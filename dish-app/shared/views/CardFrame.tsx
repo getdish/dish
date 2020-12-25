@@ -1,4 +1,5 @@
 // debug
+// TODO scaling for width/height
 import React from 'react'
 import { Dimensions } from 'react-native'
 import { StackProps, VStack, useMedia, useTheme } from 'snackui'

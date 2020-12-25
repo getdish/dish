@@ -1,4 +1,3 @@
-// debug
 import React, { memo } from 'react'
 import { AbsoluteVStack, VStack, useMedia } from 'snackui'
 
@@ -45,7 +44,6 @@ export const DishLogoButton = memo(() => {
         transform={[{ translateY: -2 }]}
         width={logoXsWidth}
         height={logoXsHeight}
-        zIndex={-1}
       >
         <LinkButton {...linkButtonProps}>
           <LogoSmall />

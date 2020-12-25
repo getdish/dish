@@ -132,7 +132,7 @@ const MenuButton = memo(
         opacity={0.6}
         alignSelf="stretch"
         width="100%"
-        activeStyle={{
+        pressStyle={{
           opacity: 1,
           transform: [{ scale: 1.1 }],
         }}
