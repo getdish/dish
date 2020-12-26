@@ -22,11 +22,9 @@ import {
 
 import { BottomDrawerStore } from './BottomDrawerStore'
 import { bgLight } from './colors'
-import { searchBarHeight, searchBarTopOffset } from './constants'
-import { isNative, isWeb } from './constants'
+import { isNative, isWeb, searchBarHeight } from './constants'
 import { fuzzySearch } from './helpers/fuzzySearch'
 import { getFuzzyMatchQuery } from './helpers/getFuzzyMatchQuery'
-import { getWindowHeight } from './helpers/getWindow'
 import {
   locationToAutocomplete,
   searchLocations,
@@ -41,6 +39,7 @@ import { omStatic } from './state/omStatic'
 import { useRouterCurPage } from './state/router'
 import { tagDisplayName } from './state/tagMeta'
 import { useOvermind } from './state/useOvermind'
+import { PaneControlButtons } from './views/PaneControlButtons'
 import { CloseButton, SmallCircleButton } from './views/ui/CloseButton'
 import { LinkButton } from './views/ui/LinkButton'
 
@@ -91,9 +90,49 @@ export default memo(function AppAutocomplete() {
     }, [])
   }
 
+  const om = useOvermind()
+  const curPage = useRouterCurPage()
+  useEffect(() => {
+    om.actions.home.setShowAutocomplete(false)
+  }, [curPage])
+
+  useEffect(() => {
+    let cancel: Function | null = null
+
+    const dispose = om.reaction(
+      (state) => {
+        const query =
+          state.home.showAutocomplete === 'location'
+            ? state.home.locationSearchQuery
+            : state.home.currentStateSearchQuery
+        return [query, state.home.lastActiveTags] as const
+      },
+      ([query, tags]) => {
+        const navigablesTags = tagsToNavigableTags(tags)
+        cancel?.()
+        if (om.state.home.showAutocomplete) {
+          setIsLoading(true)
+          cancel = runAutocomplete(
+            om.state.home.showAutocomplete,
+            query.trim(),
+            navigablesTags,
+            () => {
+              setIsLoading(false)
+            }
+          )
+        }
+      }
+    )
+
+    return () => {
+      dispose()
+      cancel?.()
+      setIsLoading(false)
+    }
+  }, [])
+
   return (
     <>
-      <HomeAutocompleteEffects onChangeStatus={setIsLoading} />
       <HomeAutoCompleteContents isLoading={isLoading} />
     </>
   )
@@ -101,140 +140,73 @@ export default memo(function AppAutocomplete() {
 
 export const useShowAutocomplete = () => {
   const om = useOvermind()
-  const { showAutocomplete } = om.state.home
-  const showLocation = showAutocomplete == 'location'
-  const showSearch = showAutocomplete == 'search'
-  return showSearch || showLocation
+  return om.state.home.showAutocomplete
 }
-
-const HomeAutocompleteEffects = memo(
-  ({ onChangeStatus }: { onChangeStatus: (isLoading: boolean) => void }) => {
-    const om = useOvermind()
-    const curPage = useRouterCurPage()
-    useEffect(() => {
-      om.actions.home.setShowAutocomplete(false)
-    }, [curPage])
-
-    useEffect(() => {
-      let cancel: Function | null = null
-
-      const dispose = om.reaction(
-        (state) => {
-          const query =
-            state.home.showAutocomplete === 'location'
-              ? state.home.locationSearchQuery
-              : state.home.currentStateSearchQuery
-          return [query, state.home.lastActiveTags] as const
-        },
-        ([query, tags]) => {
-          const navigablesTags = tagsToNavigableTags(tags)
-          cancel?.()
-          if (om.state.home.showAutocomplete) {
-            onChangeStatus(true)
-            cancel = runAutocomplete(
-              om.state.home.showAutocomplete,
-              query.trim(),
-              navigablesTags,
-              () => {
-                onChangeStatus(false)
-              }
-            )
-          }
-        }
-      )
-
-      return () => {
-        dispose()
-        cancel?.()
-        onChangeStatus(false)
-      }
-    }, [])
-
-    return null
-  }
-)
 
 const HomeAutoCompleteContents = memo(
   ({ isLoading }: { isLoading: boolean }) => {
     const om = useOvermind()
-    const { showAutocomplete } = om.state.home
-    const showLocation = showAutocomplete == 'location'
-    const showSearch = showAutocomplete == 'search'
-    const isShowing = showSearch || showLocation
-
-    if (!isShowing) {
-      return null
-    }
-    return <AutocompleteContentsInner isLoading={isLoading} />
-  }
-)
-
-const AutocompleteContentsInner = memo(
-  ({ isLoading }: { isLoading: boolean }) => {
-    const om = useOvermind()
+    const isShowing = useShowAutocomplete()
     const media = useMedia()
     const theme = useTheme()
-    const top = media.sm ? searchBarHeight : 0
 
     const content = (
       <AbsoluteVStack
         zIndex={100000000}
+        opacity={isShowing ? 1 : 0}
+        pointerEvents={isShowing ? 'auto' : 'none'}
         fullscreen
         overflow="hidden"
         alignItems="center"
-        pointerEvents="none"
-        top={top}
+        top={media.sm ? searchBarHeight : 0}
         onPress={() => {
           om.actions.home.setShowAutocomplete(false)
         }}
       >
+        <AbsoluteVStack
+          backgroundColor={theme.backgroundColorTranslucent}
+          fullscreen
+        />
+        <BlurView
+          fallbackBackgroundColor="transparent"
+          blurRadius={20}
+          blurType="light"
+          position="absolute"
+          fullscreen
+        />
+        <PaneControlButtons>
+          <CloseButton
+            size={20}
+            position="absolute"
+            top={14}
+            right={14}
+            onPressOut={prevent}
+            zIndex={1000}
+            onPress={(e) => {
+              e.stopPropagation()
+              omStatic.actions.home.setShowAutocomplete(false)
+            }}
+          />
+        </PaneControlButtons>
         <VStack
-          maxWidth="100%"
+          className="ease-in-out"
+          position="relative"
           width="100%"
           height="100%"
-          position="relative"
-          pointerEvents="auto"
+          minHeight={200}
+          padding={5}
+          borderRadius={media.sm ? 0 : 10}
+          flex={media.sm ? 1 : 0}
+          onPress={() => {
+            om.actions.home.setShowAutocomplete(false)
+          }}
         >
-          <VStack
-            width="100%"
-            height="100%"
-            maxWidth="100%"
-            pointerEvents="auto"
+          <ScrollView
+            keyboardShouldPersistTaps="always"
+            style={{ opacity: isLoading ? 0.5 : 1, padding: 10 }}
           >
-            <VStack
-              className="ease-in-out"
-              position="relative"
-              width="100%"
-              height="100%"
-              backgroundColor={theme.backgroundColorTranslucent}
-              minHeight={200}
-              padding={5}
-              borderRadius={media.sm ? 0 : 10}
-              flex={media.sm ? 1 : 0}
-              onPress={() => {
-                om.actions.home.setShowAutocomplete(false)
-              }}
-            >
-              <CloseButton
-                size={20}
-                position="absolute"
-                top={14}
-                right={14}
-                onPressOut={prevent}
-                zIndex={1000}
-                onPress={(e) => {
-                  e.stopPropagation()
-                  omStatic.actions.home.setShowAutocomplete(false)
-                }}
-              />
-              <ScrollView
-                keyboardShouldPersistTaps="always"
-                style={{ opacity: isLoading ? 0.5 : 1, padding: 10 }}
-              >
-                <AutocompleteResults />
-              </ScrollView>
-            </VStack>
-          </VStack>
+            <AutocompleteResults />
+          </ScrollView>
         </VStack>
       </AbsoluteVStack>
     )
@@ -261,12 +233,12 @@ const AutocompleteContentsInner = memo(
 const AutocompleteResults = memo(() => {
   const om = useOvermind()
   const drawerStore = useStore(BottomDrawerStore)
+  const theme = useTheme()
   const {
     showAutocomplete,
     autocompleteIndex,
     autocompleteResults,
     locationAutocompleteResults,
-    // currentStateSearchQuery,
   } = om.state.home
   const showLocation = showAutocomplete == 'location'
   const hideAutocomplete = useDebounce(
@@ -309,8 +281,9 @@ const AutocompleteResults = memo(() => {
         return (
           <React.Fragment key={`${result.tagId}${index}`}>
             <LinkButton
-              className="no-transition"
-              pointerEvents="auto"
+              fontWeight="600"
+              lineHeight={22}
+              width="100%"
               onPressOut={() => {
                 hideAutocomplete()
                 if (showLocation) {
@@ -345,49 +318,56 @@ const AutocompleteResults = memo(() => {
                   slug: result.slug,
                 },
               })}
-              lineHeight={22}
-              paddingHorizontal={10}
-              paddingVertical={10}
-              fontWeight="600"
-              borderRadius={5}
-              hoverStyle={{
-                backgroundColor: 'rgba(0,0,0,0.025)',
-              }}
-              {...(isActive && {
-                backgroundColor: 'rgba(0,0,0,0.05)',
-                hoverStyle: {
-                  backgroundColor: 'rgba(0,0,0,0.05)',
-                },
-              })}
             >
-              <HStack alignItems="center" justifyContent="center">
-                <VStack
-                  alignItems="center"
-                  height={22}
-                  width={22}
-                  marginRight={10}
-                >
+              <HStack
+                flex={1}
+                justifyContent={
+                  showAutocomplete === 'location' ? 'flex-end' : 'center'
+                }
+                paddingHorizontal={10}
+                paddingVertical={10}
+                borderRadius={12}
+                hoverStyle={{
+                  backgroundColor: theme.backgroundColorTertiaryTranslucent,
+                }}
+                {...(isActive && {
+                  backgroundColor: theme.backgroundColorTranslucent,
+                  hoverStyle: {
+                    backgroundColor: theme.backgroundColorSecondaryTranslucent,
+                  },
+                })}
+              >
+                <VStack height={26} width={26} marginRight={10}>
                   {result.icon?.indexOf('http') === 0 ? (
                     <Image
                       source={{ uri: result.icon }}
                       style={{
-                        width: 22,
-                        height: 22,
+                        width: 26,
+                        height: 26,
                         borderRadius: 100,
                       }}
                     />
                   ) : result.icon ? (
-                    <Text fontSize={18}>{result.icon} </Text>
+                    <Text fontSize={22}>{result.icon} </Text>
                   ) : null}
                 </VStack>
-                <VStack alignItems="center" justifyContent="center">
-                  <Text fontWeight="600" ellipse color={'#000'} fontSize={18}>
+                <VStack
+                  alignItems="center"
+                  justifyContent={showLocation ? 'flex-end' : 'flex-end'}
+                >
+                  <Text
+                    textAlign={showLocation ? 'right' : 'center'}
+                    fontWeight="600"
+                    ellipse
+                    color={'#000'}
+                    fontSize={22}
+                  >
                     {result.name} {plusButtonEl}
                   </Text>
                   {!!result.description && (
                     <>
                       <Spacer size="xs" />
-                      <Text ellipse color="rgba(0,0,0,0.5)" fontSize={13}>
+                      <Text ellipse color="rgba(0,0,0,0.5)" fontSize={15}>
                         {result.description}
                       </Text>
                     </>
@@ -432,7 +412,6 @@ const HomeAutocompleteDefault = memo(() => {
               flexDirection="column"
               disallowDisableWhenActive
               tag={tag}
-              pointerEvents="auto"
             >
               <VStack>
                 <Text textAlign="center" width="100%" fontSize={56}>

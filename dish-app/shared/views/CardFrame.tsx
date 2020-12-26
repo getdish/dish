@@ -1,4 +1,5 @@
 // debug
+// TODO verify the conditional + theme works
 // TODO scaling for width/height
 import React from 'react'
 import { Dimensions } from 'react-native'
@@ -10,8 +11,13 @@ export const cardFrameBorderRadiusSmaller = borderRadius * 0.95
 export const CardFrame = ({
   hoverable,
   expandable,
+  transparent,
   ...props
-}: StackProps & { expandable?: boolean; hoverable?: boolean }) => {
+}: StackProps & {
+  expandable?: boolean
+  hoverable?: boolean
+  transparent?: boolean
+}) => {
   const { width, height } = useCardFrame()
   const theme = useTheme()
   const media = useMedia()
@@ -24,9 +30,9 @@ export const CardFrame = ({
       borderRadius={borderRadius}
       width={width}
       height={height}
-      backgroundColor={theme.cardBackgroundColor}
+      backgroundColor={transparent ? 'transparent' : theme.cardBackgroundColor}
       shadowColor="#000"
-      shadowOpacity={0.1}
+      shadowOpacity={transparent ? 0 : 0.1}
       shadowRadius={4}
       shadowOffset={{ height: 1, width: 0 }}
       position="relative"

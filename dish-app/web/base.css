@@ -245,8 +245,9 @@ div,
   /* flex-grow: inherit; */
 }
 
-.blur {
-  backdrop-filter: blur(30px);
+.backdrop-filter {
+  backdrop-filter: blur(15px);
+  -webkit-backdrop-filter: blur(15px);
 }
 
 .overflow-y-hidden {

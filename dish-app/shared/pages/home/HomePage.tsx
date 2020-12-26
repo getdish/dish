@@ -65,6 +65,7 @@ type FeedItemBase = {
   id: string
   rank: number
   expandable: boolean
+  transparent?: boolean
 }
 
 type FeedItemDish = FeedItemBase & {
@@ -379,7 +380,10 @@ const HomePageContent = memo(
                       // flex={1}
                       alignItems="center"
                     >
-                      <CardFrame expandable={item.expandable}>
+                      <CardFrame
+                        transparent={item.transparent}
+                        expandable={item.expandable}
+                      >
                         {content}
                       </CardFrame>
                     </VStack>
@@ -463,6 +467,7 @@ function useHomeFeed(
                 type: 'dish',
                 expandable: false,
                 rank: Math.random() * 10,
+                transparent: true,
                 restaurant: {
                   id: restaurants[0]?.id ?? '',
                   slug: restaurants[0]?.slug ?? '',
@@ -642,29 +647,22 @@ const DishFeedCard = graphql(function DishFeedCard(props: FeedItemDish) {
       height={cardFrame.height}
       borderRadius={20}
       alignItems="center"
-      justifyContent="space-between"
+      justifyContent="center"
       overflow="hidden"
       flexWrap="nowrap"
     >
-      <Text
-        alignSelf="flex-start"
-        selectable
-        lineHeight={28}
-        maxHeight={28}
-        fontSize={18}
-        fontWeight="400"
-        color="#fff"
-        padding={10}
-        backgroundColor="rgba(0,0,0,0.85)"
-        shadowColor="#000"
-        shadowOpacity={0.2}
-        shadowRadius={5}
-        shadowOffset={{ height: 3, width: 0 }}
-        borderRadius={7}
-      >
-        {restaurant.name}
-      </Text>
-      <DishView showSearchButton size={cardFrame.width - 20} {...props} />
+      <VStack position="relative" alignSelf="center">
+        <SlantedTitle
+          position="absolute"
+          top={10}
+          left={10}
+          alignSelf="flex-start"
+          size="xl"
+        >
+          {restaurant.name}
+        </SlantedTitle>
+        <DishView showSearchButton size={cardFrame.width} {...props} />
+      </VStack>
       <Text fontSize={14} lineHeight={22} opacity={0.4} margin={4}>
         lorem ipsume dolor sit amet lorem ipsume dolor sit amet lorem ipsume
         dolor sit amet lorem ipsume dolor sit amet.

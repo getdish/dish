@@ -1,3 +1,4 @@
+- fix cardframe/stylui issue with transparent
 - fix research in area
 - fix router back
 - fix map jittering
