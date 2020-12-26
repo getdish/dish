@@ -182,9 +182,12 @@ function db_migrate() {
 }
 
 function db_migrate_local() {
+  if [[ $USE_PROD_HASURA_PASSWORD == "true" ]]; then
+    HASURA_ADMIN_SECRET="$TF_VAR_HASURA_GRAPHQL_ADMIN_SECRET"
+  fi
   _db_migrate \
     http://localhost:8080 \
-    password \
+    "${HASURA_ADMIN_SECRET:-password}" \
     postgres \
     5432 \
     "$1"
