@@ -1,5 +1,5 @@
+import { AutocompleteItem } from '../AppAutocomplete'
 import { createAutocomplete } from './createAutocomplete'
-import { AutocompleteItem } from './home-types'
 
 export const defaultLocationAutocompleteResults: AutocompleteItem[] = [
   createAutocomplete({

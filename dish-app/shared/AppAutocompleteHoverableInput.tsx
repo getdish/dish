@@ -1,6 +1,7 @@
 import React, { useRef } from 'react'
 import { HStack, Hoverable, useMedia } from 'snackui'
 
+import { autocompletesStore } from './AppAutocomplete'
 import { useOvermind } from './state/useOvermind'
 
 export const AppAutocompleteHoverableInput = ({
@@ -32,7 +33,7 @@ export const AppAutocompleteHoverableInput = ({
         if (om.state.home.currentState.searchQuery) {
           tm.current = setTimeout(() => {
             if (document.activeElement == input) {
-              om.actions.home.setShowAutocomplete(autocompleteTarget)
+              autocompletesStore.setTarget(autocompleteTarget)
             }
           }, 150)
         }

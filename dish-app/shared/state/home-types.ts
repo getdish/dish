@@ -17,13 +17,10 @@ export type OmStateHome = OmState['home']
 export type ActiveEvent = 'key' | 'pin' | 'hover' | null
 
 export type HomeState = {
-  activeAutocompleteResults: AutocompleteItem[]
   activeEvent: ActiveEvent
   activeIndex: number // index for vertical (in page), -1 = autocomplete
   allStates: { [key: string]: HomeStateItem }
   allUsers: { [id: string]: User }
-  autocompleteIndex: number // index for horizontal row (autocomplete)
-  autocompleteResults: AutocompleteItem[]
   centerToResults: number
   currentNavItem: NavigateItem
   currentState: HomeStateItem
@@ -32,7 +29,6 @@ export type HomeState = {
   currentStateType: HomeStateItem['type']
   drawerSnapPoint: number
   hoveredRestaurant: RestaurantOnlyIds | null | false
-  isAutocompleteActive: boolean
   isHoveringRestaurant: boolean
   isLoading: boolean
   isOptimisticUpdating: boolean
@@ -40,8 +36,6 @@ export type HomeState = {
   lastHomeState: HomeStateItemHome
   lastRestaurantState: HomeStateItemRestaurant | undefined
   lastSearchState: HomeStateItemSearch | undefined
-  location: AutocompleteItem | null // for now just autocomplete item
-  locationAutocompleteResults: AutocompleteItem[]
   locationSearchQuery: string
   previousState: HomeStateItem
   refreshCurrentPage: number
@@ -50,7 +44,6 @@ export type HomeState = {
   searchBarTags: NavigableTag[]
   searchBarY: number
   selectedRestaurant: RestaurantOnlyIds | null
-  showAutocomplete: ShowAutocomplete
   showUserMenu: boolean
   skipNextPageFetchData: boolean
   started: boolean
@@ -86,8 +79,6 @@ export type HomeStateNav = {
   disallowDisableWhenActive?: boolean
   replaceSearch?: boolean
 }
-
-export type ShowAutocomplete = 'search' | 'location' | false
 
 export type LngLat = { lng: number; lat: number }
 
@@ -194,16 +185,3 @@ export type HomeStateItemUserEdit = HomeStateItemBase & {
 }
 
 export type HomeStateItemSimple = Pick<HomeStateItem, 'id' | 'type'>
-
-export type AutocompleteItem = {
-  is: 'autocomplete'
-  id?: string
-  icon?: string
-  name: string
-  description?: string
-  tagId?: string
-  slug?: string
-  type: Tag['type'] | 'restaurant'
-  center?: LngLat
-  span?: LngLat
-}

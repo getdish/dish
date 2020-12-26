@@ -1,4 +1,5 @@
 import { ArrowUp, ChevronLeft, Map, Search } from '@dish/react-feather'
+import { useStoreInstance } from '@dish/use-store'
 import React, { Suspense, memo } from 'react'
 import { Platform, StyleSheet, TouchableOpacity } from 'react-native'
 import { Line } from 'react-native-svg'
@@ -11,6 +12,7 @@ import {
   useMedia,
 } from 'snackui'
 
+import { autocompletesStore } from './AppAutocomplete'
 import { AppMenu } from './AppMenu'
 import { AppSearchInput } from './AppSearchInput'
 import { AppSearchLocationInput } from './AppSearchLocationInput'
@@ -170,10 +172,11 @@ export const AppSearchBarFloating = () => {
 
 const AppSearchBarContents = memo(() => {
   const om = useOvermind()
-  const focus = om.state.home.showAutocomplete
+  const autocompletes = useStoreInstance(autocompletesStore)
+  const focus = autocompletes.visible ? autocompletes.target : false
   const media = useMedia()
   const { color, background } = useSearchBarTheme()
-  const showLocation = om.state.home.showAutocomplete === 'location'
+  const showLocation = focus === 'location'
 
   return (
     <HStack
@@ -197,11 +200,7 @@ const AppSearchBarContents = memo(() => {
         position="relative"
         width={media.xs ? 'auto' : '43%'}
         maxWidth={
-          media.xs
-            ? 'auto'
-            : media.sm && om.state.home.showAutocomplete === 'location'
-            ? 120
-            : '100%'
+          media.xs ? 'auto' : media.sm && focus === 'location' ? 120 : '100%'
         }
         flex={1}
         alignItems="center"
@@ -262,9 +261,7 @@ const AppSearchBarContents = memo(() => {
         <HStack padding={12}>
           <TouchableOpacity
             onPress={() => {
-              omStatic.actions.home.setShowAutocomplete(
-                showLocation ? 'search' : 'location'
-              )
+              autocompletes.setTarget(showLocation ? 'search' : 'location')
             }}
           >
             {showLocation ? (
@@ -289,7 +286,8 @@ const SearchBarActionButton = memo(() => {
   // const media = useMedia()
   const { color } = useSearchBarTheme()
   const om = useOvermind()
-  const { showAutocomplete } = om.state.home
+  const autocompletes = useStoreInstance(autocompletesStore)
+  const showAutocomplete = autocompletes.visible
   const isDisabled =
     !showAutocomplete && om.state.home.currentStateType === 'home'
 
@@ -316,7 +314,7 @@ const SearchBarActionButton = memo(() => {
       disabled={isDisabled}
       onPress={() => {
         if (showAutocomplete) {
-          om.actions.home.setShowAutocomplete(false)
+          autocompletes.setVisible(false)
         } else {
           om.actions.home.popBack()
         }

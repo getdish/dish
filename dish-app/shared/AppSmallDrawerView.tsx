@@ -1,9 +1,10 @@
 import { supportsTouchWeb } from '@dish/helpers'
 import { useStore } from '@dish/use-store'
-import React, { useEffect, useMemo } from 'react'
+import React, { memo, useEffect, useMemo } from 'react'
 import { Animated, PanResponder, StyleSheet, View } from 'react-native'
 import { AbsoluteVStack, VStack, useMedia } from 'snackui'
 
+import { autocompletesStore } from './AppAutocomplete'
 import { AppSearchBar } from './AppSearchBar'
 import { blurSearchInput } from './AppSearchInput'
 import { AppSmallDrawerView as AppSmallDrawerViewNative } from './AppSmallDrawerView.native'
@@ -13,7 +14,7 @@ import { pageWidthMax, searchBarHeight, zIndexDrawer } from './constants'
 import { isWebIOS } from './helpers/isIOS'
 import { omStatic } from './state/omStatic'
 
-export const AppSmallDrawerView = (props: { children: any }) => {
+export const AppSmallDrawerView = memo((props: { children: any }) => {
   if (supportsTouchWeb) {
     return <AppSmallDrawerViewNative {...props} />
   }
@@ -26,7 +27,7 @@ export const AppSmallDrawerView = (props: { children: any }) => {
   useEffect(() => {
     const drawerSnapListener = () => {
       if (drawerStore.snapIndex === 0) {
-        omStatic.actions.home.setShowAutocomplete(false)
+        autocompletesStore.setVisible(false)
         drawerStore.setSnapPoint(1)
       } else if (drawerStore.snapIndex === 1) {
         drawerStore.setSnapPoint(2)
@@ -58,9 +59,7 @@ export const AppSmallDrawerView = (props: { children: any }) => {
         drawerStore.spring = null
         drawerStore.pan.setOffset(drawerStore.pan['_value'])
         document.body.classList.add('all-input-blur')
-        if (omStatic.state.home.showAutocomplete) {
-          omStatic.actions.home.setShowAutocomplete(false)
-        }
+        autocompletesStore.setVisible(false)
         blurSearchInput()
       },
       onPanResponderMove: Animated.event([null, { dy: drawerStore.pan }], {
@@ -159,7 +158,7 @@ export const AppSmallDrawerView = (props: { children: any }) => {
       </Animated.View>
     </VStack>
   )
-}
+})
 
 const sheet = StyleSheet.create({
   searchBarContainer: {
