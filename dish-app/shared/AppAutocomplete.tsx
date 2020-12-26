@@ -1,10 +1,11 @@
+// import { defaultLocationAutocompleteResults } from './defaultLocationAutocompleteResults'
 import { fullyIdle, series, sleep } from '@dish/async'
-import { order_by, query, resolved } from '@dish/graph'
+import { Tag, order_by, query, resolved } from '@dish/graph'
 import { isPresent } from '@dish/helpers'
 import { Plus } from '@dish/react-feather'
-import { useStore } from '@dish/use-store'
-import { debounce, groupBy, uniqBy } from 'lodash'
-import React, { memo, useEffect, useState } from 'react'
+import { Store, createStore, useStore, useStoreInstance } from '@dish/use-store'
+import { clamp, debounce, groupBy, uniqBy } from 'lodash'
+import React, { memo, useCallback, useEffect, useMemo, useState } from 'react'
 import { Image, Keyboard, ScrollView } from 'react-native'
 import {
   AbsoluteVStack,
@@ -16,6 +17,7 @@ import {
   VStack,
   prevent,
   useDebounce,
+  useDebounceValue,
   useMedia,
   useTheme,
 } from 'snackui'
@@ -32,7 +34,7 @@ import {
 import { searchRestaurants } from './helpers/searchRestaurants'
 import { createAutocomplete } from './state/createAutocomplete'
 import { defaultLocationAutocompleteResults } from './state/defaultLocationAutocompleteResults'
-import { AutocompleteItem, LngLat, ShowAutocomplete } from './state/home-types'
+import { LngLat } from './state/home-types'
 import { tagDefaultAutocomplete } from './state/localTags'
 import { NavigableTag, tagsToNavigableTags } from './state/NavigableTag'
 import { omStatic } from './state/omStatic'
@@ -45,8 +47,68 @@ import { LinkButton } from './views/ui/LinkButton'
 
 let curPagePos = { x: 0, y: 0 }
 
+export type ShowAutocomplete = 'search' | 'location' | false
+
+export type AutocompleteItem = {
+  is: 'autocomplete'
+  id?: string
+  icon?: string
+  name: string
+  description?: string
+  tagId?: string
+  slug?: string
+  type: Tag['type'] | 'restaurant'
+  center?: LngLat
+  span?: LngLat
+}
+
+type AutocompleteTarget = 'search' | 'location'
+
+class AutocompletesStore extends Store {
+  visible = false
+  target: AutocompleteTarget = 'search'
+
+  setVisible(n: boolean) {
+    this.visible = n
+  }
+
+  setTarget(n: AutocompleteTarget) {
+    this.visible = true
+    this.target = n
+  }
+}
+
+export const autocompletesStore = createStore(AutocompletesStore)
+
+export class AutocompleteStore extends Store<{ target: AutocompleteTarget }> {
+  index = 0
+  results: AutocompleteItem[] = []
+  isLoading = false
+
+  get activeResult() {
+    return this.results[this.index]
+  }
+
+  setIsLoading(n: boolean) {
+    this.isLoading = n
+  }
+
+  setResults(results: AutocompleteItem[]) {
+    this.index = 0
+    this.results = results ?? []
+  }
+
+  moveIndex(val: number) {
+    this.setIndex(this.index + val)
+  }
+
+  setIndex(val: number) {
+    this.index = clamp(val, 0, this.results.length)
+  }
+}
+
 export default memo(function AppAutocomplete() {
-  const [isLoading, setIsLoading] = useState(false)
+  const autocompletes = useStoreInstance(autocompletesStore)
   const drawerStore = useStore(BottomDrawerStore)
 
   if (isWeb) {
@@ -70,8 +132,8 @@ export default memo(function AppAutocomplete() {
       // debounce to go after press event
       const handleHide = debounce(() => {
         console.log('handleHideKeyboard')
-        if (omStatic.state.home.showAutocomplete) {
-          omStatic.actions.home.setShowAutocomplete(false)
+        if (autocompletes.visible) {
+          autocompletes.setVisible(false)
         }
         if (drawerStore.snapIndex === 0) {
           drawerStore.setSnapPoint(1)
@@ -93,167 +155,117 @@ export default memo(function AppAutocomplete() {
   const om = useOvermind()
   const curPage = useRouterCurPage()
   useEffect(() => {
-    om.actions.home.setShowAutocomplete(false)
+    autocompletes.setVisible(false)
   }, [curPage])
-
-  useEffect(() => {
-    let cancel: Function | null = null
-
-    const dispose = om.reaction(
-      (state) => {
-        const query =
-          state.home.showAutocomplete === 'location'
-            ? state.home.locationSearchQuery
-            : state.home.currentStateSearchQuery
-        return [query, state.home.lastActiveTags] as const
-      },
-      ([query, tags]) => {
-        const navigablesTags = tagsToNavigableTags(tags)
-        cancel?.()
-        if (om.state.home.showAutocomplete) {
-          setIsLoading(true)
-          cancel = runAutocomplete(
-            om.state.home.showAutocomplete,
-            query.trim(),
-            navigablesTags,
-            () => {
-              setIsLoading(false)
-            }
-          )
-        }
-      }
-    )
-
-    return () => {
-      dispose()
-      cancel?.()
-      setIsLoading(false)
-    }
-  }, [])
 
   return (
     <>
-      <HomeAutoCompleteContents isLoading={isLoading} />
+      <AutocompleteSearch />
+      <AutocompleteLocation />
     </>
   )
 })
 
-export const useShowAutocomplete = () => {
+const AutocompleteSearch = memo(() => {
   const om = useOvermind()
-  return om.state.home.showAutocomplete
-}
-
-const HomeAutoCompleteContents = memo(
-  ({ isLoading }: { isLoading: boolean }) => {
-    const om = useOvermind()
-    const isShowing = useShowAutocomplete()
-    const media = useMedia()
-    const theme = useTheme()
-
-    const content = (
-      <AbsoluteVStack
-        zIndex={100000000}
-        opacity={isShowing ? 1 : 0}
-        pointerEvents={isShowing ? 'auto' : 'none'}
-        fullscreen
-        overflow="hidden"
-        alignItems="center"
-        top={media.sm ? searchBarHeight : 0}
-        onPress={() => {
-          om.actions.home.setShowAutocomplete(false)
-        }}
-      >
-        <AbsoluteVStack
-          backgroundColor={theme.backgroundColorTranslucent}
-          fullscreen
-        />
-        <BlurView
-          fallbackBackgroundColor="transparent"
-          blurRadius={20}
-          blurType="light"
-          position="absolute"
-          fullscreen
-        />
-        <PaneControlButtons>
-          <CloseButton
-            size={20}
-            position="absolute"
-            top={14}
-            right={14}
-            onPressOut={prevent}
-            zIndex={1000}
-            onPress={(e) => {
-              e.stopPropagation()
-              omStatic.actions.home.setShowAutocomplete(false)
-            }}
-          />
-        </PaneControlButtons>
-        <VStack
-          className="ease-in-out"
-          position="relative"
-          width="100%"
-          height="100%"
-          minHeight={200}
-          padding={5}
-          borderRadius={media.sm ? 0 : 10}
-          flex={media.sm ? 1 : 0}
-          onPress={() => {
-            om.actions.home.setShowAutocomplete(false)
-          }}
-        >
-          <ScrollView
-            keyboardShouldPersistTaps="always"
-            style={{ opacity: isLoading ? 0.5 : 1, padding: 10 }}
-          >
-            <AutocompleteResults />
-          </ScrollView>
-        </VStack>
-      </AbsoluteVStack>
-    )
-
-    if (!isWeb) {
-      return (
-        <AnimatedVStack
-          position="absolute"
-          pointerEvents="none"
-          fullscreen
-          height="100%"
-          zIndex={100000000}
-          flex={1}
-        >
-          {content}
-        </AnimatedVStack>
-      )
-    }
-
-    return content
-  }
-)
-
-const AutocompleteResults = memo(() => {
-  const om = useOvermind()
-  const drawerStore = useStore(BottomDrawerStore)
-  const theme = useTheme()
-  const {
-    showAutocomplete,
-    autocompleteIndex,
-    autocompleteResults,
-    locationAutocompleteResults,
-  } = om.state.home
-  const showLocation = showAutocomplete == 'location'
-  const hideAutocomplete = useDebounce(
-    () => om.actions.home.setShowAutocomplete(false),
-    50
+  const store = useStore(AutocompleteStore, { target: 'search' })
+  const { currentStateSearchQuery, lastActiveTags } = om.state.home
+  const searchState = useMemo(
+    () => [currentStateSearchQuery.trim(), lastActiveTags] as const,
+    [currentStateSearchQuery, lastActiveTags]
   )
+  const [query, activeTags] = useDebounceValue(searchState, 250)
 
-  if (showAutocomplete === 'search' && !autocompleteResults.length) {
-    return <HomeAutocompleteDefault />
-  }
+  useEffect(() => {
+    query && store.setIsLoading(true)
+  }, [query])
 
-  const autocompleteResultsActive =
-    showAutocomplete === 'location'
-      ? locationAutocompleteResults
-      : [
+  useEffect(() => {
+    let results: AutocompleteItem[] = []
+    const state = omStatic.state.home.currentState
+    const tags = tagsToNavigableTags(activeTags)
+    const countryTag =
+      tags.length === 2 ? tags.find((x) => x.type === 'country') : null
+    const cuisineName = countryTag?.name
+
+    return series([
+      async () => {
+        if (cuisineName) {
+          results = await resolved(() => {
+            return [
+              ...searchDishTags(query, cuisineName),
+              ...searchRestaurants(
+                query,
+                state.center,
+                state.span,
+                cuisineName
+              ),
+            ]
+          })
+        } else {
+          results = await searchAutocomplete(query, state.center!, state.span!)
+        }
+      },
+      // allow cancel
+      () => sleep(30),
+      async () => {
+        results = await filterAutocompletes(query, results)
+      },
+      setResults,
+      () => {
+        store.setIsLoading(false)
+      },
+    ])
+
+    function setResults() {
+      // add in a deduped entry
+      // if multiple countries have "steak" we show a single "generic steak" entry at top
+      const dishes = results.filter((x) => x.type === 'dish')
+      const groupedDishes = groupBy(dishes, (x) => x.name)
+      for (const [name, group] of Object.keys(groupedDishes).map(
+        (x) => [x, groupedDishes[x]] as const
+      )) {
+        // more than one cuisine with same dish name, lets make a generic entry
+        if (group.length > 1) {
+          const firstIndexOfGroup = results.findIndex((x) => x.name === name)
+          results.splice(
+            firstIndexOfGroup,
+            0,
+            createAutocomplete({
+              name,
+              type: 'dish',
+              icon: group.find((x) => x.icon)?.icon ?? '',
+            })
+          )
+        }
+      }
+
+      // countries that match name startsWith go to top
+      const sqlower = query.toLowerCase()
+      const partialCountryMatches = results
+        .map((item, index) => {
+          return item.type === 'country' &&
+            item.name.toLowerCase().startsWith(sqlower)
+            ? index
+            : -1
+        })
+        .filter((x) => x > 0)
+      for (const index of partialCountryMatches) {
+        const countryTag = results[index]
+        results.splice(index, 1) // remove from cur pos
+        results.splice(0, 0, countryTag) // insert into higher place
+      }
+
+      store.setResults(results)
+    }
+  }, [query])
+
+  return (
+    <AutocompleteFrame>
+      <AutocompleteResults
+        target="search"
+        emptyContent={<HomeAutocompleteDefault />}
+        prefixResults={[
           {
             name: 'Enter to search',
             icon: '🔍',
@@ -261,127 +273,277 @@ const AutocompleteResults = memo(() => {
             type: 'orphan' as const,
             description: '',
           },
-          ...(autocompleteResults ?? []),
-        ].slice(0, 13)
+        ]}
+        onSelect={(result) => {
+          // clear query
+          if (result.type === 'ophan') {
+            om.actions.home.clearTags()
+            om.actions.home.setSearchQuery(
+              om.state.home.currentStateSearchQuery
+            )
+          } else if (result.type !== 'restaurant') {
+            om.actions.home.setSearchQuery('')
+          }
+        }}
+      />
+    </AutocompleteFrame>
+  )
+})
 
-  if (!autocompleteResultsActive.length) {
-    return null
-  }
+const AutocompleteLocation = memo(() => {
+  const om = useOvermind()
+  const autocompletes = useStoreInstance(autocompletesStore)
+  const drawerStore = useStore(BottomDrawerStore)
+  const store = useStore(AutocompleteStore, { target: 'location' })
+  const query = useDebounceValue('', 250)
+
+  useEffect(() => {
+    query && store.setIsLoading(true)
+  }, [query])
+
+  useEffect(() => {
+    let results: AutocompleteItem[] = []
+    const state = omStatic.state.home.currentState
+
+    return series([
+      async () => {
+        const locationResults = await searchLocations(query, state.center)
+        results = [
+          ...locationResults.map(locationToAutocomplete).filter(isPresent),
+          ...defaultLocationAutocompleteResults,
+        ]
+      },
+      // allow cancel
+      () => sleep(30),
+      async () => {
+        results = await filterAutocompletes(query, results)
+      },
+      () => {
+        store.setResults(results)
+      },
+      () => {
+        store.setIsLoading(false)
+      },
+    ])
+  }, [query])
+
+  const handleSelect = useCallback((result: AutocompleteItem) => {
+    om.actions.home.setLocation(result.name)
+    autocompletes.setVisible(false)
+    // changing location = change drawer to show
+    if (om.state.home.drawerSnapPoint === 0) {
+      drawerStore.setSnapPoint(1)
+    }
+  }, [])
 
   return (
-    <>
-      {autocompleteResultsActive.map((result, index) => {
-        const plusButtonEl =
-          result.type === 'dish' && index !== 0 && om.state.user.isLoggedIn ? (
-            <AutocompleteAddButton />
-          ) : null
+    <AutocompleteFrame>
+      <AutocompleteResults target="location" onSelect={handleSelect} />
+    </AutocompleteFrame>
+  )
+})
 
-        const isActive = autocompleteIndex === index
+const AutocompleteFrame = ({ children }: { children: any }) => {
+  const autocompletes = useStoreInstance(autocompletesStore)
+  const isShowing = autocompletes.visible
+  const media = useMedia()
+  const theme = useTheme()
 
-        return (
-          <React.Fragment key={`${result.tagId}${index}`}>
-            <LinkButton
-              fontWeight="600"
-              lineHeight={22}
-              width="100%"
-              onPressOut={() => {
-                hideAutocomplete()
-                if (showLocation) {
-                  om.actions.home.setLocation(result.name)
-                  om.actions.home.setShowAutocomplete(false)
+  const content = (
+    <AbsoluteVStack
+      zIndex={100000000}
+      opacity={isShowing ? 1 : 0}
+      pointerEvents={isShowing ? 'auto' : 'none'}
+      fullscreen
+      overflow="hidden"
+      alignItems="center"
+      top={media.sm ? searchBarHeight : 0}
+      onPress={() => autocompletes.setVisible(false)}
+    >
+      <AbsoluteVStack
+        backgroundColor={theme.backgroundColorTranslucent}
+        fullscreen
+      />
+      <BlurView
+        fallbackBackgroundColor="transparent"
+        blurRadius={20}
+        blurType="light"
+        position="absolute"
+        fullscreen
+      />
+      <PaneControlButtons>
+        <CloseButton
+          size={20}
+          position="absolute"
+          top={14}
+          right={14}
+          onPressOut={prevent}
+          zIndex={1000}
+          onPress={(e) => {
+            e.stopPropagation()
+            autocompletes.setVisible(false)
+          }}
+        />
+      </PaneControlButtons>
+      <VStack
+        className="ease-in-out"
+        position="relative"
+        width="100%"
+        height="100%"
+        minHeight={200}
+        padding={5}
+        borderRadius={media.sm ? 0 : 10}
+        flex={media.sm ? 1 : 0}
+        onPress={() => {
+          autocompletes.setVisible(false)
+        }}
+      >
+        <ScrollView keyboardShouldPersistTaps="always">{children}</ScrollView>
+      </VStack>
+    </AbsoluteVStack>
+  )
 
-                  // changing location = change drawer to show
-                  if (om.state.home.drawerSnapPoint === 0) {
-                    drawerStore.setSnapPoint(1)
-                  }
-                } else {
-                  // SEE BELOW, tag={tag}
-                  // clear query
-                  if (result.type === 'ophan') {
-                    om.actions.home.clearTags()
-                    om.actions.home.setSearchQuery(
-                      om.state.home.currentStateSearchQuery
-                    )
-                  } else if (result.type !== 'restaurant') {
-                    om.actions.home.setSearchQuery('')
-                  }
-                }
-              }}
-              {...(!showLocation &&
-                result?.type !== 'orphan' && {
-                  tag: result,
-                })}
-              {...(result.type == 'restaurant' && {
-                tag: null,
-                name: 'restaurant',
-                params: {
-                  slug: result.slug,
-                },
-              })}
-            >
-              <HStack
-                flex={1}
-                justifyContent={
-                  showAutocomplete === 'location' ? 'flex-end' : 'center'
-                }
-                paddingHorizontal={10}
-                paddingVertical={10}
-                borderRadius={12}
-                hoverStyle={{
-                  backgroundColor: theme.backgroundColorTertiaryTranslucent,
+  if (!isWeb) {
+    return (
+      <AnimatedVStack
+        position="absolute"
+        pointerEvents="none"
+        fullscreen
+        height="100%"
+        zIndex={100000000}
+        flex={1}
+      >
+        {content}
+      </AnimatedVStack>
+    )
+  }
+
+  return content
+}
+
+const AutocompleteResults = memo(
+  ({
+    target,
+    emptyContent = null,
+    prefixResults = [],
+    onSelect,
+  }: {
+    target: AutocompleteTarget
+    prefixResults?: any[]
+    emptyContent?: any
+    onSelect: (result: AutocompleteItem, index: number) => void
+  }) => {
+    const showLocation = target === 'location'
+    const om = useOvermind()
+    const drawerStore = useStore(BottomDrawerStore)
+    const theme = useTheme()
+    const autocompletes = useStoreInstance(autocompletesStore)
+    const autocompleteStore = useStore(AutocompleteStore, { target })
+    const hideAutocompleteSlow = useDebounce(
+      () => autocompletes.setVisible(false),
+      50
+    )
+    const activeIndex = autocompleteStore.index
+    const results = [...prefixResults, ...autocompleteStore.results]
+
+    return (
+      <>
+        {!results.length && emptyContent}
+        {results.map((result, index) => {
+          const plusButtonEl =
+            result.type === 'dish' &&
+            index !== 0 &&
+            om.state.user.isLoggedIn ? (
+              <AutocompleteAddButton />
+            ) : null
+
+          const isActive = activeIndex === index
+
+          return (
+            <React.Fragment key={`${result.tagId}${index}`}>
+              <LinkButton
+                fontWeight="600"
+                lineHeight={22}
+                width="100%"
+                onPressOut={() => {
+                  hideAutocompleteSlow()
+                  onSelect(result, index)
                 }}
-                {...(isActive && {
-                  backgroundColor: theme.backgroundColorTranslucent,
-                  hoverStyle: {
-                    backgroundColor: theme.backgroundColorSecondaryTranslucent,
+                {...(!showLocation &&
+                  result?.type !== 'orphan' && {
+                    tag: result,
+                  })}
+                {...(result.type == 'restaurant' && {
+                  tag: null,
+                  name: 'restaurant',
+                  params: {
+                    slug: result.slug,
                   },
                 })}
               >
-                <VStack height={26} width={26} marginRight={10}>
-                  {result.icon?.indexOf('http') === 0 ? (
-                    <Image
-                      source={{ uri: result.icon }}
-                      style={{
-                        width: 26,
-                        height: 26,
-                        borderRadius: 100,
-                      }}
-                    />
-                  ) : result.icon ? (
-                    <Text fontSize={22}>{result.icon} </Text>
-                  ) : null}
-                </VStack>
-                <VStack
-                  alignItems="center"
-                  justifyContent={showLocation ? 'flex-end' : 'flex-end'}
+                <HStack
+                  flex={1}
+                  justifyContent={target === 'location' ? 'flex-end' : 'center'}
+                  paddingHorizontal={10}
+                  paddingVertical={10}
+                  borderRadius={12}
+                  hoverStyle={{
+                    backgroundColor: theme.backgroundColorTertiaryTranslucent,
+                  }}
+                  {...(isActive && {
+                    backgroundColor: theme.backgroundColorTranslucent,
+                    hoverStyle: {
+                      backgroundColor:
+                        theme.backgroundColorSecondaryTranslucent,
+                    },
+                  })}
                 >
-                  <Text
-                    textAlign={showLocation ? 'right' : 'center'}
-                    fontWeight="600"
-                    ellipse
-                    color={'#000'}
-                    fontSize={22}
+                  <VStack height={26} width={26} marginRight={10}>
+                    {result.icon?.indexOf('http') === 0 ? (
+                      <Image
+                        source={{ uri: result.icon }}
+                        style={{
+                          width: 26,
+                          height: 26,
+                          borderRadius: 100,
+                        }}
+                      />
+                    ) : result.icon ? (
+                      <Text fontSize={22}>{result.icon} </Text>
+                    ) : null}
+                  </VStack>
+                  <VStack
+                    alignItems="center"
+                    justifyContent={showLocation ? 'flex-end' : 'flex-end'}
                   >
-                    {result.name} {plusButtonEl}
-                  </Text>
-                  {!!result.description && (
-                    <>
-                      <Spacer size="xs" />
-                      <Text ellipse color="rgba(0,0,0,0.5)" fontSize={15}>
-                        {result.description}
-                      </Text>
-                    </>
-                  )}
-                </VStack>
-              </HStack>
-            </LinkButton>
-            <Spacer size={1} />
-          </React.Fragment>
-        )
-      })}
-    </>
-  )
-})
+                    <Text
+                      textAlign={showLocation ? 'right' : 'center'}
+                      fontWeight="600"
+                      ellipse
+                      color={'#000'}
+                      fontSize={22}
+                    >
+                      {result.name} {plusButtonEl}
+                    </Text>
+                    {!!result.description && (
+                      <>
+                        <Spacer size="xs" />
+                        <Text ellipse color="rgba(0,0,0,0.5)" fontSize={15}>
+                          {result.description}
+                        </Text>
+                      </>
+                    )}
+                  </VStack>
+                </HStack>
+              </LinkButton>
+              <Spacer size={1} />
+            </React.Fragment>
+          )
+        })}
+      </>
+    )
+  }
+)
 
 const HomeAutocompleteDefault = memo(() => {
   const theme = useTheme()
@@ -454,153 +616,16 @@ function AutocompleteAddButton() {
   )
 }
 
-function runAutocomplete(
-  showAutocomplete: ShowAutocomplete,
-  searchQuery: string,
-  tags?: NavigableTag[],
-  onFinish?: Function
-) {
-  const om = omStatic
-  let results: AutocompleteItem[] = []
-  const state = om.state.home.currentState
-
-  // cuisine tag autocomplete
-  if (showAutocomplete === 'search') {
-    if (tags.length === 2) {
-      const countryTag = tags.find((x) => x.type === 'country')
-      if (countryTag) {
-        const cuisineName = countryTag.name
-        if (cuisineName) {
-          return series([
-            () => fullyIdle({ max: 350, min: 200 }),
-            async () => {
-              results = await resolved(() => {
-                return [
-                  ...searchDishTags(searchQuery, cuisineName),
-                  ...searchRestaurants(
-                    searchQuery,
-                    state.center,
-                    state.span,
-                    cuisineName
-                  ),
-                ]
-              })
-            },
-            // allow cancel
-            () => sleep(30),
-            async () => {
-              await setAutocompleteResults(
-                showAutocomplete,
-                searchQuery,
-                results
-              )
-            },
-            () => {
-              onFinish?.()
-            },
-          ])
-        }
-      }
-    }
-  }
-
-  if (searchQuery === '') {
-    if (showAutocomplete === 'location') {
-      om.actions.home.setLocationAutocompleteResults(null)
-    } else if (showAutocomplete === 'search') {
-      // leave last one
-      // om.actions.home.setAutocompleteResults([])
-    }
-    onFinish?.()
-    return undefined
-  }
-
-  return series([
-    () => fullyIdle({ max: 350, min: 200 }),
-    async () => {
-      if (showAutocomplete === 'location') {
-        const locationResults = await searchLocations(searchQuery, state.center)
-        results = [
-          ...locationResults.map(locationToAutocomplete).filter(isPresent),
-          ...defaultLocationAutocompleteResults,
-        ]
-      }
-      if (showAutocomplete === 'search') {
-        results = await searchAutocomplete(
-          searchQuery,
-          state.center!,
-          state.span!
-        )
-      }
-    },
-    // allow cancel
-    () => sleep(30),
-    async () => {
-      await setAutocompleteResults(showAutocomplete, searchQuery, results)
-    },
-    () => {
-      onFinish?.()
-    },
-  ])
-}
-
-async function setAutocompleteResults(
-  showAutocomplete: ShowAutocomplete,
-  searchQuery: string,
-  results: AutocompleteItem[]
-) {
+async function filterAutocompletes(query: string, results: AutocompleteItem[]) {
   let matched: AutocompleteItem[] = []
   if (results.length) {
     matched = await fuzzySearch({
       items: results,
-      query: searchQuery,
+      query,
       keys: ['name', 'description'],
     })
   }
-  matched = uniqBy([...matched, ...results].filter(isPresent), (x) => x.id)
-  if (showAutocomplete === 'location') {
-    omStatic.actions.home.setLocationAutocompleteResults(matched)
-  } else if (showAutocomplete === 'search') {
-    // add in a deduped entry
-    // if multiple countries have "steak" we show a single "generic steak" entry at top
-    const dishes = matched.filter((x) => x.type === 'dish')
-    const groupedDishes = groupBy(dishes, (x) => x.name)
-    for (const [name, group] of Object.keys(groupedDishes).map(
-      (x) => [x, groupedDishes[x]] as const
-    )) {
-      // more than one cuisine with same dish name, lets make a generic entry
-      if (group.length > 1) {
-        const firstIndexOfGroup = matched.findIndex((x) => x.name === name)
-        matched.splice(
-          firstIndexOfGroup,
-          0,
-          createAutocomplete({
-            name,
-            type: 'dish',
-            icon: group.find((x) => x.icon)?.icon ?? '',
-          })
-        )
-      }
-    }
-
-    // countries that match name startsWith go to top
-    const sqlower = searchQuery.toLowerCase()
-    const partialCountryMatches = matched
-      .map((item, index) => {
-        return item.type === 'country' &&
-          item.name.toLowerCase().startsWith(sqlower)
-          ? index
-          : -1
-      })
-      .filter((x) => x > 0)
-    for (const index of partialCountryMatches) {
-      const countryTag = matched[index]
-      matched.splice(index, 1) // remove from cur pos
-      matched.splice(0, 0, countryTag) // insert into higher place
-    }
-
-    omStatic.actions.home.setAutocompleteResults(matched)
-  }
+  return uniqBy([...matched, ...results].filter(isPresent), (x) => x.id)
 }
 
 function searchAutocomplete(searchQuery: string, center: LngLat, span: LngLat) {

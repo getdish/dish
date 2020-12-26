@@ -1,4 +1,4 @@
-import { AutocompleteItem } from './home-types'
+import { AutocompleteItem } from '../AppAutocomplete'
 
 export function createAutocomplete(
   item: Partial<AutocompleteItem>

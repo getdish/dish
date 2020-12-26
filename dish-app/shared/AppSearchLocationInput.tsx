@@ -1,22 +1,15 @@
 // // debug
 import { MapPin, Navigation } from '@dish/react-feather'
-import { useStore } from '@dish/use-store'
+import { useStore, useStoreInstance } from '@dish/use-store'
 import React, { memo, useCallback, useEffect, useState } from 'react'
 import { TextInput, TouchableOpacity } from 'react-native'
-import {
-  AbsoluteVStack,
-  Button,
-  HStack,
-  VStack,
-  prevent,
-  useMedia,
-} from 'snackui'
+import { Button, HStack, VStack, prevent, useMedia } from 'snackui'
 
+import { AutocompleteStore, autocompletesStore } from './AppAutocomplete'
 import { AppAutocompleteHoverableInput } from './AppAutocompleteHoverableInput'
 import { inputTextStyles } from './AppSearchInput'
 import { blue } from './colors'
 import { isWeb } from './constants'
-import { DishHorizonView } from './DishHorizonView'
 import { useSearchBarTheme } from './hooks/useSearchBarTheme'
 import { InputStore } from './InputStore'
 import { SearchInputNativeDragFix } from './SearchInputNativeDragFix'
@@ -31,10 +24,15 @@ export const AppSearchLocationInput = memo(() => {
   const { color } = useSearchBarTheme()
   const [locationSearch, setLocationSearch] = useState('')
   const { currentLocationName } = om.state.home.currentState
+  const locationAutocomplete = useStore(AutocompleteStore, {
+    target: 'location',
+  })
+  const autocompletes = useStoreInstance(autocompletesStore)
+  const showLocationAutocomplete =
+    autocompletes.visible && autocompletes.target === 'location'
 
-  const showAutocomplete = om.state.home.showAutocomplete === 'location'
   useEffect(() => {
-    if (showAutocomplete) {
+    if (showLocationAutocomplete) {
       const tm = setTimeout(() => {
         console.log('focusing')
         inputStore.node?.focus()
@@ -44,7 +42,7 @@ export const AppSearchLocationInput = memo(() => {
       }
     }
     return undefined
-  }, [showAutocomplete])
+  }, [showLocationAutocomplete])
 
   // one way sync down for more perf
   useEffect(() => {
@@ -62,13 +60,10 @@ export const AppSearchLocationInput = memo(() => {
     switch (code) {
       case 13: {
         // enter
-        const result =
-          om.state.home.locationAutocompleteResults[
-            om.state.home.autocompleteIndex
-          ]
+        const result = locationAutocomplete.activeResult
         if (result) {
           om.actions.home.setLocation(result.name)
-          om.actions.home.setShowAutocomplete(false)
+          autocompletes.setVisible(false)
         }
         return
       }
@@ -142,7 +137,7 @@ export const AppSearchLocationInput = memo(() => {
             minWidth="78.7%" // this is the hackiest ever fix for react native width issue for now
             flex={1}
             onPressOut={() => {
-              om.actions.home.setShowAutocomplete('location')
+              autocompletes.setTarget('location')
             }}
           >
             {!isWeb && <SearchInputNativeDragFix name="location" />}
@@ -158,8 +153,8 @@ export const AppSearchLocationInput = memo(() => {
               onChangeText={(text) => {
                 setLocationSearch(text)
                 om.actions.home.setLocationSearchQuery(text)
-                if (text && om.state.home.showAutocomplete === false) {
-                  om.actions.home.setShowAutocomplete('location')
+                if (text && !autocompletes.visible) {
+                  autocompletes.setTarget('location')
                 }
               }}
             />

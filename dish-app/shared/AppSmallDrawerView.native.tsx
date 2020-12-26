@@ -1,8 +1,9 @@
 import { useStore } from '@dish/use-store'
-import React, { useMemo } from 'react'
+import React, { memo, useMemo } from 'react'
 import { Animated, PanResponder, StyleSheet, View } from 'react-native'
 import { VStack } from 'snackui'
 
+import { autocompletesStore } from './AppAutocomplete'
 import { AppSearchBar } from './AppSearchBar'
 import { blurSearchInput } from './AppSearchInput'
 import { BottomDrawerStore } from './BottomDrawerStore'
@@ -10,11 +11,10 @@ import { BottomSheetContainer } from './BottomSheetContainer'
 import { pageWidthMax, searchBarHeight, zIndexDrawer } from './constants'
 import { getWindowHeight } from './helpers/getWindow'
 import { isTouchingSearchBar } from './SearchInputNativeDragFix'
-import { omStatic } from './state/omStatic'
 import { isScrollAtTop } from './views/ContentScrollView'
 import { isScrollingSubDrawer } from './views/ContentScrollViewHorizontal'
 
-export const AppSmallDrawerView = (props: { children: any }) => {
+export const AppSmallDrawerView = memo((props: { children: any }) => {
   const drawerStore = useStore(BottomDrawerStore)
 
   const panResponder = useMemo(() => {
@@ -50,9 +50,7 @@ export const AppSmallDrawerView = (props: { children: any }) => {
         drawerStore.pan.setOffset(curSnapY)
         drawerStore.pan.setValue(0)
         drawerStore.setIsDragging(true)
-        if (omStatic.state.home.showAutocomplete) {
-          omStatic.actions.home.setShowAutocomplete(false)
-        }
+        autocompletesStore.setVisible(false)
         blurSearchInput()
       },
       onPanResponderMove: (e, gestureState) => {
@@ -148,7 +146,7 @@ export const AppSmallDrawerView = (props: { children: any }) => {
       </Animated.View>
     </VStack>
   )
-}
+})
 
 const styles = StyleSheet.create({
   container: {

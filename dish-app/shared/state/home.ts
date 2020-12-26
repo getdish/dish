@@ -21,7 +21,6 @@ import { Toast } from 'snackui'
 
 import { getBreadcrumbs, isBreadcrumbState } from '../helpers/getBreadcrumbs'
 import { allTags } from './allTags'
-import { defaultLocationAutocompleteResults } from './defaultLocationAutocompleteResults'
 import { getActiveTags } from './getActiveTags'
 import { setDefaultLocation } from './getDefaultLocation'
 import { getNavigateItemForState } from './getNavigateItemForState'
@@ -30,7 +29,6 @@ import { getTagSlug } from './getTagSlug'
 import { isHomeState, isRestaurantState, isSearchState } from './home-helpers'
 import {
   ActiveEvent,
-  AutocompleteItem,
   HomeState,
   HomeStateItem,
   HomeStateItemHome,
@@ -40,7 +38,6 @@ import {
   HomeStateTagNavigable,
   LngLat,
   OmState,
-  ShowAutocomplete,
 } from './home-types'
 import { initialHomeState } from './initialHomeState'
 import { isSearchBarTag } from './isSearchBarTag'
@@ -61,13 +58,8 @@ export const state: HomeState = {
   centerToResults: 0,
   refreshCurrentPage: 0,
   allUsers: {},
-  showAutocomplete: false,
   drawerSnapPoint: 1,
   searchBarY: 25,
-  autocompleteIndex: 0,
-  autocompleteResults: [],
-  locationAutocompleteResults: defaultLocationAutocompleteResults,
-  location: null,
   locationSearchQuery: '',
   hoveredRestaurant: null,
   isHoveringRestaurant: false,
@@ -103,17 +95,6 @@ export const state: HomeState = {
   >((state) => state.currentState.searchQuery),
   currentStateType: derived<HomeState, OmState, HomeStateItem['type']>(
     (state) => state.currentState.type
-  ),
-  isAutocompleteActive: derived<HomeState, OmState, boolean>(
-    (state) => !!state.showAutocomplete
-  ),
-  activeAutocompleteResults: derived<HomeState, OmState, AutocompleteItem[]>(
-    (state) =>
-      state.showAutocomplete === 'location'
-        ? state.locationAutocompleteResults
-        : state.showAutocomplete === 'search'
-        ? state.autocompleteResults
-        : []
   ),
   previousState: derived<HomeState, OmState, HomeStateItem>((state) => {
     const curState = state.states[state.stateIndex]
@@ -733,36 +714,32 @@ const pushHomeState: AsyncAction<
   return null
 }
 
-const setShowAutocomplete: Action<ShowAutocomplete> = (om, val) => {
-  om.state.home.showAutocomplete = val
-}
-
 // TODO this sort of duplicates HomeStateItem.center... we should move it there
 const setLocation: AsyncAction<string> = async (om, val) => {
-  const current = [
-    ...om.state.home.locationAutocompleteResults,
-    ...defaultLocationAutocompleteResults,
-  ]
-  om.actions.home.setLocationSearchQuery(val)
-  const exact = current.find((x) => x.name === val)
-  if (exact?.center) {
-    om.actions.home.updateCurrentState({
-      center: { ...exact.center },
-      currentLocationName: val,
-      mapAt: null,
-    })
-    const curState = om.state.home.currentState
-    const navItem = getNavigateItemForState(om, curState)
-    if (router.getShouldNavigate(navItem)) {
-      router.navigate(navItem)
-    }
-    setDefaultLocation({
-      center: exact.center,
-      span: curState.span,
-    })
-  } else {
-    console.warn('No center found?')
-  }
+  // const current = [
+  //   ...om.state.home.locationAutocompleteResults,
+  //   ...defaultLocationAutocompleteResults,
+  // ]
+  // om.actions.home.setLocationSearchQuery(val)
+  // const exact = current.find((x) => x.name === val)
+  // if (exact?.center) {
+  //   om.actions.home.updateCurrentState({
+  //     center: { ...exact.center },
+  //     currentLocationName: val,
+  //     mapAt: null,
+  //   })
+  //   const curState = om.state.home.currentState
+  //   const navItem = getNavigateItemForState(om, curState)
+  //   if (router.getShouldNavigate(navItem)) {
+  //     router.navigate(navItem)
+  //   }
+  //   setDefaultLocation({
+  //     center: exact.center,
+  //     span: curState.span,
+  //   })
+  // } else {
+  //   console.warn('No center found?')
+  // }
 }
 
 const setLocationSearchQuery: AsyncAction<string> = async (om, val) => {
@@ -778,14 +755,14 @@ const setActiveIndex: Action<{ index: number; event: ActiveEvent }> = (
 }
 
 const moveActive: Action<number> = (om, num) => {
-  if (om.state.home.isAutocompleteActive) {
-    om.actions.home.moveAutocompleteIndex(num)
-  } else {
-    om.actions.home.setActiveIndex({
-      index: om.state.home.activeIndex + num,
-      event: 'key',
-    })
-  }
+  // if (om.state.home.isAutocompleteActive) {
+  //   om.actions.home.moveAutocompleteIndex(num)
+  // } else {
+  //   om.actions.home.setActiveIndex({
+  //     index: om.state.home.activeIndex + num,
+  //     event: 'key',
+  //   })
+  // }
 }
 
 const requestLocation: Action = (om) => {}
@@ -797,7 +774,8 @@ const setSearchBarFocusedTag: Action<NavigableTag | null> = (om, val) => {
   }
   const tags = om.state.home.searchBarTags
   const tagIndex = tags.findIndex((x) => getTagSlug(x) === getTagSlug(val))
-  om.state.home.autocompleteIndex = -tags.length + tagIndex
+  console.warn('todo comented out')
+  // om.state.home.autocompleteIndex = -tags.length + tagIndex
 }
 
 const forkCurrentList: Action = (om) => {
@@ -860,23 +838,6 @@ const updateActiveTags: Action<HomeStateTagNavigable> = (om, next) => {
   } catch (err) {
     handleAssertionError(err)
   }
-}
-
-const setAutocompleteResults: Action<AutocompleteItem[] | null> = (
-  om,
-  results
-) => {
-  om.state.home.autocompleteIndex = 0
-  om.state.home.autocompleteResults = results ?? []
-}
-
-const setLocationAutocompleteResults: Action<AutocompleteItem[] | null> = (
-  om,
-  results
-) => {
-  om.state.home.autocompleteIndex = 0
-  om.state.home.locationAutocompleteResults =
-    results ?? defaultLocationAutocompleteResults ?? []
 }
 
 const setSearchQuery: Action<string> = (om, val) => {
@@ -989,19 +950,6 @@ const setSearchBarTagIndex: Action<number> = (om, val) => {
   )
 }
 
-const moveAutocompleteIndex: Action<number> = (om, val) => {
-  om.actions.home.setAutocompleteIndex(om.state.home.autocompleteIndex + val)
-}
-
-const setAutocompleteIndex: Action<number> = (om, val) => {
-  om.state.home.autocompleteIndex = clamp(
-    val,
-    0,
-    // not -1 because we show a fake "search" entry first
-    om.state.home.activeAutocompleteResults.length
-  )
-}
-
 const setSearchBarY: Action<number> = (om, val) => {
   om.state.home.searchBarY = val
 }
@@ -1087,9 +1035,6 @@ export const actions = {
   syncStateToRoute,
   updateCurrentState,
   getNavigateItemForState,
-  moveAutocompleteIndex,
-  setAutocompleteIndex,
-  setLocationAutocompleteResults,
   setCenterToResults,
   setSearchQuery,
   updateCurrentMapAreaInformation,
@@ -1109,12 +1054,10 @@ export const actions = {
   setSearchBarFocusedTag,
   moveSearchBarTagIndex,
   setSearchBarTagIndex,
-  setShowAutocomplete,
   popBack,
   refresh,
   suggestTags,
   updateActiveTags,
-  setAutocompleteResults,
   clearTags,
   setIsLoading,
   updateHomeState,

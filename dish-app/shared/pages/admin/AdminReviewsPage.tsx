@@ -12,13 +12,13 @@ import {
   useDebounceValue,
 } from 'snackui'
 
+import { AutocompleteItem } from '../../AppAutocomplete'
 import { lightGreen, lightRed } from '../../colors'
 import {
   locationToAutocomplete,
   searchLocations,
 } from '../../helpers/searchLocations'
 import { defaultLocationAutocompleteResults } from '../../state/defaultLocationAutocompleteResults'
-import { AutocompleteItem } from '../../state/home-types'
 import { AdminListItem } from './AdminListItem'
 import { AdminSearchableColumn } from './AdminSearchableColumn'
 import { VerticalColumn } from './VerticalColumn'

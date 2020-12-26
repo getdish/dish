@@ -1,6 +1,6 @@
 import { fullyIdle, idle, series } from '@dish/async'
 import { Loader, Search, X } from '@dish/react-feather'
-import { useStore } from '@dish/use-store'
+import { getStore, useStore, useStoreInstance } from '@dish/use-store'
 import React, { memo, useCallback, useEffect, useRef, useState } from 'react'
 import {
   Platform,
@@ -23,6 +23,7 @@ import {
   useTheme,
 } from 'snackui'
 
+import { AutocompleteStore, autocompletesStore } from './AppAutocomplete'
 import { AppAutocompleteHoverableInput } from './AppAutocompleteHoverableInput'
 import { darkPink } from './colors'
 import { isWeb, searchBarHeight } from './constants'
@@ -103,7 +104,9 @@ export const AppSearchInput = memo(() => {
   const [search, setSearch] = useState('')
   const getSearch = useGet(search)
   const isSearchingCuisine = !!om.state.home.searchBarTags.length
-  // const { showAutocomplete } = om.state.home
+  const autocompletes = useStoreInstance(autocompletesStore)
+  const showSearchAutocomplete =
+    autocompletes.visible && autocompletes.target === 'search'
 
   const height = searchBarHeight - 2
   const outerHeight = height - 1
@@ -124,9 +127,8 @@ export const AppSearchInput = memo(() => {
     ])
   })
 
-  const showAutocomplete = om.state.home.showAutocomplete === 'search'
   useEffect(() => {
-    if (showAutocomplete) {
+    if (showSearchAutocomplete) {
       const tm = setTimeout(() => {
         inputStore.node?.focus()
       }, 100)
@@ -135,7 +137,7 @@ export const AppSearchInput = memo(() => {
       }
     }
     return undefined
-  }, [showAutocomplete])
+  }, [showSearchAutocomplete])
 
   // one way sync down for more perf
   useEffect(() => {
@@ -153,7 +155,7 @@ export const AppSearchInput = memo(() => {
   if (Platform.OS === 'web') {
     useEffect(() => {
       const handleClick = () => {
-        om.actions.home.setShowAutocomplete('search')
+        autocompletes.setTarget('search')
       }
       const node = inputStore.node
       node?.addEventListener('click', handleClick)
@@ -285,12 +287,12 @@ export const AppSearchInput = memo(() => {
                     if (omStatic.state.home.searchbarFocusedTag) {
                       omStatic.actions.home.setSearchBarTagIndex(0)
                     } else {
-                      omStatic.actions.home.setShowAutocomplete('search')
+                      autocompletesStore.setTarget('search')
                     }
                   }}
                   onChangeText={(text) => {
                     if (getSearch() == '' && text !== '') {
-                      om.actions.home.setShowAutocomplete('search')
+                      autocompletesStore.setTarget('search')
                     }
                     setSearch(text)
                     om.actions.home.setSearchQuery(text)
@@ -339,8 +341,8 @@ const SearchCancelButton = memo(() => {
       justifyContent="center"
       backgroundColor="rgba(220,220,220,0.1)"
       onPress={() => {
-        if (om.state.home.showAutocomplete) {
-          om.actions.home.setShowAutocomplete(false)
+        if (autocompletesStore.visible) {
+          autocompletesStore.setVisible(false)
         } else {
           om.actions.home.clearSearch()
         }
@@ -366,7 +368,11 @@ const handleKeyPress = async (e: any, inputStore: InputStore) => {
   // @ts-ignore
   const code = e.keyCode
   console.log('key', code)
-  const { isAutocompleteActive, autocompleteIndex } = omStatic.state.home
+  const isAutocompleteActive = autocompletesStore.visible
+  const autocomplete = getStore(AutocompleteStore, {
+    target: autocompletesStore.target,
+  })
+  const { index, results } = autocomplete
 
   let focusedInput: HTMLInputElement | null = null
   let isSelecting = false
@@ -387,9 +393,8 @@ const handleKeyPress = async (e: any, inputStore: InputStore) => {
     case 13: {
       // enter
       // just searching normal
-      const item =
-        omStatic.state.home.autocompleteResults[autocompleteIndex - 1]
-      if (isAutocompleteActive && item && autocompleteIndex !== 0) {
+      const item = results[index - 1]
+      if (isAutocompleteActive && item && index !== 0) {
         if (item.type === 'restaurant') {
           if (!item.slug) {
             Toast.show(`No slug, err`)
@@ -412,7 +417,7 @@ const handleKeyPress = async (e: any, inputStore: InputStore) => {
         })
         await idle(40)
       }
-      omStatic.actions.home.setShowAutocomplete(false)
+      autocompletesStore.setVisible(false)
       focusedInput?.blur()
       return
     }

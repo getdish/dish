@@ -1,9 +1,10 @@
 import { LngLat } from '@dish/graph'
 import { isPresent } from '@dish/helpers'
 
+import { AutocompleteItem } from '../AppAutocomplete'
 import { MAPBOX_ACCESS_TOKEN } from '../constants'
 import { createAutocomplete } from '../state/createAutocomplete'
-import { AutocompleteItem, GeocodePlace } from '../state/home-types'
+import { GeocodePlace } from '../state/home-types'
 
 const baseUrl = `https://api.mapbox.com/geocoding/v5/mapbox.places`
 
