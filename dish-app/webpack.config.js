@@ -1,3 +1,4 @@
+const WebpackPwaManifest = require('webpack-pwa-manifest')
 const LodashPlugin = require('lodash-webpack-plugin')
 const LoadablePlugin = require('@loadable/webpack-plugin')
 const { DuplicatesPlugin } = require('inspectpack/plugin')
@@ -67,11 +68,7 @@ module.exports = function getWebpackConfig(
       entry: {
         main:
           process.env.LEGACY || isSSR
-            ? [
-                'babel-polyfill',
-                path.join(__dirname, 'web', 'polyfill.legacy.js'),
-                appEntry,
-              ]
+            ? [path.join(__dirname, 'web', 'polyfill.legacy.js'), appEntry]
             : appEntry,
       },
       output: {
@@ -298,6 +295,20 @@ module.exports = function getWebpackConfig(
           inject: true,
           favicon: 'web/favicon.png',
           template: path.join(__dirname, 'web/index.html'),
+        }),
+
+        new WebpackPwaManifest({
+          name: 'Dish',
+          short_name: 'Dish',
+          description: 'The Food Pokedex',
+          background_color: '#000',
+          crossorigin: 'use-credentials',
+          icons: [
+            {
+              src: path.resolve('web/icon.png'),
+              sizes: [96, 128, 192, 512, 1024],
+            },
+          ],
         }),
 
         !!process.env.INSPECT &&

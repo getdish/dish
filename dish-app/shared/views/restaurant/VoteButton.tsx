@@ -43,12 +43,16 @@ export const VoteButton = ({
       }}
       {...props}
     >
+      <Icon
+        size={size * (voted ? 1.2 : 1)}
+        color={hovered ? hoverColor ?? '#000' : color ?? '#ccc'}
+      />
       <AbsoluteVStack
-        top={0}
+        top={translateDir * 10}
         left={-10}
         right={-10}
-        bottom={0}
-        transform={[{ translateY: translateDir * 10 }]}
+        bottom={-translateDir * 10}
+        // transform={[{ translateY:  }]}
         overflow="hidden"
       >
         <AbsoluteVStack
@@ -63,10 +67,6 @@ export const VoteButton = ({
           transform={[{ translateY: translateDir * -10 }]}
         />
       </AbsoluteVStack>
-      <Icon
-        size={size * (voted ? 1.2 : 1)}
-        color={hovered ? hoverColor ?? '#000' : color ?? '#ccc'}
-      />
     </VStack>
   )
 }

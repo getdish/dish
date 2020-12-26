@@ -21,19 +21,13 @@ import {
 } from 'snackui'
 
 import { isWeb } from '../constants'
+import { useRouterCurPage } from '../state/router'
 import { useOvermind } from '../state/useOvermind'
 import { SignInAppleButton } from './SignInAppleButton'
 import { Link } from './ui/Link'
 import { LinkButton } from './ui/LinkButton'
 import { LinkButtonProps } from './ui/LinkProps'
 import { SmallButton } from './ui/SmallButton'
-
-type FormPage =
-  | 'login'
-  | 'register'
-  | 'forgotPassword'
-  | 'passwordReset'
-  | 'success'
 
 const form_page_details = {
   login: {
@@ -101,7 +95,7 @@ export const LoginRegisterForm = ({
   const om = useOvermind()
   const isLoggedIn = om.state.user.isLoggedIn
   const store = useStore(AuthFormStore)
-  const curPageName = om.state.router.curPage.name
+  const curPageName = useRouterCurPage().name
   let defaultFormPage = Object.keys(form_page_details).includes(curPageName)
     ? curPageName
     : 'login'
@@ -338,7 +332,7 @@ export const LoginRegisterForm = ({
               <input
                 onSubmit={handleSubmit(onSubmit)}
                 type="submit"
-                style={{ display: 'none' }}
+                style={{ visibility: 'hidden', height: 0 }}
               />
             )}
 

@@ -7,5 +7,5 @@ export const initialHomeState: HomeStateItemHome = {
   activeTags: {},
   searchQuery: '',
   ...getDefaultLocation(),
-  region: 'san-francisco',
+  region: null,
 }

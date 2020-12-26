@@ -4,13 +4,13 @@ import { fullyIdle, series } from '@dish/async'
 import { isDev, isStaging, slugify } from '@dish/graph'
 import { useStore } from '@dish/use-store'
 import { produce } from 'immer'
-import _, { isEqual, throttle } from 'lodash'
+import _, { isEqual, sortBy, throttle } from 'lodash'
 import mapboxgl from 'mapbox-gl'
 import React, { useEffect, useRef, useState } from 'react'
 import { Dimensions } from 'react-native'
 import { useGet, useTheme } from 'snackui'
 
-import { green, lightGreen } from '../colors'
+import { blue, green, lightGreen } from '../colors'
 import { MAPBOX_ACCESS_TOKEN } from '../constants'
 import { useIsMountedRef } from '../helpers/useIsMountedRef'
 import { tagLenses } from '../state/localTags'
@@ -30,27 +30,18 @@ const CLUSTER_LABEL_LAYER_ID = 'CLUSTER_LABEL_LAYER_ID'
 const POINT_LAYER_ID = 'POINT_LAYER_ID'
 const POINT_HOVER_LAYER_ID = 'POINT_HOVER_LAYER_ID'
 
-//const MARTIN_TILES_PROD = 'https://martin-tiles.dishapp.com'
-const MARTIN_TILES_STAGING = 'https://martin-tiles-staging.dishapp.com'
-const MARTIN_TILES_PROD = MARTIN_TILES_STAGING
-const MARTIN_TILES_DEV = 'http://localhost:3005'
-
-let MARTIN_TILES_HOST = MARTIN_TILES_PROD
-
-if (isStaging) {
-  MARTIN_TILES_HOST = MARTIN_TILES_STAGING
-}
-
-if (isDev) {
-  MARTIN_TILES_HOST = MARTIN_TILES_DEV
-}
+const MARTIN_TILES_HOST = (() => {
+  const prod = 'https://martin-tiles.dishapp.com'
+  const staging = 'https://martin-tiles-staging.dishapp.com'
+  const dev = 'http://localhost:3005'
+  if (isStaging) return staging
+  if (isDev) return dev
+  return prod
+})()
 
 const round = (val: number, dec = 100000) => {
   return Math.round(val * dec) / dec
 }
-
-const initialRadius = 8
-const maxRadius = 18
 
 type MapInternalState = {
   active: null | number
@@ -59,16 +50,11 @@ type MapInternalState = {
   isAwaitingNextMove: boolean
 }
 
-const styles = {
-  light: 'mapbox://styles/nwienert/ckddrrcg14e4y1ipj0l4kf1xy',
-  dark: 'mapbox://styles/nwienert/ck68dg2go01jb1it5j2xfsaja',
-}
-
 export const MapView = (props: MapProps) => {
   const { center, span, padding, features, style, hovered, selected } = props
   const isMounted = useIsMountedRef()
   const mapNode = useRef<HTMLDivElement>(null)
-  let [map, setMap] = useState<mapboxgl.Map | null>(null)
+  const [map, setMap] = useState<mapboxgl.Map | null>(null)
   const internal = useRef<MapInternalState>()
   if (!internal.current) {
     internal.current = {
@@ -80,14 +66,6 @@ export const MapView = (props: MapProps) => {
   }
   const getProps = useGet(props)
 
-  // TODO may be worth optimizing so it doesnt re-render
-  const theme = useTheme()
-  const themeName = theme.backgroundColor === '#fff' ? 'light' : 'dark'
-  useEffect(() => {
-    if (!map) return
-    map.setStyle(styles[themeName])
-  }, [map, themeName])
-
   // window resize
   useEffect(() => {
     if (!map) return undefined
@@ -96,7 +74,7 @@ export const MapView = (props: MapProps) => {
       if (cancel) {
         cancel()
       }
-      cancel = series([() => fullyIdle({ max: 200 }), () => map.resize()])
+      cancel = series([() => fullyIdle({ max: 300 }), () => map.resize()])
     }
     Dimensions.addEventListener('change', handleResize)
     return () => {
@@ -105,8 +83,16 @@ export const MapView = (props: MapProps) => {
     }
   }, [map])
 
+  // setup map!
+  // NOTE! changing style resets all sources
+  // so be sure to thread style through here
   useEffect(() => {
-    if (!mapNode.current) return undefined
+    if (!mapNode.current) {
+      return undefined
+    }
+    if (map && !hasChangedStyle(map, style)) {
+      return undefined
+    }
     return setupMapEffect({
       mapNode: mapNode.current,
       isMounted,
@@ -115,52 +101,21 @@ export const MapView = (props: MapProps) => {
       props,
       internal,
     })
-  }, [])
+  }, [style])
 
   // selected
   useEffect(() => {
-    const isMapLoaded = map?.isStyleLoaded()
-    if (!isMapLoaded) return
     if (!selected) return
     if (!map) return
     const index = features.findIndex((x) => x.properties?.id === selected)
-    mapSetIconSelected(map, index)
     setActive(map, props, internal.current, index, false)
   }, [map, features, selected])
-
-  const [isMapLoaded, setIsMapLoaded] = useState(false)
-
-  useEffect(() => {
-    if (!map) {
-      setIsMapLoaded(false)
-      return undefined
-    }
-
-    const isMapLoaded = map.isStyleLoaded()
-
-    setIsMapLoaded(isMapLoaded)
-
-    if (!isMapLoaded) {
-      const onStyleLoad = () => {
-        setIsMapLoaded(true)
-        map.off('idle', onStyleLoad)
-      }
-      map.on('idle', onStyleLoad)
-
-      return () => {
-        map.off('idle', onStyleLoad)
-      }
-    }
-
-    return undefined
-  }, [map, setIsMapLoaded])
 
   const prevHoveredId = useRef<number>()
 
   // hovered
   useEffect(() => {
     if (!map) return
-    if (!isMapLoaded) return
     if (!hovered) return
     // mapSetIconHovered(map, index)
     // const index = features.findIndex((x) => x.properties?.id === hovered)
@@ -178,13 +133,7 @@ export const MapView = (props: MapProps) => {
       mapSetFeature(map, featureId, { hover: true })
     }
     // return animateMarker(map)
-  }, [map, hovered, isMapLoaded, features])
-
-  // style
-  useEffect(() => {
-    if (!map || !style) return
-    map.setStyle(style)
-  }, [map, style])
+  }, [map, hovered, features])
 
   // center + span
   useEffect(() => {
@@ -234,6 +183,16 @@ export const MapView = (props: MapProps) => {
   useEffect(() => {
     if (!map) return
     const source = map.getSource(RESTAURANTS_SOURCE_ID)
+    const source2 = map.getSource(RESTAURANTS_UNCLUSTERED_SOURCE_ID)
+
+    if (!source) {
+      console.warn('NO SOURCE??', source)
+      return
+    }
+    if (!source2) {
+      console.warn('NO SOURCE (UNCLUSTERED)???', source2)
+      return
+    }
 
     const featuresWithPositions = produce(features, (draft) => {
       for (const feature of draft) {
@@ -249,7 +208,6 @@ export const MapView = (props: MapProps) => {
       })
     }
 
-    const source2 = map.getSource(RESTAURANTS_UNCLUSTERED_SOURCE_ID)
     if (source2?.type === 'geojson') {
       source2.setData({
         type: 'FeatureCollection',
@@ -289,77 +247,6 @@ const mapSetFeature = (map: mapboxgl.Map, id: any, obj: any) => {
     },
     obj
   )
-}
-
-const mapSetIconSelected = (map: mapboxgl.Map, id: any) => {
-  // map.setLayoutProperty(PIN_LAYER_ID, 'icon-size', [
-  //   'match',
-  //   ['id'],
-  //   id,
-  //   0.5,
-  //   0.5,
-  // ])
-  // map.setLayoutProperty(PIN_LAYER_ID, 'icon-image', [
-  //   'match',
-  //   ['id'],
-  //   id,
-  //   'map-pin',
-  //   'icon-sushi',
-  // ])
-}
-
-const mapSetIconHovered = (map: mapboxgl.Map, id: any) => {
-  map.setLayoutProperty(POINT_HOVER_LAYER_ID, 'icon-image', [
-    'match',
-    ['id'],
-    id,
-    'map-pin',
-    'map-pin-blank',
-  ])
-}
-
-function animateMarker(map: mapboxgl.Map) {
-  const fps = 4
-  let radius = initialRadius
-  const initialOpacity = 1
-  let opacity = initialOpacity
-  let animate = true
-  let stopAfterFrames = 12 // its cpu intensive..
-
-  function run() {
-    setTimeout(() => {
-      if (!map) return
-      if (animate) {
-        stopAfterFrames--
-        if (stopAfterFrames === 0) return
-        requestAnimationFrame(run)
-      }
-      radius += (maxRadius - radius) / fps
-      opacity -= 0.9 / fps
-      map.setPaintProperty(
-        POINT_HOVER_LAYER_ID,
-        'circle-radius',
-        Math.max(0, radius)
-      )
-      map.setPaintProperty(
-        POINT_HOVER_LAYER_ID,
-        'circle-opacity',
-        Math.max(0, opacity)
-      )
-      if (opacity <= 0) {
-        radius = initialRadius
-        opacity = initialOpacity
-      }
-    }, 1000 / fps)
-  }
-
-  run()
-
-  return () => {
-    map.setPaintProperty(POINT_HOVER_LAYER_ID, 'circle-radius', 0)
-    map.setPaintProperty(POINT_HOVER_LAYER_ID, 'circle-opacity', 0)
-    animate = false
-  }
 }
 
 // this is inside memo...
@@ -404,7 +291,7 @@ function setupMapEffect({
 }) {
   const map = new mapboxgl.Map({
     container: mapNode,
-    style: styles.light,
+    style: props.style,
     center: props.center,
     zoom: 11,
     attributionControl: false,
@@ -436,24 +323,20 @@ function setupMapEffect({
     })
   }
 
-  const loadMap = () =>
-    new Promise((res) => {
-      map?.on('load', res)
-    })
-
   const cancels = new Set<Function>()
 
   cancels.add(
     series([
       () =>
         Promise.all([
-          loadMap(),
-          loadMarker('map-pin', require('../assets/map-pin.png').default),
-          loadMarker('icon-sushi', require('../assets/icon-sushi.png').default),
-          loadMarker(
-            'map-pin-blank',
-            require('../assets/map-pin-blank.png').default
-          ),
+          new Promise((res) => map.on('load', res)),
+          new Promise((res) => map.on('idle', res)), // this waits for style load
+          // loadMarker('map-pin', require('../assets/map-pin.png').default),
+          // loadMarker('icon-sushi', require('../assets/icon-sushi.png').default),
+          // loadMarker(
+          //   'map-pin-blank',
+          //   require('../assets/map-pin-blank.png').default
+          // ),
         ]),
       () => {
         if (!map) return
@@ -663,10 +546,11 @@ function setupMapEffect({
         let curId
         const handleMoveThrottled = throttle(() => {
           const zoom = map.getZoom()
-          const size = {
-            width: map.getContainer().clientWidth,
-            height: map.getContainer().clientHeight,
-          }
+          const { padding } = getProps()
+          const width = map.getContainer().clientWidth - padding.right
+          const height = map.getContainer().clientHeight - padding.bottom
+          const x = width / 2 + padding.left
+          const y = height / 2 + padding.top
           let layerName = ''
           for (const tile of tiles) {
             if (zoom > tile.minZoom && zoom < tile.maxZoom) {
@@ -675,12 +559,9 @@ function setupMapEffect({
             }
           }
           if (!layerName) return
-          const features = map.queryRenderedFeatures(
-            new mapboxgl.Point(size.width / 2, size.height / 2),
-            {
-              layers: [`${layerName}.fill`],
-            }
-          )
+          const features = map.queryRenderedFeatures(new mapboxgl.Point(x, y), {
+            layers: [`${layerName}.fill`],
+          })
           const feature = features[0]
           if (!feature) return
           if (feature.id === curId) return
@@ -758,7 +639,6 @@ function setupMapEffect({
         })
 
         const handleClick = (e) => {
-          console.log('clik', e)
           if (!map) return
           const points = map.queryRenderedFeatures(e.point, {
             layers: [POINT_LAYER_ID],
@@ -796,8 +676,6 @@ function setupMapEffect({
           })
           const boundary = boundaries[0]
           if (boundary) {
-            console.log('go to boundary', boundary)
-
             // @ts-ignore
             const center = getCenter(boundary.geometry)
             if (center) {
@@ -809,7 +687,7 @@ function setupMapEffect({
         }
         map.on('click', handleClick)
         cancels.add(() => {
-          map?.off('click', handleClick)
+          map.off('click', handleClick)
         })
 
         map.addSource(RESTAURANTS_SOURCE_ID, {
@@ -842,19 +720,11 @@ function setupMapEffect({
           type: 'circle',
           source: RESTAURANTS_SOURCE_ID,
           paint: {
-            // 'circle-radius': {
-            //   stops: [
-            //     [8, 1],
-            //     [10, 4],
-            //     [14, 8],
-            //     [16, 16],
-            //   ],
-            // },
             'circle-radius': [
               'case',
               ['boolean', ['feature-state', 'hover'], false],
-              25,
-              10,
+              8,
+              6,
             ],
 
             'circle-stroke-width': {
@@ -893,7 +763,7 @@ function setupMapEffect({
           },
         })
         cancels.add(() => {
-          map?.removeLayer(POINT_LAYER_ID)
+          map.removeLayer(POINT_LAYER_ID)
         })
 
         map.addLayer({
@@ -902,15 +772,15 @@ function setupMapEffect({
           type: 'circle',
           filter: ['==', 'id', ''],
           paint: {
-            'circle-radius': 20,
-            'circle-color': 'red',
+            'circle-radius': 12,
+            'circle-color': blue,
             // 'icon-allow-overlap': true,
             // 'icon-ignore-placement': true,
             // 'icon-size': 0.25,
           },
         })
         cancels.add(() => {
-          map?.removeLayer(POINT_HOVER_LAYER_ID)
+          map.removeLayer(POINT_HOVER_LAYER_ID)
         })
 
         map.addLayer({
@@ -933,9 +803,8 @@ function setupMapEffect({
             'text-halo-width': 1,
           },
         })
-
         cancels.add(() => {
-          map?.removeLayer(UNCLUSTERED_LABEL_LAYER_ID)
+          map.removeLayer(UNCLUSTERED_LABEL_LAYER_ID)
         })
 
         map.addLayer({
@@ -954,13 +823,13 @@ function setupMapEffect({
             'text-anchor': 'top',
           },
           paint: {
-            'text-halo-color': '#70b600',
-            'text-halo-width': 1,
+            'text-color': blue,
+            // 'text-halo-color': '#70b600',
+            // 'text-halo-width': 1,
           },
         })
-
         cancels.add(() => {
-          map?.removeLayer(RESTAURANT_SEARCH_POSITION_LABEL_ID)
+          map.removeLayer(RESTAURANT_SEARCH_POSITION_LABEL_ID)
         })
 
         map.addLayer({
@@ -986,7 +855,7 @@ function setupMapEffect({
           },
         })
         cancels.add(() => {
-          map?.removeLayer(CLUSTER_LABEL_LAYER_ID)
+          map.removeLayer(CLUSTER_LABEL_LAYER_ID)
         })
 
         type Event = mapboxgl.MapMouseEvent & {
@@ -1001,16 +870,12 @@ function setupMapEffect({
 
           // only one at a time
           if (hoverId != null) {
-            // map.setLayoutProperty(UNCLUSTE, 'icon-image', 'mountain-15')
             mapSetFeature(map, hoverId, { hover: false })
             hoverId = null
           }
           const id = e.features?.[0].id ?? -1
           if (id > -1 && hoverId != id) {
             if (hover) {
-              // map.setFilter(POINT_HOVER_LAYER_ID, ['==', 'id', id])
-              mapSetIconSelected(map, id)
-              // map.setLayoutProperty(UNCLUSTE, 'icon-image', 'bar-15')
               hoverId = +id
               mapSetFeature(map, hoverId, { hover: true })
             }
@@ -1034,7 +899,7 @@ function setupMapEffect({
         }
         map.on('mouseenter', POINT_LAYER_ID, hoverCluster)
         cancels.add(() => {
-          map?.off('mouseenter', POINT_LAYER_ID, hoverCluster)
+          map.off('mouseenter', POINT_LAYER_ID, hoverCluster)
         })
         function unHoverCluster() {
           getProps().onHover(null)
@@ -1044,9 +909,7 @@ function setupMapEffect({
         }
         map.on('mouseleave', POINT_LAYER_ID, unHoverCluster)
         cancels.add(() => {
-          if (map) {
-            map.off('mouseleave', POINT_LAYER_ID, unHoverCluster)
-          }
+          map.off('mouseleave', POINT_LAYER_ID, unHoverCluster)
         })
 
         /*
@@ -1081,8 +944,8 @@ function setupMapEffect({
         map.on('movestart', cancelMoveEnd)
         map.on('moveend', handleMoveEnd)
         cancels.add(() => {
-          map?.off('movestart', cancelMoveEnd)
-          map?.off('moveend', handleMoveEnd)
+          map.off('movestart', cancelMoveEnd)
+          map.off('moveend', handleMoveEnd)
         })
 
         const handleMove: Listener = () => {
@@ -1092,8 +955,8 @@ function setupMapEffect({
         map.on('move', handleMove)
         map.on('movestart', handleMove)
         cancels.add(() => {
-          map?.off('move', handleMove)
-          map?.off('movestart', handleMove)
+          map.off('move', handleMove)
+          map.off('movestart', handleMove)
         })
 
         const handleDoubleClick: Listener = (e) => {
@@ -1105,24 +968,27 @@ function setupMapEffect({
         }
         map.on('dblclick', CLUSTER_LABEL_LAYER_ID, handleDoubleClick)
         cancels.add(() => {
-          map?.off('dblclick', CLUSTER_LABEL_LAYER_ID, handleDoubleClick)
+          map.off('dblclick', CLUSTER_LABEL_LAYER_ID, handleDoubleClick)
         })
 
         // remove sources last
         cancels.add(() => {
-          map?.removeSource(RESTAURANTS_SOURCE_ID)
-          map?.removeSource(RESTAURANTS_UNCLUSTERED_SOURCE_ID)
+          map.removeSource(RESTAURANTS_SOURCE_ID)
+          map.removeSource(RESTAURANTS_UNCLUSTERED_SOURCE_ID)
         })
       },
       () => {
-        map?.resize()
+        map.resize()
         setMap(map)
-        if (map) props.mapRef?.(map)
+        if (map) {
+          props.mapRef?.(map)
+        }
       },
     ])
   )
 
   return () => {
+    console.warn('❌ cleaning up effect')
     cancels.forEach((c) => c())
     if (mapNode) {
       mapNode.innerHTML = ''
@@ -1262,3 +1128,9 @@ window['getCurrentLocation'] = getCurrentLocation
 //     }
 //   }
 // }
+
+// only way to check if matching, i believe
+function hasChangedStyle(map: mapboxgl.Map, style: string) {
+  const { sprite } = map.getStyle()
+  return !sprite.includes(style.replace('mapbox://styles', ''))
+}

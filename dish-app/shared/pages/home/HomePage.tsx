@@ -2,6 +2,7 @@ import { fullyIdle, series } from '@dish/async'
 import {
   LngLat,
   RestaurantOnlyIds,
+  SEARCH_DOMAIN,
   TopCuisine,
   getHomeDishes,
   graphql,
@@ -26,31 +27,37 @@ import {
   useTheme,
 } from 'snackui'
 
-import { drawerWidthMax, searchBarHeight } from '../../constants'
+import {
+  drawerWidthMax,
+  searchBarHeight,
+  searchBarHeightWithPadding,
+} from '../../constants'
+import { DishHorizonView } from '../../DishHorizonView'
 import { RegionNormalized, useRegionQuery } from '../../helpers/fetchRegion'
+import { getGroupedButtonProps } from '../../helpers/getGroupedButtonProps'
 import { DishTagItem } from '../../helpers/getRestaurantDishes'
 import { selectTagDishViewSimple } from '../../helpers/selectDishViewSimple'
+import { useQueryLoud } from '../../helpers/useQueryLoud'
 import { usePageLoadEffect } from '../../hooks/usePageLoadEffect'
 import { useRestaurantQuery } from '../../hooks/useRestaurantQuery'
-import { sfRegion } from '../../sfRegion'
-import { HomeStateItemHome, Region } from '../../state/home-types'
+import { HomeStateItemHome } from '../../state/home-types'
 import { omStatic } from '../../state/omStatic'
 import { router } from '../../state/router'
 import { useOvermind } from '../../state/useOvermind'
+import { CardFrame, useCardFrame } from '../../views/CardFrame'
 import { CommentBubble } from '../../views/CommentBubble'
 import { ContentScrollView } from '../../views/ContentScrollView'
 import { DishView } from '../../views/dish/DishView'
 import { PageFooter } from '../../views/layout/PageFooter'
+import { LinkButton } from '../../views/ui/LinkButton'
+import { LinkButtonProps } from '../../views/ui/LinkProps'
 import { PageTitleTag } from '../../views/ui/PageTitleTag'
-import { SlantedBox } from '../../views/ui/SlantedBox'
 import { SlantedTitle } from '../../views/ui/SlantedTitle'
-import { CardFrame } from '../restaurant/CardFrame'
 import { RestaurantButton } from '../restaurant/RestaurantButton'
 import { RestaurantCard } from '../restaurant/RestaurantCard'
 import { peachAvatar } from '../search/avatar'
 import { StackViewProps } from '../StackViewProps'
 import { HomeTopSearches } from './HomeTopSearches'
-import { useCardFrame } from './useCardFrame'
 
 type Props = StackViewProps<HomeStateItemHome>
 
@@ -58,13 +65,13 @@ type FeedItemBase = {
   id: string
   rank: number
   expandable: boolean
+  transparent?: boolean
 }
 
 type FeedItemDish = FeedItemBase & {
   type: 'dish'
   dish: DishTagItem
-  restaurantId: string
-  restaurantSlug: string
+  restaurant: RestaurantOnlyIds
 }
 
 type FeedItemDishRestaurants = FeedItemBase & {
@@ -80,8 +87,7 @@ type FeedItemCuisine = FeedItemBase &
 
 type FeedItemRestaurant = FeedItemBase & {
   type: 'restaurant'
-  restaurantSlug: string
-  restaurantId: string
+  restaurant: RestaurantOnlyIds
 }
 
 type FeedItems =
@@ -105,7 +111,7 @@ export default memo(function HomePage(props: Props) {
       router.navigate({
         name: 'homeRegion',
         params: {
-          region: sfRegion.slug,
+          region: 'ca-san-francisco',
         },
       })
     }
@@ -126,6 +132,7 @@ export default memo(function HomePage(props: Props) {
   useEffect(() => {
     if (!region.data) return
     const { center, span } = region.data
+    console.log('we got a region', center, span)
     if (!center || !span) return
     om.actions.home.updateCurrentState({
       center,
@@ -142,13 +149,30 @@ export default memo(function HomePage(props: Props) {
     }
   }, [props.isActive])
 
-  const regionName =
-    region.data?.name
-      .toLowerCase()
-      .replace('ca- ', '')
-      .split(' ')
-      .map((x) => capitalize(x))
-      .join(' ') ?? '...'
+  const regionName = (() => {
+    let next =
+      (region.data?.name ?? '')
+        .toLowerCase()
+        .replace('ca- ', '')
+        .split(' ')
+        .map((x) => capitalize(x))
+        .join(' ') ?? ''
+    if (next === '') return '...'
+    return next
+  })()
+
+  const navLinks: LinkButtonProps[] = [
+    {
+      name: 'homeRegion',
+      params: { region: props.item.region, section: '' },
+      children: 'Hot',
+    },
+    {
+      name: 'homeRegion',
+      params: { region: props.item.region, section: 'new' },
+      children: 'New',
+    },
+  ]
 
   return (
     <>
@@ -187,18 +211,65 @@ export default memo(function HomePage(props: Props) {
         alignSelf="flex-end"
       >
         <ContentScrollView id="home">
+          <AbsoluteVStack
+            opacity={0.05}
+            top={0}
+            right={0}
+            left={0}
+            height={700}
+          >
+            <DishHorizonView />
+          </AbsoluteVStack>
           <VStack flex={1} overflow="hidden" maxWidth="100%">
             <VStack>
               <HomeTopSpacer />
-              <Spacer size="lg" />
-              <HomeTopSearches />
-              <Spacer />
-              <VStack position="relative" alignItems="center">
-                <SlantedTitle size="xxl" alignSelf="center">
-                  {regionName}
-                </SlantedTitle>
-              </VStack>
-              <Spacer size="xl" />
+
+              <Spacer size="md" />
+
+              <HStack>
+                <ScrollView horizontal showsHorizontalScrollIndicator={false}>
+                  <HStack paddingVertical={10} paddingHorizontal={10}>
+                    <SlantedTitle
+                      position="relative"
+                      overflow="visible"
+                      minWidth={80}
+                      size="xl"
+                    >
+                      {regionName}
+
+                      <HStack position="absolute" bottom="-90%" right="2%">
+                        {navLinks.map((linkProps, index) => {
+                          return (
+                            <LinkButton
+                              key={index}
+                              backgroundColor="#fff"
+                              shadowColor="#000"
+                              shadowOpacity={0.1}
+                              shadowRadius={3}
+                              paddingHorizontal={8}
+                              fontSize={14}
+                              color={
+                                props.item.section === linkProps.params.section
+                                  ? 'red'
+                                  : '#888'
+                              }
+                              {...getGroupedButtonProps({
+                                index,
+                                items: navLinks,
+                              })}
+                              {...linkProps}
+                            />
+                          )
+                        })}
+                      </HStack>
+                    </SlantedTitle>
+                    <HomeTopSearches />
+                  </HStack>
+                </ScrollView>
+              </HStack>
+
+              <Spacer size="md" />
+
               <Spacer />
               <Suspense
                 fallback={
@@ -229,6 +300,9 @@ const HomeTopSpacer = () => {
   )
 }
 
+const isRestaurantFeedItem = (x: FeedItems): x is FeedItemRestaurant =>
+  x.type === 'restaurant'
+
 const HomePageContent = memo(
   graphql(function HomePageContent({
     region,
@@ -238,19 +312,19 @@ const HomePageContent = memo(
     item: HomeStateItemHome
   }) {
     const media = useMedia()
-    const items = useHomeFeed(item, region)
-    const results = items
-      .filter((x) => x.type === 'restaurant')
-      .map((x) => ({ id: x['restaurantId'], slug: x['restaurantSlug'] }))
+    const isNew = item.section === 'new'
+    const items = useHomeFeed(item, region, isNew)
+    const results = items.filter(isRestaurantFeedItem)
     const isLoading = !region || items[0]?.id === null
 
     useEffect(() => {
       if (isLoading) return
-      omStatic.actions.home.updateHomeState({
-        id: item.id,
-        results,
-      })
-    }, [JSON.stringify(results)])
+      const next: HomeStateItemHome = {
+        ...item,
+        results: results.map((x) => x.restaurant),
+      }
+      omStatic.actions.home.updateHomeState(next)
+    }, [isLoading, JSON.stringify(results)])
 
     const [expandable, unexpandable] = partition(items, (x) => x.expandable)
     const unshuffled = zip(expandable, unexpandable).flat().slice(0, 12)
@@ -276,7 +350,7 @@ const HomePageContent = memo(
               minHeight={Dimensions.get('window').height * 0.9}
             >
               <HStack
-                justifyContent="space-around"
+                justifyContent="center"
                 flexWrap="wrap"
                 maxWidth={830}
                 alignSelf="center"
@@ -306,7 +380,10 @@ const HomePageContent = memo(
                       // flex={1}
                       alignItems="center"
                     >
-                      <CardFrame expandable={item.expandable}>
+                      <CardFrame
+                        transparent={item.transparent}
+                        expandable={item.expandable}
+                      >
                         {content}
                       </CardFrame>
                     </VStack>
@@ -330,8 +407,26 @@ const useTopCuisines = (center: LngLat) => {
   return useQuery('topcuisine', () => getHomeCuisines(center))
 }
 
-function useHomeFeed(item: HomeStateItemHome, region?: RegionNormalized) {
-  const restaurants = region?.bbox
+function useHomeFeed(
+  item: HomeStateItemHome,
+  region?: RegionNormalized,
+  isNew?: boolean
+) {
+  const slug = item.region ?? ''
+  const homeFeed = useQueryLoud<{
+    trending: RestaurantOnlyIds[]
+    newest: RestaurantOnlyIds[]
+  }>(
+    `HOMEFEEDQUERY-${slug}`,
+    () =>
+      fetch(
+        `${SEARCH_DOMAIN}/feed?region=${encodeURIComponent(slug)}&limit=20`
+      ).then((res) => res.json()),
+    { enabled: !!item.region }
+  )
+
+  const feedRestaurants = homeFeed.data?.[isNew ? 'new' : 'trending'] ?? []
+  const backupRestaurants = region?.bbox
     ? query.restaurant({
         where: {
           location: {
@@ -341,10 +436,14 @@ function useHomeFeed(item: HomeStateItemHome, region?: RegionNormalized) {
           votes_ratio: { _is_null: false },
         },
         order_by: [{ votes_ratio: order_by.desc }],
-        limit: 8,
+        limit: 10,
       })
     : []
 
+  const restaurants = uniqBy(
+    [...feedRestaurants, ...backupRestaurants],
+    (x) => x.id
+  )
   const cuisines = useTopCuisines(item.center)
 
   const dishes = query.tag({
@@ -364,12 +463,15 @@ function useHomeFeed(item: HomeStateItemHome, region?: RegionNormalized) {
           ...dishes.map(
             (dish, index): FeedItems => {
               return {
+                id: `dish-${dish.id}`,
                 type: 'dish',
                 expandable: false,
-                id: dish.id,
                 rank: Math.random() * 10,
-                restaurantId: restaurants[0]?.id ?? '',
-                restaurantSlug: restaurants[0]?.slug ?? '',
+                transparent: true,
+                restaurant: {
+                  id: restaurants[0]?.id ?? '',
+                  slug: restaurants[0]?.slug ?? '',
+                },
                 dish: {
                   id: dish.id ?? '',
                   slug: dish.slug ?? '',
@@ -384,9 +486,9 @@ function useHomeFeed(item: HomeStateItemHome, region?: RegionNormalized) {
           ...dishes.map(
             (dish, index): FeedItems => {
               return {
+                id: `dish-restaurant-${dish.id}`,
                 type: 'dish-restaurants',
                 expandable: true,
-                id: dish.id,
                 rank: index + (index % 2 ? 10 : 0),
                 dish: {
                   id: dish.id ?? '',
@@ -407,9 +509,9 @@ function useHomeFeed(item: HomeStateItemHome, region?: RegionNormalized) {
           ...(cuisines.data ?? []).map(
             (item, index): FeedItems => {
               return {
+                id: `cuisine-${item.country}`,
                 type: 'cuisine',
                 expandable: true,
-                id: item.country,
                 rank: index + (index % 3 ? 30 : 0),
                 ...item,
               } as const
@@ -418,12 +520,14 @@ function useHomeFeed(item: HomeStateItemHome, region?: RegionNormalized) {
           ...restaurants.map(
             (item, index): FeedItems => {
               return {
-                id: item.id,
+                id: `restaurant-${item.id}`,
                 expandable: false,
                 type: 'restaurant',
-                restaurantId: item.id,
-                restaurantSlug: item.slug,
                 rank: index,
+                restaurant: {
+                  id: item.id,
+                  slug: item.slug,
+                },
               } as const
             }
           ),
@@ -536,36 +640,29 @@ const DishCol = (props: StackProps) => {
 }
 
 const DishFeedCard = graphql(function DishFeedCard(props: FeedItemDish) {
-  const restaurant = useRestaurantQuery(props.restaurantSlug)
+  const restaurant = useRestaurantQuery(props.restaurant.slug)
   const cardFrame = useCardFrame()
   return (
     <VStack
       height={cardFrame.height}
       borderRadius={20}
       alignItems="center"
-      justifyContent="space-between"
+      justifyContent="center"
       overflow="hidden"
       flexWrap="nowrap"
     >
-      <Text
-        alignSelf="flex-start"
-        selectable
-        lineHeight={28}
-        maxHeight={28}
-        fontSize={18}
-        fontWeight="400"
-        color="#fff"
-        padding={10}
-        backgroundColor="rgba(0,0,0,0.85)"
-        shadowColor="#000"
-        shadowOpacity={0.2}
-        shadowRadius={5}
-        shadowOffset={{ height: 3, width: 0 }}
-        borderRadius={7}
-      >
-        {restaurant.name}
-      </Text>
-      <DishView showSearchButton size={cardFrame.width - 20} {...props} />
+      <VStack position="relative" alignSelf="center">
+        <SlantedTitle
+          position="absolute"
+          top={10}
+          left={10}
+          alignSelf="flex-start"
+          size="xl"
+        >
+          {restaurant.name}
+        </SlantedTitle>
+        <DishView showSearchButton size={cardFrame.width} {...props} />
+      </VStack>
       <Text fontSize={14} lineHeight={22} opacity={0.4} margin={4}>
         lorem ipsume dolor sit amet lorem ipsume dolor sit amet lorem ipsume
         dolor sit amet lorem ipsume dolor sit amet.
@@ -619,7 +716,8 @@ const DishRestaurantsFeedCard = (props: FeedItemDishRestaurants) => {
 const RestaurantFeedCard = (props: FeedItemRestaurant) => {
   return (
     <RestaurantCard
-      {...props}
+      restaurantId={props.restaurant.id}
+      restaurantSlug={props.restaurant.slug}
       below={
         <CommentBubble
           name="Test"

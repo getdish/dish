@@ -23,6 +23,8 @@ export const pageWidthMax = 2000
 
 export const searchBarTopOffset = 3
 export const searchBarHeight = 50
+export const searchBarHeightWithPadding =
+  searchBarHeight + searchBarTopOffset + 12
 export const searchBarMaxWidth = pageWidthMax - 640
 
 export const LIVE_SEARCH_DOMAIN = 'https://search.dishapp.com'
@@ -48,7 +50,7 @@ export const slantedBoxStyle = {
   paddingVertical: 7,
   paddingHorizontal: 10,
   shadowColor: '#000',
-  shadowOpacity: 0.12,
+  shadowOpacity: 0.1,
   shadowRadius: 6,
   shadowOffset: { height: 2, width: 0 },
   borderRadius: 5,

@@ -9,7 +9,7 @@ type CircleButtonProps = StackProps & {
 export const CloseButton = memo((props: CircleButtonProps) => {
   return (
     <SmallCircleButton {...props}>
-      <X size={props.size ?? 14} color="white" style={{ marginTop: 1 }} />
+      <X size={props.size ?? 14} color="white" />
     </SmallCircleButton>
   )
 })

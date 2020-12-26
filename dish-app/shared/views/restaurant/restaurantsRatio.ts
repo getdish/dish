@@ -1,7 +1,9 @@
 import { RestaurantQuery } from '@dish/graph'
 
 export const restaurantRatio = (restaurant: RestaurantQuery) => {
-  const ups = restaurant.upvotes ?? 0
-  const downs = restaurant.downvotes ?? 0
-  return ups / (ups + downs)
+  return restaurant.rating * 20
+  // not working, returning empty for most
+  // const ups = restaurant.upvotes ?? 1
+  // const downs = restaurant.downvotes ?? 1
+  // return ups / (ups + downs)
 }

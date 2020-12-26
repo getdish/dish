@@ -20,6 +20,7 @@ import {
   useGet,
   useMedia,
   useOnMount,
+  useTheme,
 } from 'snackui'
 
 import { AppAutocompleteHoverableInput } from './AppAutocompleteHoverableInput'
@@ -105,8 +106,8 @@ export const AppSearchInput = memo(() => {
   // const { showAutocomplete } = om.state.home
 
   const height = searchBarHeight - 2
-  const outerHeight = height - 5
-  const innerHeight = height - 5
+  const outerHeight = height - 1
+  const innerHeight = height - 1
 
   useOnMount(() => {
     searchBar = inputStore.node
@@ -174,10 +175,10 @@ export const AppSearchInput = memo(() => {
       <HStack
         alignItems="center"
         borderRadius={180}
-        borderWidth={media.sm ? 0 : 2}
-        backgroundColor={darkPink}
+        backgroundColor="#222"
+        borderWidth={2}
         borderColor="rgba(0,0,0,0.3)"
-        shadowColor="#000"
+        shadowColor="#333"
         shadowRadius={15}
         shadowOpacity={0.2}
         flex={1}
@@ -187,12 +188,25 @@ export const AppSearchInput = memo(() => {
         position="relative"
         hoverStyle={{
           borderColor: 'rgba(255,255,255,0.125)',
-          backgroundColor: 'rgba(45,45,45,0.25)',
+          backgroundColor: 'rgba(45,45,45,1)',
         }}
         focusStyle={{
           borderColor: 'rgba(255,255,255,0.14)',
-          backgroundColor: 'rgba(45,45,45,0.5)',
+          backgroundColor: 'rgba(45,45,45,1)',
         }}
+        {...(media.sm && {
+          backgroundColor: '#f2f2f2',
+          borderRadius: 12,
+          borderWidth: 0,
+          shadowRadius: 0,
+          shadowColor: 'transparent',
+          hoverStyle: {
+            backgroundColor: '#eee',
+          },
+          focusStyle: {
+            backgroundColor: '#f2f2f2',
+          },
+        })}
       >
         <AbsoluteVStack
           fullscreen
@@ -200,17 +214,7 @@ export const AppSearchInput = memo(() => {
           borderWidth={1}
           borderColor="rgba(255,255,255,0.2)"
         />
-        <AbsoluteVStack
-          top={-90}
-          bottom={-90}
-          right={-90}
-          left={90}
-          transform={[{ translateY: 40 }, { scale: 0.75 }]}
-          display={media.sm ? 'none' : 'flex'}
-          // opacity={0.8}
-        >
-          <DishHorizonView />
-        </AbsoluteVStack>
+
         {/* Loading / Search Icon */}
         <VStack
           width={16}
@@ -402,7 +406,6 @@ const handleKeyPress = async (e: any, inputStore: InputStore) => {
           })
         }
       } else {
-        //@ts-expect-error overmind type error
         omStatic.actions.home.runSearch({
           searchQuery: e.target.value,
           force: true,
@@ -493,10 +496,10 @@ const AppSearchInputTags = memo(
               const isActive = focusedTag === tag
               return (
                 <TagButton
-                  className="no-transition"
                   key={getTagSlug(tag)}
+                  size="lg"
                   subtleIcon
-                  backgroundColor="rgba(150,150,150,0.25)"
+                  backgroundColor="rgba(150,150,150,0.65)"
                   color={'#fff'}
                   shadowColor="#00000022"
                   fontWeight="600"
@@ -505,7 +508,7 @@ const AppSearchInputTags = memo(
                   borderColor={'transparent'}
                   borderRadius={100}
                   hoverStyle={{
-                    backgroundColor: 'rgba(150,150,150,0.3)',
+                    backgroundColor: 'rgba(150,150,150,0.7)',
                   }}
                   {...(isActive && {
                     backgroundColor: 'rgba(150,150,150,0.1)',
@@ -517,13 +520,13 @@ const AppSearchInputTags = memo(
                   {...(!isWeb && {
                     transform: [{ translateY: 2 }],
                   })}
-                  size="lg"
                   {...getTagButtonProps(tag)}
                   onPress={() => {
                     om.actions.home.setSearchBarFocusedTag(tag)
                   }}
                   closable
                   onClose={async () => {
+                    console.log('navigate to close', tag)
                     om.actions.home.navigate({ tags: [tag] })
                     await fullyIdle()
                     setAvoidNextAutocompleteShowOnFocus()

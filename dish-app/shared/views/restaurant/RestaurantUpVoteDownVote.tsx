@@ -8,9 +8,18 @@ import {
   Heart,
   ThumbsDown,
 } from '@dish/react-feather'
+import { rest } from 'lodash'
 import React, { Suspense, memo } from 'react'
 import { GestureResponderEvent } from 'react-native'
-import { AbsoluteVStack, StackProps, Text, Tooltip, VStack } from 'snackui'
+import {
+  AbsoluteVStack,
+  HStack,
+  StackProps,
+  Text,
+  TextSuperScript,
+  Tooltip,
+  VStack,
+} from 'snackui'
 
 import { numberFormat } from '../../helpers/numberFormat'
 import { useRestaurantQuery } from '../../hooks/useRestaurantQuery'
@@ -21,6 +30,8 @@ import { restaurantRatio } from './restaurantsRatio'
 import { SentimentCircle } from './SentimentCircle'
 import { VoteButton } from './VoteButton'
 
+type RatingDisplay = 'ratio' | 'points'
+
 type UpvoteDownvoteProps = {
   restaurantSlug: string
   activeTags?: HomeActiveTagsRecord
@@ -28,6 +39,8 @@ type UpvoteDownvoteProps = {
   // only to override
   score?: number
   ratio?: number
+  display?: RatingDisplay
+  rounded?: boolean
 }
 
 export const RestaurantUpVoteDownVote = (props: UpvoteDownvoteProps) => {
@@ -46,14 +59,17 @@ const RestaurantUpVoteDownVoteContents = memo(
     restaurantSlug,
     onClickPoints,
     activeTags,
+    rounded,
     score,
     ratio,
+    display,
   }: UpvoteDownvoteProps) {
     const restaurant = useRestaurantQuery(restaurantSlug)
     const { vote, setVote } = useUserTagVotes(restaurantSlug, activeTags)
 
-    ratio = ratio ?? restaurantRatio(restaurant)
-    score = (score ?? restaurant.score) + vote
+    ratio = Math.round(ratio ?? restaurantRatio(restaurant))
+    score =
+      display === 'ratio' ? ratio : score ?? Math.round(restaurant.score) + vote
 
     return (
       <VStack pointerEvents="auto" position="relative">
@@ -75,19 +91,20 @@ const RestaurantUpVoteDownVoteContents = memo(
           shadowOpacity={0.1}
           shadowOffset={{ height: 2, width: 0 }}
           shadowRadius={7}
-          borderRadius={12}
+          borderRadius={rounded ? 100 : 12}
           padding={2}
           paddingHorizontal={5}
           transform={[{ skewX: '-12deg' }]}
         >
           <VStack alignItems="flex-end" transform={[{ skewX: '12deg' }]}>
-            <TotalScore
+            <RatingWithVotes
               score={score}
               ratio={ratio}
               vote={vote}
               setVote={setVote}
               onClickPoints={onClickPoints}
               isMultiple={Object.keys(activeTags).length > 1}
+              display={display}
             />
           </VStack>
         </VStack>
@@ -96,7 +113,7 @@ const RestaurantUpVoteDownVoteContents = memo(
   })
 )
 
-const TotalScore = memo(
+const RatingWithVotes = memo(
   ({
     score,
     vote,
@@ -105,6 +122,7 @@ const TotalScore = memo(
     onClickPoints,
     isMultiple,
     size,
+    display,
   }: {
     size?: 'sm' | 'md'
     ratio?: number
@@ -114,11 +132,11 @@ const TotalScore = memo(
     onClickPoints?: (event: GestureResponderEvent) => void
     subtle?: boolean
     isMultiple?: boolean
+    display?: RatingDisplay
   }) => {
-    score = Math.round(score)
     const voteButtonColor = subtle ? '#f2f2f2' : null
     const scale = size === 'sm' ? 0.75 : 1
-    const sizePx = 50 * scale
+    const sizePx = 46 * scale
     const isOpenProp =
       vote === 0
         ? null
@@ -154,6 +172,7 @@ const TotalScore = memo(
     )
 
     const color = '#000' //ratio < 0.4 ? lightRed : ratio < 0.6 ? lightOrange : '#fff'
+    const fontSize = Math.min(16, sizePx / `${score}`.length) * scale * 1.075
 
     return (
       <VStack
@@ -171,16 +190,26 @@ const TotalScore = memo(
             </Tooltip>
           )}
         </AbsoluteVStack>
-        <Text
-          fontSize={Math.min(16, sizePx / `${score}`.length) * scale * 1.075}
-          fontWeight="600"
-          letterSpacing={-0.5}
-          color={color}
-          cursor="default"
-          onPress={onClickPoints}
-        >
-          {numberFormat(score ?? 0)}
-        </Text>
+        <HStack>
+          <Text
+            fontSize={fontSize}
+            fontWeight="600"
+            letterSpacing={-0.5}
+            color={color}
+            cursor="default"
+            onPress={onClickPoints}
+          >
+            {numberFormat(score ?? 0)}
+          </Text>
+          {display === 'ratio' && (
+            <TextSuperScript
+              marginRight={-fontSize * 0.4}
+              fontSize={fontSize * 0.6}
+            >
+              %
+            </TextSuperScript>
+          )}
+        </HStack>
         <AbsoluteVStack bottom={-10}>
           {subtle ? (
             downvote

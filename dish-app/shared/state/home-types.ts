@@ -138,6 +138,8 @@ export type HomeStateItemHome = HomeStateItemBase & {
   type: 'home'
   activeTags: HomeActiveTagsRecord
   region: string
+  section: string
+  results?: RestaurantOnlyIds[]
 }
 
 export type HomeStateItemBlog = HomeStateItemBase & {

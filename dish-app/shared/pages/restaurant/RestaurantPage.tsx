@@ -53,7 +53,7 @@ const RestaurantPage = memo(
             lng: coords?.[0],
             lat: coords?.[1],
           },
-          span: getMinLngLat(item.span, 0.05, 0.05),
+          span: getMinLngLat(item.span, 0.004, 0.004),
         })
       },
       [coords]
@@ -113,7 +113,7 @@ const RestaurantPage = memo(
                 }
               >
                 <RestaurantDishPhotos
-                  size={120}
+                  size={140}
                   max={40}
                   restaurantSlug={restaurantSlug}
                   restaurantId={restaurant.id ?? undefined}

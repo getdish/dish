@@ -268,8 +268,9 @@ const RestaurantListItemContent = memo(
         />
 
         {tagIds && (
-          <AbsoluteVStack top={34} left={-12} zIndex={2000000}>
+          <AbsoluteVStack top={34} left={-5} zIndex={2000000}>
             <RestaurantUpVoteDownVote
+              rounded
               score={Math.round((meta?.effective_score ?? 0) / 10)}
               restaurantSlug={restaurantSlug}
               activeTags={tagIds}
@@ -341,7 +342,7 @@ const RestaurantListItemContent = memo(
               </VStack>
             </Link>
 
-            <Spacer size="lg" />
+            <Spacer size="xl" />
 
             {/* SECOND ROW TITLE */}
             <VStack
@@ -425,10 +426,11 @@ const RestaurantListItemContent = memo(
                       contents={`Rating Breakdown (${totalReviews} reviews)`}
                     >
                       <SmallButton
-                        name="restaurantReviews"
+                        name="restaurant"
                         params={{
                           id: props.restaurantId,
                           slug: props.restaurantSlug,
+                          section: 'reviews',
                         }}
                         before={
                           <MessageSquare

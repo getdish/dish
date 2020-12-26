@@ -24,5 +24,9 @@ export const AppSmallDrawer = (props: { children: any }) => {
     )
   }, [])
 
-  return <AppSmallDrawerView {...props} />
+  return (
+    <>
+      <AppSmallDrawerView {...props} />
+    </>
+  )
 }

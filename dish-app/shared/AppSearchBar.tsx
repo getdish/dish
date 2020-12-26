@@ -14,6 +14,7 @@ import {
 import { AppMenu } from './AppMenu'
 import { AppSearchInput } from './AppSearchInput'
 import { AppSearchLocationInput } from './AppSearchLocationInput'
+import { bgLightTranslucent } from './colors'
 import {
   searchBarHeight,
   searchBarMaxWidth,
@@ -82,7 +83,7 @@ export const AppSearchBarFloating = () => {
       <AbsoluteVStack fullscreen zIndex={-1}>
         <LinearGradient
           style={[StyleSheet.absoluteFill]}
-          colors={['rgba(0,0,0,0.15)', `rgba(0,0,0,0.0)`]}
+          colors={[bgLightTranslucent, `rgba(255,255,255,0)`]}
         />
       </AbsoluteVStack>
       <VStack
@@ -102,7 +103,7 @@ export const AppSearchBarFloating = () => {
           height={height}
           justifyContent="center"
           alignItems="center"
-          backgroundColor="#151515"
+          backgroundColor="#111"
           shadowColor="rgba(0,0,0,0.3)"
           shadowOffset={{ height: 1, width: 0 }}
           shadowRadius={15}
@@ -134,7 +135,10 @@ export const AppSearchBarFloating = () => {
           />
           <AbsoluteVStack
             opacity={0.45}
-            fullscreen
+            top={0}
+            right={0}
+            bottom={0}
+            width={300}
             transform={[{ translateX: 240 }]}
           >
             <DishHorizonView />
@@ -179,10 +183,10 @@ const AppSearchBarContents = memo(() => {
       alignItems="center"
       justifyContent="center"
       userSelect="none"
-      paddingHorizontal={10}
+      paddingHorizontal={media.xs ? 5 : 10}
       minHeight={searchBarHeight}
     >
-      <VStack paddingHorizontal={media.xs ? 0 : 6}>
+      <VStack paddingHorizontal={6}>
         <DishLogoButton />
       </VStack>
 
@@ -231,7 +235,7 @@ const AppSearchBarContents = memo(() => {
 
       {!media.xs && (
         <>
-          <Spacer size={16} />
+          <Spacer size={12} />
           <VStack
             className="ease-in-out"
             overflow="hidden"
@@ -326,7 +330,7 @@ const SearchBarActionButton = memo(() => {
         },
       })}
     >
-      <Icon color={color} size={20} style={{ marginTop: 3 }} />
+      <Icon color={color} size={20} />
     </LinkButton>
   )
 })

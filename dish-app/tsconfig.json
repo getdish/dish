@@ -14,7 +14,7 @@
     "outDir": "_",
     "noEmit": true,
     "noEmitHelpers": true,
-    "noImplicitReturns": true,
+    "noImplicitReturns": false,
     "skipLibCheck": true,
     "target": "esnext",
     "allowJs": true,

@@ -166,7 +166,7 @@ export const state: HomeState = {
 
 export const isOnOwnProfile = (state: OmState) => {
   const username = state.user?.user?.username
-  return username && slugify(username) === state.router.curPage.params?.username
+  return username && slugify(username) === router.curPage.params?.username
 }
 
 export const isEditingUserPage = (
@@ -243,23 +243,22 @@ const runSearch: AsyncAction<{
   searchQuery?: string
   quiet?: boolean
   force?: boolean
-} | void> = async (om, opts) => {
+}> = async (om, opts) => {
   opts = opts || { quiet: false }
   lastSearchAt = Date.now()
   let curId = lastSearchAt
 
   const curState = om.state.home.currentState
   const searchQuery = opts.searchQuery ?? curState.searchQuery ?? ''
+  const navItem = {
+    state: {
+      ...curState,
+      searchQuery,
+    },
+  }
 
-  if (
-    await om.actions.home.navigate({
-      state: {
-        ...curState,
-        searchQuery,
-      },
-    })
-  ) {
-    console.log('did nav from search')
+  if (await om.actions.home.navigate(navItem)) {
+    console.log('did nav from search', navItem)
     // nav will trigger search
     return
   }
@@ -579,19 +578,18 @@ const pushHomeState: AsyncAction<
   let fetchData: PageAction | null = null
   const type = item.name
 
-  switch (type) {
+  switch (item.name) {
     // home
     case 'homeRegion':
     case 'home': {
-      const prev: HomeStateItemHome = _.findLast(om.state.home.states, (x) =>
-        isHomeState(x)
-      ) as any
+      const prev = _.findLast(om.state.home.states, isHomeState)
       nextState = {
         type: 'home',
         searchQuery: '',
         activeTags: {},
         mapAt: prev?.mapAt,
-        region: item.params?.region,
+        region: item.params.region ?? null,
+        section: item.params.section ?? '',
       }
       break
     }
@@ -612,7 +610,7 @@ const pushHomeState: AsyncAction<
     case 'userSearch':
     case 'search': {
       const username =
-        type == 'userSearch' ? om.state.router.curPage.params.username : ''
+        type == 'userSearch' ? router.curPage.params.username : ''
       const prev = findLastHomeOrSearch(om.state.home.states)
       if (!prev) {
         throw new Error('unreachable')
@@ -621,16 +619,7 @@ const pushHomeState: AsyncAction<
         type: 'search',
         status: 'loading',
         results: [],
-        region: prev.region,
-        // @nate testing disabling
-        // if we have a previous existing one thats valid, use it
-        // ...(prev.type === 'search' &&
-        //   getBreadcrumbs(om.state.home.states).some(
-        //     (x) => x.id === prev.id
-        //   ) && {
-        //     status: prev.status,
-        //     results: prev.results,
-        //   }),
+        region: router.curPage.params.region ?? prev.region,
         username,
         activeTags: prev.activeTags ?? {},
         center: prev.mapAt?.center ?? prev.center,
@@ -705,10 +694,6 @@ const pushHomeState: AsyncAction<
       console.error(err)
       Toast.show(`Error loading page`)
     }
-  }
-
-  if (process.env.NODE_ENV === 'development') {
-    console.log('pushHomeState', JSON.stringify(finalState, null, 2))
   }
 
   om.actions.home.updateHomeState(finalState)
@@ -821,7 +806,7 @@ const forkCurrentList: Action = (om) => {
     Toast.show(`Login please`)
     return
   }
-  const { curPage } = om.state.router
+  const { curPage } = router
   if (curPage.name !== 'search') {
     Toast.show(`Can't fork a non-search page`)
     return
@@ -940,7 +925,11 @@ const setIsLoading: Action<boolean> = (om, val) => {
 // but then later you hit "enter" and we need to navigate to search (or home)
 // we definitely can clean up / name better some of this once things settle
 let lastNav = Date.now()
-const navigate: AsyncAction<HomeStateNav, boolean> = async (om, navState) => {
+const navigate: AsyncAction<HomeStateNav, boolean> = async (
+  om,
+  { state, ...rest }
+) => {
+  const navState = { state: state ?? om.state.home.currentState, ...rest }
   const nextState = getNextState(navState)
   const curState = om.state.home.currentState
 
@@ -954,7 +943,6 @@ const navigate: AsyncAction<HomeStateNav, boolean> = async (om, navState) => {
     })
   }
 
-  console.log('nextState', nextState)
   if (!om.actions.home.getShouldNavigate(nextState)) {
     updateTags()
     return false
@@ -983,9 +971,7 @@ const navigate: AsyncAction<HomeStateNav, boolean> = async (om, navState) => {
     om.state.home.isOptimisticUpdating = false
   }
 
-  console.warn('home.navigate', navState, nextState)
-
-  const didNav = await syncStateToRoute(om, nextState)
+  const didNav = await om.actions.home.syncStateToRoute(nextState)
   if (curNav !== lastNav) return false
   om.actions.home.updateActiveTags(nextState)
   return didNav
@@ -1071,12 +1057,6 @@ const syncStateToRoute: AsyncAction<HomeStateTagNavigable, boolean> = async (
       recentTries = 0
     }, 200)
     const navItem = getNavigateItemForState(om, state)
-    if (process.env.NODE_ENV === 'development') {
-      console.log(
-        'syncStateToRoute',
-        cloneDeep({ should, navItem, state, recentTries })
-      )
-    }
     router.navigate(navItem)
     return true
   }

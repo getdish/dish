@@ -4,37 +4,34 @@ import React, { memo, useLayoutEffect } from 'react'
 import { AbsoluteVStack, Text } from 'snackui'
 
 import { AppIntroLogin } from './AppIntroLogin'
+import { useLocalStorageState } from './hooks/useLocalStorageState'
 import { IntroModal } from './IntroModal'
+import { useRouterCurPage } from './state/router'
 import { useOvermind } from './state/useOvermind'
 import { UserOnboard } from './UserOnboard'
-// @ts-ignore
 import { DarkModal } from './views/DarkModal'
 import { SmallCircleButton } from './views/ui/CloseButton'
 
 export const AppIntroLetter = memo(() => {
   const om = useOvermind()
+  const [closes, setCloses] = useLocalStorageState('modal-intro-closes', 0)
+
   const hasOnboarded = om.state.user.user?.has_onboarded
   const isLoggedIn = om.state.user.isLoggedIn
   const store = useStore(IntroModal)
-  const curPageName = om.state.router.curPage.name
-  const isPasswordReset = curPageName == 'passwordReset'
-  // const curPage = om.state.router.curPage
-  // const isPublicPage = curPage.name === 'about' || curPage.name === 'blog'
-  // make it private only
-  // isPublicPage
-  //   ? true
-  //   : isLoggedIn
-  //   ? closed
-  //     ? true
-  //     : hasOnboarded
-  //   : false
+  const curPage = useRouterCurPage()
+  const isPasswordReset = curPage.name == 'passwordReset'
 
   useLayoutEffect(() => {
     if (store.started) return
+    if (closes >= 3) {
+      store.setHidden(true)
+      return
+    }
     if (!isLoggedIn || (isLoggedIn && !hasOnboarded)) {
       store.setHidden(false)
     }
-  }, [store.hidden, isLoggedIn, hasOnboarded])
+  }, [closes, store.hidden, isLoggedIn, hasOnboarded])
 
   if (isLoggedIn && hasOnboarded) {
     return null
@@ -54,6 +51,7 @@ export const AppIntroLetter = memo(() => {
             backgroundColor="transparent"
             padding={10}
             onPress={() => {
+              setCloses(closes + 1)
               store.setHidden(true)
             }}
           >

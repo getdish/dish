@@ -5,10 +5,11 @@ import {
   User,
   query,
   resolved,
-  userFindOne,
 } from '@dish/graph'
 import { Action, AsyncAction } from 'overmind'
 import { Toast } from 'snackui'
+
+import { router } from './router'
 
 type UserState = {
   user: Partial<User> | null
@@ -68,7 +69,7 @@ const checkForExistingLogin: AsyncAction = async (om) => {
     Toast.show('Session expired: logged out')
   }
   if (Auth.isLoggedIn) {
-    postLogin(om, Auth.user)
+    setLogin(om, Auth.user)
     om.actions.user.refreshUser()
   }
 }
@@ -89,7 +90,7 @@ const login: AsyncAction<{
         om.state.user.messages = formatErrors(data)
       }
     } else {
-      postLogin(om, data)
+      setLogin(om, data)
       Toast.show('Logged in as ' + om.state.user.user?.username)
     }
   } finally {
@@ -97,7 +98,7 @@ const login: AsyncAction<{
   }
 }
 
-const postLogin: Action<Partial<User>> = (om, user: Partial<User>) => {
+const setLogin: Action<Partial<User>> = (om, user: Partial<User>) => {
   om.state.user.isLoggedIn = true
   om.state.user.user = user as any
 }
@@ -139,7 +140,7 @@ const passwordReset: AsyncAction<{
     return false
   }
   om.state.user.loading = true
-  const token = om.state.router.curPage.params.token
+  const token = router.curPage.params.token
   try {
     const [status] = await Auth.passwordReset(token, password)
     om.state.user.loading = false
@@ -181,30 +182,40 @@ const updateUser: AsyncAction<UpdateUserProps, boolean> = async (om, props) => {
 const refreshUser: AsyncAction = async (om) => {
   const id = Auth.user.id
   if (!id) return
-  const user = await resolved(
-    () =>
-      query
-        .user({
-          where: {
-            id: {
-              _eq: id,
+  try {
+    const user = await resolved(
+      () =>
+        query
+          .user({
+            where: {
+              id: {
+                _eq: id,
+              },
             },
-          },
-        })
-        .map((u) => ({
-          id: u.id,
-          username: u.username,
-          avatar: u.avatar,
-          about: u.about,
-          location: u.location,
-          has_onboarded: u.has_onboarded,
-        }))[0]
-  )
-  if (user) {
-    om.state.user.user = {
-      ...om.state.user.user,
-      ...user,
+          })
+          .map((u) => ({
+            id: u.id,
+            username: u.username,
+            avatar: u.avatar,
+            about: u.about,
+            location: u.location,
+            has_onboarded: u.has_onboarded,
+          }))[0]
+    )
+    if (user) {
+      om.state.user.user = {
+        ...om.state.user.user,
+        ...user,
+      }
     }
+  } catch (err) {
+    console.error(
+      'ERROR WITH USER, LIKELY JWT EXPIRED, TODO react server components and fix whole stack',
+      err
+    )
+
+    //
+    om.actions.user.logout()
   }
 }
 
@@ -218,5 +229,5 @@ export const actions = {
   checkForExistingLogin,
   ensureLoggedIn,
   updateUser,
-  postLogin,
+  setLogin,
 }

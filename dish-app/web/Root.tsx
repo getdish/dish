@@ -1,17 +1,26 @@
 import { useHydrateCache } from '@dish/graph'
+import { ProvideRouter } from '@dish/router'
 import { Provider } from 'overmind-react'
 import React, { Suspense } from 'react'
-import { LoadingItems, ToastRoot } from 'snackui'
+import { QueryClientProvider } from 'react-query'
+import { ThemeProvider, configureThemes } from 'snackui'
 
-import App from '../shared/App'
-import AdminPage from '../shared/pages/admin/AdminPage'
-import { Shortcuts } from '../shared/Shortcuts'
-import { NotFoundPage } from '../shared/views/NotFoundPage'
-import { PrivateRoute, Route, RouteSwitch } from '../shared/views/router/Route'
+import { App } from '../shared/App'
+import { AppPortalProvider } from '../shared/AppPortal'
+import { queryClient } from '../shared/helpers/queryClient'
+import { routes } from '../shared/state/router'
+import themes, { MyTheme, MyThemes } from '../shared/themes'
 
 if (typeof window !== 'undefined') {
   window['requestIdleCallback'] = window['requestIdleCallback'] || setTimeout
 }
+
+declare module 'snackui' {
+  interface ThemeObject extends MyTheme {}
+  interface Themes extends MyThemes {}
+}
+
+configureThemes(themes)
 
 const cacheSnapshot =
   //@ts-expect-error
@@ -19,33 +28,27 @@ const cacheSnapshot =
 
 export function Root({ overmind }: { overmind?: any }) {
   if (cacheSnapshot) {
-    console.log('cacheSnapshot', cacheSnapshot)
+    console.debug('cacheSnapshot', cacheSnapshot)
     useHydrateCache({
       cacheSnapshot,
     })
   } else {
-    console.log('no cache snapshot')
+    console.debug('no cache snapshot')
   }
 
   return (
-    <>
-      <ToastRoot />
-      <Shortcuts />
-      <Provider value={overmind}>
-        <Suspense fallback={<LoadingItems />}>
-          <RouteSwitch>
-            <Route name="notFound">
-              <NotFoundPage title="404 Not Found" />
-            </Route>
-            <PrivateRoute name="admin">
-              <AdminPage />
-            </PrivateRoute>
-            <Route name="home">
-              <App />
-            </Route>
-          </RouteSwitch>
-        </Suspense>
-      </Provider>
-    </>
+    <Provider value={overmind}>
+      <ProvideRouter routes={routes}>
+        <ThemeProvider themes={themes} defaultTheme="light">
+          <QueryClientProvider client={queryClient}>
+            <AppPortalProvider>
+              <Suspense fallback={null}>
+                <App />
+              </Suspense>
+            </AppPortalProvider>
+          </QueryClientProvider>
+        </ThemeProvider>
+      </ProvideRouter>
+    </Provider>
   )
 }

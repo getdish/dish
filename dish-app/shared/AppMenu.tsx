@@ -7,6 +7,7 @@ import { AppMenuContents } from './AppMenuContents'
 import { useSearchBarTheme } from './hooks/useSearchBarTheme'
 import { UserAvatar } from './pages/user/UserAvatar'
 import { omStatic } from './state/omStatic'
+import { useRouterCurPage } from './state/router'
 import { useOvermind } from './state/useOvermind'
 import { LinkButton } from './views/ui/LinkButton'
 import { LinkButtonProps } from './views/ui/LinkProps'
@@ -16,7 +17,7 @@ export const AppMenu = memo(() => {
   const media = useMedia()
   const showUserMenu = om.state.home.showUserMenu
   const setShowUserMenu = om.actions.home.setShowUserMenu
-  const pageName = om.state.router.curPage.name
+  const pageName = useRouterCurPage().name
   const hideUserMenu = useCallback((x) => setShowUserMenu(false), [])
 
   useEffect(() => {
@@ -66,7 +67,7 @@ export const AppMenu = memo(() => {
                 Icon={HelpCircle}
                 ActiveIcon={ChevronUp}
                 onPress={(e) => {
-                  if (omStatic.state.router.curPageName === 'about') {
+                  if (pageName === 'about') {
                     e.preventDefault()
                     omStatic.actions.home.up()
                   } else {
@@ -131,7 +132,7 @@ const MenuButton = memo(
         opacity={0.6}
         alignSelf="stretch"
         width="100%"
-        activeStyle={{
+        pressStyle={{
           opacity: 1,
           transform: [{ scale: 1.1 }],
         }}

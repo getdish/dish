@@ -136,14 +136,9 @@ export const TagButton = memo((props: TagButtonProps) => {
   const colors = getTagColors(tag)
   const bg = backgroundColor ?? colors.backgroundColor
   const fg = color ?? colors.color
-
-  console.log('tag', tag, colors)
-
   const fontSize = fontSizeProp ? fontSizeProp : 16 * scale
-
   const smallerFontSize: any =
     typeof fontSize === 'number' ? fontSize * 0.85 : fontSize
-
   const backgroundColorHover = `${bg}99`
 
   const contents = (

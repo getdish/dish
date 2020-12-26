@@ -32,7 +32,7 @@ export type LinkSharedProps = Pick<
   onMouseDown?: Function
   asyncClick?: boolean
   // text styles
-  display?: TextProps['display']
+  display?: TextProps['display'] | any
   color?: TextProps['color']
   fontWeight?: TextProps['fontWeight']
   textAlign?: TextProps['textAlign']
@@ -66,4 +66,5 @@ export type LinkButtonProps<
   LinkSharedProps & {
     enableActiveStyle?: boolean
     activeStyle?: ViewStyle
+    activeTextStyle?: TextStyle
   } & LinkButtonNamedProps<Name, Params>

@@ -39,8 +39,9 @@ export const RestaurantOverview = memo(
       .join(' ')
     const summary = restaurant.summary || headlines
     const scale = 2.1 - Math.max(1.0, Math.min(1.1, summary.length / 250))
-    const lineHeight = (size === 'lg' ? 28 : 26) * scale
-    const fontSize = 16 * scale
+    const extra = size === 'lg' ? 3 : 0
+    const lineHeight = Math.round((size === 'lg' ? 28 : 26) * scale + extra)
+    const fontSize = Math.round(16 * scale + extra)
 
     if (summary) {
       return (

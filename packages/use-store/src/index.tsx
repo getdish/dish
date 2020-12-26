@@ -1,5 +1,4 @@
-import * as React from 'react'
-import { useCallback, useLayoutEffect, useMemo, useRef } from 'react'
+import React, { useCallback, useLayoutEffect, useMemo, useRef } from 'react'
 
 import { DebugComponents, DebugStores, shouldDebug } from './shouldDebug'
 import { Store, TRIGGER_UPDATE } from './Store'
@@ -12,35 +11,14 @@ const useMutableSource = React.unstable_useMutableSource
 
 export * from './Store'
 
-// the main hook
-export function useStore<A extends Store<B>, B>(
-  StoreKlass: new (props: B) => A | (new () => A),
-  props?: B,
-  options: { selector?: any; once?: boolean } = defaultOptions
-): A {
-  const cachedSelector = options.selector
-    ? useCallback(options.selector, [])
-    : undefined
-
-  if (options.once) {
-    const info = useMemo(() => {
-      return createStoreWithInfo(StoreKlass, props, { avoidCache: true })
-    }, [JSON.stringify(props)])
-    return useStoreInstance(info, cachedSelector)
-  }
-  const info = createStoreWithInfo(StoreKlass, props)
-  return useStoreInstance(info, cachedSelector)
+export type UseStoreSelector<Store, Res> = (store: Store) => Res
+export type UseStoreOptions<Store = any, SelectorRes = any> = {
+  selector?: UseStoreSelector<Store, SelectorRes>
+  once?: boolean
 }
 
-// for usage outside react
-export function getStore<A extends Store<B>, B>(
-  StoreKlass: new (props: B) => A | (new () => A),
-  props?: B
-): A {
-  const info = createStoreWithInfo(StoreKlass, props)
-  return createProxiedStore(info)
-}
-
+const UNWRAP_PROXY = Symbol('unwrap_proxy')
+const StoreInstanceToInfo = new WeakMap<any, StoreInfo>()
 const cache = new WeakMap<any, { [key: string]: StoreInfo }>()
 const defaultOptions = {
   once: false,
@@ -49,23 +27,90 @@ const defaultOptions = {
 
 type Selector<A = unknown, B = unknown> = (x: A) => B
 
+// sanity check types here
+// class StoreTest extends Store<{ id: number }> {}
+// const storeTest = createStore(StoreTest, { id: 3 })
+// const useStoreTest = createUseStore(StoreTest)
+// const useStoreSelectorTest = createUseStoreSelector(
+//   StoreTest,
+//   (s) => s.props.id
+// )
+// const num = useStoreSelectorTest({ id: 0 })
+// const ya = useStoreTest({ id: 1 })
+// const yb = useStoreTest({ id: 1 }, (x) => x.props.id)
+// const z = useStore(StoreTest)
+// const abc = useStoreInstance(storeTest)
+// const abcSel = useStoreInstance(storeTest, (x) => x.props.id)
+
+// singleton
+export function createStore<A extends Store<B>, B>(
+  StoreKlass: new (props: B) => A | (new () => A),
+  props?: B
+): A {
+  const info = getOrCreateStoreInfo(StoreKlass, props)
+  const storeInstance = createProxiedStore(info)
+  storeInstance.mount?.()
+  return storeInstance
+}
+
+// use singleton with react
+export function useStoreInstance<A extends Store<B>, B>(instance: A): A {
+  const info = StoreInstanceToInfo.get(instance[UNWRAP_PROXY])
+  if (!info) {
+    throw new Error(`This store not created using createStore()`)
+  }
+  return useStoreFromInfo(info, arguments[1])
+}
+// super hack! but it works!
+// putting this below the above function is technically incorrect
+// as TS expected override types to be above, but it still works!
+// and its the only way i can get the type to properly narrow...
+// but requires the @ts-expect-error on the next function def :/
+export function useStoreInstance<
+  A extends Store<any>,
+  Selector extends ((a: A) => any) | void
+>(instance: A, selector?: Selector): Selector extends (a: A) => infer C ? C : A
+
+// no singleton, just react
+// @ts-expect-error
+export function useStore<A extends Store<B>, B>(
+  StoreKlass: (new (props: B) => A) | (new () => A),
+  props?: B,
+  options: UseStoreOptions<A, any> = defaultOptions
+): A {
+  const cachedSelector = options.selector
+    ? useCallback(options.selector, [])
+    : undefined
+
+  if (options.once) {
+    const key = props ? getKey(props) : ''
+    const info = useMemo(() => {
+      return getOrCreateStoreInfo(StoreKlass, props, { avoidCache: true }, key)
+    }, [key])
+    return useStoreFromInfo(info, cachedSelector)
+  }
+
+  const info = getOrCreateStoreInfo(StoreKlass, props)
+  return useStoreFromInfo(info, cachedSelector)
+}
+
 // for creating a usable store hook
 export function createUseStore<Props, Store>(
-  StoreKlass: new (props: Props) => Store | (new () => Store)
+  StoreKlass: (new (props: Props) => Store) | (new () => Store)
 ) {
   return function <Res, C extends Selector<Store, Res>>(
     props?: Props,
     selector?: C
     // super hacky workaround for now, ts is unknown to me tbh
   ): C extends Selector<any, infer B> ? (B extends Object ? B : Store) : Store {
-    // @ts-ignore
+    // @ts-expect-error
     return useStore(StoreKlass, props, { selector })
   }
 }
 
 // for creating a usable selector hook
 export function createUseStoreSelector<A extends Store<Props>, Props, Selected>(
-  StoreKlass: new (props: Props) => A | (new () => A),
+  StoreKlass: (new (props: Props) => A) | (new () => A),
   selector: Selector<A, Selected>
 ): (props?: Props) => Selected {
   return (props?: Props) => {
@@ -80,7 +125,7 @@ export function useStoreSelector<
   S extends Selector<any, Selected>,
   Selected
 >(
-  StoreKlass: new (props: B) => A | (new () => A),
+  StoreKlass: (new (props: B) => A) | (new () => A),
   selector: S,
   props?: B
 ): Selected {
@@ -89,20 +134,30 @@ export function useStoreSelector<
 
 // for ephemeral stores (alpha, not working correctly yet)
 export function useStoreOnce<A extends Store<B>, B>(
-  StoreKlass: new (props: B) => A | (new () => A),
+  StoreKlass: (new (props: B) => A) | (new () => A),
   props?: B,
   selector?: any
 ): A {
   return useStore(StoreKlass, props, { selector, once: true })
 }
 
-function createStoreWithInfo(
+// get non-singleton outside react (weird)
+export function getStore<A extends Store<B>, B>(
+  StoreKlass: (new (props: B) => A) | (new () => A),
+  props?: B
+): A {
+  const info = getOrCreateStoreInfo(StoreKlass, props)
+  return createProxiedStore(info)
+}
+
+function getOrCreateStoreInfo(
   StoreKlass: any,
   props: any,
-  opts?: { avoidCache: boolean }
+  opts?: { avoidCache: boolean },
+  propsKeyCalculated?: string
 ) {
   const storeName = StoreKlass.name
-  const propsKey = props ? getKey(props) : ''
+  const propsKey = propsKeyCalculated ?? (props ? getKey(props) : '')
   const uid = `${storeName}_${propsKey}_`
 
   if (!opts?.avoidCache) {
@@ -143,6 +198,7 @@ function createStoreWithInfo(
   }
 
   if (!opts?.avoidCache) {
+    StoreInstanceToInfo.set(storeInstance, value)
     if (!cache.get(StoreKlass)) {
       cache.set(StoreKlass, {})
     }
@@ -150,6 +206,13 @@ function createStoreWithInfo(
   }
 
   return value
+}
+
+export function mountStore(info: StoreInfo, store: any) {
+  if (!info.hasMounted) {
+    info.hasMounted = true
+    store.mount?.()
+  }
 }
 
 const subscribe = (store: Store, callback: Function) =>
@@ -167,7 +230,10 @@ const selectKeys = (obj: any, keys: string[] = []) => {
   return res
 }
 
-function useStoreInstance(info: StoreInfo, userSelector?: Selector<any>): any {
+function useStoreFromInfo(
+  info: StoreInfo,
+  userSelector?: Selector<any> | undefined
+): any {
   const internal = useRef({
     isRendering: false,
     tracked: new Set<string>(),
@@ -181,7 +247,7 @@ function useStoreInstance(info: StoreInfo, userSelector?: Selector<any>): any {
         process.env.NODE_ENV === 'development' &&
         shouldDebug(component, info)
       ) {
-        console.log('📤 selected', selected)
+        console.log('🏪 selected', selected)
       }
       return selected
     },
@@ -189,13 +255,13 @@ function useStoreInstance(info: StoreInfo, userSelector?: Selector<any>): any {
   )
   const state = useMutableSource(info.source, getSnapshot, subscribe)
   const storeProxy = useConstant(() =>
-    createProxiedStore(info, { internal, component, state })
+    createProxiedStore(info, { internal, component })
   )
 
   // before each render
   internal.current.isRendering = true
 
-  // after each render
+  // track access, runs after each render
   useLayoutEffect(() => {
     internal.current.isRendering = false
     mountStore(info, storeProxy)
@@ -204,7 +270,7 @@ function useStoreInstance(info: StoreInfo, userSelector?: Selector<any>): any {
       process.env.NODE_ENV === 'development' &&
       shouldDebug(component, info)
     ) {
-      console.log('📤 finish render, tracking', [...internal.current.tracked])
+      console.log('🏪 finish render, tracking', [...internal.current.tracked])
     }
   })
 
@@ -215,20 +281,11 @@ function useStoreInstance(info: StoreInfo, userSelector?: Selector<any>): any {
   return storeProxy
 }
 
-// TODO only do as an optional effect? probably worthwhile
-function mountStore(info: StoreInfo, store: any) {
-  if (!info.hasMounted) {
-    info.hasMounted = true
-    store.mount()
-  }
-}
-
 function createProxiedStore(
   info: StoreInfo,
   renderOpts?: {
     internal: { current: { isRendering: boolean; tracked: Set<string> } }
     component: any
-    state: any
   }
 ) {
   const proxiedStore = new Proxy(info.storeInstance, {
@@ -245,7 +302,7 @@ function createProxiedStore(
           ) {
             return new Proxy(info.actions[key], {
               apply(a, b, c) {
-                console.log(`📤 ACTION ${key}`, c)
+                console.log(`🏪 ACTION ${key}`, c)
                 return Reflect.apply(a, b, c)
               },
             })
@@ -255,12 +312,15 @@ function createProxiedStore(
         if (renderOpts) {
           if (renderOpts.internal.current.isRendering) {
             renderOpts.internal.current.tracked.add(key)
-            const val = renderOpts.state[key]
+            const val = info.storeInstance[key]
             if (typeof val !== 'undefined') {
               return val
             }
           }
         }
+      }
+      if (key === UNWRAP_PROXY) {
+        return info.storeInstance
       }
       return Reflect.get(target, key)
     },
@@ -273,7 +333,7 @@ function createProxiedStore(
           process.env.NODE_ENV === 'development' &&
           DebugStores.has(info.storeInstance.constructor)
         ) {
-          console.log(`📤 SET ${String(key)}`, value)
+          console.log(`🏪 SET ${String(key)}`, value)
         }
         info.version++
         info.storeInstance[TRIGGER_UPDATE]()
@@ -281,6 +341,7 @@ function createProxiedStore(
       return res
     },
   })
+
   return proxiedStore
 }
 
@@ -296,7 +357,7 @@ const useCurrentComponent = () => {
 }
 
 export function useStoreDebug<A extends Store<B>, B>(
-  StoreKlass: new (props: B) => A | (new () => A),
+  StoreKlass: (new (props: B) => A) | (new () => A),
   props?: B,
   selector?: any
 ): A {
@@ -338,7 +399,7 @@ export function get<A>(
   return _ as any
 }
 
-const getKey = (props: Object) => {
+function getKey(props: Object) {
   let s = ''
   const sorted = Object.keys(props).sort()
   for (const key of sorted) {
@@ -355,15 +416,3 @@ export default function useConstant<T>(fn: () => T): T {
   }
   return ref.current.v
 }
-
-// sanity check types here
-// class StoreTest extends Store<{ id: number }> {}
-// const useStoreTest = createUseStore(StoreTest)
-// const useStoreSelectorTest = createUseStoreSelector(
-//   StoreTest,
-//   (s) => s.props.id
-// )
-// const num = useStoreSelectorTest({ id: 0 })
-// const ya = useStoreTest({ id: 1 })
-// const yb = useStoreTest({ id: 1 }, (x) => x.props.id)
-// const z = useStore(StoreTest)

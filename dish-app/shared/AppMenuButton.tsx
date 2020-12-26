@@ -60,6 +60,7 @@ export const AppMenuButton = () => {
         right={10}
         zIndex={zIndexDrawer - 1}
         pointerEvents="none"
+        backgroundColor="red"
       >
         <VStack
           shadowColor="rgba(0,0,0,0.095)"

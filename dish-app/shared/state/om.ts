@@ -3,14 +3,12 @@ import { merge, namespaced } from 'overmind/config'
 
 import * as home from './home'
 import { onInitialize } from './onInitialize'
-import * as router from './router'
 import * as user from './user'
 
 export const config = merge(
   namespaced({
     home,
     user,
-    router,
   }),
   {
     onInitialize,

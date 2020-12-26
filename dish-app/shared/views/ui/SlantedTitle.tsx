@@ -1,3 +1,4 @@
+// debug
 // TODO useTheme here and fix bugs
 import React from 'react'
 import { BoxProps, SizableTextProps, Title, useTextStyle } from 'snackui'
@@ -24,7 +25,7 @@ export const SlantedTitle = ({
   return (
     <SlantedBox alignSelf="flex-start" {...(rest as any)}>
       <Title
-        fontWeight="900"
+        fontWeight="700"
         size={size}
         sizeLineHeight={sizeLineHeight}
         {...textProps}

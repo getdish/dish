@@ -31,8 +31,6 @@ export function AppStackView<A extends HomeStateItem>(props: {
   const isAdding = currentStates.length < homeStates.length
   const items = isRemoving ? currentStates : homeStates
 
-  console.log('AppStackView.items', items)
-
   return (
     <>
       {items.map((item, i) => {

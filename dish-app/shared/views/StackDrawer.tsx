@@ -1,6 +1,5 @@
 import React, { Suspense } from 'react'
 import {
-  AbsoluteVStack,
   HStack,
   LoadingItems,
   StackProps,
@@ -10,15 +9,15 @@ import {
 } from 'snackui'
 
 import { drawerBorderRadius, drawerWidthMax } from '../constants'
+import { PaneControlButtons } from './PaneControlButtons'
 import { StackViewCloseButton } from './StackViewCloseButton'
 import { PageTitleTag } from './ui/PageTitleTag'
 
 export const StackCloseButton = () => {
-  const media = useMedia()
   return (
-    <AbsoluteVStack right={media.sm ? 10 : 10} top={media.sm ? 10 : -3}>
+    <PaneControlButtons>
       <StackViewCloseButton />
-    </AbsoluteVStack>
+    </PaneControlButtons>
   )
 }
 

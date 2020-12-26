@@ -4,6 +4,7 @@ import { isWeb } from '../constants'
 import { OVERMIND_MUTATIONS } from '../overmindMutations'
 import { addTagsToCache } from './allTags'
 import { tagDefaultAutocomplete, tagFilters, tagLenses } from './localTags'
+import { router } from './router'
 
 const LOG_OVERMIND = process.env.NODE_ENV === 'development' || !isWeb
 
@@ -22,7 +23,9 @@ export const onInitialize: OnInitialize = async (
     overmind.eventHub.on('action:start' as any, (execution) => {
       const name = `🕉 om.${execution.actionName}`
       if (typeof execution.value !== 'undefined') {
-        console.log(name, execution.value)
+        console.groupCollapsed(name)
+        console.log(JSON.stringify(execution.value, null, 2))
+        console.groupEnd()
       } else {
         console.log(name)
       }
@@ -31,8 +34,11 @@ export const onInitialize: OnInitialize = async (
 
   addTagsToCache([...tagDefaultAutocomplete, ...tagFilters, ...tagLenses])
 
+  router.onRouteChange((item) => {
+    actions.home.handleRouteChange(item)
+  })
+
   actions.user.checkForExistingLogin()
-  actions.router.start()
   actions.home.updateCurrentMapAreaInformation()
 }
 

@@ -1,18 +1,11 @@
-import { HistoryItem, Route, Router } from '@dish/router'
-import { Action, derived } from 'overmind'
+import { Route, Router, RoutesTable as RoutesTableI } from '@dish/router'
+import { createStore, useStoreInstance } from '@dish/use-store'
 
-import { OmState } from './home-types'
+export type RoutesTable = typeof routes
+export type RouteName = keyof RoutesTable
 
-export type SearchRouteParams = {
-  username?: string
-  region: string
-  lense: string
-  search?: string
-  tags?: string
-}
-
-export const routes = {
-  // should be last
+export const routes: RoutesTableI = {
+  // order important
   home: new Route('/'),
 
   // all pages go here
@@ -37,7 +30,7 @@ export const routes = {
   restaurantHours: new Route<{ slug: string }>('/restaurant/:slug/hours'),
   restaurant: new Route<{
     slug: string
-    section?: string
+    section?: 'reviews'
     sectionSlug?: string
   }>('/restaurant/:slug/:section?/:sectionSlug?'),
 
@@ -48,69 +41,43 @@ export const routes = {
   adminUsers: new Route('/admin/users'),
 
   // below pages, more catch-all routes (search)
-
   // NOTE keep userSearch and search in sync
   // after user/restaurant
   userSearch: new Route<SearchRouteParams>(
     '/u/:username/:lense/:region/:tags?/:search?'
   ),
   // search after userSearch
-  search: new Route<SearchRouteParams>('/:lense/:region/:tags?/:search?'),
+  search: new Route<SearchRouteParams>('/s/:lense/:region/:tags?/:search?'),
 
-  homeRegion: new Route<{ region?: string }>('/:region?'),
+  homeRegion: new Route<{ region?: string; section?: 'new' }>(
+    '/:region?/:section?'
+  ),
 
   notFound: new Route('*'),
 }
 
+export const router = createStore(Router, { routes })
+
+export const useRouter = () => {
+  return useStoreInstance(router)
+}
+
+export const useRouterCurPage = () => {
+  return useStoreInstance(router, (router) => router.curPage)
+}
+
+export type SearchRouteParams = {
+  username?: string
+  region: string
+  lense: string
+  search?: string
+  tags?: string
+}
+
 export const routeNames = Object.keys(routes) as RouteName[]
-export const routePathToName: { [key in RouteName]: string } = Object.keys(
-  routes
-).reduce((acc, key) => {
+export const routePathToName: {
+  [key in RouteName]: string
+} = Object.keys(routes).reduce((acc, key) => {
   acc[routes[key].path] = key
   return acc
 }, {}) as any
-
-export type RoutesTable = typeof routes
-export type RouteName = keyof RoutesTable
-
-export const router = new Router({
-  // @ts-ignore
-  routes,
-})
-
-export type OnRouteChangeCb = (item: HistoryItem) => Promise<void>
-
-const start: Action = (om) => {
-  router.onRouteChange((item) => {
-    om.actions.router._update()
-    om.actions.home.handleRouteChange(item)
-  })
-  router.mount()
-}
-
-type RouterState = {
-  _update: number
-  curPage: HistoryItem
-  curPageName: string
-}
-
-export const state: RouterState = {
-  _update: 0,
-  curPage: derived<RouterState, OmState, HistoryItem>((state) => {
-    state._update
-    return router.curPage
-  }),
-  curPageName: derived<RouterState, OmState, string>((state) => {
-    state._update
-    return state.curPage.name
-  }),
-}
-
-const _update: Action = (om) => {
-  om.state.router._update += 1
-}
-
-export const actions = {
-  start,
-  _update,
-}

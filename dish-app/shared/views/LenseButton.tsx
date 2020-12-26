@@ -33,7 +33,6 @@ export const LenseButton = memoIsEqualDeep(
     const iconSize = sizePx * (isActive ? 0.7 : 0.6) * scale
     const scaledSize = sizePx * scale
     const scaledWidth = scaledSize
-    const marginVertical = -4 * scale
     const color = media.sm || isActive ? '#ffffff' : lenseColorDark
     const lineHeight = sizePx * scale * 0.39
 
@@ -42,7 +41,8 @@ export const LenseButton = memoIsEqualDeep(
         {...(onPress ? { onPress } : { tag: lense })}
         className="unselectable"
         disallowDisableWhenActive
-        marginRight={6}
+        marginRight={5}
+        marginTop={-10}
         pressStyle={{
           opacity: 0.8,
           transform: [{ scale: 0.9 }],
@@ -52,7 +52,6 @@ export const LenseButton = memoIsEqualDeep(
           className="ease-in-out-fast"
           alignItems="center"
           justifyContent="center"
-          marginVertical={marginVertical}
           width={scaledWidth}
           height={scaledSize}
           backgroundColor={bg}
@@ -75,30 +74,23 @@ export const LenseButton = memoIsEqualDeep(
             borderRadius={4}
             paddingHorizontal={4}
             paddingVertical={1}
-            marginTop={-8}
+            marginTop={-12}
             backgroundColor="transparent"
             {...(isActive && {
               backgroundColor: lenseColorDark,
             })}
           >
-            <VStack
-              hoverStyle={{
-                opacity: 1,
-              }}
-              marginHorizontal={-5}
+            <Text
+              fontWeight="700"
+              lineHeight={lineHeight}
+              fontSize={14}
+              color={color}
+              paddingHorizontal={2}
+              textAlign="center"
+              height={16}
             >
-              <Text
-                fontWeight="700"
-                lineHeight={lineHeight}
-                fontSize={14}
-                color={color}
-                paddingHorizontal={2}
-                textAlign="center"
-                height={16}
-              >
-                {tagDisplayName(lense)}
-              </Text>
-            </VStack>
+              {tagDisplayName(lense)}
+            </Text>
           </VStack>
         </VStack>
       </LinkButton>

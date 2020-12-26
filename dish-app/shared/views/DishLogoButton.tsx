@@ -25,6 +25,7 @@ export const DishLogoButton = memo(() => {
       className="ease-in-out-fast"
       width={media.xs ? logoXsWidth : logoWidth}
       height={logoHeight}
+      position="relative"
     >
       <VStack
         opacity={media.xs ? 0 : 1}
@@ -43,7 +44,6 @@ export const DishLogoButton = memo(() => {
         transform={[{ translateY: -2 }]}
         width={logoXsWidth}
         height={logoXsHeight}
-        zIndex={-1}
       >
         <LinkButton {...linkButtonProps}>
           <LogoSmall />

@@ -3,7 +3,9 @@ module.exports = function (api) {
   const isSSR = process.env.TARGET === 'ssr'
   const isLegacy = process.env.LEGACY === '1'
 
-  api.cache.using(() => `${process.env.NODE_ENV}${process.env.TARGET}`)
+  api.cache.using(
+    () => `${process.env.NODE_ENV}${process.env.TARGET}${process.env.LEGACY}`
+  )
 
   return {
     plugins: [
@@ -15,7 +17,7 @@ module.exports = function (api) {
             'babel-plugin-lodash',
             '@babel/plugin-transform-react-inline-elements',
             '@babel/plugin-transform-react-constant-elements',
-            'babel-plugin-optimize-react',
+            '@eps1lon/babel-plugin-optimize-react',
           ]
         : []),
       '@babel/plugin-proposal-class-properties',
@@ -44,6 +46,8 @@ module.exports = function (api) {
       isLegacy && [
         '@babel/preset-env',
         {
+          useBuiltIns: 'usage',
+          corejs: 3,
           targets: {
             browsers: ['>3%'],
           },

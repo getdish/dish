@@ -1,0 +1,12 @@
+diff --git a/node_modules/react-dom/cjs/react-dom.development.js b/node_modules/react-dom/cjs/react-dom.development.js
+index 5376811..6636ed0 100644
+--- a/node_modules/react-dom/cjs/react-dom.development.js
++++ b/node_modules/react-dom/cjs/react-dom.development.js
+@@ -10305,6 +10305,7 @@ var updatedAncestorInfo = function () {};
+   var didWarn$1 = {};
+ 
+   validateDOMNesting = function (childTag, childText, ancestorInfo) {
++    return
+     ancestorInfo = ancestorInfo || emptyAncestorInfo;
+     var parentInfo = ancestorInfo.current;
+     var parentTag = parentInfo && parentInfo.tag;

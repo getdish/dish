@@ -110,7 +110,10 @@ const RestaurantHeaderContent = memo(
               >
                 <VStack flex={1}>
                   <HStack alignItems="center">
-                    <RestaurantUpVoteDownVote restaurantSlug={restaurantSlug} />
+                    <RestaurantUpVoteDownVote
+                      display="ratio"
+                      restaurantSlug={restaurantSlug}
+                    />
                     <Spacer size="xl" />
                     <Text
                       alignSelf="flex-start"
@@ -132,6 +135,7 @@ const RestaurantHeaderContent = memo(
                       {restaurant.name}
                     </Text>
                   </HStack>
+                  <Spacer />
                   <HStack
                     pointerEvents="auto"
                     flex={1}
@@ -151,7 +155,10 @@ const RestaurantHeaderContent = memo(
                           flexWrap="wrap"
                           maxWidth="100%"
                         >
-                          <RestaurantFavoriteStar restaurantId={restaurantId} />
+                          <RestaurantFavoriteStar
+                            size="lg"
+                            restaurantId={restaurantId}
+                          />
 
                           <Suspense fallback={null}>
                             <RestaurantAddressLinksRow

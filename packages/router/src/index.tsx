@@ -1,4 +1,9 @@
-import { Store, useStore } from '@dish/use-store'
+import {
+  Store,
+  UseStoreOptions,
+  useStore,
+  useStoreSelector,
+} from '@dish/use-store'
 import { createBrowserHistory, createMemoryHistory } from 'history'
 import * as React from 'react'
 import { createContext, useContext } from 'react'
@@ -10,13 +15,13 @@ const history =
     : createMemoryHistory()
 
 // need them to declare the types here
-export type RoutesTable = { [key: string]: Route }
+export type RoutesTable = { [key: string]: Route<any> }
 export type RouteName = keyof RoutesTable
 
 export type HistoryType = 'push' | 'pop' | 'replace'
 export type HistoryDirection = 'forward' | 'backward' | 'none'
 
-export type HistoryItem<A extends RouteName = any> = {
+export type HistoryItem<A extends RouteName = string> = {
   id: string
   name: A
   path: string
@@ -53,22 +58,6 @@ export class Router extends Store<RouterProps> {
   stack: HistoryItem[] = []
   stackIndex = 0
 
-  get prevPage() {
-    return this.stack[this.stackIndex - 1]
-  }
-
-  get curPage() {
-    return this.stack[this.stackIndex] ?? defaultPage
-  }
-
-  get prevHistory() {
-    return this.history[this.history.length - 2]
-  }
-
-  get curHistory() {
-    return this.history[this.history.length - 1] ?? defaultPage
-  }
-
   mount() {
     const { routes } = this.props
     this.routes = routes
@@ -103,27 +92,30 @@ export class Router extends Store<RouterProps> {
           : event.action === 'POP'
           ? 'pop'
           : 'push'
-      // console.log('router.history', {
-      //   type,
-      //   direction,
-      //   event,
-      //   state,
-      //   prevItem,
-      //   nextItem,
-      //   stack: this.stack,
-      // })
+
+      if (process.env.DEBUG) {
+        console.log('router.history', {
+          type,
+          direction,
+          event,
+          state,
+          prevItem,
+          nextItem,
+          stack: this.stack,
+        })
+      }
+
       if (type === 'pop' && direction == 'none') {
         // happens when they go back after a hard refresh, change to push
         type = 'push'
       }
+
       this.handlePath(event.location.pathname, {
         id,
         direction,
         type,
       })
     })
-
-    window['router'] = this
 
     // initial entry
     const pathname = (window.location?.pathname ?? '')
@@ -140,6 +132,22 @@ export class Router extends Store<RouterProps> {
         id: uid(),
       }
     )
+  }
+
+  get prevPage() {
+    return this.stack[this.stackIndex - 1]
+  }
+
+  get curPage() {
+    return this.stack[this.stackIndex] ?? defaultPage
+  }
+
+  get prevHistory() {
+    return this.history[this.history.length - 2]
+  }
+
+  get curHistory() {
+    return this.history[this.history.length - 1] ?? defaultPage
   }
 
   private handlePath(
@@ -207,13 +215,30 @@ export class Router extends Store<RouterProps> {
       }
     }
     this.routeChangeListeners.add(cb)
+    return () => {
+      this.routeChangeListeners.delete(cb)
+    }
   }
 
   getShouldNavigate(navItem: NavigateItem) {
     const historyItem = this.navItemToHistoryItem(navItem)
     const sameName = historyItem.name === this.curPage.name
-    const sameParams = isEqual(historyItem.params, this.curPage.params)
+    const sameParams = isEqual(
+      this.normalize(historyItem.params),
+      this.normalize(this.curPage.params)
+    )
     return !sameName || !sameParams
+  }
+
+  // remove nullish params
+  private normalize(params: Object | null) {
+    const obj = params ?? {}
+    return Object.keys(obj).reduce((acc, cur) => {
+      if (obj[cur]) {
+        acc[cur] = obj[cur]
+      }
+      return acc
+    }, {})
   }
 
   isRouteActive(navItem: NavigateItem) {
@@ -231,7 +256,6 @@ export class Router extends Store<RouterProps> {
     const params = {
       id: item?.id ?? uid(),
     }
-    console.log('router.navigate', navItem, item)
     if (item.type === 'replace') {
       history.replace(item.path, params)
     } else {
@@ -258,11 +282,11 @@ export class Router extends Store<RouterProps> {
     // object to path
     let route = this.routes[name]
     if (!route) {
-      console.debug(`no route`, name, this.routes)
+      console.log(`no route`, name, this.routes)
       return ``
     }
     if (!route.path) {
-      console.debug(`no route path`, route, name, this.routes)
+      console.log(`no route path`, route, name, this.routes)
       return ``
     }
     let path = route.path
@@ -326,34 +350,41 @@ export class Router extends Store<RouterProps> {
 
 // react stuff
 
-const RouterContext = createContext<RouterProps['routes'] | null>(null)
+const RouterPropsContext = createContext<any>(null)
 
-export function ProvideRouter({
-  routes,
-  children,
-}: {
-  routes: any
+export type ProvideRouterProps = {
   children: any
-}) {
-  // just sets it up
-  useStore(Router, {
-    routes,
-  })
+} & { routes: RoutesTable }
+
+export function ProvideRouter(props: ProvideRouterProps) {
   return (
-    <RouterContext.Provider value={routes}>{children}</RouterContext.Provider>
+    <RouterPropsContext.Provider value={props.routes}>
+      {props.children}
+    </RouterPropsContext.Provider>
   )
 }
 
 export function useRouter() {
-  const routes = useContext(RouterContext)
+  const routes = useContext(RouterPropsContext)
   if (!routes) {
-    throw new Error(`no routes`)
+    throw new Error(`Must <ProvideRouter /> above this component`)
   }
   return useStore(Router, { routes })
 }
 
+export function useRouterSelector<
+  A extends (a: Router) => any,
+  Res = A extends (a: Router) => infer B ? B : unknown
+>(selector: A) {
+  const routes = useContext(RouterPropsContext)
+  if (!routes) {
+    throw new Error(`Must <ProvideRouter /> above this component`)
+  }
+  return useStoreSelector(Router, selector, { routes }) as Res
+}
+
 // we could enable functionality like this
-export type LoadableView = React.SFC & {
+export type LoadableView = React.FunctionComponent & {
   fetchData: (params: HistoryItem) => Promise<any>
 }
 

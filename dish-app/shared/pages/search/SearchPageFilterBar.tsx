@@ -1,7 +1,8 @@
 import { groupBy, sortBy } from 'lodash'
 import React, { memo } from 'react'
-import { HStack, StackProps, useMedia } from 'snackui'
+import { HStack, useMedia } from 'snackui'
 
+import { getGroupedButtonProps } from '../../helpers/getGroupedButtonProps'
 import { rgbString } from '../../helpers/rgbString'
 import { useCurrentLenseColor } from '../../hooks/useCurrentLenseColor'
 import { getTagSlug } from '../../state/getTagSlug'
@@ -33,26 +34,19 @@ export const SearchPageFilterBar = memo(({ activeTags }: FilterBarProps) => {
         return (
           <HStack key={index} borderRadius={100}>
             {group.map((tag, groupIndex) => {
-              const hasPrev = !!group[groupIndex - 1]
-              const hasNext = !!group[groupIndex + 1]
-              const extraProps: StackProps = {}
-              extraProps.borderTopLeftRadius = hasPrev ? 0 : 30
-              extraProps.borderBottomLeftRadius = hasPrev ? 0 : 30
-              extraProps.borderTopRightRadius = hasNext ? 0 : 30
-              extraProps.borderBottomRightRadius = hasNext ? 0 : 30
               const isActive = activeTags[getTagSlug(tag)] ?? false
               const button = (
-                // @ts-expect-error Incompatibility with snack-ui types
                 <FilterButton
                   key={`tag-${tag.id}`}
                   tag={tag}
                   isActive={isActive}
-                  {...(hasPrev && { marginLeft: -1 })}
-                  {...(hasNext && { marginRight: 0 })}
-                  {...extraProps}
                   position="relative"
                   color={rgbString(color)}
                   zIndex={100 - index - groupIndex + (isActive ? 1 : 0)}
+                  {...getGroupedButtonProps({
+                    index: groupIndex,
+                    items: group,
+                  })}
                 />
               )
 

@@ -8,7 +8,13 @@ import React, {
 } from 'react'
 import { useForceUpdate } from 'snackui'
 
-import { routePathToName, router, routes } from '../../state/router'
+import { useLastValueWhen } from '../../hooks/useLastValueWhen'
+import {
+  routePathToName,
+  routes,
+  useRouter,
+  useRouterCurPage,
+} from '../../state/router'
 import { useOvermind } from '../../state/useOvermind'
 
 type RouteState = 'collect' | 'active' | 'inactive'
@@ -87,8 +93,8 @@ export function RouteSwitch(props: { children: any }) {
 }
 
 export function Route(props: { name: string; exact?: boolean; children: any }) {
-  const om = useOvermind()
-  const activeName = om.state.router.curPageName
+  const curPage = useRouterCurPage()
+  const activeName = curPage.name
   const stateRef = useRef<RouteState>('active')
   const forceUpdate = useForceUpdate()
   const routeContext = useContext(RouteContext)
@@ -114,7 +120,7 @@ export function Route(props: { name: string; exact?: boolean; children: any }) {
     routeContext?.setRoute?.(props.name, isMatched)
   }, [props.name, isMatched])
 
-  const children = useMemo(() => {
+  const content = useMemo(() => {
     if (props.exact) {
       if (isExactMatching) {
         return getChildren(props.children)
@@ -136,12 +142,16 @@ export function Route(props: { name: string; exact?: boolean; children: any }) {
     isParentMatching,
   ])
 
-  const state = stateRef.current
-  if (state === 'inactive' || state === 'collect') {
-    return null
-  }
+  const children = (() => {
+    const state = stateRef.current
+    if (state === 'inactive' || state === 'collect') {
+      return null
+    }
+    return content
+  })()
 
-  return children
+  // during collect dont render null to prevent unecessary unmounts
+  return useLastValueWhen(() => children, stateRef.current === 'collect')
 }
 
 function getChildren(children: Function | any) {
@@ -154,7 +164,8 @@ function getChildren(children: Function | any) {
 export function PrivateRoute(props: { name: string; children: any }) {
   const om = useOvermind()
   const isLoggedIn = om.state.user.isLoggedIn
-  const curPageName = om.state.router.curPage.name
+  const router = useRouter()
+  const curPageName = router.curPage.name
 
   useLayoutEffect(() => {
     if (curPageName === props.name) {

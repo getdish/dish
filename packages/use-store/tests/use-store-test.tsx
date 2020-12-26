@@ -1,8 +1,14 @@
-import { act, cleanup, fireEvent, render } from '@testing-library/react'
+import {
+  RenderResult,
+  act,
+  cleanup,
+  fireEvent,
+  render,
+} from '@testing-library/react'
 import { last } from 'lodash'
 import React, { StrictMode } from 'react'
 
-import { Store, useStore } from '../_'
+import { Store, createStore, useStore, useStoreInstance } from '../_'
 
 Error.stackTraceLimit = Infinity
 
@@ -15,15 +21,15 @@ async function testSimpleStore(id: number) {
   const getCurrentByTitle = (name: string) => last(getAllByTitle(name))!
   const findX = () => getCurrentByTitle('x').innerHTML
   expect(findX()).toBe('hi')
-  await act(async () => {
+  act(() => {
     fireEvent.click(getCurrentByTitle('add'))
   })
   expect(findX()).toBe('item-1')
-  await act(async () => {
+  act(() => {
     fireEvent.click(getCurrentByTitle('add'))
   })
   expect(findX()).toBe('item-2')
-  await act(async () => {
+  act(() => {
     fireEvent.click(getCurrentByTitle('addAsync'))
   })
   await act(async () => {
@@ -35,8 +41,66 @@ async function testSimpleStore(id: number) {
 
 // be sure ids are not same across tests...
 
+type RR = RenderResult<typeof import('@testing-library/dom/types/queries')>
+
+const getLastByTitle = (rr: RR, name: string) => last(rr.getAllByTitle(name))!
+const findTitle = (rr: RR, title: string) => getLastByTitle(rr, title).innerHTML
+
 describe('basic tests', () => {
   afterEach(cleanup)
+
+  it('works as singleton creating a global store', () => {
+    class Store3 extends Store<{ id: number }> {
+      y = 0
+      mount() {
+        this.y = this.props.id + 10
+      }
+      get z() {
+        return this.y - 5
+      }
+      add() {
+        this.y++
+      }
+    }
+
+    const store3 = createStore(Store3, { id: 1 })
+
+    expect(store3.y).toEqual(11)
+    expect(store3.z).toEqual(6)
+
+    function SingletonStore() {
+      const store = useStoreInstance(store3)
+      return (
+        <>
+          <div title="z">{store.z}</div>
+          <button title="add" onClick={() => store.add()}></button>
+        </>
+      )
+    }
+    const r1 = render(<SingletonStore />)
+    expect(findTitle(r1, 'z')).toBe('6')
+    act(() => {
+      fireEvent.click(getLastByTitle(r1, 'add'))
+    })
+    expect(findTitle(r1, 'z')).toBe('7')
+
+    function SingletonStoreSelector() {
+      const store = useStoreInstance(store3)
+      const storeZ = useStoreInstance(store3, (x) => x.z)
+      return (
+        <>
+          <div title="z">{storeZ}</div>
+          <button title="add" onClick={() => store.add()}></button>
+        </>
+      )
+    }
+    const r2 = render(<SingletonStoreSelector />)
+    expect(findTitle(r2, 'z')).toBe('7')
+    act(() => {
+      fireEvent.click(getLastByTitle(r2, 'add'))
+    })
+    expect(findTitle(r2, 'z')).toBe('8')
+  })
 
   it('creates a simple store and action works', async () => {
     await testSimpleStore(0)

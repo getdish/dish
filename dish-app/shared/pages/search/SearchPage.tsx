@@ -1,5 +1,6 @@
 import { sleep } from '@dish/async'
 import { ArrowDown, ArrowUp } from '@dish/react-feather'
+import { HistoryItem } from '@dish/router'
 import { useStore } from '@dish/use-store'
 import { sortBy } from 'lodash'
 import React, {
@@ -35,7 +36,11 @@ import {
 
 import { AppPortalItem } from '../../AppPortal'
 import { isWeb } from '../../constants'
+import { bboxToSpan } from '../../helpers/bboxToSpan'
+import { fetchRegion } from '../../helpers/fetchRegion'
 import { rgbString } from '../../helpers/rgbString'
+import { searchLocations } from '../../helpers/searchLocations'
+import { useQueryLoud } from '../../helpers/useQueryLoud'
 import { useAppDrawerWidth } from '../../hooks/useAppDrawerWidth'
 import { useCurrentLenseColor } from '../../hooks/useCurrentLenseColor'
 import { useLastValue } from '../../hooks/useLastValue'
@@ -48,17 +53,18 @@ import { addTagsToCache } from '../../state/allTags'
 import { getActiveTags } from '../../state/getActiveTags'
 import { getTagsFromRoute } from '../../state/getTagsFromRoute'
 import { getTagSlug } from '../../state/getTagSlug'
-import { getLocationFromRoute } from '../../state/home-location.helpers'
 import {
   HomeActiveTagsRecord,
   HomeStateItemSearch,
 } from '../../state/home-types'
+import { HomeStateItemLocation } from '../../state/HomeStateItemLocation'
+import { initialHomeState } from '../../state/initialHomeState'
 import { omStatic } from '../../state/omStatic'
-import { router } from '../../state/router'
+import { SearchRouteParams, router } from '../../state/router'
 import { SearchResultsStore } from '../../state/searchResult'
 import { useOvermind } from '../../state/useOvermind'
 import { ContentScrollView } from '../../views/ContentScrollView'
-import { StackCloseButton, StackDrawer } from '../../views/StackDrawer'
+import { StackDrawer } from '../../views/StackDrawer'
 import { TagButton, getTagButtonProps } from '../../views/TagButton'
 import { PageTitleTag } from '../../views/ui/PageTitleTag'
 import { SlantedTitle } from '../../views/ui/SlantedTitle'
@@ -74,57 +80,55 @@ import { SearchPageResultsInfoBox } from './SearchPageResultsInfoBox'
 type Props = StackViewProps<HomeStateItemSearch>
 const SearchPagePropsContext = createContext<Props | null>(null)
 
-const loadSearchPage: PageLoadEffectCallback = ({ isRefreshing, item }) => {
-  // if initial load on a search page, process url => state
-  let isCancelled = false
-
-  if (isRefreshing) {
-    //@ts-expect-error overmind type error
-    omStatic.actions.home.runSearch({ force: true })
-    return undefined
-  }
-
-  getLocationFromRoute().then((location) => {
-    if (isCancelled) return
-    // TODO UPDATE HOME TOO...
-    omStatic.actions.home.updateCurrentState({
-      ...location,
-    })
-    getTagsFromRoute(router.curPage).then((tags) => {
-      if (isCancelled) return
-      addTagsToCache(tags)
-      const activeTags: HomeActiveTagsRecord = tags.reduce<any>((acc, tag) => {
-        acc[getTagSlug(tag)] = true
-        return acc
-      }, {})
-      const searchQuery = decodeURIComponent(router.curPage.params.search ?? '')
-      console.log('activeTags', activeTags, item, searchQuery, 'run search')
-      omStatic.actions.home.updateActiveTags({
-        ...item,
-        searchQuery,
-        activeTags,
-      })
-      omStatic.actions.home.runSearch()
-    })
-  })
-
-  return () => {
-    isCancelled = true
-  }
-}
-
 export default memo(function SearchPage(props: Props) {
+  console.warn('render searchpage', JSON.stringify(props, null, 2))
   // const isEditingUserList = !!isEditingUserPage(om.state)
   const om = useOvermind()
-  const state = om.state.home.allStates[props.item.id] as HomeStateItemSearch
+  const state = props.item
+  const route = useLastValueWhen(
+    () => router.curPage,
+    router.curPage.name !== 'search'
+  )
+  const location = useLocationFromRoute(route)
+  const tags = useTagsFromRoute(route)
+
   const isOptimisticUpdating = om.state.home.isOptimisticUpdating
   const wasOptimisticUpdating = useLastValue(isOptimisticUpdating)
-
   const changingFilters = wasOptimisticUpdating && state.status === 'loading'
   const shouldAvoidContentUpdates =
     isOptimisticUpdating || !props.isActive || changingFilters
 
-  usePageLoadEffect(props, loadSearchPage)
+  usePageLoadEffect(props, ({ isRefreshing }) => {
+    if (isRefreshing) {
+      om.actions.home.runSearch({ force: true })
+    }
+  })
+
+  useEffect(() => {
+    if (!location.data) return
+    const searchItem: HomeStateItemSearch = {
+      ...props.item,
+      center: location.data.center,
+      span: location.data.span,
+    }
+    om.actions.home.updateCurrentState(searchItem)
+  }, [location.data])
+
+  useEffect(() => {
+    if (!tags.data) return
+    addTagsToCache(tags.data)
+    const activeTags: HomeActiveTagsRecord = tags.data.reduce((acc, tag) => {
+      acc[getTagSlug(tag)] = true
+      return acc
+    }, {})
+    const searchQuery = decodeURIComponent(router.curPage.params.search ?? '')
+    om.actions.home.updateActiveTags({
+      ...props.item,
+      searchQuery,
+      activeTags,
+    })
+    om.actions.home.runSearch({})
+  }, [tags.data])
 
   useEffect(() => {
     let isCancelled = false
@@ -148,7 +152,7 @@ export default memo(function SearchPage(props: Props) {
       isCancelled = true
       dispose()
     }
-  })
+  }, [])
 
   const key = useLastValueWhen(
     () =>
@@ -198,12 +202,7 @@ const SearchNavBarContainer = ({
   let contents = <SearchPageNavBar id={id} />
 
   if (!media.sm) {
-    return (
-      <HStack>
-        {contents}
-        <VStack width={100} height={10} />
-      </HStack>
-    )
+    return <HStack>{contents}</HStack>
   }
 
   if (!isWeb) {
@@ -301,7 +300,10 @@ const SearchResultsContent = (props: Props) => {
     <>
       <PageTitleTag>{title}</PageTitleTag>
       <RecyclerListView
-        style={{ flex: 1, height: '100%' }}
+        style={{
+          flex: 1,
+          height: '100%',
+        }}
         canChangeSize
         externalScrollView={SearchPageScrollView as any}
         renderAheadOffset={600}
@@ -322,24 +324,21 @@ const SearchPageScrollView = forwardRef<ScrollView, SearchPageScrollViewProps>(
   ({ children, onSizeChanged, ...props }, ref) => {
     const curProps = useContext(SearchPagePropsContext)
     const media = useMedia()
-    const { title, subTitle, pageTitleElements } = getTitleForState(
-      curProps.item,
-      {
-        lowerCase: false,
-      }
-    )
+    const { title, subTitle, pageName } = getTitleForState(curProps.item, {
+      lowerCase: false,
+    })
     const titleLen = (title + subTitle).length
     const titleScale =
-      titleLen > 80
+      titleLen > 65
         ? 0.7
-        : titleLen > 70
+        : titleLen > 55
         ? 0.75
-        : titleLen > 60
-        ? 0.8
-        : titleLen > 50
-        ? 0.9
+        : titleLen > 45
+        ? 0.85
+        : titleLen > 35
+        ? 0.95
         : 1
-    const titleFontSize = 28 * titleScale * (media.sm ? 0.75 : 1.2)
+    const titleFontSize = 28 * titleScale * (media.sm ? 0.75 : 1)
     const lenseColor = useCurrentLenseColor()
     const scrollRef = useRef<ScrollView>()
 
@@ -415,7 +414,7 @@ const SearchPageScrollView = forwardRef<ScrollView, SearchPageScrollViewProps>(
               fontWeight="800"
               color={rgbString(lenseColor.map((x) => x * 0.92))}
             >
-              {pageTitleElements}{' '}
+              {pageName}{' '}
               <Text
                 // @ts-ignore
                 display="inline" // safari fix
@@ -500,9 +499,10 @@ const SearchPageScrollView = forwardRef<ScrollView, SearchPageScrollViewProps>(
             <HStack flex={1} />
           </HStack>
 
-          <VStack position="relative" flex={1} minHeight={600}>
+          <VStack position="relative" flex={10} minHeight={600}>
             {children}
           </VStack>
+
           <Suspense fallback={null}>
             <SearchFooter
               searchState={curProps.item}
@@ -554,4 +554,67 @@ const HomeLoading = (props: StackProps) => {
       <LoadingItem />
     </VStack>
   )
+}
+
+function useLocationFromRoute(route: HistoryItem<'search'>) {
+  const key = `location-${route.name + route.params.region}`
+  return useQueryLoud(key, () => getLocationFromRoute(route))
+}
+
+async function getLocationFromRoute(
+  route: HistoryItem<'search'>
+): Promise<HomeStateItemLocation | null> {
+  if (route.name === 'search') {
+    const params = route.params as SearchRouteParams
+
+    if (params.region === 'here') {
+      // TODO get from localStorage or set to default sf
+      return null
+    }
+
+    // lat _ lng _ span
+    if (+params.region[0] >= 0) {
+      const [latStr, lngStr, spanStr] = params.region.split('_')
+      return {
+        center: {
+          lat: +latStr,
+          lng: +lngStr,
+        },
+        span: {
+          lat: +spanStr,
+          lng: +spanStr,
+        },
+      }
+    }
+
+    // find by slug
+    const region = await fetchRegion(params.region)
+    if (region) {
+      return {
+        center: region.center,
+        span: region.span,
+        region,
+      }
+    }
+
+    // ?? old find by slug
+    const locations = await searchLocations(params.region.split('-').join(' '))
+    if (locations.length) {
+      const [nearest] = locations
+      return {
+        center: nearest.center,
+        span: bboxToSpan(nearest.bbox),
+      }
+    }
+  }
+
+  return {
+    center: initialHomeState.center,
+    span: initialHomeState.span,
+  }
+}
+
+function useTagsFromRoute(route: HistoryItem<'search'>) {
+  const key = `tags-${Object.values(route).join(',')}`
+  return useQueryLoud(key, () => getTagsFromRoute(route))
 }

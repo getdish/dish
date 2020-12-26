@@ -92,7 +92,7 @@ export function getTitleForState(
 
   const title = `${userPrefix} ${titleSubject} ${subTitleParts.join(' ')}`
 
-  const pageTitleElements = (
+  const pageName = (
     <>
       {userPrefix}
       {titleSubject
@@ -112,6 +112,6 @@ export function getTitleForState(
     title,
     subTitle,
     subTitleElements,
-    pageTitleElements,
+    pageName,
   }
 }

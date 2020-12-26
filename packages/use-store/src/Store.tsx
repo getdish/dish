@@ -1,14 +1,13 @@
 import { DebugStores } from './shouldDebug'
 
 export const TRIGGER_UPDATE = Symbol()
-const LISTENERS = Symbol()
 
-export class Store<A extends Object | null = null> {
+const LISTENERS = Symbol('listeners')
+
+export class Store<Props extends Object | null = null> {
   private [LISTENERS] = new Set<Function>()
 
-  constructor(public props: A) {}
-
-  mount() {}
+  constructor(public props: Props) {}
 
   subscribe(onChanged: Function) {
     this[LISTENERS].add(onChanged)
@@ -17,7 +16,7 @@ export class Store<A extends Object | null = null> {
     }
   }
 
-  [TRIGGER_UPDATE] = () => {
+  [TRIGGER_UPDATE]() {
     this[LISTENERS].forEach((cb) => cb())
     if (
       process.env.NODE_ENV === 'development' &&

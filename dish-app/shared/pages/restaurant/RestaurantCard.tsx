@@ -1,4 +1,4 @@
-// debug
+// // debug
 import { graphql, order_by } from '@dish/graph'
 import React, { Suspense, memo, useCallback, useState } from 'react'
 import { Image, StyleSheet } from 'react-native'
@@ -13,10 +13,13 @@ import {
 
 import { getColorsForName } from '../../helpers/getColorsForName'
 import { useRestaurantQuery } from '../../hooks/useRestaurantQuery'
+import {
+  CardFrame,
+  cardFrameBorderRadiusSmaller,
+  useCardFrame,
+} from '../../views/CardFrame'
 import { RestaurantUpVoteDownVote } from '../../views/restaurant/RestaurantUpVoteDownVote'
 import { Link } from '../../views/ui/Link'
-import { useCardFrame } from '../home/useCardFrame'
-import { CardFrame, cardFrameBorderRadiusSmaller } from './CardFrame'
 import { priceRange } from './RestaurantDetailRow'
 
 export type RestaurantCardProps = {
@@ -59,114 +62,113 @@ export const RestaurantCardContent = memo(
       const restaurantPhoto = restaurant.photo_table({
         order_by: [{ photo: { quality: order_by.desc } }],
         limit: 1,
-      })[0].photo.url
+      })?.[0]?.photo.url
 
       return (
         <Link name="restaurant" params={{ slug: restaurantSlug }}>
-          <CardFrame hoverable>
+          <VStack
+            borderRadius={1000}
+            backgroundColor={color}
+            borderRadius={cardFrameBorderRadiusSmaller}
+          >
             <VStack
-              backgroundColor={color}
+              className="safari-fix-overflow"
+              width="100%"
+              overflow="hidden"
+              alignSelf="center"
+              position="relative"
               borderRadius={cardFrameBorderRadiusSmaller}
             >
-              <VStack
-                className="safari-fix-overflow"
-                width="100%"
-                overflow="hidden"
-                alignSelf="center"
-                position="relative"
-                borderRadius={cardFrameBorderRadiusSmaller}
-              >
-                <AbsoluteVStack
-                  fullscreen
-                  className="ease-in-out"
-                  opacity={hideInfo ? 0 : 1}
-                  pointerEvents="none"
-                  transform={[{ scaleX: 0.98 }, { scaleY: 0.98 }]}
-                  zIndex={10}
-                  borderRadius={cardFrameBorderRadiusSmaller - 2}
-                  shadowColor="#000"
-                  shadowRadius={40}
-                ></AbsoluteVStack>
-                <AbsoluteVStack
-                  className="ease-in-out"
-                  opacity={hideInfo ? 0 : 1}
-                  pointerEvents="none"
-                  fullscreen
-                  zIndex={10}
-                >
-                  <LinearGradient
-                    style={StyleSheet.absoluteFill}
-                    colors={[`${lightColor}`, `${color}99`]}
-                    start={[0, 0]}
-                    end={[0.2, 0.2]}
-                  />
-                  <LinearGradient
-                    style={StyleSheet.absoluteFill}
-                    colors={[`${altColor}22`, `${altColor}99`]}
-                    start={[1, 1]}
-                    end={[0.6, 0.6]}
-                  />
-                </AbsoluteVStack>
-                <Image
-                  resizeMode="cover"
-                  style={{
-                    width: cardFrame.width,
-                    height: cardFrame.height,
-                  }}
-                  source={{ uri: restaurantPhoto }}
-                />
-              </VStack>
               <AbsoluteVStack
-                alignItems="flex-start"
                 fullscreen
-                justifyContent="flex-end"
+                className="ease-in-out"
+                opacity={hideInfo ? 0 : 1}
                 pointerEvents="none"
+                transform={[{ scaleX: 0.98 }, { scaleY: 0.98 }]}
+                zIndex={10}
+                borderRadius={cardFrameBorderRadiusSmaller - 2}
+                shadowColor="#000"
+                shadowRadius={40}
+              ></AbsoluteVStack>
+              <AbsoluteVStack
+                className="ease-in-out"
+                opacity={hideInfo ? 0 : 1}
+                pointerEvents="none"
+                fullscreen
                 zIndex={10}
               >
-                <AbsoluteVStack top={-10} left={-10} zIndex={20}>
-                  <RestaurantUpVoteDownVote restaurantSlug={restaurantSlug} />
-                </AbsoluteVStack>
-
-                <VStack
-                  className="ease-in-out"
-                  opacity={hideInfo ? 0 : 1}
-                  padding={15}
-                  alignItems="flex-start"
-                  spacing
-                  height="100%"
-                >
-                  <HStack width="100%">
-                    <VStack minWidth={60} flex={1} />
-                    <VStack alignItems="flex-end">
-                      <Paragraph
-                        textAlign="right"
-                        size="xxxl"
-                        sizeLineHeight={0.7}
-                        textShadowColor="#00000033"
-                        textShadowRadius={1}
-                        textShadowOffset={{ height: 2, width: 0 }}
-                        color="#fff"
-                        fontWeight="800"
-                        letterSpacing={-1}
-                      >
-                        {restaurant.name}
-                      </Paragraph>
-                      <Spacer size="xs" />
-                      <Paragraph
-                        textAlign="right"
-                        color="#fff"
-                        fontWeight="500"
-                      >
-                        {price_range}
-                      </Paragraph>
-                    </VStack>
-                  </HStack>
-                  <VStack flex={1} />
-                  {below}
-                </VStack>
+                <LinearGradient
+                  style={StyleSheet.absoluteFill}
+                  colors={[`${lightColor}`, `${color}44`]}
+                  start={[0, 0]}
+                  end={[0.2, 0.2]}
+                />
+                <LinearGradient
+                  style={StyleSheet.absoluteFill}
+                  colors={[`${altColor}22`, `${altColor}44`]}
+                  start={[1, 1]}
+                  end={[0.6, 0.6]}
+                />
               </AbsoluteVStack>
+              <Image
+                resizeMode="cover"
+                style={{
+                  width: cardFrame.width,
+                  height: cardFrame.height,
+                }}
+                source={{ uri: restaurantPhoto }}
+              />
             </VStack>
-          </CardFrame>
+            <AbsoluteVStack
+              alignItems="flex-start"
+              fullscreen
+              justifyContent="flex-end"
+              pointerEvents="none"
+              zIndex={10}
+            >
+              <AbsoluteVStack top={-10} left={-10} zIndex={20}>
+                <RestaurantUpVoteDownVote
+                  rounded
+                  display="ratio"
+                  restaurantSlug={restaurantSlug}
+                />
+              </AbsoluteVStack>
+
+              <VStack
+                className="ease-in-out"
+                opacity={hideInfo ? 0 : 1}
+                padding={15}
+                alignItems="flex-start"
+                spacing
+                height="100%"
+              >
+                <HStack width="100%">
+                  <VStack minWidth={60} flex={1} />
+                  <VStack alignItems="flex-end">
+                    <Paragraph
+                      textAlign="right"
+                      size="xl"
+                      sizeLineHeight={0.7}
+                      textShadowColor="#00000011"
+                      textShadowRadius={1}
+                      textShadowOffset={{ height: 2, width: 0 }}
+                      color="#fff"
+                      fontWeight="800"
+                      letterSpacing={-0.5}
+                    >
+                      {restaurant.name}
+                    </Paragraph>
+                    <Spacer size="xs" />
+                    <Paragraph textAlign="right" color="#fff" fontWeight="500">
+                      {price_range}
+                    </Paragraph>
+                  </VStack>
+                </HStack>
+                <VStack flex={1} />
+                {below}
+              </VStack>
+            </AbsoluteVStack>
+          </VStack>
         </Link>
       )
     }
