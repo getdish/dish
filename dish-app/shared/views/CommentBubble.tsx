@@ -167,7 +167,7 @@ export const CommentBubble = ({
             </VStack>
 
             <HStack
-              backgroundColor="#000"
+              backgroundColor={colors.altColor}
               borderRadius={10}
               paddingHorizontal={5}
               paddingVertical={3}
