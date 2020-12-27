@@ -14,6 +14,7 @@ import {
   HStack,
   Spacer,
   Text,
+  Theme,
   VStack,
   prevent,
   useDebounce,
@@ -110,6 +111,7 @@ export class AutocompleteStore extends Store<{ target: AutocompleteTarget }> {
 export default memo(function AppAutocomplete() {
   const autocompletes = useStoreInstance(autocompletesStore)
   const drawerStore = useStore(BottomDrawerStore)
+  const theme = useTheme()
 
   if (isWeb) {
     useEffect(() => {
@@ -152,14 +154,15 @@ export default memo(function AppAutocomplete() {
     }, [])
   }
 
-  const om = useOvermind()
   const curPage = useRouterCurPage()
   useEffect(() => {
     autocompletes.setVisible(false)
   }, [curPage])
 
   return (
-    <>
+    <Theme
+      name={theme.name === 'light' ? 'lightTranslucent' : 'darkTranslucent'}
+    >
       <AbsoluteVStack
         fullscreen
         opacity={autocompletes.target === 'search' ? 1 : 0}
@@ -172,7 +175,7 @@ export default memo(function AppAutocomplete() {
       >
         <AutocompleteLocation />
       </AbsoluteVStack>
-    </>
+    </Theme>
   )
 })
 
@@ -370,10 +373,7 @@ const AutocompleteFrame = ({ children }: { children: any }) => {
       top={media.sm ? searchBarHeight : 0}
       onPress={() => autocompletes.setVisible(false)}
     >
-      <AbsoluteVStack
-        backgroundColor={theme.backgroundColorTranslucent}
-        fullscreen
-      />
+      <AbsoluteVStack backgroundColor={theme.backgroundColor} fullscreen />
       <BlurView
         fallbackBackgroundColor="transparent"
         blurRadius={20}
@@ -431,6 +431,8 @@ const AutocompleteFrame = ({ children }: { children: any }) => {
   return content
 }
 
+type AutocompleteSelectCb = (result: AutocompleteItem, index: number) => void
+
 const AutocompleteResults = memo(
   ({
     target,
@@ -441,111 +443,27 @@ const AutocompleteResults = memo(
     target: AutocompleteTarget
     prefixResults?: any[]
     emptyContent?: any
-    onSelect: (result: AutocompleteItem, index: number) => void
+    onSelect: AutocompleteSelectCb
   }) => {
-    const showLocation = target === 'location'
-    const om = useOvermind()
-    const drawerStore = useStore(BottomDrawerStore)
-    const theme = useTheme()
-    const autocompletes = useStoreInstance(autocompletesStore)
     const autocompleteStore = useStore(AutocompleteStore, { target })
-    const hideAutocompleteSlow = useDebounce(
-      () => autocompletes.setVisible(false),
-      50
-    )
     const activeIndex = autocompleteStore.index
     const results = [...prefixResults, ...autocompleteStore.results]
-
     return (
       <>
         {!results.length && emptyContent}
         {results.map((result, index) => {
-          const plusButtonEl =
-            result.type === 'dish' &&
-            index !== 0 &&
-            om.state.user.isLoggedIn ? (
-              <AutocompleteAddButton />
-            ) : null
-
           const isActive = activeIndex === index
 
           return (
             <React.Fragment key={`${result.tagId}${index}`}>
-              <LinkButton
-                fontWeight="600"
-                lineHeight={22}
-                width="100%"
-                onPressOut={() => {
-                  hideAutocompleteSlow()
-                  onSelect(result, index)
-                }}
-                {...(!showLocation &&
-                  result?.type !== 'orphan' && {
-                    tag: result,
-                  })}
-                {...(result.type == 'restaurant' && {
-                  tag: null,
-                  name: 'restaurant',
-                  params: {
-                    slug: result.slug,
-                  },
-                })}
-              >
-                <HStack
-                  flex={1}
-                  justifyContent={target === 'location' ? 'flex-end' : 'center'}
-                  paddingHorizontal={10}
-                  paddingVertical={10}
-                  borderRadius={12}
-                  hoverStyle={{
-                    backgroundColor: theme.backgroundColorTertiaryTranslucent,
-                  }}
-                  {...(isActive && {
-                    backgroundColor: theme.backgroundColorTranslucent,
-                    hoverStyle: {
-                      backgroundColor:
-                        theme.backgroundColorSecondaryTranslucent,
-                    },
-                  })}
-                >
-                  <VStack height={26} width={26} marginRight={10}>
-                    {result.icon?.indexOf('http') === 0 ? (
-                      <Image
-                        source={{ uri: result.icon }}
-                        style={{
-                          width: 26,
-                          height: 26,
-                          borderRadius: 100,
-                        }}
-                      />
-                    ) : result.icon ? (
-                      <Text fontSize={22}>{result.icon} </Text>
-                    ) : null}
-                  </VStack>
-                  <VStack
-                    alignItems="center"
-                    justifyContent={showLocation ? 'flex-end' : 'flex-end'}
-                  >
-                    <Text
-                      textAlign={showLocation ? 'right' : 'center'}
-                      fontWeight="600"
-                      ellipse
-                      color={'#000'}
-                      fontSize={22}
-                    >
-                      {result.name} {plusButtonEl}
-                    </Text>
-                    {!!result.description && (
-                      <>
-                        <Spacer size="xs" />
-                        <Text ellipse color="rgba(0,0,0,0.5)" fontSize={15}>
-                          {result.description}
-                        </Text>
-                      </>
-                    )}
-                  </VStack>
-                </HStack>
-              </LinkButton>
+              <Theme name={isActive ? 'active' : null}>
+                <AutocompleteItemView
+                  target={target}
+                  index={index}
+                  result={result}
+                  onSelect={onSelect}
+                />
+              </Theme>
               <Spacer size={1} />
             </React.Fragment>
           )
@@ -554,6 +472,102 @@ const AutocompleteResults = memo(
     )
   }
 )
+
+const AutocompleteItemView = ({
+  target,
+  onSelect,
+  result,
+  index,
+}: {
+  result: AutocompleteItem
+  index: number
+  target: ShowAutocomplete
+  onSelect: AutocompleteSelectCb
+}) => {
+  const om = useOvermind()
+  const showLocation = target === 'location'
+  const theme = useTheme()
+  const hideAutocompleteSlow = useDebounce(
+    () => autocompletesStore.setVisible(false),
+    50
+  )
+  const plusButtonEl =
+    result.type === 'dish' && index !== 0 && om.state.user.isLoggedIn ? (
+      <AutocompleteAddButton />
+    ) : null
+
+  return (
+    <LinkButton
+      fontWeight="600"
+      lineHeight={22}
+      width="100%"
+      onPressOut={() => {
+        hideAutocompleteSlow()
+        onSelect(result, index)
+      }}
+      {...(!showLocation &&
+        result?.type !== 'orphan' && {
+          tag: result,
+        })}
+      {...(result.type == 'restaurant' && {
+        tag: null,
+        name: 'restaurant',
+        params: {
+          slug: result.slug,
+        },
+      })}
+    >
+      <HStack
+        flex={1}
+        justifyContent={target === 'location' ? 'flex-end' : 'center'}
+        paddingHorizontal={10}
+        paddingVertical={10}
+        borderRadius={12}
+        backgroundColor={theme.backgroundColor}
+        hoverStyle={{
+          backgroundColor: theme.backgroundColorTertiary,
+        }}
+      >
+        <VStack height={26} width={26} marginRight={10}>
+          {result.icon?.indexOf('http') === 0 ? (
+            <Image
+              source={{ uri: result.icon }}
+              style={{
+                width: 26,
+                height: 26,
+                borderRadius: 100,
+              }}
+            />
+          ) : result.icon ? (
+            <Text fontSize={22}>{result.icon} </Text>
+          ) : null}
+        </VStack>
+        <VStack
+          alignItems="center"
+          justifyContent={showLocation ? 'flex-end' : 'flex-end'}
+        >
+          <Text
+            textAlign={showLocation ? 'right' : 'center'}
+            fontWeight="600"
+            ellipse
+            color={theme.color}
+            fontSize={22}
+          >
+            {result.name} {plusButtonEl}
+          </Text>
+          {!!result.description && (
+            <>
+              <Spacer size="xs" />
+              <Text ellipse color={theme.colorSecondary} fontSize={15}>
+                {result.description}
+              </Text>
+            </>
+          )}
+        </VStack>
+      </HStack>
+    </LinkButton>
+  )
+}
 
 const HomeAutocompleteDefault = memo(() => {
   const theme = useTheme()
