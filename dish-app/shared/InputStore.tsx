@@ -1,4 +1,4 @@
-import { Store } from '@dish/use-store'
+import { Store, createStore, useStoreInstance } from '@dish/use-store'
 import { debounce } from 'lodash'
 
 import { autocompletesStore } from './AppAutocomplete'
@@ -11,6 +11,12 @@ import { searchPageStore } from './pages/search/SearchPageStore'
 
 export class InputStore extends Store<{ name: 'location' | 'search' }> {
   node: HTMLInputElement | null = null
+  value: string | null = null
+
+  // one way sync to set it externally
+  setValue(val: string) {
+    this.value = val
+  }
 
   setNodeSlow = debounce((view: any) => {
     this.node = view
@@ -48,3 +54,8 @@ export class InputStore extends Store<{ name: 'location' | 'search' }> {
     autocompletesStore.setVisible(false)
   }
 }
+
+export const inputStoreLocation = createStore(InputStore, { name: 'location' })
+export const useInputStoreLocation = () => useStoreInstance(inputStoreLocation)
+export const inputStoreSearch = createStore(InputStore, { name: 'search' })
+export const useInputStoreSearch = () => useStoreInstance(inputStoreSearch)

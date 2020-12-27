@@ -1,4 +1,3 @@
-import { useStore } from '@dish/use-store'
 import React, { useMemo } from 'react'
 import {
   PanResponder,
@@ -6,9 +5,9 @@ import {
   TouchableWithoutFeedback,
   View,
 } from 'react-native'
-import { VStack } from 'snackui'
+import { VStack, useGet } from 'snackui'
 
-import { InputStore } from './InputStore'
+import { inputStoreLocation, inputStoreSearch } from './InputStore'
 
 export let isTouchingSearchBar = false
 
@@ -17,7 +16,9 @@ export const SearchInputNativeDragFix = ({
 }: {
   name: 'search' | 'location'
 }) => {
-  const inputStore = useStore(InputStore, { name })
+  const getName = useGet(name)
+  const getInputStore = () =>
+    getName() == 'search' ? inputStoreSearch : inputStoreLocation
   const panResponder = useMemo(() => {
     return PanResponder.create({
       onMoveShouldSetPanResponder: (_, { dy }) => {
@@ -28,11 +29,10 @@ export const SearchInputNativeDragFix = ({
         console.log(123)
       },
       onPanResponderReject: () => {
-        console.log('inputStore.node', inputStore.node?.focus())
+        getInputStore().node?.focus()
         isTouchingSearchBar = false
       },
       onPanResponderRelease: (e, gestureState) => {
-        console.log('inputStore.node', inputStore.node?.focus())
         isTouchingSearchBar = false
       },
     })
@@ -52,7 +52,7 @@ export const SearchInputNativeDragFix = ({
         onPress={(e) => {
           e.preventDefault()
           e.stopPropagation()
-          inputStore.node?.focus()
+          getInputStore().node?.focus()
         }}
       >
         <View style={StyleSheet.absoluteFill} {...panResponder.panHandlers} />

@@ -4,15 +4,13 @@ import { NavigateItem } from '@dish/router'
 import { getActiveTags } from './getActiveTags'
 import { getTagSlug } from './getTagSlug'
 import { isHomeState, isSearchState } from './home-helpers'
-import { HomeStateTagNavigable } from './home-types'
+import { HomeStateItem, HomeStateTagNavigable } from './home-types'
 import { tagLenses } from './localTags'
 import { SearchRouteParams, router } from './router'
 import { shouldBeOnSearch } from './shouldBeOnSearch'
 import { SPLIT_TAG } from './SPLIT_TAG'
 
-export const getNavigateItemForState = (
-  state: HomeStateTagNavigable
-): NavigateItem => {
+export const getNavigateItemForState = (state: HomeStateItem): NavigateItem => {
   if (!state) {
     throw new Error(`provide currentState at least`)
   }

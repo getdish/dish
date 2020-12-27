@@ -1,6 +1,5 @@
-// // debug
 import { MapPin, Navigation } from '@dish/react-feather'
-import { useStore, useStoreInstance } from '@dish/use-store'
+import { useStoreInstance } from '@dish/use-store'
 import React, { memo, useCallback, useEffect, useState } from 'react'
 import { TextInput, TouchableOpacity } from 'react-native'
 import { Button, HStack, VStack, prevent, useMedia } from 'snackui'
@@ -14,15 +13,16 @@ import { inputTextStyles } from './AppSearchInput'
 import { blue } from './colors'
 import { isWeb } from './constants'
 import { useSearchBarTheme } from './hooks/useSearchBarTheme'
-import { InputStore } from './InputStore'
+import { useInputStoreLocation } from './InputStore'
 import { SearchInputNativeDragFix } from './SearchInputNativeDragFix'
+import { setLocation } from './setLocation'
 import { useOvermind } from './state/useOvermind'
 
 const paddingHorizontal = 16
 
 export const AppSearchInputLocation = memo(() => {
   const media = useMedia()
-  const inputStore = useStore(InputStore, { name: 'location' })
+  const inputStore = useInputStoreLocation()
   const om = useOvermind()
   const { color } = useSearchBarTheme()
   const [locationSearch, setLocationSearch] = useState('')
@@ -47,11 +47,10 @@ export const AppSearchInputLocation = memo(() => {
 
   // one way sync down for more perf
   useEffect(() => {
-    return om.reaction(
-      (state) => state.home.locationSearchQuery,
-      (val) => setLocationSearch(val)
-    )
-  }, [])
+    if (inputStore.value !== null) {
+      setLocationSearch(inputStore.value)
+    }
+  }, [inputStore.value])
 
   const handleKeyPress = useCallback((e) => {
     // @ts-ignore
@@ -63,7 +62,7 @@ export const AppSearchInputLocation = memo(() => {
         // enter
         const result = locationAutocomplete.activeResult
         if (result) {
-          om.actions.home.setLocation(result.name)
+          setLocation(result.name)
           autocompletes.setVisible(false)
         }
         return
@@ -153,7 +152,6 @@ export const AppSearchInputLocation = memo(() => {
               onKeyPress={handleKeyPress}
               onChangeText={(text) => {
                 setLocationSearch(text)
-                om.actions.home.setLocationSearchQuery(text)
                 if (text && !autocompletes.visible) {
                   autocompletes.setTarget('location')
                 }
