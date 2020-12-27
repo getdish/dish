@@ -54,7 +54,6 @@ export const state: HomeState = {
   centerToResults: 0,
   refreshCurrentPage: 0,
   allUsers: {},
-  searchBarY: 25,
   locationSearchQuery: '',
   hoveredRestaurant: null,
   isHoveringRestaurant: false,
@@ -926,10 +925,6 @@ const setSearchBarTagIndex: Action<number> = (om, val) => {
   )
 }
 
-const setSearchBarY: Action<number> = (om, val) => {
-  om.state.home.searchBarY = val
-}
-
 const setIsHoveringRestaurant: Action<boolean> = (om, val) => {
   om.state.home.isHoveringRestaurant = val
 }
@@ -1033,7 +1028,6 @@ export const actions = {
   updateHomeState,
   navigate,
   moveMapToUserLocation,
-  setSearchBarY,
   setIsHoveringRestaurant,
   setSelectedRestaurant,
   setShowUserMenu,
