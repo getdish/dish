@@ -67,6 +67,7 @@ function getStoreUid(storeName: string, props: string | Object) {
 }
 
 // use singleton with react
+// TODO selector support with types...
 export function useStoreInstance<A extends Store<B>, B>(instance: A): A {
   const store = instance[UNWRAP_PROXY]
   const uid = getStoreUid(store.constructor.name, store.props)

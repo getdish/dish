@@ -80,7 +80,7 @@ type Props = StackViewProps<HomeStateItemSearch>
 const SearchPagePropsContext = createContext<Props | null>(null)
 
 export default memo(function SearchPage(props: Props) {
-  console.warn('render searchpage', JSON.stringify(props, null, 2))
+  console.warn('render searchpage', props)
   // const isEditingUserList = !!isEditingUserPage(om.state)
 
   // export const isOnOwnProfile = (state: OmState) => {
@@ -341,7 +341,7 @@ type SearchPageScrollViewProps = ScrollViewProps & {
 const SearchPageTitle = memo(() => {
   const media = useMedia()
   const curProps = useContext(SearchPagePropsContext)
-  const { title, subTitle, pageName } = getTitleForState(curProps.item, {
+  const { title, subTitle } = getTitleForState(curProps.item, {
     lowerCase: false,
   })
   const lenseColor = useCurrentLenseColor()

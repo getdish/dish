@@ -60,7 +60,6 @@ export const AppMenuButton = () => {
         right={10}
         zIndex={zIndexDrawer - 1}
         pointerEvents="none"
-        backgroundColor="red"
       >
         <VStack
           shadowColor="rgba(0,0,0,0.095)"
@@ -83,7 +82,7 @@ export const AppMenuButton = () => {
               justifyContent="center"
               borderRadius={100}
             >
-              <Menu color={color} size={22} />
+              <Menu color="#000" size={24} />
             </HStack>
           </BlurView>
         </VStack>
