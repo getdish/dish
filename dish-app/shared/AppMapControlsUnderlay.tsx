@@ -1,7 +1,10 @@
+import { isEqual } from '@dish/fast-compare'
 import { Map, RefreshCcw } from '@dish/react-feather'
+import { useStoreInstance } from '@dish/use-store'
 import React, { memo } from 'react'
 import { AbsoluteVStack, HStack, useMedia } from 'snackui'
 
+import { appMapStore } from './AppMapStore'
 import { searchBarHeight, zIndexDrawer } from './constants'
 import { isWeb } from './constants'
 import { useMapSize } from './hooks/useMapSize'
@@ -11,15 +14,19 @@ import { OverlayLinkButton } from './views/ui/OverlayLinkButton'
 
 export const AppMapControlsUnderlay = memo(() => {
   const om = useOvermind()
-  const hasMovedMap =
-    !!om.state.home.currentState.mapAt &&
-    om.state.home.currentStateType === 'search'
-
-  console.log('hasMovedMap', hasMovedMap)
-
+  const appMap = useStoreInstance(appMapStore)
+  const hasMovedCenter =
+    appMap.position.center &&
+    !isEqual(appMap.position.center, om.state.home.currentState.center)
+  const hasMovedSpan =
+    appMap.position.span &&
+    !isEqual(appMap.position.span, om.state.home.currentState.span)
+  const hasMovedMap = hasMovedCenter || hasMovedSpan
+  const showRefresh = hasMovedMap && om.state.home.currentStateType === 'search'
   const media = useMedia()
   const { paddingLeft, width } = useMapSize(media.sm)
   const safeArea = useSafeArea()
+
   return (
     <AbsoluteVStack
       zIndex={media.sm ? zIndexDrawer - 1 : zIndexDrawer + 1}
@@ -57,7 +64,7 @@ export const AppMapControlsUnderlay = memo(() => {
           // overflow="hidden"
           spacing={5}
         >
-          {hasMovedMap && (
+          {showRefresh && (
             <OverlayLinkButton
               Icon={RefreshCcw}
               alignItems="center"

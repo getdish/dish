@@ -6,6 +6,7 @@ import { isPresent } from '@dish/helpers/src'
 import { stringify } from '@dish/helpers/src'
 import { Store, createStore } from '@dish/use-store'
 
+import { appMapStore } from '../../AppMapStore'
 import { allTags } from '../../state/allTags'
 import { getActiveTags } from '../../state/getActiveTags'
 import { getTagSlug } from '../../state/getTagSlug'
@@ -75,14 +76,13 @@ class SearchPageStore extends Store {
     state = state!
 
     // overmind seems unhappy to just let us mutate
-    const center = state.mapAt?.center ?? state!.center
-    const span = state.mapAt?.span ?? state!.span
+    const center = appMapStore.position.center ?? state!.center
+    const span = appMapStore.position.span ?? state!.span
 
     om.actions.home.updateHomeState({
       id: state.id,
       center,
       span,
-      mapAt: null,
     })
 
     const activeTags = state.activeTags ?? {}

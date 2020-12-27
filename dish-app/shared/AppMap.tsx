@@ -1,4 +1,4 @@
-import { Restaurant, RestaurantOnlyIds, graphql } from '@dish/graph'
+import { LngLat, Restaurant, RestaurantOnlyIds, graphql } from '@dish/graph'
 import { isPresent } from '@dish/helpers'
 import { useStoreInstance } from '@dish/use-store'
 import { debounce, isEqual, uniqBy } from 'lodash'
@@ -20,6 +20,7 @@ import {
   useTheme,
 } from 'snackui'
 
+import { appMapStore } from './AppMapStore'
 import { drawerStore } from './BottomDrawerStore'
 import { pageWidthMax, searchBarHeight, zIndexMap } from './constants'
 import { getLngLat } from './helpers/getLngLat'
@@ -164,23 +165,8 @@ const AppMapContent = memo(
     const om = useOvermind()
     const media = useMedia()
     const { width, paddingLeft } = useMapSize(media.sm)
-    const [internal, setInternal] = useState(() => ({
-      id: omStatic.state.home.selectedRestaurant?.id,
-      span: omStatic.state.home.currentState.span,
-      center: omStatic.state.home.currentState.center,
-      via: 'select' as 'select' | 'hover' | 'detail',
-    }))
-    const setState = (next: Partial<typeof internal>) => {
-      setInternal((prev) => {
-        const fullNext = { ...prev, ...next }
-        if (isEqual(fullNext, prev)) {
-          return prev
-        }
-        return fullNext
-      })
-    }
-
-    const { center, span } = internal
+    const { position } = useStoreInstance(appMapStore)
+    const { center, span } = position
 
     // SELECTED
     // useEffect(() => {
@@ -227,7 +213,7 @@ const AppMapContent = memo(
     const isLoading = restaurants[0]?.location?.coordinates[0] === null
     const key = useLastValueWhen(
       () =>
-        `${internal.id ?? ''}${
+        `${position.id ?? ''}${
           restaurantDetail?.location.coordinates ?? ''
         }${JSON.stringify(
           restaurants.map((x) => x.location?.coordinates ?? '-')
@@ -240,7 +226,7 @@ const AppMapContent = memo(
     restaurants[0]?.id
     const restaurantSelected = useMemo(
       () =>
-        internal.id ? restaurants.find((x) => x.id === internal.id) : null,
+        position.id ? restaurants.find((x) => x.id === position.id) : null,
       [key]
     )
 
@@ -249,8 +235,8 @@ const AppMapContent = memo(
         (omState) => {
           const stateId = omState.home.currentState.id
           const state = omState.home.allStates[stateId]
-          const span = state.mapAt?.span ?? state.span
-          const center = state.mapAt?.center ?? state.center
+          const span = state.span
+          const center = state.center
           // stringify to prevent extra reactions
           return JSON.stringify({ span, center })
         },
@@ -258,7 +244,7 @@ const AppMapContent = memo(
           const { span, center } = JSON.parse(spanCenter)
           console.log('🗺 position', { center, span })
           updateRegion.cancel()
-          setState({
+          appMapStore.setPosition({
             span,
             center,
           })
@@ -274,7 +260,7 @@ const AppMapContent = memo(
       const coords = restaurantSelected.location.coordinates
       if (!coords) return
       const center = getLngLat(coords)
-      setState({
+      appMapStore.setPosition({
         center,
       })
     }, [restaurantSelected])
@@ -304,7 +290,7 @@ const AppMapContent = memo(
     const features = useMemo(() => {
       return getRestaurantMarkers(
         restaurants,
-        internal.id ?? restaurantDetail?.id
+        position.id ?? restaurantDetail?.id
       )
     }, [key])
 
@@ -323,17 +309,10 @@ const AppMapContent = memo(
           //@ts-expect-error
           om.actions.home.setCenterToResults(0)
         }
-        setState({
+        appMapStore.setPosition({
           center,
           span,
         })
-        om.actions.home.updateCurrentState({
-          mapAt: {
-            center,
-            span,
-          },
-        })
-        om.actions.home.updateCurrentMapAreaInformation()
       },
       [media.sm]
     )
@@ -449,7 +428,7 @@ const AppMapContent = memo(
               padding={padding}
               features={features}
               centerToResults={om.state.home.centerToResults}
-              selected={internal.id}
+              selected={position.id}
               hovered={
                 (om.state.home.hoveredRestaurant &&
                   om.state.home.hoveredRestaurant.id) ||

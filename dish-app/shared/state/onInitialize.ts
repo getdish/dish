@@ -39,7 +39,6 @@ export const onInitialize: OnInitialize = async (
   })
 
   actions.user.checkForExistingLogin()
-  actions.home.updateCurrentMapAreaInformation()
 }
 
 if (process.env.NODE_ENV === 'development') {

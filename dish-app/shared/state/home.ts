@@ -19,6 +19,7 @@ import { Action, AsyncAction, Config, IContext, derived } from 'overmind'
 import { Keyboard } from 'react-native'
 import { Toast } from 'snackui'
 
+import { appMapStore } from '../AppMapStore'
 import { getBreadcrumbs, isBreadcrumbState } from '../helpers/getBreadcrumbs'
 import { allTags } from './allTags'
 import { getActiveTags } from './getActiveTags'
@@ -295,17 +296,6 @@ const moveMapToUserLocation: AsyncAction = async (om) => {
   // })
 }
 
-const updateCurrentMapAreaInformation: AsyncAction = async (om) => {
-  const { center, span } =
-    om.state.home.currentState.mapAt ?? om.state.home.currentState
-  const res = await reverseGeocode(center, span)
-  if (res) {
-    const name = res.fullName ?? res.name ?? res.country
-    om.state.home.currentState.currentLocationInfo = res
-    om.state.home.currentState.currentLocationName = name
-  }
-}
-
 const handleRouteChange: AsyncAction<HistoryItem> = async (om, item) => {
   // happens on *any* route push or pop
   if (om.state.home.hoveredRestaurant) {
@@ -429,7 +419,6 @@ const pushHomeState: AsyncAction<
         type: 'home',
         searchQuery: '',
         activeTags: {},
-        mapAt: prev?.mapAt,
         region: item.params.region ?? null,
         section: item.params.section ?? '',
       }
@@ -464,8 +453,8 @@ const pushHomeState: AsyncAction<
         region: router.curPage.params.region ?? prev.region,
         username,
         activeTags: prev.activeTags ?? {},
-        center: prev.mapAt?.center ?? prev.center,
-        span: prev.mapAt?.span ?? prev.span,
+        center: appMapStore.position.center,
+        span: appMapStore.position.span,
       }
       break
     }
@@ -477,9 +466,8 @@ const pushHomeState: AsyncAction<
         section: item.params.section,
         sectionSlug: item.params.sectionSlug,
         restaurantSlug: item.params.slug,
-        center: prev.mapAt?.center ?? prev.center,
-        span: prev.mapAt?.span ?? prev.span,
-        mapAt: null,
+        center: appMapStore.position.center,
+        span: appMapStore.position.span,
       }
       break
     }
@@ -518,8 +506,8 @@ const pushHomeState: AsyncAction<
   const finalState = {
     currentLocationName: currentState?.currentLocationName,
     currentLocationInfo: currentState?.currentLocationInfo,
-    center: currentState?.mapAt?.center ?? currentState?.center,
-    span: currentState?.mapAt?.span ?? currentState?.span,
+    center: currentState?.center,
+    span: currentState?.span,
     searchQuery,
     type,
     ...nextState,
@@ -587,7 +575,6 @@ const setLocation: AsyncAction<string> = async (om, val) => {
   //   om.actions.home.updateCurrentState({
   //     center: { ...exact.center },
   //     currentLocationName: val,
-  //     mapAt: null,
   //   })
   //   const curState = om.state.home.currentState
   //   const navItem = getNavigateItemForState(om, curState)
@@ -803,7 +790,6 @@ export const actions = {
   updateCurrentState,
   setCenterToResults,
   setSearchQuery,
-  updateCurrentMapAreaInformation,
   clearSearch,
   handleRouteChange,
   up,

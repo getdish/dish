@@ -78,10 +78,6 @@ export type HomeStateItemBase = {
   searchQuery: string
   center: LngLat
   span: LngLat
-  mapAt?: {
-    center: LngLat
-    span: LngLat
-  } | null
   id: string
   currentLocationName?: string
   currentLocationInfo?: GeocodePlace | null
