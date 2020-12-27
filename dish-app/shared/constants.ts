@@ -16,8 +16,8 @@ export const listItemMaxSideWidth = drawerWidthMax / 2.5 - 40
 
 export const logoWidth = 1303 * 0.064
 export const logoHeight = 608 * 0.064
-export const logoXsWidth = 723 * 0.044
-export const logoXsHeight = 898 * 0.044
+export const logoXsWidth = 1024 * 0.044
+export const logoXsHeight = 1024 * 0.044
 
 export const pageWidthMax = 2000
 
