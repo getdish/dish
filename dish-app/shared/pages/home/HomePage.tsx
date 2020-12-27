@@ -56,6 +56,7 @@ import { SlantedTitle } from '../../views/ui/SlantedTitle'
 import { RestaurantButton } from '../restaurant/RestaurantButton'
 import { RestaurantCard } from '../restaurant/RestaurantCard'
 import { peachAvatar } from '../search/avatar'
+import { PageTitle } from '../search/PageTitle'
 import { StackViewProps } from '../StackViewProps'
 import { HomeTopSearches } from './HomeTopSearches'
 
@@ -165,7 +166,7 @@ export default memo(function HomePage(props: Props) {
     {
       name: 'homeRegion',
       params: { region: props.item.region, section: '' },
-      children: 'Hot',
+      children: 'Unique',
     },
     {
       name: 'homeRegion',
@@ -274,6 +275,14 @@ export default memo(function HomePage(props: Props) {
               </HStack>
 
               <Spacer size="md" />
+
+              <PageTitle
+                title={
+                  props.item.section === 'new' ? 'New' : 'Uniquely good here'
+                }
+              />
+
+              <Spacer size="lg" />
 
               <Spacer />
               <Suspense
