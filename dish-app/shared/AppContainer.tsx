@@ -1,5 +1,6 @@
-import React, { memo } from 'react'
+import React, { memo, useEffect, useLayoutEffect, useState } from 'react'
 import { StyleSheet } from 'react-native'
+import { createReparentableSpace } from 'react-reparenting'
 import {
   AbsoluteVStack,
   HStack,
@@ -15,34 +16,32 @@ import { searchBarHeight, zIndexDrawer } from './constants'
 import { useAppDrawerWidth } from './hooks/useAppDrawerWidth'
 import { useLastValueWhen } from './hooks/useLastValueWhen'
 
-// import { Reparentable, sendReparentableChild } from 'react-reparenting'
-// const getParent = (isSmall: boolean) => (isSmall ? 'sm' : 'lg')
+const { Reparentable, sendReparentableChild } = createReparentableSpace()
 
 export function AppContainer(props: { children: any }) {
   const media = useMedia()
-  // const [parent, setParent] = useState()
-  // const children = [<React.Fragment key="1">{props.children}</React.Fragment>]
+  const [parent, setParent] = useState(() => (media.sm ? 'sm' : 'lg'))
+  const children = [<React.Fragment key="1">{props.children}</React.Fragment>]
 
-  // useEffect(() => {
-  //   setParent((last) => {
-  //     const next = getParent(isSmall)
-  //     sendReparentableChild(last, next, 0, 0)
-  //     return next
-  //   })
-  // }, [isSmall])
+  useLayoutEffect(() => {
+    setParent((last) => {
+      const next = media.sm ? 'sm' : 'lg'
+      sendReparentableChild(last, next, 0, 0)
+      return next
+    })
+  }, [media.sm])
 
   return (
     <AbsoluteVStack fullscreen pointerEvents="none" zIndex={zIndexDrawer}>
-      {media.sm && <AppSmallDrawer>{props.children}</AppSmallDrawer>}
-      {!media.sm && <HomeContainerLarge>{props.children}</HomeContainerLarge>}
-      {/* {getParent(isSmall)} */}
-      {/* <AppSmallDrawer>
+      {/* {media.sm && <AppSmallDrawer>{props.children}</AppSmallDrawer>}
+      {!media.sm && <HomeContainerLarge>{props.children}</HomeContainerLarge>} */}
+      <AppSmallDrawer>
         <Reparentable id="sm">{parent === 'sm' ? children : []}</Reparentable>
       </AppSmallDrawer>
 
       <HomeContainerLarge>
         <Reparentable id="lg">{parent === 'lg' ? children : []}</Reparentable>
-      </HomeContainerLarge> */}
+      </HomeContainerLarge>
     </AbsoluteVStack>
   )
 }
@@ -56,6 +55,7 @@ const HomeContainerLarge = (props) => {
   return (
     <VStack
       fullscreen
+      display={media.sm ? 'none' : 'flex'}
       // TODO ui-static this fails if i remove conditional above!
       width={lastWidth}
       flex={1}
