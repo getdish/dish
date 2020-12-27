@@ -29,7 +29,6 @@ export type HomeState = {
   lastActiveTags: Tag[]
   lastHomeState: HomeStateItemHome
   lastSearchState: HomeStateItemSearch | undefined
-  locationSearchQuery: string
   previousState: HomeStateItem
   refreshCurrentPage: number
   searchbarFocusedTag: Tag | null

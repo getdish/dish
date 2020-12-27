@@ -33,6 +33,7 @@ import {
   searchLocations,
 } from './helpers/searchLocations'
 import { searchRestaurants } from './helpers/searchRestaurants'
+import { setLocation } from './setLocation'
 import { createAutocomplete } from './state/createAutocomplete'
 import { defaultLocationAutocompleteResults } from './state/defaultLocationAutocompleteResults'
 import { LngLat } from './state/home-types'
@@ -340,7 +341,7 @@ const AutocompleteLocation = memo(() => {
   }, [query])
 
   const handleSelect = useCallback((result: AutocompleteItem) => {
-    om.actions.home.setLocation(result.name)
+    setLocation(result.name)
     autocompletes.setVisible(false)
     // changing location = change drawer to show
     if (drawerStore.snapIndex === 0) {

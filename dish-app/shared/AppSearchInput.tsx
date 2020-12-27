@@ -1,6 +1,6 @@
 import { fullyIdle, idle, series } from '@dish/async'
 import { Loader, Search, X } from '@dish/react-feather'
-import { getStore, useStore, useStoreInstance } from '@dish/use-store'
+import { getStore, useStoreInstance } from '@dish/use-store'
 import React, { memo, useCallback, useEffect, useRef, useState } from 'react'
 import {
   Platform,
@@ -27,7 +27,7 @@ import { AppAutocompleteHoverableInput } from './AppAutocompleteHoverableInput'
 import { isWeb, searchBarHeight } from './constants'
 import { isWebIOS } from './helpers/isIOS'
 import { useSearchBarTheme } from './hooks/useSearchBarTheme'
-import { InputStore } from './InputStore'
+import { InputStore, useInputStoreSearch } from './InputStore'
 import { searchPageStore } from './pages/search/SearchPageStore'
 import { SearchInputNativeDragFix } from './SearchInputNativeDragFix'
 import { getTagSlug } from './state/getTagSlug'
@@ -95,7 +95,7 @@ export const isSearchInputFocused = () => {
 }
 
 export const AppSearchInput = memo(() => {
-  const inputStore = useStore(InputStore, { name: 'search' })
+  const inputStore = useInputStoreSearch()
   const om = useOvermind()
   const { color, backgroundRgb } = useSearchBarTheme()
   const media = useMedia()

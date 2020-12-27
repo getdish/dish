@@ -57,7 +57,6 @@ export const state: HomeState = {
   centerToResults: 0,
   refreshCurrentPage: 0,
   allUsers: {},
-  locationSearchQuery: '',
   hoveredRestaurant: null,
   isHoveringRestaurant: false,
   isOptimisticUpdating: false,
@@ -563,37 +562,6 @@ const pushHomeState: AsyncAction<
   return null
 }
 
-// TODO this sort of duplicates HomeStateItem.center... we should move it there
-const setLocation: AsyncAction<string> = async (om, val) => {
-  // const current = [
-  //   ...om.state.home.locationAutocompleteResults,
-  //   ...defaultLocationAutocompleteResults,
-  // ]
-  // om.actions.home.setLocationSearchQuery(val)
-  // const exact = current.find((x) => x.name === val)
-  // if (exact?.center) {
-  //   om.actions.home.updateCurrentState({
-  //     center: { ...exact.center },
-  //     currentLocationName: val,
-  //   })
-  //   const curState = om.state.home.currentState
-  //   const navItem = getNavigateItemForState(om, curState)
-  //   if (router.getShouldNavigate(navItem)) {
-  //     router.navigate(navItem)
-  //   }
-  //   setDefaultLocation({
-  //     center: exact.center,
-  //     span: curState.span,
-  //   })
-  // } else {
-  //   console.warn('No center found?')
-  // }
-}
-
-const setLocationSearchQuery: AsyncAction<string> = async (om, val) => {
-  om.state.home.locationSearchQuery = val
-}
-
 const requestLocation: Action = (om) => {}
 
 const setSearchBarFocusedTag: Action<NavigableTag | null> = (om, val) => {
@@ -797,8 +765,6 @@ export const actions = {
   popTo,
   requestLocation,
   setHoveredRestaurant,
-  setLocation,
-  setLocationSearchQuery,
   setSearchBarFocusedTag,
   moveSearchBarTagIndex,
   setSearchBarTagIndex,
