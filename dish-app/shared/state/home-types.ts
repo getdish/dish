@@ -23,7 +23,6 @@ export type HomeState = {
   currentStateLense: NavigableTag | null
   currentStateSearchQuery: HomeStateItem['searchQuery']
   currentStateType: HomeStateItem['type']
-  drawerSnapPoint: number
   hoveredRestaurant: RestaurantOnlyIds | null | false
   isHoveringRestaurant: boolean
   isLoading: boolean

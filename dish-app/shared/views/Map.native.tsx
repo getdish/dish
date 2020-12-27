@@ -1,10 +1,10 @@
-import { useStore } from '@dish/use-store'
+import { useStoreInstance } from '@dish/use-store'
 import MapboxGL from '@react-native-mapbox-gl/maps'
 import React, { useEffect, useRef, useState } from 'react'
 import { Animated, Dimensions, StyleSheet } from 'react-native'
 import { useDebounce } from 'snackui'
 
-import { BottomDrawerStore } from '../BottomDrawerStore'
+import { drawerStore as drawerStoreInstance } from '../BottomDrawerStore'
 import { MAPBOX_ACCESS_TOKEN } from '../constants'
 import { hasMovedAtLeast } from './hasMovedAtLeast'
 import { MapProps } from './MapProps'
@@ -22,7 +22,7 @@ export const MapView = ({
   onSelect,
 }: MapProps) => {
   const { width, height } = Dimensions.get('screen')
-  const drawerStore = useStore(BottomDrawerStore)
+  const drawerStore = useStoreInstance(drawerStoreInstance)
   const drawerHeight = drawerStore.currentHeight
   const [isLoaded, setIsLoaded] = useState(0)
   const paddingVertical = isLoaded ? drawerHeight / 2 : 0

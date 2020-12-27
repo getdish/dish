@@ -22,7 +22,7 @@ import {
   useTheme,
 } from 'snackui'
 
-import { BottomDrawerStore } from './BottomDrawerStore'
+import { drawerStore } from './BottomDrawerStore'
 import { bgLight } from './colors'
 import { isNative, isWeb, searchBarHeight } from './constants'
 import { fuzzySearch } from './helpers/fuzzySearch'
@@ -123,7 +123,6 @@ export const autocompleteSearchStore = createStore(AutocompleteStore, {
 
 export default memo(function AppAutocomplete() {
   const autocompletes = useStoreInstance(autocompletesStore)
-  const drawerStore = useStore(BottomDrawerStore)
   const theme = useTheme()
 
   if (isWeb) {
@@ -319,7 +318,6 @@ const AutocompleteSearch = memo(() => {
 const AutocompleteLocation = memo(() => {
   const om = useOvermind()
   const autocompletes = useStoreInstance(autocompletesStore)
-  const drawerStore = useStore(BottomDrawerStore)
   const store = useStoreInstance(autocompleteLocationStore)
   const query = useDebounceValue('', 250)
 
@@ -357,7 +355,7 @@ const AutocompleteLocation = memo(() => {
     om.actions.home.setLocation(result.name)
     autocompletes.setVisible(false)
     // changing location = change drawer to show
-    if (om.state.home.drawerSnapPoint === 0) {
+    if (drawerStore.snapIndex === 0) {
       drawerStore.setSnapPoint(1)
     }
   }, [])

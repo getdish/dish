@@ -1,11 +1,10 @@
-import { Store } from '@dish/use-store'
+import { Store, createStore } from '@dish/use-store'
 import { Animated } from 'react-native'
 
 import { isWeb } from './constants'
 import { getWindowHeight } from './helpers/getWindow'
-import { omStatic } from './state/omStatic'
 
-export class BottomDrawerStore extends Store {
+export class DrawerStore extends Store {
   snapPoints = [isWeb ? 0.02 : 0.05, 0.28, 0.75]
   snapIndex = 1
   isDragging = false
@@ -62,7 +61,6 @@ export class BottomDrawerStore extends Store {
 
   private setSnapIndex(x: number) {
     this.snapIndex = x
-    omStatic.actions.home.setDrawerSnapPoint(x)
   }
 
   private getSnapIndex(px: number, velocity: number) {
@@ -78,3 +76,5 @@ export class BottomDrawerStore extends Store {
     return 2
   }
 }
+
+export const drawerStore = createStore(DrawerStore)
