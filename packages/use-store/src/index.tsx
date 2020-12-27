@@ -158,7 +158,7 @@ function getOrCreateStoreInfo(
 ) {
   const storeName = StoreKlass.name
   const propsKey = propsKeyCalculated ?? (props ? getKey(props) : '')
-  const uid = `${storeName}_${propsKey}_`
+  const uid = `${storeName}${propsKey}`
 
   if (!opts?.avoidCache) {
     const cached = cache.get(StoreKlass)
@@ -170,6 +170,9 @@ function getOrCreateStoreInfo(
 
   // init
   const storeInstance = new StoreKlass(props!)
+
+  allStores[uid] = storeInstance
+
   const getters = {}
   const actions = {}
   const stateKeys: string[] = []
@@ -207,6 +210,8 @@ function getOrCreateStoreInfo(
 
   return value
 }
+
+export const allStores = {}
 
 export function mountStore(info: StoreInfo, store: any) {
   if (!info.hasMounted) {
@@ -403,7 +408,7 @@ function getKey(props: Object) {
   let s = ''
   const sorted = Object.keys(props).sort()
   for (const key of sorted) {
-    s += `${key}-${props[key]}_`
+    s += `-${key}-${props[key]}`
   }
   return s
 }

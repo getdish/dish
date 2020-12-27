@@ -1,5 +1,6 @@
 import { useHydrateCache } from '@dish/graph'
 import { ProvideRouter } from '@dish/router'
+import { allStores } from '@dish/use-store'
 import { Provider } from 'overmind-react'
 import React, { Suspense } from 'react'
 import { QueryClientProvider } from 'react-query'
@@ -14,6 +15,8 @@ import themes, { MyTheme, MyThemes } from '../shared/themes'
 if (typeof window !== 'undefined') {
   window['requestIdleCallback'] = window['requestIdleCallback'] || setTimeout
 }
+
+global['stores'] = allStores
 
 declare module 'snackui' {
   interface ThemeObject extends MyTheme {}
