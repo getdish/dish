@@ -20,14 +20,11 @@ import {
   useGet,
   useMedia,
   useOnMount,
-  useTheme,
 } from 'snackui'
 
 import { AutocompleteStore, autocompletesStore } from './AppAutocomplete'
 import { AppAutocompleteHoverableInput } from './AppAutocompleteHoverableInput'
-import { darkPink } from './colors'
 import { isWeb, searchBarHeight } from './constants'
-import { DishHorizonView } from './DishHorizonView'
 import { isWebIOS } from './helpers/isIOS'
 import { useSearchBarTheme } from './hooks/useSearchBarTheme'
 import { InputStore } from './InputStore'
@@ -459,13 +456,13 @@ const handleKeyPress = async (e: any, inputStore: InputStore) => {
     case 38: {
       // up
       e.preventDefault()
-      omStatic.actions.home.moveActive(-1)
+      inputStore.moveActive(-1)
       return
     }
     case 40: {
       // down
       e.preventDefault()
-      omStatic.actions.home.moveActive(1)
+      inputStore.moveActive(1)
       return
     }
   }

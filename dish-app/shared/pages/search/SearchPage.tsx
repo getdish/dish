@@ -1,5 +1,5 @@
 import { sleep } from '@dish/async'
-import { ArrowDown, ArrowUp } from '@dish/react-feather'
+import { ArrowUp } from '@dish/react-feather'
 import { HistoryItem } from '@dish/router'
 import { useStore } from '@dish/use-store'
 import { sortBy } from 'lodash'
@@ -14,7 +14,7 @@ import React, {
   useMemo,
   useRef,
 } from 'react'
-import { Dimensions, ScrollView, ScrollViewProps } from 'react-native'
+import { ScrollView, ScrollViewProps } from 'react-native'
 import Svg, { Polygon } from 'react-native-svg'
 import {
   DataProvider,
@@ -45,10 +45,7 @@ import { useAppDrawerWidth } from '../../hooks/useAppDrawerWidth'
 import { useCurrentLenseColor } from '../../hooks/useCurrentLenseColor'
 import { useLastValue } from '../../hooks/useLastValue'
 import { useLastValueWhen } from '../../hooks/useLastValueWhen'
-import {
-  PageLoadEffectCallback,
-  usePageLoadEffect,
-} from '../../hooks/usePageLoadEffect'
+import { usePageLoadEffect } from '../../hooks/usePageLoadEffect'
 import { addTagsToCache } from '../../state/allTags'
 import { getActiveTags } from '../../state/getActiveTags'
 import { getTagsFromRoute } from '../../state/getTagsFromRoute'
@@ -76,9 +73,12 @@ import { StackViewProps } from '../StackViewProps'
 import { getTitleForState } from './getTitleForState'
 import { SearchPageNavBar } from './SearchPageNavBar'
 import { SearchPageResultsInfoBox } from './SearchPageResultsInfoBox'
+import { searchPageStore } from './SearchPageStore'
 
 type Props = StackViewProps<HomeStateItemSearch>
 const SearchPagePropsContext = createContext<Props | null>(null)
+
+export type ActiveEvent = 'key' | 'pin' | 'hover' | null
 
 export default memo(function SearchPage(props: Props) {
   console.warn('render searchpage', JSON.stringify(props, null, 2))
@@ -88,7 +88,7 @@ export default memo(function SearchPage(props: Props) {
   const route = useLastValueWhen(
     () => router.curPage,
     router.curPage.name !== 'search'
-  )
+  ) as HistoryItem<'search'>
   const location = useLocationFromRoute(route)
   const tags = useTagsFromRoute(route)
 
@@ -140,10 +140,10 @@ export default memo(function SearchPage(props: Props) {
         if (index > -1) {
           await sleep(300)
           if (!isCancelled) {
-            om.actions.home.setActiveIndex({
+            searchPageStore.setIndex(
               index,
-              event: om.state.home.isHoveringRestaurant ? 'hover' : 'pin',
-            })
+              om.state.home.isHoveringRestaurant ? 'hover' : 'pin'
+            )
           }
         }
       }
@@ -163,6 +163,11 @@ export default memo(function SearchPage(props: Props) {
       }),
     shouldAvoidContentUpdates
   )
+
+  // set max results
+  useEffect(() => {
+    searchPageStore.setMax(state.results.length)
+  }, [key])
 
   const content = useMemo(() => {
     return (
@@ -347,8 +352,8 @@ const SearchPageScrollView = forwardRef<ScrollView, SearchPageScrollViewProps>(
         (state) => state.home.activeIndex,
         (index) => {
           if (
-            omStatic.state.home.activeEvent === 'pin' ||
-            omStatic.state.home.activeEvent === 'key'
+            searchPageStore.event === 'pin' ||
+            searchPageStore.event === 'key'
           ) {
             scrollRef.current?.scrollTo({
               x: 0,

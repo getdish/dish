@@ -14,11 +14,7 @@ export type Om = IContext<Config>
 export type OmState = Om['state']
 export type OmStateHome = OmState['home']
 
-export type ActiveEvent = 'key' | 'pin' | 'hover' | null
-
 export type HomeState = {
-  activeEvent: ActiveEvent
-  activeIndex: number // index for vertical (in page), -1 = autocomplete
   allStates: { [key: string]: HomeStateItem }
   allUsers: { [id: string]: User }
   centerToResults: number

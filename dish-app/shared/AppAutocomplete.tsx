@@ -1,4 +1,3 @@
-// import { defaultLocationAutocompleteResults } from './defaultLocationAutocompleteResults'
 import { series, sleep } from '@dish/async'
 import { Tag, order_by, query, resolved } from '@dish/graph'
 import { isPresent } from '@dish/helpers'
@@ -77,6 +76,12 @@ class AutocompletesStore extends Store {
     this.visible = true
     this.target = n
   }
+
+  get active() {
+    if (!this.visible) return null
+    if (this.target === 'location') return autocompleteLocationStore
+    return autocompleteSearchStore
+  }
 }
 
 export const autocompletesStore = createStore(AutocompletesStore)
@@ -99,7 +104,7 @@ export class AutocompleteStore extends Store<{ target: AutocompleteTarget }> {
     this.results = results ?? []
   }
 
-  moveIndex(val: number) {
+  move(val: -1 | 1) {
     this.setIndex(this.index + val)
   }
 
@@ -107,6 +112,14 @@ export class AutocompleteStore extends Store<{ target: AutocompleteTarget }> {
     this.index = clamp(val, 0, this.results.length)
   }
 }
+
+export const autocompleteLocationStore = createStore(AutocompleteStore, {
+  target: 'location',
+})
+
+export const autocompleteSearchStore = createStore(AutocompleteStore, {
+  target: 'search',
+})
 
 export default memo(function AppAutocomplete() {
   const autocompletes = useStoreInstance(autocompletesStore)
@@ -181,7 +194,7 @@ export default memo(function AppAutocomplete() {
 
 const AutocompleteSearch = memo(() => {
   const om = useOvermind()
-  const store = useStore(AutocompleteStore, { target: 'search' })
+  const store = useStoreInstance(autocompleteSearchStore)
   const { currentStateSearchQuery, lastActiveTags } = om.state.home
   const searchState = useMemo(
     () => [currentStateSearchQuery.trim(), lastActiveTags] as const,
@@ -307,7 +320,7 @@ const AutocompleteLocation = memo(() => {
   const om = useOvermind()
   const autocompletes = useStoreInstance(autocompletesStore)
   const drawerStore = useStore(BottomDrawerStore)
-  const store = useStore(AutocompleteStore, { target: 'location' })
+  const store = useStoreInstance(autocompleteLocationStore)
   const query = useDebounceValue('', 250)
 
   useEffect(() => {

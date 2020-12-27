@@ -5,7 +5,10 @@ import React, { memo, useCallback, useEffect, useState } from 'react'
 import { TextInput, TouchableOpacity } from 'react-native'
 import { Button, HStack, VStack, prevent, useMedia } from 'snackui'
 
-import { AutocompleteStore, autocompletesStore } from './AppAutocomplete'
+import {
+  autocompleteLocationStore,
+  autocompletesStore,
+} from './AppAutocomplete'
 import { AppAutocompleteHoverableInput } from './AppAutocompleteHoverableInput'
 import { inputTextStyles } from './AppSearchInput'
 import { blue } from './colors'
@@ -17,16 +20,14 @@ import { useOvermind } from './state/useOvermind'
 
 const paddingHorizontal = 16
 
-export const AppSearchLocationInput = memo(() => {
+export const AppSearchInputLocation = memo(() => {
   const media = useMedia()
   const inputStore = useStore(InputStore, { name: 'location' })
   const om = useOvermind()
   const { color } = useSearchBarTheme()
   const [locationSearch, setLocationSearch] = useState('')
   const { currentLocationName } = om.state.home.currentState
-  const locationAutocomplete = useStore(AutocompleteStore, {
-    target: 'location',
-  })
+  const locationAutocomplete = useStoreInstance(autocompleteLocationStore)
   const autocompletes = useStoreInstance(autocompletesStore)
   const showLocationAutocomplete =
     autocompletes.visible && autocompletes.target === 'location'
@@ -75,13 +76,13 @@ export const AppSearchLocationInput = memo(() => {
       case 38: {
         // up
         e.preventDefault()
-        om.actions.home.moveActive(-1)
+        inputStore.moveActive(-1)
         return
       }
       case 40: {
         // down
         e.preventDefault()
-        om.actions.home.moveActive(1)
+        inputStore.moveActive(1)
         return
       }
     }

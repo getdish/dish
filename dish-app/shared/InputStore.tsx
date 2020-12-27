@@ -7,6 +7,7 @@ import {
   inputGetNode,
   inputIsTextSelected,
 } from './helpers/input'
+import { searchPageStore } from './pages/search/SearchPageStore'
 
 export class InputStore extends Store<{ name: 'location' | 'search' }> {
   node: HTMLInputElement | null = null
@@ -14,6 +15,14 @@ export class InputStore extends Store<{ name: 'location' | 'search' }> {
   setNodeSlow = debounce((view: any) => {
     this.node = view
   })
+
+  moveActive(num: -1 | 1) {
+    if (autocompletesStore.active) {
+      autocompletesStore.active.move(num)
+    } else {
+      searchPageStore.setIndex(searchPageStore.index + num, 'key')
+    }
+  }
 
   setNode(view: any) {
     if (view) {

@@ -28,7 +28,6 @@ import { getNextState } from './getNextState'
 import { getTagSlug } from './getTagSlug'
 import { isHomeState, isRestaurantState, isSearchState } from './home-helpers'
 import {
-  ActiveEvent,
   HomeState,
   HomeStateItem,
   HomeStateItemHome,
@@ -50,8 +49,6 @@ export const state: HomeState = {
   started: false,
   isLoading: false,
   skipNextPageFetchData: false,
-  activeEvent: null,
-  activeIndex: -1,
   selectedRestaurant: null,
   showUserMenu: false,
   searchBarTagIndex: 0,
@@ -746,25 +743,6 @@ const setLocationSearchQuery: AsyncAction<string> = async (om, val) => {
   om.state.home.locationSearchQuery = val
 }
 
-const setActiveIndex: Action<{ index: number; event: ActiveEvent }> = (
-  om,
-  { index, event }
-) => {
-  om.state.home.activeIndex = Math.min(Math.max(-1, index), 1000) // TODO
-  om.state.home.activeEvent = event
-}
-
-const moveActive: Action<number> = (om, num) => {
-  // if (om.state.home.isAutocompleteActive) {
-  //   om.actions.home.moveAutocompleteIndex(num)
-  // } else {
-  //   om.actions.home.setActiveIndex({
-  //     index: om.state.home.activeIndex + num,
-  //     event: 'key',
-  //   })
-  // }
-}
-
 const requestLocation: Action = (om) => {}
 
 const setSearchBarFocusedTag: Action<NavigableTag | null> = (om, val) => {
@@ -1041,13 +1019,11 @@ export const actions = {
   clearSearch,
   forkCurrentList,
   handleRouteChange,
-  moveActive,
   up,
   clearTag,
   popTo,
   requestLocation,
   runSearch,
-  setActiveIndex,
   setHoveredRestaurant,
   setLocation,
   setLocationSearchQuery,
