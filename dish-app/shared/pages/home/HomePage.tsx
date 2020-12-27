@@ -233,11 +233,15 @@ export default memo(function HomePage(props: Props) {
                       position="relative"
                       overflow="visible"
                       minWidth={80}
-                      size="xl"
                     >
                       {regionName}
 
-                      <HStack position="absolute" bottom="-90%" right="2%">
+                      <HStack
+                        position="absolute"
+                        bottom={5}
+                        transform={[{ translateY: 32 }]}
+                        right="2%"
+                      >
                         {navLinks.map((linkProps, index) => {
                           return (
                             <LinkButton
@@ -248,6 +252,7 @@ export default memo(function HomePage(props: Props) {
                               shadowRadius={3}
                               paddingHorizontal={8}
                               fontSize={14}
+                              lineHeight={32}
                               color={
                                 props.item.section === linkProps.params.section
                                   ? 'red'
@@ -642,14 +647,14 @@ const DishCol = (props: StackProps) => {
 const DishFeedCard = graphql(function DishFeedCard(props: FeedItemDish) {
   const restaurant = useRestaurantQuery(props.restaurant.slug)
   return (
-    <CardFrame expandable transparent>
+    <CardFrame transparent>
       <VStack position="relative" alignSelf="center">
         <SlantedTitle
           position="absolute"
           top={10}
           left={10}
           alignSelf="flex-start"
-          size="xl"
+          size="xs"
         >
           {restaurant.name}
         </SlantedTitle>

@@ -298,6 +298,7 @@ const SearchResultsContent = (props: Props) => {
     return (
       <>
         <PageTitleTag>{title}</PageTitleTag>
+        <SearchPageTitle />
         <VStack
           margin="auto"
           paddingVertical={100}
@@ -336,26 +337,70 @@ type SearchPageScrollViewProps = ScrollViewProps & {
   onSizeChanged: (props: { width: number; height: number }) => any
 }
 
+const SearchPageTitle = memo(() => {
+  const curProps = useContext(SearchPagePropsContext)
+  const media = useMedia()
+  const { title, subTitle, pageName } = getTitleForState(curProps.item, {
+    lowerCase: false,
+  })
+  const titleLen = (title + subTitle).length
+  const titleScale =
+    titleLen > 65
+      ? 0.7
+      : titleLen > 55
+      ? 0.75
+      : titleLen > 45
+      ? 0.85
+      : titleLen > 35
+      ? 0.95
+      : 1
+  const titleFontSize = 28 * titleScale * (media.sm ? 0.75 : 1)
+  const lenseColor = useCurrentLenseColor()
+
+  return (
+    <>
+      <HStack
+        paddingHorizontal={15}
+        // TODO snackui verify working
+        paddingTop={media.sm ? 12 : 12 + 52 + 10}
+        paddingBottom={12}
+        overflow="hidden"
+        justifyContent="center"
+        alignItems="center"
+        spacing="xl"
+      >
+        <VStack backgroundColor="#f2f2f2" height={1} flex={1} />
+        <Text
+          textAlign="center"
+          letterSpacing={-0.25}
+          fontSize={titleFontSize}
+          fontWeight="800"
+          color={rgbString(lenseColor.map((x) => x * 0.92))}
+        >
+          {pageName}{' '}
+          <Text
+            // @ts-ignore
+            display="inline" // safari fix
+            fontWeight="300"
+            opacity={0.5}
+            className="nobreak"
+          >
+            {subTitle}
+          </Text>
+        </Text>
+        <VStack backgroundColor="#f2f2f2" height={1} flex={1} />
+      </HStack>
+
+      <Suspense fallback={null}>
+        <SearchPageResultsInfoBox state={curProps.item} />
+      </Suspense>
+    </>
+  )
+})
+
 const SearchPageScrollView = forwardRef<ScrollView, SearchPageScrollViewProps>(
   ({ children, onSizeChanged, ...props }, ref) => {
     const curProps = useContext(SearchPagePropsContext)
-    const media = useMedia()
-    const { title, subTitle, pageName } = getTitleForState(curProps.item, {
-      lowerCase: false,
-    })
-    const titleLen = (title + subTitle).length
-    const titleScale =
-      titleLen > 65
-        ? 0.7
-        : titleLen > 55
-        ? 0.75
-        : titleLen > 45
-        ? 0.85
-        : titleLen > 35
-        ? 0.95
-        : 1
-    const titleFontSize = 28 * titleScale * (media.sm ? 0.75 : 1)
-    const lenseColor = useCurrentLenseColor()
     const scrollRef = useRef<ScrollView>()
 
     useEffect(() => {
@@ -412,41 +457,7 @@ const SearchPageScrollView = forwardRef<ScrollView, SearchPageScrollViewProps>(
           ref={combineRefs(ref, scrollRef)}
           {...props}
         >
-          <HStack
-            paddingHorizontal={15}
-            // TODO snackui verify working
-            paddingTop={media.sm ? 12 : 12 + 52 + 10}
-            paddingBottom={12}
-            overflow="hidden"
-            justifyContent="center"
-            alignItems="center"
-            spacing="xl"
-          >
-            <VStack backgroundColor="#f2f2f2" height={1} flex={1} />
-            <Text
-              textAlign="center"
-              letterSpacing={-0.25}
-              fontSize={titleFontSize}
-              fontWeight="800"
-              color={rgbString(lenseColor.map((x) => x * 0.92))}
-            >
-              {pageName}{' '}
-              <Text
-                // @ts-ignore
-                display="inline" // safari fix
-                fontWeight="300"
-                opacity={0.5}
-                className="nobreak"
-              >
-                {subTitle}
-              </Text>
-            </Text>
-            <VStack backgroundColor="#f2f2f2" height={1} flex={1} />
-          </HStack>
-
-          <Suspense fallback={null}>
-            <SearchPageResultsInfoBox state={curProps.item} />
-          </Suspense>
+          <SearchPageTitle />
 
           <HStack alignItems="center">
             <HStack flex={1} position="relative">
