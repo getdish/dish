@@ -71,6 +71,7 @@ import {
 } from '../restaurant/RestaurantListItem'
 import { StackViewProps } from '../StackViewProps'
 import { getTitleForState } from './getTitleForState'
+import { PageTitle } from './PageTitle'
 import { SearchPageNavBar } from './SearchPageNavBar'
 import { SearchPageResultsInfoBox } from './SearchPageResultsInfoBox'
 import { searchPageStore } from './SearchPageStore'
@@ -338,59 +339,20 @@ type SearchPageScrollViewProps = ScrollViewProps & {
 }
 
 const SearchPageTitle = memo(() => {
-  const curProps = useContext(SearchPagePropsContext)
   const media = useMedia()
+  const curProps = useContext(SearchPagePropsContext)
   const { title, subTitle, pageName } = getTitleForState(curProps.item, {
     lowerCase: false,
   })
-  const titleLen = (title + subTitle).length
-  const titleScale =
-    titleLen > 65
-      ? 0.7
-      : titleLen > 55
-      ? 0.75
-      : titleLen > 45
-      ? 0.85
-      : titleLen > 35
-      ? 0.95
-      : 1
-  const titleFontSize = 28 * titleScale * (media.sm ? 0.75 : 1)
   const lenseColor = useCurrentLenseColor()
-
   return (
     <>
-      <HStack
-        paddingHorizontal={15}
-        // TODO snackui verify working
-        paddingTop={media.sm ? 12 : 12 + 52 + 10}
-        paddingBottom={12}
-        overflow="hidden"
-        justifyContent="center"
-        alignItems="center"
-        spacing="xl"
-      >
-        <VStack backgroundColor="#f2f2f2" height={1} flex={1} />
-        <Text
-          textAlign="center"
-          letterSpacing={-0.25}
-          fontSize={titleFontSize}
-          fontWeight="800"
-          color={rgbString(lenseColor.map((x) => x * 0.92))}
-        >
-          {pageName}{' '}
-          <Text
-            // @ts-ignore
-            display="inline" // safari fix
-            fontWeight="300"
-            opacity={0.5}
-            className="nobreak"
-          >
-            {subTitle}
-          </Text>
-        </Text>
-        <VStack backgroundColor="#f2f2f2" height={1} flex={1} />
-      </HStack>
-
+      <VStack paddingTop={media.sm ? 12 : 12 + 52 + 10} />
+      <PageTitle
+        title={title}
+        subTitle={subTitle}
+        color={rgbString(lenseColor.map((x) => x * 0.92))}
+      />
       <Suspense fallback={null}>
         <SearchPageResultsInfoBox state={curProps.item} />
       </Suspense>
