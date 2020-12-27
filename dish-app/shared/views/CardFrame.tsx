@@ -35,9 +35,10 @@ export const CardFrame = ({
       shadowRadius={4}
       shadowOffset={{ height: 1, width: 0 }}
       position="relative"
-      {...(media.xs && {
-        width: expandable ? cardFrameWidthLarge : width,
-      })}
+      {...(!media.xs &&
+        expandable && {
+          width: cardFrameWidthLarge,
+        })}
       {...(hoverable && {
         hoverStyle: {
           transform: [{ scale: 1.015 }],
