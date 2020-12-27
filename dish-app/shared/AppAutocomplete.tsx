@@ -1,11 +1,11 @@
 // import { defaultLocationAutocompleteResults } from './defaultLocationAutocompleteResults'
-import { fullyIdle, series, sleep } from '@dish/async'
+import { series, sleep } from '@dish/async'
 import { Tag, order_by, query, resolved } from '@dish/graph'
 import { isPresent } from '@dish/helpers'
 import { Plus } from '@dish/react-feather'
 import { Store, createStore, useStore, useStoreInstance } from '@dish/use-store'
 import { clamp, debounce, groupBy, uniqBy } from 'lodash'
-import React, { memo, useCallback, useEffect, useMemo, useState } from 'react'
+import React, { memo, useCallback, useEffect, useMemo } from 'react'
 import { Image, Keyboard, ScrollView } from 'react-native'
 import {
   AbsoluteVStack,
@@ -36,7 +36,7 @@ import { createAutocomplete } from './state/createAutocomplete'
 import { defaultLocationAutocompleteResults } from './state/defaultLocationAutocompleteResults'
 import { LngLat } from './state/home-types'
 import { tagDefaultAutocomplete } from './state/localTags'
-import { NavigableTag, tagsToNavigableTags } from './state/NavigableTag'
+import { tagsToNavigableTags } from './state/NavigableTag'
 import { omStatic } from './state/omStatic'
 import { useRouterCurPage } from './state/router'
 import { tagDisplayName } from './state/tagMeta'
@@ -160,8 +160,18 @@ export default memo(function AppAutocomplete() {
 
   return (
     <>
-      <AutocompleteSearch />
-      <AutocompleteLocation />
+      <AbsoluteVStack
+        fullscreen
+        opacity={autocompletes.target === 'search' ? 1 : 0}
+      >
+        <AutocompleteSearch />
+      </AbsoluteVStack>
+      <AbsoluteVStack
+        fullscreen
+        opacity={autocompletes.target === 'location' ? 1 : 0}
+      >
+        <AutocompleteLocation />
+      </AbsoluteVStack>
     </>
   )
 })

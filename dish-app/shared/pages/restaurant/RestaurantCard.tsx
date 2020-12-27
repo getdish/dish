@@ -66,11 +66,7 @@ export const RestaurantCardContent = memo(
 
       return (
         <Link name="restaurant" params={{ slug: restaurantSlug }}>
-          <VStack
-            borderRadius={1000}
-            backgroundColor={color}
-            borderRadius={cardFrameBorderRadiusSmaller}
-          >
+          <CardFrame hoverable>
             <VStack
               className="safari-fix-overflow"
               width="100%"
@@ -168,7 +164,7 @@ export const RestaurantCardContent = memo(
                 {below}
               </VStack>
             </AbsoluteVStack>
-          </VStack>
+          </CardFrame>
         </Link>
       )
     }

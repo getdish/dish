@@ -13,6 +13,11 @@
 - fix pressStyle stopped working on cards, etc
 - router types not working on LinkButtonProps
   - also in home.ts should work on the big pushHomeState switch
+- useStoreOnce() => usePortal()
+  - see `stores` global gets polluted
+  - make it so it *shares* the stores *while 1 or more are active*
+    - but then once the last one unmounts it clears memory
+  - TagVoteStore => portal
 
 - collect top lists
   - vietnamese: pho, banh xeo, banh mi
