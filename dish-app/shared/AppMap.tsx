@@ -1,6 +1,6 @@
 import { Restaurant, RestaurantOnlyIds, graphql } from '@dish/graph'
 import { isPresent } from '@dish/helpers'
-import { useStore } from '@dish/use-store'
+import { useStoreInstance } from '@dish/use-store'
 import { debounce, isEqual, uniqBy } from 'lodash'
 import React, {
   Suspense,
@@ -12,7 +12,6 @@ import React, {
 } from 'react'
 import {
   HStack,
-  Text,
   VStack,
   useDebounce,
   useDebounceValue,
@@ -21,7 +20,7 @@ import {
   useTheme,
 } from 'snackui'
 
-import { BottomDrawerStore } from './BottomDrawerStore'
+import { drawerStore } from './BottomDrawerStore'
 import { pageWidthMax, searchBarHeight, zIndexMap } from './constants'
 import { getLngLat } from './helpers/getLngLat'
 import { getRestaurantRating } from './helpers/getRestaurantRating'
@@ -280,11 +279,11 @@ const AppMapContent = memo(
       })
     }, [restaurantSelected])
 
-    const drawerStore = useStore(BottomDrawerStore)
+    const drawer = useStoreInstance(drawerStore)
     // ensure never goes to 0
-    const delayedIndex = useDebounceValue(drawerStore.snapIndex, 250)
+    const delayedIndex = useDebounceValue(drawer.snapIndex, 250)
     const currentSnapIndex = Math.max(1, delayedIndex)
-    const currentSnapPoint = drawerStore.snapPoints[currentSnapIndex]
+    const currentSnapPoint = drawer.snapPoints[currentSnapIndex]
     const padding = useMemo(() => {
       return media.sm
         ? {

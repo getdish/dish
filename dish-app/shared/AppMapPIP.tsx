@@ -1,11 +1,11 @@
-import { LngLat, Restaurant, graphql, restaurant } from '@dish/graph'
-import { useStore } from '@dish/use-store'
+import { LngLat, graphql, restaurant } from '@dish/graph'
+import { useStoreInstance } from '@dish/use-store'
 import { isEqual } from 'lodash'
 import mapboxgl from 'mapbox-gl'
 import React, { Suspense, memo, useEffect, useRef } from 'react'
 import { AbsoluteVStack, VStack, getMedia, useMedia } from 'snackui'
 
-import { BottomDrawerStore } from './BottomDrawerStore'
+import { drawerStore } from './BottomDrawerStore'
 import { MAPBOX_ACCESS_TOKEN } from './constants'
 import { getZoomLevel, mapZoomToMedium } from './helpers/mapHelpers'
 import { restaurantQuery } from './hooks/useRestaurantQuery'
@@ -16,13 +16,13 @@ mapboxgl.accessToken = MAPBOX_ACCESS_TOKEN
 export default memo(() => {
   const media = useMedia()
   const om = useOvermind()
-  const drawerSnapPoint = om.state.home.drawerSnapPoint
+  const drawer = useStoreInstance(drawerStore)
 
   if (!media.xs) {
     return null
   }
 
-  const isHidden = media.xs && drawerSnapPoint > 0
+  const isHidden = media.xs && drawer.snapIndex > 0
 
   return (
     <Suspense fallback={null}>
@@ -44,7 +44,6 @@ const HomeMapPIPContent = graphql(() => {
   const om = useOvermind()
   const mapNode = useRef<HTMLDivElement>(null)
   const state = om.state.home.currentState
-  const drawerStore = useStore(BottomDrawerStore)
   const focusedRestaurant =
     om.state.home.hoveredRestaurant ?? om.state.home.selectedRestaurant
 

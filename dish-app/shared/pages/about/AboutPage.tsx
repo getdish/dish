@@ -1,20 +1,10 @@
-import { useStore } from '@dish/use-store'
 import React, { useEffect } from 'react'
 import { Image } from 'react-native'
-import {
-  AbsoluteVStack,
-  Divider,
-  Paragraph,
-  Spacer,
-  UnorderedList,
-  UnorderedListItem,
-  VStack,
-} from 'snackui'
+import { AbsoluteVStack, Divider, Paragraph, Spacer, VStack } from 'snackui'
 
 import { StackItemProps } from '../../AppStackView'
-import dishWhite from '../../assets/dish-white.jpg'
 import dontPanic from '../../assets/dont-panic.svg'
-import { BottomDrawerStore } from '../../BottomDrawerStore'
+import { drawerStore } from '../../BottomDrawerStore'
 import { lightGreen, lightYellow } from '../../colors'
 import { HomeStateItemAbout } from '../../state/home-types'
 import { ContentScrollView } from '../../views/ContentScrollView'
@@ -34,8 +24,6 @@ export default function AboutPage({
   item,
   isActive,
 }: StackItemProps<HomeStateItemAbout>) {
-  const drawerStore = useStore(BottomDrawerStore)
-
   useEffect(() => {
     if (!isActive) return undefined
     const tm = setTimeout(() => {
@@ -183,8 +171,6 @@ export default function AboutPage({
               </AbsoluteVStack>
               If this all sounds interesting and you actually read this far,
               consider{' '}
-              {/** Incompatibility with snack-ui types
-                 //@ts-expect-error */}
               <Link display="inline" href="mailto:team@dishapp.com">
                 sending us an email to join our team
               </Link>

@@ -54,7 +54,6 @@ export const state: HomeState = {
   centerToResults: 0,
   refreshCurrentPage: 0,
   allUsers: {},
-  drawerSnapPoint: 1,
   searchBarY: 25,
   locationSearchQuery: '',
   hoveredRestaurant: null,
@@ -998,10 +997,6 @@ const updateCurrentState: Action<Partial<Omit<HomeStateItem, 'type'>>> = (
   })
 }
 
-const setDrawerSnapPoint: Action<number> = (om, val) => {
-  om.state.home.drawerSnapPoint = val
-}
-
 const setCenterToResults: Action<number | void> = (om, val) => {
   // @ts-ignore
   om.state.home.centerToResults = val ?? Date.now()
@@ -1043,5 +1038,4 @@ export const actions = {
   setSelectedRestaurant,
   setShowUserMenu,
   promptLogin,
-  setDrawerSnapPoint,
 }

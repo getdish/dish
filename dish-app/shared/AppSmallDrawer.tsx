@@ -1,12 +1,11 @@
-import { useStore, useStoreInstance } from '@dish/use-store'
+import { useStoreInstance } from '@dish/use-store'
 import React, { useEffect } from 'react'
 
 import { autocompletesStore } from './AppAutocomplete'
 import { AppSmallDrawerView } from './AppSmallDrawerView'
-import { BottomDrawerStore } from './BottomDrawerStore'
+import { drawerStore } from './BottomDrawerStore'
 
 export const AppSmallDrawer = (props: { children: any }) => {
-  const drawerStore = useStore(BottomDrawerStore)
   const autocompletes = useStoreInstance(autocompletesStore)
 
   useEffect(() => {

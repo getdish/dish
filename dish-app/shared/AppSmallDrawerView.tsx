@@ -1,5 +1,5 @@
 import { supportsTouchWeb } from '@dish/helpers'
-import { useStore } from '@dish/use-store'
+import { useStore, useStoreInstance } from '@dish/use-store'
 import React, { memo, useEffect, useMemo } from 'react'
 import { Animated, PanResponder, StyleSheet, View } from 'react-native'
 import { AbsoluteVStack, VStack, useMedia } from 'snackui'
@@ -8,7 +8,7 @@ import { autocompletesStore } from './AppAutocomplete'
 import { AppSearchBar } from './AppSearchBar'
 import { blurSearchInput } from './AppSearchInput'
 import { AppSmallDrawerView as AppSmallDrawerViewNative } from './AppSmallDrawerView.native'
-import { BottomDrawerStore } from './BottomDrawerStore'
+import { drawerStore as drawerStoreInstance } from './BottomDrawerStore'
 import { BottomSheetContainer } from './BottomSheetContainer'
 import { pageWidthMax, searchBarHeight, zIndexDrawer } from './constants'
 import { isWebIOS } from './helpers/isIOS'
@@ -19,7 +19,7 @@ export const AppSmallDrawerView = memo((props: { children: any }) => {
     return <AppSmallDrawerViewNative {...props} />
   }
 
-  const drawerStore = useStore(BottomDrawerStore)
+  const drawerStore = useStoreInstance(drawerStoreInstance)
   const media = useMedia()
 
   // attaching this as a direct onPress event breaks dragging

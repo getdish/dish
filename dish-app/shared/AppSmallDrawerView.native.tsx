@@ -1,4 +1,4 @@
-import { useStore } from '@dish/use-store'
+import { useStore, useStoreInstance } from '@dish/use-store'
 import React, { memo, useMemo } from 'react'
 import { Animated, PanResponder, StyleSheet, View } from 'react-native'
 import { VStack } from 'snackui'
@@ -6,7 +6,7 @@ import { VStack } from 'snackui'
 import { autocompletesStore } from './AppAutocomplete'
 import { AppSearchBar } from './AppSearchBar'
 import { blurSearchInput } from './AppSearchInput'
-import { BottomDrawerStore } from './BottomDrawerStore'
+import { drawerStore as drawerStoreInstance } from './BottomDrawerStore'
 import { BottomSheetContainer } from './BottomSheetContainer'
 import { pageWidthMax, searchBarHeight, zIndexDrawer } from './constants'
 import { getWindowHeight } from './helpers/getWindow'
@@ -15,7 +15,7 @@ import { isScrollAtTop } from './views/ContentScrollView'
 import { isScrollingSubDrawer } from './views/ContentScrollViewHorizontal'
 
 export const AppSmallDrawerView = memo((props: { children: any }) => {
-  const drawerStore = useStore(BottomDrawerStore)
+  const drawerStore = useStoreInstance(drawerStoreInstance)
 
   const panResponder = useMemo(() => {
     const move = Animated.event([null, { dy: drawerStore.pan }], {

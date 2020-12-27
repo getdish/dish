@@ -1,10 +1,10 @@
-import { useStore } from '@dish/use-store'
+import { useStoreInstance } from '@dish/use-store'
 import loadable from '@loadable/component'
 import React, { Suspense, memo } from 'react'
 import { AbsoluteVStack, HStack, useMedia } from 'snackui'
 
 import { AppMapRestaurantPeek } from './AppMapRestaurantPeek'
-import { BottomDrawerStore } from './BottomDrawerStore'
+import { drawerStore } from './BottomDrawerStore'
 import { searchBarHeight, zIndexMapControls } from './constants'
 import { getWindowHeight } from './helpers/getWindow'
 import { useMapSize } from './hooks/useMapSize'
@@ -15,11 +15,11 @@ export const AppMapControlsOverlay = memo(() => {
   const om = useOvermind()
   const media = useMedia()
   const { paddingLeft, width } = useMapSize(media.sm)
-  const drawerStore = useStore(BottomDrawerStore)
+  const drawer = useStoreInstance(drawerStore)
   const edgeInsets = useSafeArea()
 
   let bottom = 0
-  if (om.state.home.drawerSnapPoint === 2) {
+  if (drawer.snapIndex === 2) {
     bottom = getWindowHeight() - getWindowHeight() * drawerStore.snapPoints[2]
   }
 
