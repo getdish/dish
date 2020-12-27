@@ -49,3 +49,6 @@ export async function fuzzySearch<A extends { [key: string]: any }>({
     .slice(0, limit)
     .map((index) => items[index])
 }
+
+// @ts-expect-error
+module.hot?.accept()
