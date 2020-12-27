@@ -641,16 +641,8 @@ const DishCol = (props: StackProps) => {
 
 const DishFeedCard = graphql(function DishFeedCard(props: FeedItemDish) {
   const restaurant = useRestaurantQuery(props.restaurant.slug)
-  const cardFrame = useCardFrame()
   return (
-    <VStack
-      height={cardFrame.height}
-      borderRadius={20}
-      alignItems="center"
-      justifyContent="center"
-      overflow="hidden"
-      flexWrap="nowrap"
-    >
+    <CardFrame expandable transparent>
       <VStack position="relative" alignSelf="center">
         <SlantedTitle
           position="absolute"
@@ -661,13 +653,13 @@ const DishFeedCard = graphql(function DishFeedCard(props: FeedItemDish) {
         >
           {restaurant.name}
         </SlantedTitle>
-        <DishView showSearchButton size={cardFrame.width} {...props} />
+        <DishView showSearchButton size="100%" {...props} />
       </VStack>
       <Text fontSize={14} lineHeight={22} opacity={0.4} margin={4}>
         lorem ipsume dolor sit amet lorem ipsume dolor sit amet lorem ipsume
         dolor sit amet lorem ipsume dolor sit amet.
       </Text>
-    </VStack>
+    </CardFrame>
   )
 })
 

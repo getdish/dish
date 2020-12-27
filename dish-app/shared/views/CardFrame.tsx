@@ -22,7 +22,6 @@ export const CardFrame = ({
   const theme = useTheme()
   const media = useMedia()
   const cardFrameWidthLarge = width * 2
-  const expanded = !media.xs && expandable
   return (
     <VStack
       className="ease-in-out-faster"
@@ -36,8 +35,8 @@ export const CardFrame = ({
       shadowRadius={4}
       shadowOffset={{ height: 1, width: 0 }}
       position="relative"
-      {...(expanded && {
-        width: cardFrameWidthLarge,
+      {...(media.xs && {
+        width: expandable ? cardFrameWidthLarge : width,
       })}
       {...(hoverable && {
         hoverStyle: {
