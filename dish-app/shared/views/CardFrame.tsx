@@ -7,38 +7,41 @@ import { StackProps, VStack, useMedia, useTheme } from 'snackui'
 
 const borderRadius = 17
 export const cardFrameBorderRadiusSmaller = borderRadius * 0.95
+export const cardFrameWidth = 240
+export const cardFrameHeight = 340
 
 export const CardFrame = ({
   hoverable,
   expandable,
   transparent,
-  ...props
-}: StackProps & {
+  children,
+}: {
+  children?: any
   expandable?: boolean
   hoverable?: boolean
   transparent?: boolean
 }) => {
-  const { width, height } = useCardFrame()
   const theme = useTheme()
   const media = useMedia()
-  const cardFrameWidthLarge = width * 2
   return (
     <VStack
       className="ease-in-out-faster"
       contain="layout"
       borderRadius={borderRadius}
-      width={width}
-      height={height}
+      width={cardFrameWidth}
+      height={cardFrameHeight}
       backgroundColor={transparent ? 'transparent' : theme.cardBackgroundColor}
       shadowColor="#000"
       shadowOpacity={transparent ? 0 : 0.1}
       shadowRadius={4}
       shadowOffset={{ height: 1, width: 0 }}
       position="relative"
-      {...(!media.xs &&
-        expandable && {
-          width: cardFrameWidthLarge,
-        })}
+      {...(expandable && {
+        width: cardFrameWidth * 2,
+      })}
+      {...(media.xs && {
+        width: '90%',
+      })}
       {...(hoverable && {
         hoverStyle: {
           transform: [{ scale: 1.015 }],
@@ -47,28 +50,8 @@ export const CardFrame = ({
           transform: [{ scale: 0.95 }],
         },
       })}
-      {...props}
-    />
+    >
+      {children}
+    </VStack>
   )
-}
-
-export const cardFrameWidth = 240
-export const cardFrameHeight = 340
-
-export const useCardFrame = () => {
-  const media = useMedia()
-
-  if (media.xs) {
-    const { width, height } = Dimensions.get('window')
-    const cardWidth = width - 60
-    return {
-      width: cardWidth,
-      height: Math.min(cardWidth * 1.2, height - 80),
-    }
-  }
-
-  return {
-    width: cardFrameWidth,
-    height: cardFrameHeight,
-  }
 }

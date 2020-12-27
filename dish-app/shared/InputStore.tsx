@@ -1,5 +1,4 @@
 import { Store, createStore, useStoreInstance } from '@dish/use-store'
-import { debounce } from 'lodash'
 
 import { autocompletesStore } from './AppAutocomplete'
 import {
@@ -13,14 +12,14 @@ export class InputStore extends Store<{ name: 'location' | 'search' }> {
   node: HTMLInputElement | null = null
   value: string | null = null
 
+  focusNode() {
+    this.node?.focus()
+  }
+
   // one way sync to set it externally
   setValue(val: string) {
     this.value = val
   }
-
-  setNodeSlow = debounce((view: any) => {
-    this.node = view
-  })
 
   moveActive(num: -1 | 1) {
     if (autocompletesStore.active) {
@@ -30,16 +29,8 @@ export class InputStore extends Store<{ name: 'location' | 'search' }> {
     }
   }
 
-  setNode(view: any) {
-    if (view) {
-      const next = inputGetNode(view)
-      if (this.node) {
-        // fixes bug on web resizing to small
-        this.setNodeSlow(next)
-      } else {
-        this.node = next
-      }
-    }
+  setNode(node: HTMLInputElement) {
+    this.node = node
   }
 
   handleEsc() {
@@ -59,3 +50,10 @@ export const inputStoreLocation = createStore(InputStore, { name: 'location' })
 export const useInputStoreLocation = () => useStoreInstance(inputStoreLocation)
 export const inputStoreSearch = createStore(InputStore, { name: 'search' })
 export const useInputStoreSearch = () => useStoreInstance(inputStoreSearch)
+
+export function setNodeOnInputStore(inputStore: InputStore, view: any) {
+  if (!view) return
+  const next = inputGetNode(view)
+  if (inputStore.node) return
+  inputStore.setNode(next)
+}

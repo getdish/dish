@@ -18,11 +18,18 @@ export type UseStoreOptions<Store = any, SelectorRes = any> = {
 }
 
 const UNWRAP_PROXY = Symbol('unwrap_proxy')
-const StoreInstanceToInfo = new Map<string, StoreInfo>()
-const cache = new Map<string, { [key: string]: StoreInfo }>()
+const cache = new Map<string, StoreInfo>()
 const defaultOptions = {
   once: false,
   selector: undefined,
+}
+
+export type UseStoreConfig = {
+  logLevel?: 'debug' | 'info' | 'error'
+}
+let configureOpts: UseStoreConfig = {}
+export function configureUseStore(opts: UseStoreConfig) {
+  configureOpts = opts
 }
 
 type Selector<A = unknown, B = unknown> = (x: A) => B
@@ -53,9 +60,17 @@ export function createStore<A extends Store<B>, B>(
   return storeInstance
 }
 
+function getStoreUid(storeName: string, props: string | Object) {
+  return `${storeName}${
+    !props ? '' : typeof props === 'string' ? props : getKey(props)
+  }`
+}
+
 // use singleton with react
 export function useStoreInstance<A extends Store<B>, B>(instance: A): A {
-  const info = StoreInstanceToInfo.get(instance[UNWRAP_PROXY].constructor.name)
+  const store = instance[UNWRAP_PROXY]
+  const uid = getStoreUid(store.constructor.name, store.props)
+  const info = cache.get(uid)
   if (!info) {
     throw new Error(`This store not created using createStore()`)
   }
@@ -158,24 +173,22 @@ function getOrCreateStoreInfo(
   propsKeyCalculated?: string
 ) {
   const storeName = StoreKlass.name
-  const propsKey = propsKeyCalculated ?? (props ? getKey(props) : '')
-  const uid = `${storeName}${propsKey}`
+  const uid = getStoreUid(storeName, propsKeyCalculated ?? props)
 
   if (!opts?.avoidCache) {
-    const cached = cache.get(storeName)
-    const info = cached?.[uid]
-    if (info) {
+    const cached = cache.get(uid)
+    if (cached) {
       // warn if creating an already existing store!
       // need to detect HMR more cleanly if possible
       if (
         process.env.NODE_ENV === 'development' &&
-        info?.storeInstance.constructor.toString() !== StoreKlass.toString()
+        cached?.storeInstance.constructor.toString() !== StoreKlass.toString()
       ) {
         console.warn(
           'Error: Stores must have a unique name (ignore if this is a hot reload)'
         )
       }
-      return info
+      return cached
     }
   }
 
@@ -212,11 +225,7 @@ function getOrCreateStoreInfo(
   }
 
   if (!opts?.avoidCache) {
-    StoreInstanceToInfo.set(storeName, value)
-    if (!cache.get(storeName)) {
-      cache.set(storeName, {})
-    }
-    cache.get(storeName)![uid] = value
+    cache.set(uid, value)
   }
 
   return value
@@ -261,9 +270,9 @@ function useStoreFromInfo(
       const selected = selector(store, [...internal.current.tracked])
       if (
         process.env.NODE_ENV === 'development' &&
-        shouldDebug(component, info)
+        (shouldDebug(component, info) || configureOpts.logLevel === 'debug')
       ) {
-        console.log('🏪 selected', selected)
+        console.log('💰 selected', selected)
       }
       return selected
     },
@@ -284,9 +293,9 @@ function useStoreFromInfo(
 
     if (
       process.env.NODE_ENV === 'development' &&
-      shouldDebug(component, info)
+      (shouldDebug(component, info) || configureOpts.logLevel === 'debug')
     ) {
-      console.log('🏪 finish render, tracking', [...internal.current.tracked])
+      console.log('💰 finish render, tracking', [...internal.current.tracked])
     }
   })
 
@@ -304,6 +313,8 @@ function createProxiedStore(
     component: any
   }
 ) {
+  const constr = info.storeInstance.constructor
+  const setters = new Set<any>()
   const proxiedStore = new Proxy(info.storeInstance, {
     get(target, key) {
       if (typeof key === 'string') {
@@ -311,19 +322,31 @@ function createProxiedStore(
           return info.getters[key].call(proxiedStore)
         }
         if (info.actions[key]) {
+          let action = info.actions[key].bind(proxiedStore)
           if (
             process.env.NODE_ENV === 'development' &&
-            renderOpts &&
-            shouldDebug(renderOpts.component, info)
+            ((renderOpts && DebugStores.has(constr)) ||
+              configureOpts.logLevel !== 'error') &&
+            !key.startsWith('get')
           ) {
-            return new Proxy(info.actions[key], {
-              apply(a, b, c) {
-                console.log(`🏪 ACTION ${key}`, c)
-                return Reflect.apply(a, b, c)
-              },
-            })
+            const ogAction = action
+            action = (...args: any[]) => {
+              setters.clear()
+              const res = ogAction(...args)
+              const simpleArgs = args.map(simpleStr)
+              console.groupCollapsed(
+                `💰 ${constr.name}.${key}(${simpleArgs.join(', ')})`
+              )
+              console.log('ARGS ', ...args)
+              setters.forEach(({ key, value }) => {
+                console.log(`SET `, key, '=', value)
+              })
+              setters.clear()
+              console.groupEnd()
+              return res
+            }
           }
-          return info.actions[key].bind(proxiedStore)
+          return action
         }
         if (renderOpts?.internal.current.isRendering) {
           renderOpts.internal.current.tracked.add(key)
@@ -345,10 +368,11 @@ function createProxiedStore(
       if (res && cur !== value) {
         if (
           process.env.NODE_ENV === 'development' &&
-          DebugStores.has(info.storeInstance.constructor)
+          (DebugStores.has(constr) || configureOpts.logLevel !== 'error')
         ) {
-          console.log(`🏪 SET ${String(key)}`, value)
+          setters.add({ key, value })
         }
+        // TODO could potentially enforce actions + batch
         info.version++
         info.storeInstance[TRIGGER_UPDATE]()
       }
@@ -429,4 +453,16 @@ export default function useConstant<T>(fn: () => T): T {
     ref.current = { v: fn() }
   }
   return ref.current.v
+}
+
+function simpleStr(arg: any) {
+  return typeof arg === 'string'
+    ? `"${arg}"`
+    : !arg
+    ? arg
+    : typeof arg !== 'object'
+    ? arg
+    : Array.isArray(arg)
+    ? '[...]'
+    : `{...}`
 }

@@ -16,6 +16,8 @@ import { useRestaurantQuery } from '../../hooks/useRestaurantQuery'
 import {
   CardFrame,
   cardFrameBorderRadiusSmaller,
+  cardFrameHeight,
+  cardFrameWidth,
   useCardFrame,
 } from '../../views/CardFrame'
 import { RestaurantUpVoteDownVote } from '../../views/restaurant/RestaurantUpVoteDownVote'
@@ -48,7 +50,6 @@ export const RestaurantCardContent = memo(
       restaurantId,
       below,
     }: RestaurantCardProps) => {
-      const cardFrame = useCardFrame()
       const restaurant = useRestaurantQuery(restaurantSlug)
       // const scale = size === 'lg' ? 1.2 : size == 'sm' ? 0.6 : 1
       const [hideInfo, setHideInfo] = useState(false)
@@ -109,8 +110,8 @@ export const RestaurantCardContent = memo(
               <Image
                 resizeMode="cover"
                 style={{
-                  width: cardFrame.width,
-                  height: cardFrame.height,
+                  width: cardFrameWidth,
+                  height: cardFrameHeight,
                 }}
                 source={{ uri: restaurantPhoto }}
               />

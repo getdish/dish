@@ -27,7 +27,11 @@ import { AppAutocompleteHoverableInput } from './AppAutocompleteHoverableInput'
 import { isWeb, searchBarHeight } from './constants'
 import { isWebIOS } from './helpers/isIOS'
 import { useSearchBarTheme } from './hooks/useSearchBarTheme'
-import { InputStore, useInputStoreSearch } from './InputStore'
+import {
+  InputStore,
+  setNodeOnInputStore,
+  useInputStoreSearch,
+} from './InputStore'
 import { searchPageStore } from './pages/search/SearchPageStore'
 import { SearchInputNativeDragFix } from './SearchInputNativeDragFix'
 import { getTagSlug } from './state/getTagSlug'
@@ -128,7 +132,7 @@ export const AppSearchInput = memo(() => {
   useEffect(() => {
     if (showSearchAutocomplete) {
       const tm = setTimeout(() => {
-        inputStore.node?.focus()
+        inputStore.focusNode()
       }, 100)
       return () => {
         clearTimeout(tm)
@@ -274,7 +278,7 @@ export const AppSearchInput = memo(() => {
               >
                 {!isWeb && <SearchInputNativeDragFix name="search" />}
                 <TextInput
-                  ref={inputStore.setNode}
+                  ref={(view) => setNodeOnInputStore(inputStore, view)}
                   // leave uncontrolled for perf?
                   value={search ?? ''}
                   onBlur={(e) => {

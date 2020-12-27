@@ -1,6 +1,6 @@
 import { useHydrateCache } from '@dish/graph'
 import { ProvideRouter } from '@dish/router'
-import { allStores } from '@dish/use-store'
+import { allStores, configureUseStore } from '@dish/use-store'
 import { Provider } from 'overmind-react'
 import React, { Suspense } from 'react'
 import { QueryClientProvider } from 'react-query'
@@ -24,6 +24,9 @@ declare module 'snackui' {
 }
 
 configureThemes(themes)
+configureUseStore({
+  logLevel: process.env.NODE_ENV === 'development' ? 'info' : 'error',
+})
 
 const cacheSnapshot =
   //@ts-expect-error

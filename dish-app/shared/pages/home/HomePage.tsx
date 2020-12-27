@@ -27,11 +27,7 @@ import {
   useTheme,
 } from 'snackui'
 
-import {
-  drawerWidthMax,
-  searchBarHeight,
-  searchBarHeightWithPadding,
-} from '../../constants'
+import { drawerWidthMax, searchBarHeight } from '../../constants'
 import { DishHorizonView } from '../../DishHorizonView'
 import { RegionNormalized, useRegionQuery } from '../../helpers/fetchRegion'
 import { getGroupedButtonProps } from '../../helpers/getGroupedButtonProps'
@@ -44,7 +40,7 @@ import { HomeStateItemHome } from '../../state/home-types'
 import { omStatic } from '../../state/omStatic'
 import { router } from '../../state/router'
 import { useOvermind } from '../../state/useOvermind'
-import { CardFrame, useCardFrame } from '../../views/CardFrame'
+import { CardFrame } from '../../views/CardFrame'
 import { CommentBubble } from '../../views/CommentBubble'
 import { ContentScrollView } from '../../views/ContentScrollView'
 import { DishView } from '../../views/dish/DishView'
@@ -391,8 +387,8 @@ const HomePageContent = memo(
                       key={item.id}
                       paddingHorizontal={8}
                       paddingBottom="6%"
-                      // flex={1}
                       alignItems="center"
+                      width={media.xs ? '90%' : 'auto'}
                     >
                       <CardFrame
                         transparent={item.transparent}
