@@ -37,7 +37,6 @@ export type HomeState = {
   searchbarFocusedTag: Tag | null
   searchBarTagIndex: number
   searchBarTags: NavigableTag[]
-  searchBarY: number
   selectedRestaurant: RestaurantOnlyIds | null
   showUserMenu: boolean
   skipNextPageFetchData: boolean
