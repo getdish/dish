@@ -1,3 +1,4 @@
+// debug
 import { Search } from '@dish/react-feather'
 import { capitalize } from 'lodash'
 import React, { Suspense, memo, useState } from 'react'
@@ -96,7 +97,7 @@ const DishViewContent = (props: DishViewProps) => {
   const isFallback = _isFallback ?? dish.isFallback
   const { lightColor, color } = getColorsForName(dish.name)
   const backgroundColor = lightColor
-  const isActive = isHovered || selected
+  const isActive = (isHovered || selected) ?? false
 
   const showVote =
     typeof dish.score === 'number' &&
@@ -230,18 +231,20 @@ const DishViewContent = (props: DishViewProps) => {
       </AbsoluteVStack>
       {!!dish.image && (
         <VStack
-          overflow="hidden"
-          borderRadius={1000}
+          // BUG cant put transform on same as borderRadius + overflowHidden
+          // https://stackoverflow.com/questions/21087979/probleme-css3-scale-transform-and-overflowhidden-on-safari
           transform={[{ scale: isFallback ? 0.8 : 1 }]}
         >
-          <ImageAlt
-            source={{ uri: imageUrl }}
-            style={{
-              width: size,
-              height: size,
-            }}
-            resizeMode="cover"
-          />
+          <VStack className="dish-image-" overflow="hidden" borderRadius={1000}>
+            <ImageAlt
+              source={{ uri: imageUrl }}
+              style={{
+                width: size,
+                height: size,
+              }}
+              resizeMode="cover"
+            />
+          </VStack>
         </VStack>
       )}
       <AbsoluteVStack fullscreen borderRadius={10000} overflow="hidden">

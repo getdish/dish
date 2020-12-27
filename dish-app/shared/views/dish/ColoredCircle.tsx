@@ -7,7 +7,7 @@ export const ColoredCircle = ({
   ...rest
 }: StackProps & {
   isSelected?: boolean
-  size: number
+  size: number | string
 }) => {
   return (
     <VStack
