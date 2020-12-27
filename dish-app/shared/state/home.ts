@@ -1,20 +1,9 @@
-import { fullyIdle, idle, sleep } from '@dish/async'
+import { idle, sleep } from '@dish/async'
 import { isEqual } from '@dish/fast-compare'
-import {
-  RestaurantOnlyIds,
-  RestaurantSearchArgs,
-  Tag,
-  search,
-  slugify,
-} from '@dish/graph'
-import {
-  assert,
-  handleAssertionError,
-  isPresent,
-  stringify,
-} from '@dish/helpers'
-import { HistoryItem, NavigateItem } from '@dish/router'
-import _, { clamp, findLast, isPlainObject, last } from 'lodash'
+import { RestaurantOnlyIds, Tag } from '@dish/graph'
+import { assert, handleAssertionError, stringify } from '@dish/helpers'
+import { HistoryItem } from '@dish/router'
+import _, { clamp, findLast, isPlainObject } from 'lodash'
 import { Action, AsyncAction, Config, IContext, derived } from 'overmind'
 import { Keyboard } from 'react-native'
 import { Toast } from 'snackui'
@@ -23,16 +12,14 @@ import { appMapStore } from '../AppMapStore'
 import { getBreadcrumbs, isBreadcrumbState } from '../helpers/getBreadcrumbs'
 import { allTags } from './allTags'
 import { getActiveTags } from './getActiveTags'
-import { getNavigateItemForState } from './getNavigateItemForState'
 import { getNextState } from './getNextState'
 import { getShouldNavigate } from './getShouldNavigate'
 import { getTagSlug } from './getTagSlug'
-import { isHomeState, isRestaurantState, isSearchState } from './home-helpers'
+import { isHomeState, isSearchState } from './home-helpers'
 import {
   HomeState,
   HomeStateItem,
   HomeStateItemHome,
-  HomeStateItemRestaurant,
   HomeStateItemSearch,
   HomeStateNav,
   HomeStateTagNavigable,
@@ -43,7 +30,6 @@ import { initialHomeState } from './initialHomeState'
 import { isSearchBarTag } from './isSearchBarTag'
 import { tagLenses } from './localTags'
 import { NavigableTag } from './NavigableTag'
-import { reverseGeocode } from './reverseGeocode'
 import { router } from './router'
 import { syncStateToRoute } from './syncStateToRoute'
 

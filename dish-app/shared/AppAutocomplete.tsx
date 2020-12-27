@@ -33,6 +33,7 @@ import {
   searchLocations,
 } from './helpers/searchLocations'
 import { searchRestaurants } from './helpers/searchRestaurants'
+import { useInputStoreLocation } from './InputStore'
 import { setLocation } from './setLocation'
 import { createAutocomplete } from './state/createAutocomplete'
 import { defaultLocationAutocompleteResults } from './state/defaultLocationAutocompleteResults'
@@ -305,16 +306,22 @@ const AutocompleteSearch = memo(() => {
 })
 
 const AutocompleteLocation = memo(() => {
-  const om = useOvermind()
   const autocompletes = useStoreInstance(autocompletesStore)
   const store = useStoreInstance(autocompleteLocationStore)
-  const query = useDebounceValue('', 250)
+  const inputStore = useInputStoreLocation()
+  const query = useDebounceValue(inputStore.value, 250)
 
   useEffect(() => {
     query && store.setIsLoading(true)
   }, [query])
 
   useEffect(() => {
+    store.setResults(defaultLocationAutocompleteResults)
+  }, [])
+
+  useEffect(() => {
+    if (!query) return
+
     let results: AutocompleteItem[] = []
     const state = omStatic.state.home.currentState
 
@@ -450,7 +457,6 @@ const AutocompleteResults = memo(
         {!results.length && emptyContent}
         {results.map((result, index) => {
           const isActive = activeIndex === index
-
           return (
             <React.Fragment key={`${result.tagId}${index}`}>
               <Theme name={isActive ? 'active' : null}>

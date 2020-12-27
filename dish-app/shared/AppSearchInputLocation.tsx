@@ -13,7 +13,7 @@ import { inputTextStyles } from './AppSearchInput'
 import { blue } from './colors'
 import { isWeb } from './constants'
 import { useSearchBarTheme } from './hooks/useSearchBarTheme'
-import { useInputStoreLocation } from './InputStore'
+import { setNodeOnInputStore, useInputStoreLocation } from './InputStore'
 import { SearchInputNativeDragFix } from './SearchInputNativeDragFix'
 import { setLocation } from './setLocation'
 import { useOvermind } from './state/useOvermind'
@@ -25,7 +25,6 @@ export const AppSearchInputLocation = memo(() => {
   const inputStore = useInputStoreLocation()
   const om = useOvermind()
   const { color } = useSearchBarTheme()
-  const [locationSearch, setLocationSearch] = useState('')
   const { currentLocationName } = om.state.home.currentState
   const locationAutocomplete = useStoreInstance(autocompleteLocationStore)
   const autocompletes = useStoreInstance(autocompletesStore)
@@ -35,8 +34,7 @@ export const AppSearchInputLocation = memo(() => {
   useEffect(() => {
     if (showLocationAutocomplete) {
       const tm = setTimeout(() => {
-        console.log('focusing')
-        inputStore.node?.focus()
+        inputStore.focusNode()
       }, 100)
       return () => {
         clearTimeout(tm)
@@ -44,13 +42,6 @@ export const AppSearchInputLocation = memo(() => {
     }
     return undefined
   }, [showLocationAutocomplete])
-
-  // one way sync down for more perf
-  useEffect(() => {
-    if (inputStore.value !== null) {
-      setLocationSearch(inputStore.value)
-    }
-  }, [inputStore.value])
 
   const handleKeyPress = useCallback((e) => {
     // @ts-ignore
@@ -122,7 +113,7 @@ export const AppSearchInputLocation = memo(() => {
           <TouchableOpacity
             onPress={(e) => {
               prevent(e)
-              inputStore.node?.focus()
+              inputStore.focusNode()
             }}
           >
             <MapPin
@@ -142,8 +133,8 @@ export const AppSearchInputLocation = memo(() => {
           >
             {!isWeb && <SearchInputNativeDragFix name="location" />}
             <TextInput
-              ref={inputStore.setNode}
-              value={locationSearch}
+              ref={(view) => setNodeOnInputStore(inputStore, view)}
+              value={inputStore.value ?? ''}
               placeholder={currentLocationName ?? '...'}
               style={[
                 inputTextStyles.textInput,
@@ -151,7 +142,7 @@ export const AppSearchInputLocation = memo(() => {
               ]}
               onKeyPress={handleKeyPress}
               onChangeText={(text) => {
-                setLocationSearch(text)
+                inputStore.setValue(text)
                 if (text && !autocompletes.visible) {
                   autocompletes.setTarget('location')
                 }
