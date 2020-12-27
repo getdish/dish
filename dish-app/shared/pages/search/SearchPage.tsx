@@ -78,11 +78,22 @@ import { searchPageStore } from './SearchPageStore'
 type Props = StackViewProps<HomeStateItemSearch>
 const SearchPagePropsContext = createContext<Props | null>(null)
 
-export type ActiveEvent = 'key' | 'pin' | 'hover' | null
-
 export default memo(function SearchPage(props: Props) {
   console.warn('render searchpage', JSON.stringify(props, null, 2))
   // const isEditingUserList = !!isEditingUserPage(om.state)
+
+  // export const isOnOwnProfile = (state: OmState) => {
+  //   const username = state.user?.user?.username
+  //   return username && slugify(username) === router.curPage.params?.username
+  // }
+
+  // export const isEditingUserPage = (
+  //   state: HomeStateItemSearch,
+  //   omState: OmState
+  // ) => {
+  //   return state.type === 'userSearch' && isOnOwnProfile(omState)
+  // }
+
   const om = useOvermind()
   const state = props.item
   const route = useLastValueWhen(
@@ -100,7 +111,7 @@ export default memo(function SearchPage(props: Props) {
 
   usePageLoadEffect(props, ({ isRefreshing }) => {
     if (isRefreshing) {
-      om.actions.home.runSearch({ force: true })
+      searchPageStore.runSearch({ force: true })
     }
   })
 
@@ -127,7 +138,7 @@ export default memo(function SearchPage(props: Props) {
       searchQuery,
       activeTags,
     })
-    om.actions.home.runSearch({})
+    searchPageStore.runSearch({})
   }, [tags.data])
 
   useEffect(() => {

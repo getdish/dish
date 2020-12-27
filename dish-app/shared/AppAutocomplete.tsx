@@ -1,5 +1,5 @@
 import { series, sleep } from '@dish/async'
-import { Tag, order_by, query, resolved } from '@dish/graph'
+import { order_by, query, resolved } from '@dish/graph'
 import { isPresent } from '@dish/helpers'
 import { Plus } from '@dish/react-feather'
 import { Store, createStore, useStore, useStoreInstance } from '@dish/use-store'
@@ -22,6 +22,7 @@ import {
   useTheme,
 } from 'snackui'
 
+import { AutocompleteItem } from './AutocompleteItem'
 import { drawerStore } from './BottomDrawerStore'
 import { bgLight } from './colors'
 import { isNative, isWeb, searchBarHeight } from './constants'
@@ -48,19 +49,6 @@ import { LinkButton } from './views/ui/LinkButton'
 let curPagePos = { x: 0, y: 0 }
 
 export type ShowAutocomplete = 'search' | 'location' | false
-
-export type AutocompleteItem = {
-  is: 'autocomplete'
-  id?: string
-  icon?: string
-  name: string
-  description?: string
-  tagId?: string
-  slug?: string
-  type: Tag['type'] | 'restaurant'
-  center?: LngLat
-  span?: LngLat
-}
 
 type AutocompleteTarget = 'search' | 'location'
 
@@ -379,9 +367,8 @@ const AutocompleteFrame = ({ children }: { children: any }) => {
       opacity={isShowing ? 1 : 0}
       pointerEvents={isShowing ? 'auto' : 'none'}
       fullscreen
-      overflow="hidden"
       alignItems="center"
-      top={media.sm ? searchBarHeight : 0}
+      top={media.sm ? searchBarHeight : 10}
       onPress={() => autocompletes.setVisible(false)}
     >
       <AbsoluteVStack backgroundColor={theme.backgroundColor} fullscreen />
@@ -395,9 +382,6 @@ const AutocompleteFrame = ({ children }: { children: any }) => {
       <PaneControlButtons>
         <CloseButton
           size={20}
-          position="absolute"
-          top={14}
-          right={14}
           onPressOut={prevent}
           zIndex={1000}
           onPress={(e) => {

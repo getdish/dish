@@ -28,6 +28,7 @@ import { isWeb, searchBarHeight } from './constants'
 import { isWebIOS } from './helpers/isIOS'
 import { useSearchBarTheme } from './hooks/useSearchBarTheme'
 import { InputStore } from './InputStore'
+import { searchPageStore } from './pages/search/SearchPageStore'
 import { SearchInputNativeDragFix } from './SearchInputNativeDragFix'
 import { getTagSlug } from './state/getTagSlug'
 import { tagsToNavigableTags } from './state/NavigableTag'
@@ -408,7 +409,7 @@ const handleKeyPress = async (e: any, inputStore: InputStore) => {
           })
         }
       } else {
-        omStatic.actions.home.runSearch({
+        searchPageStore.runSearch({
           searchQuery: e.target.value,
           force: true,
         })
