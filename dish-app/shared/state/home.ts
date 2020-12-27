@@ -24,6 +24,7 @@ import { allTags } from './allTags'
 import { getActiveTags } from './getActiveTags'
 import { getNavigateItemForState } from './getNavigateItemForState'
 import { getNextState } from './getNextState'
+import { getShouldNavigate } from './getShouldNavigate'
 import { getTagSlug } from './getTagSlug'
 import { isHomeState, isRestaurantState, isSearchState } from './home-helpers'
 import {
@@ -43,6 +44,7 @@ import { tagLenses } from './localTags'
 import { NavigableTag } from './NavigableTag'
 import { reverseGeocode } from './reverseGeocode'
 import { router } from './router'
+import { syncStateToRoute } from './syncStateToRoute'
 
 export const state: HomeState = {
   started: false,
@@ -64,18 +66,9 @@ export const state: HomeState = {
     '0': initialHomeState,
   },
   userLocation: null,
-  currentNavItem: derived<HomeState, OmState, NavigateItem>((state, om) =>
-    getNavigateItemForState(om, last(state.states)!)
-  ),
-
   lastHomeState: derived<HomeState, OmState, HomeStateItemHome>(
     (state) => findLast(state.states, isHomeState)!
   ),
-  lastRestaurantState: derived<
-    HomeState,
-    any,
-    HomeStateItemRestaurant | undefined
-  >((state) => findLast(state.states, isRestaurantState)),
   lastSearchState: derived<HomeState, OmState, HomeStateItemSearch | undefined>(
     (state) => findLast(state.states, isSearchState)
   ),
@@ -139,18 +132,6 @@ export const state: HomeState = {
   ),
 }
 
-export const isOnOwnProfile = (state: OmState) => {
-  const username = state.user?.user?.username
-  return username && slugify(username) === router.curPage.params?.username
-}
-
-export const isEditingUserPage = (
-  state: HomeStateItemSearch,
-  omState: OmState
-) => {
-  return state.type === 'userSearch' && isOnOwnProfile(omState)
-}
-
 type PageAction = () => Promise<void>
 
 const refresh: AsyncAction = async (om) => {
@@ -212,113 +193,7 @@ const popTo: Action<HomeStateItem['type']> = (om, type) => {
   }
 }
 
-let lastSearchKey = ''
-let lastSearchAt = Date.now()
-const runSearch: AsyncAction<{
-  searchQuery?: string
-  quiet?: boolean
-  force?: boolean
-}> = async (om, opts) => {
-  opts = opts || { quiet: false }
-  lastSearchAt = Date.now()
-  let curId = lastSearchAt
-
-  const curState = om.state.home.currentState
-  const searchQuery = opts.searchQuery ?? curState.searchQuery ?? ''
-  const navItem = {
-    state: {
-      ...curState,
-      searchQuery,
-    },
-  }
-
-  if (await om.actions.home.navigate(navItem)) {
-    console.log('did nav from search', navItem)
-    // nav will trigger search
-    return
-  }
-
-  let state = om.state.home.lastSearchState
-  const tags = getActiveTags(curState)
-
-  const shouldCancel = () => {
-    const state = om.state.home.lastSearchState
-    const answer = !state || lastSearchAt != curId
-    if (answer) console.log('search: cancel')
-    return answer
-  }
-
-  // dont be so eager if started
-  if (!opts.force && om.state.home.started) {
-    await fullyIdle()
-    if (shouldCancel()) return
-  }
-
-  state = om.state.home.lastSearchState
-  if (shouldCancel()) return
-  state = state!
-
-  // overmind seems unhappy to just let us mutate
-  const center = state.mapAt?.center ?? state!.center
-  const span = state.mapAt?.span ?? state!.span
-
-  om.actions.home.updateHomeState({
-    id: state.id,
-    center,
-    span,
-    mapAt: null,
-  })
-
-  const activeTags = state.activeTags ?? {}
-  const dishSearchedTag = Object.keys(activeTags).find(
-    (k) => allTags[k]?.type === 'dish'
-  )
-  let otherTags = [
-    ...tags
-      .map((tag) =>
-        getTagSlug(tag).replace('lenses__', '').replace('filters__', '')
-      )
-      .filter((t) => !t.includes(dishSearchedTag)),
-  ]
-
-  const searchArgs: RestaurantSearchArgs = {
-    center: roundLngLat(center),
-    span: roundLngLat(span),
-    query: state!.searchQuery,
-    tags: otherTags,
-    main_tag: dishSearchedTag ?? otherTags[0],
-  }
-
-  // prevent duplicate searches
-  const searchKey = stringify(searchArgs)
-  if (!opts.force && searchKey === lastSearchKey) {
-    console.warn('same saerch again?')
-  }
-
-  // fetch
-  let res = await search(searchArgs)
-  if (shouldCancel() || !res) return
-
-  // temp code to handle both types of api response at once
-  if (!res.restaurants) {
-    console.log('no restaurants', res)
-  }
-  let restaurants = res.restaurants ?? []
-
-  // only update searchkey once finished
-  lastSearchKey = searchKey
-  state = om.state.home.lastSearchState
-  if (!state) return
-
-  // console.log('search found restaurants', restaurants)
-  om.actions.home.updateHomeState({
-    id: state.id,
-    status: 'complete',
-    // limit to 80 for now
-    results: restaurants.filter(isPresent).slice(0, 80),
-    meta: res.meta,
-  })
-}
+const runSearch: AsyncAction<{}> = async (om, opts) => {}
 
 // doesn't delete
 const deepAssign = (a: Object, b: Object) => {
@@ -399,12 +274,6 @@ const setHoveredRestaurant: Action<RestaurantOnlyIds | null | false> = (
   om.state.home.hoveredRestaurant = val
 }
 
-const suggestTags: AsyncAction<string> = async (om, tags) => {
-  let state = om.state.home.currentState
-  if (!isRestaurantState(state)) return
-  // none
-}
-
 const getUserPosition = () => {
   return new Promise<any>((res, rej) => {
     navigator.geolocation.getCurrentPosition(res, rej)
@@ -436,8 +305,6 @@ const updateCurrentMapAreaInformation: AsyncAction = async (om) => {
     om.state.home.currentState.currentLocationName = name
   }
 }
-
-let isClearingCache = false
 
 const handleRouteChange: AsyncAction<HistoryItem> = async (om, item) => {
   // happens on *any* route push or pop
@@ -753,41 +620,11 @@ const setSearchBarFocusedTag: Action<NavigableTag | null> = (om, val) => {
   // om.state.home.autocompleteIndex = -tags.length + tagIndex
 }
 
-const forkCurrentList: Action = (om) => {
-  const username = om.state.user.user?.username
-  if (!username) {
-    Toast.show(`Login please`)
-    return
-  }
-  const { curPage } = router
-  if (curPage.name !== 'search') {
-    Toast.show(`Can't fork a non-search page`)
-    return
-  }
-  router.navigate({
-    ...curPage,
-    name: 'userSearch',
-    params: {
-      ...curPage.params,
-      username,
-    },
-  })
-}
-
 // padding for map visual frame
 function padSpan(val: LngLat, by = 0.9): LngLat {
   return {
     lng: val.lng * by,
     lat: val.lat * by,
-  }
-}
-
-// used to help prevent duplicate searches on slight diff in map move
-const roundLngLat = (val: LngLat): LngLat => {
-  // 4 decimal precision is good to a few meters
-  return {
-    lng: Math.round(val.lng * 10000) / 10000,
-    lat: Math.round(val.lat * 10000) / 10000,
   }
 }
 
@@ -879,7 +716,7 @@ const navigate: AsyncAction<HomeStateNav, boolean> = async (
     })
   }
 
-  if (!om.actions.home.getShouldNavigate(nextState)) {
+  if (!getShouldNavigate(nextState)) {
     updateTags()
     return false
   }
@@ -907,7 +744,7 @@ const navigate: AsyncAction<HomeStateNav, boolean> = async (
     om.state.home.isOptimisticUpdating = false
   }
 
-  const didNav = await om.actions.home.syncStateToRoute(nextState)
+  const didNav = await syncStateToRoute(nextState)
   if (curNav !== lastNav) return false
   om.actions.home.updateActiveTags(nextState)
   return didNav
@@ -947,41 +784,6 @@ const promptLogin: Action<undefined, boolean> = (om) => {
   return false
 }
 
-const getShouldNavigate: Action<HomeStateTagNavigable, boolean> = (
-  om,
-  state
-) => {
-  const navItem = getNavigateItemForState(om, state)
-  return router.getShouldNavigate(navItem)
-}
-
-// avoid nasty two way sync bugs as much as possible
-let recentTries = 0
-let synctm
-const syncStateToRoute: AsyncAction<HomeStateTagNavigable, boolean> = async (
-  om,
-  state
-) => {
-  const should = getShouldNavigate(om, state)
-  if (should) {
-    recentTries++
-    clearTimeout(synctm)
-    if (recentTries > 3) {
-      console.warn('bailing loop')
-      recentTries = 0
-      // break loop
-      return false
-    }
-    synctm = setTimeout(() => {
-      recentTries = 0
-    }, 200)
-    const navItem = getNavigateItemForState(om, state)
-    router.navigate(navItem)
-    return true
-  }
-  return false
-}
-
 const updateCurrentState: Action<Partial<Omit<HomeStateItem, 'type'>>> = (
   om,
   val
@@ -998,21 +800,16 @@ const setCenterToResults: Action<number | void> = (om, val) => {
 }
 
 export const actions = {
-  getShouldNavigate,
-  syncStateToRoute,
   updateCurrentState,
-  getNavigateItemForState,
   setCenterToResults,
   setSearchQuery,
   updateCurrentMapAreaInformation,
   clearSearch,
-  forkCurrentList,
   handleRouteChange,
   up,
   clearTag,
   popTo,
   requestLocation,
-  runSearch,
   setHoveredRestaurant,
   setLocation,
   setLocationSearchQuery,
@@ -1021,7 +818,6 @@ export const actions = {
   setSearchBarTagIndex,
   popBack,
   refresh,
-  suggestTags,
   updateActiveTags,
   clearTags,
   setIsLoading,

@@ -1,4 +1,4 @@
-import { AutocompleteItem } from '../AppAutocomplete'
+import { AutocompleteItem } from '../AutocompleteItem'
 
 export function createAutocomplete(
   item: Partial<AutocompleteItem>

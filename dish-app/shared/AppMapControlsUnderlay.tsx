@@ -14,6 +14,9 @@ export const AppMapControlsUnderlay = memo(() => {
   const hasMovedMap =
     !!om.state.home.currentState.mapAt &&
     om.state.home.currentStateType === 'search'
+
+  console.log('hasMovedMap', hasMovedMap)
+
   const media = useMedia()
   const { paddingLeft, width } = useMapSize(media.sm)
   const safeArea = useSafeArea()

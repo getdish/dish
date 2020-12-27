@@ -1,5 +1,5 @@
 import { slugify } from '@dish/graph'
-import { NavigateItem, RouteName } from '@dish/router'
+import { NavigateItem } from '@dish/router'
 
 import { getActiveTags } from './getActiveTags'
 import { getTagSlug } from './getTagSlug'
@@ -11,10 +11,11 @@ import { shouldBeOnSearch } from './shouldBeOnSearch'
 import { SPLIT_TAG } from './SPLIT_TAG'
 
 export const getNavigateItemForState = (
-  om: any,
-  nextState: HomeStateTagNavigable
+  state: HomeStateTagNavigable
 ): NavigateItem => {
-  const state = nextState ?? om.state.home.currentState
+  if (!state) {
+    throw new Error(`provide currentState at least`)
+  }
 
   // only handle "special" states here (home/search)
   if (!isHomeState(state) && !isSearchState(state)) {

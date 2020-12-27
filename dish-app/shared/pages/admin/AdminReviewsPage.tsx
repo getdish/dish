@@ -12,7 +12,7 @@ import {
   useDebounceValue,
 } from 'snackui'
 
-import { AutocompleteItem } from '../../AppAutocomplete'
+import { AutocompleteItem } from '../../AutocompleteItem'
 import { lightGreen, lightRed } from '../../colors'
 import {
   locationToAutocomplete,

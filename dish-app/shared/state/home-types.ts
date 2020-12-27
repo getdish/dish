@@ -18,7 +18,6 @@ export type HomeState = {
   allStates: { [key: string]: HomeStateItem }
   allUsers: { [id: string]: User }
   centerToResults: number
-  currentNavItem: NavigateItem
   currentState: HomeStateItem
   currentStateLense: NavigableTag | null
   currentStateSearchQuery: HomeStateItem['searchQuery']
@@ -29,7 +28,6 @@ export type HomeState = {
   isOptimisticUpdating: boolean
   lastActiveTags: Tag[]
   lastHomeState: HomeStateItemHome
-  lastRestaurantState: HomeStateItemRestaurant | undefined
   lastSearchState: HomeStateItemSearch | undefined
   locationSearchQuery: string
   previousState: HomeStateItem
