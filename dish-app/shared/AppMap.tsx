@@ -20,6 +20,7 @@ import {
   useTheme,
 } from 'snackui'
 
+import { AppMapControls } from './AppMapControls'
 import { appMapStore } from './AppMapStore'
 import { drawerStore } from './BottomDrawerStore'
 import { pageWidthMax, searchBarHeight, zIndexMap } from './constants'
@@ -375,7 +376,7 @@ const AppMapContent = memo(
           },
         }
 
-        if (router.isRouteActive(route)) {
+        if (router.getIsRouteActive(route)) {
           if (media.sm) {
             drawerStore.setSnapPoint(0)
           }
@@ -421,6 +422,7 @@ const AppMapContent = memo(
             borderBottomRightRadius={12}
             overflow="hidden"
           >
+            <AppMapControls />
             <MapView
               center={center}
               style={styles[themeName]}

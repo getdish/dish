@@ -4,8 +4,8 @@ import { LoadingItems, ToastRoot, VStack } from 'snackui'
 
 import { AppContainer } from './AppContainer'
 import { AppIntroLetter } from './AppIntroLetter'
+import { AppMapControlsUnderlay } from './AppMapControls'
 import { AppMapControlsOverlay } from './AppMapControlsOverlay'
-import { AppMapControlsUnderlay } from './AppMapControlsUnderlay'
 import { AppMenuButton } from './AppMenuButton'
 import { AppSearchBarFloating } from './AppSearchBar'
 import { AppStackView } from './AppStackView'
@@ -92,7 +92,6 @@ const AppMain = memo(function AppMain() {
           </Suspense>
 
           <Suspense fallback={null}>
-            <AppMapControlsUnderlay />
             <AppMapControlsOverlay />
           </Suspense>
         </Suspense>

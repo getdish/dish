@@ -6,7 +6,7 @@ import { SafeAreaProvider } from 'react-native-safe-area-context'
 import { AbsoluteVStack } from 'snackui'
 
 import AppMap from './AppMap'
-import { AppMapControlsUnderlay } from './AppMapControlsUnderlay'
+import { AppMapControlsUnderlay } from './AppMapControls'
 import { AppMenuButton } from './AppMenuButton'
 import { AppSmallDrawer } from './AppSmallDrawer'
 import { AppStackView } from './AppStackView'

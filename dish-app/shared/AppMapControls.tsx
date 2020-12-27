@@ -2,17 +2,15 @@ import { isEqual } from '@dish/fast-compare'
 import { Map, RefreshCcw } from '@dish/react-feather'
 import { useStoreInstance } from '@dish/use-store'
 import React, { memo } from 'react'
-import { AbsoluteVStack, HStack, useMedia } from 'snackui'
+import { AbsoluteVStack, HStack, Text, useMedia } from 'snackui'
 
 import { appMapStore } from './AppMapStore'
-import { searchBarHeight, zIndexDrawer } from './constants'
-import { isWeb } from './constants'
-import { useMapSize } from './hooks/useMapSize'
+import { isWeb, searchBarHeight, zIndexDrawer } from './constants'
 import { useSafeArea } from './hooks/useSafeArea'
 import { useOvermind } from './state/useOvermind'
 import { OverlayLinkButton } from './views/ui/OverlayLinkButton'
 
-export const AppMapControlsUnderlay = memo(() => {
+export const AppMapControls = memo(() => {
   const om = useOvermind()
   const appMap = useStoreInstance(appMapStore)
   const hasMovedCenter =
@@ -24,29 +22,23 @@ export const AppMapControlsUnderlay = memo(() => {
   const hasMovedMap = hasMovedCenter || hasMovedSpan
   const showRefresh = hasMovedMap && om.state.home.currentStateType === 'search'
   const media = useMedia()
-  const { paddingLeft, width } = useMapSize(media.sm)
   const safeArea = useSafeArea()
+
+  console.log('hasMovedMap', hasMovedMap, showRefresh)
 
   return (
     <AbsoluteVStack
       zIndex={media.sm ? zIndexDrawer - 1 : zIndexDrawer + 1}
       marginLeft="auto"
       fullscreen
-      width={width}
       pointerEvents="none"
     >
       <AbsoluteVStack
         fullscreen
         paddingHorizontal={30}
-        // top={searchBarHeight + 10}
-        left={paddingLeft + 20}
-        right={0}
         pointerEvents="none"
-        {...(media.sm && {
-          maxWidth: '100%',
-          left: 0,
-          right: 0,
-          top: isWeb ? 0 : safeArea.top - 10,
+        {...(!isWeb && {
+          top: safeArea.top - 10,
         })}
         zIndex={20000000}
         alignItems="center"
@@ -67,8 +59,6 @@ export const AppMapControlsUnderlay = memo(() => {
           {showRefresh && (
             <OverlayLinkButton
               Icon={RefreshCcw}
-              alignItems="center"
-              justifyContent="center"
               onPress={() => {
                 om.actions.home.refresh()
               }}
@@ -77,19 +67,17 @@ export const AppMapControlsUnderlay = memo(() => {
             </OverlayLinkButton>
           )}
 
-          {om.state.home.hoveredRestaurant &&
+          {/* {om.state.home.hoveredRestaurant &&
             om.state.home.currentStateType === 'search' && (
               <OverlayLinkButton
                 Icon={Map}
-                alignItems="center"
-                justifyContent="center"
                 onPress={() => {
                   om.actions.home.setHoveredRestaurant(false)
                 }}
               >
                 Show all
               </OverlayLinkButton>
-            )}
+            )} */}
 
           {/* {hasMovedMap && zoomLevel !== 'medium' && (
             <OverlayLinkButton
