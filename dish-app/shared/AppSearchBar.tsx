@@ -2,7 +2,6 @@ import { ArrowUp, ChevronLeft, Map, Search } from '@dish/react-feather'
 import { useStoreInstance } from '@dish/use-store'
 import React, { Suspense, memo } from 'react'
 import { Platform, StyleSheet, TouchableOpacity } from 'react-native'
-import { Line } from 'react-native-svg'
 import {
   AbsoluteVStack,
   HStack,
@@ -15,7 +14,7 @@ import {
 import { autocompletesStore } from './AppAutocomplete'
 import { AppMenu } from './AppMenu'
 import { AppSearchInput } from './AppSearchInput'
-import { AppSearchLocationInput } from './AppSearchLocationInput'
+import { AppSearchInputLocation } from './AppSearchInputLocation'
 import { bgLightTranslucent } from './colors'
 import {
   searchBarHeight,
@@ -25,7 +24,6 @@ import {
 } from './constants'
 import { DishHorizonView } from './DishHorizonView'
 import { useSearchBarTheme } from './hooks/useSearchBarTheme'
-import { omStatic } from './state/omStatic'
 import { useOvermind } from './state/useOvermind'
 import { DishLogoButton } from './views/DishLogoButton'
 import { LinkButton } from './views/ui/LinkButton'
@@ -210,7 +208,7 @@ const AppSearchBarContents = memo(() => {
         {/* Search Input Start */}
         {media.xs && !isWeb && (
           <>
-            {showLocation && <AppSearchLocationInput />}
+            {showLocation && <AppSearchInputLocation />}
             {!showLocation && (
               <VStack flex={1}>
                 <AppSearchInput />
@@ -223,7 +221,7 @@ const AppSearchBarContents = memo(() => {
           <>
             {/* keep both in dom so we have access to ref */}
             <VStack display={showLocation ? 'contents' : 'none'}>
-              <AppSearchLocationInput />
+              <AppSearchInputLocation />
             </VStack>
             <VStack display={!showLocation ? 'contents' : 'none'}>
               <AppSearchInput />
@@ -251,7 +249,7 @@ const AppSearchBarContents = memo(() => {
             }
             flex={1}
           >
-            <AppSearchLocationInput />
+            <AppSearchInputLocation />
           </VStack>
           <Spacer size={16} />
         </>
