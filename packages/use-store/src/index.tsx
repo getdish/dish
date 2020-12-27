@@ -18,8 +18,8 @@ export type UseStoreOptions<Store = any, SelectorRes = any> = {
 }
 
 const UNWRAP_PROXY = Symbol('unwrap_proxy')
-const StoreInstanceToInfo = new WeakMap<any, StoreInfo>()
-const cache = new WeakMap<any, { [key: string]: StoreInfo }>()
+const StoreInstanceToInfo = new Map<string, StoreInfo>()
+const cache = new Map<string, { [key: string]: StoreInfo }>()
 const defaultOptions = {
   once: false,
   selector: undefined,
@@ -55,12 +55,13 @@ export function createStore<A extends Store<B>, B>(
 
 // use singleton with react
 export function useStoreInstance<A extends Store<B>, B>(instance: A): A {
-  const info = StoreInstanceToInfo.get(instance[UNWRAP_PROXY])
+  const info = StoreInstanceToInfo.get(instance[UNWRAP_PROXY].constructor.name)
   if (!info) {
     throw new Error(`This store not created using createStore()`)
   }
   return useStoreFromInfo(info, arguments[1])
 }
+
 // super hack! but it works!
 // putting this below the above function is technically incorrect
 // as TS expected override types to be above, but it still works!
@@ -161,9 +162,19 @@ function getOrCreateStoreInfo(
   const uid = `${storeName}${propsKey}`
 
   if (!opts?.avoidCache) {
-    const cached = cache.get(StoreKlass)
+    const cached = cache.get(storeName)
     const info = cached?.[uid]
     if (info) {
+      // warn if creating an already existing store!
+      // need to detect HMR more cleanly if possible
+      if (
+        process.env.NODE_ENV === 'development' &&
+        info?.storeInstance.constructor.toString() !== StoreKlass.toString()
+      ) {
+        console.warn(
+          'Error: Stores must have a unique name (ignore if this is a hot reload)'
+        )
+      }
       return info
     }
   }
@@ -201,11 +212,11 @@ function getOrCreateStoreInfo(
   }
 
   if (!opts?.avoidCache) {
-    StoreInstanceToInfo.set(storeInstance, value)
-    if (!cache.get(StoreKlass)) {
-      cache.set(StoreKlass, {})
+    StoreInstanceToInfo.set(storeName, value)
+    if (!cache.get(storeName)) {
+      cache.set(storeName, {})
     }
-    cache.get(StoreKlass)![uid] = value
+    cache.get(storeName)![uid] = value
   }
 
   return value
@@ -314,13 +325,11 @@ function createProxiedStore(
           }
           return info.actions[key].bind(proxiedStore)
         }
-        if (renderOpts) {
-          if (renderOpts.internal.current.isRendering) {
-            renderOpts.internal.current.tracked.add(key)
-            const val = info.storeInstance[key]
-            if (typeof val !== 'undefined') {
-              return val
-            }
+        if (renderOpts?.internal.current.isRendering) {
+          renderOpts.internal.current.tracked.add(key)
+          const val = info.storeInstance[key]
+          if (typeof val !== 'undefined') {
+            return val
           }
         }
       }

@@ -78,9 +78,9 @@ export const LogoSmall = () => {
         <G
           id="icon"
           stroke="none"
-          stroke-width="1"
+          strokeWidth="1"
           fill="none"
-          fill-rule="evenodd"
+          fillRule="evenodd"
         >
           <Mask id="mask-2" fill="white">
             <Use xlinkHref="#path-1"></Use>
