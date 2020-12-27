@@ -24,11 +24,17 @@ import { ColoredCircle } from './ColoredCircle'
 import { DishUpvoteDownvote } from './DishUpvoteDownvote'
 
 // avoid too many different image sizes
-const getRoundedDishViewSize = (size: number) => {
-  if (size < 180) {
-    return [160 * 0.9, 160] as const
+const smallSize = [160 * 0.9, 160] as const
+const largeSize = [300 * 0.9, 300] as const
+
+const getRoundedDishViewSize = (size: string | number) => {
+  if (typeof size === 'string') {
+    return smallSize
   }
-  return [size * 0.9, size] as const
+  if (size <= 160) {
+    return smallSize
+  }
+  return largeSize
 }
 
 export type DishViewProps = {
@@ -37,8 +43,8 @@ export type DishViewProps = {
   name?: any
   cuisine?: NavigableTag
   dish: DishTagItem
-
-  size?: number
+  // percent or fixed
+  size?: string | number
   isFallback?: boolean
   disableFallbackFade?: boolean
   selected?: boolean
@@ -88,7 +94,6 @@ const DishViewContent = (props: DishViewProps) => {
   const isTiny = size < 115
   const fontSize = (hasLongWord ? 14 : 16) * (isTiny ? 0.8 : 1)
   const isFallback = _isFallback ?? dish.isFallback
-  const sizeInner = Math.round(isFallback ? size * 0.8 : size * 0.975)
   const { lightColor, color } = getColorsForName(dish.name)
   const backgroundColor = lightColor
   const isActive = isHovered || selected
@@ -224,12 +229,16 @@ const DishViewContent = (props: DishViewProps) => {
         </Box>
       </AbsoluteVStack>
       {!!dish.image && (
-        <VStack overflow="hidden" borderRadius={1000}>
+        <VStack
+          overflow="hidden"
+          borderRadius={1000}
+          transform={[{ scale: isFallback ? 0.8 : 1 }]}
+        >
           <ImageAlt
             source={{ uri: imageUrl }}
             style={{
-              width: sizeInner,
-              height: sizeInner,
+              width: size,
+              height: size,
             }}
             resizeMode="cover"
           />
