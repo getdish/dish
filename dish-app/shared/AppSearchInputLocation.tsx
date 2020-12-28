@@ -2,7 +2,14 @@ import { MapPin, Navigation } from '@dish/react-feather'
 import { useStoreInstance } from '@dish/use-store'
 import React, { memo, useCallback, useEffect, useState } from 'react'
 import { TextInput, TouchableOpacity } from 'react-native'
-import { Button, HStack, VStack, prevent, useMedia } from 'snackui'
+import {
+  AbsoluteVStack,
+  Button,
+  HStack,
+  VStack,
+  prevent,
+  useMedia,
+} from 'snackui'
 
 import {
   autocompleteLocationStore,
@@ -17,8 +24,6 @@ import { setNodeOnInputStore, useInputStoreLocation } from './InputStore'
 import { SearchInputNativeDragFix } from './SearchInputNativeDragFix'
 import { setLocation } from './setLocation'
 import { useOvermind } from './state/useOvermind'
-
-const paddingHorizontal = 16
 
 export const AppSearchInputLocation = memo(() => {
   const media = useMedia()
@@ -110,19 +115,6 @@ export const AppSearchInputLocation = memo(() => {
             },
           })}
         >
-          <TouchableOpacity
-            onPress={(e) => {
-              prevent(e)
-              inputStore.focusNode()
-            }}
-          >
-            <MapPin
-              color={color}
-              size={18}
-              opacity={0.35}
-              style={{ marginLeft: 10, marginRight: -5 }}
-            />
-          </TouchableOpacity>
           <HStack
             position="relative"
             minWidth="78.7%" // this is the hackiest ever fix for react native width issue for now
@@ -131,6 +123,16 @@ export const AppSearchInputLocation = memo(() => {
               autocompletes.setTarget('location')
             }}
           >
+            <AbsoluteVStack
+              top={0}
+              left={0}
+              bottom={0}
+              alignItems="center"
+              justifyContent="center"
+              pointerEvents="none"
+            >
+              <MapPin color={color} size={18} opacity={0.35} />
+            </AbsoluteVStack>
             {!isWeb && <SearchInputNativeDragFix name="location" />}
             <TextInput
               ref={(view) => setNodeOnInputStore(inputStore, view)}
@@ -138,7 +140,13 @@ export const AppSearchInputLocation = memo(() => {
               placeholder={currentLocationName ?? '...'}
               style={[
                 inputTextStyles.textInput,
-                { flex: 1, color, paddingHorizontal, fontSize: 16 },
+                {
+                  flex: 1,
+                  color,
+                  paddingLeft: 16 + 10,
+                  paddingRight: 16,
+                  fontSize: 16,
+                },
               ]}
               onKeyPress={handleKeyPress}
               onChangeText={(text) => {

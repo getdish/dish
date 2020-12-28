@@ -465,6 +465,7 @@ const AutocompleteResults = memo(
                   index={index}
                   result={result}
                   onSelect={onSelect}
+                  isActive={isActive}
                 />
               </Theme>
               <Spacer size={1} />
@@ -482,11 +483,13 @@ const AutocompleteItemView = memo(
     onSelect,
     result,
     index,
+    isActive,
   }: {
     result: AutocompleteItem
     index: number
     target: ShowAutocomplete
     onSelect: AutocompleteSelectCb
+    isActive?: boolean
   }) => {
     const om = useOvermind()
     const showLocation = target === 'location'
@@ -524,10 +527,10 @@ const AutocompleteItemView = memo(
         <HStack
           flex={1}
           justifyContent={target === 'location' ? 'flex-end' : 'center'}
-          paddingHorizontal={10}
+          paddingHorizontal={12}
           paddingVertical={10}
           borderRadius={12}
-          backgroundColor={theme.backgroundColor}
+          backgroundColor={isActive ? theme.backgroundColor : 'transparent'}
           hoverStyle={{
             backgroundColor: theme.backgroundColorSecondary,
           }}
