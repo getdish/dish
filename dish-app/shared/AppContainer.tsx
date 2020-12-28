@@ -1,6 +1,6 @@
 import React, { memo, useEffect, useLayoutEffect, useState } from 'react'
 import { StyleSheet } from 'react-native'
-import { createReparentableSpace } from 'react-reparenting'
+// import { createReparentableSpace } from 'react-reparenting'
 import {
   AbsoluteVStack,
   HStack,
@@ -16,32 +16,32 @@ import { searchBarHeight, zIndexDrawer } from './constants'
 import { useAppDrawerWidth } from './hooks/useAppDrawerWidth'
 import { useLastValueWhen } from './hooks/useLastValueWhen'
 
-const { Reparentable, sendReparentableChild } = createReparentableSpace()
+// const { Reparentable, sendReparentableChild } = createReparentableSpace()
 
 export function AppContainer(props: { children: any }) {
   const media = useMedia()
-  const [parent, setParent] = useState(() => (media.sm ? 'sm' : 'lg'))
-  const children = [<React.Fragment key="1">{props.children}</React.Fragment>]
+  // const [parent, setParent] = useState(() => (media.sm ? 'sm' : 'lg'))
+  // const children = [<React.Fragment key="1">{props.children}</React.Fragment>]
 
-  useLayoutEffect(() => {
-    setParent((last) => {
-      const next = media.sm ? 'sm' : 'lg'
-      sendReparentableChild(last, next, 0, 0)
-      return next
-    })
-  }, [media.sm])
+  // useLayoutEffect(() => {
+  //   setParent((last) => {
+  //     const next = media.sm ? 'sm' : 'lg'
+  //     sendReparentableChild(last, next, 0, 0)
+  //     return next
+  //   })
+  // }, [media.sm])
 
   return (
     <AbsoluteVStack fullscreen pointerEvents="none" zIndex={zIndexDrawer}>
-      {/* {media.sm && <AppSmallDrawer>{props.children}</AppSmallDrawer>}
-      {!media.sm && <HomeContainerLarge>{props.children}</HomeContainerLarge>} */}
-      <AppSmallDrawer>
+      {media.sm && <AppSmallDrawer>{props.children}</AppSmallDrawer>}
+      {!media.sm && <HomeContainerLarge>{props.children}</HomeContainerLarge>}
+      {/* <AppSmallDrawer>
         <Reparentable id="sm">{parent === 'sm' ? children : []}</Reparentable>
       </AppSmallDrawer>
 
       <HomeContainerLarge>
         <Reparentable id="lg">{parent === 'lg' ? children : []}</Reparentable>
-      </HomeContainerLarge>
+      </HomeContainerLarge> */}
     </AbsoluteVStack>
   )
 }
