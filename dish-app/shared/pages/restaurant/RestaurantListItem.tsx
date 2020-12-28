@@ -342,7 +342,7 @@ const RestaurantListItemContent = memo(
               </VStack>
             </Link>
 
-            <Spacer size="md" />
+            <Spacer size="xl" />
 
             {/* SECOND ROW TITLE */}
             <VStack
