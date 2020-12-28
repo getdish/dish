@@ -54,10 +54,6 @@ const AppMain = memo(function AppMain() {
         <AppSearchBarFloating />
       </Suspense>
 
-      <Suspense fallback={null}>
-        <AppMenuButton />
-      </Suspense>
-
       <VStack
         zIndex={0}
         // borderRadius={12}
@@ -67,6 +63,10 @@ const AppMain = memo(function AppMain() {
         overflow="hidden"
         backgroundColor="#dbdeeb"
       >
+        <Suspense fallback={null}>
+          <AppMenuButton />
+        </Suspense>
+
         <Suspense fallback={null}>
           <AppContainer>
             <AppStackView>

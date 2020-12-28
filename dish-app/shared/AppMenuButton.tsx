@@ -31,7 +31,6 @@ export const AppMenuButton = () => {
   const media = useMedia()
   const userMenu = useStore(UserMenuStore)
   const safeArea = useSafeArea()
-  const { color } = useSearchBarTheme()
 
   if (!media.xs) {
     return null
