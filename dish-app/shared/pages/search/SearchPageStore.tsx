@@ -31,6 +31,10 @@ class SearchPageStore extends Store {
   private lastSearchKey = ''
   private lastSearchAt = Date.now()
 
+  refresh() {
+    this.runSearch({ force: true })
+  }
+
   async runSearch(opts: {
     searchQuery?: string
     quiet?: boolean

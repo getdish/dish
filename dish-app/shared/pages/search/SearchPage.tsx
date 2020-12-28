@@ -131,7 +131,7 @@ const SearchPageContent = memo(function SearchPageContent(props: Props) {
 
   usePageLoadEffect(props, ({ isRefreshing }) => {
     if (isRefreshing) {
-      searchPageStore.runSearch({ force: true })
+      searchPageStore.refresh()
     }
   })
 

@@ -7,6 +7,7 @@ import { AbsoluteVStack, HStack, Text, useMedia } from 'snackui'
 import { appMapStore } from './AppMapStore'
 import { isWeb, searchBarHeight, zIndexDrawer } from './constants'
 import { useSafeArea } from './hooks/useSafeArea'
+import { pagesStore } from './pages/PagesStore'
 import { useOvermind } from './state/useOvermind'
 import { OverlayLinkButton } from './views/ui/OverlayLinkButton'
 
@@ -54,12 +55,7 @@ export const AppMapControls = memo(() => {
           spacing={5}
         >
           {showRefresh && (
-            <OverlayLinkButton
-              Icon={RefreshCcw}
-              onPress={() => {
-                om.actions.home.refresh()
-              }}
-            >
+            <OverlayLinkButton Icon={RefreshCcw} onPress={pagesStore.refresh}>
               Search here
             </OverlayLinkButton>
           )}

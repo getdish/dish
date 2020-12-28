@@ -241,8 +241,9 @@ export function mountStore(info: StoreInfo, store: any) {
   }
 }
 
-const subscribe = (store: Store, callback: Function) =>
-  store.subscribe(callback)
+export const subscribe = (store: Store, callback: Function) => {
+  return store.subscribe(callback)
+}
 
 const emptyObj = {}
 const selectKeys = (obj: any, keys: string[] = []) => {
