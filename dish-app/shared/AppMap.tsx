@@ -1,7 +1,7 @@
-import { LngLat, Restaurant, RestaurantOnlyIds, graphql } from '@dish/graph'
+import { Restaurant, RestaurantOnlyIds, graphql } from '@dish/graph'
 import { isPresent } from '@dish/helpers'
 import { useStoreInstance } from '@dish/use-store'
-import { debounce, isEqual, uniqBy } from 'lodash'
+import { debounce, uniqBy } from 'lodash'
 import React, {
   Suspense,
   memo,
