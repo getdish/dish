@@ -16,6 +16,7 @@ import {
   autocompletesStore,
 } from './AppAutocomplete'
 import { AppAutocompleteHoverableInput } from './AppAutocompleteHoverableInput'
+import { appMapStore } from './AppMapStore'
 import { inputTextStyles } from './AppSearchInput'
 import { blue } from './colors'
 import { isWeb } from './constants'
@@ -163,9 +164,7 @@ export const AppSearchInputLocation = memo(() => {
             alignSelf="center"
             marginRight={5}
             borderRadius={1000}
-            onPress={() => {
-              om.actions.home.moveMapToUserLocation()
-            }}
+            onPress={appMapStore.moveToUserLocation}
           >
             <Navigation
               size={20}
