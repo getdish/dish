@@ -305,11 +305,11 @@ const AppMapContent = memo(
           console.log('avoid move stuff when snapped to top')
           return
         }
-        if (omStatic.state.home.centerToResults) {
-          // we just re-centered, ignore
-          //@ts-expect-error
-          om.actions.home.setCenterToResults(0)
-        }
+        // if (omStatic.state.home.centerToResults) {
+        //   // we just re-centered, ignore
+        //   //@ts-expect-error
+        //   om.actions.home.setCenterToResults(0)
+        // }
         appMapStore.setPosition({
           center,
           span,
@@ -429,7 +429,7 @@ const AppMapContent = memo(
               span={span}
               padding={padding}
               features={features}
-              centerToResults={om.state.home.centerToResults}
+              // centerToResults={om.state.home.centerToResults}
               selected={position.id}
               hovered={
                 (om.state.home.hoveredRestaurant &&

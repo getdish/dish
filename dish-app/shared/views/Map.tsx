@@ -218,16 +218,16 @@ export const MapView = (props: MapProps) => {
     }
   }, [features, map, restaurantPositions])
 
-  // centerToResults
-  const lastCenter = useRef(0)
-  useEffect(() => {
-    if (!map) return
-    if (!features.length) return
-    if (!props.centerToResults) return
-    if (props.centerToResults === lastCenter.current) return
-    lastCenter.current = props.centerToResults
-    fitMapToResults(map, features)
-  }, [map, features, props.centerToResults])
+  // // centerToResults
+  // const lastCenter = useRef(0)
+  // useEffect(() => {
+  //   if (!map) return
+  //   if (!features.length) return
+  //   if (!props.centerToResults) return
+  //   if (props.centerToResults === lastCenter.current) return
+  //   lastCenter.current = props.centerToResults
+  //   fitMapToResults(map, features)
+  // }, [map, features, props.centerToResults])
 
   return <div ref={mapNode} style={mapStyle} />
 }

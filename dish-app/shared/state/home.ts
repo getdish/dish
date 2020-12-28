@@ -40,7 +40,6 @@ export const state: HomeState = {
   selectedRestaurant: null,
   showUserMenu: false,
   searchBarTagIndex: 0,
-  centerToResults: 0,
   refreshCurrentPage: 0,
   allUsers: {},
   hoveredRestaurant: null,
@@ -709,14 +708,8 @@ const updateCurrentState: Action<Partial<Omit<HomeStateItem, 'type'>>> = (
   })
 }
 
-const setCenterToResults: Action<number | void> = (om, val) => {
-  // @ts-ignore
-  om.state.home.centerToResults = val ?? Date.now()
-}
-
 export const actions = {
   updateCurrentState,
-  setCenterToResults,
   setSearchQuery,
   clearSearch,
   handleRouteChange,
