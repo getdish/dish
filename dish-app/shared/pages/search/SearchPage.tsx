@@ -81,16 +81,25 @@ type Props = StackViewProps<HomeStateItemSearch>
 const SearchPagePropsContext = createContext<Props | null>(null)
 
 export default memo(function SearchPage(props: Props) {
-  console.warn('!!!!!!!!!!')
+  const { title } = getTitleForState(props.item, {
+    lowerCase: false,
+  })
   return (
-    <StackDrawer closable>
-      <Text>hi</Text>
-    </StackDrawer>
+    <>
+      <PageTitleTag>{title}</PageTitleTag>
+      <StackDrawer closable>
+        <Suspense fallback={null}>
+          <SearchNavBarContainer isActive={props.isActive} id={props.item.id} />
+        </Suspense>
+        <Suspense fallback={<LoadingItems />}>
+          <SearchPageContent {...props} />
+        </Suspense>
+      </StackDrawer>
+    </>
   )
 })
 
 const SearchPageContent = memo(function SearchPageContent(props: Props) {
-  console.warn('render searchpage', props)
   // const isEditingUserList = !!isEditingUserPage(om.state)
 
   // export const isOnOwnProfile = (state: OmState) => {
@@ -249,9 +258,6 @@ const SearchResultsContent = (props: Props) => {
   const searchState = props.item
   const drawerWidth = useAppDrawerWidth()
   const allResults = searchState.results
-  const { title } = getTitleForState(searchState, {
-    lowerCase: false,
-  })
 
   const dataProvider = useMemo(() => {
     return new DataProvider((r1, r2) => {
@@ -303,7 +309,6 @@ const SearchResultsContent = (props: Props) => {
   if (searchState.status !== 'loading' && searchState.results.length === 0) {
     return (
       <>
-        <PageTitleTag>{title}</PageTitleTag>
         <SearchPageTitle />
         <VStack
           margin="auto"
@@ -321,7 +326,6 @@ const SearchResultsContent = (props: Props) => {
 
   return (
     <>
-      <PageTitleTag>{title}</PageTitleTag>
       <RecyclerListView
         style={{
           flex: 1,

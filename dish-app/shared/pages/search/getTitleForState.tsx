@@ -79,7 +79,7 @@ export function getTitleForState(
   }
   subTitleParts.push(`${currentLocationName}`)
 
-  const subTitle = subTitleParts.join(' ')
+  const subTitle = subTitleParts.join(' ').toLowerCase()
   //   native extraction failing?
 
   const subTitleElements = (
@@ -90,7 +90,7 @@ export function getTitleForState(
     </Text>
   )
 
-  const title = `${userPrefix} ${titleSubject} ${subTitleParts.join(' ')}`
+  const title = `${userPrefix.toLowerCase()} ${titleSubject.toLowerCase()}`
 
   const pageName = (
     <>
