@@ -4,6 +4,7 @@
 
 {
   "extends": "./tsconfig.base.json",
+  "files": [],
   "compilerOptions": {
     // baseUrl + paths must both be set
     "baseUrl": ".",

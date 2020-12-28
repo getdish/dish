@@ -1,8 +1,14 @@
-import { Store, useStore, useStoreSelector } from '@dish/use-store'
+import {
+  Store,
+  useStore,
+  useStoreInstance,
+  useStoreSelector,
+} from '@dish/use-store'
 import React, { createContext, forwardRef, useRef } from 'react'
 import { ScrollView, ScrollViewProps, StyleSheet } from 'react-native'
 import { VStack, useMedia } from 'snackui'
 
+import { drawerStore } from '../BottomDrawerStore'
 import { isWeb } from '../constants'
 import { supportsTouchWeb } from '../platforms'
 import { useOvermind } from '../state/useOvermind'
@@ -30,6 +36,7 @@ export function setIsScrollAtTop(val: boolean) {
 }
 
 export const usePreventContentScroll = (id: string) => {
+  const isDrawerNotOpen = useStoreInstance(drawerStore, (x) => x.snapIndex >= 1)
   const isActive = useStoreSelector(
     ContentParentStore,
     (store) => store.activeId === id
@@ -39,11 +46,7 @@ export const usePreventContentScroll = (id: string) => {
   if (!isActive) {
     return true
   }
-  return (
-    (!isWeb || supportsTouchWeb) &&
-    media.xs &&
-    om.state.home.drawerSnapPoint >= 1
-  )
+  return (!isWeb || supportsTouchWeb) && media.xs && isDrawerNotOpen
 }
 
 export const ContentScrollContext = createContext('id')

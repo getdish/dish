@@ -44,7 +44,7 @@ export const zIndexGallery = 500
 export const MAPBOX_ACCESS_TOKEN =
   'pk.eyJ1IjoibndpZW5lcnQiLCJhIjoiY2lvbWlhYjRjMDA0NnVpbTIxMHM5ZW95eCJ9.DQyBjCEuPRVt1400yejGhA'
 
-export const slantedBoxStyle = {
+export const slantedBoxStyle: any = {
   position: 'relative',
   zIndex: 10,
   paddingVertical: 7,

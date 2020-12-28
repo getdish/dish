@@ -15,12 +15,10 @@ import {
 } from '../../state/allTags'
 import { getNavigateItemForState } from '../../state/getNavigateItemForState'
 import { getNextState } from '../../state/getNextState'
-import { HomeStateNav } from '../../state/home-types'
-import { NavigableTag, tagsToNavigableTags } from '../../state/NavigableTag'
+import { tagsToNavigableTags } from '../../state/NavigableTag'
 import { omStatic } from '../../state/omStatic'
 import { router } from '../../state/router'
-import { LinkProps } from './LinkProps'
-import { LinkButtonProps } from './LinkProps'
+import { LinkButtonProps, LinkProps } from './LinkProps'
 import { nav } from './nav'
 
 export const useLink = (props: LinkProps<any, any>) => {
@@ -142,7 +140,7 @@ const getNormalizedLink = (props: Partial<LinkButtonProps>) => {
       tags,
     })
     return {
-      ...(nextState && getNavigateItemForState(omStatic, nextState)),
+      ...(nextState && getNavigateItemForState(nextState)),
       ...(!props.preventNavigate && {
         preventNavigate: true,
         onPress() {
@@ -155,9 +153,4 @@ const getNormalizedLink = (props: Partial<LinkButtonProps>) => {
     }
   }
   return props
-}
-
-// for easy use with Link / LinkButton
-const getNavigateTo = (props: HomeStateNav): LinkButtonProps | null => {
-  return null
 }

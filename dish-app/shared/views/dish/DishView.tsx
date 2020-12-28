@@ -90,6 +90,7 @@ const DishViewContent = (props: DishViewProps) => {
     .map((x) => capitalize(x))
     .join(' ')
 
+  // @ts-expect-error
   const imageUrl = getImageUrl(dish.image, ...getRoundedDishViewSize(size), 100)
   const hasLongWord = !!dishName.split(' ').find((x) => x.length >= 8)
   const isTiny = size < 115

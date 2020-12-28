@@ -44,8 +44,8 @@ export const AppIntroLogin = memo(() => {
           the better restaurant guide
         </Paragraph>
 
+        {/* @ts-expect-error */}
         <LinkButton
-          //@ts-expect-error
           display="inline"
           fontSize={18}
           paddingVertical={6}
