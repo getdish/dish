@@ -10,16 +10,10 @@ import React, { useEffect, useRef, useState } from 'react'
 import { Dimensions } from 'react-native'
 import { useGet, useTheme } from 'snackui'
 
-import {
-  blue,
-  green,
-  hexToRGB,
-  lightGreen,
-  lightPurple,
-  purple,
-} from '../colors'
+import { blue, green, lightGreen, lightPurple, purple } from '../colors'
 import { MAPBOX_ACCESS_TOKEN } from '../constants'
 import { useIsMountedRef } from '../helpers/useIsMountedRef'
+import { hexToRGB } from '../hexToRGB'
 import { tagLenses } from '../state/localTags'
 import { SearchResultsStore } from '../state/searchResult'
 import { getCenter } from './getCenter'
