@@ -322,23 +322,6 @@ const handleRouteChange: AsyncAction<HistoryItem> = async (om, item) => {
       case 'restaurantHours':
       case 'userSearch':
       case 'restaurant': {
-        if (item.type === 'push') {
-          // TODO not working never runs..
-          // clear future states past current index
-          const stateIndex = om.state.home.stateIndex
-          if (stateIndex < om.state.home.states.length - 1) {
-            console.warn('clearing future states as were rewriting history')
-            const nextStateIds = om.state.home.states.map((x) => x.id)
-            // can garbage collect here if wanted, likely want to do in a deferred way
-            // const toClearStates = nextStateIds.slice(stateIndex)
-            // for (const id of toClearStates) {
-            //   delete om.state.home.allStates[id]
-            // }
-            const next = nextStateIds.slice(0, stateIndex)
-            om.state.home.stateIds = next
-            debugger
-          }
-        }
         const prevState = findLast(om.state.home.states, (x) => x.type === name)
         const res = await pushHomeState(om, {
           ...item,

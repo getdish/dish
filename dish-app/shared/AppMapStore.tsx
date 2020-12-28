@@ -19,6 +19,9 @@ class AppMapStore extends Store {
   }
 
   setPosition(pos: Partial<MapPosition>) {
+    if (pos.center === undefined) {
+      debugger
+    }
     this.position = {
       ...this.position,
       ...pos,
