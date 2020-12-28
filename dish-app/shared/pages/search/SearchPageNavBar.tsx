@@ -1,6 +1,13 @@
 import React, { Suspense, memo } from 'react'
 import Svg, { G, Path } from 'react-native-svg'
-import { AbsoluteVStack, HStack, VStack, useMedia, useTheme } from 'snackui'
+import {
+  AbsoluteVStack,
+  HStack,
+  Theme,
+  VStack,
+  useMedia,
+  useTheme,
+} from 'snackui'
 
 import { drawerWidthMax, isWeb } from '../../constants'
 import { useSafeArea } from '../../hooks/useSafeArea'
@@ -32,17 +39,19 @@ export const SearchPageNavBar = (props: { id: string }) => {
 
   if (media.sm) {
     content = (
-      <VStack position="absolute" bottom={0} left={0} right={0} zIndex={1000}>
-        <AbsoluteVStack top={-20} right={0}>
-          <InverseRoundedEdge />
-        </AbsoluteVStack>
-        <AbsoluteVStack top={-20} left={0} transform={[{ scaleX: -1 }]}>
-          <InverseRoundedEdge />
-        </AbsoluteVStack>
-        <VStack backgroundColor="#000" paddingBottom={safeArea.bottom}>
-          <SearchPageNavBarContent stateId={props.id} />
+      <Theme name="dark">
+        <VStack position="absolute" bottom={0} left={0} right={0} zIndex={1000}>
+          <AbsoluteVStack top={-20} right={0}>
+            <InverseRoundedEdge />
+          </AbsoluteVStack>
+          <AbsoluteVStack top={-20} left={0} transform={[{ scaleX: -1 }]}>
+            <InverseRoundedEdge />
+          </AbsoluteVStack>
+          <VStack backgroundColor="#000" paddingBottom={safeArea.bottom}>
+            <SearchPageNavBarContent stateId={props.id} />
+          </VStack>
         </VStack>
-      </VStack>
+      </Theme>
     )
   } else {
     content = (

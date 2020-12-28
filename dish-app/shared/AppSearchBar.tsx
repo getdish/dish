@@ -108,11 +108,6 @@ export const AppSearchBarFloating = () => {
           shadowOffset={{ height: 1, width: 0 }}
           shadowRadius={15}
         >
-          {/* <BlurView
-            position="absolute"
-            fullscreen
-            fallbackBackgroundColor="#000"
-          /> */}
           <AbsoluteVStack
             borderWidth={3}
             borderColor="rgba(0,0,0,0.2)"
