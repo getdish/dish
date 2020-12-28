@@ -1,16 +1,25 @@
 import { slugify } from '@dish/graph'
 import { NavigateItem } from '@dish/router'
+import { findLast } from 'lodash'
 
 import { getActiveTags } from './getActiveTags'
 import { getTagSlug } from './getTagSlug'
 import { isHomeState, isSearchState } from './home-helpers'
-import { HomeStateItem, HomeStateTagNavigable } from './home-types'
+import {
+  HomeStateItem,
+  HomeStateItemHome,
+  HomeStateItemSearch,
+  HomeStateTagNavigable,
+} from './home-types'
 import { tagLenses } from './localTags'
+import { om } from './om'
 import { SearchRouteParams, router } from './router'
 import { shouldBeOnSearch } from './shouldBeOnSearch'
 import { SPLIT_TAG } from './SPLIT_TAG'
 
-export const getNavigateItemForState = (state: HomeStateItem): NavigateItem => {
+export const getNavigateItemForState = (
+  state: Partial<HomeStateItem> & Pick<HomeStateItem, 'type'>
+): NavigateItem => {
   if (!state) {
     throw new Error(`provide currentState at least`)
   }
@@ -39,10 +48,8 @@ const getNameForState = (state: HomeStateTagNavigable) => {
   if (shouldBeOnSearch(state)) {
     return 'search'
   }
-  if (state.region) {
-    return 'homeRegion'
-  }
-  return 'home'
+  // always go to homeRegion not home
+  return 'homeRegion'
 }
 
 const getParamsForState = (state: HomeStateTagNavigable) => {
@@ -62,8 +69,12 @@ const getParamsForState = (state: HomeStateTagNavigable) => {
     }
     const lenseTag =
       allActiveTags.find((x) => x.type === 'lense') ?? tagLenses[0]
+    const prev = findLast(
+      om.state.home.states,
+      (x) => isHomeState(x) || isSearchState(x)
+    ) as HomeStateItemHome | HomeStateItemSearch
     const params: SearchRouteParams = {
-      region: state.region ?? slugify(state.currentLocationName ?? 'here'),
+      region: state.region ?? prev?.region ?? 'ca-san-francisco',
       tags: tags.length ? tags : '-',
       search: state.searchQuery,
       lense: getTagSlug(lenseTag).replace('lenses__', ''),

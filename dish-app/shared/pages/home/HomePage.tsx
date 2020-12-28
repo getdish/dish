@@ -97,6 +97,9 @@ export default memo(function HomePage(props: Props) {
   const om = useOvermind()
   const theme = useTheme()
   const [isLoaded, setIsLoaded] = useState(false)
+
+  console.warn('HomePage', props.item)
+
   const region = useRegionQuery(props.item.region, {
     enabled: !!props.item.region,
   })

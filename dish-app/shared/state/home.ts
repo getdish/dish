@@ -65,7 +65,9 @@ export const state: HomeState = {
     HomeState,
     any,
     HomeStateItem['searchQuery']
-  >((state) => state.currentState.searchQuery),
+  >((state) => {
+    return state.currentState.searchQuery
+  }),
   currentStateType: derived<HomeState, OmState, HomeStateItem['type']>(
     (state) => state.currentState.type
   ),
@@ -99,9 +101,7 @@ export const state: HomeState = {
     return state.searchBarTags[index]
   }),
   states: derived<HomeState, OmState, HomeStateItem[]>((state) => {
-    return state.stateIds
-      .map((x) => state.allStates[x])
-      .slice(0, state.stateIndex + 1)
+    return state.stateIds.map((x) => state.allStates[x])
   }),
   currentStateLense: derived<HomeState, OmState, NavigableTag | null>(
     (state) => {
@@ -137,6 +137,10 @@ const up: Action = (om) => {
   om.actions.home.popTo(getUpType(om))
 }
 
+const nameToStateType = {
+  homeRegion: 'home',
+}
+
 const popBack: Action = (om) => {
   const cur = om.state.home.currentState
   const next = findLast(om.state.home.states, (x) => x.type !== cur.type)
@@ -151,9 +155,11 @@ const popTo: Action<HomeStateItem['type']> = (om, type) => {
   }
 
   // we can just use router history directly, no? and go back?
+  const lastRouterName = router.prevHistory?.name
+  const lastRouterType = nameToStateType[lastRouterName] ?? lastRouterName
   if (
     om.state.home.previousState?.type === type &&
-    router.prevHistory?.name === type &&
+    lastRouterType === type &&
     router.curPage?.type !== 'pop'
   ) {
     router.back()
@@ -166,20 +172,29 @@ const popTo: Action<HomeStateItem['type']> = (om, type) => {
   const routerItem =
     router.history.find((x) => x.id === stateItem?.id) ??
     _.findLast(router.history, (x) => x.name === type)
+  const homeRegionParams = {
+    region:
+      stateItem?.['region'] ??
+      om.state.home.lastHomeState.region ??
+      'ca-san-francisco',
+  }
+
   if (routerItem) {
     router.navigate({
-      name: type,
-      params: routerItem?.params ?? {},
+      name: type == 'home' ? 'homeRegion' : type,
+      params:
+        type == 'home'
+          ? { ...homeRegionParams, ...routerItem?.params }
+          : routerItem?.params,
     })
   } else {
     console.warn('no match')
     router.navigate({
-      name: 'home',
+      name: 'homeRegion',
+      params: homeRegionParams,
     })
   }
 }
-
-const runSearch: AsyncAction<{}> = async (om, opts) => {}
 
 // doesn't delete
 const deepAssign = (a: Object, b: Object) => {
@@ -216,31 +231,17 @@ const updateHomeState: Action<{ id: string; [key: string]: any }> = (
     if (val.type && state.type !== val.type) {
       throw new Error(`Cant change the type`)
     }
-    // sanity checks
-    if (process.env.NODE_ENV === 'development') {
-      if (val['activeTags']) {
-        if (
-          Object.keys(val['activeTags']).some(
-            (x) => x === '' || x === 'no-slug'
-          )
-        ) {
-          debugger
-        }
-      }
-    }
     deepAssign(state, val)
   } else {
     om.state.home.allStates[val.id] = { ...val } as any
     // cleanup old from backward
-    if (om.state.home.stateIds.length - 1 > om.state.home.stateIndex) {
-      om.state.home.stateIds = om.state.home.stateIds.slice(
-        0,
-        om.state.home.stateIndex + 1
-      )
+    const stateIds = om.state.home.stateIds
+    const lastIndex = stateIds.length - 1
+    if (lastIndex > om.state.home.stateIndex) {
+      om.state.home.stateIds = stateIds.slice(0, om.state.home.stateIndex + 1)
     }
-    om.state.home.stateIds = [...new Set([...om.state.home.stateIds, val.id])]
-    const nextIndex = om.state.home.stateIds.length - 1
-    om.state.home.stateIndex = nextIndex
+    om.state.home.stateIds = [...new Set([...stateIds, val.id])]
+    om.state.home.stateIndex = om.state.home.stateIds.length - 1
   }
 }
 
@@ -274,11 +275,10 @@ const moveMapToUserLocation: AsyncAction = async (om) => {
   }
   om.state.home.userLocation = location
   const state = om.state.home.currentState
-  state.center = { ...location }
-  // om.actions.home.updateHomeState({
-  //   ...state,
-  //   center: { ...location },
-  // })
+  om.actions.home.updateHomeState({
+    ...state,
+    center: { ...location },
+  })
 }
 
 const handleRouteChange: AsyncAction<HistoryItem> = async (om, item) => {
@@ -288,13 +288,15 @@ const handleRouteChange: AsyncAction<HistoryItem> = async (om, item) => {
   }
 
   if (item.type === 'pop') {
+    const curIndex = om.state.home.stateIndex
+    const total = om.state.home.states.length
     switch (item.direction) {
       case 'forward': {
-        om.state.home.stateIndex += 1
+        om.state.home.stateIndex = Math.min(total, curIndex + 1)
         return
       }
       case 'backward': {
-        om.state.home.stateIndex -= 1
+        om.state.home.stateIndex = Math.max(0, curIndex - 1)
         return
       }
       default: {
@@ -307,14 +309,6 @@ const handleRouteChange: AsyncAction<HistoryItem> = async (om, item) => {
 
   // actions per-route
   if (item.type === 'push' || item.type === 'replace') {
-    // if (!isClearingCache) {
-    // isClearingCache = true
-    // requestIdleCallback(() => {
-    // isClearingCache = false
-    // resetQueryCache({ ifAbove: 15 })
-    // })
-    // }
-
     switch (item.name) {
       case 'homeRegion':
       case 'home':
@@ -329,6 +323,7 @@ const handleRouteChange: AsyncAction<HistoryItem> = async (om, item) => {
       case 'userSearch':
       case 'restaurant': {
         if (item.type === 'push') {
+          // TODO not working never runs..
           // clear future states past current index
           const stateIndex = om.state.home.stateIndex
           if (stateIndex < om.state.home.states.length - 1) {
@@ -344,7 +339,11 @@ const handleRouteChange: AsyncAction<HistoryItem> = async (om, item) => {
             debugger
           }
         }
-        const res = await pushHomeState(om, item)
+        const prevState = om.state.home.previousState
+        const res = await pushHomeState(om, {
+          ...item,
+          id: item.type === 'replace' ? prevState.id : item.id,
+        })
         if (res?.fetchDataPromise) {
           promises.add(res.fetchDataPromise)
         }
@@ -404,7 +403,7 @@ const pushHomeState: AsyncAction<
         type: 'home',
         searchQuery: '',
         activeTags: {},
-        region: item.params.region ?? null,
+        region: item.params.region ?? prev.region,
         section: item.params.section ?? '',
       }
       break
@@ -496,7 +495,7 @@ const pushHomeState: AsyncAction<
     searchQuery,
     type,
     ...nextState,
-    id: nextState?.id ?? item.id ?? uid(),
+    id: item.id ?? uid(),
   } as HomeStateItem
 
   async function runFetchData() {
@@ -561,14 +560,6 @@ const setSearchBarFocusedTag: Action<NavigableTag | null> = (om, val) => {
   // om.state.home.autocompleteIndex = -tags.length + tagIndex
 }
 
-// padding for map visual frame
-function padSpan(val: LngLat, by = 0.9): LngLat {
-  return {
-    lng: val.lng * by,
-    lat: val.lat * by,
-  }
-}
-
 const updateActiveTags: Action<HomeStateTagNavigable> = (om, next) => {
   const state = _.findLast(
     om.state.home.states,
@@ -582,8 +573,7 @@ const updateActiveTags: Action<HomeStateTagNavigable> = (om, next) => {
     const sameSearchQuery = isEqual(state.searchQuery, next.searchQuery)
     assert(!sameTagIds || !sameSearchQuery)
     const nextState = {
-      ...state,
-      ...next,
+      activeTags: next.activeTags,
       id: om.state.home.currentState.id,
     }
     // @ts-ignore
@@ -679,7 +669,7 @@ const navigate: AsyncAction<HomeStateNav, boolean> = async (
     om.state.home.isLoading = true
     // optimistic update active tags
     updateTags()
-    await sleep(40)
+    await sleep(20)
     await idle(30)
     if (curNav !== lastNav) return false
     om.state.home.isOptimisticUpdating = false

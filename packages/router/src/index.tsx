@@ -59,6 +59,7 @@ export class Router extends Store<RouterProps> {
   stackIndex = 0
 
   mount() {
+    console.log('MOUNT')
     const { routes } = this.props
     this.routes = routes
     this.routeNames = Object.keys(routes)
@@ -93,7 +94,7 @@ export class Router extends Store<RouterProps> {
           ? 'pop'
           : 'push'
 
-      if (process.env.DEBUG) {
+      if (true || process.env.DEBUG) {
         console.log('router.history', {
           type,
           direction,
@@ -155,63 +156,65 @@ export class Router extends Store<RouterProps> {
     item: Pick<HistoryItem, 'id' | 'type' | 'direction'>
   ) {
     const match = this.router.match('GET', pathname)
-    if (match) {
-      const next: HistoryItem = {
-        id: item.id ?? uid(),
-        type: item.type,
-        direction: item.direction,
-        name: match.handler,
-        path: pathname,
-        params: {
-          ...Object.keys(match.params).reduce((acc, key) => {
-            acc[key] = decodeURIComponent(match.params[key] ?? '')
-            return acc
-          }, {}),
-        },
-        search: window.location?.search ?? '',
-      }
-      this.history = [...this.history, next]
-
-      switch (item.direction) {
-        case 'forward':
-          this.stackIndex += 1
-          break
-        case 'backward':
-          this.stackIndex -= 1
-          break
-        case 'none':
-          if (item.type === 'replace') {
-            this.stack[this.stackIndex] = next
-            this.stack = [...this.stack]
-          } else {
-            if (this.stackIndex < this.stack.length - 1) {
-              // remove future states on next push
-              this.stack = this.stack.slice(0, this.stackIndex + 1)
-            }
-            this.stack = [...this.stack, next]
-            this.stackIndex = this.stack.length - 1
-          }
-          break
-      }
-
-      // if (process.env.NODE_ENV === 'development') {
-      //   console.log(
-      //     'router.handlePath',
-      //     JSON.stringify({ item, next }, null, 2)
-      //   )
-      // }
-
-      this.routeChangeListeners.forEach((x) => x(next))
-    } else {
+    if (!match) {
       console.log('no match', pathname, item)
+      return
     }
+    const next: HistoryItem = {
+      id: item.id ?? uid(),
+      type: item.type,
+      direction: item.direction,
+      name: match.handler,
+      path: pathname,
+      params: {
+        ...Object.keys(match.params).reduce((acc, key) => {
+          acc[key] = decodeURIComponent(match.params[key] ?? '')
+          return acc
+        }, {}),
+      },
+      search: window.location?.search ?? '',
+    }
+    this.history = [...this.history, next]
+
+    switch (item.direction) {
+      case 'forward':
+        this.stackIndex += 1
+        break
+      case 'backward':
+        this.stackIndex -= 1
+        break
+      case 'none':
+        if (item.type === 'replace') {
+          this.stack[this.stackIndex] = next
+          this.stack = [...this.stack]
+        } else {
+          if (this.stackIndex < this.stack.length - 1) {
+            // remove future states on next push
+            this.stack = this.stack.slice(0, this.stackIndex + 1)
+          }
+          this.stack = [...this.stack, next]
+          this.stackIndex = this.stack.length - 1
+        }
+        break
+    }
+
+    // if (process.env.NODE_ENV === 'development') {
+    //   console.log(
+    //     'router.handlePath',
+    //     JSON.stringify({ item, next }, null, 2)
+    //   )
+    // }
+
+    this.routeChangeListeners.forEach((x) => x(next))
   }
 
   private routeChangeListeners = new Set<HistoryCb>()
-  onRouteChange(cb: HistoryCb) {
-    if (this.history.length) {
-      for (const item of this.history) {
-        cb(item)
+  onRouteChange(cb: HistoryCb, ignoreHistory = false) {
+    if (!ignoreHistory) {
+      if (this.history.length) {
+        for (const item of this.history) {
+          cb(item)
+        }
       }
     }
     this.routeChangeListeners.add(cb)
@@ -221,7 +224,7 @@ export class Router extends Store<RouterProps> {
   }
 
   getShouldNavigate(navItem: NavigateItem) {
-    const historyItem = this.navItemToHistoryItem(navItem)
+    const historyItem = this.getHistoryItem(navItem)
     const sameName = historyItem.name === this.curPage.name
     const sameParams = isEqual(
       this.getNormalizedParams(historyItem.params),
@@ -246,7 +249,7 @@ export class Router extends Store<RouterProps> {
   }
 
   async navigate(navItem: NavigateItem) {
-    const item = this.navItemToHistoryItem(navItem)
+    const item = this.getHistoryItem(navItem)
     if (this.notFound) {
       this.notFound = false
     }
@@ -322,7 +325,7 @@ export class Router extends Store<RouterProps> {
     return path
   }
 
-  navItemToHistoryItem(navItem: NavigateItem): HistoryItem {
+  getHistoryItem(navItem: NavigateItem): HistoryItem {
     const params: any = {}
     // remove undefined params
     if ('params' in navItem && !!navItem.params) {
