@@ -5,7 +5,6 @@ import {
   Tag,
   User,
 } from '@dish/graph'
-import { NavigateItem } from '@dish/router'
 import { Config, IContext } from 'overmind'
 
 import { NavigableTag } from './NavigableTag'
@@ -39,7 +38,6 @@ export type HomeState = {
   stateIds: string[]
   stateIndex: number
   states: HomeStateItem[]
-  userLocation: LngLat | null
 }
 
 export type GeocodePlace = {

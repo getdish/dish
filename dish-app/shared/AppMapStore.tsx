@@ -13,6 +13,7 @@ type MapPosition = {
 }
 
 class AppMapStore extends Store {
+  userLocation: LngLat | null = null
   position: MapPosition = {
     center: initialHomeState.center,
     span: initialHomeState.span,
@@ -27,6 +28,26 @@ class AppMapStore extends Store {
       ...pos,
     }
     this.updateAreaInfo()
+  }
+
+  async moveToUserLocation() {
+    const position = await this.getUserPosition()
+    const location: LngLat = {
+      lng: position.coords.longitude,
+      lat: position.coords.latitude,
+    }
+    this.userLocation = location
+    const state = om.state.home.currentState
+    om.actions.home.updateHomeState({
+      ...state,
+      center: { ...location },
+    })
+  }
+
+  getUserPosition = () => {
+    return new Promise<any>((res, rej) => {
+      navigator.geolocation.getCurrentPosition(res, rej)
+    })
   }
 
   async updateAreaInfo() {

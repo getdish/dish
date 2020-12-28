@@ -49,7 +49,6 @@ export const state: HomeState = {
   allStates: {
     '0': initialHomeState,
   },
-  userLocation: null,
   lastHomeState: derived<HomeState, OmState, HomeStateItemHome>(
     (state) => findLast(state.states, isHomeState)!
   ),
@@ -253,26 +252,6 @@ const setHoveredRestaurant: Action<RestaurantOnlyIds | null | false> = (
   val
 ) => {
   om.state.home.hoveredRestaurant = val
-}
-
-const getUserPosition = () => {
-  return new Promise<any>((res, rej) => {
-    navigator.geolocation.getCurrentPosition(res, rej)
-  })
-}
-
-const moveMapToUserLocation: AsyncAction = async (om) => {
-  const position = await getUserPosition()
-  const location: LngLat = {
-    lng: position.coords.longitude,
-    lat: position.coords.latitude,
-  }
-  om.state.home.userLocation = location
-  const state = om.state.home.currentState
-  om.actions.home.updateHomeState({
-    ...state,
-    center: { ...location },
-  })
 }
 
 const handleRouteChange: AsyncAction<HistoryItem> = async (om, item) => {
@@ -722,7 +701,6 @@ export const actions = {
   setIsLoading,
   updateHomeState,
   navigate,
-  moveMapToUserLocation,
   setIsHoveringRestaurant,
   setSelectedRestaurant,
   setShowUserMenu,
