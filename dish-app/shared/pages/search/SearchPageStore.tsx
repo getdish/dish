@@ -75,10 +75,8 @@ class SearchPageStore extends Store {
     if (shouldCancel()) return
     state = state!
 
-    // overmind seems unhappy to just let us mutate
     const center = appMapStore.position.center ?? state!.center
     const span = appMapStore.position.span ?? state!.span
-
     om.actions.home.updateHomeState({
       id: state.id,
       center,

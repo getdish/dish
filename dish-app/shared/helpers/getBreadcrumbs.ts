@@ -1,6 +1,5 @@
 import { isSearchState } from '../state/home-helpers'
-import { HomeStateItem, HomeStateItemSimple } from '../state/home-types'
-import { memoize } from './memoizeWeak'
+import { HomeStateItem } from '../state/home-types'
 
 export const isBreadcrumbState = (type: HomeStateItem['type']) => {
   return (
@@ -13,8 +12,8 @@ export const isBreadcrumbState = (type: HomeStateItem['type']) => {
   )
 }
 
-export const getBreadcrumbs = memoize((states: HomeStateItem[]) => {
-  let crumbs: HomeStateItemSimple[] = []
+export const getBreadcrumbs = (states: HomeStateItem[]) => {
+  let crumbs: HomeStateItem[] = []
   // reverse loop to find latest
   for (let i = states.length - 1; i >= 0; i--) {
     const cur = states[i]
@@ -44,6 +43,6 @@ export const getBreadcrumbs = memoize((states: HomeStateItem[]) => {
     }
   }
   return crumbs
-})
+}
 
 window['getBreadcrumbs'] = getBreadcrumbs

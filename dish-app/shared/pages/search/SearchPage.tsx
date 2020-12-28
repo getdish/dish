@@ -26,6 +26,7 @@ import {
   Button,
   HStack,
   LoadingItem,
+  LoadingItems,
   Spacer,
   StackProps,
   Text,
@@ -80,6 +81,15 @@ type Props = StackViewProps<HomeStateItemSearch>
 const SearchPagePropsContext = createContext<Props | null>(null)
 
 export default memo(function SearchPage(props: Props) {
+  console.warn('!!!!!!!!!!')
+  return (
+    <StackDrawer closable>
+      <Text>hi</Text>
+    </StackDrawer>
+  )
+})
+
+const SearchPageContent = memo(function SearchPageContent(props: Props) {
   console.warn('render searchpage', props)
   // const isEditingUserList = !!isEditingUserPage(om.state)
 
@@ -190,21 +200,16 @@ export default memo(function SearchPage(props: Props) {
   }, [key])
 
   return (
-    <VStack position="relative" height="100%">
-      <StackDrawer closable>
-        <SearchNavBarContainer isActive={props.isActive} id={props.item.id} />
-        <Suspense fallback={<HomeLoading />}>
-          <VStack
-            flex={1}
-            overflow="hidden"
-            opacity={isOptimisticUpdating ? 0.5 : 1}
-            width="100%"
-          >
-            {content}
-          </VStack>
-        </Suspense>
-      </StackDrawer>
-    </VStack>
+    <Suspense fallback={<HomeLoading />}>
+      <VStack
+        flex={1}
+        overflow="hidden"
+        opacity={isOptimisticUpdating ? 0.5 : 1}
+        width="100%"
+      >
+        {content}
+      </VStack>
+    </Suspense>
   )
 })
 

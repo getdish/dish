@@ -23,9 +23,6 @@ export const AppMapControls = memo(() => {
   const showRefresh = hasMovedMap && om.state.home.currentStateType === 'search'
   const media = useMedia()
   const safeArea = useSafeArea()
-
-  console.log('hasMovedMap', hasMovedMap, showRefresh)
-
   return (
     <AbsoluteVStack
       zIndex={media.sm ? zIndexDrawer - 1 : zIndexDrawer + 1}
@@ -66,32 +63,32 @@ export const AppMapControls = memo(() => {
               Search here
             </OverlayLinkButton>
           )}
-
-          {/* {om.state.home.hoveredRestaurant &&
-            om.state.home.currentStateType === 'search' && (
-              <OverlayLinkButton
-                Icon={Map}
-                onPress={() => {
-                  om.actions.home.setHoveredRestaurant(false)
-                }}
-              >
-                Show all
-              </OverlayLinkButton>
-            )} */}
-
-          {/* {hasMovedMap && zoomLevel !== 'medium' && (
-            <OverlayLinkButton
-              Icon={Map}
-              pointerEvents="auto"
-              alignItems="center"
-              justifyContent="center"
-              onPress={mapZoomToMedium}
-            >
-              Fit to results
-            </OverlayLinkButton>
-          )} */}
         </HStack>
       </AbsoluteVStack>
     </AbsoluteVStack>
   )
 })
+
+// {/* {om.state.home.hoveredRestaurant &&
+//   om.state.home.currentStateType === 'search' && (
+//     <OverlayLinkButton
+//       Icon={Map}
+//       onPress={() => {
+//         om.actions.home.setHoveredRestaurant(false)
+//       }}
+//     >
+//       Show all
+//     </OverlayLinkButton>
+//   )} */}
+
+// {/* {hasMovedMap && zoomLevel !== 'medium' && (
+//   <OverlayLinkButton
+//     Icon={Map}
+//     pointerEvents="auto"
+//     alignItems="center"
+//     justifyContent="center"
+//     onPress={mapZoomToMedium}
+//   >
+//     Fit to results
+//   </OverlayLinkButton>
+// )} */}

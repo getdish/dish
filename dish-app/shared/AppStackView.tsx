@@ -23,13 +23,17 @@ export function AppStackView<A extends HomeStateItem>(props: {
   children: GetChildren<A>
 }) {
   const om = useOvermind()
-  const breadcrumbs = getBreadcrumbs(om.state.home.states)
+  const breadcrumbs = getBreadcrumbs(
+    om.state.home.states.slice(0, om.state.home.stateIndex + 1)
+  )
   const key = JSON.stringify(breadcrumbs.map((x) => x.id))
   const homeStates = useMemo(() => breadcrumbs, [key])
   const currentStates = useDebounceValue(homeStates, 20) ?? homeStates
   const isRemoving = currentStates.length > homeStates.length
   const isAdding = currentStates.length < homeStates.length
   const items = isRemoving ? currentStates : homeStates
+
+  console.log('👀 AppStackView', items)
 
   return (
     <>
@@ -61,7 +65,7 @@ const AppStackViewItem = memo(
     getChildren,
   }: {
     getChildren: GetChildren<HomeStateItem>
-    item: HomeStateItemSimple
+    item: HomeStateItem
     index: number
     isActive: boolean
     isRemoving: boolean
@@ -72,11 +76,11 @@ const AppStackViewItem = memo(
     const top = media.sm
       ? Math.max(0, index - 1) * 5 + (index > 0 ? 5 : 0)
       : index * 5 + (index > 0 ? searchBarHeight + searchBarTopOffset : 0)
-    const left = 0
+    const isFullyActive = !isRemoving && !isAdding
 
     let children = useMemo(() => {
       return getChildren({
-        item: item as any,
+        item,
         index,
         isActive,
       })
@@ -94,9 +98,7 @@ const AppStackViewItem = memo(
       <VStack
         position="absolute"
         zIndex={index}
-        className={`animate-up ${
-          !isRemoving && !isAdding ? 'active' : 'untouchable'
-        }`}
+        className={`animate-up ${isFullyActive ? 'active' : 'untouchable'}`}
         top={0}
         right={0}
         bottom={0}
@@ -107,7 +109,7 @@ const AppStackViewItem = memo(
           position="absolute"
           flex={1}
           top={top}
-          left={left}
+          left={0}
           bottom={-(index * 5)}
           width="100%"
           pointerEvents={isActive ? 'auto' : 'none'}

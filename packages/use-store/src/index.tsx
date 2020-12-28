@@ -56,7 +56,7 @@ export function createStore<A extends Store<B>, B>(
 ): A {
   const info = getOrCreateStoreInfo(StoreKlass, props)
   const storeInstance = createProxiedStore(info)
-  storeInstance.mount?.()
+  mountStore(info, storeInstance)
   return storeInstance
 }
 

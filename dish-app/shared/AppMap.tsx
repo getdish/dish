@@ -169,8 +169,6 @@ const AppMapContent = memo(
     const { position } = useStoreInstance(appMapStore)
     const { center, span } = position
 
-    console.log('what is', paddingLeft)
-
     // SELECTED
     // useEffect(() => {
     //   return om.reaction(

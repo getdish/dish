@@ -11,7 +11,6 @@ export async function fuzzySearch<A extends { [key: string]: any }>({
 }): Promise<A[]> {
   // react native fix import it like this
   const FlexSearch = (await import('flexsearch/flexsearch.js')).default
-  console.log('FlexSearch', FlexSearch)
   // @ts-expect-error
   const flexSearch = FlexSearch.create<number>({
     encode: 'simple',
