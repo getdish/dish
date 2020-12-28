@@ -17,7 +17,6 @@ export type OmStateHome = OmState['home']
 export type HomeState = {
   allStates: { [key: string]: HomeStateItem }
   allUsers: { [id: string]: User }
-  centerToResults: number
   currentState: HomeStateItem
   currentStateLense: NavigableTag | null
   currentStateSearchQuery: HomeStateItem['searchQuery']
