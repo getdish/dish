@@ -4,7 +4,6 @@ import { ScrollView } from 'react-native'
 import {
   AbsoluteVStack,
   Modal,
-  PageTitle,
   SmallTitle,
   Spacer,
   Table,
@@ -22,6 +21,7 @@ import { useRestaurantQuery } from '../../hooks/useRestaurantQuery'
 import { omStatic } from '../../state/omStatic'
 import { router } from '../../state/router'
 import { StackViewCloseButton } from '../../views/StackViewCloseButton'
+import { PageTitle } from '../search/PageTitle'
 
 export default memo(
   graphql<any>(function HomePageRestaurantHours() {
@@ -36,7 +36,7 @@ export default memo(
 
     return (
       <>
-        <PageTitle>{title}</PageTitle>
+        <PageTitle title={title} />
         <Modal
           onDismiss={() => {
             omStatic.actions.home.up()

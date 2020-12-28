@@ -10,7 +10,14 @@ import React, { useEffect, useRef, useState } from 'react'
 import { Dimensions } from 'react-native'
 import { useGet, useTheme } from 'snackui'
 
-import { blue, green, lightGreen } from '../colors'
+import {
+  blue,
+  green,
+  hexToRGB,
+  lightGreen,
+  lightPurple,
+  purple,
+} from '../colors'
 import { MAPBOX_ACCESS_TOKEN } from '../constants'
 import { useIsMountedRef } from '../helpers/useIsMountedRef'
 import { tagLenses } from '../state/localTags'
@@ -359,6 +366,8 @@ function setupMapEffect({
             maxZoom: 20,
             minZoom: 11,
             lineColor: '#880088',
+            lineColorActive: '#660066',
+            lineColorHover: '#330033',
             label: 'name',
             labelSource: 'public.nhood_labels',
             promoteId: 'ogc_fid',
@@ -381,11 +390,13 @@ function setupMapEffect({
           {
             maxZoom: 11,
             minZoom: 7,
-            lineColor: '#008888',
+            lineColor: '#880088',
+            lineColorActive: '#660066',
+            lineColorHover: '#330033',
             promoteId: 'ogc_fid',
-            activeColor: `rgba(128, 200, 163, 0.05)`,
-            hoverColor: `rgba(128, 200, 163, 0.7)`,
-            color: `rgba(128, 200, 163, 0.5)`,
+            activeColor: `rgba(255, 255, 0, 0.05)`,
+            hoverColor: hexToRGB(purple).string,
+            color: purple,
             label: 'hrr_city',
             name: 'public.hrr',
           },
@@ -393,10 +404,12 @@ function setupMapEffect({
             maxZoom: 7,
             minZoom: 0,
             lineColor: '#880088',
+            lineColorActive: '#660066',
+            lineColorHover: '#330033',
             promoteId: 'ogc_fid',
             activeColor: green,
             hoverColor: 'yellow',
-            color: lightGreen,
+            color: purple,
             label: null,
             name: 'public.state',
           },
@@ -412,6 +425,8 @@ function setupMapEffect({
             name,
             promoteId,
             lineColor,
+            lineColorActive,
+            lineColorHover,
             color,
             hoverColor,
             activeColor,
@@ -456,9 +471,27 @@ function setupMapEffect({
               minzoom: minZoom,
               maxzoom: maxZoom,
               paint: {
-                'line-color': lineColor,
+                'line-color': [
+                  'case',
+                  ['==', ['feature-state', 'active'], true],
+                  lineColorActive,
+                  ['==', ['feature-state', 'hover'], true],
+                  lineColorHover,
+                  ['==', ['feature-state', 'active'], null],
+                  lineColor,
+                  'green',
+                ],
                 'line-opacity': 0.05,
-                'line-width': 2,
+                'line-width': [
+                  'case',
+                  ['==', ['feature-state', 'active'], true],
+                  1,
+                  ['==', ['feature-state', 'hover'], true],
+                  2,
+                  ['==', ['feature-state', 'active'], null],
+                  3,
+                  4,
+                ],
               },
               'source-layer': name,
             },
@@ -513,18 +546,15 @@ function setupMapEffect({
                 'text-halo-width': 1,
               },
             })
-
-            cancels.add(() => {
-              if (labelSource) {
-                map.removeSource(labelSource)
-              }
-              map.removeLayer(`${name}.label`)
-            })
           }
 
           cancels.add(() => {
             map.removeLayer(`${name}.fill`)
             map.removeLayer(`${name}.line`)
+            map.removeLayer(`${name}.label`)
+            if (labelSource) {
+              map.removeSource(labelSource)
+            }
             map.removeSource(name)
           })
         }

@@ -7,7 +7,7 @@ import { sleep } from '@dish/async'
 import { startLogging } from '@dish/graph'
 import React from 'react'
 // @ts-ignore
-import { createRoot, hydrate, render } from 'react-dom'
+import ReactDOM, { hydrate, render } from 'react-dom'
 import { AppRegistry } from 'react-native'
 
 import { isSSR } from '../shared/constants'
@@ -35,7 +35,8 @@ async function start() {
 
   if (IS_CONCURRENT) {
     console.warn('👟 Concurrent Mode Running')
-    createRoot(ROOT).render(<Root overmind={om} />)
+    // @ts-expect-error
+    React.unstable_createRoot(ROOT).render(<Root overmind={om} />)
     return
   }
 

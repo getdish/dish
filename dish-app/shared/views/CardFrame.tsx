@@ -15,11 +15,13 @@ export const CardFrame = ({
   expandable,
   transparent,
   children,
+  aspectFixed,
 }: {
   children?: any
   expandable?: boolean
   hoverable?: boolean
   transparent?: boolean
+  aspectFixed?: boolean
 }) => {
   const theme = useTheme()
   const media = useMedia()
@@ -41,6 +43,9 @@ export const CardFrame = ({
       })}
       {...(media.xs && {
         width: '90%',
+      })}
+      {...(aspectFixed && {
+        width: cardFrameWidth,
       })}
       {...(hoverable && {
         hoverStyle: {

@@ -18,7 +18,6 @@ import {
   cardFrameBorderRadiusSmaller,
   cardFrameHeight,
   cardFrameWidth,
-  useCardFrame,
 } from '../../views/CardFrame'
 import { RestaurantUpVoteDownVote } from '../../views/restaurant/RestaurantUpVoteDownVote'
 import { Link } from '../../views/ui/Link'
@@ -67,7 +66,7 @@ export const RestaurantCardContent = memo(
 
       return (
         <Link name="restaurant" params={{ slug: restaurantSlug }}>
-          <CardFrame hoverable>
+          <CardFrame aspectFixed hoverable>
             <VStack
               className="safari-fix-overflow"
               width="100%"
