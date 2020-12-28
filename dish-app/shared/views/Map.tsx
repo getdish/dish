@@ -23,8 +23,7 @@ mapboxgl.accessToken = MAPBOX_ACCESS_TOKEN
 
 const RESTAURANTS_SOURCE_ID = 'RESTAURANTS_SOURCE_ID'
 const RESTAURANTS_UNCLUSTERED_SOURCE_ID = 'RESTAURANTS_UNCLUSTERED_SOURCE_ID'
-const RESTAURANT_SEARCH_POSITION_LABEL_ID =
-  'RESTAURANT_SEARCH_POSITION_LABEL_ID'
+const RESTAURANT_RANK_LABEL_ID = 'RESTAURANT_RANK_LABEL_ID'
 const UNCLUSTERED_LABEL_LAYER_ID = 'UNCLUSTERED_LABEL_LAYER_ID'
 const CLUSTER_LABEL_LAYER_ID = 'CLUSTER_LABEL_LAYER_ID'
 const POINT_LAYER_ID = 'POINT_LAYER_ID'
@@ -197,7 +196,9 @@ export const MapView = (props: MapProps) => {
     const featuresWithPositions = produce(features, (draft) => {
       for (const feature of draft) {
         const position = restaurantPositions[feature.properties.id]
-        if (position != null) feature.properties.searchPosition = position
+        if (position != null && position <= 10) {
+          feature.properties.searchPosition = position
+        }
       }
     })
 
@@ -808,7 +809,7 @@ function setupMapEffect({
         })
 
         map.addLayer({
-          id: RESTAURANT_SEARCH_POSITION_LABEL_ID,
+          id: RESTAURANT_RANK_LABEL_ID,
           source: RESTAURANTS_SOURCE_ID,
           type: 'symbol',
           filter: ['has', 'searchPosition'],
@@ -829,7 +830,7 @@ function setupMapEffect({
           },
         })
         cancels.add(() => {
-          map.removeLayer(RESTAURANT_SEARCH_POSITION_LABEL_ID)
+          map.removeLayer(RESTAURANT_RANK_LABEL_ID)
         })
 
         map.addLayer({
