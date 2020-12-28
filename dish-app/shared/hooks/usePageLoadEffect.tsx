@@ -1,7 +1,7 @@
 import { useLayoutEffect } from 'react'
 
+import { pagesStore } from '../pages/PagesStore'
 import { HomeStateItem } from '../state/home-types'
-import { useOvermind } from '../state/useOvermind'
 
 export type PageLoadEffectCallback = (opts: {
   isRefreshing: boolean
@@ -13,19 +13,18 @@ export const usePageLoadEffect = (
   cb: PageLoadEffectCallback,
   mountArgs: any[] = []
 ) => {
-  const om = useOvermind()
-
   useLayoutEffect(() => {
     if (props.isActive) {
-      const dispose = cb({ isRefreshing: false, item: props.item })
+      let dispose = cb({ isRefreshing: false, item: props.item })
 
-      const dispose2 = om.reaction(
-        () => om.state.home.refreshCurrentPage,
-        () => {
-          console.warn('refresh')
-          cb({ isRefreshing: true, item: props.item })
+      let last = 0
+      const dispose2 = pagesStore.subscribe(() => {
+        if (last !== pagesStore.refreshVersion) {
+          last = pagesStore.refreshVersion
+          if (dispose) dispose()
+          dispose = cb({ isRefreshing: true, item: props.item })
         }
-      )
+      })
 
       return () => {
         if (dispose) dispose()

@@ -29,7 +29,6 @@ export type HomeState = {
   lastHomeState: HomeStateItemHome
   lastSearchState: HomeStateItemSearch | undefined
   previousState: HomeStateItem
-  refreshCurrentPage: number
   searchbarFocusedTag: Tag | null
   searchBarTagIndex: number
   searchBarTags: NavigableTag[]

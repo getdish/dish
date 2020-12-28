@@ -40,7 +40,6 @@ export const state: HomeState = {
   selectedRestaurant: null,
   showUserMenu: false,
   searchBarTagIndex: 0,
-  refreshCurrentPage: 0,
   allUsers: {},
   hoveredRestaurant: null,
   isHoveringRestaurant: false,
@@ -118,10 +117,6 @@ export const state: HomeState = {
 }
 
 type PageAction = () => Promise<void>
-
-const refresh: AsyncAction = async (om) => {
-  om.state.home.refreshCurrentPage = Date.now()
-}
 
 const getUpType = (om: IContext<Config>) => {
   const curType = om.state.home.currentState.type
@@ -722,7 +717,6 @@ export const actions = {
   moveSearchBarTagIndex,
   setSearchBarTagIndex,
   popBack,
-  refresh,
   updateActiveTags,
   clearTags,
   setIsLoading,
