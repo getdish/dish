@@ -1,4 +1,3 @@
-- fix router back
 - fix map jittering
 - map toggle between region/area
 - ensure reload to region works
