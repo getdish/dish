@@ -100,7 +100,7 @@ export const AppSearchInputLocation = memo(() => {
           borderRadius={12}
           overflow="hidden"
           hoverStyle={{
-            backgroundColor: 'rgba(0,0,0,0.8)',
+            backgroundColor: 'rgba(155,155,155,0.1)',
           }}
           focusStyle={{
             backgroundColor: 'rgba(0,0,0,0.6)',

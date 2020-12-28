@@ -55,6 +55,28 @@ module.exports = function getWebpackConfig(
       mode: env.mode || process.env.NODE_ENV,
       context: __dirname,
       target,
+      stats: {
+        assets: false,
+        colors: true,
+      },
+      devServer: {
+        hot: isHot,
+        static: false,
+        firewall: false,
+        injectHot: true,
+        host: '0.0.0.0',
+        historyApiFallback: {
+          disableDotRule: true,
+        },
+        overlay: false,
+        headers: {
+          'Access-Control-Allow-Origin': '*',
+          'Access-Control-Allow-Methods':
+            'GET, POST, PUT, DELETE, PATCH, OPTIONS',
+          'Access-Control-Allow-Headers':
+            'X-Requested-With, content-type, Authorization',
+        },
+      },
       externals: isSSR
         ? {
             react: 'react',
@@ -63,7 +85,6 @@ module.exports = function getWebpackConfig(
             'overmind-react': 'overmind-react',
           }
         : [],
-      stats: 'normal',
       devtool: isProduction ? 'source-map' : 'eval-cheap-module-source-map',
       entry: {
         main:
@@ -347,24 +368,6 @@ module.exports = function getWebpackConfig(
             analyzerMode: 'static',
           }),
       ].filter(Boolean),
-      devServer: {
-        hot: isHot,
-        static: false,
-        firewall: false,
-        injectHot: true,
-        host: '0.0.0.0',
-        historyApiFallback: {
-          disableDotRule: true,
-        },
-        overlay: false,
-        headers: {
-          'Access-Control-Allow-Origin': '*',
-          'Access-Control-Allow-Methods':
-            'GET, POST, PUT, DELETE, PATCH, OPTIONS',
-          'Access-Control-Allow-Headers':
-            'X-Requested-With, content-type, Authorization',
-        },
-      },
     }
 
     // for profiling plugin speed

@@ -35,7 +35,11 @@ export const FilterButton = memo(
   }) => {
     const media = useMedia()
     const theme = useTheme()
-    const iconColor = media.sm ? (isActive ? '#000' : '#fff') : color
+    const iconColor = media.sm
+      ? isActive
+        ? theme.color
+        : theme.colorTertiary
+      : color
     const textColor = media.sm ? color : isActive ? '#000' : color
 
     let content: any =

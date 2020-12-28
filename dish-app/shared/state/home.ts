@@ -137,7 +137,7 @@ const up: Action = (om) => {
   om.actions.home.popTo(getUpType(om))
 }
 
-const nameToStateType = {
+const normalizeItemName = {
   homeRegion: 'home',
 }
 
@@ -156,7 +156,7 @@ const popTo: Action<HomeStateItem['type']> = (om, type) => {
 
   // we can just use router history directly, no? and go back?
   const lastRouterName = router.prevHistory?.name
-  const lastRouterType = nameToStateType[lastRouterName] ?? lastRouterName
+  const lastRouterType = normalizeItemName[lastRouterName] ?? lastRouterName
   if (
     om.state.home.previousState?.type === type &&
     lastRouterType === type &&
@@ -306,11 +306,11 @@ const handleRouteChange: AsyncAction<HistoryItem> = async (om, item) => {
   }
 
   const promises = new Set<Promise<any>>()
+  const name = normalizeItemName[item.name] ?? item.name
 
   // actions per-route
   if (item.type === 'push' || item.type === 'replace') {
-    switch (item.name) {
-      case 'homeRegion':
+    switch (name) {
       case 'home':
       case 'about':
       case 'blog':
@@ -339,9 +339,10 @@ const handleRouteChange: AsyncAction<HistoryItem> = async (om, item) => {
             debugger
           }
         }
-        const prevState = om.state.home.previousState
+        const prevState = findLast(om.state.home.states, (x) => x.type === name)
         const res = await pushHomeState(om, {
           ...item,
+          name,
           id: item.type === 'replace' ? prevState.id : item.id,
         })
         if (res?.fetchDataPromise) {
