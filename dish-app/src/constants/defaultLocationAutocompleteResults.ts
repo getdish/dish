@@ -1,9 +1,9 @@
 import {
-  AutocompleteItem,
+  AutocompleteItemFull,
   createAutocomplete,
 } from '../helpers/createAutocomplete'
 
-export const defaultLocationAutocompleteResults: AutocompleteItem[] = [
+export const defaultLocationAutocompleteResults: AutocompleteItemFull[] = [
   createAutocomplete({
     name: 'New York',
     center: {
@@ -11,7 +11,7 @@ export const defaultLocationAutocompleteResults: AutocompleteItem[] = [
       lng: -74.0071296,
     },
     icon: '📍',
-    type: 'country',
+    type: 'place',
   }),
   createAutocomplete({
     name: 'Los Angeles',
@@ -20,7 +20,7 @@ export const defaultLocationAutocompleteResults: AutocompleteItem[] = [
       lng: -118.242349,
     },
     icon: '📍',
-    type: 'country',
+    type: 'place',
   }),
   createAutocomplete({
     name: 'Las Vegas',
@@ -29,7 +29,7 @@ export const defaultLocationAutocompleteResults: AutocompleteItem[] = [
       lng: -115.1487083,
     },
     icon: '📍',
-    type: 'country',
+    type: 'place',
   }),
   createAutocomplete({
     name: 'San Francisco',
@@ -38,7 +38,7 @@ export const defaultLocationAutocompleteResults: AutocompleteItem[] = [
       lat: 37.759251,
     },
     icon: '📍',
-    type: 'country',
+    type: 'place',
   }),
   createAutocomplete({
     name: 'Miami',
@@ -47,7 +47,7 @@ export const defaultLocationAutocompleteResults: AutocompleteItem[] = [
       lng: -80.2340487,
     },
     icon: '📍',
-    type: 'country',
+    type: 'place',
   }),
   createAutocomplete({
     name: 'Chicago',
@@ -56,7 +56,7 @@ export const defaultLocationAutocompleteResults: AutocompleteItem[] = [
       lng: -87.632382,
     },
     icon: '📍',
-    type: 'country',
+    type: 'place',
   }),
   createAutocomplete({
     name: 'New Orleans',
@@ -65,6 +65,6 @@ export const defaultLocationAutocompleteResults: AutocompleteItem[] = [
       lng: -90.076688,
     },
     icon: '📍',
-    type: 'country',
+    type: 'place',
   }),
 ]

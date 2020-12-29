@@ -398,15 +398,11 @@ const handleKeyPress = async (e: any, inputStore: InputStore) => {
       const item = results[index - 1]
       if (isAutocompleteActive && item && index !== 0) {
         if (item.type === 'restaurant') {
-          if (!item.slug) {
-            Toast.show(`No slug, err`)
-            return
-          }
           router.navigate({
             name: 'restaurant',
             params: { slug: item.slug },
           })
-        } else if ('tagId' in item) {
+        } else if ('slug' in item) {
           om.actions.home.clearSearch()
           om.actions.home.navigate({
             tags: [item],

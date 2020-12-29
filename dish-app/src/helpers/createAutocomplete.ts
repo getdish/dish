@@ -1,29 +1,30 @@
-import { Tag } from '@dish/graph'
-
 import { LngLat } from '../app/state/home-types'
 
-export type AutocompleteItem = {
-  is: 'autocomplete'
-  id?: string
+type Base = {
   icon?: string
   name: string
   description?: string
-  tagId?: string
-  slug?: string
-  type: Tag['type'] | 'restaurant'
-  center?: LngLat
-  span?: LngLat
+}
+
+export type AutocompleteItem =
+  | (Base & { type: 'orphan' })
+  | (Base & { type: 'dish' | 'cuisine' | 'country'; slug: string })
+  | (Base & { type: 'restaurant'; slug: string })
+  | (Base & { type: 'place'; center?: LngLat; span?: LngLat })
+
+export type AutocompleteItemFull = AutocompleteItem & {
+  is: 'autocomplete'
+  id: string
 }
 
 export function createAutocomplete(
-  item: Partial<AutocompleteItem>
-): AutocompleteItem {
+  item: AutocompleteItem
+): AutocompleteItemFull {
   return {
     id: `${Math.random()}`,
     is: 'autocomplete',
     name: '',
-    type: 'dish',
     ...item,
-    tagId: item.slug,
+    type: item.type as any,
   }
 }

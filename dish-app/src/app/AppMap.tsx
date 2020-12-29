@@ -301,7 +301,6 @@ const AppMapContent = memo(
 
     const handleMoveEnd = useCallback(
       ({ center, span }) => {
-        updateRegion.cancel()
         if (
           media.sm &&
           (drawerStore.isDragging || drawerStore.snapIndex === 0)

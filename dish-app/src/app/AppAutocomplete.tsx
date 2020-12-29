@@ -29,6 +29,7 @@ import { tagDefaultAutocomplete } from '../constants/localTags'
 import { tagDisplayName } from '../constants/tagMeta'
 import {
   AutocompleteItem,
+  AutocompleteItemFull,
   createAutocomplete,
 } from '../helpers/createAutocomplete'
 import { fuzzySearch } from '../helpers/fuzzySearch'
@@ -198,7 +199,7 @@ const AutocompleteSearch = memo(() => {
   }, [query])
 
   useEffect(() => {
-    let results: AutocompleteItem[] = []
+    let results: AutocompleteItemFull[] = []
     const state = om.state.home.currentState
     const tags = tagsToNavigableTags(activeTags)
     const countryTag =
@@ -252,6 +253,7 @@ const AutocompleteSearch = memo(() => {
               name,
               type: 'dish',
               icon: group.find((x) => x.icon)?.icon ?? '',
+              slug: group[0]?.['slug'] ?? '',
             })
           )
         }
@@ -293,7 +295,7 @@ const AutocompleteSearch = memo(() => {
         ]}
         onSelect={(result) => {
           // clear query
-          if (result.type === 'ophan') {
+          if (result.type === 'orphan') {
             om.actions.home.clearTags()
             om.actions.home.setSearchQuery(
               om.state.home.currentStateSearchQuery
@@ -325,7 +327,7 @@ const AutocompleteLocation = memo(() => {
   useEffect(() => {
     if (!query) return
 
-    let results: AutocompleteItem[] = []
+    let results: AutocompleteItemFull[] = []
     const state = om.state.home.currentState
 
     return series([
@@ -461,7 +463,7 @@ const AutocompleteResults = memo(
         {results.map((result, index) => {
           const isActive = activeIndex === index
           return (
-            <React.Fragment key={`${result.tagId}${index}`}>
+            <React.Fragment key={`${result.id}${index}`}>
               <Theme name={isActive ? 'active' : null}>
                 <AutocompleteItemView
                   target={target}
@@ -652,8 +654,11 @@ function AutocompleteAddButton() {
   )
 }
 
-async function filterAutocompletes(query: string, results: AutocompleteItem[]) {
-  let matched: AutocompleteItem[] = []
+async function filterAutocompletes(
+  query: string,
+  results: AutocompleteItemFull[]
+) {
+  let matched: AutocompleteItemFull[] = []
   if (results.length) {
     matched = await fuzzySearch({
       items: results,
@@ -700,11 +705,11 @@ function searchCuisines(searchQuery: string) {
       return 'autocomplete' in r
         ? r
         : createAutocomplete({
-            id: r.id,
             name: r.name,
             type: 'country',
             icon: r.icon ?? '🌎',
             description: 'Cuisine',
+            slug: r.slug ?? '',
           })
     })
 }
@@ -752,11 +757,11 @@ function searchDishTags(searchQuery: string, cuisine?: string) {
       : []),
   ].map((r) =>
     createAutocomplete({
-      id: r.id,
       name: r.name,
       icon: r.icon ?? '🍽',
       type: 'dish',
       description: r.parent?.name ?? '',
+      slug: r.slug,
     })
   )
 }
