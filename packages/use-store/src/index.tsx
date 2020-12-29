@@ -60,7 +60,21 @@ export function createStore<A extends Store<B>, B>(
   return storeInstance
 }
 
-function getStoreUid(storeName: string, props: string | Object) {
+const wkm = new WeakMap<any, string>()
+const weakKey = (obj: any, prefix = '') => {
+  if (wkm.has(obj)) return wkm.get(obj)!
+  const key = `${prefix}-${Math.random()}`
+  wkm.set(obj, key)
+  return key
+}
+
+function getStoreUid(Constructor: any, props: string | Object | void) {
+  // in dev mode we can use name which gives us nice `allStores.StoreName` access
+  // in prod mode it usually is minified and mangled, unsafe to use name so use weakkey
+  const storeName =
+    process.env.NODE_ENV === 'development'
+      ? Constructor.name
+      : weakKey(Constructor)
   return `${storeName}${
     !props ? '' : typeof props === 'string' ? props : getKey(props)
   }`
@@ -70,7 +84,7 @@ function getStoreUid(storeName: string, props: string | Object) {
 // TODO selector support with types...
 export function useStoreInstance<A extends Store<B>, B>(instance: A): A {
   const store = instance[UNWRAP_PROXY]
-  const uid = getStoreUid(store.constructor.name, store.props)
+  const uid = getStoreUid(store.constructor, store.props)
   const info = cache.get(uid)
   if (!info) {
     throw new Error(`This store not created using createStore()`)
@@ -173,8 +187,7 @@ function getOrCreateStoreInfo(
   opts?: { avoidCache: boolean },
   propsKeyCalculated?: string
 ) {
-  const storeName = StoreKlass.name
-  const uid = getStoreUid(storeName, propsKeyCalculated ?? props)
+  const uid = getStoreUid(StoreKlass, propsKeyCalculated ?? props)
 
   if (!opts?.avoidCache) {
     const cached = cache.get(uid)
@@ -182,7 +195,6 @@ function getOrCreateStoreInfo(
       // warn if creating an already existing store!
       // need to detect HMR more cleanly if possible
       if (
-        process.env.NODE_ENV === 'development' &&
         cached?.storeInstance.constructor.toString() !== StoreKlass.toString()
       ) {
         console.warn(

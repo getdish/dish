@@ -62,7 +62,6 @@ export function searchRestaurants(
     }),
   ].map((r) =>
     createAutocomplete({
-      id: r.id,
       name: r.name,
       slug: r.slug,
       type: 'restaurant',

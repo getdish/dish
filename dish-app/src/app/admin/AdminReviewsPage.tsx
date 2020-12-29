@@ -174,9 +174,8 @@ const PlacesList = () => {
 
 const defaultPlaces: AutocompleteItem[] = [
   {
-    is: 'autocomplete',
     name: 'All',
-    type: 'all',
+    type: 'orphan',
   },
   ...defaultLocationAutocompleteResults,
 ]
@@ -212,7 +211,7 @@ const PlacesListContent = graphql(
               row={row}
               column={column}
               onSelect={() => {
-                if (item.type === 'all') {
+                if (item.type === 'orphan') {
                   adminStore.setSelectedCity(null)
                 } else {
                   adminStore.setSelectedCity(item)
@@ -253,18 +252,22 @@ const RestaurantsListContent = graphql(
           }),
           _neq: '',
         },
-        ...(selectedCity && {
-          location: {
-            _st_d_within: {
-              // search outside current bounds a bit
-              distance: 1,
-              from: {
-                type: 'Point',
-                coordinates: [selectedCity.center.lng, selectedCity.center.lat],
+        ...(selectedCity &&
+          'center' in selectedCity && {
+            location: {
+              _st_d_within: {
+                // search outside current bounds a bit
+                distance: 1,
+                from: {
+                  type: 'Point',
+                  coordinates: [
+                    selectedCity.center.lng,
+                    selectedCity.center.lat,
+                  ],
+                },
               },
             },
-          },
-        }),
+          }),
       },
       limit: limit,
       offset: (page - 1) * limit,

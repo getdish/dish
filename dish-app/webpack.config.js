@@ -37,6 +37,11 @@ const isHot =
   target !== 'node'
 const isStaticExtracted = !process.env.NO_EXTRACT
 
+const minimize =
+  process.env.NO_MINIFY || TARGET === 'ssr'
+    ? false
+    : isProduction && TARGET !== 'ssr'
+
 const hashFileNamePart = isProduction ? '[contenthash]' : '[fullhash]'
 
 console.log('webpack.config', { isProduction, target })
@@ -134,7 +139,7 @@ module.exports = function getWebpackConfig(
         modules: ['node_modules'],
       },
       optimization: {
-        minimize: !process.env.NO_MINIFY && isProduction && TARGET !== 'ssr',
+        minimize,
         concatenateModules: isProduction && !process.env.ANALYZE_BUNDLE,
         usedExports: isProduction,
         removeEmptyChunks: isProduction,
@@ -168,7 +173,7 @@ module.exports = function getWebpackConfig(
             : false,
         runtimeChunk: false,
         minimizer:
-          TARGET === 'ssr' || !isProduction
+          minimize == false
             ? []
             : [
                 new TerserPlugin({
