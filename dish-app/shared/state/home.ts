@@ -639,20 +639,6 @@ const setSearchBarTagIndex: Action<number> = (om, val) => {
   )
 }
 
-const setShowUserMenu: Action<boolean> = (om, val) => {
-  om.state.home.showUserMenu = val
-}
-
-const promptLogin: Action<undefined, boolean> = (om) => {
-  const user = om.state.user.user
-  if (!user || !om.state.user.isLoggedIn) {
-    om.actions.home.setShowUserMenu(true)
-    Toast.show(`Signup/login to do this`)
-    return true
-  }
-  return false
-}
-
 const updateCurrentState: Action<Partial<Omit<HomeStateItem, 'type'>>> = (
   om,
   val
@@ -681,6 +667,4 @@ export const actions = {
   setIsLoading,
   updateHomeState,
   navigate,
-  setShowUserMenu,
-  promptLogin,
 }

@@ -1,9 +1,11 @@
 import { slugify } from '@dish/graph'
 import { ChevronUp, HelpCircle, Menu } from '@dish/react-feather'
-import React, { Suspense, memo, useCallback, useEffect } from 'react'
+import { useStoreInstance } from '@dish/use-store'
+import React, { Suspense, memo, useEffect } from 'react'
 import { HStack, Popover, Spacer, Text, Tooltip, useMedia } from 'snackui'
 
 import { AppMenuContents } from './AppMenuContents'
+import { appMenuStore } from './AppMenuStore'
 import { useSearchBarTheme } from './hooks/useSearchBarTheme'
 import { UserAvatar } from './pages/user/UserAvatar'
 import { omStatic } from './state/omStatic'
@@ -15,10 +17,9 @@ import { LinkButtonProps } from './views/ui/LinkProps'
 export const AppMenu = memo(() => {
   const om = useOvermind()
   const media = useMedia()
-  const showUserMenu = om.state.home.showUserMenu
-  const setShowUserMenu = om.actions.home.setShowUserMenu
+  const appMenu = useStoreInstance(appMenuStore)
+  const showUserMenu = appMenu.showMenu
   const pageName = useRouterCurPage().name
-  const hideUserMenu = useCallback((x) => setShowUserMenu(false), [])
 
   useEffect(() => {
     // open menu on nav to login/register
@@ -27,7 +28,7 @@ export const AppMenu = memo(() => {
       pageName == 'register' ||
       pageName == 'passwordReset'
     ) {
-      setShowUserMenu(true)
+      appMenu.hide()
     }
   }, [pageName])
 
@@ -37,13 +38,13 @@ export const AppMenu = memo(() => {
         position="bottom"
         isOpen={showUserMenu}
         noArrow
-        onChangeOpen={(val) => val === false && setShowUserMenu(false)}
-        contents={<AppMenuContents hideUserMenu={hideUserMenu} />}
+        onChangeOpen={appMenu.setShowMenu}
+        contents={<AppMenuContents hideUserMenu={appMenu.hide} />}
         mountImmediately
       >
         <MenuButton
           Icon={Menu}
-          onPress={() => setShowUserMenu(!showUserMenu)}
+          onPress={() => appMenu.setShowMenu(!showUserMenu)}
           text={!media.sm && !om.state.user.isLoggedIn ? 'Signup' : ''}
         />
       </Popover>

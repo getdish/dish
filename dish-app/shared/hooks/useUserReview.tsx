@@ -11,6 +11,7 @@ import {
 import { useState } from 'react'
 import { Toast, useLazyEffect } from 'snackui'
 
+import { promptLogin } from '../helpers/promptLogin'
 import { omStatic } from '../state/omStatic'
 import { useOvermind } from '../state/useOvermind'
 
@@ -116,7 +117,7 @@ export const useUserReviewsQuery = (
         type: Review['type']
       }
     ) {
-      if (omStatic.actions.home.promptLogin()) {
+      if (promptLogin()) {
         return false
       }
       try {

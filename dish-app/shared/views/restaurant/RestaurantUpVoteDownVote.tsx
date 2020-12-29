@@ -54,8 +54,8 @@ export const RestaurantUpVoteDownVote = (props: UpvoteDownvoteProps) => {
   )
 }
 
-const RestaurantUpVoteDownVoteContents = memo(
-  graphql(function RestaurantUpVoteDownVote({
+const RestaurantUpVoteDownVoteContents = graphql(
+  ({
     restaurantSlug,
     onClickPoints,
     activeTags,
@@ -63,7 +63,7 @@ const RestaurantUpVoteDownVoteContents = memo(
     score,
     ratio,
     display,
-  }: UpvoteDownvoteProps) {
+  }: UpvoteDownvoteProps) => {
     const restaurant = useRestaurantQuery(restaurantSlug)
     const { vote, setVote } = useUserTagVotes(restaurantSlug, activeTags)
 
@@ -110,7 +110,7 @@ const RestaurantUpVoteDownVoteContents = memo(
         </VStack>
       </VStack>
     )
-  })
+  }
 )
 
 const RatingWithVotes = memo(
