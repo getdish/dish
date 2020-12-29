@@ -4,8 +4,7 @@ import { Box, BoxProps, Divider, Spacer, Toast, VStack } from 'snackui'
 import { isWeb } from 'snackui/src/constants'
 
 import { appMenuStore } from './AppMenuStore'
-import { omStatic } from './state/omStatic'
-import { useOvermind } from './state/useOvermind'
+import { useUserStore } from './state/user'
 import { flatButtonStyle } from './views/baseButtonStyle'
 import { LoginRegisterForm } from './views/LoginRegisterForm'
 import { LinkButton } from './views/ui/LinkButton'
@@ -13,21 +12,20 @@ import { LinkButtonProps } from './views/ui/LinkProps'
 
 export const AppMenuContents = memo(
   ({ hideUserMenu, ...props }: { hideUserMenu: Function } & BoxProps) => {
-    const om = useOvermind()
+    const userStore = useUserStore()
 
     return (
       <Box alignItems="stretch" minWidth={240} {...props}>
         <VStack spacing="sm" padding={10}>
-          {om.state.user.isLoggedIn &&
-            om.state.user.user?.username === 'admin' && (
-              <MenuLinkButton name="adminTags">Admin</MenuLinkButton>
-            )}
+          {userStore.isLoggedIn && userStore.user?.username === 'admin' && (
+            <MenuLinkButton name="adminTags">Admin</MenuLinkButton>
+          )}
 
-          {om.state.user.isLoggedIn && (
+          {userStore.isLoggedIn && (
             <MenuLinkButton
               name="user"
               params={{
-                username: slugify(om.state.user.user?.username ?? ''),
+                username: slugify(userStore.user?.username ?? ''),
               }}
             >
               Profile
@@ -36,7 +34,7 @@ export const AppMenuContents = memo(
 
           {isWeb && <MenuLinkButton name="blog">Blog</MenuLinkButton>}
           <MenuLinkButton name="about">About</MenuLinkButton>
-          {!om.state.user.isLoggedIn && (
+          {!userStore.isLoggedIn && (
             <>
               <Spacer size="lg" />
               <Divider />
@@ -45,7 +43,7 @@ export const AppMenuContents = memo(
             </>
           )}
 
-          {om.state.user.isLoggedIn && (
+          {userStore.isLoggedIn && (
             <>
               <Spacer size="lg" />
               <Divider />
@@ -54,7 +52,7 @@ export const AppMenuContents = memo(
                 onPress={() => {
                   Toast.show(`Logging out...`)
                   setTimeout(() => {
-                    om.actions.user.logout()
+                    userStore.logout()
                   }, 1000)
                 }}
               >

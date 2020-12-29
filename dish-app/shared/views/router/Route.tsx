@@ -15,7 +15,7 @@ import {
   useRouter,
   useRouterCurPage,
 } from '../../state/router'
-import { useOvermind } from '../../state/useOvermind'
+import { useUserStore } from '../../state/user'
 
 type RouteState = 'collect' | 'active' | 'inactive'
 
@@ -162,8 +162,8 @@ function getChildren(children: Function | any) {
 }
 
 export function PrivateRoute(props: { name: string; children: any }) {
-  const om = useOvermind()
-  const isLoggedIn = om.state.user.isLoggedIn
+  const userStore = useUserStore()
+  const isLoggedIn = userStore.isLoggedIn
   const router = useRouter()
   const curPageName = router.curPage.name
 

@@ -2,15 +2,12 @@ import { query, review, reviewUpsert } from '@dish/graph'
 import { Store, useStore } from '@dish/use-store'
 import { isNumber } from 'lodash'
 import { useEffect, useLayoutEffect } from 'react'
-import { Toast, useForceUpdate, useLazyEffect } from 'snackui'
-import { useConstant } from 'snackui'
+import { Toast, useConstant, useForceUpdate, useLazyEffect } from 'snackui'
 
-import { promptLogin } from '../helpers/promptLogin'
 import { addTagsToCache, allTags } from '../state/allTags'
 import { getFullTags } from '../state/getFullTags'
 import { HomeActiveTagsRecord } from '../state/home-types'
-import { omStatic } from '../state/omStatic'
-import { useOvermind } from '../state/useOvermind'
+import { useUserStore, userStore } from '../state/user'
 import { useRestaurantQuery } from './useRestaurantQuery'
 
 export type VoteNumber = -1 | 0 | 1
@@ -34,7 +31,7 @@ export class TagVoteStore extends Store<VoteStoreProps> {
     }
     const review = {
       tag_id: tag.id,
-      user_id: omStatic.state.user.user?.id,
+      user_id: userStore.user?.id,
       restaurant_id: restaurantId,
       vote,
       type: 'vote',
@@ -73,7 +70,7 @@ export const useUserTagVotes = (
   return {
     vote: votes[0] ?? 0, // use the first one when querying multiple
     setVote: (vote: VoteNumber) => {
-      if (promptLogin()) {
+      if (userStore.promptLogin()) {
         return
       }
       for (const setVote of setVotes) {
@@ -85,8 +82,8 @@ export const useUserTagVotes = (
 }
 
 export const useUserTagVote = (props: VoteStoreProps) => {
-  const om = useOvermind()
-  const userId = om.state.user.user?.id
+  const userStore = useUserStore()
+  const userId = userStore.user?.id
   const voteStore = useStore(TagVoteStore, props)
   const restaurant = useRestaurantQuery(props.restaurantSlug)
   const forceUpdate = useForceUpdate()
@@ -140,7 +137,7 @@ export const useUserTagVote = (props: VoteStoreProps) => {
   return [
     voteStore.vote,
     async (userVote: VoteNumber | 'toggle') => {
-      if (promptLogin()) {
+      if (userStore.promptLogin()) {
         return
       }
       const vote =

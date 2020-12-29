@@ -5,6 +5,7 @@ import { OVERMIND_MUTATIONS } from '../overmindMutations'
 import { addTagsToCache } from './allTags'
 import { tagDefaultAutocomplete, tagFilters, tagLenses } from './localTags'
 import { router } from './router'
+import { userStore } from './user'
 
 const LOG_OVERMIND = process.env.NODE_ENV === 'development' || !isWeb
 
@@ -38,7 +39,7 @@ export const onInitialize: OnInitialize = async (
     actions.home.handleRouteChange(item)
   })
 
-  actions.user.checkForExistingLogin()
+  userStore.checkForExistingLogin()
 }
 
 if (process.env.NODE_ENV === 'development') {

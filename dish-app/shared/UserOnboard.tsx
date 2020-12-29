@@ -16,19 +16,18 @@ import dishNeon from './assets/dish-neon.jpg'
 import { characters } from './pages/user/characters'
 import { UserAvatar } from './pages/user/UserAvatar'
 import { useUserQuery } from './pages/user/useUserQuery'
-import { omStatic } from './state/omStatic'
-import { useOvermind } from './state/useOvermind'
+import { useUserStore } from './state/user'
 import { SmallButton } from './views/ui/SmallButton'
 
 export const UserOnboard = graphql(({ hideLogo }: { hideLogo?: boolean }) => {
-  const om = useOvermind()
+  const userStore = useUserStore()
   const imageFormRef = useRef(null)
   const formState = useRef({
     about: '',
     location: '',
   })
   const [charIndex, setCharIndex] = useState(0)
-  const username = om.state.user.user?.username ?? ''
+  const username = userStore.user?.username ?? ''
   const user = useUserQuery(username)
   const inputAvatar = useRef(null)
 
@@ -175,7 +174,7 @@ export const UserOnboard = graphql(({ hideLogo }: { hideLogo?: boolean }) => {
           onPress={async () => {
             Toast.show('Saving...')
             if (
-              await omStatic.actions.user.updateUser({
+              await userStore.updateUser({
                 username,
                 charIndex,
                 about: formState.current.about,
