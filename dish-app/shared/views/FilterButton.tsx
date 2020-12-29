@@ -15,7 +15,7 @@ import {
 
 import { tagDisplayNames } from '../state/tagMeta'
 import { useOvermind } from '../state/useOvermind'
-import { thirdPartyCrawlSources } from '../thirdPartyCrawlSources'
+import { thirdPartyCrawlSources } from '../constants/thirdPartyCrawlSources'
 import { LinkButtonProps } from './ui/LinkProps'
 import { SmallButton } from './ui/SmallButton'
 

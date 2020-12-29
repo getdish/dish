@@ -3,17 +3,15 @@ import { Provider } from 'overmind-react'
 import React, { Suspense, useEffect, useState } from 'react'
 import { LogBox } from 'react-native'
 import { SafeAreaProvider } from 'react-native-safe-area-context'
-import { AbsoluteVStack, VStack } from 'snackui'
+import { VStack } from 'snackui'
 
 import AppMap from './AppMap'
 import { AppMenuButton } from './AppMenuButton'
-import { AppSmallDrawer } from './AppSmallDrawer'
-import { AppStackView } from './AppStackView'
-import { mapBackgroundColor } from './colors'
-import GalleryPage from './pages/gallery/GalleryPage'
-import { PagesStackView } from './pages/PagesStackView'
-import RestaurantHoursPage from './pages/restaurantHours/RestaurantHoursPage'
-import RestaurantReviewPage from './pages/restaurantReview/RestaurantReviewPage'
+import { mapBackgroundColor } from './constants/colors'
+import { Home } from './home/Home'
+import GalleryPage from './home/gallery/GalleryPage'
+import RestaurantHoursPage from './home/restaurantHours/RestaurantHoursPage'
+import RestaurantReviewPage from './home/restaurantReview/RestaurantReviewPage'
 import { om } from './state/om'
 import { setOmStatic } from './state/omStatic'
 import { Route } from './views/router/Route'
@@ -49,15 +47,7 @@ export function App() {
               <AppMap />
             </Suspense>
 
-            <AbsoluteVStack pointerEvents="none" fullscreen zIndex={1000}>
-              <AppSmallDrawer>
-                <AppStackView>
-                  {(props) => {
-                    return <PagesStackView {...props} />
-                  }}
-                </AppStackView>
-              </AppSmallDrawer>
-            </AbsoluteVStack>
+            <Home />
 
             <AppMenuButton />
 

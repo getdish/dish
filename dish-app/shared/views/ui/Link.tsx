@@ -1,7 +1,7 @@
 import React from 'react'
 import { Text, VStack } from 'snackui'
 
-import { brandColor } from '../../colors'
+import { brandColor } from '../../constants/colors'
 import { RoutesTable } from '../../state/router'
 import { isStringChild } from './isStringChild'
 import { LinkProps } from './LinkProps'

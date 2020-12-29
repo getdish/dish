@@ -189,7 +189,9 @@ module.exports = function getWebpackConfig(
                     loader: require.resolve('@snackui/static/loader'),
                     options: {
                       evaluateImportsWhitelist: ['constants.js', 'colors.js'],
-                      themesFile: require.resolve('./shared/themes.ts'),
+                      themesFile: require.resolve(
+                        './shared/constants/themes.ts'
+                      ),
                     },
                   },
                 ].filter(Boolean),

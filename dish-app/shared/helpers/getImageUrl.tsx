@@ -1,4 +1,4 @@
-import { IMAGE_PROXY_DOMAIN } from '../constants'
+import { IMAGE_PROXY_DOMAIN } from '../constants/constants'
 
 export const getImageUrl = (
   url: string,

@@ -1,8 +1,8 @@
 import React from 'react'
 import { HStack, Text, Tooltip } from 'snackui'
 
-import { bgLight, bgLightLight, brandColor, lightBlue } from '../../colors'
-import { isWeb } from '../../constants'
+import { bgLight, bgLightLight, brandColor, lightBlue } from '../../constants/colors'
+import { isWeb } from '../../constants/constants'
 import { isStringChild } from './isStringChild'
 import { Link } from './Link'
 import { LinkButtonProps } from './LinkProps'

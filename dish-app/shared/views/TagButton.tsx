@@ -26,8 +26,8 @@ import {
   orange,
   purple,
   red,
-} from '../colors'
-import { isWeb } from '../constants'
+} from '../constants/colors'
+import { isWeb } from '../constants/constants'
 import { rgbString } from '../helpers/rgbString'
 import { useUserTagVotes } from '../hooks/useUserTagVotes'
 import { getTagSlug } from '../state/getTagSlug'

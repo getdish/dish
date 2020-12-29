@@ -1,7 +1,7 @@
 import { OnInitialize, rehydrate } from 'overmind'
 
-import { isWeb } from '../constants'
-import { OVERMIND_MUTATIONS } from '../overmindMutations'
+import { isWeb } from '../constants/constants'
+import { OVERMIND_MUTATIONS } from '../constants/overmindMutations'
 import { addTagsToCache } from './allTags'
 import { tagDefaultAutocomplete, tagFilters, tagLenses } from './localTags'
 import { router } from './router'

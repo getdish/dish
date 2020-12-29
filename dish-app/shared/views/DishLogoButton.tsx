@@ -1,7 +1,7 @@
 import React, { memo } from 'react'
 import { AbsoluteVStack, VStack, useMedia } from 'snackui'
 
-import { logoHeight, logoWidth, logoXsHeight, logoXsWidth } from '../constants'
+import { logoHeight, logoWidth, logoXsHeight, logoXsWidth } from '../constants/constants'
 import { LogoColor, LogoSmall } from './Logo'
 import { LinkButton } from './ui/LinkButton'
 import { LinkButtonProps } from './ui/LinkProps'

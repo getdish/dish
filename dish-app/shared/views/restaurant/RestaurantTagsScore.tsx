@@ -17,7 +17,7 @@ import {
 import { getActiveTagSlugs } from '../../helpers/getActiveTagSlugs'
 import { useRestaurantQuery } from '../../hooks/useRestaurantQuery'
 import { useRestaurantTagScores } from '../../hooks/useRestaurantTagScores'
-import { ensureFlexText } from '../../pages/restaurant/ensureFlexText'
+import { ensureFlexText } from '../../home/restaurant/ensureFlexText'
 import { HomeActiveTagsRecord } from '../../state/home-types'
 import { PointsText } from '../PointsText'
 

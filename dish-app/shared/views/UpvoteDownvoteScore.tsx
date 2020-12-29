@@ -2,7 +2,7 @@ import { ChevronDown, ChevronUp } from '@dish/react-feather'
 import React, { memo } from 'react'
 import { AbsoluteVStack, StackProps, Text, Tooltip, VStack } from 'snackui'
 
-import { green, orange, red } from '../colors'
+import { green, orange, red } from '../constants/colors'
 import CircularProgress from './CircularProgress'
 import { VoteButton } from './restaurant/VoteButton'
 

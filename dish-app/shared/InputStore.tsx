@@ -6,7 +6,7 @@ import {
   inputGetNode,
   inputIsTextSelected,
 } from './helpers/input'
-import { searchPageStore } from './pages/search/SearchPageStore'
+import { searchPageStore } from './home/search/SearchPageStore'
 
 export class InputStore extends Store<{ name: 'location' | 'search' }> {
   node: HTMLInputElement | null = null

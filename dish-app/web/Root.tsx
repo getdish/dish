@@ -8,9 +8,9 @@ import { ThemeProvider, configureThemes } from 'snackui'
 
 import { App } from '../shared/App'
 import { AppPortalProvider } from '../shared/AppPortal'
+import themes, { MyTheme, MyThemes } from '../shared/constants/themes'
 import { queryClient } from '../shared/helpers/queryClient'
 import { routes } from '../shared/state/router'
-import themes, { MyTheme, MyThemes } from '../shared/themes'
 
 if (typeof window !== 'undefined') {
   window['requestIdleCallback'] = window['requestIdleCallback'] || setTimeout

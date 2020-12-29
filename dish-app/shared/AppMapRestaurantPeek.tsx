@@ -6,9 +6,9 @@ import { AbsoluteVStack, Box, HStack, Spacer, Text, VStack } from 'snackui'
 
 import { appMapStore } from './AppMapStore'
 import { useRestaurantQuery } from './hooks/useRestaurantQuery'
-import { RestaurantAddress } from './pages/restaurant/RestaurantAddress'
-import { RestaurantAddressLinksRow } from './pages/restaurant/RestaurantAddressLinksRow'
-import { RestaurantRatingViewPopover } from './pages/restaurant/RestaurantRatingViewPopover'
+import { RestaurantAddress } from './home/restaurant/RestaurantAddress'
+import { RestaurantAddressLinksRow } from './home/restaurant/RestaurantAddressLinksRow'
+import { RestaurantRatingViewPopover } from './home/restaurant/RestaurantRatingViewPopover'
 import { useOvermind } from './state/useOvermind'
 import { LinkButton } from './views/ui/LinkButton'
 

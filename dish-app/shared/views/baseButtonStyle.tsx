@@ -1,7 +1,7 @@
 import { ViewStyle } from 'react-native'
 import { StackProps } from 'snackui'
 
-import { bgLight, bgLightHover } from '../colors'
+import { bgLight, bgLightHover } from '../constants/colors'
 
 export const baseButtonStyle: ViewStyle = {
   // @ts-ignore

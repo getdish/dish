@@ -1,7 +1,7 @@
 import { client, mutation, query, resolved } from '@dish/graph'
 import React from 'react'
 
-import { isSSR } from '../shared/constants'
+import { isSSR } from '../shared/constants/constants'
 
 if (isSSR) {
   console.log('Patching useLayoutEffect to avoid many warnings in server mode')

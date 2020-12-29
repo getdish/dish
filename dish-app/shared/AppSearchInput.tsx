@@ -24,7 +24,7 @@ import {
 
 import { AutocompleteStore, autocompletesStore } from './AppAutocomplete'
 import { AppAutocompleteHoverableInput } from './AppAutocompleteHoverableInput'
-import { isWeb, searchBarHeight } from './constants'
+import { isWeb, searchBarHeight } from './constants/constants'
 import { isWebIOS } from './helpers/isIOS'
 import { useSearchBarTheme } from './hooks/useSearchBarTheme'
 import {
@@ -32,7 +32,7 @@ import {
   setNodeOnInputStore,
   useInputStoreSearch,
 } from './InputStore'
-import { searchPageStore } from './pages/search/SearchPageStore'
+import { searchPageStore } from './home/search/SearchPageStore'
 import { SearchInputNativeDragFix } from './SearchInputNativeDragFix'
 import { getTagSlug } from './state/getTagSlug'
 import { tagsToNavigableTags } from './state/NavigableTag'
