@@ -3,7 +3,11 @@ import { isPresent } from '@dish/helpers'
 
 import { GeocodePlace } from '../app/state/home-types'
 import { MAPBOX_ACCESS_TOKEN } from '../constants/constants'
-import { AutocompleteItem, createAutocomplete } from './createAutocomplete'
+import {
+  AutocompleteItem,
+  AutocompleteItemFull,
+  createAutocomplete,
+} from './createAutocomplete'
 
 const baseUrl = `https://api.mapbox.com/geocoding/v5/mapbox.places`
 
@@ -52,12 +56,11 @@ export async function searchLocations(
 
 export const locationToAutocomplete = (
   place: GeocodePlace
-): AutocompleteItem => {
+): AutocompleteItemFull => {
   return createAutocomplete({
-    id: JSON.stringify(place.center),
     name: place.name,
     description: place.fullName,
-    type: 'country',
+    type: 'place',
     icon: '📍',
     center: place.center,
     span: place.span,

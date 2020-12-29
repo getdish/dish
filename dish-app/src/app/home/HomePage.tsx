@@ -103,6 +103,8 @@ export default memo(function HomePage(props: Props) {
     enabled: !!props.item.region,
   })
 
+  console.log('👀 HomePage', props.item, region)
+
   // load effect!
   usePageLoadEffect(props, () => {
     // default navigate to a region (TODO make it the nearest one to current map..)
@@ -114,18 +116,21 @@ export default memo(function HomePage(props: Props) {
         },
       })
     }
-
-    if (props.isActive) {
-      setIsLoaded(true)
-    } else {
-      series([
-        fullyIdle,
-        () => {
-          setIsLoaded(true)
-        },
-      ])
-    }
   })
+
+  // center map to region
+  // ONLY on first load!
+  useEffect(() => {
+    if (!region.data) return
+    if (isLoaded) return
+    const { center, span } = region.data
+    if (!center || !span) return
+    om.actions.home.updateCurrentState({
+      center,
+      span,
+    })
+    setIsLoaded(true)
+  }, [isLoaded, region.data])
 
   useEffect(() => {
     if (!region.data) return
@@ -133,18 +138,6 @@ export default memo(function HomePage(props: Props) {
       center: region.data.center,
       span: region.data.span,
       region: region.data.name,
-    })
-  }, [region.data])
-
-  // center map to region
-  useEffect(() => {
-    if (!region.data) return
-    const { center, span } = region.data
-    console.log('we got a region', center, span)
-    if (!center || !span) return
-    om.actions.home.updateCurrentState({
-      center,
-      span,
     })
   }, [region.data])
 

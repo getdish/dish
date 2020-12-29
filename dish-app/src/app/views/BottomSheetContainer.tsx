@@ -2,6 +2,9 @@ import React from 'react'
 import { VStack, useTheme } from 'snackui'
 
 import { drawerBorderRadius } from '../../constants/constants'
+import AppAutocomplete from '../AppAutocomplete'
+
+// only renders on small views
 
 export const BottomSheetContainer = (props: { children: any }) => {
   const theme = useTheme()
@@ -18,6 +21,7 @@ export const BottomSheetContainer = (props: { children: any }) => {
       backgroundColor={theme.backgroundColor}
       position="relative"
     >
+      <AppAutocomplete />
       {props.children}
     </VStack>
   )
