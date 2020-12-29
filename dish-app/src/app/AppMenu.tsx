@@ -4,13 +4,12 @@ import { useStoreInstance } from '@dish/use-store'
 import React, { Suspense, memo, useEffect } from 'react'
 import { HStack, Popover, Spacer, Text, Tooltip, useMedia } from 'snackui'
 
+import { useRouterCurPage } from '../router'
 import { AppMenuContents } from './AppMenuContents'
 import { appMenuStore } from './AppMenuStore'
-import { useSearchBarTheme } from './hooks/useSearchBarTheme'
 import { UserAvatar } from './home/user/UserAvatar'
-import { omStatic } from './state/omStatic'
-import { useRouterCurPage } from '../router'
-import { useOvermind } from './state/useOvermind'
+import { useSearchBarTheme } from './hooks/useSearchBarTheme'
+import { om } from './state/om'
 import { useUserStore } from './state/userStore'
 import { LinkButton } from './views/LinkButton'
 import { LinkButtonProps } from './views/LinkProps'
@@ -71,7 +70,7 @@ export const AppMenu = memo(() => {
                 onPress={(e) => {
                   if (pageName === 'about') {
                     e.preventDefault()
-                    omStatic.actions.home.up()
+                    om.actions.home.up()
                   } else {
                     e.navigate()
                   }

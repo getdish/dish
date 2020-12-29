@@ -6,8 +6,8 @@ import { Paragraph, Spacer, Text, VStack } from 'snackui'
 import dishLogo from '../assets/dish-neon.jpg'
 import { lightYellow } from '../constants/colors'
 import { IntroModalStore } from './IntroModalStore'
-import { LoginRegisterForm } from './views/LoginRegisterForm'
 import { LinkButton } from './views/LinkButton'
+import { LoginRegisterForm } from './views/LoginRegisterForm'
 
 export const AppIntroLogin = memo(() => {
   const store = useStore(IntroModalStore)

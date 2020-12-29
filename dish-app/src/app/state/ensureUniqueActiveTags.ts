@@ -1,5 +1,5 @@
-import { allTags } from './allTags'
 import { getTagSlug } from '../../helpers/getTagSlug'
+import { allTags } from './allTags'
 import { HomeActiveTagsRecord } from './home-types'
 import { NavigableTag } from './NavigableTag'
 

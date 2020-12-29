@@ -12,11 +12,11 @@ import {
   useLazyEffect,
 } from 'snackui'
 
+import { peachAvatar } from '../../../constants/avatar'
 import { lightGreen, lightRed, lightYellow } from '../../../constants/colors'
 import { isWeb } from '../../../constants/constants'
 import { CommentBubble } from '../../views/CommentBubble'
 import { Link } from '../../views/Link'
-import { peachAvatar } from '../../../constants/avatar'
 import { SentimentText } from './SentimentText'
 
 const bottomMetaTextProps: TextProps = {

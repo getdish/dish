@@ -1,7 +1,7 @@
 import { memo, useEffect } from 'react'
 
 import { focusSearchInput, getSearchInput } from './AppSearchInput'
-import { omStatic } from './state/omStatic'
+import { om } from './state/om'
 
 export const Shortcuts = memo(() => {
   useEffect(() => {
@@ -19,8 +19,8 @@ export const Shortcuts = memo(() => {
 
         // esc
         case 27: {
-          if (omStatic.state.home.currentStateType === 'gallery') {
-            omStatic.actions.home.popBack()
+          if (om.state.home.currentStateType === 'gallery') {
+            om.actions.home.popBack()
           }
           break
         }

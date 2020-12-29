@@ -2,7 +2,6 @@
 import { Clock, DollarSign, ShoppingBag } from '@dish/react-feather'
 import React, { memo } from 'react'
 import { Image } from 'react-native'
-import type { NavigableTag } from 'src/app/state/NavigableTag'
 import {
   Box,
   HStack,
@@ -12,10 +11,11 @@ import {
   useMedia,
   useTheme,
 } from 'snackui'
+import type { NavigableTag } from 'src/app/state/NavigableTag'
 
 import { tagDisplayNames } from '../../constants/tagMeta'
-import { useOvermind } from '../state/useOvermind'
 import { thirdPartyCrawlSources } from '../../constants/thirdPartyCrawlSources'
+import { useOvermind } from '../state/useOvermind'
 import { LinkButtonProps } from './LinkProps'
 import { SmallButton } from './SmallButton'
 

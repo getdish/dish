@@ -27,27 +27,32 @@ import {
   useTheme,
 } from 'snackui'
 
-import { appMapStore } from '../../AppMapStore'
-import { bgLight, bgLightHover, bgLightPress, brandColor } from '../../../constants/colors'
+import {
+  bgLight,
+  bgLightHover,
+  bgLightPress,
+  brandColor,
+} from '../../../constants/colors'
 import { isWeb } from '../../../constants/constants'
 import { getActiveTagSlugs } from '../../../helpers/getActiveTagSlugs'
 import { getRestaurantDishes } from '../../../helpers/getRestaurantDishes'
 import { isWebIOS } from '../../../helpers/isIOS'
 import { numberFormat } from '../../../helpers/numberFormat'
+import { appMapStore } from '../../AppMapStore'
 import { useRestaurantQuery } from '../../hooks/useRestaurantQuery'
 import { useRestaurantTagScores } from '../../hooks/useRestaurantTagScores'
 import { allTags } from '../../state/allTags'
 import { GeocodePlace, HomeStateItemSearch } from '../../state/home-types'
-import { omStatic } from '../../state/omStatic'
+import { om } from '../../state/om'
 import { ContentScrollViewHorizontal } from '../../views/ContentScrollViewHorizontal'
 import { DishView } from '../../views/dish/DishView'
+import { Link } from '../../views/Link'
 import { RestaurantOverview } from '../../views/restaurant/RestaurantOverview'
 import { RestaurantTagsRow } from '../../views/restaurant/RestaurantTagsRow'
 import { RestaurantUpVoteDownVote } from '../../views/restaurant/RestaurantUpVoteDownVote'
-import { TagButton, getTagButtonProps } from '../../views/TagButton'
-import { Link } from '../../views/Link'
 import { SlantedTitle } from '../../views/SlantedTitle'
 import { SmallButton } from '../../views/SmallButton'
+import { TagButton, getTagButtonProps } from '../../views/TagButton'
 import { ensureFlexText } from './ensureFlexText'
 import { RankView } from './RankView'
 import { RestaurantAddress } from './RestaurantAddress'
@@ -165,7 +170,7 @@ const RestaurantListItemContent = memo(
     }, [restaurant.name])
 
     const restaurantName = (restaurant.name ?? '').slice(0, 300)
-    const curState = omStatic.state.home.currentState
+    const curState = om.state.home.currentState
     const tagIds = 'activeTags' in curState ? curState.activeTags : {}
     const score = restaurant.score ?? 0
     const [isActive, setIsActive] = useState(false)
@@ -176,11 +181,11 @@ const RestaurantListItemContent = memo(
     useLayoutEffect(() => {
       const getIsActiveNow = (state) => props.rank == state.home.activeIndex + 1
 
-      if (getIsActiveNow(omStatic.state)) {
+      if (getIsActiveNow(om.state)) {
         setIsActive(true)
       }
 
-      return omStatic.reaction(getIsActiveNow, (isActive) => {
+      return om.reaction(getIsActiveNow, (isActive) => {
         if (getIsActive() !== isActive) {
           setIsActive(isActive)
         }
@@ -600,7 +605,7 @@ const RestaurantPeekDishes = memo(
     searchState: HomeStateItemSearch
     isLoaded: boolean
   }) {
-    // const activeTags = omStatic.state.home.lastSearchState?.activeTags ?? {}
+    // const activeTags = om.state.home.lastSearchState?.activeTags ?? {}
     // const dishSearchedTag = Object.keys(activeTags).find(
     //   (k) => allTags[k]?.type === 'dish'
     // )

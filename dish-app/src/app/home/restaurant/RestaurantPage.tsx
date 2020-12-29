@@ -8,10 +8,10 @@ import { getMinLngLat } from '../../../helpers/getLngLat'
 import { usePageLoadEffect } from '../../hooks/usePageLoadEffect'
 import { useRestaurantQuery } from '../../hooks/useRestaurantQuery'
 import { HomeStateItemRestaurant } from '../../state/home-types'
-import { omStatic } from '../../state/omStatic'
+import { om } from '../../state/om'
 import { ContentScrollView } from '../../views/ContentScrollView'
-import { StackDrawer } from '../../views/StackDrawer'
 import { PageTitleTag } from '../../views/PageTitleTag'
+import { StackDrawer } from '../../views/StackDrawer'
 import { HomeStackViewProps } from '../HomeStackViewProps'
 import { RestaurantBreakdown } from './RestaurantBreakdown'
 import { RestaurantDishPhotos } from './RestaurantDishPhotos'
@@ -47,7 +47,7 @@ const RestaurantPage = memo(
         if (!coords?.[0]) {
           return
         }
-        omStatic.actions.home.updateHomeState({
+        om.actions.home.updateHomeState({
           id: item.id,
           center: {
             lng: coords?.[0],

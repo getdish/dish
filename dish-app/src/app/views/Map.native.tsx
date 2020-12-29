@@ -4,9 +4,9 @@ import React, { useEffect, useRef, useState } from 'react'
 import { Animated, Dimensions, StyleSheet } from 'react-native'
 import { useDebounce } from 'snackui'
 
-import { drawerStore as drawerStoreInstance } from '../DrawerStore'
 import { MAPBOX_ACCESS_TOKEN } from '../../constants/constants'
 import { hasMovedAtLeast } from '../../helpers/hasMovedAtLeast'
+import { drawerStore as drawerStoreInstance } from '../DrawerStore'
 import { MapProps } from './MapProps'
 
 MapboxGL.setAccessToken(MAPBOX_ACCESS_TOKEN)

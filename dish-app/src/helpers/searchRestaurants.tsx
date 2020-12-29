@@ -1,9 +1,9 @@
 import { query } from '@dish/graph'
 
 import { getAddressText } from '../app/home/restaurant/RestaurantAddressLinksRow'
-import { createAutocomplete } from './createAutocomplete'
 import { LngLat } from '../app/state/home-types'
-import { omStatic } from '../app/state/omStatic'
+import { om } from '../app/state/om'
+import { createAutocomplete } from './createAutocomplete'
 import { getFuzzyMatchQuery } from './getFuzzyMatchQuery'
 
 export function searchRestaurants(
@@ -69,7 +69,7 @@ export function searchRestaurants(
       icon: r.image || '📍',
       description:
         getAddressText(
-          omStatic.state.home.currentState.currentLocationInfo ?? null,
+          om.state.home.currentState.currentLocationInfo ?? null,
           r.address ?? '',
           'xs'
         ) || 'No Address',

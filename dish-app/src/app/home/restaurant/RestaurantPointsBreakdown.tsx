@@ -12,9 +12,9 @@ import {
 } from 'snackui'
 
 import { lightGreen, lightYellow } from '../../../constants/colors'
+import { thirdPartyCrawlSources } from '../../../constants/thirdPartyCrawlSources'
 import { numberFormat } from '../../../helpers/numberFormat'
 import { useRestaurantQuery } from '../../hooks/useRestaurantQuery'
-import { thirdPartyCrawlSources } from '../../../constants/thirdPartyCrawlSources'
 import { SmallButton } from '../../views/SmallButton'
 import { RestaurantSourcesBreakdown } from './RestaurantSourcesBreakdown'
 import {

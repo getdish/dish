@@ -14,8 +14,8 @@ import {
   prevent,
 } from 'snackui'
 
-import { useRestaurantQuery } from '../../hooks/useRestaurantQuery'
 import { thirdPartyCrawlSources } from '../../../constants/thirdPartyCrawlSources'
+import { useRestaurantQuery } from '../../hooks/useRestaurantQuery'
 import { RatingViewProps } from '../../views/RatingView'
 import RestaurantRatingView from './RestaurantRatingView'
 

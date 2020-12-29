@@ -8,13 +8,17 @@ import { Action, AsyncAction, Config, IContext, derived } from 'overmind'
 import { Keyboard } from 'react-native'
 import { Toast } from 'snackui'
 
-import { appMapStore } from '../AppMapStore'
+import { initialHomeState } from '../../constants/initialHomeState'
+import { tagLenses } from '../../constants/localTags'
 import { getBreadcrumbs, isBreadcrumbState } from '../../helpers/getBreadcrumbs'
+import { getShouldNavigate } from '../../helpers/getShouldNavigate'
+import { getTagSlug } from '../../helpers/getTagSlug'
+import { isSearchBarTag } from '../../helpers/isSearchBarTag'
+import { router } from '../../router'
+import { appMapStore } from '../AppMapStore'
 import { allTags } from './allTags'
 import { getActiveTags } from './getActiveTags'
 import { getNextState } from './getNextState'
-import { getShouldNavigate } from '../../helpers/getShouldNavigate'
-import { getTagSlug } from '../../helpers/getTagSlug'
 import { isHomeState, isSearchState } from './home-helpers'
 import {
   HomeState,
@@ -25,11 +29,7 @@ import {
   HomeStateTagNavigable,
   OmState,
 } from './home-types'
-import { initialHomeState } from '../../constants/initialHomeState'
-import { isSearchBarTag } from '../../helpers/isSearchBarTag'
-import { tagLenses } from '../../constants/localTags'
 import { NavigableTag } from './NavigableTag'
-import { router } from '../../router'
 import { syncStateToRoute } from './syncStateToRoute'
 
 export const state: HomeState = {

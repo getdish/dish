@@ -5,16 +5,15 @@ import { LogBox } from 'react-native'
 import { SafeAreaProvider } from 'react-native-safe-area-context'
 import { VStack } from 'snackui'
 
+import { mapBackgroundColor } from '../constants/colors'
 import AppMap from './AppMap'
 import { AppMenuButton } from './AppMenuButton'
-import { mapBackgroundColor } from '../constants/colors'
-import { Home } from './home/Home'
 import GalleryPage from './home/gallery/GalleryPage'
+import { Home } from './home/Home'
 import RestaurantHoursPage from './home/restaurantHours/RestaurantHoursPage'
 import RestaurantReviewPage from './home/restaurantReview/RestaurantReviewPage'
-import { om } from './state/om'
-import { setOmStatic } from './state/omStatic'
 import { Route } from './Route'
+import { om } from './state/om'
 
 LogBox.ignoreAllLogs(true)
 
@@ -24,7 +23,6 @@ export function App() {
   useEffect(() => {
     om.initialized.then(() => {
       setLoaded(true)
-      setOmStatic(om)
     })
   }, [])
 

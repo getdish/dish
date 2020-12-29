@@ -12,10 +12,10 @@ import {
 } from 'snackui'
 
 import { bgLight } from '../../../constants/colors'
-import { useRestaurantQuery } from '../../hooks/useRestaurantQuery'
 import { thirdPartyCrawlSources } from '../../../constants/thirdPartyCrawlSources'
-import { PointsText } from '../../views/PointsText'
+import { useRestaurantQuery } from '../../hooks/useRestaurantQuery'
 import { LinkButton } from '../../views/LinkButton'
+import { PointsText } from '../../views/PointsText'
 import { RestaurantSourcesBreakdown } from './RestaurantSourcesBreakdown'
 
 export const RestaurantSourcesBreakdownRow = memo(

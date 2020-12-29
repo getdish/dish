@@ -6,11 +6,11 @@ import React, { memo } from 'react'
 import { HStack, Spacer, Text, VStack } from 'snackui'
 
 import { bgLight } from '../../../constants/colors'
+import { tagDisplayName } from '../../../constants/tagMeta'
 import { getActiveTagSlugs } from '../../../helpers/getActiveTagSlugs'
 import { useRestaurantQuery } from '../../hooks/useRestaurantQuery'
 import { useRestaurantTagScores } from '../../hooks/useRestaurantTagScores'
-import { omStatic } from '../../state/omStatic'
-import { tagDisplayName } from '../../../constants/tagMeta'
+import { om } from '../../state/om'
 import { PointsText } from '../../views/PointsText'
 import { RestaurantReviewsDisplayStore } from './RestaurantBreakdown'
 
@@ -32,12 +32,12 @@ export const RestaurantScoreBreakdownSmall = memo(
       const reviewDisplayStore = useStore(RestaurantReviewsDisplayStore, {
         id: restaurantId,
       })
-      const tags = omStatic.state.home.lastActiveTags
+      const tags = om.state.home.lastActiveTags
       const tagScores = useRestaurantTagScores({
         restaurantSlug,
         tagSlugs: getActiveTagSlugs(),
       })
-      const searchQuery = omStatic.state.home.currentState.searchQuery
+      const searchQuery = om.state.home.currentState.searchQuery
       const searchQueryText = searchQuery ? ` ${searchQuery}` : ''
       const reviewTags = sortBy(
         tags.filter((tag) => tag.name !== 'Gems'),

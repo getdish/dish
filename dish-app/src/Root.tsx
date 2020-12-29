@@ -8,9 +8,9 @@ import { ThemeProvider, configureThemes } from 'snackui'
 
 import { App } from './app/App'
 import { AppPortalProvider } from './app/AppPortal'
+import themes, { MyTheme, MyThemes } from './constants/themes'
 import { queryClient } from './helpers/queryClient'
 import { routes } from './router'
-import themes, { MyTheme, MyThemes } from './constants/themes'
 
 global['stores'] = allStores
 

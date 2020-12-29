@@ -28,18 +28,19 @@ import {
 } from 'snackui'
 import { isWeb } from 'snackui/src/constants'
 
+import { peachAvatar } from '../../constants/avatar'
 import { drawerWidthMax, searchBarHeight } from '../../constants/constants'
-import { AppIntroLogin } from '../AppIntroLogin'
 import { RegionNormalized, useRegionQuery } from '../../helpers/fetchRegion'
 import { getGroupedButtonProps } from '../../helpers/getGroupedButtonProps'
 import { DishTagItem } from '../../helpers/getRestaurantDishes'
 import { selectTagDishViewSimple } from '../../helpers/selectDishViewSimple'
 import { useQueryLoud } from '../../helpers/useQueryLoud'
+import { router } from '../../router'
+import { AppIntroLogin } from '../AppIntroLogin'
 import { usePageLoadEffect } from '../hooks/usePageLoadEffect'
 import { useRestaurantQuery } from '../hooks/useRestaurantQuery'
 import { HomeStateItemHome } from '../state/home-types'
-import { omStatic } from '../state/omStatic'
-import { router } from '../../router'
+import { om } from '../state/om'
 import { useOvermind } from '../state/useOvermind'
 import { CardFrame } from '../views/CardFrame'
 import { CommentBubble } from '../views/CommentBubble'
@@ -54,7 +55,6 @@ import { HomeStackViewProps } from './HomeStackViewProps'
 import { HomeTopSearches } from './HomeTopSearches'
 import { RestaurantButton } from './restaurant/RestaurantButton'
 import { RestaurantCard } from './restaurant/RestaurantCard'
-import { peachAvatar } from '../../constants/avatar'
 import { PageTitle } from './search/PageTitle'
 
 type Props = HomeStackViewProps<HomeStateItemHome>
@@ -337,7 +337,7 @@ const HomePageContent = memo(
         ...item,
         results: results.map((x) => x.restaurant),
       }
-      omStatic.actions.home.updateHomeState(next)
+      om.actions.home.updateHomeState(next)
     }, [isLoading, JSON.stringify(results)])
 
     const [expandable, unexpandable] = partition(items, (x) => x.expandable)

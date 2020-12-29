@@ -28,10 +28,10 @@ import {
   red,
 } from '../../constants/colors'
 import { isWeb } from '../../constants/constants'
+import { tagDisplayName } from '../../constants/tagMeta'
+import { getTagSlug } from '../../helpers/getTagSlug'
 import { rgbString } from '../../helpers/rgbString'
 import { useUserTagVotes } from '../hooks/useUserTagVotes'
-import { getTagSlug } from '../../helpers/getTagSlug'
-import { tagDisplayName } from '../../constants/tagMeta'
 import { LinkButton } from './LinkButton'
 import { LinkButtonProps } from './LinkProps'
 

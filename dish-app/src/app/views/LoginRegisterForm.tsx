@@ -24,10 +24,10 @@ import { isWeb } from '../../constants/constants'
 import { useRouterCurPage } from '../../router'
 import { useOvermind } from '../state/useOvermind'
 import { useUserStore } from '../state/userStore'
-import { SignInAppleButton } from './SignInAppleButton'
 import { Link } from './Link'
 import { LinkButton } from './LinkButton'
 import { LinkButtonProps } from './LinkProps'
+import { SignInAppleButton } from './SignInAppleButton'
 import { SmallButton } from './SmallButton'
 
 const form_page_details = {

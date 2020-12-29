@@ -1,10 +1,15 @@
 import React, { memo } from 'react'
 import { AbsoluteVStack, VStack, useMedia } from 'snackui'
 
-import { logoHeight, logoWidth, logoXsHeight, logoXsWidth } from '../../constants/constants'
-import { LogoColor, LogoSmall } from './Logo'
+import {
+  logoHeight,
+  logoWidth,
+  logoXsHeight,
+  logoXsWidth,
+} from '../../constants/constants'
 import { LinkButton } from './LinkButton'
 import { LinkButtonProps } from './LinkProps'
+import { LogoColor, LogoSmall } from './Logo'
 
 const linkButtonProps: LinkButtonProps = {
   className: 'ease-in-out-fast',

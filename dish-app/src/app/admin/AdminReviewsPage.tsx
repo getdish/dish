@@ -13,15 +13,15 @@ import {
 } from 'snackui'
 
 import { lightGreen, lightRed } from '../../constants/colors'
+import { defaultLocationAutocompleteResults } from '../../constants/defaultLocationAutocompleteResults'
+import { AutocompleteItem } from '../../helpers/createAutocomplete'
 import {
   locationToAutocomplete,
   searchLocations,
 } from '../../helpers/searchLocations'
-import { defaultLocationAutocompleteResults } from '../../constants/defaultLocationAutocompleteResults'
 import { AdminListItem } from './AdminListItem'
 import { AdminSearchableColumn } from './AdminSearchableColumn'
 import { VerticalColumn } from './VerticalColumn'
-import {AutocompleteItem} from "../../helpers/createAutocomplete";
 
 export class AdminReviewsStore extends Store {
   selectedCity: AutocompleteItem | null = null

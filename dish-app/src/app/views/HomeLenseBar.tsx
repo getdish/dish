@@ -2,9 +2,9 @@ import { Tag } from '@dish/graph'
 import React, { memo } from 'react'
 import { VStack } from 'snackui'
 
+import { tagLenses } from '../../constants/localTags'
 import { getTagSlug } from '../../helpers/getTagSlug'
 import { HomeActiveTagsRecord } from '../state/home-types'
-import { tagLenses } from '../../constants/localTags'
 import { LenseButton, LenseButtonSize } from './LenseButton'
 
 export const HomeLenseBar = memo(

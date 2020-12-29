@@ -19,8 +19,8 @@ import {
   cardFrameHeight,
   cardFrameWidth,
 } from '../../views/CardFrame'
-import { RestaurantUpVoteDownVote } from '../../views/restaurant/RestaurantUpVoteDownVote'
 import { Link } from '../../views/Link'
+import { RestaurantUpVoteDownVote } from '../../views/restaurant/RestaurantUpVoteDownVote'
 import { priceRange } from './RestaurantDetailRow'
 
 export type RestaurantCardProps = {

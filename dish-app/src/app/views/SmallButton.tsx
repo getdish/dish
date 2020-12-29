@@ -1,7 +1,12 @@
 import React from 'react'
 import { HStack, Text, Tooltip } from 'snackui'
 
-import { bgLight, bgLightLight, brandColor, lightBlue } from '../../constants/colors'
+import {
+  bgLight,
+  bgLightLight,
+  brandColor,
+  lightBlue,
+} from '../../constants/colors'
 import { isWeb } from '../../constants/constants'
 import { isStringChild } from '../../helpers/isStringChild'
 import { Link } from './Link'

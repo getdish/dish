@@ -14,8 +14,8 @@ import {
 } from 'snackui'
 
 import { isWeb } from '../../../constants/constants'
-import { useRestaurantQuery } from '../../hooks/useRestaurantQuery'
 import { thirdPartyCrawlSources } from '../../../constants/thirdPartyCrawlSources'
+import { useRestaurantQuery } from '../../hooks/useRestaurantQuery'
 import { SentimentText } from './SentimentText'
 
 type RatingCount = {

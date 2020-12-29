@@ -1,10 +1,14 @@
 import { OnInitialize, rehydrate } from 'overmind'
 
 import { isWeb } from '../../constants/constants'
+import {
+  tagDefaultAutocomplete,
+  tagFilters,
+  tagLenses,
+} from '../../constants/localTags'
 import { OVERMIND_MUTATIONS } from '../../constants/overmindMutations'
-import { addTagsToCache } from './allTags'
-import { tagDefaultAutocomplete, tagFilters, tagLenses } from '../../constants/localTags'
 import { router } from '../../router'
+import { addTagsToCache } from './allTags'
 import { userStore } from './userStore'
 
 const LOG_OVERMIND = process.env.NODE_ENV === 'development' || !isWeb

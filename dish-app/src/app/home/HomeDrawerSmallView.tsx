@@ -4,16 +4,16 @@ import React, { memo, useEffect, useMemo } from 'react'
 import { Animated, PanResponder, StyleSheet, View } from 'react-native'
 import { AbsoluteVStack, VStack, useMedia } from 'snackui'
 
-import { autocompletesStore } from '../AppAutocomplete'
-import { AppSearchBar } from '../AppSearchBar'
-import { blurSearchInput } from '../AppSearchInput'
-import { drawerStore as drawerStoreInstance } from '../DrawerStore'
 import {
   pageWidthMax,
   searchBarHeight,
   zIndexDrawer,
 } from '../../constants/constants'
 import { isWebIOS } from '../../helpers/isIOS'
+import { autocompletesStore } from '../AppAutocomplete'
+import { AppSearchBar } from '../AppSearchBar'
+import { blurSearchInput } from '../AppSearchInput'
+import { drawerStore as drawerStoreInstance } from '../DrawerStore'
 import { BottomSheetContainer } from '../views/BottomSheetContainer'
 import { HomeDrawerSmallView as HomeDrawerSmallViewNative } from './HomeDrawerSmallView.native'
 

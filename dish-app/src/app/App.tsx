@@ -2,17 +2,17 @@ import loadable from '@loadable/component'
 import React, { Suspense, useEffect } from 'react'
 import { LoadingItems, ToastRoot, VStack } from 'snackui'
 
+import { isSSR } from '../constants/constants'
 import AdminPage from './admin/AdminPage'
 import { AppIntroLetter } from './AppIntroLetter'
 import { AppMapControlsOverlay } from './AppMapControlsOverlay'
 import { AppMenuButton } from './AppMenuButton'
 import { AppSearchBarFloating } from './AppSearchBar'
-import { isSSR } from '../constants/constants'
 import { Home } from './home/Home'
+import { PrivateRoute, Route, RouteSwitch } from './Route'
 import { Shortcuts } from './Shortcuts'
 import { ErrorBoundary } from './views/ErrorBoundary'
 import { NotFoundPage } from './views/NotFoundPage'
-import { PrivateRoute, Route, RouteSwitch } from './Route'
 
 export function App() {
   // helper that warns on root level unmounts (uncaught suspense)

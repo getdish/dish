@@ -10,8 +10,8 @@ import {
   useMedia,
 } from 'snackui'
 
-import { AppMenuContents } from './AppMenuContents'
 import { zIndexDrawer } from '../constants/constants'
+import { AppMenuContents } from './AppMenuContents'
 import { useSafeArea } from './hooks/useSafeArea'
 import { useSearchBarTheme } from './hooks/useSearchBarTheme'
 

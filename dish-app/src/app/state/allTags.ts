@@ -2,7 +2,7 @@ import { Tag, slugify } from '@dish/graph'
 
 import { getTagSlug } from '../../helpers/getTagSlug'
 import { NavigableTag } from './NavigableTag'
-import {FullTag, TagWithNameAndType} from "./home-types";
+import { FullTag, TagWithNameAndType } from './tagTypes'
 
 // cache for lookups in various places
 

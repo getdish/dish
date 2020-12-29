@@ -11,18 +11,17 @@ import {
   VStack,
 } from 'snackui'
 
-import { appMapStore } from '../AppMapStore'
 import { isWeb } from '../../constants/constants'
 import { getColorsForName } from '../../helpers/getColorsForName'
+import { appMapStore } from '../AppMapStore'
 import { addTagsToCache, getFullTagFromNameAndType } from '../state/allTags'
 import { getFullTags } from '../state/getFullTags'
-import { omStatic } from '../state/omStatic'
+import { TagWithNameAndType } from '../state/tagTypes'
 import { ContentScrollViewHorizontal } from '../views/ContentScrollViewHorizontal'
 import { DishView } from '../views/dish/DishView'
-import { SlantedLinkButton } from '../views/SlantedLinkButton'
 import { LinkButton } from '../views/LinkButton'
+import { SlantedLinkButton } from '../views/SlantedLinkButton'
 import { RestaurantButton } from './restaurant/RestaurantButton'
-import {TagWithNameAndType} from "../state/home-types";
 
 const dishHeight = 140
 

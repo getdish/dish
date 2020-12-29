@@ -17,9 +17,9 @@ import {
 } from 'snackui'
 
 import { bgLight } from '../../../constants/colors'
-import { useRestaurantQuery } from '../../hooks/useRestaurantQuery'
-import { omStatic } from '../../state/omStatic'
 import { router } from '../../../router'
+import { useRestaurantQuery } from '../../hooks/useRestaurantQuery'
+import { om } from '../../state/om'
 import { StackViewCloseButton } from '../../views/StackViewCloseButton'
 import { PageTitle } from '../search/PageTitle'
 
@@ -39,7 +39,7 @@ export default memo(
         <PageTitle title={title} />
         <Modal
           onDismiss={() => {
-            omStatic.actions.home.up()
+            om.actions.home.up()
           }}
           width={380}
           maxHeight={480}

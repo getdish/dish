@@ -5,10 +5,10 @@ import mapboxgl from 'mapbox-gl'
 import React, { Suspense, memo, useEffect, useRef } from 'react'
 import { AbsoluteVStack, VStack, getMedia, useMedia } from 'snackui'
 
-import { appMapStore } from './AppMapStore'
-import { drawerStore } from './DrawerStore'
 import { MAPBOX_ACCESS_TOKEN } from '../constants/constants'
 import { getZoomLevel, mapZoomToMedium } from '../helpers/mapHelpers'
+import { appMapStore } from './AppMapStore'
+import { drawerStore } from './DrawerStore'
 import { restaurantQuery } from './hooks/useRestaurantQuery'
 import { useOvermind } from './state/useOvermind'
 

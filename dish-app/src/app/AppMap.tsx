@@ -20,22 +20,26 @@ import {
   useTheme,
 } from 'snackui'
 
-import { AppMapControls } from './AppMapControls'
-import { appMapStore } from './AppMapStore'
-import { drawerStore } from './DrawerStore'
-import { pageWidthMax, searchBarHeight, zIndexMap } from '../constants/constants'
+import {
+  pageWidthMax,
+  searchBarHeight,
+  zIndexMap,
+} from '../constants/constants'
 import { getLngLat } from '../helpers/getLngLat'
 import { getRestaurantRating } from '../helpers/getRestaurantRating'
 import { getWindowHeight } from '../helpers/getWindow'
+import { router } from '../router'
+import { AppMapControls } from './AppMapControls'
+import { appMapStore } from './AppMapStore'
+import { drawerStore } from './DrawerStore'
+import { ensureFlexText } from './home/restaurant/ensureFlexText'
 import { useLastValueWhen } from './hooks/useLastValueWhen'
 import { useMapSize } from './hooks/useMapSize'
 import { useRestaurantQuery } from './hooks/useRestaurantQuery'
-import { ensureFlexText } from './home/restaurant/ensureFlexText'
 import { findLastHomeOrSearch } from './state/home'
 import { isRestaurantState } from './state/home-helpers'
 import { Region } from './state/home-types'
-import { omStatic } from './state/omStatic'
-import { router } from '../router'
+import { om } from './state/om'
 import { useOvermind } from './state/useOvermind'
 import { MapView } from './views/Map'
 
@@ -87,7 +91,7 @@ const AppMapDataLoader = memo(
         id: restaurant.id ?? '',
         slug: state.restaurantSlug ?? '',
       }
-      const last = findLastHomeOrSearch(omStatic.state.home.states)
+      const last = findLastHomeOrSearch(om.state.home.states)
       all = [single, ...(last?.['results'] ?? [])]
     } else if ('results' in state) {
       all = state?.results ?? []
@@ -143,10 +147,10 @@ const AppMapDataLoader = memo(
 )
 
 const updateRegion = debounce((region: Region) => {
-  const { currentState } = omStatic.state.home
+  const { currentState } = om.state.home
   const type = currentState.type
   if (type === 'home' || type === 'search') {
-    omStatic.actions.home.navigate({
+    om.actions.home.navigate({
       state: {
         ...currentState,
         region: region.slug,
@@ -305,7 +309,7 @@ const AppMapContent = memo(
           console.log('avoid move stuff when snapped to top')
           return
         }
-        // if (omStatic.state.home.centerToResults) {
+        // if (om.state.home.centerToResults) {
         //   // we just re-centered, ignore
         //   //@ts-expect-error
         //   om.actions.home.setCenterToResults(0)
@@ -360,7 +364,7 @@ const AppMapContent = memo(
         console.warn('not found', id)
         return
       }
-      if (omStatic.state.home.currentStateType === 'search') {
+      if (om.state.home.currentStateType === 'search') {
         if (id !== appMapStore.selected?.id) {
           appMapStore.setSelected({
             id: restaurant.id,

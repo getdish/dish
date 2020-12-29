@@ -21,12 +21,12 @@ import {
   VStack,
 } from 'snackui'
 
+import { tagLenses } from '../../../constants/localTags'
 import { numberFormat } from '../../../helpers/numberFormat'
+import { restaurantRatio } from '../../../helpers/restaurantsRatio'
 import { useRestaurantQuery } from '../../hooks/useRestaurantQuery'
 import { useUserTagVotes } from '../../hooks/useUserTagVotes'
 import { HomeActiveTagsRecord } from '../../state/home-types'
-import { tagLenses } from '../../../constants/localTags'
-import { restaurantRatio } from '../../../helpers/restaurantsRatio'
 import { SentimentCircle } from '../SentimentCircle'
 import { VoteButton } from '../VoteButton'
 

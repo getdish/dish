@@ -2,10 +2,10 @@ import React from 'react'
 import { Text, VStack } from 'snackui'
 
 import { brandColor } from '../../constants/colors'
-import { RoutesTable } from '../../router'
 import { isStringChild } from '../../helpers/isStringChild'
-import { LinkProps } from './LinkProps'
+import { RoutesTable } from '../../router'
 import { useLink } from '../hooks/useLink'
+import { LinkProps } from './LinkProps'
 
 export function Link<
   Name extends keyof RoutesTable = keyof RoutesTable,

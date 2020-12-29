@@ -1,9 +1,9 @@
 import React, { useMemo } from 'react'
 import { Text, VStack, memoIsEqualDeep, useMedia } from 'snackui'
 
+import { tagDisplayName } from '../../constants/tagMeta'
 import { rgbString } from '../../helpers/rgbString'
 import { NavigableTag } from '../state/NavigableTag'
-import { tagDisplayName } from '../../constants/tagMeta'
 import { LinkButton } from './LinkButton'
 
 export type LenseButtonSize = 'md' | 'lg' | 'xl'

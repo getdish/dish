@@ -2,7 +2,11 @@ import { useStore } from '@dish/use-store'
 import React, { Suspense, memo, useLayoutEffect, useMemo } from 'react'
 import { AnimatedVStack, VStack, useDebounceValue, useMedia } from 'snackui'
 
-import { isWeb, searchBarHeight, searchBarTopOffset } from '../../constants/constants'
+import {
+  isWeb,
+  searchBarHeight,
+  searchBarTopOffset,
+} from '../../constants/constants'
 import { getBreadcrumbs } from '../../helpers/getBreadcrumbs'
 import { useLastValueWhen } from '../hooks/useLastValueWhen'
 import { HomeStateItem } from '../state/home-types'

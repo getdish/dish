@@ -8,13 +8,8 @@ import React, {
 } from 'react'
 import { useForceUpdate } from 'snackui'
 
+import { routePathToName, routes, useRouter, useRouterCurPage } from '../router'
 import { useLastValueWhen } from './hooks/useLastValueWhen'
-import {
-  routePathToName,
-  routes,
-  useRouter,
-  useRouterCurPage,
-} from '../router'
 import { useUserStore } from './state/userStore'
 
 type RouteState = 'collect' | 'active' | 'inactive'

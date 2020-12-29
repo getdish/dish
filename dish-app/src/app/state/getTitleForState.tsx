@@ -3,9 +3,9 @@ import React from 'react'
 import { Text } from 'snackui'
 
 import { isWeb } from '../../constants/constants'
+import { tagDescriptions, tagDisplayName } from '../../constants/tagMeta'
 import { getActiveTags } from './getActiveTags'
 import { HomeStateItem } from './home-types'
-import { tagDescriptions, tagDisplayName } from '../../constants/tagMeta'
 
 const getTitleForQuery = (query: string) => {
   return query
