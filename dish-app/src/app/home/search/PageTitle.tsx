@@ -6,13 +6,16 @@ export const PageTitle = memo(
     title,
     subTitle,
     color,
+    size = 'md',
   }: {
     title: string
     subTitle?: string
     color?: string
+    size?: 'md' | 'sm'
   }) => {
     const media = useMedia()
     const titleLen = (title + subTitle).length
+    const titleSize = size == 'sm' ? 0.75 : 1
     const titleScale =
       titleLen > 65
         ? 0.7
@@ -23,7 +26,7 @@ export const PageTitle = memo(
         : titleLen > 35
         ? 0.95
         : 1
-    const titleFontSize = 28 * titleScale * (media.sm ? 0.75 : 1)
+    const titleFontSize = 28 * titleScale * titleSize
     return (
       <HStack
         paddingHorizontal={15}
@@ -32,6 +35,9 @@ export const PageTitle = memo(
         justifyContent="center"
         alignItems="center"
         spacing="xl"
+        {...(media.sm && {
+          transform: [{ scale: 0.75 }],
+        })}
       >
         <VStack backgroundColor="#f2f2f2" height={1} flex={1} />
         <Text

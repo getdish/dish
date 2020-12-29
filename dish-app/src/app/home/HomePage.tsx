@@ -277,6 +277,7 @@ export default memo(function HomePage(props: Props) {
               <Spacer size="md" />
 
               <PageTitle
+                size="sm"
                 title={
                   props.item.section === 'new' ? 'New' : 'Uniquely good here'
                 }
