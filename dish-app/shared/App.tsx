@@ -1,22 +1,29 @@
 import loadable from '@loadable/component'
-import React, { Suspense, memo, useEffect } from 'react'
+import React, { Suspense, useEffect } from 'react'
 import { LoadingItems, ToastRoot, VStack } from 'snackui'
 
-import { AppContainer } from './AppContainer'
+import AdminPage from './admin/AdminPage'
 import { AppIntroLetter } from './AppIntroLetter'
 import { AppMapControlsOverlay } from './AppMapControlsOverlay'
 import { AppMenuButton } from './AppMenuButton'
 import { AppSearchBarFloating } from './AppSearchBar'
-import { AppStackView } from './AppStackView'
-import { isSSR } from './constants'
-import AdminPage from './pages/admin/AdminPage'
-import { PagesStackView } from './pages/PagesStackView'
+import { isSSR } from './constants/constants'
+import { Home } from './home/Home'
 import { Shortcuts } from './Shortcuts'
 import { ErrorBoundary } from './views/ErrorBoundary'
 import { NotFoundPage } from './views/NotFoundPage'
 import { PrivateRoute, Route, RouteSwitch } from './views/router/Route'
 
 export function App() {
+  // helper that warns on root level unmounts (uncaught suspense)
+  if (process.env.NODE_ENV === 'development') {
+    useEffect(() => {
+      return () => {
+        console.warn('\n\nUNCAUGHT SUSPENSE SOMEWHERE -- FIX IT!!\n\ns')
+      }
+    }, [])
+  }
+
   return (
     <>
       <ToastRoot />
@@ -30,7 +37,7 @@ export function App() {
             <AdminPage />
           </PrivateRoute>
           <Route name="home">
-            <AppMain />
+            <AppHomeContent />
           </Route>
         </RouteSwitch>
       </Suspense>
@@ -38,16 +45,7 @@ export function App() {
   )
 }
 
-const AppMain = memo(function AppMain() {
-  // helper that warns on root level unmounts (uncaught suspense)
-  if (process.env.NODE_ENV === 'development') {
-    useEffect(() => {
-      return () => {
-        console.warn('\n\nUNCAUGHT SUSPENSE SOMEWHERE -- FIX IT!!\n\ns')
-      }
-    }, [])
-  }
-
+function AppHomeContent() {
   return (
     <>
       <Suspense fallback={null}>
@@ -68,13 +66,7 @@ const AppMain = memo(function AppMain() {
         </Suspense>
 
         <Suspense fallback={null}>
-          <AppContainer>
-            <AppStackView>
-              {(props) => {
-                return <PagesStackView {...props} />
-              }}
-            </AppStackView>
-          </AppContainer>
+          <Home />
         </Suspense>
 
         <Suspense fallback={null}>
@@ -113,7 +105,7 @@ const AppMain = memo(function AppMain() {
       </Suspense>
     </>
   )
-})
+}
 
 const AppMap =
   process.env.TARGET === 'ssr'
@@ -124,20 +116,20 @@ const AppMap =
 
 const UserEditPage =
   process.env.TARGET === 'ssr' || process.env.NODE_ENV === 'development'
-    ? require('./pages/userEdit/UserEditPage').default
-    : loadable(() => import('./pages/userEdit/UserEditPage'))
+    ? require('./home/userEdit/UserEditPage').default
+    : loadable(() => import('./home/userEdit/UserEditPage'))
 
 const GalleryPage =
   process.env.TARGET === 'ssr' || process.env.NODE_ENV === 'development'
-    ? require('./pages/gallery/GalleryPage').default
-    : loadable(() => import('./pages/gallery/GalleryPage'))
+    ? require('./home/gallery/GalleryPage').default
+    : loadable(() => import('./home/gallery/GalleryPage'))
 
 const RestaurantReviewPage =
   process.env.TARGET === 'ssr' || process.env.NODE_ENV === 'development'
-    ? require('./pages/restaurantReview/RestaurantReviewPage').default
-    : loadable(() => import('./pages/restaurantReview/RestaurantReviewPage'))
+    ? require('./home/restaurantReview/RestaurantReviewPage').default
+    : loadable(() => import('./home/restaurantReview/RestaurantReviewPage'))
 
 const RestaurantHoursPage =
   process.env.TARGET === 'ssr' || process.env.NODE_ENV === 'development'
-    ? require('./pages/restaurantHours/RestaurantHoursPage').default
-    : loadable(() => import('./pages/restaurantHours/RestaurantHoursPage'))
+    ? require('./home/restaurantHours/RestaurantHoursPage').default
+    : loadable(() => import('./home/restaurantHours/RestaurantHoursPage'))

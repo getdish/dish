@@ -2,7 +2,7 @@
 import React from 'react'
 import { Box, BoxProps, StackProps, useTheme } from 'snackui'
 
-import { slantedBoxStyle } from '../../constants'
+import { slantedBoxStyle } from '../../constants/constants'
 
 export const SlantedBox = (props: BoxProps) => {
   const theme = useTheme()

@@ -3,7 +3,7 @@ import { Minus, ThumbsDown, ThumbsUp } from '@dish/react-feather'
 import React, { Suspense, memo } from 'react'
 import { AbsoluteVStack, HStack, Spacer, Text, VStack } from 'snackui'
 
-import { darkGreen, darkGrey, darkRed, green, red } from '../colors'
+import { darkGreen, darkGrey, darkRed, green, red } from '../constants/colors'
 import { useUserTagVote } from '../hooks/useUserTagVotes'
 import { FullTag } from '../state/FullTag'
 import { getTagSlug } from '../state/getTagSlug'

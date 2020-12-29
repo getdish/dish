@@ -5,7 +5,7 @@ import { AbsoluteVStack, Text } from 'snackui'
 
 import { AppIntroLogin } from './AppIntroLogin'
 import { useLocalStorageState } from './hooks/useLocalStorageState'
-import { IntroModal } from './IntroModal'
+import { IntroModalStore } from './IntroModalStore'
 import { useRouterCurPage } from './state/router'
 import { useOvermind } from './state/useOvermind'
 import { useUserStore } from './state/user'
@@ -18,7 +18,7 @@ export const AppIntroLetter = memo(() => {
   const [closes, setCloses] = useLocalStorageState('modal-intro-closes', 0)
   const hasOnboarded = userStore.user?.has_onboarded
   const isLoggedIn = userStore.isLoggedIn
-  const store = useStore(IntroModal)
+  const store = useStore(IntroModalStore)
   const curPage = useRouterCurPage()
   const isPasswordReset = curPage.name == 'passwordReset'
 

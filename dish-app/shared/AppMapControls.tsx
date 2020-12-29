@@ -5,9 +5,9 @@ import React, { memo } from 'react'
 import { AbsoluteVStack, HStack, Text, useMedia } from 'snackui'
 
 import { appMapStore } from './AppMapStore'
-import { isWeb, searchBarHeight, zIndexDrawer } from './constants'
+import { isWeb, searchBarHeight, zIndexDrawer } from './constants/constants'
 import { useSafeArea } from './hooks/useSafeArea'
-import { pagesStore } from './pages/PagesStore'
+import { pagesStore } from './PagesStore'
 import { useOvermind } from './state/useOvermind'
 import { OverlayLinkButton } from './views/ui/OverlayLinkButton'
 

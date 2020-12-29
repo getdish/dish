@@ -2,7 +2,7 @@ import { LngLat } from '@dish/graph'
 import { isPresent } from '@dish/helpers'
 
 import { AutocompleteItem } from '../AutocompleteItem'
-import { MAPBOX_ACCESS_TOKEN } from '../constants'
+import { MAPBOX_ACCESS_TOKEN } from '../constants/constants'
 import { createAutocomplete } from '../state/createAutocomplete'
 import { GeocodePlace } from '../state/home-types'
 

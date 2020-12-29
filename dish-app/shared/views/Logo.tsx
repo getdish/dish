@@ -2,7 +2,7 @@ import React from 'react'
 import { Defs, Ellipse, G, Mask, Path, Svg, Use } from 'react-native-svg'
 import { VStack, useMedia } from 'snackui'
 
-import { logoHeight, logoWidth, logoXsHeight, logoXsWidth } from '../constants'
+import { logoHeight, logoWidth, logoXsHeight, logoXsWidth } from '../constants/constants'
 import { useSearchBarTheme } from '../hooks/useSearchBarTheme'
 
 export const Logo = (props: { scale?: number; color?: string }) => {

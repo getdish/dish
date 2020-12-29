@@ -1,4 +1,4 @@
-import { allColors, allLightColors } from '../colors'
+import { allColors, allLightColors } from '../constants/colors'
 
 if (allLightColors.length !== allColors.length) {
   throw new Error('must be same')

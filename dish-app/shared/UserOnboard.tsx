@@ -13,9 +13,9 @@ import {
 } from 'snackui'
 
 import dishNeon from './assets/dish-neon.jpg'
-import { characters } from './pages/user/characters'
-import { UserAvatar } from './pages/user/UserAvatar'
-import { useUserQuery } from './pages/user/useUserQuery'
+import { characters } from './home/user/characters'
+import { UserAvatar } from './home/user/UserAvatar'
+import { useUserQuery } from './home/user/useUserQuery'
 import { useUserStore } from './state/user'
 import { SmallButton } from './views/ui/SmallButton'
 

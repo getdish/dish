@@ -14,7 +14,7 @@ import {
   prevent,
 } from 'snackui'
 
-import { isWeb } from '../../constants'
+import { isWeb } from '../../constants/constants'
 import { getColorsForName } from '../../helpers/getColorsForName'
 import { getImageUrl } from '../../helpers/getImageUrl'
 import { DishTagItem } from '../../helpers/getRestaurantDishes'

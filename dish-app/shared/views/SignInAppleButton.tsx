@@ -1,7 +1,7 @@
 import loadable from '@loadable/component'
 import { VStack } from 'snackui'
 
-import { isSSR, isWeb } from '../constants'
+import { isSSR, isWeb } from '../constants/constants'
 
 export const SignInAppleButton = () => {
   return (

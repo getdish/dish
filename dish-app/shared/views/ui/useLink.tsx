@@ -6,7 +6,7 @@ import React, { useEffect, useRef } from 'react'
 import { Platform, TouchableOpacity } from 'react-native'
 import { useForceUpdate } from 'snackui'
 
-import { isWeb } from '../../constants'
+import { isWeb } from '../../constants/constants'
 import { memoize } from '../../helpers/memoizeWeak'
 import {
   addTagsToCache,

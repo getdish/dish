@@ -8,7 +8,7 @@ import {
   useTheme,
 } from 'snackui'
 
-import { drawerBorderRadius, drawerWidthMax } from '../constants'
+import { drawerBorderRadius, drawerWidthMax } from '../constants/constants'
 import { PaneControlButtons } from './PaneControlButtons'
 import { StackViewCloseButton } from './StackViewCloseButton'
 import { PageTitleTag } from './ui/PageTitleTag'

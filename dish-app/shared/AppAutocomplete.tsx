@@ -23,9 +23,9 @@ import {
 } from 'snackui'
 
 import { AutocompleteItem } from './AutocompleteItem'
-import { drawerStore } from './BottomDrawerStore'
-import { bgLight } from './colors'
-import { isNative, isWeb, searchBarHeight } from './constants'
+import { drawerStore } from './DrawerStore'
+import { bgLight } from './constants/colors'
+import { isNative, isWeb, searchBarHeight } from './constants/constants'
 import { fuzzySearch } from './helpers/fuzzySearch'
 import { getFuzzyMatchQuery } from './helpers/getFuzzyMatchQuery'
 import {

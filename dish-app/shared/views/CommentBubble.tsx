@@ -12,10 +12,10 @@ import {
   VStack,
 } from 'snackui'
 
-import { bgLight } from '../colors'
+import { bgLight } from '../constants/colors'
 import { getColorsForName } from '../helpers/getColorsForName'
-import { ensureFlexText } from '../pages/restaurant/ensureFlexText'
-import { thirdPartyCrawlSources } from '../thirdPartyCrawlSources'
+import { ensureFlexText } from '../home/restaurant/ensureFlexText'
+import { thirdPartyCrawlSources } from '../constants/thirdPartyCrawlSources'
 import { Link } from './ui/Link'
 
 export const CommentBubble = ({

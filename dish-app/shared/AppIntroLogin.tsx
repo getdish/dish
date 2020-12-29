@@ -4,13 +4,13 @@ import { Image } from 'react-native'
 import { Paragraph, Spacer, Text, VStack } from 'snackui'
 
 import dishLogo from './assets/dish-neon.jpg'
-import { lightYellow } from './colors'
-import { IntroModal } from './IntroModal'
+import { lightYellow } from './constants/colors'
+import { IntroModalStore } from './IntroModalStore'
 import { LoginRegisterForm } from './views/LoginRegisterForm'
 import { LinkButton } from './views/ui/LinkButton'
 
 export const AppIntroLogin = memo(() => {
-  const store = useStore(IntroModal)
+  const store = useStore(IntroModalStore)
   return (
     <>
       <VStack

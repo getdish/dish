@@ -1,6 +1,6 @@
 import { useLayoutEffect } from 'react'
 
-import { pagesStore } from '../pages/PagesStore'
+import { pagesStore } from '../PagesStore'
 import { HomeStateItem } from '../state/home-types'
 
 export type PageLoadEffectCallback = (opts: {

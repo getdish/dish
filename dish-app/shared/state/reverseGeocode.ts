@@ -1,4 +1,4 @@
-import { MAPBOX_ACCESS_TOKEN } from '../constants'
+import { MAPBOX_ACCESS_TOKEN } from '../constants/constants'
 import { GeocodePlace, LngLat } from './home-types'
 
 export async function reverseGeocode(

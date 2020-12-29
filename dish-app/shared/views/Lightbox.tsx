@@ -13,7 +13,7 @@ import { Dimensions, Image, ScaledSize, ScrollView } from 'react-native'
 import useKeyPressEvent from 'react-use/lib/useKeyPressEvent'
 import { HStack, VStack } from 'snackui'
 
-import { isWeb } from '../constants'
+import { isWeb } from '../constants/constants'
 
 const useScreenSize = () => {
   const [screenSize, setScreenSize] = useState(() => {

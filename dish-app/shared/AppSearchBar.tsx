@@ -15,14 +15,14 @@ import { autocompletesStore } from './AppAutocomplete'
 import { AppMenu } from './AppMenu'
 import { AppSearchInput } from './AppSearchInput'
 import { AppSearchInputLocation } from './AppSearchInputLocation'
-import { bgLightTranslucent } from './colors'
+import { bgLightTranslucent } from './constants/colors'
 import {
   searchBarHeight,
   searchBarMaxWidth,
   searchBarTopOffset,
   zIndexSearchBarFloating,
-} from './constants'
-import { DishHorizonView } from './DishHorizonView'
+} from './constants/constants'
+import { DishHorizonView } from './views/DishHorizonView'
 import { useSearchBarTheme } from './hooks/useSearchBarTheme'
 import { useOvermind } from './state/useOvermind'
 import { DishLogoButton } from './views/DishLogoButton'

@@ -1,7 +1,7 @@
 import React, { memo } from 'react'
 import { HStack, Text } from 'snackui'
 
-import { blue, green, orange, red } from '../../colors'
+import { blue, green, orange, red } from '../../constants/colors'
 import CircularProgress from '../CircularProgress'
 
 const sentiments = {

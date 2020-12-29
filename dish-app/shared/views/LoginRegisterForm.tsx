@@ -20,7 +20,7 @@ import {
   VStack,
 } from 'snackui'
 
-import { isWeb } from '../constants'
+import { isWeb } from '../constants/constants'
 import { useRouterCurPage } from '../state/router'
 import { useOvermind } from '../state/useOvermind'
 import { useUserStore } from '../state/user'

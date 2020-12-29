@@ -11,7 +11,7 @@ import {
 } from 'snackui'
 
 import { AppMenuContents } from './AppMenuContents'
-import { zIndexDrawer } from './constants'
+import { zIndexDrawer } from './constants/constants'
 import { useSafeArea } from './hooks/useSafeArea'
 import { useSearchBarTheme } from './hooks/useSearchBarTheme'
 

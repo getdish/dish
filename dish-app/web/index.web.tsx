@@ -10,8 +10,8 @@ import React from 'react'
 import ReactDOM, { hydrate, render } from 'react-dom'
 import { AppRegistry } from 'react-native'
 
-import { isSSR } from '../shared/constants'
-import { OVERMIND_MUTATIONS } from '../shared/overmindMutations'
+import { isSSR } from '../shared/constants/constants'
+import { OVERMIND_MUTATIONS } from '../shared/constants/overmindMutations'
 import { config, om } from '../shared/state/om'
 import { Root } from './Root'
 

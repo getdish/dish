@@ -1,4 +1,4 @@
-import { pageWidthMax } from '../constants'
+import { pageWidthMax } from '../constants/constants'
 import { getWindowWidth } from '../helpers/getWindow'
 import { useAppDrawerWidth } from './useAppDrawerWidth'
 

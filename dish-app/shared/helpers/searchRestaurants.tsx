@@ -1,6 +1,6 @@
 import { query } from '@dish/graph'
 
-import { getAddressText } from '../pages/restaurant/RestaurantAddressLinksRow'
+import { getAddressText } from '../home/restaurant/RestaurantAddressLinksRow'
 import { createAutocomplete } from '../state/createAutocomplete'
 import { LngLat } from '../state/home-types'
 import { omStatic } from '../state/omStatic'

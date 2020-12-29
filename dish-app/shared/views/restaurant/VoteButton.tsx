@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import { AbsoluteVStack, StackProps, VStack, prevent, useMedia } from 'snackui'
 
-import { bgLight } from '../../colors'
+import { bgLight } from '../../constants/colors'
 
 // TODO snackui advanced extraction case
 
