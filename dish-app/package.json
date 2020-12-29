@@ -130,7 +130,7 @@
     "build:docker": "cd .. && docker build -t dish/app -f dish-app/Dockerfile .",
     "build:types": "tsc",
     "build:output": "tsc -p tsconfig.build.json",
-    "build:splash": "expo-splash-screen -r contain '#000000' ./assets/splash.png",
+    "build:splash": "expo-splash-screen -r contain '#000000' src/assets/splash.png",
     "build:icon": "npx react-native-svg-app-icon",
     "watch": "npm-run-all --parallel watch:types watch:output",
     "watch:output": "tsc -p tsconfig.build.json --watch --preserveWatchOutput",

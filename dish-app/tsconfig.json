@@ -30,13 +30,14 @@
     "composite": true
   },
 
-  // "include": ["src", "web", "shared"],
+  "include": [
+    "src",
+    "web",
+    "src/**/*.json",
+    "declaration.d.ts"
+  ],
 
-  // "exclude": ["**/node_modules/**/.*"],
-
-  "include": ["src", "web", "shared", "shared/**/*.json", "declaration.d.ts"],
-
-  "exclude": ["**/_"],
+  "exclude": ["_"],
 
   "references": [
     {

@@ -36,7 +36,7 @@
     "validate:tsc": "tsc --noEmit",
     "build": "ultra -r --no-pretty build",
     "build:docker": "./dishctl.sh buildkit_build_local",
-    "build:watch": "ultra -r --concurrency 26 --no-pretty watch",
+    "build:watch": "ultra -r --concurrency 100 --no-pretty watch",
     "build:monitor": "ultra --monitor",
     "build:watch:broken": "yarn tsc -b -w",
     "build:refs": "typescript-monorepo-toolkit inject-refs .",

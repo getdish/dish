@@ -24,7 +24,7 @@ const isSSRClient = !!process.env.SSR_CLIENT
 const TARGET = process.env.TARGET || 'client'
 const target =
   TARGET === 'ssr' ? 'node' : TARGET === 'worker' ? 'webworker' : 'web'
-const appEntry = path.resolve(path.join(__dirname, 'web', 'index.web.tsx'))
+const appEntry = path.resolve(path.join(__dirname, 'src', 'index.web.tsx'))
 
 const isProduction = process.env.NODE_ENV === 'production'
 const isDevelopment = process.env.NODE_ENV === 'development'
@@ -89,7 +89,10 @@ module.exports = function getWebpackConfig(
       entry: {
         main:
           process.env.LEGACY || isSSR
-            ? [path.join(__dirname, 'web', 'polyfill.legacy.js'), appEntry]
+            ? [
+                path.join(__dirname, 'src', 'web', 'polyfill.legacy.js'),
+                appEntry,
+              ]
             : appEntry,
       },
       output: {
@@ -189,9 +192,7 @@ module.exports = function getWebpackConfig(
                     loader: require.resolve('@snackui/static/loader'),
                     options: {
                       evaluateImportsWhitelist: ['constants.js', 'colors.js'],
-                      themesFile: require.resolve(
-                        './shared/constants/themes.ts'
-                      ),
+                      themesFile: require.resolve('./src/constants/themes.ts'),
                     },
                   },
                 ].filter(Boolean),
@@ -316,8 +317,8 @@ module.exports = function getWebpackConfig(
 
         new HTMLWebpackPlugin({
           inject: true,
-          favicon: 'web/favicon.png',
-          template: path.join(__dirname, 'web/index.html'),
+          favicon: 'src/web/favicon.png',
+          template: path.join(__dirname, 'src/index.html'),
         }),
 
         new WebpackPwaManifest({
@@ -328,7 +329,7 @@ module.exports = function getWebpackConfig(
           crossorigin: 'use-credentials',
           icons: [
             {
-              src: path.resolve('web/icon.png'),
+              src: path.resolve('src/assets/icon.png'),
               sizes: [96, 128, 192, 512, 1024],
             },
           ],
