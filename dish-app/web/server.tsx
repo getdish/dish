@@ -95,7 +95,7 @@ server.use('/', express.static(clientBuildLegacyPath))
 
 server.get('*', async (req, res) => {
   console.log('req', req.hostname, req.path)
-  const htmlPath = Path.join(rootDir, 'web', 'index.html')
+  const htmlPath = Path.join(rootDir, 'src', 'index.html')
   const template = readFileSync(htmlPath, 'utf8')
   const overmind = createOvermindSSR(config)
   await overmind.initialized
@@ -166,8 +166,6 @@ server.get('*', async (req, res) => {
       <script>
         window.__OVERMIND_MUTATIONS = ${JSON.stringify(overmind.hydrate())}
         window.__CACHE_SNAPSHOT = "${cacheSnapshot}"
-
-        console.log("HELLO WORLD")
       </script>
       ${clientScripts.join('\n')}\n`
       continue

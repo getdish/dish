@@ -68,8 +68,8 @@ import { PageTitleTag } from '../../views/PageTitleTag'
 import { SlantedTitle } from '../../views/SlantedTitle'
 import { StackDrawer } from '../../views/StackDrawer'
 import { TagButton, getTagButtonProps } from '../../views/TagButton'
-import { HomeSuspense } from '../HomeStackViewPages'
 import { HomeStackViewProps } from '../HomeStackViewProps'
+import { HomeSuspense } from '../HomeSuspense'
 import {
   ITEM_HEIGHT,
   RestaurantListItem,

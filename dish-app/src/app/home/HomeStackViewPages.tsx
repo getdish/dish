@@ -1,5 +1,5 @@
 import loadable from '@loadable/component'
-import React, { Suspense, useEffect, useLayoutEffect } from 'react'
+import React, { useLayoutEffect } from 'react'
 
 import {
   isAboutState,
@@ -10,7 +10,7 @@ import {
 } from '../state/home-helpers'
 import { HomeStackViewPagesContents } from './HomeStackViewPagesContents'
 import { HomeStackViewProps } from './HomeStackViewProps'
-import { homeStore } from './HomeStore'
+import { HomeSuspense } from './HomeSuspense'
 
 export const HomeStackViewPages = (props: HomeStackViewProps) => {
   const { item } = props
@@ -24,25 +24,6 @@ export const HomeStackViewPages = (props: HomeStackViewProps) => {
       <HomeStackViewPagesContents {...props} />
     </HomeSuspense>
   )
-}
-
-export function HomeSuspense(props: { children: any; fallback?: any }) {
-  return (
-    <Suspense fallback={<PageLoading fallback={props.fallback} />}>
-      {props.children}
-    </Suspense>
-  )
-}
-
-function PageLoading({ fallback }: { fallback?: any }) {
-  useEffect(() => {
-    homeStore.setLoading(true)
-    return () => {
-      homeStore.setLoading(false)
-    }
-  }, [])
-
-  return fallback ?? null
 }
 
 const isntLoadable =
