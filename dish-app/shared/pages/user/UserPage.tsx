@@ -16,6 +16,7 @@ import {
 import { StackItemProps } from '../../AppStackView'
 import { HomeStateItemUser } from '../../state/home-types'
 import { useOvermind } from '../../state/useOvermind'
+import { useUserStore } from '../../state/user'
 import { ContentScrollView } from '../../views/ContentScrollView'
 import { NotFoundPage } from '../../views/NotFoundPage'
 import { StackDrawer } from '../../views/StackDrawer'
@@ -134,10 +135,10 @@ const UserHeader = memo(
       setTab: Function
       tab: UserTab
     }) => {
-      const om = useOvermind()
+      const userStore = useUserStore()
       const user = useUserQuery(item?.username ?? '')
-      const isOwnProfile = om.state.user?.user?.username === user?.username
-      console.log(om.state.user?.user?.username, user?.username)
+      const isOwnProfile = userStore.user?.username === user?.username
+      console.log(userStore.user?.username, user?.username)
 
       if (!user) return null
 

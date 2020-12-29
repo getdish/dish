@@ -23,6 +23,7 @@ import {
 import { isWeb } from '../constants'
 import { useRouterCurPage } from '../state/router'
 import { useOvermind } from '../state/useOvermind'
+import { useUserStore } from '../state/user'
 import { SignInAppleButton } from './SignInAppleButton'
 import { Link } from './ui/Link'
 import { LinkButton } from './ui/LinkButton'
@@ -92,8 +93,8 @@ export const LoginRegisterForm = ({
   onDidLogin?: Function
   autofocus?: boolean
 }) => {
-  const om = useOvermind()
-  const isLoggedIn = om.state.user.isLoggedIn
+  const userStore = useUserStore()
+  const isLoggedIn = userStore.isLoggedIn
   const store = useStore(AuthFormStore)
   const curPageName = useRouterCurPage().name
   let defaultFormPage = Object.keys(form_page_details).includes(curPageName)
@@ -115,26 +116,24 @@ export const LoginRegisterForm = ({
       let result
       switch (formPage) {
         case 'register':
-          result = await om.actions.user.register(store.state)
+          result = await userStore.register(store.state)
           if (result) store.resetState()
           break
         case 'login':
-          await om.actions.user.login({
+          await userStore.login({
             usernameOrEmail: store.state.login,
             password: store.state.password,
           })
           break
         case 'forgotPassword':
-          result = await om.actions.user.forgotPassword({
-            usernameOrEmail: store.state.login,
-          })
+          result = await userStore.forgotPassword(store.state.login)
           if (result) {
             setSuccessText(form_page_details[formPage].success_text)
             setFormPage('success')
           }
           break
         case 'passwordReset':
-          result = await om.actions.user.passwordReset({
+          result = await userStore.passwordReset({
             password: store.state.password,
             confirmation: store.state.confirmation,
           })
@@ -153,7 +152,7 @@ export const LoginRegisterForm = ({
   }
 
   const button_text = () => {
-    if (om.state.user.loading) {
+    if (userStore.loading) {
       return form_page_details[formPage].submitting_text
     } else {
       return form_page_details[formPage].submit_text
@@ -374,8 +373,8 @@ export const LoginRegisterForm = ({
       <Spacer />
 
       <VStack maxWidth={320}>
-        {!!om.state.user.messages.length && (
-          <ErrorParagraph>{om.state.user.messages.join(', ')}</ErrorParagraph>
+        {!!userStore.messages.length && (
+          <ErrorParagraph>{userStore.messages.join(', ')}</ErrorParagraph>
         )}
       </VStack>
 

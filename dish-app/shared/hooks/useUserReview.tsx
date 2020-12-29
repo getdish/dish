@@ -11,9 +11,8 @@ import {
 import { useState } from 'react'
 import { Toast, useLazyEffect } from 'snackui'
 
-import { promptLogin } from '../helpers/promptLogin'
-import { omStatic } from '../state/omStatic'
 import { useOvermind } from '../state/useOvermind'
+import { useUserStore } from '../state/user'
 
 export type ReviewWithTag = Pick<
   Review,
@@ -45,7 +44,8 @@ export const useUserReviewsQuery = (
 ) => {
   const refetch = useRefetch()
   const om = useOvermind()
-  const userId = (om.state.user.user?.id as string) ?? ''
+  const userStore = useUserStore()
+  const userId = (userStore.user?.id as string) ?? ''
   const [fetchKey, setFetchKey] = useState(0)
   const shouldFetch = userId && restaurantId
   const reviewsQuery = shouldFetch
@@ -117,9 +117,10 @@ export const useUserReviewsQuery = (
         type: Review['type']
       }
     ) {
-      if (promptLogin()) {
+      if (userStore.promptLogin()) {
         return false
       }
+      const user = userStore.user!
       try {
         // optimistic update
         if (review.id) {
@@ -137,7 +138,7 @@ export const useUserReviewsQuery = (
             rating: 0,
             ...review,
             // overrides
-            user_id: omStatic.state.user.user!.id,
+            user_id: user.id,
           },
         ])
 

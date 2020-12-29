@@ -44,6 +44,7 @@ import { omStatic } from './state/omStatic'
 import { useRouterCurPage } from './state/router'
 import { tagDisplayName } from './state/tagMeta'
 import { useOvermind } from './state/useOvermind'
+import { useUserStore } from './state/user'
 import { PaneControlButtons } from './views/PaneControlButtons'
 import { CloseButton, SmallCircleButton } from './views/ui/CloseButton'
 import { LinkButton } from './views/ui/LinkButton'
@@ -492,6 +493,7 @@ const AutocompleteItemView = memo(
     isActive?: boolean
   }) => {
     const om = useOvermind()
+    const userStore = useUserStore()
     const showLocation = target === 'location'
     const theme = useTheme()
     const hideAutocompleteSlow = useDebounce(
@@ -499,7 +501,7 @@ const AutocompleteItemView = memo(
       50
     )
     const plusButtonEl =
-      result.type === 'dish' && index !== 0 && om.state.user.isLoggedIn ? (
+      result.type === 'dish' && index !== 0 && userStore.isLoggedIn ? (
         <AutocompleteAddButton />
       ) : null
 

@@ -11,11 +11,12 @@ import { UserAvatar } from './pages/user/UserAvatar'
 import { omStatic } from './state/omStatic'
 import { useRouterCurPage } from './state/router'
 import { useOvermind } from './state/useOvermind'
+import { useUserStore } from './state/user'
 import { LinkButton } from './views/ui/LinkButton'
 import { LinkButtonProps } from './views/ui/LinkProps'
 
 export const AppMenu = memo(() => {
-  const om = useOvermind()
+  const userStore = useUserStore()
   const media = useMedia()
   const appMenu = useStoreInstance(appMenuStore)
   const showUserMenu = appMenu.showMenu
@@ -45,13 +46,13 @@ export const AppMenu = memo(() => {
         <MenuButton
           Icon={Menu}
           onPress={() => appMenu.setShowMenu(!showUserMenu)}
-          text={!media.sm && !om.state.user.isLoggedIn ? 'Signup' : ''}
+          text={!media.sm && !userStore.isLoggedIn ? 'Signup' : ''}
         />
       </Popover>
 
       {media.md && (
         <>
-          {om.state.user.isLoggedIn && (
+          {userStore.isLoggedIn && (
             <>
               <Spacer size={6} />
               <Suspense fallback={<Spacer size={32} />}>
@@ -61,7 +62,7 @@ export const AppMenu = memo(() => {
             </>
           )}
 
-          {!om.state.user.isLoggedIn && (
+          {!userStore.isLoggedIn && (
             <Tooltip contents="About">
               <MenuButton
                 name="about"
@@ -85,8 +86,7 @@ export const AppMenu = memo(() => {
 })
 
 const UserMenuButton = () => {
-  const om = useOvermind()
-  const user = om.state.user.user
+  const user = useUserStore().user
 
   if (!user) {
     return null

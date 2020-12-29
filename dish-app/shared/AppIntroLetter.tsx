@@ -8,16 +8,16 @@ import { useLocalStorageState } from './hooks/useLocalStorageState'
 import { IntroModal } from './IntroModal'
 import { useRouterCurPage } from './state/router'
 import { useOvermind } from './state/useOvermind'
+import { useUserStore } from './state/user'
 import { UserOnboard } from './UserOnboard'
 import { DarkModal } from './views/DarkModal'
 import { SmallCircleButton } from './views/ui/CloseButton'
 
 export const AppIntroLetter = memo(() => {
-  const om = useOvermind()
+  const userStore = useUserStore()
   const [closes, setCloses] = useLocalStorageState('modal-intro-closes', 0)
-
-  const hasOnboarded = om.state.user.user?.has_onboarded
-  const isLoggedIn = om.state.user.isLoggedIn
+  const hasOnboarded = userStore.user?.has_onboarded
+  const isLoggedIn = userStore.isLoggedIn
   const store = useStore(IntroModal)
   const curPage = useRouterCurPage()
   const isPasswordReset = curPage.name == 'passwordReset'

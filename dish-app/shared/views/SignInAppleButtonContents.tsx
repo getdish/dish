@@ -5,7 +5,7 @@ import React, { useEffect, useState } from 'react'
 import { HStack, Text, Toast, VStack } from 'snackui'
 
 import { useIsMountedRef } from '../helpers/useIsMountedRef'
-import { omStatic } from '../state/omStatic'
+import { userStore } from '../state/user'
 import { AppleLogoWhite } from './AppleLogoWhite'
 
 export default function SignInAppleButton() {
@@ -40,7 +40,7 @@ export default function SignInAppleButton() {
           const { authorization } = await res
           const user = await Auth.appleAuth(authorization)
           Toast.show('Logged in!')
-          omStatic.actions.user.setLogin(user)
+          userStore.setLogin(user)
         } catch (err) {
           Toast.show('Error loggin in 😭', { type: 'error' })
           console.error('signin err', err)

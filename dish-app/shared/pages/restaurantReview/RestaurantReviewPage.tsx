@@ -18,6 +18,7 @@ import { useRestaurantQuery } from '../../hooks/useRestaurantQuery'
 import { useUserReviewCommentQuery } from '../../hooks/useUserReview'
 import { HomeStateItemReview } from '../../state/home-types'
 import { useOvermind } from '../../state/useOvermind'
+import { useUserStore } from '../../state/user'
 import { CommentBubble } from '../../views/CommentBubble'
 import { StackViewCloseButton } from '../../views/StackViewCloseButton'
 import { TagSmallButton } from '../../views/TagSmallButton'
@@ -114,8 +115,7 @@ export const RestaurantReviewCommentForm = memo(
       restaurantId: string
       restaurantSlug: string
     }) => {
-      const om = useOvermind()
-      const user = om.state.user.user
+      const user = useUserStore().user
       const {
         review,
         upsertReview,
