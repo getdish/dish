@@ -5,6 +5,7 @@ import mapboxgl from 'mapbox-gl'
 import React, { Suspense, memo, useEffect, useRef } from 'react'
 import { AbsoluteVStack, VStack, getMedia, useMedia } from 'snackui'
 
+import { appMapStore } from './AppMapStore'
 import { drawerStore } from './BottomDrawerStore'
 import { MAPBOX_ACCESS_TOKEN } from './constants'
 import { getZoomLevel, mapZoomToMedium } from './helpers/mapHelpers'
@@ -44,8 +45,8 @@ const HomeMapPIPContent = graphql(() => {
   const om = useOvermind()
   const mapNode = useRef<HTMLDivElement>(null)
   const state = om.state.home.currentState
-  const focusedRestaurant =
-    om.state.home.hoveredRestaurant ?? om.state.home.selectedRestaurant
+  const appMap = useStoreInstance(appMapStore)
+  const focusedRestaurant = appMap.hovered ?? appMap.selected
 
   let restaurants: restaurant[] | null = null
   let slug: string | null = null

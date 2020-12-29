@@ -20,8 +20,6 @@ export type HomeState = {
   currentStateLense: NavigableTag | null
   currentStateSearchQuery: HomeStateItem['searchQuery']
   currentStateType: HomeStateItem['type']
-  hoveredRestaurant: RestaurantOnlyIds | null | false
-  isHoveringRestaurant: boolean
   isLoading: boolean
   isOptimisticUpdating: boolean
   lastActiveTags: Tag[]
@@ -31,7 +29,6 @@ export type HomeState = {
   searchbarFocusedTag: Tag | null
   searchBarTagIndex: number
   searchBarTags: NavigableTag[]
-  selectedRestaurant: RestaurantOnlyIds | null
   showUserMenu: boolean
   skipNextPageFetchData: boolean
   started: boolean

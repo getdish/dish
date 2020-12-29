@@ -241,8 +241,29 @@ export function mountStore(info: StoreInfo, store: any) {
   }
 }
 
-export const subscribe = (store: Store, callback: Function) => {
+export const subscribe = (store: Store, callback: () => any) => {
   return store.subscribe(callback)
+}
+
+export function reaction<
+  StoreInstance extends Store,
+  Selector extends (a: StoreInstance) => any
+>(
+  store: StoreInstance,
+  selector: Selector,
+  receiver: Selector extends (a: StoreInstance) => infer Derived
+    ? (a: Derived) => any
+    : unknown,
+  equalityFn: (a: any, b: any) => boolean = (a, b) => a === b
+) {
+  let last: any = undefined
+  return store.subscribe(() => {
+    const next = selector(store)
+    if (!equalityFn(last, next)) {
+      last = next
+      receiver(next)
+    }
+  })
 }
 
 const emptyObj = {}

@@ -1,6 +1,6 @@
 import { sleep } from '@dish/async'
 import { Auth } from '@dish/graph'
-import { isSafari } from '@dish/helpers/src'
+import { isSafari } from '@dish/helpers'
 import React, { useEffect, useState } from 'react'
 import { HStack, Text, Toast, VStack } from 'snackui'
 

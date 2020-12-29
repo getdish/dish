@@ -1,9 +1,6 @@
 import { fullyIdle } from '@dish/async'
-import { search } from '@dish/graph/src'
-import { LngLat } from '@dish/graph/src'
-import { RestaurantSearchArgs } from '@dish/graph/src'
-import { isPresent } from '@dish/helpers/src'
-import { stringify } from '@dish/helpers/src'
+import { LngLat, RestaurantSearchArgs, search } from '@dish/graph'
+import { isPresent, stringify } from '@dish/helpers'
 import { Store, createStore } from '@dish/use-store'
 
 import { appMapStore } from '../../AppMapStore'

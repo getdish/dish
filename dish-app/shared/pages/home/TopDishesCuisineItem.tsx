@@ -11,6 +11,7 @@ import {
   VStack,
 } from 'snackui'
 
+import { appMapStore } from '../../AppMapStore'
 import { isWeb } from '../../constants'
 import { getColorsForName } from '../../helpers/getColorsForName'
 import { addTagsToCache, getFullTagFromNameAndType } from '../../state/allTags'
@@ -152,8 +153,9 @@ const TopDishesCuisineItem = memo(
 )
 let lastHoveredId
 const setHoveredRestaurant = _.debounce((val) => {
-  omStatic.actions.home.setHoveredRestaurant(val)
+  appMapStore.setHovered(val)
 }, 200)
+
 const TopDishesTrendingRestaurants = memo(
   ({ country }: { country: TopCuisine }) => {
     return (
@@ -198,7 +200,7 @@ const TopDishesTrendingRestaurants = memo(
                     onHoverOut={() => {
                       if (lastHoveredId === restaurant.id) {
                         setHoveredRestaurant.cancel()
-                        omStatic.actions.home.setHoveredRestaurant(false)
+                        appMapStore.setHovered(null)
                       }
                     }}
                   />

@@ -10,7 +10,7 @@ import {
   query,
   tag,
 } from '@dish/graph'
-import { isPresent } from '@dish/helpers/src'
+import { isPresent } from '@dish/helpers'
 import { capitalize, chunk, partition, sortBy, uniqBy, zip } from 'lodash'
 import React, { Suspense, memo, useEffect, useRef, useState } from 'react'
 import { Dimensions, ScrollView } from 'react-native'
