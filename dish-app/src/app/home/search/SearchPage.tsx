@@ -1,4 +1,5 @@
 import { sleep } from '@dish/async'
+import { LngLat } from '@dish/graph/src'
 import { ArrowUp } from '@dish/react-feather'
 import { HistoryItem } from '@dish/router'
 import { reaction, useStore } from '@dish/use-store'
@@ -38,7 +39,7 @@ import {
 import { isWeb } from '../../../constants/constants'
 import { initialHomeState } from '../../../constants/initialHomeState'
 import { bboxToSpan } from '../../../helpers/bboxToSpan'
-import { fetchRegion } from '../../../helpers/fetchRegion'
+import { RegionNormalized, fetchRegion } from '../../../helpers/fetchRegion'
 import { getTagSlug } from '../../../helpers/getTagSlug'
 import { rgbString } from '../../../helpers/rgbString'
 import { searchLocations } from '../../../helpers/searchLocations'
@@ -564,7 +565,7 @@ function useLocationFromRoute(route: HistoryItem<'search'>) {
 
 async function getLocationFromRoute(
   route: HistoryItem<'search'>
-): Promise<HomeStateItemLocation | null> {
+): Promise<{ center: LngLat; span: LngLat; region?: RegionNormalized } | null> {
   if (route.name === 'search') {
     const params = route.params as SearchRouteParams
 

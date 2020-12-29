@@ -3,12 +3,11 @@ import {
   RestaurantOnlyIds,
   RestaurantSearchItem,
   Tag,
-  User,
+  User
 } from '@dish/graph'
 import { Config, IContext } from 'overmind'
-
-import { RegionNormalized } from '../../helpers/fetchRegion'
 import { NavigableTag } from './NavigableTag'
+
 
 export type Om = IContext<Config>
 export type OmState = Om['state']
@@ -170,5 +169,5 @@ export type HomeStateItemSimple = Pick<HomeStateItem, 'id' | 'type'>
 export type HomeStateItemLocation = {
   center: HomeStateItem['center']
   span: HomeStateItem['span']
-  region?: RegionNormalized
+  region?: string
 }

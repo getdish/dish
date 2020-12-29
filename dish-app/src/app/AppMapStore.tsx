@@ -2,8 +2,10 @@ import { LngLat, RestaurantOnlyIds } from '@dish/graph'
 import { Store, createStore } from '@dish/use-store'
 
 import { defaultLocationAutocompleteResults } from '../constants/defaultLocationAutocompleteResults'
-import { initialHomeState } from '../constants/initialHomeState'
-import { setDefaultLocation } from '../helpers/getDefaultLocation'
+import {
+  getDefaultLocation,
+  setDefaultLocation,
+} from '../helpers/getDefaultLocation'
 import { reverseGeocode } from '../helpers/reverseGeocode'
 import { router } from '../router'
 import { autocompleteLocationStore } from './AppAutocomplete'
@@ -22,10 +24,7 @@ class AppMapStore extends Store {
   selected: RestaurantOnlyIds | null = null
   hovered: RestaurantOnlyIds | null = null
   userLocation: LngLat | null = null
-  position: MapPosition = {
-    center: initialHomeState.center,
-    span: initialHomeState.span,
-  }
+  position: MapPosition = getDefaultLocation()
 
   setPosition(pos: Partial<MapPosition>) {
     if (pos.center === undefined) {
