@@ -1,4 +1,4 @@
-// debug
+// // debug
 // TODO verify the conditional + theme works
 // TODO scaling for width/height
 import React from 'react'

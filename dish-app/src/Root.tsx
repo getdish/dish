@@ -38,9 +38,9 @@ export function Root({ overmind }: { overmind?: any }) {
   }
 
   return (
-    <Provider value={overmind}>
-      <ProvideRouter routes={routes}>
-        <ThemeProvider themes={themes} defaultTheme="light">
+    <ThemeProvider themes={themes} defaultTheme="light">
+      <Provider value={overmind}>
+        <ProvideRouter routes={routes}>
           <QueryClientProvider client={queryClient}>
             <AppPortalProvider>
               <Suspense fallback={null}>
@@ -48,8 +48,8 @@ export function Root({ overmind }: { overmind?: any }) {
               </Suspense>
             </AppPortalProvider>
           </QueryClientProvider>
-        </ThemeProvider>
-      </ProvideRouter>
-    </Provider>
+        </ProvideRouter>
+      </Provider>
+    </ThemeProvider>
   )
 }

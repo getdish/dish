@@ -9,7 +9,7 @@ import {
 } from 'snackui'
 
 import { drawerBorderRadius, drawerWidthMax } from '../../constants/constants'
-import { HomeSuspense } from '../home/HomeStackViewPages'
+import { HomeSuspense } from '../home/HomeSuspense'
 import { PageTitleTag } from './PageTitleTag'
 import { PaneControlButtons } from './PaneControlButtons'
 import { StackViewCloseButton } from './StackViewCloseButton'
