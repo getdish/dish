@@ -6,7 +6,6 @@ import { HistoryItem } from '@dish/router'
 import _, { clamp, findLast, isPlainObject } from 'lodash'
 import { Action, AsyncAction, Config, IContext, derived } from 'overmind'
 import { Keyboard } from 'react-native'
-import { Toast } from 'snackui'
 
 import { initialHomeState } from '../../constants/initialHomeState'
 import { tagLenses } from '../../constants/localTags'
@@ -33,12 +32,8 @@ import { NavigableTag } from './NavigableTag'
 import { syncStateToRoute } from './syncStateToRoute'
 
 export const state: HomeState = {
-  started: false,
-  isLoading: false,
-  skipNextPageFetchData: false,
   showUserMenu: false,
   searchBarTagIndex: 0,
-  allUsers: {},
   isOptimisticUpdating: false,
   stateIndex: 0,
   stateIds: ['0'],
@@ -110,8 +105,6 @@ export const state: HomeState = {
     }
   ),
 }
-
-type PageAction = () => Promise<void>
 
 const getUpType = (om: IContext<Config>) => {
   const curType = om.state.home.currentState.type
@@ -330,14 +323,10 @@ const pushHomeState: AsyncAction<
     return null
   }
 
-  // start loading
-  om.actions.home.setIsLoading(true)
-
   const { currentState } = om.state.home
   const searchQuery = item?.params?.query ?? currentState?.searchQuery ?? ''
 
   let nextState: Partial<HomeStateItem> | null = null
-  let fetchData: PageAction | null = null
   const type = item.name
 
   switch (item.name) {
@@ -444,52 +433,7 @@ const pushHomeState: AsyncAction<
     id: item.id ?? uid(),
   } as HomeStateItem
 
-  async function runFetchData() {
-    if (!fetchData) {
-      return
-    }
-    try {
-      await fetchData()
-    } catch (err) {
-      console.error(err)
-      Toast.show(`Error loading page`)
-    }
-  }
-
   om.actions.home.updateHomeState(finalState)
-
-  if (!om.state.home.started) {
-    om.state.home.started = true
-  }
-
-  const shouldSkip = om.state.home.skipNextPageFetchData
-  om.state.home.skipNextPageFetchData = false
-
-  let fetchDataPromise: Promise<any> | null = null
-  if (!shouldSkip && fetchData) {
-    // start
-    let res: any
-    let rej: any
-    fetchDataPromise = new Promise((res2, rej2) => {
-      res = res2
-      rej = rej2
-    })
-    runFetchData()
-      .finally(() => {
-        om.actions.home.setIsLoading(false)
-        res()
-      })
-      .catch(rej)
-  }
-
-  if (fetchDataPromise) {
-    return {
-      fetchDataPromise,
-    }
-  } else {
-    om.actions.home.setIsLoading(false)
-  }
-
   return null
 }
 
@@ -559,18 +503,6 @@ const clearTag: AsyncAction<NavigableTag> = async (om, tag) => {
   }
 }
 
-let tm: NodeJS.Timeout | null = null
-const setIsLoading: Action<boolean> = (om, val) => {
-  om.state.home.isLoading = val
-  // prevent infinite spinners
-  clearTimeout(tm)
-  tm = setTimeout(() => {
-    if (val) {
-      om.actions.home.setIsLoading(false)
-    }
-  }, 3000)
-}
-
 // this is useful for search where we mutate the current state while you type,
 // but then later you hit "enter" and we need to navigate to search (or home)
 // we definitely can clean up / name better some of this once things settle
@@ -612,7 +544,6 @@ const navigate: AsyncAction<HomeStateNav, boolean> = async (
     (isSearchState(curState) && nextType === 'search')
   ) {
     om.state.home.isOptimisticUpdating = true
-    om.state.home.isLoading = true
     // optimistic update active tags
     updateTags()
     await sleep(20)
@@ -664,7 +595,6 @@ export const actions = {
   popBack,
   updateActiveTags,
   clearTags,
-  setIsLoading,
   updateHomeState,
   navigate,
 }

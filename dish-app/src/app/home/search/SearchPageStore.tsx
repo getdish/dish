@@ -66,8 +66,7 @@ class SearchPageStore extends Store {
       return answer
     }
 
-    // dont be so eager if started
-    if (!opts.force && om.state.home.started) {
+    if (!opts.force) {
       await fullyIdle()
       if (shouldCancel()) return
     }

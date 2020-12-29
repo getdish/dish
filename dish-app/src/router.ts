@@ -1,10 +1,10 @@
-import { Route, Router, RoutesTable as RoutesTableI } from '@dish/router'
+import { Route, Router } from '@dish/router'
 import { createStore, useStoreInstance } from '@dish/use-store'
 
 export type RoutesTable = typeof routes
 export type RouteName = keyof RoutesTable
 
-export const routes: RoutesTableI = {
+export const routes = {
   // order important
   home: new Route('/'),
 

@@ -15,12 +15,10 @@ export type OmStateHome = OmState['home']
 
 export type HomeState = {
   allStates: { [key: string]: HomeStateItem }
-  allUsers: { [id: string]: User }
   currentState: HomeStateItem
   currentStateLense: NavigableTag | null
   currentStateSearchQuery: HomeStateItem['searchQuery']
   currentStateType: HomeStateItem['type']
-  isLoading: boolean
   isOptimisticUpdating: boolean
   lastActiveTags: Tag[]
   lastHomeState: HomeStateItemHome
@@ -30,8 +28,6 @@ export type HomeState = {
   searchBarTagIndex: number
   searchBarTags: NavigableTag[]
   showUserMenu: boolean
-  skipNextPageFetchData: boolean
-  started: boolean
   stateIds: string[]
   stateIndex: number
   states: HomeStateItem[]

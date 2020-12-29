@@ -9,6 +9,7 @@ import {
 } from 'snackui'
 
 import { drawerBorderRadius, drawerWidthMax } from '../../constants/constants'
+import { HomeSuspense } from '../home/HomeStackViewPages'
 import { PageTitleTag } from './PageTitleTag'
 import { PaneControlButtons } from './PaneControlButtons'
 import { StackViewCloseButton } from './StackViewCloseButton'
@@ -58,7 +59,9 @@ export const StackDrawer = ({
         overflow="hidden"
         {...props}
       >
-        <Suspense fallback={fallback ?? <LoadingItems />}>{children}</Suspense>
+        <HomeSuspense fallback={fallback ?? <LoadingItems />}>
+          {children}
+        </HomeSuspense>
       </VStack>
     </HStack>
   )
