@@ -21,7 +21,10 @@ export function createAutocomplete(
   item: AutocompleteItem
 ): AutocompleteItemFull {
   return {
-    id: `${Math.random()}`,
+    id:
+      item['slug'] ??
+      (item['center'] ? JSON.stringify(item['center']) : null) ??
+      `${Math.random()}`,
     is: 'autocomplete',
     name: '',
     ...item,

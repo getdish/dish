@@ -84,7 +84,7 @@ class AppMapStore extends Store {
     ]
     inputStoreLocation.setValue(val)
     const exact = current.find((x) => x.name === val)
-    if (exact?.center) {
+    if ('center' in exact) {
       om.actions.home.updateCurrentState({
         center: { ...exact.center },
         currentLocationName: val,
