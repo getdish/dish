@@ -133,12 +133,22 @@ export default memo(function HomePage(props: Props) {
   }, [isLoaded, region.data])
 
   useEffect(() => {
-    if (!region.data) return
-    setDefaultLocation({
-      center: region.data.center,
-      span: region.data.span,
-      region: region.data.name,
-    })
+    if (region.status !== 'success') return
+    if (!region.data) {
+      // no region found!
+      router.navigate({
+        name: 'homeRegion',
+        params: {
+          region: 'ca-san-francisco',
+        },
+      })
+    } else {
+      setDefaultLocation({
+        center: region.data.center,
+        span: region.data.span,
+        region: region.data.name,
+      })
+    }
   }, [region.data])
 
   // on load home clear search effect!

@@ -28,6 +28,7 @@ import { isWebIOS } from '../helpers/isIOS'
 import { router } from '../router'
 import { AutocompleteStore, autocompletesStore } from './AppAutocomplete'
 import { AppAutocompleteHoverableInput } from './AppAutocompleteHoverableInput'
+import { useHomeStore } from './home/HomeStore'
 import { searchPageStore } from './home/search/SearchPageStore'
 import { useSearchBarTheme } from './hooks/useSearchBarTheme'
 import {
@@ -109,6 +110,7 @@ export const AppSearchInput = memo(() => {
   const autocompletes = useStoreInstance(autocompletesStore)
   const showSearchAutocomplete =
     autocompletes.visible && autocompletes.target === 'search'
+  const { loading } = useHomeStore()
 
   const height = searchBarHeight - 2
   const outerHeight = height - 1
@@ -223,10 +225,10 @@ export const AppSearchInput = memo(() => {
         <VStack
           width={16}
           marginLeft={3}
-          transform={[{ scale: om.state.home.isLoading ? 1.2 : 1 }]}
+          transform={[{ scale: loading ? 1.2 : 1 }]}
         >
           <TouchableOpacity onPress={focusSearchInput}>
-            {om.state.home.isLoading ? (
+            {loading ? (
               <VStack className="rotating" opacity={1}>
                 <Loader color={color} size={16} />
               </VStack>

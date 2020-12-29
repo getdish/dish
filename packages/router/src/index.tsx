@@ -48,7 +48,7 @@ export type OnRouteChangeCb = (item: HistoryItem) => Promise<void>
 type RouterProps = { routes: RoutesTable }
 type HistoryCb = (cb: HistoryItem) => void
 
-export class Router extends Store<RouterProps> {
+export class Router<Props extends RouterProps> extends Store<Props> {
   router = new TinyRouter()
   routes: RoutesTable = {}
   routeNames: string[] = []
@@ -59,7 +59,6 @@ export class Router extends Store<RouterProps> {
   stackIndex = 0
 
   mount() {
-    console.log('MOUNT')
     const { routes } = this.props
     this.routes = routes
     this.routeNames = Object.keys(routes)
@@ -376,8 +375,8 @@ export function useRouter() {
 }
 
 export function useRouterSelector<
-  A extends (a: Router) => any,
-  Res = A extends (a: Router) => infer B ? B : unknown
+  A extends (a: Router<any>) => any,
+  Res = A extends (a: Router<any>) => infer B ? B : unknown
 >(selector: A) {
   const routes = useContext(RouterPropsContext)
   if (!routes) {

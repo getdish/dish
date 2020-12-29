@@ -68,6 +68,7 @@ import { PageTitleTag } from '../../views/PageTitleTag'
 import { SlantedTitle } from '../../views/SlantedTitle'
 import { StackDrawer } from '../../views/StackDrawer'
 import { TagButton, getTagButtonProps } from '../../views/TagButton'
+import { HomeSuspense } from '../HomeStackViewPages'
 import { HomeStackViewProps } from '../HomeStackViewProps'
 import {
   ITEM_HEIGHT,
@@ -90,12 +91,12 @@ export default memo(function SearchPage(props: Props) {
     <>
       <PageTitleTag>{title}</PageTitleTag>
       <StackDrawer closable>
-        <Suspense fallback={null}>
+        <HomeSuspense>
           <SearchNavBarContainer isActive={props.isActive} id={props.item.id} />
-        </Suspense>
-        <Suspense fallback={<LoadingItems />}>
+        </HomeSuspense>
+        <HomeSuspense fallback={<LoadingItems />}>
           <SearchPageContent {...props} />
-        </Suspense>
+        </HomeSuspense>
       </StackDrawer>
     </>
   )
