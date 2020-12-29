@@ -20,8 +20,8 @@ import { getImageUrl } from '../../../helpers/getImageUrl'
 import { DishTagItem } from '../../../helpers/getRestaurantDishes'
 import { getTagSlug } from '../../../helpers/getTagSlug'
 import { NavigableTag } from '../../state/NavigableTag'
-import { Link } from '../Link'
 import { ColoredCircle } from '../ColoredCircle'
+import { Link } from '../Link'
 import { DishUpvoteDownvote } from './DishUpvoteDownvote'
 
 // avoid too many different image sizes

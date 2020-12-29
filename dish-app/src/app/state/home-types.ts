@@ -1,8 +1,14 @@
-import {HomeMeta, RestaurantOnlyIds, RestaurantSearchItem, Tag, User,} from '@dish/graph'
-import {Config, IContext} from 'overmind'
+import {
+  HomeMeta,
+  RestaurantOnlyIds,
+  RestaurantSearchItem,
+  Tag,
+  User,
+} from '@dish/graph'
+import { Config, IContext } from 'overmind'
 
-import {RegionNormalized} from '../../helpers/fetchRegion'
-import {NavigableTag} from './NavigableTag'
+import { RegionNormalized } from '../../helpers/fetchRegion'
+import { NavigableTag } from './NavigableTag'
 
 export type Om = IContext<Config>
 export type OmState = Om['state']
@@ -165,16 +171,4 @@ export type HomeStateItemLocation = {
   center: HomeStateItem['center']
   span: HomeStateItem['span']
   region?: RegionNormalized
-}
-
-export type FullTag = Required<
-  Pick<Tag, 'name' | 'id' | 'icon' | 'type' | 'rgb' | 'slug'>
->
-
-export type TagWithNameAndType =
-    | Tag
-    | {
-  name: FullTag['name']
-  type: FullTag['type']
-  slug?: string
 }

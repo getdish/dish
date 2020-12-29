@@ -3,14 +3,18 @@ import React, { memo, useMemo } from 'react'
 import { Animated, PanResponder, StyleSheet, View } from 'react-native'
 import { VStack } from 'snackui'
 
+import {
+  pageWidthMax,
+  searchBarHeight,
+  zIndexDrawer,
+} from '../../constants/constants'
+import { getWindowHeight } from '../../helpers/getWindow'
 import { autocompletesStore } from '../AppAutocomplete'
 import { AppSearchBar } from '../AppSearchBar'
 import { blurSearchInput } from '../AppSearchInput'
 import { drawerStore as drawerStoreInstance } from '../DrawerStore'
-import { BottomSheetContainer } from '../views/BottomSheetContainer'
-import { pageWidthMax, searchBarHeight, zIndexDrawer } from '../../constants/constants'
-import { getWindowHeight } from '../../helpers/getWindow'
 import { isTouchingSearchBar } from '../SearchInputNativeDragFix'
+import { BottomSheetContainer } from '../views/BottomSheetContainer'
 import { isScrollAtTop } from '../views/ContentScrollView'
 import { isScrollingSubDrawer } from '../views/ContentScrollViewHorizontal'
 

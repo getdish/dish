@@ -1,6 +1,6 @@
 import { tag } from '@dish/graph'
 
-import {FullTag} from "./home-types";
+import { FullTag } from './tagTypes'
 
 export function getFullTag(tag: tag): FullTag | null {
   if (!tag) {

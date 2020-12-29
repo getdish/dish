@@ -3,11 +3,17 @@ import { Minus, ThumbsDown, ThumbsUp } from '@dish/react-feather'
 import React, { Suspense, memo } from 'react'
 import { AbsoluteVStack, HStack, Spacer, Text, VStack } from 'snackui'
 
-import { darkGreen, darkGrey, darkRed, green, red } from '../../constants/colors'
-import { useUserTagVote } from '../hooks/useUserTagVotes'
-import { getTagSlug } from '../../helpers/getTagSlug'
+import {
+  darkGreen,
+  darkGrey,
+  darkRed,
+  green,
+  red,
+} from '../../constants/colors'
 import { tagDisplayName } from '../../constants/tagMeta'
-import {FullTag} from "../state/home-types";
+import { getTagSlug } from '../../helpers/getTagSlug'
+import { useUserTagVote } from '../hooks/useUserTagVotes'
+import { FullTag } from '../state/tagTypes'
 
 type TagSmallButtonProps = {
   restaurantSlug: string

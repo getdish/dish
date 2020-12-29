@@ -13,15 +13,15 @@ import {
   VStack,
 } from 'snackui'
 
-import { StackItemProps } from '../HomeStackView'
 import { HomeStateItemUser } from '../../state/home-types'
 import { useOvermind } from '../../state/useOvermind'
 import { useUserStore } from '../../state/userStore'
 import { ContentScrollView } from '../../views/ContentScrollView'
-import { NotFoundPage } from '../../views/NotFoundPage'
-import { StackDrawer } from '../../views/StackDrawer'
 import { Link } from '../../views/Link'
+import { NotFoundPage } from '../../views/NotFoundPage'
 import { SmallButton } from '../../views/SmallButton'
+import { StackDrawer } from '../../views/StackDrawer'
+import { StackItemProps } from '../HomeStackView'
 import { RestaurantReview } from '../restaurant/RestaurantReview'
 import { UserAvatar } from './UserAvatar'
 import { useUserQuery } from './useUserQuery'

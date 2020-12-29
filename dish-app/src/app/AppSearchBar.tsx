@@ -11,10 +11,6 @@ import {
   useMedia,
 } from 'snackui'
 
-import { autocompletesStore } from './AppAutocomplete'
-import { AppMenu } from './AppMenu'
-import { AppSearchInput } from './AppSearchInput'
-import { AppSearchInputLocation } from './AppSearchInputLocation'
 import { bgLightTranslucent } from '../constants/colors'
 import {
   searchBarHeight,
@@ -22,9 +18,13 @@ import {
   searchBarTopOffset,
   zIndexSearchBarFloating,
 } from '../constants/constants'
-import { DishHorizonView } from './views/DishHorizonView'
+import { autocompletesStore } from './AppAutocomplete'
+import { AppMenu } from './AppMenu'
+import { AppSearchInput } from './AppSearchInput'
+import { AppSearchInputLocation } from './AppSearchInputLocation'
 import { useSearchBarTheme } from './hooks/useSearchBarTheme'
 import { useOvermind } from './state/useOvermind'
+import { DishHorizonView } from './views/DishHorizonView'
 import { DishLogoButton } from './views/DishLogoButton'
 import { LinkButton } from './views/LinkButton'
 

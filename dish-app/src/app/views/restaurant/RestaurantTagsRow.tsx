@@ -3,13 +3,13 @@ import { sortBy } from 'lodash'
 import React, { memo } from 'react'
 import { Spacer, StackProps } from 'snackui'
 
+import { useRestaurantTags } from '../../hooks/useRestaurantTags'
 import {
   TagButton,
   TagButtonProps,
   TagButtonTagProps,
   getTagButtonProps,
 } from '../TagButton'
-import { useRestaurantTags } from '../../hooks/useRestaurantTags'
 
 type TagRowProps = {
   restaurantSlug: string

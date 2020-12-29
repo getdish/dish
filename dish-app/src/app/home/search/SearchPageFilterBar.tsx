@@ -2,13 +2,13 @@ import { groupBy, sortBy } from 'lodash'
 import React, { memo } from 'react'
 import { HStack, useMedia } from 'snackui'
 
-import { getGroupedButtonProps } from '../../../helpers/getGroupedButtonProps'
-import { rgbString } from '../../../helpers/rgbString'
-import { useCurrentLenseColor } from '../../hooks/useCurrentLenseColor'
-import { getTagSlug } from '../../../helpers/getTagSlug'
-import { HomeActiveTagsRecord } from '../../state/home-types'
 import { tagFilters } from '../../../constants/localTags'
 import { tagGroup, tagSort } from '../../../constants/tagMeta'
+import { getGroupedButtonProps } from '../../../helpers/getGroupedButtonProps'
+import { getTagSlug } from '../../../helpers/getTagSlug'
+import { rgbString } from '../../../helpers/rgbString'
+import { useCurrentLenseColor } from '../../hooks/useCurrentLenseColor'
+import { HomeActiveTagsRecord } from '../../state/home-types'
 import { FilterButton } from '../../views/FilterButton'
 
 type FilterBarProps = { activeTags: HomeActiveTagsRecord }

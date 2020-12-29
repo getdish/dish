@@ -1,4 +1,7 @@
-import {AutocompleteItem, createAutocomplete} from '../helpers/createAutocomplete'
+import {
+  AutocompleteItem,
+  createAutocomplete,
+} from '../helpers/createAutocomplete'
 
 export const defaultLocationAutocompleteResults: AutocompleteItem[] = [
   createAutocomplete({

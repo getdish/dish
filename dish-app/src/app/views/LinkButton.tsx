@@ -1,11 +1,10 @@
 import React, { useEffect, useRef, useState } from 'react'
 import { HStack, Text } from 'snackui'
 
-import { omStatic } from '../state/omStatic'
-import { RoutesTable, router } from '../../router'
 import { isStringChild } from '../../helpers/isStringChild'
-import { LinkButtonProps } from './LinkProps'
+import { RoutesTable, router } from '../../router'
 import { useLink } from '../hooks/useLink'
+import { LinkButtonProps } from './LinkProps'
 
 export function LinkButton<
   Name extends keyof RoutesTable = keyof RoutesTable,

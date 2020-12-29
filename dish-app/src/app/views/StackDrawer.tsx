@@ -9,9 +9,9 @@ import {
 } from 'snackui'
 
 import { drawerBorderRadius, drawerWidthMax } from '../../constants/constants'
+import { PageTitleTag } from './PageTitleTag'
 import { PaneControlButtons } from './PaneControlButtons'
 import { StackViewCloseButton } from './StackViewCloseButton'
-import { PageTitleTag } from './PageTitleTag'
 
 export const StackCloseButton = () => {
   return (

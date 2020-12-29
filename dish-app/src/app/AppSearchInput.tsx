@@ -22,22 +22,22 @@ import {
   useOnMount,
 } from 'snackui'
 
+import { isWeb, searchBarHeight } from '../constants/constants'
+import { getTagSlug } from '../helpers/getTagSlug'
+import { isWebIOS } from '../helpers/isIOS'
+import { router } from '../router'
 import { AutocompleteStore, autocompletesStore } from './AppAutocomplete'
 import { AppAutocompleteHoverableInput } from './AppAutocompleteHoverableInput'
-import { isWeb, searchBarHeight } from '../constants/constants'
-import { isWebIOS } from '../helpers/isIOS'
+import { searchPageStore } from './home/search/SearchPageStore'
 import { useSearchBarTheme } from './hooks/useSearchBarTheme'
 import {
   InputStore,
   setNodeOnInputStore,
   useInputStoreSearch,
 } from './InputStore'
-import { searchPageStore } from './home/search/SearchPageStore'
 import { SearchInputNativeDragFix } from './SearchInputNativeDragFix'
-import { getTagSlug } from '../helpers/getTagSlug'
 import { tagsToNavigableTags } from './state/NavigableTag'
-import { omStatic } from './state/omStatic'
-import { router } from '../router'
+import { om } from './state/om'
 import { useOvermind } from './state/useOvermind'
 import { TagButton, getTagButtonProps } from './views/TagButton'
 
@@ -70,8 +70,8 @@ export function setAvoidNextAutocompleteShowOnFocus() {
 }
 
 export const onFocusAnyInput = () => {
-  if (omStatic.state.home.searchbarFocusedTag) {
-    omStatic.actions.home.setSearchBarFocusedTag(null)
+  if (om.state.home.searchbarFocusedTag) {
+    om.actions.home.setSearchBarFocusedTag(null)
   }
 }
 
@@ -286,8 +286,8 @@ export const AppSearchInput = memo(() => {
                   }}
                   onKeyPress={handleKeyPressInner}
                   onFocus={() => {
-                    if (omStatic.state.home.searchbarFocusedTag) {
-                      omStatic.actions.home.setSearchBarTagIndex(0)
+                    if (om.state.home.searchbarFocusedTag) {
+                      om.actions.home.setSearchBarTagIndex(0)
                     } else {
                       autocompletesStore.setTarget('search')
                     }
@@ -360,10 +360,10 @@ const SearchCancelButton = memo(() => {
 })
 
 const prev = () => {
-  omStatic.actions.home.moveSearchBarTagIndex(-1)
+  om.actions.home.moveSearchBarTagIndex(-1)
 }
 const next = () => {
-  omStatic.actions.home.moveSearchBarTagIndex(1)
+  om.actions.home.moveSearchBarTagIndex(1)
 }
 
 const handleKeyPress = async (e: any, inputStore: InputStore) => {
@@ -407,8 +407,8 @@ const handleKeyPress = async (e: any, inputStore: InputStore) => {
             params: { slug: item.slug },
           })
         } else if ('tagId' in item) {
-          omStatic.actions.home.clearSearch()
-          omStatic.actions.home.navigate({
+          om.actions.home.clearSearch()
+          om.actions.home.navigate({
             tags: [item],
           })
         }
@@ -425,10 +425,10 @@ const handleKeyPress = async (e: any, inputStore: InputStore) => {
     }
     case 8: {
       // delete
-      if (omStatic.state.home.searchbarFocusedTag) {
+      if (om.state.home.searchbarFocusedTag) {
         // will remove it if active
-        omStatic.actions.home.navigate({
-          tags: tagsToNavigableTags([omStatic.state.home.searchbarFocusedTag]),
+        om.actions.home.navigate({
+          tags: tagsToNavigableTags([om.state.home.searchbarFocusedTag]),
         })
         next()
         return

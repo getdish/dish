@@ -10,14 +10,20 @@ import React, { useEffect, useRef, useState } from 'react'
 import { Dimensions } from 'react-native'
 import { useGet, useTheme } from 'snackui'
 
-import { blue, green, lightGreen, lightPurple, purple } from '../../constants/colors'
+import {
+  blue,
+  green,
+  lightGreen,
+  lightPurple,
+  purple,
+} from '../../constants/colors'
 import { MAPBOX_ACCESS_TOKEN } from '../../constants/constants'
-import { useIsMountedRef } from '../../helpers/useIsMountedRef'
-import { hexToRGB } from '../../helpers/hexToRGB'
 import { tagLenses } from '../../constants/localTags'
-import { SearchResultsStore } from '../home/search/searchResultsStore'
 import { getCenter } from '../../helpers/getCenter'
 import { hasMovedAtLeast } from '../../helpers/hasMovedAtLeast'
+import { hexToRGB } from '../../helpers/hexToRGB'
+import { useIsMountedRef } from '../../helpers/useIsMountedRef'
+import { SearchResultsStore } from '../home/search/searchResultsStore'
 import { MapProps } from './MapProps'
 
 mapboxgl.accessToken = MAPBOX_ACCESS_TOKEN

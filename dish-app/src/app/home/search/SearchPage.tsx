@@ -35,14 +35,17 @@ import {
   useMedia,
 } from 'snackui'
 
-import { appMapStore } from '../../AppMapStore'
-import { AppPortalItem } from '../../AppPortal'
 import { isWeb } from '../../../constants/constants'
+import { initialHomeState } from '../../../constants/initialHomeState'
 import { bboxToSpan } from '../../../helpers/bboxToSpan'
 import { fetchRegion } from '../../../helpers/fetchRegion'
+import { getTagSlug } from '../../../helpers/getTagSlug'
 import { rgbString } from '../../../helpers/rgbString'
 import { searchLocations } from '../../../helpers/searchLocations'
 import { useQueryLoud } from '../../../helpers/useQueryLoud'
+import { SearchRouteParams, router } from '../../../router'
+import { appMapStore } from '../../AppMapStore'
+import { AppPortalItem } from '../../AppPortal'
 import { useAppDrawerWidth } from '../../hooks/useAppDrawerWidth'
 import { useCurrentLenseColor } from '../../hooks/useCurrentLenseColor'
 import { useLastValue } from '../../hooks/useLastValue'
@@ -51,31 +54,29 @@ import { usePageLoadEffect } from '../../hooks/usePageLoadEffect'
 import { addTagsToCache } from '../../state/allTags'
 import { getActiveTags } from '../../state/getActiveTags'
 import { getTagsFromRoute } from '../../state/getTagsFromRoute'
-import { getTagSlug } from '../../../helpers/getTagSlug'
+import { getTitleForState } from '../../state/getTitleForState'
 import {
-  HomeActiveTagsRecord, HomeStateItemLocation,
+  HomeActiveTagsRecord,
+  HomeStateItemLocation,
   HomeStateItemSearch,
 } from '../../state/home-types'
-import { initialHomeState } from '../../../constants/initialHomeState'
-import { omStatic } from '../../state/omStatic'
-import { SearchRouteParams, router } from '../../../router'
-import { SearchResultsStore } from './searchResultsStore'
+import { om } from '../../state/om'
 import { useOvermind } from '../../state/useOvermind'
 import { ContentScrollView } from '../../views/ContentScrollView'
-import { StackDrawer } from '../../views/StackDrawer'
-import { TagButton, getTagButtonProps } from '../../views/TagButton'
 import { PageTitleTag } from '../../views/PageTitleTag'
 import { SlantedTitle } from '../../views/SlantedTitle'
+import { StackDrawer } from '../../views/StackDrawer'
+import { TagButton, getTagButtonProps } from '../../views/TagButton'
+import { HomeStackViewProps } from '../HomeStackViewProps'
 import {
   ITEM_HEIGHT,
   RestaurantListItem,
 } from '../restaurant/RestaurantListItem'
-import { HomeStackViewProps } from '../HomeStackViewProps'
-import { getTitleForState } from '../../state/getTitleForState'
 import { PageTitle } from './PageTitle'
 import { SearchPageNavBar } from './SearchPageNavBar'
 import { SearchPageResultsInfoBox } from './SearchPageResultsInfoBox'
 import { searchPageStore } from './SearchPageStore'
+import { SearchResultsStore } from './searchResultsStore'
 
 type Props = HomeStackViewProps<HomeStateItemSearch>
 const SearchPagePropsContext = createContext<Props | null>(null)
@@ -377,7 +378,7 @@ const SearchPageScrollView = forwardRef<ScrollView, SearchPageScrollViewProps>(
     const scrollRef = useRef<ScrollView>()
 
     useEffect(() => {
-      return omStatic.reaction(
+      return om.reaction(
         (state) => state.home.activeIndex,
         (index) => {
           if (

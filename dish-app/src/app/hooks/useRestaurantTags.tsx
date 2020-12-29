@@ -1,7 +1,7 @@
 import { order_by } from '@dish/graph'
 
-import { useRestaurantQuery } from './useRestaurantQuery'
 import { selectTagButtonProps } from '../../helpers/selectTagButtonProps'
+import { useRestaurantQuery } from './useRestaurantQuery'
 
 export const useRestaurantTags = ({
   restaurantSlug,

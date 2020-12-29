@@ -1,8 +1,8 @@
 import { isPresent } from '@dish/helpers'
 
+import { getTagSlug } from '../../helpers/getTagSlug'
 import { allTagsNameToSlug, tagNameKey } from './allTags'
 import { ensureUniqueActiveTags } from './ensureUniqueActiveTags'
-import { getTagSlug } from '../../helpers/getTagSlug'
 import { HomeActiveTagsRecord, HomeStateItem, HomeStateNav } from './home-types'
 import { shouldBeOnSearch } from './shouldBeOnSearch'
 

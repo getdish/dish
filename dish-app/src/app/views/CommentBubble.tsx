@@ -13,9 +13,9 @@ import {
 } from 'snackui'
 
 import { bgLight } from '../../constants/colors'
+import { thirdPartyCrawlSources } from '../../constants/thirdPartyCrawlSources'
 import { getColorsForName } from '../../helpers/getColorsForName'
 import { ensureFlexText } from '../home/restaurant/ensureFlexText'
-import { thirdPartyCrawlSources } from '../../constants/thirdPartyCrawlSources'
 import { Link } from './Link'
 
 export const CommentBubble = ({

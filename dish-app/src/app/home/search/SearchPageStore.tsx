@@ -3,10 +3,10 @@ import { LngLat, RestaurantSearchArgs, search } from '@dish/graph'
 import { isPresent, stringify } from '@dish/helpers'
 import { Store, createStore } from '@dish/use-store'
 
+import { getTagSlug } from '../../../helpers/getTagSlug'
 import { appMapStore } from '../../AppMapStore'
 import { allTags } from '../../state/allTags'
 import { getActiveTags } from '../../state/getActiveTags'
-import { getTagSlug } from '../../../helpers/getTagSlug'
 import { om } from '../../state/om'
 
 export type ActiveEvent = 'key' | 'pin' | 'hover' | null

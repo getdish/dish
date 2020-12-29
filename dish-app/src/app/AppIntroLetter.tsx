@@ -3,15 +3,15 @@ import { useStore } from '@dish/use-store'
 import React, { memo, useLayoutEffect } from 'react'
 import { AbsoluteVStack, Text } from 'snackui'
 
+import { useRouterCurPage } from '../router'
 import { AppIntroLogin } from './AppIntroLogin'
 import { useLocalStorageState } from './hooks/useLocalStorageState'
 import { IntroModalStore } from './IntroModalStore'
-import { useRouterCurPage } from '../router'
 import { useOvermind } from './state/useOvermind'
 import { useUserStore } from './state/userStore'
 import { UserOnboard } from './UserOnboard'
-import { DarkModal } from './views/DarkModal'
 import { SmallCircleButton } from './views/CloseButton'
+import { DarkModal } from './views/DarkModal'
 
 export const AppIntroLetter = memo(() => {
   const userStore = useUserStore()

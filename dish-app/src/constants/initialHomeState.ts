@@ -1,5 +1,5 @@
-import { getDefaultLocation } from '../helpers/getDefaultLocation'
 import { HomeStateItemHome } from '../app/state/home-types'
+import { getDefaultLocation } from '../helpers/getDefaultLocation'
 
 export const initialHomeState: HomeStateItemHome = {
   id: '0',

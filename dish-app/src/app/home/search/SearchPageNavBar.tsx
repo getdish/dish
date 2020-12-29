@@ -10,12 +10,12 @@ import {
 } from 'snackui'
 
 import { drawerWidthMax, isWeb } from '../../../constants/constants'
+import { titleHeight } from '../../../constants/titleHeight'
 import { useSafeArea } from '../../hooks/useSafeArea'
 import { isSearchState } from '../../state/home-helpers'
 import { useOvermind } from '../../state/useOvermind'
 import { HomeLenseBar } from '../../views/HomeLenseBar'
 import { SearchPageFilterBar } from './SearchPageFilterBar'
-import { titleHeight } from '../../../constants/titleHeight'
 
 const InverseRoundedEdge = () => {
   return (

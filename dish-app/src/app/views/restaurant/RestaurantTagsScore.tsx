@@ -15,9 +15,9 @@ import {
 } from 'snackui'
 
 import { getActiveTagSlugs } from '../../../helpers/getActiveTagSlugs'
+import { ensureFlexText } from '../../home/restaurant/ensureFlexText'
 import { useRestaurantQuery } from '../../hooks/useRestaurantQuery'
 import { useRestaurantTagScores } from '../../hooks/useRestaurantTagScores'
-import { ensureFlexText } from '../../home/restaurant/ensureFlexText'
 import { HomeActiveTagsRecord } from '../../state/home-types'
 import { PointsText } from '../PointsText'
 

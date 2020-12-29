@@ -1,6 +1,6 @@
+import { isValidTag } from '../../helpers/isValidTag'
 import { allTags } from './allTags'
 import { HomeStateItem } from './home-types'
-import { isValidTag } from '../../helpers/isValidTag'
 import { NavigableTag } from './NavigableTag'
 
 export const getActiveTags = (state: Partial<HomeStateItem>) => {

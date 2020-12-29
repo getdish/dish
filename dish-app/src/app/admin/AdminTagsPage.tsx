@@ -28,10 +28,10 @@ import {
 
 import { emojiRegex } from '../../helpers/emojiRegex'
 import { useQueryPaginated } from '../hooks/useQueryPaginated'
+import { PaginationNav } from '../views/PaginationNav'
 import { SmallButton } from '../views/SmallButton'
 import { AdminListItem, AdminListItemProps } from './AdminListItem'
 import { ColumnHeader } from './ColumnHeader'
-import { PaginationNav } from '../views/PaginationNav'
 import { VerticalColumn } from './VerticalColumn'
 
 const allTagsTag = { id: '', name: 'all', type: 'lense' } as const

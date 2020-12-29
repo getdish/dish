@@ -2,17 +2,17 @@ import React, { useEffect } from 'react'
 import { Image } from 'react-native'
 import { AbsoluteVStack, Divider, Paragraph, Spacer, VStack } from 'snackui'
 
-import { StackItemProps } from '../HomeStackView'
 import dontPanic from '../../../assets/dont-panic.svg'
-import { drawerStore } from '../../DrawerStore'
 import { lightGreen, lightYellow } from '../../../constants/colors'
+import { drawerStore } from '../../DrawerStore'
 import { HomeStateItemAbout } from '../../state/home-types'
 import { ContentScrollView } from '../../views/ContentScrollView'
-import { LogoColor } from '../../views/Logo'
-import { StackDrawer } from '../../views/StackDrawer'
 import { Link } from '../../views/Link'
 import { LinkButton } from '../../views/LinkButton'
+import { LogoColor } from '../../views/Logo'
+import { StackDrawer } from '../../views/StackDrawer'
 import { TextStrong } from '../../views/TextStrong'
+import { StackItemProps } from '../HomeStackView'
 
 const inlineButton = {
   borderRadius: 10,

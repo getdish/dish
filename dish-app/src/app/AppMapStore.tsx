@@ -1,15 +1,15 @@
 import { LngLat, RestaurantOnlyIds } from '@dish/graph'
 import { Store, createStore } from '@dish/use-store'
 
-import { autocompleteLocationStore } from './AppAutocomplete'
-import { inputStoreLocation } from './InputStore'
 import { defaultLocationAutocompleteResults } from '../constants/defaultLocationAutocompleteResults'
-import { setDefaultLocation } from '../helpers/getDefaultLocation'
-import { getNavigateItemForState } from './state/getNavigateItemForState'
 import { initialHomeState } from '../constants/initialHomeState'
-import { om } from './state/om'
+import { setDefaultLocation } from '../helpers/getDefaultLocation'
 import { reverseGeocode } from '../helpers/reverseGeocode'
 import { router } from '../router'
+import { autocompleteLocationStore } from './AppAutocomplete'
+import { inputStoreLocation } from './InputStore'
+import { getNavigateItemForState } from './state/getNavigateItemForState'
+import { om } from './state/om'
 
 type MapPosition = {
   center: LngLat
