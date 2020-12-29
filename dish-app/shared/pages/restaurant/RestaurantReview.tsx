@@ -1,5 +1,5 @@
 import { graphql, query, refetch } from '@dish/graph'
-import { useRefetch } from '@dish/graph/src/react'
+import { useRefetch } from '@dish/graph'
 import { uniqBy } from 'lodash'
 import React, { memo } from 'react'
 import {

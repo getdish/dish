@@ -335,15 +335,14 @@ const AppMapContent = memo(
 
     const handleHover = useCallback((id) => {
       if (id == null) {
-        om.actions.home.setHoveredRestaurant(null)
+        appMapStore.setHovered(null)
         return
       }
-      const { hoveredRestaurant } = omStatic.state.home
       const restaurants = getRestaurants()
-      if (!hoveredRestaurant || id !== hoveredRestaurant?.id) {
+      if (!appMapStore.hovered || id !== appMapStore.hovered.id) {
         const restaurant = restaurants?.find((x) => x.id === id)
         if (restaurant) {
-          om.actions.home.setHoveredRestaurant({
+          appMapStore.setHovered({
             id: restaurant.id,
             slug: restaurant.slug ?? '',
           })
@@ -362,8 +361,8 @@ const AppMapContent = memo(
         return
       }
       if (omStatic.state.home.currentStateType === 'search') {
-        if (id !== omStatic.state.home.selectedRestaurant?.id) {
-          om.actions.home.setSelectedRestaurant({
+        if (id !== appMapStore.selected?.id) {
+          appMapStore.setSelected({
             id: restaurant.id,
             slug: restaurant.slug ?? '',
           })
@@ -431,11 +430,7 @@ const AppMapContent = memo(
               features={features}
               // centerToResults={om.state.home.centerToResults}
               selected={position.id}
-              hovered={
-                (om.state.home.hoveredRestaurant &&
-                  om.state.home.hoveredRestaurant.id) ||
-                ''
-              }
+              hovered={appMapStore.hovered?.id}
               onMoveEnd={handleMoveEnd}
               onDoubleClick={handleDoubleClick}
               onHover={handleHover}

@@ -1,7 +1,7 @@
 import { sleep } from '@dish/async'
 import { ArrowUp } from '@dish/react-feather'
 import { HistoryItem } from '@dish/router'
-import { useStore } from '@dish/use-store'
+import { reaction, useStore } from '@dish/use-store'
 import { sortBy } from 'lodash'
 import React, {
   Suspense,
@@ -35,6 +35,7 @@ import {
   useMedia,
 } from 'snackui'
 
+import { appMapStore } from '../../AppMapStore'
 import { AppPortalItem } from '../../AppPortal'
 import { isWeb } from '../../constants'
 import { bboxToSpan } from '../../helpers/bboxToSpan'
@@ -163,17 +164,19 @@ const SearchPageContent = memo(function SearchPageContent(props: Props) {
 
   useEffect(() => {
     let isCancelled = false
-    const dispose = om.reaction(
-      () => om.state.home.selectedRestaurant,
-      async ({ id }) => {
+    const dispose = reaction(
+      appMapStore,
+      (x) => x.selected,
+      async (selected) => {
+        if (!selected) return
         const restaurants = props.item.results
-        const index = restaurants.findIndex((x) => x.id === id)
+        const index = restaurants.findIndex((x) => x.id === selected.id)
         if (index > -1) {
           await sleep(300)
           if (!isCancelled) {
             searchPageStore.setIndex(
               index,
-              om.state.home.isHoveringRestaurant ? 'hover' : 'pin'
+              appMapStore.hovered ? 'hover' : 'pin'
             )
           }
         }

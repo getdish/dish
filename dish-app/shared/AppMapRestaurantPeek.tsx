@@ -1,8 +1,10 @@
 import { graphql } from '@dish/graph'
+import { useStoreInstance } from '@dish/use-store'
 import React, { memo, useEffect, useState } from 'react'
 import { Image } from 'react-native'
 import { AbsoluteVStack, Box, HStack, Spacer, Text, VStack } from 'snackui'
 
+import { appMapStore } from './AppMapStore'
 import { useRestaurantQuery } from './hooks/useRestaurantQuery'
 import { RestaurantAddress } from './pages/restaurant/RestaurantAddress'
 import { RestaurantAddressLinksRow } from './pages/restaurant/RestaurantAddressLinksRow'
@@ -14,11 +16,12 @@ export const AppMapRestaurantPeek = memo(
   graphql<any>(() => {
     const om = useOvermind()
     const [slug, setSlug] = useState('')
-    const selectedSlug = om.state.home.selectedRestaurant?.slug ?? ''
-    const hoveredSlug =
-      (om.state.home.hoveredRestaurant &&
-        om.state.home.hoveredRestaurant.slug) ||
-      ''
+    const [selectedSlug, hoveredSlug] = useStoreInstance(
+      appMapStore,
+      (x) => [x.selected?.slug ?? '', x.hovered?.slug ?? ''] as const
+    )
+
+    // TODO could make hook useMostRecentValue(...args)
 
     useEffect(() => {
       setSlug(selectedSlug)

@@ -1,6 +1,6 @@
 import { idle, sleep } from '@dish/async'
 import { isEqual } from '@dish/fast-compare'
-import { RestaurantOnlyIds, Tag } from '@dish/graph'
+import { Tag } from '@dish/graph'
 import { assert, handleAssertionError, stringify } from '@dish/helpers'
 import { HistoryItem } from '@dish/router'
 import _, { clamp, findLast, isPlainObject } from 'lodash'
@@ -23,7 +23,6 @@ import {
   HomeStateItemSearch,
   HomeStateNav,
   HomeStateTagNavigable,
-  LngLat,
   OmState,
 } from './home-types'
 import { initialHomeState } from './initialHomeState'
@@ -37,12 +36,9 @@ export const state: HomeState = {
   started: false,
   isLoading: false,
   skipNextPageFetchData: false,
-  selectedRestaurant: null,
   showUserMenu: false,
   searchBarTagIndex: 0,
   allUsers: {},
-  hoveredRestaurant: null,
-  isHoveringRestaurant: false,
   isOptimisticUpdating: false,
   stateIndex: 0,
   stateIds: ['0'],
@@ -247,17 +243,10 @@ const clearSearch: AsyncAction = async (om) => {
   }
 }
 
-const setHoveredRestaurant: Action<RestaurantOnlyIds | null | false> = (
-  om,
-  val
-) => {
-  om.state.home.hoveredRestaurant = val
-}
-
 const handleRouteChange: AsyncAction<HistoryItem> = async (om, item) => {
   // happens on *any* route push or pop
-  if (om.state.home.hoveredRestaurant) {
-    om.state.home.hoveredRestaurant = null
+  if (appMapStore.hovered) {
+    appMapStore.setHovered(null)
   }
 
   if (item.type === 'pop') {
@@ -650,14 +639,6 @@ const setSearchBarTagIndex: Action<number> = (om, val) => {
   )
 }
 
-const setIsHoveringRestaurant: Action<boolean> = (om, val) => {
-  om.state.home.isHoveringRestaurant = val
-}
-
-const setSelectedRestaurant: Action<RestaurantOnlyIds | null> = (om, val) => {
-  om.state.home.selectedRestaurant = val
-}
-
 const setShowUserMenu: Action<boolean> = (om, val) => {
   om.state.home.showUserMenu = val
 }
@@ -691,7 +672,6 @@ export const actions = {
   clearTag,
   popTo,
   requestLocation,
-  setHoveredRestaurant,
   setSearchBarFocusedTag,
   moveSearchBarTagIndex,
   setSearchBarTagIndex,
@@ -701,8 +681,6 @@ export const actions = {
   setIsLoading,
   updateHomeState,
   navigate,
-  setIsHoveringRestaurant,
-  setSelectedRestaurant,
   setShowUserMenu,
   promptLogin,
 }

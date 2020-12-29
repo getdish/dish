@@ -27,6 +27,7 @@ import {
   useTheme,
 } from 'snackui'
 
+import { appMapStore } from '../../AppMapStore'
 import { bgLight, bgLightHover, bgLightPress, brandColor } from '../../colors'
 import { isWeb } from '../../constants'
 import { getActiveTagSlugs } from '../../helpers/getActiveTagSlugs'
@@ -75,7 +76,7 @@ type RestaurantListItemProps = {
  * for logged in calls, we often need to user restaurant_id
  */
 
-const setHoveredSlow = debounce(omStatic.actions.home.setHoveredRestaurant, 250)
+const setHoveredSlow = debounce(appMapStore.setHovered, 250)
 
 export const RestaurantListItem = memo(function RestaurantListItem(
   props: RestaurantListItemProps
@@ -122,11 +123,8 @@ export const RestaurantListItem = memo(function RestaurantListItem(
         }}
         onMouseLeave={() => {
           setHoveredSlow.cancel()
-          if (
-            omStatic.state.home.hoveredRestaurant &&
-            omStatic.state.home.hoveredRestaurant?.slug === props.restaurantSlug
-          ) {
-            omStatic.actions.home.setIsHoveringRestaurant(false)
+          if (appMapStore.hovered?.slug === props.restaurantSlug) {
+            appMapStore.setHovered(null)
           }
         }}
       >

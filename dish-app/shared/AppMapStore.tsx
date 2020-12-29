@@ -1,4 +1,4 @@
-import { LngLat } from '@dish/graph/src'
+import { LngLat, RestaurantOnlyIds } from '@dish/graph'
 import { Store, createStore } from '@dish/use-store'
 
 import { initialHomeState } from './state/initialHomeState'
@@ -13,6 +13,8 @@ type MapPosition = {
 }
 
 class AppMapStore extends Store {
+  selected: RestaurantOnlyIds | null = null
+  hovered: RestaurantOnlyIds | null = null
   userLocation: LngLat | null = null
   position: MapPosition = {
     center: initialHomeState.center,
@@ -28,6 +30,14 @@ class AppMapStore extends Store {
       ...pos,
     }
     this.updateAreaInfo()
+  }
+
+  setSelected(n: RestaurantOnlyIds | null) {
+    this.selected = n
+  }
+
+  setHovered(n: RestaurantOnlyIds | null) {
+    this.hovered = n
   }
 
   async moveToUserLocation() {
