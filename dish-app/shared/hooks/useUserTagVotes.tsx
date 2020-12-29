@@ -1,12 +1,13 @@
-import { Review, query, review, reviewUpsert } from '@dish/graph'
+import { query, review, reviewUpsert } from '@dish/graph'
 import { Store, useStore } from '@dish/use-store'
 import { isNumber } from 'lodash'
 import { useEffect, useLayoutEffect } from 'react'
-import { Toast, useForceUpdate } from 'snackui'
+import { Toast, useForceUpdate, useLazyEffect } from 'snackui'
+import { useConstant } from 'snackui'
 
+import { promptLogin } from '../helpers/promptLogin'
 import { addTagsToCache, allTags } from '../state/allTags'
 import { getFullTags } from '../state/getFullTags'
-import { getTagSlug } from '../state/getTagSlug'
 import { HomeActiveTagsRecord } from '../state/home-types'
 import { omStatic } from '../state/omStatic'
 import { useOvermind } from '../state/useOvermind'
@@ -46,8 +47,19 @@ export const useUserTagVotes = (
   restaurantSlug: string,
   activeTags: HomeActiveTagsRecord
 ) => {
-  // ⚠️ cant change bad hooks practice
-  const tagSlugList = Object.keys(activeTags).filter((x) => activeTags[x])
+  const tagSlugList = useConstant(() =>
+    Object.keys(activeTags).filter((x) => activeTags[x])
+  )
+
+  if (process.env.NODE_ENV === 'development') {
+    useLazyEffect(() => {
+      console.warn(
+        'CHANGING ACTIVE TAGS NOT ALLOWED< USE KEY INSTEAD',
+        activeTags,
+        tagSlugList
+      )
+    }, [JSON.stringify(activeTags)])
+  }
 
   // handles multiple
   const votes: VoteNumber[] = []
@@ -61,7 +73,7 @@ export const useUserTagVotes = (
   return {
     vote: votes[0] ?? 0, // use the first one when querying multiple
     setVote: (vote: VoteNumber) => {
-      if (omStatic.actions.home.promptLogin()) {
+      if (promptLogin()) {
         return
       }
       for (const setVote of setVotes) {
@@ -128,7 +140,7 @@ export const useUserTagVote = (props: VoteStoreProps) => {
   return [
     voteStore.vote,
     async (userVote: VoteNumber | 'toggle') => {
-      if (omStatic.actions.home.promptLogin()) {
+      if (promptLogin()) {
         return
       }
       const vote =

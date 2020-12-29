@@ -3,6 +3,7 @@ import React, { memo } from 'react'
 import { Box, BoxProps, Divider, Spacer, Toast, VStack } from 'snackui'
 import { isWeb } from 'snackui/src/constants'
 
+import { appMenuStore } from './AppMenuStore'
 import { omStatic } from './state/omStatic'
 import { useOvermind } from './state/useOvermind'
 import { flatButtonStyle } from './views/baseButtonStyle'
@@ -76,11 +77,7 @@ const MenuLinkButton = (props: LinkButtonProps) => {
         transform: [{ scale: 1.03 }],
       }}
       paddingVertical={8}
-      onPressOut={() => {
-        if (omStatic.state.home.showUserMenu) {
-          omStatic.actions.home.setShowUserMenu(false)
-        }
-      }}
+      onPressOut={appMenuStore.hide}
       fontSize={18}
       {...props}
     />

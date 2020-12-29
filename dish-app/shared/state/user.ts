@@ -9,6 +9,7 @@ import {
 import { Action, AsyncAction } from 'overmind'
 import { Toast } from 'snackui'
 
+import { appMenuStore } from '../AppMenuStore'
 import { router } from './router'
 
 type UserState = {
@@ -161,7 +162,7 @@ const ensureLoggedIn: Action<void, boolean> = (om) => {
     return true
   }
   Toast.show('Login to do this!')
-  om.actions.home.setShowUserMenu(true)
+  appMenuStore.show()
   return false
 }
 
