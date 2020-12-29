@@ -1,6 +1,6 @@
 import anyTest, { TestInterface } from 'ava'
 
-import { getRestaurantDishes } from '../../../dish-app/shared/helpers/getRestaurantDishes'
+import { getRestaurantDishes } from '../../../dish-app/src/helpers/getRestaurantDishes'
 import {
   RestaurantWithId,
   TagWithId,

@@ -4,7 +4,7 @@ import { order_by, query, resolved, startLogging } from '@dish/graph'
 import { writeFile, writeJSON } from 'fs-extra'
 import { sortBy } from 'lodash'
 
-import { getFullTag } from '../shared/state/getFullTag'
+import { getFullTag } from '../src/app/state/getFullTag'
 
 startLogging()
 main()
@@ -16,7 +16,7 @@ async function main() {
     output += `export const ${key} = ${JSON.stringify(tags[key], null, 2)}\n`
   }
   await writeFile(
-    join(__dirname, '..', 'shared', 'state', 'localTags.ts'),
+    join(__dirname, '..', 'src', 'constants', 'localTags.ts'),
     output
   )
   console.log('wrote tags', tags)
