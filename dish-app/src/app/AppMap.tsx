@@ -361,7 +361,7 @@ const AppMapContent = memo(
       const restaurants = getRestaurants()
       const restaurant = restaurants?.find((x) => x.id === id)
       if (!restaurant) {
-        console.warn('not found', id)
+        console.warn('not found', id, restaurants)
         return
       }
       if (om.state.home.currentStateType === 'search') {

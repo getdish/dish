@@ -1,6 +1,7 @@
 import { fullyIdle, series } from '@dish/async'
 import { RestaurantItemMeta, graphql } from '@dish/graph'
 import { MessageSquare } from '@dish/react-feather'
+import { useStoreInstance } from '@dish/use-store'
 import { debounce } from 'lodash'
 import React, {
   Suspense,
@@ -53,6 +54,7 @@ import { RestaurantUpVoteDownVote } from '../../views/restaurant/RestaurantUpVot
 import { SlantedTitle } from '../../views/SlantedTitle'
 import { SmallButton } from '../../views/SmallButton'
 import { TagButton, getTagButtonProps } from '../../views/TagButton'
+import { searchPageStore } from '../search/SearchPageStore'
 import { ensureFlexText } from './ensureFlexText'
 import { RankView } from './RankView'
 import { RestaurantAddress } from './RestaurantAddress'
@@ -172,25 +174,12 @@ const RestaurantListItemContent = memo(
     const restaurantName = (restaurant.name ?? '').slice(0, 300)
     const curState = om.state.home.currentState
     const tagIds = 'activeTags' in curState ? curState.activeTags : {}
-    const score = restaurant.score ?? 0
-    const [isActive, setIsActive] = useState(false)
+    const isActive = useStoreInstance(
+      searchPageStore,
+      (x) => x.index === rank - 1
+    )
     const [isExpanded, setIsExpanded] = useState(false)
     const meta = searchState.results[rank]?.meta
-
-    const getIsActive = useGet(isActive)
-    useLayoutEffect(() => {
-      const getIsActiveNow = (state) => props.rank == state.home.activeIndex + 1
-
-      if (getIsActiveNow(om.state)) {
-        setIsActive(true)
-      }
-
-      return om.reaction(getIsActiveNow, (isActive) => {
-        if (getIsActive() !== isActive) {
-          setIsActive(isActive)
-        }
-      })
-    }, [props.rank])
 
     const contentSideProps: StackProps = {
       width: media.sm ? '75%' : '60%',

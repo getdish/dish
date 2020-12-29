@@ -3,11 +3,11 @@ import {
   RestaurantOnlyIds,
   RestaurantSearchItem,
   Tag,
-  User
+  User,
 } from '@dish/graph'
 import { Config, IContext } from 'overmind'
-import { NavigableTag } from './NavigableTag'
 
+import { NavigableTag } from './NavigableTag'
 
 export type Om = IContext<Config>
 export type OmState = Om['state']

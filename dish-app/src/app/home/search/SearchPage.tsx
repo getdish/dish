@@ -379,13 +379,11 @@ const SearchPageScrollView = forwardRef<ScrollView, SearchPageScrollViewProps>(
     const scrollRef = useRef<ScrollView>()
 
     useEffect(() => {
-      return om.reaction(
-        (state) => state.home.activeIndex,
-        (index) => {
-          if (
-            searchPageStore.event === 'pin' ||
-            searchPageStore.event === 'key'
-          ) {
+      return reaction(
+        searchPageStore,
+        (x) => [x.index, x.event] as const,
+        ([index, event]) => {
+          if (event === 'pin' || event === 'key') {
             scrollRef.current?.scrollTo({
               x: 0,
               y: ITEM_HEIGHT * index,
