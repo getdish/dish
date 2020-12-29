@@ -31,6 +31,7 @@ import { isWeb } from 'snackui/src/constants'
 import { peachAvatar } from '../../constants/avatar'
 import { drawerWidthMax, searchBarHeight } from '../../constants/constants'
 import { RegionNormalized, useRegionQuery } from '../../helpers/fetchRegion'
+import { setDefaultLocation } from '../../helpers/getDefaultLocation'
 import { getGroupedButtonProps } from '../../helpers/getGroupedButtonProps'
 import { DishTagItem } from '../../helpers/getRestaurantDishes'
 import { selectTagDishViewSimple } from '../../helpers/selectDishViewSimple'
@@ -98,9 +99,6 @@ export default memo(function HomePage(props: Props) {
   const om = useOvermind()
   const theme = useTheme()
   const [isLoaded, setIsLoaded] = useState(false)
-
-  console.warn('HomePage', props.item)
-
   const region = useRegionQuery(props.item.region, {
     enabled: !!props.item.region,
   })
@@ -128,6 +126,15 @@ export default memo(function HomePage(props: Props) {
       ])
     }
   })
+
+  useEffect(() => {
+    if (!region.data) return
+    setDefaultLocation({
+      center: region.data.center,
+      span: region.data.span,
+      region: region.data.name,
+    })
+  }, [region.data])
 
   // center map to region
   useEffect(() => {
