@@ -41,7 +41,7 @@ import { usePageLoadEffect } from '../hooks/usePageLoadEffect'
 import { useRestaurantQuery } from '../hooks/useRestaurantQuery'
 import { homeStore, useHomeStore } from '../state/home'
 import { HomeStateItemHome } from '../state/home-types'
-import { CardFrame } from '../views/CardFrame'
+import { CardFrame, cardFrameBorderRadius } from '../views/CardFrame'
 import { CommentBubble } from '../views/CommentBubble'
 import { ContentScrollView } from '../views/ContentScrollView'
 import { DishView } from '../views/dish/DishView'
@@ -398,7 +398,7 @@ const HomePageContent = memo(
                   return (
                     <VStack
                       key={item.id}
-                      paddingHorizontal={8}
+                      paddingHorizontal={16}
                       paddingBottom="6%"
                       alignItems="center"
                       width={media.xs ? '90%' : 'auto'}
@@ -699,14 +699,26 @@ const DishRestaurantsFeedCard = (props: FeedItemDishRestaurants) => {
         {props.dish.icon ?? null} {props.dish.name}
       </SlantedTitle>
       <ScrollView horizontal showsHorizontalScrollIndicator={false}>
-        <HStack paddingVertical={5} paddingHorizontal={20}>
+        <HStack paddingVertical={5} paddingHorizontal={5}>
           {props.restaurants.map((r) => {
             if (!r.slug) {
               return null
             }
             return (
               <HStack key={r.id}>
-                <VStack marginHorizontal={-15} transform={[{ scale: 0.8 }]}>
+                <VStack
+                  marginRight={-105}
+                  transform={[
+                    { scale: 0.7 },
+                    { perspective: 850 },
+                    { rotateY: '20deg' },
+                  ]}
+                  borderRadius={cardFrameBorderRadius}
+                  shadowColor="#000"
+                  shadowOpacity={0.24}
+                  shadowRadius={20}
+                  shadowOffset={{ height: 0, width: -15 }}
+                >
                   <RestaurantCard
                     restaurantId={r.id}
                     restaurantSlug={r.slug}
