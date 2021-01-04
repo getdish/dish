@@ -15,7 +15,7 @@ import { getColorsForName } from '../../../helpers/getColorsForName'
 import { useRestaurantQuery } from '../../hooks/useRestaurantQuery'
 import {
   CardFrame,
-  cardFrameBorderRadiusSmaller,
+  cardFrameBorderRadius,
   cardFrameHeight,
   cardFrameWidth,
 } from '../../views/CardFrame'
@@ -73,7 +73,7 @@ export const RestaurantCardContent = memo(
               overflow="hidden"
               alignSelf="center"
               position="relative"
-              borderRadius={cardFrameBorderRadiusSmaller}
+              borderRadius={cardFrameBorderRadius}
             >
               <AbsoluteVStack
                 fullscreen
@@ -82,7 +82,7 @@ export const RestaurantCardContent = memo(
                 pointerEvents="none"
                 transform={[{ scaleX: 0.98 }, { scaleY: 0.98 }]}
                 zIndex={10}
-                borderRadius={cardFrameBorderRadiusSmaller - 2}
+                borderRadius={cardFrameBorderRadius - 2}
                 shadowColor="#000"
                 shadowRadius={40}
               ></AbsoluteVStack>
