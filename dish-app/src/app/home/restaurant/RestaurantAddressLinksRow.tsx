@@ -10,7 +10,7 @@ import { ScrollView } from 'react-native'
 import { Box, HStack, HoverablePopover, Text, VStack } from 'snackui'
 
 import { useRestaurantQuery } from '../../hooks/useRestaurantQuery'
-import { GeocodePlace } from '../../state/home-types'
+import { GeocodePlace } from '../../../types/homeTypes'
 import { SmallCircleButton } from '../../views/CloseButton'
 import { SmallButton } from '../../views/SmallButton'
 

@@ -1,7 +1,7 @@
 import { useLayoutEffect } from 'react'
 
-import { pagesStore } from '../PagesStore'
-import { HomeStateItem } from '../state/home-types'
+import { pagesStore } from '../pagesStore'
+import { HomeStateItem } from '../../types/homeTypes'
 
 export type PageLoadEffectCallback = (opts: {
   isRefreshing: boolean

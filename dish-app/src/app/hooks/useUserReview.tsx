@@ -11,7 +11,7 @@ import {
 import { useState } from 'react'
 import { Toast, useLazyEffect } from 'snackui'
 
-import { useUserStore } from '../state/userStore'
+import { useUserStore } from '../userStore'
 
 export type ReviewWithTag = Pick<
   Review,

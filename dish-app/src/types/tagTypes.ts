@@ -1,4 +1,4 @@
-import { Tag } from '@dish/graph'
+import {Tag} from '@dish/graph'
 
 export type FullTag = Required<
   Pick<Tag, 'name' | 'id' | 'icon' | 'type' | 'rgb' | 'slug'>
@@ -11,3 +11,5 @@ export type TagWithNameAndType =
       type: FullTag['type']
       slug?: string
     }
+export type NavigableTag = Partial<Tag> &
+    (Required<Pick<Tag, 'name' | 'type'>> | Required<Pick<Tag, 'slug'>>)

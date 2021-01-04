@@ -1,7 +1,5 @@
-import { Tag } from '@dish/graph'
-
-export type NavigableTag = Partial<Tag> &
-  (Required<Pick<Tag, 'name' | 'type'>> | Required<Pick<Tag, 'slug'>>)
+import {Tag} from '@dish/graph'
+import {NavigableTag} from "../types/tagTypes";
 
 export function tagsToNavigableTags(tags: Partial<Tag>[]) {
   return tags.filter(isNavigableTag)

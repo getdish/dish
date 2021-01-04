@@ -10,7 +10,7 @@ import { tagDisplayName } from '../../../constants/tagMeta'
 import { getActiveTagSlugs } from '../../../helpers/getActiveTagSlugs'
 import { useRestaurantQuery } from '../../hooks/useRestaurantQuery'
 import { useRestaurantTagScores } from '../../hooks/useRestaurantTagScores'
-import { homeStore } from '../../state/home'
+import { homeStore } from '../../homeStore'
 import { PointsText } from '../../views/PointsText'
 import { RestaurantReviewsDisplayStore } from './RestaurantBreakdown'
 

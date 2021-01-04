@@ -5,7 +5,7 @@ import React, { useEffect, useState } from 'react'
 import { HStack, Text, Toast, VStack } from 'snackui'
 
 import { useIsMountedRef } from '../../helpers/useIsMountedRef'
-import { userStore } from '../state/userStore'
+import { userStore } from '../userStore'
 import { AppleLogoWhite } from './AppleLogoWhite'
 
 export default function SignInAppleButton() {

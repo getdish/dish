@@ -10,7 +10,7 @@ import { VStack, useMedia } from 'snackui'
 
 import { isWeb } from '../../constants/constants'
 import { supportsTouchWeb } from '../../constants/platforms'
-import { drawerStore } from '../DrawerStore'
+import { drawerStore } from '../drawerStore'
 
 export class ScrollStore extends Store<{ id: string }> {
   isScrolling = false

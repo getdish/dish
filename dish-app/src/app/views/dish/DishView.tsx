@@ -19,10 +19,10 @@ import { getColorsForName } from '../../../helpers/getColorsForName'
 import { getImageUrl } from '../../../helpers/getImageUrl'
 import { DishTagItem } from '../../../helpers/getRestaurantDishes'
 import { getTagSlug } from '../../../helpers/getTagSlug'
-import { NavigableTag } from '../../state/NavigableTag'
 import { ColoredCircle } from '../ColoredCircle'
 import { Link } from '../Link'
 import { DishUpvoteDownvote } from './DishUpvoteDownvote'
+import {NavigableTag} from "../../../types/tagTypes";
 
 // avoid too many different image sizes
 const smallSize = [160 * 0.9, 160] as const

@@ -18,7 +18,7 @@ import { getActiveTagSlugs } from '../../../helpers/getActiveTagSlugs'
 import { ensureFlexText } from '../../home/restaurant/ensureFlexText'
 import { useRestaurantQuery } from '../../hooks/useRestaurantQuery'
 import { useRestaurantTagScores } from '../../hooks/useRestaurantTagScores'
-import { HomeActiveTagsRecord } from '../../state/home-types'
+import { HomeActiveTagsRecord } from '../../../types/homeTypes'
 import { PointsText } from '../PointsText'
 
 export const RestaurantTagsScore = graphql(function RestaurantTagsScore({

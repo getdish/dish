@@ -1,7 +1,7 @@
 import loadable from '@loadable/component'
 import React from 'react'
 
-import { isBlogState } from '../state/home-helpers'
+import { isBlogState } from '../../helpers/homeStateHelpers'
 import { HomeStackViewProps } from './HomeStackViewProps'
 
 export function HomeStackViewPagesContents(props: HomeStackViewProps) {

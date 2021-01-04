@@ -1,4 +1,4 @@
-import { LngLat } from '../app/state/home-types'
+import { LngLat } from '../types/homeTypes'
 
 type Base = {
   icon?: string

@@ -13,11 +13,11 @@ import {
   addTagsToCache,
   allTags,
   getFullTagFromNameAndType,
-} from '../state/allTags'
-import { getNavigateItemForState } from '../state/getNavigateItemForState'
-import { getNextState } from '../state/getNextState'
-import { homeStore } from '../state/home'
-import { tagsToNavigableTags } from '../state/NavigableTag'
+} from '../../helpers/allTags'
+import { getNavigateItemForState } from '../../helpers/getNavigateItemForState'
+import { getNextState } from '../../helpers/getNextState'
+import { homeStore } from '../homeStore'
+import { tagsToNavigableTags } from '../../helpers/tagHelpers'
 import { LinkButtonProps, LinkProps } from '../views/LinkProps'
 
 export const useLink = (props: LinkProps<any, any>) => {

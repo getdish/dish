@@ -2,10 +2,10 @@ import { isPresent } from '@dish/helpers'
 import React from 'react'
 import { Text } from 'snackui'
 
-import { isWeb } from '../../constants/constants'
-import { tagDescriptions, tagDisplayName } from '../../constants/tagMeta'
+import { isWeb } from '../constants/constants'
+import { tagDescriptions, tagDisplayName } from '../constants/tagMeta'
 import { getActiveTags } from './getActiveTags'
-import { HomeStateItem } from './home-types'
+import { HomeStateItem } from '../types/homeTypes'
 
 const getTitleForQuery = (query: string) => {
   return query

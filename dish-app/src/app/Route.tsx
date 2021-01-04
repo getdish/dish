@@ -10,7 +10,7 @@ import { useForceUpdate } from 'snackui'
 
 import { routePathToName, routes, useRouter, useRouterCurPage } from '../router'
 import { useLastValueWhen } from './hooks/useLastValueWhen'
-import { useUserStore } from './state/userStore'
+import { useUserStore } from './userStore'
 
 type RouteState = 'collect' | 'active' | 'inactive'
 

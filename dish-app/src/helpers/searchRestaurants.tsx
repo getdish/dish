@@ -1,8 +1,8 @@
 import { query } from '@dish/graph'
 
 import { getAddressText } from '../app/home/restaurant/RestaurantAddressLinksRow'
-import { homeStore } from '../app/state/home'
-import { LngLat } from '../app/state/home-types'
+import { homeStore } from '../app/homeStore'
+import { LngLat } from '../types/homeTypes'
 import { createAutocomplete } from './createAutocomplete'
 import { getFuzzyMatchQuery } from './getFuzzyMatchQuery'
 

@@ -1,7 +1,7 @@
 import React, { Suspense, memo } from 'react'
 import { AbsoluteVStack, LoadingItems } from 'snackui'
 
-import { useHomeStore } from '../../state/home'
+import { useHomeStore } from '../../homeStore'
 import { Lightbox } from '../../views/Lightbox'
 import { StackViewCloseButton } from '../../views/StackViewCloseButton'
 

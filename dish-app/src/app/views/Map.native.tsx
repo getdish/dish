@@ -6,7 +6,7 @@ import { useDebounce } from 'snackui'
 
 import { MAPBOX_ACCESS_TOKEN } from '../../constants/constants'
 import { hasMovedAtLeast } from '../../helpers/hasMovedAtLeast'
-import { drawerStore as drawerStoreInstance } from '../DrawerStore'
+import { drawerStore as drawerStoreInstance } from '../drawerStore'
 import { MapProps } from './MapProps'
 
 MapboxGL.setAccessToken(MAPBOX_ACCESS_TOKEN)

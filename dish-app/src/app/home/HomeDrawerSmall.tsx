@@ -2,7 +2,7 @@ import { useStoreInstance } from '@dish/use-store'
 import React, { useEffect } from 'react'
 
 import { autocompletesStore } from '../AppAutocomplete'
-import { drawerStore } from '../DrawerStore'
+import { drawerStore } from '../drawerStore'
 import { HomeDrawerSmallView } from './HomeDrawerSmallView'
 
 export const HomeDrawerSmall = (props: { children: any }) => {

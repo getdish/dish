@@ -1,7 +1,7 @@
 import { memo, useEffect } from 'react'
 
 import { focusSearchInput, getSearchInput } from './AppSearchInput'
-import { homeStore } from './state/home'
+import { homeStore } from './homeStore'
 
 export const Shortcuts = memo(() => {
   useEffect(() => {

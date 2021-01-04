@@ -1,4 +1,4 @@
-import { HomeStateItem } from '../state/home-types'
+import { HomeStateItem } from '../../types/homeTypes'
 import { StackItemProps } from './HomeStackView'
 
 export type HomeStackViewProps<

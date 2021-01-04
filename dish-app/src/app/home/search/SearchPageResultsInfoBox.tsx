@@ -3,8 +3,8 @@ import React, { memo } from 'react'
 import { Image, ScrollView } from 'react-native'
 import { HStack, Text, VStack } from 'snackui'
 
-import { getActiveTags } from '../../state/getActiveTags'
-import { HomeStateItemSearch } from '../../state/home-types'
+import { getActiveTags } from '../../../helpers/getActiveTags'
+import { HomeStateItemSearch } from '../../../types/homeTypes'
 import { DishViewButton } from '../../views/dish/DishViewButton'
 
 export const SearchPageResultsInfoBox = memo(

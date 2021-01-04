@@ -13,7 +13,7 @@ import { isWebIOS } from '../../helpers/isIOS'
 import { autocompletesStore } from '../AppAutocomplete'
 import { AppSearchBar } from '../AppSearchBar'
 import { blurSearchInput } from '../AppSearchInput'
-import { drawerStore as drawerStoreInstance } from '../DrawerStore'
+import { drawerStore as drawerStoreInstance } from '../drawerStore'
 import { BottomSheetContainer } from '../views/BottomSheetContainer'
 import { HomeDrawerSmallView as HomeDrawerSmallViewNative } from './HomeDrawerSmallView.native'
 

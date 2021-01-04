@@ -1,7 +1,7 @@
 import { LngLat } from '@dish/graph'
 import mapboxgl from 'mapbox-gl'
 
-import { Region } from '../state/home-types'
+import { Region } from '../../types/homeTypes'
 
 export type MapProps = {
   center: LngLat

@@ -1,5 +1,5 @@
-import { isSearchState } from '../app/state/home-helpers'
-import { HomeStateItem } from '../app/state/home-types'
+import { isSearchState } from './homeStateHelpers'
+import { HomeStateItem } from '../types/homeTypes'
 
 export const isBreadcrumbState = (type: HomeStateItem['type']) => {
   return (

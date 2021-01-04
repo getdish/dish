@@ -4,7 +4,7 @@ import { differenceBy } from 'lodash'
 
 import { allTags } from './allTags'
 import { getFullTag } from './getFullTag'
-import { FullTag, TagWithNameAndType } from './tagTypes'
+import { FullTag, TagWithNameAndType } from '../types/tagTypes'
 
 type TagPartial =
   | TagWithNameAndType

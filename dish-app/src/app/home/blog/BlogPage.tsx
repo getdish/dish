@@ -2,7 +2,7 @@ import React from 'react'
 import { Divider, Spacer, Title, VStack } from 'snackui'
 
 import { bgLightLight } from '../../../constants/colors'
-import { HomeStateItemBlog } from '../../state/home-types'
+import { HomeStateItemBlog } from '../../../types/homeTypes'
 import { ContentScrollView } from '../../views/ContentScrollView'
 import { Link } from '../../views/Link'
 import { StackDrawer } from '../../views/StackDrawer'

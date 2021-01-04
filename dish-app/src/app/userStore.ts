@@ -9,8 +9,8 @@ import {
 import { Store, createStore, useStoreInstance } from '@dish/use-store'
 import { Toast } from 'snackui'
 
-import { router } from '../../router'
-import { appMenuStore } from '../AppMenuStore'
+import { router } from '../router'
+import { appMenuStore } from './AppMenuStore'
 
 class UserStore extends Store {
   user: Partial<User> | null = null
