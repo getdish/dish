@@ -1,7 +1,6 @@
 import { LngLat } from '@dish/graph'
 
-import { om } from '../app/state/om'
-import { useOvermind } from '../app/state/useOvermind'
+import { homeStore, useHomeStore } from '../app/state/home'
 
 export const mapHelpers = null
 
@@ -11,21 +10,21 @@ export const getZoomLevel = (span: LngLat) => {
 }
 
 export const useZoomLevel = () => {
-  const om = useOvermind()
-  return getZoomLevel(om.state.home.currentState.span!)
+  const home = useHomeStore()
+  return getZoomLevel(home.currentState.span!)
 }
 
 export const mapZoomToMedium = () => {
-  let span = om.state.home.currentState.span!
-  let center = om.state.home.currentState.center!
-  for (const state of [...om.state.home.states].reverse()) {
+  let span = homeStore.currentState.span!
+  let center = homeStore.currentState.center!
+  for (const state of [...homeStore.states].reverse()) {
     if (getZoomLevel(state.span!) === 'medium') {
       span = state.span!
       center = state.center!
       break
     }
   }
-  om.actions.home.updateCurrentState({
+  homeStore.updateCurrentState({
     span,
     center,
   })

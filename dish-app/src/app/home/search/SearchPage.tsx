@@ -1,5 +1,5 @@
 import { sleep } from '@dish/async'
-import { LngLat } from '@dish/graph/src'
+import { LngLat } from '@dish/graph'
 import { ArrowUp } from '@dish/react-feather'
 import { HistoryItem } from '@dish/router'
 import { reaction, useStore } from '@dish/use-store'
@@ -56,13 +56,11 @@ import { addTagsToCache } from '../../state/allTags'
 import { getActiveTags } from '../../state/getActiveTags'
 import { getTagsFromRoute } from '../../state/getTagsFromRoute'
 import { getTitleForState } from '../../state/getTitleForState'
+import { useHomeStore } from '../../state/home'
 import {
   HomeActiveTagsRecord,
-  HomeStateItemLocation,
   HomeStateItemSearch,
 } from '../../state/home-types'
-import { om } from '../../state/om'
-import { useOvermind } from '../../state/useOvermind'
 import { ContentScrollView } from '../../views/ContentScrollView'
 import { PageTitleTag } from '../../views/PageTitleTag'
 import { SlantedTitle } from '../../views/SlantedTitle'
@@ -117,7 +115,7 @@ const SearchPageContent = memo(function SearchPageContent(props: Props) {
   //   return state.type === 'userSearch' && isOnOwnProfile(omState)
   // }
 
-  const om = useOvermind()
+  const home = useHomeStore()
   const state = props.item
   const route = useLastValueWhen(
     () => router.curPage,
@@ -126,7 +124,7 @@ const SearchPageContent = memo(function SearchPageContent(props: Props) {
   const location = useLocationFromRoute(route)
   const tags = useTagsFromRoute(route)
 
-  const isOptimisticUpdating = om.state.home.isOptimisticUpdating
+  const isOptimisticUpdating = home.isOptimisticUpdating
   const wasOptimisticUpdating = useLastValue(isOptimisticUpdating)
   const changingFilters = wasOptimisticUpdating && state.status === 'loading'
   const shouldAvoidContentUpdates =
@@ -145,7 +143,7 @@ const SearchPageContent = memo(function SearchPageContent(props: Props) {
       center: location.data.center,
       span: location.data.span,
     }
-    om.actions.home.updateCurrentState(searchItem)
+    home.updateCurrentState(searchItem)
   }, [location.data])
 
   useEffect(() => {
@@ -156,7 +154,7 @@ const SearchPageContent = memo(function SearchPageContent(props: Props) {
       return acc
     }, {})
     const searchQuery = decodeURIComponent(router.curPage.params.search ?? '')
-    om.actions.home.updateActiveTags({
+    home.updateActiveTags({
       ...props.item,
       searchQuery,
       activeTags,

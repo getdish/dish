@@ -7,15 +7,14 @@ import {
   VStack,
 } from 'snackui'
 
-import { useOvermind } from '../state/useOvermind'
+import { useHomeStore } from '../state/home'
 import { LinkButton } from '../views/LinkButton'
 import { TrendingButton } from '../views/TrendingButton'
 
 export const HomeViewTopDishesTrending = memo(() => {
-  const om = useOvermind()
-  //@ts-expect-error
-  const topRestaurants = om.state.home.topDishes[0]?.top_restaurants ?? []
-  const hasLoaded = topRestaurants.length > 0
+  const home = useHomeStore()
+  const topRestaurants = [] //home.topDishes[0]?.top_restaurants ?? []
+  const hasLoaded = false // topRestaurants.length > 0
 
   // @tom if you change Partial<any> to Partial<Restauarant>
   // you can see below at `getTrending` they disagree on Restaurant

@@ -13,8 +13,8 @@ import {
   VStack,
 } from 'snackui'
 
+import { useHomeStore } from '../../state/home'
 import { HomeStateItemUser } from '../../state/home-types'
-import { useOvermind } from '../../state/useOvermind'
 import { useUserStore } from '../../state/userStore'
 import { ContentScrollView } from '../../views/ContentScrollView'
 import { Link } from '../../views/Link'
@@ -58,7 +58,7 @@ const UserPageContent = graphql(
   }: StackItemProps<HomeStateItemUser> & {
     tab: UserTab
   }) => {
-    const om = useOvermind()
+    const home = useHomeStore()
     const user = useUserQuery(item?.username ?? '')
     const reviews = user
       ?.reviews({
@@ -73,10 +73,10 @@ const UserPageContent = graphql(
 
     useEffect(() => {
       if (!reviews || !reviews.length || reviews[0] === null) return
-      const userState = om.state.home.allStates[item.id] as HomeStateItemUser
+      const userState = home.allStates[item.id] as HomeStateItemUser
       console.log('we here', item.id, userState)
       if (userState) {
-        om.actions.home.updateHomeState({
+        home.updateHomeState({
           id: userState.id,
           results: reviews.map(({ restaurantId, restaurantSlug }) => {
             return {

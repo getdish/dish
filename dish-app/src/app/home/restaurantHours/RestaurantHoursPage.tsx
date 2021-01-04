@@ -19,7 +19,7 @@ import {
 import { bgLight } from '../../../constants/colors'
 import { router } from '../../../router'
 import { useRestaurantQuery } from '../../hooks/useRestaurantQuery'
-import { om } from '../../state/om'
+import { homeStore } from '../../state/home'
 import { StackViewCloseButton } from '../../views/StackViewCloseButton'
 import { PageTitle } from '../search/PageTitle'
 
@@ -39,7 +39,7 @@ export default memo(
         <PageTitle title={title} />
         <Modal
           onDismiss={() => {
-            om.actions.home.up()
+            homeStore.up()
           }}
           width={380}
           maxHeight={480}

@@ -1,17 +1,12 @@
 import './web/base.css'
 import './web/globals'
 
-// import './whydidyourender'
-import { sleep } from '@dish/async'
 import { startLogging } from '@dish/graph'
 import React from 'react'
-// @ts-ignore
-import { hydrate, render } from 'react-dom'
+import { render } from 'react-dom'
 import { AppRegistry } from 'react-native'
 
-import { config, om } from './app/state/om'
 import { isSSR } from './constants/constants'
-import { OVERMIND_MUTATIONS } from './constants/overmindMutations'
 import { Root } from './Root'
 
 if (isSSR) {
@@ -30,39 +25,20 @@ const ROOT = document.getElementById('root')
 AppRegistry.registerComponent('dish', () => Root)
 
 async function start() {
-  await startOvermind()
-
   if (IS_CONCURRENT) {
     console.warn('👟 Concurrent Mode Running')
     // @ts-expect-error
-    React.unstable_createRoot(ROOT).render(<Root overmind={om} />)
+    React.unstable_createRoot(ROOT).render(<Root />)
     return
   }
 
-  render(<Root overmind={om} />, ROOT)
+  render(<Root />, ROOT)
 }
 
 // SSR exports
 if (process.env.TARGET === 'ssr') {
   exports.App = Root
-  exports.config = config
   exports.ReactDOMServer = require('react-dom/server')
-}
-
-async function startOvermind() {
-  let done = false
-  await Promise.race([
-    om.initialized.then(() => {
-      done = true
-    }),
-    sleep(5000),
-  ])
-  if (!done) {
-    console.error('OM TIMED OUT')
-  }
-  if (OVERMIND_MUTATIONS) {
-    hydrate(<Root overmind={om} />, document.getElementById('root'))
-  }
 }
 
 if (process.env.NODE_ENV === 'development') {

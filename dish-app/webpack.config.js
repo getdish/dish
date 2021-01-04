@@ -86,8 +86,6 @@ module.exports = function getWebpackConfig(
         ? {
             react: 'react',
             'react-dom': 'react-dom',
-            overmind: 'overmind',
-            'overmind-react': 'overmind-react',
           }
         : [],
       devtool: isProduction ? 'source-map' : 'eval-cheap-module-source-map',

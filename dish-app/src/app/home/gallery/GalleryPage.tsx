@@ -1,13 +1,13 @@
 import React, { Suspense, memo } from 'react'
 import { AbsoluteVStack, LoadingItems } from 'snackui'
 
-import { useOvermind } from '../../state/useOvermind'
+import { useHomeStore } from '../../state/home'
 import { Lightbox } from '../../views/Lightbox'
 import { StackViewCloseButton } from '../../views/StackViewCloseButton'
 
 export default memo(function GalleryPage() {
-  const om = useOvermind()
-  const state = om.state.home.currentState
+  const home = useHomeStore()
+  const state = home.currentState
 
   if (state.type === 'gallery') {
     return (

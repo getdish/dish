@@ -24,7 +24,7 @@ import { AppMenu } from './AppMenu'
 import { AppSearchInput } from './AppSearchInput'
 import { AppSearchInputLocation } from './AppSearchInputLocation'
 import { useSearchBarTheme } from './hooks/useSearchBarTheme'
-import { useOvermind } from './state/useOvermind'
+import { useHomeStore } from './state/home'
 import { DishHorizonView } from './views/DishHorizonView'
 import { DishLogoButton } from './views/DishLogoButton'
 import { LinkButton } from './views/LinkButton'
@@ -167,7 +167,6 @@ export const AppSearchBarFloating = () => {
 }
 
 const AppSearchBarContents = memo(() => {
-  const om = useOvermind()
   const autocompletes = useStoreInstance(autocompletesStore)
   const focus = autocompletes.visible ? autocompletes.target : false
   const media = useMedia()
@@ -281,11 +280,10 @@ const AppSearchBarContents = memo(() => {
 const SearchBarActionButton = memo(() => {
   // const media = useMedia()
   const { color } = useSearchBarTheme()
-  const om = useOvermind()
+  const home = useHomeStore()
   const autocompletes = useStoreInstance(autocompletesStore)
   const showAutocomplete = autocompletes.visible
-  const isDisabled =
-    !showAutocomplete && om.state.home.currentStateType === 'home'
+  const isDisabled = !showAutocomplete && home.currentStateType === 'home'
 
   const Icon = (() => {
     if (showAutocomplete) {
@@ -294,7 +292,7 @@ const SearchBarActionButton = memo(() => {
       // }
       return ArrowUp
     }
-    if (om.state.home.states.length === 2) {
+    if (home.states.length === 2) {
       return ChevronLeft // Home
     }
     return ChevronLeft
@@ -312,7 +310,7 @@ const SearchBarActionButton = memo(() => {
         if (showAutocomplete) {
           autocompletes.setVisible(false)
         } else {
-          om.actions.home.popBack()
+          home.popBack()
         }
       }}
       {...(!isDisabled && {

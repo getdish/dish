@@ -10,13 +10,12 @@ import { getZoomLevel, mapZoomToMedium } from '../helpers/mapHelpers'
 import { appMapStore } from './AppMapStore'
 import { drawerStore } from './DrawerStore'
 import { restaurantQuery } from './hooks/useRestaurantQuery'
-import { useOvermind } from './state/useOvermind'
+import { useHomeStore } from './state/home'
 
 mapboxgl.accessToken = MAPBOX_ACCESS_TOKEN
 
 export default memo(() => {
   const media = useMedia()
-  const om = useOvermind()
   const drawer = useStoreInstance(drawerStore)
 
   if (!media.xs) {
@@ -42,9 +41,9 @@ export default memo(() => {
 })
 
 const HomeMapPIPContent = graphql(() => {
-  const om = useOvermind()
+  const home = useHomeStore()
   const mapNode = useRef<HTMLDivElement>(null)
-  const state = om.state.home.currentState
+  const state = home.currentState
   const appMap = useStoreInstance(appMapStore)
   const focusedRestaurant = appMap.hovered ?? appMap.selected
 
@@ -71,7 +70,7 @@ const HomeMapPIPContent = graphql(() => {
   }
 
   const restaurant = restaurants?.[0]
-  const curCenter = om.state.home.currentState.center
+  const curCenter = home.currentState.center
 
   const coords = restaurant?.location?.coordinates ?? [
     curCenter?.lng ?? 0,
@@ -89,9 +88,9 @@ const HomeMapPIPContent = graphql(() => {
         drawerStore.setSnapPoint(2)
       }
     }
-    if (coords[0] && !isEqual(center, om.state.home.currentState.center)) {
+    if (coords[0] && !isEqual(center, home.currentState.center)) {
       return () => {
-        om.actions.home.updateCurrentState({
+        home.updateCurrentState({
           center: center,
           span: pipSpan(span),
         })

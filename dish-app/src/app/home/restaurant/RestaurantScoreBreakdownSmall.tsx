@@ -10,7 +10,7 @@ import { tagDisplayName } from '../../../constants/tagMeta'
 import { getActiveTagSlugs } from '../../../helpers/getActiveTagSlugs'
 import { useRestaurantQuery } from '../../hooks/useRestaurantQuery'
 import { useRestaurantTagScores } from '../../hooks/useRestaurantTagScores'
-import { om } from '../../state/om'
+import { homeStore } from '../../state/home'
 import { PointsText } from '../../views/PointsText'
 import { RestaurantReviewsDisplayStore } from './RestaurantBreakdown'
 
@@ -32,12 +32,12 @@ export const RestaurantScoreBreakdownSmall = memo(
       const reviewDisplayStore = useStore(RestaurantReviewsDisplayStore, {
         id: restaurantId,
       })
-      const tags = om.state.home.lastActiveTags
+      const tags = homeStore.lastActiveTags
       const tagScores = useRestaurantTagScores({
         restaurantSlug,
         tagSlugs: getActiveTagSlugs(),
       })
-      const searchQuery = om.state.home.currentState.searchQuery
+      const searchQuery = homeStore.currentState.searchQuery
       const searchQueryText = searchQuery ? ` ${searchQuery}` : ''
       const reviewTags = sortBy(
         tags.filter((tag) => tag.name !== 'Gems'),

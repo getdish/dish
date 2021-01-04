@@ -4,7 +4,6 @@ const hoists = {
   '@dish/gqless-react': true,
   '@dish/gqless-utils': true,
   '@dish/gqless': true,
-  'overmind-react': true,
   snackui: true,
   '@snackui/babel-plugin': true,
   '@snackui/static': true,

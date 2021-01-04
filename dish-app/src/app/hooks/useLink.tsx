@@ -16,8 +16,8 @@ import {
 } from '../state/allTags'
 import { getNavigateItemForState } from '../state/getNavigateItemForState'
 import { getNextState } from '../state/getNextState'
+import { homeStore } from '../state/home'
 import { tagsToNavigableTags } from '../state/NavigableTag'
-import { om } from '../state/om'
 import { LinkButtonProps, LinkProps } from '../views/LinkProps'
 
 export const useLink = (props: LinkProps<any, any>) => {
@@ -135,7 +135,7 @@ const getNormalizedLink = (props: Partial<LinkButtonProps>) => {
 
     const nextState = getNextState({
       ...props,
-      state: om.state.home.currentState,
+      state: homeStore.currentState,
       tags,
     })
     return {
@@ -143,8 +143,8 @@ const getNormalizedLink = (props: Partial<LinkButtonProps>) => {
       ...(!props.preventNavigate && {
         preventNavigate: true,
         onPress() {
-          om.actions.home.navigate({
-            state: om.state.home.currentState,
+          homeStore.navigate({
+            state: homeStore.currentState,
             tags,
           })
         },

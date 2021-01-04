@@ -18,8 +18,7 @@ import {
 import { tagDisplayName } from '../../../constants/tagMeta'
 import { thirdPartyCrawlSources } from '../../../constants/thirdPartyCrawlSources'
 import { useRestaurantQuery } from '../../hooks/useRestaurantQuery'
-import { NavigableTag } from '../../state/NavigableTag'
-import { om } from '../../state/om'
+import { homeStore } from '../../state/home'
 import { useBreakdownsBySources } from './useBreakdownsBySources'
 
 export const col0Props: TableCellProps = {
@@ -39,7 +38,7 @@ export const RestaurantSourcesBreakdown = memo(
   graphql(({ restaurantSlug }: { restaurantSlug: string }) => {
     const restaurant = useRestaurantQuery(restaurantSlug)
     const sources = restaurant?.sources?.() ?? {}
-    const tags = om.state.home.lastActiveTags
+    const tags = homeStore.lastActiveTags
     const reviewTags = sortBy(
       tags.filter((tag) => tag.name !== 'Gems'),
       (a) => (a.type === 'lense' ? 0 : a.type === 'dish' ? 2 : 1)

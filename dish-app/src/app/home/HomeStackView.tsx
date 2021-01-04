@@ -9,8 +9,8 @@ import {
 } from '../../constants/constants'
 import { getBreadcrumbs } from '../../helpers/getBreadcrumbs'
 import { useLastValueWhen } from '../hooks/useLastValueWhen'
+import { useHomeStore } from '../state/home'
 import { HomeStateItem } from '../state/home-types'
-import { useOvermind } from '../state/useOvermind'
 import { ContentParentStore } from '../views/ContentScrollView'
 import { ErrorBoundary } from '../views/ErrorBoundary'
 
@@ -25,10 +25,8 @@ type GetChildren<A> = (props: StackItemProps<A>) => React.ReactNode
 export function HomeStackView<A extends HomeStateItem>(props: {
   children: GetChildren<A>
 }) {
-  const om = useOvermind()
-  const breadcrumbs = getBreadcrumbs(
-    om.state.home.states.slice(0, om.state.home.stateIndex + 1)
-  )
+  const home = useHomeStore()
+  const breadcrumbs = getBreadcrumbs(home.states.slice(0, home.stateIndex + 1))
   const key = JSON.stringify(breadcrumbs.map((x) => x.id))
   const homeStates = useMemo(() => breadcrumbs, [key])
   const currentStates = useDebounceValue(homeStates, 20) ?? homeStates

@@ -8,7 +8,6 @@ import React, {
   memo,
   useCallback,
   useEffect,
-  useLayoutEffect,
   useMemo,
   useState,
 } from 'react'
@@ -23,7 +22,6 @@ import {
   Text,
   Tooltip,
   VStack,
-  useGet,
   useMedia,
   useTheme,
 } from 'snackui'
@@ -43,8 +41,8 @@ import { appMapStore } from '../../AppMapStore'
 import { useRestaurantQuery } from '../../hooks/useRestaurantQuery'
 import { useRestaurantTagScores } from '../../hooks/useRestaurantTagScores'
 import { allTags } from '../../state/allTags'
+import { homeStore } from '../../state/home'
 import { GeocodePlace, HomeStateItemSearch } from '../../state/home-types'
-import { om } from '../../state/om'
 import { ContentScrollViewHorizontal } from '../../views/ContentScrollViewHorizontal'
 import { DishView } from '../../views/dish/DishView'
 import { Link } from '../../views/Link'
@@ -172,7 +170,7 @@ const RestaurantListItemContent = memo(
     }, [restaurant.name])
 
     const restaurantName = (restaurant.name ?? '').slice(0, 300)
-    const curState = om.state.home.currentState
+    const curState = homeStore.currentState
     const tagIds = 'activeTags' in curState ? curState.activeTags : {}
     const isActive = useStoreInstance(
       searchPageStore,

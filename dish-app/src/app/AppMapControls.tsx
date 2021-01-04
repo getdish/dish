@@ -1,27 +1,27 @@
 import { isEqual } from '@dish/fast-compare'
-import { Map, RefreshCcw } from '@dish/react-feather'
+import { RefreshCcw } from '@dish/react-feather'
 import { useStoreInstance } from '@dish/use-store'
 import React, { memo } from 'react'
-import { AbsoluteVStack, HStack, Text, useMedia } from 'snackui'
+import { AbsoluteVStack, HStack, useMedia } from 'snackui'
 
 import { isWeb, searchBarHeight, zIndexDrawer } from '../constants/constants'
 import { appMapStore } from './AppMapStore'
 import { useSafeArea } from './hooks/useSafeArea'
 import { pagesStore } from './PagesStore'
-import { useOvermind } from './state/useOvermind'
+import { useHomeStore } from './state/home'
 import { OverlayLinkButton } from './views/OverlayLinkButton'
 
 export const AppMapControls = memo(() => {
-  const om = useOvermind()
+  const home = useHomeStore()
   const appMap = useStoreInstance(appMapStore)
   const hasMovedCenter =
     appMap.position.center &&
-    !isEqual(appMap.position.center, om.state.home.currentState.center)
+    !isEqual(appMap.position.center, home.currentState.center)
   const hasMovedSpan =
     appMap.position.span &&
-    !isEqual(appMap.position.span, om.state.home.currentState.span)
+    !isEqual(appMap.position.span, home.currentState.span)
   const hasMovedMap = hasMovedCenter || hasMovedSpan
-  const showRefresh = hasMovedMap && om.state.home.currentStateType === 'search'
+  const showRefresh = hasMovedMap && home.currentStateType === 'search'
   const media = useMedia()
   const safeArea = useSafeArea()
   return (
