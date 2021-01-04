@@ -1,4 +1,3 @@
-import { fullyIdle, series } from '@dish/async'
 import {
   LngLat,
   RestaurantOnlyIds,
@@ -40,9 +39,8 @@ import { router } from '../../router'
 import { AppIntroLogin } from '../AppIntroLogin'
 import { usePageLoadEffect } from '../hooks/usePageLoadEffect'
 import { useRestaurantQuery } from '../hooks/useRestaurantQuery'
+import { homeStore, useHomeStore } from '../state/home'
 import { HomeStateItemHome } from '../state/home-types'
-import { om } from '../state/om'
-import { useOvermind } from '../state/useOvermind'
 import { CardFrame } from '../views/CardFrame'
 import { CommentBubble } from '../views/CommentBubble'
 import { ContentScrollView } from '../views/ContentScrollView'
@@ -96,7 +94,7 @@ type FeedItems =
   | FeedItemDishRestaurants
 
 export default memo(function HomePage(props: Props) {
-  const om = useOvermind()
+  const home = useHomeStore()
   const theme = useTheme()
   const [isLoaded, setIsLoaded] = useState(false)
   const region = useRegionQuery(props.item.region, {
@@ -125,7 +123,7 @@ export default memo(function HomePage(props: Props) {
     if (isLoaded) return
     const { center, span } = region.data
     if (!center || !span) return
-    om.actions.home.updateCurrentState({
+    home.updateCurrentState({
       center,
       span,
     })
@@ -155,8 +153,8 @@ export default memo(function HomePage(props: Props) {
   useEffect(() => {
     // not on first load
     if (props.isActive && isLoaded) {
-      om.actions.home.clearSearch()
-      om.actions.home.clearTags()
+      home.clearSearch()
+      home.clearTags()
     }
   }, [props.isActive])
 
@@ -348,7 +346,7 @@ const HomePageContent = memo(
         ...item,
         results: results.map((x) => x.restaurant),
       }
-      om.actions.home.updateHomeState(next)
+      homeStore.updateHomeState(next)
     }, [isLoading, JSON.stringify(results)])
 
     const [expandable, unexpandable] = partition(items, (x) => x.expandable)

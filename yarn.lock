@@ -2970,7 +2970,7 @@
   resolved "https://registry.npmjs.org/@types/node/-/node-14.14.16.tgz#3cc351f8d48101deadfed4c9e4f116048d437b4b"
   integrity sha512-naXYePhweTi+BMv11TgioE2/FXU4fSl29HAH1ffxVciNsH3rYXjNP2yM8wqmSm7jS20gM8TIklKiTen+1iVncw==
 
-"@types/node@^10.12.19", "@types/node@^10.5.1":
+"@types/node@^10.12.19":
   version "10.17.50"
   resolved "https://registry.npmjs.org/@types/node/-/node-10.17.50.tgz#7a20902af591282aa9176baefc37d4372131c32d"
   integrity sha512-vwX+/ija9xKc/z9VqMCdbf4WYcMTGsI0I/L/6shIF3qXURxZOhPQlPRHtjTpiNhAwn0paMJzlOQqw6mAGEQnTA==
@@ -4305,14 +4305,6 @@ bcryptjs@^2.4.3:
   version "2.4.3"
   resolved "https://registry.npmjs.org/bcryptjs/-/bcryptjs-2.4.3.tgz#9ab5627b93e60621ff7cdac5da9733027df1d0cb"
   integrity sha1-mrVie5PmBiH/fNrF2pczAn3x0Ms=
-
-betsy@1.0.2:
-  version "1.0.2"
-  resolved "https://registry.npmjs.org/betsy/-/betsy-1.0.2.tgz#e53abc4750d6a6a112a7835f723db0ca01a3b197"
-  integrity sha512-yt/OUTbSeCRj4uwbDnjTbnWgrLsgBl1nzJLdZH2eOtrf3SDH7svdoTMWOvTFhUdIM86pY6k21o/4SCIT6RYjig==
-  dependencies:
-    "@types/node" "^10.5.1"
-    tslib "^1.9.3"
 
 big-integer@^1.6.44:
   version "1.6.48"
@@ -12295,11 +12287,6 @@ nodemon@^2.0.2:
     undefsafe "^2.0.3"
     update-notifier "^4.1.0"
 
-non-blocking-json@1.1.1:
-  version "1.1.1"
-  resolved "https://registry.npmjs.org/non-blocking-json/-/non-blocking-json-1.1.1.tgz#2180c25ee0330475bdc5e14b27d0750d7c0d73a4"
-  integrity sha512-iweGQWA3+GZkjJEXhvtRh1fjo8DpnotpL8+13NSwaI28X6HaqlYTxAI/ZXawCmva2GS3NaOl5NdNudg3RyQreQ==
-
 noop-fn@^1.0.0:
   version "1.0.0"
   resolved "https://registry.npmjs.org/noop-fn/-/noop-fn-1.0.0.tgz#5f33d47f13d2150df93e0cb036699e982f78ffbf"
@@ -12675,24 +12662,6 @@ os-tmpdir@^1.0.0, os-tmpdir@~1.0.1, os-tmpdir@~1.0.2:
   version "1.0.2"
   resolved "https://registry.npmjs.org/os-tmpdir/-/os-tmpdir-1.0.2.tgz#bbe67406c79aa85c5cfec766fe5734555dfa1274"
   integrity sha1-u+Z0BseaqFxc/sdm/lc0VV36EnQ=
-
-overmind-react@^27.0.0:
-  version "27.0.0"
-  resolved "https://registry.npmjs.org/overmind-react/-/overmind-react-27.0.0.tgz#91908468b38b96c2a4fb3fd210709b1cf6e62907"
-  integrity sha512-N3DBkw5HlvBRJO0Zv8M86XeTSHwkfM/79Jv0ZORiT35tflLe5UcrIk9VTB7YLkZUwDR2pHmjiLyHZS0PVQmZDA==
-  dependencies:
-    overmind "26.0.0"
-
-overmind@26.0.0, overmind@^26.0.0:
-  version "26.0.0"
-  resolved "https://registry.npmjs.org/overmind/-/overmind-26.0.0.tgz#53480c09e6b99005f3c814c199531c27eb295bb8"
-  integrity sha512-oSHOZgF84eQYNVRdswvwTt88az5Cbif49mH5sA2HcLDzX2oDH1CXDoNxcEGp60sTCryYt09d+3+LcXR1UEumLQ==
-  dependencies:
-    betsy "1.0.2"
-    is-plain-obj "^1.1.0"
-    non-blocking-json "1.1.1"
-    proxy-state-tree "6.1.0"
-    tslib "^1.10.0"
 
 ow@^0.17.0:
   version "0.17.0"
@@ -14063,13 +14032,6 @@ proxy-from-env@^1.0.0, proxy-from-env@^1.1.0:
   version "1.1.0"
   resolved "https://registry.npmjs.org/proxy-from-env/-/proxy-from-env-1.1.0.tgz#e102f16ca355424865755d2c9e8ea4f24d58c3e2"
   integrity sha512-D+zkORCbA9f1tdWRK0RaCR3GPv50cMxcrz4X8k5LTSUD1Dkw47mKJEZQNunItRTkWwgtaUSo1RVFRIG9ZXiFYg==
-
-proxy-state-tree@6.1.0:
-  version "6.1.0"
-  resolved "https://registry.npmjs.org/proxy-state-tree/-/proxy-state-tree-6.1.0.tgz#7a85eb89328e5973dc21f30b82062cf58186095e"
-  integrity sha512-3vXW9NBjWutNakrRA4Wpy8EQ4knjjmGY583vQQxIR3xsvJ2iuUrGh5jSG+aVoccW0qWKNzaPdGAxpQXaQNdXrQ==
-  dependencies:
-    is-plain-obj "^1.1.0"
 
 ps-list@^7.0.0:
   version "7.2.0"

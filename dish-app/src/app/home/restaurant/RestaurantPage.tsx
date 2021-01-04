@@ -7,8 +7,8 @@ import { bgLight, bgLightHover, darkBlue } from '../../../constants/colors'
 import { getMinLngLat } from '../../../helpers/getLngLat'
 import { usePageLoadEffect } from '../../hooks/usePageLoadEffect'
 import { useRestaurantQuery } from '../../hooks/useRestaurantQuery'
+import { homeStore } from '../../state/home'
 import { HomeStateItemRestaurant } from '../../state/home-types'
-import { om } from '../../state/om'
 import { ContentScrollView } from '../../views/ContentScrollView'
 import { PageTitleTag } from '../../views/PageTitleTag'
 import { StackDrawer } from '../../views/StackDrawer'
@@ -47,7 +47,7 @@ const RestaurantPage = memo(
         if (!coords?.[0]) {
           return
         }
-        om.actions.home.updateHomeState({
+        homeStore.updateHomeState({
           id: item.id,
           center: {
             lng: coords?.[0],

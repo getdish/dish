@@ -1,6 +1,6 @@
 import React, { Suspense, useEffect } from 'react'
 
-import { homeStore } from './HomeStore'
+import { homeStore } from '../state/home'
 
 export function HomeSuspense(props: { children: any; fallback?: any }) {
   return (

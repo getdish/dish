@@ -1,14 +1,14 @@
 import React, { Suspense, memo } from 'react'
-import { AbsoluteVStack, LoadingItems, Modal, VStack } from 'snackui'
+import { AbsoluteVStack, LoadingItems, VStack } from 'snackui'
 
-import { useOvermind } from '../../state/useOvermind'
+import { useHomeStore } from '../../state/home'
 import { UserOnboard } from '../../UserOnboard'
 import { DarkModal } from '../../views/DarkModal'
 import { StackViewCloseButton } from '../../views/StackViewCloseButton'
 
 export default memo(function UserEditPage() {
-  const om = useOvermind()
-  const state = om.state.home.currentState
+  const home = useHomeStore()
+  const state = home.currentState
 
   if (state.type === 'userEdit') {
     return (

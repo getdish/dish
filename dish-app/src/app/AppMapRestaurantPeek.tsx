@@ -5,16 +5,14 @@ import { Image } from 'react-native'
 import { AbsoluteVStack, Box, HStack, Spacer, Text, VStack } from 'snackui'
 
 import { appMapStore } from './AppMapStore'
-import { RestaurantAddress } from './home/restaurant/RestaurantAddress'
-import { RestaurantAddressLinksRow } from './home/restaurant/RestaurantAddressLinksRow'
 import { RestaurantRatingViewPopover } from './home/restaurant/RestaurantRatingViewPopover'
 import { useRestaurantQuery } from './hooks/useRestaurantQuery'
-import { useOvermind } from './state/useOvermind'
+import { useHomeStore } from './state/home'
 import { LinkButton } from './views/LinkButton'
 
 export const AppMapRestaurantPeek = memo(
   graphql<any>(() => {
-    const om = useOvermind()
+    const home = useHomeStore()
     const [slug, setSlug] = useState('')
     const [selectedSlug, hoveredSlug] = useStoreInstance(
       appMapStore,
@@ -31,7 +29,7 @@ export const AppMapRestaurantPeek = memo(
       setSlug(hoveredSlug)
     }, [hoveredSlug])
 
-    const state = om.state.home.currentState
+    const state = home.currentState
 
     if (state.type === 'restaurant' && slug === state.restaurantSlug) {
       return null
@@ -95,7 +93,7 @@ export const AppMapRestaurantPeek = memo(
                 {/* <RestaurantAddressLinksRow
                   currentLocationInfo={
                     state?.currentLocationInfo ??
-                    om.state.home.currentState.currentLocationInfo
+                    home.currentState.currentLocationInfo
                   }
                   showMenu
                   size="sm"

@@ -16,14 +16,14 @@ import { inputTextStyles } from './AppSearchInput'
 import { useSearchBarTheme } from './hooks/useSearchBarTheme'
 import { setNodeOnInputStore, useInputStoreLocation } from './InputStore'
 import { SearchInputNativeDragFix } from './SearchInputNativeDragFix'
-import { useOvermind } from './state/useOvermind'
+import { useHomeStore } from './state/home'
 
 export const AppSearchInputLocation = memo(() => {
   const media = useMedia()
   const inputStore = useInputStoreLocation()
-  const om = useOvermind()
+  const home = useHomeStore()
   const { color } = useSearchBarTheme()
-  const { currentLocationName } = om.state.home.currentState
+  const { currentLocationName } = home.currentState
   const locationAutocomplete = useStoreInstance(autocompleteLocationStore)
   const autocompletes = useStoreInstance(autocompletesStore)
   const showLocationAutocomplete =

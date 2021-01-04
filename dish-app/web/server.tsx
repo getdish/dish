@@ -12,7 +12,6 @@ import { matchesUA } from 'browserslist-useragent'
 import express from 'express'
 // @ts-ignore
 import { JSDOM } from 'jsdom'
-import { createOvermindSSR } from 'overmind'
 import React from 'react'
 import { Helmet } from 'react-helmet'
 
@@ -97,20 +96,18 @@ server.get('*', async (req, res) => {
   console.log('req', req.hostname, req.path)
   const htmlPath = Path.join(rootDir, 'src', 'index.html')
   const template = readFileSync(htmlPath, 'utf8')
-  const overmind = createOvermindSSR(config)
-  await overmind.initialized
-  global['window']['om'] = overmind
-
   jsdom.reconfigure({
     url: 'http://dishapp.com' + req.path,
   })
-  const app = <App overmind={overmind} />
+  const app = <App />
 
   delete client.cache.query
 
   try {
     ReactDOMServer.renderToString(app)
-  } catch (err) {}
+  } catch (err) {
+    console.warn('error', err)
+  }
 
   await client.scheduler.resolving?.promise
 
@@ -120,11 +117,7 @@ server.get('*', async (req, res) => {
   // async suspense rendering
   // await ssrPrepass(app)
 
-  console.log(108, 'CACHE SNAPSHOT', cacheSnapshot)
-
-  const jsx = extractor.collectChunks(
-    <App overmind={overmind} cacheSnapshot={cacheSnapshot} />
-  )
+  const jsx = extractor.collectChunks(<App cacheSnapshot={cacheSnapshot} />)
 
   console.log('scripts are', extractor.getScriptTags())
 
@@ -164,7 +157,6 @@ server.get('*', async (req, res) => {
     if (line.indexOf('<!-- scripts -->') >= 0) {
       out += `
       <script>
-        window.__OVERMIND_MUTATIONS = ${JSON.stringify(overmind.hydrate())}
         window.__CACHE_SNAPSHOT = "${cacheSnapshot}"
       </script>
       ${clientScripts.join('\n')}\n`

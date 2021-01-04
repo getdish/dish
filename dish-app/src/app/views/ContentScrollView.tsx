@@ -11,7 +11,6 @@ import { VStack, useMedia } from 'snackui'
 import { isWeb } from '../../constants/constants'
 import { supportsTouchWeb } from '../../constants/platforms'
 import { drawerStore } from '../DrawerStore'
-import { useOvermind } from '../state/useOvermind'
 
 export class ScrollStore extends Store<{ id: string }> {
   isScrolling = false
@@ -42,7 +41,6 @@ export const usePreventContentScroll = (id: string) => {
     (store) => store.activeId === id
   )
   const media = useMedia()
-  const om = useOvermind()
   if (!isActive) {
     return true
   }

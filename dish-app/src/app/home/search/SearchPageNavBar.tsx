@@ -9,11 +9,11 @@ import {
   useTheme,
 } from 'snackui'
 
-import { drawerWidthMax, isWeb } from '../../../constants/constants'
+import { drawerWidthMax } from '../../../constants/constants'
 import { titleHeight } from '../../../constants/titleHeight'
 import { useSafeArea } from '../../hooks/useSafeArea'
+import { useHomeStore } from '../../state/home'
 import { isSearchState } from '../../state/home-helpers'
-import { useOvermind } from '../../state/useOvermind'
 import { HomeLenseBar } from '../../views/HomeLenseBar'
 import { SearchPageFilterBar } from './SearchPageFilterBar'
 
@@ -77,8 +77,8 @@ export const SearchPageNavBar = (props: { id: string }) => {
 }
 
 const SearchPageNavBarContent = memo(({ stateId }: { stateId: string }) => {
-  const om = useOvermind()
-  const state = om.state.home.allStates[stateId]
+  const home = useHomeStore()
+  const state = home.allStates[stateId]
 
   if (!isSearchState(state)) {
     return null

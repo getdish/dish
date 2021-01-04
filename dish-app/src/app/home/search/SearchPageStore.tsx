@@ -7,7 +7,7 @@ import { getTagSlug } from '../../../helpers/getTagSlug'
 import { appMapStore } from '../../AppMapStore'
 import { allTags } from '../../state/allTags'
 import { getActiveTags } from '../../state/getActiveTags'
-import { om } from '../../state/om'
+import { homeStore } from '../../state/home'
 
 export type ActiveEvent = 'key' | 'pin' | 'hover' | null
 
@@ -41,7 +41,7 @@ class SearchPageStore extends Store {
     this.lastSearchAt = Date.now()
     let curId = this.lastSearchAt
 
-    const curState = om.state.home.currentState
+    const curState = homeStore.currentState
     const searchQuery = opts.searchQuery ?? curState.searchQuery ?? ''
     const navItem = {
       state: {
@@ -50,17 +50,17 @@ class SearchPageStore extends Store {
       },
     }
 
-    if (await om.actions.home.navigate(navItem)) {
+    if (await homeStore.navigate(navItem)) {
       console.log('did nav from search', navItem)
       // nav will trigger search
       return
     }
 
-    let state = om.state.home.lastSearchState
+    let state = homeStore.lastSearchState
     const tags = getActiveTags(curState)
 
     const shouldCancel = () => {
-      const state = om.state.home.lastSearchState
+      const state = homeStore.lastSearchState
       const answer = !state || this.lastSearchAt != curId
       if (answer) console.log('search: cancel')
       return answer
@@ -71,13 +71,13 @@ class SearchPageStore extends Store {
       if (shouldCancel()) return
     }
 
-    state = om.state.home.lastSearchState
+    state = homeStore.lastSearchState
     if (shouldCancel()) return
     state = state!
 
     const center = appMapStore.position.center ?? state!.center
     const span = appMapStore.position.span ?? state!.span
-    om.actions.home.updateHomeState({
+    homeStore.updateHomeState({
       id: state.id,
       center,
       span,
@@ -121,11 +121,11 @@ class SearchPageStore extends Store {
 
     // only update searchkey once finished
     this.lastSearchKey = searchKey
-    state = om.state.home.lastSearchState
+    state = homeStore.lastSearchState
     if (!state) return
 
     // console.log('search found restaurants', restaurants)
-    om.actions.home.updateHomeState({
+    homeStore.updateHomeState({
       id: state.id,
       status: 'complete',
       // limit to 80 for now

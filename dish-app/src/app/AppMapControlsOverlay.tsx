@@ -9,10 +9,8 @@ import { AppMapRestaurantPeek } from './AppMapRestaurantPeek'
 import { drawerStore } from './DrawerStore'
 import { useMapSize } from './hooks/useMapSize'
 import { useSafeArea } from './hooks/useSafeArea'
-import { useOvermind } from './state/useOvermind'
 
 export const AppMapControlsOverlay = memo(() => {
-  const om = useOvermind()
   const media = useMedia()
   const { paddingLeft, width } = useMapSize(media.sm)
   const drawer = useStoreInstance(drawerStore)

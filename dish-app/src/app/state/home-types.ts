@@ -1,37 +1,6 @@
-import {
-  HomeMeta,
-  RestaurantOnlyIds,
-  RestaurantSearchItem,
-  Tag,
-  User,
-} from '@dish/graph'
-import { Config, IContext } from 'overmind'
+import { HomeMeta, RestaurantOnlyIds, RestaurantSearchItem } from '@dish/graph'
 
 import { NavigableTag } from './NavigableTag'
-
-export type Om = IContext<Config>
-export type OmState = Om['state']
-export type OmStateHome = OmState['home']
-
-export type HomeState = {
-  allStates: { [key: string]: HomeStateItem }
-  currentState: HomeStateItem
-  currentStateLense: NavigableTag | null
-  currentStateSearchQuery: HomeStateItem['searchQuery']
-  currentStateType: HomeStateItem['type']
-  isOptimisticUpdating: boolean
-  lastActiveTags: Tag[]
-  lastHomeState: HomeStateItemHome
-  lastSearchState: HomeStateItemSearch | undefined
-  previousState: HomeStateItem
-  searchbarFocusedTag: Tag | null
-  searchBarTagIndex: number
-  searchBarTags: NavigableTag[]
-  showUserMenu: boolean
-  stateIds: string[]
-  stateIndex: number
-  states: HomeStateItem[]
-}
 
 export type GeocodePlace = {
   type:

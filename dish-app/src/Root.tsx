@@ -1,16 +1,24 @@
+import { series } from '@dish/async'
 import { useHydrateCache } from '@dish/graph'
 import { ProvideRouter } from '@dish/router'
 import { allStores, configureUseStore } from '@dish/use-store'
-import { Provider } from 'overmind-react'
-import React, { Suspense } from 'react'
+import React, { Suspense, useLayoutEffect, useState } from 'react'
 import { QueryClientProvider } from 'react-query'
 import { ThemeProvider, configureThemes } from 'snackui'
 
 import { App } from './app/App'
 import { AppPortalProvider } from './app/AppPortal'
+import { addTagsToCache } from './app/state/allTags'
+import { homeStore } from './app/state/home'
+import { userStore } from './app/state/userStore'
+import {
+  tagDefaultAutocomplete,
+  tagFilters,
+  tagLenses,
+} from './constants/localTags'
 import themes, { MyTheme, MyThemes } from './constants/themes'
 import { queryClient } from './helpers/queryClient'
-import { routes } from './router'
+import { router, routes } from './router'
 
 global['stores'] = allStores
 
@@ -27,7 +35,25 @@ configureUseStore({
 // @ts-expect-error
 const cacheSnapshot = global.__CACHE_SNAPSHOT
 
-export function Root({ overmind }: { overmind?: any }) {
+export function Root() {
+  const [isStarted, setIsStarted] = useState(false)
+
+  // startup
+  useLayoutEffect(() => {
+    return series([
+      () => {
+        addTagsToCache([...tagDefaultAutocomplete, ...tagFilters, ...tagLenses])
+        router.onRouteChange((item) => {
+          homeStore.handleRouteChange(item)
+        })
+        userStore.checkForExistingLogin()
+      },
+      () => {
+        setIsStarted(true)
+      },
+    ])
+  })
+
   if (cacheSnapshot) {
     console.debug('cacheSnapshot', cacheSnapshot)
     useHydrateCache({
@@ -39,17 +65,13 @@ export function Root({ overmind }: { overmind?: any }) {
 
   return (
     <ThemeProvider themes={themes} defaultTheme="light">
-      <Provider value={overmind}>
-        <ProvideRouter routes={routes}>
-          <QueryClientProvider client={queryClient}>
-            <AppPortalProvider>
-              <Suspense fallback={null}>
-                <App />
-              </Suspense>
-            </AppPortalProvider>
-          </QueryClientProvider>
-        </ProvideRouter>
-      </Provider>
+      <ProvideRouter routes={routes}>
+        <QueryClientProvider client={queryClient}>
+          <AppPortalProvider>
+            <Suspense fallback={null}>{isStarted ? <App /> : null}</Suspense>
+          </AppPortalProvider>
+        </QueryClientProvider>
+      </ProvideRouter>
     </ThemeProvider>
   )
 }

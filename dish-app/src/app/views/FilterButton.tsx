@@ -15,7 +15,7 @@ import type { NavigableTag } from 'src/app/state/NavigableTag'
 
 import { tagDisplayNames } from '../../constants/tagMeta'
 import { thirdPartyCrawlSources } from '../../constants/thirdPartyCrawlSources'
-import { useOvermind } from '../state/useOvermind'
+import { useHomeStore } from '../state/home'
 import { LinkButtonProps } from './LinkProps'
 import { SmallButton } from './SmallButton'
 
@@ -121,8 +121,8 @@ export const FilterButton = memo(
 )
 
 const SearchPageDeliveryFilterButtons = memo(() => {
-  const om = useOvermind()
-  const currentState = om.state.home.currentState
+  const home = useHomeStore()
+  const currentState = home.currentState
   if (currentState.type !== 'search') {
     return null
   }

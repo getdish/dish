@@ -9,7 +9,7 @@ import { AppMenuContents } from './AppMenuContents'
 import { appMenuStore } from './AppMenuStore'
 import { UserAvatar } from './home/user/UserAvatar'
 import { useSearchBarTheme } from './hooks/useSearchBarTheme'
-import { om } from './state/om'
+import { homeStore } from './state/home'
 import { useUserStore } from './state/userStore'
 import { LinkButton } from './views/LinkButton'
 import { LinkButtonProps } from './views/LinkProps'
@@ -70,7 +70,7 @@ export const AppMenu = memo(() => {
                 onPress={(e) => {
                   if (pageName === 'about') {
                     e.preventDefault()
-                    om.actions.home.up()
+                    homeStore.up()
                   } else {
                     e.navigate()
                   }

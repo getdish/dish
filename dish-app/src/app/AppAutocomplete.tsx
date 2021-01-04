@@ -43,9 +43,9 @@ import { useRouterCurPage } from '../router'
 import { appMapStore } from './AppMapStore'
 import { drawerStore } from './DrawerStore'
 import { useInputStoreLocation } from './InputStore'
+import { useHomeStore } from './state/home'
 import { LngLat } from './state/home-types'
 import { tagsToNavigableTags } from './state/NavigableTag'
-import { useOvermind } from './state/useOvermind'
 import { useUserStore } from './state/userStore'
 import { CloseButton, SmallCircleButton } from './views/CloseButton'
 import { LinkButton } from './views/LinkButton'
@@ -185,9 +185,9 @@ export default memo(function AppAutocomplete() {
 })
 
 const AutocompleteSearch = memo(() => {
-  const om = useOvermind()
+  const home = useHomeStore()
   const store = useStoreInstance(autocompleteSearchStore)
-  const { currentStateSearchQuery, lastActiveTags } = om.state.home
+  const { currentStateSearchQuery, lastActiveTags } = home
   const searchState = useMemo(
     () => [currentStateSearchQuery.trim(), lastActiveTags] as const,
     [currentStateSearchQuery, lastActiveTags]
@@ -200,7 +200,7 @@ const AutocompleteSearch = memo(() => {
 
   useEffect(() => {
     let results: AutocompleteItemFull[] = []
-    const state = om.state.home.currentState
+    const state = home.currentState
     const tags = tagsToNavigableTags(activeTags)
     const countryTag =
       tags.length === 2 ? tags.find((x) => x.type === 'country') : null
@@ -296,12 +296,10 @@ const AutocompleteSearch = memo(() => {
         onSelect={(result) => {
           // clear query
           if (result.type === 'orphan') {
-            om.actions.home.clearTags()
-            om.actions.home.setSearchQuery(
-              om.state.home.currentStateSearchQuery
-            )
+            home.clearTags()
+            home.setSearchQuery(home.currentStateSearchQuery)
           } else if (result.type !== 'restaurant') {
-            om.actions.home.setSearchQuery('')
+            home.setSearchQuery('')
           }
         }}
       />
@@ -310,7 +308,7 @@ const AutocompleteSearch = memo(() => {
 })
 
 const AutocompleteLocation = memo(() => {
-  const om = useOvermind()
+  const home = useHomeStore()
   const autocompletes = useStoreInstance(autocompletesStore)
   const store = useStoreInstance(autocompleteLocationStore)
   const inputStore = useInputStoreLocation()
@@ -328,7 +326,7 @@ const AutocompleteLocation = memo(() => {
     if (!query) return
 
     let results: AutocompleteItemFull[] = []
-    const state = om.state.home.currentState
+    const state = home.currentState
 
     return series([
       async () => {
@@ -496,7 +494,6 @@ const AutocompleteItemView = memo(
     onSelect: AutocompleteSelectCb
     isActive?: boolean
   }) => {
-    const om = useOvermind()
     const userStore = useUserStore()
     const showLocation = target === 'location'
     const theme = useTheme()
@@ -638,8 +635,8 @@ const HomeAutocompleteDefault = memo(() => {
 })
 
 function AutocompleteAddButton() {
-  const om = useOvermind()
-  if (om.state.home.currentStateType !== 'userSearch') {
+  const home = useHomeStore()
+  if (home.currentStateType !== 'userSearch') {
     return null
   }
   return (

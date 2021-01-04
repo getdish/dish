@@ -1,6 +1,6 @@
 import { Restaurant, RestaurantOnlyIds, graphql } from '@dish/graph'
 import { isPresent } from '@dish/helpers'
-import { useStoreInstance } from '@dish/use-store'
+import { reaction, useStoreInstance } from '@dish/use-store'
 import { debounce, uniqBy } from 'lodash'
 import React, {
   Suspense,
@@ -36,11 +36,9 @@ import { ensureFlexText } from './home/restaurant/ensureFlexText'
 import { useLastValueWhen } from './hooks/useLastValueWhen'
 import { useMapSize } from './hooks/useMapSize'
 import { useRestaurantQuery } from './hooks/useRestaurantQuery'
-import { findLastHomeOrSearch } from './state/home'
+import { findLastHomeOrSearch, homeStore, useHomeStore } from './state/home'
 import { isRestaurantState } from './state/home-helpers'
 import { Region } from './state/home-types'
-import { om } from './state/om'
-import { useOvermind } from './state/useOvermind'
 import { MapView } from './views/Map'
 
 const styles = {
@@ -80,8 +78,8 @@ const AppMapDataLoader = memo(
     onLoadedRestaurantDetail: Function
     onLoadedRestaurants: Function
   }) {
-    const om = useOvermind()
-    const state = om.state.home.currentState
+    const home = useHomeStore()
+    const state = home.currentState
     let all: RestaurantOnlyIds[] = []
     let single: RestaurantOnlyIds | null = null
 
@@ -91,7 +89,7 @@ const AppMapDataLoader = memo(
         id: restaurant.id ?? '',
         slug: state.restaurantSlug ?? '',
       }
-      const last = findLastHomeOrSearch(om.state.home.states)
+      const last = findLastHomeOrSearch(home.states)
       all = [single, ...(last?.['results'] ?? [])]
     } else if ('results' in state) {
       all = state?.results ?? []
@@ -147,10 +145,10 @@ const AppMapDataLoader = memo(
 )
 
 const updateRegion = debounce((region: Region) => {
-  const { currentState } = om.state.home
+  const { currentState } = homeStore
   const type = currentState.type
   if (type === 'home' || type === 'search') {
-    om.actions.home.navigate({
+    homeStore.navigate({
       state: {
         ...currentState,
         region: region.slug,
@@ -167,7 +165,6 @@ const AppMapContent = memo(
     restaurantDetail: Restaurant | null
     restaurants: Restaurant[]
   }) => {
-    const om = useOvermind()
     const media = useMedia()
     const { width, paddingLeft } = useMapSize(media.sm)
     const { position } = useStoreInstance(appMapStore)
@@ -236,10 +233,11 @@ const AppMapContent = memo(
     )
 
     useEffect(() => {
-      return om.reaction(
-        (omState) => {
-          const stateId = omState.home.currentState.id
-          const state = omState.home.allStates[stateId]
+      return reaction(
+        homeStore,
+        (homeState) => {
+          const stateId = homeState.currentState.id
+          const state = homeState.allStates[stateId]
           const span = state.span
           const center = state.center
           // stringify to prevent extra reactions
@@ -363,7 +361,7 @@ const AppMapContent = memo(
         console.warn('not found', id, restaurants)
         return
       }
-      if (om.state.home.currentStateType === 'search') {
+      if (homeStore.currentStateType === 'search') {
         if (id !== appMapStore.selected?.id) {
           appMapStore.setSelected({
             id: restaurant.id,

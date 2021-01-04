@@ -1,6 +1,6 @@
 import React, { memo } from 'react'
 
-import { om } from '../state/om'
+import { homeStore } from '../state/home'
 import { CloseButton } from './CloseButton'
 
 export const StackViewCloseButton = memo(() => {
@@ -9,7 +9,7 @@ export const StackViewCloseButton = memo(() => {
       shadowColor="rgba(0,0,0,0.25)"
       shadowRadius={10}
       shadowOffset={{ width: 0, height: 2 }}
-      onPressOut={() => om.actions.home.up()}
+      onPressOut={() => homeStore.up()}
       size={16}
     />
   )

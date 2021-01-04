@@ -1,8 +1,8 @@
 import { query } from '@dish/graph'
 
 import { getAddressText } from '../app/home/restaurant/RestaurantAddressLinksRow'
+import { homeStore } from '../app/state/home'
 import { LngLat } from '../app/state/home-types'
-import { om } from '../app/state/om'
 import { createAutocomplete } from './createAutocomplete'
 import { getFuzzyMatchQuery } from './getFuzzyMatchQuery'
 
@@ -68,7 +68,7 @@ export function searchRestaurants(
       icon: r.image || '📍',
       description:
         getAddressText(
-          om.state.home.currentState.currentLocationInfo ?? null,
+          homeStore.currentState.currentLocationInfo ?? null,
           r.address ?? '',
           'xs'
         ) || 'No Address',

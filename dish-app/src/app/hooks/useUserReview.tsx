@@ -11,7 +11,6 @@ import {
 import { useState } from 'react'
 import { Toast, useLazyEffect } from 'snackui'
 
-import { useOvermind } from '../state/useOvermind'
 import { useUserStore } from '../state/userStore'
 
 export type ReviewWithTag = Pick<
@@ -43,7 +42,6 @@ export const useUserReviewsQuery = (
   type?: ReviewTypes
 ) => {
   const refetch = useRefetch()
-  const om = useOvermind()
   const userStore = useUserStore()
   const userId = (userStore.user?.id as string) ?? ''
   const [fetchKey, setFetchKey] = useState(0)
@@ -109,7 +107,6 @@ export const useUserReviewsQuery = (
     userId,
     reviews,
     reviewsQuery,
-    om,
     refetch: doRefetch,
     async upsert(
       review: Partial<Review> & {

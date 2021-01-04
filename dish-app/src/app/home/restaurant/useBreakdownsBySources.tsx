@@ -1,10 +1,11 @@
-import { RestaurantTag, Tag, restaurant_tag } from '@dish/graph'
+import { restaurant_tag } from '@dish/graph'
 
 import { useRestaurantQuery } from '../../hooks/useRestaurantQuery'
+import { NavigableTag } from '../../state/NavigableTag'
 
 export const useBreakdownsBySources = (
   restaurantSlug: string,
-  reviewTags: Tag[]
+  reviewTags: NavigableTag[]
 ) => {
   let total = 0
   const restaurant = useRestaurantQuery(restaurantSlug)

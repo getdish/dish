@@ -1,11 +1,11 @@
 import { useEffect, useRef } from 'react'
 
 import { tagLenses } from '../../constants/localTags'
-import { useOvermind } from '../state/useOvermind'
+import { useHomeStore } from '../state/home'
 
 export const useCurrentLenseColor = (): [number, number, number] => {
-  const om = useOvermind()
-  const lense = om.state.home.currentStateLense
+  const home = useHomeStore()
+  const lense = home.currentStateLense
   const lastLenseRgb = useRef(null)
 
   useEffect(() => {

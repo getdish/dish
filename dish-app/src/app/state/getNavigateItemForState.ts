@@ -6,6 +6,7 @@ import { SPLIT_TAG } from '../../constants/SPLIT_TAG'
 import { getTagSlug } from '../../helpers/getTagSlug'
 import { SearchRouteParams, router } from '../../router'
 import { getActiveTags } from './getActiveTags'
+import { homeStore } from './home'
 import { isHomeState, isSearchState } from './home-helpers'
 import {
   HomeStateItem,
@@ -13,7 +14,6 @@ import {
   HomeStateItemSearch,
   HomeStateTagNavigable,
 } from './home-types'
-import { om } from './om'
 import { shouldBeOnSearch } from './shouldBeOnSearch'
 
 export const getNavigateItemForState = (
@@ -69,7 +69,7 @@ const getParamsForState = (state: HomeStateTagNavigable) => {
     const lenseTag =
       allActiveTags.find((x) => x.type === 'lense') ?? tagLenses[0]
     const prev = findLast(
-      om.state.home.states,
+      homeStore.states,
       (x) => isHomeState(x) || isSearchState(x)
     ) as HomeStateItemHome | HomeStateItemSearch
     const params: SearchRouteParams = {

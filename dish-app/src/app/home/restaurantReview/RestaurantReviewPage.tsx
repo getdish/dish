@@ -16,8 +16,8 @@ import { red } from '../../../constants/colors'
 import { getRestaurantDishes } from '../../../helpers/getRestaurantDishes'
 import { useRestaurantQuery } from '../../hooks/useRestaurantQuery'
 import { useUserReviewCommentQuery } from '../../hooks/useUserReview'
+import { useHomeStore } from '../../state/home'
 import { HomeStateItemReview } from '../../state/home-types'
-import { useOvermind } from '../../state/useOvermind'
 import { useUserStore } from '../../state/userStore'
 import { CommentBubble } from '../../views/CommentBubble'
 import { SmallButton } from '../../views/SmallButton'
@@ -27,8 +27,8 @@ import { RestaurantLenseVote } from '../restaurant/RestaurantLenseVote'
 import { SentimentText } from '../restaurant/SentimentText'
 
 export default memo(function RestaurantReviewPage() {
-  const om = useOvermind()
-  const state = om.state.home.currentState
+  const home = useHomeStore()
+  const state = home.currentState
 
   if (state.type === 'restaurantReview') {
     return (

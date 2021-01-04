@@ -11,7 +11,7 @@ import { router } from '../router'
 import { autocompleteLocationStore } from './AppAutocomplete'
 import { inputStoreLocation } from './InputStore'
 import { getNavigateItemForState } from './state/getNavigateItemForState'
-import { om } from './state/om'
+import { homeStore } from './state/home'
 
 type MapPosition = {
   center: LngLat
@@ -52,8 +52,8 @@ class AppMapStore extends Store {
       lat: position.coords.latitude,
     }
     this.userLocation = location
-    const state = om.state.home.currentState
-    om.actions.home.updateHomeState({
+    const state = homeStore.currentState
+    homeStore.updateHomeState({
       ...state,
       center: { ...location },
     })
@@ -70,7 +70,7 @@ class AppMapStore extends Store {
     const res = await reverseGeocode(center, span)
     if (res) {
       const name = res.fullName ?? res.name ?? res.country
-      om.actions.home.updateCurrentState({
+      homeStore.updateCurrentState({
         currentLocationInfo: res,
         currentLocationName: name,
       })
@@ -85,11 +85,11 @@ class AppMapStore extends Store {
     inputStoreLocation.setValue(val)
     const exact = current.find((x) => x.name === val)
     if ('center' in exact) {
-      om.actions.home.updateCurrentState({
+      homeStore.updateCurrentState({
         center: { ...exact.center },
         currentLocationName: val,
       })
-      const curState = om.state.home.currentState
+      const curState = homeStore.currentState
       const navItem = getNavigateItemForState(curState)
       if (router.getShouldNavigate(navItem)) {
         router.navigate(navItem)

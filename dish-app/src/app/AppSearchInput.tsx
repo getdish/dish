@@ -1,6 +1,6 @@
 import { fullyIdle, idle, series } from '@dish/async'
 import { Loader, Search, X } from '@dish/react-feather'
-import { getStore, useStoreInstance } from '@dish/use-store'
+import { getStore, reaction, useStoreInstance } from '@dish/use-store'
 import React, { memo, useCallback, useEffect, useRef, useState } from 'react'
 import {
   Platform,
@@ -14,7 +14,6 @@ import {
   AbsoluteVStack,
   HStack,
   Spacer,
-  Toast,
   VStack,
   getMedia,
   useGet,
@@ -28,7 +27,6 @@ import { isWebIOS } from '../helpers/isIOS'
 import { router } from '../router'
 import { AutocompleteStore, autocompletesStore } from './AppAutocomplete'
 import { AppAutocompleteHoverableInput } from './AppAutocompleteHoverableInput'
-import { useHomeStore } from './home/HomeStore'
 import { searchPageStore } from './home/search/SearchPageStore'
 import { useSearchBarTheme } from './hooks/useSearchBarTheme'
 import {
@@ -37,9 +35,8 @@ import {
   useInputStoreSearch,
 } from './InputStore'
 import { SearchInputNativeDragFix } from './SearchInputNativeDragFix'
+import { homeStore, useHomeStore } from './state/home'
 import { tagsToNavigableTags } from './state/NavigableTag'
-import { om } from './state/om'
-import { useOvermind } from './state/useOvermind'
 import { TagButton, getTagButtonProps } from './views/TagButton'
 
 const placeholders = [
@@ -71,8 +68,8 @@ export function setAvoidNextAutocompleteShowOnFocus() {
 }
 
 export const onFocusAnyInput = () => {
-  if (om.state.home.searchbarFocusedTag) {
-    om.actions.home.setSearchBarFocusedTag(null)
+  if (homeStore.searchbarFocusedTag) {
+    homeStore.setSearchBarFocusedTag(null)
   }
 }
 
@@ -101,16 +98,16 @@ export const isSearchInputFocused = () => {
 
 export const AppSearchInput = memo(() => {
   const inputStore = useInputStoreSearch()
-  const om = useOvermind()
+  const home = useHomeStore()
+  const { loading } = home
   const { color, backgroundRgb } = useSearchBarTheme()
   const media = useMedia()
   const [search, setSearch] = useState('')
   const getSearch = useGet(search)
-  const isSearchingCuisine = !!om.state.home.searchBarTags.length
+  const isSearchingCuisine = !!home.searchBarTags.length
   const autocompletes = useStoreInstance(autocompletesStore)
   const showSearchAutocomplete =
     autocompletes.visible && autocompletes.target === 'search'
-  const { loading } = useHomeStore()
 
   const height = searchBarHeight - 2
   const outerHeight = height - 1
@@ -119,7 +116,7 @@ export const AppSearchInput = memo(() => {
   useOnMount(() => {
     searchBar = inputStore.node
 
-    setSearch(om.state.home.currentStateSearchQuery)
+    setSearch(home.currentStateSearchQuery)
 
     return series([
       () => fullyIdle({ max: 1000 }),
@@ -145,8 +142,9 @@ export const AppSearchInput = memo(() => {
 
   // one way sync down for more perf
   useEffect(() => {
-    return om.reaction(
-      (state) => state.home.currentStateSearchQuery,
+    return reaction(
+      homeStore,
+      (state) => state.currentStateSearchQuery,
       (val) => {
         if (val !== getSearch()) {
           setSearch(val)
@@ -288,8 +286,8 @@ export const AppSearchInput = memo(() => {
                   }}
                   onKeyPress={handleKeyPressInner}
                   onFocus={() => {
-                    if (om.state.home.searchbarFocusedTag) {
-                      om.actions.home.setSearchBarTagIndex(0)
+                    if (home.searchbarFocusedTag) {
+                      home.setSearchBarTagIndex(0)
                     } else {
                       autocompletesStore.setTarget('search')
                     }
@@ -299,7 +297,7 @@ export const AppSearchInput = memo(() => {
                       autocompletesStore.setTarget('search')
                     }
                     setSearch(text)
-                    om.actions.home.setSearchQuery(text)
+                    home.setSearchQuery(text)
                   }}
                   placeholder={isSearchingCuisine ? '...' : `${placeHolder}...`}
                   style={[
@@ -329,9 +327,9 @@ export const AppSearchInput = memo(() => {
 })
 
 const SearchCancelButton = memo(() => {
-  const om = useOvermind()
-  const hasSearch = om.state.home.currentStateSearchQuery !== ''
-  const hasSearchTags = !!om.state.home.searchBarTags.length
+  const home = useHomeStore()
+  const hasSearch = home.currentStateSearchQuery !== ''
+  const hasSearchTags = !!home.searchBarTags.length
   const isActive = hasSearch || hasSearchTags
   const media = useMedia()
   return (
@@ -348,7 +346,7 @@ const SearchCancelButton = memo(() => {
         if (autocompletesStore.visible) {
           autocompletesStore.setVisible(false)
         } else {
-          om.actions.home.clearSearch()
+          home.clearSearch()
         }
       }}
     >
@@ -362,10 +360,10 @@ const SearchCancelButton = memo(() => {
 })
 
 const prev = () => {
-  om.actions.home.moveSearchBarTagIndex(-1)
+  homeStore.moveSearchBarTagIndex(-1)
 }
 const next = () => {
-  om.actions.home.moveSearchBarTagIndex(1)
+  homeStore.moveSearchBarTagIndex(1)
 }
 
 const handleKeyPress = async (e: any, inputStore: InputStore) => {
@@ -405,8 +403,8 @@ const handleKeyPress = async (e: any, inputStore: InputStore) => {
             params: { slug: item.slug },
           })
         } else if ('slug' in item) {
-          om.actions.home.clearSearch()
-          om.actions.home.navigate({
+          homeStore.clearSearch()
+          homeStore.navigate({
             tags: [item],
           })
         }
@@ -423,10 +421,10 @@ const handleKeyPress = async (e: any, inputStore: InputStore) => {
     }
     case 8: {
       // delete
-      if (om.state.home.searchbarFocusedTag) {
+      if (homeStore.searchbarFocusedTag) {
         // will remove it if active
-        om.actions.home.navigate({
-          tags: tagsToNavigableTags([om.state.home.searchbarFocusedTag]),
+        homeStore.navigate({
+          tags: tagsToNavigableTags([homeStore.searchbarFocusedTag]),
         })
         next()
         return
@@ -489,9 +487,9 @@ export const inputTextStyles = StyleSheet.create({
 
 const AppSearchInputTags = memo(
   ({ input }: { input: HTMLInputElement | null }) => {
-    const om = useOvermind()
-    const tags = om.state.home.searchBarTags
-    const focusedTag = om.state.home.searchbarFocusedTag
+    const home = useHomeStore()
+    const tags = home.searchBarTags
+    const focusedTag = home.searchbarFocusedTag
 
     return (
       <>
@@ -527,12 +525,12 @@ const AppSearchInputTags = memo(
                   })}
                   {...getTagButtonProps(tag)}
                   onPress={() => {
-                    om.actions.home.setSearchBarFocusedTag(tag)
+                    home.setSearchBarFocusedTag(tag)
                   }}
                   closable
                   onClose={async () => {
                     console.log('navigate to close', tag)
-                    om.actions.home.navigate({ tags: [tag] })
+                    home.navigate({ tags: [tag] })
                     await fullyIdle()
                     setAvoidNextAutocompleteShowOnFocus()
                     focusSearchInput()
