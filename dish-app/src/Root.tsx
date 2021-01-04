@@ -8,9 +8,9 @@ import { ThemeProvider, configureThemes } from 'snackui'
 
 import { App } from './app/App'
 import { AppPortalProvider } from './app/AppPortal'
-import { addTagsToCache } from './app/state/allTags'
-import { homeStore } from './app/state/home'
-import { userStore } from './app/state/userStore'
+import { addTagsToCache } from './helpers/allTags'
+import { homeStore } from './app/homeStore'
+import { userStore } from './app/userStore'
 import {
   tagDefaultAutocomplete,
   tagFilters,

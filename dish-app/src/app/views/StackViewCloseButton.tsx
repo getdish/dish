@@ -1,6 +1,6 @@
 import React, { memo } from 'react'
 
-import { homeStore } from '../state/home'
+import { homeStore } from '../homeStore'
 import { CloseButton } from './CloseButton'
 
 export const StackViewCloseButton = memo(() => {

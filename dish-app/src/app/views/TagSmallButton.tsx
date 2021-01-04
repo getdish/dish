@@ -13,7 +13,7 @@ import {
 import { tagDisplayName } from '../../constants/tagMeta'
 import { getTagSlug } from '../../helpers/getTagSlug'
 import { useUserTagVote } from '../hooks/useUserTagVotes'
-import { FullTag } from '../state/tagTypes'
+import { FullTag } from '../../types/tagTypes'
 
 type TagSmallButtonProps = {
   restaurantSlug: string

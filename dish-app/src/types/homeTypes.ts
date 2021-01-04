@@ -1,6 +1,6 @@
 import { HomeMeta, RestaurantOnlyIds, RestaurantSearchItem } from '@dish/graph'
 
-import { NavigableTag } from './NavigableTag'
+import {NavigableTag} from "./tagTypes";
 
 export type GeocodePlace = {
   type:

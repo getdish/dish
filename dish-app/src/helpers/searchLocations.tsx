@@ -1,7 +1,7 @@
 import { LngLat } from '@dish/graph'
 import { isPresent } from '@dish/helpers'
 
-import { GeocodePlace } from '../app/state/home-types'
+import { GeocodePlace } from '../types/homeTypes'
 import { MAPBOX_ACCESS_TOKEN } from '../constants/constants'
 import {
   AutocompleteItem,

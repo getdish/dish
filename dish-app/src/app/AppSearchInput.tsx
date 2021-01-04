@@ -33,10 +33,10 @@ import {
   InputStore,
   setNodeOnInputStore,
   useInputStoreSearch,
-} from './InputStore'
+} from './inputStore'
 import { SearchInputNativeDragFix } from './SearchInputNativeDragFix'
-import { homeStore, useHomeStore } from './state/home'
-import { tagsToNavigableTags } from './state/NavigableTag'
+import { homeStore, useHomeStore } from './homeStore'
+import { tagsToNavigableTags } from '../helpers/tagHelpers'
 import { TagButton, getTagButtonProps } from './views/TagButton'
 
 const placeholders = [

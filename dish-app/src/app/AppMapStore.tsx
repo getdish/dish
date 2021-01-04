@@ -9,9 +9,9 @@ import {
 import { reverseGeocode } from '../helpers/reverseGeocode'
 import { router } from '../router'
 import { autocompleteLocationStore } from './AppAutocomplete'
-import { inputStoreLocation } from './InputStore'
-import { getNavigateItemForState } from './state/getNavigateItemForState'
-import { homeStore } from './state/home'
+import { inputStoreLocation } from './inputStore'
+import { getNavigateItemForState } from '../helpers/getNavigateItemForState'
+import { homeStore } from './homeStore'
 
 type MapPosition = {
   center: LngLat

@@ -6,27 +6,27 @@ import { Store, createStore, useStoreInstance } from '@dish/use-store'
 import _, { clamp, findLast, isPlainObject } from 'lodash'
 import { Keyboard } from 'react-native'
 
-import { initialHomeState } from '../../constants/initialHomeState'
-import { tagLenses } from '../../constants/localTags'
-import { getBreadcrumbs, isBreadcrumbState } from '../../helpers/getBreadcrumbs'
-import { getShouldNavigate } from '../../helpers/getShouldNavigate'
-import { getTagSlug } from '../../helpers/getTagSlug'
-import { isSearchBarTag } from '../../helpers/isSearchBarTag'
-import { router } from '../../router'
-import { appMapStore } from '../AppMapStore'
-import { allTags } from './allTags'
-import { getActiveTags } from './getActiveTags'
-import { getNextState } from './getNextState'
-import { isHomeState, isSearchState } from './home-helpers'
+import { initialHomeState } from '../constants/initialHomeState'
+import { tagLenses } from '../constants/localTags'
+import { getBreadcrumbs, isBreadcrumbState } from '../helpers/getBreadcrumbs'
+import { getShouldNavigate } from '../helpers/getShouldNavigate'
+import { getTagSlug } from '../helpers/getTagSlug'
+import { isSearchBarTag } from '../helpers/isSearchBarTag'
+import { router } from '../router'
+import { appMapStore } from './AppMapStore'
+import { allTags } from '../helpers/allTags'
+import { getActiveTags } from '../helpers/getActiveTags'
+import { getNextState } from '../helpers/getNextState'
+import { isHomeState, isSearchState } from '../helpers/homeStateHelpers'
 import {
   HomeStateItem,
   HomeStateItemHome,
   HomeStateItemSearch,
   HomeStateNav,
   HomeStateTagNavigable,
-} from './home-types'
-import { NavigableTag } from './NavigableTag'
-import { syncStateToRoute } from './syncStateToRoute'
+} from '../types/homeTypes'
+import { syncStateToRoute } from '../helpers/syncStateToRoute'
+import {NavigableTag} from "../types/tagTypes";
 
 class HomeStore extends Store {
   showUserMenu = false
@@ -186,7 +186,7 @@ class HomeStore extends Store {
       if (val.type && state.type !== val.type) {
         throw new Error(`Cant change the type`)
       }
-      deepAssign(state, val)
+      this.allStates[val.id] = { ...state, ...val }
     } else {
       this.allStates[val.id] = { ...val } as any
       // cleanup old from backward
@@ -529,29 +529,6 @@ export const useHomeStore = () => {
 
 const normalizeItemName = {
   homeRegion: 'home',
-}
-
-// doesn't delete
-const deepAssign = (a: Object, b: Object) => {
-  for (const key in b) {
-    if (a[key] != b[key]) {
-      // WARNING, overmind got totally confused when recursing and broke things in subtle ways
-      // do not recurse objects and deep assign, just flat assign for now...
-      if (a[key] && b[key] && isEqual(a[key], b[key])) {
-        continue
-      }
-      const val = b[key]
-      if (val) {
-        a[key] = Array.isArray(val)
-          ? [...val]
-          : isPlainObject(val)
-          ? { ...val }
-          : val
-      } else {
-        a[key] = val
-      }
-    }
-  }
 }
 
 const uid = () => `${Math.random()}`.replace('.', '')

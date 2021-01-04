@@ -1,5 +1,5 @@
-import { getNavigateItemForState } from '../app/state/getNavigateItemForState'
-import { HomeStateTagNavigable } from '../app/state/home-types'
+import { getNavigateItemForState } from './getNavigateItemForState'
+import { HomeStateTagNavigable } from '../types/homeTypes'
 import { router } from '../router'
 
 export function getShouldNavigate(state: HomeStateTagNavigable) {

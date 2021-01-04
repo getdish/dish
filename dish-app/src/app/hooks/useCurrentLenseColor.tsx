@@ -1,7 +1,7 @@
 import { useEffect, useRef } from 'react'
 
 import { tagLenses } from '../../constants/localTags'
-import { useHomeStore } from '../state/home'
+import { useHomeStore } from '../homeStore'
 
 export const useCurrentLenseColor = (): [number, number, number] => {
   const home = useHomeStore()

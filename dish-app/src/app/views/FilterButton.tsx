@@ -11,13 +11,13 @@ import {
   useMedia,
   useTheme,
 } from 'snackui'
-import type { NavigableTag } from 'src/app/state/NavigableTag'
 
 import { tagDisplayNames } from '../../constants/tagMeta'
 import { thirdPartyCrawlSources } from '../../constants/thirdPartyCrawlSources'
-import { useHomeStore } from '../state/home'
+import { useHomeStore } from '../homeStore'
 import { LinkButtonProps } from './LinkProps'
 import { SmallButton } from './SmallButton'
+import {NavigableTag} from "../../types/tagTypes";
 
 export const FilterButton = memo(
   ({

@@ -19,7 +19,7 @@ import {
 import { bgLight } from '../../../constants/colors'
 import { router } from '../../../router'
 import { useRestaurantQuery } from '../../hooks/useRestaurantQuery'
-import { homeStore } from '../../state/home'
+import { homeStore } from '../../homeStore'
 import { StackViewCloseButton } from '../../views/StackViewCloseButton'
 import { PageTitle } from '../search/PageTitle'
 

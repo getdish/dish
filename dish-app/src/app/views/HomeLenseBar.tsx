@@ -4,7 +4,7 @@ import { VStack } from 'snackui'
 
 import { tagLenses } from '../../constants/localTags'
 import { getTagSlug } from '../../helpers/getTagSlug'
-import { HomeActiveTagsRecord } from '../state/home-types'
+import { HomeActiveTagsRecord } from '../../types/homeTypes'
 import { LenseButton, LenseButtonSize } from './LenseButton'
 
 export const HomeLenseBar = memo(

@@ -2,7 +2,7 @@ import React, { useRef } from 'react'
 import { Hoverable } from 'snackui'
 
 import { autocompletesStore } from './AppAutocomplete'
-import { useHomeStore } from './state/home'
+import { useHomeStore } from './homeStore'
 
 export const AppAutocompleteHoverableInput = ({
   children,

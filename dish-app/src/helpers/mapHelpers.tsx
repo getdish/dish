@@ -1,6 +1,6 @@
 import { LngLat } from '@dish/graph'
 
-import { homeStore, useHomeStore } from '../app/state/home'
+import { homeStore, useHomeStore } from '../app/homeStore'
 
 export const mapHelpers = null
 

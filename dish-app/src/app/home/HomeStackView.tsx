@@ -9,8 +9,8 @@ import {
 } from '../../constants/constants'
 import { getBreadcrumbs } from '../../helpers/getBreadcrumbs'
 import { useLastValueWhen } from '../hooks/useLastValueWhen'
-import { useHomeStore } from '../state/home'
-import { HomeStateItem } from '../state/home-types'
+import { useHomeStore } from '../homeStore'
+import { HomeStateItem } from '../../types/homeTypes'
 import { ContentParentStore } from '../views/ContentScrollView'
 import { ErrorBoundary } from '../views/ErrorBoundary'
 

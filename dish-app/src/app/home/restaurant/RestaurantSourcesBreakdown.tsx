@@ -18,7 +18,7 @@ import {
 import { tagDisplayName } from '../../../constants/tagMeta'
 import { thirdPartyCrawlSources } from '../../../constants/thirdPartyCrawlSources'
 import { useRestaurantQuery } from '../../hooks/useRestaurantQuery'
-import { homeStore } from '../../state/home'
+import { homeStore } from '../../homeStore'
 import { useBreakdownsBySources } from './useBreakdownsBySources'
 
 export const col0Props: TableCellProps = {

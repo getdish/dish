@@ -22,7 +22,7 @@ import {
 
 import { isWeb } from '../../constants/constants'
 import { useRouterCurPage } from '../../router'
-import { useUserStore } from '../state/userStore'
+import { useUserStore } from '../userStore'
 import { Link } from './Link'
 import { LinkButton } from './LinkButton'
 import { LinkButtonProps } from './LinkProps'

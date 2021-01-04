@@ -7,7 +7,7 @@ import {
   VStack,
 } from 'snackui'
 
-import { useHomeStore } from '../state/home'
+import { useHomeStore } from '../homeStore'
 import { LinkButton } from '../views/LinkButton'
 import { TrendingButton } from '../views/TrendingButton'
 

@@ -3,7 +3,7 @@ import { TextStyle, ViewStyle } from 'react-native'
 import { StackProps, TextProps } from 'snackui'
 
 import { RouteName } from '../../router'
-import { NavigableTag } from '../state/NavigableTag'
+import {NavigableTag} from "../../types/tagTypes";
 
 type AProps = React.DetailedHTMLProps<
   React.AnchorHTMLAttributes<HTMLAnchorElement>,

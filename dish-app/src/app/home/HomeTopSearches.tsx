@@ -5,8 +5,8 @@ import { HStack, LinearGradient, Text } from 'snackui'
 import { bgLightHover } from '../../constants/colors'
 import { tagLenses } from '../../constants/localTags'
 import { tagDisplayName } from '../../constants/tagMeta'
-import { NavigableTag } from '../state/NavigableTag'
 import { LinkButton } from '../views/LinkButton'
+import {NavigableTag} from "../../types/tagTypes";
 
 export const HomeTopSearches = memo(() => {
   return (

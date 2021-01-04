@@ -7,8 +7,8 @@ import { AbsoluteVStack, HStack, useMedia } from 'snackui'
 import { isWeb, searchBarHeight, zIndexDrawer } from '../constants/constants'
 import { appMapStore } from './AppMapStore'
 import { useSafeArea } from './hooks/useSafeArea'
-import { pagesStore } from './PagesStore'
-import { useHomeStore } from './state/home'
+import { pagesStore } from './pagesStore'
+import { useHomeStore } from './homeStore'
 import { OverlayLinkButton } from './views/OverlayLinkButton'
 
 export const AppMapControls = memo(() => {

@@ -1,5 +1,5 @@
-import { getLocalJSON, setLocalJSON } from '../app/state/getLocalJSON'
-import { HomeStateItemLocation } from '../app/state/home-types'
+import { getLocalJSON, setLocalJSON } from './getLocalJSON'
+import { HomeStateItemLocation } from '../types/homeTypes'
 
 const initSpan = {
   lng: 0.15 / 2,

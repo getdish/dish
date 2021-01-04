@@ -5,9 +5,9 @@ import { Store, createStore } from '@dish/use-store'
 
 import { getTagSlug } from '../../../helpers/getTagSlug'
 import { appMapStore } from '../../AppMapStore'
-import { allTags } from '../../state/allTags'
-import { getActiveTags } from '../../state/getActiveTags'
-import { homeStore } from '../../state/home'
+import { allTags } from '../../../helpers/allTags'
+import { getActiveTags } from '../../../helpers/getActiveTags'
+import { homeStore } from '../../homeStore'
 
 export type ActiveEvent = 'key' | 'pin' | 'hover' | null
 

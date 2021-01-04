@@ -7,7 +7,7 @@ import {
   isRestaurantState,
   isSearchState,
   isUserState,
-} from '../state/home-helpers'
+} from '../../helpers/homeStateHelpers'
 import { HomeStackViewPagesContents } from './HomeStackViewPagesContents'
 import { HomeStackViewProps } from './HomeStackViewProps'
 import { HomeSuspense } from './HomeSuspense'

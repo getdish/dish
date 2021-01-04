@@ -14,9 +14,9 @@ import { AppAutocompleteHoverableInput } from './AppAutocompleteHoverableInput'
 import { appMapStore } from './AppMapStore'
 import { inputTextStyles } from './AppSearchInput'
 import { useSearchBarTheme } from './hooks/useSearchBarTheme'
-import { setNodeOnInputStore, useInputStoreLocation } from './InputStore'
+import { setNodeOnInputStore, useInputStoreLocation } from './inputStore'
 import { SearchInputNativeDragFix } from './SearchInputNativeDragFix'
-import { useHomeStore } from './state/home'
+import { useHomeStore } from './homeStore'
 
 export const AppSearchInputLocation = memo(() => {
   const media = useMedia()

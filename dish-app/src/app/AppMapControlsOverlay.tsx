@@ -6,7 +6,7 @@ import { AbsoluteVStack, HStack, useMedia } from 'snackui'
 import { searchBarHeight, zIndexMapControls } from '../constants/constants'
 import { getWindowHeight } from '../helpers/getWindow'
 import { AppMapRestaurantPeek } from './AppMapRestaurantPeek'
-import { drawerStore } from './DrawerStore'
+import { drawerStore } from './drawerStore'
 import { useMapSize } from './hooks/useMapSize'
 import { useSafeArea } from './hooks/useSafeArea'
 

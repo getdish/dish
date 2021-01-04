@@ -8,9 +8,9 @@ import { AbsoluteVStack, VStack, getMedia, useMedia } from 'snackui'
 import { MAPBOX_ACCESS_TOKEN } from '../constants/constants'
 import { getZoomLevel, mapZoomToMedium } from '../helpers/mapHelpers'
 import { appMapStore } from './AppMapStore'
-import { drawerStore } from './DrawerStore'
+import { drawerStore } from './drawerStore'
 import { restaurantQuery } from './hooks/useRestaurantQuery'
-import { useHomeStore } from './state/home'
+import { useHomeStore } from './homeStore'
 
 mapboxgl.accessToken = MAPBOX_ACCESS_TOKEN
 

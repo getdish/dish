@@ -1,19 +1,19 @@
 import { NavigateItem } from '@dish/router'
 import { findLast } from 'lodash'
 
-import { tagLenses } from '../../constants/localTags'
-import { SPLIT_TAG } from '../../constants/SPLIT_TAG'
-import { getTagSlug } from '../../helpers/getTagSlug'
-import { SearchRouteParams, router } from '../../router'
+import { tagLenses } from '../constants/localTags'
+import { SPLIT_TAG } from '../constants/SPLIT_TAG'
+import { getTagSlug } from './getTagSlug'
+import { SearchRouteParams, router } from '../router'
 import { getActiveTags } from './getActiveTags'
-import { homeStore } from './home'
-import { isHomeState, isSearchState } from './home-helpers'
+import { homeStore } from '../app/homeStore'
+import { isHomeState, isSearchState } from './homeStateHelpers'
 import {
   HomeStateItem,
   HomeStateItemHome,
   HomeStateItemSearch,
   HomeStateTagNavigable,
-} from './home-types'
+} from '../types/homeTypes'
 import { shouldBeOnSearch } from './shouldBeOnSearch'
 
 export const getNavigateItemForState = (

@@ -2,7 +2,7 @@ import { MapPin } from '@dish/react-feather'
 import React from 'react'
 import { HStack, Text, useMedia } from 'snackui'
 
-import { GeocodePlace } from '../../state/home-types'
+import { GeocodePlace } from '../../../types/homeTypes'
 import { SmallButton } from '../../views/SmallButton'
 import { AddressSize, getAddressText } from './RestaurantAddressLinksRow'
 

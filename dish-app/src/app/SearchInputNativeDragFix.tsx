@@ -7,7 +7,7 @@ import {
 } from 'react-native'
 import { VStack, useGet } from 'snackui'
 
-import { inputStoreLocation, inputStoreSearch } from './InputStore'
+import { inputStoreLocation, inputStoreSearch } from './inputStore'
 
 export let isTouchingSearchBar = false
 

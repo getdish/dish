@@ -13,9 +13,9 @@ import {
   VStack,
 } from 'snackui'
 
-import { useHomeStore } from '../../state/home'
-import { HomeStateItemUser } from '../../state/home-types'
-import { useUserStore } from '../../state/userStore'
+import { useHomeStore } from '../../homeStore'
+import { HomeStateItemUser } from '../../../types/homeTypes'
+import { useUserStore } from '../../userStore'
 import { ContentScrollView } from '../../views/ContentScrollView'
 import { Link } from '../../views/Link'
 import { NotFoundPage } from '../../views/NotFoundPage'

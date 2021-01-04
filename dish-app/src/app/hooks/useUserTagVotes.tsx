@@ -4,10 +4,10 @@ import { isNumber } from 'lodash'
 import { useEffect, useLayoutEffect } from 'react'
 import { Toast, useConstant, useForceUpdate, useLazyEffect } from 'snackui'
 
-import { addTagsToCache, allTags } from '../state/allTags'
-import { getFullTags } from '../state/getFullTags'
-import { HomeActiveTagsRecord } from '../state/home-types'
-import { useUserStore, userStore } from '../state/userStore'
+import { addTagsToCache, allTags } from '../../helpers/allTags'
+import { getFullTags } from '../../helpers/getFullTags'
+import { HomeActiveTagsRecord } from '../../types/homeTypes'
+import { useUserStore, userStore } from '../userStore'
 import { useRestaurantQuery } from './useRestaurantQuery'
 
 export type VoteNumber = -1 | 0 | 1

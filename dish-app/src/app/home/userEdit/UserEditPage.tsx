@@ -1,7 +1,7 @@
 import React, { Suspense, memo } from 'react'
 import { AbsoluteVStack, LoadingItems, VStack } from 'snackui'
 
-import { useHomeStore } from '../../state/home'
+import { useHomeStore } from '../../homeStore'
 import { UserOnboard } from '../../UserOnboard'
 import { DarkModal } from '../../views/DarkModal'
 import { StackViewCloseButton } from '../../views/StackViewCloseButton'

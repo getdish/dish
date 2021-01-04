@@ -6,7 +6,7 @@ import {
   HomeStateItemRestaurant,
   HomeStateItemSearch,
   HomeStateItemUser,
-} from './home-types'
+} from '../types/homeTypes'
 
 type HSIJustType = Pick<HomeStateItem, 'type'>
 

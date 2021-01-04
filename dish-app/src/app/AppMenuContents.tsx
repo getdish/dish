@@ -4,7 +4,7 @@ import { Box, BoxProps, Divider, Spacer, Toast, VStack } from 'snackui'
 import { isWeb } from 'snackui/src/constants'
 
 import { appMenuStore } from './AppMenuStore'
-import { useUserStore } from './state/userStore'
+import { useUserStore } from './userStore'
 import { LinkButton } from './views/LinkButton'
 import { LinkButtonProps } from './views/LinkProps'
 import { LoginRegisterForm } from './views/LoginRegisterForm'
