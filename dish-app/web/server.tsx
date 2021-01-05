@@ -53,10 +53,10 @@ const app = require(Path.join(
   rootDir,
   `web-build-ssr/static/js/app.ssr.${process.env.NODE_ENV ?? 'production'}.js`
 ))
-const { App, config, ReactDOMServer } = app
+const { App, ReactDOMServer } = app
 
-if (!App || !config || !ReactDOMServer) {
-  console.log(`Bad exported bundle`, { App, config, ReactDOMServer })
+if (!App || !ReactDOMServer) {
+  console.log(`Bad exported bundle`, { App, ReactDOMServer })
   process.exit()
 }
 
