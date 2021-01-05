@@ -597,7 +597,9 @@ export default function useConstant<T>(fn: () => T): T {
 }
 
 function simpleStr(arg: any) {
-  return typeof arg === 'string'
+  return typeof arg === 'function'
+    ? 'fn'
+    : typeof arg === 'string'
     ? `"${arg}"`
     : !arg
     ? arg

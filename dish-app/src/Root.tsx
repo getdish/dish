@@ -8,7 +8,6 @@ import { ThemeProvider, configureThemes } from 'snackui'
 
 import { App } from './app/App'
 import { AppPortalProvider } from './app/AppPortal'
-import { addTagsToCache } from './helpers/allTags'
 import { homeStore } from './app/homeStore'
 import { userStore } from './app/userStore'
 import {
@@ -17,6 +16,7 @@ import {
   tagLenses,
 } from './constants/localTags'
 import themes, { MyTheme, MyThemes } from './constants/themes'
+import { addTagsToCache } from './helpers/allTags'
 import { queryClient } from './helpers/queryClient'
 import { router, routes } from './router'
 
@@ -44,6 +44,7 @@ export function Root() {
       () => {
         addTagsToCache([...tagDefaultAutocomplete, ...tagFilters, ...tagLenses])
         router.onRouteChange((item) => {
+          console.warn('router.onRouteChange', item)
           homeStore.handleRouteChange(item)
         })
         userStore.checkForExistingLogin()
@@ -52,7 +53,7 @@ export function Root() {
         setIsStarted(true)
       },
     ])
-  })
+  }, [])
 
   if (cacheSnapshot) {
     console.debug('cacheSnapshot', cacheSnapshot)

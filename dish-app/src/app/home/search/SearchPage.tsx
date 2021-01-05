@@ -82,7 +82,9 @@ type Props = HomeStackViewProps<HomeStateItemSearch>
 const SearchPagePropsContext = createContext<Props | null>(null)
 
 export default memo(function SearchPage(props: Props) {
-  const { title } = getTitleForState(props.item, {
+  const homeStore = useHomeStore()
+  const state = homeStore.allStates[props.item.id]
+  const { title } = getTitleForState(state, {
     lowerCase: false,
   })
   return (
@@ -93,7 +95,7 @@ export default memo(function SearchPage(props: Props) {
           <SearchNavBarContainer isActive={props.isActive} id={props.item.id} />
         </HomeSuspense>
         <HomeSuspense fallback={<LoadingItems />}>
-          <SearchPageContent {...props} />
+          <SearchPageContent {...props} item={state} />
         </HomeSuspense>
       </StackDrawer>
     </>
@@ -261,8 +263,6 @@ const SearchResultsContent = (props: Props) => {
   const searchState = props.item
   const drawerWidth = useAppDrawerWidth()
   const allResults = searchState.results
-
-  console.log('SearchResultsContent.allResults', allResults)
 
   const dataProvider = useMemo(() => {
     return new DataProvider((r1, r2) => {

@@ -143,6 +143,7 @@ class HomeStore extends Store {
       lastRouterType === type &&
       router.curPage?.type !== 'pop'
     ) {
+      console.warn('go back')
       router.back()
       return
     }
@@ -159,6 +160,8 @@ class HomeStore extends Store {
         this.lastHomeState.region ??
         'ca-san-francisco',
     }
+
+    console.warn('up to', routerItem)
 
     if (routerItem) {
       router.navigate({
