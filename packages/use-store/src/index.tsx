@@ -1,4 +1,5 @@
 import React, { useCallback, useLayoutEffect, useMemo, useRef } from 'react'
+import { render } from 'react-dom'
 
 // @ts-expect-error
 const createMutableSource = React.unstable_createMutableSource
@@ -135,6 +136,9 @@ export function useStoreInstance<A extends Store<B>, B>(instance: A): A {
   const info = cache.get(uid)
   if (!info) {
     throw new Error(`This store not created using createStore()`)
+  }
+  if (arguments[2]) {
+    useDebugStoreComponent(store.constructor)
   }
   return useStoreFromInfo(info, arguments[1])
 }
@@ -415,6 +419,9 @@ function createProxiedStore(
           gettersState.curGetKeys.add(key)
         }
         if (key in getters) {
+          if (renderOpts?.internal.current.isRendering) {
+            renderOpts.internal.current.tracked.add(key)
+          }
           if (getCache.has(key)) {
             // console.log('using getter cahce', key)
             return getCache.get(key)
@@ -434,7 +441,6 @@ function createProxiedStore(
             cur.add(key)
           })
           getCache.set(key, res)
-          // console.log('getter', key, res)
           return res
         }
         if (key in actions) {
@@ -483,10 +489,7 @@ function createProxiedStore(
         }
         if (renderOpts?.internal.current.isRendering) {
           renderOpts.internal.current.tracked.add(key)
-          const val = storeInstance[key]
-          if (typeof val !== 'undefined') {
-            return val
-          }
+          return Reflect.get(target, key)
         }
       }
       if (key === UNWRAP_PROXY) {
@@ -504,11 +507,13 @@ function createProxiedStore(
       if (res && cur !== value) {
         if (
           process.env.NODE_ENV === 'development' &&
-          (DebugStores.has(constr) || configureOpts.logLevel !== 'error')
+          configureOpts.logLevel !== 'error'
         ) {
           setters.add({ key, value })
+          if (shouldDebug(renderOpts?.component, storeInfo)) {
+            console.log('SET', res, key, value)
+          }
         }
-        // console.log('SET', res, key, value)
 
         // clear getters cache that rely on this
         if (typeof key === 'string') {
@@ -557,22 +562,24 @@ export function useStoreDebug<A extends Store<B>, B>(
   props?: B,
   selector?: any
 ): A {
-  const cmp = useCurrentComponent()
+  useDebugStoreComponent(StoreKlass)
+  return useStore(StoreKlass, props, selector)
+}
 
+function useDebugStoreComponent(StoreCons: any) {
+  const cmp = useCurrentComponent()
   useLayoutEffect(() => {
-    DebugStores.add(StoreKlass)
+    DebugStores.add(StoreCons)
     if (!DebugComponents.has(cmp)) {
       DebugComponents.set(cmp, new Set())
     }
     const stores = DebugComponents.get(cmp)!
-    stores.add(StoreKlass)
+    stores.add(StoreCons)
     return () => {
-      DebugStores.delete(StoreKlass)
-      stores.delete(StoreKlass)
+      DebugStores.delete(StoreCons)
+      stores.delete(StoreCons)
     }
   }, [])
-
-  return useStore(StoreKlass, props, selector)
 }
 
 function getStoreDescriptors(storeInstance: any) {
