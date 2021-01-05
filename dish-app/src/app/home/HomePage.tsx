@@ -97,11 +97,12 @@ export default memo(function HomePage(props: Props) {
   const home = useHomeStore()
   const theme = useTheme()
   const [isLoaded, setIsLoaded] = useState(false)
-  const region = useRegionQuery(props.item.region, {
-    enabled: !!props.item.region,
+  const state = home.allStates[props.item.id]
+  const region = useRegionQuery(state.region, {
+    enabled: !!state.region,
   })
 
-  // console.log('👀 HomePage', props, region)
+  console.log('👀 HomePage', props, region)
 
   // load effect!
   usePageLoadEffect(props, () => {
@@ -175,12 +176,12 @@ export default memo(function HomePage(props: Props) {
   const navLinks: LinkButtonProps[] = [
     {
       name: 'homeRegion',
-      params: { region: props.item.region, section: '' },
+      params: { region: state.region, section: '' },
       children: 'Unique',
     },
     {
       name: 'homeRegion',
-      params: { region: props.item.region, section: 'new' },
+      params: { region: state.region, section: 'new' },
       children: 'New',
     },
   ]
@@ -265,7 +266,7 @@ export default memo(function HomePage(props: Props) {
                               fontSize={14}
                               lineHeight={32}
                               color={
-                                props.item.section === linkProps.params.section
+                                state.section === linkProps.params.section
                                   ? 'red'
                                   : '#888'
                               }
@@ -288,9 +289,7 @@ export default memo(function HomePage(props: Props) {
 
               <PageTitle
                 size="sm"
-                title={
-                  props.item.section === 'new' ? 'New' : 'Uniquely good here'
-                }
+                title={state.section === 'new' ? 'New' : 'Uniquely good here'}
               />
 
               <Spacer size="lg" />

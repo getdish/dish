@@ -308,10 +308,10 @@ const AppMapContent = memo(
         //   //@ts-expect-error
         //   om.actions.home.setCenterToResults(0)
         // }
-        // appMapStore.setPosition('moveEnd', {
-        //   center,
-        //   span,
-        // })
+        appMapStore.setPosition('moveEnd', {
+          center,
+          span,
+        })
       },
       [media.sm]
     )
@@ -384,6 +384,7 @@ const AppMapContent = memo(
     }, [])
 
     const handleSelectRegion = useCallback((region: Region | null) => {
+      console.log('handleSelectRegion', region)
       if (!region) return
       if (!region.slug) {
         console.log('no region slug', region)
