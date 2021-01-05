@@ -1,4 +1,5 @@
 import { client, mutation, query, resolved } from '@dish/graph'
+import * as UseStore from '@dish/use-store'
 import React from 'react'
 
 import { isSSR } from '../constants/constants'
@@ -8,6 +9,7 @@ if (isSSR) {
   React.useLayoutEffect = React.useEffect
 }
 
+window['useStore'] = UseStore
 window['React'] = React
 window['gqless'] = {
   query,

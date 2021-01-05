@@ -8,16 +8,16 @@ import { Keyboard } from 'react-native'
 
 import { initialHomeState } from '../constants/initialHomeState'
 import { tagLenses } from '../constants/localTags'
-import { getBreadcrumbs, isBreadcrumbState } from '../helpers/getBreadcrumbs'
-import { getShouldNavigate } from '../helpers/getShouldNavigate'
-import { getTagSlug } from '../helpers/getTagSlug'
-import { isSearchBarTag } from '../helpers/isSearchBarTag'
-import { router } from '../router'
-import { appMapStore } from './AppMapStore'
 import { allTags } from '../helpers/allTags'
 import { getActiveTags } from '../helpers/getActiveTags'
+import { getBreadcrumbs, isBreadcrumbState } from '../helpers/getBreadcrumbs'
 import { getNextState } from '../helpers/getNextState'
+import { getShouldNavigate } from '../helpers/getShouldNavigate'
+import { getTagSlug } from '../helpers/getTagSlug'
 import { isHomeState, isSearchState } from '../helpers/homeStateHelpers'
+import { isSearchBarTag } from '../helpers/isSearchBarTag'
+import { syncStateToRoute } from '../helpers/syncStateToRoute'
+import { router } from '../router'
 import {
   HomeStateItem,
   HomeStateItemHome,
@@ -25,8 +25,8 @@ import {
   HomeStateNav,
   HomeStateTagNavigable,
 } from '../types/homeTypes'
-import { syncStateToRoute } from '../helpers/syncStateToRoute'
-import {NavigableTag} from "../types/tagTypes";
+import { NavigableTag } from '../types/tagTypes'
+import { appMapStore } from './AppMapStore'
 
 class HomeStore extends Store {
   showUserMenu = false
@@ -51,7 +51,7 @@ class HomeStore extends Store {
     return this.states[this.stateIndex]
   }
 
-  get currentStateSearchQuery() {
+  get currentSearchQuery() {
     return this.currentState.searchQuery
   }
 
@@ -186,9 +186,15 @@ class HomeStore extends Store {
       if (val.type && state.type !== val.type) {
         throw new Error(`Cant change the type`)
       }
-      this.allStates[val.id] = { ...state, ...val }
+      this.allStates = {
+        ...this.allStates,
+        [val.id]: { ...state, ...val },
+      }
     } else {
-      this.allStates[val.id] = { ...val } as any
+      this.allStates = {
+        ...this.allStates,
+        [val.id]: { ...val },
+      }
       // cleanup old from backward
       const stateIds = this.stateIds
       const lastIndex = stateIds.length - 1
@@ -201,7 +207,7 @@ class HomeStore extends Store {
   }
 
   clearSearch() {
-    const hasQuery = !!this.currentStateSearchQuery
+    const hasQuery = !!this.currentSearchQuery
     if (!hasQuery) {
       this.clearTags()
     } else {

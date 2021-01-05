@@ -24,10 +24,12 @@ import {
 import { isWeb, searchBarHeight } from '../constants/constants'
 import { getTagSlug } from '../helpers/getTagSlug'
 import { isWebIOS } from '../helpers/isIOS'
+import { tagsToNavigableTags } from '../helpers/tagHelpers'
 import { router } from '../router'
 import { AutocompleteStore, autocompletesStore } from './AppAutocomplete'
 import { AppAutocompleteHoverableInput } from './AppAutocompleteHoverableInput'
 import { searchPageStore } from './home/search/SearchPageStore'
+import { homeStore, useHomeStore } from './homeStore'
 import { useSearchBarTheme } from './hooks/useSearchBarTheme'
 import {
   InputStore,
@@ -35,8 +37,6 @@ import {
   useInputStoreSearch,
 } from './inputStore'
 import { SearchInputNativeDragFix } from './SearchInputNativeDragFix'
-import { homeStore, useHomeStore } from './homeStore'
-import { tagsToNavigableTags } from '../helpers/tagHelpers'
 import { TagButton, getTagButtonProps } from './views/TagButton'
 
 const placeholders = [
@@ -116,7 +116,7 @@ export const AppSearchInput = memo(() => {
   useOnMount(() => {
     searchBar = inputStore.node
 
-    setSearch(home.currentStateSearchQuery)
+    setSearch(home.currentSearchQuery)
 
     return series([
       () => fullyIdle({ max: 1000 }),
@@ -144,7 +144,7 @@ export const AppSearchInput = memo(() => {
   useEffect(() => {
     return reaction(
       homeStore,
-      (state) => state.currentStateSearchQuery,
+      (state) => state.currentSearchQuery,
       (val) => {
         if (val !== getSearch()) {
           setSearch(val)
@@ -328,7 +328,7 @@ export const AppSearchInput = memo(() => {
 
 const SearchCancelButton = memo(() => {
   const home = useHomeStore()
-  const hasSearch = home.currentStateSearchQuery !== ''
+  const hasSearch = home.currentSearchQuery !== ''
   const hasSearchTags = !!home.searchBarTags.length
   const isActive = hasSearch || hasSearchTags
   const media = useMedia()

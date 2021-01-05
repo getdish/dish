@@ -36,11 +36,11 @@ import { DishTagItem } from '../../helpers/getRestaurantDishes'
 import { selectTagDishViewSimple } from '../../helpers/selectDishViewSimple'
 import { useQueryLoud } from '../../helpers/useQueryLoud'
 import { router } from '../../router'
+import { HomeStateItemHome } from '../../types/homeTypes'
 import { AppIntroLogin } from '../AppIntroLogin'
+import { homeStore, useHomeStore } from '../homeStore'
 import { usePageLoadEffect } from '../hooks/usePageLoadEffect'
 import { useRestaurantQuery } from '../hooks/useRestaurantQuery'
-import { homeStore, useHomeStore } from '../homeStore'
-import { HomeStateItemHome } from '../../types/homeTypes'
 import { CardFrame, cardFrameBorderRadius } from '../views/CardFrame'
 import { CommentBubble } from '../views/CommentBubble'
 import { ContentScrollView } from '../views/ContentScrollView'
@@ -700,7 +700,7 @@ const DishRestaurantsFeedCard = (props: FeedItemDishRestaurants) => {
       </SlantedTitle>
       <ScrollView horizontal showsHorizontalScrollIndicator={false}>
         <HStack paddingVertical={5} paddingHorizontal={5}>
-          {props.restaurants.map((r) => {
+          {props.restaurants.slice(0, 5).map((r) => {
             if (!r.slug) {
               return null
             }

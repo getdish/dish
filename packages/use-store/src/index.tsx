@@ -1,15 +1,9 @@
 import React, { useCallback, useLayoutEffect, useMemo, useRef } from 'react'
 
-import { DebugComponents, DebugStores, shouldDebug } from './shouldDebug'
-import { Store, TRIGGER_UPDATE } from './Store'
-import { StoreInfo } from './types'
-
-// @ts-ignore
+// @ts-expect-error
 const createMutableSource = React.unstable_createMutableSource
-// @ts-ignore
+// @ts-expect-error
 const useMutableSource = React.unstable_useMutableSource
-
-export * from './Store'
 
 export type UseStoreSelector<Store, Res> = (store: Store) => Res
 export type UseStoreOptions<Store = any, SelectorRes = any> = {
@@ -17,7 +11,60 @@ export type UseStoreOptions<Store = any, SelectorRes = any> = {
   once?: boolean
 }
 
-const UNWRAP_PROXY = Symbol('unwrap_proxy')
+export const shouldDebug = (component: any, info: StoreInfo) => {
+  return DebugComponents.get(component)?.has(info.storeInstance.constructor)
+}
+
+export const DebugComponents = new WeakMap<any, Set<any>>()
+export const DebugStores = new Set<any>()
+
+export type StoreInfo = {
+  source: any
+  hasMounted: boolean
+  storeInstance: any
+  getters: { [key: string]: any }
+  actions: any
+  version: number
+  stateKeys: string[]
+  gettersState: {
+    getCache: Map<string, any>
+    getterToDeps: Map<string, Set<string>>
+    depsToGetter: Map<string, Set<string>>
+    curGetKeys: Set<string>
+    isGetting: boolean
+  }
+}
+
+export const TRIGGER_UPDATE = Symbol()
+const LISTENERS = Symbol('listeners')
+
+export class Store<Props extends Object | null = null> {
+  private [LISTENERS] = new Set<Function>()
+
+  constructor(public props: Props) {}
+
+  subscribe(onChanged: Function) {
+    this[LISTENERS].add(onChanged)
+    return () => {
+      this[LISTENERS].delete(onChanged)
+    }
+  }
+
+  [TRIGGER_UPDATE]() {
+    this[LISTENERS].forEach((cb) => cb())
+    if (
+      process.env.NODE_ENV === 'development' &&
+      DebugStores.has(this.constructor)
+    ) {
+      console.log(
+        `📤 ${this.constructor.name} - updating components (${this[LISTENERS].size})`
+      )
+    }
+  }
+}
+
+const UNWRAP_PROXY = Symbol('UNWRAP_PROXY')
+const UNWRAP_STORE_INFO = Symbol('UNWRAP_STORE_INFO')
 const cache = new Map<string, StoreInfo>()
 const defaultOptions = {
   once: false,
@@ -235,6 +282,14 @@ function getOrCreateStoreInfo(
     stateKeys,
     actions,
     source: createMutableSource(storeInstance, () => value.version),
+    gettersState: {
+      getCache: new Map<string, any>(),
+      // two maps, track both directions for fast lookup/clear w slightly more memory
+      getterToDeps: new Map<string, Set<string>>(),
+      depsToGetter: new Map<string, Set<string>>(),
+      curGetKeys: new Set<string>(),
+      isGetting: false,
+    },
   }
 
   if (!opts?.avoidCache) {
@@ -342,22 +397,48 @@ function useStoreFromInfo(
 }
 
 function createProxiedStore(
-  info: StoreInfo,
+  storeInfo: StoreInfo,
   renderOpts?: {
     internal: { current: { isRendering: boolean; tracked: Set<string> } }
     component: any
   }
 ) {
-  const constr = info.storeInstance.constructor
+  const { actions, storeInstance, getters, gettersState } = storeInfo
+  const { getCache, curGetKeys, getterToDeps, depsToGetter } = gettersState
+  const constr = storeInstance.constructor
   const setters = new Set<any>()
-  const proxiedStore = new Proxy(info.storeInstance, {
+
+  const proxiedStore = new Proxy(storeInstance, {
     get(target, key) {
       if (typeof key === 'string') {
-        if (info.getters[key]) {
-          return info.getters[key].call(proxiedStore)
+        if (gettersState.isGetting) {
+          gettersState.curGetKeys.add(key)
         }
-        if (info.actions[key]) {
-          let action = info.actions[key].bind(proxiedStore)
+        if (key in getters) {
+          if (getCache.has(key)) {
+            // console.log('using getter cahce', key)
+            return getCache.get(key)
+          }
+          // track get deps
+          curGetKeys.clear()
+          gettersState.isGetting = true
+          const res = getters[key].call(proxiedStore)
+          gettersState.isGetting = false
+          getterToDeps.set(key, new Set(curGetKeys))
+          // store inverse lookup
+          curGetKeys.forEach((gk) => {
+            if (!depsToGetter.has(gk)) {
+              depsToGetter.set(gk, new Set())
+            }
+            const cur = depsToGetter.get(gk)!
+            cur.add(key)
+          })
+          getCache.set(key, res)
+          // console.log('getter', key, res)
+          return res
+        }
+        if (key in actions) {
+          let action = actions[key].bind(proxiedStore)
           if (
             process.env.NODE_ENV === 'development' &&
             ((renderOpts && DebugStores.has(constr)) ||
@@ -385,14 +466,17 @@ function createProxiedStore(
         }
         if (renderOpts?.internal.current.isRendering) {
           renderOpts.internal.current.tracked.add(key)
-          const val = info.storeInstance[key]
+          const val = storeInstance[key]
           if (typeof val !== 'undefined') {
             return val
           }
         }
       }
       if (key === UNWRAP_PROXY) {
-        return info.storeInstance
+        return storeInstance
+      }
+      if (key === UNWRAP_STORE_INFO) {
+        return storeInfo
       }
       return Reflect.get(target, key)
     },
@@ -407,13 +491,35 @@ function createProxiedStore(
         ) {
           setters.add({ key, value })
         }
+        // console.log('SET', res, key, value)
+
+        // clear getters cache that rely on this
+        if (typeof key === 'string') {
+          clearGetterCache(key)
+        }
+
         // TODO could potentially enforce actions + batch
-        info.version++
-        info.storeInstance[TRIGGER_UPDATE]()
+        storeInfo.version++
+        storeInstance[TRIGGER_UPDATE]()
       }
       return res
     },
   })
+
+  function clearGetterCache(setKey: string) {
+    const getters = depsToGetter.get(setKey)
+    if (!getters) {
+      // console.log('No getters?', setKey, depsToGetter)
+      return
+    }
+    getters.forEach((gk) => {
+      getCache.delete(gk)
+      // console.log('clearing cache for', gk)
+      if (depsToGetter.has(gk)) {
+        clearGetterCache(gk)
+      }
+    })
+  }
 
   return proxiedStore
 }
@@ -500,4 +606,12 @@ function simpleStr(arg: any) {
     : Array.isArray(arg)
     ? '[...]'
     : `{...}`
+}
+
+// helper for debugging
+export function getStoreDebugInfo(store: any) {
+  return (
+    store[UNWRAP_STORE_INFO] ??
+    cache.get(getStoreUid(store.constructor, store.props))
+  )
 }
