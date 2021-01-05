@@ -288,7 +288,6 @@ function setupMapEffect({
   isMounted?: React.RefObject<boolean>
   getProps: () => MapProps
 }) {
-  console.log('setup map effect', mapNode)
   const map = new mapboxgl.Map({
     container: mapNode,
     style: props.style,

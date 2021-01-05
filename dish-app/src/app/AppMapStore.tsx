@@ -6,12 +6,12 @@ import {
   getDefaultLocation,
   setDefaultLocation,
 } from '../helpers/getDefaultLocation'
+import { getNavigateItemForState } from '../helpers/getNavigateItemForState'
 import { reverseGeocode } from '../helpers/reverseGeocode'
 import { router } from '../router'
 import { autocompleteLocationStore } from './AppAutocomplete'
-import { inputStoreLocation } from './inputStore'
-import { getNavigateItemForState } from '../helpers/getNavigateItemForState'
 import { homeStore } from './homeStore'
+import { inputStoreLocation } from './inputStore'
 
 type MapPosition = {
   center: LngLat
@@ -26,10 +26,8 @@ class AppMapStore extends Store {
   userLocation: LngLat | null = null
   position: MapPosition = getDefaultLocation()
 
-  setPosition(pos: Partial<MapPosition>) {
-    if (pos.center === undefined) {
-      debugger
-    }
+  setPosition(via: string, pos: Partial<MapPosition>) {
+    console.log('set position via', via, pos)
     this.position = {
       ...this.position,
       ...pos,
@@ -53,7 +51,7 @@ class AppMapStore extends Store {
     }
     this.userLocation = location
     const state = homeStore.currentState
-    homeStore.updateHomeState({
+    homeStore.updateHomeState('appMapStore.moveToUserLocation', {
       ...state,
       center: { ...location },
     })
@@ -70,7 +68,7 @@ class AppMapStore extends Store {
     const res = await reverseGeocode(center, span)
     if (res) {
       const name = res.fullName ?? res.name ?? res.country
-      homeStore.updateCurrentState({
+      homeStore.updateCurrentState('appMapStore.updateAreaInfo', {
         currentLocationInfo: res,
         currentLocationName: name,
       })
@@ -85,7 +83,7 @@ class AppMapStore extends Store {
     inputStoreLocation.setValue(val)
     const exact = current.find((x) => x.name === val)
     if ('center' in exact) {
-      homeStore.updateCurrentState({
+      homeStore.updateCurrentState('appMapStore.setLocation', {
         center: { ...exact.center },
         currentLocationName: val,
       })

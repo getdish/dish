@@ -5,10 +5,10 @@ import { LoadingItem, LoadingItems, Spacer, VStack } from 'snackui'
 
 import { bgLight, bgLightHover, darkBlue } from '../../../constants/colors'
 import { getMinLngLat } from '../../../helpers/getLngLat'
+import { HomeStateItemRestaurant } from '../../../types/homeTypes'
+import { homeStore } from '../../homeStore'
 import { usePageLoadEffect } from '../../hooks/usePageLoadEffect'
 import { useRestaurantQuery } from '../../hooks/useRestaurantQuery'
-import { homeStore } from '../../homeStore'
-import { HomeStateItemRestaurant } from '../../../types/homeTypes'
 import { ContentScrollView } from '../../views/ContentScrollView'
 import { PageTitleTag } from '../../views/PageTitleTag'
 import { StackDrawer } from '../../views/StackDrawer'
@@ -47,7 +47,7 @@ const RestaurantPage = memo(
         if (!coords?.[0]) {
           return
         }
-        homeStore.updateHomeState({
+        homeStore.updateHomeState('RestaurantPage.pageLoadEffect', {
           id: item.id,
           center: {
             lng: coords?.[0],

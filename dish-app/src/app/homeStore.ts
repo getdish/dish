@@ -178,7 +178,12 @@ class HomeStore extends Store {
     }
   }
 
-  updateHomeState(val: { id: string; [key: string]: any }) {
+  updateHomeState(via: string, val: { id: string; [key: string]: any }) {
+    if (process.env.NODE_ENV === 'development') {
+      console.groupCollapsed('updateHomeState via', via)
+      console.log(val)
+      console.groupEnd()
+    }
     if (!val.id) {
       throw new Error(`Must have id`)
     }
@@ -392,7 +397,7 @@ class HomeStore extends Store {
       id: item.id ?? uid(),
     } as HomeStateItem
 
-    this.updateHomeState(finalState)
+    this.updateHomeState('pushHomeState', finalState)
     return null
   }
 
@@ -423,8 +428,7 @@ class HomeStore extends Store {
         activeTags: next.activeTags,
         id: this.currentState.id,
       }
-      // @ts-ignore
-      this.updateHomeState(nextState)
+      this.updateHomeState('homeStore.updateActiveTags', nextState)
     } catch (err) {
       handleAssertionError(err)
     }
@@ -520,8 +524,8 @@ class HomeStore extends Store {
     this.searchBarTagIndex = clamp(val, -this.searchBarTags.length, 0)
   }
 
-  updateCurrentState(val: Partial<Omit<HomeStateItem, 'type'>>) {
-    this.updateHomeState({
+  updateCurrentState(via: string, val: Partial<Omit<HomeStateItem, 'type'>>) {
+    this.updateHomeState(`updateCurrentState(${via})`, {
       id: this.currentState.id,
       ...val,
     })

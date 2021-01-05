@@ -124,7 +124,7 @@ export default memo(function HomePage(props: Props) {
     if (isLoaded) return
     const { center, span } = region.data
     if (!center || !span) return
-    home.updateCurrentState({
+    home.updateCurrentState('HomePage.centerMapToRegion', {
       center,
       span,
     })
@@ -344,11 +344,10 @@ const HomePageContent = memo(
 
     useEffect(() => {
       if (isLoading) return
-      const next: HomeStateItemHome = {
-        ...item,
+      homeStore.updateHomeState('HomePageContent.resultsEffect', {
+        id: item.id,
         results: results.map((x) => x.restaurant),
-      }
-      homeStore.updateHomeState(next)
+      })
     }, [isLoading, JSON.stringify(results)])
 
     const [expandable, unexpandable] = partition(items, (x) => x.expandable)

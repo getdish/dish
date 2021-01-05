@@ -3,10 +3,10 @@ import { LngLat, RestaurantSearchArgs, search } from '@dish/graph'
 import { isPresent, stringify } from '@dish/helpers'
 import { Store, createStore } from '@dish/use-store'
 
-import { getTagSlug } from '../../../helpers/getTagSlug'
-import { appMapStore } from '../../AppMapStore'
 import { allTags } from '../../../helpers/allTags'
 import { getActiveTags } from '../../../helpers/getActiveTags'
+import { getTagSlug } from '../../../helpers/getTagSlug'
+import { appMapStore } from '../../AppMapStore'
 import { homeStore } from '../../homeStore'
 
 export type ActiveEvent = 'key' | 'pin' | 'hover' | null
@@ -77,7 +77,7 @@ class SearchPageStore extends Store {
 
     const center = appMapStore.position.center ?? state!.center
     const span = appMapStore.position.span ?? state!.span
-    homeStore.updateHomeState({
+    homeStore.updateHomeState('SearchPageStore.runSearch', {
       id: state.id,
       center,
       span,
@@ -125,7 +125,7 @@ class SearchPageStore extends Store {
     if (!state) return
 
     // console.log('search found restaurants', restaurants)
-    homeStore.updateHomeState({
+    homeStore.updateHomeState('SearchPageStore.runSearch2', {
       id: state.id,
       status: 'complete',
       // limit to 80 for now
