@@ -9,12 +9,12 @@ import { AddressSize, getAddressText } from './RestaurantAddressLinksRow'
 export const RestaurantAddress = ({
   color = 'rgba(125,125,125,1)',
   address,
-  currentLocationInfo,
+  curLocInfo,
   size = 'xs',
 }: {
   size: AddressSize
   address: string
-  currentLocationInfo: GeocodePlace | null
+  curLocInfo: GeocodePlace | null
   color?: string
 }) => {
   const media = useMedia()
@@ -38,7 +38,7 @@ export const RestaurantAddress = ({
           selectable
           display={media.sm ? 'none' : 'flex'}
         >
-          {getAddressText(currentLocationInfo, address, size)}
+          {getAddressText(curLocInfo, address, size)}
         </Text>
       </HStack>
     </SmallButton>

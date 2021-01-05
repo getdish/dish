@@ -65,7 +65,7 @@ import { useTotalReviews } from './useTotalReviews'
 export const ITEM_HEIGHT = 290
 
 type RestaurantListItemProps = {
-  currentLocationInfo: GeocodePlace | null
+  curLocInfo: GeocodePlace | null
   restaurantId: string
   restaurantSlug: string
   rank: number
@@ -150,7 +150,7 @@ const RestaurantListItemContent = memo(
       rank,
       restaurantId,
       restaurantSlug,
-      currentLocationInfo,
+      curLocInfo,
       isLoaded,
       searchState,
     } = props
@@ -371,7 +371,7 @@ const RestaurantListItemContent = memo(
                 {!!restaurant.address && (
                   <RestaurantAddress
                     size="sm"
-                    currentLocationInfo={currentLocationInfo!}
+                    curLocInfo={curLocInfo!}
                     address={restaurant.address}
                   />
                 )}

@@ -18,8 +18,15 @@ export const DishUpvoteDownvote = (props: Props) => {
   if (!props.restaurantId || !props.restaurantSlug) {
     return null
   }
-  // @ts-expect-error
-  return <DishUpvoteDownvoteContent subtle={false} score={0} {...props} />
+  return (
+    <DishUpvoteDownvoteContent
+      subtle={false}
+      score={0}
+      {...props}
+      restaurantId={props.restaurantId}
+      restaurantSlug={props.restaurantSlug}
+    />
+  )
 }
 
 const DishUpvoteDownvoteContent = graphql(function DishUpvoteDownvote({

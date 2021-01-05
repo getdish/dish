@@ -19,13 +19,13 @@ export type AddressSize = 'lg' | 'md' | 'sm' | 'xs'
 export const RestaurantAddressLinksRow = memo(
   graphql(
     ({
-      currentLocationInfo,
+      curLocInfo,
       restaurantSlug,
       size,
       showAddress,
       showMenu,
     }: {
-      currentLocationInfo?: GeocodePlace | null
+      curLocInfo?: GeocodePlace | null
       restaurantSlug: string
       size?: AddressSize
       showAddress?: AddressSize
@@ -80,10 +80,10 @@ export const RestaurantAddressLinksRow = memo(
       return (
         <Text color="#999" fontSize={fontSize}>
           <VStack>
-            {!!(currentLocationInfo && showAddress) && (
+            {!!(curLocInfo && showAddress) && (
               <Text selectable ellipse fontSize={14} maxWidth={190}>
                 {getAddressText(
-                  currentLocationInfo,
+                  curLocInfo,
                   restaurant.address ?? '',
                   (typeof showAddress === 'string' ? showAddress : size) ?? 'sm'
                 )}

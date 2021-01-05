@@ -179,11 +179,6 @@ class HomeStore extends Store {
   }
 
   updateHomeState(via: string, val: { id: string; [key: string]: any }) {
-    if (process.env.NODE_ENV === 'development') {
-      console.groupCollapsed('updateHomeState via', via)
-      console.log(val)
-      console.groupEnd()
-    }
     if (!val.id) {
       throw new Error(`Must have id`)
     }
@@ -387,8 +382,8 @@ class HomeStore extends Store {
     }
 
     const finalState = {
-      currentLocationName: currentState?.currentLocationName,
-      currentLocationInfo: currentState?.currentLocationInfo,
+      curLocName: currentState?.curLocName,
+      curLocInfo: currentState?.curLocInfo,
       center: currentState?.center,
       span: currentState?.span,
       searchQuery,

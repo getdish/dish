@@ -36,8 +36,8 @@ export type HomeStateItemBase = {
   center: LngLat
   span: LngLat
   id: string
-  currentLocationName?: string
-  currentLocationInfo?: GeocodePlace | null
+  curLocName?: string
+  curLocInfo?: GeocodePlace | null
 }
 
 export type HomeStateItem =

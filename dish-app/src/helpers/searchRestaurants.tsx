@@ -68,7 +68,7 @@ export function searchRestaurants(
       icon: r.image || '📍',
       description:
         getAddressText(
-          homeStore.currentState.currentLocationInfo ?? null,
+          homeStore.currentState.curLocInfo ?? null,
           r.address ?? '',
           'xs'
         ) || 'No Address',

@@ -111,6 +111,7 @@ export const RestaurantCardContent = memo(
                 style={{
                   width: cardFrameWidth,
                   height: cardFrameHeight,
+                  opacity: 0.5,
                 }}
                 source={{ uri: restaurantPhoto }}
               />

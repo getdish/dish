@@ -1,5 +1,6 @@
 import { LngLat, RestaurantOnlyIds } from '@dish/graph'
 import { Store, createStore } from '@dish/use-store'
+import { isEqual } from 'lodash'
 
 import { defaultLocationAutocompleteResults } from '../constants/defaultLocationAutocompleteResults'
 import {
@@ -27,7 +28,6 @@ class AppMapStore extends Store {
   position: MapPosition = getDefaultLocation()
 
   setPosition(via: string, pos: Partial<MapPosition>) {
-    console.log('set position via', via, pos)
     this.position = {
       ...this.position,
       ...pos,
@@ -65,12 +65,13 @@ class AppMapStore extends Store {
 
   async updateAreaInfo() {
     const { center, span } = this.position
-    const res = await reverseGeocode(center, span)
-    if (res) {
-      const name = res.fullName ?? res.name ?? res.country
+    const curLocInfo = await reverseGeocode(center, span)
+    if (curLocInfo) {
+      const curLocName =
+        curLocInfo.fullName ?? curLocInfo.name ?? curLocInfo.country
       homeStore.updateCurrentState('appMapStore.updateAreaInfo', {
-        currentLocationInfo: res,
-        currentLocationName: name,
+        curLocInfo,
+        curLocName,
       })
     }
   }
@@ -85,7 +86,7 @@ class AppMapStore extends Store {
     if ('center' in exact) {
       homeStore.updateCurrentState('appMapStore.setLocation', {
         center: { ...exact.center },
-        currentLocationName: val,
+        curLocName: val,
       })
       const curState = homeStore.currentState
       const navItem = getNavigateItemForState(curState)

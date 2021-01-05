@@ -127,7 +127,10 @@ export default memo(function HomePage(props: Props) {
     if (!center || !span) return
     home.updateCurrentState('HomePage.centerMapToRegion', {
       center,
-      span,
+      span: {
+        lng: span.lng * 2,
+        lat: span.lat * 2,
+      },
     })
     setIsLoaded(true)
   }, [isLoaded, region.data])

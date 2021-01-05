@@ -162,9 +162,7 @@ const RestaurantHeaderContent = memo(
 
                           <Suspense fallback={null}>
                             <RestaurantAddressLinksRow
-                              currentLocationInfo={
-                                state?.currentLocationInfo ?? null
-                              }
+                              curLocInfo={state?.curLocInfo ?? null}
                               showMenu
                               size="lg"
                               restaurantSlug={restaurantSlug}
@@ -178,9 +176,7 @@ const RestaurantHeaderContent = memo(
                             <RestaurantAddress
                               size="xs"
                               address={restaurant.address ?? ''}
-                              currentLocationInfo={
-                                state?.currentLocationInfo ?? null
-                              }
+                              curLocInfo={state?.curLocInfo ?? null}
                             />
                           </Suspense>
                           <SmallButton
