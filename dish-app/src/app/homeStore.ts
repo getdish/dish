@@ -47,6 +47,10 @@ class HomeStore extends Store {
     return findLast(this.states, isSearchState)
   }
 
+  get lastHomeOrSearchState() {
+    return findLast(this.states, (x) => isSearchState(x) || isHomeState(x))
+  }
+
   get currentState() {
     return this.states[this.stateIndex]
   }
@@ -429,9 +433,10 @@ class HomeStore extends Store {
     }
   }
 
-  setSearchQuery(val: string) {
-    const last = this.states[this.states.length - 1]
-    last.searchQuery = val
+  setSearchQuery(searchQuery: string) {
+    this.updateCurrentState('setSearchQuery', {
+      searchQuery,
+    })
   }
 
   async clearTags() {
@@ -529,8 +534,9 @@ class HomeStore extends Store {
 
 export const homeStore = createStore(HomeStore)
 
-export const useHomeStore = () => {
-  return useStoreInstance(homeStore)
+export const useHomeStore = (debug?: boolean): HomeStore => {
+  // @ts-ignore
+  return useStoreInstance(homeStore, undefined, debug)
 }
 
 const normalizeItemName = {

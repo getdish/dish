@@ -452,24 +452,30 @@ function useHomeFeed(
   )
 
   const feedRestaurants = homeFeed.data?.[isNew ? 'new' : 'trending'] ?? []
-  const backupRestaurants = region?.bbox
-    ? query.restaurant({
-        where: {
-          location: {
-            _st_within: region?.bbox,
+  const bbox = region?.bbox
+  const backupRestaurants = bbox
+    ? query
+        .restaurant({
+          where: {
+            location: {
+              _st_within: bbox,
+            },
+            downvotes: { _is_null: false },
+            votes_ratio: { _is_null: false },
           },
-          downvotes: { _is_null: false },
-          votes_ratio: { _is_null: false },
-        },
-        order_by: [{ votes_ratio: order_by.desc }],
-        limit: 10,
-      })
+          order_by: [{ votes_ratio: order_by.desc }],
+          limit: 10,
+        })
+        .map((x) => ({ id: x.id, slug: x.slug }))
     : []
 
   const restaurants = uniqBy(
     [...feedRestaurants, ...backupRestaurants],
     (x) => x.id
   )
+
+  // console.log('feed', slug, bbox, restaurants)
+
   const cuisines = useTopCuisines(item.center)
 
   const dishes = query.tag({
