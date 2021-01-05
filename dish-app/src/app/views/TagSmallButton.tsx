@@ -12,8 +12,8 @@ import {
 } from '../../constants/colors'
 import { tagDisplayName } from '../../constants/tagMeta'
 import { getTagSlug } from '../../helpers/getTagSlug'
-import { useUserTagVote } from '../hooks/useUserTagVotes'
 import { FullTag } from '../../types/tagTypes'
+import { useUserTagVote } from '../hooks/useUserTagVotes'
 
 type TagSmallButtonProps = {
   restaurantSlug: string

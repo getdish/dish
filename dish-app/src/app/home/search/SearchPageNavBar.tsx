@@ -11,9 +11,9 @@ import {
 
 import { drawerWidthMax } from '../../../constants/constants'
 import { titleHeight } from '../../../constants/titleHeight'
-import { useSafeArea } from '../../hooks/useSafeArea'
-import { useHomeStore } from '../../homeStore'
 import { isSearchState } from '../../../helpers/homeStateHelpers'
+import { useHomeStore } from '../../homeStore'
+import { useSafeArea } from '../../hooks/useSafeArea'
 import { HomeLenseBar } from '../../views/HomeLenseBar'
 import { SearchPageFilterBar } from './SearchPageFilterBar'
 

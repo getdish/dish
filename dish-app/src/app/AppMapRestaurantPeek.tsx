@@ -6,8 +6,8 @@ import { AbsoluteVStack, Box, HStack, Spacer, Text, VStack } from 'snackui'
 
 import { appMapStore } from './AppMapStore'
 import { RestaurantRatingViewPopover } from './home/restaurant/RestaurantRatingViewPopover'
-import { useRestaurantQuery } from './hooks/useRestaurantQuery'
 import { useHomeStore } from './homeStore'
+import { useRestaurantQuery } from './hooks/useRestaurantQuery'
 import { LinkButton } from './views/LinkButton'
 
 export const AppMapRestaurantPeek = memo(

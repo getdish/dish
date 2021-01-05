@@ -1,7 +1,7 @@
-import { isSearchBarTag } from './isSearchBarTag'
-import { getActiveTags } from './getActiveTags'
 import { homeStore } from '../app/homeStore'
 import { HomeStateTagNavigable } from '../types/homeTypes'
+import { getActiveTags } from './getActiveTags'
+import { isSearchBarTag } from './isSearchBarTag'
 
 export const shouldBeOnSearch = (state: HomeStateTagNavigable) => {
   const realState = state ?? homeStore.currentState

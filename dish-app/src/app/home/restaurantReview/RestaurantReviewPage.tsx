@@ -14,10 +14,10 @@ import {
 
 import { red } from '../../../constants/colors'
 import { getRestaurantDishes } from '../../../helpers/getRestaurantDishes'
+import { HomeStateItemReview } from '../../../types/homeTypes'
+import { useHomeStore } from '../../homeStore'
 import { useRestaurantQuery } from '../../hooks/useRestaurantQuery'
 import { useUserReviewCommentQuery } from '../../hooks/useUserReview'
-import { useHomeStore } from '../../homeStore'
-import { HomeStateItemReview } from '../../../types/homeTypes'
 import { useUserStore } from '../../userStore'
 import { CommentBubble } from '../../views/CommentBubble'
 import { SmallButton } from '../../views/SmallButton'

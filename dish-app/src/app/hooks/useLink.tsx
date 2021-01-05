@@ -7,8 +7,6 @@ import { Platform, TouchableOpacity } from 'react-native'
 import { useForceUpdate } from 'snackui'
 
 import { isWeb } from '../../constants/constants'
-import { memoize } from '../../helpers/memoizeWeak'
-import { router } from '../../router'
 import {
   addTagsToCache,
   allTags,
@@ -16,8 +14,10 @@ import {
 } from '../../helpers/allTags'
 import { getNavigateItemForState } from '../../helpers/getNavigateItemForState'
 import { getNextState } from '../../helpers/getNextState'
-import { homeStore } from '../homeStore'
+import { memoize } from '../../helpers/memoizeWeak'
 import { tagsToNavigableTags } from '../../helpers/tagHelpers'
+import { router } from '../../router'
+import { homeStore } from '../homeStore'
 import { LinkButtonProps, LinkProps } from '../views/LinkProps'
 
 export const useLink = (props: LinkProps<any, any>) => {

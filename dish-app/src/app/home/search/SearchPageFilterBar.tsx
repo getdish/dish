@@ -7,8 +7,8 @@ import { tagGroup, tagSort } from '../../../constants/tagMeta'
 import { getGroupedButtonProps } from '../../../helpers/getGroupedButtonProps'
 import { getTagSlug } from '../../../helpers/getTagSlug'
 import { rgbString } from '../../../helpers/rgbString'
-import { useCurrentLenseColor } from '../../hooks/useCurrentLenseColor'
 import { HomeActiveTagsRecord } from '../../../types/homeTypes'
+import { useCurrentLenseColor } from '../../hooks/useCurrentLenseColor'
 import { FilterButton } from '../../views/FilterButton'
 
 type FilterBarProps = { activeTags: HomeActiveTagsRecord }

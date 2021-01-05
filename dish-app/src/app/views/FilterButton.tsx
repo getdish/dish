@@ -14,10 +14,10 @@ import {
 
 import { tagDisplayNames } from '../../constants/tagMeta'
 import { thirdPartyCrawlSources } from '../../constants/thirdPartyCrawlSources'
+import { NavigableTag } from '../../types/tagTypes'
 import { useHomeStore } from '../homeStore'
 import { LinkButtonProps } from './LinkProps'
 import { SmallButton } from './SmallButton'
-import {NavigableTag} from "../../types/tagTypes";
 
 export const FilterButton = memo(
   ({

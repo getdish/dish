@@ -1,11 +1,15 @@
 import { isPresent } from '@dish/helpers'
 
+import {
+  HomeActiveTagsRecord,
+  HomeStateItem,
+  HomeStateNav,
+} from '../types/homeTypes'
+import { NavigableTag } from '../types/tagTypes'
 import { allTagsNameToSlug, tagNameKey } from './allTags'
 import { allTags } from './allTags'
 import { getTagSlug } from './getTagSlug'
-import { HomeActiveTagsRecord, HomeStateItem, HomeStateNav } from '../types/homeTypes'
 import { shouldBeOnSearch } from './shouldBeOnSearch'
-import {NavigableTag} from "../types/tagTypes";
 
 export const getNextState = (navState: HomeStateNav): HomeStateItem => {
   const {

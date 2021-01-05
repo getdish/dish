@@ -1,7 +1,7 @@
-import { getShouldNavigate } from './getShouldNavigate'
 import { router } from '../router'
-import { getNavigateItemForState } from './getNavigateItemForState'
 import { HomeStateTagNavigable } from '../types/homeTypes'
+import { getNavigateItemForState } from './getNavigateItemForState'
+import { getShouldNavigate } from './getShouldNavigate'
 
 // avoid nasty two way sync bugs as much as possible
 export async function syncStateToRoute(state: HomeStateTagNavigable) {
