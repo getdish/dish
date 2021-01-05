@@ -24,9 +24,9 @@ import {
 import { tagLenses } from '../../../constants/localTags'
 import { numberFormat } from '../../../helpers/numberFormat'
 import { restaurantRatio } from '../../../helpers/restaurantsRatio'
+import { HomeActiveTagsRecord } from '../../../types/homeTypes'
 import { useRestaurantQuery } from '../../hooks/useRestaurantQuery'
 import { useUserTagVotes } from '../../hooks/useUserTagVotes'
-import { HomeActiveTagsRecord } from '../../../types/homeTypes'
 import { SentimentCircle } from '../SentimentCircle'
 import { VoteButton } from '../VoteButton'
 
@@ -44,11 +44,15 @@ type UpvoteDownvoteProps = {
 }
 
 export const RestaurantUpVoteDownVote = (props: UpvoteDownvoteProps) => {
+  const activeTags = props.activeTags ?? { [tagLenses[0].slug]: true }
+  const key = JSON.stringify(activeTags)
+
   return (
     <Suspense fallback={null}>
       <RestaurantUpVoteDownVoteContents
-        activeTags={{ [tagLenses[0].slug]: true }}
+        key={key}
         {...props}
+        activeTags={activeTags}
       />
     </Suspense>
   )

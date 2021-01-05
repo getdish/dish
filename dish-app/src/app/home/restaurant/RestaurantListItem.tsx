@@ -209,7 +209,6 @@ const RestaurantListItemContent = memo(
     const titleFontSize = Math.round((media.sm ? 20 : 28) * titleFontScale)
     const titleHeight = titleFontSize + 8 * 2
     const score = Math.round((meta?.effective_score ?? 0) / 10)
-    console.log('score is', score, meta, searchState.results)
     const theme = useTheme()
 
     return (
