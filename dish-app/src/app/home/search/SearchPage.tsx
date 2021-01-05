@@ -38,29 +38,29 @@ import {
 
 import { isWeb } from '../../../constants/constants'
 import { initialHomeState } from '../../../constants/initialHomeState'
+import { addTagsToCache } from '../../../helpers/allTags'
 import { bboxToSpan } from '../../../helpers/bboxToSpan'
 import { RegionNormalized, fetchRegion } from '../../../helpers/fetchRegion'
+import { getActiveTags } from '../../../helpers/getActiveTags'
+import { getTagsFromRoute } from '../../../helpers/getTagsFromRoute'
 import { getTagSlug } from '../../../helpers/getTagSlug'
+import { getTitleForState } from '../../../helpers/getTitleForState'
 import { rgbString } from '../../../helpers/rgbString'
 import { searchLocations } from '../../../helpers/searchLocations'
 import { useQueryLoud } from '../../../helpers/useQueryLoud'
 import { SearchRouteParams, router } from '../../../router'
+import {
+  HomeActiveTagsRecord,
+  HomeStateItemSearch,
+} from '../../../types/homeTypes'
 import { appMapStore } from '../../AppMapStore'
 import { AppPortalItem } from '../../AppPortal'
+import { useHomeStore } from '../../homeStore'
 import { useAppDrawerWidth } from '../../hooks/useAppDrawerWidth'
 import { useCurrentLenseColor } from '../../hooks/useCurrentLenseColor'
 import { useLastValue } from '../../hooks/useLastValue'
 import { useLastValueWhen } from '../../hooks/useLastValueWhen'
 import { usePageLoadEffect } from '../../hooks/usePageLoadEffect'
-import { addTagsToCache } from '../../../helpers/allTags'
-import { getActiveTags } from '../../../helpers/getActiveTags'
-import { getTagsFromRoute } from '../../../helpers/getTagsFromRoute'
-import { getTitleForState } from '../../../helpers/getTitleForState'
-import { useHomeStore } from '../../homeStore'
-import {
-  HomeActiveTagsRecord,
-  HomeStateItemSearch,
-} from '../../../types/homeTypes'
 import { ContentScrollView } from '../../views/ContentScrollView'
 import { PageTitleTag } from '../../views/PageTitleTag'
 import { SlantedTitle } from '../../views/SlantedTitle'
@@ -261,6 +261,8 @@ const SearchResultsContent = (props: Props) => {
   const searchState = props.item
   const drawerWidth = useAppDrawerWidth()
   const allResults = searchState.results
+
+  console.log('SearchResultsContent.allResults', allResults)
 
   const dataProvider = useMemo(() => {
     return new DataProvider((r1, r2) => {

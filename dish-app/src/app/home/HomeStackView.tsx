@@ -8,9 +8,9 @@ import {
   searchBarTopOffset,
 } from '../../constants/constants'
 import { getBreadcrumbs } from '../../helpers/getBreadcrumbs'
-import { useLastValueWhen } from '../hooks/useLastValueWhen'
-import { useHomeStore } from '../homeStore'
 import { HomeStateItem } from '../../types/homeTypes'
+import { useHomeStore } from '../homeStore'
+import { useLastValueWhen } from '../hooks/useLastValueWhen'
 import { ContentParentStore } from '../views/ContentScrollView'
 import { ErrorBoundary } from '../views/ErrorBoundary'
 
@@ -27,14 +27,20 @@ export function HomeStackView<A extends HomeStateItem>(props: {
 }) {
   const home = useHomeStore()
   const breadcrumbs = getBreadcrumbs(home.states.slice(0, home.stateIndex + 1))
-  const key = JSON.stringify(breadcrumbs.map((x) => x.id))
+  const key = JSON.stringify(breadcrumbs)
   const homeStates = useMemo(() => breadcrumbs, [key])
   const currentStates = useDebounceValue(homeStates, 20) ?? homeStates
   const isRemoving = currentStates.length > homeStates.length
   const isAdding = currentStates.length < homeStates.length
   const items = isRemoving ? currentStates : homeStates
 
-  console.log('👀 HomeStackView', items)
+  console.log(
+    '👀 HomeStackView',
+    items,
+    home.states,
+    home.stateIndex,
+    breadcrumbs
+  )
 
   return (
     <>

@@ -39,13 +39,13 @@ import {
   searchLocations,
 } from '../helpers/searchLocations'
 import { searchRestaurants } from '../helpers/searchRestaurants'
+import { tagsToNavigableTags } from '../helpers/tagHelpers'
 import { useRouterCurPage } from '../router'
+import { LngLat } from '../types/homeTypes'
 import { appMapStore } from './AppMapStore'
 import { drawerStore } from './drawerStore'
-import { useInputStoreLocation } from './inputStore'
 import { useHomeStore } from './homeStore'
-import { LngLat } from '../types/homeTypes'
-import { tagsToNavigableTags } from '../helpers/tagHelpers'
+import { useInputStoreLocation } from './inputStore'
 import { useUserStore } from './userStore'
 import { CloseButton, SmallCircleButton } from './views/CloseButton'
 import { LinkButton } from './views/LinkButton'
@@ -118,6 +118,8 @@ export default memo(function AppAutocomplete() {
   const autocompletes = useStoreInstance(autocompletesStore)
   const theme = useTheme()
 
+  console.warn('rendering AppAutocomplete')
+
   if (isWeb) {
     useEffect(() => {
       const handleMove = (e) => {
@@ -187,10 +189,10 @@ export default memo(function AppAutocomplete() {
 const AutocompleteSearch = memo(() => {
   const home = useHomeStore()
   const store = useStoreInstance(autocompleteSearchStore)
-  const { currentStateSearchQuery, lastActiveTags } = home
+  const { currentSearchQuery, lastActiveTags } = home
   const searchState = useMemo(
-    () => [currentStateSearchQuery.trim(), lastActiveTags] as const,
-    [currentStateSearchQuery, lastActiveTags]
+    () => [currentSearchQuery.trim(), lastActiveTags] as const,
+    [currentSearchQuery, lastActiveTags]
   )
   const [query, activeTags] = useDebounceValue(searchState, 250)
 
@@ -297,7 +299,7 @@ const AutocompleteSearch = memo(() => {
           // clear query
           if (result.type === 'orphan') {
             home.clearTags()
-            home.setSearchQuery(home.currentStateSearchQuery)
+            home.setSearchQuery(home.currentSearchQuery)
           } else if (result.type !== 'restaurant') {
             home.setSearchQuery('')
           }
@@ -313,6 +315,8 @@ const AutocompleteLocation = memo(() => {
   const store = useStoreInstance(autocompleteLocationStore)
   const inputStore = useInputStoreLocation()
   const query = useDebounceValue(inputStore.value, 250)
+
+  console.warn('rendering autocomplete location', inputStore.value)
 
   useEffect(() => {
     query && store.setIsLoading(true)
