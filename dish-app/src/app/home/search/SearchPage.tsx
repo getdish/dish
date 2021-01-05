@@ -118,7 +118,6 @@ const SearchPageContent = memo(function SearchPageContent(props: Props) {
   // }
 
   const home = useHomeStore()
-  const state = props.item
   const route = useLastValueWhen(
     () => router.curPage,
     router.curPage.name !== 'search'
@@ -128,7 +127,8 @@ const SearchPageContent = memo(function SearchPageContent(props: Props) {
 
   const isOptimisticUpdating = home.isOptimisticUpdating
   const wasOptimisticUpdating = useLastValue(isOptimisticUpdating)
-  const changingFilters = wasOptimisticUpdating && state.status === 'loading'
+  const changingFilters =
+    wasOptimisticUpdating && props.item.status === 'loading'
   const shouldAvoidContentUpdates =
     isOptimisticUpdating || !props.isActive || changingFilters
 
@@ -193,22 +193,22 @@ const SearchPageContent = memo(function SearchPageContent(props: Props) {
   const key = useLastValueWhen(
     () =>
       JSON.stringify({
-        status: state.status,
-        id: state.id,
-        results: state.results.map((x) => x.id),
+        status: props.item.status,
+        id: props.item.id,
+        results: props.item.results.map((x) => x.id),
       }),
     shouldAvoidContentUpdates
   )
 
   // set max results
   useEffect(() => {
-    searchPageStore.setMax(state.results.length)
+    searchPageStore.setMax(props.item.results.length)
   }, [key])
 
   const content = useMemo(() => {
     return (
       <SearchPagePropsContext.Provider value={props}>
-        <SearchResultsContent {...props} item={state} />
+        <SearchResultsContent {...props} />
       </SearchPagePropsContext.Provider>
     )
   }, [key])
@@ -260,15 +260,12 @@ const SearchNavBarContainer = ({
 delete RecyclerListView.propTypes['externalScrollView']
 
 const SearchResultsContent = (props: Props) => {
-  const searchState = props.item
   const drawerWidth = useAppDrawerWidth()
-  const allResults = searchState.results
-
   const dataProvider = useMemo(() => {
     return new DataProvider((r1, r2) => {
       return r1.id !== r2.id
-    }).cloneWithRows(allResults)
-  }, [allResults])
+    }).cloneWithRows(props.item.results)
+  }, [props.item.results])
 
   const layoutProvider = useMemo(() => {
     return new LayoutProvider(
@@ -282,36 +279,39 @@ const SearchResultsContent = (props: Props) => {
     )
   }, [drawerWidth])
 
-  const rowRenderer = useCallback((
-    type: string | number,
-    data: any,
-    index: number
-    // extendedState?: object
-  ) => {
-    return (
-      <Suspense fallback={<LoadingItem size="lg" />}>
-        <RestaurantListItem
-          currentLocationInfo={searchState.currentLocationInfo ?? null}
-          restaurantId={data.id}
-          restaurantSlug={data.slug}
-          rank={index + 1}
-          searchState={searchState}
-        />
-      </Suspense>
-    )
-  }, [])
+  const rowRenderer = useCallback(
+    (
+      type: string | number,
+      data: any,
+      index: number
+      // extendedState?: object
+    ) => {
+      return (
+        <Suspense fallback={<LoadingItem size="lg" />}>
+          <RestaurantListItem
+            currentLocationInfo={props.item.currentLocationInfo ?? null}
+            restaurantId={data.id}
+            restaurantSlug={data.slug}
+            rank={index + 1}
+            searchState={props.item}
+          />
+        </Suspense>
+      )
+    },
+    [props.item.results]
+  )
 
   const searchResultsStore = useStore(SearchResultsStore)
 
   useEffect(() => {
     const searchResultsPositions: Record<string, number> = {}
-    searchState.results.forEach((v, index) => {
+    props.item.results.forEach((v, index) => {
       searchResultsPositions[v.id] = index + 1
     })
     searchResultsStore.setRestaurantPositions(searchResultsPositions)
-  }, [searchState.results])
+  }, [props.item.results])
 
-  if (searchState.status !== 'loading' && searchState.results.length === 0) {
+  if (props.item.status !== 'loading' && props.item.results.length === 0) {
     return (
       <>
         <SearchPageTitle />

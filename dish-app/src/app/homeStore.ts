@@ -161,8 +161,6 @@ class HomeStore extends Store {
         'ca-san-francisco',
     }
 
-    console.warn('up to', routerItem)
-
     if (routerItem) {
       router.navigate({
         name: type == 'home' ? 'homeRegion' : type,

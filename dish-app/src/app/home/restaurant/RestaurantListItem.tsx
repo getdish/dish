@@ -33,16 +33,16 @@ import {
   brandColor,
 } from '../../../constants/colors'
 import { isWeb } from '../../../constants/constants'
+import { allTags } from '../../../helpers/allTags'
 import { getActiveTagSlugs } from '../../../helpers/getActiveTagSlugs'
 import { getRestaurantDishes } from '../../../helpers/getRestaurantDishes'
 import { isWebIOS } from '../../../helpers/isIOS'
 import { numberFormat } from '../../../helpers/numberFormat'
+import { GeocodePlace, HomeStateItemSearch } from '../../../types/homeTypes'
 import { appMapStore } from '../../AppMapStore'
+import { homeStore } from '../../homeStore'
 import { useRestaurantQuery } from '../../hooks/useRestaurantQuery'
 import { useRestaurantTagScores } from '../../hooks/useRestaurantTagScores'
-import { allTags } from '../../../helpers/allTags'
-import { homeStore } from '../../homeStore'
-import { GeocodePlace, HomeStateItemSearch } from '../../../types/homeTypes'
 import { ContentScrollViewHorizontal } from '../../views/ContentScrollViewHorizontal'
 import { DishView } from '../../views/dish/DishView'
 import { Link } from '../../views/Link'
@@ -87,13 +87,11 @@ export const RestaurantListItem = memo(function RestaurantListItem(
   props: RestaurantListItemProps
 ) {
   const [isLoaded, setIsLoaded] = useState(false)
-
   const content = useMemo(() => {
     return <RestaurantListItemContent isLoaded={isLoaded} {...props} />
   }, [props, isLoaded])
 
   const handleScrollMemo = useCallback(() => {
-    console.log('what')
     setIsLoaded(true)
   }, [])
   const handleScroll = isLoaded ? undefined : handleScrollMemo
@@ -210,6 +208,8 @@ const RestaurantListItemContent = memo(
         : 1.15
     const titleFontSize = Math.round((media.sm ? 20 : 28) * titleFontScale)
     const titleHeight = titleFontSize + 8 * 2
+    const score = Math.round((meta?.effective_score ?? 0) / 10)
+    console.log('score is', score, meta, searchState.results)
     const theme = useTheme()
 
     return (
@@ -261,7 +261,7 @@ const RestaurantListItemContent = memo(
           <AbsoluteVStack top={34} left={-5} zIndex={2000000}>
             <RestaurantUpVoteDownVote
               rounded
-              score={Math.round((meta?.effective_score ?? 0) / 10)}
+              score={score}
               restaurantSlug={restaurantSlug}
               activeTags={tagIds}
               onClickPoints={() => {
@@ -363,6 +363,7 @@ const RestaurantListItemContent = memo(
                     params={{ slug: restaurantSlug }}
                     fontSize={14}
                     color="rgba(0,0,0,0.6)"
+                    fontWeight="400"
                     ellipse
                   >
                     {opening_hours}
