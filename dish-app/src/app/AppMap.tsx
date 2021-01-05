@@ -78,7 +78,7 @@ const AppMapDataLoader = memo(
     onLoadedRestaurantDetail: Function
     onLoadedRestaurants: Function
   }) {
-    const home = useStoreInstance(homeStore, undefined, true)
+    const home = useHomeStore()
     const state = home.currentState
     let all: RestaurantOnlyIds[] = []
     let single: RestaurantOnlyIds | null = null
@@ -96,8 +96,6 @@ const AppMapDataLoader = memo(
     }
 
     all = all.filter(isPresent)
-
-    console.log('loading...', state, all, single)
 
     const allIds = [...new Set(all.map((x) => x.id))]
     const allResults = allIds
