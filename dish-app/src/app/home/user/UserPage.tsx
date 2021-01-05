@@ -13,8 +13,8 @@ import {
   VStack,
 } from 'snackui'
 
-import { useHomeStore } from '../../homeStore'
 import { HomeStateItemUser } from '../../../types/homeTypes'
+import { useHomeStore } from '../../homeStore'
 import { useUserStore } from '../../userStore'
 import { ContentScrollView } from '../../views/ContentScrollView'
 import { Link } from '../../views/Link'
@@ -76,7 +76,7 @@ const UserPageContent = graphql(
       const userState = home.allStates[item.id] as HomeStateItemUser
       console.log('we here', item.id, userState)
       if (userState) {
-        home.updateHomeState({
+        home.updateHomeState('UserPage.reviewsEffect', {
           id: userState.id,
           results: reviews.map(({ restaurantId, restaurantSlug }) => {
             return {

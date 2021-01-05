@@ -145,7 +145,7 @@ const SearchPageContent = memo(function SearchPageContent(props: Props) {
       center: location.data.center,
       span: location.data.span,
     }
-    home.updateCurrentState(searchItem)
+    home.updateCurrentState('SearchPage.searchItem', searchItem)
   }, [location.data])
 
   useEffect(() => {

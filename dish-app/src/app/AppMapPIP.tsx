@@ -9,8 +9,8 @@ import { MAPBOX_ACCESS_TOKEN } from '../constants/constants'
 import { getZoomLevel, mapZoomToMedium } from '../helpers/mapHelpers'
 import { appMapStore } from './AppMapStore'
 import { drawerStore } from './drawerStore'
-import { restaurantQuery } from './hooks/useRestaurantQuery'
 import { useHomeStore } from './homeStore'
+import { restaurantQuery } from './hooks/useRestaurantQuery'
 
 mapboxgl.accessToken = MAPBOX_ACCESS_TOKEN
 
@@ -90,7 +90,7 @@ const HomeMapPIPContent = graphql(() => {
     }
     if (coords[0] && !isEqual(center, home.currentState.center)) {
       return () => {
-        home.updateCurrentState({
+        home.updateCurrentState('AppMapPIP Action', {
           center: center,
           span: pipSpan(span),
         })

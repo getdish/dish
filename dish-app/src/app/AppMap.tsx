@@ -1,3 +1,4 @@
+import { isEqual } from '@dish/fast-compare'
 import { Restaurant, RestaurantOnlyIds, graphql } from '@dish/graph'
 import { isPresent } from '@dish/helpers'
 import { reaction, useStoreInstance } from '@dish/use-store'
@@ -235,35 +236,31 @@ const AppMapContent = memo(
     useEffect(() => {
       return reaction(
         homeStore,
-        (homeState) => {
-          const stateId = homeState.currentState.id
-          const state = homeState.allStates[stateId]
+        () => {
+          const stateId = homeStore.currentState.id
+          const state = homeStore.allStates[stateId]
           const span = state.span
           const center = state.center
           // stringify to prevent extra reactions
-          return JSON.stringify({ span, center })
+          return { span, center }
         },
-        (spanCenter) => {
-          const { span, center } = JSON.parse(spanCenter)
-          console.log('🗺 position', { center, span })
+        ({ span, center }) => {
           updateRegion.cancel()
-          appMapStore.setPosition({
+          appMapStore.setPosition('homeState.currentState', {
             span,
             center,
           })
-        }
+        },
+        isEqual
       )
     }, [])
 
     // CENTER (restauarantSelected.location)
     useEffect(() => {
-      if (!restaurantSelected) {
-        return
-      }
-      const coords = restaurantSelected.location.coordinates
+      const coords = restaurantSelected?.location.coordinates
       if (!coords) return
       const center = getLngLat(coords)
-      appMapStore.setPosition({
+      appMapStore.setPosition('restaurantSelected', {
         center,
       })
     }, [restaurantSelected])
@@ -311,10 +308,10 @@ const AppMapContent = memo(
         //   //@ts-expect-error
         //   om.actions.home.setCenterToResults(0)
         // }
-        appMapStore.setPosition({
-          center,
-          span,
-        })
+        // appMapStore.setPosition('moveEnd', {
+        //   center,
+        //   span,
+        // })
       },
       [media.sm]
     )

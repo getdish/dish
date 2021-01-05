@@ -24,7 +24,7 @@ export const mapZoomToMedium = () => {
       break
     }
   }
-  homeStore.updateCurrentState({
+  homeStore.updateCurrentState('mapZoomToMedium', {
     span,
     center,
   })
