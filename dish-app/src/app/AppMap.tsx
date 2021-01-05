@@ -28,17 +28,17 @@ import {
 import { getLngLat } from '../helpers/getLngLat'
 import { getRestaurantRating } from '../helpers/getRestaurantRating'
 import { getWindowHeight } from '../helpers/getWindow'
+import { isRestaurantState } from '../helpers/homeStateHelpers'
 import { router } from '../router'
+import { Region } from '../types/homeTypes'
 import { AppMapControls } from './AppMapControls'
 import { appMapStore } from './AppMapStore'
 import { drawerStore } from './drawerStore'
 import { ensureFlexText } from './home/restaurant/ensureFlexText'
+import { findLastHomeOrSearch, homeStore, useHomeStore } from './homeStore'
 import { useLastValueWhen } from './hooks/useLastValueWhen'
 import { useMapSize } from './hooks/useMapSize'
 import { useRestaurantQuery } from './hooks/useRestaurantQuery'
-import { findLastHomeOrSearch, homeStore, useHomeStore } from './homeStore'
-import { isRestaurantState } from '../helpers/homeStateHelpers'
-import { Region } from '../types/homeTypes'
 import { MapView } from './views/Map'
 
 const styles = {
@@ -78,7 +78,7 @@ const AppMapDataLoader = memo(
     onLoadedRestaurantDetail: Function
     onLoadedRestaurants: Function
   }) {
-    const home = useHomeStore()
+    const home = useStoreInstance(homeStore, undefined, true)
     const state = home.currentState
     let all: RestaurantOnlyIds[] = []
     let single: RestaurantOnlyIds | null = null
@@ -96,6 +96,8 @@ const AppMapDataLoader = memo(
     }
 
     all = all.filter(isPresent)
+
+    console.log('loading...', state, all, single)
 
     const allIds = [...new Set(all.map((x) => x.id))]
     const allResults = allIds
