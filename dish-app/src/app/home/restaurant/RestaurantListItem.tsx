@@ -154,7 +154,6 @@ const RestaurantListItemContent = memo(
       isLoaded,
       searchState,
     } = props
-    const pad = 18
     const media = useMedia()
     const restaurant = useRestaurantQuery(restaurantSlug)
 
@@ -222,7 +221,6 @@ const RestaurantListItemContent = memo(
         // overflow="hidden"
         // prevent jitter/layout moving until loaded
         display={restaurant.name === null ? 'none' : 'flex'}
-        paddingHorizontal={pad}
         position="relative"
         {...(isExpanded && {
           transform: [{ translateX: 300 }],
@@ -274,7 +272,8 @@ const RestaurantListItemContent = memo(
           {/* ROW: TITLE */}
           <VStack
             hoverStyle={{ backgroundColor: 'rgba(0,0,0,0.015)' }}
-            paddingTop={10}
+            paddingTop={8}
+            paddingLeft={14}
             width={950}
             position="relative"
           >
@@ -331,7 +330,7 @@ const RestaurantListItemContent = memo(
               </VStack>
             </Link>
 
-            <Spacer size="xl" />
+            <Spacer size={18} />
 
             {/* SECOND ROW TITLE */}
             <VStack
@@ -380,7 +379,7 @@ const RestaurantListItemContent = memo(
             </VStack>
           </VStack>
 
-          <HStack flex={1}>
+          <HStack paddingLeft={10} flex={1}>
             <VStack
               {...contentSideProps}
               width="5%"
@@ -403,10 +402,9 @@ const RestaurantListItemContent = memo(
 
               {/* BOTTOM ROW */}
 
-              <Spacer />
-
               <Suspense fallback={null}>
                 <HStack
+                  minHeight={44} // prevents clipping in lg size
                   position="relative"
                   alignItems="center"
                   overflow="hidden"
@@ -480,7 +478,7 @@ const RestaurantListItemContent = memo(
               paddingLeft={10}
               position="relative"
               maxHeight={220}
-              marginTop={-50}
+              marginTop={-60}
               transform={[{ translateY: -8 }]}
             >
               <Suspense fallback={null}>
@@ -521,7 +519,6 @@ const RestaurantListItemContent = memo(
             </VStack>
           </HStack>
         </VStack>
-        <Spacer size="lg" />
       </VStack>
     )
   })
