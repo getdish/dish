@@ -23,8 +23,8 @@ import { autocompletesStore } from './AppAutocomplete'
 import { AppMenu } from './AppMenu'
 import { AppSearchInput } from './AppSearchInput'
 import { AppSearchInputLocation } from './AppSearchInputLocation'
-import { useSearchBarTheme } from './hooks/useSearchBarTheme'
 import { useHomeStore } from './homeStore'
+import { useSearchBarTheme } from './hooks/useSearchBarTheme'
 import { DishHorizonView } from './views/DishHorizonView'
 import { DishLogoButton } from './views/DishLogoButton'
 import { LinkButton } from './views/LinkButton'
@@ -229,21 +229,21 @@ const AppSearchBarContents = memo(() => {
 
       {!media.xs && (
         <>
-          <Spacer size={12} />
+          <Spacer size={10} />
           <VStack
             className="ease-in-out"
             overflow="hidden"
-            minWidth={media.sm ? 240 : 310}
+            minWidth={media.sm ? 220 : 260}
             width="19%"
-            maxWidth={
-              media.sm
-                ? focus === 'search'
+            maxWidth="50%"
+            {...(media.sm && {
+              maxWidth:
+                focus === 'search'
                   ? 120
                   : focus === 'location'
                   ? '100%'
-                  : '25%'
-                : '50%'
-            }
+                  : '25%',
+            })}
             flex={1}
           >
             <AppSearchInputLocation />

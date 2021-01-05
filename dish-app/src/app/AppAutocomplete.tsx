@@ -118,8 +118,6 @@ export default memo(function AppAutocomplete() {
   const autocompletes = useStoreInstance(autocompletesStore)
   const theme = useTheme()
 
-  console.warn('rendering AppAutocomplete')
-
   if (isWeb) {
     useEffect(() => {
       const handleMove = (e) => {
@@ -315,8 +313,6 @@ const AutocompleteLocation = memo(() => {
   const store = useStoreInstance(autocompleteLocationStore)
   const inputStore = useInputStoreLocation()
   const query = useDebounceValue(inputStore.value, 250)
-
-  console.warn('rendering autocomplete location', inputStore.value)
 
   useEffect(() => {
     query && store.setIsLoading(true)

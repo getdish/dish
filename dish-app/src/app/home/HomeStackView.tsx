@@ -27,20 +27,12 @@ export function HomeStackView<A extends HomeStateItem>(props: {
 }) {
   const home = useHomeStore()
   const breadcrumbs = getBreadcrumbs(home.states.slice(0, home.stateIndex + 1))
-  const key = JSON.stringify(breadcrumbs)
+  const key = JSON.stringify(breadcrumbs.map((x) => x.id))
   const homeStates = useMemo(() => breadcrumbs, [key])
   const currentStates = useDebounceValue(homeStates, 20) ?? homeStates
   const isRemoving = currentStates.length > homeStates.length
   const isAdding = currentStates.length < homeStates.length
   const items = isRemoving ? currentStates : homeStates
-
-  console.log(
-    '👀 HomeStackView',
-    items,
-    home.states,
-    home.stateIndex,
-    breadcrumbs
-  )
 
   return (
     <>

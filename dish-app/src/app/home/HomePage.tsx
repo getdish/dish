@@ -101,12 +101,13 @@ export default memo(function HomePage(props: Props) {
     enabled: !!props.item.region,
   })
 
-  console.log('👀 HomePage', props.item, region)
+  // console.log('👀 HomePage', props, region)
 
   // load effect!
   usePageLoadEffect(props, () => {
     // default navigate to a region (TODO make it the nearest one to current map..)
     if (!props.item.region) {
+      console.warn('no region, navigate to san francisco')
       router.navigate({
         name: 'homeRegion',
         params: {
@@ -131,6 +132,7 @@ export default memo(function HomePage(props: Props) {
   }, [isLoaded, region.data])
 
   useEffect(() => {
+    if (!props.isActive) return
     if (region.status !== 'success') return
     if (!region.data) {
       // no region found!
@@ -147,7 +149,7 @@ export default memo(function HomePage(props: Props) {
         region: region.data.name,
       })
     }
-  }, [region.data])
+  }, [props.isActive, region.data])
 
   // on load home clear search effect!
   useEffect(() => {
