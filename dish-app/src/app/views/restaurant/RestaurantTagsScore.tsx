@@ -15,10 +15,10 @@ import {
 } from 'snackui'
 
 import { getActiveTagSlugs } from '../../../helpers/getActiveTagSlugs'
+import { HomeActiveTagsRecord } from '../../../types/homeTypes'
 import { ensureFlexText } from '../../home/restaurant/ensureFlexText'
 import { useRestaurantQuery } from '../../hooks/useRestaurantQuery'
 import { useRestaurantTagScores } from '../../hooks/useRestaurantTagScores'
-import { HomeActiveTagsRecord } from '../../../types/homeTypes'
 import { PointsText } from '../PointsText'
 
 export const RestaurantTagsScore = graphql(function RestaurantTagsScore({

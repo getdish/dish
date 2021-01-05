@@ -9,8 +9,8 @@ import React, { memo } from 'react'
 import { ScrollView } from 'react-native'
 import { Box, HStack, HoverablePopover, Text, VStack } from 'snackui'
 
-import { useRestaurantQuery } from '../../hooks/useRestaurantQuery'
 import { GeocodePlace } from '../../../types/homeTypes'
+import { useRestaurantQuery } from '../../hooks/useRestaurantQuery'
 import { SmallCircleButton } from '../../views/CloseButton'
 import { SmallButton } from '../../views/SmallButton'
 

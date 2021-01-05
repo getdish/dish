@@ -1,7 +1,7 @@
 import { restaurant_tag } from '@dish/graph'
 
+import { NavigableTag } from '../../../types/tagTypes'
 import { useRestaurantQuery } from '../../hooks/useRestaurantQuery'
-import {NavigableTag} from "../../../types/tagTypes";
 
 export const useBreakdownsBySources = (
   restaurantSlug: string,

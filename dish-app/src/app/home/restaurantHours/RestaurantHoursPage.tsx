@@ -18,8 +18,8 @@ import {
 
 import { bgLight } from '../../../constants/colors'
 import { router } from '../../../router'
-import { useRestaurantQuery } from '../../hooks/useRestaurantQuery'
 import { homeStore } from '../../homeStore'
+import { useRestaurantQuery } from '../../hooks/useRestaurantQuery'
 import { StackViewCloseButton } from '../../views/StackViewCloseButton'
 import { PageTitle } from '../search/PageTitle'
 

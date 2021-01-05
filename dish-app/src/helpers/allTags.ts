@@ -1,7 +1,7 @@
 import { Tag, slugify } from '@dish/graph'
 
+import { FullTag, NavigableTag, TagWithNameAndType } from '../types/tagTypes'
 import { getTagSlug } from './getTagSlug'
-import {FullTag, NavigableTag, TagWithNameAndType} from '../types/tagTypes'
 
 // cache for lookups in various places
 

@@ -2,9 +2,9 @@ import { query, resolved } from '@dish/graph'
 import { isPresent } from '@dish/helpers'
 import { differenceBy } from 'lodash'
 
+import { FullTag, TagWithNameAndType } from '../types/tagTypes'
 import { allTags } from './allTags'
 import { getFullTag } from './getFullTag'
-import { FullTag, TagWithNameAndType } from '../types/tagTypes'
 
 type TagPartial =
   | TagWithNameAndType

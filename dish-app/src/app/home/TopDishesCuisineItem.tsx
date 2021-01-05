@@ -12,11 +12,14 @@ import {
 } from 'snackui'
 
 import { isWeb } from '../../constants/constants'
+import {
+  addTagsToCache,
+  getFullTagFromNameAndType,
+} from '../../helpers/allTags'
 import { getColorsForName } from '../../helpers/getColorsForName'
-import { appMapStore } from '../AppMapStore'
-import { addTagsToCache, getFullTagFromNameAndType } from '../../helpers/allTags'
 import { getFullTags } from '../../helpers/getFullTags'
 import { TagWithNameAndType } from '../../types/tagTypes'
+import { appMapStore } from '../AppMapStore'
 import { ContentScrollViewHorizontal } from '../views/ContentScrollViewHorizontal'
 import { DishView } from '../views/dish/DishView'
 import { LinkButton } from '../views/LinkButton'

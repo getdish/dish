@@ -1,8 +1,8 @@
 import { LngLat } from '@dish/graph'
 import { isPresent } from '@dish/helpers'
 
-import { GeocodePlace } from '../types/homeTypes'
 import { MAPBOX_ACCESS_TOKEN } from '../constants/constants'
+import { GeocodePlace } from '../types/homeTypes'
 import {
   AutocompleteItem,
   AutocompleteItemFull,
