@@ -450,15 +450,32 @@ function createProxiedStore(
               setters.clear()
               const res = ogAction(...args)
               const simpleArgs = args.map(simpleStr)
-              console.groupCollapsed(
-                `💰 ${constr.name}.${key}(${simpleArgs.join(', ')})`
-              )
-              console.log('ARGS ', ...args)
-              setters.forEach(({ key, value }) => {
-                console.log(`SET `, key, '=', value)
-              })
-              setters.clear()
-              console.groupEnd()
+              if (process.env.NODE_ENV === 'development') {
+                const name = constr.name
+                const color = strColor(name)
+                console.groupCollapsed(
+                  `💰 %c${name}%c.${key}(${simpleArgs.join(', ')})`,
+                  `color: ${color};`,
+                  'color: black;'
+                )
+                console.log('ARGS ', ...args)
+                setters.forEach(({ key, value }) => {
+                  console.log(`SET `, key, '=', value)
+                })
+                setters.clear()
+                console.groupEnd()
+
+                function hashCode(str: string) {
+                  let hash = 0
+                  for (var i = 0; i < str.length; i++) {
+                    hash = str.charCodeAt(i) + ((hash << 5) - hash)
+                  }
+                  return hash
+                }
+                function strColor(str: string) {
+                  return `hsl(${hashCode(str) % 360}, 90%, 40%)`
+                }
+              }
               return res
             }
           }
