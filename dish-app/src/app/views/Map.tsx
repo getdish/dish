@@ -16,6 +16,7 @@ import {
   lightGreen,
   lightPurple,
   purple,
+  yellow,
 } from '../../constants/colors'
 import { MAPBOX_ACCESS_TOKEN } from '../../constants/constants'
 import { tagLenses } from '../../constants/localTags'
@@ -93,12 +94,7 @@ export const MapView = (props: MapProps) => {
   // NOTE! changing style resets all sources
   // so be sure to thread style through here
   useEffect(() => {
-    if (!mapNode.current) {
-      return undefined
-    }
-    if (map && !hasChangedStyle(map, style)) {
-      return undefined
-    }
+    if (!mapNode.current) return
     return setupMapEffect({
       mapNode: mapNode.current,
       isMounted,
@@ -107,7 +103,13 @@ export const MapView = (props: MapProps) => {
       props,
       internal,
     })
-  }, [style])
+  }, [])
+
+  useEffect(() => {
+    if (!map) return
+    if (!hasChangedStyle(map, style)) return
+    map.setStyle(style)
+  }, [map, style])
 
   // selected
   useEffect(() => {
@@ -224,17 +226,6 @@ export const MapView = (props: MapProps) => {
     }
   }, [features, map, restaurantPositions])
 
-  // // centerToResults
-  // const lastCenter = useRef(0)
-  // useEffect(() => {
-  //   if (!map) return
-  //   if (!features.length) return
-  //   if (!props.centerToResults) return
-  //   if (props.centerToResults === lastCenter.current) return
-  //   lastCenter.current = props.centerToResults
-  //   fitMapToResults(map, features)
-  // }, [map, features, props.centerToResults])
-
   return <div ref={mapNode} style={mapStyle} />
 }
 
@@ -297,6 +288,7 @@ function setupMapEffect({
   isMounted?: React.RefObject<boolean>
   getProps: () => MapProps
 }) {
+  console.log('setup map effect', mapNode)
   const map = new mapboxgl.Map({
     container: mapNode,
     style: props.style,
@@ -395,8 +387,8 @@ function setupMapEffect({
             lineColorHover: '#330033',
             promoteId: 'ogc_fid',
             activeColor: `rgba(255, 255, 0, 0.05)`,
-            hoverColor: hexToRGB(purple).string,
-            color: purple,
+            hoverColor: `rgba(255,255,0,0.25)`,
+            color: hexToRGB(purple, 0.5).string,
             label: 'hrr_city',
             name: 'public.hrr',
           },
@@ -551,7 +543,9 @@ function setupMapEffect({
           cancels.add(() => {
             map.removeLayer(`${name}.fill`)
             map.removeLayer(`${name}.line`)
-            map.removeLayer(`${name}.label`)
+            if (label) {
+              map.removeLayer(`${name}.label`)
+            }
             if (labelSource) {
               map.removeSource(labelSource)
             }
@@ -803,7 +797,7 @@ function setupMapEffect({
           type: 'circle',
           filter: ['==', 'id', ''],
           paint: {
-            'circle-radius': 12,
+            'circle-radius': 8,
             'circle-color': blue,
             // 'icon-allow-overlap': true,
             // 'icon-ignore-placement': true,
@@ -844,17 +838,16 @@ function setupMapEffect({
           type: 'symbol',
           filter: ['has', 'searchPosition'],
           layout: {
-            'icon-allow-overlap': true,
-            'icon-ignore-placement': true,
+            // 'icon-allow-overlap': true,
+            // 'icon-ignore-placement': true,
             'text-field': ['format', ['get', 'searchPosition']],
-            'text-font': ['DIN Offc Pro Medium', 'Arial Unicode MS Bold'],
-            'text-size': 18,
-            'text-variable-anchor': ['bottom', 'top', 'right', 'left'],
-            'text-offset': [0, 1],
-            'text-anchor': 'top',
+            'text-font': ['DIN Offc Pro Bold', 'Arial Unicode MS Bold'],
+            'text-size': 13,
+            // 'text-variable-anchor': ['bottom', 'top', 'right', 'left'],
+            'text-anchor': 'center',
           },
           paint: {
-            'text-color': blue,
+            'text-color': '#000',
             // 'text-halo-color': '#70b600',
             // 'text-halo-width': 1,
           },
