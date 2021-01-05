@@ -14,6 +14,7 @@ import useKeyPressEvent from 'react-use/lib/useKeyPressEvent'
 import { HStack, VStack } from 'snackui'
 
 import { isWeb } from '../../constants/constants'
+import { useRestaurantQuery } from '../hooks/useRestaurantQuery'
 
 const useScreenSize = () => {
   const [screenSize, setScreenSize] = useState(() => {
@@ -147,21 +148,8 @@ export const Lightbox = ({
     }
   })
   const query = useQuery()
-
-  const restaurant = query.restaurant({
-    where: {
-      slug: {
-        _eq: restaurantSlug,
-      },
-    },
-  })[0]
-
-  if (!restaurant) {
-    throw Error('No restaurant available')
-  }
-
+  const restaurant = useRestaurantQuery(restaurantSlug)
   restaurant.id
-
   const [pagination, setPagination] = useState(() => ({ limit: 20, offset: 0 }))
   const [photosList, setPhotosList] = useState<photo[]>(() => [])
 
@@ -226,7 +214,6 @@ export const Lightbox = ({
           },
         ],
       })
-
       return photo_table.map(({ photo }) => {
         photo.id
         photo.url
@@ -248,7 +235,14 @@ export const Lightbox = ({
   )
 
   const activeIndex = activeImage.index
+  console.log('what is', activeImage)
   useEffect(() => {
+    console.log(
+      'setting active index',
+      activeIndex,
+      photosList,
+      photosList[activeIndex]?.url
+    )
     if (photosList[activeIndex]?.url) {
       setActiveImage({
         url: photosList[activeIndex].url,
@@ -320,6 +314,8 @@ export const Lightbox = ({
         top="50%"
         transform={[{ translateY: -ThumbnailSize / 2 - 30 / 2 }]}
         cursor="pointer"
+        zIndex={100}
+        pointerEvents="auto"
       >
         <ChevronLeft color="#fff" size={30} />
       </VStack>
@@ -330,6 +326,8 @@ export const Lightbox = ({
         top="50%"
         transform={[{ translateY: -ThumbnailSize / 2 - 30 / 2 }]}
         cursor="pointer"
+        pointerEvents="auto"
+        zIndex={100}
       >
         <ChevronRight color="#fff" size={30} />
       </VStack>

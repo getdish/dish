@@ -91,9 +91,9 @@ export const AppMapRestaurantPeek = memo(
               >
                 {restaurant.name}
                 {/* <RestaurantAddressLinksRow
-                  currentLocationInfo={
-                    state?.currentLocationInfo ??
-                    home.currentState.currentLocationInfo
+                  curLocInfo={
+                    state?.curLocInfo ??
+                    home.currentState.curLocInfo
                   }
                   showMenu
                   size="sm"
@@ -106,7 +106,7 @@ export const AppMapRestaurantPeek = memo(
               <RestaurantAddress
                 size="sm"
                 address={restaurant.address ?? ''}
-                currentLocationInfo={state?.currentLocationInfo ?? null}
+                curLocInfo={state?.curLocInfo ?? null}
               />
             </HStack> */}
           </VStack>

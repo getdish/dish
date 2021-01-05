@@ -23,7 +23,7 @@ export const AppSearchInputLocation = memo(() => {
   const inputStore = useInputStoreLocation()
   const home = useHomeStore()
   const { color } = useSearchBarTheme()
-  const { currentLocationName } = home.currentState
+  const { curLocName } = home.currentState
   const locationAutocomplete = useStoreInstance(autocompleteLocationStore)
   const autocompletes = useStoreInstance(autocompletesStore)
   const showLocationAutocomplete =
@@ -130,7 +130,7 @@ export const AppSearchInputLocation = memo(() => {
             <TextInput
               ref={(view) => setNodeOnInputStore(inputStore, view)}
               value={inputStore.value ?? ''}
-              placeholder={currentLocationName ?? '...'}
+              placeholder={curLocName ?? '...'}
               style={[
                 inputTextStyles.textInput,
                 {

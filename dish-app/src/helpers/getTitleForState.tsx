@@ -15,7 +15,7 @@ export function getTitleForState(
   state: HomeStateItem,
   options?: { lowerCase: boolean }
 ) {
-  const { currentLocationName = '...' } = state
+  const { curLocName = '...' } = state
   const tags = getActiveTags(state)
   const lense = tags.find((x) => x.type === 'lense')
   const countryTag = tags.find((x) => x.type === 'country')
@@ -77,7 +77,7 @@ export function getTitleForState(
   if (searchName) {
     subTitleParts.push(`${searchName[0].toUpperCase()}${searchName.slice(1)}`)
   }
-  subTitleParts.push(`${currentLocationName}`)
+  subTitleParts.push(`${curLocName}`)
 
   const subTitle = subTitleParts.join(' ').toLowerCase()
   //   native extraction failing?

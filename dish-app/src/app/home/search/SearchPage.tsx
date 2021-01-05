@@ -289,7 +289,7 @@ const SearchResultsContent = (props: Props) => {
       return (
         <Suspense fallback={<LoadingItem size="lg" />}>
           <RestaurantListItem
-            currentLocationInfo={props.item.currentLocationInfo ?? null}
+            curLocInfo={props.item.curLocInfo ?? null}
             restaurantId={data.id}
             restaurantSlug={data.slug}
             rank={index + 1}
