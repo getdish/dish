@@ -125,6 +125,7 @@ class SearchPageStore extends Store {
     if (!state) return
 
     // console.log('search found restaurants', restaurants)
+    appMapStore.setSelected(null)
     homeStore.updateHomeState('SearchPageStore.runSearch2', {
       id: state.id,
       status: 'complete',

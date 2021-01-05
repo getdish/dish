@@ -38,10 +38,10 @@ export function getTitleForState(
     titleParts.push('Cheap')
   }
   if (!cheap && midRange && !expensive) {
-    titleParts.push('Nice')
+    titleParts.push('Mid-Range')
   }
   if (!cheap && !midRange && expensive) {
-    titleParts.push('High End')
+    titleParts.push('Fancy')
   }
   if (countryTag?.name) {
     titleParts.push(countryTag.name)

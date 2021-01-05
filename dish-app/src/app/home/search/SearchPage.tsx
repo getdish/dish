@@ -480,7 +480,7 @@ const SearchPageScrollView = forwardRef<ScrollView, SearchPageScrollViewProps>(
               <ScrollView
                 horizontal
                 showsHorizontalScrollIndicator={false}
-                style={{ maxWidth: 300 }}
+                style={{ maxWidth: '100%' }}
               >
                 <HStack spacing="sm">
                   {tagsWithPct.map(({ tag, pct }, index) => {
