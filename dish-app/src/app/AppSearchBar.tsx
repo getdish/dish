@@ -305,6 +305,7 @@ const SearchBarActionButton = memo(() => {
       pointerEvents="auto"
       width={32}
       opacity={isDisabled ? 0.1 : 0.7}
+      padding={0}
       disabled={isDisabled}
       onPress={() => {
         if (showAutocomplete) {

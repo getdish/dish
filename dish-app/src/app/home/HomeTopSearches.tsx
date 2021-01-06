@@ -25,7 +25,9 @@ export const HomeTopSearches = memo(() => {
         const lenseTag =
           search.tags.find((x) => x.type === 'lense') ?? tagLenses[0]
         const hasLenseColor = !!lenseTag?.rgb
-        const rgbString = hasLenseColor ? lenseTag.rgb.join(',') : ''
+        const rgbString = hasLenseColor
+          ? lenseTag.rgb.map((x) => x * 1.1).join(',')
+          : ''
         return (
           <LinkButton
             key={index}
@@ -35,7 +37,6 @@ export const HomeTopSearches = memo(() => {
             alignItems="center"
             marginBottom={7}
             borderRadius={60}
-            borderWidth={1}
             position="relative"
             overflow="hidden"
             borderColor="transparent"
@@ -56,8 +57,6 @@ export const HomeTopSearches = memo(() => {
                 <Text
                   color="#444"
                   fontSize={16}
-                  borderRadius={50}
-                  fontWeight="400"
                   {...(hasLenseColor && {
                     color: `rgb(${rgbString})`,
                   })}
