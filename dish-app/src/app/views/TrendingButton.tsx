@@ -23,7 +23,9 @@ export const TrendingButton = <
         flexDirection="row"
         alignItems="center"
         overflow="hidden"
-        ellipse
+        textProps={{
+          ellipse: true,
+        }}
         {...rest}
       >
         {rank ? <Text>`${rank}. `</Text> : null}

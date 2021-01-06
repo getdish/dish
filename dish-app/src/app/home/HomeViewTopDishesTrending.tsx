@@ -44,13 +44,11 @@ export const HomeViewTopDishesTrending = memo(() => {
             <LinkButton
               paddingVertical={5}
               paddingHorizontal={6}
-              fontSize={12}
               shadowColor={'rgba(0,0,0,0.1)'}
               shadowRadius={8}
               shadowOffset={{ height: 2, width: 0 }}
               backgroundColor="#fff"
               borderRadius={8}
-              fontWeight="700"
               transform={[{ rotate: '-4deg' }]}
             >
               Trending

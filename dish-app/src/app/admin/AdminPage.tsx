@@ -101,7 +101,6 @@ const AdminLinkButton = ({
 }: LinkButtonProps & { icon: string }) => {
   return (
     <LinkButton
-      fontSize={80}
       borderRadius={10}
       padding={10}
       paddingHorizontal={20}

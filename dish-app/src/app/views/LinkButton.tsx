@@ -1,5 +1,5 @@
-import React, { useEffect, useRef, useState } from 'react'
-import { Button, HStack, Text } from 'snackui'
+import React, { useEffect, useState } from 'react'
+import { Button, Text } from 'snackui'
 
 import { isStringChild } from '../../helpers/isStringChild'
 import { RoutesTable, router } from '../../router'
@@ -15,13 +15,7 @@ export function LinkButton<
 
   const {
     children,
-    fontSize,
-    lineHeight,
-    fontWeight,
-    textAlign,
-    ellipse,
     replace,
-    color,
     disallowDisableWhenActive,
     tags,
     tag,
@@ -30,6 +24,9 @@ export function LinkButton<
     onPress,
     enableActiveStyle,
     activeTextStyle,
+    textProps,
+    opacity,
+    disabled,
     ...restProps
   } = props
 
@@ -55,28 +52,16 @@ export function LinkButton<
   return wrapWithLinkElement(
     <Button
       minHeight={10} // temp react-native
+      disabled={disabled}
       {...restProps}
       {...(isActive && props.activeStyle)}
+      textProps={isActive ? props.activeTextStyle : textProps}
+      {...(disabled &&
+        typeof opacity !== 'number' && {
+          opacity: 0.5,
+        })}
     >
-      {!isStringChild(props.children) ? (
-        getChildren(props, isActive)
-      ) : (
-        <Text
-          ellipse={ellipse}
-          fontSize={fontSize}
-          lineHeight={lineHeight}
-          fontWeight={fontWeight}
-          textAlign={textAlign}
-          flexDirection={props.flexDirection ?? 'row'}
-          flexWrap={props.flexWrap}
-          color={color}
-          cursor={props.disabled ? 'default' : 'pointer'}
-          opacity={props.disabled ? 0.5 : 1}
-          {...(isActive && props.activeTextStyle)}
-        >
-          {getChildren(props, isActive)}
-        </Text>
-      )}
+      {getChildren(props, isActive)}
     </Button>
   )
 }

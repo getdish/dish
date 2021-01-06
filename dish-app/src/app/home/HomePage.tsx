@@ -267,12 +267,12 @@ export default memo(function HomePage(props: Props) {
                               shadowOpacity={0.1}
                               shadowRadius={3}
                               paddingVertical={0}
-                              fontSize={14}
-                              color={
-                                state.section === linkProps.params.section
-                                  ? 'red'
-                                  : '#888'
-                              }
+                              textProps={{
+                                color:
+                                  state.section === linkProps.params.section
+                                    ? 'red'
+                                    : '#888',
+                              }}
                               {...getGroupedButtonProps({
                                 index,
                                 items: navLinks,

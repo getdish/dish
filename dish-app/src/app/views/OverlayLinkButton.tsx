@@ -22,23 +22,16 @@ export function OverlayLinkButton<
         hoverStyle={{
           transform: [{ scale: 1.05 }],
         }}
-        {...props}
-      >
-        <HStack
-          alignItems="center"
-          backgroundColor="rgba(0,0,0,0.75)"
-          paddingVertical={7}
-          paddingHorizontal={11}
-        >
+        icon={
           <Icon
             size={12}
             color="rgba(255,255,255,0.5)"
             style={{ marginRight: 6 }}
           />
-          <Text color="#fff" fontSize={13} fontWeight="500" opacity={0.85}>
-            {children}
-          </Text>
-        </HStack>
+        }
+        {...props}
+      >
+        {children}
       </LinkButton>
     </BlurView>
   )

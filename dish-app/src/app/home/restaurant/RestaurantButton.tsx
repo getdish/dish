@@ -18,7 +18,7 @@ export const RestaurantButton = memo(
       rank,
       trending,
       subtle,
-      color,
+      textProps,
       onHoverIn,
       maxInnerWidth = isWeb ? 200 : 180,
       ...props
@@ -81,7 +81,8 @@ export const RestaurantButton = memo(
               ellipse
               fontSize={16}
               fontWeight={active ? '600' : '400'}
-              color={color ?? (active ? '#000' : '#444')}
+              color={active ? '#000' : '#444'}
+              {...textProps}
               // marginRight={25}
             >
               {typeof rank === 'number' ? `${rank}. ` : ''}
