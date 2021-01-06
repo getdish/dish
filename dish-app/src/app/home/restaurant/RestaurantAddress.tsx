@@ -21,25 +21,16 @@ export const RestaurantAddress = ({
   return (
     <SmallButton
       maxWidth={media.sm ? 160 : 200}
-      backgroundColor="transparent"
+      borderWidth={0}
+      icon={<MapPin color={color} size={16} style={{ opacity: 0.5 }} />}
+      textProps={{
+        opacity: 0.5,
+      }}
       href={`https://www.google.com/maps/search/?q=${encodeURIComponent(
         address
       )}`}
     >
-      <HStack alignItems="center" maxWidth="100%">
-        <MapPin color={color} size={16} style={{ opacity: 0.5 }} />
-        <Text
-          marginLeft={4}
-          color={color}
-          ellipse
-          fontSize={14}
-          fontWeight="400"
-          selectable
-          display={media.sm ? 'none' : 'flex'}
-        >
-          {getAddressText(curLocInfo, address, size)}
-        </Text>
-      </HStack>
+      {getAddressText(curLocInfo, address, size)}
     </SmallButton>
   )
 }

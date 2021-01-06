@@ -103,7 +103,6 @@ export const RestaurantListItem = memo(function RestaurantListItem(
       maxWidth="100%"
       position="relative"
       className="restaurant-list-item"
-      marginBottom={5}
     >
       <ContentScrollViewHorizontal
         onScroll={handleScroll}
@@ -359,6 +358,7 @@ const RestaurantListItemContent = memo(
                   <SmallButton
                     name="restaurantHours"
                     params={{ slug: restaurantSlug }}
+                    borderWidth={0}
                   >
                     {opening_hours}
                   </SmallButton>
@@ -418,13 +418,7 @@ const RestaurantListItemContent = memo(
                       fontWeight: '600',
                     }}
                     tooltip={`Rating Breakdown (${totalReviews} reviews)`}
-                    icon={
-                      <MessageSquare
-                        size={16}
-                        color="rgba(0,0,0,0.3)"
-                        style={{ marginRight: 6 }}
-                      />
-                    }
+                    icon={<MessageSquare size={16} color="rgba(0,0,0,0.3)" />}
                   >
                     {numberFormat(
                       restaurant.reviews_aggregate().aggregate.count() ?? 0,

@@ -2,7 +2,6 @@ import { graphql } from '@dish/graph'
 import React, { memo } from 'react'
 import { ScrollView } from 'react-native'
 import {
-  AbsoluteVStack,
   Modal,
   SmallTitle,
   Spacer,
@@ -20,11 +19,12 @@ import { bgLight } from '../../../constants/colors'
 import { router } from '../../../router'
 import { homeStore } from '../../homeStore'
 import { useRestaurantQuery } from '../../hooks/useRestaurantQuery'
+import { PaneControlButtons } from '../../views/PaneControlButtons'
 import { StackViewCloseButton } from '../../views/StackViewCloseButton'
 import { PageTitle } from '../search/PageTitle'
 
 export default memo(
-  graphql<any>(function HomePageRestaurantHours() {
+  graphql<any>(function RestaurantHoursPage() {
     const params = router.curPage.params
     const restaurant = useRestaurantQuery(params.slug)
     const hours = restaurant.hours() ?? []
@@ -44,10 +44,10 @@ export default memo(
           width={380}
           maxHeight={480}
         >
+          <PaneControlButtons>
+            <StackViewCloseButton />
+          </PaneControlButtons>
           <VStack width="100%" height="100%" flex={1}>
-            <AbsoluteVStack top={5} right={30}>
-              <StackViewCloseButton />
-            </AbsoluteVStack>
             <ScrollView style={{ width: '100%' }}>
               <VStack padding={18} spacing="lg">
                 <SmallTitle fontWeight="600">{title}</SmallTitle>

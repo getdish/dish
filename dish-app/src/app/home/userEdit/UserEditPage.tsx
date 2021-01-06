@@ -4,6 +4,7 @@ import { AbsoluteVStack, LoadingItems, VStack } from 'snackui'
 import { useHomeStore } from '../../homeStore'
 import { UserOnboard } from '../../UserOnboard'
 import { DarkModal } from '../../views/DarkModal'
+import { PaneControlButtons } from '../../views/PaneControlButtons'
 import { StackViewCloseButton } from '../../views/StackViewCloseButton'
 
 export default memo(function UserEditPage() {
@@ -20,9 +21,9 @@ export default memo(function UserEditPage() {
           height="100%"
           flex={1}
         >
-          <AbsoluteVStack top={5} right={30}>
+          <PaneControlButtons>
             <StackViewCloseButton />
-          </AbsoluteVStack>
+          </PaneControlButtons>
           <Suspense fallback={<LoadingItems />}>
             <UserOnboard hideLogo />
           </Suspense>

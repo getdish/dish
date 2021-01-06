@@ -1,6 +1,6 @@
 import { CornerLeftUp, X } from '@dish/react-feather'
 import React, { memo } from 'react'
-import { HStack, StackProps } from 'snackui'
+import { HStack, StackProps, useTheme } from 'snackui'
 
 type CircleButtonProps = StackProps & {
   size?: number
@@ -23,15 +23,16 @@ export const BackButton = memo((props: CircleButtonProps) => {
 })
 
 export const SmallCircleButton = (props: StackProps) => {
+  const theme = useTheme()
   return (
     <HStack
       borderRadius={1000}
-      backgroundColor="#999"
+      backgroundColor={theme.colorTertiary}
       padding={6}
       alignItems="center"
       justifyContent="center"
       hoverStyle={{
-        backgroundColor: 'rgba(150,150,150,0.85)',
+        backgroundColor: theme.colorSecondary,
       }}
       pressStyle={{
         backgroundColor: '#222',

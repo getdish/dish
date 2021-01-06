@@ -1,4 +1,3 @@
-import { Tag } from '@dish/graph'
 import React, { memo } from 'react'
 import { VStack } from 'snackui'
 
@@ -21,8 +20,8 @@ export const HomeLenseBar = memo(
           const isActive = props.activeTags?.[getTagSlug(lense)] ?? false
           return (
             <VStack
-              zIndex={isActive ? 1 : 0}
               height="100%"
+              zIndex={isActive ? 1 : 0}
               key={lense.id + index}
               justifyContent="center"
             >
