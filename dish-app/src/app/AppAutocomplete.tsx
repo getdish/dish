@@ -530,13 +530,6 @@ const AutocompleteItemView = memo(
         <HStack
           flex={1}
           justifyContent={target === 'location' ? 'flex-end' : 'center'}
-          paddingHorizontal={12}
-          paddingVertical={10}
-          borderRadius={12}
-          backgroundColor={isActive ? theme.backgroundColor : 'transparent'}
-          hoverStyle={{
-            backgroundColor: theme.backgroundColorSecondary,
-          }}
         >
           <VStack height={26} width={26} marginRight={10}>
             {result.icon?.indexOf('http') === 0 ? (

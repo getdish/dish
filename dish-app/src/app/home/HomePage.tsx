@@ -243,18 +243,19 @@ export default memo(function HomePage(props: Props) {
 
               <HStack>
                 <ScrollView horizontal showsHorizontalScrollIndicator={false}>
-                  <HStack paddingVertical={10} paddingHorizontal={10}>
+                  <HStack paddingVertical={15} paddingHorizontal={10}>
                     <SlantedTitle
                       position="relative"
                       overflow="visible"
                       minWidth={80}
+                      marginTop={-5}
                     >
                       {regionName}
 
                       <HStack
                         position="absolute"
-                        bottom={5}
-                        transform={[{ translateY: 32 }]}
+                        bottom={2}
+                        transform={[{ translateY: 32 }, { rotate: '2deg' }]}
                         right="2%"
                       >
                         {navLinks.map((linkProps, index) => {
@@ -265,9 +266,8 @@ export default memo(function HomePage(props: Props) {
                               shadowColor="#000"
                               shadowOpacity={0.1}
                               shadowRadius={3}
-                              paddingHorizontal={8}
+                              paddingVertical={0}
                               fontSize={14}
-                              lineHeight={32}
                               color={
                                 state.section === linkProps.params.section
                                   ? 'red'
@@ -276,6 +276,7 @@ export default memo(function HomePage(props: Props) {
                               {...getGroupedButtonProps({
                                 index,
                                 items: navLinks,
+                                borderRadius: 10,
                               })}
                               {...linkProps}
                             />

@@ -300,8 +300,8 @@ const SearchBarActionButton = memo(() => {
 
   return (
     <LinkButton
-      justifyContent="center"
-      alignItems="center"
+      alignSelf="center"
+      backgroundColor="transparent"
       pointerEvents="auto"
       width={32}
       opacity={isDisabled ? 0.1 : 0.7}

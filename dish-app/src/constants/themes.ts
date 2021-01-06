@@ -10,16 +10,18 @@ const active: MyTheme = {
   color: '#fff',
   colorSecondary: '#ccc',
   colorTertiary: '#777',
-  backgroundColor: '#204493',
-  backgroundColorSecondary: '#204493cc',
-  backgroundColorTertiary: '#204493aa',
+  backgroundColor: 'rgb(152, 88, 255)',
+  backgroundColorSecondary: 'rgba(152, 88, 255, 0.85)',
+  backgroundColorTertiary: 'rgba(152, 88, 255, 0.6)',
   borderColor: '#204493',
+  borderColorHover: '#204493',
   backgroundColorTransparent: 'rgba(40,40,200,0)',
   cardBackgroundColor: '#333',
 }
 
 const darkBase = {
   borderColor: '#252525',
+  borderColorHover: '#353535',
   color: '#fefefe',
   colorSecondary: '#ccc',
   colorTertiary: '#777',
@@ -46,7 +48,8 @@ const darkTranslucent: MyTheme = {
 }
 
 const lightBase = {
-  borderColor: '#eee',
+  borderColor: '#e5e5e5',
+  borderColorHover: '#d5d5d5',
   color: '#111',
   colorSecondary: '#444',
   colorTertiary: '#777',
@@ -68,8 +71,8 @@ const lightTranslucent: MyTheme = {
   ...shared,
   ...lightBase,
   backgroundColor: 'rgba(255,255,255,0.85)',
-  backgroundColorSecondary: 'rgba(255,255,255,0.5)',
-  backgroundColorTertiary: 'rgba(255,255,255,0.25)',
+  backgroundColorSecondary: 'rgba(250,250,250,0.85)',
+  backgroundColorTertiary: 'rgba(240,240,240,0.85)',
 }
 
 const themes = {

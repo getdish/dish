@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react'
-import { HStack, Text } from 'snackui'
+import { Button, HStack, Text } from 'snackui'
 
 import { isStringChild } from '../../helpers/isStringChild'
 import { RoutesTable, router } from '../../router'
@@ -10,7 +10,6 @@ export function LinkButton<
   Name extends keyof RoutesTable = keyof RoutesTable,
   Params = RoutesTable[Name]['params']
 >(props: LinkButtonProps<Name, Params>) {
-  const containerRef = useRef<any>()
   const [isActive, setIsActive] = useState(false)
   const { wrapWithLinkElement } = useLink(props)
 
@@ -54,20 +53,8 @@ export function LinkButton<
   }, [props.name])
 
   return wrapWithLinkElement(
-    <HStack
-      // inline-flex only on web...
-      className={`ease-in-out-faster inline-flex`}
-      // only handle click events on non-a links (we handle them in Link separately)
-      // @ts-ignore
-      ref={'name' in props ? null : containerRef}
-      pressStyle={{
-        ...props.hoverStyle,
-        opacity: 0.7,
-        transform: [{ scale: 0.96 }],
-      }}
-      // @ts-ignore
+    <Button
       minHeight={10} // temp react-native
-      cursor="pointer"
       {...restProps}
       {...(isActive && props.activeStyle)}
     >
@@ -90,7 +77,7 @@ export function LinkButton<
           {getChildren(props, isActive)}
         </Text>
       )}
-    </HStack>
+    </Button>
   )
 }
 

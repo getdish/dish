@@ -6,6 +6,7 @@ import { HStack, Text, VStack } from 'snackui'
 import { bgLight } from '../../../constants/colors'
 import { getImageUrl } from '../../../helpers/getImageUrl'
 import { useRestaurantQuery } from '../../hooks/useRestaurantQuery'
+import { Link } from '../../views/Link'
 import { LinkButton } from '../../views/LinkButton'
 
 export const RestaurantPhotosRow = memo(
@@ -36,22 +37,24 @@ export const RestaurantPhotosRow = memo(
             <>
               {photos.slice(0, 9).map((photo, index) => {
                 const photoHeight = escalating
-                  ? Math.min(height + index * (index < 3 ? 25 : 150), 500)
+                  ? index < 2
+                    ? 190
+                    : 500
                   : height
                 return (
                   <VStack key={index} className={`scroll-snap-photo`}>
-                    <LinkButton name="gallery" params={{ restaurantSlug }}>
+                    <Link name="gallery" params={{ restaurantSlug }}>
                       <Image
                         source={{
                           uri: getImageUrl(photo, width, photoHeight, 100),
                         }}
                         style={{
                           height: photoHeight,
-                          width: width,
+                          width,
                         }}
                         resizeMode="cover"
                       />
-                    </LinkButton>
+                    </Link>
                   </VStack>
                 )
               })}

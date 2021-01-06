@@ -256,7 +256,12 @@ export const TagButton = memo((props: TagButtonProps) => {
   }
 
   return (
-    <LinkButton disallowDisableWhenActive {...linkButtonProps}>
+    <LinkButton
+      disallowDisableWhenActive
+      backgroundColor="transparent"
+      padding={0}
+      {...linkButtonProps}
+    >
       {contents}
     </LinkButton>
   )

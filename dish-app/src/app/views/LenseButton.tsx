@@ -41,6 +41,8 @@ export const LenseButton = memoIsEqualDeep(
         {...(onPress ? { onPress } : { tag: lense })}
         className="unselectable"
         disallowDisableWhenActive
+        backgroundColor="transparent"
+        padding={0}
         marginRight={5}
         marginTop={-10}
         pressStyle={{

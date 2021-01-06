@@ -7,13 +7,13 @@ import {
   logoXsHeight,
   logoXsWidth,
 } from '../../constants/constants'
+import { Link } from './Link'
 import { LinkButton } from './LinkButton'
 import { LinkButtonProps } from './LinkProps'
 import { LogoColor, LogoSmall } from './Logo'
 
 const linkButtonProps: LinkButtonProps = {
   className: 'ease-in-out-fast',
-  name: 'home',
   hoverStyle: {
     transform: [{ scale: 1.05 }],
   },
@@ -36,9 +36,11 @@ export const DishLogoButton = memo(() => {
         opacity={media.xs ? 0 : 1}
         pointerEvents={media.xs ? 'none' : 'auto'}
       >
-        <LinkButton {...linkButtonProps}>
-          <LogoColor />
-        </LinkButton>
+        <Link name="home">
+          <HStack {...linkButtonProps}>
+            <LogoColor />
+          </HStack>
+        </Link>
       </VStack>
       <AbsoluteVStack
         pointerEvents={media.xs ? 'auto' : 'none'}
@@ -50,9 +52,11 @@ export const DishLogoButton = memo(() => {
         width={logoXsWidth}
         height={logoXsHeight}
       >
-        <LinkButton {...linkButtonProps}>
-          <LogoSmall />
-        </LinkButton>
+        <Link name="home">
+          <LinkButton {...linkButtonProps}>
+            <LogoSmall />
+          </LinkButton>
+        </Link>
       </AbsoluteVStack>
     </VStack>
   )

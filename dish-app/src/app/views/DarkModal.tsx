@@ -1,6 +1,12 @@
 import React from 'react'
 import { ScrollView } from 'react-native'
-import { AbsoluteVStack, AnimatedVStack, VStack, useMedia } from 'snackui'
+import {
+  AbsoluteVStack,
+  AnimatedVStack,
+  Theme,
+  VStack,
+  useMedia,
+} from 'snackui'
 
 export const DarkModal = ({
   hide,
@@ -13,55 +19,57 @@ export const DarkModal = ({
 }) => {
   const media = useMedia()
   return (
-    <AbsoluteVStack
-      className="dark inset-shadow-xxxl ease-in-out-slow"
-      fullscreen
-      zIndex={10000000000}
-      alignItems="center"
-      justifyContent="center"
-      paddingHorizontal={media.sm ? 0 : '2%'}
-      backgroundColor="rgba(30,0,12,0.5)"
-      opacity={hide ? 0 : 1}
-      pointerEvents={hide ? 'none' : 'auto'}
-    >
-      <VStack flex={1} />
-      <AnimatedVStack
-        maxWidth={450}
-        maxHeight="80%"
-        width="100%"
-        animateState={hide ? 'out' : 'in'}
+    <Theme name="dark">
+      <AbsoluteVStack
+        className="dark inset-shadow-xxxl ease-in-out-slow"
+        fullscreen
+        zIndex={10000000000}
+        alignItems="center"
+        justifyContent="center"
+        paddingHorizontal={media.sm ? 0 : '2%'}
+        backgroundColor="rgba(30,0,12,0.5)"
+        opacity={hide ? 0 : 1}
+        pointerEvents={hide ? 'none' : 'auto'}
       >
-        <VStack
-          flex={1}
-          maxHeight="100%" // needed for chrome
-          borderWidth={1}
-          position="relative"
-          backgroundColor="#000"
-          borderTopLeftRadius={20}
-          borderTopRightRadius={20}
-          shadowColor="rgba(0,0,0,1)"
-          shadowRadius={150}
-          shadowOffset={{ height: 10, width: 0 }}
+        <VStack flex={1} />
+        <AnimatedVStack
+          maxWidth={450}
+          maxHeight="80%"
+          width="100%"
+          animateState={hide ? 'out' : 'in'}
         >
-          {outside}
-          <ScrollView
-            showsVerticalScrollIndicator={false}
-            contentContainerStyle={{
-              maxWidth: '100%',
-              minHeight: '100%',
-            }}
+          <VStack
+            flex={1}
+            maxHeight="100%" // needed for chrome
+            borderWidth={1}
+            position="relative"
+            backgroundColor="#000"
+            borderTopLeftRadius={20}
+            borderTopRightRadius={20}
+            shadowColor="rgba(0,0,0,1)"
+            shadowRadius={150}
+            shadowOffset={{ height: 10, width: 0 }}
           >
-            <VStack
-              flex={1}
-              justifyContent="center"
-              minHeight="100%"
-              alignItems="center"
+            {outside}
+            <ScrollView
+              showsVerticalScrollIndicator={false}
+              contentContainerStyle={{
+                maxWidth: '100%',
+                minHeight: '100%',
+              }}
             >
-              {children}
-            </VStack>
-          </ScrollView>
-        </VStack>
-      </AnimatedVStack>
-    </AbsoluteVStack>
+              <VStack
+                flex={1}
+                justifyContent="center"
+                minHeight="100%"
+                alignItems="center"
+              >
+                {children}
+              </VStack>
+            </ScrollView>
+          </VStack>
+        </AnimatedVStack>
+      </AbsoluteVStack>
+    </Theme>
   )
 }
