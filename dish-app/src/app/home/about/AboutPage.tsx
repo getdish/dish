@@ -18,6 +18,7 @@ const inlineButton = {
   borderRadius: 10,
   paddingHorizontal: 6,
   position: 'relative',
+  display: 'inline',
 } as const
 
 export default function AboutPage({
@@ -49,8 +50,9 @@ export default function AboutPage({
             alignItems="center"
             position="relative"
           >
-            <Spacer />
+            <Spacer size="xl" />
             <LogoColor scale={2.5} />
+            <Spacer size="lg" />
             <Paragraph
               zIndex={10}
               color="#999"
@@ -58,16 +60,18 @@ export default function AboutPage({
               size={1.1}
               fontWeight="500"
             >
-              the better restaurant recommender
+              find amazing things
             </Paragraph>
           </VStack>
 
           <VStack paddingHorizontal="5%" spacing="xl">
             <Paragraph size="xxl">
-              Craving pho? Amazing Vietnamese and other hole-in-the-wall spots
-              are often lost to 3.5-star reviews. We think we can fix this by{' '}
-              <TextStrong>rating down to the dish</TextStrong> (and the other
-              factors that matter).
+              We're building a better map of the world. We want to explore what
+              makes cities and neighborhoods great, down to the unique dishes.
+              To search across all critics and delivery companies at once with{' '}
+              <strong>ratings custom to our taste</strong> - understanding that
+              what matters in a quick bowl of pho is different than a date-night
+              steak dinner.
             </Paragraph>
 
             <Paragraph size="xl">
@@ -80,10 +84,10 @@ export default function AboutPage({
                 {...inlineButton}
                 tags={[
                   { name: 'Pho', type: 'dish' },
-                  { name: 'delivery', type: 'filter' },
+                  { name: 'price-low', type: 'filter' },
                 ]}
               >
-                delivery pho 🍜
+                cheap pho 🍜
               </LinkButton>{' '}
               versus planning a{' '}
               <LinkButton
@@ -114,10 +118,6 @@ export default function AboutPage({
               the rest.
             </Paragraph>
 
-            <Paragraph size="xxl" fontWeight="600" fontStyle="italic">
-              Our goal: a more personal, fun & collaborative map of the world.
-            </Paragraph>
-
             <Paragraph size="md" fontWeight="600">
               You mentioned delivery?
             </Paragraph>
@@ -137,11 +137,10 @@ export default function AboutPage({
             <Paragraph size="lg">
               We want to build a mix of a Hitchhiker's Guide to the Galaxy (a
               smarter world guide with personality) and a Pokédex (a pocket map
-              curating your favorite things) that is built around lists that
-              anyone can create and vote on. We think the dish model of breaking
-              down ratings can enable specialization ✨ which would mean less
-              massive menus of average food, and more places do a few things
-              well.
+              curating your favorite things) that is built around lists of fun
+              days and nights out that anyone can create and vote on. We think
+              the dish model of breaking down ratings by the factors that matter
+              unlocks all of this and more.
             </Paragraph>
 
             <Spacer />

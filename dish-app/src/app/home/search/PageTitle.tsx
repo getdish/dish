@@ -8,7 +8,7 @@ export const PageTitle = memo(
     color,
     size = 'md',
   }: {
-    title: string
+    title: any
     subTitle?: string
     color?: string
     size?: 'md' | 'sm'
