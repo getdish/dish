@@ -190,6 +190,16 @@ textarea {
   text-overflow: ellipsis;
 }
 
+.theme--light ::placeholder {
+  color: rgba(50, 50, 50, 0.5);
+  text-overflow: ellipsis;
+}
+
+.theme--dark ::placeholder {
+  color: rgba(230, 230, 230, 0.5);
+  text-overflow: ellipsis;
+}
+
 .display-contents {
   display: contents;
 }

@@ -44,14 +44,10 @@ export const AppIntroLogin = memo(() => {
           the better restaurant guide
         </Paragraph>
 
-        {/* @ts-expect-error */}
         <LinkButton
-          display="inline"
           fontSize={18}
-          paddingVertical={6}
-          borderRadius={8}
-          paddingHorizontal={6}
           color={lightYellow}
+          alignSelf="center"
           backgroundColor={`${lightYellow}22`}
           fontWeight="700"
           hoverStyle={{

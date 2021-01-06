@@ -94,7 +94,7 @@ const RestaurantHeaderContent = memo(
               >
                 <RestaurantPhotosRow
                   restaurantSlug={restaurantSlug}
-                  width={330}
+                  width={380}
                   height={170}
                   escalating
                 />

@@ -8,6 +8,7 @@ import {
   useForm,
 } from 'react-hook-form'
 import {
+  Button,
   Form,
   HStack,
   Input,
@@ -24,18 +25,16 @@ import { isWeb } from '../../constants/constants'
 import { useRouterCurPage } from '../../router'
 import { useUserStore } from '../userStore'
 import { Link } from './Link'
-import { LinkButton } from './LinkButton'
 import { LinkButtonProps } from './LinkProps'
 import { SignInAppleButton } from './SignInAppleButton'
-import { SmallButton } from './SmallButton'
 
 const form_page_details = {
   login: {
     submit_text: 'Login',
-    submitting_text: 'Loginng in...',
+    submitting_text: 'Signing in...',
   },
   register: {
-    submit_text: 'Register',
+    submit_text: 'Sign up',
     submitting_text: 'Registering...',
   },
   forgotPassword: {
@@ -53,16 +52,6 @@ const form_page_details = {
 
 const activeStyle: LinkButtonProps = {
   backgroundColor: 'rgba(150,150,150,0.35)',
-}
-
-const navButtonProps: LinkButtonProps = {
-  flex: 1,
-  justifyContent: 'center',
-  paddingVertical: 6,
-  paddingHorizontal: 12,
-  height: 41,
-  alignItems: 'center',
-  color: 'rgb(120, 120, 120)',
 }
 
 class AuthFormStore extends Store {
@@ -188,21 +177,21 @@ export const LoginRegisterForm = ({
       {formPage != 'success' && (
         <Form onSubmit={handleSubmit(onSubmit)}>
           <VStack spacing="sm" minWidth={260}>
-            <InteractiveContainer height={43} alignSelf="center">
-              <LinkButton
-                {...navButtonProps}
+            <InteractiveContainer height={40} alignSelf="center">
+              <Button
+                borderRadius={0}
                 {...(formPage == 'login' && activeStyle)}
                 onPress={() => setFormPage('login')}
               >
                 Login
-              </LinkButton>
-              <LinkButton
-                {...navButtonProps}
+              </Button>
+              <Button
+                borderRadius={0}
                 {...(formPage == 'register' && activeStyle)}
                 onPress={() => setFormPage('register')}
               >
                 Signup
-              </LinkButton>
+              </Button>
             </InteractiveContainer>
 
             {formPage == 'register' && (
@@ -334,21 +323,15 @@ export const LoginRegisterForm = ({
               />
             )}
 
-            <SmallButton
+            <Button
               accessibilityComponentType="button"
               accessible
               accessibilityRole="button"
               alignSelf="flex-end"
-              backgroundColor="#222"
-              borderColor="#444"
-              color="#fff"
-              hoverStyle={{
-                backgroundColor: '#333',
-              }}
               onPress={handleSubmit(onSubmit)}
             >
               {button_text()}
-            </SmallButton>
+            </Button>
 
             {formPage == 'login' && (
               <HStack alignSelf="flex-end">

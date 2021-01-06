@@ -48,6 +48,9 @@ export const AppIntroLetter = memo(() => {
             right={15}
             opacity={0.5}
             backgroundColor="transparent"
+            hoverStyle={{
+              backgroundColor: 'rgba(255,255,255,0.3)',
+            }}
             padding={10}
             onPress={() => {
               setCloses(closes + 1)
