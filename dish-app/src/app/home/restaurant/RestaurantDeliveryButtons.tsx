@@ -62,20 +62,24 @@ const RestaurantDeliveryButton = ({
   showLabels,
 }: Props & { source: any }) => {
   const contents = (
-    <SmallButton backgroundColor="transparent" href={source.url}>
-      <Image
-        accessibilityLabel={source.name}
-        source={{ uri: source.image }}
-        style={{
-          width: showLabels ? 20 : 24,
-          height: showLabels ? 20 : 24,
-          marginHorizontal: showLabels ? -2 : -6,
-          marginVertical: -6,
-          borderRadius: 40,
-          borderWidth: 1,
-          borderColor: '#fff',
-        }}
-      />
+    <SmallButton
+      href={source.url}
+      icon={
+        <Image
+          accessibilityLabel={source.name}
+          source={{ uri: source.image }}
+          style={{
+            width: showLabels ? 20 : 24,
+            height: showLabels ? 20 : 24,
+            marginHorizontal: showLabels ? -2 : -6,
+            marginVertical: -6,
+            borderRadius: 40,
+            borderWidth: 1,
+            borderColor: '#fff',
+          }}
+        />
+      }
+    >
       {showLabels && (
         <>
           <Spacer size={8} />

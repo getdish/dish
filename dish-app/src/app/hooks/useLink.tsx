@@ -44,6 +44,8 @@ export const useLink = (
         if (props.preventNavigate) {
           return
         }
+        e.preventDefault()
+        e.stopPropagation()
         window.open(props.href ?? e.currentTarget.href, '_blank')
         return
       }
