@@ -28,6 +28,7 @@ export type RestaurantCardProps = {
   restaurantSlug: string
   restaurantId: string
   below?: any
+  hideScore?: boolean
 }
 
 export const RestaurantCard = (props: RestaurantCardProps) => {
@@ -47,6 +48,7 @@ export const RestaurantCardContent = memo(
       // size = 'lg',
       restaurantSlug,
       restaurantId,
+      hideScore,
       below,
     }: RestaurantCardProps) => {
       const restaurant = useRestaurantQuery(restaurantSlug)
@@ -123,13 +125,15 @@ export const RestaurantCardContent = memo(
               pointerEvents="none"
               zIndex={10}
             >
-              <AbsoluteVStack top={-10} left={-10} zIndex={20}>
-                <RestaurantUpVoteDownVote
-                  rounded
-                  display="ratio"
-                  restaurantSlug={restaurantSlug}
-                />
-              </AbsoluteVStack>
+              {!hideScore && (
+                <AbsoluteVStack top={-10} left={-10} zIndex={20}>
+                  <RestaurantUpVoteDownVote
+                    rounded
+                    display="ratio"
+                    restaurantSlug={restaurantSlug}
+                  />
+                </AbsoluteVStack>
+              )}
 
               <VStack
                 className="ease-in-out"

@@ -47,6 +47,7 @@ import { CommentBubble } from '../views/CommentBubble'
 import { ContentScrollView } from '../views/ContentScrollView'
 import { DishView } from '../views/dish/DishView'
 import { DishHorizonView } from '../views/DishHorizonView'
+import { Link } from '../views/Link'
 import { LinkButton } from '../views/LinkButton'
 import { LinkButtonProps } from '../views/LinkProps'
 import { PageTitleTag } from '../views/PageTitleTag'
@@ -559,13 +560,7 @@ const CuisineFeedCard = graphql(function CuisineFeedCard(
   return (
     <VStack height="100%" maxWidth="100%">
       <AbsoluteVStack zIndex={10} top={-5} left={-5}>
-        <SlantedTitle
-          color="#fff"
-          fontWeight="600"
-          lineHeight={20}
-          fontSize={20}
-          backgroundColor="#000"
-        >
+        <SlantedTitle>
           {props.country} {props.icon}
         </SlantedTitle>
       </AbsoluteVStack>
@@ -575,7 +570,7 @@ const CuisineFeedCard = graphql(function CuisineFeedCard(
         horizontal
         showsHorizontalScrollIndicator={false}
       >
-        <VStack paddingTop={48} paddingLeft={15}>
+        <VStack paddingTop={63} paddingHorizontal={20}>
           <HStack flexWrap="nowrap">
             <DishCol>{dishes.slice(0, perCol).map(getDishColInner)}</DishCol>
             <DishCol transform={[{ translateY: -15 }]}>
@@ -591,7 +586,7 @@ const CuisineFeedCard = graphql(function CuisineFeedCard(
         </VStack>
       </ScrollView>
 
-      <AbsoluteVStack bottom={0} left={0} backgroundColor="#fff">
+      {/* <AbsoluteVStack bottom={0} left={0} backgroundColor="#fff">
         <ScrollView
           horizontal
           showsHorizontalScrollIndicator={false}
@@ -607,7 +602,7 @@ const CuisineFeedCard = graphql(function CuisineFeedCard(
             </HStack>
           </VStack>
         </ScrollView>
-      </AbsoluteVStack>
+      </AbsoluteVStack> */}
     </VStack>
   )
 })
@@ -630,7 +625,7 @@ const getRestaurantButton = (r, i) => {
 const getDishColInner = (dish: tag, i: number) => {
   return (
     <VStack marginBottom={5} key={i}>
-      <DishView size={100} dish={selectTagDishViewSimple(dish)} />
+      <DishView size={130} dish={selectTagDishViewSimple(dish)} />
     </VStack>
   )
 }
@@ -648,11 +643,11 @@ const DishFeedCard = graphql(function DishFeedCard(props: FeedItemDish) {
           top={10}
           left={10}
           alignSelf="flex-start"
-          size="xs"
+          size="sm"
         >
           {restaurant.name}
         </SlantedTitle>
-        <DishView showSearchButton size="100%" {...props} />
+        <DishView showSearchButton size={220} {...props} />
       </VStack>
       <Text fontSize={14} lineHeight={22} opacity={0.4} margin={4}>
         lorem ipsume dolor sit amet lorem ipsume dolor sit amet lorem ipsume
@@ -665,49 +660,52 @@ const DishFeedCard = graphql(function DishFeedCard(props: FeedItemDish) {
 const DishRestaurantsFeedCard = (props: FeedItemDishRestaurants) => {
   return (
     <VStack>
-      <SlantedTitle
-        position="absolute"
-        fontWeight="800"
-        alignSelf="center"
-        marginTop={-10}
-        size="xs"
-      >
-        {props.dish.icon ?? null} {props.dish.name}
-      </SlantedTitle>
+      <Link tag={props.dish}>
+        <SlantedTitle
+          position="absolute"
+          fontWeight="800"
+          alignSelf="center"
+          marginTop={-10}
+          size="sm"
+        >
+          {props.dish.icon ?? null} {props.dish.name}
+        </SlantedTitle>
+      </Link>
       <ScrollView horizontal showsHorizontalScrollIndicator={false}>
-        <HStack paddingVertical={5} paddingHorizontal={5}>
-          {props.restaurants.slice(0, 5).map((r) => {
+        <HStack paddingVertical={5} paddingLeft={5} paddingRight={50}>
+          {props.restaurants.slice(0, 5).map((r, i) => {
             if (!r.slug) {
               return null
             }
             return (
-              <HStack key={r.id}>
-                <VStack
-                  marginRight={-105}
-                  transform={[
-                    { scale: 0.7 },
-                    { perspective: 850 },
-                    { rotateY: '20deg' },
-                  ]}
-                  borderRadius={cardFrameBorderRadius}
-                  shadowColor="#000"
-                  shadowOpacity={0.24}
-                  shadowRadius={20}
-                  shadowOffset={{ height: 0, width: -15 }}
-                >
-                  <RestaurantCard
-                    restaurantId={r.id}
-                    restaurantSlug={r.slug}
-                    below={
-                      <CommentBubble
-                        name="Test"
-                        avatar={peachAvatar}
-                        text="Lorem ipsum dolor sit amet"
-                      />
-                    }
-                  />
-                </VStack>
-              </HStack>
+              <VStack
+                key={r.id}
+                marginRight={-105}
+                transform={[
+                  { scale: 0.7 },
+                  { perspective: 1000 },
+                  { rotateY: '-10deg' },
+                ]}
+                borderRadius={cardFrameBorderRadius}
+                shadowColor="#000"
+                shadowOpacity={0.14}
+                shadowRadius={10}
+                shadowOffset={{ height: 0, width: 12 }}
+                zIndex={1000 - i}
+              >
+                <RestaurantCard
+                  hideScore
+                  restaurantId={r.id}
+                  restaurantSlug={r.slug}
+                  below={
+                    <CommentBubble
+                      name="Test"
+                      avatar={peachAvatar}
+                      text="Lorem ipsum dolor sit amet"
+                    />
+                  }
+                />
+              </VStack>
             )
           })}
         </HStack>
