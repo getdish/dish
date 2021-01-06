@@ -1055,6 +1055,13 @@ function staging_ssh() {
     'tmux attach'
 }
 
+function staging_restart() {
+  ssh root@ssh.staging.dishapp.com \
+    -t \
+    -i $PROJECT_ROOT/k8s/etc/ssh/dish-staging.priv \
+    'cd /app && docker-compose restart'
+}
+
 function sync_local_code_to_staging() {
   rsync -avP --filter=':- .gitignore' . root@ssh.staging.dishapp.com:/app
 }
