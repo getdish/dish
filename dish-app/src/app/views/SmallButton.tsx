@@ -1,14 +1,7 @@
 import React from 'react'
-import { Button, HStack, Text, Tooltip, useTheme } from 'snackui'
+import { Button, Tooltip, useTheme } from 'snackui'
 
-import {
-  bgLight,
-  bgLightLight,
-  brandColor,
-  lightBlue,
-} from '../../constants/colors'
 import { isWeb } from '../../constants/constants'
-import { isStringChild } from '../../helpers/isStringChild'
 import { Link } from './Link'
 import { LinkButtonProps } from './LinkProps'
 

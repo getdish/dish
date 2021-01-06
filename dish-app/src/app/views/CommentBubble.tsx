@@ -179,12 +179,11 @@ export const CommentBubble = ({
               <Link
                 name="user"
                 params={{ username: name }}
-                // maxWidth="100%"
-                // ellipse
-                // flex={1}
-                // fontWeight="400"
-                // fontSize={13}
-                // color="#fff"
+                color="#fff"
+                maxWidth="100%"
+                ellipse
+                flex={1}
+                fontSize={13}
               >
                 {name}
               </Link>
