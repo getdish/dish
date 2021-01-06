@@ -17,10 +17,12 @@ import { useQuery } from 'react-query'
 import {
   AbsoluteVStack,
   HStack,
+  InteractiveContainer,
   LoadingItems,
   Spacer,
   StackProps,
   Text,
+  Theme,
   VStack,
   useMedia,
   useTheme,
@@ -32,7 +34,6 @@ import { drawerWidthMax, searchBarHeight } from '../../constants/constants'
 import { RegionNormalized, useRegionQuery } from '../../helpers/fetchRegion'
 import { setDefaultLocation } from '../../helpers/getDefaultLocation'
 import { getGroupedButtonProps } from '../../helpers/getGroupedButtonProps'
-import { DishTagItem } from '../../helpers/getRestaurantDishes'
 import { selectTagDishViewSimple } from '../../helpers/selectDishViewSimple'
 import { useQueryLoud } from '../../helpers/useQueryLoud'
 import { router } from '../../router'
@@ -50,6 +51,13 @@ import { LinkButton } from '../views/LinkButton'
 import { LinkButtonProps } from '../views/LinkProps'
 import { PageTitleTag } from '../views/PageTitleTag'
 import { SlantedTitle } from '../views/SlantedTitle'
+import {
+  FeedItemCuisine,
+  FeedItemDish,
+  FeedItemDishRestaurants,
+  FeedItemRestaurant,
+  FeedItems,
+} from './FeedItems'
 import { HomeStackViewProps } from './HomeStackViewProps'
 import { HomeTopSearches } from './HomeTopSearches'
 import { RestaurantButton } from './restaurant/RestaurantButton'
@@ -57,41 +65,6 @@ import { RestaurantCard } from './restaurant/RestaurantCard'
 import { PageTitle } from './search/PageTitle'
 
 type Props = HomeStackViewProps<HomeStateItemHome>
-
-type FeedItemBase = {
-  id: string
-  rank: number
-  expandable: boolean
-  transparent?: boolean
-}
-
-type FeedItemDish = FeedItemBase & {
-  type: 'dish'
-  dish: DishTagItem
-  restaurant: RestaurantOnlyIds
-}
-
-type FeedItemDishRestaurants = FeedItemBase & {
-  type: 'dish-restaurants'
-  dish: DishTagItem
-  restaurants: RestaurantOnlyIds[]
-}
-
-type FeedItemCuisine = FeedItemBase &
-  TopCuisine & {
-    type: 'cuisine'
-  }
-
-type FeedItemRestaurant = FeedItemBase & {
-  type: 'restaurant'
-  restaurant: RestaurantOnlyIds
-}
-
-type FeedItems =
-  | FeedItemDish
-  | FeedItemRestaurant
-  | FeedItemCuisine
-  | FeedItemDishRestaurants
 
 export default memo(function HomePage(props: Props) {
   const home = useHomeStore()
@@ -248,52 +221,45 @@ export default memo(function HomePage(props: Props) {
                       position="relative"
                       overflow="visible"
                       minWidth={80}
+                      alignSelf="center"
                       marginTop={-5}
                     >
                       {regionName}
-
-                      <HStack
-                        position="absolute"
-                        bottom={2}
-                        transform={[{ translateY: 32 }, { rotate: '2deg' }]}
-                        right="2%"
-                      >
-                        {navLinks.map((linkProps, index) => {
-                          return (
-                            <LinkButton
-                              key={index}
-                              backgroundColor="#fff"
-                              shadowColor="#000"
-                              shadowOpacity={0.1}
-                              shadowRadius={3}
-                              paddingVertical={0}
-                              textProps={{
-                                color:
-                                  state.section === linkProps.params.section
-                                    ? 'red'
-                                    : '#888',
-                              }}
-                              {...getGroupedButtonProps({
-                                index,
-                                items: navLinks,
-                                borderRadius: 10,
-                              })}
-                              {...linkProps}
-                            />
-                          )
-                        })}
-                      </HStack>
                     </SlantedTitle>
                     <HomeTopSearches />
                   </HStack>
                 </ScrollView>
               </HStack>
 
-              <Spacer size="md" />
-
               <PageTitle
                 size="sm"
-                title={state.section === 'new' ? 'New' : 'Uniquely good here'}
+                title={
+                  <InteractiveContainer borderRadius={10}>
+                    {navLinks.map((linkProps, index) => {
+                      return (
+                        <LinkButton
+                          key={index}
+                          backgroundColor="#fff"
+                          shadowColor="#000"
+                          shadowOpacity={0.1}
+                          shadowRadius={3}
+                          textProps={{
+                            color:
+                              state.section === linkProps.params.section
+                                ? 'red'
+                                : '#888',
+                          }}
+                          {...getGroupedButtonProps({
+                            index,
+                            items: navLinks,
+                            borderRadius: 10,
+                          })}
+                          {...linkProps}
+                        />
+                      )
+                    })}
+                  </InteractiveContainer>
+                }
               />
 
               <Spacer size="lg" />
@@ -317,13 +283,13 @@ export default memo(function HomePage(props: Props) {
   )
 })
 
-// TODO tricky snackui extraction
 const HomeTopSpacer = () => {
   const media = useMedia()
   return (
     <VStack
       pointerEvents="none"
-      height={5 + (media.sm ? 0 : searchBarHeight)}
+      marginTop={5}
+      height={media.sm ? 0 : searchBarHeight}
     />
   )
 }
@@ -797,22 +763,24 @@ export const HomePageFooter = memo(() => {
   }
 
   return (
-    <VStack position="relative">
-      <AbsoluteVStack
-        zIndex={-1}
-        top={-15}
-        left={-100}
-        right={-100}
-        bottom={-55}
-        backgroundColor="#000"
-        transform={[{ rotate: '-2deg' }]}
-      />
-      <VStack paddingVertical={20} alignItems="center" paddingHorizontal="5%">
-        <VStack>
-          <AppIntroLogin />
-          <Spacer size="xxl" />
+    <Theme name="dark">
+      <VStack position="relative">
+        <AbsoluteVStack
+          zIndex={-1}
+          top={-15}
+          left={-100}
+          right={-100}
+          bottom={-55}
+          backgroundColor="#000"
+          transform={[{ rotate: '-2deg' }]}
+        />
+        <VStack paddingVertical={20} alignItems="center" paddingHorizontal="5%">
+          <VStack>
+            <AppIntroLogin />
+            <Spacer size="xxl" />
+          </VStack>
         </VStack>
       </VStack>
-    </VStack>
+    </Theme>
   )
 })

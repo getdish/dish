@@ -41,7 +41,7 @@ export const AppIntroLogin = memo(() => {
           size="xl"
           textAlign="center"
         >
-          the better restaurant guide
+          find amazing things
         </Paragraph>
 
         <LinkButton

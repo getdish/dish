@@ -129,6 +129,7 @@ const MenuButton = memo(
         enableActiveStyle
         className="ease-in-out-fast"
         padding={12}
+        backgroundColor="transparent"
         opacity={0.6}
         alignSelf="stretch"
         width="100%"
