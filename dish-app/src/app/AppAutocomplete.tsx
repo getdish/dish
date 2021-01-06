@@ -468,7 +468,6 @@ const AutocompleteResults = memo(
                   index={index}
                   result={result}
                   onSelect={onSelect}
-                  isActive={isActive}
                 />
               </Theme>
               <Spacer size={1} />
@@ -486,13 +485,11 @@ const AutocompleteItemView = memo(
     onSelect,
     result,
     index,
-    isActive,
   }: {
     result: AutocompleteItem
     index: number
     target: ShowAutocomplete
     onSelect: AutocompleteSelectCb
-    isActive?: boolean
   }) => {
     const userStore = useUserStore()
     const showLocation = target === 'location'
@@ -504,6 +501,20 @@ const AutocompleteItemView = memo(
     const plusButtonEl =
       result.type === 'dish' && index !== 0 && userStore.isLoggedIn ? (
         <AutocompleteAddButton />
+      ) : null
+
+    const icon =
+      result.icon?.indexOf('http') === 0 ? (
+        <Image
+          source={{ uri: result.icon }}
+          style={{
+            width: 26,
+            height: 26,
+            borderRadius: 100,
+          }}
+        />
+      ) : result.icon ? (
+        <Text fontSize={22}>{result.icon} </Text>
       ) : null
 
     return (
@@ -529,28 +540,13 @@ const AutocompleteItemView = memo(
           },
         })}
       >
-        <HStack
+        <VStack
           flex={1}
-          justifyContent={target === 'location' ? 'flex-end' : 'center'}
+          alignItems={target === 'location' ? 'flex-end' : 'center'}
         >
-          <VStack height={26} width={26} marginRight={10}>
-            {result.icon?.indexOf('http') === 0 ? (
-              <Image
-                source={{ uri: result.icon }}
-                style={{
-                  width: 26,
-                  height: 26,
-                  borderRadius: 100,
-                }}
-              />
-            ) : result.icon ? (
-              <Text fontSize={22}>{result.icon} </Text>
-            ) : null}
-          </VStack>
-          <VStack
-            alignItems="center"
-            justifyContent={showLocation ? 'flex-end' : 'flex-end'}
-          >
+          <HStack>
+            {icon}
+            {!!icon && <Spacer size="lg" />}
             <Text
               textAlign={showLocation ? 'right' : 'center'}
               fontWeight="600"
@@ -560,16 +556,16 @@ const AutocompleteItemView = memo(
             >
               {result.name} {plusButtonEl}
             </Text>
-            {!!result.description && (
-              <>
-                <Spacer size="xs" />
-                <Text ellipse color={theme.colorSecondary} fontSize={15}>
-                  {result.description}
-                </Text>
-              </>
-            )}
-          </VStack>
-        </HStack>
+          </HStack>
+          {!!result.description && (
+            <>
+              <Spacer size="xs" />
+              <Text ellipse color={theme.colorSecondary} fontSize={15}>
+                {result.description}
+              </Text>
+            </>
+          )}
+        </VStack>
       </LinkButton>
     )
   }

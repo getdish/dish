@@ -21,7 +21,6 @@ export const RestaurantAddress = ({
   return (
     <SmallButton
       maxWidth={media.sm ? 160 : 200}
-      ellipse
       backgroundColor="transparent"
       href={`https://www.google.com/maps/search/?q=${encodeURIComponent(
         address

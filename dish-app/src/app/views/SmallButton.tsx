@@ -1,5 +1,5 @@
 import React from 'react'
-import { HStack, Text, Tooltip } from 'snackui'
+import { Button, HStack, Text, Tooltip, useTheme } from 'snackui'
 
 import {
   bgLight,
@@ -15,20 +15,12 @@ import { LinkButtonProps } from './LinkProps'
 export type SmallButtonProps = LinkButtonProps & {
   isActive?: boolean
   tooltip?: string
-  before?: any
 }
 
 export const SmallButton = ({
   isActive,
   children,
-  color,
-  fontSize,
-  fontWeight = '600',
-  lineHeight,
-  textAlign,
   tooltip,
-  ellipse,
-  before,
   name,
   tag,
   tags,
@@ -36,39 +28,14 @@ export const SmallButton = ({
   href,
   ...rest
 }: SmallButtonProps) => {
-  let contents = isStringChild(children) ? (
-    <Text
-      color={isActive ? '#000' : brandColor}
-      fontSize={14}
-      {...{
-        color,
-        fontSize,
-        fontWeight,
-        lineHeight,
-        textAlign,
-        ellipse,
-      }}
-    >
-      {children}
-    </Text>
-  ) : (
-    children
-  )
+  const theme = useTheme()
 
-  contents = (
-    <HStack
-      alignItems="center"
-      justifyContent="center"
-      cursor="pointer"
-      paddingHorizontal={11}
-      paddingVertical={8}
+  let contents = (
+    <Button
       borderRadius={20}
       borderWidth={1}
       backgroundColor="transparent"
-      borderColor={bgLight}
-      hoverStyle={{
-        backgroundColor: bgLightLight,
-      }}
+      borderColor={theme.borderColor}
       {...(isWeb && {
         minHeight: 36,
         minWidth: 44,
@@ -78,17 +45,12 @@ export const SmallButton = ({
         minWidth: 48,
       })}
       {...(isActive && {
-        backgroundColor: bgLight,
-        borderColor: lightBlue,
-        hoverStyle: {
-          backgroundColor: bgLight,
-        },
+        backgroundColor: theme.backgroundColor,
       })}
       {...rest}
     >
-      {before}
-      {contents}
-    </HStack>
+      {children}
+    </Button>
   )
 
   if (name || tag || tags || params || href) {

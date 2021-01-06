@@ -13,8 +13,8 @@ const active: MyTheme = {
   backgroundColor: 'rgb(152, 88, 255)',
   backgroundColorSecondary: 'rgba(152, 88, 255, 0.85)',
   backgroundColorTertiary: 'rgba(152, 88, 255, 0.6)',
-  borderColor: '#204493',
-  borderColorHover: '#204493',
+  borderColor: 'rgb(142, 78, 245)',
+  borderColorHover: 'rgb(132, 68, 235)',
   backgroundColorTransparent: 'rgba(40,40,200,0)',
   cardBackgroundColor: '#333',
 }

@@ -37,7 +37,6 @@ export const RestaurantDetailRow = memo(
               className="underline-link"
               name="restaurantHours"
               params={{ slug: restaurantSlug }}
-              fontWeight="400"
               color={open_color}
               ellipse
             >

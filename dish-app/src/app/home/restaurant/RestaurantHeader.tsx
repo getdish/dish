@@ -183,10 +183,11 @@ const RestaurantHeaderContent = memo(
                             backgroundColor="transparent"
                             name="restaurantHours"
                             params={{ slug: restaurantSlug }}
-                            fontSize={14}
-                            color={open_color}
-                            ellipse
-                            before={
+                            textProps={{
+                              ellipse: true,
+                              color: open_color,
+                            }}
+                            icon={
                               <Clock
                                 size={14}
                                 color="#999"

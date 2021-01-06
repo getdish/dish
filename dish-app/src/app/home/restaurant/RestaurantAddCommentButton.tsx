@@ -24,7 +24,6 @@ export const RestaurantAddCommentButton = graphql(
       <SmallButton
         name="restaurantReview"
         params={{ slug: restaurantSlug }}
-        fontWeight="600"
         pressStyle={{
           opacity: 0.6,
         }}

@@ -168,9 +168,6 @@ export const UserOnboard = graphql(({ hideLogo }: { hideLogo?: boolean }) => {
           accessible
           accessibilityRole="button"
           alignSelf="center"
-          backgroundColor="#222"
-          borderColor="#444"
-          color="#fff"
           onPress={async () => {
             Toast.show('Saving...')
             if (

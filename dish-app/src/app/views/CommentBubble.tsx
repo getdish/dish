@@ -177,14 +177,14 @@ export const CommentBubble = ({
               zIndex={2}
             >
               <Link
-                ellipse
-                flex={1}
                 name="user"
                 params={{ username: name }}
-                fontWeight="400"
-                fontSize={13}
-                maxWidth="100%"
-                color="#fff"
+                // maxWidth="100%"
+                // ellipse
+                // flex={1}
+                // fontWeight="400"
+                // fontSize={13}
+                // color="#fff"
               >
                 {name}
               </Link>

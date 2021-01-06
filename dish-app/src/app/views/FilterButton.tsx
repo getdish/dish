@@ -1,4 +1,3 @@
-// // debug
 import { Clock, DollarSign, ShoppingBag } from '@dish/react-feather'
 import React, { memo } from 'react'
 import { Image } from 'react-native'
@@ -6,7 +5,7 @@ import {
   Box,
   HStack,
   HoverablePopover,
-  Text,
+  Theme,
   VStack,
   useMedia,
   useTheme,
@@ -16,109 +15,96 @@ import { tagDisplayNames } from '../../constants/tagMeta'
 import { thirdPartyCrawlSources } from '../../constants/thirdPartyCrawlSources'
 import { NavigableTag } from '../../types/tagTypes'
 import { useHomeStore } from '../homeStore'
-import { LinkButtonProps } from './LinkProps'
-import { SmallButton } from './SmallButton'
+import { SmallButton, SmallButtonProps } from './SmallButton'
 
-export const FilterButton = memo(
-  ({
-    tag,
-    isActive,
-    color,
-    fontSize = 14,
-    fontWeight = '700',
-    lineHeight,
-    ...rest
-  }: LinkButtonProps & {
-    tag: NavigableTag
-    isActive: boolean
-    color?: string
-  }) => {
-    const media = useMedia()
-    const theme = useTheme()
-    const iconColor = media.sm
-      ? isActive
-        ? theme.color
-        : theme.colorTertiary
-      : color
-    const textColor = media.sm ? color : isActive ? '#000' : color
+type FilterButtonProps = SmallButtonProps & {
+  tag: NavigableTag
+}
 
-    let content: any =
-      rest.children ?? (tag.name ? tagDisplayNames[tag.name] : null) ?? tag.name
+export const FilterButton = memo((props: FilterButtonProps) => {
+  const contents = <FilterButtonContents {...props} />
+  if (props.isActive) {
+    return <Theme name="active">{contents}</Theme>
+  }
+  return contents
+})
 
-    const iconElement = (() => {
-      switch (tag.slug) {
-        case 'filters__open':
-          return <Clock size={media.sm ? 22 : 18} color={iconColor} />
-        case 'filters__delivery':
-          return <ShoppingBag size={media.sm ? 22 : 18} color={iconColor} />
-        case 'filters__price-low':
-          return <DollarSign size={media.sm ? 22 : 18} color={iconColor} />
-        default:
-          return null
-      }
-    })()
+const FilterButtonContents = ({
+  tag,
+  color,
+  ...rest
+}: SmallButtonProps & {
+  tag: NavigableTag
+  color?: string
+}) => {
+  const media = useMedia()
+  const theme = useTheme()
+  const iconColor = media.sm ? theme.color : color
 
-    if (media.sm) {
-      content = iconElement
-    } else {
-      content = (
-        <Text
-          color={textColor}
-          fontSize={fontSize}
-          fontWeight={fontWeight}
-          lineHeight={lineHeight}
-        >
-          {content}
-        </Text>
-      )
+  let content: any =
+    rest.children ?? (tag.name ? tagDisplayNames[tag.name] : null) ?? tag.name
 
-      if (tag.name !== 'price-low') {
-        content = (
-          <HStack>
-            {media.sm ? (
-              iconElement
-            ) : iconElement ? (
-              <VStack opacity={0.45} marginRight={6}>
-                {iconElement}
-              </VStack>
-            ) : null}
-            {content}
-          </HStack>
-        )
-      }
+  const iconElement = (() => {
+    switch (tag.slug) {
+      case 'filters__open':
+        return <Clock size={media.sm ? 22 : 18} color={iconColor} />
+      case 'filters__delivery':
+        return <ShoppingBag size={media.sm ? 22 : 18} color={iconColor} />
+      case 'filters__price-low':
+        return <DollarSign size={media.sm ? 22 : 18} color={iconColor} />
+      default:
+        return null
     }
+  })()
 
-    content = (
-      <SmallButton
-        borderColor={theme.borderColor}
-        fontSize={14}
-        fontWeight="700"
-        alignItems="center"
-        justifyContent="center"
-        textAlign="center"
-        isActive={isActive}
-        tag={tag}
-        {...rest}
+  if (media.sm) {
+    content = iconElement
+  } else {
+    if (tag.name !== 'price-low') {
+      content = (
+        <HStack>
+          {media.sm ? (
+            iconElement
+          ) : iconElement ? (
+            <VStack opacity={0.45} marginRight={6}>
+              {iconElement}
+            </VStack>
+          ) : null}
+          {content}
+        </HStack>
+      )
+    }
+  }
+
+  content = (
+    <SmallButton
+      tag={tag}
+      {...rest}
+      textProps={{
+        // color,
+        fontWeight: '600',
+        ...rest.textProps,
+        color: rest.isActive ? theme.color : rest.textProps?.color,
+      }}
+    >
+      {content}
+    </SmallButton>
+  )
+
+  if (tag.name === 'Delivery') {
+    return (
+      <HoverablePopover
+        noArrow
+        allowHoverOnContent
+        contents={<SearchPageDeliveryFilterButtons />}
       >
         {content}
-      </SmallButton>
+      </HoverablePopover>
     )
-
-    if (tag.name === 'Delivery') {
-      return (
-        <HoverablePopover
-          noArrow
-          allowHoverOnContent
-          contents={<SearchPageDeliveryFilterButtons />}
-        >
-          {content}
-        </HoverablePopover>
-      )
-    }
-
-    return content
   }
-)
+
+  return content
+}
 
 const SearchPageDeliveryFilterButtons = memo(() => {
   const home = useHomeStore()
@@ -136,37 +122,32 @@ const SearchPageDeliveryFilterButtons = memo(() => {
       <VStack spacing={4} padding={10} alignItems="stretch">
         {sources.map((key) => {
           const item = thirdPartyCrawlSources[key]
-          const isActive = activeTags[key]
+          const isActive = noneActive ? true : activeTags[key]
           return (
-            <FilterButton
-              tag={{
-                name: key,
-                type: 'filter',
-                slug: item.tagSlug,
-              }}
-              key={key}
-              isActive={noneActive ? true : isActive}
-              width={200 - 10 * 2}
-              borderRadius={100}
-              cursor="pointer"
-              alignItems="center"
-              justifyContent="center"
-            >
-              <HStack spacing={6} alignItems="center">
-                <Image
-                  source={item.image}
-                  style={{
-                    width: 20,
-                    height: 20,
-                    marginVertical: -4,
-                    borderRadius: 100,
-                  }}
-                />
-                <Text fontSize={14} fontWeight="600">
-                  {item.name}
-                </Text>
-              </HStack>
-            </FilterButton>
+            <Theme key={key} name={isActive ? 'active' : null}>
+              <FilterButton
+                tag={{
+                  name: key,
+                  type: 'filter',
+                  slug: item.tagSlug,
+                }}
+                width={200 - 10 * 2}
+                borderRadius={100}
+                icon={
+                  <Image
+                    source={item.image}
+                    style={{
+                      width: 20,
+                      height: 20,
+                      marginVertical: -4,
+                      borderRadius: 100,
+                    }}
+                  />
+                }
+              >
+                {item.name}
+              </FilterButton>
+            </Theme>
           )
         })}
       </VStack>

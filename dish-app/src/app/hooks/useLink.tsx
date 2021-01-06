@@ -18,9 +18,11 @@ import { memoize } from '../../helpers/memoizeWeak'
 import { tagsToNavigableTags } from '../../helpers/tagHelpers'
 import { router } from '../../router'
 import { homeStore } from '../homeStore'
-import { LinkButtonProps, LinkProps } from '../views/LinkProps'
+import { LinkButtonProps, LinkProps, LinkSharedProps } from '../views/LinkProps'
 
-export const useLink = (props: LinkProps<any, any>) => {
+export const useLink = (
+  props: LinkSharedProps & { name?: any; params?: any; tagName?: string }
+) => {
   const forceUpdate = useForceUpdate()
   const linkProps = getNormalizeLinkProps(props, forceUpdate)
   const cancel = useRef<Function | null>(null)
