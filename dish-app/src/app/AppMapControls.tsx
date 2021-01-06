@@ -2,7 +2,7 @@ import { isEqual } from '@dish/fast-compare'
 import { RefreshCcw } from '@dish/react-feather'
 import { useStoreInstance } from '@dish/use-store'
 import React, { memo } from 'react'
-import { AbsoluteVStack, HStack, useMedia } from 'snackui'
+import { AbsoluteVStack, HStack, Theme, useMedia } from 'snackui'
 
 import { isWeb, searchBarHeight, zIndexDrawer } from '../constants/constants'
 import { appMapStore } from './AppMapStore'
@@ -25,43 +25,45 @@ export const AppMapControls = memo(() => {
   const media = useMedia()
   const safeArea = useSafeArea()
   return (
-    <AbsoluteVStack
-      zIndex={media.sm ? zIndexDrawer - 1 : zIndexDrawer + 1}
-      marginLeft="auto"
-      fullscreen
-      pointerEvents="none"
-    >
+    <Theme name="darkTranslucent">
       <AbsoluteVStack
+        zIndex={media.sm ? zIndexDrawer - 1 : zIndexDrawer + 1}
+        marginLeft="auto"
         fullscreen
-        paddingHorizontal={30}
         pointerEvents="none"
-        {...(!isWeb && {
-          top: safeArea.top - 10,
-        })}
-        zIndex={20000000}
-        alignItems="center"
-        justifyContent="center"
       >
-        <HStack
-          position="absolute"
-          top={media.sm ? 10 : searchBarHeight + 15}
-          right={0}
-          left={0}
+        <AbsoluteVStack
+          fullscreen
+          paddingHorizontal={30}
+          pointerEvents="none"
+          {...(!isWeb && {
+            top: safeArea.top - 10,
+          })}
+          zIndex={20000000}
           alignItems="center"
           justifyContent="center"
-          flexWrap="wrap"
-          pointerEvents="none"
-          // overflow="hidden"
-          spacing={5}
         >
-          {showRefresh && (
-            <OverlayLinkButton Icon={RefreshCcw} onPress={pagesStore.refresh}>
-              Search here
-            </OverlayLinkButton>
-          )}
-        </HStack>
+          <HStack
+            position="absolute"
+            top={media.sm ? 10 : searchBarHeight + 15}
+            right={0}
+            left={0}
+            alignItems="center"
+            justifyContent="center"
+            flexWrap="wrap"
+            pointerEvents="none"
+            // overflow="hidden"
+            spacing={5}
+          >
+            {showRefresh && (
+              <OverlayLinkButton Icon={RefreshCcw} onPress={pagesStore.refresh}>
+                Search here
+              </OverlayLinkButton>
+            )}
+          </HStack>
+        </AbsoluteVStack>
       </AbsoluteVStack>
-    </AbsoluteVStack>
+    </Theme>
   )
 })
 

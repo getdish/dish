@@ -73,7 +73,6 @@ export default function AboutPage({
             <Paragraph size="xl">
               It turns out what you care about when ordering{' '}
               <LinkButton
-                fontWeight="400"
                 backgroundColor={lightYellow}
                 hoverStyle={{
                   backgroundColor: `${lightYellow}44`,
@@ -88,7 +87,6 @@ export default function AboutPage({
               </LinkButton>{' '}
               versus planning a{' '}
               <LinkButton
-                fontWeight="400"
                 tags={[
                   { name: 'Date', type: 'lense' },
                   { name: 'price-high', type: 'filter' },

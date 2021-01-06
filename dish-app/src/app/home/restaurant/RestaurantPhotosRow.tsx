@@ -62,9 +62,6 @@ export const RestaurantPhotosRow = memo(
                 <LinkButton
                   width={width}
                   height={height}
-                  alignItems="center"
-                  justifyContent="center"
-                  color={'rgba(0,0,0,0.5)'}
                   name="gallery"
                   params={{ restaurantSlug }}
                 >

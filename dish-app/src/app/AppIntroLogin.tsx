@@ -45,11 +45,13 @@ export const AppIntroLogin = memo(() => {
         </Paragraph>
 
         <LinkButton
-          fontSize={18}
-          color={lightYellow}
+          textProps={{
+            fontSize: 18,
+            color: lightYellow,
+            fontWeight: '700',
+          }}
           alignSelf="center"
           backgroundColor={`${lightYellow}22`}
-          fontWeight="700"
           hoverStyle={{
             backgroundColor: `${lightYellow}33`,
           }}

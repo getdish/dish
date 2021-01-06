@@ -508,12 +508,14 @@ const AutocompleteItemView = memo(
 
     return (
       <LinkButton
-        fontWeight="600"
-        lineHeight={22}
         width="100%"
         onPressOut={() => {
           hideAutocompleteSlow()
           onSelect(result, index)
+        }}
+        textProps={{
+          fontWeight: '600',
+          lineHeight: 22,
         }}
         {...(!showLocation &&
           result?.type !== 'orphan' && {

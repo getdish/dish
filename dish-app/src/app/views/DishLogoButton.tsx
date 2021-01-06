@@ -1,5 +1,5 @@
 import React, { memo } from 'react'
-import { AbsoluteVStack, VStack, useMedia } from 'snackui'
+import { AbsoluteVStack, HStack, VStack, useMedia } from 'snackui'
 
 import {
   logoHeight,
