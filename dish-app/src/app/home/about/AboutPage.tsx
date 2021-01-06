@@ -16,9 +16,10 @@ import { StackItemProps } from '../HomeStackView'
 
 const inlineButton = {
   borderRadius: 10,
-  paddingHorizontal: 6,
+  paddingHorizontal: 10,
+  paddingVertical: 2,
   position: 'relative',
-  display: 'inline',
+  display: 'inline-flex',
 } as const
 
 export default function AboutPage({
@@ -66,11 +67,11 @@ export default function AboutPage({
 
           <VStack paddingHorizontal="5%" spacing="xl">
             <Paragraph size="xxl">
-              We're building a better map of the world. We want to explore what
-              makes cities and neighborhoods great, down to the unique dishes.
-              To search across all critics and delivery companies at once with{' '}
-              <strong>ratings custom to our taste</strong> - understanding that
-              what matters in a quick bowl of pho is different than a date-night
+              We're building a better map of the world. We want to explore
+              cities and neighborhoods down to the unique dishes that make them
+              great. We think local search should be{' '}
+              <strong>custom to your taste</strong> and understand that what
+              matters in a lunchtime bowl of pho is different than a date-night
               steak dinner.
             </Paragraph>
 
