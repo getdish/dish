@@ -10,11 +10,13 @@ type AProps = React.DetailedHTMLProps<
   HTMLAnchorElement
 >
 
-export type LinkProps<A, B> = LinkSharedProps & {
-  name?: A
-  params?: B
-  tagName?: string
-}
+export type LinkProps<A, B> = LinkSharedProps &
+  Omit<TextProps, 'display'> & {
+    display?: TextProps['display'] | 'inline'
+    name?: A
+    params?: B
+    tagName?: string
+  }
 
 export type LinkSharedProps = Pick<
   AProps,

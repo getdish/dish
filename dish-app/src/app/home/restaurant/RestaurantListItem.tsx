@@ -359,10 +359,6 @@ const RestaurantListItemContent = memo(
                   <SmallButton
                     name="restaurantHours"
                     params={{ slug: restaurantSlug }}
-                    fontSize={14}
-                    color="rgba(0,0,0,0.6)"
-                    fontWeight="400"
-                    ellipse
                   >
                     {opening_hours}
                   </SmallButton>
@@ -409,35 +405,32 @@ const RestaurantListItemContent = memo(
                   alignItems="center"
                   overflow="hidden"
                 >
-                  <VStack>
-                    <Tooltip
-                      contents={`Rating Breakdown (${totalReviews} reviews)`}
-                    >
-                      <SmallButton
-                        name="restaurant"
-                        params={{
-                          id: props.restaurantId,
-                          slug: props.restaurantSlug,
-                          section: 'reviews',
-                        }}
-                        before={
-                          <MessageSquare
-                            size={16}
-                            color="rgba(0,0,0,0.3)"
-                            style={{ marginRight: 6 }}
-                          />
-                        }
-                        color="#999"
-                        fontSize={14}
-                        fontWeight="600"
-                      >
-                        {numberFormat(
-                          restaurant.reviews_aggregate().aggregate.count() ?? 0,
-                          'sm'
-                        )}
-                      </SmallButton>
-                    </Tooltip>
-                  </VStack>
+                  <SmallButton
+                    name="restaurant"
+                    params={{
+                      id: props.restaurantId,
+                      slug: props.restaurantSlug,
+                      section: 'reviews',
+                    }}
+                    textProps={{
+                      color: '#999',
+                      fontSize: 14,
+                      fontWeight: '600',
+                    }}
+                    tooltip={`Rating Breakdown (${totalReviews} reviews)`}
+                    icon={
+                      <MessageSquare
+                        size={16}
+                        color="rgba(0,0,0,0.3)"
+                        style={{ marginRight: 6 }}
+                      />
+                    }
+                  >
+                    {numberFormat(
+                      restaurant.reviews_aggregate().aggregate.count() ?? 0,
+                      'sm'
+                    )}
+                  </SmallButton>
 
                   <Spacer />
 

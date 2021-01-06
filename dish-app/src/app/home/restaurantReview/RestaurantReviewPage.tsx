@@ -219,8 +219,10 @@ export const RestaurantReviewCommentForm = memo(
                   <SmallButton
                     accessible
                     accessibilityRole="button"
-                    fontWeight="400"
-                    color={red}
+                    // TODO use theme?
+                    textProps={{
+                      color: red,
+                    }}
                     onPress={() => {
                       if (
                         confirm('Are you sure you want to delete the review?')
@@ -237,7 +239,9 @@ export const RestaurantReviewCommentForm = memo(
                     accessibilityRole="button"
                     disabled={isSaved}
                     alignSelf="center"
-                    fontWeight="700"
+                    textProps={{
+                      fontWeight: '700',
+                    }}
                     marginVertical={10}
                     onPress={() => {
                       upsertReview({

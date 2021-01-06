@@ -12,6 +12,7 @@ export function Link<
   Params = RoutesTable[Name]['params']
 >(allProps: LinkProps<Name, Params>) {
   const {
+    // non-text props for useLink
     onClick,
     replaceSearch,
     disallowDisableWhenActive,
@@ -26,12 +27,12 @@ export function Link<
     tags,
     tag,
     children,
-    // rest
     ...textProps
   } = allProps
   const { wrapWithLinkElement } = useLink(allProps)
   return wrapWithLinkElement(
-    isStringChild(children) ? (
+    !!Object.keys(textProps).length || isStringChild(children) ? (
+      // @ts-expect-error we are allowing display="inline"
       <Text color={brandColor} {...textProps}>
         {children}
       </Text>

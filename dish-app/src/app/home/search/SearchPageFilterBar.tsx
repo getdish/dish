@@ -1,6 +1,6 @@
 import { groupBy, sortBy } from 'lodash'
 import React, { memo } from 'react'
-import { HStack, useMedia } from 'snackui'
+import { HStack, Theme, useMedia } from 'snackui'
 
 import { tagFilters } from '../../../constants/localTags'
 import { tagGroup, tagSort } from '../../../constants/tagMeta'
@@ -35,22 +35,22 @@ export const SearchPageFilterBar = memo(({ activeTags }: FilterBarProps) => {
           <HStack key={index} borderRadius={100}>
             {group.map((tag, groupIndex) => {
               const isActive = activeTags[getTagSlug(tag)] ?? false
-              const button = (
+              return (
                 <FilterButton
                   key={`tag-${tag.id}`}
                   tag={tag}
-                  isActive={isActive}
                   position="relative"
-                  color={rgbString(color)}
+                  textProps={{
+                    color: rgbString(color),
+                  }}
                   zIndex={100 - index - groupIndex + (isActive ? 1 : 0)}
+                  isActive={isActive}
                   {...getGroupedButtonProps({
                     index: groupIndex,
                     items: group,
                   })}
                 />
               )
-
-              return button
             })}
           </HStack>
         )
@@ -69,11 +69,10 @@ const HomePageFilterBarSmall = ({ activeTags }: FilterBarProps) => {
         return (
           <FilterButton
             key={`tag-${tag.id}`}
-            tag={tag}
             isActive={isActive}
+            tag={tag}
             position="relative"
             zIndex={100 - index + (isActive ? 1 : 0)}
-            color="#fff"
           />
         )
       })}

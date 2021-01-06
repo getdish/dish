@@ -181,7 +181,7 @@ const TopDishesTrendingRestaurants = memo(
                   minWidth={210}
                 >
                   <RestaurantButton
-                    color={`rgba(0,0,0,${Math.max(0.5, 1 - (index + 1) / 5)})`}
+                    // color={`rgba(0,0,0,${Math.max(0.5, 1 - (index + 1) / 5)})`}
                     // trending={
                     //   (index % 5) - 1 == 0
                     //     ? 'neutral'
