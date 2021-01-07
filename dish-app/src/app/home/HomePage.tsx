@@ -638,7 +638,7 @@ const DishCol = (props: StackProps) => {
 const DishFeedCard = graphql(function DishFeedCard(props: FeedItemDish) {
   const restaurant = useRestaurantQuery(props.restaurant.slug)
   return (
-    <CardFrame transparent>
+    <CardFrame aspectFixed transparent>
       <VStack position="relative" alignSelf="center">
         <SlantedTitle
           position="absolute"
@@ -683,6 +683,7 @@ const DishRestaurantsFeedCard = (props: FeedItemDishRestaurants) => {
               <VStack
                 key={r.id}
                 marginRight={-105}
+                className="ease-in-out-faster"
                 transform={[
                   { scale: 0.7 },
                   { perspective: 1000 },
@@ -693,12 +694,28 @@ const DishRestaurantsFeedCard = (props: FeedItemDishRestaurants) => {
                 shadowOpacity={0.14}
                 shadowRadius={10}
                 shadowOffset={{ height: 0, width: 12 }}
+                position="relative"
                 zIndex={1000 - i}
+                hoverStyle={{
+                  transform: [
+                    { scale: 0.72 },
+                    { perspective: 1000 },
+                    { rotateY: '-10deg' },
+                  ],
+                }}
+                pressStyle={{
+                  transform: [
+                    { scale: 0.68 },
+                    { perspective: 1000 },
+                    { rotateY: '-10deg' },
+                  ],
+                }}
               >
                 <RestaurantCard
                   hideScore
                   restaurantId={r.id}
                   restaurantSlug={r.slug}
+                  hoverable={false}
                   below={
                     <CommentBubble
                       name="Test"
