@@ -266,6 +266,75 @@ const setActive = (
   }
 }
 
+type Tile = {
+  name: string
+  label: string
+  maxZoom: number
+  minZoom: number
+  labelSource?: string
+  promoteId: string
+  lineColor?: string
+  lineColorActive?: string
+  lineColorHover?: string
+  color: string
+  hoverColor: string
+  activeColor: string
+}
+
+const tiles: Tile[] = [
+  {
+    maxZoom: 20,
+    minZoom: 12,
+    // lineColor: '#880088',
+    // lineColorActive: '#660066',
+    // lineColorHover: '#330033',
+    label: 'name',
+    labelSource: 'public.nhood_labels',
+    promoteId: 'ogc_fid',
+    activeColor: 'rgba(255, 255, 255, 0)',
+    hoverColor: 'rgba(255,255,255,0.2)',
+    color: 'rgba(248, 238, 248, 0.5)',
+    name: 'public.zcta5',
+  },
+  // {
+  //   maxZoom: 11,
+  //   minZoom: 9,
+  //   lineColor: '#880088',
+  //   promoteId: 'ogc_fid',
+  //   activeColor: purple,
+  //   hoverColor: 'yellow',
+  //   color: lightPurple,
+  //   label: 'nhood',
+  //   name: 'public.hca',
+  // },
+  {
+    maxZoom: 12,
+    minZoom: 7,
+    // lineColor: '#aa55aa',
+    // lineColorActive: '#660066',
+    // lineColorHover: '#330033',
+    promoteId: 'ogc_fid',
+    activeColor: `rgba(255, 255, 255, 0)`,
+    hoverColor: hexToRGB(purple, 0.05).string,
+    color: hexToRGB(purple, 0.25).string,
+    label: 'hrr_city',
+    name: 'public.hrr',
+  },
+  {
+    maxZoom: 7,
+    minZoom: 0,
+    // lineColor: '#880088',
+    // lineColorActive: '#660066',
+    // lineColorHover: '#330033',
+    promoteId: 'ogc_fid',
+    activeColor: green,
+    hoverColor: 'yellow',
+    color: purple,
+    label: null,
+    name: 'public.state',
+  },
+]
+
 function setupMapEffect({
   setMap,
   props,
@@ -300,20 +369,20 @@ function setupMapEffect({
 
   window['map'] = map
 
-  const loadMarker = (name: string, asset: string) => {
-    return new Promise((res, rej) => {
-      if (!map) return rej()
-      map.loadImage(asset, (err, image) => {
-        if (err) return rej(err)
-        if (map) {
-          if (!map.hasImage(name)) {
-            map.addImage(name, image)
-          }
-        }
-        res(image)
-      })
-    })
-  }
+  // const loadMarker = (name: string, asset: string) => {
+  //   return new Promise((res, rej) => {
+  //     if (!map) return rej()
+  //     map.loadImage(asset, (err, image) => {
+  //       if (err) return rej(err)
+  //       if (map) {
+  //         if (!map.hasImage(name)) {
+  //           map.addImage(name, image)
+  //         }
+  //       }
+  //       res(image)
+  //     })
+  //   })
+  // }
 
   const cancels = new Set<Function>()
 
@@ -344,75 +413,6 @@ function setupMapEffect({
           }
           return val
         })()
-
-        type Tile = {
-          name: string
-          label: string
-          maxZoom: number
-          minZoom: number
-          labelSource?: string
-          promoteId: string
-          lineColor?: string
-          lineColorActive?: string
-          lineColorHover?: string
-          color: string
-          hoverColor: string
-          activeColor: string
-        }
-
-        const tiles: Tile[] = [
-          {
-            maxZoom: 20,
-            minZoom: 11,
-            // lineColor: '#880088',
-            // lineColorActive: '#660066',
-            // lineColorHover: '#330033',
-            label: 'name',
-            labelSource: 'public.nhood_labels',
-            promoteId: 'ogc_fid',
-            activeColor: 'rgba(255, 255, 255, 0)',
-            hoverColor: 'rgba(255,255,255,0.2)',
-            color: 'rgba(248, 238, 248, 0.5)',
-            name: 'public.zcta5',
-          },
-          // {
-          //   maxZoom: 11,
-          //   minZoom: 9,
-          //   lineColor: '#880088',
-          //   promoteId: 'ogc_fid',
-          //   activeColor: purple,
-          //   hoverColor: 'yellow',
-          //   color: lightPurple,
-          //   label: 'nhood',
-          //   name: 'public.hca',
-          // },
-          {
-            maxZoom: 11,
-            minZoom: 7,
-            // lineColor: '#aa55aa',
-            // lineColorActive: '#660066',
-            // lineColorHover: '#330033',
-            promoteId: 'ogc_fid',
-            activeColor: `rgba(255, 255, 255, 0)`,
-            hoverColor: hexToRGB(purple, 0.05).string,
-            color: hexToRGB(purple, 0.25).string,
-            label: 'hrr_city',
-            name: 'public.hrr',
-          },
-          {
-            maxZoom: 7,
-            minZoom: 0,
-            // lineColor: '#880088',
-            // lineColorActive: '#660066',
-            // lineColorHover: '#330033',
-            promoteId: 'ogc_fid',
-            activeColor: green,
-            hoverColor: 'yellow',
-            color: purple,
-            label: null,
-            name: 'public.state',
-          },
-        ]
 
         // start making regions
         for (const tile of tiles) {
