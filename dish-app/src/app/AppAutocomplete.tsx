@@ -1,3 +1,4 @@
+// debug
 import { series, sleep } from '@dish/async'
 import { order_by, query, resolved } from '@dish/graph'
 import { isPresent } from '@dish/helpers'
@@ -406,6 +407,7 @@ const AutocompleteFrame = ({ children }: { children: any }) => {
         position="relative"
         width="100%"
         height="100%"
+        overflow="hidden"
         minHeight={200}
         padding={5}
         borderRadius={media.sm ? 0 : 10}
@@ -592,6 +594,7 @@ const HomeAutocompleteDefault = memo(() => {
             }}
           >
             <LinkButton
+              className="debugme"
               flexDirection="column"
               disallowDisableWhenActive
               tag={tag}
@@ -758,6 +761,7 @@ const searchDishes = (whereCondition: any, extraQuery: any = {}, limit = 5) => {
         _eq: 'dish',
       },
     },
+    order_by: [{ popularity: order_by.desc }],
     limit,
   })
 }
