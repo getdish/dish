@@ -147,16 +147,18 @@ const SearchPageContent = memo(function SearchPageContent(props: Props) {
 
   useEffect(() => {
     if (!location.data) return
+    if (!props.isActive) return
     const searchItem: HomeStateItemSearch = {
       ...props.item,
       center: location.data.center,
       span: location.data.span,
     }
     home.updateCurrentState('SearchPage.locationFromRoute', searchItem)
-  }, [location.data])
+  }, [props.isActive, location.data])
 
   useEffect(() => {
     if (!tags.data) return
+    if (!props.isActive) return
     addTagsToCache(tags.data)
     const activeTags: HomeActiveTagsRecord = tags.data.reduce((acc, tag) => {
       acc[getTagSlug(tag)] = true
@@ -169,7 +171,7 @@ const SearchPageContent = memo(function SearchPageContent(props: Props) {
       activeTags,
     })
     searchPageStore.runSearch({})
-  }, [tags.data])
+  }, [props.isActive, tags.data])
 
   // sync mapStore.selected to activeIndex in results
   useEffect(() => {
