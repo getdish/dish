@@ -22,6 +22,7 @@ export const DishUpvoteDownvote = (props: Props) => {
     <DishUpvoteDownvoteContent
       subtle={false}
       score={0}
+      key={slugify(props.name) + props.restaurantSlug}
       {...props}
       restaurantId={props.restaurantId}
       restaurantSlug={props.restaurantSlug}

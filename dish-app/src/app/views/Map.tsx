@@ -2,6 +2,8 @@ import 'mapbox-gl/dist/mapbox-gl.css'
 
 import { fullyIdle, series } from '@dish/async'
 import { isDev, isStaging, slugify } from '@dish/graph'
+import bbox from '@turf/bbox'
+import center from '@turf/center'
 import { produce } from 'immer'
 import _, { capitalize, isEqual, throttle } from 'lodash'
 import mapboxgl from 'mapbox-gl'
@@ -12,7 +14,6 @@ import { useGet } from 'snackui'
 import { blue, green, purple } from '../../constants/colors'
 import { MAPBOX_ACCESS_TOKEN } from '../../constants/constants'
 import { tagLenses } from '../../constants/localTags'
-import { getCenter } from '../../helpers/getCenter'
 import { hasMovedAtLeast } from '../../helpers/hasMovedAtLeast'
 import { hexToRGB } from '../../helpers/hexToRGB'
 import { useIsMountedRef } from '../../helpers/useIsMountedRef'
@@ -373,13 +374,13 @@ function setupMapEffect({
           {
             maxZoom: 11,
             minZoom: 7,
-            lineColor: '#880088',
+            lineColor: '#aa55aa',
             lineColorActive: '#660066',
             lineColorHover: '#330033',
             promoteId: 'ogc_fid',
-            activeColor: `rgba(255, 255, 0, 0.05)`,
-            hoverColor: `rgba(255,255,0,0.25)`,
-            color: hexToRGB(purple, 0.5).string,
+            activeColor: `rgba(255, 255, 255, 0)`,
+            hoverColor: hexToRGB(purple, 0.05).string,
+            color: hexToRGB(purple, 0.25).string,
             label: 'hrr_city',
             name: 'public.hrr',
           },
@@ -703,13 +704,10 @@ function setupMapEffect({
           })
           const boundary = boundaries[0]
           if (boundary) {
-            // @ts-ignore
-            const center = getCenter(boundary.geometry)
-            if (center) {
-              map.easeTo({
-                center: center,
-              })
-            }
+            const bounds = bbox(boundary)
+            map.fitBounds(bounds as any, {
+              padding: 20,
+            })
           }
         }
         map.on('click', handleClick)
@@ -1020,17 +1018,6 @@ function setupMapEffect({
       mapNode.innerHTML = ''
     }
   }
-}
-
-const fitMapToResults = (map: mapboxgl.Map, features: GeoJSON.Feature[]) => {
-  const bounds = new mapboxgl.LngLatBounds()
-  for (const feature of features) {
-    const geo = feature.geometry
-    if (geo.type === 'Point') {
-      bounds.extend(geo.coordinates as any)
-    }
-  }
-  map.fitBounds(bounds)
 }
 
 const getCurrentLocation = (map: mapboxgl.Map) => {
