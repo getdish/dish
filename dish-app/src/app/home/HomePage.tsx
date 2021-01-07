@@ -545,6 +545,7 @@ const CuisineFeedCard = graphql(function CuisineFeedCard(
             _in: props.dishes.map((x) => x.name),
           },
         },
+        order_by: [{ popularity: order_by.desc }],
       })
     : []
 
@@ -601,25 +602,25 @@ const CuisineFeedCard = graphql(function CuisineFeedCard(
   )
 })
 
-const getRestaurantButton = (r, i) => {
-  if (!r.slug) {
-    return null
-  }
-  return (
-    <RestaurantButton
-      subtle
-      key={r.id}
-      trending="up"
-      // rank={0}
-      restaurantSlug={r.slug}
-    />
-  )
-}
+// const getRestaurantButton = (r, i) => {
+//   if (!r.slug) {
+//     return null
+//   }
+//   return (
+//     <RestaurantButton
+//       subtle
+//       key={r.id}
+//       trending="up"
+//       // rank={0}
+//       restaurantSlug={r.slug}
+//     />
+//   )
+// }
 
 const getDishColInner = (dish: tag, i: number) => {
   return (
     <VStack marginBottom={5} key={i}>
-      <DishView size={130} dish={selectTagDishViewSimple(dish)} />
+      <DishView isFallback size={130} dish={selectTagDishViewSimple(dish)} />
     </VStack>
   )
 }
@@ -685,7 +686,7 @@ const DishRestaurantsFeedCard = (props: FeedItemDishRestaurants) => {
                 shadowColor="#000"
                 shadowOpacity={0.14}
                 shadowRadius={10}
-                shadowOffset={{ height: 0, width: 12 }}
+                shadowOffset={{ height: 4, width: 10 }}
                 position="relative"
                 zIndex={1000 - i}
                 hoverStyle={{
@@ -729,7 +730,7 @@ const DishRestaurantsFeedCard = (props: FeedItemDishRestaurants) => {
               </VStack>
             )
           })}
-          <Spacer size="xxl" />
+          <VStack width={100} height={100} />
         </HStack>
       </ScrollView>
     </VStack>
