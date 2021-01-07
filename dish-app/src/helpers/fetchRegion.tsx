@@ -49,8 +49,8 @@ export const fetchRegion = async (slug: string) => {
         center,
         span: {
           // add padding
-          lat: span.lat * 2.2,
-          lng: span.lng * 2.2,
+          lat: span.lat * 1.5,
+          lng: span.lng * 1.5,
         },
       }
       queryClient.setQueryData(key, response)

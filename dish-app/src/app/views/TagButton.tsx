@@ -219,7 +219,12 @@ export const TagButton = memo((props: TagButtonProps) => {
           )}
         </Text>
         {!!votable && !!props.restaurantSlug && (
-          <TagButtonVote {...props} color={fg} scale={scale} />
+          <TagButtonVote
+            key={getTagSlug(props) + props.restaurantSlug}
+            {...props}
+            color={fg}
+            scale={scale}
+          />
         )}
         {!!closable && (
           <VStack onPress={prevent} onPressIn={prevent} onPressOut={onClose}>
