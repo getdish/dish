@@ -1,4 +1,3 @@
-// // debug
 import { graphql, order_by } from '@dish/graph'
 import React, { Suspense, memo, useCallback, useState } from 'react'
 import { Image, StyleSheet } from 'react-native'
@@ -29,14 +28,17 @@ export type RestaurantCardProps = {
   restaurantId: string
   below?: any
   hideScore?: boolean
+  hoverable?: boolean
 }
+
+const fallbackCard = <CardFrame aspectFixed />
 
 export const RestaurantCard = (props: RestaurantCardProps) => {
   if (!props.restaurantSlug) {
-    return <CardFrame />
+    return fallbackCard
   }
   return (
-    <Suspense fallback={<CardFrame />}>
+    <Suspense fallback={fallbackCard}>
       <RestaurantCardContent {...props} />
     </Suspense>
   )
@@ -49,6 +51,7 @@ export const RestaurantCardContent = memo(
       restaurantSlug,
       restaurantId,
       hideScore,
+      hoverable = true,
       below,
     }: RestaurantCardProps) => {
       const restaurant = useRestaurantQuery(restaurantSlug)
@@ -68,7 +71,7 @@ export const RestaurantCardContent = memo(
 
       return (
         <Link name="restaurant" params={{ slug: restaurantSlug }}>
-          <CardFrame aspectFixed hoverable>
+          <CardFrame aspectFixed hoverable={hoverable}>
             <VStack
               className="safari-fix-overflow"
               width="100%"
@@ -87,7 +90,7 @@ export const RestaurantCardContent = memo(
                 borderRadius={cardFrameBorderRadius - 2}
                 shadowColor="#000"
                 shadowRadius={40}
-              ></AbsoluteVStack>
+              />
               <AbsoluteVStack
                 className="ease-in-out"
                 opacity={hideInfo ? 0 : 1}

@@ -1,6 +1,5 @@
-// // debug
-// TODO verify the conditional + theme works
-// TODO scaling for width/height
+// debug
+// TODO variant for width/height
 import React from 'react'
 import { VStack, useMedia, useTheme } from 'snackui'
 
@@ -36,6 +35,8 @@ export const CardFrame = ({
       shadowRadius={4}
       shadowOffset={{ height: 1, width: 0 }}
       position="relative"
+      alignItems="center"
+      justifyContent="center"
       {...(expandable && {
         width: cardFrameWidth * 2,
       })}
