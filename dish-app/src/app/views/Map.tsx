@@ -345,7 +345,22 @@ function setupMapEffect({
           return val
         })()
 
-        const tiles = [
+        type Tile = {
+          name: string
+          label: string
+          maxZoom: number
+          minZoom: number
+          labelSource?: string
+          promoteId: string
+          lineColor?: string
+          lineColorActive?: string
+          lineColorHover?: string
+          color: string
+          hoverColor: string
+          activeColor: string
+        }
+
+        const tiles: Tile[] = [
           {
             maxZoom: 20,
             minZoom: 11,
