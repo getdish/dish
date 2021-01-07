@@ -293,6 +293,7 @@ const SearchResultsContent = (props: Props) => {
             restaurantSlug={data.slug}
             rank={index + 1}
             searchState={props.item}
+            meta={results[index].meta}
           />
         </Suspense>
       )

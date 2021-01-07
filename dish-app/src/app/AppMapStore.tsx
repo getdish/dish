@@ -104,19 +104,22 @@ class AppMapStore extends Store {
     inputStoreLocation.setValue(val)
     const exact = current.find((x) => x.name === val)
     if ('center' in exact) {
+      const curState = homeStore.currentState
+      const center = exact.center
+      const span = exact.span ?? curState.span
       homeStore.updateCurrentState('appMapStore.setLocation', {
-        center: { ...exact.center },
+        center,
+        span,
         curLocName: val,
       })
-      const curState = homeStore.currentState
+      setDefaultLocation({
+        center,
+        span,
+      })
       const navItem = getNavigateItemForState(curState)
       if (router.getShouldNavigate(navItem)) {
         router.navigate(navItem)
       }
-      setDefaultLocation({
-        center: exact.center,
-        span: curState.span,
-      })
     } else {
       console.warn('No center found?')
     }

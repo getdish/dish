@@ -2,8 +2,8 @@ import { fullyIdle } from '@dish/async'
 import {
   HomeMeta,
   LngLat,
-  RestaurantOnlyIds,
   RestaurantSearchArgs,
+  RestaurantSearchItem,
   search,
 } from '@dish/graph'
 import { isPresent, stringify } from '@dish/helpers'
@@ -21,7 +21,7 @@ class SearchPageStore extends Store {
   index = -1
   event: ActiveEvent = null
   status: 'loading' | 'complete' = 'complete'
-  results: RestaurantOnlyIds[] = []
+  results: RestaurantSearchItem[] = []
   meta: HomeMeta | null = null
 
   setIndex(index: number, event: ActiveEvent) {
