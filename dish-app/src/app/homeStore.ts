@@ -474,6 +474,12 @@ class HomeStore extends Store {
   // we definitely can clean up / name better some of this once things settle
   lastNav = Date.now()
 
+  getShouldNavigate({ state, ...rest }: HomeStateNav) {
+    const navState = { state: state ?? this.currentState, ...rest }
+    const nextState = getNextState(navState)
+    return getShouldNavigate(nextState)
+  }
+
   async navigate({ state, ...rest }: HomeStateNav) {
     const navState = { state: state ?? this.currentState, ...rest }
     const nextState = getNextState(navState)
