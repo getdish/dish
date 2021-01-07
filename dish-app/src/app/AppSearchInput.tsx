@@ -1,6 +1,6 @@
 import { fullyIdle, idle, series } from '@dish/async'
 import { Loader, Search, X } from '@dish/react-feather'
-import { getStore, reaction, useStoreInstance } from '@dish/use-store'
+import { getStore, reaction } from '@dish/use-store'
 import React, { memo, useCallback, useEffect, useRef, useState } from 'react'
 import {
   Platform,
@@ -30,6 +30,7 @@ import { AutocompleteStore, autocompletesStore } from './AppAutocomplete'
 import { AppAutocompleteHoverableInput } from './AppAutocompleteHoverableInput'
 import { searchPageStore } from './home/search/SearchPageStore'
 import { homeStore, useHomeStore } from './homeStore'
+import { useAutocompleteInputFocus } from './hooks/useAutocompleteInputFocus'
 import { useSearchBarTheme } from './hooks/useSearchBarTheme'
 import {
   InputStore,
@@ -105,9 +106,9 @@ export const AppSearchInput = memo(() => {
   const [search, setSearch] = useState('')
   const getSearch = useGet(search)
   const isSearchingCuisine = !!home.searchBarTags.length
-  const autocompletes = useStoreInstance(autocompletesStore)
-  const showSearchAutocomplete =
-    autocompletes.visible && autocompletes.target === 'search'
+
+  // focus on visible
+  useAutocompleteInputFocus(inputStore)
 
   const height = searchBarHeight - 2
   const outerHeight = height - 1
@@ -128,18 +129,6 @@ export const AppSearchInput = memo(() => {
     ])
   })
 
-  useEffect(() => {
-    if (showSearchAutocomplete) {
-      const tm = setTimeout(() => {
-        inputStore.focusNode()
-      }, 100)
-      return () => {
-        clearTimeout(tm)
-      }
-    }
-    return undefined
-  }, [showSearchAutocomplete])
-
   // one way sync down for more perf
   useEffect(() => {
     return reaction(
@@ -157,7 +146,7 @@ export const AppSearchInput = memo(() => {
   if (Platform.OS === 'web') {
     useEffect(() => {
       const handleClick = () => {
-        autocompletes.setTarget('search')
+        autocompletesStore.setTarget('search')
       }
       const node = inputStore.node
       node?.addEventListener('click', handleClick)

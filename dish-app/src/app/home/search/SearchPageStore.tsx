@@ -1,7 +1,13 @@
 import { fullyIdle } from '@dish/async'
-import { LngLat, RestaurantSearchArgs, search } from '@dish/graph'
+import {
+  HomeMeta,
+  LngLat,
+  RestaurantOnlyIds,
+  RestaurantSearchArgs,
+  search,
+} from '@dish/graph'
 import { isPresent, stringify } from '@dish/helpers'
-import { Store, createStore } from '@dish/use-store'
+import { Store, createStore, useStoreInstance } from '@dish/use-store'
 
 import { allTags } from '../../../helpers/allTags'
 import { getActiveTags } from '../../../helpers/getActiveTags'
@@ -13,16 +19,18 @@ export type ActiveEvent = 'key' | 'pin' | 'hover' | null
 
 class SearchPageStore extends Store {
   index = -1
-  max = 0
   event: ActiveEvent = null
+  status: 'loading' | 'complete' = 'complete'
+  results: RestaurantOnlyIds[] = []
+  meta: HomeMeta | null = null
 
   setIndex(index: number, event: ActiveEvent) {
     this.index = Math.min(Math.max(-1, index), this.max)
     this.event = event
   }
 
-  setMax(n: number) {
-    this.max = n
+  get max() {
+    return this.results.length
   }
 
   private lastSearchKey = ''
@@ -124,19 +132,14 @@ class SearchPageStore extends Store {
     state = homeStore.lastSearchState
     if (!state) return
 
-    // console.log('search found restaurants', restaurants)
-    appMapStore.setSelected(null)
-    homeStore.updateHomeState('SearchPageStore.runSearch2', {
-      id: state.id,
-      status: 'complete',
-      // limit to 80 for now
-      results: restaurants.filter(isPresent).slice(0, 80),
-      meta: res.meta,
-    })
+    this.status = 'complete'
+    this.results = restaurants.filter(isPresent).slice(0, 80)
+    this.meta = res.meta
   }
 }
 
 export const searchPageStore = createStore(SearchPageStore)
+export const useSearchPageStore = () => useStoreInstance(searchPageStore)
 
 // used to help prevent duplicate searches on slight diff in map move
 const roundLngLat = (val: LngLat): LngLat => {

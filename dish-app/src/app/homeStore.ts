@@ -338,8 +338,6 @@ class HomeStore extends Store {
         }
         nextState = {
           type: 'search',
-          status: 'loading',
-          results: [],
           region: router.curPage.params.region ?? prev.region,
           username,
           activeTags: prev.activeTags ?? {},
@@ -365,7 +363,6 @@ class HomeStore extends Store {
       case 'user': {
         nextState = {
           username: item.params.username,
-          results: [],
         }
         break
       }

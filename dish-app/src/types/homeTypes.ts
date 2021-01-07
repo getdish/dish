@@ -1,4 +1,4 @@
-import { HomeMeta, RestaurantOnlyIds, RestaurantSearchItem } from '@dish/graph'
+import { RestaurantOnlyIds } from '@dish/graph'
 
 import { NavigableTag } from './tagTypes'
 
@@ -75,7 +75,6 @@ export type HomeStateItemHome = HomeStateItemBase & {
   activeTags: HomeActiveTagsRecord
   region: string
   section: string
-  results?: RestaurantOnlyIds[]
 }
 
 export type HomeStateItemBlog = HomeStateItemBase & {
@@ -90,9 +89,6 @@ export type HomeStateItemAbout = HomeStateItemBase & {
 export type HomeStateItemSearch = HomeStateItemBase & {
   type: 'search' | 'userSearch'
   activeTags: HomeActiveTagsRecord
-  status: 'loading' | 'complete'
-  meta?: HomeMeta
-  results: RestaurantSearchItem[]
   region?: string
   // for not forcing map to be always synced
   searchedCenter?: LngLat
@@ -111,7 +107,6 @@ export type HomeStateItemRestaurant = HomeStateItemBase & {
 export type HomeStateItemUser = HomeStateItemBase & {
   type: 'user'
   username: string
-  results: RestaurantOnlyIds[]
 }
 
 export type HomeStateItemGallery = HomeStateItemBase & {

@@ -1,9 +1,12 @@
-import { Store } from '@dish/use-store'
+import { Store, createStore, useStoreInstance } from '@dish/use-store'
 
-export class SearchResultsStore extends Store {
+class SearchResultsStore extends Store {
   restaurantPositions: Record<string, number | undefined> = {}
 
   setRestaurantPositions(obj: Record<string, number>) {
     this.restaurantPositions = obj
   }
 }
+
+export const searchResultsStore = createStore(SearchResultsStore)
+export const useSearchResultsStore = () => useStoreInstance(searchResultsStore)

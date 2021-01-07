@@ -14,6 +14,7 @@ import {
 } from 'snackui'
 
 import { HomeStateItemUser } from '../../../types/homeTypes'
+import { useSetAppMapResults } from '../../AppMapStore'
 import { useHomeStore } from '../../homeStore'
 import { useUserStore } from '../../userStore'
 import { ContentScrollView } from '../../views/ContentScrollView'
@@ -58,7 +59,6 @@ const UserPageContent = graphql(
   }: StackItemProps<HomeStateItemUser> & {
     tab: UserTab
   }) => {
-    const home = useHomeStore()
     const user = useUserQuery(item?.username ?? '')
     const reviews = user
       ?.reviews({
@@ -71,22 +71,15 @@ const UserPageContent = graphql(
         type: !!x.text ? 'review' : 'vote',
       }))
 
-    useEffect(() => {
-      if (!reviews || !reviews.length || reviews[0] === null) return
-      const userState = home.allStates[item.id] as HomeStateItemUser
-      console.log('we here', item.id, userState)
-      if (userState) {
-        home.updateHomeState('UserPage.reviewsEffect', {
-          id: userState.id,
-          results: reviews.map(({ restaurantId, restaurantSlug }) => {
-            return {
-              id: restaurantId,
-              slug: restaurantSlug,
-            }
-          }),
-        })
-      }
-    }, [reviews])
+    useSetAppMapResults({
+      isActive: isActive,
+      results: reviews.map(({ restaurantId, restaurantSlug }) => {
+        return {
+          id: restaurantId,
+          slug: restaurantSlug,
+        }
+      }),
+    })
 
     if (!user) {
       return <NotFoundPage />
