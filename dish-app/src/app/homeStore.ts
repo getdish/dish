@@ -51,6 +51,14 @@ class HomeStore extends Store {
     return findLast(this.states, (x) => isSearchState(x) || isHomeState(x))
   }
 
+  get currentStates() {
+    return this.states.slice(0, this.stateIndex + 1)
+  }
+
+  get breadcrumbs() {
+    return getBreadcrumbs(this.currentStates)
+  }
+
   get currentState() {
     return this.states[this.stateIndex]
   }
@@ -116,7 +124,7 @@ class HomeStore extends Store {
 
   private getUpType = () => {
     const curType = this.currentState.type
-    const crumbs = getBreadcrumbs(this.states)
+    const crumbs = this.breadcrumbs
     if (!isBreadcrumbState(curType)) {
       return _.last(crumbs)?.type
     }

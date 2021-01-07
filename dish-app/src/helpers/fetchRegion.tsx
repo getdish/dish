@@ -30,7 +30,6 @@ export const fetchRegion = async (slug: string) => {
   try {
     const url = `${SEARCH_DOMAIN}/regions?slug=${encodeURIComponent(slug)}`
     const res: RegionApiResponse = await fetch(url).then((x) => x.json())
-    console.log('fetchRegion', res)
     const centerAt = res?.centroid?.coordinates
     if (!!centerAt) {
       const center: LngLat = {
@@ -48,7 +47,11 @@ export const fetchRegion = async (slug: string) => {
       const response: RegionNormalized = {
         ...res,
         center,
-        span,
+        span: {
+          // add padding
+          lat: span.lat * 2.2,
+          lng: span.lng * 2.2,
+        },
       }
       queryClient.setQueryData(key, response)
       return response

@@ -7,6 +7,7 @@ import {
   logoXsHeight,
   logoXsWidth,
 } from '../../constants/constants'
+import { useHomeStore } from '../homeStore'
 import { Link } from './Link'
 import { LinkButton } from './LinkButton'
 import { LinkButtonProps } from './LinkProps'
@@ -25,6 +26,17 @@ const linkButtonProps: LinkButtonProps = {
 
 export const DishLogoButton = memo(() => {
   const media = useMedia()
+  const { currentStateType } = useHomeStore()
+  const wrapWithHomeLink = (el: any) => {
+    return currentStateType.indexOf('home') === 0 ? (
+      el
+    ) : (
+      <Link name="home">
+        <HStack {...linkButtonProps}>{el}</HStack>
+      </Link>
+    )
+  }
+
   return (
     <VStack
       className="ease-in-out-fast"
@@ -36,11 +48,7 @@ export const DishLogoButton = memo(() => {
         opacity={media.xs ? 0 : 1}
         pointerEvents={media.xs ? 'none' : 'auto'}
       >
-        <Link name="home">
-          <HStack {...linkButtonProps}>
-            <LogoColor />
-          </HStack>
-        </Link>
+        {wrapWithHomeLink(<LogoColor />)}
       </VStack>
       <AbsoluteVStack
         pointerEvents={media.xs ? 'auto' : 'none'}
@@ -52,11 +60,7 @@ export const DishLogoButton = memo(() => {
         width={logoXsWidth}
         height={logoXsHeight}
       >
-        <Link name="home">
-          <LinkButton {...linkButtonProps}>
-            <LogoSmall />
-          </LinkButton>
-        </Link>
+        {wrapWithHomeLink(<LogoSmall />)}
       </AbsoluteVStack>
     </VStack>
   )
