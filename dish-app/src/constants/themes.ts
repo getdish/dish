@@ -48,7 +48,7 @@ const darkTranslucent: MyTheme = {
 }
 
 const lightBase = {
-  borderColor: '#e5e5e5',
+  borderColor: '#eee',
   borderColorHover: '#d5d5d5',
   color: '#111',
   colorSecondary: '#444',
