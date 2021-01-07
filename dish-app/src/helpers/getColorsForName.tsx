@@ -6,9 +6,12 @@ if (allLightColors.length !== allColors.length) {
 
 export const getColorsForName = (name: string) => {
   const index = (name ?? '').charCodeAt(0) % allLightColors.length
+  const altIndex = (index + 1) % allLightColors.length
   return {
-    altColor: allColorsPastel[(index + 1) % allLightColors.length],
     lightColor: allLightColors[index],
-    color: allColorsPastel[index],
+    altColor: allColors[altIndex],
+    color: allColors[index],
+    pastelColor: allColorsPastel[index],
+    altPastelColor: allColorsPastel[altIndex],
   }
 }
