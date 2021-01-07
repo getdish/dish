@@ -520,13 +520,10 @@ const AutocompleteItemView = memo(
     return (
       <LinkButton
         width="100%"
+        justifyContent={target === 'location' ? 'flex-end' : 'flex-start'}
         onPressOut={() => {
           hideAutocompleteSlow()
           onSelect(result, index)
-        }}
-        textProps={{
-          fontWeight: '600',
-          lineHeight: 22,
         }}
         {...(!showLocation &&
           result?.type !== 'orphan' && {
@@ -540,10 +537,7 @@ const AutocompleteItemView = memo(
           },
         })}
       >
-        <VStack
-          flex={1}
-          alignItems={target === 'location' ? 'flex-end' : 'center'}
-        >
+        <VStack width="100%">
           <HStack>
             {icon}
             {!!icon && <Spacer size="lg" />}
@@ -553,6 +547,7 @@ const AutocompleteItemView = memo(
               ellipse
               color={theme.color}
               fontSize={22}
+              lineHeight={25}
             >
               {result.name} {plusButtonEl}
             </Text>

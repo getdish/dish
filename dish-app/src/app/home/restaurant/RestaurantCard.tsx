@@ -8,6 +8,7 @@ import {
   Paragraph,
   Spacer,
   VStack,
+  useTheme,
 } from 'snackui'
 
 import { getColorsForName } from '../../../helpers/getColorsForName'
@@ -54,6 +55,7 @@ export const RestaurantCardContent = memo(
       hoverable = true,
       below,
     }: RestaurantCardProps) => {
+      const theme = useTheme()
       const restaurant = useRestaurantQuery(restaurantSlug)
       // const scale = size === 'lg' ? 1.2 : size == 'sm' ? 0.6 : 1
       const [hideInfo, setHideInfo] = useState(false)
@@ -79,6 +81,7 @@ export const RestaurantCardContent = memo(
               alignSelf="center"
               position="relative"
               borderRadius={cardFrameBorderRadius}
+              backgroundColor={theme.backgroundColor}
             >
               <AbsoluteVStack
                 fullscreen
@@ -100,15 +103,20 @@ export const RestaurantCardContent = memo(
               >
                 <LinearGradient
                   style={StyleSheet.absoluteFill}
-                  colors={[`${lightColor}`, `${color}44`]}
-                  start={[0, 0]}
-                  end={[0.2, 0.2]}
+                  colors={[`${altColor}00`, `${lightColor}33`, `${altColor}ff`]}
+                  start={[1, 0]}
+                  end={[0, 1]}
                 />
                 <LinearGradient
                   style={StyleSheet.absoluteFill}
-                  colors={[`${altColor}22`, `${altColor}44`]}
-                  start={[1, 1]}
-                  end={[0.6, 0.6]}
+                  colors={[
+                    `${color}`,
+                    `${color}aa`,
+                    `${color}00`,
+                    `${color}00`,
+                  ]}
+                  start={[1, 0]}
+                  end={[0.9, 0.1]}
                 />
               </AbsoluteVStack>
               <Image
@@ -116,7 +124,7 @@ export const RestaurantCardContent = memo(
                 style={{
                   width: cardFrameWidth,
                   height: cardFrameHeight,
-                  opacity: 0.5,
+                  opacity: 0.75,
                 }}
                 source={{ uri: restaurantPhoto }}
               />
@@ -144,6 +152,7 @@ export const RestaurantCardContent = memo(
                 padding={15}
                 alignItems="flex-start"
                 spacing
+                width="100%"
                 height="100%"
               >
                 <HStack width="100%">
@@ -151,7 +160,7 @@ export const RestaurantCardContent = memo(
                   <VStack alignItems="flex-end">
                     <Paragraph
                       textAlign="right"
-                      size="xl"
+                      size="xxl"
                       sizeLineHeight={0.7}
                       textShadowColor="#00000011"
                       textShadowRadius={1}

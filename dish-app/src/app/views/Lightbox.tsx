@@ -235,7 +235,6 @@ export const Lightbox = ({
   )
 
   const activeIndex = activeImage.index
-  console.log('what is', activeImage)
   useEffect(() => {
     console.log(
       'setting active index',

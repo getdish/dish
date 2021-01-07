@@ -98,7 +98,7 @@ const AdminLinkButton = ({
   icon,
   children,
   ...props
-}: LinkButtonProps & { icon: string }) => {
+}: Omit<LinkButtonProps, 'icon'> & { icon: string }) => {
   return (
     <LinkButton
       borderRadius={10}

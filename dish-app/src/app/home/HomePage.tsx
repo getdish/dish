@@ -237,36 +237,28 @@ export default memo(function HomePage(props: Props) {
                 </ScrollView>
               </HStack>
 
-              <PageTitle
-                size="sm"
-                title={
-                  <InteractiveContainer borderRadius={10}>
-                    {navLinks.map((linkProps, index) => {
-                      return (
-                        <LinkButton
-                          key={index}
-                          backgroundColor="#fff"
-                          shadowColor="#000"
-                          shadowOpacity={0.1}
-                          shadowRadius={3}
-                          textProps={{
-                            color:
-                              state.section === linkProps.params.section
-                                ? 'red'
-                                : '#888',
-                          }}
-                          {...getGroupedButtonProps({
-                            index,
-                            items: navLinks,
-                            borderRadius: 10,
-                          })}
-                          {...linkProps}
-                        />
-                      )
-                    })}
-                  </InteractiveContainer>
-                }
-              />
+              {/* <VStack alignItems="center">
+                <InteractiveContainer borderRadius={10}>
+                  {navLinks.map((linkProps, index) => {
+                    const isActive = state.section === linkProps.params.section
+                    return (
+                      <LinkButton
+                        key={index}
+                        textProps={{
+                          color: isActive ? 'red' : '#888',
+                          fontWeight: '500',
+                        }}
+                        {...getGroupedButtonProps({
+                          index,
+                          items: navLinks,
+                          borderRadius: 10,
+                        })}
+                        {...linkProps}
+                      />
+                    )
+                  })}
+                </InteractiveContainer>
+              </VStack> */}
 
               <Spacer size="lg" />
 
@@ -674,7 +666,7 @@ const DishRestaurantsFeedCard = (props: FeedItemDishRestaurants) => {
         </SlantedTitle>
       </Link>
       <ScrollView horizontal showsHorizontalScrollIndicator={false}>
-        <HStack paddingVertical={5} paddingLeft={5} paddingRight={50}>
+        <HStack paddingVertical={5}>
           {props.restaurants.slice(0, 5).map((r, i) => {
             if (!r.slug) {
               return null
@@ -717,16 +709,27 @@ const DishRestaurantsFeedCard = (props: FeedItemDishRestaurants) => {
                   restaurantSlug={r.slug}
                   hoverable={false}
                   below={
-                    <CommentBubble
-                      name="Test"
-                      avatar={peachAvatar}
-                      text="Lorem ipsum dolor sit amet"
-                    />
+                    <VStack position="absolute" bottom={-10} right={-5}>
+                      <DishView
+                        dish={props.dish}
+                        restaurantId={r.id}
+                        restaurantSlug={r.slug}
+                        size={140}
+                      />
+                    </VStack>
                   }
+                  // below={
+                  //   <CommentBubble
+                  //     name="Test"
+                  //     avatar={peachAvatar}
+                  //     text="Lorem ipsum dolor sit amet"
+                  //   />
+                  // }
                 />
               </VStack>
             )
           })}
+          <Spacer size="xxl" />
         </HStack>
       </ScrollView>
     </VStack>
