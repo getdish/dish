@@ -3,7 +3,7 @@ import 'mapbox-gl/dist/mapbox-gl.css'
 import { fullyIdle, series } from '@dish/async'
 import { isDev, isStaging, slugify } from '@dish/graph'
 import bbox from '@turf/bbox'
-import center from '@turf/center'
+import union from '@turf/union'
 import { produce } from 'immer'
 import _, { capitalize, isEqual, throttle } from 'lodash'
 import mapboxgl from 'mapbox-gl'
@@ -718,12 +718,27 @@ function setupMapEffect({
               console.warn('no features', e)
             }
           }
+          const layers = tiles.map((t) => `${t.name}.fill`)
           const boundaries = map.queryRenderedFeatures(e.point, {
-            layers: tiles.map((t) => `${t.name}.fill`),
+            layers,
           })
           const boundary = boundaries[0]
-          if (boundary) {
-            const bounds = bbox(boundary)
+          // properly unifies all the tile features before moving
+          // see: https://github.com/mapbox/mapbox-gl-js/issues/3871
+          // and: https://github.com/mapbox/mapbox-gl-js/issues/5040
+          if (boundary && boundary.id) {
+            // get full boundary (mapbox weird)
+            const sourceFeatures = map.querySourceFeatures(boundary.source, {
+              sourceLayer: boundary.sourceLayer,
+              // TODO this only works for zcta5, we need to normalize the ids on backend
+              filter: ['==', 'ogc_fid', boundary.id],
+            })
+            let final = sourceFeatures[0]
+            for (const feature of sourceFeatures) {
+              final = union(final, feature)
+            }
+            console.log('sourceFeatures', final, boundary, sourceFeatures)
+            const bounds = bbox(final)
             map.fitBounds(bounds as any, {
               padding: 20,
             })
