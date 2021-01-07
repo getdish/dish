@@ -24,7 +24,12 @@ import {
 } from 'snackui'
 
 import { bgLight } from '../constants/colors'
-import { isNative, isWeb, searchBarHeight } from '../constants/constants'
+import {
+  drawerWidthMax,
+  isNative,
+  isWeb,
+  searchBarHeight,
+} from '../constants/constants'
 import { defaultLocationAutocompleteResults } from '../constants/defaultLocationAutocompleteResults'
 import { tagDefaultAutocomplete } from '../constants/localTags'
 import { tagDisplayName } from '../constants/tagMeta'
@@ -379,44 +384,46 @@ const AutocompleteFrame = ({ children }: { children: any }) => {
       opacity={isShowing ? 1 : 0}
       pointerEvents={isShowing ? 'auto' : 'none'}
       fullscreen
-      alignItems="center"
+      alignItems="flex-end"
       top={media.sm ? searchBarHeight : 10}
       onPress={() => autocompletes.setVisible(false)}
     >
-      <AbsoluteVStack backgroundColor={theme.backgroundColor} fullscreen />
-      <BlurView
-        fallbackBackgroundColor="transparent"
-        blurRadius={20}
-        blurType="light"
-        position="absolute"
-        fullscreen
-      />
-      <PaneControlButtons>
-        <CloseButton
-          size={20}
-          onPressOut={prevent}
-          zIndex={1000}
-          onPress={(e) => {
-            e.stopPropagation()
+      <VStack width="100%" height="100%" maxWidth={drawerWidthMax}>
+        <AbsoluteVStack backgroundColor={theme.backgroundColor} fullscreen />
+        <BlurView
+          fallbackBackgroundColor="transparent"
+          blurRadius={20}
+          blurType="light"
+          position="absolute"
+          fullscreen
+        />
+        <PaneControlButtons>
+          <CloseButton
+            size={20}
+            onPressOut={prevent}
+            zIndex={1000}
+            onPress={(e) => {
+              e.stopPropagation()
+              autocompletes.setVisible(false)
+            }}
+          />
+        </PaneControlButtons>
+        <VStack
+          className="ease-in-out"
+          position="relative"
+          width="100%"
+          height="100%"
+          overflow="hidden"
+          minHeight={200}
+          padding={5}
+          borderRadius={media.sm ? 0 : 10}
+          flex={media.sm ? 1 : 0}
+          onPress={() => {
             autocompletes.setVisible(false)
           }}
-        />
-      </PaneControlButtons>
-      <VStack
-        className="ease-in-out"
-        position="relative"
-        width="100%"
-        height="100%"
-        overflow="hidden"
-        minHeight={200}
-        padding={5}
-        borderRadius={media.sm ? 0 : 10}
-        flex={media.sm ? 1 : 0}
-        onPress={() => {
-          autocompletes.setVisible(false)
-        }}
-      >
-        <ScrollView keyboardShouldPersistTaps="always">{children}</ScrollView>
+        >
+          <ScrollView keyboardShouldPersistTaps="always">{children}</ScrollView>
+        </VStack>
       </VStack>
     </AbsoluteVStack>
   )
