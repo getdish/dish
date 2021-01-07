@@ -83,7 +83,7 @@ export const RestaurantCardContent = memo(
               borderRadius={cardFrameBorderRadius}
               backgroundColor={theme.backgroundColor}
             >
-              <AbsoluteVStack
+              {/* <AbsoluteVStack
                 fullscreen
                 className="ease-in-out"
                 opacity={hideInfo ? 0 : 1}
@@ -92,8 +92,8 @@ export const RestaurantCardContent = memo(
                 zIndex={10}
                 borderRadius={cardFrameBorderRadius - 2}
                 shadowColor="#000"
-                shadowRadius={40}
-              />
+                // shadowRadius={40}
+              /> */}
               <AbsoluteVStack
                 className="ease-in-out"
                 opacity={hideInfo ? 0 : 1}
@@ -108,10 +108,12 @@ export const RestaurantCardContent = memo(
                   end={[0, 1]}
                 />
                 <LinearGradient
-                  style={StyleSheet.absoluteFill}
+                  style={[StyleSheet.absoluteFill, { opacity: 0.85 }]}
                   colors={[
-                    `${color}`,
-                    `${color}aa`,
+                    color,
+                    color,
+                    `${color}99`,
+                    `${color}99`,
                     `${color}00`,
                     `${color}00`,
                   ]}
@@ -121,10 +123,12 @@ export const RestaurantCardContent = memo(
               </AbsoluteVStack>
               <Image
                 resizeMode="cover"
+                width={cardFrameWidth}
+                height={cardFrameHeight}
                 style={{
                   width: cardFrameWidth,
                   height: cardFrameHeight,
-                  opacity: 0.75,
+                  opacity: 0.5,
                 }}
                 source={{ uri: restaurantPhoto }}
               />
