@@ -1,42 +1,45 @@
-- fix map jittering
-- map toggle between region/area
-- ensure reload to region works
-- region handoff between search/home
-- fix restaurantpage click dish
-- cleanup restaurantpage a bit
-- need to make the className merge work..
-- Button (is the only really big example that shows everything)
-- fix SlantedBox
-- fix pressStyle stopped working on cards, etc
-- router types not working on LinkButtonProps
-  - also in homeStore.ts should work on the big pushHomeState switch
-- useStoreOnce() => usePortal()
-  - see `stores` global gets polluted
-  - make it so it *shares* the stores *while 1 or more are active*
-    - but then once the last one unmounts it clears memory
-  - TagVoteStore => portal
+goal january
 
-- collect top lists
-  - vietnamese: pho, banh xeo, banh mi
-  - mexican: taco, guacamole, salsa
-- gpt3 table breakdown v2
-- breakdown should have image grid on right side when on "dish" breakdown
+  1. fix lots of things
+
+    - dont make region move map unless its initial load OR far outside map bounds
+    - fix map jittering
+    - map toggle between region/area improve
+    - better search region
+    - region handoff between search/home
+    - fix restaurantpage click dish
+    - cleanup restaurantpage a bit
+    - fix SlantedBox
+    - router types not working on LinkButtonProps
+      - also in homeStore.ts should work on the big pushHomeState switch
+    - better intro / intro callout
+    - touch / mobile web app runthrough fix scrolling issues
+    - massive amounts of nav/search/autocomplete/comment/restaurant/gallery polish
+    - location <=> url
+
+  2. initial family/friends launch at end of month
+
+    - have mailing list that actually emails once a month with new release
+    - get site back up on live production and fix various issues
+    - improve some profiles and some onboarding
+
+  3. prototype playlists / improve home (bonus)
+
+     - in general playlists are fun and affect regions a bit (may lessen need)
+     - home page can be simpler and faster list, improve that
+
+---
+
 - home page with "delivery" and other filters? want to encourage that you can search across delivery from there
 - discussions
   - add comment => show comment
   - upvote/downvote comments
-- url piece for selected dish on restaurant page / restaurantreview page
-- scrolling horizontal / vertical fixes
-- touch mobile web app runthrough fix scrolling issues
-- search changing filters shows old results / sometimes gets stuck
-  - https://dishapp.com/drink/san-francisco/open_price-low_country~thai
-    - initial search seems not to load
-- other lense tags:
-  - "family run"
-- overall just runthrough everything a few times and fix a lot
-- fix small delivery/price filters
-- fix hmr for useStore in react native
-- location <=> url
+
+- useStoreOnce() => useStoreEphemeral()
+  - see `stores` global gets polluted
+  - make it so it *shares* the stores *while 1 or more are active*
+    - but then once the last one unmounts it clears memory
+  - TagVoteStore => portal
 
 ---
 
