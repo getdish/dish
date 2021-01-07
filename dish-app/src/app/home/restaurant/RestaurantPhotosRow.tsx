@@ -13,12 +13,14 @@ export const RestaurantPhotosRow = memo(
   graphql(
     ({
       escalating,
+      showEscalated,
       restaurantSlug,
       onIsAtStart,
       width,
       height,
     }: {
       escalating?: boolean
+      showEscalated?: boolean
       restaurantSlug: string
       onIsAtStart?: (x: boolean) => void
       width: number
@@ -41,26 +43,40 @@ export const RestaurantPhotosRow = memo(
                     ? 190
                     : 500
                   : height
+                const isEscalated = escalating && index >= 2
+                const photoWidth = isEscalated ? width * 2 : width
                 return (
-                  <VStack key={index} className={`scroll-snap-photo`}>
-                    <Link name="gallery" params={{ restaurantSlug }}>
-                      <Image
-                        source={{
-                          uri: getImageUrl(photo, width, photoHeight, 100),
-                        }}
-                        style={{
-                          height: photoHeight,
-                          width,
-                        }}
-                        resizeMode="cover"
-                      />
-                    </Link>
+                  <VStack
+                    width={photoWidth}
+                    height={photoHeight}
+                    key={index}
+                    className={`scroll-snap-photo`}
+                  >
+                    {(!isEscalated || showEscalated) && (
+                      <Link name="gallery" params={{ restaurantSlug }}>
+                        <Image
+                          source={{
+                            uri: getImageUrl(
+                              photo,
+                              photoWidth,
+                              photoHeight,
+                              100
+                            ),
+                          }}
+                          style={{
+                            height: photoHeight,
+                            width: photoWidth,
+                          }}
+                          resizeMode="cover"
+                        />
+                      </Link>
+                    )}
                   </VStack>
                 )
               })}
               <VStack className="scroll-snap-photo">
                 <LinkButton
-                  width={width}
+                  width={width * 2}
                   height={height}
                   name="gallery"
                   params={{ restaurantSlug }}

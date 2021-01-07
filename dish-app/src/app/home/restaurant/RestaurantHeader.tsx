@@ -58,7 +58,7 @@ const RestaurantHeaderContent = memo(
       const spacer = <Spacer size={paddingPx} />
       const nameLen = restaurant.name?.length
       const drawerWidth = useAppDrawerWidthInner()
-      const minWidth = 600
+      const minWidth = Math.min(drawerWidth, 600)
       const [width, setWidth] = useState(Math.max(minWidth, drawerWidth))
       const scale = width < 601 ? 0.75 : drawerWidth < 700 ? 0.85 : 1
       const fontScale = size === 'sm' ? 0.8 : 1
@@ -66,6 +66,8 @@ const RestaurantHeaderContent = memo(
       const fontSize = scale * fontSizeBase * fontScale
       const contentLeftWidth = width - 60
       const restaurantId = restaurant.id
+      const photoWidth = width * 0.5
+      const [hasScrolled, setHasScrolled] = useState(false)
 
       return (
         <VStack
@@ -82,6 +84,7 @@ const RestaurantHeaderContent = memo(
               maxWidth: isWeb ? '100vw' : '100%',
               minHeight,
             }}
+            onScroll={hasScrolled ? null : () => setHasScrolled(true)}
             contentContainerStyle={{
               minWidth: width,
             }}
@@ -94,14 +97,16 @@ const RestaurantHeaderContent = memo(
               >
                 <RestaurantPhotosRow
                   restaurantSlug={restaurantSlug}
-                  width={380}
+                  width={photoWidth}
                   height={170}
                   escalating
+                  showEscalated={hasScrolled}
                 />
               </AbsoluteVStack>
               <VStack
                 marginTop={150}
                 minWidth={minWidth}
+                maxWidth={width}
                 borderTopRightRadius={drawerBorderRadius - 1}
                 borderTopLeftRadius={drawerBorderRadius - 1}
                 width="100%"
