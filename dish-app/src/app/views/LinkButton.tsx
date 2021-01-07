@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react'
-import { Button, Text } from 'snackui'
+import { Button } from 'snackui'
 
-import { isStringChild } from '../../helpers/isStringChild'
 import { RoutesTable, router } from '../../router'
 import { useLink } from '../hooks/useLink'
 import { LinkButtonProps } from './LinkProps'
