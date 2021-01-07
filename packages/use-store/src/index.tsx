@@ -454,23 +454,31 @@ function createProxiedStore(
             const ogAction = action
             action = (...args: any[]) => {
               setters.clear()
-              const res = ogAction(...args)
-              const simpleArgs = args.map(simpleStr)
+
               if (process.env.NODE_ENV === 'development') {
+                // dev mode do a lot of nice logging
                 const name = constr.name
                 const color = strColor(name)
+                const simpleArgs = args.map(simpleStr)
                 console.groupCollapsed(
                   `💰 %c${name}%c.${key}(${simpleArgs.join(', ')})`,
                   `color: ${color};`,
                   'color: black;'
                 )
-                console.log('ARGS ', ...args)
+                console.log(` => ARGS`, ...args)
+                // run action here now
+                const res = ogAction(...args)
                 setters.forEach(({ key, value }) => {
-                  console.log(`SET `, key, '=', value)
+                  console.log(` => SET`, key, '=', value)
                 })
                 setters.clear()
+                if (typeof res !== 'undefined') {
+                  console.log(' => RETURN', res)
+                }
                 console.groupEnd()
+                return res
 
+                // dev-mode colored output
                 function hashCode(str: string) {
                   let hash = 0
                   for (var i = 0; i < str.length; i++) {
@@ -481,8 +489,10 @@ function createProxiedStore(
                 function strColor(str: string) {
                   return `hsl(${hashCode(str) % 360}, 90%, 40%)`
                 }
+              } else {
+                // otherwise just run it
+                return ogAction(...args)
               }
-              return res
             }
           }
           return action

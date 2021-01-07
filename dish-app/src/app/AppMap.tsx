@@ -308,10 +308,11 @@ const AppMapContent = memo(
         //   //@ts-expect-error
         //   om.actions.home.setCenterToResults(0)
         // }
-        appMapStore.setPosition('moveEnd', {
-          center,
-          span,
-        })
+        console.log('should set position on map?')
+        // appMapStore.setPosition('moveEnd', {
+        //   center,
+        //   span,
+        // })
       },
       [media.sm]
     )

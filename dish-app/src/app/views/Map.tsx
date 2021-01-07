@@ -4,7 +4,7 @@ import { fullyIdle, series } from '@dish/async'
 import { isDev, isStaging, slugify } from '@dish/graph'
 import { useStore } from '@dish/use-store'
 import { produce } from 'immer'
-import _, { isEqual, sortBy, throttle } from 'lodash'
+import _, { capitalize, isEqual, sortBy, throttle } from 'lodash'
 import mapboxgl from 'mapbox-gl'
 import React, { useEffect, useRef, useState } from 'react'
 import { Dimensions } from 'react-native'
@@ -609,15 +609,26 @@ function setupMapEffect({
             active: true,
           })
 
-          if (!feature.properties.nhood) {
-            console.warn('No available region')
+          // temp reginos supprot until we normalize naming at tile level
+          const name =
+            feature.properties.nhood ??
+            (feature.properties.hrrcity
+              ? feature.properties.hrrcity
+                  .toLowerCase()
+                  .replace('ca- ', '')
+                  .split(' ')
+                  .map((x) => capitalize(x))
+                  .join(' ')
+              : '')
+          if (!name) {
+            console.warn('No available region', feature)
             return
           }
 
           getProps().onSelectRegion?.({
             geometry: feature.geometry as any,
-            name: feature.properties.nhood,
-            slug: feature.properties.slug ?? slugify(feature.properties.nhood),
+            name: name,
+            slug: feature.properties.slug ?? slugify(name),
           })
         }, 300)
 

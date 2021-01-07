@@ -25,8 +25,7 @@ type GetChildren<A> = (props: StackItemProps<A>) => React.ReactNode
 export function HomeStackView<A extends HomeStateItem>(props: {
   children: GetChildren<A>
 }) {
-  const home = useHomeStore()
-  const breadcrumbs = getBreadcrumbs(home.states.slice(0, home.stateIndex + 1))
+  const { breadcrumbs } = useHomeStore()
   const key = JSON.stringify(breadcrumbs.map((x) => x.id))
   const homeStates = useMemo(() => breadcrumbs, [key])
   const currentStates = useDebounceValue(homeStates, 20) ?? homeStates
