@@ -31,6 +31,7 @@ import { isWeb } from 'snackui/src/constants'
 import { peachAvatar } from '../../constants/avatar'
 import { drawerWidthMax, searchBarHeight } from '../../constants/constants'
 import { RegionNormalized, useRegionQuery } from '../../helpers/fetchRegion'
+import { getColorsForName } from '../../helpers/getColorsForName'
 import { setDefaultLocation } from '../../helpers/getDefaultLocation'
 import { selectTagDishViewSimple } from '../../helpers/selectDishViewSimple'
 import { useQueryLoud } from '../../helpers/useQueryLoud'
@@ -157,6 +158,8 @@ export default memo(function HomePage(props: Props) {
     },
   ]
 
+  const regionColors = getColorsForName(regionName)
+
   return (
     <>
       <PageTitleTag>Dish - Uniquely Good Food</PageTitleTag>
@@ -218,6 +221,8 @@ export default memo(function HomePage(props: Props) {
                       minWidth={80}
                       alignSelf="center"
                       marginTop={-5}
+                      backgroundColor={regionColors.color}
+                      color="#fff"
                     >
                       {regionName}
                     </SlantedTitle>
