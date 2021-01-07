@@ -17,7 +17,7 @@ export function useAppDrawerWidth(max = drawerWidthMax): number {
   } else {
     scaleFactor = 0.6
   }
-  return Math.min(Math.max(100, width * scaleFactor), max)
+  return Math.min(Math.max(100, width * scaleFactor), Math.min(max, width))
 }
 
 export function useAppDrawerWidthInner(): number {

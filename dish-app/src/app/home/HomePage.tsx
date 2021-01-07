@@ -11,20 +11,12 @@ import {
 } from '@dish/graph'
 import { isPresent } from '@dish/helpers'
 import { capitalize, chunk, partition, sortBy, uniqBy, zip } from 'lodash'
-import React, {
-  Suspense,
-  memo,
-  useEffect,
-  useMemo,
-  useRef,
-  useState,
-} from 'react'
+import React, { Suspense, memo, useEffect, useRef, useState } from 'react'
 import { Dimensions, ScrollView } from 'react-native'
 import { useQuery } from 'react-query'
 import {
   AbsoluteVStack,
   HStack,
-  InteractiveContainer,
   LoadingItems,
   Spacer,
   StackProps,
@@ -40,14 +32,13 @@ import { peachAvatar } from '../../constants/avatar'
 import { drawerWidthMax, searchBarHeight } from '../../constants/constants'
 import { RegionNormalized, useRegionQuery } from '../../helpers/fetchRegion'
 import { setDefaultLocation } from '../../helpers/getDefaultLocation'
-import { getGroupedButtonProps } from '../../helpers/getGroupedButtonProps'
 import { selectTagDishViewSimple } from '../../helpers/selectDishViewSimple'
 import { useQueryLoud } from '../../helpers/useQueryLoud'
 import { router } from '../../router'
 import { HomeStateItemHome } from '../../types/homeTypes'
 import { AppIntroLogin } from '../AppIntroLogin'
 import { useSetAppMapResults } from '../AppMapStore'
-import { homeStore, useHomeStore } from '../homeStore'
+import { useHomeStore } from '../homeStore'
 import { usePageLoadEffect } from '../hooks/usePageLoadEffect'
 import { useRestaurantQuery } from '../hooks/useRestaurantQuery'
 import { CardFrame, cardFrameBorderRadius } from '../views/CardFrame'
@@ -56,7 +47,6 @@ import { ContentScrollView } from '../views/ContentScrollView'
 import { DishView } from '../views/dish/DishView'
 import { DishHorizonView } from '../views/DishHorizonView'
 import { Link } from '../views/Link'
-import { LinkButton } from '../views/LinkButton'
 import { LinkButtonProps } from '../views/LinkProps'
 import { PageTitleTag } from '../views/PageTitleTag'
 import { SlantedTitle } from '../views/SlantedTitle'
@@ -69,9 +59,7 @@ import {
 } from './FeedItems'
 import { HomeStackViewProps } from './HomeStackViewProps'
 import { HomeTopSearches } from './HomeTopSearches'
-import { RestaurantButton } from './restaurant/RestaurantButton'
 import { RestaurantCard } from './restaurant/RestaurantCard'
-import { PageTitle } from './search/PageTitle'
 
 type Props = HomeStackViewProps<HomeStateItemHome>
 
@@ -81,10 +69,10 @@ export default memo(function HomePage(props: Props) {
   const [isLoaded, setIsLoaded] = useState(false)
   const state = home.allStates[props.item.id]
   const region = useRegionQuery(state.region, {
-    enabled: !!state.region,
+    enabled: props.isActive && !!state.region,
   })
 
-  console.log('👀 HomePage', props, region, JSON.stringify(state, null, 2))
+  console.log('👀 HomePage', props, region, state)
 
   // load effect!
   usePageLoadEffect(props, () => {
@@ -103,6 +91,7 @@ export default memo(function HomePage(props: Props) {
   // center map to region
   // ONLY on first load!
   useEffect(() => {
+    if (!props.isActive) return
     if (!region.data) return
     if (isLoaded) return
     const { center, span } = region.data
@@ -112,7 +101,7 @@ export default memo(function HomePage(props: Props) {
       span,
     })
     setIsLoaded(true)
-  }, [isLoaded, region.data])
+  }, [props.isActive, isLoaded, region.data])
 
   useEffect(() => {
     if (!props.isActive) return
