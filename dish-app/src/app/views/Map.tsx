@@ -349,9 +349,9 @@ function setupMapEffect({
           {
             maxZoom: 20,
             minZoom: 11,
-            lineColor: '#880088',
-            lineColorActive: '#660066',
-            lineColorHover: '#330033',
+            // lineColor: '#880088',
+            // lineColorActive: '#660066',
+            // lineColorHover: '#330033',
             label: 'name',
             labelSource: 'public.nhood_labels',
             promoteId: 'ogc_fid',
@@ -374,9 +374,9 @@ function setupMapEffect({
           {
             maxZoom: 11,
             minZoom: 7,
-            lineColor: '#aa55aa',
-            lineColorActive: '#660066',
-            lineColorHover: '#330033',
+            // lineColor: '#aa55aa',
+            // lineColorActive: '#660066',
+            // lineColorHover: '#330033',
             promoteId: 'ogc_fid',
             activeColor: `rgba(255, 255, 255, 0)`,
             hoverColor: hexToRGB(purple, 0.05).string,
@@ -387,9 +387,9 @@ function setupMapEffect({
           {
             maxZoom: 7,
             minZoom: 0,
-            lineColor: '#880088',
-            lineColorActive: '#660066',
-            lineColorHover: '#330033',
+            // lineColor: '#880088',
+            // lineColorActive: '#660066',
+            // lineColorHover: '#330033',
             promoteId: 'ogc_fid',
             activeColor: green,
             hoverColor: 'yellow',
@@ -447,40 +447,42 @@ function setupMapEffect({
             firstSymbolLayerId
           )
 
-          map.addLayer(
-            {
-              id: `${name}.line`,
-              type: 'line',
-              source: name,
-              minzoom: minZoom,
-              maxzoom: maxZoom,
-              paint: {
-                'line-color': [
-                  'case',
-                  ['==', ['feature-state', 'active'], true],
-                  lineColorActive,
-                  ['==', ['feature-state', 'hover'], true],
-                  lineColorHover,
-                  ['==', ['feature-state', 'active'], null],
-                  lineColor,
-                  'green',
-                ],
-                'line-opacity': 0.05,
-                'line-width': [
-                  'case',
-                  ['==', ['feature-state', 'active'], true],
-                  1,
-                  ['==', ['feature-state', 'hover'], true],
-                  2,
-                  ['==', ['feature-state', 'active'], null],
-                  3,
-                  4,
-                ],
+          if (lineColor) {
+            map.addLayer(
+              {
+                id: `${name}.line`,
+                type: 'line',
+                source: name,
+                minzoom: minZoom,
+                maxzoom: maxZoom,
+                paint: {
+                  'line-color': [
+                    'case',
+                    ['==', ['feature-state', 'active'], true],
+                    lineColorActive,
+                    ['==', ['feature-state', 'hover'], true],
+                    lineColorHover,
+                    ['==', ['feature-state', 'active'], null],
+                    lineColor,
+                    'green',
+                  ],
+                  'line-opacity': 0.05,
+                  'line-width': [
+                    'case',
+                    ['==', ['feature-state', 'active'], true],
+                    1,
+                    ['==', ['feature-state', 'hover'], true],
+                    2,
+                    ['==', ['feature-state', 'active'], null],
+                    3,
+                    4,
+                  ],
+                },
+                'source-layer': name,
               },
-              'source-layer': name,
-            },
-            firstSymbolLayerId
-          )
+              firstSymbolLayerId
+            )
+          }
 
           if (label) {
             if (labelSource) {
@@ -534,7 +536,9 @@ function setupMapEffect({
 
           cancels.add(() => {
             map.removeLayer(`${name}.fill`)
-            map.removeLayer(`${name}.line`)
+            if (lineColor) {
+              map.removeLayer(`${name}.line`)
+            }
             if (label) {
               map.removeLayer(`${name}.label`)
             }
