@@ -270,7 +270,7 @@ const RestaurantListItemContent = memo(
           {/* ROW: TITLE */}
           <VStack
             hoverStyle={{ backgroundColor: 'rgba(0,0,0,0.015)' }}
-            paddingTop={8}
+            paddingTop={4}
             paddingLeft={14}
             width={950}
             position="relative"
@@ -331,50 +331,52 @@ const RestaurantListItemContent = memo(
             <Spacer size={18} />
 
             {/* SECOND ROW TITLE */}
-            <VStack
-              {...contentSideProps}
-              overflow="hidden"
-              zIndex={2}
-              paddingLeft={60}
-              paddingRight={20}
-              marginTop={media.sm ? -6 : 0}
-              transform={[{ translateY: -10 }]}
-              pointerEvents="auto"
-            >
-              <HStack alignItems="center" cursor="pointer" spacing="xs">
-                {!!price_range && (
-                  <Text
-                    fontSize={14}
-                    fontWeight="700"
-                    color={theme.colorTertiary}
-                    marginRight={4}
-                  >
-                    {price_range}
-                  </Text>
-                )}
+            <VStack {...contentSideProps}>
+              <VStack
+                overflow="hidden"
+                zIndex={2}
+                paddingLeft={60}
+                paddingRight={20}
+                marginTop={media.sm ? -6 : 0}
+                transform={[{ translateY: -10 }]}
+                pointerEvents="auto"
+              >
+                <HStack alignItems="center" cursor="pointer" spacing="xs">
+                  {!!price_range && (
+                    <Text
+                      fontSize={14}
+                      fontWeight="700"
+                      color={theme.colorTertiary}
+                      marginRight={4}
+                    >
+                      {price_range}
+                    </Text>
+                  )}
 
-                {!!opening_hours && (
-                  <SmallButton
-                    name="restaurantHours"
-                    params={{ slug: restaurantSlug }}
-                    borderWidth={0}
-                  >
-                    {opening_hours}
-                  </SmallButton>
-                )}
+                  {!!opening_hours && (
+                    <SmallButton
+                      name="restaurantHours"
+                      params={{ slug: restaurantSlug }}
+                      borderWidth={0}
+                    >
+                      {opening_hours}
+                    </SmallButton>
+                  )}
 
-                {!!restaurant.address && (
-                  <RestaurantAddress
-                    size="sm"
-                    curLocInfo={curLocInfo!}
-                    address={restaurant.address}
-                  />
-                )}
-              </HStack>
+                  {!!restaurant.address && (
+                    <RestaurantAddress
+                      size="sm"
+                      curLocInfo={curLocInfo!}
+                      address={restaurant.address}
+                    />
+                  )}
+                </HStack>
+              </VStack>
             </VStack>
           </VStack>
 
-          <HStack paddingLeft={10} flex={1}>
+          {/* CENTER CONTENT AREA */}
+          <HStack paddingLeft={10} marginTop={-15} flex={1}>
             <VStack
               {...contentSideProps}
               width="5%"
@@ -400,6 +402,7 @@ const RestaurantListItemContent = memo(
               <Suspense fallback={null}>
                 <HStack
                   minHeight={44} // prevents clipping in lg size
+                  transform={[{ translateY: -15 }]}
                   position="relative"
                   alignItems="center"
                   overflow="hidden"

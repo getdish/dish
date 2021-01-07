@@ -34,6 +34,7 @@ import {
   VStack,
   combineRefs,
   useMedia,
+  useTheme,
 } from 'snackui'
 
 import { isWeb } from '../../../constants/constants'
@@ -376,6 +377,7 @@ const SearchPageScrollView = forwardRef<ScrollView, SearchPageScrollViewProps>(
   ({ children, onSizeChanged, ...props }, ref) => {
     const curProps = useContext(SearchPagePropsContext)
     const scrollRef = useRef<ScrollView>()
+    const theme = useTheme()
 
     useEffect(() => {
       return reaction(
@@ -436,7 +438,7 @@ const SearchPageScrollView = forwardRef<ScrollView, SearchPageScrollViewProps>(
               <HStack position="absolute" fullscreen>
                 <VStack
                   borderLeftWidth={2}
-                  borderColor="#eee"
+                  borderColor={theme.borderColor}
                   width={40}
                   height={40}
                   marginBottom={-40}
@@ -457,7 +459,7 @@ const SearchPageScrollView = forwardRef<ScrollView, SearchPageScrollViewProps>(
                 <VStack
                   borderBottomWidth={2}
                   transform={[{ translateY: -1 }]}
-                  borderBottomColor="#eee"
+                  borderBottomColor={theme.borderColor}
                   flex={1}
                 />
               </HStack>
@@ -465,14 +467,14 @@ const SearchPageScrollView = forwardRef<ScrollView, SearchPageScrollViewProps>(
             <HStack
               alignItems="center"
               borderWidth={1}
-              borderColor="#f2f2f2"
+              borderColor={theme.borderColor}
               paddingHorizontal={18}
               borderRadius={100}
               maxWidth="80%"
-              height={52}
+              height={48}
               position="relative"
             >
-              <AbsoluteVStack left={-65}>
+              <AbsoluteVStack left={-66}>
                 <SlantedTitle size="xs">Scoring</SlantedTitle>
               </AbsoluteVStack>
               <ScrollView
@@ -495,8 +497,11 @@ const SearchPageScrollView = forwardRef<ScrollView, SearchPageScrollViewProps>(
                 </HStack>
               </ScrollView>
             </HStack>
+
             <HStack flex={1} />
           </HStack>
+
+          <Spacer />
 
           <VStack position="relative" flex={10} minHeight={600}>
             {children}
