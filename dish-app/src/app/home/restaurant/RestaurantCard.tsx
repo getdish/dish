@@ -112,7 +112,7 @@ export const RestaurantCardContent = memo(
                   colors={[
                     color,
                     color,
-                    `${color}99`,
+                    `${color}ee`,
                     `${color}99`,
                     `${color}00`,
                     `${color}00`,

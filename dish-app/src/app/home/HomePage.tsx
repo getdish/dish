@@ -479,6 +479,7 @@ function useHomeFeed(
                   name: dish.name ?? '',
                   icon: dish.icon ?? '',
                   image: dish.default_images()?.[0] ?? '',
+                  score: 100 - index * 10,
                 },
                 restaurants: restaurants.map((r) => {
                   return {
@@ -705,6 +706,7 @@ const DishRestaurantsFeedCard = (props: FeedItemDishRestaurants) => {
                         restaurantId={r.id}
                         restaurantSlug={r.slug}
                         size={140}
+                        isFallback
                       />
                     </VStack>
                   }
