@@ -4,21 +4,17 @@ import {
   ChevronUp,
   ChevronsDown,
   ChevronsUp,
-  Frown,
-  Heart,
-  ThumbsDown,
 } from '@dish/react-feather'
-import { rest } from 'lodash'
 import React, { Suspense, memo } from 'react'
 import { GestureResponderEvent } from 'react-native'
 import {
   AbsoluteVStack,
   HStack,
-  StackProps,
   Text,
   TextSuperScript,
   Tooltip,
   VStack,
+  useTheme,
 } from 'snackui'
 
 import { tagLenses } from '../../../constants/localTags'
@@ -70,6 +66,7 @@ const RestaurantUpVoteDownVoteContents = graphql(
   }: UpvoteDownvoteProps) => {
     const restaurant = useRestaurantQuery(restaurantSlug)
     const { vote, setVote } = useUserTagVotes(restaurantSlug, activeTags)
+    const theme = useTheme()
 
     ratio = Math.round(ratio ?? restaurantRatio(restaurant))
     score =
@@ -82,7 +79,7 @@ const RestaurantUpVoteDownVoteContents = graphql(
           right={-10}
           zIndex={2}
           borderRadius={1000}
-          backgroundColor="#fff"
+          backgroundColor={theme.cardBackgroundColor}
           shadowColor="#000"
           shadowOpacity={0.1}
           shadowRadius={3}
@@ -91,7 +88,7 @@ const RestaurantUpVoteDownVoteContents = graphql(
         </AbsoluteVStack>
         <VStack
           shadowColor="#000"
-          backgroundColor="#fff"
+          backgroundColor={theme.cardBackgroundColor}
           shadowOpacity={0.1}
           shadowOffset={{ height: 2, width: 0 }}
           shadowRadius={7}
