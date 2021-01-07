@@ -1,5 +1,12 @@
 import React, { useState } from 'react'
-import { AbsoluteVStack, StackProps, VStack, prevent, useMedia } from 'snackui'
+import {
+  AbsoluteVStack,
+  StackProps,
+  VStack,
+  prevent,
+  useMedia,
+  useTheme,
+} from 'snackui'
 
 import { bgLight } from '../../constants/colors'
 
@@ -22,6 +29,7 @@ export const VoteButton = ({
   size?: number
 }) => {
   const media = useMedia()
+  const theme = useTheme()
   const scale = media.sm ? 1.1 : 1
   const [hovered, setHovered] = useState(false)
   const translateDir = shadowDirection === 'up' ? -1 : 1
@@ -36,7 +44,7 @@ export const VoteButton = ({
       onHoverIn={() => setHovered(true)}
       onHoverOut={() => setHovered(false)}
       onPressIn={prevent}
-      backgroundColor="#fff"
+      backgroundColor={theme.cardBackgroundColor}
       pressStyle={{
         backgroundColor: bgLight,
         borderColor: '#aaa',
