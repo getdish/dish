@@ -20,7 +20,6 @@ import {
   Spacer,
   StackProps,
   Text,
-  Tooltip,
   VStack,
   useMedia,
   useTheme,
@@ -69,6 +68,7 @@ type RestaurantListItemProps = {
   restaurantId: string
   restaurantSlug: string
   rank: number
+  meta?: RestaurantItemMeta
   searchState: HomeStateItemSearch
   onFinishRender?: Function
 }
@@ -151,7 +151,7 @@ const RestaurantListItemContent = memo(
       restaurantSlug,
       curLocInfo,
       isLoaded,
-      searchState,
+      meta,
     } = props
     const media = useMedia()
     const restaurant = useRestaurantQuery(restaurantSlug)
@@ -173,7 +173,6 @@ const RestaurantListItemContent = memo(
       (x) => x.index === rank - 1
     )
     const [isExpanded, setIsExpanded] = useState(false)
-    const meta = searchState.results[rank]?.meta
 
     const contentSideProps: StackProps = {
       width: media.sm ? '75%' : '60%',
