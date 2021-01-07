@@ -1,11 +1,12 @@
 import { graphql } from '@dish/graph'
-import React, { Suspense, memo, useEffect, useRef } from 'react'
+import React, { Suspense, memo, useEffect, useMemo, useRef } from 'react'
 import { ScrollView } from 'react-native'
 import { LoadingItem, LoadingItems, Spacer, VStack } from 'snackui'
 
 import { bgLight, bgLightHover, darkBlue } from '../../../constants/colors'
 import { getMinLngLat } from '../../../helpers/getLngLat'
 import { HomeStateItemRestaurant } from '../../../types/homeTypes'
+import { useSetAppMapResults } from '../../AppMapStore'
 import { homeStore } from '../../homeStore'
 import { usePageLoadEffect } from '../../hooks/usePageLoadEffect'
 import { useRestaurantQuery } from '../../hooks/useRestaurantQuery'
@@ -58,6 +59,16 @@ const RestaurantPage = memo(
       },
       [coords]
     )
+
+    useSetAppMapResults({
+      isActive: props.isActive,
+      results: [
+        {
+          slug: restaurantSlug,
+          id: restaurant.id,
+        },
+      ],
+    })
 
     // TODO it wont scroll on initial load, maybe suspense issue
     const scroller = scrollView.current

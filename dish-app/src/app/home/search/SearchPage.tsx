@@ -1,8 +1,8 @@
-import { sleep } from '@dish/async'
+import { series, sleep } from '@dish/async'
 import { LngLat } from '@dish/graph'
 import { ArrowUp } from '@dish/react-feather'
 import { HistoryItem } from '@dish/router'
-import { reaction, useStore } from '@dish/use-store'
+import { reaction } from '@dish/use-store'
 import { sortBy } from 'lodash'
 import React, {
   Suspense,
@@ -53,7 +53,7 @@ import {
   HomeActiveTagsRecord,
   HomeStateItemSearch,
 } from '../../../types/homeTypes'
-import { appMapStore } from '../../AppMapStore'
+import { appMapStore, useSetAppMapResults } from '../../AppMapStore'
 import { AppPortalItem } from '../../AppPortal'
 import { useHomeStore } from '../../homeStore'
 import { useAppDrawerWidth } from '../../hooks/useAppDrawerWidth'
@@ -75,8 +75,8 @@ import {
 import { PageTitle } from './PageTitle'
 import { SearchPageNavBar } from './SearchPageNavBar'
 import { SearchPageResultsInfoBox } from './SearchPageResultsInfoBox'
-import { searchPageStore } from './SearchPageStore'
-import { SearchResultsStore } from './searchResultsStore'
+import { searchPageStore, useSearchPageStore } from './SearchPageStore'
+import { searchResultsStore } from './searchResultsStore'
 
 type Props = HomeStackViewProps<HomeStateItemSearch>
 const SearchPagePropsContext = createContext<Props | null>(null)
@@ -94,8 +94,8 @@ export default memo(function SearchPage(props: Props) {
         <HomeSuspense>
           <SearchNavBarContainer isActive={props.isActive} id={props.item.id} />
         </HomeSuspense>
-        <HomeSuspense fallback={<LoadingItems />}>
-          <SearchPageContent {...props} item={state} />
+        <HomeSuspense fallback={<SearchLoading />}>
+          <SearchPageContent key={state.id} {...props} item={state} />
         </HomeSuspense>
       </StackDrawer>
     </>
@@ -124,19 +124,25 @@ const SearchPageContent = memo(function SearchPageContent(props: Props) {
   ) as HistoryItem<'search'>
   const location = useLocationFromRoute(route)
   const tags = useTagsFromRoute(route)
-
-  const isOptimisticUpdating = home.isOptimisticUpdating
-  const wasOptimisticUpdating = useLastValue(isOptimisticUpdating)
-  const changingFilters =
-    wasOptimisticUpdating && props.item.status === 'loading'
-  const shouldAvoidContentUpdates =
-    isOptimisticUpdating || !props.isActive || changingFilters
+  const searchStore = useSearchPageStore()
 
   usePageLoadEffect(props, ({ isRefreshing }) => {
     if (isRefreshing) {
       searchPageStore.refresh()
     }
   })
+
+  useSetAppMapResults({
+    isActive: props.isActive,
+    results: searchStore.results,
+  })
+
+  const isOptimisticUpdating = home.isOptimisticUpdating
+  const wasOptimisticUpdating = useLastValue(isOptimisticUpdating)
+  const changingFilters =
+    wasOptimisticUpdating && searchStore.status === 'loading'
+  const shouldAvoidContentUpdates =
+    isOptimisticUpdating || !props.isActive || changingFilters
 
   useEffect(() => {
     if (!location.data) return
@@ -145,7 +151,7 @@ const SearchPageContent = memo(function SearchPageContent(props: Props) {
       center: location.data.center,
       span: location.data.span,
     }
-    home.updateCurrentState('SearchPage.searchItem', searchItem)
+    home.updateCurrentState('SearchPage.locationFromRoute', searchItem)
   }, [location.data])
 
   useEffect(() => {
@@ -164,46 +170,38 @@ const SearchPageContent = memo(function SearchPageContent(props: Props) {
     searchPageStore.runSearch({})
   }, [tags.data])
 
+  // sync mapStore.selected to activeIndex in results
   useEffect(() => {
-    let isCancelled = false
-    const dispose = reaction(
+    return reaction(
       appMapStore,
       (x) => x.selected,
-      async (selected) => {
+      (selected) => {
         if (!selected) return
-        const restaurants = props.item.results
+        const restaurants = searchStore.results
         const index = restaurants.findIndex((x) => x.id === selected.id)
-        if (index > -1) {
-          await sleep(300)
-          if (!isCancelled) {
+        if (index < 0) return
+        return series([
+          () => sleep(300),
+          () => {
             searchPageStore.setIndex(
               index,
               appMapStore.hovered ? 'hover' : 'pin'
             )
-          }
-        }
+          },
+        ])
       }
     )
-    return () => {
-      isCancelled = true
-      dispose()
-    }
   }, [])
 
   const key = useLastValueWhen(
     () =>
       JSON.stringify({
-        status: props.item.status,
+        status: searchStore.status,
         id: props.item.id,
-        results: props.item.results.map((x) => x.id),
+        results: searchStore.results.map((x) => x.id),
       }),
     shouldAvoidContentUpdates
   )
-
-  // set max results
-  useEffect(() => {
-    searchPageStore.setMax(props.item.results.length)
-  }, [key])
 
   const content = useMemo(() => {
     return (
@@ -214,7 +212,7 @@ const SearchPageContent = memo(function SearchPageContent(props: Props) {
   }, [key])
 
   return (
-    <Suspense fallback={<HomeLoading />}>
+    <Suspense fallback={<SearchLoading />}>
       <VStack
         flex={1}
         overflow="hidden"
@@ -261,11 +259,12 @@ delete RecyclerListView.propTypes['externalScrollView']
 
 const SearchResultsContent = (props: Props) => {
   const drawerWidth = useAppDrawerWidth()
+  const { status, results } = useSearchPageStore()
   const dataProvider = useMemo(() => {
     return new DataProvider((r1, r2) => {
       return r1.id !== r2.id
-    }).cloneWithRows(props.item.results)
-  }, [props.item.results])
+    }).cloneWithRows(results)
+  }, [results])
 
   const layoutProvider = useMemo(() => {
     return new LayoutProvider(
@@ -298,20 +297,18 @@ const SearchResultsContent = (props: Props) => {
         </Suspense>
       )
     },
-    [props.item.results]
+    [results]
   )
-
-  const searchResultsStore = useStore(SearchResultsStore)
 
   useEffect(() => {
     const searchResultsPositions: Record<string, number> = {}
-    props.item.results.forEach((v, index) => {
+    results.forEach((v, index) => {
       searchResultsPositions[v.id] = index + 1
     })
     searchResultsStore.setRestaurantPositions(searchResultsPositions)
-  }, [props.item.results])
+  }, [results])
 
-  if (props.item.status !== 'loading' && props.item.results.length === 0) {
+  if (status !== 'loading' && results.length === 0) {
     return (
       <>
         <SearchPageTitle />
@@ -404,7 +401,7 @@ const SearchPageScrollView = forwardRef<ScrollView, SearchPageScrollViewProps>(
       onSizeChanged({ width, height })
     }, [])
 
-    const meta = curProps.item.meta
+    const meta = searchPageStore.meta
     const activeTags = getActiveTags(curProps.item)
     const weights = activeTags.map((tag) => {
       return !meta
@@ -506,7 +503,7 @@ const SearchPageScrollView = forwardRef<ScrollView, SearchPageScrollViewProps>(
 
           <Suspense fallback={null}>
             <SearchFooter
-              searchState={curProps.item}
+              numResults={searchPageStore.results.length}
               scrollToTop={scrollToTopHandler}
             />
             <VStack height={400} />
@@ -518,10 +515,10 @@ const SearchPageScrollView = forwardRef<ScrollView, SearchPageScrollViewProps>(
 )
 
 const SearchFooter = ({
-  searchState,
+  numResults,
   scrollToTop,
 }: {
-  searchState: HomeStateItemSearch
+  numResults: number
   scrollToTop: Function
 }) => {
   return (
@@ -542,14 +539,13 @@ const SearchFooter = ({
       </Button>
       <Spacer size={40} />
       <Text opacity={0.5} fontSize={12}>
-        Showing {searchState.results.length} / {searchState.results.length}{' '}
-        results
+        Showing {numResults} results
       </Text>
     </VStack>
   )
 }
 
-const HomeLoading = (props: StackProps) => {
+const SearchLoading = (props: StackProps) => {
   return (
     <VStack flex={1} width="100%" minHeight={300} {...props}>
       <LoadingItem />

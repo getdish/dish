@@ -1,6 +1,5 @@
 import { MapPin, Navigation } from '@dish/react-feather'
-import { useStoreInstance } from '@dish/use-store'
-import React, { memo, useCallback, useEffect } from 'react'
+import React, { memo, useCallback } from 'react'
 import { TextInput } from 'react-native'
 import { AbsoluteVStack, Button, HStack, VStack, useMedia } from 'snackui'
 
@@ -14,6 +13,7 @@ import { AppAutocompleteHoverableInput } from './AppAutocompleteHoverableInput'
 import { appMapStore } from './AppMapStore'
 import { inputTextStyles } from './AppSearchInput'
 import { useHomeStore } from './homeStore'
+import { useAutocompleteInputFocus } from './hooks/useAutocompleteInputFocus'
 import { useSearchBarTheme } from './hooks/useSearchBarTheme'
 import { setNodeOnInputStore, useInputStoreLocation } from './inputStore'
 import { SearchInputNativeDragFix } from './SearchInputNativeDragFix'
@@ -24,22 +24,9 @@ export const AppSearchInputLocation = memo(() => {
   const home = useHomeStore()
   const { color } = useSearchBarTheme()
   const { curLocName } = home.currentState
-  const locationAutocomplete = useStoreInstance(autocompleteLocationStore)
-  const autocompletes = useStoreInstance(autocompletesStore)
-  const showLocationAutocomplete =
-    autocompletes.visible && autocompletes.target === 'location'
 
-  useEffect(() => {
-    if (showLocationAutocomplete) {
-      const tm = setTimeout(() => {
-        inputStore.focusNode()
-      }, 100)
-      return () => {
-        clearTimeout(tm)
-      }
-    }
-    return undefined
-  }, [showLocationAutocomplete])
+  // focus on visible
+  useAutocompleteInputFocus(inputStore)
 
   const handleKeyPress = useCallback((e) => {
     // @ts-ignore
@@ -49,10 +36,10 @@ export const AppSearchInputLocation = memo(() => {
     switch (code) {
       case 13: {
         // enter
-        const result = locationAutocomplete.activeResult
+        const result = autocompleteLocationStore.activeResult
         if (result) {
           appMapStore.setLocation(result.name)
-          autocompletes.setVisible(false)
+          autocompletesStore.setVisible(false)
         }
         return
       }
@@ -113,7 +100,7 @@ export const AppSearchInputLocation = memo(() => {
             minWidth="78.7%" // this is the hackiest ever fix for react native width issue for now
             flex={1}
             onPressOut={() => {
-              autocompletes.setTarget('location')
+              autocompletesStore.setTarget('location')
             }}
           >
             <AbsoluteVStack
@@ -144,8 +131,8 @@ export const AppSearchInputLocation = memo(() => {
               onKeyPress={handleKeyPress}
               onChangeText={(text) => {
                 inputStore.setValue(text)
-                if (text && !autocompletes.visible) {
-                  autocompletes.setTarget('location')
+                if (text && !autocompletesStore.visible) {
+                  autocompletesStore.setTarget('location')
                 }
               }}
             />

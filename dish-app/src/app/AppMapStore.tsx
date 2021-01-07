@@ -1,6 +1,9 @@
-import { LngLat, RestaurantOnlyIds } from '@dish/graph'
-import { Store, createStore } from '@dish/use-store'
-import { isEqual } from 'lodash'
+import { series } from '@dish/async'
+import { LngLat, RestaurantOnlyIds, resolved } from '@dish/graph'
+import { isPresent } from '@dish/helpers/src'
+import { Store, createStore, useStoreInstance } from '@dish/use-store'
+import { isEqual, uniqBy } from 'lodash'
+import { useEffect } from 'react'
 
 import { defaultLocationAutocompleteResults } from '../constants/defaultLocationAutocompleteResults'
 import {
@@ -12,6 +15,7 @@ import { reverseGeocode } from '../helpers/reverseGeocode'
 import { router } from '../router'
 import { autocompleteLocationStore } from './AppAutocomplete'
 import { homeStore } from './homeStore'
+import { useRestaurantQuery } from './hooks/useRestaurantQuery'
 import { inputStoreLocation } from './inputStore'
 
 type MapPosition = {
@@ -21,11 +25,27 @@ type MapPosition = {
   via?: 'select' | 'hover' | 'detail'
 }
 
+export type MapResultItem = {
+  id: any
+  slug: string
+  name: string
+  location: {
+    coordinates: any[]
+  }
+}
+
 class AppMapStore extends Store {
   selected: RestaurantOnlyIds | null = null
   hovered: RestaurantOnlyIds | null = null
   userLocation: LngLat | null = null
   position: MapPosition = getDefaultLocation()
+  results: MapResultItem[] = []
+
+  setResults(val: MapResultItem[]) {
+    this.setSelected(null)
+    this.setHovered(null)
+    this.results = val
+  }
 
   setPosition(via: string, pos: Partial<MapPosition>) {
     this.position = {
@@ -104,3 +124,53 @@ class AppMapStore extends Store {
 }
 
 export const appMapStore = createStore(AppMapStore)
+export const useAppMapStore = () => useStoreInstance(appMapStore)
+
+export const useSetAppMapResults = (props: {
+  isActive: boolean
+  results: RestaurantOnlyIds[]
+}) => {
+  useEffect(() => {
+    if (!props.isActive) return
+    let restaurants: MapResultItem[] | null = null
+
+    return series([
+      async () => {
+        const all = props.results
+        const allIds = [...new Set(all.map((x) => x.id))]
+        const allResults = allIds
+          .map((id) => all.find((x) => x.id === id))
+          .filter(isPresent)
+
+        restaurants = await resolved(() => {
+          return (
+            uniqBy(
+              allResults
+                .map(({ id, slug }) => {
+                  if (!slug) return null
+                  const r = useRestaurantQuery(slug)
+                  if (!r) return null
+                  const coords = r?.location?.coordinates
+                  return {
+                    id: id || r.id,
+                    slug,
+                    name: r.name,
+                    location: {
+                      coordinates: [coords?.[0], coords?.[1]],
+                    },
+                  }
+                })
+                .filter(isPresent),
+              (x) => `${x.location.coordinates[0]}${x.location.coordinates[1]}`
+            )
+              // ensure has location
+              .filter((x) => x.id && !!x.location.coordinates[0])
+          )
+        })
+      },
+      () => {
+        appMapStore.setResults(restaurants)
+      },
+    ])
+  }, [JSON.stringify(props)])
+}

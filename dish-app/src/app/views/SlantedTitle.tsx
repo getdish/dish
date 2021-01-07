@@ -28,6 +28,7 @@ export const SlantedTitle = ({
         fontWeight="700"
         size={size}
         sizeLineHeight={sizeLineHeight}
+        textAlign="center"
         {...textProps}
       >
         {children}

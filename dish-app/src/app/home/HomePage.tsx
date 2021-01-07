@@ -11,7 +11,14 @@ import {
 } from '@dish/graph'
 import { isPresent } from '@dish/helpers'
 import { capitalize, chunk, partition, sortBy, uniqBy, zip } from 'lodash'
-import React, { Suspense, memo, useEffect, useRef, useState } from 'react'
+import React, {
+  Suspense,
+  memo,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from 'react'
 import { Dimensions, ScrollView } from 'react-native'
 import { useQuery } from 'react-query'
 import {
@@ -39,6 +46,7 @@ import { useQueryLoud } from '../../helpers/useQueryLoud'
 import { router } from '../../router'
 import { HomeStateItemHome } from '../../types/homeTypes'
 import { AppIntroLogin } from '../AppIntroLogin'
+import { useSetAppMapResults } from '../AppMapStore'
 import { homeStore, useHomeStore } from '../homeStore'
 import { usePageLoadEffect } from '../hooks/usePageLoadEffect'
 import { useRestaurantQuery } from '../hooks/useRestaurantQuery'
@@ -76,7 +84,7 @@ export default memo(function HomePage(props: Props) {
     enabled: !!state.region,
   })
 
-  console.log('👀 HomePage', props, region)
+  console.log('👀 HomePage', props, region, JSON.stringify(state, null, 2))
 
   // load effect!
   usePageLoadEffect(props, () => {
@@ -139,7 +147,7 @@ export default memo(function HomePage(props: Props) {
     let next =
       (region.data?.name ?? '')
         .toLowerCase()
-        .replace('ca- ', '')
+        .replace(/[a-z]{2}\- /i, '')
         .split(' ')
         .map((x) => capitalize(x))
         .join(' ') ?? ''
@@ -299,23 +307,20 @@ const HomePageContent = memo(
   graphql(function HomePageContent({
     region,
     item,
-  }: {
+    isActive,
+  }: Props & {
     region?: RegionNormalized
     item: HomeStateItemHome
   }) {
     const media = useMedia()
     const isNew = item.section === 'new'
     const items = useHomeFeed(item, region, isNew)
-    const results = items.filter(isRestaurantFeedItem)
     const isLoading = !region || items[0]?.id === null
 
-    useEffect(() => {
-      if (isLoading) return
-      homeStore.updateHomeState('HomePageContent.resultsEffect', {
-        id: item.id,
-        results: results.map((x) => x.restaurant),
-      })
-    }, [isLoading, JSON.stringify(results)])
+    useSetAppMapResults({
+      isActive,
+      results: items.filter(isRestaurantFeedItem).map((x) => x.restaurant),
+    })
 
     const [expandable, unexpandable] = partition(items, (x) => x.expandable)
     const unshuffled = zip(expandable, unexpandable).flat().slice(0, 12)
