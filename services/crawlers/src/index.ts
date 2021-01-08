@@ -1,3 +1,5 @@
+import '@dish/helpers/polyfill'
+
 export { CI } from './ci/CI'
 export { Self } from './self/Self'
 export { UberEats } from './ubereats/UberEats'

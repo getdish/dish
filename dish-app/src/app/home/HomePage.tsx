@@ -204,13 +204,12 @@ export default memo(function HomePage(props: Props) {
 
               <HStack>
                 <ScrollView horizontal showsHorizontalScrollIndicator={false}>
-                  <HStack paddingVertical={15} paddingHorizontal={10}>
+                  <HStack paddingVertical={12} paddingHorizontal={10}>
                     <SlantedTitle
                       position="relative"
                       overflow="visible"
                       minWidth={80}
                       alignSelf="center"
-                      marginTop={-5}
                       backgroundColor={regionColors.color}
                       color="#fff"
                     >

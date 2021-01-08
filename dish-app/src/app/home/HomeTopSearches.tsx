@@ -32,21 +32,17 @@ export const HomeTopSearches = memo(() => {
           <LinkButton
             key={index}
             tags={search.tags}
+            asyncClick
             paddingVertical={12}
             paddingHorizontal={16}
             alignItems="center"
-            marginBottom={7}
             borderRadius={60}
             position="relative"
             overflow="hidden"
-            borderColor="transparent"
-            hoverStyle={{
-              borderColor: rgbString ? `rgba(${rgbString}, 0.3)` : bgLightHover,
-            }}
           >
             {hasLenseColor && (
               <LinearGradient
-                colors={[`rgba(${rgbString}, 0.1)`, `rgba(${rgbString},0.07)`]}
+                colors={[`rgba(${rgbString}, 0.15)`, `rgba(${rgbString},0.07)`]}
                 start={[1, 1]}
                 end={[-1, 1]}
                 style={StyleSheet.absoluteFill}
@@ -54,28 +50,26 @@ export const HomeTopSearches = memo(() => {
             )}
             {search.tags.map((tag, index) => (
               <React.Fragment key={tag.name}>
+                {tag.icon ? (
+                  <Text
+                    marginRight={6}
+                    fontSize={20}
+                    lineHeight={20}
+                    transform={[{ translateY: 0.5 }]}
+                  >
+                    {tag.icon.trim()}{' '}
+                  </Text>
+                ) : (
+                  ''
+                )}
                 <Text
-                  color="#444"
-                  fontSize={16}
                   {...(hasLenseColor && {
                     color: `rgb(${rgbString})`,
                   })}
+                  fontSize={16}
+                  transform={[{ translateY: -1 }]}
                 >
-                  {tag.icon ? (
-                    <Text
-                      marginRight={1}
-                      fontSize={20}
-                      lineHeight={20}
-                      transform={[{ translateY: 1 }]}
-                    >
-                      {tag.icon.trim()}{' '}
-                    </Text>
-                  ) : (
-                    ''
-                  )}
-                  <Text transform={[{ translateY: -1 }]}>
-                    {tagDisplayName(tag)}
-                  </Text>
+                  {tagDisplayName(tag)}
                 </Text>
                 {index < search.tags.length - 1 ? (
                   <Text
@@ -83,6 +77,7 @@ export const HomeTopSearches = memo(() => {
                     fontWeight="700"
                     fontSize={12}
                     opacity={0.23}
+                    transform={[{ translateY: -3 }]}
                   >
                     +
                   </Text>

@@ -1,5 +1,4 @@
 import 'isomorphic-unfetch'
-import '@dish/helpers/polyfill'
 
 export * from './react'
 export * from './graphql'
