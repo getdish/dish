@@ -1045,7 +1045,11 @@ function docker_compose_up_for_devs() {
   )
   echo "Starting the following services: $services"
   export HASURA_GRAPHQL_ADMIN_SECRET=password
-  docker-compose up "$extra" $services
+  if [ -z "$extra" ]; then
+    docker-compose up $services
+  else
+    docker-compose up "$extra" $services
+  fi
 }
 
 function staging_ssh() {
