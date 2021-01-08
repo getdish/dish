@@ -13,6 +13,7 @@
     "watch": "tsc -b --watch --preserveWatchOutput"
   },
   "devDependencies": {
+    "@dish/helpers": "*",
     "debug-http": "^1.1.0",
     "mutationobserver-polyfill": "^1.3.0",
     "jsdom": "^16.4.0",
