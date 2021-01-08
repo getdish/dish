@@ -13,7 +13,7 @@
     ]
   },
   "scripts": {
-    "start": "echo 'run:\n yarn docker:start\n yarn web'",
+    "start": "./dishctl.sh docker_compose_up_for_devs",
     "db:init": "./dishctl.sh db_migrate_local init",
     "db:migrate": "./dishctl.sh db_migrate_local",
     "db:clear": "./dishctl.sh db_clear_local",
@@ -26,7 +26,6 @@
     "postinstall": "./bin/postinstall.sh",
     "preinstall": "./bin/preinstall.sh; ",
     "t": "eval $(./dishctl.sh yaml_to_env) echo $TF_VAR_HASURA_ENDPOINT",
-    "docker:start": "./dishctl.sh docker_compose_up_for_devs",
     "docker:build": "eval $(./dishctl.sh yaml_to_env) docker-compose build",
     "docker:build:file": "eval $(./dishctl.sh yaml_to_env) docker buildx build --platform linux/amd64",
     "docker:build:base": "yarn docker:build:file .",

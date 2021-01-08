@@ -39,7 +39,7 @@ The core stack contains the minimum services needed to run the web app locally. 
 can be easily run with Docker Compose: https://docs.docker.com/compose/install/
 
 When working with Dish's Docker images you'll often need to be logged into our Docker
-Registry: `./dishctl.sh dish_docker_login`. Currently we use Google Cloud's Docker registry, so you'll likely be asked to install the GCloud SDK. 
+Registry: `./dishctl.sh dish_docker_login`. Currently we use Google Cloud's Docker registry, so you'll likely be asked to install the GCloud SDK.
 
 Once you're logged in and have Docker Compose installed, go to the root of this repo and run:
 
@@ -263,6 +263,7 @@ Deployment should happen automatically for all succesful builds on the staging b
 ### Notes
 
 These are the steps needed to set up the staging VM on Digital Ocean:
+
 ```
 # Add `webish` firewall
 # Add your SSH key if you want and SSH in:
