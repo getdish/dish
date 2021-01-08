@@ -27,7 +27,6 @@ import {
   Button,
   HStack,
   LoadingItem,
-  LoadingItems,
   Spacer,
   StackProps,
   Text,
@@ -84,7 +83,7 @@ const SearchPagePropsContext = createContext<Props | null>(null)
 
 export default memo(function SearchPage(props: Props) {
   const homeStore = useHomeStore()
-  const state = homeStore.allStates[props.item.id]
+  const state = homeStore.allStates[props.item.id] as HomeStateItemSearch
   const { title } = getTitleForState(state, {
     lowerCase: false,
   })

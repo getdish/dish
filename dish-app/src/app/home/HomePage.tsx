@@ -7,6 +7,7 @@ import {
   graphql,
   order_by,
   query,
+  slugify,
   tag,
 } from '@dish/graph'
 import { isPresent } from '@dish/helpers'
@@ -108,7 +109,7 @@ export default memo(function HomePage(props: Props) {
       setDefaultLocation({
         center: region.data.center,
         span: region.data.span,
-        region: region.data.name,
+        region: slugify(region.data.name),
       })
     }
   }, [isActive, region.status, region.data])

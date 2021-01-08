@@ -117,8 +117,8 @@ const DishViewContent = (props: DishViewProps) => {
           height={20}
           pointerEvents="none"
           zIndex={1000000}
-          top={2}
-          left={2}
+          top={12}
+          left={6}
         >
           <Suspense fallback={null}>
             <DishUpvoteDownvote

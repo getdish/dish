@@ -185,7 +185,6 @@ class HomeStore extends Store {
       })
     } else {
       console.warn('no match')
-      debugger
       router.navigate({
         name: 'homeRegion',
         params: homeRegionParams,
@@ -198,6 +197,7 @@ class HomeStore extends Store {
       throw new Error(`Must have id`)
     }
     const state = this.allStates[val.id]
+
     if (state) {
       if (val.type && state.type !== val.type) {
         throw new Error(`Cant change the type`)
