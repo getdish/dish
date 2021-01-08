@@ -60,10 +60,12 @@ export const RestaurantCardContent = memo(
       // const scale = size === 'lg' ? 1.2 : size == 'sm' ? 0.6 : 1
       const [hideInfo, setHideInfo] = useState(false)
       const [price_label, price_color, price_range] = priceRange(restaurant)
-      const colors = getColorsForName(restaurant.name)
-      const altColor = colors.altPastelColor
-      const color = colors.pastelColor
-      const lightColor = colors.lightColor
+      const {
+        altPastelColor,
+        pastelColor,
+        lightColor,
+        color,
+      } = getColorsForName(restaurant.name)
 
       const handleOnIsAtStart = useCallback((x) => {
         setHideInfo(!x)
@@ -106,7 +108,12 @@ export const RestaurantCardContent = memo(
               >
                 <LinearGradient
                   style={StyleSheet.absoluteFill}
-                  colors={[`${altColor}00`, `${lightColor}33`, `${altColor}ff`]}
+                  colors={[
+                    `${altPastelColor}00`,
+                    `${lightColor}00`,
+                    `${lightColor}00`,
+                    altPastelColor,
+                  ]}
                   start={[1, 0]}
                   end={[0, 1]}
                 />
@@ -114,11 +121,10 @@ export const RestaurantCardContent = memo(
                   style={[StyleSheet.absoluteFill, { opacity: 0.85 }]}
                   colors={[
                     color,
-                    color,
-                    `${color}ee`,
-                    `${color}99`,
-                    `${color}00`,
-                    `${color}00`,
+                    pastelColor,
+                    `${pastelColor}99`,
+                    `${pastelColor}00`,
+                    `${pastelColor}00`,
                   ]}
                   start={[1, 0]}
                   end={[0.9, 0.1]}

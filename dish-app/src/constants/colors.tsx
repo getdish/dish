@@ -41,13 +41,13 @@ export const blue = '#3666aa'
 export const purple = '#6E28aa'
 export const allColors = [yellow, pink, green, red, orange, blue, purple]
 
-export const yellowPastel = '#DED5B6'
-export const pinkPastel = `#C997AA`
-export const greenPastel = `#AECABA`
-export const redPastel = `#EDC9C9`
-export const orangePastel = '#E1BE90'
-export const bluePastel = '#8C99AB'
-export const purplePastel = '#9A84AC'
+export const yellowPastel = '#C4BCA1'
+export const pinkPastel = `#B08494`
+export const greenPastel = `#97B0A2`
+export const redPastel = `#D4B4B4`
+export const orangePastel = '#C7A77F'
+export const bluePastel = '#778291'
+export const purplePastel = '#827091'
 export const allColorsPastel = [
   yellowPastel,
   pinkPastel,
