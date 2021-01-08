@@ -37,6 +37,7 @@ export const HomeTopSearches = memo(() => {
             paddingHorizontal={16}
             alignItems="center"
             borderRadius={60}
+            className="safari-fix-overflow"
             position="relative"
             overflow="hidden"
           >

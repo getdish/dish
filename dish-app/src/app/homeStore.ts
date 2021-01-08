@@ -265,12 +265,12 @@ class HomeStore extends Store {
         case 'about':
         case 'blog':
         case 'search':
+        case 'list':
         case 'user':
         case 'userEdit':
         case 'gallery':
         case 'restaurantReview':
         case 'restaurantHours':
-        case 'userSearch':
         case 'restaurant': {
           const prevState = findLast(this.states, (x) => x.type === name)
           const res = await this.pushHomeState({
@@ -331,11 +331,7 @@ class HomeStore extends Store {
         break
       }
 
-      // search or userSearch
-      case 'userSearch':
       case 'search': {
-        const username =
-          type == 'userSearch' ? router.curPage.params.username : ''
         const prev = findLastHomeOrSearch(this.states)
         if (!prev) {
           throw new Error('unreachable')
@@ -343,7 +339,6 @@ class HomeStore extends Store {
         nextState = {
           type: 'search',
           region: router.curPage.params.region ?? prev.region,
-          username,
           activeTags: prev.activeTags ?? {},
           center: appMapStore.position.center,
           span: appMapStore.position.span,

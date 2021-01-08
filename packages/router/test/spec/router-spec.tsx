@@ -10,8 +10,6 @@ const routes = {
   ),
   login: new Route('/login'),
   restaurant: new Route<{ slug: string }>('/restaurant/:slug'),
-  // NOTE keep userSearch and search in sync
-  // after user/restaurant
   notFound: new Route('*'),
 }
 

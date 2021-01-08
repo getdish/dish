@@ -632,9 +632,6 @@ const HomeAutocompleteDefault = memo(() => {
 
 function AutocompleteAddButton() {
   const home = useHomeStore()
-  if (home.currentStateType !== 'userSearch') {
-    return null
-  }
   return (
     <SmallCircleButton
       onPressOut={(e) => {

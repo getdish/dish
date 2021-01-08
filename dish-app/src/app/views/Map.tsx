@@ -11,7 +11,14 @@ import React, { useEffect, useRef, useState } from 'react'
 import { Dimensions } from 'react-native'
 import { useGet } from 'snackui'
 
-import { blue, green, purple } from '../../constants/colors'
+import {
+  blue,
+  darkPink,
+  green,
+  pink,
+  purple,
+  yellow,
+} from '../../constants/colors'
 import { MAPBOX_ACCESS_TOKEN } from '../../constants/constants'
 import { tagLenses } from '../../constants/localTags'
 import { hasMovedAtLeast } from '../../helpers/hasMovedAtLeast'
@@ -773,7 +780,7 @@ function setupMapEffect({
           generateId: true,
         })
 
-        const rgb = tagLenses[0].rgb
+        const rgb = hexToRGB(blue).rgb
         map.addLayer({
           id: POINT_LAYER_ID,
           type: 'circle',
@@ -788,9 +795,9 @@ function setupMapEffect({
 
             'circle-stroke-width': {
               stops: [
-                [8, 1],
-                [11, 1],
-                [16, 2],
+                [8, 0],
+                [11, 0],
+                [16, 1],
               ],
             },
 
@@ -804,8 +811,8 @@ function setupMapEffect({
               1,
               'yellow',
               0,
-              `rgba(${rgb.join(',')}, 0.25)`,
-              `rgba(${rgb.join(',')}, 0.25)`,
+              `rgba(${rgb.join(',')}, 0.5)`,
+              `rgba(${rgb.join(',')}, 0.5)`,
             ],
 
             // [
@@ -831,8 +838,8 @@ function setupMapEffect({
           type: 'circle',
           filter: ['==', 'id', ''],
           paint: {
-            'circle-radius': 8,
-            'circle-color': blue,
+            'circle-radius': 6,
+            'circle-color': '#fff',
             // 'icon-allow-overlap': true,
             // 'icon-ignore-placement': true,
             // 'icon-size': 0.25,
@@ -872,18 +879,18 @@ function setupMapEffect({
           type: 'symbol',
           filter: ['has', 'searchPosition'],
           layout: {
-            // 'icon-allow-overlap': true,
-            // 'icon-ignore-placement': true,
+            'icon-allow-overlap': true,
+            'icon-ignore-placement': true,
             'text-field': ['format', ['get', 'searchPosition']],
             'text-font': ['DIN Offc Pro Bold', 'Arial Unicode MS Bold'],
-            'text-size': 13,
+            'text-size': 22,
             // 'text-variable-anchor': ['bottom', 'top', 'right', 'left'],
             'text-anchor': 'center',
           },
           paint: {
             'text-color': '#000',
-            // 'text-halo-color': '#70b600',
-            // 'text-halo-width': 1,
+            'text-halo-color': '#fff',
+            'text-halo-width': 1,
           },
         })
         cancels.add(() => {
