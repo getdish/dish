@@ -66,6 +66,7 @@ services:
       - GORSE_SYNC_HOOK=http://dish-hooks:6154/gorse_sync
       - VIRTUAL_HOST=hasura-staging.dishapp.com
     depends_on:
+      - 'postgres'
       - 'redis'
       - 'dish-hooks'
   tileserver:
@@ -77,6 +78,8 @@ services:
       - WATCH_MODE=true
       - DATABASE_URL=postgres://postgres:postgres@postgres/dish
       - VIRTUAL_HOST=martin-tiles-staging.dishapp.com
+    depends_on:
+      - 'postgres'
   user-server:
     image: gcr.io/dish-258800/user-server${DISH_IMAGE_TAG}
     platform: linux/amd64
@@ -92,6 +95,8 @@ services:
       - VIRTUAL_PORT=3000
       - POSTGRES_HOST=postgres
       - VIRTUAL_HOST=user-server-staging.dishapp.com
+    depends_on:
+      - 'postgres'
   search:
     image: gcr.io/dish-258800/dish/search${DISH_IMAGE_TAG}
     platform: linux/amd64
@@ -103,6 +108,8 @@ services:
     environment:
       - VIRTUAL_HOST=search-staging.dishapp.com
       - POSTGRES_HOST=postgres
+    depends_on:
+      - 'postgres'
   gorse:
     image: gcr.io/dish-258800/gorse
     platform: linux/amd64

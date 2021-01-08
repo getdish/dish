@@ -203,6 +203,7 @@ const RestaurantListItemContent = memo(
     const titleHeight = titleFontSize + 8 * 2
     const score = Math.round((meta?.effective_score ?? 0) / 10)
     const theme = useTheme()
+    const showVote = !!activeTagSlugs
 
     return (
       <VStack
@@ -248,7 +249,7 @@ const RestaurantListItemContent = memo(
           backgroundColor={isActive ? brandColor : 'transparent'}
         />
 
-        {activeTagSlugs && (
+        {showVote && (
           <AbsoluteVStack top={34} left={-5} zIndex={2000000}>
             <RestaurantUpVoteDownVote
               rounded
@@ -277,7 +278,7 @@ const RestaurantListItemContent = memo(
               name="restaurant"
               params={{ slug: restaurantSlug }}
             >
-              <VStack paddingLeft={47} paddingTop={25}>
+              <VStack paddingLeft={showVote ? 47 : 10} paddingTop={25}>
                 <HStack position="relative" alignItems="center">
                   <AbsoluteVStack top={-16} left={-34} zIndex={-1}>
                     <RankView rank={rank} />
@@ -331,7 +332,7 @@ const RestaurantListItemContent = memo(
               <VStack
                 overflow="hidden"
                 zIndex={2}
-                paddingLeft={60}
+                paddingLeft={showVote ? 60 : 22}
                 paddingRight={20}
                 marginTop={media.sm ? -6 : 0}
                 transform={[{ translateY: -10 }]}
@@ -538,6 +539,7 @@ const RestaurantListItemScoreBreakdown = memo(
         restaurantSlug,
         tagSlugs: activeTagSlugs,
       })
+      console.log('restaurantTags', restaurantTags)
       return (
         <VStack spacing>
           {restaurantTags.map((rtag) => {
@@ -568,10 +570,10 @@ const RestaurantPeekDishes = memo(
     const { isLoaded, size = 'md' } = props
     const dishes = getRestaurantDishes({
       restaurantSlug: props.restaurantSlug,
-      tag_slugs: props.activeTagSlugs,
+      tagSlugs: props.activeTagSlugs,
       max: 5,
     })
-    const foundMatchingSearchedDish = props.activeTagSlugs.includes(
+    const foundMatchingSearchedDish = props.activeTagSlugs?.includes(
       dishes[0].slug
     )
     const dishSize = 165
