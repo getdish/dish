@@ -26,6 +26,7 @@ import {
 } from 'snackui'
 import { isWeb } from 'snackui/src/constants'
 
+import { getImageUrl } from '../../../helpers/getImageUrl'
 import { useHomeStore } from '../../homeStore'
 import { useRestaurantQuery } from '../../hooks/useRestaurantQuery'
 import { StackViewCloseButton } from '../../views/StackViewCloseButton'
@@ -333,6 +334,7 @@ const GalleryLightboxPhotosList = ({
         }
       }}
       style={{
+        paddingVertical: 10,
         maxHeight: ThumbnailSize,
       }}
       scrollEventThrottle={100}
@@ -347,6 +349,7 @@ const GalleryLightboxPhotosList = ({
         {photos.map((photo, index) => {
           const { url } = photo
           if (!url) return null
+          const isActive = activeImageUrl === url
 
           return (
             <VStack
@@ -354,17 +357,26 @@ const GalleryLightboxPhotosList = ({
               onPress={() => {
                 onPhotoPress(photo, index)
               }}
-              paddingHorizontal={2}
+              zIndex={isActive ? 1 : 0}
             >
-              <Image
-                source={{ uri: url }}
-                style={{
-                  width: ThumbnailSize,
-                  height: ThumbnailSize,
-                  opacity: activeImageUrl === url ? 1 : 0.6,
-                }}
-                resizeMode="cover"
-              />
+              <VStack
+                transform={[{ scale: isActive ? 1.1 : 1 }]}
+                shadowOpacity={isActive ? 1 : 0}
+                shadowColor="#000"
+                shadowRadius={10}
+              >
+                <Image
+                  source={{
+                    uri: getImageUrl(url, ThumbnailSize, ThumbnailSize),
+                  }}
+                  style={{
+                    width: ThumbnailSize,
+                    height: ThumbnailSize,
+                    opacity: isActive ? 1 : 0.8,
+                  }}
+                  resizeMode="cover"
+                />
+              </VStack>
             </VStack>
           )
         })}
