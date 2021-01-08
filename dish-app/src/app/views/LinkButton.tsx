@@ -55,6 +55,7 @@ export function LinkButton<
       {...restProps}
       {...(isActive && props.activeStyle)}
       textProps={isActive ? props.activeTextStyle : textProps}
+      opacity={opacity}
       {...(disabled &&
         typeof opacity !== 'number' && {
           opacity: 0.5,
