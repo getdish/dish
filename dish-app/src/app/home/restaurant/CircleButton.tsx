@@ -1,12 +1,13 @@
 import React from 'react'
-import { StackProps, VStack } from 'snackui'
+import { StackProps, VStack, useTheme } from 'snackui'
 
 export const CircleButton = (props: StackProps) => {
+  const theme = useTheme()
   return (
     <VStack
       borderRadius={1000}
       shadowColor="rgba(0,0,0,0.1)"
-      backgroundColor="#fff"
+      backgroundColor={theme.backgroundColorTertiary}
       shadowRadius={8}
       width={38}
       height={38}

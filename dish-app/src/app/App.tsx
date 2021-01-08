@@ -54,7 +54,6 @@ function AppHomeContent() {
 
       <VStack
         zIndex={0}
-        // borderRadius={12}
         flex={1}
         maxWidth="100%"
         maxHeight="100%"

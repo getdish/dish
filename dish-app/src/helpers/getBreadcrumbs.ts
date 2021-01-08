@@ -29,10 +29,7 @@ export const getBreadcrumbs = (states: HomeStateItem[]) => {
       if (crumbs.some((x) => x.type === cur.type)) {
         continue
       }
-      if (
-        (cur.type === 'restaurant' || cur.type === 'user') &&
-        crumbs.some(isSearchState)
-      ) {
+      if (cur.type !== 'search' && crumbs.some(isSearchState)) {
         continue
       }
       if (isSearchState(cur) && crumbs.some(isSearchState)) {

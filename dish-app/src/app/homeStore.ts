@@ -326,6 +326,14 @@ class HomeStore extends Store {
         break
       }
 
+      case 'list': {
+        nextState = {
+          slug: item.params.slug,
+          userSlug: item.params.userSlug,
+        }
+        break
+      }
+
       case 'userEdit':
       case 'about': {
         break

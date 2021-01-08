@@ -1,5 +1,5 @@
 import { series, sleep } from '@dish/async'
-import { LngLat } from '@dish/graph'
+import { LngLat, slugify } from '@dish/graph'
 import { ArrowUp } from '@dish/react-feather'
 import { HistoryItem } from '@dish/router'
 import { reaction } from '@dish/use-store'
@@ -38,7 +38,7 @@ import {
 
 import { isWeb } from '../../../constants/constants'
 import { initialHomeState } from '../../../constants/initialHomeState'
-import { addTagsToCache } from '../../../helpers/allTags'
+import { addTagsToCache, allTags } from '../../../helpers/allTags'
 import { bboxToSpan } from '../../../helpers/bboxToSpan'
 import { RegionNormalized, fetchRegion } from '../../../helpers/fetchRegion'
 import { getActiveTags } from '../../../helpers/getActiveTags'
@@ -266,6 +266,20 @@ const SearchResultsContent = (props: Props) => {
     )
   }, [drawerWidth])
 
+  const activeTagSlugs = useMemo(() => {
+    return [
+      ...slugify(props.item.searchQuery),
+      ...Object.keys(props.item.activeTags || {}).filter((x) => {
+        const isActive = props.item.activeTags[x]
+        if (!isActive) {
+          return false
+        }
+        const type = allTags[x]?.type ?? 'outlier'
+        return type != 'lense' && type != 'filter' && type != 'outlier'
+      }),
+    ]
+  }, [props.item.activeTags])
+
   const rowRenderer = useCallback(
     (
       type: string | number,
@@ -280,7 +294,7 @@ const SearchResultsContent = (props: Props) => {
             restaurantId={data.id}
             restaurantSlug={data.slug}
             rank={index + 1}
-            searchState={props.item}
+            activeTagSlugs={activeTagSlugs}
             meta={results[index].meta}
           />
         </Suspense>

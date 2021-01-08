@@ -859,13 +859,13 @@ function setupMapEffect({
             'icon-ignore-placement': true,
             'text-field': ['format', ['get', 'title']],
             'text-font': ['DIN Offc Pro Medium', 'Arial Unicode MS Bold'],
-            'text-size': 12,
-            'text-variable-anchor': ['bottom', 'top', 'right', 'left'],
+            'text-size': 14,
+            'text-variable-anchor': ['right', 'left'],
             // 'text-offset': [0, 2],
-            'text-anchor': 'top',
+            'text-anchor': 'right',
           },
           paint: {
-            'text-halo-color': '#fff',
+            'text-halo-color': 'rgba(255,255,255,0.5)',
             'text-halo-width': 1,
           },
         })
@@ -889,7 +889,7 @@ function setupMapEffect({
           },
           paint: {
             'text-color': '#000',
-            'text-halo-color': '#fff',
+            'text-halo-color': 'rgba(255,255,255,0.5)',
             'text-halo-width': 1,
           },
         })

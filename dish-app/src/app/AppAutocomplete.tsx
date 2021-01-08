@@ -50,6 +50,7 @@ import { useRouterCurPage } from '../router'
 import { LngLat } from '../types/homeTypes'
 import { appMapStore } from './AppMapStore'
 import { drawerStore } from './drawerStore'
+import { CircleButton } from './home/restaurant/CircleButton'
 import { useHomeStore } from './homeStore'
 import { useInputStoreLocation } from './inputStore'
 import { useUserStore } from './userStore'
@@ -509,7 +510,10 @@ const AutocompleteItemView = memo(
     )
     const plusButtonEl =
       result.type === 'dish' && index !== 0 && userStore.isLoggedIn ? (
-        <AutocompleteAddButton />
+        <>
+          <VStack flex={1} />
+          <AutocompleteAddButton />
+        </>
       ) : null
 
     const icon =
@@ -547,7 +551,7 @@ const AutocompleteItemView = memo(
         })}
       >
         <VStack width="100%">
-          <HStack>
+          <HStack alignItems="center">
             {icon}
             {!!icon && <Spacer size="lg" />}
             <Text
@@ -558,8 +562,9 @@ const AutocompleteItemView = memo(
               fontSize={22}
               lineHeight={25}
             >
-              {result.name} {plusButtonEl}
+              {result.name}
             </Text>
+            {plusButtonEl}
           </HStack>
           {!!result.description && (
             <>
@@ -631,16 +636,17 @@ const HomeAutocompleteDefault = memo(() => {
 })
 
 function AutocompleteAddButton() {
-  const home = useHomeStore()
   return (
-    <SmallCircleButton
-      onPressOut={(e) => {
-        console.log('e', e)
-        alert('add to current search results')
-      }}
-    >
-      <Plus size={12} />
-    </SmallCircleButton>
+    <VStack padding={5}>
+      <CircleButton
+        onPressOut={(e) => {
+          console.log('e', e)
+          alert('add to current search results')
+        }}
+      >
+        <Plus size={16} />
+      </CircleButton>
+    </VStack>
   )
 }
 
