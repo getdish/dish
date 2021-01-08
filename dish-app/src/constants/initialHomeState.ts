@@ -10,5 +10,3 @@ export const initialHomeState: HomeStateItemHome = {
   region: 'ca-san-francisco',
   section: '',
 }
-
-console.log('initialHomeState', initialHomeState)

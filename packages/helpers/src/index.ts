@@ -1,5 +1,3 @@
-import './polyfill-localStorage'
-
 export * from './constants'
 export * from './assertHelpers'
 

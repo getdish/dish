@@ -98,7 +98,6 @@ export const GalleryLightbox = ({
         photo.url
         photo.quality
       })
-
       return photoTable.map((v) => v.photo)
     },
     {
@@ -162,8 +161,6 @@ export const GalleryLightbox = ({
   )
 
   const activeIndex = activeImage.index
-
-  console.log('activeImage', activeImage, activeIndex, photosList)
 
   useEffect(() => {
     if (photosList[activeIndex]?.url) {
