@@ -39,20 +39,21 @@ The core stack contains the minimum services needed to run the web app locally. 
 can be easily run with Docker Compose: https://docs.docker.com/compose/install/
 
 When working with Dish's Docker images you'll often need to be logged into our Docker
-Registry: `./dishctl.sh dish_docker_login`. Currently we use Google Cloud's Docker registry, so you'll likely be asked to install the GCloud SDK.
 
+Registry: `./dishctl.sh dish_docker_login`. Currently we use Google Cloud's Docker registry, so you'll likely be asked to install the GCloud SDK.  After installing Gcloud for the first time, run: `./dishctl.sh gcloud_init`.
 
 Some helper commands to get started:
 
 - `yarn bootstrap`: builds the base image
 - `yarn start` will run docker-compose for local development
 
-
 Once you're logged in and have Docker Compose installed, go to the root of this repo and run:
 
 `docker-compose up`
 
-For initial installation you may need to run this command a few times so postgres can generate encryption keys.
+For initial installation you may need to run this command a few times so postgres can generate encryption keys. You will also need to use an `init` arg to the first migrations run:
+
+`./dishctl.sh db_migrate_local init`
 
 When you need to rebuild the containers to update their code run:
 
