@@ -466,7 +466,7 @@ const RestaurantListItemContent = memo(
             <VStack
               paddingLeft={10}
               position="relative"
-              maxHeight={220}
+              marginBottom={15}
               marginTop={-60}
               transform={[{ translateY: -8 }]}
             >
@@ -638,11 +638,11 @@ const RestaurantPeekDishes = memo(
         contain="paint layout"
         pointerEvents="auto"
         padding={20}
-        paddingVertical={30}
+        paddingVertical={10}
         alignItems="center"
-        marginTop={-55}
+        // marginTop={-55}
         marginBottom={-35}
-        height={dishSize + 80}
+        height="100%"
         width={dishSize * 5}
       >
         {!!dishes[0]?.name &&

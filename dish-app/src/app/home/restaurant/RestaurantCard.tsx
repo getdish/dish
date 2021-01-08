@@ -77,7 +77,7 @@ export const RestaurantCardContent = memo(
       })?.[0]?.photo.url
 
       return (
-        <Link name="restaurant" params={{ slug: restaurantSlug }}>
+        <Link name="restaurant" asyncClick params={{ slug: restaurantSlug }}>
           <CardFrame aspectFixed hoverable={hoverable}>
             <VStack
               className="safari-fix-overflow"
