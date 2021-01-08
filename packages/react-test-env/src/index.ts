@@ -1,3 +1,4 @@
+import '@dish/helpers/polyfill'
 import 'mutationobserver-polyfill'
 
 import React from 'react'
