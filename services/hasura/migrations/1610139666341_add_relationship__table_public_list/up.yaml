@@ -1,12 +1,12 @@
 - args:
-    name: photo_table
+    name: list_restaurants
     table:
-      name: restaurant
+      name: list
       schema: public
     using:
       foreign_key_constraint_on:
-        column: restaurant_id
+        column: list_id
         table:
-          name: photo_xref
+          name: list_restaurant
           schema: public
   type: create_array_relationship

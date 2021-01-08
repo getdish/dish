@@ -81,13 +81,65 @@
       table:
         name: opening_hours
         schema: public
-    - table:
+    - select_permissions:
+      - permission:
+          columns:
+          - id
+          - quality
+          - url
+          filter: {}
+        role: anon
+      - permission:
+          columns:
+          - created_at
+          - id
+          - quality
+          - updated_at
+          - url
+          filter: {}
+        role: contributor
+      - permission:
+          columns:
+          - id
+          - quality
+          - url
+          filter: {}
+        role: user
+      table:
         name: photo
         schema: public
     - object_relationships:
       - name: photo
         using:
           foreign_key_constraint_on: photo_id
+      select_permissions:
+      - permission:
+          columns:
+          - id
+          - photo_id
+          - restaurant_id
+          - tag_id
+          - type
+          filter: {}
+        role: anon
+      - permission:
+          columns:
+          - id
+          - photo_id
+          - restaurant_id
+          - tag_id
+          - type
+          filter: {}
+        role: contributor
+      - permission:
+          columns:
+          - id
+          - photo_id
+          - restaurant_id
+          - tag_id
+          - type
+          filter: {}
+        role: user
       table:
         name: photo_xref
         schema: public
@@ -98,6 +150,13 @@
             column: restaurant_id
             table:
               name: menu_item
+              schema: public
+      - name: photo_table
+        using:
+          foreign_key_constraint_on:
+            column: restaurant_id
+            table:
+              name: photo_xref
               schema: public
       - name: reviews
         using:

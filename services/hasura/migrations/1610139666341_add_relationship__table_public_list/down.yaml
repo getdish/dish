@@ -1,0 +1,6 @@
+- args:
+    relationship: list_restaurants
+    table:
+      name: list
+      schema: public
+  type: drop_relationship

@@ -1,0 +1,5 @@
+- args:
+    cascade: false
+    read_only: false
+    sql: ALTER TABLE "public"."list" ADD COLUMN "user_id" uuid NOT NULL;
+  type: run_sql

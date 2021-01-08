@@ -1,0 +1,13 @@
+- args:
+    name: restaurants
+    table:
+      name: list_restaurant
+      schema: public
+    using:
+      manual_configuration:
+        column_mapping:
+          restaurant_id: id
+        remote_table:
+          name: restaurant
+          schema: public
+  type: create_array_relationship
