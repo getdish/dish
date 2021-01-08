@@ -8,8 +8,11 @@ import { useIsMountedRef } from '../../helpers/useIsMountedRef'
 import { userStore } from '../userStore'
 import { AppleLogoWhite } from './AppleLogoWhite'
 
+const { auth } = require('../../web/apple-sign-in')
+
+console.log('loading sign in')
+
 export default function SignInAppleButton() {
-  const { auth } = require('../../web/apple-sign-in')
   useEffect(() => {
     auth.init({
       clientId: 'com.dishapp',
@@ -18,35 +21,36 @@ export default function SignInAppleButton() {
       usePopup: isSafari,
     })
   }, [])
+
   const [loading, setLoading] = useState(false)
   const isMounted = useIsMountedRef()
+
+  const handleSignIn = async () => {
+    setLoading(true)
+    setTimeout(() => {
+      if (isMounted.current) {
+        setLoading(false)
+      }
+    }, 3000)
+    await sleep(40)
+    try {
+      const res = await auth.signIn()
+      if (!res) {
+        console.log('no res')
+        return // in-browser
+      }
+      const { authorization } = await res
+      const user = await Auth.appleAuth(authorization)
+      Toast.show('Logged in!')
+      userStore.setLogin(user)
+    } catch (err) {
+      Toast.show('Error loggin in 😭', { type: 'error' })
+      console.error('signin err', err)
+    }
+  }
+
   return (
-    <VStack
-      onPress={async () => {
-        setLoading(true)
-        setTimeout(() => {
-          if (isMounted.current) {
-            setLoading(false)
-          }
-        }, 3000)
-        await sleep(40)
-        const { auth } = require('../../web/apple-sign-in')
-        try {
-          const res = await auth.signIn()
-          if (!res) {
-            console.log('no res')
-            return // in-browser
-          }
-          const { authorization } = await res
-          const user = await Auth.appleAuth(authorization)
-          Toast.show('Logged in!')
-          userStore.setLogin(user)
-        } catch (err) {
-          Toast.show('Error loggin in 😭', { type: 'error' })
-          console.error('signin err', err)
-        }
-      }}
-    >
+    <VStack onPress={handleSignIn}>
       <VStack
         borderRadius={9}
         borderColor="rgba(255,255,255,0.15)"
