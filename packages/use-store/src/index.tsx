@@ -413,6 +413,9 @@ function useStoreFromInfo(
   return storeProxy
 }
 
+let setters = new Set<any>()
+const logStack = new Set<Set<any[]>>()
+
 function createProxiedStore(
   storeInfo: StoreInfo,
   renderOpts?: {
@@ -423,7 +426,6 @@ function createProxiedStore(
   const { actions, storeInstance, getters, gettersState } = storeInfo
   const { getCache, curGetKeys, getterToDeps, depsToGetter } = gettersState
   const constr = storeInstance.constructor
-  const setters = new Set<any>()
 
   const proxiedStore = new Proxy(storeInstance, {
     get(target, key) {
@@ -466,29 +468,53 @@ function createProxiedStore(
           ) {
             const ogAction = action
             action = (...args: any[]) => {
-              setters.clear()
+              setters = new Set()
+              const curSetters = setters
 
               if (process.env.NODE_ENV === 'development') {
                 // dev mode do a lot of nice logging
+                const isTopLevelLogger = logStack.size == 0
+                const logs = new Set<any[]>()
+                logStack.add(logs)
+
+                // run action here now
+                const res = ogAction(...args)
+
                 const name = constr.name
                 const color = strColor(name)
                 const simpleArgs = args.map(simpleStr)
-                console.groupCollapsed(
-                  `💰 %c${name}%c.${key}(${simpleArgs.join(', ')})`,
+                logs.add([
+                  `💰 %c${name}%c.${key}(${simpleArgs.join(', ')})${
+                    isTopLevelLogger && logStack.size > 1
+                      ? ` (+${logStack.size - 1})`
+                      : ''
+                  }`,
                   `color: ${color};`,
-                  'color: black;'
-                )
-                console.log(` => ARGS`, ...args)
-                // run action here now
-                const res = ogAction(...args)
-                setters.forEach(({ key, value }) => {
-                  console.log(` => SET`, key, '=', value)
-                })
-                setters.clear()
-                if (typeof res !== 'undefined') {
-                  console.log(' => RETURN', res)
+                  'color: black;',
+                ])
+                logs.add([` ARGS`, ...args])
+                if (curSetters.size) {
+                  curSetters.forEach(({ key, value }) => {
+                    logs.add([` SET`, key, '=', value])
+                  })
                 }
-                console.groupEnd()
+                if (typeof res !== 'undefined') {
+                  logs.add([' =>', res])
+                }
+
+                if (isTopLevelLogger) {
+                  for (const [head, ...rest] of [...logStack]) {
+                    console.groupCollapsed(...head)
+                    for (const log of rest) {
+                      console.log(...log)
+                    }
+                  }
+                  for (const _ of [...logStack]) {
+                    console.groupEnd()
+                  }
+                  logStack.clear()
+                }
+
                 return res
 
                 // dev-mode colored output

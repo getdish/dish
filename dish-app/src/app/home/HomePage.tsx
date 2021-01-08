@@ -35,7 +35,7 @@ import { getColorsForName } from '../../helpers/getColorsForName'
 import { setDefaultLocation } from '../../helpers/getDefaultLocation'
 import { selectTagDishViewSimple } from '../../helpers/selectDishViewSimple'
 import { useQueryLoud } from '../../helpers/useQueryLoud'
-import { router } from '../../router'
+import { router, useIsRouteActive } from '../../router'
 import { HomeStateItemHome } from '../../types/homeTypes'
 import { AppIntroLogin } from '../AppIntroLogin'
 import { useSetAppMapResults } from '../AppMapStore'
@@ -68,31 +68,20 @@ export default memo(function HomePage(props: Props) {
   const home = useHomeStore()
   const theme = useTheme()
   const [isLoaded, setIsLoaded] = useState(false)
-  const state = home.allStates[props.item.id]
+  const state = home.lastHomeState
+  const isRouteActive = useIsRouteActive('home')
+  // first one is if the route is active, second is if the stack view active
+  const isActive = isRouteActive && props.isActive
   const region = useRegionQuery(state.region, {
     enabled: props.isActive && !!state.region,
   })
 
-  console.log('👀 HomePage', props, region, state)
-
-  // load effect!
-  usePageLoadEffect(props, () => {
-    // default navigate to a region (TODO make it the nearest one to current map..)
-    if (!props.item.region) {
-      console.warn('no region, navigate to san francisco')
-      router.navigate({
-        name: 'homeRegion',
-        params: {
-          region: 'ca-san-francisco',
-        },
-      })
-    }
-  })
+  console.log('👀 HomePage', { props, region, state })
 
   // center map to region
   // ONLY on first load!
   useEffect(() => {
-    if (!props.isActive) return
+    if (!isActive) return
     if (!region.data) return
     if (isLoaded) return
     const { center, span } = region.data
@@ -102,10 +91,10 @@ export default memo(function HomePage(props: Props) {
       span,
     })
     setIsLoaded(true)
-  }, [props.isActive, isLoaded, region.data])
+  }, [isActive, isLoaded, region.data])
 
   useEffect(() => {
-    if (!props.isActive) return
+    if (!isActive) return
     if (region.status !== 'success') return
     if (!region.data) {
       // no region found!
@@ -122,16 +111,16 @@ export default memo(function HomePage(props: Props) {
         region: region.data.name,
       })
     }
-  }, [props.isActive, region.data])
+  }, [isActive, region.status, region.data])
 
   // on load home clear search effect!
   useEffect(() => {
     // not on first load
-    if (props.isActive && isLoaded) {
+    if (isActive && isLoaded) {
       home.clearSearch()
       home.clearTags()
     }
-  }, [props.isActive])
+  }, [isActive])
 
   const regionName = (() => {
     let next =
@@ -172,7 +161,7 @@ export default memo(function HomePage(props: Props) {
         overflow="hidden"
         height={searchBarHeight}
         zIndex={10}
-        opacity={props.isActive ? 1 : 0}
+        opacity={isActive ? 1 : 0}
         pointerEvents="none"
       >
         <AbsoluteVStack

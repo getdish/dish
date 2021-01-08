@@ -34,7 +34,9 @@ class HomeStore extends Store {
   isOptimisticUpdating = false
   stateIndex = 0
   stateIds = ['0']
-  allStates = {
+  allStates: {
+    [key: string]: HomeStateItem
+  } = {
     '0': initialHomeState,
   }
   loading = false
@@ -183,6 +185,7 @@ class HomeStore extends Store {
       })
     } else {
       console.warn('no match')
+      debugger
       router.navigate({
         name: 'homeRegion',
         params: homeRegionParams,
@@ -204,6 +207,7 @@ class HomeStore extends Store {
         [val.id]: { ...state, ...val },
       }
     } else {
+      // @ts-expect-error
       this.allStates = {
         ...this.allStates,
         [val.id]: { ...val },

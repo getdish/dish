@@ -93,7 +93,7 @@ export class Router<Props extends RouterProps> extends Store<Props> {
           ? 'pop'
           : 'push'
 
-      if (true || process.env.DEBUG) {
+      if (process.env.DEBUG) {
         console.log('router.history', {
           type,
           direction,
