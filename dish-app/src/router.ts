@@ -1,4 +1,4 @@
-import { Route, Router } from '@dish/router'
+import { HistoryType, Route, Router } from '@dish/router'
 import { createStore, useStoreInstance } from '@dish/use-store'
 
 export type RoutesTable = typeof routes
@@ -64,6 +64,10 @@ export const useRouter = () => {
 
 export const useRouterCurPage = () => {
   return useStoreInstance(router, (router) => router.curPage)
+}
+
+export const useIsRouteActive = (name: RouteName) => {
+  return useStoreInstance(router, (router) => router.curPage.name === name)
 }
 
 export type SearchRouteParams = {

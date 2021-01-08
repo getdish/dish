@@ -35,33 +35,27 @@ configureUseStore({
 // @ts-expect-error
 const cacheSnapshot = global.__CACHE_SNAPSHOT
 
+let isStarted = false
+let startPromise
+
+async function start() {
+  await new Promise<void>((res) => {
+    addTagsToCache([...tagDefaultAutocomplete, ...tagFilters, ...tagLenses])
+    router.onRouteChange((item) => {
+      console.warn('router.onRouteChange', item)
+      homeStore.handleRouteChange(item)
+      res()
+    })
+    userStore.checkForExistingLogin()
+  })
+  isStarted = true
+}
+
 export function Root() {
-  const [isStarted, setIsStarted] = useState(false)
-
-  // startup
-  useLayoutEffect(() => {
-    return series([
-      () => {
-        addTagsToCache([...tagDefaultAutocomplete, ...tagFilters, ...tagLenses])
-        router.onRouteChange((item) => {
-          console.warn('router.onRouteChange', item)
-          homeStore.handleRouteChange(item)
-        })
-        userStore.checkForExistingLogin()
-      },
-      () => {
-        setIsStarted(true)
-      },
-    ])
-  }, [])
-
   if (cacheSnapshot) {
-    console.debug('cacheSnapshot', cacheSnapshot)
     useHydrateCache({
       cacheSnapshot,
     })
-  } else {
-    console.debug('no cache snapshot')
   }
 
   return (
@@ -69,10 +63,24 @@ export function Root() {
       <ProvideRouter routes={routes}>
         <QueryClientProvider client={queryClient}>
           <AppPortalProvider>
-            <Suspense fallback={null}>{isStarted ? <App /> : null}</Suspense>
+            <Suspense fallback={null}>
+              <RootInner />
+            </Suspense>
           </AppPortalProvider>
         </QueryClientProvider>
       </ProvideRouter>
     </ThemeProvider>
+  )
+}
+
+function RootInner() {
+  if (!isStarted) {
+    startPromise = start()
+    throw startPromise
+  }
+  return (
+    <Suspense fallback={null}>
+      <App />
+    </Suspense>
   )
 }

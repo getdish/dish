@@ -260,7 +260,7 @@ const AppMapContent = memo(({ results }: { results: MapResultItem[] }) => {
   }, [])
 
   const handleSelectRegion = useCallback((region: Region | null) => {
-    console.log('handleSelectRegion', region)
+    // console.log('handleSelectRegion', region)
     if (!region) return
     if (!region.slug) {
       console.log('no region slug', region)

@@ -112,6 +112,7 @@ const RestaurantHeaderContent = memo(
                 width="100%"
                 position="relative"
                 pointerEvents="none"
+                zIndex={10}
               >
                 <VStack flex={1}>
                   <HStack alignItems="center">
@@ -133,6 +134,7 @@ const RestaurantHeaderContent = memo(
                       backgroundColor="rgba(0,0,0,0.85)"
                       shadowColor="#000"
                       shadowOpacity={0.2}
+                      pointerEvents="auto"
                       shadowRadius={5}
                       shadowOffset={{ height: 3, width: 0 }}
                       borderRadius={10}

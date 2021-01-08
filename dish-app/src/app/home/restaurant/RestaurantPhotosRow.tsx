@@ -1,4 +1,4 @@
-import { graphql } from '@dish/graph'
+import { graphql, order_by } from '@dish/graph'
 import React, { memo } from 'react'
 import { Image } from 'react-native'
 import { HStack, Text, VStack } from 'snackui'
@@ -27,7 +27,16 @@ export const RestaurantPhotosRow = memo(
       height: number
     }) => {
       const restaurant = useRestaurantQuery(restaurantSlug)
-      const photos = restaurant.photos() ?? []
+      const photos = restaurant.photo_table({
+        limit: 8,
+        order_by: [
+          {
+            photo: {
+              quality: order_by.desc,
+            },
+          },
+        ],
+      })
       return (
         <HStack>
           {!photos.length && (
@@ -37,7 +46,7 @@ export const RestaurantPhotosRow = memo(
           )}
           {!!photos.length && (
             <>
-              {photos.slice(0, 9).map((photo, index) => {
+              {photos.map((photo, index) => {
                 const photoHeight = escalating
                   ? index < 2
                     ? 190
@@ -57,7 +66,7 @@ export const RestaurantPhotosRow = memo(
                         <Image
                           source={{
                             uri: getImageUrl(
-                              photo,
+                              photo.photo.url,
                               photoWidth,
                               photoHeight,
                               100
