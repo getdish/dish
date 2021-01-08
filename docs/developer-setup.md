@@ -41,6 +41,13 @@ can be easily run with Docker Compose: https://docs.docker.com/compose/install/
 When working with Dish's Docker images you'll often need to be logged into our Docker
 Registry: `./dishctl.sh dish_docker_login`. Currently we use Google Cloud's Docker registry, so you'll likely be asked to install the GCloud SDK.
 
+
+Some helper commands to get started:
+
+- `yarn bootstrap`: builds the base image
+- `yarn start` will run docker-compose for local development
+
+
 Once you're logged in and have Docker Compose installed, go to the root of this repo and run:
 
 `docker-compose up`
@@ -69,10 +76,12 @@ So, for example `docker-compose build user-server`
 
 ### Run
 
-- `yarn start` (for development)
-- `yarn start:prod` (for production)
+- `yarn web` (for development)
+- `yarn web:prod` (for production)
 
 ### Build and run (pointed at production endpoints)
+
+In `./dish-app`:
 
 - `yarn build:web`
 - `yarn start:prod:bundle`

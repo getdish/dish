@@ -13,6 +13,7 @@
     ]
   },
   "scripts": {
+    "bootstrap": "docker-compose build base",
     "start": "./dishctl.sh docker_compose_up_for_devs",
     "db:init": "./dishctl.sh db_migrate_local init",
     "db:migrate": "./dishctl.sh db_migrate_local",
