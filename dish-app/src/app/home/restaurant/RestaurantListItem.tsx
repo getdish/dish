@@ -32,14 +32,11 @@ import {
   brandColor,
 } from '../../../constants/colors'
 import { isWeb } from '../../../constants/constants'
-import { allTags } from '../../../helpers/allTags'
-import { getActiveTagSlugs } from '../../../helpers/getActiveTagSlugs'
 import { getRestaurantDishes } from '../../../helpers/getRestaurantDishes'
 import { isWebIOS } from '../../../helpers/isIOS'
 import { numberFormat } from '../../../helpers/numberFormat'
-import { GeocodePlace, HomeStateItemSearch } from '../../../types/homeTypes'
+import { GeocodePlace } from '../../../types/homeTypes'
 import { appMapStore } from '../../AppMapStore'
-import { homeStore } from '../../homeStore'
 import { useRestaurantQuery } from '../../hooks/useRestaurantQuery'
 import { useRestaurantTagScores } from '../../hooks/useRestaurantTagScores'
 import { ContentScrollViewHorizontal } from '../../views/ContentScrollViewHorizontal'
@@ -69,7 +66,7 @@ type RestaurantListItemProps = {
   restaurantSlug: string
   rank: number
   meta?: RestaurantItemMeta
-  searchState: HomeStateItemSearch
+  activeTagSlugs?: string[]
   onFinishRender?: Function
 }
 
@@ -150,6 +147,7 @@ const RestaurantListItemContent = memo(
       restaurantId,
       restaurantSlug,
       curLocInfo,
+      activeTagSlugs,
       isLoaded,
       meta,
     } = props
@@ -166,8 +164,6 @@ const RestaurantListItemContent = memo(
     }, [restaurant.name])
 
     const restaurantName = (restaurant.name ?? '').slice(0, 300)
-    const curState = homeStore.currentState
-    const tagIds = 'activeTags' in curState ? curState.activeTags : {}
     const isActive = useStoreInstance(
       searchPageStore,
       (x) => x.index === rank - 1
@@ -252,13 +248,13 @@ const RestaurantListItemContent = memo(
           backgroundColor={isActive ? brandColor : 'transparent'}
         />
 
-        {tagIds && (
+        {activeTagSlugs && (
           <AbsoluteVStack top={34} left={-5} zIndex={2000000}>
             <RestaurantUpVoteDownVote
               rounded
               score={score}
               restaurantSlug={restaurantSlug}
-              activeTags={tagIds}
+              activeTagSlugs={activeTagSlugs}
               onClickPoints={() => {
                 setIsExpanded((x) => !x)
               }}
@@ -474,7 +470,7 @@ const RestaurantListItemContent = memo(
                 <RestaurantPeekDishes
                   restaurantSlug={props.restaurantSlug}
                   restaurantId={props.restaurantId}
-                  searchState={props.searchState}
+                  activeTagSlugs={activeTagSlugs}
                   isLoaded={isLoaded}
                 />
               </Suspense>
@@ -534,23 +530,14 @@ const fadeOutRightElement = (
 const RestaurantListItemScoreBreakdown = memo(
   graphql(
     ({
-      searchState,
+      activeTagSlugs,
       meta,
       restaurantSlug,
     }: RestaurantListItemProps & { meta: RestaurantItemMeta }) => {
-      const tagSlugs = getActiveTagSlugs(searchState.activeTags)
-      const restaurant = useRestaurantQuery(restaurantSlug)
       const restaurantTags = useRestaurantTagScores({
         restaurantSlug,
-        tagSlugs,
+        tagSlugs: activeTagSlugs,
       })
-      // console.log(
-      //   'restaurantTags',
-      //   tagSlugs,
-      //   restaurantTags,
-      //   restaurant.score_breakdown(),
-      //   restaurant.source_breakdown()
-      // )
       return (
         <VStack spacing>
           {restaurantTags.map((rtag) => {
@@ -575,64 +562,20 @@ const RestaurantPeekDishes = memo(
     size?: 'lg' | 'md'
     restaurantSlug: string
     restaurantId: string
-    searchState: HomeStateItemSearch
+    activeTagSlugs?: string[]
     isLoaded: boolean
   }) {
-    // const activeTags = om.state.home.lastSearchState?.activeTags ?? {}
-    // const dishSearchedTag = Object.keys(activeTags).find(
-    //   (k) => allTags[k]?.type === 'dish'
-    // )
-    const { isLoaded, searchState, size = 'md' } = props
-    const tagSlugs = [
-      searchState.searchQuery.toLowerCase(),
-      ...Object.keys(searchState.activeTags || {}).filter((x) => {
-        const isActive = searchState.activeTags[x]
-        if (!isActive) {
-          return false
-        }
-        const type = allTags[x]?.type ?? 'outlier'
-        return type != 'lense' && type != 'filter' && type != 'outlier'
-      }),
-    ].filter((x) => !!x)
-    // const restaurant = useRestaurantQuery(props.restaurantSlug)
-    // // get them all as once to avoid double query limit on gqless
-    const tagNames = tagSlugs
-      .map((n) => allTags[n]?.name ?? null)
-      .filter(Boolean)
-    // const fullTags = tagSlugs.length
-    //   ? restaurant
-    //       .tags({
-    //         limit: tagNames.length,
-    //         where: {
-    //           tag: {
-    //             name: {
-    //               _in: tagNames,
-    //             },
-    //           },
-    //         },
-    //         order_by: [
-    //           {
-    //             score: order_by.desc,
-    //           },
-    //         ],
-    //       })
-    //       .map((tag) => ({
-    //         name: tag.tag.name,
-    //         score: tag.score ?? 0,
-    //         icon: tag.tag.icon,
-    //         image: tag.tag.default_images()?.[0],
-    //       }))
-    //   : null
+    const { isLoaded, size = 'md' } = props
     const dishes = getRestaurantDishes({
       restaurantSlug: props.restaurantSlug,
-      tag_slugs: tagSlugs,
+      tag_slugs: props.activeTagSlugs,
       max: 5,
     })
-    const firstDishName = dishes[0]?.name
-    const foundMatchingSearchedDish = firstDishName
-      ? tagNames.includes(firstDishName)
-      : false
+    const foundMatchingSearchedDish = props.activeTagSlugs.includes(
+      dishes[0].slug
+    )
     const dishSize = 165
+
     return (
       <HStack
         contain="paint layout"
@@ -640,7 +583,6 @@ const RestaurantPeekDishes = memo(
         padding={20}
         paddingVertical={10}
         alignItems="center"
-        // marginTop={-55}
         marginBottom={-35}
         height="100%"
         width={dishSize * 5}
@@ -664,7 +606,6 @@ const RestaurantPeekDishes = memo(
                 marginRight={-15}
                 marginTop={isEven ? 0 : -15}
                 showSearchButton
-                // zIndex={100 - i}
               />
             )
           })}

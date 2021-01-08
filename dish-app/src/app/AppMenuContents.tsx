@@ -11,29 +11,50 @@ import { LoginRegisterForm } from './views/LoginRegisterForm'
 
 export const AppMenuContents = memo(
   ({ hideUserMenu, ...props }: { hideUserMenu: Function } & BoxProps) => {
-    const userStore = useUserStore()
+    const { isLoggedIn, user, logout } = useUserStore()
 
     return (
       <Box alignItems="stretch" minWidth={240} {...props}>
         <VStack spacing="sm" padding={10}>
-          {userStore.isLoggedIn && userStore.user?.username === 'admin' && (
-            <MenuLinkButton name="adminTags">Admin</MenuLinkButton>
-          )}
-
-          {userStore.isLoggedIn && (
+          {isLoggedIn && (
             <MenuLinkButton
               name="user"
               params={{
-                username: slugify(userStore.user?.username ?? ''),
+                username: slugify(user?.username ?? ''),
               }}
             >
               Profile
             </MenuLinkButton>
           )}
 
+          {isLoggedIn && (
+            <MenuLinkButton
+              name="list"
+              params={{
+                userSlug: slugify(user?.username ?? ''),
+                slug: 'create',
+              }}
+            >
+              Create Playlist
+            </MenuLinkButton>
+          )}
+
+          {isLoggedIn && user?.username === 'admin' && (
+            <MenuLinkButton name="adminTags">Admin</MenuLinkButton>
+          )}
+
+          {isLoggedIn && (
+            <>
+              <Spacer size="lg" />
+              <Divider />
+              <Spacer size="lg" />
+            </>
+          )}
+
           {isWeb && <MenuLinkButton name="blog">Blog</MenuLinkButton>}
           <MenuLinkButton name="about">About</MenuLinkButton>
-          {!userStore.isLoggedIn && (
+
+          {!isLoggedIn && (
             <>
               <Spacer size="lg" />
               <Divider />
@@ -42,7 +63,7 @@ export const AppMenuContents = memo(
             </>
           )}
 
-          {userStore.isLoggedIn && (
+          {isLoggedIn && (
             <>
               <Spacer size="lg" />
               <Divider />
@@ -50,9 +71,7 @@ export const AppMenuContents = memo(
               <MenuLinkButton
                 onPress={() => {
                   Toast.show(`Logging out...`)
-                  setTimeout(() => {
-                    userStore.logout()
-                  }, 1000)
+                  setTimeout(logout, 1000)
                 }}
               >
                 Logout

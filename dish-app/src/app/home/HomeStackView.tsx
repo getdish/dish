@@ -7,7 +7,6 @@ import {
   searchBarHeight,
   searchBarTopOffset,
 } from '../../constants/constants'
-import { getBreadcrumbs } from '../../helpers/getBreadcrumbs'
 import { HomeStateItem } from '../../types/homeTypes'
 import { useHomeStore } from '../homeStore'
 import { useLastValueWhen } from '../hooks/useLastValueWhen'

@@ -20,7 +20,6 @@ import {
 import { tagLenses } from '../../../constants/localTags'
 import { numberFormat } from '../../../helpers/numberFormat'
 import { restaurantRatio } from '../../../helpers/restaurantsRatio'
-import { HomeActiveTagsRecord } from '../../../types/homeTypes'
 import { useRestaurantQuery } from '../../hooks/useRestaurantQuery'
 import { useUserTagVotes } from '../../hooks/useUserTagVotes'
 import { SentimentCircle } from '../SentimentCircle'
@@ -30,7 +29,7 @@ type RatingDisplay = 'ratio' | 'points'
 
 type UpvoteDownvoteProps = {
   restaurantSlug: string
-  activeTags?: HomeActiveTagsRecord
+  activeTagSlugs?: string[]
   onClickPoints?: (event: GestureResponderEvent) => void
   // only to override
   score?: number
@@ -40,7 +39,7 @@ type UpvoteDownvoteProps = {
 }
 
 export const RestaurantUpVoteDownVote = (props: UpvoteDownvoteProps) => {
-  const activeTags = props.activeTags ?? { [tagLenses[0].slug]: true }
+  const activeTags = props.activeTagSlugs ?? [tagLenses[0].slug]
   const key = JSON.stringify(activeTags)
 
   return (
@@ -48,7 +47,7 @@ export const RestaurantUpVoteDownVote = (props: UpvoteDownvoteProps) => {
       <RestaurantUpVoteDownVoteContents
         key={key}
         {...props}
-        activeTags={activeTags}
+        activeTagSlugs={activeTags}
       />
     </Suspense>
   )
@@ -58,14 +57,20 @@ const RestaurantUpVoteDownVoteContents = graphql(
   ({
     restaurantSlug,
     onClickPoints,
-    activeTags,
+    activeTagSlugs,
     rounded,
     score,
     ratio,
     display,
   }: UpvoteDownvoteProps) => {
     const restaurant = useRestaurantQuery(restaurantSlug)
-    const { vote, setVote } = useUserTagVotes(restaurantSlug, activeTags)
+    const { vote, setVote } = useUserTagVotes(
+      restaurantSlug,
+      Object.keys(activeTagSlugs).reduce(
+        (acc, cur) => ({ ...acc, [cur]: true }),
+        {}
+      )
+    )
     const theme = useTheme()
 
     ratio = Math.round(ratio ?? restaurantRatio(restaurant))
@@ -104,7 +109,7 @@ const RestaurantUpVoteDownVoteContents = graphql(
               vote={vote}
               setVote={setVote}
               onClickPoints={onClickPoints}
-              isMultiple={Object.keys(activeTags).length > 1}
+              isMultiple={activeTagSlugs.length > 1}
               display={display}
             />
           </VStack>

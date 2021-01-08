@@ -1,9 +1,10 @@
 import loadable from '@loadable/component'
-import React, { useLayoutEffect } from 'react'
+import React from 'react'
 
 import {
   isAboutState,
   isHomeState,
+  isListState,
   isRestaurantState,
   isSearchState,
   isUserState,
@@ -21,6 +22,7 @@ export const HomeStackViewPages = (props: HomeStackViewProps) => {
       {isSearchState(item) && <SearchPage {...props} />}
       {isRestaurantState(item) && <RestaurantPage {...props} />}
       {isAboutState(item) && <AboutPage {...props} />}
+      {isListState(item) && <ListPage {...props} />}
       <HomeStackViewPagesContents {...props} />
     </HomeSuspense>
   )
@@ -48,3 +50,7 @@ const UserPage = isntLoadable
 const AboutPage = isntLoadable
   ? require('./about/AboutPage').default
   : loadable(() => import('./about/AboutPage'))
+
+const ListPage = isntLoadable
+  ? require('./list/ListPage').default
+  : loadable(() => import('./list/ListPage'))
