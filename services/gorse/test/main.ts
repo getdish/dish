@@ -1,3 +1,5 @@
+import '@dish/helpers/polyfill'
+
 import { sleep } from '@dish/async'
 import {
   Auth,
