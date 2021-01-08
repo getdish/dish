@@ -1,7 +1,3 @@
-CREATE EXTENSION postgis;
-CREATE EXTENSION unaccent;
-CREATE EXTENSION btree_gist;
-CREATE EXTENSION pg_trgm;
 CREATE FUNCTION public.f_opening_hours_hours(_from timestamp with time zone, _to timestamp with time zone) RETURNS TABLE(opening_hours_range tsrange)
     LANGUAGE plpgsql IMMUTABLE COST 1000 ROWS 1
     AS $$
@@ -473,15 +469,6 @@ CREATE TABLE public."user" (
 );
 CREATE TABLE public.zcta5 (
     ogc_fid integer NOT NULL,
-    zcta5ce10 character varying,
-    geoid10 character varying,
-    classfp10 character varying,
-    mtfcc10 character varying,
-    funcstat10 character varying,
-    aland10 double precision,
-    awater10 double precision,
-    intptlat10 character varying,
-    intptlon10 character varying,
     wkb_geometry public.geometry(Geometry,4326),
     nhood text,
     slug text
@@ -575,10 +562,12 @@ CREATE INDEX menu_item_description_trgm_idx ON public.menu_item USING gin (descr
 CREATE INDEX menu_item_restaurant_id_idx ON public.menu_item USING btree (restaurant_id);
 CREATE INDEX opening_hours_restaurant_id_idx ON public.opening_hours USING btree (restaurant_id);
 CREATE INDEX opening_hours_spgist_idx ON public.opening_hours USING spgist (hours);
+CREATE INDEX photo_id_ordered_idx ON public.photo USING btree (id);
 CREATE INDEX photo_xref_photo_id_idx ON public.photo_xref USING btree (photo_id);
 CREATE INDEX photo_xref_restaurant_id_idx ON public.photo_xref USING btree (restaurant_id);
 CREATE INDEX restaurant_id_ordered_index ON public.restaurant USING btree (id);
 CREATE INDEX restaurant_rating_index ON public.restaurant USING btree (rating DESC NULLS LAST);
+CREATE INDEX restaurant_slug_trgm_idx ON public.restaurant USING gin (slug public.gin_trgm_ops);
 CREATE INDEX restaurant_sources_index ON public.restaurant USING gin (sources jsonb_path_ops);
 CREATE INDEX restaurant_tag_names_trgm_idx ON public.restaurant USING gin (tag_names);
 CREATE INDEX restaurant_tag_restaurant_id_idx ON public.restaurant_tag USING btree (restaurant_id);
@@ -592,6 +581,8 @@ CREATE INDEX review_user_id_idx ON public.review USING btree (user_id);
 CREATE INDEX review_username_idx ON public.review USING btree (username);
 CREATE INDEX tag_alternates_gin_idx ON public.tag USING gin (alternates);
 CREATE INDEX tag_name_idx ON public.tag USING btree (name);
+CREATE INDEX tag_type_idx ON public.tag USING btree (type);
+CREATE INDEX tmp_updated_at_order ON public.restaurant USING btree (updated_at DESC NULLS LAST);
 CREATE INDEX zcta5_wkb_geometry_geom_idx ON public.zcta5 USING gist (wkb_geometry);
 CREATE TRIGGER menu_item_trigger BEFORE INSERT OR UPDATE ON public.menu_item FOR EACH ROW EXECUTE FUNCTION public.menu_item_defaults_trigger();
 CREATE TRIGGER nhood_triggers BEFORE INSERT OR UPDATE ON public.zcta5 FOR EACH ROW EXECUTE FUNCTION public.nhood_triggers();
@@ -610,6 +601,7 @@ CREATE TRIGGER set_public_taxonomy_updated_at BEFORE UPDATE ON public.tag FOR EA
 CREATE TRIGGER set_public_user_updated_at BEFORE UPDATE ON public."user" FOR EACH ROW EXECUTE FUNCTION public.set_current_timestamp_updated_at();
 COMMENT ON TRIGGER set_public_user_updated_at ON public."user" IS 'trigger to set value of column "updated_at" to current timestamp on row update';
 CREATE TRIGGER t_restaurant_insert BEFORE INSERT ON public.restaurant FOR EACH ROW WHEN (((new.name IS NOT NULL) AND (new.slug IS NULL))) EXECUTE FUNCTION public.set_slug_from_title();
+CREATE TRIGGER t_restaurant_update_tmp BEFORE UPDATE ON public.restaurant FOR EACH ROW EXECUTE FUNCTION public.set_slug_from_title();
 CREATE TRIGGER tag_trigger AFTER INSERT OR UPDATE ON public.tag FOR EACH ROW EXECUTE FUNCTION public.tag_triggers();
 CREATE TRIGGER vote_trigger BEFORE INSERT OR UPDATE ON public.review FOR EACH ROW EXECUTE FUNCTION public.review_score_sync();
 ALTER TABLE ONLY public.menu_item

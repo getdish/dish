@@ -1,0 +1,6 @@
+- args:
+    relationship: lists
+    table:
+      name: user
+      schema: public
+  type: drop_relationship

@@ -1,0 +1,7 @@
+- args:
+    name: restaurants
+    new_name: list_restaurants
+    table:
+      name: list
+      schema: public
+  type: rename_relationship
