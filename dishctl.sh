@@ -193,6 +193,11 @@ function db_migrate_local() {
     "$1"
 }
 
+function db_clear_local() {
+  rm -rf ~/.dish/postgres
+  mkdir ~/.dish/postgres
+}
+
 function timescale_migrate() {
   _TIMESCALE_PORT=$(generate_random_port)
   timescale_proxy $_TIMESCALE_PORT
