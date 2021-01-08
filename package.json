@@ -13,9 +13,10 @@
     ]
   },
   "scripts": {
-    "start": "echo 'run:\n yarn db\n yarn user-server\n yarn web'",
-    "db": "yarn docker:start hasura",
+    "start": "echo 'run:\n yarn docker:start\n yarn web'",
+    "db:init": "./dishctl.sh db_migrate_local init",
     "db:migrate": "./dishctl.sh db_migrate_local",
+    "db:clear": "./dishctl.sh db_clear_local",
     "user-server": "yarn workspace @dish/user-server start",
     "app": "yarn workspace @dish/dish-app start",
     "web": "yarn workspace @dish/dish-app web",
@@ -25,7 +26,7 @@
     "postinstall": "./bin/postinstall.sh",
     "preinstall": "./bin/preinstall.sh; ",
     "t": "eval $(./dishctl.sh yaml_to_env) echo $TF_VAR_HASURA_ENDPOINT",
-    "docker:start": "eval $(./dishctl.sh yaml_to_env) docker-compose up",
+    "docker:start": "./dishctl.sh docker_compose_up_for_devs",
     "docker:build": "eval $(./dishctl.sh yaml_to_env) docker-compose build",
     "docker:build:file": "eval $(./dishctl.sh yaml_to_env) docker buildx build --platform linux/amd64",
     "docker:build:base": "yarn docker:build:file .",
