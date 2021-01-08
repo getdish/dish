@@ -103,20 +103,6 @@ export default memo(function SearchPage(props: Props) {
 })
 
 const SearchPageContent = memo(function SearchPageContent(props: Props) {
-  // const isEditingUserList = !!isEditingUserPage(om.state)
-
-  // export const isOnOwnProfile = (state: OmState) => {
-  //   const username = state.user?.user?.username
-  //   return username && slugify(username) === router.curPage.params?.username
-  // }
-
-  // export const isEditingUserPage = (
-  //   state: HomeStateItemSearch,
-  //   omState: OmState
-  // ) => {
-  //   return state.type === 'userSearch' && isOnOwnProfile(omState)
-  // }
-
   const home = useHomeStore()
   const route = useLastValueWhen(
     () => router.curPage,

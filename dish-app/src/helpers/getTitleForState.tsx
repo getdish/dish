@@ -20,8 +20,6 @@ export function getTitleForState(
   const lense = tags.find((x) => x.type === 'lense')
   const countryTag = tags.find((x) => x.type === 'country')
   const dishTag = tags.find((x) => x.type === 'dish')
-  const hasUser = state.type === 'userSearch'
-  const userPrefix = state.type === 'userSearch' ? `${state.username}'s ` : ''
   let lensePlaceholder = lense?.name ?? ''
   const descriptions = tagDescriptions[lense?.name?.toLowerCase() ?? '']
   if (descriptions) {
@@ -50,9 +48,6 @@ export function getTitleForState(
     titleParts.push(
       dishTag.icon ? `${dishTag.name} ${dishTag.icon}` : dishTag.name
     )
-  }
-  if (hasUser) {
-    lensePlaceholder = lensePlaceholder.toLowerCase()
   }
   const titleSpace = titleParts.length ? ' ' : ''
   const searchName = getTitleForQuery(state.searchQuery ?? '')
@@ -90,11 +85,10 @@ export function getTitleForState(
     </Text>
   )
 
-  const title = `${userPrefix.toLowerCase()} ${titleSubject.toLowerCase()}`
+  const title = `${titleSubject.toLowerCase()}`
 
   const pageName = (
     <>
-      {userPrefix}
       {titleSubject
         .split('🍔')
         .map((x) => {

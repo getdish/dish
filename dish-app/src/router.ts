@@ -15,6 +15,7 @@ export const routes = {
     '/gallery/:restaurantSlug/:dishId?'
   ),
 
+  list: new Route<{ slug: string; userSlug: string }>('/list/:userSlug/:slug'),
   login: new Route('/login'),
   register: new Route('/register'),
   forgotPassword: new Route('/forgotten-password'),
@@ -39,16 +40,9 @@ export const routes = {
   adminTags: new Route('/admin/tags'),
   adminReviews: new Route('/admin/reviews'),
   adminUsers: new Route('/admin/users'),
-
-  // below pages, more catch-all routes (search)
-  // NOTE keep userSearch and search in sync
-  // after user/restaurant
-  userSearch: new Route<SearchRouteParams>(
-    '/u/:username/:lense/:region/:tags?/:search?'
-  ),
-  // search after userSearch
   search: new Route<SearchRouteParams>('/s/:lense/:region/:tags?/:search?'),
 
+  // home region is catch-all, goes near end
   homeRegion: new Route<{ region?: string; section?: 'new' }>(
     '/:region?/:section?'
   ),

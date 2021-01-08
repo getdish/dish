@@ -50,6 +50,7 @@ export type HomeStateItem =
   | HomeStateItemAbout
   | HomeStateItemBlog
   | HomeStateItemUserEdit
+  | HomeStateItemList
 
 export type HomeStateTagNavigable = Partial<HomeStateItemBase> & {
   id: HomeStateItemBase['id']
@@ -87,14 +88,9 @@ export type HomeStateItemAbout = HomeStateItemBase & {
 }
 
 export type HomeStateItemSearch = HomeStateItemBase & {
-  type: 'search' | 'userSearch'
+  type: 'search'
   activeTags: HomeActiveTagsRecord
   region?: string
-  // for not forcing map to be always synced
-  searchedCenter?: LngLat
-  searchedSpan?: LngLat
-  userId?: string
-  username?: string
 }
 
 export type HomeStateItemRestaurant = HomeStateItemBase & {
@@ -130,4 +126,10 @@ export type HomeStateItemLocation = {
   center: HomeStateItem['center']
   span: HomeStateItem['span']
   region?: string
+}
+
+export type HomeStateItemList = HomeStateItemBase & {
+  type: 'list'
+  slug: string
+  userSlug: string
 }

@@ -1,15 +1,17 @@
 import { HomeStateItem } from '../types/homeTypes'
 import { isSearchState } from './homeStateHelpers'
 
+const breadCrumbTypes = {
+  search: true,
+  user: true,
+  restaurant: true,
+  about: true,
+  blog: true,
+  list: true,
+}
+
 export const isBreadcrumbState = (type: HomeStateItem['type']) => {
-  return (
-    type == 'search' ||
-    type === 'userSearch' ||
-    type == 'user' ||
-    type == 'restaurant' ||
-    type === 'about' ||
-    type === 'blog'
-  )
+  return breadCrumbTypes[type]
 }
 
 export const getBreadcrumbs = (states: HomeStateItem[]) => {
@@ -28,9 +30,7 @@ export const getBreadcrumbs = (states: HomeStateItem[]) => {
         continue
       }
       if (
-        (cur.type === 'restaurant' ||
-          cur.type === 'user' ||
-          cur.type == 'userSearch') &&
+        (cur.type === 'restaurant' || cur.type === 'user') &&
         crumbs.some(isSearchState)
       ) {
         continue

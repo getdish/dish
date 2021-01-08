@@ -18,6 +18,7 @@ import { useQuery } from 'react-query'
 import {
   AbsoluteVStack,
   HStack,
+  InteractiveContainer,
   LoadingItems,
   Spacer,
   StackProps,
@@ -34,6 +35,7 @@ import { drawerWidthMax, searchBarHeight } from '../../constants/constants'
 import { RegionNormalized, useRegionQuery } from '../../helpers/fetchRegion'
 import { getColorsForName } from '../../helpers/getColorsForName'
 import { setDefaultLocation } from '../../helpers/getDefaultLocation'
+import { getGroupedButtonProps } from '../../helpers/getGroupedButtonProps'
 import { selectTagDishViewSimple } from '../../helpers/selectDishViewSimple'
 import { useQueryLoud } from '../../helpers/useQueryLoud'
 import { router, useIsRouteActive } from '../../router'
@@ -49,6 +51,7 @@ import { ContentScrollView } from '../views/ContentScrollView'
 import { DishView } from '../views/dish/DishView'
 import { DishHorizonView } from '../views/DishHorizonView'
 import { Link } from '../views/Link'
+import { LinkButton } from '../views/LinkButton'
 import { LinkButtonProps } from '../views/LinkProps'
 import { PageTitleTag } from '../views/PageTitleTag'
 import { SlantedTitle } from '../views/SlantedTitle'
@@ -202,46 +205,55 @@ export default memo(function HomePage(props: Props) {
 
               <Spacer size="md" />
 
-              <HStack>
+              <HStack marginBottom={-20}>
                 <ScrollView horizontal showsHorizontalScrollIndicator={false}>
-                  <HStack paddingVertical={12} paddingHorizontal={10}>
-                    <SlantedTitle
-                      position="relative"
-                      overflow="visible"
-                      minWidth={80}
-                      alignSelf="center"
-                      backgroundColor={regionColors.color}
-                      color="#fff"
-                    >
-                      {regionName}
-                    </SlantedTitle>
+                  <HStack
+                    alignItems="center"
+                    paddingVertical={12}
+                    paddingBottom={40}
+                    paddingHorizontal={10}
+                  >
+                    <VStack position="relative">
+                      <SlantedTitle
+                        minWidth={80}
+                        backgroundColor={regionColors.color}
+                        color="#fff"
+                      >
+                        {regionName}
+                      </SlantedTitle>
+
+                      <AbsoluteVStack
+                        bottom={-39}
+                        right={0}
+                        transform={[{ rotate: '-2deg' }]}
+                      >
+                        <InteractiveContainer borderRadius={14}>
+                          {navLinks.map((linkProps, index) => {
+                            const isActive =
+                              state.section === linkProps.params.section
+                            return (
+                              <LinkButton
+                                key={index}
+                                textProps={{
+                                  color: isActive ? 'red' : '#888',
+                                  fontWeight: '500',
+                                }}
+                                {...getGroupedButtonProps({
+                                  index,
+                                  items: navLinks,
+                                  borderRadius: 10,
+                                })}
+                                {...linkProps}
+                              />
+                            )
+                          })}
+                        </InteractiveContainer>
+                      </AbsoluteVStack>
+                    </VStack>
                     <HomeTopSearches />
                   </HStack>
                 </ScrollView>
               </HStack>
-
-              {/* <VStack alignItems="center">
-                <InteractiveContainer borderRadius={10}>
-                  {navLinks.map((linkProps, index) => {
-                    const isActive = state.section === linkProps.params.section
-                    return (
-                      <LinkButton
-                        key={index}
-                        textProps={{
-                          color: isActive ? 'red' : '#888',
-                          fontWeight: '500',
-                        }}
-                        {...getGroupedButtonProps({
-                          index,
-                          items: navLinks,
-                          borderRadius: 10,
-                        })}
-                        {...linkProps}
-                      />
-                    )
-                  })}
-                </InteractiveContainer>
-              </VStack> */}
 
               <Spacer size="lg" />
 

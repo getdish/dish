@@ -62,7 +62,8 @@ const RestaurantHeaderContent = memo(
       const [width, setWidth] = useState(Math.max(minWidth, drawerWidth))
       const scale = width < 601 ? 0.75 : drawerWidth < 700 ? 0.85 : 1
       const fontScale = size === 'sm' ? 0.8 : 1
-      const fontSizeBase = nameLen > 24 ? 28 : nameLen > 18 ? 34 : 40
+      const fontSizeBase =
+        nameLen > 30 ? 20 : nameLen > 24 ? 28 : nameLen > 18 ? 34 : 40
       const fontSize = scale * fontSizeBase * fontScale
       const contentLeftWidth = width - 60
       const restaurantId = restaurant.id
