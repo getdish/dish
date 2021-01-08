@@ -8,6 +8,7 @@ export function HomeStackViewPagesContents(props: HomeStackViewProps) {
   const { item } = props
   return <>{isBlogState(item) && <BlogPage {...props} />}</>
 }
+
 const BlogPage =
   process.env.TARGET === 'ssr' || process.env.NODE_ENV === 'development'
     ? require('./blog/BlogPage').default

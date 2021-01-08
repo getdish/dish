@@ -16,7 +16,6 @@ import React, {
   useState,
 } from 'react'
 import { Image, ScrollView } from 'react-native'
-import { useKeyPressEvent } from 'react-use'
 import {
   AbsoluteVStack,
   HStack,
@@ -204,10 +203,10 @@ export const GalleryLightbox = ({
     })
   }
 
-  if (isWeb) {
-    useKeyPressEvent('ArrowLeft', setLeftImage)
-    useKeyPressEvent('ArrowRight', setRightImage)
-  }
+  // if (isWeb) {
+  //   useKeyPressEvent('ArrowLeft', setLeftImage)
+  //   useKeyPressEvent('ArrowRight', setRightImage)
+  // }
 
   return (
     <>

@@ -66,7 +66,7 @@
     "react-refresh": "0.0.0-experimental-3310209d0",
     "react-native-web": "0.0.0-466063b7e",
     "react-native-svg": "",
-    "react-native": "0.63.2",
+    "react-native": "0.64.0-rc.2",
     "metro": "0.62.0",
     "metro-babel-register": "0.62.0",
     "metro-react-native-babel-preset": "0.62.0",
