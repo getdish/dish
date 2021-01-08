@@ -374,8 +374,8 @@ const TagListItem = graphql(
           column={column}
           row={row}
           id="tags"
-          deletable={row > 0}
-          editable={row > 0}
+          deletable
+          editable
           {...rest}
         />
       )
