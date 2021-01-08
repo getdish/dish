@@ -1,14 +1,18 @@
 import React, { memo } from 'react'
-import { HStack, Text, VStack, useMedia } from 'snackui'
+import { HStack, Text, VStack, useMedia, useTheme } from 'snackui'
 
 export const PageTitle = memo(
   ({
     title,
+    before,
+    after,
     subTitle,
     color,
     size = 'md',
   }: {
     title: any
+    before?: any
+    after?: any
     subTitle?: string
     color?: string
     size?: 'md' | 'sm'
@@ -27,6 +31,7 @@ export const PageTitle = memo(
         ? 0.95
         : 1
     const titleFontSize = 28 * titleScale * titleSize
+    const theme = useTheme()
     return (
       <HStack
         paddingHorizontal={15}
@@ -34,34 +39,38 @@ export const PageTitle = memo(
         overflow="hidden"
         justifyContent="center"
         alignItems="center"
-        spacing="xl"
+        position="relative"
         {...(media.sm && {
-          transform: [{ scale: 0.75 }],
+          transform: [{ scale: 0.8 }],
         })}
       >
-        <VStack backgroundColor="#f2f2f2" height={1} flex={1} />
-        <Text
-          textAlign="center"
-          letterSpacing={-0.25}
-          fontSize={titleFontSize}
-          fontWeight="800"
-          color={color}
-        >
-          {title}
-          {subTitle ? ' ' : ''}
-          {!!subTitle && (
-            <Text
-              // @ts-ignore
-              display="inline" // safari fix
-              fontWeight="300"
-              opacity={0.5}
-              className="nobreak"
-            >
-              {subTitle}
-            </Text>
-          )}
-        </Text>
-        <VStack backgroundColor="#f2f2f2" height={1} flex={1} />
+        {before}
+        <HStack spacing="xxl" flex={1} alignItems="center">
+          <VStack backgroundColor={theme.borderColor} height={1} flex={1} />
+          <Text
+            textAlign="center"
+            letterSpacing={-0.25}
+            fontSize={titleFontSize}
+            fontWeight="800"
+            color={color}
+          >
+            {title}
+            {subTitle ? ' ' : ''}
+            {!!subTitle && (
+              <Text
+                // @ts-ignore
+                display="inline" // safari fix
+                fontWeight="300"
+                opacity={0.5}
+                className="nobreak"
+              >
+                {subTitle}
+              </Text>
+            )}
+          </Text>
+          <VStack backgroundColor={theme.borderColor} height={1} flex={1} />
+        </HStack>
+        {after}
       </HStack>
     )
   }
