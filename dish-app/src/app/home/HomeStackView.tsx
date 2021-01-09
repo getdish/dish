@@ -38,7 +38,7 @@ export function HomeStackView<A extends HomeStateItem>(props: {
         const isActive = i === items.length - 1
         return (
           <AppStackViewItem
-            key={item.type === 'home' ? '0' : item.id}
+            key={item.type}
             item={item}
             index={i}
             isActive={isActive}

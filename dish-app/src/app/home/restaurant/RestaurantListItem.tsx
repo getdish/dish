@@ -18,6 +18,7 @@ import {
   Button,
   HStack,
   LinearGradient,
+  LoadingItem,
   LoadingItemsSmall,
   Modal,
   Spacer,
@@ -97,7 +98,15 @@ type RestaurantListItemProps = {
 
 const setHoveredSlow = debounce(appMapStore.setHovered, 250)
 
-export const RestaurantListItem = memo(function RestaurantListItem(
+export const RestaurantListItem = (props: RestaurantListItemProps) => {
+  return (
+    <Suspense fallback={<LoadingItem size="lg" />}>
+      <RestaurantListItemMain {...props} />
+    </Suspense>
+  )
+}
+
+const RestaurantListItemMain = memo(function RestaurantListItemMain(
   props: RestaurantListItemProps
 ) {
   const [isLoaded, setIsLoaded] = useState(false)
@@ -653,7 +662,7 @@ const RestaurantPeekDishes = memo(
         })
 
     const foundMatchingSearchedDish = props.activeTagSlugs?.includes(
-      dishes[0].slug
+      dishes?.[0]?.slug
     )
     const dishSize = 165
 

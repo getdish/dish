@@ -3,7 +3,7 @@ import { series, sleep } from '@dish/async'
 import { slugify } from '@dish/graph/src'
 import { graphql, order_by, query } from '@dish/graph/src'
 import { Heart, X } from '@dish/react-feather'
-import React, { useEffect, useState } from 'react'
+import React, { Suspense, useEffect, useState } from 'react'
 import { TextInput } from 'react-native'
 import {
   AbsoluteVStack,
@@ -11,6 +11,7 @@ import {
   Button,
   HStack,
   Input,
+  LoadingItems,
   Paragraph,
   Popover,
   Spacer,
@@ -41,6 +42,8 @@ type Props = StackItemProps<HomeStateItemList>
 
 export default function ListPage(props: Props) {
   const isCreating = props.item.slug === 'create'
+
+  console.log('hello world', isCreating)
 
   useEffect(() => {
     if (!isCreating) return
@@ -76,17 +79,31 @@ export default function ListPage(props: Props) {
 
       {!isCreating && (
         <>
-          <ListPageContent {...props} />
+          <StackDrawer closable title={`Create playlist`}>
+            <ContentScrollView id="list">
+              <ListPageContent {...props} />
+            </ContentScrollView>
+          </StackDrawer>
         </>
       )}
     </>
   )
 }
 
+const setIsEditing = (val: boolean) => {
+  router.navigate({
+    name: 'list',
+    params: {
+      ...router.curPage.params,
+      state: val ? 'edit' : undefined,
+    },
+  })
+}
+
 const ListPageContent = graphql((props: Props) => {
   const user = useUserStore()
   const isMyList = props.item.userSlug === slugify(user.user?.username)
-  const [isEditing, setIsEditing] = useState(false)
+  const isEditing = props.item.state === 'edit'
   const [color, setColor] = useState(blue)
 
   // fake data until i get docker/schema generation workign
@@ -146,127 +163,123 @@ const ListPageContent = graphql((props: Props) => {
   })
 
   return (
-    <StackDrawer closable title={`Create playlist`}>
-      <ContentScrollView id="list">
-        <Spacer />
+    <>
+      <Spacer />
 
-        <PageTitle
-          before={
-            <HStack
-              position="absolute"
-              zIndex={10}
-              top={-10}
-              left={0}
-              bottom={0}
-              alignItems="center"
-              justifyContent="center"
-              backgroundColor="#fff"
-              padding={20}
+      <PageTitle
+        before={
+          <HStack
+            position="absolute"
+            zIndex={10}
+            top={-10}
+            left={0}
+            bottom={0}
+            alignItems="center"
+            justifyContent="center"
+            backgroundColor="#fff"
+            padding={20}
+          >
+            {isMyList && (
+              <>
+                {!isEditing && (
+                  <Button alignSelf="center" onPress={() => setIsEditing(true)}>
+                    Edit
+                  </Button>
+                )}
+                {isEditing && (
+                  <HStack alignItems="center">
+                    <Theme name="active">
+                      <Button>Save</Button>
+                    </Theme>
+                    <Spacer />
+                    <ColorPicker color={color} onChange={setColor} />
+                    <Spacer />
+                    <VStack onPress={() => setIsEditing(false)}>
+                      <X size={20} />
+                    </VStack>
+                  </HStack>
+                )}
+              </>
+            )}
+          </HStack>
+        }
+        title={
+          <VStack>
+            <SlantedTitle size="xs" alignSelf="center">
+              {list.user.name}'s
+            </SlantedTitle>
+
+            <SlantedTitle
+              backgroundColor={color}
+              color="#fff"
+              marginTop={-5}
+              alignSelf="center"
             >
-              {isMyList && (
-                <>
-                  {!isEditing && (
-                    <Button
-                      alignSelf="center"
-                      onPress={() => setIsEditing(true)}
-                    >
-                      Edit
-                    </Button>
-                  )}
-                  {isEditing && (
-                    <HStack alignItems="center">
-                      <Theme name="active">
-                        <Button>Save</Button>
-                      </Theme>
-                      <Spacer />
-                      <ColorPicker color={color} onChange={setColor} />
-                      <Spacer />
-                      <VStack onPress={() => setIsEditing(false)}>
-                        <X size={20} />
-                      </VStack>
-                    </HStack>
-                  )}
-                </>
-              )}
-            </HStack>
-          }
-          title={
-            <VStack>
-              <SlantedTitle size="xs" alignSelf="center">
-                {list.user.name}'s
-              </SlantedTitle>
+              {list.name}
+            </SlantedTitle>
+          </VStack>
+        }
+        after={
+          <AbsoluteVStack
+            top={-10}
+            right={0}
+            bottom={0}
+            alignItems="center"
+            justifyContent="center"
+            backgroundColor="#fff"
+            padding={20}
+          >
+            <Heart size={30} />
+          </AbsoluteVStack>
+        }
+      />
 
-              <SlantedTitle
-                backgroundColor={color}
-                color="#fff"
-                marginTop={-5}
-                alignSelf="center"
-              >
-                {list.name}
-              </SlantedTitle>
-            </VStack>
-          }
-          after={
-            <AbsoluteVStack
-              top={-10}
-              right={0}
-              bottom={0}
-              alignItems="center"
-              justifyContent="center"
-              backgroundColor="#fff"
-              padding={20}
-            >
-              <Heart size={30} />
-            </AbsoluteVStack>
-          }
-        />
+      <VStack paddingHorizontal={20} paddingVertical={20}>
+        {isEditing ? (
+          <Input
+            multiline
+            numberOfLines={2}
+            lineHeight={24}
+            textAlign="center"
+            defaultValue={list.description}
+          />
+        ) : (
+          <Paragraph size="lg" textAlign="center">
+            {list.description}
+          </Paragraph>
+        )}
+      </VStack>
 
-        <VStack paddingHorizontal={20} paddingVertical={20}>
-          {isEditing ? (
-            <Input
-              multiline
-              numberOfLines={2}
-              lineHeight={24}
-              textAlign="center"
-              defaultValue={list.description}
-            />
-          ) : (
-            <Paragraph size="lg" textAlign="center">
-              {list.description}
-            </Paragraph>
-          )}
-        </VStack>
-
-        {list.restaurants.map(({ restaurant, description, dishes }, index) => {
-          if (!restaurant.slug) {
-            return null
-          }
-          return (
-            <RestaurantListItem
-              curLocInfo={props.item.curLocInfo ?? null}
-              restaurantId={restaurant.id}
-              restaurantSlug={restaurant.slug}
-              rank={index + 1}
-              description={description}
-              hideTagRow
-              dishSlugs={dishes.map((x) => x.slug)}
-              editableDishes={isEditing}
-              onChangeDishes={(dishes) => {
-                console.log('should change dishes', dishes)
-              }}
-              editableDescription={isEditing}
-              onChangeDescription={(next) => {
-                console.log('should change descirption', next)
-              }}
-              editablePosition={isEditing}
-              onChangePosition={(next) => {
-                console.log('should change position', next)
-              }}
-            />
-          )
-        })}
-      </ContentScrollView>
-    </StackDrawer>
+      {list.restaurants.map(({ restaurant, description, dishes }, index) => {
+        if (!restaurant.slug) {
+          return null
+        }
+        return (
+          <RestaurantListItem
+            key={restaurant.slug}
+            curLocInfo={props.item.curLocInfo ?? null}
+            restaurantId={restaurant.id}
+            restaurantSlug={restaurant.slug}
+            rank={index + 1}
+            description={description}
+            hideTagRow
+            dishSlugs={dishes.map((x) => x.slug)}
+            editableDishes={isEditing}
+            onChangeDishes={(dishes) => {
+              console.log('should change dishes', dishes)
+            }}
+            editableDescription={isEditing}
+            onChangeDescription={(next) => {
+              console.log('should change descirption', next)
+            }}
+            editablePosition={isEditing}
+            onChangePosition={(next) => {
+              console.log('should change position', next)
+            }}
+          />
+        )
+      })}
+    </>
   )
 })
 

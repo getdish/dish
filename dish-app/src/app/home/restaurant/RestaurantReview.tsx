@@ -56,6 +56,10 @@ export const RestaurantReview = memo(
         refetch(reviews).catch(console.error)
       }, [refetchKey])
 
+      if (!review) {
+        return null
+      }
+
       const sentiments = review.sentiments()
 
       const authoredAt = review.authored_at ? (

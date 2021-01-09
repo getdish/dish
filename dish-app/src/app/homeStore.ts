@@ -232,66 +232,6 @@ class HomeStore extends Store {
     }
   }
 
-  async handleRouteChange(item: HistoryItem) {
-    // happens on *any* route push or pop
-    if (appMapStore.hovered) {
-      appMapStore.setHovered(null)
-    }
-
-    if (item.type === 'pop') {
-      const curIndex = this.stateIndex
-      const total = this.states.length
-      switch (item.direction) {
-        case 'forward': {
-          this.stateIndex = Math.min(total, curIndex + 1)
-          return
-        }
-        case 'backward': {
-          this.stateIndex = Math.max(0, curIndex - 1)
-          return
-        }
-        default: {
-          console.error('NO DIRECTION FOR A POP??', item)
-        }
-      }
-    }
-
-    const promises = new Set<Promise<any>>()
-    const name = normalizeItemName[item.name] ?? item.name
-    // actions per-route
-    if (item.type === 'push' || item.type === 'replace') {
-      switch (name) {
-        case 'home':
-        case 'about':
-        case 'blog':
-        case 'search':
-        case 'list':
-        case 'user':
-        case 'userEdit':
-        case 'gallery':
-        case 'restaurantReview':
-        case 'restaurantHours':
-        case 'restaurant': {
-          const prevState = findLast(this.states, (x) => x.type === name)
-          const res = await this.pushHomeState({
-            ...item,
-            name,
-            id: item.type === 'replace' ? prevState.id : item.id,
-          })
-          if (res?.fetchDataPromise) {
-            promises.add(res.fetchDataPromise)
-          }
-          break
-        }
-        default: {
-          return
-        }
-      }
-    }
-
-    await Promise.all([...promises])
-  }
-
   pushHomeState(item: HistoryItem) {
     if (!item) {
       console.warn('no item?')
@@ -330,6 +270,7 @@ class HomeStore extends Store {
         nextState = {
           slug: item.params.slug,
           userSlug: item.params.userSlug,
+          state: item.params.state,
         }
         break
       }
@@ -410,6 +351,66 @@ class HomeStore extends Store {
 
     this.updateHomeState('pushHomeState', finalState)
     return null
+  }
+
+  async handleRouteChange(item: HistoryItem) {
+    // happens on *any* route push or pop
+    if (appMapStore.hovered) {
+      appMapStore.setHovered(null)
+    }
+
+    if (item.type === 'pop') {
+      const curIndex = this.stateIndex
+      const total = this.states.length
+      switch (item.direction) {
+        case 'forward': {
+          this.stateIndex = Math.min(total, curIndex + 1)
+          return
+        }
+        case 'backward': {
+          this.stateIndex = Math.max(0, curIndex - 1)
+          return
+        }
+        default: {
+          console.error('NO DIRECTION FOR A POP??', item)
+        }
+      }
+    }
+
+    const promises = new Set<Promise<any>>()
+    const name = normalizeItemName[item.name] ?? item.name
+    // actions per-route
+    if (item.type === 'push' || item.type === 'replace') {
+      switch (name) {
+        case 'home':
+        case 'about':
+        case 'blog':
+        case 'search':
+        case 'list':
+        case 'user':
+        case 'userEdit':
+        case 'gallery':
+        case 'restaurantReview':
+        case 'restaurantHours':
+        case 'restaurant': {
+          const prevState = findLast(this.states, (x) => x.type === name)
+          const res = await this.pushHomeState({
+            ...item,
+            name,
+            id: item.type === 'replace' ? prevState.id : item.id,
+          })
+          if (res?.fetchDataPromise) {
+            promises.add(res.fetchDataPromise)
+          }
+          break
+        }
+        default: {
+          return
+        }
+      }
+    }
+
+    await Promise.all([...promises])
   }
 
   setSearchBarFocusedTag(val: NavigableTag | null) {

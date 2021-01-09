@@ -15,7 +15,9 @@ export const routes = {
     '/gallery/:restaurantSlug/:dishId?'
   ),
 
-  list: new Route<{ slug: string; userSlug: string }>('/list/:userSlug/:slug'),
+  list: new Route<{ slug: string; userSlug: string; state?: 'edit' }>(
+    '/l/:userSlug/:slug/:state?'
+  ),
   login: new Route('/login'),
   register: new Route('/register'),
   forgotPassword: new Route('/forgotten-password'),

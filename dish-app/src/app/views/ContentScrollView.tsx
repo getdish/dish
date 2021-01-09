@@ -4,7 +4,7 @@ import {
   useStoreInstance,
   useStoreSelector,
 } from '@dish/use-store'
-import React, { createContext, forwardRef, useRef } from 'react'
+import React, { Suspense, createContext, forwardRef, useRef } from 'react'
 import { ScrollView, ScrollViewProps, StyleSheet } from 'react-native'
 import { VStack, useMedia } from 'snackui'
 
@@ -107,7 +107,7 @@ export const ContentScrollView = forwardRef<ScrollView, ContentScrollViewProps>(
           disableScrollViewPanResponder={preventScrolling}
           style={[styles.scroll, style]}
         >
-          {children}
+          <Suspense fallback={null}>{children}</Suspense>
 
           {/* for drawer, pad bottom */}
           <VStack height={media.sm ? 300 : 0} />

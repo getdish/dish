@@ -288,16 +288,14 @@ const SearchResultsContent = (props: Props) => {
       // extendedState?: object
     ) => {
       return (
-        <Suspense fallback={<LoadingItem size="lg" />}>
-          <RestaurantListItem
-            curLocInfo={props.item.curLocInfo ?? null}
-            restaurantId={data.id}
-            restaurantSlug={data.slug}
-            rank={index + 1}
-            activeTagSlugs={activeTagSlugs}
-            meta={results[index].meta}
-          />
-        </Suspense>
+        <RestaurantListItem
+          curLocInfo={props.item.curLocInfo ?? null}
+          restaurantId={data.id}
+          restaurantSlug={data.slug}
+          rank={index + 1}
+          activeTagSlugs={activeTagSlugs}
+          meta={results[index].meta}
+        />
       )
     },
     [results]
