@@ -4,18 +4,31 @@ import { slugify } from '@dish/graph/src'
 import { graphql, order_by, query } from '@dish/graph/src'
 import { Heart, X } from '@dish/react-feather'
 import React, { useEffect, useState } from 'react'
+import { TextInput } from 'react-native'
 import {
   AbsoluteVStack,
+  Box,
   Button,
   HStack,
+  Input,
   Paragraph,
+  Popover,
   Spacer,
+  StackProps,
   Theme,
   VStack,
 } from 'snackui'
 
+import {
+  allColors,
+  allColorsPastel,
+  allDarkColor,
+  blue,
+} from '../../../constants/colors'
+import { getRestaurantIdentifiers } from '../../../helpers/getRestaurantIdentifiers'
 import { router } from '../../../router'
 import { HomeStateItemList } from '../../../types/homeTypes'
+import { useSetAppMapResults } from '../../AppMapStore'
 import { useUserStore } from '../../userStore'
 import { ContentScrollView } from '../../views/ContentScrollView'
 import { SlantedTitle } from '../../views/SlantedTitle'
@@ -74,8 +87,9 @@ const ListPageContent = graphql((props: Props) => {
   const user = useUserStore()
   const isMyList = props.item.userSlug === slugify(user.user?.username)
   const [isEditing, setIsEditing] = useState(false)
+  const [color, setColor] = useState(blue)
 
-  // const list = query
+  // fake data until i get docker/schema generation workign
   const restaurants = query.restaurant({
     limit: 10,
     where: {
@@ -89,7 +103,6 @@ const ListPageContent = graphql((props: Props) => {
       },
     ],
   })
-  // fake list until i get docker/schema generation workign
   const list = {
     name: 'Horse Fish Circus',
     slug: 'horse-fish-circus',
@@ -98,15 +111,39 @@ const ListPageContent = graphql((props: Props) => {
     },
     description:
       'Lorem ipsum dolor sit amet Lorem ipsum dolor sit amet Lorem ipsum dolor sit amet Lorem ipsum dolor sit amet Lorem ipsum dolor sit amet.',
-    restaurants,
-    comments: restaurants.map((r) => {
+    restaurants: restaurants.map((restaurant, index) => {
       return {
-        restaurant_id: r.id,
-        text:
+        restaurant,
+        description:
           'Lorem ipsum dolor sit amet Lorem ipsum dolor sit amet Lorem ipsum dolor sit amet.',
+        position: index,
+        dishes: restaurant
+          .tags({
+            where: {
+              tag: {
+                type: {
+                  _eq: 'dish',
+                },
+              },
+            },
+            limit: 8,
+            order_by: [
+              {
+                upvotes: order_by.desc,
+              },
+            ],
+          })
+          .map((x) => x.tag),
       }
     }),
   }
+
+  useSetAppMapResults({
+    isActive: props.isActive,
+    results: list.restaurants.map((r) =>
+      getRestaurantIdentifiers(r.restaurant)
+    ),
+  })
 
   return (
     <StackDrawer closable title={`Create playlist`}>
@@ -142,6 +179,8 @@ const ListPageContent = graphql((props: Props) => {
                         <Button>Save</Button>
                       </Theme>
                       <Spacer />
+                      <ColorPicker color={color} onChange={setColor} />
+                      <Spacer />
                       <VStack onPress={() => setIsEditing(false)}>
                         <X size={20} />
                       </VStack>
@@ -157,7 +196,12 @@ const ListPageContent = graphql((props: Props) => {
                 {list.user.name}'s
               </SlantedTitle>
 
-              <SlantedTitle marginTop={-5} alignSelf="center">
+              <SlantedTitle
+                backgroundColor={color}
+                color="#fff"
+                marginTop={-5}
+                alignSelf="center"
+              >
                 {list.name}
               </SlantedTitle>
             </VStack>
@@ -178,14 +222,22 @@ const ListPageContent = graphql((props: Props) => {
         />
 
         <VStack paddingHorizontal={20} paddingVertical={20}>
-          <Paragraph size="lg" textAlign="center">
-            {list.description}
-          </Paragraph>
+          {isEditing ? (
+            <Input
+              multiline
+              numberOfLines={2}
+              lineHeight={24}
+              textAlign="center"
+              defaultValue={list.description}
+            />
+          ) : (
+            <Paragraph size="lg" textAlign="center">
+              {list.description}
+            </Paragraph>
+          )}
         </VStack>
 
-        {list.restaurants.map((restaurant, index) => {
-          restaurant.slug
-          restaurant.id
+        {list.restaurants.map(({ restaurant, description, dishes }, index) => {
           if (!restaurant.slug) {
             return null
           }
@@ -195,6 +247,21 @@ const ListPageContent = graphql((props: Props) => {
               restaurantId={restaurant.id}
               restaurantSlug={restaurant.slug}
               rank={index + 1}
+              description={description}
+              hideTagRow
+              dishSlugs={dishes.map((x) => x.slug)}
+              editableDishes={isEditing}
+              onChangeDishes={(dishes) => {
+                console.log('should change dishes', dishes)
+              }}
+              editableDescription={isEditing}
+              onChangeDescription={(next) => {
+                console.log('should change descirption', next)
+              }}
+              editablePosition={isEditing}
+              onChangePosition={(next) => {
+                console.log('should change position', next)
+              }}
             />
           )
         })}
@@ -202,3 +269,54 @@ const ListPageContent = graphql((props: Props) => {
     </StackDrawer>
   )
 })
+
+function ColorBubble(props: StackProps) {
+  return <VStack borderRadius={1000} width={34} height={34} {...props} />
+}
+
+function ColorPicker({
+  color,
+  onChange,
+}: {
+  color: string
+  onChange: (next: string) => void
+}) {
+  const [isOpen, setIsOpen] = useState(false)
+  return (
+    <Popover
+      isOpen={isOpen}
+      onChangeOpen={setIsOpen}
+      contents={() => {
+        return (
+          <Box
+            flexDirection="row"
+            padding={20}
+            maxWidth={130}
+            flexWrap="wrap"
+            justifyContent="space-between"
+          >
+            {[...allColors, ...allColorsPastel, ...allDarkColor].map(
+              (color) => {
+                return (
+                  <ColorBubble
+                    key={color}
+                    marginBottom={10}
+                    backgroundColor={color}
+                    onPress={() => {
+                      onChange(color)
+                      setIsOpen(false)
+                    }}
+                  />
+                )
+              }
+            )}
+          </Box>
+        )
+      }}
+    >
+      <VStack onPress={() => setIsOpen((x) => !x)}>
+        <ColorBubble backgroundColor={color} />
+      </VStack>
+    </Popover>
+  )
+}

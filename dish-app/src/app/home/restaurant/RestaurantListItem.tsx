@@ -1,5 +1,5 @@
 import { fullyIdle, series } from '@dish/async'
-import { RestaurantItemMeta, graphql } from '@dish/graph'
+import { RestaurantItemMeta, graphql, query, tagSlug } from '@dish/graph'
 import { MessageSquare } from '@dish/react-feather'
 import { useStoreInstance } from '@dish/use-store'
 import { debounce } from 'lodash'
@@ -9,17 +9,21 @@ import React, {
   useCallback,
   useEffect,
   useMemo,
+  useRef,
   useState,
 } from 'react'
-import { Dimensions, StyleSheet } from 'react-native'
+import { Dimensions, ScrollView, StyleSheet } from 'react-native'
 import {
   AbsoluteVStack,
+  Button,
   HStack,
   LinearGradient,
   LoadingItemsSmall,
+  Modal,
   Spacer,
   StackProps,
   Text,
+  Theme,
   VStack,
   useMedia,
   useTheme,
@@ -35,13 +39,17 @@ import { isWeb } from '../../../constants/constants'
 import { getRestaurantDishes } from '../../../helpers/getRestaurantDishes'
 import { isWebIOS } from '../../../helpers/isIOS'
 import { numberFormat } from '../../../helpers/numberFormat'
+import { selectRishDishViewSimple } from '../../../helpers/selectDishViewSimple'
 import { GeocodePlace } from '../../../types/homeTypes'
 import { appMapStore } from '../../AppMapStore'
 import { useRestaurantQuery } from '../../hooks/useRestaurantQuery'
 import { useRestaurantTagScores } from '../../hooks/useRestaurantTagScores'
+import { CloseButton } from '../../views/CloseButton'
 import { ContentScrollViewHorizontal } from '../../views/ContentScrollViewHorizontal'
 import { DishView } from '../../views/dish/DishView'
+import { DishViewButton } from '../../views/dish/DishViewButton'
 import { Link } from '../../views/Link'
+import { PaneControlButtons } from '../../views/PaneControlButtons'
 import { RestaurantOverview } from '../../views/restaurant/RestaurantOverview'
 import { RestaurantTagsRow } from '../../views/restaurant/RestaurantTagsRow'
 import { RestaurantUpVoteDownVote } from '../../views/restaurant/RestaurantUpVoteDownVote'
@@ -68,6 +76,15 @@ type RestaurantListItemProps = {
   meta?: RestaurantItemMeta
   activeTagSlugs?: string[]
   onFinishRender?: Function
+  description?: string
+  editableDescription?: boolean
+  onChangeDescription?: (next: string) => void
+  editablePosition?: boolean
+  onChangePosition?: (next: number) => void
+  dishSlugs?: string[]
+  editableDishes?: boolean
+  onChangeDishes?: (slugs: string[]) => void
+  hideTagRow?: boolean
 }
 
 /**
@@ -150,6 +167,15 @@ const RestaurantListItemContent = memo(
       activeTagSlugs,
       isLoaded,
       meta,
+      hideTagRow,
+      description,
+      dishSlugs,
+      editableDishes,
+      onChangeDishes,
+      onChangeDescription,
+      editableDescription,
+      onChangePosition,
+      editablePosition,
     } = props
     const media = useMedia()
     const restaurant = useRestaurantQuery(restaurantSlug)
@@ -204,6 +230,11 @@ const RestaurantListItemContent = memo(
     const score = Math.round((meta?.effective_score ?? 0) / 10)
     const theme = useTheme()
     const showVote = !!activeTagSlugs
+
+    const nextDescription = useRef<string>()
+    const setDescription = (val: string) => {
+      nextDescription.current = val
+    }
 
     return (
       <VStack
@@ -391,7 +422,12 @@ const RestaurantListItemContent = memo(
                 paddingLeft={20}
                 paddingRight={10}
               >
-                <RestaurantOverview restaurantSlug={restaurantSlug} />
+                <RestaurantOverview
+                  text={description}
+                  editing={editableDescription}
+                  onEdit={setDescription}
+                  restaurantSlug={restaurantSlug}
+                />
               </VStack>
 
               {/* BOTTOM ROW */}
@@ -443,17 +479,39 @@ const RestaurantListItemContent = memo(
 
                   <VStack flex={1} minWidth={12} />
 
-                  <VStack marginRight={fadeOutWidthHalf}>
-                    <Suspense fallback={null}>
-                      <RestaurantSourcesBreakdownRow
-                        size="sm"
-                        restaurantId={restaurantId}
-                        restaurantSlug={restaurantSlug}
-                      />
-                    </Suspense>
-                  </VStack>
+                  {editableDescription && (
+                    <>
+                      {/* <Button>Cancel</Button> */}
+                      {/* <Spacer size="sm" /> */}
+                      <Theme name="active">
+                        <Button
+                          onPress={() => {
+                            if (nextDescription.current) {
+                              onChangeDescription(nextDescription.current)
+                            }
+                          }}
+                        >
+                          Save
+                        </Button>
+                      </Theme>
+                    </>
+                  )}
 
-                  {fadeOutRightElement}
+                  {!editableDescription && (
+                    <>
+                      <VStack marginRight={fadeOutWidthHalf}>
+                        <Suspense fallback={null}>
+                          <RestaurantSourcesBreakdownRow
+                            size="sm"
+                            restaurantId={restaurantId}
+                            restaurantSlug={restaurantSlug}
+                          />
+                        </Suspense>
+                      </VStack>
+
+                      {fadeOutRightElement}
+                    </>
+                  )}
                 </HStack>
               </Suspense>
             </VStack>
@@ -472,36 +530,41 @@ const RestaurantListItemContent = memo(
                   restaurantSlug={props.restaurantSlug}
                   restaurantId={props.restaurantId}
                   activeTagSlugs={activeTagSlugs}
+                  tagSlugs={dishSlugs}
+                  editable={editableDishes}
+                  onChangeTags={onChangeDishes}
                   isLoaded={isLoaded}
                 />
               </Suspense>
 
               <VStack flex={1} />
 
-              <HStack
-                height={34}
-                paddingTop={20}
-                paddingLeft={25}
-                overflow="hidden"
-                alignItems="center"
-              >
-                <HStack marginBottom={-8}>
-                  <RestaurantTagsRow
-                    size="sm"
-                    restaurantSlug={restaurantSlug}
-                    restaurantId={restaurantId}
-                    spacing={8}
-                    grid
-                    max={4}
+              {!hideTagRow && (
+                <HStack
+                  height={34}
+                  paddingTop={20}
+                  paddingLeft={25}
+                  overflow="hidden"
+                  alignItems="center"
+                >
+                  <HStack marginBottom={-8}>
+                    <RestaurantTagsRow
+                      size="sm"
+                      restaurantSlug={restaurantSlug}
+                      restaurantId={restaurantId}
+                      spacing={8}
+                      grid
+                      max={4}
+                    />
+                  </HStack>
+                  <VStack
+                    flex={1}
+                    backgroundColor="#fafafa"
+                    height={1}
+                    transform={[{ translateY: -0.5 }]}
                   />
                 </HStack>
-                <VStack
-                  flex={1}
-                  backgroundColor="#fafafa"
-                  height={1}
-                  transform={[{ translateY: -0.5 }]}
-                />
-              </HStack>
+              )}
             </VStack>
           </HStack>
         </VStack>
@@ -566,52 +629,150 @@ const RestaurantPeekDishes = memo(
     restaurantId: string
     activeTagSlugs?: string[]
     isLoaded: boolean
+    tagSlugs?: string[]
+    editable?: boolean
+    onChangeTags?: (slugs: string[]) => void
   }) {
     const { isLoaded, size = 'md' } = props
-    const dishes = getRestaurantDishes({
-      restaurantSlug: props.restaurantSlug,
-      tagSlugs: props.activeTagSlugs,
-      max: 5,
-    })
+    const dishes = props.tagSlugs
+      ? useRestaurantQuery(props.restaurantSlug)
+          .tags({
+            where: {
+              tag: {
+                slug: {
+                  _in: props.tagSlugs,
+                },
+              },
+            },
+          })
+          .map(selectRishDishViewSimple)
+      : getRestaurantDishes({
+          restaurantSlug: props.restaurantSlug,
+          tagSlugs: props.activeTagSlugs,
+          max: 5,
+        })
+
     const foundMatchingSearchedDish = props.activeTagSlugs?.includes(
       dishes[0].slug
     )
     const dishSize = 165
 
     return (
-      <HStack
-        contain="paint layout"
-        pointerEvents="auto"
-        padding={20}
-        paddingVertical={10}
-        alignItems="center"
-        marginBottom={-35}
-        height="100%"
-        width={dishSize * 5}
-      >
-        {!!dishes[0]?.name &&
-          dishes.map((dish, i) => {
-            const isEven = i % 2 === 0
-            const baseSize = foundMatchingSearchedDish
-              ? i == 0
-                ? dishSize
-                : dishSize * 0.95
-              : dishSize
-            return (
-              <DishView
-                key={i}
-                preventLoad={!isLoaded && i > 2}
-                size={baseSize * (isEven ? 1.2 : 1)}
-                restaurantSlug={props.restaurantSlug}
-                restaurantId={props.restaurantId}
-                dish={dish}
-                marginRight={-15}
-                marginTop={isEven ? 0 : -15}
-                showSearchButton
-              />
-            )
-          })}
-      </HStack>
+      <>
+        {props.editable && (
+          <EditRestaurantTags
+            restaurantSlug={props.restaurantSlug}
+            tagSlugs={props.tagSlugs ?? []}
+            onChange={props.onChangeTags}
+          />
+        )}
+        <HStack
+          contain="paint layout"
+          pointerEvents="auto"
+          padding={20}
+          paddingVertical={10}
+          alignItems="center"
+          marginBottom={-35}
+          height="100%"
+          width={dishSize * 5}
+        >
+          {!!dishes[0]?.name &&
+            dishes.map((dish, i) => {
+              const isEven = i % 2 === 0
+              const baseSize = foundMatchingSearchedDish
+                ? i == 0
+                  ? dishSize
+                  : dishSize * 0.95
+                : dishSize
+              return (
+                <DishView
+                  key={i}
+                  preventLoad={!isLoaded && i > 2}
+                  size={baseSize * (isEven ? 1.2 : 1)}
+                  restaurantSlug={props.restaurantSlug}
+                  restaurantId={props.restaurantId}
+                  dish={dish}
+                  marginRight={-15}
+                  marginTop={isEven ? 0 : -15}
+                  showSearchButton={!props.editable}
+                />
+              )
+            })}
+        </HStack>
+      </>
     )
   })
+)
+
+const EditRestaurantTags = graphql(
+  ({
+    restaurantSlug,
+    tagSlugs,
+    onChange,
+  }: {
+    restaurantSlug: string
+    tagSlugs: string[]
+    onChange: (slugs: string[]) => void
+  }) => {
+    const [isOpen, setIsOpen] = useState(false)
+    const [slugs, setSlugs] = useState<string[]>(tagSlugs)
+    const restaurant = useRestaurantQuery(restaurantSlug)
+    const dishes = slugs.map((slug) => {
+      return restaurant.tags({
+        where: {
+          tag: {
+            type: {
+              _eq: 'dish',
+            },
+            slug: {
+              _eq: slug,
+            },
+          },
+        },
+        limit: 1,
+      })[0]
+    })
+
+    return (
+      <>
+        <AbsoluteVStack zIndex={100}>
+          <Button onPress={() => setIsOpen(true)}>Edit</Button>
+        </AbsoluteVStack>
+
+        <Modal
+          visible={isOpen}
+          maxWidth={480}
+          width="90%"
+          maxHeight={480}
+          onDismiss={() => setIsOpen(false)}
+        >
+          <PaneControlButtons>
+            <CloseButton onPress={() => setIsOpen(false)} />
+          </PaneControlButtons>
+
+          <ScrollView style={{ width: '100%' }}>
+            <VStack padding={18}>
+              {dishes.map((dish) => {
+                return (
+                  <HStack key={dish.tag.slug}>
+                    <DishViewButton
+                      slug={dish.tag.slug}
+                      name={dish.tag.name}
+                      icon={dish.tag.icon}
+                    />
+                  </HStack>
+                )
+              })}
+            </VStack>
+          </ScrollView>
+
+          <HStack>
+            <Theme name="active">
+              <Button onPress={() => onChange(slugs)}>Save</Button>
+            </Theme>
+          </HStack>
+        </Modal>
+      </>
+    )
+  }
 )
