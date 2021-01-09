@@ -132,4 +132,5 @@ export type HomeStateItemList = HomeStateItemBase & {
   type: 'list'
   slug: string
   userSlug: string
+  state?: 'edit'
 }

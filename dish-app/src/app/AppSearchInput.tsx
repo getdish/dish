@@ -1,5 +1,6 @@
 import { fullyIdle, idle, series } from '@dish/async'
 import { Loader, Search, X } from '@dish/react-feather'
+import { useRouterSelector } from '@dish/router'
 import { getStore, reaction } from '@dish/use-store'
 import React, { memo, useCallback, useEffect, useRef, useState } from 'react'
 import {
@@ -106,6 +107,9 @@ export const AppSearchInput = memo(() => {
   const [search, setSearch] = useState('')
   const getSearch = useGet(search)
   const isSearchingCuisine = !!home.searchBarTags.length
+  const isEditingList = useRouterSelector(
+    (x) => x.curPage.name === 'list' && x.curPage.params.state === 'edit'
+  )
 
   // focus on visible
   useAutocompleteInputFocus(inputStore)
@@ -288,7 +292,13 @@ export const AppSearchInput = memo(() => {
                     setSearch(text)
                     home.setSearchQuery(text)
                   }}
-                  placeholder={isSearchingCuisine ? '...' : `${placeHolder}...`}
+                  placeholder={
+                    isEditingList
+                      ? 'Add restaurant to list...'
+                      : isSearchingCuisine
+                      ? '...'
+                      : `${placeHolder}...`
+                  }
                   style={[
                     inputTextStyles.textInput,
                     {
