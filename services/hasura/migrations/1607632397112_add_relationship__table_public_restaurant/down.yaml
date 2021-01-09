@@ -1,0 +1,6 @@
+- args:
+    relationship: photo_table
+    table:
+      name: restaurant
+      schema: public
+  type: drop_relationship

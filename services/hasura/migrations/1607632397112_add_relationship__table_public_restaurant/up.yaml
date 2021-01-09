@@ -1,0 +1,12 @@
+- args:
+    name: photo_table
+    table:
+      name: restaurant
+      schema: public
+    using:
+      foreign_key_constraint_on:
+        column: restaurant_id
+        table:
+          name: photo_xref
+          schema: public
+  type: create_array_relationship
