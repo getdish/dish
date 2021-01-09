@@ -55,6 +55,7 @@ import { useHomeStore } from './homeStore'
 import { useInputStoreLocation } from './inputStore'
 import { useUserStore } from './userStore'
 import { CloseButton, SmallCircleButton } from './views/CloseButton'
+import { Link } from './views/Link'
 import { LinkButton } from './views/LinkButton'
 import { PaneControlButtons } from './views/PaneControlButtons'
 
@@ -206,6 +207,10 @@ const AutocompleteSearch = memo(() => {
   }, [query])
 
   useEffect(() => {
+    if (!query) {
+      store.setResults([])
+      return
+    }
     let results: AutocompleteItemFull[] = []
     const state = home.currentState
     const tags = tagsToNavigableTags(activeTags)
@@ -464,26 +469,28 @@ const AutocompleteResults = memo(
     const media = useMedia()
     const autocompleteStore = useStore(AutocompleteStore, { target })
     const activeIndex = autocompleteStore.index
-    const results = [...prefixResults, ...autocompleteStore.results]
+    const ogResults = autocompleteStore.results
+    const results = [...prefixResults, ...ogResults]
     return (
       <VStack paddingTop={media.sm ? 30 : 0}>
-        {!results.length && emptyContent}
-        {results.map((result, index) => {
-          const isActive = activeIndex === index
-          return (
-            <React.Fragment key={`${result.id}${index}`}>
-              <Theme name={isActive ? 'active' : null}>
-                <AutocompleteItemView
-                  target={target}
-                  index={index}
-                  result={result}
-                  onSelect={onSelect}
-                />
-              </Theme>
-              <Spacer size={1} />
-            </React.Fragment>
-          )
-        })}
+        {!ogResults.length && emptyContent}
+        {!!ogResults.length &&
+          results.map((result, index) => {
+            const isActive = activeIndex === index
+            return (
+              <React.Fragment key={`${result.id}${index}`}>
+                <Theme name={isActive ? 'active' : null}>
+                  <AutocompleteItemView
+                    target={target}
+                    index={index}
+                    result={result}
+                    onSelect={onSelect}
+                  />
+                </Theme>
+                <Spacer size={1} />
+              </React.Fragment>
+            )
+          })}
       </VStack>
     )
   }
@@ -605,12 +612,7 @@ const HomeAutocompleteDefault = memo(() => {
               backgroundColor: bgLight,
             }}
           >
-            <LinkButton
-              className="debugme"
-              flexDirection="column"
-              disallowDisableWhenActive
-              tag={tag}
-            >
+            <Link disallowDisableWhenActive tag={tag}>
               <VStack>
                 <Text textAlign="center" width="100%" fontSize={56}>
                   {tag.icon}
@@ -627,7 +629,7 @@ const HomeAutocompleteDefault = memo(() => {
                   {tagDisplayName(tag)}
                 </Text>
               </VStack>
-            </LinkButton>
+            </Link>
           </VStack>
         )
       })}
