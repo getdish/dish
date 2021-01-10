@@ -1,8 +1,13 @@
 import { fullyIdle, series } from '@dish/async'
 import { RestaurantItemMeta, graphql, query, tagSlug } from '@dish/graph'
-import { MessageSquare } from '@dish/react-feather'
+import {
+  ChevronDown,
+  ChevronUp,
+  ChevronsUp,
+  MessageSquare,
+} from '@dish/react-feather'
 import { useStoreInstance } from '@dish/use-store'
-import { debounce } from 'lodash'
+import { debounce, sortBy } from 'lodash'
 import React, {
   Suspense,
   memo,
@@ -12,11 +17,14 @@ import React, {
   useRef,
   useState,
 } from 'react'
+import { Image } from 'react-native'
 import { Dimensions, ScrollView, StyleSheet } from 'react-native'
 import {
   AbsoluteVStack,
   Button,
+  Circle,
   HStack,
+  Input,
   LinearGradient,
   LoadingItem,
   LoadingItemsSmall,
@@ -25,6 +33,7 @@ import {
   StackProps,
   Text,
   Theme,
+  Title,
   VStack,
   useMedia,
   useTheme,
@@ -727,21 +736,26 @@ const EditRestaurantTags = graphql(
     const [isOpen, setIsOpen] = useState(false)
     const [slugs, setSlugs] = useState<string[]>(tagSlugs)
     const restaurant = useRestaurantQuery(restaurantSlug)
-    const dishes = slugs.map((slug) => {
-      return restaurant.tags({
-        where: {
-          tag: {
-            type: {
-              _eq: 'dish',
-            },
-            slug: {
-              _eq: slug,
+    const theme = useTheme()
+    const dishes = (() => {
+      const items = slugs.map((slug) => {
+        return restaurant.tags({
+          where: {
+            tag: {
+              type: {
+                _eq: 'dish',
+              },
+              slug: {
+                _eq: slug,
+              },
             },
           },
-        },
-        limit: 1,
-      })[0]
-    })
+          limit: 1,
+        })[0]
+      })
+
+      return sortBy(items, (x) => tagSlugs.indexOf(x.tag.slug))
+    })()
 
     return (
       <>
@@ -760,16 +774,49 @@ const EditRestaurantTags = graphql(
             <CloseButton onPress={() => setIsOpen(false)} />
           </PaneControlButtons>
 
+          <SlantedTitle alignSelf="center" marginTop={-10}>
+            {restaurant.name}
+          </SlantedTitle>
+
+          <Spacer />
+
+          <VStack width="100%">
+            <Input
+              backgroundColor={theme.backgroundColorSecondary}
+              marginHorizontal={20}
+              placeholder="Search dishes..."
+            />
+          </VStack>
+
           <ScrollView style={{ width: '100%' }}>
             <VStack padding={18}>
               {dishes.map((dish) => {
+                console.log(dish.photos())
                 return (
-                  <HStack key={dish.tag.slug}>
-                    <DishViewButton
-                      slug={dish.tag.slug}
-                      name={dish.tag.name}
-                      icon={dish.tag.icon}
-                    />
+                  <HStack
+                    key={dish.tag.slug}
+                    spacing
+                    padding={5}
+                    alignItems="center"
+                  >
+                    <VStack alignItems="center" justifyContent="center">
+                      <ChevronUp size={16} color="rgba(150,150,150,0.9)" />
+                      <ChevronDown size={16} color="rgba(150,150,150,0.9)" />
+                    </VStack>
+
+                    {!!dish.photos()?.[0] ? (
+                      <Image
+                        source={{ uri: dish.photos()[0] }}
+                        style={{ width: 40, height: 40, borderRadius: 100 }}
+                      />
+                    ) : (
+                      <Circle
+                        backgroundColor="rgba(150,150,150,0.29)"
+                        size={40}
+                      />
+                    )}
+
+                    <Title>{dish.tag.name}</Title>
                   </HStack>
                 )
               })}
@@ -781,6 +828,8 @@ const EditRestaurantTags = graphql(
               <Button onPress={() => onChange(slugs)}>Save</Button>
             </Theme>
           </HStack>
+
+          <Spacer />
         </Modal>
       </>
     )
