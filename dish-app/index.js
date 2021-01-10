@@ -1,6 +1,7 @@
 import '@dish/helpers/polyfill'
 
 import { registerRootComponent } from 'expo'
+
 // import { activateKeepAwake } from 'expo-keep-awake'
 
 // if (__DEV__) {
@@ -8,6 +9,7 @@ import { registerRootComponent } from 'expo'
 // }
 
 try {
+  console.log('loading app')
   const { Root } = require('./src/Root')
   // registerRootComponent calls AppRegistry.registerComponent('main', () => App);
   // It also ensures that whether you load the app in the Expo client or in a native build,
