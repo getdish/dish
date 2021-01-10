@@ -251,6 +251,7 @@ const ListPageContent = graphql((props: Props) => {
       </VStack>
 
       {list.restaurants.map(({ restaurant, description, dishes }, index) => {
+        const dishSlugs = dishes.map((x) => x.slug)
         if (!restaurant.slug) {
           return null
         }
@@ -263,7 +264,7 @@ const ListPageContent = graphql((props: Props) => {
             rank={index + 1}
             description={description}
             hideTagRow
-            dishSlugs={dishes.map((x) => x.slug)}
+            dishSlugs={dishSlugs}
             editableDishes={isEditing}
             onChangeDishes={(dishes) => {
               console.log('should change dishes', dishes)

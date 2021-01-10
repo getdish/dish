@@ -643,6 +643,7 @@ const RestaurantPeekDishes = memo(
     onChangeTags?: (slugs: string[]) => void
   }) {
     const { isLoaded, size = 'md' } = props
+    console.log('props.tagSlugs', props.tagSlugs)
     const dishes = props.tagSlugs
       ? useRestaurantQuery(props.restaurantSlug)
           .tags({
