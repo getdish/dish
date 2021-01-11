@@ -83,7 +83,6 @@ const RestaurantDeliveryButton = ({
         children: source.name,
       })}
       textProps={{
-        fontSize: 13,
         opacity: 0.7,
       }}
     />

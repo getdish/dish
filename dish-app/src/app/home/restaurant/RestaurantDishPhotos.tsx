@@ -1,7 +1,7 @@
 import { graphql } from '@dish/graph'
 import React, { memo, useMemo, useState } from 'react'
 import { SectionList } from 'react-native'
-import { HStack, VStack } from 'snackui'
+import { HStack, Spacer, VStack } from 'snackui'
 
 import { bgLightHover } from '../../../constants/colors'
 import { isWeb } from '../../../constants/constants'
@@ -31,6 +31,7 @@ export const RestaurantDishPhotos = memo(
     }) => {
       const dishes = getRestaurantDishes({ restaurantSlug, max })
       const [hasScrolled, setHasScrolled] = useState(false)
+      const hasDishes = !!dishes?.length
 
       const handleScroll = useMemo(() => {
         return !hasScrolled
@@ -45,12 +46,12 @@ export const RestaurantDishPhotos = memo(
           onScroll={handleScroll}
           style={{
             width: isWeb ? 'calc(100% + 30px)' : '98%',
-            marginHorizontal: -15,
+            marginHorizontal: -5,
           }}
         >
-          {!!dishes?.length && (
+          {hasDishes ? (
             <HStack
-              paddingHorizontal={60}
+              paddingHorizontal={30}
               paddingTop={20}
               alignItems="center"
               justifyContent="center"
@@ -97,6 +98,8 @@ export const RestaurantDishPhotos = memo(
                 )
               })}
             </HStack>
+          ) : (
+            <Spacer size="xl" />
           )}
         </ContentScrollViewHorizontal>
       )
