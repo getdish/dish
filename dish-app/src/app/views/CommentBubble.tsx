@@ -15,6 +15,7 @@ import {
 import { bgLight } from '../../constants/colors'
 import { thirdPartyCrawlSources } from '../../constants/thirdPartyCrawlSources'
 import { getColorsForName } from '../../helpers/getColorsForName'
+import { getTimeFormat } from '../../helpers/getTimeFormat'
 import { ensureFlexText } from '../home/restaurant/ensureFlexText'
 import { Link } from './Link'
 
@@ -29,6 +30,7 @@ export const CommentBubble = ({
   after,
   afterName,
   fullWidth,
+  date,
   ...rest
 }: Omit<StackProps, 'children'> & {
   name: string
@@ -41,11 +43,12 @@ export const CommentBubble = ({
   afterName?: any
   bubbleHeight?: number
   expandable?: boolean
+  date?: Date
 }) => {
   const colors = getColorsForName(`hi${name}`)
   const [isExpanded, setIsExpanded] = useState(false)
   const isTripAdvisor = name?.startsWith('tripadvisor-')
-  const isYelp = name?.startsWith('yelp-')
+  const isYelp = name?.startsWith('Yelp')
   if (isTripAdvisor) {
     name = name?.replace('tripadvisor-', '')
   }
@@ -136,6 +139,15 @@ export const CommentBubble = ({
               text
             )}
           </Paragraph>
+
+          {!!date && (
+            <>
+              <Spacer />
+              <Paragraph opacity={0.5}>
+                {getTimeFormat(new Date(date))}
+              </Paragraph>
+            </>
+          )}
         </VStack>
 
         <HStack>
@@ -176,7 +188,7 @@ export const CommentBubble = ({
             </VStack>
 
             <HStack
-              backgroundColor={colors.altColor}
+              backgroundColor={colors.darkColor}
               borderRadius={10}
               paddingHorizontal={5}
               paddingVertical={3}

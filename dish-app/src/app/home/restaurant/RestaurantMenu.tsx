@@ -70,11 +70,13 @@ export const RestaurantMenu = memo(
                         {item.name}
                       </Paragraph>
                       <Spacer size="xs" />
-                      <Paragraph opacity={0.5}>{item.description}</Paragraph>
+                      <Paragraph sizeLineHeight={0.8} opacity={0.5}>
+                        {item.description}
+                      </Paragraph>
                     </VStack>
                     <Spacer />
 
-                    <Paragraph fontWeight="600">
+                    <Paragraph fontWeight="400">
                       {toPrice(item.price ?? 0)}
                     </Paragraph>
                   </HStack>
