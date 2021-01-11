@@ -48,21 +48,25 @@ export const RestaurantBreakdown = memo(
       showScoreTable?: boolean
       borderless?: boolean
     }) => {
+      const restaurant = useRestaurantQuery(restaurantSlug)
       const tag = tagSlug
-        ? query.tag({
+        ? restaurant.tags({
             where: {
-              slug: {
-                _eq: tagSlug,
+              tag: {
+                slug: {
+                  _eq: tagSlug,
+                },
               },
             },
-            limit: 1,
           })[0]
         : null
-      const tagName = tag?.displayName ?? tag?.name ?? null
+      const tagName = tag?.tag?.displayName ?? tag?.tag?.name ?? null
       const media = useMedia()
       const store = useStore(RestaurantReviewsDisplayStore, {
         id: restaurantId,
       })
+      const tagPhotos = tag?.photos() ?? []
+      const hasTagPhotos = tagPhotos?.length > 0
 
       return (
         <VStack
@@ -79,15 +83,6 @@ export const RestaurantBreakdown = memo(
             justifyContent="center"
           >
             <SlantedTitle fontWeight="700">{tagName ?? 'Overall'}</SlantedTitle>
-
-            <AbsoluteVStack top={0} right={0}>
-              <Suspense fallback={null}>
-                <RestaurantAddCommentButton
-                  restaurantId={restaurantId}
-                  restaurantSlug={restaurantSlug}
-                />
-              </Suspense>
-            </AbsoluteVStack>
           </HStack>
           {closable && (
             <AbsoluteVStack zIndex={1000} top={10} right={10}>
@@ -125,94 +120,47 @@ export const RestaurantBreakdown = memo(
               </Suspense>
             </VStack>
 
-            <VStack
-              borderRadius={10}
-              borderWidth={1}
-              borderColor="#eee"
-              maxWidth={media.sm ? '100%' : listItemMaxSideWidth}
-              padding={10}
-              minWidth={220}
-              margin={10}
-              width={media.sm ? '100%' : '33%'}
-              backgroundColor={bgLight}
-              overflow="hidden"
-            >
-              <Suspense fallback={<LoadingItems />}>
-                {!!tagName && (
-                  <>
-                    <SmallTitle>{tagName}</SmallTitle>
-                    <Spacer />
-                    <RestaurantTagPhotos
-                      tagName={tagName}
-                      restaurantSlug={restaurantSlug}
-                    />
-                    <Spacer />
-                  </>
-                )}
-                {!tagName && (
-                  <>
-                    <SmallTitle>Base Score</SmallTitle>
-                    <RestaurantPointsBreakdown
-                      showTable={showScoreTable}
-                      restaurantSlug={restaurantSlug}
-                      restaurantId={restaurantId}
-                    />
-                  </>
-                )}
-              </Suspense>
-            </VStack>
+            {!!(tagName && hasTagPhotos) && (
+              <VStack
+                borderRadius={10}
+                borderWidth={1}
+                borderColor="#eee"
+                maxWidth={media.sm ? '100%' : listItemMaxSideWidth}
+                padding={10}
+                minWidth={220}
+                margin={10}
+                width={media.sm ? '100%' : '33%'}
+                backgroundColor={bgLight}
+                overflow="hidden"
+              >
+                <Suspense fallback={<LoadingItems />}>
+                  <SmallTitle>{tagName}</SmallTitle>
+
+                  <HStack
+                    alignItems="center"
+                    justifyContent="center"
+                    flexWrap="wrap"
+                  >
+                    {tagPhotos.map((photo) => {
+                      return (
+                        <VStack key={photo} width={110} height={110} margin={5}>
+                          <Image
+                            source={{ uri: photo }}
+                            style={{
+                              width: '100%',
+                              height: '100%',
+                            }}
+                          />
+                        </VStack>
+                      )
+                    })}
+                  </HStack>
+                </Suspense>
+              </VStack>
+            )}
           </HStack>
         </VStack>
       )
     }
   )
-)
-
-const RestaurantTagPhotos = graphql(
-  ({
-    tagName,
-    restaurantSlug,
-  }: {
-    restaurantSlug: string
-    tagName: string
-  }) => {
-    const restaurant = useRestaurantQuery(restaurantSlug)
-    const tag = restaurant.tags({
-      where: {
-        tag: {
-          name: {
-            _eq: tagName,
-          },
-        },
-      },
-    })[0]
-    const tagPhotos = tag?.photos() ?? []
-
-    if (!tagPhotos.length) {
-      return (
-        <VStack minHeight={200} alignItems="center" justifyContent="center">
-          <Text>No photos</Text>
-        </VStack>
-      )
-    }
-
-    return (
-      <HStack alignItems="center" justifyContent="center" flexWrap="wrap">
-        {tagPhotos.map((photo) => {
-          console.log('photo', photo)
-          return (
-            <VStack key={photo} width={110} height={110} margin={5}>
-              <Image
-                source={{ uri: photo }}
-                style={{
-                  width: '100%',
-                  height: '100%',
-                }}
-              />
-            </VStack>
-          )
-        })}
-      </HStack>
-    )
-  }
 )

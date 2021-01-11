@@ -3,6 +3,7 @@ import React, { Suspense, memo } from 'react'
 
 import { useUserFavoriteQuery } from '../../hooks/useUserReview'
 import { FavoriteButton, FavoriteButtonProps } from '../../views/FavoriteButton'
+import { SmallButton } from '../../views/SmallButton'
 import { CircleButton } from './CircleButton'
 
 export type RestaurantFavoriteButtonProps = {
@@ -14,11 +15,15 @@ export const RestaurantFavoriteButton = (
   props: RestaurantFavoriteButtonProps
 ) => {
   return (
-    <CircleButton zIndex={10} alignSelf="center">
-      <Suspense fallback={null}>
-        <RestaurantFavoriteStar {...props} />
-      </Suspense>
-    </CircleButton>
+    <SmallButton
+      padding={0}
+      icon={
+        <Suspense fallback={null}>
+          <RestaurantFavoriteStar {...props} />
+        </Suspense>
+      }
+      zIndex={10}
+    />
   )
 }
 

@@ -229,6 +229,7 @@ export const GalleryLightbox = ({
           onPress={setLeftImage}
           cursor="pointer"
           zIndex={100}
+          paddingHorizontal={10}
           pointerEvents="auto"
           justifyContent="center"
         >
@@ -258,6 +259,7 @@ export const GalleryLightbox = ({
           cursor="pointer"
           pointerEvents="auto"
           zIndex={100}
+          paddingHorizontal={10}
         >
           <ChevronRight color="#fff" size={30} />
         </VStack>

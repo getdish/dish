@@ -28,7 +28,7 @@ export const RestaurantPhotosRow = memo(
     }) => {
       const restaurant = useRestaurantQuery(restaurantSlug)
       const photos = restaurant.photo_table({
-        limit: 8,
+        limit: 6,
         order_by: [
           {
             photo: {
@@ -83,14 +83,21 @@ export const RestaurantPhotosRow = memo(
                   </VStack>
                 )
               })}
-              <VStack className="scroll-snap-photo">
+              <VStack>
                 <LinkButton
                   width={width * 2}
-                  height={height}
+                  height="100%"
                   name="gallery"
+                  alignItems="center"
+                  justifyContent="center"
                   params={{ restaurantSlug }}
+                  textProps={{
+                    textAlign: 'center',
+                    fontSize: 28,
+                    fontWeight: '800',
+                  }}
                 >
-                  View all
+                  Gallery 🖼
                 </LinkButton>
               </VStack>
             </>

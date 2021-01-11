@@ -1,6 +1,6 @@
 import { MapPin } from '@dish/react-feather'
 import React from 'react'
-import { HStack, Text, useMedia } from 'snackui'
+import { useMedia } from 'snackui'
 
 import { GeocodePlace } from '../../../types/homeTypes'
 import { SmallButton } from '../../views/SmallButton'

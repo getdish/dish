@@ -138,15 +138,17 @@ const RestaurantPage = memo(
 
           <Spacer size="xl" />
 
-          <Suspense fallback={<LoadingItems />}>
-            <RestaurantBreakdown
-              tagSlug={selectedDish}
-              borderless
-              showScoreTable
-              restaurantSlug={restaurantSlug}
-              restaurantId={restaurant.id}
-            />
-          </Suspense>
+          <VStack marginTop={-35}>
+            <Suspense fallback={<LoadingItems />}>
+              <RestaurantBreakdown
+                tagSlug={selectedDish}
+                borderless
+                showScoreTable
+                restaurantSlug={restaurantSlug}
+                restaurantId={restaurant.id}
+              />
+            </Suspense>
+          </VStack>
 
           <Spacer size="xl" />
 
