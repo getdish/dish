@@ -1,4 +1,3 @@
-import { omit } from 'lodash'
 import { useCallback, useEffect, useState } from 'react'
 import { useGet } from 'snackui'
 
@@ -12,21 +11,21 @@ export const useSelectedDish = (tagName?: string | null) => {
     setSelectedDish(tagName)
   }, [tagName])
 
-  const setSelectedDishToggle = useCallback((name: string) => {
+  const setSelectedDishToggle = useCallback((name: string | null) => {
     const cur = getSelectedDish()
     const next = cur === name ? '' : name
-    const curParams = router.curPage.params
+    const { section, sectionSlug, ...restParams } = router.curPage.params
     const params = next
       ? {
-          ...curParams,
+          ...restParams,
           section: 'reviews',
           sectionSlug: name,
         }
-      : omit(curParams, 'reviews')
-    console.log('navigate', params)
+      : restParams
     router.navigate({
       name: router.curPage.name,
       params,
+      replace: true,
     })
     setSelectedDish(next)
   }, [])

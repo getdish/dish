@@ -48,14 +48,16 @@ export const RestaurantBreakdown = memo(
       showScoreTable?: boolean
       borderless?: boolean
     }) => {
-      const tag = query.tag({
-        where: {
-          slug: {
-            _eq: tagSlug,
-          },
-        },
-        limit: 1,
-      })[0]
+      const tag = tagSlug
+        ? query.tag({
+            where: {
+              slug: {
+                _eq: tagSlug,
+              },
+            },
+            limit: 1,
+          })[0]
+        : null
       const tagName = tag?.displayName ?? tag?.name ?? null
       const media = useMedia()
       const store = useStore(RestaurantReviewsDisplayStore, {
@@ -76,9 +78,7 @@ export const RestaurantBreakdown = memo(
             alignItems="center"
             justifyContent="center"
           >
-            <SlantedTitle fontWeight="700">
-              {tagName ?? 'Overview'}
-            </SlantedTitle>
+            <SlantedTitle fontWeight="700">{tagName ?? 'Overall'}</SlantedTitle>
 
             <AbsoluteVStack top={0} right={0}>
               <Suspense fallback={null}>

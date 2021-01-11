@@ -1,5 +1,6 @@
 import { graphql } from '@dish/graph'
 import React, { memo, useMemo, useState } from 'react'
+import { SectionList } from 'react-native'
 import { HStack, VStack } from 'snackui'
 
 import { bgLightHover } from '../../../constants/colors'
@@ -29,7 +30,6 @@ export const RestaurantDishPhotos = memo(
       max?: number
     }) => {
       const dishes = getRestaurantDishes({ restaurantSlug, max })
-      const spacing = 20
       const [hasScrolled, setHasScrolled] = useState(false)
 
       const handleScroll = useMemo(() => {
@@ -55,39 +55,45 @@ export const RestaurantDishPhotos = memo(
               alignItems="center"
               justifyContent="center"
             >
+              <SectionTab isSelected={selected === null}>
+                <DishView
+                  noLink
+                  size={size}
+                  dish={{
+                    name: 'Overall',
+                    image: '',
+                    icon: '',
+                    id: '',
+                  }}
+                  selected={selected === null}
+                  {...(!!selectable && {
+                    onPress() {
+                      onSelect?.(null)
+                    },
+                  })}
+                />
+              </SectionTab>
               {dishes.map((dish, index) => {
                 const isSelected = selected === getTagSlug(dish)
                 return (
-                  <VStack
-                    key={dish.name}
-                    padding={spacing / 2}
-                    marginRight={-spacing / 4}
-                    paddingBottom={30}
-                    borderTopLeftRadius={28}
-                    borderTopRightRadius={28}
-                    borderWidth={1}
-                    borderColor="transparent"
-                    {...(isSelected && {
-                      backgroundColor: '#fff',
-                      borderColor: bgLightHover,
-                      borderBottomColor: '#fff',
-                    })}
-                  >
-                    <DishView
-                      noLink
-                      preventLoad={index > 5 && !hasScrolled}
-                      size={size}
-                      restaurantSlug={restaurantSlug}
-                      restaurantId={restaurantId}
-                      dish={dish}
-                      selected={isSelected}
-                      {...(!!selectable && {
-                        onPress() {
-                          onSelect?.(getTagSlug(dish))
-                        },
-                      })}
-                    />
-                  </VStack>
+                  <React.Fragment key={dish.name}>
+                    <SectionTab isSelected={isSelected}>
+                      <DishView
+                        noLink
+                        preventLoad={index > 5 && !hasScrolled}
+                        size={size}
+                        restaurantSlug={restaurantSlug}
+                        restaurantId={restaurantId}
+                        dish={dish}
+                        selected={isSelected}
+                        {...(!!selectable && {
+                          onPress() {
+                            onSelect?.(getTagSlug(dish))
+                          },
+                        })}
+                      />
+                    </SectionTab>
+                  </React.Fragment>
                 )
               })}
             </HStack>
@@ -97,3 +103,30 @@ export const RestaurantDishPhotos = memo(
     }
   )
 )
+
+function SectionTab({
+  children,
+  isSelected,
+}: {
+  children: any
+  isSelected?: boolean
+}) {
+  return (
+    <VStack
+      padding={20 / 2}
+      marginRight={-20 / 4}
+      paddingBottom={30}
+      borderTopLeftRadius={28}
+      borderTopRightRadius={28}
+      borderWidth={1}
+      borderColor="transparent"
+      {...(isSelected && {
+        backgroundColor: '#fff',
+        borderColor: bgLightHover,
+        borderBottomColor: '#fff',
+      })}
+    >
+      {children}
+    </VStack>
+  )
+}

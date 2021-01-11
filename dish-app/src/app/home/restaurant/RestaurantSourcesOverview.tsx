@@ -89,45 +89,54 @@ function getSourceBreakdowns(breakdowns?: SourceBreakdowns) {
   const { all, ...sourceBreakdowns } = breakdowns
   const sourceNames = Object.keys(sourceBreakdowns) as string[]
 
-  return sourceNames.map((sourceName) => {
-    const sourceInfo = thirdPartyCrawlSources[sourceName]
-    if (!sourceInfo) {
-      return null
-    }
-    const { name, image } = sourceInfo
-    const breakdown = sourceBreakdowns[sourceName]
-    if (!breakdown) {
-      return null
-    }
-    let negative = 0
-    let positive = 0
-    if (breakdown.ratings) {
-      for (const key of rankingKeys) {
-        const br = breakdown.ratings[key]
-        if (br.score < 0) {
-          negative += br.score
-        } else {
-          positive += br.score
+  return sourceNames
+    .map((sourceName) => {
+      const sourceInfo = thirdPartyCrawlSources[sourceName]
+      if (!sourceInfo) {
+        return null
+      }
+      const { name, image } = sourceInfo
+      const breakdown = sourceBreakdowns[sourceName]
+      if (!breakdown) {
+        return null
+      }
+      let negative = 0
+      let positive = 0
+      if (breakdown.ratings) {
+        for (const key of rankingKeys) {
+          const br = breakdown.ratings[key]
+          if (br.score < 0) {
+            negative += br.score
+          } else {
+            positive += br.score
+          }
         }
       }
-    }
-    const sentence = ellipseText(
-      (positive > negative
-        ? breakdown.summaries.reviews.best
-        : breakdown.summaries.reviews.worst) ?? `no summary found yet 😭`,
-      {
-        maxLength: 300,
-      }
-    )
-    return { name, image, sentence, positive, negative }
-  })
+      const summary =
+        positive > negative
+          ? breakdown.summaries.reviews.best
+          : breakdown.summaries.reviews.worst
+      const sentence = summary
+        ? ellipseText(summary, {
+            maxLength: 300,
+          })
+        : null
+      return { name, image, sentence, positive, negative }
+    })
+    .filter((x) => !!x?.sentence)
 }
 
 function getTagSourceBreakdowns(breakdowns?: TagSourceBreakdown) {
   if (!breakdowns) {
     return null
   }
-  const sourceNames = Object.keys(breakdowns)
+  const sourceNames = Object.keys(breakdowns).filter(
+    (x) =>
+      !!(
+        breakdowns[x].summary.negative?.[0] ||
+        breakdowns[x].summary.positive?.[0]
+      )
+  )
 
   return sourceNames
     .map((sourceName) => {
@@ -147,17 +156,19 @@ function getTagSourceBreakdowns(breakdowns?: TagSourceBreakdown) {
         return null
       }
 
-      const sentence = ellipseText(
-        (positive > negative
-          ? breakdown.summary.positive?.[0]
-          : breakdown.summary.negative?.[0]) ?? `no summary found yet 😭`,
-        {
-          maxLength: 300,
-        }
-      )
+      const defaultSummary = positive > negative ? 'positive' : 'negative'
+      const oppositeSummary = positive > negative ? 'negative' : 'positive'
+      const summary =
+        breakdown.summary[defaultSummary]?.[0] ??
+        breakdown.summary[oppositeSummary]?.[0]
+      const sentence = summary
+        ? ellipseText(summary, {
+            maxLength: 300,
+          })
+        : null
       return { name, image, sentence, positive, negative }
     })
-    .filter(Boolean)
+    .filter((x) => !!x && x.sentence)
 }
 
 export const RestaurantSourcesOverview = graphql(
