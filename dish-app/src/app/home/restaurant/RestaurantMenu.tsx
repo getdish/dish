@@ -66,7 +66,7 @@ export const RestaurantMenu = memo(
                     )}
                     <Spacer />
                     <VStack flex={1} paddingVertical={2}>
-                      <Paragraph size="lg" fontWeight="600">
+                      <Paragraph sizeLineHeight={0.9} fontWeight="600">
                         {item.name}
                       </Paragraph>
                       <Spacer size="xs" />

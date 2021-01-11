@@ -31,6 +31,7 @@ export const thirdPartyCrawlSources = {
     name: 'Yelp',
     image: require('../assets/yelp.jpg').default,
     delivery: false,
+    color: '#C63A38',
   },
   infatuated: {
     name: 'The Infatuation',

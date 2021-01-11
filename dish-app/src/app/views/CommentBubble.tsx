@@ -141,28 +141,37 @@ export const CommentBubble = ({
         <HStack>
           <VStack alignItems="center" width={circleSize}>
             <VStack marginBottom={-10}>
-              <Circle backgroundColor={colors.color} size={circleSize}>
-                {isTripAdvisor ? (
-                  <Image
-                    source={{ uri: thirdPartyCrawlSources.tripadvisor.image }}
-                    style={{
-                      width: imageSize,
-                      height: imageSize,
-                      borderRadius: 100,
-                    }}
-                  />
-                ) : isYelp ? (
-                  <Image
-                    source={{ uri: thirdPartyCrawlSources.yelp.image }}
-                    style={{
-                      width: imageSize,
-                      height: imageSize,
-                      borderRadius: 100,
-                    }}
-                  />
-                ) : (
-                  <User color="#fff" size={imageSize} />
-                )}
+              <Circle
+                backgroundColor={
+                  isYelp
+                    ? thirdPartyCrawlSources.yelp.color
+                    : colors.pastelColor
+                }
+                size={circleSize}
+              >
+                <VStack borderRadius={100} overflow="hidden">
+                  {isTripAdvisor ? (
+                    <Image
+                      source={{ uri: thirdPartyCrawlSources.tripadvisor.image }}
+                      style={{
+                        width: imageSize,
+                        height: imageSize,
+                        margin: -1,
+                      }}
+                    />
+                  ) : isYelp ? (
+                    <Image
+                      source={{ uri: thirdPartyCrawlSources.yelp.image }}
+                      style={{
+                        width: imageSize,
+                        height: imageSize,
+                        margin: -1,
+                      }}
+                    />
+                  ) : (
+                    <User color="#fff" size={imageSize} />
+                  )}
+                </VStack>
               </Circle>
             </VStack>
 
