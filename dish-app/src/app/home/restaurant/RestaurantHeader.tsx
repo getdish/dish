@@ -16,7 +16,10 @@ import { RestaurantAddress } from './RestaurantAddress'
 import { RestaurantAddressLinksRow } from './RestaurantAddressLinksRow'
 import { RestaurantDeliveryButtons } from './RestaurantDeliveryButtons'
 import { openingHours } from './RestaurantDetailRow'
-import { RestaurantFavoriteStar } from './RestaurantFavoriteButton'
+import {
+  RestaurantFavoriteButton,
+  RestaurantFavoriteStar,
+} from './RestaurantFavoriteButton'
 import { RestaurantPhotosRow } from './RestaurantPhotosRow'
 
 type RestaurantHeaderProps = {
@@ -163,10 +166,12 @@ const RestaurantHeaderContent = memo(
                           flexWrap="wrap"
                           maxWidth="100%"
                         >
-                          <RestaurantFavoriteStar
+                          <RestaurantFavoriteButton
                             size="lg"
                             restaurantId={restaurantId}
                           />
+
+                          <Spacer size="xs" />
 
                           <Suspense fallback={null}>
                             <RestaurantAddressLinksRow
@@ -181,29 +186,36 @@ const RestaurantHeaderContent = memo(
                               restaurantSlug={restaurantSlug}
                             />
                             <Spacer size="xs" />
+                          </Suspense>
+                        </HStack>
+
+                        <Spacer />
+
+                        <HStack>
+                          <Suspense fallback={null}>
                             <RestaurantAddress
                               size="xs"
                               address={restaurant.address ?? ''}
                               curLocInfo={state?.curLocInfo ?? null}
                             />
+                            <SmallButton
+                              backgroundColor="transparent"
+                              name="restaurantHours"
+                              params={{ slug: restaurantSlug }}
+                              textProps={{
+                                ellipse: true,
+                                color: open_color,
+                              }}
+                              icon={
+                                <Clock
+                                  size={14}
+                                  color="#999"
+                                  style={{ marginRight: 5 }}
+                                />
+                              }
+                              children={`${open_text} (${next_time})`}
+                            />
                           </Suspense>
-                          <SmallButton
-                            backgroundColor="transparent"
-                            name="restaurantHours"
-                            params={{ slug: restaurantSlug }}
-                            textProps={{
-                              ellipse: true,
-                              color: open_color,
-                            }}
-                            icon={
-                              <Clock
-                                size={14}
-                                color="#999"
-                                style={{ marginRight: 5 }}
-                              />
-                            }
-                            children={`${open_text} (${next_time})`}
-                          />
                         </HStack>
 
                         {afterAddress}

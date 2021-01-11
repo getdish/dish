@@ -16,6 +16,7 @@ import {
 import { isWeb } from '../../../constants/constants'
 import { thirdPartyCrawlSources } from '../../../constants/thirdPartyCrawlSources'
 import { useRestaurantQuery } from '../../hooks/useRestaurantQuery'
+import { SlantedTitle } from '../../views/SlantedTitle'
 import { SentimentText } from './SentimentText'
 
 type RatingCount = {
@@ -118,7 +119,7 @@ function getSourceBreakdowns(breakdowns?: SourceBreakdowns) {
           : breakdown.summaries.reviews.worst
       const sentence = summary
         ? ellipseText(summary, {
-            maxLength: 300,
+            maxLength: 250,
           })
         : null
       return { name, image, sentence, positive, negative }
@@ -208,24 +209,27 @@ export const RestaurantSourcesOverview = graphql(
 
     return (
       <VStack width="100%" marginVertical={-spacing}>
-        <Grid itemMinWidth={240}>
+        <Grid itemMinWidth={280}>
           {items.map(({ name, sentence, image, positive, negative }) => {
             return (
               <VStack
                 key={name}
                 shadowColor="#000"
-                shadowOpacity={0.1}
+                shadowOpacity={0.05}
+                borderWidth={1}
+                borderColor="#eee"
                 backgroundColor="#fff"
-                shadowRadius={10}
+                shadowRadius={15}
                 shadowOffset={{ height: 3, width: 0 }}
                 padding={15}
                 margin={spacing}
+                borderRadius={10}
                 position="relative"
                 flex={1}
               >
-                <SmallTitle color="#000" divider="off" fontSize={20}>
+                <SlantedTitle marginTop={-30} size="xs" alignSelf="center">
                   {name}
-                </SmallTitle>
+                </SlantedTitle>
                 <Spacer size="sm" />
                 <AbsoluteVStack top={-10} right={-10}>
                   <Image
@@ -244,8 +248,8 @@ export const RestaurantSourcesOverview = graphql(
                   <SentimentText sentiment={negative}>Negative</SentimentText>
                 </HStack>
                 <Spacer />
-                {!!tagName && isWeb && (
-                  <Paragraph>
+                <Paragraph sizeLineHeight={0.9}>
+                  {!!tagName && isWeb ? (
                     <div
                       className="block"
                       dangerouslySetInnerHTML={{
@@ -257,9 +261,10 @@ export const RestaurantSourcesOverview = graphql(
                           ),
                       }}
                     />
-                  </Paragraph>
-                )}
-                {(!tagName || !isWeb) && <Paragraph>{sentence}</Paragraph>}
+                  ) : (
+                    sentence
+                  )}
+                </Paragraph>
               </VStack>
             )
           })}

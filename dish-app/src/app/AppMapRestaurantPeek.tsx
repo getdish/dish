@@ -90,25 +90,8 @@ export const AppMapRestaurantPeek = memo(
                 paddingRight={30}
               >
                 {restaurant.name}
-                {/* <RestaurantAddressLinksRow
-                  curLocInfo={
-                    state?.curLocInfo ??
-                    home.currentState.curLocInfo
-                  }
-                  showMenu
-                  size="sm"
-                  restaurantSlug={slug}
-                /> */}
               </Text>
             </LinkButton>
-            {/* <Spacer size="xs" />
-            <HStack>
-              <RestaurantAddress
-                size="sm"
-                address={restaurant.address ?? ''}
-                curLocInfo={state?.curLocInfo ?? null}
-              />
-            </HStack> */}
           </VStack>
 
           {!!restaurant.image && (

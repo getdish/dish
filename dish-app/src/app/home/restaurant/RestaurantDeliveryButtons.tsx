@@ -31,7 +31,7 @@ export const RestaurantDeliveryButtons = memo(
     }
 
     return (
-      <HStack flexWrap="wrap" alignItems="center" {...props}>
+      <HStack flexWrap="wrap" alignItems="center" spacing="xs" {...props}>
         {!!label && (
           <Text
             fontSize={14}
@@ -79,16 +79,14 @@ const RestaurantDeliveryButton = ({
           }}
         />
       }
-    >
-      {showLabels && (
-        <>
-          <Spacer size={8} />
-          <Text opacity={1} ellipse fontSize={14} fontWeight="400" color={blue}>
-            {source.name}
-          </Text>
-        </>
-      )}
-    </SmallButton>
+      {...(showLabels && {
+        children: source.name,
+      })}
+      textProps={{
+        fontSize: 13,
+        opacity: 0.7,
+      }}
+    />
   )
 
   if (source.name && !showLabels) {

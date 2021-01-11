@@ -36,45 +36,32 @@ export const RestaurantAddressLinksRow = memo(
       const iconSize = size === 'lg' ? 18 : 16
 
       const linkElements = (
-        <ScrollView
-          horizontal
-          showsHorizontalScrollIndicator={false}
-          style={{ maxWidth: '100%' }}
-        >
-          <HStack alignItems="center" spacing="xs">
-            {showMenu && !!restaurant.website && (
-              <SmallButton
-                backgroundColor="transparent"
-                tooltip="Menu"
-                href={restaurant.website ?? ''}
-              >
-                <AlignCenter size={iconSize} />
-              </SmallButton>
-            )}
-            {!!restaurant.telephone && (
-              <SmallButton
-                backgroundColor="transparent"
-                tooltip="Call"
-                href={`tel:${restaurant.telephone}`}
-              >
-                <PhoneCall size={iconSize} />
-              </SmallButton>
-            )}
-            {!!restaurant.website && (
-              <SmallButton
-                backgroundColor="transparent"
-                tooltip="Website"
-                href={restaurant.website ?? ''}
-              >
-                <Link2 size={iconSize} />
-              </SmallButton>
-            )}
-            {/* <RestaurantDeliveryButtons
-              showLabels
-              restaurantSlug={restaurantSlug}
-            /> */}
-          </HStack>
-        </ScrollView>
+        <HStack alignItems="center" spacing="xs">
+          {showMenu && !!restaurant.website && (
+            <SmallButton
+              backgroundColor="transparent"
+              tooltip="Menu"
+              href={restaurant.website ?? ''}
+              icon={<AlignCenter size={iconSize} />}
+            />
+          )}
+          {!!restaurant.telephone && (
+            <SmallButton
+              backgroundColor="transparent"
+              tooltip="Call"
+              href={`tel:${restaurant.telephone}`}
+              icon={<PhoneCall size={iconSize} />}
+            />
+          )}
+          {!!restaurant.website && (
+            <SmallButton
+              backgroundColor="transparent"
+              tooltip="Website"
+              href={restaurant.website ?? ''}
+              icon={<Link2 size={iconSize} />}
+            />
+          )}
+        </HStack>
       )
 
       return (
