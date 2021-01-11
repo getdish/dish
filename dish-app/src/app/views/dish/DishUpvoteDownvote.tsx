@@ -61,6 +61,7 @@ const DishUpvoteDownvoteContent = graphql(function DishUpvoteDownvote({
   })
   return (
     <UpvoteDownvoteScore
+      showVoteOnHover
       subtle={subtle}
       size={size}
       score={intScore + vote}

@@ -555,3 +555,11 @@ mark {
 .filter-image {
   filter: sepia(100%) hue-rotate(90deg);
 }
+
+.show-vote-on-hover .vote-button {
+  opacity: 0;
+}
+
+.show-vote-on-hover:hover .vote-button {
+  opacity: 1;
+}

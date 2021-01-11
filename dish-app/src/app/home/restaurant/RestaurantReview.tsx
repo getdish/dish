@@ -2,6 +2,7 @@ import { graphql, query, refetch } from '@dish/graph'
 import { useRefetch } from '@dish/graph'
 import { uniqBy } from 'lodash'
 import React, { memo } from 'react'
+import { ScrollView } from 'react-native'
 import {
   Divider,
   HStack,
@@ -129,23 +130,25 @@ export const RestaurantReview = memo(
             !!review.text ? (
               <HStack
                 width="100%"
+                overflow="hidden"
                 alignItems="center"
                 maxWidth="100%"
-                flexWrap="wrap"
               >
-                {!!sentiments?.length
-                  ? uniqBy(sentiments, (x) => x.tag.name).map((x, i) => {
-                      const snt = x.ml_sentiment
-                      return (
-                        <React.Fragment key={i}>
-                          <SentimentText sentiment={snt}>
-                            {x.tag.name}
-                          </SentimentText>
-                          <Text>&nbsp; &nbsp;</Text>
-                        </React.Fragment>
-                      )
-                    })
-                  : []}
+                <ScrollView horizontal showsHorizontalScrollIndicator={false}>
+                  {!!sentiments?.length
+                    ? uniqBy(sentiments, (x) => x.tag.name).map((x, i) => {
+                        const snt = x.ml_sentiment
+                        return (
+                          <React.Fragment key={i}>
+                            <SentimentText sentiment={snt}>
+                              {x.tag.name}
+                            </SentimentText>
+                            <Text>&nbsp;</Text>
+                          </React.Fragment>
+                        )
+                      })
+                    : []}
+                </ScrollView>
 
                 <Divider flex />
               </HStack>

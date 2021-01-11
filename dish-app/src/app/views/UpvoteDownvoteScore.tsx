@@ -6,23 +6,27 @@ import { green, orange, red } from '../../constants/colors'
 import CircularProgress from './CircularProgress'
 import { VoteButton } from './VoteButton'
 
+type Props = StackProps & {
+  showVoteOnHover?: boolean
+  size?: 'sm' | 'md'
+  ratio?: number
+  score: number
+  vote: -1 | 0 | 1
+  setVote?: Function
+  subtle?: boolean
+}
+
 export const UpvoteDownvoteScore = memo(
   ({
     score,
-    ratio = 0,
+    showVoteOnHover,
+    ratio,
     vote,
     subtle,
     setVote,
     size,
     ...props
-  }: {
-    size?: 'sm' | 'md'
-    ratio?: number
-    score: number
-    vote: -1 | 0 | 1
-    setVote?: Function
-    subtle?: boolean
-  } & StackProps) => {
+  }: Props) => {
     score = Math.round(score)
     const voteButtonColor = subtle ? '#f2f2f2' : null
     const scale = size === 'sm' ? 0.65 : 1
@@ -64,13 +68,23 @@ export const UpvoteDownvoteScore = memo(
       />
     )
 
-    const color = ratio < 0.4 ? red : ratio < 0.6 ? orange : green
+    const color =
+      typeof ratio == 'undefined'
+        ? score >= 0
+          ? green
+          : red
+        : ratio < 0.4
+        ? red
+        : ratio < 0.6
+        ? orange
+        : green
 
     return (
       <VStack
         pointerEvents="auto"
         alignItems="center"
         justifyContent="center"
+        className={showVoteOnHover ? ' show-vote-on-hover' : null}
         width={sizePx}
         height={sizePx}
         backgroundColor="#fff"
@@ -97,7 +111,6 @@ export const UpvoteDownvoteScore = memo(
             />
           </AbsoluteVStack>
         )}
-
         {subtle ? (
           upvote
         ) : (
