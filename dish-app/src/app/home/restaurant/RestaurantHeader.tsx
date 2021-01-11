@@ -1,9 +1,18 @@
 import { graphql } from '@dish/graph'
 import { Clock } from '@dish/react-feather'
 import React, { Suspense, memo, useState } from 'react'
-import { AbsoluteVStack, HStack, Spacer, Text, VStack } from 'snackui'
+import { StyleSheet } from 'react-native'
+import {
+  AbsoluteVStack,
+  HStack,
+  LinearGradient,
+  Spacer,
+  Text,
+  VStack,
+} from 'snackui'
 
 import { drawerBorderRadius, isWeb } from '../../../constants/constants'
+import { getColorsForName } from '../../../helpers/getColorsForName'
 import { HomeStateItemRestaurant } from '../../../types/homeTypes'
 import { useAppDrawerWidthInner } from '../../hooks/useAppDrawerWidth'
 import { useRestaurantQuery } from '../../hooks/useRestaurantQuery'
@@ -30,7 +39,6 @@ type RestaurantHeaderProps = {
   size?: 'sm' | 'md'
   below?: any
   showImages?: boolean
-  color?: string
   minHeight?: number
 }
 
@@ -50,7 +58,6 @@ const RestaurantHeaderContent = memo(
       after,
       below,
       afterAddress,
-      color,
       showImages,
       minHeight,
       size,
@@ -72,6 +79,7 @@ const RestaurantHeaderContent = memo(
       const restaurantId = restaurant.id
       const photoWidth = width * 0.5
       const [hasScrolled, setHasScrolled] = useState(false)
+      const colors = getColorsForName(restaurant.name)
 
       return (
         <VStack
@@ -94,11 +102,7 @@ const RestaurantHeaderContent = memo(
             }}
           >
             <VStack>
-              <AbsoluteVStack
-                zIndex={0}
-                pointerEvents="auto"
-                className="fade-photos"
-              >
+              <AbsoluteVStack zIndex={0} pointerEvents="auto">
                 <RestaurantPhotosRow
                   restaurantSlug={restaurantSlug}
                   width={photoWidth}
@@ -106,6 +110,22 @@ const RestaurantHeaderContent = memo(
                   escalating
                   showEscalated={hasScrolled}
                 />
+                <AbsoluteVStack
+                  left={0}
+                  right={0}
+                  height={170 + 20}
+                  width={width}
+                  pointerEvents="none"
+                >
+                  <LinearGradient
+                    style={[StyleSheet.absoluteFill]}
+                    colors={[
+                      `${colors.darkColor}99`,
+                      `${colors.extraLightColor}33`,
+                      `${colors.extraLightColor}ff`,
+                    ]}
+                  />
+                </AbsoluteVStack>
               </AbsoluteVStack>
               <VStack
                 marginTop={150}
@@ -125,26 +145,30 @@ const RestaurantHeaderContent = memo(
                       restaurantSlug={restaurantSlug}
                     />
                     <Spacer size="xl" />
-                    <Text
-                      alignSelf="flex-start"
-                      selectable
-                      lineHeight={20}
-                      maxHeight={20}
-                      letterSpacing={-1.2}
-                      fontSize={fontSize}
-                      fontWeight="800"
-                      color="#fff"
-                      padding={20}
-                      backgroundColor="rgba(0,0,0,0.85)"
+                    <HStack
+                      backgroundColor={colors.darkColor}
                       shadowColor="#000"
                       shadowOpacity={0.2}
                       pointerEvents="auto"
                       shadowRadius={5}
                       shadowOffset={{ height: 3, width: 0 }}
                       borderRadius={10}
+                      paddingHorizontal={15}
+                      paddingVertical={5}
+                      alignItems="center"
+                      justifyContent="center"
                     >
-                      {restaurant.name}
-                    </Text>
+                      <Text
+                        color={colors.extraLightColor}
+                        alignSelf="flex-start"
+                        selectable
+                        letterSpacing={-1.2}
+                        fontSize={fontSize}
+                        fontWeight="800"
+                      >
+                        {restaurant.name}
+                      </Text>
+                    </HStack>
                   </HStack>
                   <Spacer />
                   <HStack
@@ -166,62 +190,66 @@ const RestaurantHeaderContent = memo(
                           flexWrap="wrap"
                           maxWidth="100%"
                         >
-                          <RestaurantFavoriteButton
-                            size="lg"
-                            restaurantId={restaurantId}
-                          />
+                          <VStack marginBottom={10}>
+                            <RestaurantFavoriteStar
+                              size="lg"
+                              restaurantId={restaurantId}
+                            />
+                          </VStack>
 
                           <Spacer size="xs" />
 
                           <Suspense fallback={null}>
-                            <RestaurantAddressLinksRow
-                              curLocInfo={state?.curLocInfo ?? null}
-                              showMenu
-                              size="lg"
-                              restaurantSlug={restaurantSlug}
-                            />
+                            <VStack marginBottom={10}>
+                              <RestaurantAddress
+                                size="xs"
+                                address={restaurant.address ?? ''}
+                                curLocInfo={state?.curLocInfo ?? null}
+                              />
+                            </VStack>
+                            <VStack marginBottom={10}>
+                              <SmallButton
+                                backgroundColor="transparent"
+                                name="restaurantHours"
+                                params={{ slug: restaurantSlug }}
+                                textProps={{
+                                  ellipse: true,
+                                  color: open_color,
+                                }}
+                                icon={
+                                  <Clock
+                                    size={14}
+                                    color="#999"
+                                    style={{ marginRight: 5 }}
+                                  />
+                                }
+                                children={`${open_text}${
+                                  next_time ? `(${next_time})` : ''
+                                }`}
+                              />
+                            </VStack>
+                            <Spacer size="sm" />
+                            <VStack marginBottom={10}>
+                              <RestaurantAddressLinksRow
+                                curLocInfo={state?.curLocInfo ?? null}
+                                showMenu
+                                size="lg"
+                                restaurantSlug={restaurantSlug}
+                              />
+                            </VStack>
                             <Spacer size="xs" />
-                            <RestaurantDeliveryButtons
-                              showLabels
-                              restaurantSlug={restaurantSlug}
-                            />
+                            <VStack marginBottom={10}>
+                              <RestaurantDeliveryButtons
+                                showLabels
+                                restaurantSlug={restaurantSlug}
+                              />
+                            </VStack>
                             <Spacer size="xs" />
-                          </Suspense>
-                        </HStack>
-
-                        <Spacer />
-
-                        <HStack>
-                          <Suspense fallback={null}>
-                            <RestaurantAddress
-                              size="xs"
-                              address={restaurant.address ?? ''}
-                              curLocInfo={state?.curLocInfo ?? null}
-                            />
-                            <SmallButton
-                              backgroundColor="transparent"
-                              name="restaurantHours"
-                              params={{ slug: restaurantSlug }}
-                              textProps={{
-                                ellipse: true,
-                                color: open_color,
-                              }}
-                              icon={
-                                <Clock
-                                  size={14}
-                                  color="#999"
-                                  style={{ marginRight: 5 }}
-                                />
-                              }
-                              children={`${open_text} (${next_time})`}
-                            />
                           </Suspense>
                         </HStack>
 
                         {afterAddress}
                       </VStack>
-
-                      <Spacer size="lg" />
 
                       <VStack>
                         <HStack marginTop={10} flexWrap="wrap">
@@ -231,12 +259,11 @@ const RestaurantHeaderContent = memo(
                             maxWidth={contentLeftWidth}
                           >
                             <HStack
-                              maxHeight={76}
+                              maxHeight={80}
                               overflow="hidden"
                               flexWrap="wrap"
                             >
                               <RestaurantTagsRow
-                                size="sm"
                                 restaurantSlug={restaurantSlug}
                                 restaurantId={restaurantId}
                                 spacing={10}
@@ -244,7 +271,9 @@ const RestaurantHeaderContent = memo(
                                 max={10}
                               />
                             </HStack>
-                            <Spacer />
+
+                            <Spacer size="lg" />
+
                             <RestaurantOverview
                               fullHeight
                               size="lg"

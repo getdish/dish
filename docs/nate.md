@@ -9,7 +9,6 @@ goal january
     - region handoff between search/home
     - fix restaurantpage click dish
     - cleanup restaurantpage a bit
-    - fix SlantedBox
     - router types not working on LinkButtonProps
       - also in homeStore.ts should work on the big pushHomeState switch
     - better intro / intro callout
@@ -27,6 +26,21 @@ goal january
 
      - in general playlists are fun and affect regions a bit (may lessen need)
      - home page can be simpler and faster list, improve that
+
+---
+
+making it actually a community:
+
+- lists
+- home page needs to actually show real things / update better / etc
+- lots of core bugs in home/search/routing
+- rating improvements / clarity in design
+- probably a lot of fixes to data quality / imagery
+- social social social
+  - better showing of comments/trending on home
+  - better flows and surfacing of user actions
+- taste based matching
+- an active blog with interesting updates
 
 ---
 

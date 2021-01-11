@@ -14,13 +14,30 @@ export const brandColorDarker = `#800A32`
 export const brandColorLight = `#DE487B`
 export const brandColorLighter = `#EC6996`
 
-export const lightYellow = '#FCF3CF'
-export const lightPink = '#FAC8D9'
-export const lightGreen = '#DCF1E5'
-export const lightRed = '#F6DDCC'
-export const lightBlue = '#D4E6F1'
-export const lightPurple = '#F5EEF8'
-export const lightOrange = '#FFE3D7'
+export const extraLightYellow = '#F7F5ED'
+export const extraLightPink = '#F7EDF1'
+export const extraLightGreen = '#EDF7F2'
+export const extraLightRed = '#F7F1ED'
+export const extraLightOrange = '#FFF8F5'
+export const extraLightBlue = '#F0FAFF'
+export const extraLightPurple = '#F5EEF8'
+export const allExtraLightColors = [
+  extraLightYellow,
+  extraLightPink,
+  extraLightGreen,
+  extraLightRed,
+  extraLightOrange,
+  extraLightBlue,
+  extraLightPurple,
+]
+
+export const lightYellow = '#F7EECB'
+export const lightPink = '#F7CBDA'
+export const lightGreen = '#CBF7DE'
+export const lightRed = '#F7DDCB'
+export const lightOrange = '#FFDFD1'
+export const lightBlue = '#D1F0FF'
+export const lightPurple = '#EBCBF8'
 export const allLightColors = [
   lightYellow,
   lightPink,
@@ -29,13 +46,12 @@ export const allLightColors = [
   lightOrange,
   lightBlue,
   lightPurple,
-  // lightGrey,
 ]
 
 export const yellow = '#E0C25F'
 export const pink = `#C94375`
 export const green = `#57CB88`
-export const red = `#ee6868`
+export const red = `#E34646`
 export const orange = '#DC9132'
 export const blue = '#3666aa'
 export const purple = '#6E28aa'
@@ -58,13 +74,13 @@ export const allColorsPastel = [
   purplePastel,
 ]
 
-export const darkYellow = '#98894C'
-export const darkPink = '#3E1221'
-export const darkGreen = `#11692D`
+export const darkYellow = '#8C7619'
+export const darkPink = '#8C294B'
+export const darkGreen = `#16632F`
 export const darkRed = `#791D1D`
-export const darkOrange = `#934914`
-export const darkBlue = `#204493`
-export const darkPurple = `#542084`
+export const darkOrange = `#8C4613`
+export const darkBlue = `#1B397A`
+export const darkPurple = `#572684`
 export const allDarkColor = [
   darkYellow,
   darkPink,

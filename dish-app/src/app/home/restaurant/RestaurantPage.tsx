@@ -4,6 +4,7 @@ import { ScrollView } from 'react-native'
 import { LoadingItem, LoadingItems, Spacer, VStack } from 'snackui'
 
 import { bgLight, bgLightHover, darkBlue } from '../../../constants/colors'
+import { getColorsForName } from '../../../helpers/getColorsForName'
 import { getMinLngLat } from '../../../helpers/getLngLat'
 import { HomeStateItemRestaurant } from '../../../types/homeTypes'
 import { useSetAppMapResults } from '../../AppMapStore'
@@ -41,6 +42,7 @@ const RestaurantPage = memo(
     const { selectedDish, setSelectedDishToggle } = useSelectedDish(
       section === 'reviews' ? sectionSlug : null
     )
+    const colors = getColorsForName(restaurant.name)
 
     usePageLoadEffect(
       props,
@@ -94,8 +96,8 @@ const RestaurantPage = memo(
           {/* HEADER */}
           {/* -1 margin bottom to overlap bottom border */}
           <VStack
-            backgroundColor={bgLight}
-            borderBottomColor={bgLightHover}
+            backgroundColor={colors.extraLightColor}
+            borderBottomColor={colors.lightColor}
             borderBottomWidth={1}
           >
             <Suspense
@@ -106,7 +108,6 @@ const RestaurantPage = memo(
               }
             >
               <RestaurantHeader
-                color={darkBlue}
                 minHeight={450}
                 showImages
                 restaurantSlug={restaurantSlug}
@@ -124,8 +125,8 @@ const RestaurantPage = memo(
                 }
               >
                 <RestaurantDishPhotos
-                  size={140}
-                  max={40}
+                  size={130}
+                  max={35}
                   restaurantSlug={restaurantSlug}
                   restaurantId={restaurant.id ?? undefined}
                   selectable

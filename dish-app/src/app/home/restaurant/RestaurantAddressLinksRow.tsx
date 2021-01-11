@@ -37,14 +37,14 @@ export const RestaurantAddressLinksRow = memo(
 
       const linkElements = (
         <HStack alignItems="center" spacing="xs">
-          {showMenu && !!restaurant.website && (
+          {/* {showMenu && !!restaurant.website && (
             <SmallButton
               backgroundColor="transparent"
               tooltip="Menu"
               href={restaurant.website ?? ''}
               icon={<AlignCenter size={iconSize} />}
             />
-          )}
+          )} */}
           {!!restaurant.telephone && (
             <SmallButton
               backgroundColor="transparent"

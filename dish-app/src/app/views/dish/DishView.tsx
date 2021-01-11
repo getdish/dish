@@ -234,7 +234,7 @@ const DishViewContent = (props: DishViewProps) => {
         <VStack
           // BUG cant put transform on same as borderRadius + overflowHidden
           // https://stackoverflow.com/questions/21087979/probleme-css3-scale-transform-and-overflowhidden-on-safari
-          transform={[{ scale: isFallback ? 0.8 : 1 }]}
+          transform={[{ scale: isFallback ? 0.9 : 1 }]}
         >
           <VStack className="dish-image-" overflow="hidden" borderRadius={1000}>
             <ImageAlt
