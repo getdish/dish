@@ -203,21 +203,34 @@ export const GalleryLightbox = ({
     })
   }
 
-  // if (isWeb) {
-  //   useKeyPressEvent('ArrowLeft', setLeftImage)
-  //   useKeyPressEvent('ArrowRight', setRightImage)
-  // }
+  if (isWeb) {
+    useEffect(() => {
+      const handleKeyPress = (e: KeyboardEvent) => {
+        switch (e.key) {
+          case 'ArrowLeft':
+            setLeftImage()
+            break
+          case 'ArrowRight':
+            setRightImage()
+            break
+        }
+      }
+      window.addEventListener('keyup', handleKeyPress)
+      return () => {
+        window.removeEventListener('keyup', handleKeyPress)
+      }
+    }, [])
+  }
 
   return (
     <>
       <HStack flex={1}>
         <VStack
           onPress={setLeftImage}
-          top="50%"
-          transform={[{ translateY: 30 / 2 }]}
           cursor="pointer"
           zIndex={100}
           pointerEvents="auto"
+          justifyContent="center"
         >
           <ChevronLeft color="#fff" size={30} />
         </VStack>
@@ -241,8 +254,7 @@ export const GalleryLightbox = ({
         </VStack>
         <VStack
           onPress={setRightImage}
-          transform={[{ translateY: 30 / 2 }]}
-          top="50%"
+          justifyContent="center"
           cursor="pointer"
           pointerEvents="auto"
           zIndex={100}

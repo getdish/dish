@@ -61,7 +61,7 @@ export const RestaurantPhotosRow = memo(
                     key={index}
                     className={`scroll-snap-photo`}
                   >
-                    {(!isEscalated || showEscalated) && (
+                    {(!isEscalated || showEscalated || index === 2) && (
                       <Link name="gallery" params={{ restaurantSlug }}>
                         <Image
                           source={{
