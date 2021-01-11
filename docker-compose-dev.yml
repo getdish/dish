@@ -1,0 +1,108 @@
+version: '2.4'
+services:
+  base:
+    image: 'gcr.io/dish-258800/base${DISH_BASE_VERSION}'
+    platform: linux/amd64
+    build:
+      context: .
+      dockerfile: ./Dockerfile
+  postgres:
+    image: bitnami/postgresql:12.1.0-debian-9-r53 # See k8s/yaml/postgres.yaml
+    platform: linux/amd64
+    volumes:
+      - ${HOME}/.dish/postgres:/bitnami/postgresql
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: 'postgres'
+      POSTGRES_DB: dish
+      BITNAMI_DEBUG: 'true'
+    ports:
+      - 5432:5432
+  redis:
+    image: redis
+    platform: linux/amd64
+    ports:
+      - 6379:6379
+  dish-hooks:
+    image: gcr.io/dish-258800/dish-hooks${DISH_IMAGE_TAG}
+    platform: linux/amd64
+    build:
+      context: ./
+      dockerfile: ./services/dish-hooks/Dockerfile
+    ports:
+      - 6154:6154
+    environment:
+      - DO_SPACES_ID=${TF_VAR_DO_SPACES_ID}
+      - DO_SPACES_SECRET=${TF_VAR_DO_SPACES_SECRET}
+      - GORSE_ENDPOINT=http://gorse:9000
+      - DISH_ENV=production
+    depends_on:
+      - 'gorse'
+  hasura:
+    image: fedormelexin/graphql-engine-arm64
+    ports:
+      - 8080:8080
+    environment:
+      - HASURA_GRAPHQL_DATABASE_URL=postgres://postgres:postgres@postgres/dish
+      - HASURA_GRAPHQL_ENABLED_LOG_TYPES=startup, http-log, webhook-log, websocket-log, query-log
+      - HASURA_GRAPHQL_ENABLE_TELEMETRY=false
+      - HASURA_GRAPHQL_ADMIN_SECRET=${TF_VAR_HASURA_GRAPHQL_ADMIN_SECRET:-password}
+      - HASURA_GRAPHQL_UNAUTHORIZED_ROLE=anon
+      - HASURA_GRAPHQL_JWT_SECRET={"type":"HS256", "key":"12345678901234567890123456789012"}
+      - HASURA_GRAPHQL_ENABLE_CONSOLE=true
+      - DISH_HOOKS_ENDPOINT=http://dish-hooks:6154
+      - GORSE_SYNC_HOOK=http://dish-hooks:6154/gorse_sync
+      - VIRTUAL_HOST=hasura-staging.dishapp.com
+    depends_on:
+      - 'postgres'
+      - 'redis'
+      - 'dish-hooks'
+  tileserver:
+    image: urbica/martin
+    platform: linux/amd64
+    ports:
+      - 3005:3000
+    environment:
+      - WATCH_MODE=true
+      - DATABASE_URL=postgres://postgres:postgres@postgres/dish
+      - VIRTUAL_HOST=martin-tiles-staging.dishapp.com
+    depends_on:
+      - 'postgres'
+  user-server:
+    image: gcr.io/dish-258800/user-server${DISH_IMAGE_TAG}
+    platform: linux/amd64
+    build:
+      context: ./
+      dockerfile: ./services/user-server/Dockerfile
+    ports:
+      - 3000:3000
+    environment:
+      - DO_SPACES_ID=${TF_VAR_DO_SPACES_ID}
+      - DO_SPACES_SECRET=${TF_VAR_DO_SPACES_SECRET}
+      - SENDGRID_API_KEY=${TF_VAR_SENDGRID_API_KEY}
+      - VIRTUAL_PORT=3000
+      - POSTGRES_HOST=postgres
+      - VIRTUAL_HOST=user-server-staging.dishapp.com
+    depends_on:
+      - 'postgres'
+  search:
+    image: gcr.io/dish-258800/dish/search${DISH_IMAGE_TAG}
+    platform: linux/amd64
+    build:
+      context: ./
+      dockerfile: ./services/search/Dockerfile
+    ports:
+      - 10000:10000
+    environment:
+      - VIRTUAL_HOST=search-staging.dishapp.com
+      - POSTGRES_HOST=postgres
+    depends_on:
+      - 'postgres'
+  gorse:
+    image: gcr.io/dish-258800/gorse
+    platform: linux/amd64
+    volumes:
+      - ${HOME}/.dish/gorse:/data
+      - ./services/gorse/config.local.toml:/app/config.toml
+    ports:
+      - 9000:9000

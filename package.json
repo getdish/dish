@@ -14,7 +14,8 @@
   },
   "scripts": {
     "bootstrap": "docker-compose build base",
-    "start": "./dishctl.sh docker_compose_up_for_devs",
+    "start": "HASURA_GRAPHQL_ADMIN_SECRET=password docker-compose -f docker-compose-dev.yml up",
+    "start:bak": "./dishctl.sh docker_compose_up_for_devs",
     "db:init": "./dishctl.sh db_migrate_local init",
     "db:migrate": "./dishctl.sh db_migrate_local",
     "db:clear": "./dishctl.sh db_clear_local",

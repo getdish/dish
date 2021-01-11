@@ -1,3 +1,5 @@
+import '@dish/helpers/polyfill'
+
 import {
   Auth,
   Restaurant,
