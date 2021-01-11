@@ -604,7 +604,7 @@ const fadeOutRightElement = (
       style={StyleSheet.absoluteFill}
       colors={['rgba(255,255,255,0)', 'rgba(255,255,255,1)']}
       start={[0, 0]}
-      endPoint={[1, 0]}
+      end={[1, 0]}
     />
   </VStack>
 )

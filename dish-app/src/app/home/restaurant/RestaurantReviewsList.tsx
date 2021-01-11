@@ -66,7 +66,7 @@ export const RestaurantReviewsList = memo(
 
               {topReviews.map((review, i) => {
                 return (
-                  <VStack flex={1} key={i}>
+                  <VStack marginVertical={20} flex={1} key={i}>
                     <VStack flex={1} />
                     <RestaurantReview reviewId={review.id} />
                   </VStack>

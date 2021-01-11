@@ -100,15 +100,20 @@ export const RestaurantReview = memo(
         </>
       )
 
+      let name = hideUsername ? '' : review.username ?? ''
+      const isYelp = name?.startsWith('yelp-')
+      name = isYelp ? 'Yelp' : name
+
       return (
         <CommentBubble
           expandable
+          date={review.updated_at}
           bubbleHeight={height}
           avatar={review.user.avatar ?? peachAvatar}
           height={height}
           ellipseContentAbove={200}
           text={review.text ?? ''}
-          name={hideUsername ? '' : review.username ?? ''}
+          name={name}
           afterName={
             showRestaurant ? (
               <HStack alignItems="center">
