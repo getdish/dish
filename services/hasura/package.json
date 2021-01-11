@@ -6,7 +6,8 @@
     "ava": "*"
   },
   "dependencies": {
-    "@dish/graph": "*"
+    "@dish/graph": "*",
+    "@dish/helpers": "*"
   },
   "peerDependencies": {
     "react": "*"
