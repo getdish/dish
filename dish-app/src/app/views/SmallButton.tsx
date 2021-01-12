@@ -36,6 +36,9 @@ export const SmallButton = ({
       })}
       {...(!rest.theme && {
         backgroundColor: 'transparent',
+        hoverStyle: {
+          backgroundColor: theme.backgroundColorSecondary,
+        },
       })}
       {...rest}
     >
