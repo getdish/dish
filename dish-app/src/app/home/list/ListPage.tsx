@@ -32,6 +32,9 @@ import { HomeStateItemList } from '../../../types/homeTypes'
 import { useSetAppMapResults } from '../../AppMapStore'
 import { useUserStore } from '../../userStore'
 import { ContentScrollView } from '../../views/ContentScrollView'
+import { Link } from '../../views/Link'
+import { ScalingPressable } from '../../views/ScalingPressable'
+import { SlantedLinkButton } from '../../views/SlantedLinkButton'
 import { SlantedTitle } from '../../views/SlantedTitle'
 import { StackDrawer } from '../../views/StackDrawer'
 import { StackItemProps } from '../HomeStackView'
@@ -125,6 +128,7 @@ const ListPageContent = graphql((props: Props) => {
     slug: 'horse-fish-circus',
     user: {
       name: 'Peach',
+      username: 'admin',
     },
     description:
       'Lorem ipsum dolor sit amet Lorem ipsum dolor sit amet Lorem ipsum dolor sit amet Lorem ipsum dolor sit amet Lorem ipsum dolor sit amet.',
@@ -205,15 +209,20 @@ const ListPageContent = graphql((props: Props) => {
         }
         title={
           <VStack>
-            <SlantedTitle size="xs" alignSelf="center">
-              {list.user.name}'s
-            </SlantedTitle>
+            <ScalingPressable>
+              <Link name="user" params={{ username: list.user.username }}>
+                <SlantedTitle size="xs" alignSelf="center">
+                  {list.user.name}'s
+                </SlantedTitle>
+              </Link>
+            </ScalingPressable>
 
             <SlantedTitle
               backgroundColor={color}
               color="#fff"
               marginTop={-5}
               alignSelf="center"
+              zIndex={0}
             >
               {list.name}
             </SlantedTitle>
@@ -239,7 +248,10 @@ const ListPageContent = graphql((props: Props) => {
           <Input
             multiline
             numberOfLines={2}
-            lineHeight={24}
+            lineHeight={28}
+            fontSize={18}
+            marginVertical={-12}
+            marginHorizontal={-8}
             textAlign="center"
             defaultValue={list.description}
           />
@@ -264,6 +276,7 @@ const ListPageContent = graphql((props: Props) => {
             rank={index + 1}
             description={description}
             hideTagRow
+            flexibleHeight
             dishSlugs={dishSlugs}
             editableDishes={isEditing}
             onChangeDishes={(dishes) => {

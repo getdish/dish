@@ -94,7 +94,9 @@ const UserMenuButton = () => {
   return (
     <Tooltip contents="Profile">
       <LinkButton
+        backgroundColor="transparent"
         name="user"
+        noTextWrap
         params={{
           username: slugify(user.username ?? ''),
         }}

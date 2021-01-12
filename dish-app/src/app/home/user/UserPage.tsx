@@ -1,7 +1,10 @@
-import { graphql } from '@dish/graph'
-import React, { Suspense, memo, useEffect, useState } from 'react'
+import { ReviewQuery, UserQuery, graphql, order_by } from '@dish/graph'
+import { useRouterSelector } from '@dish/router'
+import React, { Suspense, memo } from 'react'
 import { ScrollView } from 'react-native'
 import {
+  AbsoluteVStack,
+  Button,
   Divider,
   HStack,
   LoadingItem,
@@ -13,13 +16,14 @@ import {
   VStack,
 } from 'snackui'
 
+import { router } from '../../../router'
 import { HomeStateItemUser } from '../../../types/homeTypes'
 import { useSetAppMapResults } from '../../AppMapStore'
-import { useHomeStore } from '../../homeStore'
 import { useUserStore } from '../../userStore'
 import { ContentScrollView } from '../../views/ContentScrollView'
 import { Link } from '../../views/Link'
 import { NotFoundPage } from '../../views/NotFoundPage'
+import { SlantedTitle } from '../../views/SlantedTitle'
 import { SmallButton } from '../../views/SmallButton'
 import { StackDrawer } from '../../views/StackDrawer'
 import { StackItemProps } from '../HomeStackView'
@@ -27,12 +31,24 @@ import { RestaurantReview } from '../restaurant/RestaurantReview'
 import { UserAvatar } from './UserAvatar'
 import { useUserQuery } from './useUserQuery'
 
-type UserTab = 'vote' | 'review'
+type UserPane = 'vote' | 'review' | ''
 
 export default function UserPageContainer(
   props: StackItemProps<HomeStateItemUser>
 ) {
-  const [tab, setTab] = useState<UserTab>('review')
+  const pane = useRouterSelector(
+    (x) => x.curPage.name === 'user' && (x.curPage.params.pane as UserPane)
+  )
+  const setPane = (pane?: UserPane) => {
+    router.navigate({
+      name: 'user',
+      params: {
+        username: props.item.username,
+        pane,
+      },
+    })
+  }
+
   return (
     <StackDrawer closable title={`${props.item.username} | Dish food reviews`}>
       <Suspense
@@ -42,74 +58,76 @@ export default function UserPageContainer(
           </VStack>
         }
       >
-        <UserHeader {...props} setTab={setTab} tab={tab} />
+        <UserHeader {...props} setPane={setPane} pane={pane} />
       </Suspense>
       <Suspense fallback={<LoadingItems />}>
-        <UserPageContent {...props} tab={tab} />
+        <UserPageContent {...props} pane={pane} />
       </Suspense>
     </StackDrawer>
   )
 }
 
+function useUserReviews(user: UserQuery, type: UserPane | 'both') {
+  return user?.reviews({
+    limit: 50,
+    ...(type === 'review' && {
+      where: { text: { _neq: '' } },
+    }),
+    ...(type === 'vote' && {
+      where: { text: { _eq: '' } },
+    }),
+    order_by: [{ updated_at: order_by.desc }],
+  })
+}
+
+const getReviewRestuarants = (x: ReviewQuery) => {
+  return {
+    id: x.restaurant.id,
+    slug: x.restaurant.slug,
+  }
+}
+
 const UserPageContent = graphql(
   ({
     item,
-    tab,
     isActive,
-  }: StackItemProps<HomeStateItemUser> & {
-    tab: UserTab
-  }) => {
-    const user = useUserQuery(item?.username ?? '')
-    const reviews = user
-      ?.reviews({
-        limit: 50,
-      })
-      .map((x) => ({
-        id: x.id,
-        restaurantId: x.restaurant.id,
-        restaurantSlug: x.restaurant.slug,
-        type: !!x.text ? 'review' : 'vote',
-      }))
+    pane,
+  }: StackItemProps<HomeStateItemUser> & { pane: UserPane }) => {
+    const user = useUserQuery(item.username ?? '')
+    const reviews = useUserReviews(user, pane || 'both')
+    const hasReviews = !!reviews?.length
 
     useSetAppMapResults({
       isActive: isActive,
-      results: reviews.map(({ restaurantId, restaurantSlug }) => {
-        return {
-          id: restaurantId,
-          slug: restaurantSlug,
-        }
-      }),
+      results: reviews.map(getReviewRestuarants),
     })
 
     if (!user) {
       return <NotFoundPage />
     }
 
-    const hasReviews = !!reviews?.length && reviews[0].id !== null
-
     return (
       <ContentScrollView id="user">
         <VStack spacing="xl" paddingHorizontal="2.5%" paddingVertical={20}>
           <VStack>
-            {tab === 'review' && (
+            {!!user.about && (
               <VStack>
-                {user.about && (
-                  <VStack>
-                    <SmallTitle>About</SmallTitle>
-                    <Paragraph size="lg">{user.about}</Paragraph>
-                  </VStack>
-                )}
+                <SmallTitle>About</SmallTitle>
+                <Paragraph size="lg">{user.about}</Paragraph>
               </VStack>
             )}
 
+            <SlantedTitle>Recently</SlantedTitle>
+
             <Suspense fallback={<LoadingItems />}>
               {!hasReviews && <Text>No reviews yet...</Text>}
-              {hasReviews &&
-                reviews
-                  .filter((x) => x.type === tab)
-                  .map(({ id }) => (
-                    <RestaurantReview showRestaurant key={id} reviewId={id} />
+              {hasReviews && (
+                <VStack>
+                  {reviews.map(({ id }) => (
+                    <RestaurantReview key={id} showRestaurant reviewId={id} />
                   ))}
+                </VStack>
+              )}
             </Suspense>
           </VStack>
         </VStack>
@@ -122,11 +140,11 @@ const UserHeader = memo(
   graphql(
     ({
       item,
-      tab,
-      setTab,
+      pane,
+      setPane,
     }: StackItemProps<HomeStateItemUser> & {
-      setTab: Function
-      tab: UserTab
+      setPane: Function
+      pane: UserPane
     }) => {
       const userStore = useUserStore()
       const user = useUserQuery(item?.username ?? '')
@@ -136,66 +154,80 @@ const UserHeader = memo(
       if (!user) return null
 
       return (
-        <ScrollView
-          horizontal
-          showsHorizontalScrollIndicator={false}
-          style={{ width: '100%' }}
-          contentContainerStyle={{
-            minWidth: '100%',
-          }}
-        >
-          <VStack maxWidth="100%" width="100%">
-            <VStack flex={1} padding={18}>
-              <HStack alignItems="center" flex={1} position="relative">
-                <VStack marginTop={-10} marginBottom={5}>
-                  <UserAvatar
-                    avatar={user.avatar ?? ''}
-                    charIndex={user.charIndex ?? 0}
-                  />
-                </VStack>
-                <Spacer size={20} />
-                <VStack flex={1}>
-                  <Text fontSize={28} fontWeight="bold" paddingRight={30}>
-                    {user.username ?? 'no-name'}
-                  </Text>
-                  <Spacer size={4} />
-                  <Text color="#777" fontSize={14}>
-                    {user.location ?? 'Earth, Universe'}
-                  </Text>
-                  {isOwnProfile && (
-                    <>
-                      <Spacer />
-                      <Link name="userEdit">Edit profile</Link>
-                    </>
-                  )}
-                  <Spacer size={12} />
-                </VStack>
+        <VStack position="relative">
+          <ScrollView
+            horizontal
+            showsHorizontalScrollIndicator={false}
+            style={{ width: '100%' }}
+            contentContainerStyle={{
+              minWidth: '100%',
+            }}
+          >
+            <VStack maxWidth="100%" width="100%">
+              <VStack flex={1} padding={18}>
+                <HStack alignItems="center" flex={1} position="relative">
+                  <VStack marginTop={-10} marginBottom={5}>
+                    <UserAvatar
+                      avatar={user.avatar ?? ''}
+                      charIndex={user.charIndex ?? 0}
+                    />
+                  </VStack>
+                  <Spacer size={20} />
+                  <VStack flex={1}>
+                    <Text fontSize={28} fontWeight="bold" paddingRight={30}>
+                      {user.username ?? 'no-name'}
+                    </Text>
+                    <Spacer size={4} />
+                    <HStack>
+                      <Text color="#777" fontSize={14}>
+                        {user.location?.trim() || 'Earth, Universe'}
+                      </Text>
+                    </HStack>
+                    <Spacer size={12} />
+                  </VStack>
 
-                <VStack flex={1} minWidth={20} />
+                  <VStack flex={1} minWidth={20} />
 
-                <HStack spacing>
-                  <SmallButton
-                    isActive={tab === 'review'}
-                    onPress={() => {
-                      setTab('review')
-                    }}
-                  >
-                    Reviews
-                  </SmallButton>
-                  <SmallButton
-                    isActive={tab === 'vote'}
-                    onPress={() => {
-                      setTab('vote')
-                    }}
-                  >
-                    Votes
-                  </SmallButton>
+                  <HStack spacing="sm">
+                    <SmallButton
+                      theme={!pane ? 'active' : null}
+                      onPress={() => {
+                        setPane()
+                      }}
+                    >
+                      Profile
+                    </SmallButton>
+                    <SmallButton
+                      theme={pane === 'review' ? 'active' : null}
+                      onPress={() => {
+                        setPane('review')
+                      }}
+                    >
+                      Reviews
+                    </SmallButton>
+                    <SmallButton
+                      theme={pane === 'vote' ? 'active' : null}
+                      onPress={() => {
+                        setPane('vote')
+                      }}
+                    >
+                      Votes
+                    </SmallButton>
+                  </HStack>
                 </HStack>
-              </HStack>
-              <Divider />
+
+                <Divider />
+              </VStack>
             </VStack>
-          </VStack>
-        </ScrollView>
+          </ScrollView>
+          {isOwnProfile && (
+            <AbsoluteVStack zIndex={10} bottom={-10} right={10}>
+              <Link name="userEdit">
+                <Button>Edit profile</Button>
+              </Link>
+            </AbsoluteVStack>
+          )}
+        </VStack>
       )
     }
   )

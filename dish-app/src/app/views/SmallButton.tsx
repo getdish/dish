@@ -1,17 +1,15 @@
 import React from 'react'
-import { Button, Tooltip, useTheme } from 'snackui'
+import { Button, Theme, Tooltip, useTheme } from 'snackui'
 
 import { isWeb } from '../../constants/constants'
 import { Link } from './Link'
 import { LinkButtonProps } from './LinkProps'
 
 export type SmallButtonProps = LinkButtonProps & {
-  isActive?: boolean
   tooltip?: string
 }
 
 export const SmallButton = ({
-  isActive,
   children,
   tooltip,
   name,
@@ -27,7 +25,6 @@ export const SmallButton = ({
     <Button
       borderRadius={20}
       borderWidth={1}
-      backgroundColor="transparent"
       borderColor={theme.borderColor}
       {...(isWeb && {
         minHeight: 36,
@@ -37,8 +34,8 @@ export const SmallButton = ({
         minHeight: 42,
         minWidth: 48,
       })}
-      {...(isActive && {
-        backgroundColor: theme.backgroundColor,
+      {...(!rest.theme && {
+        backgroundColor: 'transparent',
       })}
       {...rest}
     >
