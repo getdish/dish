@@ -73,10 +73,8 @@ export default function createWebpackConfig({
 
   function getConfig() {
     const defines = {
-      ...(isProduction && {
-        process: '({})',
-        'process.env': '({})',
-      }),
+      process: '({})',
+      'process.env': '({})',
       'process.env.IS_SSR_RENDERING': isSSR,
       'process.env.SNACKUI_COMPILE_PROCESS': false,
       'process.env.NODE_ENV': JSON.stringify(process.env.NODE_ENV),

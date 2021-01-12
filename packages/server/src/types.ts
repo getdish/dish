@@ -1,3 +1,5 @@
+import { Configuration } from 'webpack'
+
 export type ServerConfig = {
   rootFolder: string
   env: 'prod' | 'dev'
@@ -5,4 +7,10 @@ export type ServerConfig = {
   clean?: boolean
   port?: number
   hostname?: string
+}
+
+export type ServerConfigNormal = ServerConfig & {
+  rootDir: string
+  buildDir: string
+  webpackConfig: Configuration
 }
