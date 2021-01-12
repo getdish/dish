@@ -9,7 +9,8 @@ import React from 'react'
 
 import { ServerConfig, ServerConfigNormal } from './types'
 
-process.env.TARGET = process.env.TARGET || 'SSR'
+process.env.TARGET =
+  process.env.TARGET || (process.env.NODE_ENV === 'development' ? 'web' : 'SSR')
 global['React'] = React
 global['__DEV__'] = process.env.NODE_ENV === 'development'
 global['requestIdleCallback'] = global['requestIdleCallback'] || setTimeout

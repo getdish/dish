@@ -20,6 +20,6 @@ Pods/
 .env
 k8s/.terraform/*
 hasura.logs
-web-build
-web-build-ssr
-web-build-legacy
+web-build/
+web-build-ssr/
+web-build-legacy/
