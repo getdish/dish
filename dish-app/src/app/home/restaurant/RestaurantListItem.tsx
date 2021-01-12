@@ -261,7 +261,10 @@ const RestaurantListItemContent = memo(
         className="ease-in-out-slow hover-faded-in-parent"
         alignItems="flex-start"
         justifyContent="flex-start"
-        height={ITEM_HEIGHT}
+        minHeight={ITEM_HEIGHT}
+        {...(!flexibleHeight && {
+          maxHeight: ITEM_HEIGHT,
+        })}
         flex={1}
         // turn this off breaks something? but hides the rest of title hover?
         // overflow="hidden"
@@ -441,6 +444,8 @@ const RestaurantListItemContent = memo(
                 flex={1}
                 paddingLeft={20}
                 paddingRight={10}
+                marginTop={flexibleHeight ? 15 : 0}
+                marginBottom={flexibleHeight ? 30 : 0}
               >
                 <RestaurantOverview
                   fullHeight={flexibleHeight}
@@ -656,7 +661,6 @@ const RestaurantPeekDishes = memo(
     onChangeTags?: (slugs: string[]) => void
   }) {
     const { isLoaded, size = 'md' } = props
-    console.log('props.tagSlugs', props.tagSlugs)
     const dishes = props.tagSlugs
       ? useRestaurantQuery(props.restaurantSlug)
           .tags({

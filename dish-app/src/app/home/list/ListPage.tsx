@@ -4,7 +4,7 @@ import { slugify } from '@dish/graph/src'
 import { graphql, order_by, query } from '@dish/graph/src'
 import { Heart, X } from '@dish/react-feather'
 import React, { Suspense, useEffect, useState } from 'react'
-import { TextInput } from 'react-native'
+import { Switch, TextInput } from 'react-native'
 import {
   AbsoluteVStack,
   Box,
@@ -16,6 +16,7 @@ import {
   Popover,
   Spacer,
   StackProps,
+  Text,
   Theme,
   VStack,
 } from 'snackui'
@@ -136,7 +137,7 @@ const ListPageContent = graphql((props: Props) => {
       return {
         restaurant,
         description:
-          'Lorem ipsum dolor sit amet Lorem ipsum dolor sit amet Lorem ipsum dolor sit amet.',
+          'Lorem ipsum dolor sit amet Lorem ipsum dolor sit amet Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet Lorem ipsum dolor sit amet Lorem ipsum dolor sit amet.',
         position: index,
         dishes: restaurant
           .tags({
@@ -195,9 +196,7 @@ const ListPageContent = graphql((props: Props) => {
                     <Theme name="active">
                       <Button>Save</Button>
                     </Theme>
-                    <Spacer />
-                    <ColorPicker color={color} onChange={setColor} />
-                    <Spacer />
+                    <Spacer size="sm" />
                     <VStack onPress={() => setIsEditing(false)}>
                       <X size={20} />
                     </VStack>
@@ -224,7 +223,20 @@ const ListPageContent = graphql((props: Props) => {
               alignSelf="center"
               zIndex={0}
             >
-              {list.name}
+              {isEditing ? (
+                <Input
+                  fontSize={26}
+                  backgroundColor="transparent"
+                  defaultValue={list.name}
+                  fontWeight="700"
+                  textAlign="center"
+                  color="#fff"
+                  borderColor="transparent"
+                  margin={-5}
+                />
+              ) : (
+                list.name
+              )}
             </SlantedTitle>
           </VStack>
         }
@@ -242,6 +254,22 @@ const ListPageContent = graphql((props: Props) => {
           </AbsoluteVStack>
         }
       />
+
+      {isEditing && (
+        <>
+          <Spacer />
+          <HStack alignItems="center" justifyContent="center">
+            <Text>Color:&nbsp;&nbsp;</Text>
+            <ColorPicker color={color} onChange={setColor} />
+
+            <Spacer size="xl" />
+
+            <Text>Public:&nbsp;&nbsp;</Text>
+            <Switch value={true} />
+          </HStack>
+          <Spacer />
+        </>
+      )}
 
       <VStack paddingHorizontal={20} paddingVertical={20}>
         {isEditing ? (

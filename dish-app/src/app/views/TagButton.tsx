@@ -32,6 +32,7 @@ import { tagDisplayName } from '../../constants/tagMeta'
 import { getTagSlug } from '../../helpers/getTagSlug'
 import { rgbString } from '../../helpers/rgbString'
 import { useUserTagVotes } from '../hooks/useUserTagVotes'
+import { Link } from './Link'
 import { LinkButton } from './LinkButton'
 import { LinkButtonProps } from './LinkProps'
 
@@ -96,7 +97,6 @@ export type TagButtonProps = Omit<StackProps & TagButtonTagProps, 'rgb'> & {
   noColor?: boolean
   replace?: boolean
   replaceSearch?: boolean
-  onPress?: Function
   after?: any
 }
 
@@ -142,133 +142,129 @@ export const TagButton = memo((props: TagButtonProps) => {
   const backgroundColorHover = `${bg}99`
 
   const contents = (
-    <>
-      <HStack
-        className="ease-in-out-faster"
-        height={isSmall ? 28 : 34}
-        borderRadius={isSmall ? 8 : 10}
-        paddingHorizontal={isSmall ? 4 : 8}
-        overflow="hidden"
-        alignItems="center"
-        justifyContent="center"
-        backgroundColor={bg}
-        position="relative"
-        // used again down below
-        minHeight={isSmall ? 22 : 26}
-        hoverStyle={{
-          backgroundColor: backgroundColorHover,
-        }}
-        {...rest}
-      >
-        <Spacer size={5} />
-        {!!rank ? (
-          <Text
-            fontSize={smallerFontSize}
-            fontWeight="500"
-            paddingHorizontal={6 * scale}
-            alignContent="center"
-            justifyContent="center"
-            alignItems="center"
-            display="flex"
-            color={fg}
-          >
-            <TextSuperScript fontWeight="300" opacity={0.5}>
-              #
-            </TextSuperScript>
-            {rank}
-          </Text>
-        ) : null}
-        {hideIcon ? (
-          <>&nbsp;</>
-        ) : !!tag.icon ? (
-          tag.icon.startsWith('http') ? (
-            <Image
-              source={{ uri: tag.icon }}
-              style={{
-                width: fontSize,
-                height: fontSize,
-                borderRadius: 1000,
-                display: isWeb ? ('inline-flex' as any) : 'flex',
-                marginVertical: -2,
-              }}
-            />
-          ) : (
-            <Text>{tag.icon}</Text>
-          )
-        ) : null}
+    <HStack
+      className="ease-in-out-faster"
+      height={isSmall ? 28 : 34}
+      borderRadius={isSmall ? 8 : 10}
+      paddingHorizontal={isSmall ? 4 : 8}
+      overflow="hidden"
+      alignItems="center"
+      justifyContent="center"
+      backgroundColor={bg}
+      position="relative"
+      // used again down below
+      minHeight={isSmall ? 22 : 26}
+      hoverStyle={{
+        backgroundColor: backgroundColorHover,
+      }}
+      {...rest}
+    >
+      <Spacer size={5} />
+      {!!rank ? (
         <Text
-          ellipse
-          // @ts-ignore
-          fontSize={fontSize}
-          // @ts-ignore
-          fontWeight={fontWeight ?? '600'}
-          lineHeight={isSmall ? 22 : 26}
-          paddingHorizontal={7 * scale}
+          fontSize={smallerFontSize}
+          fontWeight="500"
+          paddingHorizontal={6 * scale}
+          alignContent="center"
+          justifyContent="center"
+          alignItems="center"
+          display="flex"
           color={fg}
         >
-          {tagDisplayName(tag)}
-          {typeof score === 'number' && (
-            <Text marginLeft={4} fontWeight="300" fontSize={smallerFontSize}>
-              {score > 0 ? `+${score}` : score}
-            </Text>
-          )}
-          {!!after && (
-            <Text marginLeft={4} fontWeight="300" fontSize={smallerFontSize}>
-              {after}
-            </Text>
-          )}
+          <TextSuperScript fontWeight="300" opacity={0.5}>
+            #
+          </TextSuperScript>
+          {rank}
         </Text>
-        {!!votable && !!props.restaurantSlug && (
-          <TagButtonVote
-            key={getTagSlug(props) + props.restaurantSlug}
-            {...props}
-            color={fg}
-            scale={scale}
+      ) : null}
+      {hideIcon ? (
+        <>&nbsp;</>
+      ) : !!tag.icon ? (
+        tag.icon.startsWith('http') ? (
+          <Image
+            source={{ uri: tag.icon }}
+            style={{
+              width: fontSize,
+              height: fontSize,
+              borderRadius: 1000,
+              display: isWeb ? ('inline-flex' as any) : 'flex',
+              marginVertical: -2,
+            }}
           />
+        ) : (
+          <Text>{tag.icon}</Text>
+        )
+      ) : null}
+      <Text
+        ellipse
+        // @ts-ignore
+        fontSize={fontSize}
+        // @ts-ignore
+        fontWeight={fontWeight ?? '600'}
+        lineHeight={isSmall ? 22 : 26}
+        paddingHorizontal={7 * scale}
+        color={fg}
+      >
+        {tagDisplayName(tag)}
+        {typeof score === 'number' && (
+          <Text marginLeft={4} fontWeight="300" fontSize={smallerFontSize}>
+            {score > 0 ? `+${score}` : score}
+          </Text>
         )}
-        {!!closable && (
-          <VStack onPress={prevent} onPressIn={prevent} onPressOut={onClose}>
-            <VStack
-              backgroundColor="transparent"
-              borderRadius={10}
-              opacity={0.35}
-              marginLeft={-10}
-              position="relative"
-              width={isWeb ? 26 : 40}
-              height={isWeb ? 26 : 40}
-              alignItems="center"
-              justifyContent="center"
-              alignSelf="center"
-            >
-              <X size={13} color={color} />
-            </VStack>
+        {!!after && (
+          <Text marginLeft={4} fontWeight="300" fontSize={smallerFontSize}>
+            {after}
+          </Text>
+        )}
+      </Text>
+      {!!votable && !!props.restaurantSlug && (
+        <TagButtonVote
+          key={getTagSlug(props) + props.restaurantSlug}
+          {...props}
+          color={fg}
+          scale={scale}
+        />
+      )}
+      {!!closable && (
+        <VStack
+          onPress={prevent}
+          onPressIn={prevent}
+          onPressOut={onClose as any}
+        >
+          <VStack
+            backgroundColor="transparent"
+            borderRadius={10}
+            opacity={0.35}
+            marginLeft={-10}
+            position="relative"
+            width={isWeb ? 26 : 40}
+            height={isWeb ? 26 : 40}
+            alignItems="center"
+            justifyContent="center"
+            alignSelf="center"
+          >
+            <X size={13} color={color} />
           </VStack>
-        )}
-        {!closable && !votable && <Spacer size={6} />}
-      </HStack>
-    </>
+        </VStack>
+      )}
+      {!closable && !votable && <Spacer size={6} />}
+    </HStack>
   )
 
-  const linkButtonProps: LinkButtonProps = {
-    ...(onPress && {
-      onPress,
-    }),
-    ...(tag && {
-      tag,
-    }),
-    replace,
-    replaceSearch,
-  }
-
   return (
-    <LinkButton
+    <Link
       disallowDisableWhenActive
-      backgroundColor="transparent"
-      padding={0}
-      {...linkButtonProps}
+      {...(onPress && {
+        onPress,
+      })}
+      {...(tag && {
+        tag,
+      })}
+      replace={replace}
+      replaceSearch={replaceSearch}
     >
       {contents}
-    </LinkButton>
+    </Link>
   )
 })
 

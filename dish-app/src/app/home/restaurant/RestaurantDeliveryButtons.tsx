@@ -61,9 +61,10 @@ const RestaurantDeliveryButton = ({
   source,
   showLabels,
 }: Props & { source: any }) => {
-  const contents = (
+  return (
     <SmallButton
       href={source.url}
+      tooltip={!showLabels ? source.name : null}
       icon={
         <Image
           accessibilityLabel={source.name}
@@ -87,10 +88,4 @@ const RestaurantDeliveryButton = ({
       }}
     />
   )
-
-  if (source.name && !showLabels) {
-    return <Tooltip contents={source.name}>{contents}</Tooltip>
-  }
-
-  return contents
 }
