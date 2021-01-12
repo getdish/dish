@@ -31,6 +31,7 @@
     "@oclif/plugin-autocomplete": "0.3.0",
     "@oclif/plugin-help": "3.2.1",
     "@oclif/plugin-not-found": "1.2.4",
+    "compression": "^1.7.4",
     "enquirer": "^2.3.6",
     "express": "^4.17.1",
     "@salesforce/lazy-require": "^0.3.3",

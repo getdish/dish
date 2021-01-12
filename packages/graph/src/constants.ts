@@ -103,5 +103,5 @@ export const AUTH_DOMAIN = (() => {
   if (isHasuraLive) {
     return AUTH_PROD
   }
-  return process.env.REACT_APP_AUTH_ENDPOINT || LOCAL_AUTH_SERVER
+  return LOCAL_AUTH_SERVER
 })()

@@ -8,7 +8,7 @@ export class Start extends Command {
 
   static flags = {
     help: flags.help({ char: 'h' }),
-    production: flags.boolean({
+    prod: flags.boolean({
       description: 'Start production server',
     }),
     port: flags.integer({
@@ -36,7 +36,7 @@ export class Start extends Command {
       hostname: flags.hostname ?? 'localhost',
       inspect: flags.inspect ?? false,
       clean: flags['no-incremental-build'],
-      env: flags.production ? 'prod' : 'dev',
+      env: flags.prod ? 'prod' : 'dev',
     }
 
     try {

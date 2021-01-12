@@ -29,7 +29,8 @@ services:
       - HASURA_GRAPHQL_UNAUTHORIZED_ROLE=anon
       - HASURA_GRAPHQL_JWT_SECRET={"type":"HS256", "key":"12345678901234567890123456789012"}
       - HASURA_GRAPHQL_ENABLE_CONSOLE=true
-      - VIRTUAL_HOST=hasura-staging.dishapp.com
+      - DISH_HOOKS_ENDPOINT=http://dish-hooks:6154
+      - GORSE_SYNC_HOOK=http://dish-hooks:6154/gorse_sync
     depends_on:
       - 'postgres'
       - 'redis'
@@ -41,7 +42,6 @@ services:
     environment:
       - WATCH_MODE=true
       - DATABASE_URL=postgres://postgres:postgres@postgres/dish
-      - VIRTUAL_HOST=martin-tiles-staging.dishapp.com
     depends_on:
       - 'postgres'
   user-server:
@@ -58,19 +58,16 @@ services:
       - SENDGRID_API_KEY=${TF_VAR_SENDGRID_API_KEY}
       - VIRTUAL_PORT=3000
       - POSTGRES_HOST=postgres
-      - VIRTUAL_HOST=user-server-staging.dishapp.com
     depends_on:
       - 'postgres'
   search:
     image: gcr.io/dish-258800/dish/search${DISH_IMAGE_TAG}
-    platform: linux/amd64
     build:
       context: ./
       dockerfile: ./services/search/Dockerfile
     ports:
       - 10000:10000
     environment:
-      - VIRTUAL_HOST=search-staging.dishapp.com
       - POSTGRES_HOST=postgres
     depends_on:
       - 'postgres'
