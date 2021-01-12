@@ -31,6 +31,7 @@ export const RestaurantOverview = memo(
     restaurantSlug,
     fullHeight,
     size,
+    disableEllipse,
   }: {
     restaurantSlug: string
     fullHeight?: boolean
@@ -38,6 +39,7 @@ export const RestaurantOverview = memo(
     text?: string
     editing?: boolean
     onEdit?: (next: string) => void
+    disableEllipse?: boolean
   }) {
     const theme = useTheme()
     const restaurant = useRestaurantQuery(restaurantSlug)
@@ -88,16 +90,18 @@ export const RestaurantOverview = memo(
               opacity={1}
               color={theme.color}
             >
-              {ellipseText(
-                summary
-                  .replace(/(\s{2,}|\n)/g, ' ')
-                  .split('. ')
-                  .map((sentence) => capitalize(sentence.trim()))
-                  .join('. '),
-                {
-                  maxLength: 380,
-                }
-              )}
+              {disableEllipse
+                ? summary
+                : ellipseText(
+                    summary
+                      .replace(/(\s{2,}|\n)/g, ' ')
+                      .split('. ')
+                      .map((sentence) => capitalize(sentence.trim()))
+                      .join('. '),
+                    {
+                      maxLength: 380,
+                    }
+                  )}
             </Text>
           )}
         </HStack>

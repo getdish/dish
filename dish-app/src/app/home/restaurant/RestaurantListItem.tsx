@@ -95,6 +95,7 @@ type RestaurantListItemProps = {
   editableDishes?: boolean
   onChangeDishes?: (slugs: string[]) => void
   hideTagRow?: boolean
+  flexibleHeight?: boolean
 }
 
 /**
@@ -188,6 +189,7 @@ const RestaurantListItemContent = memo(
       hideTagRow,
       description,
       dishSlugs,
+      flexibleHeight,
       editableDishes,
       onChangeDishes,
       onChangeDescription,
@@ -441,6 +443,8 @@ const RestaurantListItemContent = memo(
                 paddingRight={10}
               >
                 <RestaurantOverview
+                  fullHeight={flexibleHeight}
+                  disableEllipse={flexibleHeight}
                   text={description}
                   editing={editableDescription}
                   onEdit={setDescription}

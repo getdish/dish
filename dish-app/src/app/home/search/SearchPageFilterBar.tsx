@@ -44,7 +44,7 @@ export const SearchPageFilterBar = memo(({ activeTags }: FilterBarProps) => {
                     color: rgbString(color),
                   }}
                   zIndex={100 - index - groupIndex + (isActive ? 1 : 0)}
-                  isActive={isActive}
+                  theme={isActive ? 'active' : null}
                   {...getGroupedButtonProps({
                     index: groupIndex,
                     items: group,
@@ -69,7 +69,7 @@ const HomePageFilterBarSmall = ({ activeTags }: FilterBarProps) => {
         return (
           <FilterButton
             key={`tag-${tag.id}`}
-            isActive={isActive}
+            theme={isActive ? 'active' : null}
             tag={tag}
             position="relative"
             zIndex={100 - index + (isActive ? 1 : 0)}

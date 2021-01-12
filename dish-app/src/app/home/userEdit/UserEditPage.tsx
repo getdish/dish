@@ -1,10 +1,13 @@
 import React, { Suspense, memo } from 'react'
-import { AbsoluteVStack, LoadingItems, VStack } from 'snackui'
+import { LoadingItems, Spacer, VStack } from 'snackui'
 
+import { router } from '../../../router'
 import { useHomeStore } from '../../homeStore'
 import { UserOnboard } from '../../UserOnboard'
+import { useUserStore, userStore } from '../../userStore'
 import { DarkModal } from '../../views/DarkModal'
 import { PaneControlButtons } from '../../views/PaneControlButtons'
+import { SlantedTitle } from '../../views/SlantedTitle'
 import { StackViewCloseButton } from '../../views/StackViewCloseButton'
 
 export default memo(function UserEditPage() {
@@ -13,7 +16,17 @@ export default memo(function UserEditPage() {
 
   if (state.type === 'userEdit') {
     return (
-      <DarkModal hide={false}>
+      <DarkModal
+        hide={false}
+        outside={
+          <>
+            <UserSlantedTitle />
+            <PaneControlButtons>
+              <StackViewCloseButton />
+            </PaneControlButtons>
+          </>
+        }
+      >
         <VStack
           pointerEvents="auto"
           width="95%"
@@ -21,11 +34,19 @@ export default memo(function UserEditPage() {
           height="100%"
           flex={1}
         >
-          <PaneControlButtons>
-            <StackViewCloseButton />
-          </PaneControlButtons>
+          <Spacer />
           <Suspense fallback={<LoadingItems />}>
-            <UserOnboard hideLogo />
+            <UserOnboard
+              hideLogo
+              onFinish={() => {
+                router.navigate({
+                  name: 'user',
+                  params: {
+                    username: userStore.user?.username,
+                  },
+                })
+              }}
+            />
           </Suspense>
         </VStack>
       </DarkModal>
@@ -33,4 +54,15 @@ export default memo(function UserEditPage() {
   }
 
   return null
+})
+
+const UserSlantedTitle = memo(({}) => {
+  const userStore = useUserStore()
+  const username = userStore.user?.username ?? ''
+
+  return (
+    <VStack marginTop={-20}>
+      <SlantedTitle alignSelf="center">{username}</SlantedTitle>
+    </VStack>
+  )
 })

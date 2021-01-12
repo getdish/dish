@@ -23,7 +23,7 @@ export const PaginationNav = ({
               return (
                 <SmallButton
                   key={index}
-                  isActive={index + 1 === page}
+                  theme={index + 1 === page ? 'active' : null}
                   onPress={() => setPage(index + 1)}
                 >
                   {index + 1}
