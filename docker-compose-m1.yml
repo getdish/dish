@@ -40,9 +40,8 @@ services:
     depends_on:
       - 'gorse'
   hasura:
-    image: hasura/graphql-engine:v1.3.3
+    image: fedormelexin/graphql-engine-arm64
     restart: always
-    platform: linux/amd64
     ports:
       - 8080:8080
     environment:
@@ -59,3 +58,44 @@ services:
     depends_on:
       - 'postgres'
       - 'redis'
+  tileserver:
+    image: urbica/martin
+    platform: linux/amd64
+    ports:
+      - 3005:3000
+    environment:
+      - WATCH_MODE=true
+      - DATABASE_URL=postgres://postgres:postgres@postgres/dish
+      - VIRTUAL_HOST=martin-tiles-staging.dishapp.com
+    depends_on:
+      - 'postgres'
+  user-server:
+    image: gcr.io/dish-258800/user-server${DISH_IMAGE_TAG}
+    platform: linux/amd64
+    build:
+      context: ./
+      dockerfile: ./services/user-server/Dockerfile
+    ports:
+      - 3000:3000
+    environment:
+      - DO_SPACES_ID=${TF_VAR_DO_SPACES_ID}
+      - DO_SPACES_SECRET=${TF_VAR_DO_SPACES_SECRET}
+      - SENDGRID_API_KEY=${TF_VAR_SENDGRID_API_KEY}
+      - VIRTUAL_PORT=3000
+      - POSTGRES_HOST=postgres
+      - VIRTUAL_HOST=user-server-staging.dishapp.com
+    depends_on:
+      - 'postgres'
+  search:
+    image: gcr.io/dish-258800/dish/search${DISH_IMAGE_TAG}
+    platform: linux/amd64
+    build:
+      context: ./
+      dockerfile: ./services/search/Dockerfile
+    ports:
+      - 10000:10000
+    environment:
+      - VIRTUAL_HOST=search-staging.dishapp.com
+      - POSTGRES_HOST=postgres
+    depends_on:
+      - 'postgres'

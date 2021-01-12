@@ -10,8 +10,6 @@ import { AppleLogoWhite } from './AppleLogoWhite'
 
 const { auth } = require('../../web/apple-sign-in')
 
-console.log('loading sign in')
-
 export default function SignInAppleButton() {
   useEffect(() => {
     auth.init({
@@ -53,12 +51,12 @@ export default function SignInAppleButton() {
     <VStack onPress={handleSignIn}>
       <VStack
         borderRadius={9}
-        borderColor="rgba(255,255,255,0.15)"
+        borderColor="rgba(255,255,255,0.3)"
         borderWidth={2}
         cursor="pointer"
         overflow="hidden"
         hoverStyle={{
-          borderColor: 'rgba(255,255,255,0.3)',
+          borderColor: 'rgba(255,255,255,0.5)',
         }}
       >
         <HStack paddingRight={20} backgroundColor="#000" alignItems="center">

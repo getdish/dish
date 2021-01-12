@@ -400,14 +400,14 @@ restore_latest_main_backup_to_local() {
   latest_backup=$(get_latest_main_backup)
   dump_file="/tmp/latest_dish_backup.dump"
   s3 get "$latest_backup" "$dump_file"
-  cat "$dump_file" | PGPASSWORD=postgres pg_restore -h localhost -U postgres -p 5432 -d dish
+  PGPASSWORD=postgres pg_restore -h localhost -U postgres -p 5432 -d dish "$dump_file"
 }
 
 restore_latest_scrapes_backup_to_local() {
   latest_backup=$(get_latest_scrape_backup)
   dump_file="/tmp/latest_scrape_backup.dump"
   s3 get "$latest_backup" "$dump_file"
-  cat "$dump_file" | PGPASSWORD=postgres pg_restore -h localhost -U postgres -p 5433 -d dish
+  PGPASSWORD=postgres pg_restore -h localhost -U postgres -p 5433 -d dish "$dump_file"
 }
 
 get_latest_scrape_backup() {

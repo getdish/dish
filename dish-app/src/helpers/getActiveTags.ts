@@ -16,9 +16,6 @@ export const getActiveTags = (state: Partial<HomeStateItem>) => {
       .filter(isValidTag)
     const tags: NavigableTag[] = []
     for (const slug of tagIds) {
-      if (!allTags[slug]) {
-        debugger
-      }
       tags.push(allTags[slug])
     }
     return tags

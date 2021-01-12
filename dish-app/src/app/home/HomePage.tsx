@@ -387,7 +387,7 @@ const HomePageContent = memo(
 )
 
 const useTopCuisines = (center: LngLat) => {
-  return useQuery('topcuisine', () => getHomeCuisines(center))
+  return useQueryLoud('topcuisine', () => getHomeCuisines(center))
 }
 
 function useHomeFeed(
@@ -430,8 +430,6 @@ function useHomeFeed(
     [...feedRestaurants, ...backupRestaurants],
     (x) => x.id
   )
-
-  // console.log('feed', slug, bbox, restaurants)
 
   const cuisines = useTopCuisines(item.center)
 

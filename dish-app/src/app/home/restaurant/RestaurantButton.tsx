@@ -56,9 +56,7 @@ export const RestaurantButton = memo(
           {...props}
           name="restaurant"
           params={{ slug: restaurant.slug }}
-          onHoverIn={() => {
-            onHoverIn?.(restaurant)
-          }}
+          onHoverIn={onHoverIn}
         >
           <HStack
             maxWidth={maxInnerWidth}
