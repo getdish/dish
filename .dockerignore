@@ -5,9 +5,9 @@ Dockerfile
 **/node_modules
 **/_
 **/tsconfig.tsbuildinfo
-**/web-build-legacy
-**/web-build-ssr
-**/web-build
+**/build-legacy
+**/build-ssr
+**/build
 **/.expo
 **/target/*
 dish-app/ios

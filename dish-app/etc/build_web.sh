@@ -3,7 +3,7 @@ set -e
 
 export NODE_ENV=production
 
-rm -rf web-build web-build-legacy web-build-ssr
+rm -rf build build-legacy build-ssr
 
 yarn build:output
 yarn build:web:client

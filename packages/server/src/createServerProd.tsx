@@ -16,17 +16,28 @@ const jsdom = shimBrowser()
 
 export async function createServerProd(
   server: any,
-  { webpackConfig, rootDir, buildDir }: ServerConfigNormal
+  config: ServerConfigNormal
 ) {
-  const compiler = webpack(webpackConfig)
-  await new Promise<void>((res, rej) => {
-    compiler.compile((err, stats) => {
-      if (err || stats?.errors.length) {
-        return rej(err ?? stats?.errors)
-      }
-      res()
+  const { watch, webpackConfig, rootDir, buildDir } = config
+
+  if (watch) {
+    const { createServerDev } = require('./createServerDev')
+    return await createServerDev(server, config)
+  } else {
+    const stats = await new Promise<webpack.Stats>((res, rej) => {
+      webpack(webpackConfig, (err, stats) => {
+        if (err || !stats || stats?.hasErrors) {
+          return rej(err ?? stats?.toString({ colors: true }))
+        }
+        res(stats)
+      })
     })
-  })
+    console.log(
+      stats.toString({
+        colors: true,
+      })
+    )
+  }
 
   const statsFile = Path.resolve(Path.join(buildDir, 'loadable-stats.json'))
   const extractor = new ChunkExtractor({ statsFile })
@@ -44,8 +55,8 @@ export async function createServerProd(
 
   // static assets
   const indexFile = Path.join(buildDir, 'index.html')
-  const clientBuildPath = Path.join(rootDir, 'web-build')
-  const clientBuildLegacyPath = Path.join(rootDir, 'web-build-legacy')
+  const clientBuildPath = Path.join(rootDir, 'build')
+  const clientBuildLegacyPath = Path.join(rootDir, 'build-legacy')
 
   // move index.html to backup location so we dont serve via express.static
   const [clientHTMLModern, clientHTMLLegacy] = [
