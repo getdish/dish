@@ -71,8 +71,7 @@ export const RestaurantRatingViewPopover = memo(
                         marginHorizontal={-10}
                         paddingHorizontal={10}
                         key={source}
-                        // @ts-ignore
-                        style={{ cursor: 'pointer' }}
+                        cursor="pointer"
                         onPress={() => Linking.openURL(item.url)}
                       >
                         <HStack width="50%" spacing={6} alignItems="center">

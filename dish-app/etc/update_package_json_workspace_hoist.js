@@ -11,6 +11,7 @@ const hoists = {
 
 const noHoists = [
   // dev deps that no hoist
+  '@dish/server',
   'babel-plugin-transform-inline-environment-variables',
   ...Object.keys(package.dependencies).filter(
     (x) => !hoists[x] && !x.startsWith('@dish/')

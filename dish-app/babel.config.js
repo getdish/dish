@@ -13,6 +13,9 @@ module.exports = function (api) {
     }
   }
 
+  // really helpful to log this in case you accidently use wrong config
+  console.log('using metro babel config')
+
   return {
     presets: ['module:metro-react-native-babel-preset'],
     plugins: [
