@@ -4,7 +4,7 @@ import { Image } from 'react-native'
 import { Paragraph, Spacer, Text, VStack } from 'snackui'
 
 import dishLogo from '../assets/dish-neon.jpg'
-import { lightYellow } from '../constants/colors'
+import { lightYellow, yellowPastel } from '../constants/colors'
 import { IntroModalStore } from './IntroModalStore'
 import { LinkButton } from './views/LinkButton'
 import { LoginRegisterForm } from './views/LoginRegisterForm'
@@ -47,13 +47,13 @@ export const AppIntroLogin = memo(() => {
         <LinkButton
           textProps={{
             fontSize: 18,
-            color: lightYellow,
+            color: yellowPastel,
             fontWeight: '700',
           }}
           alignSelf="center"
-          backgroundColor={`${lightYellow}22`}
+          backgroundColor={`${yellowPastel}44`}
           hoverStyle={{
-            backgroundColor: `${lightYellow}33`,
+            backgroundColor: `${yellowPastel}66`,
           }}
           name="about"
           onPressOut={() => {

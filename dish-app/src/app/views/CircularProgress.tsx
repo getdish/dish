@@ -115,10 +115,6 @@ export default class CircularProgress extends React.PureComponent<any> {
           )
         : null
 
-    if (isNaN(rotation)) {
-      debugger
-    }
-
     return (
       <View style={style}>
         <Svg width={size + padding} height={size + padding}>

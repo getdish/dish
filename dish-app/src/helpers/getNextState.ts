@@ -36,9 +36,6 @@ export const getNextState = (navState: HomeStateNav): HomeStateItem => {
   while (words.length) {
     const [word, ...rest] = words
     const foundTagSlug = allTagsNameToSlug[tagNameKey(word)]
-    if (foundTagSlug === 'no-slug') {
-      debugger
-    }
     if (foundTagSlug) {
       // remove from words
       words = rest

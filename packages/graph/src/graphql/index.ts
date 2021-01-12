@@ -1,6 +1,3 @@
-// BEWARE CYCLE IMPORTS !
-// don't import '/helpers' directly, do individually
-
 import { QueryFetcher, createClient } from '@dish/gqless'
 
 import { Auth } from '../Auth'

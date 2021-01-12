@@ -4,12 +4,12 @@ import {
   QueryKey,
   QueryObserverResult,
   UseQueryOptions,
-  UseQueryResult,
   useQuery,
 } from 'react-query'
 import { Toast } from 'snackui'
 
 // automatically logs errors to toast
+// but allows things to fail without failing entire app
 
 export function useQueryLoud<
   TData = unknown,
@@ -20,7 +20,18 @@ export function useQueryLoud<
   queryFn: QueryFunction<TQueryFnData | TData>,
   options?: UseQueryOptions<TData, TError, TQueryFnData>
 ): QueryObserverResult<TQueryFnData, TError> {
-  const res = useQuery(queryKey, queryFn, options)
+  const res = useQuery(
+    queryKey,
+    async (...args) => {
+      try {
+        return await queryFn(...args)
+      } catch (err) {
+        console.error(`Query error`, queryFn)
+        return null
+      }
+    },
+    options
+  )
 
   if (process.env.NODE_ENV === 'development') {
     useEffect(() => {

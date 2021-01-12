@@ -42,7 +42,7 @@ export const AppMenu = memo(() => {
         contents={<AppMenuContents hideUserMenu={appMenu.hide} />}
         mountImmediately
       >
-        <MenuButton
+        <MenuLinkButton
           Icon={Menu}
           onPress={() => appMenu.setShowMenu(!showUserMenu)}
           text={!media.sm && !userStore.isLoggedIn ? 'Signup' : ''}
@@ -63,7 +63,7 @@ export const AppMenu = memo(() => {
 
           {!userStore.isLoggedIn && (
             <Tooltip contents="About">
-              <MenuButton
+              <MenuLinkButton
                 name="about"
                 Icon={HelpCircle}
                 ActiveIcon={ChevronUp}
@@ -72,6 +72,7 @@ export const AppMenu = memo(() => {
                     e.preventDefault()
                     homeStore.up()
                   } else {
+                    // @ts-expect-error
                     e.navigate()
                   }
                 }}
@@ -111,7 +112,7 @@ const UserMenuButton = () => {
   )
 }
 
-const MenuButton = memo(
+const MenuLinkButton = memo(
   ({
     Icon,
     ActiveIcon,
