@@ -120,7 +120,6 @@
     "ios:prod": "yarn ios:run --configuration Release",
     "ios:device": "yarn ios:run --device",
     "ios:device:prod": "yarn ios:run --device --configuration Release",
-    "webpack-dev": "node --max-old-space-size=16384 ../node_modules/webpack-dev-server/bin/webpack-dev-server.js",
     "web": "dish start",
     "web:debug": "node --inspect ../node_modules/.bin/dish start",
     "web:prod": "DEBUG_PATHS=1 VERBOSE=1 dish start --prod",

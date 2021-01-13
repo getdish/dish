@@ -51,7 +51,7 @@
     "chokidar": "^3.5.0",
     "lodash": "*",
     "webpack-pwa-manifest": "^4.3.0",
-    "webpack": "^5.11.1",
+    "webpack": "^5.13.0",
     "express-winston": "^4.0.5",
     "winston": "^3.3.3"
   },
