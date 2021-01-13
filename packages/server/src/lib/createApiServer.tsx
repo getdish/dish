@@ -1,19 +1,18 @@
 import { basename, join, relative, resolve } from 'path'
+import { Worker } from 'worker_threads'
 
 import chokidar from 'chokidar'
 import { NextFunction, Request, RequestHandler, Response } from 'express'
 import expressWinston from 'express-winston'
 import { pathExists, readdir } from 'fs-extra'
 import { debounce } from 'lodash'
-import * as ts from 'typescript'
 import winston from 'winston'
 
-import { ServerConfigNormal } from '../types'
+import { File, ServerConfigNormal, WorkerData } from '../types'
+import { typescriptOptions } from './typescriptOptions'
 
-export async function createApiServer(
-  server: any,
-  { apiDir, rootDir, watch, hostname, port }: ServerConfigNormal
-) {
+export async function createApiServer(server: any, config: ServerConfigNormal) {
+  const { apiDir, rootDir, watch, hostname, port } = config
   if (!apiDir) return
 
   let lastRouteResponse: any
@@ -65,7 +64,7 @@ export async function createApiServer(
     if (!(await pathExists(apiDir))) {
       throw new Error(`Specificed API directory ${apiDir} doesn't exist`)
     }
-    const files = (await getFiles(apiDir))
+    const files: File[] = (await getFiles(apiDir))
       .map((fullPath) => {
         return relative(apiDir, fullPath)
       })
@@ -91,6 +90,16 @@ export async function createApiServer(
     }
 
     const disposes = new Set<Function>()
+
+    require('ts-node').register({
+      transpileOnly: true,
+      compilerOptions: {
+        ...typescriptOptions,
+        lib: ['esnext'],
+        module: 'commonjs',
+        target: 'es2018',
+      },
+    })
 
     function refreshApi() {
       disposes.forEach((x) => x())
@@ -170,73 +179,20 @@ export async function createApiServer(
       }
     }
 
-    const options: ts.CompilerOptions = {
-      downlevelIteration: true,
-      esModuleInterop: true,
-      allowJs: false,
-      skipLibCheck: true,
-      lib: ['lib.esnext.d.ts'],
-      transpileModule: true,
-      skipDefaultLibCheck: true,
-      outDir,
-      module: ts.ModuleKind.CommonJS,
-    }
-
-    if (watch) {
-      const host = ts.createWatchCompilerHost(
-        files.map((x) => x.fileIn),
-        options,
-        ts.sys,
-        ts.createSemanticDiagnosticsBuilderProgram,
-        (err) => {
-          console.error(err.messageText)
-        },
-        ({ messageText, code }) => {
-          console.log(' [api] tsc:', messageText)
-          if (code === 6194) {
-            // no errors
-            refreshApi()
-          }
-        }
-      )
-      const program = ts.createWatchProgram(host)
-
-      return () => {
-        program.close()
-      }
-    }
-
-    const program = ts.createProgram(
-      files.map((x) => x.fileIn),
-      options
-    )
-    const results = program.emit()
-    const allDiagnostics = ts
-      .getPreEmitDiagnostics(program)
-      .concat(results.diagnostics)
-    allDiagnostics.forEach((diagnostic) => {
-      if (diagnostic.file) {
-        const {
-          line,
-          character,
-        } = diagnostic.file.getLineAndCharacterOfPosition(diagnostic.start!)
-        const message = ts.flattenDiagnosticMessageText(
-          diagnostic.messageText,
-          '\n'
-        )
-        console.log(
-          `${diagnostic.file.fileName} (${line + 1},${
-            character + 1
-          }): ${message}`
-        )
-      } else {
-        console.log(
-          ts.flattenDiagnosticMessageText(diagnostic.messageText, '\n')
-        )
-      }
+    const workerData: WorkerData = { watch, outDir, files }
+    const worker = new Worker(join(__dirname, '/runTypescript.js'), {
+      workerData,
     })
-
-    return () => {}
+    worker.on('message', () => {
+      refreshApi()
+    })
+    worker.on('error', (err) => {
+      console.log('Typescript error', err)
+      process.exit(1)
+    })
+    worker.on('exit', (code) => {
+      console.log(`Worker stopped with exit code ${code}`)
+    })
   }
 }
 

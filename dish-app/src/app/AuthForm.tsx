@@ -45,20 +45,19 @@ export async function userFetch(
 ) {
   const header = await userFetchSimple(method, path, data)
   const isErrHead = header.status >= 300
-  if (isErrHead) {
-    console.warn(`fetch err ${path} - ${header.statusText}`)
-  }
   const res = await header.json()
   if (res.error) {
     Toast.show(res.error, {
       type: 'error',
     })
-  } else if (res.success) {
+  }
+  if (res.success) {
     Toast.show(res.success)
   }
   if (!res.error && !isErrHead) {
     onSuccess?.(res)
   }
+  console.warn(`fetch err ${path} - ${header.statusText}`)
   return res
 }
 
@@ -85,21 +84,6 @@ export const AuthForm = ({
   if (isLoggedIn) {
     return null
   }
-
-  const contents = (() => {
-    if (formPage === 'login') {
-      return <LoginForm autoFocus={autoFocus} setFormPage={setFormPage} />
-    }
-    if (formPage === 'signup') {
-      return <SignupForm autoFocus={autoFocus} setFormPage={setFormPage} />
-    }
-    if (formPage === 'forgotPassword') {
-      return <ForgotPassword setFormPage={setFormPage} />
-    }
-    if (formPage === 'passwordReset') {
-      return <PasswordReset setFormPage={setFormPage} />
-    }
-  })()
 
   const activeStyle: LinkButtonProps = {
     backgroundColor: 'rgba(150,150,150,0.35)',
@@ -148,7 +132,20 @@ export const AuthForm = ({
         </Button>
       </InteractiveContainer>
 
-      {contents}
+      {(() => {
+        if (formPage === 'login') {
+          return <LoginForm autoFocus={autoFocus} setFormPage={setFormPage} />
+        }
+        if (formPage === 'signup') {
+          return <SignupForm autoFocus={autoFocus} setFormPage={setFormPage} />
+        }
+        if (formPage === 'forgotPassword') {
+          return <ForgotPassword setFormPage={setFormPage} />
+        }
+        if (formPage === 'passwordReset') {
+          return <PasswordReset setFormPage={setFormPage} />
+        }
+      })()}
 
       <VStack maxWidth={320}>
         {!!userStore.messages.length && (
@@ -182,7 +179,6 @@ const PasswordReset = ({ autoFocus }: AuthFormProps) => {
       successText="Your password has been reset, you can now login"
     >
       <Text>Enter your new password:</Text>
-      <Spacer size="sm" />
       <ValidatedInput
         control={control}
         autoFocus={autoFocus}
@@ -195,7 +191,6 @@ const PasswordReset = ({ autoFocus }: AuthFormProps) => {
           required: true,
         }}
       />
-      <Spacer size="sm" />
       <ValidatedInput
         control={control}
         errors={errors.confirmation}
@@ -324,7 +319,6 @@ const SignupForm = ({ autoFocus }: AuthFormProps) => {
         userStore.setUser(res.user)
       }),
   })
-
   return (
     <SubmittableForm onSubmit={onSubmit} submitText="Signup">
       <ValidatedInput

@@ -66,6 +66,9 @@ export const AppMenuButton = () => {
           shadowOffset={{ height: 3, width: 0 }}
           pointerEvents="auto"
           borderRadius={100}
+          // hoverStyle={{
+          //   backgroundColor: '#000',
+          // }}
           onPress={() => {
             userMenu.toggle()
           }}

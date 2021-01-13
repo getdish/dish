@@ -205,7 +205,7 @@ class AuthModel {
 
   // mostly same as login
   async appleAuth(authorization: { id_token: string; code: string }) {
-    const response = await this.api('POST', '/api/auth/apple_verify', {
+    const response = await this.api('POST', '/api/auth/appleVerify', {
       ...authorization,
       redirectUri: Auth.getRedirectUri(),
     })
@@ -227,6 +227,7 @@ class AuthModel {
     )
     this.has_been_logged_out = false
     return data.user as {
+      id: string
       username: string
       location: string
       about: string

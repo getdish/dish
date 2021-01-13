@@ -116,6 +116,7 @@ export default function createWebpackConfig({
         modules: ['node_modules'],
       },
       optimization: {
+        moduleIds: 'deterministic',
         minimize,
         concatenateModules: isProduction && !process.env.ANALYZE_BUNDLE,
         usedExports: isProduction,

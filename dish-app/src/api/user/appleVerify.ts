@@ -1,5 +1,5 @@
 import { route } from '@dish/api'
-import { User, WithID, userFindOne, userUpsert } from '@dish/graph'
+import { userFindOne } from '@dish/graph'
 import { jwtSign } from '@dish/helpers-node'
 
 import { appleSignIn, clientSecret } from './_apple'
@@ -24,6 +24,7 @@ export default route(async (req, res) => {
   res.json({
     token: jwtSign(user),
     user: {
+      id: user.id,
       username: user.username,
       location: user.location,
       about: user.about,

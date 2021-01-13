@@ -37,3 +37,17 @@ export type CreateWebpackConfig = {
   disableHot?: boolean
   noMinify?: boolean
 }
+
+export type File = {
+  name: string
+  route: string
+  file: string
+  fileIn: string
+  fileOut: string
+}
+
+export type WorkerData = {
+  watch: boolean
+  outDir: string
+  files: File[]
+}
