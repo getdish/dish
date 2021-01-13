@@ -13,8 +13,8 @@
     "/_"
   ],
   "scripts": {
-    "build": "tsc -p tsconfig.hidefromoclif.json",
-    "watch": "tsc -p tsconfig.hidefromoclif.json --watch --preserveWatchOutput"
+    "build": "tsc -b tsconfig.json",
+    "watch": "tsc -b tsconfig.json --watch --preserveWatchOutput"
   },
   "oclif": {
     "commands": "./_/commands",
@@ -35,8 +35,6 @@
     "compression": "^1.7.4",
     "enquirer": "^2.3.6",
     "express": "^4.17.1",
-    "@salesforce/lazy-require": "^0.3.3",
-    "v8-compile-cache": "^2.2.0",
     "react-ssr-prepass": "^1.2.1",
     "@loadable/server": "^5.14.0",
     "@loadable/component": "^5.14.1",
