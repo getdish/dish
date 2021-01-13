@@ -1,4 +1,4 @@
-import 'isomorphic-unfetch'
+import './lib/env'
 
 import { run as oclifRun } from '@oclif/command'
 

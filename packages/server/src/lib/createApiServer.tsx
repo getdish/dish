@@ -15,6 +15,16 @@ export async function createApiServer(
 ) {
   if (!apiDir) return
 
+  let lastRouteResponse: any
+
+  process.on('unhandledRejection', (err) => {
+    console.log('unhandledRejection', err)
+    const lastPromiseErr = lastRouteResponse?.['__tracedError']
+    if (lastPromiseErr) {
+      console.log('Maybe from this route:', lastPromiseErr)
+    }
+  })
+
   server.use(
     '/api',
     expressWinston.logger({
@@ -92,13 +102,19 @@ export async function createApiServer(
           handlers[name] = endpoint
           if (!registered[name]) {
             registered[name] = true
-            server.use(route, async (req, res, next) => {
+            server.use(route, (req, res, next) => {
               if (!handlers[name]) {
                 return res.status(404)
               }
-              const out = handlers[name](req, res, next)
-              if (out instanceof Promise) {
-                await out
+              const result = handlers[name](req, res, next)
+              if (result instanceof Promise) {
+                lastRouteResponse = result
+                setTimeout(() => {
+                  // clear after a bit if no error
+                  if (lastRouteResponse === result) {
+                    lastRouteResponse = null
+                  }
+                }, 1)
               }
             })
           }
@@ -116,6 +132,7 @@ export async function createApiServer(
       esModuleInterop: true,
       allowJs: false,
       skipLibCheck: true,
+      transpileModule: true,
       skipDefaultLibCheck: true,
       outDir,
       module: ts.ModuleKind.CommonJS,
