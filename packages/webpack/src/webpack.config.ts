@@ -1,4 +1,4 @@
-import path from 'path'
+import path, { join } from 'path'
 
 import { isPresent } from '@dish/helpers'
 import { CreateWebpackConfig } from '@dish/server'
@@ -7,6 +7,7 @@ import ReactRefreshWebpack4Plugin from '@pmmmwh/react-refresh-webpack-plugin'
 import CircularDependencyPlugin from 'circular-dependency-plugin'
 import DedupeParentCssFromChunksWebpackPlugin from 'dedupe-parent-css-from-chunks-webpack-plugin'
 import ExtractCssChunks from 'extract-css-chunks-webpack-plugin'
+import { ensureDirSync, fstat } from 'fs-extra'
 import HTMLWebpackPlugin from 'html-webpack-plugin'
 import { DuplicatesPlugin } from 'inspectpack/plugin'
 // import LodashPlugin from 'lodash-webpack-plugin'
@@ -65,8 +66,22 @@ export default function createWebpackConfig({
       console.log('defines', defines)
     }
 
+    // i had to manually create the webpack cache folder or else it didnt work!
+    const rootNodeModules = join(require.resolve('webpack'), '..', '..', '..')
+    const cacheDir = join(rootNodeModules, '.cache', 'webpack')
+    ensureDirSync(cacheDir)
+
     const config: Webpack.Configuration = {
-      cache: true,
+      infrastructureLogging: {
+        debug: process.env.DEBUG_CACHE ? /webpack\.cache/ : false,
+      },
+      cache: {
+        name: `${process.env.TARGET}${process.env.NODE_ENV}`,
+        type: 'filesystem',
+        buildDependencies: {
+          defaultConfig: [__filename],
+        },
+      },
       mode: process.env.NODE_ENV as any,
       context: cwd,
       target,
