@@ -32,6 +32,8 @@ export const FilterButton = ({
       case 'filters__delivery':
         return <ShoppingBag size={media.sm ? 22 : 18} color={iconColor} />
       case 'filters__price-low':
+      case 'filters__price-mid':
+      case 'filters__price-high':
         return <DollarSign size={media.sm ? 22 : 18} color={iconColor} />
       default:
         return null
@@ -61,6 +63,14 @@ export const FilterButton = ({
     <SmallButton
       tag={tag}
       {...rest}
+      {...(media.sm && {
+        padding: 0,
+        height: 44,
+        width: 52,
+        noTextWrap: true,
+        alignItems: 'center',
+        justifyContent: 'center',
+      })}
       textProps={{
         // color,
         fontWeight: '600',

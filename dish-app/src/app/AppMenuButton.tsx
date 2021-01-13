@@ -61,14 +61,19 @@ export const AppMenuButton = () => {
         pointerEvents="none"
       >
         <VStack
+          className="ease-in-out-fast"
           shadowColor="rgba(0,0,0,0.095)"
           shadowRadius={4}
           shadowOffset={{ height: 3, width: 0 }}
           pointerEvents="auto"
           borderRadius={100}
-          // hoverStyle={{
-          //   backgroundColor: '#000',
-          // }}
+          backgroundColor="rgba(0,0,0,0.1)"
+          hoverStyle={{
+            backgroundColor: 'rgba(0,0,0,0.2)',
+          }}
+          pressStyle={{
+            transform: [{ scale: 0.9 }],
+          }}
           onPress={() => {
             userMenu.toggle()
           }}
@@ -78,8 +83,8 @@ export const AppMenuButton = () => {
             fallbackBackgroundColor="rgba(255,255,255,0.9)"
           >
             <HStack
-              width={44}
-              height={44}
+              width={50}
+              height={50}
               alignItems="center"
               justifyContent="center"
               borderRadius={100}

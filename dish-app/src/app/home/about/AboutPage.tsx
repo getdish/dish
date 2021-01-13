@@ -1,6 +1,14 @@
 import React, { useEffect } from 'react'
 import { Image } from 'react-native'
-import { AbsoluteVStack, Divider, Paragraph, Spacer, VStack } from 'snackui'
+import {
+  AbsoluteVStack,
+  Divider,
+  Paragraph,
+  Spacer,
+  UnorderedList,
+  UnorderedListItem,
+  VStack,
+} from 'snackui'
 
 import dontPanic from '../../../assets/dont-panic.svg'
 import { lightGreen, lightYellow } from '../../../constants/colors'
@@ -66,17 +74,23 @@ export default function AboutPage({
           </VStack>
 
           <VStack paddingHorizontal="5%" spacing="xl">
-            <Paragraph size="xxl">
-              We're building a better map of the world. We want to explore
-              cities and neighborhoods down to the unique dishes that make them
-              great. We think local search should be{' '}
-              <strong>custom to your taste</strong> and understand that what
-              matters in a lunchtime bowl of pho is different than a date-night
-              steak dinner.
-            </Paragraph>
+            <Paragraph size="xxl">We have a three step plan:</Paragraph>
+
+            <UnorderedList>
+              <UnorderedListItem size="xl">
+                Fix restaurant ratings.
+              </UnorderedListItem>
+              <UnorderedListItem size="xl">
+                Make the IRL Hitchhiker's Guide to the Galaxy.
+              </UnorderedListItem>
+              <UnorderedListItem size="xl">
+                Stick it to the man.
+              </UnorderedListItem>
+            </UnorderedList>
 
             <Paragraph size="xl">
-              It turns out what you care about when ordering{' '}
+              We originally wrote a bunch of high-minded words about how
+              ordering{' '}
               <LinkButton
                 backgroundColor={lightYellow}
                 hoverStyle={{
@@ -104,49 +118,22 @@ export default function AboutPage({
               >
                 date night 🌃
               </LinkButton>{' '}
-              is <em>unique</em>: one night it's an authentic dish and delivery
-              speed, the next it's the atmosphere and service. Dish breaks
-              ratings down exactly across tags. For example 💎 uniqueness, 🥬
-              green-friendly, and 🌃 vibes.
+              require different <em>lenses</em>, and about how some nights you
+              crave an authentic dish, others you want ambiance, and sometimes
+              you just want to know if it's not busy (and so on).
+            </Paragraph>
+
+            <Paragraph size="lg" fontWeight="600">
+              But really, we just want to find places near us with a little
+              Pokedex type app that feels fun and has great recs.
             </Paragraph>
 
             <Paragraph size="lg">
-              When you write a review on Dish{' '}
-              <TextStrong>
-                we automatically turn what you say into votes
-              </TextStrong>{' '}
-              that you can manually change as you please. Speak your mind, we do
-              the rest.
+              Dish (kinda) works. It's sketchy. It breaks all the time. Things
+              are confusing. But we put a lot of thought into the foundation.
             </Paragraph>
 
-            <Paragraph size="md" fontWeight="600">
-              You mentioned delivery?
-            </Paragraph>
-
-            <Paragraph size="lg">
-              We found it tiring to have to flip between 3 delivery apps with
-              low quality ratings and a separate app for higher quality ratings.
-              Dish search shows{' '}
-              <TextStrong>every delivery service in your results,</TextStrong>{' '}
-              so you can start from finding something good and then go order it.
-            </Paragraph>
-
-            <Paragraph size="md" fontWeight="600">
-              Long term
-            </Paragraph>
-
-            <Paragraph size="lg">
-              We want to build a mix of a Hitchhiker's Guide to the Galaxy (a
-              smarter world guide with personality) and a Pokédex (a pocket map
-              curating your favorite things) that is built around lists of fun
-              days and nights out that anyone can create and vote on. We think
-              the dish model of breaking down ratings by the factors that matter
-              unlocks all of this and more.
-            </Paragraph>
-
-            <Spacer />
-
-            <Paragraph size="xxl">Enjoy! 🌮🍜</Paragraph>
+            <Paragraph size="lg">We hope you enjoy 🌮🍜</Paragraph>
 
             <Spacer />
             <Divider />
@@ -167,13 +154,11 @@ export default function AboutPage({
                   resizeMode="contain"
                 />
               </AbsoluteVStack>
-              If this all sounds interesting and you actually read this far,
-              consider{' '}
+              Consider{' '}
               <Link display="inline" href="mailto:team@dishapp.com">
-                sending us an email to join our team
+                telling us what we should do better
               </Link>
-              . We're looking for people who want to build the real world
-              Hitchhiker's Guide to the Galaxy.
+              , or better, send a pic of your favorite taqueria.
             </Paragraph>
             <Spacer size="sm" />
             {/* <form>

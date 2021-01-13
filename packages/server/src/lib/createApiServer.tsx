@@ -42,7 +42,6 @@ export async function createApiServer(server: any, config: ServerConfigNormal) {
   )
 
   const url = `http://${hostname}:${port ? port : ''}`
-  const outDir = join(rootDir, 'dist')
   const handlers = {}
   const handlerStatus: { [key: string]: undefined | 'loading' | 'ready' } = {}
 
