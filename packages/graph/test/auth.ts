@@ -2,7 +2,13 @@ import '@dish/react-test-env'
 
 import anyTest, { TestInterface } from 'ava'
 
-import { AUTH_DOMAIN, Auth, flushTestData, getGraphEndpoint } from '../src'
+import {
+  AUTH_DOMAIN,
+  Auth,
+  flushTestData,
+  getAuthHeaders,
+  getGraphEndpoint,
+} from '../src'
 
 interface Context {}
 
@@ -14,7 +20,7 @@ test.beforeEach(async () => {
 
 // keep this, make it easier on us debugging tests
 console.log({
-  AuthHeaders: Auth.getHeaders(),
+  AuthHeaders: getAuthHeaders(),
   AUTH_DOMAIN,
   graphEndpoint: getGraphEndpoint(),
 })

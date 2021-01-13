@@ -26,8 +26,8 @@ export function useQueryLoud<
       try {
         return await queryFn(...args)
       } catch (err) {
-        console.error(`Query error`, queryFn)
-        return null
+        Toast.show(`Query error: ${err.message}`)
+        throw err
       }
     },
     options

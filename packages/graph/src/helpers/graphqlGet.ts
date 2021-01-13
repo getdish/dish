@@ -1,4 +1,4 @@
-import { Auth } from '../Auth'
+import { Auth, getAuthHeaders } from '../Auth'
 import { getGraphEndpoint } from './getGraphEndpoint'
 
 export async function graphqlGet(query: string = '', variables: Object = {}) {
@@ -7,7 +7,7 @@ export async function graphqlGet(query: string = '', variables: Object = {}) {
     headers: {
       'Content-Type': 'application/json',
       Accept: 'application/json',
-      ...Auth.getHeaders(),
+      ...getAuthHeaders(),
     },
     body: JSON.stringify({
       query,

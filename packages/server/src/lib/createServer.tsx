@@ -1,15 +1,25 @@
-import 'isomorphic-unfetch'
+import './env'
 
 import { join } from 'path'
 
 import bodyParser from 'body-parser'
 import compression from 'compression'
 import express from 'express'
-import React from 'react'
 
 import { ServerConfig, ServerConfigNormal } from '../types'
 import { createApiServer } from './createApiServer'
 import { getWebpackConfigBuilder } from './getWebpackConfigBuilder'
+
+// process.on('unhandledRejection', (error, p) => {
+//   console.log(
+//     'Unhandled Rejection at: Promise',
+//     p,
+//     'reason:',
+//     error?.['message'],
+//     '\n',
+//     error?.['stack']
+//   )
+// })
 
 export async function createServer(opts: ServerConfig) {
   const port = process.env.PORT ? +process.env.PORT : opts.port ?? 4040
@@ -33,11 +43,7 @@ export async function createServer(opts: ServerConfig) {
     port,
     buildDir: join(rootDir, 'build'),
     createConfig: (opts) => {
-      return getWebpackConfigBuilder({
-        rootDir,
-        env: opts.env,
-        target: opts.target,
-      })(opts)
+      return getWebpackConfigBuilder({ rootDir })(opts)
     },
     rootDir,
     webpackConfig: {

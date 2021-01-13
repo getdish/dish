@@ -1,13 +1,13 @@
 import { slugify } from '@dish/graph'
 import React, { memo } from 'react'
 import { Box, BoxProps, Divider, Spacer, Toast, VStack } from 'snackui'
-import { isWeb } from 'snackui/src/constants'
 
+import { isWeb } from '../constants/constants'
 import { appMenuStore } from './AppMenuStore'
+import { AuthForm } from './AuthForm'
 import { useUserStore } from './userStore'
 import { LinkButton } from './views/LinkButton'
 import { LinkButtonProps } from './views/LinkProps'
-import { LoginRegisterForm } from './views/LoginRegisterForm'
 
 export const AppMenuContents = memo(
   ({ hideUserMenu, ...props }: { hideUserMenu: Function } & BoxProps) => {
@@ -59,7 +59,7 @@ export const AppMenuContents = memo(
               <Spacer size="lg" />
               <Divider />
               <Spacer size="lg" />
-              <LoginRegisterForm onDidLogin={hideUserMenu} />
+              <AuthForm onDidLogin={hideUserMenu} />
             </>
           )}
 

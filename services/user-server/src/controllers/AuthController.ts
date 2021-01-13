@@ -1,64 +1,9 @@
-import { validate } from 'class-validator'
 import { Request, Response } from 'express'
-import jwt from 'jsonwebtoken'
 import { getRepository } from 'typeorm'
 
-import config from '../config/config'
 import { User } from '../models/User'
 
 class AuthController {
-  static login = async (req: Request, res: Response) => {
-    let { username, password } = req.body
-
-    if (!username || !password) {
-      res.status(400).send()
-    }
-
-    const userRepository = getRepository(User)
-    let user: User
-    try {
-      user = await userRepository.findOneOrFail({ where: { username } })
-    } catch (error) {
-      try {
-        user = await userRepository.findOneOrFail({
-          where: { email: username },
-        })
-      } catch (error2) {
-        console.error('failed logging in', error, error2)
-        res.status(401).send()
-        return
-      }
-    }
-
-    if (!user.checkIfUnencryptedPasswordIsValid(password)) {
-      res.status(401).send()
-      return
-    }
-
-    const token = jwt.sign(
-      {
-        username: user.username,
-        userId: user.id,
-        'https://hasura.io/jwt/claims': {
-          'x-hasura-user-id': user.id,
-          'x-hasura-allowed-roles': [user.role],
-          'x-hasura-default-role': user.role,
-        },
-      },
-      config.jwtSecret,
-      { expiresIn: '1w' }
-    )
-
-    if (process.env.NODE_ENV != 'test') {
-      console.log('logging in', user)
-    }
-
-    //@ts-ignore
-    delete user.password
-
-    res.send({ user: user, token: token })
-  }
-
   static forgotPassword = async (req: Request, res: Response) => {
     const { username } = req.body
     if (!username) {

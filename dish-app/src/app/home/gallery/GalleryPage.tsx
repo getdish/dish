@@ -23,8 +23,8 @@ import {
   VStack,
   useWindowSize,
 } from 'snackui'
-import { isWeb } from 'snackui/src/constants'
 
+import { isWeb } from '../../../constants/constants'
 import { getImageUrl } from '../../../helpers/getImageUrl'
 import { useHomeStore } from '../../homeStore'
 import { useRestaurantQuery } from '../../hooks/useRestaurantQuery'

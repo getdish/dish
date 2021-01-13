@@ -1,6 +1,6 @@
 import { QueryFetcher, createClient } from '@dish/gqless'
 
-import { Auth } from '../Auth'
+import { getAuthHeaders } from '../Auth'
 import { getGraphEndpoint } from '../helpers/getGraphEndpoint'
 import {
   GeneratedSchema,
@@ -15,7 +15,7 @@ export const queryFetcher: QueryFetcher = async function (query, variables) {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
-      ...Auth.getHeaders(),
+      ...getAuthHeaders(),
     },
     body: JSON.stringify({
       query,

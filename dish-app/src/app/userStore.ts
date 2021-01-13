@@ -31,37 +31,6 @@ class UserStore extends Store {
     return false
   }
 
-  async register({
-    username,
-    email,
-    password,
-  }: {
-    username: string
-    email: string
-    password: string
-  }) {
-    let result = false
-    this.loading = true
-    const [status, data] = await Auth.register(username, email, password)
-    switch (status) {
-      case 201:
-        await this.login({ usernameOrEmail: email, password })
-        result = true
-        break
-      case 409:
-        this.messages = data
-        break
-      default:
-        break
-    }
-    if (status >= 400) {
-      this.messages = formatErrors(data)
-    }
-    console.log('data', data)
-    this.loading = false
-    return result
-  }
-
   async login({
     usernameOrEmail,
     password,
@@ -81,7 +50,7 @@ class UserStore extends Store {
           this.messages = formatErrors(data)
         }
       } else {
-        this.setLogin(data)
+        this.setUser(data)
         Toast.show('Logged in as ' + this.user?.username)
       }
     } finally {
@@ -89,8 +58,9 @@ class UserStore extends Store {
     }
   }
 
-  setLogin(user: Partial<User>) {
+  setUser(user: Partial<User>) {
     this.user = user as any
+    this.refreshUser()
   }
 
   async logout() {
@@ -105,8 +75,7 @@ class UserStore extends Store {
       Toast.show('Session expired: logged out')
     }
     if (Auth.isLoggedIn) {
-      this.setLogin(Auth.user)
-      this.refreshUser()
+      this.setUser(Auth.user)
     }
   }
 
