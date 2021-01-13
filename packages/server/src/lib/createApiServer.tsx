@@ -41,10 +41,10 @@ export async function createApiServer(server: any, config: ServerConfigNormal) {
     })
   )
 
-  const url = `http://${hostname}${port ? port : ''}`
+  const url = `http://${hostname}:${port ? port : ''}`
   const outDir = join(rootDir, 'dist')
   const handlers = {}
-  const registered = {}
+  const handlerStatus: { [key: string]: undefined | 'loading' | 'ready' } = {}
 
   let dispose: any
   const run = debounce(async () => {
@@ -85,9 +85,6 @@ export async function createApiServer(server: any, config: ServerConfigNormal) {
       })
 
     console.log(' [api] creating', files.length, 'routes:')
-    for (const { route } of files) {
-      console.log(` [api]   · ${url}${route}`)
-    }
 
     const disposes = new Set<Function>()
 
@@ -101,11 +98,53 @@ export async function createApiServer(server: any, config: ServerConfigNormal) {
       },
     })
 
+    // first, register the route so we can pause responses until ready
+    for (const { route, name } of files) {
+      if (!handlerStatus[name]) {
+        console.log(` [api]   · ${url}${route}`)
+        handlerStatus[name] = 'loading'
+        server.use(route, async (req, res, next) => {
+          let tries = 0
+          while (handlerStatus[name] === 'loading') {
+            tries++
+            if (tries > 100) {
+              console.log('timed out loading route', route)
+              return res.send(408)
+            }
+            await new Promise((res) => setTimeout(res, 300))
+          }
+          const cur = handlers[name]
+          if (!cur) {
+            return res.status(404).text(`Route handler not found`)
+          }
+          // allow for arrays of multiple
+          if (Array.isArray(cur)) {
+            let curIndex = -1
+            const handleNextRoute = () => {
+              curIndex++
+              const curRoute = cur[curIndex]
+              if (curRoute) {
+                handleRoute(curRoute, req, res, handleNextRoute)
+              } else {
+                next()
+              }
+            }
+            handleNextRoute()
+          } else {
+            handleRoute(cur, req, res, next)
+          }
+        })
+      }
+    }
+
     function refreshApi() {
       disposes.forEach((x) => x())
       disposes.clear()
+
+      // then, load the routes
       for (const { route, name, file, fileOut } of files) {
         try {
+          // ensure its a new copy
           delete require.cache[fileOut]
           const endpoint = require(fileOut).default
           if (!endpoint) {
@@ -120,37 +159,14 @@ export async function createApiServer(server: any, config: ServerConfigNormal) {
             continue
           }
           handlers[name] = endpoint
-          if (!registered[name]) {
-            registered[name] = true
-            server.use(route, (req, res, next) => {
-              const cur = handlers[name]
-              if (!cur) {
-                return res.send(404)
-              }
-              // allow for arrays of multiple
-              if (Array.isArray(cur)) {
-                let curIndex = -1
-                function handleNextRoute() {
-                  curIndex++
-                  const curRoute = cur[curIndex]
-                  if (curRoute) {
-                    console.log('curRoute', curRoute)
-                    handleRoute(curRoute, req, res, handleNextRoute)
-                  } else {
-                    next()
-                  }
-                }
-                handleNextRoute()
-              } else {
-                handleRoute(cur, req, res, next)
-              }
-            })
-          }
+          handlerStatus[name] = 'ready'
           disposes.add(() => {
+            handlerStatus[name] = 'loading'
             delete handlers[name]
           })
         } catch (err) {
           console.log('Error requiring API endpoints', file, err)
+          delete handlers[name]
         }
       }
       console.log(` [api] ready`)
