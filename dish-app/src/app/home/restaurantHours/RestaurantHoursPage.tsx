@@ -38,6 +38,7 @@ export default memo(
       <>
         <PageTitle title={title} />
         <Modal
+          visible
           onDismiss={() => {
             homeStore.up()
           }}
