@@ -14,7 +14,7 @@ import { shimBrowser } from './shimBrowser'
 
 const jsdom = shimBrowser()
 
-export async function createServerProd(
+export async function createWebServerProd(
   server: any,
   config: ServerConfigNormal
 ) {

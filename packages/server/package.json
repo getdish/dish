@@ -46,6 +46,7 @@
     "fs-extra": "^9.0.1",
     "react-helmet": "^6.1.0",
     "@dish/helpers": "*",
+    "express-remove-route": "^1.0.0",
     "lodash": "*",
     "webpack-pwa-manifest": "^4.3.0",
     "webpack": "^5.11.1"

@@ -740,9 +740,9 @@ function setupMapEffect({
               // TODO this only works for zcta5, we need to normalize the ids on backend
               filter: ['==', 'ogc_fid', boundary.id],
             })
-            let final = sourceFeatures[0]
+            let final = sourceFeatures[0] as any
             for (const feature of sourceFeatures) {
-              final = union(final, feature)
+              final = union(final, feature as any)
             }
             console.log('sourceFeatures', final, boundary, sourceFeatures)
             const bounds = bbox(final)

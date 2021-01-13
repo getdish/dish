@@ -93,8 +93,6 @@ k8s/.terraform/*
 hasura.logs
 
 build/
-build-ssr/
-build-legacy/
 
 services/search/m
 services/search/embedded.go

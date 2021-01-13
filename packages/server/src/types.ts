@@ -11,6 +11,7 @@ export type ServerConfig = {
   clean?: boolean
   port?: number
   hostname?: string
+  apiDir?: string | null
 }
 
 export type ServerConfigNormal = ServerConfig & {

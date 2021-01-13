@@ -5,7 +5,7 @@ import hotMiddleware from 'webpack-hot-middleware'
 
 import { ServerConfigNormal } from '../types'
 
-export async function createServerDev(
+export async function createWebServerDev(
   server: any,
   { createConfig, webpackConfig }: ServerConfigNormal
 ) {
