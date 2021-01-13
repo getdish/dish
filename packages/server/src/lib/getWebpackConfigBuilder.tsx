@@ -1,6 +1,6 @@
 import { join } from 'path'
 
-import { CreateWebpackConfig } from './types'
+import { CreateWebpackConfig } from '../types'
 
 export function getWebpackConfigBuilder({
   rootDir,

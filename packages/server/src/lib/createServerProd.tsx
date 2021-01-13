@@ -8,9 +8,9 @@ import { existsSync, readFileSync, renameSync } from 'fs-extra'
 import React from 'react'
 import { Helmet } from 'react-helmet'
 
+import { ServerConfigNormal } from '../types'
 import { build } from './build'
 import { shimBrowser } from './shimBrowser'
-import { ServerConfigNormal } from './types'
 
 const jsdom = shimBrowser()
 

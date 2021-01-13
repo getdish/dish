@@ -2,8 +2,8 @@ import { join } from 'path'
 
 import { Command, flags } from '@oclif/command'
 
-import { build } from '../build'
-import { getWebpackConfigBuilder } from '../getWebpackConfigBuilder'
+import { build } from '../lib/build'
+import { getWebpackConfigBuilder } from '../lib/getWebpackConfigBuilder'
 
 export class Build extends Command {
   static description = 'Build app to filesystem'

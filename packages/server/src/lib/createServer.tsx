@@ -7,8 +7,8 @@ import compression from 'compression'
 import express from 'express'
 import React from 'react'
 
+import { ServerConfig, ServerConfigNormal } from '../types'
 import { getWebpackConfigBuilder } from './getWebpackConfigBuilder'
-import { ServerConfig, ServerConfigNormal } from './types'
 
 process.env.TARGET =
   process.env.TARGET || (process.env.NODE_ENV === 'development' ? 'web' : 'SSR')
