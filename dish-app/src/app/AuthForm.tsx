@@ -453,7 +453,11 @@ function SubmittableForm({
   return (
     <Form onSubmit={handleSubmit}>
       <VStack spacing="sm" minWidth={260}>
-        {!isSuccess && <Suspense fallback={null}>{children}</Suspense>}
+        {!isSuccess && (
+          <Suspense fallback={null}>
+            <VStack spacing="sm">{children}</VStack>
+          </Suspense>
+        )}
 
         {!isSuccess && isWeb && (
           <input

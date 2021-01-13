@@ -391,7 +391,7 @@ const AutocompleteFrame = ({ children }: { children: any }) => {
       pointerEvents={isShowing ? 'auto' : 'none'}
       fullscreen
       alignItems="flex-end"
-      top={media.sm ? searchBarHeight : 10}
+      top={media.sm ? searchBarHeight + 5 : 10}
       onPress={() => autocompletes.setVisible(false)}
     >
       <VStack width="100%" height="100%" maxWidth={drawerWidthMax}>
@@ -609,7 +609,7 @@ const HomeAutocompleteDefault = memo(() => {
             justifyContent="center"
             overflow="hidden"
             hoverStyle={{
-              backgroundColor: bgLight,
+              backgroundColor: theme.backgroundColorTertiary,
             }}
           >
             <Link disallowDisableWhenActive tag={tag}>
@@ -617,13 +617,13 @@ const HomeAutocompleteDefault = memo(() => {
                 <Text textAlign="center" width="100%" fontSize={56}>
                   {tag.icon}
                 </Text>
-                <Spacer size="md" />
+                <Spacer size="sm" />
                 <Text
                   ellipse
                   textAlign="center"
-                  fontSize={14}
+                  fontSize={15}
                   width="100%"
-                  fontWeight="300"
+                  fontWeight="400"
                   color={theme.color}
                 >
                   {tagDisplayName(tag)}
