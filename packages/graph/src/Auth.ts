@@ -39,18 +39,6 @@ export function getAuthHeaders() {
   }
 }
 
-export async function userFetch(
-  method: 'POST' | 'GET',
-  path: string,
-  data: any = {}
-) {
-  const res = await userFetchSimple(method, path, data)
-  if (res.status >= 300) {
-    throw new Error(`fetch err ${path} - ${res.statusText}`)
-  }
-  return await res.json()
-}
-
 export async function userFetchSimple(
   method: 'POST' | 'GET',
   path: string,

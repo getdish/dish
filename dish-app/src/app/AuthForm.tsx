@@ -1,6 +1,6 @@
-import { userFetch } from '@dish/graph'
+import { userFetchSimple } from '@dish/graph'
 import { capitalize } from 'lodash'
-import React, { useEffect, useRef, useState } from 'react'
+import React, { Suspense, useEffect, useRef, useState } from 'react'
 import {
   Controller,
   FieldError,
@@ -18,6 +18,7 @@ import {
   SmallTitle,
   Spacer,
   Text,
+  Toast,
   VStack,
 } from 'snackui'
 
@@ -35,6 +36,31 @@ type AuthFormProps = {
 }
 
 const pages = ['login', 'register', 'forgotPassword', 'passwordReset']
+
+export async function userFetch(
+  method: 'POST' | 'GET',
+  path: string,
+  data: any = {},
+  onSuccess?: (data: any) => any
+) {
+  const header = await userFetchSimple(method, path, data)
+  const isErrHead = header.status >= 300
+  if (isErrHead) {
+    console.warn(`fetch err ${path} - ${header.statusText}`)
+  }
+  const res = await header.json()
+  if (res.error) {
+    Toast.show(res.error, {
+      type: 'error',
+    })
+  } else if (res.success) {
+    Toast.show(res.success)
+  }
+  if (!res.error && !isErrHead) {
+    onSuccess?.(res)
+  }
+  return res
+}
 
 export const AuthForm = ({
   onDidLogin,
@@ -238,11 +264,8 @@ const LoginForm = ({ autoFocus, setFormPage }: AuthFormProps) => {
       password: '',
     },
     submit: (obj) =>
-      userFetch('POST', '/api/user/login', obj).then((res) => {
-        if (res.success) {
-          userStore.setUser(res.user)
-        }
-        return res
+      userFetch('POST', '/api/user/login', obj, (res) => {
+        userStore.setUser(res.user)
       }),
   })
   return (
@@ -297,11 +320,8 @@ const SignupForm = ({ autoFocus }: AuthFormProps) => {
       email: '',
     },
     submit: (obj) =>
-      userFetch('POST', '/api/user/new', obj).then((res) => {
-        if (res.success) {
-          userStore.setUser(res.user)
-        }
-        return res
+      userFetch('POST', '/api/user/new', obj, (res) => {
+        userStore.setUser(res.user)
       }),
   })
 
@@ -439,7 +459,7 @@ function SubmittableForm({
   return (
     <Form onSubmit={handleSubmit}>
       <VStack spacing="sm" minWidth={260}>
-        {!isSuccess && children}
+        {!isSuccess && <Suspense fallback={null}>{children}</Suspense>}
 
         {!isSuccess && isWeb && (
           <input
@@ -492,8 +512,8 @@ function useFormAction<Values extends { [key: string]: any }>({
   const [send, setSend] = useState(0)
   const response = useQueryLoud([name, send], () => submit(data.current), {
     enabled: !!send,
+    suspense: false,
   })
-  console.log('response', response)
   const onSubmit = handleSubmit(() => {
     setSend(Math.random())
   })

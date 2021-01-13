@@ -15,7 +15,7 @@ export default route(async (req, res) => {
       },
     ])
     res.status(201).json({
-      success: 'User created',
+      success: 'Welcome!',
       user: {
         id: user.id,
       },
