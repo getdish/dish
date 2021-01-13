@@ -90,18 +90,18 @@ export default function createWebpackConfig({
             : [hotEntry, entry].filter(isPresent),
       },
       output: {
-        path: path.join(cwd, 'build'),
+        path: path.join(cwd, 'build', 'modern'),
         filename: `static/js/app.${hashFileNamePart}.js`,
         publicPath: '/',
         pathinfo: !!(isDevelopment || process.env.DEBUG_PATHS),
         ...(isSSR && {
           libraryTarget: 'commonjs',
           filename: `static/js/app.ssr.${process.env.NODE_ENV}.js`,
-          path: path.join(cwd, 'build-ssr'),
+          path: path.join(cwd, 'build', 'ssr'),
         }),
         ...(legacy && {
           filename: `static/js/app.legacy.${hashFileNamePart}.js`,
-          path: path.join(cwd, 'build-legacy'),
+          path: path.join(cwd, 'build', 'legacy'),
         }),
       },
       node: {

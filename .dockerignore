@@ -5,8 +5,6 @@ Dockerfile
 **/node_modules
 **/_
 **/tsconfig.tsbuildinfo
-**/build-legacy
-**/build-ssr
 **/build
 **/.expo
 **/target/*

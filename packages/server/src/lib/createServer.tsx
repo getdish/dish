@@ -8,6 +8,7 @@ import express from 'express'
 import React from 'react'
 
 import { ServerConfig, ServerConfigNormal } from '../types'
+import { createApiServer } from './createApiServer'
 import { getWebpackConfigBuilder } from './getWebpackConfigBuilder'
 
 process.env.TARGET =
@@ -53,12 +54,14 @@ export async function createServer(opts: ServerConfig) {
     },
   }
 
+  await createApiServer(server, serverConf)
+
   if (opts.env === 'development') {
-    const { createServerDev } = require('./createServerDev')
-    res = createServerDev(server, serverConf)
+    const { createWebServerDev } = require('./createWebServerDev')
+    res = createWebServerDev(server, serverConf)
   } else {
-    const { createServerProd } = require('./createServerProd')
-    res = createServerProd(server, serverConf)
+    const { createWebServerProd } = require('./createWebServerProd')
+    res = createWebServerProd(server, serverConf)
   }
 
   const host = opts.hostname ?? 'localhost'

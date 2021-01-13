@@ -1,8 +1,7 @@
-import { series } from '@dish/async'
 import { useHydrateCache } from '@dish/graph'
 import { ProvideRouter } from '@dish/router'
 import { allStores, configureUseStore } from '@dish/use-store'
-import React, { Suspense, useLayoutEffect, useState } from 'react'
+import React, { Suspense } from 'react'
 import { QueryClientProvider } from 'react-query'
 import { ThemeProvider, configureThemes } from 'snackui'
 

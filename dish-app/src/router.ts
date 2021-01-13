@@ -1,4 +1,4 @@
-import { HistoryType, Route, Router } from '@dish/router'
+import { Route, Router } from '@dish/router'
 import { createStore, useStoreInstance } from '@dish/use-store'
 
 export type RoutesTable = typeof routes

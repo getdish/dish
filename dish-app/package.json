@@ -126,6 +126,7 @@
   },
   "dependencies": {
     "snackui": "*",
+    "@dish/api": "*",
     "@dish/server": "*",
     "@dish/async": "*",
     "@dish/graph": "*",

@@ -1,3 +1,5 @@
+import { join } from 'path'
+
 import { Command, flags } from '@oclif/command'
 
 import { ServerConfig } from '../types'
@@ -13,6 +15,9 @@ export class Start extends Command {
     }),
     ssr: flags.boolean({
       description: 'Build and serve statically.',
+    }),
+    'no-api': flags.integer({
+      description: 'Run without api',
     }),
     port: flags.integer({
       char: 'p',
@@ -32,15 +37,16 @@ export class Start extends Command {
 
   async run() {
     const { flags } = this.parse(Start)
-
+    const rootFolder = process.cwd()
     const config: ServerConfig = {
-      rootFolder: process.cwd(),
+      rootFolder,
       port: flags.port,
       hostname: flags.hostname ?? 'localhost',
       inspect: flags.inspect ?? false,
       clean: flags.clean,
       env: flags.prod ? 'production' : 'development',
       watch: flags.ssr ? false : true,
+      apiDir: flags['no-api'] ? null : join(rootFolder, 'src', 'api'),
     }
 
     if (config.env === 'development') {
@@ -50,7 +56,7 @@ export class Start extends Command {
     }
 
     try {
-      const { createServer } = require('../createServer')
+      const { createServer } = require('../lib/createServer')
       await createServer(config)
     } catch (err) {
       console.error(err)
