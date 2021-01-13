@@ -87,9 +87,7 @@
   "dependencies": {
     "react": "0.0.0-experimental-3310209d0",
     "react-dom": "0.0.0-experimental-3310209d0",
-    "react-native-web": "0.0.0-466063b7e",
-    "@tsmirror/graphql": "^0.0.2",
-    "@tsmirror/reflect": "^0.0.3"
+    "react-native-web": "0.0.0-466063b7e"
   },
   "devDependencies": {
     "typescript-monorepo-toolkit": "^0.2.0",

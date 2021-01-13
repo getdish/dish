@@ -96,55 +96,6 @@ class UserController {
       username: user.username,
     })
   }
-
-  static editUser = async (req: Request, res: Response) => {
-    const id = req.params.id
-
-    const { username, email, role } = req.body
-
-    const userRepository = getRepository(User)
-    let user
-    try {
-      user = await userRepository.findOneOrFail(id)
-    } catch (error) {
-      res.status(404).send('User not found')
-      return
-    }
-
-    user.email = email
-    user.username = username
-    user.role = role
-    const errors = await validate(user)
-    if (errors.length > 0) {
-      res.status(400).send(errors)
-      return
-    }
-
-    try {
-      await userRepository.save(user)
-    } catch (e) {
-      res.status(409).send('username already in use')
-      return
-    }
-    res.status(204).send()
-  }
-
-  static deleteUser = async (req: Request, res: Response) => {
-    const id = req.params.id
-
-    const userRepository = getRepository(User)
-    let user: User
-    try {
-      user = await userRepository.findOneOrFail(id)
-    } catch (error) {
-      res.status(404).send('User not found')
-      return
-    }
-    userRepository.delete(id)
-
-    //After all send a 204 (no content, but accepted) response
-    res.status(204).send()
-  }
 }
 
 export default UserController

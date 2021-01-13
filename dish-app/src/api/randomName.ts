@@ -1,8 +1,8 @@
-import { Req, Res } from '@dish/api'
+import { route } from '@dish/api'
 
-export default (req: Req, res: Res) => {
+export default route((_, res) => {
   res.send(randomName())
-}
+})
 
 function randomName() {
   const first = capFirst(name1[getRandomInt(0, name1.length)])

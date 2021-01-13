@@ -11,12 +11,6 @@ import { ServerConfig, ServerConfigNormal } from '../types'
 import { createApiServer } from './createApiServer'
 import { getWebpackConfigBuilder } from './getWebpackConfigBuilder'
 
-process.env.TARGET =
-  process.env.TARGET || (process.env.NODE_ENV === 'development' ? 'web' : 'SSR')
-global['React'] = React
-global['__DEV__'] = process.env.NODE_ENV === 'development'
-global['requestIdleCallback'] = global['requestIdleCallback'] || setTimeout
-
 export async function createServer(opts: ServerConfig) {
   const port = process.env.PORT ? +process.env.PORT : opts.port ?? 4040
   const rootDir = process.cwd()
@@ -36,6 +30,7 @@ export async function createServer(opts: ServerConfig) {
 
   const serverConf: ServerConfigNormal = {
     ...opts,
+    port,
     buildDir: join(rootDir, 'build'),
     createConfig: (opts) => {
       return getWebpackConfigBuilder({
