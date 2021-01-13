@@ -563,3 +563,8 @@ mark {
 .show-vote-on-hover:hover .vote-button {
   opacity: 1;
 }
+
+#portals {
+  position: absolute;
+  z-index: 10000000000000000000000000000;
+}

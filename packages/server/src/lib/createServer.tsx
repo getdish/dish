@@ -31,7 +31,7 @@ export async function createServer(opts: ServerConfig) {
   // see: https://stackoverflow.com/questions/18811286/nodejs-express-cache-and-304-status-code
   server.disable('etag')
   server.use(bodyParser.json({ limit: '2048mb' }))
-  server.use(bodyParser.urlencoded({ limit: '2048mb', extended: true }))
+  server.use(bodyParser.urlencoded({ limit: '2048mb', extended: false }))
   server.get('/__test', (_, res) => res.send('hello world'))
 
   let res: Promise<any>

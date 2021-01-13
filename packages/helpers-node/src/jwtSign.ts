@@ -12,7 +12,7 @@ export function jwtSign(user: Pick<User, 'username' | 'id' | 'role'>) {
         'x-hasura-default-role': user.role,
       },
     },
-    process.env.JWT_SECRET,
+    `${process.env.JWT_SECRET}`,
     { expiresIn: '1w' }
   )
 }

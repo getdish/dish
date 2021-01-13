@@ -843,7 +843,6 @@ function build_all_dish_services() {
     'services/worker' \
     'services/dish-hooks' \
     'services/search' \
-    'services/user-server' \
     'dish-app'
 
   echo "...all Dish services built."
@@ -1098,7 +1097,6 @@ declare -a ALL_IMAGES=(
   "dish-app"
   "worker"
   "dish-hooks"
-  "user-server"
   "search"
 )
 

@@ -61,20 +61,6 @@ resource "kubernetes_ingress" "k8s-services-ingress" {
             service_port = "http"
           }
         }
-        path {
-          path = "/auth"
-          backend {
-            service_name = "user-server"
-            service_port = "http"
-          }
-        }
-        path {
-          path = "/user"
-          backend {
-            service_name = "user-server"
-            service_port = "http"
-          }
-        }
       }
     }
     rule {
@@ -108,18 +94,6 @@ resource "kubernetes_ingress" "k8s-services-ingress" {
           path = "/"
           backend {
             service_name = "search"
-            service_port = "http"
-          }
-        }
-      }
-    }
-    rule {
-      host = "auth.${var.dish_domain}"
-      http {
-        path {
-          path = "/"
-          backend {
-            service_name = "user-server"
             service_port = "http"
           }
         }

@@ -26,11 +26,6 @@ export type ReviewTagSentence = {
   ml_score?: number
 }
 
-String.prototype.replaceAll = function (search, replacement) {
-  var target = this
-  return target.replace(new RegExp(search, 'g'), replacement)
-}
-
 export async function reviewFindAllForRestaurant(
   restaurant_id: uuid,
   fn?: (v: any) => unknown

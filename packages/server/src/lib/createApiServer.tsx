@@ -1,6 +1,7 @@
-import { join, relative, resolve } from 'path'
+import { basename, join, relative, resolve } from 'path'
 
 import chokidar from 'chokidar'
+import { NextFunction, Request, RequestHandler, Response } from 'express'
 import expressWinston from 'express-winston'
 import { pathExists, readdir } from 'fs-extra'
 import { debounce } from 'lodash'
@@ -69,7 +70,9 @@ export async function createApiServer(
         return relative(apiDir, fullPath)
       })
       .filter((x) => {
-        return (x[0] !== '_' && x.endsWith('.ts')) || x.endsWith('.tsx')
+        return (
+          (basename(x)[0] !== '_' && x.endsWith('.ts')) || x.endsWith('.tsx')
+        )
       })
       .map((file) => {
         const name = file.replace(/\.tsx?$/, '')
@@ -96,25 +99,41 @@ export async function createApiServer(
         try {
           delete require.cache[fileOut]
           const endpoint = require(fileOut).default
-          if (typeof endpoint !== 'function') {
-            throw new Error(`isn't of type function: ${typeof endpoint}`)
+          if (!endpoint) {
+            console.warn(` [api] ⚠️  no default export, ignoring ${file}`)
+            continue
+          }
+          if (typeof endpoint !== 'function' && !Array.isArray(endpoint)) {
+            console.warn(
+              ` [api] ⚠️  no function/array export, ignoring ${file}`,
+              endpoint
+            )
+            continue
           }
           handlers[name] = endpoint
           if (!registered[name]) {
             registered[name] = true
             server.use(route, (req, res, next) => {
-              if (!handlers[name]) {
-                return res.status(404)
+              const cur = handlers[name]
+              if (!cur) {
+                return res.send(404)
               }
-              const result = handlers[name](req, res, next)
-              if (result instanceof Promise) {
-                lastRouteResponse = result
-                setTimeout(() => {
-                  // clear after a bit if no error
-                  if (lastRouteResponse === result) {
-                    lastRouteResponse = null
+              // allow for arrays of multiple
+              if (Array.isArray(cur)) {
+                let curIndex = -1
+                function handleNextRoute() {
+                  curIndex++
+                  const curRoute = cur[curIndex]
+                  if (curRoute) {
+                    console.log('curRoute', curRoute)
+                    handleRoute(curRoute, req, res, handleNextRoute)
+                  } else {
+                    next()
                   }
-                }, 50)
+                }
+                handleNextRoute()
+              } else {
+                handleRoute(cur, req, res, next)
               }
             })
           }
@@ -128,10 +147,35 @@ export async function createApiServer(
       console.log(` [api] ready`)
     }
 
+    function handleRoute(
+      handler: RequestHandler,
+      req: Request,
+      res: Response,
+      next: NextFunction
+    ) {
+      if (typeof handler !== 'function') {
+        console.warn(' [api] ⚠️  invalid handler', handler)
+        return res.status(500)
+      }
+      const result = handler(req, res, next)
+      // @ts-expect-error
+      if (result instanceof Promise) {
+        lastRouteResponse = result
+        setTimeout(() => {
+          // clear after a bit if no error
+          if (lastRouteResponse === result) {
+            lastRouteResponse = null
+          }
+        }, 50)
+      }
+    }
+
     const options: ts.CompilerOptions = {
+      downlevelIteration: true,
       esModuleInterop: true,
       allowJs: false,
       skipLibCheck: true,
+      lib: ['lib.esnext.d.ts'],
       transpileModule: true,
       skipDefaultLibCheck: true,
       outDir,

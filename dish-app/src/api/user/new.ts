@@ -1,6 +1,6 @@
 import { route } from '@dish/api'
 import { userInsert } from '@dish/graph'
-import * as bcrypt from 'bcryptjs'
+import { hashPassword } from '@dish/helpers-node'
 
 export default route(async (req, res) => {
   if (req.method !== 'POST') return
@@ -9,7 +9,7 @@ export default route(async (req, res) => {
     const [user] = await userInsert([
       {
         username,
-        password: bcrypt.hashSync(password, 8),
+        password: hashPassword(password),
         email: email,
         role: 'user',
       },

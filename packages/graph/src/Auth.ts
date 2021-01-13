@@ -1,6 +1,6 @@
 import { isSafari } from '@dish/helpers'
 
-import { AUTH_DOMAIN, ORIGIN, isNode } from './constants'
+import { ORIGIN, isNode } from './constants'
 
 const LOGIN_KEY = 'auth'
 const HAS_LOGGED_IN_BEFORE = 'HAS_LOGGED_IN_BEFORE'
@@ -29,22 +29,33 @@ export function getAuth(): null | {
 
 export function getAuthHeaders() {
   const auth = getAuth()
-  if (auth) {
-    return {
-      ...(HASURA_SECRET && {
-        'X-Hasura-Admin-Secret': HASURA_SECRET,
-      }),
+  return {
+    ...(HASURA_SECRET && {
+      'X-Hasura-Admin-Secret': HASURA_SECRET,
+    }),
+    ...(auth && {
       Authorization: `Bearer ${auth.token}`,
-    }
+    }),
   }
-  return null
 }
 
 export async function userFetch(
   method: 'POST' | 'GET',
   path: string,
+  data: any = {}
+) {
+  const res = await userFetchSimple(method, path, data)
+  if (res.status >= 300) {
+    throw new Error(`fetch err ${path} - ${res.statusText}`)
+  }
+  return await res.json()
+}
+
+export async function userFetchSimple(
+  method: 'POST' | 'GET',
+  path: string,
   data: any = {},
-  { onLoggedOut }: { onLoggedOut?: () => void } = {}
+  { handleLogOut }: { handleLogOut?: () => void } = {}
 ) {
   const response = await fetch(ORIGIN + path, {
     method,
@@ -57,19 +68,18 @@ export async function userFetch(
   })
   if (response.status >= 300) {
     if (response.status == 401) {
-      onLoggedOut?.()
-    } else {
-      console.error('Auth fetch() error', {
-        method,
-        domain: ORIGIN,
-        path,
-        data,
-        status: response.status,
-        statusText: response.statusText,
-      })
+      handleLogOut?.()
     }
+    console.error('Auth fetch() error', {
+      method,
+      domain: ORIGIN,
+      path,
+      data,
+      status: response.status,
+      statusText: response.statusText,
+    })
   }
-  return await response.json()
+  return response
 }
 
 class AuthModel {
@@ -81,8 +91,8 @@ class AuthModel {
 
   getRedirectUri() {
     return isSafari
-      ? `${AUTH_DOMAIN}/auth/apple_authorize`
-      : `${AUTH_DOMAIN}/auth/apple_authorize_chrome`
+      ? `${ORIGIN}/auth/apple_authorize`
+      : `${ORIGIN}/auth/apple_authorize_chrome`
   }
 
   hasEverLoggedIn =
@@ -110,8 +120,8 @@ class AuthModel {
   }
 
   async api(method: 'POST' | 'GET', path: string, data: any = {}) {
-    return await userFetch(method, path, data, {
-      onLoggedOut: () => {
+    return await userFetchSimple(method, path, data, {
+      handleLogOut: () => {
         this.isLoggedIn = false
         this.user = null
         this.is_admin = false
@@ -128,7 +138,7 @@ class AuthModel {
   }
 
   async uploadAvatar(body: FormData) {
-    const response = await this.api('POST', '/user/uploadAvatar', body)
+    const response = await this.api('POST', '/api/user/uploadAvatar', body)
     if (response.status !== 200) {
       console.error(`Error updating: ${response.status} ${response.statusText}`)
       return null
@@ -146,7 +156,7 @@ class AuthModel {
     charIndex: number
     username: string
   } | null> {
-    const response = await this.api('POST', '/user/updateUser', user)
+    const response = await this.api('POST', '/api/user/updateUser', user)
     if (response.status !== 200) {
       console.error(`Error updating: ${response.status} ${response.statusText}`)
       return null
@@ -207,7 +217,7 @@ class AuthModel {
 
   // mostly same as login
   async appleAuth(authorization: { id_token: string; code: string }) {
-    const response = await this.api('POST', '/auth/apple_verify', {
+    const response = await this.api('POST', '/api/auth/apple_verify', {
       ...authorization,
       redirectUri: Auth.getRedirectUri(),
     })
@@ -234,43 +244,6 @@ class AuthModel {
       about: string
       avatar: string
     }
-  }
-
-  async forgotPassword(username: string) {
-    if (!username) {
-      throw new Error(`no username/email`)
-    }
-    const response = await this.api('POST', '/auth/forgot-password', {
-      username,
-    })
-
-    if (response.status != 204) {
-      console.error(`Couldn't send forgotten password request`)
-      return [response.status, response.statusText] as const
-    }
-
-    return [response.status] as const
-  }
-
-  async passwordReset(token: string, password: string) {
-    if (!token) {
-      throw new Error(`no password reset token`)
-    }
-
-    if (!password) {
-      throw new Error(`no password to reset`)
-    }
-    const response = await this.api('POST', '/auth/password-reset', {
-      token,
-      password,
-    })
-
-    if (response.status != 201) {
-      console.error(`Couldn't reset password`)
-      return [response.status, response.statusText] as const
-    }
-
-    return [response.status] as const
   }
 
   async logout() {

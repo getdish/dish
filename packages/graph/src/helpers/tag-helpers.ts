@@ -14,7 +14,7 @@ export const tagFindOne = QueryHelpers.findOne
 export const tagDelete = QueryHelpers.delete
 export const tagRefresh = QueryHelpers.refresh
 
-export const tagFindOneWithCategories = async (tag: Tag) => {
+export const tagFindOneWithCategories = async (tag: Partial<Tag>) => {
   return await tagFindOne(tag, (tagV: tag) => {
     if (Array.isArray(tagV)) {
       return tagV.map((tagV) => {
