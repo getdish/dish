@@ -39,10 +39,8 @@ export default function createWebpackConfig({
   const isHot = !isProduction && !isSSR && !disableHot && target !== 'node'
   const isStaticExtracted = !process.env.NO_EXTRACT
   const minimize = noMinify || isSSR ? false : isProduction && !isSSR
-
   const hashFileNamePart = isProduction ? '[contenthash]' : '[fullhash]'
   const hotEntry = isHot ? 'webpack-hot-middleware/client' : null
-
   const smp = new SpeedMeasurePlugin()
 
   function getConfig() {

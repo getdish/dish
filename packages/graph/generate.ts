@@ -1,6 +1,6 @@
 import { inspectWriteGenerate } from '@dish/gqless-cli'
 
-import { Auth } from './src/Auth'
+import { Auth, getAuthHeaders } from './src/Auth'
 import { getGraphEndpoint } from './src/helpers/getGraphEndpoint'
 
 const run = async () => {
@@ -8,7 +8,7 @@ const run = async () => {
     endpoint: getGraphEndpoint(),
     destination: 'src/graphql/schema.generated.ts',
     overwrite: true,
-    headers: Auth.getHeaders(),
+    headers: getAuthHeaders(),
     generateOptions: {},
   })
 }

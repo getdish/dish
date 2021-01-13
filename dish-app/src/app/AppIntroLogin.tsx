@@ -5,9 +5,9 @@ import { Paragraph, Spacer, Text, VStack } from 'snackui'
 
 import dishLogo from '../assets/dish-neon.jpg'
 import { lightYellow, yellowPastel } from '../constants/colors'
+import { AuthForm } from './AuthForm'
 import { IntroModalStore } from './IntroModalStore'
 import { LinkButton } from './views/LinkButton'
-import { LoginRegisterForm } from './views/LoginRegisterForm'
 
 export const AppIntroLogin = memo(() => {
   const store = useStore(IntroModalStore)
@@ -63,7 +63,7 @@ export const AppIntroLogin = memo(() => {
           learn more
         </LinkButton>
 
-        <LoginRegisterForm />
+        <AuthForm />
       </VStack>
     </>
   )

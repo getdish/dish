@@ -5,9 +5,8 @@ import * as bcrypt from 'bcryptjs'
 export default route(async (req, res) => {
   if (req.method !== 'POST') return
   const { username, email, password } = req.body
-
   try {
-    await userInsert([
+    const [user] = await userInsert([
       {
         username,
         password: bcrypt.hashSync(password, 8),
@@ -15,12 +14,17 @@ export default route(async (req, res) => {
         role: 'user',
       },
     ])
+    res.status(201).json({
+      success: 'User created',
+      user: {
+        id: user.id,
+      },
+    })
   } catch (err) {
+    console.error(err)
     if (err.message.includes('Uniqueness violation')) {
-      return res.status(409).json(['Username/email already in use'])
+      return res.status(409).json({ error: 'Username/email already in use' })
     }
-    return res.status(400).json([err.message])
+    return res.status(400).json({ error: err.message })
   }
-
-  res.status(201).send('User created')
 })

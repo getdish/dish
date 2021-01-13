@@ -1,9 +1,11 @@
 import { join, relative, resolve } from 'path'
 
 import chokidar from 'chokidar'
+import expressWinston from 'express-winston'
 import { pathExists, readdir } from 'fs-extra'
 import { debounce } from 'lodash'
 import * as ts from 'typescript'
+import winston from 'winston'
 
 import { ServerConfigNormal } from '../types'
 
@@ -12,6 +14,22 @@ export async function createApiServer(
   { apiDir, rootDir, watch, hostname, port }: ServerConfigNormal
 ) {
   if (!apiDir) return
+
+  server.use(
+    '/api',
+    expressWinston.logger({
+      transports: [new winston.transports.Console()],
+      format: winston.format.combine(
+        winston.format.colorize(),
+        winston.format.simple()
+      ),
+      meta: true,
+      msg:
+        '{{req.method}} {{req.url}} - {{res.statusCode}} {{res.responseTime}}ms',
+      // expressFormat: true,
+      colorize: false,
+    })
+  )
 
   const url = `http://${hostname}${port ? port : ''}`
   const outDir = join(rootDir, 'dist')
@@ -37,11 +55,11 @@ export async function createApiServer(
       throw new Error(`Specificed API directory ${apiDir} doesn't exist`)
     }
     const files = (await getFiles(apiDir))
-      .filter((x) => {
-        return x.endsWith('.ts') || x.endsWith('.tsx')
-      })
       .map((fullPath) => {
         return relative(apiDir, fullPath)
+      })
+      .filter((x) => {
+        return (x[0] !== '_' && x.endsWith('.ts')) || x.endsWith('.tsx')
       })
       .map((file) => {
         const name = file.replace(/\.tsx?$/, '')
@@ -54,9 +72,9 @@ export async function createApiServer(
         }
       })
 
-    console.log('Creating', files.length, 'API endpoints')
+    console.log(' [api] creating', files.length, 'routes:')
     for (const { route } of files) {
-      console.log(`  => ${url}${route}`)
+      console.log(` [api]   · ${url}${route}`)
     }
 
     const disposes = new Set<Function>()
@@ -74,11 +92,14 @@ export async function createApiServer(
           handlers[name] = endpoint
           if (!registered[name]) {
             registered[name] = true
-            server.use(route, (req, res, next) => {
+            server.use(route, async (req, res, next) => {
               if (!handlers[name]) {
                 return res.status(404)
               }
-              handlers[name](req, res, next)
+              const out = handlers[name](req, res, next)
+              if (out instanceof Promise) {
+                await out
+              }
             })
           }
           disposes.add(() => {
@@ -88,13 +109,14 @@ export async function createApiServer(
           console.log('Error requiring API endpoints', file, err)
         }
       }
-      console.log(`Refreshed ${files.length} api endpoints...`)
+      console.log(` [api] ready`)
     }
 
-    const options = {
+    const options: ts.CompilerOptions = {
       esModuleInterop: true,
-      allowJs: true,
+      allowJs: false,
       skipLibCheck: true,
+      skipDefaultLibCheck: true,
       outDir,
       module: ts.ModuleKind.CommonJS,
     }
@@ -109,7 +131,7 @@ export async function createApiServer(
           console.error(err.messageText)
         },
         ({ messageText, code }) => {
-          console.log('  [api] tsc:', messageText)
+          console.log(' [api] tsc:', messageText)
           if (code === 6194) {
             // no errors
             refreshApi()

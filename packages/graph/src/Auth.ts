@@ -1,15 +1,78 @@
 import { isSafari } from '@dish/helpers'
 
-import { AUTH_DOMAIN, isNode } from './constants'
+import { AUTH_DOMAIN, ORIGIN, isNode } from './constants'
 
 const LOGIN_KEY = 'auth'
 const HAS_LOGGED_IN_BEFORE = 'HAS_LOGGED_IN_BEFORE'
+// TODO put this away! in localstorage i think
+const HASURA_SECRET =
+  process.env.HASURA_SECRET || process.env.REACT_APP_HASURA_SECRET || 'password'
 
 export type UpdateUserProps = {
   username: string
   about?: string
   location?: string
   charIndex?: number
+}
+
+console.log('polyfill now')
+require('@dish/helpers/polyfill')
+
+export function getAuth(): null | {
+  user: Object
+  token: string
+  admin?: boolean
+} {
+  const json = localStorage.getItem(LOGIN_KEY)
+  if (json != null) {
+    return JSON.parse(json)
+  }
+  return null
+}
+
+export function getAuthHeaders() {
+  const auth = getAuth()
+  if (auth) {
+    return {
+      ...(auth.admin && {
+        'X-Hasura-Admin-Secret': HASURA_SECRET,
+      }),
+      Authorization: `Bearer ${auth.token}`,
+    }
+  }
+  return null
+}
+
+export async function userFetch(
+  method: 'POST' | 'GET',
+  path: string,
+  data: any = {},
+  { onLoggedOut }: { onLoggedOut?: () => void } = {}
+) {
+  const response = await fetch(ORIGIN + path, {
+    method,
+    headers: {
+      ...getAuthHeaders(),
+      'Content-Type': 'application/json',
+      Accept: 'application/json',
+    },
+    body: JSON.stringify(data),
+  })
+  if (response.status >= 300) {
+    if (response.status == 401) {
+      onLoggedOut?.()
+    } else {
+      console.error('Auth fetch() error', {
+        method,
+        domain: ORIGIN,
+        path,
+        data,
+        status: response.status,
+        statusText: response.statusText,
+      })
+    }
+  }
+  return await response.json()
 }
 
 class AuthModel {
@@ -49,56 +112,22 @@ class AuthModel {
     }
   }
 
+  async api(method: 'POST' | 'GET', path: string, data: any = {}) {
+    return await userFetch(method, path, data, {
+      onLoggedOut: () => {
+        this.isLoggedIn = false
+        this.user = null
+        this.is_admin = false
+      },
+    })
+  }
+
   as(role: string) {
     if (role == 'admin') {
       this.is_admin = true
     } else {
       this.is_admin = false
     }
-  }
-
-  getHeaders() {
-    let auth_headers = {}
-    if (this.isLoggedIn) {
-      auth_headers = {
-        ...(this.is_admin && {
-          'X-Hasura-Admin-Secret':
-            process.env.HASURA_SECRET ||
-            process.env.REACT_APP_HASURA_SECRET ||
-            'password',
-        }),
-        Authorization: 'Bearer ' + this.jwt,
-      }
-    }
-    return auth_headers
-  }
-
-  async api(method: 'POST' | 'GET', path: string, data: any = {}) {
-    const response = await fetch(AUTH_DOMAIN + path, {
-      method,
-      headers: {
-        ...Auth.getHeaders(),
-        'Content-Type': 'application/json',
-        Accept: 'application/json',
-      },
-      body: JSON.stringify(data),
-    })
-    if (response.status >= 300) {
-      if (response.status == 401) {
-        this.has_been_logged_out = true
-        this.logout()
-      } else {
-        console.error('Auth fetch() error', {
-          method,
-          domain: AUTH_DOMAIN,
-          path,
-          data,
-          status: response.status,
-          statusText: response.statusText,
-        })
-      }
-    }
-    return response
   }
 
   async uploadAvatar(body: FormData) {

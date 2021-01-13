@@ -28,9 +28,9 @@ import {
   useMedia,
   useTheme,
 } from 'snackui'
-import { isWeb } from 'snackui/src/constants'
 
 import { peachAvatar } from '../../constants/avatar'
+import { isWeb } from '../../constants/constants'
 import { drawerWidthMax, searchBarHeight } from '../../constants/constants'
 import { RegionNormalized, useRegionQuery } from '../../helpers/fetchRegion'
 import { getColorsForName } from '../../helpers/getColorsForName'

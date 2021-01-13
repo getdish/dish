@@ -21,11 +21,7 @@ export class Build extends Command {
       await build({
         clean: true,
         createConfig: (opts) => {
-          return getWebpackConfigBuilder({
-            rootDir,
-            env: 'production',
-            target: opts.target,
-          })(opts)
+          return getWebpackConfigBuilder({ rootDir })(opts)
         },
         webpackConfig: {
           entry: join(rootDir, 'src', 'index.ts'),
