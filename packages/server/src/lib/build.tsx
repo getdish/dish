@@ -1,5 +1,3 @@
-import './env'
-
 import { pathExists, remove } from 'fs-extra'
 import webpack, { Configuration } from 'webpack'
 

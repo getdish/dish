@@ -1,5 +1,3 @@
-import './env'
-
 import { join } from 'path'
 
 import bodyParser from 'body-parser'
