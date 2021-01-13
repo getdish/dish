@@ -1,4 +1,8 @@
-import { Request, Response } from 'express'
+import { Request, RequestHandler, Response } from 'express'
 
-export type Req = any //Request
-export type Res = any //Response
+export type Req = Request
+export type Res = Response
+
+export function route(fn: RequestHandler) {
+  return fn
+}

@@ -40,6 +40,10 @@ export async function createWebServerProd(
   const statsFile = Path.resolve(Path.join(buildDir, 'loadable-stats.json'))
   const extractor = new ChunkExtractor({ statsFile })
 
+  global['React'] = React
+  global['__DEV__'] = process.env.NODE_ENV === 'development'
+  global['requestIdleCallback'] = global['requestIdleCallback'] || setTimeout
+
   const app = require(Path.join(
     buildDir,
     `static/js/app.ssr.${process.env.NODE_ENV ?? 'production'}.js`
