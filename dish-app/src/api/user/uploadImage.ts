@@ -64,14 +64,17 @@ export default secureRoute('user', [
       })
     }
 
-    if (!Array.isArray(req.files) || !req.files.length) {
+    // @ts-expect-error
+    const files = req.files
+
+    if (!Array.isArray(files) || !files.length) {
       return res.json({
         error: 'no files',
       })
     }
 
     try {
-      const [file] = req.files
+      const [file] = files
       const avatar = file['location']
 
       await userUpsert([

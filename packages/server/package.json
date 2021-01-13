@@ -13,8 +13,8 @@
     "/_"
   ],
   "scripts": {
-    "build": "tsc -b",
-    "watch": "tsc -b --watch --preserveWatchOutput"
+    "build": "tsc -p tsconfig.hidefromoclif.json",
+    "watch": "tsc -p tsconfig.hidefromoclif.json --watch --preserveWatchOutput"
   },
   "oclif": {
     "commands": "./_/commands",
@@ -26,6 +26,7 @@
     ]
   },
   "dependencies": {
+    "ts-node": "^9.1.1",
     "@oclif/command": "1.8.0",
     "@oclif/config": "1.17.0",
     "@oclif/plugin-autocomplete": "0.3.0",
@@ -52,8 +53,7 @@
     "webpack-pwa-manifest": "^4.3.0",
     "webpack": "^5.11.1",
     "express-winston": "^4.0.5",
-    "winston": "^3.3.3",
-    "trace-unhandled": "^1.2.1"
+    "winston": "^3.3.3"
   },
   "devDependencies": {
     "webpack-dev-middleware": "^4.0.3",
