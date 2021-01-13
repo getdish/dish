@@ -11,16 +11,27 @@ import {
 export * from './schema.generated'
 
 export const queryFetcher: QueryFetcher = async function (query, variables) {
-  const response = await fetch(getGraphEndpoint(), {
+  const url = getGraphEndpoint()
+  const headers = {
+    'Content-Type': 'application/json',
+    ...getAuthHeaders(),
+  }
+  const body = JSON.stringify({
+    query,
+    variables,
+  })
+  if (process.env.DEBUG || process.env.TARGET === 'node') {
+    console.log(`fetch('${url}', {
+      method: 'POST',
+      headers: ${JSON.stringify(headers, null, 2)}
+      body: "${body}"
+      mode: 'cors'
+    }).then(x => x.json())`)
+  }
+  const response = await fetch(url, {
     method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-      ...getAuthHeaders(),
-    },
-    body: JSON.stringify({
-      query,
-      variables,
-    }),
+    headers,
+    body,
     mode: 'cors',
   })
 
