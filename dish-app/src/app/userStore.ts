@@ -30,9 +30,8 @@ class UserStore extends Store {
     return false
   }
 
-  setUser(user: Partial<User>) {
-    this.user = user as any
-    this.refreshUser()
+  async setUser(user: { id: string }) {
+    await this.refreshUser(user)
   }
 
   async logout() {
@@ -74,8 +73,7 @@ class UserStore extends Store {
     return false
   }
 
-  private async refreshUser() {
-    const id = Auth.user.id
+  private async refreshUser({ id }: { id: string }) {
     if (!id) return
     try {
       const user = await resolved(
