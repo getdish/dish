@@ -9,5 +9,7 @@
   },
 
   "include": ["src"],
-  "references": []
+  "references": [{
+    "path": "../helpers"
+  }]
 }

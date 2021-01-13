@@ -13,5 +13,9 @@
   "include": ["src"],
   "references": [{
     "path": "../helpers"
+  }, {
+    "path": "../server"
+  }, {
+    "path": "../../snackui/packages/snackui-static"
   }]
 }

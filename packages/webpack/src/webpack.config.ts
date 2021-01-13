@@ -1,9 +1,9 @@
 import path from 'path'
 
 import { isPresent } from '@dish/helpers'
+import { CreateWebpackConfig } from '@dish/server'
 import LoadablePlugin from '@loadable/webpack-plugin'
 import ReactRefreshWebpack4Plugin from '@pmmmwh/react-refresh-webpack-plugin'
-import { SnackOptions } from '@snackui/static'
 import CircularDependencyPlugin from 'circular-dependency-plugin'
 import DedupeParentCssFromChunksWebpackPlugin from 'dedupe-parent-css-from-chunks-webpack-plugin'
 import ExtractCssChunks from 'extract-css-chunks-webpack-plugin'
@@ -17,59 +17,33 @@ import TimeFixPlugin from 'time-fix-plugin'
 import Webpack from 'webpack'
 import WebpackPwaManifest from 'webpack-pwa-manifest'
 
-const smp = new SpeedMeasurePlugin()
-
-process.env.NODE_ENV = process.env.NODE_ENV || 'development'
-
-console.log('process.env.NODE_ENV', process.env.NODE_ENV)
-
-const isSSRClient = !!process.env.SSR_CLIENT
-
-// 'ssr' | 'worker' | 'preact' | 'client'
-const TARGET = process.env.TARGET || 'client'
-const target =
-  TARGET === 'ssr' ? 'node' : TARGET === 'worker' ? 'webworker' : 'web'
-
-const isProduction = process.env.NODE_ENV === 'production'
-const isDevelopment = process.env.NODE_ENV === 'development'
-const isSSR = TARGET === 'ssr'
-const isHot =
-  !isProduction &&
-  !isSSR &&
-  !isSSRClient &&
-  TARGET !== 'worker' &&
-  target !== 'node'
-const isStaticExtracted = !process.env.NO_EXTRACT
-
-const minimize =
-  process.env.NO_MINIFY || TARGET === 'ssr'
-    ? false
-    : isProduction && TARGET !== 'ssr'
-
-const hashFileNamePart = isProduction ? '[contenthash]' : '[fullhash]'
-
 export default function createWebpackConfig({
   entry,
+  env,
+  target,
   cwd = process.cwd(),
   babelInclude,
   snackOptions,
+  legacy,
+  disableHot,
   resolve,
   polyFillPath,
   htmlOptions,
   defineOptions,
   pwaOptions,
-}: {
-  entry: string
-  cwd?: string
-  babelInclude?: (path: string) => boolean
-  snackOptions: SnackOptions
-  resolve?: Webpack.ResolveOptions
-  htmlOptions?: Object
-  pwaOptions?: WebpackPwaManifest.ManifestOptions
-  defineOptions?: Object
-  polyFillPath?: string
-}): Webpack.Configuration {
+  noMinify,
+}: CreateWebpackConfig): Webpack.Configuration {
+  const isProduction = env === 'production'
+  const isDevelopment = env === 'development'
+  const isSSR = target === 'node'
+  const isHot = !isProduction && !isSSR && !disableHot && target !== 'node'
+  const isStaticExtracted = !process.env.NO_EXTRACT
+  const minimize = noMinify || isSSR ? false : isProduction && !isSSR
+
+  const hashFileNamePart = isProduction ? '[contenthash]' : '[fullhash]'
   const hotEntry = isHot ? 'webpack-hot-middleware/client' : null
+
+  const smp = new SpeedMeasurePlugin()
 
   function getConfig() {
     const defines = {
@@ -77,8 +51,8 @@ export default function createWebpackConfig({
       'process.env': '({})',
       'process.env.IS_SSR_RENDERING': isSSR,
       'process.env.SNACKUI_COMPILE_PROCESS': false,
-      'process.env.NODE_ENV': JSON.stringify(process.env.NODE_ENV),
-      'process.env.TARGET': JSON.stringify(TARGET || null),
+      'process.env.NODE_ENV': JSON.stringify(env),
+      'process.env.TARGET': JSON.stringify(target || null),
       'process.env.IS_STATIC': false,
       'process.env.DISABLE_CACHE': false,
       'process.env.IS_LIVE': JSON.stringify(process.env.IS_LIVE ?? false),
@@ -89,7 +63,9 @@ export default function createWebpackConfig({
       ...defineOptions,
     }
 
-    console.log('defines', defines)
+    if (process.env.DEBUG) {
+      console.log('defines', defines)
+    }
 
     const config: Webpack.Configuration = {
       cache: true,
@@ -109,7 +85,7 @@ export default function createWebpackConfig({
       devtool: isProduction ? 'source-map' : 'eval-cheap-module-source-map',
       entry: {
         main:
-          process.env.LEGACY || isSSR
+          legacy || isSSR
             ? [hotEntry, polyFillPath, entry].filter(isPresent)
             : [hotEntry, entry].filter(isPresent),
       },
@@ -123,7 +99,7 @@ export default function createWebpackConfig({
           filename: `static/js/app.ssr.${process.env.NODE_ENV}.js`,
           path: path.join(cwd, 'build-ssr'),
         }),
-        ...(process.env.LEGACY && {
+        ...(legacy && {
           filename: `static/js/app.legacy.${hashFileNamePart}.js`,
           path: path.join(cwd, 'build-legacy'),
         }),
@@ -147,7 +123,7 @@ export default function createWebpackConfig({
         usedExports: isProduction,
         removeEmptyChunks: isProduction,
         splitChunks:
-          isProduction && TARGET != 'ssr' && !process.env.NO_MINIFY
+          isProduction && !isSSR && !noMinify
             ? {
                 chunks: 'async',
                 minSize: 20000,
@@ -207,7 +183,7 @@ export default function createWebpackConfig({
               {
                 test: /\.css$/i,
                 use:
-                  isProduction && TARGET !== 'ssr'
+                  isProduction && !isSSR
                     ? [
                         {
                           loader: ExtractCssChunks.loader,
@@ -290,7 +266,7 @@ export default function createWebpackConfig({
         // isClient && isProduction && new ShakePlugin({}),
 
         ...((isProduction &&
-          TARGET != 'ssr' && [
+          !isSSR && [
             // new LodashPlugin({
             //   // fixes issue i had https://github.com/lodash/lodash/issues/3101
             //   shorthands: true,

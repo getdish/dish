@@ -2134,6 +2134,21 @@
     "@nodelib/fs.scandir" "2.1.4"
     fastq "^1.6.0"
 
+"@npmcli/map-workspaces@^0.0.0-pre.1":
+  version "0.0.0-pre.1"
+  resolved "https://registry.npmjs.org/@npmcli/map-workspaces/-/map-workspaces-0.0.0-pre.1.tgz#b2c38d9a78bf38e799f66d14453e7c9b72928132"
+  integrity sha512-IovEVdr17hW/Stt0kpPjz1r0ZxRX3RGah7ww3tQpi5NtyOapJwbUffWuWETyQkOjud5soC45mnjOOBtfTggtng==
+  dependencies:
+    "@npmcli/name-from-folder" "^1.0.1"
+    glob "^7.1.6"
+    minimatch "^3.0.4"
+    read-package-json-fast "^1.1.3"
+
+"@npmcli/name-from-folder@^1.0.1":
+  version "1.0.1"
+  resolved "https://registry.npmjs.org/@npmcli/name-from-folder/-/name-from-folder-1.0.1.tgz#77ecd0a4fcb772ba6fe927e2e2e155fbec2e6b1a"
+  integrity sha512-qq3oEfcLFwNfEYOQ8HLimRGKlD8WSeGEdtUa7hmzpR8Sa7haL1KVQrvgO6wqMjhWFFVjgtrh1gIxDz+P8sjUaA==
+
 "@oclif/color@^0.x":
   version "0.1.2"
   resolved "https://registry.npmjs.org/@oclif/color/-/color-0.1.2.tgz#28b07e2850d9ce814d0b587ce3403b7ad8f7d987"
@@ -4005,6 +4020,13 @@ assign-symbols@^1.0.0:
   resolved "https://registry.npmjs.org/assign-symbols/-/assign-symbols-1.0.0.tgz#59667f41fadd4f20ccbc2bb96b8d4f7f78ec0367"
   integrity sha1-WWZ/QfrdTyDMvCu5a41Pf3jsA2c=
 
+ast-types@0.14.2:
+  version "0.14.2"
+  resolved "https://registry.npmjs.org/ast-types/-/ast-types-0.14.2.tgz#600b882df8583e3cd4f2df5fa20fa83759d4bdfd"
+  integrity sha512-O0yuUDnZeQDL+ncNGlJ78BiO4jnYI3bvMsD5prT0/nsgijG/LpNBIr63gTjVTNsiGkgQhiyCShTgxt8oXOrklA==
+  dependencies:
+    tslib "^2.0.1"
+
 astral-regex@^1.0.0:
   version "1.0.0"
   resolved "https://registry.npmjs.org/astral-regex/-/astral-regex-1.0.0.tgz#6c8c3fb827dd43ee3918f27b82782ab7658a6fd9"
@@ -5557,7 +5579,7 @@ colorette@^1.0.7, colorette@^1.2.1:
   resolved "https://registry.npmjs.org/colorette/-/colorette-1.2.1.tgz#4d0b921325c14faf92633086a536db6e89564b1b"
   integrity sha512-puCDz0CzydiSYOrnXpz/PKd69zRrribezjtE9yd4zvytoRc8+RY/KJPvtPFKZS3E3wP6neGyMe0vOTlHO5L3Pw==
 
-colors@^1.1.2:
+colors@^1.1.2, colors@^1.4.0:
   version "1.4.0"
   resolved "https://registry.npmjs.org/colors/-/colors-1.4.0.tgz#c50491479d4c1bdaed2c9ced32cf7c7dc2360f78"
   integrity sha512-a+UqTh4kgZg/SlGvfbzDHpgRu7AAQOmmqRHJnxhRZICKFUT91brVhNNt58CMWU9PsBbv3PDCZUHbVxuDiH2mtA==
@@ -5619,7 +5641,7 @@ commander@^5.1.0:
   resolved "https://registry.npmjs.org/commander/-/commander-5.1.0.tgz#46abbd1652f8e059bddaef99bbdcb2ad9cf179ae"
   integrity sha512-P0CysNDQ7rtVw4QIQtm+MRxV66vKFSvlsQvGYXZWR3qFU0jlMKHZZZgw8e+8DSah4UDKMqnknRDQz+xuQXQ/Zg==
 
-commander@^6.2.0, commander@^6.2.1:
+commander@^6.1.0, commander@^6.2.0, commander@^6.2.1:
   version "6.2.1"
   resolved "https://registry.npmjs.org/commander/-/commander-6.2.1.tgz#0792eb682dfbc325999bb2b84fddddba110ac73c"
   integrity sha512-U7VdrJFnJgo4xjrHpTzu0yrHPGImdsmD95ZlgYSEajAn2JKzDhDTPG9kBTefmObL2w/ngeZnilk+OV9CG3d7UA==
@@ -11267,6 +11289,11 @@ lodash.once@^4.0.0:
   resolved "https://registry.npmjs.org/lodash.once/-/lodash.once-4.1.1.tgz#0dd3971213c7c56df880977d504c88fb471a97ac"
   integrity sha1-DdOXEhPHxW34gJd9UEyI+0cal6w=
 
+lodash.partition@^4.6.0:
+  version "4.6.0"
+  resolved "https://registry.npmjs.org/lodash.partition/-/lodash.partition-4.6.0.tgz#a38e46b73469e0420b0da1212e66d414be364ba4"
+  integrity sha1-o45GtzRp4EILDaEhLmbUFL42S6Q=
+
 lodash.pick@^4.4.0:
   version "4.4.0"
   resolved "https://registry.npmjs.org/lodash.pick/-/lodash.pick-4.4.0.tgz#52f05610fff9ded422611441ed1fc123a03001b3"
@@ -12615,6 +12642,11 @@ npm-conf@^1.1.0:
   dependencies:
     config-chain "^1.1.11"
     pify "^3.0.0"
+
+npm-normalize-package-bin@^1.0.1:
+  version "1.0.1"
+  resolved "https://registry.npmjs.org/npm-normalize-package-bin/-/npm-normalize-package-bin-1.0.1.tgz#6e79a41f23fd235c0623218228da7d9c23b8f6e2"
+  integrity sha512-EPfafl6JL5/rU+ot6P3gRSCpPDW5VmIzX959Ob1+ySFUuuYHWHekXpwdUZcKP5C+DS4GEtdJluwBjnsNDl+fSA==
 
 npm-run-all@4.1.5, npm-run-all@^4.1.5:
   version "4.1.5"
@@ -14772,6 +14804,14 @@ read-file-relative@^1.2.0:
   dependencies:
     callsite "^1.0.0"
 
+read-package-json-fast@^1.1.3, read-package-json-fast@^1.2.1:
+  version "1.2.1"
+  resolved "https://registry.npmjs.org/read-package-json-fast/-/read-package-json-fast-1.2.1.tgz#e8518d6f37c99eb3afc26704c5cbb50d7ead82dd"
+  integrity sha512-OFbpwnHcv74Oa5YN5WvbOBfLw6yPmPcwvyJJw/tj9cWFBF7juQUDLDSZiOjEcgzfweWeeROOmbPpNN1qm4hcRg==
+  dependencies:
+    json-parse-even-better-errors "^2.3.0"
+    npm-normalize-package-bin "^1.0.1"
+
 read-pkg-up@^1.0.1:
   version "1.0.1"
   resolved "https://registry.npmjs.org/read-pkg-up/-/read-pkg-up-1.0.1.tgz#9d63c13276c065918d57f002a57f40a1b643fb02"
@@ -14864,6 +14904,16 @@ readdirp@~3.5.0:
   integrity sha512-cMhu7c/8rdhkHXWsY+osBhfSy0JikwpHK/5+imo+LpeasTF8ouErHrlYkwT0++njiyuDvc7OFY5T3ukvZ8qmFQ==
   dependencies:
     picomatch "^2.2.1"
+
+recast@^0.20.2:
+  version "0.20.4"
+  resolved "https://registry.npmjs.org/recast/-/recast-0.20.4.tgz#db55983eac70c46b3fff96c8e467d65ffb4a7abc"
+  integrity sha512-6qLIBGGRcwjrTZGIiBpJVC/NeuXpogXNyRQpqU1zWPUigCphvApoCs9KIwDYh1eDuJ6dAFlQoi/QUyE5KQ6RBQ==
+  dependencies:
+    ast-types "0.14.2"
+    esprima "~4.0.0"
+    source-map "~0.6.1"
+    tslib "^2.0.1"
 
 rechoir@^0.6.2:
   version "0.6.2"
@@ -17192,7 +17242,7 @@ tsconfig-paths@^3.9.0:
     minimist "^1.2.0"
     strip-bom "^3.0.0"
 
-tslib@2.0.3, tslib@^1, tslib@^1.10.0, tslib@^1.13.0, tslib@^1.9.0, tslib@^1.9.3, tslib@^2.0.0, tslib@^2.0.3, tslib@~2.0.1, tslib@~2.1.0:
+tslib@2.0.3, tslib@^1, tslib@^1.10.0, tslib@^1.13.0, tslib@^1.9.0, tslib@^1.9.3, tslib@^2.0.0, tslib@^2.0.1, tslib@^2.0.3, tslib@~2.0.1, tslib@~2.1.0:
   version "2.0.3"
   resolved "https://registry.npmjs.org/tslib/-/tslib-2.0.3.tgz#8e0741ac45fc0c226e58a17bfc3e64b9bc6ca61c"
   integrity sha512-uZtkfKblCEQtZKBF6EBXVZeQNl82yqtDQdv+eck8u7tdPxjLu2/lp5/uPW+um2tpuxINHWy3GhiccY7QgEaVHQ==
@@ -17314,6 +17364,19 @@ typeorm@^0.2.25:
     xml2js "^0.4.23"
     yargonaut "^1.1.2"
     yargs "^16.0.3"
+
+typescript-monorepo-toolkit@^0.2.0:
+  version "0.2.0"
+  resolved "https://registry.npmjs.org/typescript-monorepo-toolkit/-/typescript-monorepo-toolkit-0.2.0.tgz#91ee32d7b5cacb3b0b2721132588f4808e060c84"
+  integrity sha512-uzq3qFq/p1H5AJfTumonxN8wRETWSxtS9jE6fg+DFkVntL9Q7YaHCIhlYwNcOyH9IXWSzahzkJOsPRhB/9uwvA==
+  dependencies:
+    colors "^1.4.0"
+    commander "^6.1.0"
+    debug "^4.1.1"
+    lodash.partition "^4.6.0"
+    p-map "^4.0.0"
+    recast "^0.20.2"
+    workspace-info "^0.0.5"
 
 typescript@*, typescript@4, typescript@4.1.3, typescript@^3.2.4, typescript@^3.3.3, typescript@^4.1.2, typescript@^4.1.3:
   version "4.1.3"
@@ -18290,6 +18353,19 @@ wordwrapjs@^4.0.0:
   dependencies:
     reduce-flatten "^2.0.0"
     typical "^5.0.0"
+
+workspace-info@^0.0.5:
+  version "0.0.5"
+  resolved "https://registry.npmjs.org/workspace-info/-/workspace-info-0.0.5.tgz#4d0031cf7a931b210105b92c23b16d6e61c03216"
+  integrity sha512-hRzPZtSc/9NwZQV0DCWQkGcQJrEAFlpSJtnrele8lAcAzvl9IR02UjRrq1KjGyLuHbFh4NyGJjBMtkCh9NVbWA==
+  dependencies:
+    "@npmcli/map-workspaces" "^0.0.0-pre.1"
+    "@npmcli/name-from-folder" "^1.0.1"
+    glob "^7.1.6"
+    minimatch "^3.0.4"
+    read-package-json-fast "^1.2.1"
+    tslib "^2.0.0"
+    yargs "^15.4.1"
 
 wrap-ansi@^2.1.0:
   version "2.1.0"

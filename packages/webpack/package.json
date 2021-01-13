@@ -8,8 +8,9 @@
     "watch": "tsc -b --watch --preserveWatchOutput"
   },
   "dependencies": {
-    "time-fix-plugin": "^2.0.7",
     "@dish/helpers": "*",
+    "@dish/server": "*",
+    "time-fix-plugin": "^2.0.7",
     "@loadable/webpack-plugin": "^5.14.0",
     "webpack-pwa-manifest": "^4.3.0",
     "@snackui/babel-plugin": "*",

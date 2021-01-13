@@ -1,8 +1,9 @@
 const path = require('path')
 const createWebpackConfig = require('@dish/webpack').default
 
-module.exports = () => {
+module.exports = (opts) => {
   return createWebpackConfig({
+    ...opts,
     entry: path.resolve(path.join(__dirname, 'src', 'index.web.tsx')),
     cwd: __dirname,
     resolve: {

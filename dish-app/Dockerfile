@@ -8,4 +8,4 @@ RUN apt-get update && apt-get install -y parallel build-essential \
 
 RUN yarn build:web
 
-CMD ["node", "_/web/server.js"]
+CMD ["yarn", "web:start --prod --ssr"]

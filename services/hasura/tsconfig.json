@@ -6,9 +6,9 @@
     "baseUrl": ".",
     "rootDir": "src"
   },
-  "references": [
-    {
-      "path": "../../packages/graph"
-    }
-  ]
+  "references": [{
+    "path": "../../packages/graph"
+  }, {
+    "path": "../../packages/helpers"
+  }]
 }
