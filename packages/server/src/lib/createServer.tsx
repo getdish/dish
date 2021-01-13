@@ -34,6 +34,10 @@ export async function createServer(opts: ServerConfig) {
   server.use(bodyParser.urlencoded({ limit: '2048mb', extended: false }))
   server.get('/__test', (_, res) => res.send('hello world'))
 
+  const host = opts.hostname ?? 'localhost'
+  server.listen(port, host)
+  console.log(`listening on http://${host}:${port}`)
+
   let res: Promise<any>
 
   const serverConf: ServerConfigNormal = {
@@ -55,6 +59,8 @@ export async function createServer(opts: ServerConfig) {
 
   await createApiServer(server, serverConf)
 
+  console.log(' [web] starting webpack...')
+
   if (opts.env === 'development') {
     const { createWebServerDev } = require('./createWebServerDev')
     res = createWebServerDev(server, serverConf)
@@ -62,10 +68,6 @@ export async function createServer(opts: ServerConfig) {
     const { createWebServerProd } = require('./createWebServerProd')
     res = createWebServerProd(server, serverConf)
   }
-
-  const host = opts.hostname ?? 'localhost'
-  server.listen(port, host)
-  console.log(`started on http://${host}:${port}`)
 
   await res
 }

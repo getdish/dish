@@ -43,7 +43,6 @@ export type File = {
   route: string
   file: string
   fileIn: string
-  fileOut: string
 }
 
 export type WorkerData = {

@@ -47,23 +47,7 @@ export async function createApiServer(server: any, config: ServerConfigNormal) {
   const handlerStatus: { [key: string]: undefined | 'loading' | 'ready' } = {}
 
   let dispose: any
-  const run = debounce(async () => {
-    dispose?.()
-    dispose = await runFiles()
-  }, 150)
-
-  if (watch) {
-    const watcher = chokidar.watch(apiDir, { ignored: /^\./, persistent: true })
-    watcher.on('add', run).on('unlink', run)
-  } else {
-    run()
-  }
-
-  async function runFiles() {
-    if (!apiDir) return
-    if (!(await pathExists(apiDir))) {
-      throw new Error(`Specificed API directory ${apiDir} doesn't exist`)
-    }
+  const run = debounce(async (path?: string) => {
     const files: File[] = (await getFiles(apiDir))
       .map((fullPath) => {
         return relative(apiDir, fullPath)
@@ -80,23 +64,46 @@ export async function createApiServer(server: any, config: ServerConfigNormal) {
           route: `/api/${name}`,
           file,
           fileIn: join(apiDir, file),
-          fileOut: join(outDir, file.replace(/\.tsx?$/, '.js')),
         }
       })
 
-    console.log(' [api] creating', files.length, 'routes:')
+    if (path) {
+      const relativePath = files.find((x) => path === x.fileIn)?.fileIn
+      if (relativePath) {
+        // ensure its a new copy
+        delete require.cache[relativePath]
+      }
+    }
+    dispose?.()
+    dispose = await runFiles(files)
+  }, 50)
 
-    const disposes = new Set<Function>()
+  if (watch) {
+    const watcher = chokidar.watch(apiDir, { ignored: /^\./, persistent: true })
+    watcher.on('add', run).on('unlink', run).on('change', run)
+  } else {
+    run()
+  }
 
-    require('ts-node').register({
-      transpileOnly: true,
-      compilerOptions: {
-        ...typescriptOptions,
-        lib: ['esnext'],
-        module: 'commonjs',
-        target: 'es2018',
-      },
-    })
+  const disposes = new Set<Function>()
+
+  require('ts-node').register({
+    transpileOnly: true,
+    compilerOptions: {
+      ...typescriptOptions,
+      lib: ['esnext'],
+      module: 'commonjs',
+      target: 'es2018',
+    },
+  })
+
+  async function runFiles(files: File[]) {
+    if (!apiDir) return
+    if (!(await pathExists(apiDir))) {
+      throw new Error(`Specificed API directory ${apiDir} doesn't exist`)
+    }
+
+    console.log(' [api] loading', files.length, 'routes')
 
     // first, register the route so we can pause responses until ready
     for (const { route, name } of files) {
@@ -137,41 +144,6 @@ export async function createApiServer(server: any, config: ServerConfigNormal) {
       }
     }
 
-    function refreshApi() {
-      disposes.forEach((x) => x())
-      disposes.clear()
-
-      // then, load the routes
-      for (const { route, name, file, fileOut } of files) {
-        try {
-          // ensure its a new copy
-          delete require.cache[fileOut]
-          const endpoint = require(fileOut).default
-          if (!endpoint) {
-            console.warn(` [api] ⚠️  no default export, ignoring ${file}`)
-            continue
-          }
-          if (typeof endpoint !== 'function' && !Array.isArray(endpoint)) {
-            console.warn(
-              ` [api] ⚠️  no function/array export, ignoring ${file}`,
-              endpoint
-            )
-            continue
-          }
-          handlers[name] = endpoint
-          handlerStatus[name] = 'ready'
-          disposes.add(() => {
-            handlerStatus[name] = 'loading'
-            delete handlers[name]
-          })
-        } catch (err) {
-          console.log('Error requiring API endpoints', file, err)
-          delete handlers[name]
-        }
-      }
-      console.log(` [api] ready`)
-    }
-
     function handleRoute(
       handler: RequestHandler,
       req: Request,
@@ -195,20 +167,36 @@ export async function createApiServer(server: any, config: ServerConfigNormal) {
       }
     }
 
-    const workerData: WorkerData = { watch, outDir, files }
-    const worker = new Worker(join(__dirname, '/runTypescript.js'), {
-      workerData,
-    })
-    worker.on('message', () => {
-      refreshApi()
-    })
-    worker.on('error', (err) => {
-      console.log('Typescript error', err)
-      process.exit(1)
-    })
-    worker.on('exit', (code) => {
-      console.log(`Worker stopped with exit code ${code}`)
-    })
+    disposes.forEach((x) => x())
+    disposes.clear()
+
+    // then, load the routes
+    for (const { name, file, fileIn } of files) {
+      try {
+        const endpoint = require(fileIn).default
+        if (!endpoint) {
+          console.warn(` [api] ⚠️  no default export, ignoring ${file}`)
+          continue
+        }
+        if (typeof endpoint !== 'function' && !Array.isArray(endpoint)) {
+          console.warn(
+            ` [api] ⚠️  no function/array export, ignoring ${file}`,
+            endpoint
+          )
+          continue
+        }
+        handlers[name] = endpoint
+        handlerStatus[name] = 'ready'
+        disposes.add(() => {
+          handlerStatus[name] = 'loading'
+          delete handlers[name]
+        })
+      } catch (err) {
+        console.log('Error requiring API endpoints', file, err)
+        delete handlers[name]
+      }
+    }
+    console.log(` [api] ready`)
   }
 }
 
