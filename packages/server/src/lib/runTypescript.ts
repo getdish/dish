@@ -34,7 +34,7 @@ function runTypescript(args: WorkerData) {
       (err) => {
         console.error(
           ' [api] tsc error:',
-          err.file.fileName,
+          err.file?.fileName,
           '\n',
           err.messageText,
           err.start

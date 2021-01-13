@@ -27,7 +27,14 @@ export async function createWebServerDev(
     }
     next()
   })
-  server.use(connectHistoryApiFallback())
+  const historyFb = connectHistoryApiFallback()
+  server.use((req, res, next) => {
+    if (req.path.startsWith('/api')) {
+      next()
+    } else {
+      historyFb(req, res, next)
+    }
+  })
   server.use(
     middleware(compiler, {
       publicPath: config.output?.publicPath ?? '/',
