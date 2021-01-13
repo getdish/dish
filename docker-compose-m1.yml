@@ -44,22 +44,6 @@ services:
       - DATABASE_URL=postgres://postgres:postgres@postgres/dish
     depends_on:
       - 'postgres'
-  user-server:
-    image: gcr.io/dish-258800/user-server${DISH_IMAGE_TAG}
-    platform: linux/amd64
-    build:
-      context: ./
-      dockerfile: ./services/user-server/Dockerfile
-    ports:
-      - 3000:3000
-    environment:
-      - DO_SPACES_ID=${TF_VAR_DO_SPACES_ID}
-      - DO_SPACES_SECRET=${TF_VAR_DO_SPACES_SECRET}
-      - SENDGRID_API_KEY=${TF_VAR_SENDGRID_API_KEY}
-      - VIRTUAL_PORT=3000
-      - POSTGRES_HOST=postgres
-    depends_on:
-      - 'postgres'
   search:
     image: gcr.io/dish-258800/dish/search${DISH_IMAGE_TAG}
     build:

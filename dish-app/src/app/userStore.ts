@@ -9,7 +9,6 @@ import {
 import { Store, createStore, useStoreInstance } from '@dish/use-store'
 import { Toast } from 'snackui'
 
-import { router } from '../router'
 import { appMenuStore } from './AppMenuStore'
 
 class UserStore extends Store {
@@ -31,33 +30,6 @@ class UserStore extends Store {
     return false
   }
 
-  async login({
-    usernameOrEmail,
-    password,
-  }: {
-    usernameOrEmail: string
-    password: string
-  }) {
-    this.loading = true
-    try {
-      const [status, data] = await Auth.login(usernameOrEmail, password)
-      if (status >= 400) {
-        Toast.show('Error logging in', { type: 'error' })
-        this.user = null
-        if (status == 400 || status == 401) {
-          this.messages = ['Username or password not recognised']
-        } else {
-          this.messages = formatErrors(data)
-        }
-      } else {
-        this.setUser(data)
-        Toast.show('Logged in as ' + this.user?.username)
-      }
-    } finally {
-      this.loading = false
-    }
-  }
-
   setUser(user: Partial<User>) {
     this.user = user as any
     this.refreshUser()
@@ -77,51 +49,6 @@ class UserStore extends Store {
     if (Auth.isLoggedIn) {
       this.setUser(Auth.user)
     }
-  }
-
-  async forgotPassword(usernameOrEmail: string) {
-    this.loading = true
-    try {
-      const [status] = await Auth.forgotPassword(usernameOrEmail)
-      this.loading = false
-      if (status == 204) {
-        Toast.show('Password reset request sent')
-        return true
-      } else {
-        Toast.show('Error requesting password reset', { type: 'error' })
-      }
-    } finally {
-      this.loading = false
-    }
-    return false
-  }
-
-  async passwordReset({
-    password,
-    confirmation,
-  }: {
-    password: string
-    confirmation: string
-  }) {
-    if (password != confirmation) {
-      Toast.show("Passwords don't match")
-      return false
-    }
-    this.loading = true
-    const token = router.curPage.params.token
-    try {
-      const [status] = await Auth.passwordReset(token, password)
-      this.loading = false
-      if (status == 201) {
-        Toast.show('Password updated')
-        return true
-      } else {
-        Toast.show('Error updating password', { type: 'error' })
-      }
-    } finally {
-      this.loading = false
-    }
-    return true
   }
 
   ensureLoggedIn() {

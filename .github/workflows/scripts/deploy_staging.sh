@@ -27,7 +27,7 @@ cd /app
 git checkout staging
 USE_PROD_HASURA_PASSWORD=true ./dishctl.sh db_migrate_local
 docker-compose pull
-docker-compose restart dish-app-web user-server dish-hooks search
+docker-compose restart dish-app-web dish-hooks search
 '
 
 commit=$(git rev-parse HEAD)

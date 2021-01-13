@@ -19,7 +19,6 @@
     "db:init": "./dishctl.sh db_migrate_local init",
     "db:migrate": "./dishctl.sh db_migrate_local",
     "db:clear": "./dishctl.sh db_clear_local",
-    "user-server": "yarn workspace @dish/user-server start",
     "app": "yarn workspace @dish/dish-app start",
     "web": "yarn workspace @dish/dish-app web",
     "web:prod": "yarn workspace @dish/dish-app web:prod",
