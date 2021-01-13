@@ -7,6 +7,7 @@ import compression from 'compression'
 import express from 'express'
 import React from 'react'
 
+import { getWebpackConfigBuilder } from './getWebpackConfigBuilder'
 import { ServerConfig, ServerConfigNormal } from './types'
 
 process.env.TARGET =
@@ -18,14 +19,6 @@ global['requestIdleCallback'] = global['requestIdleCallback'] || setTimeout
 export async function createServer(opts: ServerConfig) {
   const port = process.env.PORT ? +process.env.PORT : opts.port ?? 4040
   const rootDir = process.cwd()
-  const createConfig = require(join(rootDir, 'webpack.config.js'))
-  const webpackConfig = createConfig()
-  const normalized: ServerConfigNormal = {
-    ...opts,
-    buildDir: join(rootDir, 'build'),
-    webpackConfig,
-    rootDir,
-  }
 
   const server = express()
   server.set('port', port)
@@ -40,12 +33,32 @@ export async function createServer(opts: ServerConfig) {
 
   let res: Promise<any>
 
-  if (opts.env === 'dev') {
+  const serverConf: ServerConfigNormal = {
+    ...opts,
+    buildDir: join(rootDir, 'build'),
+    createConfig: (opts) => {
+      return getWebpackConfigBuilder({
+        rootDir,
+        env: opts.env,
+        target: opts.target,
+      })(opts)
+    },
+    rootDir,
+    webpackConfig: {
+      entry: join(rootDir, 'src', 'index.ts'),
+      env: opts.env,
+      snackOptions: {
+        evaluateImportsWhitelist: ['constants.js', 'colors.js'],
+      },
+    },
+  }
+
+  if (opts.env === 'development') {
     const { createServerDev } = require('./createServerDev')
-    res = createServerDev(server, normalized)
+    res = createServerDev(server, serverConf)
   } else {
     const { createServerProd } = require('./createServerProd')
-    res = createServerProd(server, normalized)
+    res = createServerProd(server, serverConf)
   }
 
   const host = opts.hostname ?? 'localhost'

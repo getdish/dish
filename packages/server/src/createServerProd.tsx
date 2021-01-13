@@ -1,14 +1,14 @@
-import { existsSync, readFileSync, renameSync } from 'fs'
 import * as Path from 'path'
 
 import { client } from '@dish/graph'
 import { ChunkExtractor } from '@loadable/server'
 import { matchesUA } from 'browserslist-useragent'
 import express from 'express'
+import { existsSync, readFileSync, renameSync } from 'fs-extra'
 import React from 'react'
 import { Helmet } from 'react-helmet'
-import webpack from 'webpack'
 
+import { build } from './build'
 import { shimBrowser } from './shimBrowser'
 import { ServerConfigNormal } from './types'
 
@@ -18,25 +18,23 @@ export async function createServerProd(
   server: any,
   config: ServerConfigNormal
 ) {
-  const { watch, webpackConfig, rootDir, buildDir } = config
-
+  const {
+    clean,
+    watch,
+    createConfig,
+    rootDir,
+    buildDir,
+    webpackConfig,
+  } = config
   if (watch) {
     const { createServerDev } = require('./createServerDev')
     return await createServerDev(server, config)
   } else {
-    const stats = await new Promise<webpack.Stats>((res, rej) => {
-      webpack(webpackConfig, (err, stats) => {
-        if (err || !stats || stats?.hasErrors) {
-          return rej(err ?? stats?.toString({ colors: true }))
-        }
-        res(stats)
-      })
+    await build({
+      clean,
+      createConfig,
+      webpackConfig,
     })
-    console.log(
-      stats.toString({
-        colors: true,
-      })
-    )
   }
 
   const statsFile = Path.resolve(Path.join(buildDir, 'loadable-stats.json'))

@@ -11,6 +11,9 @@ export class Start extends Command {
     prod: flags.boolean({
       description: 'Start production server',
     }),
+    ssr: flags.boolean({
+      description: 'Build and serve statically.',
+    }),
     port: flags.integer({
       char: 'p',
       description: 'Set port number',
@@ -35,9 +38,15 @@ export class Start extends Command {
       port: flags.port,
       hostname: flags.hostname ?? 'localhost',
       inspect: flags.inspect ?? false,
-      clean: flags['no-incremental-build'],
-      env: flags.prod ? 'prod' : 'dev',
-      watch: true,
+      clean: flags.clean,
+      env: flags.prod ? 'production' : 'development',
+      watch: flags.ssr ? false : true,
+    }
+
+    if (config.env === 'development') {
+      process.env.NODE_ENV = 'development'
+    } else {
+      process.env.NODE_ENV = 'production'
     }
 
     try {

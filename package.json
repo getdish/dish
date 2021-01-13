@@ -23,7 +23,7 @@
     "app": "yarn workspace @dish/dish-app start",
     "web": "yarn workspace @dish/dish-app web",
     "web:prod": "yarn workspace @dish/dish-app web:prod",
-    "web:prod:profile": "yarn workspace @dish/dish-app web:prod",
+    "web:build": "yarn workspace @dish/dish-app web:build",
     "ios": "yarn workspace @dish/dish-app ios",
     "postinstall": "./bin/postinstall.sh",
     "preinstall": "./bin/preinstall.sh; ",
@@ -90,6 +90,7 @@
     "react-native-web": "0.0.0-466063b7e"
   },
   "devDependencies": {
+    "typescript-monorepo-toolkit": "^0.2.0",
     "@babel/runtime": "^7.12.5",
     "@types/fs-extra": "^9.0.5",
     "@types/node": "^14.14.12",

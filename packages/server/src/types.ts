@@ -1,9 +1,12 @@
+import { SnackOptions } from '@snackui/static'
+import Webpack from 'webpack'
 import { Configuration } from 'webpack'
+import WebpackPwaManifest from 'webpack-pwa-manifest'
 
 export type ServerConfig = {
   rootFolder: string
   watch: boolean
-  env: 'prod' | 'dev'
+  env: 'production' | 'development'
   inspect?: boolean
   clean?: boolean
   port?: number
@@ -13,5 +16,23 @@ export type ServerConfig = {
 export type ServerConfigNormal = ServerConfig & {
   rootDir: string
   buildDir: string
-  webpackConfig: Configuration
+  createConfig: (opts: CreateWebpackConfig) => Configuration
+  webpackConfig: Omit<CreateWebpackConfig, 'target'>
+}
+
+export type CreateWebpackConfig = {
+  entry: string
+  target: 'node' | 'web'
+  legacy?: boolean
+  env: 'development' | 'production'
+  cwd?: string
+  babelInclude?: (path: string) => boolean
+  snackOptions: SnackOptions
+  resolve?: Webpack.ResolveOptions
+  htmlOptions?: Object
+  pwaOptions?: WebpackPwaManifest.ManifestOptions
+  defineOptions?: Object
+  polyFillPath?: string
+  disableHot?: boolean
+  noMinify?: boolean
 }

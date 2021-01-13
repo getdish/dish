@@ -7,9 +7,14 @@ import { ServerConfigNormal } from './types'
 
 export async function createServerDev(
   server: any,
-  { webpackConfig }: ServerConfigNormal
+  { createConfig, webpackConfig }: ServerConfigNormal
 ) {
-  const compiler = webpack(webpackConfig)
+  const config = createConfig({
+    target: 'web',
+    noMinify: true,
+    ...webpackConfig,
+  })
+  const compiler = webpack(config)
   const headers = {
     'Access-Control-Allow-Origin': '*',
     'Access-Control-Allow-Methods': 'GET, POST, PUT, DELETE, PATCH, OPTIONS',
@@ -25,7 +30,7 @@ export async function createServerDev(
   server.use(connectHistoryApiFallback())
   server.use(
     middleware(compiler, {
-      publicPath: webpackConfig.output?.publicPath ?? '/',
+      publicPath: config.output?.publicPath ?? '/',
     })
   )
   server.use(hotMiddleware(compiler))

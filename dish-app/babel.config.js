@@ -1,4 +1,9 @@
-const useOurBabel = process.env.TARGET === 'web' || process.env.TARGET === 'ssr'
+if (!process.env.TARGET) {
+  throw new Error(`No target set!`)
+}
+
+const useOurBabel =
+  process.env.TARGET === 'web' || process.env.TARGET === 'node'
 
 module.exports = function (api) {
   api.cache(true)
@@ -14,7 +19,7 @@ module.exports = function (api) {
   }
 
   // really helpful to log this in case you accidently use wrong config
-  console.log('using metro babel config')
+  console.log('⚙️ using metro babel config', process.env.TARGET)
 
   return {
     presets: ['module:metro-react-native-babel-preset'],
