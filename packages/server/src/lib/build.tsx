@@ -1,7 +1,7 @@
 import { pathExists, remove } from 'fs-extra'
 import webpack, { Configuration } from 'webpack'
 
-import { CreateWebpackConfig } from './types'
+import { CreateWebpackConfig } from '../types'
 
 export async function build({
   webpackConfig,

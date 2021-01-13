@@ -3,7 +3,7 @@ import webpack from 'webpack'
 import middleware from 'webpack-dev-middleware'
 import hotMiddleware from 'webpack-hot-middleware'
 
-import { ServerConfigNormal } from './types'
+import { ServerConfigNormal } from '../types'
 
 export async function createServerDev(
   server: any,
