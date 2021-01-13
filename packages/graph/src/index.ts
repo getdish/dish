@@ -1,5 +1,7 @@
 import 'isomorphic-unfetch'
 
+import { startLogging } from './startLogging'
+
 export * from './react'
 export * from './graphql'
 export * from './startLogging'
@@ -9,3 +11,7 @@ export * from './helpers'
 export * from './constants'
 export * from './graphql'
 export * from './Auth'
+
+if (process.env.TARGET === 'node') {
+  startLogging()
+}

@@ -114,7 +114,7 @@ export async function createApiServer(
                   if (lastRouteResponse === result) {
                     lastRouteResponse = null
                   }
-                }, 1)
+                }, 50)
               }
             })
           }

@@ -15,9 +15,6 @@ export type UpdateUserProps = {
   charIndex?: number
 }
 
-console.log('polyfill now')
-require('@dish/helpers/polyfill')
-
 export function getAuth(): null | {
   user: Object
   token: string
@@ -34,7 +31,7 @@ export function getAuthHeaders() {
   const auth = getAuth()
   if (auth) {
     return {
-      ...(auth.admin && {
+      ...(HASURA_SECRET && {
         'X-Hasura-Admin-Secret': HASURA_SECRET,
       }),
       Authorization: `Bearer ${auth.token}`,
