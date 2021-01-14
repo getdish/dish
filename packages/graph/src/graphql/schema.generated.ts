@@ -374,11 +374,6 @@ export interface list_aggregate_order_by {
   min?: Maybe<list_min_order_by>
 }
 
-/** append existing jsonb value of filtered columns with new jsonb value */
-export interface list_append_input {
-  comments?: Maybe<Scalars['jsonb']>
-}
-
 /** input type for inserting array relation for remote table "list" */
 export interface list_arr_rel_insert_input {
   data: Array<list_insert_input>
@@ -390,7 +385,6 @@ export interface list_bool_exp {
   _and?: Maybe<Array<Maybe<list_bool_exp>>>
   _not?: Maybe<list_bool_exp>
   _or?: Maybe<Array<Maybe<list_bool_exp>>>
-  comments?: Maybe<jsonb_comparison_exp>
   created_at?: Maybe<timestamptz_comparison_exp>
   description?: Maybe<String_comparison_exp>
   id?: Maybe<uuid_comparison_exp>
@@ -410,24 +404,8 @@ export enum list_constraint {
   list_slug_key = 'list_slug_key',
 }
 
-/** delete the field or element with specified path (for JSON arrays, negative integers count from the end) */
-export interface list_delete_at_path_input {
-  comments?: Maybe<Array<Maybe<Scalars['String']>>>
-}
-
-/** delete the array element with specified index (negative integers count from the end). throws an error if top level container is not an array */
-export interface list_delete_elem_input {
-  comments?: Maybe<Scalars['Int']>
-}
-
-/** delete key/value pair or string element. key/value pairs are matched based on their key value */
-export interface list_delete_key_input {
-  comments?: Maybe<Scalars['String']>
-}
-
 /** input type for inserting data into table "list" */
 export interface list_insert_input {
-  comments?: Maybe<Scalars['jsonb']>
   created_at?: Maybe<Scalars['timestamptz']>
   description?: Maybe<Scalars['String']>
   id?: Maybe<Scalars['uuid']>
@@ -476,7 +454,6 @@ export interface list_on_conflict {
 
 /** ordering options when selecting data from "list" */
 export interface list_order_by {
-  comments?: Maybe<order_by>
   created_at?: Maybe<order_by>
   description?: Maybe<order_by>
   id?: Maybe<order_by>
@@ -493,22 +470,30 @@ export interface list_pk_columns_input {
   id: Scalars['uuid']
 }
 
-/** prepend existing jsonb value of filtered columns with new jsonb value */
-export interface list_prepend_input {
-  comments?: Maybe<Scalars['jsonb']>
-}
-
 /** order by aggregate values of table "list_restaurant" */
 export interface list_restaurant_aggregate_order_by {
+  avg?: Maybe<list_restaurant_avg_order_by>
   count?: Maybe<order_by>
   max?: Maybe<list_restaurant_max_order_by>
   min?: Maybe<list_restaurant_min_order_by>
+  stddev?: Maybe<list_restaurant_stddev_order_by>
+  stddev_pop?: Maybe<list_restaurant_stddev_pop_order_by>
+  stddev_samp?: Maybe<list_restaurant_stddev_samp_order_by>
+  sum?: Maybe<list_restaurant_sum_order_by>
+  var_pop?: Maybe<list_restaurant_var_pop_order_by>
+  var_samp?: Maybe<list_restaurant_var_samp_order_by>
+  variance?: Maybe<list_restaurant_variance_order_by>
 }
 
 /** input type for inserting array relation for remote table "list_restaurant" */
 export interface list_restaurant_arr_rel_insert_input {
   data: Array<list_restaurant_insert_input>
   on_conflict?: Maybe<list_restaurant_on_conflict>
+}
+
+/** order by avg() on columns of table "list_restaurant" */
+export interface list_restaurant_avg_order_by {
+  position?: Maybe<order_by>
 }
 
 /** Boolean expression to filter rows from the table "list_restaurant". All fields are combined with a logical 'AND'. */
@@ -520,9 +505,11 @@ export interface list_restaurant_bool_exp {
   id?: Maybe<uuid_comparison_exp>
   list?: Maybe<list_bool_exp>
   list_id?: Maybe<uuid_comparison_exp>
+  position?: Maybe<Int_comparison_exp>
   restaurant?: Maybe<restaurant_bool_exp>
   restaurant_id?: Maybe<uuid_comparison_exp>
   restaurants?: Maybe<restaurant_bool_exp>
+  tags?: Maybe<list_restaurant_tag_bool_exp>
 }
 
 /** unique or primary key constraints on table "list_restaurant" */
@@ -531,6 +518,13 @@ export enum list_restaurant_constraint {
   list_restaurant_id_key = 'list_restaurant_id_key',
   /** unique or primary key constraint */
   list_restaurant_pkey = 'list_restaurant_pkey',
+  /** unique or primary key constraint */
+  list_restaurant_position_list_id_key = 'list_restaurant_position_list_id_key',
+}
+
+/** input type for incrementing integer column in table "list_restaurant" */
+export interface list_restaurant_inc_input {
+  position?: Maybe<Scalars['Int']>
 }
 
 /** input type for inserting data into table "list_restaurant" */
@@ -539,9 +533,11 @@ export interface list_restaurant_insert_input {
   id?: Maybe<Scalars['uuid']>
   list?: Maybe<list_obj_rel_insert_input>
   list_id?: Maybe<Scalars['uuid']>
+  position?: Maybe<Scalars['Int']>
   restaurant?: Maybe<restaurant_obj_rel_insert_input>
   restaurant_id?: Maybe<Scalars['uuid']>
   restaurants?: Maybe<restaurant_arr_rel_insert_input>
+  tags?: Maybe<list_restaurant_tag_arr_rel_insert_input>
 }
 
 /** order by max() on columns of table "list_restaurant" */
@@ -549,6 +545,7 @@ export interface list_restaurant_max_order_by {
   comment?: Maybe<order_by>
   id?: Maybe<order_by>
   list_id?: Maybe<order_by>
+  position?: Maybe<order_by>
   restaurant_id?: Maybe<order_by>
 }
 
@@ -557,6 +554,7 @@ export interface list_restaurant_min_order_by {
   comment?: Maybe<order_by>
   id?: Maybe<order_by>
   list_id?: Maybe<order_by>
+  position?: Maybe<order_by>
   restaurant_id?: Maybe<order_by>
 }
 
@@ -579,9 +577,11 @@ export interface list_restaurant_order_by {
   id?: Maybe<order_by>
   list?: Maybe<list_order_by>
   list_id?: Maybe<order_by>
+  position?: Maybe<order_by>
   restaurant?: Maybe<restaurant_order_by>
   restaurant_id?: Maybe<order_by>
   restaurants_aggregate?: Maybe<restaurant_aggregate_order_by>
+  tags_aggregate?: Maybe<list_restaurant_tag_aggregate_order_by>
 }
 
 /** primary key columns input for table: "list_restaurant" */
@@ -599,6 +599,8 @@ export enum list_restaurant_select_column {
   /** column name */
   list_id = 'list_id',
   /** column name */
+  position = 'position',
+  /** column name */
   restaurant_id = 'restaurant_id',
 }
 
@@ -607,7 +609,206 @@ export interface list_restaurant_set_input {
   comment?: Maybe<Scalars['String']>
   id?: Maybe<Scalars['uuid']>
   list_id?: Maybe<Scalars['uuid']>
+  position?: Maybe<Scalars['Int']>
   restaurant_id?: Maybe<Scalars['uuid']>
+}
+
+/** order by stddev() on columns of table "list_restaurant" */
+export interface list_restaurant_stddev_order_by {
+  position?: Maybe<order_by>
+}
+
+/** order by stddev_pop() on columns of table "list_restaurant" */
+export interface list_restaurant_stddev_pop_order_by {
+  position?: Maybe<order_by>
+}
+
+/** order by stddev_samp() on columns of table "list_restaurant" */
+export interface list_restaurant_stddev_samp_order_by {
+  position?: Maybe<order_by>
+}
+
+/** order by sum() on columns of table "list_restaurant" */
+export interface list_restaurant_sum_order_by {
+  position?: Maybe<order_by>
+}
+
+/** order by aggregate values of table "list_restaurant_tag" */
+export interface list_restaurant_tag_aggregate_order_by {
+  avg?: Maybe<list_restaurant_tag_avg_order_by>
+  count?: Maybe<order_by>
+  max?: Maybe<list_restaurant_tag_max_order_by>
+  min?: Maybe<list_restaurant_tag_min_order_by>
+  stddev?: Maybe<list_restaurant_tag_stddev_order_by>
+  stddev_pop?: Maybe<list_restaurant_tag_stddev_pop_order_by>
+  stddev_samp?: Maybe<list_restaurant_tag_stddev_samp_order_by>
+  sum?: Maybe<list_restaurant_tag_sum_order_by>
+  var_pop?: Maybe<list_restaurant_tag_var_pop_order_by>
+  var_samp?: Maybe<list_restaurant_tag_var_samp_order_by>
+  variance?: Maybe<list_restaurant_tag_variance_order_by>
+}
+
+/** input type for inserting array relation for remote table "list_restaurant_tag" */
+export interface list_restaurant_tag_arr_rel_insert_input {
+  data: Array<list_restaurant_tag_insert_input>
+  on_conflict?: Maybe<list_restaurant_tag_on_conflict>
+}
+
+/** order by avg() on columns of table "list_restaurant_tag" */
+export interface list_restaurant_tag_avg_order_by {
+  position?: Maybe<order_by>
+}
+
+/** Boolean expression to filter rows from the table "list_restaurant_tag". All fields are combined with a logical 'AND'. */
+export interface list_restaurant_tag_bool_exp {
+  _and?: Maybe<Array<Maybe<list_restaurant_tag_bool_exp>>>
+  _not?: Maybe<list_restaurant_tag_bool_exp>
+  _or?: Maybe<Array<Maybe<list_restaurant_tag_bool_exp>>>
+  id?: Maybe<uuid_comparison_exp>
+  list_id?: Maybe<uuid_comparison_exp>
+  list_restaurant_id?: Maybe<uuid_comparison_exp>
+  position?: Maybe<Int_comparison_exp>
+  restaurant_tag?: Maybe<restaurant_tag_bool_exp>
+  restaurant_tag_id?: Maybe<uuid_comparison_exp>
+}
+
+/** unique or primary key constraints on table "list_restaurant_tag" */
+export enum list_restaurant_tag_constraint {
+  /** unique or primary key constraint */
+  list_restaurant_tag_pkey = 'list_restaurant_tag_pkey',
+}
+
+/** input type for incrementing integer column in table "list_restaurant_tag" */
+export interface list_restaurant_tag_inc_input {
+  position?: Maybe<Scalars['Int']>
+}
+
+/** input type for inserting data into table "list_restaurant_tag" */
+export interface list_restaurant_tag_insert_input {
+  id?: Maybe<Scalars['uuid']>
+  list_id?: Maybe<Scalars['uuid']>
+  list_restaurant_id?: Maybe<Scalars['uuid']>
+  position?: Maybe<Scalars['Int']>
+  restaurant_tag?: Maybe<restaurant_tag_obj_rel_insert_input>
+  restaurant_tag_id?: Maybe<Scalars['uuid']>
+}
+
+/** order by max() on columns of table "list_restaurant_tag" */
+export interface list_restaurant_tag_max_order_by {
+  id?: Maybe<order_by>
+  list_id?: Maybe<order_by>
+  list_restaurant_id?: Maybe<order_by>
+  position?: Maybe<order_by>
+  restaurant_tag_id?: Maybe<order_by>
+}
+
+/** order by min() on columns of table "list_restaurant_tag" */
+export interface list_restaurant_tag_min_order_by {
+  id?: Maybe<order_by>
+  list_id?: Maybe<order_by>
+  list_restaurant_id?: Maybe<order_by>
+  position?: Maybe<order_by>
+  restaurant_tag_id?: Maybe<order_by>
+}
+
+/** input type for inserting object relation for remote table "list_restaurant_tag" */
+export interface list_restaurant_tag_obj_rel_insert_input {
+  data: list_restaurant_tag_insert_input
+  on_conflict?: Maybe<list_restaurant_tag_on_conflict>
+}
+
+/** on conflict condition type for table "list_restaurant_tag" */
+export interface list_restaurant_tag_on_conflict {
+  constraint: list_restaurant_tag_constraint
+  update_columns: Array<list_restaurant_tag_update_column>
+  where?: Maybe<list_restaurant_tag_bool_exp>
+}
+
+/** ordering options when selecting data from "list_restaurant_tag" */
+export interface list_restaurant_tag_order_by {
+  id?: Maybe<order_by>
+  list_id?: Maybe<order_by>
+  list_restaurant_id?: Maybe<order_by>
+  position?: Maybe<order_by>
+  restaurant_tag?: Maybe<restaurant_tag_order_by>
+  restaurant_tag_id?: Maybe<order_by>
+}
+
+/** primary key columns input for table: "list_restaurant_tag" */
+export interface list_restaurant_tag_pk_columns_input {
+  id: Scalars['uuid']
+}
+
+/** select columns of table "list_restaurant_tag" */
+export enum list_restaurant_tag_select_column {
+  /** column name */
+  id = 'id',
+  /** column name */
+  list_id = 'list_id',
+  /** column name */
+  list_restaurant_id = 'list_restaurant_id',
+  /** column name */
+  position = 'position',
+  /** column name */
+  restaurant_tag_id = 'restaurant_tag_id',
+}
+
+/** input type for updating data in table "list_restaurant_tag" */
+export interface list_restaurant_tag_set_input {
+  id?: Maybe<Scalars['uuid']>
+  list_id?: Maybe<Scalars['uuid']>
+  list_restaurant_id?: Maybe<Scalars['uuid']>
+  position?: Maybe<Scalars['Int']>
+  restaurant_tag_id?: Maybe<Scalars['uuid']>
+}
+
+/** order by stddev() on columns of table "list_restaurant_tag" */
+export interface list_restaurant_tag_stddev_order_by {
+  position?: Maybe<order_by>
+}
+
+/** order by stddev_pop() on columns of table "list_restaurant_tag" */
+export interface list_restaurant_tag_stddev_pop_order_by {
+  position?: Maybe<order_by>
+}
+
+/** order by stddev_samp() on columns of table "list_restaurant_tag" */
+export interface list_restaurant_tag_stddev_samp_order_by {
+  position?: Maybe<order_by>
+}
+
+/** order by sum() on columns of table "list_restaurant_tag" */
+export interface list_restaurant_tag_sum_order_by {
+  position?: Maybe<order_by>
+}
+
+/** update columns of table "list_restaurant_tag" */
+export enum list_restaurant_tag_update_column {
+  /** column name */
+  id = 'id',
+  /** column name */
+  list_id = 'list_id',
+  /** column name */
+  list_restaurant_id = 'list_restaurant_id',
+  /** column name */
+  position = 'position',
+  /** column name */
+  restaurant_tag_id = 'restaurant_tag_id',
+}
+
+/** order by var_pop() on columns of table "list_restaurant_tag" */
+export interface list_restaurant_tag_var_pop_order_by {
+  position?: Maybe<order_by>
+}
+
+/** order by var_samp() on columns of table "list_restaurant_tag" */
+export interface list_restaurant_tag_var_samp_order_by {
+  position?: Maybe<order_by>
+}
+
+/** order by variance() on columns of table "list_restaurant_tag" */
+export interface list_restaurant_tag_variance_order_by {
+  position?: Maybe<order_by>
 }
 
 /** update columns of table "list_restaurant" */
@@ -619,13 +820,28 @@ export enum list_restaurant_update_column {
   /** column name */
   list_id = 'list_id',
   /** column name */
+  position = 'position',
+  /** column name */
   restaurant_id = 'restaurant_id',
+}
+
+/** order by var_pop() on columns of table "list_restaurant" */
+export interface list_restaurant_var_pop_order_by {
+  position?: Maybe<order_by>
+}
+
+/** order by var_samp() on columns of table "list_restaurant" */
+export interface list_restaurant_var_samp_order_by {
+  position?: Maybe<order_by>
+}
+
+/** order by variance() on columns of table "list_restaurant" */
+export interface list_restaurant_variance_order_by {
+  position?: Maybe<order_by>
 }
 
 /** select columns of table "list" */
 export enum list_select_column {
-  /** column name */
-  comments = 'comments',
   /** column name */
   created_at = 'created_at',
   /** column name */
@@ -644,7 +860,6 @@ export enum list_select_column {
 
 /** input type for updating data in table "list" */
 export interface list_set_input {
-  comments?: Maybe<Scalars['jsonb']>
   created_at?: Maybe<Scalars['timestamptz']>
   description?: Maybe<Scalars['String']>
   id?: Maybe<Scalars['uuid']>
@@ -656,8 +871,6 @@ export interface list_set_input {
 
 /** update columns of table "list" */
 export enum list_update_column {
-  /** column name */
-  comments = 'comments',
   /** column name */
   created_at = 'created_at',
   /** column name */
@@ -3631,6 +3844,7 @@ export interface user_bool_exp {
   id?: Maybe<uuid_comparison_exp>
   lists?: Maybe<list_bool_exp>
   location?: Maybe<String_comparison_exp>
+  name?: Maybe<String_comparison_exp>
   password?: Maybe<String_comparison_exp>
   password_reset_date?: Maybe<timestamptz_comparison_exp>
   password_reset_token?: Maybe<String_comparison_exp>
@@ -3670,6 +3884,7 @@ export interface user_insert_input {
   id?: Maybe<Scalars['uuid']>
   lists?: Maybe<list_arr_rel_insert_input>
   location?: Maybe<Scalars['String']>
+  name?: Maybe<Scalars['String']>
   password?: Maybe<Scalars['String']>
   password_reset_date?: Maybe<Scalars['timestamptz']>
   password_reset_token?: Maybe<Scalars['String']>
@@ -3692,6 +3907,7 @@ export interface user_max_order_by {
   email?: Maybe<order_by>
   id?: Maybe<order_by>
   location?: Maybe<order_by>
+  name?: Maybe<order_by>
   password?: Maybe<order_by>
   password_reset_date?: Maybe<order_by>
   password_reset_token?: Maybe<order_by>
@@ -3713,6 +3929,7 @@ export interface user_min_order_by {
   email?: Maybe<order_by>
   id?: Maybe<order_by>
   location?: Maybe<order_by>
+  name?: Maybe<order_by>
   password?: Maybe<order_by>
   password_reset_date?: Maybe<order_by>
   password_reset_token?: Maybe<order_by>
@@ -3749,6 +3966,7 @@ export interface user_order_by {
   id?: Maybe<order_by>
   lists_aggregate?: Maybe<list_aggregate_order_by>
   location?: Maybe<order_by>
+  name?: Maybe<order_by>
   password?: Maybe<order_by>
   password_reset_date?: Maybe<order_by>
   password_reset_token?: Maybe<order_by>
@@ -3790,6 +4008,8 @@ export enum user_select_column {
   /** column name */
   location = 'location',
   /** column name */
+  name = 'name',
+  /** column name */
   password = 'password',
   /** column name */
   password_reset_date = 'password_reset_date',
@@ -3817,6 +4037,7 @@ export interface user_set_input {
   has_onboarded?: Maybe<Scalars['Boolean']>
   id?: Maybe<Scalars['uuid']>
   location?: Maybe<Scalars['String']>
+  name?: Maybe<Scalars['String']>
   password?: Maybe<Scalars['String']>
   password_reset_date?: Maybe<Scalars['timestamptz']>
   password_reset_token?: Maybe<Scalars['String']>
@@ -3871,6 +4092,8 @@ export enum user_update_column {
   id = 'id',
   /** column name */
   location = 'location',
+  /** column name */
+  name = 'name',
   /** column name */
   password = 'password',
   /** column name */
@@ -3936,6 +4159,8 @@ export interface zcta5_arr_rel_insert_input {
 
 /** order by avg() on columns of table "zcta5" */
 export interface zcta5_avg_order_by {
+  aland10?: Maybe<order_by>
+  awater10?: Maybe<order_by>
   ogc_fid?: Maybe<order_by>
 }
 
@@ -3944,10 +4169,19 @@ export interface zcta5_bool_exp {
   _and?: Maybe<Array<Maybe<zcta5_bool_exp>>>
   _not?: Maybe<zcta5_bool_exp>
   _or?: Maybe<Array<Maybe<zcta5_bool_exp>>>
+  aland10?: Maybe<float8_comparison_exp>
+  awater10?: Maybe<float8_comparison_exp>
+  classfp10?: Maybe<String_comparison_exp>
+  funcstat10?: Maybe<String_comparison_exp>
+  geoid10?: Maybe<String_comparison_exp>
+  intptlat10?: Maybe<String_comparison_exp>
+  intptlon10?: Maybe<String_comparison_exp>
+  mtfcc10?: Maybe<String_comparison_exp>
   nhood?: Maybe<String_comparison_exp>
   ogc_fid?: Maybe<Int_comparison_exp>
   slug?: Maybe<String_comparison_exp>
   wkb_geometry?: Maybe<geometry_comparison_exp>
+  zcta5ce10?: Maybe<String_comparison_exp>
 }
 
 /** unique or primary key constraints on table "zcta5" */
@@ -3960,29 +4194,58 @@ export enum zcta5_constraint {
 
 /** input type for incrementing integer column in table "zcta5" */
 export interface zcta5_inc_input {
+  aland10?: Maybe<Scalars['float8']>
+  awater10?: Maybe<Scalars['float8']>
   ogc_fid?: Maybe<Scalars['Int']>
 }
 
 /** input type for inserting data into table "zcta5" */
 export interface zcta5_insert_input {
+  aland10?: Maybe<Scalars['float8']>
+  awater10?: Maybe<Scalars['float8']>
+  classfp10?: Maybe<Scalars['String']>
+  funcstat10?: Maybe<Scalars['String']>
+  geoid10?: Maybe<Scalars['String']>
+  intptlat10?: Maybe<Scalars['String']>
+  intptlon10?: Maybe<Scalars['String']>
+  mtfcc10?: Maybe<Scalars['String']>
   nhood?: Maybe<Scalars['String']>
   ogc_fid?: Maybe<Scalars['Int']>
   slug?: Maybe<Scalars['String']>
   wkb_geometry?: Maybe<Scalars['geometry']>
+  zcta5ce10?: Maybe<Scalars['String']>
 }
 
 /** order by max() on columns of table "zcta5" */
 export interface zcta5_max_order_by {
+  aland10?: Maybe<order_by>
+  awater10?: Maybe<order_by>
+  classfp10?: Maybe<order_by>
+  funcstat10?: Maybe<order_by>
+  geoid10?: Maybe<order_by>
+  intptlat10?: Maybe<order_by>
+  intptlon10?: Maybe<order_by>
+  mtfcc10?: Maybe<order_by>
   nhood?: Maybe<order_by>
   ogc_fid?: Maybe<order_by>
   slug?: Maybe<order_by>
+  zcta5ce10?: Maybe<order_by>
 }
 
 /** order by min() on columns of table "zcta5" */
 export interface zcta5_min_order_by {
+  aland10?: Maybe<order_by>
+  awater10?: Maybe<order_by>
+  classfp10?: Maybe<order_by>
+  funcstat10?: Maybe<order_by>
+  geoid10?: Maybe<order_by>
+  intptlat10?: Maybe<order_by>
+  intptlon10?: Maybe<order_by>
+  mtfcc10?: Maybe<order_by>
   nhood?: Maybe<order_by>
   ogc_fid?: Maybe<order_by>
   slug?: Maybe<order_by>
+  zcta5ce10?: Maybe<order_by>
 }
 
 /** input type for inserting object relation for remote table "zcta5" */
@@ -4000,10 +4263,19 @@ export interface zcta5_on_conflict {
 
 /** ordering options when selecting data from "zcta5" */
 export interface zcta5_order_by {
+  aland10?: Maybe<order_by>
+  awater10?: Maybe<order_by>
+  classfp10?: Maybe<order_by>
+  funcstat10?: Maybe<order_by>
+  geoid10?: Maybe<order_by>
+  intptlat10?: Maybe<order_by>
+  intptlon10?: Maybe<order_by>
+  mtfcc10?: Maybe<order_by>
   nhood?: Maybe<order_by>
   ogc_fid?: Maybe<order_by>
   slug?: Maybe<order_by>
   wkb_geometry?: Maybe<order_by>
+  zcta5ce10?: Maybe<order_by>
 }
 
 /** primary key columns input for table: "zcta5" */
@@ -4014,6 +4286,22 @@ export interface zcta5_pk_columns_input {
 /** select columns of table "zcta5" */
 export enum zcta5_select_column {
   /** column name */
+  aland10 = 'aland10',
+  /** column name */
+  awater10 = 'awater10',
+  /** column name */
+  classfp10 = 'classfp10',
+  /** column name */
+  funcstat10 = 'funcstat10',
+  /** column name */
+  geoid10 = 'geoid10',
+  /** column name */
+  intptlat10 = 'intptlat10',
+  /** column name */
+  intptlon10 = 'intptlon10',
+  /** column name */
+  mtfcc10 = 'mtfcc10',
+  /** column name */
   nhood = 'nhood',
   /** column name */
   ogc_fid = 'ogc_fid',
@@ -4021,39 +4309,74 @@ export enum zcta5_select_column {
   slug = 'slug',
   /** column name */
   wkb_geometry = 'wkb_geometry',
+  /** column name */
+  zcta5ce10 = 'zcta5ce10',
 }
 
 /** input type for updating data in table "zcta5" */
 export interface zcta5_set_input {
+  aland10?: Maybe<Scalars['float8']>
+  awater10?: Maybe<Scalars['float8']>
+  classfp10?: Maybe<Scalars['String']>
+  funcstat10?: Maybe<Scalars['String']>
+  geoid10?: Maybe<Scalars['String']>
+  intptlat10?: Maybe<Scalars['String']>
+  intptlon10?: Maybe<Scalars['String']>
+  mtfcc10?: Maybe<Scalars['String']>
   nhood?: Maybe<Scalars['String']>
   ogc_fid?: Maybe<Scalars['Int']>
   slug?: Maybe<Scalars['String']>
   wkb_geometry?: Maybe<Scalars['geometry']>
+  zcta5ce10?: Maybe<Scalars['String']>
 }
 
 /** order by stddev() on columns of table "zcta5" */
 export interface zcta5_stddev_order_by {
+  aland10?: Maybe<order_by>
+  awater10?: Maybe<order_by>
   ogc_fid?: Maybe<order_by>
 }
 
 /** order by stddev_pop() on columns of table "zcta5" */
 export interface zcta5_stddev_pop_order_by {
+  aland10?: Maybe<order_by>
+  awater10?: Maybe<order_by>
   ogc_fid?: Maybe<order_by>
 }
 
 /** order by stddev_samp() on columns of table "zcta5" */
 export interface zcta5_stddev_samp_order_by {
+  aland10?: Maybe<order_by>
+  awater10?: Maybe<order_by>
   ogc_fid?: Maybe<order_by>
 }
 
 /** order by sum() on columns of table "zcta5" */
 export interface zcta5_sum_order_by {
+  aland10?: Maybe<order_by>
+  awater10?: Maybe<order_by>
   ogc_fid?: Maybe<order_by>
 }
 
 /** update columns of table "zcta5" */
 export enum zcta5_update_column {
   /** column name */
+  aland10 = 'aland10',
+  /** column name */
+  awater10 = 'awater10',
+  /** column name */
+  classfp10 = 'classfp10',
+  /** column name */
+  funcstat10 = 'funcstat10',
+  /** column name */
+  geoid10 = 'geoid10',
+  /** column name */
+  intptlat10 = 'intptlat10',
+  /** column name */
+  intptlon10 = 'intptlon10',
+  /** column name */
+  mtfcc10 = 'mtfcc10',
+  /** column name */
   nhood = 'nhood',
   /** column name */
   ogc_fid = 'ogc_fid',
@@ -4061,20 +4384,28 @@ export enum zcta5_update_column {
   slug = 'slug',
   /** column name */
   wkb_geometry = 'wkb_geometry',
+  /** column name */
+  zcta5ce10 = 'zcta5ce10',
 }
 
 /** order by var_pop() on columns of table "zcta5" */
 export interface zcta5_var_pop_order_by {
+  aland10?: Maybe<order_by>
+  awater10?: Maybe<order_by>
   ogc_fid?: Maybe<order_by>
 }
 
 /** order by var_samp() on columns of table "zcta5" */
 export interface zcta5_var_samp_order_by {
+  aland10?: Maybe<order_by>
+  awater10?: Maybe<order_by>
   ogc_fid?: Maybe<order_by>
 }
 
 /** order by variance() on columns of table "zcta5" */
 export interface zcta5_variance_order_by {
+  aland10?: Maybe<order_by>
+  awater10?: Maybe<order_by>
   ogc_fid?: Maybe<order_by>
 }
 
@@ -4094,6 +4425,9 @@ export const scalarsEnumsHash: ScalarsEnumsHash = {
   list_constraint: true,
   list_restaurant_constraint: true,
   list_restaurant_select_column: true,
+  list_restaurant_tag_constraint: true,
+  list_restaurant_tag_select_column: true,
+  list_restaurant_tag_update_column: true,
   list_restaurant_update_column: true,
   list_select_column: true,
   list_update_column: true,
@@ -4213,6 +4547,30 @@ export const generatedSchema = {
     list_restaurant_by_pk: {
       __type: 'list_restaurant',
       __args: { list_id: 'uuid!', restaurant_id: 'uuid!' },
+    },
+    list_restaurant_tag: {
+      __type: '[list_restaurant_tag!]!',
+      __args: {
+        distinct_on: '[list_restaurant_tag_select_column!]',
+        limit: 'Int',
+        offset: 'Int',
+        order_by: '[list_restaurant_tag_order_by!]',
+        where: 'list_restaurant_tag_bool_exp',
+      },
+    },
+    list_restaurant_tag_aggregate: {
+      __type: 'list_restaurant_tag_aggregate!',
+      __args: {
+        distinct_on: '[list_restaurant_tag_select_column!]',
+        limit: 'Int',
+        offset: 'Int',
+        order_by: '[list_restaurant_tag_order_by!]',
+        where: 'list_restaurant_tag_bool_exp',
+      },
+    },
+    list_restaurant_tag_by_pk: {
+      __type: 'list_restaurant_tag',
+      __args: { id: 'uuid!' },
     },
     menu_item: {
       __type: '[menu_item!]!',
@@ -4538,6 +4896,14 @@ export const generatedSchema = {
       __type: 'list_restaurant',
       __args: { list_id: 'uuid!', restaurant_id: 'uuid!' },
     },
+    delete_list_restaurant_tag: {
+      __type: 'list_restaurant_tag_mutation_response',
+      __args: { where: 'list_restaurant_tag_bool_exp!' },
+    },
+    delete_list_restaurant_tag_by_pk: {
+      __type: 'list_restaurant_tag',
+      __args: { id: 'uuid!' },
+    },
     delete_menu_item: {
       __type: 'menu_item_mutation_response',
       __args: { where: 'menu_item_bool_exp!' },
@@ -4657,6 +5023,20 @@ export const generatedSchema = {
       __args: {
         object: 'list_restaurant_insert_input!',
         on_conflict: 'list_restaurant_on_conflict',
+      },
+    },
+    insert_list_restaurant_tag: {
+      __type: 'list_restaurant_tag_mutation_response',
+      __args: {
+        objects: '[list_restaurant_tag_insert_input!]!',
+        on_conflict: 'list_restaurant_tag_on_conflict',
+      },
+    },
+    insert_list_restaurant_tag_one: {
+      __type: 'list_restaurant_tag',
+      __args: {
+        object: 'list_restaurant_tag_insert_input!',
+        on_conflict: 'list_restaurant_tag_on_conflict',
       },
     },
     insert_menu_item: {
@@ -4867,31 +5247,16 @@ export const generatedSchema = {
     },
     update_list: {
       __type: 'list_mutation_response',
-      __args: {
-        _append: 'list_append_input',
-        _delete_at_path: 'list_delete_at_path_input',
-        _delete_elem: 'list_delete_elem_input',
-        _delete_key: 'list_delete_key_input',
-        _prepend: 'list_prepend_input',
-        _set: 'list_set_input',
-        where: 'list_bool_exp!',
-      },
+      __args: { _set: 'list_set_input', where: 'list_bool_exp!' },
     },
     update_list_by_pk: {
       __type: 'list',
-      __args: {
-        _append: 'list_append_input',
-        _delete_at_path: 'list_delete_at_path_input',
-        _delete_elem: 'list_delete_elem_input',
-        _delete_key: 'list_delete_key_input',
-        _prepend: 'list_prepend_input',
-        _set: 'list_set_input',
-        pk_columns: 'list_pk_columns_input!',
-      },
+      __args: { _set: 'list_set_input', pk_columns: 'list_pk_columns_input!' },
     },
     update_list_restaurant: {
       __type: 'list_restaurant_mutation_response',
       __args: {
+        _inc: 'list_restaurant_inc_input',
         _set: 'list_restaurant_set_input',
         where: 'list_restaurant_bool_exp!',
       },
@@ -4899,8 +5264,25 @@ export const generatedSchema = {
     update_list_restaurant_by_pk: {
       __type: 'list_restaurant',
       __args: {
+        _inc: 'list_restaurant_inc_input',
         _set: 'list_restaurant_set_input',
         pk_columns: 'list_restaurant_pk_columns_input!',
+      },
+    },
+    update_list_restaurant_tag: {
+      __type: 'list_restaurant_tag_mutation_response',
+      __args: {
+        _inc: 'list_restaurant_tag_inc_input',
+        _set: 'list_restaurant_tag_set_input',
+        where: 'list_restaurant_tag_bool_exp!',
+      },
+    },
+    update_list_restaurant_tag_by_pk: {
+      __type: 'list_restaurant_tag',
+      __args: {
+        _inc: 'list_restaurant_tag_inc_input',
+        _set: 'list_restaurant_tag_set_input',
+        pk_columns: 'list_restaurant_tag_pk_columns_input!',
       },
     },
     update_menu_item: {
@@ -5231,6 +5613,30 @@ export const generatedSchema = {
     list_restaurant_by_pk: {
       __type: 'list_restaurant',
       __args: { list_id: 'uuid!', restaurant_id: 'uuid!' },
+    },
+    list_restaurant_tag: {
+      __type: '[list_restaurant_tag!]!',
+      __args: {
+        distinct_on: '[list_restaurant_tag_select_column!]',
+        limit: 'Int',
+        offset: 'Int',
+        order_by: '[list_restaurant_tag_order_by!]',
+        where: 'list_restaurant_tag_bool_exp',
+      },
+    },
+    list_restaurant_tag_aggregate: {
+      __type: 'list_restaurant_tag_aggregate!',
+      __args: {
+        distinct_on: '[list_restaurant_tag_select_column!]',
+        limit: 'Int',
+        offset: 'Int',
+        order_by: '[list_restaurant_tag_order_by!]',
+        where: 'list_restaurant_tag_bool_exp',
+      },
+    },
+    list_restaurant_tag_by_pk: {
+      __type: 'list_restaurant_tag',
+      __args: { id: 'uuid!' },
     },
     menu_item: {
       __type: '[menu_item!]!',
@@ -5861,7 +6267,6 @@ export const generatedSchema = {
   },
   list: {
     __typename: { __type: 'String!' },
-    comments: { __type: 'jsonb', __args: { path: 'String' } },
     created_at: { __type: 'timestamptz!' },
     description: { __type: 'String' },
     id: { __type: 'uuid!' },
@@ -5910,7 +6315,6 @@ export const generatedSchema = {
     max: { __type: 'list_max_order_by' },
     min: { __type: 'list_min_order_by' },
   },
-  list_append_input: { comments: { __type: 'jsonb' } },
   list_arr_rel_insert_input: {
     data: { __type: '[list_insert_input!]!' },
     on_conflict: { __type: 'list_on_conflict' },
@@ -5919,7 +6323,6 @@ export const generatedSchema = {
     _and: { __type: '[list_bool_exp]' },
     _not: { __type: 'list_bool_exp' },
     _or: { __type: '[list_bool_exp]' },
-    comments: { __type: 'jsonb_comparison_exp' },
     created_at: { __type: 'timestamptz_comparison_exp' },
     description: { __type: 'String_comparison_exp' },
     id: { __type: 'uuid_comparison_exp' },
@@ -5930,11 +6333,7 @@ export const generatedSchema = {
     user: { __type: 'user_bool_exp' },
     user_id: { __type: 'uuid_comparison_exp' },
   },
-  list_delete_at_path_input: { comments: { __type: '[String]' } },
-  list_delete_elem_input: { comments: { __type: 'Int' } },
-  list_delete_key_input: { comments: { __type: 'String' } },
   list_insert_input: {
-    comments: { __type: 'jsonb' },
     created_at: { __type: 'timestamptz' },
     description: { __type: 'String' },
     id: { __type: 'uuid' },
@@ -5998,7 +6397,6 @@ export const generatedSchema = {
     where: { __type: 'list_bool_exp' },
   },
   list_order_by: {
-    comments: { __type: 'order_by' },
     created_at: { __type: 'order_by' },
     description: { __type: 'order_by' },
     id: { __type: 'order_by' },
@@ -6010,13 +6408,13 @@ export const generatedSchema = {
     user_id: { __type: 'order_by' },
   },
   list_pk_columns_input: { id: { __type: 'uuid!' } },
-  list_prepend_input: { comments: { __type: 'jsonb' } },
   list_restaurant: {
     __typename: { __type: 'String!' },
     comment: { __type: 'String' },
     id: { __type: 'uuid!' },
     list: { __type: 'list!' },
     list_id: { __type: 'uuid!' },
+    position: { __type: 'Int' },
     restaurant: { __type: 'restaurant!' },
     restaurant_id: { __type: 'uuid!' },
     restaurants: {
@@ -6039,6 +6437,26 @@ export const generatedSchema = {
         where: 'restaurant_bool_exp',
       },
     },
+    tags: {
+      __type: '[list_restaurant_tag!]!',
+      __args: {
+        distinct_on: '[list_restaurant_tag_select_column!]',
+        limit: 'Int',
+        offset: 'Int',
+        order_by: '[list_restaurant_tag_order_by!]',
+        where: 'list_restaurant_tag_bool_exp',
+      },
+    },
+    tags_aggregate: {
+      __type: 'list_restaurant_tag_aggregate!',
+      __args: {
+        distinct_on: '[list_restaurant_tag_select_column!]',
+        limit: 'Int',
+        offset: 'Int',
+        order_by: '[list_restaurant_tag_order_by!]',
+        where: 'list_restaurant_tag_bool_exp',
+      },
+    },
   },
   list_restaurant_aggregate: {
     __typename: { __type: 'String!' },
@@ -6047,6 +6465,7 @@ export const generatedSchema = {
   },
   list_restaurant_aggregate_fields: {
     __typename: { __type: 'String!' },
+    avg: { __type: 'list_restaurant_avg_fields' },
     count: {
       __type: 'Int',
       __args: {
@@ -6056,16 +6475,36 @@ export const generatedSchema = {
     },
     max: { __type: 'list_restaurant_max_fields' },
     min: { __type: 'list_restaurant_min_fields' },
+    stddev: { __type: 'list_restaurant_stddev_fields' },
+    stddev_pop: { __type: 'list_restaurant_stddev_pop_fields' },
+    stddev_samp: { __type: 'list_restaurant_stddev_samp_fields' },
+    sum: { __type: 'list_restaurant_sum_fields' },
+    var_pop: { __type: 'list_restaurant_var_pop_fields' },
+    var_samp: { __type: 'list_restaurant_var_samp_fields' },
+    variance: { __type: 'list_restaurant_variance_fields' },
   },
   list_restaurant_aggregate_order_by: {
+    avg: { __type: 'list_restaurant_avg_order_by' },
     count: { __type: 'order_by' },
     max: { __type: 'list_restaurant_max_order_by' },
     min: { __type: 'list_restaurant_min_order_by' },
+    stddev: { __type: 'list_restaurant_stddev_order_by' },
+    stddev_pop: { __type: 'list_restaurant_stddev_pop_order_by' },
+    stddev_samp: { __type: 'list_restaurant_stddev_samp_order_by' },
+    sum: { __type: 'list_restaurant_sum_order_by' },
+    var_pop: { __type: 'list_restaurant_var_pop_order_by' },
+    var_samp: { __type: 'list_restaurant_var_samp_order_by' },
+    variance: { __type: 'list_restaurant_variance_order_by' },
   },
   list_restaurant_arr_rel_insert_input: {
     data: { __type: '[list_restaurant_insert_input!]!' },
     on_conflict: { __type: 'list_restaurant_on_conflict' },
   },
+  list_restaurant_avg_fields: {
+    __typename: { __type: 'String!' },
+    position: { __type: 'Float' },
+  },
+  list_restaurant_avg_order_by: { position: { __type: 'order_by' } },
   list_restaurant_bool_exp: {
     _and: { __type: '[list_restaurant_bool_exp]' },
     _not: { __type: 'list_restaurant_bool_exp' },
@@ -6074,30 +6513,37 @@ export const generatedSchema = {
     id: { __type: 'uuid_comparison_exp' },
     list: { __type: 'list_bool_exp' },
     list_id: { __type: 'uuid_comparison_exp' },
+    position: { __type: 'Int_comparison_exp' },
     restaurant: { __type: 'restaurant_bool_exp' },
     restaurant_id: { __type: 'uuid_comparison_exp' },
     restaurants: { __type: 'restaurant_bool_exp' },
+    tags: { __type: 'list_restaurant_tag_bool_exp' },
   },
+  list_restaurant_inc_input: { position: { __type: 'Int' } },
   list_restaurant_insert_input: {
     comment: { __type: 'String' },
     id: { __type: 'uuid' },
     list: { __type: 'list_obj_rel_insert_input' },
     list_id: { __type: 'uuid' },
+    position: { __type: 'Int' },
     restaurant: { __type: 'restaurant_obj_rel_insert_input' },
     restaurant_id: { __type: 'uuid' },
     restaurants: { __type: 'restaurant_arr_rel_insert_input' },
+    tags: { __type: 'list_restaurant_tag_arr_rel_insert_input' },
   },
   list_restaurant_max_fields: {
     __typename: { __type: 'String!' },
     comment: { __type: 'String' },
     id: { __type: 'uuid' },
     list_id: { __type: 'uuid' },
+    position: { __type: 'Int' },
     restaurant_id: { __type: 'uuid' },
   },
   list_restaurant_max_order_by: {
     comment: { __type: 'order_by' },
     id: { __type: 'order_by' },
     list_id: { __type: 'order_by' },
+    position: { __type: 'order_by' },
     restaurant_id: { __type: 'order_by' },
   },
   list_restaurant_min_fields: {
@@ -6105,12 +6551,14 @@ export const generatedSchema = {
     comment: { __type: 'String' },
     id: { __type: 'uuid' },
     list_id: { __type: 'uuid' },
+    position: { __type: 'Int' },
     restaurant_id: { __type: 'uuid' },
   },
   list_restaurant_min_order_by: {
     comment: { __type: 'order_by' },
     id: { __type: 'order_by' },
     list_id: { __type: 'order_by' },
+    position: { __type: 'order_by' },
     restaurant_id: { __type: 'order_by' },
   },
   list_restaurant_mutation_response: {
@@ -6132,9 +6580,11 @@ export const generatedSchema = {
     id: { __type: 'order_by' },
     list: { __type: 'list_order_by' },
     list_id: { __type: 'order_by' },
+    position: { __type: 'order_by' },
     restaurant: { __type: 'restaurant_order_by' },
     restaurant_id: { __type: 'order_by' },
     restaurants_aggregate: { __type: 'restaurant_aggregate_order_by' },
+    tags_aggregate: { __type: 'list_restaurant_tag_aggregate_order_by' },
   },
   list_restaurant_pk_columns_input: {
     list_id: { __type: 'uuid!' },
@@ -6144,10 +6594,218 @@ export const generatedSchema = {
     comment: { __type: 'String' },
     id: { __type: 'uuid' },
     list_id: { __type: 'uuid' },
+    position: { __type: 'Int' },
     restaurant_id: { __type: 'uuid' },
   },
+  list_restaurant_stddev_fields: {
+    __typename: { __type: 'String!' },
+    position: { __type: 'Float' },
+  },
+  list_restaurant_stddev_order_by: { position: { __type: 'order_by' } },
+  list_restaurant_stddev_pop_fields: {
+    __typename: { __type: 'String!' },
+    position: { __type: 'Float' },
+  },
+  list_restaurant_stddev_pop_order_by: { position: { __type: 'order_by' } },
+  list_restaurant_stddev_samp_fields: {
+    __typename: { __type: 'String!' },
+    position: { __type: 'Float' },
+  },
+  list_restaurant_stddev_samp_order_by: { position: { __type: 'order_by' } },
+  list_restaurant_sum_fields: {
+    __typename: { __type: 'String!' },
+    position: { __type: 'Int' },
+  },
+  list_restaurant_sum_order_by: { position: { __type: 'order_by' } },
+  list_restaurant_tag: {
+    __typename: { __type: 'String!' },
+    id: { __type: 'uuid!' },
+    list_id: { __type: 'uuid!' },
+    list_restaurant_id: { __type: 'uuid!' },
+    position: { __type: 'Int!' },
+    restaurant_tag: { __type: 'restaurant_tag' },
+    restaurant_tag_id: { __type: 'uuid!' },
+  },
+  list_restaurant_tag_aggregate: {
+    __typename: { __type: 'String!' },
+    aggregate: { __type: 'list_restaurant_tag_aggregate_fields' },
+    nodes: { __type: '[list_restaurant_tag!]!' },
+  },
+  list_restaurant_tag_aggregate_fields: {
+    __typename: { __type: 'String!' },
+    avg: { __type: 'list_restaurant_tag_avg_fields' },
+    count: {
+      __type: 'Int',
+      __args: {
+        columns: '[list_restaurant_tag_select_column!]',
+        distinct: 'Boolean',
+      },
+    },
+    max: { __type: 'list_restaurant_tag_max_fields' },
+    min: { __type: 'list_restaurant_tag_min_fields' },
+    stddev: { __type: 'list_restaurant_tag_stddev_fields' },
+    stddev_pop: { __type: 'list_restaurant_tag_stddev_pop_fields' },
+    stddev_samp: { __type: 'list_restaurant_tag_stddev_samp_fields' },
+    sum: { __type: 'list_restaurant_tag_sum_fields' },
+    var_pop: { __type: 'list_restaurant_tag_var_pop_fields' },
+    var_samp: { __type: 'list_restaurant_tag_var_samp_fields' },
+    variance: { __type: 'list_restaurant_tag_variance_fields' },
+  },
+  list_restaurant_tag_aggregate_order_by: {
+    avg: { __type: 'list_restaurant_tag_avg_order_by' },
+    count: { __type: 'order_by' },
+    max: { __type: 'list_restaurant_tag_max_order_by' },
+    min: { __type: 'list_restaurant_tag_min_order_by' },
+    stddev: { __type: 'list_restaurant_tag_stddev_order_by' },
+    stddev_pop: { __type: 'list_restaurant_tag_stddev_pop_order_by' },
+    stddev_samp: { __type: 'list_restaurant_tag_stddev_samp_order_by' },
+    sum: { __type: 'list_restaurant_tag_sum_order_by' },
+    var_pop: { __type: 'list_restaurant_tag_var_pop_order_by' },
+    var_samp: { __type: 'list_restaurant_tag_var_samp_order_by' },
+    variance: { __type: 'list_restaurant_tag_variance_order_by' },
+  },
+  list_restaurant_tag_arr_rel_insert_input: {
+    data: { __type: '[list_restaurant_tag_insert_input!]!' },
+    on_conflict: { __type: 'list_restaurant_tag_on_conflict' },
+  },
+  list_restaurant_tag_avg_fields: {
+    __typename: { __type: 'String!' },
+    position: { __type: 'Float' },
+  },
+  list_restaurant_tag_avg_order_by: { position: { __type: 'order_by' } },
+  list_restaurant_tag_bool_exp: {
+    _and: { __type: '[list_restaurant_tag_bool_exp]' },
+    _not: { __type: 'list_restaurant_tag_bool_exp' },
+    _or: { __type: '[list_restaurant_tag_bool_exp]' },
+    id: { __type: 'uuid_comparison_exp' },
+    list_id: { __type: 'uuid_comparison_exp' },
+    list_restaurant_id: { __type: 'uuid_comparison_exp' },
+    position: { __type: 'Int_comparison_exp' },
+    restaurant_tag: { __type: 'restaurant_tag_bool_exp' },
+    restaurant_tag_id: { __type: 'uuid_comparison_exp' },
+  },
+  list_restaurant_tag_inc_input: { position: { __type: 'Int' } },
+  list_restaurant_tag_insert_input: {
+    id: { __type: 'uuid' },
+    list_id: { __type: 'uuid' },
+    list_restaurant_id: { __type: 'uuid' },
+    position: { __type: 'Int' },
+    restaurant_tag: { __type: 'restaurant_tag_obj_rel_insert_input' },
+    restaurant_tag_id: { __type: 'uuid' },
+  },
+  list_restaurant_tag_max_fields: {
+    __typename: { __type: 'String!' },
+    id: { __type: 'uuid' },
+    list_id: { __type: 'uuid' },
+    list_restaurant_id: { __type: 'uuid' },
+    position: { __type: 'Int' },
+    restaurant_tag_id: { __type: 'uuid' },
+  },
+  list_restaurant_tag_max_order_by: {
+    id: { __type: 'order_by' },
+    list_id: { __type: 'order_by' },
+    list_restaurant_id: { __type: 'order_by' },
+    position: { __type: 'order_by' },
+    restaurant_tag_id: { __type: 'order_by' },
+  },
+  list_restaurant_tag_min_fields: {
+    __typename: { __type: 'String!' },
+    id: { __type: 'uuid' },
+    list_id: { __type: 'uuid' },
+    list_restaurant_id: { __type: 'uuid' },
+    position: { __type: 'Int' },
+    restaurant_tag_id: { __type: 'uuid' },
+  },
+  list_restaurant_tag_min_order_by: {
+    id: { __type: 'order_by' },
+    list_id: { __type: 'order_by' },
+    list_restaurant_id: { __type: 'order_by' },
+    position: { __type: 'order_by' },
+    restaurant_tag_id: { __type: 'order_by' },
+  },
+  list_restaurant_tag_mutation_response: {
+    __typename: { __type: 'String!' },
+    affected_rows: { __type: 'Int!' },
+    returning: { __type: '[list_restaurant_tag!]!' },
+  },
+  list_restaurant_tag_obj_rel_insert_input: {
+    data: { __type: 'list_restaurant_tag_insert_input!' },
+    on_conflict: { __type: 'list_restaurant_tag_on_conflict' },
+  },
+  list_restaurant_tag_on_conflict: {
+    constraint: { __type: 'list_restaurant_tag_constraint!' },
+    update_columns: { __type: '[list_restaurant_tag_update_column!]!' },
+    where: { __type: 'list_restaurant_tag_bool_exp' },
+  },
+  list_restaurant_tag_order_by: {
+    id: { __type: 'order_by' },
+    list_id: { __type: 'order_by' },
+    list_restaurant_id: { __type: 'order_by' },
+    position: { __type: 'order_by' },
+    restaurant_tag: { __type: 'restaurant_tag_order_by' },
+    restaurant_tag_id: { __type: 'order_by' },
+  },
+  list_restaurant_tag_pk_columns_input: { id: { __type: 'uuid!' } },
+  list_restaurant_tag_set_input: {
+    id: { __type: 'uuid' },
+    list_id: { __type: 'uuid' },
+    list_restaurant_id: { __type: 'uuid' },
+    position: { __type: 'Int' },
+    restaurant_tag_id: { __type: 'uuid' },
+  },
+  list_restaurant_tag_stddev_fields: {
+    __typename: { __type: 'String!' },
+    position: { __type: 'Float' },
+  },
+  list_restaurant_tag_stddev_order_by: { position: { __type: 'order_by' } },
+  list_restaurant_tag_stddev_pop_fields: {
+    __typename: { __type: 'String!' },
+    position: { __type: 'Float' },
+  },
+  list_restaurant_tag_stddev_pop_order_by: { position: { __type: 'order_by' } },
+  list_restaurant_tag_stddev_samp_fields: {
+    __typename: { __type: 'String!' },
+    position: { __type: 'Float' },
+  },
+  list_restaurant_tag_stddev_samp_order_by: {
+    position: { __type: 'order_by' },
+  },
+  list_restaurant_tag_sum_fields: {
+    __typename: { __type: 'String!' },
+    position: { __type: 'Int' },
+  },
+  list_restaurant_tag_sum_order_by: { position: { __type: 'order_by' } },
+  list_restaurant_tag_var_pop_fields: {
+    __typename: { __type: 'String!' },
+    position: { __type: 'Float' },
+  },
+  list_restaurant_tag_var_pop_order_by: { position: { __type: 'order_by' } },
+  list_restaurant_tag_var_samp_fields: {
+    __typename: { __type: 'String!' },
+    position: { __type: 'Float' },
+  },
+  list_restaurant_tag_var_samp_order_by: { position: { __type: 'order_by' } },
+  list_restaurant_tag_variance_fields: {
+    __typename: { __type: 'String!' },
+    position: { __type: 'Float' },
+  },
+  list_restaurant_tag_variance_order_by: { position: { __type: 'order_by' } },
+  list_restaurant_var_pop_fields: {
+    __typename: { __type: 'String!' },
+    position: { __type: 'Float' },
+  },
+  list_restaurant_var_pop_order_by: { position: { __type: 'order_by' } },
+  list_restaurant_var_samp_fields: {
+    __typename: { __type: 'String!' },
+    position: { __type: 'Float' },
+  },
+  list_restaurant_var_samp_order_by: { position: { __type: 'order_by' } },
+  list_restaurant_variance_fields: {
+    __typename: { __type: 'String!' },
+    position: { __type: 'Float' },
+  },
+  list_restaurant_variance_order_by: { position: { __type: 'order_by' } },
   list_set_input: {
-    comments: { __type: 'jsonb' },
     created_at: { __type: 'timestamptz' },
     description: { __type: 'String' },
     id: { __type: 'uuid' },
@@ -9150,6 +9808,7 @@ export const generatedSchema = {
       },
     },
     location: { __type: 'String' },
+    name: { __type: 'String' },
     password: { __type: 'String!' },
     password_reset_date: { __type: 'timestamptz' },
     password_reset_token: { __type: 'String' },
@@ -9238,6 +9897,7 @@ export const generatedSchema = {
     id: { __type: 'uuid_comparison_exp' },
     lists: { __type: 'list_bool_exp' },
     location: { __type: 'String_comparison_exp' },
+    name: { __type: 'String_comparison_exp' },
     password: { __type: 'String_comparison_exp' },
     password_reset_date: { __type: 'timestamptz_comparison_exp' },
     password_reset_token: { __type: 'String_comparison_exp' },
@@ -9261,6 +9921,7 @@ export const generatedSchema = {
     id: { __type: 'uuid' },
     lists: { __type: 'list_arr_rel_insert_input' },
     location: { __type: 'String' },
+    name: { __type: 'String' },
     password: { __type: 'String' },
     password_reset_date: { __type: 'timestamptz' },
     password_reset_token: { __type: 'String' },
@@ -9282,6 +9943,7 @@ export const generatedSchema = {
     email: { __type: 'String' },
     id: { __type: 'uuid' },
     location: { __type: 'String' },
+    name: { __type: 'String' },
     password: { __type: 'String' },
     password_reset_date: { __type: 'timestamptz' },
     password_reset_token: { __type: 'String' },
@@ -9301,6 +9963,7 @@ export const generatedSchema = {
     email: { __type: 'order_by' },
     id: { __type: 'order_by' },
     location: { __type: 'order_by' },
+    name: { __type: 'order_by' },
     password: { __type: 'order_by' },
     password_reset_date: { __type: 'order_by' },
     password_reset_token: { __type: 'order_by' },
@@ -9321,6 +9984,7 @@ export const generatedSchema = {
     email: { __type: 'String' },
     id: { __type: 'uuid' },
     location: { __type: 'String' },
+    name: { __type: 'String' },
     password: { __type: 'String' },
     password_reset_date: { __type: 'timestamptz' },
     password_reset_token: { __type: 'String' },
@@ -9340,6 +10004,7 @@ export const generatedSchema = {
     email: { __type: 'order_by' },
     id: { __type: 'order_by' },
     location: { __type: 'order_by' },
+    name: { __type: 'order_by' },
     password: { __type: 'order_by' },
     password_reset_date: { __type: 'order_by' },
     password_reset_token: { __type: 'order_by' },
@@ -9375,6 +10040,7 @@ export const generatedSchema = {
     id: { __type: 'order_by' },
     lists_aggregate: { __type: 'list_aggregate_order_by' },
     location: { __type: 'order_by' },
+    name: { __type: 'order_by' },
     password: { __type: 'order_by' },
     password_reset_date: { __type: 'order_by' },
     password_reset_token: { __type: 'order_by' },
@@ -9397,6 +10063,7 @@ export const generatedSchema = {
     has_onboarded: { __type: 'Boolean' },
     id: { __type: 'uuid' },
     location: { __type: 'String' },
+    name: { __type: 'String' },
     password: { __type: 'String' },
     password_reset_date: { __type: 'timestamptz' },
     password_reset_token: { __type: 'String' },
@@ -9452,10 +10119,19 @@ export const generatedSchema = {
   },
   zcta5: {
     __typename: { __type: 'String!' },
+    aland10: { __type: 'float8' },
+    awater10: { __type: 'float8' },
+    classfp10: { __type: 'String' },
+    funcstat10: { __type: 'String' },
+    geoid10: { __type: 'String' },
+    intptlat10: { __type: 'String' },
+    intptlon10: { __type: 'String' },
+    mtfcc10: { __type: 'String' },
     nhood: { __type: 'String' },
     ogc_fid: { __type: 'Int!' },
     slug: { __type: 'String' },
     wkb_geometry: { __type: 'geometry' },
+    zcta5ce10: { __type: 'String' },
   },
   zcta5_aggregate: {
     __typename: { __type: 'String!' },
@@ -9498,46 +10174,110 @@ export const generatedSchema = {
   },
   zcta5_avg_fields: {
     __typename: { __type: 'String!' },
+    aland10: { __type: 'Float' },
+    awater10: { __type: 'Float' },
     ogc_fid: { __type: 'Float' },
   },
-  zcta5_avg_order_by: { ogc_fid: { __type: 'order_by' } },
+  zcta5_avg_order_by: {
+    aland10: { __type: 'order_by' },
+    awater10: { __type: 'order_by' },
+    ogc_fid: { __type: 'order_by' },
+  },
   zcta5_bool_exp: {
     _and: { __type: '[zcta5_bool_exp]' },
     _not: { __type: 'zcta5_bool_exp' },
     _or: { __type: '[zcta5_bool_exp]' },
+    aland10: { __type: 'float8_comparison_exp' },
+    awater10: { __type: 'float8_comparison_exp' },
+    classfp10: { __type: 'String_comparison_exp' },
+    funcstat10: { __type: 'String_comparison_exp' },
+    geoid10: { __type: 'String_comparison_exp' },
+    intptlat10: { __type: 'String_comparison_exp' },
+    intptlon10: { __type: 'String_comparison_exp' },
+    mtfcc10: { __type: 'String_comparison_exp' },
     nhood: { __type: 'String_comparison_exp' },
     ogc_fid: { __type: 'Int_comparison_exp' },
     slug: { __type: 'String_comparison_exp' },
     wkb_geometry: { __type: 'geometry_comparison_exp' },
+    zcta5ce10: { __type: 'String_comparison_exp' },
   },
-  zcta5_inc_input: { ogc_fid: { __type: 'Int' } },
+  zcta5_inc_input: {
+    aland10: { __type: 'float8' },
+    awater10: { __type: 'float8' },
+    ogc_fid: { __type: 'Int' },
+  },
   zcta5_insert_input: {
+    aland10: { __type: 'float8' },
+    awater10: { __type: 'float8' },
+    classfp10: { __type: 'String' },
+    funcstat10: { __type: 'String' },
+    geoid10: { __type: 'String' },
+    intptlat10: { __type: 'String' },
+    intptlon10: { __type: 'String' },
+    mtfcc10: { __type: 'String' },
     nhood: { __type: 'String' },
     ogc_fid: { __type: 'Int' },
     slug: { __type: 'String' },
     wkb_geometry: { __type: 'geometry' },
+    zcta5ce10: { __type: 'String' },
   },
   zcta5_max_fields: {
     __typename: { __type: 'String!' },
+    aland10: { __type: 'float8' },
+    awater10: { __type: 'float8' },
+    classfp10: { __type: 'String' },
+    funcstat10: { __type: 'String' },
+    geoid10: { __type: 'String' },
+    intptlat10: { __type: 'String' },
+    intptlon10: { __type: 'String' },
+    mtfcc10: { __type: 'String' },
     nhood: { __type: 'String' },
     ogc_fid: { __type: 'Int' },
     slug: { __type: 'String' },
+    zcta5ce10: { __type: 'String' },
   },
   zcta5_max_order_by: {
+    aland10: { __type: 'order_by' },
+    awater10: { __type: 'order_by' },
+    classfp10: { __type: 'order_by' },
+    funcstat10: { __type: 'order_by' },
+    geoid10: { __type: 'order_by' },
+    intptlat10: { __type: 'order_by' },
+    intptlon10: { __type: 'order_by' },
+    mtfcc10: { __type: 'order_by' },
     nhood: { __type: 'order_by' },
     ogc_fid: { __type: 'order_by' },
     slug: { __type: 'order_by' },
+    zcta5ce10: { __type: 'order_by' },
   },
   zcta5_min_fields: {
     __typename: { __type: 'String!' },
+    aland10: { __type: 'float8' },
+    awater10: { __type: 'float8' },
+    classfp10: { __type: 'String' },
+    funcstat10: { __type: 'String' },
+    geoid10: { __type: 'String' },
+    intptlat10: { __type: 'String' },
+    intptlon10: { __type: 'String' },
+    mtfcc10: { __type: 'String' },
     nhood: { __type: 'String' },
     ogc_fid: { __type: 'Int' },
     slug: { __type: 'String' },
+    zcta5ce10: { __type: 'String' },
   },
   zcta5_min_order_by: {
+    aland10: { __type: 'order_by' },
+    awater10: { __type: 'order_by' },
+    classfp10: { __type: 'order_by' },
+    funcstat10: { __type: 'order_by' },
+    geoid10: { __type: 'order_by' },
+    intptlat10: { __type: 'order_by' },
+    intptlon10: { __type: 'order_by' },
+    mtfcc10: { __type: 'order_by' },
     nhood: { __type: 'order_by' },
     ogc_fid: { __type: 'order_by' },
     slug: { __type: 'order_by' },
+    zcta5ce10: { __type: 'order_by' },
   },
   zcta5_mutation_response: {
     __typename: { __type: 'String!' },
@@ -9554,53 +10294,113 @@ export const generatedSchema = {
     where: { __type: 'zcta5_bool_exp' },
   },
   zcta5_order_by: {
+    aland10: { __type: 'order_by' },
+    awater10: { __type: 'order_by' },
+    classfp10: { __type: 'order_by' },
+    funcstat10: { __type: 'order_by' },
+    geoid10: { __type: 'order_by' },
+    intptlat10: { __type: 'order_by' },
+    intptlon10: { __type: 'order_by' },
+    mtfcc10: { __type: 'order_by' },
     nhood: { __type: 'order_by' },
     ogc_fid: { __type: 'order_by' },
     slug: { __type: 'order_by' },
     wkb_geometry: { __type: 'order_by' },
+    zcta5ce10: { __type: 'order_by' },
   },
   zcta5_pk_columns_input: { ogc_fid: { __type: 'Int!' } },
   zcta5_set_input: {
+    aland10: { __type: 'float8' },
+    awater10: { __type: 'float8' },
+    classfp10: { __type: 'String' },
+    funcstat10: { __type: 'String' },
+    geoid10: { __type: 'String' },
+    intptlat10: { __type: 'String' },
+    intptlon10: { __type: 'String' },
+    mtfcc10: { __type: 'String' },
     nhood: { __type: 'String' },
     ogc_fid: { __type: 'Int' },
     slug: { __type: 'String' },
     wkb_geometry: { __type: 'geometry' },
+    zcta5ce10: { __type: 'String' },
   },
   zcta5_stddev_fields: {
     __typename: { __type: 'String!' },
+    aland10: { __type: 'Float' },
+    awater10: { __type: 'Float' },
     ogc_fid: { __type: 'Float' },
   },
-  zcta5_stddev_order_by: { ogc_fid: { __type: 'order_by' } },
+  zcta5_stddev_order_by: {
+    aland10: { __type: 'order_by' },
+    awater10: { __type: 'order_by' },
+    ogc_fid: { __type: 'order_by' },
+  },
   zcta5_stddev_pop_fields: {
     __typename: { __type: 'String!' },
+    aland10: { __type: 'Float' },
+    awater10: { __type: 'Float' },
     ogc_fid: { __type: 'Float' },
   },
-  zcta5_stddev_pop_order_by: { ogc_fid: { __type: 'order_by' } },
+  zcta5_stddev_pop_order_by: {
+    aland10: { __type: 'order_by' },
+    awater10: { __type: 'order_by' },
+    ogc_fid: { __type: 'order_by' },
+  },
   zcta5_stddev_samp_fields: {
     __typename: { __type: 'String!' },
+    aland10: { __type: 'Float' },
+    awater10: { __type: 'Float' },
     ogc_fid: { __type: 'Float' },
   },
-  zcta5_stddev_samp_order_by: { ogc_fid: { __type: 'order_by' } },
+  zcta5_stddev_samp_order_by: {
+    aland10: { __type: 'order_by' },
+    awater10: { __type: 'order_by' },
+    ogc_fid: { __type: 'order_by' },
+  },
   zcta5_sum_fields: {
     __typename: { __type: 'String!' },
+    aland10: { __type: 'float8' },
+    awater10: { __type: 'float8' },
     ogc_fid: { __type: 'Int' },
   },
-  zcta5_sum_order_by: { ogc_fid: { __type: 'order_by' } },
+  zcta5_sum_order_by: {
+    aland10: { __type: 'order_by' },
+    awater10: { __type: 'order_by' },
+    ogc_fid: { __type: 'order_by' },
+  },
   zcta5_var_pop_fields: {
     __typename: { __type: 'String!' },
+    aland10: { __type: 'Float' },
+    awater10: { __type: 'Float' },
     ogc_fid: { __type: 'Float' },
   },
-  zcta5_var_pop_order_by: { ogc_fid: { __type: 'order_by' } },
+  zcta5_var_pop_order_by: {
+    aland10: { __type: 'order_by' },
+    awater10: { __type: 'order_by' },
+    ogc_fid: { __type: 'order_by' },
+  },
   zcta5_var_samp_fields: {
     __typename: { __type: 'String!' },
+    aland10: { __type: 'Float' },
+    awater10: { __type: 'Float' },
     ogc_fid: { __type: 'Float' },
   },
-  zcta5_var_samp_order_by: { ogc_fid: { __type: 'order_by' } },
+  zcta5_var_samp_order_by: {
+    aland10: { __type: 'order_by' },
+    awater10: { __type: 'order_by' },
+    ogc_fid: { __type: 'order_by' },
+  },
   zcta5_variance_fields: {
     __typename: { __type: 'String!' },
+    aland10: { __type: 'Float' },
+    awater10: { __type: 'Float' },
     ogc_fid: { __type: 'Float' },
   },
-  zcta5_variance_order_by: { ogc_fid: { __type: 'order_by' } },
+  zcta5_variance_order_by: {
+    aland10: { __type: 'order_by' },
+    awater10: { __type: 'order_by' },
+    ogc_fid: { __type: 'order_by' },
+  },
 } as const
 
 export interface Query {
@@ -9653,6 +10453,27 @@ export interface Query {
     list_id: ScalarsEnums['uuid']
     restaurant_id: ScalarsEnums['uuid']
   }) => Maybe<list_restaurant>
+  list_restaurant_tag: (args?: {
+    distinct_on?: Maybe<
+      Array<ScalarsEnums['list_restaurant_tag_select_column']>
+    >
+    limit?: Maybe<ScalarsEnums['Int']>
+    offset?: Maybe<ScalarsEnums['Int']>
+    order_by?: Maybe<Array<list_restaurant_tag_order_by>>
+    where?: Maybe<list_restaurant_tag_bool_exp>
+  }) => Array<list_restaurant_tag>
+  list_restaurant_tag_aggregate: (args?: {
+    distinct_on?: Maybe<
+      Array<ScalarsEnums['list_restaurant_tag_select_column']>
+    >
+    limit?: Maybe<ScalarsEnums['Int']>
+    offset?: Maybe<ScalarsEnums['Int']>
+    order_by?: Maybe<Array<list_restaurant_tag_order_by>>
+    where?: Maybe<list_restaurant_tag_bool_exp>
+  }) => list_restaurant_tag_aggregate
+  list_restaurant_tag_by_pk: (args: {
+    id: ScalarsEnums['uuid']
+  }) => Maybe<list_restaurant_tag>
   menu_item: (args?: {
     distinct_on?: Maybe<Array<ScalarsEnums['menu_item_select_column']>>
     limit?: Maybe<ScalarsEnums['Int']>
@@ -9894,6 +10715,12 @@ export interface Mutation {
     list_id: ScalarsEnums['uuid']
     restaurant_id: ScalarsEnums['uuid']
   }) => Maybe<list_restaurant>
+  delete_list_restaurant_tag: (args: {
+    where: list_restaurant_tag_bool_exp
+  }) => Maybe<list_restaurant_tag_mutation_response>
+  delete_list_restaurant_tag_by_pk: (args: {
+    id: ScalarsEnums['uuid']
+  }) => Maybe<list_restaurant_tag>
   delete_menu_item: (args: {
     where: menu_item_bool_exp
   }) => Maybe<menu_item_mutation_response>
@@ -9990,6 +10817,14 @@ export interface Mutation {
     object: list_restaurant_insert_input
     on_conflict?: Maybe<list_restaurant_on_conflict>
   }) => Maybe<list_restaurant>
+  insert_list_restaurant_tag: (args: {
+    objects: Array<list_restaurant_tag_insert_input>
+    on_conflict?: Maybe<list_restaurant_tag_on_conflict>
+  }) => Maybe<list_restaurant_tag_mutation_response>
+  insert_list_restaurant_tag_one: (args: {
+    object: list_restaurant_tag_insert_input
+    on_conflict?: Maybe<list_restaurant_tag_on_conflict>
+  }) => Maybe<list_restaurant_tag>
   insert_menu_item: (args: {
     objects: Array<menu_item_insert_input>
     on_conflict?: Maybe<menu_item_on_conflict>
@@ -10113,31 +10948,33 @@ export interface Mutation {
     pk_columns: hrr_pk_columns_input
   }) => Maybe<hrr>
   update_list: (args: {
-    _append?: Maybe<list_append_input>
-    _delete_at_path?: Maybe<list_delete_at_path_input>
-    _delete_elem?: Maybe<list_delete_elem_input>
-    _delete_key?: Maybe<list_delete_key_input>
-    _prepend?: Maybe<list_prepend_input>
     _set?: Maybe<list_set_input>
     where: list_bool_exp
   }) => Maybe<list_mutation_response>
   update_list_by_pk: (args: {
-    _append?: Maybe<list_append_input>
-    _delete_at_path?: Maybe<list_delete_at_path_input>
-    _delete_elem?: Maybe<list_delete_elem_input>
-    _delete_key?: Maybe<list_delete_key_input>
-    _prepend?: Maybe<list_prepend_input>
     _set?: Maybe<list_set_input>
     pk_columns: list_pk_columns_input
   }) => Maybe<list>
   update_list_restaurant: (args: {
+    _inc?: Maybe<list_restaurant_inc_input>
     _set?: Maybe<list_restaurant_set_input>
     where: list_restaurant_bool_exp
   }) => Maybe<list_restaurant_mutation_response>
   update_list_restaurant_by_pk: (args: {
+    _inc?: Maybe<list_restaurant_inc_input>
     _set?: Maybe<list_restaurant_set_input>
     pk_columns: list_restaurant_pk_columns_input
   }) => Maybe<list_restaurant>
+  update_list_restaurant_tag: (args: {
+    _inc?: Maybe<list_restaurant_tag_inc_input>
+    _set?: Maybe<list_restaurant_tag_set_input>
+    where: list_restaurant_tag_bool_exp
+  }) => Maybe<list_restaurant_tag_mutation_response>
+  update_list_restaurant_tag_by_pk: (args: {
+    _inc?: Maybe<list_restaurant_tag_inc_input>
+    _set?: Maybe<list_restaurant_tag_set_input>
+    pk_columns: list_restaurant_tag_pk_columns_input
+  }) => Maybe<list_restaurant_tag>
   update_menu_item: (args: {
     _inc?: Maybe<menu_item_inc_input>
     _set?: Maybe<menu_item_set_input>
@@ -10372,6 +11209,27 @@ export interface Subscription {
     list_id: ScalarsEnums['uuid']
     restaurant_id: ScalarsEnums['uuid']
   }) => Maybe<list_restaurant>
+  list_restaurant_tag: (args?: {
+    distinct_on?: Maybe<
+      Array<ScalarsEnums['list_restaurant_tag_select_column']>
+    >
+    limit?: Maybe<ScalarsEnums['Int']>
+    offset?: Maybe<ScalarsEnums['Int']>
+    order_by?: Maybe<Array<list_restaurant_tag_order_by>>
+    where?: Maybe<list_restaurant_tag_bool_exp>
+  }) => Array<list_restaurant_tag>
+  list_restaurant_tag_aggregate: (args?: {
+    distinct_on?: Maybe<
+      Array<ScalarsEnums['list_restaurant_tag_select_column']>
+    >
+    limit?: Maybe<ScalarsEnums['Int']>
+    offset?: Maybe<ScalarsEnums['Int']>
+    order_by?: Maybe<Array<list_restaurant_tag_order_by>>
+    where?: Maybe<list_restaurant_tag_bool_exp>
+  }) => list_restaurant_tag_aggregate
+  list_restaurant_tag_by_pk: (args: {
+    id: ScalarsEnums['uuid']
+  }) => Maybe<list_restaurant_tag>
   menu_item: (args?: {
     distinct_on?: Maybe<Array<ScalarsEnums['menu_item_select_column']>>
     limit?: Maybe<ScalarsEnums['Int']>
@@ -10716,9 +11574,6 @@ export interface hrr_variance_fields {
 
 export interface list {
   __typename: 'list'
-  comments: (args?: {
-    path?: Maybe<ScalarsEnums['String']>
-  }) => Maybe<ScalarsEnums['jsonb']>
   created_at: ScalarsEnums['timestamptz']
   description?: Maybe<ScalarsEnums['String']>
   id: ScalarsEnums['uuid']
@@ -10793,6 +11648,7 @@ export interface list_restaurant {
   id: ScalarsEnums['uuid']
   list: list
   list_id: ScalarsEnums['uuid']
+  position?: Maybe<ScalarsEnums['Int']>
   restaurant: restaurant
   restaurant_id: ScalarsEnums['uuid']
   restaurants: (args?: {
@@ -10809,6 +11665,24 @@ export interface list_restaurant {
     order_by?: Maybe<Array<restaurant_order_by>>
     where?: Maybe<restaurant_bool_exp>
   }) => restaurant_aggregate
+  tags: (args?: {
+    distinct_on?: Maybe<
+      Array<ScalarsEnums['list_restaurant_tag_select_column']>
+    >
+    limit?: Maybe<ScalarsEnums['Int']>
+    offset?: Maybe<ScalarsEnums['Int']>
+    order_by?: Maybe<Array<list_restaurant_tag_order_by>>
+    where?: Maybe<list_restaurant_tag_bool_exp>
+  }) => Array<list_restaurant_tag>
+  tags_aggregate: (args?: {
+    distinct_on?: Maybe<
+      Array<ScalarsEnums['list_restaurant_tag_select_column']>
+    >
+    limit?: Maybe<ScalarsEnums['Int']>
+    offset?: Maybe<ScalarsEnums['Int']>
+    order_by?: Maybe<Array<list_restaurant_tag_order_by>>
+    where?: Maybe<list_restaurant_tag_bool_exp>
+  }) => list_restaurant_tag_aggregate
 }
 
 export interface list_restaurant_aggregate {
@@ -10819,12 +11693,25 @@ export interface list_restaurant_aggregate {
 
 export interface list_restaurant_aggregate_fields {
   __typename: 'list_restaurant_aggregate_fields'
+  avg?: Maybe<list_restaurant_avg_fields>
   count: (args?: {
     columns?: Maybe<Array<ScalarsEnums['list_restaurant_select_column']>>
     distinct?: Maybe<ScalarsEnums['Boolean']>
   }) => Maybe<ScalarsEnums['Int']>
   max?: Maybe<list_restaurant_max_fields>
   min?: Maybe<list_restaurant_min_fields>
+  stddev?: Maybe<list_restaurant_stddev_fields>
+  stddev_pop?: Maybe<list_restaurant_stddev_pop_fields>
+  stddev_samp?: Maybe<list_restaurant_stddev_samp_fields>
+  sum?: Maybe<list_restaurant_sum_fields>
+  var_pop?: Maybe<list_restaurant_var_pop_fields>
+  var_samp?: Maybe<list_restaurant_var_samp_fields>
+  variance?: Maybe<list_restaurant_variance_fields>
+}
+
+export interface list_restaurant_avg_fields {
+  __typename: 'list_restaurant_avg_fields'
+  position?: Maybe<ScalarsEnums['Float']>
 }
 
 export interface list_restaurant_max_fields {
@@ -10832,6 +11719,7 @@ export interface list_restaurant_max_fields {
   comment?: Maybe<ScalarsEnums['String']>
   id?: Maybe<ScalarsEnums['uuid']>
   list_id?: Maybe<ScalarsEnums['uuid']>
+  position?: Maybe<ScalarsEnums['Int']>
   restaurant_id?: Maybe<ScalarsEnums['uuid']>
 }
 
@@ -10840,6 +11728,7 @@ export interface list_restaurant_min_fields {
   comment?: Maybe<ScalarsEnums['String']>
   id?: Maybe<ScalarsEnums['uuid']>
   list_id?: Maybe<ScalarsEnums['uuid']>
+  position?: Maybe<ScalarsEnums['Int']>
   restaurant_id?: Maybe<ScalarsEnums['uuid']>
 }
 
@@ -10847,6 +11736,139 @@ export interface list_restaurant_mutation_response {
   __typename: 'list_restaurant_mutation_response'
   affected_rows: ScalarsEnums['Int']
   returning: Array<list_restaurant>
+}
+
+export interface list_restaurant_stddev_fields {
+  __typename: 'list_restaurant_stddev_fields'
+  position?: Maybe<ScalarsEnums['Float']>
+}
+
+export interface list_restaurant_stddev_pop_fields {
+  __typename: 'list_restaurant_stddev_pop_fields'
+  position?: Maybe<ScalarsEnums['Float']>
+}
+
+export interface list_restaurant_stddev_samp_fields {
+  __typename: 'list_restaurant_stddev_samp_fields'
+  position?: Maybe<ScalarsEnums['Float']>
+}
+
+export interface list_restaurant_sum_fields {
+  __typename: 'list_restaurant_sum_fields'
+  position?: Maybe<ScalarsEnums['Int']>
+}
+
+export interface list_restaurant_tag {
+  __typename: 'list_restaurant_tag'
+  id: ScalarsEnums['uuid']
+  list_id: ScalarsEnums['uuid']
+  list_restaurant_id: ScalarsEnums['uuid']
+  position: ScalarsEnums['Int']
+  restaurant_tag?: Maybe<restaurant_tag>
+  restaurant_tag_id: ScalarsEnums['uuid']
+}
+
+export interface list_restaurant_tag_aggregate {
+  __typename: 'list_restaurant_tag_aggregate'
+  aggregate?: Maybe<list_restaurant_tag_aggregate_fields>
+  nodes: Array<list_restaurant_tag>
+}
+
+export interface list_restaurant_tag_aggregate_fields {
+  __typename: 'list_restaurant_tag_aggregate_fields'
+  avg?: Maybe<list_restaurant_tag_avg_fields>
+  count: (args?: {
+    columns?: Maybe<Array<ScalarsEnums['list_restaurant_tag_select_column']>>
+    distinct?: Maybe<ScalarsEnums['Boolean']>
+  }) => Maybe<ScalarsEnums['Int']>
+  max?: Maybe<list_restaurant_tag_max_fields>
+  min?: Maybe<list_restaurant_tag_min_fields>
+  stddev?: Maybe<list_restaurant_tag_stddev_fields>
+  stddev_pop?: Maybe<list_restaurant_tag_stddev_pop_fields>
+  stddev_samp?: Maybe<list_restaurant_tag_stddev_samp_fields>
+  sum?: Maybe<list_restaurant_tag_sum_fields>
+  var_pop?: Maybe<list_restaurant_tag_var_pop_fields>
+  var_samp?: Maybe<list_restaurant_tag_var_samp_fields>
+  variance?: Maybe<list_restaurant_tag_variance_fields>
+}
+
+export interface list_restaurant_tag_avg_fields {
+  __typename: 'list_restaurant_tag_avg_fields'
+  position?: Maybe<ScalarsEnums['Float']>
+}
+
+export interface list_restaurant_tag_max_fields {
+  __typename: 'list_restaurant_tag_max_fields'
+  id?: Maybe<ScalarsEnums['uuid']>
+  list_id?: Maybe<ScalarsEnums['uuid']>
+  list_restaurant_id?: Maybe<ScalarsEnums['uuid']>
+  position?: Maybe<ScalarsEnums['Int']>
+  restaurant_tag_id?: Maybe<ScalarsEnums['uuid']>
+}
+
+export interface list_restaurant_tag_min_fields {
+  __typename: 'list_restaurant_tag_min_fields'
+  id?: Maybe<ScalarsEnums['uuid']>
+  list_id?: Maybe<ScalarsEnums['uuid']>
+  list_restaurant_id?: Maybe<ScalarsEnums['uuid']>
+  position?: Maybe<ScalarsEnums['Int']>
+  restaurant_tag_id?: Maybe<ScalarsEnums['uuid']>
+}
+
+export interface list_restaurant_tag_mutation_response {
+  __typename: 'list_restaurant_tag_mutation_response'
+  affected_rows: ScalarsEnums['Int']
+  returning: Array<list_restaurant_tag>
+}
+
+export interface list_restaurant_tag_stddev_fields {
+  __typename: 'list_restaurant_tag_stddev_fields'
+  position?: Maybe<ScalarsEnums['Float']>
+}
+
+export interface list_restaurant_tag_stddev_pop_fields {
+  __typename: 'list_restaurant_tag_stddev_pop_fields'
+  position?: Maybe<ScalarsEnums['Float']>
+}
+
+export interface list_restaurant_tag_stddev_samp_fields {
+  __typename: 'list_restaurant_tag_stddev_samp_fields'
+  position?: Maybe<ScalarsEnums['Float']>
+}
+
+export interface list_restaurant_tag_sum_fields {
+  __typename: 'list_restaurant_tag_sum_fields'
+  position?: Maybe<ScalarsEnums['Int']>
+}
+
+export interface list_restaurant_tag_var_pop_fields {
+  __typename: 'list_restaurant_tag_var_pop_fields'
+  position?: Maybe<ScalarsEnums['Float']>
+}
+
+export interface list_restaurant_tag_var_samp_fields {
+  __typename: 'list_restaurant_tag_var_samp_fields'
+  position?: Maybe<ScalarsEnums['Float']>
+}
+
+export interface list_restaurant_tag_variance_fields {
+  __typename: 'list_restaurant_tag_variance_fields'
+  position?: Maybe<ScalarsEnums['Float']>
+}
+
+export interface list_restaurant_var_pop_fields {
+  __typename: 'list_restaurant_var_pop_fields'
+  position?: Maybe<ScalarsEnums['Float']>
+}
+
+export interface list_restaurant_var_samp_fields {
+  __typename: 'list_restaurant_var_samp_fields'
+  position?: Maybe<ScalarsEnums['Float']>
+}
+
+export interface list_restaurant_variance_fields {
+  __typename: 'list_restaurant_variance_fields'
+  position?: Maybe<ScalarsEnums['Float']>
 }
 
 export interface menu_item {
@@ -12285,6 +13307,7 @@ export interface user {
     where?: Maybe<list_bool_exp>
   }) => list_aggregate
   location?: Maybe<ScalarsEnums['String']>
+  name?: Maybe<ScalarsEnums['String']>
   password: ScalarsEnums['String']
   password_reset_date?: Maybe<ScalarsEnums['timestamptz']>
   password_reset_token?: Maybe<ScalarsEnums['String']>
@@ -12349,6 +13372,7 @@ export interface user_max_fields {
   email?: Maybe<ScalarsEnums['String']>
   id?: Maybe<ScalarsEnums['uuid']>
   location?: Maybe<ScalarsEnums['String']>
+  name?: Maybe<ScalarsEnums['String']>
   password?: Maybe<ScalarsEnums['String']>
   password_reset_date?: Maybe<ScalarsEnums['timestamptz']>
   password_reset_token?: Maybe<ScalarsEnums['String']>
@@ -12370,6 +13394,7 @@ export interface user_min_fields {
   email?: Maybe<ScalarsEnums['String']>
   id?: Maybe<ScalarsEnums['uuid']>
   location?: Maybe<ScalarsEnums['String']>
+  name?: Maybe<ScalarsEnums['String']>
   password?: Maybe<ScalarsEnums['String']>
   password_reset_date?: Maybe<ScalarsEnums['timestamptz']>
   password_reset_token?: Maybe<ScalarsEnums['String']>
@@ -12421,10 +13446,19 @@ export interface user_variance_fields {
 
 export interface zcta5 {
   __typename: 'zcta5'
+  aland10?: Maybe<ScalarsEnums['float8']>
+  awater10?: Maybe<ScalarsEnums['float8']>
+  classfp10?: Maybe<ScalarsEnums['String']>
+  funcstat10?: Maybe<ScalarsEnums['String']>
+  geoid10?: Maybe<ScalarsEnums['String']>
+  intptlat10?: Maybe<ScalarsEnums['String']>
+  intptlon10?: Maybe<ScalarsEnums['String']>
+  mtfcc10?: Maybe<ScalarsEnums['String']>
   nhood?: Maybe<ScalarsEnums['String']>
   ogc_fid: ScalarsEnums['Int']
   slug?: Maybe<ScalarsEnums['String']>
   wkb_geometry?: Maybe<ScalarsEnums['geometry']>
+  zcta5ce10?: Maybe<ScalarsEnums['String']>
 }
 
 export interface zcta5_aggregate {
@@ -12453,21 +13487,41 @@ export interface zcta5_aggregate_fields {
 
 export interface zcta5_avg_fields {
   __typename: 'zcta5_avg_fields'
+  aland10?: Maybe<ScalarsEnums['Float']>
+  awater10?: Maybe<ScalarsEnums['Float']>
   ogc_fid?: Maybe<ScalarsEnums['Float']>
 }
 
 export interface zcta5_max_fields {
   __typename: 'zcta5_max_fields'
+  aland10?: Maybe<ScalarsEnums['float8']>
+  awater10?: Maybe<ScalarsEnums['float8']>
+  classfp10?: Maybe<ScalarsEnums['String']>
+  funcstat10?: Maybe<ScalarsEnums['String']>
+  geoid10?: Maybe<ScalarsEnums['String']>
+  intptlat10?: Maybe<ScalarsEnums['String']>
+  intptlon10?: Maybe<ScalarsEnums['String']>
+  mtfcc10?: Maybe<ScalarsEnums['String']>
   nhood?: Maybe<ScalarsEnums['String']>
   ogc_fid?: Maybe<ScalarsEnums['Int']>
   slug?: Maybe<ScalarsEnums['String']>
+  zcta5ce10?: Maybe<ScalarsEnums['String']>
 }
 
 export interface zcta5_min_fields {
   __typename: 'zcta5_min_fields'
+  aland10?: Maybe<ScalarsEnums['float8']>
+  awater10?: Maybe<ScalarsEnums['float8']>
+  classfp10?: Maybe<ScalarsEnums['String']>
+  funcstat10?: Maybe<ScalarsEnums['String']>
+  geoid10?: Maybe<ScalarsEnums['String']>
+  intptlat10?: Maybe<ScalarsEnums['String']>
+  intptlon10?: Maybe<ScalarsEnums['String']>
+  mtfcc10?: Maybe<ScalarsEnums['String']>
   nhood?: Maybe<ScalarsEnums['String']>
   ogc_fid?: Maybe<ScalarsEnums['Int']>
   slug?: Maybe<ScalarsEnums['String']>
+  zcta5ce10?: Maybe<ScalarsEnums['String']>
 }
 
 export interface zcta5_mutation_response {
@@ -12478,36 +13532,50 @@ export interface zcta5_mutation_response {
 
 export interface zcta5_stddev_fields {
   __typename: 'zcta5_stddev_fields'
+  aland10?: Maybe<ScalarsEnums['Float']>
+  awater10?: Maybe<ScalarsEnums['Float']>
   ogc_fid?: Maybe<ScalarsEnums['Float']>
 }
 
 export interface zcta5_stddev_pop_fields {
   __typename: 'zcta5_stddev_pop_fields'
+  aland10?: Maybe<ScalarsEnums['Float']>
+  awater10?: Maybe<ScalarsEnums['Float']>
   ogc_fid?: Maybe<ScalarsEnums['Float']>
 }
 
 export interface zcta5_stddev_samp_fields {
   __typename: 'zcta5_stddev_samp_fields'
+  aland10?: Maybe<ScalarsEnums['Float']>
+  awater10?: Maybe<ScalarsEnums['Float']>
   ogc_fid?: Maybe<ScalarsEnums['Float']>
 }
 
 export interface zcta5_sum_fields {
   __typename: 'zcta5_sum_fields'
+  aland10?: Maybe<ScalarsEnums['float8']>
+  awater10?: Maybe<ScalarsEnums['float8']>
   ogc_fid?: Maybe<ScalarsEnums['Int']>
 }
 
 export interface zcta5_var_pop_fields {
   __typename: 'zcta5_var_pop_fields'
+  aland10?: Maybe<ScalarsEnums['Float']>
+  awater10?: Maybe<ScalarsEnums['Float']>
   ogc_fid?: Maybe<ScalarsEnums['Float']>
 }
 
 export interface zcta5_var_samp_fields {
   __typename: 'zcta5_var_samp_fields'
+  aland10?: Maybe<ScalarsEnums['Float']>
+  awater10?: Maybe<ScalarsEnums['Float']>
   ogc_fid?: Maybe<ScalarsEnums['Float']>
 }
 
 export interface zcta5_variance_fields {
   __typename: 'zcta5_variance_fields'
+  aland10?: Maybe<ScalarsEnums['Float']>
+  awater10?: Maybe<ScalarsEnums['Float']>
   ogc_fid?: Maybe<ScalarsEnums['Float']>
 }
 
@@ -12524,6 +13592,9 @@ export interface ScalarsEnums extends Scalars {
   list_constraint: list_constraint
   list_restaurant_constraint: list_restaurant_constraint
   list_restaurant_select_column: list_restaurant_select_column
+  list_restaurant_tag_constraint: list_restaurant_tag_constraint
+  list_restaurant_tag_select_column: list_restaurant_tag_select_column
+  list_restaurant_tag_update_column: list_restaurant_tag_update_column
   list_restaurant_update_column: list_restaurant_update_column
   list_select_column: list_select_column
   list_update_column: list_update_column

@@ -37,7 +37,7 @@
     "validate:tsc": "tsc --noEmit",
     "build": "ultra -r --no-pretty build",
     "build:docker": "./dishctl.sh buildkit_build_local",
-    "build:watch": "tsc -b -w",
+    "build:watch": "tsc -b -w --preserveWatchOutput tsconfig.build.json",
     "build:monitor": "ultra --monitor",
     "build:refs": "typescript-monorepo-toolkit inject-refs .",
     "test": "ultra -r --no-pretty --serial test",
@@ -52,7 +52,7 @@
     "snackui:push": "git subrepo clean snackui && git subrepo push snackui"
   },
   "resolutions": {
-    "typescript": "4.1.3",
+    "typescript": "4.2.0-beta",
     "webpack": "5.13.0",
     "terser": "5.5.1",
     "lodash": "4.17.20",
@@ -106,7 +106,7 @@
     "react-refresh": "0.0.0-experimental-27659559e",
     "ts-node": "^9.1.1",
     "tsconfig-paths": "^3.9.0",
-    "typescript": "^4.1.2",
+    "typescript": "^4.2.0-beta",
     "ultra-runner": "^3.7.1"
   },
   "importSort": {

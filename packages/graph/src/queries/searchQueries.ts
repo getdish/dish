@@ -4,7 +4,7 @@ import {
   RestaurantOnlyIds,
   RestaurantSearchArgs,
   TopCuisine,
-} from '../types-extra'
+} from '../typesExtra'
 
 // See https://wiki.openstreetmap.org/wiki/Zoom_levels
 const TILE_BASED_CACHE_ZOOM = 11

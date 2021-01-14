@@ -31,16 +31,16 @@ import { sleep } from './sleep'
 export function series(fns: (Function | ((x?: any) => any))[]) {
   let current: any
   let cancelled = false
+  let val: any
 
   async function run() {
-    let prev: any
     for (const fn of fns) {
       if (cancelled) return
-      current = fn(prev)
+      current = fn(val)
       if (current instanceof Promise) {
-        prev = await current
+        val = await current
       } else {
-        prev = current
+        val = current
       }
     }
   }
@@ -52,7 +52,7 @@ export function series(fns: (Function | ((x?: any) => any))[]) {
     cancelPromise(current)
   }
 
-  cancel.value = () => current
+  cancel.value = () => val
   return cancel
 }
 

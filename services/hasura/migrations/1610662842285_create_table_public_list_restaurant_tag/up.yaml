@@ -1,0 +1,15 @@
+- args:
+    cascade: false
+    read_only: false
+    sql: CREATE TABLE "public"."list_restaurant_tag"("id" uuid NOT NULL, "list_id"
+      uuid NOT NULL, "list_restaurant_id" uuid NOT NULL, "tag_id" uuid NOT NULL, "position"
+      integer NOT NULL, PRIMARY KEY ("id") , FOREIGN KEY ("list_id") REFERENCES "public"."list"("id")
+      ON UPDATE cascade ON DELETE cascade, FOREIGN KEY ("list_restaurant_id") REFERENCES
+      "public"."list_restaurant"("id") ON UPDATE cascade ON DELETE cascade, FOREIGN
+      KEY ("tag_id") REFERENCES "public"."tag"("id") ON UPDATE cascade ON DELETE cascade,
+      UNIQUE ("id"));
+  type: run_sql
+- args:
+    name: list_restaurant_tag
+    schema: public
+  type: add_existing_table_or_view
