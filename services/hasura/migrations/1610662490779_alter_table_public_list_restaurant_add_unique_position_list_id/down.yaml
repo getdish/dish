@@ -1,0 +1,5 @@
+- args:
+    cascade: false
+    read_only: false
+    sql: alter table "public"."list_restaurant" drop constraint "list_restaurant_position_list_id_key";
+  type: run_sql

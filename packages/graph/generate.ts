@@ -1,11 +1,15 @@
+import '@dish/helpers/polyfill'
+
 import { inspectWriteGenerate } from '@dish/gqless-cli'
 
-import { Auth, getAuthHeaders } from './src/Auth'
+import { getAuthHeaders } from './src/getAuth'
 import { getGraphEndpoint } from './src/helpers/getGraphEndpoint'
 
 const run = async () => {
+  const endpoint = getGraphEndpoint()
+  console.log('Generating from endpoint', endpoint)
   await inspectWriteGenerate({
-    endpoint: getGraphEndpoint(),
+    endpoint,
     destination: 'src/graphql/schema.generated.ts',
     overwrite: true,
     headers: getAuthHeaders(),

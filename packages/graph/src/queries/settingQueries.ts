@@ -12,9 +12,10 @@ export const _settingFindOne = QueryHelpers.findOne
 
 export async function settingFindOne(
   requested_setting: Partial<Setting>
-): Promise<Setting> {
-  console.log(141414)
-  if (!requested_setting.key) return {} as Setting
+): Promise<Setting | null> {
+  if (!requested_setting.key) {
+    return null
+  }
   let found_setting = await _settingFindOne(
     requested_setting,
     (v_s: setting[]) => {
@@ -33,14 +34,13 @@ export async function settingFindOne(
 }
 
 async function initKey(key: string) {
-  console.log('SETTING HELPER: inserting new key for ' + key)
   await settingInsert([{ key, value: {} }])
   return { key, value: {} } as WithID<Setting>
 }
 
 export async function settingGet(key: string) {
   const setting = await settingFindOne({ key: key })
-  return setting['value']
+  return setting?.value
 }
 
 export async function settingSet(key: string, value: any) {
@@ -56,6 +56,6 @@ export async function settingSet(key: string, value: any) {
       },
       _append: { value },
     })
-    return result as Setting[]
+    return (result as any) as Setting[]
   })
 }

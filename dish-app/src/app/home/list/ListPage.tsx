@@ -1,7 +1,15 @@
 // // debug
 import { series, sleep } from '@dish/async'
-import { graphql, listInsert, order_by, query, slugify } from '@dish/graph'
-import { assertNonNull } from '@dish/helpers'
+import {
+  List,
+  graphql,
+  list,
+  listInsert,
+  order_by,
+  query,
+  slugify,
+} from '@dish/graph'
+import { assertIsString, assertNonNull } from '@dish/helpers'
 import { Heart, X } from '@dish/react-feather'
 import React, { useEffect, useState } from 'react'
 import { Switch } from 'react-native'
@@ -51,20 +59,18 @@ export default function ListPage(props: Props) {
     // create a new list and redirect to it
     return series([
       () => sleep(500),
-      () => {
-        return fetch('/api/randomName').then(
-          (res) => res.json() as Promise<string>
-        )
-      },
-      (randomName) => {
-        assertNonNull(userStore.user.id)
-        return listInsert([
+      () => fetch('/api/randomName').then((res) => res.text()),
+      async (randomName) => {
+        assertIsString(userStore.user.id, 'no-user-id')
+        const [list] = await listInsert([
           {
             name: randomName,
             slug: slugify(randomName),
             user_id: userStore.user.id,
           },
-        ])?.[0]
+        ])
+        console.log('list', list)
+        return list
       },
       (list) => {
         if (!list) {
@@ -120,63 +126,100 @@ const setIsEditing = (val: boolean) => {
   })
 }
 
+function useListRestaurants(list: list) {
+  const items = list
+    .restaurants({
+      order_by: [{ position: order_by.desc }],
+    })
+    .map((r) => {
+      return {
+        restaurant: r.restaurant,
+        comment: r.comment,
+        position: r.position,
+        dishes: r
+          .tags({
+            order_by: [{ position: order_by.desc }],
+          })
+          .map((listTag) => {
+            return listTag.restaurant_tag
+          }),
+      }
+    })
+
+  return [
+    items,
+    () => {
+      console.log('todo')
+    },
+  ] as const
+}
+
 const ListPageContent = graphql((props: Props) => {
   const user = useUserStore()
   const isMyList = props.item.userSlug === slugify(user.user?.username)
   const isEditing = props.item.state === 'edit'
   const [color, setColor] = useState(blue)
 
-  // fake data until i get docker/schema generation workign
-  const restaurants = query.restaurant({
-    limit: 10,
-    where: {
-      summary: {
-        _is_null: false,
+  // const list = {
+  //   name: 'Horse Fish Circus',
+  //   slug: 'horse-fish-circus',
+  //   user: {
+  //     name: 'Peach',
+  //     username: 'admin',
+  //   },
+  //   description:
+  //     'Lorem ipsum dolor sit amet Lorem ipsum dolor sit amet Lorem ipsum dolor sit amet Lorem ipsum dolor sit amet Lorem ipsum dolor sit amet.',
+  //   restaurants: restaurants.map((restaurant, index) => {
+  //     return {
+  //       restaurant,
+  //       description:
+  //         'Lorem ipsum dolor sit amet Lorem ipsum dolor sit amet Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet Lorem ipsum dolor sit amet Lorem ipsum dolor sit amet.',
+  //       position: index,
+  //       dishes: restaurant
+  //         .tags({
+  //           where: {
+  //             tag: {
+  //               type: {
+  //                 _eq: 'dish',
+  //               },
+  //             },
+  //           },
+  //           limit: 8,
+  //           order_by: [
+  //             {
+  //               upvotes: order_by.desc,
+  //             },
+  //           ],
+  //         })
+  //         .map((x) => x.tag),
+  //     }
+  //   }),
+  // }
+
+  const l = queryList(props.item.slug)
+  const [restaurants, setRestaurants] = useListRestaurants(l)
+
+  function queryList(slug?: string) {
+    return query.list({
+      where: {
+        slug: {
+          _eq: slug,
+        },
       },
-    },
-    order_by: [
-      {
-        upvotes: order_by.desc,
-      },
-    ],
-  })
-  const list = {
-    name: 'Horse Fish Circus',
-    slug: 'horse-fish-circus',
-    user: {
-      name: 'Peach',
-      username: 'admin',
-    },
-    description:
-      'Lorem ipsum dolor sit amet Lorem ipsum dolor sit amet Lorem ipsum dolor sit amet Lorem ipsum dolor sit amet Lorem ipsum dolor sit amet.',
-    restaurants: restaurants.map((restaurant, index) => {
-      return {
-        restaurant,
-        description:
-          'Lorem ipsum dolor sit amet Lorem ipsum dolor sit amet Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet Lorem ipsum dolor sit amet Lorem ipsum dolor sit amet.',
-        position: index,
-        dishes: restaurant
-          .tags({
-            where: {
-              tag: {
-                type: {
-                  _eq: 'dish',
-                },
-              },
-            },
-            limit: 8,
-            order_by: [
-              {
-                upvotes: order_by.desc,
-              },
-            ],
-          })
-          .map((x) => x.tag),
-      }
-    }),
+    })[0]
   }
 
-  console.log('list', list)
+  const list = {
+    name: l.name,
+    description: l.description,
+    user: {
+      username: l.user.username,
+      name: l.user.name,
+    },
+    restaurants,
+  }
+
+  console.log('list', JSON.stringify(list))
 
   useSetAppMapResults({
     isActive: props.isActive,
@@ -308,8 +351,8 @@ const ListPageContent = graphql((props: Props) => {
         )}
       </VStack>
 
-      {list.restaurants.map(({ restaurant, description, dishes }, index) => {
-        const dishSlugs = dishes.map((x) => x.slug)
+      {list.restaurants.map(({ restaurant, comment, dishes }, index) => {
+        const dishSlugs = dishes.map((x) => x.tag.slug)
         if (!restaurant.slug) {
           return null
         }
@@ -320,7 +363,7 @@ const ListPageContent = graphql((props: Props) => {
             restaurantId={restaurant.id}
             restaurantSlug={restaurant.slug}
             rank={index + 1}
-            description={description}
+            description={comment}
             hideTagRow
             flexibleHeight
             dishSlugs={dishSlugs}

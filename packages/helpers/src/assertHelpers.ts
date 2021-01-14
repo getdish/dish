@@ -1,9 +1,12 @@
 export class AssertionError extends Error {}
 export class AsserionNullError extends AssertionError {}
 
-export function assertPresent(value: any): asserts value is null | undefined {
+export function assertPresent(
+  value: any,
+  why?: string
+): asserts value is null | undefined {
   if (value !== undefined && value !== null) {
-    throw new AssertionError('Expected value: ' + value)
+    throw new AssertionError(`Expected ${why ?? 'value: ' + value}`)
   }
 }
 
@@ -13,24 +16,28 @@ export function assertSame<T>(a: T, b: T) {
   }
 }
 
-export function assertIsString(val: unknown): asserts val is string {
+export function assertIsString(
+  val: unknown,
+  why?: string
+): asserts val is string {
   if (typeof val !== 'string') {
-    throw new AssertionError('Expected string ' + val)
+    throw new AssertionError(`Expected ${why ?? 'string ' + val}`)
   }
 }
 
 export function assertInstanceOf<T>(
   val: unknown,
-  clazz: new (...args: any[]) => T
+  clazz: new (...args: any[]) => T,
+  why?: string
 ): asserts val is T {
   if (!(val instanceof clazz)) {
-    throw new AssertionError('Expected instance of ' + clazz)
+    throw new AssertionError(`Expected ${why ?? `instance of ${clazz}`}`)
   }
 }
 
-export function assert(value: unknown): asserts value {
+export function assert(value: unknown, why?: string): asserts value {
   if (value !== true) {
-    throw new AssertionError()
+    throw new AssertionError(why)
   }
 }
 
@@ -38,9 +45,9 @@ export function assertNever(value: never) {
   throw new AssertionError('unexpected value ' + value)
 }
 
-export function assertNonNull<T>(value: T): NonNullable<T> {
+export function assertNonNull<T>(value: T, why?: string): NonNullable<T> {
   if (value == null) {
-    throw new AsserionNullError()
+    throw new AsserionNullError(why)
   }
   return value as any
 }

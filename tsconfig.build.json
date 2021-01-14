@@ -1,0 +1,15 @@
+{
+  "files": [],
+  "compilerOptions": {
+    "typeRoots": ["node_modules/@types"],
+    "skipDefaultLibCheck": true,
+    "skipLibCheck": true
+  },
+  "references": [
+    { "path": "dish-app" },
+    { "path": "packages/react-feather" },
+    { "path": "services/crawlers" },
+    { "path": "services/worker" },
+    { "path": "services/hasura" }
+  ]
+}

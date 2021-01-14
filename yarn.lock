@@ -16886,10 +16886,10 @@ typescript-monorepo-toolkit@^0.2.0:
     recast "^0.20.2"
     workspace-info "^0.0.5"
 
-typescript@*, typescript@4, typescript@4.1.3, typescript@^3.2.4, typescript@^3.3.3, typescript@^4.1.2, typescript@^4.1.3:
-  version "4.1.3"
-  resolved "https://registry.npmjs.org/typescript/-/typescript-4.1.3.tgz#519d582bd94cba0cf8934c7d8e8467e473f53bb7"
-  integrity sha512-B3ZIOf1IKeH2ixgHhj6la6xdwR9QrLC5d1VKeCSY4tvkqhF2eqd9O7txNlS0PO3GrBAFIdr3L1ndNwteUbZLYg==
+typescript@*, typescript@4, typescript@4.2.0-beta, typescript@^3.2.4, typescript@^3.3.3, typescript@^4.1.2, typescript@^4.1.3, typescript@^4.2.0-beta:
+  version "4.2.0-beta"
+  resolved "https://registry.npmjs.org/typescript/-/typescript-4.2.0-beta.tgz#75326e43625718f4a325f5725a105a1b3f1a7b45"
+  integrity sha512-0nYjpkQ6bKjHoJTQkUHcDtGLNenqc5rfTcl3ISUnJXPkGa0115FcVJABmodfMKHLyDBmzDr8IGLbDv5m7sbYgw==
 
 typical@^4.0.0:
   version "4.0.0"
