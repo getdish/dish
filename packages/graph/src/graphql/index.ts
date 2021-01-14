@@ -1,6 +1,6 @@
 import { QueryFetcher, createClient } from '@dish/gqless'
 
-import { getAuthHeaders } from '../Auth'
+import { getAuthHeaders } from '../getAuth'
 import { getGraphEndpoint } from '../helpers/getGraphEndpoint'
 import {
   GeneratedSchema,

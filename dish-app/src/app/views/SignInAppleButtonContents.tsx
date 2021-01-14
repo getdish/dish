@@ -12,12 +12,14 @@ const { auth } = require('../../web/apple-sign-in')
 
 export default function SignInAppleButton() {
   useEffect(() => {
-    auth.init({
+    const conf = {
       clientId: 'com.dishapp',
       scope: 'name email',
       redirectURI: Auth.getRedirectUri(),
       usePopup: isSafari,
-    })
+    }
+    console.log(conf)
+    auth.init(conf)
   }, [])
 
   const [loading, setLoading] = useState(false)
@@ -38,9 +40,9 @@ export default function SignInAppleButton() {
         return // in-browser
       }
       const { authorization } = await res
-      const user = await Auth.appleAuth(authorization)
+      const data = await Auth.appleAuth(authorization)
       Toast.show('Logged in!')
-      userStore.setUser(user)
+      userStore.afterLogin(data)
     } catch (err) {
       Toast.show('Error loggin in 😭', { type: 'error' })
       console.error('signin err', err)

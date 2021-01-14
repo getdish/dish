@@ -12,11 +12,14 @@ export type ServerConfig = {
   port?: number
   hostname?: string
   apiDir?: string | null
+  https?: boolean
 }
 
-export type ServerConfigNormal = ServerConfig & {
+export type ServerConfigNormal = Required<ServerConfig> & {
+  url: string
   rootDir: string
   buildDir: string
+  protocol: string
   createConfig: (opts: CreateWebpackConfig) => Configuration
   webpackConfig: Omit<CreateWebpackConfig, 'target'>
 }
@@ -43,10 +46,4 @@ export type File = {
   route: string
   file: string
   fileIn: string
-}
-
-export type WorkerData = {
-  watch: boolean
-  outDir: string
-  files: File[]
 }

@@ -1,10 +1,10 @@
-import { userUpdate } from '@dish/graph/src'
+import { EditUserResponse, userUpdate } from '@dish/graph'
 
 import { getUserFromRoute, secureRoute } from './_user'
 
 export default secureRoute('user', async (req, res) => {
   const user = await getUserFromRoute(req)!
-  const { username, about, location, charIndex } = req.body
+  const { about, location, charIndex } = req.body
   user.has_onboarded = true
   user.email = user.email ?? 'default@dishapp.com'
   if (about !== null) user.about = about
@@ -12,14 +12,15 @@ export default secureRoute('user', async (req, res) => {
   if (charIndex !== null) user.charIndex = charIndex
   try {
     await userUpdate(user)
-    res.json({
+    const val: EditUserResponse = {
       email: user.email,
       has_onboarded: user.has_onboarded,
       about: user.about,
       location: user.location,
       charIndex: user.charIndex,
       username: user.username,
-    })
+    }
+    res.status(200).json(val)
   } catch (e) {
     res.status(409).send('failed')
     return

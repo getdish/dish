@@ -1,4 +1,4 @@
-import { User } from '@dish/graph'
+import { JWT_SECRET, User } from '@dish/graph'
 import jwt from 'jsonwebtoken'
 
 export function jwtSign(user: Pick<User, 'username' | 'id' | 'role'>) {
@@ -12,7 +12,7 @@ export function jwtSign(user: Pick<User, 'username' | 'id' | 'role'>) {
         'x-hasura-default-role': user.role,
       },
     },
-    `${process.env.JWT_SECRET}`,
+    JWT_SECRET,
     { expiresIn: '1w' }
   )
 }

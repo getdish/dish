@@ -4,7 +4,7 @@ import { Image } from 'react-native'
 import { Paragraph, Spacer, Text, VStack } from 'snackui'
 
 import dishLogo from '../assets/dish-neon.jpg'
-import { lightYellow, yellowPastel } from '../constants/colors'
+import { lightYellow, pinkPastel } from '../constants/colors'
 import { AuthForm } from './AuthForm'
 import { IntroModalStore } from './IntroModalStore'
 import { LinkButton } from './views/LinkButton'
@@ -38,22 +38,22 @@ export const AppIntroLogin = memo(() => {
           paddingHorizontal="3%"
           maxWidth={320}
           fontWeight="300"
-          size="xl"
+          size="lg"
           textAlign="center"
         >
-          find amazing things
+          your pocket guide to the world
         </Paragraph>
 
         <LinkButton
           textProps={{
             fontSize: 18,
-            color: yellowPastel,
+            color: pinkPastel,
             fontWeight: '700',
           }}
           alignSelf="center"
-          backgroundColor={`${yellowPastel}44`}
+          backgroundColor={`${pinkPastel}44`}
           hoverStyle={{
-            backgroundColor: `${yellowPastel}66`,
+            backgroundColor: `${pinkPastel}66`,
           }}
           name="about"
           onPressOut={() => {

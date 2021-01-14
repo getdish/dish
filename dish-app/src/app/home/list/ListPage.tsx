@@ -1,17 +1,15 @@
 // // debug
 import { series, sleep } from '@dish/async'
-import { slugify } from '@dish/graph/src'
-import { graphql, order_by, query } from '@dish/graph/src'
+import { graphql, order_by, query, slugify } from '@dish/graph'
 import { Heart, X } from '@dish/react-feather'
-import React, { Suspense, useEffect, useState } from 'react'
-import { Switch, TextInput } from 'react-native'
+import React, { useEffect, useState } from 'react'
+import { Switch } from 'react-native'
 import {
   AbsoluteVStack,
   Box,
   Button,
   HStack,
   Input,
-  LoadingItems,
   Paragraph,
   Popover,
   Spacer,
@@ -35,7 +33,6 @@ import { useUserStore } from '../../userStore'
 import { ContentScrollView } from '../../views/ContentScrollView'
 import { Link } from '../../views/Link'
 import { ScalingPressable } from '../../views/ScalingPressable'
-import { SlantedLinkButton } from '../../views/SlantedLinkButton'
 import { SlantedTitle } from '../../views/SlantedTitle'
 import { StackDrawer } from '../../views/StackDrawer'
 import { StackItemProps } from '../HomeStackView'

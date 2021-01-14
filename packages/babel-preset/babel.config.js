@@ -7,17 +7,19 @@ module.exports = function (api) {
     () => `${process.env.NODE_ENV}${process.env.TARGET}${process.env.LEGACY}`
   )
 
+  const shouldOptimize = api.env('production') && !isWorker && !isSSR
+
   return {
     plugins: [
       isSSR && '@loadable/babel-plugin',
       api.env('development') && !isWorker && !isSSR && 'react-refresh/babel',
       !api.env('production') && '@babel/plugin-transform-react-display-name',
-      ...(api.env('production') && !isWorker && !isSSR
+      ...(shouldOptimize
         ? [
             'babel-plugin-lodash',
             '@babel/plugin-transform-react-inline-elements',
             '@babel/plugin-transform-react-constant-elements',
-            '@eps1lon/babel-plugin-optimize-react',
+            // '@eps1lon/babel-plugin-optimize-react',
           ]
         : []),
       '@babel/plugin-proposal-class-properties',

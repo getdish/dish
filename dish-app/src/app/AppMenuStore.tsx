@@ -1,18 +1,18 @@
 import { Store, createStore } from '@dish/use-store'
 
 class AppMenuStore extends Store {
-  showMenu = false
+  isVisible = false
 
-  setShowMenu(val: boolean) {
-    this.showMenu = val
+  setIsVisible(val: boolean) {
+    this.isVisible = val
   }
 
   hide() {
-    this.showMenu = false
+    this.isVisible = false
   }
 
   show() {
-    this.showMenu = true
+    this.isVisible = true
   }
 }
 

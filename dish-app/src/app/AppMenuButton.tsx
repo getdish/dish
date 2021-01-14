@@ -1,5 +1,5 @@
 import { Menu } from '@dish/react-feather'
-import { Store, useStore } from '@dish/use-store'
+import { useStoreInstance } from '@dish/use-store'
 import React from 'react'
 import {
   AbsoluteVStack,
@@ -12,24 +12,12 @@ import {
 
 import { zIndexDrawer } from '../constants/constants'
 import { AppMenuContents } from './AppMenuContents'
+import { appMenuStore } from './AppMenuStore'
 import { useSafeArea } from './hooks/useSafeArea'
-import { useSearchBarTheme } from './hooks/useSearchBarTheme'
-
-class UserMenuStore extends Store {
-  show = false
-
-  toggle() {
-    this.show = !this.show
-  }
-
-  setShow(val: boolean) {
-    this.show = val
-  }
-}
 
 export const AppMenuButton = () => {
   const media = useMedia()
-  const userMenu = useStore(UserMenuStore)
+  const appMenu = useStoreInstance(appMenuStore)
   const safeArea = useSafeArea()
 
   if (!media.xs) {
@@ -39,20 +27,13 @@ export const AppMenuButton = () => {
   return (
     <>
       <Modal
-        visible={userMenu.show}
+        visible={appMenu.isVisible}
         presentationStyle="formSheet"
         overlayDismisses
-        onDismiss={() => {
-          userMenu.setShow(false)
-        }}
-        onRequestClose={() => {
-          userMenu.setShow(false)
-        }}
+        onDismiss={appMenu.hide}
+        onRequestClose={appMenu.hide}
       >
-        <AppMenuContents
-          flex={1}
-          hideUserMenu={() => userMenu.setShow(false)}
-        />
+        <AppMenuContents flex={1} hideUserMenu={appMenu.hide} />
       </Modal>
       <AbsoluteVStack
         top={safeArea.top ? safeArea.top : 10}
@@ -74,9 +55,7 @@ export const AppMenuButton = () => {
           pressStyle={{
             transform: [{ scale: 0.9 }],
           }}
-          onPress={() => {
-            userMenu.toggle()
-          }}
+          onPress={appMenu.show}
         >
           <BlurView
             borderRadius={24}

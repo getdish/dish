@@ -171,7 +171,7 @@ export const UserOnboard = graphql(
             onPress={async () => {
               Toast.show('Saving...')
               if (
-                await userStore.updateUser({
+                await userStore.edit({
                   username,
                   charIndex,
                   about: formState.current.about,
