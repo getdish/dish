@@ -153,6 +153,7 @@ class AuthModel {
   }
 
   setLoginData(data: { user: any; token: string }) {
+    console.log('setLoginData', data)
     this.isLoggedIn = true
     this.jwt = data.token
     this.user = data.user

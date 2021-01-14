@@ -831,20 +831,21 @@ function _build_dish_service() {
 export -f _build_dish_service
 
 function build_dish_base() {
+  echo "Building base..."
   gcloud_build . $BASE_IMAGE
 }
 
 function build_all_dish_services() {
   echo "Building all Dish services..."
   build_dish_base
+  echo "Pulling base..."
   docker pull $BASE_IMAGE
-
-  parallel --lb _build_dish_service ::: \
+  echo "Building worker, dish-hooks, search, dish-app in parallel..."
+  parallel --tag --lb _build_dish_service ::: \
     'services/worker' \
     'services/dish-hooks' \
     'services/search' \
     'dish-app'
-
   echo "...all Dish services built."
   docker images
 }

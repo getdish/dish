@@ -34,7 +34,7 @@ export const AppIntroLogin = memo(() => {
         />
 
         <Paragraph
-          color="#E2A5D9"
+          color="var(--color)"
           paddingHorizontal="3%"
           maxWidth={320}
           fontWeight="300"

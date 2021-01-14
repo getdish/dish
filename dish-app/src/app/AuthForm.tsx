@@ -245,7 +245,7 @@ const LoginForm = ({ autoFocus, setFormPage }: AuthFormProps) => {
       submitText="Go"
       after={
         <Link
-          alignSelf="center"
+          alignSelf="flex-end"
           fontSize={14}
           onClick={(e) => setFormPage('forgotPassword')}
         >
@@ -498,7 +498,7 @@ function useFormAction<Values extends { [key: string]: any }>({
     errors,
     control,
     response,
-    isSuccess: response.isSuccess,
+    isSuccess: response.isSuccess && response.data,
     onChange,
     onSubmit,
     watch,

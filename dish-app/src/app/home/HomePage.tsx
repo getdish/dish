@@ -548,8 +548,8 @@ const CuisineFeedCard = graphql(function CuisineFeedCard(
 
   return (
     <VStack height="100%" maxWidth="100%">
-      <AbsoluteVStack zIndex={10} top={-5} left={-5}>
-        <SlantedTitle>
+      <AbsoluteVStack zIndex={10} top={-5} left={-5} right={-5}>
+        <SlantedTitle alignSelf="center">
           {props.country} {props.icon}
         </SlantedTitle>
       </AbsoluteVStack>
@@ -735,6 +735,7 @@ const DishRestaurantsFeedCard = (props: FeedItemDishRestaurants) => {
 const RestaurantFeedCard = (props: FeedItemRestaurant) => {
   return (
     <RestaurantCard
+      aspectFixed={false}
       restaurantId={props.restaurant.id}
       restaurantSlug={props.restaurant.slug}
       below={

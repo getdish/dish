@@ -37,6 +37,7 @@ export const CardFrame = ({
       position="relative"
       alignItems="center"
       justifyContent="center"
+      minWidth={cardFrameWidth}
       {...(expandable && {
         width: cardFrameWidth * 2,
       })}

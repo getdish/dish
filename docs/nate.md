@@ -32,7 +32,12 @@ goal january
 making it actually a community:
 
 - lists
+  - on restaurant page show prominently "lists this is on"
+- commenting/review features need to be brought forward more and more fun
+  - eventually threaded discussions esp on lists
+  - could have comment section show just for each dish too
 - home page needs to actually show real things / update better / etc
+  - lists as cards + voting
 - lots of core bugs in home/search/routing
 - rating improvements / clarity in design
 - probably a lot of fixes to data quality / imagery
