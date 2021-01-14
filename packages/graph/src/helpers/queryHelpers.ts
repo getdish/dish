@@ -15,13 +15,13 @@ import {
   tag_tag_constraint,
   user_constraint,
 } from '../graphql'
-import { ModelName, ModelType, WithID } from '../types'
-import { isMutatableField, isMutatableRelation } from './isMutatableField'
 import {
   resolvedMutation,
   resolvedMutationWithFields,
   resolvedWithFields,
-} from './queryResolvers'
+} from '../helpers/queryResolvers'
+import { ModelName, ModelType, WithID } from '../types'
+import { isMutatableField, isMutatableRelation } from './isMutatableField'
 
 type uuid = Scalars['uuid']
 

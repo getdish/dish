@@ -1,6 +1,5 @@
-import { tag_tag_constraint } from '../graphql'
+import { createQueryHelpersFor } from '../helpers/queryHelpers'
 import { TagTag } from '../types'
-import { createQueryHelpersFor } from './queryHelpers'
 
 const QueryHelpers = createQueryHelpersFor<TagTag>('tag_tag')
 export const tagTagInsert = QueryHelpers.insert

@@ -1,7 +1,7 @@
 import { globalTagId } from '../constants'
 import { Tag } from '../types'
 
-export type TagWithParent = Tag & { parent: Tag }
+export const tagHelpers = 0
 
 export const tagSlug = (tag: Pick<Tag, 'slug'>) => {
   if (!tag.slug) return 'no-slug'

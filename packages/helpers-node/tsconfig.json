@@ -1,5 +1,5 @@
 {
-  "extends": "../../tsconfig",
+  "extends": "../../tsconfig.base",
   "compilerOptions": {
     "composite": true,
     "baseUrl": ".",
@@ -9,5 +9,7 @@
     "rootDir": "./src"
   },
   "include": ["src"],
-  "references": []
+  "references": [{
+    "path": "../graph"
+  }]
 }

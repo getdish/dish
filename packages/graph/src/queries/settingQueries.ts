@@ -1,9 +1,9 @@
 import { selectFields } from '@dish/gqless'
 
 import { mutation, setting } from '../graphql'
+import { createQueryHelpersFor, prepareData } from '../helpers/queryHelpers'
+import { resolvedMutationWithFields } from '../helpers/queryResolvers'
 import { Setting, WithID } from '../types'
-import { createQueryHelpersFor, prepareData } from './queryHelpers'
-import { resolvedMutationWithFields } from './queryResolvers'
 
 const QueryHelpers = createQueryHelpersFor<Setting>('setting')
 export const settingInsert = QueryHelpers.insert

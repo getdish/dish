@@ -1,8 +1,8 @@
 import { omit } from 'lodash'
 
 import { menu_item_constraint } from '../graphql'
+import { createQueryHelpersFor } from '../helpers/queryHelpers'
 import { MenuItem } from '../types'
-import { createQueryHelpersFor } from './queryHelpers'
 
 const QueryHelpers = createQueryHelpersFor<MenuItem>(
   'menu_item',

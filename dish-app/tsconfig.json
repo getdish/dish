@@ -39,33 +39,27 @@
 
   "exclude": ["_"],
 
-  "references": [
-    {
-      "path": "../snackui/packages/snackui"
-    },
-    {
-      "path": "../packages/server"
-    },
-    {
-      "path": "../packages/async"
-    },
-    {
-      "path": "../packages/graph"
-    },
-    {
-      "path": "../packages/router"
-    },
-    {
-      "path": "../packages/helpers"
-    },
-    {
-      "path": "../packages/use-store"
-    },
-    {
-      "path": "../packages/react-feather"
-    },
-    {
-      "path": "../packages/fast-compare"
-    }
-  ]
+  "references": [{
+    "path": "../snackui/packages/snackui"
+  }, {
+    "path": "../packages/api"
+  }, {
+    "path": "../packages/server"
+  }, {
+    "path": "../packages/helpers-node"
+  }, {
+    "path": "../packages/async"
+  }, {
+    "path": "../packages/graph"
+  }, {
+    "path": "../packages/router"
+  }, {
+    "path": "../packages/helpers"
+  }, {
+    "path": "../packages/use-store"
+  }, {
+    "path": "../packages/react-feather"
+  }, {
+    "path": "../packages/fast-compare"
+  }]
 }

@@ -1,0 +1,37 @@
+{
+  "compilerOptions": {
+    "importHelpers": true,
+    "allowJs": false,
+    "allowSyntheticDefaultImports": true,
+    "declaration": true,
+    "declarationMap": true,
+    "downlevelIteration": true,
+    "emitDecoratorMetadata": true,
+    "esModuleInterop": true,
+    "experimentalDecorators": true,
+    "preserveSymlinks": true,
+    "incremental": true,
+    "jsx": "react",
+    "skipLibCheck": true,
+    "module": "ESNext",
+    "moduleResolution": "node",
+    "noEmitOnError": false,
+    "noImplicitAny": false,
+    "noImplicitReturns": false,
+    "noUnusedLocals": false,
+    "noUnusedParameters": false,
+    "preserveConstEnums": true,
+    "removeComments": true,
+    "resolveJsonModule": true,
+    "sourceMap": true,
+    "strict": true,
+    "strictNullChecks": true,
+    "target": "ES2019",
+    "lib": ["dom", "esnext"],
+    "typeRoots": ["./node_modules/@types", "./types"]
+  },
+  "exclude": ["_", "test/**/*"],
+  "typeAcquisition": {
+    "enable": true
+  }
+}

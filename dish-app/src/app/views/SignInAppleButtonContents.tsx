@@ -44,7 +44,7 @@ export default function SignInAppleButton() {
       Toast.show('Logged in!')
       userStore.afterLogin(data)
     } catch (err) {
-      Toast.show('Error loggin in 😭', { type: 'error' })
+      Toast.error('Error loggin in 😭')
       console.error('signin err', err)
     }
   }

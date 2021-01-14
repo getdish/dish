@@ -1,6 +1,7 @@
 // // debug
 import { series, sleep } from '@dish/async'
-import { graphql, order_by, query, slugify } from '@dish/graph'
+import { graphql, listInsert, order_by, query, slugify } from '@dish/graph'
+import { assertNonNull } from '@dish/helpers'
 import { Heart, X } from '@dish/react-feather'
 import React, { useEffect, useState } from 'react'
 import { Switch } from 'react-native'
@@ -16,6 +17,7 @@ import {
   StackProps,
   Text,
   Theme,
+  Toast,
   VStack,
 } from 'snackui'
 
@@ -29,7 +31,7 @@ import { getRestaurantIdentifiers } from '../../../helpers/getRestaurantIdentifi
 import { router } from '../../../router'
 import { HomeStateItemList } from '../../../types/homeTypes'
 import { useSetAppMapResults } from '../../AppMapStore'
-import { useUserStore } from '../../userStore'
+import { useUserStore, userStore } from '../../userStore'
 import { ContentScrollView } from '../../views/ContentScrollView'
 import { Link } from '../../views/Link'
 import { ScalingPressable } from '../../views/ScalingPressable'
@@ -44,19 +46,36 @@ type Props = StackItemProps<HomeStateItemList>
 export default function ListPage(props: Props) {
   const isCreating = props.item.slug === 'create'
 
-  console.log('hello world', isCreating)
-
   useEffect(() => {
     if (!isCreating) return
     // create a new list and redirect to it
     return series([
-      () => sleep(1000),
+      () => sleep(500),
       () => {
+        return fetch('/api/randomName').then(
+          (res) => res.json() as Promise<string>
+        )
+      },
+      (randomName) => {
+        assertNonNull(userStore.user.id)
+        return listInsert([
+          {
+            name: randomName,
+            slug: slugify(randomName),
+            user_id: userStore.user.id,
+          },
+        ])?.[0]
+      },
+      (list) => {
+        if (!list) {
+          Toast.error(`Error creating list`)
+          return
+        }
         router.navigate({
           name: 'list',
           params: {
             userSlug: props.item.userSlug,
-            slug: 'horse-fish-circus',
+            slug: list.slug,
           },
         })
       },
@@ -157,11 +176,13 @@ const ListPageContent = graphql((props: Props) => {
     }),
   }
 
+  console.log('list', list)
+
   useSetAppMapResults({
     isActive: props.isActive,
-    results: list.restaurants.map((r) =>
-      getRestaurantIdentifiers(r.restaurant)
-    ),
+    results: list.restaurants
+      .map((x) => x.restaurant)
+      .map(getRestaurantIdentifiers),
   })
 
   return (

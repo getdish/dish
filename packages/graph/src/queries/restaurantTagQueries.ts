@@ -6,8 +6,8 @@ import {
   restaurant_tag_constraint,
   restaurant_tag_update_column,
 } from '../graphql'
+import { resolvedMutationWithFields } from '../helpers/queryResolvers'
 import { RestaurantTag, RestaurantWithId } from '../types'
-import { resolvedMutationWithFields } from './queryResolvers'
 
 export async function restaurantTagUpsert(
   restaurant_id: string,
