@@ -1,5 +1,5 @@
+import { createQueryHelpersFor } from '../helpers/queryHelpers'
 import { User } from '../types'
-import { createQueryHelpersFor } from './queryHelpers'
 
 const QueryHelpers = createQueryHelpersFor<User>('user')
 export const userInsert = QueryHelpers.insert

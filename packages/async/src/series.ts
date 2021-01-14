@@ -1,26 +1,59 @@
 import { cancelPromise } from './cancellablePromise'
 import { sleep } from './sleep'
 
-export const series = (fns: (() => Promise<any> | any)[] | any) => {
+// type AsyncFlowFn<A = any, B = any> = ((arg?: A extends Promise<infer X> ? X : A) => B)
+// type AsyncFlowReturn = {
+//   (): void;
+//   value(): any;
+// }
+
+// prettier-ignore
+// type AsyncFlow<A, B, C, D, E, F, G, H> =
+
+// | AsyncFlowFn[]
+
+// // sanity check
+// series([
+//   () => Promise.resolve(1),
+//   (x) => x,
+//   (y) => y.charAt(0),
+//   // (z) => z,
+// ])
+
+//   | [AsyncFlowFn<A, B>, AsyncFlowFn<B, C>, AsyncFlowFn<C, D>]
+//   | [AsyncFlowFn<A, B>, AsyncFlowFn<B, C>, AsyncFlowFn<C, D>, AsyncFlowFn<D, E>]
+//   | [AsyncFlowFn<A, B>, AsyncFlowFn<B, C>, AsyncFlowFn<C, D>, AsyncFlowFn<D, E>, AsyncFlowFn<E, F>]
+//   | [AsyncFlowFn<A, B>, AsyncFlowFn<B, C>, AsyncFlowFn<C, D>, AsyncFlowFn<D, E>, AsyncFlowFn<E, F>, AsyncFlowFn<F, G>]
+//   | [AsyncFlowFn<A, B>, AsyncFlowFn<B, C>, AsyncFlowFn<C, D>, AsyncFlowFn<D, E>, AsyncFlowFn<E, F>, AsyncFlowFn<F, G>, AsyncFlowFn<G, H>]
+
+// export function series<A, B>(fns: [AsyncFlowFn<A, B>, AsyncFlowFn<B, any>]): AsyncFlowReturn
+// export function series<A, B, C>(fns: [AsyncFlowFn<A, B>, AsyncFlowFn<B, C>, AsyncFlowFn<C, any>]): AsyncFlowReturn
+export function series(fns: (Function | ((x?: any) => any))[]) {
   let current: any
   let cancelled = false
 
   async function run() {
+    let prev: any
     for (const fn of fns) {
       if (cancelled) return
-      current = fn()
+      current = fn(prev)
       if (current instanceof Promise) {
-        await current
+        prev = await current
+      } else {
+        prev = current
       }
     }
   }
 
   run()
 
-  return () => {
+  function cancel() {
     cancelled = true
     cancelPromise(current)
   }
+
+  cancel.value = () => current
+  return cancel
 }
 
 // simple sanity test

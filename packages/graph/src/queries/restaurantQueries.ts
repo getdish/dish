@@ -3,11 +3,11 @@ import _ from 'lodash'
 
 import { globalTagId } from '../constants'
 import { Maybe, client, order_by, resolved, restaurant } from '../graphql'
+import { createQueryHelpersFor } from '../helpers/queryHelpers'
+import { tagSlugs } from '../helpers/tagHelpers'
 import { Restaurant, RestaurantTag, RestaurantWithId } from '../types'
-import { createQueryHelpersFor } from './queryHelpers'
-import { restaurantTagUpsert } from './restaurantTag'
-import { tagSlugs } from './tag-extension-helpers'
-import { tagGetAllChildren, tagGetAllGenerics, tagUpsert } from './tag-helpers'
+import { restaurantTagUpsert } from './restaurantTagQueries'
+import { tagGetAllChildren, tagGetAllGenerics, tagUpsert } from './tagQueries'
 
 const query = client.query
 

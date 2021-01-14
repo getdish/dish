@@ -1,21 +1,21 @@
 export class AssertionError extends Error {}
-export class NullError extends AssertionError {}
+export class AsserionNullError extends AssertionError {}
 
 export function assertPresent(value: any): asserts value is null | undefined {
   if (value !== undefined && value !== null) {
-    throw new Error('Expected value: ' + value)
+    throw new AssertionError('Expected value: ' + value)
   }
 }
 
 export function assertSame<T>(a: T, b: T) {
   if (a !== b) {
-    throw new Error(`Expected same: ${a} ${b}`)
+    throw new AssertionError(`Expected same: ${a} ${b}`)
   }
 }
 
 export function assertIsString(val: unknown): asserts val is string {
   if (typeof val !== 'string') {
-    throw new Error('Expected string ' + val)
+    throw new AssertionError('Expected string ' + val)
   }
 }
 
@@ -24,7 +24,7 @@ export function assertInstanceOf<T>(
   clazz: new (...args: any[]) => T
 ): asserts val is T {
   if (!(val instanceof clazz)) {
-    throw new Error('Expected instance of ' + clazz)
+    throw new AssertionError('Expected instance of ' + clazz)
   }
 }
 
@@ -35,12 +35,12 @@ export function assert(value: unknown): asserts value {
 }
 
 export function assertNever(value: never) {
-  throw new Error('unexpected value ' + value)
+  throw new AssertionError('unexpected value ' + value)
 }
 
 export function assertNonNull<T>(value: T): NonNullable<T> {
   if (value == null) {
-    throw new NullError()
+    throw new AsserionNullError()
   }
   return value as any
 }

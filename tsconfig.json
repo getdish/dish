@@ -1,14 +1,15 @@
-// dont do any references, incremental here
-// they dont place nice with paths
-// https://github.com/IBM/slack-wrench/pull/44
-
 {
-  "extends": "./tsconfig.base.json",
+  "files": [],
   "compilerOptions": {
-    // baseUrl + paths must both be set
-    "baseUrl": ".",
-    "paths": {
-      "@dish/*": ["packages/*/src"]
-    }
-  }
+    "typeRoots": ["node_modules/@types"],
+    "skipDefaultLibCheck": true,
+    "skipLibCheck": true
+  },
+  "references": [
+    { "path": "dish-app" },
+    { "path": "packages/react-feather" },
+    { "path": "services/crawlers" },
+    { "path": "services/worker" },
+    { "path": "services/hasura" }
+  ]
 }

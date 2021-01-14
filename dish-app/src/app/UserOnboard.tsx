@@ -43,7 +43,7 @@ export const UserOnboard = graphql(
             user.avatar = avatar
             Toast.show('Saved image!')
           } else {
-            Toast.show('Error saving  image!', { type: 'error' })
+            Toast.error('Error saving  image!')
           }
         } catch (err) {
           Toast.show('Error saving image')

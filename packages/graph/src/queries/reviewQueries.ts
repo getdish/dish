@@ -3,9 +3,9 @@ import { uniqBy } from 'lodash'
 
 import { globalTagId } from '../constants'
 import { Scalars, order_by, query, review, review_constraint } from '../graphql'
+import { createQueryHelpersFor } from '../helpers/queryHelpers'
+import { resolvedWithFields } from '../helpers/queryResolvers'
 import { Review } from '../types'
-import { createQueryHelpersFor } from './queryHelpers'
-import { resolvedWithFields } from './queryResolvers'
 
 export type uuid = Scalars['uuid']
 

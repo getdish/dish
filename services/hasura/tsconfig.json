@@ -1,11 +1,12 @@
 {
-  "extends": "../../tsconfig",
+  "extends": "../../tsconfig.base",
   "compilerOptions": {
     "composite": true,
     "module": "CommonJS",
     "baseUrl": ".",
     "rootDir": "src"
   },
+  "exclude": ["test"],
   "references": [{
     "path": "../../packages/graph"
   }, {

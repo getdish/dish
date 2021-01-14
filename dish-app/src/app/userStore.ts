@@ -33,9 +33,7 @@ class UserStore extends Store {
     const isErrHead = header.status >= 300
     const res = await header.json()
     if (res.error) {
-      Toast.show(res.error, {
-        type: 'error',
-      })
+      Toast.error(res.error)
     }
     if (res.success) {
       Toast.show(res.success)

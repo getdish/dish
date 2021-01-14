@@ -1,10 +1,10 @@
 import { selectFields } from '@dish/gqless'
 
 import { order_by, query, tag } from '../graphql'
+import { createQueryHelpersFor } from '../helpers/queryHelpers'
+import { resolvedWithFields } from '../helpers/queryResolvers'
 import { Tag, TagWithId } from '../types'
-import { createQueryHelpersFor } from './queryHelpers'
-import { resolvedWithFields } from './queryResolvers'
-import { tagTagUpsert } from './tag_tag-helpers'
+import { tagTagUpsert } from './tagTagQueries'
 
 const QueryHelpers = createQueryHelpersFor<Tag>('tag')
 export const tagInsert = QueryHelpers.insert

@@ -1,6 +1,6 @@
 
 {
-  "extends": "../../tsconfig",
+  "extends": "../../tsconfig.base",
   "compilerOptions": {
     "composite": true,
     "baseUrl": ".",
@@ -13,6 +13,8 @@
   "include": ["src"],
   "references": [{
     "path": "../helpers"
+  }, {
+    "path": "../server"
   }, {
     "path": "../../snackui/packages/snackui-static"
   }]

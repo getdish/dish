@@ -1,4 +1,5 @@
 import {
+  list,
   menu_item,
   photo,
   photo_xref,
@@ -11,18 +12,6 @@ import {
   user,
 } from './graphql'
 
-// used to infer returns from functions
-// but the problme is extensions... they should be excluded
-// most of the stuff in this file could be folded into gqless and fixed
-// export type FlatResolvedModel<O> = {
-//   [K in keyof O]?: K extends '__typename'
-//     ? any
-//     : O[K] extends { __typename: string }
-//     ? FlatResolvedModel<O[K]>
-//     : O[K] extends (...args: any[]) => any
-//     ? any
-//     : O[K]
-// }
 export type FlatResolvedModel<O> = {
   [K in keyof O]: O[K] extends (...args: any) => any
     ? ReturnType<O[K]> extends object
@@ -49,6 +38,7 @@ export interface MenuItemQuery extends menu_item {}
 export interface SettingQuery extends setting {}
 export interface PhotoBaseQuery extends photo {}
 export interface PhotoXrefQuery extends photo_xref {}
+export interface ListQuery extends list {}
 
 // SECTION 1
 // this flattens them to a partial of all resolved values, minus sub-nodes
@@ -63,6 +53,7 @@ export interface MenuItem extends FlatResolvedModel<MenuItemQuery> {}
 export interface Setting extends FlatResolvedModel<SettingQuery> {}
 export interface PhotoBase extends FlatResolvedModel<PhotoBaseQuery> {}
 export interface PhotoXref extends FlatResolvedModel<PhotoXrefQuery> {}
+export interface List extends FlatResolvedModel<ListQuery> {}
 
 // SECTION 3
 // this just adds a requirement on the id being present, for things like update()
@@ -75,6 +66,7 @@ export interface UserWithId extends WithID<User> {}
 export interface ReviewWithId extends WithID<Review> {}
 export interface MenuItemWithId extends WithID<MenuItem> {}
 export interface SettingWithId extends WithID<Setting> {}
+export interface ListWithId extends WithID<List> {}
 
 // SECTION 4
 // a nice union so we can limit what we accept in our various helpers
@@ -89,6 +81,7 @@ export type ModelType =
   | PhotoBase
   | PhotoXref
   | Setting
+  | List
 
 // DONE
 
