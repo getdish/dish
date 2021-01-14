@@ -14,7 +14,7 @@ import {
 import { lightGreen, lightYellow } from '../../../constants/colors'
 import { thirdPartyCrawlSources } from '../../../constants/thirdPartyCrawlSources'
 import { numberFormat } from '../../../helpers/numberFormat'
-import { useRestaurantQuery } from '../../hooks/useRestaurantQuery'
+import { queryRestaurant } from '../../../queries/queryRestaurant'
 import { SmallButton } from '../../views/SmallButton'
 import { RestaurantSourcesBreakdown } from './RestaurantSourcesBreakdown'
 import {
@@ -55,7 +55,7 @@ export const RestaurantPointsBreakdown = memo(
       restaurantId: string
       showTable?: boolean
     }) => {
-      const restaurant = useRestaurantQuery(restaurantSlug)
+      const restaurant = queryRestaurant(restaurantSlug)
       const sources = restaurant.sources() ?? {}
       const [showTable, setShowTable] = useState(showTableDefault)
       const totalReviews = useTotalReviews(restaurant)

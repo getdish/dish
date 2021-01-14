@@ -1,14 +1,6 @@
 // // debug
 import { series, sleep } from '@dish/async'
-import {
-  List,
-  graphql,
-  list,
-  listInsert,
-  order_by,
-  query,
-  slugify,
-} from '@dish/graph'
+import { List, graphql, list, listInsert, order_by, slugify } from '@dish/graph'
 import { assertIsString, assertNonNull } from '@dish/helpers'
 import { Heart, X } from '@dish/react-feather'
 import React, { useEffect, useState } from 'react'
@@ -48,6 +40,7 @@ import { StackDrawer } from '../../views/StackDrawer'
 import { StackItemProps } from '../HomeStackView'
 import { RestaurantListItem } from '../restaurant/RestaurantListItem'
 import { PageTitle } from '../search/PageTitle'
+import { queryList } from '../../../queries/queryList'
 
 type Props = StackItemProps<HomeStateItemList>
 
@@ -129,6 +122,7 @@ const setIsEditing = (val: boolean) => {
 function useListRestaurants(list: list) {
   const items = list
     .restaurants({
+      limit: 10,
       order_by: [{ position: order_by.desc }],
     })
     .map((r) => {
@@ -138,6 +132,7 @@ function useListRestaurants(list: list) {
         position: r.position,
         dishes: r
           .tags({
+            limit: 5,
             order_by: [{ position: order_by.desc }],
           })
           .map((listTag) => {
@@ -199,16 +194,6 @@ const ListPageContent = graphql((props: Props) => {
   const l = queryList(props.item.slug)
   const [restaurants, setRestaurants] = useListRestaurants(l)
 
-  function queryList(slug?: string) {
-    return query.list({
-      where: {
-        slug: {
-          _eq: slug,
-        },
-      },
-    })[0]
-  }
-
   const list = {
     name: l.name,
     description: l.description,
@@ -219,7 +204,7 @@ const ListPageContent = graphql((props: Props) => {
     restaurants,
   }
 
-  console.log('list', JSON.stringify(list))
+  console.log('list', list)
 
   useSetAppMapResults({
     isActive: props.isActive,

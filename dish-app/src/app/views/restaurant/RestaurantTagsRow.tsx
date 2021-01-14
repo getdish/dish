@@ -3,7 +3,7 @@ import { sortBy } from 'lodash'
 import React, { memo } from 'react'
 import { Spacer, StackProps } from 'snackui'
 
-import { useRestaurantTags } from '../../hooks/useRestaurantTags'
+import { queryRestaurantTags } from '../../../queries/queryRestaurantTags'
 import {
   TagButton,
   TagButtonProps,
@@ -36,7 +36,7 @@ export const RestaurantTagsRow = memo(
     if (props.tags) {
       tags = props.tags
     } else {
-      tags = useRestaurantTags({ restaurantSlug, limit: props.max })
+      tags = queryRestaurantTags({ restaurantSlug, limit: props.max })
     }
     if (showMore) {
       tags = tags.slice(0, 2)

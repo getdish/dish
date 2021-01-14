@@ -12,7 +12,7 @@ import {
 } from 'snackui'
 
 import { getColorsForName } from '../../../helpers/getColorsForName'
-import { useRestaurantQuery } from '../../hooks/useRestaurantQuery'
+import { queryRestaurant } from '../../../queries/queryRestaurant'
 import {
   CardFrame,
   cardFrameBorderRadius,
@@ -58,7 +58,7 @@ export const RestaurantCardContent = memo(
       below,
     }: RestaurantCardProps) => {
       const theme = useTheme()
-      const restaurant = useRestaurantQuery(restaurantSlug)
+      const restaurant = queryRestaurant(restaurantSlug)
       // const scale = size === 'lg' ? 1.2 : size == 'sm' ? 0.6 : 1
       const [hideInfo, setHideInfo] = useState(false)
       const [price_label, price_color, price_range] = priceRange(restaurant)

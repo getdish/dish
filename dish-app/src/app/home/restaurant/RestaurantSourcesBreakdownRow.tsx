@@ -13,7 +13,7 @@ import {
 
 import { bgLight } from '../../../constants/colors'
 import { thirdPartyCrawlSources } from '../../../constants/thirdPartyCrawlSources'
-import { useRestaurantQuery } from '../../hooks/useRestaurantQuery'
+import { queryRestaurant } from '../../../queries/queryRestaurant'
 import { LinkButton } from '../../views/LinkButton'
 import { PointsText } from '../../views/PointsText'
 import { RestaurantSourcesBreakdown } from './RestaurantSourcesBreakdown'
@@ -28,7 +28,7 @@ export const RestaurantSourcesBreakdownRow = memo(
     restaurantId: string
     size?: 'sm' | 'md'
   }) {
-    const restaurant = useRestaurantQuery(restaurantSlug)
+    const restaurant = queryRestaurant(restaurantSlug)
     const sources = {
       ...(restaurant?.sources?.() ?? {}),
     }

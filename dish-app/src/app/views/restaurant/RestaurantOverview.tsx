@@ -13,7 +13,7 @@ import {
 } from 'snackui'
 
 import { ensureFlexText } from '../../home/restaurant/ensureFlexText'
-import { useRestaurantQuery } from '../../hooks/useRestaurantQuery'
+import { queryRestaurant } from '../../../queries/queryRestaurant'
 
 const quote = (
   <AbsoluteVStack top={-10} left={-0}>
@@ -42,7 +42,7 @@ export const RestaurantOverview = memo(
     disableEllipse?: boolean
   }) {
     const theme = useTheme()
-    const restaurant = useRestaurantQuery(restaurantSlug)
+    const restaurant = queryRestaurant(restaurantSlug)
     const headlines = (restaurant.headlines() ?? [])
       .slice(0, 2)
       .map((x) => x.sentence)

@@ -15,7 +15,7 @@ import {
 
 import { bgLight } from '../../../constants/colors'
 import { listItemMaxSideWidth } from '../../../constants/constants'
-import { useRestaurantQuery } from '../../hooks/useRestaurantQuery'
+import { queryRestaurant } from '../../../queries/queryRestaurant'
 import { CloseButton } from '../../views/CloseButton'
 import { SlantedTitle } from '../../views/SlantedTitle'
 import { RestaurantAddCommentButton } from './RestaurantAddCommentButton'
@@ -48,7 +48,7 @@ export const RestaurantBreakdown = memo(
       showScoreTable?: boolean
       borderless?: boolean
     }) => {
-      const restaurant = useRestaurantQuery(restaurantSlug)
+      const restaurant = queryRestaurant(restaurantSlug)
       const tag = tagSlug
         ? restaurant.tags({
             where: {

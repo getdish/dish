@@ -7,6 +7,7 @@
   },
   "references": [
     { "path": "dish-app" },
+    { "path": "snackui" },
     { "path": "packages/react-feather" },
     { "path": "services/crawlers" },
     { "path": "services/worker" },

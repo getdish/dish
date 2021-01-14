@@ -1,16 +1,16 @@
 import { isPresent } from '@dish/helpers'
 
-import { selectTagButtonProps } from '../../helpers/selectTagButtonProps'
-import { useRestaurantQuery } from './useRestaurantQuery'
+import { selectTagButtonProps } from '../helpers/selectTagButtonProps'
+import { queryRestaurant } from './queryRestaurant'
 
-export function useRestaurantTagScores({
+export function queryRestaurantTagScores({
   restaurantSlug,
   tagSlugs,
 }: {
   restaurantSlug: string
   tagSlugs: string[]
 }) {
-  const restaurant = useRestaurantQuery(restaurantSlug)
+  const restaurant = queryRestaurant(restaurantSlug)
   return tagSlugs
     .map((slug) => {
       const rtag = restaurant.tags({

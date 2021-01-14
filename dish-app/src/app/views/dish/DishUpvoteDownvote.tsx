@@ -1,7 +1,7 @@
 import { graphql, slugify } from '@dish/graph'
 import React from 'react'
 
-import { useRestaurantQuery } from '../../hooks/useRestaurantQuery'
+import { queryRestaurant } from '../../../queries/queryRestaurant'
 import { useUserTagVotes } from '../../hooks/useUserTagVotes'
 import { UpvoteDownvoteScore } from '../UpvoteDownvoteScore'
 
@@ -41,7 +41,7 @@ const DishUpvoteDownvoteContent = graphql(function DishUpvoteDownvote({
   const intScore =
     score ??
     (restaurantSlug
-      ? useRestaurantQuery(restaurantSlug).tags({
+      ? queryRestaurant(restaurantSlug).tags({
           limit: 1,
           where: {
             tag: {

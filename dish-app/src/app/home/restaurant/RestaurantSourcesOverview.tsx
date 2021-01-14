@@ -15,7 +15,7 @@ import {
 
 import { isWeb } from '../../../constants/constants'
 import { thirdPartyCrawlSources } from '../../../constants/thirdPartyCrawlSources'
-import { useRestaurantQuery } from '../../hooks/useRestaurantQuery'
+import { queryRestaurant } from '../../../queries/queryRestaurant'
 import { SlantedTitle } from '../../views/SlantedTitle'
 import { SentimentText } from './SentimentText'
 
@@ -180,7 +180,7 @@ export const RestaurantSourcesOverview = graphql(
     tagName?: string | null
     restaurantSlug: string
   }) => {
-    const restaurant = useRestaurantQuery(restaurantSlug)
+    const restaurant = queryRestaurant(restaurantSlug)
     const spacing = 12
 
     const items = tagName

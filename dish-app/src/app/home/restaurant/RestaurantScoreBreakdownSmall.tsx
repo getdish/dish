@@ -9,8 +9,8 @@ import { bgLight } from '../../../constants/colors'
 import { tagDisplayName } from '../../../constants/tagMeta'
 import { getActiveTagSlugs } from '../../../helpers/getActiveTagSlugs'
 import { homeStore } from '../../homeStore'
-import { useRestaurantQuery } from '../../hooks/useRestaurantQuery'
-import { useRestaurantTagScores } from '../../hooks/useRestaurantTagScores'
+import { queryRestaurant } from '../../../queries/queryRestaurant'
+import { queryRestaurantTagScores } from '../../../queries/queryRestaurantTagScores'
 import { PointsText } from '../../views/PointsText'
 import { RestaurantReviewsDisplayStore } from './RestaurantBreakdown'
 
@@ -28,12 +28,12 @@ export const RestaurantScoreBreakdownSmall = memo(
         color: 'rgba(0,0,0,0.6)',
       }
 
-      const restaurant = useRestaurantQuery(restaurantSlug)
+      const restaurant = queryRestaurant(restaurantSlug)
       const reviewDisplayStore = useStore(RestaurantReviewsDisplayStore, {
         id: restaurantId,
       })
       const tags = homeStore.lastActiveTags
-      const tagScores = useRestaurantTagScores({
+      const tagScores = queryRestaurantTagScores({
         restaurantSlug,
         tagSlugs: getActiveTagSlugs(),
       })
