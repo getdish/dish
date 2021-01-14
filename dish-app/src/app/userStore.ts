@@ -140,7 +140,9 @@ class UserStore extends Store {
     } catch (err) {
       console.error(
         'ERROR WITH USER, LIKELY JWT EXPIRED, TODO react server components and fix whole stack',
-        err
+        err,
+        err.stack,
+        err.message
       )
       this.logout()
     }

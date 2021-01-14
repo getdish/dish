@@ -316,7 +316,7 @@ const tiles: Tile[] = [
   // },
   {
     maxZoom: 12,
-    minZoom: 7,
+    minZoom: 4,
     // lineColor: '#aa55aa',
     // lineColorActive: '#660066',
     // lineColorHover: '#330033',
@@ -328,7 +328,7 @@ const tiles: Tile[] = [
     name: 'public.hrr',
   },
   {
-    maxZoom: 7,
+    maxZoom: 4,
     minZoom: 0,
     // lineColor: '#880088',
     // lineColorActive: '#660066',

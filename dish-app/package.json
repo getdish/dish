@@ -114,7 +114,8 @@
   },
   "scripts": {
     "start": "TARGET=native react-native start",
-    "web": "sudo dish start --https --hostname d1sh.com --port 443",
+    "web": "sudo dish start --hostname d1sh.com --port 80",
+    "web:https": "sudo dish start --https --hostname d1sh.com --port 443",
     "web:debug": "node --inspect ../node_modules/.bin/dish start",
     "web:prod": "DEBUG_PATHS=1 VERBOSE=1 dish start --prod",
     "web:build": "dish build",

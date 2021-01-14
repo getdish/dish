@@ -63,7 +63,14 @@ export default function SignInAppleButton() {
       >
         <HStack paddingRight={20} backgroundColor="#000" alignItems="center">
           <AppleLogoWhite />
-          <Text color="#fff" fontSize={18} fontWeight="600" marginTop={-1}>
+          <Text
+            textAlign="center"
+            flex={1}
+            color="#fff"
+            fontSize={18}
+            fontWeight="600"
+            marginTop={-1}
+          >
             {loading ? 'Loading...' : 'Sign in with Apple'}
           </Text>
         </HStack>

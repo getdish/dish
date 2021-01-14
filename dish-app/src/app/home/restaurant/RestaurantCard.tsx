@@ -30,6 +30,7 @@ export type RestaurantCardProps = {
   below?: any
   hideScore?: boolean
   hoverable?: boolean
+  aspectFixed?: boolean
 }
 
 const fallbackCard = <CardFrame aspectFixed />
@@ -52,6 +53,7 @@ export const RestaurantCardContent = memo(
       restaurantSlug,
       restaurantId,
       hideScore,
+      aspectFixed,
       hoverable = true,
       below,
     }: RestaurantCardProps) => {
@@ -78,7 +80,7 @@ export const RestaurantCardContent = memo(
 
       return (
         <Link name="restaurant" asyncClick params={{ slug: restaurantSlug }}>
-          <CardFrame aspectFixed hoverable={hoverable}>
+          <CardFrame aspectFixed={aspectFixed} hoverable={hoverable}>
             <VStack
               className="safari-fix-overflow"
               width="100%"
@@ -135,7 +137,7 @@ export const RestaurantCardContent = memo(
                 width={cardFrameWidth}
                 height={cardFrameHeight}
                 style={{
-                  width: cardFrameWidth,
+                  width: aspectFixed ? cardFrameWidth : '100%',
                   height: cardFrameHeight,
                   opacity: 0.5,
                 }}
