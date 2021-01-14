@@ -5,7 +5,7 @@ import { HStack, Spacer, StackProps, Text, Tooltip } from 'snackui'
 
 import { bgLight, blue } from '../../../constants/colors'
 import { isWeb } from '../../../constants/constants'
-import { useRestaurantQuery } from '../../hooks/useRestaurantQuery'
+import { queryRestaurant } from '../../../queries/queryRestaurant'
 import { SmallButton } from '../../views/SmallButton'
 import { getRestaurantDeliverySources } from './getRestaurantDeliverySources'
 
@@ -22,7 +22,7 @@ export const RestaurantDeliveryButtons = memo(
     label,
     ...props
   }: Props) {
-    const restaurant = useRestaurantQuery(restaurantSlug)
+    const restaurant = queryRestaurant(restaurantSlug)
     const restaurantSources = restaurant.sources()
     const sources = getRestaurantDeliverySources(restaurantSources)
 

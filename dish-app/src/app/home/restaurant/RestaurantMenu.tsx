@@ -3,12 +3,12 @@ import React, { memo } from 'react'
 import { Image } from 'react-native'
 import { Grid, HStack, Paragraph, Spacer, Text, VStack } from 'snackui'
 
-import { useRestaurantQuery } from '../../hooks/useRestaurantQuery'
+import { queryRestaurant } from '../../../queries/queryRestaurant'
 import { SlantedTitle } from '../../views/SlantedTitle'
 
 export const RestaurantMenu = memo(
   graphql(({ restaurantSlug }: { restaurantSlug: string }) => {
-    const restaurant = useRestaurantQuery(restaurantSlug)
+    const restaurant = queryRestaurant(restaurantSlug)
     const items = restaurant.menu_items({ limit: 120 })
     return (
       <>

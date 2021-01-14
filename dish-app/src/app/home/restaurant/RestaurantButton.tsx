@@ -3,7 +3,7 @@ import React, { memo } from 'react'
 import { HStack, Spacer, Text, VStack } from 'snackui'
 
 import { isWeb } from '../../../constants/constants'
-import { useRestaurantQuery } from '../../hooks/useRestaurantQuery'
+import { queryRestaurant } from '../../../queries/queryRestaurant'
 import { LinkButton } from '../../views/LinkButton'
 import { LinkButtonProps } from '../../views/LinkProps'
 import { TrendingIcon } from '../../views/TrendingIcon'
@@ -30,7 +30,7 @@ export const RestaurantButton = memo(
       subtle?: boolean
       maxInnerWidth?: number
     } & LinkButtonProps) => {
-      const restaurant = useRestaurantQuery(restaurantSlug)
+      const restaurant = queryRestaurant(restaurantSlug)
       if (!restaurant) {
         // got an error when resizing between small/regular
         return null

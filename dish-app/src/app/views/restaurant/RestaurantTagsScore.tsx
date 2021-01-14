@@ -17,8 +17,8 @@ import {
 import { getActiveTagSlugs } from '../../../helpers/getActiveTagSlugs'
 import { HomeActiveTagsRecord } from '../../../types/homeTypes'
 import { ensureFlexText } from '../../home/restaurant/ensureFlexText'
-import { useRestaurantQuery } from '../../hooks/useRestaurantQuery'
-import { useRestaurantTagScores } from '../../hooks/useRestaurantTagScores'
+import { queryRestaurant } from '../../../queries/queryRestaurant'
+import { queryRestaurantTagScores } from '../../../queries/queryRestaurantTagScores'
 import { PointsText } from '../PointsText'
 
 export const RestaurantTagsScore = graphql(function RestaurantTagsScore({
@@ -30,9 +30,9 @@ export const RestaurantTagsScore = graphql(function RestaurantTagsScore({
   activeTags: HomeActiveTagsRecord
   userVote: number
 }) {
-  const restaurant = useRestaurantQuery(restaurantSlug)
+  const restaurant = queryRestaurant(restaurantSlug)
   const breakdown = restaurant.score_breakdown()
-  const tagScores = useRestaurantTagScores({
+  const tagScores = queryRestaurantTagScores({
     restaurantSlug,
     tagSlugs: getActiveTagSlugs(activeTags),
   })

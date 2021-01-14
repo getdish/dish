@@ -1,3 +1,4 @@
+// debug
 import { ArrowUp, ChevronLeft, Map, Search } from '@dish/react-feather'
 import { useStoreInstance } from '@dish/use-store'
 import React, { Suspense, memo } from 'react'
@@ -98,6 +99,7 @@ export const AppSearchBarFloating = () => {
         >
           <AbsoluteVStack
             borderRadius={13}
+            className="searchbar-shadow"
             transform={[{ skewX: '-12deg' }]}
             overflow="hidden"
             zIndex={102}
@@ -106,7 +108,7 @@ export const AppSearchBarFloating = () => {
             justifyContent="center"
             alignItems="center"
             backgroundColor="#111"
-            shadowColor="rgba(0,0,0,0.3)"
+            shadowColor="rgba(0,0,0,0.523)"
             shadowOffset={{ height: 1, width: 0 }}
             shadowRadius={15}
           >

@@ -52,8 +52,8 @@ import { numberFormat } from '../../../helpers/numberFormat'
 import { selectRishDishViewSimple } from '../../../helpers/selectDishViewSimple'
 import { GeocodePlace } from '../../../types/homeTypes'
 import { appMapStore } from '../../AppMapStore'
-import { useRestaurantQuery } from '../../hooks/useRestaurantQuery'
-import { useRestaurantTagScores } from '../../hooks/useRestaurantTagScores'
+import { queryRestaurant } from '../../../queries/queryRestaurant'
+import { queryRestaurantTagScores } from '../../../queries/queryRestaurantTagScores'
 import { CloseButton } from '../../views/CloseButton'
 import { ContentScrollViewHorizontal } from '../../views/ContentScrollViewHorizontal'
 import { DishView } from '../../views/dish/DishView'
@@ -198,7 +198,7 @@ const RestaurantListItemContent = memo(
       editablePosition,
     } = props
     const media = useMedia()
-    const restaurant = useRestaurantQuery(restaurantSlug)
+    const restaurant = queryRestaurant(restaurantSlug)
 
     restaurant.location
 
@@ -625,7 +625,7 @@ const RestaurantListItemScoreBreakdown = memo(
       meta,
       restaurantSlug,
     }: RestaurantListItemProps & { meta: RestaurantItemMeta }) => {
-      const restaurantTags = useRestaurantTagScores({
+      const restaurantTags = queryRestaurantTagScores({
         restaurantSlug,
         tagSlugs: activeTagSlugs,
       })
@@ -662,7 +662,7 @@ const RestaurantPeekDishes = memo(
   }) {
     const { isLoaded, size = 'md' } = props
     const dishes = props.tagSlugs
-      ? useRestaurantQuery(props.restaurantSlug)
+      ? queryRestaurant(props.restaurantSlug)
           .tags({
             where: {
               tag: {
@@ -743,7 +743,7 @@ const EditRestaurantTags = graphql(
   }) => {
     const [isOpen, setIsOpen] = useState(false)
     const [slugs, setSlugs] = useState<string[]>(tagSlugs)
-    const restaurant = useRestaurantQuery(restaurantSlug)
+    const restaurant = queryRestaurant(restaurantSlug)
     const theme = useTheme()
     const dishes = (() => {
       const items = slugs.map((slug) => {

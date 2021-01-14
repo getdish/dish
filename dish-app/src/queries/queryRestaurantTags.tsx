@@ -1,16 +1,16 @@
 import { order_by } from '@dish/graph'
 
-import { selectTagButtonProps } from '../../helpers/selectTagButtonProps'
-import { useRestaurantQuery } from './useRestaurantQuery'
+import { selectTagButtonProps } from '../helpers/selectTagButtonProps'
+import { queryRestaurant } from './queryRestaurant'
 
-export const useRestaurantTags = ({
+export const queryRestaurantTags = ({
   restaurantSlug,
   limit = 20,
 }: {
   restaurantSlug: string
   limit?: number
 }) => {
-  const restaurant = useRestaurantQuery(restaurantSlug)
+  const restaurant = queryRestaurant(restaurantSlug)
   const restaurantTags = restaurant.tags({
     limit,
     where: {

@@ -15,7 +15,7 @@ import { drawerBorderRadius, isWeb } from '../../../constants/constants'
 import { getColorsForName } from '../../../helpers/getColorsForName'
 import { HomeStateItemRestaurant } from '../../../types/homeTypes'
 import { useAppDrawerWidthInner } from '../../hooks/useAppDrawerWidth'
-import { useRestaurantQuery } from '../../hooks/useRestaurantQuery'
+import { queryRestaurant } from '../../../queries/queryRestaurant'
 import { ContentScrollViewHorizontal } from '../../views/ContentScrollViewHorizontal'
 import { RestaurantOverview } from '../../views/restaurant/RestaurantOverview'
 import { RestaurantTagsRow } from '../../views/restaurant/RestaurantTagsRow'
@@ -62,7 +62,7 @@ const RestaurantHeaderContent = memo(
       minHeight,
       size,
     }: RestaurantHeaderProps) => {
-      const restaurant = useRestaurantQuery(restaurantSlug)
+      const restaurant = queryRestaurant(restaurantSlug)
       const [open_text, open_color, next_time] = openingHours(restaurant)
       const paddingPx = size === 'sm' ? 10 : 30
       const spacer = <Spacer size={paddingPx} />

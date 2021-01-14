@@ -15,7 +15,7 @@ import {
 } from 'snackui'
 
 import { thirdPartyCrawlSources } from '../../../constants/thirdPartyCrawlSources'
-import { useRestaurantQuery } from '../../hooks/useRestaurantQuery'
+import { queryRestaurant } from '../../../queries/queryRestaurant'
 import { RatingViewProps } from '../../views/RatingView'
 import RestaurantRatingView from './RestaurantRatingView'
 
@@ -25,7 +25,7 @@ export const RestaurantRatingViewPopover = memo(
       size = 'md',
       restaurantSlug,
     }: Partial<RatingViewProps> & { restaurantSlug: string }) => {
-      const restaurant = useRestaurantQuery(restaurantSlug)
+      const restaurant = queryRestaurant(restaurantSlug)
       const sources = restaurant?.sources?.() ?? {}
       const headStyle: TextProps = {
         fontWeight: '300',

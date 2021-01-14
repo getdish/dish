@@ -27,7 +27,7 @@ import {
 import { isWeb } from '../../../constants/constants'
 import { getImageUrl } from '../../../helpers/getImageUrl'
 import { useHomeStore } from '../../homeStore'
-import { useRestaurantQuery } from '../../hooks/useRestaurantQuery'
+import { queryRestaurant } from '../../../queries/queryRestaurant'
 import { StackViewCloseButton } from '../../views/StackViewCloseButton'
 
 export default memo(function GalleryPage() {
@@ -74,7 +74,7 @@ export const GalleryLightbox = ({
     }
   })
   const query = useQuery()
-  const restaurant = useRestaurantQuery(restaurantSlug)
+  const restaurant = queryRestaurant(restaurantSlug)
   restaurant.id
   const [pagination, setPagination] = useState(() => ({ limit: 20, offset: 0 }))
   const [photosList, setPhotosList] = useState<photo[]>(() => [])

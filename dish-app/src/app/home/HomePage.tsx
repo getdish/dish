@@ -44,7 +44,7 @@ import { AppIntroLogin } from '../AppIntroLogin'
 import { useSetAppMapResults } from '../AppMapStore'
 import { useHomeStore } from '../homeStore'
 import { usePageLoadEffect } from '../hooks/usePageLoadEffect'
-import { useRestaurantQuery } from '../hooks/useRestaurantQuery'
+import { queryRestaurant } from '../../queries/queryRestaurant'
 import { CardFrame, cardFrameBorderRadius } from '../views/CardFrame'
 import { CommentBubble } from '../views/CommentBubble'
 import { ContentScrollView } from '../views/ContentScrollView'
@@ -623,7 +623,7 @@ const DishCol = (props: StackProps) => {
 }
 
 const DishFeedCard = graphql(function DishFeedCard(props: FeedItemDish) {
-  const restaurant = useRestaurantQuery(props.restaurant.slug)
+  const restaurant = queryRestaurant(props.restaurant.slug)
   return (
     <CardFrame aspectFixed transparent>
       <VStack position="relative" alignSelf="center">

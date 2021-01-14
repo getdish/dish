@@ -3,7 +3,7 @@ import React, { memo } from 'react'
 import { HStack, StackProps, Text, VStack } from 'snackui'
 
 import { isWeb } from '../../../constants/constants'
-import { useRestaurantQuery } from '../../hooks/useRestaurantQuery'
+import { queryRestaurant } from '../../../queries/queryRestaurant'
 import { Link } from '../../views/Link'
 import { RestaurantDeliveryButtons } from './RestaurantDeliveryButtons'
 
@@ -22,7 +22,7 @@ export const RestaurantDetailRow = memo(
       after?: any
     }) => {
       const sizeSm = size === 'sm'
-      const restaurant = useRestaurantQuery(restaurantSlug)
+      const restaurant = queryRestaurant(restaurantSlug)
       // const restaurantSources = getRestaurantDeliverySources(
       //   restaurant.sources()
       // )

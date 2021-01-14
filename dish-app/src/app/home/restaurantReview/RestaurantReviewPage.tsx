@@ -16,7 +16,7 @@ import { red } from '../../../constants/colors'
 import { getRestaurantDishes } from '../../../helpers/getRestaurantDishes'
 import { HomeStateItemReview } from '../../../types/homeTypes'
 import { useHomeStore } from '../../homeStore'
-import { useRestaurantQuery } from '../../hooks/useRestaurantQuery'
+import { queryRestaurant } from '../../../queries/queryRestaurant'
 import { useUserReviewCommentQuery } from '../../hooks/useUserReview'
 import { useUserStore } from '../../userStore'
 import { CommentBubble } from '../../views/CommentBubble'
@@ -89,7 +89,7 @@ const HomePageReviewContent = memo(
   }: {
     state: HomeStateItemReview
   }) {
-    const restaurant = useRestaurantQuery(state.restaurantSlug)
+    const restaurant = queryRestaurant(state.restaurantSlug)
 
     return (
       <VStack width="100%" maxWidth="100%" padding={18} spacing="lg" flex={1}>

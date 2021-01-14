@@ -10,7 +10,7 @@ import { ScrollView } from 'react-native'
 import { Box, HStack, HoverablePopover, Text, VStack } from 'snackui'
 
 import { GeocodePlace } from '../../../types/homeTypes'
-import { useRestaurantQuery } from '../../hooks/useRestaurantQuery'
+import { queryRestaurant } from '../../../queries/queryRestaurant'
 import { SmallCircleButton } from '../../views/CloseButton'
 import { SmallButton } from '../../views/SmallButton'
 
@@ -31,7 +31,7 @@ export const RestaurantAddressLinksRow = memo(
       showAddress?: AddressSize
       showMenu?: boolean
     }) => {
-      const restaurant = useRestaurantQuery(restaurantSlug)
+      const restaurant = queryRestaurant(restaurantSlug)
       const fontSize = size == 'lg' ? 16 : 14
       const iconSize = size === 'lg' ? 18 : 16
 

@@ -2,7 +2,7 @@ import { restaurant_tag } from '@dish/graph'
 import { isPresent } from '@dish/helpers'
 import { useMemo } from 'react'
 
-import { useRestaurantQuery } from '../app/hooks/useRestaurantQuery'
+import { queryRestaurant } from '../queries/queryRestaurant'
 import {
   DishTagItemSimple,
   selectRishDishViewSimple,
@@ -37,7 +37,7 @@ export const getRestaurantDishes = ({
   tagSlugs = [],
   max = 6,
 }: Props): DishTagItemSimple[] => {
-  const restaurant = useRestaurantQuery(restaurantSlug)
+  const restaurant = queryRestaurant(restaurantSlug)
   let topTags = restaurant.top_tags({
     args: {
       tag_slugs: tagSlugs.filter(isPresent).join(','),

@@ -5,7 +5,7 @@ import { HStack, Text, VStack } from 'snackui'
 
 import { bgLight } from '../../../constants/colors'
 import { getImageUrl } from '../../../helpers/getImageUrl'
-import { useRestaurantQuery } from '../../hooks/useRestaurantQuery'
+import { queryRestaurant } from '../../../queries/queryRestaurant'
 import { Link } from '../../views/Link'
 import { LinkButton } from '../../views/LinkButton'
 
@@ -26,7 +26,7 @@ export const RestaurantPhotosRow = memo(
       width: number
       height: number
     }) => {
-      const restaurant = useRestaurantQuery(restaurantSlug)
+      const restaurant = queryRestaurant(restaurantSlug)
       const photos = restaurant.photo_table({
         limit: 6,
         order_by: [

@@ -20,7 +20,7 @@ import {
 import { tagLenses } from '../../../constants/localTags'
 import { numberFormat } from '../../../helpers/numberFormat'
 import { restaurantRatio } from '../../../helpers/restaurantsRatio'
-import { useRestaurantQuery } from '../../hooks/useRestaurantQuery'
+import { queryRestaurant } from '../../../queries/queryRestaurant'
 import { useUserTagVotes } from '../../hooks/useUserTagVotes'
 import { SentimentCircle } from '../SentimentCircle'
 import { VoteButton } from '../VoteButton'
@@ -63,7 +63,7 @@ const RestaurantUpVoteDownVoteContents = graphql(
     ratio,
     display,
   }: UpvoteDownvoteProps) => {
-    const restaurant = useRestaurantQuery(restaurantSlug)
+    const restaurant = queryRestaurant(restaurantSlug)
     const { vote, setVote } = useUserTagVotes(
       restaurantSlug,
       Object.keys(activeTagSlugs).reduce(

@@ -5,7 +5,7 @@ import {
   getRankingColor,
   getRestaurantRating,
 } from '../../../helpers/getRestaurantRating'
-import { useRestaurantQuery } from '../../hooks/useRestaurantQuery'
+import { queryRestaurant } from '../../../queries/queryRestaurant'
 import { RatingView, RatingViewProps } from '../../views/RatingView'
 
 export type RestaurantRatingViewProps = Omit<
@@ -22,7 +22,7 @@ export default memo(
     let { restaurantSlug, rating, ...rest } = props
     // optionally fetch
     if (typeof rating === 'undefined') {
-      const restaurant = useRestaurantQuery(restaurantSlug)
+      const restaurant = queryRestaurant(restaurantSlug)
       rating = restaurant.rating
     }
     const percent = getRestaurantRating(rating ?? 0)

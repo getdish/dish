@@ -8,7 +8,7 @@ import { addTagsToCache, allTags } from '../../helpers/allTags'
 import { getFullTags } from '../../helpers/getFullTags'
 import { HomeActiveTagsRecord } from '../../types/homeTypes'
 import { useUserStore, userStore } from '../userStore'
-import { useRestaurantQuery } from './useRestaurantQuery'
+import { queryRestaurant } from '../../queries/queryRestaurant'
 
 export type VoteNumber = -1 | 0 | 1
 
@@ -85,7 +85,7 @@ export const useUserTagVote = (props: VoteStoreProps) => {
   const userStore = useUserStore()
   const userId = userStore.user?.id
   const voteStore = useStore(TagVoteStore, props)
-  const restaurant = useRestaurantQuery(props.restaurantSlug)
+  const restaurant = queryRestaurant(props.restaurantSlug)
   const forceUpdate = useForceUpdate()
   const tag = allTags[props.tagSlug]
   const tagId = tag?.id

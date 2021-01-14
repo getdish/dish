@@ -10,7 +10,7 @@ import { HomeStateItemRestaurant } from '../../../types/homeTypes'
 import { useSetAppMapResults } from '../../AppMapStore'
 import { homeStore } from '../../homeStore'
 import { usePageLoadEffect } from '../../hooks/usePageLoadEffect'
-import { useRestaurantQuery } from '../../hooks/useRestaurantQuery'
+import { queryRestaurant } from '../../../queries/queryRestaurant'
 import { ContentScrollView } from '../../views/ContentScrollView'
 import { PageTitleTag } from '../../views/PageTitleTag'
 import { StackDrawer } from '../../views/StackDrawer'
@@ -36,7 +36,7 @@ const RestaurantPage = memo(
   graphql((props: Props) => {
     const { item } = props
     const { restaurantSlug, section, sectionSlug } = item
-    const restaurant = useRestaurantQuery(restaurantSlug)
+    const restaurant = queryRestaurant(restaurantSlug)
     const coords = restaurant?.location?.coordinates
     const scrollView = useRef<ScrollView>()
     const { selectedDish, setSelectedDishToggle } = useSelectedDish(

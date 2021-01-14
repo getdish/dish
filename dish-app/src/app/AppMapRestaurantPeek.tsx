@@ -7,7 +7,7 @@ import { AbsoluteVStack, Box, HStack, Spacer, Text, VStack } from 'snackui'
 import { appMapStore } from './AppMapStore'
 import { RestaurantRatingViewPopover } from './home/restaurant/RestaurantRatingViewPopover'
 import { useHomeStore } from './homeStore'
-import { useRestaurantQuery } from './hooks/useRestaurantQuery'
+import { queryRestaurant } from '../queries/queryRestaurant'
 import { LinkButton } from './views/LinkButton'
 
 export const AppMapRestaurantPeek = memo(
@@ -60,7 +60,7 @@ export const AppMapRestaurantPeek = memo(
       return containerWrap(null)
     }
 
-    const restaurant = useRestaurantQuery(slug)
+    const restaurant = queryRestaurant(slug)
 
     return containerWrap(
       <>
