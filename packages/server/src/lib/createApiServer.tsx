@@ -1,5 +1,4 @@
 import { basename, join, relative, resolve } from 'path'
-import { Worker } from 'worker_threads'
 
 import chokidar from 'chokidar'
 import { NextFunction, Request, RequestHandler, Response } from 'express'
@@ -8,11 +7,11 @@ import { pathExists, readdir } from 'fs-extra'
 import { debounce } from 'lodash'
 import winston from 'winston'
 
-import { File, ServerConfigNormal, WorkerData } from '../types'
+import { File, ServerConfigNormal } from '../types'
 import { typescriptOptions } from './typescriptOptions'
 
-export async function createApiServer(server: any, config: ServerConfigNormal) {
-  const { apiDir, rootDir, watch, hostname, port } = config
+export async function createApiServer(app: any, config: ServerConfigNormal) {
+  const { apiDir, url, watch } = config
   if (!apiDir) return
 
   let lastRouteResponse: any
@@ -25,7 +24,7 @@ export async function createApiServer(server: any, config: ServerConfigNormal) {
     }
   })
 
-  server.use(
+  app.use(
     '/api',
     expressWinston.logger({
       transports: [new winston.transports.Console()],
@@ -41,7 +40,6 @@ export async function createApiServer(server: any, config: ServerConfigNormal) {
     })
   )
 
-  const url = `http://${hostname}:${port ? port : ''}`
   const handlers = {}
   const handlerStatus: { [key: string]: undefined | 'loading' | 'ready' } = {}
 
@@ -109,7 +107,7 @@ export async function createApiServer(server: any, config: ServerConfigNormal) {
       if (!handlerStatus[name]) {
         console.log(` [api]   · ${url}${route}`)
         handlerStatus[name] = 'loading'
-        server.use(route, async (req, res, next) => {
+        app.use(route, async (req, res, next) => {
           let tries = 0
           while (handlerStatus[name] === 'loading') {
             tries++

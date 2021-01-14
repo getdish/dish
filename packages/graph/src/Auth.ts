@@ -1,42 +1,30 @@
 import { isSafari } from '@dish/helpers'
 
 import { ORIGIN, isNode } from './constants'
+import { HAS_LOGGED_IN_BEFORE, LOGIN_KEY, getAuthHeaders } from './getAuth'
 
-const LOGIN_KEY = 'auth'
-const HAS_LOGGED_IN_BEFORE = 'HAS_LOGGED_IN_BEFORE'
-// TODO put this away! in localstorage i think
-const HASURA_SECRET =
-  process.env.HASURA_SECRET || process.env.REACT_APP_HASURA_SECRET || 'password'
+// TODO next gen!! remove all cruft!!
 
-export type UpdateUserProps = {
+export type EditUserProps = {
   username: string
   about?: string
   location?: string
   charIndex?: number
 }
 
-export function getAuth(): null | {
-  user: Object
-  token: string
-  admin?: boolean
-} {
-  const json = localStorage.getItem(LOGIN_KEY)
-  if (json != null) {
-    return JSON.parse(json)
-  }
-  return null
+export type EditUserResponse = {
+  email: string
+  has_onboarded: boolean
+  about: string
+  location: string
+  charIndex: number
+  username: string
 }
 
-export function getAuthHeaders() {
-  const auth = getAuth()
-  return {
-    ...(HASURA_SECRET && {
-      'X-Hasura-Admin-Secret': HASURA_SECRET,
-    }),
-    ...(auth && {
-      Authorization: `Bearer ${auth.token}`,
-    }),
-  }
+export async function userEdit(
+  user: EditUserProps
+): Promise<EditUserResponse | null> {
+  return await (await userFetchSimple('POST', '/api/user/edit', user)).json()
 }
 
 export async function userFetchSimple(
@@ -58,14 +46,7 @@ export async function userFetchSimple(
     if (response.status == 401) {
       handleLogOut?.()
     }
-    console.error('Auth fetch() error', {
-      method,
-      domain: ORIGIN,
-      path,
-      data,
-      status: response.status,
-      statusText: response.statusText,
-    })
+    console.error('Auth fetch() error', method, path, data)
   }
   return response
 }
@@ -79,8 +60,8 @@ class AuthModel {
 
   getRedirectUri() {
     return isSafari
-      ? `${ORIGIN}/auth/apple_authorize`
-      : `${ORIGIN}/auth/apple_authorize_chrome`
+      ? `${ORIGIN}/api/auth/appleAuthorize`
+      : `${ORIGIN}/api/auth/appleAuthorizeChrome`
   }
 
   hasEverLoggedIn =
@@ -134,24 +115,6 @@ class AuthModel {
     return await response.json()
   }
 
-  async updateUser(
-    user: UpdateUserProps
-  ): Promise<{
-    email: string
-    has_onboarded: boolean
-    about: string
-    location: string
-    charIndex: number
-    username: string
-  } | null> {
-    const response = await this.api('POST', '/api/user/updateUser', user)
-    if (response.status !== 200) {
-      console.error(`Error updating: ${response.status} ${response.statusText}`)
-      return null
-    }
-    return await response.json()
-  }
-
   async register(username: string, email: string, password: string) {
     const response = await this.api('POST', '/user', {
       username,
@@ -162,7 +125,6 @@ class AuthModel {
       console.error(
         `Error registering: ${response.status} ${response.statusText}`
       )
-
       const data = await response.json()
       return [response.status, data] as const
     } else {
@@ -179,15 +141,18 @@ class AuthModel {
       username,
       password,
     })
-
     if (response.status != 201 && response.status != 200) {
       console.error(
         `Couldn't login, invalid username or password or missing user`
       )
       return [response.status, response.statusText] as const
     }
-
     const data = await response.json()
+    this.setLoginData(data)
+    return [response.status, data.user] as const
+  }
+
+  setLoginData(data: { user: any; token: string }) {
     this.isLoggedIn = true
     this.jwt = data.token
     this.user = data.user
@@ -200,7 +165,6 @@ class AuthModel {
       })
     )
     this.has_been_logged_out = false
-    return [response.status, data.user] as const
   }
 
   // mostly same as login
@@ -213,26 +177,9 @@ class AuthModel {
       console.error(`Couldn't login apple auth`)
       throw new Error(response.statusText)
     }
-
     const data = await response.json()
-    this.isLoggedIn = true
-    this.jwt = data.token
-    this.user = data.user
-    localStorage.setItem(
-      LOGIN_KEY,
-      JSON.stringify({
-        token: this.jwt,
-        user: this.user,
-      })
-    )
-    this.has_been_logged_out = false
-    return data.user as {
-      id: string
-      username: string
-      location: string
-      about: string
-      avatar: string
-    }
+    this.setLoginData(data)
+    return data
   }
 
   async logout() {

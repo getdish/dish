@@ -18,7 +18,7 @@ export const AppMenu = memo(() => {
   const userStore = useUserStore()
   const media = useMedia()
   const appMenu = useStoreInstance(appMenuStore)
-  const showUserMenu = appMenu.showMenu
+  const showUserMenu = appMenu.isVisible
   const pageName = useRouterCurPage().name
 
   useEffect(() => {
@@ -38,13 +38,13 @@ export const AppMenu = memo(() => {
         position="bottom"
         isOpen={showUserMenu}
         noArrow
-        onChangeOpen={appMenu.setShowMenu}
+        onChangeOpen={appMenu.setIsVisible}
         contents={<AppMenuContents hideUserMenu={appMenu.hide} />}
         mountImmediately
       >
         <MenuLinkButton
           Icon={Menu}
-          onPress={() => appMenu.setShowMenu(!showUserMenu)}
+          onPress={() => appMenu.setIsVisible(!showUserMenu)}
           text={!media.sm && !userStore.isLoggedIn ? 'Signup' : ''}
         />
       </Popover>

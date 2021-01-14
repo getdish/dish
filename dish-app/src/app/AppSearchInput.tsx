@@ -137,7 +137,7 @@ export const AppSearchInput = memo(() => {
   useEffect(() => {
     return reaction(
       homeStore,
-      (state) => state.currentSearchQuery,
+      (x) => x.currentSearchQuery,
       (val) => {
         if (val !== getSearch()) {
           setSearch(val)

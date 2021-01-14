@@ -2,6 +2,7 @@ import { join } from 'path'
 
 import { Command, flags } from '@oclif/command'
 
+import { createServer } from '../lib/createServer'
 import { ServerConfig } from '../types'
 
 export class Start extends Command {
@@ -33,6 +34,10 @@ export class Start extends Command {
     clean: flags.boolean({
       description: 'Start from a fresh cache.',
     }),
+    https: flags.boolean({
+      char: 'S',
+      description: 'Set up an https domain',
+    }),
   }
 
   async run() {
@@ -41,12 +46,13 @@ export class Start extends Command {
     const config: ServerConfig = {
       rootFolder,
       port: flags.port,
-      hostname: flags.hostname ?? 'localhost',
-      inspect: flags.inspect ?? false,
+      hostname: flags.hostname,
+      inspect: flags.inspect,
       clean: flags.clean,
       env: flags.prod ? 'production' : 'development',
       watch: flags.ssr ? false : true,
       apiDir: flags['no-api'] ? null : join(rootFolder, 'src', 'api'),
+      https: flags.https,
     }
 
     if (config.env === 'development') {
@@ -56,7 +62,6 @@ export class Start extends Command {
     }
 
     try {
-      const { createServer } = require('../lib/createServer')
       await createServer(config)
     } catch (err) {
       console.error(err)

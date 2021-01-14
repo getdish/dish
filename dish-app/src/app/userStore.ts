@@ -1,10 +1,12 @@
 import {
   Auth,
+  EditUserProps,
   Review,
-  UpdateUserProps,
   User,
   query,
   resolved,
+  userEdit,
+  userFetchSimple,
 } from '@dish/graph'
 import { Store, createStore, useStoreInstance } from '@dish/use-store'
 import { Toast } from 'snackui'
@@ -21,6 +23,44 @@ class UserStore extends Store {
     return !!this.user
   }
 
+  async fetch(
+    method: 'POST' | 'GET',
+    path: string,
+    data: any = {},
+    onSuccess?: (data: any) => any
+  ) {
+    const header = await userFetchSimple(method, path, data)
+    const isErrHead = header.status >= 300
+    const res = await header.json()
+    if (res.error) {
+      Toast.show(res.error, {
+        type: 'error',
+      })
+    }
+    if (res.success) {
+      Toast.show(res.success)
+    }
+    if (!res.error && !isErrHead) {
+      onSuccess?.(res)
+      return res
+    }
+    console.warn(`fetch err ${path} - ${header.statusText}`, res)
+    return res
+  }
+
+  async login(obj) {
+    await this.fetch('POST', '/api/user/login', obj, this.afterLogin)
+  }
+
+  async register(obj) {
+    await this.fetch('POST', '/api/user/new', obj, this.afterLogin)
+  }
+
+  async afterLogin(data) {
+    Auth.setLoginData(data)
+    await this.refreshUser(data.user)
+  }
+
   promptLogin() {
     if (!this.isLoggedIn) {
       appMenuStore.show()
@@ -28,10 +68,6 @@ class UserStore extends Store {
       return true
     }
     return false
-  }
-
-  async setUser(user: { id: string }) {
-    await this.refreshUser(user)
   }
 
   async logout() {
@@ -46,7 +82,7 @@ class UserStore extends Store {
       Toast.show('Session expired: logged out')
     }
     if (Auth.isLoggedIn) {
-      this.setUser(Auth.user)
+      this.refreshUser(Auth.user)
     }
   }
 
@@ -59,8 +95,8 @@ class UserStore extends Store {
     return false
   }
 
-  async updateUser(props: UpdateUserProps) {
-    const user = await Auth.updateUser(props)
+  async edit(props: EditUserProps) {
+    const user = await userEdit(props)
     if (user) {
       this.user = {
         ...this.user,
@@ -109,16 +145,6 @@ class UserStore extends Store {
       this.logout()
     }
   }
-}
-
-const formatErrors = (torm_errors: any) => {
-  let errors: string[] = []
-  for (const torm_error of torm_errors) {
-    for (const entry of Object.entries(torm_error.constraints)) {
-      errors.push(entry[1] as string)
-    }
-  }
-  return errors
 }
 
 export const userStore = createStore(UserStore)

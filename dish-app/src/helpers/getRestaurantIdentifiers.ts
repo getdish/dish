@@ -1,4 +1,4 @@
-import { RestaurantQuery } from '@dish/graph/src'
+import { RestaurantQuery } from '@dish/graph'
 
 export function getRestaurantIdentifiers(r: RestaurantQuery) {
   return {

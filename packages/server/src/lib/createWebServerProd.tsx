@@ -10,12 +10,13 @@ import { Helmet } from 'react-helmet'
 
 import { ServerConfigNormal } from '../types'
 import { build } from './build'
+import { createWebServerDev } from './createWebServerDev'
 import { shimBrowser } from './shimBrowser'
 
 const jsdom = shimBrowser()
 
 export async function createWebServerProd(
-  server: any,
+  app: any,
   config: ServerConfigNormal
 ) {
   const {
@@ -27,8 +28,7 @@ export async function createWebServerProd(
     webpackConfig,
   } = config
   if (watch) {
-    const { createServerDev } = require('./createServerDev')
-    return await createServerDev(server, config)
+    return await createWebServerDev(app, config)
   } else {
     await build({
       clean,
@@ -44,11 +44,11 @@ export async function createWebServerProd(
   global['__DEV__'] = process.env.NODE_ENV === 'development'
   global['requestIdleCallback'] = global['requestIdleCallback'] || setTimeout
 
-  const app = require(Path.join(
+  const userApp = require(Path.join(
     buildDir,
     `static/js/app.ssr.${process.env.NODE_ENV ?? 'production'}.js`
   ))
-  const { App, ReactDOMServer } = app
+  const { App, ReactDOMServer } = userApp
 
   if (!App || !ReactDOMServer) {
     console.log(`Bad exported bundle`, { App, ReactDOMServer })
@@ -72,10 +72,10 @@ export async function createWebServerProd(
     return readFileSync(outPath, 'utf8')
   })
 
-  server.use('/', express.static(clientBuildPath))
-  server.use('/', express.static(clientBuildLegacyPath))
+  app.use('/', express.static(clientBuildPath))
+  app.use('/', express.static(clientBuildLegacyPath))
 
-  server.get('*', async (req, res) => {
+  app.get('*', async (req, res) => {
     console.log('req', req.hostname, req.path)
     const htmlPath = Path.join(rootDir, 'src', 'index.html')
     const template = readFileSync(htmlPath, 'utf8')

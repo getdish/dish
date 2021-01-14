@@ -1,4 +1,4 @@
-import { Request, Handler as ExpressHandler, Response } from 'express'
+import { Handler as ExpressHandler, Request, Response } from 'express'
 
 export type Handler = ExpressHandler | ExpressHandler[]
 export type Req = Request
@@ -19,9 +19,12 @@ export function wrapRoute(
 }
 
 export function handleErrors(fn: ExpressHandler) {
-  return (r, r2, next) => {
+  return async (r, r2, next) => {
     try {
-      return fn(r, r2, next)
+      const handlerRes = fn(r, r2, next) as any
+      if (handlerRes instanceof Promise) {
+        await handlerRes
+      }
     } catch (err) {
       if (err instanceof RouteNext) {
         return next()

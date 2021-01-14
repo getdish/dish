@@ -10,7 +10,7 @@ import AppleSignIn, { AppleSignInOptions } from 'apple-sign-in-rest'
 // may want to switch if we get issues:
 // https://github.com/A-Tokyo/apple-signin-auth
 
-export const redirectUri = 'https://dishapp.com/auth/apple_authorize'
+export const redirectUri = 'https://dishapp.com/api/auth/appleAuthorize'
 const rootPath = join(__dirname, '..', '..', '..')
 const privateKeyPath = join(rootPath, 'etc', '_AuthKey_M5CPALWBA5.p8')
 export const appleConfig: AppleSignInOptions = {

@@ -48,10 +48,6 @@ export function App() {
 function AppHomeContent() {
   return (
     <>
-      <Suspense fallback={null}>
-        <AppSearchBarFloating />
-      </Suspense>
-
       <VStack
         zIndex={0}
         flex={1}
@@ -60,10 +56,6 @@ function AppHomeContent() {
         overflow="hidden"
         backgroundColor="#dbdeeb"
       >
-        <Suspense fallback={null}>
-          <AppMenuButton />
-        </Suspense>
-
         <Suspense fallback={null}>
           <Home />
         </Suspense>
@@ -85,7 +77,15 @@ function AppHomeContent() {
             <AppMapControlsOverlay />
           </Suspense>
         </Suspense>
+
+        <Suspense fallback={null}>
+          <AppMenuButton />
+        </Suspense>
       </VStack>
+
+      <Suspense fallback={null}>
+        <AppSearchBarFloating />
+      </Suspense>
 
       {/* Modals outside the above VStack to stay above */}
       <Suspense fallback={null}>

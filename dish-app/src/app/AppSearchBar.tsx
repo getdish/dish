@@ -29,26 +29,6 @@ import { DishHorizonView } from './views/DishHorizonView'
 import { DishLogoButton } from './views/DishLogoButton'
 import { LinkButton } from './views/LinkButton'
 
-console.log({
-  ArrowUp,
-  ChevronLeft,
-  Map,
-  Search,
-  AbsoluteVStack,
-  DishHorizonView,
-  DishLogoButton,
-  LinkButton,
-  AppMenu,
-  AppSearchInput,
-  AppSearchInputLocation,
-  HStack,
-  LinearGradient,
-  Spacer,
-  Theme,
-  VStack,
-  useMedia,
-})
-
 const isWeb = Platform.OS === 'web'
 
 export const AppSearchBar = () => {

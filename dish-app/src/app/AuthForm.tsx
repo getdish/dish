@@ -1,4 +1,3 @@
-import { userFetchSimple } from '@dish/graph'
 import { capitalize } from 'lodash'
 import React, { Suspense, useEffect, useRef, useState } from 'react'
 import {
@@ -18,7 +17,6 @@ import {
   SmallTitle,
   Spacer,
   Text,
-  Toast,
   VStack,
 } from 'snackui'
 
@@ -36,30 +34,6 @@ type AuthFormProps = {
 }
 
 const pages = ['login', 'register', 'forgotPassword', 'passwordReset']
-
-export async function userFetch(
-  method: 'POST' | 'GET',
-  path: string,
-  data: any = {},
-  onSuccess?: (data: any) => any
-) {
-  const header = await userFetchSimple(method, path, data)
-  const isErrHead = header.status >= 300
-  const res = await header.json()
-  if (res.error) {
-    Toast.show(res.error, {
-      type: 'error',
-    })
-  }
-  if (res.success) {
-    Toast.show(res.success)
-  }
-  if (!res.error && !isErrHead) {
-    onSuccess?.(res)
-  }
-  console.warn(`fetch err ${path} - ${header.statusText}`)
-  return res
-}
 
 export const AuthForm = ({
   onDidLogin,
@@ -89,8 +63,23 @@ export const AuthForm = ({
     backgroundColor: 'rgba(150,150,150,0.35)',
   }
 
+  function getContent() {
+    if (formPage === 'login') {
+      return <LoginForm autoFocus={autoFocus} setFormPage={setFormPage} />
+    }
+    if (formPage === 'signup') {
+      return <SignupForm autoFocus={autoFocus} setFormPage={setFormPage} />
+    }
+    if (formPage === 'forgotPassword') {
+      return <ForgotPassword setFormPage={setFormPage} />
+    }
+    if (formPage === 'passwordReset') {
+      return <PasswordReset setFormPage={setFormPage} />
+    }
+  }
+
   return (
-    <VStack alignItems="center" spacing>
+    <VStack alignItems="center" spacing="sm">
       {isWeb && (
         <>
           <VStack>
@@ -132,26 +121,15 @@ export const AuthForm = ({
         </Button>
       </InteractiveContainer>
 
-      {(() => {
-        if (formPage === 'login') {
-          return <LoginForm autoFocus={autoFocus} setFormPage={setFormPage} />
-        }
-        if (formPage === 'signup') {
-          return <SignupForm autoFocus={autoFocus} setFormPage={setFormPage} />
-        }
-        if (formPage === 'forgotPassword') {
-          return <ForgotPassword setFormPage={setFormPage} />
-        }
-        if (formPage === 'passwordReset') {
-          return <PasswordReset setFormPage={setFormPage} />
-        }
-      })()}
+      {getContent()}
 
       <VStack maxWidth={320}>
         {!!userStore.messages.length && (
           <ErrorParagraph>{userStore.messages.join(', ')}</ErrorParagraph>
         )}
       </VStack>
+
+      <Spacer />
     </VStack>
   )
 }
@@ -170,7 +148,7 @@ const PasswordReset = ({ autoFocus }: AuthFormProps) => {
       password: '',
       confirmation: '',
     },
-    submit: (obj) => userFetch('POST', '/api/user/passwordReset', obj),
+    submit: (obj) => userStore.fetch('POST', '/api/user/passwordReset', obj),
   })
   return (
     <SubmittableForm
@@ -215,7 +193,7 @@ const ForgotPassword = ({ autoFocus, setFormPage }: AuthFormProps) => {
     initialValues: {
       login: '',
     },
-    submit: (obj) => userFetch('POST', '/api/user/forgotPassword', obj),
+    submit: (obj) => userStore.fetch('POST', '/api/user/forgotPassword', obj),
   })
   return (
     <SubmittableForm
@@ -258,24 +236,21 @@ const LoginForm = ({ autoFocus, setFormPage }: AuthFormProps) => {
       login: '',
       password: '',
     },
-    submit: (obj) =>
-      userFetch('POST', '/api/user/login', obj, (res) => {
-        userStore.setUser(res.user)
-      }),
+    submit: userStore.login,
   })
   return (
     <SubmittableForm
       onSubmit={onSubmit}
       isSuccess={isSuccess}
-      submitText="Login"
+      submitText="Go"
       after={
-        <HStack alignSelf="flex-end">
-          <Text fontSize={14}>
-            <Link onClick={(e) => setFormPage('forgotPassword')}>
-              Forgot password?
-            </Link>{' '}
-          </Text>
-        </HStack>
+        <Link
+          alignSelf="center"
+          fontSize={14}
+          onClick={(e) => setFormPage('forgotPassword')}
+        >
+          Forgot password?
+        </Link>
       }
     >
       <ValidatedInput
@@ -314,10 +289,7 @@ const SignupForm = ({ autoFocus }: AuthFormProps) => {
       password: '',
       email: '',
     },
-    submit: (obj) =>
-      userFetch('POST', '/api/user/new', obj, (res) => {
-        userStore.setUser(res.user)
-      }),
+    submit: userStore.register,
   })
   return (
     <SubmittableForm onSubmit={onSubmit} submitText="Signup">
@@ -452,19 +424,19 @@ function SubmittableForm({
   }
   return (
     <Form onSubmit={handleSubmit}>
+      {!isSuccess && isWeb && (
+        <input
+          onSubmit={handleSubmit}
+          type="submit"
+          style={{ visibility: 'hidden', height: 0 }}
+        />
+      )}
+
       <VStack spacing="sm" minWidth={260}>
         {!isSuccess && (
           <Suspense fallback={null}>
             <VStack spacing="sm">{children}</VStack>
           </Suspense>
-        )}
-
-        {!isSuccess && isWeb && (
-          <input
-            onSubmit={handleSubmit}
-            type="submit"
-            style={{ visibility: 'hidden', height: 0 }}
-          />
         )}
 
         {!isSuccess && (
@@ -518,6 +490,9 @@ function useFormAction<Values extends { [key: string]: any }>({
   const onChange = (key: keyof Values) => (val: string) => {
     // @ts-expect-error
     data.current[key] = val
+  }
+  if (response.isSuccess) {
+    console.log('🤠 NICE JOB', send, name, data, response)
   }
   return {
     errors,

@@ -6,7 +6,7 @@ import {
   handleErrors,
   wrapRoute,
 } from '@dish/api'
-import { userFindOne } from '@dish/graph/src'
+import { JWT_SECRET, userFindOne } from '@dish/graph'
 import * as jwt from 'jsonwebtoken'
 
 type PermissionLevel = 'admin' | 'user' | 'contributor'
@@ -14,7 +14,7 @@ type PermissionLevel = 'admin' | 'user' | 'contributor'
 const permissionsByUser = {
   admin: ['admin', 'user', 'contributor'],
   user: ['user', 'contributor'],
-  contributor: ['user', 'contributor'],
+  contributor: ['contributor'],
 }
 
 export function secureRoute(
@@ -45,11 +45,12 @@ export async function ensureRole(
     if (!user) {
       throw new Error(`No user`)
     }
-    const permission = permissionsByUser[minimumPermission ?? 'admin']
-    if (!permission.includes(user.role)) {
+    const permissions = permissionsByUser[minimumPermission ?? 'contributor']
+    if (!permissions.includes(user.role)) {
       throw new Error(`No permission`)
     }
   } catch (err) {
+    console.error('ensureRole error', err)
     res.status(400).send(err)
     throw RouteExit
   }
@@ -58,10 +59,11 @@ export async function ensureRole(
 export function ensureJWT(req: Req, res: Res) {
   const token = getJWT(req)
   if (!token) {
+    res.status(401).send('expired/invalid jwt')
     throw RouteExit
   }
   const { userId, username } = token
-  const newToken = jwt.sign({ userId, username }, process.env.JWT_SECRET, {
+  const newToken = jwt.sign({ userId, username }, JWT_SECRET, {
     expiresIn: '180d',
   })
   // TODO??? HANDLE THIS ON CLIENT RIGHT???
@@ -71,7 +73,7 @@ export function ensureJWT(req: Req, res: Res) {
 function getJWT(req: Req) {
   const token = (req.headers['authorization'] ?? '').replace('Bearer ', '')
   try {
-    const res = jwt.verify(token, process.env.JWT_SECRET) as {
+    const res = jwt.verify(token, JWT_SECRET) as {
       userId: string
       username: string
     }

@@ -36,6 +36,9 @@ export const RESTAURANT_WEIGHTS = {
   google: 0.4,
 }
 
+export const JWT_SECRET =
+  process.env.JWT_SECRET || '12345678901234567890123456789012'
+
 const IS_LIVE =
   typeof window !== 'undefined' && window.location?.origin.includes('live')
 const STAGING_ORIGIN = 'https://staging.dishapp.com'
