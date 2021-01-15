@@ -1,9 +1,10 @@
 import { graphql } from '@dish/graph'
 import { ellipseText } from '@dish/helpers'
 import { capitalize } from 'lodash'
-import React, { memo } from 'react'
+import React, { memo, useState } from 'react'
 import {
   AbsoluteVStack,
+  Button,
   HStack,
   Input,
   Paragraph,
@@ -12,8 +13,10 @@ import {
   useTheme,
 } from 'snackui'
 
+import { blue } from '../../../constants/colors'
 import { queryRestaurant } from '../../../queries/queryRestaurant'
 import { ensureFlexText } from '../../home/restaurant/ensureFlexText'
+import { SmallButton } from '../SmallButton'
 
 const quote = (
   <AbsoluteVStack top={-10} left={-0}>
@@ -26,7 +29,7 @@ const quote = (
 export const RestaurantOverview = memo(
   graphql(function RestaurantOverview({
     text,
-    editing,
+    editableDescription,
     onEdit,
     restaurantSlug,
     fullHeight,
@@ -37,7 +40,7 @@ export const RestaurantOverview = memo(
     fullHeight?: boolean
     size?: 'lg'
     text?: string
-    editing?: boolean
+    editableDescription?: boolean
     onEdit?: (next: string) => void
     disableEllipse?: boolean
   }) {
@@ -52,6 +55,7 @@ export const RestaurantOverview = memo(
     const extra = size === 'lg' ? 1 : 0
     const lineHeight = Math.round((size === 'lg' ? 26 : 24) * scale + extra)
     const fontSize = Math.round(16 * scale + extra)
+    const [isEditing, setIsEditing] = useState(false)
 
     if (summary) {
       return (
@@ -65,7 +69,7 @@ export const RestaurantOverview = memo(
           position="relative"
         >
           {quote}
-          {editing ? (
+          {isEditing ? (
             <VStack>
               {ensureFlexText}
               <Input
@@ -74,11 +78,22 @@ export const RestaurantOverview = memo(
                 height="100%"
                 width="100%"
                 multiline
+                numberOfLines={5}
                 fontSize={fontSize}
                 lineHeight={lineHeight}
                 color={theme.color}
                 onBlur={(e) => onEdit(e.target['value'])}
               />
+              <Text
+                marginTop={10}
+                alignSelf="flex-end"
+                color={blue}
+                onPress={() => {
+                  setIsEditing(false)
+                }}
+              >
+                Cancel
+              </Text>
             </VStack>
           ) : (
             <Text
@@ -102,6 +117,18 @@ export const RestaurantOverview = memo(
                       maxLength: 380,
                     }
                   )}
+
+              {editableDescription && (
+                <Text
+                  marginLeft={5}
+                  color={blue}
+                  onPress={() => {
+                    setIsEditing(true)
+                  }}
+                >
+                  Edit &raquo;
+                </Text>
+              )}
             </Text>
           )}
         </HStack>

@@ -41,7 +41,7 @@ export const PageTitle = memo(
         alignItems="center"
         position="relative"
         {...(media.sm && {
-          transform: [{ scale: 0.8 }],
+          transform: [{ scale: 0.9 }],
         })}
       >
         {before}

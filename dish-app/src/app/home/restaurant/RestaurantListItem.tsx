@@ -455,7 +455,7 @@ const RestaurantListItemContent = memo(
                   fullHeight={flexibleHeight}
                   disableEllipse={flexibleHeight}
                   text={description}
-                  editing={editableDescription}
+                  editableDescription={editableDescription}
                   onEdit={setDescription}
                   restaurantSlug={restaurantSlug}
                 />
@@ -510,39 +510,17 @@ const RestaurantListItemContent = memo(
 
                   <VStack flex={1} minWidth={12} />
 
-                  {editableDescription && (
-                    <>
-                      {/* <Button>Cancel</Button> */}
-                      {/* <Spacer size="sm" /> */}
-                      <Theme name="active">
-                        <Button
-                          onPress={() => {
-                            if (nextDescription.current) {
-                              onChangeDescription(nextDescription.current)
-                            }
-                          }}
-                        >
-                          Save
-                        </Button>
-                      </Theme>
-                    </>
-                  )}
+                  <VStack marginRight={fadeOutWidthHalf}>
+                    <Suspense fallback={null}>
+                      <RestaurantSourcesBreakdownRow
+                        size="sm"
+                        restaurantId={restaurantId}
+                        restaurantSlug={restaurantSlug}
+                      />
+                    </Suspense>
+                  </VStack>
 
-                  {!editableDescription && (
-                    <>
-                      <VStack marginRight={fadeOutWidthHalf}>
-                        <Suspense fallback={null}>
-                          <RestaurantSourcesBreakdownRow
-                            size="sm"
-                            restaurantId={restaurantId}
-                            restaurantSlug={restaurantSlug}
-                          />
-                        </Suspense>
-                      </VStack>
-
-                      {fadeOutRightElement}
-                    </>
-                  )}
+                  {fadeOutRightElement}
                 </HStack>
               </Suspense>
             </VStack>

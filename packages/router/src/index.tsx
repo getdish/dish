@@ -17,6 +17,11 @@ export type RoutesTable = {
 }
 export type RouteName = keyof RoutesTable
 
+export type RouteAlert<A extends RoutesTable> = {
+  condition: (next: 'unload' | NavigateItem<A>) => boolean
+  message: string
+}
+
 export type HistoryType = 'push' | 'pop' | 'replace'
 export type HistoryDirection = 'forward' | 'backward' | 'none'
 
@@ -46,6 +51,7 @@ export class Router<
   history: HistoryItem[] = []
   stack: HistoryItem[] = []
   stackIndex = 0
+  alert: RouteAlert<RT> | null = null
 
   mount() {
     const { routes } = this.props
@@ -247,6 +253,11 @@ export class Router<
     const params = {
       id: item?.id ?? uid(),
     }
+    if (this.alert?.condition(navItem)) {
+      if (!confirm(this.alert.message)) {
+        return
+      }
+    }
     if (item.type === 'replace') {
       history.replace(item.path, params)
     } else {
@@ -260,6 +271,16 @@ export class Router<
 
   forward() {
     history.forward()
+  }
+
+  setRouteAlert(alert: RouteAlert<RT>) {
+    const prev = this.alert
+    this.alert = alert
+    setUnloadCondition(alert)
+    return () => {
+      setUnloadCondition(prev)
+      this.alert = prev
+    }
   }
 
   getPathFromParams({
@@ -491,3 +512,8 @@ export type NavigateItem<
 //     hi: '',
 //   },
 // })
+
+function setUnloadCondition(alert: RouteAlert<any> | null) {
+  window.onbeforeunload = () =>
+    alert?.condition('unload') ? alert.message : null
+}

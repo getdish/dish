@@ -192,6 +192,19 @@ const ListPageContent = graphql((props: Props) => {
   const [color, setColor] = useStateSynced(listColors[list?.color] ?? '#999')
   const [isPublic, setPublic] = useStateSynced(list?.public ?? true)
   const [restaurants, restaurantActions] = useListRestaurants(list)
+  const username = list.user.name ?? list.user.username
+
+  useEffect(() => {
+    if (isEditing) {
+      return router.setRouteAlert({
+        condition: () => {
+          debugger
+          return true
+        },
+        message: `Cancel editing list and lose edits?`,
+      })
+    }
+  }, [isEditing])
 
   useSetAppMapResults({
     isActive: props.isActive,
@@ -207,7 +220,7 @@ const ListPageContent = graphql((props: Props) => {
   }
 
   return (
-    <StackDrawer closable title={`${list.user.name}'s ${list.name}`}>
+    <StackDrawer closable title={`${username}'s ${list.name}`}>
       {isMyList && (
         <BottomFloatingArea>
           <VStack flex={1} />
@@ -255,76 +268,61 @@ const ListPageContent = graphql((props: Props) => {
       <ContentScrollView id="list">
         <Spacer />
 
-        <PageTitle
-          before={
-            <HStack
-              position="absolute"
-              zIndex={10}
-              top={-10}
-              left={0}
-              bottom={0}
-              alignItems="center"
-              justifyContent="center"
-              backgroundColor="#fff"
-              padding={20}
-            >
-              {isMyList && (
-                <>
-                  {!isEditing && (
-                    <Button
-                      alignSelf="center"
-                      onPress={() => setIsEditing(true)}
-                    >
-                      Edit
-                    </Button>
-                  )}
-                  {isEditing && (
-                    <HStack alignItems="center">
-                      <Theme name="active">
-                        <Button
-                          onPress={async () => {
-                            await listUpdate(
-                              {
-                                id: list.id,
-                                ...draft.current,
-                                ...(color !== '#999' && {
-                                  color: listColors.indexOf(color),
-                                }),
-                                public: isPublic,
-                              },
-                              {
-                                query: list,
-                              }
-                            )
-                            await refetch(list)
-                            setIsEditing(false)
-                          }}
-                        >
-                          Save
-                        </Button>
-                      </Theme>
-                      <Spacer size="sm" />
-                      <VStack
-                        onPress={() => {
-                          if (confirm('Lose any changes?')) {
-                            setIsEditing(false)
-                          }
-                        }}
-                      >
-                        <X size={20} />
-                      </VStack>
-                    </HStack>
-                  )}
-                </>
+        <HStack position="absolute" zIndex={10} top={-10} left={0} padding={20}>
+          {isMyList && (
+            <>
+              {!isEditing && (
+                <Button alignSelf="center" onPress={() => setIsEditing(true)}>
+                  Edit
+                </Button>
               )}
-            </HStack>
-          }
+              {isEditing && (
+                <HStack alignItems="center">
+                  <Theme name="active">
+                    <Button
+                      onPress={async () => {
+                        await listUpdate(
+                          {
+                            id: list.id,
+                            ...draft.current,
+                            ...(color !== '#999' && {
+                              color: listColors.indexOf(color),
+                            }),
+                            public: isPublic,
+                          },
+                          {
+                            query: list,
+                          }
+                        )
+                        await refetch(list)
+                        router.setRouteAlert(null)
+                        setIsEditing(false)
+                      }}
+                    >
+                      Save
+                    </Button>
+                  </Theme>
+                  <Spacer size="sm" />
+                  <VStack
+                    onPress={() => {
+                      setIsEditing(false)
+                    }}
+                  >
+                    <X size={20} />
+                  </VStack>
+                </HStack>
+              )}
+            </>
+          )}
+        </HStack>
+
+        <PageTitle
           title={
             <VStack>
               <ScalingPressable>
                 <Link name="user" params={{ username: list.user.username }}>
                   <SlantedTitle size="xs" alignSelf="center">
-                    {list.user.name}'s
+                    {username}'s
                   </SlantedTitle>
                 </Link>
               </ScalingPressable>
@@ -432,17 +430,16 @@ const ListPageContent = graphql((props: Props) => {
                 <UpvoteDownvoteScore
                   score={index + 1}
                   setVote={async (vote) => {
-                    // immutable style because its tricky
-                    const moveUpIndex = index - vote
-                    // get next ordering
-                    const next = []
-                    for (const [ri, { restaurant }] of restaurants.entries()) {
-                      if (ri === moveUpIndex) {
-                        next.unshift(restaurant.id)
-                      } else {
-                        next.push(restaurant.id)
-                      }
-                    }
+                    const now = restaurants.map((x) => x.restaurant.id)
+                    const moveUpIndex = vote === 1 ? index : index + 1
+                    if (moveUpIndex == 0) return
+                    // now move it
+                    const next = ((now) => {
+                      const [id] = now.splice(moveUpIndex, 1)
+                      if (!id) return
+                      now.splice(moveUpIndex - 1, 0, id)
+                      return now
+                    })([...now])
                     // seems like hasura isnt merging it into one big mutation
                     const seed = Math.round(Math.random() * 1000)
                     await mutate((mutation) => {
