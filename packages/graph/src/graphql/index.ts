@@ -20,7 +20,7 @@ export const queryFetcher: QueryFetcher = async function (query, variables) {
     query,
     variables,
   })
-  if (process.env.DEBUG || process.env.TARGET === 'node') {
+  if (process.env.DEBUG || process.env.LOG_FETCH) {
     console.log(`fetch('${url}', {
       method: 'POST',
       headers: ${JSON.stringify(headers, null, 2)}

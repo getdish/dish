@@ -4,6 +4,7 @@ import _ from 'lodash'
 import { globalTagId } from '../constants'
 import { Maybe, client, order_by, resolved, restaurant } from '../graphql'
 import { createQueryHelpersFor } from '../helpers/queryHelpers'
+import { MutationOpts } from '../helpers/queryResolvers'
 import { tagSlugs } from '../helpers/tagHelpers'
 import { Restaurant, RestaurantTag, RestaurantWithId } from '../types'
 import { restaurantTagUpsert } from './restaurantTagQueries'
@@ -106,8 +107,7 @@ export async function restaurantFindNear(
 export async function restaurantUpsertManyTags(
   restaurant: RestaurantWithId,
   restaurant_tags: Partial<RestaurantTag>[],
-  fn?: (v: restaurant[]) => any,
-  keys?: '*' | Array<string>
+  opts?: MutationOpts
 ) {
   if (!restaurant_tags.length) {
     return null
@@ -116,12 +116,7 @@ export async function restaurantUpsertManyTags(
     const existing = getRestaurantTagFromTag(restaurant, rt.tag_id)
     return { ...existing, ...rt }
   })
-  const next = await restaurantUpsertRestaurantTags(
-    restaurant,
-    populated,
-    fn,
-    keys
-  )
+  const next = await restaurantUpsertRestaurantTags(restaurant, populated, opts)
   return next
 }
 
@@ -149,23 +144,18 @@ export async function convertSimpleTagsToRestaurantTags(tag_strings: string[]) {
 export async function restaurantUpsertRestaurantTags(
   restaurant: RestaurantWithId,
   restaurant_tags: Partial<RestaurantTag>[],
-  fn?: (v: restaurant[]) => any,
-  keys?: '*' | Array<string>
+  opts?: MutationOpts
 ) {
   const updated_restaurant = await restaurantTagUpsert(
     restaurant.id,
     restaurant_tags
   )
-
-  const d = await restaurantUpdateTagNames(updated_restaurant, fn, keys)
-
-  return d
+  return await restaurantUpdateTagNames(updated_restaurant, opts)
 }
 
 async function restaurantUpdateTagNames(
   restaurant: RestaurantWithId,
-  fn?: (v: restaurant[]) => any,
-  keys?: '*' | Array<string>
+  opts?: MutationOpts
 ) {
   if (!restaurant) {
     return null
@@ -187,34 +177,34 @@ async function restaurantUpdateTagNames(
       tag_names,
     },
     {
-      keys,
-      select:
-        fn ||
-        ((v: restaurant[]) => {
-          return v.map((rest) => {
-            return {
-              ...selectFields(rest),
-              tag_names: rest.tag_names(),
-              tags: rest.tags().map((r_t) => {
-                const tagInfo = selectFields(r_t.tag)
+      keys: '*',
+      select: (v: restaurant[]) => {
+        console.log('select?', v)
+        return v.map((rest) => {
+          return {
+            ...selectFields(rest),
+            tag_names: rest.tag_names(),
+            tags: rest.tags().map((r_t) => {
+              const tagInfo = selectFields(r_t.tag)
 
-                return {
-                  ...selectFields(r_t, '*', 2),
-                  tag: {
-                    ...tagInfo,
-                    categories: r_t.tag.categories().map((cat) => {
-                      return {
-                        ...selectFields(cat),
-                        category: selectFields(cat.category),
-                      }
-                    }),
-                    parent: selectFields(r_t.tag.parent),
-                  },
-                }
-              }),
-            }
-          })
-        }),
+              return {
+                ...selectFields(r_t, '*', 2),
+                tag: {
+                  ...tagInfo,
+                  categories: r_t.tag.categories().map((cat) => {
+                    return {
+                      ...selectFields(cat),
+                      category: selectFields(cat.category),
+                    }
+                  }),
+                  parent: selectFields(r_t.tag.parent),
+                },
+              }
+            }),
+          }
+        })
+      },
+      ...opts,
     }
   )
 

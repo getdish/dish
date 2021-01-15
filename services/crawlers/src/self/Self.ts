@@ -223,10 +223,10 @@ export class Self extends WorkerJob {
     await restaurantUpsertManyTags(
       this.restaurant,
       this.tagging.restaurant_tags,
-      () => {
-        return {}
-      },
-      ['__typename']
+      {
+        select: () => ({}),
+        keys: ['__typename'],
+      }
     )
     if (this.menu_items.length != 0) {
       await menuItemsUpsertMerge(this.menu_items)
