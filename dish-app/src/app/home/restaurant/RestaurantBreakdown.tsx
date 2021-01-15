@@ -48,7 +48,7 @@ export const RestaurantBreakdown = memo(
       showScoreTable?: boolean
       borderless?: boolean
     }) => {
-      const restaurant = queryRestaurant(restaurantSlug)
+      const [restaurant] = queryRestaurant(restaurantSlug)
       const tag = tagSlug
         ? restaurant.tags({
             where: {

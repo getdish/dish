@@ -22,7 +22,7 @@ export const RestaurantDetailRow = memo(
       after?: any
     }) => {
       const sizeSm = size === 'sm'
-      const restaurant = queryRestaurant(restaurantSlug)
+      const [restaurant] = queryRestaurant(restaurantSlug)
       // const restaurantSources = getRestaurantDeliverySources(
       //   restaurant.sources()
       // )

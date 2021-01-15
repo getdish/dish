@@ -50,10 +50,10 @@ import { getRestaurantDishes } from '../../../helpers/getRestaurantDishes'
 import { isWebIOS } from '../../../helpers/isIOS'
 import { numberFormat } from '../../../helpers/numberFormat'
 import { selectRishDishViewSimple } from '../../../helpers/selectDishViewSimple'
-import { GeocodePlace } from '../../../types/homeTypes'
-import { appMapStore } from '../../AppMapStore'
 import { queryRestaurant } from '../../../queries/queryRestaurant'
 import { queryRestaurantTagScores } from '../../../queries/queryRestaurantTagScores'
+import { GeocodePlace } from '../../../types/homeTypes'
+import { appMapStore } from '../../AppMapStore'
 import { CloseButton } from '../../views/CloseButton'
 import { ContentScrollViewHorizontal } from '../../views/ContentScrollViewHorizontal'
 import { DishView } from '../../views/dish/DishView'
@@ -198,7 +198,7 @@ const RestaurantListItemContent = memo(
       editablePosition,
     } = props
     const media = useMedia()
-    const restaurant = queryRestaurant(restaurantSlug)
+    const [restaurant] = queryRestaurant(restaurantSlug)
 
     restaurant.location
 
@@ -662,7 +662,7 @@ const RestaurantPeekDishes = memo(
   }) {
     const { isLoaded, size = 'md' } = props
     const dishes = props.tagSlugs
-      ? queryRestaurant(props.restaurantSlug)
+      ? queryRestaurant(props.restaurantSlug)[0]
           .tags({
             where: {
               tag: {
@@ -743,7 +743,7 @@ const EditRestaurantTags = graphql(
   }) => {
     const [isOpen, setIsOpen] = useState(false)
     const [slugs, setSlugs] = useState<string[]>(tagSlugs)
-    const restaurant = queryRestaurant(restaurantSlug)
+    const [restaurant] = queryRestaurant(restaurantSlug)
     const theme = useTheme()
     const dishes = (() => {
       const items = slugs.map((slug) => {

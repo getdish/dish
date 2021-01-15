@@ -217,7 +217,7 @@ export class Self extends WorkerJob {
   }
 
   async finishTagsEtc() {
-    await restaurantUpdate(this.restaurant, undefined, ['__typename'])
+    await restaurantUpdate(this.restaurant, { keys: ['__typename'] })
     this.tagging.deDepulicateTags()
     await this.tagging.updateTagRankings()
     await restaurantUpsertManyTags(

@@ -37,7 +37,7 @@ export const getRestaurantDishes = ({
   tagSlugs = [],
   max = 6,
 }: Props): DishTagItemSimple[] => {
-  const restaurant = queryRestaurant(restaurantSlug)
+  const [restaurant] = queryRestaurant(restaurantSlug)
   let topTags = restaurant.top_tags({
     args: {
       tag_slugs: tagSlugs.filter(isPresent).join(','),

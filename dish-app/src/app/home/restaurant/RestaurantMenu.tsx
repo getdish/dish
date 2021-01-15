@@ -8,7 +8,7 @@ import { SlantedTitle } from '../../views/SlantedTitle'
 
 export const RestaurantMenu = memo(
   graphql(({ restaurantSlug }: { restaurantSlug: string }) => {
-    const restaurant = queryRestaurant(restaurantSlug)
+    const [restaurant] = queryRestaurant(restaurantSlug)
     const items = restaurant.menu_items({ limit: 120 })
     return (
       <>

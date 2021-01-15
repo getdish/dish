@@ -28,7 +28,7 @@ export const RestaurantSourcesBreakdownRow = memo(
     restaurantId: string
     size?: 'sm' | 'md'
   }) {
-    const restaurant = queryRestaurant(restaurantSlug)
+    const [restaurant] = queryRestaurant(restaurantSlug)
     const sources = {
       ...(restaurant?.sources?.() ?? {}),
     }

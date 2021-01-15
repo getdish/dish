@@ -15,10 +15,10 @@ import {
 } from 'snackui'
 
 import { getActiveTagSlugs } from '../../../helpers/getActiveTagSlugs'
-import { HomeActiveTagsRecord } from '../../../types/homeTypes'
-import { ensureFlexText } from '../../home/restaurant/ensureFlexText'
 import { queryRestaurant } from '../../../queries/queryRestaurant'
 import { queryRestaurantTagScores } from '../../../queries/queryRestaurantTagScores'
+import { HomeActiveTagsRecord } from '../../../types/homeTypes'
+import { ensureFlexText } from '../../home/restaurant/ensureFlexText'
 import { PointsText } from '../PointsText'
 
 export const RestaurantTagsScore = graphql(function RestaurantTagsScore({
@@ -30,7 +30,7 @@ export const RestaurantTagsScore = graphql(function RestaurantTagsScore({
   activeTags: HomeActiveTagsRecord
   userVote: number
 }) {
-  const restaurant = queryRestaurant(restaurantSlug)
+  const [restaurant] = queryRestaurant(restaurantSlug)
   const breakdown = restaurant.score_breakdown()
   const tagScores = queryRestaurantTagScores({
     restaurantSlug,

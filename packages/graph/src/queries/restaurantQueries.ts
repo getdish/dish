@@ -186,33 +186,36 @@ async function restaurantUpdateTagNames(
       ...restaurant,
       tag_names,
     },
-    fn ||
-      ((v: restaurant[]) => {
-        return v.map((rest) => {
-          return {
-            ...selectFields(rest),
-            tag_names: rest.tag_names(),
-            tags: rest.tags().map((r_t) => {
-              const tagInfo = selectFields(r_t.tag)
+    {
+      keys,
+      select:
+        fn ||
+        ((v: restaurant[]) => {
+          return v.map((rest) => {
+            return {
+              ...selectFields(rest),
+              tag_names: rest.tag_names(),
+              tags: rest.tags().map((r_t) => {
+                const tagInfo = selectFields(r_t.tag)
 
-              return {
-                ...selectFields(r_t, '*', 2),
-                tag: {
-                  ...tagInfo,
-                  categories: r_t.tag.categories().map((cat) => {
-                    return {
-                      ...selectFields(cat),
-                      category: selectFields(cat.category),
-                    }
-                  }),
-                  parent: selectFields(r_t.tag.parent),
-                },
-              }
-            }),
-          }
-        })
-      }),
-    keys
+                return {
+                  ...selectFields(r_t, '*', 2),
+                  tag: {
+                    ...tagInfo,
+                    categories: r_t.tag.categories().map((cat) => {
+                      return {
+                        ...selectFields(cat),
+                        category: selectFields(cat.category),
+                      }
+                    }),
+                    parent: selectFields(r_t.tag.parent),
+                  },
+                }
+              }),
+            }
+          })
+        }),
+    }
   )
 
   return dataRestaurantUpdate

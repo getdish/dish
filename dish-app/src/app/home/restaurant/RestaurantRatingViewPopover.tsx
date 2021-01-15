@@ -25,7 +25,7 @@ export const RestaurantRatingViewPopover = memo(
       size = 'md',
       restaurantSlug,
     }: Partial<RatingViewProps> & { restaurantSlug: string }) => {
-      const restaurant = queryRestaurant(restaurantSlug)
+      const [restaurant] = queryRestaurant(restaurantSlug)
       const sources = restaurant?.sources?.() ?? {}
       const headStyle: TextProps = {
         fontWeight: '300',

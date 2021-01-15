@@ -6,11 +6,11 @@ import { LoadingItem, LoadingItems, Spacer, VStack } from 'snackui'
 import { bgLight, bgLightHover, darkBlue } from '../../../constants/colors'
 import { getColorsForName } from '../../../helpers/getColorsForName'
 import { getMinLngLat } from '../../../helpers/getLngLat'
+import { queryRestaurant } from '../../../queries/queryRestaurant'
 import { HomeStateItemRestaurant } from '../../../types/homeTypes'
 import { useSetAppMapResults } from '../../AppMapStore'
 import { homeStore } from '../../homeStore'
 import { usePageLoadEffect } from '../../hooks/usePageLoadEffect'
-import { queryRestaurant } from '../../../queries/queryRestaurant'
 import { ContentScrollView } from '../../views/ContentScrollView'
 import { PageTitleTag } from '../../views/PageTitleTag'
 import { StackDrawer } from '../../views/StackDrawer'
@@ -36,7 +36,7 @@ const RestaurantPage = memo(
   graphql((props: Props) => {
     const { item } = props
     const { restaurantSlug, section, sectionSlug } = item
-    const restaurant = queryRestaurant(restaurantSlug)
+    const [restaurant] = queryRestaurant(restaurantSlug)
     const coords = restaurant?.location?.coordinates
     const scrollView = useRef<ScrollView>()
     const { selectedDish, setSelectedDishToggle } = useSelectedDish(

@@ -4,10 +4,10 @@ import React, { memo, useEffect, useState } from 'react'
 import { Image } from 'react-native'
 import { AbsoluteVStack, Box, HStack, Spacer, Text, VStack } from 'snackui'
 
+import { queryRestaurant } from '../queries/queryRestaurant'
 import { appMapStore } from './AppMapStore'
 import { RestaurantRatingViewPopover } from './home/restaurant/RestaurantRatingViewPopover'
 import { useHomeStore } from './homeStore'
-import { queryRestaurant } from '../queries/queryRestaurant'
 import { LinkButton } from './views/LinkButton'
 
 export const AppMapRestaurantPeek = memo(
@@ -60,7 +60,7 @@ export const AppMapRestaurantPeek = memo(
       return containerWrap(null)
     }
 
-    const restaurant = queryRestaurant(slug)
+    const [restaurant] = queryRestaurant(slug)
 
     return containerWrap(
       <>

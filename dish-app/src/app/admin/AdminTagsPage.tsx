@@ -27,6 +27,7 @@ import {
 } from 'snackui'
 
 import { emojiRegex } from '../../helpers/emojiRegex'
+import { queryTag } from '../../queries/queryTag'
 import { useQueryPaginated } from '../hooks/useQueryPaginated'
 import { PaginationNav } from '../views/PaginationNav'
 import { SmallButton } from '../views/SmallButton'
@@ -356,7 +357,7 @@ const TagListItem = graphql(
     row: number
   } & Partial<AdminListItemProps>) => {
     if (tagId) {
-      const tag = queryTag(tagId)
+      const [tag] = queryTag(tagId)
       // be sure to get id
       tag.id
       const text = `${tag.icon ?? ''} ${tag.name}`.trim()
@@ -432,21 +433,12 @@ const TagEditColumn = memo(() => {
   )
 })
 
-const queryTag = (id: string) => {
-  return query.tag({
-    where: {
-      id: { _eq: id },
-    },
-    limit: 1,
-  })[0]
-}
-
 const TagEdit = memo(
   graphql<any>(() => {
     const tagStore = useStore(AdminTagStore)
 
     if (tagStore.selectedId) {
-      const tag = queryTag(tagStore.selectedId)
+      const [tag] = queryTag(tagStore.selectedId)
       const fullTag = {
         id: tagStore.selectedId,
         name: tag.name,
@@ -464,21 +456,17 @@ const TagEdit = memo(
           onChange={async (x) => {
             const tagMutation = await mutate(
               (mutation, { assignSelections }) => {
-                const tagMutation = mutation.update_tag_by_pk({
+                const res = mutation.update_tag_by_pk({
                   pk_columns: {
                     id: tagStore.selectedId,
                   },
                   _set: x,
                 })
-
-                assignSelections(tag, tagMutation)
-
-                return tagMutation
+                assignSelections(tag, res)
+                return res
               }
             )
-
             setCache(tag, tagMutation)
-
             Toast.show('Saved')
           }}
         />

@@ -63,7 +63,7 @@ const RestaurantUpVoteDownVoteContents = graphql(
     ratio,
     display,
   }: UpvoteDownvoteProps) => {
-    const restaurant = queryRestaurant(restaurantSlug)
+    const [restaurant] = queryRestaurant(restaurantSlug)
     const { vote, setVote } = useUserTagVotes(
       restaurantSlug,
       Object.keys(activeTagSlugs).reduce(

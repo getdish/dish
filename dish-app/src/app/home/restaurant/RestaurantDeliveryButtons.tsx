@@ -22,7 +22,7 @@ export const RestaurantDeliveryButtons = memo(
     label,
     ...props
   }: Props) {
-    const restaurant = queryRestaurant(restaurantSlug)
+    const [restaurant] = queryRestaurant(restaurantSlug)
     const restaurantSources = restaurant.sources()
     const sources = getRestaurantDeliverySources(restaurantSources)
 

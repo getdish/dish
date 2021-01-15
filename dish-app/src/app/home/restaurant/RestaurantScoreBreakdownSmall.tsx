@@ -8,9 +8,9 @@ import { HStack, Spacer, Text, VStack } from 'snackui'
 import { bgLight } from '../../../constants/colors'
 import { tagDisplayName } from '../../../constants/tagMeta'
 import { getActiveTagSlugs } from '../../../helpers/getActiveTagSlugs'
-import { homeStore } from '../../homeStore'
 import { queryRestaurant } from '../../../queries/queryRestaurant'
 import { queryRestaurantTagScores } from '../../../queries/queryRestaurantTagScores'
+import { homeStore } from '../../homeStore'
 import { PointsText } from '../../views/PointsText'
 import { RestaurantReviewsDisplayStore } from './RestaurantBreakdown'
 
@@ -28,7 +28,7 @@ export const RestaurantScoreBreakdownSmall = memo(
         color: 'rgba(0,0,0,0.6)',
       }
 
-      const restaurant = queryRestaurant(restaurantSlug)
+      const [restaurant] = queryRestaurant(restaurantSlug)
       const reviewDisplayStore = useStore(RestaurantReviewsDisplayStore, {
         id: restaurantId,
       })

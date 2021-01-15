@@ -16,9 +16,9 @@ import {
 } from 'snackui'
 
 import { bgLight } from '../../../constants/colors'
+import { queryRestaurant } from '../../../queries/queryRestaurant'
 import { router } from '../../../router'
 import { homeStore } from '../../homeStore'
-import { queryRestaurant } from '../../../queries/queryRestaurant'
 import { PaneControlButtons } from '../../views/PaneControlButtons'
 import { StackViewCloseButton } from '../../views/StackViewCloseButton'
 import { PageTitle } from '../search/PageTitle'
@@ -26,7 +26,7 @@ import { PageTitle } from '../search/PageTitle'
 export default memo(
   graphql<any>(function RestaurantHoursPage() {
     const params = router.curPage.params
-    const restaurant = queryRestaurant(params.slug)
+    const [restaurant] = queryRestaurant(params.slug)
     const hours = restaurant.hours() ?? []
     const dayOfWeek = new Intl.DateTimeFormat(['en'], {
       weekday: 'short',

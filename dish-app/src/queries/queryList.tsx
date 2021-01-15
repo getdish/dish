@@ -8,5 +8,5 @@ export function queryList(slug: string) {
         _eq: slug,
       },
     },
-  })[0]
+  })
 }
