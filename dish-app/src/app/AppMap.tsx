@@ -245,7 +245,7 @@ const AppMapContent = memo(({ results }: { results: MapResultItem[] }) => {
         params: {
           slug: restaurant.slug,
         },
-      }
+      } as const
 
       if (router.getIsRouteActive(route)) {
         if (media.sm) {

@@ -1,10 +1,9 @@
-import { NavigateItem } from '@dish/router'
 import { findLast } from 'lodash'
 
 import { homeStore } from '../app/homeStore'
 import { tagLenses } from '../constants/localTags'
 import { SPLIT_TAG } from '../constants/SPLIT_TAG'
-import { SearchRouteParams, router } from '../router'
+import { NavigateItem, SearchRouteParams, router } from '../router'
 import {
   HomeStateItem,
   HomeStateItemHome,
@@ -36,6 +35,7 @@ export const getNavigateItemForState = (
   const isChangingType = name !== curName
   const replace = !isChangingType
   const params = getParamsForState(state)
+  // @ts-expect-error
   return {
     name,
     params,

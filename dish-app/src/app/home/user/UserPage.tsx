@@ -127,7 +127,13 @@ const UserPageContent = graphql(
               <ScrollView horizontal showsHorizontalScrollIndicator={false}>
                 <HStack margin={20} spacing>
                   {lists.map((list) => {
-                    return <ListCard key={list.slug} slug={list.slug} />
+                    return (
+                      <ListCard
+                        key={list.slug}
+                        userSlug={list.user.username}
+                        slug={list.slug}
+                      />
+                    )
                   })}
                 </HStack>
               </ScrollView>

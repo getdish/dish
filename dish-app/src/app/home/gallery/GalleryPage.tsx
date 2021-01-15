@@ -26,8 +26,8 @@ import {
 
 import { isWeb } from '../../../constants/constants'
 import { getImageUrl } from '../../../helpers/getImageUrl'
-import { useHomeStore } from '../../homeStore'
 import { queryRestaurant } from '../../../queries/queryRestaurant'
+import { useHomeStore } from '../../homeStore'
 import { StackViewCloseButton } from '../../views/StackViewCloseButton'
 
 export default memo(function GalleryPage() {

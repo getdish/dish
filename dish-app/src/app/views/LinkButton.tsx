@@ -5,10 +5,9 @@ import { RoutesTable, router } from '../../router'
 import { useLink } from '../hooks/useLink'
 import { LinkButtonProps } from './LinkProps'
 
-export function LinkButton<
-  Name extends keyof RoutesTable = keyof RoutesTable,
-  Params = RoutesTable[Name]['params']
->(props: LinkButtonProps<Name, Params>) {
+export function LinkButton<Name extends keyof RoutesTable = keyof RoutesTable>(
+  props: LinkButtonProps<Name, RoutesTable[Name]['params']>
+) {
   const [isActive, setIsActive] = useState(false)
   const { wrapWithLinkElement } = useLink(props)
 

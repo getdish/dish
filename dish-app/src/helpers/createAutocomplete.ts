@@ -6,10 +6,15 @@ type Base = {
   description?: string
 }
 
+export type AutocompleteItemRestuarant = Base & {
+  type: 'restaurant'
+  slug: string
+}
+
 export type AutocompleteItem =
   | (Base & { type: 'orphan' })
   | (Base & { type: 'dish' | 'cuisine' | 'country'; slug: string })
-  | (Base & { type: 'restaurant'; slug: string })
+  | AutocompleteItemRestuarant
   | (Base & { type: 'place'; center?: LngLat; span?: LngLat })
 
 export type AutocompleteItemFull = AutocompleteItem & {

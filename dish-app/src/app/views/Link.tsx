@@ -7,10 +7,9 @@ import { RoutesTable } from '../../router'
 import { useLink } from '../hooks/useLink'
 import { LinkProps } from './LinkProps'
 
-export function Link<
-  Name extends keyof RoutesTable = keyof RoutesTable,
-  Params = RoutesTable[Name]['params']
->(allProps: LinkProps<Name, Params>) {
+export function Link<Name extends keyof RoutesTable = keyof RoutesTable>(
+  allProps: LinkProps<Name, RoutesTable[Name]['params']>
+) {
   const {
     // non-text props for useLink
     onClick,

@@ -1,21 +1,19 @@
 // // debug
 import { series, sleep } from '@dish/async'
 import {
-  List,
   graphql,
   list,
   listInsert,
   order_by,
   query,
   slugify,
+  useLazyQuery,
 } from '@dish/graph'
-import { assertIsString, assertNonNull } from '@dish/helpers'
+import { assertIsString } from '@dish/helpers'
 import { Heart, Plus, X } from '@dish/react-feather'
 import { useStoreInstance } from '@dish/use-store'
-import { rest } from 'lodash'
 import React, { useEffect, useMemo, useState } from 'react'
 import { ScrollView, Switch } from 'react-native'
-import { useSafeAreaInsets } from 'react-native-safe-area-context'
 import {
   AbsoluteVStack,
   Box,
@@ -41,6 +39,7 @@ import {
   allDarkColor,
   blue,
 } from '../../../constants/colors'
+import { AutocompleteItemRestuarant } from '../../../helpers/createAutocomplete'
 import { getRestaurantIdentifiers } from '../../../helpers/getRestaurantIdentifiers'
 import { queryList } from '../../../queries/queryList'
 import { router } from '../../../router'
@@ -58,7 +57,6 @@ import { ScalingPressable } from '../../views/ScalingPressable'
 import { SlantedTitle } from '../../views/SlantedTitle'
 import { StackDrawer } from '../../views/StackDrawer'
 import { StackItemProps } from '../HomeStackView'
-import { CircleButton } from '../restaurant/CircleButton'
 import { RestaurantListItem } from '../restaurant/RestaurantListItem'
 import { PageTitle } from '../search/PageTitle'
 
@@ -189,15 +187,32 @@ function BottomFloatingArea(props: { children: any }) {
 const ListAddRestuarant = graphql(
   ({ onAdd, listSlug }: { onAdd: () => any; listSlug: string }) => {
     const theme = useTheme()
-    const [search, setSearch] = useState('')
-    const restuarants = query.restaurant({
-      where: {
-        name: {
-          _ilike: `%${search.split(' ').join('%')}%`,
-        },
+    const [results, setResults] = useState<AutocompleteItemRestuarant[]>([])
+
+    let [runSearch, { isLoading }] = useLazyQuery(
+      (_query, searchQuery: string) => {
+        const restaurants = query.restaurant({
+          where: {
+            name: {
+              _ilike: `%${searchQuery.split(' ').join('%')}%`,
+            },
+          },
+          limit: 20,
+        })
+        return restaurants.map((restaurant) => {
+          return {
+            type: 'restaurant',
+            name: restaurant.name,
+            slug: restaurant.slug,
+            description: restaurant.address,
+            icon: restaurant.image,
+          } as const
+        })
       },
-      limit: 20,
-    })
+      {
+        onCompleted: setResults,
+      }
+    )
 
     return (
       <VStack width="100%" height="100%" flex={1}>
@@ -209,27 +224,22 @@ const ListAddRestuarant = graphql(
             backgroundColor={theme.backgroundColorSecondary}
             marginHorizontal={20}
             placeholder="Search restaurants..."
-            onChangeText={(val) => setSearch(val)}
+            onChangeText={(val) => runSearch({ args: val })}
           />
         </VStack>
         <ScrollView style={{ width: '100%' }}>
           <VStack padding={20} spacing="xs">
-            {restuarants.map((restaurant, index) => {
+            {results.map((result, index) => {
               return (
                 <AutocompleteItemView
-                  key={restaurant.id ?? index}
+                  preventNavigate
+                  key={result.slug ?? index}
                   hideBackground
                   onSelect={() => {}}
                   target="search"
                   showAddButton
                   index={index}
-                  result={{
-                    type: 'restaurant',
-                    name: restaurant.name,
-                    slug: restaurant.slug,
-                    description: restaurant.address,
-                    icon: restaurant.image,
-                  }}
+                  result={result}
                 />
               )
             })}

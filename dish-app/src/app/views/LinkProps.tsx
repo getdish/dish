@@ -14,6 +14,7 @@ export type LinkProps<A, B> = LinkSharedProps &
   Omit<TextProps, 'display'> & {
     display?: TextProps['display'] | 'inline'
     name?: A
+    // @ts-ignore
     params?: B
     tagName?: string
   }
