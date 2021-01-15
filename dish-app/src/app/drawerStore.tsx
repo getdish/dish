@@ -25,6 +25,10 @@ class DrawerStore extends Store {
     return this.snapPoints.map((_, i) => this.getSnapPointOffset(i))
   }
 
+  get bottomOccluded() {
+    return getWindowHeight() - getWindowHeight() * this.currentSnapPoint
+  }
+
   setIsDragging(val: boolean) {
     this.isDragging = val
     this.spring?.stop()

@@ -1,16 +1,28 @@
 // // debug
 import { series, sleep } from '@dish/async'
-import { List, graphql, list, listInsert, order_by, slugify } from '@dish/graph'
+import {
+  List,
+  graphql,
+  list,
+  listInsert,
+  order_by,
+  query,
+  slugify,
+} from '@dish/graph'
 import { assertIsString, assertNonNull } from '@dish/helpers'
-import { Heart, X } from '@dish/react-feather'
-import React, { useEffect, useState } from 'react'
-import { Switch } from 'react-native'
+import { Heart, Plus, X } from '@dish/react-feather'
+import { useStoreInstance } from '@dish/use-store'
+import { rest } from 'lodash'
+import React, { useEffect, useMemo, useState } from 'react'
+import { ScrollView, Switch } from 'react-native'
+import { useSafeAreaInsets } from 'react-native-safe-area-context'
 import {
   AbsoluteVStack,
   Box,
   Button,
   HStack,
   Input,
+  Modal,
   Paragraph,
   Popover,
   Spacer,
@@ -19,6 +31,8 @@ import {
   Theme,
   Toast,
   VStack,
+  useMedia,
+  useTheme,
 } from 'snackui'
 
 import {
@@ -28,19 +42,25 @@ import {
   blue,
 } from '../../../constants/colors'
 import { getRestaurantIdentifiers } from '../../../helpers/getRestaurantIdentifiers'
+import { queryList } from '../../../queries/queryList'
 import { router } from '../../../router'
 import { HomeStateItemList } from '../../../types/homeTypes'
+import { AutocompleteItemView } from '../../AppAutocomplete'
 import { useSetAppMapResults } from '../../AppMapStore'
+import { drawerStore } from '../../drawerStore'
+import { useSafeArea } from '../../hooks/useSafeArea'
 import { useUserStore, userStore } from '../../userStore'
+import { CloseButton } from '../../views/CloseButton'
 import { ContentScrollView } from '../../views/ContentScrollView'
 import { Link } from '../../views/Link'
+import { PaneControlButtons } from '../../views/PaneControlButtons'
 import { ScalingPressable } from '../../views/ScalingPressable'
 import { SlantedTitle } from '../../views/SlantedTitle'
 import { StackDrawer } from '../../views/StackDrawer'
 import { StackItemProps } from '../HomeStackView'
+import { CircleButton } from '../restaurant/CircleButton'
 import { RestaurantListItem } from '../restaurant/RestaurantListItem'
 import { PageTitle } from '../search/PageTitle'
-import { queryList } from '../../../queries/queryList'
 
 type Props = StackItemProps<HomeStateItemList>
 
@@ -75,6 +95,7 @@ export default function ListPage(props: Props) {
           params: {
             userSlug: props.item.userSlug,
             slug: list.slug,
+            state: 'edit',
           },
         })
       },
@@ -98,11 +119,7 @@ export default function ListPage(props: Props) {
 
       {!isCreating && (
         <>
-          <StackDrawer closable title={`Create playlist`}>
-            <ContentScrollView id="list">
-              <ListPageContent {...props} />
-            </ContentScrollView>
-          </StackDrawer>
+          <ListPageContent {...props} />
         </>
       )}
     </>
@@ -149,11 +166,86 @@ function useListRestaurants(list: list) {
   ] as const
 }
 
+function BottomFloatingArea(props: { children: any }) {
+  const drawer = useStoreInstance(drawerStore)
+  const children = useMemo(() => props.children, [props.children])
+  const safeArea = useSafeArea()
+  const media = useMedia()
+  return (
+    <AbsoluteVStack
+      zIndex={1000000000}
+      pointerEvents="none"
+      bottom={
+        20 + (media.sm ? safeArea.bottom + drawer.bottomOccluded - 400 : 0)
+      }
+      right={20}
+      left={20}
+    >
+      <HStack pointerEvents="auto">{children}</HStack>
+    </AbsoluteVStack>
+  )
+}
+
+const ListAddRestuarant = graphql(
+  ({ onAdd, listSlug }: { onAdd: () => any; listSlug: string }) => {
+    const theme = useTheme()
+    const [search, setSearch] = useState('')
+    const restuarants = query.restaurant({
+      where: {
+        name: {
+          _ilike: `%${search.split(' ').join('%')}%`,
+        },
+      },
+      limit: 20,
+    })
+
+    return (
+      <VStack width="100%" height="100%" flex={1}>
+        <SlantedTitle alignSelf="center" marginTop={-15}>
+          Add
+        </SlantedTitle>
+        <VStack width="100%">
+          <Input
+            backgroundColor={theme.backgroundColorSecondary}
+            marginHorizontal={20}
+            placeholder="Search restaurants..."
+            onChangeText={(val) => setSearch(val)}
+          />
+        </VStack>
+        <ScrollView style={{ width: '100%' }}>
+          <VStack padding={20} spacing="xs">
+            {restuarants.map((restaurant, index) => {
+              return (
+                <AutocompleteItemView
+                  key={restaurant.id ?? index}
+                  hideBackground
+                  onSelect={() => {}}
+                  target="search"
+                  showAddButton
+                  index={index}
+                  result={{
+                    type: 'restaurant',
+                    name: restaurant.name,
+                    slug: restaurant.slug,
+                    description: restaurant.address,
+                    icon: restaurant.image,
+                  }}
+                />
+              )
+            })}
+          </VStack>
+        </ScrollView>
+      </VStack>
+    )
+  }
+)
+
 const ListPageContent = graphql((props: Props) => {
   const user = useUserStore()
   const isMyList = props.item.userSlug === slugify(user.user?.username)
   const isEditing = props.item.state === 'edit'
   const [color, setColor] = useState(blue)
+  const [showAddModal, setShowAddModal] = useState(false)
 
   // const list = {
   //   name: 'Horse Fish Circus',
@@ -214,160 +306,204 @@ const ListPageContent = graphql((props: Props) => {
   })
 
   return (
-    <>
-      <Spacer />
-
-      <PageTitle
-        before={
-          <HStack
-            position="absolute"
-            zIndex={10}
-            top={-10}
-            left={0}
-            bottom={0}
+    <StackDrawer closable title={`${list.user.name}'s ${list.name}`}>
+      {isMyList && (
+        <BottomFloatingArea>
+          <VStack flex={1} />
+          <Button
+            pointerEvents="auto"
+            theme="active"
+            borderRadius={100}
+            width={50}
+            height={50}
             alignItems="center"
             justifyContent="center"
-            backgroundColor="#fff"
-            padding={20}
+            shadowColor="#000"
+            shadowRadius={20}
+            shadowOffset={{ height: 4, width: 0 }}
+            shadowOpacity={0.2}
+            noTextWrap
+            onPress={() => {
+              setShowAddModal(true)
+            }}
           >
-            {isMyList && (
-              <>
-                {!isEditing && (
-                  <Button alignSelf="center" onPress={() => setIsEditing(true)}>
-                    Edit
-                  </Button>
-                )}
-                {isEditing && (
-                  <HStack alignItems="center">
-                    <Theme name="active">
-                      <Button>Save</Button>
-                    </Theme>
-                    <Spacer size="sm" />
-                    <VStack onPress={() => setIsEditing(false)}>
-                      <X size={20} />
-                    </VStack>
-                  </HStack>
-                )}
-              </>
-            )}
-          </HStack>
-        }
-        title={
-          <VStack>
-            <ScalingPressable>
-              <Link name="user" params={{ username: list.user.username }}>
-                <SlantedTitle size="xs" alignSelf="center">
-                  {list.user.name}'s
-                </SlantedTitle>
-              </Link>
-            </ScalingPressable>
-
-            <SlantedTitle
-              backgroundColor={color}
-              color="#fff"
-              marginTop={-5}
-              alignSelf="center"
-              zIndex={0}
-            >
-              {isEditing ? (
-                <Input
-                  fontSize={26}
-                  backgroundColor="transparent"
-                  defaultValue={list.name}
-                  fontWeight="700"
-                  textAlign="center"
-                  color="#fff"
-                  borderColor="transparent"
-                  margin={-5}
-                />
-              ) : (
-                list.name
-              )}
-            </SlantedTitle>
-          </VStack>
-        }
-        after={
-          <AbsoluteVStack
-            top={-10}
-            right={0}
-            bottom={0}
-            alignItems="center"
-            justifyContent="center"
-            backgroundColor="#fff"
-            padding={20}
-          >
-            <Heart size={30} />
-          </AbsoluteVStack>
-        }
-      />
-
-      {isEditing && (
-        <>
-          <Spacer />
-          <HStack alignItems="center" justifyContent="center">
-            <Text>Color:&nbsp;&nbsp;</Text>
-            <ColorPicker color={color} onChange={setColor} />
-
-            <Spacer size="xl" />
-
-            <Text>Public:&nbsp;&nbsp;</Text>
-            <Switch value={true} />
-          </HStack>
-          <Spacer />
-        </>
+            <Plus size={32} color="#fff" />
+          </Button>
+        </BottomFloatingArea>
       )}
 
-      <VStack paddingHorizontal={20} paddingVertical={20}>
-        {isEditing ? (
-          <Input
-            multiline
-            numberOfLines={2}
-            lineHeight={28}
-            fontSize={18}
-            marginVertical={-12}
-            marginHorizontal={-8}
-            textAlign="center"
-            defaultValue={list.description}
-          />
-        ) : (
-          <Paragraph size="lg" textAlign="center">
-            {list.description}
-          </Paragraph>
-        )}
-      </VStack>
+      {isMyList && (
+        <Modal
+          visible={showAddModal}
+          onDismiss={() => setShowAddModal(false)}
+          width={380}
+          maxHeight={480}
+        >
+          <PaneControlButtons>
+            <CloseButton onPress={() => setShowAddModal(false)} />
+          </PaneControlButtons>
+          <ListAddRestuarant listSlug={props.item.slug} onAdd={() => {}} />
+        </Modal>
+      )}
 
-      {list.restaurants.map(({ restaurant, comment, dishes }, index) => {
-        const dishSlugs = dishes.map((x) => x.tag.slug)
-        if (!restaurant.slug) {
-          return null
-        }
-        return (
-          <RestaurantListItem
-            key={restaurant.slug}
-            curLocInfo={props.item.curLocInfo ?? null}
-            restaurantId={restaurant.id}
-            restaurantSlug={restaurant.slug}
-            rank={index + 1}
-            description={comment}
-            hideTagRow
-            flexibleHeight
-            dishSlugs={dishSlugs}
-            editableDishes={isEditing}
-            onChangeDishes={(dishes) => {
-              console.log('should change dishes', dishes)
-            }}
-            editableDescription={isEditing}
-            onChangeDescription={(next) => {
-              console.log('should change descirption', next)
-            }}
-            editablePosition={isEditing}
-            onChangePosition={(next) => {
-              console.log('should change position', next)
-            }}
-          />
-        )
-      })}
-    </>
+      <ContentScrollView id="list">
+        <Spacer />
+
+        <PageTitle
+          before={
+            <HStack
+              position="absolute"
+              zIndex={10}
+              top={-10}
+              left={0}
+              bottom={0}
+              alignItems="center"
+              justifyContent="center"
+              backgroundColor="#fff"
+              padding={20}
+            >
+              {isMyList && (
+                <>
+                  {!isEditing && (
+                    <Button
+                      alignSelf="center"
+                      onPress={() => setIsEditing(true)}
+                    >
+                      Edit
+                    </Button>
+                  )}
+                  {isEditing && (
+                    <HStack alignItems="center">
+                      <Theme name="active">
+                        <Button>Save</Button>
+                      </Theme>
+                      <Spacer size="sm" />
+                      <VStack onPress={() => setIsEditing(false)}>
+                        <X size={20} />
+                      </VStack>
+                    </HStack>
+                  )}
+                </>
+              )}
+            </HStack>
+          }
+          title={
+            <VStack>
+              <ScalingPressable>
+                <Link name="user" params={{ username: list.user.username }}>
+                  <SlantedTitle size="xs" alignSelf="center">
+                    {list.user.name}'s
+                  </SlantedTitle>
+                </Link>
+              </ScalingPressable>
+
+              <SlantedTitle
+                backgroundColor={color}
+                color="#fff"
+                marginTop={-5}
+                alignSelf="center"
+                zIndex={0}
+              >
+                {isEditing ? (
+                  <Input
+                    fontSize={26}
+                    backgroundColor="transparent"
+                    defaultValue={list.name}
+                    fontWeight="700"
+                    textAlign="center"
+                    color="#fff"
+                    borderColor="transparent"
+                    margin={-5}
+                  />
+                ) : (
+                  list.name
+                )}
+              </SlantedTitle>
+            </VStack>
+          }
+          after={
+            <AbsoluteVStack
+              top={-10}
+              right={0}
+              bottom={0}
+              alignItems="center"
+              justifyContent="center"
+              backgroundColor="#fff"
+              padding={20}
+            >
+              <Heart size={30} />
+            </AbsoluteVStack>
+          }
+        />
+
+        {isEditing && (
+          <>
+            <Spacer />
+            <HStack alignItems="center" justifyContent="center">
+              <Text>Color:&nbsp;&nbsp;</Text>
+              <ColorPicker color={color} onChange={setColor} />
+
+              <Spacer size="xl" />
+
+              <Text>Public:&nbsp;&nbsp;</Text>
+              <Switch value={true} />
+            </HStack>
+            <Spacer />
+          </>
+        )}
+
+        <VStack paddingHorizontal={20} paddingVertical={20}>
+          {isEditing ? (
+            <Input
+              multiline
+              numberOfLines={2}
+              lineHeight={28}
+              fontSize={18}
+              marginVertical={-12}
+              marginHorizontal={-8}
+              textAlign="center"
+              defaultValue={list.description}
+            />
+          ) : (
+            <Paragraph size="lg" textAlign="center">
+              {list.description}
+            </Paragraph>
+          )}
+        </VStack>
+
+        {list.restaurants.map(({ restaurant, comment, dishes }, index) => {
+          const dishSlugs = dishes.map((x) => x.tag.slug)
+          if (!restaurant.slug) {
+            return null
+          }
+          return (
+            <RestaurantListItem
+              key={restaurant.slug}
+              curLocInfo={props.item.curLocInfo ?? null}
+              restaurantId={restaurant.id}
+              restaurantSlug={restaurant.slug}
+              rank={index + 1}
+              description={comment}
+              hideTagRow
+              flexibleHeight
+              dishSlugs={dishSlugs}
+              editableDishes={isEditing}
+              onChangeDishes={(dishes) => {
+                console.log('should change dishes', dishes)
+              }}
+              editableDescription={isEditing}
+              onChangeDescription={(next) => {
+                console.log('should change descirption', next)
+              }}
+              editablePosition={isEditing}
+              onChangePosition={(next) => {
+                console.log('should change position', next)
+              }}
+            />
+          )
+        })}
+      </ContentScrollView>
+    </StackDrawer>
   )
 })
 

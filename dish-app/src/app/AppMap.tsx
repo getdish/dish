@@ -149,15 +149,13 @@ const AppMapContent = memo(({ results }: { results: MapResultItem[] }) => {
 
   const drawer = useStoreInstance(drawerStore)
   // ensure never goes to 0
-  const delayedIndex = useDebounceValue(drawer.snapIndex, 250)
-  const currentSnapIndex = Math.max(1, delayedIndex)
-  const currentSnapPoint = drawer.snapPoints[currentSnapIndex]
+  const bottomOcclude = useDebounceValue(drawer.bottomOccluded + 10, 250)
   const padding = useMemo(() => {
     return media.sm
       ? {
           left: 10,
           top: 10,
-          bottom: getWindowHeight() - getWindowHeight() * currentSnapPoint + 10,
+          bottom: bottomOcclude,
           right: 10,
         }
       : {
@@ -166,7 +164,7 @@ const AppMapContent = memo(({ results }: { results: MapResultItem[] }) => {
           bottom: 10,
           right: 10,
         }
-  }, [media.sm, paddingLeft, currentSnapPoint])
+  }, [media.sm, paddingLeft, bottomOcclude])
 
   const features = useMemo(() => {
     return getMapFeatures(results, position.id)

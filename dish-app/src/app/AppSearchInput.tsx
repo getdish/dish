@@ -107,9 +107,7 @@ export const AppSearchInput = memo(() => {
   const [search, setSearch] = useState('')
   const getSearch = useGet(search)
   const isSearchingCuisine = !!home.searchBarTags.length
-  const isEditingList = useRouterSelector(
-    (x) => x.curPage.name === 'list' && x.curPage.params.state === 'edit'
-  )
+  const isEditingList = false // useRouterSelector((x) => x.curPage.name === 'list' && x.curPage.params.state === 'edit')
 
   // focus on visible
   useAutocompleteInputFocus(inputStore)
