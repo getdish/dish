@@ -35,7 +35,7 @@
     "docker:logs:web": "docker logs -f dish-app",
     "docker:stop:web": "docker rm -f dish-app || true",
     "validate:tsc": "tsc --noEmit",
-    "build": "ultra -r --no-pretty build",
+    "build": "yarn tsc -b || true && ultra -r --no-pretty build",
     "build:docker": "./dishctl.sh buildkit_build_local",
     "build:ts:watch": "tsc -b -w --preserveWatchOutput tsconfig.build.json",
     "build:extras:watch": "ultra -r --no-pretty --filter @snackui/node watch",

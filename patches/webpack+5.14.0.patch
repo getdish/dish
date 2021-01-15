@@ -1,0 +1,18 @@
+diff --git a/node_modules/webpack/lib/NormalModule.js b/node_modules/webpack/lib/NormalModule.js
+index f721ccf..3ed2aa4 100644
+--- a/node_modules/webpack/lib/NormalModule.js
++++ b/node_modules/webpack/lib/NormalModule.js
+@@ -176,9 +176,10 @@ class NormalModule extends Module {
+ 	 */
+ 	static getCompilationHooks(compilation) {
+ 		if (!(compilation instanceof Compilation)) {
+-			throw new TypeError(
+-				"The 'compilation' argument must be an instance of Compilation"
+-			);
++			// debugger
++			// throw new TypeError(
++			// 	"The 'compilation' argument must be an instance of Compilation"
++			// );
+ 		}
+ 		let hooks = compilationHooksMap.get(compilation);
+ 		if (hooks === undefined) {
