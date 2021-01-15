@@ -22,7 +22,7 @@ export default secureRoute('user', async (req, res) => {
     }
     res.status(200).json(val)
   } catch (e) {
-    res.status(409).send('failed')
+    res.status(409).json({ error: e.message })
     return
   }
 })

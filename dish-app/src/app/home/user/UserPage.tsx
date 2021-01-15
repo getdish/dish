@@ -71,7 +71,7 @@ export default function UserPageContainer(
 
 function useUserReviews(user: UserQuery, type: UserPane | 'both') {
   return user?.reviews({
-    limit: 50,
+    limit: 10,
     ...(type === 'review' && {
       where: { text: { _neq: '' } },
     }),

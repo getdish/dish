@@ -32,23 +32,11 @@ app.all((_req, res, next) => {
   next()
 })
 const historyFb = connectHistoryApiFallback()
-app.use(ignoreApi(historyFb))
+app.use(historyFb)
 app.use(
-  ignoreApi(
-    middleware(compiler, {
-      publicPath: config.output?.publicPath ?? '/',
-    })
-  )
+  middleware(compiler, {
+    publicPath: config.output?.publicPath ?? '/',
+  })
 )
 app.use(hotMiddleware(compiler))
 app.listen(port)
-
-function ignoreApi(fn) {
-  return (req, res, next) => {
-    if (req.path.startsWith('/api')) {
-      next()
-    } else {
-      fn(req, res, next)
-    }
-  }
-}
