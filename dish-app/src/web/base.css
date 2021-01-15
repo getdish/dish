@@ -408,6 +408,14 @@ input:-webkit-autofill:active {
   white-space: pre-wrap;
 }
 
+.white-space-pre {
+  white-space: pre;
+}
+
+.font-mono {
+  font-family:'Courier New', Courier, monospace;
+}
+
 @media (hover: hover) {
   .hover-faded-in-parent:hover .faded-out,
   .hover-faded-in-parent:hover .greyed-out {

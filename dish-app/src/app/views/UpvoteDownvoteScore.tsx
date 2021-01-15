@@ -7,12 +7,12 @@ import CircularProgress from './CircularProgress'
 import { VoteButton } from './VoteButton'
 
 type Props = StackProps & {
+  score: number
   showVoteOnHover?: boolean
   size?: 'sm' | 'md'
   ratio?: number
-  score: number
-  vote: -1 | 0 | 1
-  setVote?: Function
+  vote?: -1 | 0 | 1
+  setVote?: (next: -1 | 1 | 0) => any
   subtle?: boolean
 }
 
@@ -21,7 +21,7 @@ export const UpvoteDownvoteScore = memo(
     score,
     showVoteOnHover,
     ratio,
-    vote,
+    vote = 0,
     subtle,
     setVote,
     size,

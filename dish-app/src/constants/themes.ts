@@ -19,6 +19,20 @@ const active: MyTheme = {
   cardBackgroundColor: '#333',
 }
 
+const error: MyTheme = {
+  name: 'error',
+  color: '#fff',
+  colorSecondary: '#ccc',
+  colorTertiary: '#777',
+  backgroundColor: 'rgb(245, 38, 102)',
+  backgroundColorSecondary: 'rgb(245, 38, 102)',
+  backgroundColorTertiary: 'rgba(245, 38, 102, 0.85)',
+  borderColor: 'rgb(205, 28, 92)',
+  borderColorHover: 'rgb(205, 28, 92)',
+  backgroundColorTransparent: 'rgba(40,40,200,0)',
+  cardBackgroundColor: '#333',
+}
+
 const darkBase = {
   borderColor: '#252525',
   borderColorHover: '#353535',
@@ -81,6 +95,7 @@ const themes = {
   lightTranslucent,
   darkTranslucent,
   active,
+  error,
 }
 
 export default themes
