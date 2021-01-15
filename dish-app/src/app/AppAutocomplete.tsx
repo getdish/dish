@@ -15,6 +15,7 @@ import {
   Spacer,
   Text,
   Theme,
+  Toast,
   VStack,
   prevent,
   useDebounce,
@@ -233,7 +234,16 @@ const AutocompleteSearch = memo(() => {
             ]
           })
         } else {
-          results = await searchAutocomplete(query, state.center!, state.span!)
+          try {
+            results = await searchAutocomplete(
+              query,
+              state.center!,
+              state.span!
+            )
+          } catch (err) {
+            Toast.error(`Error searching ${err.message}`)
+            console.error(err)
+          }
         }
       },
       // allow cancel
@@ -496,32 +506,34 @@ const AutocompleteResults = memo(
   }
 )
 
-const AutocompleteItemView = memo(
+export const AutocompleteItemView = memo(
   ({
     target,
     onSelect,
     result,
+    showAddButton,
+    hideBackground,
     index,
   }: {
     result: AutocompleteItem
     index: number
     target: ShowAutocomplete
+    showAddButton?: boolean
     onSelect: AutocompleteSelectCb
+    hideBackground?: boolean
   }) => {
-    const userStore = useUserStore()
     const showLocation = target === 'location'
     const theme = useTheme()
     const hideAutocompleteSlow = useDebounce(
       () => autocompletesStore.setVisible(false),
       50
     )
-    const plusButtonEl =
-      result.type === 'dish' && index !== 0 && userStore.isLoggedIn ? (
-        <>
-          <VStack flex={1} />
-          <AutocompleteAddButton />
-        </>
-      ) : null
+    const plusButtonEl = showAddButton ? (
+      <>
+        <VStack flex={1} />
+        <AutocompleteAddButton />
+      </>
+    ) : null
 
     const icon =
       result.icon?.indexOf('http') === 0 ? (
@@ -541,6 +553,9 @@ const AutocompleteItemView = memo(
       <LinkButton
         width="100%"
         justifyContent={target === 'location' ? 'flex-end' : 'flex-start'}
+        {...(hideBackground && {
+          backgroundColor: 'transparent',
+        })}
         onPressOut={() => {
           hideAutocompleteSlow()
           onSelect(result, index)
