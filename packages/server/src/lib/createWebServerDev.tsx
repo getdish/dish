@@ -1,48 +1,30 @@
-import connectHistoryApiFallback from 'connect-history-api-fallback'
-import webpack from 'webpack'
-import middleware from 'webpack-dev-middleware'
-import hotMiddleware from 'webpack-hot-middleware'
+import { Worker } from 'worker_threads'
+
+import proxy from 'express-http-proxy'
+import getPort from 'get-port'
 
 import { ServerConfigNormal } from '../types'
 
 export async function createWebServerDev(
   app: any,
-  { createConfig, webpackConfig }: ServerConfigNormal
+  { rootDir, webpackConfig }: ServerConfigNormal
 ) {
-  const config = createConfig({
-    target: 'web',
-    noMinify: true,
-    ...webpackConfig,
-  })
-  const compiler = webpack(config)
-  const headers = {
-    'Access-Control-Allow-Origin': '*',
-    'Access-Control-Allow-Methods': 'GET, POST, PUT, DELETE, PATCH, OPTIONS',
-    'Access-Control-Allow-Headers':
-      'X-Requested-With, content-type, Authorization',
-  }
-  app.all((_req, res, next) => {
-    for (const name in headers) {
-      res.setHeader(name, headers[name])
+  const port = await getPort()
+  const worker = new Worker(
+    __filename.replace('src', '_').replace('.tsx', '.worker.js'),
+    {
+      workerData: {
+        webpackConfig,
+        port,
+        rootDir,
+      },
     }
-    next()
-  })
-  const historyFb = connectHistoryApiFallback()
-  app.use(ignoreApi(historyFb))
-  app.use(
-    ignoreApi(
-      middleware(compiler, {
-        publicPath: config.output?.publicPath ?? '/',
-      })
-    )
   )
-  app.use(hotMiddleware(compiler))
-}
+  worker.on('error', (err) => console.error(' [webpack]', err))
+  worker.on('exit', (code) => {
+    console.log(' [webpack] exited', code)
+    if (code !== 0) throw new Error(`Worker stopped with exit code ${code}`)
+  })
 
-const ignoreApi = (fn) => (req, res, next) => {
-  if (req.path.startsWith('/api')) {
-    next()
-  } else {
-    fn(req, res, next)
-  }
+  app.use(proxy(`localhost:${port}`))
 }
