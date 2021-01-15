@@ -2,7 +2,6 @@
 import { series, sleep } from '@dish/async'
 import {
   List,
-  client,
   graphql,
   list,
   listInsert,
@@ -48,13 +47,12 @@ import { HomeStateItemList } from '../../../types/homeTypes'
 import { useSetAppMapResults } from '../../AppMapStore'
 import { useStateSynced } from '../../hooks/useStateSynced'
 import { useUserStore, userStore } from '../../userStore'
-import { CloseButton, SmallCircleButton } from '../../views/CloseButton'
+import { CloseButton } from '../../views/CloseButton'
 import { ContentScrollView } from '../../views/ContentScrollView'
 import { Link } from '../../views/Link'
 import { PaneControlButtons } from '../../views/PaneControlButtons'
 import { ScalingPressable } from '../../views/ScalingPressable'
 import { SlantedTitle } from '../../views/SlantedTitle'
-import { SmallButton } from '../../views/SmallButton'
 import { StackDrawer } from '../../views/StackDrawer'
 import { UpvoteDownvoteScore } from '../../views/UpvoteDownvoteScore'
 import { StackItemProps } from '../HomeStackView'
@@ -192,13 +190,13 @@ function useListRestaurants(list: list) {
           mutation.insert_list_restaurant_one({
             object: {
               // negative to go first + space it out
-              position: -items.length * 100,
+              position: -items.length * Math.round(1000 * Math.random()),
               list_id: list.id,
               restaurant_id: id,
             },
           }).__typename
         })
-        await refetch(itemsQuery)
+        await Promise.all([refetch(list), refetch(itemsQuery)])
       },
       async promote(index: number) {
         if (index == 0) return
@@ -216,7 +214,7 @@ function useListRestaurants(list: list) {
             },
           }).affected_rows
         })
-        await refetch(list)
+        await Promise.all([refetch(list), refetch(itemsQuery)])
       },
       async setDishes(id: string, dishTags: string[]) {
         const { dishQuery } = items.find((x) => x.restaurantId === id)
@@ -610,39 +608,3 @@ function promote(items: any[], index: number): any[] {
   now.splice(index - 1, 0, id)
   return now
 }
-
-// const list = {
-//   name: 'Horse Fish Circus',
-//   slug: 'horse-fish-circus',
-//   user: {
-//     name: 'Peach',
-//     username: 'admin',
-//   },
-//   description:
-//     'Lorem ipsum dolor sit amet Lorem ipsum dolor sit amet Lorem ipsum dolor sit amet Lorem ipsum dolor sit amet Lorem ipsum dolor sit amet.',
-//   restaurants: restaurants.map((restaurant, index) => {
-//     return {
-//       restaurant,
-//       description:
-//         'Lorem ipsum dolor sit amet Lorem ipsum dolor sit amet Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet Lorem ipsum dolor sit amet Lorem ipsum dolor sit amet.',
-//       position: index,
-//       dishes: restaurant
-//         .tags({
-//           where: {
-//             tag: {
-//               type: {
-//                 _eq: 'dish',
-//               },
-//             },
-//           },
-//           limit: 8,
-//           order_by: [
-//             {
-//               upvotes: order_by.desc,
-//             },
-//           ],
-//         })
-//         .map((x) => x.tag),
-//     }
-//   }),
-// }
