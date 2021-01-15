@@ -26,5 +26,15 @@ export async function createWebServerDev(
     if (code !== 0) throw new Error(`Worker stopped with exit code ${code}`)
   })
 
-  app.use(proxy(`localhost:${port}`))
+  app.use(ignoreApi(proxy(`localhost:${port}`)))
+}
+
+function ignoreApi(fn) {
+  return (req, res, next) => {
+    if (req.path.startsWith('/api')) {
+      next()
+    } else {
+      fn(req, res, next)
+    }
+  }
 }

@@ -88,7 +88,6 @@ const MenuLinkButton = (props: LinkButtonProps) => {
   return (
     <LinkButton
       width="100%"
-      asyncClick
       hoverStyle={{
         transform: [{ scale: 1.03 }],
       }}

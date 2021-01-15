@@ -24,19 +24,59 @@ export async function createApiServer(app: any, config: ServerConfigNormal) {
     }
   })
 
+  const secret = {
+    authorization: true,
+    'x-hasura-admin-secret': true,
+  }
+  const filtered = {
+    host: true,
+    accept: true,
+    'user-agent': true,
+    'accept-language': true,
+    'accept-encoding': true,
+    'content-type': true,
+    origin: true,
+    connection: true,
+    referer: true,
+    'content-length': true,
+  }
   app.use(
     '/api',
     expressWinston.logger({
+      colorize: true,
       transports: [new winston.transports.Console()],
       format: winston.format.combine(
         winston.format.colorize(),
-        winston.format.simple()
+        winston.format.metadata({
+          fillExcept: ['message', 'level', 'timestamp', 'label'],
+        }),
+        winston.format.printf((info) => {
+          const { req, res, responseTime } = info.metadata.meta
+          let out = `${info.level}: ${info.message} ${responseTime}ms`
+          if (info.metadata.error) {
+            out = out + ' ' + info.metadata.error
+            if (info.metadata.error.stack) {
+              out = out + ' ' + info.metadata.error.stack
+            }
+          }
+          const reqstr = Object.keys(req.headers)
+            .map((k) => {
+              const val = secret[k]
+                ? `${k}:🔒`
+                : filtered[k]
+                ? ''
+                : `${k}:${req.headers[k]}`
+              return `${val}`
+            })
+            .filter(Boolean)
+            .join(', ')
+          if (reqstr.trim()) {
+            out += `\n <= ${reqstr}`
+          }
+          out += `\n => ${res.statusCode}`
+          return out
+        })
       ),
-      meta: true,
-      msg:
-        '{{req.method}} {{req.url}} - {{res.statusCode}} {{res.responseTime}}ms',
-      // expressFormat: true,
-      colorize: false,
     })
   )
 
