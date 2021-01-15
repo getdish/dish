@@ -62,7 +62,33 @@ To build an individual container:
 
 `docker-compose build [container-name]`
 
-So, for example `docker-compose build dish-app-web`
+So, for example `docker-compose build dish-app-web`.
+
+## Debugging broken docker build
+
+You see the steps in the build?
+
+```
+Sending build context to Docker daemon  7.168kB
+Step 1/6 : FROM node:10.15.1-alpine
+ ---> fe6ff768f798
+Step 2/6 : WORKDIR /app
+ ---> Using cache
+ ---> d9b21154b260
+Step 3/6 : COPY package.json yarn.lock /app/
+ ---> Using cache
+ ---> f72815b0addf
+Step 4/6 : RUN yarn install --frozen-lockfile
+ ---> Using cache
+ ---> 9ac88c8d0b9d
+```
+
+Just do this for any step to get shell access:
+
+```
+docker commit 9ac88c8d0b9d tempname
+docker run -ti --rm tempname sh
+```
 
 ## The Web App
 
