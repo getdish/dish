@@ -1,8 +1,9 @@
-import { Route, Router } from '@dish/router'
+import { NavigateItem as RNavigateItem, Route, Router } from '@dish/router'
 import { createStore, useStoreInstance } from '@dish/use-store'
 
 export type RoutesTable = typeof routes
 export type RouteName = keyof RoutesTable
+export type NavigateItem = RNavigateItem<RoutesTable>
 
 export const routes = {
   // order important
@@ -28,7 +29,7 @@ export const routes = {
   contact: new Route<{ pane: string }>('/contact'),
   privacy: new Route<{ pane: string }>('/privacy'),
   about: new Route<{ pane: string }>('/about'),
-  blog: new Route<{ pane: string }>('/blog/:slug?'),
+  blog: new Route<{ slug: string }>('/blog/:slug?'),
   restaurantReview: new Route<{ slug: string }>('/restaurant/:slug/review'),
   restaurantHours: new Route<{ slug: string }>('/restaurant/:slug/hours'),
   restaurant: new Route<{

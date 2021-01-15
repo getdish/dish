@@ -23,7 +23,7 @@ export const useSelectedDish = (tagName?: string | null) => {
         }
       : restParams
     router.navigate({
-      name: router.curPage.name,
+      name: router.curPage.name as any,
       params,
       replace: true,
     })

@@ -1,13 +1,10 @@
-import {
-  Store,
-  UseStoreOptions,
-  useStore,
-  useStoreSelector,
-} from '@dish/use-store'
+import { Store, createStore, useStore, useStoreSelector } from '@dish/use-store'
 import { createBrowserHistory, createMemoryHistory } from 'history'
 import * as React from 'react'
 import { createContext, useContext } from 'react'
 import { Router as TinyRouter } from 'tiny-request-router'
+
+// TODO fix HistoryType to narrow types
 
 const history =
   typeof document !== 'undefined'
@@ -15,7 +12,9 @@ const history =
     : createMemoryHistory()
 
 // need them to declare the types here
-export type RoutesTable = { [key: string]: Route<any> }
+export type RoutesTable = {
+  [key: string]: Route<any>
+}
 export type RouteName = keyof RoutesTable
 
 export type HistoryType = 'push' | 'pop' | 'replace'
@@ -31,24 +30,14 @@ export type HistoryItem<A extends RouteName = string> = {
   direction: HistoryDirection
 }
 
-export type NavigateItem<
-  T = {
-    [K in keyof RoutesTable]: {
-      name: K
-      params?: RoutesTable[K]['params'] | Object
-    }
-  }
-> = T[keyof T] & {
-  search?: Object
-  replace?: boolean
-  callback?: OnRouteChangeCb
-}
-
 export type OnRouteChangeCb = (item: HistoryItem) => Promise<void>
 type RouterProps = { routes: RoutesTable }
 type HistoryCb = (cb: HistoryItem) => void
 
-export class Router<Props extends RouterProps> extends Store<Props> {
+export class Router<
+  Props extends RouterProps,
+  RT extends RoutesTable = Props['routes']
+> extends Store<Props> {
   router = new TinyRouter()
   routes: RoutesTable = {}
   routeNames: string[] = []
@@ -222,7 +211,7 @@ export class Router<Props extends RouterProps> extends Store<Props> {
     }
   }
 
-  getShouldNavigate(navItem: NavigateItem) {
+  getShouldNavigate(navItem: NavigateItem<RT>) {
     const historyItem = this.getHistoryItem(navItem)
     const sameName = historyItem.name === this.curPage.name
     const sameParams = isEqual(
@@ -243,11 +232,11 @@ export class Router<Props extends RouterProps> extends Store<Props> {
     }, {})
   }
 
-  getIsRouteActive(navItem: NavigateItem) {
+  getIsRouteActive(navItem: NavigateItem<RT>) {
     return !this.getShouldNavigate(navItem)
   }
 
-  async navigate(navItem: NavigateItem) {
+  async navigate(navItem: NavigateItem<RT>) {
     const item = this.getHistoryItem(navItem)
     if (this.notFound) {
       this.notFound = false
@@ -324,7 +313,7 @@ export class Router<Props extends RouterProps> extends Store<Props> {
     return path
   }
 
-  getHistoryItem(navItem: NavigateItem): HistoryItem {
+  getHistoryItem(navItem: NavigateItem<RT>): HistoryItem {
     const params: any = {}
     // remove undefined params
     if ('params' in navItem && !!navItem.params) {
@@ -338,11 +327,11 @@ export class Router<Props extends RouterProps> extends Store<Props> {
     return {
       id: uid(),
       direction: 'none',
-      name: navItem.name,
+      name: navItem.name as any,
       type: navItem.replace ? 'replace' : 'push',
       params,
       path: this.getPathFromParams({
-        name: navItem.name,
+        name: navItem.name as any,
         params,
       }),
       search: window.location?.search ?? '',
@@ -434,3 +423,71 @@ const isEqual = (a: any, b: any) => {
   }
   return true
 }
+
+// sanity check types
+
+type NavigableItems<Table extends RoutesTable> = {
+  [Property in keyof Table]: {
+    name: Property
+    params: Table[Property]['params']
+    search?: string
+    replace?: boolean
+    callback?: OnRouteChangeCb
+  }
+}
+
+export type NavigateItem<
+  RT extends RoutesTable,
+  Items extends NavigableItems<RT> = NavigableItems<RT>
+> = Items[keyof Items]
+
+// const router = createStore(Router, {
+//   routes: {
+//     name: new Route<{ hi: boolean }>(''),
+//     alt: new Route<{ other: string }>(''),
+//   },
+// })
+
+// // good
+// router.navigate({
+//   name: 'name',
+//   params: {
+//     hi: true,
+//   },
+// })
+// // good
+// router.navigate({
+//   name: 'alt',
+//   params: {
+//     other: '',
+//   },
+// })
+// // bad
+// router.navigate({
+//   name: 'alt',
+//   replace: '',
+//   params: {
+//     hi: true,
+//   },
+// })
+// // bad
+// router.navigate({
+//   name: 'alt',
+//   params: {
+//     other: true,
+//   },
+// })
+// // bad
+// router.navigate({
+//   name: 'name',
+//   params: {
+//     hi: '',
+//   },
+// })
+// // bad
+// router.navigate({
+//   name: 'falsename',
+//   params: {
+//     hi: '',
+//   },
+// })

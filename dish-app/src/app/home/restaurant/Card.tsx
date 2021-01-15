@@ -39,10 +39,8 @@ export function Card({
 }) {
   const theme = useTheme()
   const { altPastelColor, pastelColor, lightColor, color } = getColorsForName(
-    title
+    title ?? ''
   )
-
-  console.log('waht si', color, title)
 
   const size = {
     width: aspectFixed ? cardFrameWidth : '100%',

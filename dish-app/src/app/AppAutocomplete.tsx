@@ -513,11 +513,13 @@ export const AutocompleteItemView = memo(
     result,
     showAddButton,
     hideBackground,
+    preventNavigate,
     index,
   }: {
     result: AutocompleteItem
     index: number
     target: ShowAutocomplete
+    preventNavigate?: boolean
     showAddButton?: boolean
     onSelect: AutocompleteSelectCb
     hideBackground?: boolean
@@ -560,6 +562,7 @@ export const AutocompleteItemView = memo(
           hideAutocompleteSlow()
           onSelect(result, index)
         }}
+        preventNavigate={preventNavigate}
         {...(!showLocation &&
           result?.type !== 'orphan' && {
             tag: result,
