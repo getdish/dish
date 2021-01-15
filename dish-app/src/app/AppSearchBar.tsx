@@ -1,4 +1,3 @@
-// debug
 import { ArrowUp, ChevronLeft, Map, Search } from '@dish/react-feather'
 import { useStoreInstance } from '@dish/use-store'
 import React, { Suspense, memo } from 'react'
