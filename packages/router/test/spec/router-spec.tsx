@@ -1,6 +1,7 @@
+import { createStore, useStore, useStoreInstance } from '@dish/use-store'
 import React, { StrictMode } from 'react'
 
-import { ProvideRouter, Route, useRouter } from '../../_'
+import { ProvideRouter, Route, Router, useRouter } from '../../_'
 
 const routes = {
   home: new Route('/'),
@@ -23,8 +24,10 @@ export function RecoilStoreRouterTest1() {
   )
 }
 
+const routerStore = createStore(Router, { routes })
+
 function Component1() {
-  const router = useRouter()
+  const router = useStoreInstance(routerStore)
   // console.log('NOW AT', router.curPage.name, router.stack, router.stackIndex)
   return (
     <>

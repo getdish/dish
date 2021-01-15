@@ -7,9 +7,11 @@ import { Router as TinyRouter } from 'tiny-request-router'
 // TODO fix HistoryType to narrow types
 
 const history =
-  typeof document !== 'undefined'
-    ? createBrowserHistory()
-    : createMemoryHistory()
+  process.env.TARGET === 'node' ||
+  typeof document === 'undefined' ||
+  navigator?.userAgent.includes('jsdom')
+    ? createMemoryHistory()
+    : createBrowserHistory()
 
 // need them to declare the types here
 export type RoutesTable = {
@@ -36,7 +38,7 @@ export type HistoryItem<A extends RouteName = string> = {
 }
 
 export type OnRouteChangeCb = (item: HistoryItem) => Promise<void>
-type RouterProps = { routes: RoutesTable }
+type RouterProps = { routes: RoutesTable; skipInitial?: boolean }
 type HistoryCb = (cb: HistoryItem) => void
 
 export class Router<
@@ -88,17 +90,17 @@ export class Router<
           ? 'pop'
           : 'push'
 
-      if (process.env.DEBUG) {
-        console.log('router.history', {
-          type,
-          direction,
-          event,
-          state,
-          prevItem,
-          nextItem,
-          stack: this.stack,
-        })
-      }
+      // if (process.env.DEBUG) {
+      // console.log('router.history', {
+      //   type,
+      //   direction,
+      //   event,
+      //   state,
+      //   prevItem,
+      //   nextItem,
+      //   stack: this.stack,
+      // })
+      // }
 
       if (type === 'pop' && direction == 'none') {
         // happens when they go back after a hard refresh, change to push
@@ -113,20 +115,21 @@ export class Router<
     })
 
     // initial entry
-    const pathname = (window.location?.pathname ?? '')
-      // temp bugfix: react native has debugger-ui as window.location
-      .replace(/\/debugger-ui.*/g, '/')
-
-    history.push(
-      {
-        pathname,
-        search: window.location?.search ?? '',
-        hash: window.location?.hash ?? '',
-      },
-      {
-        id: uid(),
-      }
-    )
+    if (!this.props.skipInitial) {
+      const pathname = (window.location?.pathname ?? '')
+        // temp bugfix: react native has debugger-ui as window.location
+        .replace(/\/debugger-ui.*/g, '/')
+      history.push(
+        {
+          pathname,
+          search: window.location?.search ?? '',
+          hash: window.location?.hash ?? '',
+        },
+        {
+          id: uid(),
+        }
+      )
+    }
   }
 
   get prevPage() {
@@ -182,7 +185,7 @@ export class Router<
           this.stack[this.stackIndex] = next
           this.stack = [...this.stack]
         } else {
-          if (this.stackIndex < this.stack.length - 1) {
+          if (this.stackIndex < this.stack.length) {
             // remove future states on next push
             this.stack = this.stack.slice(0, this.stackIndex + 1)
           }
@@ -193,10 +196,7 @@ export class Router<
     }
 
     // if (process.env.NODE_ENV === 'development') {
-    //   console.log(
-    //     'router.handlePath',
-    //     JSON.stringify({ item, next }, null, 2)
-    //   )
+    // console.log('router.handlePath', JSON.stringify({ item, next }, null, 2))
     // }
 
     this.routeChangeListeners.forEach((x) => x(next))
@@ -242,7 +242,7 @@ export class Router<
     return !this.getShouldNavigate(navItem)
   }
 
-  async navigate(navItem: NavigateItem<RT>) {
+  navigate(navItem: NavigateItem<RT>) {
     const item = this.getHistoryItem(navItem)
     if (this.notFound) {
       this.notFound = false
@@ -337,11 +337,12 @@ export class Router<
   getHistoryItem(navItem: NavigateItem<RT>): HistoryItem {
     const params: any = {}
     // remove undefined params
-    if ('params' in navItem && !!navItem.params) {
-      for (const key in navItem.params as any) {
-        const value = navItem.params[key]
-        if (typeof value !== 'undefined') {
-          params[key] = value
+    if ('params' in navItem) {
+      const p = navItem['params']
+      for (const key in p) {
+        const val = p[key]
+        if (typeof val !== 'undefined') {
+          params[key] = val
         }
       }
     }
@@ -408,13 +409,20 @@ export class Route<A extends Object | void = void> {
     public page?: PageRouteView,
     public params?: A
   ) {}
+
+  toString() {
+    return JSON.stringify({
+      path: this.path,
+      params: this.params,
+    })
+  }
 }
 
 // state
 
 const defaultPage: HistoryItem = {
   id: '0',
-  name: 'home',
+  name: 'null',
   path: '/',
   params: {},
   type: 'push',
@@ -445,16 +453,28 @@ const isEqual = (a: any, b: any) => {
   return true
 }
 
+function setUnloadCondition(alert: RouteAlert<any> | null) {
+  window.onbeforeunload = () =>
+    alert?.condition('unload') ? alert.message : null
+}
+
 // sanity check types
 
 type NavigableItems<Table extends RoutesTable> = {
-  [Property in keyof Table]: {
-    name: Property
-    params: Table[Property]['params']
-    search?: string
-    replace?: boolean
-    callback?: OnRouteChangeCb
-  }
+  [Property in keyof Table]: Table[Property]['params'] extends void
+    ? {
+        name: Property
+        search?: string
+        replace?: boolean
+        callback?: OnRouteChangeCb
+      }
+    : {
+        name: Property
+        params: Table[Property]['params']
+        search?: string
+        replace?: boolean
+        callback?: OnRouteChangeCb
+      }
 }
 
 export type NavigateItem<
@@ -466,9 +486,10 @@ export type NavigateItem<
 //   routes: {
 //     name: new Route<{ hi: boolean }>(''),
 //     alt: new Route<{ other: string }>(''),
+//     alt2: new Route(''),
 //   },
 // })
-
+//
 // // good
 // router.navigate({
 //   name: 'name',
@@ -476,7 +497,9 @@ export type NavigateItem<
 //     hi: true,
 //   },
 // })
-// // good
+// router.navigate({
+//   name: 'alt2',
+// })
 // router.navigate({
 //   name: 'alt',
 //   params: {
@@ -491,29 +514,21 @@ export type NavigateItem<
 //     hi: true,
 //   },
 // })
-// // bad
 // router.navigate({
 //   name: 'alt',
 //   params: {
 //     other: true,
 //   },
 // })
-// // bad
 // router.navigate({
 //   name: 'name',
 //   params: {
 //     hi: '',
 //   },
 // })
-// // bad
 // router.navigate({
 //   name: 'falsename',
 //   params: {
 //     hi: '',
 //   },
 // })
-
-function setUnloadCondition(alert: RouteAlert<any> | null) {
-  window.onbeforeunload = () =>
-    alert?.condition('unload') ? alert.message : null
-}

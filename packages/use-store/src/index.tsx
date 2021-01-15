@@ -655,7 +655,12 @@ function getKey(props: Object) {
   let s = ''
   const sorted = Object.keys(props).sort()
   for (const key of sorted) {
-    s += `-${key}-${props[key]}`
+    const v = props[key]
+    if (v && typeof v === 'object') {
+      s += getKey(v)
+    } else {
+      s += `-${key}-${v}`
+    }
   }
   return s
 }
