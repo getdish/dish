@@ -96,6 +96,7 @@ type RestaurantListItemProps = {
   onChangeDishes?: (slugs: string[]) => void
   hideTagRow?: boolean
   flexibleHeight?: boolean
+  above?: any
 }
 
 /**
@@ -190,6 +191,7 @@ const RestaurantListItemContent = memo(
       description,
       dishSlugs,
       flexibleHeight,
+      above,
       editableDishes,
       onChangeDishes,
       onChangeDescription,
@@ -249,7 +251,7 @@ const RestaurantListItemContent = memo(
     const titleHeight = titleFontSize + 8 * 2
     const score = Math.round((meta?.effective_score ?? 0) / 10)
     const theme = useTheme()
-    const showVote = !!activeTagSlugs
+    const showAbove = !!above || !!activeTagSlugs
 
     const nextDescription = useRef<string>()
     const setDescription = (val: string) => {
@@ -303,19 +305,21 @@ const RestaurantListItemContent = memo(
           backgroundColor={isActive ? brandColor : 'transparent'}
         />
 
-        {showVote && (
-          <AbsoluteVStack top={34} left={-5} zIndex={2000000}>
-            <RestaurantUpVoteDownVote
-              rounded
-              score={score}
-              restaurantSlug={restaurantSlug}
-              activeTagSlugs={activeTagSlugs}
-              onClickPoints={() => {
-                setIsExpanded((x) => !x)
-              }}
-            />
-          </AbsoluteVStack>
-        )}
+        <AbsoluteVStack top={34} left={-5} zIndex={2000000}>
+          {showAbove
+            ? above ?? (
+                <RestaurantUpVoteDownVote
+                  rounded
+                  score={score}
+                  restaurantSlug={restaurantSlug}
+                  activeTagSlugs={activeTagSlugs}
+                  onClickPoints={() => {
+                    setIsExpanded((x) => !x)
+                  }}
+                />
+              )
+            : null}
+        </AbsoluteVStack>
 
         <VStack flex={1} alignItems="flex-start" maxWidth="100%">
           {/* ROW: TITLE */}
@@ -332,7 +336,7 @@ const RestaurantListItemContent = memo(
               name="restaurant"
               params={{ slug: restaurantSlug }}
             >
-              <VStack paddingLeft={showVote ? 47 : 10} paddingTop={25}>
+              <VStack paddingLeft={showAbove ? 47 : 10} paddingTop={25}>
                 <HStack position="relative" alignItems="center">
                   <AbsoluteVStack top={-16} left={-34} zIndex={-1}>
                     <RankView rank={rank} />
@@ -386,7 +390,7 @@ const RestaurantListItemContent = memo(
               <VStack
                 overflow="hidden"
                 zIndex={2}
-                paddingLeft={showVote ? 60 : 22}
+                paddingLeft={showAbove ? 60 : 22}
                 paddingRight={20}
                 marginTop={media.sm ? -6 : 0}
                 transform={[{ translateY: -10 }]}

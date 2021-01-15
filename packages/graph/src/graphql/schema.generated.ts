@@ -403,6 +403,7 @@ export interface list_bool_exp {
   description?: Maybe<String_comparison_exp>
   id?: Maybe<uuid_comparison_exp>
   name?: Maybe<String_comparison_exp>
+  public?: Maybe<Boolean_comparison_exp>
   restaurants?: Maybe<list_restaurant_bool_exp>
   slug?: Maybe<String_comparison_exp>
   updated_at?: Maybe<timestamptz_comparison_exp>
@@ -430,6 +431,7 @@ export interface list_insert_input {
   description?: Maybe<Scalars['String']>
   id?: Maybe<Scalars['uuid']>
   name?: Maybe<Scalars['String']>
+  public?: Maybe<Scalars['Boolean']>
   restaurants?: Maybe<list_restaurant_arr_rel_insert_input>
   slug?: Maybe<Scalars['String']>
   updated_at?: Maybe<Scalars['timestamptz']>
@@ -481,6 +483,7 @@ export interface list_order_by {
   description?: Maybe<order_by>
   id?: Maybe<order_by>
   name?: Maybe<order_by>
+  public?: Maybe<order_by>
   restaurants_aggregate?: Maybe<list_restaurant_aggregate_order_by>
   slug?: Maybe<order_by>
   updated_at?: Maybe<order_by>
@@ -876,6 +879,8 @@ export enum list_select_column {
   /** column name */
   name = 'name',
   /** column name */
+  public = 'public',
+  /** column name */
   slug = 'slug',
   /** column name */
   updated_at = 'updated_at',
@@ -890,6 +895,7 @@ export interface list_set_input {
   description?: Maybe<Scalars['String']>
   id?: Maybe<Scalars['uuid']>
   name?: Maybe<Scalars['String']>
+  public?: Maybe<Scalars['Boolean']>
   slug?: Maybe<Scalars['String']>
   updated_at?: Maybe<Scalars['timestamptz']>
   user_id?: Maybe<Scalars['uuid']>
@@ -927,6 +933,8 @@ export enum list_update_column {
   id = 'id',
   /** column name */
   name = 'name',
+  /** column name */
+  public = 'public',
   /** column name */
   slug = 'slug',
   /** column name */
@@ -6343,6 +6351,7 @@ export const generatedSchema = {
     description: { __type: 'String' },
     id: { __type: 'uuid!' },
     name: { __type: 'String!' },
+    public: { __type: 'Boolean!' },
     restaurants: {
       __type: '[list_restaurant!]!',
       __args: {
@@ -6421,6 +6430,7 @@ export const generatedSchema = {
     description: { __type: 'String_comparison_exp' },
     id: { __type: 'uuid_comparison_exp' },
     name: { __type: 'String_comparison_exp' },
+    public: { __type: 'Boolean_comparison_exp' },
     restaurants: { __type: 'list_restaurant_bool_exp' },
     slug: { __type: 'String_comparison_exp' },
     updated_at: { __type: 'timestamptz_comparison_exp' },
@@ -6434,6 +6444,7 @@ export const generatedSchema = {
     description: { __type: 'String' },
     id: { __type: 'uuid' },
     name: { __type: 'String' },
+    public: { __type: 'Boolean' },
     restaurants: { __type: 'list_restaurant_arr_rel_insert_input' },
     slug: { __type: 'String' },
     updated_at: { __type: 'timestamptz' },
@@ -6502,6 +6513,7 @@ export const generatedSchema = {
     description: { __type: 'order_by' },
     id: { __type: 'order_by' },
     name: { __type: 'order_by' },
+    public: { __type: 'order_by' },
     restaurants_aggregate: { __type: 'list_restaurant_aggregate_order_by' },
     slug: { __type: 'order_by' },
     updated_at: { __type: 'order_by' },
@@ -6912,6 +6924,7 @@ export const generatedSchema = {
     description: { __type: 'String' },
     id: { __type: 'uuid' },
     name: { __type: 'String' },
+    public: { __type: 'Boolean' },
     slug: { __type: 'String' },
     updated_at: { __type: 'timestamptz' },
     user_id: { __type: 'uuid' },
@@ -11718,6 +11731,7 @@ export interface list {
   description?: Maybe<ScalarsEnums['String']>
   id: ScalarsEnums['uuid']
   name: ScalarsEnums['String']
+  public: ScalarsEnums['Boolean']
   restaurants: (args?: {
     distinct_on?: Maybe<Array<ScalarsEnums['list_restaurant_select_column']>>
     limit?: Maybe<ScalarsEnums['Int']>

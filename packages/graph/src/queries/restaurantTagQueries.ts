@@ -27,7 +27,6 @@ export async function restaurantTagUpsert(
   const response = await resolvedMutationWithFields(
     () => {
       const insert = mutation.insert_restaurant_tag
-
       const obj = insert({
         objects: objects as any,
         on_conflict: {
@@ -40,7 +39,6 @@ export async function restaurantTagUpsert(
           ],
         },
       })
-
       return obj
     },
     {

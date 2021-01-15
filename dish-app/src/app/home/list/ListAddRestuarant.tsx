@@ -1,14 +1,21 @@
-import { graphql, query, useLazyQuery } from '@dish/graph'
+import { graphql, query, resolved, useLazyQuery } from '@dish/graph'
 import React, { useState } from 'react'
 import { ScrollView } from 'react-native'
 import { Input, VStack, useTheme } from 'snackui'
 
 import { AutocompleteItemRestuarant } from '../../../helpers/createAutocomplete'
+import { queryRestaurant } from '../../../queries/queryRestaurant'
 import { AutocompleteItemView } from '../../AppAutocomplete'
 import { SlantedTitle } from '../../views/SlantedTitle'
 
 export const ListAddRestuarant = graphql(
-  ({ onAdd, listSlug }: { onAdd: () => any; listSlug: string }) => {
+  ({
+    onAdd,
+    listSlug,
+  }: {
+    onAdd: (r: AutocompleteItemRestuarant & { id: string }) => any
+    listSlug: string
+  }) => {
     const theme = useTheme()
     const [results, setResults] = useState<AutocompleteItemRestuarant[]>([])
 
@@ -63,7 +70,15 @@ export const ListAddRestuarant = graphql(
                   showAddButton
                   index={index}
                   result={result}
-                  onAdd={() => {}}
+                  onAdd={async () => {
+                    const id = await resolved(
+                      () => queryRestaurant(result.slug)[0].id
+                    )
+                    onAdd({
+                      ...result,
+                      id,
+                    })
+                  }}
                 />
               )
             })}
