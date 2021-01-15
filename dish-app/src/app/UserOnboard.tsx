@@ -145,6 +145,7 @@ export const UserOnboard = graphql(
 
           <Spacer />
           <TextArea
+            color="#fff"
             placeholder="Optional description for your profile..."
             fontSize={16}
             width="100%"
@@ -153,6 +154,7 @@ export const UserOnboard = graphql(
             }}
           />
           <Input
+            color="#fff"
             placeholder="Location..."
             fontSize={16}
             width="100%"
@@ -170,16 +172,12 @@ export const UserOnboard = graphql(
             alignSelf="center"
             onPress={async () => {
               Toast.show('Saving...')
-              if (
-                await userStore.edit({
-                  username,
-                  charIndex,
-                  about: formState.current.about,
-                  location: formState.current.location,
-                })
-              ) {
-                Toast.show(`All set! Welcome!`)
-              }
+              await userStore.edit({
+                username,
+                charIndex,
+                about: formState.current.about,
+                location: formState.current.location,
+              })
               onFinish?.()
             }}
           >

@@ -98,12 +98,14 @@ class UserStore extends Store {
     if (user) {
       this.user = {
         ...this.user,
+        ...props,
         ...user,
         has_onboarded: true,
-        ...props,
       }
+      Toast.success(`Updated`)
       return true
     }
+    Toast.error(`Failed editing`)
     return false
   }
 

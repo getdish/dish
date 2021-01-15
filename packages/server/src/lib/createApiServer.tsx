@@ -44,7 +44,13 @@ export async function createApiServer(app: any, config: ServerConfigNormal) {
   const handlerStatus: { [key: string]: undefined | 'loading' | 'ready' } = {}
 
   let dispose: any
-  const run = debounce(async (path?: string) => {
+  const restart = debounce(async (files: File[]) => {
+    dispose = await runFiles(files)
+  }, 30)
+
+  const run = async (path?: string) => {
+    dispose?.()
+    dispose = null
     const files: File[] = (await getFiles(apiDir))
       .map((fullPath) => {
         return relative(apiDir, fullPath)
@@ -63,17 +69,19 @@ export async function createApiServer(app: any, config: ServerConfigNormal) {
           fileIn: join(apiDir, file),
         }
       })
-
     if (path) {
       const relativePath = files.find((x) => path === x.fileIn)?.fileIn
+      // if direct hit, fast delete, if not delete all
       if (relativePath) {
-        // ensure its a new copy
         delete require.cache[relativePath]
+      } else {
+        for (const key in require.cache) {
+          delete require.cache[key]
+        }
       }
     }
-    dispose?.()
-    dispose = await runFiles(files)
-  }, 50)
+    await restart(files)
+  }
 
   if (watch) {
     const watcher = chokidar.watch(apiDir, { ignored: /^\./, persistent: true })
