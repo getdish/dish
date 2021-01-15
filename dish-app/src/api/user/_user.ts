@@ -11,7 +11,7 @@ import * as jwt from 'jsonwebtoken'
 
 type PermissionLevel = 'admin' | 'user' | 'contributor'
 
-const permissionsByUser = {
+const access = {
   admin: ['admin', 'user', 'contributor'],
   user: ['user', 'contributor'],
   contributor: ['contributor'],
@@ -45,8 +45,8 @@ export async function ensureRole(
     if (!user) {
       throw new Error(`No user`)
     }
-    const permissions = permissionsByUser[minimumPermission ?? 'contributor']
-    if (!permissions.includes(user.role)) {
+    const permissions = access[user.role]
+    if (!permissions.includes(minimumPermission ?? 'contributor')) {
       throw new Error(`No permission`)
     }
   } catch (err) {
