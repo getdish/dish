@@ -109,8 +109,7 @@ docker run -ti --rm tempname sh
 
 In `./dish-app`:
 
-- `yarn build:web`
-- `yarn start:prod:bundle`
+- `yarn web:prod`
 
 ### Run end to end tests
 

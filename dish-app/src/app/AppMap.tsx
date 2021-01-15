@@ -35,8 +35,8 @@ const styles = {
 }
 
 export default memo(function AppMap() {
-  const { results } = useAppMapStore()
-  return <AppMapContent results={results} />
+  const { results, showRank } = useAppMapStore()
+  return <AppMapContent results={results} showRank={showRank} />
 })
 
 const updateRegion = debounce((region: Region) => {
@@ -52,269 +52,275 @@ const updateRegion = debounce((region: Region) => {
   }
 }, 150)
 
-const AppMapContent = memo(({ results }: { results: MapResultItem[] }) => {
-  const media = useMedia()
-  const { width, paddingLeft } = useMapSize(media.sm)
-  const { position } = useStoreInstance(appMapStore)
-  const { center, span } = position
+const AppMapContent = memo(
+  ({ results, showRank }: { results: MapResultItem[]; showRank?: boolean }) => {
+    const media = useMedia()
+    const { width, paddingLeft } = useMapSize(media.sm)
+    const { position } = useStoreInstance(appMapStore)
+    const { center, span } = position
 
-  // SELECTED
-  // useEffect(() => {
-  //   return om.reaction(
-  //     (state) => state.home.selectedRestaurant?.id,
-  //     (selectedId) => {
-  //       const nextSpan = getZoomedSpan(span, 0.025)
-  //       setState({
-  //         id: selectedId,
-  //         via: 'select',
-  //         span: nextSpan,
-  //       })
-  //     }
-  //   )
-  // }, [])
+    // SELECTED
+    // useEffect(() => {
+    //   return om.reaction(
+    //     (state) => state.home.selectedRestaurant?.id,
+    //     (selectedId) => {
+    //       const nextSpan = getZoomedSpan(span, 0.025)
+    //       setState({
+    //         id: selectedId,
+    //         via: 'select',
+    //         span: nextSpan,
+    //       })
+    //     }
+    //   )
+    // }, [])
 
-  // HOVERED
-  // TODO make it zoom just icon
-  // const hoveredId =
-  //   om.state.home.hoveredRestaurant && om.state.home.hoveredRestaurant.id
-  // useEffect(() => {
-  //   if (!hoveredId) return
-  //   setState({
-  //     id: hoveredId,
-  //     via: 'hover',
-  //     span: getMinLngLat(state.span, 0.02),
-  //   })
-  // }, [hoveredId])
+    // HOVERED
+    // TODO make it zoom just icon
+    // const hoveredId =
+    //   om.state.home.hoveredRestaurant && om.state.home.hoveredRestaurant.id
+    // useEffect(() => {
+    //   if (!hoveredId) return
+    //   setState({
+    //     id: hoveredId,
+    //     via: 'hover',
+    //     span: getMinLngLat(state.span, 0.02),
+    //   })
+    // }, [hoveredId])
 
-  // DETAIL
-  // const detailId = restaurantDetail?.id
-  // useEffect(() => {
-  //   if (!detailId) return
-  //   if (state.type !== 'restaurant') return
-  //   console.log('the detail is.....', detailId)
-  //   setState({
-  //     id: detailId,
-  //     via: 'detail',
-  //     span: getZoomedSpan(state.span, 0.0025),
-  //   })
-  // }, [detailId])
+    // DETAIL
+    // const detailId = restaurantDetail?.id
+    // useEffect(() => {
+    //   if (!detailId) return
+    //   if (state.type !== 'restaurant') return
+    //   console.log('the detail is.....', detailId)
+    //   setState({
+    //     id: detailId,
+    //     via: 'detail',
+    //     span: getZoomedSpan(state.span, 0.0025),
+    //   })
+    // }, [detailId])
 
-  // gather restaruants
-  const isLoading = results[0]?.location?.coordinates[0] === null
-  const key = useLastValueWhen(
-    () =>
-      `${position.id ?? ''}${JSON.stringify(
-        results.map((x) => x.location?.coordinates ?? '-')
-      )}`,
-    isLoading || !results.length
-  )
-
-  // sync down location from above state
-  const restaurantSelected = useMemo(
-    () => (position.id ? results.find((x) => x.id === position.id) : null),
-    [key]
-  )
-
-  useEffect(() => {
-    return reaction(
-      homeStore,
-      () => {
-        const stateId = homeStore.currentState.id
-        const state = homeStore.allStates[stateId]
-        const span = state.span
-        const center = state.center
-        // stringify to prevent extra reactions
-        return { span, center }
-      },
-      ({ span, center }) => {
-        updateRegion.cancel()
-        appMapStore.setPosition('homeState.currentState', {
-          span,
-          center,
-        })
-      },
-      isEqual
+    // gather restaruants
+    const isLoading = results[0]?.location?.coordinates[0] === null
+    const key = useLastValueWhen(
+      () =>
+        `${position.id ?? ''}${JSON.stringify(
+          results.map((x) => x.location?.coordinates ?? '-')
+        )}`,
+      isLoading || !results.length
     )
-  }, [])
 
-  // CENTER (restauarantSelected.location)
-  useEffect(() => {
-    const coords = restaurantSelected?.location.coordinates
-    if (!coords) return
-    const center = getLngLat(coords)
-    appMapStore.setPosition('restaurantSelected', {
-      center,
-    })
-  }, [restaurantSelected])
+    // sync down location from above state
+    const restaurantSelected = useMemo(
+      () => (position.id ? results.find((x) => x.id === position.id) : null),
+      [key]
+    )
 
-  const drawer = useStoreInstance(drawerStore)
-  // ensure never goes to 0
-  const bottomOcclude = useDebounceValue(drawer.bottomOccluded + 10, 250)
-  const padding = useMemo(() => {
-    return media.sm
-      ? {
-          left: 10,
-          top: 10,
-          bottom: bottomOcclude,
-          right: 10,
+    useEffect(() => {
+      return reaction(
+        homeStore,
+        () => {
+          const stateId = homeStore.currentState.id
+          const state = homeStore.allStates[stateId]
+          const span = state.span
+          const center = state.center
+          // stringify to prevent extra reactions
+          return { span, center }
+        },
+        ({ span, center }) => {
+          updateRegion.cancel()
+          appMapStore.setPosition('homeState.currentState', {
+            span,
+            center,
+          })
+        },
+        isEqual
+      )
+    }, [])
+
+    // CENTER (restauarantSelected.location)
+    useEffect(() => {
+      const coords = restaurantSelected?.location.coordinates
+      if (!coords) return
+      const center = getLngLat(coords)
+      appMapStore.setPosition('restaurantSelected', {
+        center,
+      })
+    }, [restaurantSelected])
+
+    const drawer = useStoreInstance(drawerStore)
+    // ensure never goes to 0
+    const bottomOcclude = useDebounceValue(drawer.bottomOccluded + 10, 250)
+    const padding = useMemo(() => {
+      return media.sm
+        ? {
+            left: 10,
+            top: 10,
+            bottom: bottomOcclude,
+            right: 10,
+          }
+        : {
+            left: paddingLeft,
+            top: searchBarHeight + 20,
+            bottom: 10,
+            right: 10,
+          }
+    }, [media.sm, paddingLeft, bottomOcclude])
+
+    const features = useMemo(() => {
+      return getMapFeatures(results, position.id)
+    }, [key])
+
+    const handleMoveEnd = useCallback(
+      ({ center, span }) => {
+        if (
+          media.sm &&
+          (drawerStore.isDragging || drawerStore.snapIndex === 0)
+        ) {
+          console.log('avoid move stuff when snapped to top')
+          return
         }
-      : {
-          left: paddingLeft,
-          top: searchBarHeight + 20,
-          bottom: 10,
-          right: 10,
-        }
-  }, [media.sm, paddingLeft, bottomOcclude])
+        // if (om.state.home.centerToResults) {
+        //   // we just re-centered, ignore
+        //   //@ts-expect-error
+        //   om.actions.home.setCenterToResults(0)
+        // }
+        console.log('should set position on map?')
+        // appMapStore.setPosition('moveEnd', {
+        //   center,
+        //   span,
+        // })
+      },
+      [media.sm]
+    )
 
-  const features = useMemo(() => {
-    return getMapFeatures(results, position.id)
-  }, [key])
+    const getResults = useGet(results)
 
-  const handleMoveEnd = useCallback(
-    ({ center, span }) => {
-      if (media.sm && (drawerStore.isDragging || drawerStore.snapIndex === 0)) {
-        console.log('avoid move stuff when snapped to top')
+    const handleDoubleClick = useCallback((id) => {
+      const restaurant = getResults()?.find((x) => x.id === id)
+      if (restaurant) {
+        router.navigate({
+          replace: true,
+          name: 'restaurant',
+          params: {
+            slug: restaurant.slug,
+          },
+        })
+      }
+    }, [])
+
+    const handleHover = useCallback((id) => {
+      if (id == null) {
+        appMapStore.setHovered(null)
         return
       }
-      // if (om.state.home.centerToResults) {
-      //   // we just re-centered, ignore
-      //   //@ts-expect-error
-      //   om.actions.home.setCenterToResults(0)
-      // }
-      console.log('should set position on map?')
-      // appMapStore.setPosition('moveEnd', {
-      //   center,
-      //   span,
-      // })
-    },
-    [media.sm]
-  )
+      const restaurants = getResults()
+      if (!appMapStore.hovered || id !== appMapStore.hovered.id) {
+        const restaurant = restaurants?.find((x) => x.id === id)
+        if (restaurant) {
+          appMapStore.setHovered({
+            id: restaurant.id,
+            slug: restaurant.slug ?? '',
+          })
+        } else {
+          console.warn('not found?', restaurants, id)
+        }
+      }
+    }, [])
 
-  const getResults = useGet(results)
-
-  const handleDoubleClick = useCallback((id) => {
-    const restaurant = getResults()?.find((x) => x.id === id)
-    if (restaurant) {
-      router.navigate({
-        replace: true,
-        name: 'restaurant',
-        params: {
-          slug: restaurant.slug,
-        },
-      })
-    }
-  }, [])
-
-  const handleHover = useCallback((id) => {
-    if (id == null) {
-      appMapStore.setHovered(null)
-      return
-    }
-    const restaurants = getResults()
-    if (!appMapStore.hovered || id !== appMapStore.hovered.id) {
+    const handleSelect = useCallback((id: string) => {
+      updateRegion.cancel()
+      const restaurants = getResults()
       const restaurant = restaurants?.find((x) => x.id === id)
-      if (restaurant) {
-        appMapStore.setHovered({
-          id: restaurant.id,
-          slug: restaurant.slug ?? '',
-        })
-      } else {
-        console.warn('not found?', restaurants, id)
+      if (!restaurant) {
+        console.warn('not found', id, restaurants)
+        return
       }
-    }
-  }, [])
-
-  const handleSelect = useCallback((id: string) => {
-    updateRegion.cancel()
-    const restaurants = getResults()
-    const restaurant = restaurants?.find((x) => x.id === id)
-    if (!restaurant) {
-      console.warn('not found', id, restaurants)
-      return
-    }
-    if (homeStore.currentStateType === 'search') {
-      if (id !== appMapStore.selected?.id) {
-        appMapStore.setSelected({
-          id: restaurant.id,
-          slug: restaurant.slug ?? '',
-        })
-      }
-    } else {
-      const route = {
-        name: 'restaurant',
-        params: {
-          slug: restaurant.slug,
-        },
-      } as const
-
-      if (router.getIsRouteActive(route)) {
-        if (media.sm) {
-          drawerStore.setSnapPoint(0)
+      if (homeStore.currentStateType === 'search') {
+        if (id !== appMapStore.selected?.id) {
+          appMapStore.setSelected({
+            id: restaurant.id,
+            slug: restaurant.slug ?? '',
+          })
         }
       } else {
-        router.navigate(route)
+        const route = {
+          name: 'restaurant',
+          params: {
+            slug: restaurant.slug,
+          },
+        } as const
+
+        if (router.getIsRouteActive(route)) {
+          if (media.sm) {
+            drawerStore.setSnapPoint(0)
+          }
+        } else {
+          router.navigate(route)
+        }
       }
-    }
-  }, [])
+    }, [])
 
-  const handleSelectRegion = useCallback((region: Region | null) => {
-    // console.log('handleSelectRegion', region)
-    if (!region) return
-    if (!region.slug) {
-      console.log('no region slug', region)
-      return
-    }
-    updateRegion.cancel()
-    updateRegion(region)
-  }, [])
+    const handleSelectRegion = useCallback((region: Region | null) => {
+      // console.log('handleSelectRegion', region)
+      if (!region) return
+      if (!region.slug) {
+        console.log('no region slug', region)
+        return
+      }
+      updateRegion.cancel()
+      updateRegion(region)
+    }, [])
 
-  const theme = useTheme()
-  const themeName = theme.backgroundColor === '#fff' ? 'light' : 'dark'
+    const theme = useTheme()
+    const themeName = theme.backgroundColor === '#fff' ? 'light' : 'dark'
 
-  return (
-    <HStack
-      position="absolute"
-      fullscreen
-      alignItems="center"
-      justifyContent="center"
-    >
-      <HStack height="100%" maxWidth={pageWidthMax} width="100%">
-        {!media.sm && (
-          <VStack height="100%" flex={2}>
-            {ensureFlexText}
+    return (
+      <HStack
+        position="absolute"
+        fullscreen
+        alignItems="center"
+        justifyContent="center"
+      >
+        <HStack height="100%" maxWidth={pageWidthMax} width="100%">
+          {!media.sm && (
+            <VStack height="100%" flex={2}>
+              {ensureFlexText}
+            </VStack>
+          )}
+          <VStack
+            pointerEvents="auto"
+            contain="strict"
+            zIndex={zIndexMap}
+            maxHeight="100%"
+            width={width}
+            borderTopRightRadius={12}
+            borderBottomRightRadius={12}
+            overflow="hidden"
+          >
+            <AppMapControls />
+            <MapView
+              center={center}
+              style={styles[themeName]}
+              span={span}
+              padding={padding}
+              features={features}
+              // centerToResults={om.state.home.centerToResults}
+              selected={position.id}
+              hovered={appMapStore.hovered?.id}
+              onMoveEnd={handleMoveEnd}
+              onDoubleClick={handleDoubleClick}
+              onHover={handleHover}
+              onSelect={handleSelect}
+              onSelectRegion={handleSelectRegion}
+              showRank={showRank}
+            />
           </VStack>
-        )}
-        <VStack
-          pointerEvents="auto"
-          contain="strict"
-          zIndex={zIndexMap}
-          maxHeight="100%"
-          width={width}
-          borderTopRightRadius={12}
-          borderBottomRightRadius={12}
-          overflow="hidden"
-        >
-          <AppMapControls />
-          <MapView
-            center={center}
-            style={styles[themeName]}
-            span={span}
-            padding={padding}
-            features={features}
-            // centerToResults={om.state.home.centerToResults}
-            selected={position.id}
-            hovered={appMapStore.hovered?.id}
-            onMoveEnd={handleMoveEnd}
-            onDoubleClick={handleDoubleClick}
-            onHover={handleHover}
-            onSelect={handleSelect}
-            onSelectRegion={handleSelectRegion}
-          />
-        </VStack>
+        </HStack>
       </HStack>
-    </HStack>
-  )
-})
+    )
+  }
+)
 
 let ids = {}
 const getNumId = (id: string): number => {

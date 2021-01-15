@@ -185,46 +185,37 @@ export const MapView = (props: MapProps) => {
     map?.easeTo({ padding })
   }, [map, JSON.stringify(padding)])
 
-  const { restaurantPositions } = useSearchResultsStore()
-
   // features
   useEffect(() => {
     if (!map) return
     const source = map.getSource(RESTAURANTS_SOURCE_ID)
     const source2 = map.getSource(RESTAURANTS_UNCLUSTERED_SOURCE_ID)
 
-    if (!source) {
-      console.warn('NO SOURCE??', source)
-      return
-    }
-    if (!source2) {
-      console.warn('NO SOURCE (UNCLUSTERED)???', source2)
+    if (!source || !source2) {
+      console.warn('NO SOURCE??', source, source2)
       return
     }
 
-    const featuresWithPositions = produce(features, (draft) => {
-      for (const feature of draft) {
-        const position = restaurantPositions[feature.properties.id]
-        if (position != null && position <= 10) {
-          feature.properties.searchPosition = position
-        }
+    if (props.showRank) {
+      for (const [index, feature] of features.entries()) {
+        feature.properties.searchPosition = index + 1
       }
-    })
+    }
 
     if (source?.type === 'geojson') {
       source.setData({
         type: 'FeatureCollection',
-        features: featuresWithPositions,
+        features: features,
       })
     }
 
     if (source2?.type === 'geojson') {
       source2.setData({
         type: 'FeatureCollection',
-        features: featuresWithPositions,
+        features: features,
       })
     }
-  }, [features, map, restaurantPositions])
+  }, [features, map, props.showRank])
 
   return <div ref={mapNode} style={mapStyle} />
 }

@@ -29,6 +29,7 @@ import { SmallButton } from '../../views/SmallButton'
 import { StackDrawer } from '../../views/StackDrawer'
 import { StackItemProps } from '../HomeStackView'
 import { RestaurantReview } from '../restaurant/RestaurantReview'
+import { CardCarousel } from './CardCarousel'
 import { UserAvatar } from './UserAvatar'
 import { useUserQuery } from './useUserQuery'
 
@@ -97,6 +98,11 @@ const UserPageContent = graphql(
     const user = useUserQuery(item.username ?? '')
     const lists = user.lists({
       limit: 10,
+      where: {
+        public: {
+          _eq: true,
+        },
+      },
       order_by: [{ created_at: order_by.asc }],
     })
     const reviews = useUserReviews(user, pane || 'both')
@@ -123,21 +129,17 @@ const UserPageContent = graphql(
             )}
 
             <SlantedTitle>Lists</SlantedTitle>
-            <HStack marginHorizontal={-20}>
-              <ScrollView horizontal showsHorizontalScrollIndicator={false}>
-                <HStack margin={20} spacing>
-                  {lists.map((list) => {
-                    return (
-                      <ListCard
-                        key={list.slug}
-                        userSlug={list.user.username}
-                        slug={list.slug}
-                      />
-                    )
-                  })}
-                </HStack>
-              </ScrollView>
-            </HStack>
+            <CardCarousel>
+              {lists.map((list) => {
+                return (
+                  <ListCard
+                    key={list.slug}
+                    userSlug={list.user.username}
+                    slug={list.slug}
+                  />
+                )
+              })}
+            </CardCarousel>
 
             <SlantedTitle>Recently</SlantedTitle>
 
