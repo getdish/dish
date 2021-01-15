@@ -1,6 +1,8 @@
 import 'isomorphic-unfetch'
 
-import { startLogging } from './startLogging'
+if (process.env.NODE_ENV === 'node') {
+  require('@dish/helpers/polyfill')
+}
 
 export * from './react'
 export * from './graphql'
@@ -32,7 +34,3 @@ export * from './queries/tagTagQueries'
 export * from './queries/tagQueries'
 export * from './queries/tagQueries'
 export * from './queries/userQueries'
-
-if (process.env.TARGET === 'node') {
-  startLogging()
-}
