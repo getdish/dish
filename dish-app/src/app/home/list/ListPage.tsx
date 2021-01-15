@@ -92,6 +92,7 @@ export default function ListPage(props: Props) {
         }
         router.navigate({
           name: 'list',
+          replace: true,
           params: {
             userSlug: props.item.userSlug,
             slug: list.slug,
@@ -209,6 +210,7 @@ const ListPageContent = graphql((props: Props) => {
   useSetAppMapResults({
     isActive: props.isActive,
     results: restaurants.map((x) => x.restaurant).map(getRestaurantIdentifiers),
+    showRank: true,
   })
 
   if (!list) {

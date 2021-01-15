@@ -121,6 +121,7 @@ const SearchPageContent = memo(function SearchPageContent(props: Props) {
   useSetAppMapResults({
     isActive: props.isActive,
     results: searchStore.results,
+    showRank: true,
   })
 
   const isOptimisticUpdating = home.isOptimisticUpdating

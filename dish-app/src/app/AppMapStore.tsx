@@ -40,11 +40,13 @@ class AppMapStore extends Store {
   userLocation: LngLat | null = null
   position: MapPosition = getDefaultLocation()
   results: MapResultItem[] = []
+  showRank = false
 
-  setResults(val: MapResultItem[]) {
+  setResults(val: { results: MapResultItem[]; showRank?: boolean }) {
     this.setSelected(null)
     this.setHovered(null)
-    this.results = val
+    this.results = val.results
+    this.showRank = val.showRank
   }
 
   setPosition(via: string, pos: Partial<MapPosition>) {
@@ -132,14 +134,16 @@ export const useAppMapStore = () => useStoreInstance(appMapStore)
 export const useSetAppMapResults = (props: {
   isActive: boolean
   results: RestaurantOnlyIds[]
+  showRank?: boolean
 }) => {
+  const { results, showRank, isActive } = props
   useEffect(() => {
-    if (!props.isActive) return
+    if (!isActive) return
     let restaurants: MapResultItem[] | null = null
 
     return series([
       async () => {
-        const all = props.results
+        const all = results
         const allIds = [...new Set(all.map((x) => x.id))]
         const allResults = allIds
           .map((id) => all.find((x) => x.id === id))
@@ -172,7 +176,10 @@ export const useSetAppMapResults = (props: {
         })
       },
       () => {
-        appMapStore.setResults(restaurants)
+        appMapStore.setResults({
+          results: restaurants,
+          showRank,
+        })
       },
     ])
   }, [JSON.stringify(props)])

@@ -53,6 +53,7 @@ import { DishHorizonView } from '../views/DishHorizonView'
 import { Link } from '../views/Link'
 import { LinkButton } from '../views/LinkButton'
 import { LinkButtonProps } from '../views/LinkProps'
+import { ListCard } from '../views/list/ListCard'
 import { PageTitleTag } from '../views/PageTitleTag'
 import { SlantedTitle } from '../views/SlantedTitle'
 import {
@@ -65,6 +66,7 @@ import {
 import { HomeStackViewProps } from './HomeStackViewProps'
 import { HomeTopSearches } from './HomeTopSearches'
 import { RestaurantCard } from './restaurant/RestaurantCard'
+import { CardCarousel } from './user/CardCarousel'
 
 type Props = HomeStackViewProps<HomeStateItemHome>
 
@@ -302,6 +304,15 @@ const HomePageContent = memo(
     const media = useMedia()
     const isNew = item.section === 'new'
     const items = [] ?? useHomeFeed(item, region, isNew)
+    const recentLists = query.list({
+      limit: 10,
+      where: {
+        public: {
+          _neq: false,
+        },
+      },
+      order_by: [{ created_at: order_by.asc }],
+    })
     const isLoading = !region || items[0]?.id === null
 
     useSetAppMapResults({
@@ -332,6 +343,18 @@ const HomePageContent = memo(
               paddingBottom={100}
               minHeight={Dimensions.get('window').height * 0.9}
             >
+              <CardCarousel>
+                {recentLists.map((list) => {
+                  return (
+                    <ListCard
+                      key={list.slug}
+                      slug={list.slug}
+                      userSlug={list.user.username}
+                    />
+                  )
+                })}
+              </CardCarousel>
+
               <HStack
                 justifyContent="center"
                 flexWrap="wrap"
