@@ -4,8 +4,6 @@
   "version": "0.0.0",
   "workspaces": {
     "nohoist": [
-      "@dish/server",
-      "@dish/server/**",
       "babel-plugin-transform-inline-environment-variables",
       "babel-plugin-transform-inline-environment-variables/**",
       "react-query",

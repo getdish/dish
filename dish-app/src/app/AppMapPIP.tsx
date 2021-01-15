@@ -95,11 +95,12 @@ const HomeMapPIPContent = graphql(() => {
           span: pipSpan(span),
         })
       }
-    } else if (getZoomLevel(span) !== 'medium') {
-      return mapZoomToMedium
-    } else {
+    }
+    // else if (getZoomLevel(span) !== 'medium') {
+    //   return mapZoomToMedium
+    // }
+    else {
       // none
-      return undefined
     }
   })()
 
@@ -163,6 +164,8 @@ const HomeMapPIPContent = graphql(() => {
   //   }
   // }, [map, annotation])
 
+  console.log('pipAction', pipAction)
+
   return (
     <VStack
       pointerEvents="auto"
@@ -175,7 +178,7 @@ const HomeMapPIPContent = graphql(() => {
       shadowColor="rgba(0,0,0,0.2)"
       shadowRadius={18}
       shadowOffset={{ height: 3, width: 0 }}
-      className="ease-in-out-slow"
+      className="12313333333 ease-in-out-slow"
       transform={[{ scale: 1 }]}
       cursor="pointer"
       pressStyle={{
@@ -185,7 +188,8 @@ const HomeMapPIPContent = graphql(() => {
         transform: [{ scale: 1.1 }],
       }}
       {...(!pipAction && {
-        display: 'none',
+        pointerEvents: 'none',
+        opacity: 0,
       })}
       onPress={pipAction}
     >
