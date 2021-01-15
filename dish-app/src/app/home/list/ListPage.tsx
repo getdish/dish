@@ -216,8 +216,7 @@ function useListRestaurants(list: list) {
             },
           }).affected_rows
         })
-        delete client.cache.query
-        await refetch(itemsQuery)
+        await refetch(list)
       },
       async setDishes(id: string, dishTags: string[]) {
         const { dishQuery } = items.find((x) => x.restaurantId === id)

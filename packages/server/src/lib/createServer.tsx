@@ -30,9 +30,7 @@ export async function createServer(serverConf: ServerConfig) {
     ...serverConf,
     protocol,
     buildDir: join(rootDir, 'build'),
-    createConfig: (opts) => {
-      return getWebpackConfigBuilder({ rootDir })(opts)
-    },
+    createConfig: getWebpackConfigBuilder({ rootDir }),
     rootDir,
     webpackConfig: {
       entry: join(rootDir, 'src', 'index.ts'),
