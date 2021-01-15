@@ -1,6 +1,6 @@
 import 'isomorphic-unfetch'
 
-if (process.env.NODE_ENV === 'node') {
+if (process.env.TARGET === 'node' || process.env.TARGET === 'test') {
   require('@dish/helpers/polyfill')
 }
 

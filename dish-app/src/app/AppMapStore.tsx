@@ -34,19 +34,28 @@ export type MapResultItem = {
   }
 }
 
+type MapOpts = {
+  showRank?: boolean
+  zoomOnHover?: boolean
+}
+
+type MapHoveredRestaurant = RestaurantOnlyIds & { via: 'map' | 'list' }
+
 class AppMapStore extends Store {
   selected: RestaurantOnlyIds | null = null
-  hovered: RestaurantOnlyIds | null = null
+  hovered: MapHoveredRestaurant | null = null
   userLocation: LngLat | null = null
   position: MapPosition = getDefaultLocation()
   results: MapResultItem[] = []
   showRank = false
+  zoomOnHover = false
 
-  setResults(val: { results: MapResultItem[]; showRank?: boolean }) {
+  setState(val: MapOpts & { results?: MapResultItem[] }) {
     this.setSelected(null)
     this.setHovered(null)
-    this.results = val.results
+    this.results = val.results ?? []
     this.showRank = val.showRank
+    this.zoomOnHover = val.zoomOnHover
   }
 
   setPosition(via: string, pos: Partial<MapPosition>) {
@@ -61,7 +70,7 @@ class AppMapStore extends Store {
     this.selected = n
   }
 
-  setHovered(n: RestaurantOnlyIds | null) {
+  setHovered(n: MapHoveredRestaurant | null) {
     this.hovered = n
   }
 
@@ -131,17 +140,18 @@ class AppMapStore extends Store {
 export const appMapStore = createStore(AppMapStore)
 export const useAppMapStore = () => useStoreInstance(appMapStore)
 
-export const useSetAppMapResults = (props: {
-  isActive: boolean
-  results: RestaurantOnlyIds[]
-  showRank?: boolean
-}) => {
-  const { results, showRank, isActive } = props
+export const useSetAppMapResults = (
+  props: MapOpts & {
+    results?: RestaurantOnlyIds[]
+    isActive: boolean
+  }
+) => {
+  const { results, showRank, isActive, zoomOnHover } = props
   useEffect(() => {
     if (!isActive) return
     let restaurants: MapResultItem[] | null = null
 
-    return series([
+    const disposeSeries = series([
       async () => {
         const all = results
         const allIds = [...new Set(all.map((x) => x.id))]
@@ -176,11 +186,21 @@ export const useSetAppMapResults = (props: {
         })
       },
       () => {
-        appMapStore.setResults({
+        appMapStore.setState({
           results: restaurants,
           showRank,
+          zoomOnHover,
         })
       },
     ])
+
+    return () => {
+      disposeSeries()
+      console.log('disable')
+      appMapStore.setState({
+        zoomOnHover: false,
+        showRank: false,
+      })
+    }
   }, [JSON.stringify(props)])
 }
