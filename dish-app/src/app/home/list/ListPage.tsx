@@ -1,19 +1,19 @@
 // // debug
 import { series, sleep } from '@dish/async'
 import {
+  List,
   graphql,
   list,
   listInsert,
+  listUpdate,
   order_by,
-  query,
   slugify,
-  useLazyQuery,
+  useRefetch,
 } from '@dish/graph'
 import { assertIsString } from '@dish/helpers'
 import { Heart, Plus, X } from '@dish/react-feather'
-import { useStoreInstance } from '@dish/use-store'
-import React, { useEffect, useMemo, useState } from 'react'
-import { ScrollView, Switch } from 'react-native'
+import React, { useEffect, useRef, useState } from 'react'
+import { Switch } from 'react-native'
 import {
   AbsoluteVStack,
   Box,
@@ -29,8 +29,6 @@ import {
   Theme,
   Toast,
   VStack,
-  useMedia,
-  useTheme,
 } from 'snackui'
 
 import {
@@ -39,15 +37,11 @@ import {
   allDarkColor,
   blue,
 } from '../../../constants/colors'
-import { AutocompleteItemRestuarant } from '../../../helpers/createAutocomplete'
 import { getRestaurantIdentifiers } from '../../../helpers/getRestaurantIdentifiers'
 import { queryList } from '../../../queries/queryList'
 import { router } from '../../../router'
 import { HomeStateItemList } from '../../../types/homeTypes'
-import { AutocompleteItemView } from '../../AppAutocomplete'
 import { useSetAppMapResults } from '../../AppMapStore'
-import { drawerStore } from '../../drawerStore'
-import { useSafeArea } from '../../hooks/useSafeArea'
 import { useUserStore, userStore } from '../../userStore'
 import { CloseButton } from '../../views/CloseButton'
 import { ContentScrollView } from '../../views/ContentScrollView'
@@ -59,8 +53,12 @@ import { StackDrawer } from '../../views/StackDrawer'
 import { StackItemProps } from '../HomeStackView'
 import { RestaurantListItem } from '../restaurant/RestaurantListItem'
 import { PageTitle } from '../search/PageTitle'
+import { BottomFloatingArea } from './BottomFloatingArea'
+import { ListAddRestuarant } from './ListAddRestuarant'
 
 type Props = StackItemProps<HomeStateItemList>
+
+const listColors = [...allColors, ...allColorsPastel, ...allDarkColor]
 
 export default function ListPage(props: Props) {
   const isCreating = props.item.slug === 'create'
@@ -164,155 +162,25 @@ function useListRestaurants(list: list) {
   ] as const
 }
 
-function BottomFloatingArea(props: { children: any }) {
-  const drawer = useStoreInstance(drawerStore)
-  const children = useMemo(() => props.children, [props.children])
-  const safeArea = useSafeArea()
-  const media = useMedia()
-  return (
-    <AbsoluteVStack
-      zIndex={1000000000}
-      pointerEvents="none"
-      bottom={
-        20 + (media.sm ? safeArea.bottom + drawer.bottomOccluded - 400 : 0)
-      }
-      right={20}
-      left={20}
-    >
-      <HStack pointerEvents="auto">{children}</HStack>
-    </AbsoluteVStack>
-  )
-}
-
-const ListAddRestuarant = graphql(
-  ({ onAdd, listSlug }: { onAdd: () => any; listSlug: string }) => {
-    const theme = useTheme()
-    const [results, setResults] = useState<AutocompleteItemRestuarant[]>([])
-
-    let [runSearch, { isLoading }] = useLazyQuery(
-      (_query, searchQuery: string) => {
-        const restaurants = query.restaurant({
-          where: {
-            name: {
-              _ilike: `%${searchQuery.split(' ').join('%')}%`,
-            },
-          },
-          limit: 20,
-        })
-        return restaurants.map((restaurant) => {
-          return {
-            type: 'restaurant',
-            name: restaurant.name,
-            slug: restaurant.slug,
-            description: restaurant.address,
-            icon: restaurant.image,
-          } as const
-        })
-      },
-      {
-        onCompleted: setResults,
-      }
-    )
-
-    return (
-      <VStack width="100%" height="100%" flex={1}>
-        <SlantedTitle alignSelf="center" marginTop={-15}>
-          Add
-        </SlantedTitle>
-        <VStack width="100%">
-          <Input
-            backgroundColor={theme.backgroundColorSecondary}
-            marginHorizontal={20}
-            placeholder="Search restaurants..."
-            onChangeText={(val) => runSearch({ args: val })}
-          />
-        </VStack>
-        <ScrollView style={{ width: '100%' }}>
-          <VStack padding={20} spacing="xs">
-            {results.map((result, index) => {
-              return (
-                <AutocompleteItemView
-                  preventNavigate
-                  key={result.slug ?? index}
-                  hideBackground
-                  onSelect={() => {}}
-                  target="search"
-                  showAddButton
-                  index={index}
-                  result={result}
-                />
-              )
-            })}
-          </VStack>
-        </ScrollView>
-      </VStack>
-    )
-  }
-)
-
 const ListPageContent = graphql((props: Props) => {
   const user = useUserStore()
   const isMyList = props.item.userSlug === slugify(user.user?.username)
   const isEditing = props.item.state === 'edit'
-  const [color, setColor] = useState(blue)
+  const [color, setColor] = useState('#999')
   const [showAddModal, setShowAddModal] = useState(false)
+  const draft = useRef<Partial<List>>({})
 
-  // const list = {
-  //   name: 'Horse Fish Circus',
-  //   slug: 'horse-fish-circus',
-  //   user: {
-  //     name: 'Peach',
-  //     username: 'admin',
-  //   },
-  //   description:
-  //     'Lorem ipsum dolor sit amet Lorem ipsum dolor sit amet Lorem ipsum dolor sit amet Lorem ipsum dolor sit amet Lorem ipsum dolor sit amet.',
-  //   restaurants: restaurants.map((restaurant, index) => {
-  //     return {
-  //       restaurant,
-  //       description:
-  //         'Lorem ipsum dolor sit amet Lorem ipsum dolor sit amet Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet Lorem ipsum dolor sit amet Lorem ipsum dolor sit amet.',
-  //       position: index,
-  //       dishes: restaurant
-  //         .tags({
-  //           where: {
-  //             tag: {
-  //               type: {
-  //                 _eq: 'dish',
-  //               },
-  //             },
-  //           },
-  //           limit: 8,
-  //           order_by: [
-  //             {
-  //               upvotes: order_by.desc,
-  //             },
-  //           ],
-  //         })
-  //         .map((x) => x.tag),
-  //     }
-  //   }),
-  // }
+  const refetch = useRefetch()
+  const [list] = queryList(props.item.slug)
+  const [restaurants, setRestaurants] = useListRestaurants(list)
 
-  const l = queryList(props.item.slug)
-  const [restaurants, setRestaurants] = useListRestaurants(l)
-
-  const list = {
-    name: l.name,
-    description: l.description,
-    user: {
-      username: l.user.username,
-      name: l.user.name,
-    },
-    restaurants,
-  }
-
-  console.log('list', list)
+  useEffect(() => {
+    setColor(listColors[list.color ?? 0])
+  }, [list.color])
 
   useSetAppMapResults({
     isActive: props.isActive,
-    results: list.restaurants
-      .map((x) => x.restaurant)
-      .map(getRestaurantIdentifiers),
+    results: restaurants.map((x) => x.restaurant).map(getRestaurantIdentifiers),
   })
 
   return (
@@ -352,7 +220,12 @@ const ListPageContent = graphql((props: Props) => {
           <PaneControlButtons>
             <CloseButton onPress={() => setShowAddModal(false)} />
           </PaneControlButtons>
-          <ListAddRestuarant listSlug={props.item.slug} onAdd={() => {}} />
+          <ListAddRestuarant
+            listSlug={props.item.slug}
+            onAdd={() => {
+              console.log('add')
+            }}
+          />
         </Modal>
       )}
 
@@ -385,7 +258,26 @@ const ListPageContent = graphql((props: Props) => {
                   {isEditing && (
                     <HStack alignItems="center">
                       <Theme name="active">
-                        <Button>Save</Button>
+                        <Button
+                          onPress={async () => {
+                            await listUpdate(
+                              {
+                                id: list.id,
+                                ...draft.current,
+                                ...(color !== '#999' && {
+                                  color: listColors.indexOf(color),
+                                }),
+                              },
+                              {
+                                query: list,
+                              }
+                            )
+                            refetch(list)
+                            setIsEditing(false)
+                          }}
+                        >
+                          Save
+                        </Button>
                       </Theme>
                       <Spacer size="sm" />
                       <VStack onPress={() => setIsEditing(false)}>
@@ -419,6 +311,9 @@ const ListPageContent = graphql((props: Props) => {
                     fontSize={26}
                     backgroundColor="transparent"
                     defaultValue={list.name}
+                    onChangeText={(val) => {
+                      draft.current.name = val
+                    }}
                     fontWeight="700"
                     textAlign="center"
                     color="#fff"
@@ -451,7 +346,11 @@ const ListPageContent = graphql((props: Props) => {
             <Spacer />
             <HStack alignItems="center" justifyContent="center">
               <Text>Color:&nbsp;&nbsp;</Text>
-              <ColorPicker color={color} onChange={setColor} />
+              <ColorPicker
+                colors={listColors}
+                color={color}
+                onChange={setColor}
+              />
 
               <Spacer size="xl" />
 
@@ -481,7 +380,7 @@ const ListPageContent = graphql((props: Props) => {
           )}
         </VStack>
 
-        {list.restaurants.map(({ restaurant, comment, dishes }, index) => {
+        {restaurants.map(({ restaurant, comment, dishes }, index) => {
           const dishSlugs = dishes.map((x) => x.tag.slug)
           if (!restaurant.slug) {
             return null
@@ -522,9 +421,11 @@ function ColorBubble(props: StackProps) {
 }
 
 function ColorPicker({
+  colors,
   color,
   onChange,
 }: {
+  colors: string[]
   color: string
   onChange: (next: string) => void
 }) {
@@ -542,21 +443,19 @@ function ColorPicker({
             flexWrap="wrap"
             justifyContent="space-between"
           >
-            {[...allColors, ...allColorsPastel, ...allDarkColor].map(
-              (color) => {
-                return (
-                  <ColorBubble
-                    key={color}
-                    marginBottom={10}
-                    backgroundColor={color}
-                    onPress={() => {
-                      onChange(color)
-                      setIsOpen(false)
-                    }}
-                  />
-                )
-              }
-            )}
+            {colors.map((color) => {
+              return (
+                <ColorBubble
+                  key={color}
+                  marginBottom={10}
+                  backgroundColor={color}
+                  onPress={() => {
+                    onChange(color)
+                    setIsOpen(false)
+                  }}
+                />
+              )
+            })}
           </Box>
         )
       }}
@@ -567,3 +466,39 @@ function ColorPicker({
     </Popover>
   )
 }
+
+// const list = {
+//   name: 'Horse Fish Circus',
+//   slug: 'horse-fish-circus',
+//   user: {
+//     name: 'Peach',
+//     username: 'admin',
+//   },
+//   description:
+//     'Lorem ipsum dolor sit amet Lorem ipsum dolor sit amet Lorem ipsum dolor sit amet Lorem ipsum dolor sit amet Lorem ipsum dolor sit amet.',
+//   restaurants: restaurants.map((restaurant, index) => {
+//     return {
+//       restaurant,
+//       description:
+//         'Lorem ipsum dolor sit amet Lorem ipsum dolor sit amet Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet Lorem ipsum dolor sit amet Lorem ipsum dolor sit amet.',
+//       position: index,
+//       dishes: restaurant
+//         .tags({
+//           where: {
+//             tag: {
+//               type: {
+//                 _eq: 'dish',
+//               },
+//             },
+//           },
+//           limit: 8,
+//           order_by: [
+//             {
+//               upvotes: order_by.desc,
+//             },
+//           ],
+//         })
+//         .map((x) => x.tag),
+//     }
+//   }),
+// }

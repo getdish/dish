@@ -43,7 +43,7 @@ export const RestaurantCardContent = memo(
       hoverable = true,
       below,
     }: RestaurantCardProps) => {
-      const restaurant = queryRestaurant(restaurantSlug)
+      const [restaurant] = queryRestaurant(restaurantSlug)
       const [price_label, price_color, price_range] = priceRange(restaurant)
       const restaurantPhoto = restaurant.photo_table({
         order_by: [{ photo: { quality: order_by.desc } }],

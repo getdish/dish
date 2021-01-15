@@ -55,7 +55,7 @@ export const RestaurantPointsBreakdown = memo(
       restaurantId: string
       showTable?: boolean
     }) => {
-      const restaurant = queryRestaurant(restaurantSlug)
+      const [restaurant] = queryRestaurant(restaurantSlug)
       const sources = restaurant.sources() ?? {}
       const [showTable, setShowTable] = useState(showTableDefault)
       const totalReviews = useTotalReviews(restaurant)

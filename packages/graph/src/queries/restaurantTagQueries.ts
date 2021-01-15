@@ -43,33 +43,36 @@ export async function restaurantTagUpsert(
 
       return obj
     },
-    '*',
-    fn ||
-      ((returning: restaurant_tag[]) => {
-        return returning.map((r_t) => {
-          const rest_tags = r_t.restaurant.tags()
-          return {
-            restaurant: {
-              ...selectFields(r_t.restaurant),
-              tags: rest_tags.map((r_t_2) => {
-                const tag_categories = r_t_2.tag.categories()
-                return {
-                  tag: {
-                    ...selectFields(r_t_2.tag),
-                    categories: tag_categories.map((cat) => {
-                      return {
-                        category: selectFields(cat.category),
-                      }
-                    }),
-                    parent: selectFields(r_t_2.tag.parent),
-                  },
-                  reviews: selectFields(r_t_2.reviews(), '*', 2),
-                }
-              }),
-            },
-          }
-        })
-      })
+    {
+      keys: '*',
+      select:
+        fn ||
+        ((returning: restaurant_tag[]) => {
+          return returning.map((r_t) => {
+            const rest_tags = r_t.restaurant.tags()
+            return {
+              restaurant: {
+                ...selectFields(r_t.restaurant),
+                tags: rest_tags.map((r_t_2) => {
+                  const tag_categories = r_t_2.tag.categories()
+                  return {
+                    tag: {
+                      ...selectFields(r_t_2.tag),
+                      categories: tag_categories.map((cat) => {
+                        return {
+                          category: selectFields(cat.category),
+                        }
+                      }),
+                      parent: selectFields(r_t_2.tag.parent),
+                    },
+                    reviews: selectFields(r_t_2.reviews(), '*', 2),
+                  }
+                }),
+              },
+            }
+          })
+        }),
+    }
   )
   return (response as any)[0].restaurant
 }

@@ -11,5 +11,5 @@ export const queryRestaurant = (slug: string) => {
       },
     },
     limit: 1,
-  })[0]
+  })
 }

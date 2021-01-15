@@ -512,6 +512,7 @@ export const AutocompleteItemView = memo(
     onSelect,
     result,
     showAddButton,
+    onAdd,
     hideBackground,
     preventNavigate,
     index,
@@ -523,6 +524,7 @@ export const AutocompleteItemView = memo(
     showAddButton?: boolean
     onSelect: AutocompleteSelectCb
     hideBackground?: boolean
+    onAdd?: () => any
   }) => {
     const showLocation = target === 'location'
     const theme = useTheme()
@@ -533,7 +535,9 @@ export const AutocompleteItemView = memo(
     const plusButtonEl = showAddButton ? (
       <>
         <VStack flex={1} />
-        <AutocompleteAddButton />
+        <CircleButton marginLeft={10} onPressOut={onAdd}>
+          <Plus size={16} />
+        </CircleButton>
       </>
     ) : null
 
@@ -654,21 +658,6 @@ const HomeAutocompleteDefault = memo(() => {
     </HStack>
   )
 })
-
-function AutocompleteAddButton() {
-  return (
-    <VStack padding={5}>
-      <CircleButton
-        onPressOut={(e) => {
-          console.log('e', e)
-          alert('add to current search results')
-        }}
-      >
-        <Plus size={16} />
-      </CircleButton>
-    </VStack>
-  )
-}
 
 async function filterAutocompletes(
   query: string,

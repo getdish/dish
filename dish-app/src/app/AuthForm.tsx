@@ -423,15 +423,14 @@ function SubmittableForm({
     onSubmit()
   }
   return (
-    <Form onSubmit={handleSubmit}>
-      {!isSuccess && isWeb && (
-        <input
-          onSubmit={handleSubmit}
-          type="submit"
-          style={{ visibility: 'hidden', height: 0 }}
-        />
-      )}
-
+    <Form
+      onSubmit={handleSubmit}
+      onKeyPress={(e) => {
+        if (e.key === 'Enter') {
+          handleSubmit()
+        }
+      }}
+    >
       <VStack spacing="sm" minWidth={260}>
         {!isSuccess && (
           <Suspense fallback={null}>

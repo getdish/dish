@@ -30,7 +30,7 @@ export const RestaurantButton = memo(
       subtle?: boolean
       maxInnerWidth?: number
     } & LinkButtonProps) => {
-      const restaurant = queryRestaurant(restaurantSlug)
+      const [restaurant] = queryRestaurant(restaurantSlug)
       if (!restaurant) {
         // got an error when resizing between small/regular
         return null

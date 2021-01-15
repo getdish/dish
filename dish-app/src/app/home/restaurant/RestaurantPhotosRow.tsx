@@ -26,7 +26,7 @@ export const RestaurantPhotosRow = memo(
       width: number
       height: number
     }) => {
-      const restaurant = queryRestaurant(restaurantSlug)
+      const [restaurant] = queryRestaurant(restaurantSlug)
       const photos = restaurant.photo_table({
         limit: 6,
         order_by: [

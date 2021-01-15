@@ -10,7 +10,7 @@ export function queryRestaurantTagScores({
   restaurantSlug: string
   tagSlugs: string[]
 }) {
-  const restaurant = queryRestaurant(restaurantSlug)
+  const [restaurant] = queryRestaurant(restaurantSlug)
   return tagSlugs
     .map((slug) => {
       const rtag = restaurant.tags({

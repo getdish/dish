@@ -180,7 +180,7 @@ export const RestaurantSourcesOverview = graphql(
     tagName?: string | null
     restaurantSlug: string
   }) => {
-    const restaurant = queryRestaurant(restaurantSlug)
+    const [restaurant] = queryRestaurant(restaurantSlug)
     const spacing = 12
 
     const items = tagName

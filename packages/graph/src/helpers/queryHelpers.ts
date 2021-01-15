@@ -10,12 +10,14 @@ import {
   restaurant_constraint,
   review_constraint,
   review_tag_sentence_constraint,
+  setCache,
   setting_constraint,
   tag_constraint,
   tag_tag_constraint,
   user_constraint,
 } from '../graphql'
 import {
+  MutationOpts,
   resolvedMutation,
   resolvedMutationWithFields,
   resolvedWithFields,
@@ -80,13 +82,9 @@ export function createQueryHelpersFor<A extends ModelType>(
         keys
       )
     },
-    async update(
-      a: WithID<Partial<A>>,
-      fn?: (v: any) => unknown,
-      keys?: '*' | string[]
-    ) {
+    async update(a: WithID<Partial<A>>, opts?: MutationOpts) {
       //@ts-expect-error
-      return await update<WithID<A>>(modelName, a, fn, keys)
+      return await update<WithID<A>>(modelName, a, opts)
     },
     async findOne(a: Partial<A>, fn?: (v: any) => unknown) {
       return await findOne<WithID<A>>(modelName, a as any, fn)
@@ -129,7 +127,7 @@ export async function findAll<T extends ModelType>(
 export async function insert<T extends ModelType>(
   table: ModelName,
   objects: Partial<T>[],
-  fn?: (v: any) => unknown,
+  select?: (v: any) => unknown,
   keys?: string[]
 ): Promise<WithID<T>[]> {
   const action = `insert_${table}` as any
@@ -143,8 +141,7 @@ export async function insert<T extends ModelType>(
         objects: prepareData(table, objects, '_insert_input'),
       })
     },
-    keys,
-    fn
+    { keys, select }
   )
 }
 
@@ -152,7 +149,7 @@ export async function upsert<T extends ModelType>(
   table: ModelName,
   objectsIn: Partial<T>[],
   constraint?: string,
-  fn?: (v: any) => unknown,
+  select?: (v: any) => unknown,
   keys?: '*' | string[]
 ): Promise<WithID<T>[]> {
   constraint = constraint ?? defaultConstraints[table]
@@ -177,34 +174,49 @@ export async function upsert<T extends ModelType>(
 
       return m
     },
-    keys,
-    fn
+    { keys, select }
   )
 }
+
+const res = mutation.update_list_by_pk({
+  pk_columns: {
+    id: '',
+  },
+  _set: {} as any,
+})
 
 export async function update<T extends WithID<ModelType>>(
   table: ModelName,
   objectIn: T,
-  fn?: (v: any) => unknown,
-  keys?: '*' | string[]
+  opts: MutationOpts = {}
 ): Promise<WithID<T>> {
-  const action = `update_${table}` as any
+  const action = `update_${table}_by_pk` as any
   const [object] = prepareData(table, [objectIn], '_set_input')
+  if (!object.id) {
+    throw new Error(`Must have ID to update`)
+  }
   for (const key of Object.keys(object)) {
     if (object[key] == null) delete object[key]
   }
-  keys = keys || Object.keys(generatedSchema[table + '_set_input'])
-  const [resolved] = await resolvedMutationWithFields(
-    () => {
+  opts.keys = opts.keys || Object.keys(generatedSchema[table + '_set_input'])
+  const resolved = await resolvedMutationWithFields(
+    (mutation, { assignSelections }) => {
       const res = mutation[action]({
-        where: { id: { _eq: object.id } },
+        pk_columns: {
+          id: object.id,
+        },
         _set: object,
       })
-      return res as WithID<T>[]
+      if (opts.query && res) {
+        assignSelections(opts.query, res)
+      }
+      return res as WithID<T>
     },
-    keys,
-    fn
+    opts
   )
+  if (opts.query && resolved) {
+    setCache(opts.query, resolved)
+  }
   return resolved
 }
 

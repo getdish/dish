@@ -38,13 +38,13 @@ import { setDefaultLocation } from '../../helpers/getDefaultLocation'
 import { getGroupedButtonProps } from '../../helpers/getGroupedButtonProps'
 import { selectTagDishViewSimple } from '../../helpers/selectDishViewSimple'
 import { useQueryLoud } from '../../helpers/useQueryLoud'
+import { queryRestaurant } from '../../queries/queryRestaurant'
 import { router, useIsRouteActive } from '../../router'
 import { HomeStateItemHome } from '../../types/homeTypes'
 import { AppIntroLogin } from '../AppIntroLogin'
 import { useSetAppMapResults } from '../AppMapStore'
 import { useHomeStore } from '../homeStore'
 import { usePageLoadEffect } from '../hooks/usePageLoadEffect'
-import { queryRestaurant } from '../../queries/queryRestaurant'
 import { CardFrame, cardFrameBorderRadius } from '../views/CardFrame'
 import { CommentBubble } from '../views/CommentBubble'
 import { ContentScrollView } from '../views/ContentScrollView'
@@ -623,7 +623,7 @@ const DishCol = (props: StackProps) => {
 }
 
 const DishFeedCard = graphql(function DishFeedCard(props: FeedItemDish) {
-  const restaurant = queryRestaurant(props.restaurant.slug)
+  const [restaurant] = queryRestaurant(props.restaurant.slug)
   return (
     <CardFrame aspectFixed transparent>
       <VStack position="relative" alignSelf="center">

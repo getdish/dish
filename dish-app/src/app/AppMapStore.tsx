@@ -12,10 +12,10 @@ import {
 } from '../helpers/getDefaultLocation'
 import { getNavigateItemForState } from '../helpers/getNavigateItemForState'
 import { reverseGeocode } from '../helpers/reverseGeocode'
+import { queryRestaurant } from '../queries/queryRestaurant'
 import { router } from '../router'
 import { autocompleteLocationStore } from './AppAutocomplete'
 import { homeStore } from './homeStore'
-import { queryRestaurant } from '../queries/queryRestaurant'
 import { inputStoreLocation } from './inputStore'
 
 type MapPosition = {
@@ -151,7 +151,7 @@ export const useSetAppMapResults = (props: {
               allResults
                 .map(({ id, slug }) => {
                   if (!slug) return null
-                  const r = queryRestaurant(slug)
+                  const [r] = queryRestaurant(slug)
                   if (!r) return null
                   const coords = r?.location?.coordinates
                   return {

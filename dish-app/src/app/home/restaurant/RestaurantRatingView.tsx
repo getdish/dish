@@ -22,7 +22,7 @@ export default memo(
     let { restaurantSlug, rating, ...rest } = props
     // optionally fetch
     if (typeof rating === 'undefined') {
-      const restaurant = queryRestaurant(restaurantSlug)
+      const [restaurant] = queryRestaurant(restaurantSlug)
       rating = restaurant.rating
     }
     const percent = getRestaurantRating(rating ?? 0)

@@ -10,7 +10,7 @@ export const queryRestaurantTags = ({
   restaurantSlug: string
   limit?: number
 }) => {
-  const restaurant = queryRestaurant(restaurantSlug)
+  const [restaurant] = queryRestaurant(restaurantSlug)
   const restaurantTags = restaurant.tags({
     limit,
     where: {

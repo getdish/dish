@@ -74,7 +74,7 @@ export const GalleryLightbox = ({
     }
   })
   const query = useQuery()
-  const restaurant = queryRestaurant(restaurantSlug)
+  const [restaurant] = queryRestaurant(restaurantSlug)
   restaurant.id
   const [pagination, setPagination] = useState(() => ({ limit: 20, offset: 0 }))
   const [photosList, setPhotosList] = useState<photo[]>(() => [])

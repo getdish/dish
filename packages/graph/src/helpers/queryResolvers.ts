@@ -1,39 +1,30 @@
 import { selectFields } from '@dish/gqless'
 import { merge } from 'lodash'
 
-import { resolved } from '../graphql'
+import { Mutation, Query, mutate, resolved } from '../graphql'
 
-// just a helper that clears our cache after mutations for now
-export async function resolvedMutation<T extends () => unknown>(
-  resolver: T
-): Promise<
-  T extends () => {
-    returning: infer X
-  }
-    ? X
-    : any
-> {
-  const next = await resolved(resolver, {
-    noCache: true,
-  })
-  //@ts-expect-error
-  return next
+export type MutationOpts = {
+  select?: (v: any) => unknown
+  keys?: '*' | string[]
+  query?: any
 }
 
+// just a helper that clears our cache after mutations for now
+export const resolvedMutation = mutate
+
 export async function resolvedMutationWithFields<T>(
-  resolver: () => T,
-  fields: (string | number)[] | '*' = '*',
-  fn?: (v: any) => unknown
+  resolver: (
+    mutation: Mutation,
+    opts: { setCache: Function; query: Query; assignSelections: Function }
+  ) => T,
+  { keys, select }: MutationOpts = {}
 ): Promise<T> {
-  //@ts-expect-error
-  return await resolvedMutation(() => {
-    const res = resolver()
-
+  return await resolvedMutation((mutation, opts) => {
+    const res = resolver(mutation, opts)
     const returning = (res as any).returning
-    const obj = selectFields(returning, fields as any) as any
-
-    if (fn) {
-      merge(obj, fn(returning))
+    const obj = selectFields(returning, keys as any) as any
+    if (select) {
+      merge(obj, select(returning))
     }
     return obj
   })
