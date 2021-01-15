@@ -1,26 +1,12 @@
 import { graphql, order_by } from '@dish/graph'
 import React, { Suspense, memo, useCallback, useState } from 'react'
-import { Image, StyleSheet } from 'react-native'
-import {
-  AbsoluteVStack,
-  HStack,
-  LinearGradient,
-  Paragraph,
-  Spacer,
-  VStack,
-  useTheme,
-} from 'snackui'
+import { AbsoluteVStack } from 'snackui'
 
-import { getColorsForName } from '../../../helpers/getColorsForName'
 import { queryRestaurant } from '../../../queries/queryRestaurant'
-import {
-  CardFrame,
-  cardFrameBorderRadius,
-  cardFrameHeight,
-  cardFrameWidth,
-} from '../../views/CardFrame'
+import { CardFrame } from '../../views/CardFrame'
 import { Link } from '../../views/Link'
 import { RestaurantUpVoteDownVote } from '../../views/restaurant/RestaurantUpVoteDownVote'
+import { Card } from './Card'
 import { priceRange } from './RestaurantDetailRow'
 
 export type RestaurantCardProps = {
@@ -57,22 +43,8 @@ export const RestaurantCardContent = memo(
       hoverable = true,
       below,
     }: RestaurantCardProps) => {
-      const theme = useTheme()
       const restaurant = queryRestaurant(restaurantSlug)
-      // const scale = size === 'lg' ? 1.2 : size == 'sm' ? 0.6 : 1
-      const [hideInfo, setHideInfo] = useState(false)
       const [price_label, price_color, price_range] = priceRange(restaurant)
-      const {
-        altPastelColor,
-        pastelColor,
-        lightColor,
-        color,
-      } = getColorsForName(restaurant.name)
-
-      const handleOnIsAtStart = useCallback((x) => {
-        setHideInfo(!x)
-      }, [])
-
       const restaurantPhoto = restaurant.photo_table({
         order_by: [{ photo: { quality: order_by.desc } }],
         limit: 1,
@@ -80,78 +52,12 @@ export const RestaurantCardContent = memo(
 
       return (
         <Link name="restaurant" asyncClick params={{ slug: restaurantSlug }}>
-          <CardFrame aspectFixed={aspectFixed} hoverable={hoverable}>
-            <VStack
-              className="safari-fix-overflow"
-              width="100%"
-              overflow="hidden"
-              alignSelf="center"
-              position="relative"
-              borderRadius={cardFrameBorderRadius}
-              backgroundColor={theme.backgroundColor}
-            >
-              {/* <AbsoluteVStack
-                fullscreen
-                className="ease-in-out"
-                opacity={hideInfo ? 0 : 1}
-                pointerEvents="none"
-                transform={[{ scaleX: 0.98 }, { scaleY: 0.98 }]}
-                zIndex={10}
-                borderRadius={cardFrameBorderRadius - 2}
-                shadowColor="#000"
-                // shadowRadius={40}
-              /> */}
-              <AbsoluteVStack
-                className="ease-in-out"
-                opacity={hideInfo ? 0 : 1}
-                pointerEvents="none"
-                fullscreen
-                zIndex={10}
-              >
-                <LinearGradient
-                  style={StyleSheet.absoluteFill}
-                  colors={[
-                    `${altPastelColor}00`,
-                    `${lightColor}00`,
-                    `${lightColor}00`,
-                    altPastelColor,
-                  ]}
-                  start={[1, 0]}
-                  end={[0, 1]}
-                />
-                <LinearGradient
-                  style={[StyleSheet.absoluteFill, { opacity: 0.85 }]}
-                  colors={[
-                    color,
-                    pastelColor,
-                    `${pastelColor}99`,
-                    `${pastelColor}00`,
-                    `${pastelColor}00`,
-                  ]}
-                  start={[1, 0]}
-                  end={[0.9, 0.1]}
-                />
-              </AbsoluteVStack>
-              <Image
-                resizeMode="cover"
-                width={cardFrameWidth}
-                height={cardFrameHeight}
-                style={{
-                  width: aspectFixed ? cardFrameWidth : '100%',
-                  height: cardFrameHeight,
-                  opacity: 0.5,
-                }}
-                source={{ uri: restaurantPhoto }}
-              />
-            </VStack>
-            <AbsoluteVStack
-              alignItems="flex-start"
-              fullscreen
-              justifyContent="flex-end"
-              pointerEvents="none"
-              zIndex={10}
-            >
-              {!hideScore && (
+          <Card
+            title={restaurant.name}
+            subTitle={price_range}
+            below={below}
+            outside={
+              !hideScore && (
                 <AbsoluteVStack top={-10} left={-10} zIndex={20}>
                   <RestaurantUpVoteDownVote
                     rounded
@@ -159,44 +65,12 @@ export const RestaurantCardContent = memo(
                     restaurantSlug={restaurantSlug}
                   />
                 </AbsoluteVStack>
-              )}
-
-              <VStack
-                className="ease-in-out"
-                opacity={hideInfo ? 0 : 1}
-                padding={15}
-                alignItems="flex-start"
-                spacing
-                width="100%"
-                height="100%"
-              >
-                <HStack width="100%">
-                  <VStack minWidth={60} flex={1} />
-                  <VStack alignItems="flex-end">
-                    <Paragraph
-                      textAlign="right"
-                      size="xxl"
-                      sizeLineHeight={0.7}
-                      textShadowColor="#00000011"
-                      textShadowRadius={1}
-                      textShadowOffset={{ height: 2, width: 0 }}
-                      color="#fff"
-                      fontWeight="800"
-                      letterSpacing={-0.5}
-                    >
-                      {restaurant.name}
-                    </Paragraph>
-                    <Spacer size="xs" />
-                    <Paragraph textAlign="right" color="#fff" fontWeight="500">
-                      {price_range}
-                    </Paragraph>
-                  </VStack>
-                </HStack>
-                <VStack flex={1} />
-                {below}
-              </VStack>
-            </AbsoluteVStack>
-          </CardFrame>
+              )
+            }
+            photo={restaurantPhoto}
+            aspectFixed={aspectFixed}
+            hoverable={hoverable}
+          />
         </Link>
       )
     }

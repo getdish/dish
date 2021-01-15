@@ -22,6 +22,7 @@ import { useSetAppMapResults } from '../../AppMapStore'
 import { useUserStore } from '../../userStore'
 import { ContentScrollView } from '../../views/ContentScrollView'
 import { Link } from '../../views/Link'
+import { ListCard } from '../../views/list/ListCard'
 import { NotFoundPage } from '../../views/NotFoundPage'
 import { SlantedTitle } from '../../views/SlantedTitle'
 import { SmallButton } from '../../views/SmallButton'
@@ -94,6 +95,10 @@ const UserPageContent = graphql(
     pane,
   }: StackItemProps<HomeStateItemUser> & { pane: UserPane }) => {
     const user = useUserQuery(item.username ?? '')
+    const lists = user.lists({
+      limit: 10,
+      order_by: [{ created_at: order_by.asc }],
+    })
     const reviews = useUserReviews(user, pane || 'both')
     const hasReviews = !!reviews?.length
 
@@ -116,6 +121,17 @@ const UserPageContent = graphql(
                 <Paragraph size="lg">{user.about}</Paragraph>
               </VStack>
             )}
+
+            <SlantedTitle>Lists</SlantedTitle>
+            <HStack marginHorizontal={-20}>
+              <ScrollView horizontal showsHorizontalScrollIndicator={false}>
+                <HStack margin={20} spacing>
+                  {lists.map((list) => {
+                    return <ListCard key={list.slug} slug={list.slug} />
+                  })}
+                </HStack>
+              </ScrollView>
+            </HStack>
 
             <SlantedTitle>Recently</SlantedTitle>
 
