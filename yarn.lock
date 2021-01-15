@@ -16914,7 +16914,7 @@ uglify-es@^3.1.9:
     commander "~2.13.0"
     source-map "~0.6.1"
 
-ultra-runner@^3.7.1:
+ultra-runner@^3.9.0:
   version "3.9.0"
   resolved "https://registry.npmjs.org/ultra-runner/-/ultra-runner-3.9.0.tgz#bd4ed4e6b08c2b72eec4ee489f673927a814a636"
   integrity sha512-ekJfZ3PQqwueNRuxxWWSU1mHqo6M4F7Cn8z/OWXxLAeohP4Nrv9/TdOSo9lDg5JxEG4mvGT9Jc+oXYInOgOHeg==
