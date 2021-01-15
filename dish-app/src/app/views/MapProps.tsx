@@ -19,6 +19,7 @@ export type MapProps = {
   hovered?: string
   centerToResults?: number
   showRank?: boolean
+  zoomOnHover?: boolean
 }
 
 type MapPosition = { center: LngLat; span: LngLat }

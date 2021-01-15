@@ -164,8 +164,6 @@ const HomeMapPIPContent = graphql(() => {
   //   }
   // }, [map, annotation])
 
-  console.log('pipAction', pipAction)
-
   return (
     <VStack
       pointerEvents="auto"

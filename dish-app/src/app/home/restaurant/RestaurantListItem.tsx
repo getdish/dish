@@ -155,6 +155,7 @@ const RestaurantListItemMain = memo(function RestaurantListItemMain(
           setHoveredSlow({
             id: props.restaurantId,
             slug: props.restaurantSlug,
+            via: 'list',
           })
         }}
         onMouseLeave={() => {

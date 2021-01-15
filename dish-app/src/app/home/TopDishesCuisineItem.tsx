@@ -153,10 +153,6 @@ const TopDishesCuisineItem = memo(
     )
   }
 )
-let lastHoveredId
-const setHoveredRestaurant = _.debounce((val) => {
-  appMapStore.setHovered(val)
-}, 200)
 
 const TopDishesTrendingRestaurants = memo(
   ({ country }: { country: TopCuisine }) => {
@@ -192,18 +188,14 @@ const TopDishesTrendingRestaurants = memo(
                     subtle
                     restaurantSlug={restaurant.slug ?? ''}
                     onHoverIn={() => {
-                      lastHoveredId = restaurant.id
-                      setHoveredRestaurant.cancel()
-                      setHoveredRestaurant({
+                      appMapStore.setHovered({
                         id: restaurant.id,
                         slug: restaurant.slug,
+                        via: 'list',
                       })
                     }}
                     onHoverOut={() => {
-                      if (lastHoveredId === restaurant.id) {
-                        setHoveredRestaurant.cancel()
-                        appMapStore.setHovered(null)
-                      }
+                      appMapStore.setHovered(null)
                     }}
                   />
                 </HStack>
