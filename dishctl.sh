@@ -841,7 +841,7 @@ function build_all_dish_services() {
   echo "Pulling base..."
   docker pull $BASE_IMAGE
   echo "Building worker, dish-hooks, search, dish-app in parallel..."
-  parallel--tag --lb _build_dish_service ::: \
+  parallel --tag --lb _build_dish_service ::: \
     'services/worker' \
     'services/dish-hooks' \
     'services/search' \
