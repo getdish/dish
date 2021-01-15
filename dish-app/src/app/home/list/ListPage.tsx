@@ -2,13 +2,14 @@
 import { series, sleep } from '@dish/async'
 import {
   List,
+  client,
   graphql,
   list,
   listInsert,
   listUpdate,
   mutate,
-  mutation,
   order_by,
+  query,
   resolved,
   slugify,
   useRefetch,
@@ -38,6 +39,7 @@ import {
   allColors,
   allColorsPastel,
   allDarkColor,
+  bgLight,
 } from '../../../constants/colors'
 import { getRestaurantIdentifiers } from '../../../helpers/getRestaurantIdentifiers'
 import { queryList } from '../../../queries/queryList'
@@ -46,15 +48,17 @@ import { HomeStateItemList } from '../../../types/homeTypes'
 import { useSetAppMapResults } from '../../AppMapStore'
 import { useStateSynced } from '../../hooks/useStateSynced'
 import { useUserStore, userStore } from '../../userStore'
-import { CloseButton } from '../../views/CloseButton'
+import { CloseButton, SmallCircleButton } from '../../views/CloseButton'
 import { ContentScrollView } from '../../views/ContentScrollView'
 import { Link } from '../../views/Link'
 import { PaneControlButtons } from '../../views/PaneControlButtons'
 import { ScalingPressable } from '../../views/ScalingPressable'
 import { SlantedTitle } from '../../views/SlantedTitle'
+import { SmallButton } from '../../views/SmallButton'
 import { StackDrawer } from '../../views/StackDrawer'
 import { UpvoteDownvoteScore } from '../../views/UpvoteDownvoteScore'
 import { StackItemProps } from '../HomeStackView'
+import { CircleButton } from '../restaurant/CircleButton'
 import { RestaurantListItem } from '../restaurant/RestaurantListItem'
 import { PageTitle } from '../search/PageTitle'
 import { BottomFloatingArea } from './BottomFloatingArea'
@@ -146,27 +150,46 @@ function useListRestaurants(list: list) {
   })
   const items =
     itemsQuery.map((r) => {
-      r.restaurant.id
+      const dishQuery = r.tags({
+        limit: 5,
+        order_by: [{ position: order_by.asc }],
+      })
       return {
+        dishQuery,
+        restaurantId: r.restaurant.id,
         restaurant: r.restaurant,
         comment: r.comment,
         position: r.position,
-        dishes: r
-          .tags({
-            limit: 5,
-            order_by: [{ position: order_by.asc }],
-          })
-          .map((listTag) => {
-            return listTag.restaurant_tag
-          }),
+        dishes: dishQuery.map((listTag) => listTag.restaurant_tag),
       }
     }) ?? []
+
+  async function setOrder(ids: string[]) {
+    await mutate((mutation) => {
+      // seed because it doesnt do it all in one step causing uniqueness violations
+      const seed = Math.floor(Math.random() * 10000)
+      ids.forEach((rid, position) => {
+        mutation.update_list_restaurant_by_pk({
+          pk_columns: {
+            list_id: list.id,
+            restaurant_id: rid,
+          },
+          _set: {
+            position: (position + 1) * seed,
+          },
+        }).__typename
+      })
+    })
+    await refetch(list)
+  }
+
   return [
     items,
     {
+      setOrder,
       add: async (id: string) => {
-        await resolved(() => {
-          return mutation.insert_list_restaurant_one({
+        await mutate((mutation) => {
+          mutation.insert_list_restaurant_one({
             object: {
               // negative to go first + space it out
               position: -items.length * 100,
@@ -175,7 +198,57 @@ function useListRestaurants(list: list) {
             },
           }).__typename
         })
-        refetch(itemsQuery)
+        await refetch(itemsQuery)
+      },
+      async promote(index: number) {
+        if (index == 0) return
+        const now = items.map((x) => x.restaurant.id as string)
+        const next = promote(now, index)
+        await setOrder(next)
+      },
+      async delete(id: string) {
+        await mutate((mutation) => {
+          mutation.delete_list_restaurant({
+            where: {
+              restaurant_id: {
+                _eq: id,
+              },
+            },
+          }).affected_rows
+        })
+        delete client.cache.query
+        await refetch(itemsQuery)
+      },
+      async setDishes(id: string, dishTags: string[]) {
+        const { dishQuery } = items.find((x) => x.restaurantId === id)
+        const rtagids = await resolved(() =>
+          query
+            .restaurant_tag({ where: { tag: { slug: { _in: dishTags } } } })
+            .map((x) => x.id)
+        )
+        await mutate((mutation) => {
+          // immutable style
+          // first delete old ones
+          mutation.delete_list_restaurant_tag({
+            where: {
+              list_restaurant_id: {
+                _eq: id,
+              },
+            },
+          }).__typename
+          // then add news ones
+          for (const [position, rid] of rtagids.entries()) {
+            mutation.insert_list_restaurant_tag_one({
+              object: {
+                restaurant_tag_id: rid,
+                list_restaurant_id: id,
+                list_id: list.id,
+                position,
+              },
+            }).__typename
+          }
+        })
+        refetch(dishQuery)
       },
     },
   ] as const
@@ -415,74 +488,66 @@ const ListPageContent = graphql((props: Props) => {
           )}
         </VStack>
 
-        {restaurants.map(({ restaurant, comment, dishes, position }, index) => {
-          const dishSlugs = dishes.map((x) => x.tag.slug)
-          if (!restaurant.slug) {
-            return null
-          }
-          return (
-            <RestaurantListItem
-              key={restaurant.slug}
-              curLocInfo={props.item.curLocInfo ?? null}
-              restaurantId={restaurant.id}
-              restaurantSlug={restaurant.slug}
-              rank={index + 1}
-              description={comment}
-              hideTagRow
-              above={
-                <UpvoteDownvoteScore
-                  score={index + 1}
-                  setVote={async (vote) => {
-                    const now = restaurants.map((x) => x.restaurant.id)
-                    const moveUpIndex = vote === 1 ? index : index + 1
-                    if (moveUpIndex == 0) return
-                    // now move it
-                    const next = ((now) => {
-                      const [id] = now.splice(moveUpIndex, 1)
-                      if (!id) return
-                      now.splice(moveUpIndex - 1, 0, id)
-                      return now
-                    })([...now])
-                    // seems like hasura isnt merging it into one big mutation
-                    const seed = Math.round(Math.random() * 1000)
-                    await mutate((mutation) => {
-                      const mutations = []
-                      for (const [position, rid] of next.entries()) {
-                        mutations.push(
-                          mutation.update_list_restaurant_by_pk({
-                            pk_columns: {
-                              list_id: list.id,
-                              restaurant_id: rid,
-                            },
-                            _set: {
-                              position: (position + 1) * seed,
-                            },
-                          }).__typename
+        {restaurants.map(
+          ({ restaurantId, restaurant, comment, dishes, position }, index) => {
+            const dishSlugs = dishes.map((x) => x.tag.slug)
+            if (!restaurant.slug) {
+              return null
+            }
+            return (
+              <RestaurantListItem
+                key={restaurant.slug}
+                curLocInfo={props.item.curLocInfo ?? null}
+                restaurantId={restaurantId}
+                restaurantSlug={restaurant.slug}
+                rank={index + 1}
+                description={comment}
+                hideTagRow
+                above={
+                  <>
+                    {isEditing && (
+                      <AbsoluteVStack top={-28} left={28}>
+                        <CircleButton
+                          backgroundColor={bgLight}
+                          width={44}
+                          height={44}
+                          onPress={() => {
+                            restaurantActions.delete(restaurantId)
+                          }}
+                        >
+                          <X size={20} />
+                        </CircleButton>
+                      </AbsoluteVStack>
+                    )}
+                    <UpvoteDownvoteScore
+                      score={index + 1}
+                      setVote={async (vote) => {
+                        restaurantActions.promote(
+                          vote === 1 ? index : index + 1
                         )
-                      }
-                      return mutations
-                    })
-                    refetch(list)
-                  }}
-                />
-              }
-              flexibleHeight
-              dishSlugs={dishSlugs.length ? dishSlugs : null}
-              editableDishes={isEditing}
-              onChangeDishes={(dishes) => {
-                console.log('should change dishes', dishes)
-              }}
-              editableDescription={isEditing}
-              onChangeDescription={(next) => {
-                console.log('should change descirption', next)
-              }}
-              editablePosition={isEditing}
-              onChangePosition={(next) => {
-                console.log('should change position', next)
-              }}
-            />
-          )
-        })}
+                      }}
+                    />
+                  </>
+                }
+                flexibleHeight
+                dishSlugs={dishSlugs.length ? dishSlugs : null}
+                editableDishes={isEditing}
+                onChangeDishes={async (dishes) => {
+                  console.log('should change dishes', dishes)
+                  restaurantActions.setDishes(restaurantId, dishes)
+                }}
+                editableDescription={isEditing}
+                onChangeDescription={(next) => {
+                  console.log('should change descirption', next)
+                }}
+                editablePosition={isEditing}
+                onChangePosition={(next) => {
+                  console.log('should change position', next)
+                }}
+              />
+            )
+          }
+        )}
       </ContentScrollView>
     </StackDrawer>
   )
@@ -537,6 +602,14 @@ function ColorPicker({
       </VStack>
     </Popover>
   )
+}
+
+function promote(items: any[], index: number): any[] {
+  const now = [...items]
+  const [id] = now.splice(index, 1)
+  if (!id) return
+  now.splice(index - 1, 0, id)
+  return now
 }
 
 // const list = {

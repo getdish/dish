@@ -701,7 +701,13 @@ export interface list_restaurant_tag_bool_exp {
 /** unique or primary key constraints on table "list_restaurant_tag" */
 export enum list_restaurant_tag_constraint {
   /** unique or primary key constraint */
+  list_restaurant_tag_id_key = 'list_restaurant_tag_id_key',
+  /** unique or primary key constraint */
+  list_restaurant_tag_list_id_list_restaurant_id_restaurant_tag_i = 'list_restaurant_tag_list_id_list_restaurant_id_restaurant_tag_i',
+  /** unique or primary key constraint */
   list_restaurant_tag_pkey = 'list_restaurant_tag_pkey',
+  /** unique or primary key constraint */
+  list_restaurant_tag_position_list_id_list_restaurant_id_key = 'list_restaurant_tag_position_list_id_list_restaurant_id_key',
 }
 
 /** input type for incrementing integer column in table "list_restaurant_tag" */
