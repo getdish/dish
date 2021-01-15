@@ -13,6 +13,7 @@ import {
   ChevronUp,
   ChevronsUp,
   MessageSquare,
+  X,
 } from '@dish/react-feather'
 import { useStoreInstance } from '@dish/use-store'
 import { debounce, sortBy } from 'lodash'
@@ -773,11 +774,10 @@ const EditRestaurantTags = graphql(
       setSlugs(tagSlugs)
     }, [JSON.stringify(tagSlugs)])
 
-    function getDishItem(dish: restaurant_tag, before: any) {
+    function getDishItem(dish: restaurant_tag, before = null, after = null) {
       return (
         <HStack key={dish.tag.slug} spacing padding={5} alignItems="center">
           {before}
-
           {!!dish.photos()?.[0] ? (
             <Image
               source={{ uri: dish.photos()[0] }}
@@ -786,8 +786,9 @@ const EditRestaurantTags = graphql(
           ) : (
             <Circle backgroundColor="rgba(150,150,150,0.29)" size={40} />
           )}
-
           <Title>{dish.tag.name}</Title>
+          <VStack flex={1} />
+          {after}
         </HStack>
       )
     }
@@ -825,12 +826,21 @@ const EditRestaurantTags = graphql(
 
           <ScrollView style={{ width: '100%' }}>
             <VStack padding={18}>
-              {dishes.map((dish) => {
+              {dishes.map((dish, index) => {
                 return getDishItem(
                   dish,
                   <VStack alignItems="center" justifyContent="center">
                     <ChevronUp size={16} color="rgba(150,150,150,0.9)" />
                     <ChevronDown size={16} color="rgba(150,150,150,0.9)" />
+                  </VStack>,
+                  <VStack
+                    onPress={() => {
+                      const next = [...tagSlugs]
+                      next.splice(index, 1)
+                      onChange(next)
+                    }}
+                  >
+                    <X size={16} color="#000" />
                   </VStack>
                 )
               })}

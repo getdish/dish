@@ -26,6 +26,7 @@
     ]
   },
   "dependencies": {
+    "@dish/graph": "*",
     "ts-node": "^9.1.1",
     "@oclif/command": "1.8.0",
     "@oclif/config": "1.17.0",
