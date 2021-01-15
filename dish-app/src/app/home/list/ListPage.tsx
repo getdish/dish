@@ -467,7 +467,7 @@ const ListPageContent = graphql((props: Props) => {
                 />
               }
               flexibleHeight
-              dishSlugs={dishSlugs}
+              dishSlugs={dishSlugs.length ? dishSlugs : null}
               editableDishes={isEditing}
               onChangeDishes={(dishes) => {
                 console.log('should change dishes', dishes)

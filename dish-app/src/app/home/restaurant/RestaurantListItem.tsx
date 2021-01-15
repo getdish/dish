@@ -1,5 +1,13 @@
 import { fullyIdle, series } from '@dish/async'
-import { RestaurantItemMeta, graphql, query, tagSlug } from '@dish/graph'
+import {
+  RestaurantItemMeta,
+  RestaurantTag,
+  Tag,
+  graphql,
+  query,
+  restaurant_tag,
+  tagSlug,
+} from '@dish/graph'
 import {
   ChevronDown,
   ChevronUp,
@@ -23,6 +31,7 @@ import {
   AbsoluteVStack,
   Button,
   Circle,
+  Divider,
   HStack,
   Input,
   LinearGradient,
@@ -67,6 +76,7 @@ import { SlantedTitle } from '../../views/SlantedTitle'
 import { SmallButton } from '../../views/SmallButton'
 import { TagButton, getTagButtonProps } from '../../views/TagButton'
 import { searchPageStore } from '../search/SearchPageStore'
+import { CircleButton } from './CircleButton'
 import { ensureFlexText } from './ensureFlexText'
 import { RankView } from './RankView'
 import { RestaurantAddress } from './RestaurantAddress'
@@ -672,7 +682,7 @@ const RestaurantPeekDishes = memo(
         {props.editable && (
           <EditRestaurantTags
             restaurantSlug={props.restaurantSlug}
-            tagSlugs={props.tagSlugs ?? []}
+            tagSlugs={props.tagSlugs ?? dishes.map((x) => x.slug)}
             onChange={props.onChangeTags}
           />
         )}
@@ -744,9 +754,43 @@ const EditRestaurantTags = graphql(
           limit: 1,
         })[0]
       })
-
       return sortBy(items, (x) => tagSlugs.indexOf(x.tag.slug))
     })()
+    const restDishes = restaurant.tags({
+      where: {
+        tag: {
+          type: {
+            _eq: 'dish',
+          },
+          slug: {
+            _nin: slugs,
+          },
+        },
+      },
+    })
+
+    useEffect(() => {
+      setSlugs(tagSlugs)
+    }, [JSON.stringify(tagSlugs)])
+
+    function getDishItem(dish: restaurant_tag, before: any) {
+      return (
+        <HStack key={dish.tag.slug} spacing padding={5} alignItems="center">
+          {before}
+
+          {!!dish.photos()?.[0] ? (
+            <Image
+              source={{ uri: dish.photos()[0] }}
+              style={{ width: 40, height: 40, borderRadius: 100 }}
+            />
+          ) : (
+            <Circle backgroundColor="rgba(150,150,150,0.29)" size={40} />
+          )}
+
+          <Title>{dish.tag.name}</Title>
+        </HStack>
+      )
+    }
 
     return (
       <>
@@ -758,7 +802,7 @@ const EditRestaurantTags = graphql(
           visible={isOpen}
           maxWidth={480}
           width="90%"
-          maxHeight={480}
+          maxHeight="90%"
           onDismiss={() => setIsOpen(false)}
         >
           <PaneControlButtons>
@@ -771,7 +815,7 @@ const EditRestaurantTags = graphql(
 
           <Spacer />
 
-          <VStack width="100%">
+          <VStack width="100%" flexShrink={0}>
             <Input
               backgroundColor={theme.backgroundColorSecondary}
               marginHorizontal={20}
@@ -782,39 +826,31 @@ const EditRestaurantTags = graphql(
           <ScrollView style={{ width: '100%' }}>
             <VStack padding={18}>
               {dishes.map((dish) => {
-                console.log(dish.photos())
-                return (
-                  <HStack
-                    key={dish.tag.slug}
-                    spacing
-                    padding={5}
-                    alignItems="center"
-                  >
-                    <VStack alignItems="center" justifyContent="center">
-                      <ChevronUp size={16} color="rgba(150,150,150,0.9)" />
-                      <ChevronDown size={16} color="rgba(150,150,150,0.9)" />
-                    </VStack>
+                return getDishItem(
+                  dish,
+                  <VStack alignItems="center" justifyContent="center">
+                    <ChevronUp size={16} color="rgba(150,150,150,0.9)" />
+                    <ChevronDown size={16} color="rgba(150,150,150,0.9)" />
+                  </VStack>
+                )
+              })}
 
-                    {!!dish.photos()?.[0] ? (
-                      <Image
-                        source={{ uri: dish.photos()[0] }}
-                        style={{ width: 40, height: 40, borderRadius: 100 }}
-                      />
-                    ) : (
-                      <Circle
-                        backgroundColor="rgba(150,150,150,0.29)"
-                        size={40}
-                      />
-                    )}
+              <Spacer />
+              <Divider />
+              <Spacer />
 
-                    <Title>{dish.tag.name}</Title>
-                  </HStack>
+              {restDishes.map((dish) => {
+                return getDishItem(
+                  dish,
+                  <VStack alignItems="center" justifyContent="center">
+                    <Text>+</Text>
+                  </VStack>
                 )
               })}
             </VStack>
           </ScrollView>
 
-          <HStack>
+          <HStack flexShrink={0}>
             <Theme name="active">
               <Button onPress={() => onChange(slugs)}>Save</Button>
             </Theme>
