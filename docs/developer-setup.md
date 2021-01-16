@@ -92,6 +92,8 @@ docker run -ti --rm tempname sh
 
 ## The Web App
 
+At the root of the monorepo:
+
 ### Install dependencies
 
 - `yarn install`
@@ -105,11 +107,17 @@ docker run -ti --rm tempname sh
 - `yarn web` (for development)
 - `yarn web:prod` (for production)
 
-### Build and run (pointed at production endpoints)
+### Endpoints
 
-In `./dish-app`:
+You'll want to add:
 
-- `yarn web:prod`
+```
+d1sh.com 127.0.0.1
+d1staging.com 127.0.0.1
+d1live.com 127.0.0.1
+```
+
+Which are for local, staging, prod, respectively.
 
 ### Run end to end tests
 
