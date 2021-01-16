@@ -33,7 +33,7 @@ export async function userFetchSimple(
   data: any = {},
   { handleLogOut }: { handleLogOut?: () => void } = {}
 ) {
-  const response = await fetch(ORIGIN + path, {
+  const init: RequestInit = {
     method,
     headers: {
       ...getAuthHeaders(),
@@ -41,7 +41,8 @@ export async function userFetchSimple(
       Accept: 'application/json',
     },
     body: JSON.stringify(data),
-  })
+  }
+  const response = await fetch(ORIGIN + path, init)
   if (response.status >= 300) {
     if (response.status == 401) {
       handleLogOut?.()
@@ -60,8 +61,8 @@ class AuthModel {
 
   getRedirectUri() {
     return isSafari
-      ? `${ORIGIN}/api/auth/appleAuthorize`
-      : `${ORIGIN}/api/auth/appleAuthorizeChrome`
+      ? `${ORIGIN}/api/user/appleAuthorize`
+      : `${ORIGIN}/api/user/appleAuthorizeChrome`
   }
 
   hasEverLoggedIn =
@@ -116,7 +117,7 @@ class AuthModel {
   }
 
   async register(username: string, email: string, password: string) {
-    const response = await this.api('POST', '/user', {
+    const response = await this.api('POST', '/api/user/new', {
       username,
       password,
       email,
@@ -137,7 +138,7 @@ class AuthModel {
     if (!username || !password) {
       throw new Error(`no username/password`)
     }
-    const response = await this.api('POST', '/auth/login', {
+    const response = await this.api('POST', '/api/user/login', {
       username,
       password,
     })
@@ -170,7 +171,7 @@ class AuthModel {
 
   // mostly same as login
   async appleAuth(authorization: { id_token: string; code: string }) {
-    const response = await this.api('POST', '/api/auth/appleVerify', {
+    const response = await this.api('POST', '/api/user/appleVerify', {
       ...authorization,
       redirectUri: Auth.getRedirectUri(),
     })

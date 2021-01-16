@@ -1045,7 +1045,7 @@ function docker_compose_up_for_devs() {
   extra=$1
   services=$(
     docker-compose config --services \
-      | grep -E -v 'base|nginx|dish-app-web|image-quality|image-proxy|bert' \
+      | grep -E -v 'base|nginx|image-quality|image-proxy|bert' \
       | tr '\r\n' ' '
   )
   echo "Starting the following services: $services"

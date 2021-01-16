@@ -1,20 +1,6 @@
 import { fullyIdle, series } from '@dish/async'
-import {
-  RestaurantItemMeta,
-  RestaurantTag,
-  Tag,
-  graphql,
-  query,
-  restaurant_tag,
-  tagSlug,
-} from '@dish/graph'
-import {
-  ChevronDown,
-  ChevronUp,
-  ChevronsUp,
-  MessageSquare,
-  X,
-} from '@dish/react-feather'
+import { RestaurantItemMeta, graphql, restaurant_tag } from '@dish/graph'
+import { ChevronDown, ChevronUp, MessageSquare, X } from '@dish/react-feather'
 import { useStoreInstance } from '@dish/use-store'
 import { debounce, sortBy } from 'lodash'
 import React, {
@@ -26,8 +12,7 @@ import React, {
   useRef,
   useState,
 } from 'react'
-import { Image } from 'react-native'
-import { Dimensions, ScrollView, StyleSheet } from 'react-native'
+import { Dimensions, Image, ScrollView, StyleSheet } from 'react-native'
 import {
   AbsoluteVStack,
   Button,
@@ -67,7 +52,6 @@ import { appMapStore } from '../../AppMapStore'
 import { CloseButton } from '../../views/CloseButton'
 import { ContentScrollViewHorizontal } from '../../views/ContentScrollViewHorizontal'
 import { DishView } from '../../views/dish/DishView'
-import { DishViewButton } from '../../views/dish/DishViewButton'
 import { Link } from '../../views/Link'
 import { PaneControlButtons } from '../../views/PaneControlButtons'
 import { RestaurantOverview } from '../../views/restaurant/RestaurantOverview'
@@ -77,7 +61,6 @@ import { SlantedTitle } from '../../views/SlantedTitle'
 import { SmallButton } from '../../views/SmallButton'
 import { TagButton, getTagButtonProps } from '../../views/TagButton'
 import { searchPageStore } from '../search/SearchPageStore'
-import { CircleButton } from './CircleButton'
 import { ensureFlexText } from './ensureFlexText'
 import { RankView } from './RankView'
 import { RestaurantAddress } from './RestaurantAddress'
@@ -479,6 +462,7 @@ const RestaurantListItemContent = memo(
                 <HStack
                   minHeight={44} // prevents clipping in lg size
                   transform={[{ translateY: -15 }]}
+                  className="safari-fix-overflow"
                   position="relative"
                   alignItems="center"
                   overflow="hidden"

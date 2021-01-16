@@ -5,7 +5,6 @@ import { tagDisplayName } from '../../constants/tagMeta'
 import { rgbString } from '../../helpers/rgbString'
 import { NavigableTag } from '../../types/tagTypes'
 import { Link } from './Link'
-import { LinkButton } from './LinkButton'
 
 export type LenseButtonSize = 'md' | 'lg' | 'xl'
 
@@ -49,7 +48,9 @@ export const LenseButton = ({
         height={scaledSize}
         backgroundColor={bg}
         borderRadius={100}
-        transform={[{ scale: 1 }]}
+        transform={[
+          { scale: media.sm ? (isActive ? 1.25 : 0.85) : isActive ? 1.25 : 1 },
+        ]}
         padding={0}
         marginRight={5}
         marginTop={-10}

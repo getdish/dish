@@ -34,12 +34,7 @@ import {
   VStack,
 } from 'snackui'
 
-import {
-  allColors,
-  allColorsPastel,
-  allDarkColor,
-  bgLight,
-} from '../../../constants/colors'
+import { bgLight } from '../../../constants/colors'
 import { getRestaurantIdentifiers } from '../../../helpers/getRestaurantIdentifiers'
 import { queryList } from '../../../queries/queryList'
 import { router } from '../../../router'
@@ -61,10 +56,9 @@ import { RestaurantListItem } from '../restaurant/RestaurantListItem'
 import { PageTitle } from '../search/PageTitle'
 import { BottomFloatingArea } from './BottomFloatingArea'
 import { ListAddRestuarant } from './ListAddRestuarant'
+import { getListColor, listColors } from './listColors'
 
 type Props = StackItemProps<HomeStateItemList>
-
-const listColors = [...allColors, ...allColorsPastel, ...allDarkColor]
 
 export default function ListPage(props: Props) {
   const isCreating = props.item.slug === 'create'
@@ -260,7 +254,7 @@ const ListPageContent = graphql((props: Props) => {
 
   const refetch = useRefetch()
   const [list] = queryList(props.item.slug)
-  const [color, setColor] = useStateSynced(listColors[list?.color] ?? '#999')
+  const [color, setColor] = useStateSynced(getListColor(list?.color) ?? '#999')
   const [isPublic, setPublic] = useStateSynced(list?.public ?? true)
   const [restaurants, restaurantActions] = useListRestaurants(list)
   const username = list.user.name ?? list.user.username

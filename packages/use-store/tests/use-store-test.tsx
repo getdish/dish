@@ -8,7 +8,7 @@ import {
 import { last } from 'lodash'
 import React, { StrictMode } from 'react'
 
-import { Store, createStore, useStore, useStoreInstance } from '../_'
+import { Store, createStore, useStore, useStoreInstance } from '../src'
 
 Error.stackTraceLimit = Infinity
 

@@ -1,22 +1,44 @@
-export const constants = 0
-export const isNode = typeof window == 'undefined'
+function getWindow() {
+  return typeof window !== 'undefined' ? window : null
+}
 
-export const isLive = process.env.IS_LIVE === '1'
-
-export const isHasuraLive =
-  (!isNode && window.location?.hostname.includes('live')) || isLive
-export const isDevProd =
-  process.env.TARGET === 'native' ||
-  (!isNode && window.location?.hostname.includes('dish'))
+export const isNode = process.env.TARGET === 'web' || !getWindow()
+export const isProd =
+  process.env.IS_LIVE === '1' ||
+  getWindow()?.location?.hostname.includes('live')
 export const isStaging =
   process.env.NODE_ENV === 'staging' ||
-  (!isNode && window.location?.hostname.includes('staging'))
-
-export const isDev = !isHasuraLive && !isDevProd && !isStaging
-
+  getWindow()?.location?.hostname.includes('staging')
+export const isDev = !isProd && !isStaging
 export const isNative = process.env.TARGET === 'native'
 export const isWorker =
   typeof document !== 'undefined' && !document.getElementById('root')
+
+export const JWT_SECRET =
+  process.env.JWT_SECRET || '12345678901234567890123456789012'
+
+const PROD_ORIGIN = 'https://staging.dishapp.com'
+
+export const ORIGIN =
+  process.env.ORIGIN ??
+  (isProd
+    ? PROD_ORIGIN
+    : isStaging
+    ? PROD_ORIGIN
+    : getWindow()?.location?.origin ?? 'http://localhost')
+
+export const SEARCH_DOMAIN = (() => {
+  const staging = 'https://search-staging.dishapp.com'
+  const live = staging
+  const local = `${ORIGIN}:10000`
+  if (isProd) {
+    return live
+  }
+  if (isStaging) {
+    return staging
+  }
+  return local
+})()
 
 export const ZeroUUID = '00000000-0000-0000-0000-000000000000'
 export const globalTagId = ZeroUUID
@@ -35,54 +57,3 @@ export const RESTAURANT_WEIGHTS = {
   grubhub: 0.2,
   google: 0.4,
 }
-
-export const JWT_SECRET =
-  process.env.JWT_SECRET || '12345678901234567890123456789012'
-
-const IS_LIVE =
-  typeof window !== 'undefined' && window.location?.origin.includes('live')
-const STAGING_ORIGIN = 'https://staging.dishapp.com'
-//const PROD_ORIGIN = 'https://dishapp.com'
-const PROD_ORIGIN = STAGING_ORIGIN
-const LOCAL_ORIGIN =
-  typeof window !== 'undefined'
-    ? IS_LIVE
-      ? PROD_ORIGIN
-      : window.location?.origin ?? 'http://localhost'
-    : 'http://localhost'
-
-export const ORIGIN = (() => {
-  if (isNode) {
-    return LOCAL_ORIGIN
-  }
-  if (isDevProd) {
-    return PROD_ORIGIN
-  }
-  if (isHasuraLive) {
-    return PROD_ORIGIN
-  }
-  if (isStaging) {
-    return STAGING_ORIGIN
-  }
-  return LOCAL_ORIGIN
-})()
-
-export let SEARCH_DOMAIN = (() => {
-  const STAGING_SEARCH_DOMAIN = 'https://search-staging.dishapp.com'
-  //const LIVE_SEARCH_DOMAIN = 'https://search.dishapp.com'
-  const LIVE_SEARCH_DOMAIN = STAGING_SEARCH_DOMAIN
-  const LOCAL_SEARCH_DOMAIN = `${LOCAL_ORIGIN}:10000`
-  if (isWorker || isNative || IS_LIVE) {
-    return LIVE_SEARCH_DOMAIN
-  }
-  if (isNode) {
-    return LOCAL_SEARCH_DOMAIN
-  }
-  if (isStaging) {
-    return STAGING_SEARCH_DOMAIN
-  }
-  if (isDevProd || isHasuraLive) {
-    return LIVE_SEARCH_DOMAIN
-  }
-  return LOCAL_SEARCH_DOMAIN
-})()

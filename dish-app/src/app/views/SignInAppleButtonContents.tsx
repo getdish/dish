@@ -1,7 +1,7 @@
 import { sleep } from '@dish/async'
 import { Auth } from '@dish/graph'
 import { isSafari } from '@dish/helpers'
-import React, { useEffect, useState } from 'react'
+import React, { memo, useEffect, useState } from 'react'
 import { HStack, Text, Toast, VStack } from 'snackui'
 
 import { useIsMountedRef } from '../../helpers/useIsMountedRef'
@@ -10,7 +10,7 @@ import { AppleLogoWhite } from './AppleLogoWhite'
 
 const { auth } = require('../../web/apple-sign-in')
 
-export default function SignInAppleButton() {
+export default memo(function SignInAppleButton() {
   useEffect(() => {
     const conf = {
       clientId: 'com.dishapp',
@@ -77,4 +77,4 @@ export default function SignInAppleButton() {
       </VStack>
     </VStack>
   )
-}
+})

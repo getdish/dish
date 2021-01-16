@@ -1,5 +1,5 @@
 import { capitalize } from 'lodash'
-import React, { Suspense, useEffect, useRef, useState } from 'react'
+import React, { Suspense, memo, useEffect, useRef, useState } from 'react'
 import {
   Controller,
   FieldError,
@@ -35,104 +35,106 @@ type AuthFormProps = {
 
 const pages = ['login', 'register', 'forgotPassword', 'passwordReset']
 
-export const AuthForm = ({
-  onDidLogin,
-  autoFocus,
-}: {
-  onDidLogin?: Function
-  autoFocus?: boolean
-}) => {
-  const userStore = useUserStore()
-  const isLoggedIn = userStore.isLoggedIn
-  const curPageName = useRouterCurPage().name
-  const [formPage, setFormPage] = useState(
-    pages.find((x) => x === curPageName) ?? 'login'
-  )
+export const AuthForm = memo(
+  ({
+    onDidLogin,
+    autoFocus,
+  }: {
+    onDidLogin?: Function
+    autoFocus?: boolean
+  }) => {
+    const userStore = useUserStore()
+    const isLoggedIn = userStore.isLoggedIn
+    const curPageName = useRouterCurPage().name
+    const [formPage, setFormPage] = useState(
+      pages.find((x) => x === curPageName) ?? 'login'
+    )
 
-  useEffect(() => {
+    useEffect(() => {
+      if (isLoggedIn) {
+        onDidLogin?.()
+      }
+    }, [isLoggedIn])
+
     if (isLoggedIn) {
-      onDidLogin?.()
+      return null
     }
-  }, [isLoggedIn])
 
-  if (isLoggedIn) {
-    return null
-  }
-
-  const activeStyle: LinkButtonProps = {
-    backgroundColor: 'rgba(150,150,150,0.35)',
-  }
-
-  function getContent() {
-    if (formPage === 'login') {
-      return <LoginForm autoFocus={autoFocus} setFormPage={setFormPage} />
+    const activeStyle: LinkButtonProps = {
+      backgroundColor: 'rgba(150,150,150,0.35)',
     }
-    if (formPage === 'signup') {
-      return <SignupForm autoFocus={autoFocus} setFormPage={setFormPage} />
+
+    function getContent() {
+      if (formPage === 'login') {
+        return <LoginForm autoFocus={autoFocus} setFormPage={setFormPage} />
+      }
+      if (formPage === 'signup') {
+        return <SignupForm autoFocus={autoFocus} setFormPage={setFormPage} />
+      }
+      if (formPage === 'forgotPassword') {
+        return <ForgotPassword setFormPage={setFormPage} />
+      }
+      if (formPage === 'passwordReset') {
+        return <PasswordReset setFormPage={setFormPage} />
+      }
     }
-    if (formPage === 'forgotPassword') {
-      return <ForgotPassword setFormPage={setFormPage} />
-    }
-    if (formPage === 'passwordReset') {
-      return <PasswordReset setFormPage={setFormPage} />
-    }
-  }
 
-  return (
-    <VStack alignItems="center" spacing="sm">
-      {isWeb && (
-        <>
-          <VStack>
-            <SignInAppleButton />
-          </VStack>
-          <Spacer />
-          <HStack width="100%" alignItems="center">
-            <VStack
-              height={1}
-              flex={1}
-              backgroundColor="rgba(255,255,255,0.1)"
-            />
-            <SmallTitle fontSize={14} divider="center">
-              or
-            </SmallTitle>
-            <VStack
-              height={1}
-              flex={1}
-              backgroundColor="rgba(255,255,255,0.1)"
-            />
-          </HStack>
-        </>
-      )}
-
-      <InteractiveContainer height={40} alignSelf="center">
-        <Button
-          borderRadius={0}
-          {...(formPage == 'login' && activeStyle)}
-          onPress={() => setFormPage('login')}
-        >
-          Login
-        </Button>
-        <Button
-          borderRadius={0}
-          {...(formPage == 'signup' && activeStyle)}
-          onPress={() => setFormPage('signup')}
-        >
-          Signup
-        </Button>
-      </InteractiveContainer>
-
-      {getContent()}
-
-      <VStack maxWidth={320}>
-        {!!userStore.messages.length && (
-          <ErrorParagraph>{userStore.messages.join(', ')}</ErrorParagraph>
+    return (
+      <VStack alignItems="center" spacing="sm">
+        {isWeb && (
+          <>
+            <VStack>
+              <SignInAppleButton />
+            </VStack>
+            <Spacer />
+            <HStack width="100%" alignItems="center">
+              <VStack
+                height={1}
+                flex={1}
+                backgroundColor="rgba(255,255,255,0.1)"
+              />
+              <SmallTitle fontSize={14} divider="center">
+                or
+              </SmallTitle>
+              <VStack
+                height={1}
+                flex={1}
+                backgroundColor="rgba(255,255,255,0.1)"
+              />
+            </HStack>
+          </>
         )}
-      </VStack>
 
-      <Spacer />
-    </VStack>
-  )
-}
+        <InteractiveContainer height={40} alignSelf="center">
+          <Button
+            borderRadius={0}
+            {...(formPage == 'login' && activeStyle)}
+            onPress={() => setFormPage('login')}
+          >
+            Login
+          </Button>
+          <Button
+            borderRadius={0}
+            {...(formPage == 'signup' && activeStyle)}
+            onPress={() => setFormPage('signup')}
+          >
+            Signup
+          </Button>
+        </InteractiveContainer>
+
+        {getContent()}
+
+        <VStack maxWidth={320}>
+          {!!userStore.messages.length && (
+            <ErrorParagraph>{userStore.messages.join(', ')}</ErrorParagraph>
+          )}
+        </VStack>
+
+        <Spacer />
+      </VStack>
+    )
+  }
+)
 
 const PasswordReset = ({ autoFocus }: AuthFormProps) => {
   const {
