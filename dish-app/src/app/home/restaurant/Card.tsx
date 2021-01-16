@@ -27,17 +27,19 @@ export function Card({
   aspectFixed,
   hoverable,
   hideInfo,
+  backgroundColor,
 }: {
   below?: string
   outside?: any
-  photo?: string
+  photo?: string | JSX.Element
   title: string
   subTitle?: string
   hideInfo?: boolean
   aspectFixed?: boolean
   hoverable?: boolean
+  backgroundColor?: string
 }) {
-  const theme = useTheme()
+  // const theme = useTheme()
   const { altPastelColor, pastelColor, lightColor, color } = getColorsForName(
     title ?? ''
   )
@@ -56,7 +58,7 @@ export function Card({
         alignSelf="center"
         position="relative"
         borderRadius={cardFrameBorderRadius}
-        backgroundColor={theme.backgroundColor}
+        backgroundColor={backgroundColor}
       >
         <AbsoluteVStack
           className="ease-in-out"
@@ -69,8 +71,8 @@ export function Card({
             style={StyleSheet.absoluteFill}
             colors={[
               `${altPastelColor}00`,
-              `${lightColor}00`,
-              `${lightColor}00`,
+              `${color}00`,
+              `${color}00`,
               altPastelColor,
             ]}
             start={[1, 0]}
@@ -81,7 +83,7 @@ export function Card({
             colors={[
               color,
               pastelColor,
-              `${pastelColor}99`,
+              `${pastelColor}00`,
               `${pastelColor}00`,
               `${pastelColor}00`,
             ]}
@@ -90,7 +92,7 @@ export function Card({
           />
         </AbsoluteVStack>
         <VStack {...size}>
-          {!!photo && (
+          {!!photo && typeof photo === 'string' ? (
             <Image
               resizeMode="cover"
               width={cardFrameWidth}
@@ -101,6 +103,8 @@ export function Card({
               }}
               source={{ uri: photo }}
             />
+          ) : (
+            photo
           )}
         </VStack>
       </VStack>
@@ -123,8 +127,8 @@ export function Card({
           height="100%"
         >
           <HStack width="100%">
-            <VStack minWidth={60} flex={1} />
-            <VStack alignItems="flex-end">
+            {!!outside && <VStack minWidth={60} flex={1} />}
+            <VStack flex={1} overflow="hidden" alignItems="flex-end">
               <Paragraph
                 textAlign="right"
                 size="xxl"

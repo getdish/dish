@@ -1,10 +1,10 @@
 import { useStore } from '@dish/use-store'
 import React, { memo } from 'react'
 import { Image } from 'react-native'
-import { Paragraph, Spacer, Text, VStack } from 'snackui'
+import { Paragraph, VStack } from 'snackui'
 
 import dishLogo from '../assets/dish-neon.jpg'
-import { lightYellow, pinkPastel } from '../constants/colors'
+import { pinkPastel } from '../constants/colors'
 import { AuthForm } from './AuthForm'
 import { IntroModalStore } from './IntroModalStore'
 import { LinkButton } from './views/LinkButton'

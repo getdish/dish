@@ -52,7 +52,10 @@ export async function createApiServer(app: any, config: ServerConfigNormal) {
         }),
         winston.format.printf((info) => {
           const { req, res, responseTime } = info.metadata.meta
-          let out = `${info.level}: ${info.message} ${responseTime}ms`
+          let out = ` [api] ${info.message.replace(
+            /^https?\s+/i,
+            ''
+          )} ${responseTime}ms`
           if (info.metadata.error) {
             out = out + ' ' + info.metadata.error
             if (info.metadata.error.stack) {
@@ -71,9 +74,9 @@ export async function createApiServer(app: any, config: ServerConfigNormal) {
             .filter(Boolean)
             .join(', ')
           if (reqstr.trim()) {
-            out += `\n <= ${reqstr}`
+            out += `\n  <= ${reqstr}`
           }
-          out += `\n => ${res.statusCode}`
+          out += `\n  => ${res.statusCode}`
           return out
         })
       ),

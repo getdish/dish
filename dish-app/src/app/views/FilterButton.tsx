@@ -34,7 +34,10 @@ export const FilterButton = ({
       case 'filters__price-low':
       case 'filters__price-mid':
       case 'filters__price-high':
-        return <DollarSign size={media.sm ? 22 : 18} color={iconColor} />
+        if (media.sm) {
+          return <DollarSign size={media.sm ? 22 : 18} color={iconColor} />
+        }
+        return null
       default:
         return null
     }

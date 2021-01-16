@@ -1,32 +1,13 @@
-import {
-  isDevProd,
-  isHasuraLive,
-  isNative,
-  isNode,
-  isStaging,
-  isWorker,
-} from '../constants'
-
-// TODO can we simplify this
+import { isProd, isStaging } from '../constants'
 
 export function getGraphEndpointDomain() {
-  const LOCAL_HASURA = 'http://localhost:8080'
-  const LIVE_HASURA = 'https://hasura.dishapp.com'
-  const STAGING_HASURA = 'https://hasura-staging.dishapp.com'
-
-  if (isWorker || isNative || isHasuraLive || isDevProd || isStaging) {
-    return STAGING_HASURA
+  const local = 'http://localhost:8080'
+  const live = 'https://hasura.dishapp.com'
+  const staging = 'https://hasura-staging.dishapp.com'
+  if (isProd || isStaging) {
+    return staging
   }
-
-  if (isNode) {
-    return (
-      process.env.HASURA_ENDPOINT ||
-      process.env.REACT_APP_HASURA_ENDPOINT ||
-      LOCAL_HASURA
-    )
-  }
-
-  return process.env.REACT_APP_HASURA_ENDPOINT || LOCAL_HASURA
+  return process.env.HASURA_ENDPOINT || local
 }
 
 export function getGraphEndpoint() {

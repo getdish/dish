@@ -229,10 +229,7 @@ export async function deleteAllFuzzyBy(
     const m = mutation[`delete_${table}`]?.({
       where: { [key]: { _ilike: `%${value}%` } },
     })
-
-    const r = selectFields(m, '*', 3)
-
-    return r
+    return selectFields(m, '*', 3)
   })
 }
 
@@ -245,7 +242,6 @@ export async function deleteAllBy(
     const m = mutation[`delete_${table}`]?.({
       where: { [key]: { _eq: value } },
     })
-
     return selectFields(m, '*', 3)
   })
 }

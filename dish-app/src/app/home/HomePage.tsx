@@ -303,7 +303,7 @@ const HomePageContent = memo(
   }) {
     const media = useMedia()
     const isNew = item.section === 'new'
-    const items = [] ?? useHomeFeed(item, region, isNew)
+    const items = useHomeFeed(item, region, isNew)
     const recentLists = query.list({
       limit: 10,
       where: {
