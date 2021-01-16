@@ -9,6 +9,7 @@ export async function createWebServerDev(
   app: any,
   { rootDir, webpackConfig }: ServerConfigNormal
 ) {
+  console.log(' [web] starting webpack...')
   const port = await getPort()
   const worker = new Worker(
     __filename.replace('src', '_').replace('.tsx', '.worker.js'),

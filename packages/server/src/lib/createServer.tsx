@@ -66,7 +66,6 @@ export async function createServer(serverConf: ServerConfig) {
 
   await createApiServer(app, conf)
 
-  console.log(' [web] starting webpack...')
   if (conf.env === 'development') {
     res = createWebServerDev(app, conf)
   } else {
