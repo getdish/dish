@@ -353,7 +353,7 @@ class HomeStore extends Store {
     return null
   }
 
-  async handleRouteChange(item: HistoryItem) {
+  handleRouteChange(item: HistoryItem) {
     // happens on *any* route push or pop
     if (appMapStore.hovered) {
       appMapStore.setHovered(null)
@@ -375,42 +375,40 @@ class HomeStore extends Store {
           console.error('NO DIRECTION FOR A POP??', item)
         }
       }
-    }
+    } else {
+      // remove future states no longer accessible
+      this.stateIds = this.stateIds.slice(0, this.stateIndex + 1)
 
-    const promises = new Set<Promise<any>>()
-    const name = normalizeItemName[item.name] ?? item.name
-    // actions per-route
-    if (item.type === 'push' || item.type === 'replace') {
-      switch (name) {
-        case 'home':
-        case 'about':
-        case 'blog':
-        case 'search':
-        case 'list':
-        case 'user':
-        case 'userEdit':
-        case 'gallery':
-        case 'restaurantReview':
-        case 'restaurantHours':
-        case 'restaurant': {
-          const prevState = findLast(this.states, (x) => x.type === name)
-          const res = await this.pushHomeState({
-            ...item,
-            name,
-            id: item.type === 'replace' ? prevState.id : item.id,
-          })
-          if (res?.fetchDataPromise) {
-            promises.add(res.fetchDataPromise)
+      const name = item.name
+      if (item.type === 'push' || item.type === 'replace') {
+        switch (name) {
+          case 'home':
+          case 'homeRegion':
+          case 'about':
+          case 'blog':
+          case 'search':
+          case 'list':
+          case 'user':
+          case 'userEdit':
+          case 'gallery':
+          case 'restaurantReview':
+          case 'restaurantHours':
+          case 'restaurant': {
+            const prevState = findLast(this.states, (x) => x.type === name)
+            this.pushHomeState({
+              ...item,
+              name,
+              id: item.type === 'replace' ? prevState.id : item.id,
+            })
+            break
           }
-          break
-        }
-        default: {
-          return
+          default: {
+            console.warn('IS THIS EVEN NECESSARY?', item)
+            return
+          }
         }
       }
     }
-
-    await Promise.all([...promises])
   }
 
   setSearchBarFocusedTag(val: NavigableTag | null) {
@@ -551,15 +549,15 @@ class HomeStore extends Store {
   }
 }
 
+const normalizeItemName = {
+  homeRegion: 'home',
+}
+
 export const homeStore = createStore(HomeStore)
 
 export const useHomeStore = (debug?: boolean): HomeStore => {
   // @ts-ignore
   return useStoreInstance(homeStore, undefined, debug)
-}
-
-const normalizeItemName = {
-  homeRegion: 'home',
 }
 
 const uid = () => `${Math.random()}`.replace('.', '')

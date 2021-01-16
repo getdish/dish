@@ -2,8 +2,8 @@ FROM postgres:12-alpine
 
 LABEL maintainer="PostGIS Project - https://postgis.net"
 
-ENV POSTGIS_VERSION 2.5.5
-ENV POSTGIS_SHA256 24b15ee36f3af02015da0e92a18f9046ea0b4fd24896196c8e6c2aa8e4b56baa
+ENV POSTGIS_VERSION 2.5.4
+ENV POSTGIS_SHA256 ee547d902bfd758fc89e9e04d5bf3d0f08ebf449d0c63a5a1a8827249fe22c21
 
 RUN set -ex \
     \
@@ -36,7 +36,7 @@ RUN set -ex \
         gcc \
         gdal-dev \
         geos-dev \
-        llvm10-dev \
+        llvm9-dev \
         proj-dev \
         protobuf-c-dev \
     && cd /usr/src/postgis \
@@ -45,19 +45,8 @@ RUN set -ex \
 # https://anonscm.debian.org/cgit/pkg-grass/postgis.git/tree/debian/rules?h=jessie
     && ./configure \
 #       --with-gui \
-    && make -j$(nproc) \
+    && make \
     && make install \
-# regress check
-    && mkdir /tempdb \
-    && chown -R postgres:postgres /tempdb \
-    && su postgres -c 'pg_ctl -D /tempdb init' \
-    && su postgres -c 'pg_ctl -D /tempdb start' \
-    && cd regress \
-    && make -j$(nproc) check RUNTESTFLAGS=--extension PGUSER=postgres \
-    && su postgres -c 'pg_ctl -D /tempdb --mode=immediate stop' \
-    && rm -rf /tempdb \
-    && rm -rf /tmp/pgis_reg \
-# add .postgis-rundeps
     && apk add --no-cache --virtual .postgis-rundeps \
         json-c \
         geos \
@@ -65,10 +54,9 @@ RUN set -ex \
         proj \
         libstdc++ \
         protobuf-c \
-# clean
     && cd / \
     && rm -rf /usr/src/postgis \
     && apk del .fetch-deps .build-deps
 
-COPY ./initdb-postgis.sh /docker-entrypoint-initdb.d/10_postgis.sh
+COPY ./initdb-postgis.sh /docker-entrypoint-initdb.d/postgis.sh
 COPY ./update-postgis.sh /usr/local/bin
