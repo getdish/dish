@@ -31,7 +31,7 @@ docker run --net host $DISH_REGISTRY/base \
 # JWT server won't start until migrations have been applied
 docker-compose down
 
-./dishctl.sh docker_compose_up_for_devs -d
+./dishctl.sh docker_compose_up_for_tests -d
 
 if ! timeout --preserve-status 20 bash -c wait_until_hasura_ready; then
   echo "Timed out waiting for Hasura container to start"

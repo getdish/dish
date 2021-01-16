@@ -30,6 +30,7 @@ export async function createWebServerProd(
   if (watch) {
     return await createWebServerDev(app, config)
   } else {
+    console.log(' [web] building...')
     await build({
       clean,
       createConfig,

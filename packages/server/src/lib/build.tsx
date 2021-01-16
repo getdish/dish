@@ -1,5 +1,5 @@
 import { pathExists, remove } from 'fs-extra'
-import webpack, { Configuration } from 'webpack'
+import { Configuration, Stats } from 'webpack'
 
 import { CreateWebpackConfig } from '../types'
 
@@ -47,14 +47,15 @@ export async function build({
     if (!(await pathExists(path))) {
       await buildWebpack(config)
     } else {
-      console.log('Exists already, not re-building without --clean')
+      console.log(` [web] exists already, won't re-building without --clean`)
     }
   }
 }
 
-async function buildWebpack(config: webpack.Configuration) {
-  const stats = await new Promise<webpack.Stats | null>((res, rej) => {
-    console.log(`building ${config.output?.path ?? ''}...`)
+async function buildWebpack(config: Configuration) {
+  const stats = await new Promise<Stats | null>((res, rej) => {
+    console.log(` [web] building ${config.output?.path ?? ''}...`)
+    const webpack = require('webpack')
     webpack(config, (err, stats) => {
       if (err || stats?.hasErrors()) {
         return rej(err ?? `has errors, ${stats?.toString({ colors: true })}`)
