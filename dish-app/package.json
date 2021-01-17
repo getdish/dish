@@ -116,6 +116,7 @@
     "web:https": "sudo dish start --https --hostname d1sh.com --port 443",
     "web:debug": "node --inspect ../node_modules/.bin/dish start",
     "web:prod": "DEBUG_PATHS=1 VERBOSE=1 dish start --prod",
+    "web:serve": "dish serve",
     "web:build": "dish build",
     "web:build:analyze": "ANALYZE_BUNDLE=1 yarn web:build",
     "web:no-extract": "NO_EXTRACT=1 yarn web",

@@ -36,7 +36,7 @@ async function start() {
 }
 
 // SSR exports
-if (process.env.TARGET === 'ssr') {
+if (isSSR) {
   exports.App = Root
   exports.ReactDOMServer = require('react-dom/server')
 }
@@ -46,7 +46,7 @@ if (process.env.NODE_ENV === 'development') {
   module?.hot?.accept()
 }
 
-if (!window['STARTED'] && process.env.TARGET !== 'ssr') {
+if (!window['STARTED'] && process.env.TARGET !== 'node') {
   start()
   window['STARTED'] = true
 }

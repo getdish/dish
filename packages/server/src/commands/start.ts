@@ -31,7 +31,7 @@ export class Start extends Command {
     inspect: flags.boolean({
       description: 'Enable the Node.js inspector',
     }),
-    clean: flags.boolean({
+    clean: flags.string({
       description: 'Start from a fresh cache.',
     }),
     https: flags.boolean({

@@ -11,7 +11,7 @@ export class Start extends Command {
 
   static flags = {
     help: flags.help({ char: 'h' }),
-    'no-api': flags.integer({
+    'no-api': flags.boolean({
       description: 'Run without api',
     }),
     port: flags.integer({
@@ -22,7 +22,7 @@ export class Start extends Command {
       char: 'H',
       description: 'Set server hostname',
     }),
-    clean: flags.boolean({
+    clean: flags.string({
       description: 'Rebuild on start.',
     }),
     https: flags.boolean({
@@ -36,10 +36,10 @@ export class Start extends Command {
     const rootFolder = process.cwd()
     const config: ServerConfig = {
       rootFolder,
-      port: flags.port,
-      hostname: flags.hostname,
+      port: flags.port ?? 4040,
+      hostname: flags.hostname ?? 'localhost',
       inspect: false,
-      clean: flags.clean,
+      clean: flags.clean as any,
       env: 'production',
       watch: false,
       apiDir: flags['no-api'] ? null : join(rootFolder, 'src', 'api'),

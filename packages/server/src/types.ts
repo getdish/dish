@@ -8,7 +8,7 @@ export type ServerConfig = {
   watch: boolean
   env: 'production' | 'development'
   inspect?: boolean
-  clean?: boolean
+  clean?: 'web' | 'legacy' | 'node' | 'all' | false | string
   port?: number
   hostname?: string
   apiDir?: string | null

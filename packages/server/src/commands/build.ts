@@ -2,7 +2,7 @@ import { join } from 'path'
 
 import { Command, flags } from '@oclif/command'
 
-import { build } from '../lib/build'
+import { buildApp } from '../lib/buildApp'
 import { getWebpackConfigBuilder } from '../lib/getWebpackConfigBuilder'
 
 export class Build extends Command {
@@ -11,15 +11,18 @@ export class Build extends Command {
 
   static flags = {
     help: flags.help({ char: 'h' }),
+    clean: flags.string({
+      description: 'Rebuild either "node", "web", "legacy", "all"',
+    }),
   }
 
   async run() {
-    // const { flags } = this.parse(Build)
+    const { flags } = this.parse(Build)
 
     try {
       const rootDir = process.cwd()
-      await build({
-        clean: true,
+      await buildApp({
+        clean: flags.clean,
         createConfig: (opts) => {
           return getWebpackConfigBuilder({ rootDir })(opts)
         },
