@@ -13,6 +13,7 @@ export class Build extends Command {
     help: flags.help({ char: 'h' }),
     clean: flags.string({
       description: 'Rebuild either "node", "web", "legacy", "all"',
+      default: 'all',
     }),
   }
 

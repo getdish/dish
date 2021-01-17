@@ -24,6 +24,7 @@ export class Start extends Command {
     }),
     clean: flags.string({
       description: 'Rebuild on start.',
+      default: 'all',
     }),
     https: flags.boolean({
       char: 'S',

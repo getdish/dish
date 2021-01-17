@@ -33,6 +33,7 @@ export class Start extends Command {
     }),
     clean: flags.string({
       description: 'Start from a fresh cache.',
+      default: 'all',
     }),
     https: flags.boolean({
       char: 'S',
