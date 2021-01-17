@@ -46,6 +46,8 @@
   }, {
     "path": "../packages/server"
   }, {
+    "path": "../packages/webpack"
+  }, {
     "path": "../packages/helpers-node"
   }, {
     "path": "../packages/async"

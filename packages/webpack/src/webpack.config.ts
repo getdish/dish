@@ -4,6 +4,7 @@ import { isPresent } from '@dish/helpers'
 import { CreateWebpackConfig } from '@dish/server'
 import LoadablePlugin from '@loadable/webpack-plugin'
 import ReactRefreshWebpack4Plugin from '@pmmmwh/react-refresh-webpack-plugin'
+import { SnackUIPlugin } from '@snackui/static'
 import CircularDependencyPlugin from 'circular-dependency-plugin'
 import DedupeParentCssFromChunksWebpackPlugin from 'dedupe-parent-css-from-chunks-webpack-plugin'
 import ExtractCssChunks from 'extract-css-chunks-webpack-plugin'
@@ -182,6 +183,7 @@ export default function createWebpackConfig({
               {
                 test: /\.[jt]sx?$/,
                 include: babelInclude,
+                // @ts-ignore
                 use: [
                   {
                     loader: 'babel-loader',
@@ -269,6 +271,8 @@ export default function createWebpackConfig({
       },
       plugins: [
         isSSR && new LoadablePlugin(),
+
+        new SnackUIPlugin(),
 
         // slim down unused react-native-web modules
         new Webpack.NormalModuleReplacementPlugin(

@@ -142,6 +142,7 @@
   },
   "dependencies": {
     "snackui": "*",
+    "@dish/webpack": "*",
     "@dish/api": "*",
     "@dish/server": "*",
     "@dish/helpers-node": "*",
