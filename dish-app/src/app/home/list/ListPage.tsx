@@ -290,7 +290,7 @@ const ListPageContent = graphql((props: Props) => {
     <StackDrawer closable title={`${username}'s ${list.name}`}>
       {isMyList && (
         <BottomFloatingArea>
-          <VStack flex={1} />
+          <VStack pointerEvents="none" flex={1} />
           <Button
             pointerEvents="auto"
             theme="active"
@@ -302,7 +302,7 @@ const ListPageContent = graphql((props: Props) => {
             shadowColor="#000"
             shadowRadius={20}
             shadowOffset={{ height: 4, width: 0 }}
-            shadowOpacity={0.2}
+            shadowOpacity={0.35}
             noTextWrap
             onPress={() => {
               setShowAddModal(true)
