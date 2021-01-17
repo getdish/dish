@@ -1,0 +1,14 @@
+diff --git a/node_modules/fs-monkey/lib/patchFs.js b/node_modules/fs-monkey/lib/patchFs.js
+index 82a6f05..8fedb88 100644
+--- a/node_modules/fs-monkey/lib/patchFs.js
++++ b/node_modules/fs-monkey/lib/patchFs.js
+@@ -13,6 +13,9 @@ function patchFs(vol) {
+     var bkp = {};
+ 
+     var patch = function patch(key, newValue) {
++        if (_lists.fsProps.includes(key)) {
++            return
++        }
+         bkp[key] = fs[key];
+         fs[key] = newValue;
+     };
