@@ -6,7 +6,7 @@ import express from 'express'
 
 import { ServerConfig, ServerConfigNormal } from '../types'
 import { createApiServer } from './createApiServer'
-import { createWebServerDev } from './createWebServerDev'
+import { createWebServer } from './createWebServer'
 import { getWebpackConfigBuilder } from './getWebpackConfigBuilder'
 
 export async function createServer(serverConf: ServerConfig) {
@@ -21,13 +21,15 @@ export async function createServer(serverConf: ServerConfig) {
   }`
   const conf: ServerConfigNormal = {
     url,
-    apiDir: null,
+    apiDir: serverConf.apiDir as any,
     clean: false,
     hostname,
     port,
     https,
     inspect: false,
-    ...serverConf,
+    env: serverConf.env ?? 'development',
+    rootFolder: serverConf.rootFolder ?? process.cwd(),
+    watch: serverConf.watch ?? false,
     protocol,
     buildDir: join(rootDir, 'build'),
     createConfig: getWebpackConfigBuilder({ rootDir }),
@@ -59,21 +61,18 @@ export async function createServer(serverConf: ServerConfig) {
     const ssl = await devcert.certificateFor(conf.hostname)
     https.createServer(ssl, app).listen(conf.port)
   } else {
+    if (!conf.hostname || !conf.port) throw new Error(`missing conf`)
     app.listen(conf.port, conf.hostname)
   }
 
-  let res: Promise<any>
-
-  await createApiServer(app, conf)
-
   if (conf.env === 'development') {
-    res = createWebServerDev(app, conf)
+    await createApiServer(app, conf)
+    await createWebServer(app, conf)
   } else {
-    const { createWebServerProd } = require('./createWebServerProd')
-    res = createWebServerProd(app, conf)
+    // ts-node can fuck up require on server side so run api after
+    await createWebServer(app, conf)
+    await createApiServer(app, conf)
   }
-
-  await res
 }
 
 function cors() {

@@ -12,7 +12,10 @@ import { typescriptOptions } from './typescriptOptions'
 
 export async function createApiServer(app: any, config: ServerConfigNormal) {
   const { apiDir, url, watch } = config
-  if (!apiDir) return
+  if (!apiDir) {
+    console.log(` [api] no api dir, not serving`)
+    return
+  }
 
   let lastRouteResponse: any
 
