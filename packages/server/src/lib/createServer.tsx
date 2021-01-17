@@ -66,8 +66,11 @@ export async function createServer(serverConf: ServerConfig) {
   }
 
   if (conf.env === 'development') {
-    await createApiServer(app, conf)
-    await createWebServer(app, conf)
+    await Promise.all([
+      //
+      createWebServer(app, conf),
+      createApiServer(app, conf),
+    ])
   } else {
     // ts-node can fuck up require on server side so run api after
     await createWebServer(app, conf)
