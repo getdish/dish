@@ -189,7 +189,7 @@ export default function createWebpackConfig({
                   },
                   isStaticExtracted
                     ? {
-                        loader: require.resolve('@snackui/static/loader'),
+                        loader: 'snackui-loader',
                         options: snackOptions,
                       }
                     : null,
@@ -270,8 +270,6 @@ export default function createWebpackConfig({
       },
       plugins: [
         isSSR && new LoadablePlugin(),
-
-        new SnackUIPlugin(),
 
         // slim down unused react-native-web modules
         new Webpack.NormalModuleReplacementPlugin(

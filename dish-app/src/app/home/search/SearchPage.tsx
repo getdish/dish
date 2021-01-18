@@ -30,6 +30,7 @@ import {
   Spacer,
   StackProps,
   Text,
+  Tooltip,
   VStack,
   combineRefs,
   useMedia,
@@ -61,6 +62,8 @@ import { useCurrentLenseColor } from '../../hooks/useCurrentLenseColor'
 import { useLastValue } from '../../hooks/useLastValue'
 import { useLastValueWhen } from '../../hooks/useLastValueWhen'
 import { usePageLoadEffect } from '../../hooks/usePageLoadEffect'
+import { userStore } from '../../userStore'
+import { SmallCircleButton } from '../../views/CloseButton'
 import { ContentScrollView } from '../../views/ContentScrollView'
 import { PageTitleTag } from '../../views/PageTitleTag'
 import { SlantedTitle } from '../../views/SlantedTitle'
@@ -90,7 +93,25 @@ export default memo(function SearchPage(props: Props) {
   return (
     <>
       <PageTitleTag>{title}</PageTitleTag>
-      <StackDrawer closable>
+      <StackDrawer
+        closable
+        topLeftControls={
+          <Tooltip contents="Make your list">
+            <SmallCircleButton
+              onPress={() => {
+                if (!userStore.promptLogin()) return
+                router.navigate({
+                  name: 'list',
+                  params: {
+                    userSlug: userStore.user.username,
+                    slug: 'create',
+                  },
+                })
+              }}
+            ></SmallCircleButton>
+          </Tooltip>
+        }
+      >
         <HomeSuspense>
           <SearchNavBarContainer isActive={props.isActive} id={props.item.id} />
         </HomeSuspense>
