@@ -166,7 +166,7 @@ export const UserOnboard = graphql(
           <Spacer />
 
           <SmallButton
-            accessibilityComponentType="button"
+            // accessibilityComponentType="button"
             accessible
             accessibilityRole="button"
             alignSelf="center"
