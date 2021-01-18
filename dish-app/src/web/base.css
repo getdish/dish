@@ -19,6 +19,12 @@ body {
   z-index: 0;
   overflow: hidden;
   position: relative;
+
+  max-height: 100vh;
+
+  border-radius: 10px;
+  overflow: hidden;
+  transform: translateZ(0);
 }
 
 * {

@@ -124,7 +124,6 @@ services:
     environment:
       - VIRTUAL_HOST=images-staging.dishapp.com
   dish-app-web:
-    image: gcr.io/dish-258800/dish-app${DISH_IMAGE_TAG}
     platform: linux/amd64
     build:
       context: ./

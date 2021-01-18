@@ -182,7 +182,7 @@ export default function createWebpackConfig({
             oneOf: [
               {
                 test: /\.[jt]sx?$/,
-                include: babelInclude,
+                // include: babelInclude,
                 // @ts-ignore
                 use: [
                   {

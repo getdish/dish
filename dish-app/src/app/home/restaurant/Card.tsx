@@ -15,7 +15,9 @@ import {
   CardFrame,
   cardFrameBorderRadius,
   cardFrameHeight,
+  cardFrameHeightSm,
   cardFrameWidth,
+  cardFrameWidthSm,
 } from '../../views/CardFrame'
 
 export function Card({
@@ -28,6 +30,7 @@ export function Card({
   hoverable,
   hideInfo,
   backgroundColor,
+  size,
 }: {
   below?: string
   outside?: any
@@ -37,6 +40,7 @@ export function Card({
   hideInfo?: boolean
   aspectFixed?: boolean
   hoverable?: boolean
+  size?: 'sm' | 'md'
   backgroundColor?: string
 }) {
   // const theme = useTheme()
@@ -44,13 +48,18 @@ export function Card({
     title ?? ''
   )
 
-  const size = {
-    width: aspectFixed ? cardFrameWidth : '100%',
-    height: cardFrameHeight,
+  const isSm = size === 'sm'
+  const sizes = {
+    width: isSm ? cardFrameWidthSm : cardFrameWidth,
+    height: isSm ? cardFrameHeightSm : cardFrameHeight,
+  }
+  const frame = {
+    ...sizes,
+    width: aspectFixed ? sizes.width : '100%',
   }
 
   return (
-    <CardFrame aspectFixed={aspectFixed} hoverable={hoverable}>
+    <CardFrame size={size} aspectFixed={aspectFixed} hoverable={hoverable}>
       <VStack
         className="safari-fix-overflow"
         width="100%"
@@ -91,14 +100,13 @@ export function Card({
             end={[0.9, 0.1]}
           />
         </AbsoluteVStack>
-        <VStack {...size}>
+        <VStack {...frame}>
           {!!photo && typeof photo === 'string' ? (
             <Image
               resizeMode="cover"
-              width={cardFrameWidth}
-              height={cardFrameHeight}
+              {...sizes}
               style={{
-                ...size,
+                ...frame,
                 opacity: 0.5,
               }}
               source={{ uri: photo }}

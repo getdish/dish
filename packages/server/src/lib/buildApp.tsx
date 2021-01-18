@@ -8,11 +8,13 @@ export async function buildApp({
   createConfig,
   watch,
   clean,
+  serial,
 }: {
   webpackConfig: Omit<CreateWebpackConfig, 'target'>
   createConfig: (config: CreateWebpackConfig) => Configuration
   watch?: boolean
   clean?: ServerConfig['clean']
+  serial?: boolean
 }) {
   const web = createConfig({
     ...webpackConfig,
@@ -39,7 +41,8 @@ export async function buildApp({
 
   await Promise.all(
     (
-      await Promise.all(
+      await async(
+        serial ? 'serial' : 'parallel',
         Object.entries(configs).map(async ([name, config]) => {
           if (!config) return
           const path = config.output?.path
@@ -66,6 +69,20 @@ export async function buildApp({
         await buildWebpack(config!)
       })
   )
+}
+
+async function async<A extends any>(
+  type: 'serial' | 'parallel',
+  items: Promise<A>[]
+): Promise<A[]> {
+  if (type === 'serial') {
+    let res: any[] = []
+    for (const item of items) {
+      res.push(await item)
+    }
+    return res
+  }
+  return await Promise.all(items)
 }
 
 async function buildWebpack(config: Configuration) {

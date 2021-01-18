@@ -15,6 +15,9 @@ export class Build extends Command {
       description: 'Rebuild either "node", "web", "legacy", "all"',
       default: 'all',
     }),
+    serial: flags.boolean({
+      description: 'Build one at a time for memory saving',
+    }),
   }
 
   async run() {
@@ -23,6 +26,7 @@ export class Build extends Command {
     try {
       const rootDir = process.cwd()
       await buildApp({
+        serial: flags.serial,
         clean: flags.clean,
         createConfig: (opts) => {
           return getWebpackConfigBuilder({ rootDir })(opts)

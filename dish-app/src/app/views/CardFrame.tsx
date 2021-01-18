@@ -4,8 +4,12 @@ import React from 'react'
 import { VStack, useMedia, useTheme } from 'snackui'
 
 export const cardFrameBorderRadius = 17
+
 export const cardFrameWidth = 240
 export const cardFrameHeight = 340
+
+export const cardFrameWidthSm = 240 * 0.75
+export const cardFrameHeightSm = 340 * 0.75
 
 export const CardFrame = ({
   hoverable,
@@ -13,12 +17,14 @@ export const CardFrame = ({
   transparent,
   children,
   aspectFixed,
+  size,
 }: {
   children?: any
   expandable?: boolean
   hoverable?: boolean
   transparent?: boolean
   aspectFixed?: boolean
+  size?: 'md' | 'sm'
 }) => {
   const theme = useTheme()
   const media = useMedia()
@@ -46,6 +52,10 @@ export const CardFrame = ({
       })}
       {...(aspectFixed && {
         width: cardFrameWidth,
+      })}
+      {...(size === 'sm' && {
+        width: cardFrameWidthSm,
+        height: cardFrameHeightSm,
       })}
       {...(hoverable && {
         hoverStyle: {

@@ -12,7 +12,7 @@ import AppleSignIn, { AppleSignInOptions } from 'apple-sign-in-rest'
 
 export const redirectUri = 'https://dishapp.com/api/auth/appleAuthorize'
 const rootPath = join(__dirname, '..', '..', '..')
-const privateKeyPath = join(rootPath, 'etc', '_AuthKey_M5CPALWBA5.p8')
+const privateKeyPath = join(rootPath, 'etc', 'AuthKey_M5CPALWBA5.p8')
 export const appleConfig: AppleSignInOptions = {
   clientId: 'com.dishapp',
   teamId: '399WY8X9HY',

@@ -1,3 +1,4 @@
+// debug
 import { useStore } from '@dish/use-store'
 import React, { memo } from 'react'
 import { Image } from 'react-native'
@@ -34,7 +35,7 @@ export const AppIntroLogin = memo(() => {
         />
 
         <Paragraph
-          color="var(--color)"
+          // color="var(--color)"
           paddingHorizontal="3%"
           maxWidth={320}
           fontWeight="300"

@@ -1,5 +1,4 @@
 import './web/base.css'
-import './web/globals'
 
 import { startLogging } from '@dish/graph'
 import React from 'react'

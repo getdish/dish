@@ -16,15 +16,17 @@ import { HomeSuspense } from './HomeSuspense'
 export const HomeStackViewPages = (props: HomeStackViewProps) => {
   const { item } = props
   return (
-    <HomeSuspense>
-      {isHomeState(item) && <HomePage {...props} />}
-      {isUserState(item) && <UserPage {...props} />}
-      {isSearchState(item) && <SearchPage {...props} />}
-      {isRestaurantState(item) && <RestaurantPage {...props} />}
-      {isAboutState(item) && <AboutPage {...props} />}
-      {isListState(item) && <ListPage {...props} />}
-      <HomeStackViewPagesContents {...props} />
-    </HomeSuspense>
+    null ?? (
+      <HomeSuspense>
+        {isHomeState(item) && <HomePage {...props} />}
+        {isUserState(item) && <UserPage {...props} />}
+        {isSearchState(item) && <SearchPage {...props} />}
+        {isRestaurantState(item) && <RestaurantPage {...props} />}
+        {isAboutState(item) && <AboutPage {...props} />}
+        {isListState(item) && <ListPage {...props} />}
+        <HomeStackViewPagesContents {...props} />
+      </HomeSuspense>
+    )
   )
 }
 

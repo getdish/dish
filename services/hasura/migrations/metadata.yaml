@@ -5,64 +5,6 @@ tables:
     name: hrr
 - table:
     schema: public
-    name: list
-  object_relationships:
-  - name: user
-    using:
-      manual_configuration:
-        remote_table:
-          schema: public
-          name: user
-        column_mapping:
-          user_id: id
-  array_relationships:
-  - name: restaurants
-    using:
-      foreign_key_constraint_on:
-        column: list_id
-        table:
-          schema: public
-          name: list_restaurant
-- table:
-    schema: public
-    name: list_restaurant
-  object_relationships:
-  - name: list
-    using:
-      foreign_key_constraint_on: list_id
-  - name: restaurant
-    using:
-      foreign_key_constraint_on: restaurant_id
-  array_relationships:
-  - name: restaurants
-    using:
-      manual_configuration:
-        remote_table:
-          schema: public
-          name: restaurant
-        column_mapping:
-          restaurant_id: id
-  - name: tags
-    using:
-      foreign_key_constraint_on:
-        column: list_restaurant_id
-        table:
-          schema: public
-          name: list_restaurant_tag
-- table:
-    schema: public
-    name: list_restaurant_tag
-  object_relationships:
-  - name: restaurant_tag
-    using:
-      manual_configuration:
-        remote_table:
-          schema: public
-          name: restaurant_tag
-        column_mapping:
-          restaurant_tag_id: id
-- table:
-    schema: public
     name: menu_item
   object_relationships:
   - name: restaurant
@@ -142,30 +84,6 @@ tables:
 - table:
     schema: public
     name: photo
-  select_permissions:
-  - role: anon
-    permission:
-      columns:
-      - id
-      - quality
-      - url
-      filter: {}
-  - role: contributor
-    permission:
-      columns:
-      - created_at
-      - id
-      - quality
-      - updated_at
-      - url
-      filter: {}
-  - role: user
-    permission:
-      columns:
-      - id
-      - quality
-      - url
-      filter: {}
 - table:
     schema: public
     name: photo_xref
@@ -173,34 +91,6 @@ tables:
   - name: photo
     using:
       foreign_key_constraint_on: photo_id
-  select_permissions:
-  - role: anon
-    permission:
-      columns:
-      - id
-      - photo_id
-      - restaurant_id
-      - tag_id
-      - type
-      filter: {}
-  - role: contributor
-    permission:
-      columns:
-      - id
-      - photo_id
-      - restaurant_id
-      - tag_id
-      - type
-      filter: {}
-  - role: user
-    permission:
-      columns:
-      - id
-      - photo_id
-      - restaurant_id
-      - tag_id
-      - type
-      filter: {}
 - table:
     schema: public
     name: restaurant
@@ -633,28 +523,6 @@ tables:
       filter:
         user_id:
           _eq: X-Hasura-User-Id
-  event_triggers:
-  - name: gorse_sync
-    definition:
-      enable_manual: true
-      insert:
-        columns: '*'
-      delete:
-        columns: '*'
-      update:
-        columns:
-        - rating
-        - username
-        - id
-        - restaurant_id
-        - tag_id
-        - user_id
-        - favorited
-    retry_conf:
-      num_retries: 3
-      interval_sec: 10
-      timeout_sec: 60
-    webhook_from_env: GORSE_SYNC_HOOK
 - table:
     schema: public
     name: review_tag_sentence
@@ -860,14 +728,6 @@ tables:
     schema: public
     name: user
   array_relationships:
-  - name: lists
-    using:
-      manual_configuration:
-        remote_table:
-          schema: public
-          name: list
-        column_mapping:
-          id: user_id
   - name: reviews
     using:
       foreign_key_constraint_on:

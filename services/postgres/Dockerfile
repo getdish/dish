@@ -1,62 +1,17 @@
-FROM postgres:12-alpine
+FROM postgres:12
 
 LABEL maintainer="PostGIS Project - https://postgis.net"
 
-ENV POSTGIS_VERSION 2.5.4
-ENV POSTGIS_SHA256 ee547d902bfd758fc89e9e04d5bf3d0f08ebf449d0c63a5a1a8827249fe22c21
+ENV POSTGIS_MAJOR 2.5
+ENV POSTGIS_VERSION 2.5.5+dfsg-1.pgdg100+2
 
-RUN set -ex \
-    \
-    && apk add --no-cache --virtual .fetch-deps \
-        ca-certificates \
-        openssl \
-        tar \
-    \
-    && wget -O postgis.tar.gz "https://github.com/postgis/postgis/archive/$POSTGIS_VERSION.tar.gz" \
-    && echo "$POSTGIS_SHA256 *postgis.tar.gz" | sha256sum -c - \
-    && mkdir -p /usr/src/postgis \
-    && tar \
-        --extract \
-        --file postgis.tar.gz \
-        --directory /usr/src/postgis \
-        --strip-components 1 \
-    && rm postgis.tar.gz \
-    \
-    && apk add --no-cache --virtual .build-deps \
-        autoconf \
-        automake \
-        file \
-        json-c-dev \
-        libtool \
-        libxml2-dev \
-        make \
-        perl \
-        clang-dev \
-        g++ \
-        gcc \
-        gdal-dev \
-        geos-dev \
-        llvm9-dev \
-        proj-dev \
-        protobuf-c-dev \
-    && cd /usr/src/postgis \
-    && ./autogen.sh \
-# configure options taken from:
-# https://anonscm.debian.org/cgit/pkg-grass/postgis.git/tree/debian/rules?h=jessie
-    && ./configure \
-#       --with-gui \
-    && make \
-    && make install \
-    && apk add --no-cache --virtual .postgis-rundeps \
-        json-c \
-        geos \
-        gdal \
-        proj \
-        libstdc++ \
-        protobuf-c \
-    && cd / \
-    && rm -rf /usr/src/postgis \
-    && apk del .fetch-deps .build-deps
+RUN apt-get update \
+      && apt-cache showpkg postgresql-$PG_MAJOR-postgis-$POSTGIS_MAJOR \
+      && apt-get install -y --no-install-recommends \
+           postgresql-$PG_MAJOR-postgis-$POSTGIS_MAJOR=$POSTGIS_VERSION \
+           postgresql-$PG_MAJOR-postgis-$POSTGIS_MAJOR-scripts=$POSTGIS_VERSION \
+      && rm -rf /var/lib/apt/lists/*
 
-COPY ./initdb-postgis.sh /docker-entrypoint-initdb.d/postgis.sh
+RUN mkdir -p /docker-entrypoint-initdb.d
+COPY ./initdb-postgis.sh /docker-entrypoint-initdb.d/10_postgis.sh
 COPY ./update-postgis.sh /usr/local/bin
