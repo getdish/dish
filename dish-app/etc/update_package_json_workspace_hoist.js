@@ -7,6 +7,16 @@ const hoists = {
   snackui: true,
   '@snackui/babel-plugin': true,
   '@snackui/static': true,
+  bcryptjs: true,
+  'react-query': true,
+  lodash: true,
+  immer: true,
+  recyclerlistview: true,
+  'react-use': true,
+  'react-hook-form': true,
+  multer: true,
+  uuid: true,
+  '@sendgrid/mail': true,
 }
 
 const noHoists = [

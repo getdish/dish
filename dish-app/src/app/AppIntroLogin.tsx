@@ -1,4 +1,3 @@
-// debug
 import { useStore } from '@dish/use-store'
 import React, { memo } from 'react'
 import { Image } from 'react-native'
@@ -6,6 +5,7 @@ import { Paragraph, VStack } from 'snackui'
 
 import dishLogo from '../assets/dish-neon.jpg'
 import { pinkPastel } from '../constants/colors'
+import { isWeb } from '../constants/constants'
 import { AuthForm } from './AuthForm'
 import { IntroModalStore } from './IntroModalStore'
 import { LinkButton } from './views/LinkButton'
@@ -35,7 +35,7 @@ export const AppIntroLogin = memo(() => {
         />
 
         <Paragraph
-          // color="var(--color)"
+          color={isWeb ? 'var(--color)' : '#777'}
           paddingHorizontal="3%"
           maxWidth={320}
           fontWeight="300"
