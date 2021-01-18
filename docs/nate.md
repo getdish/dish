@@ -2,6 +2,7 @@ goal january
 
   1. fix lots of things
 
+    - show onboard if not yet
     - dont make region move map unless its initial load OR far outside map bounds
     - fix map jittering
     - map toggle between region/area improve
@@ -49,6 +50,7 @@ making it actually a community:
 
 ---
 
+- after sign in we need to route them somewhere so browser will prompt "remember password"
 - home page with "delivery" and other filters? want to encourage that you can search across delivery from there
 - discussions
   - add comment => show comment

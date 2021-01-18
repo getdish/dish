@@ -5,7 +5,7 @@ import { client } from '@dish/graph'
 import { ChunkExtractor } from '@loadable/server'
 import { matchesUA } from 'browserslist-useragent'
 import express from 'express'
-import { existsSync, readFileSync, renameSync } from 'fs-extra'
+import { existsSync, pathExists, readFileSync, renameSync } from 'fs-extra'
 import React from 'react'
 import { Helmet } from 'react-helmet'
 
@@ -49,6 +49,12 @@ async function createWebServerProd(app: any, config: ServerConfigNormal) {
     }
 
     const ssrDir = Path.join(buildDir, 'ssr')
+
+    if (!(await pathExists(ssrDir))) {
+      console.error(`No path exists: ${ssrDir}`)
+      process.exit(1)
+    }
+
     const statsFile = Path.resolve(Path.join(ssrDir, 'loadable-stats.json'))
     const extractor = new ChunkExtractor({ statsFile })
 

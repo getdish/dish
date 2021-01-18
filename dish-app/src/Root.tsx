@@ -1,3 +1,5 @@
+import './globals'
+
 import { useHydrateCache } from '@dish/graph'
 import { ProvideRouter } from '@dish/router'
 import { allStores, configureUseStore } from '@dish/use-store'
@@ -19,23 +21,10 @@ import { addTagsToCache } from './helpers/allTags'
 import { queryClient } from './helpers/queryClient'
 import { router, routes } from './router'
 
-global['stores'] = allStores
-
 declare module 'snackui' {
   interface ThemeObject extends MyTheme {}
   interface Themes extends MyThemes {}
 }
-
-configureThemes(themes)
-configureUseStore({
-  logLevel: process.env.NODE_ENV === 'development' ? 'info' : 'error',
-})
-
-// @ts-expect-error
-const cacheSnapshot = global.__CACHE_SNAPSHOT
-
-let isStarted = false
-let startPromise
 
 async function start() {
   await new Promise<void>((res) => {
@@ -50,6 +39,14 @@ async function start() {
   isStarted = true
 }
 
+configureThemes(themes)
+configureUseStore({
+  logLevel: process.env.NODE_ENV === 'development' ? 'info' : 'error',
+})
+
+// @ts-expect-error
+const cacheSnapshot = global.__CACHE_SNAPSHOT
+
 export function Root() {
   if (cacheSnapshot) {
     useHydrateCache({
@@ -63,7 +60,9 @@ export function Root() {
         <QueryClientProvider client={queryClient}>
           <AppPortalProvider>
             <Suspense fallback={null}>
-              <RootInner />
+              <RootLoader>
+                <App />
+              </RootLoader>
             </Suspense>
           </AppPortalProvider>
         </QueryClientProvider>
@@ -72,14 +71,15 @@ export function Root() {
   )
 }
 
-function RootInner() {
+let isStarted = false
+let startPromise
+
+function RootLoader(props: any) {
   if (!isStarted) {
-    startPromise = start()
+    if (!startPromise) {
+      startPromise = start()
+    }
     throw startPromise
   }
-  return (
-    <Suspense fallback={null}>
-      <App />
-    </Suspense>
-  )
+  return <Suspense fallback={null}>{props.children}</Suspense>
 }

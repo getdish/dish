@@ -30,6 +30,7 @@ export const ListCard = graphql(
     return (
       <Link name="list" asyncClick params={{ slug, userSlug }}>
         <Card
+          size="sm"
           hoverable
           title={list.name}
           subTitle={`by ${list.user.name ?? list.user.username ?? ''}`}
