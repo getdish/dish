@@ -3,6 +3,8 @@ const block = require('metro-config/src/defaults/exclusionList')
 
 const config = createMetroConfiguration(__dirname)
 
+// TODO inlineRequires
+
 module.exports = {
   ...config,
   resolver: {
