@@ -23,6 +23,8 @@ export class Build extends Command {
   async run() {
     const { flags } = this.parse(Build)
 
+    process.env.NODE_ENV === 'production'
+
     try {
       const rootDir = process.cwd()
       await buildApp({
