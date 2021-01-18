@@ -38,6 +38,7 @@ function delete_duplicate_snack_modules() {
 }
 
 PROJECT_ROOT="$(dirname "$0")/.."
+delete_duplicates &
 delete_and_link_duplicate_modules &
 delete_duplicate_snack_modules &
 patch_packages &
