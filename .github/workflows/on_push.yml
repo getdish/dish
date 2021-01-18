@@ -20,6 +20,8 @@ jobs:
       - uses: actions/setup-node@v1
         with:
           node-version: '12.16.1'
+      - uses: satackey/action-docker-layer-caching@v0.0.11
+          continue-on-error: true
       - name: Setup dependencies
         run: .github/workflows/scripts/setup_deps.sh
       - name: Build docker images
