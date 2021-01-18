@@ -87,7 +87,11 @@ async function async<A extends any>(
 
 async function buildWebpack(config: Configuration) {
   const stats = await new Promise<Stats | null>((res, rej) => {
-    console.log(` [web] building ${config.output?.path ?? ''}...`)
+    console.log(
+      ` [web] building ${config.output?.path ?? ''} in ${
+        process.env.NODE_ENV
+      }...`
+    )
     const webpack = require('webpack')
     webpack(config, (err, stats) => {
       if (err || stats?.hasErrors()) {
