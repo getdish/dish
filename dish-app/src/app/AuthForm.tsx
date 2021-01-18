@@ -442,7 +442,7 @@ function SubmittableForm({
 
         {!isSuccess && (
           <Button
-            accessibilityComponentType="button"
+            // accessibilityComponentType="button"
             accessible
             accessibilityRole="button"
             alignSelf="flex-end"

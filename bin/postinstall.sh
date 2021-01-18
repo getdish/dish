@@ -7,6 +7,12 @@ function patch_packages() {
   popd
 }
 
+function delete_extra_dish_app_modules() {
+  pushd $PROJECT_ROOT/dish-app/node_modules
+  rm -r lodash || true
+  popd
+}
+
 function delete_and_link_duplicate_modules() {
   pushd $PROJECT_ROOT/node_modules
   rm -r react-native || true
@@ -38,7 +44,7 @@ function delete_duplicate_snack_modules() {
 }
 
 PROJECT_ROOT="$(dirname "$0")/.."
-delete_duplicates &
+delete_extra_dish_app_modules &
 delete_and_link_duplicate_modules &
 delete_duplicate_snack_modules &
 patch_packages &

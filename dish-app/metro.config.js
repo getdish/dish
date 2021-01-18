@@ -14,4 +14,13 @@ module.exports = {
       /.*\/versioned-react-native\/.*/,
     ]),
   },
+  transformer: {
+    ...config.transformer,
+    getTransformOptions: async () => ({
+      transform: {
+        experimentalImportSupport: false,
+        inlineRequires: true,
+      },
+    }),
+  },
 }

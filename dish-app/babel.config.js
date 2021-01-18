@@ -1,7 +1,3 @@
-if (!process.env.TARGET) {
-  throw new Error(`No target set!`)
-}
-
 const useOurBabel =
   process.env.TARGET === 'web' || process.env.TARGET === 'node'
 
