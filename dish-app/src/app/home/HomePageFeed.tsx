@@ -113,7 +113,7 @@ export const HomePageFeed = memo(
               <HStack
                 justifyContent="center"
                 flexWrap="wrap"
-                maxWidth={830}
+                maxWidth="100%"
                 alignSelf="center"
                 paddingHorizontal={media.xl ? '3%' : 0}
               >
@@ -138,12 +138,11 @@ export const HomePageFeed = memo(
                   return (
                     <VStack
                       key={item.id}
-                      paddingBottom="6%"
                       alignItems="center"
                       position="relative"
                       width="100%"
                     >
-                      <VStack marginTop={-20}>
+                      <VStack marginBottom={-8}>
                         <SlantedTitle size="sm">{item.title}</SlantedTitle>
                       </VStack>
                       {content}

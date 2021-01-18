@@ -4,12 +4,10 @@ import { HStack } from 'snackui'
 
 export const CardCarousel = ({ children }: { children: any }) => {
   return (
-    <HStack marginHorizontal={-15}>
-      <ScrollView horizontal showsHorizontalScrollIndicator={false}>
-        <HStack margin={20} spacing>
-          {children}
-        </HStack>
-      </ScrollView>
-    </HStack>
+    <ScrollView horizontal showsHorizontalScrollIndicator={false}>
+      <HStack margin={20} spacing>
+        {children}
+      </HStack>
+    </ScrollView>
   )
 }

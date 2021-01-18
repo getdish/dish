@@ -1,5 +1,6 @@
 import React, { Suspense } from 'react'
 import {
+  AbsoluteVStack,
   HStack,
   LoadingItems,
   StackProps,
@@ -27,8 +28,14 @@ export const StackDrawer = ({
   closable,
   children,
   fallback,
+  topLeftControls,
   ...props
-}: StackProps & { title?: string; closable?: boolean; fallback?: any }) => {
+}: StackProps & {
+  title?: string
+  closable?: boolean
+  fallback?: any
+  topLeftControls?: any
+}) => {
   const media = useMedia()
   const theme = useTheme()
   return (
@@ -48,6 +55,16 @@ export const StackDrawer = ({
       shadowRadius={media.sm ? 6 : 10}
       shadowColor={media.sm ? 'rgba(0,0,0,0.125)' : 'rgba(0,0,0,0.22)'}
     >
+      {!!topLeftControls && (
+        <AbsoluteVStack
+          className="top-left-controls"
+          zIndex={1000000000000}
+          left={media.sm ? 6 : -12}
+          top={media.sm ? 6 : -6}
+        >
+          {topLeftControls}
+        </AbsoluteVStack>
+      )}
       {closable && <StackCloseButton />}
       {!!title && <PageTitleTag>{title}</PageTitleTag>}
       <VStack
