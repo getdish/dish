@@ -12,7 +12,14 @@ import AppleSignIn, { AppleSignInOptions } from 'apple-sign-in-rest'
 
 export const redirectUri = 'https://dishapp.com/api/auth/appleAuthorize'
 const rootPath = join(__dirname, '..', '..', '..')
-const privateKeyPath = join(rootPath, 'etc', 'AuthKey_M5CPALWBA5.p8')
+
+let privateKeyPath = ''
+try {
+  privateKeyPath = join(rootPath, 'etc', 'AuthKey_M5CPALWBA5.p8')
+} catch (err) {
+  console.error('Error: loading privateKeyPath')
+}
+
 export const appleConfig: AppleSignInOptions = {
   clientId: 'com.dishapp',
   teamId: '399WY8X9HY',
