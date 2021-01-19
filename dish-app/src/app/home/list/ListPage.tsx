@@ -1,4 +1,3 @@
-// // debug
 import { series, sleep } from '@dish/async'
 import {
   List,
@@ -42,6 +41,7 @@ import { HomeStateItemList } from '../../../types/homeTypes'
 import { useSetAppMapResults } from '../../AppMapStore'
 import { useStateSynced } from '../../hooks/useStateSynced'
 import { useUserStore, userStore } from '../../userStore'
+import { BottomFloatingArea } from '../../views/BottomFloatingArea'
 import { CloseButton } from '../../views/CloseButton'
 import { ContentScrollView } from '../../views/ContentScrollView'
 import { Link } from '../../views/Link'
@@ -54,7 +54,6 @@ import { StackItemProps } from '../HomeStackView'
 import { CircleButton } from '../restaurant/CircleButton'
 import { RestaurantListItem } from '../restaurant/RestaurantListItem'
 import { PageTitle } from '../search/PageTitle'
-import { BottomFloatingArea } from '../../views/BottomFloatingArea'
 import { ListAddRestuarant } from './ListAddRestuarant'
 import { getListColor, listColors } from './listColors'
 
@@ -262,10 +261,7 @@ const ListPageContent = graphql((props: Props) => {
   useEffect(() => {
     if (isEditing) {
       return router.setRouteAlert({
-        condition: () => {
-          debugger
-          return true
-        },
+        condition: () => true,
         message: `Cancel editing list and lose edits?`,
       })
     }

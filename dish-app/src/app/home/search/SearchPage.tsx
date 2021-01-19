@@ -56,7 +56,7 @@ import {
 } from '../../../types/homeTypes'
 import { appMapStore, useSetAppMapResults } from '../../AppMapStore'
 import { AppPortalItem } from '../../AppPortal'
-import { useHomeStore } from '../../homeStore'
+import { useHomeStateById, useHomeStore, useLastHomeState } from '../../homeStore'
 import { useAppDrawerWidth } from '../../hooks/useAppDrawerWidth'
 import { useCurrentLenseColor } from '../../hooks/useCurrentLenseColor'
 import { useLastValue } from '../../hooks/useLastValue'
@@ -85,8 +85,7 @@ type Props = HomeStackViewProps<HomeStateItemSearch>
 const SearchPagePropsContext = createContext<Props | null>(null)
 
 export default memo(function SearchPage(props: Props) {
-  const homeStore = useHomeStore()
-  const state = homeStore.allStates[props.item.id] as HomeStateItemSearch
+  const state = useHomeStateById<HomeStateItemSearch>(props.item.id)
   const { title } = getTitleForState(state, {
     lowerCase: false,
   })

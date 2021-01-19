@@ -1,5 +1,11 @@
 import { useStore } from '@dish/use-store'
-import React, { Suspense, memo, useLayoutEffect, useMemo } from 'react'
+import React, {
+  Suspense,
+  memo,
+  useEffect,
+  useLayoutEffect,
+  useMemo,
+} from 'react'
 import { AnimatedVStack, VStack, useDebounceValue, useMedia } from 'snackui'
 
 import {
@@ -31,6 +37,10 @@ export function HomeStackView<A extends HomeStateItem>(props: {
   const isRemoving = currentStates.length > homeStates.length
   const isAdding = currentStates.length < homeStates.length
   const items = isRemoving ? currentStates : homeStates
+
+  useEffect(() => {
+    console.log('👀 HomeStackView', items)
+  }, [items])
 
   return (
     <>

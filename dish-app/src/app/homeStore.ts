@@ -196,29 +196,18 @@ class HomeStore extends Store {
     if (!val.id) {
       throw new Error(`Must have id`)
     }
-    const state = this.allStates[val.id]
-
+    const state = this.allStates[val.id] ?? null
     if (state) {
       if (val.type && state.type !== val.type) {
         throw new Error(`Cant change the type`)
       }
-      this.allStates = {
-        ...this.allStates,
-        [val.id]: { ...state, ...val },
-      }
-    } else {
-      // @ts-expect-error
-      this.allStates = {
-        ...this.allStates,
-        [val.id]: { ...val },
-      }
-      // cleanup old from backward
-      const stateIds = this.stateIds
-      const lastIndex = stateIds.length - 1
-      if (lastIndex > this.stateIndex) {
-        this.stateIds = stateIds.slice(0, this.stateIndex + 1)
-      }
-      this.stateIds = [...new Set([...stateIds, val.id])]
+    }
+    this.allStates = {
+      ...this.allStates,
+      [val.id]: { ...state, ...val },
+    }
+    if (!state) {
+      this.stateIds = [...new Set([...this.stateIds, val.id])]
       this.stateIndex = this.stateIds.length - 1
     }
   }
@@ -232,7 +221,7 @@ class HomeStore extends Store {
     }
   }
 
-  pushHomeState(item: HistoryItem) {
+  getHomeState(item: HistoryItem) {
     if (!item) {
       console.warn('no item?')
       return null
@@ -338,7 +327,7 @@ class HomeStore extends Store {
       }
     }
 
-    const finalState = {
+    return {
       curLocName: currentState?.curLocName,
       curLocInfo: currentState?.curLocInfo,
       center: currentState?.center,
@@ -348,9 +337,6 @@ class HomeStore extends Store {
       ...nextState,
       id: item.id ?? uid(),
     } as HomeStateItem
-
-    this.updateHomeState('pushHomeState', finalState)
-    return null
   }
 
   handleRouteChange(item: HistoryItem) {
@@ -394,12 +380,11 @@ class HomeStore extends Store {
           case 'restaurantReview':
           case 'restaurantHours':
           case 'restaurant': {
-            const prevState = findLast(this.states, (x) => x.type === name)
-            this.pushHomeState({
+            const next = this.getHomeState({
               ...item,
               name,
-              id: item.type === 'replace' ? prevState?.id ?? item.id : item.id,
             })
+            this.updateHomeState('handleRouteChange', next)
             break
           }
           default: {
@@ -558,6 +543,18 @@ export const homeStore = createStore(HomeStore)
 export const useHomeStore = (debug?: boolean): HomeStore => {
   // @ts-ignore
   return useStoreInstance(homeStore, undefined, debug)
+}
+
+export const useLastHomeState = <Type extends HomeStateItem['type']>(
+  type: Type
+) => {
+  return useStoreInstance(homeStore, (x) =>
+    _.findLast(x.states, (s) => s.type === type)
+  )
+}
+
+export const useHomeStateById = <Type extends HomeStateItem>(id: string) => {
+  return useStoreInstance(homeStore, (x) => x.allStates[id]) as Type
 }
 
 const uid = () => `${Math.random()}`.replace('.', '')
