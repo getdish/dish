@@ -28,6 +28,7 @@ export async function createServer(serverConf: ServerConfig) {
     https,
     inspect: false,
     env: serverConf.env ?? 'development',
+    verbose: serverConf.verbose ?? false,
     rootFolder: serverConf.rootFolder ?? process.cwd(),
     watch: serverConf.watch ?? false,
     protocol,

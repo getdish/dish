@@ -13,6 +13,7 @@ export type ServerConfig = {
   hostname?: string
   apiDir?: string | null
   https?: boolean
+  verbose?: boolean
 }
 
 export type ServerConfigNormal = Required<ServerConfig> & {
@@ -39,6 +40,7 @@ export type CreateWebpackConfig = {
   polyFillPath?: string
   disableHot?: boolean
   noMinify?: boolean
+  verbose?: boolean
 }
 
 export type File = {
