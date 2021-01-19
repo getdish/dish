@@ -5,8 +5,6 @@ Dockerfile
 **/node_modules
 **/_
 **/tsconfig.tsbuildinfo
-**/build
-!dish-app/build
 **/.expo
 **/target/*
 dish-app/ios

@@ -40,15 +40,6 @@ import { HomeTopSearches } from './HomeTopSearches'
 export type Props = HomeStackViewProps<HomeStateItemHome>
 
 export default memo(function HomePage(props: Props) {
-  // const test123 = useIsRouteActive('home')
-  console.log('rendering???')
-  return (
-    <>
-      <LinkButton tags={[{ slug: 'lenses__gems' }]}>1</LinkButton>
-      <LinkButton tags={[{ slug: 'lenses__veg' }]}>2</LinkButton>
-    </>
-  )
-
   const home = useHomeStore()
   const theme = useTheme()
   const [isLoaded, setIsLoaded] = useState(false)

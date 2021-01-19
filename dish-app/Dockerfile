@@ -8,6 +8,6 @@ RUN apt-get update && apt-get install -y parallel build-essential \
 
 ENV NODE_ENV=production
 
-RUN yarn web:build
+# RUN yarn web:build
 
 CMD ["yarn", "web:serve"]
