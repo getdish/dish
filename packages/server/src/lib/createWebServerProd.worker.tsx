@@ -38,7 +38,10 @@ async function createWebServerProd(app: any, config: ServerConfigNormal) {
       webpackConfig,
     } = config
     if (watch) {
-      return await createWebServerDev(app, config)
+      createWebServerDev(app, config)
+      app.listen(port)
+      parentPort?.postMessage('done')
+      return
     } else {
       console.log(' [web] building...')
       await buildApp({
