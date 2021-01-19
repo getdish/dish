@@ -21,9 +21,11 @@ export class Store<Props extends Object | null = null> {
       process.env.NODE_ENV === 'development' &&
       DebugStores.has(this.constructor)
     ) {
-      console.log(
+      console.groupCollapsed(
         `📤 ${this.constructor.name} - updating components (${this[LISTENERS].size})`
       )
+      console.trace()
+      console.groupEnd()
     }
   }
 }
