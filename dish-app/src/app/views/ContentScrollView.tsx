@@ -4,7 +4,13 @@ import {
   useStoreInstance,
   useStoreSelector,
 } from '@dish/use-store'
-import React, { Suspense, createContext, forwardRef, useRef } from 'react'
+import React, {
+  Suspense,
+  createContext,
+  forwardRef,
+  useMemo,
+  useRef,
+} from 'react'
 import { ScrollView, ScrollViewProps, StyleSheet } from 'react-native'
 import { VStack, useMedia } from 'snackui'
 
@@ -40,11 +46,10 @@ export const usePreventContentScroll = (id: string) => {
     ContentParentStore,
     (store) => store.activeId === id
   )
-  const media = useMedia()
   if (!isActive) {
     return true
   }
-  return (!isWeb || supportsTouchWeb) && media.xs && isDrawerNotOpen
+  return (!isWeb || supportsTouchWeb) && isDrawerNotOpen
 }
 
 export const ContentScrollContext = createContext('id')
@@ -96,22 +101,34 @@ export const ContentScrollView = forwardRef<ScrollView, ContentScrollViewProps>(
       }
     }
 
+    // memo because preventScrolling changes on media queries
+    const childrenMemo = useMemo(() => children, [children])
+
     return (
       <ContentScrollContext.Provider value={id}>
-        <ScrollView
-          ref={ref}
-          {...props}
-          onScroll={setIsScrolling}
-          scrollEventThrottle={16}
-          scrollEnabled={!preventScrolling}
-          disableScrollViewPanResponder={preventScrolling}
-          style={[styles.scroll, style]}
+        <VStack
+          flex={1}
+          overflow="hidden"
+          pointerEvents={preventScrolling ? 'none' : 'auto'}
+          {...(media.notXs && {
+            pointerEvents: 'auto',
+          })}
         >
-          <Suspense fallback={null}>{children}</Suspense>
+          <ScrollView
+            ref={ref}
+            {...props}
+            onScroll={setIsScrolling}
+            scrollEventThrottle={16}
+            // scrollEnabled={!preventScrolling}
+            // disableScrollViewPanResponder={preventScrolling}
+            style={[styles.scroll, style]}
+          >
+            <Suspense fallback={null}>{childrenMemo}</Suspense>
 
-          {/* for drawer, pad bottom */}
-          <VStack height={media.sm ? 300 : 0} />
-        </ScrollView>
+            {/* for drawer, pad bottom */}
+            <VStack height={media.sm ? 300 : 0} />
+          </ScrollView>
+        </VStack>
       </ContentScrollContext.Provider>
     )
   }
@@ -122,5 +139,6 @@ const styles = StyleSheet.create({
     flex: 1,
     height: '100%',
     maxHeight: '100%',
+    overflow: 'scroll',
   },
 })
