@@ -398,7 +398,7 @@ class HomeStore extends Store {
             this.pushHomeState({
               ...item,
               name,
-              id: item.type === 'replace' ? prevState.id : item.id,
+              id: item.type === 'replace' ? prevState?.id ?? item.id : item.id,
             })
             break
           }
