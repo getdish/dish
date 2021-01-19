@@ -2,19 +2,16 @@ import { route } from '@dish/api'
 import { userFindOne } from '@dish/graph'
 import { jwtSign } from '@dish/helpers-node'
 
-import { appleSignIn, clientSecret } from './_apple'
+import { appleAuth } from './_apple'
 
 export default route(async (req, res) => {
   const { id_token, code, redirectUri } = req.body
   if (!id_token || !code) {
     return res.sendStatus(500)
   }
-  const tokens = await appleSignIn.getAuthorizationToken(clientSecret, code, {
-    // Optional, use the same value which you passed to authorisation URL. In case of iOS you skip the value
+  const { claim } = await appleAuth({
+    code,
     redirectUri,
-  })
-  const claim = await appleSignIn.verifyIdToken(tokens.id_token, {
-    ignoreExpiration: true, // default is false
   })
   const user = await userFindOne({ apple_uid: claim.email })
   if (!user) {
