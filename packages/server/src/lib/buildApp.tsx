@@ -34,6 +34,7 @@ export async function buildApp({
         node: createConfig({
           ...webpackConfig,
           target: 'node',
+          noMinify: true,
         }),
       }
 

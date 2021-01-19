@@ -2,7 +2,7 @@ import './globals'
 
 import { useHydrateCache } from '@dish/graph'
 import { ProvideRouter } from '@dish/router'
-import { allStores, configureUseStore } from '@dish/use-store'
+import { configureUseStore } from '@dish/use-store'
 import React, { Suspense } from 'react'
 import { QueryClientProvider } from 'react-query'
 import { ThemeProvider, configureThemes } from 'snackui'
@@ -10,6 +10,7 @@ import { ThemeProvider, configureThemes } from 'snackui'
 import { App } from './app/App'
 import { AppPortalProvider } from './app/AppPortal'
 import { homeStore } from './app/homeStore'
+import { PlatformSpecificProvider } from './app/PlatformSpecificProvider'
 import { userStore } from './app/userStore'
 import {
   tagDefaultAutocomplete,
@@ -55,19 +56,21 @@ export function Root() {
   }
 
   return (
-    <ThemeProvider themes={themes} defaultTheme="light">
-      <ProvideRouter routes={routes}>
-        <QueryClientProvider client={queryClient}>
-          <AppPortalProvider>
-            <Suspense fallback={null}>
-              <RootLoader>
-                <App />
-              </RootLoader>
-            </Suspense>
-          </AppPortalProvider>
-        </QueryClientProvider>
-      </ProvideRouter>
-    </ThemeProvider>
+    <PlatformSpecificProvider>
+      <ThemeProvider themes={themes} defaultTheme="light">
+        <ProvideRouter routes={routes}>
+          <QueryClientProvider client={queryClient}>
+            <AppPortalProvider>
+              <Suspense fallback={null}>
+                <RootLoader>
+                  <App />
+                </RootLoader>
+              </Suspense>
+            </AppPortalProvider>
+          </QueryClientProvider>
+        </ProvideRouter>
+      </ThemeProvider>
+    </PlatformSpecificProvider>
   )
 }
 

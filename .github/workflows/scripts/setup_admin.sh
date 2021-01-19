@@ -1,5 +1,6 @@
 #!/usr/bin/env bash
 set -e
+set -x
 
 echo "$HOME/bin" >> $GITHUB_PATH
 echo "$(yarn global bin)/" >> $GITHUB_PATH

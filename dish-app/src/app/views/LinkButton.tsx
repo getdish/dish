@@ -49,7 +49,7 @@ export function LinkButton<Name extends keyof RoutesTable = keyof RoutesTable>(
 
   return wrapWithLinkElement(
     <Button
-      minHeight={10} // temp react-native
+      // minHeight={10} // temp react-native
       disabled={disabled}
       {...restProps}
       {...(isActive && props.activeStyle)}

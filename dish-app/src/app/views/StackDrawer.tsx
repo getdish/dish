@@ -59,8 +59,8 @@ export const StackDrawer = ({
         <AbsoluteVStack
           className="top-left-controls"
           zIndex={1000000000000}
-          left={media.sm ? 6 : -12}
-          top={media.sm ? 6 : -6}
+          left={media.sm ? 6 : 12}
+          top={media.sm ? 6 : 78}
         >
           {topLeftControls}
         </AbsoluteVStack>

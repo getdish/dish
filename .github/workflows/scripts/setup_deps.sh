@@ -1,5 +1,6 @@
 #!/usr/bin/env bash
 set -e
+set -x
 
 yarn global add hasura-cli@v1.2.2
 yarn global add https://github.com/getdish/postgrator-cli

@@ -1,5 +1,6 @@
 #!/usr/bin/env bash
 set -e
+set -x
 
 echo "Running Test Cafe end-to-end browser-based tests..."
 

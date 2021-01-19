@@ -1,5 +1,6 @@
 #!/usr/bin/env bash
 set -e
+set -x
 
 echo "Deploying staging branch to staging droplet..."
 
