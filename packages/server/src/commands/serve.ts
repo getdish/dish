@@ -30,6 +30,10 @@ export class Start extends Command {
       char: 'S',
       description: 'Set up an https domain',
     }),
+    verbose: flags.boolean({
+      char: 'S',
+      description: 'logs',
+    }),
   }
 
   async run() {
@@ -45,6 +49,7 @@ export class Start extends Command {
       watch: false,
       apiDir: flags['no-api'] ? null : join(rootFolder, 'src', 'api'),
       https: flags.https,
+      verbose: flags.verbose,
     }
 
     process.env.NODE_ENV = 'production'

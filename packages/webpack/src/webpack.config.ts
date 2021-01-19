@@ -39,6 +39,7 @@ export default function createWebpackConfig({
   const isSSR = target === 'node'
   const isHot = !isProduction && !isSSR && !disableHot && target !== 'node'
   const isStaticExtracted = !process.env.NO_EXTRACT
+  const isVerbose = process.env.ANALYZE_BUNDLE || process.env.INSPECT
   const minimize = noMinify || isSSR ? false : isProduction && !isSSR
   const hashFileNamePart = isProduction ? '[contenthash]' : '[fullhash]'
   const hotEntry = isHot ? 'webpack-hot-middleware/client' : null
@@ -133,7 +134,7 @@ export default function createWebpackConfig({
       optimization: {
         moduleIds: 'deterministic',
         minimize,
-        concatenateModules: isProduction && !process.env.ANALYZE_BUNDLE,
+        concatenateModules: isProduction && !isVerbose,
         usedExports: isProduction,
         removeEmptyChunks: isProduction,
         splitChunks:
@@ -303,7 +304,7 @@ export default function createWebpackConfig({
 
         !!pwaOptions && new WebpackPwaManifest(pwaOptions),
 
-        !!process.env.INSPECT &&
+        !!isVerbose &&
           new DuplicatesPlugin({
             emitErrors: false,
             emitHandler: undefined,
@@ -338,7 +339,7 @@ export default function createWebpackConfig({
 
         new TimeFixPlugin(),
 
-        process.env.ANALYZE_BUNDLE &&
+        isVerbose &&
           new (require('webpack-bundle-analyzer').BundleAnalyzerPlugin)({
             analyzerMode: 'static',
           }),
