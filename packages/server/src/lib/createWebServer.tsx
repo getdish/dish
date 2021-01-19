@@ -9,7 +9,11 @@ export async function createWebServer(
   app: any,
   { createConfig, ...config }: ServerConfigNormal
 ) {
-  console.log(' [web] starting webpack ...')
+  console.log(
+    ` [web] starting webpack in ${config.env} mode ${
+      config.watch ? '(watch)' : ''
+    }...`
+  )
   const port = await getPort()
   const workerData = {
     ...config,

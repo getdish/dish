@@ -38,4 +38,5 @@ export function createWebServerDev(
     })
   )
   app.use(hotMiddleware(compiler))
+  return compiler
 }

@@ -1,4 +1,4 @@
-ARG DISH_BASE_VERSION=nate-dev
+ARG DISH_BASE_VERSION=latest
 FROM gcr.io/dish-258800/base:$DISH_BASE_VERSION
 WORKDIR /app/dish-app
 
