@@ -13,13 +13,7 @@ import AppleSignIn, { AppleSignInOptions } from 'apple-sign-in-rest'
 export const redirectUri = 'https://dishapp.com/api/auth/appleAuthorize'
 const rootPath = join(__dirname, '..', '..', '..')
 
-let privateKeyPath = ''
-try {
-  privateKeyPath = join(rootPath, 'etc', 'AuthKey_M5CPALWBA5.p8')
-} catch (err) {
-  console.error('Error: loading privateKeyPath')
-}
-
+const privateKeyPath = join(rootPath, 'etc', 'AuthKey_M5CPALWBA5.p8')
 export const appleConfig: AppleSignInOptions = {
   clientId: 'com.dishapp',
   teamId: '399WY8X9HY',
@@ -27,35 +21,49 @@ export const appleConfig: AppleSignInOptions = {
   privateKeyPath,
 }
 
-export const appleSignIn = new AppleSignIn(appleConfig)
-export const clientSecret = appleSignIn.createClientSecret({
-  // expirationDuration: 5 * 60, // 5 minutes
-})
+let appleSignIn: AppleSignIn | null = null
+let clientSecret: string | null = null
 
-export const authorizeRoute = route(async (req, res) => {
-  let { user: reqUser, id_token, code, error } = req.body
-  console.log('sign in response', JSON.stringify(req.body, null, 2))
+export async function appleAuth({
+  code,
+  redirectUri,
+}: {
+  code: string
+  redirectUri?: string
+}) {
+  if (!appleSignIn) {
+    try {
+      appleSignIn = new AppleSignIn(appleConfig)
+      clientSecret = appleSignIn.createClientSecret({
+        // expirationDuration: 5 * 60, // 5 minutes
+      })
+    } catch (err) {
+      console.log('error setting up apple sign in', appleConfig)
+      throw err
+    }
+  }
   const tokens = await appleSignIn.getAuthorizationToken(clientSecret, code, {
     // Optional, use the same value which you passed to authorisation URL. In case of iOS you skip the value
     redirectUri,
   })
-
   const claim = await appleSignIn.verifyIdToken(tokens.id_token, {
     ignoreExpiration: true, // default is false
   })
+  return {
+    tokens,
+    claim,
+  }
+}
 
-  const apple_token = tokens.access_token
-  const apple_secret = clientSecret
-  const apple_refresh_token = tokens.refresh_token
-
-  console.log('got', {
-    apple_secret,
-    apple_token,
-    id_token,
-    apple_refresh_token,
-    tokenResponse: tokens.id_token,
+export const authorizeRoute = route(async (req, res) => {
+  let { user: reqUser, id_token, code, error } = req.body
+  console.log('sign in response', JSON.stringify(req.body, null, 2))
+  const { claim, tokens } = await appleAuth({
+    code,
+    redirectUri,
   })
-
+  const apple_token = tokens.access_token
+  const apple_refresh_token = tokens.refresh_token
   const isChrome = req.path.includes('_chrome')
   const sendResponse = (success?: boolean) => {
     if (isChrome) {
