@@ -1,8 +1,7 @@
 import React, { memo } from 'react'
-import { ScrollView, StyleSheet } from 'react-native'
+import { StyleSheet } from 'react-native'
 import { HStack, LinearGradient, Text } from 'snackui'
 
-import { bgLightHover } from '../../constants/colors'
 import { tagLenses } from '../../constants/localTags'
 import { tagDisplayName } from '../../constants/tagMeta'
 import { NavigableTag } from '../../types/tagTypes'
@@ -40,6 +39,7 @@ export const HomeTopSearches = memo(() => {
             className="safari-fix-overflow"
             position="relative"
             overflow="hidden"
+            flexShrink={1}
           >
             {hasLenseColor && (
               <LinearGradient

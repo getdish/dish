@@ -1,5 +1,6 @@
 #!/usr/bin/env bash
 set -e
+set -x
 
 branch=$(git rev-parse --abbrev-ref HEAD)
 export DISH_BASE_VERSION=:${branch//\//-}
