@@ -1,12 +1,7 @@
 import { useCallback, useLayoutEffect, useMemo, useRef } from 'react'
 
 import { configureOpts } from './configureUseStore'
-import {
-  UNWRAP_PROXY,
-  createMutableSource,
-  defaultOptions,
-  useMutableSource,
-} from './constants'
+import { UNWRAP_PROXY, defaultOptions } from './constants'
 import useConstant, {
   UNWRAP_STORE_INFO,
   cache,
@@ -17,6 +12,7 @@ import useConstant, {
 } from './helpers'
 import { Selector, StoreInfo, UseStoreOptions } from './interfaces'
 import { Store, TRIGGER_UPDATE } from './Store'
+import { createMutableSource, useMutableSource } from './useMutableSource'
 import {
   DebugStores,
   shouldDebug,
@@ -259,17 +255,18 @@ function useStoreFromInfo(
   const selector = userSelector ?? selectKeys
   const getSnapshot = useCallback(
     (store) => {
-      const selected = selector(store, [...internal.current.tracked])
+      const snap = selector(store, [...internal.current.tracked])
       if (
         process.env.NODE_ENV === 'development' &&
         (shouldDebug(component, info) || configureOpts.logLevel === 'debug')
       ) {
-        console.log('💰 selected', selected)
+        console.log('💰 getSnapshot', [...internal.current.tracked], snap)
       }
-      return selected
+      return snap
     },
-    [selector]
+    [selector.toString()]
   )
+  // TODO selector should not be memoed automatically?
   const state = useMutableSource(info.source, getSnapshot, subscribe)
   const storeProxy = useConstant(() =>
     createProxiedStore(info, { internal, component })
@@ -282,7 +279,6 @@ function useStoreFromInfo(
   useLayoutEffect(() => {
     internal.current.isRendering = false
     mountStore(info, storeProxy)
-
     if (
       process.env.NODE_ENV === 'development' &&
       (shouldDebug(component, info) || configureOpts.logLevel === 'debug')
@@ -297,8 +293,10 @@ function useStoreFromInfo(
 
   return storeProxy
 }
+
 let setters = new Set<any>()
 const logStack = new Set<Set<any[]>>()
+
 function createProxiedStore(
   storeInfo: StoreInfo,
   renderOpts?: {
@@ -317,7 +315,10 @@ function createProxiedStore(
           gettersState.curGetKeys.add(key)
         }
         if (key in getters) {
-          if (renderOpts?.internal.current.isRendering) {
+          if (
+            !gettersState.isGetting &&
+            renderOpts?.internal.current.isRendering
+          ) {
             renderOpts.internal.current.tracked.add(key)
           }
           if (getCache.has(key)) {
@@ -431,7 +432,10 @@ function createProxiedStore(
           }
           return action
         }
-        if (renderOpts?.internal.current.isRendering) {
+        if (
+          !gettersState.isGetting &&
+          renderOpts?.internal.current.isRendering
+        ) {
           renderOpts.internal.current.tracked.add(key)
           return Reflect.get(target, key)
         }
