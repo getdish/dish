@@ -16,7 +16,6 @@ export type StoreInfo = {
   stateKeys: string[]
   gettersState: {
     getCache: Map<string, any>
-    getterToDeps: Map<string, Set<string>>
     depsToGetter: Map<string, Set<string>>
     curGetKeys: Set<string>
     isGetting: boolean

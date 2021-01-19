@@ -64,23 +64,24 @@ export const useMutableSource = (
       lastVersion.current = nextVersion
       const nextSnapshot = getSnapshot(source[TARGET])
       setState((prev) => {
-        if (
-          prev[0] !== source ||
-          prev[1] !== getSnapshot ||
-          prev[2] !== subscribe
-        ) {
-          return prev
-        }
-        if (isObjectEqualShallow(prev[4], nextSnapshot)) {
-          return prev
-        }
-        return [
+        const next = [
           /* [0] */ prev[0],
           /* [1] */ prev[1],
           /* [2] */ prev[2],
           /* [3] */ nextVersion,
           /* [4] */ nextSnapshot,
-        ]
+        ] as const
+        if (
+          prev[0] !== source ||
+          prev[1] !== getSnapshot ||
+          prev[2] !== subscribe
+        ) {
+          return next
+        }
+        if (isObjectEqualShallow(prev[4], nextSnapshot)) {
+          return prev
+        }
+        return next
       })
     }
     const unsubscribe = subscribe(source[TARGET], checkForUpdates)
