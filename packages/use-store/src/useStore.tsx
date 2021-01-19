@@ -205,8 +205,6 @@ function getOrCreateStoreInfo(
     source: createMutableSource(storeInstance, () => value.version),
     gettersState: {
       getCache: new Map<string, any>(),
-      // two maps, track both directions for fast lookup/clear w slightly more memory
-      getterToDeps: new Map<string, Set<string>>(),
       depsToGetter: new Map<string, Set<string>>(),
       curGetKeys: new Set<string>(),
       isGetting: false,
@@ -295,7 +293,7 @@ function useStoreFromInfo(
 }
 
 let setters = new Set<any>()
-const logStack = new Set<Set<any[]>>()
+const logStack = new Set<Set<any[]> | 'end'>()
 
 function createProxiedStore(
   storeInfo: StoreInfo,
@@ -305,11 +303,12 @@ function createProxiedStore(
   }
 ) {
   const { actions, storeInstance, getters, gettersState } = storeInfo
-  const { getCache, curGetKeys, getterToDeps, depsToGetter } = gettersState
+  const { getCache, curGetKeys, depsToGetter } = gettersState
   const constr = storeInstance.constructor
 
   const proxiedStore = new Proxy(storeInstance, {
     get(target, key) {
+      const isDebugging = renderOpts && DebugStores.has(constr)
       if (typeof key === 'string') {
         if (gettersState.isGetting) {
           gettersState.curGetKeys.add(key)
@@ -322,7 +321,6 @@ function createProxiedStore(
             renderOpts.internal.current.tracked.add(key)
           }
           if (getCache.has(key)) {
-            // console.log('using getter cahce', key)
             return getCache.get(key)
           }
           // track get deps
@@ -330,7 +328,6 @@ function createProxiedStore(
           gettersState.isGetting = true
           const res = getters[key].call(proxiedStore)
           gettersState.isGetting = false
-          getterToDeps.set(key, new Set(curGetKeys))
           // store inverse lookup
           curGetKeys.forEach((gk) => {
             if (!depsToGetter.has(gk)) {
@@ -346,8 +343,7 @@ function createProxiedStore(
           let action = actions[key].bind(proxiedStore)
           if (
             process.env.NODE_ENV === 'development' &&
-            ((renderOpts && DebugStores.has(constr)) ||
-              configureOpts.logLevel !== 'error') &&
+            (isDebugging || configureOpts.logLevel !== 'error') &&
             !key.startsWith('get')
           ) {
             const ogAction = action
@@ -361,8 +357,10 @@ function createProxiedStore(
                 const logs = new Set<any[]>()
                 logStack.add(logs)
 
-                // run action here now
+                // 🏃‍♀️ run action here now
                 const res = ogAction(...args)
+
+                logStack.add('end')
 
                 const name = constr.name
                 const color = strColor(name)
@@ -389,7 +387,12 @@ function createProxiedStore(
                 if (isTopLevelLogger) {
                   let error = null
                   try {
-                    for (const [head, ...rest] of [...logStack]) {
+                    for (const item of [...logStack]) {
+                      if (item === 'end') {
+                        console.groupEnd()
+                        continue
+                      }
+                      const [head, ...rest] = item
                       if (head) {
                         console.groupCollapsed(...head)
                         for (const log of rest) {
@@ -468,7 +471,7 @@ function createProxiedStore(
           clearGetterCache(key)
         }
 
-        // TODO could potentially enforce actions + batch
+        // TODO option to enforce actions only mutations
         storeInfo.version++
         storeInstance[TRIGGER_UPDATE]()
       }
@@ -479,7 +482,6 @@ function createProxiedStore(
   function clearGetterCache(setKey: string) {
     const getters = depsToGetter.get(setKey)
     if (!getters) {
-      // console.log('No getters?', setKey, depsToGetter)
       return
     }
     getters.forEach((gk) => {
