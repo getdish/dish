@@ -54,7 +54,7 @@ import { StackItemProps } from '../HomeStackView'
 import { CircleButton } from '../restaurant/CircleButton'
 import { RestaurantListItem } from '../restaurant/RestaurantListItem'
 import { PageTitle } from '../search/PageTitle'
-import { BottomFloatingArea } from './BottomFloatingArea'
+import { BottomFloatingArea } from '../../views/BottomFloatingArea'
 import { ListAddRestuarant } from './ListAddRestuarant'
 import { getListColor, listColors } from './listColors'
 

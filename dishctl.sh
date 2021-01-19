@@ -853,7 +853,7 @@ function build_all_dish_services() {
 function ci_prettier() {
   docker run \
     $DISH_REGISTRY/base:$DOCKER_TAG_NAMESPACE \
-    prettier --check "**/*.{ts,tsx}"
+    yarn prettier --check "**/*.{ts,tsx}"
 }
 
 function ci_rename_tagged_images_to_latest() {
