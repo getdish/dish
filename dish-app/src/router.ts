@@ -16,7 +16,7 @@ export const routes = {
     '/gallery/:restaurantSlug/:dishId?'
   ),
 
-  list: new Route<{ slug: string; userSlug: string; state?: 'edit' }>(
+  list: new Route<{ slug: string; userSlug: string; state?: 'edit' | string }>(
     '/l/:userSlug/:slug/:state?'
   ),
   login: new Route('/login'),

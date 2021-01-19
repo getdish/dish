@@ -2,9 +2,7 @@ import { CornerLeftUp, X } from '@dish/react-feather'
 import React, { memo } from 'react'
 import { HStack, StackProps, useTheme } from 'snackui'
 
-type CircleButtonProps = StackProps & {
-  size?: number
-}
+type CircleButtonProps = StackProps & { size?: number; shadowed?: boolean }
 
 export const CloseButton = memo((props: CircleButtonProps) => {
   return (
@@ -22,7 +20,10 @@ export const BackButton = memo((props: CircleButtonProps) => {
   )
 })
 
-export const SmallCircleButton = (props: StackProps) => {
+export const SmallCircleButton = ({
+  shadowed,
+  ...props
+}: CircleButtonProps) => {
   const theme = useTheme()
   return (
     <HStack
@@ -37,6 +38,11 @@ export const SmallCircleButton = (props: StackProps) => {
       pressStyle={{
         backgroundColor: '#222',
       }}
+      {...(shadowed && {
+        shadowColor: 'rgba(0,0,0,0.25)',
+        shadowRadius: 10,
+        shadowOffset: { width: 0, height: 2 },
+      })}
       {...props}
     />
   )
