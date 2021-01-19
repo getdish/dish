@@ -1,6 +1,6 @@
 import { series, sleep } from '@dish/async'
 import { LngLat, slugify } from '@dish/graph'
-import { ArrowUp } from '@dish/react-feather'
+import { ArrowUp, Edit, Edit2 } from '@dish/react-feather'
 import { HistoryItem } from '@dish/router'
 import { reaction } from '@dish/use-store'
 import { sortBy } from 'lodash'
@@ -96,19 +96,32 @@ export default memo(function SearchPage(props: Props) {
       <StackDrawer
         closable
         topLeftControls={
-          <Tooltip contents="Make your list">
+          <Tooltip contents={`Make your "${title.replace('the ', '')}" list`}>
             <SmallCircleButton
+              shadowed
               onPress={() => {
-                if (!userStore.promptLogin()) return
+                if (userStore.promptLogin()) return
+                console.log('go', state.activeTags, {
+                  userSlug: userStore.user.username,
+                  slug: 'create',
+                  state: getActiveTags(state)
+                    .map((x) => x.slug)
+                    .join(','),
+                })
                 router.navigate({
                   name: 'list',
                   params: {
                     userSlug: userStore.user.username,
                     slug: 'create',
+                    state: getActiveTags(state.activeTags)
+                      .map((x) => x.slug)
+                      .join(','),
                   },
                 })
               }}
-            ></SmallCircleButton>
+            >
+              <Edit2 color="#fff" size={14} />
+            </SmallCircleButton>
           </Tooltip>
         }
       >
