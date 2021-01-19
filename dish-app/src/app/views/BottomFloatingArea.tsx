@@ -2,8 +2,8 @@ import { useStoreInstance } from '@dish/use-store'
 import React, { useMemo } from 'react'
 import { AbsoluteVStack, HStack, useMedia } from 'snackui'
 
-import { drawerStore } from '../../drawerStore'
-import { useSafeArea } from '../../hooks/useSafeArea'
+import { drawerStore } from '../drawerStore'
+import { useSafeArea } from '../hooks/useSafeArea'
 
 export function BottomFloatingArea(props: { children: any }) {
   const drawer = useStoreInstance(drawerStore)

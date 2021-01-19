@@ -57,3 +57,12 @@ export const RESTAURANT_WEIGHTS = {
   grubhub: 0.2,
   google: 0.4,
 }
+
+export const MARTIN_TILES_HOST = (() => {
+  const prod = 'https://martin-tiles.dishapp.com'
+  const staging = 'https://martin-tiles-staging.dishapp.com'
+  const dev = 'http://localhost:3005'
+  if (isStaging) return staging
+  if (isDev) return dev
+  return prod
+})()

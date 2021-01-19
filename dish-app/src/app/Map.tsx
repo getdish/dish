@@ -11,21 +11,15 @@ import React, { useEffect, useRef, useState } from 'react'
 import { Dimensions } from 'react-native'
 import { useGet } from 'snackui'
 
-import {
-  blue,
-  darkPink,
-  green,
-  pink,
-  purple,
-  yellow,
-} from '../../constants/colors'
-import { MAPBOX_ACCESS_TOKEN } from '../../constants/constants'
-import { tagLenses } from '../../constants/localTags'
-import { hasMovedAtLeast } from '../../helpers/hasMovedAtLeast'
-import { hexToRGB } from '../../helpers/hexToRGB'
-import { useIsMountedRef } from '../../helpers/useIsMountedRef'
-import { useSearchResultsStore } from '../home/search/searchResultsStore'
+import { blue, darkPink, green, pink, yellow } from '../constants/colors'
+import { MAPBOX_ACCESS_TOKEN } from '../constants/constants'
+import { tagLenses } from '../constants/localTags'
+import { hasMovedAtLeast } from '../helpers/hasMovedAtLeast'
+import { hexToRGB } from '../helpers/hexToRGB'
+import { useIsMountedRef } from '../helpers/useIsMountedRef'
+import { useSearchResultsStore } from './home/search/searchResultsStore'
 import { MapProps } from './MapProps'
+import { tiles } from './tiles'
 
 mapboxgl.accessToken = MAPBOX_ACCESS_TOKEN
 
@@ -263,75 +257,6 @@ const setActive = (
     }
   }
 }
-
-type Tile = {
-  name: string
-  label: string
-  maxZoom: number
-  minZoom: number
-  labelSource?: string
-  promoteId: string
-  lineColor?: string
-  lineColorActive?: string
-  lineColorHover?: string
-  color: string
-  hoverColor: string
-  activeColor: string
-}
-
-const tiles: Tile[] = [
-  {
-    maxZoom: 20,
-    minZoom: 12,
-    // lineColor: '#880088',
-    // lineColorActive: '#660066',
-    // lineColorHover: '#330033',
-    label: 'name',
-    labelSource: 'public.nhood_labels',
-    promoteId: 'ogc_fid',
-    activeColor: 'rgba(255, 255, 255, 0)',
-    hoverColor: 'rgba(255,255,255,0.35)',
-    color: 'rgba(248, 238, 248, 0.5)',
-    name: 'public.zcta5',
-  },
-  // {
-  //   maxZoom: 11,
-  //   minZoom: 9,
-  //   lineColor: '#880088',
-  //   promoteId: 'ogc_fid',
-  //   activeColor: purple,
-  //   hoverColor: 'yellow',
-  //   color: lightPurple,
-  //   label: 'nhood',
-  //   name: 'public.hca',
-  // },
-  {
-    maxZoom: 12,
-    minZoom: 4,
-    // lineColor: '#aa55aa',
-    // lineColorActive: '#660066',
-    // lineColorHover: '#330033',
-    promoteId: 'ogc_fid',
-    activeColor: `rgba(255, 255, 255, 0)`,
-    hoverColor: hexToRGB(purple, 0.2).string,
-    color: hexToRGB(purple, 0.25).string,
-    label: 'hrr_city',
-    name: 'public.hrr',
-  },
-  {
-    maxZoom: 4,
-    minZoom: 0,
-    // lineColor: '#880088',
-    // lineColorActive: '#660066',
-    // lineColorHover: '#330033',
-    promoteId: 'ogc_fid',
-    activeColor: green,
-    hoverColor: 'yellow',
-    color: purple,
-    label: null,
-    name: 'public.state',
-  },
-]
 
 function setupMapEffect({
   setMap,

@@ -1,13 +1,18 @@
+import { MARTIN_TILES_HOST } from '@dish/graph'
 import { useStoreInstance } from '@dish/use-store'
 import MapboxGL from '@react-native-mapbox-gl/maps'
 import React, { useEffect, useRef, useState } from 'react'
 import { Animated, Dimensions, StyleSheet } from 'react-native'
 import { useDebounce } from 'snackui'
 
-import { MAPBOX_ACCESS_TOKEN } from '../../constants/constants'
-import { hasMovedAtLeast } from '../../helpers/hasMovedAtLeast'
-import { drawerStore as drawerStoreInstance } from '../drawerStore'
+import { green } from '../constants/colors'
+import { MAPBOX_ACCESS_TOKEN } from '../constants/constants'
+import { hasMovedAtLeast } from '../helpers/hasMovedAtLeast'
+import { drawerStore as drawerStoreInstance } from './drawerStore'
 import { MapProps } from './MapProps'
+import { tiles } from './tiles'
+
+console.log('tiles, tiles', tiles)
 
 MapboxGL.setAccessToken(MAPBOX_ACCESS_TOKEN)
 MapboxGL.setTelemetryEnabled(false)
@@ -31,6 +36,7 @@ export const MapView = ({
   const cameraRef = useRef<MapboxGL.Camera>(null)
   const mapRef = useRef<MapboxGL.MapView>(null)
   const onMoveEndDelayed = useDebounce(onMoveEnd ?? idFn, 250)
+  const tileSource = useRef<MapboxGL.VectorSource>()
 
   useEffect(() => {
     const spring = Animated.spring(tyRef.current, {
@@ -125,6 +131,134 @@ export const MapView = ({
             bounds,
           }}
         />
+        {tiles.map(
+          (
+            {
+              name,
+              minZoom,
+              maxZoom,
+              activeColor,
+              hoverColor,
+              color,
+              label,
+              promoteId,
+              labelSource,
+              lineColor,
+              lineColorActive,
+              lineColorHover,
+            },
+            index
+          ) => {
+            const url = `http://d1sh.com/api/tile/${name}.json`
+            const sourceId = `${name}`.replace('.', '')
+            const labelUrl = `${MARTIN_TILES_HOST}/${labelSource}.json`
+            console.log('Loading tile url', sourceId, url, labelUrl)
+            return (
+              <MapboxGL.VectorSource
+                key={name}
+                ref={tileSource}
+                url={url}
+                id={sourceId}
+              >
+                <MapboxGL.FillLayer
+                  id={`${name}fill`}
+                  sourceLayerID={`${name}fillLayer`}
+                  minZoomLevel={minZoom}
+                  maxZoomLevel={maxZoom}
+                  style={{
+                    fillColor: '#000' ?? [
+                      'case',
+                      ['==', ['feature-state', 'active'], true],
+                      activeColor,
+                      ['==', ['feature-state', 'hover'], true],
+                      hoverColor,
+                      ['==', ['feature-state', 'active'], null],
+                      color,
+                      'green',
+                    ],
+                    fillAntialias: true,
+                    fillOpacity: 1,
+                  }}
+                />
+                {lineColor && (
+                  <MapboxGL.LineLayer
+                    id={`${name}line`}
+                    // sourceLayerID={sourceId}
+                    minZoomLevel={minZoom}
+                    maxZoomLevel={maxZoom}
+                    style={{
+                      lineCap: [
+                        'case',
+                        ['==', ['feature-state', 'active'], true],
+                        lineColorActive,
+                        ['==', ['feature-state', 'hover'], true],
+                        lineColorHover,
+                        ['==', ['feature-state', 'active'], null],
+                        lineColor,
+                        'green',
+                      ],
+                      lineOpacity: 0.05,
+                      lineWidth: [
+                        'case',
+                        ['==', ['feature-state', 'active'], true],
+                        1,
+                        ['==', ['feature-state', 'hover'], true],
+                        2,
+                        ['==', ['feature-state', 'active'], null],
+                        3,
+                        4,
+                      ],
+                    }}
+                  />
+                )}
+                {labelSource && (
+                  <MapboxGL.VectorSource url={labelUrl} id={`${name}-labels`}>
+                    <MapboxGL.SymbolLayer
+                      id={`${name}label`}
+                      // TODO move it to a centroid computed source}
+                      // sourceID={null as any}
+                      // sourceLayerID={`${name}-labels`}
+                      // source-layer={labelSource ?? name}
+                      minZoomLevel={minZoom}
+                      maxZoomLevel={maxZoom}
+                      style={{
+                        textField: `{${label}}`,
+                        textFont: ['PT Serif Bold', 'Arial Unicode MS Bold'],
+                        // 'textallowOverlap: true,
+                        textVariableAnchor: ['center', 'center'],
+                        textRadialOffset: 10,
+                        // 'iconallowOverlap: true,
+                        textSize: 22,
+                        // , {
+                        //   base: 1,
+                        //   stops: [
+                        //     [10, 6],
+                        //     [16, 22],
+                        //   ],
+                        // },
+                        textJustify: 'center',
+                        symbolPlacement: 'point',
+                        textColor: '#000' ?? [
+                          'case',
+                          ['==', ['feature-state', 'active'], true],
+                          '#000',
+                          ['==', ['feature-state', 'hover'], true],
+                          green,
+                          ['==', ['feature-state', 'active'], null],
+                          'rgba(0,0,0,0.8)',
+                          'green',
+                        ],
+                        textHaloColor: 'rgba(255,255,255,0.1)',
+                        textHaloWidth: 1,
+                      }}
+                    />
+                  </MapboxGL.VectorSource>
+                )}
+              </MapboxGL.VectorSource>
+            )
+          }
+        )}
+
         <MapboxGL.ShapeSource
           id="trackClustersSource"
           shape={{

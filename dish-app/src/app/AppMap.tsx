@@ -30,7 +30,7 @@ import { ensureFlexText } from './home/restaurant/ensureFlexText'
 import { homeStore } from './homeStore'
 import { useLastValueWhen } from './hooks/useLastValueWhen'
 import { useMapSize } from './hooks/useMapSize'
-import { MapView } from './views/Map'
+import { MapView } from './Map'
 
 const styles = {
   light: 'mapbox://styles/nwienert/ckddrrcg14e4y1ipj0l4kf1xy',
