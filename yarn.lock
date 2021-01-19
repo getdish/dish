@@ -14142,9 +14142,10 @@ postcss@^8.1.4:
     nanoid "^3.1.20"
     source-map "^0.6.1"
 
-"postgrator-cli@https://github.com/getdish/postgrator-cli":
+postgrator-cli@^4.0.0:
   version "4.0.0"
-  resolved "https://github.com/getdish/postgrator-cli#9fb3e969b612ee5fc56b855d379840eeec70e2c3"
+  resolved "https://registry.npmjs.org/postgrator-cli/-/postgrator-cli-4.0.0.tgz#d6a582b354c183879198f508ec49cd3f3b96b1b5"
+  integrity sha512-y1Sa37fh92ObKiZ9YCWTg/FPOKZj5wwLXQIFvf+XU1AE3INO8ZJPRzSFku5J5LsN7TogoibIQ2ZYZFlfporYug==
   dependencies:
     command-line-args "^5.1.1"
     command-line-usage "^6.1.0"

@@ -5,6 +5,8 @@ import { Command, flags } from '@oclif/command'
 import { buildApp } from '../lib/buildApp'
 import { getWebpackConfigBuilder } from '../lib/getWebpackConfigBuilder'
 
+process.env.NODE_ENV === 'production'
+
 export class Build extends Command {
   static description = 'Build app to filesystem'
   static aliases = ['s']
@@ -23,16 +25,12 @@ export class Build extends Command {
   async run() {
     const { flags } = this.parse(Build)
 
-    process.env.NODE_ENV === 'production'
-
     try {
       const rootDir = process.cwd()
       await buildApp({
         serial: flags.serial,
         clean: flags.clean,
-        createConfig: (opts) => {
-          return getWebpackConfigBuilder({ rootDir })(opts)
-        },
+        createConfig: getWebpackConfigBuilder({ rootDir }),
         webpackConfig: {
           entry: join(rootDir, 'src', 'index.ts'),
           env: 'production',

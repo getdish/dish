@@ -87,12 +87,13 @@ async function async<A extends any>(
 }
 
 async function buildWebpack(config: Configuration) {
+  const env = process.env.NODE_ENV
+  if (!env) {
+    // throw new Error(`No NODE_ENV set`)
+    process.env.NODE_ENV = process.env.NODE_ENV || 'production'
+  }
   const stats = await new Promise<Stats | null>((res, rej) => {
-    console.log(
-      ` [web] building ${config.output?.path ?? ''} in ${
-        process.env.NODE_ENV
-      }...`
-    )
+    console.log(` [web] building ${config.output?.path ?? ''} in ${env}...`)
     const webpack = require('webpack')
     webpack(config, (err, stats) => {
       if (err || stats?.hasErrors()) {
