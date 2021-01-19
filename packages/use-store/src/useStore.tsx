@@ -253,12 +253,13 @@ function useStoreFromInfo(
   const selector = userSelector ?? selectKeys
   const getSnapshot = useCallback(
     (store) => {
-      const snap = selector(store, [...internal.current.tracked])
+      const keys = [...internal.current.tracked]
+      const snap = selector(store, keys)
       if (
         process.env.NODE_ENV === 'development' &&
         (shouldDebug(component, info) || configureOpts.logLevel === 'debug')
       ) {
-        console.log('💰 getSnapshot', [...internal.current.tracked], snap)
+        console.log('💰 getSnapshot', keys, snap)
       }
       return snap
     },

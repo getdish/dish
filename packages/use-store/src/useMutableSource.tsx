@@ -8,7 +8,10 @@ export const createMutableSource = (target: any, getVersion: any) => ({
   [GET_VERSION]: getVersion,
 })
 
-export function isObjectEqualShallow(a: Object, b: Object) {
+export function isEqualShallow(a: Object, b: Object) {
+  if (!a || !b) return a === b
+  if (typeof a !== typeof b) return false
+  if (typeof a !== 'object') return a === b
   const ak = Object.keys(a)
   const bk = Object.keys(b)
   if (ak.length !== bk.length) return false
@@ -43,7 +46,7 @@ export const useMutableSource = (
     if (currentVersion !== state[3] && currentVersion !== lastVersion.current) {
       const prevSnapshot = currentSnapshot
       currentSnapshot = getSnapshot(source[TARGET])
-      if (!isObjectEqualShallow(currentSnapshot, prevSnapshot)) {
+      if (!isEqualShallow(currentSnapshot, prevSnapshot)) {
         setState([
           /* [0] */ source,
           /* [1] */ getSnapshot,
@@ -78,7 +81,7 @@ export const useMutableSource = (
         ) {
           return next
         }
-        if (isObjectEqualShallow(prev[4], nextSnapshot)) {
+        if (isEqualShallow(prev[4], nextSnapshot)) {
           return prev
         }
         return next
