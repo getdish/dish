@@ -4,8 +4,8 @@ services:
     build:
       context: ./services/postgres
     restart: always
-    # volumes:
-    #   - ${HOME}/.dish/postgres:/var/lib/postgresql/data
+    volumes:
+      - ${HOME}/.dish/postgres:/var/lib/postgresql/data
     environment:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: 'postgres'

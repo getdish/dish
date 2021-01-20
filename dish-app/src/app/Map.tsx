@@ -17,6 +17,7 @@ import { tagLenses } from '../constants/localTags'
 import { hasMovedAtLeast } from '../helpers/hasMovedAtLeast'
 import { hexToRGB } from '../helpers/hexToRGB'
 import { useIsMountedRef } from '../helpers/useIsMountedRef'
+import { Region } from '../types/homeTypes'
 import { useSearchResultsStore } from './home/search/searchResultsStore'
 import { MapProps } from './MapProps'
 import { tiles } from './tiles'
@@ -502,6 +503,7 @@ function setupMapEffect({
           )
         }
 
+        let curRegion: Region | null = null
         let curId
         const handleMoveThrottled = throttle(() => {
           const zoom = map.getZoom()
@@ -544,7 +546,7 @@ function setupMapEffect({
             active: true,
           })
 
-          // temp reginos supprot until we normalize naming at tile level
+          // temp regions supprot until we normalize naming at tile level
           const name =
             feature.properties.nhood ??
             (feature.properties.hrrcity
@@ -560,11 +562,12 @@ function setupMapEffect({
             return
           }
 
-          getProps().onSelectRegion?.({
+          curRegion = {
             geometry: feature.geometry as any,
             name: name,
             slug: feature.properties.slug ?? slugify(name),
-          })
+          }
+          updateOnSelectRegion()
         }, 300)
 
         let hovered
@@ -918,14 +921,40 @@ function setupMapEffect({
 
         internal.current.currentMoveCancel = handleMoveEndDebounced.cancel
 
-        const cancelMoveEnd = () => {
+        const handleMoveStart = () => {
           handleMoveEndDebounced.cancel()
+          props.onMoveStart?.()
         }
 
-        map.on('movestart', cancelMoveEnd)
+        let isMouseDown = false
+
+        const handleMouseDown = () => {
+          handleMoveEndDebounced.cancel()
+          isMouseDown = true
+        }
+
+        const handleMouseUp = () => {
+          isMouseDown = false
+          updateOnSelectRegion()
+        }
+
+        let lastUpdate = null
+        function updateOnSelectRegion() {
+          if (isMouseDown) return
+          if (!isEqual(lastUpdate, curRegion)) {
+            getProps().onSelectRegion?.(curRegion)
+            curRegion = null
+          }
+        }
+
+        map.on('mousedown', handleMouseDown)
+        map.on('mouseup', handleMouseUp)
+        map.on('movestart', handleMoveStart)
         map.on('moveend', handleMoveEnd)
         cancels.add(() => {
-          map.off('movestart', cancelMoveEnd)
+          map.off('mousedown', handleMouseDown)
+          map.off('mouseup', handleMouseUp)
+          map.off('movestart', handleMoveStart)
           map.off('moveend', handleMoveEnd)
         })
 

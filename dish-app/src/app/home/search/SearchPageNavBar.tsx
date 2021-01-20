@@ -83,8 +83,6 @@ const SearchPageNavBarContent = memo(() => {
     return null
   }
 
-  console.log('RENDER', JSON.stringify(state.activeTags))
-
   return (
     <>
       <VStack
