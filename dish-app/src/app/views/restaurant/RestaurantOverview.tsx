@@ -2,21 +2,11 @@ import { graphql } from '@dish/graph'
 import { ellipseText } from '@dish/helpers'
 import { capitalize } from 'lodash'
 import React, { memo, useState } from 'react'
-import {
-  AbsoluteVStack,
-  Button,
-  HStack,
-  Input,
-  Paragraph,
-  Text,
-  VStack,
-  useTheme,
-} from 'snackui'
+import { AbsoluteVStack, HStack, Input, Text, VStack, useTheme } from 'snackui'
 
 import { blue } from '../../../constants/colors'
 import { queryRestaurant } from '../../../queries/queryRestaurant'
 import { ensureFlexText } from '../../home/restaurant/ensureFlexText'
-import { SmallButton } from '../SmallButton'
 
 const quote = (
   <AbsoluteVStack top={-10} left={-0}>

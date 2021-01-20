@@ -26,9 +26,13 @@ export type RestaurantItemMeta = {
   rishes_votes_ratio_rank: number
 }
 
-export type RestaurantSearchItem = RestaurantOnlyIds & {
-  meta: RestaurantItemMeta
-}
+export type RestaurantSearchItem =
+  | (RestaurantOnlyIds & {
+      meta: RestaurantItemMeta
+    })
+  | {
+      isPlaceholder: boolean
+    }
 
 export type SearchResults = {
   restaurants: RestaurantSearchItem[]

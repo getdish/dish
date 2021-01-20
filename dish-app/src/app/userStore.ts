@@ -1,3 +1,4 @@
+import { sleep } from '@dish/async'
 import {
   Auth,
   EditUserProps,
@@ -30,7 +31,18 @@ class UserStore extends Store {
     data: any = {},
     onSuccess?: (data: any) => any
   ) {
-    const header = await userFetchSimple(method, path, data)
+    const header = await Promise.race([
+      userFetchSimple(method, path, data),
+      sleep(3000).then(() => {
+        Toast.error('Timed out!')
+        throw new Error(`Timed out`)
+      }),
+    ])
+    if (!header) {
+      return {
+        error: `Timed out`,
+      }
+    }
     const isErrHead = header.status >= 300
     const res = await header.json()
     if (res.error) {
