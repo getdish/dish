@@ -15,7 +15,6 @@ services:
       - 5432:5432
   redis:
     image: redis
-    platform: linux/amd64
     ports:
       - 6379:6379
   hasura:
@@ -38,7 +37,6 @@ services:
       - 'redis'
   tileserver:
     image: urbica/martin
-    platform: linux/amd64
     ports:
       - 3005:3000
     environment:

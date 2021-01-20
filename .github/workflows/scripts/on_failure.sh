@@ -1,5 +1,8 @@
 #!/usr/bin/env bash
 
+set -e
+set -x
+
 echo "Outputting CI logs..."
 
 pushd services/hasura

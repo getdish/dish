@@ -10,4 +10,6 @@ ENV NODE_ENV=production
 
 RUN yarn web:build
 
+EXPOSE 4444
+
 CMD ["yarn", "web:serve"]
