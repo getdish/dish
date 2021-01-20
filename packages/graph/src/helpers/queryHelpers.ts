@@ -178,13 +178,6 @@ export async function upsert<T extends ModelType>(
   )
 }
 
-const res = mutation.update_list_by_pk({
-  pk_columns: {
-    id: '',
-  },
-  _set: {} as any,
-})
-
 export async function update<T extends WithID<ModelType>>(
   table: ModelName,
   objectIn: T,
@@ -199,24 +192,23 @@ export async function update<T extends WithID<ModelType>>(
     if (object[key] == null) delete object[key]
   }
   opts.keys = opts.keys || Object.keys(generatedSchema[table + '_set_input'])
-  const resolved = await resolvedMutationWithFields(
-    (mutation, { assignSelections }) => {
-      const res = mutation[action]({
-        pk_columns: {
-          id: object.id,
-        },
-        _set: object,
-      })
-      if (opts.query && res) {
-        assignSelections(opts.query, res)
-      }
-      return res as WithID<T>
-    },
-    opts
-  )
-  if (opts.query && resolved) {
-    setCache(opts.query, resolved)
-  }
+  const resolved = await resolvedMutationWithFields(() => {
+    const res = mutation[action]({
+      pk_columns: {
+        id: object.id,
+      },
+      _set: object,
+    })
+    // ensure we select something!
+    res['__typename']
+    // if (opts.query && res) {
+    //   assignSelections(opts.query, res)
+    // }
+    return res as WithID<T>
+  }, opts)
+  // if (opts.query && resolved) {
+  //   setCache(opts.query, resolved)
+  // }
   return resolved
 }
 
