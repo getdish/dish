@@ -84,12 +84,12 @@ async function createWebServerProd(app: any, config: ServerConfigNormal) {
     // static assets
     // const indexFile = Path.join(ssrDir, 'index.html')
     const clientBuildPath = Path.join(buildDir, 'modern')
-    const clientBuildLegacyPath = Path.join(buildDir, 'legacy')
+    // const clientBuildLegacyPath = Path.join(buildDir, 'legacy')
 
     // move index.html to backup location so we dont serve via express.static
-    const [clientHTMLModern, clientHTMLLegacy] = [
+    const [clientHTMLModern] = [
       Path.join(clientBuildPath, 'index.html'),
-      Path.join(clientBuildLegacyPath, 'index.html'),
+      // Path.join(clientBuildLegacyPath, 'index.html'),
     ].map((path) => {
       const outPath = Path.join(Path.dirname(path), 'index-original.html')
       if (existsSync(path)) {
@@ -99,7 +99,7 @@ async function createWebServerProd(app: any, config: ServerConfigNormal) {
     })
 
     app.use('/', express.static(clientBuildPath))
-    app.use('/', express.static(clientBuildLegacyPath))
+    // app.use('/', express.static(clientBuildLegacyPath))
 
     app.get('*', async (req, res) => {
       console.log('req', req.hostname, req.path)
@@ -142,7 +142,7 @@ async function createWebServerProd(app: any, config: ServerConfigNormal) {
         allowHigherVersions: true,
       })
 
-      const clientHTML = isModernUser ? clientHTMLModern : clientHTMLLegacy
+      const clientHTML = clientHTMLModern
       const clientScripts =
         clientHTML.match(/<script\b[^>]*>([\s\S]*?)<\/script>/gm) ?? []
       const clientLinks = clientHTML.match(/<link\b[^>]*>/gm) ?? []

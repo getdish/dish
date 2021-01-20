@@ -28,7 +28,7 @@ export type ServerConfigNormal = Required<ServerConfig> & {
 export type CreateWebpackConfig = {
   entry: string
   target: 'node' | 'web'
-  legacy?: boolean
+  // legacy?: boolean
   env: 'development' | 'production'
   cwd?: string
   babelInclude?: (path: string) => boolean

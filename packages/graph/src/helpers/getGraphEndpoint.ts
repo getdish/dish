@@ -2,7 +2,7 @@ import { isProd, isStaging } from '../constants'
 
 export function getGraphEndpointDomain() {
   const local = 'http://localhost:8080'
-  const live = 'https://hasura.dishapp.com'
+  // const live = 'https://hasura.dishapp.com'
   const staging = 'https://hasura-staging.dishapp.com'
   if (isProd || isStaging) {
     return staging
