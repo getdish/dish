@@ -18,19 +18,19 @@ export const JWT_SECRET =
   process.env.JWT_SECRET || '12345678901234567890123456789012'
 
 const PROD_ORIGIN = 'https://staging.dishapp.com'
+const ORIGIN = isProd
+  ? PROD_ORIGIN
+  : isStaging
+  ? PROD_ORIGIN
+  : getWindow()?.location?.origin ?? 'http://localhost'
 
 export const DISH_API_ENDPOINT =
-  process.env.DISH_ENDPOINT ??
-  (isProd
-    ? PROD_ORIGIN
-    : isStaging
-    ? PROD_ORIGIN
-    : getWindow()?.location?.origin ?? 'http://localhost:4444')
+  process.env.DISH_API_ENDPOINT ?? `${ORIGIN}:4444`
 
 export const SEARCH_DOMAIN = (() => {
   const staging = 'https://search-staging.dishapp.com'
   const live = staging
-  const local = process.env.SEARCH_ENDPOINT ?? `localhost:10000`
+  const local = process.env.SEARCH_ENDPOINT ?? `${ORIGIN}:10000`
   if (isProd) {
     return live
   }
@@ -61,7 +61,7 @@ export const RESTAURANT_WEIGHTS = {
 export const MARTIN_TILES_HOST = (() => {
   const prod = 'https://martin-tiles.dishapp.com'
   const staging = 'https://martin-tiles-staging.dishapp.com'
-  const dev = 'http://localhost:3005'
+  const dev = `http://${ORIGIN}:3005`
   if (isStaging) return staging
   if (isDev) return dev
   return prod
