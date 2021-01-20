@@ -75,10 +75,12 @@ services:
       - VIRTUAL_HOST=staging.dishapp.com
       - VIRTUAL_PORT=4444
       - HASURA_ENDPOINT=http://hasura:8080
+      - SEARCH_ENDPOINT=http://search:10000
     ports:
       - 4444:4444
     depends_on:
       - 'hasura'
+      - 'search'
   tileserver:
     image: urbica/martin
     ports:
