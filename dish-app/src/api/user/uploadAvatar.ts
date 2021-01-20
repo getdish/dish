@@ -10,9 +10,14 @@ import { v4 } from 'uuid'
 
 import { getUserFromRoute, secureRoute } from './_user'
 
-// if (!process.env.DO_SPACES_ID) {
-//   throw new Error(`NO Docker Spaces ID provided`)
-// }
+if (!process.env.DO_SPACES_ID || !process.env.DO_SPACES_SECRET) {
+  console.error(
+    `Error: Missing docker credentials`,
+    process.env,
+    process.env.DO_SPACES_ID,
+    process.env.DO_SPACES_SECRET
+  )
+}
 
 const BUCKET_NAME = 'user-images'
 

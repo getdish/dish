@@ -116,6 +116,9 @@ services:
       context: ./
       dockerfile: ./dish-app/Dockerfile
     environment:
+      - SENDGRID_API_KEY=${TF_VAR_SENDGRID_API_KEY}
+      - DO_SPACES_ID=${TF_VAR_DO_SPACES_ID}
+      - DO_SPACES_SECRET=${TF_VAR_DO_SPACES_SECRET}
       - VIRTUAL_HOST=staging.dishapp.com
       - VIRTUAL_PORT=4444
     ports:
