@@ -16,10 +16,10 @@ export function getAuth(): null | {
   return null
 }
 
-export function getAuthHeaders() {
+export function getAuthHeaders(isAdmin?: boolean) {
   const auth = getAuth()
   return {
-    ...(HASURA_SECRET && {
+    ...(isAdmin && {
       'X-Hasura-Admin-Secret': HASURA_SECRET,
     }),
     ...(auth && {

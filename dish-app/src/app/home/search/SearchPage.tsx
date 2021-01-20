@@ -1,5 +1,5 @@
 import { series, sleep } from '@dish/async'
-import { LngLat, slugify } from '@dish/graph'
+import { slugify } from '@dish/graph'
 import { ArrowUp, Edit, Edit2 } from '@dish/react-feather'
 import { HistoryItem } from '@dish/router'
 import { reaction } from '@dish/use-store'
@@ -38,18 +38,14 @@ import {
 } from 'snackui'
 
 import { isWeb } from '../../../constants/constants'
-import { initialHomeState } from '../../../constants/initialHomeState'
 import { addTagsToCache, allTags } from '../../../helpers/allTags'
-import { bboxToSpan } from '../../../helpers/bboxToSpan'
-import { RegionNormalized, fetchRegion } from '../../../helpers/fetchRegion'
 import { getActiveTags } from '../../../helpers/getActiveTags'
 import { getTagsFromRoute } from '../../../helpers/getTagsFromRoute'
 import { getTagSlug } from '../../../helpers/getTagSlug'
 import { getTitleForState } from '../../../helpers/getTitleForState'
 import { rgbString } from '../../../helpers/rgbString'
-import { searchLocations } from '../../../helpers/searchLocations'
 import { useQueryLoud } from '../../../helpers/useQueryLoud'
-import { SearchRouteParams, router } from '../../../router'
+import { router } from '../../../router'
 import {
   HomeActiveTagsRecord,
   HomeStateItemSearch,
@@ -84,6 +80,7 @@ import { SearchPageNavBar } from './SearchPageNavBar'
 import { SearchPageResultsInfoBox } from './SearchPageResultsInfoBox'
 import { searchPageStore, useSearchPageStore } from './SearchPageStore'
 import { searchResultsStore } from './searchResultsStore'
+import { useLocationFromRoute } from './useLocationFromRoute'
 
 type Props = HomeStackViewProps<HomeStateItemSearch>
 const SearchPagePropsContext = createContext<Props | null>(null)
@@ -377,6 +374,7 @@ const SearchPageTitle = memo(() => {
   const { title, subTitle } = getTitleForState(curProps.item, {
     lowerCase: false,
   })
+  console.log('item is', curProps.item, title, subTitle)
   const lenseColor = useCurrentLenseColor()
   return (
     <>
@@ -577,64 +575,6 @@ const SearchLoading = (props: StackProps) => {
       <LoadingItem />
     </VStack>
   )
-}
-
-function useLocationFromRoute(route: HistoryItem<'search'>) {
-  const key = `location-${route.name + route.params.region}`
-  return useQueryLoud(key, () => getLocationFromRoute(route))
-}
-
-async function getLocationFromRoute(
-  route: HistoryItem<'search'>
-): Promise<{ center: LngLat; span: LngLat; region?: RegionNormalized } | null> {
-  if (route.name === 'search') {
-    const params = route.params as SearchRouteParams
-
-    if (params.region === 'here') {
-      // TODO get from localStorage or set to default sf
-      return null
-    }
-
-    // lat _ lng _ span
-    if (+params.region[0] >= 0) {
-      const [latStr, lngStr, spanStr] = params.region.split('_')
-      return {
-        center: {
-          lat: +latStr,
-          lng: +lngStr,
-        },
-        span: {
-          lat: +spanStr,
-          lng: +spanStr,
-        },
-      }
-    }
-
-    // find by slug
-    const region = await fetchRegion(params.region)
-    if (region) {
-      return {
-        center: region.center,
-        span: region.span,
-        region,
-      }
-    }
-
-    // ?? old find by slug
-    const locations = await searchLocations(params.region.split('-').join(' '))
-    if (locations.length) {
-      const [nearest] = locations
-      return {
-        center: nearest.center,
-        span: bboxToSpan(nearest.bbox),
-      }
-    }
-  }
-
-  return {
-    center: initialHomeState.center,
-    span: initialHomeState.span,
-  }
 }
 
 function useTagsFromRoute(route: HistoryItem<'search'>) {

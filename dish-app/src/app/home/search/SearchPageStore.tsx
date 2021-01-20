@@ -47,9 +47,10 @@ class SearchPageStore extends Store {
   }) {
     opts = opts || { quiet: false }
     this.lastSearchAt = Date.now()
+    this.status = 'loading'
     let curId = this.lastSearchAt
 
-    const curState = homeStore.currentState
+    const curState = homeStore.lastSearchState
     const searchQuery = opts.searchQuery ?? curState.searchQuery ?? ''
     const navItem = {
       state: {
