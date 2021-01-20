@@ -316,46 +316,7 @@ func handleRequests() {
 	mux.HandleFunc("/feed", feed)
 	mux.HandleFunc("/regions", regions)
 	handler := cors.Default().Handler(mux)
-	handler = logRequestHandler(handler)
 	log.Fatal(http.ListenAndServe(":"+port, handler))
-}
-
-type HTTPReqInfo struct {
-	// GET etc.
-	method string
-	uri string
-	referer string
-	ipaddr string
-	// response code, like 200, 404
-	code int
-	// number of bytes of the response sent
-	size int64
-	// how long did it take to
-	duration time.Duration
-	userAgent string
-}
-
-func logRequestHandler(h http.Handler) http.Handler {
-	fn := func(w http.ResponseWriter, r *http.Request) {
-		ri := &HTTPReqInfo{
-			method: r.Method,
-			uri: r.URL.String(),
-			referer: r.Header.Get("Referer"),
-			userAgent: r.Header.Get("User-Agent"),
-		}
-
-		ri.ipaddr = requestGetRemoteAddress(r)
-
-		// this runs handler h and captures information about
-		// HTTP request
-		m := httpsnoop.CaptureMetrics(h, w, r)
-
-		ri.code = m.Code
-		ri.size = m.BytesWritten
-		ri.duration = m.Duration
-		logHTTPReq(ri)
-	}
-	return http.HandlerFunc(fn)
 }
 
 func main() {

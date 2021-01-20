@@ -1,12 +1,6 @@
 import { graphql } from '@dish/graph'
-import {
-  AlignCenter,
-  ExternalLink,
-  Link2,
-  PhoneCall,
-} from '@dish/react-feather'
+import { ExternalLink, Link2, PhoneCall } from '@dish/react-feather'
 import React, { memo } from 'react'
-import { ScrollView } from 'react-native'
 import { Box, HStack, HoverablePopover, Text, VStack } from 'snackui'
 
 import { queryRestaurant } from '../../../queries/queryRestaurant'
@@ -68,7 +62,7 @@ export const RestaurantAddressLinksRow = memo(
         <Text color="#999" fontSize={fontSize}>
           <VStack>
             {!!(curLocInfo && showAddress) && (
-              <Text selectable ellipse fontSize={14} maxWidth={190}>
+              <Text selectable ellipse fontSize={14} maxWidth={220}>
                 {getAddressText(
                   curLocInfo,
                   restaurant.address ?? '',

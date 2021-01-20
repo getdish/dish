@@ -402,6 +402,7 @@ export interface list_bool_exp {
   created_at?: Maybe<timestamptz_comparison_exp>
   description?: Maybe<String_comparison_exp>
   id?: Maybe<uuid_comparison_exp>
+  location?: Maybe<geometry_comparison_exp>
   name?: Maybe<String_comparison_exp>
   public?: Maybe<Boolean_comparison_exp>
   restaurants?: Maybe<list_restaurant_bool_exp>
@@ -430,6 +431,7 @@ export interface list_insert_input {
   created_at?: Maybe<Scalars['timestamptz']>
   description?: Maybe<Scalars['String']>
   id?: Maybe<Scalars['uuid']>
+  location?: Maybe<Scalars['geometry']>
   name?: Maybe<Scalars['String']>
   public?: Maybe<Scalars['Boolean']>
   restaurants?: Maybe<list_restaurant_arr_rel_insert_input>
@@ -482,6 +484,7 @@ export interface list_order_by {
   created_at?: Maybe<order_by>
   description?: Maybe<order_by>
   id?: Maybe<order_by>
+  location?: Maybe<order_by>
   name?: Maybe<order_by>
   public?: Maybe<order_by>
   restaurants_aggregate?: Maybe<list_restaurant_aggregate_order_by>
@@ -883,6 +886,8 @@ export enum list_select_column {
   /** column name */
   id = 'id',
   /** column name */
+  location = 'location',
+  /** column name */
   name = 'name',
   /** column name */
   public = 'public',
@@ -900,6 +905,7 @@ export interface list_set_input {
   created_at?: Maybe<Scalars['timestamptz']>
   description?: Maybe<Scalars['String']>
   id?: Maybe<Scalars['uuid']>
+  location?: Maybe<Scalars['geometry']>
   name?: Maybe<Scalars['String']>
   public?: Maybe<Scalars['Boolean']>
   slug?: Maybe<Scalars['String']>
@@ -937,6 +943,8 @@ export enum list_update_column {
   description = 'description',
   /** column name */
   id = 'id',
+  /** column name */
+  location = 'location',
   /** column name */
   name = 'name',
   /** column name */
@@ -2722,6 +2730,8 @@ export interface review_bool_exp {
   categories?: Maybe<jsonb_comparison_exp>
   favorited?: Maybe<Boolean_comparison_exp>
   id?: Maybe<uuid_comparison_exp>
+  list?: Maybe<list_bool_exp>
+  list_id?: Maybe<uuid_comparison_exp>
   location?: Maybe<geometry_comparison_exp>
   native_data_unique_key?: Maybe<String_comparison_exp>
   rating?: Maybe<numeric_comparison_exp>
@@ -2779,6 +2789,8 @@ export interface review_insert_input {
   categories?: Maybe<Scalars['jsonb']>
   favorited?: Maybe<Scalars['Boolean']>
   id?: Maybe<Scalars['uuid']>
+  list?: Maybe<list_obj_rel_insert_input>
+  list_id?: Maybe<Scalars['uuid']>
   location?: Maybe<Scalars['geometry']>
   native_data_unique_key?: Maybe<Scalars['String']>
   rating?: Maybe<Scalars['numeric']>
@@ -2801,6 +2813,7 @@ export interface review_insert_input {
 export interface review_max_order_by {
   authored_at?: Maybe<order_by>
   id?: Maybe<order_by>
+  list_id?: Maybe<order_by>
   native_data_unique_key?: Maybe<order_by>
   rating?: Maybe<order_by>
   restaurant_id?: Maybe<order_by>
@@ -2818,6 +2831,7 @@ export interface review_max_order_by {
 export interface review_min_order_by {
   authored_at?: Maybe<order_by>
   id?: Maybe<order_by>
+  list_id?: Maybe<order_by>
   native_data_unique_key?: Maybe<order_by>
   rating?: Maybe<order_by>
   restaurant_id?: Maybe<order_by>
@@ -2850,6 +2864,8 @@ export interface review_order_by {
   categories?: Maybe<order_by>
   favorited?: Maybe<order_by>
   id?: Maybe<order_by>
+  list?: Maybe<list_order_by>
+  list_id?: Maybe<order_by>
   location?: Maybe<order_by>
   native_data_unique_key?: Maybe<order_by>
   rating?: Maybe<order_by>
@@ -2889,6 +2905,8 @@ export enum review_select_column {
   /** column name */
   id = 'id',
   /** column name */
+  list_id = 'list_id',
+  /** column name */
   location = 'location',
   /** column name */
   native_data_unique_key = 'native_data_unique_key',
@@ -2920,6 +2938,7 @@ export interface review_set_input {
   categories?: Maybe<Scalars['jsonb']>
   favorited?: Maybe<Scalars['Boolean']>
   id?: Maybe<Scalars['uuid']>
+  list_id?: Maybe<Scalars['uuid']>
   location?: Maybe<Scalars['geometry']>
   native_data_unique_key?: Maybe<Scalars['String']>
   rating?: Maybe<Scalars['numeric']>
@@ -3180,6 +3199,8 @@ export enum review_update_column {
   favorited = 'favorited',
   /** column name */
   id = 'id',
+  /** column name */
+  list_id = 'list_id',
   /** column name */
   location = 'location',
   /** column name */
@@ -6356,6 +6377,7 @@ export const generatedSchema = {
     created_at: { __type: 'timestamptz!' },
     description: { __type: 'String' },
     id: { __type: 'uuid!' },
+    location: { __type: 'geometry' },
     name: { __type: 'String!' },
     public: { __type: 'Boolean!' },
     restaurants: {
@@ -6435,6 +6457,7 @@ export const generatedSchema = {
     created_at: { __type: 'timestamptz_comparison_exp' },
     description: { __type: 'String_comparison_exp' },
     id: { __type: 'uuid_comparison_exp' },
+    location: { __type: 'geometry_comparison_exp' },
     name: { __type: 'String_comparison_exp' },
     public: { __type: 'Boolean_comparison_exp' },
     restaurants: { __type: 'list_restaurant_bool_exp' },
@@ -6449,6 +6472,7 @@ export const generatedSchema = {
     created_at: { __type: 'timestamptz' },
     description: { __type: 'String' },
     id: { __type: 'uuid' },
+    location: { __type: 'geometry' },
     name: { __type: 'String' },
     public: { __type: 'Boolean' },
     restaurants: { __type: 'list_restaurant_arr_rel_insert_input' },
@@ -6518,6 +6542,7 @@ export const generatedSchema = {
     created_at: { __type: 'order_by' },
     description: { __type: 'order_by' },
     id: { __type: 'order_by' },
+    location: { __type: 'order_by' },
     name: { __type: 'order_by' },
     public: { __type: 'order_by' },
     restaurants_aggregate: { __type: 'list_restaurant_aggregate_order_by' },
@@ -6929,6 +6954,7 @@ export const generatedSchema = {
     created_at: { __type: 'timestamptz' },
     description: { __type: 'String' },
     id: { __type: 'uuid' },
+    location: { __type: 'geometry' },
     name: { __type: 'String' },
     public: { __type: 'Boolean' },
     slug: { __type: 'String' },
@@ -8757,6 +8783,8 @@ export const generatedSchema = {
     categories: { __type: 'jsonb', __args: { path: 'String' } },
     favorited: { __type: 'Boolean' },
     id: { __type: 'uuid!' },
+    list: { __type: 'list' },
+    list_id: { __type: 'uuid' },
     location: { __type: 'geometry' },
     native_data_unique_key: { __type: 'String' },
     rating: { __type: 'numeric' },
@@ -8850,6 +8878,8 @@ export const generatedSchema = {
     categories: { __type: 'jsonb_comparison_exp' },
     favorited: { __type: 'Boolean_comparison_exp' },
     id: { __type: 'uuid_comparison_exp' },
+    list: { __type: 'list_bool_exp' },
+    list_id: { __type: 'uuid_comparison_exp' },
     location: { __type: 'geometry_comparison_exp' },
     native_data_unique_key: { __type: 'String_comparison_exp' },
     rating: { __type: 'numeric_comparison_exp' },
@@ -8879,6 +8909,8 @@ export const generatedSchema = {
     categories: { __type: 'jsonb' },
     favorited: { __type: 'Boolean' },
     id: { __type: 'uuid' },
+    list: { __type: 'list_obj_rel_insert_input' },
+    list_id: { __type: 'uuid' },
     location: { __type: 'geometry' },
     native_data_unique_key: { __type: 'String' },
     rating: { __type: 'numeric' },
@@ -8900,6 +8932,7 @@ export const generatedSchema = {
     __typename: { __type: 'String!' },
     authored_at: { __type: 'timestamptz' },
     id: { __type: 'uuid' },
+    list_id: { __type: 'uuid' },
     native_data_unique_key: { __type: 'String' },
     rating: { __type: 'numeric' },
     restaurant_id: { __type: 'uuid' },
@@ -8915,6 +8948,7 @@ export const generatedSchema = {
   review_max_order_by: {
     authored_at: { __type: 'order_by' },
     id: { __type: 'order_by' },
+    list_id: { __type: 'order_by' },
     native_data_unique_key: { __type: 'order_by' },
     rating: { __type: 'order_by' },
     restaurant_id: { __type: 'order_by' },
@@ -8931,6 +8965,7 @@ export const generatedSchema = {
     __typename: { __type: 'String!' },
     authored_at: { __type: 'timestamptz' },
     id: { __type: 'uuid' },
+    list_id: { __type: 'uuid' },
     native_data_unique_key: { __type: 'String' },
     rating: { __type: 'numeric' },
     restaurant_id: { __type: 'uuid' },
@@ -8946,6 +8981,7 @@ export const generatedSchema = {
   review_min_order_by: {
     authored_at: { __type: 'order_by' },
     id: { __type: 'order_by' },
+    list_id: { __type: 'order_by' },
     native_data_unique_key: { __type: 'order_by' },
     rating: { __type: 'order_by' },
     restaurant_id: { __type: 'order_by' },
@@ -8977,6 +9013,8 @@ export const generatedSchema = {
     categories: { __type: 'order_by' },
     favorited: { __type: 'order_by' },
     id: { __type: 'order_by' },
+    list: { __type: 'list_order_by' },
+    list_id: { __type: 'order_by' },
     location: { __type: 'order_by' },
     native_data_unique_key: { __type: 'order_by' },
     rating: { __type: 'order_by' },
@@ -9001,6 +9039,7 @@ export const generatedSchema = {
     categories: { __type: 'jsonb' },
     favorited: { __type: 'Boolean' },
     id: { __type: 'uuid' },
+    list_id: { __type: 'uuid' },
     location: { __type: 'geometry' },
     native_data_unique_key: { __type: 'String' },
     rating: { __type: 'numeric' },
@@ -11736,6 +11775,7 @@ export interface list {
   created_at: ScalarsEnums['timestamptz']
   description?: Maybe<ScalarsEnums['String']>
   id: ScalarsEnums['uuid']
+  location?: Maybe<ScalarsEnums['geometry']>
   name: ScalarsEnums['String']
   public: ScalarsEnums['Boolean']
   restaurants: (args?: {
@@ -12959,6 +12999,8 @@ export interface review {
   }) => Maybe<ScalarsEnums['jsonb']>
   favorited?: Maybe<ScalarsEnums['Boolean']>
   id: ScalarsEnums['uuid']
+  list?: Maybe<list>
+  list_id?: Maybe<ScalarsEnums['uuid']>
   location?: Maybe<ScalarsEnums['geometry']>
   native_data_unique_key?: Maybe<ScalarsEnums['String']>
   rating?: Maybe<ScalarsEnums['numeric']>
@@ -13028,6 +13070,7 @@ export interface review_max_fields {
   __typename: 'review_max_fields'
   authored_at?: Maybe<ScalarsEnums['timestamptz']>
   id?: Maybe<ScalarsEnums['uuid']>
+  list_id?: Maybe<ScalarsEnums['uuid']>
   native_data_unique_key?: Maybe<ScalarsEnums['String']>
   rating?: Maybe<ScalarsEnums['numeric']>
   restaurant_id?: Maybe<ScalarsEnums['uuid']>
@@ -13045,6 +13088,7 @@ export interface review_min_fields {
   __typename: 'review_min_fields'
   authored_at?: Maybe<ScalarsEnums['timestamptz']>
   id?: Maybe<ScalarsEnums['uuid']>
+  list_id?: Maybe<ScalarsEnums['uuid']>
   native_data_unique_key?: Maybe<ScalarsEnums['String']>
   rating?: Maybe<ScalarsEnums['numeric']>
   restaurant_id?: Maybe<ScalarsEnums['uuid']>

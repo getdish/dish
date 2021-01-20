@@ -1,5 +1,4 @@
 import { Auth } from '../Auth'
-import { DISH_API_ENDPOINT } from '../constants'
 
 export async function reviewAnalyze({
   restaurantId,

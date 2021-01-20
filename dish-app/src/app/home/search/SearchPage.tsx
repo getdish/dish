@@ -56,7 +56,11 @@ import {
 } from '../../../types/homeTypes'
 import { appMapStore, useSetAppMapResults } from '../../AppMapStore'
 import { AppPortalItem } from '../../AppPortal'
-import { useHomeStateById, useHomeStore, useLastHomeState } from '../../homeStore'
+import {
+  useHomeStateById,
+  useHomeStore,
+  useLastHomeState,
+} from '../../homeStore'
 import { useAppDrawerWidth } from '../../hooks/useAppDrawerWidth'
 import { useCurrentLenseColor } from '../../hooks/useCurrentLenseColor'
 import { useLastValue } from '../../hooks/useLastValue'
@@ -128,7 +132,11 @@ export default memo(function SearchPage(props: Props) {
           <SearchNavBarContainer isActive={props.isActive} id={props.item.id} />
         </HomeSuspense>
         <HomeSuspense fallback={<SearchLoading />}>
-          <SearchPageContent key={state.id} {...props} item={state} />
+          <SearchPageContent
+            key={state.id + JSON.stringify(state.activeTags)}
+            {...props}
+            item={state}
+          />
         </HomeSuspense>
       </StackDrawer>
     </>
@@ -387,6 +395,7 @@ type SearchPageScrollViewProps = ScrollViewProps & {
 const SearchPageTitle = memo(() => {
   const media = useMedia()
   const curProps = useContext(SearchPagePropsContext)
+  console.log('curProps', curProps)
   const { title, subTitle } = getTitleForState(curProps.item, {
     lowerCase: false,
   })

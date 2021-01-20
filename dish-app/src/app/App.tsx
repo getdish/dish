@@ -26,8 +26,10 @@ export function App() {
 
   return (
     <>
-      <ToastRoot />
-      <Shortcuts />
+      <Suspense fallback={null}>
+        <ToastRoot />
+        <Shortcuts />
+      </Suspense>
       <Suspense fallback={<LoadingItems />}>
         <RouteSwitch>
           <Route name="notFound">
