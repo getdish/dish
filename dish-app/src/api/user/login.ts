@@ -20,7 +20,7 @@ export default jsonRoute(async (req, res) => {
     const token = jwtSign(user)
     res.status(200).json({ user: { id: user.id }, token, success: 'Welcome!' })
   } catch (err) {
-    console.error('login err', err)
+    console.error('login err', err, req.body)
     res.status(400).json({ error: err.message })
   }
 })
