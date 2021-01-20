@@ -14,7 +14,7 @@ export async function createServer(serverConf: ServerConfig) {
   const hostname = serverConf.hostname ?? 'localhost'
   const protocol = serverConf.https ? 'https' : 'http'
   const defaultPort = https ? 443 : 80
-  const port = process.env.PORT ? +process.env.PORT : serverConf.port ?? 4040
+  const port = process.env.PORT ? +process.env.PORT : serverConf.port ?? 4444
   const url = `${protocol}://${hostname}${
     port == defaultPort ? '' : `:${port}`
   }`
