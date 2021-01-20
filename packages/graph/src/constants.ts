@@ -22,10 +22,9 @@ const ORIGIN = isProd
   ? PROD_ORIGIN
   : isStaging
   ? PROD_ORIGIN
-  : getWindow()?.location?.origin ?? 'http://localhost'
+  : getWindow()?.location?.origin ?? 'http://localhost:4444'
 
-export const DISH_API_ENDPOINT =
-  process.env.DISH_API_ENDPOINT ?? `${ORIGIN}:4444`
+export const DISH_API_ENDPOINT = process.env.DISH_API_ENDPOINT ?? ORIGIN
 
 export const SEARCH_DOMAIN = (() => {
   const staging = 'https://search-staging.dishapp.com'

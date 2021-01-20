@@ -14,7 +14,7 @@ export const queryFetcher: QueryFetcher = async function (query, variables) {
   const url = getGraphEndpoint()
   const headers = {
     'Content-Type': 'application/json',
-    ...getAuthHeaders(),
+    ...getAuthHeaders(!!process.env.HASURA_SECRET),
   }
   const body = JSON.stringify({
     query,

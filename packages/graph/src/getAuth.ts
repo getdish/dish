@@ -18,6 +18,9 @@ export function getAuth(): null | {
 
 export function getAuthHeaders(isAdmin?: boolean) {
   const auth = getAuth()
+  if (isAdmin && !HASURA_SECRET) {
+    throw new Error(`Didn't provide hasura secret`)
+  }
   return {
     ...(isAdmin && {
       'X-Hasura-Admin-Secret': HASURA_SECRET,

@@ -15,7 +15,7 @@ test.beforeEach(async () => {
 
 // keep this, make it easier on us debugging tests
 console.log({
-  AuthHeaders: getAuthHeaders(),
+  AuthHeaders: getAuthHeaders(true),
   graphEndpoint: getGraphEndpoint(),
 })
 
