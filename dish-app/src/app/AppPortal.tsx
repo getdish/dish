@@ -1,5 +1,5 @@
 import { Store, useStore } from '@dish/use-store'
-import React, { useEffect, useRef } from 'react'
+import React, { Suspense, useLayoutEffect } from 'react'
 
 class AppPortalStore extends Store {
   items = {}
@@ -24,7 +24,11 @@ export function AppPortalProvider(props: { children: any }) {
       {props.children}
       {Object.keys(portalStore.items).map((key) => {
         const item = portalStore.items[key]
-        return <React.Fragment key={key}>{item}</React.Fragment>
+        return (
+          <React.Fragment key={key}>
+            <Suspense fallback={null}>{item}</Suspense>
+          </React.Fragment>
+        )
       })}
     </>
   )
@@ -33,7 +37,7 @@ export function AppPortalProvider(props: { children: any }) {
 export function AppPortalItem(props: { children: any }) {
   const portalStore = useStore(AppPortalStore)
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     const key = `${Math.random()}`
     portalStore.setItem(key, props.children)
     return () => {

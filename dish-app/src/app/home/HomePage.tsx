@@ -49,6 +49,7 @@ export default memo(function HomePage(props: Props) {
   const isActive = isRouteActive && props.isActive
   const region = useRegionQuery(state.region, {
     enabled: props.isActive && !!state.region,
+    suspense: false,
   })
 
   console.log('👀 HomePage', { props, region, state })

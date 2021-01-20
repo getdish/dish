@@ -5,6 +5,8 @@ import { RoutesTable, router } from '../../router'
 import { useLink } from '../hooks/useLink'
 import { LinkButtonProps } from './LinkProps'
 
+// most the logic here comes from useLink
+
 export function LinkButton<Name extends keyof RoutesTable = keyof RoutesTable>(
   props: LinkButtonProps<Name, RoutesTable[Name]['params']>
 ) {

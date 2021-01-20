@@ -13,6 +13,10 @@ import { getActiveTags } from '../helpers/getActiveTags'
 import { getBreadcrumbs, isBreadcrumbState } from '../helpers/getBreadcrumbs'
 import { getNextState } from '../helpers/getNextState'
 import { getShouldNavigate } from '../helpers/getShouldNavigate'
+import {
+  getTagSlugsFromRoute,
+  getTagsFromRoute,
+} from '../helpers/getTagsFromRoute'
 import { getTagSlug } from '../helpers/getTagSlug'
 import { isHomeState, isSearchState } from '../helpers/homeStateHelpers'
 import { isSearchBarTag } from '../helpers/isSearchBarTag'
@@ -274,10 +278,18 @@ class HomeStore extends Store {
         if (!prev) {
           throw new Error('unreachable')
         }
+        const tagSlugs = getTagSlugsFromRoute(
+          router.curPage as HistoryItem<'search'>
+        ).map((x) => x.slug)
+        const activeTags = tagSlugs.reduce((acc, cur) => {
+          acc[cur] = true
+          return acc
+        }, {})
+        console.log('pushState', activeTags)
         nextState = {
           type: 'search',
           region: router.curPage.params.region ?? prev.region,
-          activeTags: prev.activeTags ?? {},
+          activeTags,
           center: appMapStore.position.center,
           span: appMapStore.position.span,
         }
@@ -475,17 +487,26 @@ class HomeStore extends Store {
     const navState = { state: state ?? this.currentState, ...rest }
     const nextState = getNextState(navState)
     const curState = this.currentState
+
     const updateTags = () => {
-      const type = curState.type as any
+      if (!('activeTags' in curState)) return
+      if (!('activeTags' in nextState)) return
+      const curActive = curState.activeTags
+      const nextActive = nextState.activeTags
+      if (isEqual(curActive, nextActive)) {
+        return
+      }
+      console.log('set active tags', nextActive)
       this.updateActiveTags({
         id: curState.id,
-        type,
+        type: curState.type,
         searchQuery: nextState.searchQuery,
-        activeTags: nextState['activeTags'],
+        activeTags: nextActive,
       })
     }
 
-    if (!getShouldNavigate(nextState)) {
+    const shouldNav = getShouldNavigate(nextState)
+    if (!shouldNav) {
       updateTags()
       return false
     }
@@ -506,7 +527,6 @@ class HomeStore extends Store {
       this.isOptimisticUpdating = true
       // optimistic update active tags
       updateTags()
-      await sleep(20)
       await idle(30)
       if (curNav !== this.lastNav) return false
       this.isOptimisticUpdating = false
@@ -542,14 +562,16 @@ export const homeStore = createStore(HomeStore)
 
 export const useHomeStore = (debug?: boolean): HomeStore => {
   // @ts-ignore
-  return useStoreInstance(homeStore, undefined, debug)
+  return useStoreInstance(homeStore, undefined, [], debug)
 }
 
 export const useLastHomeState = <Type extends HomeStateItem['type']>(
   type: Type
 ) => {
-  return useStoreInstance(homeStore, (x) =>
-    _.findLast(x.states, (s) => s.type === type)
+  return useStoreInstance(
+    homeStore,
+    (x) => _.findLast(x.states, (s) => s.type === type),
+    [type]
   )
 }
 
@@ -558,11 +580,13 @@ export const useCurrentHomeType = () => {
 }
 
 export const useIsHomeTypeActive = (type?: HomeStateItem['type']) => {
-  return useStoreInstance(homeStore, (x) => x.currentState.type === type)
+  return useStoreInstance(homeStore, (x) => x.currentState.type === type, [
+    type,
+  ])
 }
 
 export const useHomeStateById = <Type extends HomeStateItem>(id: string) => {
-  return useStoreInstance(homeStore, (x) => x.allStates[id]) as Type
+  return useStoreInstance(homeStore, (x) => x.allStates[id], [id]) as Type
 }
 
 const uid = () => `${Math.random()}`.replace('.', '')

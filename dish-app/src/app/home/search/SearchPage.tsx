@@ -93,6 +93,7 @@ export default memo(function SearchPage(props: Props) {
   const { title } = getTitleForState(state, {
     lowerCase: false,
   })
+
   return (
     <>
       <PageTitleTag>{title}</PageTitleTag>
@@ -104,13 +105,6 @@ export default memo(function SearchPage(props: Props) {
               shadowed
               onPress={() => {
                 if (userStore.promptLogin()) return
-                console.log('go', state.activeTags, {
-                  userSlug: userStore.user.username,
-                  slug: 'create',
-                  state: getActiveTags(state)
-                    .map((x) => x.slug)
-                    .join(','),
-                })
                 router.navigate({
                   name: 'list',
                   params: {
@@ -129,7 +123,7 @@ export default memo(function SearchPage(props: Props) {
         }
       >
         <HomeSuspense>
-          <SearchNavBarContainer isActive={props.isActive} id={props.item.id} />
+          <SearchNavBarContainer isActive={props.isActive} />
         </HomeSuspense>
         <HomeSuspense fallback={<SearchLoading />}>
           <SearchPageContent
@@ -165,12 +159,12 @@ const SearchPageContent = memo(function SearchPageContent(props: Props) {
     showRank: true,
   })
 
-  const isOptimisticUpdating = home.isOptimisticUpdating
-  const wasOptimisticUpdating = useLastValue(isOptimisticUpdating)
-  const changingFilters =
-    wasOptimisticUpdating && searchStore.status === 'loading'
-  const shouldAvoidContentUpdates =
-    isOptimisticUpdating || !props.isActive || changingFilters
+  // const isOptimisticUpdating = home.isOptimisticUpdating
+  // const wasOptimisticUpdating = useLastValue(isOptimisticUpdating)
+  // const changingFilters =
+  //   wasOptimisticUpdating && searchStore.status === 'loading'
+  // const shouldAvoidContentUpdates =
+  //   isOptimisticUpdating || !props.isActive || changingFilters
 
   useEffect(() => {
     if (!location.data) return
@@ -184,20 +178,13 @@ const SearchPageContent = memo(function SearchPageContent(props: Props) {
   }, [props.isActive, location.data])
 
   useEffect(() => {
+    searchPageStore.runSearch({})
+  }, [props.item])
+
+  useEffect(() => {
     if (!tags.data) return
     if (!props.isActive) return
     addTagsToCache(tags.data)
-    const activeTags: HomeActiveTagsRecord = tags.data.reduce((acc, tag) => {
-      acc[getTagSlug(tag)] = true
-      return acc
-    }, {})
-    const searchQuery = decodeURIComponent(router.curPage.params.search ?? '')
-    home.updateActiveTags({
-      ...props.item,
-      searchQuery,
-      activeTags,
-    })
-    searchPageStore.runSearch({})
   }, [props.isActive, tags.data])
 
   // sync mapStore.selected to activeIndex in results
@@ -223,47 +210,42 @@ const SearchPageContent = memo(function SearchPageContent(props: Props) {
     )
   }, [])
 
-  const key = useLastValueWhen(
-    () =>
-      JSON.stringify({
-        status: searchStore.status,
-        id: props.item.id,
-        results: searchStore.results.map((x) => x.id),
-      }),
-    shouldAvoidContentUpdates
-  )
+  // const key = useLastValueWhen(
+  //   () =>
+  //     JSON.stringify({
+  //       status: searchStore.status,
+  //       id: props.item.id,
+  //       results: searchStore.results.map((x) => x.id),
+  //     }),
+  //   shouldAvoidContentUpdates
+  // )
 
-  const content = useMemo(() => {
-    return (
-      <SearchPagePropsContext.Provider value={props}>
-        <SearchResultsContent {...props} />
-      </SearchPagePropsContext.Provider>
-    )
-  }, [key])
+  // const content = useMemo(() => {
+  //   return (
+
+  //   )
+  // }, [key])
 
   return (
     <Suspense fallback={<SearchLoading />}>
       <VStack
         flex={1}
         overflow="hidden"
-        opacity={isOptimisticUpdating ? 0.5 : 1}
+        // opacity={isOptimisticUpdating ? 0.5 : 1}
         width="100%"
       >
-        {content}
+        <SearchPagePropsContext.Provider value={props}>
+          <SearchResultsContent {...props} />
+        </SearchPagePropsContext.Provider>
       </VStack>
     </Suspense>
   )
 })
 
-const SearchNavBarContainer = ({
-  isActive,
-  id,
-}: {
-  isActive: boolean
-  id: string
-}) => {
+const SearchNavBarContainer = memo(({ isActive }: { isActive: boolean }) => {
   const media = useMedia()
-  let contents = <SearchPageNavBar id={id} />
+
+  let contents = isActive ? <SearchPageNavBar /> : null
 
   if (!media.sm) {
     return <HStack>{contents}</HStack>
@@ -277,12 +259,8 @@ const SearchNavBarContainer = ({
     )
   }
 
-  return (
-    <AppPortalItem key={isActive ? '1' : '0'}>
-      {!!isActive && <>{contents}</>}
-    </AppPortalItem>
-  )
-}
+  return <AppPortalItem key={`${isActive}`}>{contents}</AppPortalItem>
+})
 
 // prevent warning
 delete RecyclerListView.propTypes['externalScrollView']
@@ -374,6 +352,7 @@ const SearchResultsContent = (props: Props) => {
       <RecyclerListView
         style={{
           flex: 1,
+          width: '100%',
           height: '100%',
         }}
         canChangeSize
@@ -395,7 +374,6 @@ type SearchPageScrollViewProps = ScrollViewProps & {
 const SearchPageTitle = memo(() => {
   const media = useMedia()
   const curProps = useContext(SearchPagePropsContext)
-  console.log('curProps', curProps)
   const { title, subTitle } = getTitleForState(curProps.item, {
     lowerCase: false,
   })
@@ -661,5 +639,7 @@ async function getLocationFromRoute(
 
 function useTagsFromRoute(route: HistoryItem<'search'>) {
   const key = `tags-${Object.values(route).join(',')}`
-  return useQueryLoud(key, () => getTagsFromRoute(route))
+  return useQueryLoud(key, () => getTagsFromRoute(route), {
+    suspense: false,
+  })
 }

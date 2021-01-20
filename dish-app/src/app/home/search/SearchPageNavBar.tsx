@@ -12,7 +12,7 @@ import {
 import { drawerWidthMax } from '../../../constants/constants'
 import { titleHeight } from '../../../constants/titleHeight'
 import { isSearchState } from '../../../helpers/homeStateHelpers'
-import { useHomeStore } from '../../homeStore'
+import { useLastHomeState } from '../../homeStore'
 import { useSafeArea } from '../../hooks/useSafeArea'
 import { HomeLenseBar } from '../../views/HomeLenseBar'
 import { SearchPageFilterBar } from './SearchPageFilterBar'
@@ -30,7 +30,7 @@ const InverseRoundedEdge = () => {
   )
 }
 
-export const SearchPageNavBar = (props: { id: string }) => {
+export const SearchPageNavBar = memo(() => {
   const media = useMedia()
   const theme = useTheme()
   const safeArea = useSafeArea()
@@ -48,7 +48,7 @@ export const SearchPageNavBar = (props: { id: string }) => {
             <InverseRoundedEdge />
           </AbsoluteVStack>
           <VStack backgroundColor="#000" paddingBottom={safeArea.bottom}>
-            <SearchPageNavBarContent stateId={props.id} />
+            <SearchPageNavBarContent />
           </VStack>
         </VStack>
       </Theme>
@@ -68,21 +68,22 @@ export const SearchPageNavBar = (props: { id: string }) => {
         shadowOffset={{ height: 3, width: 0 }}
         zIndex={10000}
       >
-        <SearchPageNavBarContent stateId={props.id} />
+        <SearchPageNavBarContent />
       </VStack>
     )
   }
 
   return <Suspense fallback={null}>{content}</Suspense>
-}
+})
 
-const SearchPageNavBarContent = memo(({ stateId }: { stateId: string }) => {
-  const home = useHomeStore()
-  const state = home.allStates[stateId]
+const SearchPageNavBarContent = memo(() => {
+  const state = useLastHomeState('search')
 
   if (!isSearchState(state)) {
     return null
   }
+
+  console.log('RENDER', JSON.stringify(state.activeTags))
 
   return (
     <>

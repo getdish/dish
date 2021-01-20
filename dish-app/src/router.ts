@@ -64,7 +64,9 @@ export const useRouterCurPage = () => {
 }
 
 export const useIsRouteActive = (name: RouteName) => {
-  return useStoreInstance(router, (router) => router.curPage.name === name)
+  return useStoreInstance(router, (router) => router.curPage.name === name, [
+    name,
+  ])
 }
 
 export type SearchRouteParams = {
