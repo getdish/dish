@@ -196,7 +196,6 @@ export const useSetAppMapResults = (
 
     return () => {
       disposeSeries()
-      console.log('disable')
       appMapStore.setState({
         zoomOnHover: false,
         showRank: false,

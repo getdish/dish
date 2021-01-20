@@ -35,7 +35,6 @@ async function start() {
   await new Promise<void>((res) => {
     addTagsToCache([...tagDefaultAutocomplete, ...tagFilters, ...tagLenses])
     router.onRouteChange((item) => {
-      console.warn('router.onRouteChange', item)
       homeStore.handleRouteChange(item)
       startPromise = null
       res()

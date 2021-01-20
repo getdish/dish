@@ -59,7 +59,6 @@ export const useMutableSource = (
   })()
 
   if (shouldUpdate) {
-    console.log('currentSnapshot', currentSnapshot)
     setState([
       /* [0] */ source,
       /* [1] */ getSnapshot,

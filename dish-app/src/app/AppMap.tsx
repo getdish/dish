@@ -157,7 +157,7 @@ export default memo(() => {
       //   //@ts-expect-error
       //   om.actions.home.setCenterToResults(0)
       // }
-      console.log('should set position on map?')
+      // console.log('should set position on map?')
       // appMapStore.setPosition('moveEnd', {
       //   center,
       //   span,

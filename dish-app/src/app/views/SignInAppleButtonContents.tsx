@@ -18,7 +18,6 @@ export default memo(function SignInAppleButton() {
       redirectURI: Auth.getRedirectUri(),
       usePopup: isSafari,
     }
-    console.log(conf)
     auth.init(conf)
   }, [])
 

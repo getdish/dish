@@ -71,7 +71,7 @@ class SearchPageStore extends Store {
     const shouldCancel = () => {
       const state = homeStore.lastSearchState
       const answer = !state || this.lastSearchAt != curId
-      if (answer) console.log('search: cancel')
+      // if (answer) console.log('search: cancel')
       return answer
     }
 
