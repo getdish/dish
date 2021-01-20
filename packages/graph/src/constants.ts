@@ -19,8 +19,8 @@ export const JWT_SECRET =
 
 const PROD_ORIGIN = 'https://staging.dishapp.com'
 
-export const ORIGIN =
-  process.env.ORIGIN ??
+export const DISH_API_ENDPOINT =
+  process.env.DISH_ENDPOINT ??
   (isProd
     ? PROD_ORIGIN
     : isStaging
@@ -30,7 +30,7 @@ export const ORIGIN =
 export const SEARCH_DOMAIN = (() => {
   const staging = 'https://search-staging.dishapp.com'
   const live = staging
-  const local = `${ORIGIN}:10000`
+  const local = `${DISH_API_ENDPOINT}:10000`
   if (isProd) {
     return live
   }

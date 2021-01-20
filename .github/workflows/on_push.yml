@@ -10,6 +10,7 @@ env:
   DISH_REGISTRY: 'gcr.io/dish-258800'
   CURRENT_DISH_CLUSTER: 'dish-blue'
   HASURA_ENDPOINT: 'http://localhost:8080'
+  DISH_ENDPOINT: 'http://localhost:4444'
   GITCRYPT_KEY: ${{ secrets.GITCRYPT_KEY }}
 
 jobs:

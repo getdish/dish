@@ -50,7 +50,7 @@ export async function createServer(serverConf: ServerConfig) {
   // fixes bug with 304 errors sometimes
   // see: https://stackoverflow.com/questions/18811286/nodejs-express-cache-and-304-status-code
   app.disable('etag')
-  app.get('/__test', (_, res) => res.send('hello world'))
+  app.get('/healthz', (_, res) => res.send('healthy'))
 
   console.log(`listening on ${conf.url}`)
   if (conf.https) {

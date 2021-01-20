@@ -10,12 +10,24 @@ is_hasura_up() {
 }
 export -f is_hasura_up
 
+is_dish_up() {
+  [ $(curl -L $DISH_ENDPOINT/healthz -o /dev/null -w '%{http_code}\n' -s) == "200" ]
+}
+export -f is_dish_up
+
 wait_until_hasura_ready() {
   echo "Waiting for Hasura to start..."
   until is_hasura_up; do sleep 0.1; done
   echo "Hasura is up"
 }
 export -f wait_until_hasura_ready
+
+wait_until_dish_app_ready() {
+  echo "Waiting for dish to start..."
+  until is_dish_up; do sleep 0.1; done
+  echo "Hasura is up"
+}
+export -f wait_until_dish_app_ready
 
 docker-compose --version
 ./dishctl.sh ci_rename_tagged_images_to_latest
@@ -37,6 +49,12 @@ docker run --net host $DISH_REGISTRY/base \
 
 echo "Waiting for hasura to finish starting"
 if ! timeout --preserve-status 20 bash -c wait_until_hasura_ready; then
+  echo "Timed out waiting for Hasura container to start"
+  exit 1
+fi
+
+echo "Waiting for dish-app to finish starting"
+if ! timeout --preserve-status 20 bash -c wait_until_dish_app_ready; then
   echo "Timed out waiting for Hasura container to start"
   exit 1
 fi

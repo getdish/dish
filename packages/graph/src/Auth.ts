@@ -1,6 +1,6 @@
 import { isSafari } from '@dish/helpers'
 
-import { ORIGIN, isNode } from './constants'
+import { DISH_API_ENDPOINT, isNode } from './constants'
 import { HAS_LOGGED_IN_BEFORE, LOGIN_KEY, getAuthHeaders } from './getAuth'
 
 // TODO next gen!! remove all cruft!!
@@ -46,7 +46,7 @@ export async function userFetchSimple(
     },
     body: rawData ? data : JSON.stringify(data),
   }
-  const response = await fetch(ORIGIN + path, init)
+  const response = await fetch(DISH_API_ENDPOINT + path, init)
   if (response.status >= 300) {
     if (response.status == 401) {
       handleLogOut?.()
@@ -65,8 +65,8 @@ class AuthModel {
 
   getRedirectUri() {
     return isSafari
-      ? `${ORIGIN}/api/user/appleAuthorize`
-      : `${ORIGIN}/api/user/appleAuthorizeChrome`
+      ? `${DISH_API_ENDPOINT}/api/user/appleAuthorize`
+      : `${DISH_API_ENDPOINT}/api/user/appleAuthorizeChrome`
   }
 
   hasEverLoggedIn =

@@ -25,7 +25,6 @@ export default function createWebpackConfig({
   cwd = process.cwd(),
   babelInclude,
   snackOptions,
-  legacy,
   disableHot,
   resolve,
   polyFillPath,
@@ -99,7 +98,7 @@ export default function createWebpackConfig({
       devtool: isProduction ? 'source-map' : 'eval-cheap-module-source-map',
       entry: {
         main:
-          legacy || isSSR
+          polyFillPath || isSSR
             ? [hotEntry, polyFillPath, entry].filter(isPresent)
             : [hotEntry, entry].filter(isPresent),
       },
@@ -113,10 +112,10 @@ export default function createWebpackConfig({
           filename: `static/js/app.ssr.${process.env.NODE_ENV}.js`,
           path: path.join(cwd, 'build', 'ssr'),
         }),
-        ...(legacy && {
-          filename: `static/js/app.legacy.${hashFileNamePart}.js`,
-          path: path.join(cwd, 'build', 'legacy'),
-        }),
+        // ...(legacy && {
+        //   filename: `static/js/app.legacy.${hashFileNamePart}.js`,
+        //   path: path.join(cwd, 'build', 'legacy'),
+        // }),
       },
       node: {
         global: true,

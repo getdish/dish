@@ -14,7 +14,7 @@ export class Build extends Command {
   static flags = {
     help: flags.help({ char: 'h' }),
     clean: flags.string({
-      description: 'Rebuild either "node", "web", "legacy", "all"',
+      description: 'Rebuild either "node", "web", "all"',
       default: 'all',
     }),
     serial: flags.boolean({
