@@ -12,4 +12,4 @@ RUN yarn web:build
 
 EXPOSE 4444
 
-CMD ["yarn", "web:serve"]
+CMD ["yarn", "web:serve", "--host", "0.0.0.0"]

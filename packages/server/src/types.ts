@@ -10,7 +10,7 @@ export type ServerConfig = {
   inspect?: boolean
   clean?: 'web' | 'legacy' | 'node' | 'all' | false | string
   port?: number
-  hostname?: string
+  host?: string
   apiDir?: string | null
   https?: boolean
   verbose?: boolean
