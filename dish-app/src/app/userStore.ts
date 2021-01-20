@@ -126,9 +126,9 @@ class UserStore extends Store {
                 id: {
                   _eq: id,
                 },
-                name: {
-                  _neq: `${Math.random()}`,
-                },
+                // name: {
+                //   _neq: `${Math.random()}`,
+                // },
               },
             })
             .map((u) => ({

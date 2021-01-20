@@ -1,4 +1,4 @@
-import { Auth, graphql, userUpsert } from '@dish/graph'
+import { Auth, graphql, useRefetch } from '@dish/graph'
 import React, { useEffect, useRef, useState } from 'react'
 import { Image } from 'react-native'
 import {
@@ -21,6 +21,7 @@ import { SmallButton } from './views/SmallButton'
 
 export const UserOnboard = graphql(
   ({ hideLogo, onFinish }: { hideLogo?: boolean; onFinish?: Function }) => {
+    const refetch = useRefetch()
     const userStore = useUserStore()
     const imageFormRef = useRef(null)
     const formState = useRef({
@@ -44,6 +45,7 @@ export const UserOnboard = graphql(
           const avatar = await Auth.uploadAvatar(formData)
           if (avatar) {
             userStore.refresh()
+            refetch()
             Toast.success('Saved image!')
           } else {
             Toast.error('Error saving  image!')

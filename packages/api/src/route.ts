@@ -1,5 +1,5 @@
 import bodyParser from 'body-parser'
-import { Handler as ExpressHandler, Request, Response } from 'express'
+import { Handler as ExpressHandler, Request, Response, response } from 'express'
 
 import { Handler } from './interfaces'
 
@@ -26,14 +26,22 @@ type BodyParseOptsURLEncoded = {
   urlEncoded: bodyParser.OptionsUrlencoded | undefined
 }
 
-export function bodyParsedRoute(fn: Handler, opts?: BodyParseOpts) {
+function getBodyParser(opts: BodyParseOpts) {
   const key = opts ? Object.keys(opts)[0] : 'json'
+  return bodyParser[key](opts?.[key] ?? { limit: '2048mb' })
+}
+
+export async function useRouteBodyParser(
+  req: Request,
+  res: Response,
+  opts: BodyParseOpts
+) {
+  return await runMiddleware(req, res, getBodyParser(opts))
+}
+
+export function bodyParsedRoute(fn: Handler, opts?: BodyParseOpts) {
   return handleErrors(async (req, res) => {
-    await runMiddleware(
-      req,
-      res,
-      bodyParser[key](opts?.[key] ?? { limit: '2048mb' })
-    )
+    await useRouteBodyParser(req, res, opts ?? { json: { limit: '2048mb' } })
     await fn(req, res)
   })
 }

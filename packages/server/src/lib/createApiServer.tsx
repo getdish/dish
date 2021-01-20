@@ -109,6 +109,7 @@ export async function createApiServer(app: any, config: ServerConfigNormal) {
       const relativePath = files.find((x) => path === x.fileIn)?.fileIn
       // if direct hit, fast delete, if not delete all
       if (relativePath) {
+        // TODO import tree...
         delete require.cache[relativePath]
       } else {
         for (const key in require.cache) {

@@ -1,8 +1,10 @@
+import { useRouteBodyParser } from '@dish/api'
 import { EditUserResponse, userUpdate } from '@dish/graph'
 
 import { getUserFromRoute, secureRoute } from './_user'
 
 export default secureRoute('user', async (req, res) => {
+  await useRouteBodyParser(req, res, { json: { limit: 2048 } })
   const user = await getUserFromRoute(req)!
   const { about, location, charIndex } = req.body
   user.has_onboarded = true
