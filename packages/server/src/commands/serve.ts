@@ -18,9 +18,9 @@ export class Start extends Command {
       char: 'p',
       description: 'Set port number',
     }),
-    hostname: flags.string({
+    host: flags.string({
       char: 'H',
-      description: 'Set server hostname',
+      description: 'Set server host',
     }),
     clean: flags.string({
       description: 'Rebuild on start.',
@@ -42,7 +42,7 @@ export class Start extends Command {
     const config: ServerConfig = {
       rootFolder,
       port: flags.port ?? 4444,
-      hostname: flags.hostname ?? 'localhost',
+      host: flags.host ?? 'localhost',
       inspect: false,
       clean: flags.clean as any,
       env: 'production',

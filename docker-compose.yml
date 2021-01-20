@@ -76,6 +76,8 @@ services:
       - VIRTUAL_PORT=4444
     ports:
       - 4444:4444
+    depends_on:
+      - 'hasura'
   tileserver:
     image: urbica/martin
     ports:

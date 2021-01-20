@@ -11,18 +11,16 @@ import { getWebpackConfigBuilder } from './getWebpackConfigBuilder'
 export async function createServer(serverConf: ServerConfig) {
   const rootDir = process.cwd()
   const https = serverConf.https ?? false
-  const hostname = serverConf.hostname ?? 'localhost'
+  const host = serverConf.host ?? 'localhost'
   const protocol = serverConf.https ? 'https' : 'http'
   const defaultPort = https ? 443 : 80
   const port = process.env.PORT ? +process.env.PORT : serverConf.port ?? 4444
-  const url = `${protocol}://${hostname}${
-    port == defaultPort ? '' : `:${port}`
-  }`
+  const url = `${protocol}://${host}${port == defaultPort ? '' : `:${port}`}`
   const conf: ServerConfigNormal = {
     url,
     apiDir: serverConf.apiDir as any,
     clean: false,
-    hostname,
+    host,
     port,
     https,
     inspect: false,
@@ -56,11 +54,11 @@ export async function createServer(serverConf: ServerConfig) {
   if (conf.https) {
     const devcert = require('devcert')
     const https = require('https')
-    const ssl = await devcert.certificateFor(conf.hostname)
+    const ssl = await devcert.certificateFor(conf.host)
     https.createServer(ssl, app).listen(conf.port)
   } else {
-    if (!conf.hostname || !conf.port) throw new Error(`missing conf`)
-    app.listen(conf.port, conf.hostname)
+    if (!conf.host || !conf.port) throw new Error(`missing conf`)
+    app.listen(conf.port, conf.host)
   }
 
   if (conf.env === 'development') {

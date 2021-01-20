@@ -24,9 +24,9 @@ export class Start extends Command {
       char: 'p',
       description: 'Set port number',
     }),
-    hostname: flags.string({
+    host: flags.string({
       char: 'H',
-      description: 'Set server hostname',
+      description: 'Set server host',
     }),
     inspect: flags.boolean({
       description: 'Enable the Node.js inspector',
@@ -47,7 +47,7 @@ export class Start extends Command {
     const config: ServerConfig = {
       rootFolder,
       port: flags.port,
-      hostname: flags.hostname,
+      host: flags.host,
       inspect: flags.inspect,
       clean: flags.clean,
       env: flags.prod ? 'production' : 'development',
