@@ -31,11 +31,14 @@ class UserStore extends Store {
     data: any = {},
     onSuccess?: (data: any) => any
   ) {
+    let complete = false
     const header = await Promise.race([
       userFetchSimple(method, path, data),
       sleep(3000).then(() => {
-        Toast.error('Timed out!')
-        throw new Error(`Timed out`)
+        if (!complete) {
+          Toast.error('Timed out!')
+          throw new Error(`Timed out`)
+        }
       }),
     ])
     if (!header) {
@@ -43,6 +46,7 @@ class UserStore extends Store {
         error: `Timed out`,
       }
     }
+    complete = true
     const isErrHead = header.status >= 300
     const res = await header.json()
     if (res.error) {

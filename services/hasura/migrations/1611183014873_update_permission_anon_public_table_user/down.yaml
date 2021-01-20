@@ -1,0 +1,26 @@
+- args:
+    role: anon
+    table:
+      name: user
+      schema: public
+  type: drop_select_permission
+- args:
+    permission:
+      allow_aggregations: false
+      columns:
+      - about
+      - avatar
+      - charIndex
+      - created_at
+      - id
+      - location
+      - role
+      - updated_at
+      - username
+      computed_fields: []
+      filter: {}
+    role: anon
+    table:
+      name: user
+      schema: public
+  type: create_select_permission
