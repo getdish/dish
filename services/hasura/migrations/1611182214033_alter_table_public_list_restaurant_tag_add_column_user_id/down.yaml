@@ -1,0 +1,5 @@
+- args:
+    cascade: false
+    read_only: false
+    sql: ALTER TABLE "public"."list_restaurant_tag" DROP COLUMN "user_id";
+  type: run_sql

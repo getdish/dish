@@ -1,0 +1,13 @@
+- args:
+    permission:
+      backend_only: false
+      columns: []
+      filter:
+        user_id:
+          _eq: X-Hasura-User-Id
+      set: {}
+    role: user
+    table:
+      name: list_restaurant
+      schema: public
+  type: create_update_permission
