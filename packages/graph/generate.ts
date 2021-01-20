@@ -12,7 +12,7 @@ const run = async () => {
     endpoint,
     destination: 'src/graphql/schema.generated.ts',
     overwrite: true,
-    headers: getAuthHeaders(),
+    headers: getAuthHeaders(true),
     generateOptions: {},
   })
 }
