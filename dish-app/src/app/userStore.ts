@@ -60,6 +60,11 @@ class UserStore extends Store {
     await this.refreshUser(data.user)
   }
 
+  refresh() {
+    if (!this.user.id) return
+    this.refreshUser({ id: this.user.id })
+  }
+
   promptLogin() {
     if (!this.isLoggedIn) {
       appMenuStore.show()
@@ -121,6 +126,9 @@ class UserStore extends Store {
                 id: {
                   _eq: id,
                 },
+                name: {
+                  _neq: `${Math.random()}`,
+                },
               },
             })
             .map((u) => ({
@@ -130,8 +138,12 @@ class UserStore extends Store {
               about: u.about,
               location: u.location,
               has_onboarded: u.has_onboarded,
-            }))[0]
+            }))[0],
+        {
+          refetch: true,
+        }
       )
+      console.log('refreshed user', user)
       if (user) {
         this.user = {
           ...this.user,

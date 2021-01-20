@@ -21,12 +21,14 @@ export const queryFetcher: QueryFetcher = async function (query, variables) {
     variables,
   })
   if (process.env.DEBUG || process.env.LOG_FETCH) {
-    console.log(`fetch('${url}', {
-      method: 'POST',
-      headers: ${JSON.stringify(headers, null, 2)},
-      body: \`${body}\`,
-      mode: 'cors'
-    }).then(x => x.json()).then(console.log.bind(console))`)
+    console.log(` [gqless]
+      fetch('${url}', {
+        method: 'POST',
+        headers: ${JSON.stringify(headers)},
+        body: \`${body}\`,
+        mode: 'cors'
+      }).then(x => x.json()).then(console.log.bind(console))
+`)
   }
   const response = await fetch(url, {
     method: 'POST',
@@ -38,9 +40,10 @@ export const queryFetcher: QueryFetcher = async function (query, variables) {
   if (!response.ok) {
     throw new Error(`Network error, received status code ${response.status}`)
   }
-
   const json = await response.json()
-
+  if (process.env.DEBUG || process.env.LOG_FETCH) {
+    console.log(` [gqless] =>`, JSON.stringify(json, null, 2))
+  }
   return json
 }
 

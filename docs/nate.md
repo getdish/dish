@@ -1,3 +1,5 @@
+@pablo - need to make `mutate` helper accept options (noCache to replace resolveMutation in queryResolvers)
+
 goal january
 
   1. fix lots of things

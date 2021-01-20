@@ -10,17 +10,33 @@ export type MutationOpts = {
 }
 
 // just a helper that clears our cache after mutations for now
-export const resolvedMutation = mutate
+export async function resolvedMutation<T extends () => unknown>(
+  resolver: T
+): Promise<
+  T extends () => {
+    returning: infer X
+  }
+    ? X
+    : any
+> {
+  const next = await resolved(resolver, {
+    noCache: true,
+  })
+  //@ts-expect-error
+  return next
+}
 
 export async function resolvedMutationWithFields<T>(
-  resolver: (
-    mutation: Mutation,
-    opts: { setCache: Function; query: Query; assignSelections: Function }
-  ) => T,
+  resolver: () => T,
+  // (
+  //   mutation: Mutation,
+  //   opts: { setCache: Function; query: Query; assignSelections: Function }
+  // ) => T,
   { keys, select }: MutationOpts = {}
 ): Promise<T> {
-  return await resolvedMutation((mutation, opts) => {
-    const res = resolver(mutation, opts)
+  // @ts-expect-error
+  return await resolvedMutation(() => {
+    const res = resolver()
     const returning = (res as any).returning
     const obj = selectFields(returning, keys as any) as any
     if (select) {

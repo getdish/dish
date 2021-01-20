@@ -27,22 +27,24 @@ export async function userEdit(
   return await (await userFetchSimple('POST', '/api/user/edit', user)).json()
 }
 
+type UserFetchOpts = { handleLogOut?: () => void; rawData?: boolean }
+
 export async function userFetchSimple(
   method: 'POST' | 'GET',
   path: string,
   data: any = {},
-  { handleLogOut }: { handleLogOut?: () => void } = {}
+  { handleLogOut, rawData }: UserFetchOpts = {}
 ) {
   const init: RequestInit = {
     method,
     headers: {
       ...getAuthHeaders(),
-      ...(!(data instanceof FormData) && {
+      ...(!rawData && {
         'Content-Type': 'application/json',
       }),
       Accept: 'application/json',
     },
-    body: data instanceof FormData ? data : JSON.stringify(data),
+    body: rawData ? data : JSON.stringify(data),
   }
   const response = await fetch(ORIGIN + path, init)
   if (response.status >= 300) {
@@ -91,8 +93,14 @@ class AuthModel {
     }
   }
 
-  async api(method: 'POST' | 'GET', path: string, data: any = {}) {
+  async api(
+    method: 'POST' | 'GET',
+    path: string,
+    data: any = {},
+    opts?: UserFetchOpts
+  ) {
     return await userFetchSimple(method, path, data, {
+      ...opts,
       handleLogOut: () => {
         this.isLoggedIn = false
         this.user = null
@@ -110,7 +118,9 @@ class AuthModel {
   }
 
   async uploadAvatar(body: FormData) {
-    const response = await this.api('POST', '/api/user/uploadAvatar', body)
+    const response = await this.api('POST', '/api/user/uploadAvatar', body, {
+      rawData: true,
+    })
     if (response.status !== 200) {
       console.error(`Error updating: ${response.status} ${response.statusText}`)
       return null

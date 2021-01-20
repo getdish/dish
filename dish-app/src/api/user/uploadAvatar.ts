@@ -1,7 +1,7 @@
 import path from 'path'
 
 import { runMiddleware } from '@dish/api'
-import { userUpsert } from '@dish/graph'
+import { userUpdate } from '@dish/graph'
 import AWS from 'aws-sdk'
 import { Request, Response } from 'express'
 import multer from 'multer'
@@ -13,7 +13,6 @@ import { getUserFromRoute, secureRoute } from './_user'
 if (!process.env.DO_SPACES_ID || !process.env.DO_SPACES_SECRET) {
   console.error(
     `Error: Missing docker credentials`,
-    process.env,
     process.env.DO_SPACES_ID,
     process.env.DO_SPACES_SECRET
   )
@@ -58,49 +57,37 @@ const upload = multer({
 
 export default secureRoute('user', async (req: Request, res: Response) => {
   await runMiddleware(req, res, upload)
-  console.log('what is', req['files'], req['file'])
 
-  upload(req, res, async (error) => {
-    if (error) {
-      return res.json({
-        error,
-      })
-    }
+  const user = await getUserFromRoute(req)
+  if (!user) {
+    res.json({
+      error: 'no user',
+    })
+    return
+  }
 
-    const user = await getUserFromRoute(req)
+  // @ts-expect-error
+  const files = req.files
 
-    if (!user) {
-      return res.json({
-        error: 'no user',
-      })
-    }
+  if (!Array.isArray(files) || !files.length) {
+    res.status(500).json({
+      error: 'no files',
+    })
+    return
+  }
 
-    // @ts-expect-error
-    const files = req.files
-
-    if (!Array.isArray(files) || !files.length) {
-      return res.status(500).json({
-        error: 'no files',
-      })
-    }
-
-    try {
-      const [file] = files
-      const avatar = file['location']
-
-      await userUpsert([
-        {
-          ...user,
-          avatar,
-        },
-      ])
-
-      res.json({
-        avatar,
-      })
-    } catch (err) {
-      console.error('error', err)
-      return res.send(401)
-    }
-  })
+  try {
+    const [file] = files
+    const avatar = file['location']
+    await userUpdate({
+      id: user.id,
+      avatar,
+    })
+    res.json({
+      avatar,
+    })
+  } catch (error) {
+    console.error('error', error)
+    res.status(401).json({ error })
+  }
 })

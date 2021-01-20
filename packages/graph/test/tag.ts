@@ -5,7 +5,6 @@ import {
   RestaurantWithId,
   TagWithId,
   flushTestData,
-  query,
   resolved,
   restaurantFindOneWithTags,
   restaurantUpsert,

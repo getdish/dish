@@ -1,7 +1,7 @@
 import bodyParser from 'body-parser'
 import { Handler as ExpressHandler, Request, Response } from 'express'
 
-import { Handler } from './index'
+import { Handler } from './interfaces'
 
 export function route(fn: Handler) {
   return handleErrors(fn)

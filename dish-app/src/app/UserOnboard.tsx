@@ -40,16 +40,11 @@ export const UserOnboard = graphql(
       const handleUpload = async (e) => {
         const formData = new FormData(form)
         try {
+          Toast.show('Uploading...')
           const avatar = await Auth.uploadAvatar(formData)
-          console.log('avatar', formData, avatar)
           if (avatar) {
-            userUpsert([
-              {
-                id: userStore.user.id,
-                avatar,
-              },
-            ])
-            Toast.show('Saved image!')
+            userStore.refresh()
+            Toast.success('Saved image!')
           } else {
             Toast.error('Error saving  image!')
           }
