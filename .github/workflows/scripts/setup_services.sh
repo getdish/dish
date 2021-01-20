@@ -15,6 +15,8 @@ is_dish_up() {
 }
 export -f is_dish_up
 
+echo "dish endpoint: $DISH_ENDPOINT"
+
 wait_until_hasura_ready() {
   echo "Waiting for Hasura to start..."
   until is_hasura_up; do sleep 0.1; done
@@ -25,7 +27,7 @@ export -f wait_until_hasura_ready
 wait_until_dish_app_ready() {
   echo "Waiting for dish to start..."
   until is_dish_up; do sleep 0.1; done
-  echo "Hasura is up"
+  echo "dish is up"
 }
 export -f wait_until_dish_app_ready
 
@@ -34,7 +36,7 @@ docker-compose --version
 
 mkdir -p $HOME/.dish/postgres/data
 docker-compose up -d postgres
-sleep 10 # Postgres needs 2 starts to get everything set up
+sleep 8 # Postgres needs 2 starts to get everything set up
 docker-compose down
 
 echo "Starting docker for tests"
@@ -54,8 +56,8 @@ if ! timeout --preserve-status 20 bash -c wait_until_hasura_ready; then
 fi
 
 echo "Waiting for dish-app to finish starting"
-if ! timeout --preserve-status 20 bash -c wait_until_dish_app_ready; then
-  echo "Timed out waiting for Hasura container to start"
+if ! timeout --preserve-status 60 bash -c wait_until_dish_app_ready; then
+  echo "Timed out waiting for dish container to start"
   exit 1
 fi
 

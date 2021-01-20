@@ -11,3 +11,4 @@ dish-app/ios
 dish-app/android
 .expo/*
 .expo-shared/*
+.github/*

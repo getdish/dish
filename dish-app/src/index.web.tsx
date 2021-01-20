@@ -8,11 +8,6 @@ import { AppRegistry } from 'react-native'
 import { isSSR } from './constants/constants'
 import { Root } from './Root'
 
-if (isSSR) {
-  console.log('Patching useLayoutEffect to avoid many warnings in server mode')
-  React.useLayoutEffect = React.useEffect
-}
-
 if (process.env.NODE_ENV === 'development' && !window['STARTED']) {
   startLogging()
 }
