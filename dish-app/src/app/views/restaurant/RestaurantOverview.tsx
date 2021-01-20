@@ -47,7 +47,7 @@ export const RestaurantOverview = memo(
     const theme = useTheme()
     const [restaurant] = queryRestaurant(restaurantSlug)
     const headlines = (restaurant.headlines() ?? [])
-      .slice(0, 2)
+      .slice(0, 3)
       .map((x) => x.sentence)
       .join(' ')
     const summary = text ?? restaurant.summary ?? headlines
@@ -133,6 +133,8 @@ export const RestaurantOverview = memo(
           )}
         </HStack>
       )
+    } else {
+      console.log('no summary', summary)
     }
 
     return null

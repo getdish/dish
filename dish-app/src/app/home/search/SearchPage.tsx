@@ -374,7 +374,6 @@ const SearchPageTitle = memo(() => {
   const { title, subTitle } = getTitleForState(curProps.item, {
     lowerCase: false,
   })
-  console.log('item is', curProps.item, title, subTitle)
   const lenseColor = useCurrentLenseColor()
   return (
     <>

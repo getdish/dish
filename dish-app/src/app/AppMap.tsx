@@ -48,7 +48,7 @@ const updateRegion = debounce((region: Region) => {
       },
     })
   }
-}, 150)
+}, 300)
 
 export default memo(() => {
   const { results, showRank, zoomOnHover, hovered } = useAppMapStore()
@@ -146,6 +146,8 @@ export default memo(() => {
 
   const handleMoveEnd = useCallback(
     ({ center, span }) => {
+      updateRegion.cancel()
+
       if (media.sm && (drawerStore.isDragging || drawerStore.snapIndex === 0)) {
         console.log('avoid move stuff when snapped to top')
         return
@@ -167,6 +169,7 @@ export default memo(() => {
   const getResults = useGet(results)
 
   const handleDoubleClick = useCallback((id) => {
+    updateRegion.cancel()
     const restaurant = getResults()?.find((x) => x.id === id)
     if (restaurant) {
       router.navigate({
@@ -246,6 +249,10 @@ export default memo(() => {
   const theme = useTheme()
   const themeName = theme.backgroundColor === '#fff' ? 'light' : 'dark'
 
+  const handleMoveStart = useCallback(() => {
+    updateRegion.cancel()
+  }, [])
+
   return (
     <HStack
       position="absolute"
@@ -279,6 +286,7 @@ export default memo(() => {
             // centerToResults={om.state.home.centerToResults}
             selected={position.id}
             hovered={appMapStore.hovered?.id}
+            onMoveStart={handleMoveStart}
             onMoveEnd={handleMoveEnd}
             onDoubleClick={handleDoubleClick}
             onHover={handleHover}

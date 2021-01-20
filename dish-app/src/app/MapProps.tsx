@@ -15,6 +15,7 @@ export type MapProps = {
   onSelectRegion?: (region: Region) => void
   onDoubleClick?: (id: string) => void
   onMoveEnd?: (props: MapPosition) => void
+  onMoveStart?: () => void
   selected?: string
   hovered?: string
   centerToResults?: number
