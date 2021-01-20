@@ -77,11 +77,15 @@ export function useStoreInstance<A extends Store<B>, B>(instance: A): A {
   if (!info) {
     throw new Error(`This store not created using createStore()`)
   }
-  if (arguments[2]) {
+  if (arguments[3]) {
     useDebugStoreComponent(store.constructor)
   }
-  return useStoreFromInfo(info, arguments[1])
+  const selector = arguments[1]
+    ? useCallback(arguments[1], arguments[2] ?? [])
+    : undefined
+  return useStoreFromInfo(info, selector)
 }
+
 // super hack! but it works!
 // putting this below the above function is technically incorrect
 // as TS expected override types to be above, but it still works!
@@ -91,7 +95,12 @@ export function useStoreInstance<A extends Store<B>, B>(instance: A): A {
 export function useStoreInstance<
   A extends Store<any>,
   Selector extends ((a: A) => any) | void
->(instance: A, selector?: Selector): Selector extends (a: A) => infer C ? C : A
+>(
+  instance: A,
+  selector?: Selector,
+  memoArgs?: any[],
+  debug?: boolean
+): Selector extends (a: A) => infer C ? C : A
 // for creating a usable store hook
 // @ts-expect-error
 
@@ -230,6 +239,7 @@ export function mountStore(info: StoreInfo, store: any) {
 export const subscribe = (store: Store, callback: () => any) => {
   return store.subscribe(callback)
 }
+
 const emptyObj = {}
 const selectKeys = (obj: any, keys: string[] = []) => {
   if (!keys.length) {
@@ -241,6 +251,7 @@ const selectKeys = (obj: any, keys: string[] = []) => {
   }
   return res
 }
+
 function useStoreFromInfo(
   info: StoreInfo,
   userSelector?: Selector<any> | undefined
@@ -263,9 +274,9 @@ function useStoreFromInfo(
       }
       return snap
     },
-    [selector.toString()]
+    [selector]
   )
-  // TODO selector should not be memoed automatically?
+
   const state = useMutableSource(info.source, getSnapshot, subscribe)
   const storeProxy = useConstant(() =>
     createProxiedStore(info, { internal, component })

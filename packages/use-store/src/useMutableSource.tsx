@@ -39,24 +39,36 @@ export const useMutableSource = (
         /* [4] */ getSnapshot(source[TARGET]),
       ] as const
   )
+
   let currentSnapshot = state[4]
-  const hasChangedRefs =
-    state[0] !== source || state[1] !== getSnapshot || state[2] !== subscribe
-  if (hasChangedRefs) {
-    if (currentVersion !== state[3] && currentVersion !== lastVersion.current) {
-      const prevSnapshot = currentSnapshot
-      currentSnapshot = getSnapshot(source[TARGET])
-      if (!isEqualShallow(currentSnapshot, prevSnapshot)) {
-        setState([
-          /* [0] */ source,
-          /* [1] */ getSnapshot,
-          /* [2] */ subscribe,
-          /* [3] */ currentVersion,
-          /* [4] */ currentSnapshot,
-        ])
+
+  const shouldUpdate = (() => {
+    const hasChangedRefs =
+      state[0] !== source || state[1] !== getSnapshot || state[2] !== subscribe
+    const hasChangedVersion =
+      currentVersion !== state[3] && currentVersion !== lastVersion.current
+    if (hasChangedRefs || hasChangedVersion) {
+      const prev = currentSnapshot
+      const next = getSnapshot(source[TARGET])
+      if (!isEqualShallow(next, prev)) {
+        currentSnapshot = next
+        return true
       }
     }
+    return hasChangedRefs
+  })()
+
+  if (shouldUpdate) {
+    console.log('currentSnapshot', currentSnapshot)
+    setState([
+      /* [0] */ source,
+      /* [1] */ getSnapshot,
+      /* [2] */ subscribe,
+      /* [3] */ currentVersion,
+      /* [4] */ currentSnapshot,
+    ])
   }
+
   useEffect(() => {
     let didUnsubscribe = false
     const checkForUpdates = () => {
@@ -94,5 +106,6 @@ export const useMutableSource = (
       unsubscribe()
     }
   }, [source, getSnapshot, subscribe])
+
   return currentSnapshot
 }

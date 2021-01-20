@@ -5,14 +5,12 @@ import { SPLIT_TAG, SPLIT_TAG_TYPE } from '../constants/SPLIT_TAG'
 import { FullTag, TagWithNameAndType } from '../types/tagTypes'
 import { getFullTags } from './getFullTags'
 
-export const getTagsFromRoute = async (
-  item: HistoryItem<'search'>
-): Promise<FullTag[]> => {
+export const getTagSlugsFromRoute = (item: HistoryItem<'search'>) => {
   const tags: FullTag[] = []
   if (!item?.params) {
     return tags
   }
-  const tmpTags: TagWithNameAndType[] = []
+  const slugs: TagWithNameAndType[] = []
   if (item.params.lense) {
     const slug = `lenses__${item.params.lense}`
     let lenseTag = tagLenses.find((x) => x.slug == slug)
@@ -20,16 +18,22 @@ export const getTagsFromRoute = async (
       console.warn('No known lense! reverting to default', slug, item.params)
       lenseTag = tagLenses[0]
     }
-    tmpTags.push(lenseTag)
+    slugs.push(lenseTag)
   }
   if (item.params.tags) {
     for (const tag of item.params.tags.split(SPLIT_TAG)) {
       if (tag !== '-') {
-        tmpTags.push(getUrlTagInfo(tag, 'filter'))
+        slugs.push(getUrlTagInfo(tag, 'filter'))
       }
     }
   }
-  return await getFullTags(tmpTags)
+  return slugs
+}
+
+export const getTagsFromRoute = async (
+  item: HistoryItem<'search'>
+): Promise<FullTag[]> => {
+  return await getFullTags(getTagSlugsFromRoute(item))
 }
 
 const getUrlTagInfo = (
