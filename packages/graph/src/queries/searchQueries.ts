@@ -46,7 +46,6 @@ export async function search({
   limit = 50,
   main_tag = '',
 }: RestaurantSearchArgs): Promise<SearchResults> {
-  // console.log(40, tags)
   const params = [
     'query=' + query,
     'lon=' + lng,
@@ -58,7 +57,6 @@ export async function search({
     'main_tag=' + main_tag,
   ]
   const url = SEARCH_DOMAIN + '/search?' + params.join('&')
-  const x = Date.now()
   const result = await fetch(url).then((res) => res.json())
   // console.log('search', Date.now() - x + 'ms', url, result)
   return result

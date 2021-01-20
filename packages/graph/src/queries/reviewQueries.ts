@@ -104,17 +104,19 @@ export async function userFavoriteARestaurant(
       },
     ],
     undefined,
-    (r_v: review[]) => {
-      return r_v.map((review) => {
-        return {
-          ...selectFields(review, '*', 2),
-          restaurant: {
-            ...selectFields(review.restaurant),
-            tags: selectFields(review.restaurant.tags(), '*', 2),
-          },
-          sentiments: selectFields(review.sentiments(), '*', 2),
-        }
-      })
+    {
+      select: (r_v: review[]) => {
+        return r_v.map((review) => {
+          return {
+            ...selectFields(review, '*', 2),
+            restaurant: {
+              ...selectFields(review.restaurant),
+              tags: selectFields(review.restaurant.tags(), '*', 2),
+            },
+            sentiments: selectFields(review.sentiments(), '*', 2),
+          }
+        })
+      },
     }
   )
   return review
@@ -159,8 +161,9 @@ export async function reviewExternalUpsert(reviews: Review[]) {
   const d = await reviewUpsert(
     reviews,
     review_constraint.review_username_restaurant_id_tag_id_authored_at_key,
-    undefined,
-    ['__typename']
+    {
+      keys: ['__typename'],
+    }
   )
 
   return d

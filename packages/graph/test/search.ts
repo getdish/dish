@@ -13,6 +13,7 @@ import {
   restaurantUpsertRestaurantTags,
   reviewUpsert,
   search,
+  tagFindOne,
   tagInsert,
 } from '../src'
 import { restaurant_fixture } from './etc/fixtures'
@@ -97,6 +98,12 @@ test('Orders by restaurant score if no dish tags queried', async (t) => {
   t.is(results?.[2].id, rr3.id)
 })
 
+test('Tag insert triggers work, useful for next test', async (t) => {
+  await tagInsert([{ name: 'Test rated tag', type: 'dish' }])
+  const tag = await tagFindOne({ name: 'Test rated tag' })
+  t.is(tag.slug, 'global__test-rated-tag')
+})
+
 test('Orders by restaurant+tag score if dish tags queried', async (t) => {
   let r1 = clone(restaurant_fixture)
   let r2 = clone(restaurant_fixture)
@@ -124,7 +131,6 @@ test('Orders by restaurant+tag score if dish tags queried', async (t) => {
     query: '',
     tags: ['test-rated-tag'],
   })
-
   t.is(results?.restaurants.length, 3)
   t.is(results?.restaurants?.[0].id, rr3.id)
   t.is(results?.restaurants?.[0].meta.restaurant_rank, 3)

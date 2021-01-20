@@ -1,7 +1,6 @@
 import { deleteAllFuzzyBy } from './queryHelpers'
 
 export async function flushTestData() {
-  console.log('flushing test data...')
   await deleteAllFuzzyBy('review', 'text', 'test')
   await deleteAllFuzzyBy('tag', 'name', 'test')
   await deleteAllFuzzyBy('user', 'username', 'test')

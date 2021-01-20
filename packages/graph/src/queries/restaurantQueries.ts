@@ -179,7 +179,6 @@ async function restaurantUpdateTagNames(
     {
       keys: '*',
       select: (v: restaurant[]) => {
-        console.log('select?', v)
         return v.map((rest) => {
           return {
             ...selectFields(rest),
