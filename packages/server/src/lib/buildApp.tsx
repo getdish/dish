@@ -25,12 +25,6 @@ export async function buildApp({
     ? { web }
     : {
         web,
-        legacy: createConfig({
-          ...webpackConfig,
-          disableHot: true,
-          legacy: true,
-          target: 'web',
-        }),
         node: createConfig({
           ...webpackConfig,
           target: 'node',
