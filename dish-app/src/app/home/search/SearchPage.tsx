@@ -264,7 +264,19 @@ delete RecyclerListView.propTypes['externalScrollView']
 
 const SearchResultsContent = (props: Props) => {
   const drawerWidth = useAppDrawerWidth()
-  const { status, results } = useSearchPageStore()
+  const searchStore = useSearchPageStore()
+  const { status } = searchStore
+
+  let results = searchStore.results
+
+  if (results.length === 0) {
+    results = [
+      {
+        isPlaceholder: true,
+      },
+    ]
+  }
+
   const dataProvider = useMemo(() => {
     return new DataProvider((r1, r2) => {
       return r1.id !== r2.id
@@ -304,6 +316,9 @@ const SearchResultsContent = (props: Props) => {
       index: number
       // extendedState?: object
     ) => {
+      if ('isPlaceholder' in data) {
+        return <LoadingItem size="lg" />
+      }
       return (
         <RestaurantListItem
           curLocInfo={props.item.curLocInfo ?? null}
@@ -311,7 +326,7 @@ const SearchResultsContent = (props: Props) => {
           restaurantSlug={data.slug}
           rank={index + 1}
           activeTagSlugs={activeTagSlugs}
-          meta={results[index].meta}
+          meta={data.meta}
         />
       )
     },

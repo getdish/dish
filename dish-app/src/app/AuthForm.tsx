@@ -140,6 +140,7 @@ const PasswordReset = ({ autoFocus }: AuthFormProps) => {
   const {
     onChange,
     onSubmit,
+    isSubmitting,
     control,
     errors,
     watch,
@@ -154,6 +155,7 @@ const PasswordReset = ({ autoFocus }: AuthFormProps) => {
   })
   return (
     <SubmittableForm
+      isSubmitting={isSubmitting}
       onSubmit={onSubmit}
       isSuccess={isSuccess}
       successText="Your password has been reset, you can now login"
@@ -190,7 +192,14 @@ const PasswordReset = ({ autoFocus }: AuthFormProps) => {
 }
 
 const ForgotPassword = ({ autoFocus, setFormPage }: AuthFormProps) => {
-  const { onChange, onSubmit, control, errors, isSuccess } = useFormAction({
+  const {
+    onChange,
+    onSubmit,
+    control,
+    errors,
+    isSuccess,
+    isSubmitting,
+  } = useFormAction({
     name: 'forgotPassword',
     initialValues: {
       login: '',
@@ -199,6 +208,7 @@ const ForgotPassword = ({ autoFocus, setFormPage }: AuthFormProps) => {
   })
   return (
     <SubmittableForm
+      isSubmitting={isSubmitting}
       onSubmit={onSubmit}
       successText="If we have your details in our database you will receive an email shortly"
       isSuccess={isSuccess}
@@ -232,7 +242,14 @@ const ForgotPassword = ({ autoFocus, setFormPage }: AuthFormProps) => {
 }
 
 const LoginForm = ({ autoFocus, setFormPage }: AuthFormProps) => {
-  const { onChange, onSubmit, control, errors, isSuccess } = useFormAction({
+  const {
+    onChange,
+    onSubmit,
+    control,
+    errors,
+    isSuccess,
+    isSubmitting,
+  } = useFormAction({
     name: 'login',
     initialValues: {
       login: '',
@@ -242,6 +259,7 @@ const LoginForm = ({ autoFocus, setFormPage }: AuthFormProps) => {
   })
   return (
     <SubmittableForm
+      isSubmitting={isSubmitting}
       onSubmit={onSubmit}
       isSuccess={isSuccess}
       submitText="Go"
@@ -284,7 +302,7 @@ const LoginForm = ({ autoFocus, setFormPage }: AuthFormProps) => {
 }
 
 const SignupForm = ({ autoFocus }: AuthFormProps) => {
-  const { onChange, onSubmit, control, errors } = useFormAction({
+  const { onChange, onSubmit, control, errors, isSubmitting } = useFormAction({
     name: 'register',
     initialValues: {
       username: '',
@@ -294,7 +312,11 @@ const SignupForm = ({ autoFocus }: AuthFormProps) => {
     submit: userStore.register,
   })
   return (
-    <SubmittableForm onSubmit={onSubmit} submitText="Signup">
+    <SubmittableForm
+      isSubmitting={isSubmitting}
+      onSubmit={onSubmit}
+      submitText="Signup"
+    >
       <ValidatedInput
         control={control}
         errors={errors.email}
@@ -409,9 +431,11 @@ function SubmittableForm({
   isSuccess,
   errorText,
   children,
+  isSubmitting,
   after,
 }: {
   onSubmit: any
+  isSubmitting: boolean
   submitText?: string
   isSuccess?: boolean
   successText?: string
@@ -419,17 +443,12 @@ function SubmittableForm({
   children?: any
   after?: any
 }) {
-  const [isSubmitting, setIsSubmitting] = useState(false)
-  const handleSubmit = () => {
-    setIsSubmitting(true)
-    onSubmit()
-  }
   return (
     <Form
-      onSubmit={handleSubmit}
+      onSubmit={onSubmit}
       onKeyPress={(e) => {
         if (e.key === 'Enter') {
-          handleSubmit()
+          onSubmit()
         }
       }}
     >
@@ -446,7 +465,7 @@ function SubmittableForm({
             accessible
             accessibilityRole="button"
             alignSelf="flex-end"
-            onPress={handleSubmit}
+            onPress={onSubmit}
             theme="active"
             disabled={isSubmitting}
           >
@@ -481,22 +500,37 @@ function useFormAction<Values extends { [key: string]: any }>({
   const { handleSubmit, errors, control, watch } = useForm()
   const data = useRef(initialValues)
   const [send, setSend] = useState(0)
+  const [isSubmitting, setIsSubmitting] = useState(false)
   const response = useQueryLoud([name, send], () => submit(data.current), {
     enabled: !!send,
     suspense: false,
+    retry: false,
   })
   const onSubmit = handleSubmit(() => {
+    setIsSubmitting(true)
     setSend(Math.random())
   })
+
+  useEffect(() => {
+    if (response.isError || response.data?.error) {
+      setIsSubmitting(false)
+    }
+  }, [response.data, response.isError])
+
   const onChange = (key: keyof Values) => (val: string) => {
     // @ts-expect-error
     data.current[key] = val
   }
+
   if (response.isSuccess) {
     console.log('🤠 NICE JOB', send, name, data, response)
+  } else {
+    console.log('response', response)
   }
+
   return {
     errors,
+    isSubmitting,
     control,
     response,
     isSuccess: response.isSuccess && response.data,
