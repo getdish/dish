@@ -92,7 +92,7 @@
     "start": "TARGET=native react-native start",
     "preinstall": "node ./etc/update_package_json_workspace_hoist.js",
     "postinstall": "patch-package; expo-yarn-workspaces postinstall",
-    "web": "sudo dish start --hostname d1sh.com --port 80",
+    "web": "eval $(../dishctl.sh yaml_to_env); SENDGRID_API_KEY=$TF_VAR_SENDGRID_API_KEY DO_SPACES_ID=$TF_VAR_DO_SPACES_ID DO_SPACES_SECRET=$TF_VAR_DO_SPACES_SECRET DISH_ENV=development sudo -E dish start --hostname d1sh.com --port 80",
     "web:https": "sudo dish start --https --hostname d1sh.com --port 443",
     "web:debug": "node --inspect ../node_modules/.bin/dish start",
     "web:prod": "DEBUG_PATHS=1 VERBOSE=1 yarn web --prod",

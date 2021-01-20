@@ -4,7 +4,6 @@ set -x
 
 branch=$(git rev-parse --abbrev-ref HEAD)
 export DISH_BASE_VERSION=:${branch//\//-}
-export DISH_IMAGE_TAG=latest
 
 is_hasura_up() {
   [ $(curl -L $HASURA_ENDPOINT/healthz -o /dev/null -w '%{http_code}\n' -s) == "200" ]
