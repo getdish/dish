@@ -124,7 +124,7 @@ export const RestaurantOverview = memo(
         </HStack>
       )
     } else {
-      console.log('no summary', summary)
+      // console.log('no summary', summary)
     }
 
     return null

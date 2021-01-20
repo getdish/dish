@@ -131,7 +131,7 @@ export default function createWebpackConfig({
         modules: ['node_modules'],
       },
       optimization: {
-        moduleIds: 'deterministic',
+        moduleIds: isProduction ? 'deterministic' : 'natural',
         minimize,
         concatenateModules: isProduction && !isVerbose,
         usedExports: isProduction,

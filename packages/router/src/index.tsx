@@ -195,9 +195,9 @@ export class Router<
         break
     }
 
-    if (process.env.NODE_ENV === 'development') {
-      console.log('router.handlePath', JSON.stringify({ item, next }, null, 2))
-    }
+    // if (process.env.NODE_ENV === 'development') {
+    //   console.log('router.handlePath', JSON.stringify({ item, next }, null, 2))
+    // }
 
     this.routeChangeListeners.forEach((x) => x(next))
   }

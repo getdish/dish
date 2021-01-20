@@ -285,7 +285,6 @@ class HomeStore extends Store {
           acc[cur] = true
           return acc
         }, {})
-        console.log('pushState', activeTags)
         nextState = {
           type: 'search',
           region: router.curPage.params.region ?? prev.region,
@@ -496,7 +495,6 @@ class HomeStore extends Store {
       if (isEqual(curActive, nextActive)) {
         return
       }
-      console.log('set active tags', nextActive)
       this.updateActiveTags({
         id: curState.id,
         type: curState.type,

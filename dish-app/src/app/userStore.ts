@@ -159,7 +159,6 @@ class UserStore extends Store {
           refetch: true,
         }
       )
-      console.log('refreshed user', user)
       if (user) {
         this.user = {
           ...this.user,

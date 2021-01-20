@@ -186,6 +186,7 @@ function useListRestaurants(list: list) {
               position: -items.length * Math.round(1000 * Math.random()),
               list_id: list.id,
               restaurant_id: id,
+              user_id: userStore.user.id,
             },
           }).__typename
         })
@@ -233,6 +234,7 @@ function useListRestaurants(list: list) {
                 restaurant_tag_id: rid,
                 list_restaurant_id: id,
                 list_id: list.id,
+                user_id: userStore.user.id,
                 position,
               },
             }).__typename
