@@ -41,7 +41,7 @@ export class Start extends Command {
     const rootFolder = process.cwd()
     const config: ServerConfig = {
       rootFolder,
-      port: flags.port ?? 4040,
+      port: flags.port ?? 4444,
       hostname: flags.hostname ?? 'localhost',
       inspect: false,
       clean: flags.clean as any,
