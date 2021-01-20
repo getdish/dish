@@ -8,5 +8,4 @@ export async function flushTestData() {
   await deleteAllFuzzyBy('menu_item', 'name', 'Test')
   await deleteAllFuzzyBy('restaurant', 'name', 'Test')
   await deleteAllFuzzyBy('photo', 'url', 'imgur.com')
-  console.log('done flushing...')
 }

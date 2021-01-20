@@ -51,7 +51,14 @@ export async function userFetchSimple(
     if (response.status == 401) {
       handleLogOut?.()
     }
-    console.error('Auth fetch() error', method, path, data)
+    console.error(
+      'Auth fetch() error',
+      method,
+      path,
+      data,
+      response.status,
+      response.statusText
+    )
   }
   return response
 }
@@ -146,18 +153,16 @@ class AuthModel {
     return [response.status, response.statusText] as const
   }
 
-  async login(username: string, password: string) {
-    if (!username || !password) {
-      throw new Error(`no username/password`)
+  async login(login: string, password: string) {
+    if (!login || !password) {
+      throw new Error(`no login/password`)
     }
     const response = await this.api('POST', '/api/user/login', {
-      username,
+      login,
       password,
     })
     if (response.status != 201 && response.status != 200) {
-      console.error(
-        `Couldn't login, invalid username or password or missing user`
-      )
+      console.error(`Couldn't login, invalid login or password or missing user`)
       return [response.status, response.statusText] as const
     }
     const data = await response.json()
@@ -166,7 +171,6 @@ class AuthModel {
   }
 
   setLoginData(data: { user: any; token: string }) {
-    console.log('setLoginData', data)
     if (!data.token) {
       throw new Error(`INVALID NO TOKEN`)
     }
