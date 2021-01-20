@@ -1,4 +1,4 @@
-import { Auth, graphql } from '@dish/graph'
+import { Auth, graphql, userUpsert } from '@dish/graph'
 import React, { useEffect, useRef, useState } from 'react'
 import { Image } from 'react-native'
 import {
@@ -33,14 +33,22 @@ export const UserOnboard = graphql(
     const inputAvatar = useRef(null)
 
     useEffect(() => {
-      const handleUpload = async () => {
-        const form = imageFormRef.current!
+      const avatar = inputAvatar.current
+      const form = imageFormRef.current
+      if (!avatar || !form) return
+
+      const handleUpload = async (e) => {
         const formData = new FormData(form)
         try {
           const avatar = await Auth.uploadAvatar(formData)
-          console.log('avatar', avatar)
+          console.log('avatar', formData, avatar)
           if (avatar) {
-            user.avatar = avatar
+            userUpsert([
+              {
+                id: userStore.user.id,
+                avatar,
+              },
+            ])
             Toast.show('Saved image!')
           } else {
             Toast.error('Error saving  image!')
@@ -51,14 +59,11 @@ export const UserOnboard = graphql(
       }
 
       // fixes safari not working with onChange={}
-      const avatar = inputAvatar.current
-      if (avatar) {
-        avatar.addEventListener('change', handleUpload)
-        return () => {
-          avatar.removeEventListener('change', handleUpload)
-        }
+      avatar.addEventListener('change', handleUpload)
+      return () => {
+        avatar.removeEventListener('change', handleUpload)
       }
-    }, [])
+    }, [imageFormRef.current, inputAvatar.current])
 
     return (
       <>

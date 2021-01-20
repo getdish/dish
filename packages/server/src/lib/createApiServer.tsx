@@ -17,16 +17,6 @@ export async function createApiServer(app: any, config: ServerConfigNormal) {
     return
   }
 
-  let lastRouteResponse: any
-
-  process.on('unhandledRejection', (err) => {
-    console.log('unhandledRejection', err)
-    const lastPromiseErr = lastRouteResponse?.['__tracedError']
-    if (lastPromiseErr) {
-      console.log('Maybe from this route:', lastPromiseErr)
-    }
-  })
-
   const secret = {
     authorization: true,
     'x-hasura-admin-secret': true,
@@ -193,28 +183,23 @@ export async function createApiServer(app: any, config: ServerConfigNormal) {
           }
         })
       }
-    }
 
-    function handleRoute(
-      handler: RequestHandler,
-      req: Request,
-      res: Response,
-      next: NextFunction
-    ) {
-      if (typeof handler !== 'function') {
-        console.warn(' [api] ⚠️  invalid handler', handler)
-        return res.status(500)
-      }
-      const result = handler(req, res, next)
-      // @ts-expect-error
-      if (result instanceof Promise) {
-        lastRouteResponse = result
-        setTimeout(() => {
-          // clear after a bit if no error
-          if (lastRouteResponse === result) {
-            lastRouteResponse = null
-          }
-        }, 50)
+      function handleRoute(
+        handler: RequestHandler,
+        req: Request,
+        res: Response,
+        next: NextFunction
+      ) {
+        if (typeof handler !== 'function') {
+          console.warn(' [api] ⚠️  invalid handler', handler)
+          return res.status(500)
+        }
+        const result = handler(req, res, next) as any
+        if (result instanceof Promise) {
+          result.catch((err) => {
+            console.log(`route ${name} error`, err.message, '\n', err.stack)
+          })
+        }
       }
     }
 

@@ -25,12 +25,18 @@ mkdir -p $HOME/.dish/postgres/data
 docker-compose up -d postgres
 sleep 10 # Postgres needs 2 starts to get everything set up
 docker-compose down
+
+echo "Starting docker for tests"
 ./dishctl.sh docker_compose_up_for_tests -d
 
+echo "Migrating DB"
 ./dishctl.sh db_migrate_local init
+
+echo "Migrating timescale"
 docker run --net host $DISH_REGISTRY/base \
   bash -c 'cd services/timescaledb && DISH_ENV=not-production ./migrate.sh'
 
+echo "Waiting for hasura to finish starting"
 if ! timeout --preserve-status 20 bash -c wait_until_hasura_ready; then
   echo "Timed out waiting for Hasura container to start"
   exit 1

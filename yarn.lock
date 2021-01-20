@@ -1138,6 +1138,15 @@
     lodash "^4.17.20"
     lodash-es "^4.17.15"
 
+"@dish/postgrator-cli@^4.0.0":
+  version "4.0.0"
+  resolved "https://registry.npmjs.org/@dish/postgrator-cli/-/postgrator-cli-4.0.0.tgz#01bdedc150b9b850176e4c7bce67f894c19d74d6"
+  integrity sha512-RcVwPstRZy/N1fLJLe+cZ5SwJWGsgRnJeQjQJq2xhjVmJF3fF2mT7D2HVU7Tf5eaRL1wRnxHbNyaj1uOfvZEZg==
+  dependencies:
+    command-line-args "^5.1.1"
+    command-line-usage "^6.1.0"
+    postgrator "^4.0.0"
+
 "@dish/react-ssr-prepass@^1.3.1":
   version "1.3.1"
   resolved "https://registry.npmjs.org/@dish/react-ssr-prepass/-/react-ssr-prepass-1.3.1.tgz#d471587c138bd85813a9c4452c33ddc001ae532b"
@@ -14141,15 +14150,6 @@ postcss@^8.1.4:
     colorette "^1.2.1"
     nanoid "^3.1.20"
     source-map "^0.6.1"
-
-postgrator-cli@^4.0.0:
-  version "4.0.0"
-  resolved "https://registry.npmjs.org/postgrator-cli/-/postgrator-cli-4.0.0.tgz#d6a582b354c183879198f508ec49cd3f3b96b1b5"
-  integrity sha512-y1Sa37fh92ObKiZ9YCWTg/FPOKZj5wwLXQIFvf+XU1AE3INO8ZJPRzSFku5J5LsN7TogoibIQ2ZYZFlfporYug==
-  dependencies:
-    command-line-args "^5.1.1"
-    command-line-usage "^6.1.0"
-    postgrator "^4.0.0"
 
 postgrator@^4.0.0, postgrator@^4.0.1:
   version "4.1.1"

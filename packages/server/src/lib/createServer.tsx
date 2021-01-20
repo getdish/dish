@@ -1,6 +1,5 @@
 import { join } from 'path'
 
-import bodyParser from 'body-parser'
 import compression from 'compression'
 import express from 'express'
 
@@ -51,8 +50,6 @@ export async function createServer(serverConf: ServerConfig) {
   // fixes bug with 304 errors sometimes
   // see: https://stackoverflow.com/questions/18811286/nodejs-express-cache-and-304-status-code
   app.disable('etag')
-  app.use(bodyParser.json({ limit: '2048mb' }))
-  app.use(bodyParser.urlencoded({ limit: '2048mb', extended: false }))
   app.get('/__test', (_, res) => res.send('hello world'))
 
   console.log(`listening on ${conf.url}`)

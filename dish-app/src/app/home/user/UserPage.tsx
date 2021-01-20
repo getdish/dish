@@ -173,9 +173,10 @@ const UserHeader = memo(
       const userStore = useUserStore()
       const user = useUserQuery(item?.username ?? '')
       const isOwnProfile = userStore.user?.username === user?.username
-      console.log(userStore.user?.username, user?.username)
 
-      if (!user) return null
+      if (!user) {
+        return null
+      }
 
       return (
         <VStack position="relative">

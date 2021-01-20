@@ -1,8 +1,8 @@
-import { route } from '@dish/api'
+import { jsonRoute } from '@dish/api'
 import { userInsert } from '@dish/graph'
-import { hashPassword } from '@dish/helpers-node'
+import { hashPassword, jwtSign } from '@dish/helpers-node'
 
-export default route(async (req, res) => {
+export default jsonRoute(async (req, res) => {
   if (req.method !== 'POST') return
   const { username, email, password } = req.body
   try {
@@ -14,8 +14,11 @@ export default route(async (req, res) => {
         role: 'user',
       },
     ])
+    const token = jwtSign(user)
+
     res.status(201).json({
       success: 'Welcome!',
+      token,
       user: {
         id: user.id,
       },
@@ -23,8 +26,9 @@ export default route(async (req, res) => {
   } catch (err) {
     console.error(err)
     if (err.message.includes('Uniqueness violation')) {
-      return res.status(409).json({ error: 'Username/email already in use' })
+      res.status(409).json({ error: 'Username/email already in use' })
+      return
     }
-    return res.status(400).json({ error: err.message })
+    res.status(400).json({ error: err.message })
   }
 })

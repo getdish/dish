@@ -3,6 +3,9 @@ import { MARTIN_TILES_HOST } from '@dish/graph'
 
 const host = MARTIN_TILES_HOST
 
+// TODO test in web app to see if it works there
+// may be we need to forward some header info
+
 export default route(async (req, res) => {
   const url = `${host}${req.path}`
   console.log('fetch', url)
@@ -11,10 +14,11 @@ export default route(async (req, res) => {
   console.log('got', url, martinRes)
 
   if (martinRes.attribution == null) {
-    return res.send({
+    res.send({
       ...martinRes,
       attribution: '',
     })
+    return
   }
 
   res.send(martinRes)

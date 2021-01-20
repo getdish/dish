@@ -37,10 +37,12 @@ export async function userFetchSimple(
     method,
     headers: {
       ...getAuthHeaders(),
-      'Content-Type': 'application/json',
+      ...(!(data instanceof FormData) && {
+        'Content-Type': 'application/json',
+      }),
       Accept: 'application/json',
     },
-    body: JSON.stringify(data),
+    body: data instanceof FormData ? data : JSON.stringify(data),
   }
   const response = await fetch(ORIGIN + path, init)
   if (response.status >= 300) {
@@ -155,17 +157,14 @@ class AuthModel {
 
   setLoginData(data: { user: any; token: string }) {
     console.log('setLoginData', data)
+    if (!data.token) {
+      throw new Error(`INVALID NO TOKEN`)
+    }
     this.isLoggedIn = true
     this.jwt = data.token
     this.user = data.user
     localStorage.setItem(HAS_LOGGED_IN_BEFORE, 'true')
-    localStorage.setItem(
-      LOGIN_KEY,
-      JSON.stringify({
-        token: this.jwt,
-        user: this.user,
-      })
-    )
+    localStorage.setItem(LOGIN_KEY, JSON.stringify(data))
     this.has_been_logged_out = false
   }
 

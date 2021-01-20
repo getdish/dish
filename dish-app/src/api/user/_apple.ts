@@ -1,6 +1,6 @@
 import { join } from 'path'
 
-import { route } from '@dish/api'
+import { urlEncodedRoute } from '@dish/api'
 import { User, WithID, userFindOne, userUpsert } from '@dish/graph'
 import { jwtSign } from '@dish/helpers-node'
 import AppleSignIn, { AppleSignInOptions } from 'apple-sign-in-rest'
@@ -55,101 +55,113 @@ export async function appleAuth({
   }
 }
 
-export const authorizeRoute = route(async (req, res) => {
-  let { user: reqUser, id_token, code, error } = req.body
-  console.log('sign in response', JSON.stringify(req.body, null, 2))
-  const { claim, tokens } = await appleAuth({
-    code,
-    redirectUri,
-  })
-  const apple_token = tokens.access_token
-  const apple_refresh_token = tokens.refresh_token
-  const isChrome = req.path.includes('_chrome')
-  const sendResponse = (success?: boolean) => {
-    if (isChrome) {
+export const authorizeRoute = urlEncodedRoute(
+  async (req, res) => {
+    let { user: reqUser, id_token, code, error } = req.body
+    console.log('sign in response', JSON.stringify(req.body, null, 2))
+    const { claim, tokens } = await appleAuth({
+      code,
+      redirectUri,
+    })
+    const apple_token = tokens.access_token
+    const apple_refresh_token = tokens.refresh_token
+    const isChrome = req.path.includes('_chrome')
+    const sendResponse = (success?: boolean) => {
+      if (isChrome) {
+        if (!success) {
+          res.send(
+            `<html><body><script>window.opener.AuthChildMessage('fail')</script></body></html>`
+          )
+          return
+        } else {
+          res.send(
+            `<html><body><script>window.opener.AuthChildMessage('success')</script></body></html>`
+          )
+          return
+        }
+      }
       if (!success) {
-        return res.send(
-          `<html><body><script>window.opener.AuthChildMessage('fail')</script></body></html>`
-        )
+        res.sendStatus(500)
+        return
       } else {
-        return res.send(
-          `<html><body><script>window.opener.AuthChildMessage('success')</script></body></html>`
-        )
+        return
       }
     }
-    if (!success) {
-      return res.sendStatus(500)
-    } else {
+
+    // user is passed on first signup
+    let user: WithID<User> | null = null
+    try {
+      if (claim.email) {
+        user = await userFindOne({
+          apple_uid: claim.email,
+        })
+      } else {
+        user = await userFindOne({
+          apple_email: reqUser.email,
+        })
+      }
+    } catch (error) {
+      console.error('user find error', error)
+      sendResponse(false)
       return
     }
-  }
 
-  // user is passed on first signup
-  let user: WithID<User> | null = null
-  try {
-    if (claim.email) {
-      user = await userFindOne({
-        apple_uid: claim.email,
-      })
-    } else {
-      user = await userFindOne({
-        apple_email: reqUser.email,
-      })
+    if (!user) {
+      try {
+        // first time, create user
+        user = await userUpsert([
+          {
+            username: `${reqUser.name.firstName} ${reqUser.name.lastName}`,
+            password: reqUser.code,
+            email: reqUser.email ?? claim.email,
+            role: 'user',
+          },
+        ])[0]
+      } catch (error) {
+        console.error('user create error', error)
+        sendResponse(false)
+        return
+      }
     }
-  } catch (error) {
-    console.error('user find error', error)
-    return sendResponse(false)
-  }
 
-  if (!user) {
+    // add apple info
     try {
-      // first time, create user
-      user = await userUpsert([
+      const finalUser = await userUpsert([
         {
-          username: `${reqUser.name.firstName} ${reqUser.name.lastName}`,
-          password: reqUser.code,
-          email: reqUser.email ?? claim.email,
-          role: 'user',
+          ...user,
+          apple_token,
+          apple_uid: claim.email,
+          apple_refresh_token,
         },
-      ])[0]
-    } catch (error) {
-      console.error('user create error', error)
-      return sendResponse(false)
+      ])
+      if (finalUser[0]) {
+        user = finalUser[0]
+      }
+    } catch (err) {
+      console.error('final user update error', error)
+      sendResponse(false)
+      return
     }
-  }
 
-  // add apple info
-  try {
-    const finalUser = await userUpsert([
-      {
-        ...user,
-        apple_token,
-        apple_uid: claim.email,
-        apple_refresh_token,
-      },
-    ])
-    if (finalUser[0]) {
-      user = finalUser[0]
+    if (!user) {
+      console.error('no user?')
+      sendResponse(false)
+      return
     }
-  } catch (err) {
-    console.error('final user update error', error)
-    return sendResponse(false)
+
+    const token = jwtSign(user)
+
+    if (isChrome) {
+      return res.redirect(
+        `https://dishapp.com/onboard?user=${encodeURIComponent(
+          user.username!
+        )}&token=${encodeURIComponent(token)}`
+      )
+    }
+
+    res.sendStatus(200)
+  },
+  {
+    extended: false,
   }
-
-  if (!user) {
-    console.error('no user?')
-    return sendResponse(false)
-  }
-
-  const token = jwtSign(user)
-
-  if (isChrome) {
-    return res.redirect(
-      `https://dishapp.com/onboard?user=${encodeURIComponent(
-        user.username!
-      )}&token=${encodeURIComponent(token)}`
-    )
-  }
-
-  return res.sendStatus(200)
-})
+)
