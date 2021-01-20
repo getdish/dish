@@ -30,7 +30,7 @@ export const DISH_API_ENDPOINT =
 export const SEARCH_DOMAIN = (() => {
   const staging = 'https://search-staging.dishapp.com'
   const live = staging
-  const local = `${DISH_API_ENDPOINT}:10000`
+  const local = process.env.SEARCH_ENDPOINT ?? `localhost:10000`
   if (isProd) {
     return live
   }

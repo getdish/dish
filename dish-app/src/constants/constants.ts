@@ -27,7 +27,6 @@ export const searchBarHeightWithPadding =
   searchBarHeight + searchBarTopOffset + 12
 export const searchBarMaxWidth = pageWidthMax - 640
 
-export const LIVE_SEARCH_DOMAIN = 'https://search.dishapp.com'
 export const IMAGE_PROXY_DOMAIN = 'https://images-staging.dishapp.com'
 
 export const emptyObj = Object.freeze(Object.create(null))
