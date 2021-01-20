@@ -27,18 +27,22 @@ export async function userEdit(
   return await (await userFetchSimple('POST', '/api/user/edit', user)).json()
 }
 
-type UserFetchOpts = { handleLogOut?: () => void; rawData?: boolean }
+type UserFetchOpts = {
+  isAdmin?: boolean
+  handleLogOut?: () => void
+  rawData?: boolean
+}
 
 export async function userFetchSimple(
   method: 'POST' | 'GET',
   path: string,
   data: any = {},
-  { handleLogOut, rawData }: UserFetchOpts = {}
+  { handleLogOut, rawData, isAdmin }: UserFetchOpts = {}
 ) {
   const init: RequestInit = {
     method,
     headers: {
-      ...getAuthHeaders(),
+      ...getAuthHeaders(isAdmin),
       ...(!rawData && {
         'Content-Type': 'application/json',
       }),
@@ -66,7 +70,7 @@ export async function userFetchSimple(
 class AuthModel {
   public jwt = ''
   public isLoggedIn = false
-  public is_admin = false
+  public isAdmin = false
   public user: any = {}
   public has_been_logged_out = false
 
@@ -83,7 +87,7 @@ class AuthModel {
   constructor() {
     if (isNode) {
       this.isLoggedIn = true
-      this.is_admin = true
+      this.isAdmin = true
     }
   }
 
@@ -108,19 +112,21 @@ class AuthModel {
   ) {
     return await userFetchSimple(method, path, data, {
       ...opts,
+      isAdmin: this.isAdmin,
       handleLogOut: () => {
         this.isLoggedIn = false
+        this.isAdmin = false
         this.user = null
-        this.is_admin = false
       },
     })
   }
 
+  // only used server side
   as(role: string) {
     if (role == 'admin') {
-      this.is_admin = true
+      this.isAdmin = true
     } else {
-      this.is_admin = false
+      this.isAdmin = false
     }
   }
 

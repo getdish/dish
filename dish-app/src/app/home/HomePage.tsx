@@ -52,7 +52,7 @@ export default memo(function HomePage(props: Props) {
     suspense: false,
   })
 
-  console.log('👀 HomePage', { props, region, state })
+  console.log('👀 HomePage', { props, region, state, isActive })
 
   // center map to region
   // ONLY on first load!
@@ -74,6 +74,7 @@ export default memo(function HomePage(props: Props) {
     if (region.status !== 'success') return
     if (!region.data) {
       // no region found!
+      console.warn('no region, nav')
       router.navigate({
         name: 'homeRegion',
         params: {

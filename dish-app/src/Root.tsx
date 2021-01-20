@@ -3,7 +3,7 @@ import './globals'
 import { useHydrateCache } from '@dish/graph'
 import { ProvideRouter } from '@dish/router'
 import { configureUseStore } from '@dish/use-store'
-import React, { Suspense } from 'react'
+import React, { Suspense, useEffect } from 'react'
 import { QueryClientProvider } from 'react-query'
 import { ThemeProvider, configureThemes } from 'snackui'
 
@@ -27,12 +27,17 @@ declare module 'snackui' {
   interface Themes extends MyThemes {}
 }
 
+let isStarted = false
+let startPromise
+
 async function start() {
+  if (isStarted) return
   await new Promise<void>((res) => {
     addTagsToCache([...tagDefaultAutocomplete, ...tagFilters, ...tagLenses])
     router.onRouteChange((item) => {
       console.warn('router.onRouteChange', item)
       homeStore.handleRouteChange(item)
+      startPromise = null
       res()
     })
     userStore.checkForExistingLogin()
@@ -48,12 +53,27 @@ configureUseStore({
 // @ts-expect-error
 const cacheSnapshot = global.__CACHE_SNAPSHOT
 
+// can be used by ssr in the future to load app
+export function RootSuspenseLoad(props: any) {
+  if (!isStarted && !startPromise) {
+    startPromise = start()
+  }
+  if (startPromise) {
+    throw startPromise
+  }
+  return <Suspense fallback={null}>{props.children}</Suspense>
+}
+
 export function Root() {
   if (cacheSnapshot) {
     useHydrateCache({
       cacheSnapshot,
     })
   }
+
+  useEffect(() => {
+    start()
+  }, [])
 
   return (
     <PlatformSpecificProvider>
@@ -62,9 +82,7 @@ export function Root() {
           <QueryClientProvider client={queryClient}>
             <AppPortalProvider>
               <Suspense fallback={null}>
-                <RootLoader>
-                  <App />
-                </RootLoader>
+                <App />
               </Suspense>
             </AppPortalProvider>
           </QueryClientProvider>
@@ -72,17 +90,4 @@ export function Root() {
       </ThemeProvider>
     </PlatformSpecificProvider>
   )
-}
-
-let isStarted = false
-let startPromise
-
-function RootLoader(props: any) {
-  if (!isStarted) {
-    if (!startPromise) {
-      startPromise = start()
-    }
-    throw startPromise
-  }
-  return <Suspense fallback={null}>{props.children}</Suspense>
 }

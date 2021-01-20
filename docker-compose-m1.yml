@@ -35,6 +35,17 @@ services:
     depends_on:
       - 'postgres'
       - 'redis'
+  timescaledb:
+    image: timescale/timescaledb-postgis:1.7.2-pg11
+    restart: always
+    volumes:
+      - ${HOME}/.dish/timescaledb:/var/lib/postgresql/data
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: 'postgres'
+      POSTGRES_DB: scrape_data
+    ports:
+      - 5433:5432
   tileserver:
     image: urbica/martin
     ports:

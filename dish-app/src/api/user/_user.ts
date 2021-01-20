@@ -6,8 +6,8 @@ type PermissionLevel = 'admin' | 'user' | 'contributor'
 
 const access = {
   admin: ['admin', 'user', 'contributor'],
-  user: ['user', 'contributor'],
-  contributor: ['contributor'],
+  contributor: ['contributor', 'user'],
+  user: ['user'],
 }
 
 export function secureRoute(

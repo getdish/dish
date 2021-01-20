@@ -406,6 +406,9 @@ const handleKeyPress = async (e: any, inputStore: InputStore) => {
           })
         }
       } else {
+        // TODO move this to top-down approach
+        // inputStore.setValue(e.target.value)
+        // and have SearchPage useEffect() listen to inputStore.value
         searchPageStore.runSearch({
           searchQuery: e.target.value,
           force: true,
