@@ -1,6 +1,7 @@
 import { parseSchemaType, selectFields } from '@dish/gqless'
 
 import {
+  Mutation,
   Scalars,
   generatedSchema,
   mutation,
@@ -61,25 +62,19 @@ export function createQueryHelpersFor<A extends ModelType>(
   defaultUpsertConstraint?: string
 ) {
   return {
-    async insert(
-      items: Partial<A>[],
-      fn?: (v: any) => unknown,
-      keys?: string[]
-    ) {
-      return await insert<A>(modelName, items, fn, keys)
+    async insert(items: Partial<A>[], opts?: MutationOpts) {
+      return await insert<A>(modelName, items, opts)
     },
     async upsert(
       items: Partial<A>[],
       constraint?: string,
-      fn?: (v: any) => unknown,
-      keys?: '*' | string[]
+      opts?: MutationOpts
     ) {
       return await upsert<A>(
         modelName,
         items,
         constraint ?? defaultUpsertConstraint,
-        fn,
-        keys
+        opts
       )
     },
     async update(a: WithID<Partial<A>>, opts?: MutationOpts) {
@@ -126,22 +121,18 @@ export async function findAll<T extends ModelType>(
 
 export async function insert<T extends ModelType>(
   table: ModelName,
-  objects: Partial<T>[],
-  select?: (v: any) => unknown,
-  keys?: string[]
+  insertObjects: Partial<T>[],
+  opts?: MutationOpts
 ): Promise<WithID<T>[]> {
-  const action = `insert_${table}` as any
-
-  keys = keys || Object.keys(generatedSchema[table + '_set_input'])
-
   // @ts-ignore
   return await resolvedMutationWithFields(
     () => {
-      return mutation[action]({
-        objects: prepareData(table, objects, '_insert_input'),
+      const objects = prepareData(table, insertObjects, '_insert_input')
+      return mutation[`insert_${table}` as any]({
+        objects,
       })
     },
-    { keys, select }
+    { keys: Object.keys(generatedSchema[table + '_set_input']), ...opts }
   )
 }
 
@@ -149,32 +140,28 @@ export async function upsert<T extends ModelType>(
   table: ModelName,
   objectsIn: Partial<T>[],
   constraint?: string,
-  select?: (v: any) => unknown,
-  keys?: '*' | string[]
+  opts?: MutationOpts
 ): Promise<WithID<T>[]> {
   constraint = constraint ?? defaultConstraints[table]
   const objects = prepareData(table, objectsIn, '_insert_input')
   const update_columns = updateableColumns(table, objects[0])
-  const action = `insert_${table}` as any
-
-  // input type fields are the direct name of object types
-  // 1 to 1
-  keys = keys || Object.keys(generatedSchema[table + '_set_input'])
-
   // @ts-ignore
   return await resolvedMutationWithFields(
     () => {
-      const m = mutation[action]({
+      return mutation[`insert_${table}` as any]({
         objects,
         on_conflict: {
           constraint,
           update_columns,
         },
       })
-
-      return m
     },
-    { keys, select }
+    {
+      // input type fields are the direct name of object types
+      // 1 to 1
+      keys: Object.keys(generatedSchema[table + '_set_input']),
+      ...opts,
+    }
   )
 }
 
@@ -183,7 +170,7 @@ export async function update<T extends WithID<ModelType>>(
   objectIn: T,
   opts: MutationOpts = {}
 ): Promise<WithID<T>> {
-  const action = `update_${table}_by_pk` as any
+  const action = `update_${table}` as any
   const [object] = prepareData(table, [objectIn], '_set_input')
   if (!object.id) {
     throw new Error(`Must have ID to update`)

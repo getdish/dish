@@ -21,6 +21,7 @@ export default jsonRoute(async (req, res) => {
       token,
       user: {
         id: user.id,
+        username: user.username,
       },
     })
   } catch (err) {

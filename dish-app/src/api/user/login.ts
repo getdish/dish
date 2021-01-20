@@ -9,7 +9,7 @@ export default jsonRoute(async (req, res) => {
   try {
     const user = await getUserFromEmailOrUsername(login)
     if (!user) {
-      res.status(404).json({ error: 'Not found' })
+      res.status(401).json({ error: 'Not found' })
       return
     }
     const isValid = isPasswordValid(password, user.password)
@@ -18,7 +18,14 @@ export default jsonRoute(async (req, res) => {
       return
     }
     const token = jwtSign(user)
-    res.status(200).json({ user: { id: user.id }, token, success: 'Welcome!' })
+    res.status(200).json({
+      user: {
+        id: user.id,
+        username: user.username,
+      },
+      token,
+      success: 'Welcome!',
+    })
   } catch (err) {
     console.error('login err', err, req.body)
     res.status(400).json({ error: err.message })

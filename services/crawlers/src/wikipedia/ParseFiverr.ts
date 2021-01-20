@@ -98,13 +98,15 @@ export class ParseFiverr {
           },
         ],
         undefined,
-        (v_t: tag[]) => {
-          return v_t.map((v) => {
-            return {
-              ...selectFields(v, '*', 1),
-              alternates: v.alternates(),
-            }
-          })
+        {
+          select: (v_t: tag[]) => {
+            return v_t.map((v) => {
+              return {
+                ...selectFields(v, '*', 1),
+                alternates: v.alternates(),
+              }
+            })
+          },
         }
       )
       tagAddAlternate(tag, original)
@@ -137,13 +139,15 @@ export class ParseFiverr {
         },
       ],
       undefined,
-      (v_t: tag[]) => {
-        return v_t.map((v) => {
-          return {
-            ...selectFields(v),
-            alternates: v.alternates(),
-          }
-        })
+      {
+        select: (v_t: tag[]) => {
+          return v_t.map((v) => {
+            return {
+              ...selectFields(v),
+              alternates: v.alternates(),
+            }
+          })
+        },
       }
     )
     tagAddAlternate(tag, original)

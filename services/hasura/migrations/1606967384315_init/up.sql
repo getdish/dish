@@ -1,7 +1,7 @@
-CREATE EXTENSION postgis;
-CREATE EXTENSION unaccent;
-CREATE EXTENSION btree_gist;
-CREATE EXTENSION pg_trgm;
+CREATE EXTENSION IF NOT EXISTS postgis;
+CREATE EXTENSION IF NOT EXISTS unaccent;
+CREATE EXTENSION IF NOT EXISTS btree_gist;
+CREATE EXTENSION IF NOT EXISTS pg_trgm;
 CREATE FUNCTION public.f_opening_hours_hours(_from timestamp with time zone, _to timestamp with time zone) RETURNS TABLE(opening_hours_range tsrange)
     LANGUAGE plpgsql IMMUTABLE COST 1000 ROWS 1
     AS $$

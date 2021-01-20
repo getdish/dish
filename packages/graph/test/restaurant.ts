@@ -63,13 +63,10 @@ test('Avoiding cache', async (t) => {
     name: 'Test Restaurant',
   })
   t.context.restaurant.city = 'New City'
-
   await restaurantUpdate(t.context.restaurant as RestaurantWithId)
-
   const restaurant = await restaurantFindOne({
     name: 'Test Restaurant',
   })
-
   t.is(restaurant?.city ?? '', 'New City')
 })
 
@@ -79,7 +76,7 @@ test('Finding a restaurant by location', async (t) => {
   t.is(restaurants[0].name, 'Test Restaurant')
 })
 
-test.skip('Is open now', async (t) => {
+test.skip('is open now', async (t) => {
   const url = 'http://worldtimeapi.org/api/timezone/America/Los_Angeles'
   const now_string = await fetch(url).then((res) => res.json())
   const now = moment(now_string.datetime)
