@@ -1,11 +1,4 @@
-import {
-  Handler,
-  Req,
-  Res,
-  RouteExit,
-  handleErrors,
-  wrapRoute,
-} from '@dish/api'
+import { Handler, Req, Res, RouteExit, handleErrors } from '@dish/api'
 import { JWT_SECRET, userFindOne } from '@dish/graph'
 import * as jwt from 'jsonwebtoken'
 
@@ -21,13 +14,17 @@ export function secureRoute(
   minimumPermission: PermissionLevel,
   route: Handler
 ) {
-  return wrapRoute(route, (fn) => {
-    return handleErrors(async (req, res, next) => {
-      ensureJWT(req, res)
-      await ensureRole(req, res, minimumPermission)
-      await fn(req, res, next)
-    })
+  return handleErrors(async (req, res) => {
+    ensureJWT(req, res)
+    await ensureRole(req, res, minimumPermission)
+    await route(req, res)
   })
+}
+
+export async function getUserFromEmailOrUsername(login: string) {
+  return login.includes('@')
+    ? await userFindOne({ email: login })
+    : await userFindOne({ username: login })
 }
 
 export async function getUserFromRoute(req: Req) {
@@ -59,6 +56,7 @@ export async function ensureRole(
 export function ensureJWT(req: Req, res: Res) {
   const token = getJWT(req)
   if (!token) {
+    console.log('expired/invlaid jwt')
     res.status(401).send('expired/invalid jwt')
     throw RouteExit
   }

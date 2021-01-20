@@ -1,17 +1,15 @@
-import { route } from '@dish/api'
-import { userFindOne, userUpdate } from '@dish/graph'
+import { jsonRoute } from '@dish/api'
+import { userUpdate } from '@dish/graph'
 import { v4 } from 'uuid'
 
 import { send } from '../_mailer'
+import { getUserFromEmailOrUsername } from './_user'
 
-export default route(async (req, res) => {
+export default jsonRoute(async (req, res) => {
   if (req.method !== 'POST') return
   const { login } = req.body
   try {
-    // try with username if not try with email
-    const user =
-      (await userFindOne({ username: login })) ??
-      (await userFindOne({ email: login }))
+    const user = await getUserFromEmailOrUsername(login)
     if (user) {
       const token = v4()
       user.password_reset_token = token
@@ -19,10 +17,11 @@ export default route(async (req, res) => {
       await userUpdate(user)
       await sendPasswordResetEmail(user.email, token)
     }
-    return res.status(204)
+    res.status(204)
+    return
   } catch (err) {
     console.error(err)
-    return res.status(400).json({ error: err.message })
+    res.status(400).json({ error: err.message })
   }
 })
 

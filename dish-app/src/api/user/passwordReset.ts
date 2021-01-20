@@ -1,8 +1,8 @@
-import { route } from '@dish/api'
+import { jsonRoute } from '@dish/api/src'
 import { userFindOne, userUpdate } from '@dish/graph'
 import { hashPassword } from '@dish/helpers-node'
 
-export default route(async (req, res) => {
+export default jsonRoute(async (req, res) => {
   if (req.method !== 'POST') return
   const { token, password } = req.body
   if (!token || !password) {
@@ -21,10 +21,11 @@ export default route(async (req, res) => {
     }
     user.password = hashPassword(password)
     await userUpdate(user)
-    return res.status(200)
+    res.status(200)
+    return
   } catch (err) {
     console.error(err)
-    return res.status(400).json({ error: err.message })
+    res.status(400).json({ error: err.message })
   }
 })
 

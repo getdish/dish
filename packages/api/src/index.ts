@@ -1,6 +1,6 @@
 import { Handler as ExpressHandler, Request, Response } from 'express'
 
-export type Handler = ExpressHandler | ExpressHandler[]
+export type Handler = (req: Request, res: Response) => Promise<void> | void
 export type Req = Request
 export type Res = Response
 

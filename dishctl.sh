@@ -1058,6 +1058,7 @@ function docker_compose_up_for_devs() {
 }
 
 function docker_compose_up_for_tests() {
+  extra=$1
   services=$(
     docker-compose config --services \
       | grep -E -v 'base|nginx|image-quality|image-proxy|bert' \
@@ -1065,7 +1066,11 @@ function docker_compose_up_for_tests() {
   )
   echo "Starting the following services: $services"
   export HASURA_GRAPHQL_ADMIN_SECRET=password
-  docker-compose up $services
+  if [ -z "$extra" ]; then
+    docker-compose up $services
+  else
+    docker-compose up "$extra" $services
+  fi
 }
 
 function staging_ssh() {

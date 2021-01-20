@@ -1,13 +1,14 @@
 import path from 'path'
 
-import { userFindOne, userUpsert } from '@dish/graph'
+import { runMiddleware } from '@dish/api'
+import { userUpsert } from '@dish/graph'
 import AWS from 'aws-sdk'
 import { Request, Response } from 'express'
 import multer from 'multer'
 import multerS3 from 'multer-s3'
 import { v4 } from 'uuid'
 
-import { secureRoute } from './_user'
+import { getUserFromRoute, secureRoute } from './_user'
 
 // if (!process.env.DO_SPACES_ID) {
 //   throw new Error(`NO Docker Spaces ID provided`)
@@ -50,13 +51,18 @@ const upload = multer({
   }),
 }).array('avatar', 1)
 
-export default secureRoute('user', [
-  upload,
-  async (req: Request, res: Response) => {
-    // TODO
-    const { user, error } = 0 as any //await getUserFromResponse(res)
+export default secureRoute('user', async (req: Request, res: Response) => {
+  await runMiddleware(req, res, upload)
+  console.log('what is', req['files'], req['file'])
 
-    console.log('user', user, error)
+  upload(req, res, async (error) => {
+    if (error) {
+      return res.json({
+        error,
+      })
+    }
+
+    const user = await getUserFromRoute(req)
 
     if (!user) {
       return res.json({
@@ -68,7 +74,7 @@ export default secureRoute('user', [
     const files = req.files
 
     if (!Array.isArray(files) || !files.length) {
-      return res.json({
+      return res.status(500).json({
         error: 'no files',
       })
     }
@@ -91,5 +97,5 @@ export default secureRoute('user', [
       console.error('error', err)
       return res.send(401)
     }
-  },
-])
+  })
+})

@@ -11,6 +11,7 @@ import {
 import { Store, createStore, useStoreInstance } from '@dish/use-store'
 import { Toast } from 'snackui'
 
+import { router } from '../router'
 import { appMenuStore } from './AppMenuStore'
 
 class UserStore extends Store {
@@ -135,6 +136,13 @@ class UserStore extends Store {
         this.user = {
           ...this.user,
           ...user,
+        }
+
+        if (!this.user.has_onboarded) {
+          console.log('go to user edit')
+          router.navigate({
+            name: 'userEdit',
+          })
         }
       }
     } catch (err) {

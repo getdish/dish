@@ -553,6 +553,14 @@ export const useLastHomeState = <Type extends HomeStateItem['type']>(
   )
 }
 
+export const useCurrentHomeType = () => {
+  return useStoreInstance(homeStore, (x) => x.currentState.type)
+}
+
+export const useIsHomeTypeActive = (type?: HomeStateItem['type']) => {
+  return useStoreInstance(homeStore, (x) => x.currentState.type === type)
+}
+
 export const useHomeStateById = <Type extends HomeStateItem>(id: string) => {
   return useStoreInstance(homeStore, (x) => x.allStates[id]) as Type
 }

@@ -27,32 +27,35 @@ import {
 import { isWeb } from '../../../constants/constants'
 import { getImageUrl } from '../../../helpers/getImageUrl'
 import { queryRestaurant } from '../../../queries/queryRestaurant'
-import { useHomeStore } from '../../homeStore'
+import {
+  homeStore,
+  useCurrentHomeType,
+  useHomeStore,
+  useIsHomeTypeActive,
+} from '../../homeStore'
 import { StackViewCloseButton } from '../../views/StackViewCloseButton'
 
 export default memo(function GalleryPage() {
-  const home = useHomeStore()
-  const state = home.currentState
+  const isActive = useIsHomeTypeActive('gallery')
+  if (!isActive) return null
 
-  if (state.type === 'gallery') {
-    return (
-      <AbsoluteVStack
-        fullscreen
-        backgroundColor="rgba(0,0,0,0.85)"
-        zIndex={1000}
-        pointerEvents="auto"
-      >
-        <AbsoluteVStack top={10} right={10} zIndex={100000}>
-          <StackViewCloseButton />
-        </AbsoluteVStack>
-        <Suspense fallback={<LoadingItems />}>
-          <GalleryLightbox restaurantSlug={state.restaurantSlug} />
-        </Suspense>
+  return (
+    <AbsoluteVStack
+      fullscreen
+      backgroundColor="rgba(0,0,0,0.85)"
+      zIndex={1000}
+      pointerEvents="auto"
+    >
+      <AbsoluteVStack top={10} right={10} zIndex={100000}>
+        <StackViewCloseButton />
       </AbsoluteVStack>
-    )
-  }
-
-  return null
+      <Suspense fallback={<LoadingItems />}>
+        <GalleryLightbox
+          restaurantSlug={homeStore.currentState['restaurantSlug']}
+        />
+      </Suspense>
+    </AbsoluteVStack>
+  )
 })
 
 const ThumbnailSize = 150

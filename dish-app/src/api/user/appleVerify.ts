@@ -1,13 +1,17 @@
-import { route } from '@dish/api'
+import { jsonRoute } from '@dish/api'
 import { userFindOne } from '@dish/graph'
 import { jwtSign } from '@dish/helpers-node'
 
 import { appleAuth } from './_apple'
 
-export default route(async (req, res) => {
+export default jsonRoute(async (req, res) => {
   const { id_token, code, redirectUri } = req.body
   if (!id_token || !code) {
-    return res.sendStatus(500)
+    console.error('missing info')
+    res.sendStatus(500).json({
+      error: 'Missing info',
+    })
+    return
   }
   const { claim } = await appleAuth({
     code,
@@ -16,7 +20,8 @@ export default route(async (req, res) => {
   const user = await userFindOne({ apple_uid: claim.email })
   if (!user) {
     console.error('no user')
-    return res.sendStatus(500)
+    res.sendStatus(500)
+    return
   }
   res.json({
     token: jwtSign(user),
