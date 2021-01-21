@@ -85,7 +85,7 @@ const HomeMapPIPContent = graphql(() => {
     if (getMedia().xs && drawerStore.snapIndex === 0) {
       // move drawer down
       return () => {
-        drawerStore.setSnapPoint(2)
+        drawerStore.setSnapIndex(2)
       }
     }
     if (coords[0] && !isEqual(center, home.currentState.center)) {

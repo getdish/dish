@@ -152,7 +152,7 @@ export default memo(function AppAutocomplete() {
           autocompletes.setVisible(false)
         }
         if (drawerStore.snapIndex === 0) {
-          drawerStore.setSnapPoint(1)
+          drawerStore.setSnapIndex(1)
         }
       }, 100)
       const handleShow = () => {
@@ -377,7 +377,7 @@ const AutocompleteLocation = memo(() => {
     autocompletes.setVisible(false)
     // changing location = change drawer to show
     if (drawerStore.snapIndex === 0) {
-      drawerStore.setSnapPoint(1)
+      drawerStore.setSnapIndex(1)
     }
   }, [])
 
