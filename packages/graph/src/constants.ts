@@ -11,8 +11,6 @@ export const isStaging =
   getWindow()?.location?.hostname.includes('staging')
 export const isDev = !isProd && !isStaging
 export const isNative = process.env.TARGET === 'native'
-export const isWorker =
-  typeof document !== 'undefined' && !document.getElementById('root')
 
 export const JWT_SECRET =
   process.env.JWT_SECRET || '12345678901234567890123456789012'

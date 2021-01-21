@@ -42,18 +42,18 @@ export const AppMenuButton = () => {
         pointerEvents="none"
       >
         <VStack
-          className="ease-in-out-fast"
+          className="ease-in-out-faster"
           shadowColor="rgba(0,0,0,0.095)"
           shadowRadius={4}
           shadowOffset={{ height: 3, width: 0 }}
           pointerEvents="auto"
           borderRadius={100}
-          backgroundColor="rgba(0,0,0,0.1)"
+          backgroundColor="rgba(255,255,255,0.75)"
           hoverStyle={{
-            backgroundColor: 'rgba(0,0,0,0.2)',
+            backgroundColor: 'rgba(255,255,255,0.95)',
           }}
           pressStyle={{
-            transform: [{ scale: 0.9 }],
+            transform: [{ scale: 0.94 }],
           }}
           onPress={appMenu.show}
         >

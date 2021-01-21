@@ -777,6 +777,8 @@ const EditRestaurantTags = graphql(
       )
     }
 
+    const hide = useCallback(() => setIsOpen(false), [])
+
     return (
       <>
         <AbsoluteVStack zIndex={100}>
@@ -788,10 +790,10 @@ const EditRestaurantTags = graphql(
           maxWidth={480}
           width="90%"
           maxHeight="90%"
-          onDismiss={() => setIsOpen(false)}
+          onDismiss={hide}
         >
           <PaneControlButtons>
-            <CloseButton onPress={() => setIsOpen(false)} />
+            <CloseButton onPress={hide} />
           </PaneControlButtons>
 
           <SlantedTitle alignSelf="center" marginTop={-10}>

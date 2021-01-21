@@ -4,7 +4,7 @@ import { Configuration } from 'webpack'
 import WebpackPwaManifest from 'webpack-pwa-manifest'
 
 export type ServerConfig = {
-  rootFolder: string
+  rootDir: string
   watch: boolean
   env: 'production' | 'development'
   inspect?: boolean
@@ -18,7 +18,6 @@ export type ServerConfig = {
 
 export type ServerConfigNormal = Required<ServerConfig> & {
   url: string
-  rootDir: string
   buildDir: string
   protocol: string
   createConfig: (opts: CreateWebpackConfig) => Configuration
