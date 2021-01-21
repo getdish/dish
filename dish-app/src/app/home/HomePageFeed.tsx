@@ -10,8 +10,9 @@ import {
   tag,
 } from '@dish/graph'
 import { isPresent } from '@dish/helpers'
+import { Store, createStore, useStore } from '@dish/use-store'
 import { chunk, partition, sortBy, uniqBy, zip } from 'lodash'
-import React, { Suspense, memo, useRef } from 'react'
+import React, { Suspense, memo, useMemo, useRef } from 'react'
 import { Dimensions, ScrollView } from 'react-native'
 import {
   HStack,
@@ -29,7 +30,7 @@ import { selectTagDishViewSimple } from '../../helpers/selectDishViewSimple'
 import { useQueryLoud } from '../../helpers/useQueryLoud'
 import { queryRestaurant } from '../../queries/queryRestaurant'
 import { HomeStateItemHome } from '../../types/homeTypes'
-import { useSetAppMapResults } from '../AppMapStore'
+import { appMapStore, useSetAppMapResults } from '../AppMapStore'
 import { CardFrame, cardFrameBorderRadius } from '../views/CardFrame'
 import { CommentBubble } from '../views/CommentBubble'
 import { DishView } from '../views/dish/DishView'
@@ -40,7 +41,7 @@ import { HomeStackViewProps } from './HomeStackViewProps'
 import { RestaurantCard } from './restaurant/RestaurantCard'
 import { CardCarousel } from './user/CardCarousel'
 
-export type FeedItems =
+export type FeedItem =
   | FeedItemDish
   | FeedItemRestaurant
   | FeedItemCuisine
@@ -77,6 +78,11 @@ export type FeedItemList = FeedItemBase & {
   topic: string
 }
 
+// class HomeFeedStore extends Store {
+//   hoveredItemId: string | null = null
+// }
+// const homeFeedStore = createStore(HomeFeedStore)
+
 export const HomePageFeed = memo(
   graphql(function HomePageFeed({
     region,
@@ -90,11 +96,60 @@ export const HomePageFeed = memo(
     const isNew = item.section === 'new'
     const items = useHomeFeed(item, region, isNew)
     const isLoading = !region || items[0]?.id === null
+    const results = items.flatMap((x) => {
+      if (x.type === 'dish-restaurants') {
+        return x.restaurants
+      }
+      if (x.type === 'cuisine') {
+        return x.top_restaurants.map((r) => ({
+          slug: r.slug,
+          id: r.id,
+        }))
+      }
+      return []
+    })
+    // const store = useStore(HomeFeedStore)
+    // const hovered = store.hoveredItemId ? items.find(x => x.id === store.hoveredItemId) : null
 
     useSetAppMapResults({
       isActive,
-      results: items.filter(isRestaurantFeedItem).map((x) => x.restaurant),
+      results,
     })
+
+    const feedContents = useMemo(() => {
+      return items.map((item, index) => {
+        const content = (() => {
+          switch (item.type) {
+            case 'restaurant':
+              return <RestaurantFeedCard {...item} />
+            case 'dish':
+              return <DishFeedCard {...item} />
+            case 'dish-restaurants':
+              return <DishRestaurantsFeedCard {...item} />
+            case 'cuisine':
+              return <CuisineFeedCard {...item} />
+            case 'list':
+              return <ListFeedCard {...item} />
+          }
+        })()
+        if (!content) {
+          return null
+        }
+        return (
+          <VStack
+            key={item.id}
+            alignItems="center"
+            position="relative"
+            width="100%"
+          >
+            <VStack marginBottom={-8}>
+              <SlantedTitle size="sm">{item.title}</SlantedTitle>
+            </VStack>
+            {content}
+          </VStack>
+        )
+      })
+    }, [items])
 
     return (
       <>
@@ -118,38 +173,7 @@ export const HomePageFeed = memo(
                 alignSelf="center"
                 paddingHorizontal={media.xl ? '3%' : 0}
               >
-                {items.map((item, index) => {
-                  const content = (() => {
-                    switch (item.type) {
-                      case 'restaurant':
-                        return <RestaurantFeedCard {...item} />
-                      case 'dish':
-                        return <DishFeedCard {...item} />
-                      case 'dish-restaurants':
-                        return <DishRestaurantsFeedCard {...item} />
-                      case 'cuisine':
-                        return <CuisineFeedCard {...item} />
-                      case 'list':
-                        return <ListFeedCard {...item} />
-                    }
-                  })()
-                  if (!content) {
-                    return null
-                  }
-                  return (
-                    <VStack
-                      key={item.id}
-                      alignItems="center"
-                      position="relative"
-                      width="100%"
-                    >
-                      <VStack marginBottom={-8}>
-                        <SlantedTitle size="sm">{item.title}</SlantedTitle>
-                      </VStack>
-                      {content}
-                    </VStack>
-                  )
-                })}
+                {feedContents}
               </HStack>
             </VStack>
 
@@ -163,7 +187,7 @@ export const HomePageFeed = memo(
   })
 )
 
-const isRestaurantFeedItem = (x: FeedItems): x is FeedItemRestaurant =>
+const isRestaurantFeedItem = (x: FeedItem): x is FeedItemRestaurant =>
   x.type === 'restaurant'
 
 const useTopCuisines = (center: LngLat) => {
@@ -191,6 +215,9 @@ const ListFeedCard = graphql((props: FeedItemList) => {
             key={list.slug}
             slug={list.slug}
             userSlug={list.user.username}
+            // onHover={() => {
+            //   appMapStore.setHoverResults()
+            // }}
           />
         )
       })}
@@ -479,7 +506,7 @@ function useHomeFeed(
     limit: 8,
   })
 
-  let items: FeedItems[] =
+  let items: FeedItem[] =
     !region || !item.region
       ? []
       : [
@@ -493,7 +520,7 @@ function useHomeFeed(
           } as FeedItemList,
           ,
           // ...dishes.map(
-          //   (dish, index): FeedItems => {
+          //   (dish, index): FeedItem => {
           //     return {
           //       id: `dish-${dish.id}`,
           //       type: 'dish',
@@ -516,7 +543,7 @@ function useHomeFeed(
           //   }
           // ),
           ...dishes.map(
-            (dish, index): FeedItems => {
+            (dish, index): FeedItem => {
               return {
                 id: `dish-restaurant-${dish.id}`,
                 title: `Known for ${dish.name}`,
@@ -541,7 +568,7 @@ function useHomeFeed(
             }
           ),
           ...(cuisines.data ?? []).map(
-            (item, index): FeedItems => {
+            (item, index): FeedItem => {
               return {
                 id: `cuisine-${item.country}`,
                 title: `${item.country}`,
@@ -553,7 +580,7 @@ function useHomeFeed(
             }
           ),
           // ...restaurants.map(
-          //   (item, index): FeedItems => {
+          //   (item, index): FeedItem => {
           //     return {
           //       id: `restaurant-${item.id}`,
           //       title: item.name,

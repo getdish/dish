@@ -26,6 +26,16 @@ type MapOpts = {
 
 type MapHoveredRestaurant = RestaurantOnlyIds & { via: 'map' | 'list' }
 
+// TODO this wants to be a stack where you have states you push:
+// {
+//   via: '',
+//   results: [],
+//   zoomOnHover: true,
+//   showRank: false,
+// }
+// that way we can do things like hovering on states to see them
+// and have it pop back to show last state before hover
+
 class AppMapStore extends Store {
   selected: RestaurantOnlyIds | null = null
   hovered: MapHoveredRestaurant | null = null
