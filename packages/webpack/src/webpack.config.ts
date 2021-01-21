@@ -95,7 +95,7 @@ export default function createWebpackConfig({
             'react-dom': 'react-dom',
           }
         : [],
-      devtool: isProduction ? 'source-map' : 'cheap-module-source-map',
+      devtool: isProduction ? 'source-map' : 'eval-cheap-module-source-map',
       entry: {
         main:
           polyFillPath || isSSR

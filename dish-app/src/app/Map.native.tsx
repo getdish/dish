@@ -151,9 +151,7 @@ export const MapView = ({
           ) => {
             const url = `http://d1sh.com/api/tile/${name}.json`
             const sourceId = `${name}`.replace('.', '')
-            const labelUrl = labelSource
-              ? `${MARTIN_TILES_HOST}/${labelSource}.json`
-              : null
+            const labelUrl = `${MARTIN_TILES_HOST}/${labelSource}.json`
             console.log('Loading tile url', sourceId, url, labelUrl)
             return (
               <MapboxGL.VectorSource
