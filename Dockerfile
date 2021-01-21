@@ -30,7 +30,7 @@ COPY dish-app/patches dish-app/patches
 COPY dish-app/etc dish-app/etc
 
 # install
-RUN yarn install --production && yarn cache clean
+RUN yarn install --frozen-lockfile && yarn postinstall && yarn cache clean
 
 COPY .prettierignore .
 COPY .prettierrc .

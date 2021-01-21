@@ -12,20 +12,18 @@
     "build": "tsc -b",
     "watch": "tsc -b --watch --preserveWatchOutput"
   },
-  "dependencies": {
+  "devDependencies": {
     "@dish/helpers": "*",
     "debug-http": "^1.1.0",
     "mutationobserver-polyfill": "^1.3.0",
     "jsdom": "^16.4.0",
     "jsdom-global": "^3.0.2",
-    "@testing-library/react": "^11.2.3",
-    "react-test-renderer": "*"
-  },
-  "devDependencies": {
+    "react-test-renderer": "*",
     "@types/react-test-renderer": "*",
     "@types/react-native": "^0.62.12",
     "@types/react": "^16.9.44",
-    "@types/react-dom": "^16.9.8"
+    "@types/react-dom": "^16.9.8",
+    "@testing-library/react": "^11.2.3"
   },
   "peerDependencies": {
     "react": "*",

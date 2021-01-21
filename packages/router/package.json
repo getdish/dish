@@ -15,7 +15,9 @@
   "dependencies": {
     "history": "^5.0.0",
     "@dish/use-store": "*",
-    "tiny-request-router": "^1.2.2",
+    "tiny-request-router": "^1.2.2"
+  },
+  "devDependencies": {
     "@dish/react-test-env": "*"
   },
   "peerDependencies": {
