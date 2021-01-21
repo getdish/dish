@@ -14,7 +14,7 @@ import {
 } from '@dish/graph'
 import { Store, useStore, useStoreSelector } from '@dish/use-store'
 import { capitalize } from 'lodash'
-import React, { Suspense, memo, useEffect, useState } from 'react'
+import React, { Suspense, memo, useCallback, useEffect, useState } from 'react'
 import { ScrollView, StyleSheet, TextInput } from 'react-native'
 import {
   HStack,
@@ -153,11 +153,11 @@ const AdminTagsPageContent = graphql(() => {
 
 const TagList = memo(
   graphql(({ column }: { column: number }) => {
-    const lastRowSelection =
-      (useStoreSelector(
+    const lastRowSelection: any =
+      useStoreSelector(
         AdminTagStore,
-        (store) => store.selectedByColumn[column - 1] ?? ''
-      ) as any) ?? ''
+        useCallback((store) => store.selectedByColumn[column - 1] ?? '', [])
+      ) ?? ''
 
     const type = lastRowSelection.type ?? 'root'
     const [searchRaw, setSearch] = useState('')

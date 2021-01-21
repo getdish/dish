@@ -462,11 +462,12 @@ const SearchPageScrollView = forwardRef<ScrollView, SearchPageScrollViewProps>(
           <HStack alignItems="center">
             <HStack flex={1} position="relative">
               <HStack position="absolute" fullscreen>
+                {/* arrow line */}
                 <VStack
                   borderLeftWidth={2}
                   borderColor={theme.borderColor}
-                  width={40}
-                  height={40}
+                  minWidth={40}
+                  minHeight={40}
                   marginBottom={-40}
                   marginRight={-20}
                   borderRadius={40}
