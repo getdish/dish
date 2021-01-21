@@ -1,4 +1,4 @@
-import { jsonRoute } from '@dish/api/src'
+import { jsonRoute } from '@dish/api'
 import { userFindOne, userUpdate } from '@dish/graph'
 import { hashPassword } from '@dish/helpers-node'
 

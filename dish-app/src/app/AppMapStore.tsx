@@ -1,8 +1,8 @@
 import { series } from '@dish/async'
 import { LngLat, RestaurantOnlyIds, resolved } from '@dish/graph'
-import { isPresent } from '@dish/helpers/src'
+import { isPresent } from '@dish/helpers'
 import { Store, createStore, useStoreInstance } from '@dish/use-store'
-import { isEqual, uniqBy } from 'lodash'
+import { uniqBy } from 'lodash'
 import { useEffect } from 'react'
 
 import { defaultLocationAutocompleteResults } from '../constants/defaultLocationAutocompleteResults'
