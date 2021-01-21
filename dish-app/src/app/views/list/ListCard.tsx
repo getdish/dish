@@ -1,7 +1,7 @@
 import { graphql } from '@dish/graph'
 import React from 'react'
 import { Image } from 'react-native'
-import { HStack, VStack } from 'snackui'
+import { HStack, Hoverable, VStack } from 'snackui'
 
 import { getColorsForName } from '../../../helpers/getColorsForName'
 import { queryList } from '../../../queries/queryList'
@@ -10,7 +10,15 @@ import { Card } from '../../home/restaurant/Card'
 import { Link } from '../Link'
 
 export const ListCard = graphql(
-  ({ slug, userSlug }: { slug: string; userSlug: string }) => {
+  ({
+    slug,
+    userSlug,
+    onHover,
+  }: {
+    slug: string
+    userSlug: string
+    onHover?: (is: boolean) => void
+  }) => {
     const [list] = queryList(slug)
     const colors = getColorsForName(list.name ?? '')
     const photos = list
@@ -26,7 +34,7 @@ export const ListCard = graphql(
       })
       .map((x) => x.restaurant.image)
 
-    return (
+    const contents = (
       <Link name="list" asyncClick params={{ slug, userSlug }}>
         <Card
           size="sm"
@@ -52,5 +60,18 @@ export const ListCard = graphql(
         />
       </Link>
     )
+
+    if (onHover) {
+      return (
+        <Hoverable
+          onHoverIn={() => onHover(true)}
+          onHoverOut={() => onHover(true)}
+        >
+          {contents}
+        </Hoverable>
+      )
+    }
+
+    return contents
   }
 )
