@@ -19,7 +19,6 @@ import { Link } from '../../views/Link'
 import { LinkButton } from '../../views/LinkButton'
 import { LogoColor } from '../../views/Logo'
 import { StackDrawer } from '../../views/StackDrawer'
-import { TextStrong } from '../../views/TextStrong'
 import { StackItemProps } from '../HomeStackView'
 
 const inlineButton = {
