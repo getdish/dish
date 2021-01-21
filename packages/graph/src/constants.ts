@@ -2,18 +2,23 @@ function getWindow() {
   return typeof window !== 'undefined' ? window : null
 }
 
-export const isNode = process.env.TARGET === 'web' || !getWindow()
+export const isNode = process.env.TARGET === 'web' || !getWindow() || false
 export const isProd =
   process.env.IS_LIVE === '1' ||
-  getWindow()?.location?.hostname.includes('live')
+  getWindow()?.location?.hostname.includes('live') ||
+  false
 export const isStaging =
   process.env.NODE_ENV === 'staging' ||
-  getWindow()?.location?.hostname.includes('staging')
-export const isDev = !isProd && !isStaging
+  getWindow()?.location?.hostname.includes('staging') ||
+  false
+export const isDev = (!isProd && !isStaging) || false
 export const isNative = process.env.TARGET === 'native'
 
 export const JWT_SECRET =
   process.env.JWT_SECRET || '12345678901234567890123456789012'
+
+export const HASURA_SECRET =
+  process.env.HASURA_SECRET || process.env.REACT_APP_HASURA_SECRET || 'password'
 
 const PROD_ORIGIN = 'https://staging.dishapp.com'
 const ORIGIN = isProd
@@ -27,7 +32,8 @@ export const DISH_API_ENDPOINT = process.env.DISH_API_ENDPOINT ?? ORIGIN
 export const SEARCH_DOMAIN = (() => {
   const staging = 'https://search-staging.dishapp.com'
   const live = staging
-  const local = process.env.SEARCH_ENDPOINT ?? `${ORIGIN}:10000`
+  const local =
+    process.env.SEARCH_ENDPOINT ?? `${ORIGIN.replace(/:[0-9]+/, '')}:10000`
   if (isProd) {
     return live
   }

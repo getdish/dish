@@ -352,6 +352,15 @@ tables:
     using:
       foreign_key_constraint_on: photo_id
   select_permissions:
+  - role: anon
+    permission:
+      columns:
+      - id
+      - photo_id
+      - restaurant_id
+      - tag_id
+      - type
+      filter: {}
   - role: contributor
     permission:
       columns:
@@ -691,23 +700,12 @@ tables:
         user_id:
           _eq: X-Hasura-User-Id
       columns:
-      - categories
       - authored_at
+      - categories
       - favorited
       - id
-      - rating
-      - restaurant_id
-      - tag_id
-      - text
-      - updated_at
-      - user_id
-  select_permissions:
-  - role: anon
-    permission:
-      columns:
-      - authored_at
-      - categories
-      - id
+      - list_id
+      - location
       - rating
       - restaurant_id
       - source
@@ -717,6 +715,27 @@ tables:
       - updated_at
       - user_id
       - username
+      - vote
+  select_permissions:
+  - role: anon
+    permission:
+      columns:
+      - authored_at
+      - categories
+      - favorited
+      - id
+      - list_id
+      - location
+      - rating
+      - restaurant_id
+      - source
+      - tag_id
+      - text
+      - type
+      - updated_at
+      - user_id
+      - username
+      - vote
       filter: {}
       allow_aggregations: true
   - role: contributor
@@ -745,6 +764,9 @@ tables:
       - categories
       - favorited
       - id
+      - list_id
+      - location
+      - native_data_unique_key
       - rating
       - restaurant_id
       - source
@@ -777,15 +799,22 @@ tables:
   - role: user
     permission:
       columns:
-      - categories
-      - authored_at
       - favorited
-      - id
+      - location
+      - categories
       - rating
+      - vote
+      - native_data_unique_key
+      - source
+      - text
+      - type
+      - username
+      - authored_at
+      - updated_at
+      - id
+      - list_id
       - restaurant_id
       - tag_id
-      - text
-      - updated_at
       - user_id
       filter:
         user_id:

@@ -3,6 +3,7 @@ import '@dish/react-test-env'
 import anyTest, { TestInterface } from 'ava'
 
 import { Auth, flushTestData, getGraphEndpoint } from '../src'
+import * as Constants from '../src/constants'
 import { getAuthHeaders } from '../src/getAuth'
 
 interface Context {}
@@ -17,6 +18,7 @@ test.beforeEach(async () => {
 console.log({
   AuthHeaders: getAuthHeaders(true),
   graphEndpoint: getGraphEndpoint(),
+  ...Constants,
 })
 
 test('Creating a user', async (t) => {
