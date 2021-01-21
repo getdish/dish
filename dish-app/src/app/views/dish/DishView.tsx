@@ -301,6 +301,7 @@ const DishViewContent = (props: DishViewProps) => {
       backgroundColor={backgroundColor}
       borderColor={selected ? '#000' : 'transparent'}
       borderWidth={1}
+      pointerEvents="auto"
       size={size}
       {...rest}
       // zIndex={isHovered ? 10000000 : rest.zIndex}

@@ -169,10 +169,15 @@ const getHours = (hours: string) => {
   if (opens && closes) {
     let opens_at = opens.replace(' ', '').replace(':00', '')
     let closes_at = closes.replace(' ', '').replace(':00', '')
-    if (opens_at.includes('pm') && closes_at.includes('pm')) {
+    const opensPm = opens_at.includes('pm')
+    const closesPm = closes_at.includes('pm')
+    const opensAm = opens_at.includes('am')
+    const closesAm = closes_at.includes('am')
+    const opensMorningClosesNight = opensAm && closesPm
+    if ((opensPm && closesPm) || opensMorningClosesNight) {
       opens_at = opens_at.replace('pm', '')
     }
-    if (opens_at.includes('am') && closes_at.includes('am')) {
+    if ((opensAm && closesAm) || opensMorningClosesNight) {
       opens_at = opens_at.replace('am', '')
     }
     return `${opens_at}-${closes_at}`

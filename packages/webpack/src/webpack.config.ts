@@ -143,9 +143,9 @@ export default function createWebpackConfig({
         splitChunks:
           isProduction && !isSSR && !noMinify
             ? {
-                // maxAsyncRequests: 20,
-                // maxInitialRequests: 10,
-                // automaticNameDelimiter: '~',
+                maxAsyncRequests: 20,
+                maxInitialRequests: 10,
+                automaticNameDelimiter: '~',
                 cacheGroups: {
                   default: false,
                   defaultVendors: {
@@ -161,7 +161,7 @@ export default function createWebpackConfig({
                 },
               }
             : false,
-        // runtimeChunk: false,
+        runtimeChunk: false,
         minimizer:
           minimize == false
             ? []

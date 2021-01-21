@@ -1,5 +1,3 @@
-import { RestaurantOnlyIds } from '@dish/graph'
-
 import { NavigableTag } from './tagTypes'
 
 export type GeocodePlace = {
