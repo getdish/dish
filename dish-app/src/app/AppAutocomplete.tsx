@@ -388,6 +388,11 @@ const AutocompleteLocation = memo(() => {
   )
 })
 
+const hideAutocompletes = (e) => {
+  e.stopPropagation()
+  autocompletesStore.setVisible(false)
+}
+
 const AutocompleteFrame = ({ children }: { children: any }) => {
   const autocompletes = useStoreInstance(autocompletesStore)
   const isShowing = autocompletes.visible
@@ -418,10 +423,7 @@ const AutocompleteFrame = ({ children }: { children: any }) => {
             size={20}
             onPressOut={prevent}
             zIndex={1000}
-            onPress={(e) => {
-              e.stopPropagation()
-              autocompletes.setVisible(false)
-            }}
+            onPress={hideAutocompletes}
           />
         </PaneControlButtons>
         <VStack
@@ -464,47 +466,45 @@ const AutocompleteFrame = ({ children }: { children: any }) => {
 
 type AutocompleteSelectCb = (result: AutocompleteItem, index: number) => void
 
-const AutocompleteResults = memo(
-  ({
-    target,
-    emptyContent = null,
-    prefixResults = [],
-    onSelect,
-  }: {
-    target: AutocompleteTarget
-    prefixResults?: any[]
-    emptyContent?: any
-    onSelect: AutocompleteSelectCb
-  }) => {
-    const media = useMedia()
-    const autocompleteStore = useStore(AutocompleteStore, { target })
-    const activeIndex = autocompleteStore.index
-    const ogResults = autocompleteStore.results
-    const results = [...prefixResults, ...ogResults]
-    return (
-      <VStack paddingTop={media.sm ? 30 : 0}>
-        {!ogResults.length && emptyContent}
-        {!!ogResults.length &&
-          results.map((result, index) => {
-            const isActive = activeIndex === index
-            return (
-              <React.Fragment key={`${result.id}${index}`}>
-                <Theme name={isActive ? 'active' : null}>
-                  <AutocompleteItemView
-                    target={target}
-                    index={index}
-                    result={result}
-                    onSelect={onSelect}
-                  />
-                </Theme>
-                <Spacer size={1} />
-              </React.Fragment>
-            )
-          })}
-      </VStack>
-    )
-  }
-)
+const AutocompleteResults = ({
+  target,
+  emptyContent = null,
+  prefixResults = [],
+  onSelect,
+}: {
+  target: AutocompleteTarget
+  prefixResults?: any[]
+  emptyContent?: any
+  onSelect: AutocompleteSelectCb
+}) => {
+  const media = useMedia()
+  const autocompleteStore = useStore(AutocompleteStore, { target })
+  const activeIndex = autocompleteStore.index
+  const ogResults = autocompleteStore.results
+  const results = [...prefixResults, ...ogResults]
+  return (
+    <VStack paddingTop={media.sm ? 30 : 0}>
+      {!ogResults.length && emptyContent}
+      {!!ogResults.length &&
+        results.map((result, index) => {
+          const isActive = activeIndex === index
+          return (
+            <React.Fragment key={`${result.id}${index}`}>
+              <Theme name={isActive ? 'active' : null}>
+                <AutocompleteItemView
+                  target={target}
+                  index={index}
+                  result={result}
+                  onSelect={onSelect}
+                />
+              </Theme>
+              <Spacer size={1} />
+            </React.Fragment>
+          )
+        })}
+    </VStack>
+  )
+}
 
 export const AutocompleteItemView = memo(
   ({

@@ -1,6 +1,8 @@
+import { join } from 'path'
 import { Worker } from 'worker_threads'
 
 import proxy from 'express-http-proxy'
+import { remove } from 'fs-extra'
 import getPort from 'get-port'
 
 import { ServerConfigNormal } from '../types'
@@ -14,6 +16,7 @@ export async function createWebServer(
       config.watch ? '(watch)' : ''
     }...`
   )
+
   const port = await getPort()
   const workerData = {
     ...config,

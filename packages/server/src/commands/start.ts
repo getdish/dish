@@ -43,16 +43,16 @@ export class Start extends Command {
 
   async run() {
     const { flags } = this.parse(Start)
-    const rootFolder = process.cwd()
+    const rootDir = process.cwd()
     const config: ServerConfig = {
-      rootFolder,
+      rootDir,
       port: flags.port,
       host: flags.host,
       inspect: flags.inspect,
       clean: flags.clean,
       env: flags.prod ? 'production' : 'development',
       watch: flags.ssr ? false : true,
-      apiDir: flags['no-api'] ? null : join(rootFolder, 'src', 'api'),
+      apiDir: flags['no-api'] ? null : join(rootDir, 'src', 'api'),
       https: flags.https,
     }
 

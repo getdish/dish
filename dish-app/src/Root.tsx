@@ -1,3 +1,4 @@
+// import './whydidyourender'
 import './globals'
 
 import { useHydrateCache } from '@dish/graph'

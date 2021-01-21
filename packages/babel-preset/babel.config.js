@@ -1,19 +1,26 @@
 module.exports = function (api) {
-  const isWorker = process.env.TARGET === 'worker'
   const isSSR = process.env.TARGET === 'ssr'
   const isLegacy = process.env.LEGACY === '1'
+  const isDev = api.env('develpoment') || process.env.NODE_ENV === 'development'
+  const isProd = !isDev
 
   api.cache.using(
     () => `${process.env.NODE_ENV}${process.env.TARGET}${process.env.LEGACY}`
   )
 
-  const shouldOptimize = api.env('production') && !isWorker && !isSSR
+  const shouldOptimize = isProd && !isSSR
 
   return {
     plugins: [
       isSSR && '@loadable/babel-plugin',
-      api.env('development') && !isWorker && !isSSR && 'react-refresh/babel',
-      !api.env('production') && '@babel/plugin-transform-react-display-name',
+      isDev && !isSSR && 'react-refresh/babel',
+      ...(isDev
+        ? [
+            // '@babel/plugin-transform-function-name',
+            'babel-plugin-react-wrapped-display-name',
+          ]
+        : []),
+      !isProd && '@babel/plugin-transform-react-display-name',
       ...(shouldOptimize
         ? [
             'babel-plugin-lodash',
@@ -42,7 +49,7 @@ module.exports = function (api) {
           // auto adds react import if necessaty
           // runtime: 'automatic',
           useBuiltIns: true,
-          development: api.env('development'),
+          development: isDev,
         },
       ],
       isLegacy && [

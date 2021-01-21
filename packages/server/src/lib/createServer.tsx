@@ -9,7 +9,7 @@ import { createWebServer } from './createWebServer'
 import { getWebpackConfigBuilder } from './getWebpackConfigBuilder'
 
 export async function createServer(serverConf: ServerConfig) {
-  const rootDir = process.cwd()
+  const rootDir = serverConf.rootDir ?? process.cwd()
   const https = serverConf.https ?? false
   const host = serverConf.host ?? 'localhost'
   const protocol = serverConf.https ? 'https' : 'http'
@@ -26,12 +26,11 @@ export async function createServer(serverConf: ServerConfig) {
     inspect: false,
     env: serverConf.env ?? 'development',
     verbose: serverConf.verbose ?? false,
-    rootFolder: serverConf.rootFolder ?? process.cwd(),
+    rootDir,
     watch: serverConf.watch ?? false,
     protocol,
     buildDir: join(rootDir, 'build'),
     createConfig: getWebpackConfigBuilder({ rootDir }),
-    rootDir,
     webpackConfig: {
       entry: join(rootDir, 'src', 'index.ts'),
       env: serverConf.env,
