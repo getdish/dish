@@ -24,6 +24,7 @@
     "web:prod": "yarn workspace @dish/dish-app web:prod",
     "web:build": "yarn workspace @dish/dish-app web:build",
     "ios": "yarn workspace @dish/dish-app ios",
+    "ios:install": "yarn workspace @dish/dish-app ios:install",
     "postinstall": "./bin/postinstall.sh",
     "preinstall": "./bin/preinstall.sh; ",
     "t": "eval $(./dishctl.sh yaml_to_env) echo $TF_VAR_HASURA_ENDPOINT",

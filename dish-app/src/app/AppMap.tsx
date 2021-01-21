@@ -1,6 +1,6 @@
 import { series } from '@dish/async'
 import { isEqual } from '@dish/fast-compare'
-import { resolved } from '@dish/graph/src'
+import { resolved } from '@dish/graph'
 import { reaction, useStoreInstance } from '@dish/use-store'
 import { debounce } from 'lodash'
 import React, { memo, useCallback, useEffect, useMemo } from 'react'
@@ -19,7 +19,6 @@ import {
   zIndexMap,
 } from '../constants/constants'
 import { getLngLat, getMinLngLat } from '../helpers/getLngLat'
-import { getWindowHeight } from '../helpers/getWindow'
 import { queryRestaurant } from '../queries/queryRestaurant'
 import { router } from '../router'
 import { Region } from '../types/homeTypes'
