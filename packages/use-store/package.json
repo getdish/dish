@@ -11,8 +11,7 @@
     "watch": "tsc -b --watch --preserveWatchOutput",
     "test": "jest --preset ts-jest/presets/js-with-ts tests"
   },
-  "dependencies": {},
-  "devDependencies": {
+  "dependencies": {
     "@dish/react-test-env": "*",
     "jest": "^26.6.3",
     "ts-jest": "^26.4.4"

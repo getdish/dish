@@ -10,6 +10,7 @@ function patch_packages() {
 function delete_extra_dish_app_modules() {
   pushd $PROJECT_ROOT/dish-app/node_modules
   rm -r lodash || true
+  rm -r webpack || true
   popd
 }
 

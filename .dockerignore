@@ -12,3 +12,6 @@ dish-app/android
 .expo/*
 .expo-shared/*
 .github/*
+*.md
+*.sketch
+assets/*
