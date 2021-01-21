@@ -8,6 +8,7 @@ import React, {
   Suspense,
   createContext,
   forwardRef,
+  useCallback,
   useMemo,
   useRef,
 } from 'react'
@@ -41,10 +42,13 @@ export function setIsScrollAtTop(val: boolean) {
 }
 
 export const usePreventContentScroll = (id: string) => {
-  const isDrawerNotOpen = useStoreInstance(drawerStore, (x) => x.snapIndex >= 1)
+  const isDrawerNotOpen = useStoreInstance(
+    drawerStore,
+    useCallback((x) => x.snapIndex >= 1, [])
+  )
   const isActive = useStoreSelector(
     ContentParentStore,
-    (store) => store.activeId === id
+    useCallback((store) => store.activeId === id, [])
   )
   if (!isActive) {
     return true
