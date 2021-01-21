@@ -10,3 +10,4 @@ rm -r ./node_modules/react-native || true
 rm -r ./node_modules/react || true
 rm -r ./node_modules/react-dom || true
 popd
+

@@ -51,16 +51,16 @@
     "chokidar": "^3.5.0",
     "lodash": "*",
     "webpack-pwa-manifest": "^4.3.0",
-    "webpack": "^5.14.0",
+    "webpack": "*",
     "express-winston": "^4.0.5",
     "winston": "^3.3.3",
     "get-port": "^5.1.1",
-    "express-http-proxy": "^1.6.2"
+    "express-http-proxy": "^1.6.2",
+    "webpack-dev-middleware": "^4.0.3",
+    "webpack-hot-middleware": "^2.25.0",
+    "connect-history-api-fallback": "^1.6.0"
   },
   "devDependencies": {
-    "webpack-dev-middleware": "^4.0.3",
-    "connect-history-api-fallback": "^1.6.0",
-    "webpack-hot-middleware": "^2.25.0",
     "@types/express": "^4.17.10",
     "@types/jsdom": "^16.2.5"
   }
