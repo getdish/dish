@@ -45,7 +45,7 @@
     "test": "ultra -r --no-pretty --serial test",
     "graph:generate": "yarn workspace @dish/graph generate",
     "clean": "bin/clean.sh",
-    "hasura:migrate": "(cd services/hasura && hasura migrate apply --endpoint http://localhost:8080 --admin-secret=password)",
+    "hasura:migrate": "./dishctl.sh db_migrate_local init",
     "hasura:admin": "(cd services/hasura && hasura console --endpoint http://localhost:8080 --admin-secret=password)",
     "prettier": "prettier --write \"**/*.{ts,tsx}\" || true",
     "prettier:check": "prettier --check \"**/*.{ts,tsx}\"",

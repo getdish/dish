@@ -3,10 +3,6 @@ import { isPasswordValid, jwtSign } from '@dish/helpers-node'
 
 import { getUserFromEmailOrUsername } from './_user'
 
-if (!process.env.HASURA_SECRET) {
-  throw new Error(`Need to provide process.env.HASURA_SECRET`)
-}
-
 export default jsonRoute(async (req, res) => {
   if (req.method !== 'POST') return
   const { login, password } = req.body
