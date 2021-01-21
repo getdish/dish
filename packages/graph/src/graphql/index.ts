@@ -1,5 +1,6 @@
 import { QueryFetcher, createClient } from '@dish/gqless'
 
+import { Auth } from '../Auth'
 import { getAuthHeaders } from '../getAuth'
 import { getGraphEndpoint } from '../helpers/getGraphEndpoint'
 import {
@@ -14,7 +15,7 @@ export const queryFetcher: QueryFetcher = async function (query, variables) {
   const url = getGraphEndpoint()
   const headers = {
     'Content-Type': 'application/json',
-    ...getAuthHeaders(process.env.TARGET !== 'web'),
+    ...getAuthHeaders(Auth.isAdmin),
   }
   const body = JSON.stringify({
     query,

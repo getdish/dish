@@ -27,13 +27,14 @@ const ORIGIN = isProd
   ? PROD_ORIGIN
   : getWindow()?.location?.origin ?? 'http://localhost:4444'
 
+const ORIGIN_MINUS_PORT = ORIGIN.replace(/:[0-9]+/, '')
+
 export const DISH_API_ENDPOINT = process.env.DISH_API_ENDPOINT ?? ORIGIN
 
 export const SEARCH_DOMAIN = (() => {
   const staging = 'https://search-staging.dishapp.com'
   const live = staging
-  const local =
-    process.env.SEARCH_ENDPOINT ?? `${ORIGIN.replace(/:[0-9]+/, '')}:10000`
+  const local = process.env.SEARCH_ENDPOINT ?? `${ORIGIN_MINUS_PORT}:10000`
   if (isProd) {
     return live
   }
@@ -64,7 +65,7 @@ export const RESTAURANT_WEIGHTS = {
 export const MARTIN_TILES_HOST = (() => {
   const prod = 'https://martin-tiles.dishapp.com'
   const staging = 'https://martin-tiles-staging.dishapp.com'
-  const dev = `http://${ORIGIN}:3005`
+  const dev = `${ORIGIN_MINUS_PORT}:3005`
   if (isStaging) return staging
   if (isDev) return dev
   return prod
