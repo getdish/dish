@@ -468,6 +468,11 @@ function createProxiedStore(
       const res = Reflect.set(target, key, value, receiver)
       // only update if changed, simple compare
       if (res && cur !== value) {
+        // clear getters cache that rely on this
+        if (typeof key === 'string') {
+          clearGetterCache(key)
+        }
+
         if (
           process.env.NODE_ENV === 'development' &&
           configureOpts.logLevel !== 'error'
@@ -476,11 +481,6 @@ function createProxiedStore(
           if (shouldDebug(renderOpts?.component, storeInfo)) {
             console.log('SET', res, key, value)
           }
-        }
-
-        // clear getters cache that rely on this
-        if (typeof key === 'string') {
-          clearGetterCache(key)
         }
 
         // TODO option to enforce actions only mutations

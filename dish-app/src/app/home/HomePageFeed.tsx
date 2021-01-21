@@ -35,7 +35,8 @@ import { CommentBubble } from '../views/CommentBubble'
 import { DishView } from '../views/dish/DishView'
 import { ListCard } from '../views/list/ListCard'
 import { SlantedTitle } from '../views/SlantedTitle'
-import { HomePageFooter, Props } from './HomePage'
+import { HomePageFooter } from './HomePageFooter'
+import { HomeStackViewProps } from './HomeStackViewProps'
 import { RestaurantCard } from './restaurant/RestaurantCard'
 import { CardCarousel } from './user/CardCarousel'
 
@@ -81,7 +82,7 @@ export const HomePageFeed = memo(
     region,
     item,
     isActive,
-  }: Props & {
+  }: HomeStackViewProps<HomeStateItemHome> & {
     region?: RegionNormalized
     item: HomeStateItemHome
   }) {

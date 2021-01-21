@@ -8,24 +8,18 @@ import {
   InteractiveContainer,
   LoadingItems,
   Spacer,
-  Theme,
   VStack,
   useMedia,
   useTheme,
 } from 'snackui'
 
-import {
-  drawerWidthMax,
-  isWeb,
-  searchBarHeight,
-} from '../../constants/constants'
+import { drawerWidthMax, searchBarHeight } from '../../constants/constants'
 import { useRegionQuery } from '../../helpers/fetchRegion'
 import { getColorsForName } from '../../helpers/getColorsForName'
 import { setDefaultLocation } from '../../helpers/getDefaultLocation'
 import { getGroupedButtonProps } from '../../helpers/getGroupedButtonProps'
 import { router, useIsRouteActive } from '../../router'
 import { HomeStateItemHome } from '../../types/homeTypes'
-import { AppIntroLogin } from '../AppIntroLogin'
 import { useHomeStore } from '../homeStore'
 import { ContentScrollView } from '../views/ContentScrollView'
 import { DishHorizonView } from '../views/DishHorizonView'
@@ -37,9 +31,9 @@ import { HomePageFeed } from './HomePageFeed'
 import { HomeStackViewProps } from './HomeStackViewProps'
 import { HomeTopSearches } from './HomeTopSearches'
 
-export type Props = HomeStackViewProps<HomeStateItemHome>
-
-export default memo(function HomePage(props: Props) {
+export default memo(function HomePage(
+  props: HomeStackViewProps<HomeStateItemHome>
+) {
   const home = useHomeStore()
   const theme = useTheme()
   const [isLoaded, setIsLoaded] = useState(false)
@@ -259,31 +253,3 @@ const HomeTopSpacer = () => {
     />
   )
 }
-
-export const HomePageFooter = memo(() => {
-  if (!isWeb) {
-    return null
-  }
-
-  return (
-    <Theme name="dark">
-      <VStack position="relative">
-        <AbsoluteVStack
-          zIndex={-1}
-          top={-15}
-          left={-100}
-          right={-100}
-          bottom={-55}
-          backgroundColor="#000"
-          transform={[{ rotate: '-2deg' }]}
-        />
-        <VStack paddingVertical={20} alignItems="center" paddingHorizontal="5%">
-          <VStack>
-            <AppIntroLogin />
-            <Spacer size="xxl" />
-          </VStack>
-        </VStack>
-      </VStack>
-    </Theme>
-  )
-})
