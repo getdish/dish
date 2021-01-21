@@ -8,7 +8,7 @@ export function getWebpackConfigBuilder({ rootDir }: { rootDir: string }) {
       config: CreateWebpackConfig
     ) => any
   } catch (err) {
-    console.error('No webpack.config.js')
+    console.error('No webpack.config.js', err)
     process.exit(1)
   }
 }
