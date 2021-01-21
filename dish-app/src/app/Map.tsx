@@ -4,21 +4,18 @@ import { fullyIdle, series } from '@dish/async'
 import { isDev, isStaging, slugify } from '@dish/graph'
 import bbox from '@turf/bbox'
 import union from '@turf/union'
-import { produce } from 'immer'
 import _, { capitalize, isEqual, throttle } from 'lodash'
 import mapboxgl from 'mapbox-gl'
 import React, { useEffect, useRef, useState } from 'react'
 import { Dimensions } from 'react-native'
 import { useGet } from 'snackui'
 
-import { blue, darkPink, green, pink, yellow } from '../constants/colors'
+import { blue, green } from '../constants/colors'
 import { MAPBOX_ACCESS_TOKEN } from '../constants/constants'
-import { tagLenses } from '../constants/localTags'
 import { hasMovedAtLeast } from '../helpers/hasMovedAtLeast'
 import { hexToRGB } from '../helpers/hexToRGB'
 import { useIsMountedRef } from '../helpers/useIsMountedRef'
 import { Region } from '../types/homeTypes'
-import { useSearchResultsStore } from './home/search/searchResultsStore'
 import { MapProps } from './MapProps'
 import { tiles } from './tiles'
 
@@ -944,6 +941,8 @@ function setupMapEffect({
           if (!isEqual(lastUpdate, curRegion)) {
             getProps().onSelectRegion?.(curRegion)
             curRegion = null
+          } else {
+            console.log('is same')
           }
         }
 

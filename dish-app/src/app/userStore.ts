@@ -84,7 +84,7 @@ class UserStore extends Store {
   promptLogin() {
     if (!this.isLoggedIn) {
       appMenuStore.show()
-      Toast.show(`Signup/login to do this`)
+      Toast.show(`gotta sign in for that`)
       return true
     }
     return false

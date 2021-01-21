@@ -30,7 +30,7 @@ export const PageTitle = memo(
         : titleLen > 35
         ? 0.95
         : 1
-    const titleFontSize = 28 * titleScale * titleSize
+    const titleFontSize = 26 * titleScale * titleSize
     const theme = useTheme()
     return (
       <HStack
@@ -41,7 +41,7 @@ export const PageTitle = memo(
         alignItems="center"
         position="relative"
         {...(media.sm && {
-          transform: [{ scale: 0.9 }],
+          transform: [{ scale: 0.85 }],
         })}
       >
         {before}

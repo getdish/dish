@@ -1,29 +1,24 @@
 import { isEqual } from '@dish/fast-compare'
-import { RefreshCcw } from '@dish/react-feather'
+import { RefreshCcw, X } from '@dish/react-feather'
 import { useStoreInstance } from '@dish/use-store'
 import React, { memo } from 'react'
 import { AbsoluteVStack, HStack, Theme, useMedia } from 'snackui'
 
 import { isWeb, searchBarHeight, zIndexDrawer } from '../constants/constants'
 import { appMapStore } from './AppMapStore'
-import { useHomeStore } from './homeStore'
+import { homeStore, useHomeStore, useIsHomeTypeActive } from './homeStore'
 import { useSafeArea } from './hooks/useSafeArea'
 import { pagesStore } from './pagesStore'
 import { OverlayLinkButton } from './views/OverlayLinkButton'
 
 export const AppMapControls = memo(() => {
-  const home = useHomeStore()
-  const appMap = useStoreInstance(appMapStore)
-  const hasMovedCenter =
-    appMap.position.center &&
-    !isEqual(appMap.position.center, home.currentState.center)
-  const hasMovedSpan =
-    appMap.position.span &&
-    !isEqual(appMap.position.span, home.currentState.span)
-  const hasMovedMap = hasMovedCenter || hasMovedSpan
-  const showRefresh = hasMovedMap && home.currentStateType === 'search'
   const media = useMedia()
   const safeArea = useSafeArea()
+  const showSearchHere = useShowSearchHere()
+  const isHoverZoomed = useStoreInstance(
+    appMapStore,
+    (x) => !!x.hovered && x.zoomOnHover
+  )
   return (
     <Theme name="darkTranslucent">
       <AbsoluteVStack
@@ -53,11 +48,16 @@ export const AppMapControls = memo(() => {
             flexWrap="wrap"
             pointerEvents="none"
             // overflow="hidden"
-            spacing={5}
           >
-            {showRefresh && (
+            {showSearchHere && (
               <OverlayLinkButton Icon={RefreshCcw} onPress={pagesStore.refresh}>
                 Search here
+              </OverlayLinkButton>
+            )}
+
+            {isHoverZoomed && (
+              <OverlayLinkButton Icon={X} onPress={appMapStore.clearHover}>
+                Clear hover
               </OverlayLinkButton>
             )}
           </HStack>
@@ -66,6 +66,19 @@ export const AppMapControls = memo(() => {
     </Theme>
   )
 })
+
+function useShowSearchHere() {
+  const isOnSearch = useIsHomeTypeActive('search')
+  const hasMovedMap = useStoreInstance(appMapStore, (m) => {
+    const c =
+      m.position.center &&
+      !isEqual(m.position.center, homeStore.currentState.center)
+    const s =
+      m.position.span && !isEqual(m.position.span, homeStore.currentState.span)
+    return c || s
+  })
+  return hasMovedMap && isOnSearch
+}
 
 // {/* {om.state.home.hoveredRestaurant &&
 //   om.state.home.currentStateType === 'search' && (

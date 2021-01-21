@@ -2,7 +2,7 @@ import { series } from '@dish/async'
 import { LngLat, RestaurantOnlyIds, resolved } from '@dish/graph'
 import { isPresent } from '@dish/helpers'
 import { Store, createStore, useStoreInstance } from '@dish/use-store'
-import { uniqBy } from 'lodash'
+import { findLast, uniqBy } from 'lodash'
 import { useEffect } from 'react'
 
 import { defaultLocationAutocompleteResults } from '../constants/defaultLocationAutocompleteResults'
@@ -14,25 +14,10 @@ import { getNavigateItemForState } from '../helpers/getNavigateItemForState'
 import { reverseGeocode } from '../helpers/reverseGeocode'
 import { queryRestaurant } from '../queries/queryRestaurant'
 import { router } from '../router'
+import { AppMapPosition, MapResultItem } from '../types/mapTypes'
 import { autocompleteLocationStore } from './AppAutocomplete'
 import { homeStore } from './homeStore'
 import { inputStoreLocation } from './inputStore'
-
-type MapPosition = {
-  center: LngLat
-  span: LngLat
-  id?: string
-  via?: 'select' | 'hover' | 'detail'
-}
-
-export type MapResultItem = {
-  id: any
-  slug: string
-  name: string
-  location: {
-    coordinates: any[]
-  }
-}
 
 type MapOpts = {
   showRank?: boolean
@@ -45,7 +30,8 @@ class AppMapStore extends Store {
   selected: RestaurantOnlyIds | null = null
   hovered: MapHoveredRestaurant | null = null
   userLocation: LngLat | null = null
-  position: MapPosition = getDefaultLocation()
+  position: AppMapPosition = getDefaultLocation()
+  lastPositions: AppMapPosition[] = []
   results: MapResultItem[] = []
   showRank = false
   zoomOnHover = false
@@ -58,12 +44,22 @@ class AppMapStore extends Store {
     this.zoomOnHover = val.zoomOnHover
   }
 
-  setPosition(via: string, pos: Partial<MapPosition>) {
+  setPosition(pos: AppMapPosition) {
     this.position = {
       ...this.position,
       ...pos,
     }
+    const n = [...this.lastPositions, this.position]
+    this.lastPositions = n.reverse().slice(0, 15).reverse() // keep only 15
     this.updateAreaInfo()
+  }
+
+  clearHover() {
+    const beforeHover = findLast(this.lastPositions, (x) => x.via !== 'hover')
+    this.hovered = null
+    if (beforeHover) {
+      this.position = beforeHover
+    }
   }
 
   setSelected(n: RestaurantOnlyIds | null) {

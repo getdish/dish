@@ -63,9 +63,12 @@ export type TopCuisine = {
   top_restaurants: Partial<Restaurant>[]
 }
 
-export type RestaurantSearchArgs = {
+export type MapPosition = {
   center: LngLat
   span: LngLat
+}
+
+export type RestaurantSearchArgs = MapPosition & {
   query: string
   tags?: string[]
   limit?: number

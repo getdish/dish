@@ -1,4 +1,5 @@
 import { HomeStateItemLocation } from '../types/homeTypes'
+import { AppMapPosition } from '../types/mapTypes'
 import { getLocalJSON, setLocalJSON } from './getLocalJSON'
 
 const initSpan = {
@@ -6,7 +7,7 @@ const initSpan = {
   lat: 0.15,
 }
 
-export function getDefaultLocation(): HomeStateItemLocation {
+export function getDefaultLocation(): AppMapPosition & { region?: string } {
   const location = getLocalJSON('DEFAULT_LOCATION', {
     center: {
       lng: -122.421351,
@@ -15,6 +16,7 @@ export function getDefaultLocation(): HomeStateItemLocation {
     span: initSpan,
   })
   return {
+    via: 'init',
     ...location,
     span: {
       // minimum span for initial location

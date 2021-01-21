@@ -22,8 +22,9 @@ import { getLngLat, getMinLngLat } from '../helpers/getLngLat'
 import { queryRestaurant } from '../queries/queryRestaurant'
 import { router } from '../router'
 import { Region } from '../types/homeTypes'
+import { MapResultItem } from '../types/mapTypes'
 import { AppMapControls } from './AppMapControls'
-import { MapResultItem, appMapStore, useAppMapStore } from './AppMapStore'
+import { appMapStore, useAppMapStore } from './AppMapStore'
 import { drawerStore } from './drawerStore'
 import { ensureFlexText } from './home/restaurant/ensureFlexText'
 import { homeStore } from './homeStore'
@@ -49,7 +50,7 @@ const updateRegion = debounce((region: Region) => {
   }
 }, 300)
 
-export default memo(() => {
+export default memo(function AppMap() {
   const { results, showRank, zoomOnHover, hovered } = useAppMapStore()
   const media = useMedia()
   const { width, paddingLeft } = useMapSize(media.sm)
@@ -64,7 +65,8 @@ export default memo(() => {
       () => resolved(() => queryRestaurant(hovered.slug)[0].location),
       (location) => {
         if (!location) return
-        appMapStore.setPosition('zoomOnHover', {
+        appMapStore.setPosition({
+          via: 'hover',
           center: getLngLat(location.coordinates),
           span: getMinLngLat(span, 0.004, 0.004),
         })
@@ -101,9 +103,10 @@ export default memo(() => {
       },
       ({ span, center }) => {
         updateRegion.cancel()
-        appMapStore.setPosition('homeState.currentState', {
+        appMapStore.setPosition({
           span,
           center,
+          via: 'home',
         })
       },
       isEqual
@@ -115,8 +118,9 @@ export default memo(() => {
     const coords = restaurantSelected?.location.coordinates
     if (!coords) return
     const center = getLngLat(coords)
-    appMapStore.setPosition('restaurantSelected', {
+    appMapStore.setPosition({
       center,
+      via: 'click',
     })
   }, [restaurantSelected])
 
@@ -151,16 +155,6 @@ export default memo(() => {
         console.log('avoid move stuff when snapped to top')
         return
       }
-      // if (om.state.home.centerToResults) {
-      //   // we just re-centered, ignore
-      //   //@ts-expect-error
-      //   om.actions.home.setCenterToResults(0)
-      // }
-      // console.log('should set position on map?')
-      // appMapStore.setPosition('moveEnd', {
-      //   center,
-      //   span,
-      // })
     },
     [media.sm]
   )

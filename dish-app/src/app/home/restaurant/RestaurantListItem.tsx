@@ -154,9 +154,6 @@ const RestaurantListItemMain = memo(function RestaurantListItemMain(
         }}
         onMouseLeave={() => {
           setHoveredSlow.cancel()
-          if (appMapStore.hovered?.slug === props.restaurantSlug) {
-            appMapStore.setHovered(null)
-          }
         }}
       >
         {contentInner}
@@ -529,6 +526,7 @@ const RestaurantListItemContent = memo(
               marginBottom={15}
               marginTop={-60}
               transform={[{ translateY: -8 }]}
+              pointerEvents="none"
             >
               <Suspense fallback={null}>
                 <RestaurantPeekDishes
@@ -673,7 +671,7 @@ const RestaurantPeekDishes = memo(
         )}
         <HStack
           contain="paint layout"
-          pointerEvents="auto"
+          pointerEvents="none"
           padding={20}
           paddingVertical={10}
           alignItems="center"

@@ -1,6 +1,6 @@
 import { series, sleep } from '@dish/async'
-import { slugify } from '@dish/graph'
-import { ArrowUp, Edit, Edit2 } from '@dish/react-feather'
+import { RestaurantSearchItem, slugify } from '@dish/graph'
+import { ArrowUp, Edit2 } from '@dish/react-feather'
 import { HistoryItem } from '@dish/router'
 import { reaction } from '@dish/use-store'
 import { sortBy } from 'lodash'
@@ -41,25 +41,16 @@ import { isWeb } from '../../../constants/constants'
 import { addTagsToCache, allTags } from '../../../helpers/allTags'
 import { getActiveTags } from '../../../helpers/getActiveTags'
 import { getTagsFromRoute } from '../../../helpers/getTagsFromRoute'
-import { getTagSlug } from '../../../helpers/getTagSlug'
 import { getTitleForState } from '../../../helpers/getTitleForState'
 import { rgbString } from '../../../helpers/rgbString'
 import { useQueryLoud } from '../../../helpers/useQueryLoud'
 import { router } from '../../../router'
-import {
-  HomeActiveTagsRecord,
-  HomeStateItemSearch,
-} from '../../../types/homeTypes'
+import { HomeStateItemSearch } from '../../../types/homeTypes'
 import { appMapStore, useSetAppMapResults } from '../../AppMapStore'
 import { AppPortalItem } from '../../AppPortal'
-import {
-  useHomeStateById,
-  useHomeStore,
-  useLastHomeState,
-} from '../../homeStore'
+import { useHomeStateById, useHomeStore } from '../../homeStore'
 import { useAppDrawerWidth } from '../../hooks/useAppDrawerWidth'
 import { useCurrentLenseColor } from '../../hooks/useCurrentLenseColor'
-import { useLastValue } from '../../hooks/useLastValue'
 import { useLastValueWhen } from '../../hooks/useLastValueWhen'
 import { usePageLoadEffect } from '../../hooks/usePageLoadEffect'
 import { userStore } from '../../userStore'
@@ -273,6 +264,9 @@ const SearchResultsContent = (props: Props) => {
     results = [
       {
         isPlaceholder: true,
+        meta: null,
+        id: '',
+        slug: '',
       },
     ]
   }
@@ -312,11 +306,11 @@ const SearchResultsContent = (props: Props) => {
   const rowRenderer = useCallback(
     (
       type: string | number,
-      data: any,
+      data: RestaurantSearchItem,
       index: number
       // extendedState?: object
     ) => {
-      if ('isPlaceholder' in data) {
+      if (data.isPlaceholder) {
         return <LoadingItem size="lg" />
       }
       return (
@@ -496,24 +490,26 @@ const SearchPageScrollView = forwardRef<ScrollView, SearchPageScrollViewProps>(
                 />
               </HStack>
             </HStack>
-            <HStack
-              alignItems="center"
-              borderWidth={1}
-              borderColor={theme.borderColor}
-              paddingHorizontal={18}
-              borderRadius={100}
-              maxWidth="80%"
-              height={48}
-              position="relative"
+            <ScrollView
+              horizontal
+              showsHorizontalScrollIndicator={false}
+              style={{ maxWidth: '100%', alignSelf: 'center' }}
             >
-              <AbsoluteVStack left={-66}>
-                <SlantedTitle size="xs">Scoring</SlantedTitle>
-              </AbsoluteVStack>
-              <ScrollView
-                horizontal
-                showsHorizontalScrollIndicator={false}
-                style={{ maxWidth: '100%' }}
+              <HStack
+                alignItems="center"
+                borderWidth={1}
+                borderColor={theme.borderColor}
+                paddingHorizontal={18}
+                borderRadius={100}
+                marginLeft={100}
+                marginRight={30}
+                height={48}
+                position="relative"
               >
+                <AbsoluteVStack left={-66}>
+                  <SlantedTitle size="xs">Scoring</SlantedTitle>
+                </AbsoluteVStack>
+
                 <HStack spacing="sm">
                   {tagsWithPct.map(({ tag, pct }, index) => {
                     return (
@@ -527,8 +523,8 @@ const SearchPageScrollView = forwardRef<ScrollView, SearchPageScrollViewProps>(
                     )
                   })}
                 </HStack>
-              </ScrollView>
-            </HStack>
+              </HStack>
+            </ScrollView>
 
             <HStack flex={1} />
           </HStack>

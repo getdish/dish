@@ -9,6 +9,7 @@ import { Keyboard } from 'react-native'
 import { initialHomeState } from '../constants/initialHomeState'
 import { tagLenses } from '../constants/localTags'
 import { allTags } from '../helpers/allTags'
+import { ensureLenseTag } from '../helpers/ensureLenseTag'
 import { getActiveTags } from '../helpers/getActiveTags'
 import { getBreadcrumbs, isBreadcrumbState } from '../helpers/getBreadcrumbs'
 import { getNextState } from '../helpers/getNextState'
@@ -431,7 +432,7 @@ class HomeStore extends Store {
       const sameSearchQuery = isEqual(state.searchQuery, next.searchQuery)
       assert(!sameTagIds || !sameSearchQuery)
       const nextState = {
-        activeTags: next.activeTags,
+        activeTags: ensureLenseTag(next.activeTags),
         id: this.currentState.id,
       }
       this.updateHomeState('homeStore.updateActiveTags', nextState)
