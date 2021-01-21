@@ -48,7 +48,7 @@ test('Adds and updates Gorse feedback', async (t) => {
       text: 'test',
     },
   ])
-  await sleep(1000)
+  await sleep(2000)
   let response = await fetch(
     GORSE_ENDPOINT + `/user/${t.context.user.username}/feedback`
   )
