@@ -10,9 +10,9 @@ export const HomeDrawerSmall = (props: { children: any }) => {
 
   useEffect(() => {
     if (autocompletes.visible) {
-      drawerStore.setSnapPoint(0)
+      drawerStore.setSnapIndex(0)
     } else {
-      drawerStore.setSnapPoint(1)
+      drawerStore.setSnapIndex(1)
     }
   }, [autocompletes.visible])
 

@@ -37,7 +37,7 @@ export default function AboutPage({
     if (!isActive) return undefined
     const tm = setTimeout(() => {
       if (drawerStore.snapIndex > 0) {
-        drawerStore.setSnapPoint(0)
+        drawerStore.setSnapIndex(0)
       }
     }, 350)
     return () => {

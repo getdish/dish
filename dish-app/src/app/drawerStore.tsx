@@ -29,13 +29,20 @@ class DrawerStore extends Store {
     return getWindowHeight() - getWindowHeight() * this.currentSnapPoint
   }
 
+  get bottomOccludedIgnoreFullyClosed() {
+    return (
+      getWindowHeight() -
+      getWindowHeight() * this.snapPoints[Math.max(1, this.snapIndex)]
+    )
+  }
+
   setIsDragging(val: boolean) {
     this.isDragging = val
     this.spring?.stop()
   }
 
-  setSnapPoint(point: number) {
-    this.setSnapIndex(point)
+  setSnapIndex(point: number) {
+    this.snapIndex = point
     this.animateDrawerToPx()
   }
 
@@ -44,7 +51,7 @@ class DrawerStore extends Store {
     velocity: number = 0
   ) {
     this.isDragging = true
-    this.setSnapIndex(this.getSnapIndex(px, velocity))
+    this.snapIndex = this.getSnapIndex(px, velocity)
     const toValue = this.getSnapPointOffset()
     this.spring = Animated.spring(this.pan, {
       useNativeDriver: true,
@@ -61,10 +68,6 @@ class DrawerStore extends Store {
 
   private getSnapPointOffset(index = this.snapIndex) {
     return this.snapPoints[index] * getWindowHeight()
-  }
-
-  private setSnapIndex(x: number) {
-    this.snapIndex = x
   }
 
   private getSnapIndex(px: number, velocity: number) {

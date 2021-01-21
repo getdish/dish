@@ -126,7 +126,7 @@ export default memo(function AppMap() {
 
   const drawer = useStoreInstance(drawerStore)
   // ensure never goes to 0
-  const bottomOcclude = useDebounceValue(drawer.bottomOccluded + 10, 250)
+  const bottomOcclude = drawer.bottomOccludedIgnoreFullyClosed + 10
   const padding = useMemo(() => {
     return media.sm
       ? {
@@ -220,7 +220,7 @@ export default memo(function AppMap() {
 
       if (router.getIsRouteActive(route)) {
         if (media.sm) {
-          drawerStore.setSnapPoint(0)
+          drawerStore.setSnapIndex(0)
         }
       } else {
         router.navigate(route)

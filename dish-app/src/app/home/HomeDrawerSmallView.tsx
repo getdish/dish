@@ -31,11 +31,11 @@ export const HomeDrawerSmallView = memo((props: { children: any }) => {
     const drawerSnapListener = () => {
       if (drawerStore.snapIndex === 0) {
         autocompletesStore.setVisible(false)
-        drawerStore.setSnapPoint(1)
+        drawerStore.setSnapIndex(1)
       } else if (drawerStore.snapIndex === 1) {
-        drawerStore.setSnapPoint(2)
+        drawerStore.setSnapIndex(2)
       } else if (drawerStore.snapIndex === 2) {
-        drawerStore.setSnapPoint(1)
+        drawerStore.setSnapIndex(1)
       }
     }
 
