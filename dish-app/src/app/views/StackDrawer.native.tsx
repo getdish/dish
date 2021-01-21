@@ -50,6 +50,7 @@ export function StackDrawer(props: StackDrawerProps) {
             left: 0,
             bottom: 0,
             zIndex: 1000,
+            // backgroundColor: 'red',
           }}
         />
       </PanGestureHandler>
