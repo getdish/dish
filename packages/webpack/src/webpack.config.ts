@@ -5,18 +5,22 @@ import { CreateWebpackConfig } from '@dish/server'
 import LoadablePlugin from '@loadable/webpack-plugin'
 import ReactRefreshWebpack4Plugin from '@pmmmwh/react-refresh-webpack-plugin'
 import CircularDependencyPlugin from 'circular-dependency-plugin'
-import DedupeParentCssFromChunksWebpackPlugin from 'dedupe-parent-css-from-chunks-webpack-plugin'
-import ExtractCssChunks from 'extract-css-chunks-webpack-plugin'
+// import DedupeParentCssFromChunksWebpackPlugin from 'dedupe-parent-css-from-chunks-webpack-plugin'
+// import ExtractCssChunks from 'extract-css-chunks-webpack-plugin'
 import { ensureDirSync } from 'fs-extra'
 import HTMLWebpackPlugin from 'html-webpack-plugin'
 import { DuplicatesPlugin } from 'inspectpack/plugin'
+import MiniCssExtractPlugin from 'mini-css-extract-plugin'
 // import LodashPlugin from 'lodash-webpack-plugin'
-import OptimizeCSSAssetsPlugin from 'optimize-css-assets-webpack-plugin'
+// import OptimizeCSSAssetsPlugin from 'optimize-css-assets-webpack-plugin'
 import SpeedMeasurePlugin from 'speed-measure-webpack-plugin'
 import TerserPlugin from 'terser-webpack-plugin'
 import TimeFixPlugin from 'time-fix-plugin'
 import Webpack from 'webpack'
 import WebpackPwaManifest from 'webpack-pwa-manifest'
+
+const CssMinimizerPlugin = require('css-minimizer-webpack-plugin')
+// const DedupeParentCssFromChunksWebpackPlugin = require('dedupe-parent-css-from-chunks-webpack-plugin')
 
 export default function createWebpackConfig({
   entry,
@@ -39,7 +43,7 @@ export default function createWebpackConfig({
   const isHot = !isProduction && !isSSR && !disableHot && target !== 'node'
   const isStaticExtracted = !process.env.NO_EXTRACT
   const isVerbose = process.env.ANALYZE_BUNDLE || process.env.INSPECT
-  const minimize = noMinify || isSSR ? false : isProduction && !isSSR
+  const minimize = false ?? (noMinify || isSSR) ? false : isProduction && !isSSR
   const hashFileNamePart = isProduction ? '[contenthash]' : '[fullhash]'
   const hotEntry = isHot ? 'webpack-hot-middleware/client' : null
   const smp = new SpeedMeasurePlugin()
@@ -133,24 +137,17 @@ export default function createWebpackConfig({
       optimization: {
         moduleIds: isProduction ? 'deterministic' : 'natural',
         minimize,
-        concatenateModules: isProduction && !isVerbose,
+        concatenateModules: isProduction,
         usedExports: isProduction,
         removeEmptyChunks: isProduction,
         splitChunks:
           isProduction && !isSSR && !noMinify
             ? {
-                chunks: 'async',
-                minSize: 20000,
-                minChunks: 1,
-                maxAsyncRequests: 20,
-                maxInitialRequests: 10,
-                automaticNameDelimiter: '~',
+                // maxAsyncRequests: 20,
+                // maxInitialRequests: 10,
+                // automaticNameDelimiter: '~',
                 cacheGroups: {
-                  default: {
-                    minChunks: 1,
-                    priority: -20,
-                    reuseExistingChunk: true,
-                  },
+                  default: false,
                   defaultVendors: {
                     test: /[\\/]node_modules[\\/]/,
                     priority: -10,
@@ -164,15 +161,24 @@ export default function createWebpackConfig({
                 },
               }
             : false,
-        runtimeChunk: false,
+        // runtimeChunk: false,
         minimizer:
           minimize == false
             ? []
             : [
+                new CssMinimizerPlugin({
+                  minimizerOptions: {
+                    preset: [
+                      'default',
+                      {
+                        discardComments: { removeAll: true },
+                      },
+                    ],
+                  },
+                }),
                 new TerserPlugin({
                   parallel: true,
                 }),
-                new OptimizeCSSAssetsPlugin({}),
               ],
       },
       module: {
@@ -198,15 +204,7 @@ export default function createWebpackConfig({
                 test: /\.css$/i,
                 use:
                   isProduction && !isSSR
-                    ? [
-                        {
-                          loader: ExtractCssChunks.loader,
-                          options: {
-                            hmr: isHot,
-                          },
-                        },
-                        'css-loader',
-                      ]
+                    ? [MiniCssExtractPlugin.loader, 'css-loader']
                     : ['style-loader', 'css-loader'],
               },
               {
@@ -285,14 +283,16 @@ export default function createWebpackConfig({
             //   // fixes issue i had https://github.com/lodash/lodash/issues/3101
             //   shorthands: true,
             // }),
-            new ExtractCssChunks({
-              // @ts-expect-error
-              esModule: true,
-              ignoreOrder: false,
-            }),
-            new DedupeParentCssFromChunksWebpackPlugin({
-              assetNameRegExp: /\.optimize\.css$/g, // the default is /\.css$/g
-              canPrint: true, // the default is true
+            // new ExtractCssChunks({
+            //   // @ts-expect-error
+            //   esModule: true,
+            //   ignoreOrder: true,
+            // }),
+            // new DedupeParentCssFromChunksWebpackPlugin({
+            //   canPrint: true, // the default is true
+            // }),
+            new MiniCssExtractPlugin({
+              filename: '[name].out.css',
             }),
           ]) ||
           []),

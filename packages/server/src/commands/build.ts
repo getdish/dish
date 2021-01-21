@@ -26,6 +26,7 @@ export class Build extends Command {
     const { flags } = this.parse(Build)
 
     try {
+      process.env.NODE_ENV = 'production'
       const rootDir = process.cwd()
       await buildApp({
         serial: flags.serial,
