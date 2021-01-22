@@ -227,81 +227,81 @@ const ListFeedCard = graphql((props: FeedItemList) => {
   )
 })
 
-const CuisineFeedCard = graphql(function CuisineFeedCard(
-  props: FeedItemCuisine
-) {
-  const scrollRef = useRef<ScrollView>()
-  const dishes = props.dishes
-    ? query.tag({
-        where: {
-          name: {
-            _in: props.dishes.map((x) => x.name),
+const CuisineFeedCard = memo(
+  graphql(function CuisineFeedCard(props: FeedItemCuisine) {
+    const scrollRef = useRef<ScrollView>()
+    const dishes = props.dishes
+      ? query.tag({
+          where: {
+            name: {
+              _in: props.dishes.map((x) => x.name),
+            },
           },
-        },
-        order_by: [{ popularity: order_by.desc }],
-      })
-    : []
+          order_by: [{ popularity: order_by.desc }],
+        })
+      : []
 
-  const restaurants = props.dishes?.[0]?.best_restaurants ?? []
-  const perCol = 2
+    const restaurants = props.dishes?.[0]?.best_restaurants ?? []
+    const perCol = 2
 
-  return (
-    <ScrollView
-      ref={scrollRef as any}
-      style={{ maxWidth: '100%', overflow: 'hidden' }}
-      horizontal
-      showsHorizontalScrollIndicator={false}
-    >
-      <HStack
-        paddingTop={53}
-        paddingHorizontal={40}
-        flexWrap="nowrap"
-        alignItems="center"
-        justifyContent="center"
+    return (
+      <ScrollView
+        ref={scrollRef as any}
+        style={{ maxWidth: '100%', overflow: 'hidden' }}
+        horizontal
+        showsHorizontalScrollIndicator={false}
       >
-        <DishCol>{dishes.slice(0, perCol).map(getDishColInner)}</DishCol>
-        <DishCol transform={[{ translateY: -8 }]}>
-          {dishes.slice(perCol, perCol * 2).map(getDishColInner)}
-        </DishCol>
-        <DishCol transform={[{ translateY: -16 }]}>
-          {dishes.slice(perCol * 2, perCol * 3).map(getDishColInner)}
-        </DishCol>
-        <DishCol transform={[{ translateY: -24 }]}>
-          {dishes.slice(perCol * 3, perCol * 4).map(getDishColInner)}
-        </DishCol>
+        <HStack
+          paddingTop={53}
+          paddingHorizontal={40}
+          flexWrap="nowrap"
+          alignItems="center"
+          justifyContent="center"
+        >
+          <DishCol>{dishes.slice(0, perCol).map(getDishColInner)}</DishCol>
+          <DishCol transform={[{ translateY: -8 }]}>
+            {dishes.slice(perCol, perCol * 2).map(getDishColInner)}
+          </DishCol>
+          <DishCol transform={[{ translateY: -16 }]}>
+            {dishes.slice(perCol * 2, perCol * 3).map(getDishColInner)}
+          </DishCol>
+          <DishCol transform={[{ translateY: -24 }]}>
+            {dishes.slice(perCol * 3, perCol * 4).map(getDishColInner)}
+          </DishCol>
 
-        {restaurants.map((r, i) => {
-          return (
-            <SkewedCard zIndex={1000 - i} key={r.id}>
-              <RestaurantCard
-                hideScore
-                restaurantId={r.id}
-                restaurantSlug={r.slug}
-                hoverable={false}
-                // below={
-                //   <VStack position="absolute" bottom={-10} right={-5}>
-                //     <DishView
-                //       dish={props.dish}
-                //       restaurantId={r.id}
-                //       restaurantSlug={r.slug}
-                //       size={140}
-                //       isFallback
-                //     />
-                //   </VStack>
-                // }
-              />
-            </SkewedCard>
-          )
-        })}
-      </HStack>
-    </ScrollView>
-  )
-})
+          {restaurants.map((r, i) => {
+            return (
+              <SkewedCard zIndex={1000 - i} key={r.id}>
+                <RestaurantCard
+                  hideScore
+                  restaurantId={r.id}
+                  restaurantSlug={r.slug}
+                  hoverable={false}
+                  // below={
+                  //   <VStack position="absolute" bottom={-10} right={-5}>
+                  //     <DishView
+                  //       dish={props.dish}
+                  //       restaurantId={r.id}
+                  //       restaurantSlug={r.slug}
+                  //       size={140}
+                  //       isFallback
+                  //     />
+                  //   </VStack>
+                  // }
+                />
+              </SkewedCard>
+            )
+          })}
+        </HStack>
+      </ScrollView>
+    )
+  })
+)
 
 const getDishColInner = (dish: tag, i: number) => {
   return (
     <VStack marginBottom={5} key={i}>
-      <DishView isFallback size={130} dish={selectTagDishViewSimple(dish)} />
+      <DishView size={130} {...selectTagDishViewSimple(dish)} isFallback />
     </VStack>
   )
 }
@@ -315,7 +315,7 @@ const DishFeedCard = graphql(function DishFeedCard(props: FeedItemDish) {
   return (
     <CardFrame aspectFixed transparent>
       <VStack position="relative" alignSelf="center">
-        <DishView showSearchButton size={220} {...props} />
+        <DishView showSearchButton size={220} {...props} {...props.dish} />
       </VStack>
       <Text fontSize={14} lineHeight={22} opacity={0.4} margin={4}>
         lorem ipsume dolor sit amet lorem ipsume dolor sit amet lorem ipsume
@@ -363,7 +363,7 @@ const DishRestaurantsFeedCard = (props: FeedItemDishRestaurants) => {
                     right={-5}
                   >
                     <DishView
-                      dish={props.dish}
+                      {...props.dish}
                       restaurantId={r.id}
                       restaurantSlug={r.slug}
                       size={140}

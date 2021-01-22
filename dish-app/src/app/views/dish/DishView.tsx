@@ -38,12 +38,11 @@ const getRoundedDishViewSize = (size: string | number) => {
   return largeSize
 }
 
-export type DishViewProps = {
+export type DishViewProps = DishTagItem & {
   restaurantId?: string
   restaurantSlug?: string
   name?: any
   cuisine?: NavigableTag
-  dish: DishTagItem
   // percent or fixed
   size?: string | number
   isFallback?: boolean
@@ -72,39 +71,42 @@ export const DishView = memo((props: DishViewProps) => {
 
 const DishViewContent = (props: DishViewProps) => {
   const {
-    dish,
+    // dish specific things
+    name,
+    score,
+    icon,
+    image,
+    slug,
+
+    // rest
     cuisine,
     size = 100,
     restaurantSlug,
     restaurantId,
     selected,
     disableFallbackFade,
-    isFallback: _isFallback,
+    isFallback,
     noLink,
     showSearchButton,
     ...rest
   } = props
   const [isHovered, setIsHovered] = useState(false)
-  const dishName = (dish.name ?? '')
+  const dishName = (name ?? '')
     .split(' ')
     .map((x) => capitalize(x))
     .join(' ')
 
   // @ts-expect-error
-  const imageUrl = getImageUrl(dish.image, ...getRoundedDishViewSize(size), 100)
+  const imageUrl = getImageUrl(image, ...getRoundedDishViewSize(size), 100)
   const hasLongWord = !!dishName.split(' ').find((x) => x.length >= 8)
   const isTiny = size < 115
   const fontSize = (hasLongWord ? 14 : 16) * (isTiny ? 0.8 : 1)
-  const isFallback = _isFallback ?? dish.isFallback
-  const { lightColor, color } = getColorsForName(dish.name)
+  const { lightColor, color } = getColorsForName(name)
   const backgroundColor = lightColor
   const isActive = (isHovered || selected) ?? false
 
   const showVote =
-    typeof dish.score === 'number' &&
-    !!restaurantId &&
-    !!restaurantSlug &&
-    !!dish.name
+    typeof score === 'number' && !!restaurantId && !!restaurantSlug && !!name
 
   let contents = (
     <Hoverable
@@ -123,9 +125,9 @@ const DishViewContent = (props: DishViewProps) => {
           <Suspense fallback={null}>
             <DishUpvoteDownvote
               size="sm"
-              name={dish.name}
+              name={name}
               subtle
-              score={dish.score}
+              score={score}
               {...(restaurantId &&
                 restaurantSlug && {
                   restaurantId,
@@ -148,7 +150,7 @@ const DishViewContent = (props: DishViewProps) => {
           zIndex: 3,
         })}
       >
-        {!!dish.icon && (
+        {!!icon && (
           <Text
             className="ease-in-out"
             zIndex={10}
@@ -158,7 +160,7 @@ const DishViewContent = (props: DishViewProps) => {
             fontSize={28}
             transform={[{ scale: 1 }]}
           >
-            {dish.icon}
+            {icon}
           </Text>
         )}
 
@@ -170,7 +172,7 @@ const DishViewContent = (props: DishViewProps) => {
             right="7.5%"
             pointerEvents="auto"
           >
-            <Link tag={dish}>
+            <Link tag={{ slug, type: 'dish' }}>
               <VStack
                 width={28}
                 height={28}
@@ -230,7 +232,7 @@ const DishViewContent = (props: DishViewProps) => {
           </Text>
         </Box>
       </AbsoluteVStack>
-      {!!dish.image && (
+      {!!image && (
         <VStack
           // BUG cant put transform on same as borderRadius + overflowHidden
           // https://stackoverflow.com/questions/21087979/probleme-css3-scale-transform-and-overflowhidden-on-safari
@@ -264,12 +266,12 @@ const DishViewContent = (props: DishViewProps) => {
           end={[0.5, 0.5]}
         />
       </AbsoluteVStack>
-      {!dish.image && <Text fontSize={80}>🥗</Text>}
+      {!image && <Text fontSize={80}>🥗</Text>}
     </Hoverable>
   )
 
-  if (dish.name && !dish.slug) {
-    console.warn('dish', dish)
+  if (name && !slug) {
+    console.warn('NO DISH INFO', name, slug)
   }
 
   if (!noLink) {
@@ -281,14 +283,11 @@ const DishViewContent = (props: DishViewProps) => {
               params: {
                 slug: restaurantSlug,
                 section: 'reviews',
-                sectionSlug: getTagSlug(dish),
+                sectionSlug: slug,
               },
             }
           : {
-              tags: [
-                cuisine,
-                { type: 'dish', name: dish.name },
-              ] as NavigableTag[],
+              tags: [cuisine, { type: 'dish', name: name }] as NavigableTag[],
             })}
       >
         {contents}
