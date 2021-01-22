@@ -1073,6 +1073,11 @@ function docker_compose_up_for_tests() {
   fi
 }
 
+function docker_compose_up_for_staging() {
+  echo "Use `docker-compose logs -f` to stream logs"
+  docker-compose up -d
+}
+
 function staging_ssh() {
   ssh root@ssh.staging.dishapp.com \
     -t \
