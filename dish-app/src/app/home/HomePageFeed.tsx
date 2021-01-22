@@ -205,23 +205,24 @@ const ListFeedCard = graphql((props: FeedItemList) => {
     order_by: [{ created_at: order_by.asc }],
   })
   return (
-    <CardCarousel>
+    <SkewedCardCarousel>
       {recentLists.map((list) => {
         if (!list) {
           return null
         }
         return (
-          <ListCard
-            key={list.slug}
-            slug={list.slug}
-            userSlug={list.user?.username ?? ''}
-            // onHover={() => {
-            //   appMapStore.setHoverResults()
-            // }}
-          />
+          <SkewedCard key={list.slug}>
+            <ListCard
+              slug={list.slug}
+              userSlug={list.user?.username ?? ''}
+              // onHover={() => {
+              //   appMapStore.setHoverResults()
+              // }}
+            />
+          </SkewedCard>
         )
       })}
-    </CardCarousel>
+    </SkewedCardCarousel>
   )
 })
 
@@ -337,47 +338,55 @@ const DishRestaurantsFeedCard = (props: FeedItemDishRestaurants) => {
           {props.dish.icon ?? null} {props.dish.name}
         </SlantedTitle>
       </Link> */}
-      <ScrollView horizontal showsHorizontalScrollIndicator={false}>
-        <HStack paddingVertical={5}>
-          {props.restaurants.slice(0, 5).map((r, i) => {
-            if (!r.slug) {
-              return null
-            }
-            return (
-              <SkewedCard zIndex={1000 - i} key={r.id}>
-                <RestaurantCard
-                  hideScore
-                  restaurantId={r.id}
-                  restaurantSlug={r.slug}
-                  hoverable={false}
-                  below={
-                    <VStack
-                      transform={[
-                        { scale: 1 },
-                        { perspective: 1000 },
-                        { rotateY: '-10deg' },
-                      ]}
-                      position="absolute"
-                      bottom={-10}
-                      right={-5}
-                    >
-                      <DishView
-                        dish={props.dish}
-                        restaurantId={r.id}
-                        restaurantSlug={r.slug}
-                        size={140}
-                        isFallback
-                      />
-                    </VStack>
-                  }
-                />
-              </SkewedCard>
-            )
-          })}
-          <VStack width={100} height={100} />
-        </HStack>
-      </ScrollView>
+      <SkewedCardCarousel>
+        {props.restaurants.slice(0, 5).map((r, i) => {
+          if (!r.slug) {
+            return null
+          }
+          return (
+            <SkewedCard zIndex={1000 - i} key={r.id}>
+              <RestaurantCard
+                hideScore
+                restaurantId={r.id}
+                restaurantSlug={r.slug}
+                hoverable={false}
+                below={
+                  <VStack
+                    transform={[
+                      { scale: 1 },
+                      { perspective: 1000 },
+                      { rotateY: '-10deg' },
+                    ]}
+                    position="absolute"
+                    bottom={-10}
+                    right={-5}
+                  >
+                    <DishView
+                      dish={props.dish}
+                      restaurantId={r.id}
+                      restaurantSlug={r.slug}
+                      size={140}
+                      isFallback
+                    />
+                  </VStack>
+                }
+              />
+            </SkewedCard>
+          )
+        })}
+      </SkewedCardCarousel>
     </VStack>
+  )
+}
+
+const SkewedCardCarousel = ({ children }: { children: any }) => {
+  return (
+    <ScrollView horizontal showsHorizontalScrollIndicator={false}>
+      <HStack paddingVertical={5}>
+        {children}
+        <VStack width={100} height={100} />
+      </HStack>
+    </ScrollView>
   )
 }
 
