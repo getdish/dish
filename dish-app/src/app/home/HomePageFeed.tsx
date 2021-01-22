@@ -207,12 +207,12 @@ const ListFeedCard = graphql((props: FeedItemList) => {
   })
   return (
     <SkewedCardCarousel>
-      {recentLists.map((list) => {
+      {recentLists.map((list, i) => {
         if (!list) {
           return null
         }
         return (
-          <SkewedCard key={list.slug}>
+          <SkewedCard zIndex={1000 - i} key={list.slug}>
             <ListCard
               hoverable={false}
               slug={list.slug}

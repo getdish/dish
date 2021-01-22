@@ -114,7 +114,6 @@ const getNormalizeLinkProps = (
   function onMouseEnter(e) {
     // get latest on mouseenter, lets you update tags without re-rendering every link
     const next = getNormalizedLink(props)
-    console.log('we got a new one', next)
     if (!isEqual(omit(next, 'onPress'), omit(linkProps, 'onPress'))) {
       forceUpdate()
     }
