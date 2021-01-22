@@ -617,6 +617,8 @@ const HomeAutocompleteDefault = memo(() => {
       flexWrap="wrap"
       alignItems="center"
       justifyContent="center"
+      maxWidth={700}
+      alignSelf="center"
     >
       {tagDefaultAutocomplete.map((tag) => {
         return (
