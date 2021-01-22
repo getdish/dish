@@ -60,12 +60,9 @@ export const RestaurantDishPhotos = memo(
                 <DishView
                   noLink
                   size={size}
-                  dish={{
-                    name: 'Overall',
-                    image: '',
-                    icon: '',
-                    id: '',
-                  }}
+                  name="Overall"
+                  slug=""
+                  image=""
                   selected={selected === null}
                   {...(!!selectable && {
                     onPress() {
@@ -86,7 +83,7 @@ export const RestaurantDishPhotos = memo(
                         size={size}
                         restaurantSlug={restaurantSlug}
                         restaurantId={restaurantId}
-                        dish={dish}
+                        {...dish}
                         selected={isSelected}
                         {...(!!selectable && {
                           onPress() {

@@ -74,7 +74,7 @@ services:
       - DO_SPACES_SECRET=${TF_VAR_DO_SPACES_SECRET}
       - VIRTUAL_HOST=staging.dishapp.com
       - VIRTUAL_PORT=4444
-      - HASURA_SECRET=password
+      - HASURA_SECRET=${TF_VAR_HASURA_GRAPHQL_ADMIN_SECRET:-password}
       - HASURA_ENDPOINT=http://hasura:8080
       - SEARCH_ENDPOINT=http://search:10000
     ports:

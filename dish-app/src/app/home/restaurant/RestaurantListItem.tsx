@@ -111,9 +111,7 @@ export const RestaurantListItem = (props: RestaurantListItemProps) => {
   )
 }
 
-const RestaurantListItemMain = memo(function RestaurantListItemMain(
-  props: RestaurantListItemProps
-) {
+function RestaurantListItemMain(props: RestaurantListItemProps) {
   const [isLoaded, setIsLoaded] = useState(false)
   const content = useMemo(() => {
     return <RestaurantListItemContent isLoaded={isLoaded} {...props} />
@@ -162,7 +160,7 @@ const RestaurantListItemMain = memo(function RestaurantListItemMain(
   }
 
   return contentInner
-})
+}
 
 const fadeOutWidth = 40
 const fadeOutWidthHalf = 20
@@ -223,6 +221,7 @@ const RestaurantListItemContent = memo(
       ),
     }
 
+    const handleChangeDishes = useCallback(onChangeDishes as any, [])
     const [open_text, open_color, opening_hours] = openingHours(restaurant)
     const [price_label, price_color, price_range] = priceRange(restaurant)
     const totalReviews = useTotalReviews(restaurant)
@@ -246,9 +245,9 @@ const RestaurantListItemContent = memo(
     const showAbove = !!above || !!activeTagSlugs
 
     const nextDescription = useRef<string>()
-    const setDescription = (val: string) => {
+    const setDescription = useCallback((val: string) => {
       nextDescription.current = val
-    }
+    }, [])
 
     return (
       <VStack
@@ -535,7 +534,7 @@ const RestaurantListItemContent = memo(
                   activeTagSlugs={activeTagSlugs}
                   tagSlugs={dishSlugs}
                   editable={editableDishes}
-                  onChangeTags={onChangeDishes}
+                  onChangeTags={handleChangeDishes}
                   isLoaded={isLoaded}
                 />
               </Suspense>
@@ -695,7 +694,7 @@ const RestaurantPeekDishes = memo(
                   size={baseSize * (isEven ? 1.2 : 1)}
                   restaurantSlug={props.restaurantSlug}
                   restaurantId={props.restaurantId}
-                  dish={dish}
+                  {...dish}
                   marginRight={-15}
                   marginTop={isEven ? 0 : -15}
                   showSearchButton={!props.editable}

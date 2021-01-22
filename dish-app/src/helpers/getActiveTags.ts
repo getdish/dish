@@ -1,22 +1,8 @@
 import { HomeStateItem } from '../types/homeTypes'
-import { NavigableTag } from '../types/tagTypes'
-import { allTags } from './allTags'
-import { isValidTag } from './isValidTag'
 import { memoize } from './memoizeWeak'
 
 export const getActiveTags = memoize((state: Partial<HomeStateItem>) => {
-  if ('activeTags' in state) {
-    const { activeTags } = state
-    if (!activeTags) {
-      return []
-    }
-    const tags: NavigableTag[] = []
-    for (const key in activeTags) {
-      if (activeTags[key] && isValidTag(key)) {
-        tags.push(allTags[key])
-      }
-    }
-    return tags
-  }
-  return []
+  if (!('activeTags' in state)) return []
+  const { activeTags } = state
+  return activeTags ? Object.keys(activeTags).filter((x) => activeTags[x]) : []
 })

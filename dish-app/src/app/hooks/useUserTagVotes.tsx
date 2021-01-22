@@ -1,7 +1,7 @@
 import { query, review, reviewUpsert } from '@dish/graph'
 import { Store, useStore } from '@dish/use-store'
 import { isNumber } from 'lodash'
-import { useEffect, useLayoutEffect } from 'react'
+import { useCallback, useEffect, useLayoutEffect, useRef } from 'react'
 import { Toast, useConstant, useForceUpdate, useLazyEffect } from 'snackui'
 
 import { addTagsToCache, allTags } from '../../helpers/allTags'
@@ -60,24 +60,26 @@ export const useUserTagVotes = (
 
   // handles multiple
   const votes: VoteNumber[] = []
-  const setVotes: Function[] = []
+  const setVotes = useRef<Function[]>([])
   for (const tagSlug of tagSlugList) {
     const [vote, setVote] = useUserTagVote({ restaurantSlug, tagSlug })
     votes.push(vote)
-    setVotes.push(setVote)
+    setVotes.current.push(setVote)
   }
+
+  const setVote = useCallback((vote: VoteNumber) => {
+    if (userStore.promptLogin()) {
+      return
+    }
+    for (const setVote of setVotes.current) {
+      setVote(vote)
+    }
+    Toast.show(`Saved`)
+  }, [])
 
   return {
     vote: votes[0] ?? 0, // use the first one when querying multiple
-    setVote: (vote: VoteNumber) => {
-      if (userStore.promptLogin()) {
-        return
-      }
-      for (const setVote of setVotes) {
-        setVote(vote)
-      }
-      Toast.show(`Saved`)
-    },
+    setVote,
   }
 }
 
