@@ -213,6 +213,7 @@ const ListFeedCard = graphql((props: FeedItemList) => {
         return (
           <SkewedCard key={list.slug}>
             <ListCard
+              hoverable={false}
               slug={list.slug}
               userSlug={list.user?.username ?? ''}
               // onHover={() => {
