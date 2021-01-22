@@ -9,6 +9,7 @@ import {
   Spacer,
   Text,
   VStack,
+  useDebounce,
 } from 'snackui'
 
 import { drawerBorderRadius, isWeb } from '../../../constants/constants'
@@ -72,6 +73,7 @@ const RestaurantHeaderContent = memo(
       const drawerWidth = useAppDrawerWidthInner()
       const minWidth = Math.min(drawerWidth, 600)
       const [width, setWidth] = useState(Math.max(minWidth, drawerWidth))
+      const setWidthDebounce = useDebounce(setWidth, 250)
       const scale = width < 601 ? 0.7 : drawerWidth < 700 ? 0.85 : 1
       const fontScale = size === 'sm' ? 0.8 : 1
       const fontSizeBase =
@@ -94,7 +96,7 @@ const RestaurantHeaderContent = memo(
       return (
         <VStack
           onLayout={(x) => {
-            setWidth(x.nativeEvent.layout.width)
+            setWidthDebounce(x.nativeEvent.layout.width)
           }}
           width="100%"
           position="relative"
@@ -255,19 +257,21 @@ const RestaurantHeaderContent = memo(
                               />
                             </VStack>
                             <Spacer size="xs" />
-                            <Suspense fallback={null}>
-                              <RestaurantAddCommentButton
-                                hideLabel
-                                restaurantId={restaurantId}
-                                restaurantSlug={restaurantSlug}
-                              />
-                            </Suspense>
-                            <Spacer size="xs" />
-                            <Suspense fallback={null}>
-                              <RestaurantAddToListButton
-                                restaurantSlug={restaurantSlug}
-                              />
-                            </Suspense>
+                            <HStack>
+                              <Suspense fallback={null}>
+                                <RestaurantAddCommentButton
+                                  hideLabel
+                                  restaurantId={restaurantId}
+                                  restaurantSlug={restaurantSlug}
+                                />
+                              </Suspense>
+                              <Spacer size="xs" />
+                              <Suspense fallback={null}>
+                                <RestaurantAddToListButton
+                                  restaurantSlug={restaurantSlug}
+                                />
+                              </Suspense>
+                            </HStack>
                           </Suspense>
                         </HStack>
 
@@ -275,7 +279,7 @@ const RestaurantHeaderContent = memo(
                       </VStack>
 
                       <VStack>
-                        <HStack marginTop={10} flexWrap="wrap">
+                        <HStack marginTop={16} flexWrap="wrap">
                           <VStack
                             flex={1}
                             minWidth={280}

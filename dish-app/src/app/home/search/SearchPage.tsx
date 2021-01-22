@@ -136,7 +136,7 @@ const SearchPageContent = memo(function SearchPageContent(props: Props) {
   const searchStore = useSearchPageStore()
 
   usePageLoadEffect(props, ({ isRefreshing }) => {
-    if (isRefreshing) {
+    if (isRefreshing && props.isActive) {
       searchPageStore.refresh()
     }
   })
@@ -166,6 +166,7 @@ const SearchPageContent = memo(function SearchPageContent(props: Props) {
   }, [props.isActive, location.data])
 
   useEffect(() => {
+    if (!props.isActive) return
     searchPageStore.runSearch({})
   }, [props.item])
 

@@ -14,10 +14,12 @@ export const ListCard = graphql(
     slug,
     userSlug,
     onHover,
+    hoverable,
   }: {
     slug: string
     userSlug: string
     onHover?: (is: boolean) => void
+    hoverable?: boolean
   }) => {
     const [list] = queryList(slug)
     const colors = getColorsForName(list.name ?? '')
@@ -38,7 +40,7 @@ export const ListCard = graphql(
       <Link name="list" asyncClick params={{ slug, userSlug }}>
         <Card
           size="sm"
-          hoverable
+          hoverable={hoverable}
           title={list.name}
           subTitle={`by ${list.user?.name ?? list.user?.username ?? ''}`}
           backgroundColor={getListColor(list.color) ?? colors.color}

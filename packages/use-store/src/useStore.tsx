@@ -407,6 +407,9 @@ function createProxiedStore(
                       const [head, ...rest] = item
                       if (head) {
                         console.groupCollapsed(...head)
+                        console.groupCollapsed('trace >')
+                        console.trace()
+                        console.groupEnd()
                         for (const log of rest) {
                           console.log(...log)
                         }
