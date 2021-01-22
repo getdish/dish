@@ -4,35 +4,38 @@ import { FullTag, NavigableTag, TagWithNameAndType } from '../types/tagTypes'
 import { getTagSlug } from './getTagSlug'
 
 // cache for lookups in various places
+// not the happiest with this
 
-export const allTags: { [keyPath: string]: FullTag } = {}
+export const allTags: { [slug: string]: FullTag } = {}
 export const allTagsNameToSlug: { [name: string]: string } = {}
 
-window['allTags'] = allTags
-window['allTagsNameToSlug'] = allTagsNameToSlug
-
-// adds to allTags + allTagsNameToSlug
 export async function addTagsToCache(tags: (FullTag | NavigableTag)[]) {
   let added = false
   for (const tag of tags ?? []) {
-    if (tag.name == null || tag.slug === null) {
-      // could warn
-      continue
+    if (addTagToCache(tag)) {
+      added = true
     }
-    const slug = getTagSlug(tag)
-    const existing = allTags[slug]
-    if (existing) {
-      continue
-    }
-    added = true
-    allTags[slug] = tag as any
-    allTagsNameToSlug[tagNameKey(tag.name)] = slug
   }
   return added
 }
 
+export function addTagToCache(tag: FullTag | NavigableTag) {
+  const slug = tag.slug
+  if (!tag.name || !slug) {
+    // could warn
+    return false
+  }
+  const existing = allTags[slug]
+  if (existing || !slug) {
+    return false
+  }
+  allTags[slug] = tag as any
+  allTagsNameToSlug[tagNameKey(tag.name)] = slug
+  return true
+}
+
 export function tagNameKey(name: string) {
-  return slugify(name.toLowerCase(), ' ').replace(/\./g, '-')
+  return slugify(name, ' ').replace(/\./g, '-')
 }
 
 export function getFullTagFromNameAndType(
@@ -46,3 +49,6 @@ export function getFullTagFromNameAndType(
   return null
   // throw new Error('No slugifiable')
 }
+
+window['allTags'] = allTags
+window['allTagsNameToSlug'] = allTagsNameToSlug

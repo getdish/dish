@@ -38,7 +38,7 @@
     "style-loader": "^2.0.0",
     "terser-webpack-plugin": "^5.1.1",
     "url-loader": "^4.1.1",
-    "webpack": "^5.14.0",
+    "webpack": "^5.17.0",
     "webpack-bundle-analyzer": "^4.2.0",
     "webpack-node-externals": "^2.5.2",
     "@mdx-js/loader": "^1.6.22"

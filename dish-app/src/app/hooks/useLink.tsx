@@ -97,31 +97,32 @@ export const useLink = (
   }
 }
 
-const getNormalizeLinkProps = memoize(
-  (
-    props: Partial<LinkButtonProps>,
-    forceUpdate: Function
-  ): LinkButtonProps & { params?: Object; onMouseEnter?: any } => {
-    const linkProps = getNormalizedLink(props)
-    const next = {
-      ...props,
-      ...linkProps,
-      onMouseEnter,
-    }
-    delete next['tag']
-    delete next['tags']
-    return next
-    function onMouseEnter(e) {
-      // get latest on mouseenter, lets you update tags without re-rendering every link
-      const next = getNormalizedLink(props)
-      if (!isEqual(omit(next, 'onPress'), omit(linkProps, 'onPress'))) {
-        forceUpdate()
-      }
-      props['onMouseEnter']?.(e)
-    }
+// dont memoize relies on homeStore.currentState
+const getNormalizeLinkProps = (
+  props: Partial<LinkButtonProps>,
+  forceUpdate: Function
+): LinkButtonProps & { params?: Object; onMouseEnter?: any } => {
+  const linkProps = getNormalizedLink(props)
+  const next = {
+    ...props,
+    ...linkProps,
+    onMouseEnter,
   }
-)
+  delete next['tag']
+  delete next['tags']
+  return next
+  function onMouseEnter(e) {
+    // get latest on mouseenter, lets you update tags without re-rendering every link
+    const next = getNormalizedLink(props)
+    console.log('we got a new one', next)
+    if (!isEqual(omit(next, 'onPress'), omit(linkProps, 'onPress'))) {
+      forceUpdate()
+    }
+    props['onMouseEnter']?.(e)
+  }
+}
 
+// dont memoize relies on homeStore.currentState
 const getNormalizedLink = (props: Partial<LinkButtonProps>) => {
   if (props.tags || props.tag) {
     const tags = tagsToNavigableTags(
@@ -130,9 +131,11 @@ const getNormalizedLink = (props: Partial<LinkButtonProps>) => {
       .filter(isPresent)
       .map((tag) => {
         // TEMP bugfix, until we do new home, we need to fallback to getFullTagFromNameAndType
-        return tag.slug
-          ? allTags[tag.slug] ?? tag
-          : getFullTagFromNameAndType(tag as any) ?? tag
+        if (!tag.slug) {
+          console.warn('no slug?')
+          return getFullTagFromNameAndType(tag as any) ?? tag
+        }
+        return allTags[tag.slug] ?? tag
       })
 
     // add to cache
@@ -143,6 +146,7 @@ const getNormalizedLink = (props: Partial<LinkButtonProps>) => {
       state: homeStore.currentState,
       tags,
     })
+
     return {
       ...(nextState && getNavigateItemForState(nextState)),
       ...(!props.preventNavigate && {

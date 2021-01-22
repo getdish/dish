@@ -31,7 +31,7 @@ import { useQueryLoud } from '../../helpers/useQueryLoud'
 import { queryRestaurant } from '../../queries/queryRestaurant'
 import { HomeStateItemHome } from '../../types/homeTypes'
 import { appMapStore, useSetAppMapResults } from '../AppMapStore'
-import { CardFrame, cardFrameBorderRadius } from '../views/CardFrame'
+import { CardFrame } from '../views/CardFrame'
 import { CommentBubble } from '../views/CommentBubble'
 import { DishView } from '../views/dish/DishView'
 import { ListCard } from '../views/list/ListCard'
@@ -39,6 +39,7 @@ import { SlantedTitle } from '../views/SlantedTitle'
 import { HomePageFooter } from './HomePageFooter'
 import { HomeStackViewProps } from './HomeStackViewProps'
 import { RestaurantCard } from './restaurant/RestaurantCard'
+import { SkewedCard, SkewedCardCarousel } from './SkewedCard'
 import { CardCarousel } from './user/CardCarousel'
 
 export type FeedItem =
@@ -377,48 +378,6 @@ const DishRestaurantsFeedCard = (props: FeedItemDishRestaurants) => {
         })}
       </SkewedCardCarousel>
     </VStack>
-  )
-}
-
-const SkewedCardCarousel = ({ children }: { children: any }) => {
-  return (
-    <ScrollView horizontal showsHorizontalScrollIndicator={false}>
-      <HStack paddingVertical={5}>
-        {children}
-        <VStack width={100} height={100} />
-      </HStack>
-    </ScrollView>
-  )
-}
-
-const SkewedCard = (props: StackProps) => {
-  return (
-    <VStack
-      marginRight={-105}
-      className="ease-in-out-faster"
-      transform={[{ scale: 0.7 }, { perspective: 1000 }, { rotateY: '-10deg' }]}
-      borderRadius={cardFrameBorderRadius}
-      shadowColor="#000"
-      shadowOpacity={0.14}
-      shadowRadius={10}
-      shadowOffset={{ height: 4, width: 10 }}
-      position="relative"
-      hoverStyle={{
-        transform: [
-          { scale: 0.72 },
-          { perspective: 1000 },
-          { rotateY: '-10deg' },
-        ],
-      }}
-      pressStyle={{
-        transform: [
-          { scale: 0.68 },
-          { perspective: 1000 },
-          { rotateY: '-10deg' },
-        ],
-      }}
-      {...props}
-    />
   )
 }
 

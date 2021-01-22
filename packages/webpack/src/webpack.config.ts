@@ -79,6 +79,11 @@ export default function createWebpackConfig({
       infrastructureLogging: {
         debug: process.env.DEBUG_CACHE ? /webpack\.cache/ : false,
       },
+      experiments: {
+        // starts compiling import() lazily
+        // seems to not work
+        // lazyCompilation: !isProduction,
+      },
       cache: {
         name: `${process.env.TARGET}${process.env.NODE_ENV}`,
         type: 'filesystem',
