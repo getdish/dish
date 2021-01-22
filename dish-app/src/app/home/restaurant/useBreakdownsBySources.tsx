@@ -1,4 +1,5 @@
 import { restaurant_tag } from '@dish/graph'
+import { isPresent } from '@dish/helpers/src'
 
 import { queryRestaurant } from '../../../queries/queryRestaurant'
 import { NavigableTag } from '../../../types/tagTypes'
@@ -13,9 +14,9 @@ export const useBreakdownsBySources = (
   const rtags = restaurant?.tags()
   let scoreContributingTags: restaurant_tag[] = []
   if (reviewTags.length) {
-    scoreContributingTags = reviewTags.map((t) =>
-      rtags.find((rt) => rt.tag.name == t.name)
-    )
+    scoreContributingTags = reviewTags
+      .map((t) => rtags.find((rt) => rt.tag.name == t.name))
+      .filter(isPresent)
   } else {
     scoreContributingTags = rtags
   }

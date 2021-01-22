@@ -7,7 +7,7 @@ export const useTotalReviews = (restaurant: RestaurantQuery) => {
     return 0
   }
   const agg = restaurant.reviews_aggregate
-  return agg().aggregate.count() ?? 0
+  return agg().aggregate?.count() ?? 0
 }
 
 export const useTotalNativeReviews = (restaurant: RestaurantQuery) => {
@@ -18,7 +18,7 @@ export const useTotalNativeReviews = (restaurant: RestaurantQuery) => {
   return (
     agg({
       where: { source: { _eq: 'dish' } },
-    }).aggregate.count() ?? 0
+    }).aggregate?.count() ?? 0
   )
 }
 
@@ -30,6 +30,6 @@ export const useTotalExternalReviews = (restaurant: RestaurantQuery) => {
   return (
     agg({
       where: { source: { _neq: 'dish' } },
-    }).aggregate.count() ?? 0
+    }).aggregate?.count() ?? 0
   )
 }

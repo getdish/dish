@@ -99,8 +99,8 @@ export const MapView = (props: MapProps) => {
 
   useEffect(() => {
     if (!map) return
-    if (!hasChangedStyle(map, style)) return
-    map.setStyle(style)
+    if (!hasChangedStyle(map, style!)) return
+    map.setStyle(style!)
   }, [map, style])
 
   // selected
@@ -108,7 +108,7 @@ export const MapView = (props: MapProps) => {
     if (!selected) return
     if (!map) return
     const index = features.findIndex((x) => x.properties?.id === selected)
-    setActive(map, props, internal.current, index, false)
+    setActive(map, props, internal.current!, index, false)
   }, [map, features, selected])
 
   const prevHoveredId = useRef<number>()
@@ -125,7 +125,7 @@ export const MapView = (props: MapProps) => {
       mapSetFeature(map, prevHoveredId.current, { hover: false })
     }
     const featureId = features.findIndex(
-      (feature) => feature.properties.id === hovered
+      (feature) => feature.properties?.id === hovered
     )
 
     if (featureId !== -1) {
@@ -137,10 +137,12 @@ export const MapView = (props: MapProps) => {
 
   // center + span
   useEffect(() => {
-    if (!map) return undefined
+    if (!map) return
 
     // be sure to cancel next move callback
-    internal.current.currentMoveCancel?.()
+    const int = internal.current
+    if (!int) return
+    int.currentMoveCancel?.()
 
     // west, south, east, north
     const next: [number, number, number, number] = [
@@ -151,19 +153,19 @@ export const MapView = (props: MapProps) => {
     ]
 
     if (hasMovedAtLeast(getCurrentLocation(map), { center, span })) {
-      internal.current.isAwaitingNextMove = true
+      int.isAwaitingNextMove = true
       const cancelSeries = series([
         () => fullyIdle({ max: 500 }),
         () => {
           map?.fitBounds(next, {
             duration: 650,
           })
-          internal.current.isAwaitingNextMove = false
+          int.isAwaitingNextMove = false
         },
       ])
       return () => {
         cancelSeries()
-        internal.current.isAwaitingNextMove = false
+        int.isAwaitingNextMove = false
       }
     }
 
@@ -190,7 +192,7 @@ export const MapView = (props: MapProps) => {
 
     if (props.showRank) {
       for (const [index, feature] of features.entries()) {
-        feature.properties.searchPosition = index + 1
+        feature.properties!.searchPosition = index + 1
       }
     }
 
@@ -267,8 +269,8 @@ function setupMapEffect({
   setMap: React.Dispatch<React.SetStateAction<mapboxgl.Map>>
   props: MapProps
   mapNode: HTMLElement
-  internal: React.MutableRefObject<MapInternalState>
-  isMounted?: React.RefObject<boolean>
+  internal: React.MutableRefObject<MapInternalState | undefined | null>
+  isMounted: React.RefObject<boolean>
   getProps: () => MapProps
 }) {
   const map = new mapboxgl.Map({
@@ -325,6 +327,7 @@ function setupMapEffect({
 
         const firstSymbolLayerId = (() => {
           const layers = map.getStyle().layers
+          if (!layers) return
           let val
           for (var i = 0; i < layers.length; i++) {
             if (layers[i].type === 'symbol') {
@@ -544,10 +547,11 @@ function setupMapEffect({
           })
 
           // temp regions supprot until we normalize naming at tile level
+          const props = feature.properties ?? {}
           const name =
-            feature.properties.nhood ??
-            (feature.properties.hrrcity
-              ? feature.properties.hrrcity
+            props.nhood ??
+            (props.hrrcity
+              ? props.hrrcity
                   .toLowerCase()
                   .replace('ca- ', '')
                   .split(' ')
@@ -562,7 +566,7 @@ function setupMapEffect({
           curRegion = {
             geometry: feature.geometry as any,
             name: name,
-            slug: feature.properties.slug ?? slugify(name),
+            slug: props.slug ?? slugify(name),
           }
           updateOnSelectRegion()
         }, 300)
@@ -632,10 +636,10 @@ function setupMapEffect({
                 return
               })
             }
-            if (point.properties.id) {
+            if (point.properties?.id) {
               console.log('click set active')
               // click
-              setActive(map, getProps(), internal.current, +point.id)
+              setActive(map, getProps(), internal.current!, +(point?.id ?? 0))
               return
             } else {
               console.warn('no features', e)
@@ -883,7 +887,7 @@ function setupMapEffect({
           map.off('mouseenter', POINT_LAYER_ID, hoverCluster)
         })
         function unHoverCluster() {
-          getProps().onHover(null)
+          getProps().onHover?.(null)
           if (map) {
             map.getCanvas().style.cursor = ''
           }
@@ -910,13 +914,13 @@ function setupMapEffect({
         }, 20)
 
         const handleMoveEnd = () => {
-          if (internal.current.isAwaitingNextMove) {
+          if (internal.current?.isAwaitingNextMove) {
             return
           }
           handleMoveEndDebounced()
         }
 
-        internal.current.currentMoveCancel = handleMoveEndDebounced.cancel
+        internal.current!.currentMoveCancel = handleMoveEndDebounced.cancel
 
         const handleMoveStart = () => {
           handleMoveEndDebounced.cancel()
@@ -937,7 +941,7 @@ function setupMapEffect({
 
         let lastUpdate = null
         function updateOnSelectRegion() {
-          if (isMouseDown) return
+          if (!curRegion || isMouseDown) return
           if (!isEqual(lastUpdate, curRegion)) {
             getProps().onSelectRegion?.(curRegion)
             curRegion = null
@@ -1130,5 +1134,5 @@ window['getCurrentLocation'] = getCurrentLocation
 // only way to check if matching, i believe
 function hasChangedStyle(map: mapboxgl.Map, style: string) {
   const { sprite } = map.getStyle()
-  return !sprite.includes(style.replace('mapbox://styles', ''))
+  return !sprite?.includes(style.replace('mapbox://styles', ''))
 }

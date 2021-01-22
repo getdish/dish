@@ -96,7 +96,7 @@ export default memo(function SearchPage(props: Props) {
                 router.navigate({
                   name: 'list',
                   params: {
-                    userSlug: userStore.user.username,
+                    userSlug: userStore.user?.username ?? '',
                     slug: 'create',
                     state: getActiveTags(state.activeTags)
                       .map((x) => x.slug)
@@ -264,7 +264,7 @@ const SearchResultsContent = (props: Props) => {
     results = [
       {
         isPlaceholder: true,
-        meta: null,
+        meta: null as any,
         id: '',
         slug: '',
       },
@@ -379,7 +379,7 @@ type SearchPageScrollViewProps = ScrollViewProps & {
 
 const SearchPageTitle = memo(() => {
   const media = useMedia()
-  const curProps = useContext(SearchPagePropsContext)
+  const curProps = useContext(SearchPagePropsContext)!
   const { title, subTitle } = getTitleForState(curProps.item, {
     lowerCase: false,
   })
@@ -401,7 +401,7 @@ const SearchPageTitle = memo(() => {
 
 const SearchPageScrollView = forwardRef<ScrollView, SearchPageScrollViewProps>(
   ({ children, onSizeChanged, ...props }, ref) => {
-    const curProps = useContext(SearchPagePropsContext)
+    const curProps = useContext(SearchPagePropsContext)!
     const scrollRef = useRef<ScrollView>()
     const theme = useTheme()
 
@@ -435,7 +435,7 @@ const SearchPageScrollView = forwardRef<ScrollView, SearchPageScrollViewProps>(
     const weights = activeTags.map((tag) => {
       return !meta
         ? 1
-        : meta.main_tag === tag.slug.replace('lenses__', '')
+        : meta.main_tag === tag.slug?.replace('lenses__', '')
         ? meta.scores.weights.main_tag * 2
         : meta.scores.weights.rishes * 2
     })
@@ -454,7 +454,7 @@ const SearchPageScrollView = forwardRef<ScrollView, SearchPageScrollViewProps>(
       <VStack onLayout={handleLayout} flex={1}>
         <ContentScrollView
           id="search"
-          ref={combineRefs(ref, scrollRef)}
+          ref={combineRefs(ref, scrollRef) as any}
           {...props}
         >
           <SearchPageTitle />

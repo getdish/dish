@@ -70,11 +70,16 @@ export function handleErrors(fn: Handler) {
       if (err.name == 'RouteNext') {
         return
       }
-      if (err.name === 'RouteExit') {
+      if (err.name !== 'RouteExit') {
+        if (err.status) {
+          res.sendStatus(err.status)
+        }
+        if (err.message) {
+          err.sendText(err.message)
+        }
         return
       }
       res.sendStatus(500)
-      console.error(`Route error: ${err}`)
     }
   }
 }

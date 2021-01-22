@@ -23,23 +23,15 @@ export const RestaurantAddCommentButton = graphql(
     return (
       <SmallButton
         name="restaurantReview"
+        theme="active"
         params={{ slug: restaurantSlug }}
         pressStyle={{
           opacity: 0.6,
         }}
+        icon={<Edit color="var(--color)" size={size ?? 16} />}
         {...props}
       >
-        <Text fontWeight="700" fontSize={14}>
-          {hideLabel ? '' : !!review?.text ? 'Edit review' : 'Review'}
-        </Text>
-        <Edit
-          size={size ?? 16}
-          style={{
-            opacity: 0.5,
-            marginRight: -2,
-            marginLeft: 8,
-          }}
-        />
+        {hideLabel ? null : !!review?.text ? 'Edit note' : 'Note'}
       </SmallButton>
     )
   }

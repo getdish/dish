@@ -69,7 +69,8 @@ export const RestaurantDishPhotos = memo(
                   selected={selected === null}
                   {...(!!selectable && {
                     onPress() {
-                      onSelect?.(null)
+                      console.warn('empty str?')
+                      onSelect?.('')
                     },
                   })}
                 />

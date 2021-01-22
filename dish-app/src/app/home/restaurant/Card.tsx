@@ -32,16 +32,16 @@ export function Card({
   backgroundColor,
   size,
 }: {
-  below?: string
+  below?: string | null
   outside?: any
-  photo?: string | JSX.Element
+  photo?: string | JSX.Element | null
   title: string
-  subTitle?: string
+  subTitle?: string | null
   hideInfo?: boolean
   aspectFixed?: boolean
   hoverable?: boolean
   size?: 'sm' | 'md'
-  backgroundColor?: string
+  backgroundColor?: string | null
 }) {
   // const theme = useTheme()
   const { altPastelColor, pastelColor, lightColor, color } = getColorsForName(
@@ -67,7 +67,7 @@ export function Card({
         alignSelf="center"
         position="relative"
         borderRadius={cardFrameBorderRadius}
-        backgroundColor={backgroundColor}
+        backgroundColor={backgroundColor ?? ''}
       >
         <AbsoluteVStack
           className="ease-in-out"

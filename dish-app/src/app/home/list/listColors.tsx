@@ -6,6 +6,6 @@ import {
 
 export const listColors = [...allColors, ...allColorsPastel, ...allDarkColor]
 
-export function getListColor(index: number) {
-  return listColors[index]
+export function getListColor(index?: number | null) {
+  return listColors[index ?? 0]
 }

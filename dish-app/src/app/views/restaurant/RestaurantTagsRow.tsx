@@ -36,6 +36,7 @@ export const RestaurantTagsRow = memo(
     if (props.tags) {
       tags = props.tags
     } else {
+      // @ts-ignore
       tags = queryRestaurantTags({ restaurantSlug, limit: props.max })
     }
     if (showMore) {

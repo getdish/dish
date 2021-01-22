@@ -6,7 +6,7 @@ export const useLastValueWhen = <A extends () => any>(
   memoFn: A,
   conditional: boolean
 ): ReturnType<A> => {
-  const key = useRef(null)
+  const key = useRef(0)
   if (!conditional) {
     key.current = Math.random()
   }

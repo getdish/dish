@@ -379,7 +379,7 @@ const ValidatedInput = ({
     <>
       <Controller
         control={control}
-        name={name}
+        name={name ?? ''}
         defaultValue={defaultValue ?? ''}
         rules={rules}
         render={({ onChange, onBlur, value }) => {
@@ -391,7 +391,7 @@ const ValidatedInput = ({
               value={value}
               onChangeText={(val) => {
                 onChange(val)
-                rest?.onChangeText(val)
+                rest?.onChangeText?.(val)
               }}
             />
           )
@@ -407,7 +407,7 @@ const FormError = ({ error }: { error: FieldError | null }) => {
     return null
   }
 
-  const name = capitalize(error.ref.name)
+  const name = capitalize(error.ref?.name)
 
   if (error.type === 'required') {
     return <ErrorParagraph>{name} is required.</ErrorParagraph>

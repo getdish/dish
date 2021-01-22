@@ -31,7 +31,7 @@ export const UserOnboard = graphql(
     const [charIndex, setCharIndex] = useState(0)
     const username = userStore.user?.username ?? ''
     const user = useUserQuery(username)
-    const inputAvatar = useRef(null)
+    const inputAvatar = useRef<HTMLInputElement>(null)
 
     useEffect(() => {
       const avatar = inputAvatar.current
@@ -39,7 +39,7 @@ export const UserOnboard = graphql(
       if (!avatar || !form) return
 
       const handleUpload = async (e) => {
-        const formData = new FormData(form)
+        const formData = new FormData(form!)
         try {
           Toast.show('Uploading...')
           const avatar = await Auth.uploadAvatar(formData)

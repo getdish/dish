@@ -129,7 +129,7 @@ export default class CircularProgress extends React.PureComponent<any> {
                 stroke={backgroundColor}
                 strokeWidth={backgroundWidth || width}
                 strokeLinecap={lineCap}
-                strokeDasharray={strokeDasharrayBackground}
+                strokeDasharray={strokeDasharrayBackground ?? ''}
                 fill="transparent"
               />
             )}
@@ -139,7 +139,7 @@ export default class CircularProgress extends React.PureComponent<any> {
                 stroke={tintColor}
                 strokeWidth={width}
                 strokeLinecap={fillLineCap}
-                strokeDasharray={strokeDasharrayTint}
+                strokeDasharray={strokeDasharrayTint ?? ''}
                 fill="transparent"
               />
             )}

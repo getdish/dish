@@ -66,7 +66,7 @@ export const RestaurantPhotosRow = memo(
                         <Image
                           source={{
                             uri: getImageUrl(
-                              photo.photo.url,
+                              photo.photo.url!,
                               photoWidth,
                               photoHeight,
                               100

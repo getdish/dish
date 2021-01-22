@@ -112,6 +112,7 @@ export const GalleryLightbox = ({
   const { data: hasMore } = useTransactionQuery(
     (_query, { pagination, restaurant_id }) => {
       return (
+        // @ts-ignore
         (query
           .photo_xref_aggregate({
             where: {
@@ -167,13 +168,14 @@ export const GalleryLightbox = ({
   useEffect(() => {
     if (photosList[activeIndex]?.url) {
       setActiveImage({
-        url: photosList[activeIndex].url,
+        url: photosList[activeIndex].url ?? '',
         index: activeIndex,
       })
     }
   }, [activeIndex, setActiveImage, photosList])
 
   const setLeftImage = () =>
+    // @ts-expect-error
     setActiveImage((prevActive) => {
       const currentIndex = prevActive.index
 
@@ -190,6 +192,7 @@ export const GalleryLightbox = ({
     })
 
   const setRightImage = () => {
+    // @ts-expect-error
     setActiveImage((prevActive) => {
       const currentIndex = prevActive.index
 
@@ -272,7 +275,7 @@ export const GalleryLightbox = ({
         photos={photosList}
         onPhotoPress={(photo, index) => {
           setActiveImage({
-            url: photo.url,
+            url: photo.url ?? '',
             index,
           })
         }}
@@ -339,7 +342,7 @@ const GalleryLightboxPhotosList = ({
   return (
     <ScrollView
       horizontal
-      ref={scrollView}
+      ref={scrollView as any}
       onScroll={(ev) => {
         currentScroll.current = ev.nativeEvent.contentOffset.x
         if (ev.nativeEvent.contentOffset.x >= maxScrollRight) {

@@ -28,8 +28,17 @@ export async function getUserFromEmailOrUsername(login: string) {
 }
 
 export async function getUserFromRoute(req: Req) {
-  const { userId } = getJWT(req)
-  return await userFindOne({ id: userId })
+  const jwt = getJWT(req)
+  if (!jwt) return null
+  return await userFindOne({ id: jwt.userId })
+}
+
+export async function ensureUserOnRoute(req: Req) {
+  const res = await getUserFromRoute(req)
+  if (!res) {
+    throw new RouteExit(RouteExit.errors.unauthorized)
+  }
+  return res
 }
 
 export async function ensureRole(
@@ -42,7 +51,7 @@ export async function ensureRole(
     if (!user) {
       throw new Error(`No user`)
     }
-    const permissions = access[user.role]
+    const permissions = access[user.role ?? '']
     if (!permissions.includes(minimumPermission ?? 'contributor')) {
       throw new Error(`No permission`)
     }

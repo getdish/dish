@@ -768,7 +768,7 @@ function searchDishTags(searchQuery: string, cuisine?: string) {
       icon: r.icon ?? '🍽',
       type: 'dish',
       description: r.parent?.name ?? '',
-      slug: r.slug,
+      slug: r.slug ?? '',
     })
   )
 }

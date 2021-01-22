@@ -1,5 +1,6 @@
 import { isPresent } from '@dish/helpers'
 
+import { initialHomeState } from '../constants/initialHomeState'
 import {
   HomeActiveTagsRecord,
   HomeStateItem,
@@ -13,17 +14,14 @@ import { shouldBeOnSearch } from './shouldBeOnSearch'
 
 export const getNextState = (navState: HomeStateNav): HomeStateItem => {
   const {
-    state,
     tags = [],
     disallowDisableWhenActive = false,
     replaceSearch = false,
   } = navState
-
+  let { state } = navState
   if (!state) {
-    console.error('getNextState, no state', state)
-    return null
+    state = initialHomeState
   }
-
   let searchQuery = state.searchQuery ?? ''
   let activeTags: HomeActiveTagsRecord = replaceSearch
     ? {}

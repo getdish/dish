@@ -55,9 +55,11 @@ async function getLocationFromRoute(
     const locations = await searchLocations(params.region.split('-').join(' '))
     if (locations.length) {
       const [nearest] = locations
-      return {
-        center: nearest.center,
-        span: bboxToSpan(nearest.bbox),
+      if (nearest.center && nearest.bbox) {
+        return {
+          center: nearest.center,
+          span: bboxToSpan(nearest.bbox),
+        }
       }
     }
   }

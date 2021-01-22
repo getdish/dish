@@ -23,8 +23,8 @@ export type LinkSharedProps = Pick<
   AProps,
   'href' | 'target' | 'children' | 'className' | 'onClick'
 > & {
-  tag?: Partial<NavigableTag>
-  tags?: Partial<NavigableTag>[]
+  tag?: Partial<NavigableTag> | null
+  tags?: Partial<NavigableTag>[] | null
   replace?: boolean
   stopPropagation?: boolean
   replaceSearch?: boolean
@@ -32,12 +32,12 @@ export type LinkSharedProps = Pick<
   preventNavigate?: boolean
   navigateAfterPress?: boolean
   asyncClick?: boolean
-  onMouseDown?: Function
+  onMouseDown?: Function | null
 }
 
 export type LinkButtonNamedProps<A = any, B = any> = {
-  name?: A
-  params?: B
+  name?: A | null
+  params?: B | null
   onPress?: Function
 }
 

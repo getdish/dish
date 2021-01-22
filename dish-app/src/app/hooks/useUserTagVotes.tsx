@@ -122,6 +122,7 @@ export const useUserTagVote = (props: VoteStoreProps) => {
   useEffect(() => {
     let unmounted = false
     if (!tagId && tag) {
+      // @ts-ignore
       getFullTags([tag]).then(([fullTag]) => {
         if (unmounted) return
         if (addTagsToCache([fullTag])) {

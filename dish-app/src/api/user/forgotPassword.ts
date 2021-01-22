@@ -15,7 +15,11 @@ export default jsonRoute(async (req, res) => {
       user.password_reset_token = token
       user.password_reset_date = new Date()
       await userUpdate(user)
-      await sendPasswordResetEmail(user.email, token)
+      if (user.email) {
+        await sendPasswordResetEmail(user.email, token)
+      } else {
+        throw new Error(`no email`)
+      }
     }
     res.status(204)
     return

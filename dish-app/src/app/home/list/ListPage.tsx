@@ -12,7 +12,7 @@ import {
   slugify,
   useRefetch,
 } from '@dish/graph'
-import { assertIsString } from '@dish/helpers'
+import { assertIsString, assertPresent, isPresent } from '@dish/helpers'
 import { Heart, Plus, X } from '@dish/react-feather'
 import React, { useEffect, useRef, useState } from 'react'
 import { Switch } from 'react-native'
@@ -60,24 +60,22 @@ import { getListColor, listColors } from './listColors'
 type Props = StackItemProps<HomeStateItemList>
 
 export default function ListPage(props: Props) {
-  const isCreating = props.item.slug === 'create'
+  const isCreating = props.item.slug.startsWith('create')
 
   useEffect(() => {
     if (!isCreating) return
     // create a new list and redirect to it
     return series([
-      () => sleep(500),
       () => fetch('/api/randomName').then((res) => res.text()),
       async (randomName) => {
-        assertIsString(userStore.user.id, 'no-user-id')
+        // assertIsString(userStore.user.id, 'expected user id')
         const [list] = await listInsert([
           {
             name: randomName,
             slug: slugify(randomName),
-            user_id: userStore.user.id,
+            user_id: userStore.user?.id ?? 'anon',
           },
         ])
-        console.log('list', list)
         return list
       },
       (list) => {
@@ -132,13 +130,14 @@ const setIsEditing = (val: boolean) => {
   })
 }
 
-function useListRestaurants(list: list) {
+function useListRestaurants(list?: list) {
   const refetch = useRefetch()
-  list.id
-  const itemsQuery = list?.restaurants({
-    limit: 50,
-    order_by: [{ position: order_by.asc }],
-  })
+  list?.id
+  const itemsQuery =
+    list?.restaurants({
+      limit: 50,
+      order_by: [{ position: order_by.asc }],
+    }) ?? []
   const items =
     itemsQuery.map((r) => {
       const dishQuery = r.tags({
@@ -159,6 +158,7 @@ function useListRestaurants(list: list) {
     await mutate((mutation) => {
       // seed because it doesnt do it all in one step causing uniqueness violations
       const seed = Math.floor(Math.random() * 10000)
+      assertPresent(list)
       ids.forEach((rid, position) => {
         mutation.update_list_restaurant_by_pk({
           pk_columns: {
@@ -168,7 +168,7 @@ function useListRestaurants(list: list) {
           _set: {
             position: (position + 1) * seed,
           },
-        }).__typename
+        })?.__typename
       })
     })
     await refetch(list)
@@ -180,6 +180,8 @@ function useListRestaurants(list: list) {
       setOrder,
       add: async (id: string) => {
         await mutate((mutation) => {
+          assertPresent(list)
+          assertPresent(userStore.user)
           mutation.insert_list_restaurant_one({
             object: {
               // negative to go first + space it out
@@ -188,7 +190,7 @@ function useListRestaurants(list: list) {
               restaurant_id: id,
               user_id: userStore.user.id,
             },
-          }).__typename
+          })?.__typename
         })
         await Promise.all([refetch(list), refetch(itemsQuery)])
       },
@@ -206,12 +208,12 @@ function useListRestaurants(list: list) {
                 _eq: id,
               },
             },
-          }).affected_rows
+          })?.affected_rows
         })
         await Promise.all([refetch(list), refetch(itemsQuery)])
       },
       async setDishes(id: string, dishTags: string[]) {
-        const { dishQuery } = items.find((x) => x.restaurantId === id)
+        const { dishQuery } = items.find((x) => x.restaurantId === id) ?? {}
         const rtagids = await resolved(() =>
           query
             .restaurant_tag({ where: { tag: { slug: { _in: dishTags } } } })
@@ -226,8 +228,10 @@ function useListRestaurants(list: list) {
                 _eq: id,
               },
             },
-          }).__typename
+          })?.__typename
           // then add news ones
+          assertPresent(list)
+          assertPresent(userStore.user)
           for (const [position, rid] of rtagids.entries()) {
             mutation.insert_list_restaurant_tag_one({
               object: {
@@ -237,7 +241,7 @@ function useListRestaurants(list: list) {
                 user_id: userStore.user.id,
                 position,
               },
-            }).__typename
+            })?.__typename
           }
         })
         refetch(dishQuery)
@@ -258,7 +262,7 @@ const ListPageContent = graphql((props: Props) => {
   const [color, setColor] = useStateSynced(getListColor(list?.color) ?? '#999')
   const [isPublic, setPublic] = useStateSynced(list?.public ?? true)
   const [restaurants, restaurantActions] = useListRestaurants(list)
-  const username = list.user.name ?? list.user.username
+  const username = list.user?.name ?? list.user?.username ?? ''
 
   useEffect(() => {
     if (isEditing) {
@@ -385,7 +389,10 @@ const ListPageContent = graphql((props: Props) => {
           title={
             <VStack>
               <ScalingPressable>
-                <Link name="user" params={{ username: list.user.username }}>
+                <Link
+                  name="user"
+                  params={{ username: list.user?.username ?? '' }}
+                >
                   <SlantedTitle size="xs" alignSelf="center">
                     {username}'s
                   </SlantedTitle>
@@ -465,7 +472,7 @@ const ListPageContent = graphql((props: Props) => {
               marginVertical={-12}
               marginHorizontal={-8}
               textAlign="center"
-              defaultValue={list.description}
+              defaultValue={list.description ?? ''}
               onChangeText={(val) => {
                 draft.current.description = val
               }}
@@ -479,7 +486,7 @@ const ListPageContent = graphql((props: Props) => {
 
         {restaurants.map(
           ({ restaurantId, restaurant, comment, dishes, position }, index) => {
-            const dishSlugs = dishes.map((x) => x.tag.slug)
+            const dishSlugs = dishes.map((x) => x?.tag.slug).filter(isPresent)
             if (!restaurant.slug) {
               return null
             }
@@ -490,7 +497,7 @@ const ListPageContent = graphql((props: Props) => {
                 restaurantId={restaurantId}
                 restaurantSlug={restaurant.slug}
                 rank={index + 1}
-                description={comment}
+                description={comment ?? ''}
                 hideTagRow
                 above={
                   <>
@@ -519,7 +526,7 @@ const ListPageContent = graphql((props: Props) => {
                   </>
                 }
                 flexibleHeight
-                dishSlugs={dishSlugs.length ? dishSlugs : null}
+                dishSlugs={dishSlugs.length ? dishSlugs : undefined}
                 editableDishes={isEditing}
                 onChangeDishes={async (dishes) => {
                   console.log('should change dishes', dishes)
@@ -596,7 +603,7 @@ function ColorPicker({
 function promote(items: any[], index: number): any[] {
   const now = [...items]
   const [id] = now.splice(index, 1)
-  if (!id) return
+  if (!id) return []
   now.splice(index - 1, 0, id)
   return now
 }

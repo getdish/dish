@@ -40,7 +40,7 @@ export default memo(function UserEditPage() {
               router.navigate({
                 name: 'user',
                 params: {
-                  username: userStore.user?.username,
+                  username: userStore.user?.username ?? '',
                 },
               })
             }}

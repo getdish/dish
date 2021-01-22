@@ -1,5 +1,5 @@
 import { graphql } from '@dish/graph'
-import { ellipseText } from '@dish/helpers'
+import { ellipseText, isPresent } from '@dish/helpers'
 import React from 'react'
 import { Image } from 'react-native'
 import {
@@ -210,64 +210,67 @@ export const RestaurantSourcesOverview = graphql(
     return (
       <VStack width="100%" marginVertical={-spacing}>
         <Grid itemMinWidth={280}>
-          {items.map(({ name, sentence, image, positive, negative }) => {
-            return (
-              <VStack
-                key={name}
-                shadowColor="#000"
-                shadowOpacity={0.05}
-                borderWidth={1}
-                borderColor="#eee"
-                backgroundColor="#fff"
-                shadowRadius={15}
-                shadowOffset={{ height: 3, width: 0 }}
-                padding={15}
-                margin={spacing}
-                borderRadius={10}
-                position="relative"
-                flex={1}
-              >
-                <SlantedTitle marginTop={-30} size="xs" alignSelf="center">
-                  {name}
-                </SlantedTitle>
-                <Spacer size="sm" />
-                <AbsoluteVStack top={-10} right={-10}>
-                  <Image
-                    source={{ uri: image }}
-                    style={{
-                      width: 38,
-                      height: 38,
-                      borderRadius: 100,
-                    }}
-                  />
-                </AbsoluteVStack>
-                <Spacer />
-                <HStack justifyContent="center">
-                  <SentimentText sentiment={positive}>Positive</SentimentText>
-                  <Spacer size="xs" />
-                  <SentimentText sentiment={negative}>Negative</SentimentText>
-                </HStack>
-                <Spacer />
-                <Paragraph sizeLineHeight={0.9}>
-                  {!!tagName && isWeb ? (
-                    <div
-                      className="block"
-                      dangerouslySetInnerHTML={{
-                        __html: sentence
-                          .replace(/\s+/g, ' ')
-                          .replace(
-                            new RegExp(tagName, 'gi'),
-                            (match) => `<mark>${match}</mark>`
-                          ),
+          {items
+            .filter(isPresent)
+            .map(({ name, sentence, image, positive, negative }) => {
+              return (
+                <VStack
+                  key={name}
+                  shadowColor="#000"
+                  shadowOpacity={0.05}
+                  borderWidth={1}
+                  borderColor="#eee"
+                  backgroundColor="#fff"
+                  shadowRadius={15}
+                  shadowOffset={{ height: 3, width: 0 }}
+                  padding={15}
+                  margin={spacing}
+                  borderRadius={10}
+                  position="relative"
+                  flex={1}
+                >
+                  <SlantedTitle marginTop={-30} size="xs" alignSelf="center">
+                    {name}
+                  </SlantedTitle>
+                  <Spacer size="sm" />
+                  <AbsoluteVStack top={-10} right={-10}>
+                    <Image
+                      source={{ uri: image }}
+                      style={{
+                        width: 38,
+                        height: 38,
+                        borderRadius: 100,
                       }}
                     />
-                  ) : (
-                    sentence
-                  )}
-                </Paragraph>
-              </VStack>
-            )
-          })}
+                  </AbsoluteVStack>
+                  <Spacer />
+                  <HStack justifyContent="center">
+                    <SentimentText sentiment={positive}>Positive</SentimentText>
+                    <Spacer size="xs" />
+                    <SentimentText sentiment={negative}>Negative</SentimentText>
+                  </HStack>
+                  <Spacer />
+                  <Paragraph sizeLineHeight={0.9}>
+                    {!!tagName && isWeb ? (
+                      <div
+                        className="block"
+                        dangerouslySetInnerHTML={{
+                          __html:
+                            sentence
+                              ?.replace(/\s+/g, ' ')
+                              .replace(
+                                new RegExp(tagName, 'gi'),
+                                (match) => `<mark>${match}</mark>`
+                              ) ?? '',
+                        }}
+                      />
+                    ) : (
+                      sentence
+                    )}
+                  </Paragraph>
+                </VStack>
+              )
+            })}
         </Grid>
       </VStack>
     )

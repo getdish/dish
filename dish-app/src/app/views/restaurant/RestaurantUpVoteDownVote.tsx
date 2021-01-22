@@ -66,7 +66,7 @@ const RestaurantUpVoteDownVoteContents = graphql(
     const [restaurant] = queryRestaurant(restaurantSlug)
     const { vote, setVote } = useUserTagVotes(
       restaurantSlug,
-      Object.keys(activeTagSlugs).reduce(
+      Object.keys(activeTagSlugs ?? {}).reduce(
         (acc, cur) => ({ ...acc, [cur]: true }),
         {}
       )
@@ -109,7 +109,7 @@ const RestaurantUpVoteDownVoteContents = graphql(
               vote={vote}
               setVote={setVote}
               onClickPoints={onClickPoints}
-              isMultiple={activeTagSlugs.length > 1}
+              isMultiple={activeTagSlugs ? activeTagSlugs.length > 1 : false}
               display={display}
             />
           </VStack>

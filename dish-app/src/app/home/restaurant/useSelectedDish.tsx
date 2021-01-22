@@ -8,7 +8,7 @@ export const useSelectedDish = (tagName?: string | null) => {
   const getSelectedDish = useGet(selectedDish)
 
   useEffect(() => {
-    setSelectedDish(tagName)
+    if (tagName) setSelectedDish(tagName)
   }, [tagName])
 
   const setSelectedDishToggle = useCallback((name: string | null) => {
@@ -27,7 +27,7 @@ export const useSelectedDish = (tagName?: string | null) => {
       params,
       replace: true,
     })
-    setSelectedDish(next)
+    if (next) setSelectedDish(next)
   }, [])
   return { selectedDish, setSelectedDishToggle }
 }

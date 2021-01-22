@@ -1,10 +1,12 @@
 export class AssertionError extends Error {}
 export class AsserionNullError extends AssertionError {}
 
+export type NonNullish = string | number | boolean | symbol | bigint | object
+
 export function assertPresent(
   value: any,
   why?: string
-): asserts value is null | undefined {
+): asserts value is NonNullish {
   if (value !== undefined && value !== null) {
     throw new AssertionError(`Expected ${why ?? 'value: ' + value}`)
   }

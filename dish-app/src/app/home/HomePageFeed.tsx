@@ -89,7 +89,7 @@ export const HomePageFeed = memo(
     item,
     isActive,
   }: HomeStackViewProps<HomeStateItemHome> & {
-    region?: RegionNormalized
+    region?: RegionNormalized | null
     item: HomeStateItemHome
   }) {
     const media = useMedia()
@@ -102,8 +102,8 @@ export const HomePageFeed = memo(
       }
       if (x.type === 'cuisine') {
         return x.top_restaurants.map((r) => ({
-          slug: r.slug,
-          id: r.id,
+          slug: r.slug ?? '',
+          id: r.id ?? '',
         }))
       }
       return []
@@ -214,7 +214,7 @@ const ListFeedCard = graphql((props: FeedItemList) => {
           <ListCard
             key={list.slug}
             slug={list.slug}
-            userSlug={list.user.username}
+            userSlug={list.user?.username ?? ''}
             // onHover={() => {
             //   appMapStore.setHoverResults()
             // }}
@@ -245,7 +245,7 @@ const CuisineFeedCard = graphql(function CuisineFeedCard(
 
   return (
     <ScrollView
-      ref={scrollRef}
+      ref={scrollRef as any}
       style={{ maxWidth: '100%', overflow: 'hidden' }}
       horizontal
       showsHorizontalScrollIndicator={false}
@@ -455,7 +455,7 @@ const getHomeCuisines = async (center: LngLat) => {
 
 function useHomeFeed(
   item: HomeStateItemHome,
-  region?: RegionNormalized,
+  region?: RegionNormalized | null,
   isNew?: boolean
 ) {
   const slug = item.region ?? ''
@@ -506,6 +506,7 @@ function useHomeFeed(
     limit: 8,
   })
 
+  // @ts-ignore
   let items: FeedItem[] =
     !region || !item.region
       ? []

@@ -1,6 +1,6 @@
 import { join } from 'path'
 
-import { urlEncodedRoute } from '@dish/api'
+import { RouteExit, urlEncodedRoute } from '@dish/api'
 import { User, WithID, userFindOne, userUpsert } from '@dish/graph'
 import { jwtSign } from '@dish/helpers-node'
 import AppleSignIn, { AppleSignInOptions } from 'apple-sign-in-rest'
@@ -31,16 +31,19 @@ export async function appleAuth({
   code: string
   redirectUri?: string
 }) {
-  if (!appleSignIn) {
-    try {
+  try {
+    if (!appleSignIn) {
       appleSignIn = new AppleSignIn(appleConfig)
       clientSecret = appleSignIn.createClientSecret({
         // expirationDuration: 5 * 60, // 5 minutes
       })
-    } catch (err) {
-      console.log('error setting up apple sign in', appleConfig)
-      throw err
     }
+  } catch (err) {
+    console.log('error setting up apple sign in', appleConfig)
+    throw err
+  }
+  if (!appleSignIn || !clientSecret) {
+    throw new RouteExit(RouteExit.errors.broken)
   }
   const tokens = await appleSignIn.getAuthorizationToken(clientSecret, code, {
     // Optional, use the same value which you passed to authorisation URL. In case of iOS you skip the value
