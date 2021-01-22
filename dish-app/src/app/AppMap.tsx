@@ -203,6 +203,10 @@ export default memo(function AppMap() {
       console.warn('not found', id, restaurants)
       return
     }
+    // move drawer from bottom up to mid
+    if (drawerStore.snapIndex === 2) {
+      drawerStore.setSnapIndex(1)
+    }
     if (homeStore.currentStateType === 'search') {
       if (id !== appMapStore.selected?.id) {
         appMapStore.setSelected({
