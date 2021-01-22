@@ -7,7 +7,7 @@ export type MapProps = {
   center: LngLat
   span: LngLat
   features: GeoJSON.Feature[]
-  padding?: { top: number; left: number; bottom: number; right: number }
+  padding: { top: number; left: number; bottom: number; right: number }
   mapRef?: (map: mapboxgl.Map) => void
   style?: string
   onHover?: (id: string | null) => void

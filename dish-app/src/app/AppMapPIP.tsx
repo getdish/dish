@@ -61,6 +61,7 @@ const HomeMapPIPContent = graphql(() => {
     }
   } else if (focusedRestaurant) {
     slug = focusedRestaurant.slug ?? ''
+    // @ts-ignore
     restaurants = [queryRestaurant(slug)[0]]
     // zoom in on pip for search
     span = {
@@ -126,6 +127,7 @@ const HomeMapPIPContent = graphql(() => {
 
   useEffect(() => {
     new mapboxgl.Map({
+      // @ts-ignore
       container: mapNode.current,
       style: 'mapbox://styles/nwienert/ckddrrcg14e4y1ipj0l4kf1xy',
       center,

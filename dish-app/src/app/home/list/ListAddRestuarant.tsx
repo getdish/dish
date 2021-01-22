@@ -20,6 +20,7 @@ export const ListAddRestuarant = graphql(
     const [results, setResults] = useState<AutocompleteItemRestuarant[]>([])
 
     let [runSearch, { isLoading }] = useLazyQuery(
+      // @ts-expect-error
       (_query, searchQuery: string) => {
         const restaurants = query.restaurant({
           where: {
@@ -54,6 +55,7 @@ export const ListAddRestuarant = graphql(
             backgroundColor={theme.backgroundColorSecondary}
             marginHorizontal={20}
             placeholder="Search restaurants..."
+            // @ts-expect-error
             onChangeText={(val) => runSearch({ args: val })}
           />
         </VStack>

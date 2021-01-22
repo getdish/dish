@@ -240,6 +240,7 @@ const TagListContent = memo(
                   type: { _eq: type },
                 },
               }),
+            // @ts-ignore
             ...(!lastRowSelection && {
               type: {
                 _eq: 'null',
@@ -580,7 +581,7 @@ const TagCRUDContent = graphql(({ tag, onChange }: TagCRUDProps) => {
         <Text opacity={0.5}>Parent: {parentTag?.name}</Text>
         <SmallButton
           onPress={() => {
-            onChange({
+            onChange?.({
               parentId: null,
             })
           }}
@@ -610,7 +611,7 @@ const TagCRUDContent = graphql(({ tag, onChange }: TagCRUDProps) => {
       <TableRow label="Type">
         <select
           key={tag.type}
-          defaultValue={tag.type}
+          defaultValue={tag.type ?? ''}
           onChange={(e) => {
             const value = e.target.options[e.target.selectedIndex].value
             onChange?.({ type: value })

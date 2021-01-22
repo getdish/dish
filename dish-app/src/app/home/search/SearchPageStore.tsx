@@ -12,6 +12,7 @@ import { Store, createStore, useStoreInstance } from '@dish/use-store'
 import { allTags } from '../../../helpers/allTags'
 import { getActiveTags } from '../../../helpers/getActiveTags'
 import { getTagSlug } from '../../../helpers/getTagSlug'
+import { HomeStateNav } from '../../../types/homeTypes'
 import { appMapStore } from '../../AppMapStore'
 import { homeStore } from '../../homeStore'
 
@@ -51,9 +52,11 @@ class SearchPageStore extends Store {
     let curId = this.lastSearchAt
 
     const curState = homeStore.lastSearchState
-    const searchQuery = opts.searchQuery ?? curState.searchQuery ?? ''
-    const navItem = {
+    const searchQuery = opts.searchQuery ?? curState?.searchQuery ?? ''
+    const navItem: HomeStateNav = {
       state: {
+        id: '',
+        type: 'home',
         ...curState,
         searchQuery,
       },
@@ -66,7 +69,7 @@ class SearchPageStore extends Store {
     }
 
     let state = homeStore.lastSearchState
-    const tags = getActiveTags(curState)
+    const tags = curState ? getActiveTags(curState) : []
 
     const shouldCancel = () => {
       const state = homeStore.lastSearchState
@@ -101,7 +104,7 @@ class SearchPageStore extends Store {
         .map((tag) =>
           getTagSlug(tag).replace('lenses__', '').replace('filters__', '')
         )
-        .filter((t) => !t.includes(dishSearchedTag)),
+        .filter((t) => !t.includes(dishSearchedTag ?? '')),
     ]
 
     const searchArgs: RestaurantSearchArgs = {

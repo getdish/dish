@@ -97,7 +97,7 @@ const HomePageReviewContent = memo(
 
     return (
       <VStack width="100%" maxWidth="100%" padding={18} spacing="lg" flex={1}>
-        <SmallTitle fontWeight="600">Review {restaurant.name}</SmallTitle>
+        <SmallTitle fontWeight="600">{restaurant.name}</SmallTitle>
 
         <Suspense fallback={<LoadingItems />}>
           <RestaurantReviewCommentForm
@@ -191,7 +191,7 @@ export const RestaurantReviewCommentForm = memo(
                 }}
                 multiline
                 numberOfLines={5}
-                placeholder="Write a comment. You can just leave a tip or a whole review, up to you."
+                placeholder="A note, a tip, a whole review, it's up to you."
                 style={{
                   borderWidth: 1,
                   borderColor: '#ddd',
@@ -360,7 +360,9 @@ const UserReviewVotesRow = graphql(
         : []
     return (
       <HStack padding={10} alignItems="center" flexWrap="wrap">
-        <Text color="#999">Saved votes:</Text>
+        <Text overflow="hidden" color="#999">
+          Votes:
+        </Text>
         <Spacer />
         <HStack spacing="xs">
           {allVotes.map((vote) => {
@@ -370,7 +372,7 @@ const UserReviewVotesRow = graphql(
                 key={vote.id}
                 sentiment={vote.vote ?? 0}
               >
-                {vote.tag.name}
+                {vote.tag?.name}
               </SentimentText>
             )
           })}

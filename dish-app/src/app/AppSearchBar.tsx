@@ -27,6 +27,7 @@ import { useHomeStore } from './homeStore'
 import { useSearchBarTheme } from './hooks/useSearchBarTheme'
 import { DishHorizonView } from './views/DishHorizonView'
 import { DishLogoButton } from './views/DishLogoButton'
+import { Link } from './views/Link'
 import { LinkButton } from './views/LinkButton'
 
 const isWeb = Platform.OS === 'web'
@@ -185,11 +186,11 @@ const AppSearchBarContents = memo(() => {
       paddingHorizontal={media.xs ? 5 : 10}
       minHeight={searchBarHeight}
     >
+      {!media.xs && <SearchBarActionButton />}
+
       <VStack paddingHorizontal={6}>
         <DishLogoButton />
       </VStack>
-
-      {!media.xs && <SearchBarActionButton />}
 
       <HStack
         className="ease-in-out"
@@ -300,14 +301,8 @@ const SearchBarActionButton = memo(() => {
   })()
 
   return (
-    <LinkButton
-      alignSelf="center"
-      backgroundColor="transparent"
-      pointerEvents="auto"
-      width={32}
-      opacity={isDisabled ? 0.1 : 0.7}
-      padding={0}
-      disabled={isDisabled}
+    <Link
+      {...home.upRoute}
       onPress={() => {
         if (showAutocomplete) {
           autocompletes.setVisible(false)
@@ -315,16 +310,26 @@ const SearchBarActionButton = memo(() => {
           home.popBack()
         }
       }}
-      {...(!isDisabled && {
-        hoverStyle: {
-          opacity: 1,
-        },
-        pressStyle: {
-          opacity: 0.2,
-        },
-      })}
     >
-      <Icon color={color} size={20} />
-    </LinkButton>
+      <VStack
+        alignSelf="center"
+        backgroundColor="red"
+        pointerEvents={isDisabled ? 'none' : 'auto'}
+        width={32}
+        height="100%"
+        opacity={isDisabled ? 0.1 : 0.7}
+        padding={0}
+        {...(!isDisabled && {
+          hoverStyle: {
+            opacity: 1,
+          },
+          pressStyle: {
+            opacity: 0.2,
+          },
+        })}
+      >
+        <Icon color={color} size={20} />
+      </VStack>
+    </Link>
   )
 })

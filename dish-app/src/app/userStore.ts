@@ -77,7 +77,7 @@ class UserStore extends Store {
   }
 
   refresh() {
-    if (!this.user.id) return
+    if (!this.user?.id) return
     this.refreshUser({ id: this.user.id })
   }
 

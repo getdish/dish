@@ -36,7 +36,7 @@ export class AdminReviewsStore extends Store {
     this.selectedReviewId = val
   }
 
-  setSelectedCity(val: AutocompleteItem) {
+  setSelectedCity(val: AutocompleteItem | null) {
     this.selectedCity = val
   }
 }
@@ -132,7 +132,7 @@ const ReviewSentiment = (props: { text: string }) => {
           }),
       ]).then((sentiments) => {
         console.log(sentiments)
-        setSentiments(sentiments)
+        setSentiments(sentiments as any)
       })
     }
   }, [aspectSlow])
@@ -261,8 +261,8 @@ const RestaurantsListContent = graphql(
                 from: {
                   type: 'Point',
                   coordinates: [
-                    selectedCity.center.lng,
-                    selectedCity.center.lat,
+                    selectedCity.center?.lng,
+                    selectedCity.center?.lat,
                   ],
                 },
               },

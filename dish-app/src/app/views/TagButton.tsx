@@ -31,6 +31,7 @@ import { isWeb } from '../../constants/constants'
 import { tagDisplayName } from '../../constants/tagMeta'
 import { getTagSlug } from '../../helpers/getTagSlug'
 import { rgbString } from '../../helpers/rgbString'
+import { NavigableTag } from '../../types/tagTypes'
 import { useUserTagVotes } from '../hooks/useUserTagVotes'
 import { Link } from './Link'
 import { LinkButton } from './LinkButton'
@@ -46,15 +47,22 @@ export type TagButtonTagProps = {
   rank?: number
 }
 
-export const getTagButtonProps = (tag: TagButtonTagProps): TagButtonProps => {
+export const getTagButtonProps = (
+  tag?: TagButtonTagProps | NavigableTag | null
+): TagButtonProps => {
   return {
-    name: tag.name,
-    type: tag.type as TagType,
-    icon: tag.icon ?? '',
-    rgb: Array.isArray(tag.rgb) ? tag.rgb : tag.rgb?.(),
-    rank: tag.rank,
-    score: tag.score,
-    slug: tag.slug,
+    name: tag?.name ?? '',
+    type: tag?.type as TagType,
+    icon: tag?.icon ?? '',
+    ...(tag && {
+      rgb: Array.isArray(tag.rgb) ? tag.rgb : tag.rgb?.(),
+      slug: tag.slug ?? '',
+    }),
+    ...(tag &&
+      'rank' in tag && {
+        rank: tag.rank,
+        score: tag.score,
+      }),
   }
 }
 
@@ -73,7 +81,7 @@ const getTagColors = ({ rgb, type }: Partial<Tag>) => {
       color: rgbString(rgb),
     }
   }
-  const [backgroundColor, color] = tagColors[type] ?? tagColors.other
+  const [backgroundColor, color] = tagColors[type ?? ''] ?? tagColors.other
   return {
     backgroundColor,
     color,

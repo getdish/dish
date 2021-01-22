@@ -38,8 +38,8 @@ type UserPane = 'vote' | 'review' | ''
 export default function UserPageContainer(
   props: StackItemProps<HomeStateItemUser>
 ) {
-  const pane = useRouterSelector(
-    (x) => x.curPage.name === 'user' && (x.curPage.params.pane as UserPane)
+  const pane = useRouterSelector((x) =>
+    x.curPage.name === 'user' ? (x.curPage.params.pane as UserPane) : null
   )
   const setPane = (pane?: UserPane) => {
     router.navigate({
@@ -94,7 +94,7 @@ const UserPageContent = graphql(
     item,
     isActive,
     pane,
-  }: StackItemProps<HomeStateItemUser> & { pane: UserPane }) => {
+  }: StackItemProps<HomeStateItemUser> & { pane: UserPane | null }) => {
     const user = useUserQuery(item.username ?? '')
     const lists = user.lists({
       limit: 10,
@@ -134,7 +134,7 @@ const UserPageContent = graphql(
                 return (
                   <ListCard
                     key={list.slug}
-                    userSlug={list.user.username}
+                    userSlug={list.user?.username ?? ''}
                     slug={list.slug}
                   />
                 )
@@ -168,7 +168,7 @@ const UserHeader = memo(
       setPane,
     }: StackItemProps<HomeStateItemUser> & {
       setPane: Function
-      pane: UserPane
+      pane: UserPane | null
     }) => {
       const userStore = useUserStore()
       const user = useUserQuery(item?.username ?? '')

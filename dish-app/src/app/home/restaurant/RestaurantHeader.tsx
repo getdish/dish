@@ -21,8 +21,10 @@ import { RestaurantOverview } from '../../views/restaurant/RestaurantOverview'
 import { RestaurantTagsRow } from '../../views/restaurant/RestaurantTagsRow'
 import { RestaurantUpVoteDownVote } from '../../views/restaurant/RestaurantUpVoteDownVote'
 import { SmallButton } from '../../views/SmallButton'
+import { RestaurantAddCommentButton } from './RestaurantAddCommentButton'
 import { RestaurantAddress } from './RestaurantAddress'
 import { RestaurantAddressLinksRow } from './RestaurantAddressLinksRow'
+import { RestaurantAddToListButton } from './RestaurantAddToListButton'
 import { RestaurantDeliveryButtons } from './RestaurantDeliveryButtons'
 import { openingHours } from './RestaurantDetailRow'
 import {
@@ -70,10 +72,18 @@ const RestaurantHeaderContent = memo(
       const drawerWidth = useAppDrawerWidthInner()
       const minWidth = Math.min(drawerWidth, 600)
       const [width, setWidth] = useState(Math.max(minWidth, drawerWidth))
-      const scale = width < 601 ? 0.75 : drawerWidth < 700 ? 0.85 : 1
+      const scale = width < 601 ? 0.7 : drawerWidth < 700 ? 0.85 : 1
       const fontScale = size === 'sm' ? 0.8 : 1
       const fontSizeBase =
-        nameLen > 30 ? 20 : nameLen > 24 ? 28 : nameLen > 18 ? 34 : 40
+        nameLen > 40
+          ? 16
+          : nameLen > 30
+          ? 20
+          : nameLen > 24
+          ? 28
+          : nameLen > 18
+          ? 34
+          : 40
       const fontSize = scale * fontSizeBase * fontScale
       const contentLeftWidth = width - 60
       const restaurantId = restaurant.id
@@ -96,7 +106,7 @@ const RestaurantHeaderContent = memo(
               maxWidth: isWeb ? '100vw' : '100%',
               minHeight,
             }}
-            onScroll={hasScrolled ? null : () => setHasScrolled(true)}
+            onScroll={hasScrolled ? undefined : () => setHasScrolled(true)}
             contentContainerStyle={{
               minWidth: width,
             }}
@@ -245,6 +255,19 @@ const RestaurantHeaderContent = memo(
                               />
                             </VStack>
                             <Spacer size="xs" />
+                            <Suspense fallback={null}>
+                              <RestaurantAddCommentButton
+                                hideLabel
+                                restaurantId={restaurantId}
+                                restaurantSlug={restaurantSlug}
+                              />
+                            </Suspense>
+                            <Spacer size="xs" />
+                            <Suspense fallback={null}>
+                              <RestaurantAddToListButton
+                                restaurantSlug={restaurantSlug}
+                              />
+                            </Suspense>
                           </Suspense>
                         </HStack>
 

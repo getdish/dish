@@ -92,7 +92,7 @@ const RestaurantPage = memo(
           Dish - {restaurant?.name ?? ''} has the best [...tags] dishes.
         </PageTitleTag>
 
-        <ContentScrollView ref={scrollView} id="restaurant">
+        <ContentScrollView ref={scrollView as any} id="restaurant">
           {/* HEADER */}
           {/* -1 margin bottom to overlap bottom border */}
           <VStack

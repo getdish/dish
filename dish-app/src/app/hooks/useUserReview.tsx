@@ -208,7 +208,9 @@ export const useUserReviewCommentQuery = (
       await reviewDelete({
         id: review.id,
       })
-      setCache(reviewsQuery, null)
+      if (reviewsQuery) {
+        setCache(reviewsQuery, null)
+      }
       onDelete?.()
       Toast.show(`Deleted!`)
       // refetch()

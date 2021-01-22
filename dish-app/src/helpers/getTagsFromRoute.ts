@@ -33,6 +33,7 @@ export const getTagSlugsFromRoute = (item: HistoryItem<'search'>) => {
 export const getTagsFromRoute = async (
   item: HistoryItem<'search'>
 ): Promise<FullTag[]> => {
+  // @ts-ignore
   return await getFullTags(getTagSlugsFromRoute(item))
 }
 
@@ -42,7 +43,7 @@ const getUrlTagInfo = (
 ): TagWithNameAndType => {
   if (part.indexOf(SPLIT_TAG_TYPE) > -1) {
     const [type, nameLower] = part.split(SPLIT_TAG_TYPE)
-    return { type: type as any, name: null, slug: part }
+    return { type: type as any, name: '', slug: part }
   }
-  return { type: defaultType, name: null, slug: part }
+  return { type: defaultType, name: '', slug: part }
 }

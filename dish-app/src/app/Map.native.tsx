@@ -36,7 +36,7 @@ export const MapView = ({
   const cameraRef = useRef<MapboxGL.Camera>(null)
   const mapRef = useRef<MapboxGL.MapView>(null)
   const onMoveEndDelayed = useDebounce(onMoveEnd ?? idFn, 250)
-  const tileSource = useRef<MapboxGL.VectorSource>()
+  const tileSource = useRef<MapboxGL.VectorSource | null>(null)
 
   useEffect(() => {
     const spring = Animated.spring(tyRef.current, {

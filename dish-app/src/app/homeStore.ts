@@ -139,7 +139,10 @@ class HomeStore extends Store {
   }
 
   up() {
-    this.popTo(this.getUpType())
+    const to = this.getUpType()
+    if (to) {
+      this.popTo(to)
+    }
   }
 
   popBack() {
@@ -148,25 +151,32 @@ class HomeStore extends Store {
     this.popTo(next?.type ?? 'home')
   }
 
-  popTo(type: HomeStateItem['type']) {
-    const currentState = this.currentState
-    if (currentState.type === 'home') {
-      return
-    }
+  get upRoute() {
+    const cur = this.currentState
+    return this.getUpRouteForType(
+      findLast(this.states, (x) => x.type !== cur.type)?.type ?? 'home'
+    )
+  }
 
+  getIsUpBack(type: HomeStateItem['type']) {
     // we can just use router history directly, no? and go back?
     const lastRouterName = router.prevHistory?.name
     const lastRouterType = normalizeItemName[lastRouterName] ?? lastRouterName
-    if (
+    return (
       this.previousState?.type === type &&
       lastRouterType === type &&
       router.curPage?.type !== 'pop'
-    ) {
-      console.warn('go back')
-      router.back()
-      return
-    }
+    )
+  }
 
+  getUpRouteForType(type: HomeStateItem['type']) {
+    const currentState = this.currentState
+    if (currentState.type === 'home') {
+      return null
+    }
+    if (this.getIsUpBack(type)) {
+      return router.back()
+    }
     const states = this.states
     const prevStates = states.slice(0, states.length - 1)
     const stateItem = _.findLast(prevStates, (x) => x.type === type)
@@ -179,22 +189,26 @@ class HomeStore extends Store {
         this.lastHomeState.region ??
         'ca-san-francisco',
     }
-
     if (routerItem) {
-      router.navigate({
+      return {
         name: type == 'home' ? 'homeRegion' : type,
         params:
           type == 'home'
             ? { ...homeRegionParams, ...routerItem?.params }
             : routerItem?.params,
-      })
-    } else {
-      console.warn('no match')
-      router.navigate({
-        name: 'homeRegion',
-        params: homeRegionParams,
-      })
+      } as const
     }
+    console.warn('no match')
+    return {
+      name: 'homeRegion',
+      params: homeRegionParams,
+    } as const
+  }
+
+  popTo(type: HomeStateItem['type']) {
+    const n = this.getUpRouteForType(type)
+    if (!n) return
+    router.navigate(n)
   }
 
   updateHomeState(via: string, val: { id: string; [key: string]: any }) {
@@ -247,7 +261,7 @@ class HomeStore extends Store {
           type: 'home',
           searchQuery: '',
           activeTags: {},
-          region: item.params.region ?? prev.region,
+          region: item.params.region ?? prev?.region,
           section: item.params.section ?? '',
         }
         break
@@ -279,11 +293,12 @@ class HomeStore extends Store {
         if (!prev) {
           throw new Error('unreachable')
         }
-        const tagSlugs = getTagSlugsFromRoute(
-          router.curPage as HistoryItem<'search'>
-        ).map((x) => x.slug)
+        const tagSlugs = [
+          ...getTagSlugsFromRoute(router.curPage as HistoryItem<'search'>),
+        ].map((x) => x.slug)
+
         const activeTags = tagSlugs.reduce((acc, cur) => {
-          acc[cur] = true
+          acc[cur!] = true
           return acc
         }, {})
         nextState = {
@@ -396,7 +411,9 @@ class HomeStore extends Store {
               ...item,
               name,
             })
-            this.updateHomeState('handleRouteChange', next)
+            if (next) {
+              this.updateHomeState('handleRouteChange', next)
+            }
             break
           }
           default: {

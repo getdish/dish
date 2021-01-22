@@ -227,7 +227,7 @@ function priceRangeNumeric(restaurant: RestaurantQuery) {
     .split('-')
     .map((i) => parseInt(i))
   const average = (low + high) / 2
-  price_range = restaurant.price_range
+  price_range = restaurant.price_range ?? ''
   switch (true) {
     case average <= 10:
       label = 'Cheap'

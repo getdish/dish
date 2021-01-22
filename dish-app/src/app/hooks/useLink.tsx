@@ -124,7 +124,9 @@ const getNormalizeLinkProps = memoize(
 
 const getNormalizedLink = (props: Partial<LinkButtonProps>) => {
   if (props.tags || props.tag) {
-    const tags = tagsToNavigableTags(props.tags ?? [props.tag])
+    const tags = tagsToNavigableTags(
+      props.tags ?? (props.tag ? [props.tag] : [])
+    )
       .filter(isPresent)
       .map((tag) => {
         // TEMP bugfix, until we do new home, we need to fallback to getFullTagFromNameAndType

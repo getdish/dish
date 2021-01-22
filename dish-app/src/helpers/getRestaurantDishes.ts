@@ -46,7 +46,7 @@ export const getRestaurantDishes = ({
     limit: max,
   })
 
-  topTags = prependSearchedForTags(topTags, tagSlugs)
+  topTags = prependSearchedForTags(topTags ?? [], tagSlugs)
 
   return useMemo(
     () =>
@@ -69,8 +69,8 @@ const prependSearchedForTags = (
   topTags: restaurant_tag[],
   tagSlugs: string[]
 ) => {
-  const searchedForTags = topTags.filter((t) => tagSlugs.includes(t.tag.slug))
-  const allOthers = topTags.filter((t) => !tagSlugs.includes(t.tag.slug))
+  const searchedForTags = topTags.filter((t) => tagSlugs.includes(t.tag.slug!))
+  const allOthers = topTags.filter((t) => !tagSlugs.includes(t.tag.slug!))
   const ordered = [...searchedForTags, ...allOthers]
   return ordered
 }

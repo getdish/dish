@@ -40,7 +40,7 @@ export const ListCard = graphql(
           size="sm"
           hoverable
           title={list.name}
-          subTitle={`by ${list.user.name ?? list.user.username ?? ''}`}
+          subTitle={`by ${list.user?.name ?? list.user?.username ?? ''}`}
           backgroundColor={getListColor(list.color) ?? colors.color}
           photo={
             <VStack alignItems="center" justifyContent="center" flex={1}>
@@ -50,7 +50,7 @@ export const ListCard = graphql(
                     <Image
                       key={index}
                       style={{ width: 80, height: 80 }}
-                      source={{ uri: photo }}
+                      source={{ uri: photo ?? '' }}
                     />
                   )
                 })}

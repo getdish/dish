@@ -1,4 +1,5 @@
 export function getTimeFormat(date: Date): string {
+  // @ts-expect-error
   return relatime(Date.now() - +date)
 }
 

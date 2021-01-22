@@ -72,7 +72,7 @@ export const RestaurantOverview = memo(
                 fontSize={fontSize}
                 lineHeight={lineHeight}
                 color={theme.color}
-                onBlur={(e) => onEdit(e.target['value'])}
+                onBlur={(e) => onEdit?.(e.target['value'])}
               />
               <Text
                 marginTop={10}

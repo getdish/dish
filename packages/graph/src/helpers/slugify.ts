@@ -30,7 +30,7 @@ const sets = [
 
 const cache = new Map()
 
-export function slugify(text: string, separator = '-') {
+export function slugify(text?: string | null, separator = '-') {
   if (!text) {
     return ''
   }

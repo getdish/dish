@@ -1,4 +1,4 @@
-import { Store, createStore, useStore, useStoreSelector } from '@dish/use-store'
+import { Store, useStore, useStoreSelector } from '@dish/use-store'
 import { createBrowserHistory, createMemoryHistory } from 'history'
 import * as React from 'react'
 import { createContext, useContext } from 'react'
@@ -54,6 +54,7 @@ export class Router<
   stack: HistoryItem[] = []
   stackIndex = 0
   alert: RouteAlert<RT> | null = null
+  getPathFromParams = getPathFromParams.bind(null, this)
 
   mount() {
     const { routes } = this.props
@@ -91,15 +92,8 @@ export class Router<
           : 'push'
 
       // if (process.env.DEBUG) {
-      // console.log('router.history', {
-      //   type,
-      //   direction,
-      //   event,
-      //   state,
-      //   prevItem,
-      //   nextItem,
-      //   stack: this.stack,
-      // })
+      //   // prettier-ignore
+      //   console.log('router.history', { type,direction,event,state,prevItem,nextItem,stack: this.stack })
       // }
 
       if (type === 'pop' && direction == 'none') {
@@ -218,7 +212,7 @@ export class Router<
   }
 
   getShouldNavigate(navItem: NavigateItem<RT>) {
-    const historyItem = this.getHistoryItem(navItem)
+    const historyItem = getHistoryItem(this, navItem as any)
     const sameName = historyItem.name === this.curPage.name
     const sameParams = isEqual(
       this.getNormalizedParams(historyItem.params),
@@ -243,7 +237,7 @@ export class Router<
   }
 
   navigate(navItem: NavigateItem<RT>) {
-    const item = this.getHistoryItem(navItem)
+    const item = getHistoryItem(this, navItem as any)
     if (this.notFound) {
       this.notFound = false
     }
@@ -273,7 +267,7 @@ export class Router<
     history.forward()
   }
 
-  setRouteAlert(alert: RouteAlert<RT>) {
+  setRouteAlert(alert: RouteAlert<RT> | null) {
     const prev = this.alert
     this.alert = alert
     setUnloadCondition(alert)
@@ -282,82 +276,88 @@ export class Router<
       this.alert = prev
     }
   }
+}
 
-  getPathFromParams({
+export function getPathFromParams(
+  { routes }: Router<any>,
+  {
     name,
     params,
   }: {
     name?: string
     params?: Object | void
-  }) {
-    if (!name) return ``
-    // object to path
-    let route = this.routes[name]
-    if (!route) {
-      console.log(`no route`, name, this.routes)
-      return ``
+  }
+) {
+  if (!name) return ``
+  // object to path
+  let route = routes[name]
+  if (!route) {
+    console.log(`no route`, name, routes)
+    return ``
+  }
+  if (!route.path) {
+    console.log(`no route path`, route, name, routes)
+    return ``
+  }
+  let path = route.path
+  if (!params) return path
+  let replaceSplatParams: string[] = []
+  for (const key in params) {
+    if (typeof params[key] === 'undefined') {
+      continue
     }
-    if (!route.path) {
-      console.log(`no route path`, route, name, this.routes)
-      return ``
+    if (path.indexOf(':') > -1) {
+      path = path.replace(`:${key}`, params[key] ?? '-')
+    } else if (path.indexOf('*') > -1) {
+      replaceSplatParams.push(key)
     }
-    let path = route.path
-    if (!params) return path
-    let replaceSplatParams: string[] = []
-    for (const key in params) {
-      if (typeof params[key] === 'undefined') {
-        continue
-      }
-      if (path.indexOf(':') > -1) {
-        path = path.replace(`:${key}`, params[key] ?? '-')
-      } else if (path.indexOf('*') > -1) {
-        replaceSplatParams.push(key)
-      }
-    }
-
-    // remove unused optionals optionals
-    if (path.indexOf('/:') > 0) {
-      path = path.replace(/\/:[a-zA-Z-_]+\??/gi, '')
-    }
-
-    if (replaceSplatParams.length) {
-      path = path.replace(
-        '*',
-        replaceSplatParams.map((key) => `${key}/${params[key]}`).join('/')
-      )
-    }
-
-    // remove extra stuffs
-    path = path.replace(/\?/g, '')
-    path = path.replace(/(\/\:[^\/]+)/g, '')
-
-    return path
   }
 
-  getHistoryItem(navItem: NavigateItem<RT>): HistoryItem {
-    const params: any = {}
-    // remove undefined params
-    if ('params' in navItem) {
-      const p = navItem['params']
-      for (const key in p) {
-        const val = p[key]
-        if (typeof val !== 'undefined') {
-          params[key] = val
-        }
+  // remove unused optionals optionals
+  if (path.indexOf('/:') > 0) {
+    path = path.replace(/\/:[a-zA-Z-_]+\??/gi, '')
+  }
+
+  if (replaceSplatParams.length) {
+    path = path.replace(
+      '*',
+      replaceSplatParams.map((key) => `${key}/${params[key]}`).join('/')
+    )
+  }
+
+  // remove extra stuffs
+  path = path.replace(/\?/g, '')
+  path = path.replace(/(\/\:[^\/]+)/g, '')
+
+  return path
+}
+
+export function getHistoryItem(
+  router: Router<any>,
+  navItem: NavigateItem
+): HistoryItem {
+  const params: any = {}
+  // remove undefined params
+  if ('params' in navItem) {
+    const p = navItem['params']
+    for (const key in p) {
+      const val = p[key]
+      if (typeof val !== 'undefined') {
+        params[key] = val
       }
     }
-    return {
-      id: uid(),
-      direction: 'none',
+  }
+  return {
+    id: uid(),
+    direction: 'none',
+    name: navItem.name as any,
+    type: navItem.replace ? 'replace' : 'push',
+    params,
+    path: getPathFromParams(router, {
       name: navItem.name as any,
-      type: navItem.replace ? 'replace' : 'push',
       params,
-      path: this.getPathFromParams({
-        name: navItem.name as any,
-        params,
-      }),
-      search: window.location?.search ?? '',
-    }
+    }),
+    search: window.location?.search ?? '',
   }
 }
 
@@ -431,7 +431,6 @@ const defaultPage: HistoryItem = {
 }
 
 const uid = () => `${Math.random()}`.replace('.', '')
-
 const isObject = (x: any) => x && `${x}` === `[object Object]`
 const isEqual = (a: any, b: any) => {
   const eqLen = Object.keys(a).length === Object.keys(b).length
@@ -465,6 +464,7 @@ type NavigableItems<Table extends RoutesTable> = {
     ? {
         name: Property
         search?: string
+        params?: void
         replace?: boolean
         callback?: OnRouteChangeCb
       }
@@ -478,7 +478,7 @@ type NavigableItems<Table extends RoutesTable> = {
 }
 
 export type NavigateItem<
-  RT extends RoutesTable,
+  RT extends RoutesTable = any,
   Items extends NavigableItems<RT> = NavigableItems<RT>
 > = Items[keyof Items]
 

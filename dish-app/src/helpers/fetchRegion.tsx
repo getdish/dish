@@ -65,7 +65,7 @@ export const fetchRegion = async (slug: string) => {
 }
 
 export const useRegionQuery = (slug: string, config?: UseQueryOptions<any>) => {
-  return useQueryLoud<RegionNormalized>(
+  return useQueryLoud<RegionNormalized | null>(
     `REGIONQUERY-${slug}`,
     () => fetchRegion(slug),
     config

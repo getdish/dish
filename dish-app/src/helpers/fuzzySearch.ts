@@ -27,9 +27,9 @@ export async function fuzzySearch<A extends { [key: string]: any }>({
     }
   }
   const foundIndices = await flexSearch.search(query, limit)
-  const foundSorted = []
-  const foundAlternates = []
-  const foundExact = []
+  const foundSorted: number[] = []
+  const foundAlternates: number[] = []
+  const foundExact: number[] = []
   for (const index of foundIndices) {
     const isAlternate = index % 0 > 0
     if (isAlternate) {

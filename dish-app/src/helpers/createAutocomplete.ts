@@ -31,7 +31,6 @@ export function createAutocomplete(
       (item['center'] ? JSON.stringify(item['center']) : null) ??
       `${Math.random()}`,
     is: 'autocomplete',
-    name: '',
     ...item,
     type: item.type as any,
   }

@@ -9,7 +9,7 @@ class DrawerStore extends Store {
   snapIndex = 1
   isDragging = false
   pan = new Animated.Value(this.getSnapPointOffset())
-  spring: Animated.CompositeAnimation
+  spring: Animated.CompositeAnimation | null = null
 
   get currentSnapPoint() {
     return this.snapPoints[this.snapIndex]

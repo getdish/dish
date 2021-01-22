@@ -46,15 +46,15 @@ class AppMapStore extends Store {
   showRank = false
   zoomOnHover = false
 
-  setState(val: MapOpts & { results?: MapResultItem[] }) {
+  setState(val: MapOpts & { results?: MapResultItem[] | null }) {
     this.setSelected(null)
     this.setHovered(null)
     this.results = val.results ?? []
-    this.showRank = val.showRank
-    this.zoomOnHover = val.zoomOnHover
+    this.showRank = val.showRank ?? false
+    this.zoomOnHover = val.zoomOnHover ?? false
   }
 
-  setPosition(pos: AppMapPosition) {
+  setPosition(pos: Partial<AppMapPosition>) {
     this.position = {
       ...this.position,
       ...pos,
@@ -120,9 +120,10 @@ class AppMapStore extends Store {
     ]
     inputStoreLocation.setValue(val)
     const exact = current.find((x) => x.name === val)
+    if (!exact) return
     if ('center' in exact) {
       const curState = homeStore.currentState
-      const center = exact.center
+      const center = exact.center ?? homeStore.currentState.center
       const span = exact.span ?? curState.span
       homeStore.updateCurrentState('appMapStore.setLocation', {
         center,
@@ -160,6 +161,7 @@ export const useSetAppMapResults = (
     const disposeSeries = series([
       async () => {
         const all = results
+        if (!all) return
         const allIds = [...new Set(all.map((x) => x.id))]
         const allResults = allIds
           .map((id) => all.find((x) => x.id === id))

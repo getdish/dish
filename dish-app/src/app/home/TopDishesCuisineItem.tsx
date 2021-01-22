@@ -190,7 +190,7 @@ const TopDishesTrendingRestaurants = memo(
                     onHoverIn={() => {
                       appMapStore.setHovered({
                         id: restaurant.id,
-                        slug: restaurant.slug,
+                        slug: restaurant.slug ?? '',
                         via: 'list',
                       })
                     }}

@@ -1,11 +1,11 @@
 import { useRouteBodyParser } from '@dish/api'
 import { EditUserResponse, userUpdate } from '@dish/graph'
 
-import { getUserFromRoute, secureRoute } from './_user'
+import { ensureUserOnRoute, secureRoute } from './_user'
 
 export default secureRoute('user', async (req, res) => {
   await useRouteBodyParser(req, res, { json: { limit: 2048 } })
-  const user = await getUserFromRoute(req)!
+  const user = await ensureUserOnRoute(req)
   const { about, location, charIndex } = req.body
   user.has_onboarded = true
   user.email = user.email ?? 'default@dishapp.com'
@@ -17,8 +17,8 @@ export default secureRoute('user', async (req, res) => {
     const val: EditUserResponse = {
       email: user.email,
       has_onboarded: user.has_onboarded,
-      about: user.about,
-      location: user.location,
+      about: user.about ?? '',
+      location: user.location ?? 'nowhere',
       charIndex: user.charIndex,
       username: user.username,
     }

@@ -5,9 +5,9 @@ export function useLocalStorageState<A>(key: string, initialValue: A) {
     const item = localStorage.getItem(key)
     if (typeof item !== 'undefined') {
       if (typeof initialValue === 'object') {
-        return JSON.parse(item)
+        return JSON.parse(item as any)
       } else if (typeof initialValue === 'number') {
-        return +item
+        return +(item ?? 0)
       } else {
         return item
       }

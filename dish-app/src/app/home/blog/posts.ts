@@ -23,6 +23,6 @@ export const posts: PostDirectory = {
     title: `Reviews are broken`,
     date: '2018-09-29T22:12:03.284Z',
     author: 'Nate Wienert',
-    authorImage: null,
+    authorImage: '',
   },
 }

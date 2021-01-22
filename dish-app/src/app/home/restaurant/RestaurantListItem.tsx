@@ -280,7 +280,7 @@ const RestaurantListItemContent = memo(
         >
           <SlantedTitle alignSelf="center">Breakdown</SlantedTitle>
           <Spacer />
-          {isExpanded && (
+          {meta && isExpanded && (
             <Suspense fallback={<LoadingItemsSmall />}>
               <RestaurantListItemScoreBreakdown {...props} meta={meta} />
             </Suspense>
@@ -480,7 +480,7 @@ const RestaurantListItemContent = memo(
                     icon={<MessageSquare size={16} color="rgba(0,0,0,0.3)" />}
                   >
                     {numberFormat(
-                      restaurant.reviews_aggregate().aggregate.count() ?? 0,
+                      restaurant.reviews_aggregate().aggregate?.count() ?? 0,
                       'sm'
                     )}
                   </SmallButton>
@@ -603,7 +603,7 @@ const RestaurantListItemScoreBreakdown = memo(
     }: RestaurantListItemProps & { meta: RestaurantItemMeta }) => {
       const restaurantTags = queryRestaurantTagScores({
         restaurantSlug,
-        tagSlugs: activeTagSlugs,
+        tagSlugs: activeTagSlugs ?? [],
       })
       console.log('restaurantTags', restaurantTags)
       return (
@@ -612,6 +612,7 @@ const RestaurantListItemScoreBreakdown = memo(
             return (
               <TagButton
                 key={rtag.slug}
+                // @ts-ignore
                 {...getTagButtonProps(rtag)}
                 votable
                 restaurantSlug={restaurantSlug}
@@ -715,7 +716,7 @@ const EditRestaurantTags = graphql(
   }: {
     restaurantSlug: string
     tagSlugs: string[]
-    onChange: (slugs: string[]) => void
+    onChange?: (slugs: string[]) => any
   }) => {
     const [isOpen, setIsOpen] = useState(false)
     const [slugs, setSlugs] = useState<string[]>(tagSlugs)
@@ -737,7 +738,7 @@ const EditRestaurantTags = graphql(
           limit: 1,
         })[0]
       })
-      return sortBy(items, (x) => tagSlugs.indexOf(x.tag.slug))
+      return sortBy(items, (x) => tagSlugs.indexOf(x.tag.slug ?? ''))
     })()
     const restDishes = restaurant.tags({
       where: {
@@ -756,7 +757,11 @@ const EditRestaurantTags = graphql(
       setSlugs(tagSlugs)
     }, [JSON.stringify(tagSlugs)])
 
-    function getDishItem(dish: restaurant_tag, before = null, after = null) {
+    function getDishItem(
+      dish: restaurant_tag,
+      before: any = null,
+      after: any = null
+    ) {
       return (
         <HStack key={dish.tag.slug} spacing padding={5} alignItems="center">
           {before}
@@ -821,7 +826,7 @@ const EditRestaurantTags = graphql(
                     onPress={() => {
                       const next = [...tagSlugs]
                       next.splice(index, 1)
-                      onChange(next)
+                      onChange?.(next)
                     }}
                   >
                     <X size={16} color="#000" />
@@ -846,7 +851,7 @@ const EditRestaurantTags = graphql(
 
           <HStack flexShrink={0}>
             <Theme name="active">
-              <Button onPress={() => onChange(slugs)}>Save</Button>
+              <Button onPress={() => onChange?.(slugs)}>Save</Button>
             </Theme>
           </HStack>
 
