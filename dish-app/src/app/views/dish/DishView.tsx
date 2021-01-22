@@ -15,6 +15,7 @@ import {
 } from 'snackui'
 
 import { isWeb } from '../../../constants/constants'
+import { addTagToCache, addTagsToCache } from '../../../helpers/allTags'
 import { getColorsForName } from '../../../helpers/getColorsForName'
 import { getImageUrl } from '../../../helpers/getImageUrl'
 import { DishTagItem } from '../../../helpers/getRestaurantDishes'
@@ -57,11 +58,9 @@ export const DishView = memo((props: DishViewProps) => {
   const fallback = (
     <ColoredCircle size={props.size ?? 150} backgroundColor="#ccc" />
   )
-
   if (props.preventLoad) {
     return fallback
   }
-
   return (
     <Suspense fallback={fallback}>
       <DishViewContent {...props} />
@@ -91,6 +90,7 @@ const DishViewContent = (props: DishViewProps) => {
     ...rest
   } = props
   const [isHovered, setIsHovered] = useState(false)
+
   const dishName = (name ?? '')
     .split(' ')
     .map((x) => capitalize(x))
@@ -287,7 +287,7 @@ const DishViewContent = (props: DishViewProps) => {
               },
             }
           : {
-              tags: [cuisine, { type: 'dish', name: name }] as NavigableTag[],
+              tags: [cuisine, { name, slug }] as NavigableTag[],
             })}
       >
         {contents}

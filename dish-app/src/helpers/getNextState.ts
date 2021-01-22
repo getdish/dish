@@ -48,18 +48,19 @@ export const getNextState = (navState: HomeStateNav): HomeStateItem => {
   searchQuery = words.join(' ')
 
   // ensure has a lense
-  const allTags = [...tags].filter(isPresent)
-
-  for (const tag of allTags) {
-    const key = getTagSlug(tag)
-    if (key === 'no-slug') {
+  for (const tag of tags) {
+    if (!tag) continue
+    const slug = tag.slug
+    if (!slug) {
       console.warn('unusable tag for next state:', tag)
       continue
     }
-    if (activeTags[key] === true && !disallowDisableWhenActive) {
-      activeTags[key] = false
+    if (activeTags[slug]) {
+      if (!disallowDisableWhenActive) {
+        delete activeTags[slug]
+      }
     } else {
-      activeTags[key] = true
+      activeTags[slug] = true
       // disable others
       ensureUniqueActiveTags(activeTags, tag)
     }
@@ -78,9 +79,7 @@ export const getNextState = (navState: HomeStateNav): HomeStateItem => {
 }
 
 // mutating
-
 const ensureUniqueTagOfType = new Set(['lense', 'country', 'dish'])
-
 export function ensureUniqueActiveTags(
   activeTags: HomeActiveTagsRecord,
   nextActiveTag: NavigableTag

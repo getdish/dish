@@ -687,6 +687,7 @@ const RestaurantPeekDishes = memo(
                   ? dishSize
                   : dishSize * 0.95
                 : dishSize
+
               return (
                 <DishView
                   key={i}

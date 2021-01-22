@@ -48,7 +48,7 @@ const HomeSearchInfoBoxCountry = memo(
           },
         },
       },
-      limit: 50,
+      limit: 30,
     })
 
     return (
