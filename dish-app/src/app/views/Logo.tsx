@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { memo } from 'react'
 import { Defs, Ellipse, G, Mask, Path, Svg, Use } from 'react-native-svg'
 import { VStack, useMedia } from 'snackui'
 
@@ -68,8 +68,7 @@ export const LogoColor = (props: { scale?: number }) => {
   )
 }
 
-export const LogoSmall = () => {
-  const { color } = useSearchBarTheme()
+export const LogoSmall = memo(() => {
   const media = useMedia()
   return (
     <VStack transform={media.sm ? [{ scale: 0.8 }] : [{ scale: 1 }]}>
@@ -155,4 +154,4 @@ export const LogoSmall = () => {
       </Svg>
     </VStack>
   )
-}
+})

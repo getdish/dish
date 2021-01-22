@@ -185,6 +185,7 @@ function db_migrate_local() {
   if [[ $USE_PROD_HASURA_PASSWORD == "true" ]]; then
     HASURA_ADMIN_SECRET="$TF_VAR_HASURA_GRAPHQL_ADMIN_SECRET"
   fi
+  echo "admin secret is $HASURA_ADMIN_SECRET"
   _db_migrate \
     http://localhost:8080 \
     "${HASURA_ADMIN_SECRET:-password}" \
