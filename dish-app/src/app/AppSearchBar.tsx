@@ -10,6 +10,7 @@ import {
   Theme,
   VStack,
   useMedia,
+  useTheme,
 } from 'snackui'
 
 import { bgLightTranslucent } from '../constants/colors'
@@ -151,10 +152,8 @@ export const AppSearchBarFloating = () => {
             position="relative"
             zIndex={104}
             flex={1}
-            paddingHorizontal={3}
             height={height}
             justifyContent="center"
-            overflow="hidden"
             width="100%"
             maxWidth={searchBarMaxWidth}
           >
@@ -183,12 +182,13 @@ const AppSearchBarContents = memo(() => {
       alignItems="center"
       justifyContent="center"
       userSelect="none"
-      paddingHorizontal={media.xs ? 5 : 10}
+      marginHorizontal={media.sm ? 0 : -14}
+      paddingHorizontal={media.xs ? 5 : 4}
       minHeight={searchBarHeight}
     >
-      {!media.xs && <SearchBarActionButton />}
+      {!media.sm && <SearchBarActionButton />}
 
-      <VStack paddingHorizontal={6}>
+      <VStack paddingHorizontal={12}>
         <DishLogoButton />
       </VStack>
 
@@ -286,6 +286,7 @@ const SearchBarActionButton = memo(() => {
   const autocompletes = useStoreInstance(autocompletesStore)
   const showAutocomplete = autocompletes.visible
   const isDisabled = !showAutocomplete && home.currentStateType === 'home'
+  const theme = useTheme()
 
   const Icon = (() => {
     if (showAutocomplete) {
@@ -313,13 +314,19 @@ const SearchBarActionButton = memo(() => {
     >
       <VStack
         alignSelf="center"
-        backgroundColor="red"
+        transform={[{ skewX: '-12deg' }]}
         pointerEvents={isDisabled ? 'none' : 'auto'}
-        width={32}
-        height="100%"
-        opacity={isDisabled ? 0.1 : 0.7}
+        width={30}
+        height={searchBarHeight + 5}
+        borderTopLeftRadius={13.5}
+        borderBottomLeftRadius={13.5}
+        alignItems="center"
+        justifyContent="center"
+        opacity={0.1}
         padding={0}
+        backgroundColor={theme.backgroundColorTertiary}
         {...(!isDisabled && {
+          opacity: 0.7,
           hoverStyle: {
             opacity: 1,
           },
@@ -328,7 +335,9 @@ const SearchBarActionButton = memo(() => {
           },
         })}
       >
-        <Icon color={color} size={20} />
+        <VStack transform={[{ skewX: '12deg' }]}>
+          <Icon color={color} size={20} />
+        </VStack>
       </VStack>
     </Link>
   )
