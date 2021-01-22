@@ -524,7 +524,7 @@ const AppSearchInputTags = memo(
                     transform: [{ translateY: 2 }],
                   })}
                   {...getTagButtonProps(tag)}
-                  onPress={() => {
+                  onPressOut={() => {
                     home.setSearchBarFocusedTag(tag)
                   }}
                   closable

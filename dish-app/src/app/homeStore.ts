@@ -174,9 +174,6 @@ class HomeStore extends Store {
     if (currentState.type === 'home') {
       return null
     }
-    if (this.getIsUpBack(type)) {
-      return router.back()
-    }
     const states = this.states
     const prevStates = states.slice(0, states.length - 1)
     const stateItem = _.findLast(prevStates, (x) => x.type === type)
@@ -206,6 +203,10 @@ class HomeStore extends Store {
   }
 
   popTo(type: HomeStateItem['type']) {
+    if (this.getIsUpBack(type)) {
+      router.back()
+      return
+    }
     const n = this.getUpRouteForType(type)
     if (!n) return
     router.navigate(n)
@@ -433,6 +434,7 @@ class HomeStore extends Store {
     const tags = this.searchBarTags
     const tagIndex = tags.findIndex((x) => getTagSlug(x) === getTagSlug(val))
     console.warn('todo comented out')
+    this.searchBarTagIndex = tagIndex
     // this.autocompleteIndex = -tags.length + tagIndex
   }
 
