@@ -368,6 +368,10 @@ class HomeStore extends Store {
   }
 
   handleRouteChange(item: HistoryItem) {
+    if (item.name === 'notFound') {
+      return
+    }
+
     // happens on *any* route push or pop
     if (appMapStore.hovered) {
       appMapStore.setHovered(null)
@@ -389,40 +393,14 @@ class HomeStore extends Store {
           console.error('NO DIRECTION FOR A POP??', item)
         }
       }
-    } else {
-      // remove future states no longer accessible
-      this.stateIds = this.stateIds.slice(0, this.stateIndex + 1)
+      return
+    }
 
-      const name = item.name
-      if (item.type === 'push' || item.type === 'replace') {
-        switch (name) {
-          case 'home':
-          case 'homeRegion':
-          case 'about':
-          case 'blog':
-          case 'search':
-          case 'list':
-          case 'user':
-          case 'userEdit':
-          case 'gallery':
-          case 'restaurantReview':
-          case 'restaurantHours':
-          case 'restaurant': {
-            const next = this.getHomeState({
-              ...item,
-              name,
-            })
-            if (next) {
-              this.updateHomeState('handleRouteChange', next)
-            }
-            break
-          }
-          default: {
-            console.warn('IS THIS EVEN NECESSARY?', item)
-            return
-          }
-        }
-      }
+    // remove future states no longer accessible
+    this.stateIds = this.stateIds.slice(0, this.stateIndex + 1)
+    const next = this.getHomeState(item)
+    if (next) {
+      this.updateHomeState('handleRouteChange', next)
     }
   }
 
