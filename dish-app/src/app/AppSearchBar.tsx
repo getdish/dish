@@ -1,4 +1,4 @@
-import { ArrowUp, ChevronLeft, Map, Search } from '@dish/react-feather'
+import { ArrowUp, ChevronLeft, Map, MapPin, Search } from '@dish/react-feather'
 import { useStoreInstance } from '@dish/use-store'
 import React, { Suspense, memo } from 'react'
 import { Platform, StyleSheet, TouchableOpacity } from 'react-native'
@@ -264,7 +264,7 @@ const AppSearchBarContents = memo(() => {
             {showLocation ? (
               <Search color={color} size={22} opacity={0.65} />
             ) : (
-              <Map color={color} size={22} opacity={0.65} />
+              <MapPin color={color} size={22} opacity={0.65} />
             )}
           </TouchableOpacity>
         </HStack>

@@ -64,7 +64,9 @@ export const AppSearchInputLocation = memo(() => {
   }, [])
 
   return (
-    <VStack position="relative" flex={1}>
+    // needs overflow hidden or else search box expands past edge on media.sm
+    // while searching location
+    <VStack position="relative" flex={1} overflow="hidden">
       <AppAutocompleteHoverableInput
         input={inputStore.node}
         autocompleteTarget="location"

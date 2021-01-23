@@ -28,6 +28,7 @@ export type LinkSharedProps = Pick<
   replace?: boolean
   stopPropagation?: boolean
   replaceSearch?: boolean
+  promptLogin?: boolean
   disallowDisableWhenActive?: boolean
   preventNavigate?: boolean
   navigateAfterPress?: boolean

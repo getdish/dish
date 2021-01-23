@@ -13,11 +13,11 @@ import {
 } from '../../helpers/allTags'
 import { getNavigateItemForState } from '../../helpers/getNavigateItemForState'
 import { getNextState } from '../../helpers/getNextState'
-import { memoize } from '../../helpers/memoizeWeak'
 import { tagsToNavigableTags } from '../../helpers/tagHelpers'
 import { NavigateItem, router } from '../../router'
 import { homeStore } from '../homeStore'
-import { LinkButtonProps, LinkProps, LinkSharedProps } from '../views/LinkProps'
+import { userStore } from '../userStore'
+import { LinkButtonProps, LinkSharedProps } from '../views/LinkProps'
 
 export const useLink = (
   props: LinkSharedProps & { name?: any; params?: any; tagName?: string }
@@ -38,6 +38,12 @@ export const useLink = (
   }, [])
 
   const onPress = (e: any) => {
+    if (props.promptLogin && userStore.promptLogin()) {
+      e.preventDefault()
+      e.stopPropagation()
+      return
+    }
+
     if (isWeb) {
       if (props.href || e.metaKey || e.ctrlKey) {
         if (props.preventNavigate) {
@@ -111,8 +117,9 @@ const getNormalizeLinkProps = (
   delete next['tag']
   delete next['tags']
   return next
+
+  // get latest on mouseenter, lets you update tags without re-rendering every link
   function onMouseEnter(e) {
-    // get latest on mouseenter, lets you update tags without re-rendering every link
     const next = getNormalizedLink(props)
     if (!isEqual(omit(next, 'onPress'), omit(linkProps, 'onPress'))) {
       forceUpdate()
