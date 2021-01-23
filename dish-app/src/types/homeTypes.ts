@@ -50,6 +50,19 @@ export type HomeStateItem =
   | HomeStateItemUserEdit
   | HomeStateItemList
 
+export type HomeStatesByType = {
+  home: HomeStateItemHome
+  search: HomeStateItemSearch
+  restaurant: HomeStateItemRestaurant
+  user: HomeStateItemUser
+  gallery: HomeStateItemGallery
+  restaurantReview: HomeStateItemReview
+  about: HomeStateItemAbout
+  blog: HomeStateItemBlog
+  userEdit: HomeStateItemUserEdit
+  list: HomeStateItemList
+}
+
 export type HomeStateTagNavigable = Partial<HomeStateItemBase> & {
   id: HomeStateItemBase['id']
   searchQuery: HomeStateItemBase['searchQuery']
