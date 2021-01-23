@@ -83,11 +83,15 @@ export default function ListPage(props: Props) {
           Toast.error(`Error creating list`)
           return
         }
+        if (!userStore.user?.username) {
+          Toast.error(`No user`)
+          return
+        }
         router.navigate({
           name: 'list',
           replace: true,
           params: {
-            userSlug: props.item.userSlug,
+            userSlug: slugify(userStore.user.username),
             slug: list.slug,
             state: 'edit',
           },

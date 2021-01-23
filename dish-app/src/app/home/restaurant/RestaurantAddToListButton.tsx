@@ -17,8 +17,9 @@ export const RestaurantAddToListButton = ({
     <SmallButton
       theme="active"
       name="list"
+      promptLogin
       params={{
-        userSlug: slugify(userStore.user?.username ?? ''),
+        userSlug: 'me',
         slug: 'createRestaurant',
         state: restaurantSlug,
       }}
