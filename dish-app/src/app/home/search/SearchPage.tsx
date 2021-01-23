@@ -56,6 +56,7 @@ import { usePageLoadEffect } from '../../hooks/usePageLoadEffect'
 import { userStore } from '../../userStore'
 import { SmallCircleButton } from '../../views/CloseButton'
 import { ContentScrollView } from '../../views/ContentScrollView'
+import { Link } from '../../views/Link'
 import { PageTitleTag } from '../../views/PageTitleTag'
 import { SlantedTitle } from '../../views/SlantedTitle'
 import { StackDrawer } from '../../views/StackDrawer'
@@ -89,24 +90,21 @@ export default memo(function SearchPage(props: Props) {
         closable
         topLeftControls={
           <Tooltip contents={`Make your "${title.replace('the ', '')}" list`}>
-            <SmallCircleButton
-              shadowed
-              onPress={() => {
-                if (userStore.promptLogin()) return
-                router.navigate({
-                  name: 'list',
-                  params: {
-                    userSlug: userStore.user?.username ?? '',
-                    slug: 'create',
-                    state: getActiveTags(state.activeTags)
-                      .map((x) => x.slug)
-                      .join(','),
-                  },
-                })
+            <Link
+              name="list"
+              promptLogin
+              params={{
+                userSlug: userStore.user?.username ?? '',
+                slug: 'create',
+                state: getActiveTags(state.activeTags)
+                  .map((x) => x.slug)
+                  .join(','),
               }}
             >
-              <Edit2 color="#fff" size={14} />
-            </SmallCircleButton>
+              <SmallCircleButton shadowed>
+                <Edit2 color="#fff" size={14} />
+              </SmallCircleButton>
+            </Link>
           </Tooltip>
         }
       >
