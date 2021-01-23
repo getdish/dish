@@ -29,6 +29,7 @@ import {
   HomeStateItemSearch,
   HomeStateNav,
   HomeStateTagNavigable,
+  HomeStatesByType,
 } from '../types/homeTypes'
 import { NavigableTag } from '../types/tagTypes'
 import { appMapStore } from './AppMapStore'
@@ -56,6 +57,13 @@ class HomeStore extends Store {
 
   get lastHomeOrSearchState() {
     return findLast(this.states, (x) => isSearchState(x) || isHomeState(x))
+  }
+
+  getLastStateByType<Type extends HomeStateItem['type']>(type: Type) {
+    return (findLast(
+      this.states,
+      (x) => x.type === type
+    ) as any) as HomeStatesByType[Type]
   }
 
   get currentStates() {

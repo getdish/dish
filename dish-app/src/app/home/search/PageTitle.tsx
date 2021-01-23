@@ -53,6 +53,8 @@ export const PageTitle = memo(
             fontSize={titleFontSize}
             fontWeight="800"
             color={color}
+            flex={1}
+            overflow="hidden"
           >
             {title}
             {subTitle ? ' ' : ''}

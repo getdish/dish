@@ -1,10 +1,12 @@
 import { graphql, query, refetch, reviewAnalyze } from '@dish/graph'
+import { useStoreInstance } from '@dish/use-store'
 import React, { Suspense, memo, useEffect, useState } from 'react'
 import { Image, ScrollView, TextInput } from 'react-native'
 import {
   AbsoluteVStack,
   HStack,
   LoadingItems,
+  Modal,
   SmallTitle,
   Spacer,
   Text,
@@ -16,6 +18,7 @@ import { red } from '../../../constants/colors'
 import { getRestaurantDishes } from '../../../helpers/getRestaurantDishes'
 import { queryRestaurant } from '../../../queries/queryRestaurant'
 import { HomeStateItemReview } from '../../../types/homeTypes'
+import { AuthForm } from '../../AuthForm'
 import {
   homeStore,
   useHomeStateById,
@@ -24,6 +27,7 @@ import {
 import { useUserReviewCommentQuery } from '../../hooks/useUserReview'
 import { useUserStore } from '../../userStore'
 import { CommentBubble } from '../../views/CommentBubble'
+import { PaneControlButtons } from '../../views/PaneControlButtons'
 import { SmallButton } from '../../views/SmallButton'
 import { StackViewCloseButton } from '../../views/StackViewCloseButton'
 import { TagSmallButton } from '../../views/TagSmallButton'
@@ -33,57 +37,33 @@ import { SentimentText } from '../restaurant/SentimentText'
 export default memo(function RestaurantReviewPage() {
   const isActive = useIsHomeTypeActive('restaurantReview')
   if (!isActive) return null
-  return <RestaurantReviewPageContent id={homeStore.currentState.id} />
+  return <RestaurantReviewPageContent />
 })
 
-function RestaurantReviewPageContent({ id }: { id: string }) {
-  const state = useHomeStateById(id) as HomeStateItemReview
+function RestaurantReviewPageContent() {
+  const store = useStoreInstance(homeStore)
+  const state = store.getLastStateByType('restaurantReview')
   return (
-    <AbsoluteVStack
-      className="inset-shadow-xxxl ease-in-out-slow"
-      fullscreen
-      zIndex={1000000}
-      alignItems="center"
-      justifyContent="center"
-      paddingHorizontal="2%"
-      paddingVertical="2%"
-      backgroundColor="rgba(60,30,50,0.9)"
-      transform={[{ translateY: 0 }]}
-    >
-      <VStack
-        width="100%"
-        height="100%"
-        borderWidth={1}
-        position="relative"
-        backgroundColor="#fff"
-        borderRadius={15}
-        shadowColor="#000"
-        shadowRadius={150}
-        shadowOffset={{ height: 10, width: 0 }}
-        pointerEvents="auto"
-        maxWidth={900}
-        maxHeight={720}
+    <Modal width="98%" maxWidth={700} visible>
+      <PaneControlButtons>
+        <StackViewCloseButton />
+      </PaneControlButtons>
+      <ScrollView
+        showsVerticalScrollIndicator={false}
+        style={{
+          maxWidth: '100%',
+        }}
+        contentContainerStyle={{
+          maxWidth: '100%',
+        }}
       >
-        <ScrollView
-          showsVerticalScrollIndicator={false}
-          style={{
-            maxWidth: '100%',
-          }}
-          contentContainerStyle={{
-            maxWidth: '100%',
-          }}
-        >
-          <VStack flex={1} maxWidth="100%" alignItems="center">
-            <AbsoluteVStack zIndex={10} top={5} right={32}>
-              <StackViewCloseButton />
-            </AbsoluteVStack>
-            <Suspense fallback={<LoadingItems />}>
-              <HomePageReviewContent state={state} />
-            </Suspense>
-          </VStack>
-        </ScrollView>
-      </VStack>
-    </AbsoluteVStack>
+        <VStack flex={1} maxWidth="100%" alignItems="center">
+          <Suspense fallback={<LoadingItems />}>
+            <HomePageReviewContent state={state} />
+          </Suspense>
+        </VStack>
+      </ScrollView>
+    </Modal>
   )
 }
 
@@ -93,6 +73,14 @@ const HomePageReviewContent = memo(
   }: {
     state: HomeStateItemReview
   }) {
+    if (!state.restaurantSlug) {
+      return (
+        <VStack>
+          <Text>no slug?</Text>
+        </VStack>
+      )
+    }
+
     const [restaurant] = queryRestaurant(state.restaurantSlug)
 
     return (
@@ -167,7 +155,7 @@ export const RestaurantReviewCommentForm = memo(
 
       if (!user) {
         console.warn('no user')
-        return null
+        return <AuthForm />
       }
 
       return (
