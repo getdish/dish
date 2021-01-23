@@ -1,8 +1,8 @@
 diff --git a/node_modules/react-dom/cjs/react-dom.development.js b/node_modules/react-dom/cjs/react-dom.development.js
-index 31b7f41..f9ada95 100644
+index d51615a..2744cea 100644
 --- a/node_modules/react-dom/cjs/react-dom.development.js
 +++ b/node_modules/react-dom/cjs/react-dom.development.js
-@@ -10305,6 +10305,7 @@ var updatedAncestorInfo = function () {};
+@@ -10029,6 +10029,7 @@ var updatedAncestorInfo = function () {};
    var didWarn$1 = {};
  
    validateDOMNesting = function (childTag, childText, ancestorInfo) {
