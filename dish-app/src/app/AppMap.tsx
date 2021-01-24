@@ -34,7 +34,10 @@ import { MapView } from './Map'
 
 const styles = {
   light: 'mapbox://styles/nwienert/ckddrrcg14e4y1ipj0l4kf1xy',
-  dark: 'mapbox://styles/nwienert/ck68dg2go01jb1it5j2xfsaja',
+  // monochrome dark
+  dark: 'mapbox://styles/nwienert/ckkapnkmz30vj17ktc1fxccrh',
+  // dish dark
+  //'mapbox://styles/nwienert/ck68dg2go01jb1it5j2xfsaja',
 }
 
 const updateRegion = debounce((region: Region) => {
