@@ -30,7 +30,7 @@ export class RestaurantReviewsDisplayStore extends Store<{ id: string }> {
   }
 }
 
-export const RestaurantBreakdown = memo(
+export const RestaurantReviewsTopSources = memo(
   graphql(
     ({
       tagSlug,

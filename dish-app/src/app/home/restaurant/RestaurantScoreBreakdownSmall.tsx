@@ -12,7 +12,7 @@ import { queryRestaurant } from '../../../queries/queryRestaurant'
 import { queryRestaurantTagScores } from '../../../queries/queryRestaurantTagScores'
 import { homeStore } from '../../homeStore'
 import { PointsText } from '../../views/PointsText'
-import { RestaurantReviewsDisplayStore } from './RestaurantBreakdown'
+import { RestaurantReviewsDisplayStore } from './RestaurantReviewsTopSources'
 
 export const RestaurantScoreBreakdownSmall = memo(
   graphql(

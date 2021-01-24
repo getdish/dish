@@ -1,10 +1,9 @@
 import { graphql } from '@dish/graph'
-import React, { Suspense, memo, useEffect, useMemo, useRef } from 'react'
+import React, { Suspense, memo, useEffect, useRef } from 'react'
 import { ScrollView } from 'react-native'
-import { LoadingItem, LoadingItems, Spacer, VStack } from 'snackui'
+import { LoadingItem, LoadingItems, Spacer, VStack, useTheme } from 'snackui'
 
-import { bgLight, bgLightHover, darkBlue } from '../../../constants/colors'
-import { getColorsForName } from '../../../helpers/getColorsForName'
+import { useColorsFor } from '../../../helpers/getColorsForName'
 import { getMinLngLat } from '../../../helpers/getLngLat'
 import { queryRestaurant } from '../../../queries/queryRestaurant'
 import { HomeStateItemRestaurant } from '../../../types/homeTypes'
@@ -15,11 +14,11 @@ import { ContentScrollView } from '../../views/ContentScrollView'
 import { PageTitleTag } from '../../views/PageTitleTag'
 import { StackDrawer } from '../../views/StackDrawer'
 import { HomeStackViewProps } from '../HomeStackViewProps'
-import { RestaurantBreakdown } from './RestaurantBreakdown'
 import { RestaurantDishPhotos } from './RestaurantDishPhotos'
 import { RestaurantHeader } from './RestaurantHeader'
 import { RestaurantMenu } from './RestaurantMenu'
 import { RestaurantReviewsList } from './RestaurantReviewsList'
+import { RestaurantReviewsTopSources } from './RestaurantReviewsTopSources'
 import { useSelectedDish } from './useSelectedDish'
 
 type Props = HomeStackViewProps<HomeStateItemRestaurant>
@@ -42,7 +41,7 @@ const RestaurantPage = memo(
     const { selectedDish, setSelectedDishToggle } = useSelectedDish(
       section === 'reviews' ? sectionSlug : null
     )
-    const colors = getColorsForName(restaurant.name)
+    const colors = useColorsFor(restaurant.name)
 
     usePageLoadEffect(
       props,
@@ -86,6 +85,8 @@ const RestaurantPage = memo(
       // ])
     }, [scroller, item.sectionSlug])
 
+    const theme = useTheme()
+
     return (
       <>
         <PageTitleTag>
@@ -96,7 +97,7 @@ const RestaurantPage = memo(
           {/* HEADER */}
           {/* -1 margin bottom to overlap bottom border */}
           <VStack
-            backgroundColor={colors.extraLightColor}
+            backgroundColor={colors.themeColor}
             borderBottomColor={colors.lightColor}
             borderBottomWidth={1}
           >
@@ -141,7 +142,7 @@ const RestaurantPage = memo(
 
           <VStack marginTop={-35}>
             <Suspense fallback={<LoadingItems />}>
-              <RestaurantBreakdown
+              <RestaurantReviewsTopSources
                 tagSlug={selectedDish}
                 borderless
                 showScoreTable
@@ -154,10 +155,10 @@ const RestaurantPage = memo(
           <Spacer size="xl" />
 
           <VStack
-            backgroundColor="#fcfcfc"
+            backgroundColor={theme.backgroundColorSecondary}
+            borderColor={theme.backgroundColorSecondary}
             borderTopWidth={1}
             borderBottomWidth={1}
-            borderColor="#f2f2f2"
             paddingVertical={20}
           >
             <Suspense fallback={null}>

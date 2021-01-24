@@ -11,6 +11,7 @@ const active: MyTheme = {
   colorSecondary: '#ccc',
   colorTertiary: '#777',
   colorQuartenary: '#444',
+  shadowColor: `rgba(0,0,0,0.3)`,
   backgroundColor: 'rgb(152, 88, 255)',
   backgroundColorSecondary: 'rgb(152, 88, 255)',
   backgroundColorTertiary: 'rgba(152, 88, 255, 0.85)',
@@ -27,6 +28,7 @@ const error: MyTheme = {
   colorSecondary: '#ccc',
   colorTertiary: '#777',
   colorQuartenary: '#444',
+  shadowColor: `rgba(0,0,0,0.3)`,
   backgroundColor: 'rgb(245, 38, 102)',
   backgroundColorSecondary: 'rgb(245, 38, 102)',
   backgroundColorTertiary: 'rgba(245, 38, 102, 0.85)',
@@ -45,6 +47,7 @@ const darkBase = {
   colorTertiary: '#777',
   colorQuartenary: '#aaa',
   cardBackgroundColor: '#333',
+  shadowColor: `rgba(0,0,0,0.7)`,
   backgroundColorTransparent: 'rgba(0,0,0,0)',
 }
 
@@ -52,10 +55,10 @@ const dark = {
   name: 'dark',
   ...shared,
   ...darkBase,
-  backgroundColor: '#111',
-  backgroundColorSecondary: '#222',
-  backgroundColorTertiary: '#333',
-  backgroundColorQuartenary: '#444',
+  backgroundColor: '#222',
+  backgroundColorSecondary: '#333',
+  backgroundColorTertiary: '#444',
+  backgroundColorQuartenary: '#555',
 }
 
 const darkTranslucent: MyTheme = {
@@ -77,6 +80,7 @@ const lightBase = {
   colorQuartenary: '#aaa',
   cardBackgroundColor: '#fff',
   backgroundColorTransparent: 'rgba(255,255,255,0)',
+  shadowColor: `rgba(0,0,0,0.24)`,
 }
 
 const light: MyTheme = {

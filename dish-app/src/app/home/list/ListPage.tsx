@@ -31,6 +31,7 @@ import {
   Theme,
   Toast,
   VStack,
+  useTheme,
 } from 'snackui'
 
 import { bgLight } from '../../../constants/colors'
@@ -260,6 +261,7 @@ const ListPageContent = graphql((props: Props) => {
   const isEditing = props.item.state === 'edit'
   const [showAddModal, setShowAddModal] = useState(false)
   const draft = useRef<Partial<List>>({})
+  const theme = useTheme()
 
   const refetch = useRefetch()
   const [list] = queryList(props.item.slug)
@@ -438,7 +440,7 @@ const ListPageContent = graphql((props: Props) => {
               bottom={0}
               alignItems="center"
               justifyContent="center"
-              backgroundColor="#fff"
+              backgroundColor={theme.backgroundColor}
               padding={20}
             >
               <Heart size={30} />

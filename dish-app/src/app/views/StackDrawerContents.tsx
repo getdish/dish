@@ -45,8 +45,8 @@ export const StackDrawer = ({
       maxWidth={media.sm ? '100%' : drawerWidthMax}
       minWidth={media.sm ? '100%' : 200}
       justifyContent="flex-end"
-      shadowRadius={media.sm ? 6 : 10}
-      shadowColor={media.sm ? 'rgba(0,0,0,0.125)' : 'rgba(0,0,0,0.22)'}
+      shadowRadius={media.sm ? 10 : 13}
+      shadowColor={media.sm ? 'rgba(0,0,0,0.8)' : 'rgba(0,0,0,0.22)'}
     >
       {!!topLeftControls && (
         <AbsoluteVStack

@@ -1,3 +1,5 @@
+import { useTheme } from 'snackui'
+
 import {
   allColors,
   allColorsPastel,
@@ -21,5 +23,20 @@ export const getColorsForName = (name: string) => {
     color: allColors[index],
     pastelColor: allColorsPastel[index],
     altPastelColor: allColorsPastel[altIndex],
+  }
+}
+
+export function useColorsFor(name: string) {
+  const theme = useTheme()
+  const colors = getColorsForName(name)
+  const isDark = theme.name.startsWith('dark')
+  return {
+    ...colors,
+    get themeColor() {
+      return isDark ? colors.darkColor : colors.darkColor
+    },
+    get themeColorAlt() {
+      return isDark ? colors.color : colors.darkColor
+    },
   }
 }

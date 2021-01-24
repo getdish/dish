@@ -1,6 +1,6 @@
 import { graphql } from '@dish/graph'
 import { Clock } from '@dish/react-feather'
-import React, { Suspense, memo, useState } from 'react'
+import React, { Suspense, memo, useCallback, useState } from 'react'
 import { StyleSheet } from 'react-native'
 import {
   AbsoluteVStack,
@@ -13,7 +13,10 @@ import {
 } from 'snackui'
 
 import { drawerBorderRadius, isWeb } from '../../../constants/constants'
-import { getColorsForName } from '../../../helpers/getColorsForName'
+import {
+  getColorsForName,
+  useColorsFor,
+} from '../../../helpers/getColorsForName'
 import { queryRestaurant } from '../../../queries/queryRestaurant'
 import { HomeStateItemRestaurant } from '../../../types/homeTypes'
 import { useAppDrawerWidthInner } from '../../hooks/useAppDrawerWidth'
@@ -91,7 +94,7 @@ const RestaurantHeaderContent = memo(
       const restaurantId = restaurant.id
       const photoWidth = width * 0.5
       const [hasScrolled, setHasScrolled] = useState(false)
-      const colors = getColorsForName(restaurant.name)
+      const colors = useColorsFor(restaurant.name)
 
       return (
         <VStack
@@ -132,9 +135,9 @@ const RestaurantHeaderContent = memo(
                   <LinearGradient
                     style={[StyleSheet.absoluteFill]}
                     colors={[
-                      `${colors.darkColor}99`,
-                      `${colors.extraLightColor}33`,
-                      `${colors.extraLightColor}ff`,
+                      `${colors.themeColorAlt}99`,
+                      `${colors.themeColor}33`,
+                      `${colors.themeColor}ff`,
                     ]}
                   />
                 </AbsoluteVStack>
@@ -158,7 +161,7 @@ const RestaurantHeaderContent = memo(
                     />
                     <Spacer size="xl" />
                     <HStack
-                      backgroundColor={colors.darkColor}
+                      backgroundColor={colors.themeColorAlt}
                       shadowColor="#000"
                       shadowOpacity={0.2}
                       pointerEvents="auto"
@@ -171,7 +174,7 @@ const RestaurantHeaderContent = memo(
                       justifyContent="center"
                     >
                       <Text
-                        color={colors.extraLightColor}
+                        color={colors.themeColor}
                         alignSelf="flex-start"
                         selectable
                         letterSpacing={-1.2}

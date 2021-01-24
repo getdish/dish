@@ -20,6 +20,7 @@ import {
   useGet,
   useMedia,
   useOnMount,
+  useTheme,
 } from 'snackui'
 
 import { isWeb, searchBarHeight } from '../constants/constants'
@@ -167,42 +168,7 @@ export const AppSearchInput = memo(() => {
 
   return (
     <AppAutocompleteHoverableInput input={input} autocompleteTarget="search">
-      <HStack
-        alignItems="center"
-        borderRadius={180}
-        backgroundColor="#222"
-        borderWidth={2}
-        borderColor="rgba(0,0,0,0.3)"
-        shadowColor="#333"
-        shadowRadius={15}
-        shadowOpacity={0.2}
-        flex={1}
-        maxWidth="100%"
-        paddingLeft={10}
-        overflow="hidden"
-        position="relative"
-        hoverStyle={{
-          borderColor: 'rgba(255,255,255,0.125)',
-          backgroundColor: 'rgba(45,45,45,1)',
-        }}
-        focusStyle={{
-          borderColor: 'rgba(255,255,255,0.14)',
-          backgroundColor: 'rgba(45,45,45,1)',
-        }}
-        {...(media.sm && {
-          backgroundColor: '#f2f2f2',
-          borderRadius: 12,
-          borderWidth: 0,
-          shadowRadius: 0,
-          shadowColor: 'transparent',
-          hoverStyle: {
-            backgroundColor: '#eee',
-          },
-          focusStyle: {
-            backgroundColor: '#f2f2f2',
-          },
-        })}
-      >
+      <InputFrame>
         <AbsoluteVStack
           fullscreen
           borderRadius={1000}
@@ -318,10 +284,55 @@ export const AppSearchInput = memo(() => {
         <SearchCancelButton />
 
         <Spacer size={8} />
-      </HStack>
+      </InputFrame>
     </AppAutocompleteHoverableInput>
   )
 })
+
+function InputFrame({ children }: { children: any }) {
+  const theme = useTheme()
+  const media = useMedia()
+  return (
+    <HStack
+      alignItems="center"
+      borderRadius={180}
+      backgroundColor={theme.backgroundColorSecondary}
+      borderWidth={2}
+      borderColor={theme.borderColor}
+      shadowColor="#333"
+      shadowRadius={15}
+      shadowOpacity={0.2}
+      flex={1}
+      maxWidth="100%"
+      paddingLeft={10}
+      overflow="hidden"
+      position="relative"
+      hoverStyle={{
+        borderColor: theme.backgroundColorTertiary,
+        backgroundColor: theme.backgroundColorTertiary,
+      }}
+      focusStyle={{
+        borderColor: theme.backgroundColorQuartenary,
+        backgroundColor: theme.backgroundColorQuartenary,
+      }}
+      {...(media.sm && {
+        backgroundColor: theme.backgroundColorSecondary,
+        borderRadius: 12,
+        borderWidth: 0,
+        shadowRadius: 0,
+        shadowColor: 'transparent',
+        hoverStyle: {
+          backgroundColor: theme.backgroundColorTertiary,
+        },
+        focusStyle: {
+          backgroundColor: theme.backgroundColorSecondary,
+        },
+      })}
+    >
+      {children}
+    </HStack>
+  )
+}
 
 const SearchCancelButton = memo(() => {
   const home = useHomeStore()
