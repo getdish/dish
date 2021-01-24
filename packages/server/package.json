@@ -52,6 +52,7 @@
     "lodash": "*",
     "webpack-pwa-manifest": "^4.3.0",
     "webpack": "^5.17.0",
+    "react-async-ssr": "^0.7.2",
     "express-winston": "^4.0.5",
     "winston": "^3.3.3",
     "get-port": "^5.1.1",

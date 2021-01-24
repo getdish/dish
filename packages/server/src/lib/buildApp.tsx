@@ -32,52 +32,53 @@ export async function buildApp({
         }),
       }
 
-  const excludes = clean ? clean.trim().split(' ') : []
+  const cleans = clean ? clean.trim().split(' ') : []
 
-  await Promise.all(
-    (
-      await async(
-        serial ? 'serial' : 'parallel',
-        Object.entries(configs).map(async ([name, config]) => {
-          if (!config) return
-          const path = config.output?.path
-          if (!path) {
-            throw new Error(
-              `No output path!: ${JSON.stringify(config, null, 2)}`
-            )
+  const buildTasks = (
+    await Promise.all(
+      Object.entries(configs).map(async ([name, config]) => {
+        if (!config) return
+        const path = config.output?.path
+        if (!path) {
+          throw new Error(`No output path!: ${JSON.stringify(config, null, 2)}`)
+        }
+        for (const cleanName of cleans) {
+          if (cleanName === name || cleanName === 'all') {
+            await remove(path)
           }
-          for (const exclude of excludes) {
-            if (exclude === name || exclude === 'all') {
-              await remove(path)
-            }
-          }
-          if (await pathExists(path)) {
-            console.log(` [web] skip ${name} (rebuild with --clean ${name})`)
-            return
-          }
-          return config
-        })
-      )
-    )
-      .filter(Boolean)
-      .map(async (config) => {
-        await buildWebpack(config!)
+        }
+        if (await pathExists(path)) {
+          console.log(
+            ` [web] build skipping ${name} (rebuild with --clean ${name})`
+          )
+          return
+        }
+        console.log(`No ${path}`)
+        return [name, config] as const
       })
+    )
   )
+    .filter(isPresent)
+    .map(([name, config]) => {
+      console.log(` [web] build ${name}...`)
+      return () => buildWebpack(config!)
+    })
+
+  await async(serial ? 'serial' : 'parallel', buildTasks)
 }
 
 async function async<A extends any>(
   type: 'serial' | 'parallel',
-  items: Promise<A>[]
+  items: (() => Promise<A>)[]
 ): Promise<A[]> {
   if (type === 'serial') {
     let res: any[] = []
     for (const item of items) {
-      res.push(await item)
+      res.push(await item())
     }
     return res
   }
-  return await Promise.all(items)
+  return await Promise.all(items.map((x) => x()))
 }
 
 async function buildWebpack(config: Configuration) {
@@ -103,4 +104,8 @@ async function buildWebpack(config: Configuration) {
       })
     )
   }
+}
+
+function isPresent<T extends Object>(input: null | undefined | T): input is T {
+  return input != null
 }

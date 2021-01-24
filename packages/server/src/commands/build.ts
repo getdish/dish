@@ -15,7 +15,7 @@ export class Build extends Command {
     help: flags.help({ char: 'h' }),
     clean: flags.string({
       description: 'Rebuild either "node", "web", "all"',
-      default: 'all',
+      // no default all for fast rebuild
     }),
     serial: flags.boolean({
       description: 'Build one at a time for memory saving',

@@ -5,8 +5,6 @@ import { CreateWebpackConfig } from '@dish/server'
 import LoadablePlugin from '@loadable/webpack-plugin'
 import ReactRefreshWebpack4Plugin from '@pmmmwh/react-refresh-webpack-plugin'
 import CircularDependencyPlugin from 'circular-dependency-plugin'
-// import DedupeParentCssFromChunksWebpackPlugin from 'dedupe-parent-css-from-chunks-webpack-plugin'
-// import ExtractCssChunks from 'extract-css-chunks-webpack-plugin'
 import { ensureDirSync } from 'fs-extra'
 import HTMLWebpackPlugin from 'html-webpack-plugin'
 import { DuplicatesPlugin } from 'inspectpack/plugin'
@@ -17,6 +15,9 @@ import SpeedMeasurePlugin from 'speed-measure-webpack-plugin'
 import TerserPlugin from 'terser-webpack-plugin'
 import TimeFixPlugin from 'time-fix-plugin'
 import Webpack from 'webpack'
+// import DedupeParentCssFromChunksWebpackPlugin from 'dedupe-parent-css-from-chunks-webpack-plugin'
+// import ExtractCssChunks from 'extract-css-chunks-webpack-plugin'
+import nodeExternals from 'webpack-node-externals'
 import WebpackPwaManifest from 'webpack-pwa-manifest'
 
 const CssMinimizerPlugin = require('css-minimizer-webpack-plugin')
@@ -99,10 +100,18 @@ export default function createWebpackConfig({
         colors: true,
       },
       externals: isSSR
-        ? {
-            react: 'react',
-            'react-dom': 'react-dom',
-          }
+        ? [
+            'react',
+            'react-dom',
+            '@loadable/component',
+            // nodeExternals({
+            //   allowlist: [
+            //     // react-native-web necessary, uses es imports
+            //     'react-native-web',
+            //     'react-native',
+            //   ],
+            // }),
+          ]
         : [],
       devtool: isProduction ? 'source-map' : 'eval-cheap-source-map',
       entry: {
@@ -112,7 +121,7 @@ export default function createWebpackConfig({
             : [hotEntry, entry].filter(isPresent),
       },
       output: {
-        path: path.join(cwd, 'build', 'modern'),
+        path: path.join(cwd, 'build', 'web'),
         filename: `static/js/app.${hashFileNamePart}.js`,
         publicPath: '/',
         pathinfo: !!(isDevelopment || process.env.DEBUG_PATHS),

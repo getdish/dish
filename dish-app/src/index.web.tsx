@@ -1,8 +1,9 @@
 import './web/base.css'
 
 import { startLogging } from '@dish/graph'
+import { loadableReady } from '@loadable/component'
 import React from 'react'
-import { render } from 'react-dom'
+import { hydrate } from 'react-dom'
 import { AppRegistry } from 'react-native'
 
 import { isSSR } from './constants/constants'
@@ -26,7 +27,9 @@ async function start() {
     return
   }
 
-  render(<Root />, ROOT)
+  loadableReady(() => {
+    hydrate(<Root />, ROOT)
+  })
 }
 
 // SSR exports
