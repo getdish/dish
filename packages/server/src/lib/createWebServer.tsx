@@ -15,7 +15,7 @@ export async function createWebServer(
 
   async function start() {
     console.log(
-      ` [web] starting webpack in ${config.env} mode ${
+      ` [web] starting web in ${config.env} mode ${
         config.watch ? '(watch)' : ''
       }...`
     )

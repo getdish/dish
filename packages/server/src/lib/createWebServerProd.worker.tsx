@@ -8,6 +8,7 @@ import express from 'express'
 import { existsSync, pathExists, readFileSync, renameSync } from 'fs-extra'
 import React from 'react'
 import { Helmet } from 'react-helmet'
+import ssrPrepass from 'react-ssr-prepass'
 
 import { ServerConfigNormal } from '../types'
 import { buildApp } from './buildApp'
@@ -43,7 +44,6 @@ async function createWebServerProd(app: any, config: ServerConfigNormal) {
       parentPort?.postMessage('done')
       return
     } else {
-      console.log(' [web] building...')
       await buildApp({
         clean,
         createConfig,
@@ -83,7 +83,7 @@ async function createWebServerProd(app: any, config: ServerConfigNormal) {
 
     // static assets
     // const indexFile = Path.join(ssrDir, 'index.html')
-    const clientBuildPath = Path.join(buildDir, 'modern')
+    const clientBuildPath = Path.join(buildDir, 'web')
     // const clientBuildLegacyPath = Path.join(buildDir, 'legacy')
 
     // move index.html to backup location so we dont serve via express.static
@@ -103,86 +103,90 @@ async function createWebServerProd(app: any, config: ServerConfigNormal) {
 
     app.get('*', async (req, res) => {
       console.log('req', req.hostname, req.path)
-      const htmlPath = Path.join(rootDir, 'src', 'index.html')
-      const template = readFileSync(htmlPath, 'utf8')
-      jsdom.reconfigure({
-        url: 'http://dishapp.com' + req.path,
-      })
-      const app = <App />
-
-      delete client.cache.query
 
       try {
-        ReactDOMServer.renderToString(app)
+        const htmlPath = Path.join(rootDir, 'src', 'index.html')
+        const template = readFileSync(htmlPath, 'utf8')
+        jsdom.reconfigure({
+          url: 'http://dishapp.com' + req.path,
+        })
+
+        // const { cacheSnapshot } = await prepareReactRender(app)
+        // async suspense rendering
+        // await ssrPrepass(app)
+        console.log('scripts are', extractor.getScriptTags())
+
+        const { renderToStringAsync } = require('react-async-ssr')
+        const cacheSnapshot = JSON.stringify(client.cache)
+        const jsx = extractor.collectChunks(<App />)
+        // const app = <App />
+        delete client.cache.query
+        const appHtml = await renderToStringAsync(jsx)
+        await client.scheduler.resolving?.promise
+
+        // const appHtml = ReactDOMServer.renderToString(jsx)
+
+        // need to fool helmet back into thinking were in the node
+        // @ts-ignore
+        const helmet = Helmet.renderStatic()
+
+        const useragent = req.get('User-Agent')
+        // const isModernUser = matchesUA(useragent, {
+        //   // safari doesnt have requestidlecallback
+        //   browsers: ['Chrome >= 61', 'Firefox >= 73'],
+        //   env: 'modern',
+        //   allowHigherVersions: true,
+        // })
+
+        const clientHTML = clientHTMLModern
+        const clientScripts =
+          clientHTML.match(/<script\b[^>]*>([\s\S]*?)<\/script>/gm) ?? []
+        const clientLinks = clientHTML.match(/<link\b[^>]*>/gm) ?? []
+
+        let out = ''
+        for (const line of template.split('\n')) {
+          if (line.includes('<!-- app -->')) {
+            out += appHtml
+            continue
+          }
+          if (line.includes('<!-- head -->')) {
+            out += `
+          ${helmet.title.toString()}
+          ${helmet.meta.toString()}
+          ${helmet.link.toString()}
+    `
+            continue
+          }
+          if (line.indexOf('<!-- scripts -->') >= 0) {
+            out += `
+          <script>
+            window.__CACHE_SNAPSHOT = "${cacheSnapshot}"
+          </script>
+          ${clientScripts.join('\n')}\n`
+            continue
+          }
+          if (line.indexOf('<!-- links -->') >= 0) {
+            out += `
+          ${clientLinks.join('\n')}\n`
+            continue
+          }
+          out += line
+        }
+
+        if (process.env.DEBUG) {
+          console.log('debug', { helmet, appHtml, out })
+        }
+
+        console.log('resolve', req.hostname, req.path, out.length)
+        res.send(out)
       } catch (err) {
-        console.warn('error', err)
+        console.error(err)
+        res
+          .status(500)
+          .send(
+            `<html><body><h2>${err.message}</h2><br /><code><pre>${err.stack}</pre></code></body></html>`
+          )
       }
-
-      await client.scheduler.resolving?.promise
-      const cacheSnapshot = JSON.stringify(client.cache)
-
-      // const { cacheSnapshot } = await prepareReactRender(app)
-      // async suspense rendering
-      // await ssrPrepass(app)
-      const jsx = extractor.collectChunks(<App cacheSnapshot={cacheSnapshot} />)
-
-      console.log('scripts are', extractor.getScriptTags())
-
-      const appHtml = ReactDOMServer.renderToString(jsx)
-
-      // need to fool helmet back into thinking were in the node
-      // @ts-ignore
-      const helmet = Helmet.renderStatic()
-
-      const useragent = req.get('User-Agent')
-      const isModernUser = matchesUA(useragent, {
-        // safari doesnt have requestidlecallback
-        browsers: ['Chrome >= 61', 'Firefox >= 73'],
-        env: 'modern',
-        allowHigherVersions: true,
-      })
-
-      const clientHTML = clientHTMLModern
-      const clientScripts =
-        clientHTML.match(/<script\b[^>]*>([\s\S]*?)<\/script>/gm) ?? []
-      const clientLinks = clientHTML.match(/<link\b[^>]*>/gm) ?? []
-
-      let out = ''
-      for (const line of template.split('\n')) {
-        if (line.includes('<!-- app -->')) {
-          out += appHtml
-          continue
-        }
-        if (line.includes('<!-- head -->')) {
-          out += `
-        ${helmet.title.toString()}
-        ${helmet.meta.toString()}
-        ${helmet.link.toString()}
-  `
-          continue
-        }
-        if (line.indexOf('<!-- scripts -->') >= 0) {
-          out += `
-        <script>
-          window.__CACHE_SNAPSHOT = "${cacheSnapshot}"
-        </script>
-        ${clientScripts.join('\n')}\n`
-          continue
-        }
-        if (line.indexOf('<!-- links -->') >= 0) {
-          out += `
-        ${clientLinks.join('\n')}\n`
-          continue
-        }
-        out += line
-      }
-
-      if (process.env.DEBUG) {
-        console.log('debug', { isModernUser, helmet, appHtml, out })
-      }
-
-      console.log('resolve', req.hostname, req.path, out.length)
-      res.send(out)
     })
 
     app.listen(port)
