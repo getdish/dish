@@ -26,7 +26,8 @@ export DISH_IMAGE_TAG=staging
 
 cd /app
 git checkout staging
-USE_PROD_HASURA_PASSWORD=true ./dishctl.sh db_migrate_local
+# not working: USE_PROD_HASURA_PASSWORD=true
+./dishctl.sh db_migrate_local
 docker-compose pull
 docker-compose restart dish-app-web dish-hooks search
 '
