@@ -1,4 +1,3 @@
-// // debug
 import { series, sleep } from '@dish/async'
 import { order_by, query, resolved } from '@dish/graph'
 import { isPresent } from '@dish/helpers'
@@ -24,7 +23,6 @@ import {
   useTheme,
 } from 'snackui'
 
-import { bgLight } from '../constants/colors'
 import {
   drawerWidthMax,
   isNative,
@@ -54,8 +52,7 @@ import { drawerStore } from './drawerStore'
 import { CircleButton } from './home/restaurant/CircleButton'
 import { useHomeStore } from './homeStore'
 import { useInputStoreLocation } from './inputStore'
-import { useUserStore } from './userStore'
-import { CloseButton, SmallCircleButton } from './views/CloseButton'
+import { CloseButton } from './views/CloseButton'
 import { Link } from './views/Link'
 import { LinkButton } from './views/LinkButton'
 import { PaneControlButtons } from './views/PaneControlButtons'

@@ -1,8 +1,6 @@
 import React, { useLayoutEffect } from 'react'
 
 import { StoreInfo } from './interfaces'
-import { Store } from './Store'
-import { useStore } from './useStore'
 
 const {
   ReactCurrentOwner,
@@ -15,14 +13,6 @@ export const useCurrentComponent = () => {
     : {}
 }
 
-export function useStoreDebug<A extends Store<B>, B>(
-  StoreKlass: (new (props: B) => A) | (new () => A),
-  props?: B,
-  selector?: any
-): A {
-  useDebugStoreComponent(StoreKlass)
-  return useStore(StoreKlass, props, selector)
-}
 export function useDebugStoreComponent(StoreCons: any) {
   const cmp = useCurrentComponent()
   useLayoutEffect(() => {

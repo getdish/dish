@@ -56,8 +56,17 @@ export function useStore<A extends Store<B>, B>(
   const info = getOrCreateStoreInfo(StoreKlass, props)
   return useStoreFromInfo(info, cachedSelector)
 }
-// singleton
 
+export function useStoreDebug<A extends Store<B>, B>(
+  StoreKlass: (new (props: B) => A) | (new () => A),
+  props?: B,
+  selector?: any
+): A {
+  useDebugStoreComponent(StoreKlass)
+  return useStore(StoreKlass, props, selector)
+}
+
+// singleton
 export function createStore<A extends Store<B>, B>(
   StoreKlass: new (props: B) => A | (new () => A),
   props?: B
