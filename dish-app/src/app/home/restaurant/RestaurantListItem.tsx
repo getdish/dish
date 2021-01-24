@@ -216,7 +216,7 @@ const RestaurantListItemContent = memo(
           : Dimensions.get('window').width * 0.65
         : 320,
       maxWidth: Math.min(
-        Dimensions.get('window').width * 0.65,
+        Dimensions.get('window').width * 0.74,
         media.sm ? 360 : 420
       ),
     }
@@ -696,8 +696,8 @@ const RestaurantPeekDishes = memo(
                   restaurantSlug={props.restaurantSlug}
                   restaurantId={props.restaurantId}
                   {...dish}
-                  marginRight={-15}
-                  marginTop={isEven ? 0 : -15}
+                  marginRight={-45}
+                  marginTop={isEven ? 0 : -20}
                   showSearchButton={!props.editable}
                 />
               )
