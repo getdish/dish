@@ -1,9 +1,9 @@
-import { idle, sleep } from '@dish/async'
+import { idle } from '@dish/async'
 import { isEqual } from '@dish/fast-compare'
 import { assert, handleAssertionError, stringify } from '@dish/helpers'
 import { HistoryItem } from '@dish/router'
 import { Store, createStore, useStoreInstance } from '@dish/use-store'
-import _, { clamp, findLast, isPlainObject } from 'lodash'
+import _, { clamp, findLast } from 'lodash'
 import { Keyboard } from 'react-native'
 
 import { initialHomeState } from '../constants/initialHomeState'
@@ -14,10 +14,7 @@ import { getActiveTags } from '../helpers/getActiveTags'
 import { getBreadcrumbs, isBreadcrumbState } from '../helpers/getBreadcrumbs'
 import { getNextState } from '../helpers/getNextState'
 import { getShouldNavigate } from '../helpers/getShouldNavigate'
-import {
-  getTagSlugsFromRoute,
-  getTagsFromRoute,
-} from '../helpers/getTagsFromRoute'
+import { getTagSlugsFromRoute } from '../helpers/getTagsFromRoute'
 import { getTagSlug } from '../helpers/getTagSlug'
 import { isHomeState, isSearchState } from '../helpers/homeStateHelpers'
 import { isSearchBarTag } from '../helpers/isSearchBarTag'
