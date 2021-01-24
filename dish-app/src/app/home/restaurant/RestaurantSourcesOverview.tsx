@@ -11,6 +11,7 @@ import {
   Spacer,
   Text,
   VStack,
+  useTheme,
 } from 'snackui'
 
 import { isWeb } from '../../../constants/constants'
@@ -182,6 +183,7 @@ export const RestaurantSourcesOverview = graphql(
   }) => {
     const [restaurant] = queryRestaurant(restaurantSlug)
     const spacing = 12
+    const theme = useTheme()
 
     const items = tagName
       ? getTagSourceBreakdowns(
@@ -219,8 +221,8 @@ export const RestaurantSourcesOverview = graphql(
                   shadowColor="#000"
                   shadowOpacity={0.05}
                   borderWidth={1}
-                  borderColor="#eee"
-                  backgroundColor="#fff"
+                  borderColor={theme.borderColor}
+                  backgroundColor={theme.cardBackgroundColor}
                   shadowRadius={15}
                   shadowOffset={{ height: 3, width: 0 }}
                   padding={15}
@@ -245,12 +247,16 @@ export const RestaurantSourcesOverview = graphql(
                   </AbsoluteVStack>
                   <Spacer />
                   <HStack justifyContent="center">
-                    <SentimentText sentiment={positive}>Positive</SentimentText>
+                    <SentimentText sentiment={negative}>
+                      {negative}
+                    </SentimentText>
                     <Spacer size="xs" />
-                    <SentimentText sentiment={negative}>Negative</SentimentText>
+                    <SentimentText sentiment={positive}>
+                      {positive}
+                    </SentimentText>
                   </HStack>
                   <Spacer />
-                  <Paragraph sizeLineHeight={0.9}>
+                  <Paragraph color="var(--color)" sizeLineHeight={0.9}>
                     {!!tagName && isWeb ? (
                       <div
                         className="block"

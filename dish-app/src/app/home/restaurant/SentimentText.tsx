@@ -1,7 +1,14 @@
 import React from 'react'
 import { HStack, Text, TextProps } from 'snackui'
 
-import { lightGreen, lightGrey, lightRed } from '../../../constants/colors'
+import {
+  green,
+  grey,
+  lightGreen,
+  lightGrey,
+  lightRed,
+  red,
+} from '../../../constants/colors'
 
 export const SentimentText = ({
   sentiment,
@@ -11,9 +18,7 @@ export const SentimentText = ({
   // have to wrap with hstack to get border radius on native
   return (
     <HStack
-      backgroundColor={
-        sentiment > 0 ? lightGreen : sentiment < 0 ? lightRed : lightGrey
-      }
+      backgroundColor={sentiment > 0 ? green : sentiment < 0 ? red : grey}
       paddingHorizontal={4}
       borderRadius={6}
     >
@@ -24,13 +29,7 @@ export const SentimentText = ({
         ellipse
         {...props}
       >
-        {children}{' '}
-        {(sentiment > 0 || sentiment < 0) && (
-          <Text fontSize={11}>
-            {sentiment > 0 ? '+' : ''}
-            {Math.round(sentiment)}
-          </Text>
-        )}
+        {children}
       </Text>
     </HStack>
   )
