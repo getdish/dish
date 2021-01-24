@@ -607,6 +607,7 @@ export const AutocompleteItemView = memo(
 )
 
 const HomeAutocompleteDefault = memo(() => {
+  const media = useMedia()
   const theme = useTheme()
   return (
     <HStack
@@ -620,8 +621,8 @@ const HomeAutocompleteDefault = memo(() => {
       {tagDefaultAutocomplete.map((tag) => {
         return (
           <VStack
-            width={120}
-            height={120}
+            width={110}
+            height={110}
             borderRadius={12}
             paddingHorizontal={5}
             margin={5}
@@ -635,7 +636,11 @@ const HomeAutocompleteDefault = memo(() => {
           >
             <Link disallowDisableWhenActive tag={tag}>
               <VStack>
-                <Text textAlign="center" width="100%" fontSize={56}>
+                <Text
+                  textAlign="center"
+                  width="100%"
+                  fontSize={media.sm ? 42 : 58}
+                >
                   {tag.icon}
                 </Text>
                 <Spacer size="sm" />
