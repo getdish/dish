@@ -109,12 +109,14 @@ class SearchPageStore extends Store {
         .filter((t) => !t.includes(dishSearchedTag ?? '')),
     ]
 
+    const main_tag = dishSearchedTag ?? otherTags[0]
+    console.log('main tag', main_tag)
     const searchArgs: RestaurantSearchArgs = {
       center: roundLngLat(center),
       span: roundLngLat(span),
       query: state!.searchQuery,
       tags: otherTags,
-      main_tag: dishSearchedTag ?? otherTags[0],
+      main_tag,
     }
 
     // prevent duplicate searches

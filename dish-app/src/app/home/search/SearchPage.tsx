@@ -79,6 +79,8 @@ export default memo(function SearchPage(props: Props) {
     lowerCase: false,
   })
 
+  console.log(getActiveTags(state.activeTags))
+
   return (
     <>
       <PageTitleTag>{title}</PageTitleTag>
@@ -195,6 +197,8 @@ const SearchPageContent = memo(function SearchPageContent(props: Props) {
         overflow="hidden"
         // opacity={isLoading ? 0.5 : 1}
         width="100%"
+        // in case something weird happens, prevents RecyclerListView from complaining
+        minWidth={10}
       >
         <SearchPagePropsContext.Provider value={props}>
           <SearchResultsContent key={`${isLoading}`} {...props} />

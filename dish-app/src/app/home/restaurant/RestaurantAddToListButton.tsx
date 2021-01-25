@@ -18,6 +18,7 @@ export const RestaurantAddToListButton = ({
       theme="active"
       name="list"
       promptLogin
+      tooltip="Add to list"
       params={{
         userSlug: 'me',
         slug: 'createRestaurant',

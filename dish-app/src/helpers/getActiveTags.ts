@@ -13,7 +13,9 @@ export const getActiveTags = memoize(
       if (allTags[slug]) {
         res.push(allTags[slug])
       } else {
-        console.warn('no alltag...')
+        console.groupCollapsed('no alltag...', slug)
+        console.trace(state)
+        console.groupEnd()
         // debugger
         res.push({ slug })
       }

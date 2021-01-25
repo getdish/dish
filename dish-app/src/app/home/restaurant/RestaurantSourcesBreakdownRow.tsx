@@ -14,6 +14,7 @@ import {
 import { bgLight } from '../../../constants/colors'
 import { thirdPartyCrawlSources } from '../../../constants/thirdPartyCrawlSources'
 import { queryRestaurant } from '../../../queries/queryRestaurant'
+import { Link } from '../../views/Link'
 import { LinkButton } from '../../views/LinkButton'
 import { PointsText } from '../../views/PointsText'
 import { RestaurantSourcesBreakdown } from './RestaurantSourcesBreakdown'
@@ -68,15 +69,12 @@ export const RestaurantSourcesBreakdownRow = memo(
               const item = sources[source]
               const info = thirdPartyCrawlSources[source]
               return (
-                <LinkButton
-                  key={source}
-                  alignItems="center"
-                  paddingHorizontal={5}
-                  paddingVertical={3}
-                  borderRadius={100}
-                  href={item.url}
-                >
-                  <HStack>
+                <Link key={source} href={item.url}>
+                  <HStack
+                    alignItems="center"
+                    paddingHorizontal={5}
+                    paddingVertical={3}
+                  >
                     {/* {info?.image ? (
                       <VStack className="faded-out">
                         <Image
@@ -101,7 +99,7 @@ export const RestaurantSourcesBreakdownRow = memo(
                       />
                     )}
                   </HStack>
-                </LinkButton>
+                </Link>
               )
             })}
         </HStack>

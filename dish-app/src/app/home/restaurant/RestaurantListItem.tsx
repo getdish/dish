@@ -548,6 +548,7 @@ const RestaurantListItemContent = memo(
                   paddingLeft={25}
                   overflow="hidden"
                   alignItems="center"
+                  pointerEvents="auto"
                 >
                   <HStack marginBottom={-8}>
                     <RestaurantTagsRow
@@ -654,8 +655,6 @@ const RestaurantPeekDishes = memo(
           tagSlugs: props.activeTagSlugs,
           max: 5,
         })
-
-        console.log('dishes', dishes)
 
     const foundMatchingSearchedDish = props.activeTagSlugs?.includes(
       dishes?.[0]?.slug
