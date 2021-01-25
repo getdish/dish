@@ -391,62 +391,64 @@ const ListPageContent = graphql((props: Props) => {
           )}
         </HStack>
 
-        {/* overlap a bit up */}
-        <PageTitle
-          title={
-            <VStack>
-              <ScalingPressable>
-                <Link
-                  name="user"
-                  params={{ username: list.user?.username ?? '' }}
-                >
-                  <SlantedTitle size="xs" alignSelf="center">
-                    {username}'s
-                  </SlantedTitle>
-                </Link>
-              </ScalingPressable>
+        {/* overflow clip prevention with marginVerticals here */}
+        <VStack marginVertical={-15}>
+          <PageTitle
+            title={
+              <VStack marginVertical={15}>
+                <ScalingPressable>
+                  <Link
+                    name="user"
+                    params={{ username: list.user?.username ?? '' }}
+                  >
+                    <SlantedTitle size="xs" alignSelf="center">
+                      {username}'s
+                    </SlantedTitle>
+                  </Link>
+                </ScalingPressable>
 
-              <SlantedTitle
-                backgroundColor={color}
-                color="#fff"
-                marginTop={-5}
-                alignSelf="center"
-                zIndex={0}
+                <SlantedTitle
+                  backgroundColor={color}
+                  color="#fff"
+                  marginTop={-5}
+                  alignSelf="center"
+                  zIndex={0}
+                >
+                  {isEditing ? (
+                    <Input
+                      fontSize={26}
+                      backgroundColor="transparent"
+                      defaultValue={list.name}
+                      onChangeText={(val) => {
+                        draft.current.name = val
+                      }}
+                      fontWeight="700"
+                      textAlign="center"
+                      color="#fff"
+                      borderColor="transparent"
+                      margin={-5}
+                    />
+                  ) : (
+                    list.name
+                  )}
+                </SlantedTitle>
+              </VStack>
+            }
+            after={
+              <AbsoluteVStack
+                top={-10}
+                right={0}
+                bottom={0}
+                alignItems="center"
+                justifyContent="center"
+                backgroundColor={theme.backgroundColor}
+                padding={20}
               >
-                {isEditing ? (
-                  <Input
-                    fontSize={26}
-                    backgroundColor="transparent"
-                    defaultValue={list.name}
-                    onChangeText={(val) => {
-                      draft.current.name = val
-                    }}
-                    fontWeight="700"
-                    textAlign="center"
-                    color="#fff"
-                    borderColor="transparent"
-                    margin={-5}
-                  />
-                ) : (
-                  list.name
-                )}
-              </SlantedTitle>
-            </VStack>
-          }
-          after={
-            <AbsoluteVStack
-              top={-10}
-              right={0}
-              bottom={0}
-              alignItems="center"
-              justifyContent="center"
-              backgroundColor={theme.backgroundColor}
-              padding={20}
-            >
-              <Heart size={30} />
-            </AbsoluteVStack>
-          }
-        />
+                <Heart size={30} />
+              </AbsoluteVStack>
+            }
+          />
+        </VStack>
 
         {isEditing && (
           <>

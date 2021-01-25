@@ -89,8 +89,8 @@ const light: MyTheme = {
   ...lightBase,
   backgroundColor: '#fff',
   backgroundColorSecondary: '#f2f2f2',
-  backgroundColorTertiary: '#ddd',
-  backgroundColorQuartenary: '#bbb',
+  backgroundColorTertiary: '#e9e9e9',
+  backgroundColorQuartenary: '#d9d9d9',
 }
 
 const lightTranslucent: MyTheme = {
