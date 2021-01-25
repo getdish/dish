@@ -39,6 +39,9 @@ export class Start extends Command {
       char: 'S',
       description: 'Set up an https domain',
     }),
+    ['no-optimize']: flags.boolean({
+      description: `Don't optimize (minify, etc) for faster production debugging`,
+    }),
   }
 
   async run() {
@@ -53,6 +56,7 @@ export class Start extends Command {
       env: flags.prod ? 'production' : 'development',
       watch: flags.ssr ? false : true,
       apiDir: flags['no-api'] ? null : join(rootDir, 'src', 'api'),
+      noOptimize: flags['no-optimize'] ?? false,
       https: flags.https,
     }
 

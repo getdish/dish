@@ -322,7 +322,7 @@ function InputFrame({ children }: { children: any }) {
         shadowRadius: 0,
         shadowColor: 'transparent',
         hoverStyle: {
-          backgroundColor: theme.backgroundColorTertiary,
+          backgroundColor: theme.backgroundColorSecondary,
         },
         focusStyle: {
           backgroundColor: theme.backgroundColorSecondary,
