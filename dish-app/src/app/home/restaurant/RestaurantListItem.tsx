@@ -655,6 +655,8 @@ const RestaurantPeekDishes = memo(
           max: 5,
         })
 
+        console.log('dishes', dishes)
+
     const foundMatchingSearchedDish = props.activeTagSlugs?.includes(
       dishes?.[0]?.slug
     )

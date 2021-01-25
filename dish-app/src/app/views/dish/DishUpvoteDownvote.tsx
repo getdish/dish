@@ -8,6 +8,7 @@ import { UpvoteDownvoteScore } from '../UpvoteDownvoteScore'
 type Props = {
   size: 'sm' | 'md'
   name: string
+  slug: string
   score?: number
   subtle?: boolean
   restaurantSlug?: string
@@ -32,11 +33,10 @@ export const DishUpvoteDownvote = (props: Props) => {
 
 const DishUpvoteDownvoteContent = graphql(function DishUpvoteDownvote({
   size,
-  name,
   subtle,
   score,
   restaurantSlug,
-  restaurantId,
+  slug,
 }: Required<Props>) {
   const intScore =
     score ??
@@ -45,11 +45,8 @@ const DishUpvoteDownvoteContent = graphql(function DishUpvoteDownvote({
           limit: 1,
           where: {
             tag: {
-              name: {
-                _eq: name,
-              },
-              type: {
-                _eq: 'dish',
+              slug: {
+                _eq: slug,
               },
             },
           },
@@ -57,7 +54,7 @@ const DishUpvoteDownvoteContent = graphql(function DishUpvoteDownvote({
       : 0)
 
   const { vote, setVote } = useUserTagVotes(restaurantSlug, {
-    [slugify(name)]: true,
+    [slug]: true,
   })
   return (
     <UpvoteDownvoteScore

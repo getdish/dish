@@ -1,4 +1,5 @@
 // // debug
+import { tag } from '@dish/graph/src'
 import { Search } from '@dish/react-feather'
 import { capitalize } from 'lodash'
 import React, { Suspense, memo, useState } from 'react'
@@ -113,7 +114,7 @@ const DishViewContent = (props: DishViewProps) => {
       onHoverIn={() => setIsHovered(true)}
       onHoverOut={() => setIsHovered(false)}
     >
-      {showVote && (
+      {showVote && !!slug && (
         <AbsoluteVStack
           width={20}
           height={20}
@@ -127,6 +128,7 @@ const DishViewContent = (props: DishViewProps) => {
               size="sm"
               name={name}
               subtle
+              slug={slug}
               score={score}
               {...(restaurantId &&
                 restaurantSlug && {
