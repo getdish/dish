@@ -27,13 +27,16 @@ export type StackItemProps<A> = {
 
 type GetChildren<A> = (props: StackItemProps<A>) => React.ReactNode
 
+const ANIMATION_DURATION = 150
+
 export function HomeStackView<A extends HomeStateItem>(props: {
   children: GetChildren<A>
 }) {
   const { breadcrumbs } = useHomeStore()
   const key = JSON.stringify(breadcrumbs.map((x) => x.id))
   const homeStates = useMemo(() => breadcrumbs, [key])
-  const currentStates = useDebounceValue(homeStates, 20) ?? homeStates
+  const currentStates =
+    useDebounceValue(homeStates, ANIMATION_DURATION) ?? homeStates
   const isRemoving = currentStates.length > homeStates.length
   const isAdding = currentStates.length < homeStates.length
   const items = isRemoving ? currentStates : homeStates
