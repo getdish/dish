@@ -77,8 +77,11 @@ const RestaurantPage = memo(
       ],
     })
 
-    // TODO it wont scroll on initial load, maybe suspense issue
-    const view = item.sectionSlug ? dishesSection : reviewsSection
+    const view = item.sectionSlug
+      ? dishesSection
+      : item.section === 'reviews'
+      ? reviewsSection
+      : null
     useEffect(() => {
       if (!scrollView) return
       if (!view) return
