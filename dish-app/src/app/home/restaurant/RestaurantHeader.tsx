@@ -128,7 +128,7 @@ const RestaurantHeaderContent = memo(
                 <AbsoluteVStack
                   left={0}
                   right={0}
-                  height={170 + 20}
+                  height={170 + 21}
                   width={width}
                   pointerEvents="none"
                 >

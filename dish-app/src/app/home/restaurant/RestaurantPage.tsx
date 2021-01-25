@@ -1,8 +1,10 @@
+import { fullyIdle, series } from '@dish/async'
 import { graphql } from '@dish/graph'
-import React, { Suspense, memo, useEffect, useRef } from 'react'
-import { ScrollView } from 'react-native'
+import React, { Suspense, memo, useEffect, useRef, useState } from 'react'
+import { ScrollView, View } from 'react-native'
 import { LoadingItem, LoadingItems, Spacer, VStack, useTheme } from 'snackui'
 
+import { isWeb } from '../../../constants/constants'
 import { useColorsFor } from '../../../helpers/getColorsForName'
 import { getMinLngLat } from '../../../helpers/getLngLat'
 import { queryRestaurant } from '../../../queries/queryRestaurant'
@@ -37,11 +39,15 @@ const RestaurantPage = memo(
     const { restaurantSlug, section, sectionSlug } = item
     const [restaurant] = queryRestaurant(restaurantSlug)
     const coords = restaurant?.location?.coordinates
-    const scrollView = useRef<ScrollView>()
     const { selectedDish, setSelectedDishToggle } = useSelectedDish(
       section === 'reviews' ? sectionSlug : null
     )
     const colors = useColorsFor(restaurant.name)
+    const [scrollView, setScrollView] = useState<ScrollView | null>(null)
+    // refs break and capture old values, i think gqless related
+    // todo pablo
+    const [reviewsSection, setReviewsSection] = useState<View | null>(null)
+    const [dishesSection, setDishesSection] = useState<View | null>(null)
 
     usePageLoadEffect(
       props,
@@ -72,18 +78,25 @@ const RestaurantPage = memo(
     })
 
     // TODO it wont scroll on initial load, maybe suspense issue
-    const scroller = scrollView.current
+    const view = item.sectionSlug ? dishesSection : reviewsSection
     useEffect(() => {
-      if (!scroller) return
-      if (!item.sectionSlug) return
-      scroller.scrollTo({ y: 550, animated: true })
-      // return series([
-      //   () => fullyIdle({ max: 1000 }),
-      //   () => {
-
-      //   },
-      // ])
-    }, [scroller, item.sectionSlug])
+      if (!scrollView) return
+      if (!view) return
+      return series([
+        () => fullyIdle({ min: 500 }),
+        () => {
+          return new Promise((res) => {
+            view.measure((_x, _y, _w, _h, _pX, pY) => {
+              console.log('measure', view, _x, _y, _w, _h, _pX, pY, pY)
+              res(pY)
+            })
+          })
+        },
+        (offsetY) => {
+          scrollView.scrollTo({ y: offsetY, animated: true })
+        },
+      ])
+    }, [scrollView, view, item.section, item.sectionSlug])
 
     const theme = useTheme()
 
@@ -93,7 +106,7 @@ const RestaurantPage = memo(
           Dish - {restaurant?.name ?? ''} has the best [...tags] dishes.
         </PageTitleTag>
 
-        <ContentScrollView ref={scrollView as any} id="restaurant">
+        <ContentScrollView ref={setScrollView} id="restaurant">
           {/* HEADER */}
           {/* -1 margin bottom to overlap bottom border */}
           <VStack
@@ -118,23 +131,25 @@ const RestaurantPage = memo(
             <Spacer />
 
             <VStack marginBottom={-1} position="relative" zIndex={1}>
-              <Suspense
-                fallback={
-                  <VStack height={150}>
-                    <LoadingItem />
-                  </VStack>
-                }
-              >
-                <RestaurantDishPhotos
-                  size={130}
-                  max={35}
-                  restaurantSlug={restaurantSlug}
-                  restaurantId={restaurant.id ?? undefined}
-                  selectable
-                  selected={selectedDish}
-                  onSelect={setSelectedDishToggle}
-                />
-              </Suspense>
+              <View ref={setDishesSection}>
+                <Suspense
+                  fallback={
+                    <VStack height={150}>
+                      <LoadingItem />
+                    </VStack>
+                  }
+                >
+                  <RestaurantDishPhotos
+                    size={130}
+                    max={35}
+                    restaurantSlug={restaurantSlug}
+                    restaurantId={restaurant.id ?? undefined}
+                    selectable
+                    selected={selectedDish}
+                    onSelect={setSelectedDishToggle}
+                  />
+                </Suspense>
+              </View>
             </VStack>
           </VStack>
 
@@ -161,12 +176,14 @@ const RestaurantPage = memo(
             borderBottomWidth={1}
             paddingVertical={20}
           >
-            <Suspense fallback={null}>
-              <RestaurantReviewsList
-                restaurantSlug={restaurantSlug}
-                restaurantId={restaurant.id}
-              />
-            </Suspense>
+            <View ref={setReviewsSection}>
+              <Suspense fallback={null}>
+                <RestaurantReviewsList
+                  restaurantSlug={restaurantSlug}
+                  restaurantId={restaurant.id}
+                />
+              </Suspense>
+            </View>
           </VStack>
 
           <Spacer size="xl" />

@@ -319,7 +319,6 @@ class HomeStore extends Store {
 
       // restaurant
       case 'restaurant': {
-        const prev = this.states[this.states.length - 1]
         nextState = {
           section: item.params.section,
           sectionSlug: item.params.sectionSlug,

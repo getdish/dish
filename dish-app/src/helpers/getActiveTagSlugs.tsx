@@ -2,5 +2,6 @@ import { homeStore } from '../app/homeStore'
 import { HomeActiveTagsRecord } from '../types/homeTypes'
 
 export function getActiveTagSlugs(tagsRecord?: HomeActiveTagsRecord) {
-  return Object.keys(tagsRecord ?? homeStore.currentState['activeTags'] ?? {})
+  const obj = tagsRecord ?? homeStore.currentState['activeTags'] ?? {}
+  return Object.keys(obj).filter((x) => obj[x])
 }
