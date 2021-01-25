@@ -4,21 +4,15 @@ goal january
 
   1. fix lots of things
 
-    - jwt-refreshed-token handling on client
-      - theres another imortant TODO somewhere in code
     - show onboard if not yet
-    - dont make region move map unless its initial load OR far outside map bounds
-    - fix map jittering
+    - fix map region movement
+    - home regions colorized
     - map toggle between region/area improve
     - better search region
     - region handoff between search/home
-    - fix restaurantpage click dish
-    - cleanup restaurantpage a bit
-    - router types not working on LinkButtonProps
-      - also in homeStore.ts should work on the big pushHomeState switch
     - better intro / intro callout
     - touch / mobile web app runthrough fix scrolling issues
-    - massive amounts of nav/search/autocomplete/comment/restaurant/gallery polish
+    - touch up commenting/rating
     - location <=> url
 
   2. initial family/friends launch at end of month
