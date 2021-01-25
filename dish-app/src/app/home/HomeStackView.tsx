@@ -88,15 +88,18 @@ const AppStackViewItem = memo(
       : index * 5 + (index > 0 ? searchBarHeight + searchBarTopOffset : 0)
     const isFullyActive = !isRemoving && !isAdding
 
-    let children = useMemo(() => {
-      return getChildren({
-        item,
+    let childProps = useMemo(
+      () => ({
         index,
+        item,
         isActive,
-      })
-    }, [index, item, isActive])
+      }),
+      [index, item, isActive]
+    )
 
-    children = useLastValueWhen(() => children, isRemoving)
+    childProps = useLastValueWhen(() => childProps, isRemoving)
+
+    const children = useMemo(() => getChildren(childProps), [childProps])
 
     useLayoutEffect(() => {
       if (isActive) {

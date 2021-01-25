@@ -24,6 +24,14 @@ export function reaction<
     disposeInner()
     if (!equalityFn(last, next)) {
       last = next
+      if (process.env.NODE_ENV === 'development') {
+        console.groupCollapsed(` 💰 reaction ${store['name']}`)
+        console.groupCollapsed('trace >')
+        console.trace()
+        console.groupEnd()
+        console.log('  value', next)
+        console.groupEnd()
+      }
       innerDispose = receiver(next)
     }
   }

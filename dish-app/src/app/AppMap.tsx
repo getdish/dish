@@ -1,6 +1,6 @@
 import { series } from '@dish/async'
 import { isEqual } from '@dish/fast-compare'
-import { resolved } from '@dish/graph'
+import { MapPosition, resolved } from '@dish/graph'
 import { reaction, useStoreInstance } from '@dish/use-store'
 import { debounce } from 'lodash'
 import React, { memo, useCallback, useEffect, useMemo } from 'react'
@@ -40,18 +40,19 @@ const styles = {
   //'mapbox://styles/nwienert/ck68dg2go01jb1it5j2xfsaja',
 }
 
-const updateRegion = debounce((region: Region) => {
+const updateRegion = debounce((region: Region, position: MapPosition) => {
   const { currentState } = homeStore
   const type = currentState.type
   if (type === 'home' || type === 'search') {
     homeStore.navigate({
       state: {
         ...currentState,
+        ...position,
         region: region.slug,
       },
     })
   }
-}, 300)
+}, 150)
 
 export default memo(function AppMap() {
   const { results, showRank, zoomOnHover, hovered } = useAppMapStore()
@@ -94,6 +95,7 @@ export default memo(function AppMap() {
   )
 
   useEffect(() => {
+    console.warn('should remove this and move to a push based model')
     return reaction(
       homeStore,
       () => {
@@ -235,7 +237,7 @@ export default memo(function AppMap() {
     }
   }, [])
 
-  const handleSelectRegion = useCallback((region: Region | null) => {
+  const handleSelectRegion = useCallback((region: Region | null, position) => {
     // console.log('handleSelectRegion', region)
     if (!region) return
     if (!region.slug) {
@@ -243,7 +245,7 @@ export default memo(function AppMap() {
       return
     }
     updateRegion.cancel()
-    updateRegion(region)
+    updateRegion(region, position)
   }, [])
 
   const theme = useTheme()
