@@ -20,6 +20,7 @@ import { setDefaultLocation } from '../../helpers/getDefaultLocation'
 import { getGroupedButtonProps } from '../../helpers/getGroupedButtonProps'
 import { router, useIsRouteActive } from '../../router'
 import { HomeStateItemHome } from '../../types/homeTypes'
+import { appMapStore } from '../AppMapStore'
 import { useHomeStore } from '../homeStore'
 import { ContentScrollView } from '../views/ContentScrollView'
 import { DishHorizonView } from '../views/DishHorizonView'
@@ -39,7 +40,7 @@ export default memo(function HomePage(
   const theme = useTheme()
   const [isLoaded, setIsLoaded] = useState(false)
   const state = home.lastHomeState
-  const isRouteActive = useIsRouteActive('home')
+  const isRouteActive = useIsRouteActive('home', 'homeRegion')
   // first one is if the route is active, second is if the stack view active
   const isActive = isRouteActive && props.isActive
   const region = useRegionQuery(state.region, {
@@ -54,10 +55,20 @@ export default memo(function HomePage(
   useEffect(() => {
     if (!isActive) return
     if (!region.data) return
-    if (isLoaded) return
     const { center, span } = region.data
     if (!center || !span) return
+    console.log('setting center to region', center, span)
     home.updateCurrentState('HomePage.centerMapToRegion', {
+      center,
+      span,
+    })
+    // call this separately from above because:
+    //   1. updateCurrentState only sets if changed values
+    //   2. as you move pages isActive goes false/true here
+    //   3. navigating to a page then back, center/span will be === previous
+    //   4. so the updateCurrentState won't do anything (no change val)
+    //   5. why keep position on state at all? good question... can we remove?
+    appMapStore.setPosition({
       center,
       span,
     })

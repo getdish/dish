@@ -26,7 +26,7 @@ export class TagVoteStore extends Store<VoteStoreProps> {
     // insert into db
     const [tag] = await getFullTags([{ slug: this.props.tagSlug }])
     if (!tag) {
-      console.error('error writing vote')
+      console.error('error writing vote', this.props.tagSlug)
       return undefined
     }
     const review = {
