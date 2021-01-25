@@ -142,6 +142,13 @@ const SearchPageContent = memo(function SearchPageContent(props: Props) {
   })
 
   useEffect(() => {
+    if (!props.isActive) return
+    // reset on all page loads
+    searchStore.resetResults()
+    searchPageStore.runSearch({})
+  }, [props.item])
+
+  useEffect(() => {
     if (!location.data) return
     if (!props.isActive) return
     const searchItem: HomeStateItemSearch = {
@@ -151,11 +158,6 @@ const SearchPageContent = memo(function SearchPageContent(props: Props) {
     }
     home.updateCurrentState('SearchPage.locationFromRoute', searchItem)
   }, [props.isActive, location.data])
-
-  useEffect(() => {
-    if (!props.isActive) return
-    searchPageStore.runSearch({})
-  }, [props.item])
 
   useEffect(() => {
     if (!tags.data) return

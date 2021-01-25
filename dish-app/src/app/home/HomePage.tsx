@@ -55,7 +55,7 @@ export default memo(function HomePage(
   useEffect(() => {
     if (!isActive) return
     if (!region.data) return
-    if (region.data.name !== state.region) return
+    if (slugify(region.data.name) !== state.region) return
     let { center, span } = region.data
     if (!center || !span) return
     span = {
