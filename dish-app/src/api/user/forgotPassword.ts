@@ -1,5 +1,5 @@
 import { jsonRoute } from '@dish/api'
-import { userUpdate } from '@dish/graph'
+import { User, userUpdate } from '@dish/graph'
 import { v4 } from 'uuid'
 
 import { send } from '../_mailer'
@@ -16,12 +16,13 @@ export default jsonRoute(async (req, res) => {
       user.password_reset_date = new Date()
       await userUpdate(user)
       if (user.email) {
-        await sendPasswordResetEmail(user.email, token)
+        // dont await
+        sendPasswordResetEmail(user, token)
       } else {
         throw new Error(`no email`)
       }
     }
-    res.status(204)
+    res.status(204).json({ success: 'Reset password' })
     return
   } catch (err) {
     console.error(err)
@@ -29,12 +30,16 @@ export default jsonRoute(async (req, res) => {
   }
 })
 
-async function sendPasswordResetEmail(email: string, token: string) {
+async function sendPasswordResetEmail(user: User, token: string) {
+  if (!user.email || !user.username) {
+    console.warn('emtpy user info')
+    return
+  }
   await send(
-    this.email,
+    user.email,
     'Dish: Password reset',
     `
-  Dear ${this.username},
+  Dear ${user.username},
 
   Please follow this link to reset your password:
 

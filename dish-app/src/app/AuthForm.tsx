@@ -17,12 +17,13 @@ import {
   SmallTitle,
   Spacer,
   Text,
+  Title,
   VStack,
 } from 'snackui'
 
 import { isWeb } from '../constants/constants'
 import { useQueryLoud } from '../helpers/useQueryLoud'
-import { useRouterCurPage } from '../router'
+import { router, useRouterCurPage } from '../router'
 import { useUserStore, userStore } from './userStore'
 import { Link } from './views/Link'
 import { LinkButtonProps } from './views/LinkProps'
@@ -151,7 +152,11 @@ const PasswordReset = ({ autoFocus }: AuthFormProps) => {
       password: '',
       confirmation: '',
     },
-    submit: (obj) => userStore.fetch('POST', '/api/user/passwordReset', obj),
+    submit: (obj) =>
+      userStore.fetch('POST', '/api/user/passwordReset', {
+        ...obj,
+        token: router.curPage.params.token,
+      }),
   })
   return (
     <SubmittableForm
@@ -160,7 +165,10 @@ const PasswordReset = ({ autoFocus }: AuthFormProps) => {
       isSuccess={isSuccess}
       successText="Your password has been reset, you can now login"
     >
-      <Text>Enter your new password:</Text>
+      <VStack alignItems="center">
+        <Title>Reset Password</Title>
+        <Text>Enter your new password:</Text>
+      </VStack>
       <ValidatedInput
         control={control}
         autoFocus={autoFocus}
@@ -211,6 +219,7 @@ const ForgotPassword = ({ autoFocus, setFormPage }: AuthFormProps) => {
       isSubmitting={isSubmitting}
       onSubmit={onSubmit}
       successText="If we have your details in our database you will receive an email shortly"
+      submitText="Go"
       isSuccess={isSuccess}
       after={
         <HStack alignSelf="flex-end">
@@ -220,10 +229,10 @@ const ForgotPassword = ({ autoFocus, setFormPage }: AuthFormProps) => {
         </HStack>
       }
     >
-      <Text fontSize={14} width={300}>
-        Enter your username or email, if it exists in our database, we'll send
-        you an email with a reset link:
-      </Text>
+      <Paragraph maxWidth={280} paddingVertical={15}>
+        Enter username or email, we'll send you an email with a reset link if
+        account exists:
+      </Paragraph>
       <ValidatedInput
         control={control}
         errors={errors.email}
@@ -426,7 +435,7 @@ const ErrorParagraph = (props) => (
 
 function SubmittableForm({
   onSubmit,
-  submitText,
+  submitText = 'Go',
   successText = 'Submit',
   isSuccess,
   errorText,
@@ -533,7 +542,7 @@ function useFormAction<Values extends { [key: string]: any }>({
     isSubmitting,
     control,
     response,
-    isSuccess: response.isSuccess && response.data,
+    isSuccess: response.isSuccess && response.data && !response.data.error,
     onChange,
     onSubmit,
     watch,

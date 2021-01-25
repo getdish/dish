@@ -55,6 +55,8 @@ export const routes = {
 
 export const router = createStore(Router, { routes })
 
+global['router'] = router
+
 export const useRouter = () => {
   return useStoreInstance(router)
 }

@@ -51,6 +51,7 @@ class UserStore extends Store {
     const res = await header.json()
     if (res.error) {
       Toast.error(res.error)
+      throw res.error
     }
     if (res.success) {
       Toast.show(res.success)
