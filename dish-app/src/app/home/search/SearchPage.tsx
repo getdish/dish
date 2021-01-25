@@ -79,8 +79,6 @@ export default memo(function SearchPage(props: Props) {
     lowerCase: false,
   })
 
-  console.log(getActiveTags(state.activeTags))
-
   return (
     <>
       <PageTitleTag>{title}</PageTitleTag>
@@ -94,7 +92,7 @@ export default memo(function SearchPage(props: Props) {
               params={{
                 userSlug: userStore.user?.username ?? '',
                 slug: 'create',
-                state: getActiveTags(state.activeTags)
+                state: getActiveTags(state)
                   .map((x) => x.slug)
                   .join(','),
               }}
