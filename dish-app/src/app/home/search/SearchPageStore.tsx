@@ -38,7 +38,12 @@ class SearchPageStore extends Store {
   private lastSearchAt = Date.now()
 
   refresh() {
+    this.results = []
     this.runSearch({ force: true })
+  }
+
+  resetResults() {
+    this.results = []
   }
 
   async runSearch(opts: {
