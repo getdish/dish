@@ -1,3 +1,4 @@
+import { UNWRAP_PROXY } from './constants'
 import { Store } from './Store'
 
 export function reaction<
@@ -25,11 +26,13 @@ export function reaction<
     if (!equalityFn(last, next)) {
       last = next
       if (process.env.NODE_ENV === 'development') {
-        console.groupCollapsed(` 💰 reaction ${store['name']}`)
+        console.groupCollapsed(
+          ` 💰 ⏭ ${store[UNWRAP_PROXY].constructor.name} (reaction)`
+        )
         console.groupCollapsed('trace >')
         console.trace()
         console.groupEnd()
-        console.log('  value', next)
+        console.log('  ARG', next)
         console.groupEnd()
       }
       innerDispose = receiver(next)
