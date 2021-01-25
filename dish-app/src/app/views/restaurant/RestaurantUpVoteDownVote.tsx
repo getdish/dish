@@ -41,7 +41,6 @@ type UpvoteDownvoteProps = {
 export const RestaurantUpVoteDownVote = (props: UpvoteDownvoteProps) => {
   const activeTags = props.activeTagSlugs ?? [tagLenses[0].slug]
   const key = JSON.stringify(activeTags)
-
   return (
     <Suspense fallback={null}>
       <RestaurantUpVoteDownVoteContents
@@ -64,12 +63,13 @@ const RestaurantUpVoteDownVoteContents = graphql(
     display,
   }: UpvoteDownvoteProps) => {
     const [restaurant] = queryRestaurant(restaurantSlug)
+    const restaurantTagSlugs = (activeTagSlugs ?? []).reduce(
+      (acc, cur) => ({ ...acc, [cur]: true }),
+      {}
+    )
     const { vote, setVote } = useUserTagVotes(
       restaurantSlug,
-      Object.keys(activeTagSlugs ?? {}).reduce(
-        (acc, cur) => ({ ...acc, [cur]: true }),
-        {}
-      )
+      restaurantTagSlugs
     )
     const theme = useTheme()
 

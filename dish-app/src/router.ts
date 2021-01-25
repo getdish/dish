@@ -65,10 +65,12 @@ export const useRouterCurPage = () => {
   return useStoreInstance(router, (router) => router.curPage)
 }
 
-export const useIsRouteActive = (name: RouteName) => {
-  return useStoreInstance(router, (router) => router.curPage.name === name, [
-    name,
-  ])
+export const useIsRouteActive = (...names: RouteName[]) => {
+  return useStoreInstance(
+    router,
+    (router) => names.includes(router.curPage.name as any),
+    names
+  )
 }
 
 export type SearchRouteParams = {
