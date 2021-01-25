@@ -10,7 +10,7 @@ import React, { useEffect, useRef, useState } from 'react'
 import { Dimensions } from 'react-native'
 import { useGet } from 'snackui'
 
-import { blue, green } from '../constants/colors'
+import { blue, green, red } from '../constants/colors'
 import { MAPBOX_ACCESS_TOKEN } from '../constants/constants'
 import { hasMovedAtLeast } from '../helpers/hasMovedAtLeast'
 import { hexToRGB } from '../helpers/hexToRGB'
@@ -328,7 +328,7 @@ function setupMapEffect({
   function updateOnSelectRegion() {
     if (!curRegion || isMouseDown) return
     if (!isEqual(lastUpdate, curRegion)) {
-      getProps().onSelectRegion?.(curRegion)
+      getProps().onSelectRegion?.(curRegion, getCurrentLocation(map))
       curRegion = null
     } else {
       console.log('is same')
@@ -440,157 +440,6 @@ function setupMapEffect({
           }
           return val
         })()
-
-        // start making regions
-        for (const tile of tiles) {
-          const {
-            maxZoom,
-            minZoom,
-            label,
-            labelSource,
-            name,
-            promoteId,
-            lineColor,
-            lineColorActive,
-            lineColorHover,
-            color,
-            hoverColor,
-            activeColor,
-          } = tile
-
-          map.addSource(name, {
-            type: 'vector',
-            url: `${MARTIN_TILES_HOST}/${name}.json`,
-            promoteId,
-          })
-
-          map.addLayer(
-            {
-              id: `${name}.fill`,
-              type: 'fill',
-              source: name,
-              minzoom: minZoom,
-              maxzoom: maxZoom,
-              paint: {
-                'fill-color': [
-                  'case',
-                  ['==', ['feature-state', 'active'], true],
-                  activeColor,
-                  ['==', ['feature-state', 'hover'], true],
-                  hoverColor,
-                  ['==', ['feature-state', 'active'], null],
-                  color,
-                  'green',
-                ],
-                'fill-opacity': 1,
-              },
-              'source-layer': name,
-            },
-            firstSymbolLayerId
-          )
-
-          if (lineColor) {
-            map.addLayer(
-              {
-                id: `${name}.line`,
-                type: 'line',
-                source: name,
-                minzoom: minZoom,
-                maxzoom: maxZoom,
-                paint: {
-                  'line-color': [
-                    'case',
-                    ['==', ['feature-state', 'active'], true],
-                    lineColorActive,
-                    ['==', ['feature-state', 'hover'], true],
-                    lineColorHover,
-                    ['==', ['feature-state', 'active'], null],
-                    lineColor,
-                    'green',
-                  ],
-                  'line-opacity': 0.05,
-                  'line-width': [
-                    'case',
-                    ['==', ['feature-state', 'active'], true],
-                    1,
-                    ['==', ['feature-state', 'hover'], true],
-                    2,
-                    ['==', ['feature-state', 'active'], null],
-                    3,
-                    4,
-                  ],
-                },
-                'source-layer': name,
-              },
-              firstSymbolLayerId
-            )
-          }
-
-          if (label) {
-            if (labelSource) {
-              map.addSource(labelSource, {
-                type: 'vector',
-                url: `${MARTIN_TILES_HOST}/${labelSource}.json`,
-                promoteId: 'ogc_fid',
-              })
-            }
-            map.addLayer({
-              id: `${name}.label`,
-              // TODO move it to a centroid computed source
-              source: labelSource ?? name,
-              'source-layer': labelSource ?? name,
-              type: 'symbol',
-              minzoom: minZoom,
-              maxzoom: maxZoom,
-              layout: {
-                'text-field': `{${label}}`,
-                'text-font': ['PT Serif Bold', 'Arial Unicode MS Bold'],
-                // 'text-allow-overlap': true,
-                'text-variable-anchor': ['center', 'center'],
-                'text-radial-offset': 10,
-                // 'icon-allow-overlap': true,
-                'text-size': {
-                  base: 1,
-                  stops: [
-                    [10, 6],
-                    [16, 22],
-                  ],
-                },
-                'text-justify': 'center',
-                'symbol-placement': 'point',
-              },
-              paint: {
-                'text-color': [
-                  'case',
-                  ['==', ['feature-state', 'active'], true],
-                  '#000',
-                  ['==', ['feature-state', 'hover'], true],
-                  green,
-                  ['==', ['feature-state', 'active'], null],
-                  'rgba(0,0,0,0.8)',
-                  'green',
-                ],
-                'text-halo-color': 'rgba(255,255,255,0.1)',
-                'text-halo-width': 1,
-              },
-            })
-          }
-
-          cancels.add(() => {
-            map.removeLayer(`${name}.fill`)
-            if (lineColor) {
-              map.removeLayer(`${name}.line`)
-            }
-            if (label) {
-              map.removeLayer(`${name}.label`)
-            }
-            if (labelSource) {
-              map.removeSource(labelSource)
-            }
-            map.removeSource(name)
-          })
-        }
-        // end making regions
 
         let hovered
         const getFeatures = (e) => {
@@ -863,6 +712,157 @@ function setupMapEffect({
         cancels.add(() => {
           map.removeLayer(CLUSTER_LABEL_LAYER_ID)
         })
+
+        // start making regions
+        for (const tile of tiles) {
+          const {
+            maxZoom,
+            minZoom,
+            label,
+            labelSource,
+            name,
+            promoteId,
+            lineColor,
+            lineColorActive,
+            lineColorHover,
+            color,
+            hoverColor,
+            activeColor,
+          } = tile
+
+          map.addSource(name, {
+            type: 'vector',
+            url: `${MARTIN_TILES_HOST}/${name}.json`,
+            promoteId,
+          })
+
+          map.addLayer(
+            {
+              id: `${name}.fill`,
+              type: 'fill',
+              source: name,
+              minzoom: minZoom,
+              maxzoom: maxZoom,
+              paint: {
+                'fill-color': [
+                  'case',
+                  ['==', ['feature-state', 'active'], true],
+                  activeColor,
+                  ['==', ['feature-state', 'hover'], true],
+                  hoverColor,
+                  ['==', ['feature-state', 'active'], null],
+                  color,
+                  'green',
+                ],
+                'fill-opacity': 1,
+              },
+              'source-layer': name,
+            },
+            firstSymbolLayerId
+          )
+
+          if (lineColor) {
+            map.addLayer(
+              {
+                id: `${name}.line`,
+                type: 'line',
+                source: name,
+                minzoom: minZoom,
+                maxzoom: maxZoom,
+                paint: {
+                  'line-color': [
+                    'case',
+                    ['==', ['feature-state', 'active'], true],
+                    lineColorActive,
+                    ['==', ['feature-state', 'hover'], true],
+                    lineColorHover,
+                    ['==', ['feature-state', 'active'], null],
+                    lineColor,
+                    'green',
+                  ],
+                  'line-opacity': 0.05,
+                  'line-width': [
+                    'case',
+                    ['==', ['feature-state', 'active'], true],
+                    1,
+                    ['==', ['feature-state', 'hover'], true],
+                    2,
+                    ['==', ['feature-state', 'active'], null],
+                    3,
+                    4,
+                  ],
+                },
+                'source-layer': name,
+              },
+              firstSymbolLayerId
+            )
+          }
+
+          if (label) {
+            if (labelSource) {
+              map.addSource(labelSource, {
+                type: 'vector',
+                url: `${MARTIN_TILES_HOST}/${labelSource}.json`,
+                promoteId: 'ogc_fid',
+              })
+            }
+            map.addLayer({
+              id: `${name}.label`,
+              // TODO move it to a centroid computed source
+              source: labelSource ?? name,
+              'source-layer': labelSource ?? name,
+              type: 'symbol',
+              minzoom: minZoom,
+              maxzoom: maxZoom,
+              layout: {
+                'text-field': `{${label}}`,
+                'text-font': ['PT Sans Bold', 'Arial Unicode MS Bold'],
+                // 'text-allow-overlap': true,
+                'text-variable-anchor': ['center', 'center'],
+                // 'text-radial-offset': 10,
+                // 'icon-allow-overlap': true,
+                'text-size': {
+                  base: 1,
+                  stops: [
+                    [10, 6],
+                    [16, 26],
+                  ],
+                },
+                'text-justify': 'center',
+                'symbol-placement': 'point',
+              },
+              paint: {
+                'text-color': [
+                  'case',
+                  ['==', ['feature-state', 'active'], true],
+                  '#000',
+                  ['==', ['feature-state', 'hover'], true],
+                  green,
+                  ['==', ['feature-state', 'active'], null],
+                  'rgba(0,0,0,0.38)',
+                  'green',
+                ],
+                'text-halo-color': 'rgba(255,255,255,0.1)',
+                'text-halo-width': 1,
+              },
+            })
+          }
+
+          cancels.add(() => {
+            map.removeLayer(`${name}.fill`)
+            if (lineColor) {
+              map.removeLayer(`${name}.line`)
+            }
+            if (label) {
+              map.removeLayer(`${name}.label`)
+            }
+            if (labelSource) {
+              map.removeSource(labelSource)
+            }
+            map.removeSource(name)
+          })
+        }
+        // end making regions
 
         type Event = mapboxgl.MapMouseEvent & {
           features?: mapboxgl.MapboxGeoJSONFeature[]

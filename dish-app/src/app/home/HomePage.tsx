@@ -48,7 +48,7 @@ export default memo(function HomePage(
     suspense: false,
   })
 
-  console.log('👀 HomePage', { props, region, state, isActive })
+  console.log('👀 HomePage', state.region, { props, region, state, isActive })
 
   // center map to region
   // ONLY on first load!
@@ -62,6 +62,7 @@ export default memo(function HomePage(
       lat: span.lat * 0.66,
       lng: span.lng * 0.66,
     }
+    console.warn('update to regino wtf', region.data.name, state.region)
     home.updateCurrentState('HomePage.centerMapToRegion', {
       center,
       // TODO we need to have this be better synced
