@@ -34,6 +34,7 @@ import { HomeTopSearches } from './HomeTopSearches'
 export default memo(function HomePage(
   props: HomeStackViewProps<HomeStateItemHome>
 ) {
+  const media = useMedia()
   const home = useHomeStore()
   const theme = useTheme()
   const [isLoaded, setIsLoaded] = useState(false)
@@ -158,7 +159,7 @@ export default memo(function HomePage(
       >
         <ContentScrollView id="home">
           <AbsoluteVStack
-            opacity={0.05}
+            opacity={media.sm ? 0 : 0.05}
             top={0}
             right={0}
             left={0}

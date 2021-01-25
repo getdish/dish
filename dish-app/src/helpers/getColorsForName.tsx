@@ -33,7 +33,7 @@ export function useColorsFor(name: string) {
   return {
     ...colors,
     get themeColor() {
-      return isDark ? colors.darkColor : colors.darkColor
+      return isDark ? colors.darkColor : colors.extraLightColor
     },
     get themeColorAlt() {
       return isDark ? colors.color : colors.darkColor

@@ -72,6 +72,8 @@ class SearchPageStore extends Store {
     const tags = curState ? getActiveTags(curState) : []
 
     const shouldCancel = () => {
+      const isntOnSearch = homeStore.currentStateType !== 'search'
+      if (isntOnSearch) return true
       const state = homeStore.lastSearchState
       const answer = !state || this.lastSearchAt != curId
       // if (answer) console.log('search: cancel')

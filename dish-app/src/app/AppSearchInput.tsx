@@ -30,7 +30,10 @@ import { tagsToNavigableTags } from '../helpers/tagHelpers'
 import { router } from '../router'
 import { AutocompleteStore, autocompletesStore } from './AppAutocomplete'
 import { AppAutocompleteHoverableInput } from './AppAutocompleteHoverableInput'
-import { searchPageStore } from './home/search/SearchPageStore'
+import {
+  searchPageStore,
+  useSearchPageStore,
+} from './home/search/SearchPageStore'
 import { homeStore, useHomeStore } from './homeStore'
 import { useAutocompleteInputFocus } from './hooks/useAutocompleteInputFocus'
 import { useSearchBarTheme } from './hooks/useSearchBarTheme'
@@ -102,7 +105,6 @@ export const isSearchInputFocused = () => {
 export const AppSearchInput = memo(() => {
   const inputStore = useInputStoreSearch()
   const home = useHomeStore()
-  const { loading } = home
   const { color, backgroundRgb } = useSearchBarTheme()
   const media = useMedia()
   const [search, setSearch] = useState('')
@@ -177,27 +179,7 @@ export const AppSearchInput = memo(() => {
         />
 
         {/* Loading / Search Icon */}
-        <VStack
-          width={16}
-          marginLeft={3}
-          transform={[{ scale: loading ? 1.2 : 1 }]}
-        >
-          <TouchableOpacity onPress={focusSearchInput}>
-            {loading ? (
-              <VStack className="rotating" opacity={1}>
-                <Loader color={color} size={16} />
-              </VStack>
-            ) : (
-              <Search
-                color={color}
-                size={media.xs ? 16 : 20}
-                style={{
-                  opacity: 0.8,
-                }}
-              />
-            )}
-          </TouchableOpacity>
-        </VStack>
+        <SearchInputIcon color={color} />
 
         <VStack
           // @ts-ignore
@@ -286,6 +268,36 @@ export const AppSearchInput = memo(() => {
         <Spacer size={8} />
       </InputFrame>
     </AppAutocompleteHoverableInput>
+  )
+})
+
+const SearchInputIcon = memo(({ color }: { color: string }) => {
+  const media = useMedia()
+  const home = useHomeStore()
+  const search = useSearchPageStore()
+  const loading = home.loading || search.status === 'loading'
+  return (
+    <VStack
+      width={16}
+      marginLeft={3}
+      transform={[{ scale: loading ? 1.2 : 1 }]}
+    >
+      <TouchableOpacity onPress={focusSearchInput}>
+        {loading ? (
+          <VStack className="rotating" opacity={1}>
+            <Loader color={color} size={16} />
+          </VStack>
+        ) : (
+          <Search
+            color={color}
+            size={media.xs ? 16 : 20}
+            style={{
+              opacity: 0.8,
+            }}
+          />
+        )}
+      </TouchableOpacity>
+    </VStack>
   )
 })
 
