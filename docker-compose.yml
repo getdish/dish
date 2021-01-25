@@ -93,7 +93,7 @@ services:
     depends_on:
       - 'postgres'
   search:
-    image: gcr.io/dish-258800/search${DISH_IMAGE_TAG}
+    image: gcr.io/dish-258800/dish/search${DISH_IMAGE_TAG}
     build:
       context: ./
       dockerfile: ./services/search/Dockerfile
@@ -166,7 +166,7 @@ services:
       - ${NGINX_FILES_PATH:-./data}/certs:/etc/nginx/certs:ro
       - ${NGINX_FILES_PATH:-./data}/htpasswd:/etc/nginx/htpasswd:ro
       - /var/run/docker.sock:/tmp/docker.sock:ro
-      - ./nginx.tmpl:/etc/docker-gen/templates/nginx.tmpl:ro
+      - /app/etc/staging/docker/nginx-gen/templates/nginx.tmpl:/etc/docker-gen/templates/nginx.tmpl:ro
     logging:
       driver: ${NGINX_GEN_LOG_DRIVER:-json-file}
       options:
