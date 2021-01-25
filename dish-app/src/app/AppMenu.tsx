@@ -1,10 +1,10 @@
 import { slugify } from '@dish/graph'
 import { ChevronUp, HelpCircle, Menu } from '@dish/react-feather'
-import { useStoreInstance } from '@dish/use-store'
+import { reaction, useStoreInstance } from '@dish/use-store'
 import React, { Suspense, memo, useEffect } from 'react'
 import { HStack, Popover, Spacer, Text, Tooltip, useMedia } from 'snackui'
 
-import { useRouterCurPage } from '../router'
+import { router, useRouterCurPage } from '../router'
 import { AppMenuContents } from './AppMenuContents'
 import { appMenuStore } from './AppMenuStore'
 import { UserAvatar } from './home/user/UserAvatar'
@@ -20,17 +20,6 @@ export const AppMenu = memo(() => {
   const appMenu = useStoreInstance(appMenuStore)
   const showUserMenu = appMenu.isVisible
   const pageName = useRouterCurPage().name
-
-  useEffect(() => {
-    // open menu on nav to login/register
-    if (
-      pageName == 'login' ||
-      pageName == 'register' ||
-      pageName == 'passwordReset'
-    ) {
-      appMenu.hide()
-    }
-  }, [pageName])
 
   return (
     <HStack alignItems="center">

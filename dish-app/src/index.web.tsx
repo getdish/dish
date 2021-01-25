@@ -3,7 +3,7 @@ import './web/base.css'
 import { startLogging } from '@dish/graph'
 import { loadableReady } from '@loadable/component'
 import React from 'react'
-import { hydrate } from 'react-dom'
+import { hydrate, render } from 'react-dom'
 import { AppRegistry } from 'react-native'
 
 import { isSSR } from './constants/constants'
@@ -27,9 +27,13 @@ async function start() {
     return
   }
 
-  loadableReady(() => {
-    hydrate(<Root />, ROOT)
-  })
+  if (process.env.NODE_ENV === 'production') {
+    loadableReady(() => {
+      hydrate(<Root />, ROOT)
+    })
+  } else {
+    render(<Root />, ROOT)
+  }
 }
 
 // SSR exports

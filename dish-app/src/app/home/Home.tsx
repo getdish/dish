@@ -1,5 +1,8 @@
+import { reaction } from '@dish/use-store'
 import React, { Suspense, memo, useEffect } from 'react'
 
+import { router } from '../../router'
+import { appMenuStore } from '../AppMenuStore'
 import { HomeContainer } from './HomeContainer'
 import { HomeStackView } from './HomeStackView'
 import { HomeStackViewPages } from './HomeStackViewPages'
@@ -13,6 +16,20 @@ export const Home = memo(function Home() {
       }
     }, [])
   }
+
+  useEffect(() => {
+    return reaction(
+      router as any,
+      (x) => {
+        return x.curPage.name
+      },
+      (name) => {
+        if (name == 'login' || name == 'register' || name == 'passwordReset') {
+          appMenuStore.show()
+        }
+      }
+    )
+  }, [])
 
   return (
     <Suspense fallback={null}>

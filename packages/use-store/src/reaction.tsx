@@ -19,14 +19,17 @@ export function reaction<
     }
   }
 
-  const disposeSubscribe = store.subscribe(() => {
+  function updateReaction() {
     const next = selector(store)
     disposeInner()
     if (!equalityFn(last, next)) {
       last = next
       innerDispose = receiver(next)
     }
-  })
+  }
+
+  const disposeSubscribe = store.subscribe(updateReaction)
+  updateReaction()
 
   return () => {
     disposeSubscribe()
