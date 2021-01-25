@@ -222,7 +222,7 @@ const AppSearchBarContents = memo(() => {
             <VStack display={showLocation ? 'contents' : 'none'}>
               <AppSearchInputLocation />
             </VStack>
-            <VStack display={!showLocation ? 'contents' : 'none'}>
+            <VStack flex={1} display={!showLocation ? 'contents' : 'none'}>
               <AppSearchInput />
             </VStack>
           </>

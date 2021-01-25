@@ -16,10 +16,12 @@ export async function createServer(serverConf: ServerConfig) {
   const defaultPort = https ? 443 : 80
   const port = process.env.PORT ? +process.env.PORT : serverConf.port ?? 4444
   const url = `${protocol}://${host}${port == defaultPort ? '' : `:${port}`}`
+  const noOptimize = serverConf.noOptimize ?? false
   const conf: ServerConfigNormal = {
     url,
     apiDir: serverConf.apiDir as any,
     clean: false,
+    noOptimize,
     host,
     port,
     https,
@@ -32,6 +34,7 @@ export async function createServer(serverConf: ServerConfig) {
     buildDir: join(rootDir, 'build'),
     createConfig: getWebpackConfigBuilder({ rootDir }),
     webpackConfig: {
+      noMinify: noOptimize,
       entry: join(rootDir, 'src', 'index.ts'),
       env: serverConf.env,
       snackOptions: {

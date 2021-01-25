@@ -20,6 +20,9 @@ export class Build extends Command {
     serial: flags.boolean({
       description: 'Build one at a time for memory saving',
     }),
+    ['no-optimize']: flags.boolean({
+      description: `Don't optimize (minify, etc) for faster production debugging`,
+    }),
   }
 
   async run() {
@@ -33,6 +36,7 @@ export class Build extends Command {
         clean: flags.clean,
         createConfig: getWebpackConfigBuilder({ rootDir }),
         webpackConfig: {
+          noMinify: flags['no-optimize'] ?? false,
           entry: join(rootDir, 'src', 'index.ts'),
           env: 'production',
           snackOptions: {

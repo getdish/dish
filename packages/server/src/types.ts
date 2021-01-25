@@ -14,6 +14,7 @@ export type ServerConfig = {
   apiDir?: string | null
   https?: boolean
   verbose?: boolean
+  noOptimize?: boolean
 }
 
 export type ServerConfigNormal = Required<ServerConfig> & {

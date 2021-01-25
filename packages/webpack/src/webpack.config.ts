@@ -5,6 +5,8 @@ import { CreateWebpackConfig } from '@dish/server'
 import LoadablePlugin from '@loadable/webpack-plugin'
 import ReactRefreshWebpack4Plugin from '@pmmmwh/react-refresh-webpack-plugin'
 import CircularDependencyPlugin from 'circular-dependency-plugin'
+import DedupeParentCssFromChunksWebpackPlugin from 'dedupe-parent-css-from-chunks-webpack-plugin'
+import ExtractCssChunks from 'extract-css-chunks-webpack-plugin'
 import { ensureDirSync } from 'fs-extra'
 import HTMLWebpackPlugin from 'html-webpack-plugin'
 import { DuplicatesPlugin } from 'inspectpack/plugin'
@@ -15,13 +17,10 @@ import SpeedMeasurePlugin from 'speed-measure-webpack-plugin'
 import TerserPlugin from 'terser-webpack-plugin'
 import TimeFixPlugin from 'time-fix-plugin'
 import Webpack from 'webpack'
-// import DedupeParentCssFromChunksWebpackPlugin from 'dedupe-parent-css-from-chunks-webpack-plugin'
-// import ExtractCssChunks from 'extract-css-chunks-webpack-plugin'
 import nodeExternals from 'webpack-node-externals'
 import WebpackPwaManifest from 'webpack-pwa-manifest'
 
 const CssMinimizerPlugin = require('css-minimizer-webpack-plugin')
-// const DedupeParentCssFromChunksWebpackPlugin = require('dedupe-parent-css-from-chunks-webpack-plugin')
 
 export default function createWebpackConfig({
   entry,
@@ -44,7 +43,7 @@ export default function createWebpackConfig({
   const isHot = !isProduction && !isSSR && !disableHot && target !== 'node'
   const isStaticExtracted = !process.env.NO_EXTRACT
   const isVerbose = process.env.ANALYZE_BUNDLE || process.env.INSPECT
-  const minimize = false ?? (noMinify || isSSR) ? false : isProduction && !isSSR
+  const minimize = noMinify || isSSR ? false : isProduction && !isSSR
   const hashFileNamePart = isProduction ? '[contenthash]' : '[fullhash]'
   const hotEntry = isHot ? 'webpack-hot-middleware/client' : null
   const smp = new SpeedMeasurePlugin()
@@ -218,7 +217,7 @@ export default function createWebpackConfig({
                 test: /\.css$/i,
                 use:
                   isProduction && !isSSR
-                    ? [MiniCssExtractPlugin.loader, 'css-loader']
+                    ? [ExtractCssChunks.loader, 'css-loader']
                     : ['style-loader', 'css-loader'],
               },
               {
@@ -297,17 +296,19 @@ export default function createWebpackConfig({
             //   // fixes issue i had https://github.com/lodash/lodash/issues/3101
             //   shorthands: true,
             // }),
-            // new ExtractCssChunks({
-            //   // @ts-expect-error
-            //   esModule: true,
-            //   ignoreOrder: true,
-            // }),
-            // new DedupeParentCssFromChunksWebpackPlugin({
-            //   canPrint: true, // the default is true
-            // }),
-            new MiniCssExtractPlugin({
-              filename: '[name].out.css',
+            new ExtractCssChunks({
+              filename: '[name].css',
+              chunkFilename: '[id].css',
+              // @ts-ignore
+              esModule: true,
+              ignoreOrder: true,
             }),
+            new DedupeParentCssFromChunksWebpackPlugin({
+              canPrint: true, // the default is true
+            }),
+            // new MiniCssExtractPlugin({
+            //   filename: '[name].out.css',
+            // }),
           ]) ||
           []),
 

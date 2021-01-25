@@ -1,3 +1,21 @@
+// for testing quickly
+// import { Button, ThemeProvider, configureThemes } from 'snackui'
+
+// import themes from './constants/themes'
+
+// configureThemes(themes)
+
+// export function Root() {
+//   console.log('hi')
+//   return (
+//     <ThemeProvider themes={themes} defaultTheme="light">
+//       <Button pointerEvents="auto" backgroundColor="red">
+//         hello
+//       </Button>
+//     </ThemeProvider>
+//   )
+// }
+
 // import './whydidyourender'
 import './globals'
 
