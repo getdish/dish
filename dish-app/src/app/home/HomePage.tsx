@@ -55,11 +55,16 @@ export default memo(function HomePage(
   useEffect(() => {
     if (!isActive) return
     if (!region.data) return
-    const { center, span } = region.data
+    if (region.data.name !== state.region) return
+    let { center, span } = region.data
     if (!center || !span) return
-    console.log('setting center to region', center, span)
+    span = {
+      lat: span.lat * 0.66,
+      lng: span.lng * 0.66,
+    }
     home.updateCurrentState('HomePage.centerMapToRegion', {
       center,
+      // TODO we need to have this be better synced
       span,
     })
     // call this separately from above because:

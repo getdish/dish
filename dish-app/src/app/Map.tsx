@@ -4,7 +4,7 @@ import { fullyIdle, series } from '@dish/async'
 import { isDev, isStaging, slugify } from '@dish/graph'
 import bbox from '@turf/bbox'
 import union from '@turf/union'
-import _, { capitalize, isEqual, throttle } from 'lodash'
+import _, { capitalize, debounce, isEqual, throttle } from 'lodash'
 import mapboxgl from 'mapbox-gl'
 import React, { useEffect, useRef, useState } from 'react'
 import { Dimensions } from 'react-native'
@@ -309,6 +309,104 @@ function setupMapEffect({
 
   const cancels = new Set<Function>()
 
+  const tileSetter = (
+    feature: mapboxgl.FeatureIdentifier | mapboxgl.MapboxGeoJSONFeature
+  ) => (state: { [key: string]: any }) => {
+    map.setFeatureState(feature, state)
+    map.setFeatureState(
+      {
+        ...feature,
+        source: 'public.nhood_labels',
+        sourceLayer: 'public.nhood_labels',
+      },
+      state
+    )
+  }
+
+  let isMouseDown = false
+  let lastUpdate = null
+  function updateOnSelectRegion() {
+    if (!curRegion || isMouseDown) return
+    if (!isEqual(lastUpdate, curRegion)) {
+      getProps().onSelectRegion?.(curRegion)
+      curRegion = null
+    } else {
+      console.log('is same')
+    }
+  }
+
+  let curRegion: Region | null = null
+  let curId
+  const handleMoveDbc = debounce(() => {
+    const zoom = map.getZoom()
+    const { padding } = getProps()
+    const width = map.getContainer().clientWidth - padding.right
+    const height = map.getContainer().clientHeight - padding.bottom
+    const x = width / 2 + padding.left
+    const y = height / 2 + padding.top
+    let layerName = ''
+    for (const tile of tiles) {
+      if (zoom >= tile.minZoom && zoom <= tile.maxZoom) {
+        layerName = tile.name
+        break
+      }
+    }
+    if (!layerName) return
+    try {
+      const features = map.queryRenderedFeatures(new mapboxgl.Point(x, y), {
+        layers: [`${layerName}.fill`],
+      })
+      const feature = features[0]
+      if (!feature) return
+      if (feature.id === curId) return
+
+      if (curId) {
+        tileSetter({
+          source: layerName,
+          sourceLayer: layerName,
+          id: curId,
+        })({
+          active: null,
+        })
+        curId = null
+      }
+      curId = feature.id
+      tileSetter({
+        source: layerName,
+        sourceLayer: layerName,
+        id: curId,
+      })({
+        active: true,
+      })
+
+      // temp regions supprot until we normalize naming at tile level
+      const props = feature.properties ?? {}
+      const name =
+        props.nhood ??
+        (props.hrrcity
+          ? props.hrrcity
+              .toLowerCase()
+              .replace('ca- ', '')
+              .split(' ')
+              .map((x) => capitalize(x))
+              .join(' ')
+          : '')
+      if (!name) {
+        console.warn('No available region', feature)
+        return
+      }
+
+      curRegion = {
+        geometry: feature.geometry as any,
+        name: name,
+        slug: props.slug ?? slugify(name),
+      }
+      updateOnSelectRegion()
+    } catch (err) {
+      console.log('error querying map', err)
+    }
+  }, 150)
+
   cancels.add(
     series([
       () =>
@@ -324,6 +422,11 @@ function setupMapEffect({
         ]),
       () => {
         if (!map) return
+
+        map.on('sourcedata', () => {
+          // console.log('source data update')
+          handleMoveDbc()
+        })
 
         const firstSymbolLayerId = (() => {
           const layers = map.getStyle().layers
@@ -488,88 +591,6 @@ function setupMapEffect({
           })
         }
         // end making regions
-
-        const tileSetter = (
-          feature: mapboxgl.FeatureIdentifier | mapboxgl.MapboxGeoJSONFeature
-        ) => (state: { [key: string]: any }) => {
-          map.setFeatureState(feature, state)
-          map.setFeatureState(
-            {
-              ...feature,
-              source: 'public.nhood_labels',
-              sourceLayer: 'public.nhood_labels',
-            },
-            state
-          )
-        }
-
-        let curRegion: Region | null = null
-        let curId
-        const handleMoveThrottled = throttle(() => {
-          const zoom = map.getZoom()
-          const { padding } = getProps()
-          const width = map.getContainer().clientWidth - padding.right
-          const height = map.getContainer().clientHeight - padding.bottom
-          const x = width / 2 + padding.left
-          const y = height / 2 + padding.top
-          let layerName = ''
-          for (const tile of tiles) {
-            if (zoom > tile.minZoom && zoom < tile.maxZoom) {
-              layerName = tile.name
-              break
-            }
-          }
-          if (!layerName) return
-          const features = map.queryRenderedFeatures(new mapboxgl.Point(x, y), {
-            layers: [`${layerName}.fill`],
-          })
-          const feature = features[0]
-          if (!feature) return
-          if (feature.id === curId) return
-
-          if (curId) {
-            tileSetter({
-              source: layerName,
-              sourceLayer: layerName,
-              id: curId,
-            })({
-              active: null,
-            })
-            curId = null
-          }
-          curId = feature.id
-          tileSetter({
-            source: layerName,
-            sourceLayer: layerName,
-            id: curId,
-          })({
-            active: true,
-          })
-
-          // temp regions supprot until we normalize naming at tile level
-          const props = feature.properties ?? {}
-          const name =
-            props.nhood ??
-            (props.hrrcity
-              ? props.hrrcity
-                  .toLowerCase()
-                  .replace('ca- ', '')
-                  .split(' ')
-                  .map((x) => capitalize(x))
-                  .join(' ')
-              : '')
-          if (!name) {
-            console.warn('No available region', feature)
-            return
-          }
-
-          curRegion = {
-            geometry: feature.geometry as any,
-            name: name,
-            slug: props.slug ?? slugify(name),
-          }
-          updateOnSelectRegion()
-        }, 300)
 
         let hovered
         const getFeatures = (e) => {
@@ -927,8 +948,6 @@ function setupMapEffect({
           props.onMoveStart?.()
         }
 
-        let isMouseDown = false
-
         const handleMouseDown = () => {
           handleMoveEndDebounced.cancel()
           isMouseDown = true
@@ -937,17 +956,6 @@ function setupMapEffect({
         const handleMouseUp = () => {
           isMouseDown = false
           updateOnSelectRegion()
-        }
-
-        let lastUpdate = null
-        function updateOnSelectRegion() {
-          if (!curRegion || isMouseDown) return
-          if (!isEqual(lastUpdate, curRegion)) {
-            getProps().onSelectRegion?.(curRegion)
-            curRegion = null
-          } else {
-            console.log('is same')
-          }
         }
 
         map.on('mousedown', handleMouseDown)
@@ -962,7 +970,7 @@ function setupMapEffect({
         })
 
         const handleMove: Listener = () => {
-          handleMoveThrottled()
+          handleMoveDbc()
           handleMoveEndDebounced.cancel()
         }
         map.on('move', handleMove)
