@@ -1,5 +1,9 @@
 ARG DISH_BASE_VERSION=latest
 FROM gcr.io/dish-258800/base:$DISH_BASE_VERSION
+
+# slim it down a bit
+RUN rm -r services
+
 WORKDIR /app/dish-app
 
 RUN apt-get update && apt-get install -y parallel build-essential \

@@ -1,10 +1,5 @@
 version: '3.0'
 services:
-  base:
-    image: 'gcr.io/dish-258800/base${DISH_BASE_VERSION}'
-    build:
-      context: .
-      dockerfile: ./Dockerfile
   postgres:
     image: bitnami/postgresql:12.1.0-debian-9-r53 # See k8s/yaml/postgres.yaml
     volumes:
@@ -32,9 +27,6 @@ services:
       - 6379:6379
   dish-hooks:
     image: gcr.io/dish-258800/dish-hooks${DISH_IMAGE_TAG}
-    build:
-      context: ./
-      dockerfile: ./services/dish-hooks/Dockerfile
     ports:
       - 6154:6154
     environment:
@@ -65,9 +57,6 @@ services:
       - 'dish-hooks'
   dish-app-web:
     image: gcr.io/dish-258800/dish-app${DISH_IMAGE_TAG}
-    build:
-      context: ./
-      dockerfile: ./dish-app/Dockerfile
     environment:
       - SENDGRID_API_KEY=${TF_VAR_SENDGRID_API_KEY}
       - DO_SPACES_ID=${TF_VAR_DO_SPACES_ID}
@@ -94,9 +83,6 @@ services:
       - 'postgres'
   search:
     image: gcr.io/dish-258800/search${DISH_IMAGE_TAG}
-    build:
-      context: ./
-      dockerfile: ./services/search/Dockerfile
     ports:
       - 10000:10000
     environment:
