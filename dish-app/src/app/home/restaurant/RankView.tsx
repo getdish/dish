@@ -1,7 +1,7 @@
 import React, { memo } from 'react'
 import { Text, TextSuperScript, VStack } from 'snackui'
 
-import { bgLight, blue, darkBlue, lightBlue } from '../../../constants/colors'
+import { bgLight, blue } from '../../../constants/colors'
 import { isWeb } from '../../../constants/constants'
 
 export const RankView = memo(({ rank }: { rank: number }) => {
