@@ -77,91 +77,85 @@ export const AppSearchBarFloating = () => {
         position="absolute"
         alignItems="center"
         pointerEvents="none"
-        paddingLeft={6}
-        paddingRight={6}
-        paddingTop={searchBarTopOffset}
         left={0}
         right={0}
         top={0}
       >
+        {/* under fade */}
         <AbsoluteVStack fullscreen zIndex={-1}>
           <LinearGradient
             style={[StyleSheet.absoluteFill]}
             colors={[bgLightTranslucent, `rgba(255,255,255,0)`]}
           />
         </AbsoluteVStack>
-        <VStack
-          position="relative"
+
+        {/* container */}
+        <AbsoluteVStack
+          top={searchBarTopOffset}
+          left={20}
+          right={20}
           alignItems="center"
-          justifyContent="center"
-          width="100%"
-          height={height}
-          maxWidth={searchBarMaxWidth + 20}
         >
-          <AbsoluteVStack
-            borderRadius={13}
-            className="searchbar-shadow"
-            transform={[{ skewX: '-12deg' }]}
-            overflow="hidden"
-            zIndex={102}
-            fullscreen
-            height={height}
-            justifyContent="center"
-            alignItems="center"
-            backgroundColor="#111"
-            shadowColor="rgba(0,0,0,0.523)"
-            shadowOffset={{ height: 1, width: 0 }}
-            shadowRadius={15}
-          >
-            <AbsoluteVStack
-              borderWidth={3}
-              borderColor="rgba(0,0,0,0.2)"
-              borderRadius={12}
-              fullscreen
-            />
-            <AbsoluteVStack
-              borderWidth={1}
-              borderColor="rgba(0,0,0,0.35)"
-              borderRadius={12}
-              fullscreen
-            />
-            <LinearGradient
-              style={[StyleSheet.absoluteFill]}
-              colors={[
-                'rgba(0,0,0,0.05)',
-                `rgba(0,0,0,0.05)`,
-                'rgba(0,0,0,0.05)',
-              ]}
-            />
-            <AbsoluteVStack
-              opacity={0.45}
-              top={0}
-              right={0}
-              bottom={0}
-              width={300}
-              transform={[{ translateX: 240 }]}
-            >
-              <DishHorizonView />
-            </AbsoluteVStack>
-            <AbsoluteVStack
-              fullscreen
-              transform={[{ skewX: '12deg' }]}
-            ></AbsoluteVStack>
-          </AbsoluteVStack>
+          {/* bg/shadows */}
           <VStack
             position="relative"
-            zIndex={104}
-            flex={1}
-            height={height}
+            alignItems="center"
             justifyContent="center"
             width="100%"
+            height={height}
             maxWidth={searchBarMaxWidth}
           >
-            <Suspense fallback={null}>
-              <AppSearchBarContents />
-            </Suspense>
+            <AbsoluteVStack
+              borderRadius={13}
+              className="searchbar-shadow"
+              transform={[{ skewX: '-12deg' }]}
+              overflow="hidden"
+              zIndex={102}
+              fullscreen
+              height={height}
+              justifyContent="center"
+              alignItems="center"
+              backgroundColor="rgba(0,0,0,0.85)"
+              shadowColor="rgba(0,0,0,0.523)"
+              shadowOffset={{ height: 1, width: 0 }}
+              shadowRadius={15}
+            >
+              <AbsoluteVStack
+                borderWidth={3}
+                borderColor="rgba(0,0,0,0.2)"
+                borderRadius={12}
+                fullscreen
+              />
+              <AbsoluteVStack
+                borderWidth={1}
+                borderColor="rgba(0,0,0,0.35)"
+                borderRadius={12}
+                fullscreen
+              />
+              <LinearGradient
+                style={[StyleSheet.absoluteFill]}
+                colors={[
+                  'rgba(0,0,0,0.05)',
+                  `rgba(0,0,0,0.05)`,
+                  'rgba(0,0,0,0.05)',
+                ]}
+              />
+            </AbsoluteVStack>
+            <VStack
+              position="relative"
+              zIndex={104}
+              flex={1}
+              height={height}
+              justifyContent="center"
+              width="100%"
+              maxWidth={searchBarMaxWidth}
+            >
+              <Suspense fallback={null}>
+                <AppSearchBarContents />
+              </Suspense>
+            </VStack>
           </VStack>
-        </VStack>
+        </AbsoluteVStack>
       </AbsoluteVStack>
     </Theme>
   )
@@ -177,13 +171,11 @@ const AppSearchBarContents = memo(() => {
   return (
     <HStack
       flex={1}
-      overflow="hidden"
       pointerEvents="auto"
       alignItems="center"
       justifyContent="center"
       userSelect="none"
-      marginHorizontal={media.sm ? 0 : -14}
-      paddingHorizontal={media.xs ? 5 : 4}
+      paddingHorizontal={media.xs ? 5 : 0}
       minHeight={searchBarHeight}
     >
       {!media.sm && <SearchBarActionButton />}

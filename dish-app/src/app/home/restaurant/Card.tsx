@@ -10,7 +10,10 @@ import {
   useTheme,
 } from 'snackui'
 
-import { getColorsForName } from '../../../helpers/getColorsForName'
+import {
+  getColorsForColor,
+  getColorsForName,
+} from '../../../helpers/getColorsForName'
 import {
   CardFrame,
   cardFrameBorderRadius,
@@ -43,11 +46,9 @@ export function Card({
   size?: 'sm' | 'md'
   backgroundColor?: string | null
 }) {
-  // const theme = useTheme()
-  const { altPastelColor, pastelColor, lightColor, color } = getColorsForName(
-    title ?? ''
-  )
-
+  const { altPastelColor, color, darkColor } = backgroundColor
+    ? getColorsForColor(backgroundColor)
+    : getColorsForName(title ?? '')
   const isSm = size === 'sm'
   const sizes = {
     width: isSm ? cardFrameWidthSm : cardFrameWidth,
@@ -67,7 +68,7 @@ export function Card({
         alignSelf="center"
         position="relative"
         borderRadius={cardFrameBorderRadius}
-        backgroundColor={backgroundColor ?? color ?? ''}
+        backgroundColor={backgroundColor ?? darkColor ?? ''}
       >
         <AbsoluteVStack
           className="ease-in-out"
@@ -91,11 +92,10 @@ export function Card({
             style={[StyleSheet.absoluteFill, { opacity: 0.85 }]}
             colors={[
               color,
-              `${color}55`,
-              // pastelColor,
-              // `${pastelColor}00`,
-              // `${color}00`,
-              `${pastelColor}00`,
+              `${color}`,
+              `${color}00`,
+              `${color}00`,
+              `${altPastelColor}00`,
             ]}
             start={[1, 0]}
             end={[0.9, 0.1]}
