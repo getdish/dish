@@ -363,6 +363,7 @@ const RestaurantListItemContent = memo(
                           color={theme.color}
                           fontWeight="800"
                           letterSpacing={-1.25}
+                          paddingHorizontal={1} // prevents clipping due to letter-spacing
                           ellipse
                         >
                           {restaurantName}

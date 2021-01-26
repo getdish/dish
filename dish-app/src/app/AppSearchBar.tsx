@@ -182,7 +182,7 @@ const AppSearchBarContents = memo(() => {
       alignItems="center"
       justifyContent="center"
       userSelect="none"
-      marginHorizontal={media.sm ? 0 : -4}
+      marginHorizontal={media.sm ? 0 : -14}
       paddingHorizontal={media.xs ? 5 : 4}
       minHeight={searchBarHeight}
     >

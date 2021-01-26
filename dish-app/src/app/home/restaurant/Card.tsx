@@ -67,7 +67,7 @@ export function Card({
         alignSelf="center"
         position="relative"
         borderRadius={cardFrameBorderRadius}
-        backgroundColor={backgroundColor ?? ''}
+        backgroundColor={backgroundColor ?? color ?? ''}
       >
         <AbsoluteVStack
           className="ease-in-out"
@@ -91,9 +91,10 @@ export function Card({
             style={[StyleSheet.absoluteFill, { opacity: 0.85 }]}
             colors={[
               color,
-              pastelColor,
-              `${pastelColor}00`,
-              `${pastelColor}00`,
+              `${color}55`,
+              // pastelColor,
+              // `${pastelColor}00`,
+              // `${color}00`,
               `${pastelColor}00`,
             ]}
             start={[1, 0]}

@@ -7,7 +7,7 @@ import { cardFrameBorderRadius } from '../views/CardFrame'
 export const SkewedCard = (props: StackProps) => {
   return (
     <VStack
-      marginRight={-105}
+      marginRight={-75}
       className="ease-in-out-faster"
       borderRadius={cardFrameBorderRadius}
       shadowColor="#000"
