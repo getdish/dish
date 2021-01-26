@@ -219,10 +219,18 @@ const AppSearchBarContents = memo(() => {
         {media.xs && isWeb && (
           <>
             {/* keep both in dom so we have access to ref */}
-            <VStack display={showLocation ? 'contents' : 'none'}>
+            <VStack
+              flex={1}
+              overflow="hidden"
+              display={showLocation ? 'contents' : 'none'}
+            >
               <AppSearchInputLocation />
             </VStack>
-            <VStack flex={1} display={!showLocation ? 'contents' : 'none'}>
+            <VStack
+              flex={1}
+              overflow="hidden"
+              display={!showLocation ? 'contents' : 'none'}
+            >
               <AppSearchInput />
             </VStack>
           </>
