@@ -65,7 +65,7 @@ async function start() {
 
 configureThemes(themes)
 configureUseStore({
-  logLevel: process.env.NODE_ENV === 'development' ? 'info' : 'error',
+  logLevel: process.env.LOG_LEVEL ? 'info' : 'error',
 })
 
 // @ts-expect-error

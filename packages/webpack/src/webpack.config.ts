@@ -60,13 +60,16 @@ export default function createWebpackConfig({
       'process.env.DISABLE_CACHE': false,
       'process.env.IS_LIVE': JSON.stringify(process.env.IS_LIVE ?? false),
       'process.env.DEBUG': JSON.stringify(process.env.DEBUG || false),
+      ...(!!process.env.LOG_LEVEL && {
+        'process.env.LOG_LEVEL': JSON.stringify(process.env.LOG_LEVEL || 0),
+      }),
       'process.env.DEBUG_ASSERT': JSON.stringify(
         process.env.DEBUG_ASSERT || false
       ),
       ...defineOptions,
     }
 
-    if (process.env.DEBUG) {
+    if (process.env.DEBUG || process.env.LOG_LEVEL) {
       console.log('defines', defines)
     }
 

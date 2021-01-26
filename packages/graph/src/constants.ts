@@ -2,7 +2,7 @@ function getWindow() {
   return typeof window !== 'undefined' ? window : null
 }
 
-export const isNode = process.env.TARGET === 'web' || !getWindow() || false
+export const isNode = process.env.TARGET !== 'web' || !getWindow() || false
 export const isProd =
   process.env.IS_LIVE === '1' ||
   getWindow()?.location?.hostname.includes('live') ||
