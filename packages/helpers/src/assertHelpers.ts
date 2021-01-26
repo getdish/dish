@@ -3,11 +3,22 @@ export class AsserionNullError extends AssertionError {}
 
 export type NonNullish = string | number | boolean | symbol | bigint | object
 
+type AssertOpts = { onAssertFail?: (why?: string) => any }
+let assertConfig: AssertOpts = {}
+export function configureAssertHelpers(opts: AssertOpts) {
+  assertConfig = opts
+}
+
+function logAssert(why?: string) {
+  assertConfig.onAssertFail?.(why)
+}
+
 export function assertPresent(
   value: any,
   why?: string
 ): asserts value is NonNullish {
-  if (value !== undefined && value !== null) {
+  if (value == undefined || value == null) {
+    logAssert(why)
     throw new AssertionError(`Expected ${why ?? 'value: ' + value}`)
   }
 }
@@ -23,6 +34,7 @@ export function assertIsString(
   why?: string
 ): asserts val is string {
   if (typeof val !== 'string') {
+    logAssert(why)
     throw new AssertionError(`Expected ${why ?? 'string ' + val}`)
   }
 }
@@ -33,22 +45,26 @@ export function assertInstanceOf<T>(
   why?: string
 ): asserts val is T {
   if (!(val instanceof clazz)) {
+    logAssert(why)
     throw new AssertionError(`Expected ${why ?? `instance of ${clazz}`}`)
   }
 }
 
 export function assert(value: unknown, why?: string): asserts value {
   if (value !== true) {
+    logAssert(why)
     throw new AssertionError(why)
   }
 }
 
-export function assertNever(value: never) {
+export function assertNever(value: never, why?: string) {
+  logAssert(why)
   throw new AssertionError('unexpected value ' + value)
 }
 
 export function assertNonNull<T>(value: T, why?: string): NonNullable<T> {
   if (value == null) {
+    logAssert(why)
     throw new AsserionNullError(why)
   }
   return value as any

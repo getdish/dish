@@ -20,11 +20,12 @@
 import './globals'
 
 import { useHydrateCache } from '@dish/graph'
+import { configureAssertHelpers } from '@dish/helpers'
 import { ProvideRouter } from '@dish/router'
 import { configureUseStore } from '@dish/use-store'
 import React, { Suspense, useEffect } from 'react'
 import { QueryClientProvider } from 'react-query'
-import { ThemeProvider, configureThemes } from 'snackui'
+import { ThemeProvider, Toast, configureThemes } from 'snackui'
 
 import { App } from './app/App'
 import { AppPortalProvider } from './app/AppPortal'
@@ -66,6 +67,15 @@ async function start() {
 configureThemes(themes)
 configureUseStore({
   logLevel: process.env.LOG_LEVEL ? 'info' : 'error',
+})
+configureAssertHelpers({
+  onAssertFail: (why) => {
+    if (why) {
+      Toast.error(why)
+    } else {
+      console.warn('Assertion failed without reason')
+    }
+  },
 })
 
 // @ts-expect-error

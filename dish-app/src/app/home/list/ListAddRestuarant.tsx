@@ -4,7 +4,10 @@ import React, { useCallback, useEffect, useState } from 'react'
 import { ScrollView } from 'react-native'
 import { Input, VStack, useDebounce, useTheme } from 'snackui'
 
-import { AutocompleteItemRestuarant } from '../../../helpers/createAutocomplete'
+import {
+  AutocompleteItemFull,
+  AutocompleteItemRestuarant,
+} from '../../../helpers/createAutocomplete'
 import { searchRestaurants } from '../../../helpers/searchRestaurants'
 import { useIsMountedRef } from '../../../helpers/useIsMountedRef'
 import { queryRestaurant } from '../../../queries/queryRestaurant'
@@ -17,11 +20,11 @@ export const ListAddRestuarant = graphql(
     onAdd,
     listSlug,
   }: {
-    onAdd: (r: AutocompleteItemRestuarant & { id: string }) => any
+    onAdd: (r: { id: string }) => any
     listSlug: string
   }) => {
     const theme = useTheme()
-    const [results, setResults] = useState<AutocompleteItemRestuarant[]>([])
+    const [results, setResults] = useState<AutocompleteItemFull[]>([])
     const [searchQuery, setQuery] = useState('')
 
     useEffect(() => {
@@ -37,7 +40,6 @@ export const ListAddRestuarant = graphql(
           })
         },
         (restaurants) => {
-          console.log('got', restaurants)
           setResults(restaurants)
         },
       ])
@@ -62,7 +64,7 @@ export const ListAddRestuarant = graphql(
               return (
                 <AutocompleteItemView
                   preventNavigate
-                  key={result.slug ?? index}
+                  key={result.id ?? index}
                   hideBackground
                   onSelect={() => {}}
                   target="search"
@@ -70,13 +72,9 @@ export const ListAddRestuarant = graphql(
                   index={index}
                   result={result}
                   onAdd={async () => {
-                    const id = await resolved(
-                      () => queryRestaurant(result.slug)[0].id
-                    )
-                    onAdd({
-                      ...result,
-                      id,
-                    })
+                    const slug = result.id
+                    const id = await resolved(() => queryRestaurant(slug)[0].id)
+                    onAdd({ id })
                   }}
                 />
               )

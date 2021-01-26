@@ -144,6 +144,7 @@ function useListRestaurants(list?: list) {
       limit: 50,
       order_by: [{ position: order_by.asc }],
     }) ?? []
+
   const items =
     itemsQuery.map((r) => {
       const dishQuery = r.tags({
@@ -164,7 +165,7 @@ function useListRestaurants(list?: list) {
     await mutate((mutation) => {
       // seed because it doesnt do it all in one step causing uniqueness violations
       const seed = Math.floor(Math.random() * 10000)
-      assertPresent(list)
+      assertPresent(list, 'no list')
       ids.forEach((rid, position) => {
         mutation.update_list_restaurant_by_pk({
           pk_columns: {
@@ -186,9 +187,9 @@ function useListRestaurants(list?: list) {
       setOrder,
       add: async (id: string) => {
         await mutate((mutation) => {
-          assertPresent(list)
-          assertPresent(userStore.user)
-          mutation.insert_list_restaurant_one({
+          assertPresent(list, 'no list')
+          assertPresent(userStore.user, 'no user')
+          return mutation.insert_list_restaurant_one({
             object: {
               // negative to go first + space it out
               position: -items.length * Math.round(1000 * Math.random()),
@@ -236,8 +237,8 @@ function useListRestaurants(list?: list) {
             },
           })?.__typename
           // then add news ones
-          assertPresent(list)
-          assertPresent(userStore.user)
+          assertPresent(list, 'no list')
+          assertPresent(userStore.user, 'no user')
           for (const [position, rid] of rtagids.entries()) {
             mutation.insert_list_restaurant_tag_one({
               object: {
