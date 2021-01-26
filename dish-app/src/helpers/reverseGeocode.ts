@@ -1,5 +1,5 @@
+import { appMapStore } from '../app/AppMapStore'
 import { MAPBOX_ACCESS_TOKEN } from '../constants/constants'
-import { initialHomeState } from '../constants/initialHomeState'
 import { GeocodePlace, LngLat } from '../types/homeTypes'
 
 export async function reverseGeocode(
@@ -14,7 +14,7 @@ export async function reverseGeocode(
 
   if (res.features?.length) {
     const { features } = res
-    const scope = spanToScope(span ?? initialHomeState.span)
+    const scope = spanToScope(span ?? appMapStore.position.span)
     const placeNames = {
       street: features.find((x) => x.place_type?.includes('address'))?.text,
       neighborhood: features.find((x) => x.place_type?.includes('neighborhood'))

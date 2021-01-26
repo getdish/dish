@@ -115,7 +115,7 @@ export default function createWebpackConfig({
             // }),
           ]
         : [],
-      devtool: isProduction ? 'source-map' : 'eval-cheap-source-map',
+      devtool: isProduction ? 'source-map' : 'eval-source-map',
       entry: {
         main:
           polyFillPath || isSSR

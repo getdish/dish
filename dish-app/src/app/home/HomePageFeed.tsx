@@ -1,5 +1,6 @@
 import {
   LngLat,
+  MapPosition,
   RestaurantOnlyIds,
   SEARCH_DOMAIN,
   TopCuisine,
@@ -31,7 +32,7 @@ import { selectTagDishViewSimple } from '../../helpers/selectDishViewSimple'
 import { useQueryLoud } from '../../helpers/useQueryLoud'
 import { queryRestaurant } from '../../queries/queryRestaurant'
 import { HomeStateItemHome } from '../../types/homeTypes'
-import { useSetAppMapResults } from '../AppMapStore'
+import { useSetAppMap } from '../AppMapStore'
 import { CardFrame } from '../views/CardFrame'
 import { SmallCircleButton } from '../views/CloseButton'
 import { CommentBubble } from '../views/CommentBubble'
@@ -81,23 +82,16 @@ export type FeedItemList = FeedItemBase & {
   topic: string
 }
 
-// class HomeFeedStore extends Store {
-//   hoveredItemId: string | null = null
-// }
-// const homeFeedStore = createStore(HomeFeedStore)
+type HomeFeedProps = HomeStackViewProps<HomeStateItemHome> & {
+  region?: RegionNormalized | null
+  item: HomeStateItemHome
+} & MapPosition
 
 export const HomePageFeed = memo(
-  graphql(function HomePageFeed({
-    region,
-    item,
-    isActive,
-  }: HomeStackViewProps<HomeStateItemHome> & {
-    region?: RegionNormalized | null
-    item: HomeStateItemHome
-  }) {
+  graphql(function HomePageFeed(props: HomeFeedProps) {
+    const { region, isActive, center, span } = props
     const media = useMedia()
-    const isNew = item.section === 'new'
-    const items = useHomeFeed(item, region, isNew)
+    const items = useHomeFeed(props)
     const isLoading = !region || items[0]?.id === null
     const results = items.flatMap((x) => {
       if (x.type === 'dish-restaurants') {
@@ -114,9 +108,11 @@ export const HomePageFeed = memo(
     // const store = useStore(HomeFeedStore)
     // const hovered = store.hoveredItemId ? items.find(x => x.id === store.hoveredItemId) : null
 
-    useSetAppMapResults({
+    useSetAppMap({
       isActive,
       results,
+      center,
+      span,
     })
 
     const feedContents = useMemo(() => {
@@ -446,11 +442,8 @@ const getHomeCuisines = async (center: LngLat) => {
   return sortBy(all, (x) => -x.avg_rating)
 }
 
-function useHomeFeed(
-  item: HomeStateItemHome,
-  region?: RegionNormalized | null,
-  isNew?: boolean
-) {
+function useHomeFeed({ item, region, center, span }: HomeFeedProps) {
+  const isNew = item.section === 'new'
   const slug = item.region ?? ''
   const homeFeed = useQueryLoud<{
     trending: RestaurantOnlyIds[]
@@ -487,7 +480,7 @@ function useHomeFeed(
     (x) => x.id
   )
 
-  const cuisines = useTopCuisines(item.center)
+  const cuisines = useTopCuisines(center)
 
   const dishes = query.tag({
     where: {

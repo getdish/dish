@@ -8,7 +8,7 @@ import { AbsoluteVStack, VStack, getMedia, useMedia } from 'snackui'
 import { MAPBOX_ACCESS_TOKEN } from '../constants/constants'
 import { getZoomLevel, mapZoomToMedium } from '../helpers/mapHelpers'
 import { queryRestaurant } from '../queries/queryRestaurant'
-import { appMapStore } from './AppMapStore'
+import { appMapStore, useAppMap } from './AppMapStore'
 import { drawerStore } from './drawerStore'
 import { useHomeStore } from './homeStore'
 
@@ -42,6 +42,7 @@ export default memo(() => {
 
 const HomeMapPIPContent = graphql(() => {
   const home = useHomeStore()
+  const position = useAppMap('position')
   const mapNode = useRef<HTMLDivElement>(null)
   const state = home.currentState
   const appMap = useStoreInstance(appMapStore)
@@ -49,7 +50,7 @@ const HomeMapPIPContent = graphql(() => {
 
   let restaurants: restaurant[] | null = null
   let slug: string | null = null
-  let span: LngLat = state.span
+  let span: LngLat = position.span
 
   if (state.type === 'restaurant') {
     slug = state.restaurantSlug
@@ -71,8 +72,7 @@ const HomeMapPIPContent = graphql(() => {
   }
 
   const restaurant = restaurants?.[0]
-  const curCenter = home.currentState.center
-
+  const curCenter = appMap.position.center
   const coords = restaurant?.location?.coordinates ?? [
     curCenter?.lng ?? 0,
     curCenter?.lat ?? 0,
@@ -81,7 +81,6 @@ const HomeMapPIPContent = graphql(() => {
     lat: coords[1] ?? 0.1,
     lng: coords[0] ?? 0.1,
   }
-
   const pipAction = (() => {
     if (getMedia().xs && drawerStore.snapIndex === 0) {
       // move drawer down
@@ -89,9 +88,9 @@ const HomeMapPIPContent = graphql(() => {
         drawerStore.setSnapIndex(2)
       }
     }
-    if (coords[0] && !isEqual(center, home.currentState.center)) {
+    if (coords[0] && !isEqual(center, appMapStore.position.center)) {
       return () => {
-        home.updateCurrentState('AppMapPIP Action', {
+        appMapStore.setPosition({
           center: center,
           span: pipSpan(span),
         })

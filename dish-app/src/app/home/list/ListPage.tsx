@@ -39,7 +39,7 @@ import { getRestaurantIdentifiers } from '../../../helpers/getRestaurantIdentifi
 import { queryList } from '../../../queries/queryList'
 import { router } from '../../../router'
 import { HomeStateItemList } from '../../../types/homeTypes'
-import { useSetAppMapResults } from '../../AppMapStore'
+import { useSetAppMap } from '../../AppMapStore'
 import { useStateSynced } from '../../hooks/useStateSynced'
 import { useUserStore, userStore } from '../../userStore'
 import { BottomFloatingArea } from '../../views/BottomFloatingArea'
@@ -279,7 +279,7 @@ const ListPageContent = graphql((props: Props) => {
     }
   }, [isEditing])
 
-  useSetAppMapResults({
+  useSetAppMap({
     isActive: props.isActive,
     results: restaurants.map((x) => x.restaurant).map(getRestaurantIdentifiers),
     showRank: true,

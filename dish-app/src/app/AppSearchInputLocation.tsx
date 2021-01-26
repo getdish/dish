@@ -17,6 +17,7 @@ import { useAutocompleteInputFocus } from './hooks/useAutocompleteInputFocus'
 import { useSearchBarTheme } from './hooks/useSearchBarTheme'
 import { setNodeOnInputStore, useInputStoreLocation } from './inputStore'
 import { SearchInputNativeDragFix } from './SearchInputNativeDragFix'
+import { setLocation } from './setLocation'
 
 export const AppSearchInputLocation = memo(() => {
   const media = useMedia()
@@ -38,7 +39,7 @@ export const AppSearchInputLocation = memo(() => {
         // enter
         const result = autocompleteLocationStore.activeResult
         if (result) {
-          appMapStore.setLocation(result.name)
+          setLocation(result.name)
           autocompletesStore.setVisible(false)
         }
         return

@@ -18,7 +18,7 @@ import {
 
 import { router } from '../../../router'
 import { HomeStateItemUser } from '../../../types/homeTypes'
-import { useSetAppMapResults } from '../../AppMapStore'
+import { useSetAppMap } from '../../AppMapStore'
 import { useUserStore } from '../../userStore'
 import { ContentScrollView } from '../../views/ContentScrollView'
 import { Link } from '../../views/Link'
@@ -108,7 +108,7 @@ const UserPageContent = graphql(
     const reviews = useUserReviews(user, pane || 'both')
     const hasReviews = !!reviews?.length
 
-    useSetAppMapResults({
+    useSetAppMap({
       isActive: isActive,
       results: reviews.map(getReviewRestuarants),
     })

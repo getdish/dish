@@ -1,7 +1,7 @@
 import { LngLat } from '@dish/graph'
 import { HistoryItem } from '@dish/router'
 
-import { initialHomeState } from '../../../constants/initialHomeState'
+import { initialPosition } from '../../../constants/initialHomeState'
 import { bboxToSpan } from '../../../helpers/bboxToSpan'
 import { RegionNormalized, fetchRegion } from '../../../helpers/fetchRegion'
 import { searchLocations } from '../../../helpers/searchLocations'
@@ -64,8 +64,5 @@ async function getLocationFromRoute(
     }
   }
 
-  return {
-    center: initialHomeState.center,
-    span: initialHomeState.span,
-  }
+  return initialPosition
 }

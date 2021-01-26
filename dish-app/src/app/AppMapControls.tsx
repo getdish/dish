@@ -72,9 +72,9 @@ function useShowSearchHere() {
   const hasMovedMap = useStoreInstance(appMapStore, (m) => {
     const c =
       m.position.center &&
-      !isEqual(m.position.center, homeStore.currentState.center)
+      !isEqual(m.position.center, appMapStore.position.center)
     const s =
-      m.position.span && !isEqual(m.position.span, homeStore.currentState.span)
+      m.position.span && !isEqual(m.position.span, appMapStore.position.span)
     return c || s
   })
   return hasMovedMap && isOnSearch

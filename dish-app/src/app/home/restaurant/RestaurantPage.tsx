@@ -1,6 +1,13 @@
 import { fullyIdle, series } from '@dish/async'
 import { graphql } from '@dish/graph'
-import React, { Suspense, memo, useEffect, useRef, useState } from 'react'
+import React, {
+  Suspense,
+  memo,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from 'react'
 import { ScrollView, View } from 'react-native'
 import { LoadingItem, LoadingItems, Spacer, VStack, useTheme } from 'snackui'
 
@@ -9,7 +16,7 @@ import { getMinLngLat } from '../../../helpers/getLngLat'
 import { useColorsFor } from '../../../helpers/useColorsFor'
 import { queryRestaurant } from '../../../queries/queryRestaurant'
 import { HomeStateItemRestaurant } from '../../../types/homeTypes'
-import { useSetAppMapResults } from '../../AppMapStore'
+import { appMapStore, useSetAppMap } from '../../AppMapStore'
 import { homeStore } from '../../homeStore'
 import { usePageLoadEffect } from '../../hooks/usePageLoadEffect'
 import { ContentScrollView } from '../../views/ContentScrollView'
@@ -49,25 +56,17 @@ const RestaurantPage = memo(
     const [reviewsSection, setReviewsSection] = useState<View | null>(null)
     const [dishesSection, setDishesSection] = useState<View | null>(null)
 
-    usePageLoadEffect(
-      props,
-      () => {
-        if (!coords?.[0]) {
-          return
-        }
-        homeStore.updateHomeState('RestaurantPage.pageLoadEffect', {
-          id: item.id,
-          center: {
-            lng: coords?.[0],
-            lat: coords?.[1],
-          },
-          span: getMinLngLat(item.span, 0.004, 0.004),
-        })
-      },
-      [coords]
-    )
+    const position = useMemo(() => {
+      return {
+        center: {
+          lng: coords?.[0],
+          lat: coords?.[1],
+        },
+        span: getMinLngLat(appMapStore.position.span, 0.004, 0.004),
+      }
+    }, [...coords])
 
-    useSetAppMapResults({
+    useSetAppMap({
       isActive: props.isActive,
       results: [
         {
@@ -75,6 +74,7 @@ const RestaurantPage = memo(
           id: restaurant.id,
         },
       ],
+      ...position,
     })
 
     const view = item.sectionSlug

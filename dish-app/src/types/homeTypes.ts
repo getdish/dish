@@ -29,10 +29,14 @@ export type HomeStateNav = {
 
 export type LngLat = { lng: number; lat: number }
 
-export type HomeStateItemBase = {
-  searchQuery: string
+export type HomeStateItemLocation = {
+  region?: string
   center: LngLat
   span: LngLat
+}
+
+export type HomeStateItemBase = {
+  searchQuery: string
   id: string
   curLocName?: string
   curLocInfo?: GeocodePlace | null
@@ -132,12 +136,6 @@ export type HomeStateItemUserEdit = HomeStateItemBase & {
 }
 
 export type HomeStateItemSimple = Pick<HomeStateItem, 'id' | 'type'>
-
-export type HomeStateItemLocation = {
-  center: HomeStateItem['center']
-  span: HomeStateItem['span']
-  region?: string
-}
 
 export type HomeStateItemList = HomeStateItemBase & {
   type: 'list'

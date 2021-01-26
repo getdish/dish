@@ -43,7 +43,7 @@ import { rgbString } from '../../../helpers/rgbString'
 import { useQueryLoud } from '../../../helpers/useQueryLoud'
 import { router } from '../../../router'
 import { HomeStateItemSearch } from '../../../types/homeTypes'
-import { appMapStore, useSetAppMapResults } from '../../AppMapStore'
+import { appMapStore, useSetAppMap } from '../../AppMapStore'
 import { AppPortalItem } from '../../AppPortal'
 import { useHomeStateById, useHomeStore } from '../../homeStore'
 import { useAppDrawerWidth } from '../../hooks/useAppDrawerWidth'
@@ -78,7 +78,6 @@ export default memo(function SearchPage(props: Props) {
   const { title } = getTitleForState(state, {
     lowerCase: false,
   })
-
   return (
     <>
       <PageTitleTag>{title}</PageTitleTag>
@@ -135,10 +134,12 @@ const SearchPageContent = memo(function SearchPageContent(props: Props) {
     }
   })
 
-  useSetAppMapResults({
+  useSetAppMap({
     isActive: props.isActive,
     results: searchStore.results,
     showRank: true,
+    center: location.data?.center,
+    span: location.data?.span,
   })
 
   useEffect(() => {
@@ -147,17 +148,6 @@ const SearchPageContent = memo(function SearchPageContent(props: Props) {
     searchStore.resetResults()
     searchPageStore.runSearch({})
   }, [props.item])
-
-  useEffect(() => {
-    if (!location.data) return
-    if (!props.isActive) return
-    const searchItem: HomeStateItemSearch = {
-      ...props.item,
-      center: location.data.center,
-      span: location.data.span,
-    }
-    home.updateCurrentState('SearchPage.locationFromRoute', searchItem)
-  }, [props.isActive, location.data])
 
   useEffect(() => {
     if (!tags.data) return

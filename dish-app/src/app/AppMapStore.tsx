@@ -1,23 +1,15 @@
 import { series } from '@dish/async'
-import { LngLat, RestaurantOnlyIds, resolved } from '@dish/graph'
+import { LngLat, MapPosition, RestaurantOnlyIds, resolved } from '@dish/graph'
 import { isPresent } from '@dish/helpers'
 import { Store, createStore, useStoreInstance } from '@dish/use-store'
 import { findLast, uniqBy } from 'lodash'
 import { useEffect } from 'react'
 
-import { defaultLocationAutocompleteResults } from '../constants/defaultLocationAutocompleteResults'
-import {
-  getDefaultLocation,
-  setDefaultLocation,
-} from '../helpers/getDefaultLocation'
-import { getNavigateItemForState } from '../helpers/getNavigateItemForState'
+import { getDefaultLocation } from '../constants/initialHomeState'
 import { reverseGeocode } from '../helpers/reverseGeocode'
 import { queryRestaurant } from '../queries/queryRestaurant'
-import { router } from '../router'
 import { AppMapPosition, MapResultItem } from '../types/mapTypes'
-import { autocompleteLocationStore } from './AppAutocomplete'
 import { homeStore } from './homeStore'
-import { inputStoreLocation } from './inputStore'
 
 type MapOpts = {
   showRank?: boolean
@@ -56,8 +48,9 @@ class AppMapStore extends Store {
 
   setPosition(pos: Partial<AppMapPosition>) {
     this.position = {
-      ...this.position,
-      ...pos,
+      center: pos.center ?? this.position.center,
+      span: pos.span ?? this.position.span,
+      via: pos.via ?? this.position.via,
     }
     const n = [...this.lastPositions, this.position]
     this.lastPositions = n.reverse().slice(0, 15).reverse() // keep only 15
@@ -88,7 +81,7 @@ class AppMapStore extends Store {
     }
     this.userLocation = location
     const state = homeStore.currentState
-    homeStore.updateHomeState('appMapStore.moveToUserLocation', {
+    appMapStore.setPosition({
       ...state,
       center: { ...location },
     })
@@ -112,48 +105,34 @@ class AppMapStore extends Store {
       })
     }
   }
-
-  setLocation(val: string) {
-    const current = [
-      ...autocompleteLocationStore.results,
-      ...defaultLocationAutocompleteResults,
-    ]
-    inputStoreLocation.setValue(val)
-    const exact = current.find((x) => x.name === val)
-    if (!exact) return
-    if ('center' in exact) {
-      const curState = homeStore.currentState
-      const center = exact.center ?? homeStore.currentState.center
-      const span = exact.span ?? curState.span
-      homeStore.updateCurrentState('appMapStore.setLocation', {
-        center,
-        span,
-        curLocName: val,
-      })
-      setDefaultLocation({
-        center,
-        span,
-      })
-      const navItem = getNavigateItemForState(curState)
-      if (router.getShouldNavigate(navItem)) {
-        router.navigate(navItem)
-      }
-    } else {
-      console.warn('No center found?')
-    }
-  }
 }
 
 export const appMapStore = createStore(AppMapStore)
-export const useAppMapStore = () => useStoreInstance(appMapStore)
 
-export const useSetAppMapResults = (
+export const useAppMapStore = () => useStoreInstance(appMapStore)
+export const useAppMap = <A extends keyof AppMapStore>(key: A) =>
+  useStoreInstance(appMapStore, (x) => x[key])
+
+export const useSetAppMap = (
   props: MapOpts & {
+    center?: MapPosition['center']
+    span?: MapPosition['span']
     results?: RestaurantOnlyIds[]
     isActive: boolean
   }
 ) => {
-  const { results, showRank, isActive, zoomOnHover } = props
+  const { results, showRank, isActive, zoomOnHover, center, span } = props
+
+  useEffect(() => {
+    console.log('set position', center, span)
+    if (isActive) {
+      appMapStore.setPosition({
+        center,
+        span,
+      })
+    }
+  }, [isActive, center?.lat, center?.lng, span?.lat, span?.lng])
+
   useEffect(() => {
     if (!isActive) return
     let restaurants: MapResultItem[] | null = null

@@ -94,14 +94,8 @@ class SearchPageStore extends Store {
     if (shouldCancel()) return
     state = state!
 
-    const center = appMapStore.position.center ?? state!.center
-    const span = appMapStore.position.span ?? state!.span
-    homeStore.updateHomeState('SearchPageStore.runSearch', {
-      id: state.id,
-      center,
-      span,
-    })
-
+    const center = appMapStore.position.center
+    const span = appMapStore.position.span
     const activeTags = state.activeTags ?? {}
     const dishSearchedTag = Object.keys(activeTags).find(
       (k) => allTags[k]?.type === 'dish'
@@ -115,7 +109,6 @@ class SearchPageStore extends Store {
     ]
 
     const main_tag = dishSearchedTag ?? otherTags[0]
-    console.log('main tag', main_tag)
     const searchArgs: RestaurantSearchArgs = {
       center: roundLngLat(center),
       span: roundLngLat(span),
@@ -148,6 +141,11 @@ class SearchPageStore extends Store {
     this.status = 'complete'
     this.results = restaurants.filter(isPresent).slice(0, 80)
     this.meta = res.meta
+
+    return {
+      center,
+      span,
+    }
   }
 }
 

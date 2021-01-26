@@ -52,6 +52,7 @@ import { drawerStore } from './drawerStore'
 import { CircleButton } from './home/restaurant/CircleButton'
 import { useHomeStore } from './homeStore'
 import { useInputStoreLocation } from './inputStore'
+import { setLocation } from './setLocation'
 import { CloseButton } from './views/CloseButton'
 import { Link } from './views/Link'
 import { LinkButton } from './views/LinkButton'
@@ -210,7 +211,7 @@ const AutocompleteSearch = memo(() => {
       return
     }
     let results: AutocompleteItemFull[] = []
-    const state = home.currentState
+    const postion = appMapStore.position
     const tags = tagsToNavigableTags(activeTags)
     const countryTag =
       tags.length === 2 ? tags.find((x) => x.type === 'country') : null
@@ -224,8 +225,8 @@ const AutocompleteSearch = memo(() => {
               ...searchDishTags(query, cuisineName),
               ...searchRestaurants(
                 query,
-                state.center,
-                state.span,
+                postion.center,
+                postion.span,
                 cuisineName
               ),
             ]
@@ -234,8 +235,8 @@ const AutocompleteSearch = memo(() => {
           try {
             results = await searchAutocomplete(
               query,
-              state.center!,
-              state.span!
+              postion.center,
+              postion.span
             )
           } catch (err) {
             Toast.error(`Error searching ${err.message}`)
@@ -343,13 +344,11 @@ const AutocompleteLocation = memo(() => {
 
   useEffect(() => {
     if (!query) return
-
     let results: AutocompleteItemFull[] = []
-    const state = home.currentState
-
+    const position = appMapStore.position
     return series([
       async () => {
-        const locationResults = await searchLocations(query, state.center)
+        const locationResults = await searchLocations(query, position.center)
         results = [
           ...locationResults.map(locationToAutocomplete).filter(isPresent),
           ...defaultLocationAutocompleteResults,
@@ -370,7 +369,7 @@ const AutocompleteLocation = memo(() => {
   }, [query])
 
   const handleSelect = useCallback((result: AutocompleteItem) => {
-    appMapStore.setLocation(result.name)
+    setLocation(result.name)
     autocompletes.setVisible(false)
     // changing location = change drawer to show
     if (drawerStore.snapIndex === 0) {

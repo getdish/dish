@@ -1,4 +1,4 @@
-import { slugify } from '@dish/graph'
+import { MapPosition, slugify } from '@dish/graph'
 import { capitalize } from 'lodash'
 import React, { Suspense, memo, useEffect, useState } from 'react'
 import { ScrollView } from 'react-native'
@@ -14,13 +14,15 @@ import {
 } from 'snackui'
 
 import { drawerWidthMax, searchBarHeight } from '../../constants/constants'
+import {
+  initialPosition,
+  setDefaultLocation,
+} from '../../constants/initialHomeState'
 import { useRegionQuery } from '../../helpers/fetchRegion'
 import { getColorsForName } from '../../helpers/getColorsForName'
-import { setDefaultLocation } from '../../helpers/getDefaultLocation'
 import { getGroupedButtonProps } from '../../helpers/getGroupedButtonProps'
 import { router, useIsRouteActive } from '../../router'
 import { HomeStateItemHome } from '../../types/homeTypes'
-import { appMapStore } from '../AppMapStore'
 import { useHomeStore } from '../homeStore'
 import { ContentScrollView } from '../views/ContentScrollView'
 import { DishHorizonView } from '../views/DishHorizonView'
@@ -47,6 +49,7 @@ export default memo(function HomePage(
     enabled: props.isActive && !!state.region,
     suspense: false,
   })
+  const [position, setPosition] = useState<MapPosition>(initialPosition)
 
   console.log('👀 HomePage', state.region, { props, region, state, isActive })
 
@@ -62,22 +65,7 @@ export default memo(function HomePage(
       lat: span.lat * 0.66,
       lng: span.lng * 0.66,
     }
-    console.warn('update to regino wtf', region.data.name, state.region)
-    home.updateCurrentState('HomePage.centerMapToRegion', {
-      center,
-      // TODO we need to have this be better synced
-      span,
-    })
-    // call this separately from above because:
-    //   1. updateCurrentState only sets if changed values
-    //   2. as you move pages isActive goes false/true here
-    //   3. navigating to a page then back, center/span will be === previous
-    //   4. so the updateCurrentState won't do anything (no change val)
-    //   5. why keep position on state at all? good question... can we remove?
-    appMapStore.setPosition({
-      center,
-      span,
-    })
+    setPosition({ center, span })
     setIsLoaded(true)
   }, [isActive, isLoaded, region.data])
 
@@ -203,7 +191,6 @@ export default memo(function HomePage(
                         minWidth={80}
                         backgroundColor={regionColors.color}
                         color="#fff"
-                        size="lg"
                       >
                         {regionName}
                       </SlantedTitle>
@@ -242,8 +229,8 @@ export default memo(function HomePage(
               </HStack>
 
               <Spacer size="lg" />
-              <Spacer size="lg" />
 
+              <Spacer />
               <Suspense
                 fallback={
                   <>
@@ -252,7 +239,7 @@ export default memo(function HomePage(
                   </>
                 }
               >
-                <HomePageFeed {...props} region={region.data} />
+                <HomePageFeed {...props} region={region.data} {...position} />
               </Suspense>
             </VStack>
           </VStack>

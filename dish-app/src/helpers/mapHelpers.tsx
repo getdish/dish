@@ -1,6 +1,6 @@
 import { LngLat } from '@dish/graph'
 
-import { homeStore, useHomeStore } from '../app/homeStore'
+import { appMapStore, useAppMap } from '../app/AppMapStore'
 
 export const mapHelpers = null
 
@@ -10,21 +10,21 @@ export const getZoomLevel = (span: LngLat) => {
 }
 
 export const useZoomLevel = () => {
-  const home = useHomeStore()
-  return getZoomLevel(home.currentState.span!)
+  const position = useAppMap('position')
+  return getZoomLevel(position.span!)
 }
 
 export const mapZoomToMedium = () => {
-  let span = homeStore.currentState.span!
-  let center = homeStore.currentState.center!
-  for (const state of [...homeStore.states].reverse()) {
+  let span = appMapStore.position.span!
+  let center = appMapStore.position.center!
+  for (const state of [...appMapStore.lastPositions].reverse()) {
     if (getZoomLevel(state.span!) === 'medium') {
       span = state.span!
       center = state.center!
       break
     }
   }
-  homeStore.updateCurrentState('mapZoomToMedium', {
+  appMapStore.setPosition({
     span,
     center,
   })

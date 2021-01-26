@@ -311,8 +311,6 @@ class HomeStore extends Store {
           type: 'search',
           region: router.curPage.params.region ?? prev.region,
           activeTags,
-          center: appMapStore.position.center,
-          span: appMapStore.position.span,
         }
         break
       }
@@ -323,8 +321,6 @@ class HomeStore extends Store {
           section: item.params.section,
           sectionSlug: item.params.sectionSlug,
           restaurantSlug: item.params.slug,
-          center: appMapStore.position.center,
-          span: appMapStore.position.span,
         }
         break
       }
@@ -362,8 +358,6 @@ class HomeStore extends Store {
     return {
       curLocName: currentState?.curLocName,
       curLocInfo: currentState?.curLocInfo,
-      center: currentState?.center,
-      span: currentState?.span,
       searchQuery,
       type,
       ...nextState,
