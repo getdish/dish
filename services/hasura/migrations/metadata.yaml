@@ -195,6 +195,7 @@ tables:
       - list_restaurant_id
       - position
       - restaurant_tag_id
+      - tag_id
       - user_id
       backend_only: false
   select_permissions:
@@ -206,6 +207,7 @@ tables:
       - list_restaurant_id
       - restaurant_tag_id
       - position
+      - tag_id
       - user_id
       filter: {}
       limit: 100
@@ -217,6 +219,7 @@ tables:
       - list_id
       - list_restaurant_id
       - restaurant_tag_id
+      - tag_id
       - user_id
       filter: {}
       limit: 100
@@ -228,6 +231,7 @@ tables:
       - list_restaurant_id
       - position
       - restaurant_tag_id
+      - tag_id
       - user_id
       filter:
         user_id:
@@ -361,6 +365,7 @@ tables:
       - tag_id
       - type
       filter: {}
+      limit: 100
   - role: contributor
     permission:
       columns:
@@ -766,7 +771,6 @@ tables:
       - id
       - list_id
       - location
-      - native_data_unique_key
       - rating
       - restaurant_id
       - source
@@ -799,22 +803,15 @@ tables:
   - role: user
     permission:
       columns:
-      - favorited
-      - location
       - categories
-      - rating
-      - vote
-      - native_data_unique_key
-      - source
-      - text
-      - type
-      - username
       - authored_at
-      - updated_at
+      - favorited
       - id
-      - list_id
+      - rating
       - restaurant_id
       - tag_id
+      - text
+      - updated_at
       - user_id
       filter:
         user_id:
