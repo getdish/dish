@@ -26,14 +26,19 @@ export DISH_IMAGE_TAG=":staging"
 
 cd /app
 git checkout staging
-USE_PROD_HASURA_PASSWORD=true ./dishctl.sh db_migrate_local
-docker-compose stop dish-app-web dish-hooks search
-docker-compose rm -f dish-app-web dish-hooks search || true
+
 # ensure pulling from a yml with no build: directives so it grabs latest
 rm docker-compose.yml
 mv docker-compose-pull.yml docker-compose.yml
+
+# migrate
+USE_PROD_HASURA_PASSWORD=true ./dishctl.sh db_migrate_local
+
+# restart
+docker-compose stop dish-app-web dish-hooks search tileserver
+docker-compose rm -f dish-app-web dish-hooks search || true
 docker-compose pull
-eval $(./dishctl.sh yaml_to_env) docker-compose up -d dish-app-web dish-hooks search
+eval $(./dishctl.sh yaml_to_env) docker-compose up -d dish-app-web dish-hooks search tileserver
 '
 
 commit=$(git rev-parse HEAD)

@@ -13,10 +13,8 @@ import {
 } from 'snackui'
 
 import { drawerBorderRadius, isWeb } from '../../../constants/constants'
-import {
-  getColorsForName,
-  useColorsFor,
-} from '../../../helpers/getColorsForName'
+import { getColorsForName } from '../../../helpers/getColorsForName'
+import { useColorsFor } from '../../../helpers/useColorsFor'
 import { queryRestaurant } from '../../../queries/queryRestaurant'
 import { HomeStateItemRestaurant } from '../../../types/homeTypes'
 import { useAppDrawerWidthInner } from '../../hooks/useAppDrawerWidth'

@@ -1,0 +1,10 @@
+- args:
+    cascade: false
+    read_only: false
+    sql: ALTER TABLE "public"."zcta5" ADD COLUMN "mtfcc10" varchar;
+  type: run_sql
+- args:
+    cascade: false
+    read_only: false
+    sql: ALTER TABLE "public"."zcta5" ALTER COLUMN "mtfcc10" DROP NOT NULL;
+  type: run_sql
