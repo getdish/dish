@@ -9,6 +9,7 @@ export const PageTitle = memo(
     subTitle,
     color,
     size = 'md',
+    noDivider,
   }: {
     title: any
     before?: any
@@ -16,6 +17,7 @@ export const PageTitle = memo(
     subTitle?: string
     color?: string
     size?: 'md' | 'sm'
+    noDivider?: boolean
   }) => {
     const media = useMedia()
     const titleLen = (title + subTitle).length
@@ -46,7 +48,9 @@ export const PageTitle = memo(
       >
         {before}
         <HStack spacing="xxl" flex={1} alignItems="center">
-          <VStack backgroundColor={theme.borderColor} height={1} flex={1} />
+          {!noDivider && (
+            <VStack backgroundColor={theme.borderColor} height={1} flex={1} />
+          )}
           <Text
             textAlign="center"
             letterSpacing={-0.25}
@@ -70,7 +74,9 @@ export const PageTitle = memo(
               </Text>
             )}
           </Text>
-          <VStack backgroundColor={theme.borderColor} height={1} flex={1} />
+          {!noDivider && (
+            <VStack backgroundColor={theme.borderColor} height={1} flex={1} />
+          )}
         </HStack>
         {after}
       </HStack>

@@ -16,15 +16,15 @@ export const ListCard = graphql(
     onHover,
     hoverable,
   }: {
-    slug: string
-    userSlug: string
+    slug: string | null
+    userSlug: string | null
     onHover?: (is: boolean) => void
     hoverable?: boolean
   }) => {
-    const [list] = queryList(slug)
-    const colors = getColorsForName(list.name ?? '')
+    const [list] = slug ? queryList(slug) : []
+    const colors = getColorsForName(list?.name ?? '')
     const photos = list
-      .restaurants({
+      ?.restaurants({
         limit: 10,
         where: {
           restaurant: {
@@ -36,7 +36,11 @@ export const ListCard = graphql(
       })
       .map((x) => x.restaurant.image)
 
-    const backgroundColor = getListColor(list.color) ?? colors.color
+    const backgroundColor = getListColor(list?.color) ?? colors.color
+
+    if (!slug || !userSlug) {
+      return <Card title="" size="sm" />
+    }
 
     const contents = (
       <Link name="list" asyncClick params={{ slug, userSlug }}>

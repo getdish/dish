@@ -1,11 +1,15 @@
-import { graphql, query, resolved, useLazyQuery } from '@dish/graph'
-import React, { useState } from 'react'
+import { series, sleep } from '@dish/async'
+import { graphql, query, resolved, search, useLazyQuery } from '@dish/graph'
+import React, { useCallback, useEffect, useState } from 'react'
 import { ScrollView } from 'react-native'
-import { Input, VStack, useTheme } from 'snackui'
+import { Input, VStack, useDebounce, useTheme } from 'snackui'
 
 import { AutocompleteItemRestuarant } from '../../../helpers/createAutocomplete'
+import { searchRestaurants } from '../../../helpers/searchRestaurants'
+import { useIsMountedRef } from '../../../helpers/useIsMountedRef'
 import { queryRestaurant } from '../../../queries/queryRestaurant'
 import { AutocompleteItemView } from '../../AppAutocomplete'
+import { appMapStore } from '../../AppMapStore'
 import { SlantedTitle } from '../../views/SlantedTitle'
 
 export const ListAddRestuarant = graphql(
@@ -18,32 +22,26 @@ export const ListAddRestuarant = graphql(
   }) => {
     const theme = useTheme()
     const [results, setResults] = useState<AutocompleteItemRestuarant[]>([])
+    const [searchQuery, setQuery] = useState('')
 
-    let [runSearch, { isLoading }] = useLazyQuery(
-      // @ts-expect-error
-      (_query, searchQuery: string) => {
-        const restaurants = query.restaurant({
-          where: {
-            name: {
-              _ilike: `%${searchQuery.split(' ').join('%')}%`,
-            },
-          },
-          limit: 20,
-        })
-        return restaurants.map((restaurant) => {
-          return {
-            type: 'restaurant',
-            name: restaurant.name,
-            slug: restaurant.slug,
-            description: restaurant.address,
-            icon: restaurant.image,
-          } as const
-        })
-      },
-      {
-        onCompleted: setResults,
-      }
-    )
+    useEffect(() => {
+      return series([
+        () => sleep(300),
+        () => {
+          return resolved(() => {
+            return searchRestaurants(
+              searchQuery,
+              appMapStore.position.center,
+              appMapStore.position.span
+            )
+          })
+        },
+        (restaurants) => {
+          console.log('got', restaurants)
+          setResults(restaurants)
+        },
+      ])
+    }, [searchQuery])
 
     return (
       <VStack width="100%" height="100%" flex={1}>
@@ -55,8 +53,7 @@ export const ListAddRestuarant = graphql(
             backgroundColor={theme.backgroundColorSecondary}
             marginHorizontal={20}
             placeholder="Search restaurants..."
-            // @ts-expect-error
-            onChangeText={(val) => runSearch({ args: val })}
+            onChangeText={setQuery}
           />
         </VStack>
         <ScrollView style={{ width: '100%' }}>
@@ -90,3 +87,29 @@ export const ListAddRestuarant = graphql(
     )
   }
 )
+
+// let [runSearch, { isLoading }] = useLazyQuery(
+//   // @ts-expect-error
+//   (_query, searchQuery: string) => {
+//     const restaurants = query.restaurant({
+//       where: {
+//         name: {
+//           _ilike: `%${searchQuery.split(' ').join('%')}%`,
+//         },
+//       },
+//       limit: 20,
+//     })
+//     return restaurants.map((restaurant) => {
+//       return {
+//         type: 'restaurant',
+//         name: restaurant.name,
+//         slug: restaurant.slug,
+//         description: restaurant.address,
+//         icon: restaurant.image,
+//       } as const
+//     })
+//   },
+//   {
+//     onCompleted: setResults,
+//   }
+// )
