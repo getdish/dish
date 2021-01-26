@@ -1,4 +1,4 @@
-import { series, sleep } from '@dish/async'
+import { series } from '@dish/async'
 import {
   List,
   graphql,
@@ -12,7 +12,7 @@ import {
   slugify,
   useRefetch,
 } from '@dish/graph'
-import { assertIsString, assertPresent, isPresent } from '@dish/helpers'
+import { assertPresent, isPresent } from '@dish/helpers'
 import { Heart, Plus, X } from '@dish/react-feather'
 import React, { useEffect, useRef, useState } from 'react'
 import { Switch } from 'react-native'
@@ -65,6 +65,11 @@ export default function ListPage(props: Props) {
 
   useEffect(() => {
     if (!isCreating) return
+    const username = userStore.user?.username
+    if (!username) {
+      Toast.error(`No user`)
+      return
+    }
     // create a new list and redirect to it
     return series([
       () => fetch('/api/randomName').then((res) => res.text()),
@@ -84,15 +89,11 @@ export default function ListPage(props: Props) {
           Toast.error(`Error creating list`)
           return
         }
-        if (!userStore.user?.username) {
-          Toast.error(`No user`)
-          return
-        }
         router.navigate({
           name: 'list',
           replace: true,
           params: {
-            userSlug: slugify(userStore.user.username),
+            userSlug: slugify(username),
             slug: list.slug,
             state: 'edit',
           },
@@ -327,6 +328,7 @@ const ListPageContent = graphql((props: Props) => {
           onDismiss={() => setShowAddModal(false)}
           width={380}
           maxHeight={480}
+          minHeight={480}
         >
           <PaneControlButtons>
             <CloseButton onPress={() => setShowAddModal(false)} />
@@ -394,6 +396,7 @@ const ListPageContent = graphql((props: Props) => {
         {/* overflow clip prevention with marginVerticals here */}
         <VStack marginVertical={-15}>
           <PageTitle
+            noDivider
             title={
               <VStack marginVertical={15}>
                 <ScalingPressable>
