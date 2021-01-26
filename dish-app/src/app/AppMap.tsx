@@ -94,29 +94,29 @@ export default memo(function AppMap() {
     [key]
   )
 
-  useEffect(() => {
-    console.warn('should remove this and move to a push based model')
-    return reaction(
-      homeStore,
-      () => {
-        const stateId = homeStore.currentState.id
-        const state = homeStore.allStates[stateId]
-        const span = state.span
-        const center = state.center
-        // stringify to prevent extra reactions
-        return { span, center }
-      },
-      ({ span, center }) => {
-        updateRegion.cancel()
-        appMapStore.setPosition({
-          span,
-          center,
-          via: 'home',
-        })
-      },
-      isEqual
-    )
-  }, [])
+  // useEffect(() => {
+  //   console.warn('should remove this and move to a push based model')
+  //   return reaction(
+  //     homeStore,
+  //     () => {
+  //       const stateId = homeStore.currentState.id
+  //       const state = homeStore.allStates[stateId]
+  //       const span = state.span
+  //       const center = state.center
+  //       // stringify to prevent extra reactions
+  //       return { span, center }
+  //     },
+  //     ({ span, center }) => {
+  //       updateRegion.cancel()
+  //       appMapStore.setPosition({
+  //         span,
+  //         center,
+  //         via: 'home',
+  //       })
+  //     },
+  //     isEqual
+  //   )
+  // }, [])
 
   // CENTER (restauarantSelected.location)
   useEffect(() => {

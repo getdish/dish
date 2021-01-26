@@ -15,7 +15,6 @@ export interface Scalars {
   Boolean: boolean
   Int: number
   Float: number
-  float8: any
   geography: any
   geometry: any
   jsonb: any
@@ -68,19 +67,6 @@ export interface String_comparison_exp {
   _nlike?: Maybe<Scalars['String']>
   _nsimilar?: Maybe<Scalars['String']>
   _similar?: Maybe<Scalars['String']>
-}
-
-/** expression to compare columns of type float8. All fields are combined with logical 'AND'. */
-export interface float8_comparison_exp {
-  _eq?: Maybe<Scalars['float8']>
-  _gt?: Maybe<Scalars['float8']>
-  _gte?: Maybe<Scalars['float8']>
-  _in?: Maybe<Array<Scalars['float8']>>
-  _is_null?: Maybe<Scalars['Boolean']>
-  _lt?: Maybe<Scalars['float8']>
-  _lte?: Maybe<Scalars['float8']>
-  _neq?: Maybe<Scalars['float8']>
-  _nin?: Maybe<Array<Scalars['float8']>>
 }
 
 /** Expression to compare the result of casting a column of type geography. Multiple cast targets are combined with logical 'AND'. */
@@ -164,8 +150,6 @@ export interface hrr_arr_rel_insert_input {
 
 /** order by avg() on columns of table "hrr" */
 export interface hrr_avg_order_by {
-  hrr_bdry_i?: Maybe<order_by>
-  hrrnum?: Maybe<order_by>
   ogc_fid?: Maybe<order_by>
 }
 
@@ -174,9 +158,8 @@ export interface hrr_bool_exp {
   _and?: Maybe<Array<Maybe<hrr_bool_exp>>>
   _not?: Maybe<hrr_bool_exp>
   _or?: Maybe<Array<Maybe<hrr_bool_exp>>>
-  hrr_bdry_i?: Maybe<float8_comparison_exp>
+  color?: Maybe<String_comparison_exp>
   hrrcity?: Maybe<String_comparison_exp>
-  hrrnum?: Maybe<Int_comparison_exp>
   ogc_fid?: Maybe<Int_comparison_exp>
   slug?: Maybe<String_comparison_exp>
   wkb_geometry?: Maybe<geometry_comparison_exp>
@@ -192,16 +175,13 @@ export enum hrr_constraint {
 
 /** input type for incrementing integer column in table "hrr" */
 export interface hrr_inc_input {
-  hrr_bdry_i?: Maybe<Scalars['float8']>
-  hrrnum?: Maybe<Scalars['Int']>
   ogc_fid?: Maybe<Scalars['Int']>
 }
 
 /** input type for inserting data into table "hrr" */
 export interface hrr_insert_input {
-  hrr_bdry_i?: Maybe<Scalars['float8']>
+  color?: Maybe<Scalars['String']>
   hrrcity?: Maybe<Scalars['String']>
-  hrrnum?: Maybe<Scalars['Int']>
   ogc_fid?: Maybe<Scalars['Int']>
   slug?: Maybe<Scalars['String']>
   wkb_geometry?: Maybe<Scalars['geometry']>
@@ -209,18 +189,16 @@ export interface hrr_insert_input {
 
 /** order by max() on columns of table "hrr" */
 export interface hrr_max_order_by {
-  hrr_bdry_i?: Maybe<order_by>
+  color?: Maybe<order_by>
   hrrcity?: Maybe<order_by>
-  hrrnum?: Maybe<order_by>
   ogc_fid?: Maybe<order_by>
   slug?: Maybe<order_by>
 }
 
 /** order by min() on columns of table "hrr" */
 export interface hrr_min_order_by {
-  hrr_bdry_i?: Maybe<order_by>
+  color?: Maybe<order_by>
   hrrcity?: Maybe<order_by>
-  hrrnum?: Maybe<order_by>
   ogc_fid?: Maybe<order_by>
   slug?: Maybe<order_by>
 }
@@ -240,9 +218,8 @@ export interface hrr_on_conflict {
 
 /** ordering options when selecting data from "hrr" */
 export interface hrr_order_by {
-  hrr_bdry_i?: Maybe<order_by>
+  color?: Maybe<order_by>
   hrrcity?: Maybe<order_by>
-  hrrnum?: Maybe<order_by>
   ogc_fid?: Maybe<order_by>
   slug?: Maybe<order_by>
   wkb_geometry?: Maybe<order_by>
@@ -256,11 +233,9 @@ export interface hrr_pk_columns_input {
 /** select columns of table "hrr" */
 export enum hrr_select_column {
   /** column name */
-  hrr_bdry_i = 'hrr_bdry_i',
+  color = 'color',
   /** column name */
   hrrcity = 'hrrcity',
-  /** column name */
-  hrrnum = 'hrrnum',
   /** column name */
   ogc_fid = 'ogc_fid',
   /** column name */
@@ -271,9 +246,8 @@ export enum hrr_select_column {
 
 /** input type for updating data in table "hrr" */
 export interface hrr_set_input {
-  hrr_bdry_i?: Maybe<Scalars['float8']>
+  color?: Maybe<Scalars['String']>
   hrrcity?: Maybe<Scalars['String']>
-  hrrnum?: Maybe<Scalars['Int']>
   ogc_fid?: Maybe<Scalars['Int']>
   slug?: Maybe<Scalars['String']>
   wkb_geometry?: Maybe<Scalars['geometry']>
@@ -281,40 +255,30 @@ export interface hrr_set_input {
 
 /** order by stddev() on columns of table "hrr" */
 export interface hrr_stddev_order_by {
-  hrr_bdry_i?: Maybe<order_by>
-  hrrnum?: Maybe<order_by>
   ogc_fid?: Maybe<order_by>
 }
 
 /** order by stddev_pop() on columns of table "hrr" */
 export interface hrr_stddev_pop_order_by {
-  hrr_bdry_i?: Maybe<order_by>
-  hrrnum?: Maybe<order_by>
   ogc_fid?: Maybe<order_by>
 }
 
 /** order by stddev_samp() on columns of table "hrr" */
 export interface hrr_stddev_samp_order_by {
-  hrr_bdry_i?: Maybe<order_by>
-  hrrnum?: Maybe<order_by>
   ogc_fid?: Maybe<order_by>
 }
 
 /** order by sum() on columns of table "hrr" */
 export interface hrr_sum_order_by {
-  hrr_bdry_i?: Maybe<order_by>
-  hrrnum?: Maybe<order_by>
   ogc_fid?: Maybe<order_by>
 }
 
 /** update columns of table "hrr" */
 export enum hrr_update_column {
   /** column name */
-  hrr_bdry_i = 'hrr_bdry_i',
+  color = 'color',
   /** column name */
   hrrcity = 'hrrcity',
-  /** column name */
-  hrrnum = 'hrrnum',
   /** column name */
   ogc_fid = 'ogc_fid',
   /** column name */
@@ -325,22 +289,16 @@ export enum hrr_update_column {
 
 /** order by var_pop() on columns of table "hrr" */
 export interface hrr_var_pop_order_by {
-  hrr_bdry_i?: Maybe<order_by>
-  hrrnum?: Maybe<order_by>
   ogc_fid?: Maybe<order_by>
 }
 
 /** order by var_samp() on columns of table "hrr" */
 export interface hrr_var_samp_order_by {
-  hrr_bdry_i?: Maybe<order_by>
-  hrrnum?: Maybe<order_by>
   ogc_fid?: Maybe<order_by>
 }
 
 /** order by variance() on columns of table "hrr" */
 export interface hrr_variance_order_by {
-  hrr_bdry_i?: Maybe<order_by>
-  hrrnum?: Maybe<order_by>
   ogc_fid?: Maybe<order_by>
 }
 
@@ -4284,8 +4242,6 @@ export interface zcta5_arr_rel_insert_input {
 
 /** order by avg() on columns of table "zcta5" */
 export interface zcta5_avg_order_by {
-  aland10?: Maybe<order_by>
-  awater10?: Maybe<order_by>
   ogc_fid?: Maybe<order_by>
 }
 
@@ -4294,19 +4250,13 @@ export interface zcta5_bool_exp {
   _and?: Maybe<Array<Maybe<zcta5_bool_exp>>>
   _not?: Maybe<zcta5_bool_exp>
   _or?: Maybe<Array<Maybe<zcta5_bool_exp>>>
-  aland10?: Maybe<float8_comparison_exp>
-  awater10?: Maybe<float8_comparison_exp>
-  classfp10?: Maybe<String_comparison_exp>
-  funcstat10?: Maybe<String_comparison_exp>
-  geoid10?: Maybe<String_comparison_exp>
+  color?: Maybe<String_comparison_exp>
   intptlat10?: Maybe<String_comparison_exp>
   intptlon10?: Maybe<String_comparison_exp>
-  mtfcc10?: Maybe<String_comparison_exp>
   nhood?: Maybe<String_comparison_exp>
   ogc_fid?: Maybe<Int_comparison_exp>
   slug?: Maybe<String_comparison_exp>
   wkb_geometry?: Maybe<geometry_comparison_exp>
-  zcta5ce10?: Maybe<String_comparison_exp>
 }
 
 /** unique or primary key constraints on table "zcta5" */
@@ -4319,58 +4269,38 @@ export enum zcta5_constraint {
 
 /** input type for incrementing integer column in table "zcta5" */
 export interface zcta5_inc_input {
-  aland10?: Maybe<Scalars['float8']>
-  awater10?: Maybe<Scalars['float8']>
   ogc_fid?: Maybe<Scalars['Int']>
 }
 
 /** input type for inserting data into table "zcta5" */
 export interface zcta5_insert_input {
-  aland10?: Maybe<Scalars['float8']>
-  awater10?: Maybe<Scalars['float8']>
-  classfp10?: Maybe<Scalars['String']>
-  funcstat10?: Maybe<Scalars['String']>
-  geoid10?: Maybe<Scalars['String']>
+  color?: Maybe<Scalars['String']>
   intptlat10?: Maybe<Scalars['String']>
   intptlon10?: Maybe<Scalars['String']>
-  mtfcc10?: Maybe<Scalars['String']>
   nhood?: Maybe<Scalars['String']>
   ogc_fid?: Maybe<Scalars['Int']>
   slug?: Maybe<Scalars['String']>
   wkb_geometry?: Maybe<Scalars['geometry']>
-  zcta5ce10?: Maybe<Scalars['String']>
 }
 
 /** order by max() on columns of table "zcta5" */
 export interface zcta5_max_order_by {
-  aland10?: Maybe<order_by>
-  awater10?: Maybe<order_by>
-  classfp10?: Maybe<order_by>
-  funcstat10?: Maybe<order_by>
-  geoid10?: Maybe<order_by>
+  color?: Maybe<order_by>
   intptlat10?: Maybe<order_by>
   intptlon10?: Maybe<order_by>
-  mtfcc10?: Maybe<order_by>
   nhood?: Maybe<order_by>
   ogc_fid?: Maybe<order_by>
   slug?: Maybe<order_by>
-  zcta5ce10?: Maybe<order_by>
 }
 
 /** order by min() on columns of table "zcta5" */
 export interface zcta5_min_order_by {
-  aland10?: Maybe<order_by>
-  awater10?: Maybe<order_by>
-  classfp10?: Maybe<order_by>
-  funcstat10?: Maybe<order_by>
-  geoid10?: Maybe<order_by>
+  color?: Maybe<order_by>
   intptlat10?: Maybe<order_by>
   intptlon10?: Maybe<order_by>
-  mtfcc10?: Maybe<order_by>
   nhood?: Maybe<order_by>
   ogc_fid?: Maybe<order_by>
   slug?: Maybe<order_by>
-  zcta5ce10?: Maybe<order_by>
 }
 
 /** input type for inserting object relation for remote table "zcta5" */
@@ -4388,19 +4318,13 @@ export interface zcta5_on_conflict {
 
 /** ordering options when selecting data from "zcta5" */
 export interface zcta5_order_by {
-  aland10?: Maybe<order_by>
-  awater10?: Maybe<order_by>
-  classfp10?: Maybe<order_by>
-  funcstat10?: Maybe<order_by>
-  geoid10?: Maybe<order_by>
+  color?: Maybe<order_by>
   intptlat10?: Maybe<order_by>
   intptlon10?: Maybe<order_by>
-  mtfcc10?: Maybe<order_by>
   nhood?: Maybe<order_by>
   ogc_fid?: Maybe<order_by>
   slug?: Maybe<order_by>
   wkb_geometry?: Maybe<order_by>
-  zcta5ce10?: Maybe<order_by>
 }
 
 /** primary key columns input for table: "zcta5" */
@@ -4411,21 +4335,11 @@ export interface zcta5_pk_columns_input {
 /** select columns of table "zcta5" */
 export enum zcta5_select_column {
   /** column name */
-  aland10 = 'aland10',
-  /** column name */
-  awater10 = 'awater10',
-  /** column name */
-  classfp10 = 'classfp10',
-  /** column name */
-  funcstat10 = 'funcstat10',
-  /** column name */
-  geoid10 = 'geoid10',
+  color = 'color',
   /** column name */
   intptlat10 = 'intptlat10',
   /** column name */
   intptlon10 = 'intptlon10',
-  /** column name */
-  mtfcc10 = 'mtfcc10',
   /** column name */
   nhood = 'nhood',
   /** column name */
@@ -4434,73 +4348,47 @@ export enum zcta5_select_column {
   slug = 'slug',
   /** column name */
   wkb_geometry = 'wkb_geometry',
-  /** column name */
-  zcta5ce10 = 'zcta5ce10',
 }
 
 /** input type for updating data in table "zcta5" */
 export interface zcta5_set_input {
-  aland10?: Maybe<Scalars['float8']>
-  awater10?: Maybe<Scalars['float8']>
-  classfp10?: Maybe<Scalars['String']>
-  funcstat10?: Maybe<Scalars['String']>
-  geoid10?: Maybe<Scalars['String']>
+  color?: Maybe<Scalars['String']>
   intptlat10?: Maybe<Scalars['String']>
   intptlon10?: Maybe<Scalars['String']>
-  mtfcc10?: Maybe<Scalars['String']>
   nhood?: Maybe<Scalars['String']>
   ogc_fid?: Maybe<Scalars['Int']>
   slug?: Maybe<Scalars['String']>
   wkb_geometry?: Maybe<Scalars['geometry']>
-  zcta5ce10?: Maybe<Scalars['String']>
 }
 
 /** order by stddev() on columns of table "zcta5" */
 export interface zcta5_stddev_order_by {
-  aland10?: Maybe<order_by>
-  awater10?: Maybe<order_by>
   ogc_fid?: Maybe<order_by>
 }
 
 /** order by stddev_pop() on columns of table "zcta5" */
 export interface zcta5_stddev_pop_order_by {
-  aland10?: Maybe<order_by>
-  awater10?: Maybe<order_by>
   ogc_fid?: Maybe<order_by>
 }
 
 /** order by stddev_samp() on columns of table "zcta5" */
 export interface zcta5_stddev_samp_order_by {
-  aland10?: Maybe<order_by>
-  awater10?: Maybe<order_by>
   ogc_fid?: Maybe<order_by>
 }
 
 /** order by sum() on columns of table "zcta5" */
 export interface zcta5_sum_order_by {
-  aland10?: Maybe<order_by>
-  awater10?: Maybe<order_by>
   ogc_fid?: Maybe<order_by>
 }
 
 /** update columns of table "zcta5" */
 export enum zcta5_update_column {
   /** column name */
-  aland10 = 'aland10',
-  /** column name */
-  awater10 = 'awater10',
-  /** column name */
-  classfp10 = 'classfp10',
-  /** column name */
-  funcstat10 = 'funcstat10',
-  /** column name */
-  geoid10 = 'geoid10',
+  color = 'color',
   /** column name */
   intptlat10 = 'intptlat10',
   /** column name */
   intptlon10 = 'intptlon10',
-  /** column name */
-  mtfcc10 = 'mtfcc10',
   /** column name */
   nhood = 'nhood',
   /** column name */
@@ -4509,28 +4397,20 @@ export enum zcta5_update_column {
   slug = 'slug',
   /** column name */
   wkb_geometry = 'wkb_geometry',
-  /** column name */
-  zcta5ce10 = 'zcta5ce10',
 }
 
 /** order by var_pop() on columns of table "zcta5" */
 export interface zcta5_var_pop_order_by {
-  aland10?: Maybe<order_by>
-  awater10?: Maybe<order_by>
   ogc_fid?: Maybe<order_by>
 }
 
 /** order by var_samp() on columns of table "zcta5" */
 export interface zcta5_var_samp_order_by {
-  aland10?: Maybe<order_by>
-  awater10?: Maybe<order_by>
   ogc_fid?: Maybe<order_by>
 }
 
 /** order by variance() on columns of table "zcta5" */
 export interface zcta5_variance_order_by {
-  aland10?: Maybe<order_by>
-  awater10?: Maybe<order_by>
   ogc_fid?: Maybe<order_by>
 }
 
@@ -4540,7 +4420,6 @@ export const scalarsEnumsHash: ScalarsEnumsHash = {
   ID: true,
   Int: true,
   String: true,
-  float8: true,
   geography: true,
   geometry: true,
   hrr_constraint: true,
@@ -6114,17 +5993,6 @@ export const generatedSchema = {
     _nsimilar: { __type: 'String' },
     _similar: { __type: 'String' },
   },
-  float8_comparison_exp: {
-    _eq: { __type: 'float8' },
-    _gt: { __type: 'float8' },
-    _gte: { __type: 'float8' },
-    _in: { __type: '[float8!]' },
-    _is_null: { __type: 'Boolean' },
-    _lt: { __type: 'float8' },
-    _lte: { __type: 'float8' },
-    _neq: { __type: 'float8' },
-    _nin: { __type: '[float8!]' },
-  },
   geography_cast_exp: { geometry: { __type: 'geometry_comparison_exp' } },
   geography_comparison_exp: {
     _cast: { __type: 'geography_cast_exp' },
@@ -6163,9 +6031,8 @@ export const generatedSchema = {
   },
   hrr: {
     __typename: { __type: 'String!' },
-    hrr_bdry_i: { __type: 'float8' },
+    color: { __type: 'String' },
     hrrcity: { __type: 'String' },
-    hrrnum: { __type: 'Int' },
     ogc_fid: { __type: 'Int!' },
     slug: { __type: 'String' },
     wkb_geometry: { __type: 'geometry' },
@@ -6211,66 +6078,50 @@ export const generatedSchema = {
   },
   hrr_avg_fields: {
     __typename: { __type: 'String!' },
-    hrr_bdry_i: { __type: 'Float' },
-    hrrnum: { __type: 'Float' },
     ogc_fid: { __type: 'Float' },
   },
-  hrr_avg_order_by: {
-    hrr_bdry_i: { __type: 'order_by' },
-    hrrnum: { __type: 'order_by' },
-    ogc_fid: { __type: 'order_by' },
-  },
+  hrr_avg_order_by: { ogc_fid: { __type: 'order_by' } },
   hrr_bool_exp: {
     _and: { __type: '[hrr_bool_exp]' },
     _not: { __type: 'hrr_bool_exp' },
     _or: { __type: '[hrr_bool_exp]' },
-    hrr_bdry_i: { __type: 'float8_comparison_exp' },
+    color: { __type: 'String_comparison_exp' },
     hrrcity: { __type: 'String_comparison_exp' },
-    hrrnum: { __type: 'Int_comparison_exp' },
     ogc_fid: { __type: 'Int_comparison_exp' },
     slug: { __type: 'String_comparison_exp' },
     wkb_geometry: { __type: 'geometry_comparison_exp' },
   },
-  hrr_inc_input: {
-    hrr_bdry_i: { __type: 'float8' },
-    hrrnum: { __type: 'Int' },
-    ogc_fid: { __type: 'Int' },
-  },
+  hrr_inc_input: { ogc_fid: { __type: 'Int' } },
   hrr_insert_input: {
-    hrr_bdry_i: { __type: 'float8' },
+    color: { __type: 'String' },
     hrrcity: { __type: 'String' },
-    hrrnum: { __type: 'Int' },
     ogc_fid: { __type: 'Int' },
     slug: { __type: 'String' },
     wkb_geometry: { __type: 'geometry' },
   },
   hrr_max_fields: {
     __typename: { __type: 'String!' },
-    hrr_bdry_i: { __type: 'float8' },
+    color: { __type: 'String' },
     hrrcity: { __type: 'String' },
-    hrrnum: { __type: 'Int' },
     ogc_fid: { __type: 'Int' },
     slug: { __type: 'String' },
   },
   hrr_max_order_by: {
-    hrr_bdry_i: { __type: 'order_by' },
+    color: { __type: 'order_by' },
     hrrcity: { __type: 'order_by' },
-    hrrnum: { __type: 'order_by' },
     ogc_fid: { __type: 'order_by' },
     slug: { __type: 'order_by' },
   },
   hrr_min_fields: {
     __typename: { __type: 'String!' },
-    hrr_bdry_i: { __type: 'float8' },
+    color: { __type: 'String' },
     hrrcity: { __type: 'String' },
-    hrrnum: { __type: 'Int' },
     ogc_fid: { __type: 'Int' },
     slug: { __type: 'String' },
   },
   hrr_min_order_by: {
-    hrr_bdry_i: { __type: 'order_by' },
+    color: { __type: 'order_by' },
     hrrcity: { __type: 'order_by' },
-    hrrnum: { __type: 'order_by' },
     ogc_fid: { __type: 'order_by' },
     slug: { __type: 'order_by' },
   },
@@ -6289,99 +6140,55 @@ export const generatedSchema = {
     where: { __type: 'hrr_bool_exp' },
   },
   hrr_order_by: {
-    hrr_bdry_i: { __type: 'order_by' },
+    color: { __type: 'order_by' },
     hrrcity: { __type: 'order_by' },
-    hrrnum: { __type: 'order_by' },
     ogc_fid: { __type: 'order_by' },
     slug: { __type: 'order_by' },
     wkb_geometry: { __type: 'order_by' },
   },
   hrr_pk_columns_input: { ogc_fid: { __type: 'Int!' } },
   hrr_set_input: {
-    hrr_bdry_i: { __type: 'float8' },
+    color: { __type: 'String' },
     hrrcity: { __type: 'String' },
-    hrrnum: { __type: 'Int' },
     ogc_fid: { __type: 'Int' },
     slug: { __type: 'String' },
     wkb_geometry: { __type: 'geometry' },
   },
   hrr_stddev_fields: {
     __typename: { __type: 'String!' },
-    hrr_bdry_i: { __type: 'Float' },
-    hrrnum: { __type: 'Float' },
     ogc_fid: { __type: 'Float' },
   },
-  hrr_stddev_order_by: {
-    hrr_bdry_i: { __type: 'order_by' },
-    hrrnum: { __type: 'order_by' },
-    ogc_fid: { __type: 'order_by' },
-  },
+  hrr_stddev_order_by: { ogc_fid: { __type: 'order_by' } },
   hrr_stddev_pop_fields: {
     __typename: { __type: 'String!' },
-    hrr_bdry_i: { __type: 'Float' },
-    hrrnum: { __type: 'Float' },
     ogc_fid: { __type: 'Float' },
   },
-  hrr_stddev_pop_order_by: {
-    hrr_bdry_i: { __type: 'order_by' },
-    hrrnum: { __type: 'order_by' },
-    ogc_fid: { __type: 'order_by' },
-  },
+  hrr_stddev_pop_order_by: { ogc_fid: { __type: 'order_by' } },
   hrr_stddev_samp_fields: {
     __typename: { __type: 'String!' },
-    hrr_bdry_i: { __type: 'Float' },
-    hrrnum: { __type: 'Float' },
     ogc_fid: { __type: 'Float' },
   },
-  hrr_stddev_samp_order_by: {
-    hrr_bdry_i: { __type: 'order_by' },
-    hrrnum: { __type: 'order_by' },
-    ogc_fid: { __type: 'order_by' },
-  },
+  hrr_stddev_samp_order_by: { ogc_fid: { __type: 'order_by' } },
   hrr_sum_fields: {
     __typename: { __type: 'String!' },
-    hrr_bdry_i: { __type: 'float8' },
-    hrrnum: { __type: 'Int' },
     ogc_fid: { __type: 'Int' },
   },
-  hrr_sum_order_by: {
-    hrr_bdry_i: { __type: 'order_by' },
-    hrrnum: { __type: 'order_by' },
-    ogc_fid: { __type: 'order_by' },
-  },
+  hrr_sum_order_by: { ogc_fid: { __type: 'order_by' } },
   hrr_var_pop_fields: {
     __typename: { __type: 'String!' },
-    hrr_bdry_i: { __type: 'Float' },
-    hrrnum: { __type: 'Float' },
     ogc_fid: { __type: 'Float' },
   },
-  hrr_var_pop_order_by: {
-    hrr_bdry_i: { __type: 'order_by' },
-    hrrnum: { __type: 'order_by' },
-    ogc_fid: { __type: 'order_by' },
-  },
+  hrr_var_pop_order_by: { ogc_fid: { __type: 'order_by' } },
   hrr_var_samp_fields: {
     __typename: { __type: 'String!' },
-    hrr_bdry_i: { __type: 'Float' },
-    hrrnum: { __type: 'Float' },
     ogc_fid: { __type: 'Float' },
   },
-  hrr_var_samp_order_by: {
-    hrr_bdry_i: { __type: 'order_by' },
-    hrrnum: { __type: 'order_by' },
-    ogc_fid: { __type: 'order_by' },
-  },
+  hrr_var_samp_order_by: { ogc_fid: { __type: 'order_by' } },
   hrr_variance_fields: {
     __typename: { __type: 'String!' },
-    hrr_bdry_i: { __type: 'Float' },
-    hrrnum: { __type: 'Float' },
     ogc_fid: { __type: 'Float' },
   },
-  hrr_variance_order_by: {
-    hrr_bdry_i: { __type: 'order_by' },
-    hrrnum: { __type: 'order_by' },
-    ogc_fid: { __type: 'order_by' },
-  },
+  hrr_variance_order_by: { ogc_fid: { __type: 'order_by' } },
   jsonb_comparison_exp: {
     _contained_in: { __type: 'jsonb' },
     _contains: { __type: 'jsonb' },
@@ -10364,19 +10171,13 @@ export const generatedSchema = {
   },
   zcta5: {
     __typename: { __type: 'String!' },
-    aland10: { __type: 'float8' },
-    awater10: { __type: 'float8' },
-    classfp10: { __type: 'String' },
-    funcstat10: { __type: 'String' },
-    geoid10: { __type: 'String' },
+    color: { __type: 'String' },
     intptlat10: { __type: 'String' },
     intptlon10: { __type: 'String' },
-    mtfcc10: { __type: 'String' },
     nhood: { __type: 'String' },
     ogc_fid: { __type: 'Int!' },
     slug: { __type: 'String' },
     wkb_geometry: { __type: 'geometry' },
-    zcta5ce10: { __type: 'String' },
   },
   zcta5_aggregate: {
     __typename: { __type: 'String!' },
@@ -10419,110 +10220,64 @@ export const generatedSchema = {
   },
   zcta5_avg_fields: {
     __typename: { __type: 'String!' },
-    aland10: { __type: 'Float' },
-    awater10: { __type: 'Float' },
     ogc_fid: { __type: 'Float' },
   },
-  zcta5_avg_order_by: {
-    aland10: { __type: 'order_by' },
-    awater10: { __type: 'order_by' },
-    ogc_fid: { __type: 'order_by' },
-  },
+  zcta5_avg_order_by: { ogc_fid: { __type: 'order_by' } },
   zcta5_bool_exp: {
     _and: { __type: '[zcta5_bool_exp]' },
     _not: { __type: 'zcta5_bool_exp' },
     _or: { __type: '[zcta5_bool_exp]' },
-    aland10: { __type: 'float8_comparison_exp' },
-    awater10: { __type: 'float8_comparison_exp' },
-    classfp10: { __type: 'String_comparison_exp' },
-    funcstat10: { __type: 'String_comparison_exp' },
-    geoid10: { __type: 'String_comparison_exp' },
+    color: { __type: 'String_comparison_exp' },
     intptlat10: { __type: 'String_comparison_exp' },
     intptlon10: { __type: 'String_comparison_exp' },
-    mtfcc10: { __type: 'String_comparison_exp' },
     nhood: { __type: 'String_comparison_exp' },
     ogc_fid: { __type: 'Int_comparison_exp' },
     slug: { __type: 'String_comparison_exp' },
     wkb_geometry: { __type: 'geometry_comparison_exp' },
-    zcta5ce10: { __type: 'String_comparison_exp' },
   },
-  zcta5_inc_input: {
-    aland10: { __type: 'float8' },
-    awater10: { __type: 'float8' },
-    ogc_fid: { __type: 'Int' },
-  },
+  zcta5_inc_input: { ogc_fid: { __type: 'Int' } },
   zcta5_insert_input: {
-    aland10: { __type: 'float8' },
-    awater10: { __type: 'float8' },
-    classfp10: { __type: 'String' },
-    funcstat10: { __type: 'String' },
-    geoid10: { __type: 'String' },
+    color: { __type: 'String' },
     intptlat10: { __type: 'String' },
     intptlon10: { __type: 'String' },
-    mtfcc10: { __type: 'String' },
     nhood: { __type: 'String' },
     ogc_fid: { __type: 'Int' },
     slug: { __type: 'String' },
     wkb_geometry: { __type: 'geometry' },
-    zcta5ce10: { __type: 'String' },
   },
   zcta5_max_fields: {
     __typename: { __type: 'String!' },
-    aland10: { __type: 'float8' },
-    awater10: { __type: 'float8' },
-    classfp10: { __type: 'String' },
-    funcstat10: { __type: 'String' },
-    geoid10: { __type: 'String' },
+    color: { __type: 'String' },
     intptlat10: { __type: 'String' },
     intptlon10: { __type: 'String' },
-    mtfcc10: { __type: 'String' },
     nhood: { __type: 'String' },
     ogc_fid: { __type: 'Int' },
     slug: { __type: 'String' },
-    zcta5ce10: { __type: 'String' },
   },
   zcta5_max_order_by: {
-    aland10: { __type: 'order_by' },
-    awater10: { __type: 'order_by' },
-    classfp10: { __type: 'order_by' },
-    funcstat10: { __type: 'order_by' },
-    geoid10: { __type: 'order_by' },
+    color: { __type: 'order_by' },
     intptlat10: { __type: 'order_by' },
     intptlon10: { __type: 'order_by' },
-    mtfcc10: { __type: 'order_by' },
     nhood: { __type: 'order_by' },
     ogc_fid: { __type: 'order_by' },
     slug: { __type: 'order_by' },
-    zcta5ce10: { __type: 'order_by' },
   },
   zcta5_min_fields: {
     __typename: { __type: 'String!' },
-    aland10: { __type: 'float8' },
-    awater10: { __type: 'float8' },
-    classfp10: { __type: 'String' },
-    funcstat10: { __type: 'String' },
-    geoid10: { __type: 'String' },
+    color: { __type: 'String' },
     intptlat10: { __type: 'String' },
     intptlon10: { __type: 'String' },
-    mtfcc10: { __type: 'String' },
     nhood: { __type: 'String' },
     ogc_fid: { __type: 'Int' },
     slug: { __type: 'String' },
-    zcta5ce10: { __type: 'String' },
   },
   zcta5_min_order_by: {
-    aland10: { __type: 'order_by' },
-    awater10: { __type: 'order_by' },
-    classfp10: { __type: 'order_by' },
-    funcstat10: { __type: 'order_by' },
-    geoid10: { __type: 'order_by' },
+    color: { __type: 'order_by' },
     intptlat10: { __type: 'order_by' },
     intptlon10: { __type: 'order_by' },
-    mtfcc10: { __type: 'order_by' },
     nhood: { __type: 'order_by' },
     ogc_fid: { __type: 'order_by' },
     slug: { __type: 'order_by' },
-    zcta5ce10: { __type: 'order_by' },
   },
   zcta5_mutation_response: {
     __typename: { __type: 'String!' },
@@ -10539,113 +10294,59 @@ export const generatedSchema = {
     where: { __type: 'zcta5_bool_exp' },
   },
   zcta5_order_by: {
-    aland10: { __type: 'order_by' },
-    awater10: { __type: 'order_by' },
-    classfp10: { __type: 'order_by' },
-    funcstat10: { __type: 'order_by' },
-    geoid10: { __type: 'order_by' },
+    color: { __type: 'order_by' },
     intptlat10: { __type: 'order_by' },
     intptlon10: { __type: 'order_by' },
-    mtfcc10: { __type: 'order_by' },
     nhood: { __type: 'order_by' },
     ogc_fid: { __type: 'order_by' },
     slug: { __type: 'order_by' },
     wkb_geometry: { __type: 'order_by' },
-    zcta5ce10: { __type: 'order_by' },
   },
   zcta5_pk_columns_input: { ogc_fid: { __type: 'Int!' } },
   zcta5_set_input: {
-    aland10: { __type: 'float8' },
-    awater10: { __type: 'float8' },
-    classfp10: { __type: 'String' },
-    funcstat10: { __type: 'String' },
-    geoid10: { __type: 'String' },
+    color: { __type: 'String' },
     intptlat10: { __type: 'String' },
     intptlon10: { __type: 'String' },
-    mtfcc10: { __type: 'String' },
     nhood: { __type: 'String' },
     ogc_fid: { __type: 'Int' },
     slug: { __type: 'String' },
     wkb_geometry: { __type: 'geometry' },
-    zcta5ce10: { __type: 'String' },
   },
   zcta5_stddev_fields: {
     __typename: { __type: 'String!' },
-    aland10: { __type: 'Float' },
-    awater10: { __type: 'Float' },
     ogc_fid: { __type: 'Float' },
   },
-  zcta5_stddev_order_by: {
-    aland10: { __type: 'order_by' },
-    awater10: { __type: 'order_by' },
-    ogc_fid: { __type: 'order_by' },
-  },
+  zcta5_stddev_order_by: { ogc_fid: { __type: 'order_by' } },
   zcta5_stddev_pop_fields: {
     __typename: { __type: 'String!' },
-    aland10: { __type: 'Float' },
-    awater10: { __type: 'Float' },
     ogc_fid: { __type: 'Float' },
   },
-  zcta5_stddev_pop_order_by: {
-    aland10: { __type: 'order_by' },
-    awater10: { __type: 'order_by' },
-    ogc_fid: { __type: 'order_by' },
-  },
+  zcta5_stddev_pop_order_by: { ogc_fid: { __type: 'order_by' } },
   zcta5_stddev_samp_fields: {
     __typename: { __type: 'String!' },
-    aland10: { __type: 'Float' },
-    awater10: { __type: 'Float' },
     ogc_fid: { __type: 'Float' },
   },
-  zcta5_stddev_samp_order_by: {
-    aland10: { __type: 'order_by' },
-    awater10: { __type: 'order_by' },
-    ogc_fid: { __type: 'order_by' },
-  },
+  zcta5_stddev_samp_order_by: { ogc_fid: { __type: 'order_by' } },
   zcta5_sum_fields: {
     __typename: { __type: 'String!' },
-    aland10: { __type: 'float8' },
-    awater10: { __type: 'float8' },
     ogc_fid: { __type: 'Int' },
   },
-  zcta5_sum_order_by: {
-    aland10: { __type: 'order_by' },
-    awater10: { __type: 'order_by' },
-    ogc_fid: { __type: 'order_by' },
-  },
+  zcta5_sum_order_by: { ogc_fid: { __type: 'order_by' } },
   zcta5_var_pop_fields: {
     __typename: { __type: 'String!' },
-    aland10: { __type: 'Float' },
-    awater10: { __type: 'Float' },
     ogc_fid: { __type: 'Float' },
   },
-  zcta5_var_pop_order_by: {
-    aland10: { __type: 'order_by' },
-    awater10: { __type: 'order_by' },
-    ogc_fid: { __type: 'order_by' },
-  },
+  zcta5_var_pop_order_by: { ogc_fid: { __type: 'order_by' } },
   zcta5_var_samp_fields: {
     __typename: { __type: 'String!' },
-    aland10: { __type: 'Float' },
-    awater10: { __type: 'Float' },
     ogc_fid: { __type: 'Float' },
   },
-  zcta5_var_samp_order_by: {
-    aland10: { __type: 'order_by' },
-    awater10: { __type: 'order_by' },
-    ogc_fid: { __type: 'order_by' },
-  },
+  zcta5_var_samp_order_by: { ogc_fid: { __type: 'order_by' } },
   zcta5_variance_fields: {
     __typename: { __type: 'String!' },
-    aland10: { __type: 'Float' },
-    awater10: { __type: 'Float' },
     ogc_fid: { __type: 'Float' },
   },
-  zcta5_variance_order_by: {
-    aland10: { __type: 'order_by' },
-    awater10: { __type: 'order_by' },
-    ogc_fid: { __type: 'order_by' },
-  },
+  zcta5_variance_order_by: { ogc_fid: { __type: 'order_by' } },
 } as const
 
 export interface Query {
@@ -11707,9 +11408,8 @@ export interface Subscription {
 
 export interface hrr {
   __typename: 'hrr'
-  hrr_bdry_i?: Maybe<ScalarsEnums['float8']>
+  color?: Maybe<ScalarsEnums['String']>
   hrrcity?: Maybe<ScalarsEnums['String']>
-  hrrnum?: Maybe<ScalarsEnums['Int']>
   ogc_fid: ScalarsEnums['Int']
   slug?: Maybe<ScalarsEnums['String']>
   wkb_geometry?: Maybe<ScalarsEnums['geometry']>
@@ -11741,25 +11441,21 @@ export interface hrr_aggregate_fields {
 
 export interface hrr_avg_fields {
   __typename: 'hrr_avg_fields'
-  hrr_bdry_i?: Maybe<ScalarsEnums['Float']>
-  hrrnum?: Maybe<ScalarsEnums['Float']>
   ogc_fid?: Maybe<ScalarsEnums['Float']>
 }
 
 export interface hrr_max_fields {
   __typename: 'hrr_max_fields'
-  hrr_bdry_i?: Maybe<ScalarsEnums['float8']>
+  color?: Maybe<ScalarsEnums['String']>
   hrrcity?: Maybe<ScalarsEnums['String']>
-  hrrnum?: Maybe<ScalarsEnums['Int']>
   ogc_fid?: Maybe<ScalarsEnums['Int']>
   slug?: Maybe<ScalarsEnums['String']>
 }
 
 export interface hrr_min_fields {
   __typename: 'hrr_min_fields'
-  hrr_bdry_i?: Maybe<ScalarsEnums['float8']>
+  color?: Maybe<ScalarsEnums['String']>
   hrrcity?: Maybe<ScalarsEnums['String']>
-  hrrnum?: Maybe<ScalarsEnums['Int']>
   ogc_fid?: Maybe<ScalarsEnums['Int']>
   slug?: Maybe<ScalarsEnums['String']>
 }
@@ -11772,50 +11468,36 @@ export interface hrr_mutation_response {
 
 export interface hrr_stddev_fields {
   __typename: 'hrr_stddev_fields'
-  hrr_bdry_i?: Maybe<ScalarsEnums['Float']>
-  hrrnum?: Maybe<ScalarsEnums['Float']>
   ogc_fid?: Maybe<ScalarsEnums['Float']>
 }
 
 export interface hrr_stddev_pop_fields {
   __typename: 'hrr_stddev_pop_fields'
-  hrr_bdry_i?: Maybe<ScalarsEnums['Float']>
-  hrrnum?: Maybe<ScalarsEnums['Float']>
   ogc_fid?: Maybe<ScalarsEnums['Float']>
 }
 
 export interface hrr_stddev_samp_fields {
   __typename: 'hrr_stddev_samp_fields'
-  hrr_bdry_i?: Maybe<ScalarsEnums['Float']>
-  hrrnum?: Maybe<ScalarsEnums['Float']>
   ogc_fid?: Maybe<ScalarsEnums['Float']>
 }
 
 export interface hrr_sum_fields {
   __typename: 'hrr_sum_fields'
-  hrr_bdry_i?: Maybe<ScalarsEnums['float8']>
-  hrrnum?: Maybe<ScalarsEnums['Int']>
   ogc_fid?: Maybe<ScalarsEnums['Int']>
 }
 
 export interface hrr_var_pop_fields {
   __typename: 'hrr_var_pop_fields'
-  hrr_bdry_i?: Maybe<ScalarsEnums['Float']>
-  hrrnum?: Maybe<ScalarsEnums['Float']>
   ogc_fid?: Maybe<ScalarsEnums['Float']>
 }
 
 export interface hrr_var_samp_fields {
   __typename: 'hrr_var_samp_fields'
-  hrr_bdry_i?: Maybe<ScalarsEnums['Float']>
-  hrrnum?: Maybe<ScalarsEnums['Float']>
   ogc_fid?: Maybe<ScalarsEnums['Float']>
 }
 
 export interface hrr_variance_fields {
   __typename: 'hrr_variance_fields'
-  hrr_bdry_i?: Maybe<ScalarsEnums['Float']>
-  hrrnum?: Maybe<ScalarsEnums['Float']>
   ogc_fid?: Maybe<ScalarsEnums['Float']>
 }
 
@@ -13758,19 +13440,13 @@ export interface user_variance_fields {
 
 export interface zcta5 {
   __typename: 'zcta5'
-  aland10?: Maybe<ScalarsEnums['float8']>
-  awater10?: Maybe<ScalarsEnums['float8']>
-  classfp10?: Maybe<ScalarsEnums['String']>
-  funcstat10?: Maybe<ScalarsEnums['String']>
-  geoid10?: Maybe<ScalarsEnums['String']>
+  color?: Maybe<ScalarsEnums['String']>
   intptlat10?: Maybe<ScalarsEnums['String']>
   intptlon10?: Maybe<ScalarsEnums['String']>
-  mtfcc10?: Maybe<ScalarsEnums['String']>
   nhood?: Maybe<ScalarsEnums['String']>
   ogc_fid: ScalarsEnums['Int']
   slug?: Maybe<ScalarsEnums['String']>
   wkb_geometry?: Maybe<ScalarsEnums['geometry']>
-  zcta5ce10?: Maybe<ScalarsEnums['String']>
 }
 
 export interface zcta5_aggregate {
@@ -13799,41 +13475,27 @@ export interface zcta5_aggregate_fields {
 
 export interface zcta5_avg_fields {
   __typename: 'zcta5_avg_fields'
-  aland10?: Maybe<ScalarsEnums['Float']>
-  awater10?: Maybe<ScalarsEnums['Float']>
   ogc_fid?: Maybe<ScalarsEnums['Float']>
 }
 
 export interface zcta5_max_fields {
   __typename: 'zcta5_max_fields'
-  aland10?: Maybe<ScalarsEnums['float8']>
-  awater10?: Maybe<ScalarsEnums['float8']>
-  classfp10?: Maybe<ScalarsEnums['String']>
-  funcstat10?: Maybe<ScalarsEnums['String']>
-  geoid10?: Maybe<ScalarsEnums['String']>
+  color?: Maybe<ScalarsEnums['String']>
   intptlat10?: Maybe<ScalarsEnums['String']>
   intptlon10?: Maybe<ScalarsEnums['String']>
-  mtfcc10?: Maybe<ScalarsEnums['String']>
   nhood?: Maybe<ScalarsEnums['String']>
   ogc_fid?: Maybe<ScalarsEnums['Int']>
   slug?: Maybe<ScalarsEnums['String']>
-  zcta5ce10?: Maybe<ScalarsEnums['String']>
 }
 
 export interface zcta5_min_fields {
   __typename: 'zcta5_min_fields'
-  aland10?: Maybe<ScalarsEnums['float8']>
-  awater10?: Maybe<ScalarsEnums['float8']>
-  classfp10?: Maybe<ScalarsEnums['String']>
-  funcstat10?: Maybe<ScalarsEnums['String']>
-  geoid10?: Maybe<ScalarsEnums['String']>
+  color?: Maybe<ScalarsEnums['String']>
   intptlat10?: Maybe<ScalarsEnums['String']>
   intptlon10?: Maybe<ScalarsEnums['String']>
-  mtfcc10?: Maybe<ScalarsEnums['String']>
   nhood?: Maybe<ScalarsEnums['String']>
   ogc_fid?: Maybe<ScalarsEnums['Int']>
   slug?: Maybe<ScalarsEnums['String']>
-  zcta5ce10?: Maybe<ScalarsEnums['String']>
 }
 
 export interface zcta5_mutation_response {
@@ -13844,50 +13506,36 @@ export interface zcta5_mutation_response {
 
 export interface zcta5_stddev_fields {
   __typename: 'zcta5_stddev_fields'
-  aland10?: Maybe<ScalarsEnums['Float']>
-  awater10?: Maybe<ScalarsEnums['Float']>
   ogc_fid?: Maybe<ScalarsEnums['Float']>
 }
 
 export interface zcta5_stddev_pop_fields {
   __typename: 'zcta5_stddev_pop_fields'
-  aland10?: Maybe<ScalarsEnums['Float']>
-  awater10?: Maybe<ScalarsEnums['Float']>
   ogc_fid?: Maybe<ScalarsEnums['Float']>
 }
 
 export interface zcta5_stddev_samp_fields {
   __typename: 'zcta5_stddev_samp_fields'
-  aland10?: Maybe<ScalarsEnums['Float']>
-  awater10?: Maybe<ScalarsEnums['Float']>
   ogc_fid?: Maybe<ScalarsEnums['Float']>
 }
 
 export interface zcta5_sum_fields {
   __typename: 'zcta5_sum_fields'
-  aland10?: Maybe<ScalarsEnums['float8']>
-  awater10?: Maybe<ScalarsEnums['float8']>
   ogc_fid?: Maybe<ScalarsEnums['Int']>
 }
 
 export interface zcta5_var_pop_fields {
   __typename: 'zcta5_var_pop_fields'
-  aland10?: Maybe<ScalarsEnums['Float']>
-  awater10?: Maybe<ScalarsEnums['Float']>
   ogc_fid?: Maybe<ScalarsEnums['Float']>
 }
 
 export interface zcta5_var_samp_fields {
   __typename: 'zcta5_var_samp_fields'
-  aland10?: Maybe<ScalarsEnums['Float']>
-  awater10?: Maybe<ScalarsEnums['Float']>
   ogc_fid?: Maybe<ScalarsEnums['Float']>
 }
 
 export interface zcta5_variance_fields {
   __typename: 'zcta5_variance_fields'
-  aland10?: Maybe<ScalarsEnums['Float']>
-  awater10?: Maybe<ScalarsEnums['Float']>
   ogc_fid?: Maybe<ScalarsEnums['Float']>
 }
 

@@ -1,0 +1,10 @@
+- args:
+    cascade: false
+    read_only: false
+    sql: ALTER TABLE "public"."hrr" ADD COLUMN "hrrnum" int4;
+  type: run_sql
+- args:
+    cascade: false
+    read_only: false
+    sql: ALTER TABLE "public"."hrr" ALTER COLUMN "hrrnum" DROP NOT NULL;
+  type: run_sql
