@@ -1,4 +1,5 @@
 import { parseSchemaType, selectFields } from '@dish/gqless'
+import { omit } from 'lodash'
 
 import {
   Mutation,
@@ -182,7 +183,7 @@ export async function update<T extends WithID<ModelType>>(
   const [resolved] = await resolvedMutationWithFields(() => {
     const res = mutation[action]({
       where: { id: { _eq: object.id } },
-      _set: object,
+      _set: omit(object, 'id'),
     })
     // if (opts.query && res) {
     //   assignSelections(opts.query, res)

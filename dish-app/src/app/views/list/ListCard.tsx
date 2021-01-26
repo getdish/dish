@@ -36,6 +36,8 @@ export const ListCard = graphql(
       })
       .map((x) => x.restaurant.image)
 
+    const backgroundColor = getListColor(list.color) ?? colors.color
+
     const contents = (
       <Link name="list" asyncClick params={{ slug, userSlug }}>
         <Card
@@ -43,7 +45,7 @@ export const ListCard = graphql(
           hoverable={hoverable}
           title={list.name}
           subTitle={`by ${list.user?.name ?? list.user?.username ?? ''}`}
-          backgroundColor={getListColor(list.color) ?? colors.color}
+          backgroundColor={backgroundColor}
           photo={
             <VStack alignItems="center" justifyContent="center" flex={1}>
               <HStack flexWrap="wrap">
