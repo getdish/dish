@@ -38,7 +38,7 @@ import { CommentBubble } from '../views/CommentBubble'
 import { DishView } from '../views/dish/DishView'
 import { Link } from '../views/Link'
 import { ListCard } from '../views/list/ListCard'
-import { SlantedTitle } from '../views/SlantedTitle'
+import { SlantedTitle, SlantedTitleProps } from '../views/SlantedTitle'
 import { HomePageFooter } from './HomePageFooter'
 import { HomeStackViewProps } from './HomeStackViewProps'
 import { RestaurantCard } from './restaurant/RestaurantCard'
@@ -206,23 +206,21 @@ const ListFeedCard = graphql((props: FeedItemList) => {
   })
   return (
     <>
-      <VStack marginBottom={-8}>
-        <SlantedTitle size="sm">
-          <HStack alignItems="center">
-            <Text>Lists</Text>
-            <Spacer size="sm" />
-            <Link
-              promptLogin
-              name="list"
-              params={{ userSlug: 'me', slug: 'create' }}
-            >
-              <SmallCircleButton alignSelf="center">
-                <Plus size={14} color="#fff" />
-              </SmallCircleButton>
-            </Link>
-          </HStack>
-        </SlantedTitle>
-      </VStack>
+      <FeedSlantedTitle>
+        <HStack alignItems="center">
+          <Text>Lists</Text>
+          <Spacer size="sm" />
+          <Link
+            promptLogin
+            name="list"
+            params={{ userSlug: 'me', slug: 'create' }}
+          >
+            <SmallCircleButton alignSelf="center">
+              <Plus size={14} color="#fff" />
+            </SmallCircleButton>
+          </Link>
+        </HStack>
+      </FeedSlantedTitle>
       <SkewedCardCarousel>
         {recentLists.map((list, i) => {
           if (!list) {
@@ -246,6 +244,19 @@ const ListFeedCard = graphql((props: FeedItemList) => {
   )
 })
 
+const FeedSlantedTitle = (props: SlantedTitleProps) => {
+  return (
+    <VStack
+      alignSelf="flex-start"
+      marginTop={0}
+      marginLeft={15}
+      marginBottom={-42}
+    >
+      <SlantedTitle size="md" {...props} />
+    </VStack>
+  )
+}
+
 const CuisineFeedCard = memo(
   graphql(function CuisineFeedCard(props: FeedItemCuisine) {
     const scrollRef = useRef<ScrollView>()
@@ -265,9 +276,7 @@ const CuisineFeedCard = memo(
 
     return (
       <>
-        <VStack marginBottom={-8}>
-          <SlantedTitle size="sm">{props.title}</SlantedTitle>
-        </VStack>
+        <FeedSlantedTitle>{props.title}</FeedSlantedTitle>
         <ScrollView
           ref={scrollRef as any}
           style={{ maxWidth: '100%', overflow: 'hidden' }}
@@ -331,7 +340,7 @@ const getDishColInner = (dish: tag, i: number) => {
 }
 
 const DishCol = (props: StackProps) => {
-  return <VStack marginRight={5} {...props} />
+  return <VStack marginRight={-25} {...props} />
 }
 
 const DishFeedCard = graphql(function DishFeedCard(props: FeedItemDish) {
@@ -352,11 +361,9 @@ const DishFeedCard = graphql(function DishFeedCard(props: FeedItemDish) {
 const DishRestaurantsFeedCard = (props: FeedItemDishRestaurants) => {
   return (
     <>
-      <VStack marginBottom={-8}>
-        <SlantedTitle size="sm">
-          {props.dish.icon} {props.dish.name}
-        </SlantedTitle>
-      </VStack>
+      <FeedSlantedTitle>
+        {props.dish.icon} {props.dish.name}
+      </FeedSlantedTitle>
       <SkewedCardCarousel>
         {props.restaurants.slice(0, 5).map((r, i) => {
           if (!r.slug) {

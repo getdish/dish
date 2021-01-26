@@ -241,8 +241,8 @@ export default memo(function HomePage(
               </HStack>
 
               <Spacer size="lg" />
+              <Spacer size="lg" />
 
-              <Spacer />
               <Suspense
                 fallback={
                   <>

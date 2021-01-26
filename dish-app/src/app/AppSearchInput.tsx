@@ -27,7 +27,7 @@ import { isWeb, searchBarHeight } from '../constants/constants'
 import { getTagSlug } from '../helpers/getTagSlug'
 import { isWebIOS } from '../helpers/isIOS'
 import { tagsToNavigableTags } from '../helpers/tagHelpers'
-import { router } from '../router'
+import { router, useIsRouteActive } from '../router'
 import { AutocompleteStore, autocompletesStore } from './AppAutocomplete'
 import { AppAutocompleteHoverableInput } from './AppAutocompleteHoverableInput'
 import {
@@ -271,11 +271,13 @@ export const AppSearchInput = memo(() => {
   )
 })
 
+// TODO not happy with logical structure here
 const SearchInputIcon = memo(({ color }: { color: string }) => {
   const media = useMedia()
   const home = useHomeStore()
   const search = useSearchPageStore()
-  const loading = home.loading || search.status === 'loading'
+  const isOnSearch = useIsRouteActive('search')
+  const loading = home.loading || (isOnSearch && search.status === 'loading')
   return (
     <VStack
       width={16}

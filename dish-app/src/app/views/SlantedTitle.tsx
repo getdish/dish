@@ -5,11 +5,7 @@ import { BoxProps, SizableTextProps, Title, useTextStyle } from 'snackui'
 
 import { SlantedBox } from './SlantedBox'
 
-export const SlantedTitle = ({
-  size,
-  sizeLineHeight,
-  ...props
-}: Omit<BoxProps, 'color'> &
+export type SlantedTitleProps = Omit<BoxProps, 'color'> &
   Partial<
     Pick<
       SizableTextProps,
@@ -20,7 +16,13 @@ export const SlantedTitle = ({
       | 'fontSize'
       | 'fontWeight'
     >
-  >) => {
+  >
+
+export const SlantedTitle = ({
+  size,
+  sizeLineHeight,
+  ...props
+}: SlantedTitleProps) => {
   const [{ children, ...rest }, textProps] = useTextStyle(props as any, true)
   return (
     <SlantedBox alignSelf="flex-start" {...(rest as any)}>
