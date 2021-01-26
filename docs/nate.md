@@ -4,9 +4,28 @@ goal january
 
   1. fix lots of things
 
+    - fix re-search in area button
+    - colorize map tiles (push to staging db too)
+      - improve hover/styles
+    - fix detail page - dont scroll once already scrolled
+    - reviews - read more >> show in popup
+    - lists
+      - save within region
+      - show within region
+      - update region on edit page
+      - search near region on add restaurant modal
+    - new list
+      - dont do weird redirect thing
+      - modal that opens to select existing or create new
+    - home
+      - fix feed up a bunch to actually show real feed items
+      - show more results on map
+      - show real comments (recent?)
+    - cleanup
+     - fix comment bubble
+     - fixup profile pages a lot
     - show onboard if not yet
     - fix map region movement
-    - home regions colorized
     - map toggle between region/area improve
     - better search region
     - region handoff between search/home
