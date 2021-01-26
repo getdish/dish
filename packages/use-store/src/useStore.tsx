@@ -276,7 +276,7 @@ function useStoreFromInfo(
       const keys = [...internal.current.tracked]
       const snap = selector(store, keys)
       if (
-        process.env.NODE_ENV === 'development' &&
+        process.env.LOG_LEVEL &&
         (shouldDebug(component, info) || configureOpts.logLevel === 'debug')
       ) {
         console.log('💰 getSnapshot', keys, snap)
@@ -299,7 +299,7 @@ function useStoreFromInfo(
     internal.current.isRendering = false
     mountStore(info, storeProxy)
     if (
-      process.env.NODE_ENV === 'development' &&
+      process.env.LOG_LEVEL &&
       (shouldDebug(component, info) || configureOpts.logLevel === 'debug')
     ) {
       console.log('💰 finish render, tracking', [...internal.current.tracked])
@@ -363,7 +363,7 @@ function createProxiedStore(
         if (key in actions) {
           let action = actions[key].bind(proxiedStore)
           if (
-            process.env.NODE_ENV === 'development' &&
+            process.env.LOG_LEVEL &&
             (isDebugging || configureOpts.logLevel !== 'error') &&
             !key.startsWith('get')
           ) {
@@ -372,7 +372,7 @@ function createProxiedStore(
               setters = new Set()
               const curSetters = setters
 
-              if (process.env.NODE_ENV === 'development') {
+              if (process.env.LOG_LEVEL) {
                 // dev mode do a lot of nice logging
                 const isTopLevelLogger = logStack.size == 0
                 const logs = new Set<any[]>()
@@ -485,10 +485,7 @@ function createProxiedStore(
           clearGetterCache(key)
         }
 
-        if (
-          process.env.NODE_ENV === 'development' &&
-          configureOpts.logLevel !== 'error'
-        ) {
+        if (process.env.LOG_LEVEL && configureOpts.logLevel !== 'error') {
           setters.add({ key, value })
           if (shouldDebug(renderOpts?.component, storeInfo)) {
             console.log('SET', res, key, value)
