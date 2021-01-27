@@ -119,7 +119,6 @@ export default memo(function SearchPage(props: Props) {
 })
 
 const SearchPageContent = memo(function SearchPageContent(props: Props) {
-  const home = useHomeStore()
   const route = useLastValueWhen(
     () => router.curPage,
     router.curPage.name !== 'search'

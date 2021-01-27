@@ -9,6 +9,7 @@ import {
 import { isPresent, stringify } from '@dish/helpers'
 import { Store, createStore, useStoreInstance } from '@dish/use-store'
 
+import { initialPosition } from '../../../constants/initialHomeState'
 import { allTags } from '../../../helpers/allTags'
 import { getActiveTags } from '../../../helpers/getActiveTags'
 import { getTagSlug } from '../../../helpers/getTagSlug'
@@ -24,6 +25,7 @@ class SearchPageStore extends Store {
   status: 'loading' | 'complete' = 'complete'
   results: RestaurantSearchItem[] = []
   meta: HomeMeta | null = null
+  searchPosition = initialPosition
 
   setIndex(index: number, event: ActiveEvent) {
     this.index = Math.min(Math.max(-1, index), this.max)
@@ -141,6 +143,11 @@ class SearchPageStore extends Store {
     this.status = 'complete'
     this.results = restaurants.filter(isPresent).slice(0, 80)
     this.meta = res.meta
+    // set this at very end of search
+    this.searchPosition = {
+      center: appMapStore.position.center,
+      span: appMapStore.position.span,
+    }
 
     return {
       center,

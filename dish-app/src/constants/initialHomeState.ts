@@ -1,19 +1,20 @@
+import { MapPosition } from '@dish/graph/src'
+
 import { getLocalJSON, setLocalJSON } from '../helpers/getLocalJSON'
 import { HomeStateItemHome, HomeStateItemLocation } from '../types/homeTypes'
 import { AppMapPosition } from '../types/mapTypes'
 
 const location = getLocalJSON('DEFAULT_LOCATION')
 
-export const initialPosition = {
-  center: {
+export const initialPosition: MapPosition = {
+  center: location?.center ?? {
     lng: -122.421351,
     lat: 37.759251,
   },
-  span: {
+  span: location?.span ?? {
     lat: 0.15,
     lng: 0.15,
   },
-  ...location,
 }
 
 export function getDefaultLocation(): AppMapPosition & { region?: string } {
@@ -38,6 +39,6 @@ export const initialHomeState: HomeStateItemHome = {
   type: 'home',
   activeTags: {},
   searchQuery: '',
-  region: initialPosition.region ?? 'ca-san-francisco',
+  region: location?.region ?? 'ca-san-francisco',
   section: '',
 }

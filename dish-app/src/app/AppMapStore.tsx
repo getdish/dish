@@ -81,7 +81,6 @@ class AppMapStore extends Store {
     }
     const n = [...this.lastPositions, this.position]
     this.lastPositions = n.reverse().slice(0, 15).reverse() // keep only 15
-    this.updateAreaInfo()
   }
 
   clearHover() {
@@ -118,19 +117,6 @@ class AppMapStore extends Store {
     return new Promise<any>((res, rej) => {
       navigator.geolocation.getCurrentPosition(res, rej)
     })
-  }
-
-  async updateAreaInfo() {
-    const { center, span } = this.position
-    const curLocInfo = await reverseGeocode(center, span)
-    if (curLocInfo) {
-      const curLocName =
-        curLocInfo.fullName ?? curLocInfo.name ?? curLocInfo.country
-      homeStore.updateCurrentState('appMapStore.updateAreaInfo', {
-        curLocInfo,
-        curLocName,
-      })
-    }
   }
 
   private getNumId = (id: string): number => {
