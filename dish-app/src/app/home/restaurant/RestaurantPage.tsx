@@ -11,12 +11,13 @@ import React, {
 import { ScrollView, View } from 'react-native'
 import { LoadingItem, LoadingItems, Spacer, VStack, useTheme } from 'snackui'
 
-import { isWeb } from '../../../constants/constants'
+import { isWeb, searchBarHeight } from '../../../constants/constants'
 import { getMinLngLat } from '../../../helpers/getLngLat'
 import { useColorsFor } from '../../../helpers/useColorsFor'
 import { queryRestaurant } from '../../../queries/queryRestaurant'
 import { HomeStateItemRestaurant } from '../../../types/homeTypes'
 import { appMapStore, useSetAppMap } from '../../AppMapStore'
+import { drawerStore } from '../../drawerStore'
 import { homeStore } from '../../homeStore'
 import { usePageLoadEffect } from '../../hooks/usePageLoadEffect'
 import { ContentScrollView } from '../../views/ContentScrollView'
@@ -45,7 +46,7 @@ const RestaurantPage = memo(
     const { item } = props
     const { restaurantSlug, section, sectionSlug } = item
     const [restaurant] = queryRestaurant(restaurantSlug)
-    const coords = restaurant?.location?.coordinates
+    const coords = restaurant?.location?.coordinates ?? []
     const { selectedDish, setSelectedDishToggle } = useSelectedDish(
       section === 'reviews' ? sectionSlug : null
     )
@@ -64,7 +65,7 @@ const RestaurantPage = memo(
         },
         span: getMinLngLat(appMapStore.position.span, 0.004, 0.004),
       }
-    }, [...coords])
+    }, [JSON.stringify(coords)])
 
     useSetAppMap({
       isActive: props.isActive,
@@ -82,16 +83,19 @@ const RestaurantPage = memo(
       : item.section === 'reviews'
       ? reviewsSection
       : null
+
     useEffect(() => {
       if (!scrollView) return
       if (!view) return
+      // only scroll if not scrolled already
+      if (scrollY.current !== 0) return
       return series([
         () => fullyIdle({ min: 500 }),
         () => {
           return new Promise((res) => {
             view.measure((_x, _y, _w, _h, _pX, pY) => {
-              console.log('measure', view, _x, _y, _w, _h, _pX, pY, pY)
-              res(pY)
+              const y = pY - drawerStore.currentMapHeight - searchBarHeight
+              res(y)
             })
           })
         },
@@ -99,9 +103,10 @@ const RestaurantPage = memo(
           scrollView.scrollTo({ y: offsetY, animated: true })
         },
       ])
-    }, [scrollView, view, item.section, item.sectionSlug])
+    }, [scrollView, view])
 
     const theme = useTheme()
+    const scrollY = useRef(0)
 
     return (
       <>
@@ -109,7 +114,13 @@ const RestaurantPage = memo(
           Dish - {restaurant?.name ?? ''} has the best [...tags] dishes.
         </PageTitleTag>
 
-        <ContentScrollView ref={setScrollView} id="restaurant">
+        <ContentScrollView
+          ref={setScrollView}
+          onScrollYThrottled={(y) => {
+            scrollY.current = y
+          }}
+          id="restaurant"
+        >
           {/* HEADER */}
           {/* -1 margin bottom to overlap bottom border */}
           <VStack

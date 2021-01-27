@@ -15,7 +15,7 @@ export function BottomFloatingArea(props: { children: any }) {
       zIndex={1000000000}
       pointerEvents="none"
       bottom={
-        20 + (media.sm ? safeArea.bottom + drawer.bottomOccluded - 400 : 0)
+        20 + (media.sm ? safeArea.bottom + drawer.currentHeight - 400 : 0)
       }
       right={20}
       left={20}

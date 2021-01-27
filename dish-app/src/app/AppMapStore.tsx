@@ -66,7 +66,6 @@ class AppMapStore extends Store {
       span: pos.span ?? this.position.span,
       via: pos.via ?? this.position.via,
     }
-    console.log('set position meow', pos)
     this.nextPosition = this.position
     const n = [...this.lastPositions, this.position]
     this.lastPositions = n.reverse().slice(0, 15).reverse() // keep only 15
@@ -186,7 +185,6 @@ export const useSetAppMap = (
   useEffect(() => {
     if (!isActive) return
     if (center || span) {
-      console.log('set via new center', center, span)
       appMapStore.setPosition({
         center,
         span,

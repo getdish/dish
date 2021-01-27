@@ -13,7 +13,7 @@ export function OverlayLinkButton<
     <BlurView borderRadius={20}>
       <LinkButton
         paddingVertical={8}
-        paddingHorizontal={8}
+        paddingHorizontal={12}
         borderRadius={90}
         shadowColor="rgba(0,0,0,0.175)"
         shadowRadius={13}
