@@ -6,7 +6,7 @@ export const PaneControlButtons = (props: { children: any }) => {
   return (
     <AbsoluteVStack
       zIndex={1000000000000}
-      right={media.sm ? 6 : -12}
+      right={media.sm ? 12 : -12}
       top={media.sm ? 6 : -6}
     >
       {props.children}
