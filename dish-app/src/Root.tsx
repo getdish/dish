@@ -73,7 +73,11 @@ configureAssertHelpers({
     if (why) {
       Toast.error(why)
     } else {
-      console.warn('Assertion failed without reason')
+      if (process.env.NODE_ENV === 'development') {
+        console.groupCollapsed('Assertion exited')
+        console.trace()
+        console.groupEnd()
+      }
     }
   },
 })

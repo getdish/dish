@@ -88,6 +88,8 @@ export const HomeDrawerSmallView = memo((props: { children: any }) => {
         style={{
           transform: [
             {
+              // this is the current Y as determined by the snap
+              // drawerStore.snapIndex
               translateY: drawerStore.pan,
             },
           ],
@@ -136,24 +138,22 @@ export const HomeDrawerSmallView = memo((props: { children: any }) => {
           </View>
 
           <VStack flex={1} maxHeight="100%" position="relative">
-            {isWebIOS ||
-              (drawerStore.snapIndex === 2 && (
-                <AbsoluteVStack
-                  pointerEvents="none"
-                  fullscreen
-                  zIndex={1000000}
-                  {...(drawerStore.snapIndex > 0 && {
-                    pointerEvents: 'auto',
-                  })}
-                >
-                  <View
-                    style={{ width: '100%', height: '100%' }}
-                    {...(drawerStore.snapIndex > 0 && panResponder.panHandlers)}
-                  />
-                </AbsoluteVStack>
-              ))}
-
-            {/* children */}
+            {/* overlay over entire content to make dragging it up easy */}
+            {(isWebIOS || drawerStore.snapIndex === 2) && (
+              <AbsoluteVStack
+                pointerEvents="none"
+                fullscreen
+                zIndex={1000000}
+                {...(drawerStore.snapIndex > 0 && {
+                  pointerEvents: 'auto',
+                })}
+              >
+                <View
+                  style={{ width: '100%', height: '100%' }}
+                  {...(drawerStore.snapIndex > 0 && panResponder.panHandlers)}
+                />
+              </AbsoluteVStack>
+            )}
 
             {props.children}
           </VStack>

@@ -29,8 +29,8 @@ export function useDebugStoreComponent(StoreCons: any) {
   }, [])
 }
 
-export const shouldDebug = (component: any, info: StoreInfo) => {
-  return DebugComponents.get(component)?.has(info.storeInstance.constructor)
+export const shouldDebug = (component: any, storeInstance: any) => {
+  return DebugComponents.get(component)?.has(storeInstance.constructor)
 }
 
 export const DebugComponents = new WeakMap<any, Set<any>>()

@@ -6,13 +6,16 @@ export type UseStoreOptions<Store = any, SelectorRes = any> = {
   once?: boolean
 }
 
-export type StoreInfo = {
+export type StoreInfo<A = any> = {
+  // proxied store
+  store: A
   source: any
   hasMounted: boolean
   storeInstance: any
   getters: { [key: string]: any }
   actions: any
-  version: number
+  getVersion(): number
+  triggerUpdate(): void
   stateKeys: string[]
   gettersState: {
     getCache: Map<string, any>

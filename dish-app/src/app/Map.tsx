@@ -2,6 +2,7 @@ import 'mapbox-gl/dist/mapbox-gl.css'
 
 import { fullyIdle, series } from '@dish/async'
 import { isDev, isStaging, slugify } from '@dish/graph'
+import { assertPresent } from '@dish/helpers/src'
 import bbox from '@turf/bbox'
 import union from '@turf/union'
 import _, { capitalize, debounce, isEqual, throttle } from 'lodash'
@@ -16,6 +17,7 @@ import { hasMovedAtLeast } from '../helpers/hasMovedAtLeast'
 import { hexToRGB } from '../helpers/hexToRGB'
 import { useIsMountedRef } from '../helpers/useIsMountedRef'
 import { Region } from '../types/homeTypes'
+import { appMapStore } from './AppMapStore'
 import { MapProps } from './MapProps'
 import { tiles } from './tiles'
 
@@ -184,25 +186,19 @@ export const MapView = (props: MapProps) => {
     if (!map) return
     const source = map.getSource(RESTAURANTS_SOURCE_ID)
     const source2 = map.getSource(RESTAURANTS_UNCLUSTERED_SOURCE_ID)
-
-    if (!source || !source2) {
-      console.warn('NO SOURCE??', source, source2)
-      return
-    }
+    assertPresent(source || source2, 'missing source')
 
     if (props.showRank) {
       for (const [index, feature] of features.entries()) {
         feature.properties!.searchPosition = index + 1
       }
     }
-
     if (source?.type === 'geojson') {
       source.setData({
         type: 'FeatureCollection',
         features: features,
       })
     }
-
     if (source2?.type === 'geojson') {
       source2.setData({
         type: 'FeatureCollection',
@@ -527,14 +523,12 @@ function setupMapEffect({
             // get full boundary (mapbox weird)
             const sourceFeatures = map.querySourceFeatures(boundary.source, {
               sourceLayer: boundary.sourceLayer,
-              // TODO this only works for zcta5, we need to normalize the ids on backend
               filter: ['==', 'ogc_fid', boundary.id],
             })
             let final = sourceFeatures[0] as any
             for (const feature of sourceFeatures) {
               final = union(final, feature as any)
             }
-            console.log('sourceFeatures', final, boundary, sourceFeatures)
             const bounds = bbox(final)
             map.fitBounds(bounds as any, {
               padding: 20,
