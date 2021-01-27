@@ -141,7 +141,12 @@ const getNormalizedLink = (props: Partial<LinkButtonProps>) => {
           console.warn('no slug?')
           return getFullTagFromNameAndType(tag as any) ?? tag
         }
-        return allTags[tag.slug] ?? tag
+        return {
+          // default to dish which is important! used later
+          // by searchPageStore.runSearch to pick out dish tag
+          type: 'dish',
+          ...(allTags[tag.slug] ?? tag),
+        }
       })
 
     // add to cache

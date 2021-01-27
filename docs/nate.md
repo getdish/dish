@@ -4,10 +4,6 @@ goal january
 
   1. fix lots of things
 
-    - lists
-      - save within region
-      - show within region
-      - update region on edit page
     - new list
       - dont do weird redirect thing
       - modal that opens to select existing or create new
