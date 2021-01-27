@@ -223,7 +223,7 @@ const ListFeedCard = graphql((props: FeedItemList) => {
             return null
           }
           return (
-            <SkewedCard zIndex={1000 - i} key={list.slug}>
+            <SkewedCard zIndex={1000 - i} isBehind={i > 0} key={list.slug}>
               <ListCard
                 hoverable={false}
                 slug={list.slug}
@@ -299,7 +299,7 @@ const CuisineFeedCard = memo(
 
             {restaurants.map((r, i) => {
               return (
-                <SkewedCard zIndex={1000 - i} key={r.id}>
+                <SkewedCard zIndex={1000 - i} isBehind={i > 0} key={r.id}>
                   <RestaurantCard
                     hideScore
                     restaurantId={r.id}
@@ -366,7 +366,7 @@ const DishRestaurantsFeedCard = (props: FeedItemDishRestaurants) => {
             return null
           }
           return (
-            <SkewedCard zIndex={1000 - i} key={r.id}>
+            <SkewedCard isBehind={i > 0} zIndex={1000 - i} key={r.id}>
               <RestaurantCard
                 hideScore
                 restaurantId={r.id}
