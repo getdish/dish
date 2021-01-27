@@ -3,15 +3,13 @@ import { LngLat, MapPosition, RestaurantOnlyIds, resolved } from '@dish/graph'
 import { isPresent } from '@dish/helpers'
 import { Store, createStore, useStoreInstance } from '@dish/use-store'
 import bbox from '@turf/bbox'
-import center from '@turf/center'
+import getCenter from '@turf/center'
 import { featureCollection } from '@turf/helpers'
-import { BBox } from '@turf/helpers'
 import { findLast, uniqBy } from 'lodash'
 import { useEffect } from 'react'
 
 import { getDefaultLocation } from '../constants/initialHomeState'
 import { bboxToSpan } from '../helpers/bboxToSpan'
-import { reverseGeocode } from '../helpers/reverseGeocode'
 import { queryRestaurant } from '../queries/queryRestaurant'
 import { AppMapPosition, MapResultItem } from '../types/mapTypes'
 import { homeStore } from './homeStore'
@@ -39,48 +37,46 @@ class AppMapStore extends Store {
   hovered: MapHoveredRestaurant | null = null
   userLocation: LngLat | null = null
   position: AppMapPosition = getDefaultLocation()
+  nextPosition: AppMapPosition = getDefaultLocation()
   lastPositions: AppMapPosition[] = []
   results: MapResultItem[] = []
   features: GeoJSON.Feature[] = []
-  resultsBbox: BBox | null = null
   showRank = false
   zoomOnHover = false
   ids = {}
 
-  setState(val: MapOpts & { results?: MapResultItem[] | null }) {
+  setState(
+    val: MapOpts & {
+      results?: MapResultItem[] | null
+      features: GeoJSON.Feature[]
+    }
+  ) {
     this.setSelected(null)
     this.setHovered(null)
     this.results = val.results ?? []
-    this.features = this.getMapFeatures(this.results)
+    this.features = val.features
     this.showRank = val.showRank ?? false
     this.zoomOnHover = val.zoomOnHover ?? false
-
-    const collection = featureCollection(this.features)
-    this.resultsBbox = this.features.length ? bbox(collection) : null
-
-    if (val.fitToResults && this.resultsBbox) {
-      // @ts-expect-error
-      const centerCoord = center(collection)
-      this.position = {
-        via: 'results',
-        center: {
-          lng: centerCoord.geometry.coordinates[0],
-          lat: centerCoord.geometry.coordinates[1],
-        },
-        // @ts-expect-error
-        span: bboxToSpan(this.resultsBbox),
-      }
-    }
   }
 
   setPosition(pos: Partial<AppMapPosition>) {
+    console.log('set position', pos)
     this.position = {
       center: pos.center ?? this.position.center,
       span: pos.span ?? this.position.span,
       via: pos.via ?? this.position.via,
     }
+    this.nextPosition = this.position
     const n = [...this.lastPositions, this.position]
     this.lastPositions = n.reverse().slice(0, 15).reverse() // keep only 15
+  }
+
+  setNextPosition(pos: Partial<AppMapPosition>) {
+    this.nextPosition = {
+      center: pos.center ?? this.position.center,
+      span: pos.span ?? this.position.span,
+      via: pos.via ?? this.position.via,
+    }
   }
 
   clearHover() {
@@ -124,7 +120,7 @@ class AppMapStore extends Store {
     return this.ids[id]
   }
 
-  private getMapFeatures = (
+  getMapFeatures = (
     results: MapResultItem[] | null,
     selectedId?: string | null
   ) => {
@@ -175,20 +171,28 @@ export const useSetAppMap = (
     isActive: boolean
   }
 ) => {
-  const { results, showRank, isActive, zoomOnHover, center, span } = props
+  const {
+    results,
+    showRank,
+    isActive,
+    zoomOnHover,
+    center,
+    span,
+    fitToResults,
+  } = props
 
   useEffect(() => {
-    if (isActive && (center || span)) {
+    if (!isActive) return
+    if (center || span) {
       appMapStore.setPosition({
         center,
         span,
       })
     }
-  }, [isActive, center?.lat, center?.lng, span?.lat, span?.lng])
+  }, [fitToResults, isActive, center?.lat, center?.lng, span?.lat, span?.lng])
 
   useEffect(() => {
     if (!isActive) return
-    let restaurants: MapResultItem[] | null = null
 
     const disposeSeries = series([
       async () => {
@@ -199,7 +203,7 @@ export const useSetAppMap = (
           .map((id) => all.find((x) => x.id === id))
           .filter(isPresent)
 
-        restaurants = await resolved(() => {
+        return await resolved(() => {
           return (
             uniqBy(
               allResults
@@ -225,12 +229,32 @@ export const useSetAppMap = (
           )
         })
       },
-      () => {
+      (results) => {
+        const features = appMapStore.getMapFeatures(results)
         appMapStore.setState({
-          results: restaurants,
+          results,
           showRank,
           zoomOnHover,
+          features,
         })
+        if (fitToResults && features.length) {
+          const collection = featureCollection(features)
+          const resultsBbox = bbox(collection)
+          if (resultsBbox) {
+            // @ts-expect-error
+            const centerCoord = getCenter(collection)
+            console.log('fitting to results', centerCoord)
+            appMapStore.setPosition({
+              via: 'results',
+              center: {
+                lng: centerCoord.geometry.coordinates[0],
+                lat: centerCoord.geometry.coordinates[1],
+              },
+              // @ts-expect-error
+              span: bboxToSpan(resultsBbox),
+            })
+          }
+        }
       },
     ])
 
@@ -239,7 +263,8 @@ export const useSetAppMap = (
       appMapStore.setState({
         zoomOnHover: false,
         showRank: false,
+        features: [],
       })
     }
-  }, [JSON.stringify(results), isActive])
+  }, [JSON.stringify(results), fitToResults, isActive])
 }
