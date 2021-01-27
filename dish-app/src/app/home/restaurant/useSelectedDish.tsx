@@ -27,7 +27,7 @@ export const useSelectedDish = (tagName?: string | null) => {
       params,
       replace: true,
     })
-    if (next) setSelectedDish(next)
+    setSelectedDish(next ?? '')
   }, [])
 
   return { selectedDish, setSelectedDishToggle }

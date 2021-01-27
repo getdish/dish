@@ -4,8 +4,6 @@ goal january
 
   1. fix lots of things
 
-    - colorize map tiles (push to staging db too)
-    - fix detail page - dont scroll once already scrolled
     - reviews - read more >> show in popup
     - lists
       - save within region
@@ -22,10 +20,6 @@ goal january
      - fix comment bubble
      - fixup profile pages a lot
     - show onboard if not yet
-    - fix map region movement
-    - map toggle between region/area improve
-    - better search region
-    - region handoff between search/home
     - better intro / intro callout
     - touch / mobile web app runthrough fix scrolling issues
     - touch up commenting/rating
@@ -34,7 +28,6 @@ goal january
   2. initial family/friends launch at end of month
 
     - have mailing list that actually emails once a month with new release
-    - get site back up on live production and fix various issues
     - improve some profiles and some onboarding
 
   3. prototype playlists / improve home (bonus)

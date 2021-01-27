@@ -17,17 +17,15 @@ class DrawerStore extends Store {
   }
 
   get currentHeight() {
-    return (
-      getWindowHeight() - this.snapPoints[this.snapIndex] * getWindowHeight()
-    )
+    return getWindowHeight() - this.currentSnapPoint * getWindowHeight()
+  }
+
+  get currentMapHeight() {
+    return getWindowHeight() - this.currentHeight
   }
 
   get snapIndices() {
     return this.snapPoints.map((_, i) => this.getSnapPointOffset(i))
-  }
-
-  get bottomOccluded() {
-    return getWindowHeight() - getWindowHeight() * this.currentSnapPoint
   }
 
   get bottomOccludedIgnoreFullyClosed() {

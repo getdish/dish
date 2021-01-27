@@ -56,14 +56,14 @@ export const RestaurantDishPhotos = memo(
               alignItems="center"
               justifyContent="center"
             >
-              <SectionTab isSelected={selected === null}>
+              <SectionTab isSelected={selected === ''}>
                 <DishView
                   noLink
                   size={size}
                   name="Overall"
                   slug=""
                   image=""
-                  selected={selected === null}
+                  selected={selected === ''}
                   {...(!!selectable && {
                     onPress() {
                       console.warn('empty str?')
