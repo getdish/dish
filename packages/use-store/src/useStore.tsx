@@ -1,4 +1,11 @@
-import { useCallback, useEffect, useLayoutEffect, useMemo, useRef } from 'react'
+import {
+  useCallback,
+  useEffect,
+  useLayoutEffect,
+  useMemo,
+  useRef,
+  useState,
+} from 'react'
 
 import { configureOpts } from './configureUseStore'
 import { UNWRAP_PROXY, defaultOptions } from './constants'
@@ -11,6 +18,7 @@ import {
   simpleStr,
 } from './helpers'
 import { Selector, StoreInfo, UseStoreOptions } from './interfaces'
+import { isEqualShallow } from './isEqualShallow'
 import {
   ADD_TRACKER,
   SHOULD_DEBUG,
@@ -154,6 +162,66 @@ export function useStoreSelector<
   return useStore(StoreKlass, props, { selector }) as any
 }
 
+export function useSelector<A>(fn: () => A): A {
+  const [state, setState] = useState(() => {
+    return runStoreSelector(fn)
+  })
+
+  useEffect(() => {
+    return subscribeToStores([...state.stores], () => {
+      const next = runStoreSelector(fn)
+      setState((prev) => {
+        if (
+          isEqualShallow(prev.stores, next.stores) &&
+          isEqualShallow(prev.value, next.value)
+        ) {
+          return prev
+        }
+        console.log('GOT UPDATE')
+        return next
+      })
+    })
+  }, [...state.stores])
+
+  return state.value
+}
+
+function runStoreSelector<A>(
+  selector: () => A
+): { value: A; stores: Set<any> } {
+  const stores = new Set()
+  const dispose = trackStoresAccess((store) => {
+    stores.add(store)
+  })
+  const value = selector()
+  dispose()
+  return {
+    value,
+    stores,
+  }
+}
+
+function subscribeToStores(stores: any[], onUpdate: () => any) {
+  const disposes: Function[] = []
+  console.log('subscribing', stores)
+  for (const store of stores) {
+    disposes.push(subscribe(store, onUpdate))
+  }
+  return () => {
+    disposes.forEach((x) => x())
+  }
+}
+
+type StoreAccessTracker = (store: any) => void
+const storeAccessTrackers = new Set<StoreAccessTracker>()
+function trackStoresAccess(cb: StoreAccessTracker) {
+  storeAccessTrackers.add(cb)
+  return () => {
+    storeAccessTrackers.delete(cb)
+  }
+}
+
+// TODO deprecate and replace with usePortal
 // for ephemeral stores (alpha, not working correctly yet)
 export function useStoreOnce<A extends Store<B>, B>(
   StoreKlass: (new (props: B) => A) | (new () => A),
@@ -343,6 +411,14 @@ function createProxiedStore(storeInfo: Omit<StoreInfo, 'store' | 'source'>) {
     get(target, key) {
       const isDebugging = DebugStores.has(constr)
       if (typeof key === 'string') {
+        if (
+          storeAccessTrackers.size &&
+          !storeAccessTrackers.has(storeInstance)
+        ) {
+          storeAccessTrackers.forEach((t) => {
+            t(storeInstance)
+          })
+        }
         if (gettersState.isGetting) {
           gettersState.curGetKeys.add(key)
         }
