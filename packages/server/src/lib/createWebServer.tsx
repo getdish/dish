@@ -1,6 +1,8 @@
 import { Worker } from 'worker_threads'
 
 import proxy from 'express-http-proxy'
+import findCacheDir from 'find-cache-dir'
+import { pathExists, remove } from 'fs-extra'
 import getPort from 'get-port'
 
 import { ServerConfigNormal } from '../types'
@@ -41,9 +43,12 @@ export async function createWebServer(
         console.error(' [webpack]', err)
         rej(err)
       })
-      worker.on('exit', (code) => {
+      worker.on('exit', async (code) => {
         console.log(' [webpack] exited', code)
         if (completedInitialBuild) {
+          // clear cache
+          await clearWebpackCache()
+
           // attempt restart, probably memory failure
           start()
           return
@@ -61,6 +66,14 @@ export async function createWebServer(
         }
       })
     })
+  }
+}
+
+async function clearWebpackCache() {
+  console.log(` [webpack] clearing cache`)
+  const dir = findCacheDir({ name: 'webpack' })
+  if (await pathExists(dir)) {
+    await remove(dir)
   }
 }
 
