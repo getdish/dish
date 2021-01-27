@@ -1,4 +1,4 @@
-import { useCallback, useLayoutEffect, useMemo, useRef } from 'react'
+import { useCallback, useEffect, useLayoutEffect, useMemo, useRef } from 'react'
 
 import { configureOpts } from './configureUseStore'
 import { UNWRAP_PROXY, defaultOptions } from './constants'
@@ -11,7 +11,14 @@ import useConstant, {
   simpleStr,
 } from './helpers'
 import { Selector, StoreInfo, UseStoreOptions } from './interfaces'
-import { Store, TRIGGER_UPDATE } from './Store'
+import {
+  ADD_TRACKER,
+  SHOULD_DEBUG,
+  Store,
+  StoreTracker,
+  TRACK,
+  TRIGGER_UPDATE,
+} from './Store'
 import { createMutableSource, useMutableSource } from './useMutableSource'
 import {
   DebugStores,
@@ -71,10 +78,7 @@ export function createStore<A extends Store<B>, B>(
   StoreKlass: new (props: B) => A | (new () => A),
   props?: B
 ): A {
-  const info = getOrCreateStoreInfo(StoreKlass, props)
-  const storeInstance = createProxiedStore(info)
-  mountStore(info, storeInstance)
-  return storeInstance
+  return getOrCreateStoreInfo(StoreKlass, props).store
 }
 // use singleton with react
 // TODO selector support with types...
@@ -164,9 +168,9 @@ export function getStore<A extends Store<B>, B>(
   StoreKlass: (new (props: B) => A) | (new () => A),
   props?: B
 ): A {
-  const info = getOrCreateStoreInfo(StoreKlass, props)
-  return createProxiedStore(info)
+  return getOrCreateStoreInfo(StoreKlass, props).store
 }
+
 function getOrCreateStoreInfo(
   StoreKlass: any,
   props: any,
@@ -213,20 +217,34 @@ function getOrCreateStoreInfo(
       }
     }
   }
-  const value: StoreInfo = {
+
+  let version = 0
+
+  const storeInfo = {
     hasMounted: false,
-    version: 0,
     storeInstance,
+    getVersion() {
+      return version
+    },
+    triggerUpdate() {
+      version = (version + 1) % Number.MAX_SAFE_INTEGER
+      storeInstance[TRIGGER_UPDATE]()
+    },
     getters,
     stateKeys,
     actions,
-    source: createMutableSource(storeInstance, () => value.version),
     gettersState: {
       getCache: new Map<string, any>(),
       depsToGetter: new Map<string, Set<string>>(),
       curGetKeys: new Set<string>(),
       isGetting: false,
     },
+  }
+  const store = createProxiedStore(storeInfo)
+  const value: StoreInfo = {
+    ...storeInfo,
+    store,
+    source: createMutableSource(store, () => version),
   }
 
   if (!opts?.avoidCache) {
@@ -265,15 +283,23 @@ function useStoreFromInfo(
   info: StoreInfo,
   userSelector?: Selector<any> | undefined
 ): any {
-  const internal = useRef({
-    isRendering: false,
-    tracked: new Set<string>(),
-  })
+  const internal = useRef<StoreTracker>()
   const component = useCurrentComponent()
+  if (!internal.current) {
+    internal.current = {
+      component,
+      isTracking: false,
+      tracked: new Set<string>(),
+      dispose: null as any,
+    }
+    const dispose = info.store[ADD_TRACKER](internal.current)
+    internal.current.dispose = dispose
+  }
+  const curInternal = internal.current!
   const selector = userSelector ?? selectKeys
   const getSnapshot = useCallback(
     (store) => {
-      const keys = [...internal.current.tracked]
+      const keys = [...curInternal.tracked]
       const snap = selector(store, keys)
       if (
         process.env.LOG_LEVEL &&
@@ -287,22 +313,24 @@ function useStoreFromInfo(
   )
 
   const state = useMutableSource(info.source, getSnapshot, subscribe)
-  const storeProxy = useConstant(() =>
-    createProxiedStore(info, { internal, component })
-  )
 
   // before each render
-  internal.current.isRendering = true
+  curInternal.isTracking = true
+
+  // dispose tracker on unmount
+  useEffect(() => {
+    return curInternal.dispose
+  }, [])
 
   // track access, runs after each render
   useLayoutEffect(() => {
-    internal.current.isRendering = false
-    mountStore(info, storeProxy)
+    // curInternal.isTracking = false
+    mountStore(info, info.store)
     if (
       process.env.LOG_LEVEL &&
       (shouldDebug(component, info) || configureOpts.logLevel === 'debug')
     ) {
-      console.log('💰 finish render, tracking', [...internal.current.tracked])
+      console.log('💰 finish render, tracking', [...curInternal.tracked])
     }
   })
 
@@ -310,36 +338,27 @@ function useStoreFromInfo(
     return state
   }
 
-  return storeProxy
+  return info.store
 }
 
 let setters = new Set<any>()
 const logStack = new Set<Set<any[]> | 'end'>()
 
-function createProxiedStore(
-  storeInfo: StoreInfo,
-  renderOpts?: {
-    internal: { current: { isRendering: boolean; tracked: Set<string> } }
-    component: any
-  }
-) {
+function createProxiedStore(storeInfo: Omit<StoreInfo, 'store' | 'source'>) {
   const { actions, storeInstance, getters, gettersState } = storeInfo
   const { getCache, curGetKeys, depsToGetter } = gettersState
   const constr = storeInstance.constructor
 
   const proxiedStore = new Proxy(storeInstance, {
     get(target, key) {
-      const isDebugging = renderOpts && DebugStores.has(constr)
+      const isDebugging = DebugStores.has(constr)
       if (typeof key === 'string') {
         if (gettersState.isGetting) {
           gettersState.curGetKeys.add(key)
         }
         if (key in getters) {
-          if (
-            !gettersState.isGetting &&
-            renderOpts?.internal.current.isRendering
-          ) {
-            renderOpts.internal.current.tracked.add(key)
+          if (!gettersState.isGetting) {
+            storeInstance[TRACK](key)
           }
           if (getCache.has(key)) {
             return getCache.get(key)
@@ -459,11 +478,8 @@ function createProxiedStore(
           }
           return action
         }
-        if (
-          !gettersState.isGetting &&
-          renderOpts?.internal.current.isRendering
-        ) {
-          renderOpts.internal.current.tracked.add(key)
+        if (!gettersState.isGetting) {
+          storeInstance[TRACK](key)
           return Reflect.get(target, key)
         }
       }
@@ -484,17 +500,14 @@ function createProxiedStore(
         if (typeof key === 'string') {
           clearGetterCache(key)
         }
-
         if (process.env.LOG_LEVEL && configureOpts.logLevel !== 'error') {
           setters.add({ key, value })
-          if (shouldDebug(renderOpts?.component, storeInfo)) {
+          if (storeInfo.storeInstance[SHOULD_DEBUG]()) {
             console.log('SET', res, key, value)
           }
         }
-
         // TODO option to enforce actions only mutations
-        storeInfo.version++
-        storeInstance[TRIGGER_UPDATE]()
+        storeInfo.triggerUpdate()
       }
       return res
     },
@@ -502,12 +515,12 @@ function createProxiedStore(
 
   function clearGetterCache(setKey: string) {
     const getters = depsToGetter.get(setKey)
+    getCache.delete(setKey)
     if (!getters) {
       return
     }
     getters.forEach((gk) => {
       getCache.delete(gk)
-      // console.log('clearing cache for', gk)
       if (depsToGetter.has(gk)) {
         clearGetterCache(gk)
       }

@@ -286,6 +286,7 @@ const ListPageContent = graphql((props: Props) => {
     results: restaurants.map((x) => x.restaurant).map(getRestaurantIdentifiers),
     showRank: true,
     zoomOnHover: true,
+    fitToResults: true,
   })
 
   if (!list) {

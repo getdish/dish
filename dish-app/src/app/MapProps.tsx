@@ -1,4 +1,5 @@
 import { LngLat } from '@dish/graph'
+import { BBox } from '@turf/helpers'
 import mapboxgl from 'mapbox-gl'
 
 import { Region } from '../types/homeTypes'

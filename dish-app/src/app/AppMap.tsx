@@ -43,7 +43,15 @@ const styles = {
 const updateRegion = debounce((region: Region, position: MapPosition) => {
   const { currentState } = homeStore
   const type = currentState.type
+
+  if (type !== router.curPage.name) {
+    console.warn('wtf!?', homeStore, type)
+    return
+  }
+
   if (type === 'home' || type === 'search') {
+    console.log('navigate??????')
+    debugger
     homeStore.navigate({
       state: {
         ...currentState,
@@ -55,7 +63,14 @@ const updateRegion = debounce((region: Region, position: MapPosition) => {
 }, 150)
 
 export default memo(function AppMap() {
-  const { results, showRank, zoomOnHover, hovered } = useAppMapStore()
+  const {
+    resultsBbox,
+    features,
+    results,
+    showRank,
+    zoomOnHover,
+    hovered,
+  } = useAppMapStore()
   const media = useMedia()
   const { width, paddingLeft } = useMapSize(media.sm)
   const { position } = useStoreInstance(appMapStore)
@@ -79,13 +94,13 @@ export default memo(function AppMap() {
   }, [hovered, zoomOnHover])
 
   // gather restaruants
-  const isLoading = results[0]?.location?.coordinates[0] === null
+  const isLoading = !results.length
   const key = useLastValueWhen(
     () =>
       `${position.id ?? ''}${JSON.stringify(
         results.map((x) => x.location?.coordinates ?? '-')
       )}`,
-    isLoading || !results.length
+    isLoading
   )
 
   // sync down location from above state
@@ -93,30 +108,6 @@ export default memo(function AppMap() {
     () => (position.id ? results.find((x) => x.id === position.id) : null),
     [key]
   )
-
-  // useEffect(() => {
-  //   console.warn('should remove this and move to a push based model')
-  //   return reaction(
-  //     homeStore,
-  //     () => {
-  //       const stateId = homeStore.currentState.id
-  //       const state = homeStore.allStates[stateId]
-  //       const span = state.span
-  //       const center = state.center
-  //       // stringify to prevent extra reactions
-  //       return { span, center }
-  //     },
-  //     ({ span, center }) => {
-  //       updateRegion.cancel()
-  //       appMapStore.setPosition({
-  //         span,
-  //         center,
-  //         via: 'home',
-  //       })
-  //     },
-  //     isEqual
-  //   )
-  // }, [])
 
   // CENTER (restauarantSelected.location)
   useEffect(() => {
@@ -147,10 +138,6 @@ export default memo(function AppMap() {
           right: 10,
         }
   }, [media.sm, paddingLeft, bottomOcclude])
-
-  const features = useMemo(() => {
-    return getMapFeatures(results, position.id)
-  }, [key])
 
   const handleMoveEnd = useCallback(
     ({ center, span }) => {
@@ -285,7 +272,6 @@ export default memo(function AppMap() {
             span={span}
             padding={padding}
             features={features}
-            // centerToResults={om.state.home.centerToResults}
             selected={position.id}
             hovered={appMapStore.hovered?.id}
             onMoveStart={handleMoveStart}
@@ -301,45 +287,3 @@ export default memo(function AppMap() {
     </HStack>
   )
 })
-
-let ids = {}
-const getNumId = (id: string): number => {
-  ids[id] = ids[id] ?? Math.round(Math.random() * 10000000000)
-  return ids[id]
-}
-
-const getMapFeatures = (
-  results: MapResultItem[] | null,
-  selectedId?: string | null
-) => {
-  const result: GeoJSON.Feature[] = []
-  if (!results) {
-    return result
-  }
-  for (const restaurant of results) {
-    if (!restaurant?.location?.coordinates) {
-      continue
-    }
-    // const percent = getRestaurantRating(restaurant.rating)
-    // const color = getRankingColor(percent)
-    if (!restaurant.id) {
-      throw new Error('No id for restaurant')
-    }
-    result.push({
-      type: 'Feature',
-      id: getNumId(restaurant.id),
-      geometry: {
-        type: 'Point',
-        coordinates: restaurant.location.coordinates,
-      },
-      properties: {
-        id: restaurant.id,
-        title: restaurant.name ?? 'none',
-        subtitle: 'Pho, Banh Mi',
-        color: '#fbb03b',
-        selected: selectedId === restaurant.id ? 1 : 0,
-      },
-    })
-  }
-  return result
-}

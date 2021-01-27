@@ -1,4 +1,4 @@
-import { ArrowUp, ChevronLeft, Map, MapPin, Search } from '@dish/react-feather'
+import { ArrowUp, ChevronLeft, MapPin, Search } from '@dish/react-feather'
 import { useStoreInstance } from '@dish/use-store'
 import React, { Suspense, memo } from 'react'
 import { Platform, StyleSheet, TouchableOpacity } from 'react-native'
@@ -26,10 +26,8 @@ import { AppSearchInput } from './AppSearchInput'
 import { AppSearchInputLocation } from './AppSearchInputLocation'
 import { useHomeStore } from './homeStore'
 import { useSearchBarTheme } from './hooks/useSearchBarTheme'
-import { DishHorizonView } from './views/DishHorizonView'
 import { DishLogoButton } from './views/DishLogoButton'
 import { Link } from './views/Link'
-import { LinkButton } from './views/LinkButton'
 
 const isWeb = Platform.OS === 'web'
 
@@ -180,7 +178,7 @@ const AppSearchBarContents = memo(() => {
     >
       {!media.sm && <SearchBarActionButton />}
 
-      <VStack paddingHorizontal={12}>
+      <VStack paddingHorizontal={media.sm ? 6 : 12}>
         <DishLogoButton />
       </VStack>
 

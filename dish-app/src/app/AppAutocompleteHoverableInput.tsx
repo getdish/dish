@@ -28,13 +28,13 @@ export const AppAutocompleteHoverableInput = ({
       }}
       onHoverMove={() => {
         clearTimeout(tm.current)
-        if (home.currentState.searchQuery) {
-          tm.current = setTimeout(() => {
+        tm.current = setTimeout(() => {
+          if (home.currentState.searchQuery) {
             if (document.activeElement == input) {
               autocompletesStore.setTarget(autocompleteTarget)
             }
-          }, 150)
-        }
+          }
+        }, 150)
       }}
     >
       {children}

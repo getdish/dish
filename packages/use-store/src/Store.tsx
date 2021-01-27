@@ -1,19 +1,53 @@
+import { shouldDebug } from './useStoreDebug'
+
 export const TRIGGER_UPDATE = Symbol()
-const LISTENERS = Symbol('listeners')
+export const ADD_TRACKER = Symbol()
+export const TRACK = Symbol()
+export const SHOULD_DEBUG = Symbol()
+
+export type StoreTracker = {
+  isTracking: boolean
+  tracked: Set<string>
+  dispose: () => void
+  component?: any
+}
 
 export class Store<Props extends Object | null = null> {
-  private [LISTENERS] = new Set<Function>()
+  private listeners = new Set<Function>()
+  private trackers = new Set<StoreTracker>()
 
   constructor(public props: Props) {}
 
   subscribe(onChanged: Function) {
-    this[LISTENERS].add(onChanged)
+    this.listeners.add(onChanged)
     return () => {
-      this[LISTENERS].delete(onChanged)
+      this.listeners.delete(onChanged)
     }
   }
 
   [TRIGGER_UPDATE]() {
-    this[LISTENERS].forEach((cb) => cb())
+    this.listeners.forEach((cb) => cb())
+  }
+
+  [ADD_TRACKER](tracker: StoreTracker) {
+    let tracked = new Set<string>()
+    this.trackers.add(tracker)
+    return () => {
+      this.trackers.delete(tracker)
+    }
+  }
+
+  [TRACK](key: string) {
+    this.trackers.forEach((tracker) => {
+      if (tracker.isTracking) {
+        tracker.tracked.add(key)
+      }
+    })
+  }
+
+  [SHOULD_DEBUG]() {
+    return [...this.trackers].some(
+      (tracker) => tracker.component && shouldDebug(tracker.component, this)
+    )
   }
 }
