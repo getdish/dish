@@ -185,7 +185,7 @@ function getOrCreateStoreInfo(
       // warn if creating an already existing store!
       // need to detect HMR more cleanly if possible
       if (
-        cached?.storeInstance.constructor.toString() !== StoreKlass.toString()
+        cached.storeInstance.constructor.toString() !== StoreKlass.toString()
       ) {
         console.warn(
           'Error: Stores must have a unique name (ignore if this is a hot reload)'
@@ -369,7 +369,10 @@ function createProxiedStore(storeInfo: Omit<StoreInfo, 'store' | 'source'>) {
             const cur = depsToGetter.get(gk)!
             cur.add(key)
           })
-          getCache.set(key, res)
+          // TODO i added this !isSubGetter, seems logical but haven't validated
+          if (!isSubGetter) {
+            getCache.set(key, res)
+          }
           return res
         }
         if (key in actions) {

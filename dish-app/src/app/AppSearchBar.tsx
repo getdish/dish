@@ -293,9 +293,6 @@ const SearchBarActionButton = memo(() => {
       // }
       return ArrowUp
     }
-    if (home.states.length === 2) {
-      return ChevronLeft // Home
-    }
     return ChevronLeft
   })()
 

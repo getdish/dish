@@ -53,7 +53,6 @@ describe('basic tests', () => {
     class Store3 extends Store<{ id: number }> {
       y = 0
       mount() {
-        console.log('mount is called')
         this.y = this.props.id + 10
       }
       get z() {
@@ -195,28 +194,25 @@ describe('basic tests', () => {
 
   it('only re-renders tracked properties (selectors + singleton)', async () => {
     let renderCount = 0
-    const todoStore = createStore(TodoList, { id: 1 })
-    function SimpleStoreTestUsedProperties(props: { id: number }) {
-      // should change twice, first undefined, second item
-      const secondItem = useStoreInstance(todoStore, (x) => x.items[1])
+    const todoStore = createStore(TodoList, { id: 1001 })
+    function Component() {
+      // should change twice, first undefined, second not
+      const thirdItem = useStoreInstance(todoStore, (x) => x.items[2])
       renderCount++
       return <button title="add" onClick={() => todoStore.add()}></button>
     }
-    const { getAllByTitle } = render(<SimpleStoreTestUsedProperties id={5} />)
+    const { getAllByTitle } = render(<Component />)
     const getCurrentByTitle = (name: string) => last(getAllByTitle(name))!
-    act(() => {
-      fireEvent.click(getCurrentByTitle('add'))
-    })
-    act(() => {
-      fireEvent.click(getCurrentByTitle('add'))
-    })
-    act(() => {
-      fireEvent.click(getCurrentByTitle('add'))
-    })
-    act(() => {
-      fireEvent.click(getCurrentByTitle('add'))
-    })
-    expect(renderCount).toEqual(1)
+    for (let i = 0; i < 10; i++) {
+      act(() => {
+        fireEvent.click(getCurrentByTitle('add'))
+      })
+    }
+    // Update: fixed this, but leaving note because we may revent useMutableSource at some point
+    // fixed by not doing setState(prev => {}) but actually avoiding calling setState
+    // NOTE: its 3 because react does one extra render to be sure (for some reason)
+    // see: https://reactjs.org/docs/hooks-reference.html#bailing-out-of-a-state-update
+    expect(renderCount).toEqual(2)
   })
 })
 
