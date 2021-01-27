@@ -52,7 +52,6 @@ class AppMapStore extends Store {
     this.setHovered(null)
     this.results = val.results ?? []
     this.features = this.getMapFeatures(this.results)
-    console.log(this.features, this.resultsBbox)
     this.showRank = val.showRank ?? false
     this.zoomOnHover = val.zoomOnHover ?? false
 

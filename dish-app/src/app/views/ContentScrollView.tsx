@@ -1,5 +1,7 @@
 import {
   Store,
+  getStore,
+  reaction,
   useStore,
   useStoreInstance,
   useStoreSelector,
@@ -9,8 +11,10 @@ import React, {
   createContext,
   forwardRef,
   useCallback,
+  useEffect,
   useMemo,
   useRef,
+  useState,
 } from 'react'
 import { ScrollView, ScrollViewProps, StyleSheet } from 'react-native'
 import { VStack, useMedia } from 'snackui'
@@ -42,18 +46,42 @@ export function setIsScrollAtTop(val: boolean) {
 }
 
 export const usePreventContentScroll = (id: string) => {
-  const isDrawerNotOpen = useStoreInstance(
-    drawerStore,
-    useCallback((x) => x.snapIndex >= 1, [])
-  )
-  const isActive = useStoreSelector(
-    ContentParentStore,
-    useCallback((store) => store.activeId === id, [])
-  )
-  if (!isActive) {
-    return true
-  }
-  return (!isWeb || supportsTouchWeb) && isDrawerNotOpen
+  const [prevent, setPrevent] = useState(false)
+
+  useEffect(() => {
+    if (isWeb && !supportsTouchWeb) {
+      return
+    }
+
+    let isParentActive = false
+    const parentStore = getStore(ContentParentStore)
+
+    const d0 = reaction(
+      parentStore,
+      (x) => x.activeId === id,
+      (next) => {
+        isParentActive = next
+        if (!isParentActive) {
+          setPrevent(true)
+        }
+      }
+    )
+
+    const d1 = reaction(
+      drawerStore,
+      (x) => x.snapIndex == 2,
+      (isMinimized) => {
+        setPrevent(isMinimized || !isParentActive)
+      }
+    )
+
+    return () => {
+      d0()
+      d1()
+    }
+  }, [])
+
+  return prevent
 }
 
 export const ContentScrollContext = createContext('id')
@@ -66,6 +94,7 @@ type ContentScrollViewProps = ScrollViewProps & {
 
 export const ContentScrollView = forwardRef<ScrollView, ContentScrollViewProps>(
   ({ children, onScrollYThrottled, style, id, ...props }, ref) => {
+    // this updates when drawer moves to top
     const preventScrolling = usePreventContentScroll(id)
     const scrollStore = useStore(ScrollStore, { id })
     const media = useMedia()
@@ -123,8 +152,8 @@ export const ContentScrollView = forwardRef<ScrollView, ContentScrollViewProps>(
             {...props}
             onScroll={setIsScrolling}
             scrollEventThrottle={16}
-            // scrollEnabled={!preventScrolling}
-            // disableScrollViewPanResponder={preventScrolling}
+            scrollEnabled={!preventScrolling}
+            disableScrollViewPanResponder={preventScrolling}
             style={[styles.scroll, style]}
           >
             <Suspense fallback={null}>{childrenMemo}</Suspense>

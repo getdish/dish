@@ -77,6 +77,10 @@ export const HomeDrawerSmallView = memo((props: { children: any }) => {
     })
   }, [])
 
+  const children = useMemo(() => {
+    return props.children
+  }, [props.children])
+
   return (
     <VStack
       className={media.sm ? '' : 'untouchable invisible'}
@@ -155,7 +159,7 @@ export const HomeDrawerSmallView = memo((props: { children: any }) => {
               </AbsoluteVStack>
             )}
 
-            {props.children}
+            {children}
           </VStack>
         </BottomSheetContainer>
       </Animated.View>

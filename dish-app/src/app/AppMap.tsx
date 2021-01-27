@@ -1,17 +1,9 @@
 import { series } from '@dish/async'
-import { isEqual } from '@dish/fast-compare'
 import { MapPosition, resolved } from '@dish/graph'
-import { reaction, useStoreInstance } from '@dish/use-store'
+import { useStoreInstance } from '@dish/use-store'
 import { debounce } from 'lodash'
 import React, { memo, useCallback, useEffect, useMemo } from 'react'
-import {
-  HStack,
-  VStack,
-  useDebounceValue,
-  useGet,
-  useMedia,
-  useTheme,
-} from 'snackui'
+import { HStack, VStack, useGet, useMedia, useTheme } from 'snackui'
 
 import {
   pageWidthMax,
@@ -22,7 +14,6 @@ import { getLngLat, getMinLngLat } from '../helpers/getLngLat'
 import { queryRestaurant } from '../queries/queryRestaurant'
 import { router } from '../router'
 import { Region } from '../types/homeTypes'
-import { MapResultItem } from '../types/mapTypes'
 import { AppMapControls } from './AppMapControls'
 import { appMapStore, useAppMapStore } from './AppMapStore'
 import { drawerStore } from './drawerStore'
@@ -43,15 +34,7 @@ const styles = {
 const updateRegion = debounce((region: Region, position: MapPosition) => {
   const { currentState } = homeStore
   const type = currentState.type
-
-  if (type !== router.curPage.name) {
-    console.warn('wtf!?', homeStore, type)
-    return
-  }
-
   if (type === 'home' || type === 'search') {
-    console.log('navigate??????')
-    debugger
     homeStore.navigate({
       state: {
         ...currentState,
