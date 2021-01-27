@@ -10,7 +10,6 @@ export type StoreInfo<A = any> = {
   // proxied store
   store: A
   source: any
-  hasMounted: boolean
   storeInstance: any
   getters: { [key: string]: any }
   actions: any
