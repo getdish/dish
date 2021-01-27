@@ -3,6 +3,7 @@ import React, { Suspense, memo, useEffect } from 'react'
 
 import { router } from '../../router'
 import { appMenuStore } from '../AppMenuStore'
+import { homeStore } from '../homeStore'
 import { HomeContainer } from './HomeContainer'
 import { HomeStackView } from './HomeStackView'
 import { HomeStackViewPages } from './HomeStackViewPages'
@@ -16,6 +17,25 @@ export const Home = memo(function Home() {
       }
     }, [])
   }
+
+  useEffect(() => {
+    return reaction(
+      homeStore,
+      (x) => {
+        if (
+          x.currentState.type === 'home' ||
+          x.currentState.type === 'search'
+        ) {
+          return x.currentState
+        }
+        return null
+      },
+      (positionedState) => {
+        if (!positionedState) return
+        homeStore.updateAreaInfo()
+      }
+    )
+  }, [])
 
   useEffect(() => {
     return reaction(

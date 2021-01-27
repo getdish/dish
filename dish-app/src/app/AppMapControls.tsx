@@ -1,11 +1,12 @@
 import { isEqual } from '@dish/fast-compare'
 import { RefreshCcw, X } from '@dish/react-feather'
-import { useStoreInstance } from '@dish/use-store'
+import { useSelector, useStoreInstance } from '@dish/use-store'
 import React, { memo } from 'react'
 import { AbsoluteVStack, HStack, Theme, useMedia } from 'snackui'
 
 import { isWeb, searchBarHeight, zIndexDrawer } from '../constants/constants'
 import { appMapStore } from './AppMapStore'
+import { searchPageStore } from './home/search/SearchPageStore'
 import { homeStore, useHomeStore, useIsHomeTypeActive } from './homeStore'
 import { useSafeArea } from './hooks/useSafeArea'
 import { pagesStore } from './pagesStore'
@@ -68,16 +69,13 @@ export const AppMapControls = memo(() => {
 })
 
 function useShowSearchHere() {
-  const isOnSearch = useIsHomeTypeActive('search')
-  const hasMovedMap = useStoreInstance(appMapStore, (m) => {
-    const c =
-      m.position.center &&
-      !isEqual(m.position.center, appMapStore.position.center)
-    const s =
-      m.position.span && !isEqual(m.position.span, appMapStore.position.span)
-    return c || s
+  return useSelector(() => {
+    const isOnSearch = homeStore.currentStateType === 'search'
+    const sp = searchPageStore.searchPosition
+    const { center, span } = appMapStore.position
+    if (searchPageStore.status === 'loading') return false
+    return isOnSearch && !isEqual(sp, { center, span })
   })
-  return hasMovedMap && isOnSearch
 }
 
 // {/* {om.state.home.hoveredRestaurant &&

@@ -18,6 +18,7 @@ import { getTagSlugsFromRoute } from '../helpers/getTagsFromRoute'
 import { getTagSlug } from '../helpers/getTagSlug'
 import { isHomeState, isSearchState } from '../helpers/homeStateHelpers'
 import { isSearchBarTag } from '../helpers/isSearchBarTag'
+import { reverseGeocode } from '../helpers/reverseGeocode'
 import { syncStateToRoute } from '../helpers/syncStateToRoute'
 import { router } from '../router'
 import {
@@ -215,6 +216,25 @@ class HomeStore extends Store {
     const n = this.getUpRouteForType(type)
     if (!n) return
     router.navigate(n)
+  }
+
+  async updateAreaInfo() {
+    const { center, span } = appMapStore.position
+    const curLocInfo = await reverseGeocode(center, span)
+    if (curLocInfo) {
+      const curLocName =
+        curLocInfo.fullName ?? curLocInfo.name ?? curLocInfo.country
+      const cur = this.currentState
+      if (
+        !isEqual(cur.curLocInfo, curLocInfo) ||
+        !isEqual(cur.curLocName, curLocName)
+      ) {
+        homeStore.updateCurrentState('appMapStore.updateAreaInfo', {
+          curLocInfo,
+          curLocName,
+        })
+      }
+    }
   }
 
   updateHomeState(via: string, val: { id: string; [key: string]: any }) {
