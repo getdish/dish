@@ -33,8 +33,10 @@ const styles = {
 
 const updateRegion = debounce((region: Region, position: MapPosition) => {
   const { currentState } = homeStore
-  const type = currentState.type
-  if (type === 'home' || type === 'search') {
+  if (currentState.type === 'home' || currentState.type === 'search') {
+    if (currentState.region === region.slug) {
+      return
+    }
     homeStore.navigate({
       state: {
         ...currentState,
