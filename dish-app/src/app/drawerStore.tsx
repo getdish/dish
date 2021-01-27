@@ -3,6 +3,7 @@ import { Animated } from 'react-native'
 
 import { isWeb } from '../constants/constants'
 import { getWindowHeight } from '../helpers/getWindow'
+import { autocompletesStore } from './AppAutocomplete'
 
 class DrawerStore extends Store {
   snapPoints = [isWeb ? 0.02 : 0.05, 0.28, 0.75]
@@ -64,6 +65,17 @@ class DrawerStore extends Store {
       this.pan.setValue(toValue)
       this.spring = null
     })
+  }
+
+  toggleDrawerPosition() {
+    if (this.snapIndex === 0) {
+      autocompletesStore.setVisible(false)
+      this.setSnapIndex(1)
+    } else if (this.snapIndex === 1) {
+      this.setSnapIndex(2)
+    } else if (this.snapIndex === 2) {
+      this.setSnapIndex(1)
+    }
   }
 
   private getSnapPointOffset(index = this.snapIndex) {

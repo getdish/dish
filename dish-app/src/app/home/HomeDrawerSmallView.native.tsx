@@ -136,6 +136,7 @@ export const HomeDrawerSmallView = memo((props: { children: any }) => {
             paddingHorizontal={20}
             paddingVertical={20}
             marginTop={-10}
+            onPress={drawerStore.toggleDrawerPosition}
           >
             <VStack
               backgroundColor="rgba(100,100,100,0.35)"

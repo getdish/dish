@@ -28,22 +28,11 @@ export const HomeDrawerSmallView = memo((props: { children: any }) => {
   // attaching this as a direct onPress event breaks dragging
   // instead doing a more hacky useEffect
   useEffect(() => {
-    const drawerSnapListener = () => {
-      if (drawerStore.snapIndex === 0) {
-        autocompletesStore.setVisible(false)
-        drawerStore.setSnapIndex(1)
-      } else if (drawerStore.snapIndex === 1) {
-        drawerStore.setSnapIndex(2)
-      } else if (drawerStore.snapIndex === 2) {
-        drawerStore.setSnapIndex(1)
-      }
-    }
-
     const node = document.querySelector('.home-drawer-snap')
     if (node) {
-      node.addEventListener('click', drawerSnapListener)
+      node.addEventListener('click', drawerStore.toggleDrawerPosition)
       return () => {
-        node.removeEventListener('click', drawerSnapListener)
+        node.removeEventListener('click', drawerStore.toggleDrawerPosition)
       }
     }
   }, [])
