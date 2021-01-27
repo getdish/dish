@@ -140,10 +140,10 @@ export function Card({
             <VStack flex={1} overflow="hidden" alignItems="flex-end">
               <Paragraph
                 textAlign="right"
-                size="xxl"
+                size="xxxl"
                 sizeLineHeight={0.7}
-                textShadowColor="#00000011"
-                textShadowRadius={1}
+                textShadowColor="#00000033"
+                textShadowRadius={2}
                 textShadowOffset={{ height: 2, width: 0 }}
                 color="#fff"
                 fontWeight="800"
@@ -153,7 +153,14 @@ export function Card({
               </Paragraph>
               <Spacer size="xs" />
               {!!subTitle && (
-                <Paragraph textAlign="right" color="#fff" fontWeight="500">
+                <Paragraph
+                  textAlign="right"
+                  color="#fff"
+                  fontWeight="800"
+                  textShadowColor="#00000033"
+                  textShadowRadius={2}
+                  textShadowOffset={{ height: 2, width: 0 }}
+                >
                   {subTitle}
                 </Paragraph>
               )}

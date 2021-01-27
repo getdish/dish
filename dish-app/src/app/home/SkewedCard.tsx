@@ -1,10 +1,20 @@
 import React from 'react'
-import { ScrollView } from 'react-native'
-import { HStack, StackProps, VStack } from 'snackui'
+import { ScrollView, StyleSheet } from 'react-native'
+import {
+  AbsoluteVStack,
+  HStack,
+  LinearGradient,
+  StackProps,
+  VStack,
+} from 'snackui'
 
 import { cardFrameBorderRadius } from '../views/CardFrame'
 
-export const SkewedCard = (props: StackProps) => {
+export const SkewedCard = ({
+  isBehind,
+  children,
+  ...props
+}: StackProps & { isBehind?: boolean }) => {
   return (
     <VStack
       marginRight={-75}
@@ -35,9 +45,27 @@ export const SkewedCard = (props: StackProps) => {
         ],
       }}
       {...props}
-    />
+    >
+      {children}
+      {isBehind && (
+        <LinearGradient
+          style={[StyleSheet.absoluteFill, sheet.cardGradient]}
+          start={[0, 0]}
+          end={[1, 0]}
+          colors={['rgba(0,0,0,0.25)', 'rgba(0,0,0,0)']}
+        />
+      )}
+    </VStack>
   )
 }
+
+const sheet = StyleSheet.create({
+  cardGradient: {
+    zIndex: 100,
+    borderRadius: cardFrameBorderRadius,
+    right: '50%',
+  },
+})
 
 export const SkewedCardCarousel = ({ children }: { children: any }) => {
   return (
