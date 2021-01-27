@@ -5,9 +5,7 @@ import { Image } from 'react-native'
 import {
   AbsoluteVStack,
   Grid,
-  HStack,
   Paragraph,
-  SmallTitle,
   Spacer,
   Text,
   VStack,
@@ -17,8 +15,8 @@ import {
 import { isWeb } from '../../../constants/constants'
 import { thirdPartyCrawlSources } from '../../../constants/thirdPartyCrawlSources'
 import { queryRestaurant } from '../../../queries/queryRestaurant'
+import { SentimentCircle } from '../../views/SentimentCircle'
 import { SlantedTitle } from '../../views/SlantedTitle'
-import { SentimentText } from './SentimentText'
 
 type RatingCount = {
   count: number
@@ -51,21 +49,6 @@ type SourceBreakdowns = {
   all: SourceBreakdownItem
   dish: SourceBreakdownItem
   [key: string]: SourceBreakdownItem
-}
-
-type SourceBreakdown = {
-  votes: {
-    score: number
-    upvotes: number
-    downvotes: number
-  }
-  photos: {
-    score: number
-    criteria: number
-    score_factor: number
-    meeting_criteria_count: number
-  }
-  sources: SourceBreakdowns
 }
 
 type TagSourceBreakdownItem = {
@@ -246,15 +229,11 @@ export const RestaurantSourcesOverview = graphql(
                     />
                   </AbsoluteVStack>
                   <Spacer />
-                  <HStack justifyContent="center">
-                    <SentimentText sentiment={negative}>
-                      {negative}
-                    </SentimentText>
-                    <Spacer size="xs" />
-                    <SentimentText sentiment={positive}>
-                      {positive}
-                    </SentimentText>
-                  </HStack>
+                  <AbsoluteVStack top={-6} left={-6}>
+                    <SentimentCircle
+                      ratio={positive / (Math.abs(negative) + positive)}
+                    />
+                  </AbsoluteVStack>
                   <Spacer />
                   <Paragraph color="var(--color)" sizeLineHeight={0.9}>
                     {!!tagName && isWeb ? (

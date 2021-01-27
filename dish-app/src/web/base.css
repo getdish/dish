@@ -410,14 +410,6 @@ input:-webkit-autofill:active {
   }
 }
 
-.preserve-whitespace {
-  white-space: pre-wrap;
-}
-
-.white-space-pre {
-  white-space: pre;
-}
-
 .font-mono {
   font-family:'Courier New', Courier, monospace;
 }
@@ -585,4 +577,16 @@ mark {
   right: 0;
   bottom: 0;
   z-index: 10000000000000000000000000000;
+}
+
+.break-word {
+  word-break: break-word;
+}
+
+.preserve-whitespace {
+  white-space: pre-wrap;
+}
+
+.white-space-pre {
+  white-space: pre;
 }

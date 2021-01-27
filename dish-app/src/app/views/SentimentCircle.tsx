@@ -15,7 +15,7 @@ const sentiments = {
 const colors = {
   0: red,
   1: orange,
-  2: orange,
+  2: green,
   3: green,
   4: blue,
 }
@@ -34,16 +34,16 @@ export const SentimentCircle = memo(({ ratio }: { ratio: number }) => {
   return (
     <CircularProgress
       fill={ratio * 100}
-      size={28}
-      width={4}
+      size={32}
+      width={5}
       tintColor={colors[key]}
       lineCap="round"
-      backgroundColor="#fff"
+      backgroundColor="rgba(100,100,100,0.25)"
       rotation={(1 - ratio) * 180}
     >
       {() => (
-        <HStack alignItems="center" justifyContent="center">
-          <Text fontSize={23} color={green} fontWeight="900">
+        <HStack height="100%" alignItems="center" justifyContent="center">
+          <Text fontSize={24} lineHeight={24}>
             {sentiments[key]}
           </Text>
         </HStack>
