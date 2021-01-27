@@ -1,7 +1,6 @@
 import { graphql } from '@dish/graph'
-import { Edit, MessageSquare } from '@dish/react-feather'
+import { Edit } from '@dish/react-feather'
 import React from 'react'
-import { Text } from 'snackui'
 
 import { useUserReviewCommentQuery } from '../../hooks/useUserReview'
 import { SmallButton, SmallButtonProps } from '../../views/SmallButton'
@@ -32,7 +31,7 @@ export const RestaurantAddCommentButton = graphql(
         icon={<Edit color="var(--color)" size={size ?? 16} />}
         {...props}
       >
-        {hideLabel ? null : !!review?.text ? 'Edit note' : 'Note'}
+        {hideLabel ? null : !!review?.text ? 'Edit' : 'Add'}
       </SmallButton>
     )
   }

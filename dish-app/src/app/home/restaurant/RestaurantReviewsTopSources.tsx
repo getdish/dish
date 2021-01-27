@@ -1,4 +1,4 @@
-import { graphql, query } from '@dish/graph'
+import { graphql } from '@dish/graph'
 import { Store, useStore } from '@dish/use-store'
 import React, { Suspense, memo } from 'react'
 import { Image } from 'react-native'
@@ -7,8 +7,6 @@ import {
   HStack,
   LoadingItems,
   SmallTitle,
-  Spacer,
-  Text,
   VStack,
   useMedia,
 } from 'snackui'
@@ -18,8 +16,6 @@ import { listItemMaxSideWidth } from '../../../constants/constants'
 import { queryRestaurant } from '../../../queries/queryRestaurant'
 import { CloseButton } from '../../views/CloseButton'
 import { SlantedTitle } from '../../views/SlantedTitle'
-import { RestaurantAddCommentButton } from './RestaurantAddCommentButton'
-import { RestaurantPointsBreakdown } from './RestaurantPointsBreakdown'
 import { RestaurantSourcesOverview } from './RestaurantSourcesOverview'
 
 export class RestaurantReviewsDisplayStore extends Store<{ id: string }> {

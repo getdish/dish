@@ -91,14 +91,13 @@ export default class CircularProgress extends React.PureComponent<any> {
     const localChildrenContainerStyle = {
       ...{
         position: 'absolute',
-        left: maxWidthCircle + padding / 2,
-        top: maxWidthCircle + padding / 2,
-        width: offset,
-        height: offset,
+        left: width - 1,
+        top: width - 1,
+        width: offset - padding,
+        height: offset - padding,
         borderRadius: offset / 2,
         alignItems: 'center',
         justifyContent: 'center',
-        overflow: 'hidden',
       },
       ...childrenContainerStyle,
     }

@@ -4,7 +4,6 @@ goal january
 
   1. fix lots of things
 
-    - reviews - read more >> show in popup
     - lists
       - save within region
       - show within region
