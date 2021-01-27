@@ -2,7 +2,7 @@ import { useCallback, useEffect, useLayoutEffect, useMemo, useRef } from 'react'
 
 import { configureOpts } from './configureUseStore'
 import { UNWRAP_PROXY, defaultOptions } from './constants'
-import useConstant, {
+import {
   UNWRAP_STORE_INFO,
   cache,
   getKey,
@@ -114,9 +114,9 @@ export function useStoreInstance<
   memoArgs?: any[],
   debug?: boolean
 ): Selector extends (a: A) => infer C ? C : A
+
 // for creating a usable store hook
 // @ts-expect-error
-
 export function createUseStore<Props, Store>(
   StoreKlass: (new (props: Props) => Store) | (new () => Store)
 ) {
@@ -129,8 +129,8 @@ export function createUseStore<Props, Store>(
     return useStore(StoreKlass, props, { selector })
   }
 }
-// for creating a usable selector hook
 
+// for creating a usable selector hook
 export function createUseStoreSelector<A extends Store<Props>, Props, Selected>(
   StoreKlass: (new (props: Props) => A) | (new () => A),
   selector: Selector<A, Selected>
@@ -139,8 +139,8 @@ export function createUseStoreSelector<A extends Store<Props>, Props, Selected>(
     return useStore(StoreKlass, props, { selector }) as any
   }
 }
-// selector hook
 
+// selector hook
 export function useStoreSelector<
   A extends Store<B>,
   B,
@@ -153,8 +153,8 @@ export function useStoreSelector<
 ): Selected {
   return useStore(StoreKlass, props, { selector }) as any
 }
-// for ephemeral stores (alpha, not working correctly yet)
 
+// for ephemeral stores (alpha, not working correctly yet)
 export function useStoreOnce<A extends Store<B>, B>(
   StoreKlass: (new (props: B) => A) | (new () => A),
   props?: B,
@@ -162,8 +162,8 @@ export function useStoreOnce<A extends Store<B>, B>(
 ): A {
   return useStore(StoreKlass, props, { selector, once: true })
 }
-// get non-singleton outside react (weird)
 
+// get non-singleton outside react (weird)
 export function getStore<A extends Store<B>, B>(
   StoreKlass: (new (props: B) => A) | (new () => A),
   props?: B
@@ -255,11 +255,9 @@ function getOrCreateStoreInfo(
 }
 
 export const allStores = {}
-
 export const subscribe = (store: Store, callback: () => any) => {
   return store.subscribe(callback)
 }
-
 const emptyObj = {}
 const selectKeys = (obj: any, keys: string[] = []) => {
   if (!keys.length) {
@@ -357,9 +355,12 @@ function createProxiedStore(storeInfo: Omit<StoreInfo, 'store' | 'source'>) {
           }
           // track get deps
           curGetKeys.clear()
+          const isSubGetter = gettersState.isGetting
           gettersState.isGetting = true
           const res = getters[key].call(proxiedStore)
-          gettersState.isGetting = false
+          if (!isSubGetter) {
+            gettersState.isGetting = false
+          }
           // store inverse lookup
           curGetKeys.forEach((gk) => {
             if (!depsToGetter.has(gk)) {
