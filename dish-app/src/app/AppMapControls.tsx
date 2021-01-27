@@ -72,7 +72,7 @@ function useShowSearchHere() {
   return useSelector(() => {
     const isOnSearch = homeStore.currentStateType === 'search'
     const sp = searchPageStore.searchPosition
-    const { center, span } = appMapStore.position
+    const { center, span } = appMapStore.nextPosition
     if (searchPageStore.status === 'loading') return false
     return isOnSearch && !isEqual(sp, { center, span })
   })

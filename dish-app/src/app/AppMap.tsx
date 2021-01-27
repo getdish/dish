@@ -126,7 +126,7 @@ export default memo(function AppMap() {
 
   const handleMoveEnd = useCallback(
     ({ center, span }) => {
-      appMapStore.setPosition({ center, span })
+      appMapStore.setNextPosition({ center, span })
       updateRegion.cancel()
       if (media.sm && (drawerStore.isDragging || drawerStore.snapIndex === 0)) {
         console.log('avoid move stuff when snapped to top')

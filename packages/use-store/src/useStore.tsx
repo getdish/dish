@@ -177,7 +177,6 @@ export function useSelector<A>(fn: () => A): A {
         ) {
           return prev
         }
-        console.log('GOT UPDATE')
         return next
       })
     })
@@ -203,7 +202,6 @@ function runStoreSelector<A>(
 
 function subscribeToStores(stores: any[], onUpdate: () => any) {
   const disposes: Function[] = []
-  console.log('subscribing', stores)
   for (const store of stores) {
     disposes.push(subscribe(store, onUpdate))
   }
