@@ -1,6 +1,5 @@
-// // debug
 import React from 'react'
-import { BlurView, HStack, Text } from 'snackui'
+import { BlurView } from 'snackui'
 
 import { RoutesTable } from '../../router'
 import { LinkButton } from './LinkButton'
@@ -13,6 +12,8 @@ export function OverlayLinkButton<
   return (
     <BlurView borderRadius={20}>
       <LinkButton
+        paddingVertical={8}
+        paddingHorizontal={8}
         borderRadius={90}
         shadowColor="rgba(0,0,0,0.175)"
         shadowRadius={13}
@@ -22,13 +23,7 @@ export function OverlayLinkButton<
         hoverStyle={{
           transform: [{ scale: 1.05 }],
         }}
-        icon={
-          <Icon
-            size={12}
-            color="rgba(255,255,255,0.5)"
-            style={{ marginRight: 6 }}
-          />
-        }
+        icon={<Icon size={12} color="rgba(255,255,255,0.5)" />}
         {...props}
       >
         {children}

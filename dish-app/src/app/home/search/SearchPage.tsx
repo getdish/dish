@@ -133,11 +133,13 @@ const SearchPageContent = memo(function SearchPageContent(props: Props) {
     }
   })
 
+  const center = location.data?.center
+
   useSetAppMap({
     isActive: props.isActive,
     results: searchStore.results,
     showRank: true,
-    center: location.data?.center,
+    center,
     span: location.data?.span,
   })
 
@@ -146,7 +148,31 @@ const SearchPageContent = memo(function SearchPageContent(props: Props) {
     // reset on all page loads
     searchStore.resetResults()
     searchPageStore.runSearch({})
-  }, [props.item])
+
+    // OK so story time... in Map.tsx the fitBounds that runs
+    // in some cases it comes from `center/span` above which are
+    // estimates of the final bounds basically, we can't get that
+    // from mapbox ahead of time (a `map.getFinalBoundsFor(bounds)`
+    // would be nice) but instead of doing complicated things in Map
+    // lets just say this: once center changes, the *next* movement
+    // from map we can safely ignore! because it will almost always change
+    // worst case is not bad: we miss a movement, but they can just touch
+    // map again and it will show "re-search in area button"
+    let runs = 0
+    const dispose = reaction(
+      appMapStore,
+      (x) => x.nextPosition,
+      (x) => {
+        searchPageStore.setSearchPosition(x)
+        runs++
+        if (runs > 1) {
+          dispose()
+        }
+      }
+    )
+
+    return dispose
+  }, [props.item, center])
 
   useEffect(() => {
     if (!tags.data) return
