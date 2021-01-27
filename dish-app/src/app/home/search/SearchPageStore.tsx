@@ -103,8 +103,9 @@ class SearchPageStore extends Store {
     )
     let otherTags = [
       ...tags
-        .map((tag) =>
-          getTagSlug(tag).replace('lenses__', '').replace('filters__', '')
+        .map(
+          (tag) =>
+            tag.slug?.replace('lenses__', '').replace('filters__', '') ?? ''
         )
         .filter((t) => !t.includes(dishSearchedTag ?? '')),
     ]
@@ -120,8 +121,6 @@ class SearchPageStore extends Store {
     // prevent duplicate searches
     const searchKey = stringify(searchArgs)
     if (!opts.force && searchKey !== this.lastSearchKey) {
-      console.warn('same saerch again?')
-
       // SEARCH
       const res = await search(searchArgs)
       if (shouldCancel()) return
@@ -129,11 +128,12 @@ class SearchPageStore extends Store {
         console.log('no restaurants', res)
         return
       }
-
       // only update searchkey once finished
       this.lastSearchKey = searchKey
       this.results = (res.restaurants ?? []).filter(isPresent).slice(0, 80)
       this.meta = res.meta
+    } else {
+      console.warn('same saerch again?')
     }
 
     this.status = 'complete'

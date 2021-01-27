@@ -80,7 +80,7 @@ export const CommentBubble = (props: CommentBubbleProps) => {
           <PaneControlButtons>
             <CloseButton onPress={() => setIsExpanded(false)} />
           </PaneControlButtons>
-          <VStack maxWidth="100%" flex={1} overflow="hidden">
+          <VStack paddingTop={20} maxWidth="100%" flex={1} overflow="hidden">
             <CommentBubbleContents {...props} scrollable expanded />
           </VStack>
         </Modal>

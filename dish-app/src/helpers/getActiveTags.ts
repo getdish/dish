@@ -15,7 +15,6 @@ export const getActiveTags = memoize((state: HomeStateItem): NavigableTag[] => {
       console.groupCollapsed('no alltag...', slug)
       console.trace(state)
       console.groupEnd()
-      // debugger
       res.push({ slug })
     }
   }

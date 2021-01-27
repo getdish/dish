@@ -89,7 +89,7 @@ export default memo(function SearchPage(props: Props) {
               name="list"
               promptLogin
               params={{
-                userSlug: userStore.user?.username ?? '',
+                userSlug: userStore.user?.username ?? 'me',
                 slug: 'create',
                 state: getActiveTags(state)
                   .map((x) => x.slug)

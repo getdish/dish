@@ -11,5 +11,7 @@ export type TagWithNameAndType =
       type: FullTag['type']
       slug?: string
     }
+
+// TODO remove name | type option
 export type NavigableTag = Partial<Tag> &
   (Required<Pick<Tag, 'name' | 'type'>> | Required<Pick<Tag, 'slug'>>)
