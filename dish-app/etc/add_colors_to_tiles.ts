@@ -4,6 +4,8 @@ import { mutate, query, resolved } from '@dish/graph'
 
 import { getColorsForName } from '../src/helpers/getColorsForName'
 
+console.log('hasura pass is', process.env.HASURA_SECRET)
+
 async function main() {
   await updateNeighborhoods()
   await updateCounties()
@@ -15,7 +17,7 @@ async function updateCounties() {
       .hrr({
         where: {
           slug: {
-            _neq: null,
+            _neq: '',
           },
           color: {
             _eq: null,
@@ -56,7 +58,7 @@ async function updateNeighborhoods() {
       .zcta5({
         where: {
           slug: {
-            _neq: null,
+            _neq: '',
           },
           color: {
             _eq: null,
@@ -66,6 +68,7 @@ async function updateNeighborhoods() {
       .map((x) => ({ ogc_fid: x.ogc_fid, slug: x.slug }))
   })
 
+  console.log('found', tiles.length, tiles[0])
   for (const { slug, ogc_fid } of tiles) {
     if (!slug) {
       continue
