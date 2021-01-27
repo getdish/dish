@@ -92,7 +92,7 @@
     "start": "TARGET=native react-native start",
     "preinstall": "node ./etc/update_package_json_workspace_hoist.js",
     "postinstall": "patch-package; expo-yarn-workspaces postinstall",
-    "etc:add-colors-to-staging": "eval $(../dishctl yaml_to_env) HASURA_SECRET=$TF_VAR_HASURA_SECRET yarn ts-node ./etc/add_colors_to_tiles.ts",
+    "etc:staging:colorize": "eval $(../dishctl.sh yaml_to_env); NODE_ENV=staging HASURA_SECRET=$TF_VAR_HASURA_GRAPHQL_ADMIN_SECRET yarn ts-node ./etc/add_colors_to_tiles.ts",
     "web": "eval $(../dishctl.sh yaml_to_env); LOG_LEVEL=1 SENDGRID_API_KEY=$TF_VAR_SENDGRID_API_KEY DO_SPACES_ID=$TF_VAR_DO_SPACES_ID DO_SPACES_SECRET=$TF_VAR_DO_SPACES_SECRET DISH_ENV=development HASURA_SECRET=password LOG_FETCH=1 dish start",
     "web:https": "sudo dish start --https --host d1sh.com --port 443",
     "web:debug": "node --inspect ../node_modules/.bin/dish start",
