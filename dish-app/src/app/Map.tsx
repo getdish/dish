@@ -6,7 +6,7 @@ import { assertPresent } from '@dish/helpers/src'
 import bbox from '@turf/bbox'
 import union from '@turf/union'
 import _, { capitalize, debounce, isEqual, throttle } from 'lodash'
-import mapboxgl from 'mapbox-gl'
+import mapboxgl, { MapboxGeoJSONFeature } from 'mapbox-gl'
 import React, { useEffect, useRef, useState } from 'react'
 import { Dimensions } from 'react-native'
 import { useGet } from 'snackui'
@@ -18,7 +18,7 @@ import { hexToRGB } from '../helpers/hexToRGB'
 import { useIsMountedRef } from '../helpers/useIsMountedRef'
 import { Region } from '../types/homeTypes'
 import { appMapStore } from './AppMapStore'
-import { MapProps } from './MapProps'
+import { MapProps, RegionWithVia } from './MapProps'
 import { tiles } from './tiles'
 
 mapboxgl.accessToken = MAPBOX_ACCESS_TOKEN
@@ -321,6 +321,7 @@ function setupMapEffect({
 
   let isMouseDown = false
   let lastUpdate = null
+
   function updateOnSelectRegion() {
     if (!curRegion || isMouseDown) return
     if (!isEqual(lastUpdate, curRegion)) {
@@ -331,31 +332,48 @@ function setupMapEffect({
     }
   }
 
-  let curRegion: Region | null = null
+  let curRegion: RegionWithVia | null = null
   let curId
-  const handleMoveDbc = debounce(() => {
-    const zoom = map.getZoom()
-    const { padding } = getProps()
-    const width = map.getContainer().clientWidth - padding.right
-    const height = map.getContainer().clientHeight - padding.bottom
-    const x = width / 2 + padding.left
-    const y = height / 2 + padding.top
+
+  function getCurrentLayerName() {
     let layerName = ''
+    const zoom = map.getZoom()
     for (const tile of tiles) {
       if (zoom >= tile.minZoom && zoom <= tile.maxZoom) {
         layerName = tile.name
         break
       }
     }
-    if (!layerName) return
+    return layerName
+  }
+
+  const handleMoveDbc = debounce(() => {
+    const { padding } = getProps()
+    const width = map.getContainer().clientWidth - padding.right
+    const height = map.getContainer().clientHeight - padding.bottom
+    const x = width / 2 + padding.left
+    const y = height / 2 + padding.top
     try {
+      const layerName = getCurrentLayerName()
+      if (!layerName) return
       const features = map.queryRenderedFeatures(new mapboxgl.Point(x, y), {
         layers: [`${layerName}.fill`],
       })
       const feature = features[0]
       if (!feature) return
       if (feature.id === curId) return
+      setCurrentRegion(feature, 'drag')
+    } catch (err) {
+      console.error('error querying map', err)
+    }
+  }, 150)
 
+  function setCurrentRegion(
+    feature: MapboxGeoJSONFeature,
+    via: 'click' | 'drag'
+  ) {
+    const layerName = getCurrentLayerName()
+    try {
       if (curId) {
         tileSetter({
           source: layerName,
@@ -391,17 +409,21 @@ function setupMapEffect({
         console.warn('No available region', feature)
         return
       }
-
+      if (name === curRegion?.name) {
+        console.log('same region, not changing')
+        return
+      }
       curRegion = {
         geometry: feature.geometry as any,
-        name: name,
+        name,
         slug: props.slug ?? slugify(name),
+        via,
       }
       updateOnSelectRegion()
     } catch (err) {
-      console.log('error querying map', err)
+      console.error('error setting region', err)
     }
-  }, 150)
+  }
 
   cancels.add(
     series([
@@ -483,7 +505,6 @@ function setupMapEffect({
           const points = map.queryRenderedFeatures(e.point, {
             layers: [POINT_LAYER_ID],
           })
-          console.log('points', points)
           const [point] = points
           if (point) {
             // zoom into a cluster
@@ -520,6 +541,7 @@ function setupMapEffect({
           // see: https://github.com/mapbox/mapbox-gl-js/issues/3871
           // and: https://github.com/mapbox/mapbox-gl-js/issues/5040
           if (boundary && boundary.id) {
+            setCurrentRegion(boundary, 'click')
             // get full boundary (mapbox weird)
             const sourceFeatures = map.querySourceFeatures(boundary.source, {
               sourceLayer: boundary.sourceLayer,

@@ -96,8 +96,8 @@ class SearchPageStore extends Store {
     if (shouldCancel()) return
     state = state!
 
-    const center = appMapStore.position.center
-    const span = appMapStore.position.span
+    const center = appMapStore.nextPosition.center
+    const span = appMapStore.nextPosition.span
     const activeTags = state.activeTags ?? {}
     const dishSearchedTag = Object.keys(activeTags).find(
       (k) => allTags[k]?.type === 'dish'

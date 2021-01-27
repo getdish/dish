@@ -22,6 +22,7 @@ import { homeStore } from './homeStore'
 import { useLastValueWhen } from './hooks/useLastValueWhen'
 import { useMapSize } from './hooks/useMapSize'
 import { MapView } from './Map'
+import { RegionWithVia } from './MapProps'
 
 const styles = {
   light: 'mapbox://styles/nwienert/ckddrrcg14e4y1ipj0l4kf1xy',
@@ -31,31 +32,31 @@ const styles = {
   //'mapbox://styles/nwienert/ck68dg2go01jb1it5j2xfsaja',
 }
 
-const updateRegion = debounce((region: Region, position: MapPosition) => {
-  const { currentState } = homeStore
-  if (currentState.type === 'home' || currentState.type === 'search') {
-    if (currentState.region === region.slug) {
-      return
+const updateRegion = debounce(
+  (region: RegionWithVia, position: MapPosition) => {
+    const { currentState } = homeStore
+    console.log('got it', region)
+    if (
+      currentState.type === 'home' ||
+      (currentState.type === 'search' && region.via === 'click')
+    ) {
+      if (currentState.region === region.slug) {
+        return
+      }
+      homeStore.navigate({
+        state: {
+          ...currentState,
+          ...position,
+          region: region.slug,
+        },
+      })
     }
-    homeStore.navigate({
-      state: {
-        ...currentState,
-        ...position,
-        region: region.slug,
-      },
-    })
-  }
-}, 150)
+  },
+  150
+)
 
 export default memo(function AppMap() {
-  const {
-    resultsBbox,
-    features,
-    results,
-    showRank,
-    zoomOnHover,
-    hovered,
-  } = useAppMapStore()
+  const { features, results, showRank, zoomOnHover, hovered } = useAppMapStore()
   const media = useMedia()
   const { width, paddingLeft } = useMapSize(media.sm)
   const { position } = useStoreInstance(appMapStore)
@@ -209,16 +210,25 @@ export default memo(function AppMap() {
     }
   }, [])
 
-  const handleSelectRegion = useCallback((region: Region | null, position) => {
-    // console.log('handleSelectRegion', region)
-    if (!region) return
-    if (!region.slug) {
-      console.log('no region slug', region)
-      return
-    }
-    updateRegion.cancel()
-    updateRegion(region, position)
-  }, [])
+  const handleSelectRegion = useCallback(
+    (region: RegionWithVia | null, position) => {
+      if (!region) return
+      if (!region.slug) {
+        console.log('no region slug', region)
+        return
+      }
+      updateRegion.cancel()
+      if (region.via === 'click') {
+        // avoid handleMoveStart being called next frame
+        setTimeout(() => {
+          updateRegion(region, position)
+        })
+      } else {
+        updateRegion(region, position)
+      }
+    },
+    []
+  )
 
   const theme = useTheme()
   const themeName = theme.backgroundColor === '#fff' ? 'light' : 'dark'
