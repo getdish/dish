@@ -157,9 +157,9 @@ export const MapView = (props: MapProps) => {
     if (hasMovedAtLeast(getCurrentLocation(map), { center, span })) {
       int.isAwaitingNextMove = true
       const cancelSeries = series([
-        () => fullyIdle({ max: 500 }),
+        () => fullyIdle({ max: 200 }),
         () => {
-          map?.fitBounds(next, {
+          map!.fitBounds(next, {
             duration: 650,
           })
           int.isAwaitingNextMove = false
@@ -1080,12 +1080,6 @@ const getCurrentLocation = (map: mapboxgl.Map) => {
     span.lng -= lngExtra
     span.lat -= latExtra
   }
-
-  // console.log(
-  //   'now span is',
-  //   map.getBounds().toArray(),
-  //   JSON.stringify(span, null, 2)
-  // )
 
   return {
     center: { lng: round(center.lng), lat: round(center.lat) },

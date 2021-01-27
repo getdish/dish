@@ -12,6 +12,7 @@ import { getDefaultLocation } from '../constants/initialHomeState'
 import { bboxToSpan } from '../helpers/bboxToSpan'
 import { queryRestaurant } from '../queries/queryRestaurant'
 import { AppMapPosition, MapResultItem } from '../types/mapTypes'
+import { searchPageStore } from './home/search/SearchPageStore'
 import { homeStore } from './homeStore'
 
 type MapOpts = {
@@ -60,18 +61,19 @@ class AppMapStore extends Store {
   }
 
   setPosition(pos: Partial<AppMapPosition>) {
-    console.log('set position', pos)
     this.position = {
       center: pos.center ?? this.position.center,
       span: pos.span ?? this.position.span,
       via: pos.via ?? this.position.via,
     }
+    console.log('set position meow', pos)
     this.nextPosition = this.position
     const n = [...this.lastPositions, this.position]
     this.lastPositions = n.reverse().slice(0, 15).reverse() // keep only 15
   }
 
   setNextPosition(pos: Partial<AppMapPosition>) {
+    console.log('set next position meow', pos)
     this.nextPosition = {
       center: pos.center ?? this.position.center,
       span: pos.span ?? this.position.span,
@@ -184,6 +186,7 @@ export const useSetAppMap = (
   useEffect(() => {
     if (!isActive) return
     if (center || span) {
+      console.log('set via new center', center, span)
       appMapStore.setPosition({
         center,
         span,
@@ -244,14 +247,17 @@ export const useSetAppMap = (
             // @ts-expect-error
             const centerCoord = getCenter(collection)
             console.log('fitting to results', centerCoord)
-            appMapStore.setPosition({
-              via: 'results',
+            const position = {
               center: {
                 lng: centerCoord.geometry.coordinates[0],
                 lat: centerCoord.geometry.coordinates[1],
               },
               // @ts-expect-error
               span: bboxToSpan(resultsBbox),
+            }
+            appMapStore.setPosition({
+              via: 'results',
+              ...position,
             })
           }
         }

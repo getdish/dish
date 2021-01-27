@@ -1,7 +1,8 @@
-import { fullyIdle } from '@dish/async'
+import { fullyIdle, sleep } from '@dish/async'
 import {
   HomeMeta,
   LngLat,
+  MapPosition,
   RestaurantSearchArgs,
   RestaurantSearchItem,
   search,
@@ -26,6 +27,8 @@ class SearchPageStore extends Store {
   results: RestaurantSearchItem[] = []
   meta: HomeMeta | null = null
   searchPosition = initialPosition
+  private lastSearchKey = ''
+  private lastSearchAt = 0
 
   setIndex(index: number, event: ActiveEvent) {
     this.index = Math.min(Math.max(-1, index), this.max)
@@ -35,9 +38,6 @@ class SearchPageStore extends Store {
   get max() {
     return this.results.length
   }
-
-  private lastSearchKey = ''
-  private lastSearchAt = Date.now()
 
   refresh() {
     this.results = []
@@ -54,9 +54,23 @@ class SearchPageStore extends Store {
     force?: boolean
   }) {
     opts = opts || { quiet: false }
+    const wasSearching = this.lastSearchAt !== 0
     this.lastSearchAt = Date.now()
     this.status = 'loading'
     let curId = this.lastSearchAt
+
+    const shouldCancel = () => {
+      if (this.lastSearchAt != curId) return true
+      if (homeStore.currentStateType !== 'search') return true
+      return false
+    }
+
+    // prevent searching back to back quickly
+    if (!opts.force) {
+      await sleep(wasSearching ? 250 : 100)
+      await fullyIdle({ max: 200 })
+      if (shouldCancel()) return
+    }
 
     const curState = homeStore.lastSearchState
     const searchQuery = opts.searchQuery ?? curState?.searchQuery ?? ''
@@ -75,27 +89,12 @@ class SearchPageStore extends Store {
       return
     }
 
-    let state = homeStore.lastSearchState
+    const state = homeStore.lastSearchState
+    if (!state) {
+      console.log('no search state')
+      return
+    }
     const tags = curState ? getActiveTags(curState) : []
-
-    const shouldCancel = () => {
-      const isntOnSearch = homeStore.currentStateType !== 'search'
-      if (isntOnSearch) return true
-      const state = homeStore.lastSearchState
-      const answer = !state || this.lastSearchAt != curId
-      // if (answer) console.log('search: cancel')
-      return answer
-    }
-
-    if (!opts.force) {
-      await fullyIdle()
-      if (shouldCancel()) return
-    }
-
-    state = homeStore.lastSearchState
-    if (shouldCancel()) return
-    state = state!
-
     const center = appMapStore.nextPosition.center
     const span = appMapStore.nextPosition.span
     const activeTags = state.activeTags ?? {}
@@ -109,7 +108,6 @@ class SearchPageStore extends Store {
         )
         .filter((t) => !t.includes(dishSearchedTag ?? '')),
     ]
-
     const main_tag = dishSearchedTag ?? otherTags[0]
     const searchArgs: RestaurantSearchArgs = {
       center: roundLngLat(center),
@@ -121,38 +119,45 @@ class SearchPageStore extends Store {
 
     // prevent duplicate searches
     const searchKey = stringify(searchArgs)
-    if (!opts.force && searchKey === this.lastSearchKey) {
+    if (!opts.force && searchKey !== this.lastSearchKey) {
       console.warn('same saerch again?')
+
+      // SEARCH
+      const res = await search(searchArgs)
+      if (shouldCancel()) return
+      if (!res || !res.restaurants) {
+        console.log('no restaurants', res)
+        return
+      }
+
+      // only update searchkey once finished
+      this.lastSearchKey = searchKey
+      this.results = (res.restaurants ?? []).filter(isPresent).slice(0, 80)
+      this.meta = res.meta
     }
-
-    // fetch
-    let res = await search(searchArgs)
-    if (shouldCancel() || !res) return
-
-    // temp code to handle both types of api response at once
-    if (!res.restaurants) {
-      console.log('no restaurants', res)
-    }
-    let restaurants = res.restaurants ?? []
-
-    // only update searchkey once finished
-    this.lastSearchKey = searchKey
-    state = homeStore.lastSearchState
-    if (!state) return
 
     this.status = 'complete'
-    this.results = restaurants.filter(isPresent).slice(0, 80)
-    this.meta = res.meta
     // set this at very end of search
-    this.searchPosition = {
+    const searchedPosition = {
       center: appMapStore.nextPosition.center,
       span: appMapStore.nextPosition.span,
+    }
+    console.log('SET IT', JSON.stringify(searchedPosition))
+    this.searchPosition = searchedPosition
+
+    // clear it so we can check if any currently running already at start
+    if (this.lastSearchAt === curId) {
+      this.lastSearchAt = 0
     }
 
     return {
       center,
       span,
     }
+  }
+
+  setSearchPosition(pos: MapPosition) {
+    this.searchPosition = pos
   }
 }
 
