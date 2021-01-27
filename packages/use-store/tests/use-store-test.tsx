@@ -53,6 +53,7 @@ describe('basic tests', () => {
     class Store3 extends Store<{ id: number }> {
       y = 0
       mount() {
+        console.log('mount is called')
         this.y = this.props.id + 10
       }
       get z() {
@@ -180,6 +181,35 @@ describe('basic tests', () => {
     }
     const { getAllByTitle } = render(<SimpleStoreTestUsedProperties id={5} />)
     const getCurrentByTitle = (name: string) => last(getAllByTitle(name))!
+    act(() => {
+      fireEvent.click(getCurrentByTitle('add'))
+    })
+    act(() => {
+      fireEvent.click(getCurrentByTitle('add'))
+    })
+    act(() => {
+      fireEvent.click(getCurrentByTitle('add'))
+    })
+    expect(renderCount).toEqual(1)
+  })
+
+  it('only re-renders tracked properties (selectors + singleton)', async () => {
+    let renderCount = 0
+    const todoStore = createStore(TodoList, { id: 1 })
+    function SimpleStoreTestUsedProperties(props: { id: number }) {
+      // should change twice, first undefined, second item
+      const secondItem = useStoreInstance(todoStore, (x) => x.items[1])
+      renderCount++
+      return <button title="add" onClick={() => todoStore.add()}></button>
+    }
+    const { getAllByTitle } = render(<SimpleStoreTestUsedProperties id={5} />)
+    const getCurrentByTitle = (name: string) => last(getAllByTitle(name))!
+    act(() => {
+      fireEvent.click(getCurrentByTitle('add'))
+    })
+    act(() => {
+      fireEvent.click(getCurrentByTitle('add'))
+    })
     act(() => {
       fireEvent.click(getCurrentByTitle('add'))
     })

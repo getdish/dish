@@ -221,7 +221,6 @@ function getOrCreateStoreInfo(
   let version = 0
 
   const storeInfo = {
-    hasMounted: false,
     storeInstance,
     getVersion() {
       return version
@@ -241,6 +240,7 @@ function getOrCreateStoreInfo(
     },
   }
   const store = createProxiedStore(storeInfo)
+  store.mount?.()
   const value: StoreInfo = {
     ...storeInfo,
     store,
@@ -255,13 +255,6 @@ function getOrCreateStoreInfo(
 }
 
 export const allStores = {}
-
-export function mountStore(info: StoreInfo, store: any) {
-  if (!info.hasMounted) {
-    info.hasMounted = true
-    store.mount?.()
-  }
-}
 
 export const subscribe = (store: Store, callback: () => any) => {
   return store.subscribe(callback)
@@ -324,8 +317,7 @@ function useStoreFromInfo(
 
   // track access, runs after each render
   useLayoutEffect(() => {
-    // curInternal.isTracking = false
-    mountStore(info, info.store)
+    curInternal.isTracking = false
     if (
       process.env.LOG_LEVEL &&
       (shouldDebug(component, info) || configureOpts.logLevel === 'debug')
