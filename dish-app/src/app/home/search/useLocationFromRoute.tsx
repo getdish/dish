@@ -15,7 +15,7 @@ export function useLocationFromRoute(route: HistoryItem<'search'>) {
   })
 }
 
-async function getLocationFromRoute(
+export async function getLocationFromRoute(
   route: HistoryItem<'search'>
 ): Promise<{ center: LngLat; span: LngLat; region?: RegionNormalized } | null> {
   if (route.name === 'search') {
