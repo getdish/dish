@@ -5,6 +5,7 @@ import React, { memo } from 'react'
 import { AbsoluteVStack, HStack, Theme, useMedia } from 'snackui'
 
 import { isWeb, searchBarHeight, zIndexDrawer } from '../constants/constants'
+import { hasMovedAtLeast } from '../helpers/hasMovedAtLeast'
 import { appMapStore } from './AppMapStore'
 import { searchPageStore } from './home/search/SearchPageStore'
 import { homeStore, useHomeStore, useIsHomeTypeActive } from './homeStore'
@@ -74,7 +75,9 @@ function useShowSearchHere() {
     const sp = searchPageStore.searchPosition
     const { center, span } = appMapStore.nextPosition
     if (searchPageStore.status === 'loading') return false
-    return isOnSearch && !isEqual(sp, { center, span })
+    if (!isOnSearch) return false
+    const hasMoved = hasMovedAtLeast(sp, { center, span }, 0.02)
+    return hasMoved
   })
 }
 

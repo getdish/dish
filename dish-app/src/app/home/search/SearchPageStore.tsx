@@ -145,8 +145,8 @@ class SearchPageStore extends Store {
     this.meta = res.meta
     // set this at very end of search
     this.searchPosition = {
-      center: appMapStore.position.center,
-      span: appMapStore.position.span,
+      center: appMapStore.nextPosition.center,
+      span: appMapStore.nextPosition.span,
     }
 
     return {
