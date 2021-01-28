@@ -1,0 +1,13 @@
+- args:
+    name: tags
+    table:
+      name: list
+      schema: public
+    using:
+      manual_configuration:
+        column_mapping:
+          id: list_id
+        remote_table:
+          name: list_tag
+          schema: public
+  type: create_array_relationship

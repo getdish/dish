@@ -1,0 +1,15 @@
+- args:
+    permission:
+      allow_upsert: true
+      backend_only: false
+      check: {}
+      columns:
+      - id
+      - list_id
+      - tag_id
+      set: {}
+    role: user
+    table:
+      name: list_tag
+      schema: public
+  type: create_insert_permission

@@ -23,6 +23,14 @@ tables:
         table:
           schema: public
           name: list_restaurant
+  - name: tags
+    using:
+      manual_configuration:
+        remote_table:
+          schema: public
+          name: list_tag
+        column_mapping:
+          id: list_id
   insert_permissions:
   - role: user
     permission:
@@ -243,6 +251,46 @@ tables:
       filter:
         user_id:
           _eq: X-Hasura-User-Id
+- table:
+    schema: public
+    name: list_tag
+  insert_permissions:
+  - role: user
+    permission:
+      check: {}
+      columns:
+      - id
+      - list_id
+      - tag_id
+      backend_only: false
+  select_permissions:
+  - role: anon
+    permission:
+      columns:
+      - created_at
+      - id
+      - list_id
+      - tag_id
+      filter: {}
+      limit: 100
+  - role: user
+    permission:
+      columns:
+      - id
+      - created_at
+      - list_id
+      - tag_id
+      filter: {}
+      limit: 100
+  update_permissions:
+  - role: user
+    permission:
+      columns:
+      - id
+      - list_id
+      - tag_id
+      filter: {}
+      check: null
 - table:
     schema: public
     name: menu_item

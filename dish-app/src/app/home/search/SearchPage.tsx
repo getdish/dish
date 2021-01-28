@@ -1,5 +1,13 @@
 import { series, sleep } from '@dish/async'
-import { RestaurantSearchItem, slugify } from '@dish/graph'
+import {
+  RestaurantSearchItem,
+  findOne,
+  listFindOne,
+  listInsert,
+  mutate,
+  slugify,
+} from '@dish/graph'
+import { assertPresent } from '@dish/helpers/src'
 import { ArrowUp, Edit2 } from '@dish/react-feather'
 import { HistoryItem } from '@dish/router'
 import { reaction, reaction2 } from '@dish/use-store'
@@ -28,6 +36,7 @@ import {
   Spacer,
   StackProps,
   Text,
+  Toast,
   Tooltip,
   VStack,
   combineRefs,
@@ -38,6 +47,8 @@ import {
 import { isWeb } from '../../../constants/constants'
 import { addTagsToCache, allTags } from '../../../helpers/allTags'
 import { getActiveTags } from '../../../helpers/getActiveTags'
+import { getColorsForName } from '../../../helpers/getColorsForName'
+import { getFullTags } from '../../../helpers/getFullTags'
 import { getFullTagsFromRoute } from '../../../helpers/getTagsFromRoute'
 import { getTitleForState } from '../../../helpers/getTitleForState'
 import { rgbString } from '../../../helpers/rgbString'
@@ -59,6 +70,7 @@ import { PageTitleTag } from '../../views/PageTitleTag'
 import { StackDrawer } from '../../views/StackDrawer'
 import { HomeStackViewProps } from '../HomeStackViewProps'
 import { HomeSuspense } from '../HomeSuspense'
+import { listColors } from '../list/listColors'
 import {
   ITEM_HEIGHT,
   RestaurantListItem,
@@ -69,14 +81,17 @@ import { SearchPageResultsInfoBox } from './SearchPageResultsInfoBox'
 import { SearchPageScoring } from './SearchPageScoring'
 import { searchPageStore, useSearchPageStore } from './SearchPageStore'
 import { searchResultsStore } from './searchResultsStore'
-import { useLocationFromRoute } from './useLocationFromRoute'
+import {
+  getLocationFromRoute,
+  useLocationFromRoute,
+} from './useLocationFromRoute'
 
 type Props = HomeStackViewProps<HomeStateItemSearch>
 export const SearchPagePropsContext = createContext<Props | null>(null)
 
 export default memo(function SearchPage(props: Props) {
   const state = useHomeStateById<HomeStateItemSearch>(props.item.id)
-  const { title } = getTitleForState(state, {
+  const { title, subTitle } = getTitleForState(state, {
     lowerCase: false,
   })
   return (
@@ -87,14 +102,57 @@ export default memo(function SearchPage(props: Props) {
         topLeftControls={
           <Tooltip contents={`Make your "${title.replace('the ', '')}" list`}>
             <Link
-              name="list"
               promptLogin
-              params={{
-                userSlug: userStore.user?.username ?? 'me',
-                slug: 'create',
-                state: getActiveTags(state)
-                  .map((x) => x.slug)
-                  .join(','),
+              onPress={async () => {
+                try {
+                  assertPresent(userStore.user?.id)
+                  assertPresent(userStore.user?.username)
+                  const name = `The best ${title}`
+                  const slug = slugify(name)
+                  const location = getLocationFromRoute(router.curPage as any)
+
+                  // find existing
+
+                  console.log('location', location)
+                  const [list] = await listInsert([
+                    {
+                      name,
+                      slug,
+                      description: subTitle,
+                      color: Math.floor(
+                        (listColors.length / listColors.length) * Math.random()
+                      ),
+                      user_id: userStore.user.id,
+                      location: null,
+                    },
+                  ])
+                  console.log('made a list', list)
+                  // now add tags to it
+                  const tags = await getFullTags(getActiveTags(state))
+                  console.log('now add tags', tags)
+                  await mutate((mutation) => {
+                    return mutation.insert_list_tag({
+                      objects: tags.map((tag) => {
+                        return {
+                          list_id: list.id,
+                          tag_id: tag.id,
+                        }
+                      }),
+                    })?.__typename
+                  })
+                  const listFinal = await listFindOne({ id: list.id })
+                  console.log('did insert those, go...', listFinal)
+                  // router.navigate({
+                  //   name: 'list',
+                  //   params: {
+                  //     slug,
+                  //     userSlug: userStore.user.username,
+                  //   },
+                  // })
+                } catch (err) {
+                  Toast.error(err.message)
+                  console.error(err)
+                }
               }}
             >
               <SmallCircleButton shadowed>
