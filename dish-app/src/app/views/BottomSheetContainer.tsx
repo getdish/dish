@@ -3,6 +3,7 @@ import { VStack, useTheme } from 'snackui'
 
 import { drawerBorderRadius } from '../../constants/constants'
 import AppAutocomplete from '../AppAutocomplete'
+import { DrawerPortalProvider } from '../Portal'
 
 // only renders on small views
 
@@ -21,6 +22,7 @@ export const BottomSheetContainer = (props: { children: any }) => {
       backgroundColor={theme.backgroundColor}
       position="relative"
     >
+      <DrawerPortalProvider />
       <AppAutocomplete />
       {props.children}
     </VStack>

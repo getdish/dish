@@ -1,12 +1,5 @@
 import { series, sleep } from '@dish/async'
-import {
-  RestaurantSearchItem,
-  findOne,
-  listFindOne,
-  listInsert,
-  mutate,
-  slugify,
-} from '@dish/graph'
+import { RestaurantSearchItem, listInsert, mutate, slugify } from '@dish/graph'
 import { assertPresent } from '@dish/helpers/src'
 import { ArrowUp, Edit2 } from '@dish/react-feather'
 import { HistoryItem } from '@dish/router'
@@ -47,7 +40,6 @@ import {
 import { isWeb } from '../../../constants/constants'
 import { addTagsToCache, allTags } from '../../../helpers/allTags'
 import { getActiveTags } from '../../../helpers/getActiveTags'
-import { getColorsForName } from '../../../helpers/getColorsForName'
 import { getFullTags } from '../../../helpers/getFullTags'
 import { getFullTagsFromRoute } from '../../../helpers/getTagsFromRoute'
 import { getTitleForState } from '../../../helpers/getTitleForState'
@@ -56,12 +48,12 @@ import { useQueryLoud } from '../../../helpers/useQueryLoud'
 import { router } from '../../../router'
 import { HomeStateItemSearch } from '../../../types/homeTypes'
 import { appMapStore, useSetAppMap } from '../../AppMapStore'
-import { AppPortalItem } from '../../AppPortal'
-import { useHomeStateById, useHomeStore } from '../../homeStore'
+import { useHomeStateById } from '../../homeStore'
 import { useAppDrawerWidth } from '../../hooks/useAppDrawerWidth'
 import { useCurrentLenseColor } from '../../hooks/useCurrentLenseColor'
 import { useLastValueWhen } from '../../hooks/useLastValueWhen'
 import { usePageLoadEffect } from '../../hooks/usePageLoadEffect'
+import { RootPortalItem } from '../../Portal'
 import { userStore } from '../../userStore'
 import { SmallCircleButton } from '../../views/CloseButton'
 import { ContentScrollView } from '../../views/ContentScrollView'
@@ -343,7 +335,7 @@ const SearchNavBarContainer = memo(({ isActive }: { isActive: boolean }) => {
     )
   }
 
-  return <AppPortalItem key={`${isActive}`}>{contents}</AppPortalItem>
+  return <RootPortalItem key={`${isActive}`}>{contents}</RootPortalItem>
 })
 
 // prevent warning

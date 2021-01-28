@@ -3,8 +3,6 @@ import mapboxgl from 'mapbox-gl'
 
 import { RegionWithVia } from '../types/homeTypes'
 
-export { RegionWithVia } from '../types/homeTypes'
-
 export type MapProps = {
   center: LngLat
   span: LngLat

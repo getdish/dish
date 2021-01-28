@@ -13,6 +13,7 @@ import {
 import { getLngLat, getMinLngLat } from '../helpers/getLngLat'
 import { queryRestaurant } from '../queries/queryRestaurant'
 import { router } from '../router'
+import { RegionWithVia } from '../types/homeTypes'
 import { AppMapControls } from './AppMapControls'
 import { appMapStore, useAppMapStore } from './AppMapStore'
 import { drawerStore } from './drawerStore'
@@ -21,7 +22,6 @@ import { homeStore } from './homeStore'
 import { useLastValueWhen } from './hooks/useLastValueWhen'
 import { useMapSize } from './hooks/useMapSize'
 import { MapView } from './Map'
-import { RegionWithVia } from './MapProps'
 
 const styles = {
   light: 'mapbox://styles/nwienert/ckddrrcg14e4y1ipj0l4kf1xy',

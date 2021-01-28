@@ -13,6 +13,7 @@ import { searchBarHeight } from '../../constants/constants'
 import AppAutocomplete from '../AppAutocomplete'
 import { useAppDrawerWidth } from '../hooks/useAppDrawerWidth'
 import { useLastValueWhen } from '../hooks/useLastValueWhen'
+import { DrawerPortalProvider } from '../Portal'
 
 export const HomeContainerLarge = (props) => {
   const media = useMedia()
@@ -58,7 +59,10 @@ export const HomeContainerLarge = (props) => {
           <AbsoluteVStack left={0} right={0} bottom={0} top={searchBarHeight}>
             <AppAutocomplete />
           </AbsoluteVStack>
+
           {props.children}
+
+          <DrawerPortalProvider />
         </VStack>
       </HStack>
     </VStack>
