@@ -45,17 +45,19 @@ export async function reviewFindAllForRestaurant(
 
       return r
     },
-    (r: review[]) => {
-      return r.map((review) => {
-        return {
-          ...selectFields(review, '*', 2),
-          restaurant: {
-            ...selectFields(review.restaurant),
-            tags: selectFields(review.restaurant.tags(), '*', 2),
-          },
-          sentiments: selectFields(review.sentiments(), '*', 2),
-        }
-      })
+    {
+      select: (r: review[]) => {
+        return r.map((review) => {
+          return {
+            ...selectFields(review, '*', 2),
+            restaurant: {
+              ...selectFields(review.restaurant),
+              tags: selectFields(review.restaurant.tags(), '*', 2),
+            },
+            sentiments: selectFields(review.sentiments(), '*', 2),
+          }
+        })
+      },
     }
   )
 }
@@ -74,17 +76,19 @@ export async function reviewFindAllForUser(user_id: uuid) {
         ],
       })
     },
-    (r: review[]) => {
-      return r.map((review) => {
-        return {
-          ...selectFields(review, '*', 2),
-          restaurant: {
-            ...selectFields(review.restaurant),
-            tags: selectFields(review.restaurant.tags(), '*', 2),
-          },
-          sentiments: selectFields(review.sentiments(), '*', 2),
-        }
-      })
+    {
+      select: (r: review[]) => {
+        return r.map((review) => {
+          return {
+            ...selectFields(review, '*', 2),
+            restaurant: {
+              ...selectFields(review.restaurant),
+              tags: selectFields(review.restaurant.tags(), '*', 2),
+            },
+            sentiments: selectFields(review.sentiments(), '*', 2),
+          }
+        })
+      },
     }
   )
 }
@@ -137,17 +141,19 @@ export async function userFavorites(user_id: string) {
         ],
       })
     },
-    (r: review[]) => {
-      return r.map((review) => {
-        return {
-          ...selectFields(review, '*', 2),
-          restaurant: {
-            ...selectFields(review.restaurant),
-            tags: selectFields(review.restaurant.tags(), '*', 2),
-          },
-          sentiments: selectFields(review.sentiments(), '*', 2),
-        }
-      })
+    {
+      select: (r: review[]) => {
+        return r.map((review) => {
+          return {
+            ...selectFields(review, '*', 2),
+            restaurant: {
+              ...selectFields(review.restaurant),
+              tags: selectFields(review.restaurant.tags(), '*', 2),
+            },
+            sentiments: selectFields(review.sentiments(), '*', 2),
+          }
+        })
+      },
     }
   )
 }

@@ -10,7 +10,13 @@ WITH region AS (
       (SELECT nhood AS name FROM zcta5 WHERE slug = ?0),
       (SELECT hrrcity AS name FROM hrr WHERE slug = ?0)
     )
-  ) AS name
+  ) AS name,
+  (
+    SELECT coalesce(
+      (SELECT slug FROM zcta5 WHERE slug = ?0),
+      (SELECT slug FROM hrr WHERE slug = ?0)
+    )
+  ) AS slug
 )
 
 SELECT json_build_object(
@@ -35,4 +41,3 @@ SELECT json_build_object(
     SELECT slug FROM region
   )
 )
-

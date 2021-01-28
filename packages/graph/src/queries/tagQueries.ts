@@ -15,29 +15,31 @@ export const tagDelete = QueryHelpers.delete
 export const tagRefresh = QueryHelpers.refresh
 
 export const tagFindOneWithCategories = async (tag: Partial<Tag>) => {
-  return await tagFindOne(tag, (tagV: tag) => {
-    if (Array.isArray(tagV)) {
-      return tagV.map((tagV) => {
-        return {
-          ...selectFields(tagV),
-          categories: tagV.categories().map((catV) => {
-            return {
-              ...selectFields(catV, '*', 2),
-            }
-          }),
-          alternates: tagV.alternates(),
-        }
-      })
-    }
-    return {
-      ...selectFields(tagV, '*', 2),
-      categories: tagV.categories().map((catV) => {
-        return {
-          ...selectFields(catV, '*', 2),
-        }
-      }),
-      alternates: tagV.alternates(),
-    }
+  return await tagFindOne(tag, {
+    select: (tagV: tag) => {
+      if (Array.isArray(tagV)) {
+        return tagV.map((tagV) => {
+          return {
+            ...selectFields(tagV),
+            categories: tagV.categories().map((catV) => {
+              return {
+                ...selectFields(catV, '*', 2),
+              }
+            }),
+            alternates: tagV.alternates(),
+          }
+        })
+      }
+      return {
+        ...selectFields(tagV, '*', 2),
+        categories: tagV.categories().map((catV) => {
+          return {
+            ...selectFields(catV, '*', 2),
+          }
+        }),
+        alternates: tagV.alternates(),
+      }
+    },
   })
 }
 
@@ -54,13 +56,15 @@ export async function tagGetAllChildren(
         },
       })
     },
-    (vTags: tag[]) => {
-      return vTags.map((v_t) => {
-        return {
-          ...selectFields(v_t, '*', 2),
-          alternates: v_t.alternates(),
-        }
-      })
+    {
+      select: (vTags: tag[]) => {
+        return vTags.map((v_t) => {
+          return {
+            ...selectFields(v_t, '*', 2),
+            alternates: v_t.alternates(),
+          }
+        })
+      },
     }
   )
 }
@@ -80,13 +84,15 @@ export async function tagFindCountryMatches(
         },
       })
     },
-    (vTags: tag[]) => {
-      return vTags.map((v_t: tag) => {
-        return {
-          ...selectFields(v_t, '*', 2),
-          alternates: v_t.alternates(),
-        }
-      })
+    {
+      select: (vTags: tag[]) => {
+        return vTags.map((v_t: tag) => {
+          return {
+            ...selectFields(v_t, '*', 2),
+            alternates: v_t.alternates(),
+          }
+        })
+      },
     }
   )
 }
@@ -104,13 +110,15 @@ export async function tagGetAllGenerics(): Promise<Tag[]> {
         },
       })
     },
-    (vTags: tag[]) => {
-      return vTags.map((v_t) => {
-        return {
-          ...selectFields(v_t, '*', 2),
-          alternates: v_t.alternates(),
-        }
-      })
+    {
+      select: (vTags: tag[]) => {
+        return vTags.map((v_t) => {
+          return {
+            ...selectFields(v_t, '*', 2),
+            alternates: v_t.alternates(),
+          }
+        })
+      },
     }
   )
 }
@@ -138,14 +146,16 @@ export async function tagGetAllCuisinesWithDishes(
 
       return r
     },
-    (t: tag[]) => {
-      return t.map((v) => {
-        return {
-          ...selectFields(v, '*', 2),
-          parent: selectFields(v.parent),
-          alternates: v.alternates(),
-        }
-      })
+    {
+      select: (t: tag[]) => {
+        return t.map((v) => {
+          return {
+            ...selectFields(v, '*', 2),
+            parent: selectFields(v.parent),
+            alternates: v.alternates(),
+          }
+        })
+      },
     }
   )
 }
