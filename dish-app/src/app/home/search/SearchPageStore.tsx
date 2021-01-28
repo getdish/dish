@@ -171,7 +171,7 @@ export const useSearchPageStore = () => useStoreInstance(searchPageStore)
 const roundLngLat = (val: LngLat): LngLat => {
   // 4 decimal precision is good to a few meters
   return {
-    lng: Math.round(val.lng * 10000) / 10000,
-    lat: Math.round(val.lat * 10000) / 10000,
+    lng: Math.round(val.lng * 100000) / 100000,
+    lat: Math.round(val.lat * 100000) / 100000,
   }
 }

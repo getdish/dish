@@ -2,12 +2,13 @@ import { query, resolved } from '@dish/graph'
 import { isPresent } from '@dish/helpers'
 import { differenceBy } from 'lodash'
 
-import { FullTag, TagWithNameAndType } from '../types/tagTypes'
+import { FullTag, NavigableTag, TagWithNameAndType } from '../types/tagTypes'
 import { allTags } from './allTags'
 import { getFullTag } from './getFullTag'
 
 type TagPartial =
   | TagWithNameAndType
+  | NavigableTag
   | { name?: string; type?: string; slug: string }
 
 export async function getFullTags(tags: TagPartial[]): Promise<FullTag[]> {

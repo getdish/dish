@@ -365,6 +365,7 @@ export interface list_bool_exp {
   public?: Maybe<Boolean_comparison_exp>
   restaurants?: Maybe<list_restaurant_bool_exp>
   slug?: Maybe<String_comparison_exp>
+  tags?: Maybe<list_tag_bool_exp>
   updated_at?: Maybe<timestamptz_comparison_exp>
   user?: Maybe<user_bool_exp>
   user_id?: Maybe<uuid_comparison_exp>
@@ -394,6 +395,7 @@ export interface list_insert_input {
   public?: Maybe<Scalars['Boolean']>
   restaurants?: Maybe<list_restaurant_arr_rel_insert_input>
   slug?: Maybe<Scalars['String']>
+  tags?: Maybe<list_tag_arr_rel_insert_input>
   updated_at?: Maybe<Scalars['timestamptz']>
   user?: Maybe<user_obj_rel_insert_input>
   user_id?: Maybe<Scalars['uuid']>
@@ -447,6 +449,7 @@ export interface list_order_by {
   public?: Maybe<order_by>
   restaurants_aggregate?: Maybe<list_restaurant_aggregate_order_by>
   slug?: Maybe<order_by>
+  tags_aggregate?: Maybe<list_tag_aggregate_order_by>
   updated_at?: Maybe<order_by>
   user?: Maybe<user_order_by>
   user_id?: Maybe<order_by>
@@ -919,6 +922,120 @@ export interface list_stddev_samp_order_by {
 /** order by sum() on columns of table "list" */
 export interface list_sum_order_by {
   color?: Maybe<order_by>
+}
+
+/** order by aggregate values of table "list_tag" */
+export interface list_tag_aggregate_order_by {
+  count?: Maybe<order_by>
+  max?: Maybe<list_tag_max_order_by>
+  min?: Maybe<list_tag_min_order_by>
+}
+
+/** input type for inserting array relation for remote table "list_tag" */
+export interface list_tag_arr_rel_insert_input {
+  data: Array<list_tag_insert_input>
+  on_conflict?: Maybe<list_tag_on_conflict>
+}
+
+/** Boolean expression to filter rows from the table "list_tag". All fields are combined with a logical 'AND'. */
+export interface list_tag_bool_exp {
+  _and?: Maybe<Array<Maybe<list_tag_bool_exp>>>
+  _not?: Maybe<list_tag_bool_exp>
+  _or?: Maybe<Array<Maybe<list_tag_bool_exp>>>
+  created_at?: Maybe<timestamptz_comparison_exp>
+  id?: Maybe<uuid_comparison_exp>
+  list_id?: Maybe<uuid_comparison_exp>
+  tag_id?: Maybe<uuid_comparison_exp>
+}
+
+/** unique or primary key constraints on table "list_tag" */
+export enum list_tag_constraint {
+  /** unique or primary key constraint */
+  list_tag_list_id_tag_id_id_key = 'list_tag_list_id_tag_id_id_key',
+  /** unique or primary key constraint */
+  list_tag_pkey = 'list_tag_pkey',
+}
+
+/** input type for inserting data into table "list_tag" */
+export interface list_tag_insert_input {
+  created_at?: Maybe<Scalars['timestamptz']>
+  id?: Maybe<Scalars['uuid']>
+  list_id?: Maybe<Scalars['uuid']>
+  tag_id?: Maybe<Scalars['uuid']>
+}
+
+/** order by max() on columns of table "list_tag" */
+export interface list_tag_max_order_by {
+  created_at?: Maybe<order_by>
+  id?: Maybe<order_by>
+  list_id?: Maybe<order_by>
+  tag_id?: Maybe<order_by>
+}
+
+/** order by min() on columns of table "list_tag" */
+export interface list_tag_min_order_by {
+  created_at?: Maybe<order_by>
+  id?: Maybe<order_by>
+  list_id?: Maybe<order_by>
+  tag_id?: Maybe<order_by>
+}
+
+/** input type for inserting object relation for remote table "list_tag" */
+export interface list_tag_obj_rel_insert_input {
+  data: list_tag_insert_input
+  on_conflict?: Maybe<list_tag_on_conflict>
+}
+
+/** on conflict condition type for table "list_tag" */
+export interface list_tag_on_conflict {
+  constraint: list_tag_constraint
+  update_columns: Array<list_tag_update_column>
+  where?: Maybe<list_tag_bool_exp>
+}
+
+/** ordering options when selecting data from "list_tag" */
+export interface list_tag_order_by {
+  created_at?: Maybe<order_by>
+  id?: Maybe<order_by>
+  list_id?: Maybe<order_by>
+  tag_id?: Maybe<order_by>
+}
+
+/** primary key columns input for table: "list_tag" */
+export interface list_tag_pk_columns_input {
+  id: Scalars['uuid']
+}
+
+/** select columns of table "list_tag" */
+export enum list_tag_select_column {
+  /** column name */
+  created_at = 'created_at',
+  /** column name */
+  id = 'id',
+  /** column name */
+  list_id = 'list_id',
+  /** column name */
+  tag_id = 'tag_id',
+}
+
+/** input type for updating data in table "list_tag" */
+export interface list_tag_set_input {
+  created_at?: Maybe<Scalars['timestamptz']>
+  id?: Maybe<Scalars['uuid']>
+  list_id?: Maybe<Scalars['uuid']>
+  tag_id?: Maybe<Scalars['uuid']>
+}
+
+/** update columns of table "list_tag" */
+export enum list_tag_update_column {
+  /** column name */
+  created_at = 'created_at',
+  /** column name */
+  id = 'id',
+  /** column name */
+  list_id = 'list_id',
+  /** column name */
+  tag_id = 'tag_id',
 }
 
 /** update columns of table "list" */
@@ -4434,6 +4551,9 @@ export const scalarsEnumsHash: ScalarsEnumsHash = {
   list_restaurant_tag_update_column: true,
   list_restaurant_update_column: true,
   list_select_column: true,
+  list_tag_constraint: true,
+  list_tag_select_column: true,
+  list_tag_update_column: true,
   list_update_column: true,
   menu_item_constraint: true,
   menu_item_select_column: true,
@@ -4576,6 +4696,27 @@ export const generatedSchema = {
       __type: 'list_restaurant_tag',
       __args: { id: 'uuid!' },
     },
+    list_tag: {
+      __type: '[list_tag!]!',
+      __args: {
+        distinct_on: '[list_tag_select_column!]',
+        limit: 'Int',
+        offset: 'Int',
+        order_by: '[list_tag_order_by!]',
+        where: 'list_tag_bool_exp',
+      },
+    },
+    list_tag_aggregate: {
+      __type: 'list_tag_aggregate!',
+      __args: {
+        distinct_on: '[list_tag_select_column!]',
+        limit: 'Int',
+        offset: 'Int',
+        order_by: '[list_tag_order_by!]',
+        where: 'list_tag_bool_exp',
+      },
+    },
+    list_tag_by_pk: { __type: 'list_tag', __args: { id: 'uuid!' } },
     menu_item: {
       __type: '[menu_item!]!',
       __args: {
@@ -4908,6 +5049,11 @@ export const generatedSchema = {
       __type: 'list_restaurant_tag',
       __args: { id: 'uuid!' },
     },
+    delete_list_tag: {
+      __type: 'list_tag_mutation_response',
+      __args: { where: 'list_tag_bool_exp!' },
+    },
+    delete_list_tag_by_pk: { __type: 'list_tag', __args: { id: 'uuid!' } },
     delete_menu_item: {
       __type: 'menu_item_mutation_response',
       __args: { where: 'menu_item_bool_exp!' },
@@ -5041,6 +5187,20 @@ export const generatedSchema = {
       __args: {
         object: 'list_restaurant_tag_insert_input!',
         on_conflict: 'list_restaurant_tag_on_conflict',
+      },
+    },
+    insert_list_tag: {
+      __type: 'list_tag_mutation_response',
+      __args: {
+        objects: '[list_tag_insert_input!]!',
+        on_conflict: 'list_tag_on_conflict',
+      },
+    },
+    insert_list_tag_one: {
+      __type: 'list_tag',
+      __args: {
+        object: 'list_tag_insert_input!',
+        on_conflict: 'list_tag_on_conflict',
       },
     },
     insert_menu_item: {
@@ -5295,6 +5455,17 @@ export const generatedSchema = {
         _inc: 'list_restaurant_tag_inc_input',
         _set: 'list_restaurant_tag_set_input',
         pk_columns: 'list_restaurant_tag_pk_columns_input!',
+      },
+    },
+    update_list_tag: {
+      __type: 'list_tag_mutation_response',
+      __args: { _set: 'list_tag_set_input', where: 'list_tag_bool_exp!' },
+    },
+    update_list_tag_by_pk: {
+      __type: 'list_tag',
+      __args: {
+        _set: 'list_tag_set_input',
+        pk_columns: 'list_tag_pk_columns_input!',
       },
     },
     update_menu_item: {
@@ -5650,6 +5821,27 @@ export const generatedSchema = {
       __type: 'list_restaurant_tag',
       __args: { id: 'uuid!' },
     },
+    list_tag: {
+      __type: '[list_tag!]!',
+      __args: {
+        distinct_on: '[list_tag_select_column!]',
+        limit: 'Int',
+        offset: 'Int',
+        order_by: '[list_tag_order_by!]',
+        where: 'list_tag_bool_exp',
+      },
+    },
+    list_tag_aggregate: {
+      __type: 'list_tag_aggregate!',
+      __args: {
+        distinct_on: '[list_tag_select_column!]',
+        limit: 'Int',
+        offset: 'Int',
+        order_by: '[list_tag_order_by!]',
+        where: 'list_tag_bool_exp',
+      },
+    },
+    list_tag_by_pk: { __type: 'list_tag', __args: { id: 'uuid!' } },
     menu_item: {
       __type: '[menu_item!]!',
       __args: {
@@ -6235,6 +6427,26 @@ export const generatedSchema = {
       },
     },
     slug: { __type: 'String!' },
+    tags: {
+      __type: '[list_tag!]!',
+      __args: {
+        distinct_on: '[list_tag_select_column!]',
+        limit: 'Int',
+        offset: 'Int',
+        order_by: '[list_tag_order_by!]',
+        where: 'list_tag_bool_exp',
+      },
+    },
+    tags_aggregate: {
+      __type: 'list_tag_aggregate!',
+      __args: {
+        distinct_on: '[list_tag_select_column!]',
+        limit: 'Int',
+        offset: 'Int',
+        order_by: '[list_tag_order_by!]',
+        where: 'list_tag_bool_exp',
+      },
+    },
     updated_at: { __type: 'timestamptz!' },
     user: { __type: 'user' },
     user_id: { __type: 'uuid!' },
@@ -6296,6 +6508,7 @@ export const generatedSchema = {
     public: { __type: 'Boolean_comparison_exp' },
     restaurants: { __type: 'list_restaurant_bool_exp' },
     slug: { __type: 'String_comparison_exp' },
+    tags: { __type: 'list_tag_bool_exp' },
     updated_at: { __type: 'timestamptz_comparison_exp' },
     user: { __type: 'user_bool_exp' },
     user_id: { __type: 'uuid_comparison_exp' },
@@ -6311,6 +6524,7 @@ export const generatedSchema = {
     public: { __type: 'Boolean' },
     restaurants: { __type: 'list_restaurant_arr_rel_insert_input' },
     slug: { __type: 'String' },
+    tags: { __type: 'list_tag_arr_rel_insert_input' },
     updated_at: { __type: 'timestamptz' },
     user: { __type: 'user_obj_rel_insert_input' },
     user_id: { __type: 'uuid' },
@@ -6381,6 +6595,7 @@ export const generatedSchema = {
     public: { __type: 'order_by' },
     restaurants_aggregate: { __type: 'list_restaurant_aggregate_order_by' },
     slug: { __type: 'order_by' },
+    tags_aggregate: { __type: 'list_tag_aggregate_order_by' },
     updated_at: { __type: 'order_by' },
     user: { __type: 'user_order_by' },
     user_id: { __type: 'order_by' },
@@ -6842,6 +7057,104 @@ export const generatedSchema = {
     color: { __type: 'Int' },
   },
   list_sum_order_by: { color: { __type: 'order_by' } },
+  list_tag: {
+    __typename: { __type: 'String!' },
+    created_at: { __type: 'timestamptz!' },
+    id: { __type: 'uuid!' },
+    list_id: { __type: 'uuid!' },
+    tag_id: { __type: 'uuid!' },
+  },
+  list_tag_aggregate: {
+    __typename: { __type: 'String!' },
+    aggregate: { __type: 'list_tag_aggregate_fields' },
+    nodes: { __type: '[list_tag!]!' },
+  },
+  list_tag_aggregate_fields: {
+    __typename: { __type: 'String!' },
+    count: {
+      __type: 'Int',
+      __args: { columns: '[list_tag_select_column!]', distinct: 'Boolean' },
+    },
+    max: { __type: 'list_tag_max_fields' },
+    min: { __type: 'list_tag_min_fields' },
+  },
+  list_tag_aggregate_order_by: {
+    count: { __type: 'order_by' },
+    max: { __type: 'list_tag_max_order_by' },
+    min: { __type: 'list_tag_min_order_by' },
+  },
+  list_tag_arr_rel_insert_input: {
+    data: { __type: '[list_tag_insert_input!]!' },
+    on_conflict: { __type: 'list_tag_on_conflict' },
+  },
+  list_tag_bool_exp: {
+    _and: { __type: '[list_tag_bool_exp]' },
+    _not: { __type: 'list_tag_bool_exp' },
+    _or: { __type: '[list_tag_bool_exp]' },
+    created_at: { __type: 'timestamptz_comparison_exp' },
+    id: { __type: 'uuid_comparison_exp' },
+    list_id: { __type: 'uuid_comparison_exp' },
+    tag_id: { __type: 'uuid_comparison_exp' },
+  },
+  list_tag_insert_input: {
+    created_at: { __type: 'timestamptz' },
+    id: { __type: 'uuid' },
+    list_id: { __type: 'uuid' },
+    tag_id: { __type: 'uuid' },
+  },
+  list_tag_max_fields: {
+    __typename: { __type: 'String!' },
+    created_at: { __type: 'timestamptz' },
+    id: { __type: 'uuid' },
+    list_id: { __type: 'uuid' },
+    tag_id: { __type: 'uuid' },
+  },
+  list_tag_max_order_by: {
+    created_at: { __type: 'order_by' },
+    id: { __type: 'order_by' },
+    list_id: { __type: 'order_by' },
+    tag_id: { __type: 'order_by' },
+  },
+  list_tag_min_fields: {
+    __typename: { __type: 'String!' },
+    created_at: { __type: 'timestamptz' },
+    id: { __type: 'uuid' },
+    list_id: { __type: 'uuid' },
+    tag_id: { __type: 'uuid' },
+  },
+  list_tag_min_order_by: {
+    created_at: { __type: 'order_by' },
+    id: { __type: 'order_by' },
+    list_id: { __type: 'order_by' },
+    tag_id: { __type: 'order_by' },
+  },
+  list_tag_mutation_response: {
+    __typename: { __type: 'String!' },
+    affected_rows: { __type: 'Int!' },
+    returning: { __type: '[list_tag!]!' },
+  },
+  list_tag_obj_rel_insert_input: {
+    data: { __type: 'list_tag_insert_input!' },
+    on_conflict: { __type: 'list_tag_on_conflict' },
+  },
+  list_tag_on_conflict: {
+    constraint: { __type: 'list_tag_constraint!' },
+    update_columns: { __type: '[list_tag_update_column!]!' },
+    where: { __type: 'list_tag_bool_exp' },
+  },
+  list_tag_order_by: {
+    created_at: { __type: 'order_by' },
+    id: { __type: 'order_by' },
+    list_id: { __type: 'order_by' },
+    tag_id: { __type: 'order_by' },
+  },
+  list_tag_pk_columns_input: { id: { __type: 'uuid!' } },
+  list_tag_set_input: {
+    created_at: { __type: 'timestamptz' },
+    id: { __type: 'uuid' },
+    list_id: { __type: 'uuid' },
+    tag_id: { __type: 'uuid' },
+  },
   list_var_pop_fields: {
     __typename: { __type: 'String!' },
     color: { __type: 'Float' },
@@ -10420,6 +10733,21 @@ export interface Query {
   list_restaurant_tag_by_pk: (args: {
     id: ScalarsEnums['uuid']
   }) => Maybe<list_restaurant_tag>
+  list_tag: (args?: {
+    distinct_on?: Maybe<Array<ScalarsEnums['list_tag_select_column']>>
+    limit?: Maybe<ScalarsEnums['Int']>
+    offset?: Maybe<ScalarsEnums['Int']>
+    order_by?: Maybe<Array<list_tag_order_by>>
+    where?: Maybe<list_tag_bool_exp>
+  }) => Array<list_tag>
+  list_tag_aggregate: (args?: {
+    distinct_on?: Maybe<Array<ScalarsEnums['list_tag_select_column']>>
+    limit?: Maybe<ScalarsEnums['Int']>
+    offset?: Maybe<ScalarsEnums['Int']>
+    order_by?: Maybe<Array<list_tag_order_by>>
+    where?: Maybe<list_tag_bool_exp>
+  }) => list_tag_aggregate
+  list_tag_by_pk: (args: { id: ScalarsEnums['uuid'] }) => Maybe<list_tag>
   menu_item: (args?: {
     distinct_on?: Maybe<Array<ScalarsEnums['menu_item_select_column']>>
     limit?: Maybe<ScalarsEnums['Int']>
@@ -10667,6 +10995,10 @@ export interface Mutation {
   delete_list_restaurant_tag_by_pk: (args: {
     id: ScalarsEnums['uuid']
   }) => Maybe<list_restaurant_tag>
+  delete_list_tag: (args: {
+    where: list_tag_bool_exp
+  }) => Maybe<list_tag_mutation_response>
+  delete_list_tag_by_pk: (args: { id: ScalarsEnums['uuid'] }) => Maybe<list_tag>
   delete_menu_item: (args: {
     where: menu_item_bool_exp
   }) => Maybe<menu_item_mutation_response>
@@ -10771,6 +11103,14 @@ export interface Mutation {
     object: list_restaurant_tag_insert_input
     on_conflict?: Maybe<list_restaurant_tag_on_conflict>
   }) => Maybe<list_restaurant_tag>
+  insert_list_tag: (args: {
+    objects: Array<list_tag_insert_input>
+    on_conflict?: Maybe<list_tag_on_conflict>
+  }) => Maybe<list_tag_mutation_response>
+  insert_list_tag_one: (args: {
+    object: list_tag_insert_input
+    on_conflict?: Maybe<list_tag_on_conflict>
+  }) => Maybe<list_tag>
   insert_menu_item: (args: {
     objects: Array<menu_item_insert_input>
     on_conflict?: Maybe<menu_item_on_conflict>
@@ -10923,6 +11263,14 @@ export interface Mutation {
     _set?: Maybe<list_restaurant_tag_set_input>
     pk_columns: list_restaurant_tag_pk_columns_input
   }) => Maybe<list_restaurant_tag>
+  update_list_tag: (args: {
+    _set?: Maybe<list_tag_set_input>
+    where: list_tag_bool_exp
+  }) => Maybe<list_tag_mutation_response>
+  update_list_tag_by_pk: (args: {
+    _set?: Maybe<list_tag_set_input>
+    pk_columns: list_tag_pk_columns_input
+  }) => Maybe<list_tag>
   update_menu_item: (args: {
     _inc?: Maybe<menu_item_inc_input>
     _set?: Maybe<menu_item_set_input>
@@ -11178,6 +11526,21 @@ export interface Subscription {
   list_restaurant_tag_by_pk: (args: {
     id: ScalarsEnums['uuid']
   }) => Maybe<list_restaurant_tag>
+  list_tag: (args?: {
+    distinct_on?: Maybe<Array<ScalarsEnums['list_tag_select_column']>>
+    limit?: Maybe<ScalarsEnums['Int']>
+    offset?: Maybe<ScalarsEnums['Int']>
+    order_by?: Maybe<Array<list_tag_order_by>>
+    where?: Maybe<list_tag_bool_exp>
+  }) => Array<list_tag>
+  list_tag_aggregate: (args?: {
+    distinct_on?: Maybe<Array<ScalarsEnums['list_tag_select_column']>>
+    limit?: Maybe<ScalarsEnums['Int']>
+    offset?: Maybe<ScalarsEnums['Int']>
+    order_by?: Maybe<Array<list_tag_order_by>>
+    where?: Maybe<list_tag_bool_exp>
+  }) => list_tag_aggregate
+  list_tag_by_pk: (args: { id: ScalarsEnums['uuid'] }) => Maybe<list_tag>
   menu_item: (args?: {
     distinct_on?: Maybe<Array<ScalarsEnums['menu_item_select_column']>>
     limit?: Maybe<ScalarsEnums['Int']>
@@ -11525,6 +11888,20 @@ export interface list {
     where?: Maybe<list_restaurant_bool_exp>
   }) => list_restaurant_aggregate
   slug: ScalarsEnums['String']
+  tags: (args?: {
+    distinct_on?: Maybe<Array<ScalarsEnums['list_tag_select_column']>>
+    limit?: Maybe<ScalarsEnums['Int']>
+    offset?: Maybe<ScalarsEnums['Int']>
+    order_by?: Maybe<Array<list_tag_order_by>>
+    where?: Maybe<list_tag_bool_exp>
+  }) => Array<list_tag>
+  tags_aggregate: (args?: {
+    distinct_on?: Maybe<Array<ScalarsEnums['list_tag_select_column']>>
+    limit?: Maybe<ScalarsEnums['Int']>
+    offset?: Maybe<ScalarsEnums['Int']>
+    order_by?: Maybe<Array<list_tag_order_by>>
+    where?: Maybe<list_tag_bool_exp>
+  }) => list_tag_aggregate
   updated_at: ScalarsEnums['timestamptz']
   user?: Maybe<user>
   user_id: ScalarsEnums['uuid']
@@ -11845,6 +12222,52 @@ export interface list_stddev_samp_fields {
 export interface list_sum_fields {
   __typename: 'list_sum_fields'
   color?: Maybe<ScalarsEnums['Int']>
+}
+
+export interface list_tag {
+  __typename: 'list_tag'
+  created_at: ScalarsEnums['timestamptz']
+  id: ScalarsEnums['uuid']
+  list_id: ScalarsEnums['uuid']
+  tag_id: ScalarsEnums['uuid']
+}
+
+export interface list_tag_aggregate {
+  __typename: 'list_tag_aggregate'
+  aggregate?: Maybe<list_tag_aggregate_fields>
+  nodes: Array<list_tag>
+}
+
+export interface list_tag_aggregate_fields {
+  __typename: 'list_tag_aggregate_fields'
+  count: (args?: {
+    columns?: Maybe<Array<ScalarsEnums['list_tag_select_column']>>
+    distinct?: Maybe<ScalarsEnums['Boolean']>
+  }) => Maybe<ScalarsEnums['Int']>
+  max?: Maybe<list_tag_max_fields>
+  min?: Maybe<list_tag_min_fields>
+}
+
+export interface list_tag_max_fields {
+  __typename: 'list_tag_max_fields'
+  created_at?: Maybe<ScalarsEnums['timestamptz']>
+  id?: Maybe<ScalarsEnums['uuid']>
+  list_id?: Maybe<ScalarsEnums['uuid']>
+  tag_id?: Maybe<ScalarsEnums['uuid']>
+}
+
+export interface list_tag_min_fields {
+  __typename: 'list_tag_min_fields'
+  created_at?: Maybe<ScalarsEnums['timestamptz']>
+  id?: Maybe<ScalarsEnums['uuid']>
+  list_id?: Maybe<ScalarsEnums['uuid']>
+  tag_id?: Maybe<ScalarsEnums['uuid']>
+}
+
+export interface list_tag_mutation_response {
+  __typename: 'list_tag_mutation_response'
+  affected_rows: ScalarsEnums['Int']
+  returning: Array<list_tag>
 }
 
 export interface list_var_pop_fields {
@@ -13557,6 +13980,9 @@ export interface ScalarsEnums extends Scalars {
   list_restaurant_tag_update_column: list_restaurant_tag_update_column
   list_restaurant_update_column: list_restaurant_update_column
   list_select_column: list_select_column
+  list_tag_constraint: list_tag_constraint
+  list_tag_select_column: list_tag_select_column
+  list_tag_update_column: list_tag_update_column
   list_update_column: list_update_column
   menu_item_constraint: menu_item_constraint
   menu_item_select_column: menu_item_select_column

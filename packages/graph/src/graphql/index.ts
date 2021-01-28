@@ -45,6 +45,9 @@ export const queryFetcher: QueryFetcher = async function (query, variables) {
   if (process.env.DEBUG || process.env.LOG_FETCH) {
     console.log(` [gqless] =>`, JSON.stringify(json, null, 2))
   }
+  if (json.errors) {
+    console.error(` [gqless] errors ${JSON.stringify(json.errors, null, 2)}`)
+  }
   return json
 }
 
