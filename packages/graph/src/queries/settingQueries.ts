@@ -16,17 +16,16 @@ export async function settingFindOne(
   if (!requested_setting.key) {
     return null
   }
-  let found_setting = await _settingFindOne(
-    requested_setting,
-    (v_s: setting[]) => {
+  let found_setting = await _settingFindOne(requested_setting, {
+    select: (v_s: setting[]) => {
       return v_s.map((v) => {
         return {
           ...selectFields(v, '*', 2),
           value: v.value(),
         }
       })
-    }
-  )
+    },
+  })
   if (!found_setting || !found_setting.key) {
     found_setting = await initKey(requested_setting.key)
   }

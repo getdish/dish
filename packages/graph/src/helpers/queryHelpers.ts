@@ -20,7 +20,7 @@ import {
   user_constraint,
 } from '../graphql'
 import {
-  MutationOpts,
+  SelectionOptions,
   resolvedMutation,
   resolvedMutationWithFields,
   resolvedWithFields,
@@ -65,13 +65,13 @@ export function createQueryHelpersFor<A extends ModelType>(
   defaultUpsertConstraint?: string
 ) {
   return {
-    async insert(items: Partial<A>[], opts?: MutationOpts) {
+    async insert(items: Partial<A>[], opts?: SelectionOptions) {
       return await insert<A>(modelName, items, opts)
     },
     async upsert(
       items: Partial<A>[],
       constraint?: string,
-      opts?: MutationOpts
+      opts?: SelectionOptions
     ) {
       return await upsert<A>(
         modelName,
@@ -80,15 +80,15 @@ export function createQueryHelpersFor<A extends ModelType>(
         opts
       )
     },
-    async update(a: WithID<Partial<A>>, opts?: MutationOpts) {
+    async update(a: WithID<Partial<A>>, opts?: SelectionOptions) {
       //@ts-expect-error
       return await update<WithID<A>>(modelName, a, opts)
     },
-    async findOne(a: Partial<A>, fn?: (v: any) => unknown) {
-      return await findOne<WithID<A>>(modelName, a as any, fn)
+    async findOne(a: Partial<A>, opts?: SelectionOptions) {
+      return await findOne<WithID<A>>(modelName, a as any, opts)
     },
-    async findAll(a: Partial<A>, fn?: (v: any) => unknown) {
-      return await findAll<WithID<A>>(modelName, a as any, fn)
+    async findAll(a: Partial<A>, opts?: SelectionOptions) {
+      return await findAll<WithID<A>>(modelName, a as any, opts)
     },
     async refresh(a: WithID<A>) {
       const next = await findOne(modelName, { id: a.id })
@@ -104,28 +104,28 @@ export function createQueryHelpersFor<A extends ModelType>(
 export async function findOne<T extends ModelType>(
   table: ModelName,
   hash: Partial<T>,
-  fn?: (v: any) => unknown
+  opts?: SelectionOptions
 ): Promise<T | null> {
-  const [first] = await findAll(table, hash, fn)
+  const [first] = await findAll(table, hash, opts)
   return first ?? null
 }
 
 export async function findAll<T extends ModelType>(
   table: ModelName,
   hash: Partial<T>,
-  fn?: (v: any) => unknown
+  opts?: SelectionOptions
 ): Promise<T[]> {
   const results = await resolvedWithFields(() => {
     const args = objectToWhere(hash)
     return query[table](args)
-  }, fn)
+  }, opts)
   return results ?? []
 }
 
 export async function insert<T extends ModelType>(
   table: ModelName,
   insertObjects: Partial<T>[],
-  opts?: MutationOpts
+  opts?: SelectionOptions
 ): Promise<WithID<T>[]> {
   // @ts-ignore
   return await resolvedMutationWithFields(
@@ -143,7 +143,7 @@ export async function upsert<T extends ModelType>(
   table: ModelName,
   objectsIn: Partial<T>[],
   constraint?: string,
-  opts?: MutationOpts
+  opts?: SelectionOptions
 ): Promise<WithID<T>[]> {
   constraint = constraint ?? defaultConstraints[table]
   const objects = prepareData(table, objectsIn, '_insert_input')
@@ -171,7 +171,7 @@ export async function upsert<T extends ModelType>(
 export async function update<T extends WithID<ModelType>>(
   table: ModelName,
   objectIn: T,
-  opts: MutationOpts = {}
+  opts: SelectionOptions = {}
 ): Promise<WithID<T>> {
   const action = `update_${table}` as any
   const [object] = prepareData(table, [objectIn], '_set_input')

@@ -16,9 +16,12 @@ export const routes = {
     '/gallery/:restaurantSlug/:dishId?'
   ),
 
-  list: new Route<{ slug: string; userSlug: string; state?: 'edit' | string }>(
-    '/l/:userSlug/:slug/:state?'
-  ),
+  list: new Route<{
+    slug: string
+    userSlug: string
+    region: string
+    state?: 'edit' | string
+  }>('/l/:userSlug/:region/:slug/:state?'),
   login: new Route('/login'),
   register: new Route('/register'),
   forgotPassword: new Route('/forgotten-password'),

@@ -34,6 +34,7 @@ import { useQueryLoud } from '../../helpers/useQueryLoud'
 import { queryRestaurant } from '../../queries/queryRestaurant'
 import { HomeStateItemHome, RegionNormalized } from '../../types/homeTypes'
 import { useSetAppMap } from '../AppMapStore'
+import { homeStore } from '../homeStore'
 import { CardFrame } from '../views/CardFrame'
 import { SmallCircleButton } from '../views/CloseButton'
 import { CommentBubble } from '../views/CommentBubble'
@@ -209,7 +210,11 @@ const ListFeedCard = graphql((props: FeedItemList) => {
           <Link
             promptLogin
             name="list"
-            params={{ userSlug: 'me', slug: 'create' }}
+            params={{
+              userSlug: 'me',
+              slug: 'create',
+              region: homeStore.lastRegionSlug,
+            }}
           >
             <SmallCircleButton alignSelf="center">
               <Plus size={14} color="#fff" />
@@ -229,6 +234,7 @@ const ListFeedCard = graphql((props: FeedItemList) => {
                 hoverable={false}
                 slug={list.slug}
                 userSlug={list.user?.username ?? ''}
+                region={list.region ?? ''}
                 // onHover={() => {
                 //   appMapStore.setHoverResults()
                 // }}

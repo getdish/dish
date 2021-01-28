@@ -1,11 +1,12 @@
 import { selectFields } from '@dish/gqless'
 import { merge } from 'lodash'
 
-import { Mutation, Query, mutate, resolved } from '../graphql'
+import { resolved } from '../graphql'
 
-export type MutationOpts = {
+export type SelectionOptions = {
   select?: (v: any) => unknown
   keys?: '*' | string[]
+  depth?: number
   query?: any
 }
 
@@ -28,17 +29,13 @@ export async function resolvedMutation<T extends () => unknown>(
 
 export async function resolvedMutationWithFields<T>(
   resolver: () => T,
-  // (
-  //   mutation: Mutation,
-  //   opts: { setCache: Function; query: Query; assignSelections: Function }
-  // ) => T,
-  { keys, select }: MutationOpts = {}
+  { keys, select, depth }: SelectionOptions = {}
 ): Promise<T> {
   // @ts-expect-error
   return await resolvedMutation(() => {
     const res = resolver()
     const returning = (res as any).returning
-    const obj = selectFields(returning, keys as any) as any
+    const obj = selectFields(returning, keys, depth)
     if (select) {
       merge(obj, select(returning))
     }
@@ -50,13 +47,13 @@ export async function resolvedMutationWithFields<T>(
 // if you infer the return it destroys performance... :(
 export async function resolvedWithFields<T extends () => unknown>(
   resolver: T,
-  fn?: (v: any) => unknown
+  { keys, select, depth }: SelectionOptions = {}
 ): Promise<any> {
   const next = await resolvedWithoutCache(() => {
     const res = resolver()
-    const obj = selectFields(res as object, '*', 2)
-    if (fn) {
-      merge(obj, fn(res))
+    const obj = selectFields(res as object, keys ?? '*', depth ?? 2)
+    if (select) {
+      merge(obj, select(res))
     }
     return obj
   })

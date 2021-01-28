@@ -124,12 +124,14 @@ async function findNotUploadedRestaurantPhotos(
 
       return d
     },
-    (v: photo_xref[]) => {
-      return v.map((p) => {
-        return {
-          ...selectFields(p, '*', 2),
-        }
-      })
+    {
+      select: (v: photo_xref[]) => {
+        return v.map((p) => {
+          return {
+            ...selectFields(p, '*', 2),
+          }
+        })
+      },
     }
   )
   return photos
@@ -167,12 +169,14 @@ export async function findNotUploadedTagPhotos(
         },
         distinct_on: [photo_xref_select_column.photo_id],
       }),
-    (v: photo_xref[]) => {
-      return v.map((p) => {
-        return {
-          ...selectFields(p, '*', 2),
-        }
-      })
+    {
+      select: (v: photo_xref[]) => {
+        return v.map((p) => {
+          return {
+            ...selectFields(p, '*', 2),
+          }
+        })
+      },
     }
   )
   return photos
@@ -196,12 +200,14 @@ async function unassessedPhotosForRestaurant(
         },
         distinct_on: [photo_xref_select_column.photo_id],
       }),
-    (v: photo_xref[]) => {
-      return v.map((p) => {
-        return {
-          ...selectFields(p, '*', 2),
-        }
-      })
+    {
+      select: (v: photo_xref[]) => {
+        return v.map((p) => {
+          return {
+            ...selectFields(p, '*', 2),
+          }
+        })
+      },
     }
   )
   return photos
@@ -223,12 +229,14 @@ async function unassessedPhotosForTag(tag_id: uuid): Promise<PhotoXref[]> {
         },
         distinct_on: [photo_xref_select_column.photo_id],
       }),
-    (v: photo_xref[]) => {
-      return v.map((p) => {
-        return {
-          ...selectFields(p, '*', 2),
-        }
-      })
+    {
+      select: (v: photo_xref[]) => {
+        return v.map((p) => {
+          return {
+            ...selectFields(p, '*', 2),
+          }
+        })
+      },
     }
   )
   return photos
@@ -255,14 +263,15 @@ async function unassessedPhotosForRestaurantTag(
         },
         distinct_on: [photo_xref_select_column.photo_id],
       }),
-    (v: photo_xref[]) => {
-      return v.map((p) => {
-        const d = {
-          ...selectFields(p, '*', 2),
-        }
-
-        return d
-      })
+    {
+      select: (v: photo_xref[]) => {
+        return v.map((p) => {
+          const d = {
+            ...selectFields(p, '*', 2),
+          }
+          return d
+        })
+      },
     }
   )
 
@@ -318,12 +327,14 @@ export async function bestPhotosForTag(tag_id: uuid): Promise<PhotoXref[]> {
         ],
         limit: 10,
       }),
-    (v: photo_xref[]) => {
-      return v.map((p) => {
-        return {
-          ...selectFields(p, '*', 2),
-        }
-      })
+    {
+      select: (v: photo_xref[]) => {
+        return v.map((p) => {
+          return {
+            ...selectFields(p, '*', 2),
+          }
+        })
+      },
     }
   )
   return uniqBy(photos, (p) => p.photo_id)
@@ -352,12 +363,14 @@ export async function bestPhotosForRestaurantTags(
         ],
         limit: 10,
       }),
-    (v: photo_xref[]) => {
-      return v.map((p) => {
-        return {
-          ...selectFields(p, '*', 2),
-        }
-      })
+    {
+      select: (v: photo_xref[]) => {
+        return v.map((p) => {
+          return {
+            ...selectFields(p, '*', 2),
+          }
+        })
+      },
     }
   )
   return uniqBy(photos, (p) => p.photo_id)
@@ -567,12 +580,14 @@ export async function findHeroImage(restaurant_id: uuid) {
       restaurant_id: restaurant_id,
       type: 'hero',
     },
-    (v: photo_xref[]) => {
-      return v.map((p) => {
-        return {
-          ...selectFields(p, '*', 2),
-        }
-      })
+    {
+      select: (v: photo_xref[]) => {
+        return v.map((p) => {
+          return {
+            ...selectFields(p, '*', 2),
+          }
+        })
+      },
     }
   )
 }

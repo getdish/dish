@@ -40,6 +40,7 @@ import { queryList } from '../../../queries/queryList'
 import { router } from '../../../router'
 import { HomeStateItemList } from '../../../types/homeTypes'
 import { useSetAppMap } from '../../AppMapStore'
+import { homeStore } from '../../homeStore'
 import { useStateSynced } from '../../hooks/useStateSynced'
 import { useUserStore, userStore } from '../../userStore'
 import { BottomFloatingArea } from '../../views/BottomFloatingArea'
@@ -79,6 +80,7 @@ export default function ListPage(props: Props) {
           {
             name: randomName,
             slug: slugify(randomName),
+            region: homeStore.lastRegionSlug,
             user_id: userStore.user?.id ?? 'anon',
           },
         ])
@@ -94,6 +96,7 @@ export default function ListPage(props: Props) {
           replace: true,
           params: {
             userSlug: slugify(username),
+            region: list.region,
             slug: list.slug,
             state: 'edit',
           },
@@ -436,6 +439,10 @@ const ListPageContent = graphql((props: Props) => {
                   ) : (
                     list.name
                   )}
+                </SlantedTitle>
+
+                <SlantedTitle size="xs" alignSelf="center">
+                  {list.region}
                 </SlantedTitle>
               </VStack>
             }

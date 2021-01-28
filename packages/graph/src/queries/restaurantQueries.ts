@@ -4,7 +4,7 @@ import _ from 'lodash'
 import { globalTagId } from '../constants'
 import { Maybe, client, order_by, resolved, restaurant } from '../graphql'
 import { createQueryHelpersFor } from '../helpers/queryHelpers'
-import { MutationOpts } from '../helpers/queryResolvers'
+import { SelectionOptions } from '../helpers/queryResolvers'
 import { tagSlugs } from '../helpers/tagHelpers'
 import { Restaurant, RestaurantTag, RestaurantWithId } from '../types'
 import { restaurantTagUpsert } from './restaurantTagQueries'
@@ -29,37 +29,39 @@ export const restaurant_fixture = {
 export async function restaurantFindOneWithTags(
   restaurant: Partial<RestaurantWithId>
 ) {
-  return await restaurantFindOne(restaurant, (v: Maybe<restaurant>[]) => {
-    return v.map((rest) => {
-      return {
-        ...selectFields(rest),
-        tag_names: rest?.tag_names(),
-        tags: rest?.tags().map((tagV) => {
-          return {
-            ...selectFields(tagV),
-            tag: {
-              ...selectFields(tagV.tag),
-              categories: tagV.tag.categories().map((catV) => {
-                return {
-                  category: selectFields(catV.category),
-                }
-              }),
-              parent: selectFields(tagV.tag.parent),
-              alternates: tagV.tag.alternates(),
-            },
-            sentences: selectFields(tagV.sentences()),
-            score_breakdown: tagV.score_breakdown(),
-            source_breakdown: tagV.source_breakdown(),
-          }
-        }),
-        menu_items: selectFields(rest?.menu_items()),
-        score_breakdown: rest?.score_breakdown(),
-        source_breakdown: rest?.source_breakdown(),
-        photos: rest?.photos(),
-        rating_factors: rest?.rating_factors(),
-        sources: rest?.sources(),
-      }
-    })
+  return await restaurantFindOne(restaurant, {
+    select: (v: Maybe<restaurant>[]) => {
+      return v.map((rest) => {
+        return {
+          ...selectFields(rest),
+          tag_names: rest?.tag_names(),
+          tags: rest?.tags().map((tagV) => {
+            return {
+              ...selectFields(tagV),
+              tag: {
+                ...selectFields(tagV.tag),
+                categories: tagV.tag.categories().map((catV) => {
+                  return {
+                    category: selectFields(catV.category),
+                  }
+                }),
+                parent: selectFields(tagV.tag.parent),
+                alternates: tagV.tag.alternates(),
+              },
+              sentences: selectFields(tagV.sentences()),
+              score_breakdown: tagV.score_breakdown(),
+              source_breakdown: tagV.source_breakdown(),
+            }
+          }),
+          menu_items: selectFields(rest?.menu_items()),
+          score_breakdown: rest?.score_breakdown(),
+          source_breakdown: rest?.source_breakdown(),
+          photos: rest?.photos(),
+          rating_factors: rest?.rating_factors(),
+          sources: rest?.sources(),
+        }
+      })
+    },
   })
 }
 
@@ -107,7 +109,7 @@ export async function restaurantFindNear(
 export async function restaurantUpsertManyTags(
   restaurant: RestaurantWithId,
   restaurant_tags: Partial<RestaurantTag>[],
-  opts?: MutationOpts
+  opts?: SelectionOptions
 ) {
   if (!restaurant_tags.length) {
     return null
@@ -144,7 +146,7 @@ export async function convertSimpleTagsToRestaurantTags(tag_strings: string[]) {
 export async function restaurantUpsertRestaurantTags(
   restaurant: RestaurantWithId,
   restaurant_tags: Partial<RestaurantTag>[],
-  opts?: MutationOpts
+  opts?: SelectionOptions
 ) {
   const updated_restaurant = await restaurantTagUpsert(
     restaurant.id,
@@ -155,7 +157,7 @@ export async function restaurantUpsertRestaurantTags(
 
 async function restaurantUpdateTagNames(
   restaurant: RestaurantWithId,
-  opts?: MutationOpts
+  opts?: SelectionOptions
 ) {
   if (!restaurant) {
     return null

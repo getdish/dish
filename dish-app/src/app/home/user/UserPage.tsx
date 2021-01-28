@@ -136,6 +136,7 @@ const UserPageContent = graphql(
                     key={list.slug}
                     userSlug={list.user?.username ?? ''}
                     slug={list.slug}
+                    region={list.region ?? ''}
                   />
                 )
               })}

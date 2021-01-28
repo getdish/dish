@@ -131,6 +131,17 @@ class HomeStore extends Store {
     return tagLenses[0]
   }
 
+  get lastRegionSlug() {
+    const states = this.states
+    for (let i = states.length - 1; i >= 0; i--) {
+      const state = states[i]
+      if ('region' in state && state.region) {
+        return state.region
+      }
+    }
+    return initialHomeState.region
+  }
+
   setLoading(n: boolean) {
     this.loading = n
   }

@@ -13,12 +13,14 @@ export const ListCard = graphql(
   ({
     slug,
     userSlug,
+    region,
     onHover,
     hoverable,
     isBehind,
   }: {
     slug: string | null
     userSlug: string | null
+    region: string
     onHover?: (is: boolean) => void
     hoverable?: boolean
     isBehind?: boolean
@@ -45,7 +47,7 @@ export const ListCard = graphql(
     }
 
     const contents = (
-      <Link name="list" asyncClick params={{ slug, userSlug }}>
+      <Link name="list" asyncClick params={{ slug, userSlug, region }}>
         <Card
           aspectFixed
           size="sm"

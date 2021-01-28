@@ -1,5 +1,12 @@
 import { series, sleep } from '@dish/async'
-import { RestaurantSearchItem, listInsert, mutate, slugify } from '@dish/graph'
+import {
+  RestaurantSearchItem,
+  findOne,
+  listFindOne,
+  listInsert,
+  mutate,
+  slugify,
+} from '@dish/graph'
 import { assertPresent } from '@dish/helpers/src'
 import { ArrowUp, Edit2 } from '@dish/react-feather'
 import { HistoryItem } from '@dish/router'
@@ -92,72 +99,7 @@ export default memo(function SearchPage(props: Props) {
       <StackDrawer
         closable
         topLeftControls={
-          <Tooltip contents={`Make your "${title.replace('the ', '')}" list`}>
-            <Link
-              promptLogin
-              onPress={async () => {
-                try {
-                  assertPresent(userStore.user?.id)
-                  assertPresent(userStore.user?.username)
-                  const name = `The best ${title}`
-                  const slug = slugify(name)
-                  const location = await getLocationFromRoute(
-                    router.curPage as any
-                  )
-
-                  if (!location?.region) {
-                    console.warn('no region??????')
-                    return
-                  }
-                  console.log('todo location', location)
-
-                  // find existing
-
-                  const [list] = await listInsert([
-                    {
-                      name,
-                      slug,
-                      region: location.region.slug,
-                      description: subTitle,
-                      color: Math.floor(
-                        (listColors.length / listColors.length) * Math.random()
-                      ),
-                      user_id: userStore.user.id,
-                      location: null,
-                    },
-                  ])
-
-                  // now add tags to it
-                  const tags = await getFullTags(getActiveTags(state))
-                  await mutate((mutation) => {
-                    return mutation.insert_list_tag({
-                      objects: tags.map((tag) => {
-                        return {
-                          list_id: list.id,
-                          tag_id: tag.id,
-                        }
-                      }),
-                    })?.__typename
-                  })
-                  router.navigate({
-                    name: 'list',
-                    params: {
-                      slug,
-                      userSlug: userStore.user.username,
-                    },
-                  })
-                } catch (err) {
-                  // if this list already exists, we can just take them to it
-                  Toast.error(err.message)
-                  console.error(err)
-                }
-              }}
-            >
-              <SmallCircleButton shadowed>
-                <Edit2 color="#fff" size={14} />
-              </SmallCircleButton>
-            </Link>
-          </Tooltip>
+          <SearchForkListButton {...{ title, subTitle, state }} />
         }
       >
         <HomeSuspense>
@@ -174,6 +116,108 @@ export default memo(function SearchPage(props: Props) {
     </>
   )
 })
+
+const SearchForkListButton = memo(
+  ({
+    title,
+    subTitle,
+    state,
+  }: {
+    title: string
+    subTitle: string
+    state: HomeStateItemSearch
+  }) => {
+    return (
+      <Tooltip contents={`Make your "${title.replace('the ', '')}" list`}>
+        <Link
+          promptLogin
+          onPress={async () => {
+            try {
+              assertPresent(userStore.user?.id)
+              assertPresent(userStore.user?.username)
+              const name = `The best ${title}`
+              const slug = slugify(name)
+              const user_id = userStore.user.id
+              const location = await getLocationFromRoute(router.curPage as any)
+              if (!location?.region) {
+                console.warn('no region??????')
+                return
+              }
+              const region = location.region.slug
+
+              if (!region) {
+                throw new Error(`no region slug!`)
+              }
+
+              const existing = await listFindOne(
+                {
+                  slug,
+                  user_id,
+                  region,
+                },
+                {
+                  depth: 1,
+                }
+              )
+
+              if (existing) {
+                console.warn('go to existing')
+                return
+              }
+
+              console.log('todo location', location)
+
+              // find existing
+
+              const [list] = await listInsert([
+                {
+                  name,
+                  slug,
+                  region: location.region.slug,
+                  description: subTitle,
+                  color: Math.floor(
+                    (listColors.length / listColors.length) * Math.random()
+                  ),
+                  user_id,
+                  location: null,
+                },
+              ])
+
+              // now add tags to it
+              const tags = await getFullTags(getActiveTags(state))
+              await mutate((mutation) => {
+                return mutation.insert_list_tag({
+                  objects: tags.map((tag) => {
+                    return {
+                      list_id: list.id,
+                      tag_id: tag.id,
+                    }
+                  }),
+                })?.__typename
+              })
+              router.navigate({
+                name: 'list',
+                params: {
+                  slug,
+                  region: list.region!,
+                  userSlug: userStore.user.username,
+                },
+              })
+            } catch (err) {
+              // if this list already exists, we can just take them to it
+              Toast.error(err.message)
+              console.error(err)
+            }
+          }}
+        >
+          <SmallCircleButton shadowed>
+            <Edit2 color="#fff" size={14} />
+          </SmallCircleButton>
+        </Link>
+      </Tooltip>
+    )
+  }
+)
 
 const SearchPageContent = memo(function SearchPageContent(props: Props) {
   const route = useLastValueWhen(
