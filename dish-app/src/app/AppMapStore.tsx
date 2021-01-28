@@ -13,10 +13,10 @@ import { getDefaultLocation } from '../constants/initialHomeState'
 import { bboxToSpan } from '../helpers/bboxToSpan'
 import { hasMovedAtLeast } from '../helpers/hasMovedAtLeast'
 import { queryRestaurant } from '../queries/queryRestaurant'
+import { RegionWithVia } from '../types/homeTypes'
 import { AppMapPosition, MapResultItem } from '../types/mapTypes'
 import { searchPageStore } from './home/search/SearchPageStore'
 import { homeStore } from './homeStore'
-import { RegionWithVia } from './MapProps'
 
 type MapOpts = {
   showRank?: boolean

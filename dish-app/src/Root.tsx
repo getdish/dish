@@ -28,9 +28,9 @@ import { QueryClientProvider } from 'react-query'
 import { ThemeProvider, Toast, configureThemes } from 'snackui'
 
 import { App } from './app/App'
-import { AppPortalProvider } from './app/AppPortal'
 import { homeStore } from './app/homeStore'
 import { PlatformSpecificProvider } from './app/PlatformSpecificProvider'
+import { RootPortalProvider } from './app/Portal'
 import { userStore } from './app/userStore'
 import {
   tagDefaultAutocomplete,
@@ -112,11 +112,10 @@ export function Root() {
       <ThemeProvider themes={themes} defaultTheme="light">
         <ProvideRouter routes={routes}>
           <QueryClientProvider client={queryClient}>
-            <AppPortalProvider>
-              <Suspense fallback={null}>
-                <App />
-              </Suspense>
-            </AppPortalProvider>
+            <Suspense fallback={null}>
+              <App />
+            </Suspense>
+            <RootPortalProvider />
           </QueryClientProvider>
         </ProvideRouter>
       </ThemeProvider>

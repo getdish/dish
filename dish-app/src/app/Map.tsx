@@ -16,7 +16,8 @@ import { MAPBOX_ACCESS_TOKEN } from '../constants/constants'
 import { hasMovedAtLeast } from '../helpers/hasMovedAtLeast'
 import { hexToRGB } from '../helpers/hexToRGB'
 import { useIsMountedRef } from '../helpers/useIsMountedRef'
-import { MapProps, RegionWithVia } from './MapProps'
+import { RegionWithVia } from '../types/homeTypes'
+import { MapProps } from './MapProps'
 import { tiles } from './tiles'
 
 mapboxgl.accessToken = MAPBOX_ACCESS_TOKEN

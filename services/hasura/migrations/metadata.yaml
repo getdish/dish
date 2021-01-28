@@ -44,6 +44,7 @@ tables:
       - location
       - name
       - public
+      - region
       - slug
       - user_id
       backend_only: false
@@ -73,6 +74,7 @@ tables:
       - location
       - name
       - public
+      - region
       - slug
       - updated_at
       - user_id
@@ -87,6 +89,7 @@ tables:
       - location
       - name
       - public
+      - region
       - slug
       - user_id
       filter:
