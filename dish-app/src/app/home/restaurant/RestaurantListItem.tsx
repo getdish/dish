@@ -698,7 +698,7 @@ const RestaurantPeekDishes = memo(
                   restaurantSlug={props.restaurantSlug}
                   restaurantId={props.restaurantId}
                   {...dish}
-                  marginRight={-45}
+                  marginRight={-30}
                   marginTop={isEven ? 0 : -20}
                   showSearchButton={!props.editable}
                 />

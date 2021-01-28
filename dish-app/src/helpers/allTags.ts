@@ -26,7 +26,10 @@ export function addTagToCache(tag: FullTag | NavigableTag) {
     return false
   }
   tag.name = tag.name ?? guessTagName(slug)
-  allTags[slug] = tag as any
+  allTags[slug] = {
+    ...allTags[slug],
+    ...tag,
+  }
   allTagsNameToSlug[tagNameKey(tag.name)] = slug
   return true
 }
