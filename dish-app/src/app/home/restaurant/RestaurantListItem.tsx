@@ -240,7 +240,7 @@ const RestaurantListItemContent = memo(
         : 1.15
     const titleFontSize = Math.round((media.sm ? 20 : 28) * titleFontScale)
     const titleHeight = titleFontSize + 8 * 2
-    const score = Math.round((meta?.effective_score ?? 0) / 10)
+    const score = Math.round((meta?.effective_score ?? 0) / 20)
     const theme = useTheme()
     const showAbove = !!above || !!activeTagSlugs
 

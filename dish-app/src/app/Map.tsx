@@ -892,35 +892,41 @@ function setupMapEffect({
         } & mapboxgl.EventData
         type Listener = (ev: Event) => void
 
-        let hoverId = null as null | number
+        let lastHoverCbVal = null
+        function callbackOnHover(val: any) {
+          if (val !== lastHoverCbVal) {
+            lastHoverCbVal = val
+            getProps().onHover?.(val)
+          }
+        }
+
+        let hoverIdInt = null as null | number
         const setHovered = (e: Event, hover: boolean) => {
           if (!map) return
           map.getCanvas().style.cursor = hover ? 'pointer' : ''
 
           // only one at a time
-          if (hoverId != null) {
-            mapSetFeature(map, hoverId, { hover: false })
-            hoverId = null
+          if (hoverIdInt != null) {
+            mapSetFeature(map, hoverIdInt, { hover: false })
+            hoverIdInt = null
           }
           const id = e.features?.[0].id ?? -1
-          if (id > -1 && hoverId != id) {
+          if (id > -1 && hoverIdInt != id) {
             if (hover) {
-              hoverId = +id
-              mapSetFeature(map, hoverId, { hover: true })
+              hoverIdInt = +id
+              mapSetFeature(map, hoverIdInt, { hover: true })
             }
           }
-          const { features, onHover } = getProps()
-          if (onHover) {
-            if (id > -1) {
-              const feature = features[+id]
-              const rid = feature?.properties?.id
-              if (rid) {
-                onHover(rid)
+          const { features } = getProps()
+          callbackOnHover(
+            (() => {
+              if (id > -1) {
+                const feature = features[+id]
+                return feature?.properties?.id ?? null
               }
-            } else {
-              onHover(null)
-            }
-          }
+              return null
+            })()
+          )
         }
 
         const hoverCluster: Listener = (e) => {
@@ -931,7 +937,7 @@ function setupMapEffect({
           map.off('mouseenter', POINT_LAYER_ID, hoverCluster)
         })
         function unHoverCluster() {
-          getProps().onHover?.(null)
+          callbackOnHover(null)
           if (map) {
             map.getCanvas().style.cursor = ''
           }
