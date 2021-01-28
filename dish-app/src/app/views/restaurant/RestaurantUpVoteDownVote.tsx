@@ -73,7 +73,7 @@ const RestaurantUpVoteDownVoteContents = graphql(
     )
     const theme = useTheme()
 
-    ratio = Math.round(ratio ?? restaurantRatio(restaurant))
+    ratio = ratio ?? restaurantRatio(restaurant)
     score =
       display === 'ratio' ? ratio : score ?? Math.round(restaurant.score) + vote
 
@@ -81,7 +81,7 @@ const RestaurantUpVoteDownVoteContents = graphql(
       <VStack pointerEvents="auto" position="relative">
         <AbsoluteVStack
           bottom={-14}
-          right={-10}
+          right={-14}
           zIndex={2}
           borderRadius={1000}
           backgroundColor={theme.cardBackgroundColor}
