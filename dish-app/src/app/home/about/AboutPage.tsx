@@ -73,23 +73,16 @@ export default function AboutPage({
           </VStack>
 
           <VStack paddingHorizontal="5%" spacing="xl">
-            <Paragraph size="xxl">We have a three step plan:</Paragraph>
-
-            <UnorderedList>
-              <UnorderedListItem size="xl">
-                Fix restaurant ratings.
-              </UnorderedListItem>
-              <UnorderedListItem size="xl">
-                Make the IRL Hitchhiker's Guide to the Galaxy.
-              </UnorderedListItem>
-              <UnorderedListItem size="xl">
-                Stick it to the man.
-              </UnorderedListItem>
-            </UnorderedList>
+            <Paragraph size="xxl">
+              We want to build a high quality, fun, collaborative guide to the
+              real world that maintains high quality, even in the long run.
+            </Paragraph>
 
             <Paragraph size="xl">
-              We originally wrote a bunch of high-minded words about how
-              ordering{' '}
+              We're starting with food, where we think there are many problems
+              with existing sites and apps which initially sparked our interest
+              in dish. Too many hole-in-the-wall restaurants get lost to poor
+              ratings. What you look for when ordering{' '}
               <LinkButton
                 backgroundColor={lightYellow}
                 hoverStyle={{
@@ -115,21 +108,31 @@ export default function AboutPage({
                   backgroundColor: `${lightGreen}44`,
                 }}
               >
-                date night 🌃
+                date 🌃
               </LinkButton>{' '}
-              require different <em>lenses</em>, and about how some nights you
-              crave an authentic dish, others you want ambiance, and sometimes
-              you just want to know if it's not busy (and so on).
+              are <em>fundamentally different</em> - one night you crave an
+              authentic dish, the others you just want some nice ambiance and
+              drinks.
             </Paragraph>
 
             <Paragraph size="lg" fontWeight="600">
-              But really, we just want to find places near us with a little
-              Pokedex type app that feels fun and has great recs.
+              Dish tears down the 5-star world. We rate what matters, exactly -
+              a dish, the service, the vibe, and more.
             </Paragraph>
 
             <Paragraph size="lg">
-              Dish (kinda) works. It's sketchy. It breaks all the time. Things
-              are confusing. But we put a lot of thought into the foundation.
+              We want to prove you can build a high quality app that doesn't
+              bend to advertising pressure by focusing on community and quality
+              from the start. With a play on sub-reddits and specialization,
+              community-powered everything (voting, moderation, and rating), we
+              think we can do that.
+            </Paragraph>
+
+            <Paragraph size="lg">
+              Dish is just getting started. It (kinda) works. It's sketchy, and
+              it breaks all the time. Some things are confusing. But we put a
+              lot of thought and work into the foundation, so we can move
+              quickly from here. Let us know what you'd love to see.
             </Paragraph>
 
             <Paragraph size="lg">We hope you enjoy 🌮🍜</Paragraph>
