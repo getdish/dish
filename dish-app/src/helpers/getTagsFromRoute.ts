@@ -1,16 +1,21 @@
 import { HistoryItem } from '@dish/router'
+import { capitalize } from 'lodash'
 
 import { tagLenses } from '../constants/localTags'
-import { SPLIT_TAG, SPLIT_TAG_TYPE } from '../constants/SPLIT_TAG'
-import { FullTag, TagWithNameAndType } from '../types/tagTypes'
+import { SPLIT_TAG, SPLIT_TAG_PARENT } from '../constants/SPLIT_TAG'
+import { FullTag, NavigableTag } from '../types/tagTypes'
 import { getFullTags } from './getFullTags'
 
-export const getTagSlugsFromRoute = (item: HistoryItem<'search'>) => {
-  const tags: FullTag[] = []
+const typePrefixes = {
+  lenses: 'lense',
+  filters: 'filter',
+}
+
+export const getTagsFromRoute = (item: HistoryItem<'search'>) => {
+  const tags: NavigableTag[] = []
   if (!item?.params) {
     return tags
   }
-  const slugs: TagWithNameAndType[] = []
   if (item.params.lense) {
     const slug = `lenses__${item.params.lense}`
     let lenseTag = tagLenses.find((x) => x.slug == slug)
@@ -18,32 +23,33 @@ export const getTagSlugsFromRoute = (item: HistoryItem<'search'>) => {
       console.warn('No known lense! reverting to default', slug, item.params)
       lenseTag = tagLenses[0]
     }
-    slugs.push(lenseTag)
+    tags.push(lenseTag)
   }
   if (item.params.tags) {
     for (const tag of item.params.tags.split(SPLIT_TAG)) {
       if (tag !== '-') {
-        slugs.push(getUrlTagInfo(tag, 'filter'))
+        tags.push(getUrlTagInfo(tag))
       }
     }
   }
-  return slugs
+  return tags
 }
 
-export const getTagsFromRoute = async (
+export const getFullTagsFromRoute = async (
   item: HistoryItem<'search'>
 ): Promise<FullTag[]> => {
   // @ts-ignore
-  return await getFullTags(getTagSlugsFromRoute(item))
+  return await getFullTags(getTagsFromRoute(item))
 }
 
-const getUrlTagInfo = (
-  part: string,
-  defaultType: any = ''
-): TagWithNameAndType => {
-  if (part.indexOf(SPLIT_TAG_TYPE) > -1) {
-    const [type, nameLower] = part.split(SPLIT_TAG_TYPE)
-    return { type: type as any, name: '', slug: part }
-  }
-  return { type: defaultType, name: '', slug: part }
+const getUrlTagInfo = (part: string): NavigableTag => {
+  const prefix = part.match(/([a-z]+)__/)?.[1] ?? ''
+  const type = typePrefixes[prefix] ?? 'dish'
+  return { type, name: guessTagName(part), slug: part }
+}
+
+export function guessTagName(slug: string) {
+  const postfix = slug.split(SPLIT_TAG_PARENT)[1] ?? ''
+  // best guess at a name
+  return postfix.split('-').map(capitalize).join(' ')
 }

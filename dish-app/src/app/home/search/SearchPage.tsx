@@ -37,7 +37,7 @@ import {
 import { isWeb } from '../../../constants/constants'
 import { addTagsToCache, allTags } from '../../../helpers/allTags'
 import { getActiveTags } from '../../../helpers/getActiveTags'
-import { getTagsFromRoute } from '../../../helpers/getTagsFromRoute'
+import { getFullTagsFromRoute } from '../../../helpers/getTagsFromRoute'
 import { getTitleForState } from '../../../helpers/getTitleForState'
 import { rgbString } from '../../../helpers/rgbString'
 import { useQueryLoud } from '../../../helpers/useQueryLoud'
@@ -482,7 +482,7 @@ const SearchLoading = (props: StackProps) => {
 
 function useTagsFromRoute(route: HistoryItem<'search'>) {
   const key = `tags-${Object.values(route).join(',')}`
-  return useQueryLoud(key, () => getTagsFromRoute(route), {
+  return useQueryLoud(key, () => getFullTagsFromRoute(route), {
     suspense: false,
   })
 }

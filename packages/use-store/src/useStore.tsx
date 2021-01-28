@@ -444,9 +444,10 @@ function createProxiedStore(storeInfo: Omit<StoreInfo, 'store' | 'source'>) {
             cur.add(key)
           })
           // TODO i added this !isSubGetter, seems logical but haven't validated
-          if (!isSubGetter) {
-            getCache.set(key, res)
-          }
+          // has diff performance tradeoffs, not sure whats desirable
+          // if (!isSubGetter) {
+          getCache.set(key, res)
+          // }
           return res
         }
         if (key in actions) {
