@@ -76,7 +76,7 @@ function useShowSearchHere() {
     const { center, span } = appMapStore.nextPosition
     if (searchPageStore.status === 'loading') return false
     if (!isOnSearch) return false
-    const hasMoved = hasMovedAtLeast(sp, { center, span }, 0.02)
+    const hasMoved = hasMovedAtLeast(sp, { center, span })
     return hasMoved
   })
 }

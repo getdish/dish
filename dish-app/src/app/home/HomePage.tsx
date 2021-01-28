@@ -62,8 +62,8 @@ export default memo(function HomePage(
     let { center, span } = region.data
     if (!center || !span) return
     span = {
-      lat: span.lat * 0.66,
-      lng: span.lng * 0.66,
+      lat: span.lat,
+      lng: span.lng,
     }
     setPosition({ center, span })
     setIsLoaded(true)

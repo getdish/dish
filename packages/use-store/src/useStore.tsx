@@ -439,6 +439,8 @@ function createProxiedStore(storeInfo: Omit<StoreInfo, 'store' | 'source'>) {
   const { getCache, curGetKeys, depsToGetter } = gettersState
   const constr = storeInstance.constructor
 
+  let didSet = false
+
   const proxiedStore = new Proxy(storeInstance, {
     get(target, key) {
       const isDebugging = DebugStores.has(constr)
@@ -485,7 +487,37 @@ function createProxiedStore(storeInfo: Omit<StoreInfo, 'store' | 'source'>) {
           return res
         }
         if (key in actions) {
-          let action = actions[key].bind(proxiedStore)
+          // wrap action and call didSet after
+          const actionFn = actions[key]
+
+          // fix bug in router for now, need to look at it soon
+          const isGetAction = key.startsWith('get')
+
+          let action = (...args: any[]) => {
+            if (isGetAction || gettersState.isGetting) {
+              return actionFn.call(proxiedStore, ...args)
+            }
+
+            const finishAction = () => {
+              if (didSet) {
+                storeInfo.triggerUpdate()
+                didSet = false
+              }
+            }
+
+            let res
+            try {
+              res = actionFn.call(proxiedStore, ...args)
+              return res
+            } finally {
+              if (res instanceof Promise) {
+                res.then(finishAction)
+              } else {
+                finishAction()
+              }
+            }
+          }
+
           if (
             process.env.LOG_LEVEL &&
             (isDebugging || configureOpts.logLevel !== 'error') &&
@@ -502,7 +534,9 @@ function createProxiedStore(storeInfo: Omit<StoreInfo, 'store' | 'source'>) {
                 const logs = new Set<any[]>()
                 logStack.add(logs)
 
+                //
                 // 🏃‍♀️ run action here now
+                //
                 const res = ogAction(...args)
 
                 logStack.add('end')
@@ -611,8 +645,7 @@ function createProxiedStore(storeInfo: Omit<StoreInfo, 'store' | 'source'>) {
             console.log('SET', res, key, value)
           }
         }
-        // TODO option to enforce actions only mutations
-        storeInfo.triggerUpdate()
+        didSet = true
       }
       return res
     },

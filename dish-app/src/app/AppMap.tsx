@@ -54,7 +54,7 @@ const updateRegion = debounce(
       })
     }
   },
-  150
+  300
 )
 
 export default memo(function AppMap() {
@@ -130,7 +130,7 @@ export default memo(function AppMap() {
   const handleMoveEnd = useCallback(
     ({ center, span }) => {
       appMapStore.setNextPosition({ center, span })
-      updateRegion.cancel()
+      // updateRegion.cancel()
       if (media.sm && (drawerStore.isDragging || drawerStore.snapIndex === 0)) {
         console.log('avoid move stuff when snapped to top')
         return
