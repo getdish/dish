@@ -91,8 +91,11 @@ export const SearchPagePropsContext = createContext<Props | null>(null)
 export default memo(function SearchPage(props: Props) {
   const state = useHomeStateById<HomeStateItemSearch>(props.item.id)
   const { title, subTitle } = getTitleForState(state, {
-    lowerCase: false,
+    lowerCase: true,
   })
+
+  console.log('👀 SearchPage', state.activeTags, title)
+
   return (
     <>
       <PageTitleTag>{title}</PageTitleTag>
@@ -508,7 +511,7 @@ const SearchPageTitle = memo(() => {
   const media = useMedia()
   const curProps = useContext(SearchPagePropsContext)!
   const { title, subTitle } = getTitleForState(curProps.item, {
-    lowerCase: false,
+    lowerCase: true,
   })
   const lenseColor = useCurrentLenseColor()
   return (
