@@ -298,7 +298,6 @@ const SearchBarActionButton = memo(() => {
 
   return (
     <Link
-      {...home.upRoute}
       onPress={() => {
         if (showAutocomplete) {
           autocompletes.setVisible(false)
@@ -307,33 +306,35 @@ const SearchBarActionButton = memo(() => {
         }
       }}
     >
-      <VStack
-        alignSelf="center"
-        transform={[{ skewX: '-12deg' }]}
-        pointerEvents={isDisabled ? 'none' : 'auto'}
-        width={30}
-        height={searchBarHeight + 5}
-        borderTopLeftRadius={13.5}
-        borderBottomLeftRadius={13.5}
-        alignItems="center"
-        justifyContent="center"
-        opacity={0.1}
-        padding={0}
-        backgroundColor={theme.backgroundColorTertiary}
-        {...(!isDisabled && {
-          opacity: 0.7,
-          hoverStyle: {
-            opacity: 1,
-          },
-          pressStyle: {
-            opacity: 0.2,
-          },
-        })}
-      >
-        <VStack transform={[{ skewX: '12deg' }]}>
-          <Icon color={color} size={20} />
+      <Link {...home.upRoute}>
+        <VStack
+          alignSelf="center"
+          transform={[{ skewX: '-12deg' }]}
+          pointerEvents={isDisabled ? 'none' : 'auto'}
+          width={30}
+          height={searchBarHeight + 5}
+          borderTopLeftRadius={13.5}
+          borderBottomLeftRadius={13.5}
+          alignItems="center"
+          justifyContent="center"
+          opacity={0.1}
+          padding={0}
+          backgroundColor={theme.backgroundColorTertiary}
+          {...(!isDisabled && {
+            opacity: 0.7,
+            hoverStyle: {
+              opacity: 1,
+            },
+            pressStyle: {
+              opacity: 0.2,
+            },
+          })}
+        >
+          <VStack transform={[{ skewX: '12deg' }]}>
+            <Icon color={color} size={20} />
+          </VStack>
         </VStack>
-      </VStack>
+      </Link>
     </Link>
   )
 })
