@@ -223,8 +223,9 @@ const ListFeedCard = graphql((props: FeedItemList) => {
             return null
           }
           return (
-            <SkewedCard zIndex={1000 - i} isBehind={i > 0} key={list.slug}>
+            <SkewedCard zIndex={1000 - i} key={list.slug}>
               <ListCard
+                isBehind={i > 0}
                 hoverable={false}
                 slug={list.slug}
                 userSlug={list.user?.username ?? ''}
@@ -321,9 +322,9 @@ const CuisineFeedCard = memo(
             <HStack>
               {restaurants.map((r, i) => {
                 return (
-                  <SkewedCard zIndex={1000 - i} isBehind={i > 0} key={r.id}>
+                  <SkewedCard zIndex={1000 - i} key={r.id}>
                     <RestaurantCard
-                      hideScore
+                      isBehind={i > 0}
                       restaurantId={r.id}
                       restaurantSlug={r.slug}
                       hoverable={false}
@@ -349,18 +350,6 @@ const CuisineFeedCard = memo(
     )
   })
 )
-
-const getDishColInner = (dish: tag, i: number) => {
-  return (
-    <VStack marginBottom={5} key={i}>
-      <DishView size={130} {...selectTagDishViewSimple(dish)} isFallback />
-    </VStack>
-  )
-}
-
-const DishCol = (props: StackProps) => {
-  return <VStack marginRight={-25} {...props} />
-}
 
 const DishFeedCard = graphql(function DishFeedCard(props: FeedItemDish) {
   const [restaurant] = queryRestaurant(props.restaurant.slug)
@@ -389,8 +378,9 @@ const DishRestaurantsFeedCard = (props: FeedItemDishRestaurants) => {
             return null
           }
           return (
-            <SkewedCard isBehind={i > 0} zIndex={1000 - i} key={r.id}>
+            <SkewedCard zIndex={1000 - i} key={r.id}>
               <RestaurantCard
+                isBehind={i > 0}
                 hideScore
                 restaurantId={r.id}
                 restaurantSlug={r.slug}

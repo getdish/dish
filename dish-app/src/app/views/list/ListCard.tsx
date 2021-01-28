@@ -15,11 +15,13 @@ export const ListCard = graphql(
     userSlug,
     onHover,
     hoverable,
+    isBehind,
   }: {
     slug: string | null
     userSlug: string | null
     onHover?: (is: boolean) => void
     hoverable?: boolean
+    isBehind?: boolean
   }) => {
     const [list] = slug ? queryList(slug) : []
     const colors = getColorsForName(list?.name ?? '')
@@ -51,6 +53,7 @@ export const ListCard = graphql(
           title={list.name}
           subTitle={`by ${list.user?.name ?? list.user?.username ?? ''}`}
           backgroundColor={backgroundColor}
+          isBehind={isBehind}
           photo={
             <VStack alignItems="center" justifyContent="center" flex={1}>
               <HStack flexWrap="wrap">

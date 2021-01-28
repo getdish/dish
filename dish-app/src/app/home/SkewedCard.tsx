@@ -11,7 +11,6 @@ import {
 import { cardFrameBorderRadius } from '../views/CardFrame'
 
 export const SkewedCard = ({
-  isBehind,
   children,
   ...props
 }: StackProps & { isBehind?: boolean }) => {
@@ -47,25 +46,9 @@ export const SkewedCard = ({
       {...props}
     >
       {children}
-      {isBehind && (
-        <LinearGradient
-          style={[StyleSheet.absoluteFill, sheet.cardGradient]}
-          start={[0, 0]}
-          end={[1, 0]}
-          colors={['rgba(0,0,0,0.25)', 'rgba(0,0,0,0)']}
-        />
-      )}
     </VStack>
   )
 }
-
-const sheet = StyleSheet.create({
-  cardGradient: {
-    zIndex: 100,
-    borderRadius: cardFrameBorderRadius,
-    right: '50%',
-  },
-})
 
 export const SkewedCardCarousel = ({ children }: { children: any }) => {
   return (
