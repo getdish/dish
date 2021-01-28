@@ -13,7 +13,7 @@ import {
   useRefetch,
 } from '@dish/graph'
 import { assertPresent, isPresent } from '@dish/helpers'
-import { Heart, Plus, X } from '@dish/react-feather'
+import { Heart, Plus, Trash, X } from '@dish/react-feather'
 import React, { useEffect, useRef, useState } from 'react'
 import { Switch } from 'react-native'
 import {
@@ -50,6 +50,7 @@ import { Link } from '../../views/Link'
 import { PaneControlButtons } from '../../views/PaneControlButtons'
 import { ScalingPressable } from '../../views/ScalingPressable'
 import { SlantedTitle } from '../../views/SlantedTitle'
+import { SmallButton } from '../../views/SmallButton'
 import { StackDrawer } from '../../views/StackDrawer'
 import { UpvoteDownvoteScore } from '../../views/UpvoteDownvoteScore'
 import { StackItemProps } from '../HomeStackView'
@@ -273,7 +274,6 @@ const ListPageContent = graphql((props: Props) => {
   const [color, setColor] = useStateSynced(getListColor(list?.color) ?? '#999')
   const [isPublic, setPublic] = useStateSynced(list?.public ?? true)
   const [restaurants, restaurantActions] = useListRestaurants(list)
-  const username = list.user?.name ?? list.user?.username ?? ''
 
   useEffect(() => {
     if (isEditing) {
@@ -299,6 +299,8 @@ const ListPageContent = graphql((props: Props) => {
       </StackDrawer>
     )
   }
+
+  const username = list.user?.name ?? list.user?.username ?? ''
 
   return (
     <StackDrawer closable title={`${username}'s ${list.name}`}>
@@ -360,30 +362,29 @@ const ListPageContent = graphql((props: Props) => {
               )}
               {isEditing && (
                 <HStack alignItems="center">
-                  <Theme name="active">
-                    <Button
-                      onPress={async () => {
-                        await listUpdate(
-                          {
-                            id: list.id,
-                            ...draft.current,
-                            ...(color !== '#999' && {
-                              color: listColors.indexOf(color),
-                            }),
-                            public: isPublic,
-                          },
-                          {
-                            query: list,
-                          }
-                        )
-                        await refetch(list)
-                        router.setRouteAlert(null)
-                        setIsEditing(false)
-                      }}
-                    >
-                      Save
-                    </Button>
-                  </Theme>
+                  <Button
+                    theme="active"
+                    onPress={async () => {
+                      await listUpdate(
+                        {
+                          id: list.id,
+                          ...draft.current,
+                          ...(color !== '#999' && {
+                            color: listColors.indexOf(color),
+                          }),
+                          public: isPublic,
+                        },
+                        {
+                          query: list,
+                        }
+                      )
+                      await refetch(list)
+                      router.setRouteAlert(null)
+                      setIsEditing(false)
+                    }}
+                  >
+                    Save
+                  </Button>
                   <Spacer size="sm" />
                   <VStack
                     onPress={() => {
@@ -477,6 +478,31 @@ const ListPageContent = graphql((props: Props) => {
 
               <Text>Public:&nbsp;&nbsp;</Text>
               <Switch value={isPublic} onValueChange={setPublic} />
+
+              <Spacer size="xl" />
+
+              <SmallButton
+                tooltip="Delete"
+                icon={<Trash size={16} color="red" />}
+                onPress={async () => {
+                  assertPresent(list.id, 'no list id')
+                  if (confirm('Permanently delete this list?')) {
+                    await mutate((mutation) => {
+                      return mutation.delete_list({
+                        where: {
+                          id: {
+                            _eq: list.id,
+                          },
+                        },
+                      })?.__typename
+                    })
+                    Toast.show('Deleted list')
+                    router.navigate({
+                      name: 'home',
+                    })
+                  }
+                }}
+              />
             </HStack>
             <Spacer />
           </>

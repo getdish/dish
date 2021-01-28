@@ -5,6 +5,7 @@ for pablo:
   - ListPage various fixes:
     - delete isn't removing items
   - normalize/direct-mutate
+  - mutate() should automatically add __typename if nothing else exists otherwise really confusing that mutations silently fail
 
 goal january
 

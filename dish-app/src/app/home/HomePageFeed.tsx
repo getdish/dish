@@ -199,7 +199,7 @@ const ListFeedCard = graphql((props: FeedItemList) => {
         _neq: false,
       },
     },
-    order_by: [{ created_at: order_by.asc }],
+    order_by: [{ created_at: order_by.desc }],
   })
   return (
     <>
