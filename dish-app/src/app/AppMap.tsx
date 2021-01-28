@@ -13,7 +13,6 @@ import {
 import { getLngLat, getMinLngLat } from '../helpers/getLngLat'
 import { queryRestaurant } from '../queries/queryRestaurant'
 import { router } from '../router'
-import { Region } from '../types/homeTypes'
 import { AppMapControls } from './AppMapControls'
 import { appMapStore, useAppMapStore } from './AppMapStore'
 import { drawerStore } from './drawerStore'
@@ -35,7 +34,6 @@ const styles = {
 const updateRegion = debounce(
   (region: RegionWithVia, position: MapPosition) => {
     const { currentState } = homeStore
-    console.log('got it', region)
     if (
       currentState.type === 'home' ||
       (currentState.type === 'search' && region.via === 'click')
@@ -43,6 +41,10 @@ const updateRegion = debounce(
       if (currentState.region === region.slug) {
         return
       }
+      appMapStore.setLastRegion({
+        region,
+        position,
+      })
       homeStore.navigate({
         state: {
           ...currentState,

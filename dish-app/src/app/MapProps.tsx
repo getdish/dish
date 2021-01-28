@@ -4,7 +4,7 @@ import mapboxgl from 'mapbox-gl'
 
 import { Region } from '../types/homeTypes'
 
-export type RegionWithVia = Region & { via: 'click' | 'drag' }
+export type RegionWithVia = Region & { via: 'click' | 'drag' | 'url' }
 
 export type MapProps = {
   center: LngLat

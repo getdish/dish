@@ -2,7 +2,7 @@ import { series, sleep } from '@dish/async'
 import { RestaurantSearchItem, slugify } from '@dish/graph'
 import { ArrowUp, Edit2 } from '@dish/react-feather'
 import { HistoryItem } from '@dish/router'
-import { reaction } from '@dish/use-store'
+import { reaction, reaction2 } from '@dish/use-store'
 import React, {
   Suspense,
   createContext,
@@ -31,6 +31,7 @@ import {
   Tooltip,
   VStack,
   combineRefs,
+  useGet,
   useMedia,
 } from 'snackui'
 
@@ -126,6 +127,7 @@ const SearchPageContent = memo(function SearchPageContent(props: Props) {
   const location = useLocationFromRoute(route)
   const tags = useTagsFromRoute(route)
   const searchStore = useSearchPageStore()
+  const getProps = useGet(props)
 
   usePageLoadEffect(props, ({ isRefreshing }) => {
     if (isRefreshing && props.isActive) {
@@ -141,6 +143,14 @@ const SearchPageContent = memo(function SearchPageContent(props: Props) {
     showRank: true,
     center,
     span: location.data?.span,
+    ...(location.data?.region && {
+      region: {
+        name: location.data.region.name,
+        slug: location.data.region.name,
+        geometry: {} as any,
+        via: 'url',
+      },
+    }),
   })
 
   useEffect(() => {
@@ -173,6 +183,36 @@ const SearchPageContent = memo(function SearchPageContent(props: Props) {
 
     return dispose
   }, [props.item, center])
+
+  // sync mapStore.selected to activeIndex in results
+  if (isWeb) {
+    useEffect(() => {
+      return reaction2(() => {
+        const { searchPosition, status } = searchPageStore
+        const { nextPosition, isOnRegion } = appMapStore
+        if (status === 'loading') return
+        if (isOnRegion) {
+          return
+        }
+        return series([
+          () => sleep(600),
+          () => {
+            const props = getProps()
+            if (!props.isActive) return
+            // not on region, set to coordinates
+            const { center, span } = searchPosition
+            const pos = [center.lat, center.lng, span.lat, span.lng].map(
+              (x) => Math.round(x * 1000) / 1000
+            )
+            console.warn('should set', pos.join('_'))
+            // router.setParams({
+            //   region: pos.join('_'),
+            // })
+          },
+        ])
+      })
+    }, [])
+  }
 
   useEffect(() => {
     if (!tags.data) return

@@ -1,4 +1,5 @@
 import { series } from '@dish/async'
+import { isEqual } from '@dish/fast-compare'
 import { LngLat, MapPosition, RestaurantOnlyIds, resolved } from '@dish/graph'
 import { isPresent } from '@dish/helpers'
 import { Store, createStore, useStoreInstance } from '@dish/use-store'
@@ -10,10 +11,12 @@ import { useEffect } from 'react'
 
 import { getDefaultLocation } from '../constants/initialHomeState'
 import { bboxToSpan } from '../helpers/bboxToSpan'
+import { hasMovedAtLeast } from '../helpers/hasMovedAtLeast'
 import { queryRestaurant } from '../queries/queryRestaurant'
 import { AppMapPosition, MapResultItem } from '../types/mapTypes'
 import { searchPageStore } from './home/search/SearchPageStore'
 import { homeStore } from './homeStore'
+import { RegionWithVia } from './MapProps'
 
 type MapOpts = {
   showRank?: boolean
@@ -33,6 +36,11 @@ type MapHoveredRestaurant = RestaurantOnlyIds & { via: 'map' | 'list' }
 // that way we can do things like hovering on states to see them
 // and have it pop back to show last state before hover
 
+type AppMapLastRegion = {
+  region: RegionWithVia
+  position: MapPosition
+}
+
 class AppMapStore extends Store {
   selected: RestaurantOnlyIds | null = null
   hovered: MapHoveredRestaurant | null = null
@@ -45,6 +53,7 @@ class AppMapStore extends Store {
   showRank = false
   zoomOnHover = false
   ids = {}
+  lastRegion: null | AppMapLastRegion = null
 
   setState(
     val: MapOpts & {
@@ -72,12 +81,22 @@ class AppMapStore extends Store {
   }
 
   setNextPosition(pos: Partial<AppMapPosition>) {
-    console.log('set next position meow', pos)
     this.nextPosition = {
       center: pos.center ?? this.position.center,
       span: pos.span ?? this.position.span,
       via: pos.via ?? this.position.via,
     }
+  }
+
+  setLastRegion(next: AppMapLastRegion | null) {
+    this.lastRegion = next
+  }
+
+  get isOnRegion() {
+    return (
+      !!this.lastRegion &&
+      !hasMovedAtLeast(this.lastRegion.position, this.position, 0.04)
+    )
   }
 
   clearHover() {
@@ -170,6 +189,7 @@ export const useSetAppMap = (
     span?: MapPosition['span']
     results?: RestaurantOnlyIds[]
     isActive: boolean
+    region?: RegionWithVia
   }
 ) => {
   const {
@@ -180,6 +200,7 @@ export const useSetAppMap = (
     center,
     span,
     fitToResults,
+    region,
   } = props
 
   useEffect(() => {
@@ -191,6 +212,13 @@ export const useSetAppMap = (
       })
     }
   }, [fitToResults, isActive, center?.lat, center?.lng, span?.lat, span?.lng])
+
+  useEffect(() => {
+    if (!isActive) return
+    if (!region) return
+    if (!center || !span) return
+    appMapStore.setLastRegion({ position: { center, span }, region })
+  }, [region?.slug, isActive])
 
   useEffect(() => {
     if (!isActive) return
