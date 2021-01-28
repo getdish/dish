@@ -43,7 +43,7 @@ export const SentimentCircle = memo(({ ratio }: { ratio: number }) => {
     >
       {() => (
         <HStack height="100%" alignItems="center" justifyContent="center">
-          <Text fontSize={24} lineHeight={24}>
+          <Text cursor="default" fontSize={25} lineHeight={25}>
             {sentiments[key]}
           </Text>
         </HStack>

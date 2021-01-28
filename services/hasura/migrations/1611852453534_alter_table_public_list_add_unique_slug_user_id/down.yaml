@@ -1,0 +1,10 @@
+- args:
+    cascade: false
+    read_only: false
+    sql: alter table "public"."list" drop constraint "list_slug_user_id_key";
+  type: run_sql
+- args:
+    cascade: false
+    read_only: false
+    sql: alter table "public"."list" add constraint "list_slug_key" unique ("slug");
+  type: run_sql

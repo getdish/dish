@@ -376,7 +376,7 @@ export enum list_constraint {
   /** unique or primary key constraint */
   list_pkey = 'list_pkey',
   /** unique or primary key constraint */
-  list_slug_key = 'list_slug_key',
+  list_slug_user_id_key = 'list_slug_user_id_key',
 }
 
 /** input type for incrementing integer column in table "list" */
