@@ -33,6 +33,7 @@ export function Card({
   hoverable,
   hideInfo,
   backgroundColor,
+  isBehind,
   size,
 }: {
   below?: string | null
@@ -45,6 +46,7 @@ export function Card({
   hoverable?: boolean
   size?: 'sm' | 'md'
   backgroundColor?: string | null
+  isBehind?: boolean
 }) {
   const { altPastelColor, color, darkColor } = backgroundColor
     ? getColorsForColor(backgroundColor)
@@ -122,9 +124,18 @@ export function Card({
         fullscreen
         justifyContent="flex-end"
         pointerEvents="none"
-        zIndex={10}
+        zIndex={11}
       >
         {outside}
+
+        {isBehind && (
+          <LinearGradient
+            style={[StyleSheet.absoluteFill, sheet.cardGradient]}
+            start={[0, 0]}
+            end={[1, 0]}
+            colors={['rgba(0,0,0,0.25)', 'rgba(0,0,0,0)']}
+          />
+        )}
 
         <VStack
           className="ease-in-out"
@@ -173,3 +184,11 @@ export function Card({
     </CardFrame>
   )
 }
+
+const sheet = StyleSheet.create({
+  cardGradient: {
+    zIndex: 11,
+    borderRadius: cardFrameBorderRadius,
+    right: '50%',
+  },
+})

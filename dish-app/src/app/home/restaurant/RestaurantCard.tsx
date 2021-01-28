@@ -17,6 +17,7 @@ export type RestaurantCardProps = {
   hideScore?: boolean
   hoverable?: boolean
   aspectFixed?: boolean
+  isBehind?: boolean
 }
 
 const fallbackCard = <CardFrame aspectFixed />
@@ -38,6 +39,7 @@ export const RestaurantCardContent = memo(
       // size = 'lg',
       restaurantSlug,
       restaurantId,
+      isBehind,
       hideScore,
       aspectFixed,
       hoverable = true,
@@ -53,6 +55,7 @@ export const RestaurantCardContent = memo(
       return (
         <Link name="restaurant" asyncClick params={{ slug: restaurantSlug }}>
           <Card
+            isBehind={isBehind}
             title={restaurant.name}
             subTitle={price_range}
             below={below}
