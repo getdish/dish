@@ -34,17 +34,17 @@ export const tagDescriptions = {
   vibe: {
     dish: 'Nice 🍔',
     cuisine: 'Vibey 🍔',
-    plain: 'Vibes',
+    plain: '🍔 Vibes',
   },
-  drink: {
+  drinks: {
     dish: '🍔 & drinks',
     cuisine: '🍔 with a bar',
-    plain: 'Good Drinks',
+    plain: 'Good 🍔 drinks',
   },
   veg: {
     dish: 'The best Vegetarian 🍔',
     cuisine: 'Vegetarian 🍔 Restaurants',
-    plain: 'Vegetarian',
+    plain: '🍔 Vegetarian',
   },
 }
 

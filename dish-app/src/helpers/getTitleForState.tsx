@@ -13,10 +13,11 @@ const getTitleForQuery = (query: string) => {
 
 export function getTitleForState(
   state: HomeStateItem,
-  options?: { lowerCase: boolean }
+  options: { lowerCase?: boolean } = {}
 ) {
   const { curLocName = '...' } = state
   const tags = getActiveTags(state)
+  console.log('tags', tags)
   const lense = tags.find((x) => x.type === 'lense')
   const countryTag = tags.find((x) => x.type === 'country')
   const dishTag = tags.find((x) => x.type === 'dish')
@@ -28,10 +29,12 @@ export function getTitleForState(
     else lensePlaceholder = descriptions.plain
   }
 
+  console.log('lensePlaceholder', lensePlaceholder)
+
   let titleParts: string[] = []
-  const cheap = tags.some((t) => t.name == 'price-low')
-  const midRange = tags.some((t) => t.name == 'price-mid')
-  const expensive = tags.some((t) => t.name == 'price-high')
+  const cheap = tags.some((t) => t.slug == 'filters__price-low')
+  const midRange = tags.some((t) => t.slug == 'filters__price-mid')
+  const expensive = tags.some((t) => t.slug == 'filters__price-high')
   if (cheap && !midRange && !expensive) {
     titleParts.push('Cheap')
   }
@@ -39,7 +42,7 @@ export function getTitleForState(
     titleParts.push('Mid-Range')
   }
   if (!cheap && !midRange && expensive) {
-    titleParts.push('Fancy')
+    titleParts.push('High-end')
   }
   if (countryTag?.name) {
     titleParts.push(countryTag.name)
@@ -53,16 +56,12 @@ export function getTitleForState(
   const searchName = getTitleForQuery(state.searchQuery ?? '')
   let titleTagsString = titleParts.filter(isPresent).join(' ')
 
-  if (options?.lowerCase) {
-    titleTagsString = titleTagsString.toLowerCase()
-  }
-
   // lowercase when not at front
   if (!countryTag && lensePlaceholder.indexOf('🍔') > 0) {
     titleTagsString = titleTagsString.toLowerCase()
   }
 
-  const titleSubject = lensePlaceholder.replace('🍔', titleTagsString)
+  let titleSubject = lensePlaceholder.replace('🍔', titleTagsString)
 
   // build subtitle
   let subTitleParts: string[] = []
@@ -74,8 +73,7 @@ export function getTitleForState(
   }
   subTitleParts.push(`${curLocName}`)
 
-  const subTitle = subTitleParts.join(' ').toLowerCase()
-  //   native extraction failing?
+  let subTitle = subTitleParts.join(' ')
 
   const subTitleElements = (
     <Text fontSize={14} fontWeight="300" {...(isWeb && { color: 'inherit' })}>
@@ -85,7 +83,13 @@ export function getTitleForState(
     </Text>
   )
 
-  const title = `${titleSubject.toLowerCase()}`
+  let title = `${titleSubject}`.replaceAll('  ', ' ')
+
+  if (options.lowerCase) {
+    title = title.toLowerCase()
+    subTitle = subTitle.toLowerCase()
+    titleSubject = titleSubject.toLowerCase()
+  }
 
   const pageName = (
     <>
