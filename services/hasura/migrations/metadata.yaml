@@ -195,6 +195,7 @@ tables:
       - list_restaurant_id
       - position
       - restaurant_tag_id
+      - tag_id
       - user_id
       backend_only: false
   select_permissions:
@@ -206,6 +207,7 @@ tables:
       - list_restaurant_id
       - restaurant_tag_id
       - position
+      - tag_id
       - user_id
       filter: {}
       limit: 100
@@ -217,6 +219,7 @@ tables:
       - list_id
       - list_restaurant_id
       - restaurant_tag_id
+      - tag_id
       - user_id
       filter: {}
       limit: 100
@@ -228,6 +231,7 @@ tables:
       - list_restaurant_id
       - position
       - restaurant_tag_id
+      - tag_id
       - user_id
       filter:
         user_id:
@@ -767,6 +771,7 @@ tables:
       - id
       - list_id
       - location
+      - native_data_unique_key
       - rating
       - restaurant_id
       - source
@@ -799,16 +804,21 @@ tables:
   - role: user
     permission:
       columns:
-      - categories
       - authored_at
+      - categories
       - favorited
       - id
+      - list_id
+      - location
       - rating
       - restaurant_id
+      - source
       - tag_id
       - text
+      - type
       - updated_at
       - user_id
+      - vote
       filter:
         user_id:
           _eq: X-Hasura-User-Id
