@@ -1,12 +1,22 @@
 import { graphql } from '@dish/graph'
 import { ellipseText } from '@dish/helpers'
 import { capitalize } from 'lodash'
-import React, { memo, useState } from 'react'
-import { AbsoluteVStack, HStack, Input, Text, VStack, useTheme } from 'snackui'
+import React, { memo, useRef, useState } from 'react'
+import {
+  AbsoluteVStack,
+  Button,
+  HStack,
+  Input,
+  Spacer,
+  Text,
+  VStack,
+  useTheme,
+} from 'snackui'
 
 import { blue } from '../../../constants/colors'
 import { queryRestaurant } from '../../../queries/queryRestaurant'
 import { ensureFlexText } from '../../home/restaurant/ensureFlexText'
+import { SmallButton } from '../SmallButton'
 
 const quote = (
   <AbsoluteVStack top={-10} left={-0}>
@@ -46,8 +56,9 @@ export const RestaurantOverview = memo(
     const lineHeight = Math.round((size === 'lg' ? 26 : 24) * scale + extra)
     const fontSize = Math.round(16 * scale + extra)
     const [isEditing, setIsEditing] = useState(false)
+    const editedText = useRef('')
 
-    if (summary) {
+    if (summary || editableDescription) {
       return (
         <HStack
           maxHeight={fullHeight ? 'auto' : lineHeight * 4 - 2}
@@ -72,18 +83,31 @@ export const RestaurantOverview = memo(
                 fontSize={fontSize}
                 lineHeight={lineHeight}
                 color={theme.color}
-                onBlur={(e) => onEdit?.(e.target['value'])}
-              />
-              <Text
-                marginTop={10}
-                alignSelf="flex-end"
-                color={blue}
-                onPress={() => {
-                  setIsEditing(false)
+                onChangeText={(text) => {
+                  editedText.current = text
                 }}
-              >
-                Cancel
-              </Text>
+              />
+              <HStack marginVertical={10} alignItems="center" flex={1}>
+                <VStack flex={1} />
+                <Text
+                  color={blue}
+                  onPress={() => {
+                    setIsEditing(false)
+                  }}
+                  marginTop={4}
+                >
+                  Cancel
+                </Text>
+                <Spacer size="sm" />
+                <SmallButton
+                  onPress={() => {
+                    onEdit?.(editedText.current)
+                    setIsEditing(false)
+                  }}
+                >
+                  Save
+                </SmallButton>
+              </HStack>
             </VStack>
           ) : (
             <Text
@@ -119,6 +143,8 @@ export const RestaurantOverview = memo(
                   Edit &raquo;
                 </Text>
               )}
+
+              {ensureFlexText}
             </Text>
           )}
         </HStack>

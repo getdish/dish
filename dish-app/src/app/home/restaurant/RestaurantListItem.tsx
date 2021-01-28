@@ -243,11 +243,7 @@ const RestaurantListItemContent = memo(
     const score = Math.round((meta?.effective_score ?? 0) / 20)
     const theme = useTheme()
     const showAbove = !!above || !!activeTagSlugs
-
-    const nextDescription = useRef<string>()
-    const setDescription = useCallback((val: string) => {
-      nextDescription.current = val
-    }, [])
+    const [editedDescription, setEditedDescription] = useState('')
 
     return (
       <VStack
@@ -446,9 +442,9 @@ const RestaurantListItemContent = memo(
                 <RestaurantOverview
                   fullHeight={flexibleHeight}
                   disableEllipse={flexibleHeight}
-                  text={description}
+                  text={editedDescription || description}
                   editableDescription={editableDescription}
-                  onEdit={setDescription}
+                  onEdit={setEditedDescription}
                   restaurantSlug={restaurantSlug}
                 />
               </VStack>

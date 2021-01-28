@@ -14,6 +14,8 @@ type Props = StackProps & {
   vote?: -1 | 0 | 1
   setVote?: (next: -1 | 1 | 0) => any
   subtle?: boolean
+  upTooltip?: string
+  downTooltip?: string
 }
 
 export const UpvoteDownvoteScore = memo(
@@ -22,6 +24,8 @@ export const UpvoteDownvoteScore = memo(
     showVoteOnHover,
     ratio,
     vote = 0,
+    upTooltip,
+    downTooltip,
     subtle,
     setVote,
     size,
@@ -114,7 +118,11 @@ export const UpvoteDownvoteScore = memo(
         {subtle ? (
           upvote
         ) : (
-          <Tooltip position="right" contents="Upvote" {...isOpenProp}>
+          <Tooltip
+            position="right"
+            contents={upTooltip ?? 'Upvote'}
+            {...isOpenProp}
+          >
             {upvote}
           </Tooltip>
         )}
@@ -130,7 +138,11 @@ export const UpvoteDownvoteScore = memo(
         {subtle ? (
           downvote
         ) : (
-          <Tooltip position="right" contents="Downvote" {...isOpenProp}>
+          <Tooltip
+            position="right"
+            contents={downTooltip ?? 'Downvote'}
+            {...isOpenProp}
+          >
             {downvote}
           </Tooltip>
         )}
