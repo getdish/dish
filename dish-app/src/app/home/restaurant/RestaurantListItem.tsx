@@ -80,7 +80,7 @@ type RestaurantListItemProps = {
   meta?: RestaurantItemMeta
   activeTagSlugs?: string[]
   onFinishRender?: Function
-  description?: string
+  description?: string | null
   editableDescription?: boolean
   onChangeDescription?: (next: string) => void
   editablePosition?: boolean

@@ -54,6 +54,7 @@ import { SmallButton } from '../../views/SmallButton'
 import { StackDrawer } from '../../views/StackDrawer'
 import { UpvoteDownvoteScore } from '../../views/UpvoteDownvoteScore'
 import { StackItemProps } from '../HomeStackView'
+import { PageFooter } from '../PageFooter'
 import { CircleButton } from '../restaurant/CircleButton'
 import { RestaurantListItem } from '../restaurant/RestaurantListItem'
 import { PageTitle } from '../search/PageTitle'
@@ -531,68 +532,96 @@ const ListPageContent = graphql((props: Props) => {
           )}
         </VStack>
 
-        {restaurants.map(
-          ({ restaurantId, restaurant, comment, dishes, position }, index) => {
-            const dishSlugs = dishes.map((x) => x?.tag.slug).filter(isPresent)
-            if (!restaurant.slug) {
-              return null
+        <VStack minHeight={300}>
+          {!restaurants.length && (
+            <VStack
+              padding={20}
+              margin={20}
+              borderWidth={1}
+              borderColor="rgba(100,100,100,0.1)"
+              borderRadius={10}
+            >
+              <Paragraph fontWeight="800">
+                Nothing added to this list, yet.
+              </Paragraph>
+              {isMyList && (
+                <Paragraph>
+                  Use the blue (+) button on the bottom right to add.
+                </Paragraph>
+              )}
+            </VStack>
+          )}
+
+          {restaurants.map(
+            (
+              { restaurantId, restaurant, comment, dishes, position },
+              index
+            ) => {
+              const dishSlugs = dishes.map((x) => x?.tag.slug).filter(isPresent)
+              if (!restaurant.slug) {
+                return null
+              }
+              return (
+                <RestaurantListItem
+                  key={restaurant.slug}
+                  curLocInfo={props.item.curLocInfo ?? null}
+                  restaurantId={restaurantId}
+                  restaurantSlug={restaurant.slug}
+                  rank={index + 1}
+                  description={comment}
+                  hideTagRow
+                  above={
+                    <>
+                      {isEditing && (
+                        <AbsoluteVStack top={-28} left={28}>
+                          <CircleButton
+                            backgroundColor={bgLight}
+                            width={44}
+                            height={44}
+                            onPress={() => {
+                              restaurantActions.delete(restaurantId)
+                            }}
+                          >
+                            <X size={20} />
+                          </CircleButton>
+                        </AbsoluteVStack>
+                      )}
+                      <UpvoteDownvoteScore
+                        upTooltip="Move up"
+                        downTooltip="Move down"
+                        score={index + 1}
+                        setVote={async (vote) => {
+                          restaurantActions.promote(
+                            vote === 1 ? index : index + 1
+                          )
+                        }}
+                      />
+                    </>
+                  }
+                  flexibleHeight
+                  dishSlugs={dishSlugs.length ? dishSlugs : undefined}
+                  editableDishes={isEditing}
+                  onChangeDishes={async (dishes) => {
+                    console.log('should change dishes', dishes)
+                    restaurantActions.setDishes(restaurantId, dishes)
+                  }}
+                  editableDescription={isMyList}
+                  onChangeDescription={(next) => {
+                    console.log('should change descirption', next)
+                  }}
+                  editablePosition={isEditing}
+                  onChangePosition={(next) => {
+                    console.log('should change position', next)
+                  }}
+                />
+              )
             }
-            return (
-              <RestaurantListItem
-                key={restaurant.slug}
-                curLocInfo={props.item.curLocInfo ?? null}
-                restaurantId={restaurantId}
-                restaurantSlug={restaurant.slug}
-                rank={index + 1}
-                description={comment ?? ''}
-                hideTagRow
-                above={
-                  <>
-                    {isEditing && (
-                      <AbsoluteVStack top={-28} left={28}>
-                        <CircleButton
-                          backgroundColor={bgLight}
-                          width={44}
-                          height={44}
-                          onPress={() => {
-                            restaurantActions.delete(restaurantId)
-                          }}
-                        >
-                          <X size={20} />
-                        </CircleButton>
-                      </AbsoluteVStack>
-                    )}
-                    <UpvoteDownvoteScore
-                      upTooltip="Move up"
-                      downTooltip="Move down"
-                      score={index + 1}
-                      setVote={async (vote) => {
-                        restaurantActions.promote(
-                          vote === 1 ? index : index + 1
-                        )
-                      }}
-                    />
-                  </>
-                }
-                flexibleHeight
-                dishSlugs={dishSlugs.length ? dishSlugs : undefined}
-                editableDishes={isEditing}
-                onChangeDishes={async (dishes) => {
-                  console.log('should change dishes', dishes)
-                  restaurantActions.setDishes(restaurantId, dishes)
-                }}
-                editableDescription={isEditing}
-                onChangeDescription={(next) => {
-                  console.log('should change descirption', next)
-                }}
-                editablePosition={isEditing}
-                onChangePosition={(next) => {
-                  console.log('should change position', next)
-                }}
-              />
-            )
-          }
-        )}
+          )}
+        </VStack>
+
+        <Spacer size="xxxl" />
+
+        <PageFooter />
       </ContentScrollView>
     </StackDrawer>
   )

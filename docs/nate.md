@@ -1,5 +1,7 @@
 for pablo:
 
+  - "Edit Profile" on UserPage, after I edit it doesn't update profile apge
+    - a simple way to have it update *all* queryUser()
   - we need to generate two schemas, one for admin, one for user
   - need `mutate` helper accept options (noCache so we can replace resolveMutation in queryResolvers with mutate)
   - ListPage various fixes:

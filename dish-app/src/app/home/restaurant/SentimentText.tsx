@@ -18,10 +18,14 @@ export const SentimentText = ({
       borderRadius={6}
       alignItems="center"
     >
-      <Text lineHeight={26} fontSize={14} color="#fff" ellipse {...props}>
-        {children}
-      </Text>
-      <Spacer size="xs" />
+      {!!children && (
+        <>
+          <Text lineHeight={26} fontSize={14} color="#fff" ellipse {...props}>
+            {children}
+          </Text>
+          <Spacer size="xs" />
+        </>
+      )}
       <Icon size={12} color="#fff" />
     </HStack>
   )

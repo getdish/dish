@@ -1,6 +1,6 @@
 import React, { memo } from 'react'
 import { Image } from 'react-native'
-import { Text, VStack } from 'snackui'
+import { Text, VStack, useTheme } from 'snackui'
 
 import { defaultUserImage } from '../../../constants/defaultUserImage'
 import { characters } from './characters'
@@ -16,8 +16,13 @@ export const UserAvatar = memo(
     charIndex: number
   }) => {
     const char = characters[charIndex]
+    const theme = useTheme()
     return (
-      <VStack position="relative">
+      <VStack
+        borderRadius={1000}
+        backgroundColor={theme.backgroundColorSecondary}
+        position="relative"
+      >
         <Image
           source={{ uri: avatar || defaultUserImage }}
           style={{
@@ -30,7 +35,7 @@ export const UserAvatar = memo(
           position="absolute"
           bottom={-size * 0.15}
           left={-size * 0.15}
-          fontSize={size * 0.5}
+          fontSize={size * 0.45}
         >
           {char ?? '👻'}
         </Text>
