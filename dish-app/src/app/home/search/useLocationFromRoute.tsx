@@ -28,15 +28,15 @@ export async function getLocationFromRoute(
 
     // lat _ lng _ span
     if (+params.region[0] >= 0) {
-      const [latStr, lngStr, spanStr] = params.region.split('_')
+      const [latStr, lngStr, spanLatStr, spanLngStr] = params.region.split('_')
       return {
         center: {
           lat: +latStr,
           lng: +lngStr,
         },
         span: {
-          lat: +spanStr,
-          lng: +spanStr,
+          lat: +spanLatStr,
+          lng: +spanLngStr,
         },
       }
     }

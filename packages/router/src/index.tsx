@@ -259,6 +259,18 @@ export class Router<
     }
   }
 
+  setParams(params: any) {
+    this.navigate({
+      name: this.curPage.name,
+      search: this.curPage.search,
+      params: {
+        ...this.curPage.params,
+        ...params,
+      },
+      replace: true,
+    } as NavigateItem<RT>)
+  }
+
   back() {
     history.back()
   }

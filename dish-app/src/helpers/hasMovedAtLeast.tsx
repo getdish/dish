@@ -14,3 +14,5 @@ export const hasMovedAtLeast = (
   const diff = d1 + d2 + d3 + d4
   return diff > distance
 }
+
+global['hasMovedAtLeast'] = hasMovedAtLeast
