@@ -530,6 +530,8 @@ const ListPageContent = graphql((props: Props) => {
                       </AbsoluteVStack>
                     )}
                     <UpvoteDownvoteScore
+                      upTooltip="Move up"
+                      downTooltip="Move down"
                       score={index + 1}
                       setVote={async (vote) => {
                         restaurantActions.promote(
