@@ -13,7 +13,7 @@ import {
 import { isPresent } from '@dish/helpers'
 import { Plus } from '@dish/react-feather'
 import { chunk, partition, sortBy, uniqBy, zip } from 'lodash'
-import React, { Suspense, memo, useMemo, useRef } from 'react'
+import React, { Suspense, memo, useMemo, useRef, useState } from 'react'
 import { Dimensions, ScrollView } from 'react-native'
 import {
   HStack,
@@ -26,7 +26,9 @@ import {
 } from 'snackui'
 
 import { peachAvatar } from '../../constants/avatar'
+import { getColorsForName } from '../../helpers/getColorsForName'
 import { DishTagItem } from '../../helpers/getRestaurantDishes'
+import { hexToRGB } from '../../helpers/hexToRGB'
 import { selectTagDishViewSimple } from '../../helpers/selectDishViewSimple'
 import { useQueryLoud } from '../../helpers/useQueryLoud'
 import { queryRestaurant } from '../../queries/queryRestaurant'
@@ -39,10 +41,12 @@ import { DishView } from '../views/dish/DishView'
 import { Link } from '../views/Link'
 import { ListCard } from '../views/list/ListCard'
 import { SlantedTitle, SlantedTitleProps } from '../views/SlantedTitle'
+import { GradientButton } from './GradientButton'
 import { HomePageFooter } from './HomePageFooter'
 import { HomeStackViewProps } from './HomeStackViewProps'
 import { RestaurantCard } from './restaurant/RestaurantCard'
 import { SkewedCard, SkewedCardCarousel } from './SkewedCard'
+import { TagsText } from './TagsText'
 
 export type FeedItem =
   | FeedItemDish
@@ -182,9 +186,6 @@ export const HomePageFeed = memo(
   })
 )
 
-const isRestaurantFeedItem = (x: FeedItem): x is FeedItemRestaurant =>
-  x.type === 'restaurant'
-
 const useTopCuisines = (center: LngLat) => {
   return useQueryLoud('topcuisine', () => getHomeCuisines(center))
 }
@@ -203,7 +204,7 @@ const ListFeedCard = graphql((props: FeedItemList) => {
     <>
       <FeedSlantedTitle>
         <HStack alignItems="center">
-          <Text>Lists</Text>
+          <Text>Playlists</Text>
           <Spacer size="sm" />
           <Link
             promptLogin
@@ -254,7 +255,6 @@ const FeedSlantedTitle = (props: SlantedTitleProps) => {
 
 const CuisineFeedCard = memo(
   graphql(function CuisineFeedCard(props: FeedItemCuisine) {
-    const scrollRef = useRef<ScrollView>()
     const dishes = props.dishes
       ? query.tag({
           where: {
@@ -267,59 +267,83 @@ const CuisineFeedCard = memo(
       : []
 
     const restaurants = props.dishes?.[0]?.best_restaurants ?? []
-    const perCol = 2
+    const [titleWidth, setTitleWidth] = useState(100)
 
     return (
       <>
-        <FeedSlantedTitle>{props.title}</FeedSlantedTitle>
+        <FeedSlantedTitle
+          onLayout={(x) => setTitleWidth(x.nativeEvent.layout.width)}
+        >
+          {props.title}
+        </FeedSlantedTitle>
         <ScrollView
-          ref={scrollRef as any}
+          style={{
+            maxWidth: '100%',
+            overflow: 'hidden',
+            marginBottom: -20,
+            marginTop: -14,
+          }}
+          horizontal
+          showsHorizontalScrollIndicator={false}
+        >
+          <VStack paddingVertical={12} paddingHorizontal={40} flexWrap="nowrap">
+            <HStack
+              spacing={6}
+              marginHorizontal="auto"
+              alignItems="center"
+              justifyContent="center"
+              overflow="hidden"
+            >
+              <VStack width={titleWidth} />
+              {dishes.map((dish, index) => {
+                const color = getColorsForName(dish.name).color
+                const rgb = hexToRGB(color).rgb
+                return (
+                  <Link key={index} tag={{ slug: dish.slug }} asyncClick>
+                    <GradientButton rgb={rgb.map((x) => x * 1.1)}>
+                      <TagsText
+                        tags={[{ name: dish.name, icon: dish.icon }]}
+                        color={color}
+                      />
+                    </GradientButton>
+                  </Link>
+                )
+              })}
+            </HStack>
+          </VStack>
+        </ScrollView>
+        <ScrollView
           style={{ maxWidth: '100%', overflow: 'hidden' }}
           horizontal
           showsHorizontalScrollIndicator={false}
         >
-          <HStack
-            paddingTop={53}
-            paddingHorizontal={40}
-            flexWrap="nowrap"
-            alignItems="center"
-            justifyContent="center"
-          >
-            <DishCol>{dishes.slice(0, perCol).map(getDishColInner)}</DishCol>
-            <DishCol transform={[{ translateY: -8 }]}>
-              {dishes.slice(perCol, perCol * 2).map(getDishColInner)}
-            </DishCol>
-            <DishCol transform={[{ translateY: -16 }]}>
-              {dishes.slice(perCol * 2, perCol * 3).map(getDishColInner)}
-            </DishCol>
-            <DishCol transform={[{ translateY: -24 }]}>
-              {dishes.slice(perCol * 3, perCol * 4).map(getDishColInner)}
-            </DishCol>
-
-            {restaurants.map((r, i) => {
-              return (
-                <SkewedCard zIndex={1000 - i} isBehind={i > 0} key={r.id}>
-                  <RestaurantCard
-                    hideScore
-                    restaurantId={r.id}
-                    restaurantSlug={r.slug}
-                    hoverable={false}
-                    // below={
-                    //   <VStack position="absolute" bottom={-10} right={-5}>
-                    //     <DishView
-                    //       dish={props.dish}
-                    //       restaurantId={r.id}
-                    //       restaurantSlug={r.slug}
-                    //       size={140}
-                    //       isFallback
-                    //     />
-                    //   </VStack>
-                    // }
-                  />
-                </SkewedCard>
-              )
-            })}
-          </HStack>
+          <VStack paddingVertical={0} paddingHorizontal={0} flexWrap="nowrap">
+            <HStack>
+              {restaurants.map((r, i) => {
+                return (
+                  <SkewedCard zIndex={1000 - i} isBehind={i > 0} key={r.id}>
+                    <RestaurantCard
+                      hideScore
+                      restaurantId={r.id}
+                      restaurantSlug={r.slug}
+                      hoverable={false}
+                      // below={
+                      //   <VStack position="absolute" bottom={-10} right={-5}>
+                      //     <DishView
+                      //       dish={props.dish}
+                      //       restaurantId={r.id}
+                      //       restaurantSlug={r.slug}
+                      //       size={140}
+                      //       isFallback
+                      //     />
+                      //   </VStack>
+                      // }
+                    />
+                  </SkewedCard>
+                )
+              })}
+            </HStack>
+          </VStack>
         </ScrollView>
       </>
     )
@@ -416,6 +440,7 @@ const RestaurantFeedCard = (props: FeedItemRestaurant) => {
     />
   )
 }
+
 const getHomeCuisines = async (center: LngLat) => {
   const cuisineItems = await getHomeDishes(center.lng, center.lat)
   let all: TopCuisine[] = []

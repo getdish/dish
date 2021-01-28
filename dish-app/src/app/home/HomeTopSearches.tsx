@@ -1,11 +1,12 @@
 import React, { memo } from 'react'
-import { StyleSheet } from 'react-native'
-import { HStack, LinearGradient, Text } from 'snackui'
+import { HStack } from 'snackui'
 
 import { tagLenses } from '../../constants/localTags'
-import { tagDisplayName } from '../../constants/tagMeta'
+import { rgbString } from '../../helpers/rgbString'
 import { NavigableTag } from '../../types/tagTypes'
-import { LinkButton } from '../views/LinkButton'
+import { Link } from '../views/Link'
+import { GradientButton } from './GradientButton'
+import { TagsText } from './TagsText'
 
 export const HomeTopSearches = memo(() => {
   return (
@@ -21,72 +22,14 @@ export const HomeTopSearches = memo(() => {
       overflow="hidden"
     >
       {recentSearches.map((search, index) => {
-        const lenseTag =
-          search.tags.find((x) => x.type === 'lense') ?? tagLenses[0]
-        const hasLenseColor = !!lenseTag?.rgb
-        const rgbString = hasLenseColor
-          ? lenseTag.rgb.map((x) => x * 1.1).join(',')
-          : ''
+        const rgb =
+          search.tags.find((x) => x.type === 'lense')?.rgb ?? tagLenses[0].rgb
         return (
-          <LinkButton
-            key={index}
-            tags={search.tags}
-            asyncClick
-            paddingVertical={12}
-            paddingHorizontal={16}
-            alignItems="center"
-            borderRadius={60}
-            backgroundColor="transparent"
-            className="safari-fix-overflow"
-            position="relative"
-            overflow="hidden"
-            flexShrink={1}
-          >
-            {hasLenseColor && (
-              <LinearGradient
-                colors={[`rgba(${rgbString}, 0.15)`, `rgba(${rgbString},0.07)`]}
-                start={[1, 1]}
-                end={[-1, 1]}
-                style={StyleSheet.absoluteFill}
-              />
-            )}
-            {search.tags.map((tag, index) => (
-              <React.Fragment key={tag.name}>
-                {tag.icon ? (
-                  <Text
-                    marginRight={6}
-                    fontSize={20}
-                    lineHeight={20}
-                    transform={[{ translateY: 0.5 }]}
-                  >
-                    {tag.icon.trim()}{' '}
-                  </Text>
-                ) : (
-                  ''
-                )}
-                <Text
-                  {...(hasLenseColor && {
-                    color: `rgb(${rgbString})`,
-                  })}
-                  fontSize={16}
-                  transform={[{ translateY: -1 }]}
-                >
-                  {tagDisplayName(tag)}
-                </Text>
-                {index < search.tags.length - 1 ? (
-                  <Text
-                    paddingHorizontal={8}
-                    fontWeight="700"
-                    fontSize={12}
-                    opacity={0.23}
-                    transform={[{ translateY: -3 }]}
-                  >
-                    +
-                  </Text>
-                ) : null}
-              </React.Fragment>
-            ))}
-          </LinkButton>
+          <Link key={index} tags={search.tags} asyncClick>
+            <GradientButton rgb={rgb.map((x) => x * 1.1)}>
+              <TagsText tags={search.tags} color={rgbString(rgb)} />
+            </GradientButton>
+          </Link>
         )
       })}
     </HStack>
