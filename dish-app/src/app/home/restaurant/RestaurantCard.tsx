@@ -61,7 +61,7 @@ export const RestaurantCardContent = memo(
             below={below}
             outside={
               !hideScore && (
-                <AbsoluteVStack top={-10} left={-10} zIndex={20}>
+                <AbsoluteVStack bottom={-10} right={-10} zIndex={20}>
                   <RestaurantUpVoteDownVote
                     rounded
                     display="ratio"

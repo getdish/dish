@@ -7,6 +7,7 @@ import {
   Button,
   Divider,
   HStack,
+  InteractiveContainer,
   LoadingItem,
   LoadingItems,
   Paragraph,
@@ -16,6 +17,7 @@ import {
   VStack,
 } from 'snackui'
 
+import { queryUser } from '../../../queries/queryUser'
 import { router } from '../../../router'
 import { HomeStateItemUser } from '../../../types/homeTypes'
 import { useSetAppMap } from '../../AppMapStore'
@@ -31,7 +33,6 @@ import { StackItemProps } from '../HomeStackView'
 import { RestaurantReview } from '../restaurant/RestaurantReview'
 import { CardCarousel } from './CardCarousel'
 import { UserAvatar } from './UserAvatar'
-import { useUserQuery } from './useUserQuery'
 
 type UserPane = 'vote' | 'review' | ''
 
@@ -95,7 +96,7 @@ const UserPageContent = graphql(
     isActive,
     pane,
   }: StackItemProps<HomeStateItemUser> & { pane: UserPane | null }) => {
-    const user = useUserQuery(item.username ?? '')
+    const user = queryUser(item.username ?? '')
     const lists = user.lists({
       limit: 10,
       where: {
@@ -103,7 +104,7 @@ const UserPageContent = graphql(
           _eq: true,
         },
       },
-      order_by: [{ created_at: order_by.asc }],
+      order_by: [{ created_at: order_by.desc }],
     })
     const reviews = useUserReviews(user, pane || 'both')
     const hasReviews = !!reviews?.length
@@ -172,7 +173,7 @@ const UserHeader = memo(
       pane: UserPane | null
     }) => {
       const userStore = useUserStore()
-      const user = useUserQuery(item?.username ?? '')
+      const user = queryUser(item?.username ?? '')
       const isOwnProfile = userStore.user?.username === user?.username
 
       if (!user) {
@@ -190,7 +191,7 @@ const UserHeader = memo(
             }}
           >
             <VStack maxWidth="100%" width="100%">
-              <VStack flex={1} padding={18}>
+              <VStack flex={1} padding={20} paddingVertical={25}>
                 <HStack alignItems="center" flex={1} position="relative">
                   <VStack marginTop={-10} marginBottom={5}>
                     <UserAvatar
@@ -214,8 +215,9 @@ const UserHeader = memo(
 
                   <VStack flex={1} minWidth={20} />
 
-                  <HStack spacing="sm">
+                  <InteractiveContainer>
                     <SmallButton
+                      borderColor="transparent"
                       theme={!pane ? 'active' : null}
                       onPress={() => {
                         setPane()
@@ -224,6 +226,7 @@ const UserHeader = memo(
                       Profile
                     </SmallButton>
                     <SmallButton
+                      borderColor="transparent"
                       theme={pane === 'review' ? 'active' : null}
                       onPress={() => {
                         setPane('review')
@@ -232,6 +235,7 @@ const UserHeader = memo(
                       Reviews
                     </SmallButton>
                     <SmallButton
+                      borderColor="transparent"
                       theme={pane === 'vote' ? 'active' : null}
                       onPress={() => {
                         setPane('vote')
@@ -239,7 +243,7 @@ const UserHeader = memo(
                     >
                       Votes
                     </SmallButton>
-                  </HStack>
+                  </InteractiveContainer>
                 </HStack>
 
                 <Divider />

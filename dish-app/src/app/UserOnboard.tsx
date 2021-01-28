@@ -13,9 +13,9 @@ import {
 } from 'snackui'
 
 import dishNeon from '../assets/dish-neon.jpg'
+import { queryUser } from '../queries/queryUser'
 import { characters } from './home/user/characters'
 import { UserAvatar } from './home/user/UserAvatar'
-import { useUserQuery } from './home/user/useUserQuery'
 import { useUserStore } from './userStore'
 import { SmallButton } from './views/SmallButton'
 
@@ -30,7 +30,7 @@ export const UserOnboard = graphql(
     })
     const [charIndex, setCharIndex] = useState(0)
     const username = userStore.user?.username ?? ''
-    const user = useUserQuery(username)
+    const user = queryUser(username)
     const inputAvatar = useRef<HTMLInputElement>(null)
 
     useEffect(() => {

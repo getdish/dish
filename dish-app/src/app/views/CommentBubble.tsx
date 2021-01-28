@@ -26,6 +26,7 @@ import { PaneControlButtons } from './PaneControlButtons'
 import { SlantedTitle } from './SlantedTitle'
 
 type CommentBubbleProps = Omit<StackProps, 'children'> & {
+  title?: any
   name: string
   avatar: string
   text: any
@@ -37,6 +38,7 @@ type CommentBubbleProps = Omit<StackProps, 'children'> & {
   bubbleHeight?: number
   expandable?: boolean
   date?: Date
+  belowContent?: any
 }
 
 export const CommentBubble = (props: CommentBubbleProps) => {
@@ -96,6 +98,7 @@ export const CommentBubble = (props: CommentBubbleProps) => {
 }
 
 function CommentBubbleContents({
+  title,
   name,
   avatar,
   ellipseContentAbove,
@@ -108,6 +111,7 @@ function CommentBubbleContents({
   date,
   onExpand,
   expanded,
+  belowContent,
   scrollable,
 }: CommentBubbleProps & {
   onExpand?: () => any
@@ -127,31 +131,39 @@ function CommentBubbleContents({
   const colors = getColorsForName(`hi${name}`)
 
   const contents = (
-    <Paragraph
-      className="preserve-whitespace break-word"
-      selectable
-      maxWidth="100%"
-      overflow="hidden"
-      sizeLineHeight={0.85}
-      size={1}
-    >
-      {ellipseContentAbove && text.length > ellipseContentAbove ? (
-        <Text>
-          {expanded
-            ? text
-            : typeof text === 'string'
-            ? text.slice(0, ellipseContentAbove) + '...'
-            : text}{' '}
-          {!expanded && !!expandable && (
-            <Link onPress={onExpand}>
-              <Text>Read more &raquo;</Text>
-            </Link>
-          )}
-        </Text>
-      ) : (
-        text
-      )}
-    </Paragraph>
+    <VStack>
+      {title ? (
+        <>
+          {title}
+          <Spacer />
+        </>
+      ) : null}
+      <Paragraph
+        className="preserve-whitespace break-word"
+        selectable
+        maxWidth="100%"
+        overflow="hidden"
+        sizeLineHeight={0.85}
+        size={1}
+      >
+        {ellipseContentAbove && text.length > ellipseContentAbove ? (
+          <Text>
+            {expanded
+              ? text
+              : typeof text === 'string'
+              ? text.slice(0, ellipseContentAbove) + '...'
+              : text}{' '}
+            {!expanded && !!expandable && (
+              <Link onPress={onExpand}>
+                <Text>Read more &raquo;</Text>
+              </Link>
+            )}
+          </Text>
+        ) : (
+          text
+        )}
+      </Paragraph>
+    </VStack>
   )
 
   return (
@@ -159,7 +171,7 @@ function CommentBubbleContents({
       {before}
 
       <VStack
-        padding={10}
+        padding={15}
         marginBottom={-30}
         marginLeft={20}
         backgroundColor="#fff"
@@ -194,10 +206,20 @@ function CommentBubbleContents({
           contents
         )}
 
-        {!!date && (
+        {!!(date || belowContent) && (
           <>
-            <Spacer />
-            <Paragraph opacity={0.5}>{getTimeFormat(new Date(date))}</Paragraph>
+            <Spacer size="sm" />
+            <HStack>
+              {!!date && (
+                <>
+                  <Paragraph opacity={0.5}>
+                    {getTimeFormat(new Date(date))}
+                  </Paragraph>
+                  <Spacer size="sm" />
+                </>
+              )}
+              {belowContent}
+            </HStack>
           </>
         )}
       </VStack>

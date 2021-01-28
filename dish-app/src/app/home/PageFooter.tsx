@@ -4,7 +4,7 @@ import { AbsoluteVStack, Spacer, Theme, VStack } from 'snackui'
 import { isWeb } from '../../constants/constants'
 import { AppIntroLogin } from '../AppIntroLogin'
 
-export const HomePageFooter = memo(() => {
+export const PageFooter = memo(() => {
   if (!isWeb) {
     return null
   }
@@ -22,10 +22,8 @@ export const HomePageFooter = memo(() => {
           transform={[{ rotate: '-2deg' }]}
         />
         <VStack paddingVertical={20} alignItems="center" paddingHorizontal="5%">
-          <VStack>
-            <AppIntroLogin />
-            <Spacer size="xxl" />
-          </VStack>
+          <AppIntroLogin />
+          <Spacer size="xxl" />
         </VStack>
       </VStack>
     </Theme>

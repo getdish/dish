@@ -107,30 +107,23 @@ export const RestaurantReview = memo(
       return (
         <CommentBubble
           expandable
+          title={
+            <Text fontWeight="800">
+              <Link name="restaurant" params={{ slug: review.restaurant.slug }}>
+                {review.restaurant.name ?? ''}
+              </Link>
+            </Text>
+          }
           date={review.updated_at}
+          belowContent={
+            review.vote ? <SentimentText sentiment={review.vote} /> : null
+          }
           bubbleHeight={height}
           avatar={review.user.avatar ?? peachAvatar}
           height={height}
           ellipseContentAbove={200}
           text={review.text ?? ''}
           name={name}
-          afterName={
-            showRestaurant ? (
-              <HStack alignItems="center">
-                <Text fontSize={14}>
-                  &nbsp; on{' '}
-                  <Link
-                    name="restaurant"
-                    params={{ slug: review.restaurant.slug }}
-                  >
-                    {review.restaurant.name ?? ''}
-                  </Link>
-                </Text>
-                <Spacer />
-                {meta}
-              </HStack>
-            ) : null
-          }
           after={
             !!review.text ? (
               <HStack

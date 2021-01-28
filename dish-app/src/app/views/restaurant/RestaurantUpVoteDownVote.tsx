@@ -75,7 +75,9 @@ const RestaurantUpVoteDownVoteContents = graphql(
 
     ratio = ratio ?? restaurantRatio(restaurant)
     score =
-      display === 'ratio' ? ratio : score ?? Math.round(restaurant.score) + vote
+      display === 'ratio'
+        ? Math.round(ratio * 100)
+        : score ?? Math.round(restaurant.score) + vote
 
     return (
       <VStack pointerEvents="auto" position="relative">

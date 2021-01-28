@@ -39,7 +39,7 @@ export const RestaurantOverview = memo(
     restaurantSlug: string
     fullHeight?: boolean
     size?: 'lg'
-    text?: string
+    text?: string | null
     editableDescription?: boolean
     onEdit?: (next: string) => void
     disableEllipse?: boolean
@@ -60,94 +60,97 @@ export const RestaurantOverview = memo(
 
     if (summary || editableDescription) {
       return (
-        <HStack
-          maxHeight={fullHeight ? 'auto' : lineHeight * 4 - 2}
-          overflow="hidden"
-          paddingHorizontal={30}
-          marginHorizontal={-30}
-          flex={1}
-          alignSelf="center"
-          position="relative"
-        >
-          {quote}
-          {isEditing ? (
-            <VStack>
-              {ensureFlexText}
-              <Input
-                defaultValue={summary}
-                flex={1}
-                height="100%"
-                width="100%"
-                multiline
-                numberOfLines={5}
+        <VStack>
+          <HStack
+            maxHeight={fullHeight ? 'auto' : lineHeight * 4 - 2}
+            overflow="hidden"
+            paddingHorizontal={30}
+            marginHorizontal={-30}
+            flex={1}
+            alignSelf="center"
+            position="relative"
+          >
+            {quote}
+            {isEditing ? (
+              <VStack>
+                {ensureFlexText}
+                <Input
+                  defaultValue={summary}
+                  flex={1}
+                  height="100%"
+                  width="100%"
+                  multiline
+                  numberOfLines={5}
+                  fontSize={fontSize}
+                  lineHeight={lineHeight}
+                  color={theme.color}
+                  onChangeText={(text) => {
+                    editedText.current = text
+                  }}
+                />
+                <HStack
+                  marginVertical={10}
+                  alignItems="center"
+                  justifyContent="center"
+                  flex={1}
+                >
+                  <VStack flex={1} />
+                  <Text
+                    color={blue}
+                    onPress={() => {
+                      setIsEditing(false)
+                    }}
+                  >
+                    Cancel
+                  </Text>
+                  <Spacer size="sm" />
+                  <SmallButton
+                    onPress={() => {
+                      onEdit?.(editedText.current)
+                      setIsEditing(false)
+                    }}
+                  >
+                    Save
+                  </SmallButton>
+                </HStack>
+              </VStack>
+            ) : (
+              <Text
+                display="flex"
+                marginTop="auto"
+                marginBottom="auto"
                 fontSize={fontSize}
                 lineHeight={lineHeight}
+                opacity={1}
                 color={theme.color}
-                onChangeText={(text) => {
-                  editedText.current = text
-                }}
-              />
-              <HStack marginVertical={10} alignItems="center" flex={1}>
-                <VStack flex={1} />
-                <Text
-                  color={blue}
-                  onPress={() => {
-                    setIsEditing(false)
-                  }}
-                  marginTop={4}
-                >
-                  Cancel
-                </Text>
-                <Spacer size="sm" />
-                <SmallButton
-                  onPress={() => {
-                    onEdit?.(editedText.current)
-                    setIsEditing(false)
-                  }}
-                >
-                  Save
-                </SmallButton>
-              </HStack>
-            </VStack>
-          ) : (
-            <Text
-              display="flex"
-              marginTop="auto"
-              marginBottom="auto"
-              fontSize={fontSize}
-              lineHeight={lineHeight}
-              opacity={1}
-              color={theme.color}
+              >
+                {disableEllipse
+                  ? summary
+                  : ellipseText(
+                      summary
+                        .replace(/(\s{2,}|\n)/g, ' ')
+                        .split('. ')
+                        .map((sentence) => capitalize(sentence.trim()))
+                        .join('. '),
+                      {
+                        maxLength: 380,
+                      }
+                    )}
+                {ensureFlexText}
+              </Text>
+            )}
+          </HStack>
+          {editableDescription && (
+            <SmallButton
+              marginLeft={5}
+              onPress={() => {
+                setIsEditing(true)
+              }}
             >
-              {disableEllipse
-                ? summary
-                : ellipseText(
-                    summary
-                      .replace(/(\s{2,}|\n)/g, ' ')
-                      .split('. ')
-                      .map((sentence) => capitalize(sentence.trim()))
-                      .join('. '),
-                    {
-                      maxLength: 380,
-                    }
-                  )}
-
-              {editableDescription && (
-                <Text
-                  marginLeft={5}
-                  color={blue}
-                  onPress={() => {
-                    setIsEditing(true)
-                  }}
-                >
-                  Edit &raquo;
-                </Text>
-              )}
-
-              {ensureFlexText}
-            </Text>
+              Edit description &raquo;
+            </SmallButton>
           )}
-        </HStack>
+        </VStack>
       )
     } else {
       // console.log('no summary', summary)

@@ -39,6 +39,7 @@ export const AppIntroLogin = memo(() => {
           paddingHorizontal="3%"
           maxWidth={320}
           fontWeight="300"
+          ellipse
           size="lg"
           textAlign="center"
         >

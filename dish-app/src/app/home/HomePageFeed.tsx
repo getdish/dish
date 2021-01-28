@@ -8,28 +8,18 @@ import {
   graphql,
   order_by,
   query,
-  tag,
 } from '@dish/graph'
 import { isPresent } from '@dish/helpers'
 import { Plus } from '@dish/react-feather'
 import { chunk, partition, sortBy, uniqBy, zip } from 'lodash'
-import React, { Suspense, memo, useMemo, useRef, useState } from 'react'
+import React, { Suspense, memo, useMemo, useState } from 'react'
 import { Dimensions, ScrollView } from 'react-native'
-import {
-  HStack,
-  LoadingItems,
-  Spacer,
-  StackProps,
-  Text,
-  VStack,
-  useMedia,
-} from 'snackui'
+import { HStack, LoadingItems, Spacer, Text, VStack, useMedia } from 'snackui'
 
 import { peachAvatar } from '../../constants/avatar'
 import { getColorsForName } from '../../helpers/getColorsForName'
 import { DishTagItem } from '../../helpers/getRestaurantDishes'
 import { hexToRGB } from '../../helpers/hexToRGB'
-import { selectTagDishViewSimple } from '../../helpers/selectDishViewSimple'
 import { useQueryLoud } from '../../helpers/useQueryLoud'
 import { queryRestaurant } from '../../queries/queryRestaurant'
 import { HomeStateItemHome, RegionNormalized } from '../../types/homeTypes'
@@ -43,8 +33,8 @@ import { Link } from '../views/Link'
 import { ListCard } from '../views/list/ListCard'
 import { SlantedTitle, SlantedTitleProps } from '../views/SlantedTitle'
 import { GradientButton } from './GradientButton'
-import { HomePageFooter } from './HomePageFooter'
 import { HomeStackViewProps } from './HomeStackViewProps'
+import { PageFooter } from './PageFooter'
 import { RestaurantCard } from './restaurant/RestaurantCard'
 import { SkewedCard, SkewedCardCarousel } from './SkewedCard'
 import { TagsText } from './TagsText'
@@ -179,7 +169,7 @@ export const HomePageFeed = memo(
 
             <VStack height={20} />
 
-            <HomePageFooter />
+            <PageFooter />
           </Suspense>
         )}
       </>
@@ -393,20 +383,16 @@ const DishRestaurantsFeedCard = (props: FeedItemDishRestaurants) => {
                 hoverable={false}
                 below={
                   <VStack
-                    transform={[
-                      { scale: 1 },
-                      { perspective: 1000 },
-                      { rotateY: '-10deg' },
-                    ]}
+                    // transform={[{ perspective: 1000 }, { rotateY: '10deg' }]}
                     position="absolute"
-                    bottom={-10}
-                    right={-5}
+                    bottom={-15}
+                    right={-15}
                   >
                     <DishView
                       {...props.dish}
                       restaurantId={r.id}
                       restaurantSlug={r.slug}
-                      size={140}
+                      size={120}
                       isFallback
                     />
                   </VStack>
