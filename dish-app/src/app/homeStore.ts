@@ -8,13 +8,13 @@ import { Keyboard } from 'react-native'
 
 import { initialHomeState } from '../constants/initialHomeState'
 import { tagLenses } from '../constants/localTags'
-import { allTags } from '../helpers/allTags'
+import { addTagsToCache, allTags } from '../helpers/allTags'
 import { ensureLenseTag } from '../helpers/ensureLenseTag'
 import { getActiveTags } from '../helpers/getActiveTags'
 import { getBreadcrumbs, isBreadcrumbState } from '../helpers/getBreadcrumbs'
 import { getNextState } from '../helpers/getNextState'
 import { getShouldNavigate } from '../helpers/getShouldNavigate'
-import { getTagSlugsFromRoute } from '../helpers/getTagsFromRoute'
+import { getTagsFromRoute } from '../helpers/getTagsFromRoute'
 import { getTagSlug } from '../helpers/getTagSlug'
 import { isHomeState, isSearchState } from '../helpers/homeStateHelpers'
 import { isSearchBarTag } from '../helpers/isSearchBarTag'
@@ -319,14 +319,14 @@ class HomeStore extends Store {
         if (!prev) {
           throw new Error('unreachable')
         }
-        const tagSlugs = [
-          ...getTagSlugsFromRoute(router.curPage as HistoryItem<'search'>),
-        ].map((x) => x.slug)
-
-        const activeTags = tagSlugs.reduce((acc, cur) => {
-          acc[cur!] = true
+        const tags = getTagsFromRoute(router.curPage as HistoryItem<'search'>)
+        const activeTags = tags.reduce((acc, cur) => {
+          acc[cur.slug!] = true
           return acc
         }, {})
+
+        addTagsToCache(tags)
+
         nextState = {
           type: 'search',
           region: router.curPage.params.region ?? prev.region,

@@ -1,6 +1,7 @@
 import { Tag, slugify } from '@dish/graph'
 
 import { FullTag, NavigableTag, TagWithNameAndType } from '../types/tagTypes'
+import { guessTagName } from './getTagsFromRoute'
 import { getTagSlug } from './getTagSlug'
 
 // cache for lookups in various places
@@ -21,14 +22,10 @@ export async function addTagsToCache(tags: (FullTag | NavigableTag)[]) {
 
 export function addTagToCache(tag: FullTag | NavigableTag) {
   const slug = tag.slug
-  if (!tag.name || !slug) {
-    // could warn
+  if (!slug) {
     return false
   }
-  const existing = allTags[slug]
-  if (existing || !slug) {
-    return false
-  }
+  tag.name = tag.name ?? guessTagName(slug)
   allTags[slug] = tag as any
   allTagsNameToSlug[tagNameKey(tag.name)] = slug
   return true
