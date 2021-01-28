@@ -109,15 +109,23 @@ export default memo(function SearchPage(props: Props) {
                   assertPresent(userStore.user?.username)
                   const name = `The best ${title}`
                   const slug = slugify(name)
-                  const location = getLocationFromRoute(router.curPage as any)
+                  const location = await getLocationFromRoute(
+                    router.curPage as any
+                  )
+
+                  if (!location?.region) {
+                    console.warn('no region??????')
+                    return
+                  }
+                  console.log('todo location', location)
 
                   // find existing
 
-                  console.log('location', location)
                   const [list] = await listInsert([
                     {
                       name,
                       slug,
+                      region: location.region.slug,
                       description: subTitle,
                       color: Math.floor(
                         (listColors.length / listColors.length) * Math.random()
@@ -126,10 +134,9 @@ export default memo(function SearchPage(props: Props) {
                       location: null,
                     },
                   ])
-                  console.log('made a list', list)
+
                   // now add tags to it
                   const tags = await getFullTags(getActiveTags(state))
-                  console.log('now add tags', tags)
                   await mutate((mutation) => {
                     return mutation.insert_list_tag({
                       objects: tags.map((tag) => {
@@ -140,16 +147,15 @@ export default memo(function SearchPage(props: Props) {
                       }),
                     })?.__typename
                   })
-                  const listFinal = await listFindOne({ id: list.id })
-                  console.log('did insert those, go...', listFinal)
-                  // router.navigate({
-                  //   name: 'list',
-                  //   params: {
-                  //     slug,
-                  //     userSlug: userStore.user.username,
-                  //   },
-                  // })
+                  router.navigate({
+                    name: 'list',
+                    params: {
+                      slug,
+                      userSlug: userStore.user.username,
+                    },
+                  })
                 } catch (err) {
+                  // if this list already exists, we can just take them to it
                   Toast.error(err.message)
                   console.error(err)
                 }

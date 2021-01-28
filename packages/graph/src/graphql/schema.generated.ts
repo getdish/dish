@@ -363,6 +363,7 @@ export interface list_bool_exp {
   location?: Maybe<geometry_comparison_exp>
   name?: Maybe<String_comparison_exp>
   public?: Maybe<Boolean_comparison_exp>
+  region?: Maybe<String_comparison_exp>
   restaurants?: Maybe<list_restaurant_bool_exp>
   slug?: Maybe<String_comparison_exp>
   tags?: Maybe<list_tag_bool_exp>
@@ -376,7 +377,7 @@ export enum list_constraint {
   /** unique or primary key constraint */
   list_pkey = 'list_pkey',
   /** unique or primary key constraint */
-  list_slug_user_id_key = 'list_slug_user_id_key',
+  list_slug_user_id_region_key = 'list_slug_user_id_region_key',
 }
 
 /** input type for incrementing integer column in table "list" */
@@ -393,6 +394,7 @@ export interface list_insert_input {
   location?: Maybe<Scalars['geometry']>
   name?: Maybe<Scalars['String']>
   public?: Maybe<Scalars['Boolean']>
+  region?: Maybe<Scalars['String']>
   restaurants?: Maybe<list_restaurant_arr_rel_insert_input>
   slug?: Maybe<Scalars['String']>
   tags?: Maybe<list_tag_arr_rel_insert_input>
@@ -408,6 +410,7 @@ export interface list_max_order_by {
   description?: Maybe<order_by>
   id?: Maybe<order_by>
   name?: Maybe<order_by>
+  region?: Maybe<order_by>
   slug?: Maybe<order_by>
   updated_at?: Maybe<order_by>
   user_id?: Maybe<order_by>
@@ -420,6 +423,7 @@ export interface list_min_order_by {
   description?: Maybe<order_by>
   id?: Maybe<order_by>
   name?: Maybe<order_by>
+  region?: Maybe<order_by>
   slug?: Maybe<order_by>
   updated_at?: Maybe<order_by>
   user_id?: Maybe<order_by>
@@ -447,6 +451,7 @@ export interface list_order_by {
   location?: Maybe<order_by>
   name?: Maybe<order_by>
   public?: Maybe<order_by>
+  region?: Maybe<order_by>
   restaurants_aggregate?: Maybe<list_restaurant_aggregate_order_by>
   slug?: Maybe<order_by>
   tags_aggregate?: Maybe<list_tag_aggregate_order_by>
@@ -883,6 +888,8 @@ export enum list_select_column {
   /** column name */
   public = 'public',
   /** column name */
+  region = 'region',
+  /** column name */
   slug = 'slug',
   /** column name */
   updated_at = 'updated_at',
@@ -899,6 +906,7 @@ export interface list_set_input {
   location?: Maybe<Scalars['geometry']>
   name?: Maybe<Scalars['String']>
   public?: Maybe<Scalars['Boolean']>
+  region?: Maybe<Scalars['String']>
   slug?: Maybe<Scalars['String']>
   updated_at?: Maybe<Scalars['timestamptz']>
   user_id?: Maybe<Scalars['uuid']>
@@ -1054,6 +1062,8 @@ export enum list_update_column {
   name = 'name',
   /** column name */
   public = 'public',
+  /** column name */
+  region = 'region',
   /** column name */
   slug = 'slug',
   /** column name */
@@ -6406,6 +6416,7 @@ export const generatedSchema = {
     location: { __type: 'geometry' },
     name: { __type: 'String!' },
     public: { __type: 'Boolean!' },
+    region: { __type: 'String' },
     restaurants: {
       __type: '[list_restaurant!]!',
       __args: {
@@ -6506,6 +6517,7 @@ export const generatedSchema = {
     location: { __type: 'geometry_comparison_exp' },
     name: { __type: 'String_comparison_exp' },
     public: { __type: 'Boolean_comparison_exp' },
+    region: { __type: 'String_comparison_exp' },
     restaurants: { __type: 'list_restaurant_bool_exp' },
     slug: { __type: 'String_comparison_exp' },
     tags: { __type: 'list_tag_bool_exp' },
@@ -6522,6 +6534,7 @@ export const generatedSchema = {
     location: { __type: 'geometry' },
     name: { __type: 'String' },
     public: { __type: 'Boolean' },
+    region: { __type: 'String' },
     restaurants: { __type: 'list_restaurant_arr_rel_insert_input' },
     slug: { __type: 'String' },
     tags: { __type: 'list_tag_arr_rel_insert_input' },
@@ -6536,6 +6549,7 @@ export const generatedSchema = {
     description: { __type: 'String' },
     id: { __type: 'uuid' },
     name: { __type: 'String' },
+    region: { __type: 'String' },
     slug: { __type: 'String' },
     updated_at: { __type: 'timestamptz' },
     user_id: { __type: 'uuid' },
@@ -6546,6 +6560,7 @@ export const generatedSchema = {
     description: { __type: 'order_by' },
     id: { __type: 'order_by' },
     name: { __type: 'order_by' },
+    region: { __type: 'order_by' },
     slug: { __type: 'order_by' },
     updated_at: { __type: 'order_by' },
     user_id: { __type: 'order_by' },
@@ -6557,6 +6572,7 @@ export const generatedSchema = {
     description: { __type: 'String' },
     id: { __type: 'uuid' },
     name: { __type: 'String' },
+    region: { __type: 'String' },
     slug: { __type: 'String' },
     updated_at: { __type: 'timestamptz' },
     user_id: { __type: 'uuid' },
@@ -6567,6 +6583,7 @@ export const generatedSchema = {
     description: { __type: 'order_by' },
     id: { __type: 'order_by' },
     name: { __type: 'order_by' },
+    region: { __type: 'order_by' },
     slug: { __type: 'order_by' },
     updated_at: { __type: 'order_by' },
     user_id: { __type: 'order_by' },
@@ -6593,6 +6610,7 @@ export const generatedSchema = {
     location: { __type: 'order_by' },
     name: { __type: 'order_by' },
     public: { __type: 'order_by' },
+    region: { __type: 'order_by' },
     restaurants_aggregate: { __type: 'list_restaurant_aggregate_order_by' },
     slug: { __type: 'order_by' },
     tags_aggregate: { __type: 'list_tag_aggregate_order_by' },
@@ -7033,6 +7051,7 @@ export const generatedSchema = {
     location: { __type: 'geometry' },
     name: { __type: 'String' },
     public: { __type: 'Boolean' },
+    region: { __type: 'String' },
     slug: { __type: 'String' },
     updated_at: { __type: 'timestamptz' },
     user_id: { __type: 'uuid' },
@@ -11873,6 +11892,7 @@ export interface list {
   location?: Maybe<ScalarsEnums['geometry']>
   name: ScalarsEnums['String']
   public: ScalarsEnums['Boolean']
+  region?: Maybe<ScalarsEnums['String']>
   restaurants: (args?: {
     distinct_on?: Maybe<Array<ScalarsEnums['list_restaurant_select_column']>>
     limit?: Maybe<ScalarsEnums['Int']>
@@ -11943,6 +11963,7 @@ export interface list_max_fields {
   description?: Maybe<ScalarsEnums['String']>
   id?: Maybe<ScalarsEnums['uuid']>
   name?: Maybe<ScalarsEnums['String']>
+  region?: Maybe<ScalarsEnums['String']>
   slug?: Maybe<ScalarsEnums['String']>
   updated_at?: Maybe<ScalarsEnums['timestamptz']>
   user_id?: Maybe<ScalarsEnums['uuid']>
@@ -11955,6 +11976,7 @@ export interface list_min_fields {
   description?: Maybe<ScalarsEnums['String']>
   id?: Maybe<ScalarsEnums['uuid']>
   name?: Maybe<ScalarsEnums['String']>
+  region?: Maybe<ScalarsEnums['String']>
   slug?: Maybe<ScalarsEnums['String']>
   updated_at?: Maybe<ScalarsEnums['timestamptz']>
   user_id?: Maybe<ScalarsEnums['uuid']>

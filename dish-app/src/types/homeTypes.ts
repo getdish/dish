@@ -86,6 +86,30 @@ export type Region = {
   }
 }
 
+export type Point = [number, number]
+
+export type RegionWithVia = Region & {
+  via: 'click' | 'drag' | 'url'
+}
+
+export type RegionApiResponse = {
+  name: string
+  slug: string
+  bbox: {
+    type: 'Polygon'
+    coordinates: [[Point, Point, Point, Point, Point]]
+  }
+  centroid: {
+    type: 'Point'
+    coordinates: Point
+  }
+}
+
+export type RegionNormalized = RegionApiResponse & {
+  center: LngLat
+  span: LngLat
+}
+
 export type HomeStateItemHome = HomeStateItemBase & {
   type: 'home'
   activeTags: HomeActiveTagsRecord

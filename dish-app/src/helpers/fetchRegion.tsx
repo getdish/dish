@@ -1,30 +1,12 @@
 import { LngLat, SEARCH_DOMAIN } from '@dish/graph'
 import { UseQueryOptions } from 'react-query'
 
+import { RegionApiResponse, RegionNormalized } from '../types/homeTypes'
 import { bboxToSpan } from './bboxToSpan'
 import { queryClient } from './queryClient'
 import { useQueryLoud } from './useQueryLoud'
 
-export type Point = [number, number]
-
-export type RegionApiResponse = {
-  bbox: {
-    type: 'Polygon'
-    coordinates: [[Point, Point, Point, Point, Point]]
-  }
-  centroid: {
-    type: 'Point'
-    coordinates: Point
-  }
-  name: string
-}
-
-const key = 'useRegionQuery'
-
-export type RegionNormalized = RegionApiResponse & {
-  center: LngLat
-  span: LngLat
-}
+const getKey = (slug: string) => `REGIONQUERY-${slug}`
 
 export const fetchRegion = async (slug: string) => {
   try {
@@ -53,7 +35,7 @@ export const fetchRegion = async (slug: string) => {
           lng: span.lng + Math.min(span.lng * 0.2, 0.033),
         },
       }
-      queryClient.setQueryData(key, response)
+      queryClient.setQueryData(getKey(slug), response)
       return response
     }
 
@@ -66,7 +48,7 @@ export const fetchRegion = async (slug: string) => {
 
 export const useRegionQuery = (slug: string, config?: UseQueryOptions<any>) => {
   return useQueryLoud<RegionNormalized | null>(
-    `REGIONQUERY-${slug}`,
+    getKey(slug),
     () => fetchRegion(slug),
     config
   )
