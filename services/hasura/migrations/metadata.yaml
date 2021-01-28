@@ -195,59 +195,6 @@ tables:
           name: restaurant_tag
         column_mapping:
           restaurant_tag_id: id
-  insert_permissions:
-  - role: user
-    permission:
-      check:
-        user_id:
-          _eq: X-Hasura-User-Id
-      columns:
-      - list_id
-      - list_restaurant_id
-      - position
-      - restaurant_tag_id
-      - tag_id
-      - user_id
-      backend_only: false
-  select_permissions:
-  - role: anon
-    permission:
-      columns:
-      - id
-      - list_id
-      - list_restaurant_id
-      - restaurant_tag_id
-      - position
-      - tag_id
-      - user_id
-      filter: {}
-      limit: 100
-  - role: user
-    permission:
-      columns:
-      - position
-      - id
-      - list_id
-      - list_restaurant_id
-      - restaurant_tag_id
-      - tag_id
-      - user_id
-      filter: {}
-      limit: 100
-  update_permissions:
-  - role: user
-    permission:
-      columns:
-      - list_id
-      - list_restaurant_id
-      - position
-      - restaurant_tag_id
-      - tag_id
-      - user_id
-      filter:
-        user_id:
-          _eq: X-Hasura-User-Id
-      check: null
   delete_permissions:
   - role: user
     permission:
