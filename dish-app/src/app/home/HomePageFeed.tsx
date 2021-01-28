@@ -26,12 +26,11 @@ import {
 } from 'snackui'
 
 import { peachAvatar } from '../../constants/avatar'
-import { RegionNormalized } from '../../helpers/fetchRegion'
 import { DishTagItem } from '../../helpers/getRestaurantDishes'
 import { selectTagDishViewSimple } from '../../helpers/selectDishViewSimple'
 import { useQueryLoud } from '../../helpers/useQueryLoud'
 import { queryRestaurant } from '../../queries/queryRestaurant'
-import { HomeStateItemHome } from '../../types/homeTypes'
+import { HomeStateItemHome, RegionNormalized } from '../../types/homeTypes'
 import { useSetAppMap } from '../AppMapStore'
 import { CardFrame } from '../views/CardFrame'
 import { SmallCircleButton } from '../views/CloseButton'

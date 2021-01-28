@@ -1,10 +1,9 @@
 import { LngLat } from '@dish/graph'
-import { BBox } from '@turf/helpers'
 import mapboxgl from 'mapbox-gl'
 
-import { Region } from '../types/homeTypes'
+import { RegionWithVia } from '../types/homeTypes'
 
-export type RegionWithVia = Region & { via: 'click' | 'drag' | 'url' }
+export { RegionWithVia } from '../types/homeTypes'
 
 export type MapProps = {
   center: LngLat

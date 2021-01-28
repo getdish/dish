@@ -59,12 +59,8 @@ export default memo(function HomePage(
     if (!isActive) return
     if (!region.data) return
     if (slugify(region.data.name) !== state.region) return
-    let { center, span } = region.data
+    const { center, span } = region.data
     if (!center || !span) return
-    span = {
-      lat: span.lat,
-      lng: span.lng,
-    }
     setPosition({ center, span })
     setIsLoaded(true)
   }, [isActive, isLoaded, region.data])

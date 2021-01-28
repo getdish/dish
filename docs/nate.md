@@ -1,4 +1,10 @@
-@pablo - need to make `mutate` helper accept options (noCache to replace resolveMutation in queryResolvers)
+for pablo:
+
+  - we need to generate two schemas, one for admin, one for user
+  - need `mutate` helper accept options (noCache so we can replace resolveMutation in queryResolvers with mutate)
+  - ListPage various fixes:
+    - delete isn't removing items
+  - normalize/direct-mutate
 
 goal january
 

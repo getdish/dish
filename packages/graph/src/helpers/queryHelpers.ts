@@ -48,7 +48,7 @@ export function objectToWhere(hash: { [key: string]: any }): any {
 const defaultConstraints = {
   tag: tag_constraint.tag_parentId_name_key,
   restaurant: restaurant_constraint.restaurant_name_address_key,
-  list: list_constraint.list_slug_user_id_key,
+  list: list_constraint.list_slug_user_id_region_key,
   review: review_constraint.review_native_data_unique_key_key,
   review_tag_sentence:
     review_tag_sentence_constraint.review_tag_tag_id_review_id_sentence_key,

@@ -30,6 +30,9 @@ SELECT json_build_object(
   ),
   'name', (
     SELECT name FROM region
+  ),
+  'slug', (
+    SELECT slug FROM region
   )
 )
 
