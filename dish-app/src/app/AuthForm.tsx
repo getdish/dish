@@ -354,6 +354,10 @@ const SignupForm = ({ autoFocus }: AuthFormProps) => {
         rules={{
           required: true,
           min: 3,
+          pattern: {
+            value: /^[a-z0-9]{1}[a-z0-9\-\_]+$/i,
+            message: 'must be a-z, 0-9, "_" or "-" only',
+          },
         }}
       />
       <ValidatedInput

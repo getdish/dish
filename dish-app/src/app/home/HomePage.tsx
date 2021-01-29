@@ -187,6 +187,7 @@ export default memo(function HomePage(
                         minWidth={80}
                         backgroundColor={regionColors.color}
                         color="#fff"
+                        marginTop={-20}
                       >
                         {regionName}
                       </SlantedTitle>
