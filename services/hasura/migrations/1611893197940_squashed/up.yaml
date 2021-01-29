@@ -1,0 +1,26 @@
+- args:
+    name: tag
+    table:
+      name: list_tag
+      schema: public
+    using:
+      manual_configuration:
+        column_mapping:
+          tag_id: id
+        remote_table:
+          name: tag
+          schema: public
+  type: create_object_relationship
+- args:
+    name: list
+    table:
+      name: list_tag
+      schema: public
+    using:
+      manual_configuration:
+        column_mapping:
+          list_id: id
+        remote_table:
+          name: list
+          schema: public
+  type: create_object_relationship

@@ -1,0 +1,12 @@
+- args:
+    relationship: list
+    table:
+      name: list_tag
+      schema: public
+  type: drop_relationship
+- args:
+    relationship: tag
+    table:
+      name: list_tag
+      schema: public
+  type: drop_relationship
