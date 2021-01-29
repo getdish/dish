@@ -30,6 +30,7 @@ goal january
     - touch up commenting/rating
     - location <=> url
     - organize all map/geo helpers a bit
+    - ensure usernames are the same set as slugifed (no special chars)
 
   2. initial family/friends launch at end of month
 

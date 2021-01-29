@@ -136,35 +136,38 @@ const SearchForkListButton = memo(
           promptLogin
           onPress={async () => {
             try {
-              assertPresent(userStore.user?.id)
-              assertPresent(userStore.user?.username)
+              const { id, username } = userStore.user ?? {}
+              assertPresent(id, 'no user id')
+              assertPresent(username, 'no username')
               const name = `The best ${title}`
               const slug = slugify(name)
-              const user_id = userStore.user.id
               const location = await getLocationFromRoute(router.curPage as any)
               if (!location?.region) {
                 console.warn('no region??????')
                 return
               }
               const region = location.region.slug
-
-              if (!region) {
-                throw new Error(`no region slug!`)
-              }
-
+              assertPresent(region, 'no region')
               const existing = await listFindOne(
                 {
                   slug,
-                  user_id,
+                  user_id: id,
                   region,
                 },
                 {
                   depth: 1,
                 }
               )
-
               if (existing) {
                 console.warn('go to existing')
+                router.navigate({
+                  name: 'list',
+                  params: {
+                    slug,
+                    region,
+                    userSlug: username,
+                  },
+                })
                 return
               }
 
