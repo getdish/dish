@@ -14,6 +14,12 @@ goal january
 
   1. fix lots of things
 
+    - search page fixes:
+      - shows blank sometimes
+      - recyclerview needs to load more up-front, keep more in memory
+    - restaurantlistitem - next to fav, add to list button
+    - search page - show popular lists for that region + tags
+    - restaurant page - show lists restaurant is on
     - new list
       - dont do weird redirect thing
       - modal that opens to select existing or create new
