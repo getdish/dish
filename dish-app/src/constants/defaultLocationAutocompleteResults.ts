@@ -24,8 +24,8 @@ export const defaultLocationAutocompleteResults: AutocompleteItemFull[] = [
       lng: -118.242349,
     },
     span: {
-      lat: 0.75,
-      lng: 0.75,
+      lat: 0.45,
+      lng: 0.45,
     },
     icon: '📍',
     type: 'place',
@@ -37,8 +37,8 @@ export const defaultLocationAutocompleteResults: AutocompleteItemFull[] = [
       lng: -115.1487083,
     },
     span: {
-      lat: 0.35,
-      lng: 0.35,
+      lat: 0.2,
+      lng: 0.2,
     },
     icon: '📍',
     type: 'place',

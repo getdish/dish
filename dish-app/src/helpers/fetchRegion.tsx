@@ -17,15 +17,13 @@ export const fetchRegion = async (slug: string) => {
     const res: RegionApiResponse = await fetch(url).then((x) => x.json())
     const centerAt = res?.centroid?.coordinates
     if (!!centerAt) {
-      const response: RegionNormalized = {
+      let response: RegionNormalized = {
         ...res,
         center: coordsToLngLat(centerAt),
         span: padLngLat(polygonToLngLat(res.bbox)),
       }
-      queryClient.setQueryData(getKey(slug), response)
-
       if (statePrefixRe.test(response.name)) {
-        return {
+        response = {
           ...response,
           name: response.name
             .replace(statePrefixRe, '')
@@ -34,10 +32,9 @@ export const fetchRegion = async (slug: string) => {
             .join(' '),
         }
       }
-
+      queryClient.setQueryData(getKey(slug), response)
       return response
     }
-
     return null
   } catch (err) {
     console.error(err)

@@ -15,7 +15,13 @@ import { queryRestaurant } from '../queries/queryRestaurant'
 import { router } from '../router'
 import { RegionWithVia } from '../types/homeTypes'
 import { AppMapControls } from './AppMapControls'
-import { appMapStore, useAppMapStore } from './AppMapStore'
+import {
+  appMapStore,
+  cancelUpdateRegion,
+  updateRegion,
+  updateRegionImmediate,
+  useAppMapStore,
+} from './AppMapStore'
 import { drawerStore } from './drawerStore'
 import { ensureFlexText } from './home/restaurant/ensureFlexText'
 import { homeStore } from './homeStore'
@@ -30,32 +36,6 @@ const styles = {
   // dish dark
   //'mapbox://styles/nwienert/ck68dg2go01jb1it5j2xfsaja',
 }
-
-const updateRegion = debounce(
-  (region: RegionWithVia, position: MapPosition) => {
-    const { currentState } = homeStore
-    if (
-      currentState.type === 'home' ||
-      (currentState.type === 'search' && region.via === 'click')
-    ) {
-      if (currentState.region === region.slug) {
-        return
-      }
-      appMapStore.setLastRegion({
-        region,
-        position,
-      })
-      homeStore.navigate({
-        state: {
-          ...currentState,
-          ...position,
-          region: region.slug,
-        },
-      })
-    }
-  },
-  300
-)
 
 export default memo(function AppMap() {
   const { features, results, showRank, zoomOnHover, hovered } = useAppMapStore()
@@ -130,7 +110,7 @@ export default memo(function AppMap() {
   const handleMoveEnd = useCallback(
     ({ center, span }) => {
       appMapStore.setNextPosition({ center, span })
-      // updateRegion.cancel()
+      // cancelUpdateRegion()
       if (media.sm && (drawerStore.isDragging || drawerStore.snapIndex === 0)) {
         console.log('avoid move stuff when snapped to top')
         return
@@ -142,7 +122,7 @@ export default memo(function AppMap() {
   const getResults = useGet(results)
 
   const handleDoubleClick = useCallback((id) => {
-    updateRegion.cancel()
+    cancelUpdateRegion()
     const restaurant = getResults()?.find((x) => x.id === id)
     if (restaurant) {
       router.navigate({
@@ -176,7 +156,7 @@ export default memo(function AppMap() {
   }, [])
 
   const handleSelect = useCallback((id: string) => {
-    updateRegion.cancel()
+    cancelUpdateRegion()
     const restaurants = getResults()
     const restaurant = restaurants?.find((x) => x.id === id)
     if (!restaurant) {
@@ -219,12 +199,9 @@ export default memo(function AppMap() {
         console.log('no region slug', region)
         return
       }
-      updateRegion.cancel()
       if (region.via === 'click') {
         // avoid handleMoveStart being called next frame
-        setTimeout(() => {
-          updateRegion(region, position)
-        })
+        updateRegionImmediate(region, position)
       } else {
         updateRegion(region, position)
       }
@@ -236,7 +213,7 @@ export default memo(function AppMap() {
   const themeName = theme.backgroundColor === '#fff' ? 'light' : 'dark'
 
   const handleMoveStart = useCallback(() => {
-    updateRegion.cancel()
+    cancelUpdateRegion()
   }, [])
 
   return (

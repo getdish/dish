@@ -1,6 +1,5 @@
 import { MapPosition, slugify } from '@dish/graph'
-import { capitalize } from 'lodash'
-import React, { Suspense, memo, useEffect, useState } from 'react'
+import React, { Suspense, memo, useEffect, useRef, useState } from 'react'
 import { ScrollView } from 'react-native'
 import {
   AbsoluteVStack,
@@ -15,14 +14,17 @@ import {
 
 import { drawerWidthMax, searchBarHeight } from '../../constants/constants'
 import {
+  getDefaultLocation,
   initialPosition,
   setDefaultLocation,
 } from '../../constants/initialHomeState'
 import { useRegionQuery } from '../../helpers/fetchRegion'
 import { getColorsForName } from '../../helpers/getColorsForName'
 import { getGroupedButtonProps } from '../../helpers/getGroupedButtonProps'
+import { queryClient } from '../../helpers/queryClient'
 import { router, useIsRouteActive } from '../../router'
 import { HomeStateItemHome } from '../../types/homeTypes'
+import { cancelUpdateRegion } from '../AppMapStore'
 import { useHomeStore } from '../homeStore'
 import { ContentScrollView } from '../views/ContentScrollView'
 import { DishHorizonView } from '../views/DishHorizonView'
@@ -40,7 +42,7 @@ export default memo(function HomePage(
   const media = useMedia()
   const home = useHomeStore()
   const theme = useTheme()
-  const [isLoaded, setIsLoaded] = useState(false)
+  const isLoaded = useRef(false)
   const state = home.lastHomeState
   const isRouteActive = useIsRouteActive('home', 'homeRegion')
   // first one is if the route is active, second is if the stack view active
@@ -50,63 +52,7 @@ export default memo(function HomePage(
     suspense: false,
   })
   const [position, setPosition] = useState<MapPosition>(initialPosition)
-
-  console.log('👀 HomePage', state.region, { props, region, state, isActive })
-
-  // center map to region
-  // ONLY on first load!
-  useEffect(() => {
-    if (!isActive) return
-    if (!region.data) return
-    if (slugify(region.data.name) !== state.region) return
-    const { center, span } = region.data
-    if (!center || !span) return
-    setPosition({ center, span })
-    setIsLoaded(true)
-  }, [isActive, isLoaded, region.data])
-
-  useEffect(() => {
-    if (!isActive) return
-    if (region.status !== 'success') return
-    if (!region.data) {
-      // no region found!
-      console.warn('no region, nav')
-      router.navigate({
-        name: 'homeRegion',
-        params: {
-          region: 'ca-san-francisco',
-        },
-      })
-    } else {
-      setDefaultLocation({
-        center: region.data.center,
-        span: region.data.span,
-        region: slugify(region.data.name),
-      })
-    }
-  }, [isActive, region.status, region.data])
-
-  // on load home clear search effect!
-  useEffect(() => {
-    // not on first load
-    if (isActive && isLoaded) {
-      home.clearSearch()
-      home.clearTags()
-    }
-  }, [isActive])
-
-  const regionName = (() => {
-    let next =
-      (region.data?.name ?? '')
-        .toLowerCase()
-        .replace(/[a-z]{2}\- /i, '')
-        .split(' ')
-        .map((x) => capitalize(x))
-        .join(' ') ?? ''
-    if (next === '') return '...'
-    return next
-  })()
-
+  const regionColors = getColorsForName(region.data?.name ?? '')
   const navLinks: LinkButtonProps[] = [
     {
       name: 'homeRegion',
@@ -120,7 +66,59 @@ export default memo(function HomePage(
     },
   ]
 
-  const regionColors = getColorsForName(regionName)
+  console.log('👀 HomePage', state.region, { props, region, state, isActive })
+
+  // on load home clear search effect!
+  useEffect(() => {
+    // not on first load
+    if (isActive && isLoaded.current) {
+      home.clearSearch()
+      home.clearTags()
+    }
+  }, [isActive, isLoaded.current])
+
+  // center map to region
+  const { center, span } = region.data ?? {}
+  useEffect(() => {
+    if (!isActive) return
+    if (!region.data || !center || !span) return
+    if (slugify(region.data.name) !== state.region) return
+    cancelUpdateRegion()
+    setPosition({ center, span })
+    isLoaded.current = true
+  }, [isActive, isLoaded.current, JSON.stringify([center, span])])
+
+  useEffect(() => {
+    return () => {
+      queryClient.cancelQueries(state.region)
+    }
+  }, [state.region])
+
+  useEffect(() => {
+    if (!isActive) return
+    if (region.status !== 'success') return
+    if (region.data) {
+      const regionSlug = region.data.slug ?? slugify(region.data.name)
+      setDefaultLocation({
+        center: region.data.center,
+        span: region.data.span,
+        region: regionSlug,
+      })
+    }
+  }, [isActive, region.status, region.data?.slug])
+
+  useEffect(() => {
+    if (isActive && !props.item.region) {
+      // no region found!
+      console.warn('no region, nav', region)
+      router.navigate({
+        name: 'homeRegion',
+        params: {
+          region: getDefaultLocation().region ?? 'ca-san-francisco',
+        },
+      })
+    }
+  }, [isActive, props.item.region])
 
   return (
     <>
@@ -189,7 +187,7 @@ export default memo(function HomePage(
                         color="#fff"
                         marginTop={-20}
                       >
-                        {regionName}
+                        {region.data?.name ?? ''}
                       </SlantedTitle>
 
                       <AbsoluteVStack

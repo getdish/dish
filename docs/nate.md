@@ -1,5 +1,13 @@
 for pablo:
 
+  - flow that breaks due to caching (needs to do background refetch)
+    - go to search page
+    - hit top left button "make your ____ list"
+    - close list
+    - on search page hit "+" on an item
+    - on "add to list" modal hit "+" to add to list you just made
+    - on "add to list" modal hit ">>" to go to that list
+    - bug: list is empty still, doesnt show newly added item until next refresh
   - "add to list" modal, works, then stops working sometimes
   - search page, sometimes results come back empty until i scroll down/up again
   - "Edit Profile" on UserPage, after I edit it doesn't update profile apge

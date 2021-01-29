@@ -17,7 +17,6 @@ export function getTitleForState(
 ) {
   const { curLocName = '...' } = state
   const tags = getActiveTags(state)
-  console.log('tags', tags)
   const lense = tags.find((x) => x.type === 'lense')
   const countryTag = tags.find((x) => x.type === 'country')
   const dishTag = tags.find((x) => x.type === 'dish')
@@ -28,8 +27,6 @@ export function getTitleForState(
     else if (countryTag) lensePlaceholder = descriptions.cuisine
     else lensePlaceholder = descriptions.plain
   }
-
-  console.log('lensePlaceholder', lensePlaceholder)
 
   let titleParts: string[] = []
   const cheap = tags.some((t) => t.slug == 'filters__price-low')
