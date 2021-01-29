@@ -315,6 +315,7 @@ class HomeStore extends Store {
         nextState = {
           slug: item.params.slug,
           userSlug: item.params.userSlug,
+          region: item.params.region,
           state: item.params.state,
         }
         break

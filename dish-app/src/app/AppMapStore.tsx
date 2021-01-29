@@ -1,5 +1,4 @@
 import { series } from '@dish/async'
-import { isEqual } from '@dish/fast-compare'
 import { LngLat, MapPosition, RestaurantOnlyIds, resolved } from '@dish/graph'
 import { isPresent } from '@dish/helpers'
 import { Store, createStore, useStoreInstance } from '@dish/use-store'
@@ -10,12 +9,15 @@ import { findLast, uniqBy } from 'lodash'
 import { useEffect } from 'react'
 
 import { getDefaultLocation } from '../constants/initialHomeState'
-import { bboxToSpan } from '../helpers/bboxToSpan'
-import { hasMovedAtLeast } from '../helpers/hasMovedAtLeast'
+import {
+  bboxToLngLat,
+  getZoomLevel,
+  hasMovedAtLeast,
+  padLngLat,
+} from '../helpers/mapHelpers'
 import { queryRestaurant } from '../queries/queryRestaurant'
 import { RegionWithVia } from '../types/homeTypes'
 import { AppMapPosition, MapResultItem } from '../types/mapTypes'
-import { searchPageStore } from './home/search/SearchPageStore'
 import { homeStore } from './homeStore'
 
 type MapOpts = {
@@ -183,6 +185,27 @@ export const useAppMapStore = () => useStoreInstance(appMapStore)
 export const useAppMap = <A extends keyof AppMapStore>(key: A) =>
   useStoreInstance(appMapStore, (x) => x[key])
 
+export const useZoomLevel = () => {
+  const position = useAppMap('position')
+  return getZoomLevel(position.span!)
+}
+
+export const mapZoomToMedium = () => {
+  let span = appMapStore.position.span!
+  let center = appMapStore.position.center!
+  for (const state of [...appMapStore.lastPositions].reverse()) {
+    if (getZoomLevel(state.span!) === 'medium') {
+      span = state.span!
+      center = state.center!
+      break
+    }
+  }
+  appMapStore.setPosition({
+    span,
+    center,
+  })
+}
+
 export const useSetAppMap = (
   props: MapOpts & {
     center?: MapPosition['center']
@@ -272,14 +295,12 @@ export const useSetAppMap = (
           if (resultsBbox) {
             // @ts-expect-error
             const centerCoord = getCenter(collection)
-            console.log('fitting to results', centerCoord)
             const position = {
               center: {
                 lng: centerCoord.geometry.coordinates[0],
                 lat: centerCoord.geometry.coordinates[1],
               },
-              // @ts-expect-error
-              span: bboxToSpan(resultsBbox),
+              span: padLngLat(bboxToLngLat(resultsBbox), 3),
             }
             appMapStore.setPosition({
               via: 'results',

@@ -1,12 +1,15 @@
-import { LngLat, SEARCH_DOMAIN } from '@dish/graph'
+import { SEARCH_DOMAIN } from '@dish/graph'
+import { capitalize } from 'lodash'
 import { UseQueryOptions } from 'react-query'
 
 import { RegionApiResponse, RegionNormalized } from '../types/homeTypes'
-import { bboxToSpan } from './bboxToSpan'
+import { coordsToLngLat, padLngLat, polygonToLngLat } from './mapHelpers'
 import { queryClient } from './queryClient'
 import { useQueryLoud } from './useQueryLoud'
 
 const getKey = (slug: string) => `REGIONQUERY-${slug}`
+
+const statePrefixRe = /[A-Z]{2}\- /
 
 export const fetchRegion = async (slug: string) => {
   try {
@@ -14,28 +17,24 @@ export const fetchRegion = async (slug: string) => {
     const res: RegionApiResponse = await fetch(url).then((x) => x.json())
     const centerAt = res?.centroid?.coordinates
     if (!!centerAt) {
-      const center: LngLat = {
-        lng: centerAt[0],
-        lat: centerAt[1],
-      }
-      const coords = res.bbox.coordinates[0]
-      const simpleBbox = [
-        coords[0][0],
-        coords[0][1],
-        coords[2][0],
-        coords[2][1],
-      ] as const
-      const span: LngLat = bboxToSpan(simpleBbox)
       const response: RegionNormalized = {
         ...res,
-        center,
-        span: {
-          // add padding
-          lat: span.lat + Math.min(span.lat * 0.2, 0.033),
-          lng: span.lng + Math.min(span.lng * 0.2, 0.033),
-        },
+        center: coordsToLngLat(centerAt),
+        span: padLngLat(polygonToLngLat(res.bbox)),
       }
       queryClient.setQueryData(getKey(slug), response)
+
+      if (statePrefixRe.test(response.name)) {
+        return {
+          ...response,
+          name: response.name
+            .replace(statePrefixRe, '')
+            .split(' ')
+            .map((x) => capitalize(x.toLowerCase()))
+            .join(' '),
+        }
+      }
+
       return response
     }
 

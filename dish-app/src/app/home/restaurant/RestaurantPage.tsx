@@ -12,7 +12,7 @@ import { ScrollView, View } from 'react-native'
 import { LoadingItem, LoadingItems, Spacer, VStack, useTheme } from 'snackui'
 
 import { searchBarHeight } from '../../../constants/constants'
-import { getMinLngLat } from '../../../helpers/getLngLat'
+import { getMinLngLat } from '../../../helpers/mapHelpers'
 import { useColorsFor } from '../../../helpers/useColorsFor'
 import { queryRestaurant } from '../../../queries/queryRestaurant'
 import { HomeStateItemRestaurant } from '../../../types/homeTypes'
@@ -61,7 +61,10 @@ const RestaurantPage = memo(
           lng: coords?.[0],
           lat: coords?.[1],
         },
-        span: getMinLngLat(appMapStore.position.span, 0.004, 0.004),
+        span: getMinLngLat(appMapStore.position.span, {
+          lng: 0.004,
+          lat: 0.004,
+        }),
       }
     }, [JSON.stringify(coords)])
 

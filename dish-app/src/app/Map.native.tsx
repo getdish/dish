@@ -7,7 +7,7 @@ import { useDebounce } from 'snackui'
 
 import { green } from '../constants/colors'
 import { MAPBOX_ACCESS_TOKEN } from '../constants/constants'
-import { hasMovedAtLeast } from '../helpers/hasMovedAtLeast'
+import { hasMovedAtLeast } from '../helpers/mapHelpers'
 import { drawerStore as drawerStoreInstance } from './drawerStore'
 import { MapProps } from './MapProps'
 import { tiles } from './tiles'

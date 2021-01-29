@@ -10,7 +10,7 @@ import {
   searchBarHeight,
   zIndexMap,
 } from '../constants/constants'
-import { getLngLat, getMinLngLat } from '../helpers/getLngLat'
+import { coordsToLngLat, getMinLngLat } from '../helpers/mapHelpers'
 import { queryRestaurant } from '../queries/queryRestaurant'
 import { router } from '../router'
 import { RegionWithVia } from '../types/homeTypes'
@@ -74,8 +74,8 @@ export default memo(function AppMap() {
         if (!location) return
         appMapStore.setPosition({
           via: 'hover',
-          center: getLngLat(location.coordinates),
-          span: getMinLngLat(span, 0.004, 0.004),
+          center: coordsToLngLat(location.coordinates),
+          span: getMinLngLat(span, { lng: 0.004, lat: 0.004 }),
         })
       },
     ])
@@ -101,7 +101,7 @@ export default memo(function AppMap() {
   useEffect(() => {
     const coords = restaurantSelected?.location.coordinates
     if (!coords) return
-    const center = getLngLat(coords)
+    const center = coordsToLngLat(coords)
     appMapStore.setPosition({
       center,
       via: 'click',
