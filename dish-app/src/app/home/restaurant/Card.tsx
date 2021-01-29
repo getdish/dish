@@ -6,6 +6,7 @@ import {
   LinearGradient,
   Paragraph,
   Spacer,
+  Text,
   VStack,
   useTheme,
 } from 'snackui'
@@ -29,6 +30,7 @@ export function Card({
   photo,
   title,
   subTitle,
+  padTitleSide,
   aspectFixed,
   hoverable,
   hideInfo,
@@ -39,7 +41,7 @@ export function Card({
   below?: string | null
   outside?: any
   photo?: string | JSX.Element | null
-  title: string
+  title?: string | null
   subTitle?: string | null
   hideInfo?: boolean
   aspectFixed?: boolean
@@ -47,8 +49,9 @@ export function Card({
   size?: 'sm' | 'md'
   backgroundColor?: string | null
   isBehind?: boolean
+  padTitleSide?: boolean
 }) {
-  const { altPastelColor, color, darkColor } = backgroundColor
+  const { color, darkColor } = backgroundColor
     ? getColorsForColor(backgroundColor)
     : getColorsForName(title ?? '')
   const isSm = size === 'sm'
@@ -61,7 +64,10 @@ export function Card({
     width: aspectFixed ? sizes.width : '100%',
   }
 
-  const topCornerColor = `${color}99`
+  const topCornerColor = `${color}cc`
+  const longestWord =
+    title?.split(' ').reduce((acc, cur) => Math.max(cur.length, acc), 0) ?? 0
+  const fontSize = longestWord > 9 ? 24 : 28
 
   return (
     <CardFrame size={size} aspectFixed={aspectFixed} hoverable={hoverable}>
@@ -87,10 +93,10 @@ export function Card({
               `transparent`,
               `transparent`,
               'transparent',
-              `rgba(0,0,0,0.5)`,
+              `${darkColor}aa`,
             ]}
             start={[1, 0]}
-            end={[0, 1]}
+            end={[0, 0.5]}
           />
           <LinearGradient
             style={[StyleSheet.absoluteFill, { opacity: 0.85 }]}
@@ -112,7 +118,7 @@ export function Card({
               {...sizes}
               style={{
                 ...frame,
-                opacity: 0.5,
+                opacity: 0.66,
               }}
               source={{ uri: photo }}
             />
@@ -149,21 +155,21 @@ export function Card({
           height="100%"
         >
           <HStack width="100%">
-            {!!outside && <VStack minWidth={60} flex={1} />}
+            {!!(outside || padTitleSide) && <VStack minWidth={50} flex={1} />}
             <VStack flex={1} overflow="hidden" alignItems="flex-end">
-              <Paragraph
+              <Text
                 textAlign="right"
-                size="xxxl"
-                sizeLineHeight={0.7}
                 textShadowColor="#00000033"
                 textShadowRadius={2}
                 textShadowOffset={{ height: 2, width: 0 }}
-                color="#fff"
                 fontWeight="800"
                 letterSpacing={-0.5}
+                color="#fff"
+                fontSize={fontSize}
+                lineHeight={fontSize * 1.3}
               >
                 {title}
-              </Paragraph>
+              </Text>
               <Spacer size="xs" />
               {!!subTitle && (
                 <Paragraph

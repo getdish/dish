@@ -2,7 +2,10 @@ import { graphql, order_by } from '@dish/graph'
 import React, { Suspense, memo, useCallback, useState } from 'react'
 import { AbsoluteVStack } from 'snackui'
 
-import { queryRestaurant } from '../../../queries/queryRestaurant'
+import {
+  queryRestaurant,
+  queryRestaurantCoverPhoto,
+} from '../../../queries/queryRestaurant'
 import { CardFrame } from '../../views/CardFrame'
 import { Link } from '../../views/Link'
 import { RestaurantUpVoteDownVote } from '../../views/restaurant/RestaurantUpVoteDownVote'
@@ -18,6 +21,7 @@ export type RestaurantCardProps = {
   hoverable?: boolean
   aspectFixed?: boolean
   isBehind?: boolean
+  padTitleSide?: boolean
 }
 
 const fallbackCard = <CardFrame aspectFixed />
@@ -42,16 +46,13 @@ export const RestaurantCardContent = memo(
       isBehind,
       hideScore,
       aspectFixed,
+      padTitleSide,
       hoverable = true,
       below,
     }: RestaurantCardProps) => {
       const [restaurant] = queryRestaurant(restaurantSlug)
       const [price_label, price_color, price_range] = priceRange(restaurant)
-      const restaurantPhoto = restaurant.photo_table({
-        order_by: [{ photo: { quality: order_by.desc } }],
-        limit: 1,
-      })?.[0]?.photo.url
-
+      const restaurantPhoto = queryRestaurantCoverPhoto(restaurant)
       return (
         <Link name="restaurant" asyncClick params={{ slug: restaurantSlug }}>
           <Card
@@ -73,6 +74,7 @@ export const RestaurantCardContent = memo(
             photo={restaurantPhoto}
             aspectFixed={aspectFixed}
             hoverable={hoverable}
+            padTitleSide={padTitleSide}
           />
         </Link>
       )

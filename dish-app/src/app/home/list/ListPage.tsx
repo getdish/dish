@@ -521,7 +521,9 @@ const ListPageContent = graphql((props: Props) => {
 
         {!!tagButtons && (
           <>
-            <HStack justifyContent="center">{tagButtons}</HStack>
+            <HStack spacing="sm" justifyContent="center">
+              {tagButtons}
+            </HStack>
             <Spacer />
           </>
         )}

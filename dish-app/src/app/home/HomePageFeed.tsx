@@ -376,6 +376,7 @@ const DishRestaurantsFeedCard = (props: FeedItemDishRestaurants) => {
           return (
             <SkewedCard zIndex={1000 - i} key={r.id}>
               <RestaurantCard
+                padTitleSide
                 isBehind={i > 0}
                 hideScore
                 restaurantId={r.id}
