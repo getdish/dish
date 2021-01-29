@@ -5,7 +5,7 @@ import { Store, createStore, useStoreInstance } from '@dish/use-store'
 import bbox from '@turf/bbox'
 import getCenter from '@turf/center'
 import { featureCollection } from '@turf/helpers'
-import { findLast, uniqBy } from 'lodash'
+import { debounce, findLast, uniqBy } from 'lodash'
 import { useEffect } from 'react'
 
 import { getDefaultLocation } from '../constants/initialHomeState'
@@ -204,6 +204,39 @@ export const mapZoomToMedium = () => {
     span,
     center,
   })
+}
+
+export function updateRegionImmediate(
+  region: RegionWithVia,
+  position: MapPosition
+) {
+  cancelUpdateRegion()
+  const { currentState } = homeStore
+  if (
+    currentState.type === 'home' ||
+    (currentState.type === 'search' && region.via === 'click')
+  ) {
+    if (currentState.region === region.slug) {
+      return
+    }
+    appMapStore.setLastRegion({
+      region,
+      position,
+    })
+    homeStore.navigate({
+      state: {
+        ...currentState,
+        ...position,
+        region: region.slug,
+      },
+    })
+  }
+}
+
+export const updateRegion = debounce(updateRegionImmediate, 300)
+
+export const cancelUpdateRegion = () => {
+  updateRegion.cancel()
 }
 
 export const useSetAppMap = (
