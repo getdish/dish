@@ -64,6 +64,7 @@ import { searchPageStore } from '../search/SearchPageStore'
 import { ensureFlexText } from './ensureFlexText'
 import { RankView } from './RankView'
 import { RestaurantAddress } from './RestaurantAddress'
+import { RestaurantAddToListButton } from './RestaurantAddToListButton'
 import { RestaurantDeliveryButtons } from './RestaurantDeliveryButtons'
 import { openingHours, priceRange } from './RestaurantDetailRow'
 import { RestaurantFavoriteStar } from './RestaurantFavoriteButton'
@@ -487,6 +488,16 @@ const RestaurantListItemContent = memo(
                     <RestaurantFavoriteStar
                       size="md"
                       restaurantId={restaurantId}
+                    />
+                  </Suspense>
+
+                  <Spacer />
+
+                  <Suspense fallback={<Spacer size={44} />}>
+                    <RestaurantAddToListButton
+                      theme={null}
+                      restaurantSlug={restaurantSlug}
+                      noLabel
                     />
                   </Suspense>
 

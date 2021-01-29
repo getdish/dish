@@ -1,5 +1,6 @@
 for pablo:
 
+  - "add to list" modal, works, then stops working sometimes
   - search page, sometimes results come back empty until i scroll down/up again
   - "Edit Profile" on UserPage, after I edit it doesn't update profile apge
     - a simple way to have it update *all* queryUser()
@@ -14,6 +15,9 @@ goal january
 
   1. fix lots of things
 
+    - may be able to remove a few states from homeStore
+      - gallery for example can just use router, no need for home
+      - but would require home to be smarter i think
     - search page fixes:
       - shows blank sometimes
       - recyclerview needs to load more up-front, keep more in memory
