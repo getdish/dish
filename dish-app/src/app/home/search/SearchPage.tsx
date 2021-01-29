@@ -69,7 +69,7 @@ import { PageTitleTag } from '../../views/PageTitleTag'
 import { StackDrawer } from '../../views/StackDrawer'
 import { HomeStackViewProps } from '../HomeStackViewProps'
 import { HomeSuspense } from '../HomeSuspense'
-import { listColors } from '../list/listColors'
+import { listColors, randomListColor } from '../list/listColors'
 import {
   ITEM_HEIGHT,
   RestaurantListItem,
@@ -176,9 +176,7 @@ const SearchForkListButton = memo(
                   slug,
                   region,
                   description: subTitle,
-                  color: Math.floor(
-                    (listColors.length / listColors.length) * Math.random()
-                  ),
+                  color: randomListColor(),
                   user_id: id,
                   location: null,
                 },

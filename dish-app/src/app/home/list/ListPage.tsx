@@ -28,7 +28,6 @@ import {
   Spacer,
   StackProps,
   Text,
-  Theme,
   Toast,
   VStack,
   useTheme,
@@ -54,7 +53,6 @@ import { SlantedTitle } from '../../views/SlantedTitle'
 import { SmallButton } from '../../views/SmallButton'
 import { StackDrawer } from '../../views/StackDrawer'
 import { TagButton, getTagButtonProps } from '../../views/TagButton'
-import { TagSmallButton } from '../../views/TagSmallButton'
 import { UpvoteDownvoteScore } from '../../views/UpvoteDownvoteScore'
 import { StackItemProps } from '../HomeStackView'
 import { PageFooter } from '../PageFooter'
@@ -62,7 +60,7 @@ import { CircleButton } from '../restaurant/CircleButton'
 import { RestaurantListItem } from '../restaurant/RestaurantListItem'
 import { PageTitle } from '../search/PageTitle'
 import { ListAddRestuarant } from './ListAddRestuarant'
-import { getListColor, listColors } from './listColors'
+import { getListColor, listColors, randomListColor } from './listColors'
 
 type Props = StackItemProps<HomeStateItemList>
 
@@ -87,6 +85,7 @@ export default function ListPage(props: Props) {
             slug: slugify(randomName),
             region: homeStore.lastRegionSlug,
             user_id: userStore.user?.id ?? 'anon',
+            color: randomListColor(),
           },
         ])
         return list
