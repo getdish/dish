@@ -29,6 +29,7 @@ goal january
     - touch / mobile web app runthrough fix scrolling issues
     - touch up commenting/rating
     - location <=> url
+    - organize all map/geo helpers a bit
 
   2. initial family/friends launch at end of month
 

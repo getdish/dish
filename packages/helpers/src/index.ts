@@ -1,5 +1,8 @@
 export * from './constants'
 export * from './assertHelpers'
+export * from './reduce'
+export * from './fetchBertSentiment'
+export * from './doesStringContainTag'
 
 export const stringify = (a: any) => JSON.stringify(a)
 
@@ -27,58 +30,6 @@ export function isPresent<T extends Object>(
   input: null | undefined | T
 ): input is T {
   return input != null
-}
-
-// WARNING:
-// This function is used by both the front and backend. It is critical to our
-// entire scoring system. Any changes to it could potentially alter the scores
-// for all restaurants and rishes.
-export async function fetchBertSentiment(sentence: string) {
-  const url = `https://bert-staging.dishapp.com/?text=${encodeURIComponent(
-    sentence
-  )}`
-  return fetch(url, {
-    headers: {
-      'Content-Type': 'application/json',
-    },
-  })
-    .then((res) => res.json())
-    .then((x) => x)
-}
-
-export function bertResultToNumber(bert_sentiment: [string, number]) {
-  const confidence = bert_sentiment[1]
-  switch (bert_sentiment[0]) {
-    case 'Positive':
-      return 1 * confidence
-    case 'Negative':
-      return -1 * confidence
-    default:
-      return 0
-  }
-}
-
-export async function fetchBertSentimentNumber(text: string) {
-  const result = await fetchBertSentiment(text)
-  const number = bertResultToNumber(result.result[0])
-  return number
-}
-
-export function doesStringContainTag(text: string, tag: any) {
-  const tag_names = [tag.name, ...(tag.alternates || [])]
-  for (const tag_name of tag_names) {
-    let is_found = false
-    try {
-      const regex = new RegExp(`\\b${tag_name}\\b`, 'i')
-      is_found = regex.test(text)
-    } catch (e) {
-      console.log('Tag has bad characters for regex: ' + tag_name, tag.id)
-      console.error(e)
-      return false
-    }
-    if (is_found) return true
-  }
-  return false
 }
 
 export function breakIntoSentences(text: string) {

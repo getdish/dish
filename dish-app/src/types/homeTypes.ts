@@ -165,5 +165,6 @@ export type HomeStateItemList = HomeStateItemBase & {
   type: 'list'
   slug: string
   userSlug: string
+  region: string
   state?: 'edit'
 }

@@ -218,7 +218,7 @@ const ListFeedCard = graphql((props: FeedItemList) => {
             return null
           }
           return (
-            <SkewedCard zIndex={1000 - i} key={list.slug}>
+            <SkewedCard zIndex={1000 - i} key={list.id}>
               <ListCard
                 isBehind={i > 0}
                 hoverable={false}

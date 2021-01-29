@@ -6,7 +6,6 @@ import React, { Suspense, memo, useEffect, useRef } from 'react'
 import { AbsoluteVStack, VStack, getMedia, useMedia } from 'snackui'
 
 import { MAPBOX_ACCESS_TOKEN } from '../constants/constants'
-import { getZoomLevel, mapZoomToMedium } from '../helpers/mapHelpers'
 import { queryRestaurant } from '../queries/queryRestaurant'
 import { appMapStore, useAppMap } from './AppMapStore'
 import { drawerStore } from './drawerStore'

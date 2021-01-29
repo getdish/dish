@@ -5,7 +5,7 @@ import React, { memo } from 'react'
 import { AbsoluteVStack, HStack, Theme, useMedia } from 'snackui'
 
 import { isWeb, searchBarHeight, zIndexDrawer } from '../constants/constants'
-import { hasMovedAtLeast } from '../helpers/hasMovedAtLeast'
+import { hasMovedAtLeast } from '../helpers/mapHelpers'
 import { appMapStore } from './AppMapStore'
 import { searchPageStore } from './home/search/SearchPageStore'
 import { homeStore, useHomeStore, useIsHomeTypeActive } from './homeStore'

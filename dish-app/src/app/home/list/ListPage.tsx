@@ -35,6 +35,7 @@ import {
 } from 'snackui'
 
 import { bgLight } from '../../../constants/colors'
+import { useRegionQuery } from '../../../helpers/fetchRegion'
 import { getRestaurantIdentifiers } from '../../../helpers/getRestaurantIdentifiers'
 import { queryList } from '../../../queries/queryList'
 import { router } from '../../../router'
@@ -269,12 +270,12 @@ const ListPageContent = graphql((props: Props) => {
   const [showAddModal, setShowAddModal] = useState(false)
   const draft = useRef<Partial<List>>({})
   const theme = useTheme()
-
   const refetch = useRefetch()
   const [list] = queryList(props.item.slug)
   const [color, setColor] = useStateSynced(getListColor(list?.color) ?? '#999')
   const [isPublic, setPublic] = useStateSynced(list?.public ?? true)
   const [restaurants, restaurantActions] = useListRestaurants(list)
+  const region = useRegionQuery(props.item.region)
 
   useEffect(() => {
     if (isEditing) {
@@ -444,7 +445,7 @@ const ListPageContent = graphql((props: Props) => {
                 </SlantedTitle>
 
                 <SlantedTitle size="xs" alignSelf="center">
-                  {list.region}
+                  {region.data?.name ?? props.item.region}
                 </SlantedTitle>
               </VStack>
             }
