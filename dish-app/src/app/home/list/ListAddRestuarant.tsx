@@ -1,9 +1,11 @@
 import { series, sleep } from '@dish/async'
 import { graphql, query, resolved, search, useLazyQuery } from '@dish/graph'
+import { Loader } from '@dish/react-feather'
 import React, { useCallback, useEffect, useState } from 'react'
 import { ScrollView } from 'react-native'
-import { Input, VStack, useDebounce, useTheme } from 'snackui'
+import { Input, Text, VStack, useDebounce, useTheme } from 'snackui'
 
+import { blue } from '../../../constants/colors'
 import {
   AutocompleteItemFull,
   AutocompleteItemRestuarant,
@@ -24,25 +26,35 @@ export const ListAddRestuarant = graphql(
     listSlug: string
   }) => {
     const theme = useTheme()
+    const [isSearching, setIsSearching] = useState(false)
     const [results, setResults] = useState<AutocompleteItemFull[]>([])
     const [searchQuery, setQuery] = useState('')
 
     useEffect(() => {
-      return series([
+      const dispose = series([
+        () => {
+          setIsSearching(true)
+        },
         () => sleep(300),
         () => {
           return resolved(() => {
-            return searchRestaurants(
-              searchQuery,
-              appMapStore.position.center,
-              appMapStore.position.span
-            )
+            const { center, span } = appMapStore.nextPosition
+            return searchRestaurants(searchQuery, center, {
+              lng: Math.max(0.1, span.lng),
+              lat: Math.max(0.1, span.lat),
+            })
           })
         },
         (restaurants) => {
           setResults(restaurants)
+          setIsSearching(false)
         },
       ])
+
+      return () => {
+        dispose()
+        setIsSearching(false)
+      }
     }, [searchQuery])
 
     return (
@@ -60,25 +72,39 @@ export const ListAddRestuarant = graphql(
         </VStack>
         <ScrollView style={{ width: '100%' }}>
           <VStack padding={20} spacing="xs">
-            {results.map((result, index) => {
-              return (
-                <AutocompleteItemView
-                  preventNavigate
-                  key={result.id ?? index}
-                  hideBackground
-                  onSelect={() => {}}
-                  target="search"
-                  showAddButton
-                  index={index}
-                  result={result}
-                  onAdd={async () => {
-                    const slug = result.id
-                    const id = await resolved(() => queryRestaurant(slug)[0].id)
-                    onAdd({ id })
-                  }}
-                />
-              )
-            })}
+            {isSearching && (
+              <VStack className="rotating" margin="auto" marginVertical={20}>
+                <Loader size={16} color={blue} />
+              </VStack>
+            )}
+            {!isSearching && (
+              <>
+                {!results.length && (
+                  <Text>No results found, try zooming map out</Text>
+                )}
+                {results.map((result, index) => {
+                  return (
+                    <AutocompleteItemView
+                      preventNavigate
+                      key={result.id ?? index}
+                      hideBackground
+                      onSelect={() => {}}
+                      target="search"
+                      showAddButton
+                      index={index}
+                      result={result}
+                      onAdd={async () => {
+                        const slug = result.id
+                        const id = await resolved(
+                          () => queryRestaurant(slug)[0].id
+                        )
+                        onAdd({ id })
+                      }}
+                    />
+                  )
+                })}
+              </>
+            )}
           </VStack>
         </ScrollView>
       </VStack>
