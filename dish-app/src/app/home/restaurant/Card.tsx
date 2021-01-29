@@ -61,6 +61,8 @@ export function Card({
     width: aspectFixed ? sizes.width : '100%',
   }
 
+  const topCornerColor = `${color}99`
+
   return (
     <CardFrame size={size} aspectFixed={aspectFixed} hoverable={hoverable}>
       <VStack
@@ -70,7 +72,7 @@ export function Card({
         alignSelf="center"
         position="relative"
         borderRadius={cardFrameBorderRadius}
-        backgroundColor={backgroundColor ?? darkColor ?? ''}
+        backgroundColor={backgroundColor ?? '#000' ?? ''}
       >
         <AbsoluteVStack
           className="ease-in-out"
@@ -82,10 +84,10 @@ export function Card({
           <LinearGradient
             style={StyleSheet.absoluteFill}
             colors={[
-              `${altPastelColor}00`,
-              `${color}00`,
-              `${color}00`,
-              altPastelColor,
+              `transparent`,
+              `transparent`,
+              'transparent',
+              `rgba(0,0,0,0.5)`,
             ]}
             start={[1, 0]}
             end={[0, 1]}
@@ -93,11 +95,11 @@ export function Card({
           <LinearGradient
             style={[StyleSheet.absoluteFill, { opacity: 0.85 }]}
             colors={[
-              color,
-              `${color}`,
+              topCornerColor,
+              topCornerColor,
               `${color}00`,
-              `${color}00`,
-              `${altPastelColor}00`,
+              `transparent`,
+              `transparent`,
             ]}
             start={[1, 0]}
             end={[0.9, 0.1]}

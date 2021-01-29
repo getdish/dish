@@ -81,6 +81,7 @@ export const GalleryLightbox = ({
   restaurant.id
   const [pagination, setPagination] = useState(() => ({ limit: 20, offset: 0 }))
   const [photosList, setPhotosList] = useState<photo[]>(() => [])
+  const [hasLoadedFirstImage, setHasLoadedFirstImage] = useState(false)
 
   useTransactionQuery(
     () => {
@@ -255,6 +256,9 @@ export const GalleryLightbox = ({
                 maxWidth: '95%',
                 height: `100%`,
               }}
+              onLoad={() => {
+                setHasLoadedFirstImage(true)
+              }}
               resizeMode="contain"
             />
           )}
@@ -271,33 +275,37 @@ export const GalleryLightbox = ({
         </VStack>
       </HStack>
 
-      <GalleryLightboxPhotosList
-        photos={photosList}
-        onPhotoPress={(photo, index) => {
-          setActiveImage({
-            url: photo.url ?? '',
-            index,
-          })
-        }}
-        onFetchMore={() => {
-          if (hasMore && !isFetchingMore) {
-            isFetchingMore = true
-            fetchMore({
-              args: pagination,
-            })
-              .then((data) => {
-                setPagination({
-                  limit: pagination.limit,
-                  offset: pagination.offset + data.length,
-                })
+      <VStack height={ThumbnailSize}>
+        {hasLoadedFirstImage && (
+          <GalleryLightboxPhotosList
+            photos={photosList}
+            onPhotoPress={(photo, index) => {
+              setActiveImage({
+                url: photo.url ?? '',
+                index,
               })
-              .catch(console.error)
-          } else {
-            // No more photos left
-          }
-        }}
-        activeImage={activeImage}
-      />
+            }}
+            onFetchMore={() => {
+              if (hasMore && !isFetchingMore) {
+                isFetchingMore = true
+                fetchMore({
+                  args: pagination,
+                })
+                  .then((data) => {
+                    setPagination({
+                      limit: pagination.limit,
+                      offset: pagination.offset + data.length,
+                    })
+                  })
+                  .catch(console.error)
+              } else {
+                // No more photos left
+              }
+            }}
+            activeImage={activeImage}
+          />
+        )}
+      </VStack>
     </>
   )
 }
