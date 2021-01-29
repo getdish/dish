@@ -53,6 +53,8 @@ import { ScalingPressable } from '../../views/ScalingPressable'
 import { SlantedTitle } from '../../views/SlantedTitle'
 import { SmallButton } from '../../views/SmallButton'
 import { StackDrawer } from '../../views/StackDrawer'
+import { TagButton, getTagButtonProps } from '../../views/TagButton'
+import { TagSmallButton } from '../../views/TagSmallButton'
 import { UpvoteDownvoteScore } from '../../views/UpvoteDownvoteScore'
 import { StackItemProps } from '../HomeStackView'
 import { PageFooter } from '../PageFooter'
@@ -304,6 +306,13 @@ const ListPageContent = graphql((props: Props) => {
 
   const username = list.user?.name ?? list.user?.username ?? ''
 
+  const tagButtons = list
+    .tags({ limit: 10 })
+    .map((x) => x.tag!)
+    .map((tag) => {
+      return <TagButton key={tag?.slug} size="sm" {...getTagButtonProps(tag)} />
+    })
+
   return (
     <StackDrawer closable title={`${username}'s ${list.name}`}>
       {isMyList && (
@@ -506,6 +515,13 @@ const ListPageContent = graphql((props: Props) => {
                 }}
               />
             </HStack>
+            <Spacer />
+          </>
+        )}
+
+        {!!tagButtons && (
+          <>
+            <HStack justifyContent="center">{tagButtons}</HStack>
             <Spacer />
           </>
         )}

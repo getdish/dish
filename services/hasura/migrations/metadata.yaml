@@ -253,6 +253,23 @@ tables:
 - table:
     schema: public
     name: list_tag
+  object_relationships:
+  - name: list
+    using:
+      manual_configuration:
+        remote_table:
+          schema: public
+          name: list
+        column_mapping:
+          list_id: id
+  - name: tag
+    using:
+      manual_configuration:
+        remote_table:
+          schema: public
+          name: tag
+        column_mapping:
+          tag_id: id
   insert_permissions:
   - role: user
     permission:

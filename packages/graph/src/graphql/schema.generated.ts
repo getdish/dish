@@ -673,7 +673,6 @@ export interface list_restaurant_tag_bool_exp {
   position?: Maybe<Int_comparison_exp>
   restaurant_tag?: Maybe<restaurant_tag_bool_exp>
   restaurant_tag_id?: Maybe<uuid_comparison_exp>
-  tag_id?: Maybe<uuid_comparison_exp>
   user_id?: Maybe<uuid_comparison_exp>
 }
 
@@ -702,7 +701,6 @@ export interface list_restaurant_tag_insert_input {
   position?: Maybe<Scalars['Int']>
   restaurant_tag?: Maybe<restaurant_tag_obj_rel_insert_input>
   restaurant_tag_id?: Maybe<Scalars['uuid']>
-  tag_id?: Maybe<Scalars['uuid']>
   user_id?: Maybe<Scalars['uuid']>
 }
 
@@ -713,7 +711,6 @@ export interface list_restaurant_tag_max_order_by {
   list_restaurant_id?: Maybe<order_by>
   position?: Maybe<order_by>
   restaurant_tag_id?: Maybe<order_by>
-  tag_id?: Maybe<order_by>
   user_id?: Maybe<order_by>
 }
 
@@ -724,7 +721,6 @@ export interface list_restaurant_tag_min_order_by {
   list_restaurant_id?: Maybe<order_by>
   position?: Maybe<order_by>
   restaurant_tag_id?: Maybe<order_by>
-  tag_id?: Maybe<order_by>
   user_id?: Maybe<order_by>
 }
 
@@ -749,7 +745,6 @@ export interface list_restaurant_tag_order_by {
   position?: Maybe<order_by>
   restaurant_tag?: Maybe<restaurant_tag_order_by>
   restaurant_tag_id?: Maybe<order_by>
-  tag_id?: Maybe<order_by>
   user_id?: Maybe<order_by>
 }
 
@@ -771,8 +766,6 @@ export enum list_restaurant_tag_select_column {
   /** column name */
   restaurant_tag_id = 'restaurant_tag_id',
   /** column name */
-  tag_id = 'tag_id',
-  /** column name */
   user_id = 'user_id',
 }
 
@@ -783,7 +776,6 @@ export interface list_restaurant_tag_set_input {
   list_restaurant_id?: Maybe<Scalars['uuid']>
   position?: Maybe<Scalars['Int']>
   restaurant_tag_id?: Maybe<Scalars['uuid']>
-  tag_id?: Maybe<Scalars['uuid']>
   user_id?: Maybe<Scalars['uuid']>
 }
 
@@ -819,8 +811,6 @@ export enum list_restaurant_tag_update_column {
   position = 'position',
   /** column name */
   restaurant_tag_id = 'restaurant_tag_id',
-  /** column name */
-  tag_id = 'tag_id',
   /** column name */
   user_id = 'user_id',
 }
@@ -952,7 +942,9 @@ export interface list_tag_bool_exp {
   _or?: Maybe<Array<Maybe<list_tag_bool_exp>>>
   created_at?: Maybe<timestamptz_comparison_exp>
   id?: Maybe<uuid_comparison_exp>
+  list?: Maybe<list_bool_exp>
   list_id?: Maybe<uuid_comparison_exp>
+  tag?: Maybe<tag_bool_exp>
   tag_id?: Maybe<uuid_comparison_exp>
 }
 
@@ -968,7 +960,9 @@ export enum list_tag_constraint {
 export interface list_tag_insert_input {
   created_at?: Maybe<Scalars['timestamptz']>
   id?: Maybe<Scalars['uuid']>
+  list?: Maybe<list_obj_rel_insert_input>
   list_id?: Maybe<Scalars['uuid']>
+  tag?: Maybe<tag_obj_rel_insert_input>
   tag_id?: Maybe<Scalars['uuid']>
 }
 
@@ -1005,7 +999,9 @@ export interface list_tag_on_conflict {
 export interface list_tag_order_by {
   created_at?: Maybe<order_by>
   id?: Maybe<order_by>
+  list?: Maybe<list_order_by>
   list_id?: Maybe<order_by>
+  tag?: Maybe<tag_order_by>
   tag_id?: Maybe<order_by>
 }
 
@@ -6845,7 +6841,6 @@ export const generatedSchema = {
     position: { __type: 'Int!' },
     restaurant_tag: { __type: 'restaurant_tag' },
     restaurant_tag_id: { __type: 'uuid!' },
-    tag_id: { __type: 'uuid!' },
     user_id: { __type: 'uuid!' },
   },
   list_restaurant_tag_aggregate: {
@@ -6905,7 +6900,6 @@ export const generatedSchema = {
     position: { __type: 'Int_comparison_exp' },
     restaurant_tag: { __type: 'restaurant_tag_bool_exp' },
     restaurant_tag_id: { __type: 'uuid_comparison_exp' },
-    tag_id: { __type: 'uuid_comparison_exp' },
     user_id: { __type: 'uuid_comparison_exp' },
   },
   list_restaurant_tag_inc_input: { position: { __type: 'Int' } },
@@ -6916,7 +6910,6 @@ export const generatedSchema = {
     position: { __type: 'Int' },
     restaurant_tag: { __type: 'restaurant_tag_obj_rel_insert_input' },
     restaurant_tag_id: { __type: 'uuid' },
-    tag_id: { __type: 'uuid' },
     user_id: { __type: 'uuid' },
   },
   list_restaurant_tag_max_fields: {
@@ -6926,7 +6919,6 @@ export const generatedSchema = {
     list_restaurant_id: { __type: 'uuid' },
     position: { __type: 'Int' },
     restaurant_tag_id: { __type: 'uuid' },
-    tag_id: { __type: 'uuid' },
     user_id: { __type: 'uuid' },
   },
   list_restaurant_tag_max_order_by: {
@@ -6935,7 +6927,6 @@ export const generatedSchema = {
     list_restaurant_id: { __type: 'order_by' },
     position: { __type: 'order_by' },
     restaurant_tag_id: { __type: 'order_by' },
-    tag_id: { __type: 'order_by' },
     user_id: { __type: 'order_by' },
   },
   list_restaurant_tag_min_fields: {
@@ -6945,7 +6936,6 @@ export const generatedSchema = {
     list_restaurant_id: { __type: 'uuid' },
     position: { __type: 'Int' },
     restaurant_tag_id: { __type: 'uuid' },
-    tag_id: { __type: 'uuid' },
     user_id: { __type: 'uuid' },
   },
   list_restaurant_tag_min_order_by: {
@@ -6954,7 +6944,6 @@ export const generatedSchema = {
     list_restaurant_id: { __type: 'order_by' },
     position: { __type: 'order_by' },
     restaurant_tag_id: { __type: 'order_by' },
-    tag_id: { __type: 'order_by' },
     user_id: { __type: 'order_by' },
   },
   list_restaurant_tag_mutation_response: {
@@ -6978,7 +6967,6 @@ export const generatedSchema = {
     position: { __type: 'order_by' },
     restaurant_tag: { __type: 'restaurant_tag_order_by' },
     restaurant_tag_id: { __type: 'order_by' },
-    tag_id: { __type: 'order_by' },
     user_id: { __type: 'order_by' },
   },
   list_restaurant_tag_pk_columns_input: { id: { __type: 'uuid!' } },
@@ -6988,7 +6976,6 @@ export const generatedSchema = {
     list_restaurant_id: { __type: 'uuid' },
     position: { __type: 'Int' },
     restaurant_tag_id: { __type: 'uuid' },
-    tag_id: { __type: 'uuid' },
     user_id: { __type: 'uuid' },
   },
   list_restaurant_tag_stddev_fields: {
@@ -7080,7 +7067,9 @@ export const generatedSchema = {
     __typename: { __type: 'String!' },
     created_at: { __type: 'timestamptz!' },
     id: { __type: 'uuid!' },
+    list: { __type: 'list' },
     list_id: { __type: 'uuid!' },
+    tag: { __type: 'tag' },
     tag_id: { __type: 'uuid!' },
   },
   list_tag_aggregate: {
@@ -7112,13 +7101,17 @@ export const generatedSchema = {
     _or: { __type: '[list_tag_bool_exp]' },
     created_at: { __type: 'timestamptz_comparison_exp' },
     id: { __type: 'uuid_comparison_exp' },
+    list: { __type: 'list_bool_exp' },
     list_id: { __type: 'uuid_comparison_exp' },
+    tag: { __type: 'tag_bool_exp' },
     tag_id: { __type: 'uuid_comparison_exp' },
   },
   list_tag_insert_input: {
     created_at: { __type: 'timestamptz' },
     id: { __type: 'uuid' },
+    list: { __type: 'list_obj_rel_insert_input' },
     list_id: { __type: 'uuid' },
+    tag: { __type: 'tag_obj_rel_insert_input' },
     tag_id: { __type: 'uuid' },
   },
   list_tag_max_fields: {
@@ -7164,7 +7157,9 @@ export const generatedSchema = {
   list_tag_order_by: {
     created_at: { __type: 'order_by' },
     id: { __type: 'order_by' },
+    list: { __type: 'list_order_by' },
     list_id: { __type: 'order_by' },
+    tag: { __type: 'tag_order_by' },
     tag_id: { __type: 'order_by' },
   },
   list_tag_pk_columns_input: { id: { __type: 'uuid!' } },
@@ -12115,7 +12110,6 @@ export interface list_restaurant_tag {
   position: ScalarsEnums['Int']
   restaurant_tag?: Maybe<restaurant_tag>
   restaurant_tag_id: ScalarsEnums['uuid']
-  tag_id: ScalarsEnums['uuid']
   user_id: ScalarsEnums['uuid']
 }
 
@@ -12155,7 +12149,6 @@ export interface list_restaurant_tag_max_fields {
   list_restaurant_id?: Maybe<ScalarsEnums['uuid']>
   position?: Maybe<ScalarsEnums['Int']>
   restaurant_tag_id?: Maybe<ScalarsEnums['uuid']>
-  tag_id?: Maybe<ScalarsEnums['uuid']>
   user_id?: Maybe<ScalarsEnums['uuid']>
 }
 
@@ -12166,7 +12159,6 @@ export interface list_restaurant_tag_min_fields {
   list_restaurant_id?: Maybe<ScalarsEnums['uuid']>
   position?: Maybe<ScalarsEnums['Int']>
   restaurant_tag_id?: Maybe<ScalarsEnums['uuid']>
-  tag_id?: Maybe<ScalarsEnums['uuid']>
   user_id?: Maybe<ScalarsEnums['uuid']>
 }
 
@@ -12250,7 +12242,9 @@ export interface list_tag {
   __typename: 'list_tag'
   created_at: ScalarsEnums['timestamptz']
   id: ScalarsEnums['uuid']
+  list?: Maybe<list>
   list_id: ScalarsEnums['uuid']
+  tag?: Maybe<tag>
   tag_id: ScalarsEnums['uuid']
 }
 

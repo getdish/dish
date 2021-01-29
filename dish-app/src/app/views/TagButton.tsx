@@ -1,5 +1,5 @@
 // TODO if we can have compiler pick up a few more things speeds will go up a lot
-import { Tag, TagType } from '@dish/graph'
+import { Tag, TagQuery, TagType } from '@dish/graph'
 import { ThumbsDown, ThumbsUp, X } from '@dish/react-feather'
 import React, { memo, useState } from 'react'
 import { Image } from 'react-native'
@@ -48,7 +48,7 @@ export type TagButtonTagProps = {
 }
 
 export const getTagButtonProps = (
-  tag?: TagButtonTagProps | NavigableTag | null
+  tag?: TagButtonTagProps | NavigableTag | TagQuery | null
 ): TagButtonProps => {
   return {
     name: tag?.name ?? '',

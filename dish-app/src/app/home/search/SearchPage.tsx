@@ -170,25 +170,19 @@ const SearchForkListButton = memo(
                 })
                 return
               }
-
-              console.log('todo location', location)
-
-              // find existing
-
               const [list] = await listInsert([
                 {
                   name,
                   slug,
-                  region: location.region.slug,
+                  region,
                   description: subTitle,
                   color: Math.floor(
                     (listColors.length / listColors.length) * Math.random()
                   ),
-                  user_id,
+                  user_id: id,
                   location: null,
                 },
               ])
-
               // now add tags to it
               const tags = await getFullTags(getActiveTags(state))
               await mutate((mutation) => {
@@ -205,8 +199,8 @@ const SearchForkListButton = memo(
                 name: 'list',
                 params: {
                   slug,
-                  region: list.region!,
-                  userSlug: userStore.user.username,
+                  region,
+                  userSlug: username,
                 },
               })
             } catch (err) {
