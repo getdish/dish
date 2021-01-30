@@ -84,7 +84,6 @@ type HomeFeedProps = HomeStackViewProps<HomeStateItemHome> & {
 export const HomePageFeed = memo(
   graphql(function HomePageFeed(props: HomeFeedProps) {
     const { region, isActive, center, span } = props
-    const media = useMedia()
     const items = useHomeFeed(props)
     const isLoading = !region || items[0]?.id === null
     const results = items.flatMap((x) => {
@@ -156,15 +155,7 @@ export const HomePageFeed = memo(
               paddingBottom={100}
               minHeight={Dimensions.get('window').height * 0.9}
             >
-              <HStack
-                justifyContent="center"
-                flexWrap="wrap"
-                maxWidth="100%"
-                alignSelf="center"
-                paddingHorizontal={media.xl ? '3%' : 0}
-              >
-                {feedContents}
-              </HStack>
+              {feedContents}
             </VStack>
 
             <VStack height={20} />
@@ -195,7 +186,9 @@ const ListFeedCard = graphql((props: FeedItemList) => {
     <>
       <FeedSlantedTitle>
         <HStack alignItems="center">
-          <Text>Playlists</Text>
+          <Text fontSize={22} fontWeight="700">
+            Playlists
+          </Text>
           <Spacer size="sm" />
           <Link
             promptLogin
@@ -309,6 +302,7 @@ const CuisineFeedCard = memo(
             </HStack>
           </VStack>
         </ScrollView>
+
         <ScrollView
           style={{ maxWidth: '100%', overflow: 'hidden' }}
           horizontal

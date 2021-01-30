@@ -2,6 +2,7 @@ import { graphql } from '@dish/graph'
 import { Edit } from '@dish/react-feather'
 import React from 'react'
 
+import { isWeb } from '../../../constants/constants'
 import { useUserReviewCommentQuery } from '../../hooks/useUserReview'
 import { SmallButton, SmallButtonProps } from '../../views/SmallButton'
 
@@ -28,7 +29,9 @@ export const RestaurantAddCommentButton = graphql(
         pressStyle={{
           opacity: 0.6,
         }}
-        icon={<Edit color="var(--color)" size={size ?? 16} />}
+        icon={
+          <Edit color={isWeb ? 'var(--color)' : '#000'} size={size ?? 16} />
+        }
         {...props}
       >
         {hideLabel ? null : !!review?.text ? 'Edit' : 'Add'}

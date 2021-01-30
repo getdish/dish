@@ -17,9 +17,7 @@ export function TagsText({ tags, color }: { tags: any[]; color?: string }) {
             >
               {tag.icon.trim()}{' '}
             </Text>
-          ) : (
-            ''
-          )}
+          ) : null}
           <Text color={color} fontSize={16} fontWeight="500">
             {tagDisplayName(tag)}
           </Text>

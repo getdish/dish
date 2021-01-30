@@ -15,6 +15,7 @@ import {
   useForceUpdate,
 } from 'snackui'
 
+import { isWeb } from '../../../constants/constants'
 import { useColorsFor } from '../../../helpers/useColorsFor'
 import { queryRestaurant } from '../../../queries/queryRestaurant'
 import { queryUser } from '../../../queries/queryUser'
@@ -56,7 +57,9 @@ export const RestaurantAddToListButton = ({
         pressStyle={{
           opacity: 0.6,
         }}
-        icon={<Plus color="var(--color)" size={size ?? 16} />}
+        icon={
+          <Plus color={isWeb ? 'var(--color)' : '#000'} size={size ?? 16} />
+        }
         {...props}
       >
         {noLabel ? null : 'List'}

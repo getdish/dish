@@ -235,7 +235,10 @@ export const RestaurantSourcesOverview = graphql(
                     />
                   </AbsoluteVStack>
                   <Spacer />
-                  <Paragraph color="var(--color)" sizeLineHeight={0.9}>
+                  <Paragraph
+                    color={isWeb ? 'var(--color)' : '#222'}
+                    sizeLineHeight={0.9}
+                  >
                     {!!tagName && isWeb ? (
                       <div
                         className="block"

@@ -1,3 +1,4 @@
+import { series, sleep } from '@dish/async'
 import { MARTIN_TILES_HOST } from '@dish/graph'
 import { useStoreInstance } from '@dish/use-store'
 import MapboxGL from '@react-native-mapbox-gl/maps'
@@ -38,7 +39,10 @@ export const MapView = ({
   const onMoveEndDelayed = useDebounce(onMoveEnd ?? idFn, 250)
   const tileSource = useRef<MapboxGL.VectorSource | null>(null)
 
+  console.log('drawerHeight', drawerHeight, ty)
+
   useEffect(() => {
+    console.log('animating', ty)
     const spring = Animated.spring(tyRef.current, {
       useNativeDriver: true,
       toValue: ty,
@@ -58,6 +62,11 @@ export const MapView = ({
     cameraRef.current?.fitBounds(ne, sw, [paddingTop, 0, paddingBottom, 0], 500)
   }, [JSON.stringify(bounds)])
 
+  // ensure map loads eventually (if a tile fails etc)
+  useEffect(() => {
+    return series([() => sleep(2000), () => setIsLoaded(1)])
+  }, [])
+
   return (
     <Animated.View
       style={{
@@ -71,6 +80,11 @@ export const MapView = ({
         ref={mapRef}
         styleURL="mapbox://styles/nwienert/ckddrrcg14e4y1ipj0l4kf1xy"
         onDidFinishLoadingMap={() => {
+          console.log('did load map')
+          setIsLoaded(1)
+        }}
+        onDidFailLoadingMap={() => {
+          console.warn('DID FAIL LOADING MAP!!!!!!!')
           setIsLoaded(1)
         }}
         onPress={async (e) => {
