@@ -5,6 +5,7 @@ import {
   AnimatedVStack,
   Theme,
   VStack,
+  prevent,
   useMedia,
 } from 'snackui'
 
@@ -12,10 +13,12 @@ export const DarkModal = ({
   hide,
   children,
   outside,
+  onDismiss,
 }: {
-  hide: boolean
+  hide?: boolean
   children: any
   outside?: any
+  onDismiss?: any
 }) => {
   const media = useMedia()
   return (
@@ -30,6 +33,7 @@ export const DarkModal = ({
         backgroundColor="rgba(30,0,12,0.5)"
         opacity={hide ? 0 : 1}
         pointerEvents={hide ? 'none' : 'auto'}
+        onPress={onDismiss}
       >
         <VStack flex={1} />
         <AnimatedVStack
@@ -48,6 +52,7 @@ export const DarkModal = ({
             shadowColor="rgba(0,0,0,1)"
             shadowRadius={150}
             shadowOffset={{ height: 10, width: 0 }}
+            onPress={prevent}
           >
             {outside}
             <ScrollView

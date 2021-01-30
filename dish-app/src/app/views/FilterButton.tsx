@@ -20,7 +20,7 @@ export const FilterButton = ({
 }) => {
   const media = useMedia()
   const theme = useTheme()
-  const iconColor = media.sm ? theme.color : color
+  const iconColor = theme.color
 
   let content: any =
     rest.children ?? (tag.name ? tagDisplayNames[tag.name] : null) ?? tag.name
@@ -34,46 +34,29 @@ export const FilterButton = ({
       case 'filters__price-low':
       case 'filters__price-mid':
       case 'filters__price-high':
-        if (media.sm) {
-          return <DollarSign size={media.sm ? 22 : 18} color={iconColor} />
-        }
         return null
       default:
         return null
     }
   })()
 
-  if (media.sm) {
-    content = iconElement
-  } else {
-    if (tag.name !== 'price-low') {
-      content = (
-        <HStack>
-          {media.sm ? (
-            iconElement
-          ) : iconElement ? (
-            <VStack opacity={0.45} marginRight={6}>
-              {iconElement}
-            </VStack>
-          ) : null}
-          {content}
-        </HStack>
-      )
-    }
+  if (tag.name !== 'price-low') {
+    content = (
+      <HStack>
+        {iconElement ? (
+          <VStack opacity={0.45} marginRight={6}>
+            {iconElement}
+          </VStack>
+        ) : null}
+        {content}
+      </HStack>
+    )
   }
 
   content = (
     <SmallButton
       tag={tag}
       {...rest}
-      {...(media.sm && {
-        padding: 0,
-        height: 44,
-        width: 52,
-        noTextWrap: true,
-        alignItems: 'center',
-        justifyContent: 'center',
-      })}
       textProps={{
         // color,
         fontWeight: '600',
