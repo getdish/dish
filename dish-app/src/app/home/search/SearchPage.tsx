@@ -183,6 +183,11 @@ const SearchForkListButton = memo(
               ])
               // now add tags to it
               const tags = await getFullTags(getActiveTags(state))
+              if (tags.some((tag) => !tag.id)) {
+                console.error(`no tag id??`, tags)
+                debugger
+                return
+              }
               await mutate((mutation) => {
                 return mutation.insert_list_tag({
                   objects: tags.map((tag) => {

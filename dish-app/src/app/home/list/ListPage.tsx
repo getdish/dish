@@ -564,7 +564,8 @@ const ListPageContent = graphql((props: Props) => {
               </Paragraph>
               {isMyList && (
                 <Paragraph>
-                  Use the blue (+) button on the bottom right to add.
+                  Use the blue (+) button on the bottom right to add. You can
+                  also add from any search page results.
                 </Paragraph>
               )}
             </VStack>
