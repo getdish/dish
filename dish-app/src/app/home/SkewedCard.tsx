@@ -9,6 +9,7 @@ import {
 } from 'snackui'
 
 import { cardFrameBorderRadius } from '../views/CardFrame'
+import { ContentScrollViewHorizontal } from '../views/ContentScrollViewHorizontal'
 
 export const SkewedCard = ({
   children,
@@ -52,11 +53,11 @@ export const SkewedCard = ({
 
 export const SkewedCardCarousel = ({ children }: { children: any }) => {
   return (
-    <ScrollView horizontal showsHorizontalScrollIndicator={false}>
+    <ContentScrollViewHorizontal>
       <HStack paddingVertical={5}>
         {children}
         <VStack width={100} height={100} />
       </HStack>
-    </ScrollView>
+    </ContentScrollViewHorizontal>
   )
 }

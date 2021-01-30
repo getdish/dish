@@ -3,6 +3,7 @@ import { groupBy, sortBy } from 'lodash'
 import React, { memo, useState } from 'react'
 import { HStack, Modal, Text, Theme, VStack, useMedia, useTheme } from 'snackui'
 
+import { isWeb } from '../../../constants/constants'
 import { tagFilters } from '../../../constants/localTags'
 import { tagGroup, tagSort } from '../../../constants/tagMeta'
 import { getGroupedButtonProps } from '../../../helpers/getGroupedButtonProps'
@@ -41,7 +42,7 @@ const HomePageFilterBarSmall = ({ activeTags }: FilterBarProps) => {
     <>
       <SmallButton
         alignSelf="center"
-        icon={<Filter color="var(--color)" size={14} />}
+        icon={<Filter color={isWeb ? 'var(--color)' : '#fff'} size={14} />}
         onPress={() => setShow(true)}
       >
         Filters
