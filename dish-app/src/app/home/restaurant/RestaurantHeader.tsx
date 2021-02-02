@@ -1,6 +1,6 @@
 import { graphql } from '@dish/graph'
 import { Clock } from '@dish/react-feather'
-import React, { Suspense, memo, useCallback, useState } from 'react'
+import React, { Suspense, memo, useState } from 'react'
 import { StyleSheet } from 'react-native'
 import {
   AbsoluteVStack,
@@ -13,7 +13,6 @@ import {
 } from 'snackui'
 
 import { drawerBorderRadius, isWeb } from '../../../constants/constants'
-import { getColorsForName } from '../../../helpers/getColorsForName'
 import { useColorsFor } from '../../../helpers/useColorsFor'
 import { queryRestaurant } from '../../../queries/queryRestaurant'
 import { HomeStateItemRestaurant } from '../../../types/homeTypes'
@@ -29,10 +28,7 @@ import { RestaurantAddressLinksRow } from './RestaurantAddressLinksRow'
 import { RestaurantAddToListButton } from './RestaurantAddToListButton'
 import { RestaurantDeliveryButtons } from './RestaurantDeliveryButtons'
 import { openingHours } from './RestaurantDetailRow'
-import {
-  RestaurantFavoriteButton,
-  RestaurantFavoriteStar,
-} from './RestaurantFavoriteButton'
+import { RestaurantFavoriteStar } from './RestaurantFavoriteButton'
 import { RestaurantPhotosRow } from './RestaurantPhotosRow'
 
 type RestaurantHeaderProps = {

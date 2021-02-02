@@ -14,6 +14,7 @@ import { useCurrentLenseColor } from '../../hooks/useCurrentLenseColor'
 import { CloseButton } from '../../views/CloseButton'
 import { FilterButton } from '../../views/FilterButton'
 import { PaneControlButtons } from '../../views/PaneControlButtons'
+import { SlantedTitle } from '../../views/SlantedTitle'
 import { SmallButton } from '../../views/SmallButton'
 
 type FilterBarProps = { activeTags: HomeActiveTagsRecord }
@@ -57,27 +58,30 @@ const HomePageFilterBarSmall = ({ activeTags }: FilterBarProps) => {
       </SmallButton>
 
       {show && (
-        <Modal
-          overlayDismisses
-          onDismiss={() => setShow(false)}
-          width="98%"
-          maxWidth={400}
-          height="90%"
-          maxHeight={300}
-          visible
-        >
-          <PaneControlButtons>
-            <CloseButton onPress={() => setShow(false)} />
-          </PaneControlButtons>
-          <VStack
-            alignItems="center"
-            justifyContent="center"
-            flex={1}
-            spacing="sm"
+        <Theme name="light">
+          <Modal
+            overlayDismisses
+            onDismiss={() => setShow(false)}
+            width="98%"
+            maxWidth={400}
+            height="90%"
+            maxHeight={300}
+            visible
           >
-            {filterButtons}
-          </VStack>
-        </Modal>
+            <PaneControlButtons>
+              <CloseButton onPress={() => setShow(false)} />
+            </PaneControlButtons>
+            <SlantedTitle>Filters</SlantedTitle>
+            <VStack
+              alignItems="center"
+              justifyContent="center"
+              flex={1}
+              spacing="sm"
+            >
+              {filterButtons}
+            </VStack>
+          </Modal>
+        </Theme>
       )}
     </>
   )

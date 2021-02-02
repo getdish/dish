@@ -62,7 +62,9 @@ export const ContentScrollViewHorizontal = memo(
           showsHorizontalScrollIndicator={false}
           ref={$scroller as any}
           scrollEventThrottle={40}
-          onScroll={() => {
+          {...props}
+          onScroll={(e) => {
+            props.onScroll?.(e)
             const shouldUpdate =
               !supportsTouchWeb ||
               scrollVersion.current.start === scrollVersion.current.end
@@ -93,7 +95,6 @@ export const ContentScrollViewHorizontal = memo(
             isScrollingSubDrawer = false
             update()
           }}
-          {...props}
         />
       )
     }, [props])
