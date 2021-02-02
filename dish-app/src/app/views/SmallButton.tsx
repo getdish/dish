@@ -1,5 +1,5 @@
 import React from 'react'
-import { Button, Theme, Tooltip, useTheme } from 'snackui'
+import { Button, Tooltip, useTheme } from 'snackui'
 
 import { isWeb } from '../../constants/constants'
 import { Link } from './Link'
@@ -20,6 +20,7 @@ export const SmallButton = ({
   ...rest
 }: SmallButtonProps) => {
   const theme = useTheme()
+  const hasTheme = !!rest.theme
 
   let contents = (
     <Button
@@ -34,7 +35,7 @@ export const SmallButton = ({
         minHeight: 42,
         minWidth: 48,
       })}
-      {...(!rest.theme && {
+      {...(!hasTheme && {
         backgroundColor: 'transparent',
         hoverStyle: {
           backgroundColor: theme.backgroundColorSecondary,
