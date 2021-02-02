@@ -49,7 +49,7 @@ export default memo(function AppMap() {
     if (!hovered || !zoomOnHover) return
     if (hovered.via !== 'list') return
     return series([
-      () => resolved(() => queryRestaurant(hovered.slug)[0].location),
+      () => resolved(() => queryRestaurant(hovered.slug)[0]?.location),
       (location) => {
         if (!location) return
         appMapStore.setPosition({

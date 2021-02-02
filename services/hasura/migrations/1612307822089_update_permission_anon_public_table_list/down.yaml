@@ -1,0 +1,28 @@
+- args:
+    role: anon
+    table:
+      name: list
+      schema: public
+  type: drop_select_permission
+- args:
+    permission:
+      allow_aggregations: false
+      columns:
+      - public
+      - location
+      - color
+      - description
+      - name
+      - slug
+      - created_at
+      - updated_at
+      - id
+      - user_id
+      computed_fields: []
+      filter: {}
+      limit: 100
+    role: anon
+    table:
+      name: list
+      schema: public
+  type: create_select_permission

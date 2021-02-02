@@ -96,8 +96,8 @@ export default function AboutPage({
             </Paragraph>
 
             <Paragraph size="xl">
-              We want to fix ratings, and local search generally. We realize
-              what you want when looking for{' '}
+              We want to fix ratings and local search in general. What you want
+              when looking for{' '}
               <LinkButton
                 backgroundColor={lightYellow}
                 hoverStyle={{
@@ -111,7 +111,7 @@ export default function AboutPage({
               >
                 cheap pho 🍜
               </LinkButton>{' '}
-              versus planning a{' '}
+              vs planning a{' '}
               <LinkButton
                 tags={[
                   { name: 'Date', type: 'lense' },
@@ -125,28 +125,27 @@ export default function AboutPage({
               >
                 date night 🌃
               </LinkButton>{' '}
-              are <Text fontStyle="italic">unique</Text> - one night you crave
-              an authentic dish, the other just some nice ambiance and drinks.{' '}
-              <Text fontWeight="600">
-                Dish introduces a few things to fix this
-              </Text>
-              : we rate granularly - by dish, service, ambiance, vegetarian, and
-              more - and then we let you explore through lenses.
+              are <Text fontStyle="italic">unique</Text> and not captured by
+              "five stars". One night you crave authentic food, and the next,
+              ambience or drinks.{' '}
+              <Text fontWeight="600">Dish rates what matters</Text> down to the,
+              well, dish - and all the sub-factors that matter - and lets you
+              explore based on your mood.
             </Paragraph>
 
             <Paragraph size="lg">
               Ultimately we're building what we want: a map of the world that
-              lets us see what friends love, find things that match our taste
-              and mood, and especially, an app that won't degrade in quality
-              over time. We'll be writing more about how we plan to achieve this
-              on the blog.
+              lets us see what friends love, plan trips and nights out, find
+              things that match our taste and mood, and do all this while not
+              degrading in quality over time. We'll be writing more about how we
+              plan to achieve this on <Link name="blog">the blog</Link>.
             </Paragraph>
 
             <Paragraph size="lg">
-              Dish is just getting started. It sort of works... in a sketchy,
-              fragile way. Things will break, or poorly deliver on our message
-              (including this about page!). We're working on that. But we think
-              we have the right foundation and ideas, and we look forward to
+              Dish is just getting started. It works in a sketchy, fragile way.
+              We poorly deliver what we aim to now (even the wording on this
+              about page itself!), and we're working on that. But we think we
+              have the right foundation and ideas, and we look forward to
               delivering something great soon.
             </Paragraph>
 
@@ -154,10 +153,9 @@ export default function AboutPage({
               <Link display="inline" href="mailto:team@dishapp.com">
                 Let us know what you'd love to see
               </Link>
-              , and
             </Paragraph>
 
-            <Paragraph size="lg">Enjoy 🌮🍜</Paragraph>
+            <Paragraph size="lg">Cheers! 🌮🍜</Paragraph>
 
             <Spacer />
             <Divider />

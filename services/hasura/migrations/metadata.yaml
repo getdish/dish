@@ -52,15 +52,16 @@ tables:
   - role: anon
     permission:
       columns:
-      - public
-      - location
       - color
-      - description
-      - name
-      - slug
       - created_at
-      - updated_at
+      - description
       - id
+      - location
+      - name
+      - public
+      - region
+      - slug
+      - updated_at
       - user_id
       filter: {}
       limit: 100
