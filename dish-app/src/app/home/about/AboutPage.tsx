@@ -69,7 +69,7 @@ export default function AboutPage({
               size={1.1}
               fontWeight="500"
             >
-              find amazing things
+              your pocket guide to the world
             </Paragraph>
           </VStack>
 
@@ -84,21 +84,20 @@ export default function AboutPage({
               It all started with food. In eating around the San Francisco Bay
               Area, we noticed a disturbing trend: too many great
               hole-in-the-wall restaurants were lost to poor ratings. Chinese
-              and Vietnamese gems would sit at ⭐️⭐️⭐️ stars, while more
-              Americanized with worse food would get nearly 5. One part of the
-              problem was at more authentic foreign restaurants people just
-              didn't know what their specialty was, how to order it, or what to
-              expect.
+              and Vietnamese gems would sit at ⭐️⭐️⭐️ stars, while places
+              with cute interiors but worse food get perfect scores.
             </Paragraph>
 
             <Paragraph size="xl">
-              Meanwhile, delivery apps have even worse scoring (not fake,
-              renamed pop-ups of poor-performing restaurants), finding a decent
-              plate you were craving became a chorse. And so Dish was born.
+              Meanwhile, delivery apps were consistently dissapointing in their
+              scoring, not to mention all the fake, renamed pop-ups. Finding a
+              decent delivered taco or bowl of poke was harder than just walking
+              to an alright place nearby.
             </Paragraph>
 
             <Paragraph size="xl">
-              What you look for when ordering{' '}
+              We want to fix ratings, and local search generally. We realize
+              what you want when looking for{' '}
               <LinkButton
                 backgroundColor={lightYellow}
                 hoverStyle={{
@@ -124,36 +123,38 @@ export default function AboutPage({
                   backgroundColor: `${lightGreen}44`,
                 }}
               >
-                date 🌃
+                date night 🌃
               </LinkButton>{' '}
-              are <Text fontStyle="italic">fundamentally different</Text> - one
-              night you crave an authentic dish, the others you just want some
-              nice ambiance and drinks.
+              are <Text fontStyle="italic">unique</Text> - one night you crave
+              an authentic dish, the other just some nice ambiance and drinks.{' '}
               <Text fontWeight="600">
-                Dish moves past 5-stars and instead rates what matters: the
-                factors. Each dish, the service, vibe, and more.
+                Dish introduces a few things to fix this
               </Text>
+              : we rate granularly - by dish, service, ambiance, vegetarian, and
+              more - and then we let you explore through lenses.
             </Paragraph>
 
             <Paragraph size="lg">
-              Ultimately though we think the problem comes down to platforms
-              that are stagnant and don't trust their users. We want to prove
-              you can build a high quality app and community that survives the
-              test of time, culminating with a great map of the world that
-              everyone can use, customize to their taste, and explore together.
-              We'll be writing more about this on the blog.
+              Ultimately we're building what we want: a map of the world that
+              lets us see what friends love, find things that match our taste
+              and mood, and especially, an app that won't degrade in quality
+              over time. We'll be writing more about how we plan to achieve this
+              on the blog.
             </Paragraph>
 
             <Paragraph size="lg">
-              Dish is just getting started. It (kinda) works, in a sketchy, and
-              fragile way. Some things are confusing, or poorly deliver on our
-              message (including this about page!). We're working on that. But
-              we put a lot of thought and work into the foundation, and we think
-              we can deliver something better.{' '}
+              Dish is just getting started. It sort of works... in a sketchy,
+              fragile way. Things will break, or poorly deliver on our message
+              (including this about page!). We're working on that. But we think
+              we have the right foundation and ideas, and we look forward to
+              delivering something great soon.
+            </Paragraph>
+
+            <Paragraph size="lg">
               <Link display="inline" href="mailto:team@dishapp.com">
                 Let us know what you'd love to see
               </Link>
-              .
+              , and
             </Paragraph>
 
             <Paragraph size="lg">Enjoy 🌮🍜</Paragraph>
