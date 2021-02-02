@@ -22,6 +22,7 @@ export type RestaurantCardProps = {
   aspectFixed?: boolean
   isBehind?: boolean
   padTitleSide?: boolean
+  dimImage?: boolean
 }
 
 const fallbackCard = <CardFrame aspectFixed />
@@ -48,6 +49,7 @@ export const RestaurantCardContent = memo(
       aspectFixed,
       padTitleSide,
       hoverable = true,
+      dimImage,
       below,
     }: RestaurantCardProps) => {
       const [restaurant] = queryRestaurant(restaurantSlug)
@@ -60,6 +62,7 @@ export const RestaurantCardContent = memo(
             title={restaurant.name}
             subTitle={price_range}
             below={below}
+            dimImage={dimImage}
             outside={
               !hideScore && (
                 <AbsoluteVStack bottom={-10} right={-10} zIndex={20}>

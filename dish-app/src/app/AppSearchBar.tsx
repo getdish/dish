@@ -114,7 +114,7 @@ export const AppSearchBarFloating = () => {
               justifyContent="center"
               alignItems="center"
               backgroundColor="rgba(0,0,0,0.85)"
-              shadowColor="rgba(0,0,0,0.523)"
+              shadowColor="rgba(0,0,0,0.3)"
               shadowOffset={{ height: 1, width: 0 }}
               shadowRadius={15}
             >

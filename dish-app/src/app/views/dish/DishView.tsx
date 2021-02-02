@@ -53,6 +53,7 @@ export type DishViewProps = DishTagItem & {
   noLink?: boolean
   preventLoad?: boolean
   showSearchButton?: boolean
+  hideVote?: boolean
 } & StackProps
 
 export const DishView = memo((props: DishViewProps) => {
@@ -85,6 +86,7 @@ const DishViewContent = (props: DishViewProps) => {
     restaurantId,
     selected,
     disableFallbackFade,
+    hideVote,
     isFallback,
     noLink,
     showSearchButton,
@@ -107,7 +109,11 @@ const DishViewContent = (props: DishViewProps) => {
   const isActive = (isHovered || selected) ?? false
 
   const showVote =
-    typeof score === 'number' && !!restaurantId && !!restaurantSlug && !!name
+    !hideVote &&
+    typeof score === 'number' &&
+    !!restaurantId &&
+    !!restaurantSlug &&
+    !!name
 
   let contents = (
     <Hoverable

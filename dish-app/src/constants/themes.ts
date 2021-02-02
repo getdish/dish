@@ -5,41 +5,41 @@ export type MyThemes = typeof themes
 
 const shared = {}
 
-const active: MyTheme = {
-  name: 'active',
+const baseTheme = {
   color: '#fff',
   colorSecondary: '#ccc',
   colorTertiary: '#777',
   colorQuartenary: '#444',
   shadowColor: `rgba(0,0,0,0.3)`,
+  backgroundColorAlt: 'rgb(240, 250, 255)',
+  backgroundColorTransparent: 'rgba(40,40,200,0)',
+  cardBackgroundColor: '#333',
+}
+
+const active: MyTheme = {
+  name: 'active',
+  ...baseTheme,
   backgroundColor: 'rgb(152, 88, 255)',
   backgroundColorSecondary: 'rgb(152, 88, 255)',
   backgroundColorTertiary: 'rgba(152, 88, 255, 0.85)',
   backgroundColorQuartenary: 'rgba(152, 88, 255, 0.7)',
   borderColor: 'rgb(142, 78, 245)',
   borderColorHover: 'rgb(132, 68, 235)',
-  backgroundColorTransparent: 'rgba(40,40,200,0)',
-  cardBackgroundColor: '#333',
 }
 
 const error: MyTheme = {
   name: 'error',
-  color: '#fff',
-  colorSecondary: '#ccc',
-  colorTertiary: '#777',
-  colorQuartenary: '#444',
-  shadowColor: `rgba(0,0,0,0.3)`,
+  ...baseTheme,
   backgroundColor: 'rgb(245, 38, 102)',
   backgroundColorSecondary: 'rgb(245, 38, 102)',
   backgroundColorTertiary: 'rgba(245, 38, 102, 0.85)',
   backgroundColorQuartenary: 'rgba(245, 38, 102, 0.7)',
   borderColor: 'rgb(205, 28, 92)',
   borderColorHover: 'rgb(205, 28, 92)',
-  backgroundColorTransparent: 'rgba(40,40,200,0)',
-  cardBackgroundColor: '#333',
 }
 
 const darkBase = {
+  backgroundColorAlt: 'rgba(240, 250, 255, 0.2)',
   borderColor: '#252525',
   borderColorHover: '#353535',
   color: '#fefefe',
@@ -72,6 +72,7 @@ const darkTranslucent: MyTheme = {
 }
 
 const lightBase = {
+  backgroundColorAlt: 'rgb(240, 250, 255)',
   borderColor: '#eee',
   borderColorHover: '#d5d5d5',
   color: '#111',
