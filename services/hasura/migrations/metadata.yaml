@@ -1180,3 +1180,7 @@ tables:
 - table:
     schema: public
     name: zcta5
+functions:
+- function:
+    schema: public
+    name: list_populated

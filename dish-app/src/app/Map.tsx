@@ -70,16 +70,12 @@ export const MapView = (props: MapProps) => {
   // window resize
   useEffect(() => {
     if (!map) return undefined
-    let cancel: Function | null = null
-    const handleResize = () => {
-      if (cancel) {
-        cancel()
-      }
-      cancel = series([() => fullyIdle({ max: 300 }), () => map.resize()])
-    }
+    const handleResize = debounce(() => {
+      map.resize()
+    }, 200)
     Dimensions.addEventListener('change', handleResize)
     return () => {
-      cancel?.()
+      handleResize.cancel()
       Dimensions.removeEventListener('change', handleResize)
     }
   }, [map])

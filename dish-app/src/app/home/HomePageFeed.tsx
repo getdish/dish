@@ -274,7 +274,10 @@ const ListFeedCard = graphql(
     region,
     onHoverResults,
   }: FeedItemList & { onHoverResults: (ids: RestaurantOnlyIds[]) => any }) => {
-    const recentLists = query.list({
+    const recentLists = query.list_populated({
+      args: {
+        min_items: 2,
+      },
       limit: 10,
       where: {
         public: {

@@ -465,6 +465,10 @@ export interface list_pk_columns_input {
   id: Scalars['uuid']
 }
 
+export interface list_populated_args {
+  min_items?: Maybe<Scalars['Int']>
+}
+
 /** order by aggregate values of table "list_restaurant" */
 export interface list_restaurant_aggregate_order_by {
   avg?: Maybe<list_restaurant_avg_order_by>
@@ -4654,6 +4658,28 @@ export const generatedSchema = {
       },
     },
     list_by_pk: { __type: 'list', __args: { id: 'uuid!' } },
+    list_populated: {
+      __type: '[list!]!',
+      __args: {
+        args: 'list_populated_args!',
+        distinct_on: '[list_select_column!]',
+        limit: 'Int',
+        offset: 'Int',
+        order_by: '[list_order_by!]',
+        where: 'list_bool_exp',
+      },
+    },
+    list_populated_aggregate: {
+      __type: 'list_aggregate!',
+      __args: {
+        args: 'list_populated_args!',
+        distinct_on: '[list_select_column!]',
+        limit: 'Int',
+        offset: 'Int',
+        order_by: '[list_order_by!]',
+        where: 'list_bool_exp',
+      },
+    },
     list_restaurant: {
       __type: '[list_restaurant!]!',
       __args: {
@@ -5779,6 +5805,28 @@ export const generatedSchema = {
       },
     },
     list_by_pk: { __type: 'list', __args: { id: 'uuid!' } },
+    list_populated: {
+      __type: '[list!]!',
+      __args: {
+        args: 'list_populated_args!',
+        distinct_on: '[list_select_column!]',
+        limit: 'Int',
+        offset: 'Int',
+        order_by: '[list_order_by!]',
+        where: 'list_bool_exp',
+      },
+    },
+    list_populated_aggregate: {
+      __type: 'list_aggregate!',
+      __args: {
+        args: 'list_populated_args!',
+        distinct_on: '[list_select_column!]',
+        limit: 'Int',
+        offset: 'Int',
+        order_by: '[list_order_by!]',
+        where: 'list_bool_exp',
+      },
+    },
     list_restaurant: {
       __type: '[list_restaurant!]!',
       __args: {
@@ -6615,6 +6663,7 @@ export const generatedSchema = {
     user_id: { __type: 'order_by' },
   },
   list_pk_columns_input: { id: { __type: 'uuid!' } },
+  list_populated_args: { min_items: { __type: 'Int' } },
   list_restaurant: {
     __typename: { __type: 'String!' },
     comment: { __type: 'String' },
@@ -10708,6 +10757,22 @@ export interface Query {
     where?: Maybe<list_bool_exp>
   }) => list_aggregate
   list_by_pk: (args: { id: ScalarsEnums['uuid'] }) => Maybe<list>
+  list_populated: (args: {
+    args: list_populated_args
+    distinct_on?: Maybe<Array<ScalarsEnums['list_select_column']>>
+    limit?: Maybe<ScalarsEnums['Int']>
+    offset?: Maybe<ScalarsEnums['Int']>
+    order_by?: Maybe<Array<list_order_by>>
+    where?: Maybe<list_bool_exp>
+  }) => Array<list>
+  list_populated_aggregate: (args: {
+    args: list_populated_args
+    distinct_on?: Maybe<Array<ScalarsEnums['list_select_column']>>
+    limit?: Maybe<ScalarsEnums['Int']>
+    offset?: Maybe<ScalarsEnums['Int']>
+    order_by?: Maybe<Array<list_order_by>>
+    where?: Maybe<list_bool_exp>
+  }) => list_aggregate
   list_restaurant: (args?: {
     distinct_on?: Maybe<Array<ScalarsEnums['list_restaurant_select_column']>>
     limit?: Maybe<ScalarsEnums['Int']>
@@ -11501,6 +11566,22 @@ export interface Subscription {
     where?: Maybe<list_bool_exp>
   }) => list_aggregate
   list_by_pk: (args: { id: ScalarsEnums['uuid'] }) => Maybe<list>
+  list_populated: (args: {
+    args: list_populated_args
+    distinct_on?: Maybe<Array<ScalarsEnums['list_select_column']>>
+    limit?: Maybe<ScalarsEnums['Int']>
+    offset?: Maybe<ScalarsEnums['Int']>
+    order_by?: Maybe<Array<list_order_by>>
+    where?: Maybe<list_bool_exp>
+  }) => Array<list>
+  list_populated_aggregate: (args: {
+    args: list_populated_args
+    distinct_on?: Maybe<Array<ScalarsEnums['list_select_column']>>
+    limit?: Maybe<ScalarsEnums['Int']>
+    offset?: Maybe<ScalarsEnums['Int']>
+    order_by?: Maybe<Array<list_order_by>>
+    where?: Maybe<list_bool_exp>
+  }) => list_aggregate
   list_restaurant: (args?: {
     distinct_on?: Maybe<Array<ScalarsEnums['list_restaurant_select_column']>>
     limit?: Maybe<ScalarsEnums['Int']>
