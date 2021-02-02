@@ -27,6 +27,7 @@ import { HomeStateItemHome } from '../../types/homeTypes'
 import { cancelUpdateRegion } from '../AppMapStore'
 import { useHomeStore } from '../homeStore'
 import { ContentScrollView } from '../views/ContentScrollView'
+import { ContentScrollViewHorizontal } from '../views/ContentScrollViewHorizontal'
 import { DishHorizonView } from '../views/DishHorizonView'
 import { LinkButton } from '../views/LinkButton'
 import { LinkButtonProps } from '../views/LinkProps'
@@ -173,7 +174,7 @@ export default memo(function HomePage(
               <Spacer size="md" />
 
               <HStack marginBottom={-20}>
-                <ScrollView horizontal showsHorizontalScrollIndicator={false}>
+                <ContentScrollViewHorizontal>
                   <HStack
                     alignItems="center"
                     paddingVertical={12}
@@ -220,7 +221,7 @@ export default memo(function HomePage(
                     </VStack>
                     <HomeTopSearches />
                   </HStack>
-                </ScrollView>
+                </ContentScrollViewHorizontal>
               </HStack>
 
               <Spacer size="lg" />

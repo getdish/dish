@@ -1,5 +1,8 @@
-import { useStore } from '@dish/use-store'
-import React, { memo, useContext, useMemo } from 'react'
+import { supportsTouchWeb } from '@dish/helpers/src'
+import { assertPresent } from '@dish/helpers/src'
+import { assert } from '@dish/helpers/src'
+import { getStore, useStoreSelector } from '@dish/use-store'
+import React, { memo, useContext, useEffect, useMemo, useRef } from 'react'
 import { ScrollView, ScrollViewProps } from 'react-native'
 import { VStack } from 'snackui'
 
@@ -7,27 +10,88 @@ import { ContentScrollContext, ScrollStore } from './ContentScrollView'
 
 export let isScrollingSubDrawer = false
 
+function setScrollLockHorizontal(id: string) {
+  const store = getStore(ScrollStore, { id })
+  assert(store.lock !== 'vertical', 'not locked vertically')
+  const val = isScrollingSubDrawer ? 'horizontal' : 'none'
+  if (val !== store.lock) {
+    store.setLock(val)
+  }
+}
+
 // takes children but we memo so we can optimize if wanted
 export const ContentScrollViewHorizontal = memo(
   (props: ScrollViewProps & { children: any }) => {
     const id = useContext(ContentScrollContext)
-    const { isScrolling } = useStore(ScrollStore, { id })
+    const scrollTm = useRef<any>(0)
+    const scrollVersion = useRef({
+      end: 0,
+      start: 0,
+    })
+    const $scroller = useRef<ScrollView>()
+    const isLockedVertical = useStoreSelector(
+      ScrollStore,
+      (x) => x.lock === 'vertical',
+      { id }
+    )
+
+    if (supportsTouchWeb) {
+      useEffect(() => {
+        const node = $scroller.current?.getInnerViewNode() as HTMLDivElement
+        assertPresent(node, 'no scroll node')
+        const unlockScroll = () => {
+          scrollVersion.current.end++
+          isScrollingSubDrawer = false
+          update()
+        }
+        node.addEventListener('touchend', unlockScroll)
+        return () => {
+          node.removeEventListener('touchend', unlockScroll)
+        }
+      }, [])
+    }
+
+    const update = () => {
+      setScrollLockHorizontal(id)
+    }
 
     const children = useMemo(() => {
       return (
         <ScrollView
-          {...{
-            horizontal: true,
-            showsHorizontalScrollIndicator: false,
-            onScrollBeginDrag: () => {
+          horizontal
+          showsHorizontalScrollIndicator={false}
+          ref={$scroller as any}
+          scrollEventThrottle={40}
+          onScroll={() => {
+            const shouldUpdate =
+              !supportsTouchWeb ||
+              scrollVersion.current.start === scrollVersion.current.end
+            if (shouldUpdate) {
               isScrollingSubDrawer = true
-            },
-            onScrollEndDrag: () => {
+              update()
+            }
+            clearTimeout(scrollTm.current)
+            scrollTm.current = setTimeout(() => {
+              if (supportsTouchWeb) {
+                if (scrollVersion.current.end > scrollVersion.current.start) {
+                  scrollVersion.current.start = scrollVersion.current.end
+                } else {
+                  return
+                }
+              }
               isScrollingSubDrawer = false
-            },
-            style: {
-              pointerEvents: 'inherit',
-            } as any,
+              update()
+            }, 200)
+          }}
+          onScrollBeginDrag={() => {
+            clearTimeout(scrollTm.current)
+            isScrollingSubDrawer = true
+            update()
+          }}
+          onScrollEndDrag={() => {
+            clearTimeout(scrollTm.current)
+            isScrollingSubDrawer = false
+            update()
           }}
           {...props}
         />
@@ -37,7 +101,7 @@ export const ContentScrollViewHorizontal = memo(
     return (
       // needs both pointer events to prevent/enable scroll on safari
       <VStack
-        pointerEvents={isScrolling ? 'none' : 'auto'}
+        pointerEvents={isLockedVertical ? 'none' : 'auto'}
         overflow="hidden"
         width="100%"
       >

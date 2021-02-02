@@ -95,6 +95,7 @@ export const HomeDrawerSmallView = memo((props: { children: any }) => {
           zIndex: 100,
         }}
       >
+        {/* handle */}
         <View
           pointerEvents="auto"
           style={{
@@ -131,17 +132,10 @@ export const HomeDrawerSmallView = memo((props: { children: any }) => {
           <VStack flex={1} maxHeight="100%" position="relative">
             {/* overlay over entire content to make dragging it up easy */}
             {(isWebIOS || drawerStore.snapIndex === 2) && (
-              <AbsoluteVStack
-                pointerEvents="none"
-                fullscreen
-                zIndex={1000000}
-                {...(drawerStore.snapIndex > 0 && {
-                  pointerEvents: 'auto',
-                })}
-              >
+              <AbsoluteVStack pointerEvents="auto" fullscreen zIndex={1000000}>
                 <View
                   style={{ width: '100%', height: '100%' }}
-                  {...(drawerStore.snapIndex > 0 && panResponder.panHandlers)}
+                  {...panResponder.panHandlers}
                 />
               </AbsoluteVStack>
             )}
