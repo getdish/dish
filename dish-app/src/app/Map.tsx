@@ -17,6 +17,7 @@ import { hexToRGB } from '../helpers/hexToRGB'
 import { hasMovedAtLeast } from '../helpers/mapHelpers'
 import { useIsMountedRef } from '../helpers/useIsMountedRef'
 import { RegionWithVia } from '../types/homeTypes'
+import { setMap as setMapRef } from './getMap'
 import { MapProps } from './MapProps'
 import { tiles } from './tiles'
 
@@ -88,6 +89,7 @@ export const MapView = (props: MapProps) => {
   // so be sure to thread style through here
   useEffect(() => {
     if (!mapNode.current) return
+    setMapRef(map)
     return setupMapEffect({
       mapNode: mapNode.current,
       isMounted,
