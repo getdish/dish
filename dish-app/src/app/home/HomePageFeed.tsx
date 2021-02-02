@@ -172,9 +172,9 @@ export const HomePageFeed = memo(
             onHoverIn={() => {
               setHovered(item.id)
             }}
-            onHoverOut={() => {
-              setHovered(null)
-            }}
+            // onHoverOut={() => {
+            //   setHovered(null)
+            // }}
             paddingTop={10}
             marginTop={-10}
             marginBottom={10}
