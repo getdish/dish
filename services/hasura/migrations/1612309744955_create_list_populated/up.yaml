@@ -1,0 +1,8 @@
+- args:
+    cascade: false
+    read_only: false
+    sql: "CREATE FUNCTION list_populated(min_items int)\nRETURNS SETOF list AS $$\n
+      \   SELECT *\n    FROM list \n    WHERE id IN (SELECT list_id\n               FROM
+      list_restaurant\n               GROUP BY list_id HAVING COUNT(*) >= min_items)\n$$
+      LANGUAGE sql STABLE;"
+  type: run_sql
