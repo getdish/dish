@@ -13,7 +13,15 @@ import { Plus } from '@dish/react-feather'
 import { chunk, partition, sortBy, uniqBy, zip } from 'lodash'
 import React, { Suspense, memo, useMemo, useState } from 'react'
 import { Dimensions, ScrollView } from 'react-native'
-import { HStack, LoadingItems, Spacer, Text, VStack } from 'snackui'
+import {
+  AbsoluteVStack,
+  HStack,
+  LoadingItems,
+  Spacer,
+  Text,
+  VStack,
+  useTheme,
+} from 'snackui'
 
 import { peachAvatar } from '../../constants/avatar'
 import { getColorsForName } from '../../helpers/getColorsForName'
@@ -32,6 +40,7 @@ import { homeStore } from '../homeStore'
 import { CardFrame } from '../views/CardFrame'
 import { SmallCircleButton } from '../views/CloseButton'
 import { CommentBubble } from '../views/CommentBubble'
+import { ContentScrollViewHorizontal } from '../views/ContentScrollViewHorizontal'
 import { DishView } from '../views/dish/DishView'
 import { Link } from '../views/Link'
 import { ListCard } from '../views/list/ListCard'
@@ -90,7 +99,12 @@ export const HomePageFeed = memo(
     const { region, isActive, center, span } = props
     const items = useHomeFeed(props)
     const isLoading = !region || items[0]?.id === null
+    const theme = useTheme()
+    const [hovered, setHovered] = useState<null | string>(null)
     const results = items.flatMap((x) => {
+      if (hovered && hovered !== x.id) {
+        return []
+      }
       if (x.type === 'dish-restaurants') {
         return x.restaurants
       }
@@ -137,6 +151,18 @@ export const HomePageFeed = memo(
             alignItems="center"
             position="relative"
             width="100%"
+            onHoverIn={() => {
+              setHovered(item.id)
+            }}
+            onHoverOut={() => {
+              setHovered(null)
+            }}
+            paddingTop={10}
+            marginTop={-10}
+            marginBottom={10}
+            hoverStyle={{
+              backgroundColor: theme.backgroundColorAlt,
+            }}
           >
             {content}
           </VStack>
@@ -319,48 +345,47 @@ const CuisineFeedCard = memo(
         >
           {props.title}
         </FeedSlantedTitle>
-        <ScrollView
-          style={{
-            maxWidth: '100%',
-            overflow: 'hidden',
-            marginBottom: -20,
-            marginTop: -14,
-          }}
-          horizontal
-          showsHorizontalScrollIndicator={false}
-        >
-          <VStack paddingVertical={12} paddingHorizontal={40} flexWrap="nowrap">
-            <HStack
-              spacing={6}
-              marginHorizontal="auto"
-              alignItems="center"
-              justifyContent="center"
-              overflow="hidden"
-            >
-              <VStack width={titleWidth} />
-              {dishes.map((dish, index) => {
-                const color = getColorsForName(dish.name).color
-                const rgb = hexToRGB(color).rgb
-                return (
-                  <Link key={index} tag={{ slug: dish.slug }} asyncClick>
-                    <GradientButton rgb={rgb.map((x) => x * 1.1)}>
-                      <TagsText
-                        tags={[{ name: dish.name, icon: dish.icon }]}
-                        color={color}
-                      />
-                    </GradientButton>
-                  </Link>
-                )
-              })}
-            </HStack>
-          </VStack>
-        </ScrollView>
 
-        <ScrollView
-          style={{ maxWidth: '100%', overflow: 'hidden' }}
-          horizontal
-          showsHorizontalScrollIndicator={false}
+        <VStack
+          maxWidth="100%"
+          overflow="hidden"
+          marginBottom={-20}
+          marginTop={-14}
         >
+          <ContentScrollViewHorizontal>
+            <VStack
+              paddingVertical={12}
+              paddingHorizontal={40}
+              flexWrap="nowrap"
+            >
+              <HStack
+                spacing={6}
+                marginHorizontal="auto"
+                alignItems="center"
+                justifyContent="center"
+                overflow="hidden"
+              >
+                <VStack width={titleWidth} />
+                {dishes.map((dish, index) => {
+                  const color = getColorsForName(dish.name).color
+                  const rgb = hexToRGB(color).rgb
+                  return (
+                    <Link key={index} tag={{ slug: dish.slug }} asyncClick>
+                      <GradientButton rgb={rgb.map((x) => x * 1.1)}>
+                        <TagsText
+                          tags={[{ name: dish.name, icon: dish.icon }]}
+                          color={color}
+                        />
+                      </GradientButton>
+                    </Link>
+                  )
+                })}
+              </HStack>
+            </VStack>
+          </ContentScrollViewHorizontal>
+        </VStack>
+
+        <ContentScrollViewHorizontal>
           <VStack paddingVertical={0} paddingHorizontal={0} flexWrap="nowrap">
             <HStack>
               {restaurants.map((r, i) => {
@@ -388,7 +413,7 @@ const CuisineFeedCard = memo(
               })}
             </HStack>
           </VStack>
-        </ScrollView>
+        </ContentScrollViewHorizontal>
       </>
     )
   })
@@ -429,21 +454,17 @@ const DishRestaurantsFeedCard = (props: FeedItemDishRestaurants) => {
                 restaurantId={r.id}
                 restaurantSlug={r.slug}
                 hoverable={false}
+                dimImage
                 below={
-                  <VStack
-                    // transform={[{ perspective: 1000 }, { rotateY: '10deg' }]}
-                    position="absolute"
-                    bottom={-15}
-                    right={-15}
-                  >
+                  <AbsoluteVStack alignSelf="center" bottom={20}>
                     <DishView
                       {...props.dish}
+                      hideVote
                       restaurantId={r.id}
                       restaurantSlug={r.slug}
-                      size={120}
-                      isFallback
+                      size={190}
                     />
-                  </VStack>
+                  </AbsoluteVStack>
                 }
               />
             </SkewedCard>

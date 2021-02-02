@@ -3,14 +3,8 @@ import { useState } from 'react'
 export function useLocalStorageState<A>(key: string, initialValue: A) {
   const [state, setState] = useState(() => {
     const item = localStorage.getItem(key)
-    if (typeof item !== 'undefined') {
-      if (typeof initialValue === 'object') {
-        return JSON.parse(item as any)
-      } else if (typeof initialValue === 'number') {
-        return +(item ?? 0)
-      } else {
-        return item
-      }
+    if (item !== null) {
+      return JSON.parse(item as any)
     }
     return initialValue
   })

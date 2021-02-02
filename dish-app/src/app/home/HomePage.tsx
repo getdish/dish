@@ -6,12 +6,18 @@ import {
   HStack,
   InteractiveContainer,
   LoadingItems,
+  Paragraph,
   Spacer,
   VStack,
   useMedia,
   useTheme,
 } from 'snackui'
 
+import {
+  allColors,
+  allExtraLightColors,
+  allLightColors,
+} from '../../constants/colors'
 import { drawerWidthMax, searchBarHeight } from '../../constants/constants'
 import {
   getDefaultLocation,
@@ -26,12 +32,16 @@ import { router, useIsRouteActive } from '../../router'
 import { HomeStateItemHome } from '../../types/homeTypes'
 import { cancelUpdateRegion } from '../AppMapStore'
 import { useHomeStore } from '../homeStore'
+import { useLocalStorageState } from '../hooks/useLocalStorageState'
+import { CloseButton } from '../views/CloseButton'
 import { ContentScrollView } from '../views/ContentScrollView'
 import { ContentScrollViewHorizontal } from '../views/ContentScrollViewHorizontal'
 import { DishHorizonView } from '../views/DishHorizonView'
+import { Link } from '../views/Link'
 import { LinkButton } from '../views/LinkButton'
 import { LinkButtonProps } from '../views/LinkProps'
 import { PageTitleTag } from '../views/PageTitleTag'
+import { PaneControlButtons } from '../views/PaneControlButtons'
 import { SlantedTitle } from '../views/SlantedTitle'
 import { HomePageFeed } from './HomePageFeed'
 import { HomeStackViewProps } from './HomeStackViewProps'
@@ -143,8 +153,6 @@ export default memo(function HomePage(
           shadowColor={theme.backgroundColor}
           shadowOpacity={1}
           shadowRadius={10}
-          borderBottomColor={theme.backgroundColorSecondary}
-          borderBottomWidth={1}
           height={searchBarHeight + 10}
         />
       </AbsoluteVStack>
@@ -178,7 +186,7 @@ export default memo(function HomePage(
                   <HStack
                     alignItems="center"
                     paddingVertical={12}
-                    paddingBottom={40}
+                    paddingBottom={35}
                     paddingHorizontal={10}
                   >
                     <VStack position="relative">
@@ -226,7 +234,10 @@ export default memo(function HomePage(
 
               <Spacer size="lg" />
 
+              <HomePageIntroDialogue />
+
               <Spacer />
+
               <Suspense
                 fallback={
                   <>
@@ -244,6 +255,37 @@ export default memo(function HomePage(
     </>
   )
 })
+
+const HomePageIntroDialogue = () => {
+  const [show, setShow] = useLocalStorageState('home-intro-dialogue2', true)
+  console.log('show', show)
+
+  if (!show) {
+    return null
+  }
+
+  return (
+    <VStack
+      backgroundColor={allExtraLightColors[0]}
+      borderColor={allLightColors[0]}
+      borderWidth={1}
+      borderRadius={15}
+      padding={10}
+      paddingHorizontal={13}
+      margin={10}
+      position="relative"
+    >
+      <AbsoluteVStack top={-5} right={-5}>
+        <CloseButton onPress={() => setShow(false)} />
+      </AbsoluteVStack>
+      <Paragraph>
+        Welcome! Dish is a pocket map for finding great things. To start - food.
+        We want to make it much easier to find the local gems and know what's
+        good in each city/neighborhood. <Link name="about">Read more</Link>.
+      </Paragraph>
+    </VStack>
+  )
+}
 
 const HomeTopSpacer = () => {
   const media = useMedia()

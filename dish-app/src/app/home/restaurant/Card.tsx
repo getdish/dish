@@ -36,6 +36,7 @@ export function Card({
   hideInfo,
   backgroundColor,
   isBehind,
+  dimImage,
   size,
 }: {
   below?: string | null
@@ -49,9 +50,10 @@ export function Card({
   size?: 'sm' | 'md'
   backgroundColor?: string | null
   isBehind?: boolean
+  dimImage?: boolean
   padTitleSide?: boolean
 }) {
-  const { color, darkColor } = backgroundColor
+  const { color, darkColor, lightColor } = backgroundColor
     ? getColorsForColor(backgroundColor)
     : getColorsForName(title ?? '')
   const isSm = size === 'sm'
@@ -78,7 +80,7 @@ export function Card({
         alignSelf="center"
         position="relative"
         borderRadius={cardFrameBorderRadius}
-        backgroundColor={backgroundColor ?? '#000' ?? ''}
+        backgroundColor={backgroundColor ?? color ?? ''}
       >
         <AbsoluteVStack
           className="ease-in-out"
@@ -118,7 +120,7 @@ export function Card({
               {...sizes}
               style={{
                 ...frame,
-                opacity: 0.66,
+                opacity: dimImage ? 0.33 : 0.66,
               }}
               source={{ uri: photo }}
             />

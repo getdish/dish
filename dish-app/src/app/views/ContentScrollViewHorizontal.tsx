@@ -3,7 +3,7 @@ import { assertPresent } from '@dish/helpers/src'
 import { assert } from '@dish/helpers/src'
 import { getStore, useStoreSelector } from '@dish/use-store'
 import React, { memo, useContext, useEffect, useMemo, useRef } from 'react'
-import { ScrollView, ScrollViewProps } from 'react-native'
+import { ScrollView, ScrollViewProps, StyleSheet } from 'react-native'
 import { VStack } from 'snackui'
 
 import { ContentScrollContext, ScrollStore } from './ContentScrollView'
@@ -62,6 +62,7 @@ export const ContentScrollViewHorizontal = memo(
           showsHorizontalScrollIndicator={false}
           ref={$scroller as any}
           scrollEventThrottle={40}
+          style={sheet.scrollStyle}
           {...props}
           onScroll={(e) => {
             props.onScroll?.(e)
@@ -115,3 +116,10 @@ export const ContentScrollViewHorizontal = memo(
     )
   }
 )
+
+const sheet = StyleSheet.create({
+  scrollStyle: {
+    maxWidth: '100%',
+    overflow: 'hidden',
+  },
+})

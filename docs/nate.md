@@ -29,7 +29,6 @@ goal january
     - search page fixes:
       - shows blank sometimes
       - recyclerview needs to load more up-front, keep more in memory
-    - restaurantlistitem - next to fav, add to list button
     - search page - show popular lists for that region + tags
     - restaurant page - show lists restaurant is on
     - new list
@@ -40,11 +39,9 @@ goal january
       - show more results on map
       - show real comments (recent?)
     - cleanup
-     - fix comment bubble
      - fixup profile pages a lot
     - show onboard if not yet
     - better intro / intro callout
-    - touch / mobile web app runthrough fix scrolling issues
     - touch up commenting/rating
     - location <=> url
     - organize all map/geo helpers a bit
