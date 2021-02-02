@@ -1,6 +1,7 @@
 import { appMapStore } from '../app/AppMapStore'
 import { MAPBOX_ACCESS_TOKEN } from '../constants/constants'
 import { GeocodePlace, LngLat } from '../types/homeTypes'
+import { spanToScope } from './mapHelpers'
 
 export async function reverseGeocode(
   center: LngLat,
@@ -31,24 +32,4 @@ export async function reverseGeocode(
   }
 
   return null
-}
-
-// needs to be... better, can mapbox just do this?
-function spanToScope(
-  span: LngLat
-): 'street' | 'neighborhood' | 'city' | 'state' | 'country' {
-  const est = (span.lat + span.lat) / 2
-  if (est < 0.025) {
-    return 'street'
-  }
-  if (est < 0.05) {
-    return 'neighborhood'
-  }
-  if (est < 1.5) {
-    return 'city'
-  }
-  if (est < 4) {
-    return 'state'
-  }
-  return 'country'
 }

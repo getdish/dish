@@ -6,9 +6,71 @@ import { Point } from '../types/homeTypes'
 
 const { abs } = Math
 
+export function snapCoordsToTileCentre(lon: number, lat: number, zoom: number) {
+  const n = Math.pow(2, zoom)
+  const in_lat_rad = lat * (Math.PI / 180)
+  const x_coord = n * ((lon + 180) / 360)
+  const magic =
+    1 - Math.log(Math.tan(in_lat_rad) + 1 / Math.cos(in_lat_rad)) / Math.PI
+  const y_coord = 0.5 * n * magic
+  const xtile = Math.floor(x_coord)
+  const ytile = Math.floor(y_coord)
+  const out_lat_rad = Math.atan(Math.sinh(Math.PI * (1 - (2 * ytile) / n)))
+
+  lon = (xtile / n) * 360.0 - 180.0
+  lat = (out_lat_rad * 180.0) / Math.PI
+  return [lon, lat]
+}
+
+// TODO getZoomLevel, distanceForZoom, spanToScope all similar...
+
+// this is incorrect technically, doesnt correspond to map.getZoom()
+export const getZoomFromSpan = (span: LngLat) => {
+  const zoom = (Math.abs(span.lat) + Math.abs(span.lng)) / 2
+  return zoom
+}
+
 export const getZoomLevel = (span: LngLat) => {
-  const curZoom = (Math.abs(span.lat) + Math.abs(span.lng)) / 2
+  const curZoom = getZoomFromSpan(span)
   return curZoom < 0.05 ? 'close' : curZoom > 0.3 ? 'far' : 'medium'
+}
+
+// See https://wiki.openstreetmap.org/wiki/Zoom_levels
+const distances: { [key: string]: number } = {
+  10: 0.352, // metro
+  11: 0.176, // city
+  12: 0.088, // town/city/district
+  13: 0.044, // suburb
+}
+
+export function getDistanceForZoom(zoom: number) {
+  const x = Math.round(zoom)
+  for (const d in distances) {
+    if (x <= +d) {
+      return distances[d]
+    }
+  }
+  const keys = Object.keys(distances)
+  return distances[keys[keys.length - 1]]
+}
+
+export function spanToScope(
+  span: LngLat
+): 'street' | 'neighborhood' | 'city' | 'state' | 'country' {
+  const est = getZoomFromSpan(span)
+  if (est < 0.025) {
+    return 'street'
+  }
+  if (est < 0.05) {
+    return 'neighborhood'
+  }
+  if (est < 1.5) {
+    return 'city'
+  }
+  if (est < 4) {
+    return 'state'
+  }
+  return 'country'
 }
 
 export const polygonToLngLat = ({

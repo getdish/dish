@@ -4,7 +4,6 @@ import {
   RestaurantOnlyIds,
   SEARCH_DOMAIN,
   TopCuisine,
-  getHomeDishes,
   graphql,
   order_by,
   query,
@@ -14,16 +13,21 @@ import { Plus } from '@dish/react-feather'
 import { chunk, partition, sortBy, uniqBy, zip } from 'lodash'
 import React, { Suspense, memo, useMemo, useState } from 'react'
 import { Dimensions, ScrollView } from 'react-native'
-import { HStack, LoadingItems, Spacer, Text, VStack, useMedia } from 'snackui'
+import { HStack, LoadingItems, Spacer, Text, VStack } from 'snackui'
 
 import { peachAvatar } from '../../constants/avatar'
 import { getColorsForName } from '../../helpers/getColorsForName'
 import { DishTagItem } from '../../helpers/getRestaurantDishes'
 import { hexToRGB } from '../../helpers/hexToRGB'
+import {
+  getDistanceForZoom,
+  snapCoordsToTileCentre,
+} from '../../helpers/mapHelpers'
 import { useQueryLoud } from '../../helpers/useQueryLoud'
 import { queryRestaurant } from '../../queries/queryRestaurant'
 import { HomeStateItemHome, RegionNormalized } from '../../types/homeTypes'
 import { useSetAppMap } from '../AppMapStore'
+import { getMapZoom } from '../getMap'
 import { homeStore } from '../homeStore'
 import { CardFrame } from '../views/CardFrame'
 import { SmallCircleButton } from '../views/CloseButton'
@@ -168,8 +172,57 @@ export const HomePageFeed = memo(
   })
 )
 
+async function getHomeDishes(
+  lng: number,
+  lat: number,
+  zoom: number
+): Promise<TopCuisine[]> {
+  const snapped = snapCoordsToTileCentre(lng, lat, zoom)
+  lng = snapped[0]
+  lat = snapped[1]
+  const params = [
+    'lon=' + lng,
+    'lat=' + lat,
+    'distance=' + getDistanceForZoom(zoom),
+  ]
+  const url = SEARCH_DOMAIN + '/top_cuisines?' + params.join('&')
+  const response = await fetch(url).then((res) => res.json())
+  return response
+}
+
+const getHomeCuisines = async (center: LngLat) => {
+  const cuisineItems = await getHomeDishes(
+    center.lng,
+    center.lat,
+    (await getMapZoom()) ?? 11
+  )
+  let all: TopCuisine[] = []
+  for (const item of cuisineItems) {
+    const existing = all.find((x) => x.country === item.country)
+    if (existing) {
+      const allTopRestaurants = [
+        ...existing.top_restaurants,
+        ...item.top_restaurants,
+      ]
+      const sortedTopRestaurants = sortBy(
+        allTopRestaurants,
+        (x) => -(x.rating ?? 0)
+      )
+      existing.top_restaurants = uniqBy(
+        sortedTopRestaurants,
+        (x) => x.id
+      ).slice(0, 5)
+    } else {
+      all.push(item)
+    }
+  }
+  return sortBy(all, (x) => -x.avg_rating)
+}
+
 const useTopCuisines = (center: LngLat) => {
-  return useQueryLoud('topcuisine', () => getHomeCuisines(center))
+  return useQueryLoud('topcuisine', () => getHomeCuisines(center), {
+    suspense: false,
+  })
 }
 
 const ListFeedCard = graphql((props: FeedItemList) => {
@@ -418,31 +471,6 @@ const RestaurantFeedCard = (props: FeedItemRestaurant) => {
   )
 }
 
-const getHomeCuisines = async (center: LngLat) => {
-  const cuisineItems = await getHomeDishes(center.lng, center.lat)
-  let all: TopCuisine[] = []
-  for (const item of cuisineItems) {
-    const existing = all.find((x) => x.country === item.country)
-    if (existing) {
-      const allTopRestaurants = [
-        ...existing.top_restaurants,
-        ...item.top_restaurants,
-      ]
-      const sortedTopRestaurants = sortBy(
-        allTopRestaurants,
-        (x) => -(x.rating ?? 0)
-      )
-      existing.top_restaurants = uniqBy(
-        sortedTopRestaurants,
-        (x) => x.id
-      ).slice(0, 5)
-    } else {
-      all.push(item)
-    }
-  }
-  return sortBy(all, (x) => -x.avg_rating)
-}
-
 function useHomeFeed({ item, region, center, span }: HomeFeedProps) {
   const isNew = item.section === 'new'
   const slug = item.region ?? ''
@@ -455,7 +483,10 @@ function useHomeFeed({ item, region, center, span }: HomeFeedProps) {
       fetch(
         `${SEARCH_DOMAIN}/feed?region=${encodeURIComponent(slug)}&limit=20`
       ).then((res) => res.json()),
-    { enabled: !!item.region }
+    {
+      enabled: !!item.region,
+      suspense: false,
+    }
   )
 
   const feedRestaurants = homeFeed.data?.[isNew ? 'new' : 'trending'] ?? []

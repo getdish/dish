@@ -10,6 +10,7 @@ import { green } from '../constants/colors'
 import { MAPBOX_ACCESS_TOKEN } from '../constants/constants'
 import { hasMovedAtLeast } from '../helpers/mapHelpers'
 import { drawerStore as drawerStoreInstance } from './drawerStore'
+import { setMap } from './getMap'
 import { MapProps } from './MapProps'
 import { tiles } from './tiles'
 
@@ -39,8 +40,6 @@ export const MapView = ({
   const onMoveEndDelayed = useDebounce(onMoveEnd ?? idFn, 250)
   const tileSource = useRef<MapboxGL.VectorSource | null>(null)
 
-  console.log('drawerHeight', drawerHeight, ty)
-
   useEffect(() => {
     console.log('animating', ty)
     const spring = Animated.spring(tyRef.current, {
@@ -64,6 +63,8 @@ export const MapView = ({
 
   // ensure map loads eventually (if a tile fails etc)
   useEffect(() => {
+    setMap(mapRef.current)
+
     return series([() => sleep(2000), () => setIsLoaded(1)])
   }, [])
 
