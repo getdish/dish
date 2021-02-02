@@ -5,6 +5,7 @@ import {
   Divider,
   Paragraph,
   Spacer,
+  Text,
   UnorderedList,
   UnorderedListItem,
   VStack,
@@ -75,14 +76,29 @@ export default function AboutPage({
           <VStack paddingHorizontal="5%" spacing="xl">
             <Paragraph size="xxl">
               We want to build a high quality, fun, collaborative guide to the
-              real world that maintains high quality, even in the long run.
+              real world that is entirely driven by users, and avoids the
+              problems of corporatization and advertising pressure.
             </Paragraph>
 
             <Paragraph size="xl">
-              We're starting with food, where we think there are many problems
-              with existing sites and apps which initially sparked our interest
-              in dish. Too many hole-in-the-wall restaurants get lost to poor
-              ratings. What you look for when ordering{' '}
+              It all started with food. In eating around the San Francisco Bay
+              Area, we noticed a disturbing trend: too many great
+              hole-in-the-wall restaurants were lost to poor ratings. Chinese
+              and Vietnamese gems would sit at ⭐️⭐️⭐️ stars, while more
+              Americanized with worse food would get nearly 5. One part of the
+              problem was at more authentic foreign restaurants people just
+              didn't know what their specialty was, how to order it, or what to
+              expect.
+            </Paragraph>
+
+            <Paragraph size="xl">
+              Meanwhile, delivery apps have even worse scoring (not fake,
+              renamed pop-ups of poor-performing restaurants), finding a decent
+              plate you were craving became a chorse. And so Dish was born.
+            </Paragraph>
+
+            <Paragraph size="xl">
+              What you look for when ordering{' '}
               <LinkButton
                 backgroundColor={lightYellow}
                 hoverStyle={{
@@ -110,41 +126,45 @@ export default function AboutPage({
               >
                 date 🌃
               </LinkButton>{' '}
-              are <em>fundamentally different</em> - one night you crave an
-              authentic dish, the others you just want some nice ambiance and
-              drinks.
-            </Paragraph>
-
-            <Paragraph size="lg" fontWeight="600">
-              Dish tears down the 5-star world. We rate what matters, exactly -
-              a dish, the service, the vibe, and more.
-            </Paragraph>
-
-            <Paragraph size="lg">
-              We want to prove you can build a high quality app that doesn't
-              bend to advertising pressure by focusing on community and quality
-              from the start. With a play on sub-reddits and specialization,
-              community-powered everything (voting, moderation, and rating), we
-              think we can do that.
+              are <Text fontStyle="italic">fundamentally different</Text> - one
+              night you crave an authentic dish, the others you just want some
+              nice ambiance and drinks.
+              <Text fontWeight="600">
+                Dish moves past 5-stars and instead rates what matters: the
+                factors. Each dish, the service, vibe, and more.
+              </Text>
             </Paragraph>
 
             <Paragraph size="lg">
-              Dish is just getting started. It (kinda) works. It's sketchy, and
-              it breaks all the time. Some things are confusing. But we put a
-              lot of thought and work into the foundation, so we can move
-              quickly from here. Let us know what you'd love to see.
+              Ultimately though we think the problem comes down to platforms
+              that are stagnant and don't trust their users. We want to prove
+              you can build a high quality app and community that survives the
+              test of time, culminating with a great map of the world that
+              everyone can use, customize to their taste, and explore together.
+              We'll be writing more about this on the blog.
             </Paragraph>
 
-            <Paragraph size="lg">We hope you enjoy 🌮🍜</Paragraph>
+            <Paragraph size="lg">
+              Dish is just getting started. It (kinda) works, in a sketchy, and
+              fragile way. Some things are confusing, or poorly deliver on our
+              message (including this about page!). We're working on that. But
+              we put a lot of thought and work into the foundation, and we think
+              we can deliver something better.{' '}
+              <Link display="inline" href="mailto:team@dishapp.com">
+                Let us know what you'd love to see
+              </Link>
+              .
+            </Paragraph>
+
+            <Paragraph size="lg">Enjoy 🌮🍜</Paragraph>
 
             <Spacer />
             <Divider />
-            <Spacer />
 
             <Paragraph size="xl">
               <AbsoluteVStack
                 zIndex={1}
-                bottom={34}
+                bottom={0}
                 right={15}
                 width={125}
                 height={125}
@@ -156,23 +176,7 @@ export default function AboutPage({
                   resizeMode="contain"
                 />
               </AbsoluteVStack>
-              Consider{' '}
-              <Link display="inline" href="mailto:team@dishapp.com">
-                telling us what we should do better
-              </Link>
-              , or better, send a pic of your favorite taqueria.
             </Paragraph>
-            <Spacer size="sm" />
-            {/* <form>
-              <VStack>
-                <Input name="email" type="email" placeholder="Email..." />
-                <TextArea name="comment" numberOfLines={100} />
-                <Button>Submit</Button>
-              </VStack>
-            </form> */}
-            <Spacer />
-            <Spacer />
-            <Spacer />
             <Spacer />
           </VStack>
         </VStack>
