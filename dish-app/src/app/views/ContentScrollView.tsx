@@ -1,16 +1,8 @@
-import {
-  Store,
-  getStore,
-  reaction,
-  useStore,
-  useStoreInstance,
-  useStoreSelector,
-} from '@dish/use-store'
+import { Store, getStore, reaction, useStore } from '@dish/use-store'
 import React, {
   Suspense,
   createContext,
   forwardRef,
-  useCallback,
   useEffect,
   useMemo,
   useRef,
@@ -23,11 +15,13 @@ import { isWeb } from '../../constants/constants'
 import { supportsTouchWeb } from '../../constants/platforms'
 import { drawerStore } from '../drawerStore'
 
-export class ScrollStore extends Store<{ id: string }> {
-  isScrolling = false
+type ScrollLock = 'horizontal' | 'vertical' | 'none'
 
-  setIsScrolling(val: boolean) {
-    this.isScrolling = val
+export class ScrollStore extends Store<{ id: string }> {
+  lock: ScrollLock = 'none'
+
+  setLock(val: ScrollLock) {
+    this.lock = val
   }
 }
 
@@ -45,7 +39,7 @@ export function setIsScrollAtTop(val: boolean) {
   isScrollAtTop = val
 }
 
-export const usePreventContentScroll = (id: string) => {
+export const usePreventVerticalScroll = (id: string) => {
   const [prevent, setPrevent] = useState(false)
 
   useEffect(() => {
@@ -54,32 +48,54 @@ export const usePreventContentScroll = (id: string) => {
     }
 
     let isParentActive = false
+    let isMinimized = false
+    let isLockedHorizontal = false
+
     const parentStore = getStore(ContentParentStore)
+    const scrollStore = getStore(ScrollStore, { id })
+
+    // TODO once reactions are finished to support doing all in one function
+    // we can greatly simplify this area
+
+    const update = () => {
+      const prevent = isMinimized || !isParentActive || isLockedHorizontal
+      setPrevent(prevent)
+    }
 
     const d0 = reaction(
       parentStore,
       (x) => x.activeId === id,
       (next) => {
         isParentActive = next
-        if (!isParentActive) {
-          setPrevent(true)
-        }
+        update()
       }
     )
 
     const d1 = reaction(
       drawerStore,
-      (x) => x.snapIndex == 2,
-      (isMinimized) => {
-        setPrevent(isMinimized || !isParentActive)
+      (x) => x.snapIndex > 0,
+      (x) => {
+        isMinimized = x
+        update()
+      }
+    )
+
+    const d2 = reaction(
+      scrollStore as any,
+      (x) => x.lock,
+      (lock) => {
+        isLockedHorizontal = lock === 'horizontal'
+        console.log('is locked', isLockedHorizontal)
+        update()
       }
     )
 
     return () => {
       d0()
       d1()
+      d2()
     }
-  }, [])
+  }, [id])
 
   return prevent
 }
@@ -95,7 +111,7 @@ type ContentScrollViewProps = ScrollViewProps & {
 export const ContentScrollView = forwardRef<ScrollView, ContentScrollViewProps>(
   ({ children, onScrollYThrottled, style, id, ...props }, ref) => {
     // this updates when drawer moves to top
-    const preventScrolling = usePreventContentScroll(id)
+    const preventScrolling = usePreventVerticalScroll(id)
     const scrollStore = useStore(ScrollStore, { id })
     const media = useMedia()
     const lastUpdate = useRef<any>(0)
@@ -114,13 +130,13 @@ export const ContentScrollView = forwardRef<ScrollView, ContentScrollViewProps>(
       }
 
       if (isAtTop) {
-        scrollStore.setIsScrolling(false)
+        scrollStore.setLock('none')
       } else {
-        if (!scrollStore.isScrolling) {
-          scrollStore.setIsScrolling(true)
+        if (!scrollStore.lock) {
+          scrollStore.setLock('vertical')
         }
         finish.current = setTimeout(() => {
-          scrollStore.setIsScrolling(false)
+          scrollStore.setLock('none')
         }, 220)
       }
     }

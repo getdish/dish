@@ -1,7 +1,7 @@
 import { useStore, useStoreInstance } from '@dish/use-store'
 import React, { memo, useMemo } from 'react'
 import { Animated, PanResponder, StyleSheet, View } from 'react-native'
-import { VStack } from 'snackui'
+import { AbsoluteVStack, VStack, useConstant } from 'snackui'
 
 import {
   pageWidthMax,
@@ -21,7 +21,7 @@ import { isScrollingSubDrawer } from '../views/ContentScrollViewHorizontal'
 export const HomeDrawerSmallView = memo((props: { children: any }) => {
   const drawerStore = useStoreInstance(drawerStoreInstance)
 
-  const panResponder = useMemo(() => {
+  const panResponder = useConstant(() => {
     const move = Animated.event([null, { dy: drawerStore.pan }], {
       useNativeDriver: false,
     })
@@ -77,7 +77,7 @@ export const HomeDrawerSmallView = memo((props: { children: any }) => {
         drawerStore.animateDrawerToPx(drawerStore.pan['_value'], velocity)
       },
     })
-  }, [])
+  })
 
   const content = useMemo(
     () => (
@@ -121,10 +121,10 @@ export const HomeDrawerSmallView = memo((props: { children: any }) => {
           zIndex: 100,
         }}
       >
+        {/* handle */}
         <View
+          pointerEvents="auto"
           style={{
-            // @ts-ignore
-            pointerEvents: 'auto',
             position: 'absolute',
             top: -30,
             padding: 5,
@@ -146,6 +146,9 @@ export const HomeDrawerSmallView = memo((props: { children: any }) => {
             />
           </VStack>
         </View>
+
+        {/* DONT OVERLAY BECAUSE WE NEED HORIZONTAL SCROLLING */}
+        {/* SEE CONTENTSCROLLVIEW FOR PREVENTING SCROLL */}
 
         {content}
       </Animated.View>
