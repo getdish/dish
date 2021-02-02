@@ -21,7 +21,7 @@ export const ListCard = graphql(
     slug: string | null
     userSlug: string | null
     region: string
-    onHover?: (is: boolean) => void
+    onHover?: (is: boolean) => any
     hoverable?: boolean
     isBehind?: boolean
   }) => {
