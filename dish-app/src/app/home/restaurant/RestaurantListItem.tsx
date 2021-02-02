@@ -114,10 +114,6 @@ export const RestaurantListItem = (props: RestaurantListItemProps) => {
 
 function RestaurantListItemMain(props: RestaurantListItemProps) {
   const [isLoaded, setIsLoaded] = useState(false)
-  const content = useMemo(() => {
-    return <RestaurantListItemContent isLoaded={isLoaded} {...props} />
-  }, [props, isLoaded])
-
   const handleScrollMemo = useCallback(() => {
     setIsLoaded(true)
   }, [])
@@ -135,7 +131,7 @@ function RestaurantListItemMain(props: RestaurantListItemProps) {
         onScroll={handleScroll}
         scrollEventThrottle={100}
       >
-        {content}
+        <RestaurantListItemContent isLoaded={isLoaded} {...props} />
       </ContentScrollViewHorizontal>
     </VStack>
   )
