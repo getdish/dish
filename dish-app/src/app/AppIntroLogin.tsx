@@ -43,7 +43,7 @@ export const AppIntroLogin = memo(() => {
           size="lg"
           textAlign="center"
         >
-          a pocket guide to the world
+          your pocket guide to the world
         </Paragraph>
 
         <LinkButton
