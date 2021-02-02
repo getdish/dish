@@ -166,15 +166,6 @@ export default memo(function HomePage(
         alignSelf="flex-end"
       >
         <ContentScrollView id="home">
-          <AbsoluteVStack
-            opacity={media.sm ? 0 : 0.05}
-            top={0}
-            right={0}
-            left={0}
-            height={700}
-          >
-            <DishHorizonView />
-          </AbsoluteVStack>
           <VStack flex={1} overflow="hidden" maxWidth="100%">
             <VStack>
               <HomeTopSpacer />

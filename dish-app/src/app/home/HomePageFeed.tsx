@@ -1,3 +1,4 @@
+import { series } from '@dish/async'
 import {
   LngLat,
   MapPosition,
@@ -7,11 +8,12 @@ import {
   graphql,
   order_by,
   query,
+  resolved,
 } from '@dish/graph'
 import { isPresent } from '@dish/helpers'
 import { Plus } from '@dish/react-feather'
 import { chunk, partition, sortBy, uniqBy, zip } from 'lodash'
-import React, { Suspense, memo, useMemo, useState } from 'react'
+import React, { Suspense, memo, useEffect, useMemo, useState } from 'react'
 import { Dimensions, ScrollView } from 'react-native'
 import {
   AbsoluteVStack,
@@ -20,12 +22,14 @@ import {
   Spacer,
   Text,
   VStack,
+  useDebounce,
   useTheme,
 } from 'snackui'
 
 import { peachAvatar } from '../../constants/avatar'
 import { getColorsForName } from '../../helpers/getColorsForName'
 import { DishTagItem } from '../../helpers/getRestaurantDishes'
+import { getRestaurantIdentifiers } from '../../helpers/getRestaurantIdentifiers'
 import { hexToRGB } from '../../helpers/hexToRGB'
 import {
   getDistanceForZoom,
@@ -86,7 +90,7 @@ export type FeedItemRestaurant = FeedItemBase & {
 }
 export type FeedItemList = FeedItemBase & {
   type: 'list'
-  topic: string
+  region: string
 }
 
 type HomeFeedProps = HomeStackViewProps<HomeStateItemHome> & {
@@ -101,9 +105,16 @@ export const HomePageFeed = memo(
     const isLoading = !region || items[0]?.id === null
     const theme = useTheme()
     const [hovered, setHovered] = useState<null | string>(null)
+    const [hoveredResults, setHoveredResults] = useState<null | {
+      via: FeedItem['type']
+      results: RestaurantOnlyIds[]
+    }>(null)
     const results = items.flatMap((x) => {
       if (hovered && hovered !== x.id) {
         return []
+      }
+      if (hoveredResults?.via === x.type) {
+        return hoveredResults.results
       }
       if (x.type === 'dish-restaurants') {
         return x.restaurants
@@ -139,7 +150,14 @@ export const HomePageFeed = memo(
             case 'cuisine':
               return <CuisineFeedCard {...item} />
             case 'list':
-              return <ListFeedCard {...item} />
+              return (
+                <ListFeedCard
+                  {...item}
+                  onHoverResults={(results) =>
+                    setHoveredResults({ via: 'list', results })
+                  }
+                />
+              )
           }
         })()
         if (!content) {
@@ -251,63 +269,101 @@ const useTopCuisines = (center: LngLat) => {
   })
 }
 
-const ListFeedCard = graphql((props: FeedItemList) => {
-  const recentLists = query.list({
-    limit: 10,
-    where: {
-      public: {
-        _neq: false,
+const ListFeedCard = graphql(
+  ({
+    region,
+    onHoverResults,
+  }: FeedItemList & { onHoverResults: (ids: RestaurantOnlyIds[]) => any }) => {
+    const recentLists = query.list({
+      limit: 10,
+      where: {
+        public: {
+          _neq: false,
+        },
+        region: {
+          _eq: region,
+        },
       },
-    },
-    order_by: [{ created_at: order_by.desc }],
-  })
-  return (
-    <>
-      <FeedSlantedTitle>
-        <HStack alignItems="center">
-          <Text fontSize={22} fontWeight="700">
-            Playlists
-          </Text>
-          <Spacer size="sm" />
-          <Link
-            promptLogin
-            name="list"
-            params={{
-              userSlug: 'me',
-              slug: 'create',
-              region: homeStore.lastRegionSlug,
-            }}
-          >
-            <SmallCircleButton alignSelf="center">
-              <Plus size={14} color="#fff" />
-            </SmallCircleButton>
-          </Link>
-        </HStack>
-      </FeedSlantedTitle>
-      <SkewedCardCarousel>
-        {recentLists.map((list, i) => {
-          if (!list) {
-            return null
-          }
-          return (
-            <SkewedCard zIndex={1000 - i} key={list.id}>
-              <ListCard
-                isBehind={i > 0}
-                hoverable={false}
-                slug={list.slug}
-                userSlug={list.user?.username ?? ''}
-                region={list.region ?? ''}
-                // onHover={() => {
-                //   appMapStore.setHoverResults()
-                // }}
-              />
-            </SkewedCard>
-          )
-        })}
-      </SkewedCardCarousel>
-    </>
-  )
-})
+      order_by: [{ created_at: order_by.desc }],
+    })
+    const [hoveredList, setHoveredListFast] = useState<string | null>(null)
+    const setHoveredList = useDebounce(setHoveredListFast, 300)
+
+    useEffect(() => {
+      return series([
+        () =>
+          resolved(() => {
+            return query
+              .list({
+                where: {
+                  id: {
+                    _eq: hoveredList,
+                  },
+                },
+                limit: 1,
+              })
+              .flatMap((x) => {
+                return x
+                  .restaurants({
+                    limit: 40,
+                  })
+                  .map((r) => getRestaurantIdentifiers(r.restaurant))
+              })
+          }),
+        (results) => {
+          onHoverResults(results)
+        },
+      ])
+    }, [hoveredList])
+
+    return (
+      <>
+        <FeedSlantedTitle>
+          <HStack alignItems="center">
+            <Text fontSize={22} fontWeight="700">
+              Playlists
+            </Text>
+            <Spacer size="sm" />
+            <Link
+              promptLogin
+              name="list"
+              params={{
+                userSlug: 'me',
+                slug: 'create',
+                region: homeStore.lastRegionSlug,
+              }}
+            >
+              <SmallCircleButton alignSelf="center">
+                <Plus size={14} color="#fff" />
+              </SmallCircleButton>
+            </Link>
+          </HStack>
+        </FeedSlantedTitle>
+        <SkewedCardCarousel>
+          {recentLists.map((list, i) => {
+            if (!list) {
+              return null
+            }
+            return (
+              <SkewedCard zIndex={1000 - i} key={list.id}>
+                <ListCard
+                  isBehind={i > 0}
+                  hoverable={false}
+                  slug={list.slug}
+                  userSlug={list.user?.username ?? ''}
+                  region={list.region ?? ''}
+                  onHover={(hovered) =>
+                    hovered ? setHoveredList(list.id) : null
+                  }
+                />
+              </SkewedCard>
+            )
+          })}
+        </SkewedCardCarousel>
+      </>
+    )
+  }
+)
 
 const FeedSlantedTitle = (props: SlantedTitleProps) => {
   return (
@@ -553,7 +609,7 @@ function useHomeFeed({ item, region, center, span }: HomeFeedProps) {
           {
             id: `0`,
             type: 'list',
-            topic: 'Lists',
+            region: item.region,
             expandable: true,
             rank: -1,
             title: `Lists`,
