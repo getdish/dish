@@ -7,6 +7,7 @@ import {
   LoadingItems,
   Paragraph,
   Spacer,
+  Text,
   VStack,
   useMedia,
   useTheme,
@@ -256,14 +257,17 @@ const HomePageIntroDialogue = () => {
       paddingHorizontal={13}
       margin={10}
       position="relative"
+      maxWidth={740}
+      alignSelf="center"
     >
-      <AbsoluteVStack top={-5} right={-5}>
+      <AbsoluteVStack top={-10} right={-10}>
         <CloseButton onPress={() => setShow(false)} />
       </AbsoluteVStack>
       <Paragraph>
-        Welcome! Dish is a pocket map for finding great things. To start - food.
-        We want to make it much easier to find the local gems and know what's
-        good in each city/neighborhood. <Link name="about">Read more</Link>.
+        <Text fontWeight="700">Welcome!</Text> Dish is a better pocket map of
+        the world, starting with food. We want to make it easier to know what's
+        uniquely good in each city and neighborhood.{' '}
+        <Link name="about">Read more</Link>.
       </Paragraph>
     </VStack>
   )

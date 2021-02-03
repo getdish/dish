@@ -75,29 +75,42 @@ export default function AboutPage({
 
           <VStack paddingHorizontal="5%" spacing="xl">
             <Paragraph size="xxl">
-              We want to build a high quality, fun, collaborative guide to the
-              real world that is entirely driven by users, and avoids the
-              problems of corporatization and advertising pressure.
+              A high quality, fun, community-built guide to the real world - a
+              Hitchiker's Guide to the Galaxy, for earth, starting with food.
             </Paragraph>
 
             <Paragraph size="xl">
               It all started with food. In eating around the San Francisco Bay
               Area, we noticed a disturbing trend: too many great
-              hole-in-the-wall restaurants were lost to poor ratings. Chinese
-              and Vietnamese gems would sit at ⭐️⭐️⭐️ stars, while places
-              with cute interiors but worse food get perfect scores.
+              hole-in-the-wall restaurants were lost to poor ratings. Amazing
+              Mexican, Chinese and Vietnamese gems would sit at ⭐️⭐️⭐️.5
+              stars due to their hole-in-the-wall charms, while more
+              Instagrammable places with bland food would score near-perfectly.
+            </Paragraph>
+
+            <Paragraph size="xxl">
+              It's not that{' '}
+              <Text fontStyle="italic">
+                sometimes you don't want a trendy spot with ok food
+              </Text>
+              - it's just{' '}
+              <Text fontWeight="800">
+                five star ratings don't really help you with that either
+              </Text>
+              . It's time humans start to generally consider them a bad idea, by
+              our estimation.
             </Paragraph>
 
             <Paragraph size="xl">
-              Meanwhile, delivery apps were consistently dissapointing in their
-              scoring, not to mention all the fake, renamed pop-ups. Finding a
-              decent delivered taco or bowl of poke was harder than just walking
-              to an alright place nearby.
+              Meanwhile, delivery apps have consistently inconsistent ratings,
+              alongside a new "innovation" in virtual pop-ups of existing
+              rebranded, poorly-performing restaurants. Combine that with the
+              whole 5-star issue and finding a decent delivered taco or bowl of
+              poke is often more painful than Vogon poetry.
             </Paragraph>
 
             <Paragraph size="xl">
-              We want to fix ratings and local search in general. What you want
-              when looking for{' '}
+              What you want when looking for{' '}
               <LinkButton
                 backgroundColor={lightYellow}
                 hoverStyle={{
@@ -125,12 +138,13 @@ export default function AboutPage({
               >
                 date night 🌃
               </LinkButton>{' '}
-              are <Text fontStyle="italic">unique</Text> and not captured by
-              "five stars". One night you crave authentic food, and the next,
-              ambience or drinks.{' '}
-              <Text fontWeight="600">Dish rates what matters</Text> down to the,
-              well, dish - and all the sub-factors that matter - and lets you
-              explore based on your mood.
+              are <Text fontStyle="italic">unique</Text>, so Dish rates down to
+              each dish, and other factors that matter. We think we can fix
+              ratings with a community that tags and rates tags across
+              everything, and shares lists of their favorite spots, nights out,
+              and dishes. We use your votes, a mini-search engine that crawls
+              for outside reviews, and a dash of NLP to show what each place
+              excels or dissapoints at more exactly.
             </Paragraph>
 
             <Paragraph size="lg">
@@ -142,17 +156,17 @@ export default function AboutPage({
             </Paragraph>
 
             <Paragraph size="lg">
-              Dish is just getting started. It works in a sketchy, fragile way.
-              We poorly deliver what we aim to now (even the wording on this
-              about page itself!), and we're working on that. But we think we
-              have the right foundation and ideas, and we look forward to
-              delivering something great soon.
+              Dish is just getting started. It works in a sketchy, fragile way,
+              and not everything is all lined up (including the words on this
+              very page). But we think we have the right foundation and ideas,
+              and we look forward to delivering something great soon.
             </Paragraph>
 
             <Paragraph size="lg">
               <Link display="inline" href="mailto:team@dishapp.com">
                 Let us know what you'd love to see
               </Link>
+              .
             </Paragraph>
 
             <Paragraph size="lg">Cheers! 🌮🍜</Paragraph>
