@@ -10,8 +10,9 @@ if (allLightColors.length !== allColors.length) {
   throw new Error('must be same')
 }
 
-export const getColorsForName = (name: string) => {
-  const index = (name || '').charCodeAt(0) % allLightColors.length
+export const getColorsForName = (name?: string | null) => {
+  const charCode = name && name?.length > 0 ? name.charCodeAt(0) : 0
+  const index = charCode % allLightColors.length
   return getColorsForIndex(index)
 }
 

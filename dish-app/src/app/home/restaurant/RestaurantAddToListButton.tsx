@@ -49,10 +49,11 @@ export const RestaurantAddToListButton = ({
       )}
       <SmallButton
         theme={theme}
-        promptLogin
         tooltip="Add to list"
         onPress={() => {
-          setShowModal(true)
+          if (!userStore.promptLogin()) {
+            setShowModal(true)
+          }
         }}
         pressStyle={{
           opacity: 0.6,

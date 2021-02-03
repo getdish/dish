@@ -1,6 +1,5 @@
 import { MapPosition, slugify } from '@dish/graph'
 import React, { Suspense, memo, useEffect, useRef, useState } from 'react'
-import { ScrollView } from 'react-native'
 import {
   AbsoluteVStack,
   HStack,
@@ -13,11 +12,7 @@ import {
   useTheme,
 } from 'snackui'
 
-import {
-  allColors,
-  allExtraLightColors,
-  allLightColors,
-} from '../../constants/colors'
+import { allExtraLightColors, allLightColors } from '../../constants/colors'
 import { drawerWidthMax, searchBarHeight } from '../../constants/constants'
 import {
   getDefaultLocation,
@@ -36,12 +31,10 @@ import { useLocalStorageState } from '../hooks/useLocalStorageState'
 import { CloseButton } from '../views/CloseButton'
 import { ContentScrollView } from '../views/ContentScrollView'
 import { ContentScrollViewHorizontal } from '../views/ContentScrollViewHorizontal'
-import { DishHorizonView } from '../views/DishHorizonView'
 import { Link } from '../views/Link'
 import { LinkButton } from '../views/LinkButton'
 import { LinkButtonProps } from '../views/LinkProps'
 import { PageTitleTag } from '../views/PageTitleTag'
-import { PaneControlButtons } from '../views/PaneControlButtons'
 import { SlantedTitle } from '../views/SlantedTitle'
 import { HomePageFeed } from './HomePageFeed'
 import { HomeStackViewProps } from './HomeStackViewProps'
@@ -50,7 +43,6 @@ import { HomeTopSearches } from './HomeTopSearches'
 export default memo(function HomePage(
   props: HomeStackViewProps<HomeStateItemHome>
 ) {
-  const media = useMedia()
   const home = useHomeStore()
   const theme = useTheme()
   const isLoaded = useRef(false)
@@ -63,7 +55,7 @@ export default memo(function HomePage(
     suspense: false,
   })
   const [position, setPosition] = useState<MapPosition>(initialPosition)
-  const regionColors = getColorsForName(region.data?.name ?? '')
+  const regionColors = getColorsForName(props.item.region)
   const navLinks: LinkButtonProps[] = [
     {
       name: 'homeRegion',
@@ -182,12 +174,12 @@ export default memo(function HomePage(
                   >
                     <VStack position="relative">
                       <SlantedTitle
-                        minWidth={80}
+                        minWidth={100}
                         backgroundColor={regionColors.color}
                         color="#fff"
-                        marginTop={-20}
+                        marginTop={-24}
                       >
-                        {region.data?.name ?? ''}
+                        {region.data?.name ?? '...'}
                       </SlantedTitle>
 
                       <AbsoluteVStack
@@ -248,8 +240,7 @@ export default memo(function HomePage(
 })
 
 const HomePageIntroDialogue = () => {
-  const [show, setShow] = useLocalStorageState('home-intro-dialogue2', true)
-  console.log('show', show)
+  const [show, setShow] = useLocalStorageState('home-intro-dialogue', true)
 
   if (!show) {
     return null
