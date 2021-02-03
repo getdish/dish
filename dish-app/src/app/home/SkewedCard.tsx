@@ -43,43 +43,6 @@ export const SkewedCard = ({ children, ...props }: StackProps) => {
   )
 }
 
-export const SkewedCardSmall = ({ children, ...props }: StackProps) => {
-  return (
-    <VStack
-      marginRight={-75}
-      className="ease-in-out-faster"
-      borderRadius={cardFrameBorderRadius}
-      shadowColor="#000"
-      shadowOpacity={0.14}
-      shadowRadius={10}
-      shadowOffset={{ height: 4, width: 4 }}
-      position="relative"
-      transform={[
-        { scale: 0.65 },
-        { perspective: 1000 },
-        { rotateY: '-10deg' },
-      ]}
-      hoverStyle={{
-        transform: [
-          { scale: 0.66 },
-          { perspective: 1000 },
-          { rotateY: '-10deg' },
-        ],
-      }}
-      pressStyle={{
-        transform: [
-          { scale: 0.64 },
-          { perspective: 1000 },
-          { rotateY: '-10deg' },
-        ],
-      }}
-      {...props}
-    >
-      {children}
-    </VStack>
-  )
-}
-
 export const SkewedCardCarousel = ({ children }: { children: any }) => {
   return (
     <ContentScrollViewHorizontal>
