@@ -1,12 +1,12 @@
 import { sortBy } from 'lodash'
 import React, { memo, useContext } from 'react'
 import { ScrollView } from 'react-native'
-import Svg, { Polygon } from 'react-native-svg'
 import { AbsoluteVStack, HStack, VStack, useTheme } from 'snackui'
 
 import { getActiveTags } from '../../../helpers/getActiveTags'
 import { SlantedTitle } from '../../views/SlantedTitle'
 import { TagButton, getTagButtonProps } from '../../views/TagButton'
+import { Arrow } from './Arrow'
 import { SearchPagePropsContext } from './SearchPage'
 import { searchPageStore } from './SearchPageStore'
 
@@ -53,9 +53,7 @@ export const SearchPageScoring = memo(() => {
             left={15}
             transform={[{ rotate: '180deg' }]}
           >
-            <Svg width={12} height={12} viewBox="0 0 100 100">
-              <Polygon points="50 15, 100 100, 0 100" fill="#ddd" />
-            </Svg>
+            <Arrow />
           </AbsoluteVStack>
           <VStack
             borderBottomWidth={2}

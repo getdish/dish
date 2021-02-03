@@ -143,7 +143,7 @@ export function Card({
             style={[StyleSheet.absoluteFill, sheet.cardGradient]}
             start={[0, 0]}
             end={[1, 0]}
-            colors={['rgba(0,0,0,0.25)', 'rgba(0,0,0,0)']}
+            colors={['rgba(0,0,0,0.33)', 'rgba(0,0,0,0)']}
           />
         )}
 
@@ -197,7 +197,7 @@ export function Card({
 
 const sheet = StyleSheet.create({
   cardGradient: {
-    zIndex: 11,
+    zIndex: 101,
     borderRadius: cardFrameBorderRadius,
     right: '50%',
   },

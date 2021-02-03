@@ -28,7 +28,6 @@ goal january
       - but would require home to be smarter i think
     - search page fixes:
       - shows blank sometimes
-      - recyclerview needs to load more up-front, keep more in memory
     - search page - show popular lists for that region + tags
     - restaurant page - show lists restaurant is on
     - new list

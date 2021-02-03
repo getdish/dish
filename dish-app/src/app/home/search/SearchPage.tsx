@@ -2,11 +2,14 @@ import { series, sleep } from '@dish/async'
 import {
   RestaurantSearchItem,
   findOne,
+  graphql,
   listFindOne,
   listInsert,
   mutate,
   slugify,
 } from '@dish/graph'
+import { query } from '@dish/graph/src'
+import { isPresent } from '@dish/helpers/src'
 import { assertPresent } from '@dish/helpers/src'
 import { ArrowUp, Edit2 } from '@dish/react-feather'
 import { HistoryItem } from '@dish/router'
@@ -22,6 +25,7 @@ import React, {
   useMemo,
   useRef,
 } from 'react'
+import { Arrow } from 'react-laag'
 import { ScrollView, ScrollViewProps } from 'react-native'
 import {
   DataProvider,
@@ -64,8 +68,16 @@ import { RootPortalItem } from '../../Portal'
 import { userStore } from '../../userStore'
 import { SmallCircleButton } from '../../views/CloseButton'
 import { ContentScrollView } from '../../views/ContentScrollView'
+import {
+  ContentScrollViewHorizontal,
+  ContentScrollViewHorizontalFitted,
+  useContentScrollHorizontalFitter,
+} from '../../views/ContentScrollViewHorizontal'
 import { Link } from '../../views/Link'
+import { ListCard, ListCardHorizontal } from '../../views/list/ListCard'
 import { PageTitleTag } from '../../views/PageTitleTag'
+import { SearchPageDeliveryFilterButtons } from '../../views/SearchPageDeliveryFilterButtons'
+import { SlantedTitle } from '../../views/SlantedTitle'
 import { StackDrawer } from '../../views/StackDrawer'
 import { HomeStackViewProps } from '../HomeStackViewProps'
 import { HomeSuspense } from '../HomeSuspense'
@@ -74,6 +86,7 @@ import {
   ITEM_HEIGHT,
   RestaurantListItem,
 } from '../restaurant/RestaurantListItem'
+import { SkewedCard, SkewedCardCarousel } from '../SkewedCard'
 import { PageTitle } from './PageTitle'
 import { SearchPageNavBar } from './SearchPageNavBar'
 import { SearchPageResultsInfoBox } from './SearchPageResultsInfoBox'
@@ -93,6 +106,10 @@ export default memo(function SearchPage(props: Props) {
   const { title, subTitle } = getTitleForState(state, {
     lowerCase: true,
   })
+  const route = useLastValueWhen(
+    () => router.curPage,
+    router.curPage.name !== 'search'
+  ) as HistoryItem<'search'>
 
   console.log('👀 SearchPage', state.activeTags, title)
 
@@ -102,7 +119,7 @@ export default memo(function SearchPage(props: Props) {
       <StackDrawer
         closable
         topLeftControls={
-          <SearchForkListButton {...{ title, subTitle, state }} />
+          <SearchForkListButton {...{ title, subTitle, state, route }} />
         }
       >
         <HomeSuspense>
@@ -112,6 +129,7 @@ export default memo(function SearchPage(props: Props) {
           <SearchPageContent
             key={state.id + JSON.stringify(state.activeTags)}
             {...props}
+            route={route}
             item={state}
           />
         </HomeSuspense>
@@ -125,13 +143,20 @@ const SearchForkListButton = memo(
     title,
     subTitle,
     state,
+    route,
   }: {
     title: string
     subTitle: string
     state: HomeStateItemSearch
+    route: HistoryItem<'search'>
   }) => {
+    const location = useLocationFromRoute(route)
+    const regionName = location.data?.region?.name
+    const tooltip = `Make your "${title.replace('the ', '')}${
+      regionName ? ` in ${regionName}` : ''
+    }" list`
     return (
-      <Tooltip contents={`Make your "${title.replace('the ', '')}" list`}>
+      <Tooltip contents={tooltip}>
         <Link
           promptLogin
           onPress={async () => {
@@ -222,23 +247,101 @@ const SearchForkListButton = memo(
   }
 )
 
-const SearchPageContent = memo(function SearchPageContent(props: Props) {
-  const route = useLastValueWhen(
-    () => router.curPage,
-    router.curPage.name !== 'search'
-  ) as HistoryItem<'search'>
-  const location = useLocationFromRoute(route)
-  const tags = useTagsFromRoute(route)
+const SearchHeader = () => {
+  const { width, setWidthDebounce } = useContentScrollHorizontalFitter()
+  const media = useMedia()
+  return (
+    <ContentScrollViewHorizontalFitted
+      width={width}
+      setWidth={setWidthDebounce}
+    >
+      <VStack>
+        <VStack paddingTop={media.sm ? 12 : 12 + 52 + 10} />
+        <HStack>
+          <VStack width={width}>
+            <SearchPageTitle />
+            <SearchPageScoring />
+          </VStack>
+          <VStack marginBottom={8} position="relative">
+            <AbsoluteVStack
+              top={0}
+              bottom={0}
+              alignItems="center"
+              justifyContent="center"
+              left={-65}
+            >
+              <SlantedTitle size="xs">Lists</SlantedTitle>
+              <AbsoluteVStack right={-12} transform={[{ rotate: '180deg' }]}>
+                <Arrow />
+              </AbsoluteVStack>
+            </AbsoluteVStack>
+            <SearchPageListsRow />
+          </VStack>
+        </HStack>
+      </VStack>
+    </ContentScrollViewHorizontalFitted>
+  )
+}
+
+const SearchPageListsRow = memo(
+  graphql((props: any) => {
+    const curProps = useContext(SearchPagePropsContext)!
+    const region = curProps.item.region
+
+    if (!region) {
+      return null
+    }
+
+    const tags = getActiveTags(curProps.item)
+    const lists = query.list_populated({
+      args: {
+        min_items: 2,
+      },
+      where: {
+        region: {
+          _eq: region,
+        },
+        tags: {
+          tag: {
+            slug: {
+              _in: tags.map((x) => x.slug).filter(isPresent),
+            },
+          },
+        },
+      },
+    })
+
+    return (
+      <>
+        {lists.map((list, i) => {
+          return (
+            <ListCardHorizontal
+              key={i}
+              slug={list.slug}
+              userSlug={list.user?.username ?? ''}
+              region={list.region ?? ''}
+            />
+          )
+        })}
+      </>
+    )
+  })
+)
+
+const SearchPageContent = memo(function SearchPageContent(
+  props: Props & { route: HistoryItem<'search'> }
+) {
+  const location = useLocationFromRoute(props.route)
+  const tags = useTagsFromRoute(props.route)
   const searchStore = useSearchPageStore()
   const getProps = useGet(props)
+  const center = location.data?.center
 
   usePageLoadEffect(props, ({ isRefreshing }) => {
     if (isRefreshing && props.isActive) {
       searchPageStore.refresh()
     }
   })
-
-  const center = location.data?.center
 
   useSetAppMap({
     isActive: props.isActive,
@@ -493,7 +596,7 @@ const SearchResultsContent = (props: Props) => {
         }}
         canChangeSize
         externalScrollView={SearchPageScrollView as any}
-        renderAheadOffset={600}
+        renderAheadOffset={1000}
         rowRenderer={rowRenderer}
         dataProvider={dataProvider}
         layoutProvider={layoutProvider}
@@ -508,7 +611,6 @@ type SearchPageScrollViewProps = ScrollViewProps & {
 }
 
 const SearchPageTitle = memo(() => {
-  const media = useMedia()
   const curProps = useContext(SearchPagePropsContext)!
   const { title, subTitle } = getTitleForState(curProps.item, {
     lowerCase: true,
@@ -516,7 +618,6 @@ const SearchPageTitle = memo(() => {
   const lenseColor = useCurrentLenseColor()
   return (
     <>
-      <VStack paddingTop={media.sm ? 12 : 12 + 52 + 10} />
       <PageTitle
         title={title}
         subTitle={subTitle}
@@ -565,8 +666,7 @@ const SearchPageScrollView = forwardRef<ScrollView, SearchPageScrollViewProps>(
           ref={combineRefs(ref, scrollRef) as any}
           {...props}
         >
-          <SearchPageTitle />
-          <SearchPageScoring />
+          <SearchHeader />
           <Spacer />
           <VStack position="relative" flex={10} minHeight={600}>
             {children}
