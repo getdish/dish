@@ -81,7 +81,7 @@ const lightBase = {
   colorQuartenary: '#aaa',
   cardBackgroundColor: '#fff',
   backgroundColorTransparent: 'rgba(255,255,255,0)',
-  shadowColor: `rgba(0,0,0,0.24)`,
+  shadowColor: `rgba(0,0,0,0.2)`,
 }
 
 const light: MyTheme = {

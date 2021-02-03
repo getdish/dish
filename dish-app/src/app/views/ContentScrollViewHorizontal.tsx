@@ -2,10 +2,20 @@ import { supportsTouchWeb } from '@dish/helpers/src'
 import { assertPresent } from '@dish/helpers/src'
 import { assert } from '@dish/helpers/src'
 import { getStore, useStoreSelector } from '@dish/use-store'
-import React, { memo, useContext, useEffect, useMemo, useRef } from 'react'
+import { setWith } from 'lodash'
+import React, {
+  memo,
+  useContext,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from 'react'
 import { ScrollView, ScrollViewProps, StyleSheet } from 'react-native'
-import { VStack } from 'snackui'
+import { VStack, useDebounce } from 'snackui'
 
+import { isWeb } from '../../constants/constants'
+import { useAppDrawerWidthInner } from '../hooks/useAppDrawerWidth'
 import { ContentScrollContext, ScrollStore } from './ContentScrollView'
 
 export let isScrollingSubDrawer = false
@@ -19,9 +29,56 @@ function setScrollLockHorizontal(id: string) {
   }
 }
 
+export const useContentScrollHorizontalFitter = () => {
+  const drawerWidth = useAppDrawerWidthInner()
+  const minWidth = Math.min(drawerWidth, 600)
+  const [width, setWidth] = useState(Math.max(minWidth, drawerWidth))
+  const setWidthDebounce = useDebounce(setWidth, 250)
+  return { width, setWidth, minWidth, setWidthDebounce, drawerWidth }
+}
+
+export type ContentScrollViewHorizontalProps = ScrollViewProps & {
+  children: any
+}
+
+export const ContentScrollViewHorizontalFitted = (
+  props: ContentScrollViewHorizontalProps & {
+    width: number
+    setWidth: Function
+  }
+) => {
+  return (
+    <VStack
+      onLayout={(x) => {
+        props.setWidth(x.nativeEvent.layout.width)
+      }}
+      width="100%"
+      position="relative"
+      zIndex={100}
+    >
+      <ContentScrollViewHorizontal
+        {...props}
+        style={[
+          {
+            width: '100%',
+            maxWidth: isWeb ? '100vw' : '100%',
+          },
+          props.contentContainerStyle,
+        ]}
+        contentContainerStyle={[
+          {
+            minWidth: props.width,
+          },
+          props.contentContainerStyle,
+        ]}
+      />
+    </VStack>
+  )
+}
+
 // takes children but we memo so we can optimize if wanted
 export const ContentScrollViewHorizontal = memo(
-  (props: ScrollViewProps & { children: any }) => {
+  (props: ContentScrollViewHorizontalProps) => {
     const id = useContext(ContentScrollContext)
     const scrollTm = useRef<any>(0)
     const scrollVersion = useRef({
