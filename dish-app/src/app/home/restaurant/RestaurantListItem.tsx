@@ -441,7 +441,10 @@ const RestaurantListItemContent = memo(
                   disableEllipse={flexibleHeight}
                   text={editedDescription || description}
                   editableDescription={editableDescription}
-                  onEdit={setEditedDescription}
+                  onEdit={(next) => {
+                    setEditedDescription(next)
+                    onChangeDescription?.(next)
+                  }}
                   restaurantSlug={restaurantSlug}
                 />
               </VStack>

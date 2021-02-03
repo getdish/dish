@@ -145,7 +145,7 @@ const setIsEditing = (val: boolean) => {
 
 function useListRestaurants(list?: list) {
   const refetch = useRefetch()
-  list?.id
+  const listId = list?.id
   const itemsQuery =
     list?.restaurants({
       limit: 50,
@@ -176,7 +176,7 @@ function useListRestaurants(list?: list) {
       ids.forEach((rid, position) => {
         mutation.update_list_restaurant_by_pk({
           pk_columns: {
-            list_id: list.id,
+            list_id: listId,
             restaurant_id: rid,
           },
           _set: {
@@ -200,7 +200,7 @@ function useListRestaurants(list?: list) {
             object: {
               // negative to go first + space it out
               position: -items.length * Math.round(1000 * Math.random()),
-              list_id: list.id,
+              list_id: listId,
               restaurant_id: id,
               user_id: userStore.user.id,
             },
@@ -225,6 +225,20 @@ function useListRestaurants(list?: list) {
           })?.affected_rows
         })
         await Promise.all([refetch(list), refetch(itemsQuery)])
+      },
+      async setComment(id: string, comment: string) {
+        await mutate((mutation) => {
+          return mutation.update_list_restaurant_by_pk({
+            pk_columns: {
+              list_id: listId,
+              restaurant_id: id,
+            },
+            _set: {
+              comment,
+            },
+          })?.__typename
+        })
+        await refetch(list)
       },
       async setDishes(id: string, dishTags: string[]) {
         const { dishQuery } = items.find((x) => x.restaurantId === id) ?? {}
@@ -258,7 +272,7 @@ function useListRestaurants(list?: list) {
             })?.__typename
           }
         })
-        refetch(dishQuery)
+        await refetch(dishQuery)
       },
     },
   ] as const
@@ -622,11 +636,13 @@ const ListPageContent = graphql((props: Props) => {
                   editableDishes={isEditing}
                   onChangeDishes={async (dishes) => {
                     console.log('should change dishes', dishes)
-                    restaurantActions.setDishes(restaurantId, dishes)
+                    await restaurantActions.setDishes(restaurantId, dishes)
+                    Toast.success(`Updated dishes`)
                   }}
-                  editableDescription={isMyList}
-                  onChangeDescription={(next) => {
-                    console.log('should change descirption', next)
+                  editableDescription={isEditing}
+                  onChangeDescription={async (next) => {
+                    await restaurantActions.setComment(restaurantId, next)
+                    Toast.success('Updated description')
                   }}
                   editablePosition={isEditing}
                   onChangePosition={(next) => {
@@ -638,6 +654,8 @@ const ListPageContent = graphql((props: Props) => {
           )}
         </VStack>
 
+        <Spacer size="xxxl" />
+        <Spacer size="xxxl" />
         <Spacer size="xxxl" />
 
         <PageFooter />
