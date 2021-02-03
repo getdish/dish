@@ -36,6 +36,7 @@ import {
 import { bgLight } from '../../../constants/colors'
 import { useRegionQuery } from '../../../helpers/fetchRegion'
 import { getRestaurantIdentifiers } from '../../../helpers/getRestaurantIdentifiers'
+import { promote } from '../../../helpers/listHelpers'
 import { queryList } from '../../../queries/queryList'
 import { router } from '../../../router'
 import { HomeStateItemList } from '../../../types/homeTypes'
@@ -547,20 +548,17 @@ const ListPageContent = graphql((props: Props) => {
               placeholder="Description..."
               multiline
               numberOfLines={2}
-              lineHeight={28}
-              fontSize={18}
+              lineHeight={30}
+              fontSize={20}
               marginVertical={-12}
               marginHorizontal={-8}
-              textAlign="center"
               defaultValue={list.description ?? ''}
               onChangeText={(val) => {
                 draft.current.description = val
               }}
             />
           ) : (
-            <Paragraph size="lg" textAlign="center">
-              {list.description}
-            </Paragraph>
+            <Paragraph size="xl">{list.description}</Paragraph>
           )}
         </VStack>
 
@@ -713,12 +711,4 @@ function ColorPicker({
       </VStack>
     </Popover>
   )
-}
-
-function promote(items: any[], index: number): any[] {
-  const now = [...items]
-  const [id] = now.splice(index, 1)
-  if (!id) return []
-  now.splice(index - 1, 0, id)
-  return now
 }

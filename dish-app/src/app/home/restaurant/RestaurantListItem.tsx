@@ -1,6 +1,12 @@
 import { fullyIdle, series } from '@dish/async'
 import { RestaurantItemMeta, graphql, restaurant_tag } from '@dish/graph'
-import { ChevronDown, ChevronUp, MessageSquare, X } from '@dish/react-feather'
+import {
+  ChevronDown,
+  ChevronUp,
+  MessageSquare,
+  Plus,
+  X,
+} from '@dish/react-feather'
 import { useStoreInstance } from '@dish/use-store'
 import { debounce, sortBy } from 'lodash'
 import React, {
@@ -43,6 +49,7 @@ import {
 import { isWeb } from '../../../constants/constants'
 import { getRestaurantDishes } from '../../../helpers/getRestaurantDishes'
 import { isWebIOS } from '../../../helpers/isIOS'
+import { promote } from '../../../helpers/listHelpers'
 import { numberFormat } from '../../../helpers/numberFormat'
 import { selectRishDishViewSimple } from '../../../helpers/selectDishViewSimple'
 import { queryRestaurant } from '../../../queries/queryRestaurant'
@@ -730,6 +737,7 @@ const EditRestaurantTags = graphql(
     const [slugs, setSlugs] = useState<string[]>(tagSlugs)
     const [restaurant] = queryRestaurant(restaurantSlug)
     const theme = useTheme()
+
     const dishes = (() => {
       const items = slugs.map((slug) => {
         return restaurant.tags({
@@ -746,8 +754,9 @@ const EditRestaurantTags = graphql(
           limit: 1,
         })[0]
       })
-      return sortBy(items, (x) => tagSlugs.indexOf(x.tag.slug ?? ''))
+      return sortBy(items, (x) => slugs.indexOf(x.tag.slug ?? ''))
     })()
+
     const restDishes = restaurant.tags({
       where: {
         tag: {
@@ -792,7 +801,7 @@ const EditRestaurantTags = graphql(
 
     return (
       <>
-        <AbsoluteVStack zIndex={100}>
+        <AbsoluteVStack pointerEvents="auto" zIndex={10000}>
           <Button onPress={() => setIsOpen(true)}>Edit</Button>
         </AbsoluteVStack>
 
@@ -827,14 +836,31 @@ const EditRestaurantTags = graphql(
                 return getDishItem(
                   dish,
                   <VStack alignItems="center" justifyContent="center">
-                    <ChevronUp size={16} color="rgba(150,150,150,0.9)" />
-                    <ChevronDown size={16} color="rgba(150,150,150,0.9)" />
+                    <VStack
+                      padding={10}
+                      onPress={() => {
+                        const next = promote(slugs, index)
+                        setSlugs(next)
+                      }}
+                    >
+                      <ChevronUp size={16} color="rgba(150,150,150,0.9)" />
+                    </VStack>
+                    <VStack
+                      padding={10}
+                      onPress={() => {
+                        const next = promote(slugs, index + 1)
+                        setSlugs(next)
+                      }}
+                    >
+                      <ChevronDown size={16} color="rgba(150,150,150,0.9)" />
+                    </VStack>
                   </VStack>,
                   <VStack
+                    padding={10}
                     onPress={() => {
-                      const next = [...tagSlugs]
+                      const next = [...slugs]
                       next.splice(index, 1)
-                      onChange?.(next)
+                      setSlugs(next)
                     }}
                   >
                     <X size={16} color="#000" />
@@ -847,10 +873,20 @@ const EditRestaurantTags = graphql(
               <Spacer />
 
               {restDishes.map((dish) => {
+                dish.tag.slug
                 return getDishItem(
                   dish,
-                  <VStack alignItems="center" justifyContent="center">
-                    <Text>+</Text>
+                  <VStack
+                    padding={10}
+                    onPress={() => {
+                      if (dish.tag.slug) {
+                        setSlugs([...slugs, dish.tag.slug])
+                      }
+                    }}
+                    alignItems="center"
+                    justifyContent="center"
+                  >
+                    <Plus size={16} color="rgba(150,150,150,0.9)" />
                   </VStack>
                 )
               })}
