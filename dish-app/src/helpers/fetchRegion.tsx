@@ -7,11 +7,14 @@ import { coordsToLngLat, padLngLat, polygonToLngLat } from './mapHelpers'
 import { queryClient } from './queryClient'
 import { useQueryLoud } from './useQueryLoud'
 
-const getKey = (slug: string) => `REGIONQUERY-${slug}`
+const getKey = (slug?: string | null) => `REGIONQUERY-${slug}`
 
 const statePrefixRe = /[A-Z]{2}\- /
 
-export const fetchRegion = async (slug: string) => {
+export const fetchRegion = async (slug?: string | null) => {
+  if (!slug) {
+    return null
+  }
   try {
     const url = `${SEARCH_DOMAIN}/regions?slug=${encodeURIComponent(slug)}`
     const res: RegionApiResponse = await fetch(url).then((x) => x.json())
@@ -42,10 +45,16 @@ export const fetchRegion = async (slug: string) => {
   }
 }
 
-export const useRegionQuery = (slug: string, config?: UseQueryOptions<any>) => {
+export const useRegionQuery = (
+  slug?: string | null,
+  config?: UseQueryOptions<any>
+) => {
   return useQueryLoud<RegionNormalized | null>(
     getKey(slug),
     () => fetchRegion(slug),
-    config
+    {
+      ...config,
+      enabled: !!slug,
+    }
   )
 }

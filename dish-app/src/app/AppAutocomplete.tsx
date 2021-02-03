@@ -531,9 +531,11 @@ export const AutocompleteItemView = memo(
     const plusButtonEl = showAddButton ? (
       <>
         <VStack flex={1} />
-        <CircleButton marginLeft={10} onPressOut={onAdd}>
-          <Plus size={16} />
-        </CircleButton>
+        <VStack padding={8} flexShrink={0}>
+          <CircleButton onPressOut={onAdd}>
+            <Plus size={16} />
+          </CircleButton>
+        </VStack>
       </>
     ) : null
 
@@ -575,31 +577,33 @@ export const AutocompleteItemView = memo(
           },
         })}
       >
-        <VStack width="100%">
-          <HStack alignItems="center">
-            {icon}
-            {!!icon && <Spacer size="lg" />}
-            <Text
-              textAlign={showLocation ? 'right' : 'center'}
-              fontWeight="600"
-              ellipse
-              color={theme.color}
-              fontSize={22}
-              lineHeight={25}
-            >
-              {result.name}
-            </Text>
-            {plusButtonEl}
-          </HStack>
-          {!!result.description && (
-            <>
-              <Spacer size="xs" />
-              <Text ellipse color={theme.colorSecondary} fontSize={15}>
-                {result.description}
+        <HStack width="100%">
+          <VStack flex={1}>
+            <HStack flex={1} alignItems="center">
+              {icon}
+              {!!icon && <Spacer size="lg" />}
+              <Text
+                textAlign={showLocation ? 'right' : 'center'}
+                fontWeight="700"
+                ellipse
+                color={theme.color}
+                fontSize={20}
+                lineHeight={20}
+              >
+                {result.name}
               </Text>
-            </>
-          )}
-        </VStack>
+            </HStack>
+            {!!result.description && (
+              <>
+                <Spacer size="xs" />
+                <Text ellipse color={theme.colorSecondary} fontSize={15}>
+                  {result.description}
+                </Text>
+              </>
+            )}
+          </VStack>
+          {plusButtonEl}
+        </HStack>
       </LinkButton>
     )
   }

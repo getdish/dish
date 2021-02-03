@@ -1,9 +1,7 @@
 import { query } from '@dish/graph'
 
-import { getAddressText } from '../app/home/restaurant/RestaurantAddressLinksRow'
-import { homeStore } from '../app/homeStore'
 import { LngLat } from '../types/homeTypes'
-import { createAutocomplete } from './createAutocomplete'
+import { createRestaurantAutocomplete } from './createRestaurantAutocomplete'
 import { getFuzzyMatchQuery } from './getFuzzyMatchQuery'
 
 export function searchRestaurants(
@@ -60,18 +58,5 @@ export function searchRestaurants(
         },
       }),
     }),
-  ].map((r) =>
-    createAutocomplete({
-      name: r.name,
-      slug: r.slug,
-      type: 'restaurant',
-      icon: r.image || '📍',
-      description:
-        getAddressText(
-          homeStore.currentState.curLocInfo ?? null,
-          r.address ?? '',
-          'xs'
-        ) || 'No Address',
-    })
-  )
+  ].map(createRestaurantAutocomplete)
 }
