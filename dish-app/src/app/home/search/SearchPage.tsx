@@ -91,7 +91,14 @@ export default memo(function SearchPage(props: Props) {
         </HomeSuspense>
         <HomeSuspense fallback={<SearchLoading />}>
           <SearchPageContent
-            key={state.id + JSON.stringify(state.activeTags)}
+            key={
+              state.id +
+              JSON.stringify([
+                state.activeTags,
+                state.searchQuery,
+                state.region,
+              ])
+            }
             {...props}
             route={route}
             item={state}
