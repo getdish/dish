@@ -1,7 +1,14 @@
 import { MapPin, Navigation } from '@dish/react-feather'
 import React, { memo, useCallback } from 'react'
 import { TextInput } from 'react-native'
-import { AbsoluteVStack, Button, HStack, VStack, useMedia } from 'snackui'
+import {
+  AbsoluteVStack,
+  Button,
+  HStack,
+  VStack,
+  getMedia,
+  useMedia,
+} from 'snackui'
 
 import { blue } from '../constants/colors'
 import { isWeb } from '../constants/constants'
@@ -121,6 +128,13 @@ export const AppSearchInputLocation = memo(() => {
               ref={(view) => setNodeOnInputStore(inputStore, view)}
               value={inputStore.value ?? ''}
               placeholder={curLocName ?? '...'}
+              onBlur={() => {
+                if (isWeb && !getMedia().sm) {
+                  if (autocompletesStore.target === 'location') {
+                    autocompletesStore.setVisible(false)
+                  }
+                }
+              }}
               style={[
                 inputTextStyles.textInput,
                 {

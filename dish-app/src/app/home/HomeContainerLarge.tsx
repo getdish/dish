@@ -10,7 +10,7 @@ import {
 } from 'snackui'
 
 import { searchBarHeight } from '../../constants/constants'
-import AppAutocomplete from '../AppAutocomplete'
+import { AppAutocompleteSearch } from '../AppAutocomplete'
 import { useAppDrawerWidth } from '../hooks/useAppDrawerWidth'
 import { useLastValueWhen } from '../hooks/useLastValueWhen'
 import { DrawerPortalProvider } from '../Portal'
@@ -57,7 +57,7 @@ export const HomeContainerLarge = (props) => {
           opacity={1}
         >
           <AbsoluteVStack left={0} right={0} bottom={0} top={searchBarHeight}>
-            <AppAutocomplete />
+            <AppAutocompleteSearch />
           </AbsoluteVStack>
 
           {props.children}

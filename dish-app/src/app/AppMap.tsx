@@ -3,7 +3,15 @@ import { MapPosition, resolved } from '@dish/graph'
 import { useStoreInstance } from '@dish/use-store'
 import { debounce } from 'lodash'
 import React, { memo, useCallback, useEffect, useMemo } from 'react'
-import { HStack, VStack, useGet, useMedia, useTheme } from 'snackui'
+import {
+  AbsoluteVStack,
+  HStack,
+  Theme,
+  VStack,
+  useGet,
+  useMedia,
+  useTheme,
+} from 'snackui'
 
 import {
   pageWidthMax,
@@ -14,6 +22,7 @@ import { coordsToLngLat, getMinLngLat } from '../helpers/mapHelpers'
 import { queryRestaurant } from '../queries/queryRestaurant'
 import { router } from '../router'
 import { RegionWithVia } from '../types/homeTypes'
+import { AppAutocompleteLocation } from './AppAutocomplete'
 import { AppMapControls } from './AppMapControls'
 import {
   appMapStore,
@@ -239,6 +248,18 @@ export default memo(function AppMap() {
           borderBottomRightRadius={12}
           overflow="hidden"
         >
+          {!media.sm && (
+            <Theme name="dark">
+              <AbsoluteVStack
+                left={0}
+                right={0}
+                bottom={0}
+                top={searchBarHeight}
+              >
+                <AppAutocompleteLocation />
+              </AbsoluteVStack>
+            </Theme>
+          )}
           <AppMapControls />
           <MapView
             center={center}

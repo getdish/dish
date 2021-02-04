@@ -19,7 +19,7 @@ export function assertPresent(
 ): asserts value is NonNullish {
   if (value == undefined || value == null) {
     logAssert(why)
-    throw new AssertionError(`Expected ${why ?? 'value: ' + value}`)
+    throw new AssertionError(`${why ?? 'value: ' + value}`)
   }
 }
 
