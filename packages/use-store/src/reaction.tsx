@@ -1,4 +1,5 @@
 import { UNWRAP_PROXY } from './constants'
+import { isEqualShallow } from './isEqualShallow'
 import { Store } from './Store'
 
 export function reaction<
@@ -10,7 +11,7 @@ export function reaction<
   receiver: Selector extends (a: StoreInstance) => infer Derived
     ? (a: Derived) => any
     : unknown,
-  equalityFn: (a: any, b: any) => boolean = (a, b) => a === b
+  equalityFn: (a: any, b: any) => boolean = isEqualShallow
 ) {
   let last: any = undefined
   let innerDispose: any
@@ -24,10 +25,10 @@ export function reaction<
     const next = selector(store)
     disposeInner()
     if (!equalityFn(last, next)) {
-      last = next
       if (process.env.NODE_ENV === 'development') {
         console.groupCollapsed(
-          ` 💰 ⏭ ${store[UNWRAP_PROXY].constructor.name} (reaction)`
+          ` 💰 ⏭ %c${store[UNWRAP_PROXY].constructor.name} ${receiver.name} ${last} => ${next}`,
+          'color: chocolate;'
         )
         console.groupCollapsed('trace >')
         console.trace()
@@ -35,6 +36,7 @@ export function reaction<
         console.log('  ARG', next)
         console.groupEnd()
       }
+      last = next
       innerDispose = receiver(next)
     }
   }

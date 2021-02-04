@@ -111,12 +111,7 @@ export default memo(function SearchPage(props: Props) {
   return (
     <>
       <PageTitleTag>{title}</PageTitleTag>
-      <StackDrawer
-        closable
-        topLeftControls={
-          <SearchForkListButton {...{ title, subTitle, state, route }} />
-        }
-      >
+      <StackDrawer closable>
         <HomeSuspense>
           <SearchNavBarContainer isActive={props.isActive} />
         </HomeSuspense>
@@ -133,91 +128,51 @@ export default memo(function SearchPage(props: Props) {
   )
 })
 
-const SearchForkListButton = memo(
-  ({
-    title,
-    subTitle,
-    state,
-    route,
-  }: {
-    title: string
-    subTitle: string
-    state: HomeStateItemSearch
-    route: HistoryItem<'search'>
-  }) => {
-    const location = useLocationFromRoute(route)
-    const regionName = location.data?.region?.name
-    const tooltip = `Make your "${title.replace('the ', '')}${
-      regionName ? ` in ${regionName}` : ''
-    }" list`
-    return (
-      <Tooltip contents={tooltip}>
-        <Link
-          promptLogin
-          onPress={async () => {
-            try {
-              const { id, username } = userStore.user ?? {}
-              assertPresent(id, 'no user id')
-              assertPresent(username, 'no username')
-              const name = `My ${title}`
-              const slug = slugify(name)
-              const location = await getLocationFromRoute(router.curPage as any)
-              if (!location?.region) {
-                console.warn('no region??????')
-                return
+const SearchForkListButton = memo(() => {
+  const curProps = useContext(SearchPagePropsContext)!
+  const state = useHomeStateById<HomeStateItemSearch>(curProps.item.id)
+  const { title, subTitle } = getTitleForState(state, {
+    lowerCase: true,
+  })
+  const route = useLastValueWhen(
+    () => router.curPage,
+    router.curPage.name !== 'search'
+  ) as HistoryItem<'search'>
+  const location = useLocationFromRoute(route)
+  const regionName = location.data?.region?.name
+  const tooltip = `Make your "${title.replace('the ', '')}${
+    regionName ? ` in ${regionName}` : ''
+  }" list`
+  return (
+    <Tooltip contents={tooltip}>
+      <Link
+        promptLogin
+        onPress={async () => {
+          try {
+            const { id, username } = userStore.user ?? {}
+            assertPresent(id, 'no user id')
+            assertPresent(username, 'no username')
+            const name = `My ${title}`
+            const slug = slugify(name)
+            const location = await getLocationFromRoute(router.curPage as any)
+            if (!location?.region) {
+              console.warn('no region??????')
+              return
+            }
+            const region = location.region.slug
+            assertPresent(region, 'no region')
+            const existing = await listFindOne(
+              {
+                slug,
+                user_id: id,
+                region,
+              },
+              {
+                depth: 1,
               }
-              const region = location.region.slug
-              assertPresent(region, 'no region')
-              const existing = await listFindOne(
-                {
-                  slug,
-                  user_id: id,
-                  region,
-                },
-                {
-                  depth: 1,
-                }
-              )
-              if (existing) {
-                console.warn('go to existing')
-                router.navigate({
-                  name: 'list',
-                  params: {
-                    slug,
-                    region,
-                    userSlug: username,
-                  },
-                })
-                return
-              }
-              const [list] = await listInsert([
-                {
-                  name,
-                  slug,
-                  region,
-                  description: subTitle,
-                  color: randomListColor(),
-                  user_id: id,
-                  location: null,
-                },
-              ])
-              // now add tags to it
-              const tags = await getFullTags(getActiveTags(state))
-              if (tags.some((tag) => !tag.id)) {
-                console.error(`no tag id??`, tags)
-                debugger
-                return
-              }
-              await mutate((mutation) => {
-                return mutation.insert_list_tag({
-                  objects: tags.map((tag) => {
-                    return {
-                      list_id: list.id,
-                      tag_id: tag.id,
-                    }
-                  }),
-                })?.__typename
-              })
+            )
+            if (existing) {
+              console.warn('go to existing')
               router.navigate({
                 name: 'list',
                 params: {
@@ -226,21 +181,58 @@ const SearchForkListButton = memo(
                   userSlug: username,
                 },
               })
-            } catch (err) {
-              // if this list already exists, we can just take them to it
-              Toast.error(err.message)
-              console.error(err)
+              return
             }
-          }}
-        >
-          <SmallCircleButton shadowed>
-            <Edit2 color="#fff" size={14} />
-          </SmallCircleButton>
-        </Link>
-      </Tooltip>
-    )
-  }
-)
+            const [list] = await listInsert([
+              {
+                name,
+                slug,
+                region,
+                description: subTitle,
+                color: randomListColor(),
+                user_id: id,
+                location: null,
+              },
+            ])
+            // now add tags to it
+            const tags = await getFullTags(getActiveTags(state))
+            if (tags.some((tag) => !tag.id)) {
+              console.error(`no tag id??`, tags)
+              debugger
+              return
+            }
+            await mutate((mutation) => {
+              return mutation.insert_list_tag({
+                objects: tags.map((tag) => {
+                  return {
+                    list_id: list.id,
+                    tag_id: tag.id,
+                  }
+                }),
+              })?.__typename
+            })
+            router.navigate({
+              name: 'list',
+              params: {
+                slug,
+                region,
+                userSlug: username,
+              },
+            })
+          } catch (err) {
+            // if this list already exists, we can just take them to it
+            Toast.error(err.message)
+            console.error(err)
+          }
+        }}
+      >
+        <SmallCircleButton shadowed>
+          <Edit2 color="#fff" size={14} />
+        </SmallCircleButton>
+      </Link>
+    </Tooltip>
+  )
+})
 
 const SearchHeader = () => {
   const { width, setWidthDebounce } = useContentScrollHorizontalFitter()
@@ -253,6 +245,9 @@ const SearchHeader = () => {
       <VStack>
         <VStack paddingTop={media.sm ? 12 : 12 + 52 + 10} />
         <HStack>
+          <AbsoluteVStack zIndex={1000} top={5} left={5}>
+            <SearchForkListButton />
+          </AbsoluteVStack>
           <VStack width={width}>
             <SearchPageTitle />
             <SearchPageScoring />
@@ -382,7 +377,7 @@ const SearchPageContent = memo(function SearchPageContent(
     const dispose = reaction(
       appMapStore,
       (x) => x.nextPosition,
-      (x) => {
+      function setSearchPosition(x) {
         searchPageStore.setSearchPosition(x)
         runs++
         if (runs > 1) {
@@ -434,7 +429,7 @@ const SearchPageContent = memo(function SearchPageContent(
     return reaction(
       appMapStore,
       (x) => x.selected,
-      (selected) => {
+      function mapSelectedToSearchPageSetIndex(selected) {
         if (!selected) return
         const restaurants = searchStore.results
         const index = restaurants.findIndex((x) => x.id === selected.id)
@@ -598,6 +593,7 @@ const SearchResultsContent = (props: Props) => {
         style={{
           flex: 1,
           width: '100%',
+          minWidth: 300,
           height: '100%',
         }}
         canChangeSize
@@ -644,7 +640,7 @@ const SearchPageScrollView = forwardRef<ScrollView, SearchPageScrollViewProps>(
       return reaction(
         searchPageStore,
         (x) => [x.index, x.event] as const,
-        ([index, event]) => {
+        function searchPageIndexToSCroll([index, event]) {
           if (event === 'pin' || event === 'key') {
             scrollRef.current?.scrollTo({
               x: 0,

@@ -439,7 +439,15 @@ const AutocompleteFrame = ({ children }: { children: any }) => {
             autocompletes.setVisible(false)
           }}
         >
-          <ScrollView keyboardShouldPersistTaps="always">{children}</ScrollView>
+          <ScrollView
+            style={{ maxHeight: '100%' }}
+            keyboardShouldPersistTaps="always"
+          >
+            {children}
+
+            {/* pad bottom to scroll */}
+            <VStack height={100} />
+          </ScrollView>
         </VStack>
       </VStack>
     </AbsoluteVStack>
@@ -482,7 +490,7 @@ const AutocompleteResults = ({
   const ogResults = autocompleteStore.results
   const results = [...prefixResults, ...ogResults]
   return (
-    <VStack paddingTop={media.sm ? 30 : 0}>
+    <VStack paddingTop={media.sm ? 15 : 0}>
       {!ogResults.length && emptyContent}
       {!!ogResults.length &&
         results.map((result, index) => {

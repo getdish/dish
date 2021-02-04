@@ -107,7 +107,7 @@ export const HomeDrawerSmallView = memo((props: { children: any }) => {
         </View>
       </BottomSheetContainer>
     ),
-    [props.children, preventScrolling]
+    [props.children]
   )
 
   return (
@@ -165,7 +165,13 @@ export const HomeDrawerSmallView = memo((props: { children: any }) => {
         {/* DONT OVERLAY BECAUSE WE NEED HORIZONTAL SCROLLING */}
         {/* SEE CONTENTSCROLLVIEW FOR PREVENTING SCROLL */}
 
-        {content}
+        <VStack
+          width="100%"
+          flex={1}
+          pointerEvents={preventScrolling ? 'none' : 'auto'}
+        >
+          {content}
+        </VStack>
       </Animated.View>
     </VStack>
   )

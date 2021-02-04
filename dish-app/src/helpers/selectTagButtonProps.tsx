@@ -1,6 +1,6 @@
 import { RestaurantTagQuery } from '@dish/graph'
 
-export function selectTagButtonProps(tag: RestaurantTagQuery) {
+export function getRestaurantTagTagButtonProps(tag: RestaurantTagQuery) {
   return {
     rank: tag.rank,
     rgb: tag.tag.rgb,

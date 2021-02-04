@@ -30,7 +30,7 @@ export const Home = memo(function Home() {
         }
         return null
       },
-      (positionedState) => {
+      function updateAreaInfo(positionedState) {
         if (!positionedState) return
         homeStore.updateAreaInfo()
       }
@@ -43,7 +43,7 @@ export const Home = memo(function Home() {
       (x) => {
         return x.curPage.name
       },
-      (name) => {
+      function appMenuShow(name) {
         if (name == 'login' || name == 'register' || name == 'passwordReset') {
           appMenuStore.show()
         }

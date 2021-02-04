@@ -34,16 +34,7 @@ type Props = HomeStackViewProps<HomeStateItemRestaurant>
 
 export default function RestaurantPageContainer(props: Props) {
   return (
-    <StackDrawer
-      closable
-      topLeftControls={
-        <Suspense fallback={null}>
-          <RestaurantAddToListButton
-            restaurantSlug={props.item.restaurantSlug}
-          />
-        </Suspense>
-      }
-    >
+    <StackDrawer closable>
       <RestaurantPage {...props} />
     </StackDrawer>
   )

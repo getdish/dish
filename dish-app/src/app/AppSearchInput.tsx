@@ -143,7 +143,7 @@ export const AppSearchInput = memo(() => {
     return reaction(
       homeStore,
       (x) => x.currentSearchQuery,
-      (val) => {
+      function searchQuerySync(val) {
         if (val !== getSearch()) {
           setSearch(val)
         }
@@ -242,7 +242,9 @@ export const AppSearchInput = memo(() => {
                   }}
                   onChangeText={(text) => {
                     if (getSearch() == '' && text !== '') {
-                      autocompletesStore.setTarget('search')
+                      if (autocompletesStore.target !== 'search') {
+                        autocompletesStore.setTarget('search')
+                      }
                     }
                     setSearch(text)
                   }}

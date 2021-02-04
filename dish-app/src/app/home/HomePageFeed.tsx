@@ -51,7 +51,7 @@ import { ContentScrollViewHorizontal } from '../views/ContentScrollViewHorizonta
 import { DishView } from '../views/dish/DishView'
 import { Link } from '../views/Link'
 import { ListCard } from '../views/list/ListCard'
-import { SlantedTitle, SlantedTitleProps } from '../views/SlantedTitle'
+import { FeedSlantedTitle } from './FeedSlantedTitle'
 import { GradientButton } from './GradientButton'
 import { HomeStackViewProps } from './HomeStackViewProps'
 import { PageFooter } from './PageFooter'
@@ -370,19 +370,6 @@ const ListFeedCard = graphql(
     )
   }
 )
-
-const FeedSlantedTitle = (props: SlantedTitleProps) => {
-  return (
-    <VStack
-      alignSelf="flex-start"
-      marginTop={0}
-      marginLeft={15}
-      marginBottom={-42}
-    >
-      <SlantedTitle size="md" {...props} />
-    </VStack>
-  )
-}
 
 const CuisineFeedCard = memo(
   graphql(function CuisineFeedCard(props: FeedItemCuisine) {

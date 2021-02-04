@@ -10,10 +10,10 @@ export function useAutocompleteInputFocus(inputStore: InputStore) {
     return reaction(
       autocompletesStore,
       (store) => store.visible && store.target === inputStore.props.name,
-      (visible) => {
+      function autocompleteVisibileToFocus(visible) {
         if (!visible) return
         return series([
-          () => sleep(100),
+          () => sleep(200),
           () => {
             inputStore.focusNode()
           },

@@ -23,14 +23,17 @@ import { HomeStateItemUser } from '../../../types/homeTypes'
 import { useSetAppMap } from '../../AppMapStore'
 import { useUserStore } from '../../userStore'
 import { ContentScrollView } from '../../views/ContentScrollView'
+import { ContentScrollViewHorizontal } from '../../views/ContentScrollViewHorizontal'
 import { Link } from '../../views/Link'
 import { ListCard } from '../../views/list/ListCard'
 import { NotFoundPage } from '../../views/NotFoundPage'
 import { SlantedTitle } from '../../views/SlantedTitle'
 import { SmallButton } from '../../views/SmallButton'
 import { StackDrawer } from '../../views/StackDrawer'
+import { FeedSlantedTitle } from '../FeedSlantedTitle'
 import { StackItemProps } from '../HomeStackView'
 import { RestaurantReview } from '../restaurant/RestaurantReview'
+import { SkewedCard, SkewedCardCarousel } from '../SkewedCard'
 import { CardCarousel } from './CardCarousel'
 import { UserAvatar } from './UserAvatar'
 
@@ -120,7 +123,7 @@ const UserPageContent = graphql(
 
     return (
       <ContentScrollView id="user">
-        <VStack spacing="xl" paddingHorizontal="2.5%" paddingVertical={20}>
+        <VStack spacing="xl" paddingVertical={20}>
           <VStack>
             {!!user.about && (
               <VStack>
@@ -129,22 +132,24 @@ const UserPageContent = graphql(
               </VStack>
             )}
 
-            <SlantedTitle>Lists</SlantedTitle>
-            <CardCarousel>
-              {lists.map((list) => {
+            <FeedSlantedTitle>Lists</FeedSlantedTitle>
+            <SkewedCardCarousel>
+              {lists.map((list, i) => {
                 return (
-                  <ListCard
-                    key={list.slug}
-                    userSlug={list.user?.username ?? ''}
-                    slug={list.slug}
-                    region={list.region ?? ''}
-                  />
+                  <SkewedCard zIndex={1000 - i} key={list.slug}>
+                    <ListCard
+                      isBehind={i > 0}
+                      userSlug={list.user?.username ?? ''}
+                      slug={list.slug}
+                      region={list.region ?? ''}
+                    />
+                  </SkewedCard>
                 )
               })}
-            </CardCarousel>
+            </SkewedCardCarousel>
 
-            <SlantedTitle>Recently</SlantedTitle>
-
+            <FeedSlantedTitle>Recently</FeedSlantedTitle>
+            <Spacer size="xxxl" />
             <Suspense fallback={<LoadingItems />}>
               {!hasReviews && <Text>No reviews yet...</Text>}
               {hasReviews && (
@@ -182,14 +187,7 @@ const UserHeader = memo(
 
       return (
         <VStack position="relative">
-          <ScrollView
-            horizontal
-            showsHorizontalScrollIndicator={false}
-            style={{ width: '100%' }}
-            contentContainerStyle={{
-              minWidth: '100%',
-            }}
-          >
+          <ContentScrollViewHorizontal>
             <VStack maxWidth="100%" width="100%">
               <VStack flex={1} padding={20} paddingVertical={25}>
                 <HStack alignItems="center" flex={1} position="relative">
@@ -249,7 +247,8 @@ const UserHeader = memo(
                 <Divider />
               </VStack>
             </VStack>
-          </ScrollView>
+          </ContentScrollViewHorizontal>
+
           {isOwnProfile && (
             <AbsoluteVStack zIndex={10} bottom={-10} right={10}>
               <Link name="userEdit">

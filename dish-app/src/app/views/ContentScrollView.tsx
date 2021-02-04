@@ -73,7 +73,7 @@ export const usePreventVerticalScroll = (id: string) => {
     const d0 = reaction(
       parentStore,
       (x) => x.activeId === id,
-      (next) => {
+      function parentStoreActiveIdToPreventScroll(next) {
         isParentActive = next
         update()
       }
@@ -82,7 +82,7 @@ export const usePreventVerticalScroll = (id: string) => {
     const d1 = reaction(
       drawerStore,
       (x) => x.snapIndex > 0,
-      (x) => {
+      function drawerStoreSnapIndexToPreventScroll(x) {
         isMinimized = x
         update()
       }
@@ -91,7 +91,7 @@ export const usePreventVerticalScroll = (id: string) => {
     const d2 = reaction(
       scrollStore as any,
       (x) => [x.lock, x.isAtTop] as const,
-      ([lock, t]) => {
+      function scrollLockToPreventScroll([lock, t]) {
         isAtTop = t
         isLockedHorizontal = lock === 'horizontal'
         update()

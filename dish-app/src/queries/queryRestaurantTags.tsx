@@ -1,6 +1,6 @@
 import { order_by } from '@dish/graph'
 
-import { selectTagButtonProps } from '../helpers/selectTagButtonProps'
+import { getRestaurantTagTagButtonProps } from '../helpers/selectTagButtonProps'
 import { queryRestaurant } from './queryRestaurant'
 
 export const queryRestaurantTags = ({
@@ -22,5 +22,5 @@ export const queryRestaurantTags = ({
     },
     order_by: [{ score: order_by.desc }],
   })
-  return restaurantTags.map(selectTagButtonProps)
+  return restaurantTags
 }

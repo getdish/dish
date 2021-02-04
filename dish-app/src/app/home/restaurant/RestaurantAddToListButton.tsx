@@ -58,9 +58,9 @@ export const RestaurantAddToListButton = ({
         pressStyle={{
           opacity: 0.6,
         }}
-        paddingHorizontal={14}
         {...props}
       >
+        <Spacer size="xs" />
         <Plus color="#fff" size={size ?? 16} />
         {!noLabel && (
           <>
@@ -70,6 +70,7 @@ export const RestaurantAddToListButton = ({
             </Text>
           </>
         )}
+        <Spacer size="xs" />
       </SmallCircleButton>
     </>
   )

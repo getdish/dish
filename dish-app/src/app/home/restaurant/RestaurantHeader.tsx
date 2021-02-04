@@ -100,6 +100,12 @@ const RestaurantHeaderContent = memo(
           setWidth={setWidthDebounce}
         >
           <VStack>
+            <AbsoluteVStack top={5} left={5} zIndex={100}>
+              <Suspense fallback={null}>
+                <RestaurantAddToListButton restaurantSlug={restaurantSlug} />
+              </Suspense>
+            </AbsoluteVStack>
+
             <AbsoluteVStack zIndex={0} pointerEvents="auto">
               <RestaurantPhotosRow
                 restaurantSlug={restaurantSlug}

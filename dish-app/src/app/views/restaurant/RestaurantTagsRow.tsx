@@ -3,6 +3,7 @@ import { sortBy } from 'lodash'
 import React, { memo } from 'react'
 import { Spacer, StackProps } from 'snackui'
 
+import { getRestaurantTagTagButtonProps } from '../../../helpers/selectTagButtonProps'
 import { queryRestaurantTags } from '../../../queries/queryRestaurantTags'
 import {
   TagButton,
@@ -26,18 +27,18 @@ type TagRowProps = {
 
 export const RestaurantTagsRow = memo(
   graphql(function RestaurantTagsRow(props: TagRowProps) {
-    // const drawerWidth = useAppDrawerWidthInner()
     const { size, restaurantSlug, showMore } = props
     if (!restaurantSlug) {
       return null
     }
     let tags: TagButtonTagProps[] = []
-    // 🚨 BAD HOOKS ALERT
     if (props.tags) {
-      tags = props.tags
+      tags = props.tags.map(getTagButtonProps)
     } else {
       // @ts-ignore
-      tags = queryRestaurantTags({ restaurantSlug, limit: props.max })
+      tags = queryRestaurantTags({ restaurantSlug, limit: props.max }).map(
+        getRestaurantTagTagButtonProps
+      )
     }
     if (showMore) {
       tags = tags.slice(0, 2)
@@ -45,19 +46,19 @@ export const RestaurantTagsRow = memo(
     tags = tags.slice(0, props.max ?? Infinity)
     return (
       <>
-        {sortBy(tags, (a) =>
-          a.type === 'lense'
+        {sortBy(tags, (tag) =>
+          tag.type === 'lense'
             ? -2
-            : a.type === 'cuisine' || a.type === 'country'
+            : tag.type === 'cuisine' || tag.type === 'country'
             ? -3
-            : a.score
+            : tag.score
         ).map((tag, index) => {
           return (
             <React.Fragment key={`${index}${tag.name}`}>
               <TagButton
                 replaceSearch
                 size={size ?? 'sm'}
-                {...getTagButtonProps(tag)}
+                {...tag}
                 votable
                 restaurantSlug={props.restaurantSlug}
                 marginBottom={props.spacing ?? 5}

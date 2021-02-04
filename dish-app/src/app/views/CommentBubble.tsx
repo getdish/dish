@@ -127,7 +127,7 @@ function CommentBubbleContents({
   if (isYelp) {
     name = name?.replace('yelp-', '').replace(/[_-].*/, '')
   }
-  const circleSize = 80
+  const circleSize = 65
   const imageSize = circleSize * 0.6
   const colors = getColorsForName(`hi${name}`)
 
@@ -179,8 +179,8 @@ function CommentBubbleContents({
         borderRadius={20}
         position="relative"
         zIndex={10}
-        shadowColor="rgba(0,0,0,0.1)"
-        shadowRadius={10}
+        shadowColor="rgba(0,0,0,0.075)"
+        shadowRadius={8}
         shadowOffset={{ height: 3, width: 0 }}
         height={bubbleHeight}
       >
