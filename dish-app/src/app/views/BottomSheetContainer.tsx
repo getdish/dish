@@ -2,7 +2,10 @@ import React from 'react'
 import { VStack, useTheme } from 'snackui'
 
 import { drawerBorderRadius } from '../../constants/constants'
-import AppAutocomplete from '../AppAutocomplete'
+import {
+  AppAutocompleteLocation,
+  AppAutocompleteSearch,
+} from '../AppAutocomplete'
 import { DrawerPortalProvider } from '../Portal'
 
 // only renders on small views
@@ -23,7 +26,8 @@ export const BottomSheetContainer = (props: { children: any }) => {
       position="relative"
     >
       <DrawerPortalProvider />
-      <AppAutocomplete />
+      <AppAutocompleteLocation />
+      <AppAutocompleteSearch />
       {props.children}
     </VStack>
   )

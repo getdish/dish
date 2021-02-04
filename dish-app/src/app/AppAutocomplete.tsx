@@ -121,25 +121,8 @@ export const autocompleteSearchStore = createStore(AutocompleteStore, {
   target: 'search',
 })
 
-export default memo(function AppAutocomplete() {
+export const useAppAutocompleteEffects = () => {
   const autocompletes = useStoreInstance(autocompletesStore)
-  const theme = useTheme()
-
-  if (isWeb) {
-    useEffect(() => {
-      const handleMove = (e) => {
-        curPagePos.x = e.pageX
-        curPagePos.y = e.pageY
-      }
-      document.addEventListener('mousemove', handleMove, {
-        capture: false,
-        passive: true,
-      })
-      return () => {
-        document.removeEventListener('mousemove', handleMove)
-      }
-    }, [])
-  }
 
   if (isNative) {
     useEffect(() => {
@@ -170,28 +153,48 @@ export default memo(function AppAutocomplete() {
   useEffect(() => {
     autocompletes.setVisible(false)
   }, [curPage])
+}
 
+const ThemeTranslucent = (props: { children: any }) => {
+  const theme = useTheme()
   return (
     <Theme
       name={theme.name === 'light' ? 'lightTranslucent' : 'darkTranslucent'}
     >
+      {props.children}
+    </Theme>
+  )
+}
+
+export const AppAutocompleteSearch = () => {
+  const autocompletes = useStoreInstance(autocompletesStore)
+  return (
+    <ThemeTranslucent>
       <AbsoluteVStack
         fullscreen
         opacity={autocompletes.target === 'search' ? 1 : 0}
       >
-        <AutocompleteSearch />
+        <AutocompleteSearchInner />
       </AbsoluteVStack>
+    </ThemeTranslucent>
+  )
+}
+
+export const AppAutocompleteLocation = () => {
+  const autocompletes = useStoreInstance(autocompletesStore)
+  return (
+    <ThemeTranslucent>
       <AbsoluteVStack
         fullscreen
         opacity={autocompletes.target === 'location' ? 1 : 0}
       >
-        <AutocompleteLocation />
+        <AutocompleteLocationInner />
       </AbsoluteVStack>
-    </Theme>
+    </ThemeTranslucent>
   )
-})
+}
 
-const AutocompleteSearch = memo(() => {
+const AutocompleteSearchInner = memo(() => {
   const home = useHomeStore()
   const store = useStoreInstance(autocompleteSearchStore)
   const { currentSearchQuery, lastActiveTags } = home
@@ -327,8 +330,7 @@ const AutocompleteSearch = memo(() => {
   )
 })
 
-const AutocompleteLocation = memo(() => {
-  const home = useHomeStore()
+const AutocompleteLocationInner = memo(() => {
   const autocompletes = useStoreInstance(autocompletesStore)
   const store = useStoreInstance(autocompleteLocationStore)
   const inputStore = useInputStoreLocation()
@@ -402,7 +404,8 @@ const AutocompleteFrame = ({ children }: { children: any }) => {
       pointerEvents={isShowing ? 'auto' : 'none'}
       fullscreen
       alignItems="flex-end"
-      top={media.sm ? searchBarHeight + 5 : 10}
+      marginTop={5}
+      top={media.sm ? searchBarHeight : 0}
       onPress={() => autocompletes.setVisible(false)}
     >
       <VStack width="100%" height="100%" maxWidth={drawerWidthMax}>
@@ -414,14 +417,14 @@ const AutocompleteFrame = ({ children }: { children: any }) => {
           position="absolute"
           fullscreen
         />
-        <PaneControlButtons>
+        <AbsoluteVStack top={10} right={10}>
           <CloseButton
             size={20}
             onPressOut={prevent}
             zIndex={1000}
             onPress={hideAutocompletes}
           />
-        </PaneControlButtons>
+        </AbsoluteVStack>
         <VStack
           className="ease-in-out"
           position="relative"

@@ -4,6 +4,7 @@ import { LoadingItems, ToastRoot, VStack } from 'snackui'
 
 import { isSSR } from '../constants/constants'
 import AdminPage from './admin/AdminPage'
+import { useAppAutocompleteEffects } from './AppAutocomplete'
 import { AppIntroLetter } from './AppIntroLetter'
 import { AppMapControlsOverlay } from './AppMapControlsOverlay'
 import { AppMenuButton } from './AppMenuButton'
@@ -23,6 +24,8 @@ export function App() {
       }
     }, [])
   }
+
+  useAppAutocompleteEffects()
 
   return (
     <>

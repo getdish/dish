@@ -1,6 +1,5 @@
 import { fullyIdle, idle, series } from '@dish/async'
 import { Loader, Search, X } from '@dish/react-feather'
-import { useRouterSelector } from '@dish/router'
 import { getStore, reaction } from '@dish/use-store'
 import React, { memo, useCallback, useEffect, useRef, useState } from 'react'
 import {
@@ -227,6 +226,11 @@ export const AppSearchInput = memo(() => {
                   value={search ?? ''}
                   onBlur={(e) => {
                     avoidNextFocus = false
+                    if (isWeb && !getMedia().sm) {
+                      if (autocompletesStore.target === 'search') {
+                        autocompletesStore.setVisible(false)
+                      }
+                    }
                   }}
                   onKeyPress={handleKeyPressInner}
                   onFocus={() => {
