@@ -8,7 +8,7 @@ import { ContentScrollViewHorizontal } from '../../views/ContentScrollViewHorizo
 import { SlantedTitle } from '../../views/SlantedTitle'
 import { TagButton, getTagButtonProps } from '../../views/TagButton'
 import { Arrow } from './Arrow'
-import { SearchPagePropsContext } from './SearchPage'
+import { SearchPagePropsContext } from './SearchPagePropsContext'
 import { searchPageStore } from './SearchPageStore'
 
 export const SearchPageScoring = memo(() => {

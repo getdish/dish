@@ -3,7 +3,7 @@ import { query } from '@dish/graph/src'
 import { assertPresent, isPresent } from '@dish/helpers/src'
 import { Edit2 } from '@dish/react-feather'
 import { HistoryItem } from '@dish/router'
-import React, { memo, useContext } from 'react'
+import React, { Suspense, memo, useContext } from 'react'
 import {
   AbsoluteVStack,
   HStack,
@@ -16,9 +16,11 @@ import {
 import { getActiveTags } from '../../../helpers/getActiveTags'
 import { getFullTags } from '../../../helpers/getFullTags'
 import { getTitleForState } from '../../../helpers/getTitleForState'
+import { rgbString } from '../../../helpers/rgbString'
 import { router } from '../../../router'
 import { HomeStateItemSearch } from '../../../types/homeTypes'
 import { useHomeStateById } from '../../homeStore'
+import { useCurrentLenseColor } from '../../hooks/useCurrentLenseColor'
 import { useLastValueWhen } from '../../hooks/useLastValueWhen'
 import { userStore } from '../../userStore'
 import { SmallCircleButton } from '../../views/CloseButton'
@@ -31,7 +33,9 @@ import { ListCardHorizontal } from '../../views/list/ListCard'
 import { SlantedTitle } from '../../views/SlantedTitle'
 import { randomListColor } from '../list/listColors'
 import { Arrow } from './Arrow'
-import { SearchPagePropsContext, SearchPageTitle } from './SearchPage'
+import { PageTitle } from './PageTitle'
+import { SearchPagePropsContext } from './SearchPagePropsContext'
+import { SearchPageResultsInfoBox } from './SearchPageResultsInfoBox'
 import { SearchPageScoring } from './SearchPageScoring'
 import {
   getLocationFromRoute,
@@ -76,6 +80,26 @@ export const SearchHeader = () => {
     </ContentScrollViewHorizontalFitted>
   )
 }
+
+const SearchPageTitle = memo(() => {
+  const curProps = useContext(SearchPagePropsContext)!
+  const { title, subTitle } = getTitleForState(curProps.item, {
+    lowerCase: true,
+  })
+  const lenseColor = useCurrentLenseColor()
+  return (
+    <>
+      <PageTitle
+        title={title}
+        subTitle={subTitle}
+        color={rgbString(lenseColor.map((x) => x * 0.92))}
+      />
+      <Suspense fallback={null}>
+        <SearchPageResultsInfoBox state={curProps.item} />
+      </Suspense>
+    </>
+  )
+})
 
 const SearchForkListButton = memo(() => {
   const curProps = useContext(SearchPagePropsContext)!

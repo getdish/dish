@@ -5,11 +5,9 @@ import { HistoryItem } from '@dish/router'
 import { reaction, reaction2 } from '@dish/use-store'
 import React, {
   Suspense,
-  createContext,
   forwardRef,
   memo,
   useCallback,
-  useContext,
   useEffect,
   useMemo,
   useRef,
@@ -38,14 +36,12 @@ import { isWeb } from '../../../constants/constants'
 import { addTagsToCache, allTags } from '../../../helpers/allTags'
 import { getFullTagsFromRoute } from '../../../helpers/getTagsFromRoute'
 import { getTitleForState } from '../../../helpers/getTitleForState'
-import { rgbString } from '../../../helpers/rgbString'
 import { useQueryLoud } from '../../../helpers/useQueryLoud'
 import { router } from '../../../router'
 import { HomeStateItemSearch } from '../../../types/homeTypes'
 import { appMapStore, useSetAppMap } from '../../AppMapStore'
 import { useHomeStateById } from '../../homeStore'
 import { useAppDrawerWidth } from '../../hooks/useAppDrawerWidth'
-import { useCurrentLenseColor } from '../../hooks/useCurrentLenseColor'
 import { useLastValueWhen } from '../../hooks/useLastValueWhen'
 import { usePageLoadEffect } from '../../hooks/usePageLoadEffect'
 import { RootPortalItem } from '../../Portal'
@@ -58,17 +54,15 @@ import {
   ITEM_HEIGHT,
   RestaurantListItem,
 } from '../restaurant/RestaurantListItem'
-import { PageTitle } from './PageTitle'
 import { SearchHeader } from './SearchHeader'
 import { SearchPageNavBar } from './SearchPageNavBar'
-import { SearchPageResultsInfoBox } from './SearchPageResultsInfoBox'
+import { SearchPagePropsContext } from './SearchPagePropsContext'
 import { SearchPageScoring } from './SearchPageScoring'
 import { searchPageStore, useSearchPageStore } from './SearchPageStore'
 import { searchResultsStore } from './searchResultsStore'
 import { useLocationFromRoute } from './useLocationFromRoute'
 
-type Props = HomeStackViewProps<HomeStateItemSearch>
-export const SearchPagePropsContext = createContext<Props | null>(null)
+export type Props = HomeStackViewProps<HomeStateItemSearch>
 
 export default memo(function SearchPage(props: Props) {
   const state = useHomeStateById<HomeStateItemSearch>(props.item.id)
@@ -365,8 +359,7 @@ const SearchResultsContent = (props: Props) => {
   if (status !== 'loading' && results.length === 0) {
     return (
       <>
-        <SearchPageTitle />
-        <SearchPageScoring />
+        <SearchHeader />
         <VStack paddingVertical={100} alignItems="center" spacing>
           <Text fontSize={22}>Nothing found</Text>
           <Text fontSize={32}>😞</Text>
@@ -399,26 +392,6 @@ const SearchResultsContent = (props: Props) => {
 type SearchPageScrollViewProps = ScrollViewProps & {
   onSizeChanged: (props: { width: number; height: number }) => any
 }
-
-export const SearchPageTitle = memo(() => {
-  const curProps = useContext(SearchPagePropsContext)!
-  const { title, subTitle } = getTitleForState(curProps.item, {
-    lowerCase: true,
-  })
-  const lenseColor = useCurrentLenseColor()
-  return (
-    <>
-      <PageTitle
-        title={title}
-        subTitle={subTitle}
-        color={rgbString(lenseColor.map((x) => x * 0.92))}
-      />
-      <Suspense fallback={null}>
-        <SearchPageResultsInfoBox state={curProps.item} />
-      </Suspense>
-    </>
-  )
-})
 
 const SearchPageScrollView = forwardRef<ScrollView, SearchPageScrollViewProps>(
   ({ children, onSizeChanged, ...props }, ref) => {
