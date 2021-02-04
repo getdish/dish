@@ -484,13 +484,12 @@ const AutocompleteResults = ({
   emptyContent?: any
   onSelect: AutocompleteSelectCb
 }) => {
-  const media = useMedia()
   const autocompleteStore = useStore(AutocompleteStore, { target })
   const activeIndex = autocompleteStore.index
   const ogResults = autocompleteStore.results
   const results = [...prefixResults, ...ogResults]
   return (
-    <VStack paddingTop={media.sm ? 15 : 0}>
+    <VStack>
       {!ogResults.length && emptyContent}
       {!!ogResults.length &&
         results.map((result, index) => {

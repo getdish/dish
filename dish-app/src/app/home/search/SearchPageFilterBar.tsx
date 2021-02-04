@@ -34,7 +34,7 @@ export const SearchPageFilterBar = memo(({ activeTags }: FilterBarProps) => {
   )
 })
 
-const HomePageFilterBarSmall = ({ activeTags }: FilterBarProps) => {
+const HomePageFilterBarSmall = memo(({ activeTags }: FilterBarProps) => {
   const num = Object.keys(activeTags).length
   const theme = useTheme()
   const [show, setShow] = useState(false)
@@ -85,7 +85,7 @@ const HomePageFilterBarSmall = ({ activeTags }: FilterBarProps) => {
       )}
     </>
   )
-}
+})
 
 const useSearchFilterButtons = ({ activeTags }: FilterBarProps) => {
   const color = useCurrentLenseColor()

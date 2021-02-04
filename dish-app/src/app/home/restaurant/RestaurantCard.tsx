@@ -38,49 +38,47 @@ export const RestaurantCard = (props: RestaurantCardProps) => {
   )
 }
 
-export const RestaurantCardContent = memo(
-  graphql(
-    ({
-      // size = 'lg',
-      restaurantSlug,
-      restaurantId,
-      isBehind,
-      hideScore,
-      aspectFixed,
-      padTitleSide,
-      hoverable = true,
-      dimImage,
-      below,
-    }: RestaurantCardProps) => {
-      const [restaurant] = queryRestaurant(restaurantSlug)
-      const [price_label, price_color, price_range] = priceRange(restaurant)
-      const restaurantPhoto = queryRestaurantCoverPhoto(restaurant)
-      return (
-        <Link name="restaurant" asyncClick params={{ slug: restaurantSlug }}>
-          <Card
-            isBehind={isBehind}
-            title={restaurant.name}
-            subTitle={price_range}
-            below={below}
-            dimImage={dimImage}
-            outside={
-              !hideScore && (
-                <AbsoluteVStack bottom={-10} right={-10} zIndex={20}>
-                  <RestaurantUpVoteDownVote
-                    rounded
-                    display="ratio"
-                    restaurantSlug={restaurantSlug}
-                  />
-                </AbsoluteVStack>
-              )
-            }
-            photo={restaurantPhoto}
-            aspectFixed={aspectFixed}
-            hoverable={hoverable}
-            padTitleSide={padTitleSide}
-          />
-        </Link>
-      )
-    }
-  )
+export const RestaurantCardContent = graphql(
+  ({
+    // size = 'lg',
+    restaurantSlug,
+    restaurantId,
+    isBehind,
+    hideScore,
+    aspectFixed,
+    padTitleSide,
+    hoverable = true,
+    dimImage,
+    below,
+  }: RestaurantCardProps) => {
+    const [restaurant] = queryRestaurant(restaurantSlug)
+    const [price_label, price_color, price_range] = priceRange(restaurant)
+    const restaurantPhoto = queryRestaurantCoverPhoto(restaurant)
+    return (
+      <Link name="restaurant" asyncClick params={{ slug: restaurantSlug }}>
+        <Card
+          isBehind={isBehind}
+          title={restaurant.name}
+          subTitle={price_range}
+          below={below}
+          dimImage={dimImage}
+          outside={
+            !hideScore && (
+              <AbsoluteVStack bottom={-10} right={-10} zIndex={20}>
+                <RestaurantUpVoteDownVote
+                  rounded
+                  display="ratio"
+                  restaurantSlug={restaurantSlug}
+                />
+              </AbsoluteVStack>
+            )
+          }
+          photo={restaurantPhoto}
+          aspectFixed={aspectFixed}
+          hoverable={hoverable}
+          padTitleSide={padTitleSide}
+        />
+      </Link>
+    )
+  }
 )

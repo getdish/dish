@@ -108,7 +108,9 @@ export const ListCardHorizontal = graphql((props: ListIDProps) => {
         borderRadius={15}
         padding={10}
         paddingHorizontal={12}
-        backgroundColor={theme.cardBackgroundColor}
+        backgroundColor={colors.extraLightColor}
+        borderWidth={1}
+        borderColor={colors.lightColor}
         shadowColor={theme.shadowColor}
         shadowRadius={3}
         shadowOffset={{ height: 2, width: 0 }}
@@ -123,7 +125,7 @@ export const ListCardHorizontal = graphql((props: ListIDProps) => {
           }}
         />
         <VStack>
-          <Text ellipse color={colors.color} fontWeight="800">
+          <Text ellipse color={colors.darkColor} fontWeight="800">
             {list.name}
           </Text>
           <Text>{list.user?.username}</Text>

@@ -4,13 +4,13 @@ import { HStack, StackProps, VStack, useTheme } from 'snackui'
 
 type CircleButtonProps = StackProps & { size?: number; shadowed?: boolean }
 
-export const CloseButton = memo((props: CircleButtonProps) => {
+export const CloseButton = (props: CircleButtonProps) => {
   return (
     <SmallCircleButton {...props}>
       <X size={props.size ?? 14} color="white" />
     </SmallCircleButton>
   )
-})
+}
 
 export const BackButton = memo((props: CircleButtonProps) => {
   return (

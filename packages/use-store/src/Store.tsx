@@ -13,32 +13,32 @@ export type StoreTracker = {
 }
 
 export class Store<Props extends Object | null = null> {
-  private listeners = new Set<Function>()
-  private trackers = new Set<StoreTracker>()
+  private _listeners = new Set<Function>()
+  private _trackers = new Set<StoreTracker>()
 
   constructor(public props: Props) {}
 
   subscribe(onChanged: Function) {
-    this.listeners.add(onChanged)
+    this._listeners.add(onChanged)
     return () => {
-      this.listeners.delete(onChanged)
+      this._listeners.delete(onChanged)
     }
   }
 
   [TRIGGER_UPDATE]() {
-    this.listeners.forEach((cb) => cb())
+    this._listeners.forEach((cb) => cb())
   }
 
   [ADD_TRACKER](tracker: StoreTracker) {
     let tracked = new Set<string>()
-    this.trackers.add(tracker)
+    this._trackers.add(tracker)
     return () => {
-      this.trackers.delete(tracker)
+      this._trackers.delete(tracker)
     }
   }
 
   [TRACK](key: string) {
-    this.trackers.forEach((tracker) => {
+    this._trackers.forEach((tracker) => {
       if (tracker.isTracking) {
         tracker.tracked.add(key)
       }
@@ -46,7 +46,7 @@ export class Store<Props extends Object | null = null> {
   }
 
   [SHOULD_DEBUG]() {
-    return [...this.trackers].some(
+    return [...this._trackers].some(
       (tracker) => tracker.component && shouldDebug(tracker.component, this)
     )
   }

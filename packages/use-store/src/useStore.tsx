@@ -18,7 +18,7 @@ import {
   simpleStr,
 } from './helpers'
 import { Selector, StoreInfo, UseStoreOptions } from './interfaces'
-import { isEqualShallow } from './isEqualShallow'
+import { isEqualSubsetShallow } from './isEqualShallow'
 import {
   ADD_TRACKER,
   SHOULD_DEBUG,
@@ -182,7 +182,7 @@ export function reaction2(fn: () => any): () => void {
     disposeSubscribe = subscribeToStores([...state.stores], () => {
       const next = runStoreSelector(fn)
       disposePrev()
-      if (!isEqualShallow(state.stores, next.stores)) {
+      if (!isEqualSubsetShallow(state.stores, next.stores)) {
         state = next
         update()
       } else {
@@ -206,8 +206,8 @@ export function useSelector<A>(fn: () => A): A {
       const next = runStoreSelector(fn)
       setState((prev) => {
         if (
-          isEqualShallow(prev.stores, next.stores) &&
-          isEqualShallow(prev.value, next.value)
+          isEqualSubsetShallow(prev.stores, next.stores) &&
+          isEqualSubsetShallow(prev.value, next.value)
         ) {
           return prev
         }
@@ -358,10 +358,10 @@ export const allStores = {}
 export const subscribe = (store: Store, callback: () => any) => {
   return store.subscribe(callback)
 }
-const emptyObj = {}
+
 const selectKeys = (obj: any, keys: string[] = []) => {
   if (!keys.length) {
-    return emptyObj
+    return { ...obj }
   }
   const res = {}
   for (const key of keys) {
@@ -443,6 +443,10 @@ function createProxiedStore(storeInfo: Omit<StoreInfo, 'store' | 'source'>) {
 
   const proxiedStore = new Proxy(storeInstance, {
     get(target, key) {
+      // avoid tracking internal stuff
+      if (key === '_trackers' || key === '_listeners') {
+        return Reflect.get(target, key)
+      }
       const isDebugging = DebugStores.has(constr)
       if (typeof key === 'string') {
         if (
@@ -642,7 +646,7 @@ function createProxiedStore(storeInfo: Omit<StoreInfo, 'store' | 'source'>) {
         if (process.env.LOG_LEVEL && configureOpts.logLevel !== 'error') {
           setters.add({ key, value })
           if (storeInfo.storeInstance[SHOULD_DEBUG]()) {
-            console.log('SET', res, key, value)
+            console.log('(debug) SET', res, key, value)
           }
         }
         didSet = true

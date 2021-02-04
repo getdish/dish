@@ -246,6 +246,15 @@ const RestaurantListItemContent = memo(
     const showAbove = !!above || !!activeTagSlugs
     const [editedDescription, setEditedDescription] = useState('')
 
+    const handleEdit = useCallback((next) => {
+      setEditedDescription(next)
+      onChangeDescription?.(next)
+    }, [])
+
+    const toggleSetExpanded = useCallback(() => {
+      setIsExpanded((x) => !x)
+    }, [])
+
     return (
       <VStack
         className="ease-in-out-slow hover-faded-in-parent"
@@ -301,9 +310,7 @@ const RestaurantListItemContent = memo(
                   score={score}
                   restaurantSlug={restaurantSlug}
                   activeTagSlugs={activeTagSlugs}
-                  onClickPoints={() => {
-                    setIsExpanded((x) => !x)
-                  }}
+                  onClickPoints={toggleSetExpanded}
                 />
               )
             : null}
@@ -445,10 +452,7 @@ const RestaurantListItemContent = memo(
                   disableEllipse={flexibleHeight}
                   text={editedDescription || description}
                   editableDescription={editableDescription}
-                  onEdit={(next) => {
-                    setEditedDescription(next)
-                    onChangeDescription?.(next)
-                  }}
+                  onEdit={handleEdit}
                   restaurantSlug={restaurantSlug}
                 />
               </VStack>

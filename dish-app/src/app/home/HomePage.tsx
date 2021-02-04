@@ -46,12 +46,12 @@ export default memo(function HomePage(
 ) {
   const home = useHomeStore()
   const theme = useTheme()
-  const isLoaded = useRef(false)
+  const [isLoaded, setIsLoaded] = useState(false)
   const state = home.lastHomeState
   const isRouteActive = useIsRouteActive('home', 'homeRegion')
   // first one is if the route is active, second is if the stack view active
   const isActive = isRouteActive && props.isActive
-  const region = useRegionQuery(state.region, {
+  const regionResponse = useRegionQuery(state.region, {
     enabled: props.isActive && !!state.region,
     suspense: false,
   })
@@ -69,28 +69,30 @@ export default memo(function HomePage(
       children: 'New',
     },
   ]
+  const region = regionResponse.data
+  const { center, span } = region ?? {}
 
-  console.log('👀 HomePage', state.region, { props, region, state, isActive })
+  // prettier-ignore
+  console.log('👀 HomePage', state.region, { position, isLoaded, props, region, state, isActive, center, span })
 
   // on load home clear search effect!
   useEffect(() => {
     // not on first load
-    if (isActive && isLoaded.current) {
+    if (isActive && isLoaded) {
       home.clearSearch()
       home.clearTags()
     }
-  }, [isActive, isLoaded.current])
+  }, [isActive, isLoaded])
 
   // center map to region
-  const { center, span } = region.data ?? {}
   useEffect(() => {
     if (!isActive) return
-    if (!region.data || !center || !span) return
-    if (slugify(region.data.name) !== state.region) return
+    if (!region || !center || !span) return
+    if (region.slug !== state.region) return
     cancelUpdateRegion()
     setPosition({ center, span })
-    isLoaded.current = true
-  }, [isActive, isLoaded.current, JSON.stringify([center, span])])
+    setIsLoaded(true)
+  }, [isActive, isLoaded, JSON.stringify([center, span])])
 
   useEffect(() => {
     return () => {
@@ -100,16 +102,16 @@ export default memo(function HomePage(
 
   useEffect(() => {
     if (!isActive) return
-    if (region.status !== 'success') return
-    if (region.data) {
-      const regionSlug = region.data.slug ?? slugify(region.data.name)
+    if (regionResponse.status !== 'success') return
+    if (region) {
+      const regionSlug = region.slug ?? slugify(region.name)
       setDefaultLocation({
-        center: region.data.center,
-        span: region.data.span,
+        center: region.center,
+        span: region.span,
         region: regionSlug,
       })
     }
-  }, [isActive, region.status, region.data?.slug])
+  }, [isActive, regionResponse.status, region?.slug])
 
   useEffect(() => {
     if (isActive && !props.item.region) {
@@ -180,7 +182,7 @@ export default memo(function HomePage(
                         color="#fff"
                         marginTop={-24}
                       >
-                        {region.data?.name ?? '...'}
+                        {region?.name ?? '...'}
                       </SlantedTitle>
 
                       <AbsoluteVStack
@@ -230,7 +232,9 @@ export default memo(function HomePage(
                   </>
                 }
               >
-                <HomePageFeed {...props} region={region.data} {...position} />
+                {isLoaded && (
+                  <HomePageFeed {...props} region={region} {...position} />
+                )}
               </Suspense>
             </VStack>
           </VStack>
@@ -240,7 +244,7 @@ export default memo(function HomePage(
   )
 })
 
-const HomePageIntroDialogue = () => {
+const HomePageIntroDialogue = memo(() => {
   const [show, setShow] = useLocalStorageState('home-intro-dialogue', true)
 
   if (!show) {
@@ -271,7 +275,7 @@ const HomePageIntroDialogue = () => {
       </Paragraph>
     </VStack>
   )
-}
+})
 
 const HomeTopSpacer = () => {
   const media = useMedia()

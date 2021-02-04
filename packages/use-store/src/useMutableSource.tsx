@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from 'react'
 
-import { isEqualShallow } from './isEqualShallow'
+import { isEqualSubsetShallow } from './isEqualShallow'
+import { useCurrentComponent } from './useStoreDebug'
 
 const TARGET = Symbol()
 const GET_VERSION = Symbol()
@@ -16,55 +17,59 @@ export const useMutableSource = (
   subscribe: any
 ) => {
   const currentVersion = source[GET_VERSION](source[TARGET])
-  const [state, setState] = useState(
-    () =>
-      [
-        /* [0] */ source,
-        /* [1] */ getSnapshot,
-        /* [2] */ subscribe,
-        /* [3] */ currentVersion,
-        /* [4] */ getSnapshot(source[TARGET]),
-      ] as const
-  )
+  const [state, setState] = useState(() => {
+    return [
+      /* [0] */ source,
+      /* [1] */ getSnapshot,
+      /* [2] */ subscribe,
+      /* [3] */ currentVersion,
+      /* [4] */ getSnapshot(source[TARGET]),
+    ] as const
+  })
   const internal = useRef<{
     version: number
     state: readonly [any, any, any, any, any]
   }>()
+
+  let currentSnapshot = state[4]
+
   if (!internal.current) {
     internal.current = {
       version: 0,
       state,
     }
-  }
-  internal.current.state = state
-
-  let currentSnapshot = state[4]
-
-  const shouldUpdate = (() => {
-    const hasChangedRefs =
-      state[0] !== source || state[1] !== getSnapshot || state[2] !== subscribe
-    const hasChangedVersion =
-      currentVersion !== state[3] && currentVersion !== internal.current.version
-    if (hasChangedRefs || hasChangedVersion) {
-      const prev = currentSnapshot
-      const next = getSnapshot(source[TARGET])
-      if (!isEqualShallow(next, prev)) {
-        currentSnapshot = next
-        return true
+  } else {
+    const shouldUpdate = (() => {
+      const hasChangedRefs =
+        state[0] !== source ||
+        state[1] !== getSnapshot ||
+        state[2] !== subscribe
+      const hasChangedVersion =
+        currentVersion !== state[3] &&
+        currentVersion !== internal.current.version
+      if (hasChangedRefs || hasChangedVersion) {
+        const prev = currentSnapshot
+        const next = getSnapshot(source[TARGET])
+        if (!isEqualSubsetShallow(prev, next)) {
+          currentSnapshot = next
+          return true
+        }
       }
-    }
-    return hasChangedRefs
-  })()
+      return hasChangedRefs
+    })()
 
-  if (shouldUpdate) {
-    setState([
-      /* [0] */ source,
-      /* [1] */ getSnapshot,
-      /* [2] */ subscribe,
-      /* [3] */ currentVersion,
-      /* [4] */ currentSnapshot,
-    ])
+    if (shouldUpdate) {
+      setState([
+        /* [0] */ source,
+        /* [1] */ getSnapshot,
+        /* [2] */ subscribe,
+        /* [3] */ currentVersion,
+        /* [4] */ currentSnapshot,
+      ])
+    }
   }
+
+  internal.current.state = state
 
   useEffect(() => {
     let didUnsubscribe = false
@@ -84,13 +89,12 @@ export const useMutableSource = (
         /* [3] */ nextVersion,
         /* [4] */ nextSnapshot,
       ] as const
-
-      if (
+      const shouldUpdate =
         prev[0] !== source ||
         prev[1] !== getSnapshot ||
         prev[2] !== subscribe ||
-        !isEqualShallow(prev[4], nextSnapshot)
-      ) {
+        !isEqualSubsetShallow(prev[4], nextSnapshot)
+      if (shouldUpdate) {
         setState(next)
       }
     }
