@@ -9,7 +9,7 @@ import React, {
   useState,
 } from 'react'
 import { ScrollView, ScrollViewProps, StyleSheet } from 'react-native'
-import { VStack, useMedia } from 'snackui'
+import { VStack, getMedia, useMedia } from 'snackui'
 
 import { isWeb } from '../../constants/constants'
 import { supportsTouchWeb } from '../../constants/platforms'
@@ -69,8 +69,11 @@ export const usePreventVerticalScroll = (id: string) => {
     // we can greatly simplify this area
 
     const update = () => {
+      const isLarge = getMedia().lg
       const prevent =
-        isAtTop && (isMinimized || !isParentActive || isLockedHorizontal)
+        !isLarge &&
+        isAtTop &&
+        (isMinimized || !isParentActive || isLockedHorizontal)
       setPrevent(prevent)
     }
 
@@ -183,9 +186,6 @@ export const ContentScrollView = forwardRef<ScrollView, ContentScrollViewProps>(
           flex={1}
           overflow="hidden"
           pointerEvents={preventScrolling ? 'none' : 'auto'}
-          {...(media.notXs && {
-            pointerEvents: 'auto',
-          })}
         >
           <ScrollView
             ref={ref}

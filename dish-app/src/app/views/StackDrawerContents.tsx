@@ -45,7 +45,7 @@ export const StackDrawer = ({
       maxWidth={media.sm ? '100%' : drawerWidthMax}
       minWidth={media.sm ? '100%' : 200}
       justifyContent="flex-end"
-      shadowRadius={12}
+      shadowRadius={7}
       shadowColor={theme.shadowColor}
     >
       {!!topLeftControls && (
