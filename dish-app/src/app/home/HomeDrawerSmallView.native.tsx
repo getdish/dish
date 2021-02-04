@@ -62,7 +62,8 @@ export const HomeDrawerSmallView = memo((props: { children: any }) => {
           return false
         }
         if (drawerStore.snapIndex === 2) {
-          return Math.abs(dy) > 6
+          // try and prevent grabbing both horizontal + vertical
+          return Math.abs(dy) > 12
         }
         if (drawerStore.snapIndex === 0) {
           return dy > 6
