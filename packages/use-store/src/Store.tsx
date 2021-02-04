@@ -10,6 +10,7 @@ export type StoreTracker = {
   tracked: Set<string>
   dispose: () => void
   component?: any
+  firstRun: boolean
 }
 
 export class Store<Props extends Object | null = null> {

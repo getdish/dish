@@ -359,9 +359,13 @@ export const subscribe = (store: Store, callback: () => any) => {
   return store.subscribe(callback)
 }
 
-const selectKeys = (obj: any, keys: string[] = []) => {
-  if (!keys.length) {
+const emptyObj = {}
+const selectKeys = (obj: any, keys: string[] | null) => {
+  if (keys === null) {
     return { ...obj }
+  }
+  if (!keys.length) {
+    return emptyObj
   }
   const res = {}
   for (const key of keys) {
@@ -380,6 +384,7 @@ function useStoreFromInfo(
     internal.current = {
       component,
       isTracking: false,
+      firstRun: true,
       tracked: new Set<string>(),
       dispose: null as any,
     }
@@ -390,7 +395,7 @@ function useStoreFromInfo(
   const selector = userSelector ?? selectKeys
   const getSnapshot = useCallback(
     (store) => {
-      const keys = [...curInternal.tracked]
+      const keys = curInternal.firstRun ? null : [...curInternal.tracked]
       const snap = selector(store, keys)
       if (
         process.env.LOG_LEVEL &&
@@ -416,6 +421,7 @@ function useStoreFromInfo(
   // track access, runs after each render
   useLayoutEffect(() => {
     curInternal.isTracking = false
+    curInternal.firstRun = false
     if (
       process.env.LOG_LEVEL &&
       (shouldDebug(component, info) || configureOpts.logLevel === 'debug')
