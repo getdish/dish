@@ -3,6 +3,7 @@ import 'mapbox-gl/dist/mapbox-gl.css'
 import { fullyIdle, series } from '@dish/async'
 import { isDev, isStaging, slugify } from '@dish/graph'
 import { assertPresent } from '@dish/helpers/src'
+import { supportsTouchWeb } from '@dish/helpers/src'
 import bbox from '@turf/bbox'
 import union from '@turf/union'
 import _, { capitalize, debounce, isEqual, throttle } from 'lodash'
@@ -592,8 +593,8 @@ function setupMapEffect({
             'circle-radius': [
               'case',
               ['boolean', ['feature-state', 'hover'], false],
-              8,
-              6,
+              12 * (supportsTouchWeb ? 2 : 1),
+              6 * (supportsTouchWeb ? 2 : 1),
             ],
 
             'circle-stroke-width': {

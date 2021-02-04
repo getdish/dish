@@ -58,9 +58,11 @@ export type TopCuisine = {
   country: string
   icon: string
   frequency: number
-  avg_rating: number
+  avg_score: number
   dishes: TopCuisineDish[]
   top_restaurants: Partial<Restaurant>[]
+  tag_slug: string
+  tag_id: string
 }
 
 export type MapPosition = {

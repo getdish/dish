@@ -50,7 +50,8 @@ import { ContentScrollViewHorizontal } from '../views/ContentScrollViewHorizonta
 import { DishView } from '../views/dish/DishView'
 import { Link } from '../views/Link'
 import { ListCard } from '../views/list/ListCard'
-import { FeedSlantedTitle } from './FeedSlantedTitle'
+import { ScalingPressable } from '../views/ScalingPressable'
+import { FeedSlantedTitle, FeedSlantedTitleLink } from './FeedSlantedTitle'
 import { GradientButton } from './GradientButton'
 import { HomeStackViewProps } from './HomeStackViewProps'
 import { PageFooter } from './PageFooter'
@@ -262,7 +263,7 @@ const getHomeCuisines = async (center: LngLat) => {
       all.push(item)
     }
   }
-  return sortBy(all, (x) => -x.avg_rating)
+  return sortBy(all, (x) => -x.avg_score)
 }
 
 const useTopCuisines = (center: LngLat) => {
@@ -388,17 +389,19 @@ const CuisineFeedCard = memo(
 
     return (
       <>
-        <FeedSlantedTitle
+        <FeedSlantedTitleLink
+          tag={{ slug: props.tag_slug }}
           onLayout={(x) => setTitleWidth(x.nativeEvent.layout.width)}
+          zIndex={10}
         >
           {props.title}
-        </FeedSlantedTitle>
+        </FeedSlantedTitleLink>
 
         <VStack
           maxWidth="100%"
           overflow="hidden"
           marginBottom={-20}
-          marginTop={-14}
+          marginTop={-16}
         >
           <ContentScrollViewHorizontal>
             <VStack
@@ -489,9 +492,9 @@ const DishRestaurantsFeedCard = ({
   const theme = useTheme()
   return (
     <>
-      <FeedSlantedTitle>
+      <FeedSlantedTitleLink tag={dish}>
         {dish.icon} {dish.name}
-      </FeedSlantedTitle>
+      </FeedSlantedTitleLink>
       <SkewedCardCarousel>
         {restaurants.slice(0, 5).map((r, i) => {
           if (!r.slug) {
