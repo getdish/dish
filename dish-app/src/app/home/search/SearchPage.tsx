@@ -72,7 +72,7 @@ export const SearchPagePropsContext = createContext<Props | null>(null)
 
 export default memo(function SearchPage(props: Props) {
   const state = useHomeStateById<HomeStateItemSearch>(props.item.id)
-  const { title, subTitle } = getTitleForState(state, {
+  const { title } = getTitleForState(state, {
     lowerCase: true,
   })
   const route = useLastValueWhen(

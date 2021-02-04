@@ -28,7 +28,6 @@ import {
   useTheme,
 } from 'snackui'
 
-import { peachAvatar } from '../../constants/avatar'
 import { allColorsPastel } from '../../constants/colors'
 import { getColorsForName } from '../../helpers/getColorsForName'
 import { DishTagItem } from '../../helpers/getRestaurantDishes'
@@ -584,7 +583,7 @@ const RestaurantFeedCard = (props: FeedItemRestaurant) => {
       below={
         <CommentBubble
           name="Test"
-          avatar={peachAvatar}
+          avatar={''}
           text="Lorem ipsum dolor sit amet"
         />
       }

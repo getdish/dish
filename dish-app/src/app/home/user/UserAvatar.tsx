@@ -33,9 +33,9 @@ export const UserAvatar = memo(
         />
         <Text
           position="absolute"
-          bottom={-size * 0.15}
-          left={-size * 0.15}
-          fontSize={size * 0.45}
+          bottom={-size * 0.1}
+          left={-size * 0.1}
+          fontSize={size * 0.4}
         >
           {char ?? '👻'}
         </Text>

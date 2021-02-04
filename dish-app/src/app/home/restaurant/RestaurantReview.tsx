@@ -1,19 +1,9 @@
-import { graphql, query, refetch } from '@dish/graph'
-import { useRefetch } from '@dish/graph'
+import { graphql, query, useRefetch } from '@dish/graph'
 import { uniqBy } from 'lodash'
 import React, { memo } from 'react'
 import { ScrollView } from 'react-native'
-import {
-  Divider,
-  HStack,
-  Spacer,
-  Text,
-  TextProps,
-  useForceUpdate,
-  useLazyEffect,
-} from 'snackui'
+import { Divider, HStack, Text, TextProps, useLazyEffect } from 'snackui'
 
-import { peachAvatar } from '../../../constants/avatar'
 import { lightGreen, lightRed, lightYellow } from '../../../constants/colors'
 import { isWeb } from '../../../constants/constants'
 import { CommentBubble } from '../../views/CommentBubble'
@@ -119,7 +109,7 @@ export const RestaurantReview = memo(
             review.vote ? <SentimentText sentiment={review.vote} /> : null
           }
           bubbleHeight={height}
-          avatar={review.user.avatar ?? peachAvatar}
+          avatar={review.user.avatar ?? ''}
           height={height}
           ellipseContentAbove={200}
           text={review.text ?? ''}

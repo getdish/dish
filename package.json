@@ -22,6 +22,7 @@
     "app": "yarn workspace @dish/dish-app start",
     "web": "yarn workspace @dish/dish-app web",
     "web:prod": "yarn workspace @dish/dish-app web:prod",
+    "web:prod:optimize": "yarn workspace @dish/dish-app web:prod:optimize",
     "web:build": "yarn workspace @dish/dish-app web:build",
     "ios": "yarn workspace @dish/dish-app ios",
     "ios:install": "yarn workspace @dish/dish-app ios:install",

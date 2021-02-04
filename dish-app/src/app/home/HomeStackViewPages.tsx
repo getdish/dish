@@ -15,6 +15,9 @@ import { HomeSuspense } from './HomeSuspense'
 
 export const HomeStackViewPages = (props: HomeStackViewProps) => {
   const { item } = props
+
+  console.log('SearchPage', SearchPage)
+
   return (
     <HomeSuspense>
       {isHomeState(item) && <HomePage {...props} />}

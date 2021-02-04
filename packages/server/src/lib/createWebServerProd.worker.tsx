@@ -124,6 +124,8 @@ async function createWebServerProd(app: any, config: ServerConfigNormal) {
         const appHtml = await renderToStringAsync(jsx)
         await client.scheduler.resolving?.promise
 
+        console.log('we need', extractor.getScriptTags())
+
         // const appHtml = ReactDOMServer.renderToString(jsx)
 
         // need to fool helmet back into thinking were in the node

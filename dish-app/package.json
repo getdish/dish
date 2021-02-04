@@ -97,6 +97,7 @@
     "web:https": "sudo dish start --https --host d1sh.com --port 443",
     "web:debug": "node --inspect ../node_modules/.bin/dish start",
     "web:prod": "LOG_LEVEL=1 DEBUG_PATHS=1 VERBOSE=1 yarn web --prod --no-optimize",
+    "web:prod:optimize": "LOG_LEVEL=1 DEBUG_PATHS=1 VERBOSE=1 yarn web --prod",
     "web:serve": "dish serve",
     "web:build": "dish build",
     "web:build:analyze": "ANALYZE_BUNDLE=1 yarn web:build",

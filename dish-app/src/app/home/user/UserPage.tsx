@@ -191,13 +191,12 @@ const UserHeader = memo(
             <VStack maxWidth="100%" width="100%">
               <VStack flex={1} padding={20} paddingVertical={25}>
                 <HStack alignItems="center" flex={1} position="relative">
-                  <VStack marginTop={-10} marginBottom={5}>
+                  <VStack marginTop={-10} marginBottom={5} marginRight={10}>
                     <UserAvatar
                       avatar={user.avatar ?? ''}
                       charIndex={user.charIndex ?? 0}
                     />
                   </VStack>
-                  <Spacer size={20} />
                   <VStack flex={1}>
                     <Text fontSize={28} fontWeight="bold" paddingRight={30}>
                       {user.username ?? 'no-name'}
