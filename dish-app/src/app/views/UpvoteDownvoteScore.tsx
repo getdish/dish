@@ -1,8 +1,10 @@
+import { supportsTouchWeb } from '@dish/helpers/src'
 import { ChevronDown, ChevronUp } from '@dish/react-feather'
 import React, { memo } from 'react'
 import { AbsoluteVStack, StackProps, Text, Tooltip, VStack } from 'snackui'
 
 import { green, orange, red } from '../../constants/colors'
+import { isWeb } from '../../constants/constants'
 import CircularProgress from './CircularProgress'
 import { VoteButton } from './VoteButton'
 
@@ -88,7 +90,11 @@ export const UpvoteDownvoteScore = memo(
         pointerEvents="auto"
         alignItems="center"
         justifyContent="center"
-        className={showVoteOnHover ? ' show-vote-on-hover' : ''}
+        className={
+          isWeb && !supportsTouchWeb && showVoteOnHover
+            ? ' show-vote-on-hover'
+            : ''
+        }
         width={sizePx}
         height={sizePx}
         backgroundColor="#fff"

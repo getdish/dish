@@ -196,13 +196,10 @@ const RestaurantListItemContent = memo(
     const media = useMedia()
     const [restaurant] = queryRestaurant(restaurantSlug)
 
-    restaurant.location
-
     useEffect(() => {
       if (!!restaurant.name && props.onFinishRender) {
         return series([() => fullyIdle({ min: 50 }), props.onFinishRender!])
       }
-      return undefined
     }, [restaurant.name])
 
     const restaurantName = (restaurant.name ?? '').slice(0, 300)

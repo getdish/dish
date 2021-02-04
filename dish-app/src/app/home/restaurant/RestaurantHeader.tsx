@@ -222,38 +222,32 @@ const RestaurantHeaderContent = memo(
                                 />
                               }
                               children={`${open_text}${
-                                next_time ? `(${next_time})` : ''
+                                next_time ? ` (${next_time})` : ''
                               }`}
                             />
                           </VStack>
                           <Spacer size="sm" />
-                          <VStack marginBottom={10}>
-                            <RestaurantAddressLinksRow
-                              curLocInfo={state?.curLocInfo ?? null}
-                              showMenu
-                              size="lg"
-                              restaurantSlug={restaurantSlug}
-                            />
-                          </VStack>
-                          <Spacer size="xs" />
-                          <VStack marginBottom={10}>
-                            <RestaurantDeliveryButtons
-                              showLabels
-                              restaurantSlug={restaurantSlug}
-                            />
-                          </VStack>
-                          <Spacer size="xs" />
                           <HStack>
+                            <VStack marginBottom={10}>
+                              <RestaurantAddressLinksRow
+                                curLocInfo={state?.curLocInfo ?? null}
+                                showMenu
+                                size="lg"
+                                restaurantSlug={restaurantSlug}
+                              />
+                            </VStack>
+                            <Spacer size="xs" />
+                            <VStack marginBottom={10}>
+                              <RestaurantDeliveryButtons
+                                showLabels
+                                restaurantSlug={restaurantSlug}
+                              />
+                            </VStack>
+                            <Spacer size="xs" />
                             <Suspense fallback={null}>
                               <RestaurantAddCommentButton
                                 hideLabel
                                 restaurantId={restaurantId}
-                                restaurantSlug={restaurantSlug}
-                              />
-                            </Suspense>
-                            <Spacer size="xs" />
-                            <Suspense fallback={null}>
-                              <RestaurantAddToListButton
                                 restaurantSlug={restaurantSlug}
                               />
                             </Suspense>
@@ -272,16 +266,17 @@ const RestaurantHeaderContent = memo(
                           maxWidth={contentLeftWidth}
                         >
                           <HStack
-                            maxHeight={80}
+                            maxHeight={70}
                             overflow="hidden"
                             flexWrap="wrap"
                           >
                             <RestaurantTagsRow
+                              size="sm"
                               restaurantSlug={restaurantSlug}
                               restaurantId={restaurantId}
                               spacing={10}
                               grid
-                              max={10}
+                              max={8}
                             />
                           </HStack>
 

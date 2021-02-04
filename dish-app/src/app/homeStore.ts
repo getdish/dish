@@ -5,6 +5,7 @@ import { HistoryItem } from '@dish/router'
 import { Store, createStore, useStoreInstance } from '@dish/use-store'
 import _, { clamp, findLast } from 'lodash'
 import { Keyboard } from 'react-native'
+import { getMedia } from 'snackui'
 
 import { initialHomeState } from '../constants/initialHomeState'
 import { tagLenses } from '../constants/localTags'
@@ -31,6 +32,7 @@ import {
 } from '../types/homeTypes'
 import { NavigableTag } from '../types/tagTypes'
 import { appMapStore } from './AppMapStore'
+import { drawerStore } from './drawerStore'
 
 class HomeStore extends Store {
   showUserMenu = false
@@ -432,6 +434,14 @@ class HomeStore extends Store {
     this.stateIds = this.stateIds.slice(0, this.stateIndex + 1)
     const next = this.getHomeState(item)
     if (next) {
+      // show map on some routes
+      if (next.type === 'search' || next.type === 'restaurant') {
+        if (drawerStore.snapIndex === 0 && getMedia().sm) {
+          console.log('close drawer from fully open')
+          drawerStore.setSnapIndex(1)
+        }
+      }
+
       this.updateHomeState('handleRouteChange', next)
     }
   }
@@ -563,8 +573,10 @@ class HomeStore extends Store {
     }
 
     const didNav = await syncStateToRoute(nextState)
+
     if (curNav !== this.lastNav) return false
     this.updateActiveTags(nextState)
+
     return didNav
   }
 

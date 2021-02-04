@@ -22,6 +22,7 @@ import { ContentScrollView } from '../../views/ContentScrollView'
 import { PageTitleTag } from '../../views/PageTitleTag'
 import { StackDrawer } from '../../views/StackDrawer'
 import { HomeStackViewProps } from '../HomeStackViewProps'
+import { RestaurantAddToListButton } from './RestaurantAddToListButton'
 import { RestaurantDishPhotos } from './RestaurantDishPhotos'
 import { RestaurantHeader } from './RestaurantHeader'
 import { RestaurantMenu } from './RestaurantMenu'
@@ -33,7 +34,16 @@ type Props = HomeStackViewProps<HomeStateItemRestaurant>
 
 export default function RestaurantPageContainer(props: Props) {
   return (
-    <StackDrawer closable>
+    <StackDrawer
+      closable
+      topLeftControls={
+        <Suspense fallback={null}>
+          <RestaurantAddToListButton
+            restaurantSlug={props.item.restaurantSlug}
+          />
+        </Suspense>
+      }
+    >
       <RestaurantPage {...props} />
     </StackDrawer>
   )

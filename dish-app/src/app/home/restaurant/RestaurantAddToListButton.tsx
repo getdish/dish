@@ -1,5 +1,6 @@
 import { graphql, mutate, order_by, query, useRefetch } from '@dish/graph'
 import { Plus, X } from '@dish/react-feather'
+import { rest } from 'lodash'
 import React, { useState } from 'react'
 import { ScrollView } from 'react-native'
 import {
@@ -20,7 +21,7 @@ import { useColorsFor } from '../../../helpers/useColorsFor'
 import { queryRestaurant } from '../../../queries/queryRestaurant'
 import { queryUser } from '../../../queries/queryUser'
 import { userStore } from '../../userStore'
-import { CloseButton } from '../../views/CloseButton'
+import { CloseButton, SmallCircleButton } from '../../views/CloseButton'
 import { LinkButton } from '../../views/LinkButton'
 import { PaneControlButtons } from '../../views/PaneControlButtons'
 import { SlantedTitle } from '../../views/SlantedTitle'
@@ -47,8 +48,7 @@ export const RestaurantAddToListButton = ({
           onDismiss={() => setShowModal(false)}
         />
       )}
-      <SmallButton
-        theme={theme}
+      <SmallCircleButton
         tooltip="Add to list"
         onPress={() => {
           if (!userStore.promptLogin()) {
@@ -58,13 +58,15 @@ export const RestaurantAddToListButton = ({
         pressStyle={{
           opacity: 0.6,
         }}
-        icon={
-          <Plus color={isWeb ? 'var(--color)' : '#000'} size={size ?? 16} />
-        }
+        paddingHorizontal={14}
         {...props}
       >
-        {noLabel ? null : 'List'}
-      </SmallButton>
+        <Plus color="#fff" size={size ?? 16} />
+        <Spacer size="xs" />
+        <Text color="#fff" fontSize={13} fontWeight="500">
+          {noLabel ? null : 'List'}
+        </Text>
+      </SmallCircleButton>
     </>
   )
 }
@@ -92,6 +94,9 @@ const RestaurantAddToListModal = graphql(
         },
       },
     })
+
+    const refresh = () =>
+      Promise.all([refetch(restaurant), refetch(listsWithRestaurant)])
 
     return (
       <Modal
@@ -149,7 +154,7 @@ const RestaurantAddToListModal = graphql(
                           },
                         })?.__typename
                       })
-                      await refetch(listsWithRestaurant)
+                      await refresh()
                       Toast.success(`Added!`)
                     }}
                   />
@@ -165,7 +170,7 @@ const RestaurantAddToListModal = graphql(
                           restaurant_id: restaurantId,
                         })?.__typename
                       })
-                      await refetch(listsWithRestaurant)
+                      await refresh()
                       Toast.success(`Removed`)
                     }}
                   />

@@ -1,5 +1,6 @@
 // // debug
 import { tag } from '@dish/graph/src'
+import { supportsTouchWeb } from '@dish/helpers/src'
 import { Search } from '@dish/react-feather'
 import { capitalize } from 'lodash'
 import React, { Suspense, memo, useState } from 'react'
@@ -133,7 +134,7 @@ const DishViewContent = (props: DishViewProps) => {
             <DishUpvoteDownvote
               size="sm"
               name={name}
-              subtle
+              subtle={isWeb && !supportsTouchWeb}
               slug={slug}
               score={score}
               {...(restaurantId &&
