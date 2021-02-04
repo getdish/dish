@@ -6,6 +6,7 @@ import { HStack, Text, VStack } from 'snackui'
 import { getActiveTags } from '../../../helpers/getActiveTags'
 import { HomeStateItemSearch } from '../../../types/homeTypes'
 import { DishViewButton } from '../../views/dish/DishViewButton'
+import { TagButton } from '../../views/TagButton'
 
 export const SearchPageResultsInfoBox = memo(
   ({ state }: { state: HomeStateItemSearch }) => {
@@ -28,7 +29,7 @@ export const SearchPageResultsInfoBox = memo(
 const HomeSearchInfoBoxCountry = memo(
   graphql(({ state }: { state: HomeStateItemSearch }) => {
     const tags = getActiveTags(state)
-    const countryTag = tags.find((x) => x.type === 'country')
+    const countryTag = tags.find((x) => x.type === 'country')!
     const topCountryDishes = query.tag({
       order_by: [
         {
@@ -44,7 +45,7 @@ const HomeSearchInfoBoxCountry = memo(
         },
         parent: {
           name: {
-            _ilike: countryTag?.name,
+            _eq: countryTag.name,
           },
         },
       },
@@ -78,7 +79,7 @@ const HomeSearchInfoBoxCountry = memo(
             </Text>
             {topCountryDishes.map((tag) => {
               return (
-                <DishViewButton
+                <TagButton
                   key={tag.id}
                   name={tag.name}
                   icon={tag.icon ?? ''}

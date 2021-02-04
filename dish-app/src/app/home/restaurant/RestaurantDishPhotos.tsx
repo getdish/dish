@@ -73,7 +73,7 @@ export const RestaurantDishPhotos = memo(
                 />
               </SectionTab>
               {dishes.map((dish, index) => {
-                const isSelected = selected === getTagSlug(dish)
+                const isSelected = selected === getTagSlug(dish.slug)
                 return (
                   <React.Fragment key={dish.name}>
                     <SectionTab isSelected={isSelected}>
@@ -87,7 +87,7 @@ export const RestaurantDishPhotos = memo(
                         selected={isSelected}
                         {...(!!selectable && {
                           onPress() {
-                            onSelect?.(getTagSlug(dish))
+                            onSelect?.(getTagSlug(dish.slug))
                           },
                         })}
                       />

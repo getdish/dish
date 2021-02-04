@@ -227,7 +227,7 @@ export const TagButton = memo((props: TagButtonProps) => {
       </Text>
       {!!votable && !!props.restaurantSlug && (
         <TagButtonVote
-          key={getTagSlug(props) + props.restaurantSlug}
+          key={getTagSlug(props.slug) + props.restaurantSlug}
           {...props}
           color={fg}
           scale={scale}
@@ -261,7 +261,6 @@ export const TagButton = memo((props: TagButtonProps) => {
 
   return (
     <Link
-      disallowDisableWhenActive
       {...(onPress && {
         onPress,
       })}
@@ -280,7 +279,7 @@ const TagButtonVote = (props: TagButtonProps & { scale: number }) => {
   const { scale } = props
   const [hovered, setHovered] = useState(false)
   const { vote, setVote } = useUserTagVotes(props.restaurantSlug ?? '', {
-    [getTagSlug(props)]: true,
+    [getTagSlug(props.slug)]: true,
   })
   const Icon = vote ? ThumbsDown : ThumbsUp
   const color = props.color ?? 'rgba(0,0,0,0.7)'

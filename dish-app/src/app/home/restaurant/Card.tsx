@@ -12,6 +12,7 @@ import {
 } from 'snackui'
 
 import {
+  ColorShades,
   getColorsForColor,
   getColorsForName,
 } from '../../../helpers/getColorsForName'
@@ -23,6 +24,22 @@ import {
   cardFrameWidth,
   cardFrameWidthSm,
 } from '../../views/CardFrame'
+
+export type CardProps = {
+  below?: ((colors: ColorShades) => any) | any
+  outside?: any
+  photo?: string | JSX.Element | null
+  title?: string | null
+  subTitle?: string | null
+  hideInfo?: boolean
+  aspectFixed?: boolean
+  hoverable?: boolean
+  size?: 'sm' | 'md'
+  backgroundColor?: string | null
+  isBehind?: boolean
+  dimImage?: boolean
+  padTitleSide?: boolean
+}
 
 export function Card({
   below,
@@ -38,24 +55,11 @@ export function Card({
   isBehind,
   dimImage,
   size,
-}: {
-  below?: string | null
-  outside?: any
-  photo?: string | JSX.Element | null
-  title?: string | null
-  subTitle?: string | null
-  hideInfo?: boolean
-  aspectFixed?: boolean
-  hoverable?: boolean
-  size?: 'sm' | 'md'
-  backgroundColor?: string | null
-  isBehind?: boolean
-  dimImage?: boolean
-  padTitleSide?: boolean
-}) {
-  const { color, darkColor, lightColor } = backgroundColor
+}: CardProps) {
+  const colors = backgroundColor
     ? getColorsForColor(backgroundColor)
     : getColorsForName(title ?? '')
+  const { color, darkColor } = colors
   const isSm = size === 'sm'
   const sizes = {
     width: isSm ? cardFrameWidthSm : cardFrameWidth,
@@ -188,7 +192,7 @@ export function Card({
             </VStack>
           </HStack>
           <VStack flex={1} />
-          {below}
+          {typeof below === 'function' ? below(colors) : below}
         </VStack>
       </AbsoluteVStack>
     </CardFrame>

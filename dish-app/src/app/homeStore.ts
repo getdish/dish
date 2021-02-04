@@ -54,7 +54,9 @@ class HomeStore extends Store {
   }
 
   get lastHomeOrSearchState() {
-    return findLast(this.states, (x) => isSearchState(x) || isHomeState(x))
+    return findLast(this.states, (x) => isSearchState(x) || isHomeState(x)) as
+      | HomeStateItemSearch
+      | HomeStateItemHome
   }
 
   getLastStateByType<Type extends HomeStateItem['type']>(type: Type) {
@@ -440,7 +442,9 @@ class HomeStore extends Store {
       return
     }
     const tags = this.searchBarTags
-    const tagIndex = tags.findIndex((x) => getTagSlug(x) === getTagSlug(val))
+    const tagIndex = tags.findIndex(
+      (x) => getTagSlug(x.slug) === getTagSlug(val.slug)
+    )
     console.warn('todo comented out')
     this.searchBarTagIndex = tagIndex
     // this.autocompleteIndex = -tags.length + tagIndex
@@ -490,7 +494,7 @@ class HomeStore extends Store {
         ...state,
         activeTags: {
           ...state.activeTags,
-          [getTagSlug(tag)]: false,
+          [getTagSlug(tag.slug)]: false,
         },
       }
       await this.navigate({

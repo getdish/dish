@@ -99,7 +99,7 @@ const useSearchFilterButtons = ({ activeTags }: FilterBarProps) => {
     return (
       <HStack key={index} borderRadius={100}>
         {group.map((tag, groupIndex) => {
-          const isActive = activeTags[getTagSlug(tag)] ?? false
+          const isActive = activeTags[getTagSlug(tag.slug)] ?? false
           return (
             <FilterButton
               key={`tag-${tag.id}`}

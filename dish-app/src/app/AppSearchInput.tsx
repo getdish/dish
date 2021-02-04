@@ -17,6 +17,7 @@ import {
   Spacer,
   VStack,
   getMedia,
+  useDebounce,
   useGet,
   useMedia,
   useOnMount,
@@ -24,9 +25,10 @@ import {
 } from 'snackui'
 
 import { isWeb, searchBarHeight } from '../constants/constants'
+import { combineFns } from '../helpers/combineFns'
 import { getTagSlug } from '../helpers/getTagSlug'
 import { isWebIOS } from '../helpers/isIOS'
-import { tagsToNavigableTags } from '../helpers/tagHelpers'
+import { filterToNavigable } from '../helpers/tagHelpers'
 import { router, useIsRouteActive } from '../router'
 import { AutocompleteStore, autocompletesStore } from './AppAutocomplete'
 import { AppAutocompleteHoverableInput } from './AppAutocompleteHoverableInput'
@@ -107,10 +109,13 @@ export const AppSearchInput = memo(() => {
   const home = useHomeStore()
   const { color, backgroundRgb } = useSearchBarTheme()
   const media = useMedia()
-  const [search, setSearch] = useState('')
+  const [search, setSearchFast] = useState('')
   const getSearch = useGet(search)
   const isSearchingCuisine = !!home.searchBarTags.length
   const isEditingList = false // useRouterSelector((x) => x.curPage.name === 'list' && x.curPage.params.state === 'edit')
+
+  const setSearchSlow = useDebounce(homeStore.setSearchQuery, 300)
+  const setSearch = combineFns(setSearchFast, setSearchSlow)
 
   // focus on visible
   useAutocompleteInputFocus(inputStore)
@@ -236,7 +241,6 @@ export const AppSearchInput = memo(() => {
                       autocompletesStore.setTarget('search')
                     }
                     setSearch(text)
-                    home.setSearchQuery(text)
                   }}
                   placeholder={
                     isEditingList
@@ -449,7 +453,7 @@ const handleKeyPress = async (e: any, inputStore: InputStore) => {
       if (homeStore.searchbarFocusedTag) {
         // will remove it if active
         homeStore.navigate({
-          tags: tagsToNavigableTags([homeStore.searchbarFocusedTag]),
+          tags: filterToNavigable([homeStore.searchbarFocusedTag]),
         })
         next()
         return
@@ -524,7 +528,7 @@ const AppSearchInputTags = memo(
               const isActive = focusedTag === tag
               return (
                 <TagButton
-                  key={getTagSlug(tag)}
+                  key={getTagSlug(tag.slug)}
                   size="lg"
                   subtleIcon
                   backgroundColor="rgba(150,150,150,0.65)"

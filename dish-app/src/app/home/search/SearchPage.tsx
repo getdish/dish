@@ -1,7 +1,6 @@
 import { series, sleep } from '@dish/async'
 import {
   RestaurantSearchItem,
-  findOne,
   graphql,
   listFindOne,
   listInsert,
@@ -9,8 +8,7 @@ import {
   slugify,
 } from '@dish/graph'
 import { query } from '@dish/graph/src'
-import { isPresent } from '@dish/helpers/src'
-import { assertPresent } from '@dish/helpers/src'
+import { assertPresent, isPresent } from '@dish/helpers/src'
 import { ArrowUp, Edit2 } from '@dish/react-feather'
 import { HistoryItem } from '@dish/router'
 import { reaction, reaction2 } from '@dish/use-store'
@@ -69,24 +67,21 @@ import { userStore } from '../../userStore'
 import { SmallCircleButton } from '../../views/CloseButton'
 import { ContentScrollView } from '../../views/ContentScrollView'
 import {
-  ContentScrollViewHorizontal,
   ContentScrollViewHorizontalFitted,
   useContentScrollHorizontalFitter,
 } from '../../views/ContentScrollViewHorizontal'
 import { Link } from '../../views/Link'
-import { ListCard, ListCardHorizontal } from '../../views/list/ListCard'
+import { ListCardHorizontal } from '../../views/list/ListCard'
 import { PageTitleTag } from '../../views/PageTitleTag'
-import { SearchPageDeliveryFilterButtons } from '../../views/SearchPageDeliveryFilterButtons'
 import { SlantedTitle } from '../../views/SlantedTitle'
 import { StackDrawer } from '../../views/StackDrawer'
 import { HomeStackViewProps } from '../HomeStackViewProps'
 import { HomeSuspense } from '../HomeSuspense'
-import { listColors, randomListColor } from '../list/listColors'
+import { randomListColor } from '../list/listColors'
 import {
   ITEM_HEIGHT,
   RestaurantListItem,
 } from '../restaurant/RestaurantListItem'
-import { SkewedCard, SkewedCardCarousel } from '../SkewedCard'
 import { PageTitle } from './PageTitle'
 import { SearchPageNavBar } from './SearchPageNavBar'
 import { SearchPageResultsInfoBox } from './SearchPageResultsInfoBox'
@@ -268,7 +263,7 @@ const SearchHeader = () => {
               bottom={0}
               alignItems="center"
               justifyContent="center"
-              left={-65}
+              left={-55}
             >
               <SlantedTitle size="xs">Lists</SlantedTitle>
               <AbsoluteVStack right={-12} transform={[{ rotate: '180deg' }]}>
@@ -359,21 +354,30 @@ const SearchPageContent = memo(function SearchPageContent(
     }),
   })
 
+  const { item } = props
+
+  //
+  // SEARCH
+  //
+  const sk = JSON.stringify([item.activeTags, item.searchQuery, center])
   useEffect(() => {
     if (!props.isActive) return
+    // searchStore.resetResults()
     // reset on all page loads
-    searchStore.resetResults()
+    console.warn('got>>', props.item, center)
     searchPageStore.runSearch({})
+  }, [sk])
 
-    // OK so story time... in Map.tsx the fitBounds that runs
-    // in some cases it comes from `center/span` above which are
-    // estimates of the final bounds basically, we can't get that
-    // from mapbox ahead of time (a `map.getFinalBoundsFor(bounds)`
-    // would be nice) but instead of doing complicated things in Map
-    // lets just say this: once center changes, the *next* movement
-    // from map we can safely ignore! because it will almost always change
-    // worst case is not bad: we miss a movement, but they can just touch
-    // map again and it will show "re-search in area button"
+  // ... in Map.tsx the fitBounds that runs
+  // in some cases comes from `center/span` above which are
+  // estimates of the final bounds basically, we can't get that
+  // from mapbox (no `map.getFinalBoundsFor(bounds)`)
+  // instead of doing complicated things in Map, once center changes,
+  // the *next* movement
+  // from map we can safely ignore! because it will almost always change
+  // worst case is not bad: we miss a movement, but they can just touch
+  // map again and it will show "re-search in area button"
+  useEffect(() => {
     let runs = 0
     const dispose = reaction(
       appMapStore,
@@ -386,9 +390,8 @@ const SearchPageContent = memo(function SearchPageContent(
         }
       }
     )
-
     return dispose
-  }, [props.item, center])
+  }, [props.item.id, center])
 
   // sync mapStore.selected to activeIndex in results
   if (isWeb) {
@@ -491,6 +494,15 @@ const SearchNavBarContainer = memo(({ isActive }: { isActive: boolean }) => {
 // prevent warning
 delete RecyclerListView.propTypes['externalScrollView']
 
+const loadingResults: RestaurantSearchItem[] = [
+  {
+    isPlaceholder: true,
+    meta: null as any,
+    id: '',
+    slug: '',
+  },
+]
+
 const SearchResultsContent = (props: Props) => {
   const drawerWidth = useAppDrawerWidth()
   const searchStore = useSearchPageStore()
@@ -499,14 +511,7 @@ const SearchResultsContent = (props: Props) => {
   let results = searchStore.results
 
   if (searchStore.status === 'loading') {
-    results = [
-      {
-        isPlaceholder: true,
-        meta: null as any,
-        id: '',
-        slug: '',
-      },
-    ]
+    results = loadingResults
   }
 
   const dataProvider = useMemo(() => {
@@ -570,6 +575,7 @@ const SearchResultsContent = (props: Props) => {
     results.forEach((v, index) => {
       searchResultsPositions[v.id] = index + 1
     })
+    console.warn('results changed', results)
     searchResultsStore.setRestaurantPositions(searchResultsPositions)
   }, [results])
 

@@ -44,7 +44,7 @@ import {
   searchLocations,
 } from '../helpers/searchLocations'
 import { searchRestaurants } from '../helpers/searchRestaurants'
-import { tagsToNavigableTags } from '../helpers/tagHelpers'
+import { filterToNavigable } from '../helpers/tagHelpers'
 import { useRouterCurPage } from '../router'
 import { LngLat } from '../types/homeTypes'
 import { appMapStore } from './AppMapStore'
@@ -212,7 +212,7 @@ const AutocompleteSearch = memo(() => {
     }
     let results: AutocompleteItemFull[] = []
     const postion = appMapStore.position
-    const tags = tagsToNavigableTags(activeTags)
+    const tags = filterToNavigable(activeTags)
     const countryTag =
       tags.length === 2 ? tags.find((x) => x.type === 'country') : null
     const cuisineName = countryTag?.name

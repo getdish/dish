@@ -13,8 +13,8 @@ export const BottomSheetContainer = (props: { children: any }) => {
     <VStack
       width="100%"
       height="100%"
-      shadowColor="rgba(0,0,0,0.25)"
-      shadowRadius={34}
+      shadowColor="rgba(0,0,0,0.18)"
+      shadowRadius={28}
       shadowOffset={{ width: 10, height: 0 }}
       borderTopRightRadius={drawerBorderRadius}
       borderTopLeftRadius={drawerBorderRadius}
