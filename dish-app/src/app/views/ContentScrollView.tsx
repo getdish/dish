@@ -24,6 +24,10 @@ export class ScrollStore extends Store<{ id: string }> {
 
   setLock(val: ScrollLock) {
     this.lock = val
+
+    if (val === 'horizontal') {
+      drawerStore.setIsDragging(false)
+    }
   }
 
   setIsAtTop(val: boolean) {

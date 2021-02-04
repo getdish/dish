@@ -4,6 +4,7 @@ import { ScrollView } from 'react-native'
 import { AbsoluteVStack, HStack, VStack, useTheme } from 'snackui'
 
 import { getActiveTags } from '../../../helpers/getActiveTags'
+import { ContentScrollViewHorizontal } from '../../views/ContentScrollViewHorizontal'
 import { SlantedTitle } from '../../views/SlantedTitle'
 import { TagButton, getTagButtonProps } from '../../views/TagButton'
 import { Arrow } from './Arrow'
@@ -34,7 +35,7 @@ export const SearchPageScoring = memo(() => {
   )
 
   return (
-    <HStack alignItems="center">
+    <HStack alignItems="center" paddingBottom={5}>
       <HStack flex={1} position="relative">
         <HStack position="absolute" fullscreen>
           <VStack
@@ -63,11 +64,7 @@ export const SearchPageScoring = memo(() => {
           />
         </HStack>
       </HStack>
-      <ScrollView
-        horizontal
-        showsHorizontalScrollIndicator={false}
-        style={{ maxWidth: '100%', alignSelf: 'center' }}
-      >
+      <ContentScrollViewHorizontal>
         <HStack
           alignItems="center"
           borderWidth={1}
@@ -96,7 +93,7 @@ export const SearchPageScoring = memo(() => {
             })}
           </HStack>
         </HStack>
-      </ScrollView>
+      </ContentScrollViewHorizontal>
 
       <HStack flex={1} />
     </HStack>

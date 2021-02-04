@@ -5,6 +5,7 @@ import { HStack, Text, VStack, useMedia } from 'snackui'
 
 import { getActiveTags } from '../../../helpers/getActiveTags'
 import { HomeStateItemSearch } from '../../../types/homeTypes'
+import { ContentScrollViewHorizontal } from '../../views/ContentScrollViewHorizontal'
 import { TagButton } from '../../views/TagButton'
 
 export const SearchPageResultsInfoBox = memo(
@@ -61,13 +62,7 @@ const HomeSearchInfoBoxCountry = memo(
         marginHorizontal={10}
         marginBottom={10}
       >
-        <ScrollView
-          style={{
-            borderRadius: 100,
-          }}
-          horizontal
-          showsHorizontalScrollIndicator={false}
-        >
+        <ContentScrollViewHorizontal>
           <HStack
             paddingHorizontal={20}
             paddingVertical={5}
@@ -94,7 +89,7 @@ const HomeSearchInfoBoxCountry = memo(
               )
             })}
           </HStack>
-        </ScrollView>
+        </ContentScrollViewHorizontal>
       </HStack>
     )
   })

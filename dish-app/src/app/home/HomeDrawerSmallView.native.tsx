@@ -1,7 +1,14 @@
-import { Store, createStore, useStore, useStoreInstance } from '@dish/use-store'
-import React, { memo, useMemo } from 'react'
+import {
+  Store,
+  createStore,
+  getStore,
+  reaction,
+  useStore,
+  useStoreInstance,
+} from '@dish/use-store'
+import React, { memo, useEffect, useMemo } from 'react'
 import { Animated, PanResponder, StyleSheet, View } from 'react-native'
-import { AbsoluteVStack, VStack, useConstant } from 'snackui'
+import { AbsoluteVStack, VStack, useConstant, useGet } from 'snackui'
 
 import {
   pageWidthMax,
@@ -16,6 +23,7 @@ import { drawerStore as ds } from '../drawerStore'
 import { isTouchingSearchBar } from '../SearchInputNativeDragFix'
 import { BottomSheetContainer } from '../views/BottomSheetContainer'
 import {
+  ScrollStore,
   isScrollAtTop,
   usePreventVerticalScroll,
 } from '../views/ContentScrollView'
@@ -58,6 +66,10 @@ export const HomeDrawerSmallView = memo((props: { children: any }) => {
         }
         if (drawerStore.snapIndex === 0) {
           return dy > 6
+        }
+        const scrollStore = getStore(ScrollStore, { id })
+        if (scrollStore.lock === 'horizontal') {
+          return false
         }
         const threshold = 6
         return Math.abs(dy) > threshold
