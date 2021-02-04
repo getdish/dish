@@ -26,11 +26,16 @@ export function addTagToCache(tag: FullTag | NavigableTag) {
     return false
   }
   tag.name = tag.name ?? guessTagName(slug)
-  allTags[slug] = {
-    ...allTags[slug],
-    ...tag,
+  const exists = allTags[slug]
+  const ogType = exists?.type
+  allTags[slug] = allTags[slug] || {}
+  Object.assign(allTags[slug], tag)
+  if (ogType) {
+    allTags[slug].type = ogType // dont ever change type
   }
-  allTagsNameToSlug[tagNameKey(tag.name)] = slug
+  if (!exists) {
+    allTagsNameToSlug[tagNameKey(tag.name)] = slug
+  }
   return true
 }
 

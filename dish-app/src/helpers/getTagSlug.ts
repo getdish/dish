@@ -1,7 +1,7 @@
-export const getTagSlug = (tag: { slug?: string | null }) => {
-  if (!tag || tag.slug === null) {
-    console.warn('no tag, or tag slug', tag)
+export const getTagSlug = (slug?: string | null) => {
+  if (!slug) {
+    console.warn('no tag, or tag slug', slug)
     return ''
   }
-  return tag.slug ?? ''
+  return slug
 }

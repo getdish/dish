@@ -19,14 +19,17 @@ import {
   AbsoluteVStack,
   HStack,
   LoadingItems,
+  ProgressCircle,
   Spacer,
   Text,
+  Theme,
   VStack,
   useDebounce,
   useTheme,
 } from 'snackui'
 
 import { peachAvatar } from '../../constants/avatar'
+import { allColorsPastel } from '../../constants/colors'
 import { getColorsForName } from '../../helpers/getColorsForName'
 import { DishTagItem } from '../../helpers/getRestaurantDishes'
 import { getRestaurantIdentifiers } from '../../helpers/getRestaurantIdentifiers'
@@ -41,7 +44,7 @@ import { HomeStateItemHome, RegionNormalized } from '../../types/homeTypes'
 import { useSetAppMap } from '../AppMapStore'
 import { getMapZoom } from '../getMap'
 import { homeStore } from '../homeStore'
-import { CardFrame } from '../views/CardFrame'
+import { CardFrame, cardFrameBorderRadius } from '../views/CardFrame'
 import { SmallCircleButton } from '../views/CloseButton'
 import { CommentBubble } from '../views/CommentBubble'
 import { ContentScrollViewHorizontal } from '../views/ContentScrollViewHorizontal'
@@ -493,14 +496,18 @@ const DishFeedCard = graphql(function DishFeedCard(props: FeedItemDish) {
   )
 })
 
-const DishRestaurantsFeedCard = (props: FeedItemDishRestaurants) => {
+const DishRestaurantsFeedCard = ({
+  dish,
+  restaurants,
+}: FeedItemDishRestaurants) => {
+  const theme = useTheme()
   return (
     <>
       <FeedSlantedTitle>
-        {props.dish.icon} {props.dish.name}
+        {dish.icon} {dish.name}
       </FeedSlantedTitle>
       <SkewedCardCarousel>
-        {props.restaurants.slice(0, 5).map((r, i) => {
+        {restaurants.slice(0, 5).map((r, i) => {
           if (!r.slug) {
             return null
           }
@@ -514,17 +521,64 @@ const DishRestaurantsFeedCard = (props: FeedItemDishRestaurants) => {
                 restaurantSlug={r.slug}
                 hoverable={false}
                 dimImage
-                below={
-                  <AbsoluteVStack alignSelf="center" bottom={20}>
-                    <DishView
-                      {...props.dish}
-                      hideVote
-                      restaurantId={r.id}
-                      restaurantSlug={r.slug}
-                      size={190}
-                    />
-                  </AbsoluteVStack>
-                }
+                below={(colors) => {
+                  return (
+                    <Theme
+                      name={
+                        theme.name === 'dark'
+                          ? 'darkTranslucent'
+                          : 'lightTranslucent'
+                      }
+                    >
+                      <AbsoluteVStack
+                        fullscreen
+                        top="auto"
+                        justifyContent="flex-end"
+                        borderBottomLeftRadius={cardFrameBorderRadius}
+                        borderBottomRightRadius={cardFrameBorderRadius}
+                        overflow="hidden"
+                      >
+                        {['Burrito', 'Taco', 'Service'].map((tag, i) => {
+                          const pct = (i + 20) * (i + 1)
+                          return (
+                            <HStack
+                              key={tag}
+                              width="100%"
+                              height={55}
+                              alignItems="center"
+                              position="relative"
+                            >
+                              <Text
+                                fontWeight="300"
+                                fontSize={26}
+                                textShadowColor="rgba(0,0,0,0.1)"
+                                textShadowOffset={{ height: 1, width: 0 }}
+                                padding={10}
+                                textAlign="right"
+                                flex={1}
+                                zIndex={2}
+                                color="#fff"
+                              >
+                                {tag}
+                              </Text>
+                              <AbsoluteVStack
+                                backgroundColor="#fff"
+                                height={4}
+                                bottom={0}
+                                left={0}
+                                width={`${pct}%`}
+                              />
+                              <AbsoluteVStack
+                                fullscreen
+                                backgroundColor="rgba(255,255,255,0.1)"
+                              />
+                            </HStack>
+                          )
+                        })}
+                      </AbsoluteVStack>
+                    </Theme>
+                  )
+                }}
               />
             </SkewedCard>
           )

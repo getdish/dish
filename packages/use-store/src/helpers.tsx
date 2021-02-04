@@ -44,6 +44,7 @@ export function get<A>(
 ): A extends new (props?: any) => infer B ? B : A {
   return _ as any
 }
+
 export function getKey(props: Object) {
   let s = ''
   const sorted = Object.keys(props).sort()
@@ -59,6 +60,7 @@ export function getKey(props: Object) {
 }
 
 type ResultBox<T> = { v: T }
+
 export default function useConstant<T>(fn: () => T): T {
   const ref = useRef<ResultBox<T>>()
   if (!ref.current) {

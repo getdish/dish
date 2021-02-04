@@ -10,6 +10,7 @@ import {
   HomeStateItemSearch,
   HomeStateTagNavigable,
 } from '../types/homeTypes'
+import { NavigableTag } from '../types/tagTypes'
 import { getActiveTags } from './getActiveTags'
 import { getTagSlug } from './getTagSlug'
 import { isHomeState, isSearchState } from './homeStateHelpers'
@@ -35,7 +36,6 @@ export const getNavigateItemForState = (
   const isChangingType = name !== curName
   const replace = !isChangingType
   const params = getParamsForState(state)
-  // @ts-expect-error
   return {
     name,
     params,
@@ -51,34 +51,41 @@ const getNameForState = (state: HomeStateTagNavigable) => {
   return 'homeRegion'
 }
 
-const getParamsForState = (state: HomeStateTagNavigable) => {
+// this function is written quite functionally
+// and called often, maybe worth profiling
+const getParamsForState = (
+  state: HomeStateTagNavigable
+): SearchRouteParams | any => {
   if (isHomeState(state) || isSearchState(state)) {
     const allActiveTags = getActiveTags(state)
-    // build our final path segment
-    const filterTags = allActiveTags.filter((x) => x.type === 'filter')
-    const otherTags = allActiveTags.filter(
-      (x) => x.type !== 'lense' && x.type !== 'filter'
-    )
-    let tags = `${filterTags.map((x) => x.slug).join(SPLIT_TAG)}`
-    if (otherTags.length) {
-      if (tags.length) {
-        tags += SPLIT_TAG
-      }
-      tags += `${otherTags.map((t) => t.slug).join(SPLIT_TAG)}`
+    let tags = ''
+    let lense = tagLenses[0].slug
+    const addTag = (slug: string) => {
+      if (tags.length) tags += SPLIT_TAG
+      tags += slug
     }
-    const lenseTag =
-      allActiveTags.find((x) => x.type === 'lense') ?? tagLenses[0]
-    const prev = findLast(
-      homeStore.states,
-      (x) => isHomeState(x) || isSearchState(x)
-    ) as HomeStateItemHome | HomeStateItemSearch
-    const params: SearchRouteParams = {
+    for (const tag of allActiveTags) {
+      if (!tag.slug) {
+        continue
+      }
+      switch (tag.type) {
+        case 'lense': // dont add to tags str its in a diff route segment
+          lense = tag.slug.replace('lenses__', '')
+          break
+        case 'country':
+          addTag(`in-${tag.slug}`)
+          break
+        default:
+          addTag(tag.slug)
+      }
+    }
+    const prev = homeStore.lastHomeOrSearchState
+    return {
       region: state.region ?? prev?.region ?? 'ca-san-francisco',
       tags: tags.length ? tags : '-',
       search: state.searchQuery,
-      lense: getTagSlug(lenseTag).replace('lenses__', ''),
+      lense,
     }
-    return params
   }
 
   // none other for now

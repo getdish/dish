@@ -17,10 +17,10 @@ export const SmallButton = ({
   tags,
   params,
   href,
+  theme: themeProp,
   ...rest
 }: SmallButtonProps) => {
   const theme = useTheme()
-  const hasTheme = !!rest.theme
 
   let contents = (
     <Button
@@ -35,7 +35,7 @@ export const SmallButton = ({
         minHeight: 42,
         minWidth: 48,
       })}
-      {...(!hasTheme && {
+      {...(!themeProp && {
         backgroundColor: 'transparent',
         hoverStyle: {
           backgroundColor: theme.backgroundColorSecondary,

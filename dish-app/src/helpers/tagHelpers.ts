@@ -2,7 +2,7 @@ import { Tag } from '@dish/graph'
 
 import { NavigableTag } from '../types/tagTypes'
 
-export function tagsToNavigableTags(tags: Partial<Tag>[]) {
+export function filterToNavigable(tags: Partial<Tag>[]) {
   return tags.filter(isNavigableTag)
 }
 

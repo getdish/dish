@@ -9,18 +9,18 @@ import {
 import { CardFrame } from '../../views/CardFrame'
 import { Link } from '../../views/Link'
 import { RestaurantUpVoteDownVote } from '../../views/restaurant/RestaurantUpVoteDownVote'
-import { Card } from './Card'
+import { Card, CardProps } from './Card'
 import { priceRange } from './RestaurantDetailRow'
 
 export type RestaurantCardProps = {
   // size?: 'lg' | 'md' | 'sm'
   restaurantSlug: string
   restaurantId: string
-  below?: any
+  below?: CardProps['below']
+  aspectFixed?: CardProps['below']
+  isBehind?: boolean
   hideScore?: boolean
   hoverable?: boolean
-  aspectFixed?: boolean
-  isBehind?: boolean
   padTitleSide?: boolean
   dimImage?: boolean
 }

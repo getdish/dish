@@ -33,3 +33,5 @@ const getColorsForIndex = (index: number) => {
     altPastelColor: allColorsPastel[altIndex],
   }
 }
+
+export type ColorShades = ReturnType<typeof getColorsForIndex>

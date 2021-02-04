@@ -43,9 +43,16 @@ export const getFullTagsFromRoute = async (
 }
 
 const getUrlTagInfo = (part: string): NavigableTag => {
-  const prefix = part.match(/([a-z]+)__/)?.[1] ?? ''
-  const type = typePrefixes[prefix] ?? 'dish'
-  return { type, name: guessTagName(part), slug: part }
+  let type = ''
+  let slug = part
+  if (part.startsWith('in-')) {
+    type = 'country'
+    slug = part.replace('in-', '')
+  } else {
+    const prefix = part.match(/([a-z]+)__/)?.[1] ?? ''
+    type = typePrefixes[prefix] ?? 'dish'
+  }
+  return { type, name: guessTagName(part), slug }
 }
 
 export function guessTagName(slug: string) {

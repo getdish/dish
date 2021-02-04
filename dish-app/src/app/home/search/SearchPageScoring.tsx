@@ -88,7 +88,6 @@ export const SearchPageScoring = memo(() => {
               return (
                 <TagButton
                   key={tag.slug ?? index}
-                  replaceSearch
                   size="sm"
                   {...getTagButtonProps(tag)}
                   after={`(${pct}%)`}

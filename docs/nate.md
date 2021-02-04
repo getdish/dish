@@ -1,3 +1,26 @@
+- may be able to remove a few states from homeStore
+- gallery for example can just use router, no need for home
+- but would require home to be smarter i think
+- search page fixes:
+- shows blank sometimes
+- search page - show popular lists for that region + tags
+- restaurant page - show lists restaurant is on
+- new list
+- dont do weird redirect thing
+- modal that opens to select existing or create new
+- home
+- fix feed up a bunch to actually show real feed items
+- show more results on map
+- show real comments (recent?)
+- cleanup
+- fixup profile pages a lot
+- show onboard if not yet
+- better intro / intro callout
+- touch up commenting/rating
+- location <=> url
+- organize all map/geo helpers a bit
+- ensure usernames are the same set as slugifed (no special chars)
+
 for pablo:
 
   - flow that breaks due to caching (needs to do background refetch)
@@ -19,39 +42,12 @@ for pablo:
   - normalize/direct-mutate
   - mutate() should automatically add __typename if nothing else exists otherwise really confusing that mutations silently fail
 
-goal january
-
-  1. fix lots of things
-
-    - may be able to remove a few states from homeStore
-      - gallery for example can just use router, no need for home
-      - but would require home to be smarter i think
-    - search page fixes:
-      - shows blank sometimes
-    - search page - show popular lists for that region + tags
-    - restaurant page - show lists restaurant is on
-    - new list
-      - dont do weird redirect thing
-      - modal that opens to select existing or create new
-    - home
-      - fix feed up a bunch to actually show real feed items
-      - show more results on map
-      - show real comments (recent?)
-    - cleanup
-     - fixup profile pages a lot
-    - show onboard if not yet
-    - better intro / intro callout
-    - touch up commenting/rating
-    - location <=> url
-    - organize all map/geo helpers a bit
-    - ensure usernames are the same set as slugifed (no special chars)
-
-  2. initial family/friends launch at end of month
+  1. initial family/friends launch at end of month
 
     - have mailing list that actually emails once a month with new release
     - improve some profiles and some onboarding
 
-  3. prototype playlists / improve home (bonus)
+  2. prototype playlists / improve home (bonus)
 
      - in general playlists are fun and affect regions a bit (may lessen need)
      - home page can be simpler and faster list, improve that

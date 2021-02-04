@@ -2,7 +2,6 @@ import React, { memo } from 'react'
 import { VStack } from 'snackui'
 
 import { tagLenses } from '../../constants/localTags'
-import { getTagSlug } from '../../helpers/getTagSlug'
 import { HomeActiveTagsRecord } from '../../types/homeTypes'
 import { LenseButton, LenseButtonSize } from './LenseButton'
 
@@ -17,7 +16,7 @@ export const HomeLenseBar = memo(
     return (
       <>
         {tagLenses.map((lense, index) => {
-          const isActive = props.activeTags?.[getTagSlug(lense)] ?? false
+          const isActive = props.activeTags?.[lense.slug] ?? false
           return (
             <VStack
               height="100%"

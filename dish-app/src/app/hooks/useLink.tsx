@@ -13,7 +13,7 @@ import {
 } from '../../helpers/allTags'
 import { getNavigateItemForState } from '../../helpers/getNavigateItemForState'
 import { getNextState } from '../../helpers/getNextState'
-import { tagsToNavigableTags } from '../../helpers/tagHelpers'
+import { filterToNavigable } from '../../helpers/tagHelpers'
 import { NavigateItem, router } from '../../router'
 import { homeStore } from '../homeStore'
 import { userStore } from '../userStore'
@@ -131,23 +131,22 @@ const getNormalizeLinkProps = (
 // dont memoize relies on homeStore.currentState
 const getNormalizedLink = (props: Partial<LinkButtonProps>) => {
   if (props.tags || props.tag) {
-    const tags = tagsToNavigableTags(
+    const tags = filterToNavigable(
       props.tags ?? (props.tag ? [props.tag] : [])
-    )
-      .filter(isPresent)
-      .map((tag) => {
-        // TEMP bugfix, until we do new home, we need to fallback to getFullTagFromNameAndType
-        if (!tag.slug) {
-          console.warn('no slug?')
-          return getFullTagFromNameAndType(tag as any) ?? tag
-        }
-        return {
-          // default to dish which is important! used later
-          // by searchPageStore.runSearch to pick out dish tag
-          type: 'dish',
-          ...(allTags[tag.slug] ?? tag),
-        }
-      })
+    ).map((tag) => {
+      // TEMP bugfix, until we do new home, we need to fallback to getFullTagFromNameAndType
+      if (!tag.slug) {
+        console.warn('no slug?')
+        return getFullTagFromNameAndType(tag as any) ?? tag
+      }
+      return {
+        // TODO ideally our data is cleaner, no need for this
+        // default to dish which is important! used later
+        // by searchPageStore.runSearch to pick out dish tag
+        type: 'dish',
+        ...(allTags[tag.slug] ?? tag),
+      }
+    })
 
     // add to cache
     addTagsToCache(tags)
