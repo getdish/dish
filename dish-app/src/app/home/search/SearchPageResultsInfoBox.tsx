@@ -1,11 +1,10 @@
 import { graphql, order_by, query } from '@dish/graph'
 import React, { memo } from 'react'
 import { Image, ScrollView } from 'react-native'
-import { HStack, Text, VStack } from 'snackui'
+import { HStack, Text, VStack, useMedia } from 'snackui'
 
 import { getActiveTags } from '../../../helpers/getActiveTags'
 import { HomeStateItemSearch } from '../../../types/homeTypes'
-import { DishViewButton } from '../../views/dish/DishViewButton'
 import { TagButton } from '../../views/TagButton'
 
 export const SearchPageResultsInfoBox = memo(
@@ -28,6 +27,7 @@ export const SearchPageResultsInfoBox = memo(
 
 const HomeSearchInfoBoxCountry = memo(
   graphql(({ state }: { state: HomeStateItemSearch }) => {
+    const media = useMedia()
     const tags = getActiveTags(state)
     const countryTag = tags.find((x) => x.type === 'country')!
     const topCountryDishes = query.tag({
@@ -74,7 +74,13 @@ const HomeSearchInfoBoxCountry = memo(
             spacing="xs"
             alignItems="center"
           >
-            <Text opacity={0.7} fontSize={14} marginRight={8}>
+            <Text
+              width={media.sm ? 0 : 'auto'}
+              overflow="hidden"
+              opacity={0.7}
+              fontSize={14}
+              marginRight={8}
+            >
               Popular dishes:
             </Text>
             {topCountryDishes.map((tag) => {
