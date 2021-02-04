@@ -1,4 +1,4 @@
-import { useStore, useStoreInstance } from '@dish/use-store'
+import { Store, createStore, useStore, useStoreInstance } from '@dish/use-store'
 import React, { memo, useMemo } from 'react'
 import { Animated, PanResponder, StyleSheet, View } from 'react-native'
 import { AbsoluteVStack, VStack, useConstant } from 'snackui'
@@ -12,14 +12,29 @@ import { getWindowHeight } from '../../helpers/getWindow'
 import { autocompletesStore } from '../AppAutocomplete'
 import { AppSearchBar } from '../AppSearchBar'
 import { blurSearchInput } from '../AppSearchInput'
-import { drawerStore as drawerStoreInstance } from '../drawerStore'
+import { drawerStore as ds } from '../drawerStore'
 import { isTouchingSearchBar } from '../SearchInputNativeDragFix'
 import { BottomSheetContainer } from '../views/BottomSheetContainer'
-import { isScrollAtTop } from '../views/ContentScrollView'
+import {
+  isScrollAtTop,
+  usePreventVerticalScroll,
+} from '../views/ContentScrollView'
 import { isScrollingSubDrawer } from '../views/ContentScrollViewHorizontal'
 
+class HomeActiveContent extends Store {
+  id = 'home'
+
+  setId(next: string) {
+    this.id = next
+  }
+}
+
+export const homeActiveContent = createStore(HomeActiveContent)
+
 export const HomeDrawerSmallView = memo((props: { children: any }) => {
-  const drawerStore = useStoreInstance(drawerStoreInstance)
+  const drawerStore = useStoreInstance(ds)
+  const { id } = useStoreInstance(homeActiveContent)
+  const preventScrolling = usePreventVerticalScroll(id)
 
   const panResponder = useConstant(() => {
     const move = Animated.event([null, { dy: drawerStore.pan }], {
@@ -92,7 +107,7 @@ export const HomeDrawerSmallView = memo((props: { children: any }) => {
         </View>
       </BottomSheetContainer>
     ),
-    [props.children]
+    [props.children, preventScrolling]
   )
 
   return (

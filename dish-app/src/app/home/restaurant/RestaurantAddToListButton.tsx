@@ -62,10 +62,14 @@ export const RestaurantAddToListButton = ({
         {...props}
       >
         <Plus color="#fff" size={size ?? 16} />
-        <Spacer size="xs" />
-        <Text color="#fff" fontSize={13} fontWeight="500">
-          {noLabel ? null : 'List'}
-        </Text>
+        {!noLabel && (
+          <>
+            <Spacer size="xs" />
+            <Text color="#fff" fontSize={13} fontWeight="500">
+              List
+            </Text>
+          </>
+        )}
       </SmallCircleButton>
     </>
   )

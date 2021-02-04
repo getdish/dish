@@ -14,14 +14,20 @@ import { VStack, useMedia } from 'snackui'
 import { isWeb } from '../../constants/constants'
 import { supportsTouchWeb } from '../../constants/platforms'
 import { drawerStore } from '../drawerStore'
+import { homeActiveContent } from '../home/HomeDrawerSmallView.native'
 
 type ScrollLock = 'horizontal' | 'vertical' | 'none'
 
 export class ScrollStore extends Store<{ id: string }> {
   lock: ScrollLock = 'none'
+  isAtTop = true
 
   setLock(val: ScrollLock) {
     this.lock = val
+  }
+
+  setIsAtTop(val: boolean) {
+    this.isAtTop = val
   }
 }
 
@@ -50,6 +56,7 @@ export const usePreventVerticalScroll = (id: string) => {
     let isParentActive = false
     let isMinimized = false
     let isLockedHorizontal = false
+    let isAtTop = true
 
     const parentStore = getStore(ContentParentStore)
     const scrollStore = getStore(ScrollStore, { id })
@@ -58,7 +65,8 @@ export const usePreventVerticalScroll = (id: string) => {
     // we can greatly simplify this area
 
     const update = () => {
-      const prevent = isMinimized || !isParentActive || isLockedHorizontal
+      const prevent =
+        isAtTop && (isMinimized || !isParentActive || isLockedHorizontal)
       setPrevent(prevent)
     }
 
@@ -82,10 +90,10 @@ export const usePreventVerticalScroll = (id: string) => {
 
     const d2 = reaction(
       scrollStore as any,
-      (x) => x.lock,
-      (lock) => {
+      (x) => [x.lock, x.isAtTop] as const,
+      ([lock, t]) => {
+        isAtTop = t
         isLockedHorizontal = lock === 'horizontal'
-        console.log('is locked', isLockedHorizontal)
         update()
       }
     )
@@ -112,10 +120,12 @@ export const ContentScrollView = forwardRef<ScrollView, ContentScrollViewProps>(
   ({ children, onScrollYThrottled, style, id, ...props }, ref) => {
     // this updates when drawer moves to top
     const preventScrolling = usePreventVerticalScroll(id)
-    const scrollStore = useStore(ScrollStore, { id })
     const media = useMedia()
     const lastUpdate = useRef<any>(0)
     const finish = useRef<any>(0)
+
+    // note, not using it, not reacting
+    const scrollStore = getStore(ScrollStore, { id })
 
     const doUpdate = (y: number, e: any) => {
       clearTimeout(finish.current)
@@ -130,8 +140,10 @@ export const ContentScrollView = forwardRef<ScrollView, ContentScrollViewProps>(
       }
 
       if (isAtTop) {
+        scrollStore.setIsAtTop(true)
         scrollStore.setLock('none')
       } else {
+        scrollStore.setIsAtTop(false)
         if (!scrollStore.lock) {
           scrollStore.setLock('vertical')
         }
@@ -152,6 +164,14 @@ export const ContentScrollView = forwardRef<ScrollView, ContentScrollViewProps>(
 
     // memo because preventScrolling changes on media queries
     const childrenMemo = useMemo(() => children, [children])
+
+    useEffect(() => {
+      let prev = homeActiveContent.id
+      homeActiveContent.setId(id)
+      return () => {
+        homeActiveContent.setId(prev)
+      }
+    }, [])
 
     return (
       <ContentScrollContext.Provider value={id}>

@@ -159,7 +159,7 @@ const SearchForkListButton = memo(
               const { id, username } = userStore.user ?? {}
               assertPresent(id, 'no user id')
               assertPresent(username, 'no username')
-              const name = `The best ${title}`
+              const name = `My ${title}`
               const slug = slugify(name)
               const location = await getLocationFromRoute(router.curPage as any)
               if (!location?.region) {
