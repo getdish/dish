@@ -12,6 +12,7 @@ export type DishTagItemSimple = {
   image: string
   slug: string
   isFallback?: boolean
+  type: string
 }
 
 export const selectRishDishViewSimple = (
@@ -31,6 +32,7 @@ export const selectRishDishViewSimple = (
     downvotes: tag.downvotes,
     image: tagImage ?? tagFallbackImage,
     isFallback: !tagImage,
+    type: tag.tag.type ?? '',
   }
 }
 

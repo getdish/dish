@@ -45,6 +45,7 @@ const TopDishesCuisineItem = memo(
               size={dishHeight}
               isFallback
               disableFallbackFade
+              type=""
               {...top_dish}
               cuisine={{
                 id: country.country,

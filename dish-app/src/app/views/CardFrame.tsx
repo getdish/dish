@@ -2,13 +2,13 @@
 import React from 'react'
 import { VStack, useMedia, useTheme } from 'snackui'
 
-export const cardFrameBorderRadius = 17
+export const cardFrameBorderRadius = 18
 
-export const cardFrameWidth = 240
-export const cardFrameHeight = 340
+export const cardFrameWidth = 250
+export const cardFrameHeight = 320
 
-export const cardFrameWidthSm = 240 * 0.75
-export const cardFrameHeightSm = 340 * 0.75
+export const cardFrameWidthSm = 250 * 0.75
+export const cardFrameHeightSm = 320 * 0.75
 
 export const CardFrame = ({
   hoverable,
@@ -54,6 +54,7 @@ export const CardFrame = ({
       })}
       {...(size === 'sm' && {
         width: cardFrameWidthSm,
+        minWidth: cardFrameWidthSm,
         height: cardFrameHeightSm,
       })}
       {...(hoverable && {

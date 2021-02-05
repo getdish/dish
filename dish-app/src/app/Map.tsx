@@ -593,8 +593,8 @@ function setupMapEffect({
             'circle-radius': [
               'case',
               ['boolean', ['feature-state', 'hover'], false],
-              12 * (supportsTouchWeb ? 2 : 1),
-              6 * (supportsTouchWeb ? 2 : 1),
+              12 * (supportsTouchWeb ? 1.2 : 1),
+              6 * (supportsTouchWeb ? 1.2 : 1),
             ],
 
             'circle-stroke-width': {

@@ -73,12 +73,12 @@ export function Card({
   const topCornerColor = `${color}cc`
   const longestWord =
     title?.split(' ').reduce((acc, cur) => Math.max(cur.length, acc), 0) ?? 0
-  const fontSize = longestWord > 9 ? 24 : 28
+  const fontSize = (longestWord > 9 ? 24 : 28) * (isSm ? 0.85 : 1)
 
   return (
     <CardFrame size={size} aspectFixed={aspectFixed} hoverable={hoverable}>
       <VStack
-        className="safari-fix-overflow"
+        className="card-hover-image safari-fix-overflow"
         width="100%"
         overflow="hidden"
         alignSelf="center"
@@ -90,7 +90,7 @@ export function Card({
           className="ease-in-out"
           opacity={hideInfo ? 0 : 1}
           hoverStyle={{
-            opacity: 0.5,
+            opacity: 0.35,
           }}
           fullscreen
           zIndex={12}
@@ -127,7 +127,7 @@ export function Card({
             end={[0.9, 0.1]}
           />
         </AbsoluteVStack>
-        <VStack className="ease-in-out half-opacity-until-hover" {...frame}>
+        <VStack className="card-image" {...frame}>
           {!!photo && typeof photo === 'string' ? (
             <Image
               resizeMode="cover"
@@ -173,7 +173,7 @@ export function Card({
                 letterSpacing={-0.5}
                 color="#fff"
                 fontSize={fontSize}
-                lineHeight={fontSize * 1.3}
+                lineHeight={fontSize * 1.1}
               >
                 {title}
               </Text>

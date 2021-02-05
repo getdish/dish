@@ -44,7 +44,7 @@ const distances: { [key: string]: number } = {
 }
 
 export function getDistanceForZoom(zoom: number) {
-  const x = Math.round(zoom)
+  const x = Math.ceil(zoom)
   for (const d in distances) {
     if (x <= +d) {
       return distances[d]

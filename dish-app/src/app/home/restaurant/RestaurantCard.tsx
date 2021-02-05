@@ -1,5 +1,5 @@
-import { graphql, order_by } from '@dish/graph'
-import React, { Suspense, memo, useCallback, useState } from 'react'
+import { graphql } from '@dish/graph'
+import React, { Suspense } from 'react'
 import { AbsoluteVStack } from 'snackui'
 
 import {
@@ -13,11 +13,11 @@ import { Card, CardProps } from './Card'
 import { priceRange } from './RestaurantDetailRow'
 
 export type RestaurantCardProps = {
-  // size?: 'lg' | 'md' | 'sm'
   restaurantSlug: string
   restaurantId: string
   below?: CardProps['below']
   aspectFixed?: CardProps['below']
+  size?: CardProps['size']
   isBehind?: boolean
   hideScore?: boolean
   hoverable?: boolean
@@ -40,7 +40,7 @@ export const RestaurantCard = (props: RestaurantCardProps) => {
 
 export const RestaurantCardContent = graphql(
   ({
-    // size = 'lg',
+    size = 'md',
     restaurantSlug,
     restaurantId,
     isBehind,
@@ -58,6 +58,7 @@ export const RestaurantCardContent = graphql(
       <Link name="restaurant" asyncClick params={{ slug: restaurantSlug }}>
         <Card
           isBehind={isBehind}
+          size={size}
           title={restaurant.name}
           subTitle={price_range}
           below={below}

@@ -1,6 +1,5 @@
 import { graphql, mutate, order_by, query, useRefetch } from '@dish/graph'
 import { Plus, X } from '@dish/react-feather'
-import { rest } from 'lodash'
 import React, { useState } from 'react'
 import { ScrollView } from 'react-native'
 import {
@@ -12,11 +11,10 @@ import {
   Text,
   Title,
   Toast,
+  Tooltip,
   VStack,
-  useForceUpdate,
 } from 'snackui'
 
-import { isWeb } from '../../../constants/constants'
 import { useColorsFor } from '../../../helpers/useColorsFor'
 import { queryRestaurant } from '../../../queries/queryRestaurant'
 import { queryUser } from '../../../queries/queryUser'
@@ -25,7 +23,7 @@ import { CloseButton, SmallCircleButton } from '../../views/CloseButton'
 import { LinkButton } from '../../views/LinkButton'
 import { PaneControlButtons } from '../../views/PaneControlButtons'
 import { SlantedTitle } from '../../views/SlantedTitle'
-import { SmallButton, SmallButtonProps } from '../../views/SmallButton'
+import { SmallButtonProps } from '../../views/SmallButton'
 
 export const RestaurantAddToListButton = ({
   restaurantSlug,
@@ -48,31 +46,33 @@ export const RestaurantAddToListButton = ({
           onDismiss={() => setShowModal(false)}
         />
       )}
-      <SmallCircleButton
-        shadowed
-        tooltip="Add to list"
-        onPress={() => {
-          if (!userStore.promptLogin()) {
-            setShowModal(true)
-          }
-        }}
-        pressStyle={{
-          opacity: 0.6,
-        }}
-        {...props}
-      >
-        <Spacer size="xs" />
-        <Plus color="#fff" size={size ?? 16} />
-        {!noLabel && (
-          <>
-            <Spacer size="xs" />
-            <Text color="#fff" fontSize={13} fontWeight="500">
-              List
-            </Text>
-          </>
-        )}
-        <Spacer size="xs" />
-      </SmallCircleButton>
+      <Tooltip contents="Add to list">
+        <SmallCircleButton
+          shadowed
+          tooltip="Add to list"
+          onPress={() => {
+            if (!userStore.promptLogin()) {
+              setShowModal(true)
+            }
+          }}
+          pressStyle={{
+            opacity: 0.6,
+          }}
+          {...props}
+        >
+          <Spacer size="xs" />
+          <Plus color="#fff" size={size ?? 16} />
+          {!noLabel && (
+            <>
+              <Spacer size="xs" />
+              <Text color="#fff" fontSize={13} fontWeight="500">
+                List
+              </Text>
+            </>
+          )}
+          <Spacer size="xs" />
+        </SmallCircleButton>
+      </Tooltip>
     </>
   )
 }

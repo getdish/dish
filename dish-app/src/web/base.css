@@ -595,10 +595,10 @@ mark {
   white-space: pre;
 }
 
-.half-opacity-until-hover {
+.card-hover-image .card-image {
   opacity: 0.5;
 }
 
-.half-opacity-until-hover:hover {
-  opacity: 1;
+.card-hover-image:hover .card-image {
+  opacity: 0.8;
 }

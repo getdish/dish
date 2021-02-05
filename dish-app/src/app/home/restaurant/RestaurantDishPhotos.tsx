@@ -63,6 +63,7 @@ export const RestaurantDishPhotos = memo(
                   name="Overall"
                   slug=""
                   image=""
+                  type=""
                   selected={selected === ''}
                   {...(!!selectable && {
                     onPress() {

@@ -57,18 +57,18 @@ export default memo(function HomePage(
   })
   const [position, setPosition] = useState<MapPosition>(initialPosition)
   const regionColors = getColorsForName(props.item.region)
-  const navLinks: LinkButtonProps[] = [
-    {
-      name: 'homeRegion',
-      params: { region: state.region, section: '' },
-      children: 'Hot',
-    },
-    {
-      name: 'homeRegion',
-      params: { region: state.region, section: 'new' },
-      children: 'New',
-    },
-  ]
+  // const navLinks: LinkButtonProps[] = [
+  //   {
+  //     name: 'homeRegion',
+  //     params: { region: state.region, section: '' },
+  //     children: 'Hot',
+  //   },
+  //   {
+  //     name: 'homeRegion',
+  //     params: { region: state.region, section: 'new' },
+  //     children: 'New',
+  //   },
+  // ]
   const region = regionResponse.data
   const { center, span } = region ?? {}
 
@@ -126,6 +126,8 @@ export default memo(function HomePage(
     }
   }, [isActive, props.item.region])
 
+  const regionName = region?.name ?? '...'
+
   return (
     <>
       <PageTitleTag>Dish - Uniquely Good Food</PageTitleTag>
@@ -172,7 +174,7 @@ export default memo(function HomePage(
                   <HStack
                     alignItems="center"
                     paddingVertical={12}
-                    paddingBottom={35}
+                    paddingBottom={25}
                     paddingHorizontal={10}
                   >
                     <VStack position="relative">
@@ -180,12 +182,23 @@ export default memo(function HomePage(
                         minWidth={100}
                         backgroundColor={regionColors.color}
                         color="#fff"
-                        marginTop={-24}
+                        size={
+                          regionName.length > 24
+                            ? 'xs'
+                            : regionName.length > 17
+                            ? 'sm'
+                            : regionName.length > 14
+                            ? 'md'
+                            : regionName.length > 8
+                            ? 'lg'
+                            : 'xl'
+                        }
+                        // marginTop={-24}
                       >
-                        {region?.name ?? '...'}
+                        {regionName}
                       </SlantedTitle>
 
-                      <AbsoluteVStack
+                      {/* <AbsoluteVStack
                         bottom={-39}
                         right={0}
                         transform={[{ rotate: '-2deg' }]}
@@ -211,7 +224,7 @@ export default memo(function HomePage(
                             )
                           })}
                         </InteractiveContainer>
-                      </AbsoluteVStack>
+                      </AbsoluteVStack> */}
                     </VStack>
                     <HomeTopSearches />
                   </HStack>

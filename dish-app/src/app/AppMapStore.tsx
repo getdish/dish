@@ -283,7 +283,7 @@ export const useSetAppMap = (
       async () => {
         const all = results
         if (!all) return
-        const allIds = [...new Set(all.map((x) => x.id))]
+        const allIds = [...new Set(all.filter((x) => x?.id).map((x) => x.id))]
         const allResults = allIds
           .map((id) => all.find((x) => x.id === id))
           .filter(isPresent)
