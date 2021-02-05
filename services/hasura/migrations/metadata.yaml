@@ -1185,3 +1185,9 @@ functions:
 - function:
     schema: public
     name: list_populated
+- function:
+    schema: public
+    name: restaurant_top_tags
+- function:
+    schema: public
+    name: restaurant_with_tags

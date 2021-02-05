@@ -2804,6 +2804,10 @@ export interface restaurant_variance_order_by {
   zip?: Maybe<order_by>
 }
 
+export interface restaurant_with_tags_args {
+  tag_slugs?: Maybe<Scalars['String']>
+}
+
 /** order by aggregate values of table "review" */
 export interface review_aggregate_order_by {
   avg?: Maybe<review_avg_order_by>
@@ -4899,6 +4903,50 @@ export const generatedSchema = {
       __type: 'restaurant_tag',
       __args: { restaurant_id: 'uuid!', tag_id: 'uuid!' },
     },
+    restaurant_top_tags: {
+      __type: '[restaurant_tag!]!',
+      __args: {
+        args: 'restaurant_top_tags_args!',
+        distinct_on: '[restaurant_tag_select_column!]',
+        limit: 'Int',
+        offset: 'Int',
+        order_by: '[restaurant_tag_order_by!]',
+        where: 'restaurant_tag_bool_exp',
+      },
+    },
+    restaurant_top_tags_aggregate: {
+      __type: 'restaurant_tag_aggregate!',
+      __args: {
+        args: 'restaurant_top_tags_args!',
+        distinct_on: '[restaurant_tag_select_column!]',
+        limit: 'Int',
+        offset: 'Int',
+        order_by: '[restaurant_tag_order_by!]',
+        where: 'restaurant_tag_bool_exp',
+      },
+    },
+    restaurant_with_tags: {
+      __type: '[restaurant!]!',
+      __args: {
+        args: 'restaurant_with_tags_args!',
+        distinct_on: '[restaurant_select_column!]',
+        limit: 'Int',
+        offset: 'Int',
+        order_by: '[restaurant_order_by!]',
+        where: 'restaurant_bool_exp',
+      },
+    },
+    restaurant_with_tags_aggregate: {
+      __type: 'restaurant_aggregate!',
+      __args: {
+        args: 'restaurant_with_tags_args!',
+        distinct_on: '[restaurant_select_column!]',
+        limit: 'Int',
+        offset: 'Int',
+        order_by: '[restaurant_order_by!]',
+        where: 'restaurant_bool_exp',
+      },
+    },
     review: {
       __type: '[review!]!',
       __args: {
@@ -6045,6 +6093,50 @@ export const generatedSchema = {
     restaurant_tag_by_pk: {
       __type: 'restaurant_tag',
       __args: { restaurant_id: 'uuid!', tag_id: 'uuid!' },
+    },
+    restaurant_top_tags: {
+      __type: '[restaurant_tag!]!',
+      __args: {
+        args: 'restaurant_top_tags_args!',
+        distinct_on: '[restaurant_tag_select_column!]',
+        limit: 'Int',
+        offset: 'Int',
+        order_by: '[restaurant_tag_order_by!]',
+        where: 'restaurant_tag_bool_exp',
+      },
+    },
+    restaurant_top_tags_aggregate: {
+      __type: 'restaurant_tag_aggregate!',
+      __args: {
+        args: 'restaurant_top_tags_args!',
+        distinct_on: '[restaurant_tag_select_column!]',
+        limit: 'Int',
+        offset: 'Int',
+        order_by: '[restaurant_tag_order_by!]',
+        where: 'restaurant_tag_bool_exp',
+      },
+    },
+    restaurant_with_tags: {
+      __type: '[restaurant!]!',
+      __args: {
+        args: 'restaurant_with_tags_args!',
+        distinct_on: '[restaurant_select_column!]',
+        limit: 'Int',
+        offset: 'Int',
+        order_by: '[restaurant_order_by!]',
+        where: 'restaurant_bool_exp',
+      },
+    },
+    restaurant_with_tags_aggregate: {
+      __type: 'restaurant_aggregate!',
+      __args: {
+        args: 'restaurant_with_tags_args!',
+        distinct_on: '[restaurant_select_column!]',
+        limit: 'Int',
+        offset: 'Int',
+        order_by: '[restaurant_order_by!]',
+        where: 'restaurant_bool_exp',
+      },
     },
     review: {
       __type: '[review!]!',
@@ -9014,6 +9106,7 @@ export const generatedSchema = {
     votes_ratio: { __type: 'order_by' },
     zip: { __type: 'order_by' },
   },
+  restaurant_with_tags_args: { tag_slugs: { __type: 'String' } },
   review: {
     __typename: { __type: 'String!' },
     authored_at: { __type: 'timestamptz!' },
@@ -10939,6 +11032,38 @@ export interface Query {
     restaurant_id: ScalarsEnums['uuid']
     tag_id: ScalarsEnums['uuid']
   }) => Maybe<restaurant_tag>
+  restaurant_top_tags: (args: {
+    args: restaurant_top_tags_args
+    distinct_on?: Maybe<Array<ScalarsEnums['restaurant_tag_select_column']>>
+    limit?: Maybe<ScalarsEnums['Int']>
+    offset?: Maybe<ScalarsEnums['Int']>
+    order_by?: Maybe<Array<restaurant_tag_order_by>>
+    where?: Maybe<restaurant_tag_bool_exp>
+  }) => Array<restaurant_tag>
+  restaurant_top_tags_aggregate: (args: {
+    args: restaurant_top_tags_args
+    distinct_on?: Maybe<Array<ScalarsEnums['restaurant_tag_select_column']>>
+    limit?: Maybe<ScalarsEnums['Int']>
+    offset?: Maybe<ScalarsEnums['Int']>
+    order_by?: Maybe<Array<restaurant_tag_order_by>>
+    where?: Maybe<restaurant_tag_bool_exp>
+  }) => restaurant_tag_aggregate
+  restaurant_with_tags: (args: {
+    args: restaurant_with_tags_args
+    distinct_on?: Maybe<Array<ScalarsEnums['restaurant_select_column']>>
+    limit?: Maybe<ScalarsEnums['Int']>
+    offset?: Maybe<ScalarsEnums['Int']>
+    order_by?: Maybe<Array<restaurant_order_by>>
+    where?: Maybe<restaurant_bool_exp>
+  }) => Array<restaurant>
+  restaurant_with_tags_aggregate: (args: {
+    args: restaurant_with_tags_args
+    distinct_on?: Maybe<Array<ScalarsEnums['restaurant_select_column']>>
+    limit?: Maybe<ScalarsEnums['Int']>
+    offset?: Maybe<ScalarsEnums['Int']>
+    order_by?: Maybe<Array<restaurant_order_by>>
+    where?: Maybe<restaurant_bool_exp>
+  }) => restaurant_aggregate
   review: (args?: {
     distinct_on?: Maybe<Array<ScalarsEnums['review_select_column']>>
     limit?: Maybe<ScalarsEnums['Int']>
@@ -11748,6 +11873,38 @@ export interface Subscription {
     restaurant_id: ScalarsEnums['uuid']
     tag_id: ScalarsEnums['uuid']
   }) => Maybe<restaurant_tag>
+  restaurant_top_tags: (args: {
+    args: restaurant_top_tags_args
+    distinct_on?: Maybe<Array<ScalarsEnums['restaurant_tag_select_column']>>
+    limit?: Maybe<ScalarsEnums['Int']>
+    offset?: Maybe<ScalarsEnums['Int']>
+    order_by?: Maybe<Array<restaurant_tag_order_by>>
+    where?: Maybe<restaurant_tag_bool_exp>
+  }) => Array<restaurant_tag>
+  restaurant_top_tags_aggregate: (args: {
+    args: restaurant_top_tags_args
+    distinct_on?: Maybe<Array<ScalarsEnums['restaurant_tag_select_column']>>
+    limit?: Maybe<ScalarsEnums['Int']>
+    offset?: Maybe<ScalarsEnums['Int']>
+    order_by?: Maybe<Array<restaurant_tag_order_by>>
+    where?: Maybe<restaurant_tag_bool_exp>
+  }) => restaurant_tag_aggregate
+  restaurant_with_tags: (args: {
+    args: restaurant_with_tags_args
+    distinct_on?: Maybe<Array<ScalarsEnums['restaurant_select_column']>>
+    limit?: Maybe<ScalarsEnums['Int']>
+    offset?: Maybe<ScalarsEnums['Int']>
+    order_by?: Maybe<Array<restaurant_order_by>>
+    where?: Maybe<restaurant_bool_exp>
+  }) => Array<restaurant>
+  restaurant_with_tags_aggregate: (args: {
+    args: restaurant_with_tags_args
+    distinct_on?: Maybe<Array<ScalarsEnums['restaurant_select_column']>>
+    limit?: Maybe<ScalarsEnums['Int']>
+    offset?: Maybe<ScalarsEnums['Int']>
+    order_by?: Maybe<Array<restaurant_order_by>>
+    where?: Maybe<restaurant_bool_exp>
+  }) => restaurant_aggregate
   review: (args?: {
     distinct_on?: Maybe<Array<ScalarsEnums['review_select_column']>>
     limit?: Maybe<ScalarsEnums['Int']>

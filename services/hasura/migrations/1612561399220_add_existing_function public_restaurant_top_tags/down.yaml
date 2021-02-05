@@ -1,0 +1,4 @@
+- args:
+    name: restaurant_top_tags
+    schema: public
+  type: untrack_function

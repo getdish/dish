@@ -1,0 +1,16 @@
+- args:
+    cascade: false
+    read_only: false
+    sql: |-
+      CREATE FUNCTION public.restaurant_with_tags(tag_slugs text)
+      RETURNS SETOF restaurant AS $$
+          SELECT r.* FROM restaurant r
+              INNER JOIN restaurant_tag rt on rt.restaurant_id = r.id
+              INNER JOIN tag t on t.id = rt.tag_id
+              WHERE t.slug IN (SELECT * FROM (SELECT UNNEST(string_to_array(tag_slugs, ','))) as tsa)
+      $$ LANGUAGE sql STABLE;
+  type: run_sql
+- args:
+    name: restaurant_with_tags
+    schema: public
+  type: track_function

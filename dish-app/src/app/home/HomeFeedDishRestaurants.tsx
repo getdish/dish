@@ -79,22 +79,19 @@ export function useFeedDishItems(
 
 export const HomeFeedDishRestaurants = graphql(
   ({ tag, region }: FIDishRestaurants) => {
-    const restaurants = query.restaurant({
-      order_by: [{ upvotes: order_by.desc_nulls_last }],
+    const restaurants = query.restaurant_with_tags({
+      args: {
+        tag_slugs: tag.slug,
+      },
       limit: 10,
       where: {
         location: {
           _st_within: region.bbox,
         },
-        tags: {
-          tag: {
-            slug: {
-              _eq: tag.slug,
-            },
-          },
-        },
       },
     })
+
+    console.log('tag is', tag, restaurants)
 
     return (
       <>
@@ -171,11 +168,6 @@ const RestaurantStatBars = graphql(
       showTags
     )
     const theme = useTheme()
-
-    console.log(
-      'rtags',
-      rtags.map((x) => [x.score, x.tag.name])
-    )
 
     return (
       <Theme
