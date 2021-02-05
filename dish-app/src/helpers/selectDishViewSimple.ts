@@ -7,6 +7,8 @@ export type DishTagItemSimple = {
   score?: number
   rating?: number
   votesRatio?: number
+  upvotes?: number
+  downvotes?: number
   image: string
   slug: string
   isFallback?: boolean
@@ -25,6 +27,8 @@ export const selectRishDishViewSimple = (
     score: tag.score ?? 0,
     rating: tag.rating ?? 0,
     votesRatio: tag.votes_ratio ?? 0,
+    upvotes: tag.upvotes,
+    downvotes: tag.downvotes,
     image: tagImage ?? tagFallbackImage,
     isFallback: !tagImage,
   }

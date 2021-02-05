@@ -1,5 +1,6 @@
 import { memo, useEffect } from 'react'
 
+import { router } from '../router'
 import { focusSearchInput, getSearchInput } from './AppSearchInput'
 import { homeStore } from './homeStore'
 
@@ -19,7 +20,8 @@ export const Shortcuts = memo(() => {
 
         // esc
         case 27: {
-          if (homeStore.currentStateType === 'gallery') {
+          // TODO better system for this
+          if (router.curPage.name === 'gallery') {
             homeStore.popBack()
           }
           break

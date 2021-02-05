@@ -135,7 +135,7 @@ export const RestaurantTagReviews = memo(
             </ContentScrollViewHorizontal>
           )}
 
-          <Spacer size="xxl" />
+          <Spacer size="lg" />
 
           <VStack
             minWidth={260}
@@ -291,7 +291,7 @@ function getTagSourceBreakdowns(breakdowns?: TagSourceBreakdown) {
         breakdown.summary[oppositeSummary]?.[0]
       const sentence = summary
         ? ellipseText(summary, {
-            maxLength: 260,
+            maxLength: 200,
           })
         : null
       return { name, image, sentence, positive, negative }
@@ -352,13 +352,13 @@ export const RestaurantSourcesOverview = graphql(
                   backgroundColor={theme.cardBackgroundColor}
                   shadowRadius={15}
                   shadowOffset={{ height: 3, width: 0 }}
-                  padding={15}
+                  padding={20}
                   margin={spacing}
                   borderRadius={10}
                   position="relative"
                   flex={1}
                 >
-                  <VStack position="relative" alignSelf="flex-start">
+                  <VStack position="relative" alignSelf="center">
                     <AbsoluteVStack
                       right={-35}
                       top={-25}
@@ -373,7 +373,7 @@ export const RestaurantSourcesOverview = graphql(
                     </SlantedTitle>
                   </VStack>
 
-                  <Spacer size="md" />
+                  <Spacer size="lg" />
 
                   <HStack>
                     <VStack spacing alignItems="center">
@@ -404,7 +404,7 @@ export const RestaurantSourcesOverview = graphql(
                       </VStack>
                     </VStack>
 
-                    <Spacer />
+                    <Spacer size="lg" />
 
                     <Paragraph
                       color={isWeb ? 'var(--color)' : '#222'}

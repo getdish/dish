@@ -22,7 +22,9 @@ export let isScrollingSubDrawer = false
 
 function setScrollLockHorizontal(id: string) {
   const store = getStore(ScrollStore, { id })
-  assert(store.lock !== 'vertical', 'not locked vertically')
+  if (store.lock === 'vertical') {
+    return
+  }
   const val = isScrollingSubDrawer ? 'horizontal' : 'none'
   if (val !== store.lock) {
     store.setLock(val)

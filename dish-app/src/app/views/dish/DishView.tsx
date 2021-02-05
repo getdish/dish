@@ -1,5 +1,4 @@
 // // debug
-import { tag } from '@dish/graph/src'
 import { supportsTouchWeb } from '@dish/helpers/src'
 import { Search } from '@dish/react-feather'
 import { capitalize } from 'lodash'
@@ -17,11 +16,9 @@ import {
 } from 'snackui'
 
 import { isWeb } from '../../../constants/constants'
-import { addTagToCache, addTagsToCache } from '../../../helpers/allTags'
 import { getColorsForName } from '../../../helpers/getColorsForName'
 import { getImageUrl } from '../../../helpers/getImageUrl'
 import { DishTagItem } from '../../../helpers/getRestaurantDishes'
-import { getTagSlug } from '../../../helpers/getTagSlug'
 import { NavigableTag } from '../../../types/tagTypes'
 import { ColoredCircle } from '../ColoredCircle'
 import { Link } from '../Link'
@@ -80,6 +77,8 @@ const DishViewContent = (props: DishViewProps) => {
     image,
     slug,
     rating,
+    upvotes,
+    downvotes,
 
     // rest
     cuisine,
@@ -103,9 +102,10 @@ const DishViewContent = (props: DishViewProps) => {
 
   // @ts-expect-error
   const imageUrl = getImageUrl(image, ...getRoundedDishViewSize(size), 100)
-  const hasLongWord = !!dishName.split(' ').find((x) => x.length >= 8)
+  const isLong =
+    dishName.length > 17 || !!dishName.split(' ').find((x) => x.length >= 8)
   const isTiny = size < 115
-  const fontSize = (hasLongWord ? 14 : 16) * (isTiny ? 0.8 : 1)
+  const fontSize = (isLong ? 13 : 15) * (isTiny ? 0.75 : 1)
   const { lightColor, color } = getColorsForName(name)
   const backgroundColor = lightColor
   const isActive = (isHovered || selected) ?? false
@@ -128,8 +128,8 @@ const DishViewContent = (props: DishViewProps) => {
           height={20}
           pointerEvents="none"
           zIndex={1000000}
-          top={6}
-          left={6}
+          top={0}
+          left={0}
         >
           <Suspense fallback={null}>
             <DishUpvoteDownvote
@@ -138,7 +138,8 @@ const DishViewContent = (props: DishViewProps) => {
               subtle={isWeb && !supportsTouchWeb}
               slug={slug}
               score={score}
-              rating={rating}
+              upvotes={upvotes}
+              downvotes={downvotes}
               {...(restaurantId &&
                 restaurantSlug && {
                   restaurantId,
@@ -214,7 +215,7 @@ const DishViewContent = (props: DishViewProps) => {
           borderRadius={8}
           paddingVertical={3}
           paddingHorizontal={8}
-          maxWidth="60%"
+          maxWidth="70%"
           overflow="hidden"
           transform={[{ translateX: -10 }, { skewX: '-12deg' }]}
           shadowColor="rgba(0,0,0,0.1)"
@@ -234,7 +235,8 @@ const DishViewContent = (props: DishViewProps) => {
             className="unskewX ease-in-out-fast"
             // flex={1} breaks native
             overflow="hidden"
-            fontWeight="400"
+            fontWeight="700"
+            letterSpacing={-0.5}
             color={isActive ? '#fff' : '#000'}
             fontSize={fontSize}
             textAlign="center"

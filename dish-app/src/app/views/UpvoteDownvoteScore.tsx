@@ -1,7 +1,14 @@
 import { supportsTouchWeb } from '@dish/helpers/src'
 import { ChevronDown, ChevronUp } from '@dish/react-feather'
 import React, { memo, useState } from 'react'
-import { AbsoluteVStack, StackProps, Text, Tooltip, VStack } from 'snackui'
+import {
+  AbsoluteVStack,
+  HStack,
+  StackProps,
+  Text,
+  Tooltip,
+  VStack,
+} from 'snackui'
 
 import { green, orange, red } from '../../constants/colors'
 import { isWeb } from '../../constants/constants'
@@ -33,8 +40,8 @@ export const UpvoteDownvoteScore = memo(
     size,
     ...props
   }: Props) => {
-    score = Math.round(score)
     const [hovered, setHovered] = useState(false)
+    const shownScore = Math.round(ratio ? ratio * 100 : score)
     const voteButtonColor = subtle ? '#f2f2f2' : null
     const scale = size === 'sm' ? 0.65 : 1
     const sizePx = 56 * scale
@@ -45,7 +52,7 @@ export const UpvoteDownvoteScore = memo(
             isOpen: false,
           }
     const fontSize =
-      Math.min(16, sizePx / `${score}`.length) * scale * 1.075 +
+      Math.min(16, sizePx / `${shownScore}`.length) * scale * 1.075 +
       (size === 'sm' ? 2 : 0)
 
     const upvote = (
@@ -137,16 +144,19 @@ export const UpvoteDownvoteScore = memo(
         )}
         <Text
           fontSize={fontSize}
-          fontWeight="700"
+          fontWeight="900"
           marginVertical={-2 * scale}
           letterSpacing={-0.5}
           color={color}
+          textAlignVertical="top"
         >
-          {ratio ? (
-            <>
-              <Text>{Math.round(ratio * 100)}</Text>
-              <Text fontSize={12}>%</Text>
-            </>
+          {ratio && !hovered ? (
+            <HStack alignItems="flex-start">
+              <Text>{shownScore}</Text>
+              <Text marginRight={-3} fontSize={8} opacity={0.5}>
+                %
+              </Text>
+            </HStack>
           ) : (
             score ?? ''
           )}

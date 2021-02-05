@@ -147,11 +147,15 @@ export const ContentScrollView = forwardRef<ScrollView, ContentScrollViewProps>(
       }
 
       if (isAtTop) {
-        scrollStore.setIsAtTop(true)
+        if (!scrollStore.isAtTop) {
+          scrollStore.setIsAtTop(true)
+        }
         scrollStore.setLock('none')
       } else {
-        scrollStore.setIsAtTop(false)
-        if (!scrollStore.lock) {
+        if (scrollStore.isAtTop) {
+          scrollStore.setIsAtTop(false)
+        }
+        if (scrollStore.lock === 'none') {
           scrollStore.setLock('vertical')
         }
         finish.current = setTimeout(() => {
