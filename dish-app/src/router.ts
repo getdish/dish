@@ -1,4 +1,9 @@
-import { NavigateItem as RNavigateItem, Route, Router } from '@dish/router'
+import {
+  HistoryItem,
+  NavigateItem as RNavigateItem,
+  Route,
+  Router,
+} from '@dish/router'
 import { createStore, useStoreInstance } from '@dish/use-store'
 
 export type RoutesTable = typeof routes
@@ -12,9 +17,11 @@ export const routes = {
   // all pages go here
   user: new Route<{ username: string; pane?: string }>('/u/:username/:pane?'),
   userEdit: new Route('/edit-profile'),
-  gallery: new Route<{ restaurantSlug: string; dishId?: string }>(
-    '/gallery/:restaurantSlug/:dishId?'
-  ),
+  gallery: new Route<{
+    restaurantSlug: string
+    tagSlug?: string
+    offset?: number
+  }>('/gallery/:restaurantSlug/:tagSlug?/:offset?'),
 
   list: new Route<{
     slug: string
@@ -73,6 +80,15 @@ export const useIsRouteActive = (...names: RouteName[]) => {
     router,
     (router) => names.includes(router.curPage.name as any),
     names
+  )
+}
+
+export const useRoute = <N extends RouteName>(name: N): HistoryItem<N> => {
+  return useStoreInstance(
+    router,
+    (router) =>
+      (router.curPage.name === name ? router.curPage : null) as HistoryItem<N>,
+    [name]
   )
 }
 

@@ -10,7 +10,7 @@ export const SkewedCard = ({ children, ...props }: StackProps) => {
   return (
     <VStack
       marginRight={-75}
-      className="ease-in-out-faster"
+      className="ease-in-out-slow"
       borderRadius={cardFrameBorderRadius}
       shadowColor="#000"
       shadowOpacity={0.14}
@@ -27,6 +27,7 @@ export const SkewedCard = ({ children, ...props }: StackProps) => {
           { scale: 0.76 },
           { perspective: 1000 },
           { rotateY: '-10deg' },
+          { translateX: 10 },
         ],
       }}
       pressStyle={{

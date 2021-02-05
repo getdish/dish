@@ -1,6 +1,6 @@
 import { supportsTouchWeb } from '@dish/helpers/src'
 import { ChevronDown, ChevronUp } from '@dish/react-feather'
-import React, { memo } from 'react'
+import React, { memo, useState } from 'react'
 import { AbsoluteVStack, StackProps, Text, Tooltip, VStack } from 'snackui'
 
 import { green, orange, red } from '../../constants/colors'
@@ -34,6 +34,7 @@ export const UpvoteDownvoteScore = memo(
     ...props
   }: Props) => {
     score = Math.round(score)
+    const [hovered, setHovered] = useState(false)
     const voteButtonColor = subtle ? '#f2f2f2' : null
     const scale = size === 'sm' ? 0.65 : 1
     const sizePx = 56 * scale
@@ -102,6 +103,8 @@ export const UpvoteDownvoteScore = memo(
         shadowRadius={6}
         shadowOffset={{ height: 3, width: -1 }}
         borderRadius={1000}
+        onHoverIn={() => setHovered(true)}
+        onHoverOut={() => setHovered(false)}
         {...props}
       >
         {typeof ratio === 'number' && (
@@ -113,7 +116,7 @@ export const UpvoteDownvoteScore = memo(
             <CircularProgress
               fill={ratio * 100}
               size={sizePx}
-              width={2}
+              width={3}
               tintColor={color}
               lineCap="round"
               // arcSweepAngle={180}
@@ -139,7 +142,14 @@ export const UpvoteDownvoteScore = memo(
           letterSpacing={-0.5}
           color={color}
         >
-          {score ?? ''}
+          {ratio ? (
+            <>
+              <Text>{Math.round(ratio * 100)}</Text>
+              <Text fontSize={12}>%</Text>
+            </>
+          ) : (
+            score ?? ''
+          )}
         </Text>
         {subtle ? (
           downvote

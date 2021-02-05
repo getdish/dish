@@ -10,6 +10,7 @@ type Props = {
   name: string
   slug: string
   score?: number
+  rating?: number
   subtle?: boolean
   restaurantSlug?: string
   restaurantId?: string
@@ -23,6 +24,7 @@ export const DishUpvoteDownvote = (props: Props) => {
     <DishUpvoteDownvoteContent
       subtle={false}
       score={0}
+      rating={0}
       key={slugify(props.name) + props.restaurantSlug}
       {...props}
       restaurantId={props.restaurantId}
@@ -34,6 +36,7 @@ export const DishUpvoteDownvote = (props: Props) => {
 const DishUpvoteDownvoteContent = graphql(function DishUpvoteDownvote({
   size,
   subtle,
+  rating,
   score,
   restaurantSlug,
   slug,
@@ -62,6 +65,7 @@ const DishUpvoteDownvoteContent = graphql(function DishUpvoteDownvote({
       subtle={subtle}
       size={size}
       score={intScore + vote}
+      ratio={rating}
       vote={vote}
       setVote={setVote}
     />

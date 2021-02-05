@@ -38,6 +38,7 @@ export const useContentScrollHorizontalFitter = () => {
 }
 
 export type ContentScrollViewHorizontalProps = ScrollViewProps & {
+  height?: number
   children: any
 }
 
@@ -164,6 +165,7 @@ export const ContentScrollViewHorizontal = (
       pointerEvents={isLockedVertical ? 'none' : 'auto'}
       overflow="hidden"
       width="100%"
+      height={props.height}
     >
       {/* DEBUG VIEW */}
       {/* {isScrolling && (

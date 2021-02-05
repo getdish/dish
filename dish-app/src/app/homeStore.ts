@@ -368,14 +368,6 @@ class HomeStore extends Store {
         break
       }
 
-      case 'gallery': {
-        nextState = {
-          restaurantSlug: item.params.restaurantSlug,
-          dishId: item.params.dishId,
-        }
-        break
-      }
-
       case 'restaurantReview': {
         nextState = {
           restaurantSlug: item.params.slug,

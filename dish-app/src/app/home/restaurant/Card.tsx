@@ -89,10 +89,20 @@ export function Card({
         <AbsoluteVStack
           className="ease-in-out"
           opacity={hideInfo ? 0 : 1}
-          pointerEvents="none"
+          hoverStyle={{
+            opacity: 0.5,
+          }}
           fullscreen
-          zIndex={10}
+          zIndex={12}
         >
+          {isBehind && (
+            <LinearGradient
+              style={[StyleSheet.absoluteFill, sheet.cardGradient]}
+              start={[0, 0]}
+              end={[1, 0]}
+              colors={['rgba(0,0,0,0.33)', 'rgba(0,0,0,0)']}
+            />
+          )}
           <LinearGradient
             style={StyleSheet.absoluteFill}
             colors={[
@@ -117,14 +127,14 @@ export function Card({
             end={[0.9, 0.1]}
           />
         </AbsoluteVStack>
-        <VStack {...frame}>
+        <VStack className="ease-in-out half-opacity-until-hover" {...frame}>
           {!!photo && typeof photo === 'string' ? (
             <Image
               resizeMode="cover"
               {...sizes}
               style={{
                 ...frame,
-                opacity: dimImage ? 0.33 : 0.66,
+                opacity: dimImage ? 0.5 : 1,
               }}
               source={{ uri: photo }}
             />
@@ -141,15 +151,6 @@ export function Card({
         zIndex={11}
       >
         {outside}
-
-        {isBehind && (
-          <LinearGradient
-            style={[StyleSheet.absoluteFill, sheet.cardGradient]}
-            start={[0, 0]}
-            end={[1, 0]}
-            colors={['rgba(0,0,0,0.33)', 'rgba(0,0,0,0)']}
-          />
-        )}
 
         <VStack
           className="ease-in-out"
@@ -201,7 +202,7 @@ export function Card({
 
 const sheet = StyleSheet.create({
   cardGradient: {
-    zIndex: 101,
+    zIndex: 1001,
     borderRadius: cardFrameBorderRadius,
     right: '50%',
   },

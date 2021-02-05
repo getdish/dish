@@ -47,7 +47,6 @@ export type HomeStateItem =
   | HomeStateItemSearch
   | HomeStateItemRestaurant
   | HomeStateItemUser
-  | HomeStateItemGallery
   | HomeStateItemReview
   | HomeStateItemAbout
   | HomeStateItemBlog
@@ -59,7 +58,6 @@ export type HomeStatesByType = {
   search: HomeStateItemSearch
   restaurant: HomeStateItemRestaurant
   user: HomeStateItemUser
-  gallery: HomeStateItemGallery
   restaurantReview: HomeStateItemReview
   about: HomeStateItemAbout
   blog: HomeStateItemBlog
@@ -142,12 +140,6 @@ export type HomeStateItemRestaurant = HomeStateItemBase & {
 export type HomeStateItemUser = HomeStateItemBase & {
   type: 'user'
   username: string
-}
-
-export type HomeStateItemGallery = HomeStateItemBase & {
-  type: 'gallery'
-  restaurantSlug: string
-  dishId?: string
 }
 
 export type HomeStateItemReview = HomeStateItemBase & {

@@ -48,17 +48,13 @@ export const getRestaurantDishes = ({
 
   topTags = prependSearchedForTags(topTags ?? [], tagSlugs)
 
-  return useMemo(
-    () =>
-      (topTags ?? [])
-        .map((tag) => {
-          if (!tag) return null
-          return selectRishDishViewSimple(tag)
-        })
-        .filter(isPresent)
-        .filter((x) => !!x.slug),
-    [topTags]
-  )
+  return (topTags ?? [])
+    .map((tag) => {
+      if (!tag) return null
+      return selectRishDishViewSimple(tag)
+    })
+    .filter(isPresent)
+    .filter((x) => x && !!x.slug)
 }
 
 // TODO: Whether it is Postgres or Hasura, having to set the ordering here should not

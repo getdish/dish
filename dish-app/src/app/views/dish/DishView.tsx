@@ -79,6 +79,7 @@ const DishViewContent = (props: DishViewProps) => {
     icon,
     image,
     slug,
+    rating,
 
     // rest
     cuisine,
@@ -137,6 +138,7 @@ const DishViewContent = (props: DishViewProps) => {
               subtle={isWeb && !supportsTouchWeb}
               slug={slug}
               score={score}
+              rating={rating}
               {...(restaurantId &&
                 restaurantSlug && {
                   restaurantId,

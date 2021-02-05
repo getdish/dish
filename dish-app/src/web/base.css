@@ -594,3 +594,11 @@ mark {
 .white-space-pre {
   white-space: pre;
 }
+
+.half-opacity-until-hover {
+  opacity: 0.5;
+}
+
+.half-opacity-until-hover:hover {
+  opacity: 1;
+}

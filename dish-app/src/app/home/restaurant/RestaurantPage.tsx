@@ -22,12 +22,11 @@ import { ContentScrollView } from '../../views/ContentScrollView'
 import { PageTitleTag } from '../../views/PageTitleTag'
 import { StackDrawer } from '../../views/StackDrawer'
 import { HomeStackViewProps } from '../HomeStackViewProps'
-import { RestaurantAddToListButton } from './RestaurantAddToListButton'
 import { RestaurantDishPhotos } from './RestaurantDishPhotos'
 import { RestaurantHeader } from './RestaurantHeader'
 import { RestaurantMenu } from './RestaurantMenu'
 import { RestaurantReviewsList } from './RestaurantReviewsList'
-import { RestaurantReviewsTopSources } from './RestaurantReviewsTopSources'
+import { RestaurantTagReviews } from './RestaurantTagReviews'
 import { useSelectedDish } from './useSelectedDish'
 
 type Props = HomeStackViewProps<HomeStateItemRestaurant>
@@ -173,7 +172,7 @@ const RestaurantPage = memo(
 
           <VStack marginTop={-35}>
             <Suspense fallback={<LoadingItems />}>
-              <RestaurantReviewsTopSources
+              <RestaurantTagReviews
                 tagSlug={selectedDish}
                 borderless
                 showScoreTable

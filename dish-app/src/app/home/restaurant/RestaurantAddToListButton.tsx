@@ -49,6 +49,7 @@ export const RestaurantAddToListButton = ({
         />
       )}
       <SmallCircleButton
+        shadowed
         tooltip="Add to list"
         onPress={() => {
           if (!userStore.promptLogin()) {

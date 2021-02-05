@@ -27,17 +27,15 @@ import {
 import { isWeb } from '../../../constants/constants'
 import { getImageUrl } from '../../../helpers/getImageUrl'
 import { queryRestaurant } from '../../../queries/queryRestaurant'
-import {
-  homeStore,
-  useCurrentHomeType,
-  useHomeStore,
-  useIsHomeTypeActive,
-} from '../../homeStore'
+import { useRoute } from '../../../router'
 import { StackViewCloseButton } from '../../views/StackViewCloseButton'
 
 export default memo(function GalleryPage() {
-  const isActive = useIsHomeTypeActive('gallery')
-  if (!isActive) return null
+  const route = useRoute('gallery')
+
+  if (!route) {
+    return null
+  }
 
   return (
     <AbsoluteVStack
@@ -50,9 +48,7 @@ export default memo(function GalleryPage() {
         <StackViewCloseButton />
       </AbsoluteVStack>
       <Suspense fallback={<LoadingItems />}>
-        <GalleryLightbox
-          restaurantSlug={homeStore.currentState['restaurantSlug']}
-        />
+        <GalleryLightbox restaurantSlug={route.params.restaurantSlug} />
       </Suspense>
     </AbsoluteVStack>
   )
