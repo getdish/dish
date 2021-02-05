@@ -6,7 +6,7 @@ import {
   query,
 } from '@dish/graph'
 import React, { memo, useState } from 'react'
-import { HStack, VStack } from 'snackui'
+import { HStack, Hoverable, VStack } from 'snackui'
 
 import { getColorsForName } from '../../helpers/getColorsForName'
 import { hexToRGB } from '../../helpers/hexToRGB'
@@ -16,6 +16,7 @@ import { FeedSlantedTitleLink } from './FeedSlantedTitle'
 import { FIBase } from './FIBase'
 import { GradientButton } from './GradientButton'
 import { HomeFeedProps } from './HomeFeedProps'
+import { HoverResultsProp } from './HoverResultsProp'
 import { RestaurantCard } from './restaurant/RestaurantCard'
 import { SkewedCard } from './SkewedCard'
 import { TagsText } from './TagsText'
@@ -51,7 +52,7 @@ export function useFeedTopCuisines({ center }: HomeFeedProps) {
 }
 
 export const HomeFeedCuisineItem = memo(
-  graphql(function HomeFeedCuisineItem(props: FICuisine) {
+  graphql(function HomeFeedCuisineItem(props: FICuisine & HoverResultsProp) {
     const restaurants = props.restaurants
     const [titleWidth, setTitleWidth] = useState(100)
     const dishes = props.dishes
@@ -66,7 +67,11 @@ export const HomeFeedCuisineItem = memo(
       : []
 
     return (
-      <>
+      <Hoverable
+        onHoverIn={() => {
+          props.onHoverResults(restaurants)
+        }}
+      >
         <FeedSlantedTitleLink
           tag={{ slug: props.tagSlug }}
           onLayout={(x) => setTitleWidth(x.nativeEvent.layout.width)}
@@ -121,6 +126,7 @@ export const HomeFeedCuisineItem = memo(
                 return (
                   <SkewedCard zIndex={1000 - i} key={r.id}>
                     <RestaurantCard
+                      hoverToMap
                       isBehind={i > 0}
                       restaurantId={r.id}
                       restaurantSlug={r.slug}
@@ -132,7 +138,7 @@ export const HomeFeedCuisineItem = memo(
             </HStack>
           </VStack>
         </ContentScrollViewHorizontal>
-      </>
+      </Hoverable>
     )
   })
 )

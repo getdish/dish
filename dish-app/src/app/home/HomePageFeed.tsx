@@ -1,19 +1,11 @@
-import {
-  RestaurantOnlyIds,
-  SEARCH_DOMAIN,
-  graphql,
-  order_by,
-  query,
-} from '@dish/graph'
+import { RestaurantOnlyIds, SEARCH_DOMAIN, graphql } from '@dish/graph'
 import { isPresent } from '@dish/helpers'
-import { groupBy, sortBy, uniqBy } from 'lodash'
-import React, { Suspense, memo, useMemo, useState } from 'react'
+import { sortBy, uniqBy } from 'lodash'
+import React, { Suspense, memo, useCallback, useMemo, useState } from 'react'
 import { Dimensions } from 'react-native'
 import { LoadingItems, VStack, useTheme } from 'snackui'
 
-import { selectRishDishViewSimple } from '../../helpers/selectDishViewSimple'
 import { useQueryLoud } from '../../helpers/useQueryLoud'
-import { RegionNormalized } from '../../types/homeTypes'
 import { useSetAppMap } from '../AppMapStore'
 import {
   FICuisine,
@@ -71,16 +63,31 @@ export const HomePageFeed = memo(
             case 'new':
               return <HomeFeedTrendingNew {...item} />
             case 'dish-restaurants':
-              return <HomeFeedDishRestaurants {...item} />
+              return (
+                <HomeFeedDishRestaurants
+                  {...item}
+                  onHoverResults={(results) => {
+                    setHoveredResults({ via: item.type, results })
+                  }}
+                />
+              )
             case 'cuisine':
-              return <HomeFeedCuisineItem {...item} />
+              return (
+                <HomeFeedCuisineItem
+                  {...item}
+                  onHoverResults={(results) => {
+                    console.log('setting hover', results)
+                    setHoveredResults({ via: item.type, results })
+                  }}
+                />
+              )
             case 'list':
               return (
                 <HomeFeedLists
                   {...item}
-                  onHoverResults={(results) =>
-                    setHoveredResults({ via: 'list', results })
-                  }
+                  onHoverResults={(results) => {
+                    setHoveredResults({ via: item.type, results })
+                  }}
                 />
               )
           }
@@ -198,35 +205,3 @@ function useHomeFeed(props: HomeFeedProps) {
 
   return items
 }
-
-// const DishFeedCard = graphql(function DishFeedCard(props: FIDish) {
-//   const [restaurant] = queryRestaurant(props.restaurant.slug)
-//   return (
-//     <CardFrame aspectFixed transparent>
-//       <VStack position="relative" alignSelf="center">
-//         <DishView showSearchButton size={220} {...props} {...props.dish} />
-//       </VStack>
-//       <Text fontSize={14} lineHeight={22} opacity={0.4} margin={4}>
-//         lorem ipsume dolor sit amet lorem ipsume dolor sit amet lorem ipsume
-//         dolor sit amet lorem ipsume dolor sit amet.
-//       </Text>
-//     </CardFrame>
-//   )
-// })
-
-// const RestaurantFeedCard = (props: FIRestaurant) => {
-//   return (
-//     <RestaurantCard
-//       aspectFixed={false}
-//       restaurantId={props.restaurant.id}
-//       restaurantSlug={props.restaurant.slug}
-//       below={
-//         <CommentBubble
-//           name="Test"
-//           avatar={''}
-//           text="Lorem ipsum dolor sit amet"
-//         />
-//       }
-//     />
-//   )
-// }

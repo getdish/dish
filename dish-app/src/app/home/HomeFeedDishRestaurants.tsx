@@ -1,7 +1,14 @@
 import { graphql, order_by, query } from '@dish/graph'
-import { groupBy, sortBy, uniqBy } from 'lodash'
+import { groupBy, pick, sortBy, uniqBy } from 'lodash'
 import React from 'react'
-import { AbsoluteVStack, HStack, Theme, VStack, useTheme } from 'snackui'
+import {
+  AbsoluteVStack,
+  HStack,
+  Hoverable,
+  Theme,
+  VStack,
+  useTheme,
+} from 'snackui'
 
 import { selectRishDishViewSimple } from '../../helpers/selectDishViewSimple'
 import { queryRestaurant } from '../../queries/queryRestaurant'
@@ -10,6 +17,7 @@ import { cardFrameBorderRadius } from '../views/CardFrame'
 import { TagButton } from '../views/TagButton'
 import { FeedSlantedTitleLink } from './FeedSlantedTitle'
 import { FIBase } from './FIBase'
+import { HoverResultsProp } from './HoverResultsProp'
 import { RestaurantCard } from './restaurant/RestaurantCard'
 import { SkewedCard, SkewedCardCarousel } from './SkewedCard'
 
@@ -78,7 +86,7 @@ export function useFeedDishItems(
 }
 
 export const HomeFeedDishRestaurants = graphql(
-  ({ tag, region }: FIDishRestaurants) => {
+  ({ tag, region, onHoverResults }: FIDishRestaurants & HoverResultsProp) => {
     const restaurants = query.restaurant_with_tags({
       args: {
         tag_slugs: tag.slug,
@@ -91,10 +99,12 @@ export const HomeFeedDishRestaurants = graphql(
       },
     })
 
-    console.log('tag is', tag, restaurants)
-
     return (
-      <>
+      <Hoverable
+        onHoverIn={() => {
+          onHoverResults(restaurants.map((x) => pick(x, 'id', 'slug')))
+        }}
+      >
         <FeedSlantedTitleLink tag={tag}>
           {tag.icon} {tag.name}
         </FeedSlantedTitleLink>
@@ -104,6 +114,7 @@ export const HomeFeedDishRestaurants = graphql(
               <SkewedCard zIndex={1000 - i} key={r.id}>
                 <RestaurantCard
                   padTitleSide
+                  hoverToMap
                   isBehind={i > 0}
                   hideScore
                   restaurantId={r.id}
@@ -121,7 +132,7 @@ export const HomeFeedDishRestaurants = graphql(
             )
           })}
         </SkewedCardCarousel>
-      </>
+      </Hoverable>
     )
   }
 )

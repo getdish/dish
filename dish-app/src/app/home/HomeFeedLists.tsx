@@ -1,11 +1,5 @@
 import { series } from '@dish/async'
-import {
-  RestaurantOnlyIds,
-  graphql,
-  order_by,
-  query,
-  resolved,
-} from '@dish/graph'
+import { graphql, order_by, query, resolved } from '@dish/graph'
 import { Plus } from '@dish/react-feather'
 import React, { useEffect, useState } from 'react'
 import { HStack, Spacer, Text, useDebounce } from 'snackui'
@@ -17,6 +11,7 @@ import { Link } from '../views/Link'
 import { ListCard } from '../views/list/ListCard'
 import { FeedSlantedTitle } from './FeedSlantedTitle'
 import { FIBase } from './FIBase'
+import { HoverResultsProp } from './HoverResultsProp'
 import { SkewedCard, SkewedCardCarousel } from './SkewedCard'
 
 export type FIList = FIBase & {
@@ -25,10 +20,7 @@ export type FIList = FIBase & {
 }
 
 export const HomeFeedLists = graphql(
-  ({
-    region,
-    onHoverResults,
-  }: FIList & { onHoverResults: (ids: RestaurantOnlyIds[]) => any }) => {
+  ({ region, onHoverResults }: FIList & HoverResultsProp) => {
     const recentLists = query.list_populated({
       args: {
         min_items: 2,

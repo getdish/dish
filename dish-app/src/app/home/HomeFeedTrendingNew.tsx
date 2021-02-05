@@ -1,6 +1,8 @@
 import { RestaurantOnlyIds, graphql } from '@dish/graph'
 import React, { memo } from 'react'
+import { Hoverable } from 'snackui'
 
+import { appMapStore } from '../AppMapStore'
 import { FeedSlantedTitle } from './FeedSlantedTitle'
 import { FIBase } from './FIBase'
 import { RestaurantCard } from './restaurant/RestaurantCard'
@@ -41,6 +43,7 @@ export const HomeFeedTrendingNew = memo(
                   restaurantId={r.id}
                   restaurantSlug={r.slug}
                   hoverable={false}
+                  hoverToMap
                 />
               </SkewedCard>
             )

@@ -1,11 +1,12 @@
 import { graphql } from '@dish/graph'
 import React, { Suspense } from 'react'
-import { AbsoluteVStack } from 'snackui'
+import { AbsoluteVStack, Hoverable } from 'snackui'
 
 import {
   queryRestaurant,
   queryRestaurantCoverPhoto,
 } from '../../../queries/queryRestaurant'
+import { appMapStore } from '../../AppMapStore'
 import { CardFrame } from '../../views/CardFrame'
 import { Link } from '../../views/Link'
 import { RestaurantUpVoteDownVote } from '../../views/restaurant/RestaurantUpVoteDownVote'
@@ -21,21 +22,38 @@ export type RestaurantCardProps = {
   isBehind?: boolean
   hideScore?: boolean
   hoverable?: boolean
+  hoverToMap?: boolean
   padTitleSide?: boolean
   dimImage?: boolean
 }
 
-const fallbackCard = <CardFrame aspectFixed />
-
 export const RestaurantCard = (props: RestaurantCardProps) => {
+  const fallbackCard = <CardFrame aspectFixed size={props.size} />
   if (!props.restaurantSlug) {
     return fallbackCard
   }
-  return (
+  const content = (
     <Suspense fallback={fallbackCard}>
       <RestaurantCardContent {...props} />
     </Suspense>
   )
+  if (props.hoverToMap) {
+    return (
+      <Hoverable
+        onHoverIn={() =>
+          appMapStore.setHovered({
+            id: props.restaurantId,
+            slug: props.restaurantSlug,
+            via: 'list',
+          })
+        }
+      >
+        {content}
+      </Hoverable>
+    )
+  }
+
+  return content
 }
 
 export const RestaurantCardContent = graphql(
