@@ -1,11 +1,9 @@
-import { RestaurantOnlyIds, SEARCH_DOMAIN, graphql } from '@dish/graph'
+import { RestaurantOnlyIds, graphql } from '@dish/graph'
 import { isPresent } from '@dish/helpers'
-import { sortBy, uniqBy } from 'lodash'
-import React, { Suspense, memo, useCallback, useMemo, useState } from 'react'
+import React, { Suspense, memo, useMemo, useState } from 'react'
 import { Dimensions } from 'react-native'
 import { LoadingItems, VStack, useTheme } from 'snackui'
 
-import { useQueryLoud } from '../../helpers/useQueryLoud'
 import { useSetAppMap } from '../AppMapStore'
 import {
   FICuisine,
@@ -19,10 +17,34 @@ import {
 } from './HomeFeedDishRestaurants'
 import { FIList, HomeFeedLists } from './HomeFeedLists'
 import { HomeFeedProps } from './HomeFeedProps'
-import { FIHot, FINew, HomeFeedTrendingNew } from './HomeFeedTrendingNew'
+import {
+  FIHot,
+  FINew,
+  HomeFeedTrendingNew,
+  useHomeFeedTrendingNew,
+} from './HomeFeedTrendingNew'
 import { PageFooter } from './PageFooter'
 
 type FI = FICuisine | FIDishRestaurants | FIList | FINew | FIHot
+
+function useHomeFeed(props: HomeFeedProps): FI[] {
+  const { item, region } = props
+  const cuisineItems = useFeedTopCuisines(props)
+  const dishItems = useFeedDishItems(region)
+  const hotNewItems = useHomeFeedTrendingNew(props)
+  return [
+    {
+      id: `0`,
+      type: 'list',
+      region: item.region,
+      rank: -3,
+      title: `Lists`,
+    } as FIList,
+    ...hotNewItems,
+    ...cuisineItems,
+    ...dishItems,
+  ].filter(isPresent)
+}
 
 export const HomePageFeed = memo(
   graphql(function HomePageFeed(props: HomeFeedProps) {
@@ -144,64 +166,3 @@ export const HomePageFeed = memo(
     )
   })
 )
-
-type FeedApiResponse = {
-  trending: RestaurantOnlyIds[]
-  newest: RestaurantOnlyIds[]
-}
-
-function useHomeFeed(props: HomeFeedProps) {
-  const { item, region } = props
-  const cuisineItems = useFeedTopCuisines(props)
-  const slug = item.region ?? region?.slug ?? ''
-  const dishItems = useFeedDishItems(region)
-  const homeFeed = useQueryLoud<FeedApiResponse>(
-    `HOMEFEEDQUERY-${slug}`,
-    () =>
-      fetch(
-        `${SEARCH_DOMAIN}/feed?region=${encodeURIComponent(slug)}&limit=20`
-      ).then((res) => res.json()),
-    {
-      enabled: !!slug,
-      suspense: false,
-    }
-  )
-  const feedData = homeFeed.data
-
-  let items: FI[] =
-    !region || !item.region
-      ? []
-      : [
-          {
-            id: `0`,
-            type: 'list',
-            region: item.region,
-            rank: -3,
-            title: `Lists`,
-          } as FIList,
-
-          {
-            id: '1',
-            type: 'new',
-            rank: -2,
-            title: 'New',
-            restaurants: feedData?.newest,
-          } as FINew,
-
-          {
-            id: '2',
-            type: 'hot',
-            title: 'Trending',
-            rank: -1,
-            restaurants: feedData?.trending,
-          } as FIHot,
-          ...cuisineItems,
-          ...dishItems,
-        ].filter(isPresent)
-
-  items = uniqBy(items, (x) => x.id)
-  items = items.filter((x) => x.id)
-  items = sortBy(items, (x) => x.rank)
-
-  return items
-}

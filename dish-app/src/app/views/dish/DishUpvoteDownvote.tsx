@@ -71,14 +71,14 @@ const DishUpvoteDownvoteContent = graphql(function DishUpvoteDownvote({
     [slug]: true,
   })
 
-  if (isPresent(upvotes ?? downvotes)) {
-    return (
-      <VStack position="relative">
-        <SkewRating positive>{upvotes}</SkewRating>
-        <SkewRating>{downvotes}</SkewRating>
-      </VStack>
-    )
-  }
+  // if (isPresent(upvotes ?? downvotes)) {
+  //   return (
+  //     <VStack position="relative">
+  //       <SkewRating positive>{upvotes}</SkewRating>
+  //       <SkewRating>{downvotes}</SkewRating>
+  //     </VStack>
+  //   )
+  // }
 
   return (
     <UpvoteDownvoteScore

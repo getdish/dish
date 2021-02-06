@@ -1,6 +1,6 @@
 import { graphql, mutate, order_by, query, useRefetch } from '@dish/graph'
 import { Plus, X } from '@dish/react-feather'
-import React, { useState } from 'react'
+import React, { Suspense, useState } from 'react'
 import { ScrollView } from 'react-native'
 import {
   AbsoluteVStack,
@@ -29,6 +29,7 @@ export const RestaurantAddToListButton = ({
   restaurantSlug,
   noLabel,
   theme = 'active',
+  shadowed,
   size,
   ...props
 }: SmallButtonProps & {
@@ -36,19 +37,23 @@ export const RestaurantAddToListButton = ({
   size?: number
   restaurantSlug?: string
   noLabel?: boolean
+  shadowed?: boolean
 }) => {
   const [showModal, setShowModal] = useState(false)
   return (
     <>
       {!!(showModal && restaurantSlug) && (
-        <RestaurantAddToListModal
-          slug={restaurantSlug}
-          onDismiss={() => setShowModal(false)}
-        />
+        <Suspense fallback={null}>
+          <RestaurantAddToListModal
+            slug={restaurantSlug}
+            onDismiss={() => setShowModal(false)}
+          />
+        </Suspense>
       )}
       <Tooltip contents="Add to list">
         <SmallCircleButton
-          shadowed
+          cursor="pointer"
+          shadowed={shadowed}
           tooltip="Add to list"
           onPress={() => {
             if (!userStore.promptLogin()) {

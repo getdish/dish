@@ -66,7 +66,10 @@ export function useFeedDishItems(
     })
 
   const topDishes = sortBy(
-    groupBy(popularDishTags, (x) => x.slug),
+    groupBy(
+      uniqBy(popularDishTags, (x) => x.slug),
+      (x) => x.slug
+    ),
     (x) => -x.length
   )
     .slice(0, 5)

@@ -78,9 +78,9 @@ const RestaurantHeaderContent = memo(
       const fontScale = size === 'sm' ? 0.8 : 1
       const fontSizeBase =
         nameLen > 40
-          ? 16
+          ? 22
           : nameLen > 30
-          ? 20
+          ? 24
           : nameLen > 24
           ? 28
           : nameLen > 18
@@ -102,7 +102,10 @@ const RestaurantHeaderContent = memo(
           <VStack>
             <AbsoluteVStack top={5} left={5} zIndex={100}>
               <Suspense fallback={null}>
-                <RestaurantAddToListButton restaurantSlug={restaurantSlug} />
+                <RestaurantAddToListButton
+                  shadowed
+                  restaurantSlug={restaurantSlug}
+                />
               </Suspense>
             </AbsoluteVStack>
 

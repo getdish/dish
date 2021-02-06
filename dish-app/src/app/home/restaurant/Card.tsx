@@ -26,8 +26,8 @@ import {
 } from '../../views/CardFrame'
 
 export type CardProps = {
-  below?: ((colors: ColorShades) => any) | any
-  outside?: any
+  below?: ((colors: ColorShades) => any) | JSX.Element | string | null
+  outside?: ((colors: ColorShades) => any) | JSX.Element | string | null
   photo?: string | JSX.Element | null
   title?: string | null
   subTitle?: string | null
@@ -73,12 +73,12 @@ export function Card({
   const topCornerColor = `${color}cc`
   const longestWord =
     title?.split(' ').reduce((acc, cur) => Math.max(cur.length, acc), 0) ?? 0
-  const fontSize = (longestWord > 9 ? 24 : 28) * (isSm ? 0.85 : 1)
+  const fontSize = Math.round((longestWord > 9 ? 24 : 28) * (isSm ? 0.85 : 0.9))
 
   return (
     <CardFrame size={size} aspectFixed={aspectFixed} hoverable={hoverable}>
       <VStack
-        className="card-hover-image safari-fix-overflow"
+        className="card-hover safari-fix-overflow"
         width="100%"
         overflow="hidden"
         alignSelf="center"
@@ -89,31 +89,30 @@ export function Card({
         <AbsoluteVStack
           className="ease-in-out"
           opacity={hideInfo ? 0 : 1}
-          hoverStyle={{
-            opacity: 0.35,
-          }}
           fullscreen
           zIndex={12}
         >
-          {isBehind && (
+          <VStack className="card-hover-fade" flex={1}>
+            {isBehind && (
+              <LinearGradient
+                style={[StyleSheet.absoluteFill, sheet.cardGradient]}
+                start={[0, 0]}
+                end={[1, 0]}
+                colors={['rgba(0,0,0,0.33)', 'rgba(0,0,0,0)']}
+              />
+            )}
             <LinearGradient
-              style={[StyleSheet.absoluteFill, sheet.cardGradient]}
-              start={[0, 0]}
-              end={[1, 0]}
-              colors={['rgba(0,0,0,0.33)', 'rgba(0,0,0,0)']}
+              style={StyleSheet.absoluteFill}
+              colors={[
+                `transparent`,
+                `transparent`,
+                'transparent',
+                `${darkColor}aa`,
+              ]}
+              start={[1, 0]}
+              end={[0, 0.5]}
             />
-          )}
-          <LinearGradient
-            style={StyleSheet.absoluteFill}
-            colors={[
-              `transparent`,
-              `transparent`,
-              'transparent',
-              `${darkColor}aa`,
-            ]}
-            start={[1, 0]}
-            end={[0, 0.5]}
-          />
+          </VStack>
           <LinearGradient
             style={[StyleSheet.absoluteFill, { opacity: 0.85 }]}
             colors={[
@@ -150,19 +149,24 @@ export function Card({
         pointerEvents="none"
         zIndex={11}
       >
-        {outside}
+        {typeof outside === 'function' ? outside(colors) : outside}
 
         <VStack
           className="ease-in-out"
           opacity={hideInfo ? 0 : 1}
-          padding={15}
+          padding={20}
           alignItems="flex-start"
           spacing
           width="100%"
           height="100%"
         >
           <HStack width="100%">
-            {!!(outside || padTitleSide) && <VStack minWidth={50} flex={1} />}
+            {!!padTitleSide &&
+              (isSm ? (
+                <VStack minWidth={30} flex={1} />
+              ) : (
+                <VStack minWidth={45} flex={1} />
+              ))}
             <VStack flex={1} overflow="hidden" alignItems="flex-end">
               <Text
                 textAlign="right"

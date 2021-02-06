@@ -1,7 +1,8 @@
 import { graphql } from '@dish/graph'
 import React, { Suspense } from 'react'
-import { AbsoluteVStack, Hoverable } from 'snackui'
+import { AbsoluteVStack, Circle, Hoverable, Text } from 'snackui'
 
+import { green } from '../../../constants/colors'
 import {
   queryRestaurant,
   queryRestaurantCoverPhoto,
@@ -17,7 +18,7 @@ export type RestaurantCardProps = {
   restaurantSlug: string
   restaurantId: string
   below?: CardProps['below']
-  aspectFixed?: CardProps['below']
+  aspectFixed?: CardProps['aspectFixed']
   size?: CardProps['size']
   isBehind?: boolean
   hideScore?: boolean
@@ -82,15 +83,46 @@ export const RestaurantCardContent = graphql(
           below={below}
           dimImage={dimImage}
           outside={
-            !hideScore && (
-              <AbsoluteVStack bottom={-10} right={-10} zIndex={20}>
-                <RestaurantUpVoteDownVote
-                  rounded
-                  display="ratio"
-                  restaurantSlug={restaurantSlug}
-                />
-              </AbsoluteVStack>
-            )
+            (colors) => {
+              return (
+                <Circle
+                  backgroundColor={colors.darkColor}
+                  shadowColor="#000"
+                  shadowOffset={{ height: 2, width: 0 }}
+                  shadowOpacity={0.1}
+                  shadowRadius={10}
+                  size={36}
+                  position="absolute"
+                  top={-7}
+                  right={-10}
+                  zIndex={100}
+                >
+                  <Text color="#fff" fontWeight="800" fontSize={18}>
+                    {Math.round(restaurant.rating * 2)}
+                  </Text>
+                </Circle>
+              )
+            }
+            // <Text
+            //   position="absolute"
+            //   zIndex={1000}
+            //   top={-15}
+            //   right={-15}
+            //   textShadowColor="rgba(0,0,0,0.5)"
+            //   textShadowRadius={3}
+            //   fontSize={42}
+            // >
+            //   💎
+            // </Text>
+            // !hideScore && (
+            //   <AbsoluteVStack bottom={-10} right={-10} zIndex={20}>
+            //     <RestaurantUpVoteDownVote
+            //       rounded
+            //       display="ratio"
+            //       restaurantSlug={restaurantSlug}
+            //     />
+            //   </AbsoluteVStack>
+            // )
           }
           photo={restaurantPhoto}
           aspectFixed={aspectFixed}

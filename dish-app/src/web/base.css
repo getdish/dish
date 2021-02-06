@@ -595,10 +595,20 @@ mark {
   white-space: pre;
 }
 
-.card-hover-image .card-image {
+.card-hover .card-image {
   opacity: 0.5;
+  transition: opacity ease-in-out 300ms;
 }
 
-.card-hover-image:hover .card-image {
+.card-hover:hover .card-image {
   opacity: 0.8;
+}
+
+.card-hover .card-hover-fade {
+  opacity: 1;
+  transition: opacity ease-in-out 300ms;
+}
+
+.card-hover:hover .card-hover-fade {
+  opacity: 0.2;
 }

@@ -350,6 +350,7 @@ export const RestaurantSourcesOverview = graphql(
                   borderWidth={1}
                   borderColor={theme.borderColor}
                   backgroundColor={theme.cardBackgroundColor}
+                  maxWidth={360}
                   shadowRadius={15}
                   shadowOffset={{ height: 3, width: 0 }}
                   padding={20}
@@ -359,7 +360,7 @@ export const RestaurantSourcesOverview = graphql(
                   flex={1}
                 >
                   <VStack position="relative" alignSelf="center">
-                    <AbsoluteVStack
+                    {/* <AbsoluteVStack
                       right={-35}
                       top={-25}
                       justifyContent="center"
@@ -367,8 +368,8 @@ export const RestaurantSourcesOverview = graphql(
                       zIndex={0}
                     >
                       <SentimentCircle scale={1.2} ratio={ratio} />
-                    </AbsoluteVStack>
-                    <SlantedTitle marginTop={-30} size="sm">
+                    </AbsoluteVStack> */}
+                    <SlantedTitle marginTop={-30} size="xs">
                       {name}
                     </SlantedTitle>
                   </VStack>
@@ -380,8 +381,8 @@ export const RestaurantSourcesOverview = graphql(
                       <Image
                         source={{ uri: image }}
                         style={{
-                          width: 48,
-                          height: 48,
+                          width: 32,
+                          height: 32,
                           borderRadius: 100,
                         }}
                       />
