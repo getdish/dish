@@ -17,6 +17,7 @@ export const CardFrame = ({
   children,
   aspectFixed,
   size,
+  square,
 }: {
   children?: any
   expandable?: boolean
@@ -24,6 +25,7 @@ export const CardFrame = ({
   transparent?: boolean
   aspectFixed?: boolean
   size?: 'md' | 'sm'
+  square?: boolean
 }) => {
   const theme = useTheme()
   const media = useMedia()
@@ -33,7 +35,7 @@ export const CardFrame = ({
       contain="layout"
       borderRadius={cardFrameBorderRadius}
       width={cardFrameWidth}
-      height={cardFrameHeight}
+      height={square ? cardFrameWidth : cardFrameHeight}
       backgroundColor={transparent ? 'transparent' : theme.cardBackgroundColor}
       shadowColor="#000"
       shadowOpacity={transparent ? 0 : 0.1}
@@ -56,7 +58,12 @@ export const CardFrame = ({
         width: cardFrameWidthSm,
         minWidth: cardFrameWidthSm,
         height: cardFrameHeightSm,
+        // maxHeight: square ? cardFrameWidth : 'auto',
       })}
+      {...(size === 'sm' &&
+        square && {
+          height: cardFrameWidthSm,
+        })}
       {...(hoverable && {
         hoverStyle: {
           transform: [{ scale: 1.015 }],

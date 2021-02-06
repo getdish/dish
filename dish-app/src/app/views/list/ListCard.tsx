@@ -53,6 +53,7 @@ export const ListCard = graphql(
       <Link name="list" asyncClick params={{ slug, userSlug, region }}>
         <Card
           aspectFixed
+          square
           size="sm"
           hoverable={hoverable}
           title={list.name}

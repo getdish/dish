@@ -39,6 +39,7 @@ export type CardProps = {
   isBehind?: boolean
   dimImage?: boolean
   padTitleSide?: boolean
+  square?: boolean
 }
 
 export function Card({
@@ -51,6 +52,7 @@ export function Card({
   aspectFixed,
   hoverable,
   hideInfo,
+  square,
   backgroundColor,
   isBehind,
   dimImage,
@@ -61,9 +63,11 @@ export function Card({
     : getColorsForName(title ?? '')
   const { color, darkColor } = colors
   const isSm = size === 'sm'
+  const width = isSm ? cardFrameWidthSm : cardFrameWidth
+  const height = square ? width : isSm ? cardFrameHeightSm : cardFrameHeight
   const sizes = {
-    width: isSm ? cardFrameWidthSm : cardFrameWidth,
-    height: isSm ? cardFrameHeightSm : cardFrameHeight,
+    width,
+    height,
   }
   const frame = {
     ...sizes,
@@ -76,7 +80,12 @@ export function Card({
   const fontSize = Math.round((longestWord > 9 ? 24 : 28) * (isSm ? 0.85 : 0.9))
 
   return (
-    <CardFrame size={size} aspectFixed={aspectFixed} hoverable={hoverable}>
+    <CardFrame
+      square={square}
+      size={size}
+      aspectFixed={aspectFixed}
+      hoverable={hoverable}
+    >
       <VStack
         className="card-hover safari-fix-overflow"
         width="100%"

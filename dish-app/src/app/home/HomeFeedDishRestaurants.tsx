@@ -56,7 +56,7 @@ export function useFeedDishItems(
               },
             },
           },
-          order_by: [{ upvotes: order_by.desc }],
+          order_by: [{ upvotes: order_by.desc_nulls_last }],
         })
         .map((x) => ({
           name: x.tag.name ?? '',
@@ -174,7 +174,7 @@ const RestaurantStatBars = graphql(
         },
       },
       limit: 3,
-      order_by: [{ upvotes: order_by.desc }],
+      order_by: [{ upvotes: order_by.desc_nulls_last }],
     })
 
     const rtags = uniqBy([...givenTags, ...restTags], (x) => x.tag.slug).slice(

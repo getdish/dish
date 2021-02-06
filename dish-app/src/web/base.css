@@ -601,7 +601,7 @@ mark {
 }
 
 .card-hover:hover .card-image {
-  opacity: 0.8;
+  opacity: 1;
 }
 
 .card-hover .card-hover-fade {
