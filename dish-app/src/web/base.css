@@ -612,3 +612,13 @@ mark {
 .card-hover:hover .card-hover-fade {
   opacity: 0.2;
 }
+
+.map-marker .mapboxgl-popup-content {
+  padding: 5px;
+  background-color: #00000099;
+  color: #fff;
+}
+
+.map-marker .mapboxgl-popup-tip {
+  display: none;
+}

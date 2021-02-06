@@ -5,6 +5,7 @@ import { isDev, isStaging, slugify } from '@dish/graph'
 import { assertPresent } from '@dish/helpers/src'
 import { supportsTouchWeb } from '@dish/helpers/src'
 import bbox from '@turf/bbox'
+import getCenter from '@turf/center'
 import union from '@turf/union'
 import _, { capitalize, debounce, isEqual, throttle } from 'lodash'
 import mapboxgl, { MapboxGeoJSONFeature } from 'mapbox-gl'
@@ -97,6 +98,7 @@ export const MapView = (props: MapProps) => {
     })
   }, [])
 
+  // style
   useEffect(() => {
     if (!map) return
     if (!hasChangedStyle(map, style!)) return
@@ -124,15 +126,39 @@ export const MapView = (props: MapProps) => {
     if (prevHoveredId.current != null) {
       mapSetFeature(map, prevHoveredId.current, { hover: false })
     }
-    const featureId = features.findIndex(
+    const index = features.findIndex(
       (feature) => feature.properties?.id === hovered
     )
 
-    if (featureId !== -1) {
-      prevHoveredId.current = featureId
-      mapSetFeature(map, featureId, { hover: true })
+    if (index === -1) {
+      return
     }
-    // return animateMarker(map)
+
+    prevHoveredId.current = index
+    mapSetFeature(map, index, { hover: true })
+
+    const feature = features[index]
+    if (!feature || feature.geometry.type !== 'Point') {
+      return
+    }
+
+    const popup = new mapboxgl.Popup({
+      className: 'map-marker',
+      closeButton: false,
+      offset: 12,
+    })
+      .setLngLat(
+        new mapboxgl.LngLat(
+          feature.geometry.coordinates[0],
+          feature.geometry.coordinates[1]
+        )
+      )
+      .setHTML(`${feature.properties?.title}`)
+      .addTo(map)
+
+    return () => {
+      popup.remove()
+    }
   }, [map, hovered, features])
 
   // center + span
@@ -184,7 +210,7 @@ export const MapView = (props: MapProps) => {
     if (!map) return
     const source = map.getSource(RESTAURANTS_SOURCE_ID)
     const source2 = map.getSource(RESTAURANTS_UNCLUSTERED_SOURCE_ID)
-    assertPresent(source || source2, 'missing source')
+    if (!(source || source2)) return
 
     if (props.showRank) {
       for (const [index, feature] of features.entries()) {
@@ -458,13 +484,16 @@ function setupMapEffect({
         })()
 
         let hovered
+
+        const tileLayers = tiles.map((t) => `${t.name}.fill`)
         const getFeatures = (e) => {
           return map.queryRenderedFeatures(e.point, {
-            layers: tiles.map((t) => `${t.name}.fill`),
+            layers: tileLayers,
           })
         }
-        const handleHover = throttle((e) => {
-          const [feature] = getFeatures(e)
+        const handleMouseMove = throttle((e) => {
+          const features = getFeatures(e)
+          const [feature] = features
           if (
             feature &&
             hovered &&
@@ -492,10 +521,11 @@ function setupMapEffect({
           })({
             hover: true,
           })
-        }, 32)
-        map.on('mousemove', handleHover)
+        }, 100)
+        map.on('mousemove', handleMouseMove)
         cancels.add(() => {
-          map.off('mousemove', handleHover)
+          handleMouseMove.cancel()
+          map.off('mousemove', handleMouseMove)
         })
 
         const handleClick = (e) => {
@@ -763,10 +793,10 @@ function setupMapEffect({
                   ['==', ['feature-state', 'active'], true],
                   1.0,
                   ['==', ['feature-state', 'hover'], true],
-                  0.05,
+                  0.5,
                   ['==', ['feature-state', 'active'], null],
-                  0.15,
-                  0.15,
+                  0.6,
+                  0,
                 ],
                 'fill-color': [
                   'case',
@@ -847,7 +877,7 @@ function setupMapEffect({
                 'text-size': {
                   base: 1,
                   stops: [
-                    [10, 6],
+                    [10, 8],
                     [16, 26],
                   ],
                 },
@@ -860,13 +890,13 @@ function setupMapEffect({
                   ['==', ['feature-state', 'active'], true],
                   '#000',
                   ['==', ['feature-state', 'hover'], true],
-                  '#000',
+                  '#fff',
                   ['==', ['feature-state', 'active'], null],
-                  'rgba(0,0,0,0.5)',
+                  '#fff',
                   'green',
                 ],
-                'text-halo-color': 'rgba(255,255,255,0.1)',
-                'text-halo-width': 1,
+                // 'text-halo-color': 'rgba(255,255,255,0.1)',
+                // 'text-halo-width': 1,
               },
             })
           }
@@ -929,22 +959,23 @@ function setupMapEffect({
           )
         }
 
-        const hoverCluster: Listener = (e) => {
+        const pointMouseEnter: Listener = (e) => {
           setHovered(e, true)
         }
-        map.on('mouseenter', POINT_LAYER_ID, hoverCluster)
+        map.on('mousemove', POINT_LAYER_ID, pointMouseEnter)
         cancels.add(() => {
-          map.off('mouseenter', POINT_LAYER_ID, hoverCluster)
+          map.off('mousemove', POINT_LAYER_ID, pointMouseEnter)
         })
-        function unHoverCluster() {
+
+        function pointMouseLeave() {
           callbackOnHover(null)
           if (map) {
             map.getCanvas().style.cursor = ''
           }
         }
-        map.on('mouseleave', POINT_LAYER_ID, unHoverCluster)
+        map.on('mouseleave', POINT_LAYER_ID, pointMouseLeave)
         cancels.add(() => {
-          map.off('mouseleave', POINT_LAYER_ID, unHoverCluster)
+          map.off('mouseleave', POINT_LAYER_ID, pointMouseLeave)
         })
 
         /*

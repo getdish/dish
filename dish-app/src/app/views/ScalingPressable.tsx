@@ -7,11 +7,11 @@ export function ScalingPressable({ children }: { children: any }) {
       position="relative"
       zIndex={0}
       hoverStyle={{
-        transform: [{ scale: 1.05 }],
+        transform: [{ scale: 1.025 }],
         zIndex: 3,
       }}
       pressStyle={{
-        transform: [{ scale: 0.9 }],
+        transform: [{ scale: 0.95 }],
       }}
     >
       {children}

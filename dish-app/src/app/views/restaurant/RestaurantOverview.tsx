@@ -35,6 +35,7 @@ export const RestaurantOverview = memo(
     fullHeight,
     size,
     disableEllipse,
+    maxLines = 3,
   }: {
     restaurantSlug: string
     fullHeight?: boolean
@@ -43,6 +44,7 @@ export const RestaurantOverview = memo(
     editableDescription?: boolean
     onEdit?: (next: string) => void
     disableEllipse?: boolean
+    maxLines?: number
   }) {
     const theme = useTheme()
     const [restaurant] = queryRestaurant(restaurantSlug)
@@ -62,7 +64,7 @@ export const RestaurantOverview = memo(
       return (
         <VStack>
           <HStack
-            maxHeight={fullHeight ? 'auto' : lineHeight * 4 - 2}
+            maxHeight={fullHeight ? 'auto' : lineHeight * maxLines - 2}
             overflow="hidden"
             paddingHorizontal={30}
             marginHorizontal={-30}

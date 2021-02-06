@@ -132,7 +132,7 @@ async function createWebServerProd(app: any, config: ServerConfigNormal) {
         // @ts-ignore
         const helmet = Helmet.renderStatic()
 
-        const useragent = req.get('User-Agent')
+        // const useragent = req.get('User-Agent')
         // const isModernUser = matchesUA(useragent, {
         //   // safari doesnt have requestidlecallback
         //   browsers: ['Chrome >= 61', 'Firefox >= 73'],

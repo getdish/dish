@@ -44,7 +44,7 @@ export const UpvoteDownvoteScore = memo(
     const shownScore = Math.round(ratio ? ratio * 100 : score)
     const voteButtonColor = subtle ? '#f2f2f2' : null
     const scale = size === 'sm' ? 0.65 : 1
-    const sizePx = 56 * scale
+    const sizePx = 46 * scale
     const isOpenProp =
       vote === 0
         ? null
@@ -52,7 +52,7 @@ export const UpvoteDownvoteScore = memo(
             isOpen: false,
           }
     const fontSize =
-      Math.min(16, sizePx / `${shownScore}`.length) * scale * 1.075 +
+      Math.min(16, sizePx / `${shownScore}`.length) * scale * 1.175 +
       (size === 'sm' ? 2 : 0)
 
     const upvote = (

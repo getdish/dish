@@ -3,14 +3,14 @@ import React, { memo, useMemo, useState } from 'react'
 import { SectionList } from 'react-native'
 import { HStack, Spacer, VStack } from 'snackui'
 
-import { bgLightHover } from '../../../constants/colors'
+import { bgLightHover, blue } from '../../../constants/colors'
 import { isWeb } from '../../../constants/constants'
 import { getRestaurantDishes } from '../../../helpers/getRestaurantDishes'
 import { getTagSlug } from '../../../helpers/getTagSlug'
 import { ContentScrollViewHorizontal } from '../../views/ContentScrollViewHorizontal'
 import { DishView } from '../../views/dish/DishView'
 
-export const RestaurantDishPhotos = memo(
+export const RestaurantTagsRow = memo(
   graphql(
     ({
       restaurantSlug,
@@ -18,7 +18,7 @@ export const RestaurantDishPhotos = memo(
       selectable,
       onSelect,
       selected,
-      size = 170,
+      size = 140,
       max = 30,
     }: {
       restaurantSlug: string
@@ -115,13 +115,18 @@ function SectionTab({
 }) {
   return (
     <VStack
-      padding={20 / 2}
-      marginRight={-20 / 4}
-      paddingBottom={30}
-      borderTopLeftRadius={28}
-      borderTopRightRadius={28}
-      borderWidth={1}
+      borderRadius={1000}
+      shadowColor={blue}
+      borderWidth={2}
       borderColor="transparent"
+      marginRight={5}
+      // padding={20 / 2}
+      // marginRight={-20 / 4}
+      // paddingBottom={30}
+      // borderTopLeftRadius={28}
+      // borderTopRightRadius={28}
+      // borderWidth={1}
+      // borderColor="transparent"
       {...(isSelected && {
         backgroundColor: '#fff',
         borderColor: bgLightHover,

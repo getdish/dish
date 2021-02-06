@@ -64,36 +64,34 @@ export const SearchPageScoring = memo(() => {
           />
         </HStack>
       </HStack>
-      <ContentScrollViewHorizontal>
-        <HStack
-          alignItems="center"
-          borderWidth={1}
-          borderColor={theme.borderColor}
-          paddingHorizontal={18}
-          borderRadius={100}
-          marginLeft={100}
-          marginRight={30}
-          height={48}
-          position="relative"
-        >
-          <AbsoluteVStack left={-66}>
-            <SlantedTitle size="xs">Scoring</SlantedTitle>
-          </AbsoluteVStack>
+      <HStack
+        alignItems="center"
+        borderWidth={1}
+        borderColor={theme.borderColor}
+        paddingHorizontal={18}
+        borderRadius={100}
+        marginLeft={100}
+        marginRight={30}
+        height={48}
+        position="relative"
+      >
+        <AbsoluteVStack left={-66}>
+          <SlantedTitle size="xs">Scoring</SlantedTitle>
+        </AbsoluteVStack>
 
-          <HStack spacing="sm">
-            {tagsWithPct.map(({ tag, pct }, index) => {
-              return (
-                <TagButton
-                  key={tag.slug ?? index}
-                  size="sm"
-                  {...getTagButtonProps(tag)}
-                  after={`(${pct}%)`}
-                />
-              )
-            })}
-          </HStack>
+        <HStack spacing="sm">
+          {tagsWithPct.map(({ tag, pct }, index) => {
+            return (
+              <TagButton
+                key={tag.slug ?? index}
+                size="sm"
+                {...getTagButtonProps(tag)}
+                after={`(${pct}%)`}
+              />
+            )
+          })}
         </HStack>
-      </ContentScrollViewHorizontal>
+      </HStack>
 
       <HStack flex={1} />
     </HStack>

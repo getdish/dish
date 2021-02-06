@@ -19,7 +19,7 @@ export const AppMapControls = memo(() => {
   const showSearchHere = useShowSearchHere()
   const isHoverZoomed = useStoreInstance(
     appMapStore,
-    (x) => !!x.hovered && x.zoomOnHover
+    (x) => x.hovered?.via === 'list' && x.zoomOnHover
   )
   return (
     <Theme name="darkTranslucent">

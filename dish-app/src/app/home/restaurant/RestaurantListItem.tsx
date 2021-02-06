@@ -9,15 +9,7 @@ import {
 } from '@dish/react-feather'
 import { useStoreInstance } from '@dish/use-store'
 import { debounce, sortBy } from 'lodash'
-import React, {
-  Suspense,
-  memo,
-  useCallback,
-  useEffect,
-  useMemo,
-  useRef,
-  useState,
-} from 'react'
+import React, { Suspense, memo, useCallback, useEffect, useState } from 'react'
 import { Dimensions, Image, ScrollView, StyleSheet } from 'react-native'
 import {
   AbsoluteVStack,
@@ -78,7 +70,7 @@ import { RestaurantFavoriteStar } from './RestaurantFavoriteButton'
 import { RestaurantSourcesBreakdownRow } from './RestaurantSourcesBreakdownRow'
 import { useTotalReviews } from './useTotalReviews'
 
-export const ITEM_HEIGHT = 290
+export const ITEM_HEIGHT = 260
 
 type RestaurantListItemProps = {
   curLocInfo: GeocodePlace | null
@@ -454,6 +446,7 @@ const RestaurantListItemContent = memo(
                   editableDescription={editableDescription}
                   onEdit={handleEdit}
                   restaurantSlug={restaurantSlug}
+                  maxLines={3}
                 />
               </VStack>
 

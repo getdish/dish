@@ -146,50 +146,52 @@ const RestaurantHeaderContent = memo(
               zIndex={10}
             >
               <VStack flex={1}>
-                <HStack alignItems="center">
-                  <VStack transform={[{ scale: 1.2 }]}>
-                    <RestaurantUpVoteDownVote
-                      display="ratio"
-                      restaurantSlug={restaurantSlug}
-                    />
-                  </VStack>
-                  <Spacer size="xl" />
-                  <HStack
-                    backgroundColor={colors.themeColorAlt}
-                    shadowColor="#000"
-                    shadowOpacity={0.2}
-                    pointerEvents="auto"
-                    shadowRadius={5}
-                    shadowOffset={{ height: 3, width: 0 }}
-                    borderRadius={10}
-                    paddingHorizontal={15}
-                    paddingVertical={5}
-                    alignItems="center"
-                    justifyContent="center"
-                    transform={[
-                      {
-                        skewX: '-12deg',
-                      },
-                    ]}
-                  >
-                    <Text
-                      color={colors.themeColor}
-                      alignSelf="flex-start"
-                      selectable
-                      letterSpacing={-1.2}
-                      fontSize={fontSize}
-                      fontWeight="800"
+                {/* title row */}
+                <HStack paddingLeft={20} alignItems="center">
+                  <HStack position="relative">
+                    <HStack
+                      backgroundColor={colors.themeColorAlt}
+                      shadowColor="#000"
+                      shadowOpacity={0.2}
+                      pointerEvents="auto"
+                      shadowRadius={5}
+                      shadowOffset={{ height: 3, width: 0 }}
+                      borderRadius={10}
+                      paddingHorizontal={15}
+                      paddingVertical={5}
+                      alignItems="center"
+                      justifyContent="center"
                       transform={[
                         {
-                          skewX: '12deg',
+                          skewX: '-12deg',
                         },
                       ]}
                     >
-                      {restaurant.name}
-                    </Text>
+                      <Text
+                        color={colors.themeColor}
+                        alignSelf="flex-start"
+                        selectable
+                        letterSpacing={-1.2}
+                        fontSize={fontSize}
+                        fontWeight="800"
+                        transform={[
+                          {
+                            skewX: '12deg',
+                          },
+                        ]}
+                      >
+                        {restaurant.name}
+                      </Text>
+                    </HStack>
                   </HStack>
+                  <VStack transform={[{ scale: 1.2 }]}>
+                    <RestaurantUpVoteDownVote restaurantSlug={restaurantSlug} />
+                  </VStack>
                 </HStack>
+
                 <Spacer />
+
+                {/* below title row */}
                 <HStack
                   pointerEvents="auto"
                   flex={1}

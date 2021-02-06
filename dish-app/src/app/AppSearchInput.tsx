@@ -524,6 +524,7 @@ const AppSearchInputTags = memo(
   ({ input }: { input: HTMLInputElement | null }) => {
     const home = useHomeStore()
     const tags = home.searchBarTags
+    const theme = useTheme()
     const focusedTag = home.searchbarFocusedTag
 
     return (
@@ -537,7 +538,7 @@ const AppSearchInputTags = memo(
                   key={getTagSlug(tag.slug)}
                   size="lg"
                   subtleIcon
-                  backgroundColor="rgba(150,150,150,0.65)"
+                  backgroundColor={theme.backgroundColorTertiary}
                   color={'#fff'}
                   shadowColor="#00000022"
                   fontWeight="600"

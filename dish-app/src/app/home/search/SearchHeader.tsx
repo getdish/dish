@@ -43,7 +43,9 @@ import {
 } from './useLocationFromRoute'
 
 export const SearchHeader = () => {
+  const curProps = useContext(SearchPagePropsContext)!
   const { width, setWidthDebounce } = useContentScrollHorizontalFitter()
+  console.log('width', width)
   const media = useMedia()
   return (
     <ContentScrollViewHorizontalFitted
@@ -73,7 +75,13 @@ export const SearchHeader = () => {
                 <Arrow />
               </AbsoluteVStack>
             </AbsoluteVStack>
-            <SearchPageListsRow />
+
+            <VStack>
+              <SearchPageListsRow />
+              <Suspense fallback={null}>
+                <SearchPageResultsInfoBox state={curProps.item} />
+              </Suspense>
+            </VStack>
           </VStack>
         </HStack>
       </VStack>
@@ -94,9 +102,6 @@ const SearchPageTitle = memo(() => {
         subTitle={subTitle}
         color={rgbString(lenseColor.map((x) => x * 0.92))}
       />
-      <Suspense fallback={null}>
-        <SearchPageResultsInfoBox state={curProps.item} />
-      </Suspense>
     </>
   )
 })

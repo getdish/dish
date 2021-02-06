@@ -22,11 +22,11 @@ import { ContentScrollView } from '../../views/ContentScrollView'
 import { PageTitleTag } from '../../views/PageTitleTag'
 import { StackDrawer } from '../../views/StackDrawer'
 import { HomeStackViewProps } from '../HomeStackViewProps'
-import { RestaurantDishPhotos } from './RestaurantDishPhotos'
 import { RestaurantHeader } from './RestaurantHeader'
 import { RestaurantMenu } from './RestaurantMenu'
 import { RestaurantReviewsList } from './RestaurantReviewsList'
 import { RestaurantTagReviews } from './RestaurantTagReviews'
+import { RestaurantTagsRow } from './RestaurantTagsRow'
 import { useSelectedDish } from './useSelectedDish'
 
 type Props = HomeStackViewProps<HomeStateItemRestaurant>
@@ -50,8 +50,6 @@ const RestaurantPage = memo(
     )
     const colors = useColorsFor(restaurant.name)
     const [scrollView, setScrollView] = useState<ScrollView | null>(null)
-    // refs break and capture old values, i think gqless related
-    // todo pablo
     const [reviewsSection, setReviewsSection] = useState<View | null>(null)
     const [dishesSection, setDishesSection] = useState<View | null>(null)
 
@@ -154,8 +152,8 @@ const RestaurantPage = memo(
                     </VStack>
                   }
                 >
-                  <RestaurantDishPhotos
-                    size={130}
+                  <RestaurantTagsRow
+                    size={100}
                     max={35}
                     restaurantSlug={restaurantSlug}
                     restaurantId={restaurant.id ?? undefined}

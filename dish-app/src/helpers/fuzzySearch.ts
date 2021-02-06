@@ -1,3 +1,5 @@
+import FlexSearch from 'flexsearch/flexsearch.js'
+
 export async function fuzzySearch<A extends { [key: string]: any }>({
   items,
   limit = 20,
@@ -9,9 +11,6 @@ export async function fuzzySearch<A extends { [key: string]: any }>({
   keys?: (keyof A)[]
   limit?: number
 }): Promise<A[]> {
-  // react native fix import it like this
-  const FlexSearch = (await import('flexsearch/flexsearch.js')).default
-  // @ts-expect-error
   const flexSearch = FlexSearch.create<number>({
     encode: 'simple',
     tokenize: 'forward',

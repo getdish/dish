@@ -105,7 +105,7 @@ const DishViewContent = (props: DishViewProps) => {
   const isLong =
     dishName.length > 17 || !!dishName.split(' ').find((x) => x.length >= 8)
   const isTiny = size < 115
-  const fontSize = (isLong ? 13 : 15) * (isTiny ? 0.75 : 1)
+  const fontSize = Math.max(14, (isLong ? 13 : 15) * (isTiny ? 0.75 : 1))
   const { lightColor, color } = getColorsForName(name)
   const backgroundColor = lightColor
   const isActive = (isHovered || selected) ?? false

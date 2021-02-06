@@ -245,7 +245,7 @@ function getSourceBreakdowns(breakdowns?: SourceBreakdowns) {
           : breakdown.summaries.reviews.worst
       const sentence = summary
         ? ellipseText(summary, {
-            maxLength: 250,
+            maxLength: 180,
           })
         : null
       return { name, image, sentence, positive, negative }
@@ -337,7 +337,7 @@ export const RestaurantSourcesOverview = graphql(
 
     return (
       <VStack width="100%" marginVertical={-spacing}>
-        <Grid itemMinWidth={280}>
+        <Grid itemMinWidth={300}>
           {items
             .filter(isPresent)
             .map(({ name, sentence, image, positive, negative }) => {
@@ -350,7 +350,7 @@ export const RestaurantSourcesOverview = graphql(
                   borderWidth={1}
                   borderColor={theme.borderColor}
                   backgroundColor={theme.cardBackgroundColor}
-                  maxWidth={360}
+                  maxWidth={400}
                   shadowRadius={15}
                   shadowOffset={{ height: 3, width: 0 }}
                   padding={20}
@@ -377,7 +377,7 @@ export const RestaurantSourcesOverview = graphql(
                   <Spacer size="lg" />
 
                   <HStack>
-                    <VStack spacing alignItems="center">
+                    <VStack marginTop={-18} spacing alignItems="center">
                       <Image
                         source={{ uri: image }}
                         style={{
@@ -388,19 +388,20 @@ export const RestaurantSourcesOverview = graphql(
                       />
 
                       <Text
-                        fontSize={18}
+                        fontSize={22}
+                        fontWeight="700"
                         color={positive > negative ? green : grey}
                       >
                         {Math.round(ratio * 100)}%
                       </Text>
 
                       <VStack spacing="xs">
-                        <SentimentText scale={1.2} sentiment={1}>
+                        <SentimentText scale={1.1} sentiment={1}>
                           {`${positive || 0}`}
                         </SentimentText>
 
-                        <SentimentText scale={1.2} sentiment={-1}>
-                          {`${negative || 0}`}
+                        <SentimentText scale={1.1} sentiment={-1}>
+                          {`${Math.abs(negative || 0)}`}
                         </SentimentText>
                       </VStack>
                     </VStack>
@@ -410,7 +411,6 @@ export const RestaurantSourcesOverview = graphql(
                     <Paragraph
                       color={isWeb ? 'var(--color)' : '#222'}
                       sizeLineHeight={0.9}
-                      size={1.1}
                     >
                       {tagName ? <Text fontWeight="800">{tagName}</Text> : ''}
                       {!!tagName && isWeb ? (
