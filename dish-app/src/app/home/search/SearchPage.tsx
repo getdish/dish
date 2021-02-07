@@ -352,7 +352,6 @@ const SearchResultsContent = (props: Props) => {
     results.forEach((v, index) => {
       searchResultsPositions[v.id] = index + 1
     })
-    console.warn('results changed', results)
     searchResultsStore.setRestaurantPositions(searchResultsPositions)
   }, [results])
 

@@ -216,7 +216,6 @@ class HomeStore extends Store {
             : routerItem?.params,
       } as const
     }
-    console.warn('no match')
     return {
       name: 'homeRegion',
       params: homeRegionParams,

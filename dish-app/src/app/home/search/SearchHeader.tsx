@@ -45,7 +45,6 @@ import {
 export const SearchHeader = () => {
   const curProps = useContext(SearchPagePropsContext)!
   const { width, setWidthDebounce } = useContentScrollHorizontalFitter()
-  console.log('width', width)
   const media = useMedia()
   return (
     <ContentScrollViewHorizontalFitted

@@ -50,7 +50,7 @@ export async function search({
     'span_lon=' + span.lng * 2,
     'span_lat=' + span.lat * 2,
     `limit=${limit}`,
-    'tags=' + tags.map((t) => t.toLowerCase().trim()).join(','),
+    'tags=' + tags.join(','),
     'main_tag=' + main_tag,
   ]
   const url = SEARCH_DOMAIN + '/search?' + params.join('&')

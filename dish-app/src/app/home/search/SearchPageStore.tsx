@@ -97,26 +97,23 @@ class SearchPageStore extends Store {
     const tags = curState ? getActiveTags(curState) : []
     const center = appMapStore.nextPosition.center
     const span = appMapStore.nextPosition.span
-    const activeTags = state.activeTags ?? {}
-    const dishSearchedTag = Object.keys(activeTags).find(
-      (k) => allTags[k]?.type === 'dish'
-    )
-    let otherTags = [
-      ...tags
-        .map(
-          (tag) =>
-            tag.slug?.replace('lenses__', '').replace('filters__', '') ?? ''
-        )
-        .filter((t) => !t.includes(dishSearchedTag ?? '')),
-    ]
-    const main_tag = dishSearchedTag ?? otherTags[0]
+    const dishSearchedTag = tags.find((k) => allTags[k.slug!]?.type === 'dish')
+      ?.slug
+    let otherTags = tags
+      .map(
+        (tag) =>
+          tag.slug?.replace('lenses__', '').replace('filters__', '') ?? ''
+      )
+      .filter((t) => (dishSearchedTag ? !t.includes(dishSearchedTag) : true))
+    const mainTag = dishSearchedTag ?? otherTags[0]
     const searchArgs: RestaurantSearchArgs = {
       center: roundLngLat(center),
       span: roundLngLat(span),
       query: state!.searchQuery,
       tags: otherTags,
-      main_tag,
+      main_tag: mainTag,
     }
+    console.log('search', searchArgs, tags, mainTag)
 
     // prevent duplicate searches
     const searchKey = stringify(searchArgs)
