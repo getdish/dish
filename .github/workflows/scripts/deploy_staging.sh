@@ -35,10 +35,10 @@ mv docker-compose-pull.yml docker-compose.yml
 USE_PROD_HASURA_PASSWORD=true ./dishctl.sh db_migrate_local
 
 # restart
-docker-compose stop dish-app-web dish-hooks search tileserver
-docker-compose rm -f dish-app-web dish-hooks search || true
+docker-compose stop dish-app-web dish-hooks search tileserver worker
+docker-compose rm -f dish-app-web dish-hooks search worker || true
 docker-compose pull
-eval $(./dishctl.sh yaml_to_env) docker-compose up -d dish-app-web dish-hooks search tileserver
+eval $(./dishctl.sh yaml_to_env) docker-compose up -d dish-app-web dish-hooks search tileserver worker
 '
 
 commit=$(git rev-parse HEAD)
