@@ -231,7 +231,7 @@ const RestaurantListItemContent = memo(
         : nameLen > 15
         ? 0.975
         : 1.15
-    const titleFontSize = Math.round((media.sm ? 20 : 28) * titleFontScale)
+    const titleFontSize = Math.round((media.sm ? 20 : 25) * titleFontScale)
     const titleHeight = titleFontSize + 8 * 2
     const score = Math.round((meta?.effective_score ?? 0) / 20)
     const theme = useTheme()
@@ -358,7 +358,7 @@ const RestaurantListItemContent = memo(
                           height={titleHeight}
                           color={theme.color}
                           fontWeight="800"
-                          letterSpacing={-1.25}
+                          letterSpacing={-0.25}
                           paddingHorizontal={1} // prevents clipping due to letter-spacing
                           ellipse
                         >
@@ -401,6 +401,9 @@ const RestaurantListItemContent = memo(
                       name="restaurantHours"
                       params={{ slug: restaurantSlug }}
                       borderWidth={0}
+                      textProps={{
+                        opacity: 0.5,
+                      }}
                     >
                       {opening_hours}
                     </SmallButton>
@@ -495,9 +498,9 @@ const RestaurantListItemContent = memo(
 
                   <Suspense fallback={<Spacer size={44} />}>
                     <RestaurantAddToListButton
-                      theme={null}
                       restaurantSlug={restaurantSlug}
                       noLabel
+                      subtle
                     />
                   </Suspense>
 
@@ -530,9 +533,8 @@ const RestaurantListItemContent = memo(
             <VStack
               paddingLeft={10}
               position="relative"
-              marginBottom={15}
               marginTop={-60}
-              transform={[{ translateY: -8 }]}
+              transform={[{ translateY: -25 }]}
               pointerEvents="none"
             >
               <Suspense fallback={null}>
@@ -552,7 +554,7 @@ const RestaurantListItemContent = memo(
               {!hideTagRow && (
                 <HStack
                   height={34}
-                  paddingTop={20}
+                  paddingTop={30}
                   paddingLeft={25}
                   overflow="hidden"
                   alignItems="center"
@@ -667,7 +669,7 @@ const RestaurantPeekDishes = memo(
     const foundMatchingSearchedDish = props.activeTagSlugs?.includes(
       dishes?.[0]?.slug
     )
-    const dishSize = 165
+    const dishSize = 150
 
     return (
       <>
@@ -705,7 +707,7 @@ const RestaurantPeekDishes = memo(
                   restaurantSlug={props.restaurantSlug}
                   restaurantId={props.restaurantId}
                   {...dish}
-                  marginRight={-30}
+                  marginRight={-16}
                   marginTop={isEven ? 0 : -20}
                   showSearchButton={!props.editable}
                 />

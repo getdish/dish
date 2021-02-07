@@ -111,6 +111,14 @@ textarea {
   transition: all 400ms ease-in-out;
 }
 
+.transition-transform {
+  transition-property: transform;
+}
+
+.transition-opacity {
+  transition-property: opacity;
+}
+
 .force-disable,
 .force-disable * {
   pointer-events: none !important;
@@ -566,11 +574,11 @@ mark {
   filter: sepia(100%) hue-rotate(90deg);
 }
 
-.show-vote-on-hover .vote-button {
+.show-on-hover .shown-hover {
   opacity: 0;
 }
 
-.show-vote-on-hover:hover .vote-button {
+.show-on-hover:hover .shown-hover {
   opacity: 1;
 }
 

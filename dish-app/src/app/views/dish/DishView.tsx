@@ -176,7 +176,7 @@ const DishViewContent = (props: DishViewProps) => {
           </Text>
         )}
 
-        {showSearchButton && (
+        {showSearchButton && isActive && (
           <AbsoluteVStack
             onPress={prevent}
             zIndex={888}

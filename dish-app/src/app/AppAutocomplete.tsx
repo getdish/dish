@@ -405,6 +405,8 @@ const AutocompleteFrame = ({ children }: { children: any }) => {
       fullscreen
       alignItems="flex-end"
       marginTop={5}
+      borderRadius={12}
+      overflow="hidden"
       top={media.sm ? searchBarHeight : 0}
       onPress={() => autocompletes.setVisible(false)}
     >
@@ -489,7 +491,7 @@ const AutocompleteResults = ({
   const ogResults = autocompleteStore.results
   const results = [...prefixResults, ...ogResults]
   return (
-    <VStack>
+    <VStack paddingVertical={10}>
       {!ogResults.length && emptyContent}
       {!!ogResults.length &&
         results.map((result, index) => {

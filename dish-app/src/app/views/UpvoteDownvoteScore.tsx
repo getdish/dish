@@ -99,9 +99,7 @@ export const UpvoteDownvoteScore = memo(
         alignItems="center"
         justifyContent="center"
         className={
-          isWeb && !supportsTouchWeb && showVoteOnHover
-            ? ' show-vote-on-hover'
-            : ''
+          isWeb && !supportsTouchWeb && showVoteOnHover ? ' show-on-hover' : ''
         }
         width={sizePx}
         height={sizePx}

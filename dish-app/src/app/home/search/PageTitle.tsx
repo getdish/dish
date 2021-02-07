@@ -21,7 +21,7 @@ export const PageTitle = memo(
   }) => {
     const media = useMedia()
     const titleLen = (title + subTitle).length
-    const titleSize = size == 'sm' ? 0.75 : 1
+    const titleSize = size == 'sm' ? 0.75 : 0.85
     const titleScale =
       titleLen > 65
         ? 0.7
@@ -32,7 +32,7 @@ export const PageTitle = memo(
         : titleLen > 35
         ? 0.95
         : 1
-    const titleFontSize = 26 * titleScale * titleSize
+    const titleFontSize = Math.round(26 * titleScale * titleSize)
     const theme = useTheme()
     return (
       <HStack
