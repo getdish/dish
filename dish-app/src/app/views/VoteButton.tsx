@@ -41,7 +41,7 @@ export const VoteButton = ({
       borderRadius={100}
       alignItems="center"
       justifyContent="center"
-      className="vote-button"
+      className="shown-hover ease-in-out transition-opacity"
       onHoverIn={() => setHovered(true)}
       onHoverOut={() => setHovered(false)}
       onPressIn={prevent}

@@ -793,9 +793,9 @@ function setupMapEffect({
                   ['==', ['feature-state', 'active'], true],
                   1.0,
                   ['==', ['feature-state', 'hover'], true],
-                  0.5,
+                  0.35,
                   ['==', ['feature-state', 'active'], null],
-                  0.6,
+                  0.4,
                   0,
                 ],
                 'fill-color': [
