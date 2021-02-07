@@ -78,7 +78,7 @@ function send_slack_monitoring_message() {
 EOF
 }
 
-function worker() {
+function _worker_k8s() {
   kubectl exec -it \
     $(kubectl get pods \
       | grep -v worker-ui \
@@ -87,6 +87,20 @@ function worker() {
       | awk '{print $1}') \
     -c worker \
     -- bash -c "$1"
+}
+
+function _worker_staging() {
+  worker_env="REDIS_HOST=redis PGHOST=postgres TIMESCALE_HOST=timescaledb"
+  docker_run_base "bash -c \"$worker_env $1\""
+}
+
+function worker() {
+  if grep -q "dish-do" "/etc/hostname"; then
+    _worker_staging "$1"
+  else
+    _worker_staging "$1"
+    #_worker_k8s "$1"
+  fi
 }
 
 function worker_cli() {
@@ -713,10 +727,7 @@ function self_crawl_by_query() {
   [ -z "$1" ] && exit 1
   query="SELECT id FROM restaurant $1"
   echo "Running self crawler with SQL: $query"
-  worker "
-    QUERY=${query@Q} \
-      node /app/services/crawlers/_/self/sandbox.js
-  "
+  worker "QUERY=${query@Q} node /app/services/crawlers/_/self/sandbox.js"
 }
 
 # Watch progress at https://worker-ui.k8s.dishapp.com/ui
@@ -851,10 +862,14 @@ function build_all_dish_services() {
   docker images
 }
 
+function docker_run_base() {
+  command="docker-compose run --rm base $1"
+  echo "Running: $command"
+  eval $command
+}
+
 function ci_prettier() {
-  docker run \
-    $DISH_REGISTRY/base:$DOCKER_TAG_NAMESPACE \
-    yarn prettier --check "**/*.{ts,tsx}"
+  docker_run_base yarn prettier --check "**/*.{ts,tsx}"
 }
 
 function ci_rename_tagged_images_to_latest() {
@@ -1046,7 +1061,7 @@ function docker_compose_up_for_devs() {
   extra=$1
   services=$(
     docker-compose config --services \
-      | grep -E -v 'base|nginx|dish-app|image-quality|image-proxy|bert' \
+      | grep -E -v 'base|nginx|dish-app|image-quality|image-proxy|bert|worker' \
       | tr '\r\n' ' '
   )
   echo "Starting the following services: $services"
@@ -1062,7 +1077,7 @@ function docker_compose_up_for_tests() {
   extra=$1
   services=$(
     docker-compose config --services \
-      | grep -E -v 'base|nginx|image-quality|image-proxy|bert' \
+      | grep -E -v 'base|nginx|image-quality|image-proxy|bert|worker' \
       | tr '\r\n' ' '
   )
   echo "Starting the following services: $services"
@@ -1075,8 +1090,9 @@ function docker_compose_up_for_tests() {
 }
 
 function docker_compose_up_for_staging() {
-  echo "Use `docker-compose logs -f` to stream logs"
-  docker-compose up -d
+  echo "Use 'docker-compose logs -f' to stream logs"
+  command="$(echo $all_env | tr '\r\n' ' ') TF_VAR_HASURA_GRAPHQL_ADMIN_SECRET=password docker-compose up -d"
+  eval $command
 }
 
 function staging_ssh() {
