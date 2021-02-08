@@ -4,7 +4,7 @@ export function useLocalStorageState<A>(key: string, initialValue: A) {
   const [state, setState] = useState(() => {
     const item = localStorage.getItem(key)
     if (item !== null) {
-      return JSON.parse(item as any)
+      return JSON.parse((item as any) ?? null)
     }
     return initialValue
   })

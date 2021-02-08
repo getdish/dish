@@ -24,6 +24,9 @@ export const BackButton = memo((props: CircleButtonProps) => {
   )
 })
 
+// only for native TODO fix bug
+const DeoptSnack = HStack
+
 export const SmallCircleButton = ({
   shadowed,
   children,
@@ -38,7 +41,7 @@ export const SmallCircleButton = ({
   const theme = useTheme()
   return (
     <VStack {...props} padding={10} margin={-10}>
-      <HStack
+      <DeoptSnack
         borderRadius={1000}
         backgroundColor={theme.colorQuartenary}
         alignItems="center"
@@ -63,10 +66,14 @@ export const SmallCircleButton = ({
             backgroundColor: theme.backgroundColorTertiary,
           },
         })}
-        {...{ width, height, minWidth, minHeight, padding }}
+        width={width}
+        height={height}
+        minWidth={minWidth}
+        minHeight={minHeight}
+        padding={padding}
       >
         {children}
-      </HStack>
+      </DeoptSnack>
     </VStack>
   )
 }
