@@ -18,7 +18,9 @@ export const JWT_SECRET =
   process.env.JWT_SECRET || '12345678901234567890123456789012'
 
 export const HASURA_SECRET =
-  process.env.HASURA_SECRET || process.env.REACT_APP_HASURA_SECRET
+  process.env.HASURA_SECRET ||
+  process.env.REACT_APP_HASURA_SECRET ||
+  (process.env.TARGET === 'node' ? 'password' : '')
 
 const PROD_ORIGIN = 'https://staging.dishapp.com'
 const ORIGIN = isProd
