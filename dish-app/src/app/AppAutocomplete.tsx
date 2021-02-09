@@ -56,7 +56,6 @@ import { setLocation } from './setLocation'
 import { CloseButton } from './views/CloseButton'
 import { Link } from './views/Link'
 import { LinkButton } from './views/LinkButton'
-import { PaneControlButtons } from './views/PaneControlButtons'
 
 let curPagePos = { x: 0, y: 0 }
 

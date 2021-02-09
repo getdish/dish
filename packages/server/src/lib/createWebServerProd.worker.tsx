@@ -99,6 +99,7 @@ async function createWebServerProd(app: any, config: ServerConfigNormal) {
     // })
 
     app.use(express.static(clientBuildPath))
+    app.get('*', express.static(Path.join(clientBuildPath, 'index.html')))
     // app.use('/', express.static(clientBuildLegacyPath))
 
     // ssr rendering

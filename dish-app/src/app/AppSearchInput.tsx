@@ -538,8 +538,8 @@ const AppSearchInputTags = memo(
                   key={getTagSlug(tag.slug)}
                   size="lg"
                   subtleIcon
-                  backgroundColor={theme.backgroundColorTertiary}
-                  color={'#fff'}
+                  backgroundColor={theme.backgroundColor}
+                  color={theme.color}
                   shadowColor="#00000022"
                   fontWeight="600"
                   shadowRadius={10}
