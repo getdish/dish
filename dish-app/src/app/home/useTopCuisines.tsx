@@ -20,7 +20,6 @@ const getHomeCuisines = async (center: LngLat) => {
     center.lat,
     (await getMapZoom()) ?? 11
   )
-  console.log('got them', cuisineItems)
   let all: TopCuisine[] = []
   for (const item of cuisineItems) {
     const existing = all.find((x) => x.country === item.country)
