@@ -303,6 +303,7 @@ const ListPageContent = graphql((props: Props) => {
   }, [isEditing])
 
   useSetAppMap({
+    hideRegions: true,
     isActive: props.isActive,
     results: restaurants.map((x) => x.restaurant).map(getRestaurantIdentifiers),
     showRank: true,

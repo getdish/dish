@@ -47,7 +47,14 @@ const styles = {
 }
 
 export default memo(function AppMap() {
-  const { features, results, showRank, zoomOnHover, hovered } = useAppMapStore()
+  const {
+    features,
+    results,
+    showRank,
+    zoomOnHover,
+    hovered,
+    hideRegions,
+  } = useAppMapStore()
   const media = useMedia()
   const { width, paddingLeft } = useMapSize(media.sm)
   const { position } = useStoreInstance(appMapStore)
@@ -276,6 +283,7 @@ export default memo(function AppMap() {
             onSelect={handleSelect}
             onSelectRegion={handleSelectRegion}
             showRank={showRank}
+            hideRegions={hideRegions}
           />
         </VStack>
       </HStack>

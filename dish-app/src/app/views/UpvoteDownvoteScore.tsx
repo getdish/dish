@@ -129,7 +129,7 @@ export const UpvoteDownvoteScore = memo(
           fontWeight="900"
           marginVertical={-2 * scale}
           letterSpacing={-0.5}
-          color={colors.color}
+          color={`${colors.darkColor}99`}
           textAlignVertical="top"
           zIndex={100}
         >

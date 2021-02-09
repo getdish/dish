@@ -70,7 +70,7 @@ export const RestaurantReviewsList = memo(
                 return (
                   <VStack marginVertical={20} flex={1} key={i}>
                     <VStack flex={1} />
-                    <RestaurantReview reviewId={review.id} />
+                    <RestaurantReview hideRestaurantName reviewId={review.id} />
                   </VStack>
                 )
               })}

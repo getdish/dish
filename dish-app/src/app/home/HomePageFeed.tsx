@@ -82,11 +82,11 @@ export const HomePageFeed = memo(
         const content = (() => {
           switch (item.type) {
             case 'new':
-              return (
-                <VStack width="100%" marginBottom={-50}>
-                  <HomeFeedTrendingNew {...item} />
-                </VStack>
-              )
+            // return (
+            //   <VStack width="100%" marginBottom={-50}>
+            //     <HomeFeedTrendingNew {...item} />
+            //   </VStack>
+            // )
             case 'hot':
               return <HomeFeedTrendingNew {...item} />
             case 'dish-restaurants':

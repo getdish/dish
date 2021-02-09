@@ -22,13 +22,13 @@ export const RestaurantReview = memo(
       reviewId,
       refetchKey,
       hideUsername,
-      showRestaurant,
+      hideRestaurantName,
       height,
     }: {
       reviewId: string
       refetchKey?: string
       hideUsername?: boolean
-      showRestaurant?: boolean
+      hideRestaurantName?: boolean
       height?: number
     }) => {
       const refetch = useRefetch()
@@ -97,16 +97,18 @@ export const RestaurantReview = memo(
       return (
         <CommentBubble
           expandable
-          title={
-            <Text fontWeight="800">
-              <Link
-                name="restaurant"
-                params={{ slug: review.restaurant.slug ?? '' }}
-              >
-                {review.restaurant.name ?? ''}
-              </Link>
-            </Text>
-          }
+          {...(!hideRestaurantName && {
+            title: (
+              <Text fontWeight="800">
+                <Link
+                  name="restaurant"
+                  params={{ slug: review.restaurant.slug ?? '' }}
+                >
+                  {review.restaurant.name ?? ''}
+                </Link>
+              </Text>
+            ),
+          })}
           date={review.updated_at}
           belowContent={
             review.vote ? <SentimentText sentiment={review.vote} /> : null

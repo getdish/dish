@@ -139,7 +139,7 @@ export const TagButton = memo((props: TagButtonProps) => {
       // used again down below
       minHeight={isSmall ? 22 : 26}
       hoverStyle={{
-        backgroundColor: colors.lightColor,
+        backgroundColor: `${colors.lightColor}99`,
       }}
       {...rest}
     >
@@ -209,7 +209,7 @@ export const TagButton = memo((props: TagButtonProps) => {
         size="sm"
         subtle
       /> */}
-      {typeof score === 'number' && (
+      {!!score && (
         <Text
           color={fg}
           marginLeft={4}
@@ -221,26 +221,24 @@ export const TagButton = memo((props: TagButtonProps) => {
         </Text>
       )}
 
-      {typeof rating === 'number' && (
-        <VStack position="relative">
+      {!!rating && (
+        <VStack position="relative" marginRight={4}>
           <Pie
-            size={size === 'sm' ? 18 : 24}
+            size={size === 'sm' ? 16 : 18}
             percent={rating}
-            color={floating ? `${colors.lightColor}99` : colors.lightColor}
-            background="rgba(0,0,0,0.2)"
+            color={floating ? `${colors.lightColor}99` : colors.color}
+            background={`${colors.extraLightColor}99`}
           />
-
-          {!!votable && !!props.restaurantSlug && (
-            <AbsoluteVStack fullscreen>
-              <TagButtonVote
-                key={getTagSlug(props.slug) + props.restaurantSlug}
-                {...props}
-                color={fg}
-                scale={scale}
-              />
-            </AbsoluteVStack>
-          )}
         </VStack>
+      )}
+
+      {!!votable && !!props.restaurantSlug && (
+        <TagButtonVote
+          key={getTagSlug(props.slug) + props.restaurantSlug}
+          {...props}
+          color={fg}
+          scale={scale}
+        />
       )}
 
       {!!after && (
@@ -316,7 +314,7 @@ const TagButtonVote = (props: TagButtonProps & { scale: number }) => {
         opacity={0.6}
         hoverStyle={{
           opacity: 1,
-          transform: [{ scale: 1.2 }],
+          transform: [{ scale: 1.1 }],
         }}
         onPressIn={prevent}
         onPress={(e) => {
@@ -334,7 +332,7 @@ const TagButtonVote = (props: TagButtonProps & { scale: number }) => {
             alignItems="center"
             justifyContent="center"
           >
-            <Text color="#fff" fontSize={13 * scale} fontWeight="700">
+            <Text color="#fff" fontSize={12 * scale} fontWeight="600">
               {vote < 0 ? vote : `+${vote}`}
             </Text>
           </VStack>

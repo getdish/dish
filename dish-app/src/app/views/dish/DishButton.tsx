@@ -44,9 +44,9 @@ const DishButtonContent = (props: DishButtonProps) => {
     .map((x) => capitalize(x))
     .join(' ')
 
-  const imageUrl = getImageUrl(image ?? '', 60, 60, 100)
+  const imageUrl = getImageUrl(image ?? '', 100, 100, 100)
   const isLong =
-    dishName.length > 17 || !!dishName.split(' ').find((x) => x.length >= 8)
+    dishName.length > 20 || !!dishName.split(' ').find((x) => x.length >= 10)
   const fontSize = isLong ? 16 : 18
   const theme = useTheme()
 
@@ -68,17 +68,25 @@ const DishButtonContent = (props: DishButtonProps) => {
         // {...rest}
       >
         <HStack transform={[{ skewX: '12deg' }]} spacing alignItems="center">
-          {!!image && (
-            <VStack overflow="hidden" borderRadius={1000}>
+          {!!image ? (
+            <VStack
+              overflow="hidden"
+              borderRadius={1000}
+              // margin={-10}
+              // marginRight={0}
+              // marginLeft={-20}
+            >
               <ImageAlt
                 source={{ uri: imageUrl }}
                 style={{
-                  width: 32,
-                  height: 32,
+                  width: 36,
+                  height: 36,
                 }}
                 resizeMode="cover"
               />
             </VStack>
+          ) : (
+            <VStack width={1} />
           )}
 
           {!!icon && (
@@ -87,7 +95,7 @@ const DishButtonContent = (props: DishButtonProps) => {
               zIndex={10}
               fontSize={28}
               transform={[{ scale: 1 }]}
-              marginLeft={image ? -20 : 0}
+              marginLeft={image ? -30 : 0}
             >
               {icon}
             </Text>
@@ -106,7 +114,7 @@ const DishButtonContent = (props: DishButtonProps) => {
             {dishName}
           </Text>
 
-          {!!score && (
+          {typeof score !== 'undefined' ? (
             <DishUpvoteDownvote
               size="sm"
               slug={slug || ''}
@@ -114,6 +122,8 @@ const DishButtonContent = (props: DishButtonProps) => {
               rating={rating ?? 0}
               restaurantSlug={restaurantSlug}
             />
+          ) : (
+            <VStack width={1} />
           )}
         </HStack>
       </Box>
