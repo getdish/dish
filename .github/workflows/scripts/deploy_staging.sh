@@ -32,7 +32,7 @@ rm docker-compose.yml
 mv docker-compose-pull.yml docker-compose.yml
 
 # migrate
-USE_PROD_HASURA_PASSWORD=true ./dishctl.sh db_migrate_local
+./dishctl.sh db_migrate_local
 
 # restart
 docker-compose stop dish-app-web dish-hooks search tileserver
