@@ -83,7 +83,7 @@ export const AppSearchInputLocation = memo(() => {
           flex={1}
           minHeight={44}
           alignItems="center"
-          backgroundColor="rgba(0,0,0,0.7)"
+          backgroundColor="rgba(50,50,50,0.7)"
           justifyContent="center"
           paddingHorizontal={8}
           position="relative"

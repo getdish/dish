@@ -604,7 +604,7 @@ mark {
 }
 
 .card-hover .card-image {
-  opacity: 0.5;
+  opacity: 0.4;
   transition: opacity ease-in-out 300ms;
 }
 

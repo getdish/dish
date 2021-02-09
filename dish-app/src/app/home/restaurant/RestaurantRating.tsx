@@ -8,22 +8,32 @@ export const RestaurantRating = ({
   darken,
   colors,
   rating,
+  lighten,
 }: {
   size?: 'sm' | 'md'
   rating: number
   darken?: boolean
-  colors: ColorShades
+  colors?: ColorShades
+  lighten?: boolean
 }) => {
-  const fontSize = 20 * (size === 'md' ? 1.2 : 1)
+  const fontSize = 18 * (size === 'md' ? 1.2 : 1)
   const ratingNormal = Math.min(10, Math.max(0, rating))
   return (
     <Circle
-      backgroundColor={darken ? '#000' : colors.color}
+      backgroundColor={
+        colors
+          ? darken
+            ? colors.darkColor
+            : lighten
+            ? colors.lightColor
+            : colors.color
+          : '#000'
+      }
       shadowColor="#000"
       shadowOffset={{ height: 2, width: 0 }}
       shadowOpacity={0.1}
       shadowRadius={10}
-      size={size === 'sm' ? 34 : 48}
+      size={size === 'sm' ? 30 : 46}
       position="relative"
       transform={[
         {
@@ -33,9 +43,10 @@ export const RestaurantRating = ({
     >
       <Text
         zIndex={10}
-        color="#fff"
+        color={lighten ? colors?.darkColor : '#fff'}
         fontWeight={ratingNormal >= 8 ? '900' : '700'}
         fontSize={fontSize}
+        opacity={ratingNormal >= 5 ? 1 : 0.65}
       >
         {ratingNormal}
       </Text>
@@ -44,14 +55,14 @@ export const RestaurantRating = ({
 }
 
 const ratingScales = {
-  0: 0.65,
-  1: 0.65,
-  2: 0.65,
-  3: 0.65,
-  4: 0.75,
-  5: 0.8,
-  6: 0.8,
-  7: 0.9,
+  0: 0.8,
+  1: 0.8,
+  2: 0.8,
+  3: 0.8,
+  4: 0.8,
+  5: 0.85,
+  6: 0.85,
+  7: 0.95,
   8: 1,
   9: 1.05,
   10: 1.1,

@@ -340,7 +340,7 @@ export const RestaurantSourcesOverview = graphql(
 
     return (
       <VStack width="100%" marginVertical={-spacing}>
-        <Grid itemMinWidth={300}>
+        <Grid itemMinWidth={320}>
           {items
             .filter(isPresent)
             .map(({ name, sentence, image, positive, negative }) => {
@@ -353,7 +353,7 @@ export const RestaurantSourcesOverview = graphql(
                   // borderWidth={1}
                   // borderColor={theme.borderColor}
                   backgroundColor={theme.cardBackgroundColor}
-                  maxWidth={400}
+                  maxWidth={440}
                   shadowRadius={15}
                   shadowOffset={{ height: 3, width: 0 }}
                   padding={20}

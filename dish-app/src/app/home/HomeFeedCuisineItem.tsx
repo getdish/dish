@@ -122,7 +122,7 @@ export const HomeFeedCuisineItem = memo(
 
         <ContentScrollViewHorizontal>
           <VStack paddingVertical={0} paddingHorizontal={0} flexWrap="nowrap">
-            <HStack>
+            <HStack paddingRight={100}>
               {restaurants.map((r, i) => {
                 return (
                   <SkewedCard zIndex={1000 - i} key={r.id}>

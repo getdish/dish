@@ -817,9 +817,9 @@ function setupMapEffect({
                   ['==', ['feature-state', 'active'], true],
                   1.0,
                   ['==', ['feature-state', 'hover'], true],
-                  0.15,
+                  0.1,
                   ['==', ['feature-state', 'active'], null],
-                  0.2,
+                  0.15,
                   0,
                 ],
                 'fill-color': [
@@ -838,42 +838,31 @@ function setupMapEffect({
             firstSymbolLayerId
           )
 
-          if (lineColor) {
-            map.addLayer(
-              {
-                id: `${name}.line`,
-                type: 'line',
-                source: name,
-                minzoom: minZoom,
-                maxzoom: maxZoom,
-                paint: {
-                  'line-color': [
-                    'case',
-                    ['==', ['feature-state', 'active'], true],
-                    lineColorActive,
-                    ['==', ['feature-state', 'hover'], true],
-                    lineColorHover,
-                    ['==', ['feature-state', 'active'], null],
-                    lineColor,
-                    'green',
-                  ],
-                  'line-opacity': 0.05,
-                  'line-width': [
-                    'case',
-                    ['==', ['feature-state', 'active'], true],
-                    1,
-                    ['==', ['feature-state', 'hover'], true],
-                    2,
-                    ['==', ['feature-state', 'active'], null],
-                    3,
-                    4,
-                  ],
-                },
-                'source-layer': name,
+          map.addLayer(
+            {
+              id: `${name}.line`,
+              type: 'line',
+              source: name,
+              minzoom: minZoom,
+              maxzoom: maxZoom,
+              paint: {
+                'line-color': [
+                  'case',
+                  ['==', ['feature-state', 'active'], true],
+                  ['get', 'color'],
+                  ['==', ['feature-state', 'hover'], true],
+                  ['get', 'color'],
+                  ['==', ['feature-state', 'active'], null],
+                  ['get', 'color'],
+                  'green',
+                ],
+                'line-opacity': 0.1,
+                'line-width': 3,
               },
-              firstSymbolLayerId
-            )
-          }
+              'source-layer': name,
+            },
+            firstSymbolLayerId
+          )
 
           if (label) {
             if (labelSource) {

@@ -131,8 +131,8 @@ export const HomePageFeed = memo(
             onHoverIn={() => {
               setHovered(item.id)
             }}
-            paddingTop={5}
-            marginTop={-5}
+            paddingTop={10}
+            marginTop={-10}
             marginBottom={10}
             hoverStyle={{
               backgroundColor: theme.backgroundColorAlt,

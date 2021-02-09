@@ -1,6 +1,6 @@
 import { graphql } from '@dish/graph'
 import React, { Suspense } from 'react'
-import { AbsoluteVStack, Hoverable } from 'snackui'
+import { AbsoluteVStack, Hoverable, useDebounce } from 'snackui'
 
 import { green } from '../../../constants/colors'
 import {
@@ -31,28 +31,28 @@ export type RestaurantCardProps = {
 
 export const RestaurantCard = (props: RestaurantCardProps) => {
   const fallbackCard = <CardFrame aspectFixed size={props.size} />
+  const handleHover = useDebounce(
+    () =>
+      appMapStore.setHovered({
+        id: props.restaurantId,
+        slug: props.restaurantSlug,
+        via: 'list',
+      }),
+    200
+  )
+
   if (!props.restaurantSlug) {
     return fallbackCard
   }
+
   const content = (
     <Suspense fallback={fallbackCard}>
       <RestaurantCardContent {...props} />
     </Suspense>
   )
+
   if (props.hoverToMap) {
-    return (
-      <Hoverable
-        onHoverIn={() =>
-          appMapStore.setHovered({
-            id: props.restaurantId,
-            slug: props.restaurantSlug,
-            via: 'list',
-          })
-        }
-      >
-        {content}
-      </Hoverable>
-    )
+    return <Hoverable onHoverIn={handleHover}>{content}</Hoverable>
   }
 
   return content
@@ -93,7 +93,12 @@ export const RestaurantCardContent = graphql(
                   right={-10}
                   zIndex={100}
                 >
-                  <RestaurantRating size="sm" colors={colors} rating={rating} />
+                  <RestaurantRating
+                    darken
+                    size="sm"
+                    colors={colors}
+                    rating={rating}
+                  />
                 </AbsoluteVStack>
               )
             }
