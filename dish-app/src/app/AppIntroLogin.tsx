@@ -1,17 +1,21 @@
 import { useStore } from '@dish/use-store'
 import React, { memo } from 'react'
 import { Image } from 'react-native'
-import { Paragraph, VStack } from 'snackui'
+import { Paragraph, VStack, useTheme, useThemeName } from 'snackui'
 
 import dishLogo from '../assets/dish-neon.jpg'
 import { pinkPastel } from '../constants/colors'
 import { isWeb } from '../constants/constants'
 import { AuthForm } from './AuthForm'
 import { IntroModalStore } from './IntroModalStore'
+import { DishLogoButton } from './views/DishLogoButton'
 import { LinkButton } from './views/LinkButton'
+import { LogoColor } from './views/Logo'
 
 export const AppIntroLogin = memo(() => {
   const store = useStore(IntroModalStore)
+  const themeName = useThemeName()
+
   return (
     <>
       <VStack
@@ -22,17 +26,21 @@ export const AppIntroLogin = memo(() => {
         alignItems="center"
         width="100%"
       >
-        <Image
-          source={{ uri: dishLogo }}
-          style={{
-            marginBottom: -30,
-            width: 892 * 0.25,
-            height: 492 * 0.25,
-            // transform: [{ rotate: '6deg' }],
-            zIndex: -2,
-            position: 'relative',
-          }}
-        />
+        {themeName == 'dark' ? (
+          <Image
+            source={{ uri: dishLogo }}
+            style={{
+              marginBottom: -30,
+              width: 892 * 0.25,
+              height: 492 * 0.25,
+              // transform: [{ rotate: '6deg' }],
+              zIndex: -2,
+              position: 'relative',
+            }}
+          />
+        ) : (
+          <LogoColor scale={2} />
+        )}
 
         <Paragraph
           color={isWeb ? 'var(--color)' : '#777'}

@@ -1,8 +1,8 @@
 import { graphql } from '@dish/graph'
+import { debounce } from 'lodash'
 import React, { Suspense } from 'react'
-import { AbsoluteVStack, Hoverable, useDebounce } from 'snackui'
+import { AbsoluteVStack, Hoverable } from 'snackui'
 
-import { green } from '../../../constants/colors'
 import {
   queryRestaurant,
   queryRestaurantCoverPhoto,
@@ -10,7 +10,6 @@ import {
 import { appMapStore } from '../../AppMapStore'
 import { CardFrame } from '../../views/CardFrame'
 import { Link } from '../../views/Link'
-import { RestaurantUpVoteDownVote } from '../../views/restaurant/RestaurantUpVoteDownVote'
 import { Card, CardProps } from './Card'
 import { priceRange } from './RestaurantDetailRow'
 import { RestaurantRating } from './RestaurantRating'
@@ -29,17 +28,10 @@ export type RestaurantCardProps = {
   dimImage?: boolean
 }
 
+const setHovered = debounce(appMapStore.setHovered, 300)
+
 export const RestaurantCard = (props: RestaurantCardProps) => {
   const fallbackCard = <CardFrame aspectFixed size={props.size} />
-  const handleHover = useDebounce(
-    () =>
-      appMapStore.setHovered({
-        id: props.restaurantId,
-        slug: props.restaurantSlug,
-        via: 'list',
-      }),
-    200
-  )
 
   if (!props.restaurantSlug) {
     return fallbackCard
@@ -52,7 +44,19 @@ export const RestaurantCard = (props: RestaurantCardProps) => {
   )
 
   if (props.hoverToMap) {
-    return <Hoverable onHoverIn={handleHover}>{content}</Hoverable>
+    return (
+      <Hoverable
+        onHoverIn={() => {
+          setHovered({
+            id: props.restaurantId,
+            slug: props.restaurantSlug,
+            via: 'list',
+          })
+        }}
+      >
+        {content}
+      </Hoverable>
+    )
   }
 
   return content

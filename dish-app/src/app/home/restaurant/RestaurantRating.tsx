@@ -29,10 +29,10 @@ export const RestaurantRating = ({
             : colors.color
           : '#000'
       }
-      shadowColor="#000"
-      shadowOffset={{ height: 2, width: 0 }}
-      shadowOpacity={0.1}
-      shadowRadius={10}
+      // shadowColor="#000"
+      // shadowOffset={{ height: 2, width: 0 }}
+      // shadowOpacity={0.1}
+      // shadowRadius={10}
       size={size === 'sm' ? 30 : 46}
       position="relative"
       transform={[

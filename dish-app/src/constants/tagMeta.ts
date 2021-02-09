@@ -1,6 +1,6 @@
 import { Tag } from '@dish/graph'
 
-export const tagDisplayName = (tag: Tag) => {
+export const tagDisplayName = (tag: Partial<Tag>) => {
   const name = tag.name || ''
   return tagDisplayNames[name] ?? tag.displayName ?? name
 }

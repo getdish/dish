@@ -1,4 +1,5 @@
 import { graphql } from '@dish/graph'
+import { partition, unzip } from 'lodash'
 import React, { memo, useMemo, useState } from 'react'
 import { HStack, Spacer, Theme, VStack } from 'snackui'
 
@@ -6,9 +7,15 @@ import { bgLightHover, blue } from '../../../constants/colors'
 import { isWeb } from '../../../constants/constants'
 import { getRestaurantDishes } from '../../../helpers/getRestaurantDishes'
 import { getTagSlug } from '../../../helpers/getTagSlug'
+import { DishTagItemSimple } from '../../../helpers/selectDishViewSimple'
 import { ContentScrollViewHorizontal } from '../../views/ContentScrollViewHorizontal'
 import { DishButton } from '../../views/dish/DishButton'
 import { ScalingPressable } from '../../views/ScalingPressable'
+
+const withIndex = (fn) => {
+  let index = 0
+  return (thing) => fn(thing, index++)
+}
 
 export const RestaurantDishRow = memo(
   graphql(
@@ -32,6 +39,10 @@ export const RestaurantDishRow = memo(
       const dishes = getRestaurantDishes({ restaurantSlug, max })
       const [hasScrolled, setHasScrolled] = useState(false)
       const hasDishes = !!dishes?.length
+      const dishGroups = partition(
+        dishes,
+        withIndex((_, idx) => idx % 2)
+      )
 
       const handleScroll = useMemo(() => {
         return !hasScrolled
@@ -40,6 +51,38 @@ export const RestaurantDishRow = memo(
             }
           : undefined
       }, [hasScrolled])
+
+      const getDishRow = (dishes: DishTagItemSimple[]) => {
+        return (
+          <>
+            {dishes.map((dish, index) => {
+              const isSelected = selected === getTagSlug(dish.slug)
+              return (
+                <React.Fragment key={dish.name}>
+                  <ScalingPressable
+                    {...(!!selectable && {
+                      onPress() {
+                        onSelect?.(getTagSlug(dish.slug))
+                      },
+                    })}
+                  >
+                    <SectionTab isSelected={isSelected}>
+                      <Theme name={isSelected && themeName ? themeName : null}>
+                        <DishButton
+                          noLink
+                          restaurantSlug={restaurantSlug}
+                          restaurantId={restaurantId}
+                          {...dish}
+                        />
+                      </Theme>
+                    </SectionTab>
+                  </ScalingPressable>
+                </React.Fragment>
+              )
+            })}
+          </>
+        )
+      }
 
       return (
         <ContentScrollViewHorizontal
@@ -50,56 +93,29 @@ export const RestaurantDishRow = memo(
           }}
         >
           {hasDishes ? (
-            <HStack
-              paddingHorizontal={30}
-              paddingVertical={20}
-              alignItems="center"
-              justifyContent="center"
-            >
-              <SectionTab isSelected={selected === ''}>
-                <Theme name={themeName && selected === '' ? themeName : null}>
-                  <ScalingPressable
-                    onPress={() => {
-                      onSelect?.('')
-                    }}
-                  >
-                    <DishButton
-                      noLink
-                      name="Overall"
-                      selected={selected === ''}
-                    />
-                  </ScalingPressable>
-                </Theme>
-              </SectionTab>
-
-              {dishes.map((dish, index) => {
-                const isSelected = selected === getTagSlug(dish.slug)
-                return (
-                  <React.Fragment key={dish.name}>
+            <VStack paddingHorizontal={30} paddingVertical={20}>
+              <HStack>
+                <SectionTab isSelected={selected === ''}>
+                  <Theme name={themeName && selected === '' ? themeName : null}>
                     <ScalingPressable
-                      {...(!!selectable && {
-                        onPress() {
-                          onSelect?.(getTagSlug(dish.slug))
-                        },
-                      })}
+                      onPress={() => {
+                        onSelect?.('')
+                      }}
                     >
-                      <SectionTab isSelected={isSelected}>
-                        <Theme
-                          name={isSelected && themeName ? themeName : null}
-                        >
-                          <DishButton
-                            noLink
-                            restaurantSlug={restaurantSlug}
-                            restaurantId={restaurantId}
-                            {...dish}
-                          />
-                        </Theme>
-                      </SectionTab>
+                      <DishButton
+                        noLink
+                        bold
+                        name="Overall"
+                        selected={selected === ''}
+                      />
                     </ScalingPressable>
-                  </React.Fragment>
-                )
-              })}
-            </HStack>
+                  </Theme>
+                </SectionTab>
+                {getDishRow(dishGroups[0])}
+              </HStack>
+              <Spacer size="sm" />
+              <HStack>{getDishRow(dishGroups[1])}</HStack>
+            </VStack>
           ) : (
             <Spacer size="xl" />
           )}

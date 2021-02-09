@@ -1,11 +1,9 @@
 import { graphql, order_by, query } from '@dish/graph'
 import { groupBy, pick, sortBy, uniqBy } from 'lodash'
 import React from 'react'
-import { Hoverable, VStack } from 'snackui'
+import { Hoverable } from 'snackui'
 
-import { selectRishDishViewSimple } from '../../helpers/selectDishViewSimple'
 import { RegionNormalized } from '../../types/homeTypes'
-import { TagButton } from '../views/TagButton'
 import { FeedSlantedTitleLink } from './FeedSlantedTitle'
 import { FIBase } from './FIBase'
 import { HoverResultsProp } from './HoverResultsProp'

@@ -7,8 +7,8 @@ export const cardFrameBorderRadius = 18
 export const cardFrameWidth = 250
 export const cardFrameHeight = 320
 
-export const cardFrameWidthSm = 250 * 0.75
-export const cardFrameHeightSm = 320 * 0.75
+export const cardFrameWidthSm = 250 * 0.7
+export const cardFrameHeightSm = 320 * 0.7
 
 export const CardFrame = ({
   hoverable,

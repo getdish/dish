@@ -154,6 +154,12 @@ const RestaurantHeaderContent = memo(
                   {/* title row */}
                   <HStack paddingLeft={20} alignItems="center">
                     <HStack position="relative">
+                      <RestaurantUpVoteDownVote
+                        restaurantSlug={restaurantSlug}
+                      />
+
+                      <Spacer size="lg" />
+
                       <HStack
                         backgroundColor={colors.themeColorAlt}
                         shadowColor="#000"

@@ -33,7 +33,9 @@ type MapOpts = {
   fitToResults?: boolean
 }
 
-type MapHoveredRestaurant = RestaurantOnlyIds & { via: 'map' | 'list' }
+export type MapHoveredRestaurant = RestaurantOnlyIds & {
+  via: 'map' | 'list'
+}
 
 // TODO this wants to be a stack where you have states you push:
 // {

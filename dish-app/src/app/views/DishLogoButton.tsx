@@ -9,7 +9,6 @@ import {
 } from '../../constants/constants'
 import { useHomeStore } from '../homeStore'
 import { Link } from './Link'
-import { LinkButton } from './LinkButton'
 import { LinkButtonProps } from './LinkProps'
 import { LogoColor, LogoSmall } from './Logo'
 

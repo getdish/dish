@@ -18,6 +18,7 @@ export type DishButtonProps = Partial<DishTagItem> & {
   noLink?: boolean
   showSearchButton?: boolean
   hideVote?: boolean
+  bold?: boolean
 }
 
 export const DishButton = memo((props: DishButtonProps) => {
@@ -38,6 +39,7 @@ const DishButtonContent = (props: DishButtonProps) => {
     rating,
     restaurantSlug,
     noLink,
+    bold,
   } = props
   const dishName = (name ?? '')
     .split(' ')
@@ -104,7 +106,7 @@ const DishButtonContent = (props: DishButtonProps) => {
           <Text
             className="ease-in-out-fast"
             overflow="hidden"
-            fontWeight="500"
+            fontWeight={bold ? '800' : '400'}
             color={theme.color}
             fontSize={fontSize}
             textAlign="center"
