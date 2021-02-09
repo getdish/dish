@@ -1,24 +1,16 @@
 import { graphql, order_by, query } from '@dish/graph'
 import { groupBy, pick, sortBy, uniqBy } from 'lodash'
 import React from 'react'
-import {
-  AbsoluteVStack,
-  HStack,
-  Hoverable,
-  Theme,
-  VStack,
-  useTheme,
-} from 'snackui'
+import { Hoverable, VStack } from 'snackui'
 
 import { selectRishDishViewSimple } from '../../helpers/selectDishViewSimple'
-import { queryRestaurant } from '../../queries/queryRestaurant'
 import { RegionNormalized } from '../../types/homeTypes'
-import { cardFrameBorderRadius } from '../views/CardFrame'
 import { TagButton } from '../views/TagButton'
 import { FeedSlantedTitleLink } from './FeedSlantedTitle'
 import { FIBase } from './FIBase'
 import { HoverResultsProp } from './HoverResultsProp'
 import { RestaurantCard } from './restaurant/RestaurantCard'
+import { RestaurantStatBars } from './RestaurantStatBars'
 import { SkewedCard, SkewedCardCarousel } from './SkewedCard'
 
 export type FIDishRestaurants = FIBase & {
@@ -124,126 +116,19 @@ export const HomeFeedDishRestaurants = graphql(
                   restaurantSlug={r.slug}
                   hoverable={false}
                   dimImage
-                  below={
+                  below={(colors) => (
                     <RestaurantStatBars
                       tags={[tag.slug]}
                       restaurantSlug={r.slug}
+                      colors={colors}
                     />
-                  }
+                  )}
                 />
               </SkewedCard>
             )
           })}
         </SkewedCardCarousel>
       </Hoverable>
-    )
-  }
-)
-
-const RestaurantStatBars = graphql(
-  ({
-    restaurantSlug,
-    tags,
-    showTags = 3,
-  }: {
-    restaurantSlug: string
-    tags?: string[]
-    showTags?: number
-  }) => {
-    const [restaurant] = queryRestaurant(restaurantSlug)
-    const givenTags =
-      tags?.flatMap((tag) => {
-        return restaurant.tags({
-          where: {
-            tag: {
-              slug: {
-                _eq: tag,
-              },
-            },
-          },
-          limit: 1,
-        })
-      }) ?? []
-
-    const restTags = query.restaurant_tag({
-      where: {
-        restaurant: {
-          slug: {
-            _eq: restaurantSlug,
-          },
-        },
-      },
-      limit: 3,
-      order_by: [{ upvotes: order_by.desc_nulls_last }],
-    })
-
-    const rtags = uniqBy([...givenTags, ...restTags], (x) => x.tag.slug).slice(
-      0,
-      showTags
-    )
-    const theme = useTheme()
-
-    return (
-      <Theme
-        name={theme.name === 'dark' ? 'darkTranslucent' : 'lightTranslucent'}
-      >
-        <AbsoluteVStack
-          fullscreen
-          top="auto"
-          justifyContent="flex-end"
-          borderBottomLeftRadius={cardFrameBorderRadius}
-          borderBottomRightRadius={cardFrameBorderRadius}
-          overflow="hidden"
-          padding={10}
-        >
-          <HStack flexWrap="wrap">
-            {rtags.map((rtag) => {
-              return (
-                <VStack key={rtag.tag.slug} margin={3}>
-                  <TagButton {...selectRishDishViewSimple(rtag)} />
-                </VStack>
-              )
-            })}
-          </HStack>
-          {/* {['Burrito', 'Taco', 'Service'].map((tag, i) => {
-            const pct = (i + 20) * (i + 1)
-            return (
-              <HStack
-                key={tag}
-                width="100%"
-                height={55}
-                alignItems="center"
-                position="relative"
-              >
-                <Text
-                  fontWeight="300"
-                  fontSize={26}
-                  textShadowColor="rgba(0,0,0,0.1)"
-                  textShadowOffset={{ height: 1, width: 0 }}
-                  padding={10}
-                  textAlign="right"
-                  flex={1}
-                  zIndex={2}
-                  color="#fff"
-                >
-                  {tag}
-                </Text>
-                <AbsoluteVStack
-                  backgroundColor="#fff"
-                  height={4}
-                  bottom={0}
-                  left={0}
-                  width={`${pct}%`}
-                />
-                <AbsoluteVStack
-                  fullscreen
-                  backgroundColor="rgba(255,255,255,0.1)"
-                />
-              </HStack>
-            )
-          })} */}
-        </AbsoluteVStack>
-      </Theme>
     )
   }
 )

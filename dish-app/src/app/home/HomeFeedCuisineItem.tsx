@@ -18,6 +18,7 @@ import { GradientButton } from './GradientButton'
 import { HomeFeedProps } from './HomeFeedProps'
 import { HoverResultsProp } from './HoverResultsProp'
 import { RestaurantCard } from './restaurant/RestaurantCard'
+import { RestaurantStatBars } from './RestaurantStatBars'
 import { SkewedCard } from './SkewedCard'
 import { TagsText } from './TagsText'
 import { useTopCuisines } from './useTopCuisines'
@@ -131,6 +132,12 @@ export const HomeFeedCuisineItem = memo(
                       restaurantId={r.id}
                       restaurantSlug={r.slug}
                       hoverable={false}
+                      below={(colors) => (
+                        <RestaurantStatBars
+                          restaurantSlug={r.slug}
+                          colors={colors}
+                        />
+                      )}
                     />
                   </SkewedCard>
                 )
