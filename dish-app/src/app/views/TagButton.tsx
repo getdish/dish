@@ -4,7 +4,6 @@ import { ThumbsDown, ThumbsUp, X } from '@dish/react-feather'
 import React, { memo } from 'react'
 import { Image } from 'react-native'
 import {
-  AbsoluteVStack,
   HStack,
   Spacer,
   StackProps,
@@ -17,15 +16,13 @@ import {
 
 import { blue, green, orange, purple, red } from '../../constants/colors'
 import { isWeb } from '../../constants/constants'
+import { tagDisplayName } from '../../constants/tagMeta'
 import { getColorsForColor } from '../../helpers/getColorsForName'
 import { getTagSlug } from '../../helpers/getTagSlug'
-import { numberFormat } from '../../helpers/numberFormat'
 import { NavigableTag } from '../../types/tagTypes'
 import { RestaurantRating } from '../home/restaurant/RestaurantRating'
 import { useUserTagVotes } from '../hooks/useUserTagVotes'
-import { DishUpvoteDownvote } from './dish/DishUpvoteDownvote'
 import { Link } from './Link'
-import { Pie } from './Pie'
 
 export type TagButtonTagProps = {
   type?: string
@@ -42,7 +39,7 @@ export const getTagButtonProps = (
   tag?: TagButtonTagProps | NavigableTag | TagQuery | null
 ): TagButtonProps => {
   return {
-    name: tag?.name ?? '',
+    name: tag ? tagDisplayName(tag as any) : '',
     type: tag?.type as TagType,
     icon: tag?.icon ?? '',
     ...(tag && {

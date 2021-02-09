@@ -307,7 +307,7 @@ const ListPageContent = graphql((props: Props) => {
     isActive: props.isActive,
     results: restaurants.map((x) => x.restaurant).map(getRestaurantIdentifiers),
     showRank: true,
-    // zoomOnHover: true,
+    zoomOnHover: true,
     fitToResults: true,
   })
 
@@ -330,7 +330,7 @@ const ListPageContent = graphql((props: Props) => {
 
   return (
     <StackDrawer closable title={`${username}'s ${list.name}`}>
-      {isMyList && (
+      {props.isActive && isMyList && (
         <BottomFloatingArea>
           <VStack pointerEvents="none" flex={1} />
           <Button

@@ -71,7 +71,7 @@ export default memo(function AppMap() {
         appMapStore.setPosition({
           via: 'hover',
           center: coordsToLngLat(location.coordinates),
-          span: getMinLngLat(span, { lng: 0.004, lat: 0.004 }),
+          span: getMinLngLat(span, { lng: 0.1, lat: 0.1 }),
         })
       },
     ])
