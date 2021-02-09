@@ -188,6 +188,7 @@ const RestaurantHeaderContent = memo(
 
                         <AbsoluteVStack top={-23} right={-40} zIndex={1000}>
                           <RestaurantRating
+                            darken
                             colors={colors}
                             size="sm"
                             rating={Math.min(
@@ -318,7 +319,7 @@ const RestaurantHeaderContent = memo(
                             />
                           </HStack>
 
-                          <Spacer size="lg" />
+                          <Spacer size="xl" />
 
                           <RestaurantOverview
                             fullHeight

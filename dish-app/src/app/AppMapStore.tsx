@@ -29,6 +29,7 @@ import { homeStore } from './homeStore'
 type MapOpts = {
   showRank?: boolean
   zoomOnHover?: boolean
+  hideRegions?: boolean
   fitToResults?: boolean
 }
 
@@ -60,6 +61,7 @@ class AppMapStore extends Store {
   features: GeoJSON.Feature[] = []
   showRank = false
   zoomOnHover = false
+  hideRegions = false
   ids = {}
   lastRegion: null | AppMapLastRegion = null
 
@@ -73,8 +75,9 @@ class AppMapStore extends Store {
     this.setHovered(null)
     this.results = val.results ?? []
     this.features = val.features
-    this.showRank = val.showRank ?? false
-    this.zoomOnHover = val.zoomOnHover ?? false
+    this.showRank = val.showRank || false
+    this.zoomOnHover = val.zoomOnHover || false
+    this.hideRegions = val.hideRegions || false
   }
 
   setPosition(pos: Partial<AppMapPosition>) {
@@ -262,6 +265,7 @@ export const useSetAppMap = (
     center,
     span,
     fitToResults,
+    hideRegions,
     region,
   } = props
 
@@ -289,10 +293,14 @@ export const useSetAppMap = (
       async () => {
         const all = results
         if (!all) return
-        const allIds = [...new Set(all.filter((x) => x?.id).map((x) => x.id))]
-        const allResults = allIds
-          .map((id) => all.find((x) => x.id === id))
-          .filter(isPresent)
+        const allIds = new Set<string>()
+        const allResults: RestaurantOnlyIdsPartial[] = []
+        for (const item of all) {
+          if (item && item.id) {
+            allIds.add(item.id)
+            allResults.push(item)
+          }
+        }
 
         return await resolved(() => {
           return (
@@ -327,6 +335,7 @@ export const useSetAppMap = (
           showRank,
           zoomOnHover,
           features,
+          hideRegions,
         })
         if (fitToResults && features.length) {
           const collection = featureCollection(features)
@@ -358,5 +367,5 @@ export const useSetAppMap = (
         features: [],
       })
     }
-  }, [JSON.stringify(results), fitToResults, isActive])
+  }, [JSON.stringify(results), fitToResults, isActive, hideRegions])
 }

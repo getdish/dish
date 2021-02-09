@@ -66,13 +66,11 @@ export const RestaurantTagReviews = memo(
           })[0]
         : null
       const tagName = tag?.tag?.displayName ?? tag?.tag?.name ?? null
-      const media = useMedia()
       const store = useStore(RestaurantReviewsDisplayStore, {
         id: restaurantId,
       })
       const tagPhotos = tag?.photos() ?? []
       const numTags = tagPhotos?.length
-      const theme = useTheme()
 
       return (
         <VStack
@@ -90,17 +88,19 @@ export const RestaurantTagReviews = memo(
           <HStack
             position="relative"
             marginHorizontal={10}
-            marginBottom={-28}
+            marginBottom={-20}
             alignItems="center"
             justifyContent="center"
           >
-            <SlantedTitle fontWeight="700">{tagName ?? 'Overall'}</SlantedTitle>
+            <SlantedTitle size="sm" fontWeight="700">
+              {tagName ?? 'Overall'}
+            </SlantedTitle>
           </HStack>
 
           {!!tagPhotos.length && (
             <ContentScrollViewHorizontal height={190}>
               <Suspense fallback={<LoadingItems />}>
-                <HStack spacing="xs" paddingHorizontal={10} paddingVertical={5}>
+                <HStack spacing="sm" paddingHorizontal={10} paddingVertical={5}>
                   {[...tagPhotos, 0, 0, 0, 0, 0, 0]
                     .slice(0, Math.max(numTags, 5))
                     .map((photo, index) => {
@@ -392,8 +392,9 @@ export const RestaurantSourcesOverview = graphql(
 
                       <Text
                         fontSize={22}
-                        fontWeight="700"
+                        fontWeight="800"
                         color={positive > negative ? green : grey}
+                        letterSpacing={-1}
                       >
                         {Math.round(ratio * 100)}%
                       </Text>
@@ -414,6 +415,7 @@ export const RestaurantSourcesOverview = graphql(
                     <Paragraph
                       color={isWeb ? 'var(--color)' : '#222'}
                       sizeLineHeight={0.9}
+                      size={1.1}
                     >
                       {tagName ? <Text fontWeight="800">{tagName}</Text> : ''}
                       {!!tagName && isWeb ? (

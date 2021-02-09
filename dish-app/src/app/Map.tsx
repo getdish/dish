@@ -54,7 +54,16 @@ type MapInternalState = {
 }
 
 export const MapView = (props: MapProps) => {
-  const { center, span, padding, features, style, hovered, selected } = props
+  const {
+    center,
+    span,
+    padding,
+    features,
+    style,
+    hovered,
+    selected,
+    hideRegions,
+  } = props
   const isMounted = useIsMountedRef()
   const mapNode = useRef<HTMLDivElement>(null)
   const [map, setMap] = useState<mapboxgl.Map | null>(null)
@@ -97,6 +106,21 @@ export const MapView = (props: MapProps) => {
       internal,
     })
   }, [])
+
+  // hide regions
+  useEffect(() => {
+    if (!map) return
+    if (hideRegions) {
+      for (const tile of tiles) {
+        map.setLayoutProperty(`${tile.name}.fill`, 'visibility', 'none')
+      }
+      return () => {
+        for (const tile of tiles) {
+          map.setLayoutProperty(`${tile.name}.fill`, 'visibility', 'visible')
+        }
+      }
+    }
+  }, [map, hideRegions])
 
   // style
   useEffect(() => {

@@ -21,6 +21,7 @@ export type MapProps = {
   centerToResults?: number
   showRank?: boolean
   zoomOnHover?: boolean
+  hideRegions?: boolean
 }
 
 type MapPosition = { center: LngLat; span: LngLat }

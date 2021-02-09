@@ -67,6 +67,7 @@ const RestaurantPage = memo(
     }, [JSON.stringify(coords)])
 
     useSetAppMap({
+      hideRegions: true,
       isActive: props.isActive,
       results: [
         {
@@ -143,7 +144,7 @@ const RestaurantPage = memo(
 
             <Spacer />
 
-            <VStack marginBottom={10} position="relative" zIndex={1}>
+            <VStack marginBottom={15} position="relative" zIndex={1}>
               <View ref={setDishesSection}>
                 <Suspense
                   fallback={

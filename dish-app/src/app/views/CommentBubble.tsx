@@ -168,7 +168,14 @@ function CommentBubbleContents({
   )
 
   return (
-    <VStack maxWidth="100%" overflow="hidden" padding={10} width="100%" spacing>
+    <VStack
+      maxWidth="100%"
+      overflow="hidden"
+      paddingHorizontal={15}
+      padding={10}
+      width="100%"
+      spacing
+    >
       {before}
 
       <VStack
@@ -284,11 +291,10 @@ function CommentBubbleContents({
               params={{ username: name }}
               color="#fff"
               maxWidth="100%"
-              ellipse
               flex={1}
               fontSize={13}
             >
-              {name}
+              <Text ellipse>{name}</Text>
             </Link>
             {afterName}
           </HStack>

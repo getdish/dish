@@ -113,6 +113,7 @@ const UserPageContent = graphql(
     const hasReviews = !!reviews?.length
 
     useSetAppMap({
+      hideRegions: true,
       isActive: isActive,
       results: reviews.map(getReviewRestuarants),
     })
@@ -155,7 +156,7 @@ const UserPageContent = graphql(
               {hasReviews && (
                 <VStack>
                   {reviews.map(({ id }) => (
-                    <RestaurantReview key={id} showRestaurant reviewId={id} />
+                    <RestaurantReview key={id} reviewId={id} />
                   ))}
                 </VStack>
               )}
