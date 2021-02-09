@@ -148,6 +148,12 @@ const RestaurantHeaderContent = memo(
               <VStack flex={1}>
                 {/* title row */}
                 <HStack paddingLeft={20} alignItems="center">
+                  <VStack transform={[{ scale: 1.2 }]}>
+                    <RestaurantUpVoteDownVote restaurantSlug={restaurantSlug} />
+                  </VStack>
+                  <Spacer />
+                  <Spacer />
+                  <Spacer />
                   <HStack position="relative">
                     <HStack
                       backgroundColor={colors.themeColorAlt}
@@ -184,9 +190,6 @@ const RestaurantHeaderContent = memo(
                       </Text>
                     </HStack>
                   </HStack>
-                  <VStack transform={[{ scale: 1.2 }]}>
-                    <RestaurantUpVoteDownVote restaurantSlug={restaurantSlug} />
-                  </VStack>
                 </HStack>
 
                 <Spacer />

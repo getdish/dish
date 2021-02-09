@@ -1,6 +1,5 @@
 import { restaurant_tag } from '@dish/graph'
 import { isPresent } from '@dish/helpers'
-import { useMemo } from 'react'
 
 import { queryRestaurant } from '../queries/queryRestaurant'
 import {

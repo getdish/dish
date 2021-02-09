@@ -10,16 +10,17 @@ import {
   VStack,
 } from 'snackui'
 
-import { green, orange, red } from '../../constants/colors'
+import { green, grey, orange, red } from '../../constants/colors'
 import { isWeb } from '../../constants/constants'
 import CircularProgress from './CircularProgress'
+import { Pie } from './Pie'
 import { VoteButton } from './VoteButton'
 
 type Props = StackProps & {
   score: number
   showVoteOnHover?: boolean
   size?: 'sm' | 'md'
-  ratio?: number
+  rating?: number
   vote?: -1 | 0 | 1
   setVote?: (next: -1 | 1 | 0) => any
   subtle?: boolean
@@ -31,7 +32,7 @@ export const UpvoteDownvoteScore = memo(
   ({
     score,
     showVoteOnHover,
-    ratio,
+    rating = 50,
     vote = 0,
     upTooltip,
     downTooltip,
@@ -40,8 +41,6 @@ export const UpvoteDownvoteScore = memo(
     size,
     ...props
   }: Props) => {
-    const [hovered, setHovered] = useState(false)
-    const shownScore = Math.round(ratio ? ratio * 100 : score)
     const voteButtonColor = subtle ? '#f2f2f2' : null
     const scale = size === 'sm' ? 0.65 : 1
     const sizePx = 46 * scale
@@ -52,7 +51,7 @@ export const UpvoteDownvoteScore = memo(
             isOpen: false,
           }
     const fontSize =
-      Math.min(16, sizePx / `${shownScore}`.length) * scale * 1.175 +
+      Math.min(16, sizePx / `${score}`.length) * scale * 1.175 +
       (size === 'sm' ? 2 : 0)
 
     const upvote = (
@@ -82,16 +81,7 @@ export const UpvoteDownvoteScore = memo(
       />
     )
 
-    const color =
-      typeof ratio == 'undefined'
-        ? score >= 0
-          ? green
-          : red
-        : ratio < 0.4
-        ? red
-        : ratio < 0.6
-        ? orange
-        : green
+    const color = rating > 70 ? green : rating < 50 ? red : grey
 
     return (
       <VStack
@@ -108,37 +98,38 @@ export const UpvoteDownvoteScore = memo(
         shadowRadius={6}
         shadowOffset={{ height: 3, width: -1 }}
         borderRadius={1000}
-        onHoverIn={() => setHovered(true)}
-        onHoverOut={() => setHovered(false)}
         {...props}
       >
-        {typeof ratio === 'number' && (
-          <AbsoluteVStack
-            fullscreen
-            opacity={0.8}
-            // transform={[{ scale: 0.95 }]}
-          >
-            <CircularProgress
-              fill={ratio * 100}
-              size={sizePx}
-              width={3}
-              tintColor={color}
-              lineCap="round"
-              // arcSweepAngle={180}
-              rotation={(1 - ratio) * 180}
-            />
+        <AbsoluteVStack top={-15}>
+          {subtle ? (
+            upvote
+          ) : (
+            <Tooltip
+              position="right"
+              contents={upTooltip ?? 'Upvote'}
+              {...isOpenProp}
+            >
+              {upvote}
+            </Tooltip>
+          )}
+        </AbsoluteVStack>
+        <AbsoluteVStack bottom={-15}>
+          {subtle ? (
+            downvote
+          ) : (
+            <Tooltip
+              position="right"
+              contents={downTooltip ?? 'Downvote'}
+              {...isOpenProp}
+            >
+              {downvote}
+            </Tooltip>
+          )}
+        </AbsoluteVStack>
+        {typeof rating === 'number' && (
+          <AbsoluteVStack fullscreen>
+            <Pie size={sizePx} color="rgba(0,0,0,0.1)" percent={rating} />
           </AbsoluteVStack>
-        )}
-        {subtle ? (
-          upvote
-        ) : (
-          <Tooltip
-            position="right"
-            contents={upTooltip ?? 'Upvote'}
-            {...isOpenProp}
-          >
-            {upvote}
-          </Tooltip>
         )}
         <Text
           fontSize={fontSize}
@@ -148,28 +139,8 @@ export const UpvoteDownvoteScore = memo(
           color={color}
           textAlignVertical="top"
         >
-          {ratio && !hovered ? (
-            <HStack alignItems="flex-start">
-              <Text>{shownScore}</Text>
-              <Text marginRight={-3} fontSize={8} opacity={0.5}>
-                %
-              </Text>
-            </HStack>
-          ) : (
-            score ?? ''
-          )}
+          {score ?? ''}
         </Text>
-        {subtle ? (
-          downvote
-        ) : (
-          <Tooltip
-            position="right"
-            contents={downTooltip ?? 'Downvote'}
-            {...isOpenProp}
-          >
-            {downvote}
-          </Tooltip>
-        )}
       </VStack>
     )
   }

@@ -1,6 +1,6 @@
 import { isPresent } from '@dish/helpers'
 
-import { getRestaurantTagTagButtonProps } from '../helpers/selectTagButtonProps'
+import { selectRishDishViewSimple } from '../helpers/selectDishViewSimple'
 import { queryRestaurant } from './queryRestaurant'
 
 export function queryRestaurantTagScores({
@@ -26,7 +26,7 @@ export function queryRestaurantTagScores({
       if (!rtag) {
         return null
       }
-      return getRestaurantTagTagButtonProps(rtag)
+      return selectRishDishViewSimple(rtag)
     })
     .filter(isPresent)
 }

@@ -2,15 +2,14 @@ import { graphql } from '@dish/graph'
 import { sortBy } from 'lodash'
 import React, { memo } from 'react'
 import { Spacer, StackProps } from 'snackui'
-
-import { getRestaurantTagTagButtonProps } from '../../../helpers/selectTagButtonProps'
+import { selectRishDishViewSimple } from '../../../helpers/selectDishViewSimple'
 import { queryRestaurantTags } from '../../../queries/queryRestaurantTags'
 import {
-  TagButton,
+  getTagButtonProps, TagButton,
   TagButtonProps,
-  TagButtonTagProps,
-  getTagButtonProps,
+  TagButtonTagProps
 } from '../TagButton'
+
 
 type TagRowProps = {
   restaurantSlug: string
@@ -35,9 +34,8 @@ export const RestaurantTagsRow = memo(
     if (props.tags) {
       tags = props.tags.map(getTagButtonProps)
     } else {
-      // @ts-ignore
       tags = queryRestaurantTags({ restaurantSlug, limit: props.max }).map(
-        getRestaurantTagTagButtonProps
+        selectRishDishViewSimple
       )
     }
     if (showMore) {

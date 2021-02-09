@@ -86,15 +86,6 @@ export const RestaurantTagReviews = memo(
               <CloseButton onPress={store.toggleShowComments} />
             </AbsoluteVStack>
           )}
-          <HStack
-            position="relative"
-            marginHorizontal={10}
-            marginBottom={-31}
-            alignItems="center"
-            justifyContent="center"
-          >
-            <SlantedTitle fontWeight="700">{tagName ?? 'Overall'}</SlantedTitle>
-          </HStack>
 
           {!!tagPhotos.length && (
             <ContentScrollViewHorizontal height={180}>
