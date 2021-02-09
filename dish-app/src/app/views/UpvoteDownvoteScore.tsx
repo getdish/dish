@@ -6,6 +6,7 @@ import { AbsoluteVStack, StackProps, Text, Tooltip, VStack } from 'snackui'
 import { green, grey, red } from '../../constants/colors'
 import { isWeb } from '../../constants/constants'
 import { getColorsForColor } from '../../helpers/getColorsForName'
+import { numberFormat } from '../../helpers/numberFormat'
 import { Pie } from './Pie'
 import { VoteButton } from './VoteButton'
 
@@ -126,14 +127,14 @@ export const UpvoteDownvoteScore = memo(
         )}
         <Text
           fontSize={fontSize}
-          fontWeight="900"
+          fontWeight="800"
           marginVertical={-2 * scale}
-          letterSpacing={-0.5}
+          letterSpacing={-1}
           color={`${colors.darkColor}99`}
           textAlignVertical="top"
           zIndex={100}
         >
-          {score ?? ''}
+          {numberFormat(score, 'sm')}
         </Text>
       </VStack>
     )

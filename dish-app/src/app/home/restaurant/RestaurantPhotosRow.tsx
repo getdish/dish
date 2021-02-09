@@ -37,6 +37,9 @@ export const RestaurantPhotosRow = memo(
           },
         ],
       })
+
+      console.log('rendering photos', photos)
+
       return (
         <HStack>
           {!photos.length && (

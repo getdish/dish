@@ -119,10 +119,10 @@ for (const [index, name] of colorNames.entries()) {
     color: colors.darkColor,
     backgroundColor: colors.extraLightColor,
     backgroundColorSecondary: colors.lightColor,
-    backgroundColorTertiary: colors.color,
-    backgroundColorQuartenary: colors.darkColor,
+    backgroundColorTertiary: `${colors.lightColor}aa`,
+    backgroundColorQuartenary: `${colors.lightColor}77`,
     borderColor: colors.lightColor,
-    backgroundColorAlt: colors.altColor,
+    backgroundColorAlt: colors.darkColor,
   }
   colorThemes[`${name}Dark`] = {
     name,
@@ -131,10 +131,10 @@ for (const [index, name] of colorNames.entries()) {
     color: colors.extraLightColor,
     backgroundColor: colors.darkColor,
     backgroundColorSecondary: colors.color,
-    backgroundColorTertiary: colors.lightColor,
-    backgroundColorQuartenary: colors.extraLightColor,
+    backgroundColorTertiary: `${colors.darkColor}aa`,
+    backgroundColorQuartenary: `${colors.darkColor}77`,
     borderColor: colors.color,
-    backgroundColorAlt: colors.altPastelColor,
+    backgroundColorAlt: colors.lightColor,
   }
 }
 

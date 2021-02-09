@@ -1,6 +1,14 @@
 import { graphql, query } from '@dish/graph'
 import React, { Suspense, memo } from 'react'
-import { AbsoluteVStack, Grid, HStack, Spacer, Text, VStack } from 'snackui'
+import {
+  AbsoluteVStack,
+  Grid,
+  HStack,
+  Spacer,
+  Text,
+  Theme,
+  VStack,
+} from 'snackui'
 
 import { useUserReviewCommentQuery } from '../../hooks/useUserReview'
 import { SlantedTitle } from '../../views/SlantedTitle'
@@ -42,10 +50,12 @@ export const RestaurantReviewsList = memo(
 
             <AbsoluteVStack top={0} right={0}>
               <Suspense fallback={null}>
-                <RestaurantAddCommentButton
-                  restaurantId={restaurantId}
-                  restaurantSlug={restaurantSlug}
-                />
+                <Theme name="active">
+                  <RestaurantAddCommentButton
+                    restaurantId={restaurantId}
+                    restaurantSlug={restaurantSlug}
+                  />
+                </Theme>
               </Suspense>
             </AbsoluteVStack>
           </HStack>

@@ -23,7 +23,6 @@ export const RestaurantAddCommentButton = graphql(
     return (
       <SmallButton
         name="restaurantReview"
-        theme="active"
         tooltip="Add comment"
         params={{ slug: restaurantSlug }}
         pressStyle={{

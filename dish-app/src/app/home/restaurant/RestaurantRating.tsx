@@ -1,6 +1,5 @@
 import React from 'react'
-import { StyleSheet } from 'react-native'
-import { Circle, LinearGradient, Text } from 'snackui'
+import { Circle, Text } from 'snackui'
 
 import { ColorShades } from '../../../helpers/getColorsForName'
 
