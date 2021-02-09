@@ -26,7 +26,7 @@ export const UpvoteDownvoteScore = memo(
   ({
     score,
     showVoteOnHover,
-    rating = 50,
+    rating,
     vote = 0,
     upTooltip,
     downTooltip,
@@ -74,7 +74,13 @@ export const UpvoteDownvoteScore = memo(
     )
 
     const colors = getColorsForColor(
-      rating > 70 ? green : rating < 50 ? red : grey
+      typeof rating === 'number'
+        ? rating > 70
+          ? green
+          : rating < 50
+          ? red
+          : grey
+        : grey
     )
 
     return (

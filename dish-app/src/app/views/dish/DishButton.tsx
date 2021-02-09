@@ -47,7 +47,7 @@ const DishButtonContent = (props: DishButtonProps) => {
   const imageUrl = getImageUrl(image ?? '', 100, 100, 100)
   const isLong =
     dishName.length > 20 || !!dishName.split(' ').find((x) => x.length >= 10)
-  const fontSize = isLong ? 16 : 18
+  const fontSize = isLong ? 15 : 16
   const theme = useTheme()
 
   let contents = (
@@ -103,10 +103,8 @@ const DishButtonContent = (props: DishButtonProps) => {
 
           <Text
             className="ease-in-out-fast"
-            // flex={1} breaks native
             overflow="hidden"
-            fontWeight="700"
-            letterSpacing={-0.5}
+            fontWeight="500"
             color={theme.color}
             fontSize={fontSize}
             textAlign="center"

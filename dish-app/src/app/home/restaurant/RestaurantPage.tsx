@@ -1,5 +1,5 @@
 import { fullyIdle, series } from '@dish/async'
-import { graphql } from '@dish/graph'
+import { graphql, order_by } from '@dish/graph'
 import React, {
   Suspense,
   memo,
@@ -9,7 +9,14 @@ import React, {
   useState,
 } from 'react'
 import { ScrollView, View } from 'react-native'
-import { LoadingItem, LoadingItems, Spacer, VStack, useTheme } from 'snackui'
+import {
+  HStack,
+  LoadingItem,
+  LoadingItems,
+  Spacer,
+  VStack,
+  useTheme,
+} from 'snackui'
 
 import { searchBarHeight } from '../../../constants/constants'
 import { getMinLngLat } from '../../../helpers/mapHelpers'
@@ -19,9 +26,12 @@ import { HomeStateItemRestaurant } from '../../../types/homeTypes'
 import { appMapStore, useSetAppMap } from '../../AppMapStore'
 import { drawerStore } from '../../drawerStore'
 import { ContentScrollView } from '../../views/ContentScrollView'
+import { ListCard } from '../../views/list/ListCard'
 import { PageTitleTag } from '../../views/PageTitleTag'
+import { SlantedTitle } from '../../views/SlantedTitle'
 import { StackDrawer } from '../../views/StackDrawer'
 import { HomeStackViewProps } from '../HomeStackViewProps'
+import { SkewedCard, SkewedCardCarousel } from '../SkewedCard'
 import { RestaurantDishRow } from './RestaurantDishRow'
 import { RestaurantHeader } from './RestaurantHeader'
 import { RestaurantMenu } from './RestaurantMenu'
@@ -181,6 +191,10 @@ const RestaurantPage = memo(
 
           <Spacer size="xl" />
 
+          <Suspense fallback={null}>
+            <RestaurantLists restaurantSlug={restaurantSlug} />
+          </Suspense>
+
           <VStack
             backgroundColor={theme.backgroundColorSecondary}
             borderColor={theme.backgroundColorSecondary}
@@ -207,6 +221,44 @@ const RestaurantPage = memo(
           </VStack>
         </ContentScrollView>
       </>
+    )
+  })
+)
+
+const RestaurantLists = memo(
+  graphql(({ restaurantSlug }: { restaurantSlug: string }) => {
+    const [restaurant] = queryRestaurant(restaurantSlug)
+    const lists = restaurant.lists({
+      limit: 10,
+      order_by: [{ list: { created_at: order_by.asc } }],
+    })
+
+    if (lists.length === 0) {
+      return null
+    }
+
+    return (
+      <VStack>
+        <SlantedTitle alignSelf="center" fontWeight="700">
+          Lists
+        </SlantedTitle>
+
+        <SkewedCardCarousel>
+          {lists.map(({ list }, i) => {
+            return (
+              <SkewedCard zIndex={1000 - i} key={list.id}>
+                <ListCard
+                  isBehind={i > 0}
+                  hoverable={false}
+                  slug={list.slug}
+                  userSlug={list.user?.username ?? ''}
+                  region={list.region ?? ''}
+                />
+              </SkewedCard>
+            )
+          })}
+        </SkewedCardCarousel>
+      </VStack>
     )
   })
 )

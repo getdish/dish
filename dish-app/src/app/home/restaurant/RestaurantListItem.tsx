@@ -210,7 +210,7 @@ const RestaurantListItemContent = memo(
         : 320,
       maxWidth: Math.min(
         Dimensions.get('window').width * 0.74,
-        media.sm ? 360 : 420
+        media.sm ? 360 : 460
       ),
     }
 
@@ -325,7 +325,15 @@ const RestaurantListItemContent = memo(
             >
               <VStack paddingLeft={showAbove ? 47 : 10} paddingTop={25}>
                 <HStack position="relative" alignItems="center">
-                  <AbsoluteVStack top={-16} left={-34} zIndex={-1}>
+                  <AbsoluteVStack
+                    top={-16}
+                    left={-34}
+                    zIndex={-1}
+                    {...(!showAbove && {
+                      top: 0,
+                      left: -32,
+                    })}
+                  >
                     <RankView rank={rank} />
                   </AbsoluteVStack>
 
@@ -444,7 +452,7 @@ const RestaurantListItemContent = memo(
               >
                 <RestaurantOverview
                   fullHeight={flexibleHeight}
-                  disableEllipse={flexibleHeight}
+                  // disableEllipse={flexibleHeight}
                   text={editedDescription || description}
                   editableDescription={editableDescription}
                   onEdit={handleEdit}

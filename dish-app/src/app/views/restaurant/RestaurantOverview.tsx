@@ -54,7 +54,7 @@ export const RestaurantOverview = memo(
       .join(' ')
     const summary = text ?? restaurant.summary ?? headlines
     const scale = 2.1 - Math.max(1.0, Math.min(1.1, summary.length / 250))
-    const extra = size === 'lg' ? 1 : 0
+    const extra = size === 'lg' ? 3 : 0
     const lineHeight = Math.round((size === 'lg' ? 26 : 24) * scale + extra)
     const fontSize = Math.round(16 * scale + extra)
     const [isEditing, setIsEditing] = useState(false)
@@ -124,7 +124,8 @@ export const RestaurantOverview = memo(
                 fontSize={fontSize}
                 lineHeight={lineHeight}
                 opacity={1}
-                color={theme.color}
+                // fontWeight="500"
+                color={theme.colorSecondary}
               >
                 {disableEllipse
                   ? summary

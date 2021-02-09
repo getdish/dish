@@ -113,10 +113,12 @@ export const MapView = (props: MapProps) => {
     if (hideRegions) {
       for (const tile of tiles) {
         map.setLayoutProperty(`${tile.name}.fill`, 'visibility', 'none')
+        map.setLayoutProperty(`${tile.name}.line`, 'visibility', 'none')
       }
       return () => {
         for (const tile of tiles) {
           map.setLayoutProperty(`${tile.name}.fill`, 'visibility', 'visible')
+          map.setLayoutProperty(`${tile.name}.line`, 'visibility', 'visible')
         }
       }
     }

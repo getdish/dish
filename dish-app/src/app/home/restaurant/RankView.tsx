@@ -27,7 +27,7 @@ export const RankView = memo(({ rank }: { rank: number }) => {
       <Text transform={[{ translateY: -0 }]} textAlign="center" lineHeight={38}>
         <TextSuperScript
           color={blue}
-          transform={[{ translateY: -10 }]}
+          transform={[{ translateY: -15 }]}
           fontSize={11}
         >
           #

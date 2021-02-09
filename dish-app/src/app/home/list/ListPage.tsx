@@ -307,7 +307,7 @@ const ListPageContent = graphql((props: Props) => {
     isActive: props.isActive,
     results: restaurants.map((x) => x.restaurant).map(getRestaurantIdentifiers),
     showRank: true,
-    zoomOnHover: true,
+    // zoomOnHover: true,
     fitToResults: true,
   })
 
@@ -448,6 +448,7 @@ const ListPageContent = graphql((props: Props) => {
                   marginTop={-5}
                   alignSelf="center"
                   zIndex={0}
+                  size="lg"
                 >
                   {isEditing ? (
                     <Input
@@ -468,7 +469,7 @@ const ListPageContent = graphql((props: Props) => {
                   )}
                 </SlantedTitle>
 
-                <SlantedTitle size="xs" alignSelf="center">
+                <SlantedTitle zIndex={-1} size="xs" alignSelf="center">
                   {region.data?.name ?? props.item.region}
                 </SlantedTitle>
               </VStack>
@@ -543,7 +544,13 @@ const ListPageContent = graphql((props: Props) => {
           </>
         )}
 
-        <VStack paddingHorizontal={20} paddingVertical={20}>
+        {/* <VStack
+          backgroundColor={`${color}99`}
+          paddingHorizontal={20}
+          paddingVertical={20}
+          alignSelf="center"
+          borderRadius={20}
+        >
           {isEditing ? (
             <Input
               placeholder="Description..."
@@ -552,6 +559,7 @@ const ListPageContent = graphql((props: Props) => {
               lineHeight={30}
               fontSize={20}
               marginVertical={-12}
+              textAlign="center"
               marginHorizontal={-8}
               defaultValue={list.description ?? ''}
               onChangeText={(val) => {
@@ -559,9 +567,11 @@ const ListPageContent = graphql((props: Props) => {
               }}
             />
           ) : (
-            <Paragraph size="xl">{list.description}</Paragraph>
+            <Paragraph textAlign="center" size="xl">
+              {list.description}
+            </Paragraph>
           )}
-        </VStack>
+        </VStack> */}
 
         <VStack minHeight={300}>
           {!restaurants.length && (
@@ -603,8 +613,8 @@ const ListPageContent = graphql((props: Props) => {
                   description={comment}
                   hideTagRow
                   above={
-                    <>
-                      {isEditing && (
+                    isEditing && (
+                      <>
                         <AbsoluteVStack top={-28} left={28}>
                           <CircleButton
                             backgroundColor={bgLight}
@@ -617,18 +627,18 @@ const ListPageContent = graphql((props: Props) => {
                             <X size={20} />
                           </CircleButton>
                         </AbsoluteVStack>
-                      )}
-                      <UpvoteDownvoteScore
-                        upTooltip="Move up"
-                        downTooltip="Move down"
-                        score={index + 1}
-                        setVote={async (vote) => {
-                          restaurantActions.promote(
-                            vote === 1 ? index : index + 1
-                          )
-                        }}
-                      />
-                    </>
+                        <UpvoteDownvoteScore
+                          upTooltip="Move up"
+                          downTooltip="Move down"
+                          score={index + 1}
+                          setVote={async (vote) => {
+                            restaurantActions.promote(
+                              vote === 1 ? index : index + 1
+                            )
+                          }}
+                        />
+                      </>
+                    )
                   }
                   flexibleHeight
                   dishSlugs={dishSlugs.length ? dishSlugs : undefined}

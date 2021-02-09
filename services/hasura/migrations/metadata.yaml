@@ -453,6 +453,14 @@ tables:
     schema: public
     name: restaurant
   array_relationships:
+  - name: lists
+    using:
+      manual_configuration:
+        remote_table:
+          schema: public
+          name: list_restaurant
+        column_mapping:
+          id: restaurant_id
   - name: menu_items
     using:
       foreign_key_constraint_on:

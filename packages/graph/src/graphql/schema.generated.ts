@@ -1964,6 +1964,7 @@ export interface restaurant_bool_exp {
   hours?: Maybe<jsonb_comparison_exp>
   id?: Maybe<uuid_comparison_exp>
   image?: Maybe<String_comparison_exp>
+  lists?: Maybe<list_restaurant_bool_exp>
   location?: Maybe<geometry_comparison_exp>
   menu_items?: Maybe<menu_item_bool_exp>
   name?: Maybe<String_comparison_exp>
@@ -2061,6 +2062,7 @@ export interface restaurant_insert_input {
   hours?: Maybe<Scalars['jsonb']>
   id?: Maybe<Scalars['uuid']>
   image?: Maybe<Scalars['String']>
+  lists?: Maybe<list_restaurant_arr_rel_insert_input>
   location?: Maybe<Scalars['geometry']>
   menu_items?: Maybe<menu_item_arr_rel_insert_input>
   name?: Maybe<Scalars['String']>
@@ -2165,6 +2167,7 @@ export interface restaurant_order_by {
   hours?: Maybe<order_by>
   id?: Maybe<order_by>
   image?: Maybe<order_by>
+  lists_aggregate?: Maybe<list_restaurant_aggregate_order_by>
   location?: Maybe<order_by>
   menu_items_aggregate?: Maybe<menu_item_aggregate_order_by>
   name?: Maybe<order_by>
@@ -8067,6 +8070,26 @@ export const generatedSchema = {
     id: { __type: 'uuid!' },
     image: { __type: 'String' },
     is_open_now: { __type: 'Boolean' },
+    lists: {
+      __type: '[list_restaurant!]!',
+      __args: {
+        distinct_on: '[list_restaurant_select_column!]',
+        limit: 'Int',
+        offset: 'Int',
+        order_by: '[list_restaurant_order_by!]',
+        where: 'list_restaurant_bool_exp',
+      },
+    },
+    lists_aggregate: {
+      __type: 'list_restaurant_aggregate!',
+      __args: {
+        distinct_on: '[list_restaurant_select_column!]',
+        limit: 'Int',
+        offset: 'Int',
+        order_by: '[list_restaurant_order_by!]',
+        where: 'list_restaurant_bool_exp',
+      },
+    },
     location: { __type: 'geometry!' },
     menu_items: {
       __type: '[menu_item!]!',
@@ -8260,6 +8283,7 @@ export const generatedSchema = {
     hours: { __type: 'jsonb_comparison_exp' },
     id: { __type: 'uuid_comparison_exp' },
     image: { __type: 'String_comparison_exp' },
+    lists: { __type: 'list_restaurant_bool_exp' },
     location: { __type: 'geometry_comparison_exp' },
     menu_items: { __type: 'menu_item_bool_exp' },
     name: { __type: 'String_comparison_exp' },
@@ -8335,6 +8359,7 @@ export const generatedSchema = {
     hours: { __type: 'jsonb' },
     id: { __type: 'uuid' },
     image: { __type: 'String' },
+    lists: { __type: 'list_restaurant_arr_rel_insert_input' },
     location: { __type: 'geometry' },
     menu_items: { __type: 'menu_item_arr_rel_insert_input' },
     name: { __type: 'String' },
@@ -8484,6 +8509,7 @@ export const generatedSchema = {
     hours: { __type: 'order_by' },
     id: { __type: 'order_by' },
     image: { __type: 'order_by' },
+    lists_aggregate: { __type: 'list_restaurant_aggregate_order_by' },
     location: { __type: 'order_by' },
     menu_items_aggregate: { __type: 'menu_item_aggregate_order_by' },
     name: { __type: 'order_by' },
@@ -12945,6 +12971,20 @@ export interface restaurant {
   id: ScalarsEnums['uuid']
   image?: Maybe<ScalarsEnums['String']>
   is_open_now?: Maybe<ScalarsEnums['Boolean']>
+  lists: (args?: {
+    distinct_on?: Maybe<Array<ScalarsEnums['list_restaurant_select_column']>>
+    limit?: Maybe<ScalarsEnums['Int']>
+    offset?: Maybe<ScalarsEnums['Int']>
+    order_by?: Maybe<Array<list_restaurant_order_by>>
+    where?: Maybe<list_restaurant_bool_exp>
+  }) => Array<list_restaurant>
+  lists_aggregate: (args?: {
+    distinct_on?: Maybe<Array<ScalarsEnums['list_restaurant_select_column']>>
+    limit?: Maybe<ScalarsEnums['Int']>
+    offset?: Maybe<ScalarsEnums['Int']>
+    order_by?: Maybe<Array<list_restaurant_order_by>>
+    where?: Maybe<list_restaurant_bool_exp>
+  }) => list_restaurant_aggregate
   location: ScalarsEnums['geometry']
   menu_items: (args?: {
     distinct_on?: Maybe<Array<ScalarsEnums['menu_item_select_column']>>
