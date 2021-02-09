@@ -87,7 +87,7 @@ export function Card({
       hoverable={hoverable}
     >
       <VStack
-        className="card-hover safari-fix-overflow"
+        className="safari-fix-overflow"
         width="100%"
         overflow="hidden"
         alignSelf="center"
@@ -102,14 +102,17 @@ export function Card({
           zIndex={12}
         >
           <VStack className="card-hover-fade" flex={1}>
-            {isBehind && (
-              <LinearGradient
-                style={[StyleSheet.absoluteFill, sheet.cardGradient]}
-                start={[0, 0]}
-                end={[1, 0]}
-                colors={['rgba(0,0,0,0.33)', 'rgba(0,0,0,0)']}
-              />
-            )}
+            <LinearGradient
+              pointerEvents="none"
+              style={[
+                StyleSheet.absoluteFill,
+                sheet.cardGradient,
+                { opacity: isBehind ? 1 : 0 },
+              ]}
+              start={[0, 0]}
+              end={[1, 0]}
+              colors={['rgba(0,0,0,0.33)', 'rgba(0,0,0,0)']}
+            />
             <LinearGradient
               style={StyleSheet.absoluteFill}
               colors={[

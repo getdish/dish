@@ -1,11 +1,13 @@
 import { graphql, order_by, query } from '@dish/graph'
 import { uniqBy } from 'lodash'
 import React from 'react'
-import { AbsoluteVStack, HStack, Text, Theme, useTheme } from 'snackui'
+import { AbsoluteVStack, HStack, Text, Theme, VStack, useTheme } from 'snackui'
 
 import { ColorShades } from '../../helpers/getColorsForName'
+import { selectRishDishViewSimple } from '../../helpers/selectDishViewSimple'
 import { queryRestaurant } from '../../queries/queryRestaurant'
 import { cardFrameBorderRadius } from '../views/CardFrame'
+import { TagButton } from '../views/TagButton'
 
 export const RestaurantStatBars = graphql(
   ({
@@ -60,6 +62,7 @@ export const RestaurantStatBars = graphql(
         name={theme.name === 'dark' ? 'darkTranslucent' : 'lightTranslucent'}
       >
         <AbsoluteVStack
+          className="card-hover-fade"
           fullscreen
           top="auto"
           justifyContent="flex-end"
@@ -67,44 +70,59 @@ export const RestaurantStatBars = graphql(
           borderBottomRightRadius={cardFrameBorderRadius}
           overflow="hidden"
         >
-          <HStack flexWrap="wrap">
-            {rtags.map((rtag) => {
+          <VStack alignItems="flex-end" justifyContent="flex-end">
+            {rtags.map((rtag, index) => {
               return (
-                <HStack
+                <VStack
                   key={rtag.tag.slug}
                   width="100%"
-                  height={42}
-                  alignItems="center"
-                  position="relative"
+                  backgroundColor={`rgba(0,0,0,0.${index + 2})`}
+                  alignItems="flex-end"
                 >
-                  <Text
-                    fontWeight="500"
-                    fontSize={22}
-                    textShadowColor="rgba(0,0,0,0.1)"
-                    textShadowOffset={{ height: 1, width: 0 }}
-                    paddingHorizontal={10}
-                    textAlign="right"
-                    flex={1}
-                    zIndex={2}
+                  <TagButton
+                    size="lg"
+                    {...selectRishDishViewSimple(rtag)}
+                    backgroundColor="transparent"
                     color="#fff"
-                  >
-                    {rtag.tag.name} {rtag.tag.icon}
-                  </Text>
-                  <AbsoluteVStack
-                    backgroundColor={colors.altPastelColor}
-                    height="100%"
-                    bottom={0}
-                    left={0}
-                    width={`${rtag.rating * 100}%`}
                   />
-                  <AbsoluteVStack
-                    fullscreen
-                    backgroundColor="rgba(0,0,0,0.15)"
-                  />
-                </HStack>
+                </VStack>
               )
+              // return (
+              //   <HStack
+              //     key={rtag.tag.slug}
+              //     width="100%"
+              //     height={42}
+              //     alignItems="center"
+              //     position="relative"
+              //   >
+              //     <Text
+              //       fontWeight="500"
+              //       fontSize={22}
+              //       textShadowColor="rgba(0,0,0,0.1)"
+              //       textShadowOffset={{ height: 1, width: 0 }}
+              //       paddingHorizontal={10}
+              //       textAlign="right"
+              //       flex={1}
+              //       zIndex={2}
+              //       color="#fff"
+              //     >
+              //       {rtag.tag.name} {rtag.tag.icon}
+              //     </Text>
+              //     <AbsoluteVStack
+              //       backgroundColor={colors.altPastelColor}
+              //       height="100%"
+              //       bottom={0}
+              //       left={0}
+              //       width={`${rtag.rating * 100}%`}
+              //     />
+              //     <AbsoluteVStack
+              //       fullscreen
+              //       backgroundColor="rgba(0,0,0,0.15)"
+              //     />
+              //   </HStack>
+              // )
             })}
-          </HStack>
+          </VStack>
         </AbsoluteVStack>
       </Theme>
     )

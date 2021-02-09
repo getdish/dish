@@ -1,6 +1,8 @@
-// for testing quickly
+// // for testing quickly
+// import React from 'react'
 // import { Button, ThemeProvider, configureThemes } from 'snackui'
 
+// import { Pie } from "./app/views/Pie"
 // import themes from './constants/themes'
 
 // configureThemes(themes)
@@ -9,9 +11,10 @@
 //   console.log('hi')
 //   return (
 //     <ThemeProvider themes={themes} defaultTheme="light">
-//       <Button pointerEvents="auto" backgroundColor="red">
+//       <Pie />
+//       {/* <Button pointerEvents="auto" backgroundColor="red">
 //         hello
-//       </Button>
+//       </Button> */}
 //     </ThemeProvider>
 //   )
 // }
