@@ -12,7 +12,7 @@ export default jsonRoute(async (req, res) => {
       res.status(401).json({ error: 'Not found' })
       return
     }
-    const isValid = isPasswordValid(password, user.password)
+    const isValid = isPasswordValid(password, user.password!)
     if (!isValid) {
       res.status(401).json({ error: 'Invalid password' })
       return

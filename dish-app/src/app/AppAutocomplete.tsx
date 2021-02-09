@@ -729,11 +729,11 @@ function searchCuisines(searchQuery: string) {
       return 'autocomplete' in r
         ? r
         : createAutocomplete({
-            name: r.name,
+            name: r.name || '',
             type: 'country',
-            icon: r.icon ?? '🌎',
+            icon: r.icon || '🌎',
             description: 'Cuisine',
-            slug: r.slug ?? '',
+            slug: r.slug || '',
           })
     })
 }
@@ -781,7 +781,7 @@ function searchDishTags(searchQuery: string, cuisine?: string) {
       : []),
   ].map((r) =>
     createAutocomplete({
-      name: r.name,
+      name: r.name ?? '',
       icon: r.icon ?? '🍽',
       type: 'dish',
       description: r.parent?.name ?? '',

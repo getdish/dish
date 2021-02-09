@@ -70,19 +70,19 @@ export const useUserReviewsQuery = (
           type: review?.tag?.type ?? '',
         }
         return {
-          id: review.id,
-          rating: review.rating,
-          tag_id: review.tag_id,
-          text: review.text,
+          id: review.id ?? '',
+          rating: review.rating ?? 0,
+          tag_id: review.tag_id ?? '',
+          text: review.text ?? '',
           tag,
-          vote: review.vote,
-          restaurant_id: review.restaurant_id,
-          user_id: review.user_id,
+          vote: review.vote ?? 0,
+          restaurant_id: review.restaurant_id ?? '',
+          user_id: review.user_id ?? '',
           user: {
-            username: review.user.username,
+            username: review.user.username ?? '',
           },
-          favorited: review.favorited,
-          updated_at: review.updated_at,
+          favorited: review.favorited ?? false,
+          updated_at: review.updated_at ?? '',
         }
       })
     : []

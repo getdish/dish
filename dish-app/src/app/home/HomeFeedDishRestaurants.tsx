@@ -97,7 +97,7 @@ export const HomeFeedDishRestaurants = graphql(
     return (
       <Hoverable
         onHoverIn={() => {
-          onHoverResults(restaurants.map((x) => pick(x, 'id', 'slug')))
+          onHoverResults(restaurants.map((x) => pick(x, 'id', 'slug') as any))
         }}
       >
         <FeedSlantedTitleLink tag={tag}>
@@ -113,13 +113,13 @@ export const HomeFeedDishRestaurants = graphql(
                   isBehind={i > 0}
                   hideScore
                   restaurantId={r.id}
-                  restaurantSlug={r.slug}
+                  restaurantSlug={r.slug || ''}
                   hoverable={false}
                   dimImage
                   below={(colors) => (
                     <RestaurantStatBars
                       tags={[tag.slug]}
-                      restaurantSlug={r.slug}
+                      restaurantSlug={r.slug || ''}
                       colors={colors}
                     />
                   )}

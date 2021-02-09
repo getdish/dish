@@ -135,7 +135,7 @@ export const RestaurantAddToListModal = graphql(
                 <LinkButton
                   name="list"
                   params={{
-                    slug: list.slug,
+                    slug: list.slug ?? '',
                     userSlug: userStore.user?.username ?? '',
                     region: list.region ?? '',
                   }}

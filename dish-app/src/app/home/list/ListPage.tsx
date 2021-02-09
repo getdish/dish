@@ -452,7 +452,7 @@ const ListPageContent = graphql((props: Props) => {
                     <Input
                       fontSize={26}
                       backgroundColor="transparent"
-                      defaultValue={list.name}
+                      defaultValue={list.name || ''}
                       onChangeText={(val) => {
                         draft.current.name = val
                       }}

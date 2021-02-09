@@ -67,7 +67,7 @@ const RestaurantHeaderContent = memo(
       const [open_text, open_color, next_time] = openingHours(restaurant)
       const paddingPx = size === 'sm' ? 10 : 30
       const spacer = <Spacer size={paddingPx} />
-      const nameLen = restaurant.name?.length
+      const nameLen = restaurant.name?.length ?? 10
       const {
         width,
         drawerWidth,

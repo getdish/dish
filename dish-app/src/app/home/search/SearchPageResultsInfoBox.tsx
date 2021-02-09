@@ -82,9 +82,9 @@ const HomeSearchInfoBoxCountry = memo(
               return (
                 <TagButton
                   key={tag.id}
-                  name={tag.name}
-                  icon={tag.icon ?? ''}
-                  slug={tag.slug ?? ''}
+                  name={tag.name || ''}
+                  icon={tag.icon || ''}
+                  slug={tag.slug || ''}
                 />
               )
             })}

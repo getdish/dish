@@ -46,6 +46,7 @@ export function tagNameKey(name: string) {
 export function getFullTagFromNameAndType(
   tag: TagWithNameAndType
 ): NavigableTag | null {
+  if (!tag.name) return null
   const res = allTags[allTagsNameToSlug[tagNameKey(tag.name)]]
   if (res) return res
   if ('slug' in tag && 'type' in tag && 'name' in tag) {

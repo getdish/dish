@@ -6,8 +6,8 @@ import { createAutocomplete } from './createAutocomplete'
 
 export function createRestaurantAutocomplete(r: restaurant) {
   return createAutocomplete({
-    name: r.name,
-    slug: r.slug,
+    name: r.name ?? '',
+    slug: r.slug ?? '',
     type: 'restaurant',
     icon: r.image || '📍',
     description:
