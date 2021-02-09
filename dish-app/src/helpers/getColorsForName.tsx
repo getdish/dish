@@ -4,6 +4,7 @@ import {
   allDarkColor,
   allExtraLightColors,
   allLightColors,
+  colorNames,
 } from '../constants/colors'
 
 if (allLightColors.length !== allColors.length) {
@@ -11,7 +12,7 @@ if (allLightColors.length !== allColors.length) {
 }
 
 export const getColorsForName = (name?: string | null) => {
-  const charCode = name && name?.length > 0 ? name.charCodeAt(0) : 0
+  const charCode = name && name.length > 0 ? name.charCodeAt(0) : 0
   const index = charCode % allLightColors.length
   return getColorsForIndex(index)
 }
@@ -24,6 +25,7 @@ export const getColorsForColor = (color: string) => {
 const getColorsForIndex = (index: number) => {
   const altIndex = (index + 1) % allLightColors.length
   return {
+    name: colorNames[index],
     darkColor: allDarkColor[index],
     lightColor: allLightColors[index],
     extraLightColor: allExtraLightColors[index],

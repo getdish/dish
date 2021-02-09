@@ -102,7 +102,7 @@ const DishViewContent = (props: DishViewProps) => {
   const isLong =
     dishName.length > 17 || !!dishName.split(' ').find((x) => x.length >= 8)
   const isTiny = size < 115
-  const fontSize = Math.max(14, (isLong ? 13 : 15) * (isTiny ? 0.75 : 1))
+  const fontSize = Math.max(13, (isLong ? 15 : 18) * (isTiny ? 0.75 : 1))
   const { lightColor, color } = getColorsForName(name)
   const backgroundColor = lightColor
   const isActive = (isHovered || selected) ?? false
@@ -125,13 +125,12 @@ const DishViewContent = (props: DishViewProps) => {
           height={20}
           pointerEvents="none"
           zIndex={1000000}
-          top={0}
-          left={0}
+          top="4%"
+          left="4%"
         >
           <Suspense fallback={null}>
             <DishUpvoteDownvote
               size="sm"
-              name={name}
               subtle={isWeb && !supportsTouchWeb}
               slug={slug}
               score={score}
@@ -158,7 +157,7 @@ const DishViewContent = (props: DishViewProps) => {
           zIndex: 3,
         })}
       >
-        {!!icon && (
+        {/* {!!icon && (
           <Text
             className="ease-in-out"
             zIndex={10}
@@ -170,7 +169,7 @@ const DishViewContent = (props: DishViewProps) => {
           >
             {icon}
           </Text>
-        )}
+        )} */}
 
         {showSearchButton && isActive && (
           <AbsoluteVStack

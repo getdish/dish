@@ -1,5 +1,8 @@
 // import * as colors from './colors'
 
+import { getColorsForColor } from '../helpers/getColorsForName'
+import { allColors, colorNames } from './colors'
+
 export type MyTheme = typeof dark
 export type MyThemes = typeof themes
 
@@ -104,6 +107,37 @@ const lightTranslucent: MyTheme = {
   backgroundColorQuartenary: 'rgba(240,240,240,0.7)',
 }
 
+const colorThemes: { [key: string]: MyTheme } = {}
+
+for (const [index, name] of colorNames.entries()) {
+  const color = allColors[index]
+  const colors = getColorsForColor(color)
+  colorThemes[name] = {
+    name,
+    ...shared,
+    ...lightBase,
+    color: colors.darkColor,
+    backgroundColor: colors.extraLightColor,
+    backgroundColorSecondary: colors.lightColor,
+    backgroundColorTertiary: colors.color,
+    backgroundColorQuartenary: colors.darkColor,
+    borderColor: colors.lightColor,
+    backgroundColorAlt: colors.altColor,
+  }
+  colorThemes[`${name}Dark`] = {
+    name,
+    ...shared,
+    ...lightBase,
+    color: colors.extraLightColor,
+    backgroundColor: colors.darkColor,
+    backgroundColorSecondary: colors.color,
+    backgroundColorTertiary: colors.lightColor,
+    backgroundColorQuartenary: colors.extraLightColor,
+    borderColor: colors.color,
+    backgroundColorAlt: colors.altPastelColor,
+  }
+}
+
 const themes = {
   dark,
   light,
@@ -111,6 +145,7 @@ const themes = {
   darkTranslucent,
   active,
   error,
+  ...colorThemes,
 }
 
 export default themes

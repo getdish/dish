@@ -1,8 +1,8 @@
-// // debug
+// debug
 import { capitalize } from 'lodash'
 import React, { Suspense, memo } from 'react'
 import { Image } from 'react-native'
-import { Box, HStack, StackProps, Text, VStack } from 'snackui'
+import { Box, HStack, StackProps, Text, VStack, useTheme } from 'snackui'
 
 import { isWeb } from '../../../constants/constants'
 import { getColorsForName } from '../../../helpers/getColorsForName'
@@ -11,15 +11,14 @@ import { DishTagItem } from '../../../helpers/getRestaurantDishes'
 import { Link } from '../Link'
 import { DishUpvoteDownvote } from './DishUpvoteDownvote'
 
-export type DishButtonProps = DishTagItem & {
+export type DishButtonProps = Partial<DishTagItem> & {
   restaurantId?: string
   restaurantSlug?: string
   selected?: boolean
   noLink?: boolean
   showSearchButton?: boolean
   hideVote?: boolean
-  isActive?: boolean
-} & StackProps
+}
 
 export const DishButton = memo((props: DishButtonProps) => {
   return (
@@ -31,47 +30,42 @@ export const DishButton = memo((props: DishButtonProps) => {
 
 const DishButtonContent = (props: DishButtonProps) => {
   const {
-    // dish specific things
     name,
     score,
     icon,
     image,
     slug,
     rating,
-    isActive,
-    // rest
     restaurantSlug,
-    restaurantId,
     noLink,
-    ...rest
   } = props
   const dishName = (name ?? '')
     .split(' ')
     .map((x) => capitalize(x))
     .join(' ')
 
-  const imageUrl = getImageUrl(image, 30, 30, 100)
+  const imageUrl = getImageUrl(image ?? '', 60, 60, 100)
   const isLong =
     dishName.length > 17 || !!dishName.split(' ').find((x) => x.length >= 8)
   const fontSize = isLong ? 16 : 18
+  const theme = useTheme()
 
   let contents = (
     <>
       <Box
         className="ease-in-out-fast"
-        backgroundColor="#fff"
+        backgroundColor={theme.backgroundColor}
         borderRadius={8}
         paddingVertical={3}
+        height={38}
+        justifyContent="center"
         paddingHorizontal={8}
         transform={[{ skewX: '-12deg' }]}
-        shadowColor="rgba(0,0,0,0.1)"
+        shadowColor="rgba(0,0,0,0.05)"
         shadowRadius={2}
         zIndex={1000}
         cursor="pointer"
-        {...(isActive && {
-          backgroundColor: '#000',
-          shadowColor: 'rgba(0,0,0,0.2)',
-        })}
+        // {...rest}
       >
         <HStack transform={[{ skewX: '12deg' }]} spacing alignItems="center">
           {!!image && (
@@ -93,6 +87,7 @@ const DishButtonContent = (props: DishButtonProps) => {
               zIndex={10}
               fontSize={28}
               transform={[{ scale: 1 }]}
+              marginLeft={image ? -20 : 0}
             >
               {icon}
             </Text>
@@ -104,22 +99,22 @@ const DishButtonContent = (props: DishButtonProps) => {
             overflow="hidden"
             fontWeight="700"
             letterSpacing={-0.5}
-            color={isActive ? '#fff' : '#000'}
+            color={theme.color}
             fontSize={fontSize}
             textAlign="center"
           >
             {dishName}
           </Text>
 
-          <DishUpvoteDownvote
-            size="sm"
-            name={name}
-            slug={slug || ''}
-            score={score}
-            rating={(rating ?? 0) * 100}
-            restaurantId={restaurantId}
-            restaurantSlug={restaurantSlug}
-          />
+          {!!score && (
+            <DishUpvoteDownvote
+              size="sm"
+              slug={slug || ''}
+              score={score}
+              rating={rating ?? 0}
+              restaurantSlug={restaurantSlug}
+            />
+          )}
         </HStack>
       </Box>
     </>

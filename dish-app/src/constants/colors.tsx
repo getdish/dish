@@ -14,6 +14,17 @@ export const brandColorDarker = `#800A32`
 export const brandColorLight = `#DE487B`
 export const brandColorLighter = `#EC6996`
 
+// all indices must match going down
+export const colorNames = [
+  'yellow',
+  'pink',
+  'green',
+  'red',
+  'orange',
+  'blue',
+  'purple',
+]
+
 export const extraLightYellow = '#F7F5ED'
 export const extraLightPink = '#F7EDF1'
 export const extraLightGreen = '#EDF7F2'

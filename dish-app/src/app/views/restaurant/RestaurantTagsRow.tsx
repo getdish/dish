@@ -2,14 +2,15 @@ import { graphql } from '@dish/graph'
 import { sortBy } from 'lodash'
 import React, { memo } from 'react'
 import { Spacer, StackProps } from 'snackui'
+
 import { selectRishDishViewSimple } from '../../../helpers/selectDishViewSimple'
 import { queryRestaurantTags } from '../../../queries/queryRestaurantTags'
 import {
-  getTagButtonProps, TagButton,
+  TagButton,
   TagButtonProps,
-  TagButtonTagProps
+  TagButtonTagProps,
+  getTagButtonProps,
 } from '../TagButton'
-
 
 type TagRowProps = {
   restaurantSlug: string
@@ -58,7 +59,7 @@ export const RestaurantTagsRow = memo(
                 size={size ?? 'sm'}
                 {...tag}
                 votable
-                restaurantSlug={props.restaurantSlug}
+                restaurantSlug={restaurantSlug}
                 marginBottom={props.spacing ?? 5}
               />
               {!!props.spacing && <Spacer size={props.spacing} />}

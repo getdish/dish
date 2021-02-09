@@ -31,6 +31,7 @@ import { RestaurantDeliveryButtons } from './RestaurantDeliveryButtons'
 import { openingHours } from './RestaurantDetailRow'
 import { RestaurantFavoriteStar } from './RestaurantFavoriteButton'
 import { RestaurantPhotosRow } from './RestaurantPhotosRow'
+import { RestaurantRating } from './RestaurantRating'
 
 type RestaurantHeaderProps = {
   state?: HomeStateItemRestaurant
@@ -127,8 +128,8 @@ const RestaurantHeaderContent = memo(
                 <LinearGradient
                   style={[StyleSheet.absoluteFill]}
                   colors={[
-                    `${colors.themeColorAlt}99`,
-                    `${colors.themeColor}33`,
+                    `${colors.themeColorAlt}aa`,
+                    `${colors.themeColor}22`,
                     `${colors.themeColor}ff`,
                   ]}
                 />
@@ -148,12 +149,6 @@ const RestaurantHeaderContent = memo(
               <VStack flex={1}>
                 {/* title row */}
                 <HStack paddingLeft={20} alignItems="center">
-                  <VStack transform={[{ scale: 1.2 }]}>
-                    <RestaurantUpVoteDownVote restaurantSlug={restaurantSlug} />
-                  </VStack>
-                  <Spacer />
-                  <Spacer />
-                  <Spacer />
                   <HStack position="relative">
                     <HStack
                       backgroundColor={colors.themeColorAlt}
@@ -173,21 +168,35 @@ const RestaurantHeaderContent = memo(
                         },
                       ]}
                     >
-                      <Text
-                        color={colors.themeColor}
-                        alignSelf="flex-start"
-                        selectable
-                        letterSpacing={-1.2}
-                        fontSize={fontSize}
-                        fontWeight="800"
+                      <HStack
                         transform={[
                           {
                             skewX: '12deg',
                           },
                         ]}
                       >
-                        {restaurant.name}
-                      </Text>
+                        <Text
+                          color={colors.themeColor}
+                          alignSelf="flex-start"
+                          selectable
+                          letterSpacing={-1.2}
+                          fontSize={fontSize}
+                          fontWeight="800"
+                        >
+                          {restaurant.name}
+                        </Text>
+
+                        <AbsoluteVStack top={-23} right={-40} zIndex={1000}>
+                          <RestaurantRating
+                            colors={colors}
+                            size="sm"
+                            rating={Math.min(
+                              10,
+                              Math.round(restaurant.rating * 2)
+                            )}
+                          />
+                        </AbsoluteVStack>
+                      </HStack>
                     </HStack>
                   </HStack>
                 </HStack>
@@ -204,6 +213,7 @@ const RestaurantHeaderContent = memo(
                   {spacer}
                   <VStack flex={10} overflow="hidden">
                     <Spacer size="lg" />
+
                     <VStack
                       pointerEvents="auto"
                       overflow="hidden"
@@ -223,6 +233,34 @@ const RestaurantHeaderContent = memo(
 
                         <Spacer size="xs" />
 
+                        <HStack>
+                          <VStack marginBottom={10}>
+                            <RestaurantAddressLinksRow
+                              curLocInfo={state?.curLocInfo ?? null}
+                              showMenu
+                              size="lg"
+                              restaurantSlug={restaurantSlug}
+                            />
+                          </VStack>
+                          <Spacer size="xs" />
+                          <VStack marginBottom={10}>
+                            <RestaurantDeliveryButtons
+                              showLabels
+                              restaurantSlug={restaurantSlug}
+                            />
+                          </VStack>
+                          <Spacer size="xs" />
+                          <Suspense fallback={null}>
+                            <RestaurantAddCommentButton
+                              hideLabel
+                              restaurantId={restaurantId}
+                              restaurantSlug={restaurantSlug}
+                            />
+                          </Suspense>
+                        </HStack>
+
+                        <Spacer size="sm" />
+
                         <Suspense fallback={null}>
                           <VStack marginBottom={10}>
                             <RestaurantAddress
@@ -234,6 +272,7 @@ const RestaurantHeaderContent = memo(
                           <VStack marginBottom={10}>
                             <SmallButton
                               backgroundColor="transparent"
+                              borderWidth={0}
                               name="restaurantHours"
                               params={{ slug: restaurantSlug }}
                               textProps={{
@@ -252,32 +291,6 @@ const RestaurantHeaderContent = memo(
                               }`}
                             />
                           </VStack>
-                          <Spacer size="sm" />
-                          <HStack>
-                            <VStack marginBottom={10}>
-                              <RestaurantAddressLinksRow
-                                curLocInfo={state?.curLocInfo ?? null}
-                                showMenu
-                                size="lg"
-                                restaurantSlug={restaurantSlug}
-                              />
-                            </VStack>
-                            <Spacer size="xs" />
-                            <VStack marginBottom={10}>
-                              <RestaurantDeliveryButtons
-                                showLabels
-                                restaurantSlug={restaurantSlug}
-                              />
-                            </VStack>
-                            <Spacer size="xs" />
-                            <Suspense fallback={null}>
-                              <RestaurantAddCommentButton
-                                hideLabel
-                                restaurantId={restaurantId}
-                                restaurantSlug={restaurantSlug}
-                              />
-                            </Suspense>
-                          </HStack>
                         </Suspense>
                       </HStack>
 
@@ -292,12 +305,11 @@ const RestaurantHeaderContent = memo(
                           maxWidth={contentLeftWidth}
                         >
                           <HStack
-                            maxHeight={70}
+                            maxHeight={80}
                             overflow="hidden"
                             flexWrap="wrap"
                           >
                             <RestaurantTagsRow
-                              size="sm"
                               restaurantSlug={restaurantSlug}
                               restaurantId={restaurantId}
                               spacing={10}

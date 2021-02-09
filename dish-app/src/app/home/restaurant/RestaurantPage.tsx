@@ -22,11 +22,11 @@ import { ContentScrollView } from '../../views/ContentScrollView'
 import { PageTitleTag } from '../../views/PageTitleTag'
 import { StackDrawer } from '../../views/StackDrawer'
 import { HomeStackViewProps } from '../HomeStackViewProps'
+import { RestaurantDishRow } from './RestaurantDishRow'
 import { RestaurantHeader } from './RestaurantHeader'
 import { RestaurantMenu } from './RestaurantMenu'
 import { RestaurantReviewsList } from './RestaurantReviewsList'
 import { RestaurantTagReviews } from './RestaurantTagReviews'
-import { RestaurantTagsRow } from './RestaurantTagsRow'
 import { useSelectedDish } from './useSelectedDish'
 
 type Props = HomeStackViewProps<HomeStateItemRestaurant>
@@ -60,8 +60,8 @@ const RestaurantPage = memo(
           lat: coords?.[1],
         },
         span: getMinLngLat(appMapStore.position.span, {
-          lng: 0.004,
-          lat: 0.004,
+          lng: 0.006,
+          lat: 0.006,
         }),
       }
     }, [JSON.stringify(coords)])
@@ -143,7 +143,7 @@ const RestaurantPage = memo(
 
             <Spacer />
 
-            <VStack marginBottom={-1} position="relative" zIndex={1}>
+            <VStack marginBottom={10} position="relative" zIndex={1}>
               <View ref={setDishesSection}>
                 <Suspense
                   fallback={
@@ -152,22 +152,21 @@ const RestaurantPage = memo(
                     </VStack>
                   }
                 >
-                  <RestaurantTagsRow
+                  <RestaurantDishRow
                     max={35}
                     restaurantSlug={restaurantSlug}
                     restaurantId={restaurant.id ?? undefined}
                     selectable
                     selected={selectedDish}
                     onSelect={setSelectedDishToggle}
+                    themeName={`${colors.name}Dark`}
                   />
                 </Suspense>
               </View>
             </VStack>
           </VStack>
 
-          <Spacer size="xl" />
-
-          <VStack>
+          <VStack marginTop={-18}>
             <Suspense fallback={<LoadingItems />}>
               <RestaurantTagReviews
                 tagSlug={selectedDish}

@@ -126,6 +126,7 @@ class SearchPageStore extends Store {
       if (shouldCancel()) return
       if (!res || !res.restaurants) {
         console.log('no restaurants', res)
+        this.status = 'complete'
         return
       }
       // only update searchkey once finished

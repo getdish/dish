@@ -99,7 +99,7 @@ const SearchPageTitle = memo(() => {
       <PageTitle
         title={title}
         subTitle={subTitle}
-        color={rgbString(lenseColor.map((x) => x * 0.92))}
+        color={rgbString(lenseColor)}
       />
     </>
   )

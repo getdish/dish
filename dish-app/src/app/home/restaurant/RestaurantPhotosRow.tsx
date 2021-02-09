@@ -53,7 +53,7 @@ export const RestaurantPhotosRow = memo(
                     : 500
                   : height
                 const isEscalated = escalating && index >= 2
-                const photoWidth = isEscalated ? width * 2 : width
+                const photoWidth = isEscalated ? width * 1.25 : width
                 return (
                   <VStack
                     width={photoWidth}

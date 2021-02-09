@@ -87,10 +87,20 @@ export const RestaurantTagReviews = memo(
             </AbsoluteVStack>
           )}
 
+          <HStack
+            position="relative"
+            marginHorizontal={10}
+            marginBottom={-28}
+            alignItems="center"
+            justifyContent="center"
+          >
+            <SlantedTitle fontWeight="700">{tagName ?? 'Overall'}</SlantedTitle>
+          </HStack>
+
           {!!tagPhotos.length && (
-            <ContentScrollViewHorizontal height={180}>
+            <ContentScrollViewHorizontal height={190}>
               <Suspense fallback={<LoadingItems />}>
-                <HStack>
+                <HStack spacing="xs" paddingHorizontal={10} paddingVertical={5}>
                   {[...tagPhotos, 0, 0, 0, 0, 0, 0]
                     .slice(0, Math.max(numTags, 5))
                     .map((photo, index) => {
@@ -106,7 +116,9 @@ export const RestaurantTagReviews = memo(
                           <VStack
                             width={180}
                             height={180}
-                            backgroundColor={theme.backgroundColorTertiary}
+                            backgroundColor={`rgba(0,0,0,0.0${5 - index})`}
+                            borderRadius={35}
+                            overflow="hidden"
                           >
                             {!!photo && (
                               <Image
@@ -338,8 +350,8 @@ export const RestaurantSourcesOverview = graphql(
                   key={name}
                   shadowColor="#000"
                   shadowOpacity={0.05}
-                  borderWidth={1}
-                  borderColor={theme.borderColor}
+                  // borderWidth={1}
+                  // borderColor={theme.borderColor}
                   backgroundColor={theme.cardBackgroundColor}
                   maxWidth={400}
                   shadowRadius={15}

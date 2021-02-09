@@ -70,7 +70,7 @@ import { RestaurantFavoriteStar } from './RestaurantFavoriteButton'
 import { RestaurantSourcesBreakdownRow } from './RestaurantSourcesBreakdownRow'
 import { useTotalReviews } from './useTotalReviews'
 
-export const ITEM_HEIGHT = 260
+export const ITEM_HEIGHT = 270
 
 type RestaurantListItemProps = {
   curLocInfo: GeocodePlace | null
@@ -506,13 +506,15 @@ const RestaurantListItemContent = memo(
 
                   <Spacer />
 
+                  <VStack flex={1} minWidth={12} />
+
                   <RestaurantDeliveryButtons
                     label="🚗"
                     restaurantSlug={restaurantSlug}
                   />
 
-                  <VStack flex={1} minWidth={12} />
-
+                  <Spacer />
+                  {/*
                   <VStack marginRight={fadeOutWidthHalf}>
                     <Suspense fallback={null}>
                       <RestaurantSourcesBreakdownRow
@@ -521,7 +523,7 @@ const RestaurantListItemContent = memo(
                         restaurantSlug={restaurantSlug}
                       />
                     </Suspense>
-                  </VStack>
+                  </VStack> */}
 
                   {fadeOutRightElement}
                 </HStack>
@@ -622,7 +624,6 @@ const RestaurantListItemScoreBreakdown = memo(
             return (
               <TagButton
                 key={rtag.slug}
-                // @ts-ignore
                 {...getTagButtonProps(rtag)}
                 votable
                 restaurantSlug={restaurantSlug}
