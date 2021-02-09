@@ -295,6 +295,7 @@ export class Tagging {
       }
     }
     if (isReview(text_source)) {
+      // @ts-expect-error
       text_source.sentiments = dedupeSentiments(text_source.sentiments)
     }
     return text_source

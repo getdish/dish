@@ -7,6 +7,13 @@ export type RestaurantOnlyIds = {
   restaurant_rank?: number
 }
 
+export type RestaurantOnlyIdsPartial = {
+  slug?: RestaurantOnlyIds['slug'] | null
+  id?: RestaurantOnlyIds['id'] | null
+  rish_rank?: number
+  restaurant_rank?: number
+}
+
 export type TagType =
   | 'root'
   | 'lense'

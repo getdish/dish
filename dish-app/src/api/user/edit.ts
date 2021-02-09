@@ -19,8 +19,8 @@ export default secureRoute('user', async (req, res) => {
       has_onboarded: user.has_onboarded,
       about: user.about ?? '',
       location: user.location ?? 'nowhere',
-      charIndex: user.charIndex,
-      username: user.username,
+      charIndex: charIndex,
+      username: user.username!,
     }
     res.status(200).json(val)
   } catch (e) {

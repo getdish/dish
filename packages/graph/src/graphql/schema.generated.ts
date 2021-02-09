@@ -14222,63 +14222,67 @@ export interface GeneratedSchema {
   subscription: Subscription
 }
 
-export interface ScalarsEnums extends Scalars {
-  hrr_constraint: hrr_constraint
-  hrr_select_column: hrr_select_column
-  hrr_update_column: hrr_update_column
-  list_constraint: list_constraint
-  list_restaurant_constraint: list_restaurant_constraint
-  list_restaurant_select_column: list_restaurant_select_column
-  list_restaurant_tag_constraint: list_restaurant_tag_constraint
-  list_restaurant_tag_select_column: list_restaurant_tag_select_column
-  list_restaurant_tag_update_column: list_restaurant_tag_update_column
-  list_restaurant_update_column: list_restaurant_update_column
-  list_select_column: list_select_column
-  list_tag_constraint: list_tag_constraint
-  list_tag_select_column: list_tag_select_column
-  list_tag_update_column: list_tag_update_column
-  list_update_column: list_update_column
-  menu_item_constraint: menu_item_constraint
-  menu_item_select_column: menu_item_select_column
-  menu_item_update_column: menu_item_update_column
-  nhood_labels_constraint: nhood_labels_constraint
-  nhood_labels_select_column: nhood_labels_select_column
-  nhood_labels_update_column: nhood_labels_update_column
-  opening_hours_constraint: opening_hours_constraint
-  opening_hours_select_column: opening_hours_select_column
-  opening_hours_update_column: opening_hours_update_column
-  order_by: order_by
-  photo_constraint: photo_constraint
-  photo_select_column: photo_select_column
-  photo_update_column: photo_update_column
-  photo_xref_constraint: photo_xref_constraint
-  photo_xref_select_column: photo_xref_select_column
-  photo_xref_update_column: photo_xref_update_column
-  restaurant_constraint: restaurant_constraint
-  restaurant_select_column: restaurant_select_column
-  restaurant_tag_constraint: restaurant_tag_constraint
-  restaurant_tag_select_column: restaurant_tag_select_column
-  restaurant_tag_update_column: restaurant_tag_update_column
-  restaurant_update_column: restaurant_update_column
-  review_constraint: review_constraint
-  review_select_column: review_select_column
-  review_tag_sentence_constraint: review_tag_sentence_constraint
-  review_tag_sentence_select_column: review_tag_sentence_select_column
-  review_tag_sentence_update_column: review_tag_sentence_update_column
-  review_update_column: review_update_column
-  setting_constraint: setting_constraint
-  setting_select_column: setting_select_column
-  setting_update_column: setting_update_column
-  tag_constraint: tag_constraint
-  tag_select_column: tag_select_column
-  tag_tag_constraint: tag_tag_constraint
-  tag_tag_select_column: tag_tag_select_column
-  tag_tag_update_column: tag_tag_update_column
-  tag_update_column: tag_update_column
-  user_constraint: user_constraint
-  user_select_column: user_select_column
-  user_update_column: user_update_column
-  zcta5_constraint: zcta5_constraint
-  zcta5_select_column: zcta5_select_column
-  zcta5_update_column: zcta5_update_column
+export type MakeNullable<T> = {
+  [K in keyof T]: T[K] | null
+}
+
+export interface ScalarsEnums extends MakeNullable<Scalars> {
+  hrr_constraint: hrr_constraint | null
+  hrr_select_column: hrr_select_column | null
+  hrr_update_column: hrr_update_column | null
+  list_constraint: list_constraint | null
+  list_restaurant_constraint: list_restaurant_constraint | null
+  list_restaurant_select_column: list_restaurant_select_column | null
+  list_restaurant_tag_constraint: list_restaurant_tag_constraint | null
+  list_restaurant_tag_select_column: list_restaurant_tag_select_column | null
+  list_restaurant_tag_update_column: list_restaurant_tag_update_column | null
+  list_restaurant_update_column: list_restaurant_update_column | null
+  list_select_column: list_select_column | null
+  list_tag_constraint: list_tag_constraint | null
+  list_tag_select_column: list_tag_select_column | null
+  list_tag_update_column: list_tag_update_column | null
+  list_update_column: list_update_column | null
+  menu_item_constraint: menu_item_constraint | null
+  menu_item_select_column: menu_item_select_column | null
+  menu_item_update_column: menu_item_update_column | null
+  nhood_labels_constraint: nhood_labels_constraint | null
+  nhood_labels_select_column: nhood_labels_select_column | null
+  nhood_labels_update_column: nhood_labels_update_column | null
+  opening_hours_constraint: opening_hours_constraint | null
+  opening_hours_select_column: opening_hours_select_column | null
+  opening_hours_update_column: opening_hours_update_column | null
+  order_by: order_by | null
+  photo_constraint: photo_constraint | null
+  photo_select_column: photo_select_column | null
+  photo_update_column: photo_update_column | null
+  photo_xref_constraint: photo_xref_constraint | null
+  photo_xref_select_column: photo_xref_select_column | null
+  photo_xref_update_column: photo_xref_update_column | null
+  restaurant_constraint: restaurant_constraint | null
+  restaurant_select_column: restaurant_select_column | null
+  restaurant_tag_constraint: restaurant_tag_constraint | null
+  restaurant_tag_select_column: restaurant_tag_select_column | null
+  restaurant_tag_update_column: restaurant_tag_update_column | null
+  restaurant_update_column: restaurant_update_column | null
+  review_constraint: review_constraint | null
+  review_select_column: review_select_column | null
+  review_tag_sentence_constraint: review_tag_sentence_constraint | null
+  review_tag_sentence_select_column: review_tag_sentence_select_column | null
+  review_tag_sentence_update_column: review_tag_sentence_update_column | null
+  review_update_column: review_update_column | null
+  setting_constraint: setting_constraint | null
+  setting_select_column: setting_select_column | null
+  setting_update_column: setting_update_column | null
+  tag_constraint: tag_constraint | null
+  tag_select_column: tag_select_column | null
+  tag_tag_constraint: tag_tag_constraint | null
+  tag_tag_select_column: tag_tag_select_column | null
+  tag_tag_update_column: tag_tag_update_column | null
+  tag_update_column: tag_update_column | null
+  user_constraint: user_constraint | null
+  user_select_column: user_select_column | null
+  user_update_column: user_update_column | null
+  zcta5_constraint: zcta5_constraint | null
+  zcta5_select_column: zcta5_select_column | null
+  zcta5_update_column: zcta5_update_column | null
 }

@@ -2,7 +2,7 @@ import { useTheme } from 'snackui'
 
 import { getColorsForName } from './getColorsForName'
 
-export function useColorsFor(name: string) {
+export function useColorsFor(name?: string | null) {
   const theme = useTheme()
   const colors = getColorsForName(name)
   const isDark = theme.name.startsWith('dark')

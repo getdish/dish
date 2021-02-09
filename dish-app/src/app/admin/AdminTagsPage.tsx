@@ -594,7 +594,7 @@ const TagCRUDContent = graphql(({ tag, onChange }: TagCRUDProps) => {
         <TextInput
           style={styles.textInput}
           onChange={(e) => onChange?.({ name: e.target['value'] })}
-          defaultValue={tag.name}
+          defaultValue={tag.name ?? ''}
         />
       </TableRow>
 

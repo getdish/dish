@@ -1,5 +1,11 @@
 import { series } from '@dish/async'
-import { LngLat, MapPosition, RestaurantOnlyIds, resolved } from '@dish/graph'
+import {
+  LngLat,
+  MapPosition,
+  RestaurantOnlyIds,
+  RestaurantOnlyIdsPartial,
+  resolved,
+} from '@dish/graph'
 import { isPresent } from '@dish/helpers'
 import { Store, createStore, useStoreInstance } from '@dish/use-store'
 import bbox from '@turf/bbox'
@@ -243,7 +249,7 @@ export const useSetAppMap = (
   props: MapOpts & {
     center?: MapPosition['center']
     span?: MapPosition['span']
-    results?: RestaurantOnlyIds[]
+    results?: RestaurantOnlyIdsPartial[]
     isActive: boolean
     region?: RegionWithVia
   }

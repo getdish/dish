@@ -55,7 +55,7 @@ export const RestaurantButton = memo(
           }}
           {...props}
           name="restaurant"
-          params={{ slug: restaurant.slug }}
+          params={{ slug: restaurant.slug || '' }}
           onHoverIn={onHoverIn}
         >
           <HStack

@@ -7,7 +7,7 @@
   "private": true,
   "scripts": {
     "prebuild": "rm -f tsconfig.tsbuildinfo",
-    "generate": "ts-node --transpile-only ./generate.ts",
+    "generate": "HASURA_SECRET=password ts-node --transpile-only ./generate.ts",
     "build": "tsc -b",
     "watch": "tsc -b --watch --preserveWatchOutput",
     "test": "TARGET=node DISH_ENV=test ava test/* --verbose --serial",
