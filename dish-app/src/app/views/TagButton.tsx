@@ -32,7 +32,12 @@ import {
 } from '../../constants/colors'
 import { isWeb } from '../../constants/constants'
 import { tagDisplayName } from '../../constants/tagMeta'
+import {
+  getColorsForColor,
+  getColorsForName,
+} from '../../helpers/getColorsForName'
 import { getTagSlug } from '../../helpers/getTagSlug'
+import { numberFormat } from '../../helpers/numberFormat'
 import { rgbString } from '../../helpers/rgbString'
 import { NavigableTag } from '../../types/tagTypes'
 import { useUserTagVotes } from '../hooks/useUserTagVotes'
@@ -50,6 +55,7 @@ export type TagButtonTagProps = {
   rgb?: Exclude<Tag['rgb'], null>
   score?: number
   rank?: number
+  rating?: number
 }
 
 export const getTagButtonProps = (
@@ -71,46 +77,33 @@ export const getTagButtonProps = (
   }
 }
 
-const tagColors = {
-  country: [lightOrange, orange],
-  filter: [lightBlue, blue],
-  lense: [lightPurple, purple],
-  dish: [lightRed, red],
-  other: [lightGreen, green],
-}
-
-const getTagColors = ({ rgb, type }: Partial<Tag>) => {
-  if (rgb?.[0]) {
-    return {
-      backgroundColor: `rgba(${rgb[0]}, ${rgb[1]}, ${rgb[2]}, 0.15)`,
-      color: rgbString(rgb),
-    }
+export type TagButtonProps = StackProps &
+  Omit<TagButtonTagProps, 'rgb'> & {
+    rgb?: [number, number, number]
+    slug?: string
+    restaurantSlug?: string
+    size?: 'lg' | 'md' | 'sm'
+    votable?: boolean
+    closable?: boolean
+    onClose?: Function
+    color?: any
+    hideIcon?: boolean
+    subtleIcon?: boolean
+    fontSize?: TextProps['fontSize']
+    fontWeight?: TextProps['fontWeight']
+    noColor?: boolean
+    replace?: boolean
+    replaceSearch?: boolean
+    after?: any
+    floating?: boolean
   }
-  const [backgroundColor, color] = tagColors[type ?? ''] ?? tagColors.other
-  return {
-    backgroundColor,
-    color,
-  }
-}
 
-export type TagButtonProps = Omit<StackProps & TagButtonTagProps, 'rgb'> & {
-  rgb?: [number, number, number]
-  rank?: number
-  slug?: string
-  restaurantSlug?: string
-  size?: 'lg' | 'md' | 'sm'
-  votable?: boolean
-  closable?: boolean
-  onClose?: Function
-  color?: any
-  hideIcon?: boolean
-  subtleIcon?: boolean
-  fontSize?: TextProps['fontSize']
-  fontWeight?: TextProps['fontWeight']
-  noColor?: boolean
-  replace?: boolean
-  replaceSearch?: boolean
-  after?: any
+const typeColors = {
+  lense: purple,
+  dish: red,
+  filter: blue,
+  category: green,
+  country: orange,
 }
 
 export const TagButton = memo((props: TagButtonProps) => {
@@ -120,7 +113,9 @@ export const TagButton = memo((props: TagButtonProps) => {
     type,
     size,
     slug,
+    rating,
     noColor,
+    floating,
     closable,
     onClose,
     replaceSearch,
@@ -137,22 +132,17 @@ export const TagButton = memo((props: TagButtonProps) => {
     after,
     replace,
     onPress,
+    hoverStyle,
     ...rest
   } = props
-
-  if (name === null) {
-    return null
-  }
-  const tag = { name, type: type as TagType, icon, rgb, slug }
   const isSmall = size === 'sm'
   const scale = isSmall ? 0.85 : size == 'lg' ? 1.25 : 1
-  const colors = getTagColors(tag)
-  const bg = backgroundColor ?? colors.backgroundColor
-  const fg = color ?? colors.color
+  const colors = getColorsForColor(type ? typeColors[type] ?? green : green)
+  const bg = backgroundColor ?? colors.lightColor
+  const fg = color ?? colors.darkColor
   const fontSize = fontSizeProp ? fontSizeProp : 16 * scale
   const smallerFontSize: any =
     typeof fontSize === 'number' ? fontSize * 0.85 : fontSize
-  const backgroundColorHover = `${bg}99`
 
   const contents = (
     <HStack
@@ -168,7 +158,7 @@ export const TagButton = memo((props: TagButtonProps) => {
       // used again down below
       minHeight={isSmall ? 22 : 26}
       hoverStyle={{
-        backgroundColor: backgroundColorHover,
+        backgroundColor: colors.lightColor,
       }}
       {...rest}
     >
@@ -192,10 +182,10 @@ export const TagButton = memo((props: TagButtonProps) => {
       ) : null}
       {hideIcon ? (
         <>&nbsp;</>
-      ) : !!tag.icon ? (
-        tag.icon.startsWith('http') ? (
+      ) : !!icon ? (
+        icon.startsWith('http') ? (
           <Image
-            source={{ uri: tag.icon }}
+            source={{ uri: icon }}
             style={{
               width: fontSize,
               height: fontSize,
@@ -205,36 +195,49 @@ export const TagButton = memo((props: TagButtonProps) => {
             }}
           />
         ) : (
-          <Text>{tag.icon}</Text>
+          <Text>{icon}</Text>
         )
       ) : null}
+
+      <VStack width={7 * scale} />
+
       <Text
         ellipse
         // @ts-ignore
         fontSize={fontSize}
         // @ts-ignore
-        fontWeight={fontWeight ?? '500'}
+        fontWeight={fontWeight ?? '600'}
         lineHeight={isSmall ? 22 : 26}
-        paddingHorizontal={7 * scale}
-        textShadowColor="rgba(0,0,0,0.4)"
-        textShadowOffset={{ height: 1, width: 0 }}
-        textShadowRadius={3}
         color={fg}
+        {...(floating && {
+          textShadowColor: 'rgba(0,0,0,0.4)',
+          textShadowOffset: { height: 1, width: 0 },
+          textShadowRadius: 3,
+        })}
       >
-        {tagDisplayName(tag)}
-        {/* {typeof score === 'number' && (
-          <Text marginLeft={4} fontWeight="300" fontSize={smallerFontSize}>
-            {score > 0 ? `+${score}` : score}
-          </Text>
-        )} */}
+        {name}
       </Text>
 
       {typeof score === 'number' && (
+        <Text
+          color={fg}
+          marginLeft={4}
+          fontWeight="300"
+          fontSize={smallerFontSize}
+          opacity={0.8}
+        >
+          {numberFormat(score ?? 0)}
+        </Text>
+      )}
+
+      <VStack width={7 * scale} />
+
+      {typeof rating === 'number' && (
         <VStack marginVertical={-5}>
           <Pie
-            size={28}
-            percent={score}
-            color={colors.backgroundColor}
+            size={size === 'sm' ? 18 : 24}
+            percent={rating * 100}
+            color={floating ? `${colors.lightColor}99` : colors.lightColor}
             background="rgba(0,0,0,0.2)"
           />
         </VStack>
@@ -284,8 +287,8 @@ export const TagButton = memo((props: TagButtonProps) => {
       {...(onPress && {
         onPress,
       })}
-      {...(tag && {
-        tag,
+      {...(slug && {
+        tag: { slug },
       })}
       replace={replace}
       replaceSearch={replaceSearch}
@@ -297,7 +300,6 @@ export const TagButton = memo((props: TagButtonProps) => {
 
 const TagButtonVote = (props: TagButtonProps & { scale: number }) => {
   const { scale } = props
-  const [hovered, setHovered] = useState(false)
   const { vote, setVote } = useUserTagVotes(props.restaurantSlug ?? '', {
     [getTagSlug(props.slug)]: true,
   })
@@ -309,10 +311,7 @@ const TagButtonVote = (props: TagButtonProps & { scale: number }) => {
   }
 
   return (
-    <Hoverable
-      onHoverIn={() => setHovered(true)}
-      onHoverOut={() => setHovered(false)}
-    >
+    <>
       <VStack
         paddingHorizontal={3 * scale}
         alignItems="center"
@@ -348,6 +347,6 @@ const TagButtonVote = (props: TagButtonProps & { scale: number }) => {
           </VStack>
         )}
       </VStack>
-    </Hoverable>
+    </>
   )
 }

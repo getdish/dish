@@ -153,7 +153,6 @@ const RestaurantPage = memo(
                   }
                 >
                   <RestaurantTagsRow
-                    size={100}
                     max={35}
                     restaurantSlug={restaurantSlug}
                     restaurantId={restaurant.id ?? undefined}
@@ -168,7 +167,7 @@ const RestaurantPage = memo(
 
           <Spacer size="xl" />
 
-          <VStack marginTop={-35}>
+          <VStack>
             <Suspense fallback={<LoadingItems />}>
               <RestaurantTagReviews
                 tagSlug={selectedDish}

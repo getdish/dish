@@ -41,7 +41,6 @@ const getRoundedDishViewSize = (size: string | number) => {
 export type DishViewProps = DishTagItem & {
   restaurantId?: string
   restaurantSlug?: string
-  name?: any
   cuisine?: NavigableTag
   // percent or fixed
   size?: string | number
@@ -77,8 +76,6 @@ const DishViewContent = (props: DishViewProps) => {
     image,
     slug,
     rating,
-    upvotes,
-    downvotes,
 
     // rest
     cuisine,
@@ -138,8 +135,7 @@ const DishViewContent = (props: DishViewProps) => {
               subtle={isWeb && !supportsTouchWeb}
               slug={slug}
               score={score}
-              upvotes={upvotes}
-              downvotes={downvotes}
+              rating={rating}
               {...(restaurantId &&
                 restaurantSlug && {
                   restaurantId,

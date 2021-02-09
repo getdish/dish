@@ -1,16 +1,6 @@
 import { graphql, slugify } from '@dish/graph'
-import { isPresent } from '@dish/helpers/src'
 import React from 'react'
-import { Circle, HStack, Text, VStack } from 'snackui'
 
-import {
-  extraLightGreen,
-  extraLightRed,
-  green,
-  lightGreen,
-  lightRed,
-  red,
-} from '../../../constants/colors'
 import { queryRestaurant } from '../../../queries/queryRestaurant'
 import { useUserTagVotes } from '../../hooks/useUserTagVotes'
 import { UpvoteDownvoteScore } from '../UpvoteDownvoteScore'
@@ -20,8 +10,7 @@ type Props = {
   name: string
   slug: string
   score?: number
-  upvotes?: number
-  downvotes?: number
+  rating?: number
   subtle?: boolean
   restaurantSlug?: string
   restaurantId?: string
@@ -46,8 +35,7 @@ export const DishUpvoteDownvote = (props: Props) => {
 const DishUpvoteDownvoteContent = graphql(function DishUpvoteDownvote({
   size,
   subtle,
-  upvotes,
-  downvotes,
+  rating,
   score,
   restaurantSlug,
   slug,
@@ -71,59 +59,15 @@ const DishUpvoteDownvoteContent = graphql(function DishUpvoteDownvote({
     [slug]: true,
   })
 
-  // if (isPresent(upvotes ?? downvotes)) {
-  //   return (
-  //     <VStack position="relative">
-  //       <SkewRating positive>{upvotes}</SkewRating>
-  //       <SkewRating>{downvotes}</SkewRating>
-  //     </VStack>
-  //   )
-  // }
-
   return (
     <UpvoteDownvoteScore
       showVoteOnHover
       subtle={subtle}
       size={size}
       score={intScore + vote}
+      rating={rating}
       vote={vote}
       setVote={setVote}
     />
   )
 })
-
-function SkewRating({
-  positive,
-  children,
-}: {
-  positive?: boolean
-  children: any
-}) {
-  return (
-    <HStack
-      width={32}
-      minHeight={24}
-      borderRadius={10}
-      alignItems="center"
-      justifyContent="center"
-      transform={[{ skewX: '-12deg' }]}
-      backgroundColor={positive ? green : red}
-      shadowColor="#000"
-      shadowOffset={{ height: 2, width: 0 }}
-      shadowOpacity={0.1}
-      shadowRadius={4}
-      borderWidth={1}
-      borderColor={positive ? lightGreen : lightRed}
-    >
-      <Text
-        transform={[{ skewX: '12deg' }]}
-        color={positive ? extraLightGreen : extraLightRed}
-        fontSize={14}
-        letterSpacing={-1}
-        fontWeight="800"
-      >
-        {children}
-      </Text>
-    </HStack>
-  )
-}

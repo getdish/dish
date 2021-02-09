@@ -53,8 +53,6 @@ export const RestaurantStatBars = graphql(
       showTags
     )
 
-    console.log('rtags', rtags)
-
     const theme = useTheme()
 
     return (
@@ -62,7 +60,7 @@ export const RestaurantStatBars = graphql(
         name={theme.name === 'dark' ? 'darkTranslucent' : 'lightTranslucent'}
       >
         <AbsoluteVStack
-          className="card-hover-fade"
+          // className="card-hover-fade"
           fullscreen
           top="auto"
           justifyContent="flex-end"
@@ -76,11 +74,12 @@ export const RestaurantStatBars = graphql(
                 <VStack
                   key={rtag.tag.slug}
                   width="100%"
-                  backgroundColor={`rgba(0,0,0,0.${index + 2})`}
+                  backgroundColor={`rgba(0,0,0,0.${index + 3})`}
                   alignItems="flex-end"
                 >
                   <TagButton
                     size="lg"
+                    floating
                     {...selectRishDishViewSimple(rtag)}
                     backgroundColor="transparent"
                     color="#fff"

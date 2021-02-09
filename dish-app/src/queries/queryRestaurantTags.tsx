@@ -1,6 +1,5 @@
 import { order_by } from '@dish/graph'
 
-import { getRestaurantTagTagButtonProps } from '../helpers/selectTagButtonProps'
 import { queryRestaurant } from './queryRestaurant'
 
 export const queryRestaurantTags = ({

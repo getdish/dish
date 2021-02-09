@@ -1,6 +1,5 @@
 import { graphql } from '@dish/graph'
 import React, { memo, useMemo, useState } from 'react'
-import { SectionList } from 'react-native'
 import { HStack, Spacer, VStack } from 'snackui'
 
 import { bgLightHover, blue } from '../../../constants/colors'
@@ -8,7 +7,8 @@ import { isWeb } from '../../../constants/constants'
 import { getRestaurantDishes } from '../../../helpers/getRestaurantDishes'
 import { getTagSlug } from '../../../helpers/getTagSlug'
 import { ContentScrollViewHorizontal } from '../../views/ContentScrollViewHorizontal'
-import { DishView } from '../../views/dish/DishView'
+import { DishButton } from '../../views/dish/DishButton'
+import { ScalingPressable } from '../../views/ScalingPressable'
 
 export const RestaurantTagsRow = memo(
   graphql(
@@ -18,7 +18,6 @@ export const RestaurantTagsRow = memo(
       selectable,
       onSelect,
       selected,
-      size = 140,
       max = 30,
     }: {
       restaurantSlug: string
@@ -26,7 +25,6 @@ export const RestaurantTagsRow = memo(
       selectable?: boolean
       onSelect?: (dish: string) => any
       selected?: string | null
-      size?: number
       max?: number
     }) => {
       const dishes = getRestaurantDishes({ restaurantSlug, max })
@@ -52,47 +50,31 @@ export const RestaurantTagsRow = memo(
           {hasDishes ? (
             <HStack
               paddingHorizontal={30}
-              paddingTop={20}
+              paddingVertical={20}
               alignItems="center"
               justifyContent="center"
             >
-              <SectionTab isSelected={selected === ''}>
-                <DishView
-                  noLink
-                  size={size}
-                  name="Overall"
-                  slug=""
-                  image=""
-                  type=""
-                  selected={selected === ''}
-                  {...(!!selectable && {
-                    onPress() {
-                      console.warn('empty str?')
-                      onSelect?.('')
-                    },
-                  })}
-                />
-              </SectionTab>
               {dishes.map((dish, index) => {
                 const isSelected = selected === getTagSlug(dish.slug)
                 return (
                   <React.Fragment key={dish.name}>
-                    <SectionTab isSelected={isSelected}>
-                      <DishView
-                        noLink
-                        preventLoad={index > 5 && !hasScrolled}
-                        size={size}
-                        restaurantSlug={restaurantSlug}
-                        restaurantId={restaurantId}
-                        {...dish}
-                        selected={isSelected}
-                        {...(!!selectable && {
-                          onPress() {
-                            onSelect?.(getTagSlug(dish.slug))
-                          },
-                        })}
-                      />
-                    </SectionTab>
+                    <ScalingPressable
+                      {...(!!selectable && {
+                        onPress() {
+                          onSelect?.(getTagSlug(dish.slug))
+                        },
+                      })}
+                    >
+                      <SectionTab isSelected={isSelected}>
+                        <DishButton
+                          noLink
+                          restaurantSlug={restaurantSlug}
+                          restaurantId={restaurantId}
+                          {...dish}
+                          isActive={isSelected}
+                        />
+                      </SectionTab>
+                    </ScalingPressable>
                   </React.Fragment>
                 )
               })}

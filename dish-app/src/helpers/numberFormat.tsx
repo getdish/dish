@@ -1,6 +1,6 @@
 export function numberFormat(n: number, size?: 'sm') {
   if (size === 'sm') {
-    if (n > 750 && n < 1250) {
+    if (n > 950 && n < 1100) {
       return '1k'
     }
     if (n >= 1250) {

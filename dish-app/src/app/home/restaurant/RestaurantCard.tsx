@@ -73,6 +73,7 @@ export const RestaurantCardContent = graphql(
     const [restaurant] = queryRestaurant(restaurantSlug)
     const [price_label, price_color, price_range] = priceRange(restaurant)
     const restaurantPhoto = queryRestaurantCoverPhoto(restaurant)
+    const rating = Math.round(restaurant.rating * 2)
     return (
       <Link name="restaurant" asyncClick params={{ slug: restaurantSlug }}>
         <Card
@@ -97,8 +98,12 @@ export const RestaurantCardContent = graphql(
                   right={-10}
                   zIndex={100}
                 >
-                  <Text color="#fff" fontWeight="800" fontSize={18}>
-                    {Math.round(restaurant.rating * 2)}
+                  <Text
+                    color="#fff"
+                    fontWeight="800"
+                    fontSize={rating > 7 ? 20 : 16}
+                  >
+                    {rating}
                   </Text>
                 </Circle>
               )
