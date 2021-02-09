@@ -1,18 +1,11 @@
 import { supportsTouchWeb } from '@dish/helpers/src'
 import { ChevronDown, ChevronUp } from '@dish/react-feather'
-import React, { memo, useState } from 'react'
-import {
-  AbsoluteVStack,
-  HStack,
-  StackProps,
-  Text,
-  Tooltip,
-  VStack,
-} from 'snackui'
+import React, { memo } from 'react'
+import { AbsoluteVStack, StackProps, Text, Tooltip, VStack } from 'snackui'
 
-import { green, grey, orange, red } from '../../constants/colors'
+import { green, grey, red } from '../../constants/colors'
 import { isWeb } from '../../constants/constants'
-import CircularProgress from './CircularProgress'
+import { getColorsForColor } from '../../helpers/getColorsForName'
 import { Pie } from './Pie'
 import { VoteButton } from './VoteButton'
 
@@ -43,16 +36,14 @@ export const UpvoteDownvoteScore = memo(
   }: Props) => {
     const voteButtonColor = subtle ? '#f2f2f2' : null
     const scale = size === 'sm' ? 0.65 : 1
-    const sizePx = 46 * scale
+    const sizePx = 53 * scale
     const isOpenProp =
       vote === 0
         ? null
         : {
             isOpen: false,
           }
-    const fontSize =
-      Math.min(16, sizePx / `${score}`.length) * scale * 1.175 +
-      (size === 'sm' ? 2 : 0)
+    const fontSize = Math.round(16 * scale * 1.175 + (size === 'sm' ? 2 : 0))
 
     const upvote = (
       <VoteButton
@@ -81,7 +72,9 @@ export const UpvoteDownvoteScore = memo(
       />
     )
 
-    const color = rating > 70 ? green : rating < 50 ? red : grey
+    const colors = getColorsForColor(
+      rating > 70 ? green : rating < 50 ? red : grey
+    )
 
     return (
       <VStack
@@ -128,7 +121,7 @@ export const UpvoteDownvoteScore = memo(
         </AbsoluteVStack>
         {typeof rating === 'number' && (
           <AbsoluteVStack fullscreen>
-            <Pie size={sizePx} color="rgba(0,0,0,0.1)" percent={rating} />
+            <Pie size={sizePx} color={colors.lightColor} percent={rating} />
           </AbsoluteVStack>
         )}
         <Text
@@ -136,8 +129,9 @@ export const UpvoteDownvoteScore = memo(
           fontWeight="900"
           marginVertical={-2 * scale}
           letterSpacing={-0.5}
-          color={color}
+          color={colors.color}
           textAlignVertical="top"
+          zIndex={100}
         >
           {score ?? ''}
         </Text>

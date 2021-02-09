@@ -1,14 +1,11 @@
 // TODO if we can have compiler pick up a few more things speeds will go up a lot
 import { Tag, TagQuery, TagType } from '@dish/graph'
 import { ThumbsDown, ThumbsUp, X } from '@dish/react-feather'
-import React, { memo, useState } from 'react'
+import React, { memo } from 'react'
 import { Image } from 'react-native'
-import { Ellipse } from 'react-native-svg'
 import {
   AbsoluteVStack,
   HStack,
-  Hoverable,
-  ProgressCircle,
   Spacer,
   StackProps,
   Text,
@@ -18,33 +15,15 @@ import {
   prevent,
 } from 'snackui'
 
-import {
-  blue,
-  green,
-  lightBlue,
-  lightGreen,
-  lightOrange,
-  lightPurple,
-  lightRed,
-  orange,
-  purple,
-  red,
-} from '../../constants/colors'
+import { blue, green, orange, purple, red } from '../../constants/colors'
 import { isWeb } from '../../constants/constants'
-import { tagDisplayName } from '../../constants/tagMeta'
-import {
-  getColorsForColor,
-  getColorsForName,
-} from '../../helpers/getColorsForName'
+import { getColorsForColor } from '../../helpers/getColorsForName'
 import { getTagSlug } from '../../helpers/getTagSlug'
 import { numberFormat } from '../../helpers/numberFormat'
-import { rgbString } from '../../helpers/rgbString'
 import { NavigableTag } from '../../types/tagTypes'
 import { useUserTagVotes } from '../hooks/useUserTagVotes'
-import CircularProgress from './CircularProgress'
+import { DishUpvoteDownvote } from './dish/DishUpvoteDownvote'
 import { Link } from './Link'
-import { LinkButton } from './LinkButton'
-import { LinkButtonProps } from './LinkProps'
 import { Pie } from './Pie'
 
 export type TagButtonTagProps = {
@@ -73,6 +52,7 @@ export const getTagButtonProps = (
       'rank' in tag && {
         rank: tag.rank,
         score: tag.score,
+        rating: tag.rating,
       }),
   }
 }
@@ -133,13 +113,14 @@ export const TagButton = memo((props: TagButtonProps) => {
     replace,
     onPress,
     hoverStyle,
+    restaurantSlug,
     ...rest
   } = props
   const isSmall = size === 'sm'
   const scale = isSmall ? 0.85 : size == 'lg' ? 1.25 : 1
   const colors = getColorsForColor(type ? typeColors[type] ?? green : green)
   const bg = backgroundColor ?? colors.lightColor
-  const fg = color ?? colors.darkColor
+  const fg = color ?? colors.color
   const fontSize = fontSizeProp ? fontSizeProp : 16 * scale
   const smallerFontSize: any =
     typeof fontSize === 'number' ? fontSize * 0.85 : fontSize
@@ -206,7 +187,7 @@ export const TagButton = memo((props: TagButtonProps) => {
         // @ts-ignore
         fontSize={fontSize}
         // @ts-ignore
-        fontWeight={fontWeight ?? '600'}
+        fontWeight={fontWeight ?? '700'}
         lineHeight={isSmall ? 22 : 26}
         color={fg}
         {...(floating && {
@@ -218,6 +199,16 @@ export const TagButton = memo((props: TagButtonProps) => {
         {name}
       </Text>
 
+      <VStack width={7 * scale} />
+
+      {/* <DishUpvoteDownvote
+        slug={slug ?? ''}
+        restaurantSlug={restaurantSlug}
+        score={score}
+        rating={rating}
+        size="sm"
+        subtle
+      /> */}
       {typeof score === 'number' && (
         <Text
           color={fg}
@@ -230,16 +221,25 @@ export const TagButton = memo((props: TagButtonProps) => {
         </Text>
       )}
 
-      <VStack width={7 * scale} />
-
       {typeof rating === 'number' && (
-        <VStack marginVertical={-5}>
+        <VStack position="relative">
           <Pie
             size={size === 'sm' ? 18 : 24}
-            percent={rating * 100}
+            percent={rating}
             color={floating ? `${colors.lightColor}99` : colors.lightColor}
             background="rgba(0,0,0,0.2)"
           />
+
+          {!!votable && !!props.restaurantSlug && (
+            <AbsoluteVStack fullscreen>
+              <TagButtonVote
+                key={getTagSlug(props.slug) + props.restaurantSlug}
+                {...props}
+                color={fg}
+                scale={scale}
+              />
+            </AbsoluteVStack>
+          )}
         </VStack>
       )}
 
@@ -247,14 +247,6 @@ export const TagButton = memo((props: TagButtonProps) => {
         <Text marginLeft={4} fontWeight="300" fontSize={smallerFontSize}>
           {after}
         </Text>
-      )}
-      {!!votable && !!props.restaurantSlug && (
-        <TagButtonVote
-          key={getTagSlug(props.slug) + props.restaurantSlug}
-          {...props}
-          color={fg}
-          scale={scale}
-        />
       )}
       {!!closable && (
         <VStack
@@ -278,6 +270,7 @@ export const TagButton = memo((props: TagButtonProps) => {
           </VStack>
         </VStack>
       )}
+
       {!closable && !votable && <Spacer size={6} />}
     </HStack>
   )

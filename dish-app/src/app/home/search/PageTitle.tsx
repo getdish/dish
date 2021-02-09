@@ -21,7 +21,7 @@ export const PageTitle = memo(
   }) => {
     const media = useMedia()
     const titleLen = (title + subTitle).length
-    const titleSize = size == 'sm' ? 0.75 : 0.85
+    const titleSize = size == 'sm' ? 0.75 : 1
     const titleScale =
       titleLen > 65
         ? 0.7

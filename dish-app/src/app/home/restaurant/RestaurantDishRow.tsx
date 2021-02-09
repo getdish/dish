@@ -1,6 +1,6 @@
 import { graphql } from '@dish/graph'
 import React, { memo, useMemo, useState } from 'react'
-import { HStack, Spacer, VStack } from 'snackui'
+import { HStack, Spacer, Theme, VStack } from 'snackui'
 
 import { bgLightHover, blue } from '../../../constants/colors'
 import { isWeb } from '../../../constants/constants'
@@ -10,7 +10,7 @@ import { ContentScrollViewHorizontal } from '../../views/ContentScrollViewHorizo
 import { DishButton } from '../../views/dish/DishButton'
 import { ScalingPressable } from '../../views/ScalingPressable'
 
-export const RestaurantTagsRow = memo(
+export const RestaurantDishRow = memo(
   graphql(
     ({
       restaurantSlug,
@@ -19,6 +19,7 @@ export const RestaurantTagsRow = memo(
       onSelect,
       selected,
       max = 30,
+      themeName,
     }: {
       restaurantSlug: string
       restaurantId?: string
@@ -26,6 +27,7 @@ export const RestaurantTagsRow = memo(
       onSelect?: (dish: string) => any
       selected?: string | null
       max?: number
+      themeName?: string
     }) => {
       const dishes = getRestaurantDishes({ restaurantSlug, max })
       const [hasScrolled, setHasScrolled] = useState(false)
@@ -54,6 +56,22 @@ export const RestaurantTagsRow = memo(
               alignItems="center"
               justifyContent="center"
             >
+              <SectionTab isSelected={selected === ''}>
+                <Theme name={themeName && selected === '' ? themeName : null}>
+                  <ScalingPressable
+                    onPress={() => {
+                      onSelect?.('')
+                    }}
+                  >
+                    <DishButton
+                      noLink
+                      name="Overall"
+                      selected={selected === ''}
+                    />
+                  </ScalingPressable>
+                </Theme>
+              </SectionTab>
+
               {dishes.map((dish, index) => {
                 const isSelected = selected === getTagSlug(dish.slug)
                 return (
@@ -66,13 +84,16 @@ export const RestaurantTagsRow = memo(
                       })}
                     >
                       <SectionTab isSelected={isSelected}>
-                        <DishButton
-                          noLink
-                          restaurantSlug={restaurantSlug}
-                          restaurantId={restaurantId}
-                          {...dish}
-                          isActive={isSelected}
-                        />
+                        <Theme
+                          name={isSelected && themeName ? themeName : null}
+                        >
+                          <DishButton
+                            noLink
+                            restaurantSlug={restaurantSlug}
+                            restaurantId={restaurantId}
+                            {...dish}
+                          />
+                        </Theme>
                       </SectionTab>
                     </ScalingPressable>
                   </React.Fragment>

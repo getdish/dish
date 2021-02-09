@@ -23,7 +23,7 @@ export const selectRishDishViewSimple = (
     icon: tag.tag?.icon ?? '',
     slug: tag.tag?.slug ?? '',
     score: (tag.upvotes ?? 0) - Math.abs(tag.downvotes ?? 0),
-    rating: tag.rating ?? 0,
+    rating: (tag.rating ?? 0) * 100,
     image: tagImage ?? tagFallbackImage,
     isFallback: !tagImage,
     type: tag.tag.type ?? '',

@@ -1,6 +1,6 @@
 import { graphql } from '@dish/graph'
 import React, { Suspense } from 'react'
-import { AbsoluteVStack, Circle, Hoverable, Text } from 'snackui'
+import { AbsoluteVStack, Hoverable } from 'snackui'
 
 import { green } from '../../../constants/colors'
 import {
@@ -13,6 +13,7 @@ import { Link } from '../../views/Link'
 import { RestaurantUpVoteDownVote } from '../../views/restaurant/RestaurantUpVoteDownVote'
 import { Card, CardProps } from './Card'
 import { priceRange } from './RestaurantDetailRow'
+import { RestaurantRating } from './RestaurantRating'
 
 export type RestaurantCardProps = {
   restaurantSlug: string
@@ -86,26 +87,14 @@ export const RestaurantCardContent = graphql(
           outside={
             (colors) => {
               return (
-                <Circle
-                  backgroundColor={colors.darkColor}
-                  shadowColor="#000"
-                  shadowOffset={{ height: 2, width: 0 }}
-                  shadowOpacity={0.1}
-                  shadowRadius={10}
-                  size={36}
+                <AbsoluteVStack
                   position="absolute"
                   top={-7}
                   right={-10}
                   zIndex={100}
                 >
-                  <Text
-                    color="#fff"
-                    fontWeight="800"
-                    fontSize={rating > 7 ? 20 : 16}
-                  >
-                    {rating}
-                  </Text>
-                </Circle>
+                  <RestaurantRating size="sm" colors={colors} rating={rating} />
+                </AbsoluteVStack>
               )
             }
             // <Text
