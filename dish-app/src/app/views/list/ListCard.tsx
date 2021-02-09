@@ -67,7 +67,7 @@ export const ListCard = graphql(
                   return (
                     <Image
                       key={index}
-                      style={{ width: 80, height: 80 }}
+                      style={{ width: 93, height: 93, opacity: 0.5 }}
                       source={{ uri: photo ?? '' }}
                     />
                   )

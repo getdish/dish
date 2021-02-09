@@ -81,8 +81,13 @@ export const HomePageFeed = memo(
       return items.map((item, index) => {
         const content = (() => {
           switch (item.type) {
-            case 'hot':
             case 'new':
+              return (
+                <VStack width="100%" marginBottom={-50}>
+                  <HomeFeedTrendingNew {...item} />
+                </VStack>
+              )
+            case 'hot':
               return <HomeFeedTrendingNew {...item} />
             case 'dish-restaurants':
               return (
@@ -126,8 +131,8 @@ export const HomePageFeed = memo(
             onHoverIn={() => {
               setHovered(item.id)
             }}
-            paddingTop={10}
-            marginTop={-10}
+            paddingTop={5}
+            marginTop={-5}
             marginBottom={10}
             hoverStyle={{
               backgroundColor: theme.backgroundColorAlt,

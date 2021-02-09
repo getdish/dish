@@ -3,9 +3,12 @@ import { Tag, TagQuery, TagType } from '@dish/graph'
 import { ThumbsDown, ThumbsUp, X } from '@dish/react-feather'
 import React, { memo, useState } from 'react'
 import { Image } from 'react-native'
+import { Ellipse } from 'react-native-svg'
 import {
+  AbsoluteVStack,
   HStack,
   Hoverable,
+  ProgressCircle,
   Spacer,
   StackProps,
   Text,
@@ -33,9 +36,11 @@ import { getTagSlug } from '../../helpers/getTagSlug'
 import { rgbString } from '../../helpers/rgbString'
 import { NavigableTag } from '../../types/tagTypes'
 import { useUserTagVotes } from '../hooks/useUserTagVotes'
+import CircularProgress from './CircularProgress'
 import { Link } from './Link'
 import { LinkButton } from './LinkButton'
 import { LinkButtonProps } from './LinkProps'
+import { Pie } from './Pie'
 
 export type TagButtonTagProps = {
   type?: string
@@ -140,7 +145,7 @@ export const TagButton = memo((props: TagButtonProps) => {
   }
   const tag = { name, type: type as TagType, icon, rgb, slug }
   const isSmall = size === 'sm'
-  const scale = isSmall ? 0.85 : size == 'lg' ? 1 : 1
+  const scale = isSmall ? 0.85 : size == 'lg' ? 1.25 : 1
   const colors = getTagColors(tag)
   const bg = backgroundColor ?? colors.backgroundColor
   const fg = color ?? colors.color
@@ -208,23 +213,38 @@ export const TagButton = memo((props: TagButtonProps) => {
         // @ts-ignore
         fontSize={fontSize}
         // @ts-ignore
-        fontWeight={fontWeight ?? '600'}
+        fontWeight={fontWeight ?? '500'}
         lineHeight={isSmall ? 22 : 26}
         paddingHorizontal={7 * scale}
+        textShadowColor="rgba(0,0,0,0.4)"
+        textShadowOffset={{ height: 1, width: 0 }}
+        textShadowRadius={3}
         color={fg}
       >
         {tagDisplayName(tag)}
-        {typeof score === 'number' && (
+        {/* {typeof score === 'number' && (
           <Text marginLeft={4} fontWeight="300" fontSize={smallerFontSize}>
             {score > 0 ? `+${score}` : score}
           </Text>
-        )}
-        {!!after && (
-          <Text marginLeft={4} fontWeight="300" fontSize={smallerFontSize}>
-            {after}
-          </Text>
-        )}
+        )} */}
       </Text>
+
+      {typeof score === 'number' && (
+        <VStack marginVertical={-5}>
+          <Pie
+            size={28}
+            percent={score}
+            color={colors.backgroundColor}
+            background="rgba(0,0,0,0.2)"
+          />
+        </VStack>
+      )}
+
+      {!!after && (
+        <Text marginLeft={4} fontWeight="300" fontSize={smallerFontSize}>
+          {after}
+        </Text>
+      )}
       {!!votable && !!props.restaurantSlug && (
         <TagButtonVote
           key={getTagSlug(props.slug) + props.restaurantSlug}

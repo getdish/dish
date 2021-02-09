@@ -622,8 +622,12 @@ mark {
 }
 
 .map-marker .mapboxgl-popup-content {
-  padding: 5px;
-  background-color: #00000099;
+  padding: 3px;
+  padding-right: 8px;
+  padding-left: 8px;
+  font-weight: 600;
+  border-radius: 8px;
+  background-color: #000000ee;
   color: #fff;
 }
 
