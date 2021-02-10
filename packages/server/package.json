@@ -1,7 +1,7 @@
 {
   "name": "@dish/server",
   "version": "0.0.1",
-  "main": "_",
+  "main": "_/index.js",
   "tsmain": "src",
   "sideEffects": false,
   "private": true,
@@ -13,8 +13,8 @@
     "/_"
   ],
   "scripts": {
-    "build": "tsc -p tsconfig.build.json",
-    "watch": "tsc -p tsconfig.build.json --watch --preserveWatchOutput"
+    "build": "tsc -b tsconfig.json",
+    "watch": "tsc -b tsconfig.json --watch --preserveWatchOutput"
   },
   "oclif": {
     "commands": "./_/commands",
