@@ -1123,17 +1123,17 @@
   dependencies:
     prettier "^2.2.1"
 
-"@dish/gqless-react@2.0.5":
-  version "2.0.5"
-  resolved "https://registry.npmjs.org/@dish/gqless-react/-/gqless-react-2.0.5.tgz#34bf1b72af8bc4d230bc4e7a911e643c8531cd0f"
-  integrity sha512-BRAD8+gGeO02zYz4yv5dKKZH6HQBg5N0bge2t7bwKModr48Rmo/gL3litWGBTDbUvdZj+Qs/OQESXTV1AJ/pew==
+"@dish/gqless-react@2.0.6":
+  version "2.0.6"
+  resolved "https://registry.npmjs.org/@dish/gqless-react/-/gqless-react-2.0.6.tgz#1ff6e02bef9ec8d57fefd1f672f17a87b6b5bb2a"
+  integrity sha512-GRIBlQUEZJgjnAhx56f2VqojRjWUsV3sMFx5t6FF6THAmP0fB6wZALqgBtQx5BiTPbVX06Yad/66e+W1UOS2BQ==
   dependencies:
     "@dish/react-ssr-prepass" "^1.3.1"
 
-"@dish/gqless@3.0.4":
-  version "3.0.4"
-  resolved "https://registry.npmjs.org/@dish/gqless/-/gqless-3.0.4.tgz#0c6b3f1994956bc1c4279164857ebdd5da17e6a0"
-  integrity sha512-ve7HVBZEezDa72c+v99HKAx5uowHHczp2M3Y8ZiSmhKS5almnwh/fjFLViP8EsZRM3RML/54h708P3bt1clGkg==
+"@dish/gqless@3.0.5":
+  version "3.0.5"
+  resolved "https://registry.npmjs.org/@dish/gqless/-/gqless-3.0.5.tgz#b695958c793e9477b3898dc05962f35f2ad65050"
+  integrity sha512-dSmtFq3KGL9ZjSsk+BVswhF4Fc8YkOWAr4egbM+fGfuaLZnsxzqGlv+WyvoRGM/mTnSXXCglZmleAtRf+zcuzw==
   dependencies:
     lodash "^4.17.20"
     lodash-es "^4.17.20"
