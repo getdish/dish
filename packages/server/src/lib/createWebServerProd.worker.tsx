@@ -1,16 +1,16 @@
 import * as Path from 'path'
 import { parentPort, workerData } from 'worker_threads'
 
-import { ChunkExtractor } from '@loadable/server'
 import express from 'express'
-import { existsSync, pathExists, readFileSync, renameSync } from 'fs-extra'
-import React from 'react'
 
 import { ServerConfigNormal } from '../types'
 import { buildApp } from './buildApp'
 import { createWebServerDev } from './createWebServerDev'
 import { getWebpackConfigBuilder } from './getWebpackConfigBuilder'
 
+// import { ChunkExtractor } from '@loadable/server'
+// import { existsSync, pathExists, readFileSync, renameSync } from 'fs-extra'
+// import React from 'react'
 // import { shimBrowser } from './shimBrowser'
 // import { client } from '@dish/graph'
 // import { matchesUA } from 'browserslist-useragent'
@@ -51,35 +51,35 @@ async function createWebServerProd(app: any, config: ServerConfigNormal) {
       })
     }
 
-    const ssrDir = Path.join(buildDir, 'ssr')
+    // const ssrDir = Path.join(buildDir, 'ssr')
 
-    if (!(await pathExists(ssrDir))) {
-      console.error(`No path exists: ${ssrDir}`)
-      process.exit(1)
-    }
+    // if (!(await pathExists(ssrDir))) {
+    //   console.error(`No path exists: ${ssrDir}`)
+    //   process.exit(1)
+    // }
 
-    const statsFile = Path.resolve(Path.join(ssrDir, 'loadable-stats.json'))
-    const extractor = new ChunkExtractor({ statsFile })
+    // const statsFile = Path.resolve(Path.join(ssrDir, 'loadable-stats.json'))
+    // const extractor = new ChunkExtractor({ statsFile })
 
-    global['React'] = React
-    global['__DEV__'] = process.env.NODE_ENV === 'development'
-    global['requestIdleCallback'] = global['requestIdleCallback'] || setTimeout
+    // global['React'] = React
+    // global['__DEV__'] = process.env.NODE_ENV === 'development'
+    // global['requestIdleCallback'] = global['requestIdleCallback'] || setTimeout
 
-    const ssrPath = Path.join(
-      ssrDir,
-      `static/js/app.ssr.${process.env.NODE_ENV ?? 'production'}.js`
-    )
-    const userApp = require(ssrPath)
-    const { App, ReactDOMServer } = userApp
+    // const ssrPath = Path.join(
+    //   ssrDir,
+    //   `static/js/app.ssr.${process.env.NODE_ENV ?? 'production'}.js`
+    // )
+    // const userApp = require(ssrPath)
+    // const { App, ReactDOMServer } = userApp
 
-    if (!App || !ReactDOMServer) {
-      console.error(`\nError: Bad exported bundle`, {
-        path: ssrPath,
-        App,
-        ReactDOMServer,
-      })
-      process.exit()
-    }
+    // if (!App || !ReactDOMServer) {
+    //   console.error(`\nError: Bad exported bundle`, {
+    //     path: ssrPath,
+    //     App,
+    //     ReactDOMServer,
+    //   })
+    //   process.exit()
+    // }
 
     // static assets
     // const indexFile = Path.join(ssrDir, 'index.html')
