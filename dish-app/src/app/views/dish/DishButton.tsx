@@ -1,4 +1,3 @@
-// debug
 import { capitalize } from 'lodash'
 import React, { Suspense, memo } from 'react'
 import { Image } from 'react-native'

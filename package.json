@@ -57,6 +57,7 @@
   },
   "resolutions": {
     "typescript": "4.2.0-beta",
+    "node-fetch": "2.6.1",
     "webpack": "5.20.2",
     "terser": "5.5.1",
     "lodash": "4.17.20",

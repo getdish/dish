@@ -9,8 +9,17 @@ import { ServerConfigNormal } from '../types'
 
 export async function createWebServer(
   app: any,
-  { createConfig, ...config }: ServerConfigNormal
+  serverConfig: ServerConfigNormal
 ) {
+  if (serverConfig.serial) {
+    console.log(' [web] running in same process')
+    const { createWebServerDev } = require('./createWebServerDev')
+    await createWebServerDev(app, serverConfig)
+    return
+  }
+
+  const { createConfig, ...config } = serverConfig
+
   const port = await getPort()
   app.use(ignoreApi(proxy(`localhost:${port}`)))
   await start()
@@ -21,21 +30,17 @@ export async function createWebServer(
         config.watch ? '(watch)' : ''
       }...`
     )
-    const workerData = {
+    const args = {
       ...config,
       port,
     }
-    const worker = new Worker(
-      __filename
-        .replace('src', '_')
-        .replace(
-          '.tsx',
-          `${config.env === 'development' ? 'Dev' : 'Prod'}.worker.js`
-        ),
-      {
-        workerData,
-      }
+    const filePath = __filename.replace(
+      '.js',
+      `${config.env === 'development' ? 'Dev' : 'Prod'}.worker.js`
     )
+    const worker = new Worker(filePath, {
+      workerData: args,
+    })
     let completedInitialBuild = false
 
     await new Promise<void>((res, rej) => {

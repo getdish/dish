@@ -39,6 +39,9 @@ export class Start extends Command {
       char: 'S',
       description: 'Set up an https domain',
     }),
+    serial: flags.boolean({
+      description: 'Disable multi-process (helpful for internal debugging)',
+    }),
     ['no-optimize']: flags.boolean({
       description: `Don't optimize (minify, etc) for faster production debugging`,
     }),
@@ -58,6 +61,7 @@ export class Start extends Command {
       apiDir: flags['no-api'] ? null : join(rootDir, 'src', 'api'),
       noOptimize: flags['no-optimize'] ?? false,
       https: flags.https,
+      serial: flags.serial,
     }
 
     if (config.env === 'development') {

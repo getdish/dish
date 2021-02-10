@@ -13,8 +13,8 @@
     "/_"
   ],
   "scripts": {
-    "build": "tsc -b tsconfig.json",
-    "watch": "tsc -b tsconfig.json --watch --preserveWatchOutput"
+    "build": "tsc -p tsconfig.build.json",
+    "watch": "tsc -p tsconfig.build.json --watch --preserveWatchOutput"
   },
   "oclif": {
     "commands": "./_/commands",

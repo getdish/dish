@@ -1,10 +1,12 @@
 import { join } from 'path'
+import { Worker } from 'worker_threads'
 
 import compression from 'compression'
 import express from 'express'
+import proxy from 'express-http-proxy'
+import getPort from 'get-port'
 
 import { ServerConfig, ServerConfigNormal } from '../types'
-import { createApiServer } from './createApiServer'
 import { createWebServer } from './createWebServer'
 import { getWebpackConfigBuilder } from './getWebpackConfigBuilder'
 
@@ -17,6 +19,7 @@ export async function createServer(serverConf: ServerConfig) {
   const port = process.env.PORT ? +process.env.PORT : serverConf.port ?? 4444
   const url = `${protocol}://${host}${port == defaultPort ? '' : `:${port}`}`
   const noOptimize = serverConf.noOptimize ?? false
+
   const conf: ServerConfigNormal = {
     url,
     apiDir: serverConf.apiDir as any,
@@ -31,6 +34,7 @@ export async function createServer(serverConf: ServerConfig) {
     rootDir,
     watch: serverConf.watch ?? false,
     protocol,
+    serial: serverConf.serial ?? false,
     buildDir: join(rootDir, 'build'),
     createConfig: getWebpackConfigBuilder({ rootDir }),
     webpackConfig: {
@@ -74,6 +78,40 @@ export async function createServer(serverConf: ServerConfig) {
     await createWebServer(app, conf)
     await createApiServer(app, conf)
   }
+}
+
+async function createApiServer(
+  app: any,
+  { createConfig, ...config }: ServerConfigNormal
+) {
+  const port = await getPort()
+  app.use('/api', proxy(`localhost:${port}`))
+  const file = require.resolve('./createApiServer.worker')
+  const worker = new Worker(file, {
+    workerData: {
+      ...config,
+      port,
+    },
+  })
+  await new Promise<void>((res, rej) => {
+    worker.on('error', (err) => {
+      console.error(' [webpack]', err)
+      rej(err)
+    })
+    worker.on('exit', async (code) => {
+      console.log(' [api] exited', code)
+      if (code !== 0) {
+        rej(`Worker stopped with exit code ${code}`)
+      }
+    })
+    worker.on('message', (msg: string) => {
+      if (msg === 'done') {
+        res()
+      } else {
+        rej(msg)
+      }
+    })
+  })
 }
 
 function cors() {

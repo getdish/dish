@@ -15,6 +15,7 @@ export type ServerConfig = {
   https?: boolean
   verbose?: boolean
   noOptimize?: boolean
+  serial?: boolean
 }
 
 export type ServerConfigNormal = Required<ServerConfig> & {
