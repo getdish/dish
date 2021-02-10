@@ -50,7 +50,6 @@ export async function createApiServer(app: any, config: ServerConfigNormal) {
   }
 
   app.use(
-    '/api',
     expressWinston.logger({
       colorize: true,
       transports: [new winston.transports.Console()],
@@ -116,7 +115,7 @@ export async function createApiServer(app: any, config: ServerConfigNormal) {
         const name = file.replace(/\.tsx?$/, '')
         return {
           name,
-          route: `/api/${name}`,
+          route: `/${name}`,
           file,
           fileIn: join(apiDir, file),
         }
