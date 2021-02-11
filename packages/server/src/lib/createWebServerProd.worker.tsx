@@ -2,6 +2,7 @@ import * as Path from 'path'
 import { parentPort, workerData } from 'worker_threads'
 
 import express from 'express'
+import { readFile } from 'fs-extra'
 
 import { ServerConfigNormal } from '../types'
 import { buildApp } from './buildApp'
@@ -84,6 +85,7 @@ async function createWebServerProd(app: any, config: ServerConfigNormal) {
     // static assets
     // const indexFile = Path.join(ssrDir, 'index.html')
     const clientBuildPath = Path.join(buildDir, 'web')
+    const clientHTML = await readFile(Path.join(clientBuildPath, 'index.html'))
     // const clientBuildLegacyPath = Path.join(buildDir, 'legacy')
 
     // move index.html to backup location so we dont serve via express.static
@@ -99,7 +101,18 @@ async function createWebServerProd(app: any, config: ServerConfigNormal) {
     // })
 
     app.use(express.static(clientBuildPath))
-    app.get('*', express.static(Path.join(clientBuildPath, 'index.html')))
+
+    // fallback to index.html
+    const root = clientBuildPath
+    app.use((req, res, next) => {
+      if (
+        (req.method === 'GET' || req.method === 'HEAD') &&
+        req.accepts('html')
+      ) {
+        res.sendFile(clientHTML, { root }, (err) => err && next())
+      }
+    })
+
     // app.use('/', express.static(clientBuildLegacyPath))
 
     // ssr rendering
