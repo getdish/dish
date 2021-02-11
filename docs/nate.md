@@ -1,22 +1,40 @@
+THREE BIG AREAS
+
+  1. WEB
+     1. lots of bugs, mobile, etc, get it stable
+     2. blog post / substack
+  2. DATA
+     1. need to fix tons of data issues on specific restaurants
+     2. re-run crawl successfully on SF
+     3. run it on a bunch more places
+     4. need to have a beter plan for getting off yelp
+  3. APPS
+     1. need to get a beta version that is testflight deployable
+
+
+# initial family/friends launch at end of month
+
+    - fix up blog and write something (or remove blog)
+    - dish substack! have mailing list that actually emails once a month with new release
+    - improve some profiles and some onboarding
+
+- fix restaurantpage flicker
+- mobile fixes: get it fully working mobile web
+- fix back sometimes still breaking stack
+- fix tag ratings on various pages / consistency
+- fix home speed / home data
+- fix home not showing tag data properly
 - may be able to remove a few states from homeStore
-- gallery for example can just use router, no need for home
-- but would require home to be smarter i think
 - search page fixes:
-- shows blank sometimes
-- search page - show popular lists for that region + tags
-- restaurant page - show lists restaurant is on
-- new list
-- dont do weird redirect thing
-- modal that opens to select existing or create new
+  - search page - show popular lists for that region + tags
 - home
-- fix feed up a bunch to actually show real feed items
-- show more results on map
-- show real comments (recent?)
+  - fix feed up a bunch to actually show real feed items
+  - show real comments (recent?)
 - cleanup
-- fixup profile pages a lot
-- show onboard if not yet
-- better intro / intro callout
-- touch up commenting/rating
+  - fixup profile pages a lot
+  - show onboard if not yet
+  - better intro / intro callout
+  - touch up commenting/rating
 - location <=> url
 - organize all map/geo helpers a bit
 - ensure usernames are the same set as slugifed (no special chars)
@@ -42,11 +60,6 @@ for pablo:
   - normalize/direct-mutate
   - mutate() should automatically add __typename if nothing else exists otherwise really confusing that mutations silently fail
 
-  1. initial family/friends launch at end of month
-
-    - have mailing list that actually emails once a month with new release
-    - improve some profiles and some onboarding
-
   2. prototype playlists / improve home (bonus)
 
      - in general playlists are fun and affect regions a bit (may lessen need)
@@ -56,15 +69,22 @@ for pablo:
 
 making it actually a community:
 
-- lists
-  - on restaurant page show prominently "lists this is on"
+- when you upvote something, have a chance to add it to your "top list"
+- expand into not just restaurants
+  - index other things
+  - lists should account for type
+  - expand the lenses into subreddits basically
+    - lense can decide it's "type"
+      - restaurant, activity, everything, etc
+    - let anyone create a lense (must be unique)
+    - popular lenses show at top (can search them)
 - commenting/review features need to be brought forward more and more fun
   - eventually threaded discussions esp on lists
   - could have comment section show just for each dish too
+- eventually have just discussions be a thing in general
+  - push more towards home being reddit-like
 - home page needs to actually show real things / update better / etc
-  - lists as cards + voting
 - lots of core bugs in home/search/routing
-- rating improvements / clarity in design
 - probably a lot of fixes to data quality / imagery
 - social social social
   - better showing of comments/trending on home
