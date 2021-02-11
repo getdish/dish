@@ -32,8 +32,9 @@ USE_PROD_HASURA_PASSWORD=true ./dishctl.sh db_migrate_local
 # restart
 docker-compose stop dish-app-web dish-hooks search tileserver worker
 docker-compose rm -f dish-app-web dish-hooks search worker || true
-DISH_IMAGE_TAG=":staging" docker-compose pull
-eval $(./dishctl.sh yaml_to_env) DISH_IMAGE_TAG=":staging" docker-compose up -d dish-app-web dish-hooks search tileserver worker
+./dishctl.sh docker_pull_images_that_compose_would_rather_build
+eval $(./dishctl.sh yaml_to_env) DISH_IMAGE_TAG=":staging" \
+  docker-compose up -d dish-app-web dish-hooks search tileserver worker
 '
 
 commit=$(git rev-parse HEAD)

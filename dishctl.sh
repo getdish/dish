@@ -868,6 +868,16 @@ function docker_run_base() {
   eval $command
 }
 
+# Docker Compose doesn't pull images with a build key in their definition?
+function docker_pull_images_that_compose_would_rather_build() {
+  image="$DISH_REGISTRY/%:$DOCKER_TAG_NAMESPACE"
+  parallel -j 4 --tag --lb -I% docker pull "$image" ::: \
+    'worker' \
+    'dish-hooks' \
+    'search' \
+    'dish-app'
+}
+
 function ci_prettier() {
   docker_run_base yarn prettier --check "**/*.{ts,tsx}"
 }
