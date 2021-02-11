@@ -11,6 +11,7 @@ import {
   useGet,
   useMedia,
   useTheme,
+  useThemeName,
 } from 'snackui'
 
 import {
@@ -225,9 +226,7 @@ export default memo(function AppMap() {
     []
   )
 
-  const theme = useTheme()
-  const themeName = theme.backgroundColor === '#fff' ? 'light' : 'dark'
-
+  const themeName = useThemeName()
   const handleMoveStart = useCallback(() => {
     cancelUpdateRegion()
   }, [])

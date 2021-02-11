@@ -1,10 +1,10 @@
 import React, { memo } from 'react'
-import { Text, TextSuperScript, VStack } from 'snackui'
+import { Text, TextSuperScript, VStack, useTheme } from 'snackui'
 
-import { bgLight, blue } from '../../../constants/colors'
 import { isWeb } from '../../../constants/constants'
 
 export const RankView = memo(({ rank }: { rank: number }) => {
+  const theme = useTheme()
   return (
     <VStack
       width={48}
@@ -19,14 +19,14 @@ export const RankView = memo(({ rank }: { rank: number }) => {
         marginRight: 0,
       })}
       position="relative"
-      backgroundColor={bgLight}
+      backgroundColor={theme.backgroundColorAlt}
       borderRadius={1000}
       alignItems="center"
       justifyContent="center"
     >
       <Text transform={[{ translateY: -0 }]} textAlign="center" lineHeight={38}>
         <TextSuperScript
-          color={blue}
+          color={theme.colorAlt}
           transform={[{ translateY: -15 }]}
           fontSize={11}
         >
@@ -36,7 +36,7 @@ export const RankView = memo(({ rank }: { rank: number }) => {
           letterSpacing={-1}
           fontSize={+rank > 9 ? 18 : 24}
           fontWeight="800"
-          color={blue}
+          color={theme.colorAlt}
         >
           {rank}
         </Text>

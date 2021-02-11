@@ -354,10 +354,11 @@ const RestaurantListItemContent = memo(
                         marginVertical={-5}
                         maxWidth={contentSideProps.maxWidth}
                         hoverStyle={{
-                          backgroundColor: bgLightHover,
+                          backgroundColor: theme.backgroundColorAlt,
                         }}
                         pressStyle={{
-                          backgroundColor: bgLightPress,
+                          backgroundColor: theme.backgroundColorAlt,
+                          opacity: 0.8,
                         }}
                       >
                         <Text

@@ -1,7 +1,5 @@
-// import * as colors from './colors'
-
 import { getColorsForColor } from '../helpers/getColorsForName'
-import { allColors, colorNames } from './colors'
+import { allColors, bgAlt, blue, colorNames } from './colors'
 
 export type MyTheme = typeof dark
 export type MyThemes = typeof themes
@@ -14,9 +12,10 @@ const baseTheme = {
   colorTertiary: '#777',
   colorQuartenary: '#444',
   shadowColor: `rgba(0,0,0,0.3)`,
-  backgroundColorAlt: 'rgb(240, 250, 255)',
   backgroundColorTransparent: 'rgba(40,40,200,0)',
   cardBackgroundColor: '#333',
+  backgroundColorAlt: bgAlt,
+  colorAlt: blue,
 }
 
 const active: MyTheme = {
@@ -42,7 +41,8 @@ const error: MyTheme = {
 }
 
 const darkBase = {
-  backgroundColorAlt: 'rgba(240, 250, 255, 0.2)',
+  backgroundColorAlt: 'rgba(240, 250, 255, 0.1)',
+  colorAlt: '#fff',
   borderColor: '#252525',
   borderColorHover: '#353535',
   color: '#fefefe',
@@ -75,6 +75,7 @@ const darkTranslucent: MyTheme = {
 }
 
 const lightBase = {
+  colorAlt: blue,
   backgroundColorAlt: 'rgb(240, 250, 255)',
   borderColor: '#eee',
   borderColorHover: '#d5d5d5',
