@@ -3,9 +3,8 @@ import { basename, join, relative, resolve } from 'path'
 import chokidar from 'chokidar'
 import { NextFunction, Request, RequestHandler, Response } from 'express'
 import expressWinston from 'express-winston'
-import { pathExists, readFileSync, readJSONSync, readdir } from 'fs-extra'
+import { pathExists, readdir } from 'fs-extra'
 import { debounce } from 'lodash'
-import ts from 'typescript'
 import winston from 'winston'
 
 import { File, ServerConfigNormal } from '../types'
@@ -21,6 +20,7 @@ export async function createApiServer(app: any, config: ServerConfigNormal) {
   require('ts-node').register({
     lazy: true,
     transpileOnly: true,
+    typeCheck: false,
     compilerOptions: {
       target: 'es6',
       lib: ['esnext', 'dom'],
@@ -28,7 +28,7 @@ export async function createApiServer(app: any, config: ServerConfigNormal) {
       moduleResolution: 'node',
       esModuleInterop: true,
       allowSyntheticDefaultImports: true,
-      allowJs: true,
+      allowJs: false,
     },
   })
 

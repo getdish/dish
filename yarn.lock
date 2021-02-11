@@ -17389,6 +17389,11 @@ ts-transform-import-path-rewrite@^0.3.0:
   dependencies:
     typescript "4"
 
+tsc-prog@^2.2.1:
+  version "2.2.1"
+  resolved "https://registry.npmjs.org/tsc-prog/-/tsc-prog-2.2.1.tgz#7ea892e1628f1ef93ae6f4d0a97c8a9518e4b408"
+  integrity sha512-whYQUQjB+wm9c2FoikigaBVnXesgAjIYXgHrbzlK+Etg9L657a92MSUcbi5hrD/YBaRmjuDcTIQVZmo/f74OZQ==
+
 tsconfig-paths@^3.9.0:
   version "3.9.0"
   resolved "https://registry.npmjs.org/tsconfig-paths/-/tsconfig-paths-3.9.0.tgz#098547a6c4448807e8fcb8eae081064ee9a3c90b"
