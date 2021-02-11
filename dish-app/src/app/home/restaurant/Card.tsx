@@ -6,6 +6,7 @@ import {
   LinearGradient,
   Paragraph,
   Spacer,
+  StackProps,
   Text,
   VStack,
   useTheme,
@@ -223,3 +224,17 @@ const sheet = StyleSheet.create({
     right: '50%',
   },
 })
+
+export const CardOverlay = (props: StackProps) => {
+  return (
+    <AbsoluteVStack
+      fullscreen
+      top="auto"
+      justifyContent="flex-end"
+      borderBottomLeftRadius={cardFrameBorderRadius}
+      borderBottomRightRadius={cardFrameBorderRadius}
+      overflow="hidden"
+      {...props}
+    />
+  )
+}

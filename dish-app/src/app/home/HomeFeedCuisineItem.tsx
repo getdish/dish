@@ -17,6 +17,7 @@ import { FIBase } from './FIBase'
 import { GradientButton } from './GradientButton'
 import { HomeFeedProps } from './HomeFeedProps'
 import { HoverResultsProp } from './HoverResultsProp'
+import { CardOverlay } from './restaurant/Card'
 import { RestaurantCard } from './restaurant/RestaurantCard'
 import { RestaurantStatBars } from './RestaurantStatBars'
 import { SkewedCard } from './SkewedCard'
@@ -130,10 +131,12 @@ export const HomeFeedCuisineItem = memo(
                         restaurantSlug={r.slug}
                         hoverable={false}
                         below={(colors) => (
-                          <RestaurantStatBars
-                            restaurantSlug={r.slug}
-                            colors={colors}
-                          />
+                          <CardOverlay>
+                            <RestaurantStatBars
+                              restaurantSlug={r.slug}
+                              colors={colors}
+                            />
+                          </CardOverlay>
                         )}
                       />
                     </SkewedCard>

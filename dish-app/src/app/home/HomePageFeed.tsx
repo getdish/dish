@@ -33,6 +33,7 @@ function useHomeFeed(props: HomeFeedProps): FI[] {
   const dishItems = useFeedDishItems(region)
   const hotNewItems = useHomeFeedTrendingNew(props)
   return [
+    ...hotNewItems,
     {
       id: `0`,
       type: 'list',
@@ -40,7 +41,6 @@ function useHomeFeed(props: HomeFeedProps): FI[] {
       rank: -3,
       title: `Lists`,
     } as FIList,
-    ...hotNewItems,
     ...cuisineItems,
     ...dishItems,
   ].filter(isPresent)

@@ -1,12 +1,21 @@
 import { graphql, order_by, query } from '@dish/graph'
 import { groupBy, pick, sortBy, uniqBy } from 'lodash'
 import React from 'react'
-import { Hoverable } from 'snackui'
+import { AbsoluteVStack, HStack, Hoverable, Spacer, VStack } from 'snackui'
 
+import {
+  DishTagItemSimple,
+  selectRishDishViewSimple,
+  selectTagDishViewSimple,
+} from '../../helpers/selectDishViewSimple'
+import { queryTag } from '../../queries/queryTag'
 import { RegionNormalized } from '../../types/homeTypes'
+import { cardFrameBorderRadius } from '../views/CardFrame'
+import { DishView } from '../views/dish/DishView'
 import { FeedSlantedTitleLink } from './FeedSlantedTitle'
 import { FIBase } from './FIBase'
 import { HoverResultsProp } from './HoverResultsProp'
+import { CardOverlay } from './restaurant/Card'
 import { RestaurantCard } from './restaurant/RestaurantCard'
 import { RestaurantStatBars } from './RestaurantStatBars'
 import { SkewedCard, SkewedCardCarousel } from './SkewedCard'
@@ -14,7 +23,7 @@ import { SkewedCard, SkewedCardCarousel } from './SkewedCard'
 export type FIDishRestaurants = FIBase & {
   type: 'dish-restaurants'
   region: RegionNormalized
-  tag: { name: string; icon: string; slug: string }
+  tag: DishTagItemSimple
 }
 
 export function useFeedDishItems(
@@ -48,11 +57,7 @@ export function useFeedDishItems(
           },
           order_by: [{ upvotes: order_by.desc_nulls_last }],
         })
-        .map((x) => ({
-          name: x.tag.name ?? '',
-          slug: x.tag.slug ?? '',
-          icon: x.tag.icon ?? '',
-        }))
+        .map(selectRishDishViewSimple)
     })
 
   const topDishes = sortBy(
@@ -115,11 +120,16 @@ export const HomeFeedDishRestaurants = graphql(
                   hoverable={false}
                   dimImage
                   below={(colors) => (
-                    <RestaurantStatBars
-                      tags={[tag.slug]}
-                      restaurantSlug={r.slug || ''}
-                      colors={colors}
-                    />
+                    <CardOverlay>
+                      <HStack alignItems="center" justifyContent="center">
+                        <DishView {...tag} size={120} />
+                      </HStack>
+                      <Spacer />
+                      <RestaurantStatBars
+                        restaurantSlug={r.slug || ''}
+                        colors={colors}
+                      />
+                    </CardOverlay>
                   )}
                 />
               </SkewedCard>

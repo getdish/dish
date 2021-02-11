@@ -1,20 +1,29 @@
 import { RestaurantOnlyIds, SEARCH_DOMAIN, graphql } from '@dish/graph'
 import React, { memo } from 'react'
+import { HStack, VStack } from 'snackui'
 
+import { getColorsForName } from '../../helpers/getColorsForName'
+import { hexToRGB } from '../../helpers/hexToRGB'
 import { useQueryLoud } from '../../helpers/useQueryLoud'
+import { queryRestaurant } from '../../queries/queryRestaurant'
+import { ContentScrollViewHorizontal } from '../views/ContentScrollViewHorizontal'
+import { Link } from '../views/Link'
 import { FeedSlantedTitle } from './FeedSlantedTitle'
 import { FIBase } from './FIBase'
+import { GradientButton } from './GradientButton'
 import { HomeFeedProps } from './HomeFeedProps'
 import { RestaurantCard } from './restaurant/RestaurantCard'
 import { SkewedCard, SkewedCardCarousel } from './SkewedCard'
 
 export type FINew = FIBase & {
   type: 'new'
+  size: 'sm' | 'md'
   restaurants: RestaurantOnlyIds[]
 }
 
 export type FIHot = FIBase & {
   type: 'hot'
+  size: 'sm' | 'md'
   restaurants: RestaurantOnlyIds[]
 }
 
@@ -42,6 +51,7 @@ export function useHomeFeedTrendingNew(props: HomeFeedProps) {
     {
       id: '1',
       type: 'new',
+      size: 'sm',
       rank: -2,
       title: 'New',
       restaurants: feedData?.newest,
@@ -50,6 +60,7 @@ export function useHomeFeedTrendingNew(props: HomeFeedProps) {
     {
       id: '2',
       type: 'hot',
+      size: 'sm',
       title: 'Trending',
       rank: -1,
       restaurants: feedData?.trending,
@@ -62,6 +73,46 @@ export const HomeFeedTrendingNew = memo(
     const restaurants = props.restaurants
     if (!restaurants) {
       return null
+    }
+    if (props.size === 'sm') {
+      return (
+        <>
+          <FeedSlantedTitle size="sm" zIndex={10}>
+            {props.title}
+          </FeedSlantedTitle>
+          <VStack
+            maxWidth="100%"
+            overflow="hidden"
+            marginTop={-15}
+            marginBottom={10}
+          >
+            <ContentScrollViewHorizontal>
+              <VStack
+                paddingVertical={12}
+                paddingHorizontal={40}
+                flexWrap="nowrap"
+              >
+                <HStack
+                  spacing={6}
+                  marginHorizontal="auto"
+                  alignItems="center"
+                  justifyContent="center"
+                  overflow="hidden"
+                >
+                  <VStack width={80} />
+
+                  {restaurants.map((r, index) => {
+                    if (!r) return null
+                    return (
+                      <RestaurantGradientButton key={index} slug={r.slug} />
+                    )
+                  })}
+                </HStack>
+              </VStack>
+            </ContentScrollViewHorizontal>
+          </VStack>
+        </>
+      )
     }
     return (
       <>
@@ -92,3 +143,14 @@ export const HomeFeedTrendingNew = memo(
     )
   })
 )
+
+const RestaurantGradientButton = graphql(({ slug }: { slug: string }) => {
+  const [restaurant] = queryRestaurant(slug)
+  const colors = getColorsForName(slug)
+  const rgb = hexToRGB(colors.color).rgb
+  return (
+    <Link name="restaurant" params={{ slug: slug }} asyncClick>
+      <GradientButton rgb={rgb}>{restaurant.name}</GradientButton>
+    </Link>
+  )
+})

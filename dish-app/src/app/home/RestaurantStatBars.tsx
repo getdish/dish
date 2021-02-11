@@ -59,70 +59,60 @@ export const RestaurantStatBars = graphql(
       <Theme
         name={theme.name === 'dark' ? 'darkTranslucent' : 'lightTranslucent'}
       >
-        <AbsoluteVStack
-          // className="card-hover-fade"
-          fullscreen
-          top="auto"
-          justifyContent="flex-end"
-          borderBottomLeftRadius={cardFrameBorderRadius}
-          borderBottomRightRadius={cardFrameBorderRadius}
-          overflow="hidden"
-        >
-          <VStack alignItems="flex-end" justifyContent="flex-end">
-            {rtags.map((rtag, index) => {
-              return (
-                <VStack
-                  key={rtag.tag.slug}
-                  width="100%"
-                  backgroundColor={`rgba(0,0,0,0.${index + 3})`}
-                  alignItems="flex-end"
-                >
-                  <TagButton
-                    size="lg"
-                    floating
-                    {...selectRishDishViewSimple(rtag)}
-                    backgroundColor="transparent"
-                    color="#fff"
-                  />
-                </VStack>
-              )
-              // return (
-              //   <HStack
-              //     key={rtag.tag.slug}
-              //     width="100%"
-              //     height={42}
-              //     alignItems="center"
-              //     position="relative"
-              //   >
-              //     <Text
-              //       fontWeight="500"
-              //       fontSize={22}
-              //       textShadowColor="rgba(0,0,0,0.1)"
-              //       textShadowOffset={{ height: 1, width: 0 }}
-              //       paddingHorizontal={10}
-              //       textAlign="right"
-              //       flex={1}
-              //       zIndex={2}
-              //       color="#fff"
-              //     >
-              //       {rtag.tag.name} {rtag.tag.icon}
-              //     </Text>
-              //     <AbsoluteVStack
-              //       backgroundColor={colors.altPastelColor}
-              //       height="100%"
-              //       bottom={0}
-              //       left={0}
-              //       width={`${rtag.rating * 100}%`}
-              //     />
-              //     <AbsoluteVStack
-              //       fullscreen
-              //       backgroundColor="rgba(0,0,0,0.15)"
-              //     />
-              //   </HStack>
-              // )
-            })}
-          </VStack>
-        </AbsoluteVStack>
+        <VStack alignItems="flex-end" justifyContent="flex-end">
+          {rtags.map((rtag, index) => {
+            return (
+              <VStack
+                key={rtag.tag.slug}
+                width="100%"
+                backgroundColor={`rgba(0,0,0,0.${index + 3})`}
+                alignItems="flex-end"
+              >
+                <TagButton
+                  size="lg"
+                  floating
+                  {...selectRishDishViewSimple(rtag)}
+                  backgroundColor="transparent"
+                  color="#fff"
+                />
+              </VStack>
+            )
+            // return (
+            //   <HStack
+            //     key={rtag.tag.slug}
+            //     width="100%"
+            //     height={42}
+            //     alignItems="center"
+            //     position="relative"
+            //   >
+            //     <Text
+            //       fontWeight="500"
+            //       fontSize={22}
+            //       textShadowColor="rgba(0,0,0,0.1)"
+            //       textShadowOffset={{ height: 1, width: 0 }}
+            //       paddingHorizontal={10}
+            //       textAlign="right"
+            //       flex={1}
+            //       zIndex={2}
+            //       color="#fff"
+            //     >
+            //       {rtag.tag.name} {rtag.tag.icon}
+            //     </Text>
+            //     <AbsoluteVStack
+            //       backgroundColor={colors.altPastelColor}
+            //       height="100%"
+            //       bottom={0}
+            //       left={0}
+            //       width={`${rtag.rating * 100}%`}
+            //     />
+            //     <AbsoluteVStack
+            //       fullscreen
+            //       backgroundColor="rgba(0,0,0,0.15)"
+            //     />
+            //   </HStack>
+            // )
+          })}
+        </VStack>
       </Theme>
     )
   }
