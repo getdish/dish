@@ -10,7 +10,7 @@ import { DishTagItem } from '../../../helpers/getRestaurantDishes'
 import { Link } from '../Link'
 import { DishUpvoteDownvote } from './DishUpvoteDownvote'
 
-export type DishButtonProps = Partial<DishTagItem> & {
+export type TagButtonSlantedProps = Partial<DishTagItem> & {
   restaurantId?: string
   restaurantSlug?: string
   selected?: boolean
@@ -20,7 +20,7 @@ export type DishButtonProps = Partial<DishTagItem> & {
   bold?: boolean
 }
 
-export const DishButton = memo((props: DishButtonProps) => {
+export const TagButtonSlanted = memo((props: TagButtonSlantedProps) => {
   return (
     <Suspense fallback={null}>
       <DishButtonContent {...props} />
@@ -28,7 +28,7 @@ export const DishButton = memo((props: DishButtonProps) => {
   )
 })
 
-const DishButtonContent = (props: DishButtonProps) => {
+const DishButtonContent = (props: TagButtonSlantedProps) => {
   const {
     name,
     score,

@@ -75,9 +75,9 @@ export const UpvoteDownvoteScore = memo(
 
     const colors = getColorsForColor(
       typeof rating === 'number'
-        ? rating > 70
+        ? rating >= 7
           ? green
-          : rating < 50
+          : rating < 5
           ? red
           : grey
         : grey
@@ -128,7 +128,11 @@ export const UpvoteDownvoteScore = memo(
         </AbsoluteVStack>
         {typeof rating === 'number' && (
           <AbsoluteVStack fullscreen>
-            <Pie size={sizePx} color={colors.lightColor} percent={rating} />
+            <Pie
+              size={sizePx}
+              color={colors.lightColor}
+              percent={rating * 10}
+            />
           </AbsoluteVStack>
         )}
         <Text

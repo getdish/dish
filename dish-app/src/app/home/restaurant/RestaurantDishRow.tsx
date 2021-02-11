@@ -9,7 +9,7 @@ import { getRestaurantDishes } from '../../../helpers/getRestaurantDishes'
 import { getTagSlug } from '../../../helpers/getTagSlug'
 import { DishTagItemSimple } from '../../../helpers/selectDishViewSimple'
 import { ContentScrollViewHorizontal } from '../../views/ContentScrollViewHorizontal'
-import { DishButton } from '../../views/dish/DishButton'
+import { TagButtonSlanted } from '../../views/dish/TagButtonSlanted'
 import { ScalingPressable } from '../../views/ScalingPressable'
 
 const withIndex = (fn) => {
@@ -68,7 +68,7 @@ export const RestaurantDishRow = memo(
                   >
                     <SectionTab isSelected={isSelected}>
                       <Theme name={isSelected && themeName ? themeName : null}>
-                        <DishButton
+                        <TagButtonSlanted
                           noLink
                           restaurantSlug={restaurantSlug}
                           restaurantId={restaurantId}
@@ -102,7 +102,7 @@ export const RestaurantDishRow = memo(
                         onSelect?.('')
                       }}
                     >
-                      <DishButton
+                      <TagButtonSlanted
                         noLink
                         bold
                         name="Overall"

@@ -17,13 +17,17 @@ export const selectRishDishViewSimple = (
 ): DishTagItemSimple => {
   const tagImage = tag.photos()?.[0]
   const tagFallbackImage = tagImage ? null : tag.tag?.default_images()?.[0]
+  const rawRating = tag.rating ? tag.rating * 100 : null
+  const totalVotes = tag.upvotes + tag.downvotes
+  const ratioRating = totalVotes > 0 ? (tag.upvotes / totalVotes) * 100 : 0
+  const rating = Math.round((rawRating ?? ratioRating) / 10)
   return {
     id: tag.tag?.id,
     name: tag.tag?.name ?? '',
     icon: tag.tag?.icon ?? '',
     slug: tag.tag?.slug ?? '',
     score: (tag.upvotes ?? 0) - Math.abs(tag.downvotes ?? 0),
-    rating: (tag.rating ?? 0) * 100,
+    rating,
     image: tagImage ?? tagFallbackImage,
     isFallback: !tagImage,
     type: tag.tag.type ?? '',
