@@ -9,17 +9,19 @@ import { useQueryLoud } from '../../helpers/useQueryLoud'
 import { getMapZoom } from '../getMap'
 
 export const useTopCuisines = (center: LngLat) => {
-  return useQueryLoud('topcuisine', () => getHomeCuisines(center), {
-    suspense: false,
-  })
+  return useQueryLoud(
+    `topcuisine-${JSON.stringify(center)}`,
+    () => getHomeCuisines(center),
+    {
+      suspense: false,
+    }
+  )
 }
 
 const getHomeCuisines = async (center: LngLat) => {
-  const cuisineItems = await getHomeDishes(
-    center.lng,
-    center.lat,
-    (await getMapZoom()) ?? 11
-  )
+  const zoom = (await getMapZoom()) ?? 11
+  console.log('get at zoom', zoom)
+  const cuisineItems = await getHomeDishes(center.lng, center.lat, zoom)
   let all: TopCuisine[] = []
   for (const item of cuisineItems) {
     const existing = all.find((x) => x.country === item.country)

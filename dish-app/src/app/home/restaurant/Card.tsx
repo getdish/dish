@@ -126,8 +126,10 @@ export function Card({
               end={[0, 0.5]}
             />
           </VStack>
+        </AbsoluteVStack>
+        <AbsoluteVStack fullscreen zIndex={10}>
           <LinearGradient
-            style={[StyleSheet.absoluteFill, { opacity: 0.85 }]}
+            style={[StyleSheet.absoluteFill]}
             colors={[
               topCornerColor,
               topCornerColor,

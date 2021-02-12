@@ -10,6 +10,7 @@ import {
 import { appMapStore } from '../../AppMapStore'
 import { CardFrame } from '../../views/CardFrame'
 import { Link } from '../../views/Link'
+import { RestaurantRatingView } from '../RestaurantRatingView'
 import { Card, CardProps } from './Card'
 import { priceRange } from './RestaurantDetailRow'
 import { RestaurantRating } from './RestaurantRating'
@@ -97,11 +98,10 @@ export const RestaurantCardContent = graphql(
                   right={-10}
                   zIndex={100}
                 >
-                  <RestaurantRating
-                    darken
-                    size="sm"
-                    colors={colors}
-                    rating={rating}
+                  <RestaurantRatingView
+                    slug={restaurantSlug}
+                    floating
+                    size={32}
                   />
                 </AbsoluteVStack>
               )

@@ -33,24 +33,26 @@ export type FICuisine = FIBase & {
 }
 
 export function useFeedTopCuisines({ center }: HomeFeedProps) {
-  const cuisines = useTopCuisines(center)
-  return (cuisines.data ?? []).map(
-    (item, index): FICuisine => {
-      return {
-        id: `cuisine-${item.country}`,
-        title: `${item.country}`,
-        type: 'cuisine',
-        expandable: true,
-        rank: index + (index % 3 ? 30 : 0),
-        restaurants: item.top_restaurants.map((r) => ({
-          slug: r.slug!,
-          id: r.id!,
-        })),
-        dishes: item.dishes,
-        tagSlug: item.tag_slug,
-      }
-    }
-  )
+  // disable for now, needs to be redone for regions ideally as a materialized view
+  return []
+  // const cuisines = useTopCuisines(center)
+  // return (cuisines.data ?? []).map(
+  //   (item, index): FICuisine => {
+  //     return {
+  //       id: `cuisine-${item.country}`,
+  //       title: `${item.country}`,
+  //       type: 'cuisine',
+  //       expandable: true,
+  //       rank: index,
+  //       restaurants: item.top_restaurants.map((r) => ({
+  //         slug: r.slug!,
+  //         id: r.id!,
+  //       })),
+  //       dishes: item.dishes,
+  //       tagSlug: item.tag_slug,
+  //     }
+  //   }
+  // )
 }
 
 export const HomeFeedCuisineItem = memo(
@@ -126,6 +128,7 @@ export const HomeFeedCuisineItem = memo(
                     <SkewedCard zIndex={1000 - i} key={r.id}>
                       <RestaurantCard
                         hoverToMap
+                        dimImage
                         isBehind={i > 0}
                         restaurantId={r.id}
                         restaurantSlug={r.slug}

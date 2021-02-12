@@ -20,7 +20,9 @@ export const RestaurantRatingView = graphql(
         rating={restaurant.rating * 20}
         size={size}
         floating={floating}
-        count={restaurant.reviews_aggregate({}).aggregate?.count({}) ?? 0}
+        {...(size >= 42 && {
+          count: restaurant.reviews_aggregate({}).aggregate?.count({}) ?? 0,
+        })}
       />
     )
   }

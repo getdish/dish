@@ -66,6 +66,10 @@ export const HomeFeedLists = graphql(
       ])
     }, [hoveredList])
 
+    if (!recentLists.length) {
+      return null
+    }
+
     return (
       <>
         <FeedSlantedTitle>
@@ -89,6 +93,7 @@ export const HomeFeedLists = graphql(
             </Link>
           </HStack>
         </FeedSlantedTitle>
+
         <SkewedCardCarousel>
           {recentLists.map((list, i) => {
             if (!list) {

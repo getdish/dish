@@ -64,9 +64,6 @@ export const AppMapRestaurantPeek = memo(
 
     return containerWrap(
       <>
-        <AbsoluteVStack zIndex={100} top={-10} right={-10}>
-          <RestaurantRatingViewPopover size="sm" restaurantSlug={slug} />
-        </AbsoluteVStack>
         <HStack
           flex={1}
           paddingHorizontal={8}

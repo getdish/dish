@@ -692,22 +692,22 @@ function setupMapEffect({
           map.removeLayer(POINT_LAYER_ID)
         })
 
-        map.addLayer({
-          id: POINT_HOVER_LAYER_ID,
-          source: RESTAURANTS_UNCLUSTERED_SOURCE_ID,
-          type: 'circle',
-          filter: ['==', 'id', ''],
-          paint: {
-            'circle-radius': 6,
-            'circle-color': '#fff',
-            // 'icon-allow-overlap': true,
-            // 'icon-ignore-placement': true,
-            // 'icon-size': 0.25,
-          },
-        })
-        cancels.add(() => {
-          map.removeLayer(POINT_HOVER_LAYER_ID)
-        })
+        // map.addLayer({
+        //   id: POINT_HOVER_LAYER_ID,
+        //   source: RESTAURANTS_UNCLUSTERED_SOURCE_ID,
+        //   type: 'circle',
+        //   filter: ['==', 'id', ''],
+        //   paint: {
+        //     'circle-radius': 6,
+        //     'circle-color': '#fff',
+        //     // 'icon-allow-overlap': true,
+        //     // 'icon-ignore-placement': true,
+        //     // 'icon-size': 0.25,
+        //   },
+        // })
+        // cancels.add(() => {
+        //   map.removeLayer(POINT_HOVER_LAYER_ID)
+        // })
 
         map.addLayer({
           id: UNCLUSTERED_LABEL_LAYER_ID,
@@ -840,31 +840,31 @@ function setupMapEffect({
             firstSymbolLayerId
           )
 
-          map.addLayer(
-            {
-              id: `${name}.line`,
-              type: 'line',
-              source: name,
-              minzoom: minZoom,
-              maxzoom: maxZoom,
-              paint: {
-                'line-color': [
-                  'case',
-                  ['==', ['feature-state', 'active'], true],
-                  ['get', 'color'],
-                  ['==', ['feature-state', 'hover'], true],
-                  ['get', 'color'],
-                  ['==', ['feature-state', 'active'], null],
-                  ['get', 'color'],
-                  'green',
-                ],
-                'line-opacity': 0.1,
-                'line-width': 3,
-              },
-              'source-layer': name,
-            },
-            firstSymbolLayerId
-          )
+          // map.addLayer(
+          //   {
+          //     id: `${name}.line`,
+          //     type: 'line',
+          //     source: name,
+          //     minzoom: minZoom,
+          //     maxzoom: maxZoom,
+          //     paint: {
+          //       'line-color': [
+          //         'case',
+          //         ['==', ['feature-state', 'active'], true],
+          //         ['get', 'color'],
+          //         ['==', ['feature-state', 'hover'], true],
+          //         ['get', 'color'],
+          //         ['==', ['feature-state', 'active'], null],
+          //         ['get', 'color'],
+          //         'green',
+          //       ],
+          //       'line-opacity': 0.1,
+          //       'line-width': 3,
+          //     },
+          //     'source-layer': name,
+          //   },
+          //   firstSymbolLayerId
+          // )
 
           if (label) {
             if (labelSource) {

@@ -19,7 +19,7 @@ export type Tile = {
 export const tiles: Tile[] = [
   {
     maxZoom: 20,
-    minZoom: 11.5,
+    minZoom: 11,
     // lineColor: '#880088',
     // lineColorActive: '#660066',
     // lineColorHover: '#330033',
@@ -43,7 +43,7 @@ export const tiles: Tile[] = [
   //   name: 'public.hca',
   // },
   {
-    maxZoom: 11.5,
+    maxZoom: 11,
     minZoom: 4,
     // lineColor: '#aa55aa',
     // lineColorActive: '#660066',

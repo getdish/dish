@@ -41,7 +41,7 @@ export function useFeedDishItems(
           _st_within: bbox,
         },
       },
-      order_by: [{ upvotes: order_by.desc_nulls_last }],
+      order_by: [{ upvotes: order_by.asc }],
       limit: 20,
     })
     .flatMap((r) => {
@@ -55,7 +55,7 @@ export function useFeedDishItems(
               },
             },
           },
-          order_by: [{ upvotes: order_by.desc_nulls_last }],
+          order_by: [{ upvotes: order_by.asc }],
         })
         .map(selectRishDishViewSimple)
     })
@@ -69,6 +69,8 @@ export function useFeedDishItems(
   )
     .slice(0, 5)
     .map((x) => x[0])
+
+  console.log('waht', { popularDishTags, topDishes })
 
   return topDishes.map((tag, index) => {
     return {
@@ -106,29 +108,53 @@ export const HomeFeedDishRestaurants = graphql(
         <FeedSlantedTitleLink tag={tag}>
           {tag.icon} {tag.name}
         </FeedSlantedTitleLink>
+
         <SkewedCardCarousel>
-          {restaurants.map((r, i) => {
+          {restaurants.map((restaurant, i) => {
+            const rtag = restaurant.tags({
+              where: {
+                tag: {
+                  slug: {
+                    _eq: tag.slug,
+                  },
+                },
+              },
+              limit: 1,
+            })[0]
+            const dishViewProps = selectRishDishViewSimple(rtag)
+
+            console.log('rtag', dishViewProps)
+
             return (
-              <SkewedCard zIndex={1000 - i} key={r.id}>
+              <SkewedCard zIndex={1000 - i} key={restaurant.id}>
                 <RestaurantCard
                   padTitleSide
                   hoverToMap
                   isBehind={i > 0}
                   hideScore
-                  restaurantId={r.id}
-                  restaurantSlug={r.slug || ''}
+                  restaurantId={restaurant.id}
+                  restaurantSlug={restaurant.slug || ''}
                   hoverable={false}
                   dimImage
                   below={(colors) => (
                     <CardOverlay>
-                      <HStack alignItems="center" justifyContent="center">
-                        <DishView {...tag} size={120} />
+                      <HStack
+                        alignItems="center"
+                        justifyContent="center"
+                        paddingBottom={20}
+                      >
+                        <DishView
+                          restaurantSlug={restaurant.slug || ''}
+                          restaurantId={restaurant.id || ''}
+                          {...dishViewProps}
+                          size={180}
+                        />
                       </HStack>
-                      <Spacer />
-                      <RestaurantStatBars
+                      {/* <Spacer /> */}
+                      {/* <RestaurantStatBars
                         restaurantSlug={r.slug || ''}
                         colors={colors}
-                      />
+                      /> */}
                     </CardOverlay>
                   )}
                 />

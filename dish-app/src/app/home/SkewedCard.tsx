@@ -26,10 +26,10 @@ export const SkewedCard = ({ children, ...props }: StackProps) => {
       ]}
       hoverStyle={{
         transform: [
-          { scale: 0.775 },
+          { scale: 0.766 },
           { perspective: 1000 },
           { rotateY: '-10deg' },
-          { translateX: 10 },
+          { translateX: 8 },
         ],
       }}
       pressStyle={{

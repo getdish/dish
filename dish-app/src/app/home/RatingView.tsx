@@ -13,13 +13,13 @@ export const RatingView = ({
   floating,
 }: {
   size: number
-  count: number
   rating: number
+  count?: number
   floating?: boolean
 }) => {
   const theme = useTheme()
-  const countText = `${numberFormat(count, 'sm')}`
-  const longText = countText.length > 2
+  const countText = count ? `${numberFormat(count, 'sm')}` : null
+  const longText = countText ? countText.length > 2 : false
   const rotate = `${(1 - (rating * 0.7) / 100) * 180}deg`
   const width = size * 0.075
   return (
@@ -53,26 +53,28 @@ export const RatingView = ({
         </ProgressRing>
       </ProgressRing>
 
-      <AbsoluteVStack
-        zIndex={-1}
-        top="-15%"
-        right="-15%"
-        backgroundColor="#fff"
-        width={size * 0.44}
-        height={size * 0.44}
-        borderRadius={100}
-        alignItems="center"
-        justifyContent="center"
-      >
-        <Text
-          color={theme.color}
-          opacity={0.5}
-          fontWeight="600"
-          fontSize={longText ? 10 : 12}
+      {typeof count !== 'undefined' && (
+        <AbsoluteVStack
+          zIndex={-1}
+          top="-15%"
+          right="-15%"
+          backgroundColor="#fff"
+          width={size * 0.44}
+          height={size * 0.44}
+          borderRadius={100}
+          alignItems="center"
+          justifyContent="center"
         >
-          {countText}
-        </Text>
-      </AbsoluteVStack>
+          <Text
+            color={theme.color}
+            opacity={0.5}
+            fontWeight="600"
+            fontSize={longText ? 10 : 12}
+          >
+            {countText}
+          </Text>
+        </AbsoluteVStack>
+      )}
     </HStack>
   )
 }
