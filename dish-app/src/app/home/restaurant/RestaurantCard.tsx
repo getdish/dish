@@ -101,7 +101,7 @@ export const RestaurantCardContent = graphql(
                   <RestaurantRatingView
                     slug={restaurantSlug}
                     floating
-                    size={32}
+                    size={40}
                   />
                 </AbsoluteVStack>
               )

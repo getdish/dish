@@ -62,7 +62,9 @@ export function Card({
   const colors = backgroundColor
     ? getColorsForColor(backgroundColor)
     : getColorsForName(title ?? '')
-  const { color, darkColor } = colors
+  const darkColor = colors.darkColor
+  const underColor = colors.pastelColor
+  const overColor = colors.color
   const isSm = size === 'sm'
   const width = isSm ? cardFrameWidthSm : cardFrameWidth
   const height = square ? width : isSm ? cardFrameHeightSm : cardFrameHeight
@@ -75,7 +77,7 @@ export function Card({
     width: aspectFixed ? sizes.width : '100%',
   }
 
-  const topCornerColor = `${color}cc`
+  const topCornerColor = `${overColor}dd`
   const longestWord =
     title?.split(' ').reduce((acc, cur) => Math.max(cur.length, acc), 0) ?? 0
   const fontSize = Math.round((longestWord > 9 ? 24 : 28) * (isSm ? 0.85 : 0.9))
@@ -94,7 +96,7 @@ export function Card({
         alignSelf="center"
         position="relative"
         borderRadius={cardFrameBorderRadius}
-        backgroundColor={backgroundColor ?? color ?? ''}
+        backgroundColor={backgroundColor || underColor || ''}
       >
         <AbsoluteVStack
           className="ease-in-out"
@@ -133,7 +135,8 @@ export function Card({
             colors={[
               topCornerColor,
               topCornerColor,
-              `${color}00`,
+              `${overColor}44`,
+              `transparent`,
               `transparent`,
               `transparent`,
             ]}
@@ -148,7 +151,7 @@ export function Card({
               {...sizes}
               style={{
                 ...frame,
-                opacity: dimImage ? 0.5 : 1,
+                opacity: dimImage ? 0.85 : 1,
               }}
               source={{ uri: photo }}
             />
@@ -169,7 +172,7 @@ export function Card({
         <VStack
           className="ease-in-out"
           opacity={hideInfo ? 0 : 1}
-          padding={20}
+          padding={24}
           alignItems="flex-start"
           spacing
           width="100%"

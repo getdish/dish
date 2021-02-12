@@ -12,6 +12,7 @@ import { queryTag } from '../../queries/queryTag'
 import { RegionNormalized } from '../../types/homeTypes'
 import { cardFrameBorderRadius } from '../views/CardFrame'
 import { DishView } from '../views/dish/DishView'
+import { TagButtonSlanted } from '../views/dish/TagButtonSlanted'
 import { FeedSlantedTitleLink } from './FeedSlantedTitle'
 import { FIBase } from './FIBase'
 import { HoverResultsProp } from './HoverResultsProp'
@@ -87,17 +88,39 @@ export function useFeedDishItems(
 
 export const HomeFeedDishRestaurants = graphql(
   ({ tag, region, onHoverResults }: FIDishRestaurants & HoverResultsProp) => {
-    const restaurants = query.restaurant_with_tags({
-      args: {
-        tag_slugs: tag.slug,
-      },
-      limit: 10,
-      where: {
-        location: {
-          _st_within: region.bbox,
+    const restaurants = query
+      .restaurant_with_tags({
+        args: {
+          tag_slugs: tag.slug,
         },
-      },
-    })
+        limit: 10,
+        where: {
+          location: {
+            _st_within: region.bbox,
+          },
+        },
+      })
+      .map((restaurant) => {
+        const rtag = restaurant.tags({
+          where: {
+            tag: {
+              slug: {
+                _eq: tag.slug,
+              },
+            },
+          },
+          limit: 1,
+        })[0]
+        return {
+          id: restaurant.id,
+          slug: restaurant.slug,
+          dish: selectRishDishViewSimple(rtag),
+        }
+      })
+
+    // TODO FIX ORDERING
+    console.warn('revversing order FOR NOW')
+    restaurants.reverse()
 
     return (
       <Hoverable
@@ -111,20 +134,6 @@ export const HomeFeedDishRestaurants = graphql(
 
         <SkewedCardCarousel>
           {restaurants.map((restaurant, i) => {
-            const rtag = restaurant.tags({
-              where: {
-                tag: {
-                  slug: {
-                    _eq: tag.slug,
-                  },
-                },
-              },
-              limit: 1,
-            })[0]
-            const dishViewProps = selectRishDishViewSimple(rtag)
-
-            console.log('rtag', dishViewProps)
-
             return (
               <SkewedCard zIndex={1000 - i} key={restaurant.id}>
                 <RestaurantCard
@@ -142,13 +151,20 @@ export const HomeFeedDishRestaurants = graphql(
                         alignItems="center"
                         justifyContent="center"
                         paddingBottom={20}
+                        transform={[{ scale: 1.1 }]}
                       >
-                        <DishView
+                        <TagButtonSlanted
+                          maxTextWidth={80}
+                          restaurantSlug={restaurant.slug || ''}
+                          restaurantId={restaurant.id || ''}
+                          {...restaurant.dish}
+                        />
+                        {/* <DishView
                           restaurantSlug={restaurant.slug || ''}
                           restaurantId={restaurant.id || ''}
                           {...dishViewProps}
                           size={180}
-                        />
+                        /> */}
                       </HStack>
                       {/* <Spacer /> */}
                       {/* <RestaurantStatBars

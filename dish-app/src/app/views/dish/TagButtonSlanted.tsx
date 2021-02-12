@@ -18,6 +18,7 @@ export type TagButtonSlantedProps = Partial<DishTagItem> & {
   showSearchButton?: boolean
   hideVote?: boolean
   bold?: boolean
+  maxTextWidth?: number
 }
 
 export const TagButtonSlanted = memo((props: TagButtonSlantedProps) => {
@@ -38,6 +39,7 @@ const DishButtonContent = (props: TagButtonSlantedProps) => {
     rating,
     restaurantSlug,
     noLink,
+    maxTextWidth,
     bold,
   } = props
   const dishName = (name ?? '')
@@ -104,12 +106,12 @@ const DishButtonContent = (props: TagButtonSlantedProps) => {
 
           <Text
             className="ease-in-out-fast"
-            overflow="hidden"
             fontWeight={bold ? '800' : '600'}
             color={theme.color}
             opacity={0.8}
             fontSize={fontSize}
             textAlign="center"
+            maxWidth={maxTextWidth}
           >
             {dishName}
           </Text>
