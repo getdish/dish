@@ -127,7 +127,10 @@ export const UpvoteDownvoteScore = memo(
           )}
         </AbsoluteVStack>
         {typeof rating === 'number' && (
-          <AbsoluteVStack fullscreen>
+          <AbsoluteVStack
+            fullscreen
+            transform={[{ rotate: `${(1 - rating / 10) * 180}deg` }]}
+          >
             <Pie
               size={sizePx}
               color={colors.lightColor}
@@ -137,7 +140,7 @@ export const UpvoteDownvoteScore = memo(
         )}
         <Text
           fontSize={fontSize}
-          fontWeight="800"
+          fontWeight="600"
           marginVertical={-2 * scale}
           letterSpacing={-1}
           color={`${colors.darkColor}99`}

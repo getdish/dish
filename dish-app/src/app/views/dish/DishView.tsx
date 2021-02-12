@@ -4,6 +4,7 @@ import { Search } from '@dish/react-feather'
 import { capitalize } from 'lodash'
 import React, { Suspense, memo, useState } from 'react'
 import { Image, StyleSheet } from 'react-native'
+import Svg, { G, Path } from 'react-native-svg'
 import {
   AbsoluteVStack,
   Box,
@@ -38,20 +39,20 @@ const getRoundedDishViewSize = (size: string | number) => {
   return largeSize
 }
 
-export type DishViewProps = DishTagItem & {
-  restaurantId?: string
-  restaurantSlug?: string
-  cuisine?: NavigableTag
-  // percent or fixed
-  size?: string | number
-  isFallback?: boolean
-  disableFallbackFade?: boolean
-  selected?: boolean
-  noLink?: boolean
-  preventLoad?: boolean
-  showSearchButton?: boolean
-  hideVote?: boolean
-} & StackProps
+export type DishViewProps = DishTagItem &
+  Omit<StackProps, 'size'> & {
+    restaurantId?: string
+    restaurantSlug?: string
+    cuisine?: NavigableTag
+    size?: number
+    isFallback?: boolean
+    disableFallbackFade?: boolean
+    selected?: boolean
+    noLink?: boolean
+    preventLoad?: boolean
+    showSearchButton?: boolean
+    hideVote?: boolean
+  }
 
 export const DishView = memo((props: DishViewProps) => {
   const fallback = (
@@ -240,11 +241,12 @@ const DishViewContent = (props: DishViewProps) => {
           </Text>
         </Box>
       </AbsoluteVStack>
+
       {!!image && (
         <VStack
           // BUG cant put transform on same as borderRadius + overflowHidden
           // https://stackoverflow.com/questions/21087979/probleme-css3-scale-transform-and-overflowhidden-on-safari
-          transform={[{ scale: isFallback ? 0.9 : 1 }]}
+          transform={[{ scale: isFallback ? 0.8 : 0.9 }]}
         >
           <VStack className="dish-image-" overflow="hidden" borderRadius={1000}>
             <ImageAlt
@@ -258,17 +260,27 @@ const DishViewContent = (props: DishViewProps) => {
           </VStack>
         </VStack>
       )}
+
       <AbsoluteVStack fullscreen borderRadius={10000} overflow="hidden">
+        <AbsoluteVStack
+          fullscreen
+          transform={[
+            { translateX: -size * 0.75 },
+            { translateY: size * 0.35 },
+          ]}
+        >
+          <SineWave color={backgroundColor} size={size} />
+        </AbsoluteVStack>
         <LinearGradient
           style={[StyleSheet.absoluteFill]}
           colors={[
             `${backgroundColor}${
-              isFallback && !disableFallbackFade ? '88' : '44'
+              isFallback && !disableFallbackFade ? 'aa' : '44'
             }`,
             `${backgroundColor}${
               isFallback && !disableFallbackFade ? '55' : '00'
             }`,
-            `${color}${isFallback && !disableFallbackFade ? '88' : '44'}`,
+            `${color}${isFallback && !disableFallbackFade ? 'aa' : '44'}`,
           ]}
           start={[0, 0.5]}
           end={[0.5, 0.5]}
@@ -315,6 +327,23 @@ const DishViewContent = (props: DishViewProps) => {
     >
       {contents}
     </ColoredCircle>
+  )
+}
+
+const SineWave = ({ color, size }: { color: string; size: number }) => {
+  return (
+    <VStack
+      transform={[
+        { scale: size / 385 },
+        { translateX: (385 - size / 385) / 2 },
+      ]}
+    >
+      <Svg width="385px" height="169px" viewBox="0 0 385 169">
+        <G transform="translate(-83.000000, -142.000000)" fill={color}>
+          <Path d="M83,169.121094 C153.643229,133.990885 221.466146,133.990885 286.46875,169.121094 C351.471354,204.251302 411.981771,204.251302 468,169.121094 L468,310.121094 L83,310.121094 L83,169.121094 Z" />
+        </G>
+      </Svg>
+    </VStack>
   )
 }
 

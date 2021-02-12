@@ -44,13 +44,11 @@ export const SentimentCircle = memo(
         backgroundColor="rgba(100,100,100,0.25)"
         rotation={(1 - ratio) * 180}
       >
-        {() => (
-          <HStack height="100%" alignItems="center" justifyContent="center">
-            <Text cursor="default" fontSize={textSize} lineHeight={textSize}>
-              {sentiments[key]}
-            </Text>
-          </HStack>
-        )}
+        <HStack height="100%" alignItems="center" justifyContent="center">
+          <Text cursor="default" fontSize={textSize} lineHeight={textSize}>
+            {sentiments[key]}
+          </Text>
+        </HStack>
       </CircularProgress>
     )
   }

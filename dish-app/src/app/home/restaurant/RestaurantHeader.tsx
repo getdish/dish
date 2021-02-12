@@ -4,6 +4,7 @@ import React, { Suspense, memo, useState } from 'react'
 import { StyleSheet } from 'react-native'
 import {
   AbsoluteVStack,
+  Circle,
   HStack,
   LinearGradient,
   Spacer,
@@ -24,13 +25,17 @@ import { RestaurantOverview } from '../../views/restaurant/RestaurantOverview'
 import { RestaurantTagsRow } from '../../views/restaurant/RestaurantTagsRow'
 import { RestaurantUpVoteDownVote } from '../../views/restaurant/RestaurantUpVoteDownVote'
 import { SmallButton } from '../../views/SmallButton'
+import { RestaurantRatingView } from '../RestaurantRatingView'
 import { RestaurantAddCommentButton } from './RestaurantAddCommentButton'
 import { RestaurantAddress } from './RestaurantAddress'
 import { RestaurantAddressLinksRow } from './RestaurantAddressLinksRow'
 import { RestaurantAddToListButton } from './RestaurantAddToListButton'
 import { RestaurantDeliveryButtons } from './RestaurantDeliveryButtons'
 import { openingHours } from './RestaurantDetailRow'
-import { RestaurantFavoriteStar } from './RestaurantFavoriteButton'
+import {
+  RestaurantFavoriteButton,
+  RestaurantFavoriteStar,
+} from './RestaurantFavoriteButton'
 import { RestaurantPhotosRow } from './RestaurantPhotosRow'
 import { RestaurantRating } from './RestaurantRating'
 
@@ -70,6 +75,7 @@ const RestaurantHeaderContent = memo(
       const paddingPx = size === 'sm' ? 10 : 30
       const spacer = <Spacer size={paddingPx} />
       const nameLen = restaurant.name?.length ?? 10
+      const imageHeight = 190
       const {
         width,
         drawerWidth,
@@ -117,7 +123,7 @@ const RestaurantHeaderContent = memo(
                   <RestaurantPhotosRow
                     restaurantSlug={restaurantSlug}
                     width={photoWidth}
-                    height={170}
+                    height={imageHeight}
                     escalating
                     showEscalated={hasScrolled}
                   />
@@ -125,22 +131,22 @@ const RestaurantHeaderContent = memo(
                 <AbsoluteVStack
                   left={0}
                   right={0}
-                  height={170 + 21}
+                  height={imageHeight}
                   width={width}
                   pointerEvents="none"
                 >
                   <LinearGradient
                     style={[StyleSheet.absoluteFill]}
                     colors={[
-                      `${colors.themeColorAlt}aa`,
-                      `${colors.themeColor}22`,
+                      `${colors.themeColorAlt}88`,
+                      `${colors.themeColor}66`,
                       `${colors.themeColor}ff`,
                     ]}
                   />
                 </AbsoluteVStack>
               </AbsoluteVStack>
               <VStack
-                marginTop={150}
+                marginTop={imageHeight - 20}
                 minWidth={minWidth}
                 maxWidth={width}
                 borderTopRightRadius={drawerBorderRadius - 1}
@@ -154,12 +160,13 @@ const RestaurantHeaderContent = memo(
                   {/* title row */}
                   <HStack paddingLeft={20} alignItems="center">
                     <HStack position="relative">
-                      <RestaurantUpVoteDownVote
-                        restaurantSlug={restaurantSlug}
+                      <RestaurantRatingView
+                        floating
+                        size={60}
+                        slug={restaurantSlug}
                       />
 
                       <Spacer size="lg" />
-
                       <HStack
                         backgroundColor={colors.themeColorAlt}
                         shadowColor="#000"
@@ -195,24 +202,12 @@ const RestaurantHeaderContent = memo(
                           >
                             {restaurant.name}
                           </Text>
-
-                          <AbsoluteVStack top={-23} right={-40} zIndex={1000}>
-                            <RestaurantRating
-                              darken
-                              colors={colors}
-                              size="sm"
-                              rating={Math.min(
-                                10,
-                                Math.round(restaurant.rating * 2)
-                              )}
-                            />
-                          </AbsoluteVStack>
                         </HStack>
                       </HStack>
                     </HStack>
                   </HStack>
 
-                  <Spacer />
+                  <Spacer size="lg" />
 
                   {/* below title row */}
                   <HStack
@@ -223,8 +218,6 @@ const RestaurantHeaderContent = memo(
                   >
                     {spacer}
                     <VStack flex={10} overflow="hidden">
-                      <Spacer size="lg" />
-
                       <VStack
                         pointerEvents="auto"
                         overflow="hidden"
@@ -235,39 +228,19 @@ const RestaurantHeaderContent = memo(
                           flexWrap="wrap"
                           maxWidth="100%"
                         >
-                          <VStack marginBottom={10}>
+                          <HStack marginBottom={10}>
                             <RestaurantFavoriteStar
                               size="lg"
                               restaurantId={restaurantId}
                             />
-                          </VStack>
-
-                          <Spacer size="xs" />
-
-                          <HStack>
-                            <VStack marginBottom={10}>
-                              <RestaurantAddressLinksRow
-                                curLocInfo={state?.curLocInfo ?? null}
-                                showMenu
-                                size="lg"
-                                restaurantSlug={restaurantSlug}
-                              />
-                            </VStack>
                             <Spacer size="xs" />
-                            <VStack marginBottom={10}>
-                              <RestaurantDeliveryButtons
-                                showLabels
-                                restaurantSlug={restaurantSlug}
-                              />
-                            </VStack>
-                            <Spacer size="xs" />
-                            <Suspense fallback={null}>
-                              <RestaurantAddCommentButton
-                                hideLabel
-                                restaurantId={restaurantId}
-                                restaurantSlug={restaurantSlug}
-                              />
-                            </Suspense>
+
+                            <RestaurantAddressLinksRow
+                              curLocInfo={state?.curLocInfo ?? null}
+                              showMenu
+                              size="lg"
+                              restaurantSlug={restaurantSlug}
+                            />
                           </HStack>
 
                           <Spacer size="sm" />
@@ -308,8 +281,10 @@ const RestaurantHeaderContent = memo(
                         {afterAddress}
                       </VStack>
 
+                      <Spacer size="sm" />
+
                       <VStack>
-                        <HStack marginTop={5} flexWrap="wrap">
+                        <HStack flexWrap="wrap">
                           <VStack
                             flex={1}
                             minWidth={280}
@@ -329,11 +304,18 @@ const RestaurantHeaderContent = memo(
                               />
                             </HStack>
 
-                            <Spacer size="xl" />
+                            <Spacer size="lg" />
 
                             <RestaurantOverview
                               fullHeight
                               size="lg"
+                              restaurantSlug={restaurantSlug}
+                            />
+
+                            <RestaurantDeliveryButtons
+                              marginTop={20}
+                              label="Delivers"
+                              showLabels
                               restaurantSlug={restaurantSlug}
                             />
                           </VStack>

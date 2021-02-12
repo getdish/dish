@@ -20,9 +20,11 @@ import { tagDisplayName } from '../../constants/tagMeta'
 import { getColorsForColor } from '../../helpers/getColorsForName'
 import { getTagSlug } from '../../helpers/getTagSlug'
 import { NavigableTag } from '../../types/tagTypes'
+import { ProgressRing } from '../home/ProgressRing'
 import { RestaurantRating } from '../home/restaurant/RestaurantRating'
 import { useUserTagVotes } from '../hooks/useUserTagVotes'
 import { Link } from './Link'
+import { Pie } from './Pie'
 
 export type TagButtonTagProps = {
   type?: string
@@ -185,7 +187,7 @@ export const TagButton = memo((props: TagButtonProps) => {
         // @ts-ignore
         fontSize={fontSize}
         // @ts-ignore
-        fontWeight={fontWeight ?? '700'}
+        fontWeight={fontWeight ?? '600'}
         lineHeight={isSmall ? 22 : 26}
         color={fg}
         {...(floating && {
@@ -222,29 +224,28 @@ export const TagButton = memo((props: TagButtonProps) => {
       )} */}
 
       {typeof rating !== 'undefined' && (
-        <RestaurantRating
-          colors={props.backgroundColor ? undefined : colors}
-          lighten={props.backgroundColor ? false : true}
-          rating={rating}
-          size="sm"
-        />
+        <VStack transform={[{ rotate: `${(1 - rating / 10) * 180}deg` }]}>
+          <Pie
+            size={size === 'sm' ? 16 : 18}
+            percent={rating * 10}
+            color={floating ? `${colors.lightColor}99` : `${colors.color}55`}
+          />
+        </VStack>
         // <VStack position="relative" marginRight={4}>
-        //   <Pie
-        //     size={size === 'sm' ? 16 : 18}
-        //     percent={rating}
-        //     color={floating ? `${colors.lightColor}99` : colors.color}
-        //     background={`${colors.extraLightColor}99`}
-        //   />
+
         // </VStack>
       )}
 
       {!!votable && !!props.restaurantSlug && (
-        <TagButtonVote
-          key={getTagSlug(props.slug) + props.restaurantSlug}
-          {...props}
-          color={fg}
-          scale={scale}
-        />
+        <>
+          <Spacer size="xs" />
+          <TagButtonVote
+            key={getTagSlug(props.slug) + props.restaurantSlug}
+            {...props}
+            color={fg}
+            scale={scale}
+          />
+        </>
       )}
 
       {!!after && (

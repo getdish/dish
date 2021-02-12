@@ -143,12 +143,13 @@ export default class CircularProgress extends React.PureComponent<any> {
             {cap}
           </G>
         </Svg>
-        {typeof children === 'function' && (
-          <View style={localChildrenContainerStyle}>{children(fill)}</View>
+        {!!children && (
+          <View style={localChildrenContainerStyle}>{children}</View>
         )}
       </View>
     )
   }
+
   static defaultProps = {
     tintColor: 'black',
     tintTransparency: true,
@@ -160,6 +161,7 @@ export default class CircularProgress extends React.PureComponent<any> {
     dashedTint: { width: 0, gap: 0 },
   }
 }
+
 // CircularProgress.propTypes = {
 //   style: PropTypes.object,
 //   size: PropTypes.oneOfType([

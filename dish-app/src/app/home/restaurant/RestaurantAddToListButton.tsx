@@ -55,7 +55,7 @@ export const RestaurantAddToListButton = ({
           {!noLabel && (
             <>
               <Spacer size="xs" />
-              <Text color="#fff" fontSize={13} fontWeight="500">
+              <Text color="#fff" fontSize={14} fontWeight="600">
                 List
               </Text>
             </>

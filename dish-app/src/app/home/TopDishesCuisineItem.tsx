@@ -24,7 +24,8 @@ import { ContentScrollViewHorizontal } from '../views/ContentScrollViewHorizonta
 import { DishView } from '../views/dish/DishView'
 import { LinkButton } from '../views/LinkButton'
 import { SlantedLinkButton } from '../views/SlantedLinkButton'
-import { RestaurantButton } from './restaurant/RestaurantButton'
+
+// import { RestaurantButton } from './restaurant/RestaurantButton'
 
 const dishHeight = 140
 
@@ -130,7 +131,7 @@ const TopDishesCuisineItem = memo(
           <ContentScrollViewHorizontal style={{ paddingVertical: 15 }}>
             <HStack alignItems="center" paddingRight={20}>
               <VStack marginRight={6}>
-                <TopDishesTrendingRestaurants country={country} />
+                {/* <TopDishesTrendingRestaurants country={country} /> */}
               </VStack>
 
               <Spacer />
@@ -150,59 +151,6 @@ const TopDishesCuisineItem = memo(
             </HStack>
           </ContentScrollViewHorizontal>
         </VStack>
-      </VStack>
-    )
-  }
-)
-
-const TopDishesTrendingRestaurants = memo(
-  ({ country }: { country: TopCuisine }) => {
-    return (
-      <VStack
-        width={210}
-        paddingHorizontal={10}
-        marginRight={5}
-        height={135}
-        spacing={4}
-        alignItems="flex-start"
-      >
-        <Suspense fallback={<LoadingItemsSmall />}>
-          {_.uniqBy(country.top_restaurants, (x) => x.name)
-            .slice(0, 4)
-            .map((restaurant, index) => {
-              return (
-                <HStack
-                  justifyContent="flex-end"
-                  key={restaurant.name}
-                  maxWidth="100%"
-                  minWidth={210}
-                >
-                  <RestaurantButton
-                    // color={`rgba(0,0,0,${Math.max(0.5, 1 - (index + 1) / 5)})`}
-                    // trending={
-                    //   (index % 5) - 1 == 0
-                    //     ? 'neutral'
-                    //     : index % 2 == 0
-                    //     ? 'up'
-                    //     : 'down'
-                    // }
-                    subtle
-                    restaurantSlug={restaurant.slug ?? ''}
-                    onHoverIn={() => {
-                      appMapStore.setHovered({
-                        id: restaurant.id,
-                        slug: restaurant.slug ?? '',
-                        via: 'list',
-                      })
-                    }}
-                    onHoverOut={() => {
-                      appMapStore.setHovered(null)
-                    }}
-                  />
-                </HStack>
-              )
-            })}
-        </Suspense>
       </VStack>
     )
   }

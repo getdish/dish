@@ -2,17 +2,13 @@ import { RestaurantOnlyIds, SEARCH_DOMAIN, graphql } from '@dish/graph'
 import React, { memo } from 'react'
 import { HStack, VStack } from 'snackui'
 
-import { getColorsForName } from '../../helpers/getColorsForName'
-import { hexToRGB } from '../../helpers/hexToRGB'
 import { useQueryLoud } from '../../helpers/useQueryLoud'
-import { queryRestaurant } from '../../queries/queryRestaurant'
 import { ContentScrollViewHorizontal } from '../views/ContentScrollViewHorizontal'
-import { Link } from '../views/Link'
 import { FeedSlantedTitle } from './FeedSlantedTitle'
 import { FIBase } from './FIBase'
-import { GradientButton } from './GradientButton'
 import { HomeFeedProps } from './HomeFeedProps'
 import { RestaurantCard } from './restaurant/RestaurantCard'
+import { RestaurantButton } from './RestaurantButton'
 import { SkewedCard, SkewedCardCarousel } from './SkewedCard'
 
 export type FINew = FIBase & {
@@ -103,9 +99,7 @@ export const HomeFeedTrendingNew = memo(
 
                   {restaurants.map((r, index) => {
                     if (!r) return null
-                    return (
-                      <RestaurantGradientButton key={index} slug={r.slug} />
-                    )
+                    return <RestaurantButton key={index} slug={r.slug} />
                   })}
                 </HStack>
               </VStack>
@@ -143,14 +137,3 @@ export const HomeFeedTrendingNew = memo(
     )
   })
 )
-
-const RestaurantGradientButton = graphql(({ slug }: { slug: string }) => {
-  const [restaurant] = queryRestaurant(slug)
-  const colors = getColorsForName(slug)
-  const rgb = hexToRGB(colors.color).rgb
-  return (
-    <Link name="restaurant" params={{ slug: slug }} asyncClick>
-      <GradientButton rgb={rgb}>{restaurant.name}</GradientButton>
-    </Link>
-  )
-})
