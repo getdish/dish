@@ -84,13 +84,14 @@ async function createWebServerProd(app: any, config: ServerConfigNormal) {
 
     // static assets
     // const indexFile = Path.join(ssrDir, 'index.html')
-    const clientBuildPath = Path.join(buildDir, 'web')
-    const clientHTML = await readFile(Path.join(clientBuildPath, 'index.html'))
+    const clientRoot = Path.join(buildDir, 'web')
+    // const clientHTMLPath = Path.join(clientRoot, 'index.html')
+    // const clientHTML = await readFile(clientHTMLPath)
     // const clientBuildLegacyPath = Path.join(buildDir, 'legacy')
 
     // move index.html to backup location so we dont serve via express.static
     // const [clientHTMLModern] = [
-    //   Path.join(clientBuildPath, 'index.html'),
+    //   Path.join(clientRoot, 'index.html'),
     //   // Path.join(clientBuildLegacyPath, 'index.html'),
     // ].map((path) => {
     //   const outPath = Path.join(Path.dirname(path), 'index-original.html')
@@ -100,16 +101,16 @@ async function createWebServerProd(app: any, config: ServerConfigNormal) {
     //   return readFileSync(outPath, 'utf8')
     // })
 
-    app.use(express.static(clientBuildPath))
+    app.use(express.static(clientRoot))
 
     // fallback to index.html
-    const root = clientBuildPath
+    const root = clientRoot
     app.use((req, res, next) => {
       if (
         (req.method === 'GET' || req.method === 'HEAD') &&
         req.accepts('html')
       ) {
-        res.sendFile(clientHTML, { root }, (err) => err && next())
+        res.sendFile('index.html', { root }, (err) => err && next())
       }
     })
 
