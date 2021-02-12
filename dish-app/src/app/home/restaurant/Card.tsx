@@ -41,6 +41,7 @@ export type CardProps = {
   dimImage?: boolean
   padTitleSide?: boolean
   square?: boolean
+  colorsKey?: string
 }
 
 export function Card({
@@ -48,6 +49,7 @@ export function Card({
   outside,
   photo,
   title,
+  colorsKey,
   subTitle,
   padTitleSide,
   aspectFixed,
@@ -61,7 +63,7 @@ export function Card({
 }: CardProps) {
   const colors = backgroundColor
     ? getColorsForColor(backgroundColor)
-    : getColorsForName(title ?? '')
+    : getColorsForName(colorsKey || title || '')
   const darkColor = colors.darkColor
   const underColor = colors.pastelColor
   const overColor = colors.color

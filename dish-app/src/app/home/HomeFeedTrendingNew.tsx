@@ -99,7 +99,14 @@ export const HomeFeedTrendingNew = memo(
 
                   {restaurants.map((r, index) => {
                     if (!r) return null
-                    return <RestaurantButton key={index} slug={r.slug} />
+                    return (
+                      <RestaurantButton
+                        key={index}
+                        slug={r.slug}
+                        id={r.id}
+                        hoverToMap
+                      />
+                    )
                   })}
                 </HStack>
               </VStack>

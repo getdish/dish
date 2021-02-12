@@ -13,7 +13,6 @@ import { Link } from '../../views/Link'
 import { RestaurantRatingView } from '../RestaurantRatingView'
 import { Card, CardProps } from './Card'
 import { priceRange } from './RestaurantDetailRow'
-import { RestaurantRating } from './RestaurantRating'
 
 export type RestaurantCardProps = {
   restaurantSlug: string
@@ -87,6 +86,7 @@ export const RestaurantCardContent = graphql(
           size={size}
           title={restaurant.name}
           subTitle={price_range}
+          colorsKey={restaurantSlug}
           below={below}
           dimImage={dimImage}
           outside={

@@ -102,7 +102,7 @@ export const HomeFeedCuisineItem = memo(
                 >
                   <VStack width={titleWidth} />
                   {dishes.map((dish, index) => {
-                    const color = getColorsForName(dish.name).color
+                    const color = getColorsForName(dish.slug).color
                     const rgb = hexToRGB(color).rgb
                     return (
                       <Link key={index} tag={{ slug: dish.slug }} asyncClick>

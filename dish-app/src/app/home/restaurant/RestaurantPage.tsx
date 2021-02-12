@@ -58,7 +58,7 @@ const RestaurantPage = memo(
     const { selectedDish, setSelectedDishToggle } = useSelectedDish(
       section === 'reviews' ? sectionSlug : null
     )
-    const colors = useColorsFor(restaurant.name)
+    const colors = useColorsFor(restaurantSlug)
     const [scrollView, setScrollView] = useState<ScrollView | null>(null)
     const [reviewsSection, setReviewsSection] = useState<View | null>(null)
     const [dishesSection, setDishesSection] = useState<View | null>(null)

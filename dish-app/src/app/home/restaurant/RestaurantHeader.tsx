@@ -99,7 +99,7 @@ const RestaurantHeaderContent = memo(
       const restaurantId = restaurant.id
       const photoWidth = width * 0.5
       const [hasScrolled, setHasScrolled] = useState(false)
-      const colors = useColorsFor(restaurant.name)
+      const colors = useColorsFor(restaurantSlug)
 
       return (
         <ContentScrollViewHorizontalFitted

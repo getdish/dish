@@ -4,11 +4,11 @@ import { VStack, useMedia, useTheme } from 'snackui'
 
 export const cardFrameBorderRadius = 18
 
-export const cardFrameWidth = 250
-export const cardFrameHeight = 320
+export const cardFrameWidth = 240
+export const cardFrameHeight = 300
 
-export const cardFrameWidthSm = 250 * 0.7
-export const cardFrameHeightSm = 320 * 0.7
+export const cardFrameWidthSm = 240 * 0.7
+export const cardFrameHeightSm = 300 * 0.7
 
 export const CardFrame = ({
   hoverable,
