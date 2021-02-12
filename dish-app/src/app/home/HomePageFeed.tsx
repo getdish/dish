@@ -2,7 +2,7 @@ import { RestaurantOnlyIds, graphql } from '@dish/graph'
 import { isPresent } from '@dish/helpers'
 import React, { Suspense, memo, useMemo, useState } from 'react'
 import { Dimensions } from 'react-native'
-import { LoadingItems, VStack, useTheme } from 'snackui'
+import { Hoverable, LoadingItems, VStack } from 'snackui'
 
 import { useSetAppMap } from '../AppMapStore'
 import {
@@ -51,7 +51,6 @@ export const HomePageFeed = memo(
     const { region, isActive, center, span } = props
     const items = useHomeFeed(props)
     const isLoading = !region || items[0]?.id === null
-    const theme = useTheme()
     const [hovered, setHovered] = useState<null | string>(null)
     const [hoveredResults, setHoveredResults] = useState<null | {
       via: FI['type']
@@ -123,23 +122,14 @@ export const HomePageFeed = memo(
           return null
         }
         return (
-          <VStack
+          <Hoverable
             key={item.id}
-            alignItems="center"
-            position="relative"
-            width="100%"
             onHoverIn={() => {
               setHovered(item.id)
             }}
-            paddingTop={20}
-            marginTop={-20}
-            marginBottom={10}
-            hoverStyle={{
-              backgroundColor: theme.backgroundColorAlt,
-            }}
           >
             {content}
-          </VStack>
+          </Hoverable>
         )
       })
     }, [items])

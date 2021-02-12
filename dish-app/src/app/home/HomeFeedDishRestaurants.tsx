@@ -13,6 +13,7 @@ import { RegionNormalized } from '../../types/homeTypes'
 import { cardFrameBorderRadius } from '../views/CardFrame'
 import { DishView } from '../views/dish/DishView'
 import { TagButtonSlanted } from '../views/dish/TagButtonSlanted'
+import { ContentSectionHoverable } from './ContentSectionHoverable'
 import { FeedSlantedTitleLink } from './FeedSlantedTitle'
 import { FIBase } from './FIBase'
 import { HoverResultsProp } from './HoverResultsProp'
@@ -123,62 +124,64 @@ export const HomeFeedDishRestaurants = graphql(
     restaurants.reverse()
 
     return (
-      <Hoverable
-        onHoverIn={() => {
-          onHoverResults(restaurants.map((x) => pick(x, 'id', 'slug') as any))
-        }}
-      >
-        <FeedSlantedTitleLink tag={tag}>
-          {tag.icon} {tag.name}
-        </FeedSlantedTitleLink>
+      <ContentSectionHoverable>
+        <Hoverable
+          onHoverIn={() => {
+            onHoverResults(restaurants.map((x) => pick(x, 'id', 'slug') as any))
+          }}
+        >
+          <FeedSlantedTitleLink tag={tag}>
+            {tag.icon} {tag.name}
+          </FeedSlantedTitleLink>
 
-        <SkewedCardCarousel>
-          {restaurants.map((restaurant, i) => {
-            return (
-              <SkewedCard zIndex={1000 - i} key={restaurant.id}>
-                <RestaurantCard
-                  padTitleSide
-                  hoverToMap
-                  isBehind={i > 0}
-                  hideScore
-                  restaurantId={restaurant.id}
-                  restaurantSlug={restaurant.slug || ''}
-                  hoverable={false}
-                  dimImage
-                  below={(colors) => (
-                    <CardOverlay>
-                      <HStack
-                        alignItems="center"
-                        justifyContent="center"
-                        paddingBottom={20}
-                        transform={[{ scale: 1.1 }]}
-                      >
-                        <TagButtonSlanted
-                          maxTextWidth={80}
-                          restaurantSlug={restaurant.slug || ''}
-                          restaurantId={restaurant.id || ''}
-                          {...restaurant.dish}
-                        />
-                        {/* <DishView
+          <SkewedCardCarousel>
+            {restaurants.map((restaurant, i) => {
+              return (
+                <SkewedCard zIndex={1000 - i} key={restaurant.id}>
+                  <RestaurantCard
+                    padTitleSide
+                    hoverToMap
+                    isBehind={i > 0}
+                    hideScore
+                    restaurantId={restaurant.id}
+                    restaurantSlug={restaurant.slug || ''}
+                    hoverable={false}
+                    dimImage
+                    below={(colors) => (
+                      <CardOverlay>
+                        <HStack
+                          alignItems="center"
+                          justifyContent="center"
+                          paddingBottom={20}
+                          transform={[{ scale: 1.1 }]}
+                        >
+                          <TagButtonSlanted
+                            maxTextWidth={80}
+                            restaurantSlug={restaurant.slug || ''}
+                            restaurantId={restaurant.id || ''}
+                            {...restaurant.dish}
+                          />
+                          {/* <DishView
                           restaurantSlug={restaurant.slug || ''}
                           restaurantId={restaurant.id || ''}
                           {...dishViewProps}
                           size={180}
                         /> */}
-                      </HStack>
-                      {/* <Spacer /> */}
-                      {/* <RestaurantStatBars
+                        </HStack>
+                        {/* <Spacer /> */}
+                        {/* <RestaurantStatBars
                         restaurantSlug={r.slug || ''}
                         colors={colors}
                       /> */}
-                    </CardOverlay>
-                  )}
-                />
-              </SkewedCard>
-            )
-          })}
-        </SkewedCardCarousel>
-      </Hoverable>
+                      </CardOverlay>
+                    )}
+                  />
+                </SkewedCard>
+              )
+            })}
+          </SkewedCardCarousel>
+        </Hoverable>
+      </ContentSectionHoverable>
     )
   }
 )

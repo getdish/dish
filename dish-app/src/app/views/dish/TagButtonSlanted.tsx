@@ -1,10 +1,9 @@
 import { capitalize } from 'lodash'
 import React, { Suspense, memo } from 'react'
 import { Image } from 'react-native'
-import { Box, HStack, StackProps, Text, VStack, useTheme } from 'snackui'
+import { Box, HStack, Text, VStack, useTheme } from 'snackui'
 
 import { isWeb } from '../../../constants/constants'
-import { getColorsForName } from '../../../helpers/getColorsForName'
 import { getImageUrl } from '../../../helpers/getImageUrl'
 import { DishTagItem } from '../../../helpers/getRestaurantDishes'
 import { Link } from '../Link'

@@ -14,7 +14,7 @@ export function GradientButton({
   return (
     <HStack
       paddingVertical={12}
-      paddingHorizontal={18}
+      paddingHorizontal={16}
       alignItems="center"
       justifyContent="center"
       borderRadius={60}

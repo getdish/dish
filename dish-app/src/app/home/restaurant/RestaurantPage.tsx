@@ -22,6 +22,7 @@ import { searchBarHeight } from '../../../constants/constants'
 import { getMinLngLat } from '../../../helpers/mapHelpers'
 import { useColorsFor } from '../../../helpers/useColorsFor'
 import { queryRestaurant } from '../../../queries/queryRestaurant'
+import { router } from '../../../router'
 import { HomeStateItemRestaurant } from '../../../types/homeTypes'
 import { appMapStore, useSetAppMap } from '../../AppMapStore'
 import { drawerStore } from '../../drawerStore'
@@ -97,6 +98,10 @@ const RestaurantPage = memo(
     useEffect(() => {
       if (!scrollView) return
       if (!view) return
+      if (router.prevPage?.name === 'restaurant') {
+        // already on restaurant page, don't scroll
+        return
+      }
       // only scroll if not scrolled already
       if (scrollY.current !== 0) return
       return series([

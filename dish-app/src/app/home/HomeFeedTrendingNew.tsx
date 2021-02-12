@@ -4,6 +4,7 @@ import { HStack, VStack } from 'snackui'
 
 import { useQueryLoud } from '../../helpers/useQueryLoud'
 import { ContentScrollViewHorizontal } from '../views/ContentScrollViewHorizontal'
+import { ContentSectionHoverable } from './ContentSectionHoverable'
 import { FeedSlantedTitle } from './FeedSlantedTitle'
 import { FIBase } from './FIBase'
 import { HomeFeedProps } from './HomeFeedProps'
@@ -72,7 +73,7 @@ export const HomeFeedTrendingNew = memo(
     }
     if (props.size === 'sm') {
       return (
-        <>
+        <ContentSectionHoverable>
           <FeedSlantedTitle size="sm" zIndex={10}>
             {props.title}
           </FeedSlantedTitle>
@@ -88,14 +89,8 @@ export const HomeFeedTrendingNew = memo(
                 paddingHorizontal={40}
                 flexWrap="nowrap"
               >
-                <HStack
-                  spacing={6}
-                  marginHorizontal="auto"
-                  alignItems="center"
-                  justifyContent="center"
-                  overflow="hidden"
-                >
-                  <VStack width={80} />
+                <HStack spacing={6} overflow="hidden">
+                  <VStack width={props.type == 'hot' ? 80 : 50} />
 
                   {restaurants.map((r, index) => {
                     if (!r) return null
@@ -112,11 +107,11 @@ export const HomeFeedTrendingNew = memo(
               </VStack>
             </ContentScrollViewHorizontal>
           </VStack>
-        </>
+        </ContentSectionHoverable>
       )
     }
     return (
-      <>
+      <ContentSectionHoverable>
         <FeedSlantedTitle zIndex={10}>{props.title}</FeedSlantedTitle>
         <SkewedCardCarousel>
           {restaurants.map((r, i) => {
@@ -140,7 +135,7 @@ export const HomeFeedTrendingNew = memo(
             )
           })}
         </SkewedCardCarousel>
-      </>
+      </ContentSectionHoverable>
     )
   })
 )

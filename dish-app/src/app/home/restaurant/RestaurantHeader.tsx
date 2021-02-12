@@ -70,12 +70,12 @@ const RestaurantHeaderContent = memo(
       minHeight,
       size,
     }: RestaurantHeaderProps) => {
+      const imageHeight = 190
       const [restaurant] = queryRestaurant(restaurantSlug)
       const [open_text, open_color, next_time] = openingHours(restaurant)
       const paddingPx = size === 'sm' ? 10 : 30
       const spacer = <Spacer size={paddingPx} />
       const nameLen = restaurant.name?.length ?? 10
-      const imageHeight = 190
       const {
         width,
         drawerWidth,
@@ -162,7 +162,7 @@ const RestaurantHeaderContent = memo(
                     <HStack position="relative">
                       <RestaurantRatingView
                         floating
-                        size={60}
+                        size={66}
                         slug={restaurantSlug}
                       />
 
@@ -261,7 +261,7 @@ const RestaurantHeaderContent = memo(
                                 params={{ slug: restaurantSlug }}
                                 textProps={{
                                   ellipse: true,
-                                  color: open_color,
+                                  opacity: 0.5,
                                 }}
                                 icon={
                                   <Clock

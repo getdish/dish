@@ -116,7 +116,7 @@ export function Card({
               ]}
               start={[0, 0]}
               end={[1, 0]}
-              colors={['rgba(0,0,0,0.33)', 'rgba(0,0,0,0)']}
+              colors={['rgba(0,0,0,0.5)', 'rgba(0,0,0,0)']}
             />
             <LinearGradient
               style={StyleSheet.absoluteFill}

@@ -21,6 +21,7 @@ import { tagLenses } from '../../../constants/localTags'
 import { numberFormat } from '../../../helpers/numberFormat'
 import { restaurantRatio } from '../../../helpers/restaurantsRatio'
 import { queryRestaurant } from '../../../queries/queryRestaurant'
+import { RestaurantRatingView } from '../../home/RestaurantRatingView'
 import { useUserTagVotes } from '../../hooks/useUserTagVotes'
 import { SentimentCircle } from '../SentimentCircle'
 import { VoteButton } from '../VoteButton'
@@ -82,8 +83,8 @@ const RestaurantUpVoteDownVoteContents = graphql(
     return (
       <VStack pointerEvents="auto" position="relative">
         <AbsoluteVStack
-          bottom={-14}
-          right={-14}
+          bottom={-18}
+          right={-18}
           zIndex={2}
           borderRadius={1000}
           backgroundColor={theme.cardBackgroundColor}
@@ -91,7 +92,7 @@ const RestaurantUpVoteDownVoteContents = graphql(
           shadowOpacity={0.1}
           shadowRadius={3}
         >
-          <SentimentCircle ratio={ratio} />
+          <RestaurantRatingView slug={restaurantSlug} floating size={36} />
         </AbsoluteVStack>
         <VStack
           shadowColor="#000"

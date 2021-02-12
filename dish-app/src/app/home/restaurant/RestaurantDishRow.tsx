@@ -53,35 +53,29 @@ export const RestaurantDishRow = memo(
       }, [hasScrolled])
 
       const getDishRow = (dishes: DishTagItemSimple[]) => {
-        return (
-          <>
-            {dishes.map((dish, index) => {
-              const isSelected = selected === getTagSlug(dish.slug)
-              return (
-                <React.Fragment key={dish.name}>
-                  <ScalingPressable
-                    {...(!!selectable && {
-                      onPress() {
-                        onSelect?.(getTagSlug(dish.slug))
-                      },
-                    })}
-                  >
-                    <SectionTab isSelected={isSelected}>
-                      <Theme name={isSelected && themeName ? themeName : null}>
-                        <TagButtonSlanted
-                          noLink
-                          restaurantSlug={restaurantSlug}
-                          restaurantId={restaurantId}
-                          {...dish}
-                        />
-                      </Theme>
-                    </SectionTab>
-                  </ScalingPressable>
-                </React.Fragment>
-              )
-            })}
-          </>
-        )
+        return dishes.map((dish, index) => {
+          const isSelected = selected === getTagSlug(dish.slug)
+          return (
+            <React.Fragment key={dish.name}>
+              <ScalingPressable
+                {...(!!selectable && {
+                  onPress() {
+                    onSelect?.(getTagSlug(dish.slug))
+                  },
+                })}
+              >
+                <Theme name={isSelected && themeName ? themeName : null}>
+                  <TagButtonSlanted
+                    noLink
+                    restaurantSlug={restaurantSlug}
+                    restaurantId={restaurantId}
+                    {...dish}
+                  />
+                </Theme>
+              </ScalingPressable>
+            </React.Fragment>
+          )
+        })
       }
 
       return (
@@ -94,23 +88,21 @@ export const RestaurantDishRow = memo(
         >
           {hasDishes ? (
             <VStack paddingHorizontal={30} paddingVertical={20}>
-              <HStack>
-                <SectionTab isSelected={selected === ''}>
-                  <Theme name={themeName && selected === '' ? themeName : null}>
-                    <ScalingPressable
-                      onPress={() => {
-                        onSelect?.('')
-                      }}
-                    >
-                      <TagButtonSlanted
-                        noLink
-                        bold
-                        name="Overall"
-                        selected={selected === ''}
-                      />
-                    </ScalingPressable>
-                  </Theme>
-                </SectionTab>
+              <HStack spacing>
+                <Theme name={themeName && selected === '' ? themeName : null}>
+                  <ScalingPressable
+                    onPress={() => {
+                      onSelect?.('')
+                    }}
+                  >
+                    <TagButtonSlanted
+                      noLink
+                      bold
+                      name="Overall"
+                      selected={selected === ''}
+                    />
+                  </ScalingPressable>
+                </Theme>
                 {getDishRow(dishGroups[0])}
               </HStack>
               <Spacer size="sm" />
@@ -124,35 +116,3 @@ export const RestaurantDishRow = memo(
     }
   )
 )
-
-function SectionTab({
-  children,
-  isSelected,
-}: {
-  children: any
-  isSelected?: boolean
-}) {
-  return (
-    <VStack
-      borderRadius={1000}
-      shadowColor={blue}
-      borderWidth={2}
-      borderColor="transparent"
-      marginRight={5}
-      // padding={20 / 2}
-      // marginRight={-20 / 4}
-      // paddingBottom={30}
-      // borderTopLeftRadius={28}
-      // borderTopRightRadius={28}
-      // borderWidth={1}
-      // borderColor="transparent"
-      {...(isSelected && {
-        backgroundColor: '#fff',
-        borderColor: bgLightHover,
-        borderBottomColor: '#fff',
-      })}
-    >
-      {children}
-    </VStack>
-  )
-}

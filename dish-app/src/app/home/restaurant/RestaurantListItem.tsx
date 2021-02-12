@@ -387,7 +387,7 @@ const RestaurantListItemContent = memo(
               <VStack
                 overflow="hidden"
                 zIndex={2}
-                paddingLeft={showAbove ? 60 : 22}
+                paddingLeft={showAbove ? 70 : 22}
                 paddingRight={20}
                 marginTop={media.sm ? -6 : 0}
                 transform={[{ translateY: -10 }]}
