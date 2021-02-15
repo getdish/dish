@@ -3,7 +3,6 @@ import React, { memo } from 'react'
 import { ScrollView } from 'react-native'
 import {
   Modal,
-  SmallTitle,
   Spacer,
   Table,
   TableCell,
@@ -20,6 +19,7 @@ import { queryRestaurant } from '../../../queries/queryRestaurant'
 import { router } from '../../../router'
 import { homeStore } from '../../homeStore'
 import { PaneControlButtons } from '../../views/PaneControlButtons'
+import { SmallTitle } from '../../views/SmallTitle'
 import { StackViewCloseButton } from '../../views/StackViewCloseButton'
 import { PageTitle } from '../search/PageTitle'
 

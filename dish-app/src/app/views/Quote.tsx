@@ -1,7 +1,5 @@
 import React, { memo } from 'react'
-
-import { HStack, VStack } from './Stacks'
-import { Text, TextProps } from './Text'
+import { HStack, Text, TextProps, VStack } from 'snackui'
 
 export const Quote = memo(
   ({

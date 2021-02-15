@@ -38,7 +38,7 @@ export const DishLogoButton = memo(() => {
 
   return (
     <VStack
-      className="ease-in-out-fast"
+      className="ease-in-out-faster transform-transform"
       width={media.xs ? logoXsWidth : logoWidth}
       height={logoHeight}
       position="relative"

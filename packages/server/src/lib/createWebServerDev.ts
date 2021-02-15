@@ -17,6 +17,12 @@ export function createWebServerDev(
     ...webpackConfig,
   })
   const compiler = webpack(config)
+
+  // allow for easier memory usage debugging
+  if (process.env.DEBUG_WEBPACK) {
+    console.log('debug webpack', compiler)
+  }
+
   const headers = {
     'Access-Control-Allow-Origin': '*',
     'Access-Control-Allow-Methods': 'GET, POST, PUT, DELETE, PATCH, OPTIONS',

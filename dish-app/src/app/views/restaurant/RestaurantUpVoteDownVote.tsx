@@ -11,7 +11,6 @@ import {
   AbsoluteVStack,
   HStack,
   Text,
-  TextSuperScript,
   Tooltip,
   VStack,
   useTheme,
@@ -23,7 +22,7 @@ import { restaurantRatio } from '../../../helpers/restaurantsRatio'
 import { queryRestaurant } from '../../../queries/queryRestaurant'
 import { RestaurantRatingView } from '../../home/RestaurantRatingView'
 import { useUserTagVotes } from '../../hooks/useUserTagVotes'
-import { SentimentCircle } from '../SentimentCircle'
+import { TextSuperScript } from '../TextSuperScript'
 import { VoteButton } from '../VoteButton'
 
 type RatingDisplay = 'ratio' | 'points'

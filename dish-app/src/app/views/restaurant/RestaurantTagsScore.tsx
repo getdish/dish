@@ -3,7 +3,6 @@ import React from 'react'
 import {
   Box,
   HStack,
-  SmallTitle,
   Spacer,
   Table,
   TableCell,
@@ -20,6 +19,7 @@ import { queryRestaurantTagScores } from '../../../queries/queryRestaurantTagSco
 import { HomeActiveTagsRecord } from '../../../types/homeTypes'
 import { ensureFlexText } from '../../home/restaurant/ensureFlexText'
 import { PointsText } from '../PointsText'
+import { SmallTitle } from '../SmallTitle'
 
 export const RestaurantTagsScore = graphql(function RestaurantTagsScore({
   restaurantSlug,

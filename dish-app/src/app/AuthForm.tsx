@@ -14,7 +14,6 @@ import {
   InputProps,
   InteractiveContainer,
   Paragraph,
-  SmallTitle,
   Spacer,
   Text,
   Title,
@@ -28,6 +27,7 @@ import { useUserStore, userStore } from './userStore'
 import { Link } from './views/Link'
 import { LinkButtonProps } from './views/LinkProps'
 import { SignInAppleButton } from './views/SignInAppleButton'
+import { SmallTitle } from './views/SmallTitle'
 
 type AuthFormProps = {
   autoFocus?: boolean

@@ -2,12 +2,13 @@ import { getGraphEndpointDomain } from '@dish/graph'
 import loadable from '@loadable/component'
 import React, { memo } from 'react'
 import { ScrollView } from 'react-native'
-import { HStack, SmallTitle, Spacer, Text, Title, VStack } from 'snackui'
+import { HStack, Spacer, Text, Title, VStack } from 'snackui'
 
 import { Route, RouteSwitch } from '../Route'
 import { Link } from '../views/Link'
 import { LinkButton } from '../views/LinkButton'
 import { LinkButtonProps } from '../views/LinkProps'
+import { SmallTitle } from '../views/SmallTitle'
 
 export default memo(function AdminPage() {
   return (

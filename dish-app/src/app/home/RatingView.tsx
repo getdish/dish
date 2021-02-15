@@ -34,7 +34,7 @@ export const RatingView = ({
       />
     </VStack>
   )
-  const width = size * 0.075
+  const width = size * 0.09
   const middleRing = (
     <ProgressRing
       percent={ratingMiddle}

@@ -160,11 +160,15 @@ const RestaurantHeaderContent = memo(
                   {/* title row */}
                   <HStack paddingLeft={20} alignItems="center">
                     <HStack position="relative">
-                      <RestaurantRatingView
-                        floating
-                        size={66}
-                        slug={restaurantSlug}
-                      />
+                      <VStack marginVertical={-8}>
+                        <Theme name="light">
+                          <RestaurantRatingView
+                            floating
+                            size={82}
+                            slug={restaurantSlug}
+                          />
+                        </Theme>
+                      </VStack>
 
                       <Spacer size="lg" />
                       <HStack

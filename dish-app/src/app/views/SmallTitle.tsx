@@ -1,9 +1,13 @@
 import React, { memo } from 'react'
-
-import { Divider } from './Divider'
-import { Spacer } from './Spacer'
-import { HStack, StackProps, VStack } from './Stacks'
-import { Text, TextProps } from './Text'
+import {
+  Divider,
+  HStack,
+  Spacer,
+  StackProps,
+  Text,
+  TextProps,
+  VStack,
+} from 'snackui'
 
 export const SmallTitle = memo(
   ({

@@ -1,7 +1,8 @@
 import React, { memo } from 'react'
-import { Text, TextSuperScript, VStack, useTheme } from 'snackui'
+import { Text, VStack, useTheme } from 'snackui'
 
 import { isWeb } from '../../../constants/constants'
+import { TextSuperScript } from '../../views/TextSuperScript'
 
 export const RankView = memo(({ rank }: { rank: number }) => {
   const theme = useTheme()

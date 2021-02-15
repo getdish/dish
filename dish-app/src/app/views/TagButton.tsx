@@ -9,7 +9,6 @@ import {
   StackProps,
   Text,
   TextProps,
-  TextSuperScript,
   VStack,
   prevent,
 } from 'snackui'
@@ -25,6 +24,7 @@ import { RestaurantRating } from '../home/restaurant/RestaurantRating'
 import { useUserTagVotes } from '../hooks/useUserTagVotes'
 import { Link } from './Link'
 import { Pie } from './Pie'
+import { TextSuperScript } from './TextSuperScript'
 
 export type TagButtonTagProps = {
   type?: string

@@ -46,7 +46,7 @@ export const RestaurantRatingView = graphql(
         >
           <RatingView
             {...ratingViewProps}
-            {...(size >= 42 && {
+            {...(size >= 48 && {
               count,
             })}
           />

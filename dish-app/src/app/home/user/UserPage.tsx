@@ -11,7 +11,6 @@ import {
   LoadingItem,
   LoadingItems,
   Paragraph,
-  SmallTitle,
   Spacer,
   Text,
   VStack,
@@ -29,6 +28,7 @@ import { ListCard } from '../../views/list/ListCard'
 import { NotFoundPage } from '../../views/NotFoundPage'
 import { SlantedTitle } from '../../views/SlantedTitle'
 import { SmallButton } from '../../views/SmallButton'
+import { SmallTitle } from '../../views/SmallTitle'
 import { StackDrawer } from '../../views/StackDrawer'
 import { FeedSlantedTitle } from '../FeedSlantedTitle'
 import { StackItemProps } from '../HomeStackView'

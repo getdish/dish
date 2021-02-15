@@ -1,5 +1,7 @@
 import React, { forwardRef } from 'react'
-import { HStack, ProgressCircle, StackProps, Text, VStack } from 'snackui'
+import { HStack, StackProps, Text, VStack } from 'snackui'
+
+import { ProgressCircle } from '../views/ProgressCircle'
 
 export type RatingViewProps = StackProps & {
   size: 'lg' | 'md' | 'sm' | 'xs'

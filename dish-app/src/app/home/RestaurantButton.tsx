@@ -54,9 +54,8 @@ export const RestaurantButton = graphql(
           <Text color={colors.darkColor} fontWeight="500">
             {restaurant.name}
           </Text>
-          <Spacer size="sm" />
-          <VStack marginVertical={-3}>
-            <RestaurantRatingView slug={slug} />
+          <VStack margin={-10} marginLeft={8}>
+            <RestaurantRatingView size={42} slug={slug} />
           </VStack>
         </GradientButton>
       </Link>

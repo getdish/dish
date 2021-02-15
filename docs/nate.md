@@ -1,3 +1,5 @@
+- comments need voting or else no one will want to use them
+
 THREE BIG AREAS
 
   1. WEB

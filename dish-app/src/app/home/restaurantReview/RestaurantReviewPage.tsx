@@ -3,11 +3,9 @@ import { useStoreInstance } from '@dish/use-store'
 import React, { Suspense, memo, useEffect, useState } from 'react'
 import { Image, ScrollView, TextInput } from 'react-native'
 import {
-  AbsoluteVStack,
   HStack,
   LoadingItems,
   Modal,
-  SmallTitle,
   Spacer,
   Text,
   VStack,
@@ -19,16 +17,13 @@ import { getRestaurantDishes } from '../../../helpers/getRestaurantDishes'
 import { queryRestaurant } from '../../../queries/queryRestaurant'
 import { HomeStateItemReview } from '../../../types/homeTypes'
 import { AuthForm } from '../../AuthForm'
-import {
-  homeStore,
-  useHomeStateById,
-  useIsHomeTypeActive,
-} from '../../homeStore'
+import { homeStore, useIsHomeTypeActive } from '../../homeStore'
 import { useUserReviewCommentQuery } from '../../hooks/useUserReview'
 import { useUserStore } from '../../userStore'
 import { CommentBubble } from '../../views/CommentBubble'
 import { PaneControlButtons } from '../../views/PaneControlButtons'
 import { SmallButton } from '../../views/SmallButton'
+import { SmallTitle } from '../../views/SmallTitle'
 import { StackViewCloseButton } from '../../views/StackViewCloseButton'
 import { TagSmallButton } from '../../views/TagSmallButton'
 import { RestaurantLenseVote } from '../restaurant/RestaurantLenseVote'

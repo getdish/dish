@@ -6,7 +6,6 @@ import { AbsoluteVStack, Box, HStack, Spacer, Text, VStack } from 'snackui'
 
 import { queryRestaurant } from '../queries/queryRestaurant'
 import { appMapStore } from './AppMapStore'
-import { RestaurantRatingViewPopover } from './home/restaurant/RestaurantRatingViewPopover'
 import { useHomeStore } from './homeStore'
 import { LinkButton } from './views/LinkButton'
 
