@@ -35,7 +35,7 @@ export const FilterButton = ({
       icon={iconElement ? <VStack opacity={0.45}>{iconElement}</VStack> : null}
       {...rest}
       textProps={{
-        fontWeight: '700',
+        // fontWeight: '700',
         ...(!rest.theme && {
           color,
         }),

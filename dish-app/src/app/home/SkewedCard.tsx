@@ -1,7 +1,7 @@
 import React from 'react'
 import { HStack, StackProps, VStack } from 'snackui'
 
-import { cardFrameBorderRadius } from '../views/CardFrame'
+import { cardFrameBorderRadius } from '../../constants/constants'
 import { ContentScrollViewHorizontal } from '../views/ContentScrollViewHorizontal'
 
 // TODO merge these two using SnackUI scaling once ready

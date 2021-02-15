@@ -1,6 +1,6 @@
 import React from 'react'
 import { StyleSheet } from 'react-native'
-import { HStack, LinearGradient } from 'snackui'
+import { AbsoluteVStack, HStack, LinearGradient } from 'snackui'
 
 import { rgbString } from '../../helpers/rgbString'
 
@@ -17,25 +17,28 @@ export function GradientButton({
       paddingHorizontal={16}
       alignItems="center"
       justifyContent="center"
-      borderRadius={60}
+      borderRadius={20}
       backgroundColor="transparent"
-      className="ease-in-out-fast safari-fix-overflow"
+      className="hover-parent ease-in-out-faster safari-fix-overflow"
       position="relative"
       overflow="hidden"
       flexShrink={1}
       pressStyle={{
-        transform: [{ scale: 0.95 }],
-      }}
-      hoverStyle={{
-        transform: [{ scale: 1.025 }],
+        transform: [{ scale: 0.98 }],
       }}
     >
-      <LinearGradient
-        colors={[rgbString(rgb, 0.15), rgbString(rgb, 0.07)]}
-        start={[1, 1]}
-        end={[-1, 1]}
-        style={StyleSheet.absoluteFill}
-      />
+      <AbsoluteVStack
+        opacity={0.35}
+        className="hover-half-opacity-child"
+        fullscreen
+      >
+        <LinearGradient
+          colors={[rgbString(rgb, 0.35), rgbString(rgb, 0.5)]}
+          start={[0, 1]}
+          end={[0, 0]}
+          style={StyleSheet.absoluteFill}
+        />
+      </AbsoluteVStack>
       {children}
     </HStack>
   )

@@ -47,7 +47,7 @@ export const DishLogoButton = memo(() => {
         opacity={media.xs ? 0 : 1}
         pointerEvents={media.xs ? 'none' : 'auto'}
       >
-        {wrapWithHomeLink(<LogoColor />)}
+        {wrapWithHomeLink(<LogoColor scale={1.05} />)}
       </VStack>
       <AbsoluteVStack
         pointerEvents={media.xs ? 'auto' : 'none'}

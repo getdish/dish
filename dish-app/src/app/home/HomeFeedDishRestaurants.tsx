@@ -1,17 +1,13 @@
 import { graphql, order_by, query } from '@dish/graph'
 import { groupBy, pick, sortBy, uniqBy } from 'lodash'
 import React from 'react'
-import { AbsoluteVStack, HStack, Hoverable, Spacer, VStack } from 'snackui'
+import { HStack, Hoverable } from 'snackui'
 
 import {
   DishTagItemSimple,
   selectRishDishViewSimple,
-  selectTagDishViewSimple,
 } from '../../helpers/selectDishViewSimple'
-import { queryTag } from '../../queries/queryTag'
 import { RegionNormalized } from '../../types/homeTypes'
-import { cardFrameBorderRadius } from '../views/CardFrame'
-import { DishView } from '../views/dish/DishView'
 import { TagButtonSlanted } from '../views/dish/TagButtonSlanted'
 import { ContentSectionHoverable } from './ContentSectionHoverable'
 import { FeedSlantedTitleLink } from './FeedSlantedTitle'
@@ -19,7 +15,6 @@ import { FIBase } from './FIBase'
 import { HoverResultsProp } from './HoverResultsProp'
 import { CardOverlay } from './restaurant/Card'
 import { RestaurantCard } from './restaurant/RestaurantCard'
-import { RestaurantStatBars } from './RestaurantStatBars'
 import { SkewedCard, SkewedCardCarousel } from './SkewedCard'
 
 export type FIDishRestaurants = FIBase & {

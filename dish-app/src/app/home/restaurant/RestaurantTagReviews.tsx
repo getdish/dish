@@ -12,7 +12,6 @@ import {
   Spacer,
   Text,
   VStack,
-  useMedia,
   useTheme,
 } from 'snackui'
 
@@ -23,7 +22,6 @@ import { queryRestaurant } from '../../../queries/queryRestaurant'
 import { CloseButton } from '../../views/CloseButton'
 import { ContentScrollViewHorizontal } from '../../views/ContentScrollViewHorizontal'
 import { Link } from '../../views/Link'
-import { SentimentCircle } from '../../views/SentimentCircle'
 import { SlantedTitle } from '../../views/SlantedTitle'
 import { SentimentText } from './SentimentText'
 
@@ -412,11 +410,7 @@ export const RestaurantSourcesOverview = graphql(
 
                     <Spacer size="lg" />
 
-                    <Paragraph
-                      color={isWeb ? 'var(--color)' : '#222'}
-                      sizeLineHeight={0.9}
-                      size={1.1}
-                    >
+                    <Paragraph color={isWeb ? 'var(--color)' : '#222'}>
                       {tagName ? <Text fontWeight="800">{tagName}</Text> : ''}
                       {!!tagName && isWeb ? (
                         <div

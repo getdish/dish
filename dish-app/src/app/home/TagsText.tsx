@@ -18,13 +18,12 @@ export function TagsText({ tags, color }: { tags: any[]; color?: string }) {
               {tag.icon.trim()}{' '}
             </Text>
           ) : null}
-          <Text color={color} fontSize={16} fontWeight="600">
+          <Text color={color} fontSize={16} fontWeight="400">
             {tagDisplayName(tag)}
           </Text>
           {index < tags.length - 1 ? (
             <Text
               paddingHorizontal={8}
-              fontWeight="400"
               fontSize={12}
               opacity={0.23}
               transform={[{ translateY: -3 }]}

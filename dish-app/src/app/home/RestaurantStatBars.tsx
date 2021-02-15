@@ -6,7 +6,6 @@ import { AbsoluteVStack, HStack, Text, Theme, VStack, useTheme } from 'snackui'
 import { ColorShades } from '../../helpers/getColorsForName'
 import { selectRishDishViewSimple } from '../../helpers/selectDishViewSimple'
 import { queryRestaurant } from '../../queries/queryRestaurant'
-import { cardFrameBorderRadius } from '../views/CardFrame'
 import { TagButton } from '../views/TagButton'
 
 export const RestaurantStatBars = graphql(

@@ -40,6 +40,12 @@ export const zIndexMapControlsUnderlaySmall = 500
 export const zIndexSearchBarFloating = 450
 export const zIndexGallery = 500
 
+export const cardFrameBorderRadius = 18
+export const cardFrameWidth = 240
+export const cardFrameHeight = 300
+export const cardFrameWidthSm = 240 * 0.7
+export const cardFrameHeightSm = 300 * 0.7
+
 export const MAPBOX_ACCESS_TOKEN =
   'pk.eyJ1IjoibndpZW5lcnQiLCJhIjoiY2lvbWlhYjRjMDA0NnVpbTIxMHM5ZW95eCJ9.DQyBjCEuPRVt1400yejGhA'
 

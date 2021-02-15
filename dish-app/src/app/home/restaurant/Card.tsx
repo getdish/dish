@@ -9,22 +9,21 @@ import {
   StackProps,
   Text,
   VStack,
-  useTheme,
 } from 'snackui'
 
 import {
-  ColorShades,
-  getColorsForColor,
-  getColorsForName,
-} from '../../../helpers/getColorsForName'
-import {
-  CardFrame,
   cardFrameBorderRadius,
   cardFrameHeight,
   cardFrameHeightSm,
   cardFrameWidth,
   cardFrameWidthSm,
-} from '../../views/CardFrame'
+} from '../../../constants/constants'
+import {
+  ColorShades,
+  getColorsForColor,
+  getColorsForName,
+} from '../../../helpers/getColorsForName'
+import { CardFrame } from '../../views/CardFrame'
 
 export type CardProps = {
   below?: ((colors: ColorShades) => any) | JSX.Element | string | null
@@ -107,17 +106,26 @@ export function Card({
           zIndex={12}
         >
           <VStack className="card-hover-fade" flex={1}>
-            <LinearGradient
-              pointerEvents="none"
-              style={[
-                StyleSheet.absoluteFill,
-                sheet.cardGradient,
-                { opacity: isBehind ? 1 : 0 },
-              ]}
-              start={[0, 0]}
-              end={[1, 0]}
-              colors={['rgba(0,0,0,0.5)', 'rgba(0,0,0,0)']}
-            />
+            <AbsoluteVStack
+              zIndex={1001}
+              borderRadius={cardFrameBorderRadius}
+              top={0}
+              left={0}
+              bottom={0}
+              right="70%"
+              transform={[{ translateX: -20 }]}
+            >
+              <LinearGradient
+                pointerEvents="none"
+                style={[
+                  StyleSheet.absoluteFill,
+                  { opacity: isBehind ? 0.6 : 0 },
+                ]}
+                start={[0, 0]}
+                end={[1, 0]}
+                colors={[colors.darkColor, 'rgba(0,0,0,0)']}
+              />
+            </AbsoluteVStack>
             <LinearGradient
               style={StyleSheet.absoluteFill}
               colors={[
@@ -223,14 +231,6 @@ export function Card({
     </CardFrame>
   )
 }
-
-const sheet = StyleSheet.create({
-  cardGradient: {
-    zIndex: 1001,
-    borderRadius: cardFrameBorderRadius,
-    right: '50%',
-  },
-})
 
 export const CardOverlay = (props: StackProps) => {
   return (

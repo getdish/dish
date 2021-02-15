@@ -634,3 +634,11 @@ mark {
 .map-marker .mapboxgl-popup-tip {
   display: none;
 }
+
+.hover-parent:hover .hover-full-opacity-child {
+  opacity: 1;
+}
+
+.hover-parent:hover .hover-half-opacity-child {
+  opacity: 0.5;
+}

@@ -25,16 +25,18 @@ export const RatingView = ({
   const ratingInner = rating * 0.7
   const ratingMiddle = rating * 0.5
   const rotate = `${(1 - ratingInner / 100) * 180}deg`
+  const width = size * 0.1
+
   const innerRing = (
     <VStack transform={[{ rotate }]}>
       <Pie
         color={red}
         percent={ratingInner}
-        size={stacked ? size * 0.66 : size * 0.3}
+        size={stacked ? size * 0.66 : size * 0.33}
       />
     </VStack>
   )
-  const width = size * 0.09
+
   const middleRing = (
     <ProgressRing
       percent={ratingMiddle}
