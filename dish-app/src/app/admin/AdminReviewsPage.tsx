@@ -3,14 +3,7 @@ import { fetchBertSentiment } from '@dish/helpers'
 import { Store, useStore } from '@dish/use-store'
 import React, { Suspense, useEffect, useState } from 'react'
 import { ScrollView, TextInput } from 'react-native'
-import {
-  Divider,
-  HStack,
-  SmallTitle,
-  Text,
-  VStack,
-  useDebounceValue,
-} from 'snackui'
+import { Divider, HStack, Text, VStack, useDebounceValue } from 'snackui'
 
 import { lightGreen, lightRed } from '../../constants/colors'
 import { defaultLocationAutocompleteResults } from '../../constants/defaultLocationAutocompleteResults'
@@ -19,6 +12,7 @@ import {
   locationToAutocomplete,
   searchLocations,
 } from '../../helpers/searchLocations'
+import { SmallTitle } from '../views/SmallTitle'
 import { AdminListItem } from './AdminListItem'
 import { AdminSearchableColumn } from './AdminSearchableColumn'
 import { VerticalColumn } from './VerticalColumn'
