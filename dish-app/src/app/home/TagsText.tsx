@@ -24,7 +24,7 @@ export function TagsText({ tags, color }: { tags: any[]; color?: string }) {
           {index < tags.length - 1 ? (
             <Text
               paddingHorizontal={8}
-              fontWeight="700"
+              fontWeight="400"
               fontSize={12}
               opacity={0.23}
               transform={[{ translateY: -3 }]}

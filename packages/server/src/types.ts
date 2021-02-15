@@ -16,6 +16,7 @@ export type ServerConfig = {
   verbose?: boolean
   noOptimize?: boolean
   serial?: boolean
+  resetCache?: boolean
 }
 
 export type ServerConfigNormal = Required<ServerConfig> & {

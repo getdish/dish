@@ -45,6 +45,9 @@ export class Start extends Command {
     ['no-optimize']: flags.boolean({
       description: `Don't optimize (minify, etc) for faster production debugging`,
     }),
+    ['reset-cache']: flags.boolean({
+      description: 'Clear cache on start',
+    }),
   }
 
   async run() {
@@ -62,6 +65,7 @@ export class Start extends Command {
       noOptimize: flags['no-optimize'] ?? false,
       https: flags.https,
       serial: flags.serial,
+      resetCache: flags['reset-cache'],
     }
 
     if (config.env === 'development') {

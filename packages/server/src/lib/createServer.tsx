@@ -29,6 +29,7 @@ export async function createServer(serverConf: ServerConfig) {
     port,
     https,
     inspect: false,
+    resetCache: serverConf.resetCache ?? false,
     env: serverConf.env ?? 'development',
     verbose: serverConf.verbose ?? false,
     rootDir,

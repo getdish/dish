@@ -1,9 +1,8 @@
 import { MapPosition, slugify } from '@dish/graph'
-import React, { Suspense, memo, useEffect, useRef, useState } from 'react'
+import React, { Suspense, memo, useEffect, useState } from 'react'
 import {
   AbsoluteVStack,
   HStack,
-  InteractiveContainer,
   LoadingItems,
   Paragraph,
   Spacer,
@@ -22,7 +21,6 @@ import {
 } from '../../constants/initialHomeState'
 import { useRegionQuery } from '../../helpers/fetchRegion'
 import { getColorsForName } from '../../helpers/getColorsForName'
-import { getGroupedButtonProps } from '../../helpers/getGroupedButtonProps'
 import { queryClient } from '../../helpers/queryClient'
 import { router, useIsRouteActive } from '../../router'
 import { HomeStateItemHome } from '../../types/homeTypes'
@@ -33,8 +31,6 @@ import { CloseButton } from '../views/CloseButton'
 import { ContentScrollView } from '../views/ContentScrollView'
 import { ContentScrollViewHorizontal } from '../views/ContentScrollViewHorizontal'
 import { Link } from '../views/Link'
-import { LinkButton } from '../views/LinkButton'
-import { LinkButtonProps } from '../views/LinkProps'
 import { PageTitleTag } from '../views/PageTitleTag'
 import { SlantedTitle } from '../views/SlantedTitle'
 import { HomePageFeed } from './HomePageFeed'
@@ -193,38 +189,9 @@ export default memo(function HomePage(
                             ? 'lg'
                             : 'xl'
                         }
-                        // marginTop={-24}
                       >
                         {regionName}
                       </SlantedTitle>
-
-                      {/* <AbsoluteVStack
-                        bottom={-39}
-                        right={0}
-                        transform={[{ rotate: '-2deg' }]}
-                      >
-                        <InteractiveContainer borderRadius={14}>
-                          {navLinks.map((linkProps, index) => {
-                            const isActive =
-                              state.section === linkProps.params.section
-                            return (
-                              <LinkButton
-                                key={index}
-                                textProps={{
-                                  color: isActive ? 'red' : '#888',
-                                  fontWeight: '500',
-                                }}
-                                {...getGroupedButtonProps({
-                                  index,
-                                  items: navLinks,
-                                  borderRadius: 10,
-                                })}
-                                {...linkProps}
-                              />
-                            )
-                          })}
-                        </InteractiveContainer>
-                      </AbsoluteVStack> */}
                     </VStack>
                     <HomeTopSearches />
                   </HStack>

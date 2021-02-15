@@ -11,6 +11,10 @@ export async function createWebServer(
   app: any,
   serverConfig: ServerConfigNormal
 ) {
+  if (serverConfig.resetCache) {
+    await clearWebpackCache()
+  }
+
   if (serverConfig.serial) {
     console.log(' [web] running in same process')
     const { createWebServerDev } = require('./createWebServerDev')
