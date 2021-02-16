@@ -1,4 +1,4 @@
-import { supportsTouchWeb } from '@dish/helpers/src'
+import { supportsTouchWeb } from '@dish/helpers'
 import { ChevronDown, ChevronUp } from '@dish/react-feather'
 import React, { memo } from 'react'
 import { AbsoluteVStack, StackProps, Text, Tooltip, VStack } from 'snackui'

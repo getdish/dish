@@ -16,7 +16,7 @@
     "noEmitHelpers": true,
     "noImplicitReturns": false,
     "skipLibCheck": true,
-    "target": "esnext",
+    "target": "ES2019",
     "allowJs": true,
     "baseUrl": ".",
     "strict": false,

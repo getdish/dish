@@ -1,5 +1,5 @@
 // // debug
-import { supportsTouchWeb } from '@dish/helpers/src'
+import { supportsTouchWeb } from '@dish/helpers'
 import { Search } from '@dish/react-feather'
 import { capitalize } from 'lodash'
 import React, { Suspense, memo, useState } from 'react'

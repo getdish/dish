@@ -1,6 +1,6 @@
 import { graphql, listFindOne, listInsert, mutate, slugify } from '@dish/graph'
-import { query } from '@dish/graph/src'
-import { assertPresent, isPresent } from '@dish/helpers/src'
+import { query } from '@dish/graph'
+import { assertPresent, isPresent } from '@dish/helpers'
 import { Edit2 } from '@dish/react-feather'
 import { HistoryItem } from '@dish/router'
 import React, { Suspense, memo, useContext } from 'react'

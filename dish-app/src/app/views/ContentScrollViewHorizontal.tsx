@@ -1,6 +1,6 @@
-import { supportsTouchWeb } from '@dish/helpers/src'
-import { assertPresent } from '@dish/helpers/src'
-import { assert } from '@dish/helpers/src'
+import { supportsTouchWeb } from '@dish/helpers'
+import { assertPresent } from '@dish/helpers'
+import { assert } from '@dish/helpers'
 import { getStore, useStoreSelector } from '@dish/use-store'
 import { setWith } from 'lodash'
 import React, {

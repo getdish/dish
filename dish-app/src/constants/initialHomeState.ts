@@ -1,4 +1,4 @@
-import { MapPosition } from '@dish/graph/src'
+import { MapPosition } from '@dish/graph'
 
 import { getLocalJSON, setLocalJSON } from '../helpers/getLocalJSON'
 import { HomeStateItemHome, HomeStateItemLocation } from '../types/homeTypes'

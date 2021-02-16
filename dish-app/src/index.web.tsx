@@ -1,53 +1,57 @@
-import './web/base.css'
+import * as S from 'react-native-svg'
 
-import { startLogging } from '@dish/graph'
-import { loadableReady } from '@loadable/component'
-import React from 'react'
-import { hydrate, render } from 'react-dom'
-import { AppRegistry } from 'react-native'
+console.log('S', S)
 
-import { isSSR } from './constants/constants'
-import { Root } from './Root'
+// import './web/base.css'
 
-if (process.env.NODE_ENV === 'development' && !window['STARTED']) {
-  startLogging()
-}
+// import { startLogging } from '@dish/graph'
+// import { loadableReady } from '@loadable/component'
+// import React from 'react'
+// import { hydrate, render } from 'react-dom'
+// import { AppRegistry } from 'react-native'
 
-const IS_CONCURRENT = window.location.search.indexOf(`concurrent`) > -1
-const ROOT = document.getElementById('root')
+// import { isSSR } from './constants/constants'
+// import { Root } from './Root'
 
-// register root component
-AppRegistry.registerComponent('dish', () => Root)
+// if (process.env.NODE_ENV === 'development' && !window['STARTED']) {
+//   startLogging()
+// }
 
-async function start() {
-  if (IS_CONCURRENT) {
-    console.warn('👟 Concurrent Mode Running')
-    // @ts-expect-error
-    React.unstable_createRoot(ROOT).render(<Root />)
-    return
-  }
+// const IS_CONCURRENT = window.location.search.indexOf(`concurrent`) > -1
+// const ROOT = document.getElementById('root')
 
-  if (process.env.NODE_ENV === 'production') {
-    loadableReady(() => {
-      hydrate(<Root />, ROOT)
-    })
-  } else {
-    render(<Root />, ROOT)
-  }
-}
+// // register root component
+// AppRegistry.registerComponent('dish', () => Root)
 
-// SSR exports
-if (isSSR) {
-  exports.App = Root
-  exports.ReactDOMServer = require('react-dom/server')
-}
+// async function start() {
+//   if (IS_CONCURRENT) {
+//     console.warn('👟 Concurrent Mode Running')
+//     // @ts-expect-error
+//     React.unstable_createRoot(ROOT).render(<Root />)
+//     return
+//   }
 
-if (process.env.NODE_ENV === 'development') {
-  // @ts-expect-error
-  module?.hot?.accept()
-}
+//   if (process.env.NODE_ENV === 'production') {
+//     loadableReady(() => {
+//       hydrate(<Root />, ROOT)
+//     })
+//   } else {
+//     render(<Root />, ROOT)
+//   }
+// }
 
-if (!window['STARTED'] && process.env.TARGET !== 'node') {
-  start()
-  window['STARTED'] = true
-}
+// // SSR exports
+// if (isSSR) {
+//   exports.App = Root
+//   exports.ReactDOMServer = require('react-dom/server')
+// }
+
+// if (process.env.NODE_ENV === 'development') {
+//   // @ts-expect-error
+//   module?.hot?.accept()
+// }
+
+// if (!window['STARTED'] && process.env.TARGET !== 'node') {
+//   start()
+//   window['STARTED'] = true
+// }

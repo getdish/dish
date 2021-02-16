@@ -24,11 +24,11 @@ export const Pie = ({
 
 function getCirclePath(size: number, percent: number) {
   const h = size / 2
-  let π = Math.PI
-  const α = (Math.min(99.999999, percent) * 3.6) % 360
-  let r = (α * π) / 180
+  let pi = Math.PI
+  const alpha = (Math.min(99.999999, percent) * 3.6) % 360
+  let r = (alpha * pi) / 180
   let x = Math.sin(r) * h
   let y = Math.cos(r) * -h
-  let mid = α > 180 ? 1 : 0
+  let mid = alpha > 180 ? 1 : 0
   return `M 0 0 v -${h} A ${h} ${h} 1 ` + mid + ' 1 ' + x + ' ' + y + ' z'
 }

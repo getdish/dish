@@ -187,6 +187,10 @@
     "@sendgrid/mail": "7.4.0"
   },
   "devDependencies": {
+    "@snowpack/plugin-react-refresh": "^2.4.0",
+    "@snowpack/plugin-dotenv": "^2.0.5",
+    "@snowpack/plugin-typescript": "^1.2.1",
+    "snowpack": "^3.0.11",
     "@babel/cli": "^7.12.10",
     "expo-updates": "^0.4.1",
     "expo": "^40.0.0",

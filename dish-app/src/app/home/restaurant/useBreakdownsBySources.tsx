@@ -1,5 +1,5 @@
 import { restaurant_tag } from '@dish/graph'
-import { isPresent } from '@dish/helpers/src'
+import { isPresent } from '@dish/helpers'
 
 import { queryRestaurant } from '../../../queries/queryRestaurant'
 import { NavigableTag } from '../../../types/tagTypes'

@@ -1,4 +1,4 @@
-import { isPresent } from '@dish/helpers/src'
+import { isPresent } from '@dish/helpers'
 import { uniqBy } from 'lodash'
 
 import { initialHomeState } from '../constants/initialHomeState'
