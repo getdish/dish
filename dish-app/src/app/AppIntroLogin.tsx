@@ -45,11 +45,11 @@ export const AppIntroLogin = memo(() => {
           color={isWeb ? 'var(--color)' : '#777'}
           paddingHorizontal="3%"
           minWidth={280}
-          fontWeight="300"
+          fontWeight="700"
           size="lg"
           textAlign="center"
         >
-          your pocket guide to the world
+          pocket guide to the world
         </Paragraph>
 
         <LinkButton

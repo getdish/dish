@@ -36,6 +36,7 @@ import { SlantedTitle } from '../views/SlantedTitle'
 import { HomePageFeed } from './HomePageFeed'
 import { HomeStackViewProps } from './HomeStackViewProps'
 import { HomeTopSearches } from './HomeTopSearches'
+import { PageFooter } from './PageFooter'
 
 export default memo(function HomePage(
   props: HomeStackViewProps<HomeStateItemHome>
@@ -204,23 +205,29 @@ export default memo(function HomePage(
 
               <Spacer />
 
-              <Suspense
-                fallback={
-                  <>
-                    <LoadingItems />
-                    <LoadingItems />
-                  </>
-                }
-              >
-                {isLoaded && (
-                  <HomePageFeed
-                    key={state.region}
-                    {...props}
-                    region={region}
-                    {...position}
-                  />
-                )}
-              </Suspense>
+              <VStack minHeight={800}>
+                <Suspense
+                  fallback={
+                    <>
+                      <LoadingItems />
+                      <LoadingItems />
+                    </>
+                  }
+                >
+                  {isLoaded && (
+                    <HomePageFeed
+                      key={state.region}
+                      {...props}
+                      region={region}
+                      {...position}
+                    />
+                  )}
+                </Suspense>
+              </VStack>
+
+              <VStack height={20} />
+
+              <PageFooter />
             </VStack>
           </VStack>
         </ContentScrollView>

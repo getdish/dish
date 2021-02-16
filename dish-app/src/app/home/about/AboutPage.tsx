@@ -3,9 +3,11 @@ import { Image } from 'react-native'
 import {
   AbsoluteVStack,
   Divider,
+  H3,
   Paragraph,
   Spacer,
   Text,
+  Title,
   UnorderedList,
   UnorderedListItem,
   VStack,
@@ -59,55 +61,68 @@ export default function AboutPage({
             alignItems="center"
             position="relative"
           >
-            <Spacer size="xl" />
+            <Spacer size="xxl" />
             <LogoColor scale={2.5} />
-            <Spacer size="lg" />
+            <Spacer size="xl" />
             <Paragraph
               zIndex={10}
               color="#999"
               textAlign="center"
               size={1.1}
-              fontWeight="500"
+              fontWeight="300"
             >
-              your pocket guide to the world
+              pocket guide to the world
             </Paragraph>
           </VStack>
 
           <VStack paddingHorizontal="5%" spacing="xl">
-            <Paragraph size="xxl">
-              A high quality, fun, community-built guide to the real world - a
-              Hitchiker's Guide to the Galaxy, for earth, starting with food.
+            <Paragraph
+              paddingVertical={20}
+              textAlign="center"
+              size="lg"
+              fontWeight="700"
+            >
+              We're building the Hitchiker's Guide to the Galaxy, starting with
+              earth (and food). Ratings&nbsp;+&nbsp;online communities are
+              breaking, we're exploring how to fix them.
             </Paragraph>
 
+            <H3>How it started</H3>
+
             <Paragraph size="xl">
-              It all started with food. In eating around the San Francisco Bay
-              Area, we noticed a disturbing trend: too many great
-              hole-in-the-wall restaurants were lost to poor ratings. Amazing
-              Mexican, Chinese and Vietnamese gems would sit at ⭐️⭐️⭐️.5
-              stars due to their hole-in-the-wall charms, while more
-              Instagrammable places with bland food would score near-perfectly.
+              Food — technically, a large bang and a lot of commotion, but
+              ultimately — tacos and pho in the San Francisco Bay Area. In
+              eating around that corner of the galaxy, we'd noticed a disturbing
+              trend: international cuisine with poor ratings. Amazing Mexican,
+              Chinese and Vietnamese spots with ⭐️⭐️⭐️/5 stars due to their
+              hole-in-the-wall charms. It was hard to know where to get a good
+              bowl of pho.
             </Paragraph>
+
+            <H3>The problem</H3>
 
             <Paragraph size="xxl">
               It's not that{' '}
               <Text fontStyle="italic">
-                sometimes you don't want a trendy spot with ok food
+                sometimes you don't want the trendy spot
               </Text>
-              - it's just{' '}
-              <Text fontWeight="800">
+              ... it's just{' '}
+              <Text fontWeight="700">
                 five star ratings don't really help you with that either
               </Text>
-              . It's time humans start to generally consider them a bad idea, by
-              our estimation.
+              . By our estimate, it's time humans generally considered them bad
+              idea.
             </Paragraph>
 
             <Paragraph size="xl">
-              Meanwhile, delivery apps have consistently inconsistent ratings,
-              alongside a new "innovation" in virtual pop-ups of existing
-              rebranded, poorly-performing restaurants. Combine that with the
-              whole 5-star issue and finding a decent delivered taco or bowl of
-              poke is often more painful than Vogon poetry.
+              Delivery just makes it worse: more inconsistent scores, and new
+              "innovations" like virtual pop-ups that are just poorly performing
+              restaurants paying for a "rating reset". Getting a decent bowl of
+              poke delivered easily is nearly as improbable as an improbability
+              drive.
             </Paragraph>
+
+            <H3>What we want</H3>
 
             <Paragraph size="xl">
               What you want when looking for{' '}
@@ -139,13 +154,35 @@ export default function AboutPage({
                 date night 🌃
               </LinkButton>{' '}
               are <Text fontStyle="italic">unique</Text>, so Dish rates down to
-              each dish, and other factors that matter. We think we can fix
-              ratings with a community that tags and rates tags across
-              everything, and shares lists of their favorite spots, nights out,
-              and dishes. We use your votes, a mini-search engine that crawls
-              for outside reviews, and a dash of NLP to show what each place
-              excels or dissapoints at more exactly.
+              each dish, and other factors that matter. We think the rating
+              problem comes down to the factors that matter, unique to each type
+              of cuisine or experience.
             </Paragraph>
+
+            <Paragraph size="xl">
+              But of course it's not just ratings, but also taste, and building
+              up a good community of hitchikers. We hope we can solve it with a
+              few things:
+            </Paragraph>
+
+            <UnorderedList>
+              <UnorderedListItem size="xl">
+                Single-account, invite-based membership
+              </UnorderedListItem>
+              <UnorderedListItem size="xl">
+                Customizing to your taste, but letting you control the knobs
+              </UnorderedListItem>
+              <UnorderedListItem size="xl">
+                Community voting across{' '}
+                <Text fontStyle="italic">everything</Text>
+              </UnorderedListItem>
+              <UnorderedListItem size="xl">
+                Sub-communities that can curate their own maps
+              </UnorderedListItem>
+              <UnorderedListItem size="xl">
+                A paid-for "plus" membership that avoids ads
+              </UnorderedListItem>
+            </UnorderedList>
 
             <Paragraph size="lg">
               Ultimately we're building what we want: a map of the world that

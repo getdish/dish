@@ -43,19 +43,19 @@ export const RestaurantButton = graphql(
             <Image
               source={{ uri: getImageUrl(restaurant.image, 80, 80) }}
               style={{
-                width: 40,
-                height: 40,
+                width: 32,
+                height: 32,
                 borderRadius: 100,
                 margin: -10,
-                marginRight: 8,
+                marginRight: 10,
               }}
             />
           )}
-          <Text color={colors.darkColor} fontWeight="500">
+          <Text color={colors.darkColor} fontWeight="600">
             {restaurant.name}
           </Text>
-          <VStack margin={-10} marginLeft={8}>
-            <RestaurantRatingView size={42} slug={slug} />
+          <VStack margin={-10} marginLeft={10}>
+            <RestaurantRatingView size={32} slug={slug} />
           </VStack>
         </GradientButton>
       </Link>

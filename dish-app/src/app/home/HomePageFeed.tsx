@@ -151,10 +151,6 @@ export const HomePageFeed = memo(
             >
               {feedContents}
             </VStack>
-
-            <VStack height={20} />
-
-            <PageFooter />
           </Suspense>
         )}
       </>

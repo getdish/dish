@@ -39,7 +39,7 @@ export const Logo = (props: { scale?: number; color?: string }) => {
 export const LogoColor = (props: { scale?: number }) => {
   const scale = props.scale ?? 1
   return (
-    <VStack transform={[{ scale }]}>
+    <VStack transform={[{ scale }]} marginVertical={scale * 5}>
       <Svg width={logoWidth} height={logoHeight} viewBox={`0 0 1303 608`}>
         <G transform="translate(-124.000000, -446.000000)">
           <Path
