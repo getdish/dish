@@ -213,7 +213,12 @@ export default memo(function HomePage(
                 }
               >
                 {isLoaded && (
-                  <HomePageFeed {...props} region={region} {...position} />
+                  <HomePageFeed
+                    key={state.region}
+                    {...props}
+                    region={region}
+                    {...position}
+                  />
                 )}
               </Suspense>
             </VStack>

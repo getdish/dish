@@ -67,7 +67,7 @@ export function useFeedDishItems(
     .slice(0, 5)
     .map((x) => x[0])
 
-  console.log('waht', { popularDishTags, topDishes })
+  console.log('waht', { popularDishTags, topDishes, region })
 
   return topDishes.map((tag, index) => {
     return {
@@ -84,39 +84,39 @@ export function useFeedDishItems(
 
 export const HomeFeedDishRestaurants = graphql(
   ({ tag, region, onHoverResults }: FIDishRestaurants & HoverResultsProp) => {
-    const restaurants = query
-      .restaurant_with_tags({
-        args: {
-          tag_slugs: tag.slug,
+    const restaurantsQuery = query.restaurant_with_tags({
+      args: {
+        tag_slugs: tag.slug,
+      },
+      limit: 8,
+      where: {
+        location: {
+          _st_within: region.bbox,
         },
-        limit: 10,
+      },
+    })
+
+    const restaurants = restaurantsQuery.map((restaurant) => {
+      const rtag = restaurant.tags({
         where: {
-          location: {
-            _st_within: region.bbox,
-          },
-        },
-      })
-      .map((restaurant) => {
-        const rtag = restaurant.tags({
-          where: {
-            tag: {
-              slug: {
-                _eq: tag.slug,
-              },
+          tag: {
+            slug: {
+              _eq: tag.slug,
             },
           },
-          limit: 1,
-        })[0]
-        return {
-          id: restaurant.id,
-          slug: restaurant.slug,
-          dish: selectRishDishViewSimple(rtag),
-        }
-      })
+        },
+        limit: 1,
+      })[0]
+
+      return {
+        id: restaurant.id,
+        slug: restaurant.slug,
+        dish: selectRishDishViewSimple(rtag),
+      }
+    })
 
     // TODO FIX ORDERING
-    console.warn('revversing order FOR NOW')
-    restaurants.reverse()
+    console.warn('render dish restaurants', region.slug, tag.slug)
 
     return (
       <ContentSectionHoverable>

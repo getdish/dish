@@ -113,12 +113,12 @@ export const MapView = (props: MapProps) => {
     if (hideRegions) {
       for (const tile of tiles) {
         map.setLayoutProperty(`${tile.name}.fill`, 'visibility', 'none')
-        map.setLayoutProperty(`${tile.name}.line`, 'visibility', 'none')
+        // map.setLayoutProperty(`${tile.name}.line`, 'visibility', 'none')
       }
       return () => {
         for (const tile of tiles) {
           map.setLayoutProperty(`${tile.name}.fill`, 'visibility', 'visible')
-          map.setLayoutProperty(`${tile.name}.line`, 'visibility', 'visible')
+          // map.setLayoutProperty(`${tile.name}.line`, 'visibility', 'visible')
         }
       }
     }
@@ -147,7 +147,7 @@ export const MapView = (props: MapProps) => {
     if (!hovered) return
     // mapSetIconHovered(map, index)
     // const index = features.findIndex((x) => x.properties?.id === hovered)
-    map.setFilter(POINT_HOVER_LAYER_ID, ['==', 'id', hovered])
+    // map.setFilter(POINT_HOVER_LAYER_ID, ['==', 'id', hovered])
 
     if (prevHoveredId.current != null) {
       mapSetFeature(map, prevHoveredId.current, { hover: false })
@@ -918,9 +918,9 @@ function setupMapEffect({
 
           cancels.add(() => {
             map.removeLayer(`${name}.fill`)
-            if (lineColor) {
-              map.removeLayer(`${name}.line`)
-            }
+            // if (lineColor) {
+            //   map.removeLayer(`${name}.line`)
+            // }
             if (label) {
               map.removeLayer(`${name}.label`)
             }
