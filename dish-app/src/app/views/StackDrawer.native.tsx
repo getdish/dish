@@ -5,7 +5,6 @@ import Animated, {
   useSharedValue,
   withSpring,
 } from 'react-native-reanimated'
-import { AbsoluteVStack, VStack } from 'snackui'
 
 import {
   StackDrawer as StackDrawerContents,

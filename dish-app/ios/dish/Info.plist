@@ -35,23 +35,8 @@
     <true/>
     <key>NSAppTransportSecurity</key>
     <dict>
-      <key>NSExceptionDomains</key>
-      <dict>
-        <key>localhost</key>
-        <dict>
-          <key>NSExceptionAllowsInsecureHTTPLoads</key>
-          <true/>
-        </dict>
-        <key>dishapp.com</key>
-        <dict>
-          <key>NSIncludesSubdomains</key>
-          <true/>
-          <key>NSTemporaryExceptionAllowsInsecureHTTPLoads</key>
-          <true/>
-          <key>NSTemporaryExceptionMinimumTLSVersion</key>
-          <string>TLSv1.1</string>
-        </dict>
-      </dict>
+      <key>NSAllowsArbitraryLoads</key>
+      <true/>
     </dict>
     <key>NSLocationWhenInUseUsageDescription</key>
     <string></string>

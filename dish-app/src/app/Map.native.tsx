@@ -1,5 +1,5 @@
 import { series, sleep } from '@dish/async'
-import { MARTIN_TILES_HOST } from '@dish/graph'
+import { DISH_API_ENDPOINT, MARTIN_TILES_HOST } from '@dish/graph'
 import { useStoreInstance } from '@dish/use-store'
 import MapboxGL from '@react-native-mapbox-gl/maps'
 import React, { useEffect, useRef, useState } from 'react'
@@ -164,7 +164,7 @@ export const MapView = ({
             },
             index
           ) => {
-            const url = `http://d1sh.com/api/tile/${name}.json`
+            const url = `http://${DISH_API_ENDPOINT}/api/tile/${name}.json`
             const sourceId = `${name}`.replace('.', '')
             const labelUrl = `${MARTIN_TILES_HOST}/${labelSource}.json`
             console.log('Loading tile url', sourceId, url, labelUrl)

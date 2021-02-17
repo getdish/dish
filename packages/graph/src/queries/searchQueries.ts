@@ -54,7 +54,7 @@ export async function search({
     'main_tag=' + main_tag,
   ]
   const url = SEARCH_DOMAIN + '/search?' + params.join('&')
+  console.log('search', url)
   const result = await fetch(url).then((res) => res.json())
-  // console.log('search', Date.now() - x + 'ms', url, result)
   return result
 }
