@@ -1,7 +1,7 @@
 import { graphql } from '@dish/graph'
 import { debounce } from 'lodash'
 import React, { Suspense } from 'react'
-import { AbsoluteVStack, Hoverable } from 'snackui'
+import { AbsoluteVStack, HStack, Hoverable } from 'snackui'
 
 import {
   queryRestaurant,
@@ -72,7 +72,7 @@ export const RestaurantCardContent = graphql(
     aspectFixed,
     padTitleSide,
     hoverable = true,
-    dimImage,
+    dimImage = true,
     below,
   }: RestaurantCardProps) => {
     const [restaurant] = queryRestaurant(restaurantSlug)
@@ -87,45 +87,27 @@ export const RestaurantCardContent = graphql(
           title={restaurant.name}
           subTitle={price_range}
           colorsKey={restaurantSlug}
-          below={below}
           dimImage={dimImage}
           outside={
-            (colors) => {
-              return (
-                <AbsoluteVStack
+            <>
+              {!!below && (
+                <HStack
+                  zIndex={10000}
+                  pointerEvents="none"
                   position="absolute"
-                  top={-7}
-                  right={-10}
-                  zIndex={100}
+                  fullscreen
                 >
-                  <RestaurantRatingView
-                    slug={restaurantSlug}
-                    floating
-                    size={40}
-                  />
-                </AbsoluteVStack>
-              )
-            }
-            // <Text
-            //   position="absolute"
-            //   zIndex={1000}
-            //   top={-15}
-            //   right={-15}
-            //   textShadowColor="rgba(0,0,0,0.5)"
-            //   textShadowRadius={3}
-            //   fontSize={42}
-            // >
-            //   💎
-            // </Text>
-            // !hideScore && (
-            //   <AbsoluteVStack bottom={-10} right={-10} zIndex={20}>
-            //     <RestaurantUpVoteDownVote
-            //       rounded
-            //       display="ratio"
-            //       restaurantSlug={restaurantSlug}
-            //     />
-            //   </AbsoluteVStack>
-            // )
+                  {below}
+                </HStack>
+              )}
+              <AbsoluteVStack top={-7} right={-10} zIndex={100}>
+                <RestaurantRatingView
+                  slug={restaurantSlug}
+                  floating
+                  size={40}
+                />
+              </AbsoluteVStack>
+            </>
           }
           photo={restaurantPhoto}
           aspectFixed={aspectFixed}

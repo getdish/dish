@@ -1,12 +1,12 @@
-import { graphql, listFindOne, listInsert, mutate, slugify } from '@dish/graph'
-import { query } from '@dish/graph'
-import { assertPresent, isPresent } from '@dish/helpers'
+import { listFindOne, listInsert, mutate, slugify } from '@dish/graph'
+import { assertPresent } from '@dish/helpers'
 import { Edit2 } from '@dish/react-feather'
 import { HistoryItem } from '@dish/router'
 import React, { Suspense, memo, useContext } from 'react'
 import {
   AbsoluteVStack,
   HStack,
+  Text,
   Toast,
   Tooltip,
   VStack,
@@ -29,11 +29,11 @@ import {
   useContentScrollHorizontalFitter,
 } from '../../views/ContentScrollViewHorizontal'
 import { Link } from '../../views/Link'
-import { ListCardHorizontal } from '../../views/list/ListCard'
 import { SlantedTitle } from '../../views/SlantedTitle'
 import { randomListColor } from '../list/listColors'
 import { PageTitle } from '../PageTitle'
 import { Arrow } from './Arrow'
+import { SearchPageListsRow } from './SearchPageListsRow'
 import { SearchPagePropsContext } from './SearchPagePropsContext'
 import { SearchPageResultsInfoBox } from './SearchPageResultsInfoBox'
 import { SearchPageScoring } from './SearchPageScoring'
@@ -47,44 +47,43 @@ export const SearchHeader = () => {
   const { width, setWidthDebounce } = useContentScrollHorizontalFitter()
   const media = useMedia()
   return (
-    <ContentScrollViewHorizontalFitted
-      width={width}
-      setWidth={setWidthDebounce}
-    >
-      <VStack>
-        <VStack paddingTop={media.sm ? 12 : 12 + 52 + 10} />
-        <HStack>
-          <AbsoluteVStack zIndex={1000} top={5} left={5}>
-            <SearchForkListButton />
-          </AbsoluteVStack>
-          <VStack width={width}>
-            <SearchPageTitle />
-            <SearchPageScoring />
-          </VStack>
-          <VStack marginBottom={8} position="relative">
-            <AbsoluteVStack
-              top={0}
-              bottom={0}
-              alignItems="center"
-              justifyContent="center"
-              left={-55}
-            >
-              <SlantedTitle size="xs">Lists</SlantedTitle>
-              <AbsoluteVStack right={-14} transform={[{ rotate: '90deg' }]}>
-                <Arrow />
-              </AbsoluteVStack>
+    <>
+      <ContentScrollViewHorizontalFitted
+        width={width}
+        setWidth={setWidthDebounce}
+      >
+        <VStack width="100%">
+          <VStack paddingTop={media.sm ? 12 : 12 + 52 + 10} />
+          <HStack>
+            <AbsoluteVStack zIndex={1000} top={5} left={5}>
+              <SearchForkListButton />
             </AbsoluteVStack>
-
             <VStack>
-              <SearchPageListsRow />
-              <Suspense fallback={null}>
-                <SearchPageResultsInfoBox state={curProps.item} />
-              </Suspense>
+              <SearchPageTitle />
+              <SearchPageScoring />
             </VStack>
-          </VStack>
-        </HStack>
-      </VStack>
-    </ContentScrollViewHorizontalFitted>
+            <HStack marginBottom={8} position="relative">
+              <VStack
+                position="relative"
+                alignItems="center"
+                justifyContent="center"
+                transform={[{ translateX: -10 }]}
+              >
+                <SlantedTitle size="xs">Lists</SlantedTitle>
+                <AbsoluteVStack right={-14} transform={[{ rotate: '90deg' }]}>
+                  <Arrow />
+                </AbsoluteVStack>
+              </VStack>
+
+              <SearchPageListsRow />
+            </HStack>
+          </HStack>
+        </VStack>
+      </ContentScrollViewHorizontalFitted>
+      <Suspense fallback={null}>
+        <SearchPageResultsInfoBox state={curProps.item} />
+      </Suspense>
+    </>
   )
 }
 
@@ -96,11 +95,12 @@ const SearchPageTitle = memo(() => {
   const lenseColor = useCurrentLenseColor()
   return (
     <>
-      <PageTitle
-        title={title}
-        subTitle={subTitle}
-        color={rgbString(lenseColor)}
-      />
+      <SlantedTitle color={rgbString(lenseColor)} size="xl" fontWeight="800">
+        {title}{' '}
+        <Text fontSize={16} fontWeight="300">
+          {subTitle}
+        </Text>
+      </SlantedTitle>
     </>
   )
 })
@@ -210,54 +210,3 @@ const SearchForkListButton = memo(() => {
     </Tooltip>
   )
 })
-
-const SearchPageListsRow = memo(
-  graphql((props: any) => {
-    const curProps = useContext(SearchPagePropsContext)!
-    const region = curProps.item.region
-
-    if (!region) {
-      return null
-    }
-
-    const tags = getActiveTags(curProps.item)
-    const lists = query.list_populated({
-      args: {
-        min_items: 2,
-      },
-      where: {
-        region: {
-          _eq: region,
-        },
-        tags: {
-          tag: {
-            slug: {
-              _in: tags.map((x) => x.slug).filter(isPresent),
-            },
-          },
-        },
-      },
-    })
-
-    return (
-      <HStack
-        height="100%"
-        alignItems="center"
-        justifyContent="center"
-        spacing="md"
-        paddingHorizontal={20}
-      >
-        {lists.map((list, i) => {
-          return (
-            <ListCardHorizontal
-              key={i}
-              slug={list.slug}
-              userSlug={list.user?.username ?? ''}
-              region={list.region ?? ''}
-            />
-          )
-        })}
-      </HStack>
-    )
-  })
-)

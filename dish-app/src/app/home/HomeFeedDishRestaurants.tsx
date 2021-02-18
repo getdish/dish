@@ -1,7 +1,7 @@
 import { graphql, order_by, query } from '@dish/graph'
 import { groupBy, pick, sortBy, uniqBy } from 'lodash'
 import React from 'react'
-import { HStack, Hoverable } from 'snackui'
+import { HStack, Hoverable, Theme } from 'snackui'
 
 import {
   DishTagItemSimple,
@@ -142,13 +142,18 @@ export const HomeFeedDishRestaurants = graphql(
                     restaurantSlug={restaurant.slug || ''}
                     hoverable={false}
                     dimImage
-                    below={(colors) => (
-                      <CardOverlay>
+                    below={
+                      <Theme name="darkTranslucent">
                         <HStack
+                          alignSelf="flex-end"
+                          marginLeft="auto"
                           alignItems="center"
                           justifyContent="center"
-                          paddingBottom={20}
-                          transform={[{ scale: 1.1 }]}
+                          transform={[
+                            { scale: 1.1 },
+                            { translateX: -15 },
+                            { translateY: -10 },
+                          ]}
                         >
                           <TagButtonSlanted
                             maxTextWidth={80}
@@ -156,20 +161,9 @@ export const HomeFeedDishRestaurants = graphql(
                             restaurantId={restaurant.id || ''}
                             {...restaurant.dish}
                           />
-                          {/* <DishView
-                          restaurantSlug={restaurant.slug || ''}
-                          restaurantId={restaurant.id || ''}
-                          {...dishViewProps}
-                          size={180}
-                        /> */}
                         </HStack>
-                        {/* <Spacer /> */}
-                        {/* <RestaurantStatBars
-                        restaurantSlug={r.slug || ''}
-                        colors={colors}
-                      /> */}
-                      </CardOverlay>
-                    )}
+                      </Theme>
+                    }
                   />
                 </SkewedCard>
               )

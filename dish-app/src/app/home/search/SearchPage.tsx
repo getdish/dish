@@ -58,7 +58,6 @@ import {
 import { SearchHeader } from './SearchHeader'
 import { SearchPageNavBar } from './SearchPageNavBar'
 import { SearchPagePropsContext } from './SearchPagePropsContext'
-import { SearchPageScoring } from './SearchPageScoring'
 import { searchPageStore, useSearchPageStore } from './SearchPageStore'
 import { searchResultsStore } from './searchResultsStore'
 import { useLocationFromRoute } from './useLocationFromRoute'

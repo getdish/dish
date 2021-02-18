@@ -29,7 +29,7 @@ export function GradientButton({
     >
       <AbsoluteVStack
         opacity={0.35}
-        className="hover-half-opacity-child"
+        className="hover-50-opacity-child"
         fullscreen
       >
         <LinearGradient

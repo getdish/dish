@@ -106,7 +106,7 @@ export const RestaurantDishRow = memo(
                 {getDishRow(dishGroups[0])}
               </HStack>
               <Spacer size="sm" />
-              <HStack>{getDishRow(dishGroups[1])}</HStack>
+              <HStack spacing>{getDishRow(dishGroups[1])}</HStack>
             </VStack>
           ) : (
             <Spacer size="xl" />

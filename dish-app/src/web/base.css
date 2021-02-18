@@ -603,24 +603,6 @@ mark {
   white-space: pre;
 }
 
-.card-hover .card-image {
-  opacity: 0.4;
-  transition: opacity ease-in-out 300ms;
-}
-
-.card-hover:hover .card-image {
-  opacity: 1;
-}
-
-.card-hover .card-hover-fade {
-  opacity: 1;
-  transition: opacity ease-in-out 300ms;
-}
-
-.card-hover:hover .card-hover-fade {
-  opacity: 0.2;
-}
-
 .map-marker .mapboxgl-popup-content {
   padding: 3px;
   padding-right: 8px;
@@ -635,10 +617,14 @@ mark {
   display: none;
 }
 
-.hover-parent:hover .hover-full-opacity-child {
+.hover-parent:hover .hover-100-opacity-child {
   opacity: 1;
 }
 
-.hover-parent:hover .hover-half-opacity-child {
+.hover-parent:hover .hover-50-opacity-child {
+  opacity: 0.5;
+}
+
+.hover-parent:hover .hover-0-opacity-child {
   opacity: 0.5;
 }

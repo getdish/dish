@@ -55,16 +55,16 @@ const DishButtonContent = (props: TagButtonSlantedProps) => {
   let contents = (
     <>
       <Box
-        className="ease-in-out-fast"
         backgroundColor={theme.backgroundColor}
-        borderRadius={8}
+        borderRadius={16}
         paddingVertical={3}
         height={38}
         justifyContent="center"
         paddingHorizontal={8}
         transform={[{ skewX: '-12deg' }]}
-        shadowColor="rgba(0,0,0,0.05)"
-        shadowRadius={2}
+        shadowColor={theme.backgroundColorTertiary}
+        shadowOffset={{ height: 2, width: 2 }}
+        shadowRadius={0}
         zIndex={1000}
         cursor="pointer"
         // {...rest}

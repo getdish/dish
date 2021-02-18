@@ -68,7 +68,7 @@ const darkTranslucent: MyTheme = {
   name: 'darkTranslucent',
   ...shared,
   ...darkBase,
-  backgroundColor: 'rgba(0,0,0,0.8)',
+  backgroundColor: 'rgba(0,0,0,0.7)',
   backgroundColorSecondary: 'rgba(0,0,0,0.5)',
   backgroundColorTertiary: 'rgba(0,0,0,0.25)',
   backgroundColorQuartenary: 'rgba(0,0,0,0.1)',
@@ -85,7 +85,7 @@ const lightBase = {
   colorQuartenary: '#aaa',
   cardBackgroundColor: '#fff',
   backgroundColorTransparent: 'rgba(255,255,255,0)',
-  shadowColor: `rgba(0,0,0,0.2)`,
+  shadowColor: `rgba(0,0,0,0.1)`,
 }
 
 const light: MyTheme = {
