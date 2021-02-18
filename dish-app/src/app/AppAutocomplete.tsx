@@ -168,28 +168,28 @@ const ThemeTranslucent = (props: { children: any }) => {
 export const AppAutocompleteSearch = () => {
   const autocompletes = useStoreInstance(autocompletesStore)
   return (
-    <ThemeTranslucent>
+    <Theme name="darkTranslucent">
       <AbsoluteVStack
         fullscreen
         opacity={autocompletes.target === 'search' ? 1 : 0}
       >
         <AutocompleteSearchInner />
       </AbsoluteVStack>
-    </ThemeTranslucent>
+    </Theme>
   )
 }
 
 export const AppAutocompleteLocation = () => {
   const autocompletes = useStoreInstance(autocompletesStore)
   return (
-    <ThemeTranslucent>
+    <Theme name="darkTranslucent">
       <AbsoluteVStack
         fullscreen
         opacity={autocompletes.target === 'location' ? 1 : 0}
       >
         <AutocompleteLocationInner />
       </AbsoluteVStack>
-    </ThemeTranslucent>
+    </Theme>
   )
 }
 
