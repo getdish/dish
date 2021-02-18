@@ -6,6 +6,7 @@ import React, { Suspense, memo, useContext } from 'react'
 import {
   AbsoluteVStack,
   HStack,
+  Spacer,
   Text,
   Toast,
   Tooltip,
@@ -95,11 +96,22 @@ const SearchPageTitle = memo(() => {
   const lenseColor = useCurrentLenseColor()
   return (
     <>
-      <SlantedTitle color={rgbString(lenseColor)} size="xl" fontWeight="800">
-        {title}{' '}
-        <Text fontSize={16} fontWeight="300">
-          {subTitle}
-        </Text>
+      <SlantedTitle
+        paddingHorizontal={20}
+        backgroundColor={rgbString(lenseColor)}
+        color="#fff"
+        size="xl"
+        fontWeight="800"
+        minWidth={200}
+        borderRadius={8}
+      >
+        <VStack alignItems="center">
+          <Text>{title}</Text>
+          <Spacer size="xl" />
+          <Text position="absolute" bottom={0} fontSize={16} fontWeight="300">
+            {subTitle}
+          </Text>
+        </VStack>
       </SlantedTitle>
     </>
   )
