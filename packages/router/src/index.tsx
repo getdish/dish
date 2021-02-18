@@ -291,7 +291,7 @@ export class Router<
 }
 
 const stripExtraPathSegments = (path: string) => {
-  return path.replace(/\/:[a-zA-Z-_]+\??/g, '')
+  return path.replace(/\/:[a-zA-Z-_]+[\?]?/g, '')
 }
 
 export function getPathFromParams(
@@ -331,8 +331,8 @@ export function getPathFromParams(
     if (typeof params[key] === 'undefined') {
       continue
     }
-    if (path.indexOf(':') > -1) {
-      path = path.replace(`:${key}`, params[key] ?? '-')
+    if (path.includes(':')) {
+      path = path.replace(new RegExp(`:${key}[\?]?`), params[key] ?? '-')
     } else if (path.indexOf('*') > -1) {
       replaceSplatParams.push(key)
     }

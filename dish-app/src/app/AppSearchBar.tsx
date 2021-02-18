@@ -48,6 +48,9 @@ export const parentIds = {
   large: 'searchbar-large',
 }
 
+const borderRadius = 20
+const borderRadiusInner = 19
+
 export const AppSearchBarFloating = () => {
   const media = useMedia()
   // const { background, backgroundRgb } = useSearchBarTheme()
@@ -104,7 +107,7 @@ export const AppSearchBarFloating = () => {
             maxWidth={searchBarMaxWidth}
           >
             <AbsoluteVStack
-              borderRadius={13}
+              borderRadius={borderRadius}
               className="searchbar-shadow"
               transform={[{ skewX: '-12deg' }]}
               overflow="hidden"
@@ -121,13 +124,13 @@ export const AppSearchBarFloating = () => {
               <AbsoluteVStack
                 borderWidth={3}
                 borderColor="rgba(0,0,0,0.2)"
-                borderRadius={12}
+                borderRadius={borderRadiusInner}
                 fullscreen
               />
               <AbsoluteVStack
                 borderWidth={1}
                 borderColor="rgba(0,0,0,0.35)"
-                borderRadius={12}
+                borderRadius={borderRadiusInner}
                 fullscreen
               />
               <LinearGradient
@@ -309,12 +312,12 @@ const SearchBarActionButton = memo(() => {
       <Link {...home.upRoute}>
         <VStack
           alignSelf="center"
-          transform={[{ skewX: '-12deg' }]}
+          transform={[{ skewX: '-12deg' }, { scale: 0.97 }]}
           pointerEvents={isDisabled ? 'none' : 'auto'}
           width={30}
           height={searchBarHeight + 5}
-          borderTopLeftRadius={13.5}
-          borderBottomLeftRadius={13.5}
+          borderTopLeftRadius={borderRadius}
+          borderBottomLeftRadius={borderRadius}
           alignItems="center"
           justifyContent="center"
           opacity={0.05}

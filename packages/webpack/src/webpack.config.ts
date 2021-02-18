@@ -15,7 +15,6 @@ import MiniCssExtractPlugin from 'mini-css-extract-plugin'
 // import OptimizeCSSAssetsPlugin from 'optimize-css-assets-webpack-plugin'
 import SpeedMeasurePlugin from 'speed-measure-webpack-plugin'
 import TerserPlugin from 'terser-webpack-plugin'
-import TimeFixPlugin from 'time-fix-plugin'
 import Webpack from 'webpack'
 import nodeExternals from 'webpack-node-externals'
 import WebpackPwaManifest from 'webpack-pwa-manifest'
@@ -353,8 +352,6 @@ export default function createWebpackConfig({
           }),
 
         isHot && new Webpack.HotModuleReplacementPlugin({}),
-
-        new TimeFixPlugin(),
 
         isVerbose &&
           new (require('webpack-bundle-analyzer').BundleAnalyzerPlugin)({

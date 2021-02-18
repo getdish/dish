@@ -462,6 +462,7 @@ const handleKeyPress = async (e: any, inputStore: InputStore) => {
           tags: filterToNavigable([homeStore.searchbarFocusedTag]),
         })
         next()
+        focusSearchInput()
         return
       }
       if (isCaretAtStart) {

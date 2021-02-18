@@ -1,6 +1,8 @@
 import React, { Suspense, memo, useContext } from 'react'
 import { AbsoluteVStack, HStack, Spacer, Text, VStack, useMedia } from 'snackui'
 
+import { tagLenses } from '../../../constants/localTags'
+import { getActiveTags } from '../../../helpers/getActiveTags'
 import { getTitleForState } from '../../../helpers/getTitleForState'
 import { rgbString } from '../../../helpers/rgbString'
 import { useCurrentLenseColor } from '../../hooks/useCurrentLenseColor'
@@ -23,7 +25,9 @@ export const SearchHeader = memo(() => {
   const { title, subTitle } = getTitleForState(curProps.item, {
     lowerCase: true,
   })
-  const lenseColor = useCurrentLenseColor()
+  const lenseTag =
+    getActiveTags(curProps.item).find((x) => x.type === 'lense') ?? tagLenses[0]
+  const lenseColor = lenseTag.rgb
   return (
     <>
       <ContentScrollViewHorizontalFitted
