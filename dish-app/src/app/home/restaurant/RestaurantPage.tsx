@@ -32,6 +32,7 @@ import { PageTitleTag } from '../../views/PageTitleTag'
 import { SlantedTitle } from '../../views/SlantedTitle'
 import { StackDrawer } from '../../views/StackDrawer'
 import { HomeStackViewProps } from '../HomeStackViewProps'
+import { PageContentWithFooter } from '../PageContentWithFooter'
 import { SkewedCard, SkewedCardCarousel } from '../SkewedCard'
 import { RestaurantDishRow } from './RestaurantDishRow'
 import { RestaurantHeader } from './RestaurantHeader'
@@ -136,94 +137,96 @@ const RestaurantPage = memo(
           }}
           id="restaurant"
         >
-          {/* HEADER */}
-          {/* -1 margin bottom to overlap bottom border */}
-          <VStack
-            backgroundColor={colors.themeColor}
-            borderBottomColor={colors.lightColor}
-            borderBottomWidth={1}
-          >
-            <Suspense
-              fallback={
-                <VStack height={600} width="100%">
-                  <LoadingItem size="lg" />
-                </VStack>
-              }
+          <PageContentWithFooter>
+            {/* HEADER */}
+            {/* -1 margin bottom to overlap bottom border */}
+            <VStack
+              backgroundColor={colors.themeColor}
+              borderBottomColor={colors.lightColor}
+              borderBottomWidth={1}
             >
-              <RestaurantHeader
-                minHeight={450}
-                showImages
-                restaurantSlug={restaurantSlug}
-              />
-            </Suspense>
+              <Suspense
+                fallback={
+                  <VStack height={600} width="100%">
+                    <LoadingItem size="lg" />
+                  </VStack>
+                }
+              >
+                <RestaurantHeader
+                  minHeight={450}
+                  showImages
+                  restaurantSlug={restaurantSlug}
+                />
+              </Suspense>
 
-            <Spacer />
+              <Spacer />
 
-            <VStack marginBottom={15} position="relative" zIndex={1}>
-              <View ref={setDishesSection}>
-                <Suspense
-                  fallback={
-                    <VStack height={150}>
-                      <LoadingItem />
-                    </VStack>
-                  }
-                >
-                  <RestaurantDishRow
-                    max={35}
-                    restaurantSlug={restaurantSlug}
-                    restaurantId={restaurant.id ?? undefined}
-                    selectable
-                    selected={selectedDish}
-                    onSelect={setSelectedDishToggle}
-                    themeName={`${colors.name}Dark`}
-                  />
-                </Suspense>
-              </View>
+              <VStack marginBottom={15} position="relative" zIndex={1}>
+                <View ref={setDishesSection}>
+                  <Suspense
+                    fallback={
+                      <VStack height={150}>
+                        <LoadingItem />
+                      </VStack>
+                    }
+                  >
+                    <RestaurantDishRow
+                      max={35}
+                      restaurantSlug={restaurantSlug}
+                      restaurantId={restaurant.id ?? undefined}
+                      selectable
+                      selected={selectedDish}
+                      onSelect={setSelectedDishToggle}
+                      themeName={`${colors.name}Dark`}
+                    />
+                  </Suspense>
+                </View>
+              </VStack>
             </VStack>
-          </VStack>
 
-          <VStack marginTop={-18}>
-            <Suspense fallback={<LoadingItems />}>
-              <RestaurantTagReviews
-                tagSlug={selectedDish}
-                borderless
-                showScoreTable
-                restaurantSlug={restaurantSlug}
-                restaurantId={restaurant.id}
-              />
-            </Suspense>
-          </VStack>
-
-          <Spacer size="xl" />
-
-          <Suspense fallback={null}>
-            <RestaurantLists restaurantSlug={restaurantSlug} />
-          </Suspense>
-
-          <VStack
-            backgroundColor={theme.backgroundColorSecondary}
-            borderColor={theme.backgroundColorSecondary}
-            borderTopWidth={1}
-            borderBottomWidth={1}
-            paddingVertical={20}
-          >
-            <View ref={setReviewsSection}>
-              <Suspense fallback={null}>
-                <RestaurantReviewsList
+            <VStack marginTop={-18}>
+              <Suspense fallback={<LoadingItems />}>
+                <RestaurantTagReviews
+                  tagSlug={selectedDish}
+                  borderless
+                  showScoreTable
                   restaurantSlug={restaurantSlug}
                   restaurantId={restaurant.id}
                 />
               </Suspense>
-            </View>
-          </VStack>
+            </VStack>
 
-          <Spacer size="xl" />
+            <Spacer size="xl" />
 
-          <VStack flex={1} marginBottom={20} width="100%" alignSelf="center">
             <Suspense fallback={null}>
-              <RestaurantMenu restaurantSlug={restaurantSlug} />
+              <RestaurantLists restaurantSlug={restaurantSlug} />
             </Suspense>
-          </VStack>
+
+            <VStack
+              backgroundColor={theme.backgroundColorSecondary}
+              borderColor={theme.backgroundColorSecondary}
+              borderTopWidth={1}
+              borderBottomWidth={1}
+              paddingVertical={20}
+            >
+              <View ref={setReviewsSection}>
+                <Suspense fallback={null}>
+                  <RestaurantReviewsList
+                    restaurantSlug={restaurantSlug}
+                    restaurantId={restaurant.id}
+                  />
+                </Suspense>
+              </View>
+            </VStack>
+
+            <Spacer size="xl" />
+
+            <VStack flex={1} marginBottom={20} width="100%" alignSelf="center">
+              <Suspense fallback={null}>
+                <RestaurantMenu restaurantSlug={restaurantSlug} />
+              </Suspense>
+            </VStack>
+          </PageContentWithFooter>
         </ContentScrollView>
       </>
     )

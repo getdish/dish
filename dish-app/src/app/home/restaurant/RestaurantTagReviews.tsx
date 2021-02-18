@@ -146,6 +146,7 @@ export const RestaurantTagReviews = memo(
             paddingHorizontal={10}
             paddingVertical={20}
             alignItems="center"
+            justifyContent="center"
             spacing={10}
           >
             <Suspense fallback={<LoadingItems />}>
@@ -344,92 +345,94 @@ export const RestaurantSourcesOverview = graphql(
             .map(({ name, sentence, image, positive, negative }) => {
               const ratio = positive / (Math.abs(negative) + positive)
               return (
-                <VStack
-                  key={name}
-                  shadowColor="#000"
-                  shadowOpacity={0.05}
-                  // borderWidth={1}
-                  // borderColor={theme.borderColor}
-                  backgroundColor={theme.cardBackgroundColor}
-                  maxWidth={440}
-                  shadowRadius={15}
-                  shadowOffset={{ height: 3, width: 0 }}
-                  padding={20}
-                  margin={spacing}
-                  borderRadius={10}
-                  position="relative"
-                  flex={1}
-                >
-                  <VStack position="relative" alignSelf="center">
-                    {/* <AbsoluteVStack
+                <VStack key={name} margin="auto">
+                  <VStack
+                    margin={spacing}
+                    shadowColor="#000"
+                    shadowOpacity={0.05}
+                    // borderWidth={1}
+                    // borderColor={theme.borderColor}
+                    backgroundColor={theme.cardBackgroundColor}
+                    maxWidth={440}
+                    shadowRadius={15}
+                    shadowOffset={{ height: 3, width: 0 }}
+                    padding={20}
+                    alignSelf="center"
+                    borderRadius={10}
+                    position="relative"
+                    flex={1}
+                  >
+                    <VStack position="relative" alignSelf="center">
+                      {/* <AbsoluteVStack
                       right={-35}
                       top={-25}
                       justifyContent="center"
                       alignItems="center"
                       zIndex={0}
-                    >
+                      >
                       <SentimentCircle scale={1.2} ratio={ratio} />
                     </AbsoluteVStack> */}
-                    <SlantedTitle marginTop={-30} size="xs">
-                      {name}
-                    </SlantedTitle>
-                  </VStack>
-
-                  <Spacer size="lg" />
-
-                  <HStack>
-                    <VStack marginTop={-18} spacing alignItems="center">
-                      <Image
-                        source={{ uri: image }}
-                        style={{
-                          width: 32,
-                          height: 32,
-                          borderRadius: 100,
-                        }}
-                      />
-
-                      <Text
-                        fontSize={22}
-                        fontWeight="800"
-                        color={positive > negative ? green : grey}
-                        letterSpacing={-1}
-                      >
-                        {Math.round(ratio * 100)}%
-                      </Text>
-
-                      <VStack spacing="xs">
-                        <SentimentText scale={1.1} sentiment={1}>
-                          {`${positive || 0}`}
-                        </SentimentText>
-
-                        <SentimentText scale={1.1} sentiment={-1}>
-                          {`${Math.abs(negative || 0)}`}
-                        </SentimentText>
-                      </VStack>
+                      <SlantedTitle marginTop={-30} size="xs">
+                        {name}
+                      </SlantedTitle>
                     </VStack>
 
                     <Spacer size="lg" />
 
-                    <Paragraph color={isWeb ? 'var(--color)' : '#222'}>
-                      {tagName ? <Text fontWeight="800">{tagName}</Text> : ''}
-                      {!!tagName && isWeb ? (
-                        <div
-                          className="block"
-                          dangerouslySetInnerHTML={{
-                            __html:
-                              sentence
-                                ?.replace(/\s+/g, ' ')
-                                .replace(
-                                  new RegExp(tagName, 'gi'),
-                                  (match) => `<mark>${match}</mark>`
-                                ) ?? '',
+                    <HStack>
+                      <VStack marginTop={-18} spacing alignItems="center">
+                        <Image
+                          source={{ uri: image }}
+                          style={{
+                            width: 32,
+                            height: 32,
+                            borderRadius: 100,
                           }}
                         />
-                      ) : (
-                        sentence
-                      )}
-                    </Paragraph>
-                  </HStack>
+
+                        <Text
+                          fontSize={22}
+                          fontWeight="800"
+                          color={positive > negative ? green : grey}
+                          letterSpacing={-1}
+                        >
+                          {Math.round(ratio * 100)}%
+                        </Text>
+
+                        <VStack spacing="xs">
+                          <SentimentText scale={1.1} sentiment={1}>
+                            {`${positive || 0}`}
+                          </SentimentText>
+
+                          <SentimentText scale={1.1} sentiment={-1}>
+                            {`${Math.abs(negative || 0)}`}
+                          </SentimentText>
+                        </VStack>
+                      </VStack>
+
+                      <Spacer size="lg" />
+
+                      <Paragraph color={isWeb ? 'var(--color)' : '#222'}>
+                        {tagName ? <Text fontWeight="800">{tagName}</Text> : ''}
+                        {!!tagName && isWeb ? (
+                          <div
+                            className="block"
+                            dangerouslySetInnerHTML={{
+                              __html:
+                                sentence
+                                  ?.replace(/\s+/g, ' ')
+                                  .replace(
+                                    new RegExp(tagName, 'gi'),
+                                    (match) => `<mark>${match}</mark>`
+                                  ) ?? '',
+                            }}
+                          />
+                        ) : (
+                          sentence
+                        )}
+                      </Paragraph>
+                    </HStack>
+                  </VStack>
                 </VStack>
               )
             })}

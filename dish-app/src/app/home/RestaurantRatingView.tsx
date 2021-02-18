@@ -16,7 +16,8 @@ export const RestaurantRatingView = graphql(
     floating?: boolean
   }) => {
     const [restaurant] = queryRestaurant(slug)
-    const count = restaurant.reviews_aggregate({}).aggregate?.count({}) ?? 0
+    const count =
+      0 ?? restaurant.reviews_aggregate({}).aggregate?.count({}) ?? 0
     const ratingViewProps = {
       rating: restaurant.rating * 20,
       size,

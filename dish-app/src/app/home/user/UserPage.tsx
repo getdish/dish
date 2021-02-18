@@ -32,6 +32,7 @@ import { SmallTitle } from '../../views/SmallTitle'
 import { StackDrawer } from '../../views/StackDrawer'
 import { FeedSlantedTitle } from '../FeedSlantedTitle'
 import { StackItemProps } from '../HomeStackView'
+import { PageContentWithFooter } from '../PageContentWithFooter'
 import { RestaurantReview } from '../restaurant/RestaurantReview'
 import { SkewedCard, SkewedCardCarousel } from '../SkewedCard'
 import { CardCarousel } from './CardCarousel'
@@ -124,45 +125,47 @@ const UserPageContent = graphql(
 
     return (
       <ContentScrollView id="user">
-        <VStack spacing="xl" paddingVertical={20}>
-          <VStack>
-            {!!user.about && (
-              <VStack>
-                <SmallTitle>About</SmallTitle>
-                <Paragraph size="lg">{user.about}</Paragraph>
-              </VStack>
-            )}
-
-            <FeedSlantedTitle>Lists</FeedSlantedTitle>
-            <SkewedCardCarousel>
-              {lists.map((list, i) => {
-                return (
-                  <SkewedCard zIndex={1000 - i} key={list.slug}>
-                    <ListCard
-                      isBehind={i > 0}
-                      userSlug={list.user?.username ?? ''}
-                      slug={list.slug}
-                      region={list.region ?? ''}
-                    />
-                  </SkewedCard>
-                )
-              })}
-            </SkewedCardCarousel>
-
-            <FeedSlantedTitle>Recently</FeedSlantedTitle>
-            <Spacer size="xxxl" />
-            <Suspense fallback={<LoadingItems />}>
-              {!hasReviews && <Text>No reviews yet...</Text>}
-              {hasReviews && (
+        <PageContentWithFooter>
+          <VStack spacing="xl" paddingVertical={20}>
+            <VStack>
+              {!!user.about && (
                 <VStack>
-                  {reviews.map(({ id }) => (
-                    <RestaurantReview key={id} reviewId={id} />
-                  ))}
+                  <SmallTitle>About</SmallTitle>
+                  <Paragraph size="lg">{user.about}</Paragraph>
                 </VStack>
               )}
-            </Suspense>
+
+              <FeedSlantedTitle>Lists</FeedSlantedTitle>
+              <SkewedCardCarousel>
+                {lists.map((list, i) => {
+                  return (
+                    <SkewedCard zIndex={1000 - i} key={list.slug}>
+                      <ListCard
+                        isBehind={i > 0}
+                        userSlug={list.user?.username ?? ''}
+                        slug={list.slug}
+                        region={list.region ?? ''}
+                      />
+                    </SkewedCard>
+                  )
+                })}
+              </SkewedCardCarousel>
+
+              <FeedSlantedTitle>Recently</FeedSlantedTitle>
+              <Spacer size="xxxl" />
+              <Suspense fallback={<LoadingItems />}>
+                {!hasReviews && <Text>No reviews yet...</Text>}
+                {hasReviews && (
+                  <VStack>
+                    {reviews.map(({ id }) => (
+                      <RestaurantReview key={id} reviewId={id} />
+                    ))}
+                  </VStack>
+                )}
+              </Suspense>
+            </VStack>
           </VStack>
-        </VStack>
+        </PageContentWithFooter>
       </ContentScrollView>
     )
   }

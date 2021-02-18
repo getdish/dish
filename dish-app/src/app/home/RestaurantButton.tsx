@@ -51,7 +51,7 @@ export const RestaurantButton = graphql(
               }}
             />
           )}
-          <Text color={colors.darkColor} fontWeight="600">
+          <Text color={colors.darkColor} fontWeight="400">
             {restaurant.name}
           </Text>
           <VStack margin={-10} marginLeft={10}>

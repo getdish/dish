@@ -21,7 +21,7 @@ import { homeStore } from '../../homeStore'
 import { PaneControlButtons } from '../../views/PaneControlButtons'
 import { SmallTitle } from '../../views/SmallTitle'
 import { StackViewCloseButton } from '../../views/StackViewCloseButton'
-import { PageTitle } from '../search/PageTitle'
+import { PageTitle } from '../PageTitle'
 
 export default memo(
   graphql<any>(function RestaurantHoursPage() {

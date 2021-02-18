@@ -1,26 +1,103 @@
 <HighlightedText size="lg">
 
-
-Dish is a better restaurant recommender. We do it differently by understanding natural language. If you want a short, high level overview, check our [About page]().
+<strong>TL;DR</strong>: Dish is a better way to find great food by the dish.
+That's all. It's also a personal experiment in creating a more sustainable index
+of knowledge powered by community, ergo the rest of this post.
 
 </HighlightedText>
 
+<IntroText>Why can't it just be a better way to find burgers?</IntroText>
 
-<IntroText>
-  I want to introduce a lot of thinking that's gone into Dish in this blog post.
-  The first part will be on motivation, and the second will go into some of the
-  tech.
-</IntroText>
+I ask myself. I mean Dish _is that_, optimistically, and you can leave this post un-cursed, without needing to know a thing else. It finds burgers, a bit better.
 
-### Search has grown out of control
+Explaining any further for some reason always feels like having to account for _everything else in the universe_. I think it has something to do with that spooky action at a distance stuff.
 
-Let's start at the top.
+What I guess I mean is that, at least to me, Dish is not so much a culmination as it is a continuation of a process that's taken my whole life, on that I quite enjoy and think is valuable and would like to continue, and it's only _manifest_ itself as a burger finder. You can see this post as some sort of "DD", though I'll try and keep it short.
+
+It seems to me startups are too focused on end-results, not not enough on processes. I don't care about the end-result of Dish, I've in fact already developed it in a way such that if I folded it tomorrow, just having this post with these ideas, and open sourcing some of the tech behind it would be enough.
+
+I care about the ideas behind it, the technology and community it aims to build, but mostly about being able to continue to work in the way I've found myself working for 8 or so years now.
+
+That is: for myself, on a small team, doing very ambitious things. Somewhere in the t-SNE cluster of Bell Labs or Bret Victor, Basecamp or Formidable Labs, Nintendo, Pixar or Miyazaki, or just some crazy-haired guy in his big basement of tools puttering around.
+
+It's certainly selfish, but I also think it just happens to produce the best outcomes for the rest of the world as well.
+
+The future of work I dream of is **smaller teams taking on big ones using less funding, amazing OSS tools, ingenuity, and longer incubation periods resulting in building better 🚀 engines without the needing 🚀 growth**.
+
+Instead of launching into a sclerotic manifesto, how about instead a scatalogical list of what I like thinking about when it comes to Dish.
+
+### The process is the product
+
+When you subscribe to Spotify, you aren't just paying to listen to music. You're _voting for the Spotify model_. I think people, even if they don't have the explicit words for this, understand it.
+
+What I want to get away from ultimately is **processes that abuse their users**, or to drop the masquerade, I want to get away from the advertising-driven-content model of the internet. Maybe it's not possible entirely, but that will be a theme throughout.
+
+And I think having Dish users be proud of the idea, the pitch, and the vision is super important for that exact reason: Dish isn't a map of food, it's an attempt to build a fun, high quality community of people who curate what they know best: the best eats in _their hometown_ or within _their favorite cuisine_.
+
+### Make it fun
+
+As tech matures, we have more room for personality, experience, interaction. But it doesn't always move forward.
+
+Look at this progression in social: Usenet, AIM, Myspace, Facebook, Instagram, Snapchat, TikTok. Some mediums allowed profuse personalization, and then Facebook came. But with Snapchat and TikTok, we're seeing "zany-ness" come back.
+
+I'm hoping for a similar one here, with "local search" (blegh), or it really should be called: a community-powered guide to the world.
+
+I want people to be able to share playlists of their favorite nights out, beautiful countryside trips, top coffee shops to work at, and best places to catch a sunset. We lost something special in the shutter of FourSquare, but we can do even better, and Snapchat and TikTok show in part that personality, sociality, and fun matter.
+
+### Quality sells
+
+This will make more sense after the next section, but I want it first because it stands on it's own, and it's easier to agree with.
+
+People pay for quality. And paying for things often aligns you better with the company.
+
+> obligatory _"if youre not paying for it, you're the product"_ quote
+
+Dish will explore some sort of "Prime membership" type deal, with a free tier that still gets you as good an experience as what's already out there.
+
+It's not just about making the customer happier, it's also about setting a benchmark: I want to make something great, and if it is, then people will pay a small amount to have that, and vote to maintain it.
+
+### Big companies can be evil AND benevolent
+
+Ok, so Google really does seem, ultimately, to be "evil". They are slowly wringing entire industries dry, they've deigned themselves arbiters of truth yet make constant mistakes, their Algorithms don't care about you and if they shut your account down the only recourse is hoping your Tweet about them goes viral.
+
+There's no trial, no vote, just the Algorithm, all the way down.
+
+Meanwhile, they are pushing absurd small-business killing initiatives left and right, from their latest ad-blocking-prevention-proposals to baking tracking into Chrome, from the ever-expanding inlining of content to AMP, to their ever-slimming profit-sharing with content creators, even to their Embrace, Extend and Extinguish model with Android OSS.
+
+From here, many say, "we need to decentralize!" And I sympathize, I do. But to me, decentralization just adds an equally big problem on top of an already huge one: how to carve out a space for an information-company in a world of Google.
+
+The antidote to a Big Evil Company (BEC) will just have to be Big Amazing Companies (BAC) until proven otherwise. To define:
+
+- The customers of a BAC company are primarily being persuaded to keep purchasing with the BAC.
+
+Meanwhile...
+
+- The customers of a BEC are being tracked and analyzed in order to sell you on many other companies.
+
+Evil companies make it harder to find good information because their entire revenue stream - advertising - is predicated on that. If they help you out along the way, it's only in the way that poison is best covered in yogurt.
+
+Do we have to have poison to eat Yogurt? Maybe we can just pay for Yogurt.
+
+**The highest paying bidder is a terrible, terrible algorithm for finding good things**. It's ironic that two of our biggest information finding/sharing companies rely on this entirely.
+
+### Communities know best, but need tending
+
+This one isn't so hard to argue. Really, _specialized_ communities know best. Small forums, small subreddits, the less controversial parts of Wikipedia, Hacker News or Stack Overflow (if you're a nerd like me), or even small blogs with active comment systems.
+
+Here's how the best ones work:
+
+- Specialization (sub-reddits, focused topics, or small scale).
+- Voting on content AND comments (or really voting on everything).
+- Heirarchies of trust (moderators, invite chains).
+- Real people. The more you link an account to a real person, the better. Note: you can keep anonimity _and_ allow multiple accounts per user with this model, but you will require fairly strict verification/signup requirement eventually or lean heavily on specialization.
+
+### Algorithms need humans, humans can fix Algorithms
 
 Google has been running into a problem. They control the main access point to information on the web, and by nature of incentives, that means that everyone wants a piece of the top of their results. How do they combat the ever-growing spectre of spam, and the glut of content produced purely for optimization?
 
 Well, the answer is, as with all things Google: algorithms.
 
-The problem with algorithms is they are fairly easy to game. But is there anything _but_ algorithms? How do you scale anything besides an algorithm?
+The problem with algorithms is they are fairly easy to game and require constant attention. Is there anything _but_ algorithms? How do you scale anything besides an algorithm?
 
 We aren't proposing to know a grand solution, but we do see some patterns. There's a simple way to get far better search results even on the of Google today. And that is **site filters**.
 
@@ -37,31 +114,4 @@ There's a whole list of sites like these that I've collected over time, for topi
 
 And so on. There are more, but that's for another post. But what I'm drawing attention to here isn't so much the exact sites or filters here, but something else.
 
-### What's in common with all these sites?
-
-They are either communities, or blogs.
-
-<br />
-<br />
-<br />
-<br />
-<br />
-<br />
-<br />
-<br />
-<br />
-<br />
-<br />
-<br />
-<br />
-<br />
-<br />
-<br />
-<br />
-<br />
-<br />
-<br />
-<br />
-<br />
-<br />
-<br />
+### Customizing to taste can be controlled

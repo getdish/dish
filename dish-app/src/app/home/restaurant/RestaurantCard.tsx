@@ -78,7 +78,7 @@ export const RestaurantCardContent = graphql(
     const [restaurant] = queryRestaurant(restaurantSlug)
     const [price_label, price_color, price_range] = priceRange(restaurant)
     const restaurantPhoto = queryRestaurantCoverPhoto(restaurant)
-    const rating = Math.round(restaurant.rating * 2)
+    // const rating = Math.round(restaurant.rating * 2)
     return (
       <Link name="restaurant" asyncClick params={{ slug: restaurantSlug }}>
         <Card

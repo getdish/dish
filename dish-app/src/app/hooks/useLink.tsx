@@ -170,6 +170,7 @@ const getNormalizedLink = (props: Partial<LinkButtonProps>) => {
       }),
     }
   }
+
   return props
 }
 

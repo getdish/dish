@@ -50,6 +50,7 @@ import { PageTitleTag } from '../../views/PageTitleTag'
 import { StackDrawer } from '../../views/StackDrawer'
 import { HomeStackViewProps } from '../HomeStackViewProps'
 import { HomeSuspense } from '../HomeSuspense'
+import { PageContentWithFooter } from '../PageContentWithFooter'
 import {
   ITEM_HEIGHT,
   RestaurantListItem,
@@ -428,18 +429,19 @@ const SearchPageScrollView = forwardRef<ScrollView, SearchPageScrollViewProps>(
           ref={combineRefs(ref, scrollRef) as any}
           {...props}
         >
-          <SearchHeader />
-          <Spacer />
-          <VStack position="relative" flex={10} minHeight={600}>
-            {children}
-          </VStack>
-          <Suspense fallback={null}>
-            <SearchFooter
-              numResults={searchPageStore.results.length}
-              scrollToTop={scrollToTopHandler}
-            />
-            <VStack height={400} />
-          </Suspense>
+          <PageContentWithFooter>
+            <SearchHeader />
+            <Spacer />
+            <VStack position="relative" flex={10} minHeight={600}>
+              {children}
+            </VStack>
+            <Suspense fallback={null}>
+              <SearchFooter
+                numResults={searchPageStore.results.length}
+                scrollToTop={scrollToTopHandler}
+              />
+            </Suspense>
+          </PageContentWithFooter>
         </ContentScrollView>
       </VStack>
     )

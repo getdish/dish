@@ -2142,6 +2142,10 @@ export interface restaurant_min_order_by {
   zip?: Maybe<order_by>
 }
 
+export interface restaurant_new_args {
+  region_slug?: Maybe<Scalars['String']>
+}
+
 /** input type for inserting object relation for remote table "restaurant" */
 export interface restaurant_obj_rel_insert_input {
   data: restaurant_insert_input
@@ -2709,6 +2713,10 @@ export interface restaurant_tag_variance_order_by {
 export interface restaurant_top_tags_args {
   _tag_types?: Maybe<Scalars['String']>
   tag_slugs?: Maybe<Scalars['String']>
+}
+
+export interface restaurant_trending_args {
+  region_slug?: Maybe<Scalars['String']>
 }
 
 /** update columns of table "restaurant" */
@@ -4882,6 +4890,28 @@ export const generatedSchema = {
       },
     },
     restaurant_by_pk: { __type: 'restaurant', __args: { id: 'uuid!' } },
+    restaurant_new: {
+      __type: '[restaurant!]!',
+      __args: {
+        args: 'restaurant_new_args!',
+        distinct_on: '[restaurant_select_column!]',
+        limit: 'Int',
+        offset: 'Int',
+        order_by: '[restaurant_order_by!]',
+        where: 'restaurant_bool_exp',
+      },
+    },
+    restaurant_new_aggregate: {
+      __type: 'restaurant_aggregate!',
+      __args: {
+        args: 'restaurant_new_args!',
+        distinct_on: '[restaurant_select_column!]',
+        limit: 'Int',
+        offset: 'Int',
+        order_by: '[restaurant_order_by!]',
+        where: 'restaurant_bool_exp',
+      },
+    },
     restaurant_tag: {
       __type: '[restaurant_tag!]!',
       __args: {
@@ -4926,6 +4956,28 @@ export const generatedSchema = {
         offset: 'Int',
         order_by: '[restaurant_tag_order_by!]',
         where: 'restaurant_tag_bool_exp',
+      },
+    },
+    restaurant_trending: {
+      __type: '[restaurant!]!',
+      __args: {
+        args: 'restaurant_trending_args!',
+        distinct_on: '[restaurant_select_column!]',
+        limit: 'Int',
+        offset: 'Int',
+        order_by: '[restaurant_order_by!]',
+        where: 'restaurant_bool_exp',
+      },
+    },
+    restaurant_trending_aggregate: {
+      __type: 'restaurant_aggregate!',
+      __args: {
+        args: 'restaurant_trending_args!',
+        distinct_on: '[restaurant_select_column!]',
+        limit: 'Int',
+        offset: 'Int',
+        order_by: '[restaurant_order_by!]',
+        where: 'restaurant_bool_exp',
       },
     },
     restaurant_with_tags: {
@@ -6073,6 +6125,28 @@ export const generatedSchema = {
       },
     },
     restaurant_by_pk: { __type: 'restaurant', __args: { id: 'uuid!' } },
+    restaurant_new: {
+      __type: '[restaurant!]!',
+      __args: {
+        args: 'restaurant_new_args!',
+        distinct_on: '[restaurant_select_column!]',
+        limit: 'Int',
+        offset: 'Int',
+        order_by: '[restaurant_order_by!]',
+        where: 'restaurant_bool_exp',
+      },
+    },
+    restaurant_new_aggregate: {
+      __type: 'restaurant_aggregate!',
+      __args: {
+        args: 'restaurant_new_args!',
+        distinct_on: '[restaurant_select_column!]',
+        limit: 'Int',
+        offset: 'Int',
+        order_by: '[restaurant_order_by!]',
+        where: 'restaurant_bool_exp',
+      },
+    },
     restaurant_tag: {
       __type: '[restaurant_tag!]!',
       __args: {
@@ -6117,6 +6191,28 @@ export const generatedSchema = {
         offset: 'Int',
         order_by: '[restaurant_tag_order_by!]',
         where: 'restaurant_tag_bool_exp',
+      },
+    },
+    restaurant_trending: {
+      __type: '[restaurant!]!',
+      __args: {
+        args: 'restaurant_trending_args!',
+        distinct_on: '[restaurant_select_column!]',
+        limit: 'Int',
+        offset: 'Int',
+        order_by: '[restaurant_order_by!]',
+        where: 'restaurant_bool_exp',
+      },
+    },
+    restaurant_trending_aggregate: {
+      __type: 'restaurant_aggregate!',
+      __args: {
+        args: 'restaurant_trending_args!',
+        distinct_on: '[restaurant_select_column!]',
+        limit: 'Int',
+        offset: 'Int',
+        order_by: '[restaurant_order_by!]',
+        where: 'restaurant_bool_exp',
       },
     },
     restaurant_with_tags: {
@@ -8489,6 +8585,7 @@ export const generatedSchema = {
     affected_rows: { __type: 'Int!' },
     returning: { __type: '[restaurant!]!' },
   },
+  restaurant_new_args: { region_slug: { __type: 'String' } },
   restaurant_obj_rel_insert_input: {
     data: { __type: 'restaurant_insert_input!' },
     on_conflict: { __type: 'restaurant_on_conflict' },
@@ -9081,6 +9178,7 @@ export const generatedSchema = {
     _tag_types: { __type: 'String' },
     tag_slugs: { __type: 'String' },
   },
+  restaurant_trending_args: { region_slug: { __type: 'String' } },
   restaurant_var_pop_fields: {
     __typename: { __type: 'String!' },
     downvotes: { __type: 'Float' },
@@ -11040,6 +11138,22 @@ export interface Query {
     where?: Maybe<restaurant_bool_exp>
   }) => restaurant_aggregate
   restaurant_by_pk: (args: { id: ScalarsEnums['uuid'] }) => Maybe<restaurant>
+  restaurant_new: (args: {
+    args: restaurant_new_args
+    distinct_on?: Maybe<Array<ScalarsEnums['restaurant_select_column']>>
+    limit?: Maybe<ScalarsEnums['Int']>
+    offset?: Maybe<ScalarsEnums['Int']>
+    order_by?: Maybe<Array<restaurant_order_by>>
+    where?: Maybe<restaurant_bool_exp>
+  }) => Array<restaurant>
+  restaurant_new_aggregate: (args: {
+    args: restaurant_new_args
+    distinct_on?: Maybe<Array<ScalarsEnums['restaurant_select_column']>>
+    limit?: Maybe<ScalarsEnums['Int']>
+    offset?: Maybe<ScalarsEnums['Int']>
+    order_by?: Maybe<Array<restaurant_order_by>>
+    where?: Maybe<restaurant_bool_exp>
+  }) => restaurant_aggregate
   restaurant_tag: (args?: {
     distinct_on?: Maybe<Array<ScalarsEnums['restaurant_tag_select_column']>>
     limit?: Maybe<ScalarsEnums['Int']>
@@ -11074,6 +11188,22 @@ export interface Query {
     order_by?: Maybe<Array<restaurant_tag_order_by>>
     where?: Maybe<restaurant_tag_bool_exp>
   }) => restaurant_tag_aggregate
+  restaurant_trending: (args: {
+    args: restaurant_trending_args
+    distinct_on?: Maybe<Array<ScalarsEnums['restaurant_select_column']>>
+    limit?: Maybe<ScalarsEnums['Int']>
+    offset?: Maybe<ScalarsEnums['Int']>
+    order_by?: Maybe<Array<restaurant_order_by>>
+    where?: Maybe<restaurant_bool_exp>
+  }) => Array<restaurant>
+  restaurant_trending_aggregate: (args: {
+    args: restaurant_trending_args
+    distinct_on?: Maybe<Array<ScalarsEnums['restaurant_select_column']>>
+    limit?: Maybe<ScalarsEnums['Int']>
+    offset?: Maybe<ScalarsEnums['Int']>
+    order_by?: Maybe<Array<restaurant_order_by>>
+    where?: Maybe<restaurant_bool_exp>
+  }) => restaurant_aggregate
   restaurant_with_tags: (args: {
     args: restaurant_with_tags_args
     distinct_on?: Maybe<Array<ScalarsEnums['restaurant_select_column']>>
@@ -11881,6 +12011,22 @@ export interface Subscription {
     where?: Maybe<restaurant_bool_exp>
   }) => restaurant_aggregate
   restaurant_by_pk: (args: { id: ScalarsEnums['uuid'] }) => Maybe<restaurant>
+  restaurant_new: (args: {
+    args: restaurant_new_args
+    distinct_on?: Maybe<Array<ScalarsEnums['restaurant_select_column']>>
+    limit?: Maybe<ScalarsEnums['Int']>
+    offset?: Maybe<ScalarsEnums['Int']>
+    order_by?: Maybe<Array<restaurant_order_by>>
+    where?: Maybe<restaurant_bool_exp>
+  }) => Array<restaurant>
+  restaurant_new_aggregate: (args: {
+    args: restaurant_new_args
+    distinct_on?: Maybe<Array<ScalarsEnums['restaurant_select_column']>>
+    limit?: Maybe<ScalarsEnums['Int']>
+    offset?: Maybe<ScalarsEnums['Int']>
+    order_by?: Maybe<Array<restaurant_order_by>>
+    where?: Maybe<restaurant_bool_exp>
+  }) => restaurant_aggregate
   restaurant_tag: (args?: {
     distinct_on?: Maybe<Array<ScalarsEnums['restaurant_tag_select_column']>>
     limit?: Maybe<ScalarsEnums['Int']>
@@ -11915,6 +12061,22 @@ export interface Subscription {
     order_by?: Maybe<Array<restaurant_tag_order_by>>
     where?: Maybe<restaurant_tag_bool_exp>
   }) => restaurant_tag_aggregate
+  restaurant_trending: (args: {
+    args: restaurant_trending_args
+    distinct_on?: Maybe<Array<ScalarsEnums['restaurant_select_column']>>
+    limit?: Maybe<ScalarsEnums['Int']>
+    offset?: Maybe<ScalarsEnums['Int']>
+    order_by?: Maybe<Array<restaurant_order_by>>
+    where?: Maybe<restaurant_bool_exp>
+  }) => Array<restaurant>
+  restaurant_trending_aggregate: (args: {
+    args: restaurant_trending_args
+    distinct_on?: Maybe<Array<ScalarsEnums['restaurant_select_column']>>
+    limit?: Maybe<ScalarsEnums['Int']>
+    offset?: Maybe<ScalarsEnums['Int']>
+    order_by?: Maybe<Array<restaurant_order_by>>
+    where?: Maybe<restaurant_bool_exp>
+  }) => restaurant_aggregate
   restaurant_with_tags: (args: {
     args: restaurant_with_tags_args
     distinct_on?: Maybe<Array<ScalarsEnums['restaurant_select_column']>>

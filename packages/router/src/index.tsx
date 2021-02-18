@@ -290,6 +290,10 @@ export class Router<
   }
 }
 
+const stripExtraPathSegments = (path: string) => {
+  return path.replace(/\/:[a-zA-Z-_]+[\?]?/gi, '')
+}
+
 export function getPathFromParams(
   { routes }: Router<any>,
   {
@@ -300,9 +304,13 @@ export function getPathFromParams(
     params?: Object | void
   }
 ) {
-  if (!name) return ``
+  if (!name) {
+    return ``
+  }
+
   // object to path
   let route = routes[name]
+
   if (!route) {
     console.log(`no route`, name, routes)
     return ``
@@ -311,8 +319,13 @@ export function getPathFromParams(
     console.log(`no route path`, route, name, routes)
     return ``
   }
+
   let path = route.path
-  if (!params) return path
+
+  if (!params) {
+    return stripExtraPathSegments(path)
+  }
+
   let replaceSplatParams: string[] = []
   for (const key in params) {
     if (typeof params[key] === 'undefined') {
@@ -326,8 +339,8 @@ export function getPathFromParams(
   }
 
   // remove unused optionals optionals
-  if (path.indexOf('/:') > 0) {
-    path = path.replace(/\/:[a-zA-Z-_]+\??/gi, '')
+  if (path.includes('/:')) {
+    path = stripExtraPathSegments(path)
   }
 
   if (replaceSplatParams.length) {
@@ -336,10 +349,6 @@ export function getPathFromParams(
       replaceSplatParams.map((key) => `${key}/${params[key]}`).join('/')
     )
   }
-
-  // remove extra stuffs
-  path = path.replace(/\?/g, '')
-  path = path.replace(/(\/\:[^\/]+)/g, '')
 
   return path
 }

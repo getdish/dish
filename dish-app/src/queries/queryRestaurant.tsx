@@ -15,8 +15,6 @@ export const queryRestaurant = (slug: string) => {
 }
 
 export const queryRestaurantCoverPhoto = (restaurant: RestaurantQuery) => {
-  return restaurant.photo_table({
-    order_by: [{ photo: { quality: order_by.desc } }],
-    limit: 1,
-  })?.[0]?.photo.url
+  // TODO using photo_table was causing incredibly slow queries
+  return restaurant.photos()?.[0]
 }

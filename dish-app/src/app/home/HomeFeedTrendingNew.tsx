@@ -1,8 +1,8 @@
-import { RestaurantOnlyIds, SEARCH_DOMAIN, graphql } from '@dish/graph'
+import { RestaurantOnlyIds, graphql, query } from '@dish/graph'
 import React, { memo } from 'react'
 import { HStack, VStack } from 'snackui'
 
-import { useQueryLoud } from '../../helpers/useQueryLoud'
+import { getRestaurantIdentifiers } from '../../helpers/getRestaurantIdentifiers'
 import { ContentScrollViewHorizontal } from '../views/ContentScrollViewHorizontal'
 import { ContentSectionHoverable } from './ContentSectionHoverable'
 import { FeedSlantedTitle } from './FeedSlantedTitle'
@@ -24,26 +24,31 @@ export type FIHot = FIBase & {
   restaurants: RestaurantOnlyIds[]
 }
 
-type FeedApiResponse = {
-  trending: RestaurantOnlyIds[]
-  newest: RestaurantOnlyIds[]
+const getGraphResults = (r: any) => {
+  return r[0]?.slug ? r : []
 }
 
 export function useHomeFeedTrendingNew(props: HomeFeedProps) {
   const { item, region } = props
   const slug = item.region ?? region?.slug ?? ''
-  const homeFeed = useQueryLoud<FeedApiResponse>(
-    `HOMEFEEDQUERY-${slug}`,
-    () =>
-      fetch(
-        `${SEARCH_DOMAIN}/feed?region=${encodeURIComponent(slug)}&limit=20`
-      ).then((res) => res.json()),
-    {
-      enabled: !!slug,
-      suspense: false,
-    }
-  )
-  const feedData = homeFeed.data
+  const newest = query
+    .restaurant_new({
+      args: {
+        region_slug: slug,
+      },
+      limit: 8,
+    })
+    .map(getRestaurantIdentifiers)
+
+  const trending = query
+    .restaurant_trending({
+      args: {
+        region_slug: slug,
+      },
+      limit: 8,
+    })
+    .map(getRestaurantIdentifiers)
+
   return [
     {
       id: '1',
@@ -51,7 +56,7 @@ export function useHomeFeedTrendingNew(props: HomeFeedProps) {
       size: 'sm',
       rank: -2,
       title: 'New',
-      restaurants: feedData?.newest,
+      restaurants: getGraphResults(newest),
     } as FINew,
 
     {
@@ -60,7 +65,7 @@ export function useHomeFeedTrendingNew(props: HomeFeedProps) {
       size: 'sm',
       title: 'Trending',
       rank: -1,
-      restaurants: feedData?.trending,
+      restaurants: getGraphResults(trending),
     } as FIHot,
   ]
 }

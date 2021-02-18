@@ -9,12 +9,14 @@ import {
   H5,
   Paragraph,
   Text,
+  Theme,
   UnorderedList,
   UnorderedListItem,
   VStack,
 } from 'snackui'
 
 import { lightYellow, yellow } from '../../../constants/colors'
+import { HighlightedText } from '../../views/HighlightedText'
 import { Link } from '../../views/Link'
 import { contentSpace, contentSpaceLg, contentSpaceSm } from './contentSpace'
 import { IntroText } from './IntroText'
@@ -66,17 +68,7 @@ const components = {
     </>
   ),
 
-  HighlightedText: spaceVertical((props) => (
-    <Paragraph
-      backgroundColor={lightYellow}
-      borderColor={yellow}
-      borderWidth={1}
-      borderRadius={10}
-      paddingVertical="1%"
-      paddingHorizontal="3%"
-      {...props}
-    />
-  )),
+  HighlightedText: spaceVertical(HighlightedText),
 
   Image: ({ alt, ...rest }: ImageProps & { alt?: string }) => (
     <>

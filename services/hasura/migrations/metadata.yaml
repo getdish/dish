@@ -1195,7 +1195,13 @@ functions:
     name: list_populated
 - function:
     schema: public
+    name: restaurant_new
+- function:
+    schema: public
     name: restaurant_top_tags
+- function:
+    schema: public
+    name: restaurant_trending
 - function:
     schema: public
     name: restaurant_with_tags
