@@ -71,24 +71,22 @@ export default function AboutPage({
               size="lg"
               fontWeight="700"
             >
-              We're building the Hitchiker's Guide to the Galaxy, starting with
-              earth (and food). Ratings&nbsp;+&nbsp;online communities are
-              breaking, we're exploring how to fix them.
+              The Hitchiker's Guide to the Galaxy, starting with earth + food.
+              We're&nbsp;exploring&nbsp;how to improve ratings and online
+              communities.
             </Paragraph>
 
             <H3>How it started</H3>
 
             <Paragraph size="xl">
-              Food — technically, a large bang and a lot of commotion, but
-              ultimately — tacos and pho in the San Francisco Bay Area. In
-              eating around that corner of the galaxy, we'd noticed a disturbing
-              trend: international cuisine with poor ratings. Amazing Mexican,
-              Chinese and Vietnamese spots with ⭐️⭐️⭐️/5 stars due to their
-              hole-in-the-wall charms. It was hard to know where to get a good
-              bowl of pho.
+              Tacos and pho in the San Francisco Bay Area. In that corner of the
+              galaxy, we'd noticed a disturbing trend: good food with poor
+              ratings. Amazing Mexican, Chinese and Vietnamese spots with
+              ⭐️⭐️⭐️/5 stars due to service or ambience. It was hard to know
+              where to get a good bowl of pho.
             </Paragraph>
 
-            <H3>The problem</H3>
+            <H3>The realization</H3>
 
             <Paragraph size="xxl">
               It's not that{' '}
@@ -99,16 +97,24 @@ export default function AboutPage({
               <Text fontWeight="700">
                 five star ratings don't really help you with that either
               </Text>
-              . By our estimate, it's time humans generally considered them bad
-              idea.
+              . What we need is ratings down to the dish (and other factors that
+              matter).
             </Paragraph>
 
             <Paragraph size="xl">
-              Delivery just makes it worse: more inconsistent scores, and new
-              "innovations" like virtual pop-ups that are just poorly performing
-              restaurants paying for a "rating reset". Getting a decent bowl of
-              poke delivered easily is nearly as improbable as an improbability
-              drive.
+              By our estimate, it's time humans generally considered "five
+              stars" a bad idea.
+            </Paragraph>
+
+            <Paragraph size="xl">
+              Delivery adds more problems: up to four different services with
+              unreliable ratings the "innovation" of virtual pop-ups (poor-rated
+              restaurants masquerading under clean ratings).
+            </Paragraph>
+
+            <Paragraph size="xl">
+              Getting a great bowl of poke delivered can feel like navigating
+              Vogon beaurocracy.
             </Paragraph>
 
             <H3>What we want</H3>
@@ -143,33 +149,31 @@ export default function AboutPage({
                 date night 🌃
               </LinkButton>{' '}
               are <Text fontStyle="italic">unique</Text>, so Dish rates down to
-              each dish, and other factors that matter. We think the rating
-              problem comes down to the factors that matter, unique to each type
-              of cuisine or experience.
+              each dish, and splits out other factors by tags (vibe, service,
+              vegan, etc).
             </Paragraph>
 
             <Paragraph size="xl">
-              But of course it's not just ratings, but also taste, and building
-              up a good community of hitchikers. We hope we can solve it with a
-              few things:
+              But of course it's not just ratings: building up a good community
+              of hitchikers, accounting for taste, and a few more problems we
+              want to solve:
             </Paragraph>
 
             <UnorderedList>
-              <UnorderedListItem size="xl">
+              <UnorderedListItem size="lg">
+                Taste profile, but let you control the algorithm
+              </UnorderedListItem>
+              <UnorderedListItem size="lg">
+                Voting across <Text fontStyle="italic">everything</Text>
+              </UnorderedListItem>
+              <UnorderedListItem size="lg">
                 Single-account, invite-based membership
               </UnorderedListItem>
-              <UnorderedListItem size="xl">
-                Customizing to your taste, but letting you control the knobs
+              <UnorderedListItem size="lg">
+                Sub-communities / specialization
               </UnorderedListItem>
-              <UnorderedListItem size="xl">
-                Community voting across{' '}
-                <Text fontStyle="italic">everything</Text>
-              </UnorderedListItem>
-              <UnorderedListItem size="xl">
-                Sub-communities that can curate their own maps
-              </UnorderedListItem>
-              <UnorderedListItem size="xl">
-                A paid-for "plus" membership that avoids ads
+              <UnorderedListItem size="lg">
+                A non-ad, non-tracked private option
               </UnorderedListItem>
             </UnorderedList>
 
