@@ -204,8 +204,6 @@ export default memo(function HomePage(
 
               <HomePageIntroDialogue />
 
-              <Spacer />
-
               <PageContentWithFooter>
                 {isLoaded && (
                   <HomePageFeed

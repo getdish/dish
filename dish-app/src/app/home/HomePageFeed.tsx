@@ -141,16 +141,7 @@ export const HomePageFeed = memo(
           </>
         )}
 
-        {!isLoading && (
-          <Suspense fallback={null}>
-            <VStack
-              paddingBottom={100}
-              minHeight={Dimensions.get('window').height * 0.9}
-            >
-              {feedContents}
-            </VStack>
-          </Suspense>
-        )}
+        {!isLoading && <Suspense fallback={null}>{feedContents}</Suspense>}
       </>
     )
   })

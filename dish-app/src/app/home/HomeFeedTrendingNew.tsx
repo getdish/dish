@@ -1,9 +1,10 @@
 import { RestaurantOnlyIds, graphql, query } from '@dish/graph'
 import React, { memo, useMemo } from 'react'
-import { HStack, VStack } from 'snackui'
+import { AbsoluteVStack, HStack, VStack } from 'snackui'
 
 import { getRestaurantIdentifiers } from '../../helpers/getRestaurantIdentifiers'
 import { ContentScrollViewHorizontal } from '../views/ContentScrollViewHorizontal'
+import { SlantedTitle } from '../views/SlantedTitle'
 import { ContentSectionHoverable } from './ContentSectionHoverable'
 import { FeedSlantedTitle } from './FeedSlantedTitle'
 import { FIBase } from './FIBase'
@@ -84,23 +85,24 @@ export const HomeFeedTrendingNew = memo(
     if (props.size === 'sm') {
       return (
         <ContentSectionHoverable>
-          <FeedSlantedTitle size="sm" zIndex={10}>
-            {props.title}
-          </FeedSlantedTitle>
-          <VStack
-            maxWidth="100%"
-            overflow="hidden"
-            marginTop={-15}
-            marginBottom={10}
+          <AbsoluteVStack
+            fullscreen
+            pointerEvents="none"
+            justifyContent="center"
           >
+            <SlantedTitle fontWeight="300" size="xs" zIndex={10}>
+              {props.title}
+            </SlantedTitle>
+          </AbsoluteVStack>
+          <VStack maxWidth="100%" overflow="hidden">
             <ContentScrollViewHorizontal>
               <VStack
-                paddingVertical={12}
+                paddingVertical={5}
                 paddingHorizontal={40}
                 flexWrap="nowrap"
               >
-                <HStack spacing={6} overflow="hidden">
-                  <VStack width={props.type == 'hot' ? 72 : 30} />
+                <HStack spacing={6}>
+                  <VStack width={props.type == 'hot' ? 60 : 30} />
 
                   {restaurants.map((r, index) => {
                     if (!r) return null
