@@ -79,9 +79,7 @@ export function Card({
   }
   const longestWord =
     title?.split(' ').reduce((acc, cur) => Math.max(cur.length, acc), 0) ?? 0
-  const fontSize = Math.round(
-    (longestWord > 9 ? 24 : 28) * (isSm ? 0.85 : 1.05)
-  )
+  const fontSize = Math.round((longestWord > 9 ? 24 : 28) * (isSm ? 0.85 : 1))
 
   return (
     <CardFrame
@@ -92,7 +90,7 @@ export function Card({
     >
       <VStack
         borderRadius={cardFrameBorderRadius}
-        backgroundColor="#000"
+        backgroundColor={colors.pastelColor}
         width="100%"
         height="100%"
       >
@@ -119,7 +117,7 @@ export function Card({
                 top={0}
                 left={0}
                 bottom={0}
-                right="70%"
+                right="60%"
                 transform={[{ translateX: -20 }]}
               >
                 <LinearGradient
@@ -130,14 +128,14 @@ export function Card({
                   ]}
                   start={[0, 0]}
                   end={[1, 0]}
-                  colors={[colors.darkColor, 'rgba(0,0,0,0)']}
+                  colors={['rgba(0,0,0,1)', 'rgba(0,0,0,0)']}
                 />
               </AbsoluteVStack>
             </VStack>
           </AbsoluteVStack>
           <VStack
-            className="hover-100-opacity-child"
-            opacity={dimImage ? 0.75 : 0.9}
+            className="hover-75-opacity-child"
+            opacity={dimImage ? 0.5 : 0.9}
             {...frame}
           >
             {!!photo && typeof photo === 'string' ? (
@@ -167,7 +165,7 @@ export function Card({
           <VStack
             className="ease-in-out"
             opacity={hideInfo ? 0 : 1}
-            padding={24}
+            padding={20}
             alignItems="flex-start"
             spacing
             width="100%"
@@ -189,11 +187,28 @@ export function Card({
                   <AbsoluteVStack
                     className="hover-0-opacity-child"
                     zIndex={-1}
-                    opacity={0.66}
-                    left={-40}
+                    left={-60}
                     bottom={-60}
+                    transform={[
+                      { rotate: '20deg' },
+                      { scaleX: 1.5 },
+                      { translateY: -30 },
+                    ]}
                   >
-                    <Circle size={width} backgroundColor={colors.color} />
+                    <LinearGradient
+                      style={{ width: 220, height: 220 }}
+                      colors={[
+                        colors.pastelColor,
+                        colors.pastelColor,
+                        colors.pastelColor,
+                        colors.pastelColor,
+                        `${colors.color}00`,
+                        // `transparent`,
+                        // `transparent`,
+                      ]}
+                      // start={[1, 0]}
+                      // end={[0.9, 0.1]}
+                    />
                   </AbsoluteVStack>
 
                   <Text
@@ -205,7 +220,7 @@ export function Card({
                     letterSpacing={-0.5}
                     color="#fff"
                     fontSize={fontSize}
-                    lineHeight={fontSize * 1.1}
+                    lineHeight={fontSize * 1.05}
                   >
                     {title}
                   </Text>

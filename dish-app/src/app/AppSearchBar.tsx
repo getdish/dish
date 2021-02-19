@@ -186,16 +186,16 @@ const AppSearchBarContents = memo(() => {
     >
       {!media.sm && <SearchBarActionButton />}
 
-      <VStack paddingHorizontal={media.sm ? 6 : 12}>
+      <VStack paddingHorizontal={media.xs ? 6 : 12}>
         <DishLogoButton />
       </VStack>
 
       <HStack
         className="ease-in-out"
         position="relative"
-        width={media.xs ? 'auto' : '43%'}
+        width={media.sm ? 'auto' : '43%'}
         maxWidth={
-          media.xs ? 'auto' : media.sm && focus === 'location' ? 120 : '100%'
+          media.xs ? 'auto' : media.sm && focus === 'location' ? '30%' : '100%'
         }
         flex={1}
         alignItems="center"

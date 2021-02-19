@@ -621,6 +621,10 @@ mark {
   opacity: 1;
 }
 
+.hover-parent:hover .hover-75-opacity-child {
+  opacity: 0.75;
+}
+
 .hover-parent:hover .hover-50-opacity-child {
   opacity: 0.5;
 }

@@ -69,7 +69,11 @@ const DishButtonContent = (props: TagButtonSlantedProps) => {
         cursor="pointer"
         // {...rest}
       >
-        <HStack transform={[{ skewX: '12deg' }]} spacing alignItems="center">
+        <HStack
+          transform={[{ skewX: '12deg' }]}
+          spacing="sm"
+          alignItems="center"
+        >
           {!!image ? (
             <VStack
               overflow="hidden"
@@ -102,12 +106,13 @@ const DishButtonContent = (props: TagButtonSlantedProps) => {
 
           <Text
             className="ease-in-out-fast"
-            fontWeight={bold ? '800' : '600'}
+            fontWeight={bold ? '800' : '400'}
             color={theme.color}
             opacity={0.8}
             fontSize={fontSize}
             textAlign="center"
             maxWidth={maxTextWidth}
+            lineHeight={fontSize}
             letterSpacing={-0.5}
           >
             {dishName}

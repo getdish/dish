@@ -289,9 +289,11 @@ const RestaurantListItemContent = memo(
           top={0}
           bottom={0}
           zIndex={-1}
-          width={8}
-          left={-2}
+          width={18}
+          left={-13}
           backgroundColor={isActive ? brandColor : 'transparent'}
+          borderTopRightRadius={8}
+          borderBottomRightRadius={8}
         />
 
         <AbsoluteVStack top={34} left={-5} zIndex={2000000}>
@@ -626,7 +628,6 @@ const RestaurantListItemScoreBreakdown = memo(
         restaurantSlug,
         tagSlugs: activeTagSlugs ?? [],
       })
-      console.log('restaurantTags', restaurantTags)
       return (
         <VStack spacing>
           {restaurantTags.map((rtag) => {
@@ -691,7 +692,6 @@ const RestaurantPeekDishes = memo(
           />
         )}
         <HStack
-          contain="paint layout"
           pointerEvents="none"
           padding={20}
           paddingVertical={10}

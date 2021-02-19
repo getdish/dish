@@ -253,8 +253,8 @@ const RestaurantLists = memo(
                   isBehind={i > 0}
                   hoverable={false}
                   slug={list.slug}
-                  userSlug={list.user?.username ?? ''}
-                  region={list.region ?? ''}
+                  userSlug={list.user?.username ?? 'no-user'}
+                  region={list.region ?? 'no-region'}
                 />
               </SkewedCard>
             )

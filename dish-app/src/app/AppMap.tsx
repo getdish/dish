@@ -184,21 +184,20 @@ export default memo(function AppMap() {
           slug: restaurant.slug ?? '',
         })
       }
-    } else {
-      const route = {
-        name: 'restaurant',
-        params: {
-          slug: restaurant.slug,
-        },
-      } as const
+    }
+    const route = {
+      name: 'restaurant',
+      params: {
+        slug: restaurant.slug,
+      },
+    } as const
 
-      if (router.getIsRouteActive(route)) {
-        if (media.sm) {
-          drawerStore.setSnapIndex(0)
-        }
-      } else {
-        router.navigate(route)
+    if (router.getIsRouteActive(route)) {
+      if (media.sm) {
+        drawerStore.setSnapIndex(0)
       }
+    } else {
+      router.navigate(route)
     }
   }, [])
 

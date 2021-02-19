@@ -44,8 +44,11 @@ export const DishLogoButton = memo(() => {
       position="relative"
     >
       <VStack
-        opacity={media.xs ? 0 : 1}
+        opacity={1}
         pointerEvents={media.xs ? 'none' : 'auto'}
+        {...(media.xs && {
+          opacity: 0,
+        })}
       >
         {wrapWithHomeLink(
           <VStack marginVertical={-5}>
@@ -59,9 +62,12 @@ export const DishLogoButton = memo(() => {
         fullscreen
         alignItems="center"
         justifyContent="center"
-        transform={[{ translateY: -2 }]}
+        top={-2}
         width={logoXsWidth}
         height={logoXsHeight}
+        {...(media.sm && {
+          transform: [{ scale: 0.9 }],
+        })}
       >
         {wrapWithHomeLink(<LogoSmall />)}
       </AbsoluteVStack>

@@ -76,7 +76,9 @@ class AppMapStore extends Store {
     this.setSelected(null)
     this.setHovered(null)
     this.results = val.results ?? []
-    this.features = val.features
+    if (val.features?.length) {
+      this.features = val.features
+    }
     this.showRank = val.showRank || false
     this.zoomOnHover = val.zoomOnHover || false
     this.hideRegions = val.hideRegions || false

@@ -88,7 +88,7 @@ export const RestaurantCardContent = graphql(
           subTitle={price_range}
           colorsKey={restaurantSlug}
           dimImage={dimImage}
-          outside={
+          outside={(colors) => (
             <>
               {!!below && (
                 <HStack
@@ -97,7 +97,7 @@ export const RestaurantCardContent = graphql(
                   position="absolute"
                   fullscreen
                 >
-                  {below}
+                  {typeof below === 'function' ? below(colors) : below}
                 </HStack>
               )}
               <AbsoluteVStack top={-7} right={-10} zIndex={100}>
@@ -108,7 +108,7 @@ export const RestaurantCardContent = graphql(
                 />
               </AbsoluteVStack>
             </>
-          }
+          )}
           photo={restaurantPhoto}
           aspectFixed={aspectFixed}
           hoverable={hoverable}

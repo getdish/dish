@@ -11,7 +11,7 @@ import React, { useEffect, useRef, useState } from 'react'
 import { Dimensions } from 'react-native'
 import { useGet } from 'snackui'
 
-import { blue } from '../constants/colors'
+import { blue, darkPurple, darkRed, red } from '../constants/colors'
 import { MAPBOX_ACCESS_TOKEN } from '../constants/constants'
 import { hexToRGB } from '../helpers/hexToRGB'
 import { hasMovedAtLeast } from '../helpers/mapHelpers'
@@ -111,11 +111,13 @@ export const MapView = (props: MapProps) => {
     if (hideRegions) {
       for (const tile of tiles) {
         map.setLayoutProperty(`${tile.name}.fill`, 'visibility', 'none')
+        map.setLayoutProperty(`${tile.name}.label`, 'visibility', 'none')
         // map.setLayoutProperty(`${tile.name}.line`, 'visibility', 'none')
       }
       return () => {
         for (const tile of tiles) {
           map.setLayoutProperty(`${tile.name}.fill`, 'visibility', 'visible')
+          map.setLayoutProperty(`${tile.name}.label`, 'visibility', 'visible')
           // map.setLayoutProperty(`${tile.name}.line`, 'visibility', 'visible')
         }
       }
@@ -237,7 +239,8 @@ export const MapView = (props: MapProps) => {
     if (!(source || source2)) return
 
     if (props.showRank) {
-      for (const [index, feature] of features.entries()) {
+      const MAX = 10
+      for (const [index, feature] of features.slice(0, MAX).entries()) {
         feature.properties!.searchPosition = index + 1
       }
     }
@@ -638,7 +641,7 @@ function setupMapEffect({
           generateId: true,
         })
 
-        const rgb = hexToRGB(blue).rgb
+        const rgb = hexToRGB(red).rgb
         map.addLayer({
           id: POINT_LAYER_ID,
           type: 'circle',
@@ -647,21 +650,19 @@ function setupMapEffect({
             'circle-radius': [
               'case',
               ['boolean', ['feature-state', 'hover'], false],
+              15 * (supportsTouchWeb ? 1.2 : 1),
               12 * (supportsTouchWeb ? 1.2 : 1),
-              6 * (supportsTouchWeb ? 1.2 : 1),
             ],
 
-            'circle-stroke-width': {
-              stops: [
-                [8, 0],
-                [11, 0],
-                [16, 1],
-              ],
-            },
+            // 'circle-stroke-width': {
+            //   stops: [
+            //     [8, 0],
+            //     [11, 0],
+            //     [16, 1],
+            //   ],
+            // },
 
-            'circle-stroke-color': `rgba(${rgb
-              .map((x) => +x * 0.5)
-              .join(',')}, 0.5)`,
+            // 'circle-stroke-color': 'transparent',
 
             'circle-color': [
               'match',
@@ -669,8 +670,8 @@ function setupMapEffect({
               1,
               'yellow',
               0,
-              `rgba(${rgb.join(',')}, 0.5)`,
-              `rgba(${rgb.join(',')}, 0.5)`,
+              `rgba(${rgb.join(',')}, 0.65)`,
+              `rgba(${rgb.join(',')}, 0.65)`,
             ],
 
             // [
@@ -716,15 +717,17 @@ function setupMapEffect({
             'icon-allow-overlap': true,
             'icon-ignore-placement': true,
             'text-field': ['format', ['get', 'title']],
-            'text-font': ['DIN Offc Pro Medium', 'Arial Unicode MS Bold'],
+            'text-font': ['DIN Offc Pro Bold', 'Arial Unicode MS Bold'],
             'text-size': 14,
+            'text-line-height': 1,
             'text-variable-anchor': ['right', 'left'],
-            // 'text-offset': [0, 2],
-            'text-anchor': 'right',
+            // 'text-offset': [0, 20],
+            // 'text-anchor': 'bottom',
           },
           paint: {
-            'text-halo-color': 'rgba(255,255,255,0.5)',
-            'text-halo-width': 1,
+            'text-color': darkPurple,
+            // 'text-halo-color': blue,
+            // 'text-halo-width': 1,
           },
         })
         cancels.add(() => {
@@ -737,18 +740,19 @@ function setupMapEffect({
           type: 'symbol',
           filter: ['has', 'searchPosition'],
           layout: {
+            'text-allow-overlap': true,
             'icon-allow-overlap': true,
             'icon-ignore-placement': true,
             'text-field': ['format', ['get', 'searchPosition']],
             'text-font': ['DIN Offc Pro Bold', 'Arial Unicode MS Bold'],
-            'text-size': 22,
+            'text-size': 15,
             // 'text-variable-anchor': ['bottom', 'top', 'right', 'left'],
             'text-anchor': 'center',
           },
           paint: {
-            'text-color': '#000',
-            'text-halo-color': 'rgba(255,255,255,0.5)',
-            'text-halo-width': 1,
+            'text-color': '#fff',
+            // 'text-halo-color': 'rgba(255,255,255,0.5)',
+            // 'text-halo-width': 1,
           },
         })
         cancels.add(() => {

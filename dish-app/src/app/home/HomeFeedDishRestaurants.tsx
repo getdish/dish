@@ -139,18 +139,19 @@ export const HomeFeedDishRestaurants = graphql(
                     restaurantSlug={restaurant.slug || ''}
                     hoverable={false}
                     dimImage
-                    below={
-                      <Theme name="darkTranslucent">
+                    below={(colors) => (
+                      <Theme name={colors.name}>
                         <HStack
                           alignSelf="flex-end"
                           marginLeft="auto"
                           alignItems="center"
                           justifyContent="center"
-                          transform={[
-                            { scale: 1.1 },
-                            { translateX: -15 },
-                            { translateY: -10 },
-                          ]}
+                          transform={
+                            [
+                              // { translateX: -15 },
+                              // { translateY: -10 },
+                            ]
+                          }
                         >
                           <TagButtonSlanted
                             maxTextWidth={80}
@@ -160,7 +161,7 @@ export const HomeFeedDishRestaurants = graphql(
                           />
                         </HStack>
                       </Theme>
-                    }
+                    )}
                   />
                 </SkewedCard>
               )

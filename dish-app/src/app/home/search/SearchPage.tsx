@@ -122,6 +122,7 @@ const SearchPageContent = memo(function SearchPageContent(
     isActive: props.isActive,
     results: searchStore.results,
     showRank: true,
+    hideRegions: true,
     center,
     span: location.data?.span,
     ...(location.data?.region && {
@@ -370,13 +371,7 @@ const SearchResultsContent = (props: Props) => {
   return (
     <>
       <RecyclerListView
-        style={{
-          flex: 1,
-          width: '100%',
-          minWidth: 300,
-          minHeight: 1,
-          height: '100%',
-        }}
+        style={listStyle}
         canChangeSize
         externalScrollView={SearchPageScrollView as any}
         renderAheadOffset={1000}
@@ -387,6 +382,14 @@ const SearchResultsContent = (props: Props) => {
       />
     </>
   )
+}
+
+const listStyle = {
+  flex: 1,
+  width: '100%',
+  minWidth: 300,
+  minHeight: 1,
+  height: '100%',
 }
 
 type SearchPageScrollViewProps = ScrollViewProps & {

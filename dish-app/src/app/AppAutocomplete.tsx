@@ -395,7 +395,7 @@ const AutocompleteFrame = ({ children }: { children: any }) => {
   const isShowing = autocompletes.visible
   const media = useMedia()
   const theme = useTheme()
-  const topOffsetSm = searchBarHeight + 4
+  const topOffsetSm = searchBarHeight
 
   const content = (
     <AbsoluteVStack
