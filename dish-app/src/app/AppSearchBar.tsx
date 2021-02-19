@@ -83,7 +83,12 @@ export const AppSearchBarFloating = () => {
         top={0}
       >
         {/* under fade */}
-        <AbsoluteVStack fullscreen zIndex={-1}>
+        <AbsoluteVStack
+          // doesnt fix flickering
+          // display={media.sm ? 'none' : 'flex'}
+          fullscreen
+          zIndex={-1}
+        >
           <LinearGradient
             style={[StyleSheet.absoluteFill]}
             colors={[bgLightTranslucent, `rgba(255,255,255,0)`]}

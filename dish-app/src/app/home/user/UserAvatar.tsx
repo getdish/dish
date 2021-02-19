@@ -21,7 +21,8 @@ export const UserAvatar = memo(
       <VStack
         borderRadius={1000}
         backgroundColor={theme.backgroundColorSecondary}
-        position="relative"
+        width={size}
+        height={size}
       >
         <Image
           source={{ uri: avatar || defaultUserImage }}

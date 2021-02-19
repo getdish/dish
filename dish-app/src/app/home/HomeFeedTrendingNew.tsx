@@ -12,23 +12,18 @@ import { RestaurantCard } from './restaurant/RestaurantCard'
 import { RestaurantButton } from './RestaurantButton'
 import { SkewedCard, SkewedCardCarousel } from './SkewedCard'
 
-export type FINew = FIBase & {
-  type: 'new'
+export type FIHotNew = FIBase & {
+  type: 'new' | 'hot'
   size: 'sm' | 'md'
   restaurants: RestaurantOnlyIds[]
-}
-
-export type FIHot = FIBase & {
-  type: 'hot'
-  size: 'sm' | 'md'
-  restaurants: RestaurantOnlyIds[]
+  status: 'loading' | 'complete'
 }
 
 const getGraphResults = (r: any) => {
   return r[0]?.slug ? r : []
 }
 
-export function useHomeFeedTrendingNew(props: HomeFeedProps) {
+export function useHomeFeedTrendingNew(props: HomeFeedProps): FIHotNew[] {
   const { item, region } = props
   const slug = item.region ?? region?.slug ?? ''
   const newest = query
@@ -48,6 +43,8 @@ export function useHomeFeedTrendingNew(props: HomeFeedProps) {
       limit: 8,
     })
     .map(getRestaurantIdentifiers)
+  const status =
+    !trending[0] || trending[0].id === null ? 'loading' : 'complete'
 
   return [
     {
@@ -57,8 +54,9 @@ export function useHomeFeedTrendingNew(props: HomeFeedProps) {
       rank: -2,
       title: 'New',
       restaurants: getGraphResults(newest),
-    } as FINew,
-
+      status,
+      expandable: false,
+    },
     {
       id: '2',
       type: 'hot',
@@ -66,14 +64,16 @@ export function useHomeFeedTrendingNew(props: HomeFeedProps) {
       title: 'Trending',
       rank: -1,
       restaurants: getGraphResults(trending),
-    } as FIHot,
+      status,
+      expandable: false,
+    },
   ]
 }
 
 export const HomeFeedTrendingNew = memo(
-  graphql(function HomeFeedTrendingNew(props: FIHot | FINew) {
+  graphql(function HomeFeedTrendingNew(props: FIHotNew) {
     const restaurants = props.restaurants
-    if (!restaurants) {
+    if (!restaurants.length) {
       return null
     }
     if (props.size === 'sm') {
@@ -95,7 +95,7 @@ export const HomeFeedTrendingNew = memo(
                 flexWrap="nowrap"
               >
                 <HStack spacing={6} overflow="hidden">
-                  <VStack width={props.type == 'hot' ? 80 : 50} />
+                  <VStack width={props.type == 'hot' ? 72 : 30} />
 
                   {restaurants.map((r, index) => {
                     if (!r) return null

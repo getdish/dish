@@ -137,7 +137,7 @@ export function Card({
           </AbsoluteVStack>
           <VStack
             className="hover-100-opacity-child"
-            opacity={dimImage ? 0.5 : 0.7}
+            opacity={dimImage ? 0.75 : 0.9}
             {...frame}
           >
             {!!photo && typeof photo === 'string' ? (
@@ -189,7 +189,7 @@ export function Card({
                   <AbsoluteVStack
                     className="hover-0-opacity-child"
                     zIndex={-1}
-                    opacity={0.75}
+                    opacity={0.66}
                     left={-40}
                     bottom={-60}
                   >

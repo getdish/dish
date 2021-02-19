@@ -21,8 +21,8 @@ import { thirdPartyCrawlSources } from '../../../constants/thirdPartyCrawlSource
 import { queryRestaurant } from '../../../queries/queryRestaurant'
 import { CloseButton } from '../../views/CloseButton'
 import { ContentScrollViewHorizontal } from '../../views/ContentScrollViewHorizontal'
-import { Link } from '../../views/Link'
 import { SlantedTitle } from '../../views/SlantedTitle'
+import { PageTitle } from '../PageTitle'
 import { SentimentText } from './SentimentText'
 
 export class RestaurantReviewsDisplayStore extends Store<{ id: string }> {
@@ -33,7 +33,29 @@ export class RestaurantReviewsDisplayStore extends Store<{ id: string }> {
   }
 }
 
-export const RestaurantTagReviews = memo(
+type Props = {
+  title?: string
+  tagSlug?: string | null
+  restaurantId: string
+  restaurantSlug: string
+  closable?: boolean
+  showScoreTable?: boolean
+  borderless?: boolean
+}
+
+const height = 240
+
+export const RestaurantTagReviews = (props: Props) => {
+  return (
+    <VStack height={height + 40}>
+      <Suspense fallback={<LoadingItems />}>
+        <RestaurantTagReviewsContent {...props} />
+      </Suspense>
+    </VStack>
+  )
+}
+
+export const RestaurantTagReviewsContent = memo(
   graphql(
     ({
       tagSlug,
@@ -42,15 +64,7 @@ export const RestaurantTagReviews = memo(
       closable,
       borderless,
       showScoreTable,
-    }: {
-      title?: string
-      tagSlug?: string | null
-      restaurantId: string
-      restaurantSlug: string
-      closable?: boolean
-      showScoreTable?: boolean
-      borderless?: boolean
-    }) => {
+    }: Props) => {
       const [restaurant] = queryRestaurant(restaurantSlug)
       const tag = tagSlug
         ? restaurant.tags({
@@ -67,76 +81,35 @@ export const RestaurantTagReviews = memo(
       const store = useStore(RestaurantReviewsDisplayStore, {
         id: restaurantId,
       })
-      const tagPhotos = tag?.photos() ?? []
-      const numTags = tagPhotos?.length
+      const spacing = 12
+      const theme = useTheme()
+      const items = tagName
+        ? getTagSourceBreakdowns(
+            restaurant
+              .tags({
+                where: {
+                  tag: {
+                    name: {
+                      _ilike: tagName,
+                    },
+                  },
+                },
+              })[0]
+              ?.source_breakdown()
+          )
+        : getSourceBreakdowns(restaurant.source_breakdown()?.sources)
 
       return (
-        <VStack
-          overflow="hidden"
-          maxWidth="100%"
-          width="100%"
-          position="relative"
-        >
+        <VStack maxWidth="100%" width="100%" position="relative">
           {closable && (
             <AbsoluteVStack zIndex={1000} top={10} right={10}>
               <CloseButton onPress={store.toggleShowComments} />
             </AbsoluteVStack>
           )}
 
-          <HStack
-            position="relative"
-            marginHorizontal={10}
-            marginBottom={-20}
-            alignItems="center"
-            justifyContent="center"
-          >
-            <SlantedTitle size="sm" fontWeight="700">
-              {tagName ?? 'Overall'}
-            </SlantedTitle>
-          </HStack>
-
-          {!!tagPhotos.length && (
-            <ContentScrollViewHorizontal height={190}>
-              <Suspense fallback={<LoadingItems />}>
-                <HStack spacing="sm" paddingHorizontal={10} paddingVertical={5}>
-                  {[...tagPhotos, 0, 0, 0, 0, 0, 0]
-                    .slice(0, Math.max(numTags, 5))
-                    .map((photo, index) => {
-                      return (
-                        <Link
-                          name="gallery"
-                          params={{
-                            restaurantSlug,
-                            tagSlug: tag?.tag?.slug ?? '',
-                            offset: index,
-                          }}
-                        >
-                          <VStack
-                            width={180}
-                            height={180}
-                            backgroundColor={`rgba(0,0,0,0.0${5 - index})`}
-                            borderRadius={35}
-                            overflow="hidden"
-                          >
-                            {!!photo && (
-                              <Image
-                                source={{ uri: photo }}
-                                style={{
-                                  width: '100%',
-                                  height: '100%',
-                                }}
-                              />
-                            )}
-                          </VStack>
-                        </Link>
-                      )
-                    })}
-                </HStack>
-              </Suspense>
-            </ContentScrollViewHorizontal>
-          )}
-
-          <Spacer size="lg" />
+          <SlantedTitle marginBottom={-40} alignSelf="center" size="sm">
+            {tagName ?? 'Overall'}
+          </SlantedTitle>
 
           <VStack
             minWidth={260}
@@ -149,12 +122,122 @@ export const RestaurantTagReviews = memo(
             justifyContent="center"
             spacing={10}
           >
-            <Suspense fallback={<LoadingItems />}>
-              <RestaurantSourcesOverview
-                tagName={tagName}
-                restaurantSlug={restaurantSlug}
-              />
-            </Suspense>
+            <ContentScrollViewHorizontal height={height}>
+              {!!items && (
+                <HStack paddingHorizontal={20}>
+                  {items
+                    .filter(isPresent)
+                    .map(({ name, sentence, image, positive, negative }) => {
+                      const ratio = positive / (Math.abs(negative) + positive)
+                      return (
+                        <VStack key={name} margin="auto">
+                          <VStack
+                            margin={spacing}
+                            shadowColor="#000"
+                            shadowOpacity={0.05}
+                            // borderWidth={1}
+                            // borderColor={theme.borderColor}
+                            backgroundColor={theme.cardBackgroundColor}
+                            maxWidth={440}
+                            shadowRadius={15}
+                            shadowOffset={{ height: 3, width: 0 }}
+                            padding={20}
+                            alignSelf="center"
+                            borderRadius={10}
+                            position="relative"
+                            flex={1}
+                          >
+                            <VStack position="relative" alignSelf="center">
+                              {/* <AbsoluteVStack
+                    right={-35}
+                    top={-25}
+                    justifyContent="center"
+                    alignItems="center"
+                    zIndex={0}
+                    >
+                    <SentimentCircle scale={1.2} ratio={ratio} />
+                  </AbsoluteVStack> */}
+                              <SlantedTitle marginTop={-30} size="xs">
+                                {name}
+                              </SlantedTitle>
+                            </VStack>
+
+                            <Spacer size="lg" />
+
+                            <HStack>
+                              <VStack
+                                marginTop={-18}
+                                spacing
+                                alignItems="center"
+                              >
+                                <Image
+                                  source={{ uri: image }}
+                                  style={{
+                                    width: 32,
+                                    height: 32,
+                                    borderRadius: 100,
+                                  }}
+                                />
+
+                                <Text
+                                  fontSize={22}
+                                  fontWeight="800"
+                                  color={positive > negative ? green : grey}
+                                  letterSpacing={-1}
+                                >
+                                  {Math.round(ratio * 100)}%
+                                </Text>
+
+                                <VStack spacing="xs">
+                                  <SentimentText scale={1.1} sentiment={1}>
+                                    {`${positive || 0}`}
+                                  </SentimentText>
+
+                                  <SentimentText scale={1.1} sentiment={-1}>
+                                    {`${Math.abs(negative || 0)}`}
+                                  </SentimentText>
+                                </VStack>
+                              </VStack>
+
+                              <Spacer size="lg" />
+
+                              <Paragraph
+                                color={isWeb ? 'var(--color)' : '#222'}
+                                maxHeight={height - 80}
+                                overflow="hidden"
+                              >
+                                {tagName ? (
+                                  <Text fontWeight="800">{tagName}</Text>
+                                ) : (
+                                  ''
+                                )}
+                                {!!tagName && isWeb && sentence ? (
+                                  <div
+                                    className="block"
+                                    dangerouslySetInnerHTML={{
+                                      __html:
+                                        ellipseText(sentence, {
+                                          maxLength: 130,
+                                        })
+                                          ?.replace(/\s+/g, ' ')
+                                          .replace(
+                                            new RegExp(tagName, 'gi'),
+                                            (match) => `<mark>${match}</mark>`
+                                          ) ?? '',
+                                    }}
+                                  />
+                                ) : (
+                                  sentence
+                                )}
+                              </Paragraph>
+                            </HStack>
+                          </VStack>
+                        </VStack>
+                      )
+                    })}
+                </HStack>
+              )}
+            </ContentScrollViewHorizontal>
           </VStack>
         </VStack>
       )
@@ -247,7 +330,7 @@ function getSourceBreakdowns(breakdowns?: SourceBreakdowns) {
           : breakdown.summaries.reviews.worst
       const sentence = summary
         ? ellipseText(summary, {
-            maxLength: 180,
+            maxLength: 130,
           })
         : null
       return { name, image, sentence, positive, negative }
@@ -300,144 +383,3 @@ function getTagSourceBreakdowns(breakdowns?: TagSourceBreakdown) {
     })
     .filter((x) => !!x && x.sentence)
 }
-
-export const RestaurantSourcesOverview = graphql(
-  ({
-    tagName,
-    restaurantSlug,
-  }: {
-    tagName?: string | null
-    restaurantSlug: string
-  }) => {
-    const [restaurant] = queryRestaurant(restaurantSlug)
-    const spacing = 12
-    const theme = useTheme()
-
-    const items = tagName
-      ? getTagSourceBreakdowns(
-          restaurant
-            .tags({
-              where: {
-                tag: {
-                  name: {
-                    _ilike: tagName,
-                  },
-                },
-              },
-            })[0]
-            ?.source_breakdown()
-        )
-      : getSourceBreakdowns(restaurant.source_breakdown()?.sources)
-
-    if (!items) {
-      return (
-        <VStack minHeight={200} alignItems="center" justifyContent="center">
-          <Text opacity={0.5}>No reviews</Text>
-        </VStack>
-      )
-    }
-
-    return (
-      <VStack width="100%" marginVertical={-spacing}>
-        <Grid itemMinWidth={320}>
-          {items
-            .filter(isPresent)
-            .map(({ name, sentence, image, positive, negative }) => {
-              const ratio = positive / (Math.abs(negative) + positive)
-              return (
-                <VStack key={name} margin="auto">
-                  <VStack
-                    margin={spacing}
-                    shadowColor="#000"
-                    shadowOpacity={0.05}
-                    // borderWidth={1}
-                    // borderColor={theme.borderColor}
-                    backgroundColor={theme.cardBackgroundColor}
-                    maxWidth={440}
-                    shadowRadius={15}
-                    shadowOffset={{ height: 3, width: 0 }}
-                    padding={20}
-                    alignSelf="center"
-                    borderRadius={10}
-                    position="relative"
-                    flex={1}
-                  >
-                    <VStack position="relative" alignSelf="center">
-                      {/* <AbsoluteVStack
-                      right={-35}
-                      top={-25}
-                      justifyContent="center"
-                      alignItems="center"
-                      zIndex={0}
-                      >
-                      <SentimentCircle scale={1.2} ratio={ratio} />
-                    </AbsoluteVStack> */}
-                      <SlantedTitle marginTop={-30} size="xs">
-                        {name}
-                      </SlantedTitle>
-                    </VStack>
-
-                    <Spacer size="lg" />
-
-                    <HStack>
-                      <VStack marginTop={-18} spacing alignItems="center">
-                        <Image
-                          source={{ uri: image }}
-                          style={{
-                            width: 32,
-                            height: 32,
-                            borderRadius: 100,
-                          }}
-                        />
-
-                        <Text
-                          fontSize={22}
-                          fontWeight="800"
-                          color={positive > negative ? green : grey}
-                          letterSpacing={-1}
-                        >
-                          {Math.round(ratio * 100)}%
-                        </Text>
-
-                        <VStack spacing="xs">
-                          <SentimentText scale={1.1} sentiment={1}>
-                            {`${positive || 0}`}
-                          </SentimentText>
-
-                          <SentimentText scale={1.1} sentiment={-1}>
-                            {`${Math.abs(negative || 0)}`}
-                          </SentimentText>
-                        </VStack>
-                      </VStack>
-
-                      <Spacer size="lg" />
-
-                      <Paragraph color={isWeb ? 'var(--color)' : '#222'}>
-                        {tagName ? <Text fontWeight="800">{tagName}</Text> : ''}
-                        {!!tagName && isWeb ? (
-                          <div
-                            className="block"
-                            dangerouslySetInnerHTML={{
-                              __html:
-                                sentence
-                                  ?.replace(/\s+/g, ' ')
-                                  .replace(
-                                    new RegExp(tagName, 'gi'),
-                                    (match) => `<mark>${match}</mark>`
-                                  ) ?? '',
-                            }}
-                          />
-                        ) : (
-                          sentence
-                        )}
-                      </Paragraph>
-                    </HStack>
-                  </VStack>
-                </VStack>
-              )
-            })}
-        </Grid>
-      </VStack>
-    )
-  }
-)

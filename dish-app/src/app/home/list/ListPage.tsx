@@ -54,13 +54,14 @@ import { SlantedTitle } from '../../views/SlantedTitle'
 import { SmallButton } from '../../views/SmallButton'
 import { StackDrawer } from '../../views/StackDrawer'
 import { TagButton, getTagButtonProps } from '../../views/TagButton'
-import { UpvoteDownvoteScore } from '../../views/UpvoteDownvoteScore'
+import { Score } from '../../views/UpvoteDownvoteScore'
 import { StackItemProps } from '../HomeStackView'
 import { PageContentWithFooter } from '../PageContentWithFooter'
 import { PageTitle } from '../PageTitle'
 import { CircleButton } from '../restaurant/CircleButton'
 import { RestaurantListItem } from '../restaurant/RestaurantListItem'
 import { useSnapToFullscreenOnMount } from '../restaurant/useSnapToFullscreenOnMount'
+import { UserAvatar } from '../user/UserAvatar'
 import { ListAddRestuarant } from './ListAddRestuarant'
 import { getListColor, listColors, randomListColor } from './listColors'
 
@@ -452,32 +453,48 @@ const ListPageContent = graphql((props: Props) => {
                     </Link>
                   </ScalingPressable>
 
-                  <SlantedTitle
-                    backgroundColor={color}
-                    color="#fff"
-                    marginTop={-5}
-                    alignSelf="center"
-                    zIndex={0}
-                    size="lg"
-                  >
-                    {isEditing ? (
-                      <Input
-                        fontSize={26}
-                        backgroundColor="transparent"
-                        defaultValue={list.name || ''}
-                        onChangeText={(val) => {
-                          draft.current.name = val
-                        }}
-                        fontWeight="700"
-                        textAlign="center"
-                        color="#fff"
-                        borderColor="transparent"
-                        margin={-5}
-                      />
-                    ) : (
-                      list.name
+                  <VStack position="relative" alignSelf="center">
+                    {list.user?.avatar && (
+                      <AbsoluteVStack
+                        overflow="visible"
+                        bottom={-50}
+                        left={-80}
+                        zIndex={-1}
+                      >
+                        <UserAvatar
+                          size={150}
+                          charIndex={list.user.charIndex!}
+                          avatar={list.user.avatar}
+                        />
+                      </AbsoluteVStack>
                     )}
-                  </SlantedTitle>
+                    <SlantedTitle
+                      backgroundColor={color}
+                      color="#fff"
+                      marginTop={-5}
+                      alignSelf="center"
+                      zIndex={0}
+                      size="lg"
+                    >
+                      {isEditing ? (
+                        <Input
+                          fontSize={26}
+                          backgroundColor="transparent"
+                          defaultValue={list.name || ''}
+                          onChangeText={(val) => {
+                            draft.current.name = val
+                          }}
+                          fontWeight="700"
+                          textAlign="center"
+                          color="#fff"
+                          borderColor="transparent"
+                          margin={-5}
+                        />
+                      ) : (
+                        list.name
+                      )}
+                    </SlantedTitle>
+                  </VStack>
 
                   <SlantedTitle zIndex={-1} size="xs" alignSelf="center">
                     {region.data?.name ?? props.item.region}
@@ -639,7 +656,8 @@ const ListPageContent = graphql((props: Props) => {
                               <X size={20} />
                             </CircleButton>
                           </AbsoluteVStack>
-                          <UpvoteDownvoteScore
+                          <Score
+                            votable
                             upTooltip="Move up"
                             downTooltip="Move down"
                             score={index + 1}

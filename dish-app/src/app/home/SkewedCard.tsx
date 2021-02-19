@@ -9,8 +9,8 @@ import { ContentScrollViewHorizontal } from '../views/ContentScrollViewHorizonta
 export const SkewedCard = ({ children, ...props }: StackProps) => {
   return (
     <VStack
-      marginRight={-75}
-      className="ease-in-out-fast"
+      marginRight={-60}
+      className="ease-in-out-faster"
       borderRadius={cardFrameBorderRadius}
       shadowColor="#000"
       shadowOpacity={0.14}
@@ -19,25 +19,25 @@ export const SkewedCard = ({ children, ...props }: StackProps) => {
       position="relative"
       opacity={1}
       transform={[
-        { scale: 0.75 },
+        { scale: 0.8 },
         { perspective: 1000 },
         { rotateY: '-10deg' },
         { translateX: 0 },
       ]}
       hoverStyle={{
         transform: [
-          { scale: 0.766 },
+          { scale: 0.82 },
           { perspective: 1000 },
           { rotateY: '-10deg' },
-          { translateX: 8 },
+          { translateX: 5 },
         ],
       }}
       pressStyle={{
         transform: [
-          { scale: 0.745 },
+          { scale: 0.78 },
           { perspective: 1000 },
           { rotateY: '-10deg' },
-          { translateX: 8 },
+          { translateX: 0 },
         ],
       }}
       {...props}

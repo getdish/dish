@@ -3,7 +3,7 @@ import React from 'react'
 
 import { queryRestaurant } from '../../../queries/queryRestaurant'
 import { useUserTagVotes } from '../../hooks/useUserTagVotes'
-import { UpvoteDownvoteScore } from '../UpvoteDownvoteScore'
+import { Score } from '../UpvoteDownvoteScore'
 
 type Props = {
   size: 'sm' | 'md'
@@ -50,7 +50,8 @@ const DishUpvoteDownvoteContent = graphql(
     })
 
     return (
-      <UpvoteDownvoteScore
+      <Score
+        votable
         showVoteOnHover
         subtle={subtle}
         size={size}

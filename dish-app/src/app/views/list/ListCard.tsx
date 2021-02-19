@@ -1,13 +1,22 @@
 import { graphql } from '@dish/graph'
 import React from 'react'
 import { Image } from 'react-native'
-import { HStack, Hoverable, Text, VStack, useTheme } from 'snackui'
+import {
+  AbsoluteVStack,
+  HStack,
+  Hoverable,
+  Text,
+  VStack,
+  useTheme,
+} from 'snackui'
 
 import { getColorsForName } from '../../../helpers/getColorsForName'
 import { queryList } from '../../../queries/queryList'
 import { getListColor } from '../../home/list/listColors'
 import { Card } from '../../home/restaurant/Card'
+import { DishUpvoteDownvote } from '../dish/DishUpvoteDownvote'
 import { Link } from '../Link'
+import { Score } from '../UpvoteDownvoteScore'
 
 type ListIDProps = {
   slug: string | null
@@ -60,6 +69,15 @@ export const ListCard = graphql(
           subTitle={`by ${list.user?.name ?? list.user?.username ?? ''}`}
           backgroundColor={backgroundColor}
           isBehind={isBehind}
+          outside={
+            <AbsoluteVStack zIndex={1000000} top="-2%" right="-2%">
+              <Score
+                size="sm"
+                score={Math.round(Math.random() * 100)}
+                rating={Math.random() * 100}
+              />
+            </AbsoluteVStack>
+          }
           photo={
             <VStack alignItems="center" justifyContent="center" flex={1}>
               <HStack flexWrap="wrap">

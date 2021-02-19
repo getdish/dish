@@ -34,9 +34,7 @@ export const SearchForkListButton = memo(() => {
   ) as HistoryItem<'search'>
   const location = useLocationFromRoute(route)
   const regionName = location.data?.region?.name
-  const tooltip = `Make your "${title.replace('the ', '')}${
-    regionName ? ` in ${regionName}` : ''
-  }" list`
+  const tooltip = `my ${title.replace('the ', '')} list`
   return (
     <Tooltip contents={tooltip}>
       <Link

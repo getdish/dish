@@ -395,7 +395,7 @@ const AutocompleteFrame = ({ children }: { children: any }) => {
   const isShowing = autocompletes.visible
   const media = useMedia()
   const theme = useTheme()
-  const topOffsetSm = searchBarHeight
+  const topOffsetSm = searchBarHeight + 4
 
   const content = (
     <AbsoluteVStack
@@ -412,13 +412,20 @@ const AutocompleteFrame = ({ children }: { children: any }) => {
     >
       <VStack width="100%" height="100%" maxWidth={drawerWidthMax}>
         <AbsoluteVStack backgroundColor={theme.backgroundColor} fullscreen />
-        <BlurView
-          fallbackBackgroundColor="transparent"
-          blurRadius={20}
-          blurType="light"
-          position="absolute"
+        <AbsoluteVStack
           fullscreen
+          backgroundColor="rgba(20,20,20,0.85)"
+          display={media.sm ? 'flex' : 'none'}
         />
+        <AbsoluteVStack fullscreen display={media.sm ? 'none' : 'flex'}>
+          <BlurView
+            fallbackBackgroundColor="transparent"
+            blurRadius={40}
+            blurType="dark"
+            position="absolute"
+            fullscreen
+          />
+        </AbsoluteVStack>
         <AbsoluteVStack top={10} right={10}>
           <CloseButton
             size={20}

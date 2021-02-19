@@ -8,7 +8,7 @@ export const isWeb = process.env.TARGET === 'web'
 export const isNative = process.env.TARGET === 'native'
 
 export const drawerPad = 8
-export const drawerBorderRadius = 16
+export const drawerBorderRadius = 20
 export const drawerWidthMax = 940
 export const drawerExtraLeftScrollSpace = 500
 

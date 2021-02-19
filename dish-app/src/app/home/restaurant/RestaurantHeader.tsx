@@ -86,11 +86,11 @@ const RestaurantHeaderContent = memo(
       const fontScale = size === 'sm' ? 0.8 : 1
       const fontSizeBase =
         nameLen > 40
-          ? 22
-          : nameLen > 30
-          ? 24
-          : nameLen > 24
           ? 28
+          : nameLen > 30
+          ? 30
+          : nameLen > 24
+          ? 32
           : nameLen > 18
           ? 34
           : 40
@@ -107,44 +107,46 @@ const RestaurantHeaderContent = memo(
           width={width}
           setWidth={setWidthDebounce}
         >
-          <Theme name={colors.name}>
-            <VStack>
-              <AbsoluteVStack top={5} left={5} zIndex={100}>
-                <Suspense fallback={null}>
-                  <RestaurantAddToListButton
-                    shadowed
-                    restaurantSlug={restaurantSlug}
-                  />
-                </Suspense>
-              </AbsoluteVStack>
+          <VStack>
+            <AbsoluteVStack top={5} left={5} zIndex={100}>
+              <Suspense fallback={null}>
+                <RestaurantAddToListButton
+                  shadowed
+                  restaurantSlug={restaurantSlug}
+                />
+              </Suspense>
+            </AbsoluteVStack>
 
-              <AbsoluteVStack zIndex={0} pointerEvents="auto">
-                <Suspense fallback={null}>
-                  <RestaurantPhotosRow
-                    restaurantSlug={restaurantSlug}
-                    width={photoWidth}
-                    height={imageHeight}
-                    escalating
-                    showEscalated={hasScrolled}
-                  />
-                </Suspense>
-                <AbsoluteVStack
-                  left={0}
-                  right={0}
+            <AbsoluteVStack zIndex={0} pointerEvents="auto">
+              <Suspense fallback={null}>
+                <RestaurantPhotosRow
+                  restaurantSlug={restaurantSlug}
+                  width={photoWidth}
                   height={imageHeight}
-                  width={width}
-                  pointerEvents="none"
-                >
-                  <LinearGradient
-                    style={[StyleSheet.absoluteFill]}
-                    colors={[
-                      `${colors.themeColorAlt}88`,
-                      `${colors.themeColor}66`,
-                      `${colors.themeColor}ff`,
-                    ]}
-                  />
-                </AbsoluteVStack>
+                  escalating
+                  showEscalated={hasScrolled}
+                />
+              </Suspense>
+              <AbsoluteVStack
+                left={0}
+                right={0}
+                height={imageHeight}
+                width={width}
+                pointerEvents="none"
+                transform={[{ translateY: 1 }]}
+              >
+                <LinearGradient
+                  style={[StyleSheet.absoluteFill]}
+                  colors={[
+                    `${colors.themeColorAlt}88`,
+                    `${colors.themeColor}66`,
+                    `${colors.themeColor}ff`,
+                  ]}
+                />
               </AbsoluteVStack>
+            </AbsoluteVStack>
+
+            <Theme name={colors.name}>
               <VStack
                 marginTop={imageHeight - 20}
                 minWidth={minWidth}
@@ -311,7 +313,7 @@ const RestaurantHeaderContent = memo(
                             <Spacer size="lg" />
 
                             <RestaurantOverview
-                              fullHeight
+                              maxLines={4}
                               size="lg"
                               restaurantSlug={restaurantSlug}
                             />
@@ -329,8 +331,8 @@ const RestaurantHeaderContent = memo(
                   </HStack>
                 </VStack>
               </VStack>
-            </VStack>
-          </Theme>
+            </Theme>
+          </VStack>
         </ContentScrollViewHorizontalFitted>
       )
     }

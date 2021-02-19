@@ -11,6 +11,7 @@ import { Pie } from './Pie'
 import { VoteButton } from './VoteButton'
 
 type Props = StackProps & {
+  votable?: boolean
   score: number
   showVoteOnHover?: boolean
   size?: 'sm' | 'md'
@@ -22,9 +23,10 @@ type Props = StackProps & {
   downTooltip?: string
 }
 
-export const UpvoteDownvoteScore = memo(
+export const Score = memo(
   ({
     score,
+    votable,
     showVoteOnHover,
     rating,
     vote = 0,
@@ -100,32 +102,36 @@ export const UpvoteDownvoteScore = memo(
         borderRadius={1000}
         {...props}
       >
-        <AbsoluteVStack top={-15}>
-          {subtle ? (
-            upvote
-          ) : (
-            <Tooltip
-              position="right"
-              contents={upTooltip ?? 'Upvote'}
-              {...isOpenProp}
-            >
-              {upvote}
-            </Tooltip>
-          )}
-        </AbsoluteVStack>
-        <AbsoluteVStack bottom={-15}>
-          {subtle ? (
-            downvote
-          ) : (
-            <Tooltip
-              position="right"
-              contents={downTooltip ?? 'Downvote'}
-              {...isOpenProp}
-            >
-              {downvote}
-            </Tooltip>
-          )}
-        </AbsoluteVStack>
+        {votable && (
+          <>
+            <AbsoluteVStack top={-15}>
+              {subtle ? (
+                upvote
+              ) : (
+                <Tooltip
+                  position="right"
+                  contents={upTooltip ?? 'Upvote'}
+                  {...isOpenProp}
+                >
+                  {upvote}
+                </Tooltip>
+              )}
+            </AbsoluteVStack>
+            <AbsoluteVStack bottom={-15}>
+              {subtle ? (
+                downvote
+              ) : (
+                <Tooltip
+                  position="right"
+                  contents={downTooltip ?? 'Downvote'}
+                  {...isOpenProp}
+                >
+                  {downvote}
+                </Tooltip>
+              )}
+            </AbsoluteVStack>
+          </>
+        )}
         {typeof rating === 'number' && (
           <AbsoluteVStack
             fullscreen

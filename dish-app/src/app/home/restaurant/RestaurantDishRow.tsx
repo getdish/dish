@@ -1,7 +1,7 @@
 import { graphql } from '@dish/graph'
 import { partition, unzip } from 'lodash'
-import React, { memo, useMemo, useState } from 'react'
-import { HStack, Spacer, Theme, VStack } from 'snackui'
+import React, { Suspense, memo, useMemo, useState } from 'react'
+import { HStack, LoadingItem, Spacer, Theme, VStack } from 'snackui'
 
 import { bgLightHover, blue } from '../../../constants/colors'
 import { isWeb } from '../../../constants/constants'
@@ -17,7 +17,31 @@ const withIndex = (fn) => {
   return (thing) => fn(thing, index++)
 }
 
-export const RestaurantDishRow = memo(
+type Props = {
+  restaurantSlug: string
+  restaurantId?: string
+  selectable?: boolean
+  onSelect?: (dish: string) => any
+  selected?: string | null
+  max?: number
+  themeName?: string
+}
+
+export const RestaurantDishRow = (props: Props) => {
+  return (
+    <Suspense
+      fallback={
+        <VStack height={150}>
+          <LoadingItem />
+        </VStack>
+      }
+    >
+      <RestaurantDishRowContent {...props} />
+    </Suspense>
+  )
+}
+
+export const RestaurantDishRowContent = memo(
   graphql(
     ({
       restaurantSlug,
@@ -27,15 +51,7 @@ export const RestaurantDishRow = memo(
       selected,
       max = 30,
       themeName,
-    }: {
-      restaurantSlug: string
-      restaurantId?: string
-      selectable?: boolean
-      onSelect?: (dish: string) => any
-      selected?: string | null
-      max?: number
-      themeName?: string
-    }) => {
+    }: Props) => {
       const dishes = getRestaurantDishes({ restaurantSlug, max })
       const [hasScrolled, setHasScrolled] = useState(false)
       const hasDishes = !!dishes?.length
@@ -87,8 +103,8 @@ export const RestaurantDishRow = memo(
           }}
         >
           {hasDishes ? (
-            <VStack paddingHorizontal={30} paddingVertical={20}>
-              <HStack spacing>
+            <VStack paddingHorizontal={30} paddingVertical={10}>
+              <HStack spacing="md">
                 <Theme name={themeName && selected === '' ? themeName : null}>
                   <ScalingPressable
                     onPress={() => {
@@ -105,8 +121,10 @@ export const RestaurantDishRow = memo(
                 </Theme>
                 {getDishRow(dishGroups[0])}
               </HStack>
-              <Spacer size="sm" />
-              <HStack spacing>{getDishRow(dishGroups[1])}</HStack>
+              <Spacer size="lg" />
+              <HStack marginLeft={24} spacing="lg">
+                {getDishRow(dishGroups[1])}
+              </HStack>
             </VStack>
           ) : (
             <Spacer size="xl" />

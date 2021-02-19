@@ -42,15 +42,16 @@ export const AppMenuButton = () => {
         pointerEvents="none"
       >
         <VStack
-          className="ease-in-out-faster"
+          // className="ease-in-out-faster"
           shadowColor="rgba(0,0,0,0.25)"
           shadowRadius={6}
           shadowOffset={{ height: 3, width: 0 }}
           pointerEvents="auto"
           borderRadius={100}
-          backgroundColor="rgba(255,255,255,0.85)"
+          backgroundColor="rgba(0,0,0,0.5)"
+          transform={[{ scale: 1.0001 }]}
           hoverStyle={{
-            backgroundColor: 'rgba(255,255,255,1)',
+            // backgroundColor: 'rgba(0,0,0,0.5)',
             transform: [{ scale: 1.1 }],
           }}
           pressStyle={{
@@ -58,10 +59,7 @@ export const AppMenuButton = () => {
           }}
           onPress={appMenu.show}
         >
-          <BlurView
-            borderRadius={24}
-            fallbackBackgroundColor="rgba(255,255,255,0.9)"
-          >
+          <BlurView borderRadius={24} fallbackBackgroundColor="rgba(0,0,0,0.5)">
             <HStack
               width={50}
               height={50}
@@ -69,7 +67,7 @@ export const AppMenuButton = () => {
               justifyContent="center"
               borderRadius={100}
             >
-              <Menu color="#000" size={24} />
+              <Menu color="#fff" size={24} />
             </HStack>
           </BlurView>
         </VStack>

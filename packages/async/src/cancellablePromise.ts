@@ -1,8 +1,10 @@
 const cancelsMap = new WeakMap()
 export type CancelFn = () => void
 
+const emptyFn = () => {}
+
 export class CancellablePromise<T> extends Promise<T> {
-  cancel: (() => void) | null = null
+  cancel: () => any = emptyFn
 
   constructor(
     executor: (
@@ -20,7 +22,7 @@ export const createCancellablePromise = <A>(
     rej: (value?: any) => any,
     onCancel: Function
   ) => A
-): Promise<A> => {
+): CancellablePromise<A> => {
   let canceller: any = null
   const promise = new Promise((res, rej) => {
     cb(res, rej, (onCancel) => {
@@ -28,7 +30,7 @@ export const createCancellablePromise = <A>(
     })
   })
   cancelsMap.set(promise, canceller)
-  return promise as Promise<A>
+  return promise as CancellablePromise<A>
 }
 
 export const cancelPromise = (

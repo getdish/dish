@@ -42,7 +42,7 @@ class DrawerStore extends Store {
 
   setSnapIndex(point: number) {
     this.snapIndex = point
-    this.animateDrawerToPx()
+    this.animateDrawerToPx(this.getSnapPointOffset(), 2)
   }
 
   animateDrawerToPx(

@@ -40,16 +40,14 @@ export const SearchHeader = memo(() => {
             <AbsoluteVStack zIndex={1000} top={5} left={5}>
               <SearchForkListButton />
             </AbsoluteVStack>
-            <VStack>
+            <VStack transform={[{ translateX: -10 }]}>
               <SlantedTitle
-                paddingHorizontal={20}
+                paddingHorizontal={35}
                 backgroundColor={rgbString(lenseColor)}
                 color="#fff"
                 size="xl"
                 fontWeight="800"
-                minWidth={200}
-                borderRadius={8}
-                alignSelf="center"
+                // alignSelf="center"
               >
                 <VStack alignItems="center">
                   <Text>{title}</Text>
@@ -66,7 +64,7 @@ export const SearchHeader = memo(() => {
               </SlantedTitle>
               <SearchPageScoring />
             </VStack>
-            <HStack marginBottom={8} position="relative">
+            <HStack marginLeft={-50} marginBottom={8} position="relative">
               <VStack
                 position="relative"
                 alignItems="center"

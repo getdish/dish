@@ -38,6 +38,7 @@ import { RestaurantDishRow } from './RestaurantDishRow'
 import { RestaurantHeader } from './RestaurantHeader'
 import { RestaurantMenu } from './RestaurantMenu'
 import { RestaurantReviewsList } from './RestaurantReviewsList'
+import { RestaurantTagPhotos } from './RestaurantTagPhotos'
 import { RestaurantTagReviews } from './RestaurantTagReviews'
 import { useSelectedDish } from './useSelectedDish'
 import { useSnapToFullscreenOnMount } from './useSnapToFullscreenOnMount'
@@ -93,14 +94,13 @@ const RestaurantPage = memo(
 
     useSnapToFullscreenOnMount()
 
-    const view = item.sectionSlug
-      ? dishesSection
-      : item.section === 'reviews'
-      ? reviewsSection
-      : null
-
     useEffect(() => {
       if (!scrollView) return
+      const view = item.sectionSlug
+        ? dishesSection
+        : item.section === 'reviews'
+        ? reviewsSection
+        : null
       if (!view) return
       if (router.prevPage?.name === 'restaurant') {
         // already on restaurant page, don't scroll
@@ -122,7 +122,7 @@ const RestaurantPage = memo(
           scrollView.scrollTo({ y: offsetY, animated: true })
         },
       ])
-    }, [scrollView, view])
+    }, [scrollView, item.sectionSlug])
 
     const theme = useTheme()
     const scrollY = useRef(0)
@@ -162,33 +162,13 @@ const RestaurantPage = memo(
                 />
               </Suspense>
 
+              <Suspense fallback={null}>
+                <RestaurantLists restaurantSlug={restaurantSlug} />
+              </Suspense>
+
               <Spacer />
 
-              <VStack marginBottom={15} position="relative" zIndex={1}>
-                <View ref={setDishesSection}>
-                  <Suspense
-                    fallback={
-                      <VStack height={150}>
-                        <LoadingItem />
-                      </VStack>
-                    }
-                  >
-                    <RestaurantDishRow
-                      max={35}
-                      restaurantSlug={restaurantSlug}
-                      restaurantId={restaurant.id ?? undefined}
-                      selectable
-                      selected={selectedDish}
-                      onSelect={setSelectedDishToggle}
-                      themeName={`${colors.name}Dark`}
-                    />
-                  </Suspense>
-                </View>
-              </VStack>
-            </VStack>
-
-            <VStack marginTop={-18}>
-              <Suspense fallback={<LoadingItems />}>
+              <VStack marginHorizontal={-20} marginBottom={-30}>
                 <RestaurantTagReviews
                   tagSlug={selectedDish}
                   borderless
@@ -196,20 +176,37 @@ const RestaurantPage = memo(
                   restaurantSlug={restaurantSlug}
                   restaurantId={restaurant.id}
                 />
-              </Suspense>
+              </VStack>
+
+              <VStack marginBottom={20} position="relative" zIndex={1}>
+                <View ref={setDishesSection}>
+                  <RestaurantDishRow
+                    max={35}
+                    restaurantSlug={restaurantSlug}
+                    restaurantId={restaurant.id ?? undefined}
+                    selectable
+                    selected={selectedDish}
+                    onSelect={setSelectedDishToggle}
+                    themeName={`${colors.name}Dark`}
+                  />
+                </View>
+              </VStack>
+
+              <VStack>
+                <RestaurantTagPhotos
+                  tagSlug={selectedDish}
+                  restaurantSlug={restaurantSlug}
+                />
+              </VStack>
+
+              {/* END head color AREA */}
             </VStack>
 
-            <Spacer size="xl" />
-
-            <Suspense fallback={null}>
-              <RestaurantLists restaurantSlug={restaurantSlug} />
-            </Suspense>
-
             <VStack
-              backgroundColor={theme.backgroundColorSecondary}
-              borderColor={theme.backgroundColorSecondary}
-              borderTopWidth={1}
-              borderBottomWidth={1}
+              // backgroundColor={theme.backgroundColorSecondary}
+              // borderColor={theme.backgroundColorSecondary}
+              // borderTopWidth={1}
+              // borderBottomWidth={1}
               paddingVertical={20}
             >
               <View ref={setReviewsSection}>
@@ -249,11 +246,10 @@ const RestaurantLists = memo(
     }
 
     return (
-      <VStack>
-        <SlantedTitle alignSelf="center" fontWeight="700">
+      <VStack marginTop={-18}>
+        <SlantedTitle marginBottom={-28} alignSelf="center" fontWeight="700">
           Lists
         </SlantedTitle>
-
         <SkewedCardCarousel>
           {lists.map(({ list }, i) => {
             return (

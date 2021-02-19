@@ -18,14 +18,12 @@ import {
 import { FIList, HomeFeedLists } from './HomeFeedLists'
 import { HomeFeedProps } from './HomeFeedProps'
 import {
-  FIHot,
-  FINew,
+  FIHotNew,
   HomeFeedTrendingNew,
   useHomeFeedTrendingNew,
 } from './HomeFeedTrendingNew'
-import { PageFooter } from './PageFooter'
 
-type FI = FICuisine | FIDishRestaurants | FIList | FINew | FIHot
+type FI = FICuisine | FIDishRestaurants | FIList | FIHotNew
 
 function useHomeFeed(props: HomeFeedProps): FI[] {
   const { item, region } = props

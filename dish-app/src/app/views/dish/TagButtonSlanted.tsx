@@ -46,10 +46,10 @@ const DishButtonContent = (props: TagButtonSlantedProps) => {
     .map((x) => capitalize(x))
     .join(' ')
 
-  const imageUrl = getImageUrl(image ?? '', 100, 100, 100)
+  const imageUrl = getImageUrl(image ?? '', 120, 120, 120)
   const isLong =
     dishName.length > 20 || !!dishName.split(' ').find((x) => x.length >= 10)
-  const fontSize = isLong ? 15 : 16
+  const fontSize = isLong ? 16 : 18
   const theme = useTheme()
 
   let contents = (
@@ -81,8 +81,8 @@ const DishButtonContent = (props: TagButtonSlantedProps) => {
               <ImageAlt
                 source={{ uri: imageUrl }}
                 style={{
-                  width: 36,
-                  height: 36,
+                  width: 60,
+                  height: 60,
                 }}
                 resizeMode="cover"
               />
@@ -111,6 +111,7 @@ const DishButtonContent = (props: TagButtonSlantedProps) => {
             fontSize={fontSize}
             textAlign="center"
             maxWidth={maxTextWidth}
+            letterSpacing={-0.5}
           >
             {dishName}
           </Text>
