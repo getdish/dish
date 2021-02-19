@@ -1,5 +1,5 @@
 import { RestaurantOnlyIds, graphql, query } from '@dish/graph'
-import React, { memo } from 'react'
+import React, { memo, useMemo } from 'react'
 import { HStack, VStack } from 'snackui'
 
 import { getRestaurantIdentifiers } from '../../helpers/getRestaurantIdentifiers'
@@ -46,28 +46,33 @@ export function useHomeFeedTrendingNew(props: HomeFeedProps): FIHotNew[] {
   const status =
     !trending[0] || trending[0].id === null ? 'loading' : 'complete'
 
-  return [
-    {
-      id: '1',
-      type: 'new',
-      size: 'sm',
-      rank: -2,
-      title: 'New',
-      restaurants: getGraphResults(newest),
-      status,
-      expandable: false,
-    },
-    {
-      id: '2',
-      type: 'hot',
-      size: 'sm',
-      title: 'Trending',
-      rank: -1,
-      restaurants: getGraphResults(trending),
-      status,
-      expandable: false,
-    },
-  ]
+  const key = `${status}${newest.map((x) => x.slug)}${trending.map(
+    (x) => x.slug
+  )}`
+  return useMemo(() => {
+    return [
+      {
+        id: '1',
+        type: 'new',
+        size: 'sm',
+        rank: -2,
+        title: 'New',
+        restaurants: getGraphResults(newest),
+        status,
+        expandable: false,
+      },
+      {
+        id: '2',
+        type: 'hot',
+        size: 'sm',
+        title: 'Trending',
+        rank: -1,
+        restaurants: getGraphResults(trending),
+        status,
+        expandable: false,
+      },
+    ]
+  }, [key])
 }
 
 export const HomeFeedTrendingNew = memo(

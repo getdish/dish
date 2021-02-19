@@ -1,6 +1,6 @@
 import { graphql, order_by, query } from '@dish/graph'
 import { groupBy, pick, sortBy, uniqBy } from 'lodash'
-import React from 'react'
+import React, { useMemo } from 'react'
 import { HStack, Hoverable, Theme } from 'snackui'
 
 import {
@@ -57,29 +57,29 @@ export function useFeedDishItems(
         .map(selectRishDishViewSimple)
     })
 
-  const topDishes = sortBy(
-    groupBy(
-      uniqBy(popularDishTags, (x) => x.slug),
-      (x) => x.slug
-    ),
-    (x) => -x.length
-  )
-    .slice(0, 5)
-    .map((x) => x[0])
-
-  console.log('waht', { popularDishTags, topDishes, region })
-
-  return topDishes.map((tag, index) => {
-    return {
-      id: `dish-restaurant-${tag.name}`,
-      region,
-      title: `Known for ${tag.name}`,
-      type: 'dish-restaurants',
-      expandable: true,
-      rank: index + (index % 2 ? 10 : 0),
-      tag,
-    }
-  })
+  const key = `${popularDishTags.map((x) => x.id)}`
+  return useMemo(() => {
+    const topDishes = sortBy(
+      groupBy(
+        uniqBy(popularDishTags, (x) => x.slug),
+        (x) => x.slug
+      ),
+      (x) => -x.length
+    )
+      .slice(0, 5)
+      .map((x) => x[0])
+    return topDishes.map((tag, index) => {
+      return {
+        id: `dish-restaurant-${tag.name}`,
+        region,
+        title: `Known for ${tag.name}`,
+        type: 'dish-restaurants',
+        expandable: true,
+        rank: index + (index % 2 ? 10 : 0),
+        tag,
+      }
+    })
+  }, [key])
 }
 
 export const HomeFeedDishRestaurants = graphql(

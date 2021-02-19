@@ -45,7 +45,7 @@ export const SearchHeader = memo(() => {
                 paddingHorizontal={35}
                 backgroundColor={rgbString(lenseColor)}
                 color="#fff"
-                size="xl"
+                size="lg"
                 fontWeight="800"
                 // alignSelf="center"
               >

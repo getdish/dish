@@ -27,21 +27,22 @@ type FI = FICuisine | FIDishRestaurants | FIList | FIHotNew
 
 function useHomeFeed(props: HomeFeedProps): FI[] {
   const { item, region } = props
-  const cuisineItems = useFeedTopCuisines(props)
+  // const cuisineItems = useFeedTopCuisines(props)
   const dishItems = useFeedDishItems(region)
   const hotNewItems = useHomeFeedTrendingNew(props)
-  return [
-    ...hotNewItems,
-    {
-      id: `0`,
-      type: 'list',
-      region: item.region,
-      rank: -3,
-      title: `Lists`,
-    } as FIList,
-    ...cuisineItems,
-    ...dishItems,
-  ].filter(isPresent)
+  return useMemo(() => {
+    return [
+      ...hotNewItems,
+      {
+        id: `0`,
+        type: 'list',
+        region: item.region,
+        rank: -3,
+        title: `Lists`,
+      } as FIList,
+      ...dishItems,
+    ].filter(isPresent)
+  }, [dishItems, hotNewItems])
 }
 
 export const HomePageFeed = memo(
@@ -74,51 +75,50 @@ export const HomePageFeed = memo(
       span,
     })
 
-    const feedContents = useMemo(() => {
-      return items.map((item, index) => {
-        const content = (() => {
-          switch (item.type) {
-            case 'new':
-            // return (
-            //   <VStack width="100%" marginBottom={-50}>
-            //     <HomeFeedTrendingNew {...item} />
-            //   </VStack>
-            // )
-            case 'hot':
-              return <HomeFeedTrendingNew {...item} />
-            case 'dish-restaurants':
-              return (
-                <HomeFeedDishRestaurants
-                  {...item}
-                  onHoverResults={(results) => {
-                    setHoveredResults({ via: item.type, results })
-                  }}
-                />
-              )
-            case 'cuisine':
-              return (
-                <HomeFeedCuisineItem
-                  {...item}
-                  onHoverResults={(results) => {
-                    console.log('setting hover', results)
-                    setHoveredResults({ via: item.type, results })
-                  }}
-                />
-              )
-            case 'list':
-              return (
-                <HomeFeedLists
-                  {...item}
-                  onHoverResults={(results) => {
-                    setHoveredResults({ via: item.type, results })
-                  }}
-                />
-              )
-          }
-        })()
-        if (!content) {
-          return null
+    const contents = useMemo(() => {
+      return items.map((item) => {
+        console.warn('GETTING NEW??')
+        switch (item.type) {
+          case 'new':
+          case 'hot':
+            return <HomeFeedTrendingNew {...item} />
+          case 'dish-restaurants':
+            return (
+              <HomeFeedDishRestaurants
+                {...item}
+                onHoverResults={(results) => {
+                  setHoveredResults({ via: item.type, results })
+                }}
+              />
+            )
+          case 'cuisine':
+            return (
+              <HomeFeedCuisineItem
+                {...item}
+                onHoverResults={(results) => {
+                  console.log('setting hover', results)
+                  setHoveredResults({ via: item.type, results })
+                }}
+              />
+            )
+          case 'list':
+            return (
+              <HomeFeedLists
+                {...item}
+                onHoverResults={(results) => {
+                  setHoveredResults({ via: item.type, results })
+                }}
+              />
+            )
+          default:
+            return null
         }
+      })
+    }, [items])
+
+    const feedContents = useMemo(() => {
+      return contents.map((content, index) => {
+        const item = items[index]
         return (
           <Hoverable
             key={item.id}
@@ -130,7 +130,7 @@ export const HomePageFeed = memo(
           </Hoverable>
         )
       })
-    }, [items])
+    }, [contents])
 
     return (
       <>

@@ -20,8 +20,11 @@ export async function getFullTags(tags: TagPartial[]): Promise<FullTag[]> {
   const uncached: TagPartial[] = []
 
   for (const tag of tags) {
-    const found = tag.slug && allTags[tag.slug]?.id ? allTags[tag.slug] : null
+    const found = tag.slug ? allTags[tag.slug] : null
     if (found) {
+      if (!found.id) {
+        console.warn('no found.id, lets get this later...', found)
+      }
       cached.push(found)
     } else {
       uncached.push(tag)
