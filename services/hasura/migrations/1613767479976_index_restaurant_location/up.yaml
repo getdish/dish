@@ -1,0 +1,6 @@
+- args:
+    cascade: false
+    read_only: false
+    sql: |-
+      CREATE INDEX IF NOT EXISTS restaurant_location_geo ON public.restaurant USING gist (location);
+  type: run_sql
