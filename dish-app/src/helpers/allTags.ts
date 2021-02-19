@@ -25,15 +25,14 @@ export function addTagToCache(tag: FullTag | NavigableTag) {
   if (!slug) {
     return false
   }
-  tag.name = tag.name ?? guessTagName(slug)
-  const exists = allTags[slug]
-  const ogType = exists?.type
+  tag.name = tag.name || guessTagName(slug)
+  const existing = allTags[slug]
   allTags[slug] = allTags[slug] || {}
-  Object.assign(allTags[slug], tag)
-  if (ogType) {
-    allTags[slug].type = ogType // dont ever change type
-  }
-  if (!exists) {
+  const current = allTags[slug]!
+  Object.assign(current, tag)
+  if (existing) {
+    current.type = existing.type // reset to OG type, dont ever change, should warn...
+  } else {
     allTagsNameToSlug[tagNameKey(tag.name)] = slug
   }
   return true

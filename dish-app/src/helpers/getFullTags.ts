@@ -1,15 +1,27 @@
 import { query, resolved } from '@dish/graph'
 import { isPresent } from '@dish/helpers'
-import { differenceBy } from 'lodash'
+import { debounce, differenceBy } from 'lodash'
 
 import { FullTag, NavigableTag, TagWithNameAndType } from '../types/tagTypes'
-import { allTags } from './allTags'
+import { addTagsToCache, allTags } from './allTags'
 import { getFullTag } from './getFullTag'
 
 type TagPartial =
   | TagWithNameAndType
   | NavigableTag
   | { name?: string; type?: string; slug: string }
+
+const noIdTagSlugs = new Set<string>()
+
+const hydrateIds = debounce(async () => {
+  if (!noIdTagSlugs.size) {
+    return
+  }
+  const slugs = [...noIdTagSlugs]
+  noIdTagSlugs.clear()
+  const full = await fetchFullTags(slugs.map((slug) => ({ slug })))
+  addTagsToCache(full)
+}, 500)
 
 export async function getFullTags(tags: TagPartial[]): Promise<FullTag[]> {
   const missingTag = tags.some((x) => !x.slug && !x.name && !x.type)
@@ -23,7 +35,14 @@ export async function getFullTags(tags: TagPartial[]): Promise<FullTag[]> {
     const found = tag.slug ? allTags[tag.slug] : null
     if (found) {
       if (!found.id) {
-        console.warn('no found.id, lets get this later...', found)
+        if ('id' in tag) {
+          found.id = tag.id
+        } else {
+          const slug = found.slug || tag.slug
+          if (slug) {
+            noIdTagSlugs.add(slug)
+          }
+        }
       }
       cached.push(found)
     } else {
@@ -31,13 +50,29 @@ export async function getFullTags(tags: TagPartial[]): Promise<FullTag[]> {
     }
   }
 
+  hydrateIds()
+
   if (!uncached.length) {
     return cached
   }
 
-  const res = [
-    ...cached,
-    ...(await resolved(() => {
+  const uncachedFull = await fetchFullTags(uncached)
+  addTagsToCache(uncachedFull)
+  const res = [...cached, ...uncachedFull]
+  if (res.length !== tags.length) {
+    console.warn(
+      'didnt find some tags',
+      tags,
+      res,
+      differenceBy(res, tags, (x) => x.name)
+    )
+  }
+  return res
+}
+
+async function fetchFullTags(tags: TagPartial[]) {
+  const all = await resolved(
+    () => {
       return tags.map((tag) => {
         return getFullTag(
           query.tag({
@@ -56,17 +91,10 @@ export async function getFullTags(tags: TagPartial[]): Promise<FullTag[]> {
           })[0]
         )
       })
-    })),
-  ].filter(isPresent)
-
-  if (res.length !== tags.length) {
-    console.warn(
-      'didnt find some tags',
-      tags,
-      res,
-      differenceBy(res, tags, (x) => x.name)
-    )
-  }
-
-  return res
+    },
+    {
+      noCache: true,
+    }
+  )
+  return all.filter(isPresent)
 }

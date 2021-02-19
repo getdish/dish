@@ -13,7 +13,6 @@ import { ContentSectionHoverable } from './ContentSectionHoverable'
 import { FeedSlantedTitleLink } from './FeedSlantedTitle'
 import { FIBase } from './FIBase'
 import { HoverResultsProp } from './HoverResultsProp'
-import { CardOverlay } from './restaurant/Card'
 import { RestaurantCard } from './restaurant/RestaurantCard'
 import { SkewedCard, SkewedCardCarousel } from './SkewedCard'
 
@@ -115,9 +114,6 @@ export const HomeFeedDishRestaurants = graphql(
         dish: selectRishDishViewSimple(rtag),
       }
     })
-
-    // TODO FIX ORDERING
-    console.warn('render dish restaurants', region.slug, tag.slug)
 
     return (
       <ContentSectionHoverable>
