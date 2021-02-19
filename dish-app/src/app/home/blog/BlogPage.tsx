@@ -8,6 +8,7 @@ import { Link } from '../../views/Link'
 import { StackDrawer } from '../../views/StackDrawer'
 import { HomeStackViewProps } from '../HomeStackViewProps'
 import { PageContentWithFooter } from '../PageContentWithFooter'
+import { useSnapToFullscreenOnMount } from '../restaurant/useSnapToFullscreenOnMount'
 import { BlogPageDetail } from './BlogPageDetail'
 import { BlogPostMeta } from './BlogPostMeta'
 import { MDX } from './MDX'
@@ -15,6 +16,9 @@ import { posts } from './posts'
 
 export default function BlogPage(props: HomeStackViewProps<HomeStateItemBlog>) {
   const slug = props.item.slug
+
+  useSnapToFullscreenOnMount()
+
   return (
     <MDX>
       <StackDrawer closable title="Blog">

@@ -160,7 +160,7 @@ const RestaurantHeaderContent = memo(
                   {/* title row */}
                   <HStack paddingLeft={20} alignItems="center">
                     <HStack position="relative">
-                      <VStack marginVertical={-8}>
+                      <VStack marginVertical={-14}>
                         <Theme name="light">
                           <RestaurantRatingView
                             floating
@@ -178,7 +178,7 @@ const RestaurantHeaderContent = memo(
                         pointerEvents="auto"
                         shadowRadius={5}
                         shadowOffset={{ height: 3, width: 0 }}
-                        borderRadius={10}
+                        borderRadius={16}
                         paddingHorizontal={15}
                         paddingVertical={5}
                         alignItems="center"

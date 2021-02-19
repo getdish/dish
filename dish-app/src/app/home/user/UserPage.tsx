@@ -1,7 +1,6 @@
 import { ReviewQuery, UserQuery, graphql, order_by } from '@dish/graph'
 import { useRouterSelector } from '@dish/router'
 import React, { Suspense, memo } from 'react'
-import { ScrollView } from 'react-native'
 import {
   AbsoluteVStack,
   Button,
@@ -26,7 +25,6 @@ import { ContentScrollViewHorizontal } from '../../views/ContentScrollViewHorizo
 import { Link } from '../../views/Link'
 import { ListCard } from '../../views/list/ListCard'
 import { NotFoundPage } from '../../views/NotFoundPage'
-import { SlantedTitle } from '../../views/SlantedTitle'
 import { SmallButton } from '../../views/SmallButton'
 import { SmallTitle } from '../../views/SmallTitle'
 import { StackDrawer } from '../../views/StackDrawer'
@@ -34,8 +32,8 @@ import { FeedSlantedTitle } from '../FeedSlantedTitle'
 import { StackItemProps } from '../HomeStackView'
 import { PageContentWithFooter } from '../PageContentWithFooter'
 import { RestaurantReview } from '../restaurant/RestaurantReview'
+import { useSnapToFullscreenOnMount } from '../restaurant/useSnapToFullscreenOnMount'
 import { SkewedCard, SkewedCardCarousel } from '../SkewedCard'
-import { CardCarousel } from './CardCarousel'
 import { UserAvatar } from './UserAvatar'
 
 type UserPane = 'vote' | 'review' | ''
@@ -112,6 +110,8 @@ const UserPageContent = graphql(
     })
     const reviews = useUserReviews(user, pane || 'both')
     const hasReviews = !!reviews?.length
+
+    useSnapToFullscreenOnMount()
 
     useSetAppMap({
       hideRegions: true,

@@ -49,6 +49,7 @@ export const SearchHeader = memo(() => {
                 fontWeight="800"
                 minWidth={200}
                 borderRadius={8}
+                alignSelf="center"
               >
                 <VStack alignItems="center">
                   <Text>{title}</Text>

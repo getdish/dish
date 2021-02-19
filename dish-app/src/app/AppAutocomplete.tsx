@@ -395,6 +395,7 @@ const AutocompleteFrame = ({ children }: { children: any }) => {
   const isShowing = autocompletes.visible
   const media = useMedia()
   const theme = useTheme()
+  const topOffsetSm = searchBarHeight
 
   const content = (
     <AbsoluteVStack
@@ -406,7 +407,7 @@ const AutocompleteFrame = ({ children }: { children: any }) => {
       marginTop={5}
       borderRadius={12}
       overflow="hidden"
-      top={media.sm ? searchBarHeight : 0}
+      top={media.sm ? topOffsetSm : 0}
       onPress={() => autocompletes.setVisible(false)}
     >
       <VStack width="100%" height="100%" maxWidth={drawerWidthMax}>

@@ -84,7 +84,7 @@ const AppStackViewItem = memo(
     const contentParentStore = useStore(ContentParentStore)
     const media = useMedia()
     const top = media.sm
-      ? Math.max(0, index - 1) * 5 + (index > 0 ? 5 : 0)
+      ? Math.max(0, index - 1) * 3
       : index * 5 + (index > 0 ? searchBarHeight + searchBarTopOffset : 0)
     const isFullyActive = !isRemoving && !isAdding
 

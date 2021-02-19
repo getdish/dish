@@ -10,7 +10,7 @@ export const SkewedCard = ({ children, ...props }: StackProps) => {
   return (
     <VStack
       marginRight={-75}
-      className="card-hover ease-in-out-fast"
+      className="ease-in-out-fast"
       borderRadius={cardFrameBorderRadius}
       shadowColor="#000"
       shadowOpacity={0.14}

@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react'
+import React from 'react'
 import { Image } from 'react-native'
 import {
   AbsoluteVStack,
@@ -7,7 +7,6 @@ import {
   Paragraph,
   Spacer,
   Text,
-  Title,
   UnorderedList,
   UnorderedListItem,
   VStack,
@@ -16,13 +15,13 @@ import {
 import dontPanic from '../../../assets/dont-panic.svg'
 import { lightGreen, lightYellow } from '../../../constants/colors'
 import { HomeStateItemAbout } from '../../../types/homeTypes'
-import { drawerStore } from '../../drawerStore'
 import { ContentScrollView } from '../../views/ContentScrollView'
 import { Link } from '../../views/Link'
 import { LinkButton } from '../../views/LinkButton'
 import { LogoColor } from '../../views/Logo'
 import { StackDrawer } from '../../views/StackDrawer'
 import { StackItemProps } from '../HomeStackView'
+import { useSnapToFullscreenOnMount } from '../restaurant/useSnapToFullscreenOnMount'
 
 const inlineButton = {
   borderRadius: 10,
@@ -36,17 +35,7 @@ export default function AboutPage({
   item,
   isActive,
 }: StackItemProps<HomeStateItemAbout>) {
-  useEffect(() => {
-    if (!isActive) return undefined
-    const tm = setTimeout(() => {
-      if (drawerStore.snapIndex > 0) {
-        drawerStore.setSnapIndex(0)
-      }
-    }, 350)
-    return () => {
-      clearTimeout(tm)
-    }
-  }, [isActive])
+  useSnapToFullscreenOnMount()
 
   return (
     <StackDrawer closable title="About Dish">

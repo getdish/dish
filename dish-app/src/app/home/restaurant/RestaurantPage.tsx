@@ -40,6 +40,7 @@ import { RestaurantMenu } from './RestaurantMenu'
 import { RestaurantReviewsList } from './RestaurantReviewsList'
 import { RestaurantTagReviews } from './RestaurantTagReviews'
 import { useSelectedDish } from './useSelectedDish'
+import { useSnapToFullscreenOnMount } from './useSnapToFullscreenOnMount'
 
 type Props = HomeStackViewProps<HomeStateItemRestaurant>
 
@@ -89,6 +90,8 @@ const RestaurantPage = memo(
       ],
       ...position,
     })
+
+    useSnapToFullscreenOnMount()
 
     const view = item.sectionSlug
       ? dishesSection

@@ -44,6 +44,9 @@ export const SearchForkListButton = memo(() => {
         onPress={async () => {
           try {
             const { id, username } = userStore.user ?? {}
+            if (userStore.promptLogin()) {
+              return
+            }
             assertPresent(id, 'no user id')
             assertPresent(username, 'no username')
             const name = `My ${title}`

@@ -57,10 +57,10 @@ import { TagButton, getTagButtonProps } from '../../views/TagButton'
 import { UpvoteDownvoteScore } from '../../views/UpvoteDownvoteScore'
 import { StackItemProps } from '../HomeStackView'
 import { PageContentWithFooter } from '../PageContentWithFooter'
-import { PageFooter } from '../PageFooter'
 import { PageTitle } from '../PageTitle'
 import { CircleButton } from '../restaurant/CircleButton'
 import { RestaurantListItem } from '../restaurant/RestaurantListItem'
+import { useSnapToFullscreenOnMount } from '../restaurant/useSnapToFullscreenOnMount'
 import { ListAddRestuarant } from './ListAddRestuarant'
 import { getListColor, listColors, randomListColor } from './listColors'
 
@@ -293,6 +293,8 @@ const ListPageContent = graphql((props: Props) => {
   const [isPublic, setPublic] = useStateSynced(list?.public ?? true)
   const [restaurants, restaurantActions] = useListRestaurants(list)
   const region = useRegionQuery(props.item.region)
+
+  useSnapToFullscreenOnMount()
 
   useEffect(() => {
     if (isEditing) {

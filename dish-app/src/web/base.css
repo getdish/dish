@@ -628,3 +628,7 @@ mark {
 .hover-parent:hover .hover-0-opacity-child {
   opacity: 0.5;
 }
+
+.hover-parent:hover .hover-bubble-title-child {
+  transform: scale(0.9);
+}

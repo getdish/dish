@@ -1,4 +1,3 @@
-// // debug
 import React from 'react'
 import { Box, BoxProps, StackProps, useTheme } from 'snackui'
 

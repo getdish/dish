@@ -98,6 +98,7 @@ export function Card({
       >
         <VStack
           className="hover-parent safari-fix-overflow"
+          pointerEvents="auto"
           width="100%"
           overflow="hidden"
           alignSelf="center"
@@ -111,7 +112,7 @@ export function Card({
             fullscreen
             zIndex={12}
           >
-            <VStack className="card-hover" flex={1}>
+            <VStack flex={1}>
               <AbsoluteVStack
                 zIndex={1001}
                 borderRadius={cardFrameBorderRadius}
@@ -179,7 +180,11 @@ export function Card({
                 ) : (
                   <VStack minWidth={45} flex={1} />
                 ))}
-              <VStack flex={1} alignItems="flex-end">
+              <VStack
+                className="hover-bubble-title-child"
+                flex={1}
+                alignItems="flex-end"
+              >
                 <VStack position="relative">
                   <AbsoluteVStack
                     className="hover-0-opacity-child"

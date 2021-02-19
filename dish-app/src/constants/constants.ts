@@ -58,6 +58,6 @@ export const slantedBoxStyle: any = {
   shadowOpacity: 0.125,
   shadowRadius: 6,
   shadowOffset: { height: 2, width: 0 },
-  borderRadius: 5,
+  borderRadius: 7,
   transform: [{ rotate: '-2deg' }],
 }

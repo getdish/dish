@@ -374,6 +374,7 @@ const SearchResultsContent = (props: Props) => {
           flex: 1,
           width: '100%',
           minWidth: 300,
+          minHeight: 1,
           height: '100%',
         }}
         canChangeSize

@@ -10,13 +10,12 @@ import ExtractCssChunks from 'extract-css-chunks-webpack-plugin'
 import { ensureDirSync } from 'fs-extra'
 import HTMLWebpackPlugin from 'html-webpack-plugin'
 import { DuplicatesPlugin } from 'inspectpack/plugin'
-import MiniCssExtractPlugin from 'mini-css-extract-plugin'
-// import LodashPlugin from 'lodash-webpack-plugin'
+// import MiniCssExtractPlugin from 'mini-css-extract-plugin'
 // import OptimizeCSSAssetsPlugin from 'optimize-css-assets-webpack-plugin'
+// import nodeExternals from 'webpack-node-externals'
 import SpeedMeasurePlugin from 'speed-measure-webpack-plugin'
 import TerserPlugin from 'terser-webpack-plugin'
 import Webpack from 'webpack'
-import nodeExternals from 'webpack-node-externals'
 import WebpackPwaManifest from 'webpack-pwa-manifest'
 
 const CssMinimizerPlugin = require('css-minimizer-webpack-plugin')
@@ -294,10 +293,6 @@ export default function createWebpackConfig({
 
         ...((isProduction &&
           !isSSR && [
-            // new LodashPlugin({
-            //   // fixes issue i had https://github.com/lodash/lodash/issues/3101
-            //   shorthands: true,
-            // }),
             new ExtractCssChunks({
               filename: '[name].css',
               chunkFilename: '[id].css',
