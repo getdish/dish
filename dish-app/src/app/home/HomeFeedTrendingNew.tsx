@@ -26,24 +26,29 @@ const getGraphResults = (r: any) => {
 
 export function useHomeFeedTrendingNew(props: HomeFeedProps): FIHotNew[] {
   const { item, region } = props
-  const slug = item.region ?? region?.slug ?? ''
-  const newest = query
-    .restaurant_new({
-      args: {
-        region_slug: slug,
-      },
-      limit: 8,
-    })
-    .map(getRestaurantIdentifiers)
+  const slug = item.region || region?.slug || ''
+  const newest = slug
+    ? query
+        .restaurant_new({
+          args: {
+            region_slug: slug,
+          },
+          limit: 8,
+        })
+        .map(getRestaurantIdentifiers)
+    : []
 
-  const trending = query
-    .restaurant_trending({
-      args: {
-        region_slug: slug,
-      },
-      limit: 8,
-    })
-    .map(getRestaurantIdentifiers)
+  const trending = slug
+    ? query
+        .restaurant_trending({
+          args: {
+            region_slug: slug,
+          },
+          limit: 8,
+        })
+        .map(getRestaurantIdentifiers)
+    : []
+
   const status =
     !trending[0] || trending[0].id === null ? 'loading' : 'complete'
 

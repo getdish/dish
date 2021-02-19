@@ -14,7 +14,7 @@ import {
 } from '@dish/graph'
 import { assertPresent, isPresent } from '@dish/helpers'
 import { Heart, Plus, Trash, X } from '@dish/react-feather'
-import React, { useEffect, useRef, useState } from 'react'
+import React, { Suspense, useEffect, useRef, useState } from 'react'
 import { Switch } from 'react-native'
 import {
   AbsoluteVStack,
@@ -128,9 +128,9 @@ export default function ListPage(props: Props) {
       )}
 
       {!isCreating && (
-        <>
+        <Suspense fallback={<StackDrawer closable title={`...`} />}>
           <ListPageContent {...props} />
-        </>
+        </Suspense>
       )}
     </>
   )
@@ -367,15 +367,21 @@ const ListPageContent = graphql((props: Props) => {
           maxHeight={480}
           minHeight={480}
         >
-          <PaneControlButtons>
-            <CloseButton onPress={() => setShowAddModal(false)} />
-          </PaneControlButtons>
-          <ListAddRestuarant
-            listSlug={props.item.slug}
-            onAdd={({ id }) => {
-              restaurantActions.add(id)
-            }}
-          />
+          {showAddModal && (
+            <>
+              <PaneControlButtons>
+                <CloseButton onPress={() => setShowAddModal(false)} />
+              </PaneControlButtons>
+              <Suspense fallback={null}>
+                <ListAddRestuarant
+                  listSlug={props.item.slug}
+                  onAdd={({ id }) => {
+                    restaurantActions.add(id)
+                  }}
+                />
+              </Suspense>
+            </>
+          )}
         </Modal>
       )}
 

@@ -74,7 +74,7 @@ export const HomeFeedLists = graphql(
       <>
         <FeedSlantedTitle>
           <HStack alignItems="center">
-            <Text fontSize={22} fontWeight="700">
+            <Text fontSize={20} fontWeight="700">
               Playlists
             </Text>
             <Spacer size="sm" />
@@ -93,6 +93,8 @@ export const HomeFeedLists = graphql(
             </Link>
           </HStack>
         </FeedSlantedTitle>
+
+        <Spacer size="lg" />
 
         <SkewedCardCarousel>
           {recentLists.map((list, i) => {

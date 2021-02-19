@@ -27,7 +27,6 @@ type FI = FICuisine | FIDishRestaurants | FIList | FIHotNew
 
 function useHomeFeed(props: HomeFeedProps): FI[] {
   const { item, region } = props
-  // const cuisineItems = useFeedTopCuisines(props)
   const dishItems = useFeedDishItems(region)
   const hotNewItems = useHomeFeedTrendingNew(props)
   return useMemo(() => {
@@ -55,18 +54,21 @@ export const HomePageFeed = memo(
       via: FI['type']
       results: RestaurantOnlyIds[]
     }>(null)
-    const results = items.flatMap((x) => {
-      if (hovered && hovered !== x.id) {
+
+    const results = useMemo(() => {
+      return items.flatMap((x) => {
+        if (hovered && hovered !== x.id) {
+          return []
+        }
+        if (hoveredResults?.via === x.type) {
+          return hoveredResults.results
+        }
+        if ('restaurants' in x) {
+          return x.restaurants
+        }
         return []
-      }
-      if (hoveredResults?.via === x.type) {
-        return hoveredResults.results
-      }
-      if ('restaurants' in x) {
-        return x.restaurants
-      }
-      return []
-    })
+      })
+    }, [items])
 
     useSetAppMap({
       isActive,
@@ -77,7 +79,6 @@ export const HomePageFeed = memo(
 
     const contents = useMemo(() => {
       return items.map((item) => {
-        console.warn('GETTING NEW??')
         switch (item.type) {
           case 'new':
           case 'hot':

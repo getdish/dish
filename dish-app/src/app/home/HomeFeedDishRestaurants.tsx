@@ -26,39 +26,40 @@ export type FIDishRestaurants = FIBase & {
 export function useFeedDishItems(
   region?: RegionNormalized | null
 ): FIDishRestaurants[] {
-  if (!region) {
-    return []
-  }
-
-  const { bbox } = region
-  const popularDishTags = query
-    .restaurant({
-      where: {
-        location: {
-          _st_within: bbox,
-        },
-      },
-      order_by: [{ upvotes: order_by.asc }],
-      limit: 20,
-    })
-    .flatMap((r) => {
-      return r
-        .tags({
-          limit: 8,
+  const bbox = region?.bbox
+  const popularDishTags = bbox
+    ? query
+        .restaurant({
           where: {
-            tag: {
-              type: {
-                _eq: 'dish',
-              },
+            location: {
+              _st_within: bbox,
             },
           },
           order_by: [{ upvotes: order_by.asc }],
+          limit: 20,
         })
-        .map(selectRishDishViewSimple)
-    })
+        .flatMap((r) => {
+          return r
+            .tags({
+              limit: 8,
+              where: {
+                tag: {
+                  type: {
+                    _eq: 'dish',
+                  },
+                },
+              },
+              order_by: [{ upvotes: order_by.asc }],
+            })
+            .map(selectRishDishViewSimple)
+        })
+    : []
 
   const key = `${popularDishTags.map((x) => x.id)}`
   return useMemo(() => {
+    if (!region) {
+      return []
+    }
     const topDishes = sortBy(
       groupBy(
         uniqBy(popularDishTags, (x) => x.slug),
