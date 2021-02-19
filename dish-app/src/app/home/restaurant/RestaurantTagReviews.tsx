@@ -222,7 +222,7 @@ export const RestaurantTagReviewsContent = memo(
                               right={0}
                             >
                               <LinearGradient
-                                colors={['transparent', '#fff']}
+                                colors={['rgba(255,255,255,0)', '#fff']}
                                 style={StyleSheet.absoluteFill}
                               />
                             </AbsoluteVStack>

@@ -5,7 +5,7 @@ import { searchBarHeight } from '../../constants/constants'
 import { getWindowHeight } from '../../helpers/getWindow'
 import { PageFooter } from './PageFooter'
 
-export const PageContentWithFooter = ({ children }: { children: any }) => {
+export const PageContentWithFooter = ({ children }: { children?: any }) => {
   return (
     <>
       <VStack minHeight={getWindowHeight() * 0.9 - searchBarHeight}>

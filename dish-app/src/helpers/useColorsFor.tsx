@@ -2,6 +2,8 @@ import { useTheme } from 'snackui'
 
 import { getColorsForName } from './getColorsForName'
 
+export type UseColors = ReturnType<typeof useColorsFor>
+
 export function useColorsFor(name?: string | null) {
   const theme = useTheme()
   const colors = getColorsForName(name)

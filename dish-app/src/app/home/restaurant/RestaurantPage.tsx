@@ -9,11 +9,11 @@ import React, {
   useState,
 } from 'react'
 import { ScrollView, View } from 'react-native'
-import { Spacer, VStack } from 'snackui'
+import { LoadingItems, Spacer, VStack } from 'snackui'
 
 import { searchBarHeight } from '../../../constants/constants'
 import { getMinLngLat } from '../../../helpers/mapHelpers'
-import { useColorsFor } from '../../../helpers/useColorsFor'
+import { UseColors, useColorsFor } from '../../../helpers/useColorsFor'
 import { queryRestaurant } from '../../../queries/queryRestaurant'
 import { router } from '../../../router'
 import { HomeStateItemRestaurant } from '../../../types/homeTypes'
@@ -39,23 +39,32 @@ import { useSnapToFullscreenOnMount } from './useSnapToFullscreenOnMount'
 type Props = HomeStackViewProps<HomeStateItemRestaurant>
 
 export default function RestaurantPageContainer(props: Props) {
+  const colors = useColorsFor(props.item.restaurantSlug)
   return (
-    <StackDrawer closable>
-      <RestaurantPage {...props} />
+    <StackDrawer
+      closable
+      fallback={
+        <VStack backgroundColor={colors.themeColor}>
+          <PageContentWithFooter>
+            <LoadingItems />
+          </PageContentWithFooter>
+        </VStack>
+      }
+    >
+      <RestaurantPage {...props} colors={colors} />
     </StackDrawer>
   )
 }
 
 const RestaurantPage = memo(
-  graphql((props: Props) => {
-    const { item } = props
+  graphql((props: Props & { colors: UseColors }) => {
+    const { item, colors } = props
     const { restaurantSlug, section, sectionSlug } = item
     const [restaurant] = queryRestaurant(restaurantSlug)
     const coords = restaurant?.location?.coordinates ?? []
     const { selectedDish, setSelectedDishToggle } = useSelectedDish(
       section === 'reviews' ? sectionSlug : null
     )
-    const colors = useColorsFor(restaurantSlug)
     const [scrollView, setScrollView] = useState<ScrollView | null>(null)
     const [reviewsSection, setReviewsSection] = useState<View | null>(null)
     const [dishesSection, setDishesSection] = useState<View | null>(null)

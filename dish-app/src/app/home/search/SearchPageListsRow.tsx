@@ -1,7 +1,7 @@
 import { graphql, query } from '@dish/graph'
 import { isPresent } from '@dish/helpers'
 import React, { memo, useContext } from 'react'
-import { HStack, useTheme } from 'snackui'
+import { HStack } from 'snackui'
 
 import { getActiveTags } from '../../../helpers/getActiveTags'
 import { ListCardHorizontal } from '../../views/list/ListCard'
@@ -9,10 +9,9 @@ import { SearchForkListButton } from './SearchForkListButton'
 import { SearchPagePropsContext } from './SearchPagePropsContext'
 
 export const SearchPageListsRow = memo(
-  graphql((props: any) => {
+  graphql((props: {}) => {
     const curProps = useContext(SearchPagePropsContext)!
     const region = curProps.item.region
-    const theme = useTheme()
 
     if (!region) {
       return null
@@ -56,7 +55,9 @@ export const SearchPageListsRow = memo(
           )
         })}
 
-        <SearchForkListButton>No lists yet, create first</SearchForkListButton>
+        <SearchForkListButton>
+          {!lists.length ? 'No lists yet, create first' : 'Create list'}
+        </SearchForkListButton>
       </HStack>
     )
   })
