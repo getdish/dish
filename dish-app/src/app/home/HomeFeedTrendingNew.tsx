@@ -87,6 +87,7 @@ export const HomeFeedTrendingNew = memo(
         <ContentSectionHoverable>
           <AbsoluteVStack
             fullscreen
+            paddingLeft={20}
             pointerEvents="none"
             justifyContent="center"
           >

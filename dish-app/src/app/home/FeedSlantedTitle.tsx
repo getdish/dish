@@ -6,16 +6,26 @@ import { LinkButtonNamedProps, LinkSharedProps } from '../views/LinkProps'
 import { ScalingPressable } from '../views/ScalingPressable'
 import { SlantedTitle, SlantedTitleProps } from '../views/SlantedTitle'
 
-export const FeedSlantedTitle = (props: SlantedTitleProps) => {
+const TitleContainer = ({ children }: { children: any }) => {
   return (
     <VStack
       alignSelf="flex-start"
-      marginTop={0}
+      marginTop={10}
       marginLeft={15}
-      marginBottom={-42}
+      marginBottom={-52}
+      position="relative"
+      zIndex={10}
     >
-      <SlantedTitle size="md" {...props} />
+      {children}
     </VStack>
+  )
+}
+
+export const FeedSlantedTitle = (props: SlantedTitleProps) => {
+  return (
+    <TitleContainer>
+      <SlantedTitle size="md" {...props} />
+    </TitleContainer>
   )
 }
 
@@ -27,19 +37,12 @@ export const FeedSlantedTitleLink = ({
   ...props
 }: SlantedTitleProps & LinkSharedProps & LinkButtonNamedProps) => {
   return (
-    <VStack
-      alignSelf="flex-start"
-      marginTop={0}
-      marginLeft={15}
-      marginBottom={-42}
-      position="relative"
-      zIndex={10}
-    >
+    <TitleContainer>
       <ScalingPressable>
         <Link asyncClick {...{ tag, tags, name, params }}>
           <SlantedTitle size="md" {...props} />
         </Link>
       </ScalingPressable>
-    </VStack>
+    </TitleContainer>
   )
 }
