@@ -68,7 +68,7 @@ export const HomePageFeed = memo(
         }
         return []
       })
-    }, [items])
+    }, [items, hoveredResults])
 
     useSetAppMap({
       isActive,

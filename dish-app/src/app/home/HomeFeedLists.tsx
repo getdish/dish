@@ -1,7 +1,7 @@
 import { series } from '@dish/async'
 import { graphql, order_by, query, resolved } from '@dish/graph'
 import { Plus } from '@dish/react-feather'
-import React, { useEffect, useState } from 'react'
+import React, { Suspense, useEffect, useMemo, useState } from 'react'
 import { HStack, Spacer, Text, useDebounce } from 'snackui'
 
 import { getRestaurantIdentifiers } from '../../helpers/getRestaurantIdentifiers'
@@ -19,8 +19,18 @@ export type FIList = FIBase & {
   region: string
 }
 
-export const HomeFeedLists = graphql(
-  ({ region, onHoverResults }: FIList & HoverResultsProp) => {
+type Props = FIList & HoverResultsProp
+
+export const HomeFeedLists = (props: Props) => {
+  return (
+    <Suspense fallback={null}>
+      <HomeFeedListsContents {...props} />
+    </Suspense>
+  )
+}
+
+export const HomeFeedListsContents = graphql(
+  ({ region, onHoverResults }: Props) => {
     const recentLists = query.list_populated({
       args: {
         min_items: 2,
@@ -66,58 +76,61 @@ export const HomeFeedLists = graphql(
       ])
     }, [hoveredList])
 
-    if (!recentLists.length) {
-      return null
-    }
+    const key = `${recentLists?.map((x) => x.id)}`
 
-    return (
-      <>
-        <FeedSlantedTitle>
-          <HStack alignItems="center">
-            <Text fontSize={20} fontWeight="700">
-              Playlists
-            </Text>
-            <Spacer size="sm" />
-            <Link
-              promptLogin
-              name="list"
-              params={{
-                userSlug: 'me',
-                slug: 'create',
-                region: homeStore.lastRegionSlug,
-              }}
-            >
-              <SmallCircleButton alignSelf="center">
-                <Plus size={14} color="#fff" />
-              </SmallCircleButton>
-            </Link>
-          </HStack>
-        </FeedSlantedTitle>
+    return useMemo(() => {
+      if (!recentLists.length) {
+        return null
+      }
+      return (
+        <>
+          <FeedSlantedTitle>
+            <HStack alignItems="center">
+              <Text fontSize={20} fontWeight="700">
+                Playlists
+              </Text>
+              <Spacer size="sm" />
+              <Link
+                promptLogin
+                name="list"
+                params={{
+                  userSlug: 'me',
+                  slug: 'create',
+                  region: homeStore.lastRegionSlug,
+                }}
+              >
+                <SmallCircleButton alignSelf="center">
+                  <Plus size={14} color="#fff" />
+                </SmallCircleButton>
+              </Link>
+            </HStack>
+          </FeedSlantedTitle>
 
-        <Spacer size="lg" />
+          <Spacer size="lg" />
 
-        <SkewedCardCarousel>
-          {recentLists.map((list, i) => {
-            if (!list) {
-              return null
-            }
-            return (
-              <SkewedCard zIndex={1000 - i} key={list.id}>
-                <ListCard
-                  isBehind={i > 0}
-                  hoverable={false}
-                  slug={list.slug}
-                  userSlug={list.user?.username ?? ''}
-                  region={list.region ?? ''}
-                  onHover={(hovered) =>
-                    hovered ? setHoveredList(list.id) : null
-                  }
-                />
-              </SkewedCard>
-            )
-          })}
-        </SkewedCardCarousel>
-      </>
-    )
+          <SkewedCardCarousel>
+            {recentLists.map((list, i) => {
+              if (!list) {
+                return null
+              }
+              return (
+                <SkewedCard zIndex={1000 - i} key={list.id}>
+                  <ListCard
+                    isBehind={i > 0}
+                    hoverable={false}
+                    slug={list.slug}
+                    userSlug={list.user?.username ?? ''}
+                    region={list.region ?? ''}
+                    onHover={(hovered) => {
+                      hovered ? setHoveredList(list.id) : null
+                    }}
+                  />
+                </SkewedCard>
+              )
+            })}
+          </SkewedCardCarousel>
+        </>
+      )
+    }, [key])
   }
 )
