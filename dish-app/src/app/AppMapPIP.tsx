@@ -10,6 +10,7 @@ import { queryRestaurant } from '../queries/queryRestaurant'
 import { appMapStore, useAppMap } from './AppMapStore'
 import { drawerStore } from './drawerStore'
 import { useHomeStore } from './homeStore'
+import { mapStyles } from './mapStyles'
 
 mapboxgl.accessToken = MAPBOX_ACCESS_TOKEN
 
@@ -33,13 +34,13 @@ export default memo(() => {
           pointerEvents: 'none',
         })}
       >
-        <HomeMapPIPContent />
+        <AppPIPContent />
       </VStack>
     </Suspense>
   )
 })
 
-const HomeMapPIPContent = graphql(() => {
+const AppPIPContent = graphql(() => {
   const home = useHomeStore()
   const position = useAppMap('position')
   const mapNode = useRef<HTMLDivElement>(null)
@@ -72,14 +73,9 @@ const HomeMapPIPContent = graphql(() => {
 
   const restaurant = restaurants?.[0]
   const curCenter = appMap.position.center
-  const coords = restaurant?.location?.coordinates ?? [
-    curCenter?.lng ?? 0,
-    curCenter?.lat ?? 0,
-  ]
-  const center: LngLat = {
-    lat: coords[1] ?? 0.1,
-    lng: coords[0] ?? 0.1,
-  }
+  const restCenter = restaurant?.location?.coordinates as LngLat | null
+  const center = restCenter || curCenter
+
   const pipAction = (() => {
     if (getMedia().xs && drawerStore.snapIndex === 0) {
       // move drawer down
@@ -87,19 +83,13 @@ const HomeMapPIPContent = graphql(() => {
         drawerStore.setSnapIndex(2)
       }
     }
-    if (coords[0] && !isEqual(center, appMapStore.position.center)) {
+    if (center[0] && !isEqual(center, appMapStore.position.center)) {
       return () => {
         appMapStore.setPosition({
           center: center,
           span: pipSpan(span),
         })
       }
-    }
-    // else if (getZoomLevel(span) !== 'medium') {
-    //   return mapZoomToMedium
-    // }
-    else {
-      // none
     }
   })()
 
@@ -124,10 +114,12 @@ const HomeMapPIPContent = graphql(() => {
   }
 
   useEffect(() => {
+    if (!mapNode.current) {
+      return
+    }
     new mapboxgl.Map({
-      // @ts-ignore
       container: mapNode.current,
-      style: 'mapbox://styles/nwienert/ckddrrcg14e4y1ipj0l4kf1xy',
+      style: mapStyles.light,
       center,
       zoom: 11,
       attributionControl: false,
@@ -136,7 +128,7 @@ const HomeMapPIPContent = graphql(() => {
         compact: true,
       })
     )
-  }, [])
+  }, [mapNode.current])
 
   // useEffect(() => {
   //   if (!map) return

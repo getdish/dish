@@ -16,6 +16,7 @@ export const BottomSheetContainer = (props: { children: any }) => {
     <VStack
       width="100%"
       height="100%"
+      flex={1}
       shadowColor="rgba(0,0,0,0.15)"
       shadowRadius={28}
       shadowOffset={{ width: 10, height: 0 }}

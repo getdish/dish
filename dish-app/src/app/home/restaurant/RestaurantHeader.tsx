@@ -82,8 +82,6 @@ const RestaurantHeaderContent = memo(
       const [hasScrolled, setHasScrolled] = useState(false)
       const colors = useColorsFor(restaurantSlug)
 
-      console.log('rendering', { imageHeight, width, name: restaurant.name })
-
       return (
         <ContentScrollViewHorizontalFitted
           onScroll={hasScrolled ? undefined : () => setHasScrolled(true)}

@@ -1,9 +1,8 @@
 import { MapPosition, slugify } from '@dish/graph'
-import React, { Suspense, memo, useEffect, useState } from 'react'
+import React, { memo, useEffect, useState } from 'react'
 import {
   AbsoluteVStack,
   HStack,
-  LoadingItems,
   Paragraph,
   Spacer,
   Text,
@@ -37,7 +36,6 @@ import { HomePageFeed } from './HomePageFeed'
 import { HomeStackViewProps } from './HomeStackViewProps'
 import { HomeTopSearches } from './HomeTopSearches'
 import { PageContentWithFooter } from './PageContentWithFooter'
-import { PageFooter } from './PageFooter'
 
 export default memo(function HomePage(
   props: HomeStackViewProps<HomeStateItemHome>
@@ -70,8 +68,10 @@ export default memo(function HomePage(
   const region = regionResponse.data
   const { center, span } = region ?? {}
 
-  // prettier-ignore
-  console.log('👀 HomePage', state.region, { position, isLoaded, props, region, state, isActive, center, span })
+  if (process.env.NODE_ENV === 'development') {
+    // prettier-ignore
+    console.log('👀 HomePage', state.region, { position, isLoaded, props, region, state, isActive, center, span })
+  }
 
   // on load home clear search effect!
   useEffect(() => {

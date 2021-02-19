@@ -74,6 +74,7 @@ export const HomeDrawerSmallView = memo((props: { children: any }) => {
       zIndex={media.sm ? zIndexDrawer : -1}
       width="100%"
       height="100%"
+      backgroundColor="red"
     >
       <Animated.View
         style={{

@@ -65,22 +65,20 @@ function AppHomeContent() {
           <Home />
         </Suspense>
 
+        {!isSSR && (
+          <ErrorBoundary name="main-map">
+            <Suspense fallback={null}>
+              <AppMap />
+            </Suspense>
+          </ErrorBoundary>
+        )}
+
         <Suspense fallback={null}>
-          {!isSSR && (
-            <ErrorBoundary name="main-map">
-              <Suspense fallback={null}>
-                <AppMap />
-              </Suspense>
-            </ErrorBoundary>
-          )}
+          <AppIntroLetter />
+        </Suspense>
 
-          <Suspense fallback={null}>
-            <AppIntroLetter />
-          </Suspense>
-
-          <Suspense fallback={null}>
-            <AppMapControlsOverlay />
-          </Suspense>
+        <Suspense fallback={null}>
+          <AppMapControlsOverlay />
         </Suspense>
 
         <Suspense fallback={null}>

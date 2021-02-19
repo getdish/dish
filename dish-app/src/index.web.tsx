@@ -27,7 +27,8 @@ async function start() {
     return
   }
 
-  if (process.env.NODE_ENV === 'production') {
+  // disable as we're not doing SSR for now
+  if (false && process.env.NODE_ENV === 'production') {
     loadableReady(() => {
       hydrate(<Root />, ROOT)
     })

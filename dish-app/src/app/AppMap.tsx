@@ -38,14 +38,7 @@ import { homeStore } from './homeStore'
 import { useLastValueWhen } from './hooks/useLastValueWhen'
 import { useMapSize } from './hooks/useMapSize'
 import { MapView } from './Map'
-
-const styles = {
-  light: 'mapbox://styles/nwienert/ckl1saj8w0nmo17mqz5b42s8k', // ice cream
-  // 'mapbox://styles/nwienert/ckl1sc28t0btd17mk1n435qf4', // basic light
-  //'mapbox://styles/nwienert/ckddrrcg14e4y1ipj0l4kf1xy', // dish light
-  dark: 'mapbox://styles/nwienert/ckkapnkmz30vj17ktc1fxccrh', // monochrome dark
-  //'mapbox://styles/nwienert/ck68dg2go01jb1it5j2xfsaja', // dish dark
-}
+import { mapStyles } from './mapStyles'
 
 export default memo(function AppMap() {
   const {
@@ -269,7 +262,7 @@ export default memo(function AppMap() {
           <AppMapControls />
           <MapView
             center={center}
-            style={styles[themeName]}
+            style={mapStyles[themeName]}
             span={span}
             padding={padding}
             features={features}

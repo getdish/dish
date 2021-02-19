@@ -107,22 +107,6 @@ export const HomeDrawerSmallView = memo((props: { children: any }) => {
     })
   })
 
-  const content = useMemo(
-    () => (
-      <BottomSheetContainer>
-        <View style={styles.container} {...panResponder.panHandlers}>
-          <VStack zIndex={1000} maxHeight={searchBarHeight}>
-            <AppSearchBar />
-          </VStack>
-          <VStack position="relative" flex={1}>
-            {props.children}
-          </VStack>
-        </View>
-      </BottomSheetContainer>
-    ),
-    [props.children]
-  )
-
   return (
     <VStack
       pointerEvents="none"
@@ -132,31 +116,21 @@ export const HomeDrawerSmallView = memo((props: { children: any }) => {
       maxHeight="100%"
     >
       <Animated.View
-        style={{
-          transform: [
-            {
-              translateY: drawerStore.pan,
-            },
-          ],
-          maxWidth: pageWidthMax,
-          alignItems: 'center',
-          width: '100%',
-          position: 'absolute',
-          top: 0,
-          left: 0,
-          right: 0,
-          bottom: 0,
-          zIndex: 100,
-        }}
+        style={[
+          styles.animatedView,
+          {
+            transform: [
+              {
+                translateY: drawerStore.pan,
+              },
+            ],
+          },
+        ]}
       >
         {/* handle */}
         <View
           pointerEvents="auto"
-          style={{
-            position: 'absolute',
-            top: -30,
-            padding: 5,
-          }}
+          style={styles.panView}
           {...panResponder.panHandlers}
         >
           <VStack
@@ -183,7 +157,21 @@ export const HomeDrawerSmallView = memo((props: { children: any }) => {
           flex={1}
           pointerEvents={preventScrolling ? 'none' : 'auto'}
         >
-          {content}
+          {useMemo(
+            () => (
+              <BottomSheetContainer>
+                <View style={styles.container} {...panResponder.panHandlers}>
+                  <VStack zIndex={1000} maxHeight={searchBarHeight}>
+                    <AppSearchBar />
+                  </VStack>
+                  <VStack position="relative" flex={1}>
+                    {props.children}
+                  </VStack>
+                </View>
+              </BottomSheetContainer>
+            ),
+            [props.children]
+          )}
         </VStack>
       </Animated.View>
     </VStack>
@@ -194,5 +182,22 @@ const styles = StyleSheet.create({
   container: {
     width: '100%',
     height: '100%',
+    flex: 1,
+  },
+  animatedView: {
+    maxWidth: pageWidthMax,
+    alignItems: 'center',
+    width: '100%',
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
+    zIndex: 100,
+  },
+  panView: {
+    position: 'absolute',
+    top: -30,
+    padding: 5,
   },
 })
