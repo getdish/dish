@@ -4,7 +4,6 @@ import React, { Suspense, memo, useState } from 'react'
 import { StyleSheet } from 'react-native'
 import {
   AbsoluteVStack,
-  Circle,
   HStack,
   LinearGradient,
   Spacer,
@@ -23,30 +22,21 @@ import {
 } from '../../views/ContentScrollViewHorizontal'
 import { RestaurantOverview } from '../../views/restaurant/RestaurantOverview'
 import { RestaurantTagsRow } from '../../views/restaurant/RestaurantTagsRow'
-import { RestaurantUpVoteDownVote } from '../../views/restaurant/RestaurantUpVoteDownVote'
 import { SmallButton } from '../../views/SmallButton'
 import { RestaurantRatingView } from '../RestaurantRatingView'
-import { RestaurantAddCommentButton } from './RestaurantAddCommentButton'
 import { RestaurantAddress } from './RestaurantAddress'
 import { RestaurantAddressLinksRow } from './RestaurantAddressLinksRow'
 import { RestaurantAddToListButton } from './RestaurantAddToListButton'
 import { RestaurantDeliveryButtons } from './RestaurantDeliveryButtons'
 import { openingHours } from './RestaurantDetailRow'
-import {
-  RestaurantFavoriteButton,
-  RestaurantFavoriteStar,
-} from './RestaurantFavoriteButton'
+import { RestaurantFavoriteStar } from './RestaurantFavoriteButton'
 import { RestaurantPhotosRow } from './RestaurantPhotosRow'
-import { RestaurantRating } from './RestaurantRating'
 
 type RestaurantHeaderProps = {
   state?: HomeStateItemRestaurant
   restaurantSlug: any
-  after?: any
   afterAddress?: any
   size?: 'sm' | 'md'
-  below?: any
-  showImages?: boolean
   minHeight?: number
 }
 
@@ -60,16 +50,7 @@ export const RestaurantHeader = (props: RestaurantHeaderProps) => {
 
 const RestaurantHeaderContent = memo(
   graphql(
-    ({
-      state,
-      restaurantSlug,
-      after,
-      below,
-      afterAddress,
-      showImages,
-      minHeight,
-      size,
-    }: RestaurantHeaderProps) => {
+    ({ state, restaurantSlug, afterAddress, size }: RestaurantHeaderProps) => {
       const imageHeight = 190
       const [restaurant] = queryRestaurant(restaurantSlug)
       const [open_text, open_color, next_time] = openingHours(restaurant)
@@ -101,6 +82,8 @@ const RestaurantHeaderContent = memo(
       const [hasScrolled, setHasScrolled] = useState(false)
       const colors = useColorsFor(restaurantSlug)
 
+      console.log('rendering', { imageHeight, width, name: restaurant.name })
+
       return (
         <ContentScrollViewHorizontalFitted
           onScroll={hasScrolled ? undefined : () => setHasScrolled(true)}
@@ -118,15 +101,13 @@ const RestaurantHeaderContent = memo(
             </AbsoluteVStack>
 
             <AbsoluteVStack zIndex={0} pointerEvents="auto">
-              <Suspense fallback={null}>
-                <RestaurantPhotosRow
-                  restaurantSlug={restaurantSlug}
-                  width={photoWidth}
-                  height={imageHeight}
-                  escalating
-                  showEscalated={hasScrolled}
-                />
-              </Suspense>
+              <RestaurantPhotosRow
+                restaurantSlug={restaurantSlug}
+                width={photoWidth}
+                height={imageHeight}
+                escalating
+                showEscalated={hasScrolled}
+              />
               <AbsoluteVStack
                 left={0}
                 right={0}
@@ -171,7 +152,6 @@ const RestaurantHeaderContent = memo(
                           />
                         </Theme>
                       </VStack>
-
                       <Spacer size="lg" />
                       <HStack
                         backgroundColor={colors.themeColorAlt}
@@ -206,7 +186,7 @@ const RestaurantHeaderContent = memo(
                             fontSize={fontSize}
                             fontWeight="800"
                           >
-                            {restaurant.name}
+                            {restaurant.name || ' '}
                           </Text>
                         </HStack>
                       </HStack>
@@ -233,25 +213,26 @@ const RestaurantHeaderContent = memo(
                           alignItems="center"
                           flexWrap="wrap"
                           maxWidth="100%"
+                          minHeight={55}
                         >
-                          <HStack marginBottom={10}>
-                            <RestaurantFavoriteStar
-                              size="lg"
-                              restaurantId={restaurantId}
-                            />
-                            <Spacer size="xs" />
-
-                            <RestaurantAddressLinksRow
-                              curLocInfo={state?.curLocInfo ?? null}
-                              showMenu
-                              size="lg"
-                              restaurantSlug={restaurantSlug}
-                            />
-                          </HStack>
-
-                          <Spacer size="sm" />
-
                           <Suspense fallback={null}>
+                            <HStack marginBottom={10}>
+                              <RestaurantFavoriteStar
+                                size="lg"
+                                restaurantId={restaurantId}
+                              />
+                              <Spacer size="xs" />
+
+                              <RestaurantAddressLinksRow
+                                curLocInfo={state?.curLocInfo ?? null}
+                                showMenu
+                                size="lg"
+                                restaurantSlug={restaurantSlug}
+                              />
+                            </HStack>
+
+                            <Spacer size="sm" />
+
                             <VStack marginBottom={10}>
                               <RestaurantAddress
                                 size="xs"
@@ -259,6 +240,7 @@ const RestaurantHeaderContent = memo(
                                 curLocInfo={state?.curLocInfo ?? null}
                               />
                             </VStack>
+
                             <VStack marginBottom={10}>
                               <SmallButton
                                 backgroundColor="transparent"
@@ -289,43 +271,29 @@ const RestaurantHeaderContent = memo(
 
                       <Spacer size="sm" />
 
-                      <VStack>
-                        <HStack flexWrap="wrap">
-                          <VStack
-                            flex={1}
-                            minWidth={280}
-                            maxWidth={contentLeftWidth}
-                          >
-                            <HStack
-                              maxHeight={80}
-                              overflow="hidden"
-                              flexWrap="wrap"
-                            >
-                              <RestaurantTagsRow
-                                restaurantSlug={restaurantSlug}
-                                restaurantId={restaurantId}
-                                spacing={10}
-                                grid
-                                max={8}
-                              />
-                            </HStack>
+                      <VStack width={contentLeftWidth}>
+                        <RestaurantTagsRow
+                          restaurantSlug={restaurantSlug}
+                          restaurantId={restaurantId}
+                          spacing={10}
+                          grid
+                          max={8}
+                        />
 
-                            <Spacer size="lg" />
+                        <Spacer size="lg" />
 
-                            <RestaurantOverview
-                              maxLines={4}
-                              size="lg"
-                              restaurantSlug={restaurantSlug}
-                            />
+                        <RestaurantOverview
+                          maxLines={4}
+                          size="lg"
+                          restaurantSlug={restaurantSlug}
+                        />
 
-                            <RestaurantDeliveryButtons
-                              marginTop={20}
-                              label="Delivers"
-                              showLabels
-                              restaurantSlug={restaurantSlug}
-                            />
-                          </VStack>
-                        </HStack>
+                        <RestaurantDeliveryButtons
+                          marginTop={20}
+                          label="Delivers"
+                          showLabels
+                          restaurantSlug={restaurantSlug}
+                        />
                       </VStack>
                     </VStack>
                   </HStack>

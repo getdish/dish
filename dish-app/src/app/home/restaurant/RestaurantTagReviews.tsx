@@ -2,11 +2,12 @@ import { graphql } from '@dish/graph'
 import { ellipseText, isPresent } from '@dish/helpers'
 import { Store, useStore } from '@dish/use-store'
 import React, { Suspense, memo } from 'react'
-import { Image } from 'react-native'
+import { Image, StyleSheet } from 'react-native'
 import {
   AbsoluteVStack,
   Grid,
   HStack,
+  LinearGradient,
   LoadingItems,
   Paragraph,
   Spacer,
@@ -18,6 +19,7 @@ import {
 import { green, grey } from '../../../constants/colors'
 import { isWeb } from '../../../constants/constants'
 import { thirdPartyCrawlSources } from '../../../constants/thirdPartyCrawlSources'
+import { numberFormat } from '../../../helpers/numberFormat'
 import { queryRestaurant } from '../../../queries/queryRestaurant'
 import { CloseButton } from '../../views/CloseButton'
 import { ContentScrollViewHorizontal } from '../../views/ContentScrollViewHorizontal'
@@ -43,12 +45,14 @@ type Props = {
   borderless?: boolean
 }
 
-const height = 240
+const height = 220
+const scrollHeight = height - 40
+const itemHeight = scrollHeight - 20
 
 export const RestaurantTagReviews = (props: Props) => {
   return (
     <VStack height={height + 40}>
-      <Suspense fallback={<LoadingItems />}>
+      <Suspense fallback={null}>
         <RestaurantTagReviewsContent {...props} />
       </Suspense>
     </VStack>
@@ -83,21 +87,23 @@ export const RestaurantTagReviewsContent = memo(
       })
       const spacing = 12
       const theme = useTheme()
-      const items = tagName
-        ? getTagSourceBreakdowns(
-            restaurant
-              .tags({
-                where: {
-                  tag: {
-                    name: {
-                      _ilike: tagName,
+      const items = (
+        (tagName
+          ? getTagSourceBreakdowns(
+              restaurant
+                .tags({
+                  where: {
+                    tag: {
+                      name: {
+                        _ilike: tagName,
+                      },
                     },
                   },
-                },
-              })[0]
-              ?.source_breakdown()
-          )
-        : getSourceBreakdowns(restaurant.source_breakdown()?.sources)
+                })[0]
+                ?.source_breakdown()
+            )
+          : getSourceBreakdowns(restaurant.source_breakdown()?.sources)) ?? []
+      ).filter(isPresent)
 
       return (
         <VStack maxWidth="100%" width="100%" position="relative">
@@ -122,121 +128,111 @@ export const RestaurantTagReviewsContent = memo(
             justifyContent="center"
             spacing={10}
           >
-            <ContentScrollViewHorizontal height={height}>
-              {!!items && (
-                <HStack paddingHorizontal={20}>
-                  {items
-                    .filter(isPresent)
-                    .map(({ name, sentence, image, positive, negative }) => {
-                      const ratio = positive / (Math.abs(negative) + positive)
-                      return (
-                        <VStack key={name} margin="auto">
-                          <VStack
-                            margin={spacing}
-                            shadowColor="#000"
-                            shadowOpacity={0.05}
-                            // borderWidth={1}
-                            // borderColor={theme.borderColor}
-                            backgroundColor={theme.cardBackgroundColor}
-                            maxWidth={440}
-                            shadowRadius={15}
-                            shadowOffset={{ height: 3, width: 0 }}
-                            padding={20}
-                            alignSelf="center"
-                            borderRadius={10}
-                            position="relative"
-                            flex={1}
-                          >
-                            <VStack position="relative" alignSelf="center">
-                              {/* <AbsoluteVStack
-                    right={-35}
-                    top={-25}
-                    justifyContent="center"
-                    alignItems="center"
-                    zIndex={0}
-                    >
-                    <SentimentCircle scale={1.2} ratio={ratio} />
-                  </AbsoluteVStack> */}
-                              <SlantedTitle marginTop={-30} size="xs">
-                                {name}
-                              </SlantedTitle>
-                            </VStack>
+            <ContentScrollViewHorizontal height={scrollHeight}>
+              <HStack paddingHorizontal={20}>
+                {items.map(({ name, sentence, image, positive, negative }) => {
+                  const ratio = positive / (Math.abs(negative) + positive)
+                  return (
+                    <VStack key={name} margin="auto">
+                      <VStack
+                        margin={spacing}
+                        shadowColor="#000"
+                        shadowOpacity={0.05}
+                        backgroundColor={theme.cardBackgroundColor}
+                        width={400}
+                        height={itemHeight}
+                        shadowRadius={15}
+                        shadowOffset={{ height: 3, width: 0 }}
+                        padding={20}
+                        alignSelf="center"
+                        borderRadius={10}
+                        position="relative"
+                        flex={1}
+                      >
+                        <VStack position="relative" alignSelf="center">
+                          <SlantedTitle marginTop={-30} size="xs">
+                            {name}
+                          </SlantedTitle>
+                        </VStack>
 
-                            <Spacer size="lg" />
+                        <Spacer size="lg" />
 
-                            <HStack>
-                              <VStack
-                                marginTop={-18}
-                                spacing
-                                alignItems="center"
-                              >
-                                <Image
-                                  source={{ uri: image }}
-                                  style={{
-                                    width: 32,
-                                    height: 32,
-                                    borderRadius: 100,
-                                  }}
-                                />
+                        <HStack>
+                          <VStack marginTop={-18} spacing alignItems="center">
+                            <Image
+                              source={{ uri: image }}
+                              style={{
+                                width: 32,
+                                height: 32,
+                                borderRadius: 100,
+                              }}
+                            />
 
-                                <Text
-                                  fontSize={22}
-                                  fontWeight="800"
-                                  color={positive > negative ? green : grey}
-                                  letterSpacing={-1}
-                                >
-                                  {Math.round(ratio * 100)}%
-                                </Text>
+                            <Text
+                              fontSize={22}
+                              fontWeight="800"
+                              color={positive > negative ? green : grey}
+                              letterSpacing={-1}
+                            >
+                              {Math.round(ratio * 100)}%
+                            </Text>
 
-                                <VStack spacing="xs">
-                                  <SentimentText scale={1.1} sentiment={1}>
-                                    {`${positive || 0}`}
-                                  </SentimentText>
+                            <HStack spacing="xs">
+                              <SentimentText sentiment={1}>
+                                {numberFormat(positive || 0, 'sm')}
+                              </SentimentText>
+                              <SentimentText sentiment={-1}>
+                                {numberFormat(Math.abs(negative || 0), 'sm')}
+                              </SentimentText>
+                            </HStack>
+                          </VStack>
 
-                                  <SentimentText scale={1.1} sentiment={-1}>
-                                    {`${Math.abs(negative || 0)}`}
-                                  </SentimentText>
-                                </VStack>
-                              </VStack>
+                          <Spacer size="lg" />
 
-                              <Spacer size="lg" />
-
-                              <Paragraph
-                                color={isWeb ? 'var(--color)' : '#222'}
-                                maxHeight={height - 80}
-                                overflow="hidden"
-                              >
-                                {tagName ? (
-                                  <Text fontWeight="800">{tagName}</Text>
-                                ) : (
-                                  ''
-                                )}
-                                {!!tagName && isWeb && sentence ? (
-                                  <div
-                                    className="block"
-                                    dangerouslySetInnerHTML={{
-                                      __html:
-                                        ellipseText(sentence, {
-                                          maxLength: 130,
-                                        })
+                          <VStack position="relative" flex={1}>
+                            <Paragraph
+                              color={isWeb ? 'var(--color)' : '#222'}
+                              maxHeight={height - 80}
+                              overflow="hidden"
+                            >
+                              {!!tagName && isWeb && sentence ? (
+                                <div
+                                  className="block"
+                                  dangerouslySetInnerHTML={{
+                                    __html:
+                                      `<b>${tagName}</b> -` +
+                                        sentence
                                           ?.replace(/\s+/g, ' ')
                                           .replace(
                                             new RegExp(tagName, 'gi'),
                                             (match) => `<mark>${match}</mark>`
                                           ) ?? '',
-                                    }}
-                                  />
-                                ) : (
-                                  sentence
-                                )}
-                              </Paragraph>
-                            </HStack>
+                                  }}
+                                />
+                              ) : (
+                                sentence
+                              )}
+                            </Paragraph>
+
+                            <AbsoluteVStack
+                              zIndex={10}
+                              bottom={0}
+                              left={0}
+                              height={20}
+                              right={0}
+                            >
+                              <LinearGradient
+                                colors={['transparent', '#fff']}
+                                style={StyleSheet.absoluteFill}
+                              />
+                            </AbsoluteVStack>
                           </VStack>
-                        </VStack>
-                      )
-                    })}
-                </HStack>
-              )}
+                        </HStack>
+                      </VStack>
+                    </VStack>
+                  )
+                })}
+              </HStack>
             </ContentScrollViewHorizontal>
           </VStack>
         </VStack>
@@ -330,7 +326,7 @@ function getSourceBreakdowns(breakdowns?: SourceBreakdowns) {
           : breakdown.summaries.reviews.worst
       const sentence = summary
         ? ellipseText(summary, {
-            maxLength: 130,
+            maxLength: 115,
           })
         : null
       return { name, image, sentence, positive, negative }
@@ -376,7 +372,7 @@ function getTagSourceBreakdowns(breakdowns?: TagSourceBreakdown) {
         breakdown.summary[oppositeSummary]?.[0]
       const sentence = summary
         ? ellipseText(summary, {
-            maxLength: 200,
+            maxLength: 115,
           })
         : null
       return { name, image, sentence, positive, negative }

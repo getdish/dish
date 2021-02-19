@@ -36,9 +36,9 @@ export const SearchHeader = memo(() => {
       >
         <VStack width="100%">
           <VStack paddingTop={media.sm ? 12 : 12 + 52 + 10} />
-          <HStack>
-            <AbsoluteVStack zIndex={1000} top={5} left={5}>
-              <SearchForkListButton />
+          <HStack position="relative">
+            <AbsoluteVStack zIndex={1000} top={-5} left={5}>
+              <SearchForkListButton size="sm" />
             </AbsoluteVStack>
             <VStack transform={[{ translateX: -10 }]}>
               <SlantedTitle

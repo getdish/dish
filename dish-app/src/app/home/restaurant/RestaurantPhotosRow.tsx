@@ -1,5 +1,5 @@
 import { graphql, order_by } from '@dish/graph'
-import React, { memo } from 'react'
+import React, { Suspense, memo } from 'react'
 import { Image } from 'react-native'
 import { HStack, Text, VStack } from 'snackui'
 
@@ -9,7 +9,26 @@ import { queryRestaurant } from '../../../queries/queryRestaurant'
 import { Link } from '../../views/Link'
 import { LinkButton } from '../../views/LinkButton'
 
-export const RestaurantPhotosRow = memo(
+type Props = {
+  escalating?: boolean
+  showEscalated?: boolean
+  restaurantSlug: string
+  onIsAtStart?: (x: boolean) => void
+  width: number
+  height: number
+}
+
+export const RestaurantPhotosRow = (props: Props) => {
+  return (
+    <VStack height={props.height} minWidth={props.width}>
+      <Suspense fallback={null}>
+        <RestaurantPhotosRowContent {...props} />
+      </Suspense>
+    </VStack>
+  )
+}
+
+export const RestaurantPhotosRowContent = memo(
   graphql(
     ({
       escalating,
@@ -18,14 +37,7 @@ export const RestaurantPhotosRow = memo(
       onIsAtStart,
       width,
       height,
-    }: {
-      escalating?: boolean
-      showEscalated?: boolean
-      restaurantSlug: string
-      onIsAtStart?: (x: boolean) => void
-      width: number
-      height: number
-    }) => {
+    }: Props) => {
       const [restaurant] = queryRestaurant(restaurantSlug)
       const photos = restaurant.photo_table({
         limit: 6,
@@ -41,7 +53,7 @@ export const RestaurantPhotosRow = memo(
       return (
         <HStack>
           {!photos.length && (
-            <HStack height={height} minWidth={width} backgroundColor={bgLight}>
+            <HStack backgroundColor={bgLight}>
               <Text>No photos!</Text>
             </HStack>
           )}

@@ -1,7 +1,7 @@
 import { graphql } from '@dish/graph'
 import { sortBy } from 'lodash'
-import React, { memo } from 'react'
-import { Spacer, StackProps } from 'snackui'
+import React, { Suspense, memo } from 'react'
+import { HStack, Spacer, StackProps, VStack } from 'snackui'
 
 import { selectRishDishViewSimple } from '../../../helpers/selectDishViewSimple'
 import { queryRestaurantTags } from '../../../queries/queryRestaurantTags'
@@ -25,7 +25,17 @@ type TagRowProps = {
   max?: number
 }
 
-export const RestaurantTagsRow = memo(
+export const RestaurantTagsRow = (props: TagRowProps) => {
+  return (
+    <HStack maxHeight={80} overflow="hidden" flexWrap="wrap">
+      <Suspense fallback={<VStack height={80} />}>
+        <RestaurantTagsRowContent {...props} />
+      </Suspense>
+    </HStack>
+  )
+}
+
+const RestaurantTagsRowContent = memo(
   graphql(function RestaurantTagsRow(props: TagRowProps) {
     const { size, restaurantSlug, showMore } = props
     if (!restaurantSlug) {

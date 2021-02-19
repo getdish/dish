@@ -80,7 +80,7 @@ export function Card({
   const longestWord =
     title?.split(' ').reduce((acc, cur) => Math.max(cur.length, acc), 0) ?? 0
   const fontSize = Math.round(
-    (longestWord > 9 ? 24 : 28) * (isSm ? 0.95 : 1.05)
+    (longestWord > 9 ? 24 : 28) * (isSm ? 0.85 : 1.05)
   )
 
   return (

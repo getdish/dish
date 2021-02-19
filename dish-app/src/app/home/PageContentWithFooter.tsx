@@ -1,12 +1,14 @@
 import { Suspense } from 'react'
 import { LoadingItems, VStack } from 'snackui'
 
+import { searchBarHeight } from '../../constants/constants'
+import { getWindowHeight } from '../../helpers/getWindow'
 import { PageFooter } from './PageFooter'
 
 export const PageContentWithFooter = ({ children }: { children: any }) => {
   return (
     <>
-      <VStack minHeight={600}>
+      <VStack minHeight={getWindowHeight() * 0.9 - searchBarHeight}>
         <Suspense
           fallback={
             <>

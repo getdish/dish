@@ -74,22 +74,19 @@ const DishButtonContent = (props: TagButtonSlantedProps) => {
             <VStack
               overflow="hidden"
               borderRadius={1000}
-              // margin={-10}
-              // marginRight={0}
-              // marginLeft={-20}
+              width={55}
+              height={55}
             >
               <ImageAlt
                 source={{ uri: imageUrl }}
                 style={{
-                  width: 60,
-                  height: 60,
+                  width: 55,
+                  height: 55,
                 }}
                 resizeMode="cover"
               />
             </VStack>
-          ) : (
-            <VStack width={1} />
-          )}
+          ) : null}
 
           {!!icon && (
             <Text

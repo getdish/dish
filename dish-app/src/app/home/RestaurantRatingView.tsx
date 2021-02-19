@@ -1,20 +1,26 @@
 import { graphql } from '@dish/graph'
-import React, { useState } from 'react'
+import React, { Suspense, useState } from 'react'
 import { Box, HoverablePopover, Popover, VStack } from 'snackui'
 
 import { queryRestaurant } from '../../queries/queryRestaurant'
 import { RatingView } from './RatingView'
 
-export const RestaurantRatingView = graphql(
-  ({
-    slug,
-    size = 32,
-    floating,
-  }: {
-    slug: string
-    size?: number
-    floating?: boolean
-  }) => {
+type Props = {
+  slug: string
+  size?: number
+  floating?: boolean
+}
+
+export const RestaurantRatingView = (props: Props) => {
+  return (
+    <Suspense fallback={<VStack width={props.size} height={props.size} />}>
+      <RestaurantRatingViewContent {...props} />
+    </Suspense>
+  )
+}
+
+export const RestaurantRatingViewContent = graphql(
+  ({ slug, size = 32, floating }: Props) => {
     const [restaurant] = queryRestaurant(slug)
     const count =
       0 ?? restaurant.reviews_aggregate({}).aggregate?.count({}) ?? 0

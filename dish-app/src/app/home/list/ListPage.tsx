@@ -336,7 +336,6 @@ const ListPageContent = graphql((props: Props) => {
     <StackDrawer closable title={`${username}'s ${list.name}`}>
       {props.isActive && isMyList && (
         <BottomFloatingArea>
-          <VStack pointerEvents="none" flex={1} />
           <Button
             pointerEvents="auto"
             theme="active"
@@ -356,6 +355,7 @@ const ListPageContent = graphql((props: Props) => {
           >
             <Plus size={32} color="#fff" />
           </Button>
+          <VStack pointerEvents="none" flex={1} />
         </BottomFloatingArea>
       )}
 
@@ -614,8 +614,8 @@ const ListPageContent = graphql((props: Props) => {
                 </Paragraph>
                 {isMyList && (
                   <Paragraph>
-                    Use the blue (+) button on the bottom right to add. You can
-                    also add from any search page results.
+                    Use the blue (+) button at the bottom. You can also add from
+                    any search page results.
                   </Paragraph>
                 )}
               </VStack>
