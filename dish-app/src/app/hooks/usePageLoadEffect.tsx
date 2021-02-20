@@ -14,23 +14,21 @@ export const usePageLoadEffect = (
   mountArgs: any[] = []
 ) => {
   useLayoutEffect(() => {
-    if (props.isActive) {
-      let dispose = cb({ isRefreshing: false, item: props.item })
+    if (!props.isActive) return
+    let dispose = cb({ isRefreshing: false, item: props.item })
 
-      let last = 0
-      const dispose2 = pagesStore.subscribe(() => {
-        if (last !== pagesStore.refreshVersion) {
-          last = pagesStore.refreshVersion
-          if (dispose) dispose()
-          dispose = cb({ isRefreshing: true, item: props.item })
-        }
-      })
-
-      return () => {
+    let last = pagesStore.refreshVersion
+    const dispose2 = pagesStore.subscribe(() => {
+      if (last !== pagesStore.refreshVersion) {
+        last = pagesStore.refreshVersion
         if (dispose) dispose()
-        dispose2()
+        dispose = cb({ isRefreshing: true, item: props.item })
       }
+    })
+
+    return () => {
+      dispose && dispose()
+      dispose2()
     }
-    return undefined
   }, [props.isActive, ...mountArgs])
 }

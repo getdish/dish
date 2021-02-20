@@ -1,16 +1,14 @@
 import { graphql } from '@dish/graph'
 import { debounce } from 'lodash'
-import React, { useCallback, useMemo } from 'react'
+import React, { useCallback } from 'react'
 import { Image } from 'react-native'
-import { Button, HStack, Hoverable, Spacer, Text, VStack } from 'snackui'
+import { Button, HStack, Hoverable, Text, VStack } from 'snackui'
 
 import { getColorsForName } from '../../helpers/getColorsForName'
 import { getImageUrl } from '../../helpers/getImageUrl'
-import { hexToRGB } from '../../helpers/hexToRGB'
 import { queryRestaurant } from '../../queries/queryRestaurant'
 import { appMapStore } from '../AppMapStore'
 import { Link } from '../views/Link'
-import { GradientButton } from './GradientButton'
 import { RestaurantRatingView } from './RestaurantRatingView'
 
 const setHovered = debounce(appMapStore.setHovered, 300)

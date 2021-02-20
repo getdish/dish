@@ -15,7 +15,7 @@ export const HomeTopSearches = memo(() => {
       // for easier touchability
       paddingVertical={16}
       marginVertical={-10}
-      spacing={6}
+      spacing
       marginHorizontal="auto"
       alignItems="center"
       justifyContent="center"

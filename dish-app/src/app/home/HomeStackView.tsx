@@ -18,6 +18,7 @@ import { useHomeStore } from '../homeStore'
 import { useLastValueWhen } from '../hooks/useLastValueWhen'
 import { ContentParentStore } from '../views/ContentScrollView'
 import { ErrorBoundary } from '../views/ErrorBoundary'
+import { homeActiveContent } from './HomeDrawerSmallView.native'
 
 export type StackItemProps<A> = {
   item: A
@@ -104,6 +105,7 @@ const AppStackViewItem = memo(
     useLayoutEffect(() => {
       if (isActive) {
         contentParentStore.setActiveId(item.type)
+        homeActiveContent.setId(item.type)
       }
     }, [isActive])
 

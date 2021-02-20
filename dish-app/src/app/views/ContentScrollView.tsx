@@ -1,4 +1,4 @@
-import { Store, getStore, reaction, useStore } from '@dish/use-store'
+import { Store, getStore, reaction } from '@dish/use-store'
 import React, {
   Suspense,
   createContext,
@@ -14,7 +14,6 @@ import { VStack, getMedia, useMedia } from 'snackui'
 import { isWeb } from '../../constants/constants'
 import { supportsTouchWeb } from '../../constants/platforms'
 import { drawerStore } from '../drawerStore'
-import { homeActiveContent } from '../home/HomeDrawerSmallView.native'
 
 type ScrollLock = 'horizontal' | 'vertical' | 'none'
 
@@ -24,7 +23,6 @@ export class ScrollStore extends Store<{ id: string }> {
 
   setLock(val: ScrollLock) {
     this.lock = val
-
     if (val === 'horizontal') {
       drawerStore.setIsDragging(false)
     }
@@ -175,14 +173,6 @@ export const ContentScrollView = forwardRef<ScrollView, ContentScrollViewProps>(
 
     // memo because preventScrolling changes on media queries
     const childrenMemo = useMemo(() => children, [children])
-
-    useEffect(() => {
-      let prev = homeActiveContent.id
-      homeActiveContent.setId(id)
-      return () => {
-        homeActiveContent.setId(prev)
-      }
-    }, [])
 
     return (
       <ContentScrollContext.Provider value={id}>

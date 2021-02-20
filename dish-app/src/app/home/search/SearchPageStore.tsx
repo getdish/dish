@@ -127,8 +127,9 @@ class SearchPageStore extends Store {
     // prevent duplicate searches
     const searchKey = stringify(searchArgs)
     if (
-      !opts.force &&
-      (searchKey !== this.lastSearchKey || !this.results.length)
+      opts.force ||
+      searchKey !== this.lastSearchKey ||
+      !this.results.length
     ) {
       // SEARCH
       const res = await search(searchArgs)

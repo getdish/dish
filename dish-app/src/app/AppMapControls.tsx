@@ -1,8 +1,9 @@
 import { RefreshCcw, X } from '@dish/react-feather'
 import { useSelector, useStoreInstance } from '@dish/use-store'
+import { useDebugStoreComponent } from '@dish/use-store/src/useStoreDebug'
 import React, { memo } from 'react'
 import { Switch } from 'react-native'
-import { AbsoluteVStack, HStack, Text, Theme, useMedia } from 'snackui'
+import { AbsoluteVStack, HStack, Text, Theme, VStack, useMedia } from 'snackui'
 
 import { isWeb, searchBarHeight, zIndexDrawer } from '../constants/constants'
 import { hasMovedAtLeast } from '../helpers/mapHelpers'
@@ -68,6 +69,8 @@ export const AppMapControls = memo(() => {
                 Clear hover
               </OverlayLinkButton>
             )}
+
+            <VStack flex={media.sm ? 1 : 0} />
           </HStack>
         </AbsoluteVStack>
       </AbsoluteVStack>
@@ -84,9 +87,13 @@ const ToggleRegionButton = memo(() => {
   return (
     <OverlayLinkButton onPress={toggleSearchRegion}>
       <HStack pointerEvents="none" alignItems="center" spacing="sm">
-        <Text fontSize={12}>Region</Text>
+        <Text selectable={false} fontSize={12}>
+          Region
+        </Text>
         <Switch value={searchRegion} />
-        <Text fontSize={12}>Map area</Text>
+        <Text selectable={false} fontSize={12}>
+          Map area
+        </Text>
       </HStack>
     </OverlayLinkButton>
   )

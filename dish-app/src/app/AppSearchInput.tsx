@@ -543,6 +543,7 @@ const AppSearchInputTags = memo(
                   color={theme.color}
                   shadowColor="#00000022"
                   fontWeight="600"
+                  height={40}
                   shadowRadius={10}
                   shadowOffset={{ height: 2, width: 0 }}
                   borderColor={'transparent'}
