@@ -85,6 +85,7 @@ export const RestaurantDishRowContent = memo(
                     noLink
                     restaurantSlug={restaurantSlug}
                     restaurantId={restaurantId}
+                    showSearchButton
                     {...dish}
                   />
                 </Theme>

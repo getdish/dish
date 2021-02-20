@@ -1,6 +1,5 @@
 // // debug
 import { supportsTouchWeb } from '@dish/helpers'
-import { Search } from '@dish/react-feather'
 import { capitalize } from 'lodash'
 import React, { Suspense, memo, useState } from 'react'
 import { Image, StyleSheet } from 'react-native'
@@ -20,10 +19,12 @@ import { isWeb } from '../../../constants/constants'
 import { getColorsForName } from '../../../helpers/getColorsForName'
 import { getImageUrl } from '../../../helpers/getImageUrl'
 import { DishTagItem } from '../../../helpers/getRestaurantDishes'
+import { UseColors } from '../../../helpers/useColorsFor'
 import { NavigableTag } from '../../../types/tagTypes'
 import { ColoredCircle } from '../ColoredCircle'
 import { Link } from '../Link'
 import { DishUpvoteDownvote } from './DishUpvoteDownvote'
+import { SearchTagButton } from './SearchTagButton'
 
 // avoid too many different image sizes
 const smallSize = [160 * 0.9, 160] as const
@@ -104,7 +105,8 @@ const DishViewContent = (props: DishViewProps) => {
     dishName.length > 17 || !!dishName.split(' ').find((x) => x.length >= 8)
   const isTiny = size < 115
   const fontSize = Math.max(13, (isLong ? 15 : 18) * (isTiny ? 0.75 : 1))
-  const { lightColor, color } = getColorsForName(name)
+  const colors = getColorsForName(name)
+  const { lightColor, color } = colors
   const backgroundColor = lightColor
   const isActive = (isHovered || selected) ?? false
 
@@ -173,7 +175,7 @@ const DishViewContent = (props: DishViewProps) => {
           </Text>
         )} */}
 
-        {showSearchButton && isActive && (
+        {showSearchButton && isActive && slug && (
           <AbsoluteVStack
             onPress={prevent}
             zIndex={888}
@@ -181,25 +183,11 @@ const DishViewContent = (props: DishViewProps) => {
             right="7.5%"
             pointerEvents="auto"
           >
-            <Link tag={{ slug, type: 'dish' }}>
-              <VStack
-                width={28}
-                height={28}
-                borderRadius={1000}
-                backgroundColor={backgroundColor}
-                shadowColor="#000"
-                shadowOpacity={0.1}
-                shadowRadius={5}
-                shadowOffset={{ height: 1, width: 0 }}
-                alignItems="center"
-                justifyContent="center"
-                hoverStyle={{
-                  transform: [{ scale: 1.1 }],
-                }}
-              >
-                <Search size={16} color={color} />
-              </VStack>
-            </Link>
+            <SearchTagButton
+              backgroundColor={colors.lightColor}
+              color={colors.color}
+              tag={{ slug, type: 'dish' }}
+            />
           </AbsoluteVStack>
         )}
 

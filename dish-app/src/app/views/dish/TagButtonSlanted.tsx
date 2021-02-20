@@ -1,7 +1,7 @@
 import { capitalize } from 'lodash'
 import React, { Suspense, memo } from 'react'
 import { Image } from 'react-native'
-import { Box, HStack, Text, VStack, useTheme } from 'snackui'
+import { AbsoluteVStack, Box, HStack, Text, VStack, useTheme } from 'snackui'
 
 import { isWeb } from '../../../constants/constants'
 import { getImageUrl } from '../../../helpers/getImageUrl'
@@ -9,6 +9,7 @@ import { DishTagItem } from '../../../helpers/getRestaurantDishes'
 import { Link } from '../Link'
 import { TextSuperScript } from '../TextSuperScript'
 import { DishUpvoteDownvote } from './DishUpvoteDownvote'
+import { SearchTagButton } from './SearchTagButton'
 
 export type TagButtonSlantedProps = Partial<DishTagItem> & {
   restaurantId?: string
@@ -41,6 +42,7 @@ const DishButtonContent = (props: TagButtonSlantedProps) => {
     restaurantSlug,
     noLink,
     maxTextWidth,
+    showSearchButton,
     bold,
   } = props
   const dishName = (name ?? '')
@@ -143,6 +145,16 @@ const DishButtonContent = (props: TagButtonSlantedProps) => {
               rating={rating ?? 0}
               restaurantSlug={restaurantSlug}
             />
+          )}
+
+          {showSearchButton && !!slug && (
+            <AbsoluteVStack bottom="-15%" right="-10%">
+              <SearchTagButton
+                tag={{ type: 'dish', slug }}
+                backgroundColor="#fff"
+                color="#000"
+              />
+            </AbsoluteVStack>
           )}
         </HStack>
       </Box>
