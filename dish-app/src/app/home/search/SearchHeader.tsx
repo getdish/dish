@@ -51,10 +51,10 @@ export const SearchHeader = memo(() => {
               >
                 <VStack alignItems="center">
                   <Text>{title}</Text>
-                  <Spacer size="xl" />
                   <Text
-                    position="absolute"
-                    bottom={0}
+                    className="nobreak"
+                    marginTop={-18}
+                    marginBottom={-3}
                     fontSize={16}
                     fontWeight="300"
                   >

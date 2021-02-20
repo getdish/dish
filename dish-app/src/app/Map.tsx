@@ -399,6 +399,17 @@ function setupMapEffect({
   }
 
   const handleMoveDbc = debounce(() => {
+    // IF NEAR BOUNDARY DONT AUTO SELECT
+    const zoom = map.getZoom()
+    for (const tile of tiles) {
+      const [min, max] = [tile.minZoom, tile.maxZoom]
+      const isNear = (x: number) => Math.abs(zoom - x) < x * 0.1
+      if (isNear(min) || isNear(max)) {
+        console.warn('near border')
+        return
+      }
+    }
+
     const { padding } = getProps()
     const width = map.getContainer().clientWidth - padding.right
     const height = map.getContainer().clientHeight - padding.bottom

@@ -46,6 +46,7 @@ export const RestaurantTagPhotosContent = memo(
               .map((photo, index) => {
                 return (
                   <Link
+                    key={photo || index}
                     name="gallery"
                     params={{
                       restaurantSlug,

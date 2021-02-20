@@ -208,6 +208,10 @@ export default memo(function AppMap() {
         console.log('no region slug', region)
         return
       }
+      if (region.via === 'drag' && homeStore.currentStateType === 'search') {
+        // ignore region drag during search to be less aggressive
+        return
+      }
       if (region.via === 'click') {
         // avoid handleMoveStart being called next frame
         updateRegionImmediate(region, position)

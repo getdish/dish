@@ -26,12 +26,22 @@ class SearchPageStore extends Store {
   results: RestaurantSearchItem[] = []
   meta: HomeMeta | null = null
   searchPosition = initialPosition
+  searchRegion = false
   private lastSearchKey = ''
   private lastSearchAt = 0
 
   setIndex(index: number, event: ActiveEvent) {
     this.index = Math.min(Math.max(-1, index), this.max)
     this.event = event
+  }
+
+  setSearchRegion(val: boolean) {
+    this.searchRegion = true
+    this.runSearch({})
+  }
+
+  toggleSearchRegion() {
+    this.setSearchRegion(!this.searchRegion)
   }
 
   get max() {

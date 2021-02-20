@@ -452,6 +452,7 @@ const RestaurantListItemContent = memo(
                 paddingRight={10}
                 marginTop={flexibleHeight ? 15 : 0}
                 marginBottom={flexibleHeight ? 30 : 0}
+                transform={[{ translateY: -10 }]}
               >
                 <RestaurantOverview
                   fullHeight={flexibleHeight}

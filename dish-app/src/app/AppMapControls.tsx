@@ -1,14 +1,18 @@
-import { isEqual } from '@dish/fast-compare'
 import { RefreshCcw, X } from '@dish/react-feather'
 import { useSelector, useStoreInstance } from '@dish/use-store'
 import React, { memo } from 'react'
-import { AbsoluteVStack, HStack, Theme, useMedia } from 'snackui'
+import { Switch } from 'react-native'
+import { AbsoluteVStack, HStack, Text, Theme, useMedia } from 'snackui'
 
 import { isWeb, searchBarHeight, zIndexDrawer } from '../constants/constants'
 import { hasMovedAtLeast } from '../helpers/mapHelpers'
+import { useIsRouteActive } from '../router'
 import { appMapStore } from './AppMapStore'
-import { searchPageStore } from './home/search/SearchPageStore'
-import { homeStore, useHomeStore, useIsHomeTypeActive } from './homeStore'
+import {
+  searchPageStore,
+  useSearchPageStore,
+} from './home/search/SearchPageStore'
+import { homeStore } from './homeStore'
 import { useSafeArea } from './hooks/useSafeArea'
 import { pagesStore } from './pagesStore'
 import { OverlayLinkButton } from './views/OverlayLinkButton'
@@ -51,6 +55,8 @@ export const AppMapControls = memo(() => {
             pointerEvents="none"
             // overflow="hidden"
           >
+            <ToggleRegionButton />
+
             {showSearchHere && (
               <OverlayLinkButton Icon={RefreshCcw} onPress={pagesStore.refresh}>
                 Search here
@@ -69,14 +75,33 @@ export const AppMapControls = memo(() => {
   )
 })
 
+const ToggleRegionButton = memo(() => {
+  const { searchRegion, toggleSearchRegion } = useSearchPageStore()
+  const isOnSearch = useIsRouteActive('search')
+  if (!isOnSearch) {
+    return null
+  }
+  return (
+    <OverlayLinkButton onPress={toggleSearchRegion}>
+      <HStack pointerEvents="none" alignItems="center" spacing="sm">
+        <Text fontSize={12}>Region</Text>
+        <Switch value={searchRegion} />
+        <Text fontSize={12}>Map area</Text>
+      </HStack>
+    </OverlayLinkButton>
+  )
+})
+
 function useShowSearchHere() {
   return useSelector(() => {
     const isOnSearch = homeStore.currentStateType === 'search'
     const sp = searchPageStore.searchPosition
     const { center, span } = appMapStore.nextPosition
+    console.log('wut', center)
     if (searchPageStore.status === 'loading') return false
     if (!isOnSearch) return false
     const hasMoved = hasMovedAtLeast(sp, { center, span })
+    console.log('show search here', { hasMoved })
     return hasMoved
   })
 }

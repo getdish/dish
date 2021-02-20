@@ -63,7 +63,7 @@ export function getTitleForState(
   // build subtitle
   let subTitleParts: string[] = []
   if (tags.some((tag) => tag.name === 'Delivery')) {
-    subTitleParts.push(`Delivery`)
+    subTitleParts.push(`Delivered to`)
   }
   if (searchName) {
     subTitleParts.push(`${searchName[0].toUpperCase()}${searchName.slice(1)}`)

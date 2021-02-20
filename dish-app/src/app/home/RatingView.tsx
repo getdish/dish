@@ -1,5 +1,13 @@
 import React from 'react'
-import { AbsoluteVStack, HStack, Spacer, Text, VStack, useTheme } from 'snackui'
+import {
+  AbsoluteVStack,
+  Circle,
+  HStack,
+  Spacer,
+  Text,
+  VStack,
+  useTheme,
+} from 'snackui'
 
 import { green, red, yellow } from '../../constants/colors'
 import { numberFormat } from '../../helpers/numberFormat'
@@ -64,6 +72,7 @@ export const RatingView = ({
       <VStack
         alignItems="center"
         justifyContent="center"
+        position="relative"
         borderRadius={1000}
         width={size}
         height={size}
@@ -73,6 +82,9 @@ export const RatingView = ({
           shadowRadius: 5,
         })}
       >
+        <AbsoluteVStack zIndex={-1}>
+          <Circle size={size} backgroundColor={theme.backgroundColor} />
+        </AbsoluteVStack>
         {outerRing}
         {typeof count !== 'undefined' && (
           <AbsoluteVStack
