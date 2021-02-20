@@ -4,6 +4,7 @@ import {
   AbsoluteVStack,
   Divider,
   H3,
+  HStack,
   Paragraph,
   Spacer,
   Text,
@@ -13,7 +14,14 @@ import {
 } from 'snackui'
 
 import dontPanic from '../../../assets/dont-panic.svg'
-import { lightGreen, lightYellow } from '../../../constants/colors'
+import {
+  green,
+  lightGreen,
+  lightYellow,
+  orange,
+  purple,
+  red,
+} from '../../../constants/colors'
 import { HomeStateItemAbout } from '../../../types/homeTypes'
 import { ContentScrollView } from '../../views/ContentScrollView'
 import { Link } from '../../views/Link'
@@ -21,7 +29,9 @@ import { LinkButton } from '../../views/LinkButton'
 import { LogoColor } from '../../views/Logo'
 import { StackDrawer } from '../../views/StackDrawer'
 import { StackItemProps } from '../HomeStackView'
+import { RatingView } from '../RatingView'
 import { useSnapToFullscreenOnMount } from '../restaurant/useSnapToFullscreenOnMount'
+import { RestaurantRatingView } from '../RestaurantRatingView'
 
 const inlineButton = {
   borderRadius: 10,
@@ -52,7 +62,7 @@ export default function AboutPage({
           >
             <Spacer size="xxl" />
             <LogoColor scale={2.5} />
-            <Spacer size="xl" />
+            {/* <Spacer size="xl" />
             <Paragraph
               zIndex={10}
               color="#999"
@@ -61,7 +71,7 @@ export default function AboutPage({
               fontWeight="300"
             >
               pocket guide to the world
-            </Paragraph>
+            </Paragraph> */}
           </VStack>
 
           <VStack paddingHorizontal="5%" spacing="xl">
@@ -71,50 +81,97 @@ export default function AboutPage({
               size="lg"
               fontWeight="700"
             >
-              The Hitchiker's Guide to the Galaxy, starting with earth + food.
-              We're&nbsp;exploring&nbsp;how to improve ratings and online
+              A Hitchiker's Guide to Gastronomy.
+              <br /> We're&nbsp;exploring&nbsp;how to improve ratings and online
               communities.
             </Paragraph>
 
-            <H3>How it started</H3>
-
-            <Paragraph size="xl">
-              Tacos and pho in the San Francisco Bay Area. In that corner of the
-              galaxy, we'd noticed a disturbing trend: good food with poor
-              ratings. Amazing Mexican, Chinese and Vietnamese spots with
-              ⭐️⭐️⭐️/5 stars due to service or ambience. It was hard to know
-              where to get a good bowl of pho.
+            <Paragraph size="xxl">
+              We'd noticed a disturbing trend: amazing latin or asian food with
+              ⭐️⭐️⭐️/5 stars. Unopinionated rankings designed to please.
+              Combined with delivery apps delivering iffy rankings and promoting
+              fake pop-ups, and we were finding it hard to find the best
+              <LinkButton
+                backgroundColor={lightYellow}
+                hoverStyle={{
+                  backgroundColor: `${lightYellow}44`,
+                }}
+                {...inlineButton}
+                tags={[
+                  {
+                    name: 'Banh Xeo',
+                    slug: 'vietnamese__banh-xeo',
+                    type: 'dish',
+                  },
+                ]}
+              >
+                banh xeo
+              </LinkButton>
+              or{' '}
+              <LinkButton
+                tags={[
+                  {
+                    name: 'Birria Taco',
+                    slug: 'mexican__birria-taco',
+                    type: 'dish',
+                  },
+                ]}
+                {...inlineButton}
+                backgroundColor={lightGreen}
+                hoverStyle={{
+                  backgroundColor: `${lightGreen}44`,
+                }}
+              >
+                birria taco
+              </LinkButton>{' '}
+              without Google and a magnifying glass.
             </Paragraph>
-
-            <H3>The realization</H3>
 
             <Paragraph size="xxl">
-              It's not that{' '}
-              <Text fontStyle="italic">
-                sometimes you don't want the trendy spot
+              We want our own lists. Give lists to the people!
+            </Paragraph>
+
+            <Paragraph size="lg">
+              Dish is all about lists. We compile top lists of everything: by
+              cuisine, by dish, all sort of other factors. You can disagree and
+              vote up or down anything.
+            </Paragraph>
+
+            <Paragraph size="lg">
+              That wa. We're working on this flower thing, where it shows{' '}
+              <Text fontWeight="700" color={green}>
+                food
               </Text>
-              ... it's just{' '}
-              <Text fontWeight="700">
-                five star ratings don't really help you with that either
-              </Text>
-              . What we need is ratings down to the dish (and other factors that
-              matter).
+              ,{' '}
+              <Text fontWeight="700" color={orange}>
+                service
+              </Text>{' '}
+              and{' '}
+              <Text fontWeight="700" color={purple}>
+                ambience
+              </Text>{' '}
+              all in one, it takes a sec to get used to, let it grow on you - it
+              gives a good intuition based on it's "fullness", so you don't need
+              to understand it right away.
             </Paragraph>
 
-            <Paragraph size="xl">
-              By our estimate, it's time humans generally considered "five
-              stars" a bad idea.
+            <HStack justifyContent="center">
+              <RestaurantRatingView size={72} slug="miss-saigon" />
+              <Spacer />
+              <VStack>
+                <RatingView rating={50} size={20} stacked />
+              </VStack>
+            </HStack>
+
+            <Paragraph size="lg">
+              The flower is your HUD, eventually we'd like to adapt it to your
+              taste.
             </Paragraph>
 
-            <Paragraph size="xl">
-              Delivery adds more problems: up to four different services with
-              unreliable ratings the "innovation" of virtual pop-ups (poor-rated
-              restaurants masquerading under clean ratings).
-            </Paragraph>
-
-            <Paragraph size="xl">
-              Getting a great bowl of poke delivered can feel like navigating
-              Vogon beaurocracy.
+            <Paragraph size="lg">
+              When you search, your search is ranked based on the
+              votes/sentiment towards the tags: (Taco + Delivery + Vibe) shows
+              search results where the points
             </Paragraph>
 
             <H3>What we want</H3>

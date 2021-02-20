@@ -7,6 +7,7 @@ import { isWeb } from '../../../constants/constants'
 import { getImageUrl } from '../../../helpers/getImageUrl'
 import { DishTagItem } from '../../../helpers/getRestaurantDishes'
 import { Link } from '../Link'
+import { TextSuperScript } from '../TextSuperScript'
 import { DishUpvoteDownvote } from './DishUpvoteDownvote'
 
 export type TagButtonSlantedProps = Partial<DishTagItem> & {
@@ -35,6 +36,7 @@ const DishButtonContent = (props: TagButtonSlantedProps) => {
     icon,
     image,
     slug,
+    rank,
     rating,
     restaurantSlug,
     noLink,
@@ -60,7 +62,7 @@ const DishButtonContent = (props: TagButtonSlantedProps) => {
         paddingVertical={3}
         height={38}
         justifyContent="center"
-        paddingHorizontal={8}
+        paddingHorizontal={12}
         transform={[{ skewX: '-12deg' }]}
         shadowColor={theme.backgroundColorTertiary}
         shadowOffset={{ height: 2, width: 2 }}
@@ -74,23 +76,38 @@ const DishButtonContent = (props: TagButtonSlantedProps) => {
           spacing="sm"
           alignItems="center"
         >
-          {!!image ? (
+          {!!image && (
             <VStack
               overflow="hidden"
               borderRadius={1000}
-              width={55}
-              height={55}
+              width={50}
+              height={50}
+              marginVertical={-5}
+              marginLeft={-5}
             >
               <ImageAlt
                 source={{ uri: imageUrl }}
                 style={{
-                  width: 55,
-                  height: 55,
+                  width: 50,
+                  height: 50,
                 }}
                 resizeMode="cover"
               />
             </VStack>
-          ) : null}
+          )}
+
+          {!!rank && (
+            <Text
+              fontSize={fontSize * 0.7}
+              fontWeight="700"
+              color={theme.color}
+            >
+              <TextSuperScript fontWeight="300" opacity={0.5}>
+                #
+              </TextSuperScript>
+              {rank}
+            </Text>
+          )}
 
           {!!icon && (
             <Text
@@ -118,7 +135,7 @@ const DishButtonContent = (props: TagButtonSlantedProps) => {
             {dishName}
           </Text>
 
-          {typeof score !== 'undefined' ? (
+          {typeof score !== 'undefined' && (
             <DishUpvoteDownvote
               size="sm"
               slug={slug || ''}
@@ -126,8 +143,6 @@ const DishButtonContent = (props: TagButtonSlantedProps) => {
               rating={rating ?? 0}
               restaurantSlug={restaurantSlug}
             />
-          ) : (
-            <VStack width={1} />
           )}
         </HStack>
       </Box>

@@ -12,6 +12,7 @@ type Props = {
   rating?: number
   subtle?: boolean
   restaurantSlug?: string
+  shadowed?: boolean
 }
 
 export const DishUpvoteDownvote = (props: Props) => {
@@ -29,7 +30,7 @@ export const DishUpvoteDownvote = (props: Props) => {
 }
 
 const DishUpvoteDownvoteContent = graphql(
-  ({ size, subtle, rating, score, restaurantSlug, slug }: Props) => {
+  ({ size, subtle, rating, score, restaurantSlug, slug, shadowed }: Props) => {
     const intScore =
       score ??
       (restaurantSlug
@@ -58,6 +59,7 @@ const DishUpvoteDownvoteContent = graphql(
         score={intScore + vote}
         rating={rating}
         vote={vote}
+        shadowed={shadowed}
         setVote={setVote}
       />
     )

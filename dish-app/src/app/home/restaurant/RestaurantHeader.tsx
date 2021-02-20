@@ -127,7 +127,7 @@ const RestaurantHeaderContent = memo(
 
             <Theme name={colors.name}>
               <VStack
-                marginTop={imageHeight - 20}
+                marginTop={imageHeight - 70}
                 minWidth={minWidth}
                 maxWidth={width}
                 borderTopRightRadius={drawerBorderRadius - 1}

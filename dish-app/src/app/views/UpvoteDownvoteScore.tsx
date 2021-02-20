@@ -1,5 +1,5 @@
 import { supportsTouchWeb } from '@dish/helpers'
-import { ChevronDown, ChevronUp } from '@dish/react-feather'
+import { ArrowDown, ArrowUp, ChevronDown, ChevronUp } from '@dish/react-feather'
 import React, { memo } from 'react'
 import { AbsoluteVStack, StackProps, Text, Tooltip, VStack } from 'snackui'
 
@@ -21,6 +21,7 @@ type Props = StackProps & {
   subtle?: boolean
   upTooltip?: string
   downTooltip?: string
+  shadowed?: boolean
 }
 
 export const Score = memo(
@@ -31,13 +32,14 @@ export const Score = memo(
     rating,
     vote = 0,
     upTooltip,
+    shadowed,
     downTooltip,
     subtle,
     setVote,
     size,
     ...props
   }: Props) => {
-    const voteButtonColor = subtle ? '#f2f2f2' : null
+    const voteButtonColor = subtle ? '#ccc' : '#999'
     const scale = size === 'sm' ? 0.65 : 1
     const sizePx = 53 * scale
     const isOpenProp =
@@ -46,12 +48,12 @@ export const Score = memo(
         : {
             isOpen: false,
           }
-    const fontSize = Math.round(16 * scale * 1.175 + (size === 'sm' ? 2 : 0))
+    const fontSize = Math.round(16 * scale + (size === 'sm' ? 2 : 0))
 
     const upvote = (
       <VoteButton
-        size={18 * scale}
-        Icon={ChevronUp}
+        size={22 * scale}
+        Icon={ArrowUp}
         shadowDirection="up"
         voted={vote == 1}
         color={vote === 1 ? 'green' : voteButtonColor}
@@ -64,8 +66,8 @@ export const Score = memo(
 
     const downvote = (
       <VoteButton
-        size={18 * scale}
-        Icon={ChevronDown}
+        size={22 * scale}
+        Icon={ArrowDown}
         voted={vote == -1}
         color={vote === -1 ? 'red' : voteButtonColor}
         onPress={(e) => {
@@ -96,15 +98,17 @@ export const Score = memo(
         width={sizePx}
         height={sizePx}
         backgroundColor="#fff"
-        shadowColor="rgba(0,0,0,0.125)"
-        shadowRadius={6}
-        shadowOffset={{ height: 3, width: -1 }}
+        {...(shadowed && {
+          shadowColor: 'rgba(0,0,0,0.125)',
+          shadowRadius: 6,
+          shadowOffset: { height: 3, width: -1 },
+        })}
         borderRadius={1000}
         {...props}
       >
         {votable && (
           <>
-            <AbsoluteVStack top={-15}>
+            <AbsoluteVStack zIndex={10} top={-15}>
               {subtle ? (
                 upvote
               ) : (
@@ -117,7 +121,7 @@ export const Score = memo(
                 </Tooltip>
               )}
             </AbsoluteVStack>
-            <AbsoluteVStack bottom={-15}>
+            <AbsoluteVStack zIndex={10} bottom={-15}>
               {subtle ? (
                 downvote
               ) : (
@@ -137,24 +141,28 @@ export const Score = memo(
             fullscreen
             transform={[{ rotate: `${(1 - rating / 10) * 180}deg` }]}
           >
-            <Pie
-              size={sizePx}
-              color={colors.lightColor}
-              percent={rating * 10}
-            />
+            <Pie size={sizePx} color={colors.color} percent={rating * 10} />
           </AbsoluteVStack>
         )}
-        <Text
-          fontSize={fontSize}
-          fontWeight="600"
-          marginVertical={-2 * scale}
-          letterSpacing={-1}
-          color={`${colors.darkColor}99`}
-          textAlignVertical="top"
+
+        <VStack
           zIndex={100}
+          backgroundColor="#fff"
+          borderRadius={100}
+          width={sizePx * 0.75}
+          height={sizePx * 0.75}
+          alignItems="center"
+          justifyContent="center"
         >
-          {numberFormat(score, 'sm')}
-        </Text>
+          <Text
+            fontSize={fontSize}
+            fontWeight="600"
+            letterSpacing={-1}
+            color={`${colors.darkColor}99`}
+          >
+            {numberFormat(score, 'sm')}
+          </Text>
+        </VStack>
       </VStack>
     )
   }

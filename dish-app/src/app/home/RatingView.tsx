@@ -9,7 +9,7 @@ import {
   useTheme,
 } from 'snackui'
 
-import { green, red, yellow } from '../../constants/colors'
+import { green, purple, yellow } from '../../constants/colors'
 import { numberFormat } from '../../helpers/numberFormat'
 import { Pie } from '../views/Pie'
 import { ProgressRing } from './ProgressRing'
@@ -38,7 +38,7 @@ export const RatingView = ({
   const innerRing = (
     <VStack transform={[{ rotate }]}>
       <Pie
-        color={red}
+        color={purple}
         percent={ratingInner}
         size={stacked ? size * 0.66 : size * 0.33}
       />
@@ -82,7 +82,7 @@ export const RatingView = ({
           shadowRadius: 5,
         })}
       >
-        <AbsoluteVStack zIndex={-1}>
+        <AbsoluteVStack zIndex={-1} opacity={0.5}>
           <Circle size={size} backgroundColor={theme.backgroundColor} />
         </AbsoluteVStack>
         {outerRing}
@@ -113,7 +113,7 @@ export const RatingView = ({
   }
 
   return (
-    <VStack>
+    <>
       <HStack alignItems="center">
         <VStack
           width={size}
@@ -186,6 +186,6 @@ export const RatingView = ({
           <Text>Reviews</Text>
         </HStack>
       )}
-    </VStack>
+    </>
   )
 }

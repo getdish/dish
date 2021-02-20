@@ -31,7 +31,7 @@ export const CardFrame = ({
   const media = useMedia()
   return (
     <VStack
-      className="ease-in-out-fast"
+      className="hover-parent  ease-in-out-fast"
       contain="layout"
       borderRadius={cardFrameBorderRadius}
       width={cardFrameWidth}

@@ -4,6 +4,8 @@ import { ThumbsDown, ThumbsUp, X } from '@dish/react-feather'
 import React, { memo } from 'react'
 import { Image } from 'react-native'
 import {
+  AbsoluteVStack,
+  Circle,
   HStack,
   Spacer,
   StackProps,
@@ -19,8 +21,6 @@ import { tagDisplayName } from '../../constants/tagMeta'
 import { getColorsForColor } from '../../helpers/getColorsForName'
 import { getTagSlug } from '../../helpers/getTagSlug'
 import { NavigableTag } from '../../types/tagTypes'
-import { ProgressRing } from '../home/ProgressRing'
-import { RestaurantRating } from '../home/restaurant/RestaurantRating'
 import { useUserTagVotes } from '../hooks/useUserTagVotes'
 import { Link } from './Link'
 import { Pie } from './Pie'
@@ -117,7 +117,7 @@ export const TagButton = memo((props: TagButtonProps) => {
     ...rest
   } = props
   const isSmall = size === 'sm'
-  const scale = isSmall ? 0.85 : size == 'lg' ? 1.2 : 1
+  const scale = isSmall ? 0.85 : size == 'lg' ? 1.3 : 1
   const colors = getColorsForColor(type ? typeColors[type] ?? green : green)
   const bg = backgroundColor ?? colors.lightColor
   const fg = color ?? colors.color
@@ -144,7 +144,7 @@ export const TagButton = memo((props: TagButtonProps) => {
       {...rest}
     >
       <Spacer size={5} />
-      {!!rank ? (
+      {!!rank && (
         <Text
           fontSize={smallerFontSize}
           fontWeight="500"
@@ -160,7 +160,7 @@ export const TagButton = memo((props: TagButtonProps) => {
           </TextSuperScript>
           {rank}
         </Text>
-      ) : null}
+      )}
       {hideIcon ? (
         <>&nbsp;</>
       ) : !!icon ? (
@@ -224,16 +224,23 @@ export const TagButton = memo((props: TagButtonProps) => {
       )} */}
 
       {typeof rating !== 'undefined' && (
-        <VStack transform={[{ rotate: `${(1 - rating / 10) * 180}deg` }]}>
+        <VStack
+          position="relative"
+          transform={[{ rotate: `${(1 - rating / 10) * 180}deg` }]}
+        >
+          <AbsoluteVStack fullscreen zIndex={-1}>
+            <Circle
+              size={size === 'sm' ? 16 : 18}
+              backgroundColor="#fff"
+              opacity={0.25}
+            />
+          </AbsoluteVStack>
           <Pie
             size={size === 'sm' ? 16 : 18}
             percent={rating * 10}
-            color={floating ? `${colors.lightColor}99` : `${colors.color}55`}
+            color={floating ? `#fff` : `${colors.color}`}
           />
         </VStack>
-        // <VStack position="relative" marginRight={4}>
-
-        // </VStack>
       )}
 
       {!!votable && !!props.restaurantSlug && (

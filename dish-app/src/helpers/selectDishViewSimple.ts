@@ -10,6 +10,7 @@ export type DishTagItemSimple = {
   slug: string
   isFallback?: boolean
   type: string
+  rank?: number
 }
 
 export const selectRishDishViewSimple = (
@@ -23,14 +24,15 @@ export const selectRishDishViewSimple = (
   const rating = Math.round((rawRating ?? ratioRating) / 10)
   return {
     id: tag.tag?.id,
-    name: tag.tag?.name ?? '',
-    icon: tag.tag?.icon ?? '',
-    slug: tag.tag?.slug ?? '',
-    score: (tag.upvotes ?? 0) - Math.abs(tag.downvotes ?? 0),
+    name: tag.tag?.name || '',
+    icon: tag.tag?.icon || '',
+    slug: tag.tag?.slug || '',
+    score: (tag.upvotes || 0) - Math.abs(tag.downvotes || 0),
     rating,
-    image: tagImage ?? tagFallbackImage,
+    image: tagImage || tagFallbackImage,
     isFallback: !tagImage,
-    type: tag.tag.type ?? '',
+    type: tag.tag.type || '',
+    rank: tag.rank || undefined,
   }
 }
 
@@ -38,10 +40,10 @@ export const selectTagDishViewSimple = (tag: tag) => {
   const [tagImage, tagFallbackImage] = tag.default_images?.() ?? []
   return {
     id: tag.id,
-    name: tag.name ?? '',
-    icon: tag.icon ?? '',
-    slug: tag.slug ?? '',
-    image: tagImage ?? tagFallbackImage,
+    name: tag.name || '',
+    icon: tag.icon || '',
+    slug: tag.slug || '',
+    image: tagImage || tagFallbackImage,
     isFallback: !tagImage,
   }
 }

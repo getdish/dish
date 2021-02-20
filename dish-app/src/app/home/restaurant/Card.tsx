@@ -95,7 +95,7 @@ export function Card({
         height="100%"
       >
         <VStack
-          className="hover-parent safari-fix-overflow"
+          className="safari-fix-overflow"
           pointerEvents="auto"
           width="100%"
           overflow="hidden"
@@ -104,37 +104,23 @@ export function Card({
           borderRadius={cardFrameBorderRadius}
           backgroundColor={backgroundColor || underColor || ''}
         >
-          <AbsoluteVStack
-            className="ease-in-out"
-            opacity={hideInfo ? 0 : 1}
-            fullscreen
-            zIndex={12}
-          >
-            <VStack flex={1}>
-              <AbsoluteVStack
-                zIndex={1001}
-                borderRadius={cardFrameBorderRadius}
-                top={0}
-                left={0}
-                bottom={0}
-                right="60%"
-                transform={[{ translateX: -20 }]}
-              >
-                <LinearGradient
-                  pointerEvents="none"
-                  style={[
-                    StyleSheet.absoluteFill,
-                    { opacity: isBehind ? 0.6 : 0 },
-                  ]}
-                  start={[0, 0]}
-                  end={[1, 0]}
-                  colors={['rgba(0,0,0,1)', 'rgba(0,0,0,0)']}
-                />
-              </AbsoluteVStack>
-            </VStack>
-          </AbsoluteVStack>
+          {/* behind shadow */}
+          {isBehind && (
+            <AbsoluteVStack
+              className="ease-in-out"
+              opacity={hideInfo ? 0 : 1}
+              zIndex={1002}
+              borderRadius={cardFrameBorderRadius}
+              fullscreen
+              backgroundColor="red"
+              transform={[{ translateX: -cardFrameWidth }]}
+              shadowColor="#000"
+              shadowRadius={50}
+              shadowOffset={{ width: 10, height: 0 }}
+            />
+          )}
           <VStack
-            className="hover-75-opacity-child"
+            className="hover-75-opacity-child mask-image"
             opacity={dimImage ? 0.5 : 0.9}
             {...frame}
           >
@@ -162,6 +148,28 @@ export function Card({
           borderRadius={cardFrameBorderRadius}
           overflow="hidden"
         >
+          {/* bottom color gradient */}
+          <AbsoluteVStack
+            className="hover-0-opacity-child ease-in-out"
+            zIndex={-2}
+            left={0}
+            bottom={0}
+            top="0%"
+            right={-20}
+            opacity={1}
+            transform={[
+              { rotate: '45deg' },
+              { scaleX: 2 },
+              { translateY: 30 },
+              { translateY: 30 },
+            ]}
+          >
+            <LinearGradient
+              style={StyleSheet.absoluteFill}
+              colors={['transparent', `${colors.altColor}00`, colors.altColor]}
+            />
+          </AbsoluteVStack>
+
           <VStack
             className="ease-in-out"
             opacity={hideInfo ? 0 : 1}
@@ -178,17 +186,13 @@ export function Card({
                 ) : (
                   <VStack minWidth={45} flex={1} />
                 ))}
-              <VStack
-                className="hover-bubble-title-child"
-                flex={1}
-                alignItems="flex-end"
-              >
+              <VStack flex={1} alignItems="flex-end">
                 <VStack position="relative">
                   <AbsoluteVStack
-                    className="hover-0-opacity-child"
+                    className="hover-50-opacity-child ease-in-out-slow"
                     zIndex={-1}
-                    left={-60}
-                    bottom={-60}
+                    left={-90}
+                    bottom={-90}
                     transform={[
                       { rotate: '20deg' },
                       { scaleX: 1.5 },
@@ -201,13 +205,8 @@ export function Card({
                         colors.pastelColor,
                         colors.pastelColor,
                         colors.pastelColor,
-                        colors.pastelColor,
                         `${colors.color}00`,
-                        // `transparent`,
-                        // `transparent`,
                       ]}
-                      // start={[1, 0]}
-                      // end={[0.9, 0.1]}
                     />
                   </AbsoluteVStack>
 
@@ -217,10 +216,10 @@ export function Card({
                     textShadowRadius={4}
                     textShadowOffset={{ height: 2, width: 0 }}
                     fontWeight="800"
-                    letterSpacing={-0.5}
+                    letterSpacing={-1}
                     color="#fff"
                     fontSize={fontSize}
-                    lineHeight={fontSize * 1.05}
+                    lineHeight={fontSize}
                   >
                     {title}
                   </Text>
@@ -249,7 +248,7 @@ export function Card({
   )
 }
 
-export const CardOverlay = (props: StackProps) => {
+export const CardOverlay = (props: { children: any }) => {
   return (
     <AbsoluteVStack
       fullscreen
@@ -258,7 +257,16 @@ export const CardOverlay = (props: StackProps) => {
       borderBottomLeftRadius={cardFrameBorderRadius}
       borderBottomRightRadius={cardFrameBorderRadius}
       overflow="hidden"
-      {...props}
-    />
+    >
+      <VStack position="relative">
+        <AbsoluteVStack left={0} right={0} bottom={0} top={-30}>
+          <LinearGradient
+            colors={['rgba(0,0,0,0)', '#000']}
+            style={StyleSheet.absoluteFill}
+          />
+        </AbsoluteVStack>
+        <VStack padding={10}>{props.children}</VStack>
+      </VStack>
+    </AbsoluteVStack>
   )
 }

@@ -65,7 +65,7 @@ export const useLink = (
 
     if (props.asyncClick) {
       cancel.current = series([
-        () => sleep(0),
+        () => sleep(32),
         () => {
           cancel.current = null
           doNavigate(navItem, newLinkProps, props, e)

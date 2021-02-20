@@ -131,6 +131,7 @@ const DishViewContent = (props: DishViewProps) => {
         >
           <Suspense fallback={null}>
             <DishUpvoteDownvote
+              shadowed
               size="sm"
               subtle={isWeb && !supportsTouchWeb}
               slug={slug}

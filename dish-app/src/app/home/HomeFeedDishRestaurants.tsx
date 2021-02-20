@@ -9,10 +9,12 @@ import {
 } from '../../helpers/selectDishViewSimple'
 import { RegionNormalized } from '../../types/homeTypes'
 import { TagButtonSlanted } from '../views/dish/TagButtonSlanted'
+import { TagButton } from '../views/TagButton'
 import { ContentSectionHoverable } from './ContentSectionHoverable'
 import { FeedSlantedTitleLink } from './FeedSlantedTitle'
 import { FIBase } from './FIBase'
 import { HoverResultsProp } from './HoverResultsProp'
+import { CardOverlay } from './restaurant/Card'
 import { RestaurantCard } from './restaurant/RestaurantCard'
 import { SkewedCard, SkewedCardCarousel } from './SkewedCard'
 
@@ -140,27 +142,16 @@ export const HomeFeedDishRestaurants = graphql(
                     hoverable={false}
                     dimImage
                     below={(colors) => (
-                      <Theme name={colors.name}>
-                        <HStack
-                          alignSelf="flex-end"
-                          marginLeft="auto"
-                          alignItems="center"
-                          justifyContent="center"
-                          transform={
-                            [
-                              // { translateX: -15 },
-                              // { translateY: -10 },
-                            ]
-                          }
-                        >
-                          <TagButtonSlanted
-                            maxTextWidth={80}
-                            restaurantSlug={restaurant.slug || ''}
-                            restaurantId={restaurant.id || ''}
-                            {...restaurant.dish}
-                          />
-                        </HStack>
-                      </Theme>
+                      <CardOverlay>
+                        <TagButton
+                          size="lg"
+                          restaurantSlug={restaurant.slug || ''}
+                          color="#fff"
+                          backgroundColor="transparent"
+                          floating
+                          {...restaurant.dish}
+                        />
+                      </CardOverlay>
                     )}
                   />
                 </SkewedCard>

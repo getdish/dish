@@ -40,7 +40,7 @@ export const RestaurantTagPhotosContent = memo(
     return (
       <ContentScrollViewHorizontal height={220}>
         <Suspense fallback={<LoadingItems />}>
-          <HStack spacing="sm" paddingHorizontal={20} paddingVertical={5}>
+          <HStack spacing paddingHorizontal={20} paddingVertical={5}>
             {[...tagPhotos, 0, 0, 0, 0, 0, 0]
               .slice(0, Math.max(numTags, 5))
               .map((photo, index) => {
