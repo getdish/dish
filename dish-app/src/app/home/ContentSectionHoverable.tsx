@@ -7,7 +7,7 @@ export const ContentSectionHoverable = (props: StackProps) => {
     <VStack
       position="relative"
       width="100%"
-      paddingVertical={5}
+      paddingVertical={7}
       hoverStyle={{
         backgroundColor: theme.backgroundColorAlt,
       }}

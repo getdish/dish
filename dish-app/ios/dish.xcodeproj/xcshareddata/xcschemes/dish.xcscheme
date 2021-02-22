@@ -67,6 +67,11 @@
             isEnabled = "YES">
          </EnvironmentVariable>
          <EnvironmentVariable
+            key = "NODE_BINARY"
+            value = "/Users/n8/n/bin/node"
+            isEnabled = "YES">
+         </EnvironmentVariable>
+         <EnvironmentVariable
             key = "RCT_NO_LAUNCH_PACKAGER"
             value = "1"
             isEnabled = "YES">

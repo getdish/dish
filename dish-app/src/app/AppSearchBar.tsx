@@ -1,7 +1,7 @@
 import { ArrowUp, ChevronLeft, MapPin, Search } from '@dish/react-feather'
 import { useStoreInstance } from '@dish/use-store'
 import React, { Suspense, memo } from 'react'
-import { Platform, StyleSheet, TouchableOpacity } from 'react-native'
+import { StyleSheet, TouchableOpacity } from 'react-native'
 import {
   AbsoluteVStack,
   HStack,
@@ -15,6 +15,7 @@ import {
 
 import { bgLightTranslucent } from '../constants/colors'
 import {
+  isWeb,
   searchBarHeight,
   searchBarMaxWidth,
   searchBarTopOffset,
@@ -28,8 +29,6 @@ import { useHomeStore } from './homeStore'
 import { useSearchBarTheme } from './hooks/useSearchBarTheme'
 import { DishLogoButton } from './views/DishLogoButton'
 import { Link } from './views/Link'
-
-const isWeb = Platform.OS === 'web'
 
 export const AppSearchBar = () => {
   const media = useMedia()
@@ -195,9 +194,10 @@ const AppSearchBarContents = memo(() => {
         position="relative"
         width={media.sm ? 'auto' : '43%'}
         maxWidth={
-          media.xs ? 'auto' : media.sm && focus === 'location' ? '30%' : '100%'
+          media.sm && focus === 'location' ? '30%' : media.xs ? 'auto' : '100%'
         }
-        flex={1}
+        // ipad
+        flex={media.sm ? 6 : 1}
         alignItems="center"
       >
         {!media.xs && <AppSearchInput />}
@@ -276,7 +276,7 @@ const AppSearchBarContents = memo(() => {
         </HStack>
       )}
 
-      {!media.xs && (
+      {!media.sm && !media.xs && (
         <Suspense fallback={null}>
           <AppMenu />
         </Suspense>

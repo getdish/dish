@@ -20,7 +20,7 @@ export const AppMenuButton = () => {
   const appMenu = useStoreInstance(appMenuStore)
   const safeArea = useSafeArea()
 
-  if (!media.xs) {
+  if (!(media.sm || media.xs)) {
     return null
   }
 
