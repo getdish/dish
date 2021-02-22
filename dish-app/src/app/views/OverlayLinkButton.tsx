@@ -20,6 +20,7 @@ export function OverlayLinkButton<
         paddingVertical={8}
         paddingHorizontal={12}
         borderRadius={90}
+        minHeight={40}
         shadowColor="rgba(0,0,0,0.175)"
         shadowRadius={13}
         shadowOffset={{ width: 0, height: 3 }}

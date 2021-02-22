@@ -36,12 +36,12 @@ class SearchPageStore extends Store {
   }
 
   setSearchRegion(val: boolean) {
-    this.searchRegion = true
-    this.runSearch({})
+    this.searchRegion = val
   }
 
   toggleSearchRegion() {
     this.setSearchRegion(!this.searchRegion)
+    this.runSearch({})
   }
 
   get max() {
@@ -173,7 +173,8 @@ class SearchPageStore extends Store {
 }
 
 export const searchPageStore = createStore(SearchPageStore)
-export const useSearchPageStore = () => useStoreInstance(searchPageStore)
+export const useSearchPageStore = (debug?: boolean) =>
+  useStoreInstance(searchPageStore, undefined, undefined, debug)
 
 // used to help prevent duplicate searches on slight diff in map move
 const roundLngLat = (val: LngLat): LngLat => {

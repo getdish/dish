@@ -29,6 +29,7 @@ import {
 } from './Store'
 import { createMutableSource, useMutableSource } from './useMutableSource'
 import {
+  DebugComponents,
   DebugStores,
   shouldDebug,
   useCurrentComponent,
@@ -312,7 +313,7 @@ function getOrCreateStoreInfo(
     } else if (typeof descriptor.get === 'function') {
       getters[key] = descriptor.get
     } else {
-      if (key !== 'props') {
+      if (key !== 'props' && key[0] !== '_') {
         stateKeys.push(key)
       }
     }
@@ -360,10 +361,7 @@ export const subscribe = (store: Store, callback: () => any) => {
 }
 
 const emptyObj = {}
-const selectKeys = (obj: any, keys: string[] | null) => {
-  if (keys === null) {
-    return { ...obj }
-  }
+const selectKeys = (obj: any, keys: string[]) => {
   if (!keys.length) {
     return emptyObj
   }
@@ -393,22 +391,31 @@ function useStoreFromInfo(
   }
   const curInternal = internal.current!
   const selector = userSelector ?? selectKeys
+
+  const shouldPrintDebug =
+    !!process.env.LOG_LEVEL &&
+    (configureOpts.logLevel === 'debug' || shouldDebug(component, info))
+
   const getSnapshot = useCallback(
     (store) => {
-      const keys = curInternal.firstRun ? null : [...curInternal.tracked]
+      const keys = curInternal.firstRun
+        ? info.stateKeys
+        : [...curInternal.tracked]
       const snap = selector(store, keys)
-      if (
-        process.env.LOG_LEVEL &&
-        (shouldDebug(component, info) || configureOpts.logLevel === 'debug')
-      ) {
-        console.log('💰 getSnapshot', keys, snap)
+      if (shouldPrintDebug) {
+        console.log('💰 getSnapshot', { info, component, keys, snap })
       }
       return snap
     },
     [selector]
   )
 
-  const state = useMutableSource(info.source, getSnapshot, subscribe)
+  const state = useMutableSource(
+    info.source,
+    getSnapshot,
+    subscribe,
+    shouldPrintDebug
+  )
 
   // before each render
   curInternal.isTracking = true
@@ -422,10 +429,7 @@ function useStoreFromInfo(
   useLayoutEffect(() => {
     curInternal.isTracking = false
     curInternal.firstRun = false
-    if (
-      process.env.LOG_LEVEL &&
-      (shouldDebug(component, info) || configureOpts.logLevel === 'debug')
-    ) {
+    if (shouldPrintDebug) {
       console.log('💰 finish render, tracking', [...curInternal.tracked])
     }
   })
@@ -446,8 +450,10 @@ function createProxiedStore(storeInfo: Omit<StoreInfo, 'store' | 'source'>) {
   const constr = storeInstance.constructor
 
   let didSet = false
+  let withinAction = false
 
   const proxiedStore = new Proxy(storeInstance, {
+    // GET
     get(target, key) {
       // avoid tracking internal stuff
       if (key === '_trackers' || key === '_listeners') {
@@ -501,15 +507,21 @@ function createProxiedStore(storeInfo: Omit<StoreInfo, 'store' | 'source'>) {
           const actionFn = actions[key]
 
           // fix bug in router for now, need to look at it soon
-          const isGetAction = key.startsWith('get')
+          const isGetFn = key.startsWith('get')
 
           let action = (...args: any[]) => {
-            if (isGetAction || gettersState.isGetting) {
-              return actionFn.call(proxiedStore, ...args)
+            if (isGetFn || gettersState.isGetting) {
+              return actionFn.apply(proxiedStore, args)
             }
 
+            const isWithin = withinAction
+
             const finishAction = () => {
-              if (didSet) {
+              // if (storeInstance[SHOULD_DEBUG]()) {
+              //   // prettier-ignore
+              //   console.log('finish action', constr.name, key, { isWithin, didSet })
+              // }
+              if (didSet && !isWithin) {
                 storeInfo.triggerUpdate()
                 didSet = false
               }
@@ -517,9 +529,11 @@ function createProxiedStore(storeInfo: Omit<StoreInfo, 'store' | 'source'>) {
 
             let res
             try {
-              res = actionFn.call(proxiedStore, ...args)
+              withinAction = true
+              res = actionFn.apply(proxiedStore, args)
               return res
             } finally {
+              withinAction = false
               if (res instanceof Promise) {
                 res.then(finishAction)
               } else {
@@ -640,6 +654,8 @@ function createProxiedStore(storeInfo: Omit<StoreInfo, 'store' | 'source'>) {
       }
       return Reflect.get(target, key)
     },
+
+    // SET
     set(target, key, value, receiver) {
       const cur = Reflect.get(target, key)
       const res = Reflect.set(target, key, value, receiver)
@@ -651,7 +667,7 @@ function createProxiedStore(storeInfo: Omit<StoreInfo, 'store' | 'source'>) {
         }
         if (process.env.LOG_LEVEL && configureOpts.logLevel !== 'error') {
           setters.add({ key, value })
-          if (storeInfo.storeInstance[SHOULD_DEBUG]()) {
+          if (storeInstance[SHOULD_DEBUG]()) {
             console.log('(debug) SET', res, key, value)
           }
         }

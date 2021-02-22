@@ -47,8 +47,9 @@ export class Store<Props extends Object | null = null> {
   }
 
   [SHOULD_DEBUG]() {
+    const info = { storeInstance: this }
     return [...this._trackers].some(
-      (tracker) => tracker.component && shouldDebug(tracker.component, this)
+      (tracker) => tracker.component && shouldDebug(tracker.component, info)
     )
   }
 }

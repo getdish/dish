@@ -24,6 +24,7 @@ import {
 import { queryRestaurant } from '../queries/queryRestaurant'
 import { RegionWithVia } from '../types/homeTypes'
 import { AppMapPosition, MapResultItem } from '../types/mapTypes'
+import { searchPageStore } from './home/search/SearchPageStore'
 import { homeStore } from './homeStore'
 
 type MapOpts = {
@@ -371,5 +372,11 @@ export const useSetAppMap = (
         features: [],
       })
     }
-  }, [JSON.stringify(results), fitToResults, isActive, hideRegions])
+  }, [
+    JSON.stringify(results),
+    fitToResults,
+    isActive,
+    zoomOnHover,
+    hideRegions,
+  ])
 }

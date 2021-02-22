@@ -122,7 +122,7 @@ const SearchPageContent = memo(function SearchPageContent(
     isActive: props.isActive,
     results: searchStore.results,
     showRank: true,
-    hideRegions: searchStore.searchRegion,
+    hideRegions: !searchStore.searchRegion,
     center,
     span: location.data?.span,
     ...(location.data?.region && {

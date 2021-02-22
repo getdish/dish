@@ -59,9 +59,10 @@ export const AppMapControls = memo(() => {
             <ToggleRegionButton />
 
             {showSearchHere && (
-              <OverlayLinkButton Icon={RefreshCcw} onPress={pagesStore.refresh}>
-                Search here
-              </OverlayLinkButton>
+              <OverlayLinkButton
+                Icon={RefreshCcw}
+                onPress={pagesStore.refresh}
+              />
             )}
 
             {isHoverZoomed && (
@@ -87,12 +88,14 @@ const ToggleRegionButton = memo(() => {
   return (
     <OverlayLinkButton onPress={toggleSearchRegion}>
       <HStack pointerEvents="none" alignItems="center" spacing="sm">
-        <Text selectable={false} fontSize={12}>
+        <Text userSelect="none" fontSize={12}>
           Region
         </Text>
-        <Switch value={searchRegion} />
-        <Text selectable={false} fontSize={12}>
-          Map area
+        <VStack transform={[{ scale: 0.8 }]}>
+          <Switch value={!searchRegion} />
+        </VStack>
+        <Text userSelect="none" fontSize={12}>
+          Map
         </Text>
       </HStack>
     </OverlayLinkButton>
@@ -104,11 +107,9 @@ function useShowSearchHere() {
     const isOnSearch = homeStore.currentStateType === 'search'
     const sp = searchPageStore.searchPosition
     const { center, span } = appMapStore.nextPosition
-    console.log('wut', center)
     if (searchPageStore.status === 'loading') return false
     if (!isOnSearch) return false
     const hasMoved = hasMovedAtLeast(sp, { center, span })
-    console.log('show search here', { hasMoved })
     return hasMoved
   })
 }

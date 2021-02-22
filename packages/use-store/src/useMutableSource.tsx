@@ -5,6 +5,7 @@ import { useCurrentComponent } from './useStoreDebug'
 
 const TARGET = Symbol()
 const GET_VERSION = Symbol()
+export const RETURN_OG_OBJECT = Symbol()
 
 export const createMutableSource = (target: any, getVersion: any) => ({
   [TARGET]: target,
@@ -14,7 +15,8 @@ export const createMutableSource = (target: any, getVersion: any) => ({
 export const useMutableSource = (
   source: any,
   getSnapshot: any,
-  subscribe: any
+  subscribe: any,
+  debug?: boolean
 ) => {
   const currentVersion = source[GET_VERSION](source[TARGET])
   const [state, setState] = useState(() => {
@@ -26,50 +28,49 @@ export const useMutableSource = (
       /* [4] */ getSnapshot(source[TARGET]),
     ] as const
   })
-  const internal = useRef<{
-    version: number
-    state: readonly [any, any, any, any, any]
-  }>()
+  const internal = useRef<readonly [any, any, any, any, any]>()
 
   let currentSnapshot = state[4]
 
   if (!internal.current) {
-    internal.current = {
-      version: 0,
-      state,
-    }
+    internal.current = state
   } else {
     const shouldUpdate = (() => {
+      const hasChangedVersion =
+        currentVersion !== state[3] && currentVersion !== internal.current[3]
+      if (!hasChangedVersion) {
+        return false
+      }
       const hasChangedRefs =
         state[0] !== source ||
         state[1] !== getSnapshot ||
         state[2] !== subscribe
-      const hasChangedVersion =
-        currentVersion !== state[3] &&
-        currentVersion !== internal.current.version
-      if (hasChangedRefs || hasChangedVersion) {
-        const prev = currentSnapshot
-        const next = getSnapshot(source[TARGET])
-        if (!isEqualSubsetShallow(prev, next)) {
-          currentSnapshot = next
-          return true
-        }
+      if (!hasChangedRefs) {
+        return false
       }
-      return hasChangedRefs
+      const prev = currentSnapshot
+      const next = getSnapshot(source[TARGET])
+      if (isEqualSubsetShallow(prev, next)) {
+        return false
+      }
+      currentSnapshot = next
+      return true
     })()
 
     if (shouldUpdate) {
-      setState([
+      const next = [
         /* [0] */ source,
         /* [1] */ getSnapshot,
         /* [2] */ subscribe,
         /* [3] */ currentVersion,
         /* [4] */ currentSnapshot,
-      ])
+      ] as const
+      setState(next)
+      internal.current = next
+    } else {
+      internal.current = state
     }
   }
-
-  internal.current.state = state
 
   useEffect(() => {
     let didUnsubscribe = false
@@ -79,9 +80,12 @@ export const useMutableSource = (
         return
       }
       const nextVersion = source[GET_VERSION](source[TARGET])
-      internal.current!.version = nextVersion
+      const prev = internal.current!
+      if (nextVersion === prev[3]) {
+        return
+      }
+
       const nextSnapshot = getSnapshot(source[TARGET])
-      const prev = internal.current!.state
       const next = [
         /* [0] */ prev[0],
         /* [1] */ prev[1],
@@ -94,7 +98,16 @@ export const useMutableSource = (
         prev[1] !== getSnapshot ||
         prev[2] !== subscribe ||
         !isEqualSubsetShallow(prev[4], nextSnapshot)
+
+      if (debug) {
+        // prettier-ignore
+        console.groupCollapsed('💰 (debug) useMutableSource', { shouldUpdate, prev, next })
+        console.trace()
+        console.groupEnd()
+      }
+
       if (shouldUpdate) {
+        internal.current = next
         setState(next)
       }
     }

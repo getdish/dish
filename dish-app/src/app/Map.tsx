@@ -405,7 +405,7 @@ function setupMapEffect({
       const [min, max] = [tile.minZoom, tile.maxZoom]
       const isNear = (x: number) => Math.abs(zoom - x) < x * 0.1
       if (isNear(min) || isNear(max)) {
-        console.warn('near border')
+        // console.warn('near border')
         return
       }
     }

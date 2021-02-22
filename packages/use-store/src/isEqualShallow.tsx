@@ -1,5 +1,5 @@
 export function isEqualSubsetShallow(prev: Object, next: Object) {
-  if (!prev || !next) return prev === next
+  if (prev === next) return true
   const aType = typeof prev
   if (aType !== typeof next) return false
   if (aType !== 'object') return prev === next

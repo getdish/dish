@@ -116,6 +116,11 @@ export const TagButton = memo((props: TagButtonProps) => {
     restaurantSlug,
     ...rest
   } = props
+
+  if (!slug) {
+    return null
+  }
+
   const isSmall = size === 'sm'
   const scale = isSmall ? 0.85 : size == 'lg' ? 1.3 : 1
   const colors = getColorsForColor(type ? typeColors[type] ?? green : green)
