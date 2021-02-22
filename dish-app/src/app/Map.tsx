@@ -384,7 +384,7 @@ function setupMapEffect({
   }
 
   let curRegion: RegionWithVia | null = null
-  let curId
+  let curRegionId
 
   function getCurrentLayerName() {
     let layerName = ''
@@ -404,7 +404,8 @@ function setupMapEffect({
     for (const tile of tiles) {
       const [min, max] = [tile.minZoom, tile.maxZoom]
       const isNear = (x: number) => Math.abs(zoom - x) < x * 0.1
-      if (isNear(min) || isNear(max)) {
+      const isNearBoundary = isNear(min) || isNear(max)
+      if (curRegionId && isNearBoundary) {
         // console.warn('near border')
         return
       }
@@ -423,7 +424,7 @@ function setupMapEffect({
       })
       const feature = features[0]
       if (!feature) return
-      if (feature.id === curId) return
+      if (feature.id === curRegionId) return
       setCurrentRegion(feature, 'drag')
     } catch (err) {
       console.error('error querying map', err)
@@ -436,25 +437,16 @@ function setupMapEffect({
   ) {
     const layerName = getCurrentLayerName()
     try {
-      if (curId) {
+      if (curRegionId) {
         tileSetter({
           source: layerName,
           sourceLayer: layerName,
-          id: curId,
+          id: curRegionId,
         })({
           active: null,
         })
-        curId = null
+        curRegionId = null
       }
-      curId = feature.id
-      tileSetter({
-        source: layerName,
-        sourceLayer: layerName,
-        id: curId,
-      })({
-        active: true,
-      })
-
       // temp regions supprot until we normalize naming at tile level
       const props = feature.properties ?? {}
       const name =
@@ -475,6 +467,14 @@ function setupMapEffect({
         console.log('same region, not changing')
         return
       }
+      curRegionId = feature.id
+      tileSetter({
+        source: layerName,
+        sourceLayer: layerName,
+        id: curRegionId,
+      })({
+        active: true,
+      })
       curRegion = {
         geometry: feature.geometry as any,
         name,

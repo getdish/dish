@@ -147,26 +147,25 @@ export const MapView = ({
           }}
         />
         {tiles.map(
-          (
-            {
-              name,
-              minZoom,
-              maxZoom,
-              activeColor,
-              hoverColor,
-              color,
-              label,
-              promoteId,
-              labelSource,
-              lineColor,
-              lineColorActive,
-              lineColorHover,
-            },
-            index
-          ) => {
-            const url = `http://${DISH_API_ENDPOINT}/api/tile/${name}.json`
+          ({
+            name,
+            minZoom,
+            maxZoom,
+            activeColor,
+            hoverColor,
+            color,
+            label,
+            promoteId,
+            labelSource,
+            lineColor,
+            lineColorActive,
+            lineColorHover,
+          }) => {
+            const url = `${DISH_API_ENDPOINT}/api/tile/${name}.json`
             const sourceId = `${name}`.replace('.', '')
-            const labelUrl = `${MARTIN_TILES_HOST}/${labelSource}.json`
+            const labelUrl = labelSource
+              ? `${MARTIN_TILES_HOST}/${labelSource}.json`
+              : ''
             console.log('Loading tile url', sourceId, url, labelUrl)
             return (
               <MapboxGL.VectorSource
