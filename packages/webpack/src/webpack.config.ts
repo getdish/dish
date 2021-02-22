@@ -177,7 +177,7 @@ export default function createWebpackConfig({
             : false,
         runtimeChunk: false,
         minimizer:
-          minimize == false
+          minimize == false || noMinify
             ? []
             : [
                 new CssMinimizerPlugin({
@@ -217,7 +217,7 @@ export default function createWebpackConfig({
               {
                 test: /\.css$/i,
                 use:
-                  isProduction && !isSSR
+                  !noMinify && isProduction && !isSSR
                     ? [ExtractCssChunks.loader, 'css-loader']
                     : ['style-loader', 'css-loader'],
               },
