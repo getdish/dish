@@ -9,6 +9,7 @@ import { ContentSectionHoverable } from './ContentSectionHoverable'
 import { FeedSlantedTitle } from './FeedSlantedTitle'
 import { FIBase } from './FIBase'
 import { HomeFeedProps } from './HomeFeedProps'
+import { HoverResultsProp } from './HoverResultsProp'
 import { RestaurantCard } from './restaurant/RestaurantCard'
 import { RestaurantButton } from './RestaurantButton'
 import { SkewedCard, SkewedCardCarousel } from './SkewedCard'
@@ -82,14 +83,20 @@ export function useHomeFeedTrendingNew(props: HomeFeedProps): FIHotNew[] {
 }
 
 export const HomeFeedTrendingNew = memo(
-  graphql(function HomeFeedTrendingNew(props: FIHotNew) {
-    const restaurants = props.restaurants
+  graphql(function HomeFeedTrendingNew({
+    restaurants,
+    onHoverResults,
+    ...props
+  }: FIHotNew & HoverResultsProp) {
     if (!restaurants.length) {
       return null
     }
+
+    let contents: any = null
+
     if (props.size === 'sm') {
-      return (
-        <ContentSectionHoverable>
+      contents = (
+        <>
           <AbsoluteVStack
             fullscreen
             paddingLeft={20}
@@ -125,34 +132,45 @@ export const HomeFeedTrendingNew = memo(
               </VStack>
             </ContentScrollViewHorizontal>
           </VStack>
+        </>
+      )
+    } else {
+      contents = (
+        <ContentSectionHoverable>
+          <FeedSlantedTitle zIndex={10}>{props.title}</FeedSlantedTitle>
+          <SkewedCardCarousel>
+            {restaurants.map((r, i) => {
+              if (!r) {
+                return null
+              }
+              return (
+                <SkewedCard zIndex={1000 - i} key={r.id}>
+                  <RestaurantCard
+                    size="sm"
+                    aspectFixed
+                    padTitleSide
+                    isBehind={i > 0}
+                    hideScore
+                    restaurantId={r.id}
+                    restaurantSlug={r.slug}
+                    hoverable={false}
+                    hoverToMap
+                  />
+                </SkewedCard>
+              )
+            })}
+          </SkewedCardCarousel>
         </ContentSectionHoverable>
       )
     }
+
     return (
-      <ContentSectionHoverable>
-        <FeedSlantedTitle zIndex={10}>{props.title}</FeedSlantedTitle>
-        <SkewedCardCarousel>
-          {restaurants.map((r, i) => {
-            if (!r) {
-              return null
-            }
-            return (
-              <SkewedCard zIndex={1000 - i} key={r.id}>
-                <RestaurantCard
-                  size="sm"
-                  aspectFixed
-                  padTitleSide
-                  isBehind={i > 0}
-                  hideScore
-                  restaurantId={r.id}
-                  restaurantSlug={r.slug}
-                  hoverable={false}
-                  hoverToMap
-                />
-              </SkewedCard>
-            )
-          })}
-        </SkewedCardCarousel>
+      <ContentSectionHoverable
+        onHoverIn={() => {
+          onHoverResults(restaurants)
+        }}
+      >
+        {contents}
       </ContentSectionHoverable>
     )
   })

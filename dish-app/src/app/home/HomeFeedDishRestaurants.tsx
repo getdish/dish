@@ -117,13 +117,9 @@ export const HomeFeedDishRestaurants = graphql(
       }
     })
 
-    return (
-      <ContentSectionHoverable>
-        <Hoverable
-          onHoverIn={() => {
-            onHoverResults(restaurants.map((x) => pick(x, 'id', 'slug') as any))
-          }}
-        >
+    const contents = useMemo(() => {
+      return (
+        <>
           <FeedSlantedTitleLink tag={tag}>
             {tag.icon} {tag.name}
           </FeedSlantedTitleLink>
@@ -158,7 +154,17 @@ export const HomeFeedDishRestaurants = graphql(
               )
             })}
           </SkewedCardCarousel>
-        </Hoverable>
+        </>
+      )
+    }, [])
+
+    return (
+      <ContentSectionHoverable
+        onHoverIn={() => {
+          onHoverResults(restaurants.map((x) => pick(x, 'id', 'slug') as any))
+        }}
+      >
+        {contents}
       </ContentSectionHoverable>
     )
   }

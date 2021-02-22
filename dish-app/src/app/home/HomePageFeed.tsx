@@ -82,7 +82,14 @@ export const HomePageFeed = memo(
         switch (item.type) {
           case 'new':
           case 'hot':
-            return <HomeFeedTrendingNew {...item} />
+            return (
+              <HomeFeedTrendingNew
+                {...item}
+                onHoverResults={(results) => {
+                  setHoveredResults({ via: item.type, results })
+                }}
+              />
+            )
           case 'dish-restaurants':
             return (
               <HomeFeedDishRestaurants
