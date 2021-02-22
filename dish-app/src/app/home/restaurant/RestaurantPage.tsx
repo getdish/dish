@@ -160,7 +160,7 @@ const RestaurantPage = memo(
 
               <Spacer size="lg" />
 
-              <VStack marginHorizontal={-20} marginBottom={-40}>
+              <VStack marginHorizontal={-20} marginBottom={-36}>
                 <RestaurantTagReviews
                   tagSlug={selectedDish}
                   borderless
@@ -182,7 +182,7 @@ const RestaurantPage = memo(
                 />
               </View>
 
-              <Spacer size="lg" />
+              <Spacer size="xl" />
 
               <RestaurantTagPhotos
                 tagSlug={selectedDish}

@@ -27,15 +27,17 @@ import {
 import { isWeb } from '../../../constants/constants'
 import { getImageUrl } from '../../../helpers/getImageUrl'
 import { queryRestaurant } from '../../../queries/queryRestaurant'
-import { useRoute } from '../../../router'
+import { router, useIsRouteActive, useRoute } from '../../../router'
 import { StackViewCloseButton } from '../../views/StackViewCloseButton'
 
 export default memo(function GalleryPage() {
-  const route = useRoute('gallery')
+  const isActive = useIsRouteActive('gallery')
 
-  if (!route) {
+  if (!isActive) {
     return null
   }
+
+  const route = router.curPage
 
   return (
     <AbsoluteVStack

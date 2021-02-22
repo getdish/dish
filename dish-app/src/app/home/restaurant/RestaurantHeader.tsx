@@ -117,9 +117,9 @@ const RestaurantHeaderContent = memo(
                 <LinearGradient
                   style={[StyleSheet.absoluteFill]}
                   colors={[
-                    `${colors.themeColorAlt}88`,
-                    `${colors.themeColor}66`,
-                    `${colors.themeColor}ff`,
+                    `${colors.themeColorAlt}aa`,
+                    `${colors.themeColor}99`,
+                    colors.themeColor,
                   ]}
                 />
               </AbsoluteVStack>

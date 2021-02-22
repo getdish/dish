@@ -192,7 +192,7 @@ export const RestaurantTagReviewsContent = memo(
                           <VStack position="relative" flex={1}>
                             <Paragraph
                               color={isWeb ? 'var(--color)' : '#222'}
-                              maxHeight={height - 80}
+                              maxHeight={height - 100}
                               overflow="hidden"
                             >
                               {!!tagName && isWeb && sentence ? (

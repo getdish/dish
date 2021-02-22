@@ -1,5 +1,5 @@
 import { graphql } from '@dish/graph'
-import React from 'react'
+import React, { Suspense } from 'react'
 
 import { queryRestaurant } from '../../../queries/queryRestaurant'
 import { useUserTagVotes } from '../../hooks/useUserTagVotes'
@@ -20,12 +20,23 @@ export const DishUpvoteDownvote = (props: Props) => {
     return null
   }
   return (
-    <DishUpvoteDownvoteContent
-      subtle={false}
-      score={0}
-      {...props}
-      restaurantSlug={props.restaurantSlug}
-    />
+    <Suspense
+      fallback={
+        <Score
+          size={props.size}
+          score={0}
+          rating={0}
+          shadowed={props.shadowed}
+        />
+      }
+    >
+      <DishUpvoteDownvoteContent
+        subtle={false}
+        score={0}
+        {...props}
+        restaurantSlug={props.restaurantSlug}
+      />
+    </Suspense>
   )
 }
 
