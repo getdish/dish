@@ -14,6 +14,9 @@ export async function remove404Images(internal: Self) {
   console.log('Total photos: ' + count)
   while (true) {
     const results = await getFailableBatch(PER_PAGE, previous_id)
+    if (!results) {
+      return
+    }
     if (results.length == 0) {
       await internal.job.progress(100)
       break

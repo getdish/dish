@@ -146,7 +146,9 @@ export class UberEats extends WorkerJob {
     )
     const data = response.data.data
     const scrape_id = await this.saveRestaurant(data, uuid)
-    await this.getDishes(data, scrape_id)
+    if (scrape_id) {
+      await this.getDishes(data, scrape_id)
+    }
   }
 
   private async saveRestaurant(data: any, uuid: string) {

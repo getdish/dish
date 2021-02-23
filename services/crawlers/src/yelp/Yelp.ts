@@ -86,13 +86,13 @@ export class Yelp extends WorkerJob {
     const bb = encodeURIComponent('g:' + coords)
     const uri = BB_SEARCH + bb + '&start=' + start
     const response = await yelpAPI.get(uri)
-    const search_results = response?.data.searchPageProps.searchResultsProps
-    const objects = search_results.searchResults
-    const pagination = search_results.paginationInfo
+    const componentsList =
+      response?.data.searchPageProps.mainContentComponentsListProps ?? []
+    const pagination = componentsList.find((x) => x.type === 'pagination')
     let found_the_one = false
     this.find_only = only
 
-    if (!search_results.searchResults) {
+    if (!componentsList.length) {
       console.error(
         'searchPageProps.searchResultsProps: ',
         response?.data.searchPageProps.searchResultsProps
@@ -102,10 +102,10 @@ export class Yelp extends WorkerJob {
       )
     }
     console.log(
-      `YELP: geo search: ${coords}, page ${start}, ${objects.length} results`
+      `YELP: geo search: ${coords}, page ${start}, ${componentsList.length} results`
     )
 
-    for (const data of objects) {
+    for (const data of componentsList) {
       if (data?.props?.text?.includes('Sponsored Results')) {
         console.log('YELP: Skipping sponsored result')
         continue
@@ -133,7 +133,9 @@ export class Yelp extends WorkerJob {
         only,
       ])
     }
-    if (only && !found_the_one) throw `Couldn't find ${only}`
+    if (only && !found_the_one) {
+      throw `Couldn't find ${only}`
+    }
   }
 
   async getRestaurant(data: ScrapeData) {
@@ -147,6 +149,7 @@ export class Yelp extends WorkerJob {
         biz_page = data.searchResultBusiness.businessUrl
       }
       const biz_page_uri = url.parse(biz_page, true)
+      console.log('run now...')
       await this.runOnWorker('getEmbeddedJSONData', [
         id,
         biz_page_uri.path,
@@ -176,6 +179,7 @@ export class Yelp extends WorkerJob {
     yelp_path: string,
     id_from_source: string
   ) {
+    console.log('get me')
     let data: { [keys: string]: any } = {}
     const SIG1 = '<script type="application/json" data-hypernova-key'
     const SIG2 = 'mapBoxProps'

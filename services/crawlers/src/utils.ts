@@ -5,7 +5,7 @@ import { Restaurant, settingGet, settingSet } from '@dish/graph'
 import axios from 'axios'
 import _ from 'lodash'
 import moment, { Moment } from 'moment'
-import { Pool, Result } from 'pg'
+import { Pool, QueryResult } from 'pg'
 
 import { isGoogleGeocoderID } from './GoogleGeocoder'
 
@@ -27,8 +27,11 @@ export const CITY_LIST = [
 
 export class DB {
   pool: Pool
+  connection: Promise<void>
+
   constructor(public config: object) {
-    this.connect()
+    this.pool = new Pool(this.config)
+    this.connection = this.connect()
   }
 
   static main_db() {
@@ -38,31 +41,41 @@ export class DB {
       user: process.env.PGUSER || 'postgres',
       password: process.env.PGPASSWORD || 'postgres',
       database: 'dish',
-      idleTimeoutMillis: 0,
+      idleTimeoutMillis: 10_000,
       connectionTimeoutMillis: 0,
     })
   }
 
   static async one_query_on_main(query: string) {
     const db = DB.main_db()
+    await db.connect()
     const result = await db.query(query)
-    await db.pool.end()
+    await db.pool?.end()
     return result
   }
 
   connect() {
-    this.pool = new Pool(this.config)
+    if (this.connection) {
+      return this.connection
+    }
     this.pool.on('error', (e) => {
+      console.log('error', e)
       sentryException(e, {
         more: 'Error likely from long-lived pool connection in node-pg',
       })
-      this.pool = null
+      // this.pool = null
+    })
+    return new Promise<void>((res) => {
+      this.pool.once('connect', () => {
+        console.log('connected')
+        res()
+      })
     })
   }
 
   async query(query: string) {
-    let result: Result
-    if (!this.pool) this.connect()
+    let result: QueryResult
+    await this.connect()
     let client = await this.pool.connect()
     try {
       result = await client.query(query)

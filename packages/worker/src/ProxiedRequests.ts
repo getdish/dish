@@ -33,17 +33,20 @@ export class ProxiedRequests {
       base = this.domain
       config = {
         ...config,
-        httpsAgent: new HttpsProxyAgent(this.luminatiDatacentreConfig()),
+        ...(!process.env.DISABLE_LUMINATI && {
+          httpsAgent: new HttpsProxyAgent(this.luminatiDatacentreConfig()),
+        }),
       }
     }
 
     while (true) {
+      const url = base + uri
       try {
-        const response = await axios.get(base + uri, config)
-        return response
+        return await axios.get(url, config)
       } catch (e) {
+        console.log('error fetching', url)
         // TODO: detect other blocking signatures
-        if (e.response.status != 503) {
+        if (!e.response || e.response.status != 503) {
           throw e
         }
         tries++

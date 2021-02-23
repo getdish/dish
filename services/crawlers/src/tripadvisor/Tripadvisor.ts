@@ -83,6 +83,7 @@ export class Tripadvisor extends WorkerJob {
     const response = await axios.get(TRIPADVISOR_DOMAIN + path)
     let data = this._extractEmbeddedJSONData(response.data)
     const scrape_id = await this.saveRestaurant(data)
+    if (!scrape_id) return
     await this.savePhotos(response.data, scrape_id)
     await this.saveReviews(path, scrape_id, 0, response.data)
   }

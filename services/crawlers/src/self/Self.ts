@@ -779,7 +779,7 @@ export class Self extends WorkerJob {
       this.restaurant = restaurant
       await this.gpt3.generateGPT3Summary()
       await restaurantUpdate(this.restaurant)
-      await this.main_db.pool.end()
+      await this.main_db.pool?.end()
     }
   }
 

@@ -49,7 +49,7 @@
     "graph:generate": "yarn workspace @dish/graph generate",
     "clean": "bin/clean.sh",
     "hasura:migrate": "./dishctl.sh db_migrate_local init",
-    "hasura:admin": "(cd services/hasura && hasura console --endpoint http://localhost:8080 --admin-secret=password)",
+    "hasura:admin": "eval $(./dishctl.sh yaml_to_env) && (cd services/hasura && hasura console --endpoint http://localhost:8080 --admin-secret=$TF_VAR_HASURA_GRAPHQL_ADMIN_SECRET)",
     "prettier": "prettier --write \"**/*.{ts,tsx}\" || true",
     "prettier:check": "prettier --check \"**/*.{ts,tsx}\"",
     "expo:check-deps": "expo-yarn-workspaces check-workspace-dependencies",

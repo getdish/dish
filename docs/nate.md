@@ -20,11 +20,9 @@ THREE BIG AREAS
     - dish substack! have mailing list that actually emails once a month with new release
     - improve some profiles and some onboarding
 
-- fix restaurantpage flicker
+- fix home speed / home data
 - mobile fixes: get it fully working mobile web
 - fix back sometimes still breaking stack
-- fix tag ratings on various pages / consistency
-- fix home speed / home data
 - fix home not showing tag data properly
 - may be able to remove a few states from homeStore
 - search page fixes:
@@ -62,7 +60,7 @@ for pablo:
   - normalize/direct-mutate
   - mutate() should automatically add __typename if nothing else exists otherwise really confusing that mutations silently fail
 
-  2. prototype playlists / improve home (bonus)
+  1. prototype playlists / improve home (bonus)
 
      - in general playlists are fun and affect regions a bit (may lessen need)
      - home page can be simpler and faster list, improve that

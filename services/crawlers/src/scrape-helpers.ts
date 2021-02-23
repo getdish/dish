@@ -4,9 +4,9 @@ import {
   ensureJSONSyntax,
   restaurantFindOne,
 } from '@dish/graph'
+import { ConfigurationServicePlaceholders } from 'aws-sdk/lib/config_service_placeholders'
 
 import { DoorDash } from './doordash/DoorDash'
-import { GooglePuppeteer } from './google/GooglePuppeteer'
 import { GoogleGeocoder } from './GoogleGeocoder'
 import { GrubHub } from './grubhub/GrubHub'
 import { Infatuated } from './infatuated/Infatuated'
@@ -27,6 +27,7 @@ let db_config = {
 if (process.env.DISH_ENV == 'production' || process.env.USE_PG_SSL == 'true') {
   db_config.ssl = true
 }
+
 const db = new DB(db_config)
 
 type LatLon = {
@@ -51,6 +52,7 @@ export async function scrapeFindOneBySourceID(
   id: string,
   allow_not_found = false
 ) {
+  await db.connect()
   const query = `
     SELECT *, st_asgeojson(location) as location
     FROM scrape
@@ -116,29 +118,40 @@ export async function latestScrapeForRestaurant(
 }
 
 export async function scrapeInsert(scrape: Scrape) {
-  let data = ensureJSONSyntax(scrape.data)
-  data = JSON.stringify(data).replace(/'/g, `''`)
-  const result = await db.query(`
-    INSERT INTO scrape (
-      time,
-      source,
-      id_from_source,
-      data,
-      restaurant_id,
-      location
-    ) VALUES (
-      NOW(),
-      '${scrape.source}',
-      '${scrape.id_from_source}',
-      '${data}'::jsonb,
-      '${scrape.restaurant_id}',
-      ST_GeomFromText('POINT(
-        ${scrape.location.lon} ${scrape.location.lat}
-      )', 4326)
+  try {
+    const data = JSON.stringify(ensureJSONSyntax(scrape.data)).replace(
+      /'/g,
+      `''`
     )
-    RETURNING id;
-  `)
-  return result.rows[0].id as string
+    console.log('go', data)
+    await db.connect()
+    console.log('now')
+    const result = await db.query(`
+      INSERT INTO scrape (
+        time,
+        source,
+        id_from_source,
+        data,
+        restaurant_id,
+        location
+      ) VALUES (
+        NOW(),
+        '${scrape.source}',
+        '${scrape.id_from_source}',
+        '${data}'::jsonb,
+        '${scrape.restaurant_id}',
+        ST_GeomFromText('POINT(
+          ${scrape.location.lon} ${scrape.location.lat}
+        )', 4326)
+      )
+      RETURNING id;
+    `)
+    const res = result.rows[0].id as string
+    console.log('inserted', result)
+    return res
+  } catch (err) {
+    console.error(`Error inserting scrape`, err)
+  }
 }
 
 export async function scrapeUpdateBasic(scrape: Scrape) {

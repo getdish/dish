@@ -480,7 +480,7 @@ const ListPageContent = graphql((props: Props) => {
                       marginTop={-5}
                       alignSelf="center"
                       zIndex={0}
-                      size="lg"
+                      size="xl"
                     >
                       {isEditing ? (
                         <Input
