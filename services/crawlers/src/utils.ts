@@ -5,7 +5,7 @@ import { Restaurant, settingGet, settingSet } from '@dish/graph'
 import axios from 'axios'
 import _ from 'lodash'
 import moment, { Moment } from 'moment'
-import { Pool, QueryResult } from 'pg'
+import { Pool, PoolClient, QueryResult } from 'pg'
 
 import { isGoogleGeocoderID } from './GoogleGeocoder'
 
@@ -27,11 +27,18 @@ export const CITY_LIST = [
 
 export class DB {
   pool: Pool
-  connection: Promise<void>
+  client: PoolClient | null = null
 
   constructor(public config: object) {
     this.pool = new Pool(this.config)
-    this.connection = this.connect()
+    this.pool.on('error', (e) => {
+      console.log('error', e)
+      sentryException(e, {
+        more: 'Error likely from long-lived pool connection in node-pg',
+      })
+      // this.pool = null
+    })
+    this.connect()
   }
 
   static main_db() {
@@ -54,29 +61,17 @@ export class DB {
     return result
   }
 
-  connect() {
-    if (this.connection) {
-      return this.connection
+  async connect() {
+    if (this.client) {
+      return this.client
     }
-    this.pool.on('error', (e) => {
-      console.log('error', e)
-      sentryException(e, {
-        more: 'Error likely from long-lived pool connection in node-pg',
-      })
-      // this.pool = null
-    })
-    return new Promise<void>((res) => {
-      this.pool.once('connect', () => {
-        console.log('connected')
-        res()
-      })
-    })
+    this.client = await this.pool.connect()
+    return this.client
   }
 
   async query(query: string) {
     let result: QueryResult
-    await this.connect()
-    let client = await this.pool.connect()
+    const client = await this.connect()
     try {
       result = await client.query(query)
     } catch (e) {
@@ -85,10 +80,10 @@ export class DB {
       if (query.includes('BEGIN;') || query.includes('TRANSACTION;')) {
         await client.query('ROLLBACK')
       }
-      await client.release()
+      client.release()
       throw e
     }
-    await client.release()
+    client.release()
     return result
   }
 }

@@ -123,9 +123,7 @@ export async function scrapeInsert(scrape: Scrape) {
       /'/g,
       `''`
     )
-    console.log('go', data)
     await db.connect()
-    console.log('now')
     const result = await db.query(`
       INSERT INTO scrape (
         time,

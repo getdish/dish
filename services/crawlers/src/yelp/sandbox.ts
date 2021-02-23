@@ -1,10 +1,5 @@
 import { Yelp } from './Yelp'
 
-async function main() {
-  const t = new Yelp()
-  await t.runOnWorker('allForCity', ['San Francisco, CA'])
-}
-
 async function one() {
   try {
     const range = 0.001
