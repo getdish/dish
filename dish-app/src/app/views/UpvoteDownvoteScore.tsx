@@ -108,7 +108,7 @@ export const Score = memo(
       >
         {votable && (
           <>
-            <AbsoluteVStack zIndex={10} top={-15}>
+            <AbsoluteVStack zIndex={-1} top={-15}>
               {subtle ? (
                 upvote
               ) : (
@@ -121,7 +121,7 @@ export const Score = memo(
                 </Tooltip>
               )}
             </AbsoluteVStack>
-            <AbsoluteVStack zIndex={10} bottom={-15}>
+            <AbsoluteVStack zIndex={-1} bottom={-15}>
               {subtle ? (
                 downvote
               ) : (

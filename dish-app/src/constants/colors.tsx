@@ -85,11 +85,11 @@ export const allColorsPastel = [
   purplePastel,
 ]
 
-export const darkYellow = '#8C761D'
+export const darkYellow = '#8C7C3C'
 export const darkPink = '#8C2347'
 export const darkGreen = `#1D783A`
 export const darkRed = `#7D1E1E`
-export const darkOrange = `#804921`
+export const darkOrange = `#804F2D`
 export const darkBlue = `#1D3A7A`
 export const darkPurple = `#572685`
 export const allDarkColor = [

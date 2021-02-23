@@ -12,7 +12,7 @@ import { Dimensions } from 'react-native'
 import { useGet } from 'snackui'
 
 import { blue, darkPurple, darkRed, red } from '../constants/colors'
-import { MAPBOX_ACCESS_TOKEN } from '../constants/constants'
+import { MAPBOX_ACCESS_TOKEN, isM1Sim } from '../constants/constants'
 import { hexToRGB } from '../helpers/hexToRGB'
 import { hasMovedAtLeast } from '../helpers/mapHelpers'
 import { useIsMountedRef } from '../helpers/useIsMountedRef'
@@ -52,6 +52,11 @@ type MapInternalState = {
 }
 
 export const MapView = (props: MapProps) => {
+  if (isM1Sim) {
+    // bug: https://github.com/mapbox/mapbox-gl-js/issues/10260
+    return null
+  }
+
   const {
     center,
     span,

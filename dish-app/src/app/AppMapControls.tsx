@@ -89,13 +89,13 @@ const ToggleRegionButton = memo(() => {
     <OverlayLinkButton onPress={toggleSearchRegion}>
       <HStack pointerEvents="none" alignItems="center" spacing="sm">
         <Text userSelect="none" fontSize={12}>
-          Region
+          Area
         </Text>
         <VStack transform={[{ scale: 0.8 }]}>
           <Switch value={!searchRegion} />
         </VStack>
         <Text userSelect="none" fontSize={12}>
-          Map
+          All
         </Text>
       </HStack>
     </OverlayLinkButton>

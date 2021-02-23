@@ -291,6 +291,7 @@ function getOrCreateStoreInfo(
         console.warn(
           'Error: Stores must have a unique name (ignore if this is a hot reload)'
         )
+        cache.set(uid, StoreKlass.toString())
       }
       return cached
     }

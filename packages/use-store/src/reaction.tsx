@@ -2,6 +2,12 @@ import { UNWRAP_PROXY } from './constants'
 import { isEqualSubsetShallow } from './isEqualShallow'
 import { Store } from './Store'
 
+const dispose = (d: any) => {
+  if (typeof d === 'function') {
+    d()
+  }
+}
+
 export function reaction<
   StoreInstance extends Store,
   Selector extends (a: StoreInstance) => any
@@ -15,15 +21,10 @@ export function reaction<
 ) {
   let last: any = undefined
   let innerDispose: any
-  const disposeInner = () => {
-    if (typeof innerDispose === 'function') {
-      innerDispose()
-    }
-  }
 
   function updateReaction() {
     const next = selector(store)
-    disposeInner()
+    dispose(innerDispose)
     if (!equalityFn(last, next)) {
       if (process.env.NODE_ENV === 'development') {
         console.groupCollapsed(
@@ -46,6 +47,6 @@ export function reaction<
 
   return () => {
     disposeSubscribe()
-    disposeInner()
+    dispose(innerDispose)
   }
 }

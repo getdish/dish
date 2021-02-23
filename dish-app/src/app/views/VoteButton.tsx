@@ -32,12 +32,13 @@ export const VoteButton = ({
   const theme = useTheme()
   const scale = media.sm ? 1.1 : 1
   const [hovered, setHovered] = useState(false)
-  const translateDir = shadowDirection === 'up' ? -1 : 1
+  const isUp = shadowDirection === 'up'
+  const translateDir = isUp ? -1 : 1
   return (
     <VStack
       position="relative"
-      width={22 * scale}
-      height={22 * scale}
+      width={24 * scale}
+      height={24 * scale}
       borderRadius={100}
       alignItems="center"
       justifyContent="center"
@@ -57,12 +58,13 @@ export const VoteButton = ({
         color={hovered ? hoverColor ?? '#000' : color ?? '#ccc'}
       />
       <AbsoluteVStack
-        top={translateDir * 10}
-        left={-10}
-        right={-10}
-        bottom={-translateDir * 10}
+        top={translateDir * 8}
+        left={-8}
+        right={-8}
+        bottom={-translateDir * 8}
         // transform={[{ translateY:  }]}
         overflow="hidden"
+        // backgroundColor="rgba(0,0,0,0.2)"
       >
         <AbsoluteVStack
           top={0}

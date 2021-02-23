@@ -1,4 +1,6 @@
-import { Store, getStore, reaction } from '@dish/use-store'
+import { series, sleep } from '@dish/async'
+import { assertPresent } from '@dish/helpers/src'
+import { Store, getStore, reaction, useStoreInstance } from '@dish/use-store'
 import React, {
   Suspense,
   createContext,
@@ -9,11 +11,12 @@ import React, {
   useState,
 } from 'react'
 import { ScrollView, ScrollViewProps, StyleSheet } from 'react-native'
-import { VStack, getMedia, useMedia } from 'snackui'
+import { VStack, combineRefs, getMedia, useMedia } from 'snackui'
 
 import { isWeb } from '../../constants/constants'
 import { supportsTouchWeb } from '../../constants/platforms'
 import { drawerStore } from '../drawerStore'
+import { homeStore } from '../homeStore'
 
 type ScrollLock = 'horizontal' | 'vertical' | 'none'
 
@@ -121,6 +124,22 @@ type ContentScrollViewProps = ScrollViewProps & {
   onScrollYThrottled?: Function
 }
 
+let last
+const cancelIfDragging = (e) => {
+  console.log('drawerStore.isDragging', drawerStore.isDragging)
+  if (drawerStore.isDragging) {
+    e.preventDefault()
+    const node = (e.currentTarget as any) as HTMLDivElement
+    if (node.style.overflow !== 'hidden') {
+      last = node.style.overflow
+    }
+    node.style.overflow = 'hidden'
+    setTimeout(() => {
+      node.style.overflow = last
+    }, 100)
+  }
+}
+
 export const ContentScrollView = forwardRef<ScrollView, ContentScrollViewProps>(
   ({ children, onScrollYThrottled, style, id, ...props }, ref) => {
     // this updates when drawer moves to top
@@ -173,6 +192,21 @@ export const ContentScrollView = forwardRef<ScrollView, ContentScrollViewProps>(
 
     // memo because preventScrolling changes on media queries
     const childrenMemo = useMemo(() => children, [children])
+    const scrollRef = useRef<ScrollView | null>(null)
+
+    // useEffect(() => {
+    //   const view =scrollRef.current
+    //   scrollViews.add(view)
+    //   return () => {
+    //     scrollViews.delete(view)
+    //   }
+    // }, [])
+
+    // const drawerStore_ = useStoreInstance(drawerStore)
+
+    // useEffect(() => {
+    //   console.log('drawerStore_.isDragging', drawerStore_.isDragging)
+    // }, [drawerStore_.isDragging])
 
     return (
       <ContentScrollContext.Provider value={id}>
@@ -182,9 +216,16 @@ export const ContentScrollView = forwardRef<ScrollView, ContentScrollViewProps>(
           pointerEvents={preventScrolling ? 'none' : 'auto'}
         >
           <ScrollView
-            ref={ref}
+            ref={combineRefs(scrollRef, ref)}
             {...props}
             onScroll={setIsScrolling}
+            {...(supportsTouchWeb && {
+              onTouchMove: cancelIfDragging,
+              onTouchStart: cancelIfDragging,
+            })}
+            // for native...
+            // bounces={false}
+            // bouncesZoom={false}
             scrollEventThrottle={16}
             scrollEnabled={!preventScrolling}
             disableScrollViewPanResponder={preventScrolling}
@@ -206,6 +247,5 @@ const styles = StyleSheet.create({
     flex: 1,
     height: '100%',
     maxHeight: '100%',
-    overflow: 'scroll',
   },
 })
