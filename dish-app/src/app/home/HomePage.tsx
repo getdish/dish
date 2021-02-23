@@ -23,7 +23,7 @@ import { getColorsForName } from '../../helpers/getColorsForName'
 import { queryClient } from '../../helpers/queryClient'
 import { router, useIsRouteActive } from '../../router'
 import { HomeStateItemHome } from '../../types/homeTypes'
-import { cancelUpdateRegion } from '../AppMapStore'
+import { appMapStore, cancelUpdateRegion } from '../AppMapStore'
 import { useHomeStore } from '../homeStore'
 import { useLocalStorageState } from '../hooks/useLocalStorageState'
 import { CloseButton } from '../views/CloseButton'
@@ -53,18 +53,6 @@ export default memo(function HomePage(
   })
   const [position, setPosition] = useState<MapPosition>(initialPosition)
   const regionColors = getColorsForName(props.item.region)
-  // const navLinks: LinkButtonProps[] = [
-  //   {
-  //     name: 'homeRegion',
-  //     params: { region: state.region, section: '' },
-  //     children: 'Hot',
-  //   },
-  //   {
-  //     name: 'homeRegion',
-  //     params: { region: state.region, section: 'new' },
-  //     children: 'New',
-  //   },
-  // ]
   const region = regionResponse.data
   const { center, span } = region ?? {}
 
@@ -87,9 +75,13 @@ export default memo(function HomePage(
     if (!isActive) return
     if (!region || !center || !span) return
     if (region.slug !== state.region) return
+    setIsLoaded(true)
+    if (appMapStore.lastRegion?.region.via !== 'url') {
+      console.warn('avoid map zoom unless coming from external')
+      return
+    }
     cancelUpdateRegion()
     setPosition({ center, span })
-    setIsLoaded(true)
   }, [isActive, isLoaded, JSON.stringify([center, span])])
 
   useEffect(() => {

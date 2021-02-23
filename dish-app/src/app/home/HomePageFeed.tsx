@@ -1,15 +1,10 @@
 import { RestaurantOnlyIds, graphql } from '@dish/graph'
 import { isPresent } from '@dish/helpers'
 import React, { Suspense, memo, useMemo, useState } from 'react'
-import { Dimensions } from 'react-native'
-import { Hoverable, LoadingItems, VStack } from 'snackui'
+import { Hoverable, LoadingItems } from 'snackui'
 
 import { useSetAppMap } from '../AppMapStore'
-import {
-  FICuisine,
-  HomeFeedCuisineItem,
-  useFeedTopCuisines,
-} from './HomeFeedCuisineItem'
+import { FICuisine, HomeFeedCuisineItem } from './HomeFeedCuisineItem'
 import {
   FIDishRestaurants,
   HomeFeedDishRestaurants,
@@ -36,7 +31,6 @@ function useHomeFeed(props: HomeFeedProps): FI[] {
         id: `0`,
         type: 'list',
         region: item.region,
-        rank: -3,
         title: `Lists`,
       } as FIList,
       ...dishItems,
@@ -129,7 +123,7 @@ export const HomePageFeed = memo(
         const item = items[index]
         return (
           <Hoverable
-            key={item.id}
+            key={item.id + index}
             onHoverIn={() => {
               setHovered(item.id)
             }}

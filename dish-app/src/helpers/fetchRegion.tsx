@@ -23,7 +23,7 @@ export const fetchRegion = async (slug?: string | null) => {
       let response: RegionNormalized = {
         ...res,
         center: coordsToLngLat(centerAt),
-        span: padLngLat(polygonToLngLat(res.bbox)),
+        span: polygonToLngLat(res.bbox),
       }
       if (statePrefixRe.test(response.name)) {
         response = {

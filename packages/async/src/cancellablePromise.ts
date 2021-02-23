@@ -29,6 +29,7 @@ export const createCancellablePromise = <A>(
       canceller = onCancel
     })
   })
+  promise['cancel'] = canceller
   cancelsMap.set(promise, canceller)
   return promise as CancellablePromise<A>
 }

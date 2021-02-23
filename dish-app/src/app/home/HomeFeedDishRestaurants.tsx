@@ -36,13 +36,13 @@ export function useFeedDishItems(
               _st_within: bbox,
             },
           },
-          order_by: [{ upvotes: order_by.asc }],
-          limit: 20,
+          order_by: [{ upvotes: order_by.desc_nulls_last }],
+          limit: 12,
         })
         .flatMap((r) => {
           return r
             .tags({
-              limit: 8,
+              limit: 6,
               where: {
                 tag: {
                   type: {
@@ -50,26 +50,21 @@ export function useFeedDishItems(
                   },
                 },
               },
-              order_by: [{ upvotes: order_by.asc }],
+              order_by: [{ upvotes: order_by.desc_nulls_last }],
             })
             .map(selectRishDishViewSimple)
         })
     : []
 
   const key = `${popularDishTags.map((x) => x.id)}`
+
   return useMemo(() => {
     if (!region) {
       return []
     }
-    const topDishes = sortBy(
-      groupBy(
-        uniqBy(popularDishTags, (x) => x.slug),
-        (x) => x.slug
-      ),
-      (x) => -x.length
-    )
-      .slice(0, 5)
-      .map((x) => x[0])
+    const grouped = groupBy(popularDishTags, (x) => x.slug)
+    const sorted = sortBy(grouped, (x) => -x.length)
+    const topDishes = sorted.slice(0, 5).map((x) => x[0])
     return topDishes.map((tag, index) => {
       return {
         id: `dish-restaurant-${tag.name}`,
@@ -77,7 +72,6 @@ export function useFeedDishItems(
         title: `Known for ${tag.name}`,
         type: 'dish-restaurants',
         expandable: true,
-        rank: index + (index % 2 ? 10 : 0),
         tag,
       }
     })
@@ -156,7 +150,7 @@ export const HomeFeedDishRestaurants = graphql(
           </SkewedCardCarousel>
         </>
       )
-    }, [])
+    }, [tag, restaurants.length])
 
     return (
       <ContentSectionHoverable

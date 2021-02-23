@@ -62,7 +62,6 @@ export function useHomeFeedTrendingNew(props: HomeFeedProps): FIHotNew[] {
         id: '1',
         type: 'new',
         size: 'sm',
-        rank: -2,
         title: 'New',
         restaurants: getGraphResults(newest),
         status,
@@ -73,7 +72,6 @@ export function useHomeFeedTrendingNew(props: HomeFeedProps): FIHotNew[] {
         type: 'hot',
         size: 'sm',
         title: 'Trending',
-        rank: -1,
         restaurants: getGraphResults(trending),
         status,
         expandable: false,
@@ -114,7 +112,7 @@ export const HomeFeedTrendingNew = memo(
                 paddingHorizontal={40}
                 flexWrap="nowrap"
               >
-                <HStack spacing={6}>
+                <HStack spacing={14}>
                   <VStack width={props.type == 'hot' ? 60 : 30} />
 
                   {restaurants.map((r, index) => {
