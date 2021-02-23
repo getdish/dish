@@ -23,6 +23,8 @@ ssh \
 
 set -e
 
+docker system prune --force
+
 cd /app
 git checkout staging
 
