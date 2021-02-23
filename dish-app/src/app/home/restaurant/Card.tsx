@@ -178,6 +178,7 @@ export function Card({
             spacing
             width="100%"
             height="100%"
+            contain="strict"
           >
             <HStack width="100%">
               {!!padTitleSide &&

@@ -50,7 +50,7 @@ export const SkewedCard = ({ children, ...props }: StackProps) => {
 export const SkewedCardCarousel = ({ children }: { children: any }) => {
   return (
     <ContentScrollViewHorizontal>
-      <HStack paddingVertical={5}>
+      <HStack contain="paint" paddingVertical={5}>
         {children}
         <VStack width={100} height={100} />
       </HStack>
