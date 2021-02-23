@@ -1,16 +1,6 @@
-import { supportsTouchWeb } from '@dish/helpers'
-import { assertPresent } from '@dish/helpers'
-import { assert } from '@dish/helpers'
+import { assertPresent, supportsTouchWeb } from '@dish/helpers'
 import { getStore, useStoreSelector } from '@dish/use-store'
-import { setWith } from 'lodash'
-import React, {
-  memo,
-  useContext,
-  useEffect,
-  useMemo,
-  useRef,
-  useState,
-} from 'react'
+import React, { useContext, useEffect, useMemo, useRef, useState } from 'react'
 import { ScrollView, ScrollViewProps, StyleSheet } from 'react-native'
 import { VStack, useDebounce } from 'snackui'
 

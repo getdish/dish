@@ -64,14 +64,14 @@ export const CardFrame = ({
         square && {
           height: cardFrameWidthSm,
         })}
-      {...(hoverable && {
-        hoverStyle: {
-          transform: [{ scale: 1.015 }],
-        },
-        pressStyle: {
-          transform: [{ scale: 0.95 }],
-        },
-      })}
+      // {...(hoverable && {
+      //   hoverStyle: {
+      //     transform: [{ scale: 1.015 }],
+      //   },
+      //   pressStyle: {
+      //     transform: [{ scale: 0.95 }],
+      //   },
+      // })}
     >
       {children}
     </VStack>

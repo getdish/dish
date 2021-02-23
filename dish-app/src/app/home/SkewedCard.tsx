@@ -4,13 +4,11 @@ import { HStack, StackProps, VStack } from 'snackui'
 import { cardFrameBorderRadius } from '../../constants/constants'
 import { ContentScrollViewHorizontal } from '../views/ContentScrollViewHorizontal'
 
-// TODO merge these two using SnackUI scaling once ready
-
 export const SkewedCard = ({ children, ...props }: StackProps) => {
   return (
     <VStack
       marginRight={-60}
-      className="ease-in-out-fast"
+      className="disable-hover-touch ease-in-out-fast"
       borderRadius={cardFrameBorderRadius}
       shadowColor="#000"
       shadowOpacity={0.14}

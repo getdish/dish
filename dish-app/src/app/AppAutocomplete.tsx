@@ -123,30 +123,27 @@ export const autocompleteSearchStore = createStore(AutocompleteStore, {
 export const useAppAutocompleteEffects = () => {
   const autocompletes = useStoreInstance(autocompletesStore)
 
-  if (isNative) {
-    useEffect(() => {
-      // debounce to go after press event
-      const handleHide = debounce(() => {
-        console.log('handleHideKeyboard')
-        if (autocompletes.visible) {
-          autocompletes.setVisible(false)
-        }
-        if (drawerStore.snapIndex === 0) {
-          drawerStore.setSnapIndex(1)
-        }
-      }, 100)
-      const handleShow = () => {
-        console.log('handleShowKeyboard')
-        handleHide.cancel()
+  useEffect(() => {
+    // debounce to go after press event
+    const handleHide = debounce(() => {
+      if (autocompletes.visible) {
+        autocompletes.setVisible(false)
       }
-      Keyboard.addListener('keyboardDidHide', handleHide)
-      Keyboard.addListener('keyboardWillShow', handleShow)
-      return () => {
-        Keyboard.removeListener('keyboardDidHide', handleHide)
-        Keyboard.removeListener('keyboardWillShow', handleShow)
+      if (drawerStore.snapIndex === 0) {
+        drawerStore.setSnapIndex(1)
       }
-    }, [])
-  }
+    }, 100)
+    const handleShow = () => {
+      console.log('handleShowKeyboard')
+      handleHide.cancel()
+    }
+    Keyboard.addListener('keyboardDidHide', handleHide)
+    Keyboard.addListener('keyboardWillShow', handleShow)
+    return () => {
+      Keyboard.removeListener('keyboardDidHide', handleHide)
+      Keyboard.removeListener('keyboardWillShow', handleShow)
+    }
+  }, [])
 
   const curPage = useRouterCurPage()
   useEffect(() => {
@@ -154,16 +151,16 @@ export const useAppAutocompleteEffects = () => {
   }, [curPage])
 }
 
-const ThemeTranslucent = (props: { children: any }) => {
-  const theme = useTheme()
-  return (
-    <Theme
-      name={theme.name === 'light' ? 'lightTranslucent' : 'darkTranslucent'}
-    >
-      {props.children}
-    </Theme>
-  )
-}
+// const ThemeTranslucent = (props: { children: any }) => {
+//   const theme = useTheme()
+//   return (
+//     <Theme
+//       name={theme.name === 'light' ? 'lightTranslucent' : 'darkTranslucent'}
+//     >
+//       {props.children}
+//     </Theme>
+//   )
+// }
 
 export const AppAutocompleteSearch = () => {
   const autocompletes = useStoreInstance(autocompletesStore)
