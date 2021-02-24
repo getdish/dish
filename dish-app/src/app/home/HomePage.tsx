@@ -1,5 +1,5 @@
 import { MapPosition, slugify } from '@dish/graph'
-import React, { memo, useEffect, useState } from 'react'
+import React, { memo, useEffect, useMemo, useState } from 'react'
 import {
   AbsoluteVStack,
   HStack,
@@ -58,7 +58,7 @@ export default memo(function HomePage(
 
   if (process.env.NODE_ENV === 'development') {
     // prettier-ignore
-    console.log('👀 HomePage', state.region, { position, isLoaded, props, region, state, isActive, center, span })
+    console.log('👀 HomePage', state.region, { position, item: props.item, region, state, isActive, center, span })
   }
 
   // on load home clear search effect!
@@ -76,9 +76,12 @@ export default memo(function HomePage(
     if (!region || !center || !span) return
     if (region.slug !== state.region) return
     setIsLoaded(true)
-    if (appMapStore.lastRegion?.region.via !== 'url') {
-      console.warn('avoid map zoom unless coming from external')
-      return
+    if (appMapStore.lastRegion) {
+      const via = appMapStore.lastRegion.region.via
+      if (via !== 'url') {
+        console.warn('avoid map zoom unless coming from external', via)
+        return
+      }
     }
     cancelUpdateRegion()
     setPosition({ center, span })
@@ -118,6 +121,49 @@ export default memo(function HomePage(
 
   const regionName = region?.name ?? '...'
 
+  const homeHeaderContent = useMemo(() => {
+    return (
+      <>
+        <HomeTopSpacer />
+        <Spacer size="md" />
+        <HStack marginBottom={-20}>
+          <ContentScrollViewHorizontal>
+            <HStack
+              alignItems="center"
+              paddingVertical={12}
+              paddingBottom={25}
+              paddingHorizontal={10}
+            >
+              <VStack position="relative">
+                <SlantedTitle
+                  minWidth={100}
+                  backgroundColor={regionColors.color}
+                  color="#fff"
+                  size={
+                    regionName.length > 24
+                      ? 'xs'
+                      : regionName.length > 17
+                      ? 'sm'
+                      : regionName.length > 14
+                      ? 'md'
+                      : regionName.length > 8
+                      ? 'lg'
+                      : 'xl'
+                  }
+                >
+                  {regionName}
+                </SlantedTitle>
+              </VStack>
+              <HomeTopSearches />
+            </HStack>
+          </ContentScrollViewHorizontal>
+        </HStack>
+        <Spacer size="lg" />
+        <HomePageIntroDialogue />
+      </>
+    )
+  }, [regionColors, regionName])
+
   return (
     <>
       <PageTitleTag>Dish - Uniquely Good Food</PageTitleTag>
@@ -155,46 +201,7 @@ export default memo(function HomePage(
         <ContentScrollView id="home">
           <VStack flex={1} overflow="hidden" maxWidth="100%">
             <VStack>
-              <HomeTopSpacer />
-
-              <Spacer size="md" />
-
-              <HStack marginBottom={-20}>
-                <ContentScrollViewHorizontal>
-                  <HStack
-                    alignItems="center"
-                    paddingVertical={12}
-                    paddingBottom={25}
-                    paddingHorizontal={10}
-                  >
-                    <VStack position="relative">
-                      <SlantedTitle
-                        minWidth={100}
-                        backgroundColor={regionColors.color}
-                        color="#fff"
-                        size={
-                          regionName.length > 24
-                            ? 'xs'
-                            : regionName.length > 17
-                            ? 'sm'
-                            : regionName.length > 14
-                            ? 'md'
-                            : regionName.length > 8
-                            ? 'lg'
-                            : 'xl'
-                        }
-                      >
-                        {regionName}
-                      </SlantedTitle>
-                    </VStack>
-                    <HomeTopSearches />
-                  </HStack>
-                </ContentScrollViewHorizontal>
-              </HStack>
-
-              <Spacer size="lg" />
-
-              <HomePageIntroDialogue />
+              {homeHeaderContent}
 
               <PageContentWithFooter>
                 {isLoaded && (

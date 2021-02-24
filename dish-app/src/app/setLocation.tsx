@@ -19,7 +19,6 @@ export async function setLocation(val: string) {
     const curState = homeStore.currentState
     const center = exact.center
     const span = exact.span
-    console.log('need to set info', val)
     appMapStore.setPosition(exact)
     setDefaultLocation({
       center,

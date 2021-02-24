@@ -26,7 +26,9 @@ curl 'https://6rw3mhsrsb.execute-api.us-west-2.amazonaws.com/fireprox/search?q=k
    -H 'User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101 Firefox/78.0'
 */
 
-if (!process.env.GOOGLE_SEARCH_PROXY) throw 'No GOOGLE_SEARCH_PROXY'
+if (!process.env.GOOGLE_SEARCH_PROXY) {
+  throw new Error('No GOOGLE_SEARCH_PROXY')
+}
 
 const axios = axios_base.create({
   baseURL: process.env.GOOGLE_SEARCH_PROXY + 'search',
@@ -107,8 +109,8 @@ export class GoogleImages extends WorkerJob {
     const updated_dish = {
       id: dish.id,
       default_images,
+      default_image: default_images[0],
     }
-
     await tagUpdate(updated_dish)
   }
 
