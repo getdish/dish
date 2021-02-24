@@ -1,4 +1,4 @@
-import { restaurantFindOne, restaurantInsert } from '@dish/graph/'
+import { ZeroUUID, restaurantFindOne, restaurantInsert } from '@dish/graph/'
 
 import { GoogleGeocoder } from './GoogleGeocoder'
 import { scrapeFindOneBySourceID } from './scrape-helpers'
@@ -47,7 +47,7 @@ async function findExistingCanonical(
   address: string
 ): Promise<string | undefined> {
   const scrape = await scrapeFindOneBySourceID(source, id_from_source, true)
-  if (scrape && scrape.restaurant_id) {
+  if (scrape && scrape.restaurant_id !== ZeroUUID) {
     return scrape.restaurant_id
   }
   const geocoder = new GoogleGeocoder()
@@ -58,5 +58,7 @@ async function findExistingCanonical(
     if (restaurant) {
       return restaurant.id
     }
+  } else {
+    console.error(`No google id ${query} ${lat} ${lon}`)
   }
 }

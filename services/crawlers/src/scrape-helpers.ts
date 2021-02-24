@@ -119,7 +119,6 @@ export async function latestScrapeForRestaurant(
 
 export async function scrapeInsert(scrape: Scrape) {
   try {
-    console.log('inserting scrape')
     const data = JSON.stringify(ensureJSONSyntax(scrape.data)).replace(
       /'/g,
       `''`
@@ -146,7 +145,7 @@ export async function scrapeInsert(scrape: Scrape) {
       RETURNING id;
     `)
     const res = result.rows[0].id as string
-    console.log('inserted', result)
+    console.log('inserted', result.rows)
     return res
   } catch (err) {
     console.error(`Error inserting scrape`, err)

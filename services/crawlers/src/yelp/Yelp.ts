@@ -2,7 +2,7 @@ import url from 'url'
 
 import { sleep } from '@dish/async'
 import { sentryMessage } from '@dish/common'
-import { ZeroUUID } from '@dish/graph'
+import { ZeroUUID, restaurantFindOne } from '@dish/graph'
 import { ProxiedRequests, WorkerJob } from '@dish/worker'
 import { JobOptions, QueueOptions } from 'bull'
 import _ from 'lodash'
@@ -75,7 +75,7 @@ export class Yelp extends WorkerJob {
     top_right: readonly [number, number],
     bottom_left: readonly [number, number],
     start = 0,
-    only = ''
+    onlyName = ''
   ) {
     const PER_PAGE = 30
     const coords = [
@@ -96,7 +96,7 @@ export class Yelp extends WorkerJob {
     }
 
     let found_the_one = false
-    this.find_only = only
+    this.find_only = onlyName
 
     if (!componentsList.length) {
       console.error('searchPageProps.searchResultsProps: ', uri, response?.data)
@@ -117,15 +117,15 @@ export class Yelp extends WorkerJob {
         continue
       }
       const name = data.searchResultBusiness.name
-      if (only != '' && name != only) {
+      if (onlyName != '' && name != onlyName) {
         console.log('YELP SANDBOX: Skipping ' + name)
         continue
       }
-      if (name == only) {
+      if (name == onlyName) {
         found_the_one = true
         console.log('YELP SANDBOX: found ' + name)
       }
-      const timeout = sleep(2000)
+      const timeout = sleep(8000)
       await Promise.race([
         this.getRestaurant(data),
         timeout.then(() => {
@@ -144,36 +144,38 @@ export class Yelp extends WorkerJob {
           top_right,
           bottom_left,
           next_page,
-          only,
+          onlyName,
         ])
       }
     }
 
-    if (only && !found_the_one) {
+    if (onlyName && !found_the_one) {
       console.log('error componentsList', uri, componentsList)
-      throw new Error(`Couldn't find ${only}`)
+      throw new Error(`Couldn't find ${onlyName}`)
     }
 
     console.log('YELP: done with getRestaurants')
   }
 
   async getRestaurant(data: ScrapeData) {
-    if (data.searchResultBusiness) {
-      let biz_page: string
-      const id = await this.saveDataFromMapSearch(data)
-      const full_uri = url.parse(data.searchResultBusiness.businessUrl, true)
-      if (full_uri.query.redirect_url) {
-        biz_page = decodeURI(full_uri.query.redirect_url as string)
-      } else {
-        biz_page = data.searchResultBusiness.businessUrl
-      }
-      const biz_page_uri = url.parse(biz_page, true)
-      await this.runOnWorker('getEmbeddedJSONData', [
-        id,
-        biz_page_uri.path,
-        data.bizId,
-      ])
+    if (!data.searchResultBusiness) {
+      console.warn('no data.searchResultBusiness')
+      return
     }
+    let biz_page: string
+    const id = await this.saveDataFromMapSearch(data)
+    const full_uri = url.parse(data.searchResultBusiness.businessUrl, true)
+    if (full_uri.query.redirect_url) {
+      biz_page = decodeURI(full_uri.query.redirect_url as string)
+    } else {
+      biz_page = data.searchResultBusiness.businessUrl
+    }
+    const biz_page_uri = url.parse(biz_page, true)
+    await this.runOnWorker('getEmbeddedJSONData', [
+      id,
+      biz_page_uri.path,
+      data.bizId,
+    ])
   }
 
   async saveDataFromMapSearch(data: ScrapeData) {
@@ -211,7 +213,7 @@ export class Yelp extends WorkerJob {
       }
     }
     if (!('mapBoxProps' in data)) {
-      const message = "YELP: Couldn't extract embedded data"
+      const message = "YELP: Error Couldn't extract embedded data"
       sentryMessage(message, { path: yelp_path })
       console.log(message)
       return
@@ -234,8 +236,9 @@ export class Yelp extends WorkerJob {
       scrape.data.data_from_map_search.name,
       scrape.data.data_from_map_search.formattedAddress
     )
-    if (this.find_only)
-      console.log(`ID for ${this.find_only} is ${restaurant_id}`)
+    if (this.find_only) {
+      console.log(`Slug for ${this.find_only} is ${restaurant_id}`)
+    }
     scrape.location = {
       lon: lon,
       lat: lat,

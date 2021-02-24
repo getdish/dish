@@ -1,6 +1,11 @@
+import '@dish/helpers/polyfill'
+
 import { UpdateSearchEndpoint } from './UpdateSearchEndpoint'
-;(async () => {
+
+async function main() {
   const updater = new UpdateSearchEndpoint()
   await updater.getNewSearchEndpoint()
-  process.exit()
-})()
+  process.exit(0)
+}
+
+main()

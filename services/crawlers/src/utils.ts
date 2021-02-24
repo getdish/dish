@@ -1,5 +1,6 @@
 import '@dish/common'
 
+import { sleep } from '@dish/async'
 import { sentryException } from '@dish/common'
 import { Restaurant, settingGet, settingSet } from '@dish/graph'
 import axios from 'axios'
@@ -27,9 +28,8 @@ export const CITY_LIST = [
 
 export class DB {
   pool: Pool
-  client: PoolClient | null = null
 
-  constructor(public config: object) {
+  constructor(public config: Object) {
     if (process.env.DEBUG) {
       console.log('setup db', config)
     }
@@ -57,35 +57,48 @@ export class DB {
 
   static async one_query_on_main(query: string) {
     const db = DB.main_db()
-    await db.connect()
     const result = await db.query(query)
-    await db.pool?.end()
+    // await db.pool?.end()
     return result
   }
 
   async connect() {
-    if (this.client) {
-      return this.client
-    }
-    this.client = await this.pool.connect()
-    return this.client
+    return await this.pool.connect()
   }
 
   async query(query: string) {
+    if (process.env.DEBUG) {
+      console.log('DB.query', this.config['port'], query)
+    }
     let result: QueryResult
     const client = await this.connect()
     try {
-      result = await client.query(query)
+      const timeout = sleep(8000)
+      const res = await Promise.race([
+        client.query(query),
+        timeout.then(() => {
+          console.error(`Timed out on query`, query)
+          return 'timed_out'
+        }),
+      ] as const)
+      if (res === 'timed_out') {
+        throw new Error(`Timed out`)
+      }
+      timeout.cancel()
+      result = res as any
     } catch (e) {
       console.error('Errored query: ' + query)
       console.error(e.message)
       if (query.includes('BEGIN;') || query.includes('TRANSACTION;')) {
         await client.query('ROLLBACK')
       }
-      // client.release()
       throw e
+    } finally {
+      client.release()
     }
-    // client.release()
+    if (process.env.DEBUG) {
+      console.log(' DB.query response', result.rowCount, result.rows)
+    }
     return result
   }
 }

@@ -1,3 +1,5 @@
+import '@dish/helpers/polyfill'
+
 import { restaurantFindOne } from '@dish/graph'
 
 import { DB } from '../utils'
@@ -6,6 +8,7 @@ import { Self } from './Self'
 
 async function one() {
   const slug = process.env.SLUG || ''
+  console.log('one', slug)
   const restaurant = await restaurantFindOne({
     slug,
   })
@@ -58,28 +61,34 @@ async function gpt3_many(query: string) {
   }
 }
 
-if (process.env.SLUG) {
-  one()
+async function main() {
+  if (process.env.SLUG) {
+    await one()
+  }
+
+  if (process.env.ALL == '1') {
+    await all()
+  }
+
+  if (process.env.QUERY) {
+    await query()
+  }
+
+  if (process.env.GPT3) {
+    await gpt3_one()
+  }
+
+  if (process.env.GPT3_TOP_100) {
+    const query = `
+      SELECT id FROM restaurant
+        WHERE address LIKE '%Francisco%'
+      ORDER BY score DESC NULLS LAST
+      LIMIT 1
+    `
+    await gpt3_many(query)
+  }
 }
 
-if (process.env.ALL == '1') {
-  all()
-}
-
-if (process.env.QUERY) {
-  query()
-}
-
-if (process.env.GPT3) {
-  gpt3_one()
-}
-
-if (process.env.GPT3_TOP_100) {
-  const query = `
-    SELECT id FROM restaurant
-      WHERE address LIKE '%Francisco%'
-    ORDER BY score DESC NULLS LAST
-    LIMIT 1
-  `
-  gpt3_many(query)
-}
+main().then(() => {
+  process.exit(0)
+})
