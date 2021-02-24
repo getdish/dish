@@ -3,11 +3,7 @@ import { isPresent } from '@dish/helpers'
 
 import { MAPBOX_ACCESS_TOKEN } from '../constants/constants'
 import { GeocodePlace } from '../types/homeTypes'
-import {
-  AutocompleteItem,
-  AutocompleteItemFull,
-  createAutocomplete,
-} from './createAutocomplete'
+import { AutocompleteItemFull, createAutocomplete } from './createAutocomplete'
 
 const baseUrl = `https://api.mapbox.com/geocoding/v5/mapbox.places`
 
@@ -31,7 +27,18 @@ export async function searchLocations(
   return res.features
     .map((feat) => {
       if (feat.bbox) {
-        const [minLng, minLat, maxLng, maxLat] = feat.bbox
+        const [lng1, lat1, lng2, lat2] = feat.bbox
+        const maxLng = Math.max(lng1, lng2)
+        const minLng = Math.min(lng1, lng2)
+        const maxLat = Math.max(lat1, lat2)
+        const minLat = Math.min(lat1, lat2)
+        const lngDist = (Math.abs(maxLng) - Math.abs(minLng)) / 2
+        const latDist = (Math.abs(maxLat) - Math.abs(minLat)) / 2
+        const span = {
+          lng: lngDist,
+          lat: latDist,
+        }
+        console.log('bbox', feat.bbox, span, lngDist, latDist)
         return {
           name: feat.text,
           fullName: feat.place_name,
@@ -41,10 +48,7 @@ export async function searchLocations(
             lng: feat.center[0],
             lat: feat.center[1],
           },
-          span: {
-            lng: feat.center[0] - (maxLng - minLng) / 2,
-            lat: feat.center[1] - (maxLat - minLat) / 2,
-          },
+          span,
           state: feat.context?.find((x) => x.wikidata === 'Q99'),
           country: feat.context?.find((x) => x.wikidata === 'Q30'),
         }

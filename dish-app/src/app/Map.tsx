@@ -11,7 +11,7 @@ import React, { useEffect, useRef, useState } from 'react'
 import { Dimensions } from 'react-native'
 import { useGet } from 'snackui'
 
-import { blue, darkPurple, darkRed, red } from '../constants/colors'
+import { darkPurple, red } from '../constants/colors'
 import { MAPBOX_ACCESS_TOKEN, isM1Sim } from '../constants/constants'
 import { hexToRGB } from '../helpers/hexToRGB'
 import { hasMovedAtLeast } from '../helpers/mapHelpers'

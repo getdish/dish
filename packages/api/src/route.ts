@@ -48,10 +48,13 @@ export function bodyParsedRoute(fn: Handler, opts?: BodyParseOpts) {
 
 export const jsonRoute = (fn: Handler, opts?: BodyParseOptsJSON['json']) =>
   bodyParsedRoute(fn, { json: opts })
+
 export const rawRoute = (fn: Handler, opts?: BodyParseOptsRaw['raw']) =>
   bodyParsedRoute(fn, { raw: opts })
+
 export const textRoute = (fn: Handler, opts?: BodyParseOptsText['text']) =>
   bodyParsedRoute(fn, { text: opts })
+
 export const urlEncodedRoute = (
   fn: Handler,
   opts?: BodyParseOptsURLEncoded['urlEncoded']

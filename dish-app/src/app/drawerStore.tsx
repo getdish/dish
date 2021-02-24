@@ -11,6 +11,7 @@ class DrawerStore extends Store {
   isDragging = false
   pan = new Animated.Value(this.getSnapPointOffset())
   spring: Animated.CompositeAnimation | null = null
+  lastSnapAt = Date.now()
 
   get currentSnapPoint() {
     return this.snapPoints[this.snapIndex]
@@ -49,6 +50,7 @@ class DrawerStore extends Store {
     px: number = this.getSnapPointOffset(),
     velocity: number = 0
   ) {
+    this.lastSnapAt = Date.now()
     this.isDragging = true
     this.snapIndex = this.getSnapIndex(px, velocity)
     const toValue = this.getSnapPointOffset()
@@ -66,6 +68,13 @@ class DrawerStore extends Store {
   }
 
   toggleDrawerPosition() {
+    // when you release from drag it calls this
+    // but in general if you *just* snapped, don't snap again
+    if (Date.now() - this.lastSnapAt < 100) {
+      console.log('avoid snap, just snapped')
+      return
+    }
+
     if (this.snapIndex === 0) {
       autocompletesStore.setVisible(false)
       this.setSnapIndex(1)

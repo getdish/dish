@@ -34,8 +34,9 @@ export async function createApiServer(app: any, config: ServerConfigNormal) {
 
   const secret = {
     authorization: true,
-    'x-hasura-admin-secret': true,
+    // 'x-hasura-admin-secret': true,
   }
+
   const filtered = {
     host: true,
     accept: true,

@@ -52,10 +52,10 @@ export const AppMenuButton = () => {
           transform={[{ scale: 1.0001 }]}
           hoverStyle={{
             // backgroundColor: 'rgba(0,0,0,0.5)',
-            transform: [{ scale: 1.1 }],
+            transform: [{ scale: 1.05 }],
           }}
           pressStyle={{
-            transform: [{ scale: 0.94 }],
+            transform: [{ scale: 0.95 }],
           }}
           onPress={appMenu.show}
         >
