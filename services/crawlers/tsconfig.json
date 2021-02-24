@@ -9,6 +9,7 @@
   },
   "include": ["src", "src/ubereats/categories.json"],
   "references": [
+    { "path": "../../packages/async" },
     { "path": "../../packages/common" },
     { "path": "../../packages/graph" },
     { "path": "../../packages/helpers" },

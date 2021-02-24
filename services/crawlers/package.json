@@ -15,6 +15,7 @@
     "test:scheduled": "TARGET=node RUN_WITHOUT_WORKER=true DISH_ENV=test ava test/http-dependent/* --verbose"
   },
   "dependencies": {
+    "@dish/async": "*",
     "@dish/common": "*",
     "@dish/graph": "*",
     "@dish/helpers": "*",

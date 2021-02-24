@@ -1364,15 +1364,6 @@
     lodash "^4.17.20"
     lodash-es "^4.17.20"
 
-"@dish/postgrator-cli@^4.0.0":
-  version "4.0.0"
-  resolved "https://registry.npmjs.org/@dish/postgrator-cli/-/postgrator-cli-4.0.0.tgz#01bdedc150b9b850176e4c7bce67f894c19d74d6"
-  integrity sha512-RcVwPstRZy/N1fLJLe+cZ5SwJWGsgRnJeQjQJq2xhjVmJF3fF2mT7D2HVU7Tf5eaRL1wRnxHbNyaj1uOfvZEZg==
-  dependencies:
-    command-line-args "^5.1.1"
-    command-line-usage "^6.1.0"
-    postgrator "^4.0.0"
-
 "@dish/react-ssr-prepass@^1.3.1":
   version "1.3.1"
   resolved "https://registry.npmjs.org/@dish/react-ssr-prepass/-/react-ssr-prepass-1.3.1.tgz#d471587c138bd85813a9c4452c33ddc001ae532b"
@@ -4460,16 +4451,6 @@ arr-union@^3.1.0:
   resolved "https://registry.npmjs.org/arr-union/-/arr-union-3.1.0.tgz#e39b09aea9def866a8f206e288af63919bae39c4"
   integrity sha1-45sJrqne+Gao8gbiiK9jkZuuOcQ=
 
-array-back@^3.0.1:
-  version "3.1.0"
-  resolved "https://registry.npmjs.org/array-back/-/array-back-3.1.0.tgz#b8859d7a508871c9a7b2cf42f99428f65e96bfb0"
-  integrity sha512-TkuxA4UCOvxuDK6NZYXCalszEzj+TLszyASooky+i742l9TqsOdYCMJJupxRic61hwquNtppB3hgcuq9SVSH1Q==
-
-array-back@^4.0.1:
-  version "4.0.1"
-  resolved "https://registry.npmjs.org/array-back/-/array-back-4.0.1.tgz#9b80312935a52062e1a233a9c7abeb5481b30e90"
-  integrity sha512-Z/JnaVEXv+A9xabHzN43FiiiWEE7gPCRXMrVmRm00tWbjZRul1iHm7ECzlyNq1p4a4ATXz+G9FJ3GqGOkOV3fg==
-
 array-filter@^1.0.0:
   version "1.0.0"
   resolved "https://registry.npmjs.org/array-filter/-/array-filter-1.0.0.tgz#baf79e62e6ef4c2a4c0b831232daffec251f9d83"
@@ -6191,26 +6172,6 @@ command-exists@^1.2.4, command-exists@^1.2.8:
   resolved "https://registry.npmjs.org/command-exists/-/command-exists-1.2.9.tgz#c50725af3808c8ab0260fd60b01fbfa25b954f69"
   integrity sha512-LTQ/SGc+s0Xc0Fu5WaKnR0YiygZkm9eKFvyS+fRsU7/ZWFF8ykFM6Pc9aCVf1+xasOOZpO3BAVgVrKvsqKHV7w==
 
-command-line-args@^5.1.1:
-  version "5.1.1"
-  resolved "https://registry.npmjs.org/command-line-args/-/command-line-args-5.1.1.tgz#88e793e5bb3ceb30754a86863f0401ac92fd369a"
-  integrity sha512-hL/eG8lrll1Qy1ezvkant+trihbGnaKaeEjj6Scyr3DN+RC7iQ5Rz84IeLERfAWDGo0HBSNAakczwgCilDXnWg==
-  dependencies:
-    array-back "^3.0.1"
-    find-replace "^3.0.0"
-    lodash.camelcase "^4.3.0"
-    typical "^4.0.0"
-
-command-line-usage@^6.1.0:
-  version "6.1.1"
-  resolved "https://registry.npmjs.org/command-line-usage/-/command-line-usage-6.1.1.tgz#c908e28686108917758a49f45efb4f02f76bc03f"
-  integrity sha512-F59pEuAR9o1SF/bD0dQBDluhpT4jJQNWUHEuVBqpDmCUo6gPjCi+m9fCWnWZVR/oG6cMTUms4h+3NPl74wGXvA==
-  dependencies:
-    array-back "^4.0.1"
-    chalk "^2.4.2"
-    table-layout "^1.0.1"
-    typical "^5.2.0"
-
 commander@2.11.x:
   version "2.11.0"
   resolved "https://registry.npmjs.org/commander/-/commander-2.11.0.tgz#157152fd1e7a6c8d98a5b715cf376df928004563"
@@ -7053,7 +7014,7 @@ deep-equal@^2.0.3:
     which-collection "^1.0.1"
     which-typed-array "^1.1.2"
 
-deep-extend@^0.6.0, deep-extend@~0.6.0:
+deep-extend@^0.6.0:
   version "0.6.0"
   resolved "https://registry.npmjs.org/deep-extend/-/deep-extend-0.6.0.tgz#c4fa7c95404a17a9c3e8ca7e1537312b736330ac"
   integrity sha512-LOHxIOaPYdHlJRtCQfDIVZtfw/ufM8+rVj649RIHzcm/vGwQRXFt6OPqIFWsm2XEMrNIEtWR64sY1LEKD2vAOA==
@@ -8624,13 +8585,6 @@ find-line-column@^0.5.2:
   version "0.5.2"
   resolved "https://registry.npmjs.org/find-line-column/-/find-line-column-0.5.2.tgz#db00238ff868551a182e74a103416d295a98c8ca"
   integrity sha1-2wAjj/hoVRoYLnShA0FtKVqYyMo=
-
-find-replace@^3.0.0:
-  version "3.0.0"
-  resolved "https://registry.npmjs.org/find-replace/-/find-replace-3.0.0.tgz#3e7e23d3b05167a76f770c9fbd5258b0def68c38"
-  integrity sha512-6Tb2myMioCAgv5kfvP5/PkZZ/ntTpVK39fHY7WkWBgvbeE+VHd/tZuZ4mrC+bxh4cfOZeYKVPaJIZtZXV7GNCQ==
-  dependencies:
-    array-back "^3.0.1"
 
 find-root@^1.0.0:
   version "1.1.0"
@@ -11799,11 +11753,6 @@ lodash._reinterpolate@^3.0.0:
   resolved "https://registry.npmjs.org/lodash._reinterpolate/-/lodash._reinterpolate-3.0.0.tgz#0ccf2d89166af03b3663c796538b75ac6e114d9d"
   integrity sha1-DM8tiRZq8Ds2Y8eWU4t1rG4RTZ0=
 
-lodash.camelcase@^4.3.0:
-  version "4.3.0"
-  resolved "https://registry.npmjs.org/lodash.camelcase/-/lodash.camelcase-4.3.0.tgz#b28aa6288a2b9fc651035c7711f65ab6190331a6"
-  integrity sha1-soqmKIorn8ZRA1x3EfZathkDMaY=
-
 lodash.clonedeep@^4.5.0:
   version "4.5.0"
   resolved "https://registry.npmjs.org/lodash.clonedeep/-/lodash.clonedeep-4.5.0.tgz#e23f3f9c4f8fbdde872529c1071857a086e5ccef"
@@ -14597,15 +14546,7 @@ postcss@^8.2.4:
     nanoid "^3.1.20"
     source-map "^0.6.1"
 
-postgrator@4.0.1:
-  version "4.0.1"
-  resolved "https://registry.npmjs.org/postgrator/-/postgrator-4.0.1.tgz#a06d7be12fe1aaab0f98c75bc2617417e3d18883"
-  integrity sha512-BFLIfGTOVSGFA1mThDETBnUQ59stxDtm9+l9Fr6H9bekgnuC6+a0BXH6b1fosjrOAORpmJ4UZaR6xCAY9Pn15Q==
-  dependencies:
-    glob "^7.1.6"
-    newline "0.0.3"
-
-postgrator@^4.0.0:
+postgrator@^4.1.1:
   version "4.1.1"
   resolved "https://registry.npmjs.org/postgrator/-/postgrator-4.1.1.tgz#0d2a31e2f6daf9f3b9e0adb7728c6e5af367f136"
   integrity sha512-ueZjQ2yqvzry+ksAy+JyjTH7AYXFXpgto1WgFjWNyIKt5XXhqUCyrYcbhzCUfzM6JOwFzYne8+XyoUmxUpD1eg==
@@ -15506,11 +15447,6 @@ redis-parser@^3.0.0:
   integrity sha1-tm2CjNyv5rS4pCin3vTGvKwxyLQ=
   dependencies:
     redis-errors "^1.0.0"
-
-reduce-flatten@^2.0.0:
-  version "2.0.0"
-  resolved "https://registry.npmjs.org/reduce-flatten/-/reduce-flatten-2.0.0.tgz#734fd84e65f375d7ca4465c69798c25c9d10ae27"
-  integrity sha512-EJ4UNY/U1t2P/2k6oqotuX2Cc3T6nxJwsM0N0asT7dhrtH1ltUxDn4NalSYmPE2rCkVpcf/X6R0wDwcFpzhd4w==
 
 regenerate-unicode-properties@^8.2.0:
   version "8.2.0"
@@ -17047,16 +16983,6 @@ symbol-tree@^3.2.4:
   resolved "https://registry.npmjs.org/symbol-tree/-/symbol-tree-3.2.4.tgz#430637d248ba77e078883951fb9aa0eed7c63fa2"
   integrity sha512-9QNk5KwDF+Bvz+PyObkmSYjI5ksVUYtjW7AU22r2NKcfLJcXp96hkDWU3+XndOsUb+AQ9QhfzfCT2O+CNWT5Tw==
 
-table-layout@^1.0.1:
-  version "1.0.1"
-  resolved "https://registry.npmjs.org/table-layout/-/table-layout-1.0.1.tgz#8411181ee951278ad0638aea2f779a9ce42894f9"
-  integrity sha512-dEquqYNJiGwY7iPfZ3wbXDI944iqanTSchrACLL2nOB+1r+h1Nzu2eH+DuPPvWvm5Ry7iAPeFlgEtP5bIp5U7Q==
-  dependencies:
-    array-back "^4.0.1"
-    deep-extend "~0.6.0"
-    typical "^5.2.0"
-    wordwrapjs "^4.0.0"
-
 tabletojson@^2.0.4:
   version "2.0.4"
   resolved "https://registry.npmjs.org/tabletojson/-/tabletojson-2.0.4.tgz#bb0a61fff2bb9e8861726c0a9bc7a57710c6f58f"
@@ -17869,16 +17795,6 @@ typescript@*, typescript@4, typescript@4.2.0-beta, typescript@^3.2.4, typescript
   version "4.2.0-beta"
   resolved "https://registry.npmjs.org/typescript/-/typescript-4.2.0-beta.tgz#75326e43625718f4a325f5725a105a1b3f1a7b45"
   integrity sha512-0nYjpkQ6bKjHoJTQkUHcDtGLNenqc5rfTcl3ISUnJXPkGa0115FcVJABmodfMKHLyDBmzDr8IGLbDv5m7sbYgw==
-
-typical@^4.0.0:
-  version "4.0.0"
-  resolved "https://registry.npmjs.org/typical/-/typical-4.0.0.tgz#cbeaff3b9d7ae1e2bbfaf5a4e6f11eccfde94fc4"
-  integrity sha512-VAH4IvQ7BDFYglMd7BPRDfLgxZZX4O4TFcRDA6EN5X7erNJJq+McIEp8np9aVtxrCJ6qx4GTYVfOWNjcqwZgRw==
-
-typical@^5.0.0, typical@^5.2.0:
-  version "5.2.0"
-  resolved "https://registry.npmjs.org/typical/-/typical-5.2.0.tgz#4daaac4f2b5315460804f0acf6cb69c52bb93066"
-  integrity sha512-dvdQgNDNJo+8B2uBQoqdb11eUCE1JQXhvjC/CZtgvZseVd5TYMXnq0+vuUemXbd/Se29cTaUuPX3YIc2xgbvIg==
 
 ua-parser-js@^0.7.18:
   version "0.7.23"
@@ -18763,14 +18679,6 @@ word-wrap@~1.2.3:
   version "1.2.3"
   resolved "https://registry.npmjs.org/word-wrap/-/word-wrap-1.2.3.tgz#610636f6b1f703891bd34771ccb17fb93b47079c"
   integrity sha512-Hz/mrNwitNRh/HUAtM/VT/5VH+ygD6DV7mYKZAtHOrbs8U7lvPS6xf7EJKMF0uW1KJCl0H701g3ZGus+muE5vQ==
-
-wordwrapjs@^4.0.0:
-  version "4.0.0"
-  resolved "https://registry.npmjs.org/wordwrapjs/-/wordwrapjs-4.0.0.tgz#9aa9394155993476e831ba8e59fb5795ebde6800"
-  integrity sha512-Svqw723a3R34KvsMgpjFBYCgNOSdcW3mQFK4wIfhGQhtaFVOJmdYoXgi63ne3dTlWgatVcUc7t4HtQ/+bUVIzQ==
-  dependencies:
-    reduce-flatten "^2.0.0"
-    typical "^5.0.0"
 
 workspace-info@^0.0.5:
   version "0.0.5"

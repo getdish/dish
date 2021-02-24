@@ -119,6 +119,7 @@ export async function latestScrapeForRestaurant(
 
 export async function scrapeInsert(scrape: Scrape) {
   try {
+    console.log('inserting scrape')
     const data = JSON.stringify(ensureJSONSyntax(scrape.data)).replace(
       /'/g,
       `''`

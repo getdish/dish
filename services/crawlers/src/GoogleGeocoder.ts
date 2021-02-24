@@ -80,7 +80,8 @@ export class GoogleGeocoder {
   }
 
   _formatSearchURL() {
-    return this.searchEndpoint
+    const url = this.searchEndpoint
+    return (url.startsWith('/') ? url : `/${url}`)
       .replaceAll(LON_TOKEN, this.lon.toString())
       .replaceAll(LAT_TOKEN, this.lat.toString())
       .replaceAll(PLEASE, encodeURIComponent(this.query))

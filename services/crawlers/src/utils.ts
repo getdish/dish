@@ -30,6 +30,9 @@ export class DB {
   client: PoolClient | null = null
 
   constructor(public config: object) {
+    if (process.env.DEBUG) {
+      console.log('setup db', config)
+    }
     this.pool = new Pool(this.config)
     this.pool.on('error', (e) => {
       console.log('error', e)
@@ -38,7 +41,6 @@ export class DB {
       })
       // this.pool = null
     })
-    this.connect()
   }
 
   static main_db() {
@@ -80,10 +82,10 @@ export class DB {
       if (query.includes('BEGIN;') || query.includes('TRANSACTION;')) {
         await client.query('ROLLBACK')
       }
-      client.release()
+      // client.release()
       throw e
     }
-    client.release()
+    // client.release()
     return result
   }
 }

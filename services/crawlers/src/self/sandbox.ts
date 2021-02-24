@@ -1,18 +1,21 @@
-import { RestaurantWithId, findOne, restaurantFindOne } from '@dish/graph'
+import { restaurantFindOne } from '@dish/graph'
 
 import { DB } from '../utils'
 import { GPT3 } from './GPT3'
 import { Self } from './Self'
 
 async function one() {
-  let restaurant = await findOne<RestaurantWithId>('restaurant', {
-    slug: process.env.SLUG || '',
+  const slug = process.env.SLUG || ''
+  const restaurant = await restaurantFindOne({
+    slug,
   })
   if (restaurant) {
     const merger = new Self()
     await merger.mergeAll(restaurant.id)
     //restaurant = await restaurantFindOneWithTags(restaurant)
     //console.log(JSON.stringify(restaurant?.tags, null, 4))
+  } else {
+    console.log('no restaurant found with slug', slug)
   }
 }
 

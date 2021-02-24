@@ -40,6 +40,7 @@ export class WorkerJob {
     args?: any[],
     specific_config: JobOptions = {}
   ) {
+    console.log('Run on worker', fn)
     if (process.env.RUN_WITHOUT_WORKER == 'true') {
       return await this.run(fn, args)
     }

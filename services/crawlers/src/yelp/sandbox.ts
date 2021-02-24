@@ -1,20 +1,35 @@
+import '@dish/helpers/polyfill'
+
+import { restaurantFindOne } from '@dish/graph'
+
 import { Yelp } from './Yelp'
 
-async function one() {
+async function one(slug: string) {
   try {
+    if (!slug) {
+      console.warn('no slug')
+      return
+    }
+    const restaurant = await restaurantFindOne({
+      slug,
+    })
+    if (!restaurant || !restaurant.name) {
+      console.warn('no restaurant/name found', restaurant)
+      return
+    }
     const range = 0.001
-    const name = 'Little Heaven'
-    const coords = [37.75948, -122.41943]
+    const name = restaurant.name
+    const coords = restaurant.location.coordinates
+    const topLeft = [coords[1] - range, coords[0] - range] as const
+    const bottomRight = [coords[1] + range, coords[0] + range] as const
     const t = new Yelp()
-    await t.getRestaurants(
-      [coords[0] - range, coords[1] - range],
-      [coords[0] + range, coords[1] + range],
-      0,
-      name
-    )
+    await t.getRestaurants(topLeft, bottomRight, 0, name)
+    console.log('done')
   } catch (err) {
-    console.error(err.message, err.stack)
+    console.error('error', err)
   }
 }
 
-one()
+one(process.env.SLUG || '').then(() => {
+  process.exit(0)
+})

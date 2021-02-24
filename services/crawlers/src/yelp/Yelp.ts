@@ -1,5 +1,6 @@
 import url from 'url'
 
+import { sleep } from '@dish/async'
 import { sentryMessage } from '@dish/common'
 import { ZeroUUID } from '@dish/graph'
 import { ProxiedRequests, WorkerJob } from '@dish/worker'
@@ -15,7 +16,7 @@ import {
 } from '../scrape-helpers'
 import { aroundCoords, boundingBoxFromcenter, geocode } from '../utils'
 
-const BB_SEARCH = '/search/snippet?cflt=food&l='
+const BB_SEARCH = '/search/snippet?cflt=restaurant&l='
 
 const YELP_DOMAIN = 'https://www.yelp.com'
 
@@ -71,8 +72,8 @@ export class Yelp extends WorkerJob {
   }
 
   async getRestaurants(
-    top_right: [number, number],
-    bottom_left: [number, number],
+    top_right: readonly [number, number],
+    bottom_left: readonly [number, number],
     start = 0,
     only = ''
   ) {
@@ -89,14 +90,16 @@ export class Yelp extends WorkerJob {
     const componentsList =
       response?.data.searchPageProps.mainContentComponentsListProps ?? []
     const pagination = componentsList.find((x) => x.type === 'pagination')
+
+    if (!pagination) {
+      console.log('no pagination', componentsList)
+    }
+
     let found_the_one = false
     this.find_only = only
 
     if (!componentsList.length) {
-      console.error(
-        'searchPageProps.searchResultsProps: ',
-        response?.data.searchPageProps.searchResultsProps
-      )
+      console.error('searchPageProps.searchResultsProps: ', uri, response?.data)
       throw new Error(
         'YELP: Nothing in `response?.data.searchPageProps.searchResultsProps.searchResults`'
       )
@@ -122,20 +125,36 @@ export class Yelp extends WorkerJob {
         found_the_one = true
         console.log('YELP SANDBOX: found ' + name)
       }
-      await this.getRestaurant(data)
-    }
-    const next_page = start + PER_PAGE
-    if (next_page <= pagination.totalResults) {
-      await this.runOnWorker('getRestaurants', [
-        top_right,
-        bottom_left,
-        next_page,
-        only,
+      const timeout = sleep(2000)
+      await Promise.race([
+        this.getRestaurant(data),
+        timeout.then(() => {
+          console.warn('Timed out getting restaurant', data)
+        }),
       ])
+      timeout.cancel()
     }
+
+    console.log('YELP: done with getRestaurants page')
+
+    if (pagination) {
+      const next_page = start + PER_PAGE
+      if (next_page <= pagination.totalResults) {
+        await this.runOnWorker('getRestaurants', [
+          top_right,
+          bottom_left,
+          next_page,
+          only,
+        ])
+      }
+    }
+
     if (only && !found_the_one) {
-      throw `Couldn't find ${only}`
+      console.log('error componentsList', uri, componentsList)
+      throw new Error(`Couldn't find ${only}`)
     }
+
+    console.log('YELP: done with getRestaurants')
   }
 
   async getRestaurant(data: ScrapeData) {
@@ -149,7 +168,6 @@ export class Yelp extends WorkerJob {
         biz_page = data.searchResultBusiness.businessUrl
       }
       const biz_page_uri = url.parse(biz_page, true)
-      console.log('run now...')
       await this.runOnWorker('getEmbeddedJSONData', [
         id,
         biz_page_uri.path,
@@ -179,7 +197,6 @@ export class Yelp extends WorkerJob {
     yelp_path: string,
     id_from_source: string
   ) {
-    console.log('get me')
     let data: { [keys: string]: any } = {}
     const SIG1 = '<script type="application/json" data-hypernova-key'
     const SIG2 = 'mapBoxProps'
