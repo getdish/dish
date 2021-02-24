@@ -34,21 +34,20 @@ export const RatingView = ({
   const ratingMiddle = rating * 0.5
   const rotate = `${(1 - ratingInner / 100) * 180}deg`
   const width = size * 0.1
+  const innerSize = Math.round(stacked ? size * 0.66 : size * 0.33)
+  const middleSize = Math.round(stacked ? size * 0.8 : size * 0.6)
+  const outerSize = Math.round(stacked ? size : size * 0.85)
 
   const innerRing = (
     <VStack transform={[{ rotate }]}>
-      <Pie
-        color={purple}
-        percent={ratingInner}
-        size={stacked ? size * 0.66 : size * 0.33}
-      />
+      <Pie color={purple} percent={ratingInner} size={innerSize} />
     </VStack>
   )
 
   const middleRing = (
     <ProgressRing
       percent={ratingMiddle}
-      size={stacked ? size * 0.8 : size * 0.6}
+      size={middleSize}
       color={yellow}
       width={width}
     >
@@ -57,12 +56,7 @@ export const RatingView = ({
   )
 
   const outerRing = (
-    <ProgressRing
-      percent={rating}
-      size={stacked ? size : size * 0.85}
-      color={green}
-      width={width}
-    >
+    <ProgressRing percent={rating} size={outerSize} color={green} width={width}>
       {stacked ? null : middleRing}
     </ProgressRing>
   )
@@ -114,7 +108,7 @@ export const RatingView = ({
 
   return (
     <>
-      <HStack alignItems="center">
+      <HStack display="inline-flex" alignItems="center">
         <VStack
           width={size}
           height={size}

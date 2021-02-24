@@ -2,7 +2,6 @@ import { slugify } from '@dish/graph'
 import React, { memo } from 'react'
 import { Box, BoxProps, Divider, Spacer, Toast, VStack } from 'snackui'
 
-import { isWeb } from '../constants/constants'
 import { appMenuStore } from './AppMenuStore'
 import { AuthForm } from './AuthForm'
 import { useUserStore } from './userStore'
@@ -51,17 +50,17 @@ export const AppMenuContents = memo(
             </>
           )}
 
-          {isWeb && <MenuLinkButton name="blog">Blog</MenuLinkButton>}
-          <MenuLinkButton name="about">About</MenuLinkButton>
-
           {!isLoggedIn && (
             <>
+              <AuthForm onDidLogin={hideUserMenu} />
               <Spacer size="lg" />
               <Divider />
               <Spacer size="lg" />
-              <AuthForm onDidLogin={hideUserMenu} />
             </>
           )}
+
+          {/* {isWeb && <MenuLinkButton name="blog">Blog</MenuLinkButton>} */}
+          <MenuLinkButton name="about">About</MenuLinkButton>
 
           {isLoggedIn && (
             <>

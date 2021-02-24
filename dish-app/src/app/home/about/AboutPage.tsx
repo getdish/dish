@@ -8,20 +8,20 @@ import {
   Paragraph,
   Spacer,
   Text,
-  UnorderedList,
-  UnorderedListItem,
   VStack,
 } from 'snackui'
 
 import dontPanic from '../../../assets/dont-panic.svg'
 import {
   green,
+  lightBlue,
   lightGreen,
+  lightOrange,
   lightYellow,
   orange,
   purple,
-  red,
 } from '../../../constants/colors'
+import { tagLenses } from '../../../constants/localTags'
 import { HomeStateItemAbout } from '../../../types/homeTypes'
 import { ContentScrollView } from '../../views/ContentScrollView'
 import { Link } from '../../views/Link'
@@ -31,7 +31,6 @@ import { StackDrawer } from '../../views/StackDrawer'
 import { StackItemProps } from '../HomeStackView'
 import { RatingView } from '../RatingView'
 import { useSnapToFullscreenOnMount } from '../restaurant/useSnapToFullscreenOnMount'
-import { RestaurantRatingView } from '../RestaurantRatingView'
 
 const inlineButton = {
   borderRadius: 10,
@@ -61,7 +60,10 @@ export default function AboutPage({
             position="relative"
           >
             <Spacer size="xxl" />
-            <LogoColor scale={2.5} />
+
+            <VStack marginVertical={10}>
+              <LogoColor scale={2.5} />
+            </VStack>
             {/* <Spacer size="xl" />
             <Paragraph
               zIndex={10}
@@ -75,27 +77,25 @@ export default function AboutPage({
           </VStack>
 
           <VStack paddingHorizontal="5%" spacing="xl">
-            <Paragraph
-              paddingVertical={20}
-              textAlign="center"
-              size="lg"
-              fontWeight="700"
-            >
-              A Hitchiker's Guide to Gastronomy.
-              <br /> We're&nbsp;exploring&nbsp;how to improve ratings and online
-              communities.
+            <Paragraph textAlign="center" size="lg" fontWeight="800">
+              A Hitchhiker's Guide
             </Paragraph>
 
-            <Paragraph size="xxl">
-              We've noticed disturbing trends. Amazing Latin and Asian
-              restaurants with ⭐️⭐️⭐️ stars. Delivery apps promoting fake
-              pop-ups of poor performing restaurants. Unopinionated rankings
-              designed to sell, and content quality dropping with every drip of
-              SEO.
+            <Paragraph
+              maxWidth={550}
+              textAlign="center"
+              size="xxxl"
+              marginTop={-10}
+              marginBottom={10}
+              fontWeight="300"
+              marginHorizontal="auto"
+            >
+              See what makes each restaurant unique, debate top lists of each
+              dish
             </Paragraph>
 
             <Paragraph size="xl">
-              These days finding an actually great
+              These days finding a good
               <LinkButton
                 backgroundColor={lightYellow}
                 hoverStyle={{
@@ -110,7 +110,7 @@ export default function AboutPage({
                   },
                 ]}
               >
-                banh xeo
+                bánh xèo
               </LinkButton>
               or{' '}
               <LinkButton
@@ -122,107 +122,111 @@ export default function AboutPage({
                   },
                 ]}
                 {...inlineButton}
-                backgroundColor={lightGreen}
+                backgroundColor={lightOrange}
                 hoverStyle={{
-                  backgroundColor: `${lightGreen}44`,
+                  backgroundColor: `${lightOrange}44`,
                 }}
               >
                 birria taco
               </LinkButton>{' '}
-              requires Google-fu, 30 minutes, and a lack of appetite. We'd like
-              to create a high quality guide to the world powered by community
-              with a small, passionate team that doesn't cave to the pressures
-              of advertising and hyper-growth.
-            </Paragraph>
-
-            <Paragraph size="lg">
-              How?{' '}
-              <Link
-                fontWeight="800"
-                name="blog"
-                params={{ slug: 'welcome-to-dish' }}
-              >
-                We have some ideas
-              </Link>
-              .
+              requires Google-fu, 30 minutes and a lack of appetite. Too many
+              hole-in-the-walls have great food and ⭐️⭐️⭐️ stars. Delivery
+              apps have sketchy reviews and fake popups to boot.
             </Paragraph>
 
             <Paragraph size="xl">
-              What you want when looking for{' '}
+              What you want when craving a dish, versus{' '}
               <LinkButton
-                backgroundColor={lightYellow}
+                backgroundColor={lightGreen}
                 hoverStyle={{
-                  backgroundColor: `${lightYellow}44`,
+                  backgroundColor: `${lightGreen}44`,
                 }}
                 {...inlineButton}
                 tags={[
-                  { name: 'Pho', type: 'dish' },
+                  tagLenses.find((x) => x.slug === 'lenses__veg')!,
                   { name: 'price-low', type: 'filter' },
                 ]}
               >
-                cheap pho 🍜
-              </LinkButton>{' '}
-              vs planning a{' '}
+                going vegetarian on a budget
+              </LinkButton>
+              , versus planning a{' '}
               <LinkButton
                 tags={[
                   { name: 'Date', type: 'lense' },
                   { name: 'price-high', type: 'filter' },
                 ]}
                 {...inlineButton}
-                backgroundColor={lightGreen}
+                backgroundColor={lightBlue}
                 hoverStyle={{
-                  backgroundColor: `${lightGreen}44`,
+                  backgroundColor: `${lightBlue}44`,
                 }}
               >
                 date night 🌃
               </LinkButton>{' '}
-              are <Text fontStyle="italic">unique</Text>, so instead of five
-              stars, Dish rates <em>everything</em>: each dish, service,
-              ambience, whether it's vegetarian-friendly, has a nice patio, or
-              is a good place for drinks.
+              don't fit neatly into five stars, and often five stars hides what
+              you care about. Dish solves this in a few ways:
             </Paragraph>
 
-            <UnorderedList>
-              <UnorderedListItem size="lg">
-                Taste profile, but let you control the algorithm
-              </UnorderedListItem>
-              <UnorderedListItem size="lg">
-                Voting across <Text fontStyle="italic">everything</Text>
-              </UnorderedListItem>
-              <UnorderedListItem size="lg">
-                Single-account, invite-based membership
-              </UnorderedListItem>
-              <UnorderedListItem size="lg">
-                Sub-communities / specialization
-              </UnorderedListItem>
-              <UnorderedListItem size="lg">
-                A non-ad, non-tracked private option
-              </UnorderedListItem>
-            </UnorderedList>
+            <H3>Ratings</H3>
 
             <Paragraph size="lg">
-              Ultimately we're building what we want: a map of the world that
-              lets us see what friends love, plan trips and nights out, find
-              things that match our taste and mood, and do all this while not
-              degrading in quality over time. We'll be writing more about how we
-              plan to achieve this on <Link name="blog">the blog</Link>.
+              Dish cuts one dimensional stars into a three-part flower giving
+              you{' '}
+              <Text fontWeight="700" color={green}>
+                food
+              </Text>
+              ,{' '}
+              <Text fontWeight="700" color={orange}>
+                service
+              </Text>{' '}
+              and{' '}
+              <Text fontWeight="700" color={purple}>
+                ambience
+              </Text>{' '}
+              that's intuitive even at distance:
+            </Paragraph>
+
+            <HStack justifyContent="center" marginVertical={-10}>
+              <RatingView rating={76} size={70} />
+            </HStack>
+
+            <H3>Stats</H3>
+
+            <Paragraph size="lg">
+              Dish crawls the web and gathers sentiment towards tags:
+              birria-taco, service, vibe, veggie-friendly... then ranks each
+              restaurant on exactly the tags you search for. You can see the top
+              Chinese, but also the top Vegetarian Chinese Dim Sum, for delivery
+              etc.
+            </Paragraph>
+
+            <H3>Lists</H3>
+
+            <Paragraph size="lg">
+              Vote on top lists in each area across any tags, plus make your own
+              for yourself or others.
+            </Paragraph>
+
+            <Paragraph size="xl" fontWeight="800">
+              To maintain a high quality though, we need to avoid becoming an ad
+              company.
             </Paragraph>
 
             <Paragraph size="lg">
-              Dish is just getting started. It works in a sketchy, fragile way,
-              and not everything is all lined up (including the words on this
-              very page). But we think we have the right foundation and ideas,
-              and we look forward to delivering something great soon.
+              Ultimately we're building what we want: a high quality Pokedex for
+              the real world, driven by a community. We'll be writing more about
+              how we plan to achieve this on <Link name="blog">the blog</Link>.
             </Paragraph>
 
             <Paragraph size="lg">
+              Watch your step, it's early.{' '}
               <Link display="inline" href="mailto:team@dishapp.com">
                 Let us know what you'd love to see
               </Link>
               .
             </Paragraph>
 
-            <Paragraph size="lg">Cheers! 🌮🍜</Paragraph>
+            <Paragraph size="lg">Cheers 🌮🍜</Paragraph>
 
             <Spacer />
             <Divider />

@@ -28,7 +28,12 @@ export const AppMenu = memo(() => {
         isOpen={showUserMenu}
         noArrow
         onChangeOpen={appMenu.setIsVisible}
-        contents={<AppMenuContents hideUserMenu={appMenu.hide} />}
+        contents={
+          <>
+            {/* CONTENTS HERE */}
+            <AppMenuContents hideUserMenu={appMenu.hide} />
+          </>
+        }
         mountImmediately
       >
         <MenuLinkButton

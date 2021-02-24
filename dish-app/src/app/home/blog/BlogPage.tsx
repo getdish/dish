@@ -12,7 +12,9 @@ import { useSnapToFullscreenOnMount } from '../restaurant/useSnapToFullscreenOnM
 import { BlogPageDetail } from './BlogPageDetail'
 import { BlogPostMeta } from './BlogPostMeta'
 import { MDX } from './MDX'
-import { posts } from './posts'
+
+// import { posts } from './posts'
+const posts = []
 
 export default function BlogPage(props: HomeStackViewProps<HomeStateItemBlog>) {
   const slug = props.item.slug

@@ -32,12 +32,7 @@ import {
   useTheme,
 } from 'snackui'
 
-import {
-  bgLight,
-  bgLightHover,
-  bgLightPress,
-  brandColor,
-} from '../../../constants/colors'
+import { bgLight, brandColor } from '../../../constants/colors'
 import { isWeb } from '../../../constants/constants'
 import { getRestaurantDishes } from '../../../helpers/getRestaurantDishes'
 import { isWebIOS } from '../../../helpers/isIOS'
@@ -67,7 +62,6 @@ import { RestaurantAddToListButton } from './RestaurantAddToListButton'
 import { RestaurantDeliveryButtons } from './RestaurantDeliveryButtons'
 import { openingHours, priceRange } from './RestaurantDetailRow'
 import { RestaurantFavoriteStar } from './RestaurantFavoriteButton'
-import { RestaurantSourcesBreakdownRow } from './RestaurantSourcesBreakdownRow'
 import { useTotalReviews } from './useTotalReviews'
 
 export const ITEM_HEIGHT = 270
@@ -299,6 +293,7 @@ const RestaurantListItemContent = memo(
         <AbsoluteVStack top={34} left={-5} zIndex={2000000}>
           {showAbove
             ? above ?? (
+                // RANKING VIEW
                 <RestaurantUpVoteDownVote
                   rounded
                   score={score}
