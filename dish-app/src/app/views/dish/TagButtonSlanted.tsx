@@ -98,6 +98,18 @@ const DishButtonContent = (props: TagButtonSlantedProps) => {
             </VStack>
           )}
 
+          {!!icon && (
+            <Text
+              className="ease-in-out"
+              zIndex={10}
+              fontSize={28}
+              marginLeft={image ? -30 : 0}
+              marginRight={-4}
+            >
+              {icon}
+            </Text>
+          )}
+
           {!!rank && (
             <Text
               fontSize={fontSize * 0.7}
@@ -108,18 +120,6 @@ const DishButtonContent = (props: TagButtonSlantedProps) => {
                 #
               </TextSuperScript>
               {rank}
-            </Text>
-          )}
-
-          {!!icon && (
-            <Text
-              className="ease-in-out"
-              zIndex={10}
-              fontSize={28}
-              transform={[{ scale: 1 }]}
-              marginLeft={image ? -30 : 0}
-            >
-              {icon}
             </Text>
           )}
 

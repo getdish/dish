@@ -87,10 +87,15 @@ export default function AboutPage({
             </Paragraph>
 
             <Paragraph size="xxl">
-              We'd noticed a disturbing trend: amazing latin or asian food with
-              ⭐️⭐️⭐️/5 stars. Unopinionated rankings designed to please.
-              Combined with delivery apps delivering iffy rankings and promoting
-              fake pop-ups, and we were finding it hard to find the best
+              We've noticed disturbing trends. Amazing Latin and Asian
+              restaurants with ⭐️⭐️⭐️ stars. Delivery apps promoting fake
+              pop-ups of poor performing restaurants. Unopinionated rankings
+              designed to sell, and content quality dropping with every drip of
+              SEO.
+            </Paragraph>
+
+            <Paragraph size="xl">
+              These days finding an actually great
               <LinkButton
                 backgroundColor={lightYellow}
                 hoverStyle={{
@@ -124,57 +129,23 @@ export default function AboutPage({
               >
                 birria taco
               </LinkButton>{' '}
-              without Google and a magnifying glass.
-            </Paragraph>
-
-            <Paragraph size="xxl">
-              We want our own lists. Give lists to the people!
-            </Paragraph>
-
-            <Paragraph size="lg">
-              Dish is all about lists. We compile top lists of everything: by
-              cuisine, by dish, all sort of other factors. You can disagree and
-              vote up or down anything.
+              requires Google-fu, 30 minutes, and a lack of appetite. We'd like
+              to create a high quality guide to the world powered by community
+              with a small, passionate team that doesn't cave to the pressures
+              of advertising and hyper-growth.
             </Paragraph>
 
             <Paragraph size="lg">
-              That wa. We're working on this flower thing, where it shows{' '}
-              <Text fontWeight="700" color={green}>
-                food
-              </Text>
-              ,{' '}
-              <Text fontWeight="700" color={orange}>
-                service
-              </Text>{' '}
-              and{' '}
-              <Text fontWeight="700" color={purple}>
-                ambience
-              </Text>{' '}
-              all in one, it takes a sec to get used to, let it grow on you - it
-              gives a good intuition based on it's "fullness", so you don't need
-              to understand it right away.
+              How?{' '}
+              <Link
+                fontWeight="800"
+                name="blog"
+                params={{ slug: 'welcome-to-dish' }}
+              >
+                We have some ideas
+              </Link>
+              .
             </Paragraph>
-
-            <HStack justifyContent="center">
-              <RestaurantRatingView size={72} slug="miss-saigon" />
-              <Spacer />
-              <VStack>
-                <RatingView rating={50} size={20} stacked />
-              </VStack>
-            </HStack>
-
-            <Paragraph size="lg">
-              The flower is your HUD, eventually we'd like to adapt it to your
-              taste.
-            </Paragraph>
-
-            <Paragraph size="lg">
-              When you search, your search is ranked based on the
-              votes/sentiment towards the tags: (Taco + Delivery + Vibe) shows
-              search results where the points
-            </Paragraph>
-
-            <H3>What we want</H3>
 
             <Paragraph size="xl">
               What you want when looking for{' '}
@@ -205,15 +176,10 @@ export default function AboutPage({
               >
                 date night 🌃
               </LinkButton>{' '}
-              are <Text fontStyle="italic">unique</Text>, so Dish rates down to
-              each dish, and splits out other factors by tags (vibe, service,
-              vegan, etc).
-            </Paragraph>
-
-            <Paragraph size="xl">
-              But of course it's not just ratings: building up a good community
-              of hitchikers, accounting for taste, and a few more problems we
-              want to solve:
+              are <Text fontStyle="italic">unique</Text>, so instead of five
+              stars, Dish rates <em>everything</em>: each dish, service,
+              ambience, whether it's vegetarian-friendly, has a nice patio, or
+              is a good place for drinks.
             </Paragraph>
 
             <UnorderedList>

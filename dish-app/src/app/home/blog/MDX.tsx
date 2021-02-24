@@ -18,6 +18,7 @@ import {
 import { lightYellow, yellow } from '../../../constants/colors'
 import { HighlightedText } from '../../views/HighlightedText'
 import { Link } from '../../views/Link'
+import { BlogRatingDescription } from './components/BlogRatingDescription'
 import { contentSpace, contentSpaceLg, contentSpaceSm } from './contentSpace'
 import { IntroText } from './IntroText'
 
@@ -47,6 +48,8 @@ const components = {
   IntroText: spaceVertical(IntroText),
 
   Alt,
+
+  BlogRatingDescription,
 
   LargeImage: ({ alt, ...rest }: ImageProps & { alt?: string }) => (
     <>
