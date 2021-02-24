@@ -14597,7 +14597,15 @@ postcss@^8.2.4:
     nanoid "^3.1.20"
     source-map "^0.6.1"
 
-postgrator@^4.0.0, postgrator@^4.0.1:
+postgrator@4.0.1:
+  version "4.0.1"
+  resolved "https://registry.npmjs.org/postgrator/-/postgrator-4.0.1.tgz#a06d7be12fe1aaab0f98c75bc2617417e3d18883"
+  integrity sha512-BFLIfGTOVSGFA1mThDETBnUQ59stxDtm9+l9Fr6H9bekgnuC6+a0BXH6b1fosjrOAORpmJ4UZaR6xCAY9Pn15Q==
+  dependencies:
+    glob "^7.1.6"
+    newline "0.0.3"
+
+postgrator@^4.0.0:
   version "4.1.1"
   resolved "https://registry.npmjs.org/postgrator/-/postgrator-4.1.1.tgz#0d2a31e2f6daf9f3b9e0adb7728c6e5af367f136"
   integrity sha512-ueZjQ2yqvzry+ksAy+JyjTH7AYXFXpgto1WgFjWNyIKt5XXhqUCyrYcbhzCUfzM6JOwFzYne8+XyoUmxUpD1eg==
