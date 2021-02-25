@@ -1325,44 +1325,40 @@
     enabled "2.0.x"
     kuler "^2.0.0"
 
-"@dish/gqless-cli@4.0.0":
-  version "4.0.0"
-  resolved "https://registry.npmjs.org/@dish/gqless-cli/-/gqless-cli-4.0.0.tgz#87f36959bb21a0cad4eef9f91cea595883b0d1da"
-  integrity sha512-A3UQEAll2M2lZkdWJOpnUde8PYMCXrJ4qyGdTmUD21tTa/VRXKUMbM+07MKSYBYfVEU2CRiTSAPGG5UPb++S9g==
+"@dish/gqless-cli@^4.0.1":
+  version "4.0.1"
+  resolved "https://registry.npmjs.org/@dish/gqless-cli/-/gqless-cli-4.0.1.tgz#7ee9578d8abaaf44209f4bca5d268d87996aa9c6"
+  integrity sha512-HqmFbOkNsnlxtmpNPt0EFlFy1xDyP4Udvc5UFxAhEQ5YLo8gF6RI5+vXZKREElM6WjBRUTcd/5Kgb7jk43ma7Q==
   dependencies:
     "@graphql-codegen/core" "^1.17.9"
-    "@graphql-codegen/typescript" "^1.20.2"
-    "@graphql-tools/delegate" "^7.0.9"
+    "@graphql-codegen/typescript" "^1.21.0"
+    "@graphql-tools/delegate" "^7.0.10"
     "@graphql-tools/wrap" "^7.0.5"
-    commander "^7.0.0"
+    commander "^7.1.0"
     cross-fetch "^3.0.6"
     graphql "^15.5.0"
-    lodash "^4.17.20"
-    lodash-es "^4.17.20"
     mkdirp "^1.0.4"
     prettier "^2.2.1"
 
-"@dish/gqless-logger@0.1.3":
-  version "0.1.3"
-  resolved "https://registry.npmjs.org/@dish/gqless-logger/-/gqless-logger-0.1.3.tgz#b3bf78546da2c1f5805b6bfbcd42b804bc1ce6f3"
-  integrity sha512-P1ia0CnKeMEDVW2rx19Cla2CPdnpSh8rvULeudzJ8jzgXBRffFzoJWTlmbhFAlSXr3KENjEqiViQbmugu18d2A==
+"@dish/gqless-logger@^0.1.0":
+  version "0.1.0"
+  resolved "https://registry.npmjs.org/@dish/gqless-logger/-/gqless-logger-0.1.0.tgz#7fd1c51f4949c4980986179389846420da87405f"
+  integrity sha512-obx3VKNoX4xzzN4mAYnYtDl6hZbzemcXP0eRa3TAV2uOAWsaNSCJe632ULKwKA/Q5HeuCNLBeEeuWsIT7r1L+w==
   dependencies:
     prettier "^2.2.1"
+    regenerator-runtime "^0.13.7"
 
-"@dish/gqless-react@2.0.6":
-  version "2.0.6"
-  resolved "https://registry.npmjs.org/@dish/gqless-react/-/gqless-react-2.0.6.tgz#1ff6e02bef9ec8d57fefd1f672f17a87b6b5bb2a"
-  integrity sha512-GRIBlQUEZJgjnAhx56f2VqojRjWUsV3sMFx5t6FF6THAmP0fB6wZALqgBtQx5BiTPbVX06Yad/66e+W1UOS2BQ==
+"@dish/gqless-react@^2.0.8":
+  version "2.0.8"
+  resolved "https://registry.npmjs.org/@dish/gqless-react/-/gqless-react-2.0.8.tgz#d980b4d66ff77f84441367745d00790aa5a39da0"
+  integrity sha512-PGZnCHZecRX3G1NIQEvhErOWrUPE4bVVz3UTcaQklhAKIXy8dls1+18mRLDfyCMJTTnyt2y9nrjnATcHhsD64w==
   dependencies:
     "@dish/react-ssr-prepass" "^1.3.1"
 
-"@dish/gqless@3.0.5":
-  version "3.0.5"
-  resolved "https://registry.npmjs.org/@dish/gqless/-/gqless-3.0.5.tgz#b695958c793e9477b3898dc05962f35f2ad65050"
-  integrity sha512-dSmtFq3KGL9ZjSsk+BVswhF4Fc8YkOWAr4egbM+fGfuaLZnsxzqGlv+WyvoRGM/mTnSXXCglZmleAtRf+zcuzw==
-  dependencies:
-    lodash "^4.17.20"
-    lodash-es "^4.17.20"
+"@dish/gqless@^3.0.9":
+  version "3.0.9"
+  resolved "https://registry.npmjs.org/@dish/gqless/-/gqless-3.0.9.tgz#702ef722c2af02d3dc5c2b5bba7fde4e34eb69fc"
+  integrity sha512-CQWl9oFIbe+Rf61pF8AwcnFe9m9lkxpNWXNht58wxJUF6lcqWQ5IHTyqL91cwhvxkL+zS1JBDc/SKcGVojsN6w==
 
 "@dish/react-ssr-prepass@^1.3.1":
   version "1.3.1"
@@ -1585,20 +1581,20 @@
     tslib "~2.0.1"
     upper-case "2.0.1"
 
-"@graphql-codegen/typescript@^1.20.2":
-  version "1.20.2"
-  resolved "https://registry.npmjs.org/@graphql-codegen/typescript/-/typescript-1.20.2.tgz#223327a8aea929e772f481e264c5aa3a36707fcb"
-  integrity sha512-D/DMUz4O2UEoFucUVu2K2xoaMPAn68BwYGnCAKnSDqtFKsOEqmTjHFwcgyEnpucQ5xFeG0pKGMb1SlS2Go9J8Q==
+"@graphql-codegen/typescript@^1.21.0":
+  version "1.21.0"
+  resolved "https://registry.npmjs.org/@graphql-codegen/typescript/-/typescript-1.21.0.tgz#301b1851cd278bedd1f49e1b3d654f4dc0af2943"
+  integrity sha512-23YttnZ+87dA/3lbCvPKdsrpEOx142dCT9xSh6XkSeyCvn+vUtETN2MhamCYB87G7Nu2EcLDFKDZjgXH73f4fg==
   dependencies:
     "@graphql-codegen/plugin-helpers" "^1.18.2"
-    "@graphql-codegen/visitor-plugin-common" "^1.18.2"
+    "@graphql-codegen/visitor-plugin-common" "^1.18.3"
     auto-bind "~4.0.0"
     tslib "~2.1.0"
 
-"@graphql-codegen/visitor-plugin-common@^1.18.2":
-  version "1.18.2"
-  resolved "https://registry.npmjs.org/@graphql-codegen/visitor-plugin-common/-/visitor-plugin-common-1.18.2.tgz#1a30bd33f011b4fb976e0f8462d160126db875ea"
-  integrity sha512-A8yBJGq7A7gxaVVXK4QXwV1ZpzZ64fH7U7JTGeq86o3jA7QNV2rmCRXCY0JttS2fu+olV18NjsWRwAXuAb1g9A==
+"@graphql-codegen/visitor-plugin-common@^1.18.3":
+  version "1.18.3"
+  resolved "https://registry.npmjs.org/@graphql-codegen/visitor-plugin-common/-/visitor-plugin-common-1.18.3.tgz#9d2c4449c3bdaffe3e782e2321fe0cb998b8a91d"
+  integrity sha512-6xJzt8hszCTKt3rTlcCURpuiAFuaiaZgStlVeRE1OrKEDiY1T3vwF3/7TonhfnEjqBWtZdMmXvNx3ArXkRUV4w==
   dependencies:
     "@graphql-codegen/plugin-helpers" "^1.18.2"
     "@graphql-tools/optimize" "^1.0.1"
@@ -1621,7 +1617,20 @@
     is-promise "4.0.0"
     tslib "~2.0.1"
 
-"@graphql-tools/delegate@^7.0.7", "@graphql-tools/delegate@^7.0.9":
+"@graphql-tools/delegate@^7.0.10":
+  version "7.0.10"
+  resolved "https://registry.npmjs.org/@graphql-tools/delegate/-/delegate-7.0.10.tgz#f87ac85a2dbd03b5b3aabf347f4479fabe8ceac3"
+  integrity sha512-6Di9ia5ohoDvrHuhj2cak1nJGhIefJmUsd3WKZcJ2nu2yZAFawWMxGvQImqv3N7iyaWKiVhrrK8Roi/JrYhdKg==
+  dependencies:
+    "@ardatan/aggregate-error" "0.0.6"
+    "@graphql-tools/batch-execute" "^7.0.0"
+    "@graphql-tools/schema" "^7.0.0"
+    "@graphql-tools/utils" "^7.1.6"
+    dataloader "2.0.0"
+    is-promise "4.0.0"
+    tslib "~2.1.0"
+
+"@graphql-tools/delegate@^7.0.7":
   version "7.0.9"
   resolved "https://registry.npmjs.org/@graphql-tools/delegate/-/delegate-7.0.9.tgz#9afbffce378cdcbe72e9f4339a1c03b92c0e496e"
   integrity sha512-nlelOb354cyweV+SpTXkoGZHKgJ1PwPkHWq/0RXM5LllQsR3OrSQKKWMrd1g9dyawEZbadCF3fDJJWSQ4HOg2g==
@@ -6197,10 +6206,10 @@ commander@^6.1.0, commander@^6.2.0:
   resolved "https://registry.npmjs.org/commander/-/commander-6.2.1.tgz#0792eb682dfbc325999bb2b84fddddba110ac73c"
   integrity sha512-U7VdrJFnJgo4xjrHpTzu0yrHPGImdsmD95ZlgYSEajAn2JKzDhDTPG9kBTefmObL2w/ngeZnilk+OV9CG3d7UA==
 
-commander@^7.0.0:
-  version "7.0.0"
-  resolved "https://registry.npmjs.org/commander/-/commander-7.0.0.tgz#3e2bbfd8bb6724760980988fb5b22b7ee6b71ab2"
-  integrity sha512-ovx/7NkTrnPuIV8sqk/GjUIIM1+iUQeqA3ye2VNpq9sVoiZsooObWlQy+OPWGI17GDaEoybuAGJm6U8yC077BA==
+commander@^7.1.0:
+  version "7.1.0"
+  resolved "https://registry.npmjs.org/commander/-/commander-7.1.0.tgz#f2eaecf131f10e36e07d894698226e36ae0eb5ff"
+  integrity sha512-pRxBna3MJe6HKnBGsDyMv8ETbptw3axEdYHoqNh7gu5oDcew8fs0xnivZGm06Ogk8zGAJ9VX+OPEr2GXEQK4dg==
 
 commander@~2.13.0:
   version "2.13.0"
@@ -11726,11 +11735,6 @@ locate-path@^6.0.0:
   dependencies:
     p-locate "^5.0.0"
 
-lodash-es@^4.17.20:
-  version "4.17.20"
-  resolved "https://registry.npmjs.org/lodash-es/-/lodash-es-4.17.20.tgz#29f6332eefc60e849f869c264bc71126ad61e8f7"
-  integrity sha512-JD1COMZsq8maT6mnuz1UMV0jvYD0E0aUsSOdrr1/nAG3dhqQXwRRgeW0cSqH1U43INKcqxaiVIQNOUDld7gRDA==
-
 lodash-webpack-plugin@^0.11.6:
   version "0.11.6"
   resolved "https://registry.npmjs.org/lodash-webpack-plugin/-/lodash-webpack-plugin-0.11.6.tgz#8204c6b78beb62ce5211217dfe783c21557ecd33"
@@ -15475,7 +15479,7 @@ regenerator-runtime@^0.11.0:
   resolved "https://registry.npmjs.org/regenerator-runtime/-/regenerator-runtime-0.11.1.tgz#be05ad7f9bf7d22e056f9726cee5017fbf19e2e9"
   integrity sha512-MguG95oij0fC3QV3URf4V2SDYGJhJnJGqvIIgdECeODCT98wSWDAJ94SSuVpYQUoTcGUIL6L4yNB7j1DFFHSBg==
 
-regenerator-runtime@^0.13.2, regenerator-runtime@^0.13.3, regenerator-runtime@^0.13.4:
+regenerator-runtime@^0.13.2, regenerator-runtime@^0.13.3, regenerator-runtime@^0.13.4, regenerator-runtime@^0.13.7:
   version "0.13.7"
   resolved "https://registry.npmjs.org/regenerator-runtime/-/regenerator-runtime-0.13.7.tgz#cac2dacc8a1ea675feaabaeb8ae833898ae46f55"
   integrity sha512-a54FxoJDIr27pgf7IgeQGxmqUNYrcV338lf/6gH456HZ/PhX+5BcwHXG9ajESmwe6WRO0tAzRUrRmNONWgkrew==

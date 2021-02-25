@@ -40,7 +40,7 @@
     "docker:logs:web": "docker logs -f dish-app",
     "docker:stop:web": "docker rm -f dish-app || true",
     "validate:tsc": "tsc --noEmit",
-    "build": "yarn tsc -b || true && ultra -b --no-pretty build",
+    "build": "yarn tsc -b || true && ultra -r --no-pretty build",
     "build:docker": "./dishctl.sh buildkit_build_local",
     "build:ts:watch": "tsc -b -w --preserveWatchOutput tsconfig.build.json",
     "build:ts:watch:fast-incremental": "ultra -r --concurrency 1000 --no-pretty watch",
