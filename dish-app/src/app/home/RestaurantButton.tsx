@@ -2,7 +2,7 @@ import { graphql } from '@dish/graph'
 import { debounce } from 'lodash'
 import React, { useCallback } from 'react'
 import { Image } from 'react-native'
-import { Button, HStack, Hoverable, Text, VStack } from 'snackui'
+import { Button, HStack, Hoverable, Text, VStack, useTheme } from 'snackui'
 
 import { getColorsForName } from '../../helpers/getColorsForName'
 import { getImageUrl } from '../../helpers/getImageUrl'
@@ -24,7 +24,8 @@ export const RestaurantButton = graphql(
     hoverToMap?: boolean
   }) => {
     const [restaurant] = queryRestaurant(slug)
-    const colors = getColorsForName(slug)
+    // const colors = getColorsForName(slug)
+    const theme = useTheme()
     const onHover = useCallback(() => {
       setHovered({
         id,
@@ -49,7 +50,7 @@ export const RestaurantButton = graphql(
                 }}
               />
             )}
-            <Text ellipse color={colors.darkColor} fontWeight="400">
+            <Text ellipse color={theme.colorSecondary} fontWeight="400">
               {restaurant.name}
             </Text>
             <VStack margin={-6} marginLeft={10}>

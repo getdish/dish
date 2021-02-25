@@ -417,7 +417,7 @@ const AutocompleteFrame = ({ children }: { children: any }) => {
         <AbsoluteVStack fullscreen display={media.sm ? 'none' : 'flex'}>
           <BlurView
             fallbackBackgroundColor="transparent"
-            blurRadius={40}
+            blurRadius={100}
             blurType="dark"
             position="absolute"
             fullscreen

@@ -79,15 +79,15 @@ export const HomeFeedListsContents = graphql(
     const key = `${recentLists?.map((x) => x.id)}`
 
     return useMemo(() => {
-      if (!recentLists.length) {
-        return null
-      }
+      // if (!recentLists.length) {
+      //   return null
+      // }
       return (
         <>
           <FeedSlantedTitle>
             <HStack alignItems="center">
               <Text fontSize={20} fontWeight="700">
-                Playlists
+                Top Lists
               </Text>
               <Spacer size="sm" />
               <Link
