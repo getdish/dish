@@ -18,5 +18,7 @@ const postgrator = new Postgrator(config)
 
 postgrator
   .migrate()
-  .then((appliedMigrations) => console.log(appliedMigrations.join('\n')))
+  .then((appliedMigrations) =>
+    console.log('up to date', appliedMigrations.join('\n'))
+  )
   .catch((error) => console.error('Error migrating', error))

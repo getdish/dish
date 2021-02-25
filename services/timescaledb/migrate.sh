@@ -12,5 +12,5 @@ else
 fi
 
 pushd $path
-USE_SSL=$USE_SSL ./bin/migrate.sh
+USE_SSL=$USE_SSL ./bin/migrate.js
 popd
