@@ -11,8 +11,8 @@ const rc = redis.createClient({
 })
 const rGet = promisify(rc.get).bind(rc)
 
-const defaultHeaders = {
-  'Content-Type': 'application/json',
+const hasuraHeaders = {
+  'content-type': 'application/json',
   ...getAuthHeaders(true),
 }
 
@@ -37,8 +37,8 @@ export default route(async (req, res) => {
 
   try {
     const headers = {
-      ...defaultHeaders,
       ...req.headers,
+      ...hasuraHeaders,
     } as any
     const hasuraRes = await fetch(hasuraEndpoint, {
       method: 'POST',

@@ -19,7 +19,7 @@ export function getAuthHeaders(isAdmin?: boolean) {
   const auth = getAuth()
   return {
     ...(isAdmin && {
-      'X-Hasura-Admin-Secret': HASURA_SECRET,
+      'x-hasura-admin-secret': HASURA_SECRET,
     }),
     ...(auth && {
       Authorization: `Bearer ${auth.token}`,

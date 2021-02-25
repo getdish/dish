@@ -37,7 +37,6 @@ export const queryFetcher: QueryFetcher = async function (query, variables) {
     body,
     mode: 'cors',
   })
-
   if (!response.ok) {
     throw new Error(`Network error, received status code ${response.status}`)
   }
