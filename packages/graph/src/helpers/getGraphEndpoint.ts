@@ -1,4 +1,4 @@
-import { isProd, isStaging } from '../constants'
+import { DISH_API_ENDPOINT, isProd, isStaging } from '../constants'
 
 export function getGraphEndpointDomain() {
   const local = 'http://localhost:8080'
@@ -10,6 +10,10 @@ export function getGraphEndpointDomain() {
   return process.env.HASURA_ENDPOINT || local
 }
 
-export function getGraphEndpoint() {
+export function getGraphEndpointInternal() {
   return `${getGraphEndpointDomain()}/v1/graphql`
+}
+
+export function getGraphEndpoint() {
+  return `${DISH_API_ENDPOINT}/api/graph`
 }

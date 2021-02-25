@@ -1,38 +1,56 @@
-// import { route } from '@dish/api'
+import { promisify } from 'util'
 
-// // "apollo-server": "2.21.0",
-// // "graphql": "^15.5.0",
-// // "apollo-server-cache-redis": "^1.2.3"
+import { route, useRouteBodyParser } from '@dish/api'
+import { getAuthHeaders, getGraphEndpointInternal } from '@dish/graph'
+import redis from 'redis'
 
-// const { RedisCache } = require('apollo-server-cache-redis');
-// import { ApolloServer } from 'apollo-server'
+const host = process.env.REDIS_HOST || 'localhost'
+console.log('redis host', host)
+const rc = redis.createClient({
+  host,
+})
+const rGet = promisify(rc.get).bind(rc)
 
-// const server = new ApolloServer({
-//   typeDefs,
-//   resolvers,
-//   cache: new RedisCache({
-//     host: 'redis-server',
-//     // Options are passed through to the Redis client
-//   }),
-//   dataSources: () => ({
-//     moviesAPI: new MoviesAPI(),
-//   }),
-// });
+const defaultHeaders = {
+  'Content-Type': 'application/json',
+  ...getAuthHeaders(true),
+}
 
-// export default route(async (req, res) => {
-//   const url = `${host}${req.path}`
-//   console.log('fetch', url)
-//   const martinRes = await fetch(url).then((res) => res.json())
+const hasuraEndpoint = getGraphEndpointInternal()
 
-//   console.log('got', url, martinRes)
+function shouldCache(body: string) {
+  return body.includes('restaurant_new(')
+}
 
-//   if (martinRes.attribution == null) {
-//     res.send({
-//       ...martinRes,
-//       attribution: '',
-//     })
-//     return
-//   }
+export default route(async (req, res) => {
+  await useRouteBodyParser(req, res, { text: { type: '*/*' } })
+  const { body } = req
+  const doCache = shouldCache(body)
 
-//   res.send(martinRes)
-// })
+  if (doCache) {
+    const cache = await rGet(body)
+    if (cache) {
+      res.send(JSON.parse(cache))
+    }
+  }
+
+  try {
+    const headers = {
+      ...defaultHeaders,
+      ...req.headers,
+    } as any
+    const hasuraRes = await fetch(hasuraEndpoint, {
+      method: 'POST',
+      headers,
+      body,
+    })
+    const response = await hasuraRes.json()
+    if (doCache) {
+      rc.set(body, JSON.stringify(response))
+    }
+    res.send(response)
+  } catch (error) {
+    console.error('graph err', error)
+    res.status(500).send({ error })
+  }
+})

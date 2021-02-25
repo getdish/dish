@@ -77,6 +77,7 @@ services:
       - HASURA_SECRET=${TF_VAR_HASURA_GRAPHQL_ADMIN_SECRET:-password}
       - HASURA_ENDPOINT=http://hasura:8080
       - SEARCH_ENDPOINT=http://search:10000
+      - REDIS_HOST=redis
     ports:
       - 4444:4444
     depends_on:

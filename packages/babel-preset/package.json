@@ -10,7 +10,7 @@
     "react-native-web": "*",
     "@babel/core": "^7.12.9",
     "@babel/polyfill": "^7.12.1",
-    "core-js": "^3.8.1",
+    "core-js": "^3.9.0",
     "react-refresh": "0.0.0-experimental-3310209d0",
     "@loadable/babel-plugin": "^5.13.2",
     "@eps1lon/babel-plugin-optimize-react": "^0.0.4-alpha.4",

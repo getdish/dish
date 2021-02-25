@@ -75,10 +75,10 @@ export function handleErrors(fn: Handler) {
       }
       if (err.name !== 'RouteExit') {
         if (err.status) {
-          res.sendStatus(err.status)
+          res.status(err.status)
         }
         if (err.message) {
-          err.sendText(err.message)
+          res.send(err.message)
         }
         return
       }

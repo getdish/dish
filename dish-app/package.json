@@ -87,7 +87,9 @@
       "aws-sdk",
       "aws-sdk/**",
       "multer-s3",
-      "multer-s3/**"
+      "multer-s3/**",
+      "redis",
+      "redis/**"
     ]
   },
   "scripts": {
@@ -185,7 +187,8 @@
     "multer": "^1.4.2",
     "multer-s3": "^2.9.0",
     "uuid": "^8.3.0",
-    "@sendgrid/mail": "7.4.0"
+    "@sendgrid/mail": "7.4.0",
+    "redis": "^3.0.2"
   },
   "devDependencies": {
     "react-native-codegen": "^0.0.7",

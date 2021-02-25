@@ -13,6 +13,7 @@ export * from './constants'
 export * from './graphql'
 export * from './Auth'
 
+export * from './getAuth'
 export * from './helpers/flushTestData'
 export * from './helpers/tagHelpers'
 export * from './helpers/getGraphEndpoint'
