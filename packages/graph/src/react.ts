@@ -15,4 +15,5 @@ export const {
   useHydrateCache,
 } = createReactClient<GeneratedSchema>(client, {
   defaultSuspense: true,
+  defaultStaleWhileRevalidate: true,
 })

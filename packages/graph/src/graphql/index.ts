@@ -1,4 +1,5 @@
 import { QueryFetcher, createClient } from '@dish/gqless'
+import { createReactClient } from '@dish/gqless-react'
 
 import { Auth } from '../Auth'
 import { getAuthHeaders } from '../getAuth'
@@ -55,7 +56,7 @@ export const client = createClient<GeneratedSchema>({
   scalarsEnumsHash,
   queryFetcher,
   catchSelectionsTimeMS: 10,
-  // normalization: true,
+  normalization: true,
 })
 
 export const {
