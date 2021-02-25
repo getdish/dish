@@ -29,6 +29,7 @@ import {
   appMapStore,
   cancelUpdateRegion,
   updateRegion,
+  updateRegionFaster,
   updateRegionImmediate,
   useAppMapStore,
 } from './AppMapStore'
@@ -214,7 +215,7 @@ export default memo(function AppMap() {
       }
       if (region.via === 'click') {
         // avoid handleMoveStart being called next frame
-        updateRegionImmediate(region, position)
+        updateRegionFaster(region, position)
       } else {
         updateRegion(region, position)
       }

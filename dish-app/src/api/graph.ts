@@ -31,6 +31,7 @@ export default route(async (req, res) => {
     const cache = await rGet(body)
     if (cache) {
       res.send(JSON.parse(cache))
+      return
     }
   }
 

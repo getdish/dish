@@ -25,6 +25,8 @@
     "web:prod:optimize": "yarn workspace @dish/dish-app web:prod:optimize",
     "web:build": "yarn workspace @dish/dish-app web:build",
     "web:serve": "yarn workspace @dish/dish-app web:serve",
+    "etc:colorize": "yarn workspace @dish/dish-app etc:colorize",
+    "etc:colorize:staging": "yarn workspace @dish/dish-app etc:colorize:staging",
     "ios": "yarn workspace @dish/dish-app ios",
     "ios:install": "yarn workspace @dish/dish-app ios:install",
     "postinstall": "./bin/postinstall.sh",

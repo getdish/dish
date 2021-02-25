@@ -247,7 +247,8 @@ export function updateRegionImmediate(
   }
 }
 
-export const updateRegion = debounce(updateRegionImmediate, 300)
+export const updateRegion = debounce(updateRegionImmediate, 340)
+export const updateRegionFaster = debounce(updateRegionImmediate, 300)
 
 export const cancelUpdateRegion = () => {
   updateRegion.cancel()

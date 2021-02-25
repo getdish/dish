@@ -19,22 +19,21 @@ async function updateCounties() {
           slug: {
             _neq: '',
           },
-          color: {
-            _eq: null,
-          },
+          // color: {
+          //   _eq: null,
+          // },
         },
       })
       .map((x) => ({ ogc_fid: x.ogc_fid, slug: x.slug }))
   })
 
   for (const { slug, ogc_fid } of tiles) {
-    if (!slug) {
+    if (!slug || !ogc_fid) {
       continue
     }
-    const name = slug.replace(/[a-z]+\-/i, '')
-    const colors = getColorsForName(name)
+    const colors = getColorsForName(slug)
     if (colors) {
-      console.log('setting', name, slug, colors.color)
+      console.log('setting', slug, colors.pastelColor)
       await mutate((mutation) => {
         const res = mutation.update_hrr_by_pk({
           pk_columns: {
@@ -60,9 +59,9 @@ async function updateNeighborhoods() {
           slug: {
             _neq: '',
           },
-          color: {
-            _eq: null,
-          },
+          // color: {
+          //   _eq: null,
+          // },
         },
       })
       .map((x) => ({ ogc_fid: x.ogc_fid, slug: x.slug }))
@@ -70,11 +69,10 @@ async function updateNeighborhoods() {
 
   console.log('found', tiles.length, tiles[0])
   for (const { slug, ogc_fid } of tiles) {
-    if (!slug) {
+    if (!slug || !ogc_fid) {
       continue
     }
-    const name = slug.replace(/[a-z]+\-/i, '')
-    const colors = getColorsForName(name)
+    const colors = getColorsForName(slug)
     if (colors) {
       await mutate((mutation) => {
         const res = mutation.update_zcta5_by_pk({

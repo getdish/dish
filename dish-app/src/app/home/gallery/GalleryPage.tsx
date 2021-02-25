@@ -173,58 +173,60 @@ export const GalleryLightbox = ({
     }
   }, [activeIndex, setActiveImage, photosList])
 
-  const setLeftImage = () =>
-    // @ts-expect-error
-    setActiveImage((prevActive) => {
-      const currentIndex = prevActive.index
-
-      let newIndex =
-        currentIndex - 1 < 0 ? photosList.length - 1 : currentIndex - 1
-      if (photosList[newIndex]?.url) {
-        return {
-          url: photosList[newIndex].url,
-          index: newIndex,
-        }
-      }
-
-      return prevActive
-    })
-
-  const setRightImage = () => {
-    // @ts-expect-error
-    setActiveImage((prevActive) => {
-      const currentIndex = prevActive.index
-
-      let newIndex =
-        currentIndex + 1 >= photosList.length - 1 ? 0 : currentIndex + 1
-      if (photosList[newIndex]?.url) {
-        return {
-          url: photosList[newIndex].url,
-          index: newIndex,
-        }
-      }
-
-      return prevActive
-    })
-  }
+  const { setLeftImage, setRightImage } = useMemo(
+    () => ({
+      setLeftImage() {
+        setActiveImage((prevActive) => {
+          const currentIndex = prevActive.index
+          const newIndex =
+            currentIndex - 1 < 0 ? photosList.length - 1 : currentIndex - 1
+          if (photosList[newIndex]?.url) {
+            return {
+              url: photosList[newIndex].url ?? '',
+              index: newIndex,
+            }
+          }
+          return prevActive
+        })
+      },
+      setRightImage() {
+        setActiveImage((prevActive) => {
+          const currentIndex = prevActive.index
+          const newIndex =
+            currentIndex + 1 >= photosList.length - 1 ? 0 : currentIndex + 1
+          if (photosList[newIndex]?.url) {
+            return {
+              url: photosList[newIndex].url ?? '',
+              index: newIndex,
+            }
+          }
+          return prevActive
+        })
+      },
+    }),
+    [photosList]
+  )
 
   if (isWeb) {
     useEffect(() => {
       const handleKeyPress = (e: KeyboardEvent) => {
         switch (e.key) {
           case 'ArrowLeft':
+            e.preventDefault()
             setLeftImage()
             break
           case 'ArrowRight':
+            e.preventDefault()
             setRightImage()
             break
         }
       }
-      window.addEventListener('keyup', handleKeyPress)
+      console.log('add event listener for gallery')
+      window.addEventListener('keyup', handleKeyPress, true)
       return () => {
-        window.removeEventListener('keyup', handleKeyPress)
+        window.removeEventListener('keyup', handleKeyPress, true)
       }
-    }, [])
+    }, [setLeftImage, setRightImage])
   }
 
   return (
