@@ -58,7 +58,7 @@ test.beforeEach(async () => {
   await deleteAllFuzzyBy('restaurant', 'name', 'test')
 })
 
-test('Normal user cannot delete things', async (t) => {
+test.skip('Normal user cannot delete things', async (t) => {
   let error: Error
   await Auth.register('tester', 'test@test.com', 'password')
   await Auth.login('tester', 'password')
