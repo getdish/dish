@@ -40,7 +40,7 @@ export const tagDescriptions = {
   drinks: {
     dish: '🍔 & drinks',
     cuisine: '🍔 with a bar',
-    plain: 'Good 🍔 drinks',
+    plain: 'The best 🍔 drinks',
   },
   veg: {
     dish: 'The best Vegetarian 🍔',

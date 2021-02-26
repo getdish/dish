@@ -32,17 +32,14 @@ const setHovered = debounce(appMapStore.setHovered, 300)
 
 export const RestaurantCard = (props: RestaurantCardProps) => {
   const fallbackCard = <CardFrame aspectFixed size={props.size} />
-
   if (!props.restaurantSlug) {
     return fallbackCard
   }
-
   const content = (
     <Suspense fallback={fallbackCard}>
       <RestaurantCardContent {...props} />
     </Suspense>
   )
-
   if (props.hoverToMap) {
     return (
       <Hoverable
@@ -58,7 +55,6 @@ export const RestaurantCard = (props: RestaurantCardProps) => {
       </Hoverable>
     )
   }
-
   return content
 }
 
