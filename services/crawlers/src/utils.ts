@@ -27,20 +27,13 @@ export const CITY_LIST = [
 ]
 
 export class DB {
-  pool: Pool
+  pool: Pool | null = null
 
   constructor(public config: Object) {
     if (process.env.DEBUG) {
       console.log('setup db', config)
     }
-    this.pool = new Pool(this.config)
-    this.pool.on('error', (e) => {
-      console.log('error', e)
-      sentryException(e, {
-        more: 'Error likely from long-lived pool connection in node-pg',
-      })
-      // this.pool = null
-    })
+    this.connect()
   }
 
   static main_db() {
@@ -58,12 +51,18 @@ export class DB {
   static async one_query_on_main(query: string) {
     const db = DB.main_db()
     const result = await db.query(query)
-    // await db.pool?.end()
+    await db.pool?.end()
     return result
   }
 
-  async connect() {
-    return await this.pool.connect()
+  connect() {
+    this.pool = new Pool(this.config)
+    this.pool.on('error', (e) => {
+      sentryException(e, {
+        more: 'Error likely from long-lived pool connection in node-pg',
+      })
+      this.pool = null
+    })
   }
 
   async query(query: string) {
@@ -71,9 +70,15 @@ export class DB {
       console.log('DB.query', this.config['port'], query)
     }
     let result: QueryResult
-    const client = await this.connect()
+    if (!this.pool) {
+      this.connect()
+    }
+    const client = await this.pool?.connect()
+    if (!client) {
+      throw new Error('no client')
+    }
     try {
-      const timeout = sleep(8000)
+      const timeout = sleep(15000)
       const res = await Promise.race([
         client.query(query),
         timeout.then(() => {
