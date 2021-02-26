@@ -43,6 +43,7 @@ export const SearchHeader = memo(() => {
               </AbsoluteVStack>
               <SlantedTitle
                 paddingHorizontal={35}
+                paddingVertical={2}
                 backgroundColor={rgbString(lenseColor)}
                 color="#fff"
                 size="lg"

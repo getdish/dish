@@ -96,32 +96,42 @@ export const HomeFeedTrendingNew = memo(
       contents = (
         <>
           <AbsoluteVStack
-            fullscreen
+            top={0}
+            left={0}
+            bottom={0}
             paddingLeft={20}
             pointerEvents="none"
             justifyContent="center"
+            width={100}
           >
-            <SlantedTitle fontWeight="300" size="xs" zIndex={10}>
+            <SlantedTitle
+              alignSelf="flex-end"
+              fontWeight="300"
+              size="xs"
+              zIndex={10}
+            >
               {props.title}
             </SlantedTitle>
           </AbsoluteVStack>
           <VStack maxWidth="100%" overflow="hidden">
             <ContentScrollViewHorizontal>
               <VStack
-                paddingVertical={5}
+                paddingVertical={10}
                 paddingHorizontal={40}
                 flexWrap="nowrap"
               >
                 <HStack spacing={14}>
-                  <VStack width={props.type == 'hot' ? 60 : 30} />
+                  <VStack width={60} />
 
                   {restaurants.map((r, index) => {
                     if (!r) return null
                     return (
-                      <RestaurantButton
+                      <RestaurantCard
                         key={index}
-                        slug={r.slug}
-                        id={r.id}
+                        restaurantSlug={r.slug}
+                        restaurantId={r.id}
+                        hoverable
+                        size="xs"
                         hoverToMap
                       />
                     )

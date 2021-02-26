@@ -24,11 +24,10 @@ export const CardFrame = ({
   hoverable?: boolean
   transparent?: boolean
   aspectFixed?: boolean
-  size?: 'md' | 'sm'
+  size?: 'md' | 'sm' | 'xs'
   square?: boolean
 }) => {
   const theme = useTheme()
-  const media = useMedia()
   return (
     <VStack
       className="hover-parent  ease-in-out-fast"
@@ -48,9 +47,6 @@ export const CardFrame = ({
       {...(expandable && {
         width: cardFrameWidth * 2,
       })}
-      {...(media.xs && {
-        width: '90%',
-      })}
       {...(aspectFixed && {
         width: cardFrameWidth,
       })}
@@ -64,6 +60,12 @@ export const CardFrame = ({
         square && {
           height: cardFrameWidthSm,
         })}
+      {...(size === 'xs' && {
+        minWidth: 140,
+        width: 'auto',
+        maxWidth: 250,
+        height: 48,
+      })}
       // {...(hoverable && {
       //   hoverStyle: {
       //     transform: [{ scale: 1.015 }],

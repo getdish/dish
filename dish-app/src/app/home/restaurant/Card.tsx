@@ -2,12 +2,10 @@ import React from 'react'
 import { Image, StyleSheet } from 'react-native'
 import {
   AbsoluteVStack,
-  Circle,
   HStack,
   LinearGradient,
   Paragraph,
   Spacer,
-  StackProps,
   Text,
   VStack,
 } from 'snackui'
@@ -35,13 +33,31 @@ export type CardProps = {
   hideInfo?: boolean
   aspectFixed?: boolean
   hoverable?: boolean
-  size?: 'sm' | 'md'
+  size?: 'sm' | 'md' | 'xs'
   backgroundColor?: string | null
   isBehind?: boolean
   dimImage?: boolean
   padTitleSide?: boolean
   square?: boolean
   colorsKey?: string
+}
+
+const widths = {
+  xs: 250,
+  sm: cardFrameWidthSm,
+  md: cardFrameWidth,
+}
+
+const heights = {
+  xs: 48,
+  sm: cardFrameHeightSm,
+  md: cardFrameHeight,
+}
+
+const scales = {
+  xs: 0.65,
+  sm: 0.85,
+  md: 1,
 }
 
 export function Card({
@@ -59,16 +75,15 @@ export function Card({
   backgroundColor,
   isBehind,
   dimImage,
-  size,
+  size = 'md',
 }: CardProps) {
   const colors = backgroundColor
     ? getColorsForColor(backgroundColor)
     : getColorsForName(colorsKey || title || '')
   const underColor = `${colors.pastelColor}99`
-  const overColor = colors.color
   const isSm = size === 'sm'
-  const width = isSm ? cardFrameWidthSm : cardFrameWidth
-  const height = square ? width : isSm ? cardFrameHeightSm : cardFrameHeight
+  const width = widths[size]
+  const height = square ? width : heights[size]
   const sizes = {
     width,
     height,
@@ -79,7 +94,7 @@ export function Card({
   }
   const longestWord =
     title?.split(' ').reduce((acc, cur) => Math.max(cur.length, acc), 0) ?? 0
-  const fontSize = Math.round((longestWord > 9 ? 24 : 28) * (isSm ? 0.85 : 1))
+  const fontSize = Math.round((longestWord > 9 ? 24 : 28) * scales[size])
 
   return (
     <CardFrame
@@ -93,14 +108,12 @@ export function Card({
         backgroundColor={colors.pastelColor}
         width="100%"
         height="100%"
+        position="relative"
       >
-        <VStack
+        <AbsoluteVStack
+          fullscreen
           className="safari-fix-overflow"
-          pointerEvents="auto"
-          width="100%"
           overflow="hidden"
-          alignSelf="center"
-          position="relative"
           borderRadius={cardFrameBorderRadius}
           backgroundColor={backgroundColor || underColor || ''}
         >
@@ -135,12 +148,12 @@ export function Card({
               photo
             )}
           </VStack>
-        </VStack>
+        </AbsoluteVStack>
 
         {typeof outside === 'function' ? outside(colors) : outside}
 
-        <AbsoluteVStack
-          alignItems="flex-start"
+        <VStack
+          className="safari-fix-overflow"
           fullscreen
           justifyContent="flex-end"
           pointerEvents="none"
@@ -157,12 +170,7 @@ export function Card({
             top="0%"
             right={-20}
             opacity={1}
-            transform={[
-              { rotate: '45deg' },
-              { scaleX: 2 },
-              { translateY: 30 },
-              { translateY: 30 },
-            ]}
+            transform={[{ rotate: '45deg' }, { scaleX: 2 }, { translateY: 80 }]}
           >
             <LinearGradient
               style={StyleSheet.absoluteFill}
@@ -173,14 +181,11 @@ export function Card({
           <VStack
             className="ease-in-out"
             opacity={hideInfo ? 0 : 1}
-            padding={20}
+            paddingHorizontal={size === 'xs' ? 30 : 20}
+            paddingVertical={size === 'xs' ? 15 : 20}
             alignItems="flex-start"
-            spacing
-            width="100%"
-            height="100%"
-            contain="strict"
           >
-            <HStack width="100%">
+            <HStack flex={1} width="100%">
               {!!padTitleSide &&
                 (isSm ? (
                   <VStack minWidth={30} flex={1} />
@@ -189,6 +194,7 @@ export function Card({
                 ))}
               <VStack flex={1} alignItems="flex-end">
                 <VStack position="relative">
+                  {/* title gradient */}
                   <AbsoluteVStack
                     className="hover-50-opacity-child ease-in-out-slow"
                     zIndex={-1}
@@ -216,17 +222,19 @@ export function Card({
                     textShadowColor="#00000033"
                     textShadowRadius={4}
                     textShadowOffset={{ height: 2, width: 0 }}
-                    fontWeight="800"
+                    fontWeight={size === 'xs' ? '600' : '800'}
                     letterSpacing={-1}
                     color="#fff"
                     fontSize={fontSize}
                     lineHeight={fontSize}
+                    ellipse={size === 'xs'}
+                    flexShrink={0}
                   >
                     {title}
                   </Text>
                 </VStack>
                 <Spacer size="xs" />
-                {!!subTitle && (
+                {!!subTitle && size !== 'xs' && (
                   <Paragraph
                     textAlign="right"
                     color="#fff"
@@ -243,7 +251,7 @@ export function Card({
             <VStack flex={1} />
             {typeof below === 'function' ? below(colors) : below}
           </VStack>
-        </AbsoluteVStack>
+        </VStack>
       </VStack>
     </CardFrame>
   )
