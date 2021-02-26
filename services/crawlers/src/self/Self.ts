@@ -168,7 +168,7 @@ export class Self extends WorkerJob {
       }
       await this.postMerge()
     }
-    await this.main_db.pool.end()
+    await this.main_db.pool?.end()
   }
 
   async mergeMainData() {
