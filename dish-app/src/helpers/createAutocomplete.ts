@@ -4,6 +4,7 @@ type Base = {
   icon?: string
   name: string
   description?: string
+  namePrefix?: string
 }
 
 export type AutocompleteItemRestuarant = Base & {

@@ -206,7 +206,7 @@ const AutocompleteSearchInner = memo(() => {
 
   useEffect(() => {
     if (!query) {
-      store.setResults([])
+      store.setResults(homeDefaultResults)
       return
     }
     let results: AutocompleteItemFull[] = []
@@ -244,7 +244,7 @@ const AutocompleteSearchInner = memo(() => {
         }
       },
       // allow cancel
-      () => sleep(30),
+      () => sleep(1),
       async () => {
         results = await filterAutocompletes(query, results)
       },
@@ -302,7 +302,6 @@ const AutocompleteSearchInner = memo(() => {
     <AutocompleteFrame>
       <AutocompleteResults
         target="search"
-        emptyContent={<HomeAutocompleteDefault />}
         prefixResults={[
           {
             name: 'Enter to search',
@@ -324,6 +323,16 @@ const AutocompleteSearchInner = memo(() => {
       />
     </AutocompleteFrame>
   )
+})
+
+const homeDefaultResults = tagDefaultAutocomplete.map((tag) => {
+  return createAutocomplete({
+    type: 'dish',
+    slug: tag.slug,
+    icon: tag.icon,
+    name: tag.name,
+    namePrefix: 'The best',
+  })
 })
 
 const AutocompleteLocationInner = memo(() => {
@@ -481,14 +490,13 @@ type AutocompleteSelectCb = (result: AutocompleteItem, index: number) => void
 
 const AutocompleteResults = ({
   target,
-  emptyContent = null,
   prefixResults = [],
   onSelect,
 }: {
   target: AutocompleteTarget
   prefixResults?: any[]
-  emptyContent?: any
   onSelect: AutocompleteSelectCb
+  emptyResults?: AutocompleteItem[]
 }) => {
   const autocompleteStore = useStore(AutocompleteStore, { target })
   const activeIndex = autocompleteStore.index
@@ -496,24 +504,22 @@ const AutocompleteResults = ({
   const results = [...prefixResults, ...ogResults]
   return (
     <VStack paddingVertical={10}>
-      {!ogResults.length && emptyContent}
-      {!!ogResults.length &&
-        results.map((result, index) => {
-          const isActive = activeIndex === index
-          return (
-            <React.Fragment key={`${result.id}${index}`}>
-              <Theme name={isActive ? 'active' : null}>
-                <AutocompleteItemView
-                  target={target}
-                  index={index}
-                  result={result}
-                  onSelect={onSelect}
-                />
-              </Theme>
-              <Spacer size={1} />
-            </React.Fragment>
-          )
-        })}
+      {results.map((result, index) => {
+        const isActive = activeIndex === index
+        return (
+          <React.Fragment key={`${result.id}${index}`}>
+            <Theme name={isActive ? 'active' : null}>
+              <AutocompleteItemView
+                target={target}
+                index={index}
+                result={result}
+                onSelect={onSelect}
+              />
+            </Theme>
+            <Spacer size={1} />
+          </React.Fragment>
+        )
+      })}
     </VStack>
   )
 }
@@ -560,13 +566,13 @@ export const AutocompleteItemView = memo(
         <Image
           source={{ uri: result.icon }}
           style={{
-            width: 26,
-            height: 26,
+            width: 32,
+            height: 32,
             borderRadius: 100,
           }}
         />
       ) : result.icon ? (
-        <Text fontSize={22}>{result.icon} </Text>
+        <Text fontSize={32}>{result.icon} </Text>
       ) : null
 
     return (
@@ -603,9 +609,14 @@ export const AutocompleteItemView = memo(
                 fontWeight="700"
                 ellipse
                 color={theme.color}
-                fontSize={20}
-                lineHeight={20}
+                fontSize={24}
+                lineHeight={24}
               >
+                {!!result.namePrefix && (
+                  <>
+                    <Text fontWeight="300">{result.namePrefix}</Text>{' '}
+                  </>
+                )}
                 {result.name}
               </Text>
             </HStack>
@@ -629,7 +640,7 @@ const HomeAutocompleteDefault = memo(() => {
   const media = useMedia()
   const theme = useTheme()
   return (
-    <HStack
+    <VStack
       width="100%"
       flexWrap="wrap"
       alignItems="center"
@@ -678,7 +689,7 @@ const HomeAutocompleteDefault = memo(() => {
           </VStack>
         )
       })}
-    </HStack>
+    </VStack>
   )
 })
 
