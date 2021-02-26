@@ -11,7 +11,7 @@ const config = {
   database: process.env.PG_DATABASE || 'scrape_data',
   username: process.env.PG_USER || 'postgres',
   password: process.env.PG_PASS || 'postgres',
-  ssl: process.env.USE_SSL || false,
+  ssl: process.env.USE_SSL === 'true' ? true : false,
 }
 
 const postgrator = new Postgrator(config)
