@@ -47,8 +47,9 @@ export const SEARCH_DOMAIN = (() => {
 })()
 
 export const ZeroUUID = '00000000-0000-0000-0000-000000000000'
+export const OneUUID = '00000000-0000-0000-0000-000000000001'
 export const globalTagId = ZeroUUID
-export const externalUserUUID = '00000000-0000-0000-0000-000000000001'
+export const externalUserUUID = OneUUID
 
 // Note that there is no unit or reference point for these values. All that
 // matters is simply the relative differences between them. For example therefore

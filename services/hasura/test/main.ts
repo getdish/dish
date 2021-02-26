@@ -4,6 +4,7 @@ import {
   Auth,
   Restaurant,
   UserWithId,
+  ZeroUUID,
   deleteAllBy,
   deleteAllFuzzyBy,
   mutation,
@@ -63,21 +64,21 @@ test('Normal user cannot delete things', async (t) => {
   await Auth.login('tester', 'password')
   Auth.as('user')
 
-  error = await t.throwsAsync(() => deleteAllBy('restaurant', 'id', 'example'))
+  error = await t.throwsAsync(() => deleteAllBy('restaurant', 'id', ZeroUUID))
   t.assert(
     error.message.includes(
       'field "delete_restaurant" not found in type: \'mutation_root\''
     )
   )
 
-  error = await t.throwsAsync(() => deleteAllBy('user', 'id', 'example'))
+  error = await t.throwsAsync(() => deleteAllBy('user', 'id', ZeroUUID))
   t.assert(
     error.message.includes(
       'field "delete_user" not found in type: \'mutation_root\''
     )
   )
 
-  error = await t.throwsAsync(() => deleteAllBy('menu_item', 'id', 'example'))
+  error = await t.throwsAsync(() => deleteAllBy('menu_item', 'id', ZeroUUID))
   t.assert(
     error.message.includes(
       'field "delete_menu_item" not found in type: \'mutation_root\''
