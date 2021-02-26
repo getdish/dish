@@ -272,12 +272,16 @@ const google_review_api: Partial<Scrape> = {
 }
 
 async function reset(t: ExecutionContext<Context>) {
+  console.log('t1')
   await flushTestData()
+  console.log('t2')
   await deleteAllTestScrapes()
+  console.log('t3')
   const [restaurant, _] = await restaurantInsert([
     restaurant_fixture,
     restaurant_fixture_nearly_matches,
   ])
+  console.log('t4')
   t.context.restaurant = (await restaurantFindOneWithTagsSQL(
     restaurant.id
   )) as RestaurantWithId
@@ -294,7 +298,9 @@ async function reset(t: ExecutionContext<Context>) {
       ...google_review_api,
     },
   ]
+  console.log('t5')
   await Promise.all(scrapes.map((s) => scrapeInsert(s)))
+  console.log('t6')
   await tagUpsert([
     {
       name: 'Gem',
@@ -343,8 +349,9 @@ async function addTags(
 
 test.beforeEach(async (t) => {
   sinon.restore()
-  await reset(t)
+  console.log('reseting')
   t.timeout(30000)
+  await reset(t)
 })
 
 test('Merging', async (t) => {
@@ -389,11 +396,15 @@ test('Merging', async (t) => {
 
 test('Merging dishes', async (t) => {
   const self = new Self()
+  console.log('1')
   await self.mergeAll(t.context.restaurant.id)
+  console.log('2')
   await self.finishTagsEtc()
+  console.log('3')
   const updated = await restaurantFindOneWithTags({
     id: t.context.restaurant.id,
   })
+  console.log('4')
   t.is(!!updated, true)
   if (!updated) return
   t.is(updated.menu_items.length, 2)
