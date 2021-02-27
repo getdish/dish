@@ -1,4 +1,4 @@
 #!/usr/bin/env node
 
-require("../_/index").run()
+require("../dist/index").run()
 

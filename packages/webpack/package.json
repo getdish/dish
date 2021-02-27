@@ -1,11 +1,13 @@
 {
   "name": "@dish/webpack",
   "version": "0.0.1",
-  "main": "_/webpack.config.js",
   "sideEffects": false,
+  "main": "dist",
+  "module": "_",
+  "tsmain": "src",
   "scripts": {
-    "build": "tsc -b",
-    "watch": "tsc -b --watch --preserveWatchOutput"
+    "build": "esdx",
+    "watch": "esdx-watch"
   },
   "dependencies": {
     "@dish/helpers": "*",
@@ -42,5 +44,8 @@
     "webpack-bundle-analyzer": "^4.2.0",
     "webpack-node-externals": "^2.5.2",
     "@mdx-js/loader": "^1.6.22"
+  },
+  "devDependencies": {
+    "@dish/esdx": "*"
   }
 }

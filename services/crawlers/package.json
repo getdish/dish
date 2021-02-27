@@ -1,13 +1,13 @@
 {
   "name": "@dish/crawlers",
   "version": "0.0.1",
-  "main": "_/index.js",
+  "main": "dist",
   "sideEffects": false,
   "scripts": {
     "prebuild": "rm -f tsconfig.tsbuildinfo",
     "start": "node _/index.js",
-    "build": "tsc -b",
-    "watch": "tsc -b --watch --preserveWatchOutput",
+    "build": "esdx",
+    "watch": "esdx-watch",
     "worker": "node _/worker.js",
     "worker:watch": "nodemon _/worker.js",
     "test": "TARGET=node RUN_WITHOUT_WORKER=true DISH_ENV=test ava test/idempotent/* --verbose",
@@ -43,6 +43,7 @@
     "transliteration": "^2.1.8"
   },
   "devDependencies": {
+    "@dish/esdx": "*",
     "@types/cheerio": "^0.22.22",
     "@types/puppeteer": "^3.0.1",
     "@zeit/ncc": "^0.20.5",

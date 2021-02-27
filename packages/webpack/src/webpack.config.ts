@@ -20,7 +20,7 @@ import WebpackPwaManifest from 'webpack-pwa-manifest'
 
 const CssMinimizerPlugin = require('css-minimizer-webpack-plugin')
 
-export default function createWebpackConfig({
+export function createWebpackConfig({
   entry,
   env,
   target,

@@ -1,14 +1,13 @@
 {
   "name": "@dish/worker-service",
   "version": "0.0.1",
-  "main": "_/index.js",
+  "main": "dist",
   "sideEffects": false,
   "license": "none",
   "scripts": {
-    "prebuild": "rm -f tsconfig.tsbuildinfo",
+    "build": "esdx",
+    "watch": "esdx-watch",
     "start": "node _/index.js",
-    "build": "tsc -b",
-    "watch": "tsc -b --watch --preserveWatchOutput",
     "worker": "node _/worker.js",
     "worker:watch": "nodemon _/worker.js",
     "test": "true"
@@ -20,6 +19,7 @@
     "bull": "^3.18.0"
   },
   "devDependencies": {
+    "@dish/esdx": "*",
     "@types/bull": "^3.14.2",
     "@zeit/ncc": "^0.20.5",
     "nodemon": "^2.0.2",

@@ -1,0 +1,17 @@
+{
+  "name": "@dish/esdx",
+  "version": "0.0.1",
+  "bin": {
+    "esdx": "./esdx.sh",
+    "esdx-watch": "./esdx-watch.sh"
+  },
+  "files": [
+    "/bin",
+    "/_"
+  ],
+  "dependencies": {
+    "esbuild": "^0.8.53",
+    "chokidar-cli": "^2.1.0",
+    "esbuild-node-tsc": "^1.2.0"
+  }
+}

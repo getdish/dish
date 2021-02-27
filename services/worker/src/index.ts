@@ -1,5 +1,3 @@
-import os from 'os'
-
 import { sentryException } from '@dish/common'
 import { getBullQueue } from '@dish/worker'
 import { QueueOptions } from 'bull'

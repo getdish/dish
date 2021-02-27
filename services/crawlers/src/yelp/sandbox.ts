@@ -4,7 +4,7 @@ import { restaurantFindOne } from '@dish/graph'
 
 import { Yelp } from './Yelp'
 
-async function one(slug: string) {
+async function two(slug: string) {
   try {
     if (!slug) {
       console.warn('no slug')
@@ -30,6 +30,6 @@ async function one(slug: string) {
   }
 }
 
-one(process.env.SLUG || '').then(() => {
+two(process.env.SLUG || '').then(() => {
   process.exit(0)
 })

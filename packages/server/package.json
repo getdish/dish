@@ -1,23 +1,24 @@
 {
   "name": "@dish/server",
   "version": "0.0.1",
-  "main": "_/index.js",
-  "tsmain": "src",
   "sideEffects": false,
   "private": true,
   "bin": {
     "dish": "./bin/run"
   },
+  "main": "dist",
+  "module": "_",
+  "tsmain": "src",
+  "scripts": {
+    "build": "esdx",
+    "watch": "esdx-watch"
+  },
   "files": [
     "/bin",
     "/_"
   ],
-  "scripts": {
-    "build": "tsc -b tsconfig.json",
-    "watch": "tsc -b tsconfig.json --watch --preserveWatchOutput"
-  },
   "oclif": {
-    "commands": "./_/commands",
+    "commands": "./dist/commands",
     "bin": "dish",
     "plugins": [
       "@oclif/plugin-help",
@@ -59,6 +60,7 @@
     "express-http-proxy": "^1.6.2"
   },
   "devDependencies": {
+    "@dish/esdx": "*",
     "webpack-dev-middleware": "^4.0.3",
     "connect-history-api-fallback": "^1.6.0",
     "webpack-hot-middleware": "^2.25.0",

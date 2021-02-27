@@ -1,16 +1,14 @@
 {
   "name": "@dish/router",
   "version": "0.0.1",
-  "main": "_/index.js",
-  "types": "_/index.d.ts",
-  "tsmain": "src/index",
   "sideEffects": false,
   "private": true,
+  "main": "dist",
+  "module": "_",
+  "tsmain": "src",
   "scripts": {
-    "prebuild": "rm -f tsconfig.tsbuildinfo",
-    "build": "tsc -b",
-    "watch": "tsc -b --watch --preserveWatchOutput",
-    "test": "ava test/* --verbose"
+    "build": "esdx",
+    "watch": "esdx-watch"
   },
   "dependencies": {
     "history": "^5.0.0",
@@ -18,6 +16,7 @@
     "tiny-request-router": "^1.2.2"
   },
   "devDependencies": {
+    "@dish/esdx": "*",
     "@dish/react-test-env": "*"
   },
   "peerDependencies": {

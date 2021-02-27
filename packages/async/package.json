@@ -1,18 +1,19 @@
 {
   "name": "@dish/async",
   "version": "0.0.1",
-  "main": "_/index.js",
-  "tsmain": "src/index",
   "sideEffects": false,
   "publishConfig": {
     "access": "public"
   },
+  "main": "dist",
+  "module": "_",
+  "tsmain": "src",
   "scripts": {
-    "prebuild": "rm -f tsconfig.tsbuildinfo",
-    "build": "tsc -b",
-    "watch": "tsc -b --watch --preserveWatchOutput"
+    "build": "esdx",
+    "watch": "esdx-watch"
   },
   "devDependencies": {
+    "@dish/esdx": "*",
     "@types/requestidlecallback": "0.3.1"
   }
 }

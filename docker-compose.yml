@@ -49,7 +49,7 @@ services:
     ports:
       - 8080:8080
     environment:
-      - HASURA_GRAPHQL_DATABASE_URL=postgres://postgres:postgres@postgres/dish
+      - HASURA_GRAPHQL_DATABASE_URL=postgres://postgres:postgres@postgres/${POSTGRES_DB:-dish}
       - HASURA_GRAPHQL_ENABLED_LOG_TYPES=startup, http-log, webhook-log, websocket-log, query-log
       - HASURA_GRAPHQL_ENABLE_TELEMETRY=false
       - HASURA_GRAPHQL_ADMIN_SECRET=${TF_VAR_HASURA_GRAPHQL_ADMIN_SECRET:-password}
@@ -89,7 +89,7 @@ services:
       - 3005:3000
     environment:
       - WATCH_MODE=true
-      - DATABASE_URL=postgres://postgres:postgres@postgres/dish
+      - DATABASE_URL=postgres://postgres:postgres@postgres/${POSTGRES_DB:-dish}
       - VIRTUAL_HOST=martin-tiles-staging.dishapp.com
     depends_on:
       - 'postgres'

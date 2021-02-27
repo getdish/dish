@@ -2,20 +2,20 @@
   "name": "@dish/dish-hooks",
   "version": "0.0.1",
   "description": "",
+  "main": "dist",
   "private": true,
+  "scripts": {
+    "build": "esdx",
+    "watch": "esdx-watch",
+    "start": "node ./_/index.js"
+  },
   "dependencies": {
     "express": "^4.17.1",
     "node-fetch": "^2.6.1"
   },
   "devDependencies": {
+    "@dish/esdx": "*",
     "ava": "^3.14.0",
     "typescript": "*"
-  },
-  "scripts": {
-    "prebuild": "rm -f tsconfig.tsbuildinfo",
-    "build": "tsc -b",
-    "watch": "tsc -b --watch --preserveWatchOutput",
-    "start": "node ./_/index.js",
-    "test": "true"
   }
 }
