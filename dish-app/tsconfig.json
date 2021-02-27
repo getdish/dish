@@ -1,5 +1,5 @@
 {
-  "extends": "../tsconfig",
+  "extends": "../tsconfig.base",
 
   "compilerOptions": {
     "allowSyntheticDefaultImports": true,
@@ -8,8 +8,6 @@
     "importHelpers": true,
     "jsx": "react-native",
     "lib": ["dom", "esnext"],
-    "module": "CommonJS",
-    "moduleResolution": "node",
     "noFallthroughCasesInSwitch": true,
     "outDir": "_",
     "noEmit": true,

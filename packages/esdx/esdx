@@ -2,14 +2,18 @@
 
 shift 1
 
+set -e
+
 if [[ $NO_CHECK == true ]]; then
   echo "skip typecheck"
 else
+  if [ -f tsconfig.tsbuildinfo ]; then rm tsconfig.tsbuildinfo; fi
+  if [ -d _ ]; then rm -r _; fi
+  if [ -d dist ]; then rm -r dist; fi
   # first build types fast
-  tsc --emitDeclarationOnly --skipLibCheck --skipDefaultLibCheck
+  yarn tsc --emitDeclarationOnly --skipLibCheck --skipDefaultLibCheck
   # then copy to dist as well to only build once
-  rm -r dist || true
-cp -r _ dist
+  cp -r _ dist
 fi
 
 if [ $SWC ]; then
