@@ -39,7 +39,8 @@ test.beforeEach(async (t) => {
   t.context.user = user
 })
 
-test('Adds and updates Gorse feedback', async (t) => {
+// tom - flaky
+test.skip('Adds and updates Gorse feedback', async (t) => {
   await reviewUpsert([
     {
       restaurant_id: t.context.restaurant.id,

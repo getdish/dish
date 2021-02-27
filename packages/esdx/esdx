@@ -8,11 +8,18 @@ else
   # first build types fast
   tsc --emitDeclarationOnly --skipLibCheck --skipDefaultLibCheck
   # then copy to dist as well to only build once
-  rm -r dist || true && cp -r _ dist
+  rm -r dist || true
+cp -r _ dist
 fi
 
-# then build logic fast...
-FILES=$(find ./src \( -name '*.ts' -o -name '*.tsx' \))
-esbuild $FILES --outdir=_  --target=safari13 "$@" &
-esbuild $FILES --outdir=dist --format=cjs --target=node12.19.0 "$@" &
+if [ $SWC ]; then
+  DIR=$(dirname $(realpath $0))
+  swc src -s -c $DIR/.swcrc-modern --out-dir _ &
+  swc src -s -c $DIR/.swcrc-node --out-dir dist &
+else
+  FILES=$(find ./src \( -name '*.ts' -o -name '*.tsx' \))
+  esbuild $FILES --sourcemap --outdir=_  --target=safari13 "$@" &
+  esbuild $FILES --sourcemap --outdir=dist --format=cjs --target=node12.19.0 "$@" &
+fi
+
 wait
