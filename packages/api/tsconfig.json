@@ -5,7 +5,6 @@
     "composite": true,
     "baseUrl": ".",
     "incremental": true,
-    "module": "CommonJS",
     "esModuleInterop": true,
     "target": "es2020",
     "outDir": "_",

@@ -4,8 +4,6 @@
   "compilerOptions": {
     "composite": true,
     "baseUrl": ".",
-    "module": "CommonJS",
-    "strictNullChecks": true,
     "outDir": "_",
     "rootDir": "./src"
   },

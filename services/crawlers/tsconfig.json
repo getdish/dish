@@ -1,8 +1,6 @@
 {
   "extends": "../../tsconfig.base",
   "compilerOptions": {
-    "module": "commonjs",
-    "target": "esnext",
     "composite": true,
     "outDir": "_",
     "rootDir": "src"

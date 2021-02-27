@@ -1,9 +1,7 @@
 {
   "extends": "../../tsconfig.base",
   "compilerOptions": {
-    "module": "CommonJS",
     "composite": true,
-    "target": "es2020",
     "outDir": "_",
     "rootDir": "src"
   },

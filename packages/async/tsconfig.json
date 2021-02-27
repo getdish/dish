@@ -5,7 +5,6 @@
     "composite": true,
     "baseUrl": ".",
     "outDir": "_",
-    "module": "CommonJS",
     "rootDir": "src"
   },
 
