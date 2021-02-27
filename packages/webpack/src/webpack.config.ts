@@ -18,6 +18,8 @@ import TerserPlugin from 'terser-webpack-plugin'
 import Webpack from 'webpack'
 import WebpackPwaManifest from 'webpack-pwa-manifest'
 
+const { ESBuildPlugin } = require('esbuild-loader')
+
 const CssMinimizerPlugin = require('css-minimizer-webpack-plugin')
 
 export function createWebpackConfig({
@@ -81,9 +83,8 @@ export function createWebpackConfig({
         debug: process.env.DEBUG_CACHE ? /webpack\.cache/ : false,
       },
       experiments: {
-        // starts compiling import() lazily
-        // seems to not work
-        lazyCompilation: !isProduction,
+        // works but home doesnt load by default
+        // lazyCompilation: !isProduction,
       },
       cache: {
         name: `${process.env.TARGET}${process.env.NODE_ENV}`,
@@ -204,7 +205,11 @@ export function createWebpackConfig({
                 include: babelInclude,
                 use: [
                   {
-                    loader: 'babel-loader',
+                    loader: 'esbuild-loader',
+                    options: {
+                      loader: 'tsx',
+                      target: 'es2019',
+                    },
                   },
                   isStaticExtracted
                     ? {
@@ -280,6 +285,8 @@ export function createWebpackConfig({
         ],
       },
       plugins: [
+        new ESBuildPlugin(),
+
         isSSR && new LoadablePlugin(),
 
         // slim down unused react-native-web modules

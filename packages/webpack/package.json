@@ -43,6 +43,7 @@
     "webpack": "*",
     "webpack-bundle-analyzer": "^4.2.0",
     "webpack-node-externals": "^2.5.2",
+    "esbuild-loader": "^2.9.2",
     "@mdx-js/loader": "^1.6.22"
   },
   "devDependencies": {
