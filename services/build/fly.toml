@@ -1,0 +1,8 @@
+app = "buildkite"
+
+[mount]
+source = "buildkite_cache"
+destination = "/data"
+
+[env]
+BUILDKITE_BUILD_PATH = "/data/buildkite_builds"

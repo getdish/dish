@@ -114,3 +114,5 @@ dish-app/test/screenshots
 
 # Docker compose data
 data/
+
+!services/build
