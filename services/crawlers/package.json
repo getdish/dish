@@ -4,7 +4,6 @@
   "main": "dist",
   "sideEffects": false,
   "scripts": {
-    "prebuild": "rm -f tsconfig.tsbuildinfo",
     "start": "node _/index.js",
     "build": "esdx",
     "watch": "esdx-watch",

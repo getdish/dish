@@ -33,7 +33,7 @@
     "preinstall": "./bin/preinstall.sh; ",
     "t": "eval $(./dishctl.sh yaml_to_env) && echo $TF_VAR_HASURA_ENDPOINT",
     "docker:build": "eval $(./dishctl.sh yaml_to_env) && docker-compose build",
-    "docker:build:file": "eval $(./dishctl.sh yaml_to_env) && docker buildx build --platform linux/amd64",
+    "docker:build:file": "eval $(./dishctl.sh yaml_to_env) && docker buildx build --progress=plain --platform linux/amd64",
     "docker:build:base": "yarn docker:build:file .",
     "docker:start:web": "yarn stop:docker:web && yarn docker:start:web:simple & sleep 2 && yarn logs:docker:web",
     "docker:start:web:simple": "docker run --name dish-app -it -d -p 4444:4444 --rm dish/app",
@@ -90,7 +90,6 @@
     "metro-cache": "0.62.0",
     "metro-config": "0.62.0",
     "metro-core": "0.62.0",
-    "ts-node": "9.1.1",
     "@babel/core": "7.12.9",
     "@babel/generator": "7.12.5",
     "@babel/parser": "7.12.7",
@@ -122,10 +121,9 @@
     "prettier": "^2.2.1",
     "prettier-plugin-import-sort": "^0.0.6",
     "import-sort-style-module": "^6.0.0",
-    "ts-node": "^9.1.1",
     "tsconfig-paths": "^3.9.0",
     "typescript": "^4.2.2",
-    "ultra-runner": "^3.9.0"
+    "ultra-runner": "^3.10.0"
   },
   "importSort": {
     ".js, .jsx, .ts, .tsx": {

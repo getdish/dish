@@ -1,7 +1,7 @@
 # STEP 1
 # everything that goes into deterministic yarn goes on this step
 
-FROM node:12.16.1-buster
+FROM node:15.10.0-buster as copy-stage
 WORKDIR /app
 
 ENV PATH=$PATH:/app/node_modules/.bin:node_modules/.bin
@@ -18,9 +18,9 @@ COPY package.json .
 # remove most files (only keep stuff for install)
 RUN find . \! -name "package.json" -not -path "*/bin/*" -type f -print | xargs rm -rf
 
-FROM node:12.16.1-buster
+FROM node:15.10.0-buster as install-stage
+COPY --from=copy-stage /app /app
 WORKDIR /app
-COPY --from=0 /app .
 
 COPY yarn.lock .
 COPY .yarnrc .
@@ -30,7 +30,7 @@ COPY dish-app/patches dish-app/patches
 COPY dish-app/etc dish-app/etc
 
 # install
-RUN yarn install --frozen-lockfile && yarn postinstall && yarn cache clean
+RUN yarn install --frozen-lockfile && yarn cache clean
 
 COPY .prettierignore .
 COPY .prettierrc .
@@ -43,6 +43,10 @@ COPY packages packages
 COPY services services
 COPY dish-app dish-app
 COPY snackui snackui
+
+# for whatever reason yarn isnt linking esdx in docker
+# force it to link here
+RUN cd packages/esdx && yarn link
 
 RUN yarn build
 

@@ -38,7 +38,8 @@
   },
   "devDependencies": {
     "snackui-loader": "*",
-    "ts-node": "^9.1.1",
+    "esbuild-register": "^2.0.0",
+    "esbuild": "*",
     "@snackui/babel-plugin": "*",
     "@babel/plugin-syntax-typescript": "^7.12.1",
     "@dish/babel-preset": "*",
