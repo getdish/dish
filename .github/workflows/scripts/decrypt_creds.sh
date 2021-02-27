@@ -8,6 +8,7 @@ KEY_PATH=/tmp/gitcrypt-key
 
 apt-get install -y git-crypt
 
+echo "import key"
 echo "$GPG_KEY" > key
 gpg --import key
 gpg --list-keys
