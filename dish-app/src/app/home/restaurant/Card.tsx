@@ -103,13 +103,8 @@ export function Card({
       aspectFixed={aspectFixed}
       hoverable={hoverable}
     >
-      <VStack
-        borderRadius={cardFrameBorderRadius}
-        backgroundColor={colors.pastelColor}
-        width="100%"
-        height="100%"
-        position="relative"
-      >
+      <VStack width="100%" height="100%" position="relative">
+        {/* background */}
         <AbsoluteVStack
           fullscreen
           className="safari-fix-overflow"
@@ -132,8 +127,9 @@ export function Card({
               shadowOffset={{ width: 10, height: 0 }}
             />
           )}
+
           <VStack
-            className="hover-75-opacity-child mask-image"
+            className="hover-75-opacity-child"
             opacity={dimImage ? 0.5 : 0.9}
             {...frame}
           >
@@ -148,19 +144,7 @@ export function Card({
               photo
             )}
           </VStack>
-        </AbsoluteVStack>
 
-        {typeof outside === 'function' ? outside(colors) : outside}
-
-        <VStack
-          className="safari-fix-overflow"
-          fullscreen
-          justifyContent="flex-end"
-          pointerEvents="none"
-          zIndex={11}
-          borderRadius={cardFrameBorderRadius}
-          overflow="hidden"
-        >
           {/* bottom color gradient */}
           <AbsoluteVStack
             className="hover-0-opacity-child ease-in-out"
@@ -178,12 +162,27 @@ export function Card({
             />
           </AbsoluteVStack>
 
+          {typeof below === 'function' ? below(colors) : below}
+        </AbsoluteVStack>
+
+        {typeof outside === 'function' ? outside(colors) : outside}
+
+        <VStack
+          className="safari-fix-overflow"
+          fullscreen
+          justifyContent="flex-end"
+          pointerEvents="none"
+          zIndex={11}
+          borderRadius={cardFrameBorderRadius}
+          overflow="hidden"
+          flex={1}
+        >
           <VStack
             className="ease-in-out"
             opacity={hideInfo ? 0 : 1}
             paddingHorizontal={size === 'xs' ? 30 : 20}
             paddingVertical={size === 'xs' ? 15 : 20}
-            alignItems="flex-start"
+            flex={1}
           >
             <HStack flex={1} width="100%">
               {!!padTitleSide &&
@@ -196,13 +195,14 @@ export function Card({
                 <VStack position="relative">
                   {/* title gradient */}
                   <AbsoluteVStack
-                    className="hover-50-opacity-child ease-in-out-slow"
+                    className="hover-75-opacity-child ease-in-out-slow"
                     zIndex={-1}
                     left={-90}
                     bottom={-90}
+                    opacity={size === 'xs' ? 0.75 : 1}
                     transform={[
                       { rotate: '20deg' },
-                      { scaleX: 1.5 },
+                      { scaleX: 1.7 },
                       { translateY: -30 },
                     ]}
                   >
@@ -218,16 +218,17 @@ export function Card({
                   </AbsoluteVStack>
 
                   <Text
+                    // not working below :(
+                    className={size === 'xs' ? 'ellipse' : ''}
                     textAlign="right"
                     textShadowColor="#00000033"
                     textShadowRadius={4}
                     textShadowOffset={{ height: 2, width: 0 }}
-                    fontWeight={size === 'xs' ? '600' : '800'}
-                    letterSpacing={-1}
+                    fontWeight={'800'}
+                    letterSpacing={size === 'xs' ? -0.5 : -1}
                     color="#fff"
                     fontSize={fontSize}
                     lineHeight={fontSize}
-                    ellipse={size === 'xs'}
                     flexShrink={0}
                   >
                     {title}
@@ -248,8 +249,6 @@ export function Card({
                 )}
               </VStack>
             </HStack>
-            <VStack flex={1} />
-            {typeof below === 'function' ? below(colors) : below}
           </VStack>
         </VStack>
       </VStack>

@@ -2,7 +2,7 @@ import { series } from '@dish/async'
 import { graphql, order_by, query, resolved } from '@dish/graph'
 import { Plus } from '@dish/react-feather'
 import React, { Suspense, useEffect, useMemo, useState } from 'react'
-import { HStack, Spacer, Text, useDebounce } from 'snackui'
+import { Button, HStack, Spacer, Text, useDebounce } from 'snackui'
 
 import { getRestaurantIdentifiers } from '../../helpers/getRestaurantIdentifiers'
 import { homeStore } from '../homeStore'

@@ -9,6 +9,7 @@ import {
   isSearchState,
   isUserState,
 } from '../../helpers/homeStateHelpers'
+import HomePage from './HomePage'
 import { HomeStackViewPagesContents } from './HomeStackViewPagesContents'
 import { HomeStackViewProps } from './HomeStackViewProps'
 import { HomeSuspense } from './HomeSuspense'
@@ -17,7 +18,7 @@ export const HomeStackViewPages = (props: HomeStackViewProps) => {
   const { item } = props
   return (
     <HomeSuspense>
-      {isHomeState(item) && <HomePage {...props} />}
+      {isHomeState(item) && <HomePage {...(props as any)} />}
       {isUserState(item) && <UserPage {...props} />}
       {isSearchState(item) && <SearchPage {...props} />}
       {isRestaurantState(item) && <RestaurantPage {...props} />}
@@ -38,10 +39,6 @@ const RestaurantPage = isntLoadable
 const SearchPage = isntLoadable
   ? require('./search/SearchPage').default
   : loadable(() => import('./search/SearchPage'))
-
-const HomePage = isntLoadable
-  ? require('./HomePage').default
-  : loadable(() => import('./HomePage'))
 
 const UserPage = isntLoadable
   ? require('./user/UserPage').default

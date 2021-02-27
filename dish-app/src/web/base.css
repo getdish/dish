@@ -633,6 +633,6 @@ mark {
   opacity: 0.5;
 }
 
-.mask-image div {
+.ma`-image div {
   mask-image: linear-gradient(transparent, #000);
 }

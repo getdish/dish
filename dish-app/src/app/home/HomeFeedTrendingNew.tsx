@@ -116,7 +116,7 @@ export const HomeFeedTrendingNew = memo(
           <VStack maxWidth="100%" overflow="hidden">
             <ContentScrollViewHorizontal>
               <VStack
-                paddingVertical={10}
+                paddingVertical={20}
                 paddingHorizontal={40}
                 flexWrap="nowrap"
               >

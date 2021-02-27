@@ -18,6 +18,7 @@ export const CardFrame = ({
   aspectFixed,
   size,
   square,
+  skew,
 }: {
   children?: any
   expandable?: boolean
@@ -26,11 +27,12 @@ export const CardFrame = ({
   aspectFixed?: boolean
   size?: 'md' | 'sm' | 'xs'
   square?: boolean
+  skew?: boolean
 }) => {
   const theme = useTheme()
   return (
     <VStack
-      className="hover-parent  ease-in-out-fast"
+      className="hover-parent ease-in-out-fast"
       contain="layout"
       borderRadius={cardFrameBorderRadius}
       width={cardFrameWidth}
@@ -66,14 +68,17 @@ export const CardFrame = ({
         maxWidth: 250,
         height: 48,
       })}
-      // {...(hoverable && {
-      //   hoverStyle: {
-      //     transform: [{ scale: 1.015 }],
-      //   },
-      //   pressStyle: {
-      //     transform: [{ scale: 0.95 }],
-      //   },
-      // })}
+      {...(skew && {
+        transform: [{ skewX: '-12deg' }],
+      })}
+      {...(hoverable && {
+        hoverStyle: {
+          transform: [{ scale: 1.015 }],
+        },
+        pressStyle: {
+          transform: [{ scale: 0.95 }],
+        },
+      })}
     >
       {children}
     </VStack>
