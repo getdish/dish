@@ -43,9 +43,9 @@
     "build": "yarn tsc -b || true && ultra -r --no-pretty build",
     "build:docker": "./dishctl.sh buildkit_build_local",
     "build:ts:watch": "tsc -b -w --preserveWatchOutput tsconfig.build.json",
-    "build:ts:watch:fast-incremental": "ultra -r --concurrency 1000 --no-pretty watch",
+    "build:ts:watch:individual": "ultra -r --concurrency 1000 --no-pretty watch",
     "build:extras:watch": "ultra -r --no-pretty --filter @snackui/node watch",
-    "build:watch": "npm-run-all --parallel build:ts:watch:fast-incremental build:extras:watch",
+    "build:watch": "npm-run-all --parallel build:ts:watch build:extras:watch",
     "build:monitor": "ultra --monitor",
     "build:refs": "typescript-monorepo-toolkit inject-refs .",
     "test": "ultra -r --no-pretty --serial test",
@@ -64,7 +64,7 @@
     "snackui:push": "git subrepo clean snackui && git subrepo push snackui"
   },
   "resolutions": {
-    "typescript": "4.2.0-beta",
+    "typescript": "",
     "node-fetch": "2.6.1",
     "webpack": "5.24.2",
     "terser": "5.5.1",
@@ -122,7 +122,7 @@
     "import-sort-style-module": "^6.0.0",
     "ts-node": "^9.1.1",
     "tsconfig-paths": "^3.9.0",
-    "typescript": "^4.2.0-beta",
+    "typescript": "^4.2.2",
     "ultra-runner": "^3.9.0"
   },
   "importSort": {

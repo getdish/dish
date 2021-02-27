@@ -8,7 +8,7 @@
     // baseUrl + paths must both be set
     "baseUrl": ".",
     "paths": {
-      "@dish/*": ["packages/*/src"]
+      "@dish/*": ["packages/*"]
     }
   }
 }
