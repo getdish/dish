@@ -83,7 +83,7 @@ export default function createWebpackConfig({
       experiments: {
         // starts compiling import() lazily
         // seems to not work
-        // lazyCompilation: !isProduction,
+        lazyCompilation: !isProduction,
       },
       cache: {
         name: `${process.env.TARGET}${process.env.NODE_ENV}`,

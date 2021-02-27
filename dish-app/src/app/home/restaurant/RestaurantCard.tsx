@@ -96,7 +96,7 @@ export const RestaurantCardContent = graphql(
                   {typeof below === 'function' ? below(colors) : below}
                 </HStack>
               )}
-              <AbsoluteVStack top={-12} right={-12} zIndex={100}>
+              <AbsoluteVStack top={-15} right={-15} zIndex={100}>
                 <RestaurantRatingView
                   slug={restaurantSlug}
                   floating
