@@ -1,8 +1,5 @@
-#!/usr/bin/env bash
-set -e
-set -x
-
-apt-get install -y docker docker-compose nodejs npm yarn
+apt-get install -y docker docker-compose nodejs npm
+curl -o- -L https://yarnpkg.com/install.sh | bash
 
 if [ ! -f /usr/local/bin/hasura ]; then
   curl -L https://github.com/hasura/graphql-engine/raw/stable/cli/get.sh | bash
