@@ -2,5 +2,9 @@
 
 set -euo pipefail
 
+echo "hi"
+echo $GITCRYPT_KEY
+export GITCRYPT_KEY=$GITCRYPT_KEY
+
 eval "$(ssh-agent -s)"
 ssh-add - <<< "$PRIVATE_SSH_KEY"

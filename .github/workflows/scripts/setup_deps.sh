@@ -1,8 +1,7 @@
 #!/usr/bin/env bash
 set -e
 
-npm i -g yarn
-yarn global add hasura-cli@v1.2.2
+curl -L https://github.com/hasura/graphql-engine/raw/stable/cli/get.sh | bash
 
 ./.github/workflows/scripts/decrypt_creds.sh
 ./.github/workflows/scripts/setup_admin.sh
