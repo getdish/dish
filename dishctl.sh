@@ -640,9 +640,7 @@ function install_kubectl() {
 }
 
 function install_gcloud_sdk() {
-  # 297.0.1 is needed on Github Actions
-  # see: https://github.com/google-github-actions/setup-gcloud/issues/128
-  GCLOUD_VERSION="297.0.1"
+  GCLOUD_VERSION="329.0.0"
   base=https://dl.google.com/dl/cloudsdk/channels/rapid/downloads
   archive=$base/google-cloud-sdk-$GCLOUD_VERSION-linux-x86_64.tar.gz
   install_path=$HOME/bin
