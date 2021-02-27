@@ -27,3 +27,4 @@ export GOOGLE_APPLICATION_CREDENTIALS="$PWD/k8s/etc/dish-gcloud.enc.json"
 echo $GOOGLE_APPLICATION_CREDENTIALS
 
 echo "https://gcr.io" | docker-credential-gcr get
+
