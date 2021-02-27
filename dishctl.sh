@@ -845,7 +845,8 @@ export -f _build_dish_service
 
 function build_dish_base() {
   echo "Building base..."
-  gcloud_build . $BASE_IMAGE
+  docker build .
+  # gcloud_build . $BASE_IMAGE
 }
 
 function build_all_dish_services() {
