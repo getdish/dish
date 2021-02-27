@@ -125,19 +125,19 @@ type ContentScrollViewProps = ScrollViewProps & {
 }
 
 let last
-const cancelIfDragging = (e) => {
-  console.log('drawerStore.isDragging', drawerStore.isDragging)
-  if (drawerStore.isDragging) {
-    e.preventDefault()
-    const node = (e.currentTarget as any) as HTMLDivElement
-    if (node.style.overflow !== 'hidden') {
-      last = node.style.overflow
-    }
-    node.style.overflow = 'hidden'
-    setTimeout(() => {
-      node.style.overflow = last
-    }, 100)
+const cancelTouchContentIfDrawerDragging = (e) => {
+  if (!drawerStore.isDragging) {
+    return
   }
+  e.preventDefault()
+  const node = (e.currentTarget as any) as HTMLDivElement
+  if (node.style.overflow !== 'hidden') {
+    last = node.style.overflow
+  }
+  node.style.overflow = 'hidden'
+  setTimeout(() => {
+    node.style.overflow = last
+  }, 100)
 }
 
 export const ContentScrollView = forwardRef<ScrollView, ContentScrollViewProps>(
@@ -191,7 +191,9 @@ export const ContentScrollView = forwardRef<ScrollView, ContentScrollViewProps>(
     }
 
     // memo because preventScrolling changes on media queries
-    const childrenMemo = useMemo(() => children, [children])
+    const childrenMemo = useMemo(() => {
+      return children
+    }, [children])
     const scrollRef = useRef<ScrollView | null>(null)
 
     // useEffect(() => {
@@ -220,15 +222,16 @@ export const ContentScrollView = forwardRef<ScrollView, ContentScrollViewProps>(
             {...props}
             onScroll={setIsScrolling}
             {...(supportsTouchWeb && {
-              onTouchMove: cancelIfDragging,
-              onTouchStart: cancelIfDragging,
+              onTouchMove: cancelTouchContentIfDrawerDragging,
+              onTouchStart: cancelTouchContentIfDrawerDragging,
             })}
             // for native...
             // bounces={false}
             // bouncesZoom={false}
-            scrollEventThrottle={16}
-            scrollEnabled={!preventScrolling}
-            disableScrollViewPanResponder={preventScrolling}
+            // short duration to catch before vertical scroll
+            scrollEventThrottle={14}
+            // scrollEnabled={!preventScrolling}
+            // disableScrollViewPanResponder={preventScrolling}
             style={[styles.scroll, style]}
           >
             <Suspense fallback={null}>{childrenMemo}</Suspense>

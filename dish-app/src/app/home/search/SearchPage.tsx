@@ -171,35 +171,36 @@ const SearchPageContent = memo(function SearchPageContent(
     return dispose
   }, [props.item.id, center])
 
-  // sync mapStore.selected to activeIndex in results
-  if (isWeb) {
-    useEffect(() => {
-      return reaction2(() => {
-        const { searchPosition, status } = searchPageStore
-        const { nextPosition, isOnRegion } = appMapStore
-        if (status === 'loading') return
-        if (isOnRegion) {
-          return
-        }
-        return series([
-          () => sleep(600),
-          () => {
-            const props = getProps()
-            if (!props.isActive) return
-            // not on region, set to coordinates
-            const { center, span } = searchPosition
-            const pos = [center.lat, center.lng, span.lat, span.lng].map(
-              (x) => Math.round(x * 1000) / 1000
-            )
-            console.warn('should set', pos.join('_'))
-            // router.setParams({
-            //   region: pos.join('_'),
-            // })
-          },
-        ])
-      })
-    }, [])
-  }
+  // disabled for now, too easy to regress
+  // // sync mapStore.selected to activeIndex in results
+  // if (isWeb) {
+  //   useEffect(() => {
+  //     return reaction2(() => {
+  //       const { searchPosition, status } = searchPageStore
+  //       const { nextPosition, isOnRegion } = appMapStore
+  //       if (status === 'loading') return
+  //       if (isOnRegion) {
+  //         return
+  //       }
+  //       return series([
+  //         () => sleep(600),
+  //         () => {
+  //           const props = getProps()
+  //           if (!props.isActive) return
+  //           // not on region, set to coordinates
+  //           const { center, span } = searchPosition
+  //           const pos = [center.lat, center.lng, span.lat, span.lng].map(
+  //             (x) => Math.round(x * 1000) / 1000
+  //           )
+  //           console.warn('should set', pos.join('_'))
+  //           // router.setParams({
+  //           //   region: pos.join('_'),
+  //           // })
+  //         },
+  //       ])
+  //     })
+  //   }, [])
+  // }
 
   useEffect(() => {
     if (!tags.data) return

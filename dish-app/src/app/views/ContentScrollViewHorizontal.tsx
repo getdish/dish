@@ -75,10 +75,6 @@ export const ContentScrollViewHorizontal = (
 ) => {
   const id = useContext(ContentScrollContext)
   const scrollTm = useRef<any>(0)
-  const scrollVersion = useRef({
-    end: 0,
-    start: 0,
-  })
   const $scroller = useRef<ScrollView>()
   const isLockedVertical = useStoreSelector(
     ScrollStore,
@@ -86,24 +82,56 @@ export const ContentScrollViewHorizontal = (
     { id }
   )
 
+  const updateLock = (val: boolean) => {
+    isScrollingSubDrawer = val
+    setScrollLockHorizontal(id)
+  }
+
   if (supportsTouchWeb) {
+    // touch only logic for scroll locking (faster)
     useEffect(() => {
-      const node = $scroller.current?.getInnerViewNode() as HTMLDivElement
+      const node = $scroller.current?.getScrollableNode() as HTMLDivElement
       assertPresent(node, 'no scroll node')
-      const unlockScroll = () => {
-        scrollVersion.current.end++
-        isScrollingSubDrawer = false
-        update()
+      let preventUntilNext = false
+      const onScroll = () => {
+        if (preventUntilNext) {
+          return
+        }
+        if (!isScrollingSubDrawer) {
+          updateLock(true)
+        }
       }
-      node.addEventListener('touchend', unlockScroll)
+      const onTouchEnd = () => {
+        if (isScrollingSubDrawer) {
+          preventUntilNext = true
+          updateLock(false)
+        }
+      }
+      const onTouchStart = () => {
+        preventUntilNext = false
+      }
+      node.addEventListener('scroll', onScroll)
+      node.addEventListener('touchend', onTouchEnd)
+      node.addEventListener('touchstart', onTouchStart)
       return () => {
-        node.removeEventListener('touchend', unlockScroll)
+        node.removeEventListener('touchend', onTouchEnd)
+        node.removeEventListener('scroll', onScroll)
+        node.removeEventListener('touchstart', onTouchStart)
       }
     }, [])
   }
 
-  const update = () => {
-    setScrollLockHorizontal(id)
+  // on web desktop, scroll end is harder to detect
+  // so we just wait until no scrolling for 200ms
+  // todo: revisit can definitely be improved
+  function scrollEndListener() {
+    if (!isWeb || supportsTouchWeb) {
+      return
+    }
+    clearTimeout(scrollTm.current)
+    scrollTm.current = setTimeout(() => {
+      updateLock(false)
+    }, 200)
   }
 
   const children = useMemo(() => {
@@ -112,40 +140,29 @@ export const ContentScrollViewHorizontal = (
         horizontal
         showsHorizontalScrollIndicator={false}
         ref={$scroller as any}
-        scrollEventThrottle={40}
+        scrollEventThrottle={60}
         style={sheet.scrollStyle}
         {...props}
         onScroll={(e) => {
           props.onScroll?.(e)
-          const shouldUpdate =
-            !supportsTouchWeb ||
-            scrollVersion.current.start === scrollVersion.current.end
-          if (shouldUpdate) {
-            isScrollingSubDrawer = true
-            update()
+          if (supportsTouchWeb) {
+            // see hook above
+            return
           }
-          clearTimeout(scrollTm.current)
-          scrollTm.current = setTimeout(() => {
-            if (supportsTouchWeb) {
-              if (scrollVersion.current.end > scrollVersion.current.start) {
-                scrollVersion.current.start = scrollVersion.current.end
-              } else {
-                return
-              }
-            }
-            isScrollingSubDrawer = false
-            update()
-          }, 200)
+          if (isScrollingSubDrawer) {
+            scrollEndListener()
+            return
+          }
+          updateLock(true)
+          scrollEndListener()
         }}
         onScrollBeginDrag={() => {
           clearTimeout(scrollTm.current)
-          isScrollingSubDrawer = true
-          update()
+          updateLock(true)
         }}
         onScrollEndDrag={() => {
           clearTimeout(scrollTm.current)
-          isScrollingSubDrawer = false
-          update()
+          updateLock(false)
         }}
       />
     )
