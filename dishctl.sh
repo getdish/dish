@@ -789,25 +789,9 @@ function _gcloud_build_submit() {
   path="$1"
   image="$2"
   dish_base_version="$3"
-  base_arg="'--build-arg', 'DISH_BASE_VERSION=$dish_base_version'"
-  yaml="
-steps:
-- name: 'gcr.io/cloud-builders/docker'
-  args: [
-    'build',
-    '-t', '$image',
-    '--cache-from', '$image',
-    '-f', '$path/Dockerfile',
-    '.', $base_arg]
-images: ['$image']
-options:
-  machineType: 'N1_HIGHCPU_8'
-"
-  config="$(mktemp)"
-  echo "$yaml" > "$config"
   pushd $PROJECT_ROOT
-  echo "submitting build for image $image"
-  gcloud builds submit --timeout 1h --config "$config"
+  docker build $path
+  docker push gcr.io/dish-258800/$image
   popd
 }
 
@@ -844,9 +828,7 @@ function _build_dish_service() {
 export -f _build_dish_service
 
 function build_dish_base() {
-  echo "Building base..."
-  docker build .
-  # gcloud_build . $BASE_IMAGE
+  gcloud_build . $BASE_IMAGE
 }
 
 function build_all_dish_services() {
