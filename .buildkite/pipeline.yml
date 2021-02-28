@@ -5,7 +5,7 @@ env:
   DISH_ENDPOINT: 'http://localhost:4444'
 
 steps:
-  - label: ":docker: Build base"
+  - label: ":docker: build base"
     command: "echo done"
     plugins:
       - seek-oss/docker-ecr-cache#v1.9.0:
@@ -21,11 +21,10 @@ steps:
           build:
             - base
           image-repository: gcr.io/dish-258800/base
+          cache-from: base:gcr.io/dish-258800/base:latest
           push: base:gcr.io/dish-258800/base:latest
 
-  - wait
-
-  - label: ":docker: Build apps"
+  - label: ":docker: build non-base images"
     command: "echo done"
     plugins:
       - seek-oss/docker-ecr-cache#v1.9.0:
@@ -38,16 +37,27 @@ steps:
           volumes:
             - /app/node_modules
       - docker-compose#v3.7.0:
+          push:
+            - worker:gcr.io/dish-258800/worker:latest
+            - dish-hooks:gcr.io/dish-258800/dish-hooks:latest
+
+  - wait
+
+  - label: ":docker: build apps"
+    command: "echo done"
+    plugins:
+      - seek-oss/docker-ecr-cache#v1.9.0:
+          registry-provider: gcr
+          gcp-project: dish-258800
+      - docker-compose#v3.7.0:
           build:
             - dish-hooks
             - dish-app-web
             - search
-            - worker
           push:
             - dish-hooks:gcr.io/dish-258800/dish-hooks:latest
             - dish-app-web:gcr.io/dish-258800/dish-app-web:latest
             - search:gcr.io/dish-258800/search:latest
-            - worker:gcr.io/dish-258800/worker:latest
 
   - wait
 
