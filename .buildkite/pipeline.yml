@@ -1,3 +1,9 @@
+env:
+  DISH_ENV: 'test'
+  DISH_REGISTRY: 'gcr.io/dish-258800'
+  HASURA_ENDPOINT: 'http://localhost:8080'
+  DISH_ENDPOINT: 'http://localhost:4444'
+
 steps:
   - label: ":docker: Build base"
     command: "echo done"
@@ -44,10 +50,8 @@ steps:
   - wait
 
   - label: "run tests"
-    command: "docker run --net host $DISH_REGISTRY/base yarn test"
+    command: ".buildkite/scripts/setup_services.sh"
     plugins:
       - seek-oss/docker-ecr-cache#v1.9.0:
           registry-provider: gcr
           gcp-project: dish-258800
-      - docker-compose#v3.7.0:
-          run: dish-app-web
