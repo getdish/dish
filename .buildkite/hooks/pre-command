@@ -19,6 +19,9 @@ fi
 PATH=$PATH:$HOME/bin
 mkdir -p $HOME/bin
 
+mkdir $HOME/.dish
+mkdir $HOME/.dish/postgres
+
 if ($(which glcoud > /dev/null)); then
   echo "gcloud installed"
 else
