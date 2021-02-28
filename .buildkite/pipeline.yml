@@ -1,6 +1,6 @@
 steps:
-  - label: "Build images and test"
-    command: ".github/workflows/scripts/setup_services.sh"
+  - label: ":docker: Build base"
+    command: "echo done"
     plugins:
       - seek-oss/docker-ecr-cache#v1.9.0:
           registry-provider: gcr
@@ -13,4 +13,29 @@ steps:
             - /app/node_modules
       - docker-compose#v3.7.0:
           build: base
+          image-repository: gcr.io/dish-258800/base
+          push: base:gcr.io/dish-258800/base:latest
+
+  - wait
+
+  - label: ":docker: Build apps"
+    command: "echo done"
+    plugins:
+      - seek-oss/docker-ecr-cache#v1.9.0:
+          registry-provider: gcr
+          gcp-project: dish-258800
+          cache-on:
+            - yarn.lock
+            - '**/package.json'
+      - docker#v3.3.0:
+          volumes:
+            - /app/node_modules
+      - docker-compose#v3.7.0:
+          build:
+            - dish-hooks
+            - dish-app-web
+            - search
+            - gorse
+            - worker
+            - bert
           image-repository: gcr.io/dish-258800/base
