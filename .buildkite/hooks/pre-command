@@ -5,11 +5,9 @@ fi
 PATH=$PATH:$HOME/bin
 mkdir -p $HOME/bin
 
-mkdir ~/.dish
-mkdir ~/.dish/postgres
-ls -la ~/.dish
-chown $(whoami) ~/.dish
-whoami
+# mkdir ~/.dish || true
+# mkdir ~/.dish/postgres || true
+rm -r ~/.dish
 
 if ($(which npm > /dev/null)); then
   echo "node/docker/npm installed"
@@ -37,13 +35,13 @@ else
   git-crypt unlock
 fi
 
-if ($(which glcoud > /dev/null)); then
+export PATH=$PATH:"$HOME/bin/google-cloud-sdk/bin"
+
+if ($(which gcloud > /dev/null)); then
   echo "gcloud installed"
 else
   ./dishctl.sh install_gcloud_sdk
 fi
-
-export PATH=$PATH:"$HOME/bin/google-cloud-sdk/bin"
 
 PWD=$(pwd)
 export GOOGLE_APPLICATION_CREDENTIALS="$PWD/k8s/etc/dish-gcloud.enc.json"
@@ -79,4 +77,5 @@ export TF_VAR_LUMINATI_PROXY_RESIDENTIAL_PASSWORD
 export TF_VAR_DO_SPACES_ID
 export TF_VAR_DO_SPACES_SECRET
 export TF_VAR_GPT3_KEY
-export DISH_IMAGE_TAG="lastest"
+
+

@@ -1,6 +1,5 @@
 steps:
   - label: ":docker: Build base"
-    command: "echo done"
     plugins:
       - seek-oss/docker-ecr-cache#v1.9.0:
           registry-provider: gcr
@@ -20,7 +19,6 @@ steps:
   - wait
 
   - label: ":docker: Build apps"
-    command: "echo done"
     plugins:
       - seek-oss/docker-ecr-cache#v1.9.0:
           registry-provider: gcr
@@ -43,8 +41,11 @@ steps:
 
   - wait
 
-  - label: "Test"
-    command: "echo ok"
+  - label: "run tests"
+    command: "docker run --net host $DISH_REGISTRY/base yarn test"
     plugins:
+      - seek-oss/docker-ecr-cache#v1.9.0:
+          registry-provider: gcr
+          gcp-project: dish-258800
       - docker-compose#v3.7.0:
           run: dish-app-web

@@ -83,6 +83,7 @@ services:
     depends_on:
       - 'hasura'
       - 'search'
+      - 'worker'
   tileserver:
     image: urbica/martin
     ports:
