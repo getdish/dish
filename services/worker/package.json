@@ -7,9 +7,9 @@
   "scripts": {
     "build": "esdx",
     "watch": "esdx-watch",
-    "start": "node _/index.js",
-    "worker": "node _/worker.js",
-    "worker:watch": "nodemon _/worker.js",
+    "start": "node dist/index.js",
+    "worker": "node dist/worker.js",
+    "worker:watch": "nodemon dist/worker.js",
     "test": "true"
   },
   "dependencies": {

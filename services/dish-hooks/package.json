@@ -7,7 +7,7 @@
   "scripts": {
     "build": "esdx",
     "watch": "esdx-watch",
-    "start": "node ./_/index.js"
+    "start": "node ./dist/index.js"
   },
   "dependencies": {
     "express": "^4.17.1",
