@@ -2,6 +2,14 @@ if [ $DISABLE_SETUP == "true" ]; then
   exit 0
 fi
 
+PATH=$PATH:$HOME/bin
+mkdir -p $HOME/bin
+
+mkdir ~/.dish
+mkdir ~/.dish/postgres
+ls -la ~/.dish
+chown $(whoami) ~/.dish
+
 if ($(which npm > /dev/null)); then
   echo "node/docker/npm installed"
 else
@@ -14,13 +22,19 @@ if [ ! -f /usr/local/bin/hasura ]; then
   curl -L https://github.com/hasura/graphql-engine/raw/stable/cli/get.sh | bash
 fi
 
-./.github/workflows/scripts/decrypt_creds.sh
-
-PATH=$PATH:$HOME/bin
-mkdir -p $HOME/bin
-
-mkdir $HOME/.dish
-mkdir $HOME/.dish/postgres
+if ($(which git-crypt > /dev/null)); then
+  echo "git-crypt installed"
+else
+  echo "Decrypting Dish secrets..."
+  KEY_PATH=/tmp/gitcrypt-key
+  apt-get install -y git-crypt
+  echo "import key"
+  echo "$GPG_KEY" > key
+  gpg --import key
+  gpg --list-keys
+  git reset --hard
+  git-crypt unlock
+fi
 
 if ($(which glcoud > /dev/null)); then
   echo "gcloud installed"
@@ -33,10 +47,8 @@ export PATH=$PATH:"$HOME/bin/google-cloud-sdk/bin"
 PWD=$(pwd)
 export GOOGLE_APPLICATION_CREDENTIALS="$PWD/k8s/etc/dish-gcloud.enc.json"
 
-# echo "https://gcr.io" | docker-credential-gcr get
-
+# export env
 eval $(./dishctl.sh yaml_to_env)
-
 export TF_VAR_DO_SPACES_ID
 export TF_VAR_DO_SPACES_SECRET
 export TF_VAR_HASURA_GRAPHQL_ADMIN_SECRET
@@ -66,5 +78,4 @@ export TF_VAR_LUMINATI_PROXY_RESIDENTIAL_PASSWORD
 export TF_VAR_DO_SPACES_ID
 export TF_VAR_DO_SPACES_SECRET
 export TF_VAR_GPT3_KEY
-
 export DISH_IMAGE_TAG="lastest"
