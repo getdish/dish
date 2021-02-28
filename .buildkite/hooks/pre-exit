@@ -1,0 +1,9 @@
+#!/bin/bash
+
+set -eo pipefail
+
+echo "docker logs..."
+
+pushd services/hasura
+docker-compose logs
+popd

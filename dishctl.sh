@@ -150,6 +150,7 @@ function all_crawlers_for_cities() {
 }
 
 function _db_migrate() {
+  set -x
   hasura_endpoint=$1
   admin_secret=$2
   postgres_password=$3
@@ -181,6 +182,7 @@ function _db_migrate() {
     -d dish \
     --single-transaction
   popd
+  set +x
 }
 
 function db_migrate() {
@@ -199,7 +201,6 @@ function db_migrate_local() {
   if [[ $USE_PROD_HASURA_PASSWORD == "true" ]]; then
     HASURA_ADMIN_SECRET="$TF_VAR_HASURA_GRAPHQL_ADMIN_SECRET"
   fi
-  echo "admin secret is $HASURA_ADMIN_SECRET"
   _db_migrate \
     http://localhost:8080 \
     "${HASURA_ADMIN_SECRET:-password}" \
