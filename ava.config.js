@@ -6,6 +6,5 @@ module.exports = {
     'tsconfig-paths/register',
   ],
   timeout: '30s',
-  serial: true,
   failFast: false,
 }

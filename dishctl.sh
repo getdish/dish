@@ -150,7 +150,6 @@ function all_crawlers_for_cities() {
 }
 
 function _db_migrate() {
-  set -x
   hasura_endpoint=$1
   admin_secret=$2
   postgres_password=$3
@@ -182,7 +181,6 @@ function _db_migrate() {
     -d dish \
     --single-transaction
   popd
-  set +x
 }
 
 function db_migrate() {

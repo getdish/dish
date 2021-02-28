@@ -1,5 +1,4 @@
 import { QueryFetcher, createClient } from '@dish/gqless'
-import { createReactClient } from '@dish/gqless-react'
 
 import { Auth } from '../Auth'
 import { getAuthHeaders } from '../getAuth'

@@ -37,10 +37,10 @@ export -f wait_until_dish_app_ready
 
 # SCRIPT
 
-rm -r $HOME/.dish/postgres || true
+cat $HOME/.dish/test.txt || true
+
 mkdir -p $HOME/.dish/postgres
 chown -R root:root $HOME/.dish/postgres
-rm -r $HOME/.dish/postgres/* || true
 
 # Postgres needs 2 starts to get everything set up
 docker-compose rm -f postgres

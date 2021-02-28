@@ -1,11 +1,7 @@
 #!/bin/bash
 set -e
 
-testcafe_bin=$(yarn global bin)/testcafe
-
-if ! [ -f "$testcafe_bin" ]; then
-  testcafe_bin=./node_modules/.bin/testcafe
-fi
+testcafe_bin=../node_modules/.bin/testcafe
 
 PROJECT_ROOT=$(git rev-parse --show-toplevel)
 
