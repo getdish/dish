@@ -1,3 +1,7 @@
+#!/bin/bash
+
+set -eo pipefail
+
 if [ "$DISABLE_SETUP" == "true" ]; then
   exit 0
 fi
@@ -27,21 +31,24 @@ else
   echo "Decrypting Dish secrets..."
   KEY_PATH=/tmp/gitcrypt-key
   apt-get install -y git-crypt
-  echo "import key"
-  echo "$GPG_KEY" > key
-  gpg --import key
-  gpg --list-keys
-  git reset --hard
-  git-crypt unlock
 fi
+
+echo "$GPG_KEY" > key
+gpg --import key
+gpg --list-keys
+git reset --hard
+git-crypt unlock
 
 export PATH=$PATH:"$HOME/bin/google-cloud-sdk/bin"
 
 if ($(which gcloud > /dev/null)); then
   echo "gcloud installed"
+  ./dishctl.sh gcloud_init
 else
   ./dishctl.sh install_gcloud_sdk
 fi
+
+./dishctl.sh dish_docker_login
 
 PWD=$(pwd)
 export GOOGLE_APPLICATION_CREDENTIALS="$PWD/k8s/etc/dish-gcloud.enc.json"
