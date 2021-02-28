@@ -1,4 +1,4 @@
-if [ $DISABLE_SETUP == "true" ]; then
+if [ "$DISABLE_SETUP" == "true" ]; then
   exit 0
 fi
 
@@ -7,7 +7,7 @@ mkdir -p $HOME/bin
 
 # mkdir ~/.dish || true
 # mkdir ~/.dish/postgres || true
-rm -r ~/.dish
+# rm -r ~/.dish
 
 if ($(which npm > /dev/null)); then
   echo "node/docker/npm installed"
