@@ -2,6 +2,8 @@
 
 set -exo pipefail
 
+# HELPERS
+
 branch=$(git rev-parse --abbrev-ref HEAD)
 export DISH_BASE_VERSION=:${branch//\//-}
 
@@ -31,9 +33,13 @@ wait_until_dish_app_ready() {
 }
 export -f wait_until_dish_app_ready
 
+# SCRIPT
+
 mkdir -p $HOME/.dish/postgres/data
+
+# Postgres needs 2 starts to get everything set up
 docker-compose up -d postgres
-sleep 12 # Postgres needs 2 starts to get everything set up
+sleep 14
 docker-compose down
 
 echo "Starting docker for tests"

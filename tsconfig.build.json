@@ -11,7 +11,6 @@
     { "path": "packages/server" },
     { "path": "packages/react-feather" },
     { "path": "services/crawlers" },
-    { "path": "services/worker" },
-    { "path": "services/hasura" },
+    { "path": "services/worker" }
   ]
 }

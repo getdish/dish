@@ -4,7 +4,8 @@ import { route, useRouteBodyParser } from '@dish/api'
 import { getAuthHeaders, getGraphEndpointInternal } from '@dish/graph'
 import redis from 'redis'
 
-const host = process.env.REDIS_HOST || 'localhost'
+const host =
+  process.env.FLY_REDIS_CACHE_URL || process.env.REDIS_HOST || 'localhost'
 console.log('redis host', host)
 const rc = redis.createClient({
   host,
