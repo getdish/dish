@@ -33,7 +33,7 @@ export -f wait_until_dish_app_ready
 
 mkdir -p $HOME/.dish/postgres/data
 docker-compose up -d postgres
-sleep 8 # Postgres needs 2 starts to get everything set up
+sleep 12 # Postgres needs 2 starts to get everything set up
 docker-compose down
 
 echo "Starting docker for tests"
