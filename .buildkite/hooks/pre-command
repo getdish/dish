@@ -9,10 +9,6 @@ fi
 PATH=$PATH:$HOME/bin
 mkdir -p $HOME/bin
 
-# mkdir ~/.dish || true
-# mkdir ~/.dish/postgres || true
-# rm -r ~/.dish
-
 if ($(which npm > /dev/null)); then
   echo "node/docker/npm installed"
 else

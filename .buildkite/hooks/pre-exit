@@ -7,4 +7,6 @@ pushd services/hasura
 docker-compose logs
 popd
 
+cat *.logs || true
+
 echo "bye"
