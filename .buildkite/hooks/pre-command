@@ -9,6 +9,7 @@ mkdir ~/.dish
 mkdir ~/.dish/postgres
 ls -la ~/.dish
 chown $(whoami) ~/.dish
+whoami
 
 if ($(which npm > /dev/null)); then
   echo "node/docker/npm installed"
