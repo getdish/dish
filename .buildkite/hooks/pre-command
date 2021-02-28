@@ -34,8 +34,6 @@ export GOOGLE_APPLICATION_CREDENTIALS="$PWD/k8s/etc/dish-gcloud.enc.json"
 
 eval $(./dishctl.sh yaml_to_env)
 
-echo $TF_VAR_DO_SPACES_ID
-
 export TF_VAR_DO_SPACES_ID
 export TF_VAR_DO_SPACES_SECRET
 export TF_VAR_HASURA_GRAPHQL_ADMIN_SECRET
@@ -65,3 +63,5 @@ export TF_VAR_LUMINATI_PROXY_RESIDENTIAL_PASSWORD
 export TF_VAR_DO_SPACES_ID
 export TF_VAR_DO_SPACES_SECRET
 export TF_VAR_GPT3_KEY
+
+export DISH_IMAGE_TAG="lastest"
