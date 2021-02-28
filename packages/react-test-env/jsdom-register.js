@@ -1,5 +1,5 @@
 const KEYS = require('jsdom-global/keys')
-require('./_/index')
+require('./dist/index')
 
 const { JSDOM } = require('jsdom')
 const url = 'http://d1live.com/'

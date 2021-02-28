@@ -6,7 +6,6 @@
     "baseUrl": ".",
     "incremental": true,
     "esModuleInterop": true,
-    "target": "es2020",
     "outDir": "_",
     "rootDir": "src"
   },

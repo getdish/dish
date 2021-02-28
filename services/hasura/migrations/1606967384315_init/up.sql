@@ -1,3 +1,15 @@
+-- We will create a separate user to grant permissions on hasura-specific
+-- schemas and information_schema and pg_catalog.
+-- These permissions/grants are required for Hasura to work properly.
+
+-- create the schemas required by the hasura system
+-- NOTE: If you are starting from scratch: drop the below schemas first, if they exist.
+CREATE SCHEMA IF NOT EXISTS hdb_catalog;
+
+-- create pgcrypto extension, required for UUID
+CREATE EXTENSION IF NOT EXISTS pgcrypto;
+
+
 CREATE EXTENSION IF NOT EXISTS postgis;
 CREATE EXTENSION IF NOT EXISTS unaccent;
 CREATE EXTENSION IF NOT EXISTS btree_gist;

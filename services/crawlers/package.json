@@ -4,7 +4,7 @@
   "main": "dist",
   "sideEffects": false,
   "scripts": {
-    "start": "node _/index.js",
+    "start": "node dist/index.js",
     "build": "esdx",
     "watch": "esdx-watch",
     "worker": "node _/worker.js",
