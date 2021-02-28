@@ -2,16 +2,13 @@ if [ $DISABLE_SETUP == "true" ]; then
   exit 0
 fi
 
-apt-get update
-apt-get install -y docker docker-compose nodejs npm
-
-# install gcloud
-# echo "deb [signed-by=/usr/share/keyrings/cloud.google.gpg] https://packages.cloud.google.com/apt cloud-sdk main" | tee -a /etc/apt/sources.list.d/google-cloud-sdk.list
-# apt-get install -y apt-transport-https ca-certificates gnupg
-# curl https://packages.cloud.google.com/apt/doc/apt-key.gpg | apt-key --keyring /usr/share/keyrings/cloud.google.gpg add -
-# apt-get install -y google-cloud-sdk=297.0.1-0
-
-curl -o- -L https://yarnpkg.com/install.sh | bash
+if ($(which npm > /dev/null)); then
+  echo "node/docker/npm installed"
+else
+  apt-get update
+  apt-get install -y docker docker-compose nodejs npm
+  curl -o- -L https://yarnpkg.com/install.sh | bash
+fi
 
 if [ ! -f /usr/local/bin/hasura ]; then
   curl -L https://github.com/hasura/graphql-engine/raw/stable/cli/get.sh | bash
@@ -22,7 +19,11 @@ fi
 PATH=$PATH:$HOME/bin
 mkdir -p $HOME/bin
 
-./dishctl.sh install_gcloud_sdk
+if ($(which glcoud > /dev/null)); then
+  echo "gcloud installed"
+else
+  ./dishctl.sh install_gcloud_sdk
+fi
 
 export PATH=$PATH:"$HOME/bin/google-cloud-sdk/bin"
 
