@@ -1,3 +1,5 @@
-let config = require('../../ava.config')
-config.timeout = '60s'
-module.exports = config
+module.exports = {
+  ...require('../../ava.config'),
+  serial: true,
+  timeout: '60s',
+}
