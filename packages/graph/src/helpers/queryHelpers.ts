@@ -2,7 +2,6 @@ import { parseSchemaType, selectFields } from '@dish/gqless'
 import { omit } from 'lodash'
 
 import {
-  Mutation,
   Scalars,
   generatedSchema,
   list_constraint,
@@ -13,7 +12,6 @@ import {
   restaurant_constraint,
   review_constraint,
   review_tag_sentence_constraint,
-  setCache,
   setting_constraint,
   tag_constraint,
   tag_tag_constraint,
