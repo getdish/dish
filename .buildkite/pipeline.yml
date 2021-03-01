@@ -22,7 +22,6 @@ steps:
 
   - label: ":docker: build apps"
     env:
-      DOCKER_CLEAN: true
       LOG_DOCKER: true
     plugins:
       - docker-compose#v3.7.0:
@@ -41,8 +40,6 @@ steps:
   - label: "setup services for tests"
     command: ".buildkite/scripts/setup_services.sh"
     plugins:
-      - docker-compose#v3.7.0:
-          build-parallel: true
       - gencer/cache#v2.3.10:
           backend: s3
           key: "v1-cache-{{ runner.os }}-{{ checksum 'services/hasura/package.json' }}"
@@ -63,7 +60,9 @@ steps:
   - wait
 
   - label: "deploy to staging"
-    command: ".buildkit/scripts/deploy_staging.sh"
+    env:
+      DOCKER_CLEAN: true
+    command: ".buildkite/scripts/deploy_all.sh"
 
   - wait
 

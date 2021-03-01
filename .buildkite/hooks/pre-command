@@ -17,7 +17,7 @@ else
   apt-get install -y postgresql
 fi
 
-if ($(which npm > /dev/null)); then
+if ($(which docker > /dev/null)); then
   echo "node/docker/npm installed"
 else
   apt-get update
