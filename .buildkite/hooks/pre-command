@@ -2,11 +2,12 @@
 
 set -eo pipefail
 
-if [ "$DISABLE_SETUP" == "true" ]; then
+export PATH=$PATH:$HOME/bin
+
+if [ "$FIRST_STEP" == "true" ]; then
   exit 0
 fi
 
-PATH=$PATH:$HOME/bin
 mkdir -p $HOME/bin
 
 if ($(which psql > /dev/null)); then

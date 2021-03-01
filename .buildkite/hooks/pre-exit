@@ -2,13 +2,13 @@
 
 set -eo pipefail
 
-if [ "$DISABLE_SETUP" == "true" ]; then
+if [ "$FIRST_STEP" == "true" ]; then
   exit 0
 fi
 
 if [ "$LOG_DOCKER" == "true" ]; then
   echo "docker logs..."
-  docker-compose logs
+  docker-compose logs --tail 5000
   cat *.logs || true
 fi
 

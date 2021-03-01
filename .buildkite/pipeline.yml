@@ -15,6 +15,8 @@ steps:
           image-repository: gcr.io/dish-258800/base
           cache-from: base:gcr.io/dish-258800/base:latest
           push: base:gcr.io/dish-258800/base:latest
+          volumes:
+            - "./dist:/app/dist"
 
   - wait
 
@@ -24,6 +26,7 @@ steps:
       LOG_DOCKER: true
     plugins:
       - docker-compose#v3.7.0:
+          build-parallel: true
           build:
             - dish-hooks
             - dish-app-web
@@ -59,3 +62,10 @@ steps:
 
   - label: "deploy to staging"
     command: ".buildkit/scripts/deploy_staging.sh"
+
+  - wait
+
+  - label: "finish"
+    command: "echo done"
+    env:
+      DOCKER_CLEAN: true
