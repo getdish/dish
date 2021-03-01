@@ -15,8 +15,8 @@ export const {
   useHydrateCache,
 } = createReactClient<GeneratedSchema>(client, {
   defaults: {
-    suspense: false,
-    staleWhileRevalidate: true,
-    retry: 1
-  }
+    suspense: true,
+    staleWhileRevalidate: false,
+    retry: 1,
+  },
 })

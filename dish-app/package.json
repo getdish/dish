@@ -109,7 +109,6 @@
     "web:no-extract": "NO_EXTRACT=1 yarn web",
     "web:ssr": "PORT=80 node _/web/server.js",
     "web:ssr:development": "NODE_ENV=development yarn web:ssr",
-    "deploy": "",
     "ios:install": "cd ios && arch -x86_64 pod install",
     "ios:run": "TARGET=native react-native run-ios --no-packager",
     "ios": "DISH_ENV=development yarn ios:run --simulator=\"iPhone 11 Pro\"",

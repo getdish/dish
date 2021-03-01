@@ -29,7 +29,7 @@ export const RestaurantAddToListModal = graphql(
     const colors = useColorsFor(slug)
     const [restaurant] = queryRestaurant(slug)
     const lists = user.lists({
-      limit: 100,
+      limit: 20,
       order_by: [{ created_at: order_by.desc }],
     })
     const restaurantId = restaurant.id

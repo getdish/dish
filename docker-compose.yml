@@ -51,8 +51,8 @@ services:
   hasura:
     image: hasura/graphql-engine:v1.3.3
     build:
-      context: ./services/hasura
-      dockerfile: ./Dockerfile
+      context: .
+      dockerfile: ./services/hasura/Dockerfile
     ports:
       - 8080:8080
     environment:
@@ -108,8 +108,8 @@ services:
   search:
     image: gcr.io/dish-258800/dish/search${DISH_IMAGE_TAG}
     build:
-      context: ./services/search
-      dockerfile: ./Dockerfile
+      context: .
+      dockerfile: ./services/search/Dockerfile
     ports:
       - 10000:10000
     environment:
@@ -128,7 +128,8 @@ services:
   worker:
     image: gcr.io/dish-258800/worker${DISH_IMAGE_TAG}
     build:
-      context: ./services/search
+      context: .
+      dockerfile: ./services/search/Dockerfile
     environment:
       - DISH_ENV=staging
       - HASURA_ENDPOINT=http://hasura:8080
