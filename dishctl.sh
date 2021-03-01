@@ -347,7 +347,7 @@ function dish_app_generate_tags() {
   export HASURA_SECRET="password"
   export IS_LIVE=1
   pushd $PROJECT_ROOT/dish-app
-  ../node_modules/.bin/ts-node --transpile-only ./etc/generate_tags.ts
+  node -r esbuild-register ./etc/generate_tags.ts
 }
 
 function remove_evicted_pods() {

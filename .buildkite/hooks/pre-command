@@ -28,6 +28,8 @@ if [ ! -f /usr/local/bin/hasura ]; then
   curl -L https://github.com/hasura/graphql-engine/raw/stable/cli/get.sh | bash
 fi
 
+docker system prune --force
+
 if ($(which git-crypt > /dev/null)); then
   echo "git-crypt installed"
 else
