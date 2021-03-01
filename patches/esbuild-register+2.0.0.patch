@@ -11,3 +11,13 @@ index 666b430..3b49248 100644
              loader: getLoader(filename),
              target: options.target,
              jsxFactory: options.jsxFactory,
+diff --git a/node_modules/esbuild-register/register.js b/node_modules/esbuild-register/register.js
+index 66b26d9..23f2780 100644
+--- a/node_modules/esbuild-register/register.js
++++ b/node_modules/esbuild-register/register.js
+@@ -1,4 +1,4 @@
+ require('./dist/node').register({
+   format: 'cjs',
+-  target: `node${process.version.slice(1)}`,
++  // target: `znode${process.version.slice(1)}`,
+ })
