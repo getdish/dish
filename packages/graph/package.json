@@ -9,7 +9,7 @@
   "scripts": {
     "build": "esdx",
     "watch": "esdx-watch",
-    "generate": "HASURA_SECRET=password ts-node --transpile-only ./generate.ts",
+    "generate": "HASURA_SECRET=password node ./dist/generate.js",
     "test": "TARGET=node DISH_ENV=test ava test/* --verbose --serial",
     "test:debug": "TARGET=node DEBUG=1 DISH_ENV=test ava test/* --verbose --serial",
     "test:watch": "TARGET=node DISH_ENV=test ava test/* --watch --verbose --serial",

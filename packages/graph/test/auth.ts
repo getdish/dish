@@ -2,9 +2,7 @@ import '@dish/react-test-env'
 
 import anyTest, { TestInterface } from 'ava'
 
-import { Auth, flushTestData, getGraphEndpoint } from '../src'
-import * as Constants from '../src/constants'
-import { getAuthHeaders } from '../src/getAuth'
+import { Auth, flushTestData } from '../_'
 
 interface Context {}
 
@@ -14,14 +12,8 @@ test.beforeEach(async () => {
   await flushTestData()
 })
 
-// keep this, make it easier on us debugging tests
-console.log({
-  AuthHeaders: getAuthHeaders(true),
-  graphEndpoint: getGraphEndpoint(),
-  ...Constants,
-})
-
 test('Creating a user', async (t) => {
+  console.log('...')
   const [status] = await Auth.register('test', 'test@test.com', 'password')
   t.is(status, 201)
 })

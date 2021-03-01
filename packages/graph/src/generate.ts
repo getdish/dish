@@ -2,8 +2,8 @@ import '@dish/helpers/polyfill'
 
 import { inspectWriteGenerate } from '@dish/gqless-cli'
 
-import { getAuthHeaders } from './src/getAuth'
-import { getGraphEndpoint } from './src/helpers/getGraphEndpoint'
+import { getAuthHeaders } from './getAuth'
+import { getGraphEndpoint } from './helpers/getGraphEndpoint'
 
 const run = async () => {
   const endpoint = getGraphEndpoint()

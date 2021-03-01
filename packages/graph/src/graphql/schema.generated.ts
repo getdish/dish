@@ -1,4 +1,4 @@
-import { ScalarsEnumsHash } from '@dish/gqless'
+import { ScalarsEnumsHash, SchemaUnionsKey } from '@dish/gqless'
 
 export type Maybe<T> = T | null
 export type Exact<T extends { [key: string]: unknown }> = {
@@ -3574,6 +3574,7 @@ export interface tag_bool_exp {
   alternates?: Maybe<jsonb_comparison_exp>
   categories?: Maybe<tag_tag_bool_exp>
   created_at?: Maybe<timestamptz_comparison_exp>
+  default_image?: Maybe<String_comparison_exp>
   default_images?: Maybe<jsonb_comparison_exp>
   description?: Maybe<String_comparison_exp>
   displayName?: Maybe<String_comparison_exp>
@@ -3644,6 +3645,7 @@ export interface tag_insert_input {
   alternates?: Maybe<Scalars['jsonb']>
   categories?: Maybe<tag_tag_arr_rel_insert_input>
   created_at?: Maybe<Scalars['timestamptz']>
+  default_image?: Maybe<Scalars['String']>
   default_images?: Maybe<Scalars['jsonb']>
   description?: Maybe<Scalars['String']>
   displayName?: Maybe<Scalars['String']>
@@ -3667,6 +3669,7 @@ export interface tag_insert_input {
 /** order by max() on columns of table "tag" */
 export interface tag_max_order_by {
   created_at?: Maybe<order_by>
+  default_image?: Maybe<order_by>
   description?: Maybe<order_by>
   displayName?: Maybe<order_by>
   frequency?: Maybe<order_by>
@@ -3684,6 +3687,7 @@ export interface tag_max_order_by {
 /** order by min() on columns of table "tag" */
 export interface tag_min_order_by {
   created_at?: Maybe<order_by>
+  default_image?: Maybe<order_by>
   description?: Maybe<order_by>
   displayName?: Maybe<order_by>
   frequency?: Maybe<order_by>
@@ -3716,6 +3720,7 @@ export interface tag_order_by {
   alternates?: Maybe<order_by>
   categories_aggregate?: Maybe<tag_tag_aggregate_order_by>
   created_at?: Maybe<order_by>
+  default_image?: Maybe<order_by>
   default_images?: Maybe<order_by>
   description?: Maybe<order_by>
   displayName?: Maybe<order_by>
@@ -3756,6 +3761,8 @@ export enum tag_select_column {
   /** column name */
   created_at = 'created_at',
   /** column name */
+  default_image = 'default_image',
+  /** column name */
   default_images = 'default_images',
   /** column name */
   description = 'description',
@@ -3793,6 +3800,7 @@ export enum tag_select_column {
 export interface tag_set_input {
   alternates?: Maybe<Scalars['jsonb']>
   created_at?: Maybe<Scalars['timestamptz']>
+  default_image?: Maybe<Scalars['String']>
   default_images?: Maybe<Scalars['jsonb']>
   description?: Maybe<Scalars['String']>
   displayName?: Maybe<Scalars['String']>
@@ -3944,6 +3952,8 @@ export enum tag_update_column {
   alternates = 'alternates',
   /** column name */
   created_at = 'created_at',
+  /** column name */
+  default_image = 'default_image',
   /** column name */
   default_images = 'default_images',
   /** column name */
@@ -9935,6 +9945,7 @@ export const generatedSchema = {
       },
     },
     created_at: { __type: 'timestamptz!' },
+    default_image: { __type: 'String' },
     default_images: { __type: 'jsonb', __args: { path: 'String' } },
     description: { __type: 'String' },
     displayName: { __type: 'String' },
@@ -10036,6 +10047,7 @@ export const generatedSchema = {
     alternates: { __type: 'jsonb_comparison_exp' },
     categories: { __type: 'tag_tag_bool_exp' },
     created_at: { __type: 'timestamptz_comparison_exp' },
+    default_image: { __type: 'String_comparison_exp' },
     default_images: { __type: 'jsonb_comparison_exp' },
     description: { __type: 'String_comparison_exp' },
     displayName: { __type: 'String_comparison_exp' },
@@ -10082,6 +10094,7 @@ export const generatedSchema = {
     alternates: { __type: 'jsonb' },
     categories: { __type: 'tag_tag_arr_rel_insert_input' },
     created_at: { __type: 'timestamptz' },
+    default_image: { __type: 'String' },
     default_images: { __type: 'jsonb' },
     description: { __type: 'String' },
     displayName: { __type: 'String' },
@@ -10104,6 +10117,7 @@ export const generatedSchema = {
   tag_max_fields: {
     __typename: { __type: 'String!' },
     created_at: { __type: 'timestamptz' },
+    default_image: { __type: 'String' },
     description: { __type: 'String' },
     displayName: { __type: 'String' },
     frequency: { __type: 'Int' },
@@ -10119,6 +10133,7 @@ export const generatedSchema = {
   },
   tag_max_order_by: {
     created_at: { __type: 'order_by' },
+    default_image: { __type: 'order_by' },
     description: { __type: 'order_by' },
     displayName: { __type: 'order_by' },
     frequency: { __type: 'order_by' },
@@ -10135,6 +10150,7 @@ export const generatedSchema = {
   tag_min_fields: {
     __typename: { __type: 'String!' },
     created_at: { __type: 'timestamptz' },
+    default_image: { __type: 'String' },
     description: { __type: 'String' },
     displayName: { __type: 'String' },
     frequency: { __type: 'Int' },
@@ -10150,6 +10166,7 @@ export const generatedSchema = {
   },
   tag_min_order_by: {
     created_at: { __type: 'order_by' },
+    default_image: { __type: 'order_by' },
     description: { __type: 'order_by' },
     displayName: { __type: 'order_by' },
     frequency: { __type: 'order_by' },
@@ -10181,6 +10198,7 @@ export const generatedSchema = {
     alternates: { __type: 'order_by' },
     categories_aggregate: { __type: 'tag_tag_aggregate_order_by' },
     created_at: { __type: 'order_by' },
+    default_image: { __type: 'order_by' },
     default_images: { __type: 'order_by' },
     description: { __type: 'order_by' },
     displayName: { __type: 'order_by' },
@@ -10212,6 +10230,7 @@ export const generatedSchema = {
   tag_set_input: {
     alternates: { __type: 'jsonb' },
     created_at: { __type: 'timestamptz' },
+    default_image: { __type: 'String' },
     default_images: { __type: 'jsonb' },
     description: { __type: 'String' },
     displayName: { __type: 'String' },
@@ -10943,7 +10962,7 @@ export const generatedSchema = {
 } as const
 
 export interface Query {
-  __typename: 'Query'
+  __typename: 'Query' | null
   hrr: (args?: {
     distinct_on?: Maybe<Array<ScalarsEnums['hrr_select_column']>>
     limit?: Maybe<ScalarsEnums['Int']>
@@ -11337,7 +11356,7 @@ export interface Query {
 }
 
 export interface Mutation {
-  __typename: 'Mutation'
+  __typename: 'Mutation' | null
   delete_hrr: (args: { where: hrr_bool_exp }) => Maybe<hrr_mutation_response>
   delete_hrr_by_pk: (args: { ogc_fid: ScalarsEnums['Int'] }) => Maybe<hrr>
   delete_list: (args: { where: list_bool_exp }) => Maybe<list_mutation_response>
@@ -11816,7 +11835,7 @@ export interface Mutation {
 }
 
 export interface Subscription {
-  __typename: 'Subscription'
+  __typename: 'Subscription' | null
   hrr: (args?: {
     distinct_on?: Maybe<Array<ScalarsEnums['hrr_select_column']>>
     limit?: Maybe<ScalarsEnums['Int']>
@@ -12210,7 +12229,7 @@ export interface Subscription {
 }
 
 export interface hrr {
-  __typename: 'hrr'
+  __typename: 'hrr' | null
   color?: Maybe<ScalarsEnums['String']>
   hrrcity?: Maybe<ScalarsEnums['String']>
   ogc_fid: ScalarsEnums['Int']
@@ -12219,13 +12238,13 @@ export interface hrr {
 }
 
 export interface hrr_aggregate {
-  __typename: 'hrr_aggregate'
+  __typename: 'hrr_aggregate' | null
   aggregate?: Maybe<hrr_aggregate_fields>
   nodes: Array<hrr>
 }
 
 export interface hrr_aggregate_fields {
-  __typename: 'hrr_aggregate_fields'
+  __typename: 'hrr_aggregate_fields' | null
   avg?: Maybe<hrr_avg_fields>
   count: (args?: {
     columns?: Maybe<Array<ScalarsEnums['hrr_select_column']>>
@@ -12243,12 +12262,12 @@ export interface hrr_aggregate_fields {
 }
 
 export interface hrr_avg_fields {
-  __typename: 'hrr_avg_fields'
+  __typename: 'hrr_avg_fields' | null
   ogc_fid?: Maybe<ScalarsEnums['Float']>
 }
 
 export interface hrr_max_fields {
-  __typename: 'hrr_max_fields'
+  __typename: 'hrr_max_fields' | null
   color?: Maybe<ScalarsEnums['String']>
   hrrcity?: Maybe<ScalarsEnums['String']>
   ogc_fid?: Maybe<ScalarsEnums['Int']>
@@ -12256,7 +12275,7 @@ export interface hrr_max_fields {
 }
 
 export interface hrr_min_fields {
-  __typename: 'hrr_min_fields'
+  __typename: 'hrr_min_fields' | null
   color?: Maybe<ScalarsEnums['String']>
   hrrcity?: Maybe<ScalarsEnums['String']>
   ogc_fid?: Maybe<ScalarsEnums['Int']>
@@ -12264,48 +12283,48 @@ export interface hrr_min_fields {
 }
 
 export interface hrr_mutation_response {
-  __typename: 'hrr_mutation_response'
+  __typename: 'hrr_mutation_response' | null
   affected_rows: ScalarsEnums['Int']
   returning: Array<hrr>
 }
 
 export interface hrr_stddev_fields {
-  __typename: 'hrr_stddev_fields'
+  __typename: 'hrr_stddev_fields' | null
   ogc_fid?: Maybe<ScalarsEnums['Float']>
 }
 
 export interface hrr_stddev_pop_fields {
-  __typename: 'hrr_stddev_pop_fields'
+  __typename: 'hrr_stddev_pop_fields' | null
   ogc_fid?: Maybe<ScalarsEnums['Float']>
 }
 
 export interface hrr_stddev_samp_fields {
-  __typename: 'hrr_stddev_samp_fields'
+  __typename: 'hrr_stddev_samp_fields' | null
   ogc_fid?: Maybe<ScalarsEnums['Float']>
 }
 
 export interface hrr_sum_fields {
-  __typename: 'hrr_sum_fields'
+  __typename: 'hrr_sum_fields' | null
   ogc_fid?: Maybe<ScalarsEnums['Int']>
 }
 
 export interface hrr_var_pop_fields {
-  __typename: 'hrr_var_pop_fields'
+  __typename: 'hrr_var_pop_fields' | null
   ogc_fid?: Maybe<ScalarsEnums['Float']>
 }
 
 export interface hrr_var_samp_fields {
-  __typename: 'hrr_var_samp_fields'
+  __typename: 'hrr_var_samp_fields' | null
   ogc_fid?: Maybe<ScalarsEnums['Float']>
 }
 
 export interface hrr_variance_fields {
-  __typename: 'hrr_variance_fields'
+  __typename: 'hrr_variance_fields' | null
   ogc_fid?: Maybe<ScalarsEnums['Float']>
 }
 
 export interface list {
-  __typename: 'list'
+  __typename: 'list' | null
   color?: Maybe<ScalarsEnums['Int']>
   created_at: ScalarsEnums['timestamptz']
   description?: Maybe<ScalarsEnums['String']>
@@ -12349,13 +12368,13 @@ export interface list {
 }
 
 export interface list_aggregate {
-  __typename: 'list_aggregate'
+  __typename: 'list_aggregate' | null
   aggregate?: Maybe<list_aggregate_fields>
   nodes: Array<list>
 }
 
 export interface list_aggregate_fields {
-  __typename: 'list_aggregate_fields'
+  __typename: 'list_aggregate_fields' | null
   avg?: Maybe<list_avg_fields>
   count: (args?: {
     columns?: Maybe<Array<ScalarsEnums['list_select_column']>>
@@ -12373,12 +12392,12 @@ export interface list_aggregate_fields {
 }
 
 export interface list_avg_fields {
-  __typename: 'list_avg_fields'
+  __typename: 'list_avg_fields' | null
   color?: Maybe<ScalarsEnums['Float']>
 }
 
 export interface list_max_fields {
-  __typename: 'list_max_fields'
+  __typename: 'list_max_fields' | null
   color?: Maybe<ScalarsEnums['Int']>
   created_at?: Maybe<ScalarsEnums['timestamptz']>
   description?: Maybe<ScalarsEnums['String']>
@@ -12391,7 +12410,7 @@ export interface list_max_fields {
 }
 
 export interface list_min_fields {
-  __typename: 'list_min_fields'
+  __typename: 'list_min_fields' | null
   color?: Maybe<ScalarsEnums['Int']>
   created_at?: Maybe<ScalarsEnums['timestamptz']>
   description?: Maybe<ScalarsEnums['String']>
@@ -12404,13 +12423,13 @@ export interface list_min_fields {
 }
 
 export interface list_mutation_response {
-  __typename: 'list_mutation_response'
+  __typename: 'list_mutation_response' | null
   affected_rows: ScalarsEnums['Int']
   returning: Array<list>
 }
 
 export interface list_restaurant {
-  __typename: 'list_restaurant'
+  __typename: 'list_restaurant' | null
   comment?: Maybe<ScalarsEnums['String']>
   id: ScalarsEnums['uuid']
   list: list
@@ -12454,13 +12473,13 @@ export interface list_restaurant {
 }
 
 export interface list_restaurant_aggregate {
-  __typename: 'list_restaurant_aggregate'
+  __typename: 'list_restaurant_aggregate' | null
   aggregate?: Maybe<list_restaurant_aggregate_fields>
   nodes: Array<list_restaurant>
 }
 
 export interface list_restaurant_aggregate_fields {
-  __typename: 'list_restaurant_aggregate_fields'
+  __typename: 'list_restaurant_aggregate_fields' | null
   avg?: Maybe<list_restaurant_avg_fields>
   count: (args?: {
     columns?: Maybe<Array<ScalarsEnums['list_restaurant_select_column']>>
@@ -12478,12 +12497,12 @@ export interface list_restaurant_aggregate_fields {
 }
 
 export interface list_restaurant_avg_fields {
-  __typename: 'list_restaurant_avg_fields'
+  __typename: 'list_restaurant_avg_fields' | null
   position?: Maybe<ScalarsEnums['Float']>
 }
 
 export interface list_restaurant_max_fields {
-  __typename: 'list_restaurant_max_fields'
+  __typename: 'list_restaurant_max_fields' | null
   comment?: Maybe<ScalarsEnums['String']>
   id?: Maybe<ScalarsEnums['uuid']>
   list_id?: Maybe<ScalarsEnums['uuid']>
@@ -12493,7 +12512,7 @@ export interface list_restaurant_max_fields {
 }
 
 export interface list_restaurant_min_fields {
-  __typename: 'list_restaurant_min_fields'
+  __typename: 'list_restaurant_min_fields' | null
   comment?: Maybe<ScalarsEnums['String']>
   id?: Maybe<ScalarsEnums['uuid']>
   list_id?: Maybe<ScalarsEnums['uuid']>
@@ -12503,33 +12522,33 @@ export interface list_restaurant_min_fields {
 }
 
 export interface list_restaurant_mutation_response {
-  __typename: 'list_restaurant_mutation_response'
+  __typename: 'list_restaurant_mutation_response' | null
   affected_rows: ScalarsEnums['Int']
   returning: Array<list_restaurant>
 }
 
 export interface list_restaurant_stddev_fields {
-  __typename: 'list_restaurant_stddev_fields'
+  __typename: 'list_restaurant_stddev_fields' | null
   position?: Maybe<ScalarsEnums['Float']>
 }
 
 export interface list_restaurant_stddev_pop_fields {
-  __typename: 'list_restaurant_stddev_pop_fields'
+  __typename: 'list_restaurant_stddev_pop_fields' | null
   position?: Maybe<ScalarsEnums['Float']>
 }
 
 export interface list_restaurant_stddev_samp_fields {
-  __typename: 'list_restaurant_stddev_samp_fields'
+  __typename: 'list_restaurant_stddev_samp_fields' | null
   position?: Maybe<ScalarsEnums['Float']>
 }
 
 export interface list_restaurant_sum_fields {
-  __typename: 'list_restaurant_sum_fields'
+  __typename: 'list_restaurant_sum_fields' | null
   position?: Maybe<ScalarsEnums['Int']>
 }
 
 export interface list_restaurant_tag {
-  __typename: 'list_restaurant_tag'
+  __typename: 'list_restaurant_tag' | null
   id: ScalarsEnums['uuid']
   list_id: ScalarsEnums['uuid']
   list_restaurant_id: ScalarsEnums['uuid']
@@ -12540,13 +12559,13 @@ export interface list_restaurant_tag {
 }
 
 export interface list_restaurant_tag_aggregate {
-  __typename: 'list_restaurant_tag_aggregate'
+  __typename: 'list_restaurant_tag_aggregate' | null
   aggregate?: Maybe<list_restaurant_tag_aggregate_fields>
   nodes: Array<list_restaurant_tag>
 }
 
 export interface list_restaurant_tag_aggregate_fields {
-  __typename: 'list_restaurant_tag_aggregate_fields'
+  __typename: 'list_restaurant_tag_aggregate_fields' | null
   avg?: Maybe<list_restaurant_tag_avg_fields>
   count: (args?: {
     columns?: Maybe<Array<ScalarsEnums['list_restaurant_tag_select_column']>>
@@ -12564,12 +12583,12 @@ export interface list_restaurant_tag_aggregate_fields {
 }
 
 export interface list_restaurant_tag_avg_fields {
-  __typename: 'list_restaurant_tag_avg_fields'
+  __typename: 'list_restaurant_tag_avg_fields' | null
   position?: Maybe<ScalarsEnums['Float']>
 }
 
 export interface list_restaurant_tag_max_fields {
-  __typename: 'list_restaurant_tag_max_fields'
+  __typename: 'list_restaurant_tag_max_fields' | null
   id?: Maybe<ScalarsEnums['uuid']>
   list_id?: Maybe<ScalarsEnums['uuid']>
   list_restaurant_id?: Maybe<ScalarsEnums['uuid']>
@@ -12579,7 +12598,7 @@ export interface list_restaurant_tag_max_fields {
 }
 
 export interface list_restaurant_tag_min_fields {
-  __typename: 'list_restaurant_tag_min_fields'
+  __typename: 'list_restaurant_tag_min_fields' | null
   id?: Maybe<ScalarsEnums['uuid']>
   list_id?: Maybe<ScalarsEnums['uuid']>
   list_restaurant_id?: Maybe<ScalarsEnums['uuid']>
@@ -12589,83 +12608,83 @@ export interface list_restaurant_tag_min_fields {
 }
 
 export interface list_restaurant_tag_mutation_response {
-  __typename: 'list_restaurant_tag_mutation_response'
+  __typename: 'list_restaurant_tag_mutation_response' | null
   affected_rows: ScalarsEnums['Int']
   returning: Array<list_restaurant_tag>
 }
 
 export interface list_restaurant_tag_stddev_fields {
-  __typename: 'list_restaurant_tag_stddev_fields'
+  __typename: 'list_restaurant_tag_stddev_fields' | null
   position?: Maybe<ScalarsEnums['Float']>
 }
 
 export interface list_restaurant_tag_stddev_pop_fields {
-  __typename: 'list_restaurant_tag_stddev_pop_fields'
+  __typename: 'list_restaurant_tag_stddev_pop_fields' | null
   position?: Maybe<ScalarsEnums['Float']>
 }
 
 export interface list_restaurant_tag_stddev_samp_fields {
-  __typename: 'list_restaurant_tag_stddev_samp_fields'
+  __typename: 'list_restaurant_tag_stddev_samp_fields' | null
   position?: Maybe<ScalarsEnums['Float']>
 }
 
 export interface list_restaurant_tag_sum_fields {
-  __typename: 'list_restaurant_tag_sum_fields'
+  __typename: 'list_restaurant_tag_sum_fields' | null
   position?: Maybe<ScalarsEnums['Int']>
 }
 
 export interface list_restaurant_tag_var_pop_fields {
-  __typename: 'list_restaurant_tag_var_pop_fields'
+  __typename: 'list_restaurant_tag_var_pop_fields' | null
   position?: Maybe<ScalarsEnums['Float']>
 }
 
 export interface list_restaurant_tag_var_samp_fields {
-  __typename: 'list_restaurant_tag_var_samp_fields'
+  __typename: 'list_restaurant_tag_var_samp_fields' | null
   position?: Maybe<ScalarsEnums['Float']>
 }
 
 export interface list_restaurant_tag_variance_fields {
-  __typename: 'list_restaurant_tag_variance_fields'
+  __typename: 'list_restaurant_tag_variance_fields' | null
   position?: Maybe<ScalarsEnums['Float']>
 }
 
 export interface list_restaurant_var_pop_fields {
-  __typename: 'list_restaurant_var_pop_fields'
+  __typename: 'list_restaurant_var_pop_fields' | null
   position?: Maybe<ScalarsEnums['Float']>
 }
 
 export interface list_restaurant_var_samp_fields {
-  __typename: 'list_restaurant_var_samp_fields'
+  __typename: 'list_restaurant_var_samp_fields' | null
   position?: Maybe<ScalarsEnums['Float']>
 }
 
 export interface list_restaurant_variance_fields {
-  __typename: 'list_restaurant_variance_fields'
+  __typename: 'list_restaurant_variance_fields' | null
   position?: Maybe<ScalarsEnums['Float']>
 }
 
 export interface list_stddev_fields {
-  __typename: 'list_stddev_fields'
+  __typename: 'list_stddev_fields' | null
   color?: Maybe<ScalarsEnums['Float']>
 }
 
 export interface list_stddev_pop_fields {
-  __typename: 'list_stddev_pop_fields'
+  __typename: 'list_stddev_pop_fields' | null
   color?: Maybe<ScalarsEnums['Float']>
 }
 
 export interface list_stddev_samp_fields {
-  __typename: 'list_stddev_samp_fields'
+  __typename: 'list_stddev_samp_fields' | null
   color?: Maybe<ScalarsEnums['Float']>
 }
 
 export interface list_sum_fields {
-  __typename: 'list_sum_fields'
+  __typename: 'list_sum_fields' | null
   color?: Maybe<ScalarsEnums['Int']>
 }
 
 export interface list_tag {
-  __typename: 'list_tag'
+  __typename: 'list_tag' | null
   created_at: ScalarsEnums['timestamptz']
   id: ScalarsEnums['uuid']
   list?: Maybe<list>
@@ -12675,13 +12694,13 @@ export interface list_tag {
 }
 
 export interface list_tag_aggregate {
-  __typename: 'list_tag_aggregate'
+  __typename: 'list_tag_aggregate' | null
   aggregate?: Maybe<list_tag_aggregate_fields>
   nodes: Array<list_tag>
 }
 
 export interface list_tag_aggregate_fields {
-  __typename: 'list_tag_aggregate_fields'
+  __typename: 'list_tag_aggregate_fields' | null
   count: (args?: {
     columns?: Maybe<Array<ScalarsEnums['list_tag_select_column']>>
     distinct?: Maybe<ScalarsEnums['Boolean']>
@@ -12691,7 +12710,7 @@ export interface list_tag_aggregate_fields {
 }
 
 export interface list_tag_max_fields {
-  __typename: 'list_tag_max_fields'
+  __typename: 'list_tag_max_fields' | null
   created_at?: Maybe<ScalarsEnums['timestamptz']>
   id?: Maybe<ScalarsEnums['uuid']>
   list_id?: Maybe<ScalarsEnums['uuid']>
@@ -12699,7 +12718,7 @@ export interface list_tag_max_fields {
 }
 
 export interface list_tag_min_fields {
-  __typename: 'list_tag_min_fields'
+  __typename: 'list_tag_min_fields' | null
   created_at?: Maybe<ScalarsEnums['timestamptz']>
   id?: Maybe<ScalarsEnums['uuid']>
   list_id?: Maybe<ScalarsEnums['uuid']>
@@ -12707,28 +12726,28 @@ export interface list_tag_min_fields {
 }
 
 export interface list_tag_mutation_response {
-  __typename: 'list_tag_mutation_response'
+  __typename: 'list_tag_mutation_response' | null
   affected_rows: ScalarsEnums['Int']
   returning: Array<list_tag>
 }
 
 export interface list_var_pop_fields {
-  __typename: 'list_var_pop_fields'
+  __typename: 'list_var_pop_fields' | null
   color?: Maybe<ScalarsEnums['Float']>
 }
 
 export interface list_var_samp_fields {
-  __typename: 'list_var_samp_fields'
+  __typename: 'list_var_samp_fields' | null
   color?: Maybe<ScalarsEnums['Float']>
 }
 
 export interface list_variance_fields {
-  __typename: 'list_variance_fields'
+  __typename: 'list_variance_fields' | null
   color?: Maybe<ScalarsEnums['Float']>
 }
 
 export interface menu_item {
-  __typename: 'menu_item'
+  __typename: 'menu_item' | null
   created_at: ScalarsEnums['timestamptz']
   description?: Maybe<ScalarsEnums['String']>
   id: ScalarsEnums['uuid']
@@ -12742,13 +12761,13 @@ export interface menu_item {
 }
 
 export interface menu_item_aggregate {
-  __typename: 'menu_item_aggregate'
+  __typename: 'menu_item_aggregate' | null
   aggregate?: Maybe<menu_item_aggregate_fields>
   nodes: Array<menu_item>
 }
 
 export interface menu_item_aggregate_fields {
-  __typename: 'menu_item_aggregate_fields'
+  __typename: 'menu_item_aggregate_fields' | null
   avg?: Maybe<menu_item_avg_fields>
   count: (args?: {
     columns?: Maybe<Array<ScalarsEnums['menu_item_select_column']>>
@@ -12766,12 +12785,12 @@ export interface menu_item_aggregate_fields {
 }
 
 export interface menu_item_avg_fields {
-  __typename: 'menu_item_avg_fields'
+  __typename: 'menu_item_avg_fields' | null
   price?: Maybe<ScalarsEnums['Float']>
 }
 
 export interface menu_item_max_fields {
-  __typename: 'menu_item_max_fields'
+  __typename: 'menu_item_max_fields' | null
   created_at?: Maybe<ScalarsEnums['timestamptz']>
   description?: Maybe<ScalarsEnums['String']>
   id?: Maybe<ScalarsEnums['uuid']>
@@ -12783,7 +12802,7 @@ export interface menu_item_max_fields {
 }
 
 export interface menu_item_min_fields {
-  __typename: 'menu_item_min_fields'
+  __typename: 'menu_item_min_fields' | null
   created_at?: Maybe<ScalarsEnums['timestamptz']>
   description?: Maybe<ScalarsEnums['String']>
   id?: Maybe<ScalarsEnums['uuid']>
@@ -12795,61 +12814,61 @@ export interface menu_item_min_fields {
 }
 
 export interface menu_item_mutation_response {
-  __typename: 'menu_item_mutation_response'
+  __typename: 'menu_item_mutation_response' | null
   affected_rows: ScalarsEnums['Int']
   returning: Array<menu_item>
 }
 
 export interface menu_item_stddev_fields {
-  __typename: 'menu_item_stddev_fields'
+  __typename: 'menu_item_stddev_fields' | null
   price?: Maybe<ScalarsEnums['Float']>
 }
 
 export interface menu_item_stddev_pop_fields {
-  __typename: 'menu_item_stddev_pop_fields'
+  __typename: 'menu_item_stddev_pop_fields' | null
   price?: Maybe<ScalarsEnums['Float']>
 }
 
 export interface menu_item_stddev_samp_fields {
-  __typename: 'menu_item_stddev_samp_fields'
+  __typename: 'menu_item_stddev_samp_fields' | null
   price?: Maybe<ScalarsEnums['Float']>
 }
 
 export interface menu_item_sum_fields {
-  __typename: 'menu_item_sum_fields'
+  __typename: 'menu_item_sum_fields' | null
   price?: Maybe<ScalarsEnums['Int']>
 }
 
 export interface menu_item_var_pop_fields {
-  __typename: 'menu_item_var_pop_fields'
+  __typename: 'menu_item_var_pop_fields' | null
   price?: Maybe<ScalarsEnums['Float']>
 }
 
 export interface menu_item_var_samp_fields {
-  __typename: 'menu_item_var_samp_fields'
+  __typename: 'menu_item_var_samp_fields' | null
   price?: Maybe<ScalarsEnums['Float']>
 }
 
 export interface menu_item_variance_fields {
-  __typename: 'menu_item_variance_fields'
+  __typename: 'menu_item_variance_fields' | null
   price?: Maybe<ScalarsEnums['Float']>
 }
 
 export interface nhood_labels {
-  __typename: 'nhood_labels'
+  __typename: 'nhood_labels' | null
   center: ScalarsEnums['geometry']
   name: ScalarsEnums['String']
   ogc_fid: ScalarsEnums['Int']
 }
 
 export interface nhood_labels_aggregate {
-  __typename: 'nhood_labels_aggregate'
+  __typename: 'nhood_labels_aggregate' | null
   aggregate?: Maybe<nhood_labels_aggregate_fields>
   nodes: Array<nhood_labels>
 }
 
 export interface nhood_labels_aggregate_fields {
-  __typename: 'nhood_labels_aggregate_fields'
+  __typename: 'nhood_labels_aggregate_fields' | null
   avg?: Maybe<nhood_labels_avg_fields>
   count: (args?: {
     columns?: Maybe<Array<ScalarsEnums['nhood_labels_select_column']>>
@@ -12867,65 +12886,65 @@ export interface nhood_labels_aggregate_fields {
 }
 
 export interface nhood_labels_avg_fields {
-  __typename: 'nhood_labels_avg_fields'
+  __typename: 'nhood_labels_avg_fields' | null
   ogc_fid?: Maybe<ScalarsEnums['Float']>
 }
 
 export interface nhood_labels_max_fields {
-  __typename: 'nhood_labels_max_fields'
+  __typename: 'nhood_labels_max_fields' | null
   name?: Maybe<ScalarsEnums['String']>
   ogc_fid?: Maybe<ScalarsEnums['Int']>
 }
 
 export interface nhood_labels_min_fields {
-  __typename: 'nhood_labels_min_fields'
+  __typename: 'nhood_labels_min_fields' | null
   name?: Maybe<ScalarsEnums['String']>
   ogc_fid?: Maybe<ScalarsEnums['Int']>
 }
 
 export interface nhood_labels_mutation_response {
-  __typename: 'nhood_labels_mutation_response'
+  __typename: 'nhood_labels_mutation_response' | null
   affected_rows: ScalarsEnums['Int']
   returning: Array<nhood_labels>
 }
 
 export interface nhood_labels_stddev_fields {
-  __typename: 'nhood_labels_stddev_fields'
+  __typename: 'nhood_labels_stddev_fields' | null
   ogc_fid?: Maybe<ScalarsEnums['Float']>
 }
 
 export interface nhood_labels_stddev_pop_fields {
-  __typename: 'nhood_labels_stddev_pop_fields'
+  __typename: 'nhood_labels_stddev_pop_fields' | null
   ogc_fid?: Maybe<ScalarsEnums['Float']>
 }
 
 export interface nhood_labels_stddev_samp_fields {
-  __typename: 'nhood_labels_stddev_samp_fields'
+  __typename: 'nhood_labels_stddev_samp_fields' | null
   ogc_fid?: Maybe<ScalarsEnums['Float']>
 }
 
 export interface nhood_labels_sum_fields {
-  __typename: 'nhood_labels_sum_fields'
+  __typename: 'nhood_labels_sum_fields' | null
   ogc_fid?: Maybe<ScalarsEnums['Int']>
 }
 
 export interface nhood_labels_var_pop_fields {
-  __typename: 'nhood_labels_var_pop_fields'
+  __typename: 'nhood_labels_var_pop_fields' | null
   ogc_fid?: Maybe<ScalarsEnums['Float']>
 }
 
 export interface nhood_labels_var_samp_fields {
-  __typename: 'nhood_labels_var_samp_fields'
+  __typename: 'nhood_labels_var_samp_fields' | null
   ogc_fid?: Maybe<ScalarsEnums['Float']>
 }
 
 export interface nhood_labels_variance_fields {
-  __typename: 'nhood_labels_variance_fields'
+  __typename: 'nhood_labels_variance_fields' | null
   ogc_fid?: Maybe<ScalarsEnums['Float']>
 }
 
 export interface opening_hours {
-  __typename: 'opening_hours'
+  __typename: 'opening_hours' | null
   hours: ScalarsEnums['tsrange']
   id: ScalarsEnums['uuid']
   restaurant: restaurant
@@ -12933,13 +12952,13 @@ export interface opening_hours {
 }
 
 export interface opening_hours_aggregate {
-  __typename: 'opening_hours_aggregate'
+  __typename: 'opening_hours_aggregate' | null
   aggregate?: Maybe<opening_hours_aggregate_fields>
   nodes: Array<opening_hours>
 }
 
 export interface opening_hours_aggregate_fields {
-  __typename: 'opening_hours_aggregate_fields'
+  __typename: 'opening_hours_aggregate_fields' | null
   count: (args?: {
     columns?: Maybe<Array<ScalarsEnums['opening_hours_select_column']>>
     distinct?: Maybe<ScalarsEnums['Boolean']>
@@ -12949,25 +12968,25 @@ export interface opening_hours_aggregate_fields {
 }
 
 export interface opening_hours_max_fields {
-  __typename: 'opening_hours_max_fields'
+  __typename: 'opening_hours_max_fields' | null
   id?: Maybe<ScalarsEnums['uuid']>
   restaurant_id?: Maybe<ScalarsEnums['uuid']>
 }
 
 export interface opening_hours_min_fields {
-  __typename: 'opening_hours_min_fields'
+  __typename: 'opening_hours_min_fields' | null
   id?: Maybe<ScalarsEnums['uuid']>
   restaurant_id?: Maybe<ScalarsEnums['uuid']>
 }
 
 export interface opening_hours_mutation_response {
-  __typename: 'opening_hours_mutation_response'
+  __typename: 'opening_hours_mutation_response' | null
   affected_rows: ScalarsEnums['Int']
   returning: Array<opening_hours>
 }
 
 export interface photo {
-  __typename: 'photo'
+  __typename: 'photo' | null
   created_at: ScalarsEnums['timestamptz']
   id: ScalarsEnums['uuid']
   origin?: Maybe<ScalarsEnums['String']>
@@ -12977,13 +12996,13 @@ export interface photo {
 }
 
 export interface photo_aggregate {
-  __typename: 'photo_aggregate'
+  __typename: 'photo_aggregate' | null
   aggregate?: Maybe<photo_aggregate_fields>
   nodes: Array<photo>
 }
 
 export interface photo_aggregate_fields {
-  __typename: 'photo_aggregate_fields'
+  __typename: 'photo_aggregate_fields' | null
   avg?: Maybe<photo_avg_fields>
   count: (args?: {
     columns?: Maybe<Array<ScalarsEnums['photo_select_column']>>
@@ -13001,12 +13020,12 @@ export interface photo_aggregate_fields {
 }
 
 export interface photo_avg_fields {
-  __typename: 'photo_avg_fields'
+  __typename: 'photo_avg_fields' | null
   quality?: Maybe<ScalarsEnums['Float']>
 }
 
 export interface photo_max_fields {
-  __typename: 'photo_max_fields'
+  __typename: 'photo_max_fields' | null
   created_at?: Maybe<ScalarsEnums['timestamptz']>
   id?: Maybe<ScalarsEnums['uuid']>
   origin?: Maybe<ScalarsEnums['String']>
@@ -13016,7 +13035,7 @@ export interface photo_max_fields {
 }
 
 export interface photo_min_fields {
-  __typename: 'photo_min_fields'
+  __typename: 'photo_min_fields' | null
   created_at?: Maybe<ScalarsEnums['timestamptz']>
   id?: Maybe<ScalarsEnums['uuid']>
   origin?: Maybe<ScalarsEnums['String']>
@@ -13026,48 +13045,48 @@ export interface photo_min_fields {
 }
 
 export interface photo_mutation_response {
-  __typename: 'photo_mutation_response'
+  __typename: 'photo_mutation_response' | null
   affected_rows: ScalarsEnums['Int']
   returning: Array<photo>
 }
 
 export interface photo_stddev_fields {
-  __typename: 'photo_stddev_fields'
+  __typename: 'photo_stddev_fields' | null
   quality?: Maybe<ScalarsEnums['Float']>
 }
 
 export interface photo_stddev_pop_fields {
-  __typename: 'photo_stddev_pop_fields'
+  __typename: 'photo_stddev_pop_fields' | null
   quality?: Maybe<ScalarsEnums['Float']>
 }
 
 export interface photo_stddev_samp_fields {
-  __typename: 'photo_stddev_samp_fields'
+  __typename: 'photo_stddev_samp_fields' | null
   quality?: Maybe<ScalarsEnums['Float']>
 }
 
 export interface photo_sum_fields {
-  __typename: 'photo_sum_fields'
+  __typename: 'photo_sum_fields' | null
   quality?: Maybe<ScalarsEnums['numeric']>
 }
 
 export interface photo_var_pop_fields {
-  __typename: 'photo_var_pop_fields'
+  __typename: 'photo_var_pop_fields' | null
   quality?: Maybe<ScalarsEnums['Float']>
 }
 
 export interface photo_var_samp_fields {
-  __typename: 'photo_var_samp_fields'
+  __typename: 'photo_var_samp_fields' | null
   quality?: Maybe<ScalarsEnums['Float']>
 }
 
 export interface photo_variance_fields {
-  __typename: 'photo_variance_fields'
+  __typename: 'photo_variance_fields' | null
   quality?: Maybe<ScalarsEnums['Float']>
 }
 
 export interface photo_xref {
-  __typename: 'photo_xref'
+  __typename: 'photo_xref' | null
   id: ScalarsEnums['uuid']
   photo: photo
   photo_id: ScalarsEnums['uuid']
@@ -13077,13 +13096,13 @@ export interface photo_xref {
 }
 
 export interface photo_xref_aggregate {
-  __typename: 'photo_xref_aggregate'
+  __typename: 'photo_xref_aggregate' | null
   aggregate?: Maybe<photo_xref_aggregate_fields>
   nodes: Array<photo_xref>
 }
 
 export interface photo_xref_aggregate_fields {
-  __typename: 'photo_xref_aggregate_fields'
+  __typename: 'photo_xref_aggregate_fields' | null
   count: (args?: {
     columns?: Maybe<Array<ScalarsEnums['photo_xref_select_column']>>
     distinct?: Maybe<ScalarsEnums['Boolean']>
@@ -13093,7 +13112,7 @@ export interface photo_xref_aggregate_fields {
 }
 
 export interface photo_xref_max_fields {
-  __typename: 'photo_xref_max_fields'
+  __typename: 'photo_xref_max_fields' | null
   id?: Maybe<ScalarsEnums['uuid']>
   photo_id?: Maybe<ScalarsEnums['uuid']>
   restaurant_id?: Maybe<ScalarsEnums['uuid']>
@@ -13102,7 +13121,7 @@ export interface photo_xref_max_fields {
 }
 
 export interface photo_xref_min_fields {
-  __typename: 'photo_xref_min_fields'
+  __typename: 'photo_xref_min_fields' | null
   id?: Maybe<ScalarsEnums['uuid']>
   photo_id?: Maybe<ScalarsEnums['uuid']>
   restaurant_id?: Maybe<ScalarsEnums['uuid']>
@@ -13111,13 +13130,13 @@ export interface photo_xref_min_fields {
 }
 
 export interface photo_xref_mutation_response {
-  __typename: 'photo_xref_mutation_response'
+  __typename: 'photo_xref_mutation_response' | null
   affected_rows: ScalarsEnums['Int']
   returning: Array<photo_xref>
 }
 
 export interface restaurant {
-  __typename: 'restaurant'
+  __typename: 'restaurant' | null
   address?: Maybe<ScalarsEnums['String']>
   city?: Maybe<ScalarsEnums['String']>
   created_at: ScalarsEnums['timestamptz']
@@ -13247,13 +13266,13 @@ export interface restaurant {
 }
 
 export interface restaurant_aggregate {
-  __typename: 'restaurant_aggregate'
+  __typename: 'restaurant_aggregate' | null
   aggregate?: Maybe<restaurant_aggregate_fields>
   nodes: Array<restaurant>
 }
 
 export interface restaurant_aggregate_fields {
-  __typename: 'restaurant_aggregate_fields'
+  __typename: 'restaurant_aggregate_fields' | null
   avg?: Maybe<restaurant_avg_fields>
   count: (args?: {
     columns?: Maybe<Array<ScalarsEnums['restaurant_select_column']>>
@@ -13271,7 +13290,7 @@ export interface restaurant_aggregate_fields {
 }
 
 export interface restaurant_avg_fields {
-  __typename: 'restaurant_avg_fields'
+  __typename: 'restaurant_avg_fields' | null
   downvotes?: Maybe<ScalarsEnums['Float']>
   rating?: Maybe<ScalarsEnums['Float']>
   score?: Maybe<ScalarsEnums['Float']>
@@ -13281,7 +13300,7 @@ export interface restaurant_avg_fields {
 }
 
 export interface restaurant_max_fields {
-  __typename: 'restaurant_max_fields'
+  __typename: 'restaurant_max_fields' | null
   address?: Maybe<ScalarsEnums['String']>
   city?: Maybe<ScalarsEnums['String']>
   created_at?: Maybe<ScalarsEnums['timestamptz']>
@@ -13307,7 +13326,7 @@ export interface restaurant_max_fields {
 }
 
 export interface restaurant_min_fields {
-  __typename: 'restaurant_min_fields'
+  __typename: 'restaurant_min_fields' | null
   address?: Maybe<ScalarsEnums['String']>
   city?: Maybe<ScalarsEnums['String']>
   created_at?: Maybe<ScalarsEnums['timestamptz']>
@@ -13333,13 +13352,13 @@ export interface restaurant_min_fields {
 }
 
 export interface restaurant_mutation_response {
-  __typename: 'restaurant_mutation_response'
+  __typename: 'restaurant_mutation_response' | null
   affected_rows: ScalarsEnums['Int']
   returning: Array<restaurant>
 }
 
 export interface restaurant_stddev_fields {
-  __typename: 'restaurant_stddev_fields'
+  __typename: 'restaurant_stddev_fields' | null
   downvotes?: Maybe<ScalarsEnums['Float']>
   rating?: Maybe<ScalarsEnums['Float']>
   score?: Maybe<ScalarsEnums['Float']>
@@ -13349,7 +13368,7 @@ export interface restaurant_stddev_fields {
 }
 
 export interface restaurant_stddev_pop_fields {
-  __typename: 'restaurant_stddev_pop_fields'
+  __typename: 'restaurant_stddev_pop_fields' | null
   downvotes?: Maybe<ScalarsEnums['Float']>
   rating?: Maybe<ScalarsEnums['Float']>
   score?: Maybe<ScalarsEnums['Float']>
@@ -13359,7 +13378,7 @@ export interface restaurant_stddev_pop_fields {
 }
 
 export interface restaurant_stddev_samp_fields {
-  __typename: 'restaurant_stddev_samp_fields'
+  __typename: 'restaurant_stddev_samp_fields' | null
   downvotes?: Maybe<ScalarsEnums['Float']>
   rating?: Maybe<ScalarsEnums['Float']>
   score?: Maybe<ScalarsEnums['Float']>
@@ -13369,7 +13388,7 @@ export interface restaurant_stddev_samp_fields {
 }
 
 export interface restaurant_sum_fields {
-  __typename: 'restaurant_sum_fields'
+  __typename: 'restaurant_sum_fields' | null
   downvotes?: Maybe<ScalarsEnums['numeric']>
   rating?: Maybe<ScalarsEnums['numeric']>
   score?: Maybe<ScalarsEnums['numeric']>
@@ -13379,7 +13398,7 @@ export interface restaurant_sum_fields {
 }
 
 export interface restaurant_tag {
-  __typename: 'restaurant_tag'
+  __typename: 'restaurant_tag' | null
   downvotes?: Maybe<ScalarsEnums['numeric']>
   id: ScalarsEnums['uuid']
   photos: (args?: {
@@ -13436,13 +13455,13 @@ export interface restaurant_tag {
 }
 
 export interface restaurant_tag_aggregate {
-  __typename: 'restaurant_tag_aggregate'
+  __typename: 'restaurant_tag_aggregate' | null
   aggregate?: Maybe<restaurant_tag_aggregate_fields>
   nodes: Array<restaurant_tag>
 }
 
 export interface restaurant_tag_aggregate_fields {
-  __typename: 'restaurant_tag_aggregate_fields'
+  __typename: 'restaurant_tag_aggregate_fields' | null
   avg?: Maybe<restaurant_tag_avg_fields>
   count: (args?: {
     columns?: Maybe<Array<ScalarsEnums['restaurant_tag_select_column']>>
@@ -13460,7 +13479,7 @@ export interface restaurant_tag_aggregate_fields {
 }
 
 export interface restaurant_tag_avg_fields {
-  __typename: 'restaurant_tag_avg_fields'
+  __typename: 'restaurant_tag_avg_fields' | null
   downvotes?: Maybe<ScalarsEnums['Float']>
   rank?: Maybe<ScalarsEnums['Float']>
   rating?: Maybe<ScalarsEnums['Float']>
@@ -13471,7 +13490,7 @@ export interface restaurant_tag_avg_fields {
 }
 
 export interface restaurant_tag_max_fields {
-  __typename: 'restaurant_tag_max_fields'
+  __typename: 'restaurant_tag_max_fields' | null
   downvotes?: Maybe<ScalarsEnums['numeric']>
   id?: Maybe<ScalarsEnums['uuid']>
   rank?: Maybe<ScalarsEnums['Int']>
@@ -13485,7 +13504,7 @@ export interface restaurant_tag_max_fields {
 }
 
 export interface restaurant_tag_min_fields {
-  __typename: 'restaurant_tag_min_fields'
+  __typename: 'restaurant_tag_min_fields' | null
   downvotes?: Maybe<ScalarsEnums['numeric']>
   id?: Maybe<ScalarsEnums['uuid']>
   rank?: Maybe<ScalarsEnums['Int']>
@@ -13499,13 +13518,13 @@ export interface restaurant_tag_min_fields {
 }
 
 export interface restaurant_tag_mutation_response {
-  __typename: 'restaurant_tag_mutation_response'
+  __typename: 'restaurant_tag_mutation_response' | null
   affected_rows: ScalarsEnums['Int']
   returning: Array<restaurant_tag>
 }
 
 export interface restaurant_tag_stddev_fields {
-  __typename: 'restaurant_tag_stddev_fields'
+  __typename: 'restaurant_tag_stddev_fields' | null
   downvotes?: Maybe<ScalarsEnums['Float']>
   rank?: Maybe<ScalarsEnums['Float']>
   rating?: Maybe<ScalarsEnums['Float']>
@@ -13516,7 +13535,7 @@ export interface restaurant_tag_stddev_fields {
 }
 
 export interface restaurant_tag_stddev_pop_fields {
-  __typename: 'restaurant_tag_stddev_pop_fields'
+  __typename: 'restaurant_tag_stddev_pop_fields' | null
   downvotes?: Maybe<ScalarsEnums['Float']>
   rank?: Maybe<ScalarsEnums['Float']>
   rating?: Maybe<ScalarsEnums['Float']>
@@ -13527,7 +13546,7 @@ export interface restaurant_tag_stddev_pop_fields {
 }
 
 export interface restaurant_tag_stddev_samp_fields {
-  __typename: 'restaurant_tag_stddev_samp_fields'
+  __typename: 'restaurant_tag_stddev_samp_fields' | null
   downvotes?: Maybe<ScalarsEnums['Float']>
   rank?: Maybe<ScalarsEnums['Float']>
   rating?: Maybe<ScalarsEnums['Float']>
@@ -13538,7 +13557,7 @@ export interface restaurant_tag_stddev_samp_fields {
 }
 
 export interface restaurant_tag_sum_fields {
-  __typename: 'restaurant_tag_sum_fields'
+  __typename: 'restaurant_tag_sum_fields' | null
   downvotes?: Maybe<ScalarsEnums['numeric']>
   rank?: Maybe<ScalarsEnums['Int']>
   rating?: Maybe<ScalarsEnums['numeric']>
@@ -13549,7 +13568,7 @@ export interface restaurant_tag_sum_fields {
 }
 
 export interface restaurant_tag_var_pop_fields {
-  __typename: 'restaurant_tag_var_pop_fields'
+  __typename: 'restaurant_tag_var_pop_fields' | null
   downvotes?: Maybe<ScalarsEnums['Float']>
   rank?: Maybe<ScalarsEnums['Float']>
   rating?: Maybe<ScalarsEnums['Float']>
@@ -13560,7 +13579,7 @@ export interface restaurant_tag_var_pop_fields {
 }
 
 export interface restaurant_tag_var_samp_fields {
-  __typename: 'restaurant_tag_var_samp_fields'
+  __typename: 'restaurant_tag_var_samp_fields' | null
   downvotes?: Maybe<ScalarsEnums['Float']>
   rank?: Maybe<ScalarsEnums['Float']>
   rating?: Maybe<ScalarsEnums['Float']>
@@ -13571,7 +13590,7 @@ export interface restaurant_tag_var_samp_fields {
 }
 
 export interface restaurant_tag_variance_fields {
-  __typename: 'restaurant_tag_variance_fields'
+  __typename: 'restaurant_tag_variance_fields' | null
   downvotes?: Maybe<ScalarsEnums['Float']>
   rank?: Maybe<ScalarsEnums['Float']>
   rating?: Maybe<ScalarsEnums['Float']>
@@ -13582,7 +13601,7 @@ export interface restaurant_tag_variance_fields {
 }
 
 export interface restaurant_var_pop_fields {
-  __typename: 'restaurant_var_pop_fields'
+  __typename: 'restaurant_var_pop_fields' | null
   downvotes?: Maybe<ScalarsEnums['Float']>
   rating?: Maybe<ScalarsEnums['Float']>
   score?: Maybe<ScalarsEnums['Float']>
@@ -13592,7 +13611,7 @@ export interface restaurant_var_pop_fields {
 }
 
 export interface restaurant_var_samp_fields {
-  __typename: 'restaurant_var_samp_fields'
+  __typename: 'restaurant_var_samp_fields' | null
   downvotes?: Maybe<ScalarsEnums['Float']>
   rating?: Maybe<ScalarsEnums['Float']>
   score?: Maybe<ScalarsEnums['Float']>
@@ -13602,7 +13621,7 @@ export interface restaurant_var_samp_fields {
 }
 
 export interface restaurant_variance_fields {
-  __typename: 'restaurant_variance_fields'
+  __typename: 'restaurant_variance_fields' | null
   downvotes?: Maybe<ScalarsEnums['Float']>
   rating?: Maybe<ScalarsEnums['Float']>
   score?: Maybe<ScalarsEnums['Float']>
@@ -13612,7 +13631,7 @@ export interface restaurant_variance_fields {
 }
 
 export interface review {
-  __typename: 'review'
+  __typename: 'review' | null
   authored_at: ScalarsEnums['timestamptz']
   categories: (args?: {
     path?: Maybe<ScalarsEnums['String']>
@@ -13656,13 +13675,13 @@ export interface review {
 }
 
 export interface review_aggregate {
-  __typename: 'review_aggregate'
+  __typename: 'review_aggregate' | null
   aggregate?: Maybe<review_aggregate_fields>
   nodes: Array<review>
 }
 
 export interface review_aggregate_fields {
-  __typename: 'review_aggregate_fields'
+  __typename: 'review_aggregate_fields' | null
   avg?: Maybe<review_avg_fields>
   count: (args?: {
     columns?: Maybe<Array<ScalarsEnums['review_select_column']>>
@@ -13680,13 +13699,13 @@ export interface review_aggregate_fields {
 }
 
 export interface review_avg_fields {
-  __typename: 'review_avg_fields'
+  __typename: 'review_avg_fields' | null
   rating?: Maybe<ScalarsEnums['Float']>
   vote?: Maybe<ScalarsEnums['Float']>
 }
 
 export interface review_max_fields {
-  __typename: 'review_max_fields'
+  __typename: 'review_max_fields' | null
   authored_at?: Maybe<ScalarsEnums['timestamptz']>
   id?: Maybe<ScalarsEnums['uuid']>
   list_id?: Maybe<ScalarsEnums['uuid']>
@@ -13704,7 +13723,7 @@ export interface review_max_fields {
 }
 
 export interface review_min_fields {
-  __typename: 'review_min_fields'
+  __typename: 'review_min_fields' | null
   authored_at?: Maybe<ScalarsEnums['timestamptz']>
   id?: Maybe<ScalarsEnums['uuid']>
   list_id?: Maybe<ScalarsEnums['uuid']>
@@ -13722,37 +13741,37 @@ export interface review_min_fields {
 }
 
 export interface review_mutation_response {
-  __typename: 'review_mutation_response'
+  __typename: 'review_mutation_response' | null
   affected_rows: ScalarsEnums['Int']
   returning: Array<review>
 }
 
 export interface review_stddev_fields {
-  __typename: 'review_stddev_fields'
+  __typename: 'review_stddev_fields' | null
   rating?: Maybe<ScalarsEnums['Float']>
   vote?: Maybe<ScalarsEnums['Float']>
 }
 
 export interface review_stddev_pop_fields {
-  __typename: 'review_stddev_pop_fields'
+  __typename: 'review_stddev_pop_fields' | null
   rating?: Maybe<ScalarsEnums['Float']>
   vote?: Maybe<ScalarsEnums['Float']>
 }
 
 export interface review_stddev_samp_fields {
-  __typename: 'review_stddev_samp_fields'
+  __typename: 'review_stddev_samp_fields' | null
   rating?: Maybe<ScalarsEnums['Float']>
   vote?: Maybe<ScalarsEnums['Float']>
 }
 
 export interface review_sum_fields {
-  __typename: 'review_sum_fields'
+  __typename: 'review_sum_fields' | null
   rating?: Maybe<ScalarsEnums['numeric']>
   vote?: Maybe<ScalarsEnums['numeric']>
 }
 
 export interface review_tag_sentence {
-  __typename: 'review_tag_sentence'
+  __typename: 'review_tag_sentence' | null
   id: ScalarsEnums['uuid']
   ml_sentiment?: Maybe<ScalarsEnums['numeric']>
   naive_sentiment: ScalarsEnums['numeric']
@@ -13765,13 +13784,13 @@ export interface review_tag_sentence {
 }
 
 export interface review_tag_sentence_aggregate {
-  __typename: 'review_tag_sentence_aggregate'
+  __typename: 'review_tag_sentence_aggregate' | null
   aggregate?: Maybe<review_tag_sentence_aggregate_fields>
   nodes: Array<review_tag_sentence>
 }
 
 export interface review_tag_sentence_aggregate_fields {
-  __typename: 'review_tag_sentence_aggregate_fields'
+  __typename: 'review_tag_sentence_aggregate_fields' | null
   avg?: Maybe<review_tag_sentence_avg_fields>
   count: (args?: {
     columns?: Maybe<Array<ScalarsEnums['review_tag_sentence_select_column']>>
@@ -13789,13 +13808,13 @@ export interface review_tag_sentence_aggregate_fields {
 }
 
 export interface review_tag_sentence_avg_fields {
-  __typename: 'review_tag_sentence_avg_fields'
+  __typename: 'review_tag_sentence_avg_fields' | null
   ml_sentiment?: Maybe<ScalarsEnums['Float']>
   naive_sentiment?: Maybe<ScalarsEnums['Float']>
 }
 
 export interface review_tag_sentence_max_fields {
-  __typename: 'review_tag_sentence_max_fields'
+  __typename: 'review_tag_sentence_max_fields' | null
   id?: Maybe<ScalarsEnums['uuid']>
   ml_sentiment?: Maybe<ScalarsEnums['numeric']>
   naive_sentiment?: Maybe<ScalarsEnums['numeric']>
@@ -13806,7 +13825,7 @@ export interface review_tag_sentence_max_fields {
 }
 
 export interface review_tag_sentence_min_fields {
-  __typename: 'review_tag_sentence_min_fields'
+  __typename: 'review_tag_sentence_min_fields' | null
   id?: Maybe<ScalarsEnums['uuid']>
   ml_sentiment?: Maybe<ScalarsEnums['numeric']>
   naive_sentiment?: Maybe<ScalarsEnums['numeric']>
@@ -13817,73 +13836,73 @@ export interface review_tag_sentence_min_fields {
 }
 
 export interface review_tag_sentence_mutation_response {
-  __typename: 'review_tag_sentence_mutation_response'
+  __typename: 'review_tag_sentence_mutation_response' | null
   affected_rows: ScalarsEnums['Int']
   returning: Array<review_tag_sentence>
 }
 
 export interface review_tag_sentence_stddev_fields {
-  __typename: 'review_tag_sentence_stddev_fields'
+  __typename: 'review_tag_sentence_stddev_fields' | null
   ml_sentiment?: Maybe<ScalarsEnums['Float']>
   naive_sentiment?: Maybe<ScalarsEnums['Float']>
 }
 
 export interface review_tag_sentence_stddev_pop_fields {
-  __typename: 'review_tag_sentence_stddev_pop_fields'
+  __typename: 'review_tag_sentence_stddev_pop_fields' | null
   ml_sentiment?: Maybe<ScalarsEnums['Float']>
   naive_sentiment?: Maybe<ScalarsEnums['Float']>
 }
 
 export interface review_tag_sentence_stddev_samp_fields {
-  __typename: 'review_tag_sentence_stddev_samp_fields'
+  __typename: 'review_tag_sentence_stddev_samp_fields' | null
   ml_sentiment?: Maybe<ScalarsEnums['Float']>
   naive_sentiment?: Maybe<ScalarsEnums['Float']>
 }
 
 export interface review_tag_sentence_sum_fields {
-  __typename: 'review_tag_sentence_sum_fields'
+  __typename: 'review_tag_sentence_sum_fields' | null
   ml_sentiment?: Maybe<ScalarsEnums['numeric']>
   naive_sentiment?: Maybe<ScalarsEnums['numeric']>
 }
 
 export interface review_tag_sentence_var_pop_fields {
-  __typename: 'review_tag_sentence_var_pop_fields'
+  __typename: 'review_tag_sentence_var_pop_fields' | null
   ml_sentiment?: Maybe<ScalarsEnums['Float']>
   naive_sentiment?: Maybe<ScalarsEnums['Float']>
 }
 
 export interface review_tag_sentence_var_samp_fields {
-  __typename: 'review_tag_sentence_var_samp_fields'
+  __typename: 'review_tag_sentence_var_samp_fields' | null
   ml_sentiment?: Maybe<ScalarsEnums['Float']>
   naive_sentiment?: Maybe<ScalarsEnums['Float']>
 }
 
 export interface review_tag_sentence_variance_fields {
-  __typename: 'review_tag_sentence_variance_fields'
+  __typename: 'review_tag_sentence_variance_fields' | null
   ml_sentiment?: Maybe<ScalarsEnums['Float']>
   naive_sentiment?: Maybe<ScalarsEnums['Float']>
 }
 
 export interface review_var_pop_fields {
-  __typename: 'review_var_pop_fields'
+  __typename: 'review_var_pop_fields' | null
   rating?: Maybe<ScalarsEnums['Float']>
   vote?: Maybe<ScalarsEnums['Float']>
 }
 
 export interface review_var_samp_fields {
-  __typename: 'review_var_samp_fields'
+  __typename: 'review_var_samp_fields' | null
   rating?: Maybe<ScalarsEnums['Float']>
   vote?: Maybe<ScalarsEnums['Float']>
 }
 
 export interface review_variance_fields {
-  __typename: 'review_variance_fields'
+  __typename: 'review_variance_fields' | null
   rating?: Maybe<ScalarsEnums['Float']>
   vote?: Maybe<ScalarsEnums['Float']>
 }
 
 export interface setting {
-  __typename: 'setting'
+  __typename: 'setting' | null
   created_at?: Maybe<ScalarsEnums['timestamptz']>
   id: ScalarsEnums['uuid']
   key: ScalarsEnums['String']
@@ -13894,13 +13913,13 @@ export interface setting {
 }
 
 export interface setting_aggregate {
-  __typename: 'setting_aggregate'
+  __typename: 'setting_aggregate' | null
   aggregate?: Maybe<setting_aggregate_fields>
   nodes: Array<setting>
 }
 
 export interface setting_aggregate_fields {
-  __typename: 'setting_aggregate_fields'
+  __typename: 'setting_aggregate_fields' | null
   count: (args?: {
     columns?: Maybe<Array<ScalarsEnums['setting_select_column']>>
     distinct?: Maybe<ScalarsEnums['Boolean']>
@@ -13910,7 +13929,7 @@ export interface setting_aggregate_fields {
 }
 
 export interface setting_max_fields {
-  __typename: 'setting_max_fields'
+  __typename: 'setting_max_fields' | null
   created_at?: Maybe<ScalarsEnums['timestamptz']>
   id?: Maybe<ScalarsEnums['uuid']>
   key?: Maybe<ScalarsEnums['String']>
@@ -13918,7 +13937,7 @@ export interface setting_max_fields {
 }
 
 export interface setting_min_fields {
-  __typename: 'setting_min_fields'
+  __typename: 'setting_min_fields' | null
   created_at?: Maybe<ScalarsEnums['timestamptz']>
   id?: Maybe<ScalarsEnums['uuid']>
   key?: Maybe<ScalarsEnums['String']>
@@ -13926,13 +13945,13 @@ export interface setting_min_fields {
 }
 
 export interface setting_mutation_response {
-  __typename: 'setting_mutation_response'
+  __typename: 'setting_mutation_response' | null
   affected_rows: ScalarsEnums['Int']
   returning: Array<setting>
 }
 
 export interface tag {
-  __typename: 'tag'
+  __typename: 'tag' | null
   alternates: (args?: {
     path?: Maybe<ScalarsEnums['String']>
   }) => Maybe<ScalarsEnums['jsonb']>
@@ -13951,6 +13970,7 @@ export interface tag {
     where?: Maybe<tag_tag_bool_exp>
   }) => tag_tag_aggregate
   created_at: ScalarsEnums['timestamptz']
+  default_image?: Maybe<ScalarsEnums['String']>
   default_images: (args?: {
     path?: Maybe<ScalarsEnums['String']>
   }) => Maybe<ScalarsEnums['jsonb']>
@@ -13991,13 +14011,13 @@ export interface tag {
 }
 
 export interface tag_aggregate {
-  __typename: 'tag_aggregate'
+  __typename: 'tag_aggregate' | null
   aggregate?: Maybe<tag_aggregate_fields>
   nodes: Array<tag>
 }
 
 export interface tag_aggregate_fields {
-  __typename: 'tag_aggregate_fields'
+  __typename: 'tag_aggregate_fields' | null
   avg?: Maybe<tag_avg_fields>
   count: (args?: {
     columns?: Maybe<Array<ScalarsEnums['tag_select_column']>>
@@ -14015,15 +14035,16 @@ export interface tag_aggregate_fields {
 }
 
 export interface tag_avg_fields {
-  __typename: 'tag_avg_fields'
+  __typename: 'tag_avg_fields' | null
   frequency?: Maybe<ScalarsEnums['Float']>
   order?: Maybe<ScalarsEnums['Float']>
   popularity?: Maybe<ScalarsEnums['Float']>
 }
 
 export interface tag_max_fields {
-  __typename: 'tag_max_fields'
+  __typename: 'tag_max_fields' | null
   created_at?: Maybe<ScalarsEnums['timestamptz']>
+  default_image?: Maybe<ScalarsEnums['String']>
   description?: Maybe<ScalarsEnums['String']>
   displayName?: Maybe<ScalarsEnums['String']>
   frequency?: Maybe<ScalarsEnums['Int']>
@@ -14039,8 +14060,9 @@ export interface tag_max_fields {
 }
 
 export interface tag_min_fields {
-  __typename: 'tag_min_fields'
+  __typename: 'tag_min_fields' | null
   created_at?: Maybe<ScalarsEnums['timestamptz']>
+  default_image?: Maybe<ScalarsEnums['String']>
   description?: Maybe<ScalarsEnums['String']>
   displayName?: Maybe<ScalarsEnums['String']>
   frequency?: Maybe<ScalarsEnums['Int']>
@@ -14056,41 +14078,41 @@ export interface tag_min_fields {
 }
 
 export interface tag_mutation_response {
-  __typename: 'tag_mutation_response'
+  __typename: 'tag_mutation_response' | null
   affected_rows: ScalarsEnums['Int']
   returning: Array<tag>
 }
 
 export interface tag_stddev_fields {
-  __typename: 'tag_stddev_fields'
+  __typename: 'tag_stddev_fields' | null
   frequency?: Maybe<ScalarsEnums['Float']>
   order?: Maybe<ScalarsEnums['Float']>
   popularity?: Maybe<ScalarsEnums['Float']>
 }
 
 export interface tag_stddev_pop_fields {
-  __typename: 'tag_stddev_pop_fields'
+  __typename: 'tag_stddev_pop_fields' | null
   frequency?: Maybe<ScalarsEnums['Float']>
   order?: Maybe<ScalarsEnums['Float']>
   popularity?: Maybe<ScalarsEnums['Float']>
 }
 
 export interface tag_stddev_samp_fields {
-  __typename: 'tag_stddev_samp_fields'
+  __typename: 'tag_stddev_samp_fields' | null
   frequency?: Maybe<ScalarsEnums['Float']>
   order?: Maybe<ScalarsEnums['Float']>
   popularity?: Maybe<ScalarsEnums['Float']>
 }
 
 export interface tag_sum_fields {
-  __typename: 'tag_sum_fields'
+  __typename: 'tag_sum_fields' | null
   frequency?: Maybe<ScalarsEnums['Int']>
   order?: Maybe<ScalarsEnums['Int']>
   popularity?: Maybe<ScalarsEnums['Int']>
 }
 
 export interface tag_tag {
-  __typename: 'tag_tag'
+  __typename: 'tag_tag' | null
   category: tag
   category_tag_id: ScalarsEnums['uuid']
   main: tag
@@ -14098,13 +14120,13 @@ export interface tag_tag {
 }
 
 export interface tag_tag_aggregate {
-  __typename: 'tag_tag_aggregate'
+  __typename: 'tag_tag_aggregate' | null
   aggregate?: Maybe<tag_tag_aggregate_fields>
   nodes: Array<tag_tag>
 }
 
 export interface tag_tag_aggregate_fields {
-  __typename: 'tag_tag_aggregate_fields'
+  __typename: 'tag_tag_aggregate_fields' | null
   count: (args?: {
     columns?: Maybe<Array<ScalarsEnums['tag_tag_select_column']>>
     distinct?: Maybe<ScalarsEnums['Boolean']>
@@ -14114,46 +14136,46 @@ export interface tag_tag_aggregate_fields {
 }
 
 export interface tag_tag_max_fields {
-  __typename: 'tag_tag_max_fields'
+  __typename: 'tag_tag_max_fields' | null
   category_tag_id?: Maybe<ScalarsEnums['uuid']>
   tag_id?: Maybe<ScalarsEnums['uuid']>
 }
 
 export interface tag_tag_min_fields {
-  __typename: 'tag_tag_min_fields'
+  __typename: 'tag_tag_min_fields' | null
   category_tag_id?: Maybe<ScalarsEnums['uuid']>
   tag_id?: Maybe<ScalarsEnums['uuid']>
 }
 
 export interface tag_tag_mutation_response {
-  __typename: 'tag_tag_mutation_response'
+  __typename: 'tag_tag_mutation_response' | null
   affected_rows: ScalarsEnums['Int']
   returning: Array<tag_tag>
 }
 
 export interface tag_var_pop_fields {
-  __typename: 'tag_var_pop_fields'
+  __typename: 'tag_var_pop_fields' | null
   frequency?: Maybe<ScalarsEnums['Float']>
   order?: Maybe<ScalarsEnums['Float']>
   popularity?: Maybe<ScalarsEnums['Float']>
 }
 
 export interface tag_var_samp_fields {
-  __typename: 'tag_var_samp_fields'
+  __typename: 'tag_var_samp_fields' | null
   frequency?: Maybe<ScalarsEnums['Float']>
   order?: Maybe<ScalarsEnums['Float']>
   popularity?: Maybe<ScalarsEnums['Float']>
 }
 
 export interface tag_variance_fields {
-  __typename: 'tag_variance_fields'
+  __typename: 'tag_variance_fields' | null
   frequency?: Maybe<ScalarsEnums['Float']>
   order?: Maybe<ScalarsEnums['Float']>
   popularity?: Maybe<ScalarsEnums['Float']>
 }
 
 export interface user {
-  __typename: 'user'
+  __typename: 'user' | null
   about?: Maybe<ScalarsEnums['String']>
   apple_email?: Maybe<ScalarsEnums['String']>
   apple_refresh_token?: Maybe<ScalarsEnums['String']>
@@ -14204,13 +14226,13 @@ export interface user {
 }
 
 export interface user_aggregate {
-  __typename: 'user_aggregate'
+  __typename: 'user_aggregate' | null
   aggregate?: Maybe<user_aggregate_fields>
   nodes: Array<user>
 }
 
 export interface user_aggregate_fields {
-  __typename: 'user_aggregate_fields'
+  __typename: 'user_aggregate_fields' | null
   avg?: Maybe<user_avg_fields>
   count: (args?: {
     columns?: Maybe<Array<ScalarsEnums['user_select_column']>>
@@ -14228,12 +14250,12 @@ export interface user_aggregate_fields {
 }
 
 export interface user_avg_fields {
-  __typename: 'user_avg_fields'
+  __typename: 'user_avg_fields' | null
   charIndex?: Maybe<ScalarsEnums['Float']>
 }
 
 export interface user_max_fields {
-  __typename: 'user_max_fields'
+  __typename: 'user_max_fields' | null
   about?: Maybe<ScalarsEnums['String']>
   apple_email?: Maybe<ScalarsEnums['String']>
   apple_refresh_token?: Maybe<ScalarsEnums['String']>
@@ -14255,7 +14277,7 @@ export interface user_max_fields {
 }
 
 export interface user_min_fields {
-  __typename: 'user_min_fields'
+  __typename: 'user_min_fields' | null
   about?: Maybe<ScalarsEnums['String']>
   apple_email?: Maybe<ScalarsEnums['String']>
   apple_refresh_token?: Maybe<ScalarsEnums['String']>
@@ -14277,48 +14299,48 @@ export interface user_min_fields {
 }
 
 export interface user_mutation_response {
-  __typename: 'user_mutation_response'
+  __typename: 'user_mutation_response' | null
   affected_rows: ScalarsEnums['Int']
   returning: Array<user>
 }
 
 export interface user_stddev_fields {
-  __typename: 'user_stddev_fields'
+  __typename: 'user_stddev_fields' | null
   charIndex?: Maybe<ScalarsEnums['Float']>
 }
 
 export interface user_stddev_pop_fields {
-  __typename: 'user_stddev_pop_fields'
+  __typename: 'user_stddev_pop_fields' | null
   charIndex?: Maybe<ScalarsEnums['Float']>
 }
 
 export interface user_stddev_samp_fields {
-  __typename: 'user_stddev_samp_fields'
+  __typename: 'user_stddev_samp_fields' | null
   charIndex?: Maybe<ScalarsEnums['Float']>
 }
 
 export interface user_sum_fields {
-  __typename: 'user_sum_fields'
+  __typename: 'user_sum_fields' | null
   charIndex?: Maybe<ScalarsEnums['Int']>
 }
 
 export interface user_var_pop_fields {
-  __typename: 'user_var_pop_fields'
+  __typename: 'user_var_pop_fields' | null
   charIndex?: Maybe<ScalarsEnums['Float']>
 }
 
 export interface user_var_samp_fields {
-  __typename: 'user_var_samp_fields'
+  __typename: 'user_var_samp_fields' | null
   charIndex?: Maybe<ScalarsEnums['Float']>
 }
 
 export interface user_variance_fields {
-  __typename: 'user_variance_fields'
+  __typename: 'user_variance_fields' | null
   charIndex?: Maybe<ScalarsEnums['Float']>
 }
 
 export interface zcta5 {
-  __typename: 'zcta5'
+  __typename: 'zcta5' | null
   color?: Maybe<ScalarsEnums['String']>
   intptlat10?: Maybe<ScalarsEnums['String']>
   intptlon10?: Maybe<ScalarsEnums['String']>
@@ -14329,13 +14351,13 @@ export interface zcta5 {
 }
 
 export interface zcta5_aggregate {
-  __typename: 'zcta5_aggregate'
+  __typename: 'zcta5_aggregate' | null
   aggregate?: Maybe<zcta5_aggregate_fields>
   nodes: Array<zcta5>
 }
 
 export interface zcta5_aggregate_fields {
-  __typename: 'zcta5_aggregate_fields'
+  __typename: 'zcta5_aggregate_fields' | null
   avg?: Maybe<zcta5_avg_fields>
   count: (args?: {
     columns?: Maybe<Array<ScalarsEnums['zcta5_select_column']>>
@@ -14353,12 +14375,12 @@ export interface zcta5_aggregate_fields {
 }
 
 export interface zcta5_avg_fields {
-  __typename: 'zcta5_avg_fields'
+  __typename: 'zcta5_avg_fields' | null
   ogc_fid?: Maybe<ScalarsEnums['Float']>
 }
 
 export interface zcta5_max_fields {
-  __typename: 'zcta5_max_fields'
+  __typename: 'zcta5_max_fields' | null
   color?: Maybe<ScalarsEnums['String']>
   intptlat10?: Maybe<ScalarsEnums['String']>
   intptlon10?: Maybe<ScalarsEnums['String']>
@@ -14368,7 +14390,7 @@ export interface zcta5_max_fields {
 }
 
 export interface zcta5_min_fields {
-  __typename: 'zcta5_min_fields'
+  __typename: 'zcta5_min_fields' | null
   color?: Maybe<ScalarsEnums['String']>
   intptlat10?: Maybe<ScalarsEnums['String']>
   intptlon10?: Maybe<ScalarsEnums['String']>
@@ -14378,43 +14400,43 @@ export interface zcta5_min_fields {
 }
 
 export interface zcta5_mutation_response {
-  __typename: 'zcta5_mutation_response'
+  __typename: 'zcta5_mutation_response' | null
   affected_rows: ScalarsEnums['Int']
   returning: Array<zcta5>
 }
 
 export interface zcta5_stddev_fields {
-  __typename: 'zcta5_stddev_fields'
+  __typename: 'zcta5_stddev_fields' | null
   ogc_fid?: Maybe<ScalarsEnums['Float']>
 }
 
 export interface zcta5_stddev_pop_fields {
-  __typename: 'zcta5_stddev_pop_fields'
+  __typename: 'zcta5_stddev_pop_fields' | null
   ogc_fid?: Maybe<ScalarsEnums['Float']>
 }
 
 export interface zcta5_stddev_samp_fields {
-  __typename: 'zcta5_stddev_samp_fields'
+  __typename: 'zcta5_stddev_samp_fields' | null
   ogc_fid?: Maybe<ScalarsEnums['Float']>
 }
 
 export interface zcta5_sum_fields {
-  __typename: 'zcta5_sum_fields'
+  __typename: 'zcta5_sum_fields' | null
   ogc_fid?: Maybe<ScalarsEnums['Int']>
 }
 
 export interface zcta5_var_pop_fields {
-  __typename: 'zcta5_var_pop_fields'
+  __typename: 'zcta5_var_pop_fields' | null
   ogc_fid?: Maybe<ScalarsEnums['Float']>
 }
 
 export interface zcta5_var_samp_fields {
-  __typename: 'zcta5_var_samp_fields'
+  __typename: 'zcta5_var_samp_fields' | null
   ogc_fid?: Maybe<ScalarsEnums['Float']>
 }
 
 export interface zcta5_variance_fields {
-  __typename: 'zcta5_variance_fields'
+  __typename: 'zcta5_variance_fields' | null
   ogc_fid?: Maybe<ScalarsEnums['Float']>
 }
 

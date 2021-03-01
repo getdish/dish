@@ -15,7 +15,7 @@ import {
   search,
   tagFindOne,
   tagInsert,
-} from '../src'
+} from '../_'
 import { restaurant_fixture } from './etc/fixtures'
 
 interface Context {

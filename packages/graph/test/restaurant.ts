@@ -13,7 +13,7 @@ import {
   restaurantFindOne,
   restaurantUpdate,
   restaurantUpsert,
-} from '../src'
+} from '../_'
 import { menu_item_fixture, restaurant_fixture } from './etc/fixtures'
 
 interface Context {
