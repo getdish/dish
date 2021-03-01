@@ -2,11 +2,19 @@
 
 set -eo pipefail
 
+if [ "$DISABLE_SETUP" == "true" ]; then
+  exit 0
+fi
+
 echo "docker logs..."
 pushd services/hasura
 docker-compose logs
 popd
 
 cat *.logs || true
+
+docker system prune -a --force
+
+docker images -a
 
 echo "bye"

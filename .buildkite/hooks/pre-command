@@ -3,9 +3,6 @@
 set -eo pipefail
 
 if [ "$DISABLE_SETUP" == "true" ]; then
-
-  docker system prune --force
-
   exit 0
 fi
 
