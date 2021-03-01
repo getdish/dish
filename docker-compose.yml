@@ -4,8 +4,9 @@ services:
     image: 'gcr.io/dish-258800/base${DISH_BASE_VERSION}'
     build:
       context: .
-      dockerfile: ./Dockerfile-base
+      dockerfile: ./Dockerfile
   postgres:
+    command: postgres -c 'max_connections=400'
     build:
       context: ./services/postgres
     volumes:

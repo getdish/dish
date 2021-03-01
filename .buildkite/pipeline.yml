@@ -41,6 +41,8 @@ steps:
   - label: "setup services for tests"
     command: ".buildkite/scripts/setup_services.sh"
     plugins:
+      - docker-compose#v3.7.0:
+          build-parallel: true
       - gencer/cache#v2.3.10:
           backend: s3
           key: "v1-cache-{{ runner.os }}-{{ checksum 'services/hasura/package.json' }}"
