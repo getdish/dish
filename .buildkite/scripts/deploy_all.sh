@@ -81,6 +81,6 @@ link="https://github.com/getdish/dish/tree/$commit"
 message="
 Successful deploy of $commit to staging droplet \n
 Code: https://github.com/getdish/dish/tree/$commit \n
-CI Run: https://github.com/getdish/dish/actions/runs/$GITHUB_RUN_ID?check_suite_focus=true
+CI Run: $BUILDKITE_BUILD_URL
 "
 ./dishctl.sh send_slack_monitoring_message "$message"
