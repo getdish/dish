@@ -213,7 +213,6 @@
     "patch-package": "^6.2.2",
     "postinstall-postinstall": "^2.1.0",
     "react-test-renderer": "^17.0.1",
-    "testcafe": "^1.9.4",
     "typescript": "*"
   }
 }
