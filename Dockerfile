@@ -36,11 +36,11 @@ COPY dish-app/etc dish-app/etc
 RUN yarn install --frozen-lockfile && yarn cache clean
 
 # clean a bit of native-only deps
-RUN rm -r dish-app/node_modules/jsc-android
-RUN rm -r dish-app/node_modules/react-native
-RUN rm -r node_modules/jsc-android
-RUN rm -r node_modules/hermes-engine
-RUN rm -r node_modules/snowpack
+RUN rm -r dish-app/node_modules/jsc-android || true
+RUN rm -r dish-app/node_modules/react-native || true
+RUN rm -r node_modules/jsc-android || true
+RUN rm -r node_modules/hermes-engine || true
+RUN rm -r node_modules/snowpack || true
 
 COPY .prettierignore .
 COPY .prettierrc .
