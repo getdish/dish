@@ -6,17 +6,7 @@ env:
 
 steps:
   - label: ":docker: build base"
-    command: "echo done"
     plugins:
-      - seek-oss/docker-ecr-cache#v1.9.0:
-          registry-provider: gcr
-          gcp-project: dish-258800
-          cache-on:
-            - yarn.lock
-            - '**/package.json'
-      - docker#v3.3.0:
-          volumes:
-            - /app/node_modules
       - docker-compose#v3.7.0:
           build:
             - base
@@ -27,11 +17,7 @@ steps:
   - wait
 
   - label: ":docker: build apps"
-    command: "echo done"
     plugins:
-      - seek-oss/docker-ecr-cache#v1.9.0:
-          registry-provider: gcr
-          gcp-project: dish-258800
       - docker-compose#v3.7.0:
           build:
             - dish-hooks
@@ -43,14 +29,7 @@ steps:
             - search:gcr.io/dish-258800/search:latest
 
   - label: ":docker: build non-base images"
-    command: "echo done"
     plugins:
-      - seek-oss/docker-ecr-cache#v1.9.0:
-          registry-provider: gcr
-          gcp-project: dish-258800
-          cache-on:
-            - yarn.lock
-            - '**/package.json'
       - docker#v3.3.0:
           volumes:
             - /app/node_modules
@@ -63,9 +42,6 @@ steps:
   - label: "setup services for tests"
     command: ".buildkite/scripts/setup_services.sh"
     plugins:
-      - seek-oss/docker-ecr-cache#v1.9.0:
-          registry-provider: gcr
-          gcp-project: dish-258800
       - gencer/cache#v2.3.10:
           backend: s3
           key: "v1-cache-{{ runner.os }}-{{ checksum 'services/hasura/package.json' }}"
@@ -80,22 +56,11 @@ steps:
   - label: "run tests"
     command: "docker run --net host ${DISH_REGISTRY}/base yarn test"
     plugins:
-      - seek-oss/docker-ecr-cache#v1.9.0:
-          registry-provider: gcr
-          gcp-project: dish-258800
 
   - label: "run integration test"
     command: ".buildkite/scripts/integration_tests.sh"
-    plugins:
-      - seek-oss/docker-ecr-cache#v1.9.0:
-          registry-provider: gcr
-          gcp-project: dish-258800
 
   - wait
 
   - label: "deploy to staging"
     command: ".buildkit/scripts/deploy_staging.sh"
-    plugins:
-      - seek-oss/docker-ecr-cache#v1.9.0:
-          registry-provider: gcr
-          gcp-project: dish-258800
