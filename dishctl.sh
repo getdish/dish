@@ -155,16 +155,8 @@ function _db_migrate() {
   postgres_password=$3
   postgres_port=$4
   init=$5
+  set -x
   pushd $PROJECT_ROOT/services/hasura
-  if [[ "$init" != "init" ]]; then
-    cat functions/*.sql | \
-      PGPASSWORD=$postgres_password psql \
-      -p $postgres_port \
-      -h localhost \
-      -U postgres \
-      -d dish \
-      --single-transaction
-  fi
   hasura --skip-update-check \
     migrate apply \
     --endpoint $hasura_endpoint \
@@ -178,9 +170,19 @@ function _db_migrate() {
     -p $postgres_port \
     -h localhost \
     -U postgres \
-    -d dish \
+    -d ${POSTGRES_DB:-dish} \
     --single-transaction
+  if [[ "$init" != "init" ]]; then
+    cat functions/*.sql | \
+      PGPASSWORD=$postgres_password psql \
+      -p $postgres_port \
+      -h localhost \
+      -U postgres \
+      -d ${POSTGRES_DB:-dish} \
+      --single-transaction
+  fi
   popd
+  set +x
 }
 
 function db_migrate() {
@@ -256,7 +258,7 @@ function dump_scrape_data_to_s3() {
   PGPASSWORD=$TF_VAR_POSTGRES_PASSWORD psql \
     -h $TF_VAR_POSTGRES_HOST \
     -U postgres \
-    -d dish \
+    -d ${POSTGRES_DB:-dish} \
     -c "$copy_out" \
   | s3 put - $DISH_BACKUP_BUCKET/scrape.csv
   echo "...scrape table dumped tpo S3."

@@ -271,7 +271,6 @@ function formatRelationData<T>(
         return null
       }
       return Object.keys(cur).reduce((acc, key) => {
-        const hasArgs = !!generatedSchema[table][key]['__args']
         const schemaType = generatedSchema[table][key]['__type']
         const {
           pureType: typeName,

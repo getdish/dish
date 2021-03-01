@@ -37,8 +37,6 @@ export -f wait_until_dish_app_ready
 
 # SCRIPT
 
-cat $HOME/.dish/test.txt || true
-
 mkdir -p $HOME/.dish/postgres
 chown -R root:root $HOME/.dish/postgres
 
