@@ -6,7 +6,7 @@ services:
       context: .
       dockerfile: ./Dockerfile
   postgres:
-    command: postgres -c 'max_connections=400'
+    command: postgres -c 'max_connections=800'
     build:
       context: ./services/postgres
     volumes:
