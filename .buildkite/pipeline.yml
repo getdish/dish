@@ -6,6 +6,7 @@ env:
 
 steps:
   - label: ":docker: build base"
+    command: "echo done"
     plugins:
       - seek-oss/docker-ecr-cache#v1.9.0:
           registry-provider: gcr
@@ -24,6 +25,7 @@ steps:
           push: base:gcr.io/dish-258800/base:latest
 
   - label: ":docker: build non-base images"
+    command: "echo done"
     plugins:
       - seek-oss/docker-ecr-cache#v1.9.0:
           registry-provider: gcr
@@ -41,6 +43,7 @@ steps:
   - wait
 
   - label: ":docker: build apps"
+    command: "echo done"
     plugins:
       - seek-oss/docker-ecr-cache#v1.9.0:
           registry-provider: gcr
