@@ -45,7 +45,6 @@
     "@dish/esdx": "*",
     "@types/cheerio": "^0.22.22",
     "@types/puppeteer": "^3.0.1",
-    "@zeit/ncc": "^0.20.5",
     "ava": "^3.14.0",
     "bull-repl": "^0.26.0",
     "nodemon": "^2.0.2",
