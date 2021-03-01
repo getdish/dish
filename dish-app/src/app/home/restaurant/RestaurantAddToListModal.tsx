@@ -27,8 +27,8 @@ export const RestaurantAddToListModal = graphql(
   ({ slug, onDismiss }: { slug: string; onDismiss: () => any }) => {
     const refetch = useRefetch()
     const user = queryUser(userStore.user?.username ?? '')
-    const [restaurant] = queryRestaurant(slug)
     const colors = useColorsFor(slug)
+    const [restaurant] = queryRestaurant(slug)
     const lists = user.lists({
       limit: 100,
       order_by: [{ created_at: order_by.desc }],

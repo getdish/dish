@@ -47,6 +47,9 @@ services:
       - 'gorse'
   hasura:
     image: hasura/graphql-engine:v1.3.3
+    build:
+      context: ./services/hasura
+      dockerfile: ./Dockerfile
     ports:
       - 8080:8080
     environment:

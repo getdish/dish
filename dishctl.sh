@@ -1106,6 +1106,23 @@ function sync_local_code_to_staging() {
   rsync -avP --filter=':- .gitignore' . root@ssh.staging.dishapp.com:/app
 }
 
+function deploy_fly_app() {
+  app=$1
+  folder=$2
+  image_name=${3:-$1}
+  echo "deploying $app in $folder to image $image_name"
+  OPS_FOLDER=$PROJECT_ROOT/.ops/$app
+  mkdir -p $OPS_FOLDER
+  cp $folder/fly.toml $OPS_FOLDER
+  pushd $OPS_FOLDER
+  # deploy
+  flyctl auth docker
+  docker tag gcr.io/dish-258800/$image_name:latest registry.fly.io/$app:latest
+  docker push registry.fly.io/$app:latest
+  flyctl deploy -i registry.fly.io/$app:latest
+  popd
+}
+
 if command -v git &> /dev/null; then
   export PROJECT_ROOT=$(git rev-parse --show-toplevel)
   branch=$(git rev-parse --abbrev-ref HEAD)
