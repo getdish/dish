@@ -19,6 +19,7 @@ services:
       - 5432:5432
   timescaledb:
     image: timescale/timescaledb-postgis:1.7.2-pg11
+    command: ["-c", "max_connections=800"]
     volumes:
       - ${HOME}/.dish/timescaledb:/var/lib/postgresql/data
     environment:

@@ -56,6 +56,8 @@ steps:
 
   - label: "setup services for tests"
     command: ".buildkite/scripts/setup_services.sh"
+    env:
+      LOG_DOCKER: true
     plugins:
       - gencer/cache#v2.3.10:
           backend: s3

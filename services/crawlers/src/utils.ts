@@ -73,7 +73,6 @@ export class DB {
     if (!this.pool) {
       this.connect()
     }
-    console.log('connecting')
     const client = await this.pool?.connect()
     if (!client) {
       throw new Error('no client')
@@ -100,7 +99,6 @@ export class DB {
       }
       throw e
     } finally {
-      console.log('releasing')
       client.release()
     }
     if (process.env.DEBUG) {
