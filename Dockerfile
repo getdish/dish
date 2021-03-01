@@ -8,6 +8,9 @@ ENV PATH=$PATH:/app/node_modules/.bin:node_modules/.bin
 ENV NODE_OPTIONS="--max_old_space_size=8192"
 ENV DOCKER_BUILD=true
 
+# avoid installing puppeteer in base image
+ENV PUPPETEER_SKIP_CHROMIUM_DOWNLOAD=true
+
 # copy everything
 COPY packages packages
 COPY services services
@@ -31,6 +34,13 @@ COPY dish-app/etc dish-app/etc
 
 # install
 RUN yarn install --frozen-lockfile && yarn cache clean
+
+# clean a bit of native-only deps
+RUN rm -r dish-app/node_modules/jsc-android
+RUN rm -r dish-app/node_modules/react-native
+RUN rm -r node_modules/jsc-android
+RUN rm -r node_modules/hermes-engine
+RUN rm -r node_modules/snowpack
 
 COPY .prettierignore .
 COPY .prettierrc .

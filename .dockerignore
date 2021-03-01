@@ -10,6 +10,7 @@ Dockerfile
 **/target/*
 dish-app/ios
 dish-app/android
+snackui/examples
 .expo/*
 .expo-shared/*
 .github/*

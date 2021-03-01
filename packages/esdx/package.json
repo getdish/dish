@@ -12,8 +12,6 @@
   "dependencies": {
     "esbuild": "^0.8.53",
     "chokidar-cli": "^2.1.0",
-    "esbuild-node-tsc": "^1.2.0",
-    "@swc/core": "^1.2.49",
-    "@swc/cli": "^0.1.35"
+    "esbuild-node-tsc": "^1.2.0"
   }
 }
