@@ -14,7 +14,11 @@ import { featureCollection } from '@turf/helpers'
 import { debounce, findLast, uniqBy } from 'lodash'
 import { useEffect } from 'react'
 
-import { getDefaultLocation } from '../constants/initialHomeState'
+import {
+  getDefaultLocation,
+  initialLocation,
+  setDefaultLocation,
+} from '../constants/initialHomeState'
 import {
   bboxToLngLat,
   getZoomLevel,
@@ -53,12 +57,21 @@ type AppMapLastRegion = {
   position: MapPosition
 }
 
+let defaultLocation = getDefaultLocation()
+
+// fix broken localstorage
+console.log('123', defaultLocation.center?.lat)
+if (!defaultLocation.center?.lat) {
+  setDefaultLocation(initialLocation)
+  defaultLocation = getDefaultLocation()
+}
+
 class AppMapStore extends Store {
   selected: RestaurantOnlyIds | null = null
   hovered: MapHoveredRestaurant | null = null
   userLocation: LngLat | null = null
-  position: AppMapPosition = getDefaultLocation()
-  nextPosition: AppMapPosition = getDefaultLocation()
+  position: AppMapPosition = defaultLocation
+  nextPosition: AppMapPosition = defaultLocation
   lastPositions: AppMapPosition[] = []
   results: MapResultItem[] = []
   features: GeoJSON.Feature[] = []
@@ -91,6 +104,9 @@ class AppMapStore extends Store {
       span: pos.span ?? this.position.span,
       via: pos.via ?? this.position.via,
     }
+    // fix if it gets bad value...
+    this.position.center.lat ??= defaultLocation.center.lat
+    this.position.center.lng ??= defaultLocation.center.lng
     this.nextPosition = this.position
     const n = [...this.lastPositions, this.position]
     this.lastPositions = n.reverse().slice(0, 15).reverse() // keep only 15

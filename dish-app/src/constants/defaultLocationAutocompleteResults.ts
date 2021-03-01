@@ -3,6 +3,11 @@ import {
   createAutocomplete,
 } from '../helpers/createAutocomplete'
 
+export const defaultCenter = {
+  lng: -122.421351,
+  lat: 37.759251,
+}
+
 export const defaultLocationAutocompleteResults: AutocompleteItemFull[] = [
   createAutocomplete({
     name: 'New York',
@@ -45,10 +50,7 @@ export const defaultLocationAutocompleteResults: AutocompleteItemFull[] = [
   }),
   createAutocomplete({
     name: 'San Francisco',
-    center: {
-      lng: -122.421351,
-      lat: 37.759251,
-    },
+    center: defaultCenter,
     span: {
       lat: 0.15,
       lng: 0.15,

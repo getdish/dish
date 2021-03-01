@@ -6,6 +6,10 @@ import React, { Suspense, memo, useEffect, useRef } from 'react'
 import { AbsoluteVStack, VStack, getMedia, useMedia } from 'snackui'
 
 import { MAPBOX_ACCESS_TOKEN } from '../constants/constants'
+import {
+  defaultCenter,
+  defaultLocationAutocompleteResults,
+} from '../constants/defaultLocationAutocompleteResults'
 import { queryRestaurant } from '../queries/queryRestaurant'
 import { appMapStore, useAppMap } from './AppMapStore'
 import { drawerStore } from './drawerStore'
@@ -74,7 +78,7 @@ const AppPIPContent = graphql(() => {
   const restaurant = restaurants?.[0]
   const curCenter = appMap.position.center
   const restCenter = restaurant?.location?.coordinates as LngLat | null
-  const center = restCenter || curCenter
+  const center = restCenter || curCenter || defaultCenter
 
   const pipAction = (() => {
     if (getMedia().xs && drawerStore.snapIndex === 0) {
