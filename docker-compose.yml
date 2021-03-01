@@ -52,6 +52,7 @@ services:
     image: hasura/graphql-engine:v1.3.3
     build:
       context: ./services/hasura
+      dockerfile: ./Dockerfile
     ports:
       - 8080:8080
     environment:
@@ -95,6 +96,7 @@ services:
     image: urbica/martin
     build:
       context: ./services/tileserver
+      dockerfile: ./Dockerfile
     ports:
       - 3005:3000
     environment:
@@ -107,6 +109,7 @@ services:
     image: gcr.io/dish-258800/dish/search${DISH_IMAGE_TAG}
     build:
       context: ./services/search
+      dockerfile: ./Dockerfile
     ports:
       - 10000:10000
     environment:

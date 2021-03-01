@@ -1,7 +1,5 @@
 .buildkite
 .dockerignore
-Dockerfile
-**/Dockerfile
 .git/*
 **/node_modules
 **/_

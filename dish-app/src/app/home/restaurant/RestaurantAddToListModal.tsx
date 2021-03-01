@@ -25,13 +25,6 @@ import { SlantedTitle } from '../../views/SlantedTitle'
 
 export const RestaurantAddToListModal = graphql(
   ({ slug, onDismiss }: { slug: string; onDismiss: () => any }) => {
-    const refetch = useRefetch()
-    const [mutation, status] = useMutation((x) => {}, {
-      onCompleted: () => {
-        refetch(listsWithRestaurant)
-      },
-    })
-    console.log('mutation', status)
     const user = queryUser(userStore.user?.username ?? '')
     const colors = useColorsFor(slug)
     const [restaurant] = queryRestaurant(slug)
@@ -52,6 +45,12 @@ export const RestaurantAddToListModal = graphql(
         },
       },
     })
+
+    const [mutation, status] = useMutation((x) => {}, {
+      refetchQueries: [listsWithRestaurant],
+      awaitRefetchQueries: true,
+    })
+    console.log('mutation', status)
 
     return (
       <Modal

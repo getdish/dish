@@ -6,8 +6,6 @@ env:
 
 steps:
   - label: ":docker: build base"
-    env:
-      LOG_DOCKER: true
     plugins:
       - docker-compose#v3.7.0:
           build:
