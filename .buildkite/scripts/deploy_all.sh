@@ -60,6 +60,11 @@ echo $HASURA_GRAPHQL_DATABASE_URL
 # deploy
 ./dishctl.sh deploy_fly_app dish-app dish-app dish-app-web &
 ./dishctl.sh deploy_fly_app dish-hasura services/hasura hasura  &
+./dishctl.sh deploy_fly_app dish-search services/search search  &
+./dishctl.sh deploy_fly_app dish-timescale services/timescaledb timescaledb  &
+./dishctl.sh deploy_fly_app dish-tileserver services/tileserver tileserver  &
+./dishctl.sh deploy_fly_app dish-hooks services/dish-hooks dish-hooks  &
+./dishctl.sh deploy_fly_app dish-worker services/worker worker  &
 wait -n
 
 # TODO move into services/hasura/hooks/post-deploy.sh

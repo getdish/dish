@@ -18,8 +18,10 @@ services:
     ports:
       - 5432:5432
   timescaledb:
-    image: timescale/timescaledb-postgis:1.7.2-pg11
     command: ["-c", "max_connections=800"]
+    image: timescale/timescaledb-postgis:1.7.2-pg11
+    build:
+      context: ./services/timescaledb
     volumes:
       - ${HOME}/.dish/timescaledb:/var/lib/postgresql/data
     environment:
@@ -50,7 +52,6 @@ services:
     image: hasura/graphql-engine:v1.3.3
     build:
       context: ./services/hasura
-      dockerfile: ./Dockerfile
     ports:
       - 8080:8080
     environment:
@@ -92,6 +93,8 @@ services:
       - 'worker'
   tileserver:
     image: urbica/martin
+    build:
+      context: ./services/tileserver
     ports:
       - 3005:3000
     environment:
@@ -103,8 +106,7 @@ services:
   search:
     image: gcr.io/dish-258800/dish/search${DISH_IMAGE_TAG}
     build:
-      context: ./
-      dockerfile: ./services/search/Dockerfile
+      context: ./services/search
     ports:
       - 10000:10000
     environment:
@@ -122,6 +124,8 @@ services:
       - 9000:9000
   worker:
     image: gcr.io/dish-258800/worker${DISH_IMAGE_TAG}
+    build:
+      context: ./services/search
     environment:
       - DISH_ENV=staging
       - HASURA_ENDPOINT=http://hasura:8080
@@ -131,7 +135,7 @@ services:
       - HASURA_SECRET=${TF_VAR_HASURA_GRAPHQL_ADMIN_SECRET:-password}
       - TIMESCALE_HOST=timescaledb
       - TIMESCALE_PASSWORD=postgres
-      - TIMESCALE_PORT=5432
+      - TIMESCALE_PORT=5433
       - UBEREATS_PROXY=${TF_VAR_UBEREATS_PROXY}
       - HEREMAPS_API_TOKEN${TF_VAR_HEREMAPS_API_TOKEN}
       - INFATUATED_PROXY=${TF_VAR_INFATUATED_PROXY}
