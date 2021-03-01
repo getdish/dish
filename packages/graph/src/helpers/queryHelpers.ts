@@ -250,7 +250,6 @@ export function prepareData<T>(
   objects: T[],
   inputType: '_set_input' | '_insert_input'
 ): T[] {
-  console.log('preating', objects)
   objects = removeReadOnlyProperties<T>(table, objects)
   objects = formatRelationData<T>(table, objects, inputType)
   objects = objects.map((o) => ensureJSONSyntax(o) as T)
