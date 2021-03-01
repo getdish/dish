@@ -10,7 +10,7 @@
     "build": "esdx",
     "watch": "esdx-watch",
     "generate": "HASURA_SECRET=password node ./dist/generate.js",
-    "test": "DEBUG=1 TARGET=node DISH_ENV=test ava test/* --verbose --serial",
+    "test": "TARGET=node DISH_ENV=test ava test/* --verbose --serial",
     "test:debug": "TARGET=node DEBUG=1 DISH_ENV=test ava test/* --verbose --serial",
     "test:watch": "TARGET=node DISH_ENV=test ava test/* --watch --verbose --serial",
     "test-new": "TARGET=node DISH_ENV=test ava test/tag.ts --verbose"
@@ -22,8 +22,8 @@
     "ava": "^3.14.0",
     "lodash": "*",
     "@dish/gqless": "3.0.9",
-    "@dish/gqless-react": "^2.0.9",
-    "@dish/gqless-logger": "^0.1.0",
+    "@dish/gqless-react": "2.0.8",
+    "@dish/gqless-logger": "0.1.0",
     "@dish/use-store": "*"
   },
   "peerDependencies": {

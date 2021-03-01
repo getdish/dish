@@ -17,6 +17,8 @@ const hasuraHeaders = {
   ...getAuthHeaders(true),
 }
 
+console.log('hasuraHeaders', hasuraHeaders)
+
 const hasuraEndpoint = getGraphEndpointInternal()
 
 function shouldCache(body: string) {
@@ -41,6 +43,7 @@ export default route(async (req, res) => {
       ...req.headers,
       ...hasuraHeaders,
     } as any
+    console.log('sending', headers, hasuraHeaders)
     const hasuraRes = await fetch(hasuraEndpoint, {
       method: 'POST',
       headers,

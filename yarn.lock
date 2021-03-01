@@ -1340,7 +1340,7 @@
     mkdirp "^1.0.4"
     prettier "^2.2.1"
 
-"@dish/gqless-logger@^0.1.0":
+"@dish/gqless-logger@0.1.0":
   version "0.1.0"
   resolved "https://registry.npmjs.org/@dish/gqless-logger/-/gqless-logger-0.1.0.tgz#7fd1c51f4949c4980986179389846420da87405f"
   integrity sha512-obx3VKNoX4xzzN4mAYnYtDl6hZbzemcXP0eRa3TAV2uOAWsaNSCJe632ULKwKA/Q5HeuCNLBeEeuWsIT7r1L+w==
@@ -1348,10 +1348,10 @@
     prettier "^2.2.1"
     regenerator-runtime "^0.13.7"
 
-"@dish/gqless-react@^2.0.9":
-  version "2.0.9"
-  resolved "https://registry.npmjs.org/@dish/gqless-react/-/gqless-react-2.0.9.tgz#87c80e5e52b53071ed7e6c3c13f429a9ebf0d785"
-  integrity sha512-Eu1XX+Ee1LDChfWzofEPsSnDbaiyLzcDygWzrm6h/PcLIE5e7p3r8RWE+Zdd80umQjN6ScXzuMSgewkz3huG8A==
+"@dish/gqless-react@2.0.8":
+  version "2.0.8"
+  resolved "https://registry.npmjs.org/@dish/gqless-react/-/gqless-react-2.0.8.tgz#d980b4d66ff77f84441367745d00790aa5a39da0"
+  integrity sha512-PGZnCHZecRX3G1NIQEvhErOWrUPE4bVVz3UTcaQklhAKIXy8dls1+18mRLDfyCMJTTnyt2y9nrjnATcHhsD64w==
   dependencies:
     "@dish/react-ssr-prepass" "^1.3.1"
 

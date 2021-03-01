@@ -325,7 +325,7 @@ func main() {
 		User:     "postgres",
 		Password: getEnv("POSTGRES_PASSWORD", "postgres"),
 		Addr:     getEnv("POSTGRES_HOST", "localhost") + pg_port,
-		Database: "dish",
+		Database: getEnv("POSTGRES_DB", "dish"),
 	})
 	defer db.Close()
 	handleRequests()

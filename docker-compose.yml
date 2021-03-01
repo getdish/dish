@@ -103,6 +103,7 @@ services:
     ports:
       - 10000:10000
     environment:
+      - POSTGRES_DB=${POSTGRES_DB:-dish}
       - VIRTUAL_HOST=search-staging.dishapp.com
       - POSTGRES_HOST=postgres
     depends_on:

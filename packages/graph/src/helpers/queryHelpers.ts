@@ -1,5 +1,4 @@
 import { parseSchemaType, selectFields } from '@dish/gqless'
-import { isPresent } from '@dish/helpers/dist'
 import { omit } from 'lodash'
 
 import {
@@ -233,9 +232,6 @@ export async function deleteByIDs(table: string, ids: uuid[]): Promise<void> {
 
 function removeReadOnlyProperties<T>(table: string, objects: T[]): T[] {
   return objects.map((cur) => {
-    if (!cur) {
-      return cur
-    }
     return Object.keys(cur).reduce((acc, key) => {
       const fieldName = key
       const schemaType = generatedSchema[table][key]['__type']
@@ -254,6 +250,7 @@ export function prepareData<T>(
   objects: T[],
   inputType: '_set_input' | '_insert_input'
 ): T[] {
+  console.log('preating', objects)
   objects = removeReadOnlyProperties<T>(table, objects)
   objects = formatRelationData<T>(table, objects, inputType)
   objects = objects.map((o) => ensureJSONSyntax(o) as T)
@@ -265,51 +262,47 @@ function formatRelationData<T>(
   objects: T[],
   inputType: '_set_input' | '_insert_input'
 ) {
-  return objects
-    .map((cur) => {
-      if (!cur) {
-        return null
-      }
-      return Object.keys(cur).reduce((acc, key) => {
-        const schemaType = generatedSchema[table][key]['__type']
-        const {
-          pureType: typeName,
-          isArray,
-          isNullable,
-          nullableItems,
-        } = parseSchemaType(schemaType)
-        const inputKeys = Object.keys(generatedSchema[table + inputType])
+  return objects.map((cur) => {
+    return Object.keys(cur).reduce((acc, key) => {
+      const hasArgs = !!generatedSchema[table][key]['__args']
+      const schemaType = generatedSchema[table][key]['__type']
+      const {
+        pureType: typeName,
+        isArray,
+        isNullable,
+        nullableItems,
+      } = parseSchemaType(schemaType)
+      const inputKeys = Object.keys(generatedSchema[table + inputType])
 
-        const fieldName = key
+      const fieldName = key
 
-        if (!inputKeys.includes(fieldName)) return acc
+      if (!inputKeys.includes(fieldName)) return acc
 
-        if (isMutatableRelation(fieldName, typeName)) {
-          let relation_table: string
+      if (isMutatableRelation(fieldName, typeName)) {
+        let relation_table: string
 
-          if (isArray) {
-            relation_table = typeName
-          } else {
-            relation_table = fieldName
-          }
-
-          const constraint = defaultConstraints[relation_table]
-          const update_columns = updateableColumns(relation_table, cur[key])
-          const d = {
-            data: cur[key],
-            on_conflict: {
-              constraint,
-              update_columns,
-            },
-          }
-          acc[key] = d
+        if (isArray) {
+          relation_table = typeName
         } else {
-          acc[key] = cur[key]
+          relation_table = fieldName
         }
-        return acc
-      }, {} as T)
-    })
-    .filter(isPresent)
+
+        const constraint = defaultConstraints[relation_table]
+        const update_columns = updateableColumns(relation_table, cur[key])
+        const d = {
+          data: cur[key],
+          on_conflict: {
+            constraint,
+            update_columns,
+          },
+        }
+        acc[key] = d
+      } else {
+        acc[key] = cur[key]
+      }
+      return acc
+    }, {} as T)
+  })
 }
 
 function _traverse(o: any, fn: (obj: any, prop: string, value: any) => void) {

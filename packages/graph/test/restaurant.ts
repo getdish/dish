@@ -25,6 +25,9 @@ const test = anyTest as TestInterface<Context>
 
 test.beforeEach(async (t) => {
   await flushTestData()
+  if (!restaurant_fixture) {
+    throw new Error(`No fixture?!`)
+  }
   const [restaurant] = await restaurantUpsert([restaurant_fixture])
   t.context.restaurant = restaurant
 })
