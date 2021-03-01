@@ -3,6 +3,9 @@
 set -eo pipefail
 
 if [ "$DISABLE_SETUP" == "true" ]; then
+
+  docker system prune --force
+
   exit 0
 fi
 
@@ -27,8 +30,6 @@ fi
 if [ ! -f /usr/local/bin/hasura ]; then
   curl -L https://github.com/hasura/graphql-engine/raw/stable/cli/get.sh | bash
 fi
-
-docker system prune --force
 
 if ($(which git-crypt > /dev/null)); then
   echo "git-crypt installed"
