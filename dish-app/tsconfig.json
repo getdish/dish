@@ -14,7 +14,7 @@
     "noEmitHelpers": true,
     "noImplicitReturns": false,
     "skipLibCheck": true,
-    "target": "ES2019",
+    "target": "es2019",
     "allowJs": true,
     "baseUrl": ".",
     "strict": false,

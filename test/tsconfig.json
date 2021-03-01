@@ -10,6 +10,6 @@
     "incremental": true,
     "skipLibCheck": true,
     "moduleResolution": "node",
-    "target": "ES2019"
+    "target": "es2019"
   }
 }

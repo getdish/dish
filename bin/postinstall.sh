@@ -1,8 +1,7 @@
 #!/bin/bash
 set -e
 
-function patch_packages() {
-  yarn patch-package
+function patch_app_packages() {
   pushd $PROJECT_ROOT/dish-app
   yarn patch-package
   popd
@@ -48,6 +47,7 @@ PROJECT_ROOT="$(dirname "$0")/.."
 delete_extra_dish_app_modules &
 delete_and_link_duplicate_modules &
 delete_duplicate_snack_modules &
-patch_packages &
+yarn patch-package &
+patch_app_packages &
 yarn expo:check-deps &
 wait
