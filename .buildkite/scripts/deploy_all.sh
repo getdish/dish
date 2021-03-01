@@ -38,7 +38,7 @@ export HASURA_GRAPHQL_JWT_SECRET='{"type":"HS256", "key":"1234567890123456789012
 export HASURA_GRAPHQL_ENABLE_CONSOLE=true
 export DISH_HOOKS_ENDPOINT="http://dish-hooks:6154"
 export GORSE_SYNC_HOOK="http://dish-hooks:6154/gorse_sync"
-export VIRTUAL_HOST="hasura.fly.dev"
+export VIRTUAL_HOST="dish-hasura.fly.dev"
 pushd services/hasura
  flyctl secrets set \
     HASURA_GRAPHQL_NO_OF_RETRIES="$HASURA_GRAPHQL_NO_OF_RETRIES" \
@@ -58,9 +58,22 @@ echo "deploying..."
 echo $HASURA_GRAPHQL_DATABASE_URL
 
 # deploy
-# ./dishctl.sh deploy_fly_app dish-app dish-app dish-app-web &
+./dishctl.sh deploy_fly_app dish-app dish-app dish-app-web &
 ./dishctl.sh deploy_fly_app dish-hasura services/hasura hasura  &
 wait -n
+
+# TODO move into services/hasura/hooks/post-deploy.sh
+# setup
+pushd services/hasura
+hasura_endpoint="https://dish-hasura.fly.dev"
+hasura --skip-update-check migrate apply \
+  --endpoint $hasura_endpoint \
+  --admin-secret $TF_VAR_HASURA_GRAPHQL_ADMIN_SECRET
+hasura --skip-update-check metadata apply \
+    --endpoint $hasura_endpoint \
+    --admin-secret $TF_VAR_HASURA_GRAPHQL_ADMIN_SECRET
+cat functions/*.sql | psql $HASURA_GRAPHQL_DATABASE_URL --single-transaction
+popd
 
 # post to slack
 commit=$(git rev-parse HEAD)
