@@ -14,8 +14,8 @@
   },
   "scripts": {
     "bootstrap": "docker-compose build base",
-    "start": "eval $(./dishctl.sh yaml_to_env) DISH_IMAGE_TAG=:master docker-compose -f docker-compose-m1.yml up",
-    "start:test": "rm -r ~/.dish/postgresdb/test || true; POSTGRES_DB=test DISH_IMAGE_TAG=:master docker-compose -f docker-compose-m1.yml up",
+    "start": "docker-compose -f docker-compose-m1.yml up",
+    "start:test": "rm -r ~/.dish/postgresdb/test || true; POSTGRES_DB=test docker-compose -f docker-compose-m1.yml up",
     "start:bak": "./dishctl.sh docker_compose_up_for_devs",
     "db:init": "./dishctl.sh db_migrate_local init",
     "db:migrate": "./dishctl.sh db_migrate_local",

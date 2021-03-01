@@ -14,8 +14,9 @@ export const {
   prepareReactRender,
   useHydrateCache,
 } = createReactClient<GeneratedSchema>(client, {
-  // @ts-ignore
-  defaultSuspense: true,
-  // @ts-ignore
-  defaultStaleWhileRevalidate: true,
+  defaults: {
+    suspense: false,
+    staleWhileRevalidate: true,
+    retry: 1
+  }
 })

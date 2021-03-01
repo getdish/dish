@@ -1,4 +1,4 @@
-import { graphql, mutate, order_by, query, useRefetch } from '@dish/graph'
+import { graphql, order_by, query, useMutation, useRefetch } from '@dish/graph'
 import { Plus, X } from '@dish/react-feather'
 import React from 'react'
 import { ScrollView } from 'react-native'
@@ -25,6 +25,8 @@ import { SlantedTitle } from '../../views/SlantedTitle'
 
 export const RestaurantAddToListModal = graphql(
   ({ slug, onDismiss }: { slug: string; onDismiss: () => any }) => {
+    const [mutation, status] = useMutation()
+    console.log('mutation', status)
     const refetch = useRefetch()
     const user = queryUser(userStore.user?.username ?? '')
     const colors = useColorsFor(slug)
@@ -47,8 +49,7 @@ export const RestaurantAddToListModal = graphql(
       },
     })
 
-    const refresh = () =>
-      Promise.all([refetch(restaurant), refetch(listsWithRestaurant)])
+    const refresh = () => Promise.all([refetch(listsWithRestaurant)])
 
     return (
       <Modal
@@ -99,14 +100,16 @@ export const RestaurantAddToListModal = graphql(
                     borderRadius={1000}
                     icon={<Plus size={16} color="#fff" />}
                     onPress={async () => {
-                      await mutate((mutation) => {
-                        return mutation.insert_list_restaurant_one({
-                          object: {
-                            restaurant_id: restaurantId,
-                            list_id: listId,
-                            user_id: user.id,
-                          },
-                        })?.__typename
+                      await mutation({
+                        fn: (m) => {
+                          return m.insert_list_restaurant_one({
+                            object: {
+                              restaurant_id: restaurantId,
+                              list_id: listId,
+                              user_id: user.id,
+                            },
+                          })?.__typename
+                        },
                       })
                       await refresh()
                       Toast.success(`Added!`)
@@ -118,11 +121,13 @@ export const RestaurantAddToListModal = graphql(
                   <Button
                     icon={<X size={16} />}
                     onPress={async () => {
-                      await mutate((mutation) => {
-                        return mutation.delete_list_restaurant_by_pk({
-                          list_id: listId,
-                          restaurant_id: restaurantId,
-                        })?.__typename
+                      await mutation({
+                        fn: (m) => {
+                          return m.delete_list_restaurant_by_pk({
+                            list_id: listId,
+                            restaurant_id: restaurantId,
+                          })?.__typename
+                        },
                       })
                       await refresh()
                       Toast.success(`Removed`)
