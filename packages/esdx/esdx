@@ -11,7 +11,7 @@ else
   if [ -d _ ]; then rm -r _; fi
   if [ -d dist ]; then rm -r dist; fi
   # first build types fast
-  yarn tsc -b
+  npx tsc --emitDeclarationOnly
   # then copy to dist as well to only build once
   cp -r _ dist
 fi

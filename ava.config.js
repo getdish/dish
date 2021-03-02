@@ -1,6 +1,6 @@
 module.exports = {
   extensions: ['ts', 'tsx'],
-  require: ['esbuild-register', 'esm', 'tsconfig-paths/register'],
+  require: ['esbuild-register'],
   timeout: '30s',
   serial: true,
   failFast: false,

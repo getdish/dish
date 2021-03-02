@@ -22,7 +22,6 @@ export const test = anyTest as TestInterface<{
 }>
 
 test.before(async (t) => {
-  t.timeout(120)
   await extractStaticApp()
   process.env.IS_STATIC = undefined
   t.context.app = require(outFileFull)
@@ -69,7 +68,7 @@ export function Test() {
 async function extractStaticApp() {
   const compiler = webpack({
     context: specDir,
-    mode: 'production',
+    mode: 'development',
     devtool: false,
     optimization: {
       minimize: false,

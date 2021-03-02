@@ -13,7 +13,8 @@
     ]
   },
   "scripts": {
-    "slim": "json-filter --from=package.json --to=package.json --except=scripts",
+    "trim-for-build": "npx json-filter --from=package.json --to=package.json --exclude=scripts",
+    "trim-for-build:all": "yarn trim-for-build && ultra -r npx json-filter --from=package.json --to=package.json --exclude=scripts",
     "bootstrap": "docker-compose build base",
     "start": "docker-compose -f docker-compose-m1.yml up",
     "start:test": "rm -r ~/.dish/postgresdb/test || true; POSTGRES_DB=test docker-compose -f docker-compose-m1.yml up",
@@ -45,7 +46,7 @@
     "validate:tsc": "tsc --noEmit",
     "check:ts": "tsc -b --preserveWatchOutput tsconfig.build.json",
     "check:ts:watch": "yarn check:ts -w",
-    "build": "ultra -b",
+    "build": "ultra -r --build",
     "build:docker": "./dishctl.sh buildkit_build_local",
     "build:extras:watch": "ultra -r --filter @snackui/node watch",
     "build:watch:ts": "ultra -r --concurrency 1000 watch",
@@ -110,7 +111,6 @@
     "react-native-web": "0.0.0-466063b7e"
   },
   "devDependencies": {
-    "json-filter-cli": "1.0.0",
     "@babel/runtime": "^7.12.5",
     "@types/fs-extra": "^9.0.8",
     "@types/node": "^14.14.12",
@@ -128,7 +128,7 @@
     "tsconfig-paths": "^3.9.0",
     "typescript": "^4.2.2",
     "typescript-monorepo-toolkit": "^0.2.0",
-    "ultra-runner": "^3.10.0"
+    "ultra-runner": "^3.10.5"
   },
   "importSort": {
     ".js, .jsx, .ts, .tsx": {

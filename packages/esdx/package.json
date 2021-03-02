@@ -5,6 +5,10 @@
     "esdx": "./esdx",
     "esdx-watch": "./esdx-watch"
   },
+  "scripts": {
+    "build": "true",
+    "watch": "true"
+  },
   "files": [
     "esdx.sh",
     "esdx-watch.sh"

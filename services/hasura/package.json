@@ -13,6 +13,8 @@
     "react": "*"
   },
   "scripts": {
+    "build": "true",
+    "watch": "true",
     "test": "TARGET=node DISH_ENV=test ava test/main.ts --verbose",
     "start": "docker-compose up hasura"
   }

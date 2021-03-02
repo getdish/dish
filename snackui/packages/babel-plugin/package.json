@@ -1,12 +1,19 @@
 {
   "name": "@snackui/babel-plugin",
   "version": "0.0.6",
-  "main": "index.js",
   "license": "MIT",
   "publishConfig": {
     "access": "public"
   },
+  "main": "dist",
+  "module": "_",
+  "tsmain": "src",
+  "scripts": {
+    "build": "esdx",
+    "watch": "esdx-watch"
+  },
   "dependencies": {
+    "@dish/esdx": "*",
     "@snackui/static": "^0.0.6"
   },
   "gitHead": "503b64ff877fbb47382ba34266af192b2de81ffb"

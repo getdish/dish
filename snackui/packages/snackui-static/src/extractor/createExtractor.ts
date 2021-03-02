@@ -8,7 +8,7 @@ import { StaticComponent } from '@snackui/node'
 import invariant from 'invariant'
 import { ViewStyle } from 'react-native'
 
-import { pseudos } from '../css/getStylesAtomic'
+import { pseudos } from '../getStylesAtomic'
 import {
   ExtractedAttr,
   ExtractedAttrAttr,

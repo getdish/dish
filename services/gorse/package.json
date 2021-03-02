@@ -2,6 +2,8 @@
   "name": "@dish/gorse",
   "version": "0.0.1",
   "scripts": {
+    "build": "true",
+    "watch": "true",
     "test": "TARGET=node ava test/main.ts --verbose"
   },
   "dependencies": {

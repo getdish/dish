@@ -1,0 +1,120 @@
+.ops
+
+*__snack.css
+
+.yarn
+.ultra.cache.json
+tmp
+*.tsbuildinfo
+
+*.tmp.js
+
+# Expo
+
+.expo
+
+# Flutter
+
+.idea
+
+# Node
+
+yarn-error.log
+.next
+dist
+tsconfig.tsbuildinfo
+node_modules
+**/_
+
+.DS_Store
+# Xcode
+#
+# gitignore contributors: remember to update Global/Xcode.gitignore, Objective-C.gitignore & Swift.gitignore
+
+## User settings
+xcuserdata/
+
+## compatibility with Xcode 8 and earlier (ignoring not required starting Xcode 9)
+*.xcscmblueprint
+*.xccheckout
+
+## compatibility with Xcode 3 and earlier (ignoring not required starting Xcode 4)
+build/
+DerivedData/
+*.moved-aside
+*.pbxuser
+!default.pbxuser
+*.mode1v3
+!default.mode1v3
+*.mode2v3
+!default.mode2v3
+*.perspectivev3
+!default.perspectivev3
+
+## Obj-C/Swift specific
+*.hmap
+
+## App packaging
+*.ipa
+*.dSYM.zip
+*.dSYM
+
+## Playgrounds
+timeline.xctimeline
+playground.xcworkspace
+
+# Swift Package Manager
+.build/
+
+# CocoaPods
+Pods/
+# Add this line if you want to avoid checking in source code from the Xcode workspace
+*.xcworkspace
+
+# Carthage
+Carthage/Build/
+
+# Accio dependency management
+Dependencies/
+.accio/
+
+# fastlane
+fastlane/report.xml
+fastlane/Preview.html
+fastlane/screenshots/**/*.png
+fastlane/test_output
+
+# Code Injection
+# https://github.com/johnno1962/injectionforxcode
+iOSInjectionProject/
+
+.vim
+.env
+k8s/.terraform/*
+
+hasura.logs
+
+build/
+
+services/search/m
+services/search/embedded.go
+
+# Rust build files
+target/
+
+# Node crash logs
+report.*.json
+
+# Rust builds
+target/
+
+# testcafe screenshots
+dish-app/test/screenshots
+
+# asdf local node version
+.tool-versions
+
+# Docker compose data
+data/
+
+!services/build

@@ -7450,11 +7450,6 @@ eslint-scope@^5.1.1:
     esrecurse "^4.3.0"
     estraverse "^4.1.1"
 
-esm@^3.2.25:
-  version "3.2.25"
-  resolved "https://registry.npmjs.org/esm/-/esm-3.2.25.tgz#342c18c29d56157688ba5ce31f8431fbb795cc10"
-  integrity sha512-U1suiZ2oDVWv4zPO56S0NcR5QriEahGtdN2OR6FiOG4WJvcjBVFB0qI4+eKoWFH483PKGuLuu6V8Z4T5g63UVA==
-
 esprima@^4.0.0, esprima@^4.0.1, esprima@~4.0.0:
   version "4.0.1"
   resolved "https://registry.npmjs.org/esprima/-/esprima-4.0.1.tgz#13b04cdb3e6c5d19df91ab6987a8695619b0aa71"
@@ -9372,7 +9367,7 @@ ignore@^4.0.3:
   resolved "https://registry.npmjs.org/ignore/-/ignore-4.0.6.tgz#750e3db5862087b4737ebac8207ffd1ef27b25fc"
   integrity sha512-cyFDKrqc/YdcWFniJhzI42+AzS+gNwmUzOSFcRCQYwySuBBBy/KjuxWLZ/FHEH6Moq1NizMOBWyTcv8O4OZIMg==
 
-ignore@^5.1.1, ignore@^5.1.4:
+ignore@^5.1.1, ignore@^5.1.4, ignore@^5.1.8:
   version "5.1.8"
   resolved "https://registry.npmjs.org/ignore/-/ignore-5.1.8.tgz#f150a8b50a34289b33e22f5889abd4d8016f0e57"
   integrity sha512-BMpfD7PpiETpBl/A6S498BaIJ6Y/ABT93ETbby2fP00v4EbvPBXWEoaR1UBPKs3iR53pJY7EtZk5KACI57i1Uw==
@@ -11002,13 +10997,6 @@ json-buffer@3.0.1:
   version "3.0.1"
   resolved "https://registry.npmjs.org/json-buffer/-/json-buffer-3.0.1.tgz#9338802a30d3b6605fbe0613e094008ca8c05a13"
   integrity sha512-4bV5BfR2mqfQTJm+V5tPPdf+ZpuhiIvTuAB5g8kcrXOZpTT/QwwVRWBywX1ozr6lEuPdbHxwaJlm9G6mI2sfSQ==
-
-json-filter-cli@1.0.0:
-  version "1.0.0"
-  resolved "https://registry.npmjs.org/json-filter-cli/-/json-filter-cli-1.0.0.tgz#ae5e32be779b5e943910aa13cc4e4e68a1e133d5"
-  integrity sha512-u38uFWAt+p2UolZScu2WHXlU6R5gDjAX3Dwo0bETS8A3cAWSO9b0i7CT2/Lz+yij+EOtU5CN1jHJntjfxXEGmw==
-  dependencies:
-    minimist "^1.2.0"
 
 json-parse-better-errors@^1.0.1, json-parse-better-errors@^1.0.2:
   version "1.0.2"
@@ -17049,16 +17037,17 @@ uglify-es@^3.1.9:
     commander "~2.13.0"
     source-map "~0.6.1"
 
-ultra-runner@^3.10.0:
-  version "3.10.0"
-  resolved "https://registry.npmjs.org/ultra-runner/-/ultra-runner-3.10.0.tgz#9e16933fbdf49c62b2a561c0b00febdb7796a880"
-  integrity sha512-J7wStpH9PnERrO5vKxY8iMKa1J6CaeKJcE/m1Ras6epa5+AbpRiTjz+v57giiQHzGTES/9CUX1d5X5NRrg8ahw==
+ultra-runner@^3.10.5:
+  version "3.10.5"
+  resolved "https://registry.npmjs.org/ultra-runner/-/ultra-runner-3.10.5.tgz#7a723b64326642a6d4649ca4cd51a9900c7eccd2"
+  integrity sha512-0U2OPII7sbvtbu9rhDlUUkP4Au/DPz2Tzbnawd/XwDuUruDqd+t/Bmel3cLJxl3yMLHf0OY0TMcIx9zzxdlAZw==
   dependencies:
     ansi-split "^1.0.1"
     chalk "^4.1.0"
     cross-spawn "^7.0.3"
     fast-glob "^3.2.5"
     globrex "^0.1.2"
+    ignore "^5.1.8"
     json5 "^2.2.0"
     micro-memoize "^4.0.9"
     npm-run-path "4.0.1"

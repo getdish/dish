@@ -1,16 +1,15 @@
 import { extname } from 'path'
 
+import {
+  SnackOptions,
+  createExtractor,
+  extractToClassNames,
+  getInitialFileName,
+  shouldInternalDedupe,
+} from '@snackui/static'
 import { readFileSync, writeFileSync } from 'fs-extra'
 import { getOptions } from 'loader-utils'
 import { debounce } from 'lodash'
-
-import { shouldInternalDedupe } from './constants'
-import { createExtractor } from './extractor/createExtractor'
-import {
-  extractToClassNames,
-  getInitialFileName,
-} from './extractor/extractToClassNames'
-import { SnackOptions } from './types'
 
 Error.stackTraceLimit = Infinity
 const extractor = createExtractor()

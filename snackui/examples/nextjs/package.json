@@ -5,6 +5,7 @@
   "scripts": {
     "dev": "npx next dev",
     "build": "true",
+    "watch": "true",
     "start": "npx next start"
   },
   "dependencies": {

@@ -19,7 +19,6 @@ process.env.NODE_ENV = 'test'
 // process.env.IDENTIFY_TAGS = 'true'
 
 test.before(async (t) => {
-  t.timeout(120)
   await extractStaticApp()
   process.env.IS_STATIC = undefined
   const app = require(outFileFull)
@@ -171,7 +170,7 @@ test('16. deopt when spreading multiple', async (t) => {
 async function extractStaticApp() {
   const compiler = webpack({
     context: specDir,
-    mode: 'production',
+    mode: 'development',
     devtool: false,
     optimization: {
       minimize: false,

@@ -10,14 +10,14 @@
     "watch": "esdx-watch"
   },
   "dependencies": {
+    "snackui-loader": "*",
+    "@snackui/babel-plugin": "*",
+    "@snackui/static": "*",
     "@dish/helpers": "*",
     "@dish/server": "*",
-    "snackui-loader": "*",
     "time-fix-plugin": "^2.0.7",
     "@loadable/webpack-plugin": "^5.14.2",
     "webpack-pwa-manifest": "^4.3.0",
-    "@snackui/babel-plugin": "*",
-    "@snackui/static": "*",
     "@welldone-software/why-did-you-render": "^6.0.3",
     "@babel/core": "^7.12.9",
     "@pmmmwh/react-refresh-webpack-plugin": "^0.4.3",

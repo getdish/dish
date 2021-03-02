@@ -3,10 +3,7 @@ import { declare } from '@babel/helper-plugin-utils'
 import template from '@babel/template'
 import { Visitor } from '@babel/traverse'
 import * as t from '@babel/types'
-
-import { createExtractor } from './extractor/createExtractor'
-import { literalToAst } from './extractor/literalToAst'
-import { SnackOptions } from './types'
+import { SnackOptions, createExtractor, literalToAst } from '@snackui/static'
 
 const importNativeView = template(`
 import { View as __ReactNativeView, Text as __ReactNativeText } from 'react-native';
@@ -18,10 +15,13 @@ import { StyleSheet as ReactNativeStyleSheet } from 'react-native';
 
 const extractor = createExtractor()
 
-export const babelPlugin = declare((api, options: SnackOptions): {
+export default declare(function snackBabelPlugin(
+  api,
+  options: SnackOptions
+): {
   name: string
   visitor: Visitor
-} => {
+} {
   api.assertVersion(7)
 
   return {

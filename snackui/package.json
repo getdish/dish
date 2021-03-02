@@ -17,7 +17,7 @@
   },
   "scripts": {
     "build": "ultra -r --no-pretty build",
-    "build:watch": "ultra -r --no-pretty watch",
+    "watch": "ultra -r --no-pretty watch",
     "test": "ultra -r --no-pretty --serial test",
     "prettier": "prettier --write \"**/*.{ts,tsx}\" || true",
     "publish:all": "lerna publish"
@@ -27,7 +27,7 @@
     "lerna": "^3.22.1",
     "prettier": "^2.2.1",
     "prettier-plugin-import-sort": "^0.0.6",
-    "ultra-runner": "^3.10.0"
+    "ultra-runner": "^3.10.5"
   },
   "importSort": {
     ".js, .jsx, .ts, .tsx": {

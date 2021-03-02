@@ -25,6 +25,9 @@ COPY package.json .
 # remove most files (only keep stuff for install)
 RUN find . \! -name "package.json" -not -path "*/bin/*" -type f -print | xargs rm -rf
 
+# filter down package.json
+RUN yarn trim-for-build:all
+
 FROM node:15.10.0-buster as install-stage
 COPY --from=copy-stage /app /app
 WORKDIR /app
