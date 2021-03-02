@@ -21,6 +21,10 @@ steps:
             bucket: "dish-build-cache"
           paths:
             - '/data/.cache/yarn/'
+            - 'node_modules/'
+            - 'dish-app/node_modules/'
+            - 'packages/*/node_modules/'
+            - 'services/*/node_modules/'
       - docker-compose#v3.7.0:
           build:
             - base
