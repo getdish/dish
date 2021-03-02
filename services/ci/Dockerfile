@@ -13,5 +13,4 @@ COPY hooks/ /buildkite/hooks/
 
 COPY ./docker-entrypoint.d /docker-entrypoint.d
 
-# CMD ["start", "-s"]
-# , "--spawn", "1"
+CMD ["start", "--spawn", "2"]
