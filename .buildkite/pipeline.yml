@@ -74,6 +74,14 @@ steps:
           cache-from: base:gcr.io/dish-258800/tileserver:latest
           push: tileserver:gcr.io/dish-258800/tileserver:latest
 
+  - label: ":docker: build postgres"
+    plugins:
+      - docker-compose#v3.7.0:
+          build: postgres
+          image-repository: gcr.io/dish-258800/postgres
+          cache-from: base:gcr.io/dish-258800/postgres:latest
+          push: postgres:gcr.io/dish-258800/postgres:latest
+
   - wait
 
   - label: "setup services for tests"
