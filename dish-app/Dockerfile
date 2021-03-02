@@ -1,8 +1,11 @@
 ARG DISH_BASE_VERSION=latest
 FROM gcr.io/dish-258800/base:$DISH_BASE_VERSION
 
-# slim it down a bit
+# slim it down
 RUN rm -r services
+RUN rm -r packages/esdx
+RUN rm -r packages/react-test-env
+RUN rm -r packages/worker
 
 WORKDIR /app/dish-app
 
@@ -16,4 +19,4 @@ RUN yarn web:build
 
 EXPOSE 4444
 
-CMD ["yarn", "web:serve", "--host", "localhost"]
+CMD ["yarn", "web:serve", "--host", "0.0.0.0"]

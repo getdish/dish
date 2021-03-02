@@ -53,7 +53,7 @@ echo "Starting docker for tests"
 ./dishctl.sh docker_compose_up_for_tests -d
 
 echo "Waiting for hasura to finish starting"
-if ! timeout --preserve-status 20 bash -c wait_until_hasura_ready; then
+if ! timeout --preserve-status 30 bash -c wait_until_hasura_ready; then
   echo "Timed out waiting for Hasura container to start"
   exit 1
 fi
@@ -69,7 +69,7 @@ docker run --net host $DISH_REGISTRY/base \
   bash -c 'cd services/timescaledb && DISH_ENV=not-production ./migrate.sh'
 
 echo "Waiting for dish-app to finish starting"
-if ! timeout --preserve-status 60 bash -c wait_until_dish_app_ready; then
+if ! timeout --preserve-status 120 bash -c wait_until_dish_app_ready; then
   echo "Timed out waiting for dish container to start"
   exit 1
 fi

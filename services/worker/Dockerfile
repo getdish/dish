@@ -1,6 +1,14 @@
 ARG DISH_BASE_VERSION=latest
 FROM gcr.io/dish-258800/base:$DISH_BASE_VERSION
 
+# slim it down
+RUN rm -r dish-app
+RUN rm -r packages/server
+RUN rm -r packages/webpack
+RUN rm -r packages/router
+RUN rm -r services
+COPY services/worker .
+
 RUN apt-get update && apt-get install -y \
       gconf-service libasound2 libatk1.0-0 libatk-bridge2.0-0 \
       libc6 libcairo2 libcups2 libdbus-1-3 libexpat1 libgbm-dev \
