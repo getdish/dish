@@ -13,32 +13,32 @@
     "watch": "esdx-watch"
   },
   "dependencies": {
-    "@snackui/helpers": "^0.0.6",
     "@dish/async": "^0.0.1",
     "@dish/fast-compare": "^2.7.6",
     "@dish/proxy-worm": "^0.0.4",
     "@react-native-community/blur": "^3.6.0",
+    "@snackui/helpers": "^0.0.6",
+    "@unimodules/core": "1.0.0",
+    "css-mediaquery": "^0.1.2",
     "expo-linear-gradient": "^8.4.0",
+    "expo-screen-orientation": "3.0.0",
     "lodash": "^4.17.20",
+    "react": "*",
+    "react-dom": "*",
     "react-feather": "^2.0.8",
     "react-laag": "^2.0.2",
     "react-native-web": "*",
-    "react-storage-hooks": "^4.0.0",
-    "react": "*",
-    "react-dom": "*",
-    "@unimodules/core": "1.0.0",
-    "css-mediaquery": "^0.1.2",
-    "expo-screen-orientation": "3.0.0"
+    "react-storage-hooks": "^4.0.0"
   },
   "peerDependencies": {
     "react-native": "*"
   },
   "devDependencies": {
-    "esbuild": "*",
     "@dish/esdx": "*",
     "@types/node": "^14.11.10",
     "@types/react": "^16.9.35",
     "@types/react-dom": "^16.9.8",
+    "esbuild": "*",
     "typescript": "*"
   },
   "gitHead": "503b64ff877fbb47382ba34266af192b2de81ffb"

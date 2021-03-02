@@ -12,20 +12,20 @@
   },
   "license": "MIT",
   "devDependencies": {
-    "prop-types": "^15.7.2",
-    "feather-icons": "^4.28.0",
+    "@dish/esdx": "^0.0.1",
     "camelcase": "^6.0.0",
     "cheerio": "^1.0.0-rc.3",
+    "feather-icons": "^4.28.0",
     "glob": "^7.1.6",
     "prettier": "*",
-    "uppercamelcase": "^3.0.0",
-    "@dish/esdx": "^0.0.1",
-    "prettier-plugin-import-sort": "^0.0.6"
+    "prettier-plugin-import-sort": "^0.0.6",
+    "prop-types": "^15.7.2",
+    "uppercamelcase": "^3.0.0"
   },
   "dependencies": {
     "react": "*",
     "react-dom": "*",
-    "react-native-svg": "^12.1.0",
-    "react-native": "*"
+    "react-native": "*",
+    "react-native-svg": "^12.1.0"
   }
 }

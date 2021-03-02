@@ -16,22 +16,22 @@
     "test-new": "TARGET=node DISH_ENV=test ava test/tag.ts --verbose"
   },
   "dependencies": {
-    "@dish/helpers": "*",
-    "patch-package": "^6.2.2",
-    "isomorphic-unfetch": "^3.1.0",
-    "ava": "^3.14.0",
-    "lodash": "*",
     "@dish/gqless": "3.0.11",
-    "@dish/gqless-react": "^2.0.11",
     "@dish/gqless-logger": "0.1.0",
+    "@dish/gqless-react": "^2.0.11",
+    "@dish/helpers": "*",
     "@dish/use-store": "*",
-    "react": "*",
+    "ava": "^3.14.0",
+    "graphql": "^15.5.0",
+    "isomorphic-unfetch": "^3.1.0",
+    "lodash": "*",
     "moment": "^2.29.1",
-    "graphql": "^15.5.0"
+    "patch-package": "^6.2.2",
+    "react": "*"
   },
   "devDependencies": {
+    "@dish/gqless-cli": "^4.0.1",
     "@dish/react-test-env": "*",
-    "@types/node": "*",
-    "@dish/gqless-cli": "^4.0.1"
+    "@types/node": "*"
   }
 }

@@ -8,8 +8,8 @@
   },
   "dependencies": {
     "@dish/async": "*",
-    "@dish/helpers": "*",
     "@dish/graph": "*",
+    "@dish/helpers": "*",
     "node-fetch": "^2.6.1"
   },
   "devDependencies": {

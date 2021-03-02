@@ -9,6 +9,10 @@ gpg --import key > gpg-import.log
 git-crypt unlock > gpg-crypt.log
 
 if [ "$IGNORE_SETUP" == "true" ]; then
+  docker image prune -a --filter "until=6h" --force
+  docker system df
+  docker images -a
+
   exit 0
 fi
 

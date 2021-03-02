@@ -6,9 +6,9 @@
     "ava": "*"
   },
   "dependencies": {
-    "react": "*",
     "@dish/graph": "*",
-    "@dish/helpers": "*"
+    "@dish/helpers": "*",
+    "react": "*"
   },
   "scripts": {
     "build": "true",

@@ -20,6 +20,7 @@ function delete_and_link_duplicate_modules() {
   rm -r react-dom || true
   rm -r react-native-svg || true
   rm -r react-native-web || true
+  ln -s ../dish-app/node_modules/typescript .
   ln -s ../dish-app/node_modules/react-native .
   ln -s ../dish-app/node_modules/react .
   ln -s ../dish-app/node_modules/react-dom .

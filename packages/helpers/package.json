@@ -13,11 +13,11 @@
     "watch": "esdx-watch"
   },
   "dependencies": {
-    "node-localstorage": "^2.1.6",
-    "react-native-sync-localstorage": "^0.0.3",
-    "lodash": "*",
     "@dish/fast-compare": "^2.7.6",
-    "react": "*"
+    "lodash": "*",
+    "node-localstorage": "^2.1.6",
+    "react": "*",
+    "react-native-sync-localstorage": "^0.0.3"
   },
   "devDependencies": {
     "@dish/esdx": "*"
