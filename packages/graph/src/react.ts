@@ -17,6 +17,6 @@ export const {
   defaults: {
     suspense: true,
     staleWhileRevalidate: false,
-    retry: 1,
+    retry: false,
   },
 })

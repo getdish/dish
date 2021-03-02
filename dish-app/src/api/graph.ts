@@ -1,7 +1,7 @@
 import { promisify } from 'util'
 
 import { route, useRouteBodyParser } from '@dish/api'
-import { GRAPH_API, fetchLog, getAuthHeaders } from '@dish/graph'
+import { GRAPH_API_INTERNAL, fetchLog, getAuthHeaders } from '@dish/graph'
 import redis from 'redis'
 
 const host =
@@ -22,7 +22,6 @@ function shouldCache(body: string) {
 }
 
 export default route(async (req, res) => {
-  console.log('got req')
   await useRouteBodyParser(req, res, { text: { type: '*/*' } })
   const { body } = req
   const doCache = shouldCache(body)
@@ -40,7 +39,7 @@ export default route(async (req, res) => {
       ...req.headers,
       ...hasuraHeaders,
     } as any
-    const hasuraRes = await fetchLog(GRAPH_API, {
+    const hasuraRes = await fetchLog(GRAPH_API_INTERNAL, {
       method: 'POST',
       headers,
       body,
