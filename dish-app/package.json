@@ -68,8 +68,6 @@
       "react-reparenting/**",
       "react-storage-hooks",
       "react-storage-hooks/**",
-      "expo-linear-gradient",
-      "expo-linear-gradient/**",
       "resize-observer-polyfill",
       "resize-observer-polyfill/**",
       "@react-native-community/blur",

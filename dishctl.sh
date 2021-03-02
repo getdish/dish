@@ -654,9 +654,10 @@ function install_gcloud_sdk() {
 function gcloud_init() {
   # This service account needs the "Project Owner" role! Way too much power.
   # Follow this issue for any fixes: https://issuetracker.google.com/issues/134928412
-  gcloud auth activate-service-account --key-file k8s/etc/dish-gcloud.enc.json
-  gcloud config set core/project "$GCLOUD_PROJECT"
-  gcloud config set builds/use_kaniko False
+  gcloud auth activate-service-account --key-file k8s/etc/dish-gcloud.enc.json &
+  gcloud config set core/project "$GCLOUD_PROJECT" &
+  gcloud config set builds/use_kaniko False &
+  wait
 }
 
 function ping_home_page() {
