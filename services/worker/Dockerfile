@@ -7,9 +7,6 @@ RUN rm -r dish-app
 RUN rm -r packages/server
 RUN rm -r packages/webpack
 RUN rm -r packages/router
-RUN rm -r services
-COPY services/worker services/worker
-COPY services/crawlers services/crawlers
 
 RUN apt-get update && apt-get install -y \
       gconf-service libasound2 libatk1.0-0 libatk-bridge2.0-0 \

@@ -4,9 +4,12 @@ function getWindow() {
 
 export const isNode = process.env.TARGET !== 'web' || !getWindow() || false
 
+const hostname = getWindow()?.location?.hostname ?? ''
+
 export const isProd =
   process.env.IS_LIVE === '1' ||
-  getWindow()?.location?.hostname.includes('live') ||
+  hostname === 'dishapp' ||
+  hostname.includes('live') ||
   false
 
 export const isStaging =
