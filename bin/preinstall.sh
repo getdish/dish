@@ -12,4 +12,5 @@ rm -r ./node_modules/react-dom || true
 popd
 
 ls -la /data || true
+ls -la ./data || true
 ls -la ./node_modules || true

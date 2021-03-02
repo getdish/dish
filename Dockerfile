@@ -4,6 +4,9 @@
 FROM node:15.10.0-buster as copy-stage
 WORKDIR /app
 
+COPY bin bin
+RUN ./bin/preinstall.sh
+
 # for caching
 RUN mkdir -p /data/.cache/yarn
 RUN yarn config set cache-folder /data/.cache/yarn

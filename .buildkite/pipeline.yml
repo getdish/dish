@@ -11,7 +11,6 @@ steps:
       IGNORE_SETUP: true
 
   - label: ":docker: build base"
-    command: "mkdir -p /data; ls -la /data"
     plugins:
       - gencer/cache#v2.3.10:
           backend: s3
@@ -20,7 +19,7 @@ steps:
             args: "--endpoint-url=https://sfo2.digitaloceanspaces.com"
             bucket: "dish-build-cache"
           paths:
-            - '/data/'
+            - './data/'
       - docker-compose#v3.7.0:
           build:
             - base
@@ -29,9 +28,9 @@ steps:
           push: base:gcr.io/dish-258800/base:latest
           volumes:
             - "./dist:/app/dist"
-            - "/data:/data"
-            - "/data/node_modules:/app/node_modules"
-            - "/data/dish-app/node_modules:/app/dish-app/node_modules"
+            - "./data:/data"
+            - "./data/node_modules:/app/node_modules"
+            - "./data/dish-app/node_modules:/app/dish-app/node_modules"
 
   - label: ":docker: build search"
     plugins:

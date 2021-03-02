@@ -51,6 +51,7 @@ export LD_LIBRARY_PATH="/usr/local/lib"
 
 # ensure data dir for caches
 mkdir -p /data
+mkdir -p $HOME/data
 
 PWD=$(pwd)
 export GOOGLE_APPLICATION_CREDENTIALS="$PWD/k8s/etc/dish-gcloud.enc.json"

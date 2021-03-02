@@ -2,7 +2,7 @@
 
 shift 1
 
-set -e
+set -xe
 
 if [[ $NO_CHECK == true ]]; then
   echo "skip typecheck"
