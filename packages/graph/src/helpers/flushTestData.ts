@@ -1,5 +1,3 @@
-import { globalTagId } from '../constants'
-import { tagInsert } from '../queries/tagQueries'
 import { deleteAllFuzzyBy } from './queryHelpers'
 
 export async function flushTestData() {
@@ -12,7 +10,7 @@ export async function flushTestData() {
       )
       process.exit(0)
     }
-  }, 1000)
+  }, 3000)
 
   await deleteAllFuzzyBy('review', 'text', 'test')
   hasCompletedSome = true
