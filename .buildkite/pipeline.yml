@@ -11,7 +11,7 @@ steps:
       IGNORE_SETUP: true
 
   - label: ":docker: build base"
-    command: "mkdir -p /data"
+    command: "mkdir -p /data; ls -la /data"
     plugins:
       - gencer/cache#v2.3.10:
           backend: s3
