@@ -22,6 +22,10 @@ flyctl secrets set PRIVATE_SSH_KEY=- < ~/.ssh/github_private_ssh_key
 flyctl volumes create buildkite_cache --region ord --size 50
 ```
 
+```
+flyctl secrets set GPG_KEY=- < ~/.keys/teamdishapp
+```
+
 ```toml
 [mount]
 source = "buildkite_cache"
