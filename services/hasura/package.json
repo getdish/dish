@@ -6,11 +6,9 @@
     "ava": "*"
   },
   "dependencies": {
+    "react": "*",
     "@dish/graph": "*",
     "@dish/helpers": "*"
-  },
-  "peerDependencies": {
-    "react": "*"
   },
   "scripts": {
     "build": "true",

@@ -4,7 +4,7 @@
 
 .yarn
 # keep it in repo for fast builds
-# .ultra.cache.json
+.ultra.cache.json
 tmp
 *.tsbuildinfo
 

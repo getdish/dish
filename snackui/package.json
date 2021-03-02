@@ -10,7 +10,7 @@
       "packages/*",
       "examples/*"
     ],
-    "nohoist": [
+    "installConfig.hoistingLimits": [
       "@dish/proxy-worm",
       "@dish/proxy-worm/**"
     ]

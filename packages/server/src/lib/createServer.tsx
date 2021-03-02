@@ -75,7 +75,6 @@ export async function createServer(serverConf: ServerConfig) {
       createApiServer(app, conf),
     ])
   } else {
-    // ts-node can fuck up require on server side so run api after
     await createWebServer(app, conf)
     await createApiServer(app, conf)
   }

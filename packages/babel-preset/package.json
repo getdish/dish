@@ -11,6 +11,8 @@
     "watch": "true"
   },
   "dependencies": {
+    "react": "*",
+    "react-dom": "*",
     "react-native-web": "*",
     "@babel/core": "^7.12.9",
     "@babel/polyfill": "^7.12.1",

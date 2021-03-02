@@ -26,7 +26,7 @@ module.exports = {
     'ios/**',
     require.resolve('./index.js'),
     'metro.config.js',
-    '../node_modules/expo/**',
+    // '../node_modules/expo/**',
     'build/**',
     'webpack.config.js',
     'patches/**',

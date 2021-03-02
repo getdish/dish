@@ -10,6 +10,8 @@
     "watch": "esdx-watch"
   },
   "dependencies": {
+    "@dish/proxy-worm": "*",
+    "pnp-webpack-plugin": "1.6.4",
     "snackui-loader": "*",
     "@snackui/babel-plugin": "*",
     "@snackui/static": "*",
@@ -20,6 +22,7 @@
     "webpack-pwa-manifest": "^4.3.0",
     "@welldone-software/why-did-you-render": "^6.0.3",
     "@babel/core": "^7.12.9",
+    "react": "*",
     "@pmmmwh/react-refresh-webpack-plugin": "^0.4.3",
     "speed-measure-webpack-plugin": "^1.3.3",
     "babel-loader": "^8.2.2",
@@ -32,6 +35,7 @@
     "dedupe-parent-css-from-chunks-webpack-plugin": "^3.0.0",
     "extract-css-chunks-webpack-plugin": "^4.9.0",
     "file-loader": "^6.2.0",
+    "react-refresh": "^0.9.0",
     "html-webpack-plugin": "5.0.0-beta.5",
     "image-webpack-loader": "^7.0.1",
     "inspectpack": "^4.5.2",
@@ -40,6 +44,7 @@
     "terser-webpack-plugin": "^5.1.1",
     "url-loader": "^4.1.1",
     "webpack": "*",
+    "fs-extra": "^9.1.0",
     "webpack-bundle-analyzer": "^4.2.0",
     "webpack-node-externals": "^2.5.2",
     "esbuild-loader": "^2.9.2",

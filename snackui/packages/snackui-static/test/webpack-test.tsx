@@ -199,10 +199,10 @@ async function extractStaticApp() {
           exclude: /node_modules/,
           use: [
             {
-              loader: 'babel-loader',
+              loader: require.resolve('babel-loader'),
             },
             {
-              loader: 'snackui-loader',
+              loader: require.resolve('snackui-loader'),
               options: {
                 evaluateImportsWhitelist: ['constants.js'],
               },

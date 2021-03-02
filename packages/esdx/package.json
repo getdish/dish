@@ -16,6 +16,10 @@
   "dependencies": {
     "esbuild": "^0.8.53",
     "chokidar-cli": "^2.1.0",
-    "esbuild-node-tsc": "^1.2.0"
+    "esbuild-node-tsc": "^1.2.0",
+    "typescript": "*"
+  },
+  "publishConfig": {
+    "access": "public"
   }
 }

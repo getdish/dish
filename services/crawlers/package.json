@@ -24,6 +24,7 @@
     "acorn": "^7.1.1",
     "aws-sdk": "^2.719.0",
     "axios": "^0.19.1",
+    "graphql": "^15.5.0",
     "sinon": "^9.0.3",
     "bull": "^3.18.0",
     "cheerio": "^1.0.0-rc.3",
@@ -39,7 +40,9 @@
     "puppeteer-extra-plugin-stealth": "^2.4.9",
     "sentiment": "^5.0.2",
     "tabletojson": "^2.0.4",
-    "transliteration": "^2.1.8"
+    "transliteration": "^2.1.8",
+    "@dish/gqless": "*",
+    "node-fetch": "^2.6.1"
   },
   "devDependencies": {
     "@dish/esdx": "*",
