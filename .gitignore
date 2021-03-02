@@ -3,7 +3,8 @@
 *__snack.css
 
 .yarn
-.ultra.cache.json
+# keep it in repo for fast builds
+# .ultra.cache.json
 tmp
 *.tsbuildinfo
 
