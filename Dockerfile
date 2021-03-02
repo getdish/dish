@@ -4,6 +4,8 @@
 FROM node:15.10.0-buster as copy-stage
 WORKDIR /app
 
+# ENV YARN_VERSION 2.4.0
+
 # for caching
 RUN mkdir -p /data/.cache/yarn
 RUN yarn config set cache-folder /data/.cache/yarn
@@ -30,7 +32,8 @@ COPY --from=copy-stage /app /app
 WORKDIR /app
 
 COPY yarn.lock .
-COPY .yarnrc .
+# COPY .yarn .yarn
+# COPY .yarnrc.yml .
 COPY patches patches
 COPY bin bin
 COPY dish-app/patches dish-app/patches
