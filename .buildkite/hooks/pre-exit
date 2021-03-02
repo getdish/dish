@@ -13,7 +13,7 @@ if [ "$LOG_DOCKER" == "true" ]; then
 fi
 
 if [ "$BUILDKITE_COMMAND_EXIT_STATUS" = "1" ]; then
-  echo "failed, shutting down"
+  echo "shutting down docker"
   docker-compose down --volumes || true
 fi
 

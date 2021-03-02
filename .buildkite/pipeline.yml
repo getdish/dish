@@ -106,16 +106,6 @@ steps:
           cache-from: base:gcr.io/dish-258800/worker:latest
           push: worker:gcr.io/dish-258800/worker:latest
 
-  - label: ":docker: build postgres for testing"
-    plugins:
-      - docker-compose#v3.7.0:
-          build: postgres
-          image-repository: gcr.io/dish-258800/postgres
-          cache-from: base:gcr.io/dish-258800/postgres:latest
-          push: postgres:gcr.io/dish-258800/postgres:latest
-          env:
-            POSTGRES_STRATEGY: simple
-
   - wait
 
   - label: "setup services for tests"

@@ -83,7 +83,6 @@ export class DB {
       this.connect()
     }
     const pool = this.pool!
-    console.log('max', pool.getMaxListeners())
     const client = await pool.connect()
     if (!client) {
       throw new Error('no client')

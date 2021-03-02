@@ -2,4 +2,4 @@
 
 DIR=$(dirname $(realpath $0))
 
-chokidar src -c "NO_CHECK=true $DIR/esdx"
+chokidar src -c "$DIR/esdx.sh"

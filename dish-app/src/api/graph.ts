@@ -1,7 +1,7 @@
 import { promisify } from 'util'
 
 import { route, useRouteBodyParser } from '@dish/api'
-import { GRAPH_API, getAuthHeaders } from '@dish/graph'
+import { GRAPH_API, fetchLog, getAuthHeaders } from '@dish/graph'
 import redis from 'redis'
 
 const host =
@@ -39,7 +39,7 @@ export default route(async (req, res) => {
       ...req.headers,
       ...hasuraHeaders,
     } as any
-    const hasuraRes = await fetch(GRAPH_API, {
+    const hasuraRes = await fetchLog(GRAPH_API, {
       method: 'POST',
       headers,
       body,

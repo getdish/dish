@@ -11,6 +11,20 @@ import {
 
 export * from './schema.generated'
 
+export const fetchLog = (
+  input: RequestInfo,
+  init?: RequestInit | undefined
+): Promise<Response> => {
+  if (process.env.DEBUG || process.env.LOG_FETCH) {
+    console.log(` [gqless]
+      fetch('${input}', ${
+      init ? JSON.stringify(init, null, 2) : undefined
+    }).then(x => x.json()).then(console.log.bind(console))
+`)
+  }
+  return fetch(input, init)
+}
+
 export const queryFetcher: QueryFetcher = async function (query, variables) {
   const headers = {
     'Content-Type': 'application/json',
@@ -20,17 +34,7 @@ export const queryFetcher: QueryFetcher = async function (query, variables) {
     query,
     variables,
   })
-  if (process.env.DEBUG || process.env.LOG_FETCH) {
-    console.log(` [gqless]
-      fetch('${GRAPH_API}', {
-        method: 'POST',
-        headers: ${JSON.stringify(headers)},
-        body: \`${body}\`,
-        mode: 'cors'
-      }).then(x => x.json()).then(console.log.bind(console))
-`)
-  }
-  const response = await fetch(GRAPH_API, {
+  const response = await fetchLog(GRAPH_API, {
     method: 'POST',
     headers,
     body,

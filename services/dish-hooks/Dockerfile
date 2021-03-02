@@ -2,7 +2,7 @@ ARG DISH_BASE_VERSION=latest
 FROM gcr.io/dish-258800/base:$DISH_BASE_VERSION
 
 # slim it down
-RUN rm -r dish-app
+# RUN rm -r dish-app
 RUN rm -r packages/server
 RUN rm -r packages/webpack
 RUN rm -r packages/router
