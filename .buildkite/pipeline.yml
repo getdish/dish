@@ -132,6 +132,8 @@ steps:
 
   - label: "run tests"
     command: "docker run --net host ${DISH_REGISTRY}/base yarn test"
+    env:
+      LOG_DOCKER: true
 
   # - label: "run integration test"
   #   command: ".buildkite/scripts/integration_tests.sh"
