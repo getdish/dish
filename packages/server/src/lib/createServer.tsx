@@ -85,7 +85,9 @@ async function createApiServer(
   { createConfig, ...config }: ServerConfigNormal
 ) {
   const port = await getPort()
-  app.use('/api', proxy(`localhost:${port}`))
+  const pa = `localhost:${port}`
+  console.log('proxy', pa)
+  app.use('/api', proxy(pa))
   const file = require.resolve('./createApiServer.worker')
   const worker = new Worker(file, {
     workerData: {

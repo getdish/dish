@@ -5,7 +5,7 @@
     "outDir": "_",
     "rootDir": "src"
   },
-  "include": ["src", "src/ubereats/categories.json"],
+  "include": ["src"],
   "references": [
     { "path": "../../packages/async" },
     { "path": "../../packages/common" },

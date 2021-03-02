@@ -16,7 +16,7 @@
     ]
   },
   "scripts": {
-    "build": "ultra -r --no-pretty build",
+    "build": "ultra -r --no-pretty --build",
     "watch": "ultra -r --no-pretty watch",
     "test": "ultra -r --no-pretty --serial test",
     "prettier": "prettier --write \"**/*.{ts,tsx}\" || true",

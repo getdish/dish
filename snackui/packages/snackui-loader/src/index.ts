@@ -1,3 +1,5 @@
+process.env.SNACKUI_COMPILE_PROCESS = '1'
+
 import { extname } from 'path'
 
 import {

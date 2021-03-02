@@ -8,7 +8,7 @@ import _ from 'lodash'
 import { restaurantSaveCanonical } from '../canonical-restaurant'
 import { ScrapeData, scrapeInsert, scrapeMergeData } from '../scrape-helpers'
 import { aroundCoords, geocode } from '../utils'
-import categories from './categories.json'
+import categories from './categories'
 
 const UBEREATS_DOMAIN =
   process.env.UBEREATS_PROXY || 'https://www.ubereats.com/'

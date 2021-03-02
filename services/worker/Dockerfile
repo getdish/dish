@@ -13,5 +13,7 @@ RUN apt-get update && apt-get install -y \
       lsb-release xdg-utils wget xvfb procps psmisc htop
 WORKDIR /app/services/worker
 
+RUN yarn build
+
 COPY services/worker/entry.sh /app/entry.sh
 CMD ["/app/entry.sh"]

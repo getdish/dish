@@ -1,3 +1,5 @@
+process.env.SNACKUI_COMPILE_PROCESS = '1'
+
 import generator from '@babel/generator'
 import { declare } from '@babel/helper-plugin-utils'
 import template from '@babel/template'

@@ -1,4 +1,3 @@
-
 {
   "extends": "../../tsconfig.base",
   "compilerOptions": {
@@ -10,9 +9,12 @@
     "rootDir": "src"
   },
   "include": ["src"],
-  "references": [{
-    "path": "../helpers"
-  }, {
-    "path": "../../snackui/packages/snackui-static"
-  }]
+  "references": [
+    {
+      "path": "../helpers"
+    },
+    {
+      "path": "../../snackui/packages/snackui-static"
+    }
+  ]
 }

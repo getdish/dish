@@ -1,14 +1,15 @@
 import React from 'react'
 import { render } from 'react-dom'
+import { View } from 'react-native'
 
-type LinearGradientPoint =
+export type LinearGradientPoint =
   | {
       x: number
       y: number
     }
   | [number, number]
 
-type LinearGradientComponent = (props: {
+export type LinearGradientProps = {
   colors: string[]
   /**
    * An array that contains `number`s ranging from 0 to 1, inclusive, and is the same length as the `colors` property.
@@ -40,17 +41,18 @@ type LinearGradientComponent = (props: {
    * **On web**, this only changes the angle of the gradient because CSS gradients don't support changing the end position.
    */
   end?: LinearGradientPoint | null
-}) => JSX.Element | null
+} & React.ComponentProps<typeof View>
 
+type LinearGradientComponent = (
+  props: LinearGradientProps
+) => JSX.Element | null
 let exp: LinearGradientComponent = () => null
 
 // we dont export it in the snackui-static process
 // expo-linear-gradient is a flow file :/
 // TODO compile it ourselves for now so we can test
 
-// @ts-ignore
 if (!process.env.SNACKUI_COMPILE_PROCESS) {
-  // @ts-ignore
   exp = require('expo-linear-gradient').LinearGradient
 }
 
