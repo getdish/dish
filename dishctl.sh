@@ -155,7 +155,6 @@ function _db_migrate() {
   postgres_password=$3
   postgres_port=$4
   init=$5
-  set -x
   pushd $PROJECT_ROOT/services/hasura
   hasura --skip-update-check \
     migrate apply \
@@ -182,7 +181,6 @@ function _db_migrate() {
       --single-transaction
   fi
   popd
-  set +x
 }
 
 function db_migrate() {

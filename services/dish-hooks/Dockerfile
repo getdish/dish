@@ -1,6 +1,10 @@
 ARG DISH_BASE_VERSION=latest
 FROM gcr.io/dish-258800/base:$DISH_BASE_VERSION
 
+WORKDIR /app/services/dish-hooks
+RUN yarn  build
+
+WORKDIR /app
 # slim it down
 # RUN rm -r dish-app
 RUN rm -r packages/server

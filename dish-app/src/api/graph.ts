@@ -22,6 +22,7 @@ function shouldCache(body: string) {
 }
 
 export default route(async (req, res) => {
+  console.log('got req')
   await useRouteBodyParser(req, res, { text: { type: '*/*' } })
   const { body } = req
   const doCache = shouldCache(body)
