@@ -223,6 +223,7 @@
     "@types/react": "*",
     "@types/react-native": "*",
     "@types/requestidlecallback": "0.3.1",
+    "@types/redis": "^2.8.28",
     "@unimodules/react-native-adapter": "^5.7.0",
     "@welldone-software/why-did-you-render": "^6.0.5",
     "array-flat-polyfill": "^1.0.1",

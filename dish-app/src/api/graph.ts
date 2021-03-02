@@ -10,6 +10,11 @@ console.log('redis host', host)
 const rc = redis.createClient({
   host,
 })
+
+rc.on('error', (err) => {
+  console.log('redis err', err)
+})
+
 const rGet = promisify(rc.get).bind(rc)
 
 const hasuraHeaders = {
