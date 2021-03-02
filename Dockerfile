@@ -4,6 +4,7 @@
 FROM node:15.10.0-buster as copy-stage
 WORKDIR /app
 
+ENV NODE_CACHE=$(yarn cache dir)
 ENV PATH=$PATH:/app/node_modules/.bin:node_modules/.bin
 ENV NODE_OPTIONS="--max_old_space_size=8192"
 ENV DOCKER_BUILD=true

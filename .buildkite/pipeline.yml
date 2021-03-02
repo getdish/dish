@@ -32,6 +32,14 @@ steps:
           cache-from: base:gcr.io/dish-258800/hasura:latest
           push: hasura:gcr.io/dish-258800/hasura:latest
 
+  - label: ":docker: build timescale"
+    plugins:
+      - docker-compose#v3.7.0:
+          build: timescaledb
+          image-repository: gcr.io/dish-258800/timescaledb
+          cache-from: base:gcr.io/dish-258800/timescaledb:latest
+          push: timescaledb:gcr.io/dish-258800/timescaledb:latest
+
   - label: ":docker: build tileserver"
     plugins:
       - docker-compose#v3.7.0:
