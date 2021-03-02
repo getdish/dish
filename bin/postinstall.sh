@@ -20,12 +20,12 @@ function delete_and_link_duplicate_modules() {
   rm -r react-dom || true
   rm -r react-native-svg || true
   rm -r react-native-web || true
-  ln -s ../dish-app/node_modules/typescript .
-  ln -s ../dish-app/node_modules/react-native .
-  ln -s ../dish-app/node_modules/react .
-  ln -s ../dish-app/node_modules/react-dom .
-  ln -s ../dish-app/node_modules/react-native-svg .
-  ln -s ../dish-app/node_modules/react-native-web .
+  ln -s ../dish-app/node_modules/typescript . || true
+  ln -s ../dish-app/node_modules/react-native . || true
+  ln -s ../dish-app/node_modules/react . || true
+  ln -s ../dish-app/node_modules/react-dom . || true
+  ln -s ../dish-app/node_modules/react-native-svg . || true
+  ln -s ../dish-app/node_modules/react-native-web . || true
   popd
 }
 

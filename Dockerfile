@@ -37,9 +37,7 @@ COPY dish-app/patches dish-app/patches
 COPY dish-app/etc dish-app/etc
 
 # install
-RUN yarn install --frozen-lockfile
-# TODO to persists cache, move it?
-RUN yarn cache clean
+RUN yarn install --frozen-lockfile && yarn cache clean
 
 # clean a bit of native-only deps
 RUN rm -r dish-app/node_modules/jsc-android || true

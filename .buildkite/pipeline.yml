@@ -71,6 +71,11 @@ steps:
 
   - wait
 
+  - label: ":docker: clear cache"
+    command: "DOCKER_CLEAN=true .buildkite/hooks/pre-exit"
+
+  - wait
+
   - label: ":docker: base-dependent images"
     command: "echo ok"
     env:

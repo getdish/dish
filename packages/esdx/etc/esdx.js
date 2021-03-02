@@ -9,9 +9,10 @@ async function go() {
   if (process.env.NO_CHECK) {
     console.log('skip typecheck')
   } else {
-    fs.existsSync('tsconfig.tsbuildinfo') && fs.unlink('tsconfig.tsbuildinfo')
-    fs.existsSync('_') && fs.unlink('_')
-    fs.existsSync('dist') && fs.unlink('dist')
+    fs.existsSync('tsconfig.tsbuildinfo') &&
+      fs.unlinkSync('tsconfig.tsbuildinfo')
+    fs.existsSync('_') && fs.unlinkSync('_')
+    fs.existsSync('dist') && fs.unlinkSync('dist')
     await exec(`tsc`, ['-b'])
     await exec(`cp`, `-r _ dist`.split(' '))
   }
@@ -24,14 +25,12 @@ async function go() {
       outdir: '_',
       sourcemap: true,
       target: 'safari13',
-      // plugins: [pnpPlugin()],
     }),
     build({
       entryPoints: files,
       outdir: 'dist',
       sourcemap: true,
       target: 'node12.19.0',
-      // plugins: [pnpPlugin()],
     }),
   ])
 }

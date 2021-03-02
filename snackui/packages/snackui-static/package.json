@@ -60,8 +60,5 @@
     "react-test-renderer": "^17.0.1",
     "style-loader": "^2.0.0"
   },
-  "peerDependencies": {
-    "react-native": "*"
-  },
   "gitHead": "503b64ff877fbb47382ba34266af192b2de81ffb"
 }

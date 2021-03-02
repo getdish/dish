@@ -2,8 +2,8 @@
   "name": "@dish/esdx",
   "version": "0.0.1",
   "bin": {
-    "esdx": "./esdx.js",
-    "esdx-watch": "./esdx-watch.js"
+    "esdx": "./esdx.sh",
+    "esdx-watch": "./esdx-watch.sh"
   },
   "scripts": {
     "build": "true",
@@ -14,12 +14,7 @@
     "esbuild": "^0.8.53",
     "esbuild-node-tsc": "^1.2.0",
     "esbuild-plugin-pnp": "^0.3.0",
-    "execa": "^5.0.0",
-    "fast-glob": "^3.2.5",
     "typescript": "*"
-  },
-  "devDependencies": {
-    "@types/node": "*"
   },
   "publishConfig": {
     "access": "public"

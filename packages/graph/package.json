@@ -16,9 +16,9 @@
     "test-new": "TARGET=node DISH_ENV=test ava test/tag.ts --verbose"
   },
   "dependencies": {
-    "@dish/gqless": "3.0.11",
-    "@dish/gqless-logger": "0.1.0",
-    "@dish/gqless-react": "^2.0.11",
+    "@dish/gqless": "^3.0.13",
+    "@dish/gqless-logger": "^0.1.0",
+    "@dish/gqless-react": "^2.0.13",
     "@dish/helpers": "*",
     "@dish/use-store": "*",
     "ava": "^3.14.0",

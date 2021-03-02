@@ -26,8 +26,5 @@
     "react": "*",
     "react-dom": "*",
     "react-native-svg": "^12.1.0"
-  },
-  "peerDependencies": {
-    "react-native": "*"
   }
 }

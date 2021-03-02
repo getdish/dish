@@ -46,7 +46,7 @@
     "validate:tsc": "tsc --noEmit",
     "check:ts": "tsc -b --preserveWatchOutput tsconfig.build.json",
     "check:ts:watch": "yarn check:ts -w",
-    "build": "yarn workspaces foreach -pt run build",
+    "build": "ultra -r --no-pretty --build",
     "build:docker": "./dishctl.sh buildkit_build_local",
     "build:extras:watch": "ultra -r --no-pretty --filter @snackui/node watch",
     "build:watch:ts": "ultra -r --no-pretty --concurrency 1000 watch",
@@ -69,7 +69,6 @@
     "snackui:push": "git subrepo clean snackui && git subrepo push snackui"
   },
   "resolutions": {
-    "ts-pnp": "1.2.0",
     "aws-sdk": "2.762.0",
     "typescript": "4.2.2",
     "node-fetch": "2.6.1",
@@ -108,7 +107,6 @@
     "esbuild": "0.8.54"
   },
   "dependencies": {
-    "@yarnpkg/pnpify": "^2.4.0",
     "react": "^17.0.1",
     "react-dom": "^17.0.1",
     "react-native-web": "0.0.0-466063b7e"

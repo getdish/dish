@@ -30,9 +30,6 @@
     "react-native-web": "*",
     "react-storage-hooks": "^4.0.0"
   },
-  "peerDependencies": {
-    "react-native": "*"
-  },
   "devDependencies": {
     "@dish/esdx": "*",
     "@types/node": "^14.11.10",
