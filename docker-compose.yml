@@ -8,7 +8,7 @@ services:
   postgres:
     command: postgres -c 'max_connections=800'
     build:
-      context: ./services/postgres
+      context: ./services/postgres-${POSTGRES_STRATEGY:-ha}
     volumes:
       - ${HOME}/.dish/postgres:/var/lib/postgresql/data
     environment:
@@ -129,7 +129,7 @@ services:
     image: gcr.io/dish-258800/worker${DISH_IMAGE_TAG}
     build:
       context: .
-      dockerfile: ./services/search/Dockerfile
+      dockerfile: ./services/worker/Dockerfile
     environment:
       - DISH_ENV=staging
       - HASURA_ENDPOINT=http://hasura:8080

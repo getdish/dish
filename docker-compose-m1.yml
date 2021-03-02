@@ -2,7 +2,7 @@ version: '2.4'
 services:
   postgres:
     build:
-      context: ./services/postgres
+      context: ./services/postgres-simple
     restart: always
     volumes:
       - ${HOME}/.dish/postgresdb/${POSTGRES_DB:-dish}:/var/lib/postgresql/data

@@ -1111,15 +1111,23 @@ function deploy_fly_app() {
   folder=$2
   image_name=${3:-$1}
   echo "deploying $app in $folder to image $image_name"
-  OPS_FOLDER=$PROJECT_ROOT/.ops/$app
-  mkdir -p $OPS_FOLDER
-  cp $folder/fly.toml $OPS_FOLDER
-  pushd $OPS_FOLDER
+  # OPS_FOLDER="$PROJECT_ROOT/.ops/$app"
+  # mkdir -p $OPS_FOLDER
+  # cp $folder/fly.toml $OPS_FOLDER
+  # pushd $OPS_FOLDER
   # deploy
+
+  pushd $folder
+  if [ -f ".ci/pre_deploy.sh" ]; then
+    .ci/pre_deploy.sh
+  fi
   flyctl auth docker
   docker tag gcr.io/dish-258800/$image_name:latest registry.fly.io/$app:latest
   docker push registry.fly.io/$app:latest
   flyctl deploy -i registry.fly.io/$app:latest
+  if [ -f ".ci/post_deploy.sh" ]; then
+    .ci/pre_deploy.sh
+  fi
   popd
 }
 

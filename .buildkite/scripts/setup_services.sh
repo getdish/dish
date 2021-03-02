@@ -40,6 +40,8 @@ export -f wait_until_dish_app_ready
 mkdir -p $HOME/.dish/postgres
 chown -R root:root $HOME/.dish/postgres
 
+export POSTGRES_STRATEGY=simple
+
 # Postgres needs 2 starts to get everything set up
 docker-compose rm -f postgres
 docker-compose build postgres
