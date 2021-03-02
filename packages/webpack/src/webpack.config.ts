@@ -59,7 +59,9 @@ export function createWebpackConfig({
       'process.env.TARGET': JSON.stringify(target || null),
       'process.env.IS_STATIC': false,
       'process.env.DISABLE_CACHE': false,
-      'process.env.IS_LIVE': JSON.stringify(process.env.IS_LIVE ?? false),
+      'process.env.IS_LIVE': JSON.stringify(
+        process.env.IS_LIVE ?? (isProduction ? '1' : '0')
+      ),
       'process.env.DEBUG': JSON.stringify(process.env.DEBUG || false),
       ...(!!process.env.LOG_LEVEL && {
         'process.env.LOG_LEVEL': JSON.stringify(process.env.LOG_LEVEL || 0),
