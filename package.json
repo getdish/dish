@@ -103,7 +103,8 @@
     "@types/react": "16.9.46",
     "@types/react-dom": "16.9.8",
     "@types/react-native": "0.63.45",
-    "@types/puppeteer": "3.0.1"
+    "@types/puppeteer": "3.0.1",
+    "esbuild": "0.8.54"
   },
   "dependencies": {
     "react": "^17.0.1",
@@ -117,7 +118,7 @@
     "@types/react-native": "^0.63.45",
     "@unimodules/core": "^6.0.0",
     "ava": "^3.14.0",
-    "esbuild": "^0.8.53",
+    "esbuild": "^0.8.54",
     "expo-yarn-workspaces": "*",
     "import-sort-style-module": "^6.0.0",
     "patch-package": "^6.2.2",

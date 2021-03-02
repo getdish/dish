@@ -8,6 +8,7 @@ import {
   HStack,
   Theme,
   VStack,
+  useDebounceValue,
   useGet,
   useMedia,
   useTheme,
@@ -51,7 +52,7 @@ export default memo(function AppMap() {
     hideRegions,
   } = useAppMapStore()
   const media = useMedia()
-  const { width, paddingLeft } = useMapSize(media.sm)
+  const { width, paddingLeft } = useDebounceValue(useMapSize(media.sm), 1000)
   const { position } = useStoreInstance(appMapStore)
   const { center, span } = position
 

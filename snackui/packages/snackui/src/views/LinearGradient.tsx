@@ -48,12 +48,9 @@ let exp: LinearGradientComponent = () => null
 // expo-linear-gradient is a flow file :/
 // TODO compile it ourselves for now so we can test
 
-console.log(
-  'process.env.SNACKUI_COMPILE_PROCESS',
-  process.env.SNACKUI_COMPILE_PROCESS
-)
-
+// @ts-ignore
 if (!process.env.SNACKUI_COMPILE_PROCESS) {
+  // @ts-ignore
   exp = require('expo-linear-gradient').LinearGradient
 }
 

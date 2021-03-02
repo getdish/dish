@@ -7847,20 +7847,10 @@ esbuild-register@^2.0.0:
     source-map-support "^0.5.19"
     strip-json-comments "^3.1.1"
 
-esbuild@*, esbuild@^0.8.34, esbuild@^0.8.42, esbuild@^0.8.53:
-  version "0.8.53"
-  resolved "https://registry.npmjs.org/esbuild/-/esbuild-0.8.53.tgz#b408bb0ca1b29dab13d8bbf7d59f59afe6776e86"
-  integrity sha512-GIaYGdMukH58hu+lf07XWAeESBYFAsz8fXnrylHDCbBXKOSNtFmoYA8PhSeSF+3/qzeJ0VjzV9AkLURo5yfu3g==
-
-esbuild@^0.8.54:
+esbuild@*, esbuild@0.8.54, esbuild@^0.8.34, esbuild@^0.8.42, esbuild@^0.8.53, esbuild@^0.8.54, esbuild@^0.8.7:
   version "0.8.54"
   resolved "https://registry.npmjs.org/esbuild/-/esbuild-0.8.54.tgz#2f32ff80e95c69a0f25b799d76a27c05e2857cdf"
   integrity sha512-DJH38OiTgXJxFb/EhHrCrY8eGmtdkTtWymHpN9IYN9AF+4jykT0dQArr7wzFejpVbaB0TMIq2+vfNRWr3LXpvw==
-
-esbuild@^0.8.7:
-  version "0.8.46"
-  resolved "https://registry.npmjs.org/esbuild/-/esbuild-0.8.46.tgz#8fc7230ce3019b12e2553399f0c03875a729c26b"
-  integrity sha512-xck9sXNCNmjDHCCfxTCyhKTiFuEBweh+IDAhMLOJI990v1Fzii6MyIkT1LbkvjgoVgPX2SK1kpi5eZVGNrl8yg==
 
 escalade@^3.1.1:
   version "3.1.1"
