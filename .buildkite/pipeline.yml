@@ -6,7 +6,21 @@ env:
 
 steps:
   - label: ":docker: build base & non-base dependent images"
+    command: "echo ok"
+    env:
+      IGNORE_SETUP: true
+
+  - label: ":docker: build base"
+    command: "mkdir -p /data"
     plugins:
+      - gencer/cache#v2.3.10:
+          backend: s3
+          key: "v1-cache-{{ runner.os }}-base-yarn"
+          s3:
+            args: "--endpoint-url=https://sfo2.digitaloceanspaces.com"
+            bucket: "dish-build-cache"
+          paths:
+            - '/data/.cache/yarn/'
       - docker-compose#v3.7.0:
           build:
             - base
@@ -14,6 +28,7 @@ steps:
           cache-from: base:gcr.io/dish-258800/base:latest
           push: base:gcr.io/dish-258800/base:latest
           volumes:
+            - "./data:/data"
             - "./dist:/app/dist"
 
   - label: ":docker: build search"
@@ -57,6 +72,11 @@ steps:
           push: image-proxy:gcr.io/dish-258800/image-proxy:latest
 
   - wait
+
+  - label: ":docker: base-dependent images"
+    command: "echo ok"
+    env:
+      IGNORE_SETUP: true
 
   - label: ":docker: build dish-hooks"
     plugins:

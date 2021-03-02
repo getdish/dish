@@ -9,7 +9,7 @@ echo "$GPG_KEY" > key
 gpg --import key
 git-crypt unlock
 
-if [ "$FIRST_STEP" == "true" ]; then
+if [ "$IGNORE_SETUP" == "true" ]; then
   exit 0
 fi
 
