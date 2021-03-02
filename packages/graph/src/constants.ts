@@ -6,7 +6,6 @@ export const isNode = process.env.TARGET !== 'web' || !getWindow() || false
 
 export const isProd =
   process.env.IS_LIVE === '1' ||
-  process.env.NODE_ENV === 'production' ||
   getWindow()?.location?.hostname.includes('live') ||
   false
 
@@ -73,3 +72,8 @@ export const MARTIN_TILES_HOST = (() => {
   if (isStaging) return staging
   return dev
 })()
+
+export const GRAPH_DOMAIN =
+  process.env.HASURA_ENDPOINT || 'http://localhost:8080'
+export const GRAPH_API_INTERNAL = `${GRAPH_DOMAIN}/v1/graphql`
+export const GRAPH_API = `${DISH_API_ENDPOINT}/api/graph`

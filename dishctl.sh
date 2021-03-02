@@ -343,7 +343,7 @@ function local_node_with_staging_env() {
 }
 
 function dish_app_generate_tags() {
-  export HASURA_ENDPOINT=https://hasura-staging.dishapp.com
+  export HASURA_ENDPOINT=https://hasura.dishapp.com
   export HASURA_SECRET="password"
   export IS_LIVE=1
   pushd $PROJECT_ROOT/dish-app

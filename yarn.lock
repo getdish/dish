@@ -11003,6 +11003,13 @@ json-buffer@3.0.1:
   resolved "https://registry.npmjs.org/json-buffer/-/json-buffer-3.0.1.tgz#9338802a30d3b6605fbe0613e094008ca8c05a13"
   integrity sha512-4bV5BfR2mqfQTJm+V5tPPdf+ZpuhiIvTuAB5g8kcrXOZpTT/QwwVRWBywX1ozr6lEuPdbHxwaJlm9G6mI2sfSQ==
 
+json-filter-cli@1.0.0:
+  version "1.0.0"
+  resolved "https://registry.npmjs.org/json-filter-cli/-/json-filter-cli-1.0.0.tgz#ae5e32be779b5e943910aa13cc4e4e68a1e133d5"
+  integrity sha512-u38uFWAt+p2UolZScu2WHXlU6R5gDjAX3Dwo0bETS8A3cAWSO9b0i7CT2/Lz+yij+EOtU5CN1jHJntjfxXEGmw==
+  dependencies:
+    minimist "^1.2.0"
+
 json-parse-better-errors@^1.0.1, json-parse-better-errors@^1.0.2:
   version "1.0.2"
   resolved "https://registry.npmjs.org/json-parse-better-errors/-/json-parse-better-errors-1.0.2.tgz#bb867cfb3450e69107c131d1c514bab3dc8bcaa9"
