@@ -13,8 +13,8 @@
     ]
   },
   "scripts": {
-    "trim-for-build": "npx json-filter --from=package.json --to=package.json --exclude=scripts",
-    "trim-for-build:all": "yarn trim-for-build && ultra -r npx json-filter --from=package.json --to=package.json --exclude=scripts",
+    "trim-package": "yes | npx json-filter-cli --from=package.json --to=package.json --exclude=scripts",
+    "trim-packages": "yarn trim-package && npx ultra -r npx json-filter-cli --confirm --from=package.json --to=package.json --exclude=scripts",
     "bootstrap": "docker-compose build base",
     "start": "docker-compose -f docker-compose-m1.yml up",
     "start:test": "rm -r ~/.dish/postgresdb/test || true; POSTGRES_DB=test docker-compose -f docker-compose-m1.yml up",
