@@ -2,7 +2,14 @@
 
 *__snack.css
 
-.yarn
+.yarn/*
+!.yarn/cache
+!.yarn/patches
+!.yarn/plugins
+!.yarn/releases
+!.yarn/sdks
+!.yarn/versions
+
 # keep it in repo for fast builds
 .ultra.cache.json
 tmp

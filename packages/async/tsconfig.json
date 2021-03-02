@@ -1,11 +1,15 @@
 {
   "extends": "../../tsconfig.base",
 
+  "typeAcquisition": {
+    "enable": true
+  },
+
   "compilerOptions": {
     "composite": true,
     "baseUrl": ".",
     "outDir": "_",
-    "rootDir": "src"
+    "rootDir": "src",
   },
 
   "include": ["src"],

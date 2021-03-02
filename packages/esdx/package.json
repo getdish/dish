@@ -2,22 +2,24 @@
   "name": "@dish/esdx",
   "version": "0.0.1",
   "bin": {
-    "esdx": "./esdx",
-    "esdx-watch": "./esdx-watch"
+    "esdx": "./esdx.js",
+    "esdx-watch": "./esdx-watch.js"
   },
   "scripts": {
     "build": "true",
     "watch": "true"
   },
-  "files": [
-    "esdx.sh",
-    "esdx-watch.sh"
-  ],
   "dependencies": {
     "chokidar-cli": "^2.1.0",
     "esbuild": "^0.8.53",
     "esbuild-node-tsc": "^1.2.0",
+    "esbuild-plugin-pnp": "^0.3.0",
+    "execa": "^5.0.0",
+    "fast-glob": "^3.2.5",
     "typescript": "*"
+  },
+  "devDependencies": {
+    "@types/node": "*"
   },
   "publishConfig": {
     "access": "public"

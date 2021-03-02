@@ -15,7 +15,6 @@
     "noImplicitReturns": false,
     "skipLibCheck": true,
     "target": "es2019",
-    "allowJs": true,
     "baseUrl": ".",
     "strict": false,
     "strictNullChecks": true,
