@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-set -exo pipefail
+set -eo pipefail
 
 export DISH_IMAGE_TAG=":latest"
 
@@ -44,7 +44,7 @@ chown -R root:root $HOME/.dish/postgres
 docker-compose rm -f postgres
 docker-compose build postgres
 docker-compose up -d postgres
-sleep 4
+sleep 2
 docker-compose down
 
 echo "Starting docker for tests"
@@ -57,7 +57,7 @@ if ! timeout --preserve-status 20 bash -c wait_until_hasura_ready; then
 fi
 
 # let it finish setting up
-sleep 4
+sleep 2
 
 echo "Migrating DB"
 ./dishctl.sh db_migrate_local init

@@ -17,4 +17,8 @@ if [ "$DOCKER_CLEAN" == "true" ]; then
   docker images -a
 fi
 
+if [ "$BUILDKITE_COMMAND_EXIT_STATUS" = "1" ]; then
+  docker-compose down || true
+fi
+
 echo "bye"

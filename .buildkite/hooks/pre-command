@@ -4,6 +4,20 @@ set -eo pipefail
 
 export PATH=$PATH:$HOME/bin
 
+if ($(which git-crypt > /dev/null)); then
+  echo "git-crypt installed"
+else
+  echo "Decrypting Dish secrets..."
+  KEY_PATH=/tmp/gitcrypt-key
+  apt-get install -y git-crypt
+  echo "$GPG_KEY" > key
+  gpg --import key
+  gpg --list-keys
+  git reset --hard
+fi
+
+git-crypt unlock
+
 if [ "$FIRST_STEP" == "true" ]; then
   exit 0
 fi
@@ -29,30 +43,21 @@ if [ ! -f /usr/local/bin/hasura ]; then
   curl -L https://github.com/hasura/graphql-engine/raw/stable/cli/get.sh | bash
 fi
 
-if ($(which git-crypt > /dev/null)); then
-  echo "git-crypt installed"
-else
-  echo "Decrypting Dish secrets..."
-  KEY_PATH=/tmp/gitcrypt-key
-  apt-get install -y git-crypt
-  echo "$GPG_KEY" > key
-  gpg --import key
-  gpg --list-keys
-  git reset --hard
-fi
-
-git-crypt unlock
-
 export PATH=$PATH:"$HOME/bin/google-cloud-sdk/bin"
 
 if ($(which gcloud > /dev/null)); then
   echo "gcloud installed"
   ./dishctl.sh gcloud_init
 else
+  apt-get install -y libssl-dev libffi-dev
   ./dishctl.sh install_gcloud_sdk
 fi
+export LD_LIBRARY_PATH=/usr/local/lib"
+
+gcloud --version
 
 ./dishctl.sh dish_docker_login
+
 
 PWD=$(pwd)
 export GOOGLE_APPLICATION_CREDENTIALS="$PWD/k8s/etc/dish-gcloud.enc.json"
