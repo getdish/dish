@@ -4,9 +4,6 @@
 FROM node:15.10.0-buster as copy-stage
 WORKDIR /app
 
-COPY bin bin
-RUN ./bin/preinstall.sh
-
 # for caching
 RUN mkdir -p /data/.cache/yarn
 RUN yarn config set cache-folder /data/.cache/yarn
@@ -41,6 +38,8 @@ COPY dish-app/etc dish-app/etc
 
 # install
 RUN yarn install --frozen-lockfile
+# TODO to persists cache, move it?
+RUN yarn cache clean
 
 # clean a bit of native-only deps
 RUN rm -r dish-app/node_modules/jsc-android || true

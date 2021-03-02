@@ -13,7 +13,6 @@
     ]
   },
   "scripts": {
-    "trigger": "ok",
     "bootstrap": "docker-compose build base",
     "start": "docker-compose -f docker-compose-m1.yml up",
     "start:test": "rm -r ~/.dish/postgresdb/test || true; POSTGRES_DB=test docker-compose -f docker-compose-m1.yml up",
