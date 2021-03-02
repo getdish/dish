@@ -38,10 +38,12 @@ export PATH=$PATH:"$HOME/bin/google-cloud-sdk/bin"
 
 if ($(which gcloud > /dev/null)); then
   echo "gcloud installed"
+  gcloud config set component_manager/disable_update_check true
   ./dishctl.sh gcloud_init
 else
   apt-get install -y libssl-dev libffi-dev
   ./dishctl.sh install_gcloud_sdk
+  gcloud config set component_manager/disable_update_check true
 fi
 export LD_LIBRARY_PATH="/usr/local/lib"
 

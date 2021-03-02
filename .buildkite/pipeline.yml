@@ -20,11 +20,7 @@ steps:
             args: "--endpoint-url=https://sfo2.digitaloceanspaces.com"
             bucket: "dish-build-cache"
           paths:
-            - '/data/.cache/yarn/'
-            - 'node_modules/'
-            - 'dish-app/node_modules/'
-            - 'packages/*/node_modules/'
-            - 'services/*/node_modules/'
+            - '/data/'
       - docker-compose#v3.7.0:
           build:
             - base
@@ -32,8 +28,10 @@ steps:
           cache-from: base:gcr.io/dish-258800/base:latest
           push: base:gcr.io/dish-258800/base:latest
           volumes:
-            - "./data:/data"
             - "./dist:/app/dist"
+            - "/data:/data"
+            - "/data/node_modules:/app/node_modules"
+            - "/data/dish-app/node_modules:/app/dish-app/node_modules"
 
   - label: ":docker: build search"
     plugins:
