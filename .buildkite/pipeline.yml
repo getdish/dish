@@ -6,7 +6,7 @@ env:
 
 steps:
   - label: ":docker: build base & non-base dependent images"
-    command: "echo ok"
+    command: "echo go"
     env:
       IGNORE_SETUP: true
 
