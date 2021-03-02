@@ -5,14 +5,13 @@ PROJECT_ROOT=$(git rev-parse --show-toplevel)
 
 cd $PROJECT_ROOT
 
-echo /data
-echo $HOME/data
-
 echo "~~~ :docker: pull latest"
 
 docker pull gcr.io/dish-258800/base:latest
 
 echo "~~~ :docker: create dockerfile"
+
+ls -la /data
 
 docker_compose_file="docker-compose.buildkite-$BUILDKITE_BUILD_NUMBER-override.yml"
 tag="$BUILDKITE_PIPELINE_NAME-base-$BUILDKITE_BUILD_NUMBER"
@@ -40,7 +39,7 @@ docker-compose -f docker-compose.yml \
  build --pull base
 
 echo "~~~ check out cache!!!"
-la -la /data
+ls -la /data
 
 echo "~~~ :docker: push image"
 
