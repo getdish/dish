@@ -5,7 +5,7 @@
     "composite": true,
     "baseUrl": ".",
     "outDir": "_",
-    "rootDir": "src",
+    "rootDir": "src"
   },
 
   "include": ["src"],

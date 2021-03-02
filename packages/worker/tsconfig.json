@@ -3,7 +3,6 @@
 
   "compilerOptions": {
     "composite": true,
-    "strictNullChecks": true,
     "outDir": "_",
     "rootDir": "src",
     "baseUrl": "."

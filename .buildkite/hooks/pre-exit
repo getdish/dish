@@ -1,6 +1,6 @@
 #!/bin/bash
 
-set -exo pipefail
+set -eo pipefail
 
 if [ "$FIRST_STEP" == "true" ]; then
   exit 0
@@ -12,14 +12,15 @@ if [ "$LOG_DOCKER" == "true" ]; then
   cat *.logs || true
 fi
 
+if [ "$BUILDKITE_COMMAND_EXIT_STATUS" = "1" ]; then
+  echo "failed, shutting down"
+  docker-compose down --volumes || true
+fi
+
 if [ "$DOCKER_CLEAN" == "true" ]; then
   docker system prune -a --filter "until=1h" --force
   docker system df
   docker images -a
-fi
-
-if [ "$BUILDKITE_COMMAND_EXIT_STATUS" = "1" ]; then
-  docker-compose down --volumes || true
 fi
 
 echo "bye"

@@ -10,7 +10,7 @@ export async function flushTestData() {
       )
       process.exit(0)
     }
-  }, 3000)
+  }, 6000)
 
   await deleteAllFuzzyBy('review', 'text', 'test')
   hasCompletedSome = true

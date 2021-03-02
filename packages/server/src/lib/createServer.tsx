@@ -86,7 +86,7 @@ async function createApiServer(
 ) {
   const port = await getPort()
   const pa = `localhost:${port}`
-  console.log('proxy', pa)
+  console.log('proxy to api sub-server', pa)
   app.use('/api', proxy(pa))
   const file = require.resolve('./createApiServer.worker')
   const worker = new Worker(file, {
