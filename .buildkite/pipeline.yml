@@ -5,7 +5,7 @@ env:
   DISH_ENDPOINT: 'http://localhost:4444'
 
 steps:
-  - label: ":docker: build base"
+  - label: ":docker: build base & non-base dependent images"
     plugins:
       - docker-compose#v3.7.0:
           build:
@@ -16,15 +16,13 @@ steps:
           volumes:
             - "./dist:/app/dist"
 
-  - wait
-
-  - label: ":docker: build dish-hooks"
+  - label: ":docker: build search"
     plugins:
       - docker-compose#v3.7.0:
-          build: dish-hooks
-          image-repository: gcr.io/dish-258800/dish-hooks
-          cache-from: base:gcr.io/dish-258800/dish-hooks:latest
-          push: dish-hooks:gcr.io/dish-258800/dish-hooks:latest
+          build: search
+          image-repository: gcr.io/dish-258800/search
+          cache-from: base:gcr.io/dish-258800/search:latest
+          push: search:gcr.io/dish-258800/search:latest
 
   - label: ":docker: build hasura"
     plugins:
@@ -34,13 +32,31 @@ steps:
           cache-from: base:gcr.io/dish-258800/hasura:latest
           push: hasura:gcr.io/dish-258800/hasura:latest
 
-  - label: ":docker: build search"
+  - label: ":docker: build tileserver"
     plugins:
       - docker-compose#v3.7.0:
-          build: search
-          image-repository: gcr.io/dish-258800/search
-          cache-from: base:gcr.io/dish-258800/search:latest
-          push: search:gcr.io/dish-258800/search:latest
+          build: tileserver
+          image-repository: gcr.io/dish-258800/tileserver
+          cache-from: base:gcr.io/dish-258800/tileserver:latest
+          push: tileserver:gcr.io/dish-258800/tileserver:latest
+
+  - label: ":docker: build image-proxy"
+    plugins:
+      - docker-compose#v3.7.0:
+          build: image-proxy
+          image-repository: gcr.io/dish-258800/image-proxy
+          cache-from: base:gcr.io/dish-258800/image-proxy:latest
+          push: image-proxy:gcr.io/dish-258800/image-proxy:latest
+
+  - wait
+
+  - label: ":docker: build dish-hooks"
+    plugins:
+      - docker-compose#v3.7.0:
+          build: dish-hooks
+          image-repository: gcr.io/dish-258800/dish-hooks
+          cache-from: base:gcr.io/dish-258800/dish-hooks:latest
+          push: dish-hooks:gcr.io/dish-258800/dish-hooks:latest
 
   - label: ":docker: build dish-app-web"
     plugins:
@@ -57,14 +73,6 @@ steps:
           image-repository: gcr.io/dish-258800/worker
           cache-from: base:gcr.io/dish-258800/worker:latest
           push: worker:gcr.io/dish-258800/worker:latest
-
-  - label: ":docker: build tileserver"
-    plugins:
-      - docker-compose#v3.7.0:
-          build: tileserver
-          image-repository: gcr.io/dish-258800/tileserver
-          cache-from: base:gcr.io/dish-258800/tileserver:latest
-          push: tileserver:gcr.io/dish-258800/tileserver:latest
 
   - label: ":docker: build postgres for testing"
     plugins:

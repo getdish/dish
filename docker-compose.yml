@@ -108,8 +108,8 @@ services:
   search:
     image: gcr.io/dish-258800/dish/search${DISH_IMAGE_TAG}
     build:
-      context: .
-      dockerfile: ./services/search/Dockerfile
+      context: ./services/search
+      dockerfile: ./Dockerfile
     ports:
       - 10000:10000
     environment:
@@ -178,9 +178,11 @@ services:
       - VIRTUAL_HOST=image-quality-staging.dishapp.com
   image-proxy:
     image: gcr.io/dish-258800/imageproxy
+    build:
+      context: ./services/image-proxy
+      dockerfile: ./Dockerfile
     ports:
       - 8881:8080
-    command: '-addr 0.0.0.0:8080 -cache /image-cache'
     environment:
       - VIRTUAL_HOST=images-staging.dishapp.com
   nginx-web:

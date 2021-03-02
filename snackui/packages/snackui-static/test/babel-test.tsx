@@ -22,6 +22,7 @@ export const test = anyTest as TestInterface<{
 }>
 
 test.before(async (t) => {
+  t.timeout(120)
   await extractStaticApp()
   process.env.IS_STATIC = undefined
   t.context.app = require(outFileFull)

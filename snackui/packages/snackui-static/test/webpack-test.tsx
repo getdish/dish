@@ -19,6 +19,7 @@ process.env.NODE_ENV = 'test'
 // process.env.IDENTIFY_TAGS = 'true'
 
 test.before(async (t) => {
+  t.timeout(120)
   await extractStaticApp()
   process.env.IS_STATIC = undefined
   const app = require(outFileFull)
