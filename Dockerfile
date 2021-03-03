@@ -53,6 +53,6 @@ COPY snackui snackui
 
 RUN (cd packages/esdx && yarn link) && \
   yarn build && \
-  rm -r node_modules && yarn install --production --offline
+  yarn install --production --offline
 
 CMD ["true"]
