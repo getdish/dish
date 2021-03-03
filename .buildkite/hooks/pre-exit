@@ -8,7 +8,7 @@ fi
 
 if [ "$LOG_DOCKER" == "true" ]; then
   echo "docker logs..."
-  docker-compose logs --tail 5000
+  docker-compose logs --tail 2000
   cat *.logs || true
 fi
 
@@ -19,8 +19,8 @@ fi
 
 if [ "$BUILDKITE_COMMAND_EXIT_STATUS" = "1" ] || [ "$DOCKER_CLEAN" == "true" ]; then
   docker system prune -a --filter "until=1h" --force || true
-  docker system df || true
-  docker images -a || true
+  docker system df | head -n 20 || true
+  docker images -a | head -n 20 || true
 fi
 
 echo "bye"

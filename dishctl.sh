@@ -837,7 +837,7 @@ function build_all_dish_services() {
   echo "Building worker, dish-hooks, search, dish-app in parallel..."
   parallel -j 4 --tag --lb _build_dish_service ::: \
     'services/worker' \
-    'services/dish-hooks' \
+    'services/hooks' \
     'services/search' \
     'dish-app'
   echo "...all Dish services built."

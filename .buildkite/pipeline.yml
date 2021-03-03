@@ -10,27 +10,12 @@ env:
 steps:
   - label: ":docker: build base"
     plugins:
-      # - gencer/cache#v2.3.10:
-      #     backend: s3
-      #     key: "v1-cache-{{ runner.os }}-base-yarn"
-      #     s3:
-      #       args: "--endpoint-url=https://sfo2.digitaloceanspaces.com"
-      #       bucket: "dish-build-cache"
-      #     paths:
-      #       - './data/'
-      - docker-compose#v3.7.0:
-          build:
-            - base
-          image-repository: gcr.io/dish-258800/base
-          cache-from: base:gcr.io/dish-258800/base:latest
-          push: base:gcr.io/dish-258800/base:latest
-          # cant mount volumes on build
-          # see: https://github.com/buildkite-plugins/docker-compose-buildkite-plugin/issues/298
-          # volumes:
-          #   - "./dist:/app/dist"
-          #   - "./data:/data"
-          #   - "./data/node_modules:/app/node_modules"
-          #   - "./data/dish-app/node_modules:/app/dish-app/node_modules"
+      - seek-oss/docker-ecr-cache#v1.9.0:
+          registry-provider: gcr
+          gcp-project: dish-258800
+          cache-on:
+            - yarn.lock
+            - '**/package.json'
 
 
   # can run conncurrently here because its only deleting old images
@@ -91,7 +76,6 @@ steps:
   - wait
 
   - label: ":docker: base-dependent images"
-    command: "echo ok"
     env:
       IGNORE_SETUP: true
       DOCKER_BUILDKIT: 1
@@ -159,4 +143,4 @@ steps:
   - label: "finish"
     command: "echo done"
     env:
-      DOCKER_CLEAN: true
+      FINISH: true
