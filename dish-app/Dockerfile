@@ -2,10 +2,9 @@ ARG DISH_BASE_VERSION=latest
 FROM gcr.io/dish-258800/base:$DISH_BASE_VERSION
 
 # slim it down
-RUN rm -r services
-RUN rm -r packages/esdx
-RUN rm -r packages/react-test-env
-RUN rm -r packages/worker
+RUN rm -r services \
+      && rm -r packages/react-test-env \
+      && rm -r packages/worker
 
 WORKDIR /app/dish-app
 

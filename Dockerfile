@@ -1,13 +1,8 @@
 # STEP 1
 # everything that goes into deterministic yarn goes on this step
 
-FROM node:15.10.0-buster as copy-stage
+FROM node:15.10.0-buster as base
 WORKDIR /app
-
-# ENV YARN_VERSION 2.4.0
-# # for caching
-# RUN mkdir -p /data/.cache/yarn && \
-#   yarn config set cache-folder /data/.cache/yarn
 
 ENV PATH=$PATH:/app/node_modules/.bin:node_modules/.bin
 ENV NODE_OPTIONS="--max_old_space_size=8192"
@@ -24,8 +19,8 @@ COPY package.json .
 # remove most files (only keep stuff for install)
 RUN find . \! -name "package.json" -not -path "*/bin/*" -type f -print | xargs rm -rf
 
-FROM node:15.10.0-buster
-COPY --from=copy-stage /app /app
+FROM node:15.10.0-buster as install-stage
+COPY --from=base /app /app
 WORKDIR /app
 
 COPY .yarnrc .
@@ -35,7 +30,13 @@ COPY bin bin
 COPY dish-app/patches dish-app/patches
 COPY dish-app/etc dish-app/etc
 
-RUN  yarn install --frozen-lockfile --ignore-optional
+# install
+RUN yarn install --production \
+  && yarn cache clean \
+   rm -r dish-app/node_modules/jsc-android || true
+   rm -r dish-app/node_modules/react-native || true
+   rm -r node_modules/jsc-android || true
+   rm -r node_modules/hermes-engine || true
 
 COPY .prettierignore .
 COPY .prettierrc .
@@ -44,12 +45,13 @@ COPY tsconfig.build.json .
 COPY tsconfig.base.parent.json .
 COPY tsconfig.base.json .
 COPY ava.config.js .
+COPY packages packages
+COPY services services
+COPY dish-app dish-app
+COPY snackui snackui
 
-# autoreconf for node-jq
-RUN (cd packages/esdx && yarn link) \
-  && yarn build \
-  && rm -r node_modules \
-  && yarn install --production --ignore-optional --offline \
-  && yarn cache clean
+RUN (cd packages/esdx && yarn link) && \
+  yarn build && \
+  rm -r node_modules && yarn install --production --offline
 
 CMD ["true"]
