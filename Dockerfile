@@ -43,4 +43,5 @@ COPY snackui snackui
 
 RUN yarn build
 
+
 CMD ["true"]
