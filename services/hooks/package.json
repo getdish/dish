@@ -15,11 +15,11 @@
     "start": "node ./dist/index.js"
   },
   "dependencies": {
+    "@dish/esdx": "*",
     "express": "^4.17.1",
     "node-fetch": "^2.6.1"
   },
   "devDependencies": {
-    "@dish/esdx": "*",
     "typescript": "*",
     "ava": "^3.14.0"
   }
