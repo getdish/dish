@@ -1766,7 +1766,6 @@ __metadata:
     multer-s3: ^2.9.0
     patch-package: ^6.2.2
     polylabel: ^1.1.0
-    postinstall-postinstall: ^2.1.0
     prop-types: ^15.7.2
     react: "*"
     react-dom: "*"
@@ -18215,13 +18214,6 @@ __metadata:
   dependencies:
     xtend: ^4.0.0
   checksum: a882aae6c34a85ac6054d9c950d36bf2455cada769598c2eaf28326a45a722f23b8ba8b96efde939f38a663d5fc51ff93241afedf186ac9e9f9cf0af177370a1
-  languageName: node
-  linkType: hard
-
-"postinstall-postinstall@npm:^2.1.0":
-  version: 2.1.0
-  resolution: "postinstall-postinstall@npm:2.1.0"
-  checksum: e637f608f504ead45a2cc457db40cc70aab392d19504db5d7d55a84c0d04024d6d36393e066f001cdf0c8a634b2866c41df40fc964b3e88fc1c1672efde5c6be
   languageName: node
   linkType: hard
 
