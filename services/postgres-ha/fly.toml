@@ -1,4 +1,4 @@
-app = "dish-postgres"
+app = "dish-db"
 
 kill_signal = "SIGTERM"
 kill_timeout = 300
@@ -36,5 +36,5 @@ metrics_port    = 9187
 metrics_path    = "/metrics"
 
 [mount]
-source      = "dish_data"
+source      = "dish_db"
 destination = "/data"

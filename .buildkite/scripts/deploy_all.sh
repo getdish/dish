@@ -18,13 +18,13 @@ export FLY_API_TOKEN=$FLY_API_TOKEN
 
 # deploy
 echo "deploying..."
-./dishctl.sh deploy_fly_app dish-app dish-app dish-app-web &
-./dishctl.sh deploy_fly_app dish-hasura services/hasura hasura  &
-./dishctl.sh deploy_fly_app dish-search services/search search  &
-./dishctl.sh deploy_fly_app dish-timescale services/timescaledb timescaledb  &
-./dishctl.sh deploy_fly_app dish-tileserver services/tileserver tileserver  &
-./dishctl.sh deploy_fly_app dish-hooks services/dish-hooks dish-hooks  &
-./dishctl.sh deploy_fly_app dish-worker services/worker worker  &
+./dishctl.sh deploy_fly_app dish-app dish-app dish-app-web | sed  's/^/[web] /'  &
+./dishctl.sh deploy_fly_app dish-hasura services/hasura hasura  | sed  's/^/[hasura] /'  &
+./dishctl.sh deploy_fly_app dish-search services/search search  | sed  's/^/[search] /'  &
+./dishctl.sh deploy_fly_app dish-timescale services/timescaledb timescaledb | sed  's/^/[timescaledb] /'  &
+./dishctl.sh deploy_fly_app dish-tileserver services/tileserver tileserver | sed  's/^/[tileserver] /'  &
+./dishctl.sh deploy_fly_app dish-hooks services/dish-hooks dish-hooks | sed  's/^/[hooks] /'  &
+./dishctl.sh deploy_fly_app dish-worker services/worker worker | sed  's/^/[worker] /'  &
 wait -n
 
 # post to slack

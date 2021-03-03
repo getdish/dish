@@ -7,9 +7,7 @@ RUN rm -r packages/server && \
       rm -r packages/webpack && \
       rm -r packages/router && \
       rm -r packages/esdx && \
-      rm -r services
-
-COPY services/dish-hooks .
+      (cd services && find . ! -name 'dish-hooks' -type d -exec rm -f {} +)
 
 WORKDIR /app/services/dish-hooks
 RUN echo "deb http://deb.debian.org/debian buster-backports main" >> /etc/apt/sources.list
