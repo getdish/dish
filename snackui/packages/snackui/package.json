@@ -18,7 +18,7 @@
     "@dish/proxy-worm": "^0.0.4",
     "@react-native-community/blur": "^3.6.0",
     "@snackui/helpers": "^0.0.6",
-    "@unimodules/core": "1.0.0",
+    "@unimodules/core": "^7.0.0",
     "css-mediaquery": "^0.1.2",
     "expo-linear-gradient": "^8.4.0",
     "expo-screen-orientation": "3.0.0",

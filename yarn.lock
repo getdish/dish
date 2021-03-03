@@ -3779,14 +3779,14 @@
   dependencies:
     "@types/yargs-parser" "*"
 
-"@unimodules/core@1.0.0":
-  version "1.0.0"
-  resolved "https://registry.yarnpkg.com/@unimodules/core/-/core-1.0.0.tgz#1d7e1c2fcc3d7b996339a8d5321ea0f149af94ed"
-  integrity sha512-vITn6SLpeHzbao6kyv9yFjuLkADvZw7pMjEBeKIu2p5U3yd5PLj2PMOTpEPQCvEFswkVHoxXk25TXJoRHkwcOw==
+"@unimodules/core@^7.0.0":
+  version "7.0.0"
+  resolved "https://registry.yarnpkg.com/@unimodules/core/-/core-7.0.0.tgz#0311a9c7c0a661368ceef8891f758eb2e166bdf4"
+  integrity sha512-hKxNN6ad2VmmJqB3i1C8IJe27TcchY7YAKpkQhshjPxso61f7iM7AUFeG4vcU1vPH5d/X4Vk1ds8bWxaxg7nnw==
   dependencies:
     compare-versions "^3.4.0"
 
-"@unimodules/core@^6.0.0", "@unimodules/core@~6.0.0":
+"@unimodules/core@~6.0.0":
   version "6.0.0"
   resolved "https://registry.yarnpkg.com/@unimodules/core/-/core-6.0.0.tgz#c76ca5ca92128a059c62bb0c24d0372aaf908408"
   integrity sha512-+KCVh+NjU33lkHOFiRfJZR6dDsSF8zCY1CVARMYJbQ7w1epRsalpKnCK08JoNYHQqkPR79d2zQSWMxd20zBvoA==
