@@ -48,7 +48,7 @@ RUN  find . -type f \(  -name "*.md" -o -name "*.jpg"  \) -print | xargs rm -rf
 RUN ln -s /app/packages/esdx/etc/esdx.js /app/node_modules/.bin/esdx
 RUN yarn build
 
-FROM node:15.10.0-slim
+FROM node:15.10.0-buster
 COPY --from=install /app /app
 WORKDIR /app
 
