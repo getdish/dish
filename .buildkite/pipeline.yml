@@ -8,77 +8,77 @@ env:
   DISH_ENDPOINT: 'http://localhost:4444'
 
 steps:
-  - label: ":docker: build base"
-    plugins:
-      # - gencer/cache#v2.3.10:
-      #     backend: s3
-      #     key: "v1-cache-{{ runner.os }}-base-yarn"
-      #     s3:
-      #       args: "--endpoint-url=https://sfo2.digitaloceanspaces.com"
-      #       bucket: "dish-build-cache"
-      #     paths:
-      #       - './data/'
-      - docker-compose#v3.7.0:
-          build:
-            - base
-          image-repository: gcr.io/dish-258800/base
-          cache-from: base:gcr.io/dish-258800/base:latest
-          push: base:gcr.io/dish-258800/base:latest
-          # cant mount volumes on build
-          # see: https://github.com/buildkite-plugins/docker-compose-buildkite-plugin/issues/298
-          # volumes:
-          #   - "./dist:/app/dist"
-          #   - "./data:/data"
-          #   - "./data/node_modules:/app/node_modules"
-          #   - "./data/dish-app/node_modules:/app/dish-app/node_modules"
+  # - label: ":docker: build base"
+  #   plugins:
+  #     # - gencer/cache#v2.3.10:
+  #     #     backend: s3
+  #     #     key: "v1-cache-{{ runner.os }}-base-yarn"
+  #     #     s3:
+  #     #       args: "--endpoint-url=https://sfo2.digitaloceanspaces.com"
+  #     #       bucket: "dish-build-cache"
+  #     #     paths:
+  #     #       - './data/'
+  #     - docker-compose#v3.7.0:
+  #         build:
+  #           - base
+  #         image-repository: gcr.io/dish-258800/base
+  #         cache-from: base:gcr.io/dish-258800/base:latest
+  #         push: base:gcr.io/dish-258800/base:latest
+  #         # cant mount volumes on build
+  #         # see: https://github.com/buildkite-plugins/docker-compose-buildkite-plugin/issues/298
+  #         # volumes:
+  #         #   - "./dist:/app/dist"
+  #         #   - "./data:/data"
+  #         #   - "./data/node_modules:/app/node_modules"
+  #         #   - "./data/dish-app/node_modules:/app/dish-app/node_modules"
 
 
-  # can run conncurrently here because its only deleting old images
-  # so it should have no effect on this build in general
-  - label: ":docker: clear cache"
-    command: "DOCKER_CLEAN=true .buildkite/hooks/pre-exit"
+  # # can run conncurrently here because its only deleting old images
+  # # so it should have no effect on this build in general
+  # - label: ":docker: clear cache"
+  #   command: "DOCKER_CLEAN=true .buildkite/hooks/pre-exit"
 
-  - label: ":docker: build search"
-    plugins:
-      - docker-compose#v3.7.0:
-          build: search
-          image-repository: gcr.io/dish-258800/search
-          cache-from: base:gcr.io/dish-258800/search:latest
-          push: search:gcr.io/dish-258800/search:latest
+  # - label: ":docker: build search"
+  #   plugins:
+  #     - docker-compose#v3.7.0:
+  #         build: search
+  #         image-repository: gcr.io/dish-258800/search
+  #         cache-from: base:gcr.io/dish-258800/search:latest
+  #         push: search:gcr.io/dish-258800/search:latest
 
-  - label: ":docker: build hasura"
-    plugins:
-      - docker-compose#v3.7.0:
-          build: hasura
-          image-repository: gcr.io/dish-258800/hasura
-          cache-from: base:gcr.io/dish-258800/hasura:latest
-          push: hasura:gcr.io/dish-258800/hasura:latest
+  # - label: ":docker: build hasura"
+  #   plugins:
+  #     - docker-compose#v3.7.0:
+  #         build: hasura
+  #         image-repository: gcr.io/dish-258800/hasura
+  #         cache-from: base:gcr.io/dish-258800/hasura:latest
+  #         push: hasura:gcr.io/dish-258800/hasura:latest
 
-  - label: ":docker: build timescale"
-    plugins:
-      - docker-compose#v3.7.0:
-          build: timescaledb
-          image-repository: gcr.io/dish-258800/timescaledb
-          cache-from: base:gcr.io/dish-258800/timescaledb:latest
-          push: timescaledb:gcr.io/dish-258800/timescaledb:latest
+  # - label: ":docker: build timescale"
+  #   plugins:
+  #     - docker-compose#v3.7.0:
+  #         build: timescaledb
+  #         image-repository: gcr.io/dish-258800/timescaledb
+  #         cache-from: base:gcr.io/dish-258800/timescaledb:latest
+  #         push: timescaledb:gcr.io/dish-258800/timescaledb:latest
 
-  - label: ":docker: build tileserver"
-    plugins:
-      - docker-compose#v3.7.0:
-          build: tileserver
-          image-repository: gcr.io/dish-258800/tileserver
-          cache-from: base:gcr.io/dish-258800/tileserver:latest
-          push: tileserver:gcr.io/dish-258800/tileserver:latest
+  # - label: ":docker: build tileserver"
+  #   plugins:
+  #     - docker-compose#v3.7.0:
+  #         build: tileserver
+  #         image-repository: gcr.io/dish-258800/tileserver
+  #         cache-from: base:gcr.io/dish-258800/tileserver:latest
+  #         push: tileserver:gcr.io/dish-258800/tileserver:latest
 
-  - label: ":docker: build image-proxy"
-    plugins:
-      - docker-compose#v3.7.0:
-          build: image-proxy
-          image-repository: gcr.io/dish-258800/image-proxy
-          cache-from: base:gcr.io/dish-258800/image-proxy:latest
-          push: image-proxy:gcr.io/dish-258800/image-proxy:latest
+  # - label: ":docker: build image-proxy"
+  #   plugins:
+  #     - docker-compose#v3.7.0:
+  #         build: image-proxy
+  #         image-repository: gcr.io/dish-258800/image-proxy
+  #         cache-from: base:gcr.io/dish-258800/image-proxy:latest
+  #         push: image-proxy:gcr.io/dish-258800/image-proxy:latest
 
-  - wait
+  # - wait
 
   - label: ":docker: base-dependent images"
     command: "echo ok"
