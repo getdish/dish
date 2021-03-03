@@ -30,19 +30,19 @@ module.exports = (opts) => {
       favicon: 'src/web/favicon.png',
       template: path.join(__dirname, 'src/index.html'),
     },
-    pwaOptions: {
-      name: 'Dish',
-      short_name: 'Dish',
-      description: 'The Food Pokedex',
-      background_color: '#000',
-      crossorigin: 'use-credentials',
-      icons: [
-        {
-          src: path.resolve('src/assets/icon.png'),
-          sizes: [96, 128, 192, 512, 1024],
-        },
-      ],
-    },
+    // pwaOptions: {
+    //   name: 'Dish',
+    //   short_name: 'Dish',
+    //   description: 'The Food Pokedex',
+    //   background_color: '#000',
+    //   crossorigin: 'use-credentials',
+    //   icons: [
+    //     {
+    //       src: path.resolve('src/assets/icon.png'),
+    //       sizes: [96, 128, 192, 512, 1024],
+    //     },
+    //   ],
+    // },
   })
 }
 

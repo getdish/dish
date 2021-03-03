@@ -1789,6 +1789,9 @@ __metadata:
     tabletojson: ^2.0.4
     transliteration: ^2.1.8
     typescript: "*"
+  dependenciesMeta:
+    bull-repl:
+      optional: true
   languageName: unknown
   linkType: soft
 
@@ -1930,8 +1933,8 @@ __metadata:
     esbuild-plugin-pnp: ^0.3.0
     typescript: "*"
   bin:
-    esdx: ./esdx.sh
-    esdx-watch: ./esdx-watch.sh
+    esdx: etc/esdx.js
+    esdx-watch: etc/esdx-watch.js
   languageName: unknown
   linkType: soft
 

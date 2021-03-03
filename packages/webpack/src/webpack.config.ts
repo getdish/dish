@@ -36,7 +36,7 @@ export function createWebpackConfig({
   polyFillPath,
   htmlOptions,
   defineOptions,
-  pwaOptions,
+  // pwaOptions,
   noMinify,
 }: CreateWebpackConfig): Webpack.Configuration {
   const isProduction = env === 'production'

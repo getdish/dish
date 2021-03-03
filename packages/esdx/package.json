@@ -2,8 +2,8 @@
   "name": "@dish/esdx",
   "version": "0.0.1",
   "bin": {
-    "esdx": "./esdx.sh",
-    "esdx-watch": "./esdx-watch.sh"
+    "esdx": "etc/esdx.js",
+    "esdx-watch": "etc/esdx-watch.js"
   },
   "scripts": {
     "build": "true",
