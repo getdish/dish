@@ -9,14 +9,14 @@ RUN \
       && apt-get clean \
       && rm -rf /var/lib/apt/lists/*
 
-FROM gcr.io/dish-258800/base:$DISH_BASE_VERSION as base
+FROM gcr.io/dish-258800/base:$DISH_BASE_VERSION
 
 WORKDIR /app/dish-app
 ENV NODE_ENV=production
 
 RUN yarn web:build
 
-FROM node:15.10.0-buster-slim as slim
+FROM node:15.10.0-buster-slim
 WORKDIR /app
 COPY --from=base /app/node_modules /app/node_modules
 COPY --from=base /app/snackui /app/snackui
