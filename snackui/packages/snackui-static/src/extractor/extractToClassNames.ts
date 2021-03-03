@@ -279,7 +279,6 @@ export function extractToClassNames(
 
   if (styles) {
     // add import to styles file
-    const displayPath = `${sourceFileName}.css`
     let importPath = ''
     if (shouldInternalDedupe) {
       // in dev mode, dedupe ourselves
