@@ -11,6 +11,7 @@ ENV PUPPETEER_SKIP_CHROMIUM_DOWNLOAD=true
 
 # copy everything
 COPY packages packages
+COPY services services
 COPY dish-app dish-app
 COPY snackui snackui
 COPY package.json .
@@ -24,7 +25,6 @@ WORKDIR /app
 
 COPY yarn.lock .
 COPY patches patches
-COPY services services
 COPY bin bin
 COPY dish-app/patches dish-app/patches
 COPY dish-app/etc dish-app/etc
@@ -40,6 +40,7 @@ COPY services services
 COPY dish-app dish-app
 COPY snackui snackui
 
-RUN  yarn build && (cd packages/esdx && yarn link)
+RUN (cd packages/esdx && yarn link) \
+  && yarn build
 
 CMD ["true"]
