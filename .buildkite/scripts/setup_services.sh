@@ -43,11 +43,9 @@ chown -R root:root $HOME/.dish/postgres
 export POSTGRES_STRATEGY=simple
 
 # Postgres needs 2 starts to get everything set up
-docker-compose rm -f postgres
-docker-compose build postgres
 docker-compose up -d postgres
-sleep 2
-docker-compose down
+sleep 4
+docker-compose down -t 3
 
 echo "Starting docker for tests"
 ./dishctl.sh docker_compose_up_for_tests -d
