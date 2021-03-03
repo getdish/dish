@@ -1,5 +1,5 @@
 {
-  "name": "@dish/worker-service",
+  "name": "@dish/worker-app",
   "version": "0.0.1",
   "main": "dist",
   "sideEffects": false,

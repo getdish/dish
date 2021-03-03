@@ -1,5 +1,5 @@
 {
-  "name": "@dish/dish-hooks",
+  "name": "@dish/hooks",
   "version": "0.0.1",
   "description": "",
   "main": "dist",
@@ -19,8 +19,8 @@
     "node-fetch": "^2.6.1"
   },
   "devDependencies": {
-    "typescript": "*",
     "@dish/esdx": "*",
+    "typescript": "*",
     "ava": "^3.14.0"
   }
 }
