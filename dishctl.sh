@@ -1105,27 +1105,52 @@ function sync_local_code_to_staging() {
   rsync -avP --filter=':- .gitignore' . root@ssh.staging.dishapp.com:/app
 }
 
-function deploy_fly_app() {
-  app=$1
-  folder=$2
-  image_name=${3:-$1}
-  echo "deploying $app in $folder to image $image_name"
-  # OPS_FOLDER="$PROJECT_ROOT/.ops/$app"
-  # mkdir -p $OPS_FOLDER
-  # cp $folder/fly.toml $OPS_FOLDER
-  # pushd $OPS_FOLDER
-  # deploy
+function deploy_all() {
+  where=${1:-registry}
+  echo "deploying apps via $where"
+  deploy app $where &
+  deploy hasura $where &
+  deploy search $where &
+  deploy timescale $where &
+  deploy tileserver $where &
+  deploy hooks $where &
+  deploy worker $where &
+  wait -n
+}
 
+function deploy() {
+  app=$1
+  where=${2:-registry}
+  # todo begrudingly learn bash
+  if [ $app = "" ]; then exit 1; fi
+  if [ $app = "app" ];          then deploy_fly_app $where dish-app dish-app dish-app-web; fi
+  if [ $app = "hasura" ];       then deploy_fly_app $where dish-hasura services/hasura hasura; fi
+  if [ "$app" = "search" ];     then deploy_fly_app $where dish-search services/search search; fi
+  if [ "$app" = "timescale" ];  then deploy_fly_app $where dish-timescale services/timescaledb timescaledb; fi
+  if [ "$app" = "tileserver" ]; then deploy_fly_app $where dish-tileserver services/tileserver tileserver; fi
+  if [ "$app" = "hooks" ];      then deploy_fly_app $where dish-hooks services/hooks dish-hooks; fi
+  if [ "$app" = "worker" ];     then deploy_fly_app $where dish-worker services/worker worker; fi
+}
+
+function deploy_fly_app() {
+  where=$1
+  app=$2
+  folder=$3
+  image_name=${4:-$1}
+  tag=${5:-latest}
+  echo "deploying $app in $folder to image $image_name"
   pushd $folder
   if [ -f ".ci/pre_deploy.sh" ]; then
-    .ci/pre_deploy.sh
+    eval $(yaml_to_env) .ci/pre_deploy.sh
   fi
-  flyctl auth docker
-  docker tag gcr.io/dish-258800/$image_name:latest registry.fly.io/$app:latest
-  docker push registry.fly.io/$app:latest
-  flyctl deploy -i registry.fly.io/$app:latest
+  if [ "$where" = "registry" ]; then
+    flyctl auth docker
+    docker tag gcr.io/dish-258800/$image_name:$tag registry.fly.io/$app:$tag
+    docker push registry.fly.io/$app:$tag
+  fi
+  flyctl deploy -i registry.fly.io/$app:$tag
   if [ -f ".ci/post_deploy.sh" ]; then
-    .ci/pre_deploy.sh
+    eval $(yaml_to_env) .ci/pre_deploy.sh
   fi
   popd
 }

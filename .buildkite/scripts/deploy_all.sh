@@ -22,15 +22,7 @@ set +a
 export FLY_API_TOKEN=$FLY_API_TOKEN
 
 # deploy
-echo "deploying..."
-./dishctl.sh deploy_fly_app dish-app dish-app dish-app-web &
-./dishctl.sh deploy_fly_app dish-hasura services/hasura hasura  &
-./dishctl.sh deploy_fly_app dish-search services/search search  &
-./dishctl.sh deploy_fly_app dish-timescale services/timescaledb timescaledb &
-./dishctl.sh deploy_fly_app dish-tileserver services/tileserver tileserver &
-./dishctl.sh deploy_fly_app dish-hooks services/dish-hooks dish-hooks &
-./dishctl.sh deploy_fly_app dish-worker services/worker worker &
-wait -n
+./dishctl.sh deploy_all
 
 # post to slack
 commit=$(git rev-parse HEAD)
