@@ -1,7 +1,7 @@
 # STEP 1
 # everything that goes into deterministic yarn goes on this step
 
-FROM node:15.10.0-alpine as copy-stage
+FROM node:15.10.0-buster as copy-stage
 WORKDIR /app
 
 # ENV YARN_VERSION 2.4.0
@@ -24,7 +24,7 @@ COPY package.json .
 # remove most files (only keep stuff for install)
 RUN find . \! -name "package.json" -not -path "*/bin/*" -type f -print | xargs rm -rf
 
-FROM node:15.10.0-alpine
+FROM node:15.10.0-buster
 COPY --from=copy-stage /app /app
 WORKDIR /app
 
@@ -45,8 +45,10 @@ COPY tsconfig.base.parent.json .
 COPY tsconfig.base.json .
 COPY ava.config.js .
 
+# autoreconf for node-jq
 RUN (cd packages/esdx && yarn link) \
   && yarn build \
+  && rm -r node_modules \
   && yarn install --production --ignore-optional --offline \
   && yarn cache clean
 
