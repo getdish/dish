@@ -11,10 +11,9 @@ COPY dish-app dish-app
 COPY snackui snackui
 COPY package.json .
 
-# remove most files (only keep stuff for install)
 RUN find . \! -name "package.json" -not -path "*/bin/*" -type f -print | xargs rm -rf
 
-FROM node:15.10.0-buster as install
+FROM node:15.10.0-buster as prep
 COPY --from=base /app /app
 WORKDIR /app
 
@@ -30,6 +29,13 @@ ENV NODE_OPTIONS="--max_old_space_size=8192"
 ENV DOCKER_BUILD=true
 ENV PUPPETEER_SKIP_CHROMIUM_DOWNLOAD=true
 
+RUN find . -type d \(  -name "test" -o -name "tests"  \) -print | xargs rm -rf && \
+    find . -type f \(  -name "*.md" -o -name "*.jpg"  \) -print | xargs rm -rf
+
+FROM node:15.10.0-buster as install
+COPY --from=prep /app /app
+WORKDIR /app
+
 # install
 RUN yarn install --immutable-cache \
   && yarn cache clean && ls -la .yarn
@@ -41,17 +47,25 @@ COPY services services
 COPY dish-app dish-app
 COPY snackui snackui
 
-# remove all tests even node modules
-RUN find . -type d \(  -name "test" -o -name "tests"  \) -print | xargs rm -rf
-RUN  find . -type f \(  -name "*.md" -o -name "*.jpg"  \) -print | xargs rm -rf
+RUN find . -type d \(  -name "test" -o -name "tests"  \) -print | xargs rm -rf && \
+    find . -type f \(  -name "*.md" -o -name "*.jpg"  \) -print | xargs rm -rf
 
-RUN ln -s /app/packages/esdx/etc/esdx.js /app/node_modules/.bin/esdx
 RUN yarn build
-RUN ls -la
+
+FROM node:15.10.0-buster as test
+COPY --from=install /app /app
+WORKDIR /app
 
 COPY packages packages
 COPY services services
 COPY dish-app dish-app
 COPY snackui snackui
+
+FROM node:15.10.0-buster as test
+COPY --from=install /app /app
+WORKDIR /app
+
+RUN find . -type d \(  -name "test" -o -name "tests"  \) -print | xargs rm -rf && \
+    find . -type f \(  -name "*.md" -o -name "*.jpg"  \) -print | xargs rm -rf
 
 CMD ["true"]
