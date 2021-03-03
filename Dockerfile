@@ -31,7 +31,8 @@ ENV PUPPETEER_SKIP_CHROMIUM_DOWNLOAD=true
 
 # install
 RUN yarn install --immutable-cache \
-  && yarn cache clean
+  && yarn cache clean \
+  && rm .yarn/install-state.gz
 
 COPY .prettierrc .prettierignore tsconfig.json tsconfig.build.json \
   tsconfig.base.parent.json tsconfig.base.json ava.config.js ./
