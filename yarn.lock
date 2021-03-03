@@ -21083,6 +21083,9 @@ __metadata:
     react-native-web: "*"
     react-storage-hooks: ^4.0.0
     typescript: "*"
+  dependenciesMeta:
+    expo-screen-orientation:
+      optional: true
   languageName: unknown
   linkType: soft
 
