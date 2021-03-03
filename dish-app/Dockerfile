@@ -18,8 +18,9 @@ RUN yarn web:build
 
 EXPOSE 4444
 
-FROM node:15.10.0-buster-slim as base
+FROM node:15.10.0-buster-slim as slim
 WORKDIR /app
-COPY --from=base /app/dish-app /app
+COPY --from=base /app /app
+WORKDIR /app/dish-app
 
 CMD ["yarn", "web:serve", "--host", "0.0.0.0"]

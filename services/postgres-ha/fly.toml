@@ -1,8 +1,6 @@
-app = "dish-postgres"
+app = "dish-pg"
 
-# stop accepting new connections while existing sessions complete
 kill_signal = "SIGTERM"
-# allow 5 minutes to cleanly shutdown
 kill_timeout = 300
 
 [env]
@@ -38,5 +36,5 @@ metrics_port    = 9187
 metrics_path    = "/metrics"
 
 [mount]
-source      = "pg_data"
+source      = "dish_data"
 destination = "/data"
