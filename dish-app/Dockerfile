@@ -12,14 +12,14 @@ RUN apt-get update && apt-get install -y parallel build-essential \
 
 RUN yarn web:build
 
-EXPOSE 4444
+# slim it down
+RUN rm -r services
 
 FROM node:15.10.0-buster-slim as slim
 WORKDIR /app
 COPY --from=base /app /app
 WORKDIR /app/dish-app
 
-# slim it down
-RUN rm -r services
+EXPOSE 4444
 
 CMD ["yarn", "web:serve", "--host", "0.0.0.0"]

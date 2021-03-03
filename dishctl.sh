@@ -917,7 +917,7 @@ function push_auxillary_images() {
 }
 
 function dish_docker_login() {
-  yes | gcloud auth configure-docker gcr.io || true
+  yes | gcloud auth configure-docker gcr.io &> /dev/null || true
 }
 
 function grafana_backup() {
