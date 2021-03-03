@@ -33,10 +33,11 @@ COPY dish-app/etc dish-app/etc
 # install
 RUN yarn install --production \
   && yarn cache clean \
-   rm -r dish-app/node_modules/jsc-android || true
-   rm -r dish-app/node_modules/react-native || true
-   rm -r node_modules/jsc-android || true
-   rm -r node_modules/hermes-engine || true
+   rm -r dish-app/node_modules/jsc-android || true \
+   rm -r dish-app/node_modules/react-native || true \
+   rm -r node_modules/jsc-android || true \
+   rm -r node_modules/hermes-engine || true \
+   rm -r node_modules/metro* || true
 
 COPY .prettierignore .
 COPY .prettierrc .
@@ -51,6 +52,7 @@ COPY dish-app dish-app
 COPY snackui snackui
 
 RUN (cd packages/esdx && yarn link) && \
-  yarn build
+  yarn build && \
+  rm -r node_modules && yarn install --production --offline
 
 CMD ["true"]
