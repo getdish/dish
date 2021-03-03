@@ -17,6 +17,7 @@ FROM node:15.10.0-buster-slim as slim
 WORKDIR /app
 COPY --from=base /app/node_modules /app/node_modules
 COPY --from=base /app/snackui /app/snackui
+COPY --from=base /app/packages /app/packages
 COPY --from=base /app/package.json /app/package.json
 COPY --from=base /app/dish-app /app/dish-app
 WORKDIR /app/dish-app

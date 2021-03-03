@@ -34,7 +34,7 @@ RUN yarn install --frozen-lockfile --ignore-optional \
   && yarn cache clean
 
 COPY .prettierrc .prettierignore tsconfig.json tsconfig.build.json \
-  tsconfig.base.parent.json tsconfig.base.json ava.config.js .
+  tsconfig.base.parent.json tsconfig.base.json ava.config.js ./
 COPY packages packages
 COPY services services
 COPY dish-app dish-app
