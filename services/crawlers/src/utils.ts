@@ -58,14 +58,6 @@ export class DB {
   connect() {
     this.pool = new Pool(this.config)
     this.pool.setMaxListeners(800)
-    let total = 0
-    this.pool.on('connect', () => {
-      total++
-      console.log('total', total)
-    })
-    this.pool.on('remove', () => {
-      total--
-    })
     this.pool.on('error', (e) => {
       sentryException(e, {
         more: 'Error likely from long-lived pool connection in node-pg',
