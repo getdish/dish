@@ -13,6 +13,7 @@ steps:
       - seek-oss/docker-ecr-cache#v1.9.0:
           registry-provider: gcr
           gcp-project: dish-258800
+          image-tag: latest
           cache-on:
             - yarn.lock
             - '**/package.json'

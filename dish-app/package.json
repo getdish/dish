@@ -113,7 +113,6 @@
     "@types/redis": "^2.8.28",
     "@types/requestidlecallback": "0.3.1",
     "patch-package": "^6.2.2",
-    "postinstall-postinstall": "^2.1.0",
     "typescript": "*"
   },
   "optionalDependencies": {
