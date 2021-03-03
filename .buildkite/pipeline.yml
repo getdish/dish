@@ -39,6 +39,8 @@ steps:
     command: "DOCKER_CLEAN=true .buildkite/hooks/pre-exit"
 
   - label: ":docker: build search"
+    retry:
+      automatic: true
     plugins:
       - docker-compose#v3.7.0:
           build: search
@@ -47,6 +49,8 @@ steps:
           push: search:gcr.io/dish-258800/search:latest
 
   - label: ":docker: build hasura"
+    retry:
+      automatic: true
     plugins:
       - docker-compose#v3.7.0:
           build: hasura
@@ -55,6 +59,8 @@ steps:
           push: hasura:gcr.io/dish-258800/hasura:latest
 
   - label: ":docker: build timescale"
+    retry:
+        automatic: true
     plugins:
       - docker-compose#v3.7.0:
           build: timescaledb
@@ -63,6 +69,8 @@ steps:
           push: timescaledb:gcr.io/dish-258800/timescaledb:latest
 
   - label: ":docker: build tileserver"
+    retry:
+        automatic: true
     plugins:
       - docker-compose#v3.7.0:
           build: tileserver
@@ -71,6 +79,8 @@ steps:
           push: tileserver:gcr.io/dish-258800/tileserver:latest
 
   - label: ":docker: build image-proxy"
+    retry:
+        automatic: true
     plugins:
       - docker-compose#v3.7.0:
           build: image-proxy
