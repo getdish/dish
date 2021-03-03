@@ -3,6 +3,7 @@ FROM gcr.io/dish-258800/base:$DISH_BASE_VERSION
 
 # slim it down
 RUN rm -r services \
+      && rm -r dish-app/assets \
       && rm -r packages/react-test-env \
       && rm -r packages/worker
 
