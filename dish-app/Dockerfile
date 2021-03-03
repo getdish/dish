@@ -4,7 +4,7 @@ FROM gcr.io/dish-258800/base:$DISH_BASE_VERSION
 RUN rm -r services
 
 RUN \
-  apt-get update && apt-get install -y parallel build-essential \
+  apt-get -qq update && apt-get -qq install -y parallel build-essential \
             libcairo2-dev libpixman-1-dev libpango1.0-dev \
             libjpeg62-turbo-dev libgif-dev patch \
       && apt-get clean \

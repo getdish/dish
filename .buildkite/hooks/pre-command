@@ -19,8 +19,7 @@ mkdir -p $HOME/bin
 if ($(which psql > /dev/null)); then
   echo $(date -u) "psql installed"
 else
-  apt-get update
-  apt-get install -y postgresql-client
+  apt-get update && apt-get install -y postgresql-client
   echo $(date -u) "postgres installed"
 fi
 
