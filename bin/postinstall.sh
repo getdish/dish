@@ -3,7 +3,7 @@ set -e
 
 function patch_app_packages() {
   pushd $PROJECT_ROOT/dish-app
-  yarn patch-package
+  yarn patch-package || true
   popd
 }
 
@@ -48,7 +48,7 @@ PROJECT_ROOT="$(dirname "$0")/.."
 delete_extra_dish_app_modules &
 delete_and_link_duplicate_modules &
 delete_duplicate_snack_modules &
-yarn patch-package &
+yarn patch-package || true &
 patch_app_packages &
-yarn expo:check-deps &
+# yarn expo:check-deps &
 wait
