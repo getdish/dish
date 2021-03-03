@@ -1,7 +1,7 @@
 # STEP 1
 # everything that goes into deterministic yarn goes on this step
 
-FROM node:15.10.0-alpine
+FROM node:15.10.0-alpine as copy-stage
 WORKDIR /app
 
 # ENV YARN_VERSION 2.4.0
@@ -28,6 +28,7 @@ FROM node:15.10.0-alpine
 COPY --from=copy-stage /app /app
 WORKDIR /app
 
+COPY .yarnrc .
 COPY yarn.lock .
 COPY patches patches
 COPY bin bin
