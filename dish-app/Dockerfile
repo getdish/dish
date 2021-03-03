@@ -1,6 +1,8 @@
 ARG DISH_BASE_VERSION=latest
 FROM gcr.io/dish-258800/base:$DISH_BASE_VERSION
 
+RUN rm -r services
+
 RUN \
   apt-get update && apt-get install -y parallel build-essential \
             libcairo2-dev libpixman-1-dev libpango1.0-dev \
@@ -8,16 +10,11 @@ RUN \
       && apt-get clean \
       && rm -rf /var/lib/apt/lists/*
 
-WORKDIR /app/packages/server
-RUN ls -la
-RUN yarn build
-
 WORKDIR /app/dish-app
+
 ENV NODE_ENV=production
 
 RUN yarn web:build
-
-WORKDIR /app/dish-app
 
 EXPOSE 4444
 
