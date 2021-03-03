@@ -16,7 +16,9 @@
     "@dish/fast-compare": "^2.7.6",
     "lodash": "*",
     "node-localstorage": "^2.1.6",
-    "react": "*",
+    "react": "*"
+  },
+  "devDependencies": {
     "@dish/esdx": "*",
     "react-native-sync-localstorage": "^0.0.3"
   }

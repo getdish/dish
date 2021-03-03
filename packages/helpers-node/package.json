@@ -14,7 +14,9 @@
     "@dish/graph": "*",
     "bcryptjs": "^2.4.3",
     "jsonwebtoken": "^8.5.1",
-    "lodash": "*",
+    "lodash": "*"
+  },
+  "devDependencies": {
     "@dish/esdx": "*"
   }
 }

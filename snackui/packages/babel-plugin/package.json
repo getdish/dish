@@ -12,7 +12,7 @@
     "build": "esdx",
     "watch": "esdx-watch"
   },
-  "dependencies": {
+  "devDependencies": {
     "@babel/generator": "*",
     "@babel/helper-plugin-utils": "*",
     "@babel/template": "*",

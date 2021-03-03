@@ -1,4 +1,5 @@
 env:
+  DOCKER_BUILDKIT: 1
   DISH_ENV: 'test'
   DISH_REGISTRY: 'gcr.io/dish-258800'
   HASURA_ENDPOINT: 'http://localhost:8080'

@@ -10,10 +10,12 @@
     "start": "node ./dist/index.js"
   },
   "dependencies": {
-    "@dish/esdx": "*",
-    "ava": "^3.14.0",
     "typescript": "*",
     "express": "^4.17.1",
     "node-fetch": "^2.6.1"
+  },
+  "devDependencies": {
+    "@dish/esdx": "*",
+    "ava": "^3.14.0"
   }
 }

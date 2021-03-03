@@ -9,7 +9,7 @@
     "build": "esdx",
     "watch": "esdx-watch"
   },
-  "dependencies": {
+  "devDependencies": {
     "@babel/core": "^7.12.9",
     "@dish/helpers": "*",
     "@dish/proxy-worm": "*",
@@ -19,7 +19,6 @@
     "@pmmmwh/react-refresh-webpack-plugin": "^0.4.3",
     "@snackui/babel-plugin": "*",
     "@snackui/static": "*",
-    "@welldone-software/why-did-you-render": "^6.0.3",
     "babel-loader": "^8.2.2",
     "circular-dependency-plugin": "^5.2.2",
     "css-loader": "^5.0.2",
@@ -44,10 +43,13 @@
     "time-fix-plugin": "^2.0.7",
     "url-loader": "^4.1.1",
     "webpack": "*",
-    "webpack-bundle-analyzer": "^4.2.0",
     "webpack-merge-and-include-globally": "^2.3.3",
     "webpack-node-externals": "^2.5.2",
     "webpack-pwa-manifest": "^4.3.0",
     "@dish/esdx": "*"
+  },
+  "optionalDependencies": {
+    "@welldone-software/why-did-you-render": "^6.0.3",
+    "webpack-bundle-analyzer": "^4.2.0"
   }
 }

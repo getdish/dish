@@ -7,8 +7,7 @@
   },
   "workspaces": {
     "packages": [
-      "packages/*",
-      "examples/*"
+      "packages/*"
     ],
     "installConfig.hoistingLimits": [
       "@dish/proxy-worm",
@@ -23,12 +22,12 @@
     "publish:all": "lerna publish"
   },
   "dependencies": {
-    "ava": "^3.14.0",
     "prettier": "^2.2.1",
     "prettier-plugin-import-sort": "^0.0.6",
     "ultra-runner": "^3.10.5"
   },
   "devDependencies": {
+    "ava": "^3.14.0",
     "lerna": "^3.22.1"
   },
   "importSort": {

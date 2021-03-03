@@ -7,8 +7,8 @@ WORKDIR /app
 # ENV YARN_VERSION 2.4.0
 
 # for caching
-RUN mkdir -p /data/.cache/yarn
-RUN yarn config set cache-folder /data/.cache/yarn
+RUN mkdir -p /data/.cache/yarn && \
+  yarn config set cache-folder /data/.cache/yarn
 
 ENV PATH=$PATH:/app/node_modules/.bin:node_modules/.bin
 ENV NODE_OPTIONS="--max_old_space_size=8192"
@@ -24,31 +24,14 @@ COPY dish-app dish-app
 COPY snackui snackui
 COPY package.json .
 
-# remove most files (only keep stuff for install)
-RUN find . \! -name "package.json" -not -path "*/bin/*" -type f -print | xargs rm -rf
-
-FROM node:15.10.0-buster as install-stage
-COPY --from=copy-stage /app /app
-WORKDIR /app
+# # remove most files (only keep stuff for install)
+# RUN find . \! -name "package.json" -not -path "*/bin/*" -type f -print | xargs rm -rf
 
 COPY yarn.lock .
-# COPY .yarn .yarn
-# COPY .yarnrc.yml .
 COPY patches patches
 COPY bin bin
 COPY dish-app/patches dish-app/patches
 COPY dish-app/etc dish-app/etc
-
-# install
-RUN yarn install --production && yarn cache clean
-
-# clean a bit of native-only deps
-RUN rm -r dish-app/node_modules/jsc-android || true
-RUN rm -r dish-app/node_modules/react-native || true
-RUN rm -r node_modules/jsc-android || true
-RUN rm -r node_modules/hermes-engine || true
-RUN rm -r node_modules/snowpack || true
-
 COPY .prettierignore .
 COPY .prettierrc .
 COPY tsconfig.json .
@@ -56,10 +39,12 @@ COPY tsconfig.build.json .
 COPY tsconfig.base.parent.json .
 COPY tsconfig.base.json .
 COPY ava.config.js .
-COPY packages packages
-COPY services services
-COPY dish-app dish-app
-COPY snackui snackui
+
+# install
+RUN yarn install --frozen-lockfile --ignore-optional \
+  && yarn build \
+  && yarn install --production --ignore-optional \
+  && yarn cache clean
 
 # for whatever reason yarn isnt linking esdx in docker
 # force it to link here

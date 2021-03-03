@@ -21,15 +21,17 @@
     "@dish/gqless-react": "^2.0.13",
     "@dish/helpers": "*",
     "@dish/use-store": "*",
-    "ava": "^3.14.0",
     "graphql": "^15.5.0",
     "isomorphic-unfetch": "^3.1.0",
     "lodash": "*",
     "moment": "^2.29.1",
+    "react": "*"
+  },
+  "devDependencies": {
+    "ava": "^3.14.0",
     "patch-package": "^6.2.2",
     "@dish/esdx": "*",
     "@dish/gqless-cli": "^4.0.1",
-    "@dish/react-test-env": "*",
-    "react": "*"
+    "@dish/react-test-env": "*"
   }
 }
