@@ -1,6 +1,11 @@
 #!/usr/bin/env bash
 set -e pipefail
 
+if [ "$TF_VAR_HASURA_GRAPHQL_ADMIN_SECRET" = "" ]; then
+    echo "missing env"
+    exit 1
+fi
+
 flyctl secrets set \
     HASURA_GRAPHQL_NO_OF_RETRIES="20" \
     HASURA_GRAPHQL_DATABASE_URL="$HASURA_FLY_POSTGRES_URL" \
@@ -13,3 +18,5 @@ flyctl secrets set \
     DISH_HOOKS_ENDPOINT="http://dish-hooks:6154" \
     GORSE_SYNC_HOOK="http://dish-hooks:6154/gorse_sync" \
     VIRTUAL_HOST="dish-hasura.fly.dev" || true
+
+flyctl postgres attach --postgres-app dish-db || true

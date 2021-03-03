@@ -6,8 +6,7 @@ WORKDIR /app
 RUN rm -r packages/server && \
       rm -r packages/webpack && \
       rm -r packages/router && \
-      rm -r packages/esdx && \
-      (cd services && find . ! -name 'dish-hooks' -type d -exec rm -f {} +)
+      rm -r packages/esdx
 
 WORKDIR /app/services/dish-hooks
 RUN echo "deb http://deb.debian.org/debian buster-backports main" >> /etc/apt/sources.list
