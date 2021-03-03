@@ -4,8 +4,6 @@
 FROM node:15.10.0-buster as base
 WORKDIR /app
 
-RUN npm i -g yarn && yarn policies set-version berry
-
 ENV PATH=$PATH:/app/node_modules/.bin:node_modules/.bin
 ENV NODE_OPTIONS="--max_old_space_size=8192"
 ENV DOCKER_BUILD=true
@@ -27,13 +25,14 @@ WORKDIR /app
 
 COPY .yarnrc.yml .
 COPY yarn.lock .
+COPY .yarn .yarn
 COPY patches patches
 COPY bin bin
 COPY dish-app/etc dish-app/etc
 
 # install
-RUN yarn install --frozen-lockfile --ignore-optional && \
-  yarn cache clean
+RUN yarn install --immutable-cache --inline-builds \
+  && yarn cache clean
 
 COPY .prettierrc .prettierignore tsconfig.json tsconfig.build.json \
   tsconfig.base.parent.json tsconfig.base.json ava.config.js ./
