@@ -51,7 +51,6 @@ COPY dish-app dish-app
 COPY snackui snackui
 
 RUN (cd packages/esdx && yarn link) && \
-  yarn build && \
-  yarn install --production --offline
+  yarn build
 
 CMD ["true"]
