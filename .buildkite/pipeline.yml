@@ -2,6 +2,8 @@ env:
   # DOCKER_BUILDKIT: 1
   # COMPOSE_DOCKER_CLI_BUILD: 1
   # BUILDKIT_PROGRESS: plain
+  DISH_BASE_VERION: ":latest"
+  DISH_IMAGE_TAG: ":latest"
   DISH_ENV: 'test'
   DISH_REGISTRY: 'gcr.io/dish-258800'
   HASURA_ENDPOINT: 'http://localhost:8080'
@@ -16,56 +18,6 @@ steps:
           image-repository: gcr.io/dish-258800/base
           cache-from: base:gcr.io/dish-258800/base:latest
           push: base:gcr.io/dish-258800/base:latest
-
-  - label: ":docker: build search"
-    retry:
-      automatic: true
-    plugins:
-      - docker-compose#v3.7.0:
-          build: search
-          image-repository: gcr.io/dish-258800/search
-          cache-from: base:gcr.io/dish-258800/search:latest
-          push: search:gcr.io/dish-258800/search:latest
-
-  - label: ":docker: build hasura"
-    retry:
-      automatic: true
-    plugins:
-      - docker-compose#v3.7.0:
-          build: hasura
-          image-repository: gcr.io/dish-258800/hasura
-          cache-from: base:gcr.io/dish-258800/hasura:latest
-          push: hasura:gcr.io/dish-258800/hasura:latest
-
-  - label: ":docker: build timescale"
-    retry:
-        automatic: true
-    plugins:
-      - docker-compose#v3.7.0:
-          build: timescaledb
-          image-repository: gcr.io/dish-258800/timescaledb
-          cache-from: base:gcr.io/dish-258800/timescaledb:latest
-          push: timescaledb:gcr.io/dish-258800/timescaledb:latest
-
-  - label: ":docker: build tileserver"
-    retry:
-        automatic: true
-    plugins:
-      - docker-compose#v3.7.0:
-          build: tileserver
-          image-repository: gcr.io/dish-258800/tileserver
-          cache-from: base:gcr.io/dish-258800/tileserver:latest
-          push: tileserver:gcr.io/dish-258800/tileserver:latest
-
-  - label: ":docker: build image-proxy"
-    retry:
-        automatic: true
-    plugins:
-      - docker-compose#v3.7.0:
-          build: image-proxy
-          image-repository: gcr.io/dish-258800/image-proxy
-          cache-from: base:gcr.io/dish-258800/image-proxy:latest
-          push: image-proxy:gcr.io/dish-258800/image-proxy:latest
 
   - label: ":docker: build dish-hooks"
     depends_on: base
@@ -95,6 +47,68 @@ steps:
           image-repository: gcr.io/dish-258800/worker
           cache-from: base:gcr.io/dish-258800/worker:latest
           push: worker:gcr.io/dish-258800/worker:latest
+
+  - label: ":docker: build search"
+    retry:
+      automatic: true
+    plugins:
+      - docker-compose#v3.7.0:
+          build: search
+          image-repository: gcr.io/dish-258800/search
+          cache-from: base:gcr.io/dish-258800/search:latest
+          push: search:gcr.io/dish-258800/search:latest
+
+  - label: ":docker: build hasura"
+    retry:
+      automatic: true
+    plugins:
+      - docker-compose#v3.7.0:
+          build: hasura
+          image-repository: gcr.io/dish-258800/hasura
+          cache-from: base:gcr.io/dish-258800/hasura:latest
+          push: hasura:gcr.io/dish-258800/hasura:latest
+
+  - label: ":docker: build timescaledb"
+    retry:
+      automatic: true
+    plugins:
+      - docker-compose#v3.7.0:
+          build: timescaledb
+          image-repository: gcr.io/dish-258800/timescaledb
+          cache-from: base:gcr.io/dish-258800/timescaledb:latest
+          push: timescaledb:gcr.io/dish-258800/timescaledb:latest
+
+  - label: ":docker: build tileserver"
+    retry:
+      automatic: true
+    plugins:
+      - docker-compose#v3.7.0:
+          build: tileserver
+          image-repository: gcr.io/dish-258800/tileserver
+          cache-from: base:gcr.io/dish-258800/tileserver:latest
+          push: tileserver:gcr.io/dish-258800/tileserver:latest
+
+  - label: ":docker: build image-proxy"
+    retry:
+      automatic: true
+    plugins:
+      - docker-compose#v3.7.0:
+          build: image-proxy
+          image-repository: gcr.io/dish-258800/image-proxy
+          cache-from: base:gcr.io/dish-258800/image-proxy:latest
+          push: image-proxy:gcr.io/dish-258800/image-proxy:latest
+
+  - label: ":docker: build postgres"
+    retry:
+      automatic: true
+    env:
+      POSTGRES_STRATEGY: simple
+    plugins:
+      - docker-compose#v3.7.0:
+          build: postgres
+          image-repository: gcr.io/dish-258800/postgres
+          cache-from: base:gcr.io/dish-258800/postgres:latest
+          push: postgres:gcr.io/dish-258800/postgres:latest
 
   - wait
 
