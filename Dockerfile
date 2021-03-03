@@ -32,7 +32,8 @@ COPY dish-app/etc dish-app/etc
 
 # install
 RUN yarn install --immutable-cache \
-  && yarn cache clean
+  && yarn cache clean \
+  rm -r .yarn/cache
 
 COPY .prettierrc .prettierignore tsconfig.json tsconfig.build.json \
   tsconfig.base.parent.json tsconfig.base.json ava.config.js ./
