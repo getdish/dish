@@ -414,7 +414,7 @@ restore_latest_main_backup_to_local() {
   latest_backup=$(get_latest_main_backup)
   dump_file="/tmp/latest_dish_backup.dump"
   s3 get "$latest_backup" "$dump_file"
-  PGPASSWORD=postgres pg_restore -h localhost -U postgres -p 5432 -d dish "$dump_file"
+  # PGPASSWORD=postgres pg_restore -h localhost -U postgres -p 5432 -d dish "$dump_file"
 }
 
 restore_latest_scrapes_backup_to_local() {

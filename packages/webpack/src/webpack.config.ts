@@ -242,26 +242,26 @@ export function createWebpackConfig({
                       name: `static/media/[name].[hash].[ext]`,
                     },
                   },
-                  {
-                    loader: require.resolve('image-webpack-loader'),
-                    options: {
-                      disable: isDevelopment,
-                      mozjpeg: {
-                        progressive: true,
-                        quality: 98,
-                      },
-                      optipng: {
-                        enabled: true,
-                      },
-                      pngquant: {
-                        quality: [0.8, 0.9],
-                        speed: 4,
-                      },
-                      gifsicle: {
-                        interlaced: false,
-                      },
-                    },
-                  },
+                  // {
+                  //   loader: require.resolve('image-webpack-loader'),
+                  //   options: {
+                  //     disable: isDevelopment,
+                  //     mozjpeg: {
+                  //       progressive: true,
+                  //       quality: 98,
+                  //     },
+                  //     optipng: {
+                  //       enabled: true,
+                  //     },
+                  //     pngquant: {
+                  //       quality: [0.8, 0.9],
+                  //       speed: 4,
+                  //     },
+                  //     gifsicle: {
+                  //       interlaced: false,
+                  //     },
+                  //   },
+                  // },
                 ],
               },
               {
