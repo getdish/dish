@@ -66,7 +66,8 @@
     "prettier:check": "prettier --check \"**/*.{ts,tsx}\"",
     "expo:check-deps": "expo-yarn-workspaces check-workspace-dependencies",
     "snackui:pull": "git subrepo pull snackui",
-    "snackui:push": "git subrepo clean snackui && git subrepo push snackui"
+    "snackui:push": "git subrepo clean snackui && git subrepo push snackui",
+    "react-native-if-you-want-it": "0.62.12"
   },
   "resolutions": {
     "react-native": "0.0.0",

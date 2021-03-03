@@ -23,8 +23,6 @@ FROM node:15.10.0-buster as install-stage
 COPY --from=base /app /app
 WORKDIR /app
 
-# COPY .npm-packages-offline-cache .npm-packages-offline-cache
-COPY .yarnrc .
 COPY yarn.lock .
 COPY patches patches
 COPY bin bin
@@ -49,6 +47,5 @@ COPY snackui snackui
 
 RUN (cd packages/esdx && yarn link) \
   && yarn build
-
 
 CMD ["true"]
