@@ -3,6 +3,10 @@ FROM gcr.io/dish-258800/base:$DISH_BASE_VERSION
 
 WORKDIR /app
 
+COPY /app/services/worker /app/services/worker
+COPY /app/services/crawlers /app/services/crawlers
+RUN yarn install
+
 # RUN rm -r dish-app # breaks because react is in there not in root...
 
 RUN apt-get update && apt-get install -y \
