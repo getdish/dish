@@ -4,11 +4,11 @@ import { route, useRouteBodyParser } from '@dish/api'
 import { GRAPH_API_INTERNAL, fetchLog, getAuthHeaders } from '@dish/graph'
 import redis from 'redis'
 
-const host =
-  process.env.FLY_REDIS_CACHE_URL || process.env.REDIS_HOST || 'localhost'
-console.log('redis host', host)
+const url =
+  process.env.FLY_REDIS_CACHE_URL || process.env.REDIS_URL || 'localhost:6379'
+console.log('redis url', url)
 const rc = redis.createClient({
-  host,
+  url,
 })
 
 rc.on('error', (err) => {

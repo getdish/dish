@@ -113,7 +113,6 @@ steps:
   - wait
 
   - label: "setup services for tests"
-    depends_on: apps
     command: ".buildkite/scripts/setup_services.sh"
     env:
       LOG_DOCKER: true

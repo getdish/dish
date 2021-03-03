@@ -1141,15 +1141,19 @@ function deploy_fly_app() {
   echo "deploying $app in $folder to image $image_name"
   pushd $folder
   if [ -f ".ci/pre_deploy.sh" ]; then
+    echo "running pre-deploy script..."
     eval $(yaml_to_env) .ci/pre_deploy.sh
   fi
   if [ "$where" = "registry" ]; then
     flyctl auth docker
     docker tag gcr.io/dish-258800/$image_name:$tag registry.fly.io/$app:$tag
     docker push registry.fly.io/$app:$tag
+    flyctl deploy -i registry.fly.io/$app:$tag
+  else
+    flyctl deploy
   fi
-  flyctl deploy -i registry.fly.io/$app:$tag
   if [ -f ".ci/post_deploy.sh" ]; then
+    echo "running post-deploy script..."
     eval $(yaml_to_env) .ci/pre_deploy.sh
   fi
   popd

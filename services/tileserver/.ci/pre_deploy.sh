@@ -2,13 +2,11 @@
 set -e pipefail
 
 if [ "$TILESERVER_FLY_POSTGRES_URL" = "" ]; then
-    echo "missing env"
+    echo "missing env, may need to attach flyctl postgres attach --postgres-app dish-db"
     exit 1
 fi
 
-flyctl postgres attach --postgres-app dish-db || true
-
 flyctl secrets set \
     WATCH_MODE=true \
-    DATABASE_URL="$TILESERVER_FLY_POSTGRES_URL"
+    DATABASE_URL="$TILESERVER_FLY_POSTGRES_URL" \
     VIRTUAL_HOST="martin-tiles.dishapp.com" || true

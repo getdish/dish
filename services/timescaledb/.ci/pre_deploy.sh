@@ -1,8 +1,6 @@
 #!/usr/bin/env bash
 set -e pipefail
 
-echo $TIMESCALE_FLY_POSTGRES_USER
-
 if [ "$TIMESCALE_FLY_POSTGRES_USER" = "" ]; then
     echo "missing env"
     exit 1
