@@ -16,11 +16,13 @@
   "dependencies": {
     "@dish/async": "*",
     "@dish/common": "*",
+    "@dish/esdx": "*",
     "@dish/gqless": "*",
     "@dish/graph": "*",
     "@dish/helpers": "*",
     "@dish/worker": "*",
     "acorn": "^7.1.1",
+    "ava": "^3.14.0",
     "aws-sdk": "^2.719.0",
     "axios": "^0.19.1",
     "bull": "^3.18.0",
@@ -39,14 +41,12 @@
     "sentiment": "^5.0.2",
     "sinon": "^9.0.3",
     "tabletojson": "^2.0.4",
-    "transliteration": "^2.1.8",
-    "@dish/esdx": "*",
-    "ava": "^3.14.0"
+    "transliteration": "^2.1.8"
   },
   "devDependencies": {
+    "@types/cheerio": "^0.22.22",
     "@types/pg": "^7.14.10",
     "@types/puppeteer": "^3.0.0",
-    "@types/cheerio": "^0.22.22",
     "bull-repl": "^0.26.0",
     "nodemon": "^2.0.2",
     "typescript": "*"

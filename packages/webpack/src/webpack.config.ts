@@ -87,7 +87,7 @@ export function createWebpackConfig({
       },
       experiments: {
         // works but home doesnt load by default
-        // lazyCompilation: !isProduction,
+        // lazyCompilation: true,
       },
       cache: {
         name: `${process.env.TARGET}${process.env.NODE_ENV}`,

@@ -12,9 +12,9 @@
   },
   "dependencies": {
     "@dish/graph": "*",
+    "@sentry/node": "^5.16.1",
     "dotenv": "^8.2.0",
-    "find-up": "^4.1.0",
-    "@sentry/node": "^5.16.1"
+    "find-up": "^4.1.0"
   },
   "devDependencies": {
     "@dish/esdx": "*"

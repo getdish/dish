@@ -1,7 +1,6 @@
 import { series } from '@dish/async'
-import { MapPosition, resolved } from '@dish/graph'
+import { resolved } from '@dish/graph'
 import { useStoreInstance } from '@dish/use-store'
-import { debounce } from 'lodash'
 import React, { memo, useCallback, useEffect, useMemo } from 'react'
 import {
   AbsoluteVStack,
@@ -11,7 +10,6 @@ import {
   useDebounceValue,
   useGet,
   useMedia,
-  useTheme,
   useThemeName,
 } from 'snackui'
 
@@ -31,7 +29,6 @@ import {
   cancelUpdateRegion,
   updateRegion,
   updateRegionFaster,
-  updateRegionImmediate,
   useAppMapStore,
 } from './AppMapStore'
 import { drawerStore } from './drawerStore'

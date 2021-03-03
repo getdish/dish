@@ -11,6 +11,7 @@
   },
   "devDependencies": {
     "@babel/core": "^7.12.9",
+    "@dish/esdx": "*",
     "@dish/helpers": "*",
     "@dish/proxy-worm": "*",
     "@dish/server": "*",
@@ -44,8 +45,7 @@
     "webpack": "*",
     "webpack-merge-and-include-globally": "^2.3.3",
     "webpack-node-externals": "^2.5.2",
-    "webpack-pwa-manifest": "^4.3.0",
-    "@dish/esdx": "*"
+    "webpack-pwa-manifest": "^4.3.0"
   },
   "optionalDependencies": {
     "@welldone-software/why-did-you-render": "^6.0.3",

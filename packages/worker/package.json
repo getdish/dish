@@ -13,10 +13,10 @@
     "test:watch": "DISH_ENV=test ava tests/* --watch"
   },
   "dependencies": {
+    "@types/bull": "^3.14.4",
     "axios": "^0.19.2",
     "bull": "^3.12.1",
     "https-proxy-agent": "^5.0.0",
-    "@types/bull": "^3.14.4",
     "lodash": "*"
   },
   "devDependencies": {

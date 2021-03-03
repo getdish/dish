@@ -4,11 +4,6 @@
   "description": "",
   "main": "dist",
   "private": true,
-  "workspaces": {
-    "nohoist": [
-      "**"
-    ]
-  },
   "scripts": {
     "build": "esdx",
     "watch": "esdx-watch",
@@ -20,7 +15,7 @@
     "node-fetch": "^2.6.1"
   },
   "devDependencies": {
-    "typescript": "*",
-    "ava": "^3.14.0"
+    "ava": "^3.14.0",
+    "typescript": "*"
   }
 }

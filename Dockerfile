@@ -23,6 +23,7 @@ FROM node:15.10.0-buster as install-stage
 COPY --from=base /app /app
 WORKDIR /app
 
+COPY .yarnrc.yml .
 COPY yarn.lock .
 COPY patches patches
 COPY bin bin

@@ -28,10 +28,10 @@
     "react": "*"
   },
   "devDependencies": {
-    "ava": "^3.14.0",
-    "patch-package": "^6.2.2",
     "@dish/esdx": "*",
     "@dish/gqless-cli": "^4.0.1",
-    "@dish/react-test-env": "*"
+    "@dish/react-test-env": "*",
+    "ava": "^3.14.0",
+    "patch-package": "^6.2.2"
   }
 }
