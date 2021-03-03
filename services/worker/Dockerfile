@@ -1,13 +1,7 @@
 ARG DISH_BASE_VERSION=latest
 FROM gcr.io/dish-258800/base:$DISH_BASE_VERSION
-
+COPY /app /app
 WORKDIR /app
-
-COPY services/worker services/worker
-COPY services/crawlers services/crawlers
-RUN yarn install && yarn build:dish-worker && yarn cache clean
-
-# RUN rm -r dish-app # breaks because react is in there not in root...
 
 RUN apt-get update && apt-get install -y \
       gconf-service libasound2 libatk1.0-0 libatk-bridge2.0-0 \
@@ -22,7 +16,4 @@ RUN apt-get update && apt-get install -y \
 
 WORKDIR /app/services/worker
 
-RUN yarn build
-
-COPY services/worker/entry.sh /app/entry.sh
-CMD ["/app/entry.sh"]
+CMD ["/app/services/worker/entry.sh"]
