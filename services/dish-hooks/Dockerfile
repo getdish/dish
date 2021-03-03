@@ -8,14 +8,8 @@ RUN echo "deb http://deb.debian.org/debian buster-backports main" >> /etc/apt/so
 
 COPY services/dish-hooks services/dish-hooks
 
-RUN yarn install && yarn build && yarn cache clean && \
-      rm -r packages/server && \
-      rm -r packages/webpack && \
-      rm -r packages/router && \
-      rm -r packages/esdx
-
 FROM node:15.10.0-slim as install-stage
-COPY --from=base /app /app
-WORKDIR /app/services/dish-hooks
+COPY --from=base /app/services/dish-hooks /app
+WORKDIR /app
 
 CMD ["node", "dist/index.js"]

@@ -31,8 +31,7 @@ COPY dish-app/etc dish-app/etc
 
 # install
 RUN yarn install --frozen-lockfile --ignore-optional \
-  && yarn cache clean \
-  && (cd packages/esdx && yarn link)
+  && yarn cache clean
 
 COPY .prettierrc .prettierignore tsconfig.json tsconfig.build.json \
   tsconfig.base.parent.json tsconfig.base.json ava.config.js ./
@@ -41,6 +40,6 @@ COPY services services
 COPY dish-app dish-app
 COPY snackui snackui
 
-RUN  yarn build
+RUN  yarn build && (cd packages/esdx && yarn link)
 
 CMD ["true"]
