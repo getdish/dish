@@ -13,9 +13,7 @@
     "watch": "esdx-watch"
   },
   "dependencies": {
-    "@dish/esdx": "*"
-  },
-  "devDependencies": {
+    "@dish/esdx": "*",
     "@types/requestidlecallback": "0.3.1"
   }
 }

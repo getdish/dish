@@ -13,6 +13,7 @@
     "test": "true"
   },
   "dependencies": {
+    "@types/bull": "^3.14.2",
     "@dish/common": "*",
     "@dish/crawlers": "*",
     "@dish/worker": "*",
@@ -20,7 +21,6 @@
     "bull": "^3.18.0"
   },
   "devDependencies": {
-    "@types/bull": "^3.14.2",
     "nodemon": "^2.0.2",
     "typescript": "*"
   }

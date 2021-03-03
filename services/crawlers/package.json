@@ -8,7 +8,7 @@
     "build": "esdx",
     "watch": "esdx-watch",
     "worker": "node dist/worker.js",
-    "worker:watch": "nodemon _/worker.js",
+    "worker:watch": "nodemon dist/worker.js",
     "test": "TARGET=node RUN_WITHOUT_WORKER=true DISH_ENV=test ava test/idempotent/* --verbose --serial",
     "test-new": "TARGET=node RUN_WITHOUT_WORKER=true DISH_ENV=test ava test/idempotent/self.ts --verbose",
     "test:scheduled": "TARGET=node RUN_WITHOUT_WORKER=true DISH_ENV=test ava test/http-dependent/* --verbose"
@@ -22,6 +22,7 @@
     "@dish/worker": "*",
     "@types/pg": "^7.14.10",
     "@types/puppeteer": "^3.0.0",
+    "@types/cheerio": "^0.22.22",
     "acorn": "^7.1.1",
     "aws-sdk": "^2.719.0",
     "axios": "^0.19.1",
@@ -41,13 +42,11 @@
     "sentiment": "^5.0.2",
     "sinon": "^9.0.3",
     "tabletojson": "^2.0.4",
-    "transliteration": "^2.1.8"
+    "transliteration": "^2.1.8",
+    "@dish/esdx": "*",
+    "ava": "^3.14.0"
   },
   "devDependencies": {
-    "@dish/esdx": "*",
-    "@types/cheerio": "^0.22.22",
-    "@types/puppeteer": "^3.0.1",
-    "ava": "^3.14.0",
     "bull-repl": "^0.26.0",
     "nodemon": "^2.0.2",
     "typescript": "*"
