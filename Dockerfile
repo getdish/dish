@@ -41,6 +41,14 @@ COPY services services
 COPY dish-app dish-app
 COPY snackui snackui
 
+# remove all tests even node modules
+RUN find . -type d \(  -name "test" -o -name "tests"  \) -print | xargs rm -rf
+RUN  find . -type f \(  -name "*.md" -o -name "*.jpg"  \) -print | xargs rm -rf
+
+FROM node:15.10.0-buster as install-stage
+COPY --from=base /app /app
+WORKDIR /app
+
 RUN ln -s /app/packages/esdx/etc/esdx.js /app/node_modules/.bin/esdx
 RUN yarn build
 
