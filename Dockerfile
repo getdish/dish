@@ -33,13 +33,8 @@ COPY dish-app/etc dish-app/etc
 RUN yarn install --frozen-lockfile --ignore-optional \
   && yarn cache clean
 
-COPY .prettierignore .
-COPY .prettierrc .
-COPY tsconfig.json .
-COPY tsconfig.build.json .
-COPY tsconfig.base.parent.json .
-COPY tsconfig.base.json .
-COPY ava.config.js .
+COPY .prettierrc .prettierignore tsconfig.json tsconfig.build.json \
+  tsconfig.base.parent.json tsconfig.base.json ava.config.js .
 COPY packages packages
 COPY services services
 COPY dish-app dish-app
