@@ -31,7 +31,7 @@ COPY bin bin
 COPY dish-app/etc dish-app/etc
 
 # install
-RUN yarn install --immutable-cache --inline-builds \
+RUN yarn install --immutable-cache \
   && yarn cache clean
 
 COPY .prettierrc .prettierignore tsconfig.json tsconfig.build.json \
@@ -41,7 +41,6 @@ COPY services services
 COPY dish-app dish-app
 COPY snackui snackui
 
-RUN (cd packages/esdx && yarn link) \
-  && yarn build
+RUN yarn build
 
 CMD ["true"]
