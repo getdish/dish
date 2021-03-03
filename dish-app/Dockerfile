@@ -1,4 +1,5 @@
 ARG DISH_BASE_VERSION=latest
+
 FROM gcr.io/dish-258800/base:$DISH_BASE_VERSION as base
 
 RUN \
@@ -7,6 +8,8 @@ RUN \
             libjpeg62-turbo-dev libgif-dev patch \
       && apt-get clean \
       && rm -rf /var/lib/apt/lists/*
+
+FROM gcr.io/dish-258800/base:$DISH_BASE_VERSION as base
 
 WORKDIR /app/dish-app
 ENV NODE_ENV=production

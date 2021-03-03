@@ -5,7 +5,7 @@ WORKDIR /app
 
 COPY services/worker services/worker
 COPY services/crawlers services/crawlers
-RUN yarn install && yarn build && yarn cache clean
+RUN yarn install && yarn build:dish-worker && yarn cache clean
 
 # RUN rm -r dish-app # breaks because react is in there not in root...
 

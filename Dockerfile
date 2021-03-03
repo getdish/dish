@@ -11,6 +11,7 @@ ENV PUPPETEER_SKIP_CHROMIUM_DOWNLOAD=true
 
 # copy everything
 COPY packages packages
+COPY services services
 COPY dish-app dish-app
 COPY snackui snackui
 COPY package.json .
@@ -24,21 +25,17 @@ WORKDIR /app
 
 COPY yarn.lock .
 COPY patches patches
+COPY services services
 COPY bin bin
 COPY dish-app/patches dish-app/patches
 COPY dish-app/etc dish-app/etc
 
 # install
 RUN yarn install --frozen-lockfile --ignore-optional \
-  && yarn cache clean
+  && yarn cache clean \
+  && (cd packages/esdx && yarn link)
 
 COPY .prettierrc .prettierignore tsconfig.json tsconfig.build.json \
   tsconfig.base.parent.json tsconfig.base.json ava.config.js ./
-COPY packages packages
-COPY dish-app dish-app
-COPY snackui snackui
-
-RUN (cd packages/esdx && yarn link) \
-  && yarn build
 
 CMD ["true"]
