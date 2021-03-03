@@ -8,9 +8,8 @@ RUN echo "deb http://deb.debian.org/debian buster-backports main" >> /etc/apt/so
 
 COPY services/dish-hooks services/dish-hooks
 
-RUN yarn install && yarn build && yarn cache clean
-
-RUN rm -r packages/server && \
+RUN yarn install && yarn build && yarn cache clean && \
+      rm -r packages/server && \
       rm -r packages/webpack && \
       rm -r packages/router && \
       rm -r packages/esdx

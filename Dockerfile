@@ -11,7 +11,6 @@ ENV PUPPETEER_SKIP_CHROMIUM_DOWNLOAD=true
 
 # copy everything
 COPY packages packages
-COPY services services
 COPY dish-app dish-app
 COPY snackui snackui
 COPY package.json .
@@ -37,5 +36,11 @@ RUN yarn install --frozen-lockfile --ignore-optional \
 
 COPY .prettierrc .prettierignore tsconfig.json tsconfig.build.json \
   tsconfig.base.parent.json tsconfig.base.json ava.config.js ./
+COPY packages packages
+COPY services services
+COPY dish-app dish-app
+COPY snackui snackui
+
+RUN  yarn build
 
 CMD ["true"]

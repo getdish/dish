@@ -15,6 +15,10 @@ snackui/examples
 .expo-shared/*
 .github/*
 *.md
- *.sketch
- assets/*
-
+*.sketch
+assets
+docs
+snackui/website
+snackui/examples
+*.md
+.vscode
