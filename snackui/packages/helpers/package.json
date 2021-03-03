@@ -8,7 +8,7 @@
     "build": "esdx",
     "watch": "esdx-watch"
   },
-  "devDependencies": {
+  "dependencies": {
     "@dish/esdx": "*"
   }
 }

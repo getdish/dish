@@ -27,11 +27,9 @@
     "lodash": "*",
     "moment": "^2.29.1",
     "patch-package": "^6.2.2",
-    "react": "*"
-  },
-  "devDependencies": {
     "@dish/esdx": "*",
     "@dish/gqless-cli": "^4.0.1",
-    "@dish/react-test-env": "*"
+    "@dish/react-test-env": "*",
+    "react": "*"
   }
 }

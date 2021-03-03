@@ -101,7 +101,17 @@
       "resize-observer-polyfill",
       "resize-observer-polyfill/**",
       "testcafe",
-      "testcafe/**"
+      "testcafe/**",
+      "babel-plugin-transform-inline-environment-variables",
+      "babel-plugin-transform-inline-environment-variables/**",
+      "@babel/cli",
+      "@babel/cli/**",
+      "@babel/core",
+      "@babel/core/**",
+      "patch-package",
+      "patch-package/**",
+      "postinstall-postinstall",
+      "postinstall-postinstall/**"
     ]
   },
   "scripts": {
@@ -209,15 +219,15 @@
     "resize-observer-polyfill": "^1.5.1",
     "snackui": "*",
     "testcafe": "^1.11.0",
-    "uuid": "^8.3.0"
-  },
-  "devDependencies": {
+    "uuid": "^8.3.0",
+    "babel-plugin-transform-inline-environment-variables": "^0.4.3",
     "@babel/cli": "^7.13.0",
     "@babel/core": "^7.13.8",
-    "@dish/babel-preset": "*",
-    "@snowpack/plugin-dotenv": "^2.0.5",
-    "@snowpack/plugin-react-refresh": "^2.4.0",
-    "@snowpack/plugin-typescript": "^1.2.1",
+    "patch-package": "^6.2.2",
+    "postinstall-postinstall": "^2.1.0",
+    "@dish/babel-preset": "*"
+  },
+  "devDependencies": {
     "@types/lodash": "^4.14.165",
     "@types/mapbox-gl": "^2.1.0",
     "@types/react": "*",
@@ -226,17 +236,11 @@
     "@types/redis": "^2.8.28",
     "@unimodules/react-native-adapter": "^5.7.0",
     "@welldone-software/why-did-you-render": "^6.0.5",
-    "array-flat-polyfill": "^1.0.1",
-    "babel-plugin-transform-inline-environment-variables": "^0.4.3",
     "expo": "^40.0.1",
     "metro-config": "^0.65.1",
     "metro-react-native-babel-preset": "^0.65.1",
-    "npm-run-all": "4.1.5",
-    "patch-package": "^6.2.2",
-    "postinstall-postinstall": "^2.1.0",
     "react-native-codegen": "^0.0.7",
     "react-test-renderer": "^17.0.1",
-    "snowpack": "^3.0.11",
     "typescript": "*"
   }
 }

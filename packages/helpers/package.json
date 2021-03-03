@@ -17,9 +17,7 @@
     "lodash": "*",
     "node-localstorage": "^2.1.6",
     "react": "*",
+    "@dish/esdx": "*",
     "react-native-sync-localstorage": "^0.0.3"
-  },
-  "devDependencies": {
-    "@dish/esdx": "*"
   }
 }

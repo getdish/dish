@@ -6,22 +6,21 @@ env:
 
 steps:
   - label: ":docker: build base"
-    commands: ".buildkite/scripts/build_base.sh"
     plugins:
-      - gencer/cache#v2.3.10:
-          backend: s3
-          key: "v1-cache-{{ runner.os }}-base-yarn"
-          s3:
-            args: "--endpoint-url=https://sfo2.digitaloceanspaces.com"
-            bucket: "dish-build-cache"
-          paths:
-            - './data/'
-      # - docker-compose#v3.7.0:
-      #     build:
-      #       - base
-      #     image-repository: gcr.io/dish-258800/base
-      #     cache-from: base:gcr.io/dish-258800/base:latest
-      #     push: base:gcr.io/dish-258800/base:latest
+      # - gencer/cache#v2.3.10:
+      #     backend: s3
+      #     key: "v1-cache-{{ runner.os }}-base-yarn"
+      #     s3:
+      #       args: "--endpoint-url=https://sfo2.digitaloceanspaces.com"
+      #       bucket: "dish-build-cache"
+      #     paths:
+      #       - './data/'
+      - docker-compose#v3.7.0:
+          build:
+            - base
+          image-repository: gcr.io/dish-258800/base
+          cache-from: base:gcr.io/dish-258800/base:latest
+          push: base:gcr.io/dish-258800/base:latest
           # cant mount volumes on build
           # see: https://github.com/buildkite-plugins/docker-compose-buildkite-plugin/issues/298
           # volumes:

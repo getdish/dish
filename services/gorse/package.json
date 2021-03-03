@@ -10,9 +10,7 @@
     "@dish/async": "*",
     "@dish/graph": "*",
     "@dish/helpers": "*",
+    "ava": "^3.14.0",
     "node-fetch": "^2.6.1"
-  },
-  "devDependencies": {
-    "ava": "^3.14.0"
   }
 }

@@ -12,14 +12,10 @@
     "build": "esdx",
     "watch": "esdx-watch"
   },
-  "devDependencies": {
+  "dependencies": {
     "@dish/esdx": "*",
     "@dish/helpers": "*",
     "@testing-library/react": "^11.2.3",
-    "@types/react": "^16.9.44",
-    "@types/react-dom": "^16.9.8",
-    "@types/react-native": "^0.62.12",
-    "@types/react-test-renderer": "*",
     "debug-http": "^1.1.0",
     "jsdom": "^16.4.0",
     "jsdom-global": "^3.0.2",
@@ -27,5 +23,11 @@
     "react": "*",
     "react-dom": "*",
     "react-test-renderer": "*"
+  },
+  "devDependencies": {
+    "@types/react": "^16.9.44",
+    "@types/react-dom": "^16.9.8",
+    "@types/react-native": "^0.62.12",
+    "@types/react-test-renderer": "*"
   }
 }

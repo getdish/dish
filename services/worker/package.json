@@ -16,10 +16,10 @@
     "@dish/common": "*",
     "@dish/crawlers": "*",
     "@dish/worker": "*",
+    "@dish/esdx": "*",
     "bull": "^3.18.0"
   },
   "devDependencies": {
-    "@dish/esdx": "*",
     "@types/bull": "^3.14.2",
     "nodemon": "^2.0.2",
     "typescript": "*"

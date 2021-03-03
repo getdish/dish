@@ -7,9 +7,7 @@
     "watch": "SNACKUI_COMPILE_PROCESS=1 ttsc --watch --preserveWatchOutput"
   },
   "dependencies": {
-    "@snackui/helpers": "*"
-  },
-  "devDependencies": {
+    "@snackui/helpers": "*",
     "ts-node": "*",
     "ts-transform-import-path-rewrite": "^0.3.0",
     "ttypescript": "^1.5.12",

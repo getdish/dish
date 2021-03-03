@@ -22,12 +22,14 @@
     "prettier": "prettier --write \"**/*.{ts,tsx}\" || true",
     "publish:all": "lerna publish"
   },
-  "devDependencies": {
+  "dependencies": {
     "ava": "^3.14.0",
-    "lerna": "^3.22.1",
     "prettier": "^2.2.1",
     "prettier-plugin-import-sort": "^0.0.6",
     "ultra-runner": "^3.10.5"
+  },
+  "devDependencies": {
+    "lerna": "^3.22.1"
   },
   "importSort": {
     ".js, .jsx, .ts, .tsx": {
