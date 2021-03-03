@@ -31,7 +31,8 @@ COPY dish-app/patches dish-app/patches
 COPY dish-app/etc dish-app/etc
 
 # install
-RUN yarn install --frozen-lockfile --ignore-optional \
+RUN yarn set version berry \
+  && yarn install --frozen-lockfile --ignore-optional \
   && yarn cache clean
 
 COPY .prettierrc .prettierignore tsconfig.json tsconfig.build.json \
