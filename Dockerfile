@@ -34,6 +34,8 @@ COPY dish-app/etc dish-app/etc
 RUN yarn install --immutable-cache \
   && yarn cache clean && ls -la .yarn
 
+RUN ls -la /app/node_modules/.bin || true
+
 COPY .prettierrc .prettierignore tsconfig.json tsconfig.build.json \
   tsconfig.base.parent.json tsconfig.base.json ava.config.js ./
 COPY packages packages

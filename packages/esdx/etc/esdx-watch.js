@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 
-const exec = execa('@yarnpkg/shell')
+const exec = require('execa')
 
 async function go() {
   let dirname = await exec(`$(dirname $(realpath $0))`)

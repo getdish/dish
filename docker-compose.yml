@@ -39,7 +39,7 @@ services:
     image: gcr.io/dish-258800/dish-hooks${DISH_IMAGE_TAG}
     build:
       context: ./
-      dockerfile: ./services/dish-hooks/Dockerfile
+      dockerfile: ./services/hooks/Dockerfile
     ports:
       - 6154:6154
     environment:

@@ -1702,102 +1702,9 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@dish/async@*, @dish/async@^0.0.1, @dish/async@workspace:packages/async":
+"@dish/app@*, @dish/app@workspace:dish-app":
   version: 0.0.0-use.local
-  resolution: "@dish/async@workspace:packages/async"
-  dependencies:
-    "@dish/esdx": "*"
-    "@types/requestidlecallback": 0.3.1
-  languageName: unknown
-  linkType: soft
-
-"@dish/babel-preset@*, @dish/babel-preset@workspace:packages/babel-preset":
-  version: 0.0.0-use.local
-  resolution: "@dish/babel-preset@workspace:packages/babel-preset"
-  dependencies:
-    "@babel/core": ^7.12.9
-    "@babel/plugin-proposal-class-properties": ^7.12.1
-    "@babel/plugin-proposal-decorators": ^7.12.1
-    "@babel/plugin-proposal-nullish-coalescing-operator": ^7.12.1
-    "@babel/plugin-proposal-optional-chaining": ^7.12.1
-    "@babel/plugin-transform-react-constant-elements": 7.12.13
-    "@babel/plugin-transform-react-inline-elements": ^7.12.13
-    "@babel/polyfill": ^7.12.1
-    "@babel/preset-env": ^7.12.1
-    "@babel/preset-react": ^7.12.1
-    "@babel/preset-typescript": ^7.12.1
-    "@eps1lon/babel-plugin-optimize-react": ^0.0.4-alpha.4
-    "@loadable/babel-plugin": ^5.13.2
-    babel-plugin-lodash: ^3.3.4
-    babel-plugin-react-native-web: ^0.14.9
-    babel-plugin-react-wrapped-display-name: ^1.0.0
-    core-js: ^3.9.0
-    react: "*"
-    react-dom: "*"
-    react-native-web: "*"
-    react-refresh: 0.0.0-experimental-3310209d0
-  languageName: unknown
-  linkType: soft
-
-"@dish/common@*, @dish/common@workspace:packages/common":
-  version: 0.0.0-use.local
-  resolution: "@dish/common@workspace:packages/common"
-  dependencies:
-    "@dish/esdx": "*"
-    "@dish/graph": "*"
-    "@sentry/node": ^5.16.1
-    dotenv: ^8.2.0
-    find-up: ^4.1.0
-  languageName: unknown
-  linkType: soft
-
-"@dish/crawlers@*, @dish/crawlers@workspace:services/crawlers":
-  version: 0.0.0-use.local
-  resolution: "@dish/crawlers@workspace:services/crawlers"
-  dependencies:
-    "@dish/async": "*"
-    "@dish/common": "*"
-    "@dish/esdx": "*"
-    "@dish/gqless": "*"
-    "@dish/graph": "*"
-    "@dish/helpers": "*"
-    "@dish/worker": "*"
-    "@types/cheerio": ^0.22.22
-    "@types/pg": ^7.14.10
-    "@types/puppeteer": ^3.0.0
-    acorn: ^7.1.1
-    ava: ^3.14.0
-    aws-sdk: ^2.719.0
-    axios: ^0.19.1
-    bull: ^3.18.0
-    bull-repl: ^0.26.0
-    cheerio: ^1.0.0-rc.3
-    chrono-node: ^2.1.6
-    csv-parse: ^4.9.0
-    graphql: ^15.5.0
-    js-base64: ^2.5.2
-    lodash: "*"
-    moment: ^2.27.0
-    node-fetch: ^2.6.1
-    nodemon: ^2.0.2
-    pg: ^8.5.1
-    proxy-chain: ^0.4.4
-    puppeteer-extra: ^3.1.9
-    puppeteer-extra-plugin-stealth: ^2.4.9
-    sentiment: ^5.0.2
-    sinon: ^9.0.3
-    tabletojson: ^2.0.4
-    transliteration: ^2.1.8
-    typescript: "*"
-  dependenciesMeta:
-    bull-repl:
-      optional: true
-  languageName: unknown
-  linkType: soft
-
-"@dish/dish-app@workspace:dish-app":
-  version: 0.0.0-use.local
-  resolution: "@dish/dish-app@workspace:dish-app"
+  resolution: "@dish/app@workspace:dish-app"
   dependencies:
     "@babel/cli": ^7.13.0
     "@babel/core": ^7.13.8
@@ -1919,6 +1826,99 @@ __metadata:
     react-native-unimodules:
       optional: true
     react-test-renderer:
+      optional: true
+  languageName: unknown
+  linkType: soft
+
+"@dish/async@*, @dish/async@^0.0.1, @dish/async@workspace:packages/async":
+  version: 0.0.0-use.local
+  resolution: "@dish/async@workspace:packages/async"
+  dependencies:
+    "@dish/esdx": "*"
+    "@types/requestidlecallback": 0.3.1
+  languageName: unknown
+  linkType: soft
+
+"@dish/babel-preset@*, @dish/babel-preset@workspace:packages/babel-preset":
+  version: 0.0.0-use.local
+  resolution: "@dish/babel-preset@workspace:packages/babel-preset"
+  dependencies:
+    "@babel/core": ^7.12.9
+    "@babel/plugin-proposal-class-properties": ^7.12.1
+    "@babel/plugin-proposal-decorators": ^7.12.1
+    "@babel/plugin-proposal-nullish-coalescing-operator": ^7.12.1
+    "@babel/plugin-proposal-optional-chaining": ^7.12.1
+    "@babel/plugin-transform-react-constant-elements": 7.12.13
+    "@babel/plugin-transform-react-inline-elements": ^7.12.13
+    "@babel/polyfill": ^7.12.1
+    "@babel/preset-env": ^7.12.1
+    "@babel/preset-react": ^7.12.1
+    "@babel/preset-typescript": ^7.12.1
+    "@eps1lon/babel-plugin-optimize-react": ^0.0.4-alpha.4
+    "@loadable/babel-plugin": ^5.13.2
+    babel-plugin-lodash: ^3.3.4
+    babel-plugin-react-native-web: ^0.14.9
+    babel-plugin-react-wrapped-display-name: ^1.0.0
+    core-js: ^3.9.0
+    react: "*"
+    react-dom: "*"
+    react-native-web: "*"
+    react-refresh: 0.0.0-experimental-3310209d0
+  languageName: unknown
+  linkType: soft
+
+"@dish/common@*, @dish/common@workspace:packages/common":
+  version: 0.0.0-use.local
+  resolution: "@dish/common@workspace:packages/common"
+  dependencies:
+    "@dish/esdx": "*"
+    "@dish/graph": "*"
+    "@sentry/node": ^5.16.1
+    dotenv: ^8.2.0
+    find-up: ^4.1.0
+  languageName: unknown
+  linkType: soft
+
+"@dish/crawlers@*, @dish/crawlers@workspace:services/crawlers":
+  version: 0.0.0-use.local
+  resolution: "@dish/crawlers@workspace:services/crawlers"
+  dependencies:
+    "@dish/async": "*"
+    "@dish/common": "*"
+    "@dish/esdx": "*"
+    "@dish/gqless": "*"
+    "@dish/graph": "*"
+    "@dish/helpers": "*"
+    "@dish/worker": "*"
+    "@types/cheerio": ^0.22.22
+    "@types/pg": ^7.14.10
+    "@types/puppeteer": ^3.0.0
+    acorn: ^7.1.1
+    ava: ^3.14.0
+    aws-sdk: ^2.719.0
+    axios: ^0.19.1
+    bull: ^3.18.0
+    bull-repl: ^0.26.0
+    cheerio: ^1.0.0-rc.3
+    chrono-node: ^2.1.6
+    csv-parse: ^4.9.0
+    graphql: ^15.5.0
+    js-base64: ^2.5.2
+    lodash: "*"
+    moment: ^2.27.0
+    node-fetch: ^2.6.1
+    nodemon: ^2.0.2
+    pg: ^8.5.1
+    proxy-chain: ^0.4.4
+    puppeteer-extra: ^3.1.9
+    puppeteer-extra-plugin-stealth: ^2.4.9
+    sentiment: ^5.0.2
+    sinon: ^9.0.3
+    tabletojson: ^2.0.4
+    transliteration: ^2.1.8
+    typescript: "*"
+  dependenciesMeta:
+    bull-repl:
       optional: true
   languageName: unknown
   linkType: soft
@@ -5592,6 +5592,15 @@ __metadata:
   languageName: node
   linkType: hard
 
+"ansi-split@npm:^1.0.1":
+  version: 1.0.1
+  resolution: "ansi-split@npm:1.0.1"
+  dependencies:
+    ansi-regex: ^3.0.0
+  checksum: df037184ad634ceee3822d442d2cc2cf4a2d150d6ea5aa745f80cf79eb8456d81eaa5e1d5559498aac52b862b5948d84980efd7f47bc648d87c4fd798aacbdd1
+  languageName: node
+  linkType: hard
+
 "ansi-styles@npm:^2.2.1":
   version: 2.2.1
   resolution: "ansi-styles@npm:2.2.1"
@@ -8373,7 +8382,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"cross-spawn@npm:^7.0.0":
+"cross-spawn@npm:^7.0.0, cross-spawn@npm:^7.0.3":
   version: 7.0.3
   resolution: "cross-spawn@npm:7.0.3"
   dependencies:
@@ -9291,6 +9300,7 @@ __metadata:
   resolution: "dish-monorepo@workspace:."
   dependencies:
     "@babel/runtime": ^7.12.5
+    "@dish/app": "*"
     "@types/fs-extra": ^9.0.8
     "@types/node": ^14.14.12
     "@types/react-native": ^0.63.45
@@ -9310,6 +9320,7 @@ __metadata:
     tsconfig-paths: ^3.9.0
     typescript: 4.2.2
     typescript-monorepo-toolkit: ^0.2.0
+    ultra-runner: ^3.10.5
   dependenciesMeta:
     expo-yarn-workspaces:
       optional: true
@@ -10646,7 +10657,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"fast-glob@npm:^3.0.3, fast-glob@npm:^3.1.1":
+"fast-glob@npm:^3.0.3, fast-glob@npm:^3.1.1, fast-glob@npm:^3.2.5":
   version: 3.2.5
   resolution: "fast-glob@npm:3.2.5"
   dependencies:
@@ -11515,7 +11526,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"glob@npm:7.1.6, glob@npm:^7.0.0, glob@npm:^7.0.3, glob@npm:^7.1.1, glob@npm:^7.1.2, glob@npm:^7.1.3, glob@npm:^7.1.4, glob@npm:^7.1.6":
+"glob@npm:7.1.6, glob@npm:^7.0.0, glob@npm:^7.0.3, glob@npm:^7.0.5, glob@npm:^7.1.1, glob@npm:^7.1.2, glob@npm:^7.1.3, glob@npm:^7.1.4, glob@npm:^7.1.6":
   version: 7.1.6
   resolution: "glob@npm:7.1.6"
   dependencies:
@@ -11620,6 +11631,13 @@ __metadata:
     pify: ^4.0.1
     slash: ^2.0.0
   checksum: af02094ec14d269e61b1100918f8d7ea12e04b4acad735babdb400d93d62810caa5fb90b5506b7251f99c1fe677f02985ddab20953ded841b0f553a8674456e3
+  languageName: node
+  linkType: hard
+
+"globrex@npm:^0.1.2":
+  version: 0.1.2
+  resolution: "globrex@npm:0.1.2"
+  checksum: 78825a08abba1994cc3f79a3812a627cf22ac676b08e3b812a7c284af47d39d4dcddff6ac811cb994e817949df1ea53a17c13aa561d9c265b4d3fc34b7362990
   languageName: node
   linkType: hard
 
@@ -12333,7 +12351,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"ignore@npm:^5.1.1, ignore@npm:^5.1.4":
+"ignore@npm:^5.1.1, ignore@npm:^5.1.4, ignore@npm:^5.1.8":
   version: 5.1.8
   resolution: "ignore@npm:5.1.8"
   checksum: b08e3d5b5d94eca13475f29a5d47d221060e9cdd7e38d7647088e29d90130669a970fecbc4cdb41b8fa295c6673740c729d3dc05dadc381f593efb42282cbf9f
@@ -15758,6 +15776,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"micro-memoize@npm:^4.0.9":
+  version: 4.0.9
+  resolution: "micro-memoize@npm:4.0.9"
+  checksum: 67e7a8d1da9f3030be9f898b407ad0135b897bb541be3b995cb6bf70051fefd3e4bf38e17ed5085663266a3b945a469b2df27ffd06cf6362d77ba03280de0958
+  languageName: node
+  linkType: hard
+
 "micromatch@npm:^3.1.10, micromatch@npm:^3.1.4":
   version: 3.1.10
   resolution: "micromatch@npm:3.1.10"
@@ -16535,21 +16560,21 @@ __metadata:
   languageName: node
   linkType: hard
 
+"npm-run-path@npm:4.0.1, npm-run-path@npm:^4.0.0":
+  version: 4.0.1
+  resolution: "npm-run-path@npm:4.0.1"
+  dependencies:
+    path-key: ^3.0.0
+  checksum: 058fd068804f8c34fcef9393fc895d45400834c9f90bbafc57259f9fd47e8796712e4ad54524f0971b806260a118bf61ac37b0bf9f74e9e58c84bae780ae09e6
+  languageName: node
+  linkType: hard
+
 "npm-run-path@npm:^2.0.0":
   version: 2.0.2
   resolution: "npm-run-path@npm:2.0.2"
   dependencies:
     path-key: ^2.0.0
   checksum: 0a1bc9a1e0faa7e54a011929b830121d5da393f50cbe37c83f3ffd67781b6d176739ba6e8eab5d56faa05738a60f7eb50389673767db0dc887073932f80b9b60
-  languageName: node
-  linkType: hard
-
-"npm-run-path@npm:^4.0.0":
-  version: 4.0.1
-  resolution: "npm-run-path@npm:4.0.1"
-  dependencies:
-    path-key: ^3.0.0
-  checksum: 058fd068804f8c34fcef9393fc895d45400834c9f90bbafc57259f9fd47e8796712e4ad54524f0971b806260a118bf61ac37b0bf9f74e9e58c84bae780ae09e6
   languageName: node
   linkType: hard
 
@@ -17611,6 +17636,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"pid-cwd@npm:^1.2.0":
+  version: 1.2.0
+  resolution: "pid-cwd@npm:1.2.0"
+  checksum: 4f142b27cc0e675bb17ccf5edc65fcd41e1c0883bb641766852d3f706e5ca9cf66ef43019b8e3816b67cac20ba31ff15c536898cd4ab13545d72953441f2a6c2
+  languageName: node
+  linkType: hard
+
 "pidtree@npm:^0.3.0":
   version: 0.3.1
   resolution: "pidtree@npm:0.3.1"
@@ -18513,6 +18545,13 @@ __metadata:
   version: 1.1.0
   resolution: "proxy-from-env@npm:1.1.0"
   checksum: 6459372a57f3e8ef5211f7847ca2fffabcdd6490005892fcc0dcd62fe2b3551900c8a07fad7df9de3897547b1ab4ac7a7197964cd6fa7e76303caa4936bfaf32
+  languageName: node
+  linkType: hard
+
+"ps-list@npm:^7.2.0":
+  version: 7.2.0
+  resolution: "ps-list@npm:7.2.0"
+  checksum: 7288e6de74108d5a4fc8b6f639c33aef403b4adb68e0039e3de9ae63095c85e0d093944ae58722bd2ed2fd8408df7d94c29a172055a064ef7dc405ca1bd0798a
   languageName: node
   linkType: hard
 
@@ -20388,6 +20427,13 @@ __metadata:
   version: 1.7.2
   resolution: "shell-quote@npm:1.7.2"
   checksum: 3b3d06814ca464cde8594c27bdd57a1f4c06b26ad2988b08b5819f97ac1edfd7cb7313fda1c909da33211972c72c5a7906b7da2b62078109f9d3274d3f404fa9
+  languageName: node
+  linkType: hard
+
+"shellwords-ts@npm:^3.0.0":
+  version: 3.0.0
+  resolution: "shellwords-ts@npm:3.0.0"
+  checksum: b8214c47eeabd18c6b42e9cbdf9d338f156f14534300059f53824e386476bb089e73b45368c81f91b174418ee440cfe646cb3bcc93e6fd0b77f55539dfbe5cfb
   languageName: node
   linkType: hard
 
@@ -22320,6 +22366,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"type-fest@npm:^0.21.2":
+  version: 0.21.2
+  resolution: "type-fest@npm:0.21.2"
+  checksum: 0049e9800dbe17df86ac444bea682a6bacdb4b0f31a257bc71da7afa64149eebb8e4013171fb9ce8629d99a8a34d3c6cdaed1642d28b3ae77619cd7f331c79a9
+  languageName: node
+  linkType: hard
+
 "type-fest@npm:^0.3.0, type-fest@npm:^0.3.1":
   version: 0.3.1
   resolution: "type-fest@npm:0.3.1"
@@ -22420,6 +22473,34 @@ __metadata:
   bin:
     uglifyjs: bin/uglifyjs
   checksum: 1f821c914e73c42f9594732937f6dcc27d27d4b563ade8fea228d746a2ddb98c6d95414b0ccfbfea50a2bb6bccdb537a3705182c11327debf63ae8ce475e261c
+  languageName: node
+  linkType: hard
+
+"ultra-runner@npm:^3.10.5":
+  version: 3.10.5
+  resolution: "ultra-runner@npm:3.10.5"
+  dependencies:
+    ansi-split: ^1.0.1
+    chalk: ^4.1.0
+    cross-spawn: ^7.0.3
+    fast-glob: ^3.2.5
+    globrex: ^0.1.2
+    ignore: ^5.1.8
+    json5: ^2.2.0
+    micro-memoize: ^4.0.9
+    npm-run-path: 4.0.1
+    pid-cwd: ^1.2.0
+    ps-list: ^7.2.0
+    shellwords-ts: ^3.0.0
+    string-width: ^4.2.0
+    tslib: 2.1.0
+    type-fest: ^0.21.2
+    wrap-ansi: ^7.0.0
+    yamljs: ^0.3.0
+    yargs: ^16.2.0
+  bin:
+    ultra: bin/ultra.js
+  checksum: 2e10a69d3c20b862ba3ae54da4c599ebdb2ae2e4c277f5e58342b4136e945c771294fa30966ab48a148496b4874b93c47cc7f81de08b74af6e56676e44b100b5
   languageName: node
   linkType: hard
 
@@ -23855,6 +23936,19 @@ __metadata:
   version: 4.0.0
   resolution: "yallist@npm:4.0.0"
   checksum: a2960ef879af6ee67a76cae29bac9d8bffeb6e9e366c217dbd21464e7fce071933705544724f47e90ba5209cf9c83c17d5582dd04415d86747a826b2a231efb8
+  languageName: node
+  linkType: hard
+
+"yamljs@npm:^0.3.0":
+  version: 0.3.0
+  resolution: "yamljs@npm:0.3.0"
+  dependencies:
+    argparse: ^1.0.7
+    glob: ^7.0.5
+  bin:
+    json2yaml: ./bin/json2yaml
+    yaml2json: ./bin/yaml2json
+  checksum: 3ee0f59843b8626d81b8d4919f0f36d6a35d5d0eb1a11ef471593a30a7c579b8b7df9f013809d3d60e37d4084f0db313a1c663ad4bd6e5f343017ad350c6b234
   languageName: node
   linkType: hard
 

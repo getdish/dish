@@ -8,7 +8,7 @@ app.use(express.json())
 const PORT = process.env.PORT || 6154
 const GORSE_ENDPOINT = process.env.GORSE_ENDPOINT || 'http://gorse:9000'
 const dev_root = './src'
-const docker_root = '/app/services/dish-hooks/src'
+const docker_root = '/app/services/hooks/src'
 const ROOT = process.env.DISH_ENV == 'production' ? docker_root : dev_root
 
 type GorseFeedback = {
