@@ -69,6 +69,7 @@
     "snackui:push": "git subrepo clean snackui && git subrepo push snackui"
   },
   "resolutions": {
+    "react-native": "0.0.0",
     "@unimodules/core": "7.0.0",
     "aws-sdk": "2.762.0",
     "typescript": "4.2.2",
@@ -86,7 +87,6 @@
     "react-refresh": "0.9.0",
     "react-native-web": "0.0.0-466063b7e",
     "react-native-svg": "",
-    "react-native": "0.63.2",
     "@react-native-community/cli": "4.13.0",
     "@react-native-community/cli-platform-ios": "4.13.0",
     "metro": "0.62.0",

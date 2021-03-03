@@ -23,6 +23,7 @@ FROM node:15.10.0-buster as install-stage
 COPY --from=base /app /app
 WORKDIR /app
 
+# COPY .npm-packages-offline-cache .npm-packages-offline-cache
 COPY .yarnrc .
 COPY yarn.lock .
 COPY patches patches
@@ -31,13 +32,8 @@ COPY dish-app/patches dish-app/patches
 COPY dish-app/etc dish-app/etc
 
 # install
-RUN yarn install --production \
-  && yarn cache clean \
-   rm -r dish-app/node_modules/jsc-android || true \
-   rm -r dish-app/node_modules/react-native || true \
-   rm -r node_modules/jsc-android || true \
-   rm -r node_modules/hermes-engine || true \
-   rm -r node_modules/metro* || true
+RUN yarn install --frozen-lockfile --ignore-optional \
+  && yarn cache clean
 
 COPY .prettierignore .
 COPY .prettierrc .
@@ -51,8 +47,8 @@ COPY services services
 COPY dish-app dish-app
 COPY snackui snackui
 
-RUN (cd packages/esdx && yarn link) && \
-  yarn build && \
-  yarn install --production --offline
+RUN (cd packages/esdx && yarn link) \
+  && yarn build
+
 
 CMD ["true"]
