@@ -1,5 +1,5 @@
 import Webpack, { Configuration } from 'webpack'
-import WebpackPwaManifest from 'webpack-pwa-manifest'
+// import WebpackPwaManifest from 'webpack-pwa-manifest'
 
 export type ServerConfig = {
   rootDir: string
@@ -42,7 +42,7 @@ export type CreateWebpackConfig = {
   }
   resolve?: Webpack.ResolveOptions
   htmlOptions?: Object
-  pwaOptions?: WebpackPwaManifest.ManifestOptions
+  // pwaOptions?: WebpackPwaManifest.ManifestOptions
   defineOptions?: Object
   polyFillPath?: string
   disableHot?: boolean

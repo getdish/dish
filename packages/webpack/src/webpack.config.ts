@@ -17,7 +17,8 @@ import { DuplicatesPlugin } from 'inspectpack/plugin'
 import SpeedMeasurePlugin from 'speed-measure-webpack-plugin'
 import TerserPlugin from 'terser-webpack-plugin'
 import Webpack from 'webpack'
-import WebpackPwaManifest from 'webpack-pwa-manifest'
+
+// import WebpackPwaManifest from 'webpack-pwa-manifest'
 
 const { ESBuildPlugin } = require('esbuild-loader')
 
@@ -326,7 +327,7 @@ export function createWebpackConfig({
 
         !!htmlOptions && new HTMLWebpackPlugin(htmlOptions),
 
-        !!pwaOptions && new WebpackPwaManifest(pwaOptions),
+        // !!pwaOptions && new WebpackPwaManifest(pwaOptions),
 
         !!isVerbose &&
           new DuplicatesPlugin({

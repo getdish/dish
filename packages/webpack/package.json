@@ -44,8 +44,7 @@
     "url-loader": "^4.1.1",
     "webpack": "*",
     "webpack-merge-and-include-globally": "^2.3.3",
-    "webpack-node-externals": "^2.5.2",
-    "webpack-pwa-manifest": "^4.3.0"
+    "webpack-node-externals": "^2.5.2"
   },
   "optionalDependencies": {
     "@welldone-software/why-did-you-render": "^6.0.3",

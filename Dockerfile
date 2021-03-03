@@ -27,7 +27,6 @@ COPY .yarnrc.yml .
 COPY yarn.lock .
 COPY patches patches
 COPY bin bin
-COPY dish-app/patches dish-app/patches
 COPY dish-app/etc dish-app/etc
 
 # install

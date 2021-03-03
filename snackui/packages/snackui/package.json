@@ -20,6 +20,7 @@
     "@snackui/helpers": "^0.0.6",
     "css-mediaquery": "^0.1.2",
     "expo-linear-gradient": "^8.4.0",
+    "expo-screen-orientation": "3.0.0",
     "lodash": "^4.17.20",
     "react": "*",
     "react-dom": "*",
@@ -35,9 +36,6 @@
     "@types/react-dom": "^16.9.8",
     "esbuild": "*",
     "typescript": "*"
-  },
-  "optionalDependencies": {
-    "expo-screen-orientation": "3.0.0"
   },
   "gitHead": "503b64ff877fbb47382ba34266af192b2de81ffb"
 }
