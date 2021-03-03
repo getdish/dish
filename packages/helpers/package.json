@@ -13,7 +13,6 @@
     "watch": "esdx-watch"
   },
   "dependencies": {
-    "@dish/fast-compare": "^2.7.6",
     "lodash": "*",
     "node-localstorage": "^2.1.6",
     "react": "*"
