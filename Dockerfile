@@ -4,11 +4,6 @@
 FROM node:15.10.0-buster as base
 WORKDIR /app
 
-ENV PATH=$PATH:/app/node_modules/.bin:node_modules/.bin
-ENV NODE_OPTIONS="--max_old_space_size=8192"
-ENV DOCKER_BUILD=true
-ENV PUPPETEER_SKIP_CHROMIUM_DOWNLOAD=true
-
 # copy everything
 COPY packages packages
 COPY services services
@@ -30,6 +25,11 @@ COPY patches patches
 COPY bin bin
 COPY dish-app/etc dish-app/etc
 
+ENV PATH=$PATH:/app/node_modules/.bin:node_modules/.bin
+ENV NODE_OPTIONS="--max_old_space_size=8192"
+ENV DOCKER_BUILD=true
+ENV PUPPETEER_SKIP_CHROMIUM_DOWNLOAD=true
+
 # install
 RUN yarn install --immutable-cache \
   && yarn cache clean && ls -la .yarn
@@ -43,7 +43,13 @@ COPY services services
 COPY dish-app dish-app
 COPY snackui snackui
 
-RUN yarn build
+RUN ls -la /app/packages/esdx || true
+RUN ln -s /app/packages/txdx/etc/esdx.js /app/node_modules/.bin/esdx
+RUN ls -la /app/node_modules/.bin || true
+RUN which esdx || true
+RUN echo $PATH
 
+
+RUN yarn build
 
 CMD ["true"]
