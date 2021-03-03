@@ -131,8 +131,8 @@ steps:
       LOG_DOCKER: true
       DOCKER_CLEAN: true
 
-  - label: "run integration test"
-    command: ".buildkite/scripts/integration_tests.sh"
+  # - label: "run integration test"
+  #   command: ".buildkite/scripts/integration_tests.sh"
 
   - wait
 
