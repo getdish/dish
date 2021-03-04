@@ -22,3 +22,4 @@ snackui/website
 snackui/examples
 *.md
 .vscode
+env.enc.production.yaml
