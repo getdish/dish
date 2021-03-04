@@ -1,6 +1,9 @@
 ARG DISH_BASE_VERSION=latest
 FROM gcr.io/dish-258800/base:$DISH_BASE_VERSION as base
 
+FROM gcr.io/dish-258800/base:$DISH_BASE_VERSION as install
+COPY --from=base /app /app
+
 WORKDIR /app
 
 # try and avoid reinstalls
@@ -17,11 +20,10 @@ RUN \
       && apt-get clean \
       && rm -rf /var/lib/apt/lists/*
 
-FROM base
-COPY --from=base /app /app
-WORKDIR /app/dish-app
-
-COPY yarn.lock package.json ./
+FROM gcr.io/dish-258800/base:$DISH_BASE_VERSION as build
+COPY --from=install /app /app
+WORKDIR /app
+COPY --from=base /app/yarn.lock /app/package.json ./
 
 WORKDIR /app/dish-app
 ENV NODE_ENV=production

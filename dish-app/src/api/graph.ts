@@ -7,7 +7,7 @@ import redis from 'redis'
 const url =
   process.env.FLY_REDIS_CACHE_URL ||
   process.env.REDIS_URL ||
-  'redis://localhost:6379'
+  `redis://${process.env.REDIS_HOST || 'localhost'}:6379`
 console.log('redis url', url)
 const rc = redis.createClient({
   url,
