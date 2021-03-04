@@ -12,7 +12,7 @@ echo "deploying with postgres url $HASURA_FLY_POSTGRES_URL"
 
 flyctl secrets set \
     HASURA_GRAPHQL_DATABASE_URL="$HASURA_FLY_POSTGRES_URL" \
-    HASURA_GRAPHQL_NO_OF_RETRIES="10" \
+    HASURA_GRAPHQL_NO_OF_RETRIES="300" \
     HASURA_GRAPHQL_ENABLED_LOG_TYPES="startup, http-log, webhook-log, websocket-log, query-log" \
     HASURA_GRAPHQL_ENABLE_TELEMETRY="false" \
     HASURA_GRAPHQL_ADMIN_SECRET="${TF_VAR_HASURA_GRAPHQL_ADMIN_SECRET:-password}" \
