@@ -5,7 +5,9 @@ import { GRAPH_API_INTERNAL, fetchLog, getAuthHeaders } from '@dish/graph'
 import redis from 'redis'
 
 const url =
-  process.env.FLY_REDIS_CACHE_URL || process.env.REDIS_URL || 'localhost:6379'
+  process.env.FLY_REDIS_CACHE_URL ||
+  process.env.REDIS_URL ||
+  'redis://localhost:6379'
 console.log('redis url', url)
 const rc = redis.createClient({
   url,
