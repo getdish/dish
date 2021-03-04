@@ -49,9 +49,4 @@ RUN find . -type d \(  -name "test" -o -name "tests"  \) -print | xargs rm -rf &
 
 RUN yarn build
 
-COPY packages packages
-COPY services services
-COPY dish-app dish-app
-COPY snackui snackui
-
 CMD ["true"]

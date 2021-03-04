@@ -1,17 +1,11 @@
 ARG DISH_BASE_VERSION=latest
-FROM gcr.io/dish-258800/base:$DISH_BASE_VERSION as base
-
-FROM gcr.io/dish-258800/base:$DISH_BASE_VERSION as install
-COPY --from=base /app /app
+FROM gcr.io/dish-258800/base:$DISH_BASE_VERSION
+ENV NODE_ENV=production
 
 WORKDIR /app
 
 # try and avoid reinstalls
-RUN rm -r services && \
-      find . -type d \(  -name "test" -o -name "tests"  \) -print | xargs rm -rf && \
-      find . -type f \(  -name "*.md"  \) -print | xargs rm -rf \
-      rm package.json && \
-      rm yarn.lock
+RUN rm package.json && rm yarn.lock
 
 RUN \
   apt-get update && apt-get install -y parallel build-essential \
@@ -20,14 +14,11 @@ RUN \
       && apt-get clean \
       && rm -rf /var/lib/apt/lists/*
 
-FROM gcr.io/dish-258800/base:$DISH_BASE_VERSION as build
-WORKDIR /app
-COPY --from=base /app/yarn.lock /app/package.json /app/.yarnrc.yml ./
-COPY --from=install /app/packages /app/packages
-COPY --from=install /app/dish-app /app/dish-app
+COPY package.json ./
+COPY packages packages
+COPY dish-app dish-app
+COPY snackui snackui
 
-WORKDIR /app/dish-app
-ENV NODE_ENV=production
 RUN yarn web:build
 
 EXPOSE 4444

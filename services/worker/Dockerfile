@@ -1,6 +1,10 @@
 ARG DISH_BASE_VERSION=latest
 FROM gcr.io/dish-258800/base:$DISH_BASE_VERSION
 
+WORKDIR /app
+COPY services/worker services/worker
+COPY packages packages
+
 RUN apt-get update && apt-get install -y \
       gconf-service libasound2 libatk1.0-0 libatk-bridge2.0-0 \
       libc6 libcairo2 libcups2 libdbus-1-3 libexpat1 libgbm-dev \
