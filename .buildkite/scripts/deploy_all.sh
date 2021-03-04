@@ -14,11 +14,6 @@ fi
 export FLYCTL_INSTALL="$HOME/.fly"
 export PATH="$FLYCTL_INSTALL/bin:$PATH"
 
-# export env
-set -a
-eval $(./dishctl.sh yaml_to_env)
-set +a
-
 export FLY_API_TOKEN=$FLY_API_TOKEN
 
 # deploy

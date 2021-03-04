@@ -1106,15 +1106,22 @@ function sync_local_code_to_staging() {
   rsync -avP --filter=':- .gitignore' . root@ssh.staging.dishapp.com:/app
 }
 
+function export_env() {
+  set -a
+  eval $(./dishctl.sh yaml_to_env)
+  set +a
+}
+
 function deploy_all() {
+  export_env
   where=${1:-registry}
   echo "deploying apps via $where"
   deploy $where postgres
-  deploy $where hasura
-  deploy $where app &
+  deploy $where hasura # depends on postgres
+  deploy $where tileserver & # depends on hasura
+  deploy $where app & # depends on hasura
   deploy $where search &
   deploy $where timescale &
-  deploy $where tileserver &
   deploy $where hooks &
   deploy $where worker &
   wait -n
