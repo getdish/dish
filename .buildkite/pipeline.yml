@@ -19,15 +19,6 @@ steps:
           cache-from: base:gcr.io/dish-258800/base:latest
           push: base:gcr.io/dish-258800/base:latest
 
-  - label: ":docker: build dish-hooks"
-    depends_on: base
-    plugins:
-      - docker-compose#v3.7.0:
-          build: dish-hooks
-          image-repository: gcr.io/dish-258800/dish-hooks
-          cache-from: base:gcr.io/dish-258800/dish-hooks:latest
-          push: dish-hooks:gcr.io/dish-258800/dish-hooks:latest
-
   - label: ":docker: build dish-app-web"
     depends_on: base
     key: web
@@ -37,6 +28,24 @@ steps:
           image-repository: gcr.io/dish-258800/dish-app-web
           cache-from: base:gcr.io/dish-258800/dish-app-web:latest
           push: dish-app-web:gcr.io/dish-258800/dish-app-web:latest
+
+  - label: ":docker: build test"
+    depends_on: base
+    plugins:
+      - docker-compose#v3.7.0:
+          build: test
+          image-repository: gcr.io/dish-258800/test
+          cache-from: base:gcr.io/dish-258800/test:latest
+          push: test:gcr.io/dish-258800/test:latest
+
+  - label: ":docker: build dish-hooks"
+    depends_on: base
+    plugins:
+      - docker-compose#v3.7.0:
+          build: dish-hooks
+          image-repository: gcr.io/dish-258800/dish-hooks
+          cache-from: base:gcr.io/dish-258800/dish-hooks:latest
+          push: dish-hooks:gcr.io/dish-258800/dish-hooks:latest
 
   - label: ":docker: build worker"
     depends_on: base
@@ -163,7 +172,7 @@ steps:
   - wait
 
   - label: "run tests"
-    command: "docker run --net host ${DISH_REGISTRY}/base:latest yarn test"
+    command: "docker run --net host ${DISH_REGISTRY}/test:latest yarn test"
     env:
       LOG_DOCKER: true
       DOCKER_CLEAN_ON_FAIL: true
