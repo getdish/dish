@@ -37,15 +37,18 @@ export -f wait_until_dish_app_ready
 
 # SCRIPT
 
+export POSTGRES_STRATEGY=simple
+
 mkdir -p $HOME/.dish/postgres
 chown -R root:root $HOME/.dish/postgres
 
-export POSTGRES_STRATEGY=simple
-
-# Postgres needs 2 starts to get everything set up
-docker-compose up -d postgres
-sleep 4
-docker-compose down -t 3
+# if not already mounted/setup, we need to start postgres once and stop it so it sets up
+if [ ! -d $HOME/.dish/postgres/data ]; then
+  # Postgres needs 2 starts to get everything set up
+  docker-compose up -d postgres
+  sleep 4
+  docker-compose down -t 3
+fi
 
 echo "Starting docker for tests"
 ./dishctl.sh docker_compose_up_for_tests -d
