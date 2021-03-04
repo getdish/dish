@@ -1,7 +1,7 @@
 app = "dish-app"
 
 kill_signal = "SIGINT"
-kill_timeout = 5
+kill_timeout = 4
 
 [experimental]
   private_network = true

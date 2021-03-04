@@ -155,8 +155,8 @@ steps:
           backend: s3
           key: "v1-cache-{{ runner.os }}-{{ checksum 'services/hasura/package.json' }}"
           s3:
-            args: "--endpoint-url=https://sfo2.digitaloceanspaces.com"
-            bucket: "dish-build-cache"
+            args: "--endpoint-url=https://sfo3.digitaloceanspaces.com"
+            bucket: "dish-build-cache2"
           paths:
             - '/root/.dish/'
 
