@@ -22,6 +22,7 @@ snackui/website
 snackui/examples
 *.md
 .vscode
+dishctl.sh
 env.enc.production.yaml
 **/fly.toml
 fly.toml
