@@ -6,7 +6,7 @@ if [ "$TIMESCALE_FLY_POSTGRES_USER" = "" ]; then
     exit 1
 fi
 
-flyctl postgres attach --postgres-app dish-db || true
+# flyctl postgres attach --postgres-app dish-db || true
 
 flyctl secrets set \
     POSTGRES_USER="$TIMESCALE_FLY_POSTGRES_USER" \
