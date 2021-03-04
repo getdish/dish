@@ -22,7 +22,8 @@ test.beforeEach(async () => {
   await tagUpsert([tag])
 })
 
-test('Finds and save images for a dish', async (t) => {
+// can be re-enabled, needs to test locally though its trying to test on prod
+test.skip('Finds and save images for a dish', async (t) => {
   let images = new GoogleImages()
   images.max_images = 1
   let tag = await tagFindOne({ id: id })
