@@ -1165,7 +1165,7 @@ function deploy_fly_app() {
   fi
   if [ -f ".ci/post_deploy.sh" ]; then
     echo "running post-deploy script $app..."
-    eval $(yaml_to_env) .ci/pre_deploy.sh
+    eval $(yaml_to_env) .ci/post_deploy.sh
   fi
   popd
 }
