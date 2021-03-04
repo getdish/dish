@@ -6,6 +6,7 @@ services:
       context: .
       dockerfile: ./Dockerfile
   postgres:
+    image: gcr.io/dish-258800/postgres-${POSTGRES_STRATEGY:-ha}${DISH_IMAGE_TAG}
     command: postgres -c 'max_connections=800'
     build:
       context: ./services/postgres-${POSTGRES_STRATEGY:-ha}
