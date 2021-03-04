@@ -33,6 +33,9 @@ services:
       - 5433:5432
   redis:
     image: redis
+    build:
+      context: ./services/redis
+      dockerfile: ./Dockerfile
     ports:
       - 6379:6379
   dish-hooks:
@@ -121,6 +124,9 @@ services:
       - 'postgres'
   gorse:
     image: gcr.io/dish-258800/gorse
+    build:
+      context: ./services/gorse
+      dockerfile: ./Dockerfile
     volumes:
       - ${HOME}/.dish/gorse:/data
       - ./services/gorse/config.local.toml:/app/config.toml
