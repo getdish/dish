@@ -643,10 +643,11 @@ function install_gcloud_sdk() {
   base=https://dl.google.com/dl/cloudsdk/channels/rapid/downloads
   archive=$base/google-cloud-sdk-$GCLOUD_VERSION-linux-x86_64.tar.gz
   install_path=$HOME/bin
-  echo "Installing GCloud SDK v$GCLOUD_VERSION..."
+  echo "Installing GCloud SDK v$GCLOUD_VERSION... to $install_path"
   curl -sL "$archive" | tar xzf - -C /tmp
   cp -a /tmp/google-cloud-sdk $install_path
   gcloud_init
+  gcloud config set component_manager/disable_update_check true
 }
 
 function gcloud_init() {
