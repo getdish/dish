@@ -97,4 +97,6 @@ if [ "$ENV_SET" != "true" ]; then
   export ENV_SET="true"
 fi
 
+echo $AWS_ACCESS_KEY_ID
+
 echo $(date -u) "done"

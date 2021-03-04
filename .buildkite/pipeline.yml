@@ -153,10 +153,10 @@ steps:
     plugins:
       - gencer/cache#v2.3.10:
           backend: s3
-          key: "v1-cache-{{ runner.os }}-{{ checksum 'services/hasura/package.json' }}"
+          key: "v1-cache-{{ runner.os }}"
           s3:
-            args: "--endpoint-url=https://sfo3.digitaloceanspaces.com"
-            bucket: "dish-build-cache2"
+            args: "--endpoint-url=https://sfo2.digitaloceanspaces.com"
+            bucket: "dish-build-cache"
           paths:
             - '/root/.dish/'
 
