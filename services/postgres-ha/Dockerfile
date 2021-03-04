@@ -26,7 +26,9 @@ ADD /config/* /fly/
 RUN useradd -ms /bin/bash stolon
 COPY --from=flyutil /go/src/github.com/fly-examples/postgres-ha/fly* /usr/local/bin/
 
-RUN apt-get install --no-install-recommends -y postgis postgresql-12-postgis-2.5.
+RUN apt-get install --no-install-recommends -y \
+    postgis postgresql-12-postgis-2.5 \
+    && apt autoremove -y
 
 EXPOSE 5432
 
