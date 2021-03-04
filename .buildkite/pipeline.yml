@@ -110,7 +110,7 @@ steps:
           cache-from: base:gcr.io/dish-258800/postgres-ha:latest
           push: postgres:gcr.io/dish-258800/postgres-ha:latest
 
-  - label: ":docker: build postgres simple"
+  - label: ":docker: build postgres for tests"
     retry:
       automatic: true
     env:
@@ -121,6 +121,26 @@ steps:
           image-repository: gcr.io/dish-258800/postgres-simple
           cache-from: base:gcr.io/dish-258800/postgres-simple:latest
           push: postgres:gcr.io/dish-258800/postgres-simple:latest
+
+  - label: ":docker: build redis for tests"
+    retry:
+      automatic: true
+    plugins:
+      - docker-compose#v3.7.0:
+          build: redis
+          image-repository: gcr.io/dish-258800/redis
+          cache-from: base:gcr.io/dish-258800/redis:latest
+          push: redis:gcr.io/dish-258800/redis:latest
+
+  - label: ":docker: build gorse for tests"
+    retry:
+      automatic: true
+    plugins:
+      - docker-compose#v3.7.0:
+          build: gorse
+          image-repository: gcr.io/dish-258800/gorse
+          cache-from: base:gcr.io/dish-258800/gorse:latest
+          push: gorse:gcr.io/dish-258800/gorse:latest
 
   - wait
 
