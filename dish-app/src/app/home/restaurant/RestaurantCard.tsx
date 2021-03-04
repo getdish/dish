@@ -3,6 +3,8 @@ import { debounce } from 'lodash'
 import React, { Suspense } from 'react'
 import { AbsoluteVStack, HStack, Hoverable } from 'snackui'
 
+import { cardFrameHeight, cardFrameWidth } from '../../../constants/constants'
+import { getImageUrl } from '../../../helpers/getImageUrl'
 import {
   queryRestaurant,
   queryRestaurantCoverPhoto,
@@ -105,7 +107,7 @@ export const RestaurantCardContent = graphql(
               </AbsoluteVStack>
             </>
           )}
-          photo={restaurantPhoto}
+          photo={getImageUrl(restaurantPhoto, cardFrameWidth, cardFrameHeight)}
           aspectFixed={aspectFixed}
           hoverable={hoverable}
           padTitleSide={padTitleSide}
