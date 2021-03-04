@@ -27,4 +27,4 @@ kill_timeout = 5
     interval = "10s"
     port = "8080"
     restart_limit = 5
-    timeout = "2s"
+    timeout = "6s"

@@ -23,3 +23,5 @@ snackui/examples
 *.md
 .vscode
 env.enc.production.yaml
+**/fly.toml
+fly.toml
