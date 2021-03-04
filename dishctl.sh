@@ -1108,11 +1108,13 @@ function sync_local_code_to_staging() {
 function deploy_all() {
   where=${1:-registry}
   echo "deploying apps via $where"
-  deploy app $where &
+  deploy postgres $where &
   deploy hasura $where &
+  wait
+  db_migrate
+  deploy app $where &
   deploy search $where &
   deploy timescale $where &
-  deploy postgres $where &
   deploy tileserver $where &
   deploy hooks $where &
   deploy worker $where &
