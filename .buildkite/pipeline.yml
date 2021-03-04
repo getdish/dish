@@ -98,17 +98,29 @@ steps:
           cache-from: base:gcr.io/dish-258800/image-proxy:latest
           push: image-proxy:gcr.io/dish-258800/image-proxy:latest
 
-  - label: ":docker: build postgres"
+  - label: ":docker: build postgres ha"
     retry:
       automatic: true
     env:
-      POSTGRES_STRATEGY: simple
+      POSTGRES_STRATEGY: ha
     plugins:
       - docker-compose#v3.7.0:
           build: postgres
-          image-repository: gcr.io/dish-258800/postgres
-          cache-from: base:gcr.io/dish-258800/postgres:latest
-          push: postgres:gcr.io/dish-258800/postgres:latest
+          image-repository: gcr.io/dish-258800/postgres-ha
+          cache-from: base:gcr.io/dish-258800/postgres-ha:latest
+          push: postgres:gcr.io/dish-258800/postgres-ha:latest
+
+  - label: ":docker: build postgres simple"
+    retry:
+      automatic: true
+    env:
+      POSTGRES_STRATEGY: ha
+    plugins:
+      - docker-compose#v3.7.0:
+          build: postgres
+          image-repository: gcr.io/dish-258800/postgres-simple
+          cache-from: base:gcr.io/dish-258800/postgres-simple:latest
+          push: postgres:gcr.io/dish-258800/postgres-simple:latest
 
   - wait
 

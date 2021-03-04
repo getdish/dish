@@ -1109,27 +1109,34 @@ function sync_local_code_to_staging() {
 function deploy_all() {
   where=${1:-registry}
   echo "deploying apps via $where"
-  deploy postgres $where &
-  deploy hasura $where &
+  deploy $where postgres &
+  deploy $where hasura &
   wait
   db_migrate
-  deploy app $where &
-  deploy search $where &
-  deploy timescale $where &
-  deploy tileserver $where &
-  deploy hooks $where &
-  deploy worker $where &
+  deploy $where app &
+  deploy $where search &
+  deploy $where timescale &
+  deploy $where tileserver &
+  deploy $where hooks &
+  deploy $where worker &
   wait -n
 }
 
+function source_env() {
+  if [ "$DISH_HAS_SOURCED_ENV" != "true" ]; then
+    eval $(yaml_to_env)
+  fi
+}
+
 function deploy() {
-  app=$1
-  where=${2:-registry}
+  source_env
+  where=${1:-registry}
+  app=$2
   # todo begrudingly learn bash
   if [ $app = "" ]; then exit 1; fi
   if [ $app = "app" ];          then deploy_fly_app $where dish-app dish-app dish-app-web; fi
   if [ $app = "hasura" ];       then deploy_fly_app $where dish-hasura services/hasura hasura; fi
-  if [ $app = "postgres" ];     then deploy_fly_app $where dish-db services/postgres-ha postgres; fi
+  if [ $app = "postgres" ];     then deploy_fly_app $where dish-db services/postgres-ha postgres-ha; fi
   if [ "$app" = "search" ];     then deploy_fly_app $where dish-search services/search search; fi
   if [ "$app" = "timescale" ];  then deploy_fly_app $where dish-timescale services/timescaledb timescaledb; fi
   if [ "$app" = "tileserver" ]; then deploy_fly_app $where dish-tileserver services/tileserver tileserver; fi
@@ -1156,7 +1163,7 @@ function deploy_fly_app() {
     docker push registry.fly.io/$app:$tag
     flyctl deploy -i registry.fly.io/$app:$tag
   else
-    flyctl deploy
+    flyctl deploy --remote-only
   fi
   if [ -f ".ci/post_deploy.sh" ]; then
     echo "running post-deploy script..."

@@ -36,6 +36,8 @@
     "postinstall": "yarn patch-package && (cd dish-app && yarn patch-package)",
     "preinstall": "",
     "t": "eval $(./dishctl.sh yaml_to_env) && echo $TF_VAR_HASURA_ENDPOINT",
+    "deploy": "./dishctl.sh deploy remote",
+    "deploy:local": "./dishctl.sh deploy local",
     "docker:build": "eval $(./dishctl.sh yaml_to_env) && docker-compose build",
     "docker:build:file": "eval $(./dishctl.sh yaml_to_env) && docker buildx build --progress=plain --platform linux/amd64",
     "docker:build:base": "yarn docker:build:file .",
