@@ -26,3 +26,4 @@ dishctl.sh
 env.enc.production.yaml
 **/fly.toml
 fly.toml
+docker-compose.yml
