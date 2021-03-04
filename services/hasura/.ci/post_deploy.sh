@@ -1,6 +1,8 @@
 #!/usr/bin/env bash
 set -e pipefail
 
+echo "migrating hasura..."
+
 hasura_endpoint="https://dish-hasura.fly.dev"
 hasura --skip-update-check migrate apply \
   --endpoint $hasura_endpoint \

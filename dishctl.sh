@@ -1109,10 +1109,8 @@ function sync_local_code_to_staging() {
 function deploy_all() {
   where=${1:-registry}
   echo "deploying apps via $where"
-  deploy $where postgres &
-  deploy $where hasura &
-  wait
-  db_migrate
+  deploy $where postgres
+  deploy $where hasura
   deploy $where app &
   deploy $where search &
   deploy $where timescale &
@@ -1153,7 +1151,7 @@ function deploy_fly_app() {
   echo "deploying $app in $folder to image $image_name with tag $tag"
   pushd $folder
   if [ -f ".ci/pre_deploy.sh" ]; then
-    echo "running pre-deploy script..."
+    echo "running pre-deploy script $app..."
     eval $(yaml_to_env) .ci/pre_deploy.sh
   fi
   if [ "$where" = "registry" ]; then
@@ -1166,7 +1164,7 @@ function deploy_fly_app() {
     flyctl deploy --remote-only
   fi
   if [ -f ".ci/post_deploy.sh" ]; then
-    echo "running post-deploy script..."
+    echo "running post-deploy script $app..."
     eval $(yaml_to_env) .ci/pre_deploy.sh
   fi
   popd
