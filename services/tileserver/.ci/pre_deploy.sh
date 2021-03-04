@@ -6,8 +6,6 @@ if [ "$TILESERVER_FLY_POSTGRES_URL" = "" ]; then
     exit 1
 fi
 
-echo "deploy tileserver with postgres connection $TILESERVER_FLY_POSTGRES_URL"
-
 flyctl secrets set \
     WATCH_MODE=true \
     DATABASE_URL="$TILESERVER_FLY_POSTGRES_URL" \
