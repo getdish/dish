@@ -36,8 +36,9 @@ sed 's/STOLONCTL_/STSENTINEL_/' /data/.env >> /data/.env
 sed 's/STOLONCTL_/STPROXY_/' /data/.env >> /data/.env
 
 # write stolon initial cluster spec
+# we patch this later
 cat <<EOF > /fly/initial-cluster-spec.json
-{"initMode":"new"}
+{"initMode":"new", "pgParameters": {"work_mem": "64MB", "maintenance_work_mem": "1024MB", "effective_cache_size": "1024MB", "shared_buffers": "256MB"}}
 EOF
 
 su_password="${SU_PASSWORD:-supassword}"
@@ -54,7 +55,6 @@ if [ "$primary_region" != "" ]; then
         keeper_options="$keeper_options --can-be-master=false --can-be-synchronous-replica=false"
     fi
 fi
-
 
 export STKEEPER_PG_SU_PASSWORD=$su_password
 export STKEEPER_PG_REPL_PASSWORD=$repl_password
@@ -76,3 +76,15 @@ export OVERMIND_AUTO_RESTART=sentinel,proxy
 export OVERMIND_STOP_SIGNALS="keeper=TERM"
 export OVERMIND_TIMEOUT=300
 exec gosu stolon overmind start -f /fly/Procfile
+
+# didnt work, seems to not connect properly... (need to add & after above line)
+
+# sleep 10
+# # update settings here
+# # see: https://github.com/sorintlab/stolon/blob/master/doc/cluster_spec.md
+# # tuned using: https://www.enterprisedb.com/postgres-tutorials/how-tune-postgresql-memory
+# echo "patch"
+# stolonctl --cluster-name=$FLY_APP_NAME --store-backend consul --store-endpoints $FLY_CONSUL_URL update --patch '{"pgParameters": {"work_mem": "64MB", "maintenance_work_mem": "1024MB", "effective_cache_size": "1024MB", "shared_buffers": "256MB"}}'
+# echo "stat"
+# stolonctl --cluster-name=$FLY_APP_NAME --store-backend consul --store-endpoints $FLY_CONSUL_URL spec
+# fg
