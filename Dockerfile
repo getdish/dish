@@ -4,10 +4,6 @@
 FROM node:15.10.0-buster as base
 WORKDIR /app
 
-# quiet apt-get
-ENV DEBIAN_FRONTEND noninteractive
-RUN echo 'Dpkg::Use-Pty "0";' > /etc/apt/apt.conf.d/00usepty
-
 # copy everything
 COPY packages packages
 COPY services services
@@ -56,5 +52,9 @@ COPY packages packages
 COPY services services
 COPY dish-app dish-app
 COPY snackui snackui
+
+# quiet apt-get
+ENV DEBIAN_FRONTEND noninteractive
+RUN echo 'Dpkg::Use-Pty "0";' > /etc/apt/apt.conf.d/00usepty
 
 CMD ["true"]
