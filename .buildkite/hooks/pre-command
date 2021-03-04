@@ -16,6 +16,13 @@ fi
 
 mkdir -p $HOME/bin
 
+if ($(which netstat > /dev/null)); then
+  echo $(date -u) "netstat installed"
+else
+  apt-get update && apt-get install -y net-tools
+  echo $(date -u) "netstat installed"
+fi
+
 if ($(which psql > /dev/null)); then
   echo $(date -u) "psql installed"
 else
