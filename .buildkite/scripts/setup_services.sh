@@ -67,7 +67,7 @@ echo "Migrating DB"
 
 echo "Migrating timescale"
 docker run --net host $DISH_REGISTRY/base \
-  bash -c 'cd services/timescaledb && DISH_ENV=not-production ./migrate.sh'
+  bash -c 'cd services/timescaledb && DISH_ENV=not-production ./bin/migrate.sh'
 
 echo "Waiting for dish-app to finish starting"
 if ! timeout --preserve-status 120 bash -c wait_until_dish_app_ready; then
