@@ -1,4 +1,7 @@
 env:
+  # DOCKER_BUILDKIT: 1
+  # COMPOSE_DOCKER_CLI_BUILD: 1
+  # BUILDKIT_PROGRESS: plain
   DISH_BASE_VERION: ":latest"
   DISH_IMAGE_TAG: ":latest"
   DISH_ENV: 'test'
@@ -7,14 +10,6 @@ env:
   DISH_ENDPOINT: 'http://localhost:4444'
 
 steps:
-  - label: "setup env"
-    artifact_paths:
-      - "/usr/bin/*"
-      - "/root/bin/*"
-    command: ".buildkite/scripts/setup_deps.sh"
-
-  - wait
-
   - label: ":docker: build base"
     key: base
     plugins:
