@@ -45,8 +45,8 @@ chown -R root:root $HOME/.dish/postgres
 # if not already mounted/setup, we need to start postgres once and stop it so it sets up
 if [ ! -d $HOME/.dish/postgres/data ]; then
   # Postgres needs 2 starts to get everything set up
-  docker-compose up -d postgres
-  sleep 4
+  docker-compose run -d postgres
+  sleep 6
   docker-compose down -t 3
 fi
 
