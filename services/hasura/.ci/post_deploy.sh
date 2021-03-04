@@ -15,5 +15,6 @@ hasura --skip-update-check metadata apply \
     --endpoint $hasura_endpoint \
     --admin-secret $TF_VAR_HASURA_GRAPHQL_ADMIN_SECRET
 
-echo "apply functions..."
-cat functions/*.sql | psql $HASURA_GRAPHQL_DATABASE_URL --single-transaction
+# echo "apply functions..."
+echo "TODO apply functions"
+# cat functions/*.sql | psql $HASURA_FLY_POSTGRES_URL --single-transaction

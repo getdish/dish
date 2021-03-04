@@ -1120,10 +1120,13 @@ function deploy_all() {
   deploy $where hasura # depends on postgres
   deploy $where tileserver & # depends on hasura
   deploy $where app & # depends on hasura
+  deploy $where timescale & # depends on postgres
   deploy $where search &
-  deploy $where timescale &
   deploy $where hooks &
   deploy $where worker &
+  deploy $where image-quality &
+  deploy $where image-proxy &
+  deploy $where bert &
   wait -n
 }
 
@@ -1139,14 +1142,17 @@ function deploy() {
   app=$2
   # todo begrudingly learn bash
   if [ $app = "" ]; then exit 1; fi
-  if [ $app = "app" ];          then deploy_fly_app $where dish-app dish-app dish-app-web; fi
-  if [ $app = "hasura" ];       then deploy_fly_app $where dish-hasura services/hasura hasura; fi
-  if [ $app = "postgres" ];     then deploy_fly_app $where dish-db services/postgres-ha postgres-ha; fi
-  if [ "$app" = "search" ];     then deploy_fly_app $where dish-search services/search search; fi
-  if [ "$app" = "timescale" ];  then deploy_fly_app $where dish-timescale services/timescaledb timescaledb; fi
-  if [ "$app" = "tileserver" ]; then deploy_fly_app $where dish-tileserver services/tileserver tileserver; fi
-  if [ "$app" = "hooks" ];      then deploy_fly_app $where dish-hooks services/hooks dish-hooks; fi
-  if [ "$app" = "worker" ];     then deploy_fly_app $where dish-worker services/worker worker; fi
+  if [ $app = "app" ];              then deploy_fly_app $where dish-app dish-app dish-app-web; fi
+  if [ $app = "hasura" ];           then deploy_fly_app $where dish-hasura services/hasura hasura; fi
+  if [ $app = "postgres" ];         then deploy_fly_app $where dish-db services/postgres-ha postgres-ha; fi
+  if [ "$app" = "search" ];         then deploy_fly_app $where dish-search services/search search; fi
+  if [ "$app" = "timescale" ];      then deploy_fly_app $where dish-timescale services/timescaledb timescaledb; fi
+  if [ "$app" = "tileserver" ];     then deploy_fly_app $where dish-tileserver services/tileserver tileserver; fi
+  if [ "$app" = "hooks" ];          then deploy_fly_app $where dish-hooks services/hooks dish-hooks; fi
+  if [ "$app" = "worker" ];         then deploy_fly_app $where dish-worker services/worker worker; fi
+  if [ "$app" = "image-quality" ];  then deploy_fly_app $where dish-image-quality services/image-quality image-quality; fi
+  if [ "$app" = "image-proxy" ];    then deploy_fly_app $where dish-image-proxy services/image-proxy image-proxy; fi
+  if [ "$app" = "bert" ];           then deploy_fly_app $where dish-bert services/bert bert; fi
 }
 
 function deploy_fly_app() {

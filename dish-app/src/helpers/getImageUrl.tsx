@@ -6,6 +6,6 @@ export const getImageUrl = (
   height: number,
   quality = 100
 ) => {
-  const imageUrl = `${IMAGE_PROXY_DOMAIN}/${width}x${height},q${quality}/${url}`
+  const imageUrl = `${IMAGE_PROXY_DOMAIN}/resize?width=${width}&height=${height}&quality=${quality}&url=${url}`
   return imageUrl
 }

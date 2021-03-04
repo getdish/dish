@@ -179,25 +179,29 @@ services:
       - DISH_DEBUG=1
   bert:
     image: gcr.io/dish-258800/bert
+    build:
+      context: ./services/bert
     ports:
       - 8888:8080
     environment:
-      - VIRTUAL_HOST=bert-staging.dishapp.com
-  image-quality-api:
-    image: gcr.io/dish-258800/image-quality-server
+      - VIRTUAL_HOST=bert.dishapp.com
+  image-quality:
+    image: gcr.io/dish-258800/image-quality
+    build:
+      context: ./services/image-quality
     ports:
       - 8883:5005
     environment:
-      - VIRTUAL_HOST=image-quality-staging.dishapp.com
+      - VIRTUAL_HOST=image-quality.dishapp.com
   image-proxy:
     image: gcr.io/dish-258800/imageproxy
     build:
       context: ./services/image-proxy
       dockerfile: ./Dockerfile
     ports:
-      - 8881:8080
+      - 8881:9000
     environment:
-      - VIRTUAL_HOST=images-staging.dishapp.com
+      - VIRTUAL_HOST=images.dishapp.com
   nginx-web:
     image: nginx:stable-alpine
     labels:

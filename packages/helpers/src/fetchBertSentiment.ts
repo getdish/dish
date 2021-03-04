@@ -4,9 +4,7 @@
 // for all restaurants and rishes.
 
 export async function fetchBertSentiment(sentence: string) {
-  const url = `https://bert-staging.dishapp.com/?text=${encodeURIComponent(
-    sentence
-  )}`
+  const url = `https://bert.dishapp.com/?text=${encodeURIComponent(sentence)}`
   return fetch(url, {
     headers: {
       'Content-Type': 'application/json',

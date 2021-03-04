@@ -1,7 +1,4 @@
 env:
-  # DOCKER_BUILDKIT: 1
-  # COMPOSE_DOCKER_CLI_BUILD: 1
-  # BUILDKIT_PROGRESS: plain
   DISH_BASE_VERION: ":latest"
   DISH_IMAGE_TAG: ":latest"
   DISH_ENV: 'test'
@@ -67,6 +64,26 @@ steps:
           cache-from: base:gcr.io/dish-258800/search:latest
           push: search:gcr.io/dish-258800/search:latest
 
+  - label: ":docker: build image-quality"
+    retry:
+      automatic: true
+    plugins:
+      - docker-compose#v3.7.0:
+          build: image-quality
+          image-repository: gcr.io/dish-258800/image-quality
+          cache-from: base:gcr.io/dish-258800/image-quality:latest
+          push: image-quality:gcr.io/dish-258800/image-quality:latest
+
+  - label: ":docker: build bert"
+    retry:
+      automatic: true
+    plugins:
+      - docker-compose#v3.7.0:
+          build: bert
+          image-repository: gcr.io/dish-258800/bert
+          cache-from: base:gcr.io/dish-258800/bert:latest
+          push: bert:gcr.io/dish-258800/bert:latest
+
   - label: ":docker: build hasura"
     retry:
       automatic: true
@@ -106,6 +123,16 @@ steps:
           image-repository: gcr.io/dish-258800/image-proxy
           cache-from: base:gcr.io/dish-258800/image-proxy:latest
           push: image-proxy:gcr.io/dish-258800/image-proxy:latest
+
+  - label: ":docker: build image-quality"
+    retry:
+      automatic: true
+    plugins:
+      - docker-compose#v3.7.0:
+          build: image-quality
+          image-repository: gcr.io/dish-258800/image-quality
+          cache-from: base:gcr.io/dish-258800/image-quality:latest
+          push: image-quality:gcr.io/dish-258800/image-quality:latest
 
   - label: ":docker: build postgres ha"
     retry:

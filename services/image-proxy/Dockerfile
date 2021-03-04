@@ -1,3 +1,3 @@
-FROM willnorris/imageproxy
+FROM h2non/imaginary
 
-CMD ['-addr', '0.0.0.0:8080', '-cache', '/image-cache']
+CMD [ '-enable-url-source', '-allowed-origins', 'localhost,*.dishapp.com', '-enable-placeholder' ]
