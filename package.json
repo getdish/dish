@@ -112,6 +112,7 @@
     "esbuild": "0.8.54"
   },
   "dependencies": {
+    "esbuild-register": "patch:esbuild-register@2.1.0#./patches/esbuild-register.patch",
     "@dish/app": "*",
     "@yarnpkg/plugin-patch": "^2.1.2",
     "react": "^17.0.1",

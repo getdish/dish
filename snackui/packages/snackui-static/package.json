@@ -41,7 +41,7 @@
     "babel-loader": "^8.2.2",
     "css-loader": "^5.0.1",
     "esbuild": "*",
-    "esbuild-register": "^2.0.0",
+    "esbuild-register": "^2.1.0",
     "find-cache-dir": "^3.3.1",
     "fs-extra": "^9.0.0",
     "invariant": "^2.2.4",
