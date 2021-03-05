@@ -42,7 +42,7 @@ export class Start extends Command {
     const config: ServerConfig = {
       rootDir,
       port: flags.port ?? 4444,
-      host: flags.host ?? 'localhost',
+      host: flags.host ?? '0.0.0.0',
       inspect: false,
       clean: flags.clean as any,
       env: 'production',
