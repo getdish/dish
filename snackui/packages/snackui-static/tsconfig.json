@@ -2,10 +2,7 @@
   "extends": "../../tsconfig.base",
   "compilerOptions": {
     "composite": true,
-    "baseUrl": ".",
-    "module": "CommonJS",
-    "target": "es2019",
-    "esModuleInterop": true,
+    "outFile": "@types/index.d.ts",
     "outDir": "_",
     "rootDir": "src"
   },

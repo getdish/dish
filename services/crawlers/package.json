@@ -1,6 +1,7 @@
 {
   "name": "@dish/crawlers",
   "version": "0.0.1",
+  "typings": "@types/index.d.ts",
   "main": "dist",
   "sideEffects": false,
   "scripts": {
@@ -44,7 +45,7 @@
     "transliteration": "^2.1.8"
   },
   "devDependencies": {
-    "@types/cheerio": "^0.22.22",
+    "@types/cheerio": "^0.22.24",
     "@types/pg": "^7.14.10",
     "@types/puppeteer": "^3.0.0",
     "nodemon": "^2.0.2",

@@ -1,9 +1,10 @@
 {
   "extends": "../../tsconfig.base",
-  "include": ["src"],
+  "include": ["src/**/*"],
 
   "compilerOptions": {
     "composite": true,
+    "outFile": "@types/index.d.ts",
     "outDir": "_",
     "rootDir": "src"
   },

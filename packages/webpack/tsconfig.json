@@ -3,9 +3,7 @@
   "extends": "../../tsconfig.base",
   "compilerOptions": {
     "composite": true,
-    "baseUrl": ".",
-    "incremental": true,
-    "esModuleInterop": true,
+    "outFile": "@types/index.d.ts",
     "outDir": "_",
     "rootDir": "src"
   },

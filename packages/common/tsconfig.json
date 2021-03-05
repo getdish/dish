@@ -1,16 +1,12 @@
 {
   "extends": "../../tsconfig.base",
-
   "compilerOptions": {
     "composite": true,
-    "baseUrl": ".",
+    "outFile": "@types/index.d.ts",
     "outDir": "_",
     "rootDir": "./src"
   },
-
-  // "references": [{ "path": "../common-web" }]
   "include": ["src"],
-
   "references": [
     {
       "path": "../graph"

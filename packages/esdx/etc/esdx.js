@@ -13,29 +13,44 @@ async function go() {
     fs.existsSync('tsconfig.tsbuildinfo') && fs.rmSync('tsconfig.tsbuildinfo')
     fs.existsSync('_') && fs.rmdirSync('_', { recursive: true })
     fs.existsSync('dist') && fs.rmdirSync('dist', { recursive: true })
-    await exec(`tsc`, ['--emitDeclarationOnly'])
-    await exec(`cp`, `-r _ dist`.split(' '))
   }
 
   let files = await fg(['src/**/*.ts', 'src/**/*.tsx'])
 
-  await Promise.all([
-    build({
-      entryPoints: files,
-      outdir: '_',
-      sourcemap: true,
-      target: 'safari13',
-      treeShaking: true,
-    }),
-    build({
-      entryPoints: files,
-      outdir: 'dist',
-      sourcemap: true,
-      target: 'node12',
-      treeShaking: true,
-      format: 'cjs',
-    }),
-  ])
+  try {
+    await Promise.all([
+      exec(`tsc`, ['--emitDeclarationOnly']),
+      build({
+        entryPoints: files,
+        outdir: '_',
+        sourcemap: true,
+        target: 'safari13',
+        treeShaking: true,
+      }),
+      build({
+        entryPoints: files,
+        outdir: 'dist',
+        sourcemap: true,
+        target: 'node12',
+        treeShaking: true,
+        format: 'cjs',
+      }),
+    ])
+  } catch (error) {
+    console.log(error.stack)
+  }
+
+  // stupid ts have to hack this
+  const name = JSON.parse(fs.readFileSync('package.json')).name
+  const types = '@types/index.d.ts'
+  if (fs.existsSync(types)) {
+    const out = fs.readFileSync(types, 'utf-8')
+    fs.writeFileSync(
+      types,
+      out.replace(`declare module "index" {`, `declare module "${name}" {`)
+    )
+  }
+
   console.log('built in', `${(Date.now() - x) / 1000}s`)
 }
 

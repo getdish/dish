@@ -10,6 +10,7 @@
     "lib": ["dom", "esnext"],
     "noFallthroughCasesInSwitch": true,
     "outDir": "_",
+    "emitDeclarationOnly": false,
     "noEmit": true,
     "noEmitHelpers": true,
     "noImplicitReturns": false,

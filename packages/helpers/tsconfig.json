@@ -2,13 +2,12 @@
   "extends": "../../tsconfig.base",
   "compilerOptions": {
     "composite": true,
-    "baseUrl": ".",
     "incremental": true,
     "outDir": "_",
+    "outFile": "@types/index.d.ts",
     "rootDir": "src"
   },
-  "include": ["./src"],
-  "exclude": ["_"],
+  "include": ["src"],
   "references": [
     {
       "path": "../fast-compare"

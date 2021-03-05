@@ -2,6 +2,7 @@
   "name": "@dish/worker",
   "version": "0.0.1",
   "sideEffects": false,
+  "typings": "@types/index.d.ts",
   "private": true,
   "main": "dist",
   "module": "_",

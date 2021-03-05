@@ -3,9 +3,9 @@
 
   "compilerOptions": {
     "composite": true,
-    "baseUrl": ".",
+    "outFile": "@types/index.d.ts",
     "outDir": "_",
-    "rootDir": "./src"
+    "rootDir": "src"
   },
 
   "include": ["src"],
