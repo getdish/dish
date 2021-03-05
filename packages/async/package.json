@@ -1,5 +1,6 @@
 {
   "name": "@dish/async",
+  "types": "src/_types.d.ts",
   "version": "0.0.1",
   "sideEffects": false,
   "publishConfig": {

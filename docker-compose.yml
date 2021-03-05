@@ -177,6 +177,10 @@ services:
       - NODE_OPTIONS="--max_old_space_size=5120"
       - GORSE_ENDPOINT="http://gorse:9000"
       - DISH_DEBUG=1
+  bert2:
+    image: gcr.io/dish-258800/bert2
+    build:
+      context: ./services/bert2
   bert:
     image: gcr.io/dish-258800/bert
     build:

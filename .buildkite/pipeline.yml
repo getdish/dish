@@ -64,26 +64,6 @@ steps:
           cache-from: base:gcr.io/dish-258800/search:latest
           push: search:gcr.io/dish-258800/search:latest
 
-  - label: ":docker: build image-quality"
-    retry:
-      automatic: true
-    plugins:
-      - docker-compose#v3.7.0:
-          build: image-quality
-          image-repository: gcr.io/dish-258800/image-quality
-          cache-from: base:gcr.io/dish-258800/image-quality:latest
-          push: image-quality:gcr.io/dish-258800/image-quality:latest
-
-  - label: ":docker: build bert"
-    retry:
-      automatic: true
-    plugins:
-      - docker-compose#v3.7.0:
-          build: bert
-          image-repository: gcr.io/dish-258800/bert
-          cache-from: base:gcr.io/dish-258800/bert:latest
-          push: bert:gcr.io/dish-258800/bert:latest
-
   - label: ":docker: build hasura"
     retry:
       automatic: true
@@ -177,6 +157,30 @@ steps:
           image-repository: gcr.io/dish-258800/gorse
           cache-from: base:gcr.io/dish-258800/gorse:latest
           push: gorse:gcr.io/dish-258800/gorse:latest
+
+  # build last as it chokes cpu for base to build
+
+  - label: ":docker: build bert"
+    depends_on: base
+    retry:
+      automatic: true
+    plugins:
+      - docker-compose#v3.7.0:
+          build: bert
+          image-repository: gcr.io/dish-258800/bert
+          cache-from: base:gcr.io/dish-258800/bert:latest
+          push: bert:gcr.io/dish-258800/bert:latest
+
+  - label: ":docker: build bert2"
+    depends_on: base
+    retry:
+      automatic: true
+    plugins:
+      - docker-compose#v3.7.0:
+          build: bert2
+          image-repository: gcr.io/dish-258800/bert2
+          cache-from: base:gcr.io/dish-258800/bert2:latest
+          push: bert2:gcr.io/dish-258800/bert2:latest
 
   - wait
 

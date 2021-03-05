@@ -3,7 +3,6 @@
 
   "compilerOptions": {
     "composite": true,
-    "outFile": "@types/index.d.ts",
     "outDir": "_",
     "rootDir": "src"
   },

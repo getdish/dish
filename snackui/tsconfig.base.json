@@ -15,7 +15,6 @@
     "module": "system",
     "moduleResolution": "node",
     "noEmitOnError": false,
-    "outFile": "@types/index.d.ts",
     "noImplicitAny": false,
     "noImplicitReturns": false,
     "noUnusedLocals": false,

@@ -2,6 +2,7 @@
   "name": "@dish/fast-compare",
   "version": "2.7.6",
   "description": "none",
+  "types": "src/_types.d.ts",
   "publishConfig": {
     "access": "public"
   },

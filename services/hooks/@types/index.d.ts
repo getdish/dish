@@ -1,1 +1,1 @@
-declare module "@dish/hooks" { }
+declare module "index" { }

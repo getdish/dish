@@ -3,7 +3,6 @@
   "extends": "../../tsconfig.base",
   "compilerOptions": {
     "composite": true,
-    "outFile": "@types/index.d.ts",
     "esModuleInterop": true,
     "outDir": "_",
     "rootDir": "src"

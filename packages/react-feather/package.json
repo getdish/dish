@@ -2,6 +2,7 @@
   "name": "@dish/react-feather",
   "version": "0.0.1",
   "description": "React Native component for Feather icons",
+  "types": "src/_types.d.ts",
   "main": "dist",
   "module": "_",
   "tsmain": "src",

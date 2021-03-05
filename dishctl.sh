@@ -1108,6 +1108,7 @@ function deploy_all() {
   deploy $where image-quality &
   deploy $where image-proxy &
   deploy $where bert &
+  deploy $where bert2 &
   deploy $where cron &
   wait -n
 }
@@ -1135,6 +1136,7 @@ function deploy() {
   if [ "$app" = "image-quality" ];  then deploy_fly_app $where dish-image-quality services/image-quality image-quality; fi
   if [ "$app" = "image-proxy" ];    then deploy_fly_app $where dish-image-proxy services/image-proxy image-proxy; fi
   if [ "$app" = "bert" ];           then deploy_fly_app $where dish-bert services/bert bert; fi
+  if [ "$app" = "bert2" ];          then deploy_fly_app $where bert2 services/bert2 bert2; fi
 }
 
 function deploy_fly_app() {

@@ -4,6 +4,7 @@
   "main": "dist",
   "module": "_",
   "tsmain": "src",
+  "types": "src/_types.d.ts",
   "scripts": {
     "build": "esdx",
     "watch": "esdx-watch",

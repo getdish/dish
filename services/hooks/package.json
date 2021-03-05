@@ -2,8 +2,9 @@
   "name": "@dish/hooks",
   "version": "0.0.1",
   "description": "",
-  "typings": "@types/index.d.ts",
+  "typings": "_types.d.ts",
   "main": "dist",
+  "tsmain": "src",
   "private": true,
   "scripts": {
     "build": "esdx",

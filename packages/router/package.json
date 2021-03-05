@@ -2,6 +2,7 @@
   "name": "@dish/router",
   "version": "0.0.1",
   "sideEffects": false,
+  "types": "src/_types.d.ts",
   "private": true,
   "main": "dist",
   "module": "_",

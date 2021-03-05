@@ -2,7 +2,8 @@
   "name": "@dish/worker-app",
   "version": "0.0.1",
   "main": "dist",
-  "typings": "@types/index.d.ts",
+  "typings": "_types.d.ts",
+  "tsmain": "src",
   "sideEffects": false,
   "license": "none",
   "scripts": {

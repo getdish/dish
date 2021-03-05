@@ -1889,7 +1889,7 @@ __metadata:
     "@dish/graph": "*"
     "@dish/helpers": "*"
     "@dish/worker": "*"
-    "@types/cheerio": ^0.22.22
+    "@types/cheerio": ^0.22.24
     "@types/pg": ^7.14.10
     "@types/puppeteer": ^3.0.0
     acorn: ^7.1.1
@@ -1926,12 +1926,13 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@dish/esdx@workspace:packages/esdx"
   dependencies:
+    "@dish/rollup-plugin-flat-dts": ^1.0.1
     chokidar-cli: ^2.1.0
     esbuild: ^0.8.53
     typescript: "*"
   bin:
-    esdx: etc/esdx.js
-    esdx-watch: etc/esdx-watch.js
+    esdx: esdx.js
+    esdx-watch: esdx-watch.js
   languageName: unknown
   linkType: soft
 
@@ -2125,6 +2126,22 @@ __metadata:
     react-test-renderer: "*"
   languageName: unknown
   linkType: soft
+
+"@dish/rollup-plugin-flat-dts@npm:^1.0.1":
+  version: 1.0.1
+  resolution: "@dish/rollup-plugin-flat-dts@npm:1.0.1"
+  dependencies:
+    is-glob: ^4.0.1
+    micromatch: ^4.0.2
+  peerDependencies:
+    rollup: ^2.40.0
+    typescript: 4.1.5 - 4.3
+  peerDependenciesMeta:
+    rollup:
+      optional: true
+  checksum: a7d7c4be20276cb74a59647a8f03fc5d5e7e721c8fd691e1b591e75ee06e05bc5c56a660f0b64c213575e8f1d95b5140e49488126ae120f39ad12f5b08801337
+  languageName: node
+  linkType: hard
 
 "@dish/router@*, @dish/router@workspace:packages/router":
   version: 0.0.0-use.local
@@ -4511,7 +4528,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/cheerio@npm:^0.22.22":
+"@types/cheerio@npm:^0.22.24":
   version: 0.22.24
   resolution: "@types/cheerio@npm:0.22.24"
   dependencies:
@@ -4547,6 +4564,13 @@ __metadata:
   version: 4.1.5
   resolution: "@types/debug@npm:4.1.5"
   checksum: 416ad24bc589be0fb8c78bea972aa7d4ffdf6b136239701b1792674463b2dbf8c6707f6055ec484f79ec1f2b528ffef90c87e55df7e4a0f458184cad5bf0cfc8
+  languageName: node
+  linkType: hard
+
+"@types/emscripten@npm:^1.38.0":
+  version: 1.39.4
+  resolution: "@types/emscripten@npm:1.39.4"
+  checksum: b848421e2597a0ce56b74c6427f843cfd8f26dec8eaaa1929317e9417bc06eaa934057c317cbb561ade2f5462b6906e37868608211e09f9f507dca62066795a8
   languageName: node
   linkType: hard
 
@@ -5339,10 +5363,45 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@yarnpkg/fslib@npm:^2.2.2":
+  version: 2.4.0
+  resolution: "@yarnpkg/fslib@npm:2.4.0"
+  dependencies:
+    "@yarnpkg/libzip": ^2.2.1
+    tslib: ^1.13.0
+  checksum: da4bfaee70132c778b824fc198d795b2b56edf9069b0592800acffa6fd7670c12e72d80f162ea1d85dd2fe0e63ae1461823dd4aa1fecfc141145e2809bd3d46f
+  languageName: node
+  linkType: hard
+
+"@yarnpkg/libzip@npm:^2.2.1":
+  version: 2.2.1
+  resolution: "@yarnpkg/libzip@npm:2.2.1"
+  dependencies:
+    "@types/emscripten": ^1.38.0
+    tslib: ^1.13.0
+  checksum: 75813c2dbed76fd81aa7ba04f592888c45c58334c901edf3782105baa9b11e084473db5a3da678626509a7de3196e5297c0a790424e86d6976e916502b576c81
+  languageName: node
+  linkType: hard
+
 "@yarnpkg/lockfile@npm:^1.1.0":
   version: 1.1.0
   resolution: "@yarnpkg/lockfile@npm:1.1.0"
   checksum: 76f3f2625334fb4d37881408643b61ae08e1cfcdeb5db3e3e92f626b3535f99e963df8bafe5c07d85aa1dd09a308939eb4d0667ed4a4e93e645417b6af6e9a2f
+  languageName: node
+  linkType: hard
+
+"@yarnpkg/plugin-patch@npm:^2.1.2":
+  version: 2.1.2
+  resolution: "@yarnpkg/plugin-patch@npm:2.1.2"
+  dependencies:
+    "@yarnpkg/fslib": ^2.2.2
+    "@yarnpkg/libzip": ^2.2.1
+    clipanion: ^2.6.2
+    tslib: ^1.13.0
+  peerDependencies:
+    "@yarnpkg/cli": ^2.3.0
+    "@yarnpkg/core": ^2.3.0
+  checksum: 808980c8213315481ce05d1fadd467b1ae6b701346c7110e08b191fbb0bcd121bc3e51185b077e53d4e9c4a70ca11d5ecff773a412d4a48412785f57642e4b52
   languageName: node
   linkType: hard
 
@@ -7717,6 +7776,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"clipanion@npm:^2.6.2":
+  version: 2.6.2
+  resolution: "clipanion@npm:2.6.2"
+  checksum: d162deedd0bd297f0881ef2814cf00409d2c67383589345cf8ae0ae6d9eee2e7235313b392dd3ec9df85490e4875dd52c085997e4161a6c8aa4ec0a2c78f8f36
+  languageName: node
+  linkType: hard
+
 "cliui@npm:^5.0.0":
   version: 5.0.0
   resolution: "cliui@npm:5.0.0"
@@ -9273,6 +9339,7 @@ __metadata:
     "@types/fs-extra": ^9.0.8
     "@types/node": ^14.14.12
     "@types/react-native": ^0.63.45
+    "@yarnpkg/plugin-patch": ^2.1.2
     ava: ^3.14.0
     esbuild: ^0.8.54
     esm: ^3.2.25

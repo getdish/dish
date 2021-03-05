@@ -207,6 +207,7 @@ export function createWebpackConfig({
               {
                 test: /\.[jt]sx?$/,
                 include: babelInclude,
+                // @ts-ignore
                 use: [
                   {
                     loader: require.resolve('esbuild-loader'),
