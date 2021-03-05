@@ -10,7 +10,7 @@
   "scripts": {
     "build": "esdx",
     "watch": "esdx-watch",
-    "test": "TARGET=node DISH_ENV=test ava test/* --verbose --serial"
+    "test": "TARGET=node DISH_ENV=test jest --runInBand --forceExit"
   },
   "dependencies": {
     "@dish/use-store": "*",
@@ -20,7 +20,7 @@
   },
   "devDependencies": {
     "@dish/esdx": "*",
-    "@dish/react-test-env": "*",
-    "ava": "*"
+    "@dish/test": "*",
+    "jest": "*"
   }
 }

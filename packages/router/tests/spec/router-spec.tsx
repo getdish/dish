@@ -1,7 +1,7 @@
 import { createStore, useStore, useStoreInstance } from '@dish/use-store'
 import React, { StrictMode } from 'react'
 
-import { ProvideRouter, Route, Router, useRouter } from '../../_'
+import { ProvideRouter, Route, Router, useRouter } from '../../src'
 
 const routes = {
   home: new Route('/'),

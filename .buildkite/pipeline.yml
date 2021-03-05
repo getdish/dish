@@ -30,10 +30,10 @@ steps:
     depends_on: base
     plugins:
       - docker-compose#v3.7.0:
-          build: test
-          image-repository: gcr.io/dish-258800/test
-          cache-from: base:gcr.io/dish-258800/test:latest
-          push: test:gcr.io/dish-258800/test:latest
+          build: run-tests
+          image-repository: gcr.io/dish-258800/run-tests
+          cache-from: base:gcr.io/dish-258800/run-tests:latest
+          push: run-tests:gcr.io/dish-258800/run-tests:latest
 
   - label: ":docker: build dish-hooks"
     depends_on: base

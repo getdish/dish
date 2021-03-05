@@ -1,0 +1,23 @@
+{
+  "name": "@dish/test",
+  "version": "0.0.1",
+  "sideEffects": false,
+  "private": true,
+  "bin": "jest",
+  "scripts": {
+    "build": "true",
+    "watch": "true"
+  },
+  "dependencies": {
+    "lodash": "^4.17.21",
+    "react": "*",
+    "react-dom": "*"
+  },
+  "devDependencies": {
+    "@dish/react-test-env": "*",
+    "@testing-library/react": "^11.2.5",
+    "@types/jest": "^26.0.20",
+    "esbuild-jest": "^0.5.0",
+    "jest": "^26.6.3"
+  }
+}

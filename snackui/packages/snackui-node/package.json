@@ -10,9 +10,8 @@
     "@snackui/helpers": "*"
   },
   "devDependencies": {
-    "ts-node": "*",
     "ts-transform-import-path-rewrite": "^0.3.0",
     "ttypescript": "^1.5.12",
-    "typescript": "*"
+    "typescript": "^4.2.3"
   }
 }
