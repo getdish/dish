@@ -7,25 +7,22 @@ RUN \
       && apt-get clean \
       && rm -rf /var/lib/apt/lists/*
 
-ARG DISH_BASE_VERSION=latest
-FROM gcr.io/dish-258800/base:$DISH_BASE_VERSION
+FROM gcr.io/dish-258800/base
 COPY --from=0 /bin /usr/local/bin
 ENV NODE_ENV=production
 
 WORKDIR /app
 
-# try and avoid reinstalls
-RUN rm package.json && rm yarn.lock
-
 COPY package.json yarn.lock .yarnrc.yml ./
+COPY .yarn .yarn
 COPY packages packages
 COPY dish-app dish-app
 COPY snackui snackui
 
 WORKDIR /app/dish-app
 
-RUN yarn web:build
+RUN npm run build
 
 EXPOSE 4444
 
-CMD ["yarn", "web:serve", "--host", "0.0.0.0"]
+CMD ["npm", "web:serve", "--host", "0.0.0.0"]

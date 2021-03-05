@@ -16,15 +16,15 @@ steps:
           cache-from: base:gcr.io/dish-258800/base:latest
           push: base:gcr.io/dish-258800/base:latest
 
-  - label: ":docker: build dish-app-web"
+  - label: ":docker: build dish-app"
     depends_on: base
     key: web
     plugins:
       - docker-compose#v3.7.0:
-          build: dish-app-web
-          image-repository: gcr.io/dish-258800/dish-app-web
-          cache-from: base:gcr.io/dish-258800/dish-app-web:latest
-          push: dish-app-web:gcr.io/dish-258800/dish-app-web:latest
+          build: dish-app
+          image-repository: gcr.io/dish-258800/dish-app
+          cache-from: base:gcr.io/dish-258800/dish-app:latest
+          push: dish-app:gcr.io/dish-258800/dish-app:latest
 
   - label: ":docker: build test"
     depends_on: base

@@ -24,4 +24,4 @@ RUN eval $(./dishctl.sh yaml_to_env) \
   ./dishctl.sh docker_pull_images_that_compose_would_rather_build
 
 RUN eval $(./dishctl.sh yaml_to_env) DISH_IMAGE_TAG=":latest" \
-  docker-compose up -d dish-app-web dish-hooks search tileserver worker
+  docker-compose up -d dish-app dish-hooks search tileserver worker

@@ -29,3 +29,4 @@ fly.toml
 docker-compose.yml
 **/.ci
 services/hasura/migrations
+**/build

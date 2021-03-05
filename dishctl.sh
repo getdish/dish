@@ -1125,7 +1125,7 @@ function deploy() {
   app=$2
   # todo begrudingly learn bash
   if [ $app = "" ]; then exit 1; fi
-  if [ $app = "app" ];              then deploy_fly_app $where dish-app dish-app dish-app-web; fi
+  if [ $app = "app" ];              then deploy_fly_app $where dish-app dish-app dish-app; fi
   if [ $app = "hasura" ];           then deploy_fly_app $where dish-hasura services/hasura hasura; fi
   if [ $app = "postgres" ];         then deploy_fly_app $where dish-db services/postgres-ha postgres-ha; fi
   if [ "$app" = "search" ];         then deploy_fly_app $where dish-search services/search search; fi

@@ -63,7 +63,7 @@ To build an individual container:
 
 `docker-compose build [container-name]`
 
-So, for example `docker-compose build dish-app-web`.
+So, for example `docker-compose build dish-app`.
 
 ## Debugging broken docker build
 

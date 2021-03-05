@@ -13,7 +13,7 @@ prune bert &
 prune build-cache &
 prune dish &
 prune dish-app &
-prune dish-app-web &
+prune run-tests &
 prune dish-hooks &
 prune gorse &
 prune hasura &
