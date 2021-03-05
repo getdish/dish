@@ -4,10 +4,6 @@
 FROM node:15.10.0-buster
 WORKDIR /app
 
-# quiet apt-get
-ENV DEBIAN_FRONTEND noninteractive
-RUN echo 'Dpkg::Use-Pty "0";' > /etc/apt/apt.conf.d/00usepty
-
 ENV PATH=$PATH:/app/node_modules/.bin:node_modules/.bin
 ENV NODE_OPTIONS="--max_old_space_size=8192"
 ENV DOCKER_BUILD=true
