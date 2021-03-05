@@ -14,7 +14,6 @@ ENV NODE_ENV=production
 WORKDIR /app
 
 COPY package.json yarn.lock .yarnrc.yml ./
-COPY .yarn .yarn
 COPY packages packages
 COPY dish-app dish-app
 COPY snackui snackui
