@@ -30,7 +30,7 @@ COPY bin bin
 COPY dish-app/etc dish-app/etc
 
 # install
-RUN yarn install --immutable-cache --skip-builds \
+RUN yarn install --immutable-cache \
   && yarn cache clean \
   && rm .yarn/install-state.gz
 

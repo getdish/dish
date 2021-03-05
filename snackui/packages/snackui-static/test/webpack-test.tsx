@@ -1,5 +1,5 @@
 import '@expo/match-media'
-import '@dish/react-test-env/jsdom-register'
+import '@dish/react-test-env/browser'
 
 import path from 'path'
 

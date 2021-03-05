@@ -14,6 +14,7 @@
   "dependencies": {
     "@dish/graph": "*",
     "bcryptjs": "^2.4.3",
+    "happy-dom": "^2.9.0",
     "jsonwebtoken": "^8.5.1",
     "lodash": "*"
   },

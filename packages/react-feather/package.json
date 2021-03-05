@@ -20,7 +20,7 @@
   "devDependencies": {
     "@dish/esdx": "^0.0.1",
     "camelcase": "^6.0.0",
-    "cheerio": "^1.0.0-rc.3",
+    "cheerio": "^1.0.0-rc.5",
     "feather-icons": "^4.28.0",
     "glob": "^7.1.6",
     "prettier": "*",

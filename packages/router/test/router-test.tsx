@@ -1,4 +1,4 @@
-import '@dish/react-test-env/jsdom-register'
+import '@dish/react-test-env/browser'
 
 import { TestRenderer, act } from '@dish/react-test-env'
 import { createStore } from '@dish/use-store'
