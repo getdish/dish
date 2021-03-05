@@ -14,7 +14,7 @@ RUN cargo build --release
 FROM debian:buster-slim
 WORKDIR /app
 RUN true
-RUN apt-get update && apt-get install -y curl openssl libgomp1 > /dev/null
+RUN apt-get update > /dev/null && apt-get install -y curl openssl libgomp1 > /dev/null
 
 COPY --from=builder /build/libtorch/lib /usr/lib/x86_64-linux-gnu/
 COPY --from=builder /build/target/release/rust-bert-dish .
