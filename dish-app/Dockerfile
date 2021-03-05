@@ -24,4 +24,4 @@ RUN npm run build
 
 EXPOSE 4444
 
-CMD ["npm", "web:serve", "--host", "0.0.0.0"]
+CMD ["npm", "run", "web:serve", "--host", "0.0.0.0"]
