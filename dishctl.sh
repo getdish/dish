@@ -371,31 +371,20 @@ function list_backups() {
 }
 
 function backup_main_db() {
-  _run_on_cluster postgres:12-alpine && return 0
   set -e
   _setup_s3
   DUMP_FILE_NAME="dish-db-backup-`date +%Y-%m-%d-%H-%M`.dump"
-  PGPASSWORD=$TF_VAR_POSTGRES_PASSWORD pg_dump \
-    -U postgres \
-    -h $TF_VAR_POSTGRES_HOST \
-    -p 5432 \
-    -d dish \
+  pg_dump $HASURA_FLY_POSTGRES_URL \
     -C -w --format=c | \
     s3 put - s3://dish-backups/$DUMP_FILE_NAME
   echo 'Successfully backed up main database'
 }
 
 function backup_scrape_db() {
-  _run_on_cluster postgres:12-alpine && return 0
   set -e
   _setup_s3
   DUMP_FILE_NAME="dish-scrape-backup-`date +%Y-%m-%d-%H-%M`.dump"
-  PGPASSWORD=$TF_VAR_TIMESCALE_SU_PASS pg_dump \
-    -U postgres \
-    -h $TF_VAR_TIMESCALE_HOST \
-    -p 5432 \
-    -d scrape_data \
-    -C -w --format=c | \
+  pg_dump $TIMESCALE_FLY_POSTGRES_URL -C -w --format=c | \
     s3 put - s3://dish-backups/$DUMP_FILE_NAME
   echo 'Successfully backed up scrape database'
 }
@@ -538,15 +527,7 @@ function postgres_console() {
 }
 
 function main_db_command() {
-  PORT=$(generate_random_port)
-  postgres_proxy $PORT
-  echo "$1" | PGPASSWORD=$TF_VAR_POSTGRES_PASSWORD psql \
-    -P pager=off \
-    -P format=unaligned \
-    -p $PORT \
-    -h localhost \
-    -U postgres \
-    -d dish
+  echo "$1" | psql $HASURA_FLY_POSTGRES_URL -P pager=off -P format=unaligned
 }
 
 function timescale_command() {
@@ -1127,6 +1108,7 @@ function deploy_all() {
   deploy $where image-quality &
   deploy $where image-proxy &
   deploy $where bert &
+  deploy $where cron &
   wait -n
 }
 

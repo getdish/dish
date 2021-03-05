@@ -6,10 +6,6 @@ if [ "$HASURA_FLY_POSTGRES_URL" = "" ]; then
     exit 1
 fi
 
-echo "deploying with postgres url $HASURA_FLY_POSTGRES_URL"
-
-# flyctl postgres attach --postgres-app dish-db || true
-
 flyctl secrets set \
     HASURA_GRAPHQL_DATABASE_URL="$HASURA_FLY_POSTGRES_URL" \
     HASURA_GRAPHQL_NO_OF_RETRIES="300" \

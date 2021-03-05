@@ -217,6 +217,6 @@ steps:
   - wait
 
   - label: "finish"
-    command: "echo done"
+    command: ".buildkite/scripts/finish.sh"
     env:
       FINISH: true
