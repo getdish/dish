@@ -24,7 +24,7 @@
     "strict": true,
     "strictNullChecks": true,
     "target": "es2019",
-    "types": ["node"],
+    "types": ["node", "jest"],
     "lib": ["dom", "esnext"]
   },
   "exclude": ["_", "test/**/*"],
