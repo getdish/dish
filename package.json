@@ -33,7 +33,7 @@
     "etc:colorize:staging": "yarn workspace @dish/app etc:colorize:staging",
     "ios": "yarn workspace @dish/app ios",
     "ios:install": "yarn workspace @dish/app ios:install",
-    "postinstall": "yarn patch-package && (cd dish-app && yarn patch-package)",
+    "postinstall": "yarn patch-package",
     "preinstall": "",
     "t": "eval $(./dishctl.sh yaml_to_env) && echo $TF_VAR_HASURA_ENDPOINT",
     "deploy": "./dishctl.sh deploy remote",

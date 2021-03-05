@@ -29,8 +29,7 @@ COPY dish-app/etc dish-app/etc
 RUN yarn install --immutable-cache \
   && yarn cache clean \
   && rm .yarn/install-state.gz \
-  && yarn patch-package \
-  && (cd dish-app && yarn patch-package)
+  && yarn patch-package
 
 COPY tsconfig.json tsconfig.build.json \
   tsconfig.base.parent.json tsconfig.base.json ava.config.js ./
