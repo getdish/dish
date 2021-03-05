@@ -70,7 +70,7 @@ docker run --net host $DISH_REGISTRY/base \
   bash -c 'cd services/timescaledb && DISH_ENV=not-production ./bin/migrate.sh'
 
 echo "Waiting for dish-app to finish starting"
-if ! timeout --preserve-status 120 bash -c wait_until_dish_app_ready; then
+if ! timeout --preserve-status 30 bash -c wait_until_dish_app_ready; then
   echo "Timed out waiting for dish container to start"
   exit 1
 fi
