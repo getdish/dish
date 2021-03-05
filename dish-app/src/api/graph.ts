@@ -14,7 +14,7 @@ const rc = redis.createClient({
 })
 
 rc.on('error', (err) => {
-  console.log('redis err', err)
+  console.log('redis ', JSON.stringify(err))
 })
 
 const rGet = promisify(rc.get).bind(rc)

@@ -30,7 +30,7 @@ COPY bin bin
 COPY dish-app/etc dish-app/etc
 
 # install
-RUN yarn install --immutable-cache \
+RUN yarn install --immutable-cache --skip-builds \
   && yarn cache clean \
   && rm .yarn/install-state.gz
 
@@ -47,6 +47,6 @@ RUN find . -type d \(  -name "test" -o -name "tests"  \) -print | xargs rm -rf &
   # link in esdx bugfix
   ln -s /app/packages/esdx/esdx.js /app/node_modules/.bin/esdx
 
-RUN yarn build
+RUN JS_ONLY=1 yarn build
 
 CMD ["true"]

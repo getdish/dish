@@ -5,4 +5,6 @@ while true; do
   killall chrome
 done &
 
+console.log("??")
+
 xvfb-run node --expose-gc /app/services/worker/dist/index.js
