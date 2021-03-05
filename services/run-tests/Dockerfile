@@ -6,7 +6,7 @@ ENV NODE_ENV=test
 
 WORKDIR /app
 
-COPY package.json ./
+COPY package.json jest.config.js ./
 COPY packages packages
 COPY dish-app dish-app
 COPY snackui snackui

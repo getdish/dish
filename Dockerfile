@@ -47,7 +47,8 @@ COPY dish-app dish-app
 COPY snackui snackui
 
 # remove all tests even node modules
-RUN find . -type d \(  -name "test" -o -name "tests"  \) -print | xargs rm -rf && \
+RUN rm jest.config.js && \
+  find . -type d \(  -name "test" -o -name "tests"  \) -print | xargs rm -rf && \
   find . -type f \(  -name "*.md" -o -name "*.jpg"  \) -print | xargs rm -rf && \
   # link in esdx bugfix
   ln -s /app/packages/esdx/esdx.js /app/node_modules/.bin/esdx
