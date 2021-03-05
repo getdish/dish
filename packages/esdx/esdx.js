@@ -38,27 +38,27 @@ async function go() {
     (x) => !x.includes('.d.ts')
   )
   try {
+    buildTsc()
     await Promise.all([
-      buildTsc(),
       build({
         entryPoints: files,
         outdir: 'dist',
         sourcemap: true,
         target: 'node12',
         treeShaking: true,
+        format: 'cjs',
+        logLevel: 'error',
+      }),
+      build({
+        entryPoints: files,
+        outdir: '_',
+        sourcemap: true,
+        target: 'safari13',
+        treeShaking: true,
         format: 'esm',
         logLevel: 'error',
       }),
     ])
-    build({
-      entryPoints: files,
-      outdir: '_',
-      sourcemap: true,
-      target: 'safari13',
-      treeShaking: true,
-      format: 'esm',
-      logLevel: 'error',
-    })
   } catch (error) {
     console.log(error.message, error.stack)
   }
