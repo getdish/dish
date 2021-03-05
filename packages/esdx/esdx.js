@@ -38,8 +38,8 @@ async function go() {
     (x) => !x.includes('.d.ts')
   )
   try {
-    buildTsc()
     await Promise.all([
+      buildTsc(),
       build({
         entryPoints: files,
         outdir: 'dist',
