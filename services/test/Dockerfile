@@ -1,3 +1,5 @@
+# for running tests in on ci
+
 ARG DISH_BASE_VERSION=latest
 FROM gcr.io/dish-258800/base:$DISH_BASE_VERSION
 ENV NODE_ENV=test

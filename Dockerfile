@@ -37,7 +37,10 @@ RUN yarn install --immutable-cache \
 COPY tsconfig.json tsconfig.build.json \
   tsconfig.base.parent.json tsconfig.base.json ava.config.js ./
 COPY packages packages
-COPY services services
+# only services that depend on yarn build for testing
+COPY services/crawlers services/crawlers
+COPY services/hooks services/hooks
+COPY services/worker services/worker
 COPY dish-app dish-app
 COPY snackui snackui
 
