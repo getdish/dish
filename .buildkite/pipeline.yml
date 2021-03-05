@@ -168,7 +168,7 @@ steps:
           cache-from: base:gcr.io/dish-258800/redis:latest
           push: redis:gcr.io/dish-258800/redis:latest
 
-  - label: ":docker: build gorse for tests"
+  - label: ":docker: build gorse"
     retry:
       automatic: true
     plugins:

@@ -15,16 +15,16 @@ class WorkerTest extends WorkerJob {
   }
 }
 
-// test.before(async () => {
-//   const queue = new Queue('WorkerTest')
-//   queue.process(async (job: Job) => {
-//     const Worker = eval(job.data.className)
-//     const worker = new Worker()
-//     await worker.run(job.data.fn, job.data.args)
-//   })
-// })
+test.before(async () => {
+  const queue = new Queue('WorkerTest')
+  queue.process(async (job: Job) => {
+    const Worker = eval(job.data.className)
+    const worker = new Worker()
+    await worker.run(job.data.fn, job.data.args)
+  })
+})
 
-test.skip('Worker runs a job', async (t) => {
+test('Worker runs a job', async (t) => {
   const job = new WorkerTest()
   job.runOnWorker('capture', ['DONE'])
   await sleep(1500)
