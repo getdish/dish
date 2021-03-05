@@ -3,6 +3,7 @@
   "compilerOptions": {
     "composite": false,
     "incremental": false,
+    "emitDeclarationOnly": false,
     "outDir": "dist",
     "module": "CommonJS",
     "plugins": [
