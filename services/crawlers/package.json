@@ -19,7 +19,7 @@
     "@dish/async": "*",
     "@dish/common": "*",
     "@dish/esdx": "*",
-    "@dish/gqless": "*",
+    "@dish/gqless": "^3.0.13",
     "@dish/graph": "*",
     "@dish/helpers": "*",
     "@dish/worker": "*",

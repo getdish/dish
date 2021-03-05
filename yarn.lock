@@ -1716,7 +1716,7 @@ __metadata:
     "@mdx-js/react": ^1.6.22
     "@react-native-community/blur": ^3.6.0
     "@react-native-community/cli-platform-ios": ^4.13.0
-    "@react-native-mapbox-gl/maps": 8.1.0-rc10
+    "@react-native-mapbox-gl/maps": 8.1.0
     "@sendgrid/mail": 7.4.0
     "@turf/bbox": ^6.3.0
     "@turf/center": ^6.3.0
@@ -1730,9 +1730,9 @@ __metadata:
     "@types/redis": ^2.8.28
     "@types/requestidlecallback": 0.3.1
     "@unimodules/core": ^7.0.0
-    "@unimodules/react-native-adapter": ^5.7.0
+    "@unimodules/react-native-adapter": ^6.1.0
     "@welldone-software/why-did-you-render": ^6.0.5
-    apple-sign-in-rest: ^1.0.0
+    apple-sign-in-rest: ^1.0.2
     aws-sdk: ^2.762.0
     babel-plugin-transform-inline-environment-variables: ^0.4.3
     bcryptjs: ^2.4.3
@@ -1741,7 +1741,7 @@ __metadata:
     expo-splash-screen: ^0.9.0
     expo-status-bar: ^1.0.3
     expo-updates: ^0.4.2
-    expo-yarn-workspaces: ^1.2.1
+    expo-yarn-workspaces: ^1.3.1
     express: ^4.17.1
     flexsearch: ^0.6.32
     fs-extra: ^9.1.0
@@ -1754,7 +1754,7 @@ __metadata:
     metro-react-native-babel-preset: ^0.65.1
     multer: ^1.4.2
     multer-s3: ^2.9.0
-    patch-package: ^6.2.2
+    patch-package: ^6.4.5
     polylabel: ^1.1.0
     prop-types: ^15.7.2
     react: "*"
@@ -1767,12 +1767,12 @@ __metadata:
     react-native-animatable: ^1.3.3
     react-native-dotenv: ^2.5.3
     react-native-gesture-handler: ^1.10.2
-    react-native-reanimated: 2.0.0-rc.3
+    react-native-reanimated: 2.0.0
     react-native-safe-area-context: ^3.1.9
     react-native-svg: ^12.1.0
     react-native-unimodules: ^0.12.0
     react-native-web: 0.0.0-466063b7e
-    react-query: ^3.3.0
+    react-query: ^3.12.0
     react-reparenting: ^0.6.1
     react-storage-hooks: ^4.0.1
     react-test-renderer: ^17.0.1
@@ -1842,7 +1842,7 @@ __metadata:
     "@eps1lon/babel-plugin-optimize-react": ^0.0.4-alpha.4
     "@loadable/babel-plugin": ^5.13.2
     babel-plugin-lodash: ^3.3.4
-    babel-plugin-react-native-web: ^0.14.9
+    babel-plugin-react-native-web: ^0.15.0
     babel-plugin-react-wrapped-display-name: ^1.0.0
     core-js: ^3.9.0
     react: "*"
@@ -1871,7 +1871,7 @@ __metadata:
     "@dish/async": "*"
     "@dish/common": "*"
     "@dish/esdx": "*"
-    "@dish/gqless": "*"
+    "@dish/gqless": ^3.0.13
     "@dish/graph": "*"
     "@dish/helpers": "*"
     "@dish/worker": "*"
@@ -1914,7 +1914,7 @@ __metadata:
   dependencies:
     "@dish/rollup-plugin-flat-dts": ^1.0.1
     chokidar-cli: ^2.1.0
-    esbuild: ^0.8.53
+    esbuild: ^0.8.56
     typescript: "*"
   bin:
     esdx: esdx.js
@@ -1942,7 +1942,7 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@dish/gqless-cli@npm:^4.0.1":
+"@dish/gqless-cli@npm:^4.0.4":
   version: 4.0.4
   resolution: "@dish/gqless-cli@npm:4.0.4"
   dependencies:
@@ -1963,7 +1963,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@dish/gqless-logger@npm:^0.1.0":
+"@dish/gqless-logger@npm:^0.1.3":
   version: 0.1.3
   resolution: "@dish/gqless-logger@npm:0.1.3"
   dependencies:
@@ -1987,7 +1987,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@dish/gqless@npm:*, @dish/gqless@npm:3.0.13":
+"@dish/gqless@npm:3.0.13, @dish/gqless@npm:^3.0.13":
   version: 3.0.13
   resolution: "@dish/gqless@npm:3.0.13"
   peerDependencies:
@@ -2002,8 +2002,8 @@ __metadata:
   dependencies:
     "@dish/esdx": "*"
     "@dish/gqless": 3.0.13
-    "@dish/gqless-cli": ^4.0.1
-    "@dish/gqless-logger": ^0.1.0
+    "@dish/gqless-cli": ^4.0.4
+    "@dish/gqless-logger": ^0.1.3
     "@dish/gqless-react": ^2.0.13
     "@dish/helpers": "*"
     "@dish/react-test-env": "*"
@@ -2013,7 +2013,7 @@ __metadata:
     isomorphic-unfetch: ^3.1.0
     lodash: "*"
     moment: ^2.29.1
-    patch-package: ^6.2.2
+    patch-package: ^6.4.5
     react: "*"
   languageName: unknown
   linkType: soft
@@ -2167,8 +2167,8 @@ __metadata:
     connect-history-api-fallback: ^1.6.0
     devcert: ^1.1.3
     enquirer: ^2.3.6
-    esbuild: ^0.8.54
-    esbuild-register: ^2.1.0
+    esbuild: ^0.8.56
+    esbuild-register: ^2.2.0
     express: ^4.17.1
     express-http-proxy: ^1.6.2
     express-remove-route: ^1.0.0
@@ -2185,7 +2185,7 @@ __metadata:
     react-ssr-prepass: ^1.2.1
     typescript: "*"
     webpack: "*"
-    webpack-dev-middleware: ^4.0.3
+    webpack-dev-middleware: ^4.1.0
     webpack-hot-middleware: ^2.25.0
     winston: ^3.3.3
   dependenciesMeta:
@@ -2259,13 +2259,13 @@ __metadata:
     react: "*"
     react-refresh: ^0.9.0
     snackui-loader: "*"
-    speed-measure-webpack-plugin: ^1.3.3
+    speed-measure-webpack-plugin: ^1.4.2
     style-loader: ^2.0.0
     terser-webpack-plugin: ^5.1.1
     time-fix-plugin: ^2.0.7
     url-loader: ^4.1.1
     webpack: "*"
-    webpack-bundle-analyzer: ^4.2.0
+    webpack-bundle-analyzer: ^4.4.0
     webpack-merge-and-include-globally: ^2.3.3
     webpack-node-externals: ^2.5.2
   dependenciesMeta:
@@ -2459,16 +2459,13 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@expo/match-media@npm:^0.0.0-beta.2":
-  version: 0.0.0-beta.2
-  resolution: "@expo/match-media@npm:0.0.0-beta.2"
+"@expo/match-media@npm:^0.1.0":
+  version: 0.1.0
+  resolution: "@expo/match-media@npm:0.1.0"
   dependencies:
     css-mediaquery: ^0.1.2
-    expo-screen-orientation: ~1.1.1
-  peerDependencies:
-    "@unimodules/core": ~5.3.0
-    react-native: ~0.62
-  checksum: e6f62fa2f188c8999daf0bc71ac39e471ba93ca6d85aaac4fdd725d70f6f5c800890f7974eb7bb3e00cfa42c32847983e8a6153774a11303193620eabae6be2d
+    expo-screen-orientation: ^2.1.0
+  checksum: 70250329d76384567a91cc1a13065a66c95e58a573d5a81e5622ffc1f419eedcce8e3bf00f5095c5f90a9170facad108f51e97c48a8945b8b5808651f53ed648
   languageName: node
   linkType: hard
 
@@ -3957,9 +3954,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@react-native-mapbox-gl/maps@npm:8.1.0-rc10":
-  version: 8.1.0-rc10
-  resolution: "@react-native-mapbox-gl/maps@npm:8.1.0-rc10"
+"@react-native-mapbox-gl/maps@npm:8.1.0":
+  version: 8.1.0
+  resolution: "@react-native-mapbox-gl/maps@npm:8.1.0"
   dependencies:
     "@mapbox/geo-viewport": ">= 0.4.0"
     "@turf/along": ">= 4.0.0 <7.0.0"
@@ -3973,7 +3970,7 @@ __metadata:
     prop-types: ">=15.5.8"
     react: ^16.6.1
     react-native: ">=0.59.9"
-  checksum: 587c0fa10eea1593606ecad0e89cda99d03e31cd0c88511ea2e6617e78c3ec32747bd0eeda394b97b7122748a382027475d9617b415580c695b0751d04b42642
+  checksum: 0bc73f9ab5e4db786ec2f1d189c56419089d2778901fd900257ad2fd8ce7748a65f68883c59e2f071c575bdea6956e53f9818b51f13ae017a064646dd34833de
   languageName: node
   linkType: hard
 
@@ -4193,7 +4190,7 @@ __metadata:
     "@dish/esdx": "*"
     "@dish/proxy-worm": "*"
     "@dish/react-test-env": "*"
-    "@expo/match-media": ^0.0.0-beta.2
+    "@expo/match-media": ^0.1.0
     "@snackui/helpers": ^0.0.6
     "@snackui/node": ^0.0.6
     "@testing-library/react": ^11.2.3
@@ -4204,8 +4201,8 @@ __metadata:
     babel-literal-to-ast: ^2.1.0
     babel-loader: ^8.2.2
     css-loader: ^5.0.1
-    esbuild: "*"
-    esbuild-register: ^2.1.0
+    esbuild: ^0.8.56
+    esbuild-register: ^2.2.0
     find-cache-dir: ^3.3.1
     fs-extra: ^9.0.0
     invariant: ^2.2.4
@@ -5182,7 +5179,20 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@unimodules/react-native-adapter@npm:^5.7.0, @unimodules/react-native-adapter@npm:~5.7.0":
+"@unimodules/react-native-adapter@npm:^6.1.0":
+  version: 6.1.0
+  resolution: "@unimodules/react-native-adapter@npm:6.1.0"
+  dependencies:
+    invariant: ^2.2.4
+    lodash: ^4.5.0
+  peerDependencies:
+    react-native: "*"
+    react-native-web: ~0.13.7
+  checksum: d450e4d0d08ecf1855922ad3bc354ed93f33053944ff1cff9412eca32538045208485a5d5d57080b1d9e46bcd246d5ba1793f1304d38707e88ab48fd5d3da60b
+  languageName: node
+  linkType: hard
+
+"@unimodules/react-native-adapter@npm:~5.7.0":
   version: 5.7.0
   resolution: "@unimodules/react-native-adapter@npm:5.7.0"
   dependencies:
@@ -5734,7 +5744,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"apple-sign-in-rest@npm:^1.0.0":
+"apple-sign-in-rest@npm:^1.0.2":
   version: 1.0.2
   resolution: "apple-sign-in-rest@npm:1.0.2"
   dependencies:
@@ -6392,10 +6402,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"babel-plugin-react-native-web@npm:^0.14.9":
-  version: 0.14.13
-  resolution: "babel-plugin-react-native-web@npm:0.14.13"
-  checksum: fc9a7d4086d39b926cdf254aee30de5ee22eaaace3d9aa1fd37282ae335de87b423dacdf283207a6599acd4b54c88ed45fbf0078d7e5de81714cf0e49dc3b9b1
+"babel-plugin-react-native-web@npm:^0.15.0":
+  version: 0.15.0
+  resolution: "babel-plugin-react-native-web@npm:0.15.0"
+  checksum: 0ffd1a6d3d8c08a7d553247b84125ce9d96a61fde40f748a6b3072a046abc629b26607ee184ea92e291ba16954e8183bcd54d3fae5d278d250cfe0f73d324e79
   languageName: node
   linkType: hard
 
@@ -9324,12 +9334,12 @@ __metadata:
     "@types/react-native": ^0.63.45
     "@yarnpkg/plugin-patch": ^2.1.2
     ava: ^3.14.0
-    esbuild: ^0.8.54
+    esbuild: ^0.8.56
     esm: ^3.2.25
-    expo-yarn-workspaces: "*"
+    expo-yarn-workspaces: ^1.3.1
     import-sort-style-module: ^6.0.0
     npm-run-all: ^4.1.5
-    patch-package: ^6.2.2
+    patch-package: ^6.4.5
     prettier: ^2.2.1
     prettier-plugin-import-sort: ^0.0.6
     react: ^17.0.1
@@ -9845,7 +9855,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"esbuild-register@npm:^2.1.0":
+"esbuild-register@npm:^2.2.0":
   version: 2.2.0
   resolution: "esbuild-register@npm:2.2.0"
   dependencies:
@@ -10291,12 +10301,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"expo-screen-orientation@npm:~1.1.1":
-  version: 1.1.1
-  resolution: "expo-screen-orientation@npm:1.1.1"
+"expo-screen-orientation@npm:^2.1.0":
+  version: 2.1.0
+  resolution: "expo-screen-orientation@npm:2.1.0"
   dependencies:
     fbjs: 1.0.0
-  checksum: 7eb4b3af4c41e5cd6574492d1ac170e0834d09338cebce36553a71ea6cd4483b535414411e870b65cc1ad1a6ef9e22e5d0ccb141f985df654b357e1384aae423
+  checksum: 6ee9b2845a6eaac7435b7ad279d31e6ecd1e7b6af1e5fa71c7e7c55b138b5e1b7d7b3053715fd32e1ac89c421edece0f6bd89d038c32330fa4fafecdc82bac46
   languageName: node
   linkType: hard
 
@@ -10347,7 +10357,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"expo-yarn-workspaces@npm:*, expo-yarn-workspaces@npm:^1.2.1":
+"expo-yarn-workspaces@npm:^1.3.1":
   version: 1.3.1
   resolution: "expo-yarn-workspaces@npm:1.3.1"
   dependencies:
@@ -15953,6 +15963,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"mockdate@npm:^3.0.2":
+  version: 3.0.2
+  resolution: "mockdate@npm:3.0.2"
+  checksum: 27a242abaa48f170f6174988b3cd597806715c11d8dc644efa466ca4f1b899e66e6d0618808df60f8a7807c89e6e316b832138f2028039d1caf23341e3d01f90
+  languageName: node
+  linkType: hard
+
 "moment-duration-format-commonjs@npm:^1.0.0":
   version: 1.0.0
   resolution: "moment-duration-format-commonjs@npm:1.0.0"
@@ -17279,7 +17296,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"patch-package@npm:^6.2.2":
+"patch-package@npm:^6.4.5":
   version: 6.4.5
   resolution: "patch-package@npm:6.4.5"
   dependencies:
@@ -18882,18 +18899,19 @@ __metadata:
   languageName: node
   linkType: hard
 
-"react-native-reanimated@npm:2.0.0-rc.3":
-  version: 2.0.0-rc.3
-  resolution: "react-native-reanimated@npm:2.0.0-rc.3"
+"react-native-reanimated@npm:2.0.0":
+  version: 2.0.0
+  resolution: "react-native-reanimated@npm:2.0.0"
   dependencies:
     "@babel/plugin-transform-object-assign": ^7.10.4
     fbjs: ^3.0.0
+    mockdate: ^3.0.2
     string-hash-64: ^1.0.3
   peerDependencies:
     react: "*"
     react-native: "*"
     react-native-gesture-handler: "*"
-  checksum: 01ba3a4d3bc43df965bbd0ddf35d375b5bbd3a3df21d030421188196d40d1af1866d329f8bb84bfc661f1a7550b4d2dac847e590b722b2d8f36e2ecd8fdd9fba
+  checksum: 54e588b1456bebea1001ce8ebbd403c1dbd6fc9caf1b0f5372ab17ce9b24a022995cc0f10435d9eae41090d7993734cdd6ce99f641e333fd5876de6e525d6dcc
   languageName: node
   linkType: hard
 
@@ -18974,7 +18992,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"react-query@npm:^3.3.0":
+"react-query@npm:^3.12.0":
   version: 3.12.0
   resolution: "react-query@npm:3.12.0"
   dependencies:
@@ -20471,7 +20489,7 @@ __metadata:
     "@types/react": ^16.9.35
     "@types/react-dom": ^16.9.8
     css-mediaquery: ^0.1.2
-    esbuild: "*"
+    esbuild: ^0.8.56
     expo-linear-gradient: ^8.4.0
     expo-screen-orientation: 3.0.0
     lodash: ^4.17.20
@@ -20670,7 +20688,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"speed-measure-webpack-plugin@npm:^1.3.3":
+"speed-measure-webpack-plugin@npm:^1.4.2":
   version: 1.4.2
   resolution: "speed-measure-webpack-plugin@npm:1.4.2"
   dependencies:
@@ -23184,7 +23202,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"webpack-bundle-analyzer@npm:^4.2.0":
+"webpack-bundle-analyzer@npm:^4.4.0":
   version: 4.4.0
   resolution: "webpack-bundle-analyzer@npm:4.4.0"
   dependencies:
@@ -23203,7 +23221,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"webpack-dev-middleware@npm:^4.0.3":
+"webpack-dev-middleware@npm:^4.1.0":
   version: 4.1.0
   resolution: "webpack-dev-middleware@npm:4.1.0"
   dependencies:

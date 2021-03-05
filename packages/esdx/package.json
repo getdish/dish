@@ -12,7 +12,7 @@
   "devDependencies": {
     "@dish/rollup-plugin-flat-dts": "^1.0.1",
     "chokidar-cli": "^2.1.0",
-    "esbuild": "^0.8.53",
+    "esbuild": "^0.8.56",
     "typescript": "*"
   },
   "publishConfig": {
