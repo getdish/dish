@@ -1,9 +1,4 @@
-ARG DISH_BASE_VERSION=latest
-FROM gcr.io/dish-258800/base:$DISH_BASE_VERSION
-
-WORKDIR /app
-COPY services/worker services/worker
-COPY packages packages
+FROM node:15.10.0-buster
 
 RUN apt-get update && apt-get install -y \
       gconf-service libasound2 libatk1.0-0 libatk-bridge2.0-0 \
@@ -17,6 +12,11 @@ RUN apt-get update && apt-get install -y \
       lsb-release xdg-utils wget xvfb procps psmisc htop \
       && apt-get clean
 
+FROM gcr.io/dish-258800/base
+COPY --from=0 /bin /usr/local/bin
+WORKDIR /app
+COPY services/worker services/worker
+COPY packages packages
 WORKDIR /app/services/worker
 
 CMD ["./entry.sh"]
