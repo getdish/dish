@@ -7,7 +7,7 @@ RUN \
       && apt-get clean \
       && rm -rf /var/lib/apt/lists/*
 
-FROM gcr.io/dish-258800/base
+FROM gcr.io/dish-258800/base as base
 COPY --from=0 /bin /usr/local/bin
 ENV NODE_ENV=production
 
@@ -17,6 +17,11 @@ COPY package.json yarn.lock .yarnrc.yml ./
 COPY packages packages
 COPY dish-app dish-app
 COPY snackui snackui
+
+COPY --from=base packages packages
+COPY --from=base dish-app dish-app
+COPY --from=base snackui snackui
+COPY --from=base services services
 
 WORKDIR /app/dish-app
 
