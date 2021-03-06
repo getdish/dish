@@ -32,7 +32,7 @@ export const photoXrefUpsert = PhotoXrefQueryHelpers.upsert
 
 export const DO_BASE = 'https://dish-images.sfo2.digitaloceanspaces.com/'
 
-const prod_hooks_endpoint = 'http://dish-hooks:6154'
+const prod_hooks_endpoint = 'https://hooks.dishapp.com'
 const dev_hooks_endpoint = 'http://localhost:6154'
 const DISH_HOOKS_ENDPOINT =
   process.env.DISH_ENV == 'production'

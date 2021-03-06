@@ -941,7 +941,8 @@ function deploy_all() {
   where=${1:-registry}
   echo "deploying apps via $where"
   deploy $where db
-  deploy $where hasura # depends on postgres
+  deploy $where hooks
+  deploy $where hasura # depends on postgres and hooks
   deploy $where tileserver & # depends on hasura
   deploy $where app & # depends on hasura
   deploy $where timescale & # depends on postgres
@@ -978,6 +979,7 @@ function deploy() {
   if [ "$app" = "image-quality" ];  then deploy_fly_app $where dish-image-quality services/image-quality image-quality; fi
   if [ "$app" = "image-proxy" ];    then deploy_fly_app $where dish-image-proxy services/image-proxy image-proxy; fi
   if [ "$app" = "bert" ];           then deploy_fly_app $where dish-bert services/bert bert; fi
+  if [ "$app" = "hooks" ];          then deploy_fly_app $where dish-hooks services/hooks hooks; fi
 }
 
 function deploy_fly_app() {

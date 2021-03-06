@@ -15,6 +15,6 @@ flyctl secrets set \
     HASURA_GRAPHQL_UNAUTHORIZED_ROLE="anon" \
     HASURA_GRAPHQL_JWT_SECRET="{\"type\":\"HS256\", \"key\":\"12345678901234567890123456789012\"}" \
     HASURA_GRAPHQL_ENABLE_CONSOLE="true" \
-    DISH_HOOKS_ENDPOINT="http://dish-hooks:6154" \
-    GORSE_SYNC_HOOK="http://dish-hooks:6154/gorse_sync" \
+    DISH_HOOKS_ENDPOINT="http://dish-hooks.internal" \
+    GORSE_SYNC_HOOK="http://dish-hooks.internal/gorse_sync" \
     VIRTUAL_HOST="dish-hasura.fly.dev" || true
