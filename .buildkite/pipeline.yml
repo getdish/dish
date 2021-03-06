@@ -168,7 +168,7 @@ steps:
 
   - wait
 
-  - label: ":docker: build postgres ha"
+  - label: ":docker: build db"
     retry:
       automatic: true
     env:
@@ -176,34 +176,34 @@ steps:
     plugins:
       - docker-compose#v3.7.0:
           build: postgres
-          image-repository: gcr.io/dish-258800/postgres-ha
-          cache-from: base:gcr.io/dish-258800/postgres-ha:latest
-          push: postgres:gcr.io/dish-258800/postgres-ha:latest
+          image-repository: gcr.io/dish-258800/db
+          cache-from: base:gcr.io/dish-258800/db:latest
+          push: postgres:gcr.io/dish-258800/db:latest
 
-  - label: "setup services for tests"
-    command: ".buildkite/scripts/setup_services.sh"
-    key: test-setup
-    env:
-      LOG_DOCKER: true
-      DOCKER_CLEAN_ON_FAIL: true
-      POSTGRES_STRATEGY: simple
-    plugins:
-      - gencer/cache#v2.3.10:
-          backend: s3
-          key: "v1-cache-{{ runner.os }}"
-          s3:
-            args: "--endpoint-url=https://sfo2.digitaloceanspaces.com"
-            bucket: "dish-build-cache"
-          paths:
-            - '/root/.dish/'
+  # - label: "setup services for tests"
+  #   command: ".buildkite/scripts/setup_services.sh"
+  #   key: test-setup
+  #   env:
+  #     LOG_DOCKER: true
+  #     DOCKER_CLEAN_ON_FAIL: true
+  #     POSTGRES_STRATEGY: simple
+  #   plugins:
+  #     - gencer/cache#v2.3.10:
+  #         backend: s3
+  #         key: "v1-cache-{{ runner.os }}"
+  #         s3:
+  #           args: "--endpoint-url=https://sfo2.digitaloceanspaces.com"
+  #           bucket: "dish-build-cache"
+  #         paths:
+  #           - '/root/.dish/'
 
-  - label: "run tests"
-    key: tests
-    depends_on: test-setup
-    command: "docker run --net host gcr.io/dish-258800/run-tests:latest yarn test"
-    env:
-      LOG_DOCKER: true
-      DOCKER_CLEAN_ON_FAIL: true
+  # - label: "run tests"
+  #   key: tests
+  #   depends_on: test-setup
+  #   command: "docker run --net host gcr.io/dish-258800/run-tests:latest yarn test"
+  #   env:
+  #     LOG_DOCKER: true
+  #     DOCKER_CLEAN_ON_FAIL: true
 
   # - label: "run integration test"
   #   command: ".buildkite/scripts/integration_tests.sh"

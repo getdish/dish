@@ -22,7 +22,7 @@ prune image-quality &
 prune image-quality-server &
 prune imageproxy &
 prune postgres &
-prune postgres-ha &
+prune db &
 prune postgres-simple &
 prune redis &
 prune search &
