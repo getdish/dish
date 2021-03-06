@@ -1,10 +1,7 @@
-app = "dish-bert"
+app = "bert"
 
 kill_signal = "SIGINT"
 kill_timeout = 5
-
-[experimental]
-  private_network = true
 
 [[services]]
   internal_port = 8080

@@ -156,15 +156,15 @@ steps:
           cache-from: base:gcr.io/dish-258800/gorse:latest
           push: gorse:gcr.io/dish-258800/gorse:latest
 
-  - label: ":docker: build bert2"
+  - label: ":docker: build bert"
     retry:
       automatic: true
     plugins:
       - docker-compose#v3.7.0:
-          build: bert2
-          image-repository: gcr.io/dish-258800/bert2
-          cache-from: base:gcr.io/dish-258800/bert2:latest
-          push: bert2:gcr.io/dish-258800/bert2:latest
+          build: bert
+          image-repository: gcr.io/dish-258800/bert
+          cache-from: base:gcr.io/dish-258800/bert:latest
+          push: bert:gcr.io/dish-258800/bert:latest
 
   - wait
 
