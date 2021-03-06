@@ -168,20 +168,6 @@ steps:
           cache-from: base:gcr.io/dish-258800/gorse:latest
           push: gorse:gcr.io/dish-258800/gorse:latest
 
-  - wait
-
-  # images not used by tests but that could slow down waiting to start them
-
-  # - label: ":docker: build bert"
-  #   retry:
-  #     automatic: true
-  #   plugins:
-  #     - docker-compose#v3.7.0:
-  #         build: bert
-  #         image-repository: gcr.io/dish-258800/bert
-  #         cache-from: base:gcr.io/dish-258800/bert:latest
-  #         push: bert:gcr.io/dish-258800/bert:latest
-
   - label: ":docker: build bert2"
     retry:
       automatic: true
@@ -192,7 +178,7 @@ steps:
           cache-from: base:gcr.io/dish-258800/bert2:latest
           push: bert2:gcr.io/dish-258800/bert2:latest
 
-  # tests
+  - wait
 
   - label: "setup services for tests"
     command: ".buildkite/scripts/setup_services.sh"

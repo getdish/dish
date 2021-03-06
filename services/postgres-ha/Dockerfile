@@ -15,7 +15,7 @@ FROM postgres:12.5
 LABEL fly.app_role=postgres_cluster
 
 RUN apt-get update > /dev/null && apt-get install --no-install-recommends -y \
-    ca-certificates curl bash dnsutils tmux vim-tiny procps \
+    ca-certificates curl bash dnsutils tmux vim-tiny procps > /dev/null \
     && apt autoremove -y
 
 COPY --from=stolon /go/src/app/bin/* /usr/local/bin/

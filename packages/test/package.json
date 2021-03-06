@@ -4,9 +4,13 @@
   "sideEffects": false,
   "private": true,
   "bin": "jest",
+  "types": "src/_types.d.ts",
+  "main": "dist",
+  "module": "_",
+  "tsmain": "src",
   "scripts": {
-    "build": "true",
-    "watch": "true"
+    "build": "esdx",
+    "watch": "esdx-watch"
   },
   "dependencies": {
     "lodash": "^4.17.21",
@@ -14,6 +18,7 @@
     "react-dom": "*"
   },
   "devDependencies": {
+    "@dish/esdx": "0.0.1",
     "@dish/react-test-env": "*",
     "@testing-library/react": "^11.2.5",
     "@types/jest": "^26.0.20",

@@ -1,15 +1,14 @@
-import '@expo/match-media'
 import '@dish/react-test-env/browser'
+import '@expo/match-media'
 
 import path from 'path'
 
-import { TestRenderer, act, render } from '@dish/react-test-env'
+import { TestRenderer, act, render } from '@dish/test'
 import React from 'react'
 import webpack from 'webpack'
 
 import { externalizeModules } from './lib/externalizeModules'
-import { outDir, specDir, test } from './lib/test-constants'
-import { getTestElement } from './lib/testStyles'
+import { outDir, specDir } from './lib/test-constants'
 
 const outFile = 'out-webpack.js'
 const outFileFull = path.join(outDir, outFile)
@@ -18,153 +17,155 @@ process.env.NODE_ENV = 'test'
 // dont want line numbers output for snapshots
 // process.env.IDENTIFY_TAGS = 'true'
 
-test.before(async (t) => {
+let app: any
+let context: any = {}
+
+beforeAll(async () => {
   await extractStaticApp()
   process.env.IS_STATIC = undefined
-  const app = require(outFileFull)
-  t.context.app = app
+  app = require(outFileFull)
   for (const key in app) {
     act(() => {
       const App = app[key]
-      t.context[key.toLowerCase()] = {
+      context[key.toLowerCase()] = {
         Element: App,
         renderer: TestRenderer.create(<App conditional={true} />),
         rendererFalse: TestRenderer.create(<App conditional={false} />),
       }
     })
   }
-})
+}, 10000)
 
 // TODO fix testability of linear gradient
-// test('extracts gradients', async (t) => {
-//   const { renderer } = t.context.testlineargradient
+// test('extracts gradients', () => {
+//   const { renderer } = context.testlineargradient
 //   console.log(renderer.toJSON())
 //   // console.log('out', style.backgroundColor, style.paddingRight)
 //   t.assert(true)
 // })
 
-test('extracts media queries', async (t) => {
-  const { TestMediaQuery } = t.context.app
-  const { style } = await getTestElement(TestMediaQuery)
-  // TODO not picking up media queries
-  console.log('out', style.backgroundColor, style.paddingRight)
-  t.assert(true)
-})
+// test('extracts media queries', async () => {
+//   const { TestMediaQuery } = context.app
+//   const { style } = await getTestElement(TestMediaQuery)
+//   // TODO not picking up media queries
+//   console.log('out', style.backgroundColor, style.paddingRight)
+//   expect(true)
+// })
 
 //
 // test styles
 //
 // testStyles(test)
 
-test('1. extracts to a div for simple views', async (t) => {
-  const { test1 } = t.context
+test('1. extracts to a div for simple views', () => {
+  const { test1 } = context
   const out = test1.renderer.toJSON()!
-  t.snapshot(out)
+  expect(out).toMatchSnapshot()
 })
 
-test('2. extracts className for complex views but keeps other props', async (t) => {
-  const { test2 } = t.context
+test('2. extracts className for complex views but keeps other props', () => {
+  const { test2 } = context
   const out = test2.renderer.toJSON()!
-  t.snapshot(out)
+  expect(out).toMatchSnapshot()
   const outFalse = test2.rendererFalse.toJSON()
-  t.snapshot(outFalse)
+  expect(outFalse).toMatchSnapshot()
 })
 
-test('3. places className correctly given a single spread', async (t) => {
+test('3. places className correctly given a single spread', () => {
   const {
     test3: { Element },
-  } = t.context
+  } = context
   const out = render(<Element />)
   const list = [...out.container.firstChild?.['classList']]
-  t.snapshot(list)
+  expect(list).toMatchSnapshot()
 })
 
-test('4. leaves dynamic variables', async (t) => {
+test('4. leaves dynamic variables', () => {
   const {
     test4: { renderer, Element },
-  } = t.context
+  } = context
   const out = render(<Element />)
   const firstChild = out.container.firstChild!
   const classList = [...firstChild['classList']]
-  t.snapshot(classList)
+  expect(classList).toMatchSnapshot()
   const r = renderer.toJSON()
-  t.snapshot(r)
+  expect(r).toMatchSnapshot()
 })
 
-test('5. spread conditional', async (t) => {
-  const { test5 } = t.context
+test('5. spread conditional', () => {
+  const { test5 } = context
   const out = test5.renderer.toJSON()
-  t.snapshot(out)
+  expect(out).toMatchSnapshot()
 })
 
-test('6. spread ternary', async (t) => {
-  const { test6 } = t.context
-  t.snapshot(test6.renderer.toJSON())
-  t.snapshot(test6.rendererFalse.toJSON())
+test('6. spread ternary', () => {
+  const { test6 } = context
+  expect(test6.renderer.toJSON()).toMatchSnapshot()
+  expect(test6.rendererFalse.toJSON()).toMatchSnapshot()
 })
 
-test('7. ternary + data-is', async (t) => {
-  const { test7 } = t.context
+test('7. ternary + data-is', () => {
+  const { test7 } = context
   const out = test7.renderer.toJSON()
-  t.snapshot(out)
+  expect(out).toMatchSnapshot()
 })
 
-test('8. styleExpansions', async (t) => {
-  const { test8 } = t.context
+test('8. styleExpansions', () => {
+  const { test8 } = context
   const out = test8.renderer.toJSON()
-  t.snapshot(out)
+  expect(out).toMatchSnapshot()
   // TODO test constant folding
 })
 
-test('9. combines with classname', async (t) => {
-  const { test9 } = t.context
+test('9. combines with classname', () => {
+  const { test9 } = context
   const out = test9.renderer.toJSON()
-  t.snapshot(out)
+  expect(out).toMatchSnapshot()
 })
 
-test('10. extracts Text', async (t) => {
-  const { test10 } = t.context
+test('10. extracts Text', () => {
+  const { test10 } = context
   const out = test10.renderer.toJSON()
-  t.snapshot(out)
+  expect(out).toMatchSnapshot()
 })
 
-test('11. combines everything', async (t) => {
+test('11. combines everything', () => {
   const {
     test11: { Element },
-  } = t.context
+  } = context
   const out = render(<Element conditional={false} />)
   const firstChild = out.container.firstChild!
   const classList = [...firstChild['classList']]
-  t.snapshot(classList)
+  expect(classList).toMatchSnapshot()
 })
 
-test('12. ternary multiple on same key', async (t) => {
-  const { test12 } = t.context
-  t.snapshot(test12.renderer.toJSON())
+test('12. ternary multiple on same key', () => {
+  const { test12 } = context
+  expect(test12.renderer.toJSON()).toMatchSnapshot()
 })
 
-test('13. text with complex conditional and local vars', async (t) => {
-  const { test13 } = t.context
-  // console.log('test13', test13.renderer!.toTree())
-  t.is(1, 1)
-})
+// test('13. text with complex conditional and local vars', () => {
+//   const { test13 } = context
+//   // console.log('test13', test13.renderer!.toTree())
+//   t.is(1, 1)
+// })
 
-test('14. extracts psuedo styles and evaluates constants', async (t) => {
-  const { test14 } = t.context
+test('14. extracts psuedo styles and evaluates constants', () => {
+  const { test14 } = context
   const out = test14.renderer.toJSON()
-  t.snapshot(out)
+  expect(out).toMatchSnapshot()
 })
 
-test('15. extracts spacer (complex expansion)', async (t) => {
-  const { test15 } = t.context
+test('15. extracts spacer (complex expansion)', () => {
+  const { test15 } = context
   const out = test15.renderer.toJSON()
-  t.snapshot(out)
+  expect(out).toMatchSnapshot()
 })
 
-test('16. deopt when spreading multiple', async (t) => {
-  const { test16 } = t.context
+test('16. deopt when spreading multiple', () => {
+  const { test16 } = context
   const out = test16.renderer.toJSON()
-  t.snapshot(out)
+  expect(out).toMatchSnapshot()
 })
 
 async function extractStaticApp() {
@@ -226,8 +227,8 @@ async function extractStaticApp() {
 
   await new Promise<void>((res) => {
     compiler.run((err, result) => {
-      console.log({ err })
-      console.log(result?.toString())
+      // console.log({ err })
+      // console.log(result?.toString())
       res()
     })
   })

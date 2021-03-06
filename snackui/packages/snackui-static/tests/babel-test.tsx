@@ -2,7 +2,6 @@ import '@dish/react-test-env/browser'
 
 import path from 'path'
 
-import anyTest, { TestInterface } from 'ava'
 import React from 'react'
 import webpack from 'webpack'
 
@@ -17,52 +16,48 @@ const outFileFull = path.join(outDir, outFile)
 window['React'] = React
 process.env.NODE_ENV = 'test'
 
-export const test = anyTest as TestInterface<{
-  app: any
-}>
+let app: any
 
-test.before(async (t) => {
+beforeAll(async () => {
   await extractStaticApp()
   process.env.IS_STATIC = undefined
-  t.context.app = require(outFileFull)
-})
+  app = require(outFileFull)
+  testStyles(test, app)
+}, 10000)
 
-//
-// test styles
-//
-testStyles(test)
-
-test('basic extraction', async (t) => {
+test('basic extraction', () => {
   const output = extractBabel(`
-import { VStack } from 'snackui'
-
-export function Test() {
-  return (
-    <VStack backgroundColor="red" />
-  )
-}
+    import { VStack } from 'snackui'
+    export function Test() {
+      return (
+        <VStack backgroundColor="red" />
+      )
+    }
   `)
   const code = output?.code ?? ''
-  t.assert(code.includes(`"backgroundColor": "red"`))
-  t.assert(code.includes(`ReactNativeStyleSheet.create`))
+  expect(code.includes(`"backgroundColor": "red"`)).toBeTruthy()
+  expect(code.includes(`_StyleSheet.default.create`)).toBeTruthy()
 })
 
-test('basic conditional extraction', async (t) => {
+test('basic conditional extraction', () => {
   const output = extractBabel(`
-import { VStack } from 'snackui'
-
-export function Test() {
-  return (
-    <>
-      <VStack backgroundColor={x ? 'red' : 'blue'} />
-      <VStack {...x && { backgroundColor: 'red' }} />
-    </>
-  )
-}
+    import { VStack } from 'snackui'
+    export function Test() {
+      return (
+        <>
+          <VStack backgroundColor={x ? 'red' : 'blue'} />
+          <VStack {...x && { backgroundColor: 'red' }} />
+        </>
+      )
+    }
   `)
   const code = output?.code ?? ''
-  t.assert(code.includes(`_sheet["0"], x ? _sheet["1"] : _sheet["2"]`))
-  t.assert(code.includes(`_sheet["3"], x ? _sheet["4"] : _sheet["5"]`))
+  expect(
+    code.includes(`_sheet["0"], x ? _sheet["1"] : _sheet["2"]`)
+  ).toBeTruthy()
+  expect(
+    code.includes(`_sheet["3"], x ? _sheet["4"] : _sheet["5"]`)
+  ).toBeTruthy()
 })
 
 async function extractStaticApp() {
@@ -117,8 +112,8 @@ async function extractStaticApp() {
 
   await new Promise<void>((res) => {
     compiler.run((err, result) => {
-      console.log({ err })
-      console.log(result?.toString())
+      // console.log({ err })
+      // console.log(result?.toString())
       res()
     })
   })

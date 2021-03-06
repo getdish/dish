@@ -1908,7 +1908,7 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@dish/esdx@*, @dish/esdx@^0.0.1, @dish/esdx@workspace:packages/esdx":
+"@dish/esdx@*, @dish/esdx@0.0.1, @dish/esdx@^0.0.1, @dish/esdx@workspace:packages/esdx":
   version: 0.0.0-use.local
   resolution: "@dish/esdx@workspace:packages/esdx"
   dependencies:
@@ -2202,6 +2202,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@dish/test@workspace:packages/test"
   dependencies:
+    "@dish/esdx": 0.0.1
     "@dish/react-test-env": "*"
     "@testing-library/react": ^11.2.5
     "@types/jest": ^26.0.20
@@ -4189,15 +4190,14 @@ __metadata:
     "@dish/babel-preset": "*"
     "@dish/esdx": "*"
     "@dish/proxy-worm": "*"
-    "@dish/react-test-env": "*"
+    "@dish/test": "*"
     "@expo/match-media": ^0.1.0
     "@snackui/helpers": ^0.0.6
     "@snackui/node": ^0.0.6
-    "@testing-library/react": ^11.2.3
+    "@types/jest": "*"
     "@types/node": ^14.14.12
     "@types/react-native": ^0.62.12
     "@types/webpack": ^4.41.26
-    ava: ^3.14.0
     babel-literal-to-ast: ^2.1.0
     babel-loader: ^8.2.2
     css-loader: ^5.0.1
@@ -4206,6 +4206,7 @@ __metadata:
     find-cache-dir: ^3.3.1
     fs-extra: ^9.0.0
     invariant: ^2.2.4
+    jest: "*"
     jsdom: ^16.4.0
     jsdom-global: ^3.0.2
     loader-utils: ^2.0.0

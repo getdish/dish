@@ -1,7 +1,7 @@
 module.exports = {
   testMatch: ['**/tests/*.[jt]s?(x)'],
   transform: {
-    '^.+\\.tsx?$': 'esbuild-jest',
+    '^.+\\.[jt]sx?$': 'esbuild-jest',
   },
   bail: true,
   transformIgnorePatterns: ['node_modules/(?!@expo)/'],
