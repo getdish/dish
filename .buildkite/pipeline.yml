@@ -120,9 +120,9 @@ steps:
     plugins:
       - docker-compose#v3.7.0:
           build: run-tests
-          image-repository: gcr.io/dish-258800/run-tests-simple
-          cache-from: base:gcr.io/dish-258800/run-tests-simple:latest
-          push: run-tests:gcr.io/dish-258800/run-tests-simple:latest
+          image-repository: gcr.io/dish-258800/run-tests
+          cache-from: base:gcr.io/dish-258800/run-tests:latest
+          push: run-tests:gcr.io/dish-258800/run-tests:latest
 
   - label: ":docker: build postgres for tests"
     retry:
