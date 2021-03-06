@@ -114,18 +114,6 @@ steps:
           cache-from: base:gcr.io/dish-258800/image-quality:latest
           push: image-quality:gcr.io/dish-258800/image-quality:latest
 
-  - label: ":docker: build postgres ha"
-    retry:
-      automatic: true
-    env:
-      POSTGRES_STRATEGY: ha
-    plugins:
-      - docker-compose#v3.7.0:
-          build: postgres
-          image-repository: gcr.io/dish-258800/postgres-ha
-          cache-from: base:gcr.io/dish-258800/postgres-ha:latest
-          push: postgres:gcr.io/dish-258800/postgres-ha:latest
-
   - label: ":docker: run-tests"
     retry:
       automatic: true
@@ -140,7 +128,7 @@ steps:
     retry:
       automatic: true
     env:
-      POSTGRES_STRATEGY: ha
+      POSTGRES_STRATEGY: simple
     plugins:
       - docker-compose#v3.7.0:
           build: postgres
@@ -179,6 +167,18 @@ steps:
           push: bert2:gcr.io/dish-258800/bert2:latest
 
   - wait
+
+  - label: ":docker: build postgres ha"
+    retry:
+      automatic: true
+    env:
+      POSTGRES_STRATEGY: ha
+    plugins:
+      - docker-compose#v3.7.0:
+          build: postgres
+          image-repository: gcr.io/dish-258800/postgres-ha
+          cache-from: base:gcr.io/dish-258800/postgres-ha:latest
+          push: postgres:gcr.io/dish-258800/postgres-ha:latest
 
   - label: "setup services for tests"
     command: ".buildkite/scripts/setup_services.sh"
