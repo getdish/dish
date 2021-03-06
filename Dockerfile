@@ -1,7 +1,7 @@
 # STEP 1
 # everything that goes into deterministic yarn goes on this step
 
-FROM node:15.10.0-buster as base
+FROM node:15.10.0-buster
 WORKDIR /app
 
 ENV PATH=$PATH:/app/node_modules/.bin:node_modules/.bin
@@ -18,9 +18,9 @@ COPY package.json .
 
 RUN find . \! -name "package.json" -not -path "*/bin/*" -type f -print | xargs rm -rf
 
-FROM node:15.10.0-buster as install
+FROM node:15.10.0-buster
 WORKDIR /app
-COPY --from=base /app .
+COPY --from=0 /app .
 
 COPY .yarnrc.yml .
 COPY yarn.lock .
@@ -47,9 +47,18 @@ COPY snackui snackui
 
 # remove all tests even node modules
 RUN find . -type d \(  -name "test" -o -name "tests"  \) -print | xargs rm -rf && \
-  find . -type f \(  -name "*.md" -o -name "*.jpg"  \) -print | xargs rm -rf && \
+  find . -type f \( \
+    -name "jest.config.js" -o -name "ava.config.js" \
+    -o -name "*.md" -o -name "*.jpg" \
+  \) -print | xargs rm -rf \
   # link in esdx bugfix
-  ln -s /app/packages/esdx/esdx.js /app/node_modules/.bin/esdx
+  && ln -s /app/packages/esdx/esdx.js /app/node_modules/.bin/esdx
+
+RUN ls -la snackui/packages/snackui-static
+
+FROM node:15.10.0-buster
+WORKDIR /app
+COPY --from=1 /app .
 
 RUN yarn build:js
 

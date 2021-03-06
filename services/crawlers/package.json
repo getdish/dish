@@ -11,7 +11,7 @@
     "watch": "esdx-watch",
     "worker": "node dist/worker.js",
     "worker:watch": "nodemon dist/worker.js",
-    "test": "TARGET=node RUN_WITHOUT_WORKER=true DISH_ENV=test ava test/idempotent/* --verbose --serial",
+    "test:disable": "TARGET=node RUN_WITHOUT_WORKER=true DISH_ENV=test ava test/idempotent/* --verbose --serial",
     "test-new": "TARGET=node RUN_WITHOUT_WORKER=true DISH_ENV=test ava test/idempotent/self.ts --verbose",
     "test:scheduled": "TARGET=node RUN_WITHOUT_WORKER=true DISH_ENV=test ava test/http-dependent/* --verbose"
   },

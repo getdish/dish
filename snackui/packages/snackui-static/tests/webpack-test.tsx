@@ -1,30 +1,14 @@
 import '@dish/react-test-env/browser'
 import '@expo/match-media'
 
-import path from 'path'
-
 import { TestRenderer, act, render } from '@dish/testy'
 import React from 'react'
-import webpack from 'webpack'
 
-import { externalizeModules } from './lib/externalizeModules'
-import { outDir, specDir } from './lib/test-constants'
+const app = require('./spec/out/out-webpack')
 
-const outFile = 'out-webpack.js'
-const outFileFull = path.join(outDir, outFile)
-
-process.env.NODE_ENV = 'test'
-// dont want line numbers output for snapshots
-// process.env.IDENTIFY_TAGS = 'true'
-
-let app: any
 let context: any = {}
 
 beforeAll(async () => {
-  console.log('building webpack...')
-  await extractStaticApp()
-  process.env.IS_STATIC = undefined
-  app = require(outFileFull)
   for (const key in app) {
     act(() => {
       const App = app[key]
@@ -35,7 +19,6 @@ beforeAll(async () => {
       }
     })
   }
-  console.log('done')
 })
 
 // TODO fix testability of linear gradient
@@ -169,69 +152,3 @@ test('16. deopt when spreading multiple', () => {
   const out = test16.renderer.toJSON()
   expect(out).toMatchSnapshot()
 })
-
-async function extractStaticApp() {
-  const compiler = webpack({
-    context: specDir,
-    mode: 'development',
-    devtool: false,
-    optimization: {
-      minimize: false,
-      concatenateModules: false,
-      splitChunks: false,
-    },
-    entry: path.join(specDir, 'extract-specs.tsx'),
-    output: {
-      publicPath: '',
-      libraryTarget: 'commonjs',
-      filename: outFile,
-      path: outDir,
-    },
-    externals: [externalizeModules],
-    resolve: {
-      extensions: ['.ts', '.tsx', '.js'],
-      mainFields: ['tsmain', 'browser', 'module', 'main'],
-      alias: {
-        'react-native': 'react-native-web',
-      },
-    },
-    module: {
-      rules: [
-        {
-          test: /\.[jt]sx?$/,
-          exclude: /node_modules/,
-          use: [
-            {
-              loader: require.resolve('babel-loader'),
-            },
-            {
-              loader: require.resolve('snackui-loader'),
-              options: {
-                evaluateImportsWhitelist: ['constants.js'],
-              },
-            },
-          ],
-        },
-        {
-          test: /\.css$/,
-          use: ['style-loader', 'css-loader'],
-        },
-      ],
-    },
-    plugins: [
-      new webpack.DefinePlugin({
-        'process.env.NODE_ENV': JSON.stringify(process.env.NODE_ENV),
-        'process.env.DEBUG': JSON.stringify(process.env.DEBUG),
-        'process.env.SNACKUI_COMPILE_PROCESS': JSON.stringify(1),
-      }),
-    ],
-  })
-
-  await new Promise<void>((res) => {
-    compiler.run((err, result) => {
-      // console.log({ err })
-      // console.log(result?.toString())
-      res()
-    })
-  })
-}

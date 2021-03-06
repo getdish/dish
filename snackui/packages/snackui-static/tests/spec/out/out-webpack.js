@@ -3402,8 +3402,8 @@ var REACT_ELEMENT_TYPE;
 function _jsx(type, props, key, children) { if (!REACT_ELEMENT_TYPE) { REACT_ELEMENT_TYPE = typeof Symbol === "function" && Symbol["for"] && Symbol["for"]("react.element") || 0xeac7; } var defaultProps = type && type.defaultProps; var childrenLength = arguments.length - 3; if (!props && childrenLength !== 0) { props = { children: void 0 }; } if (childrenLength === 1) { props.children = children; } else if (childrenLength > 1) { var childArray = new Array(childrenLength); for (var i = 0; i < childrenLength; i++) { childArray[i] = arguments[i + 3]; } props.children = childArray; } if (props && defaultProps) { for (var propName in defaultProps) { if (props[propName] === void 0) { props[propName] = defaultProps[propName]; } } } else if (!props) { props = defaultProps || {}; } return { $$typeof: REACT_ELEMENT_TYPE, type: type, key: key === undefined ? null : '' + key, ref: null, props: props, _owner: null }; }
 
 const _cn3 = " _aliIte-center _aliSel-flexstart _borBotLefRad-8px _borBotRigRad-8px _borTopLefRad-8px _borTopRigRad-8px _cur-pointer _jusCon-center _padBot-10px _padLef-14px _padRig-14px _padTop-10px ";
-const _cn2 = " _dis-4qtqp9 _fleGro-1 _fleShr-1 _maxWid-100 _oveX-hidden _oveY-hidden _texOve-ellipsis _whiSpa-nowrap";
-const _cn = " _dis-4qtqp9 _fleGro-1 _fleShr-1 _maxWid-100 _oveX-hidden _oveY-hidden _texOve-ellipsis _whiSpa-nowrap ";
+const _cn2 = " _fleGro-1 _fleShr-1 _maxWid-100 _oveX-hidden _oveY-hidden";
+const _cn = " _fleGro-1 _fleShr-1 _maxWid-100 _oveX-hidden _oveY-hidden ";
 // TODO colors, spacing, static extract + colors/spacing
 // TODO sizing, static + sizing
 // TODO auto-chain
@@ -5064,7 +5064,7 @@ var REACT_ELEMENT_TYPE;
 
 function _jsx(type, props, key, children) { if (!REACT_ELEMENT_TYPE) { REACT_ELEMENT_TYPE = typeof Symbol === "function" && Symbol["for"] && Symbol["for"]("react.element") || 0xeac7; } var defaultProps = type && type.defaultProps; var childrenLength = arguments.length - 3; if (!props && childrenLength !== 0) { props = { children: void 0 }; } if (childrenLength === 1) { props.children = children; } else if (childrenLength > 1) { var childArray = new Array(childrenLength); for (var i = 0; i < childrenLength; i++) { childArray[i] = arguments[i + 3]; } props.children = childArray; } if (props && defaultProps) { for (var propName in defaultProps) { if (props[propName] === void 0) { props[propName] = defaultProps[propName]; } } } else if (!props) { props = defaultProps || {}; } return { $$typeof: REACT_ELEMENT_TYPE, type: type, key: key === undefined ? null : '' + key, ref: null, props: props, _owner: null }; }
 
-const _cn4 = " _bacCol-1x31b7q _borBotLefRad-10px _borBotRigRad-10px _borTopLefRad-10px _borTopRigRad-10px _dis-4qtqp9 _fonSiz-12px _marLef--8px _maxWid-100 _oveX-hidden _oveY-hidden _padBot-2px _padLef-8px _padRig-8px _padTop-2px _texOve-ellipsis _whiSpa-nowrap ";
+const _cn4 = " _bacCol-1x31b7q _borBotLefRad-10px _borBotRigRad-10px _borTopLefRad-10px _borTopRigRad-10px _fonSiz-12px _marLef--8px _maxWid-100 _oveX-hidden _oveY-hidden _padBot-2px _padLef-8px _padRig-8px _padTop-2px ";
 const _cn3 = " _aliSel-stretch _borBotCol-1fn3lry _borBotSty-solid _borBotWid-2px _fleGro-1 _fleShr-1 ";
 const _cn2 = " _aliIte-center _aliSel-stretch _fleGro-1 _fleShr-1 _padBot-4px _padLef-4px _padRig-4px _padTop-4px ";
 const _cn = " _aliSel-stretch _fleGro-1 _fleShr-1 ";
@@ -5448,7 +5448,7 @@ var _helpers = __webpack_require__(/*! @snackui/helpers */ "../../../helpers/src
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-const _cn = " _fonSiz-16px _fonWei-300 _linHei-18px _marBot-144px _marTop-144px _useSel-text ";
+const _cn = " _fonSiz-16px _fonWei-300 _linHei-18px _marBot-144px _marTop-144px ";
 
 // TODO can static extract once paragraph works
 const Title = props => {
@@ -9473,7 +9473,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _modules_useResponderEvents__WEBPACK_IMPORTED_MODULE_7___default = /*#__PURE__*/__webpack_require__.n(_modules_useResponderEvents__WEBPACK_IMPORTED_MODULE_7__);
 /* harmony import */ var _StyleSheet__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ../StyleSheet */ "./exports/StyleSheet");
 /* harmony import */ var _StyleSheet__WEBPACK_IMPORTED_MODULE_8___default = /*#__PURE__*/__webpack_require__.n(_StyleSheet__WEBPACK_IMPORTED_MODULE_8__);
-/* harmony import */ var _TextAncestorContext__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! ./TextAncestorContext */ "./TextAncestorContext");
+/* harmony import */ var _TextAncestorContext__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! ./TextAncestorContext */ "../Text/TextAncestorContext");
 /* harmony import */ var _TextAncestorContext__WEBPACK_IMPORTED_MODULE_9___default = /*#__PURE__*/__webpack_require__.n(_TextAncestorContext__WEBPACK_IMPORTED_MODULE_9__);
 /**
  * Copyright (c) Nicolas Gallagher.
@@ -10301,7 +10301,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _modules_useResponderEvents__WEBPACK_IMPORTED_MODULE_7___default = /*#__PURE__*/__webpack_require__.n(_modules_useResponderEvents__WEBPACK_IMPORTED_MODULE_7__);
 /* harmony import */ var _StyleSheet__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ../StyleSheet */ "./exports/StyleSheet");
 /* harmony import */ var _StyleSheet__WEBPACK_IMPORTED_MODULE_8___default = /*#__PURE__*/__webpack_require__.n(_StyleSheet__WEBPACK_IMPORTED_MODULE_8__);
-/* harmony import */ var _Text_TextAncestorContext__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! ../Text/TextAncestorContext */ "./TextAncestorContext");
+/* harmony import */ var _Text_TextAncestorContext__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! ../Text/TextAncestorContext */ "../Text/TextAncestorContext");
 /* harmony import */ var _Text_TextAncestorContext__WEBPACK_IMPORTED_MODULE_9___default = /*#__PURE__*/__webpack_require__.n(_Text_TextAncestorContext__WEBPACK_IMPORTED_MODULE_9__);
 /**
  * Copyright (c) Nicolas Gallagher.
@@ -11748,7 +11748,7 @@ module.exports = require("react-native-web/dist/exports/Text");;
 
 /***/ }),
 
-/***/ "./TextAncestorContext":
+/***/ "../Text/TextAncestorContext":
 /*!*************************************************************************!*\
   !*** external "react-native-web/dist/exports/Text/TextAncestorContext" ***!
   \*************************************************************************/

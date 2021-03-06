@@ -1,9 +1,9 @@
-import { getStylesAtomic } from '../src'
+import { getStylesAtomic } from '../dist'
 
 process.env.NODE_ENV = 'test'
 process.env.IDENTIFY_TAGS = 'true'
 
-test('converts a style object to class names', async () => {
+test('converts a style object to class names', () => {
   const style = {
     backgroundColor: 'red',
     transform: [{ rotateY: '10deg' }],
@@ -31,7 +31,7 @@ test('converts a style object to class names', async () => {
   ).toBeTruthy()
 })
 
-test('expands and resolves shorthand props', async (t) => {
+test('expands and resolves shorthand props', () => {
   const style = {
     padding: 10,
     paddingVertical: 0,

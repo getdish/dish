@@ -940,17 +940,17 @@ function deploy_all() {
   export_env
   where=${1:-registry}
   echo "deploying apps via $where"
-  deploy $where postgres
-  deploy $where hasura # depends on postgres
-  deploy $where tileserver & # depends on hasura
-  deploy $where app & # depends on hasura
-  deploy $where timescale & # depends on postgres
-  deploy $where search &
-  deploy $where hooks &
-  deploy $where worker &
+  # deploy $where postgres
+  # deploy $where hasura # depends on postgres
+  # deploy $where tileserver & # depends on hasura
+  # deploy $where app & # depends on hasura
+  # deploy $where timescale & # depends on postgres
+  # deploy $where search &
+  # deploy $where hooks &
+  # deploy $where worker &
   deploy $where image-quality &
-  deploy $where image-proxy &
-  deploy $where bert &
+  # deploy $where image-proxy &
+  # deploy $where bert &
   deploy $where bert2 &
   deploy $where cron &
   wait -n

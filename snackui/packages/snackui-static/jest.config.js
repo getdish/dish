@@ -1,4 +1,4 @@
 module.exports = {
   ...require('../../jest.config'),
-  testTimeout: 100000,
+  globalSetup: './tests/lib/preTest',
 }
