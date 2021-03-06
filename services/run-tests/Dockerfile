@@ -14,11 +14,4 @@ COPY dish-app dish-app
 COPY snackui snackui
 COPY services services
 
-# copy to get built files
-
-COPY --from=0 packages packages
-COPY --from=0 dish-app dish-app
-COPY --from=0 snackui snackui
-COPY --from=0 services services
-
 CMD ["true"]

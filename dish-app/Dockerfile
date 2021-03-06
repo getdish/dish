@@ -18,11 +18,6 @@ COPY packages packages
 COPY dish-app dish-app
 COPY snackui snackui
 
-COPY --from=base packages packages
-COPY --from=base dish-app dish-app
-COPY --from=base snackui snackui
-COPY --from=base services services
-
 WORKDIR /app/dish-app
 
 RUN npm run web:build

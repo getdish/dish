@@ -53,8 +53,4 @@ RUN find . -type d \(  -name "test" -o -name "tests"  \) -print | xargs rm -rf &
 
 RUN yarn build:js
 
-FROM node:15.10.0-buster
-WORKDIR /app
-COPY --from=install /app .
-
 CMD ["true"]
