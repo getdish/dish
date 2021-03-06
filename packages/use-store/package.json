@@ -19,7 +19,7 @@
   },
   "devDependencies": {
     "@dish/esdx": "*",
-    "@dish/test": "*",
+    "@dish/testy": "*",
     "@types/jest": "*",
     "jest": "*"
   }

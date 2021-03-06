@@ -60,10 +60,13 @@ async function go() {
       }),
     ])
   } catch (error) {
-    console.log(error.message, error.stack)
+    console.log(error)
+  } finally {
+    console.log('built in', `${(Date.now() - x) / 1000}s`)
   }
-
-  console.log('built in', `${(Date.now() - x) / 1000}s`)
 }
 
 go()
+
+process.on('uncaughtException', console.log.bind(console))
+process.on('unhandledRejection', console.log.bind(console))

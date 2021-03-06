@@ -3,7 +3,7 @@ import '@expo/match-media'
 
 import path from 'path'
 
-import { TestRenderer, act, render } from '@dish/test'
+import { TestRenderer, act, render } from '@dish/testy'
 import React from 'react'
 import webpack from 'webpack'
 

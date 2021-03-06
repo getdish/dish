@@ -31,20 +31,20 @@ test('converts a style object to class names', async () => {
   ).toBeTruthy()
 })
 
-// test('expands and resolves shorthand props', async (t) => {
-//   const style = {
-//     padding: 10,
-//     paddingVertical: 0,
-//   }
-//   const [pB, pL, pR, pT] = getStylesAtomic(style)
-//   expect(pT.value).toBe('0px')
-//   expect(pB.value).toBe('0px')
-//   expect(pL.value).toBe('10px')
-//   expect(pR.value).toBe('10px')
-//   const style2 = {
-//     borderColor: 'yellow',
-//     borderWidth: 10,
-//   }
-//   const styles2 = getStylesAtomic(style2)
-//   expect(styles2.some((x) => x.property === 'borderRightStyle')).toBeTruthy()
-// })
+test('expands and resolves shorthand props', async (t) => {
+  const style = {
+    padding: 10,
+    paddingVertical: 0,
+  }
+  const [pB, pL, pR, pT] = getStylesAtomic(style)
+  expect(pT.value).toBe('0px')
+  expect(pB.value).toBe('0px')
+  expect(pL.value).toBe('10px')
+  expect(pR.value).toBe('10px')
+  const style2 = {
+    borderColor: 'yellow',
+    borderWidth: 10,
+  }
+  const styles2 = getStylesAtomic(style2)
+  expect(styles2.some((x) => x.property === 'borderRightStyle')).toBeTruthy()
+})

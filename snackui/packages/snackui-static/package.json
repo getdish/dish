@@ -28,7 +28,7 @@
     "@dish/babel-preset": "*",
     "@dish/esdx": "*",
     "@dish/proxy-worm": "*",
-    "@dish/test": "*",
+    "@dish/testy": "*",
     "@expo/match-media": "^0.1.0",
     "@snackui/helpers": "^0.0.6",
     "@snackui/node": "^0.0.6",

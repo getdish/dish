@@ -1167,6 +1167,20 @@ function deploy_fly_app() {
   popd
 }
 
+function clean_build() {
+  find $PROJECT_ROOT -type d \( -name node_modules \) -prune -false -o -name "_" -type d -prune -exec rm -rf '{}' \; &
+  find $PROJECT_ROOT -type d \( -name node_modules \) -prune -false -o -name "dist" -type d -prune -exec rm -rf '{}' \; &
+  find $PROJECT_ROOT -type d \( -name node_modules \) -prune -false -o -name "tsconfig.tsbuildinfo" -prune -exec rm -rf '{}' \; &
+  find $PROJECT_ROOT -type d \( -name node_modules \) -prune -false -o -name ".ultra.cache.json" -prune -exec rm -rf '{}' \; &
+  wait
+}
+
+function clean() {
+  clean_build
+  find $PROJECT_ROOT -name "node_modules" -type d -prune -exec rm -rf '{}' \;
+  find $PROJECT_ROOT -name "yarn-error.log" -prune -exec rm -rf '{}' \;
+}
+
 if command -v git &> /dev/null; then
   export PROJECT_ROOT=$(git rev-parse --show-toplevel)
   branch=$(git rev-parse --abbrev-ref HEAD)

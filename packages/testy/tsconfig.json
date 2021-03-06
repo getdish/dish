@@ -2,6 +2,11 @@
   "extends": "../../tsconfig.base",
   "compilerOptions": {
     "composite": true,
+    "strict": false,
+    "strictNullChecks": false,
+    "target": "es2019",
+    "types": [],
+    "lib": [],
     "outDir": "_",
     "rootDir": "src"
   },

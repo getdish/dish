@@ -26,7 +26,7 @@ steps:
           cache-from: base:gcr.io/dish-258800/dish-app:latest
           push: dish-app:gcr.io/dish-258800/dish-app:latest
 
-  - label: ":docker: build test"
+  - label: ":docker: build run-tests"
     depends_on: base
     plugins:
       - docker-compose#v3.7.0:
