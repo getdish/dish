@@ -35,6 +35,8 @@ RUN yarn install --immutable-cache \
   && rm .yarn/install-state.gz \
   && yarn patch-package
 
+RUN ls -la .yarn
+
 COPY tsconfig.json tsconfig.build.json \
   tsconfig.base.parent.json tsconfig.base.json ava.config.js ./
 COPY packages packages

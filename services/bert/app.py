@@ -27,6 +27,7 @@ def predict():
         request.json[0], add_special_tokens=True)).unsqueeze(0)
     inputs = {session.get_inputs()[0].name: to_numpy(input_ids)}
     out = session.run(None, inputs)
+    print(out)
     result = np.argmax(out)
     return jsonify({"positive": bool(result)})
 
