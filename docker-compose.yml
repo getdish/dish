@@ -11,10 +11,10 @@ services:
       context: .
       dockerfile: ./services/run-tests/Dockerfile
   postgres:
-    image: gcr.io/dish-258800/postgres-${POSTGRES_STRATEGY:-ha}${DISH_IMAGE_TAG}
+    image: gcr.io/dish-258800/${POSTGRES_NAME:-postgres}${DISH_IMAGE_TAG}
     command: postgres -c 'max_connections=800'
     build:
-      context: ./services/postgres-${POSTGRES_STRATEGY:-ha}
+      context: ./services/${POSTGRES_NAME:-postgres}
     volumes:
       - ${HOME}/.dish/postgres:/var/lib/postgresql/data
     environment:

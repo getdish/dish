@@ -30,6 +30,9 @@ def predict():
     result = np.argmax(out)
     return jsonify({"positive": bool(result)})
 
+@app.errorhandler(404)
+def page_not_found(e):
+    return jsonify(error=str(e)), 404
 
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=8080, debug=True)

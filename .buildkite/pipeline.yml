@@ -128,13 +128,13 @@ steps:
     retry:
       automatic: true
     env:
-      POSTGRES_STRATEGY: simple
+      POSTGRES_NAME: postgres
     plugins:
       - docker-compose#v3.7.0:
           build: postgres
-          image-repository: gcr.io/dish-258800/postgres-simple
-          cache-from: base:gcr.io/dish-258800/postgres-simple:latest
-          push: postgres:gcr.io/dish-258800/postgres-simple:latest
+          image-repository: gcr.io/dish-258800/postgres
+          cache-from: base:gcr.io/dish-258800/postgres:latest
+          push: postgres:gcr.io/dish-258800/postgres:latest
 
   - label: ":docker: build redis for tests"
     retry:
@@ -172,7 +172,7 @@ steps:
     retry:
       automatic: true
     env:
-      POSTGRES_STRATEGY: ha
+      POSTGRES_NAME: db
     plugins:
       - docker-compose#v3.7.0:
           build: postgres
