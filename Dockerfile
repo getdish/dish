@@ -51,7 +51,7 @@ RUN find . -type d \(  -name "test" -o -name "tests"  \) -print | xargs rm -rf &
   # link in esdx bugfix
   ln -s /app/packages/esdx/esdx.js /app/node_modules/.bin/esdx
 
-RUN JS_ONLY=1 yarn build
+RUN yarn build:js
 
 FROM node:15.10.0-buster
 WORKDIR /app
