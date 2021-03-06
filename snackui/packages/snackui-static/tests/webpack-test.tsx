@@ -21,6 +21,7 @@ let app: any
 let context: any = {}
 
 beforeAll(async () => {
+  console.log('building webpack...')
   await extractStaticApp()
   process.env.IS_STATIC = undefined
   app = require(outFileFull)
@@ -34,7 +35,8 @@ beforeAll(async () => {
       }
     })
   }
-}, 10000)
+  console.log('done')
+})
 
 // TODO fix testability of linear gradient
 // test('extracts gradients', () => {

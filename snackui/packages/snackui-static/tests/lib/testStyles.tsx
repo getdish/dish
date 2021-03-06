@@ -1,7 +1,7 @@
 import { cleanup, render } from '@dish/react-test-env'
 import React from 'react'
 
-export function testStyles(test: jest.It, app: any) {
+export function testStyles(test: TestFn, app: any) {
   test('styles - 1. extracts to a div for simple views', async (t) => {
     const { style } = await getTestElement(app.Test1)
     expect(style.backgroundColor).toBe('rgb(255, 0, 0)')

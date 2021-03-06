@@ -89,20 +89,6 @@ function _worker_k8s() {
     -- bash -c "$1"
 }
 
-function _worker_staging() {
-  worker_env="REDIS_HOST=redis PGHOST=postgres TIMESCALE_HOST=timescaledb"
-  docker_run_base "bash -c \"$worker_env $1\""
-}
-
-function worker() {
-  if grep -q "dish-do" "/etc/hostname"; then
-    _worker_staging "$1"
-  else
-    _worker_staging "$1"
-    #_worker_k8s "$1"
-  fi
-}
-
 function worker_cli() {
   worker "bash"
 }
@@ -318,13 +304,6 @@ function local_node_with_prod_env() {
     $1
 }
 
-function staging_ports_tunnel() {
-  ssh \
-    -L 15432:localhost:5432 \
-    -L 15433:localhost:5433 \
-    root@ssh.staging.dishapp.com
-}
-
 # NB this needs the function `staging_ports_tunnel` to have been run
 function local_node_with_staging_env() {
   export DISH_DEBUG=1
@@ -338,6 +317,13 @@ function local_node_with_staging_env() {
   node \
     --max-old-space-size=4096 \
     $1
+}
+
+function staging_ports_tunnel() {
+  ssh \
+    -L 15432:localhost:5432 \
+    -L 15433:localhost:5433 \
+    root@ssh.staging.dishapp.com
 }
 
 function dish_app_generate_tags() {
@@ -559,28 +545,6 @@ function logs() {
     --max-log-requests=10
 }
 
-function run_local_search_endpoint() {
-  PROXY_PORT=$(generate_random_port)
-  postgres_proxy $PROXY_PORT
-  export PORT=10001
-  export POSTGRES_PASSWORD=$TF_VAR_POSTGRES_PASSWORD
-  export PGPORT=$PROXY_PORT
-  pushd $PROJECT_ROOT/services/search
-  go generate
-  go run ./main.go ./embedded.go
-  popd
-}
-
-function run_local_search_endpoint_staging() {
-  export PORT=10001
-  export POSTGRES_PASSWORD=postgres
-  export PGPORT=15432
-  pushd $PROJECT_ROOT/services/search
-  go generate
-  go run ./main.go ./embedded.go
-  popd
-}
-
 function bull_console() {
   redis_proxy
   $PROJECT_ROOT/services/crawlers/node_modules/.bin/bull-repl \
@@ -765,67 +729,6 @@ function yaml_to_env() {
   parse_yaml $PROJECT_ROOT/env.enc.production.yaml | sed 's/\$/\\$/g' | xargs -0
 }
 
-function _gcloud_build_submit() {
-  path="$1"
-  image="$2"
-  dish_base_version="$3"
-  pushd $PROJECT_ROOT
-  docker build $path
-  docker push gcr.io/dish-258800/$image
-  popd
-}
-
-function _gcloud_build() {
-  dockerfile_path=$2
-  name=$3
-  dish_base_version=${4:-$DOCKER_TAG_NAMESPACE}
-  dish_docker_login
-  echo "Building image: $name |$dish_base_version|$push|"
-  _gcloud_build_submit "$dockerfile_path" "$name" "$dish_base_version"
-  if [[ "$1" == "pull" ]]; then
-    docker pull "$name"
-  fi
-}
-
-function gcloud_build() {
-  _gcloud_build push "$@"
-}
-
-function gcloud_build_output_local() {
-  _gcloud_build pull "$@"
-}
-
-function build_dish_service() {
-  path=$1
-  name=$(echo $path | cut -d / -f 2)
-  image=$DISH_REGISTRY/$name:$DOCKER_TAG_NAMESPACE
-  gcloud_build_output_local $path $image
-}
-
-function _build_dish_service() {
-  $PROJECT_ROOT/dishctl.sh build_dish_service "$@"
-}
-export -f _build_dish_service
-
-function build_dish_base() {
-  gcloud_build . $BASE_IMAGE
-}
-
-function build_all_dish_services() {
-  echo "Building all Dish services..."
-  build_dish_base
-  echo "Pulling base..."
-  docker pull $BASE_IMAGE
-  echo "Building worker, dish-hooks, search, dish-app in parallel..."
-  parallel -j 4 --tag --lb _build_dish_service ::: \
-    'services/worker' \
-    'services/hooks' \
-    'services/search' \
-    'dish-app'
-  echo "...all Dish services built."
-  docker images
-}
-
 function docker_run_base() {
   command="docker-compose run --rm base $1"
   echo "Running: $command"
@@ -926,40 +829,6 @@ function scale_min() {
   kubectl scale --replicas=1 deployment image-quality-api
 }
 
-# This is just for quick deploys. Of course it skips our test suits in CI but if
-# you need to get something deployed quickly then use at your own risk.
-# Usage: ./dishctl.sh hot_deploy path/to/Dockerfile
-# You need the `buildctl` binary installed
-# Eg; `brew install buildkitd`
-function hot_deploy() {
-  service_path=$1
-  service_name="${service_path##*/}"
-
-  echo "Hot deploying $1 service..."
-
-  echo "Building the base image first..."
-  build_dish_base
-  echo "Base image built."
-
-  NAME=$DISH_REGISTRY/$service_name
-
-  ./dishctl.sh buildkit_build $service_path $NAME
-
-  kubectl rollout restart deployment/$service_name
-}
-
-function buildkit_build_local() {
-  service_path=$1
-  service_name="${service_path##*/}"
-  echo "Building the base image first..."
-  buildkit_build_output_local . $BASE_IMAGE
-  echo "Base image built."
-  NAME=$DISH_REGISTRY/$service_name
-  echo "Building $NAME..."
-  buildkit_build_output_local $service_path $NAME
-  echo "$NAME built."
-}
-
 function volume_debugger() {
   pvc=$1
   command=$2
@@ -998,26 +867,6 @@ function redis_pvc_wipe() {
   volume_debugger 'redis-data-redis-master-0' "$command" 'redis'
   redis_flush_all
   kubectl rollout restart deployment/worker
-}
-
-function get_github_actions_runs() {
-  curl -u "tombh:$GITHUB_TOKEN" \
-    -H "Accept: application/vnd.github.v3+json" \
-    https://api.github.com/repos/getdish/dish/actions/runs
-}
-
-function get_sha_build_status() {
-  current_sha=$(git rev-parse HEAD)
-  response=$(get_github_actions_runs)
-  statuses=$(
-    echo $response | jq '.workflow_runs[] | .head_sha + " " + .conclusion'
-  )
-  current_commit_status=$(echo "$statuses" | grep $current_sha)
-  if echo "$current_commit_status" | grep -q "success"; then
-    echo "passed"
-  else
-    echo "failed"
-  fi
 }
 
 function urlencode() {
@@ -1061,12 +910,6 @@ function docker_compose_up_for_tests() {
   else
     docker-compose up "$extra" $services
   fi
-}
-
-function docker_compose_up_for_staging() {
-  echo "Use 'docker-compose logs -f' to stream logs"
-  command="$(echo $all_env | tr '\r\n' ' ') TF_VAR_HASURA_GRAPHQL_ADMIN_SECRET=password docker-compose up -d"
-  eval $command
 }
 
 function staging_ssh() {

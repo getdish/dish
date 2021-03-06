@@ -19,13 +19,14 @@ process.env.NODE_ENV = 'test'
 let app: any
 
 beforeAll(async () => {
+  console.log('building babel...')
   await extractStaticApp()
   process.env.IS_STATIC = undefined
   app = require(outFileFull)
   testStyles(test, app)
-}, 10000)
+})
 
-test('basic extraction', () => {
+test('basic extraction', async () => {
   const output = extractBabel(`
     import { VStack } from 'snackui'
     export function Test() {
@@ -39,7 +40,7 @@ test('basic extraction', () => {
   expect(code.includes(`_StyleSheet.default.create`)).toBeTruthy()
 })
 
-test('basic conditional extraction', () => {
+test('basic conditional extraction', async () => {
   const output = extractBabel(`
     import { VStack } from 'snackui'
     export function Test() {
