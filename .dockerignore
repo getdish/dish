@@ -5,6 +5,7 @@ Dockerfile
 .git/*
 **/node_modules
 **/_
+**/dist
 **/tsconfig.tsbuildinfo
 **/.expo
 **/target/*
