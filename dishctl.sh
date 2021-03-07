@@ -999,7 +999,7 @@ function deploy_fly_app() {
     docker pull gcr.io/dish-258800/$image_name:$tag
     docker tag gcr.io/dish-258800/$image_name:$tag registry.fly.io/$app:$tag
     docker push registry.fly.io/$app:$tag
-    timeout 60 flyctl deploy -i registry.fly.io/$app:$tag
+    timeout 60 flyctl deploy --strategy rolling -i registry.fly.io/$app:$tag
   else
     flyctl deploy --remote-only
   fi
