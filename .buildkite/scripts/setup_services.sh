@@ -47,7 +47,7 @@ if [ ! -d $HOME/.dish/postgresdb/data ]; then
   # Postgres needs 2 starts to get everything set up
   docker-compose run -d postgres
   sleep 6
-  docker-compose down -t 3
+  docker-compose down --remove-orphans -t 3
 fi
 
 echo "Starting docker for tests"

@@ -358,7 +358,7 @@ function list_backups() {
 
 function backup_main_db() {
   set -e
-  _setup_s3
+  # _setup_s3
   DUMP_FILE_NAME="dish-db-backup-`date +%Y-%m-%d-%H-%M`.dump"
   pg_dump $HASURA_FLY_POSTGRES_URL \
     -C -w --format=c | \

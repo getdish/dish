@@ -1,6 +1,3 @@
-# STEP 1
-# everything that goes into deterministic yarn goes on this step
-
 FROM node:15.10.0-buster
 WORKDIR /app
 
@@ -17,10 +14,6 @@ COPY snackui snackui
 COPY package.json .
 
 RUN find . \! -name "package.json" -not -path "*/bin/*" -type f -print | xargs rm -rf
-
-FROM node:15.10.0-buster
-WORKDIR /app
-COPY --from=0 /app .
 
 COPY .yarnrc.yml .
 COPY yarn.lock .
@@ -57,10 +50,6 @@ RUN find . -type d \(  -name "test" -o -name "tests"  \) -print | xargs rm -rf &
   && ln -s /app/packages/esdx/esdx.js /app/node_modules/.bin/esdx
 
 RUN ls -la snackui/packages/snackui-static
-
-FROM node:15.10.0-buster
-WORKDIR /app
-COPY --from=1 /app .
 
 RUN yarn build:js
 
