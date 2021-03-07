@@ -17,6 +17,10 @@ type GorseFeedback = {
   Feedback: number
 }
 
+process.on('beforeExit', (code) => {
+  console.log('exiting with code', code)
+})
+
 async function putFeedback(feedback: GorseFeedback) {
   const response = await fetch(GORSE_ENDPOINT + '/feedback', {
     method: 'PUT',

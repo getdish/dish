@@ -16,7 +16,7 @@
     "trim-package": "yes | npx json-filter-cli --from=package.json --to=package.json --exclude=scripts",
     "trim-packages": "yarn trim-package && npx yarn workspaces foreach run yes | npx json-filter-cli --confirm --from=package.json --to=package.json --exclude=scripts",
     "bootstrap": "docker-compose build base",
-    "start": "docker-compose -f docker-compose-m1.yml up",
+    "start": "./dishctl.sh docker_compose_up_for_devs",
     "start:test": "rm -r ~/.dish/postgresdb/test || true; POSTGRES_DB=test docker-compose -f docker-compose-m1.yml up",
     "start:bak": "./dishctl.sh docker_compose_up_for_devs",
     "db:init": "./dishctl.sh db_migrate_local init",

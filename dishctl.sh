@@ -884,7 +884,7 @@ function docker_compose_up_for_devs() {
   extra=$1
   services=$(
     docker-compose config --services \
-      | grep -E -v 'base|nginx|dish-app|image-quality|image-proxy|bert|worker' \
+      | grep -E -v 'base|nginx|dish-app|image-quality|image-proxy|bert|worker|gorse' \
       | tr '\r\n' ' '
   )
   echo "Starting the following services: $services"
