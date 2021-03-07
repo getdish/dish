@@ -15,6 +15,10 @@ COPY package.json .
 
 RUN find . \! -name "package.json" -not -path "*/bin/*" -type f -print | xargs rm -rf
 
+FROM node:15.10.0-buster
+WORKDIR /app
+COPY --from=0 /app .
+
 COPY .yarnrc.yml .
 COPY yarn.lock .
 COPY .yarn .yarn
@@ -25,10 +29,8 @@ COPY dish-app/etc dish-app/etc
 # install
 RUN yarn install --immutable-cache \
   && yarn cache clean \
-  && rm .yarn/install-state.gz \
-  && yarn patch-package
-
-RUN ls -la .yarn
+  && yarn patch-package \
+  && rm .yarn/install-state.gz
 
 COPY tsconfig.json tsconfig.build.json \
   tsconfig.base.parent.json tsconfig.base.json ava.config.js ./
@@ -49,7 +51,12 @@ RUN find . -type d \(  -name "test" -o -name "tests"  \) -print | xargs rm -rf &
   # link in esdx bugfix
   && ln -s /app/packages/esdx/esdx.js /app/node_modules/.bin/esdx
 
-RUN ls -la snackui/packages/snackui-static
+# its potentially fine to remove this one (and the RUN above)
+# since it takes a long time on rebuilds (copy whole app)
+# but rebuilds are now pretty fast
+FROM node:15.10.0-buster
+WORKDIR /app
+COPY --from=1 /app .
 
 RUN yarn build:js
 
