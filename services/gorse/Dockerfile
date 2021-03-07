@@ -1,4 +1,4 @@
-FROM golang:1.16.0-alpine
+FROM golang:alpine
 
 RUN apk --no-cache add git
 RUN go get -tags='avx2' github.com/zhenghaoz/gorse/...
