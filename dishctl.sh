@@ -971,9 +971,9 @@ function deploy() {
   app=$2
   # todo begrudingly learn bash
   if [ "$app" = "" ]; then exit 1; fi
-  if [ "$app" = "app" ];              then deploy_fly_app "$where" dish-app dish-app dish-app; fi
-  if [ "$app" = "hasura" ];           then deploy_fly_app "$where" dish-hasura services/hasura hasura; fi
-  if [ "$app" = "db" ];               then deploy_fly_app "$where" dish-db services/db db; fi
+  if [ "$app" = "app" ];            then deploy_fly_app "$where" dish-app dish-app dish-app; fi
+  if [ "$app" = "hasura" ];         then deploy_fly_app "$where" dish-hasura services/hasura hasura; fi
+  if [ "$app" = "db" ];             then deploy_fly_app "$where" dish-db services/db db; fi
   if [ "$app" = "search" ];         then deploy_fly_app "$where" dish-search services/search search; fi
   if [ "$app" = "timescale" ];      then deploy_fly_app "$where" dish-timescale services/timescaledb timescaledb; fi
   if [ "$app" = "tileserver" ];     then deploy_fly_app "$where" dish-tileserver services/tileserver tileserver; fi
@@ -990,37 +990,45 @@ function deploy_fly_app() {
   app=$2
   folder=$3
   image_name=${4:-$1}
+  log_file="$(pwd)/deploy-$app.log"
+  rm "$log_file" || true
   tag=${5:-latest}
   echo "deploying $app in $folder to image $image_name with tag $tag"
-  pushd $folder
+  pushd "$folder"
   if [ -f ".ci/pre_deploy.sh" ]; then
     echo "running pre-deploy script $app..."
-    eval $(yaml_to_env) .ci/pre_deploy.sh
+    # eval $(yaml_to_env) .ci/pre_deploy.sh
   fi
+  function tail_logs() {
+    sleep 3
+    tail -f "$log_file"
+  }
   if [ "$where" = "registry" ]; then
-    log_file="./deploy-$app.log"
     did_kill_idempotent=0
-    set -x
     flyctl auth docker
     docker pull gcr.io/dish-258800/$image_name:$tag
     docker tag gcr.io/dish-258800/$image_name:$tag registry.fly.io/$app:$tag
     docker push registry.fly.io/$app:$tag
     timeout 160 \
-      flyctl deploy --strategy rolling -i registry.fly.io/$app:$tag > "$log_file" &
-    set +x
+      flyctl deploy --strategy rolling -i registry.fly.io/$app:$tag &> "$log_file" &
     pid=$!
-    while ps | grep " $pid "; do
+    tail_logs &
+    tail_pid=$!
+    while ps | grep " $pid " > /dev/null; do
+      # bugfix fly not deploying if same for now
       if grep 'Release v0 created' < "$log_file"; then
-        echo "detected idempotent release that will hang (fly issue)..."
+        echo "detected idempotent release that will hang (fly issue), continue..."
         did_kill_idempotent=1
-        kill $pid
+        kill $pid || true
+        kill $tail_pid || true
+        break
+      else
+        sleep 3
       fi
-      sleep 3
     done
-    wait $pid
-    cat "$log_file"
+    wait $pid || true
     my_status=$?
-    if [ $did_kill_idempotent -eq 1 ] || [ $my_status -eq 0 ]; then
+    if [[ $did_kill_idempotent -eq 1 ||  $my_status -eq 0 ]]; then
       echo "deployed!"
     else
       echo "deploy issue $did_kill_idempotent $my_status"

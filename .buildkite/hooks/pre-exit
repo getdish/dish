@@ -9,7 +9,7 @@ fi
 if [ "$LOG_DOCKER" == "true" ]; then
   echo "docker logs..."
   docker-compose logs --tail 2000
-  cat *.logs || true
+  cat ./*.logs || true
 fi
 
 if [ "$BUILDKITE_COMMAND_EXIT_STATUS" = "1" ]; then

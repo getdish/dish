@@ -3,7 +3,7 @@
 DIR=$(dirname "$0")
 
 function prune() {
-  $DIR/prune_gcr.py --project dish-258800 --keep-at-least 10 $1
+  $DIR/prune_gcr.py --project dish-258800 --keep-at-least 20 $1
 }
 
 echo "pruning old gcr images..."
