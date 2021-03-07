@@ -940,19 +940,22 @@ function deploy_all() {
   export_env
   where=${1:-registry}
   echo "deploying apps via $where"
-  deploy $where db
-  deploy $where hooks
-  deploy $where hasura # depends on postgres and hooks
-  deploy $where tileserver & # depends on hasura
-  deploy $where app & # depends on hasura
-  deploy $where timescale & # depends on postgres
-  deploy $where search &
-  deploy $where hooks &
-  deploy $where worker &
-  deploy $where image-quality &
-  deploy $where image-proxy &
-  deploy $where bert &
-  deploy $where cron &
+  deploy "$where" db
+  deploy "$where" hooks
+  # depends on postgres
+  deploy "$where" hasura & # depends on hooks
+  deploy "$where" tileserver &
+  deploy "$where" timescale &
+  wait
+  # depends on hasura
+  deploy "$where" app &
+  deploy "$where" search &
+  deploy "$where" hooks &
+  deploy "$where" worker &
+  deploy "$where" image-quality &
+  deploy "$where" image-proxy &
+  deploy "$where" bert &
+  deploy "$where" cron &
   wait -n
 }
 
@@ -967,19 +970,19 @@ function deploy() {
   where=${1:-registry}
   app=$2
   # todo begrudingly learn bash
-  if [ $app = "" ]; then exit 1; fi
-  if [ $app = "app" ];              then deploy_fly_app $where dish-app dish-app dish-app; fi
-  if [ $app = "hasura" ];           then deploy_fly_app $where dish-hasura services/hasura hasura; fi
-  if [ $app = "db" ];               then deploy_fly_app $where dish-db services/db db; fi
-  if [ "$app" = "search" ];         then deploy_fly_app $where dish-search services/search search; fi
-  if [ "$app" = "timescale" ];      then deploy_fly_app $where dish-timescale services/timescaledb timescaledb; fi
-  if [ "$app" = "tileserver" ];     then deploy_fly_app $where dish-tileserver services/tileserver tileserver; fi
-  if [ "$app" = "hooks" ];          then deploy_fly_app $where dish-hooks services/hooks dish-hooks; fi
-  if [ "$app" = "worker" ];         then deploy_fly_app $where dish-worker services/worker worker; fi
-  if [ "$app" = "image-quality" ];  then deploy_fly_app $where dish-image-quality services/image-quality image-quality; fi
-  if [ "$app" = "image-proxy" ];    then deploy_fly_app $where dish-image-proxy services/image-proxy image-proxy; fi
-  if [ "$app" = "bert" ];           then deploy_fly_app $where dish-bert services/bert bert; fi
-  if [ "$app" = "hooks" ];          then deploy_fly_app $where dish-hooks services/hooks hooks; fi
+  if [ "$app" = "" ]; then exit 1; fi
+  if [ "$app" = "app" ];              then deploy_fly_app "$where" dish-app dish-app dish-app; fi
+  if [ "$app" = "hasura" ];           then deploy_fly_app "$where" dish-hasura services/hasura hasura; fi
+  if [ "$app" = "db" ];               then deploy_fly_app "$where" dish-db services/db db; fi
+  if [ "$app" = "search" ];         then deploy_fly_app "$where" dish-search services/search search; fi
+  if [ "$app" = "timescale" ];      then deploy_fly_app "$where" dish-timescale services/timescaledb timescaledb; fi
+  if [ "$app" = "tileserver" ];     then deploy_fly_app "$where" dish-tileserver services/tileserver tileserver; fi
+  if [ "$app" = "hooks" ];          then deploy_fly_app "$where" dish-hooks services/hooks dish-hooks; fi
+  if [ "$app" = "worker" ];         then deploy_fly_app "$where" dish-worker services/worker worker; fi
+  if [ "$app" = "image-quality" ];  then deploy_fly_app "$where" dish-image-quality services/image-quality image-quality; fi
+  if [ "$app" = "image-proxy" ];    then deploy_fly_app "$where" dish-image-proxy services/image-proxy image-proxy; fi
+  if [ "$app" = "bert" ];           then deploy_fly_app "$where" dish-bert services/bert bert; fi
+  if [ "$app" = "hooks" ];          then deploy_fly_app "$where" dish-hooks services/hooks hooks; fi
 }
 
 function deploy_fly_app() {
@@ -995,13 +998,36 @@ function deploy_fly_app() {
     eval $(yaml_to_env) .ci/pre_deploy.sh
   fi
   if [ "$where" = "registry" ]; then
+    log_file="./deploy-$app.log"
+    did_kill_idempotent=0
+    set -x
     flyctl auth docker
     docker pull gcr.io/dish-258800/$image_name:$tag
     docker tag gcr.io/dish-258800/$image_name:$tag registry.fly.io/$app:$tag
     docker push registry.fly.io/$app:$tag
-    timeout 60 flyctl deploy --strategy rolling -i registry.fly.io/$app:$tag
+    timeout 160 \
+      flyctl deploy --strategy rolling -i registry.fly.io/$app:$tag > "$log_file" &
+    set +x
+    pid=$!
+    while ps | grep " $pid "; do
+      if grep 'Release v0 created' < "$log_file"; then
+        echo "detected idempotent release that will hang (fly issue)..."
+        did_kill_idempotent=1
+        kill $pid
+      fi
+      sleep 3
+    done
+    wait $pid
+    cat "$log_file"
+    my_status=$?
+    if [ $did_kill_idempotent -eq 1 ] || [ $my_status -eq 0 ]; then
+      echo "deployed!"
+    else
+      echo "deploy issue $did_kill_idempotent $my_status"
+      exit 1
+    fi
   else
-    flyctl deploy --remote-only
+    flyctl deploy --remote-only --strategy rolling
   fi
   if [ -f ".ci/post_deploy.sh" ]; then
     echo "running post-deploy script $app..."
