@@ -18,7 +18,7 @@ steps:
 
   - label: ":docker: build dish-app"
     depends_on: base
-    key: web
+    key: dish-app
     plugins:
       - docker-compose#v3.7.0:
           build: dish-app
@@ -170,6 +170,7 @@ steps:
 
   - label: ":docker: build db"
     key: db
+    depends_on: dish-app
     retry:
       automatic: true
     env:
