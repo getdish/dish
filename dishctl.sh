@@ -993,7 +993,7 @@ function deploy_fly_app() {
   log_file="$(pwd)/deploy-$app.log"
   rm "$log_file" || true
   tag=${5:-latest}
-  echo "deploying $app in $folder to image $image_name with tag $tag"
+  echo ">>>> deploying $app in $folder to image $image_name with tag $tag"
   pushd "$folder"
   if [ -f ".ci/pre_deploy.sh" ]; then
     echo "running pre-deploy script $app..."
