@@ -30,29 +30,13 @@ steps:
     depends_on: base
     plugins:
       - docker-compose#v3.7.0:
-          build: run-tests
-          image-repository: gcr.io/dish-258800/run-tests
-          cache-from: base:gcr.io/dish-258800/run-tests:latest
-          push: run-tests:gcr.io/dish-258800/run-tests:latest
-
-  - label: ":docker: build dish-hooks"
-    depends_on: base
-    plugins:
-      - docker-compose#v3.7.0:
-          build: dish-hooks
-          image-repository: gcr.io/dish-258800/dish-hooks
-          cache-from: base:gcr.io/dish-258800/dish-hooks:latest
-          push: dish-hooks:gcr.io/dish-258800/dish-hooks:latest
-
-  - label: ":docker: build worker"
-    depends_on: base
-    key: worker
-    plugins:
-      - docker-compose#v3.7.0:
-          build: worker
-          image-repository: gcr.io/dish-258800/worker
-          cache-from: base:gcr.io/dish-258800/worker:latest
-          push: worker:gcr.io/dish-258800/worker:latest
+          build:
+            - run-tests
+            - worker
+            - hooks
+          image-repository: gcr.io/dish-258800
+          cache-from: base:gcr.io/dish-258800:latest
+          push: run-tests:gcr.io/dish-258800:latest
 
   - label: ":docker: build search"
     retry:
@@ -191,7 +175,7 @@ steps:
     plugins:
       - gencer/cache#v2.3.10:
           backend: s3
-          key: "v1-cache-{{ runner.os }}"
+          key: "v2-cache-{{ runner.os }}"
           s3:
             args: "--endpoint-url=https://sfo2.digitaloceanspaces.com"
             bucket: "dish-build-cache"

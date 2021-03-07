@@ -37,13 +37,13 @@ export -f wait_until_dish_app_ready
 
 # SCRIPT
 
-export POSTGRES_STRATEGY=simple
+export POSTGRES_NAME=db
 
-mkdir -p $HOME/.dish/postgres
-chown -R root:root $HOME/.dish/postgres
+mkdir -p $HOME/.dish/postgresdb
+chown -R root:root $HOME/.dish/postgresdb
 
 # if not already mounted/setup, we need to start postgres once and stop it so it sets up
-if [ ! -d $HOME/.dish/postgres/data ]; then
+if [ ! -d $HOME/.dish/postgresdb/data ]; then
   # Postgres needs 2 starts to get everything set up
   docker-compose run -d postgres
   sleep 6
