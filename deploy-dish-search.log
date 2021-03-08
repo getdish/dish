@@ -1,0 +1,31 @@
+[1mDeploying dish-search[0m
+[32m==> Validating App Configuration[0m
+[38;5;252m--> Validating App Configuration done[0m
+[1mServices[0m
+TCP 80/443 ⇢ 10000 
+
+Deploying image: registry.fly.io/dish-search:latest
+
+Image ID: sha256:4de027853063f71334b722c43f1dfc76e19f364bf7111a5470c04c490855efab
+Image size: 18 MB
+[38;5;252m--> Image resolving done[0m
+[32m==> Creating deployment tag[0m
+--> registry.fly.io/dish-search:deployment-1615171727
+The push refers to repository [registry.fly.io/dish-search]
+c7784c5756d3: Preparing
+449c6b5bc1f1: Preparing
+cb381a32b229: Preparing
+c7784c5756d3: Layer already exists
+cb381a32b229: Layer already exists
+449c6b5bc1f1: Layer already exists
+deployment-1615171727: digest: sha256:95090654b13ff0c7c980a18dbcd923ce16ab60654c67e775c8141fa80db6dbcd size: 946
+[32m==> Creating Release[0m
+[2mDeployment Strategy: rolling[0mRelease v18 created
+Deploying to : dish-search.fly.dev
+
+[1mMonitoring Deployment[0m
+[2mYou can detach the terminal anytime without stopping the deployment[0m
+
+v18 is being deployed
+[38;5;252m--> v18 deployed successfully
+[0m

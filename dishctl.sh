@@ -991,7 +991,7 @@ function deploy_fly_app() {
   folder=$3
   image_name=${4:-$1}
   log_file="$(pwd)/deploy-$app.log"
-  rm "$log_file" || true
+  rm "$log_file" &> /dev/null || true
   tag=${5:-latest}
   echo ">>>> deploying $app in $folder to image $image_name with tag $tag"
   pushd "$folder"
@@ -1026,7 +1026,9 @@ function deploy_fly_app() {
         sleep 3
       fi
     done
-    wait $pid || true
+    if [ $did_kill_idempotent -eq 0 ]; then
+      wait $pid
+    fi
     my_status=$?
     if [[ $did_kill_idempotent -eq 1 ||  $my_status -eq 0 ]]; then
       echo "deployed!"
