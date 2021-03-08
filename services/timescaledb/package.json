@@ -11,6 +11,6 @@
   "scripts": {
     "build": "true",
     "watch": "true",
-    "migrate": "./bin/migrate.js"
+    "migrate": "./scripts/migrate.js"
   }
 }
