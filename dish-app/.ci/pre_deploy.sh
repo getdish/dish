@@ -9,4 +9,5 @@ fi
 flyctl secrets set \
     TF_VAR_DO_SPACES_ID="$DO_SPACES_ID" \
     TF_VAR_DO_SPACES_SECRET="$DO_SPACES_SECRET" \
+    HASURA_ENDPOINT="https://hasura.dishapp.com" \
     || true

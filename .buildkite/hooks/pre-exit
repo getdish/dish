@@ -19,8 +19,7 @@ fi
 
 if [ "$DOCKER_CLEAN" == "true" ] || { [ "$BUILDKITE_COMMAND_EXIT_STATUS" = "1" ] && [ "$BUILDKITE_COMMAND_EXIT_STATUS" = "1" ]; }; then
   docker system prune -a --filter "until=72h" --force || true
-  # this may clear useful cache?
-  # docker system df | head -n 60 || true
+  docker system df | head -n 60 || true
   docker images -a | head -n 60 || true
 fi
 
