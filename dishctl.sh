@@ -943,7 +943,9 @@ function deploy_all() {
   deploy "$where" db
   deploy "$where" hooks
   # depends on postgres
-  deploy "$where" hasura & # depends on hooks
+  # depends on hooks
+  deploy "$where" hasura
+   # depends on hasura
   deploy "$where" tileserver &
   deploy "$where" timescale &
   wait
