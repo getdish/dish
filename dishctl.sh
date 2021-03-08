@@ -1009,7 +1009,7 @@ function deploy_fly_app() {
   fi
   if [ -f ".ci/pre_deploy.sh" ]; then
     echo " >> running pre-deploy script $app..."
-    eval $(yaml_to_env) timeout 160 .ci/pre_deploy.sh > "$pre_deploy_logs" &
+    eval $(yaml_to_env) .ci/pre_deploy.sh > "$pre_deploy_logs" &
     tail -f "$pre_deploy_logs" &
     wait
     printf " done\n\n"
