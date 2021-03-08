@@ -7,6 +7,9 @@ env:
   DISH_ENDPOINT: 'http://localhost:4444'
 
 steps:
+  - label: "start"
+    command: "true"
+
   - label: ":docker: build base"
     key: base
     plugins:
@@ -94,26 +97,6 @@ steps:
           cache-from: base:gcr.io/dish-258800/tileserver:latest
           push: tileserver:gcr.io/dish-258800/tileserver:latest
 
-  - label: ":docker: build image-proxy"
-    retry:
-      automatic: true
-    plugins:
-      - docker-compose#v3.7.0:
-          build: image-proxy
-          image-repository: gcr.io/dish-258800/image-proxy
-          cache-from: base:gcr.io/dish-258800/image-proxy:latest
-          push: image-proxy:gcr.io/dish-258800/image-proxy:latest
-
-  - label: ":docker: build image-quality"
-    retry:
-      automatic: true
-    plugins:
-      - docker-compose#v3.7.0:
-          build: image-quality
-          image-repository: gcr.io/dish-258800/image-quality
-          cache-from: base:gcr.io/dish-258800/image-quality:latest
-          push: image-quality:gcr.io/dish-258800/image-quality:latest
-
   - label: ":docker: run-tests"
     retry:
       automatic: true
@@ -167,6 +150,30 @@ steps:
           push: bert:gcr.io/dish-258800/bert:latest
 
   - wait
+
+  - label: ":docker: build image-proxy"
+    key: image-proxy
+    depends_on: start
+    retry:
+      automatic: true
+    plugins:
+      - docker-compose#v3.7.0:
+          build: image-proxy
+          image-repository: gcr.io/dish-258800/image-proxy
+          cache-from: base:gcr.io/dish-258800/image-proxy:latest
+          push: image-proxy:gcr.io/dish-258800/image-proxy:latest
+
+  - label: ":docker: build image-quality"
+    key: image-quality
+    depends_on: start
+    retry:
+      automatic: true
+    plugins:
+      - docker-compose#v3.7.0:
+          build: image-quality
+          image-repository: gcr.io/dish-258800/image-quality
+          cache-from: base:gcr.io/dish-258800/image-quality:latest
+          push: image-quality:gcr.io/dish-258800/image-quality:latest
 
   - label: ":docker: build db"
     key: db
