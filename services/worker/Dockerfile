@@ -13,9 +13,6 @@ RUN apt-get update > /dev/null && apt-get install -y \
        > /dev/null \
       && apt-get clean
 
-FROM gcr.io/dish-258800/base
-COPY --from=0 /bin /usr/local/bin
-WORKDIR /app
 COPY services/worker services/worker
 COPY packages packages
 WORKDIR /app/services/worker

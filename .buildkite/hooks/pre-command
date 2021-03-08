@@ -25,7 +25,7 @@ if [ "$FIRST_STEP" == "true" ]; then
   git-crypt unlock > gpg-crypt.log
 
 
-  if ($(which gcloud > /dev/null)); then
+  if (which gcloud > /dev/null); then
     init_gcloud
   else
     apt-get install -y libssl-dev libffi-dev
@@ -34,35 +34,35 @@ if [ "$FIRST_STEP" == "true" ]; then
   fi
 fi
 
-if ($(which netstat > /dev/null)); then
+if (which netstat > /dev/null); then
   echo $(date -u) "netstat installed"
 else
   apt-get update && apt-get install -y net-tools
   echo $(date -u) "netstat installed"
 fi
 
-if ($(which psql > /dev/null)); then
+if (which psql > /dev/null); then
   echo $(date -u) "psql installed"
 else
   apt-get update && apt-get install -y postgresql-client
   echo $(date -u) "psql installed"
 fi
 
-if ($(which node > /dev/null)); then
+if (which node > /dev/null); then
   echo $(date -u) "node installed"
 else
   apt-get update && apt-get install -y nodejs
   echo $(date -u) "node installed"
 fi
 
-if ($(which npm > /dev/null)); then
+if (which npm > /dev/null); then
   echo $(date -u) "npm installed"
 else
   apt-get update && apt-get install -y npm
   echo $(date -u) "npm installed"
 fi
 
-if ($(which docker > /dev/null)); then
+if (which docker > /dev/null); then
   echo $(date -u) "node/docker/npm installed"
 else
   apt-get update
@@ -110,7 +110,5 @@ if [ "$ENV_SET" != "true" ]; then
   export HASURA_ADMIN_SECRET="$TF_VAR_HASURA_GRAPHQL_ADMIN_SECRET"
   export ENV_SET="true"
 fi
-
-echo $AWS_ACCESS_KEY_ID
 
 echo $(date -u) "done"

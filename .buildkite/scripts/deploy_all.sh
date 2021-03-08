@@ -1,10 +1,10 @@
 #!/usr/bin/env bash
 set -e pipefail
 
-if [ "$BUILDKITE_BRANCH" != "production" ]; then
-  echo "not production branch, skip deploy"
-  exit 0
-fi
+# if [ "$BUILDKITE_BRANCH" != "production" ]; then
+#   echo "not production branch, skip deploy"
+#   exit 0
+# fi
 
 echo "Deploying apps..."
 
@@ -12,7 +12,7 @@ PROJECT_ROOT=$(git rev-parse --show-toplevel)
 cd "$PROJECT_ROOT"
 
 # fly
-if ($(which flyctl > /dev/null)); then
+if (which flyctl > /dev/null); then
   echo "flyctl installed"
 else
   curl -L https://fly.io/install.sh | bash
