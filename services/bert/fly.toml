@@ -23,5 +23,5 @@ kill_timeout = 5
     grace_period = "1s"
     interval = "10s"
     port = "8080"
-    restart_limit = 5
+    restart_limit = 2
     timeout = "2s"

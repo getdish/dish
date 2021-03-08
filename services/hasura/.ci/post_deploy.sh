@@ -8,13 +8,13 @@ hasura_endpoint="https://dish-hasura.fly.dev"
 echo "migrating..."
 hasura --skip-update-check migrate apply \
   --endpoint $hasura_endpoint \
-  --admin-secret $TF_VAR_HASURA_GRAPHQL_ADMIN_SECRET
+  --admin-secret "$TF_VAR_HASURA_GRAPHQL_ADMIN_SECRET"
 
 echo "apply metadata..."
 hasura --skip-update-check metadata apply \
     --endpoint $hasura_endpoint \
-    --admin-secret $TF_VAR_HASURA_GRAPHQL_ADMIN_SECRET
+    --admin-secret "$TF_VAR_HASURA_GRAPHQL_ADMIN_SECRET"
 
 # echo "apply functions..."
 echo "TODO apply functions"
-# cat functions/*.sql | psql $HASURA_FLY_POSTGRES_URL --single-transaction
+cat functions/*.sql | psql "$HASURA_FLY_POSTGRES_URL" --single-transaction

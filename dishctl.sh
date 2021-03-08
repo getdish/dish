@@ -985,6 +985,7 @@ function deploy() {
   if [ "$app" = "image-proxy" ];    then deploy_fly_app "$where" dish-image-proxy services/image-proxy image-proxy; fi
   if [ "$app" = "bert" ];           then deploy_fly_app "$where" dish-bert services/bert bert; fi
   if [ "$app" = "hooks" ];          then deploy_fly_app "$where" dish-hooks services/hooks hooks; fi
+  if [ "$app" = "cron" ];           then deploy_fly_app "$where" dish-cron services/cron cron; fi
 }
 
 function deploy_fly_app() {
@@ -993,13 +994,32 @@ function deploy_fly_app() {
   folder=$3
   image_name=${4:-$1}
   log_file="$(pwd)/deploy-$app.log"
+  pre_deploy_logs="$(pwd)/pre-deploy-$app.log"
   rm "$log_file" &> /dev/null || true
   tag=${5:-latest}
   echo ">>>> deploying $app in $folder to image $image_name with tag $tag"
+  flyctl auth docker
   pushd "$folder"
+  if [ "$where" = "registry" ]; then
+    echo " >> pulling and tagging..."
+    docker pull gcr.io/dish-258800/$image_name:$tag
+    docker tag gcr.io/dish-258800/$image_name:$tag registry.fly.io/$app:$tag
+    docker push registry.fly.io/$app:$tag
+    printf " done\n\n"
+  fi
   if [ -f ".ci/pre_deploy.sh" ]; then
-    echo "running pre-deploy script $app..."
-    # eval $(yaml_to_env) .ci/pre_deploy.sh
+    echo " >> running pre-deploy script $app..."
+    eval $(yaml_to_env) timeout 160 .ci/pre_deploy.sh > "$pre_deploy_logs" &
+    tail -f "$pre_deploy_logs" &
+    wait
+    printf " done\n\n"
+    if grep "is being deployed" < "$pre_deploy_logs"; then
+      if grep "failed" < "$pre_deploy_logs"; then
+        exit 1
+      else
+        return
+      fi
+    fi
   fi
   function tail_logs() {
     sleep 3
@@ -1007,17 +1027,16 @@ function deploy_fly_app() {
   }
   if [ "$where" = "registry" ]; then
     did_kill_idempotent=0
-    flyctl auth docker
-    docker pull gcr.io/dish-258800/$image_name:$tag
-    docker tag gcr.io/dish-258800/$image_name:$tag registry.fly.io/$app:$tag
-    docker push registry.fly.io/$app:$tag
+    echo " >> deploying..."
     timeout 160 \
       flyctl deploy --strategy rolling -i registry.fly.io/$app:$tag &> "$log_file" &
     pid=$!
     tail_logs &
     tail_pid=$!
+    ps | grep " $pid "
     while ps | grep " $pid " > /dev/null; do
       # bugfix fly not deploying if same for now
+      echo "check"
       if grep 'Release v0 created' < "$log_file"; then
         echo "detected idempotent release that will hang (fly issue), continue..."
         did_kill_idempotent=1
@@ -1025,15 +1044,18 @@ function deploy_fly_app() {
         kill $tail_pid || true
         break
       else
+        echo "sleep"
         sleep 3
       fi
     done
+    echo "wait"
     if [ $did_kill_idempotent -eq 0 ]; then
       wait $pid
     fi
+    echo "status"
     my_status=$?
     if [[ $did_kill_idempotent -eq 1 ||  $my_status -eq 0 ]]; then
-      echo "deployed!"
+      printf " done\n\n"
     else
       echo "deploy issue $did_kill_idempotent $my_status"
       exit 1
@@ -1042,8 +1064,9 @@ function deploy_fly_app() {
     flyctl deploy --remote-only --strategy rolling
   fi
   if [ -f ".ci/post_deploy.sh" ]; then
-    echo "running post-deploy script $app..."
+    echo " >> post-deploy script $app..."
     eval $(yaml_to_env) .ci/post_deploy.sh
+    printf " done\n\n"
   fi
   popd
 }
