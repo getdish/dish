@@ -1,6 +1,5 @@
 #!/bin/bash
-set -e
-set -o pipefail
+set -eo pipefail
 
  #Does this put our `set -e` into all the functions?
 export SHELLOPTS
@@ -513,7 +512,10 @@ function postgres_console() {
 }
 
 function main_db_command() {
-  echo "$1" | psql $HASURA_FLY_POSTGRES_URL -P pager=off -P format=unaligned
+  if [ "$HASURA_FLY_POSTGRES_URL" = "" ]; then
+    echo "no url given"
+  fi
+  echo "$1" | psql "$HASURA_FLY_POSTGRES_URL" -P pager=off -P format=unaligned
 }
 
 function timescale_command() {
@@ -529,7 +531,7 @@ function timescale_command() {
 function redis_proxy() {
   echo "Waiting for connection to redis..."
   kubectl port-forward svc/redis-master $REDIS_PROXY_PORT:6379 -n redis &
-  REDIS_PROXY_PID=$!
+  # REDIS_PROXY_PID=$!
   trap _kill_port_forwarder EXIT
   while ! netstat -tna | grep 'LISTEN' | grep -q "$REDIS_PROXY_PORT"; do
     sleep 0.1
@@ -937,28 +939,30 @@ function export_env() {
 }
 
 function deploy_all() {
+  flyctl auth docker
+  set -e
   export_env
   where=${1:-registry}
   echo "deploying apps via $where"
-  deploy "$where" db
-  deploy "$where" hooks
+  deploy "$where" db | sed -e 's/^/db: /;'
+  echo "???"
+  deploy "$where" hooks | sed -e 's/^/hooks: /;'
   # depends on postgres
   # depends on hooks
-  deploy "$where" hasura
+  deploy "$where" hasura | sed -e 's/^/hasura: /;'
    # depends on hasura
-  deploy "$where" tileserver &
-  deploy "$where" timescale &
+  deploy "$where" tileserver | sed -e 's/^/tileserver: /;' &
+  deploy "$where" timescale | sed -e 's/^/timescale: /;' &
   wait
-  # depends on hasura
-  deploy "$where" app &
-  deploy "$where" search &
-  deploy "$where" hooks &
-  deploy "$where" worker &
-  deploy "$where" image-quality &
-  deploy "$where" image-proxy &
-  deploy "$where" bert &
-  deploy "$where" cron &
-  wait -n
+  deploy "$where" app | sed -e 's/^/app: /;' &
+  deploy "$where" search | sed -e 's/^/search: /;' &
+  deploy "$where" hooks | sed -e 's/^/hooks: /;' &
+  deploy "$where" worker | sed -e 's/^/worker: /;' &
+  deploy "$where" image-quality | sed -e 's/^/image-quality: /;' &
+  deploy "$where" image-proxy | sed -e 's/^/image-proxy: /;' &
+  deploy "$where" bert | sed -e 's/^/bert: /;' &
+  deploy "$where" cron | sed -e 's/^/cron: /;' &
+  wait
 }
 
 function source_env() {
@@ -998,21 +1002,24 @@ function deploy_fly_app() {
   rm "$log_file" &> /dev/null || true
   tag=${5:-latest}
   echo ">>>> deploying $app in $folder to image $image_name with tag $tag"
-  flyctl auth docker
   pushd "$folder"
   if [ "$where" = "registry" ]; then
     echo " >> pulling and tagging..."
     docker pull gcr.io/dish-258800/$image_name:$tag
     docker tag gcr.io/dish-258800/$image_name:$tag registry.fly.io/$app:$tag
     docker push registry.fly.io/$app:$tag
-    printf " done\n\n"
+    printf " done pulling and tagging\n\n"
   fi
   if [ -f ".ci/pre_deploy.sh" ]; then
     echo " >> running pre-deploy script $app..."
-    eval $(yaml_to_env) .ci/pre_deploy.sh > "$pre_deploy_logs" &
+    touch "$pre_deploy_logs"
+    eval $(yaml_to_env) .ci/pre_deploy.sh &> "$pre_deploy_logs" &
+    pre_deploy_pid=$!
     tail -f "$pre_deploy_logs" &
-    wait
-    printf " done\n\n"
+    tail_pid=$!
+    wait $pre_deploy_pid
+    kill $tail_pid
+    printf " >> done pre_deploy\n\n"
     if grep "is being deployed" < "$pre_deploy_logs"; then
       if grep "failed" < "$pre_deploy_logs"; then
         exit 1
@@ -1021,43 +1028,34 @@ function deploy_fly_app() {
       fi
     fi
   fi
-  function tail_logs() {
-    sleep 3
-    tail -f "$log_file"
-  }
   if [ "$where" = "registry" ]; then
     did_kill_idempotent=0
     echo " >> deploying..."
-    timeout 160 \
-      flyctl deploy --strategy rolling -i registry.fly.io/$app:$tag &> "$log_file" &
-    pid=$!
-    tail_logs &
+    touch "$log_file"
+    tail -f "$log_file" &
     tail_pid=$!
-    ps | grep " $pid "
-    while ps | grep " $pid " > /dev/null; do
+    flyctl deploy --strategy rolling -i registry.fly.io/$app:$tag &> "$log_file" &
+    pid=$!
+    while ps | grep "$pid " > /dev/null; do
       # bugfix fly not deploying if same for now
-      echo "check"
       if grep 'Release v0 created' < "$log_file"; then
-        echo "detected idempotent release that will hang (fly issue), continue..."
+        echo " >> detected idempotent release that will hang (fly issue), continue..."
         did_kill_idempotent=1
-        kill $pid || true
-        kill $tail_pid || true
+        kill $pid &> /dev/null || true
         break
       else
-        echo "sleep"
         sleep 3
       fi
     done
-    echo "wait"
+    kill $tail_pid || true
     if [ $did_kill_idempotent -eq 0 ]; then
       wait $pid
     fi
-    echo "status"
     my_status=$?
     if [[ $did_kill_idempotent -eq 1 ||  $my_status -eq 0 ]]; then
-      printf " done\n\n"
+      echo " >> done deploying"
     else
-      echo "deploy issue $did_kill_idempotent $my_status"
+      echo " >> deploy issue $app $did_kill_idempotent $my_status"
       exit 1
     fi
   else
@@ -1066,8 +1064,8 @@ function deploy_fly_app() {
   if [ -f ".ci/post_deploy.sh" ]; then
     echo " >> post-deploy script $app..."
     eval $(yaml_to_env) .ci/post_deploy.sh
-    printf " done\n\n"
   fi
+  echo "  >> done post_deploy $app "
   popd
 }
 

@@ -4,6 +4,7 @@ set -e pipefail
 echo "Deploying apps..."
 
 PROJECT_ROOT=$(git rev-parse --show-toplevel)
+cd "$PROJECT_ROOT"
 
 # fly
 if ($(which flyctl > /dev/null)); then
@@ -21,7 +22,7 @@ export FLY_API_TOKEN=$FLY_API_TOKEN
 
 # post to slack
 commit=$(git rev-parse HEAD)
-link="https://github.com/getdish/dish/tree/$commit"
+# link="https://github.com/getdish/dish/tree/$commit"
 message="
 Successful deploy of $commit to staging droplet \n
 Code: https://github.com/getdish/dish/tree/$commit \n

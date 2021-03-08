@@ -19,7 +19,6 @@ prune gorse &
 prune hasura &
 prune image-proxy &
 prune image-quality &
-prune image-quality-server &
 prune imageproxy &
 prune postgres &
 prune db &

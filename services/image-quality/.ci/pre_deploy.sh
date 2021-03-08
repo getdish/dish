@@ -2,4 +2,4 @@
 set -e pipefail
 
 flyctl secrets set \
-    VIRTUAL_HOST=bert.dishapp.com || true
+    VIRTUAL_HOST=image-quality.dishapp.com || true

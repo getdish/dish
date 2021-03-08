@@ -6,8 +6,8 @@ export DISH_IMAGE_TAG=":latest"
 
 # HELPERS
 
-branch=$(git rev-parse --abbrev-ref HEAD)
-export DISH_BASE_VERSION=:${branch//\//-}
+# branch=$(git rev-parse --abbrev-ref HEAD)
+# export DISH_BASE_VERSION=:${branch//\//-}
 
 is_hasura_up() {
   [ $(curl -L $HASURA_ENDPOINT/healthz -o /dev/null -w '%{http_code}\n' -s) == "200" ]

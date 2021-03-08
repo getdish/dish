@@ -7,8 +7,8 @@ if [ "$FLY_PG_PASSWORD" = "" ]; then
 fi
 
 flyctl secrets set \
-    SU_PASSWORD=$FLY_PG_PASSWORD \
-    REPL_PASSWORD=$FLY_PG_REPL_PASSWORD || true
+    SU_PASSWORD="$FLY_PG_PASSWORD" \
+    REPL_PASSWORD="$FLY_PG_REPL_PASSWORD" || true
 
 # can cause startup issues for hasura so clear here first
-../../dishctl.sh hasura_clean_event_logs
+. ../../dishctl.sh hasura_clean_event_logs

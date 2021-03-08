@@ -45,7 +45,21 @@ if ($(which psql > /dev/null)); then
   echo $(date -u) "psql installed"
 else
   apt-get update && apt-get install -y postgresql-client
-  echo $(date -u) "postgres installed"
+  echo $(date -u) "psql installed"
+fi
+
+if ($(which node > /dev/null)); then
+  echo $(date -u) "node installed"
+else
+  apt-get update && apt-get install -y nodejs
+  echo $(date -u) "node installed"
+fi
+
+if ($(which npm > /dev/null)); then
+  echo $(date -u) "npm installed"
+else
+  apt-get update && apt-get install -y npm
+  echo $(date -u) "npm installed"
 fi
 
 if ($(which docker > /dev/null)); then

@@ -1,3 +1,4 @@
+*.log
 .ops
 
 *__snack.css
