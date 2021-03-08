@@ -3,29 +3,23 @@
 // entire scoring system. Any changes to it could potentially alter the scores
 // for all restaurants and rishes.
 
-export async function fetchBertSentiment(sentence: string) {
-  const url = `https://bert-staging.dishapp.com/?text=${encodeURIComponent(
-    sentence
-  )}`
+type Sentiment = {
+  positive: boolean
+}
+
+export async function fetchBertSentiment(sentence: string): Promise<Sentiment> {
+  const url = `https://bert.dishapp.com/predict`
   return fetch(url, {
+    method: 'post',
     headers: {
       'Content-Type': 'application/json',
     },
-  })
-    .then((res) => res.json())
-    .then((x) => x)
+    body: JSON.stringify([sentence]),
+  }).then((res) => res.json())
 }
 
-export function bertResultToNumber(bert_sentiment: [string, number]) {
-  const confidence = bert_sentiment[1]
-  switch (bert_sentiment[0]) {
-    case 'Positive':
-      return 1 * confidence
-    case 'Negative':
-      return -1 * confidence
-    default:
-      return 0
-  }
+export function bertResultToNumber({ positive }: Sentiment) {
+  return positive ? 1 : -1
 }
 
 export async function fetchBertSentimentNumber(text: string) {

@@ -191,7 +191,7 @@ export class GoogleReviewAPI extends WorkerJob {
     return parts[5]
   }
 
-  parsePhotos(review: cheerio.Cheerio, $: cheerio.Root) {
+  parsePhotos(review: any, $: any) {
     let urls: string[] = []
     const anchors = review.find('g-scrolling-carousel div div div a')
     for (let i = 0; i < anchors.length; i++) {

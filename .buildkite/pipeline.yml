@@ -1,0 +1,260 @@
+env:
+  BUILDKITE_TIMEOUT: "40"
+  DISH_IMAGE_TAG: ":latest"
+  DISH_ENV: 'test'
+  DISH_REGISTRY: 'gcr.io/dish-258800'
+  DISH_ENDPOINT: 'http://localhost:4444'
+
+steps:
+  # images that tests need
+
+  - label: ":docker: build base"
+    key: base
+    plugins:
+      - docker-compose#v3.7.0:
+          build: base
+          image-repository: gcr.io/dish-258800/base
+          cache-from: base:gcr.io/dish-258800/base:latest
+          push: base:gcr.io/dish-258800/base:latest
+
+  - label: ":docker: build dish-app"
+    depends_on: base
+    key: dish-app
+    plugins:
+      - docker-compose#v3.7.0:
+          build: dish-app
+          image-repository: gcr.io/dish-258800/dish-app
+          cache-from: base:gcr.io/dish-258800/dish-app:latest
+          push: dish-app:gcr.io/dish-258800/dish-app:latest
+
+  - label: ":docker: build run-tests"
+    depends_on: base
+    plugins:
+      - docker-compose#v3.7.0:
+          build: run-tests
+          image-repository: gcr.io/dish-258800/run-tests
+          cache-from: base:gcr.io/dish-258800/run-tests:latest
+          push: run-tests:gcr.io/dish-258800/run-tests:latest
+
+  - label: ":docker: build hooks"
+    key: hooks
+    depends_on: base
+    plugins:
+      - docker-compose#v3.7.0:
+          build: hooks
+          image-repository: gcr.io/dish-258800/hooks
+          # cache-from: base:gcr.io/dish-258800/hooks:latest
+          push: hooks:gcr.io/dish-258800/hooks:latest
+
+  - label: ":docker: build worker"
+    key: worker
+    depends_on: base
+    plugins:
+      - docker-compose#v3.7.0:
+          build: worker
+          image-repository: gcr.io/dish-258800/worker
+          cache-from: base:gcr.io/dish-258800/worker:latest
+          push: worker:gcr.io/dish-258800/worker:latest
+
+  - label: ":docker: build cron"
+    key: cron
+    retry:
+      automatic: true
+    plugins:
+      - docker-compose#v3.7.0:
+          build: cron
+          image-repository: gcr.io/dish-258800/cron
+          cache-from: base:gcr.io/dish-258800/cron:latest
+          push: cron:gcr.io/dish-258800/cron:latest
+
+  - label: ":docker: build search"
+    key: search
+    retry:
+      automatic: true
+    plugins:
+      - docker-compose#v3.7.0:
+          build: search
+          image-repository: gcr.io/dish-258800/search
+          cache-from: base:gcr.io/dish-258800/search:latest
+          push: search:gcr.io/dish-258800/search:latest
+
+  - label: ":docker: build hasura"
+    key: hasura
+    retry:
+      automatic: true
+    plugins:
+      - docker-compose#v3.7.0:
+          build: hasura
+          image-repository: gcr.io/dish-258800/hasura
+          cache-from: base:gcr.io/dish-258800/hasura:latest
+          push: hasura:gcr.io/dish-258800/hasura:latest
+
+  - label: ":docker: build timescaledb"
+    key: timescaledb
+    retry:
+      automatic: true
+    plugins:
+      - docker-compose#v3.7.0:
+          build: timescaledb
+          image-repository: gcr.io/dish-258800/timescaledb
+          cache-from: base:gcr.io/dish-258800/timescaledb:latest
+          push: timescaledb:gcr.io/dish-258800/timescaledb:latest
+
+  - label: ":docker: build tileserver"
+    key: tileserver
+    retry:
+      automatic: true
+    plugins:
+      - docker-compose#v3.7.0:
+          build: tileserver
+          image-repository: gcr.io/dish-258800/tileserver
+          cache-from: base:gcr.io/dish-258800/tileserver:latest
+          push: tileserver:gcr.io/dish-258800/tileserver:latest
+
+  - label: ":docker: build run-tests"
+    key: run-tests
+    retry:
+      automatic: true
+    plugins:
+      - docker-compose#v3.7.0:
+          build: run-tests
+          image-repository: gcr.io/dish-258800/run-tests
+          cache-from: base:gcr.io/dish-258800/run-tests:latest
+          push: run-tests:gcr.io/dish-258800/run-tests:latest
+
+  - label: ":docker: build postgres for tests"
+    key: postgres
+    retry:
+      automatic: true
+    env:
+      POSTGRES_NAME: postgres
+    plugins:
+      - docker-compose#v3.7.0:
+          build: postgres
+          image-repository: gcr.io/dish-258800/postgres
+          cache-from: base:gcr.io/dish-258800/postgres:latest
+          push: postgres:gcr.io/dish-258800/postgres:latest
+
+  - label: ":docker: build redis for tests"
+    key: redis
+    retry:
+      automatic: true
+    plugins:
+      - docker-compose#v3.7.0:
+          build: redis
+          image-repository: gcr.io/dish-258800/redis
+          cache-from: base:gcr.io/dish-258800/redis:latest
+          push: redis:gcr.io/dish-258800/redis:latest
+
+  - label: "done with test images"
+    command: "true"
+    key: test-images
+    depends_on:
+      - dish-app
+      - hooks
+      - worker
+      - search
+      - hasura
+      - timescaledb
+      - tileserver
+      - run-tests
+      - postgres
+      - redis
+
+  # non test images
+
+  - label: ":docker: build gorse"
+    retry:
+      automatic: true
+    plugins:
+      - docker-compose#v3.7.0:
+          build: gorse
+          image-repository: gcr.io/dish-258800/gorse
+          cache-from: base:gcr.io/dish-258800/gorse:latest
+          push: gorse:gcr.io/dish-258800/gorse:latest
+
+  - label: ":docker: build bert"
+    retry:
+      automatic: true
+    plugins:
+      - docker-compose#v3.7.0:
+          build: bert
+          image-repository: gcr.io/dish-258800/bert
+          cache-from: base:gcr.io/dish-258800/bert:latest
+          push: bert:gcr.io/dish-258800/bert:latest
+
+  - label: ":docker: build image-proxy"
+    retry:
+      automatic: true
+    plugins:
+      - docker-compose#v3.7.0:
+          build: image-proxy
+          image-repository: gcr.io/dish-258800/image-proxy
+          cache-from: base:gcr.io/dish-258800/image-proxy:latest
+          push: image-proxy:gcr.io/dish-258800/image-proxy:latest
+
+  - label: ":docker: build image-quality"
+    retry:
+      automatic: true
+    plugins:
+      - docker-compose#v3.7.0:
+          build: image-quality
+          image-repository: gcr.io/dish-258800/image-quality
+          cache-from: base:gcr.io/dish-258800/image-quality:latest
+          push: image-quality:gcr.io/dish-258800/image-quality:latest
+
+  - label: ":docker: build db"
+    retry:
+      automatic: true
+    env:
+      POSTGRES_NAME: db
+    plugins:
+      - docker-compose#v3.7.0:
+          build: postgres
+          image-repository: gcr.io/dish-258800/db
+          cache-from: base:gcr.io/dish-258800/db:latest
+          push: postgres:gcr.io/dish-258800/db:latest
+
+  - label: "setup services for tests"
+    command: ".buildkite/scripts/setup_services.sh"
+    key: test-setup
+    depends_on:
+      - test-images
+    env:
+      LOG_DOCKER: true
+      DOCKER_CLEAN_ON_FAIL: true
+      POSTGRES_STRATEGY: simple
+    plugins:
+      - gencer/cache#v2.3.10:
+          backend: s3
+          key: "v1-cache-{{ runner.os }}"
+          s3:
+            args: "--endpoint-url=https://sfo2.digitaloceanspaces.com"
+            bucket: "dish-build-cache"
+          paths:
+            - '/root/.dish/'
+
+  - label: "run tests"
+    key: tests
+    depends_on: test-setup
+    command: "docker run --net host gcr.io/dish-258800/run-tests:latest yarn test"
+    env:
+      LOG_DOCKER: true
+      DOCKER_CLEAN_ON_FAIL: true
+
+  # - label: "run integration test"
+  #   command: ".buildkite/scripts/integration_tests.sh"
+
+  - wait
+
+  - label: "deploy"
+    env:
+      DOCKER_CLEAN: true
+    command: ".buildkite/scripts/deploy_all.sh"
+
+  - wait
+
+  - label: "finish"
+    command: ".buildkite/scripts/finish.sh"
+    env:
+      FINISH: true

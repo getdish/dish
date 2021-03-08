@@ -57,7 +57,7 @@ resource "kubernetes_ingress" "k8s-services-ingress" {
         path {
           path = "/"
           backend {
-            service_name = "dish-app-web"
+            service_name = "dish-app"
             service_port = "http"
           }
         }

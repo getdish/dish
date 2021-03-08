@@ -1,7 +1,9 @@
 # build stage
 FROM golang:1.14.4-alpine3.11 AS build-env
 RUN apk --no-cache add build-base git bzr mercurial gcc
-ADD services/search /src
+
+ADD . /src
+
 RUN cd /src && go generate && go build -o search-server
 
 # final stage

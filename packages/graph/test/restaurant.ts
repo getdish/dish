@@ -13,7 +13,7 @@ import {
   restaurantFindOne,
   restaurantUpdate,
   restaurantUpsert,
-} from '../src'
+} from '../_'
 import { menu_item_fixture, restaurant_fixture } from './etc/fixtures'
 
 interface Context {
@@ -25,6 +25,9 @@ const test = anyTest as TestInterface<Context>
 
 test.beforeEach(async (t) => {
   await flushTestData()
+  if (!restaurant_fixture) {
+    throw new Error(`No fixture?!`)
+  }
   const [restaurant] = await restaurantUpsert([restaurant_fixture])
   t.context.restaurant = restaurant
 })

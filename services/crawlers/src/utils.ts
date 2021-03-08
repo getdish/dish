@@ -57,6 +57,7 @@ export class DB {
 
   connect() {
     this.pool = new Pool(this.config)
+    this.pool.setMaxListeners(800)
     this.pool.on('error', (e) => {
       sentryException(e, {
         more: 'Error likely from long-lived pool connection in node-pg',
@@ -73,7 +74,8 @@ export class DB {
     if (!this.pool) {
       this.connect()
     }
-    const client = await this.pool?.connect()
+    const pool = this.pool!
+    const client = await pool.connect()
     if (!client) {
       throw new Error('no client')
     }

@@ -2,23 +2,30 @@
   "name": "@dish/react-feather",
   "version": "0.0.1",
   "description": "React Native component for Feather icons",
-  "main": "_/index.js",
+  "types": "src/_types.d.ts",
+  "main": "dist",
+  "module": "_",
+  "tsmain": "src",
   "scripts": {
-    "prebuild": "rm -f tsconfig.tsbuildinfo",
-    "generate": "node ./bin/build",
-    "build": "tsc -b",
-    "build:watch": "tsc -b --watch --preserveWatchOutput"
+    "build": "esdx",
+    "watch": "esdx-watch",
+    "generate": "node ./bin/build"
   },
   "license": "MIT",
+  "dependencies": {
+    "react": "*",
+    "react-dom": "*",
+    "react-native-svg": "^12.1.0"
+  },
   "devDependencies": {
-    "feather-icons": "^4.28.0",
+    "@dish/esdx": "^0.0.1",
     "camelcase": "^6.0.0",
-    "cheerio": "^1.0.0-rc.3",
+    "cheerio": "^1.0.0-rc.5",
+    "feather-icons": "^4.28.0",
     "glob": "^7.1.6",
     "prettier": "*",
+    "prettier-plugin-import-sort": "^0.0.6",
+    "prop-types": "^15.7.2",
     "uppercamelcase": "^3.0.0"
-  },
-  "dependencies": {
-    "react-native-svg": "^12.1.0"
   }
 }

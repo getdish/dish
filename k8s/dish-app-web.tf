@@ -1,22 +1,22 @@
-resource "kubernetes_deployment" "dish-app-web" {
+resource "kubernetes_deployment" "dish-app" {
   lifecycle {
     ignore_changes = [
       spec[0].replicas
     ]
   }
   metadata {
-    name = "dish-app-web"
+    name = "dish-app"
   }
   spec {
     selector {
       match_labels = {
-        app = "dish-app-web"
+        app = "dish-app"
       }
     }
     template {
       metadata {
         labels = {
-          app = "dish-app-web"
+          app = "dish-app"
         }
       }
       spec {
@@ -37,7 +37,7 @@ resource "kubernetes_deployment" "dish-app-web" {
 
 
         container {
-          name  = "dish-app-web"
+          name  = "dish-app"
           image = "${var.DOCKER_REGISTRY}/dish-app:production"
           image_pull_policy = "Always"
           env {
@@ -78,14 +78,14 @@ resource "kubernetes_deployment" "dish-app-web" {
   }
 }
 
-resource "kubernetes_service" "dish-app-web" {
+resource "kubernetes_service" "dish-app" {
   metadata {
-    name = "dish-app-web"
+    name = "dish-app"
   }
 
   spec {
     selector = {
-      app = "dish-app-web"
+      app = "dish-app"
     }
 
     port {

@@ -1,25 +1,27 @@
 {
   "name": "@dish/worker",
   "version": "0.0.1",
-  "main": "_/index.js",
-  "tsmain": "src/index",
   "sideEffects": false,
+  "types": "src/_types.d.ts",
   "private": true,
+  "main": "dist",
+  "module": "_",
+  "tsmain": "src",
   "scripts": {
-    "prebuild": "rm -f tsconfig.tsbuildinfo",
-    "build": "tsc -b",
-    "watch": "tsc -b --watch --preserveWatchOutput",
+    "build": "esdx",
+    "watch": "esdx-watch",
     "test": "DISH_ENV=test ava tests/* --verbose",
     "test:watch": "DISH_ENV=test ava tests/* --watch"
   },
   "dependencies": {
+    "@types/bull": "^3.14.4",
     "axios": "^0.19.2",
     "bull": "^3.12.1",
     "https-proxy-agent": "^5.0.0",
     "lodash": "*"
   },
   "devDependencies": {
-    "@types/bull": "^3.14.4",
+    "@dish/esdx": "*",
     "ava": "^3.14.0"
   }
 }

@@ -11,6 +11,14 @@ module.exports = function (api) {
   const shouldOptimize = isProd && !isSSR
 
   return {
+    env: {
+      development: {
+        plugins: ['@babel/plugin-transform-modules-commonjs'],
+      },
+      test: {
+        plugins: ['@babel/plugin-transform-modules-commonjs'],
+      },
+    },
     plugins: [
       isSSR && '@loadable/babel-plugin',
       isDev && !isSSR && 'react-refresh/babel',

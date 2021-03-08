@@ -1,22 +1,28 @@
 import { promisify } from 'util'
 
 import { route, useRouteBodyParser } from '@dish/api'
-import { getAuthHeaders, getGraphEndpointInternal } from '@dish/graph'
+import { GRAPH_API_INTERNAL, fetchLog, getAuthHeaders } from '@dish/graph'
 import redis from 'redis'
 
-const host = process.env.REDIS_HOST || 'localhost'
-console.log('redis host', host)
+const url =
+  process.env.FLY_REDIS_CACHE_URL ||
+  process.env.REDIS_URL ||
+  `redis://${process.env.REDIS_HOST || 'localhost'}:6379`
+console.log('redis url', url)
 const rc = redis.createClient({
-  host,
+  url,
 })
+
+rc.on('error', (err) => {
+  console.log('redis ', JSON.stringify(err))
+})
+
 const rGet = promisify(rc.get).bind(rc)
 
 const hasuraHeaders = {
   'content-type': 'application/json',
   ...getAuthHeaders(true),
 }
-
-const hasuraEndpoint = getGraphEndpointInternal()
 
 function shouldCache(body: string) {
   return body.includes('restaurant_new(')
@@ -40,7 +46,7 @@ export default route(async (req, res) => {
       ...req.headers,
       ...hasuraHeaders,
     } as any
-    const hasuraRes = await fetch(hasuraEndpoint, {
+    const hasuraRes = await fetchLog(GRAPH_API_INTERNAL, {
       method: 'POST',
       headers,
       body,

@@ -2,7 +2,6 @@ import { parseSchemaType, selectFields } from '@dish/gqless'
 import { omit } from 'lodash'
 
 import {
-  Mutation,
   Scalars,
   generatedSchema,
   list_constraint,
@@ -13,7 +12,6 @@ import {
   restaurant_constraint,
   review_constraint,
   review_tag_sentence_constraint,
-  setCache,
   setting_constraint,
   tag_constraint,
   tag_tag_constraint,
@@ -28,7 +26,7 @@ import {
 import { ModelName, ModelType, WithID } from '../types'
 import { isMutatableField, isMutatableRelation } from './isMutatableField'
 
-type uuid = Scalars['uuid']
+type scaleUid = Scalars['uuid']
 
 export function objectToWhere(hash: { [key: string]: any }): any {
   // default if id exists just use id
@@ -224,7 +222,10 @@ export async function deleteAllBy(
   })
 }
 
-export async function deleteByIDs(table: string, ids: uuid[]): Promise<void> {
+export async function deleteByIDs(
+  table: string,
+  ids: scaleUid[]
+): Promise<void> {
   await resolvedMutation(() => {
     return mutation[`delete_${table}`]?.({
       where: { id: { _in: ids } },

@@ -11,10 +11,10 @@ import {
 } from 'snackui'
 
 import { getColorsForName } from '../../../helpers/getColorsForName'
+import { getImageUrl } from '../../../helpers/getImageUrl'
 import { queryList } from '../../../queries/queryList'
 import { getListColor } from '../../home/list/listColors'
 import { Card } from '../../home/restaurant/Card'
-import { DishUpvoteDownvote } from '../dish/DishUpvoteDownvote'
 import { Link } from '../Link'
 import { Score } from '../UpvoteDownvoteScore'
 
@@ -86,7 +86,7 @@ export const ListCard = graphql(
                     <Image
                       key={index}
                       style={{ width: 93, height: 93, opacity: 0.5 }}
-                      source={{ uri: photo ?? '' }}
+                      source={{ uri: getImageUrl(photo ?? '', 93, 93) }}
                     />
                   )
                 })}
@@ -136,7 +136,7 @@ export const ListCardHorizontal = graphql((props: ListIDProps) => {
         maxHeight={80}
       >
         <Image
-          source={{ uri: photos[0] ?? '' }}
+          source={{ uri: getImageUrl(photos[0] ?? '', 42, 42) }}
           style={{
             width: 42,
             height: 42,

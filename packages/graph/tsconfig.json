@@ -3,12 +3,11 @@
   "compilerOptions": {
     "composite": true,
     "baseUrl": ".",
-    "incremental": true,
-    "module": "CommonJS",
     "outDir": "_",
     "rootDir": "src"
   },
   "include": ["src"],
+  "exclude": ["src/_types.d.ts"],
   "references": [{
     "path": "../helpers"
   }, {

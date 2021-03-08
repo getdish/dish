@@ -1,0 +1,28 @@
+{
+  "name": "@dish/testy",
+  "version": "0.0.1",
+  "sideEffects": false,
+  "private": true,
+  "bin": "jest",
+  "types": "src/_types.d.ts",
+  "main": "dist",
+  "module": "_",
+  "tsmain": "src",
+  "scripts": {
+    "build": "esdx",
+    "watch": "esdx-watch"
+  },
+  "dependencies": {
+    "lodash": "^4.17.21",
+    "react": "*",
+    "react-dom": "*"
+  },
+  "devDependencies": {
+    "@dish/esdx": "0.0.1",
+    "@dish/react-test-env": "*",
+    "@testing-library/react": "^11.2.5",
+    "@types/jest": "^26.0.20",
+    "esbuild-jest": "^0.5.0",
+    "jest": "^26.6.3"
+  }
+}

@@ -1,7 +1,6 @@
-ARG DISH_BASE_VERSION=latest
-FROM gcr.io/dish-258800/base:$DISH_BASE_VERSION
+FROM node:15.10.0-buster
 
-RUN apt-get update && apt-get install -y \
+RUN apt-get update > /dev/null && apt-get install -y \
       gconf-service libasound2 libatk1.0-0 libatk-bridge2.0-0 \
       libc6 libcairo2 libcups2 libdbus-1-3 libexpat1 libgbm-dev \
       libfontconfig1 libgcc1 libgconf-2-4 libgdk-pixbuf2.0-0\
@@ -10,8 +9,15 @@ RUN apt-get update && apt-get install -y \
       libxcb1 libxcomposite1 libxcursor1 libxdamage1 libxext6 \
       libxfixes3 libxi6 libxrandr2 libxrender1 libxss1 libxtst6 \
       ca-certificates fonts-liberation libappindicator1 libnss3 \
-      lsb-release xdg-utils wget xvfb procps psmisc htop
+      lsb-release xdg-utils wget xvfb procps psmisc htop \
+       > /dev/null \
+      && apt-get clean
+
+FROM gcr.io/dish-258800/base
+COPY --from=0 /bin /usr/local/bin
+WORKDIR /app
+COPY services/worker services/worker
+COPY packages packages
 WORKDIR /app/services/worker
 
-COPY services/worker/entry.sh /app/entry.sh
-CMD ["/app/entry.sh"]
+CMD ["./entry.sh"]

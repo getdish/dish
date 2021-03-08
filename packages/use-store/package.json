@@ -1,28 +1,26 @@
 {
   "name": "@dish/use-store",
   "version": "0.0.1",
-  "main": "_/index.js",
-  "tsmain": "src/index",
   "sideEffects": false,
   "private": true,
+  "types": "src/_types.d.ts",
+  "main": "dist",
+  "module": "_",
+  "tsmain": "src",
   "scripts": {
-    "prebuild": "rm -f tsconfig.tsbuildinfo",
-    "build": "tsc -b",
-    "watch": "tsc -b --watch --preserveWatchOutput",
-    "test": "jest --preset ts-jest/presets/js-with-ts tests"
+    "build": "esdx",
+    "watch": "esdx-watch",
+    "test": "jest test"
   },
-  "dependencies": {},
+  "dependencies": {
+    "lodash": "^4.17.21",
+    "react": "*",
+    "react-dom": "*"
+  },
   "devDependencies": {
-    "@dish/react-test-env": "*",
-    "jest": "^26.6.3",
-    "ts-jest": "^26.4.4"
-  },
-  "peerDependencies": {
-    "react": "*"
-  },
-  "jest": {
-    "testMatch": [
-      "**/tests/**/*.[jt]s?(x)"
-    ]
+    "@dish/esdx": "*",
+    "@dish/testy": "*",
+    "@types/jest": "*",
+    "jest": "*"
   }
 }

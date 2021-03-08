@@ -163,6 +163,7 @@ const RestaurantHeaderContent = memo(
                         paddingVertical={5}
                         alignItems="center"
                         justifyContent="center"
+                        minWidth={100}
                         transform={[
                           {
                             skewX: '-12deg',

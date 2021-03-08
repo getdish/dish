@@ -1,26 +1,26 @@
 {
   "name": "@dish/router",
   "version": "0.0.1",
-  "main": "_/index.js",
-  "types": "_/index.d.ts",
-  "tsmain": "src/index",
   "sideEffects": false,
+  "types": "src/_types.d.ts",
   "private": true,
+  "main": "dist",
+  "module": "_",
+  "tsmain": "src",
   "scripts": {
-    "prebuild": "rm -f tsconfig.tsbuildinfo",
-    "build": "tsc -b",
-    "watch": "tsc -b --watch --preserveWatchOutput",
-    "test": "ava test/* --verbose"
+    "build": "esdx",
+    "watch": "esdx-watch",
+    "test": "TARGET=node DISH_ENV=test jest --runInBand --forceExit"
   },
   "dependencies": {
-    "history": "^5.0.0",
     "@dish/use-store": "*",
+    "history": "^5.0.0",
+    "react": "*",
     "tiny-request-router": "^1.2.2"
   },
   "devDependencies": {
-    "@dish/react-test-env": "*"
-  },
-  "peerDependencies": {
-    "react": "*"
+    "@dish/esdx": "*",
+    "@dish/testy": "*",
+    "jest": "*"
   }
 }

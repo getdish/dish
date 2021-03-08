@@ -2,12 +2,11 @@
   "extends": "../../tsconfig.base",
   "compilerOptions": {
     "composite": true,
-    "baseUrl": ".",
-    "module": "CommonJS",
-    "outDir": "_",
+    "outDir": ".",
     "rootDir": "src"
   },
   "include": ["src"],
+  "exclude": ["src/_types.d.ts"],
   "references": [
     {
       "path": "../use-store"

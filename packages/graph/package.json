@@ -1,38 +1,37 @@
 {
   "name": "@dish/graph",
   "version": "0.0.1",
-  "main": "_",
-  "tsmain": "src",
   "sideEffects": false,
   "private": true,
+  "main": "dist",
+  "module": "_",
+  "tsmain": "src",
   "scripts": {
-    "prebuild": "rm -f tsconfig.tsbuildinfo",
-    "generate": "HASURA_SECRET=password ts-node --transpile-only ./generate.ts",
-    "build": "tsc -b",
-    "watch": "tsc -b --watch --preserveWatchOutput",
+    "build": "esdx legacy",
+    "watch": "esdx-watch legacy",
+    "generate": "HASURA_SECRET=password node ./dist/generate.js",
     "test": "TARGET=node DISH_ENV=test ava test/* --verbose --serial",
     "test:debug": "TARGET=node DEBUG=1 DISH_ENV=test ava test/* --verbose --serial",
     "test:watch": "TARGET=node DISH_ENV=test ava test/* --watch --verbose --serial",
     "test-new": "TARGET=node DISH_ENV=test ava test/tag.ts --verbose"
   },
   "dependencies": {
+    "@dish/gqless": "3.0.13",
+    "@dish/gqless-logger": "^0.1.3",
+    "@dish/gqless-react": "^2.0.13",
     "@dish/helpers": "*",
-    "patch-package": "^6.2.2",
+    "@dish/use-store": "*",
+    "graphql": "^15.5.0",
     "isomorphic-unfetch": "^3.1.0",
-    "ava": "^3.14.0",
     "lodash": "*",
-    "@dish/gqless": "^3.0.9",
-    "@dish/gqless-react": "^2.0.8",
-    "@dish/gqless-logger": "^0.1.0",
-    "@dish/use-store": "*"
-  },
-  "peerDependencies": {
+    "moment": "^2.29.1",
     "react": "*"
   },
   "devDependencies": {
+    "@dish/esdx": "*",
+    "@dish/gqless-cli": "^4.0.4",
     "@dish/react-test-env": "*",
-    "@types/node": "*",
-    "ts-node": "*",
-    "@dish/gqless-cli": "^4.0.1"
+    "ava": "^3.14.0",
+    "patch-package": "^6.4.5"
   }
 }

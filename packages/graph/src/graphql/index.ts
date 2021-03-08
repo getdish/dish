@@ -1,9 +1,8 @@
 import { QueryFetcher, createClient } from '@dish/gqless'
-import { createReactClient } from '@dish/gqless-react'
 
 import { Auth } from '../Auth'
+import { GRAPH_API } from '../constants'
 import { getAuthHeaders } from '../getAuth'
-import { getGraphEndpoint } from '../helpers/getGraphEndpoint'
 import {
   GeneratedSchema,
   generatedSchema,
@@ -12,8 +11,21 @@ import {
 
 export * from './schema.generated'
 
+export const fetchLog = (
+  input: RequestInfo,
+  init?: RequestInit | undefined
+): Promise<Response> => {
+  if (process.env.DEBUG || process.env.LOG_FETCH) {
+    console.log(` [gqless]
+      fetch('${input}', ${
+      init ? JSON.stringify(init, null, 2) : undefined
+    }).then(x => x.json()).then(console.log.bind(console))
+`)
+  }
+  return fetch(input, init)
+}
+
 export const queryFetcher: QueryFetcher = async function (query, variables) {
-  const url = getGraphEndpoint()
   const headers = {
     'Content-Type': 'application/json',
     ...getAuthHeaders(Auth.isAdmin),
@@ -22,17 +34,7 @@ export const queryFetcher: QueryFetcher = async function (query, variables) {
     query,
     variables,
   })
-  if (process.env.DEBUG || process.env.LOG_FETCH) {
-    console.log(` [gqless]
-      fetch('${url}', {
-        method: 'POST',
-        headers: ${JSON.stringify(headers)},
-        body: \`${body}\`,
-        mode: 'cors'
-      }).then(x => x.json()).then(console.log.bind(console))
-`)
-  }
-  const response = await fetch(url, {
+  const response = await fetchLog(GRAPH_API, {
     method: 'POST',
     headers,
     body,

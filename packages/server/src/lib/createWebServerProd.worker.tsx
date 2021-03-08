@@ -207,6 +207,7 @@ async function createWebServerProd(app: any, config: ServerConfigNormal) {
     //   }
     // })
 
+    console.log(` [web] worker on port`, port)
     app.listen(port)
     parentPort?.postMessage('done')
   } catch (err) {

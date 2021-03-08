@@ -129,7 +129,7 @@ glob(`${featherIconsDir}/**.svg`, (err, icons) => {
       singleQuote: true,
       trailingComma: 'es5',
       arrowParens: 'always',
-      plugins: ['../../node_modules/prettier-plugin-import-sort'],
+      plugins: [require.resolve('prettier-plugin-import-sort')],
       parser: 'typescript',
       semi: false,
     })

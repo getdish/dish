@@ -3,14 +3,20 @@ function getWindow() {
 }
 
 export const isNode = process.env.TARGET !== 'web' || !getWindow() || false
+
+const hostname = getWindow()?.location?.hostname ?? ''
+
 export const isProd =
   process.env.IS_LIVE === '1' ||
-  getWindow()?.location?.hostname.includes('live') ||
+  hostname === 'dishapp' ||
+  hostname.includes('live') ||
   false
+
 export const isStaging =
   process.env.NODE_ENV === 'staging' ||
   getWindow()?.location?.hostname.includes('staging') ||
   false
+
 export const isDev = (!isProd && !isStaging) || false
 export const isNative = process.env.TARGET === 'native'
 
@@ -22,7 +28,7 @@ export const HASURA_SECRET =
   process.env.HASURA_GRAPHQL_ADMIN_SECRET ||
   (process.env.TARGET === 'node' ? 'password' : '')
 
-const PROD_ORIGIN = 'https://staging.dishapp.com'
+const PROD_ORIGIN = 'https://dishapp.com'
 const ORIGIN = isProd
   ? PROD_ORIGIN
   : isStaging
@@ -35,14 +41,10 @@ export const DISH_API_ENDPOINT = process.env.DISH_API_ENDPOINT ?? ORIGIN
 
 export const SEARCH_DOMAIN = (() => {
   const staging = 'https://search-staging.dishapp.com'
-  const live = staging
+  const live = 'https://search.dishapp.com'
   const local = process.env.SEARCH_ENDPOINT ?? `${ORIGIN_MINUS_PORT}:10000`
-  if (isProd) {
-    return live
-  }
-  if (isStaging) {
-    return staging
-  }
+  if (isProd) return live
+  if (isStaging) return staging
   return local
 })()
 
@@ -69,7 +71,12 @@ export const MARTIN_TILES_HOST = (() => {
   const prod = 'https://martin-tiles.dishapp.com'
   const staging = 'https://martin-tiles-staging.dishapp.com'
   const dev = `${ORIGIN_MINUS_PORT}:3005`
+  if (isProd) return prod
   if (isStaging) return staging
-  if (isDev) return dev
-  return prod
+  return dev
 })()
+
+export const GRAPH_DOMAIN =
+  process.env.HASURA_ENDPOINT || 'http://localhost:8080'
+export const GRAPH_API_INTERNAL = `${GRAPH_DOMAIN}/v1/graphql`
+export const GRAPH_API = `${DISH_API_ENDPOINT}/api/graph`

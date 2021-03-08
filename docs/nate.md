@@ -1,3 +1,9 @@
+- worker and web can never run apt-get:
+  - apt-get initial layer
+  - new stage from base image
+  - copy apt-get stuff in
+  - build (web:build) can remove all install deps
+
 - comments need voting or else no one will want to use them
 
 THREE BIG AREAS

@@ -10,17 +10,21 @@ import ExtractCssChunks from 'extract-css-chunks-webpack-plugin'
 import { ensureDirSync } from 'fs-extra'
 import HTMLWebpackPlugin from 'html-webpack-plugin'
 import { DuplicatesPlugin } from 'inspectpack/plugin'
+// import PnpWebpackPlugin from 'pnp-webpack-plugin'
 // import MiniCssExtractPlugin from 'mini-css-extract-plugin'
 // import OptimizeCSSAssetsPlugin from 'optimize-css-assets-webpack-plugin'
 // import nodeExternals from 'webpack-node-externals'
 import SpeedMeasurePlugin from 'speed-measure-webpack-plugin'
 import TerserPlugin from 'terser-webpack-plugin'
 import Webpack from 'webpack'
-import WebpackPwaManifest from 'webpack-pwa-manifest'
+
+// import WebpackPwaManifest from 'webpack-pwa-manifest'
+
+const { ESBuildPlugin } = require('esbuild-loader')
 
 const CssMinimizerPlugin = require('css-minimizer-webpack-plugin')
 
-export default function createWebpackConfig({
+export function createWebpackConfig({
   entry,
   env,
   target,
@@ -32,7 +36,7 @@ export default function createWebpackConfig({
   polyFillPath,
   htmlOptions,
   defineOptions,
-  pwaOptions,
+  // pwaOptions,
   noMinify,
 }: CreateWebpackConfig): Webpack.Configuration {
   const isProduction = env === 'production'
@@ -56,7 +60,9 @@ export default function createWebpackConfig({
       'process.env.TARGET': JSON.stringify(target || null),
       'process.env.IS_STATIC': false,
       'process.env.DISABLE_CACHE': false,
-      'process.env.IS_LIVE': JSON.stringify(process.env.IS_LIVE ?? false),
+      'process.env.IS_LIVE': JSON.stringify(
+        process.env.IS_LIVE ?? (isProduction ? '1' : '0')
+      ),
       'process.env.DEBUG': JSON.stringify(process.env.DEBUG || false),
       ...(!!process.env.LOG_LEVEL && {
         'process.env.LOG_LEVEL': JSON.stringify(process.env.LOG_LEVEL || 0),
@@ -81,9 +87,8 @@ export default function createWebpackConfig({
         debug: process.env.DEBUG_CACHE ? /webpack\.cache/ : false,
       },
       experiments: {
-        // starts compiling import() lazily
-        // seems to not work
-        lazyCompilation: !isProduction,
+        // works but home doesnt load by default
+        // lazyCompilation: true,
       },
       cache: {
         name: `${process.env.TARGET}${process.env.NODE_ENV}`,
@@ -202,13 +207,18 @@ export default function createWebpackConfig({
               {
                 test: /\.[jt]sx?$/,
                 include: babelInclude,
+                // @ts-ignore
                 use: [
                   {
-                    loader: 'babel-loader',
+                    loader: require.resolve('esbuild-loader'),
+                    options: {
+                      loader: 'tsx',
+                      target: 'es2019',
+                    },
                   },
                   isStaticExtracted
                     ? {
-                        loader: 'snackui-loader',
+                        loader: require.resolve('snackui-loader'),
                         options: snackOptions,
                       }
                     : null,
@@ -218,55 +228,58 @@ export default function createWebpackConfig({
                 test: /\.css$/i,
                 use:
                   !noMinify && isProduction && !isSSR
-                    ? [ExtractCssChunks.loader, 'css-loader']
-                    : ['style-loader', 'css-loader'],
+                    ? [ExtractCssChunks.loader, require.resolve('css-loader')]
+                    : [
+                        require.resolve('style-loader'),
+                        require.resolve('css-loader'),
+                      ],
               },
               {
                 test: /\.(png|svg|jpe?g|gif)$/,
                 use: [
                   {
-                    loader: 'url-loader',
+                    loader: require.resolve('url-loader'),
                     options: {
                       limit: 1000,
                       name: `static/media/[name].[hash].[ext]`,
                     },
                   },
-                  {
-                    loader: 'image-webpack-loader',
-                    options: {
-                      disable: isDevelopment,
-                      mozjpeg: {
-                        progressive: true,
-                        quality: 98,
-                      },
-                      optipng: {
-                        enabled: true,
-                      },
-                      pngquant: {
-                        quality: [0.8, 0.9],
-                        speed: 4,
-                      },
-                      gifsicle: {
-                        interlaced: false,
-                      },
-                    },
-                  },
+                  // {
+                  //   loader: require.resolve('image-webpack-loader'),
+                  //   options: {
+                  //     disable: isDevelopment,
+                  //     mozjpeg: {
+                  //       progressive: true,
+                  //       quality: 98,
+                  //     },
+                  //     optipng: {
+                  //       enabled: true,
+                  //     },
+                  //     pngquant: {
+                  //       quality: [0.8, 0.9],
+                  //       speed: 4,
+                  //     },
+                  //     gifsicle: {
+                  //       interlaced: false,
+                  //     },
+                  //   },
+                  // },
                 ],
               },
               {
                 test: /\.mdx?$/,
                 use: [
                   {
-                    loader: 'babel-loader',
+                    loader: require.resolve('babel-loader'),
                   },
                   {
-                    loader: '@mdx-js/loader',
+                    loader: require.resolve('@mdx-js/loader'),
                   },
                 ],
               },
               // fallback loader helps webpack-dev-server serve assets
               {
-                loader: 'file-loader',
+                loader: require.resolve('file-loader'),
                 // Exclude `js` files to keep "css" loader working as it injects
                 // its runtime that would otherwise be processed through "file" loader.
                 // Also exclude `html` and `json` extensions so they get processed by webpacks internal loaders.
@@ -280,6 +293,8 @@ export default function createWebpackConfig({
         ],
       },
       plugins: [
+        new ESBuildPlugin(),
+
         isSSR && new LoadablePlugin(),
 
         // slim down unused react-native-web modules
@@ -313,7 +328,7 @@ export default function createWebpackConfig({
 
         !!htmlOptions && new HTMLWebpackPlugin(htmlOptions),
 
-        !!pwaOptions && new WebpackPwaManifest(pwaOptions),
+        // !!pwaOptions && new WebpackPwaManifest(pwaOptions),
 
         !!isVerbose &&
           new DuplicatesPlugin({

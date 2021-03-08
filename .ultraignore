@@ -1,0 +1,13 @@
+.ultra.cache.json
+tmp
+*.tsbuildinfo
+*.tmp.js
+yarn-error.log
+.next
+dist
+build
+tsconfig.tsbuildinfo
+node_modules
+**/node_modules
+**/_
+.DS_Store

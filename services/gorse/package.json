@@ -2,13 +2,15 @@
   "name": "@dish/gorse",
   "version": "0.0.1",
   "scripts": {
+    "build": "true",
+    "watch": "true",
     "test": "TARGET=node ava test/main.ts --verbose"
   },
   "dependencies": {
     "@dish/async": "*",
-    "@dish/helpers": "*"
-  },
-  "devDependencies": {
-    "ava": "^3.14.0"
+    "@dish/graph": "*",
+    "@dish/helpers": "*",
+    "ava": "^3.14.0",
+    "node-fetch": "^2.6.1"
   }
 }

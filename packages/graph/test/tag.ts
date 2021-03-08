@@ -1,11 +1,9 @@
 import anyTest, { TestInterface } from 'ava'
 
-import { getRestaurantDishes } from '../../../dish-app/src/helpers/getRestaurantDishes'
 import {
   RestaurantWithId,
   TagWithId,
   flushTestData,
-  resolved,
   restaurantFindOneWithTags,
   restaurantUpsert,
   restaurantUpsertOrphanTags,
@@ -14,7 +12,7 @@ import {
   tagInsert,
   tagUpsert,
   tagUpsertCategorizations,
-} from '../src'
+} from '../_'
 import { restaurant_fixture } from './etc/fixtures'
 
 interface Context {
@@ -116,34 +114,34 @@ test('Ambiguous tags get marked', async (t) => {
   t.is(tag5?.is_ambiguous, true)
 })
 
-test.skip('Getting top tags for a restaurant', async (t) => {
-  let restaurant = await restaurantFindOneWithTags({
-    name: 'Test Restaurant',
-  })
-  const [t1, t2, t3] = await tagInsert([
-    { name: 'Test tag 1', type: 'dish', parentId: t.context.existing_tag.id },
-    {
-      name: 'Test tag 2',
-      type: 'dish',
-      parentId: t.context.existing_tag.id,
-    },
-    { name: 'Test tag 3', type: 'dish', parentId: t.context.existing_tag.id },
-  ])
-  restaurant = (await restaurantUpsertRestaurantTags(restaurant, [
-    { tag_id: t1.id, score: 10 },
-    { tag_id: t2.id, score: -10 },
-    { tag_id: t3.id, score: 0 },
-  ]))!
-  let top_tags = await resolved(() => {
-    return getRestaurantDishes({
-      restaurantSlug: restaurant.slug,
-      tag_slugs: ['test-tag-existing__test-tag-2'],
-    })
-  })
-  top_tags = top_tags.map((tt) => tt.slug)
-  t.deepEqual(top_tags, [
-    'test-tag-existing__test-tag-2',
-    'test-tag-existing__test-tag-1',
-    'test-tag-existing__test-tag-3',
-  ])
-})
+// test.skip('Getting top tags for a restaurant', async (t) => {
+//   let restaurant = await restaurantFindOneWithTags({
+//     name: 'Test Restaurant',
+//   })
+//   const [t1, t2, t3] = await tagInsert([
+//     { name: 'Test tag 1', type: 'dish', parentId: t.context.existing_tag.id },
+//     {
+//       name: 'Test tag 2',
+//       type: 'dish',
+//       parentId: t.context.existing_tag.id,
+//     },
+//     { name: 'Test tag 3', type: 'dish', parentId: t.context.existing_tag.id },
+//   ])
+//   restaurant = (await restaurantUpsertRestaurantTags(restaurant, [
+//     { tag_id: t1.id, score: 10 },
+//     { tag_id: t2.id, score: -10 },
+//     { tag_id: t3.id, score: 0 },
+//   ]))!
+//   let top_tags = await resolved(() => {
+//     return getRestaurantDishes({
+//       restaurantSlug: restaurant.slug,
+//       tag_slugs: ['test-tag-existing__test-tag-2'],
+//     })
+//   })
+//   top_tags = top_tags.map((tt) => tt.slug)
+//   t.deepEqual(top_tags, [
+//     'test-tag-existing__test-tag-2',
+//     'test-tag-existing__test-tag-1',
+//     'test-tag-existing__test-tag-3',
+//   ])
+// })

@@ -1,6 +1,17 @@
+*.log
+.ops
+
 *__snack.css
 
-.yarn
+.yarn/*
+!.yarn/cache
+!.yarn/patches
+!.yarn/plugins
+!.yarn/releases
+!.yarn/sdks
+!.yarn/versions
+
+# keep it in repo for fast builds
 .ultra.cache.json
 tmp
 *.tsbuildinfo
@@ -114,3 +125,5 @@ dish-app/test/screenshots
 
 # Docker compose data
 data/
+
+!services/build

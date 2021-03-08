@@ -63,7 +63,7 @@ To build an individual container:
 
 `docker-compose build [container-name]`
 
-So, for example `docker-compose build dish-app-web`.
+So, for example `docker-compose build dish-app`.
 
 ## Debugging broken docker build
 
@@ -327,3 +327,6 @@ chown 1001:1001 -R ~/.dish/postgres
 eval $(./dishctl.sh yaml_to_env) docker-compose up -d
 docker-compose logs
 ```
+
+If you run into "unexpected EOF" from hasura, i dont know the fix,
+but if you run migrations like 10 times it'll eventually fix...

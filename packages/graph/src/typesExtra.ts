@@ -1,4 +1,4 @@
-import { MenuItem, Restaurant, Review, Tag } from './types'
+import { Restaurant, Review, Tag } from './types'
 
 export type RestaurantOnlyIds = {
   id: string

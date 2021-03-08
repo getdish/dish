@@ -13,7 +13,7 @@ import { getWebpackConfigBuilder } from './getWebpackConfigBuilder'
 export async function createServer(serverConf: ServerConfig) {
   const rootDir = serverConf.rootDir ?? process.cwd()
   const https = serverConf.https ?? false
-  const host = serverConf.host ?? 'localhost'
+  const host = serverConf.host ?? '0.0.0.0'
   const protocol = serverConf.https ? 'https' : 'http'
   const defaultPort = https ? 443 : 80
   const port = process.env.PORT ? +process.env.PORT : serverConf.port ?? 4444
@@ -75,7 +75,6 @@ export async function createServer(serverConf: ServerConfig) {
       createApiServer(app, conf),
     ])
   } else {
-    // ts-node can fuck up require on server side so run api after
     await createWebServer(app, conf)
     await createApiServer(app, conf)
   }
@@ -86,7 +85,8 @@ async function createApiServer(
   { createConfig, ...config }: ServerConfigNormal
 ) {
   const port = await getPort()
-  app.use('/api', proxy(`localhost:${port}`))
+  const pa = `localhost:${port}`
+  app.use('/api', proxy(pa))
   const file = require.resolve('./createApiServer.worker')
   const worker = new Worker(file, {
     workerData: {

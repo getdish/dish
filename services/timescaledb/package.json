@@ -9,6 +9,8 @@
     "postgrator": "^4.1.1"
   },
   "scripts": {
+    "build": "true",
+    "watch": "true",
     "migrate": "./bin/migrate.js"
   }
 }

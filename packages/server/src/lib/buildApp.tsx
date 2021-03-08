@@ -21,15 +21,18 @@ export async function buildApp({
     disableHot: true,
     target: 'web',
   })
+
+  console.warn('⚠️ disabling node build for now since we arent using it')
+
   const configs = watch
     ? { web }
     : {
         web,
-        node: createConfig({
-          ...webpackConfig,
-          target: 'node',
-          noMinify: true,
-        }),
+        // node: createConfig({
+        //   ...webpackConfig,
+        //   target: 'node',
+        //   noMinify: true,
+        // }),
       }
 
   const cleans = clean ? clean.trim().split(' ') : []

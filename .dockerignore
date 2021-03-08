@@ -1,17 +1,34 @@
-.dockerignore
+*.log
+.buildkite
 Dockerfile
 **/Dockerfile
+.dockerignore
 .git/*
 **/node_modules
 **/_
+**/dist
 **/tsconfig.tsbuildinfo
 **/.expo
 **/target/*
 dish-app/ios
 dish-app/android
+snackui/examples
 .expo/*
 .expo-shared/*
 .github/*
 *.md
- *.sketch
- assets/*
+*.sketch
+assets
+docs
+snackui/website
+snackui/examples
+*.md
+.vscode
+env.enc.production.yaml
+**/fly.toml
+fly.toml
+docker-compose.yml
+**/.ci
+services/hasura/migrations
+**/build
+*.tsbuildinfo

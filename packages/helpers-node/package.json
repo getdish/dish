@@ -1,18 +1,24 @@
 {
   "name": "@dish/helpers-node",
   "version": "0.0.1",
-  "main": "_",
-  "tsmain": "src",
   "sideEffects": false,
   "private": true,
+  "types": "src/_types.d.ts",
+  "main": "dist",
+  "module": "_",
+  "tsmain": "src",
   "scripts": {
-    "build": "tsc -b",
-    "watch": "tsc -b --watch --preserveWatchOutput"
+    "build": "esdx",
+    "watch": "esdx-watch"
   },
   "dependencies": {
     "@dish/graph": "*",
     "bcryptjs": "^2.4.3",
+    "happy-dom": "^2.9.0",
     "jsonwebtoken": "^8.5.1",
     "lodash": "*"
+  },
+  "devDependencies": {
+    "@dish/esdx": "*"
   }
 }

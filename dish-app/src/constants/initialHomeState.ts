@@ -17,6 +17,20 @@ export const initialPosition: MapPosition = {
   },
 }
 
+export const initialHomeState: HomeStateItemHome = {
+  id: '0',
+  type: 'home',
+  activeTags: {},
+  searchQuery: '',
+  region: location?.region ?? 'ca-san-francisco',
+  section: '',
+}
+
+export const initialLocation = {
+  ...initialPosition,
+  region: initialHomeState.region,
+}
+
 export function getDefaultLocation(): AppMapPosition & { region?: string } {
   const location = getLocalJSON('DEFAULT_LOCATION', initialPosition)
   return {
@@ -28,17 +42,8 @@ export function getDefaultLocation(): AppMapPosition & { region?: string } {
 export function setDefaultLocation(value: Partial<HomeStateItemLocation>) {
   const prev = getDefaultLocation()
   setLocalJSON('DEFAULT_LOCATION', {
-    region: value.region ?? prev.region ?? initialHomeState.region,
-    span: value.span ?? prev.span ?? initialPosition.span,
-    center: value.center ?? prev.center ?? initialPosition.center,
+    region: value.region ?? prev.region ?? initialLocation.region,
+    span: value.span ?? prev.span ?? initialLocation.span,
+    center: value.center ?? prev.center ?? initialLocation.center,
   })
-}
-
-export const initialHomeState: HomeStateItemHome = {
-  id: '0',
-  type: 'home',
-  activeTags: {},
-  searchQuery: '',
-  region: location?.region ?? 'ca-san-francisco',
-  section: '',
 }

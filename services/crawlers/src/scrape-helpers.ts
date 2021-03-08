@@ -145,7 +145,6 @@ export async function scrapeInsert(scrape: Scrape) {
       RETURNING id;
     `)
     const res = result.rows[0].id as string
-    console.log('inserted', result.rows)
     return res
   } catch (err) {
     console.error(`Error inserting scrape`, err)

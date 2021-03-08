@@ -1,3 +1,4 @@
 _
 dist
 env.enc.production.yaml
+node_modules/**/*

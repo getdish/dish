@@ -1,7 +1,5 @@
-import { SnackOptions } from '@snackui/static'
-import Webpack from 'webpack'
-import { Configuration } from 'webpack'
-import WebpackPwaManifest from 'webpack-pwa-manifest'
+import Webpack, { Configuration } from 'webpack'
+// import WebpackPwaManifest from 'webpack-pwa-manifest'
 
 export type ServerConfig = {
   rootDir: string
@@ -34,10 +32,17 @@ export type CreateWebpackConfig = {
   env: 'development' | 'production'
   cwd?: string
   babelInclude?: (path: string) => boolean
-  snackOptions: SnackOptions
+  snackOptions: {
+    // user options
+    themesFile?: string
+    evaluateVars?: boolean
+    evaluateImportsWhitelist?: string[]
+    exclude?: RegExp
+    mediaQueries?: any
+  }
   resolve?: Webpack.ResolveOptions
   htmlOptions?: Object
-  pwaOptions?: WebpackPwaManifest.ManifestOptions
+  // pwaOptions?: WebpackPwaManifest.ManifestOptions
   defineOptions?: Object
   polyFillPath?: string
   disableHot?: boolean

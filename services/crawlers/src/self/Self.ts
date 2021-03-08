@@ -832,6 +832,7 @@ export class Self extends WorkerJob {
       this._checkRAM()
       this._checkNulls()
     }
+    // @ts-ignore
     this._debugRamIntervalFunction = setInterval(fn, 5000)
   }
 

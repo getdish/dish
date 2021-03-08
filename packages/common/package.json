@@ -1,23 +1,23 @@
 {
   "name": "@dish/common",
   "version": "0.0.1",
-  "main": "_/index.js",
-  "tsmain": "src/index",
   "sideEffects": false,
+  "types": "src/_types.d.ts",
   "private": true,
+  "main": "dist",
+  "module": "_",
+  "tsmain": "src",
   "scripts": {
-    "prebuild": "rm -f tsconfig.tsbuildinfo",
-    "build": "tsc -b",
-    "watch": "tsc -b --watch --preserveWatchOutput",
-    "test": "true"
+    "build": "esdx",
+    "watch": "esdx-watch"
   },
   "dependencies": {
-    "@sentry/node": "^5.16.1"
-  },
-  "devDependencies": {
     "@dish/graph": "*",
-    "@types/node": "^13.7.0",
+    "@sentry/node": "^5.16.1",
     "dotenv": "^8.2.0",
     "find-up": "^4.1.0"
+  },
+  "devDependencies": {
+    "@dish/esdx": "*"
   }
 }

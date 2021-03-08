@@ -1,12 +1,10 @@
-# STEP 1
-# everything that goes into deterministic yarn goes on this step
-
-FROM node:12.16.1-buster
+FROM node:15.10.0-buster
 WORKDIR /app
 
 ENV PATH=$PATH:/app/node_modules/.bin:node_modules/.bin
 ENV NODE_OPTIONS="--max_old_space_size=8192"
 ENV DOCKER_BUILD=true
+ENV PUPPETEER_SKIP_CHROMIUM_DOWNLOAD=true
 
 # copy everything
 COPY packages packages
@@ -15,35 +13,51 @@ COPY dish-app dish-app
 COPY snackui snackui
 COPY package.json .
 
-# remove most files (only keep stuff for install)
 RUN find . \! -name "package.json" -not -path "*/bin/*" -type f -print | xargs rm -rf
 
-FROM node:12.16.1-buster
+FROM node:15.10.0-buster
 WORKDIR /app
 COPY --from=0 /app .
 
+COPY .yarnrc.yml .
 COPY yarn.lock .
-COPY .yarnrc .
+COPY .yarn .yarn
 COPY patches patches
 COPY bin bin
-COPY dish-app/patches dish-app/patches
 COPY dish-app/etc dish-app/etc
 
 # install
-RUN yarn install --frozen-lockfile && yarn postinstall && yarn cache clean
+RUN yarn install --immutable-cache \
+  && yarn cache clean \
+  && yarn patch-package \
+  && rm .yarn/install-state.gz
 
-COPY .prettierignore .
-COPY .prettierrc .
-COPY tsconfig.json .
-COPY tsconfig.build.json .
-COPY tsconfig.base.parent.json .
-COPY tsconfig.base.json .
-COPY ava.config.js .
+COPY tsconfig.json tsconfig.build.json \
+  tsconfig.base.parent.json tsconfig.base.json ava.config.js ./
 COPY packages packages
-COPY services services
+# only services that depend on yarn build for testing
+COPY services/crawlers services/crawlers
+COPY services/hooks services/hooks
+COPY services/worker services/worker
 COPY dish-app dish-app
 COPY snackui snackui
 
-RUN yarn build
+# remove all tests even node modules
+RUN find . -type d \(  -name "test" -o -name "tests"  \) -print | xargs rm -rf && \
+  find . -type f \( \
+    -name "jest.config.js" -o -name "ava.config.js" \
+    -o -name "*.md" -o -name "*.jpg" \
+  \) -print | xargs rm -rf \
+  # link in esdx bugfix
+  && ln -s /app/packages/esdx/esdx.js /app/node_modules/.bin/esdx
+
+# its potentially fine to remove this one (and the RUN above)
+# since it takes a long time on rebuilds (copy whole app)
+# but rebuilds are now pretty fast
+# FROM node:15.10.0-buster
+# WORKDIR /app
+# COPY --from=1 /app .
+
+RUN yarn build:js
 
 CMD ["true"]

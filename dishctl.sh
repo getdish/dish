@@ -1,6 +1,5 @@
 #!/bin/bash
-set -e
-set -o pipefail
+set -eo pipefail
 
  #Does this put our `set -e` into all the functions?
 export SHELLOPTS
@@ -89,20 +88,6 @@ function _worker_k8s() {
     -- bash -c "$1"
 }
 
-function _worker_staging() {
-  worker_env="REDIS_HOST=redis PGHOST=postgres TIMESCALE_HOST=timescaledb"
-  docker_run_base "bash -c \"$worker_env $1\""
-}
-
-function worker() {
-  if grep -q "dish-do" "/etc/hostname"; then
-    _worker_staging "$1"
-  else
-    _worker_staging "$1"
-    #_worker_k8s "$1"
-  fi
-}
-
 function worker_cli() {
   worker "bash"
 }
@@ -156,15 +141,6 @@ function _db_migrate() {
   postgres_port=$4
   init=$5
   pushd $PROJECT_ROOT/services/hasura
-  if [[ "$init" != "init" ]]; then
-    cat functions/*.sql | \
-      PGPASSWORD=$postgres_password psql \
-      -p $postgres_port \
-      -h localhost \
-      -U postgres \
-      -d dish \
-      --single-transaction
-  fi
   hasura --skip-update-check \
     migrate apply \
     --endpoint $hasura_endpoint \
@@ -178,8 +154,17 @@ function _db_migrate() {
     -p $postgres_port \
     -h localhost \
     -U postgres \
-    -d dish \
+    -d ${POSTGRES_DB:-dish} \
     --single-transaction
+  if [[ "$init" != "init" ]]; then
+    cat functions/*.sql | \
+      PGPASSWORD=$postgres_password psql \
+      -p $postgres_port \
+      -h localhost \
+      -U postgres \
+      -d ${POSTGRES_DB:-dish} \
+      --single-transaction
+  fi
   popd
 }
 
@@ -199,7 +184,6 @@ function db_migrate_local() {
   if [[ $USE_PROD_HASURA_PASSWORD == "true" ]]; then
     HASURA_ADMIN_SECRET="$TF_VAR_HASURA_GRAPHQL_ADMIN_SECRET"
   fi
-  echo "admin secret is $HASURA_ADMIN_SECRET"
   _db_migrate \
     http://localhost:8080 \
     "${HASURA_ADMIN_SECRET:-password}" \
@@ -257,7 +241,7 @@ function dump_scrape_data_to_s3() {
   PGPASSWORD=$TF_VAR_POSTGRES_PASSWORD psql \
     -h $TF_VAR_POSTGRES_HOST \
     -U postgres \
-    -d dish \
+    -d ${POSTGRES_DB:-dish} \
     -c "$copy_out" \
   | s3 put - $DISH_BACKUP_BUCKET/scrape.csv
   echo "...scrape table dumped tpo S3."
@@ -319,13 +303,6 @@ function local_node_with_prod_env() {
     $1
 }
 
-function staging_ports_tunnel() {
-  ssh \
-    -L 15432:localhost:5432 \
-    -L 15433:localhost:5433 \
-    root@ssh.staging.dishapp.com
-}
-
 # NB this needs the function `staging_ports_tunnel` to have been run
 function local_node_with_staging_env() {
   export DISH_DEBUG=1
@@ -341,12 +318,19 @@ function local_node_with_staging_env() {
     $1
 }
 
+function staging_ports_tunnel() {
+  ssh \
+    -L 15432:localhost:5432 \
+    -L 15433:localhost:5433 \
+    root@ssh.staging.dishapp.com
+}
+
 function dish_app_generate_tags() {
-  export HASURA_ENDPOINT=https://hasura-staging.dishapp.com
+  export HASURA_ENDPOINT=https://hasura.dishapp.com
   export HASURA_SECRET="password"
   export IS_LIVE=1
   pushd $PROJECT_ROOT/dish-app
-  ../node_modules/.bin/ts-node --transpile-only ./etc/generate_tags.ts
+  node -r esbuild-register ./etc/generate_tags.ts
 }
 
 function remove_evicted_pods() {
@@ -372,31 +356,20 @@ function list_backups() {
 }
 
 function backup_main_db() {
-  _run_on_cluster postgres:12-alpine && return 0
   set -e
-  _setup_s3
+  # _setup_s3
   DUMP_FILE_NAME="dish-db-backup-`date +%Y-%m-%d-%H-%M`.dump"
-  PGPASSWORD=$TF_VAR_POSTGRES_PASSWORD pg_dump \
-    -U postgres \
-    -h $TF_VAR_POSTGRES_HOST \
-    -p 5432 \
-    -d dish \
+  pg_dump $HASURA_FLY_POSTGRES_URL \
     -C -w --format=c | \
     s3 put - s3://dish-backups/$DUMP_FILE_NAME
   echo 'Successfully backed up main database'
 }
 
 function backup_scrape_db() {
-  _run_on_cluster postgres:12-alpine && return 0
   set -e
   _setup_s3
   DUMP_FILE_NAME="dish-scrape-backup-`date +%Y-%m-%d-%H-%M`.dump"
-  PGPASSWORD=$TF_VAR_TIMESCALE_SU_PASS pg_dump \
-    -U postgres \
-    -h $TF_VAR_TIMESCALE_HOST \
-    -p 5432 \
-    -d scrape_data \
-    -C -w --format=c | \
+  pg_dump $TIMESCALE_FLY_POSTGRES_URL -C -w --format=c | \
     s3 put - s3://dish-backups/$DUMP_FILE_NAME
   echo 'Successfully backed up scrape database'
 }
@@ -415,7 +388,7 @@ restore_latest_main_backup_to_local() {
   latest_backup=$(get_latest_main_backup)
   dump_file="/tmp/latest_dish_backup.dump"
   s3 get "$latest_backup" "$dump_file"
-  PGPASSWORD=postgres pg_restore -h localhost -U postgres -p 5432 -d dish "$dump_file"
+  # PGPASSWORD=postgres pg_restore -h localhost -U postgres -p 5432 -d dish "$dump_file"
 }
 
 restore_latest_scrapes_backup_to_local() {
@@ -539,15 +512,10 @@ function postgres_console() {
 }
 
 function main_db_command() {
-  PORT=$(generate_random_port)
-  postgres_proxy $PORT
-  echo "$1" | PGPASSWORD=$TF_VAR_POSTGRES_PASSWORD psql \
-    -P pager=off \
-    -P format=unaligned \
-    -p $PORT \
-    -h localhost \
-    -U postgres \
-    -d dish
+  if [ "$HASURA_FLY_POSTGRES_URL" = "" ]; then
+    echo "no url given"
+  fi
+  echo "$1" | psql "$HASURA_FLY_POSTGRES_URL" -P pager=off -P format=unaligned
 }
 
 function timescale_command() {
@@ -563,7 +531,7 @@ function timescale_command() {
 function redis_proxy() {
   echo "Waiting for connection to redis..."
   kubectl port-forward svc/redis-master $REDIS_PROXY_PORT:6379 -n redis &
-  REDIS_PROXY_PID=$!
+  # REDIS_PROXY_PID=$!
   trap _kill_port_forwarder EXIT
   while ! netstat -tna | grep 'LISTEN' | grep -q "$REDIS_PROXY_PORT"; do
     sleep 0.1
@@ -577,28 +545,6 @@ function logs() {
     logs -f \
     --selector="app=$2" \
     --max-log-requests=10
-}
-
-function run_local_search_endpoint() {
-  PROXY_PORT=$(generate_random_port)
-  postgres_proxy $PROXY_PORT
-  export PORT=10001
-  export POSTGRES_PASSWORD=$TF_VAR_POSTGRES_PASSWORD
-  export PGPORT=$PROXY_PORT
-  pushd $PROJECT_ROOT/services/search
-  go generate
-  go run ./main.go ./embedded.go
-  popd
-}
-
-function run_local_search_endpoint_staging() {
-  export PORT=10001
-  export POSTGRES_PASSWORD=postgres
-  export PGPORT=15432
-  pushd $PROJECT_ROOT/services/search
-  go generate
-  go run ./main.go ./embedded.go
-  popd
 }
 
 function bull_console() {
@@ -640,24 +586,24 @@ function install_kubectl() {
 }
 
 function install_gcloud_sdk() {
-  # 297.0.1 is needed on Github Actions
-  # see: https://github.com/google-github-actions/setup-gcloud/issues/128
   GCLOUD_VERSION="297.0.1"
   base=https://dl.google.com/dl/cloudsdk/channels/rapid/downloads
   archive=$base/google-cloud-sdk-$GCLOUD_VERSION-linux-x86_64.tar.gz
   install_path=$HOME/bin
-  echo "Installing GCloud SDK v$GCLOUD_VERSION..."
+  echo "Installing GCloud SDK v$GCLOUD_VERSION... to $install_path"
   curl -sL "$archive" | tar xzf - -C /tmp
   cp -a /tmp/google-cloud-sdk $install_path
   gcloud_init
+  gcloud config set component_manager/disable_update_check true
 }
 
 function gcloud_init() {
   # This service account needs the "Project Owner" role! Way too much power.
   # Follow this issue for any fixes: https://issuetracker.google.com/issues/134928412
-  gcloud auth activate-service-account --key-file k8s/etc/dish-gcloud.enc.json
-  gcloud config set core/project "$GCLOUD_PROJECT"
-  gcloud config set builds/use_kaniko False
+  gcloud auth activate-service-account --key-file k8s/etc/dish-gcloud.enc.json &
+  gcloud config set core/project "$GCLOUD_PROJECT" &
+  gcloud config set builds/use_kaniko False &
+  wait
 }
 
 function ping_home_page() {
@@ -785,83 +731,6 @@ function yaml_to_env() {
   parse_yaml $PROJECT_ROOT/env.enc.production.yaml | sed 's/\$/\\$/g' | xargs -0
 }
 
-function _gcloud_build_submit() {
-  path="$1"
-  image="$2"
-  dish_base_version="$3"
-  base_arg="'--build-arg', 'DISH_BASE_VERSION=$dish_base_version'"
-  yaml="
-steps:
-- name: 'gcr.io/cloud-builders/docker'
-  args: [
-    'build',
-    '-t', '$image',
-    '--cache-from', '$image',
-    '-f', '$path/Dockerfile',
-    '.', $base_arg]
-images: ['$image']
-options:
-  machineType: 'N1_HIGHCPU_8'
-"
-  config="$(mktemp)"
-  echo "$yaml" > "$config"
-  pushd $PROJECT_ROOT
-  BUILDKIT_INLINE_CACHE=1 DOCKER_BUILDKIT=1 gcloud builds submit --timeout 1h --config "$config"
-  popd
-}
-
-function _gcloud_build() {
-  dockerfile_path=$2
-  name=$3
-  dish_base_version=${4:-$DOCKER_TAG_NAMESPACE}
-  dish_docker_login
-  echo "Building image: $name |$dish_base_version|$push|"
-  _gcloud_build_submit "$dockerfile_path" "$name" "$dish_base_version"
-  if [[ "$1" == "pull" ]]; then
-    docker pull "$name"
-  fi
-}
-
-function gcloud_build() {
-  _gcloud_build push "$@"
-}
-
-function gcloud_build_output_local() {
-  _gcloud_build pull "$@"
-}
-
-function build_dish_service() {
-  path=$1
-  name=$(echo $path | cut -d / -f 2)
-  image=$DISH_REGISTRY/$name:$DOCKER_TAG_NAMESPACE
-  gcloud_build_output_local $path $image
-}
-
-function _build_dish_service() {
-  $PROJECT_ROOT/dishctl.sh build_dish_service "$@"
-}
-export -f _build_dish_service
-
-function build_dish_base() {
-  echo "Building base..."
-  gcloud_build . $BASE_IMAGE
-}
-
-function build_all_dish_services() {
-  echo "Building all Dish services..."
-  build_dish_base
-  echo "Pulling base..."
-  docker pull $BASE_IMAGE
-  echo "Building worker, dish-hooks, search, dish-app in parallel..."
-  parallel -j 4 --tag --lb _build_dish_service ::: \
-    'services/worker' \
-    'services/dish-hooks' \
-    'services/search' \
-    'dish-app'
-  echo "...all Dish services built."
-  docker images
-}
-
 function docker_run_base() {
   command="docker-compose run --rm base $1"
   echo "Running: $command"
@@ -935,7 +804,7 @@ function push_auxillary_images() {
 }
 
 function dish_docker_login() {
-  yes | gcloud auth configure-docker gcr.io || true
+  yes | gcloud auth configure-docker gcr.io &> /dev/null || true
 }
 
 function grafana_backup() {
@@ -960,40 +829,6 @@ function scale_min() {
   kubectl scale --replicas=1 deployment worker
   kubectl scale --replicas=1 deployment bert
   kubectl scale --replicas=1 deployment image-quality-api
-}
-
-# This is just for quick deploys. Of course it skips our test suits in CI but if
-# you need to get something deployed quickly then use at your own risk.
-# Usage: ./dishctl.sh hot_deploy path/to/Dockerfile
-# You need the `buildctl` binary installed
-# Eg; `brew install buildkitd`
-function hot_deploy() {
-  service_path=$1
-  service_name="${service_path##*/}"
-
-  echo "Hot deploying $1 service..."
-
-  echo "Building the base image first..."
-  build_dish_base
-  echo "Base image built."
-
-  NAME=$DISH_REGISTRY/$service_name
-
-  ./dishctl.sh buildkit_build $service_path $NAME
-
-  kubectl rollout restart deployment/$service_name
-}
-
-function buildkit_build_local() {
-  service_path=$1
-  service_name="${service_path##*/}"
-  echo "Building the base image first..."
-  buildkit_build_output_local . $BASE_IMAGE
-  echo "Base image built."
-  NAME=$DISH_REGISTRY/$service_name
-  echo "Building $NAME..."
-  buildkit_build_output_local $service_path $NAME
-  echo "$NAME built."
 }
 
 function volume_debugger() {
@@ -1036,26 +871,6 @@ function redis_pvc_wipe() {
   kubectl rollout restart deployment/worker
 }
 
-function get_github_actions_runs() {
-  curl -u "tombh:$GITHUB_TOKEN" \
-    -H "Accept: application/vnd.github.v3+json" \
-    https://api.github.com/repos/getdish/dish/actions/runs
-}
-
-function get_sha_build_status() {
-  current_sha=$(git rev-parse HEAD)
-  response=$(get_github_actions_runs)
-  statuses=$(
-    echo $response | jq '.workflow_runs[] | .head_sha + " " + .conclusion'
-  )
-  current_commit_status=$(echo "$statuses" | grep $current_sha)
-  if echo "$current_commit_status" | grep -q "success"; then
-    echo "passed"
-  else
-    echo "failed"
-  fi
-}
-
 function urlencode() {
   singles=${1//\'/\\\'}
   python -c "import sys, urllib.parse as ul; print(ul.quote('$singles'))"
@@ -1071,7 +886,7 @@ function docker_compose_up_for_devs() {
   extra=$1
   services=$(
     docker-compose config --services \
-      | grep -E -v 'base|nginx|dish-app|image-quality|image-proxy|bert|worker' \
+      | grep -E -v 'base|nginx|dish-app|image-quality|image-proxy|bert|worker|gorse' \
       | tr '\r\n' ' '
   )
   echo "Starting the following services: $services"
@@ -1099,12 +914,6 @@ function docker_compose_up_for_tests() {
   fi
 }
 
-function docker_compose_up_for_staging() {
-  echo "Use 'docker-compose logs -f' to stream logs"
-  command="$(echo $all_env | tr '\r\n' ' ') TF_VAR_HASURA_GRAPHQL_ADMIN_SECRET=password docker-compose up -d"
-  eval $command
-}
-
 function staging_ssh() {
   ssh root@ssh.staging.dishapp.com \
     -t \
@@ -1121,6 +930,157 @@ function staging_restart() {
 
 function sync_local_code_to_staging() {
   rsync -avP --filter=':- .gitignore' . root@ssh.staging.dishapp.com:/app
+}
+
+function export_env() {
+  set -a
+  eval $(./dishctl.sh yaml_to_env)
+  set +a
+}
+
+function deploy_all() {
+  flyctl auth docker
+  set -e
+  export_env
+  where=${1:-registry}
+  echo "deploying apps via $where"
+  deploy "$where" db | sed -e 's/^/db: /;'
+  echo "???"
+  deploy "$where" hooks | sed -e 's/^/hooks: /;'
+  # depends on postgres
+  # depends on hooks
+  deploy "$where" hasura | sed -e 's/^/hasura: /;'
+   # depends on hasura
+  deploy "$where" tileserver | sed -e 's/^/tileserver: /;' &
+  deploy "$where" timescale | sed -e 's/^/timescale: /;' &
+  wait
+  deploy "$where" app | sed -e 's/^/app: /;' &
+  deploy "$where" search | sed -e 's/^/search: /;' &
+  deploy "$where" hooks | sed -e 's/^/hooks: /;' &
+  deploy "$where" worker | sed -e 's/^/worker: /;' &
+  deploy "$where" image-quality | sed -e 's/^/image-quality: /;' &
+  deploy "$where" image-proxy | sed -e 's/^/image-proxy: /;' &
+  deploy "$where" bert | sed -e 's/^/bert: /;' &
+  deploy "$where" cron | sed -e 's/^/cron: /;' &
+  wait
+}
+
+function source_env() {
+  if [ "$DISH_HAS_SOURCED_ENV" != "true" ]; then
+    eval $(yaml_to_env)
+  fi
+}
+
+function deploy() {
+  source_env
+  where=${1:-registry}
+  app=$2
+  # todo begrudingly learn bash
+  if [ "$app" = "" ]; then exit 1; fi
+  if [ "$app" = "app" ];            then deploy_fly_app "$where" dish-app dish-app dish-app; fi
+  if [ "$app" = "hasura" ];         then deploy_fly_app "$where" dish-hasura services/hasura hasura; fi
+  if [ "$app" = "db" ];             then deploy_fly_app "$where" dish-db services/db db; fi
+  if [ "$app" = "search" ];         then deploy_fly_app "$where" dish-search services/search search; fi
+  if [ "$app" = "timescale" ];      then deploy_fly_app "$where" dish-timescale services/timescaledb timescaledb; fi
+  if [ "$app" = "tileserver" ];     then deploy_fly_app "$where" dish-tileserver services/tileserver tileserver; fi
+  if [ "$app" = "hooks" ];          then deploy_fly_app "$where" dish-hooks services/hooks dish-hooks; fi
+  if [ "$app" = "worker" ];         then deploy_fly_app "$where" dish-worker services/worker worker; fi
+  if [ "$app" = "image-quality" ];  then deploy_fly_app "$where" dish-image-quality services/image-quality image-quality; fi
+  if [ "$app" = "image-proxy" ];    then deploy_fly_app "$where" dish-image-proxy services/image-proxy image-proxy; fi
+  if [ "$app" = "bert" ];           then deploy_fly_app "$where" dish-bert services/bert bert; fi
+  if [ "$app" = "hooks" ];          then deploy_fly_app "$where" dish-hooks services/hooks hooks; fi
+  if [ "$app" = "cron" ];           then deploy_fly_app "$where" dish-cron services/cron cron; fi
+}
+
+function deploy_fly_app() {
+  where=$1
+  app=$2
+  folder=$3
+  image_name=${4:-$1}
+  log_file="$(pwd)/deploy-$app.log"
+  pre_deploy_logs="$(pwd)/pre-deploy-$app.log"
+  rm "$log_file" &> /dev/null || true
+  tag=${5:-latest}
+  echo ">>>> deploying $app in $folder to image $image_name with tag $tag"
+  pushd "$folder"
+  if [ "$where" = "registry" ]; then
+    echo " >> pulling and tagging..."
+    docker pull gcr.io/dish-258800/$image_name:$tag
+    docker tag gcr.io/dish-258800/$image_name:$tag registry.fly.io/$app:$tag
+    docker push registry.fly.io/$app:$tag
+    printf " done pulling and tagging\n\n"
+  fi
+  if [ -f ".ci/pre_deploy.sh" ]; then
+    echo " >> running pre-deploy script $app..."
+    touch "$pre_deploy_logs"
+    eval $(yaml_to_env) .ci/pre_deploy.sh &> "$pre_deploy_logs" &
+    pre_deploy_pid=$!
+    tail -f "$pre_deploy_logs" &
+    tail_pid=$!
+    wait $pre_deploy_pid
+    kill $tail_pid
+    printf " >> done pre_deploy\n\n"
+    if grep "is being deployed" < "$pre_deploy_logs"; then
+      if grep "failed" < "$pre_deploy_logs"; then
+        exit 1
+      else
+        return
+      fi
+    fi
+  fi
+  if [ "$where" = "registry" ]; then
+    did_kill_idempotent=0
+    echo " >> deploying..."
+    touch "$log_file"
+    tail -f "$log_file" &
+    tail_pid=$!
+    flyctl deploy --strategy rolling -i registry.fly.io/$app:$tag &> "$log_file" &
+    pid=$!
+    while ps | grep "$pid " > /dev/null; do
+      # bugfix fly not deploying if same for now
+      if grep 'Release v0 created' < "$log_file"; then
+        echo " >> detected idempotent release that will hang (fly issue), continue..."
+        did_kill_idempotent=1
+        kill $pid &> /dev/null || true
+        break
+      else
+        sleep 3
+      fi
+    done
+    kill $tail_pid || true
+    if [ $did_kill_idempotent -eq 0 ]; then
+      wait $pid
+    fi
+    my_status=$?
+    if [[ $did_kill_idempotent -eq 1 ||  $my_status -eq 0 ]]; then
+      echo " >> done deploying"
+    else
+      echo " >> deploy issue $app $did_kill_idempotent $my_status"
+      exit 1
+    fi
+  else
+    flyctl deploy --remote-only --strategy rolling
+  fi
+  if [ -f ".ci/post_deploy.sh" ]; then
+    echo " >> post-deploy script $app..."
+    eval $(yaml_to_env) .ci/post_deploy.sh
+  fi
+  echo "  >> done post_deploy $app "
+  popd
+}
+
+function clean_build() {
+  find $PROJECT_ROOT -type d \( -name node_modules \) -prune -false -o -name "_" -type d -prune -exec rm -rf '{}' \; &
+  find $PROJECT_ROOT -type d \( -name node_modules \) -prune -false -o -name "dist" -type d -prune -exec rm -rf '{}' \; &
+  find $PROJECT_ROOT -type d \( -name node_modules \) -prune -false -o -name "tsconfig.tsbuildinfo" -prune -exec rm -rf '{}' \; &
+  find $PROJECT_ROOT -type d \( -name node_modules \) -prune -false -o -name ".ultra.cache.json" -prune -exec rm -rf '{}' \; &
+  wait
+}
+
+function clean() {
+  clean_build
+  find $PROJECT_ROOT -name "node_modules" -type d -prune -exec rm -rf '{}' \;
+  find $PROJECT_ROOT -name "yarn-error.log" -prune -exec rm -rf '{}' \;
 }
 
 if command -v git &> /dev/null; then

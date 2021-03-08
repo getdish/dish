@@ -15,7 +15,7 @@ import {
   tagInsert,
   userFavoriteARestaurant,
   userFavorites,
-} from '../src'
+} from '../_'
 import { restaurant, user } from '../src/graphql'
 import { restaurant_fixture } from './etc/fixtures'
 

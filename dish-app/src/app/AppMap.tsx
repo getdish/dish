@@ -1,16 +1,15 @@
 import { series } from '@dish/async'
-import { MapPosition, resolved } from '@dish/graph'
+import { resolved } from '@dish/graph'
 import { useStoreInstance } from '@dish/use-store'
-import { debounce } from 'lodash'
 import React, { memo, useCallback, useEffect, useMemo } from 'react'
 import {
   AbsoluteVStack,
   HStack,
   Theme,
   VStack,
+  useDebounceValue,
   useGet,
   useMedia,
-  useTheme,
   useThemeName,
 } from 'snackui'
 
@@ -30,7 +29,6 @@ import {
   cancelUpdateRegion,
   updateRegion,
   updateRegionFaster,
-  updateRegionImmediate,
   useAppMapStore,
 } from './AppMapStore'
 import { drawerStore } from './drawerStore'
@@ -51,7 +49,7 @@ export default memo(function AppMap() {
     hideRegions,
   } = useAppMapStore()
   const media = useMedia()
-  const { width, paddingLeft } = useMapSize(media.sm)
+  const { width, paddingLeft } = useDebounceValue(useMapSize(media.sm), 1000)
   const { position } = useStoreInstance(appMapStore)
   const { center, span } = position
 

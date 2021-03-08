@@ -1,9 +1,8 @@
 import { graphql } from '@dish/graph'
-import { partition, unzip } from 'lodash'
+import { partition } from 'lodash'
 import React, { Suspense, memo, useMemo, useState } from 'react'
 import { HStack, LoadingItem, Spacer, Theme, VStack } from 'snackui'
 
-import { bgLightHover, blue } from '../../../constants/colors'
 import { isWeb } from '../../../constants/constants'
 import { getRestaurantDishes } from '../../../helpers/getRestaurantDishes'
 import { getTagSlug } from '../../../helpers/getTagSlug'

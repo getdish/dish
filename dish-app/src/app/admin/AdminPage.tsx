@@ -1,4 +1,4 @@
-import { getGraphEndpointDomain } from '@dish/graph'
+import { GRAPH_DOMAIN } from '@dish/graph'
 import loadable from '@loadable/component'
 import React, { memo } from 'react'
 import { ScrollView } from 'react-native'
@@ -55,7 +55,7 @@ export default memo(function AdminPage() {
 
               <SmallTitle>Services</SmallTitle>
               <HStack justifyContent="center" flexWrap="wrap" spacing="lg">
-                <AdminLinkButton icon="💽" href={getGraphEndpointDomain()}>
+                <AdminLinkButton icon="💽" href={GRAPH_DOMAIN}>
                   Hasura
                 </AdminLinkButton>
                 <AdminLinkButton

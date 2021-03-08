@@ -1,19 +1,19 @@
-
 {
   "extends": "../../tsconfig.base",
   "compilerOptions": {
     "composite": true,
-    "baseUrl": ".",
-    "incremental": true,
-    "module": "CommonJS",
     "esModuleInterop": true,
     "outDir": "_",
     "rootDir": "src"
   },
   "include": ["src"],
-  "references": [{
-    "path": "../helpers"
-  }, {
-    "path": "../../snackui/packages/snackui-static"
-  }]
+  "exclude": ["src/_types.d.ts"],
+  "references": [
+    {
+      "path": "../helpers"
+    },
+    {
+      "path": "../../snackui/packages/snackui-static"
+    }
+  ]
 }
