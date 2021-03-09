@@ -15,11 +15,10 @@ const redisObject = {
   host: is_local_redis ? 'localhost' : process.env.REDIS_HOST,
 }
 
-const redisOptions = is_local_redis
-  ? redisObject
-  : process.env.REDIS_URL || redisObject
+const redisUrl = process.env.FLY_REDIS_CACHE_URL || process.env.REDIS_URL
+const redisOptions = is_local_redis ? redisObject : redisUrl || redisObject
 
-console.log('redisOptions', redisOptions)
+console.log('redisOptions', redisUrl, is_local_redis, redisOptions)
 
 export type JobData = {
   className: string
