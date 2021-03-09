@@ -17,7 +17,6 @@ steps:
       - docker-compose#v3.7.0:
           build: base
           cache-from: base:registry.fly.io/dish-base:latest
-          image-repository: registry.fly.io/dish-base
 
   - label: ":docker: build dish-app"
     key: dish-app
