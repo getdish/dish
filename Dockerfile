@@ -1,6 +1,10 @@
 FROM node:15.10.0-buster
 WORKDIR /app
 
+ENV PATH=$PATH:/app/node_modules/.bin:node_modules/.bin
+ENV NODE_OPTIONS="--max_old_space_size=8192"
+ENV PUPPETEER_SKIP_CHROMIUM_DOWNLOAD=true
+
 # copy everything
 COPY packages packages
 COPY services services
@@ -14,8 +18,7 @@ FROM node:15.10.0-buster
 WORKDIR /app
 COPY --from=0 /app .
 
-COPY .yarnrc.yml .
-COPY yarn.lock .
+COPY .yarnrc.yml yarn.lock ./
 COPY .yarn .yarn
 COPY patches patches
 COPY bin bin
@@ -56,11 +59,6 @@ RUN find . -type d \(  -name "test" -o -name "tests"  \) -print | xargs rm -rf &
 # COPY --from=1 /app .
 
 RUN yarn build:js
-
-ENV PATH=$PATH:/app/node_modules/.bin:node_modules/.bin
-ENV NODE_OPTIONS="--max_old_space_size=8192"
-ENV DOCKER_BUILD=true
-ENV PUPPETEER_SKIP_CHROMIUM_DOWNLOAD=true
 
 # so we can deploy/tag on fly
 RUN touch ./__noop__
