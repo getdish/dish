@@ -15,5 +15,6 @@ COPY services services
 
 ENV NODE_ENV=test
 ENV CI=true
+ENV REDIS_PASSWORD=redis
 
 CMD ["true"]
