@@ -5,8 +5,8 @@ env:
   DISH_REGISTRY: 'gcr.io/dish-258800'
   HASURA_ENDPOINT: 'http://localhost:8080'
   DISH_ENDPOINT: 'http://localhost:4444'
-  DOCKER_BUILDKIT: 1
-  COMPOSE_DOCKER_CLI_BUILD: 1
+  DOCKER_BUILDKIT: 0
+  COMPOSE_DOCKER_CLI_BUILD: 0
 
 steps:
   # images that tests need
