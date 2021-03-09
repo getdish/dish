@@ -1,6 +1,6 @@
 # for running tests in on ci
 
-FROM gcr.io/dish-258800/base
+FROM registry.fly.io/base
 
 WORKDIR /app
 

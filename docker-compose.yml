@@ -1,22 +1,22 @@
 version: '3.2'
 services:
   base:
-    image: gcr.io/dish-258800/base${DISH_IMAGE_TAG}
+    image: registry.fly.io/base${DISH_IMAGE_TAG}
     build:
       context: .
       dockerfile: ./Dockerfile
   run-tests:
-    image: gcr.io/dish-258800/run-tests${DISH_IMAGE_TAG}
+    image: registry.fly.io/run-tests${DISH_IMAGE_TAG}
     build:
       context: .
       dockerfile: ./services/run-tests/Dockerfile
   cron:
-    image: gcr.io/dish-258800/cron${DISH_IMAGE_TAG}
+    image: registry.fly.io/cron${DISH_IMAGE_TAG}
     build:
       context: .
       dockerfile: ./services/cron/Dockerfile
   postgres:
-    image: gcr.io/dish-258800/${POSTGRES_NAME:-postgres}${DISH_IMAGE_TAG}
+    image: registry.fly.io/${POSTGRES_NAME:-postgres}${DISH_IMAGE_TAG}
     command: postgres -c 'max_connections=300'
     build:
       context: ./services/${POSTGRES_NAME:-postgres}
@@ -30,7 +30,7 @@ services:
       - 5432:5432
   timescale:
     command: ["-c", "max_connections=300"]
-    image: gcr.io/dish-258800/timescale${DISH_IMAGE_TAG}
+    image: registry.fly.io/timescale${DISH_IMAGE_TAG}
     build:
       context: ./services/timescale
     volumes:
@@ -51,7 +51,7 @@ services:
     environment:
       - REDIS_PASSWORD=redis
   hooks:
-    image: gcr.io/dish-258800/hooks${DISH_IMAGE_TAG}
+    image: registry.fly.io/hooks${DISH_IMAGE_TAG}
     build:
       context: ./
       dockerfile: ./services/hooks/Dockerfile
@@ -88,7 +88,7 @@ services:
       - 'redis'
       - 'hooks'
   dish-app:
-    image: gcr.io/dish-258800/dish-app${DISH_IMAGE_TAG}
+    image: registry.fly.io/dish-app${DISH_IMAGE_TAG}
     build:
       context: ./
       dockerfile: ./dish-app/Dockerfile
@@ -122,7 +122,7 @@ services:
     depends_on:
       - 'postgres'
   search:
-    image: gcr.io/dish-258800/dish/search${DISH_IMAGE_TAG}
+    image: registry.fly.io/dish/search${DISH_IMAGE_TAG}
     build:
       context: ./services/search
       dockerfile: ./Dockerfile
@@ -135,7 +135,7 @@ services:
     depends_on:
       - 'postgres'
   gorse:
-    image: gcr.io/dish-258800/gorse
+    image: registry.fly.io/gorse
     build:
       context: ./services/gorse
       dockerfile: ./Dockerfile
@@ -145,7 +145,7 @@ services:
     ports:
       - 9000:9000
   worker:
-    image: gcr.io/dish-258800/worker${DISH_IMAGE_TAG}
+    image: registry.fly.io/worker${DISH_IMAGE_TAG}
     build:
       context: .
       dockerfile: ./services/worker/Dockerfile
@@ -185,13 +185,13 @@ services:
       - GORSE_ENDPOINT="http://gorse:9000"
       - DISH_DEBUG=1
   bert:
-    image: gcr.io/dish-258800/bert
+    image: registry.fly.io/bert
     build:
       context: ./services/bert
     ports:
       - 8888:8080
   image-quality:
-    image: gcr.io/dish-258800/image-quality
+    image: registry.fly.io/image-quality
     build:
       context: ./services/image-quality
     ports:
@@ -199,7 +199,7 @@ services:
     environment:
       - VIRTUAL_HOST=image-quality.dishapp.com
   image-proxy:
-    image: gcr.io/dish-258800/imageproxy
+    image: registry.fly.io/imageproxy
     build:
       context: ./services/image-proxy
       dockerfile: ./Dockerfile

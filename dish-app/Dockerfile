@@ -9,7 +9,7 @@ RUN \
 
 WORKDIR /app
 
-FROM gcr.io/dish-258800/base
+FROM registry.fly.io/base
 COPY --from=0 /bin /usr/local/bin
 ENV NODE_ENV=production
 
