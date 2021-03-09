@@ -1070,14 +1070,24 @@ function deploy_fly_app() {
 
 function clean_docker_if_disk_full() {
   echo "checking if disk near full..."
-  df -H | grep -vE '^Filesystem|tmpfs|cdrom' | awk '{ print $5 " " $1 }' | while read output;
+  df -H | grep -E '/data' | awk '{ print $5 " " $1 }' | while read output;
   do
-    used=$(echo "$output" | awk '{ print $1}' | cut -d'%' -f1  )
+    used=$(echo "$output" | awk '{ print $1}' | cut -d'%' -f1)
     echo "$output used $used"
     if [ "$used" -ge 90 ]; then
-      echo "Running out of space"
-      docker system prune -a --filter "until=24h" --force || true
-      docker rmi $(docker images --filter "dangling=true" -q --no-trunc) || true
+      echo "running out of space, pruning docker..."
+      docker system prune --volumes --filter "until=16h" --force || true
+      docker volume prune --force || true
+      break
+    fi
+  done
+  df -H | grep -E '/data' | awk '{ print $5 " " $1 }' | while read output;
+  do
+    used=$(echo "$output" | awk '{ print $1}' | cut -d'%' -f1)
+    if [ "$used" -ge 90 ]; then
+      echo "really full, delete all.."
+      docker image prune -a
+      break
     fi
   done
 }

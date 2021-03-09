@@ -49,7 +49,7 @@ services:
     ports:
       - 6379:6379
     environment:
-      REDIS_PASSWORD: redis
+      - REDIS_PASSWORD=redis
   hooks:
     image: gcr.io/dish-258800/hooks${DISH_IMAGE_TAG}
     build:
@@ -153,6 +153,7 @@ services:
       - DISH_ENV=staging
       - HASURA_ENDPOINT=http://hasura:8080
       - REDIS_HOST=redis
+      - REDIS_PASSWORD=redis
       - PGHOST=postgres
       - PGPASSWORD=postgres
       - HASURA_SECRET=${TF_VAR_HASURA_GRAPHQL_ADMIN_SECRET:-password}
