@@ -18,6 +18,5 @@ Pods/
 *.xcworkspace
 .vim
 .env
-k8s/.terraform/*
 hasura.logs
 build/

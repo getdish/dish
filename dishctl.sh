@@ -77,17 +77,6 @@ function send_slack_monitoring_message() {
 EOF
 }
 
-function _worker_k8s() {
-  kubectl exec -it \
-    $(kubectl get pods \
-      | grep -v worker-ui \
-      | grep worker \
-      | grep Running \
-      | awk '{print $1}') \
-    -c worker \
-    -- bash -c "$1"
-}
-
 function worker_cli() {
   worker "bash"
 }
