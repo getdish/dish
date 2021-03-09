@@ -16,7 +16,6 @@ steps:
           build: base
           image-repository: gcr.io/dish-258800/base
           cache-from: base:gcr.io/dish-258800/base:latest
-          push: base:gcr.io/dish-258800/base:latest
 
   - label: ":docker: build dish-app"
     depends_on: base
@@ -26,7 +25,6 @@ steps:
           build: dish-app
           image-repository: gcr.io/dish-258800/dish-app
           cache-from: base:gcr.io/dish-258800/dish-app:latest
-          push: dish-app:gcr.io/dish-258800/dish-app:latest
 
   - label: ":docker: build run-tests"
     depends_on: base
@@ -36,7 +34,6 @@ steps:
           build: run-tests
           image-repository: gcr.io/dish-258800/run-tests
           cache-from: base:gcr.io/dish-258800/run-tests:latest
-          push: run-tests:gcr.io/dish-258800/run-tests:latest
 
   - label: ":docker: build hooks"
     key: hooks
@@ -46,7 +43,6 @@ steps:
           build: hooks
           image-repository: gcr.io/dish-258800/hooks
           cache-from: base:gcr.io/dish-258800/hooks:latest
-          push: hooks:gcr.io/dish-258800/hooks:latest
 
   - label: ":docker: build worker"
     key: worker
@@ -56,7 +52,6 @@ steps:
           build: worker
           image-repository: gcr.io/dish-258800/worker
           cache-from: base:gcr.io/dish-258800/worker:latest
-          push: worker:gcr.io/dish-258800/worker:latest
 
   - label: ":docker: build search"
     key: search
@@ -67,7 +62,6 @@ steps:
           build: search
           image-repository: gcr.io/dish-258800/search
           cache-from: base:gcr.io/dish-258800/search:latest
-          push: search:gcr.io/dish-258800/search:latest
 
   - label: ":docker: build hasura"
     key: hasura
@@ -78,7 +72,6 @@ steps:
           build: hasura
           image-repository: gcr.io/dish-258800/hasura
           cache-from: base:gcr.io/dish-258800/hasura:latest
-          push: hasura:gcr.io/dish-258800/hasura:latest
 
   - label: ":docker: build timescaledb"
     key: timescaledb
@@ -89,7 +82,6 @@ steps:
           build: timescaledb
           image-repository: gcr.io/dish-258800/timescaledb
           cache-from: base:gcr.io/dish-258800/timescaledb:latest
-          push: timescaledb:gcr.io/dish-258800/timescaledb:latest
 
   - label: ":docker: build tileserver"
     key: tileserver
@@ -100,7 +92,6 @@ steps:
           build: tileserver
           image-repository: gcr.io/dish-258800/tileserver
           cache-from: base:gcr.io/dish-258800/tileserver:latest
-          push: tileserver:gcr.io/dish-258800/tileserver:latest
 
   - label: ":docker: build postgres for tests"
     key: postgres
@@ -113,7 +104,6 @@ steps:
           build: postgres
           image-repository: gcr.io/dish-258800/postgres
           cache-from: base:gcr.io/dish-258800/postgres:latest
-          push: postgres:gcr.io/dish-258800/postgres:latest
 
   - label: ":docker: build redis for tests"
     key: redis
@@ -124,7 +114,6 @@ steps:
           build: redis
           image-repository: gcr.io/dish-258800/redis
           cache-from: base:gcr.io/dish-258800/redis:latest
-          push: redis:gcr.io/dish-258800/redis:latest
 
   - label: "done with test images"
     command: "true"
@@ -141,7 +130,7 @@ steps:
       - postgres
       - redis
 
-  - label: "push test images that go to prod to fly"
+  - label: "push pre-test images to fly"
     depends_on: test-images
     plugins:
       - docker-compose#v3.7.0:
@@ -151,9 +140,26 @@ steps:
             - worker:registry.fly.io/dish-worker:latest
             - search:registry.fly.io/dish-search:latest
             - hasura:registry.fly.io/dish-hasura:latest
-            - timescaledb:registry.fly.io/dish-timescaledb:latest
+            - timescaledb:registry.fly.io/dish-timescale:latest
             - tileserver:registry.fly.io/dish-tileserver:latest
             - tileserver:registry.fly.io/dish-tileserver:latest
+
+  - label: "push pre-test images to gcr"
+    depends_on: test-images
+    plugins:
+      - docker-compose#v3.7.0:
+          push:
+          - base:gcr.io/dish-258800/base:latest
+          - dish-app:gcr.io/dish-258800/dish-app:latest
+          - run-tests:gcr.io/dish-258800/run-tests:latest
+          - hooks:gcr.io/dish-258800/hooks:latest
+          - worker:gcr.io/dish-258800/worker:latest
+          - search:gcr.io/dish-258800/search:latest
+          - hasura:gcr.io/dish-258800/hasura:latest
+          - timescaledb:gcr.io/dish-258800/timescaledb:latest
+          - tileserver:gcr.io/dish-258800/tileserver:latest
+          - postgres:gcr.io/dish-258800/postgres:latest
+          - redis:gcr.io/dish-258800/redis:latest
 
   # non test images
 

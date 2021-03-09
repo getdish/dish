@@ -70,6 +70,9 @@ function send_slack_monitoring_message() {
   message=$1
   curl -X POST $SLACK_MONITORING_HOOK \
     -H 'Content-type: application/json' \
+    --silent \
+    --output /dev/null \
+    --show-error \
     --data @- <<EOF
     {
       "text": "$message",
