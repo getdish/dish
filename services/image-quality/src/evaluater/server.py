@@ -23,7 +23,7 @@ def load_model(config):
     model = Nima(config.base_model_name)
     model.build()
     model.nima_model.load_weights(config.weights_file)
-    model.nima_model.make_predict_function()  # https://github.com/keras-team/keras/issues/6462
+    # model.nima_model.make_predict_function()  # https://github.com/keras-team/keras/issues/6462
     model.nima_model.summary()
 
 def main(image_source, predictions_file):
