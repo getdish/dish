@@ -31,7 +31,7 @@ RUN yarn install --immutable-cache \
   && rm .yarn/install-state.gz
 
 COPY tsconfig.json tsconfig.build.json \
-  tsconfig.base.parent.json tsconfig.base.json ava.config.js ./
+      tsconfig.base.parent.json tsconfig.base.json ava.config.js ./
 COPY packages packages
 # only services that depend on yarn build for testing
 COPY services/crawlers services/crawlers
@@ -51,13 +51,7 @@ RUN find . -type d \(  -name "test" -o -name "tests"  \) -print | xargs rm -rf &
   # link in esdx bugfix
   && ln -s /app/packages/esdx/esdx.js /app/node_modules/.bin/esdx
 
-# its potentially fine to remove this one (and the RUN above)
-# since it takes a long time on rebuilds (copy whole app)
-# but rebuilds are now pretty fast
-FROM node:15.10.0-buster
-WORKDIR /app
-COPY --from=1 /app .
-
+COPY package.json package.json
 RUN yarn build:js
 
 # so we can deploy/tag on fly
