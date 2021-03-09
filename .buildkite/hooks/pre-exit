@@ -11,7 +11,7 @@ if [ "$BUILDKITE_COMMAND_EXIT_STATUS" -ne 0 ]; then
 fi
 
 if [ "$DOCKER_COMPOSE_DOWN" == "true" ]; then
-  docker-compose down --remove-orphans -t 3 &
+  docker-compose down &
 fi
 
 if [ "$DOCKER_TAG" == "true" ]; then
