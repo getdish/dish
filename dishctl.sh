@@ -1014,9 +1014,8 @@ function deploy_fly_app() {
     eval $(yaml_to_env) .ci/pre_deploy.sh &> "$pre_deploy_logs" &
     pre_deploy_pid=$!
     tail -f "$pre_deploy_logs" &
-    tail_pid=$!
     wait $pre_deploy_pid
-    kill $tail_pid
+    trap 'kill $(jobs -p)' EXIT
     printf " >> done pre_deploy\n\n"
     if grep "is being deployed" < "$pre_deploy_logs"; then
       if grep "failed" < "$pre_deploy_logs"; then
@@ -1031,7 +1030,6 @@ function deploy_fly_app() {
     echo " >> deploy..."
     touch "$log_file"
     tail -f "$log_file" &
-    tail_pid=$!
     flyctl deploy --strategy rolling -i registry.fly.io/$app:$tag &> "$log_file" &
     pid=$!
     while ps | grep "$pid " > /dev/null; do
@@ -1039,13 +1037,15 @@ function deploy_fly_app() {
       if grep 'Release v0 created' < "$log_file"; then
         echo " >> detected idempotent release that will hang (fly issue), continue..."
         did_kill_idempotent=1
-        kill $pid &> /dev/null || true
+        break
+      elif grep ' deployed successfully' < "$log_file"; then
+        echo " >> deployed, killing since it hangs sometimes on success..."
         break
       else
         sleep 3
       fi
     done
-    kill $tail_pid || true
+    trap 'kill $(jobs -p)' EXIT
     if [ $did_kill_idempotent -eq 0 ]; then
       wait $pid
     fi
@@ -1057,6 +1057,7 @@ function deploy_fly_app() {
       exit 1
     fi
   else
+    # local
     flyctl deploy --remote-only --strategy rolling
   fi
   if [ -f ".ci/post_deploy.sh" ]; then
@@ -1065,6 +1066,20 @@ function deploy_fly_app() {
   fi
   echo "  >> done post_deploy $app "
   popd
+}
+
+function clean_docker_if_disk_full() {
+  echo "checking if disk near full..."
+  df -H | grep -vE '^Filesystem|tmpfs|cdrom' | awk '{ print $5 " " $1 }' | while read output;
+  do
+    used=$(echo "$output" | awk '{ print $1}' | cut -d'%' -f1  )
+    echo "$output used $used"
+    if [ "$used" -ge 90 ]; then
+      echo "Running out of space"
+      docker system prune -a --filter "until=24h" --force || true
+      docker rmi $(docker images --filter "dangling=true" -q --no-trunc) || true
+    fi
+  done
 }
 
 function clean_build() {

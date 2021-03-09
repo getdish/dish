@@ -2,6 +2,10 @@
 
 set -eo pipefail
 
+if [ "$DOCKER_CLEAN_BEFORE" == "true" ]; then
+  ./dishctl.sh clean_docker_if_disk_full
+fi
+
 # ensure data dir for caches
 mkdir -p /data
 mkdir -p $HOME/data

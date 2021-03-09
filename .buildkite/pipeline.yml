@@ -15,6 +15,7 @@ steps:
     key: base
     env:
       DOCKER_TAG: true
+      DOCKER_CLEAN_BEFORE: true
     plugins:
       - docker-compose#v3.7.0:
           build: base
@@ -249,7 +250,7 @@ steps:
           cache-from: base:gcr.io/dish-258800/db:latest
           push:
             - postgres:gcr.io/dish-258800/db:latest
-            - postgres:gcr.io/dish-258800/dish-db:latest
+            - postgres:registry.fly.io/dish-db:latest
 
   - label: "setup services for tests"
     if: build.branch != "master"

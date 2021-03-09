@@ -4,10 +4,14 @@ import { route, useRouteBodyParser } from '@dish/api'
 import { GRAPH_API_INTERNAL, fetchLog, getAuthHeaders } from '@dish/graph'
 import redis from 'redis'
 
+const pass = process.env.REDIS_PASSWORD
+const envUrl = process.env.FLY_REDIS_CACHE_URL || process.env.REDIS_URL
 const url =
-  process.env.FLY_REDIS_CACHE_URL ||
-  process.env.REDIS_URL ||
-  `redis://${process.env.REDIS_HOST || 'localhost'}:6379`
+  envUrl ||
+  `redis://${pass ? `:${pass}` : ''}:${
+    process.env.REDIS_HOST || 'localhost'
+  }:6379`
+
 console.log('redis url', url)
 const rc = redis.createClient({
   url,
