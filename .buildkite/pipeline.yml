@@ -73,8 +73,8 @@ steps:
           build: hasura
           cache-from: base:gcr.io/dish-258800/hasura:latest
 
-  - label: ":docker: build timescaledb"
-    key: timescaledb
+  - label: ":docker: build timescale"
+    key: timescale
     retry:
       automatic: true
       # command: "./scripts/docker_label.sh"

@@ -45,8 +45,11 @@ COPY snackui snackui
 # remove all tests even node modules
 RUN find . -type d \(  -name "test" -o -name "tests"  \) -print | xargs rm -rf && \
   find . -type f \( \
-    -name "jest.config.js" -o -name "ava.config.js" \
-    -o -name "*.md" -o -name "*.jpg" \
+    -name "jest.config.js" \
+    -o -name "ava.config.js" \
+    -o -name "*.md" \
+    -o -name "*.jpg" \
+    -o name="*.sh" \
   \) -print | xargs rm -rf \
   # link in esdx bugfix
   && ln -s /app/packages/esdx/esdx.js /app/node_modules/.bin/esdx
