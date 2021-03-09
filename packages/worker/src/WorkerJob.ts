@@ -10,7 +10,7 @@ import _ from 'lodash'
 const is_local_redis =
   process.env.DISH_ENV === 'development' || process.env.CI === 'true'
 
-export const redisOptions = {
+export const redisOptions = process.env.REDIS_URL || {
   port: 6379,
   host: is_local_redis ? 'localhost' : process.env.REDIS_HOST,
 }
