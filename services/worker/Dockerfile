@@ -13,7 +13,7 @@ RUN apt-get update > /dev/null && apt-get install -y \
        > /dev/null \
       && apt-get clean
 
-FROM registry.fly.io/base as base
+FROM registry.fly.io/dish-base as base
 COPY --from=0 /bin /bin
 COPY --from=0 /usr /usr
 ENV NODE_ENV=production

@@ -7,7 +7,7 @@ cd $PROJECT_ROOT
 
 echo "~~~ :docker: pull latest"
 
-docker pull registry.fly.io/base:latest
+docker pull registry.fly.io/dish-base:latest
 
 echo "~~~ :docker: create dockerfile"
 
@@ -21,10 +21,10 @@ cat > $docker_compose_file <<EOL
 version: '3.2'
 services:
   base:
-    image: registry.fly.io/base:$tag
+    image: registry.fly.io/dish-base:$tag
     build:
       cache_from:
-        - registry.fly.io/base:latest
+        - registry.fly.io/dish-base:latest
     volumes:
       - /data:/data
       - /data/node_modules:/app/node_modules
@@ -49,11 +49,11 @@ docker-compose -f docker-compose.yml \
 
 echo "~~~ :docker: pull pre-built and tag"
 
-docker pull registry.fly.io/base:$tag
-docker tag registry.fly.io/base:$tag registry.fly.io/base
+docker pull registry.fly.io/dish-base:$tag
+docker tag registry.fly.io/dish-base:$tag registry.fly.io/dish-base
 
 echo "~~~ :docker: push again, copied from before idk"
 
-docker tag registry.fly.io/base registry.fly.io/base:latest
-docker push registry.fly.io/base:latest
+docker tag registry.fly.io/dish-base registry.fly.io/dish-base:latest
+docker push registry.fly.io/dish-base:latest
 

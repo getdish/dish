@@ -1,6 +1,6 @@
 # for running tests in on ci
 
-FROM registry.fly.io/base
+FROM registry.fly.io/dish-base
 
 WORKDIR /app
 

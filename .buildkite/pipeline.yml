@@ -18,7 +18,7 @@ steps:
     plugins:
       - docker-compose#v3.7.0:
           build: base
-          cache-from: base:registry.fly.io/base:latest
+          cache-from: base:registry.fly.io/dish-base:latest
 
   - label: ":docker: build dish-app"
     key: dish-app
@@ -28,7 +28,7 @@ steps:
     plugins:
       - docker-compose#v3.7.0:
           build: dish-app
-          cache-from: base:registry.fly.io/dish-app:latest
+          cache-from: dish-app:registry.fly.io/dish-app:latest
 
   - label: ":docker: build run-tests"
     key: run-tests
@@ -38,7 +38,6 @@ steps:
     plugins:
       - docker-compose#v3.7.0:
           build: run-tests
-          cache-from: base:registry.fly.io/run-tests:latest
 
   - label: ":docker: build hooks"
     key: hooks
@@ -48,7 +47,7 @@ steps:
     plugins:
       - docker-compose#v3.7.0:
           build: hooks
-          cache-from: base:registry.fly.io/hooks:latest
+          cache-from: hooks:registry.fly.io/dish-hooks:latest
 
   - label: ":docker: build worker"
     key: worker
@@ -58,7 +57,7 @@ steps:
     plugins:
       - docker-compose#v3.7.0:
           build: worker
-          cache-from: base:registry.fly.io/worker:latest
+          cache-from: worker:registry.fly.io/dish-worker:latest
 
   - label: ":docker: build search"
     key: search
@@ -69,7 +68,7 @@ steps:
     plugins:
       - docker-compose#v3.7.0:
           build: search
-          cache-from: base:registry.fly.io/search:latest
+          cache-from: search:registry.fly.io/dish-search:latest
 
   - label: ":docker: build hasura"
     key: hasura
@@ -80,7 +79,7 @@ steps:
     plugins:
       - docker-compose#v3.7.0:
           build: hasura
-          cache-from: base:registry.fly.io/hasura:latest
+          cache-from: hasura:registry.fly.io/dish-hasura:latest
 
   - label: ":docker: build timescale"
     key: timescale
@@ -91,7 +90,7 @@ steps:
     plugins:
       - docker-compose#v3.7.0:
           build: timescale
-          cache-from: base:registry.fly.io/timescale:latest
+          cache-from: timescale:registry.fly.io/dish-timescale:latest
 
   - label: ":docker: build tileserver"
     key: tileserver
@@ -102,20 +101,19 @@ steps:
     plugins:
       - docker-compose#v3.7.0:
           build: tileserver
-          cache-from: base:registry.fly.io/tileserver:latest
+          cache-from: tileserver:registry.fly.io/dish-tileserver:latest
 
   - label: ":docker: build postgres for tests"
     key: postgres
     env:
       DOCKER_TAG: postgres
+      POSTGRES_NAME: postgres
     retry:
       automatic: true
-    env:
-      POSTGRES_NAME: postgres
     plugins:
       - docker-compose#v3.7.0:
           build: postgres
-          cache-from: base:registry.fly.io/postgres:latest
+          cache-from: postgres:registry.fly.io/dish-postgres:latest
 
   - label: ":docker: build redis"
     key: redis
@@ -126,7 +124,7 @@ steps:
     plugins:
       - docker-compose#v3.7.0:
           build: redis
-          cache-from: base:registry.fly.io/redis:latest
+          cache-from: redis:registry.fly.io/dish-redis:latest
 
   - label: "done with test images"
     command: "true"
@@ -143,11 +141,12 @@ steps:
       - postgres
       - redis
 
-  - label: "push pre-test images to fly"
+  - label: "push ONLY pre-test images to registry"
     depends_on: test-images
     plugins:
       - docker-compose#v3.7.0:
           push:
+            - base:registry.fly.io/dish-base:latest
             - dish-app:registry.fly.io/dish-app:latest
             - hooks:registry.fly.io/dish-hooks:latest
             - worker:registry.fly.io/dish-worker:latest
@@ -157,23 +156,6 @@ steps:
             - tileserver:registry.fly.io/dish-tileserver:latest
             - tileserver:registry.fly.io/dish-tileserver:latest
             - redis:registry.fly.io/dish-redis:latest
-
-  - label: "push pre-test images to gcr"
-    depends_on: test-images
-    plugins:
-      - docker-compose#v3.7.0:
-          push:
-          - base:registry.fly.io/base:latest
-          - dish-app:registry.fly.io/dish-app:latest
-          - run-tests:registry.fly.io/run-tests:latest
-          - hooks:registry.fly.io/hooks:latest
-          - worker:registry.fly.io/worker:latest
-          - search:registry.fly.io/search:latest
-          - hasura:registry.fly.io/hasura:latest
-          - timescale:registry.fly.io/timescale:latest
-          - tileserver:registry.fly.io/tileserver:latest
-          - postgres:registry.fly.io/postgres:latest
-          - redis:registry.fly.io/redis:latest
 
   # non test images
 
@@ -185,9 +167,7 @@ steps:
           build: cron
           image-repository: registry.fly.io/cron
           cache-from: base:registry.fly.io/cron:latest
-          push:
-            - cron:registry.fly.io/cron:latest
-            - cron:registry.fly.io/dish-cron:latest
+          push: cron:registry.fly.io/dish-cron:latest
 
   - label: ":docker: build gorse"
     retry:
@@ -197,9 +177,7 @@ steps:
           build: gorse
           image-repository: registry.fly.io/gorse
           cache-from: base:registry.fly.io/gorse:latest
-          push:
-            - gorse:registry.fly.io/gorse:latest
-            - gorse:registry.fly.io/dish-gorse:latest
+          push: gorse:registry.fly.io/dish-gorse:latest
 
   - label: ":docker: build bert"
     retry:
@@ -209,9 +187,7 @@ steps:
           build: bert
           image-repository: registry.fly.io/bert
           cache-from: base:registry.fly.io/bert:latest
-          push:
-            - bert:registry.fly.io/bert:latest
-            - bert:registry.fly.io/dish-bert:latest
+          push: bert:registry.fly.io/dish-bert:latest
 
   - label: ":docker: build image-proxy"
     retry:
@@ -221,9 +197,7 @@ steps:
           build: image-proxy
           image-repository: registry.fly.io/image-proxy
           cache-from: base:registry.fly.io/image-proxy:latest
-          push:
-            - image-proxy:registry.fly.io/image-proxy:latest
-            - image-proxy:registry.fly.io/dish-image-proxy:latest
+          push: image-proxy:registry.fly.io/dish-image-proxy:latest
 
   - label: ":docker: build image-quality"
     retry:
@@ -233,9 +207,7 @@ steps:
           build: image-quality
           image-repository: registry.fly.io/image-quality
           cache-from: base:registry.fly.io/image-quality:latest
-          push:
-            - image-quality:registry.fly.io/image-quality:latest
-            - image-quality:registry.fly.io/dish-image-quality:latest
+          push: image-quality:registry.fly.io/dish-image-quality:latest
 
   - label: ":docker: build db"
     retry:
@@ -247,9 +219,7 @@ steps:
           build: postgres
           image-repository: registry.fly.io/db
           cache-from: base:registry.fly.io/db:latest
-          push:
-            - postgres:registry.fly.io/db:latest
-            - postgres:registry.fly.io/dish-db:latest
+          push: postgres:registry.fly.io/dish-db:latest
 
   - label: "setup services for tests"
     if: build.branch != "master"

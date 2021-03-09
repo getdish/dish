@@ -1,22 +1,21 @@
 version: '3.2'
 services:
   base:
-    image: registry.fly.io/base${DISH_IMAGE_TAG}
+    image: registry.fly.io/dish-base${DISH_IMAGE_TAG}
     build:
       context: .
       dockerfile: ./Dockerfile
   run-tests:
-    image: registry.fly.io/run-tests${DISH_IMAGE_TAG}
     build:
       context: .
       dockerfile: ./services/run-tests/Dockerfile
   cron:
-    image: registry.fly.io/cron${DISH_IMAGE_TAG}
+    image: registry.fly.io/dish-cron${DISH_IMAGE_TAG}
     build:
       context: .
       dockerfile: ./services/cron/Dockerfile
   postgres:
-    image: registry.fly.io/${POSTGRES_NAME:-postgres}${DISH_IMAGE_TAG}
+    image: registry.fly.io/dish-${POSTGRES_NAME:-postgres}${DISH_IMAGE_TAG}
     command: postgres -c 'max_connections=300'
     build:
       context: ./services/${POSTGRES_NAME:-postgres}
@@ -30,7 +29,7 @@ services:
       - 5432:5432
   timescale:
     command: ["-c", "max_connections=300"]
-    image: registry.fly.io/timescale${DISH_IMAGE_TAG}
+    image: registry.fly.io/dish-timescale${DISH_IMAGE_TAG}
     build:
       context: ./services/timescale
     volumes:
@@ -51,7 +50,7 @@ services:
     environment:
       - REDIS_PASSWORD=redis
   hooks:
-    image: registry.fly.io/hooks${DISH_IMAGE_TAG}
+    image: registry.fly.io/dish-hooks${DISH_IMAGE_TAG}
     build:
       context: ./
       dockerfile: ./services/hooks/Dockerfile
@@ -65,7 +64,7 @@ services:
     depends_on:
       - 'gorse'
   hasura:
-    image: ${HASURA_IMAGE:-hasura/graphql-engine:v1.3.3}
+    image: registry.fly.io/dish-hasura${DISH_IMAGE_TAG}
     build:
       context: .
       dockerfile: ./services/hasura/Dockerfile
@@ -109,7 +108,7 @@ services:
       - 'search'
       - 'worker'
   tileserver:
-    image: urbica/martin
+    image: registry.fly.io/dish-tileserver${DISH_IMAGE_TAG}
     build:
       context: ./services/tileserver
       dockerfile: ./Dockerfile
@@ -122,7 +121,7 @@ services:
     depends_on:
       - 'postgres'
   search:
-    image: registry.fly.io/dish/search${DISH_IMAGE_TAG}
+    image: registry.fly.io/dish/dish-search${DISH_IMAGE_TAG}
     build:
       context: ./services/search
       dockerfile: ./Dockerfile
@@ -135,7 +134,7 @@ services:
     depends_on:
       - 'postgres'
   gorse:
-    image: registry.fly.io/gorse
+    image: registry.fly.io/dish-gorse${DISH_IMAGE_TAG}
     build:
       context: ./services/gorse
       dockerfile: ./Dockerfile
@@ -145,7 +144,7 @@ services:
     ports:
       - 9000:9000
   worker:
-    image: registry.fly.io/worker${DISH_IMAGE_TAG}
+    image: registry.fly.io/dish-worker${DISH_IMAGE_TAG}
     build:
       context: .
       dockerfile: ./services/worker/Dockerfile
@@ -185,13 +184,13 @@ services:
       - GORSE_ENDPOINT="http://gorse:9000"
       - DISH_DEBUG=1
   bert:
-    image: registry.fly.io/bert
+    image: registry.fly.io/dish-bert${DISH_IMAGE_TAG}
     build:
       context: ./services/bert
     ports:
       - 8888:8080
   image-quality:
-    image: registry.fly.io/image-quality
+    image: registry.fly.io/dish-image-quality${DISH_IMAGE_TAG}
     build:
       context: ./services/image-quality
     ports:
@@ -199,7 +198,7 @@ services:
     environment:
       - VIRTUAL_HOST=image-quality.dishapp.com
   image-proxy:
-    image: registry.fly.io/imageproxy
+    image: registry.fly.io/dish-image-proxy${DISH_IMAGE_TAG}
     build:
       context: ./services/image-proxy
       dockerfile: ./Dockerfile
@@ -207,47 +206,3 @@ services:
       - 8881:9000
     environment:
       - VIRTUAL_HOST=images.dishapp.com
-  nginx-web:
-    image: nginx:stable-alpine
-    labels:
-      com.github.jrcs.letsencrypt_nginx_proxy_companion.nginx_proxy: 'true'
-    container_name: ${NGINX_WEB:-nginx-web}
-    restart: always
-    ports:
-      - '${IP:-0.0.0.0}:${DOCKER_HTTP:-80}:80'
-      - '${IP:-0.0.0.0}:${DOCKER_HTTPS:-443}:443'
-    volumes:
-      - ${NGINX_FILES_PATH:-./data}/conf.d:/etc/nginx/conf.d
-      - ${NGINX_FILES_PATH:-./data}/vhost.d:/etc/nginx/vhost.d
-      - ${NGINX_FILES_PATH:-./data}/html:/usr/share/nginx/html
-      - ${NGINX_FILES_PATH:-./data}/certs:/etc/nginx/certs:ro
-      - ${NGINX_FILES_PATH:-./data}/htpasswd:/etc/nginx/htpasswd:ro
-    logging:
-      driver: ${NGINX_WEB_LOG_DRIVER:-json-file}
-      options:
-        max-size: ${NGINX_WEB_LOG_MAX_SIZE:-4m}
-        max-file: ${NGINX_WEB_LOG_MAX_FILE:-10}
-    depends_on:
-      - 'hasura'
-  nginx-gen:
-    image: jwilder/docker-gen
-    command: -notify-sighup ${NGINX_WEB:-nginx-web} -watch -wait 5s:30s /etc/docker-gen/templates/nginx.tmpl /etc/nginx/conf.d/default.conf
-    container_name: ${DOCKER_GEN:-nginx-gen}
-    restart: always
-    environment:
-      SSL_POLICY: ${SSL_POLICY:-Mozilla-Intermediate}
-    volumes:
-      - ${NGINX_FILES_PATH:-./data}/conf.d:/etc/nginx/conf.d
-      - ${NGINX_FILES_PATH:-./data}/vhost.d:/etc/nginx/vhost.d
-      - ${NGINX_FILES_PATH:-./data}/html:/usr/share/nginx/html
-      - ${NGINX_FILES_PATH:-./data}/certs:/etc/nginx/certs:ro
-      - ${NGINX_FILES_PATH:-./data}/htpasswd:/etc/nginx/htpasswd:ro
-      - /var/run/docker.sock:/tmp/docker.sock:ro
-      - /app/etc/staging/docker/nginx-gen/templates/nginx.tmpl:/etc/docker-gen/templates/nginx.tmpl:ro
-    logging:
-      driver: ${NGINX_GEN_LOG_DRIVER:-json-file}
-      options:
-        max-size: ${NGINX_GEN_LOG_MAX_SIZE:-2m}
-        max-file: ${NGINX_GEN_LOG_MAX_FILE:-10}
-    depends_on:
-      - 'hasura'
