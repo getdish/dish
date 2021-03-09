@@ -6,9 +6,7 @@ export SHELLOPTS
 
 PG_PROXY_PID=
 TS_PROXY_PID=
-REDIS_PROXY_PID=
-GCLOUD_PROJECT="dish-258800"
-DISH_REGISTRY="gcr.io/$GCLOUD_PROJECT"
+DISH_REGISTRY="registry.fly.io"
 PATH=$PATH:~/bin/google-cloud-sdk/bin
 
 function generate_random_port() {
@@ -588,27 +586,6 @@ function install_kubectl() {
   chmod a+x $INSTALL_PATH/kubectl
 }
 
-function install_gcloud_sdk() {
-  GCLOUD_VERSION="297.0.1"
-  base=https://dl.google.com/dl/cloudsdk/channels/rapid/downloads
-  archive=$base/google-cloud-sdk-$GCLOUD_VERSION-linux-x86_64.tar.gz
-  install_path=$HOME/bin
-  echo "Installing GCloud SDK v$GCLOUD_VERSION... to $install_path"
-  curl -sL "$archive" | tar xzf - -C /tmp
-  cp -a /tmp/google-cloud-sdk $install_path
-  gcloud_init
-  gcloud config set component_manager/disable_update_check true
-}
-
-function gcloud_init() {
-  # This service account needs the "Project Owner" role! Way too much power.
-  # Follow this issue for any fixes: https://issuetracker.google.com/issues/134928412
-  gcloud auth activate-service-account --key-file k8s/etc/dish-gcloud.enc.json &
-  gcloud config set core/project "$GCLOUD_PROJECT" &
-  gcloud config set builds/use_kaniko False &
-  wait
-}
-
 function ping_home_page() {
   curl 'https://search.dishapp.com/top_cuisines?lon=-122.421351&lat=37.759251&distance=0.16'
 }
@@ -807,7 +784,7 @@ function push_auxillary_images() {
 }
 
 function dish_docker_login() {
-  yes | gcloud auth configure-docker gcr.io &> /dev/null || true
+  eval $(./dishctl.sh yaml_to_env) flyctl auth docker
 }
 
 function grafana_backup() {

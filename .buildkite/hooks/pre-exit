@@ -1,13 +1,14 @@
 #!/bin/bash
 
-set -exo pipefail
+set -eo pipefail
 
 if [ "$FIRST_STEP" == "true" ]; then
   exit 0
 fi
 
 if [ "$BUILDKITE_COMMAND_EXIT_STATUS" -ne 0 ]; then
-  echo "Steps are skipped because $BUILDKITE_AGENT_NAME:$BUILDKITE_LABEL returned $BUILDKITE_COMMAND_EXIT_STATUS" > /opt/ci/inner/skip
+  touch exit_this_build
+  echo "Steps are skipped because $BUILDKITE_AGENT_NAME:$BUILDKITE_LABEL returned $BUILDKITE_COMMAND_EXIT_STATUS" > exit_this_build
 fi
 
 if [ "$DOCKER_COMPOSE_DOWN" == "true" ]; then

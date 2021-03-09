@@ -11,9 +11,6 @@ env:
 steps:
   # images that tests need
 
-  - label: "test"
-    command: "docker images | grep base"
-
   - label: ":docker: build base"
     key: base
     plugins:
