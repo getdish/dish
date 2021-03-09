@@ -5,8 +5,8 @@ env:
   DISH_REGISTRY: 'gcr.io/dish-258800'
   HASURA_ENDPOINT: 'http://localhost:8080'
   DISH_ENDPOINT: 'http://localhost:4444'
-  DOCKER_BUILDKIT: 1
-  COMPOSE_DOCKER_CLI_BUILD: 1
+  DOCKER_BUILDKIT: 0
+  COMPOSE_DOCKER_CLI_BUILD: 0
 
 steps:
   # images that tests need
@@ -117,7 +117,7 @@ steps:
           build: postgres
           cache-from: base:gcr.io/dish-258800/postgres:latest
 
-  - label: ":docker: build redis for tests"
+  - label: ":docker: build redis"
     key: redis
     env:
       DOCKER_TAG: true
@@ -156,6 +156,7 @@ steps:
             - timescale:registry.fly.io/dish-timescale:latest
             - tileserver:registry.fly.io/dish-tileserver:latest
             - tileserver:registry.fly.io/dish-tileserver:latest
+            - redis:registry.fly.io/dish-redis:latest
 
   - label: "push pre-test images to gcr"
     depends_on: test-images

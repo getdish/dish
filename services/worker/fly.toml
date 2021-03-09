@@ -5,8 +5,3 @@ kill_timeout = 5
 
 [experimental]
   private_network = true
-
-[[services]]
-  [services.concurrency]
-    hard_limit = 25
-    soft_limit = 20

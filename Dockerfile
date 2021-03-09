@@ -1,4 +1,4 @@
-FROM --platform=linux/amd64 node:15.10.0-buster
+FROM node:15.10.0-buster
 WORKDIR /app
 
 ENV PATH=$PATH:/app/node_modules/.bin:node_modules/.bin

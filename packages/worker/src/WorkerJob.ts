@@ -9,7 +9,10 @@ import _ from 'lodash'
 
 const is_local_redis =
   process.env.DISH_ENV === 'development' || process.env.CI === 'true'
-const redisUrl = process.env.FLY_REDIS_CACHE_URL || process.env.REDIS_URL
+
+// fly redis doesnt support .subscribe()
+// process.env.FLY_REDIS_CACHE_URL ||
+const redisUrl = process.env.REDIS_URL
 let redisOptions: any = {
   port: 6379,
   host: is_local_redis ? 'localhost' : process.env.REDIS_HOST,
@@ -28,8 +31,6 @@ if (redisUrl) {
     }
   }
 }
-
-console.log('redisOptions234', redisOptions)
 
 export type JobData = {
   className: string

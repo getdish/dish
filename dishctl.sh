@@ -958,12 +958,15 @@ function deploy_all() {
   wait
   deploy "$where" app | sed -e 's/^/app: /;' &
   deploy "$where" search | sed -e 's/^/search: /;' &
-  deploy "$where" hooks | sed -e 's/^/hooks: /;' &
   deploy "$where" worker | sed -e 's/^/worker: /;' &
   deploy "$where" image-quality | sed -e 's/^/image-quality: /;' &
   deploy "$where" image-proxy | sed -e 's/^/image-proxy: /;' &
   deploy "$where" bert | sed -e 's/^/bert: /;' &
   deploy "$where" cron | sed -e 's/^/cron: /;' &
+  deploy "$where" redis | sed -e 's/^/redis: /;' &
+  wait
+  # depends on redis
+  deploy "$where" hooks | sed -e 's/^/hooks: /;' &
   wait
 }
 
@@ -992,6 +995,7 @@ function deploy() {
   if [ "$app" = "bert" ];           then deploy_fly_app "$where" dish-bert services/bert bert; fi
   if [ "$app" = "hooks" ];          then deploy_fly_app "$where" dish-hooks services/hooks hooks; fi
   if [ "$app" = "cron" ];           then deploy_fly_app "$where" dish-cron services/cron cron; fi
+  if [ "$app" = "redis" ];          then deploy_fly_app "$where" dish-redis services/redis redis; fi
 }
 
 function deploy_fly_app() {
