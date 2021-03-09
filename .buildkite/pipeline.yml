@@ -11,34 +11,34 @@ steps:
 
   - label: ":docker: build base"
     key: base
-    # command: "./scripts/docker_label.sh"
+    command: ".buildkite/scripts/docker_label.sh"
     plugins:
       - docker-compose#v3.7.0:
           build: base
           cache-from: base:gcr.io/dish-258800/base:latest
 
   - label: ":docker: build dish-app"
-    depends_on: base
+    command: ".buildkite/scripts/docker_label.sh"
     key: dish-app
-    # command: "./scripts/docker_label.sh"
+    depends_on: base
     plugins:
       - docker-compose#v3.7.0:
           build: dish-app
           cache-from: base:gcr.io/dish-258800/dish-app:latest
 
   - label: ":docker: build run-tests"
-    depends_on: base
     key: run-tests
-    # command: "./scripts/docker_label.sh"
+    command: ".buildkite/scripts/docker_label.sh"
+    depends_on: base
     plugins:
       - docker-compose#v3.7.0:
           build: run-tests
           cache-from: base:gcr.io/dish-258800/run-tests:latest
 
   - label: ":docker: build hooks"
+    command: ".buildkite/scripts/docker_label.sh"
     key: hooks
     depends_on: base
-    # command: "./scripts/docker_label.sh"
     plugins:
       - docker-compose#v3.7.0:
           build: hooks
@@ -46,8 +46,8 @@ steps:
 
   - label: ":docker: build worker"
     key: worker
+    command: ".buildkite/scripts/docker_label.sh"
     depends_on: base
-    # command: "./scripts/docker_label.sh"
     plugins:
       - docker-compose#v3.7.0:
           build: worker
@@ -55,9 +55,9 @@ steps:
 
   - label: ":docker: build search"
     key: search
+    command: ".buildkite/scripts/docker_label.sh"
     retry:
       automatic: true
-      # command: "./scripts/docker_label.sh"
     plugins:
       - docker-compose#v3.7.0:
           build: search
@@ -65,9 +65,9 @@ steps:
 
   - label: ":docker: build hasura"
     key: hasura
+    command: ".buildkite/scripts/docker_label.sh"
     retry:
       automatic: true
-      # command: "./scripts/docker_label.sh"
     plugins:
       - docker-compose#v3.7.0:
           build: hasura
@@ -75,9 +75,9 @@ steps:
 
   - label: ":docker: build timescale"
     key: timescale
+    command: ".buildkite/scripts/docker_label.sh"
     retry:
       automatic: true
-      # command: "./scripts/docker_label.sh"
     plugins:
       - docker-compose#v3.7.0:
           build: timescaledb
@@ -85,9 +85,9 @@ steps:
 
   - label: ":docker: build tileserver"
     key: tileserver
+    command: ".buildkite/scripts/docker_label.sh"
     retry:
       automatic: true
-      # command: "./scripts/docker_label.sh"
     plugins:
       - docker-compose#v3.7.0:
           build: tileserver
@@ -95,11 +95,11 @@ steps:
 
   - label: ":docker: build postgres for tests"
     key: postgres
+    command: ".buildkite/scripts/docker_label.sh"
     retry:
       automatic: true
     env:
       POSTGRES_NAME: postgres
-      # command: "./scripts/docker_label.sh"
     plugins:
       - docker-compose#v3.7.0:
           build: postgres
@@ -107,9 +107,9 @@ steps:
 
   - label: ":docker: build redis for tests"
     key: redis
+    command: ".buildkite/scripts/docker_label.sh"
     retry:
       automatic: true
-      # command: "./scripts/docker_label.sh"
     plugins:
       - docker-compose#v3.7.0:
           build: redis
@@ -239,8 +239,8 @@ steps:
 
   - label: "setup services for tests"
     if: build.branch != "master"
-    command: ".buildkite/scripts/setup_services.sh"
     key: test-setup
+    command: ".buildkite/scripts/setup_services.sh"
     depends_on:
       - test-images
     env:
@@ -261,8 +261,8 @@ steps:
   - label: "run tests"
     if: build.branch != "master"
     key: tests
-    depends_on: test-setup
     command: "docker run --net host gcr.io/dish-258800/run-tests:latest yarn test"
+    depends_on: test-setup
     env:
       LOG_DOCKER: true
       DOCKER_CLEAN_ON_FAIL: true
@@ -274,11 +274,11 @@ steps:
 
   - label: "deploy"
     # if: build.branch == "production"
+    command: ".buildkite/scripts/deploy_all.sh"
     artifact_paths:
       - "*.log"
     env:
       DOCKER_CLEAN: true
-    command: ".buildkite/scripts/deploy_all.sh"
 
   - wait
 
