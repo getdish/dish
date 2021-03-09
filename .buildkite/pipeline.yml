@@ -11,12 +11,12 @@ steps:
 
   - label: ":docker: build base"
     key: base
-    env:
-      DOCKER_TAG: true
     plugins:
       - docker-compose#v3.7.0:
           build: base
           cache-from: base:gcr.io/dish-258800/base:latest
+          image-repository: gcr.io/dish-258800/base
+          push: base:gcr.io/dish-258800/base:latest
 
   - label: ":docker: build dish-app"
     env:
@@ -160,7 +160,6 @@ steps:
     plugins:
       - docker-compose#v3.7.0:
           push:
-          - base:gcr.io/dish-258800/base:latest
           - dish-app:gcr.io/dish-258800/dish-app:latest
           - run-tests:gcr.io/dish-258800/run-tests:latest
           - hooks:gcr.io/dish-258800/hooks:latest

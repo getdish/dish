@@ -32,9 +32,9 @@ def main(image_source, predictions_file):
         image_dir, samples = image_file_to_json(image_source)
     else:
         image_dir = image_source
-        samples = image_dir_to_json(image_dir, img_type='jpg')
+        samples = image_dir_to_json(image_dir)
 
-    print('samples', samples)
+    print('samples', image_source, samples)
 
     ImageFile.LOAD_TRUNCATED_IMAGES = True
     Image.MAX_IMAGE_PIXELS = None
@@ -77,9 +77,9 @@ def prediction():
         if images:
             with tempfile.TemporaryDirectory() as temp:
                 for image in images:
+                    _, file_extension = os.path.splitext('/path/to/somefile.ext')
                     hashed = hashlib.md5(image.encode()).hexdigest()
                     try:
-                        print('saving image to', temp + '/' + hashed)
                         urllib.request.urlretrieve(image, temp + '/' + hashed)
                     except:
                         print('An exception occurred downloading: ' + image)
