@@ -11,14 +11,16 @@ steps:
 
   - label: ":docker: build base"
     key: base
-    command: ".buildkite/scripts/docker_label.sh"
+    env:
+      DOCKER_TAG: true
     plugins:
       - docker-compose#v3.7.0:
           build: base
           cache-from: base:gcr.io/dish-258800/base:latest
 
   - label: ":docker: build dish-app"
-    command: ".buildkite/scripts/docker_label.sh"
+    env:
+      DOCKER_TAG: true
     key: dish-app
     depends_on: base
     plugins:
@@ -28,7 +30,8 @@ steps:
 
   - label: ":docker: build run-tests"
     key: run-tests
-    command: ".buildkite/scripts/docker_label.sh"
+    env:
+      DOCKER_TAG: true
     depends_on: base
     plugins:
       - docker-compose#v3.7.0:
@@ -36,7 +39,8 @@ steps:
           cache-from: base:gcr.io/dish-258800/run-tests:latest
 
   - label: ":docker: build hooks"
-    command: ".buildkite/scripts/docker_label.sh"
+    env:
+      DOCKER_TAG: true
     key: hooks
     depends_on: base
     plugins:
@@ -46,7 +50,8 @@ steps:
 
   - label: ":docker: build worker"
     key: worker
-    command: ".buildkite/scripts/docker_label.sh"
+    env:
+      DOCKER_TAG: true
     depends_on: base
     plugins:
       - docker-compose#v3.7.0:
@@ -55,7 +60,8 @@ steps:
 
   - label: ":docker: build search"
     key: search
-    command: ".buildkite/scripts/docker_label.sh"
+    env:
+      DOCKER_TAG: true
     retry:
       automatic: true
     plugins:
@@ -65,7 +71,8 @@ steps:
 
   - label: ":docker: build hasura"
     key: hasura
-    command: ".buildkite/scripts/docker_label.sh"
+    env:
+      DOCKER_TAG: true
     retry:
       automatic: true
     plugins:
@@ -75,7 +82,8 @@ steps:
 
   - label: ":docker: build timescale"
     key: timescale
-    command: ".buildkite/scripts/docker_label.sh"
+    env:
+      DOCKER_TAG: true
     retry:
       automatic: true
     plugins:
@@ -85,7 +93,8 @@ steps:
 
   - label: ":docker: build tileserver"
     key: tileserver
-    command: ".buildkite/scripts/docker_label.sh"
+    env:
+      DOCKER_TAG: true
     retry:
       automatic: true
     plugins:
@@ -95,7 +104,8 @@ steps:
 
   - label: ":docker: build postgres for tests"
     key: postgres
-    command: ".buildkite/scripts/docker_label.sh"
+    env:
+      DOCKER_TAG: true
     retry:
       automatic: true
     env:
@@ -107,7 +117,8 @@ steps:
 
   - label: ":docker: build redis for tests"
     key: redis
-    command: ".buildkite/scripts/docker_label.sh"
+    env:
+      DOCKER_TAG: true
     retry:
       automatic: true
     plugins:
