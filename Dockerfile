@@ -62,4 +62,6 @@ RUN find . -type d \(  -name "test" -o -name "tests"  \) -print | xargs rm -rf &
 
 RUN yarn build:js
 
-CMD ["true"]
+# so we can deploy/tag on fly
+RUN touch ./__noop__
+CMD ["tail -f ./__noop__"]
