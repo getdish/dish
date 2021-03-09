@@ -11,11 +11,10 @@ if [ "$BUILDKITE_COMMAND_EXIT_STATUS" -ne 0 ]; then
 fi
 
 if [ "$DOCKER_TAG" == "true" ]; then
-  set -x
-  docker tag \
-    "$BUILDKITE_PIPELINE_NAME-$BUILDKITE_STEP_KEY-build-$BUILDKITE_BUILD_NUMBER" \
-    "gcr.io/dish-258800/$BUILDKITE_STEP_KEY:latest"
-  set +x
+  from="$BUILDKITE_PIPELINE_NAME-$BUILDKITE_STEP_KEY-build-$BUILDKITE_BUILD_NUMBER:latest"
+  to="gcr.io/dish-258800/$BUILDKITE_STEP_KEY:latest"
+  echo "docker tag $from $to"
+  docker tag "$from" "$to"
 fi
 
 if [ "$LOG_DOCKER" == "true" ]; then
