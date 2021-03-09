@@ -58,17 +58,6 @@ steps:
           cache-from: base:gcr.io/dish-258800/worker:latest
           push: worker:gcr.io/dish-258800/worker:latest
 
-  - label: ":docker: build cron"
-    key: cron
-    retry:
-      automatic: true
-    plugins:
-      - docker-compose#v3.7.0:
-          build: cron
-          image-repository: gcr.io/dish-258800/cron
-          cache-from: base:gcr.io/dish-258800/cron:latest
-          push: cron:gcr.io/dish-258800/cron:latest
-
   - label: ":docker: build search"
     key: search
     retry:
@@ -158,17 +147,27 @@ steps:
       - docker-compose#v3.7.0:
           push:
             - dish-app:registry.fly.io/dish-app:latest
-            - hooks:registry.fly.io/hooks:latest
-            - worker:registry.fly.io/worker:latest
-            - cron:registry.fly.io/cron:latest
-            - search:registry.fly.io/search:latest
-            - hasura:registry.fly.io/hasura:latest
-            - timescaledb:registry.fly.io/timescaledb:latest
-            - tileserver:registry.fly.io/tileserver:latest
-            - tileserver:registry.fly.io/tileserver:latest
-            - redis:registry.fly.io/redis:latest
+            - hooks:registry.fly.io/dish-hooks:latest
+            - worker:registry.fly.io/dish-worker:latest
+            - search:registry.fly.io/dish-search:latest
+            - hasura:registry.fly.io/dish-hasura:latest
+            - timescaledb:registry.fly.io/dish-timescaledb:latest
+            - tileserver:registry.fly.io/dish-tileserver:latest
+            - tileserver:registry.fly.io/dish-tileserver:latest
 
   # non test images
+
+  - label: ":docker: build cron"
+    retry:
+      automatic: true
+    plugins:
+      - docker-compose#v3.7.0:
+          build: cron
+          image-repository: gcr.io/dish-258800/cron
+          cache-from: base:gcr.io/dish-258800/cron:latest
+          push:
+            - cron:gcr.io/dish-258800/cron:latest
+            - cron:registry.fly.io/dish-cron:latest
 
   - label: ":docker: build gorse"
     retry:
@@ -178,7 +177,9 @@ steps:
           build: gorse
           image-repository: gcr.io/dish-258800/gorse
           cache-from: base:gcr.io/dish-258800/gorse:latest
-          push: gorse:gcr.io/dish-258800/gorse:latest
+          push:
+            - gorse:gcr.io/dish-258800/gorse:latest
+            - gorse:registry.fly.io/dish-gorse:latest
 
   - label: ":docker: build bert"
     retry:
@@ -188,7 +189,9 @@ steps:
           build: bert
           image-repository: gcr.io/dish-258800/bert
           cache-from: base:gcr.io/dish-258800/bert:latest
-          push: bert:gcr.io/dish-258800/bert:latest
+          push:
+            - bert:gcr.io/dish-258800/bert:latest
+            - bert:registry.fly.io/dish-bert:latest
 
   - label: ":docker: build image-proxy"
     retry:
@@ -198,7 +201,9 @@ steps:
           build: image-proxy
           image-repository: gcr.io/dish-258800/image-proxy
           cache-from: base:gcr.io/dish-258800/image-proxy:latest
-          push: image-proxy:gcr.io/dish-258800/image-proxy:latest
+          push:
+            - image-proxy:gcr.io/dish-258800/image-proxy:latest
+            - image-proxy:registry.fly.io/dish-image-proxy:latest
 
   - label: ":docker: build image-quality"
     retry:
@@ -208,7 +213,9 @@ steps:
           build: image-quality
           image-repository: gcr.io/dish-258800/image-quality
           cache-from: base:gcr.io/dish-258800/image-quality:latest
-          push: image-quality:gcr.io/dish-258800/image-quality:latest
+          push:
+            - image-quality:gcr.io/dish-258800/image-quality:latest
+            - image-quality:registry.fly.io/dish-image-quality:latest
 
   - label: ":docker: build db"
     retry:
@@ -220,7 +227,9 @@ steps:
           build: postgres
           image-repository: gcr.io/dish-258800/db
           cache-from: base:gcr.io/dish-258800/db:latest
-          push: postgres:gcr.io/dish-258800/db:latest
+          push:
+            - postgres:gcr.io/dish-258800/db:latest
+            - postgres:gcr.io/dish-258800/db:latest
 
   - label: "setup services for tests"
     if: build.branch != "master"
