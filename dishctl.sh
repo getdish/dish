@@ -203,7 +203,7 @@ function db_clear_local() {
 function timescale_migrate() {
   _TIMESCALE_PORT=$(generate_random_port)
   timescale_proxy $_TIMESCALE_PORT
-  pushd $PROJECT_ROOT/services/timescaledb
+  pushd $PROJECT_ROOT/services/timescale
   PG_PORT=$_TIMESCALE_PORT \
   PG_PASS=$TF_VAR_TIMESCALE_SU_PASS \
   DISH_ENV=production ./migrate.sh
@@ -211,7 +211,7 @@ function timescale_migrate() {
 }
 
 function timescale_migrate_local() {
-  pushd $PROJECT_ROOT/services/timescaledb
+  pushd $PROJECT_ROOT/services/timescale
   DISH_ENV=not-production ./migrate.sh
   popd
 }
@@ -983,7 +983,7 @@ function deploy() {
   if [ "$app" = "hasura" ];         then deploy_fly_app "$where" dish-hasura services/hasura hasura; fi
   if [ "$app" = "db" ];             then deploy_fly_app "$where" dish-db services/db db; fi
   if [ "$app" = "search" ];         then deploy_fly_app "$where" dish-search services/search search; fi
-  if [ "$app" = "timescale" ];      then deploy_fly_app "$where" dish-timescale services/timescaledb timescaledb; fi
+  if [ "$app" = "timescale" ];      then deploy_fly_app "$where" dish-timescale services/timescale timescale; fi
   if [ "$app" = "tileserver" ];     then deploy_fly_app "$where" dish-tileserver services/tileserver tileserver; fi
   if [ "$app" = "hooks" ];          then deploy_fly_app "$where" dish-hooks services/hooks dish-hooks; fi
   if [ "$app" = "worker" ];         then deploy_fly_app "$where" dish-worker services/worker worker; fi

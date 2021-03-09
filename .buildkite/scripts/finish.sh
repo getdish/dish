@@ -19,15 +19,15 @@ prune gorse &
 prune hasura &
 prune image-proxy &
 prune image-quality &
-prune imageproxy &
 prune postgres &
 prune db &
 prune postgres-simple &
 prune redis &
+prune cron &
 prune search &
 prune test &
 prune tileserver &
-prune timescaledb &
+prune timescale &
 prune user-server &
 prune work &
 wait

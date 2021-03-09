@@ -28,11 +28,11 @@ services:
       POSTGRES_DB: ${POSTGRES_DB:-dish}
     ports:
       - 5432:5432
-  timescaledb:
+  timescale:
     command: ["-c", "max_connections=300"]
-    image: gcr.io/dish-258800/timescaledb${DISH_IMAGE_TAG}
+    image: gcr.io/dish-258800/timescale${DISH_IMAGE_TAG}
     build:
-      context: ./services/timescaledb
+      context: ./services/timescale
     volumes:
       - ${HOME}/.dish/timescaledb:/var/lib/postgresql/data
     environment:
@@ -154,7 +154,7 @@ services:
       - PGHOST=postgres
       - PGPASSWORD=postgres
       - HASURA_SECRET=${TF_VAR_HASURA_GRAPHQL_ADMIN_SECRET:-password}
-      - TIMESCALE_HOST=timescaledb
+      - TIMESCALE_HOST=timescale
       - TIMESCALE_PASSWORD=postgres
       - TIMESCALE_PORT=5433
       - UBEREATS_PROXY=${TF_VAR_UBEREATS_PROXY}

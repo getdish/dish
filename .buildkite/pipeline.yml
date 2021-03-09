@@ -88,8 +88,8 @@ steps:
       automatic: true
     plugins:
       - docker-compose#v3.7.0:
-          build: timescaledb
-          cache-from: base:gcr.io/dish-258800/timescaledb:latest
+          build: timescale
+          cache-from: base:gcr.io/dish-258800/timescale:latest
 
   - label: ":docker: build tileserver"
     key: tileserver
@@ -151,7 +151,7 @@ steps:
             - worker:registry.fly.io/dish-worker:latest
             - search:registry.fly.io/dish-search:latest
             - hasura:registry.fly.io/dish-hasura:latest
-            - timescaledb:registry.fly.io/dish-timescale:latest
+            - timescale:registry.fly.io/dish-timescale:latest
             - tileserver:registry.fly.io/dish-tileserver:latest
             - tileserver:registry.fly.io/dish-tileserver:latest
 
@@ -167,7 +167,7 @@ steps:
           - worker:gcr.io/dish-258800/worker:latest
           - search:gcr.io/dish-258800/search:latest
           - hasura:gcr.io/dish-258800/hasura:latest
-          - timescaledb:gcr.io/dish-258800/timescaledb:latest
+          - timescale:gcr.io/dish-258800/timescale:latest
           - tileserver:gcr.io/dish-258800/tileserver:latest
           - postgres:gcr.io/dish-258800/postgres:latest
           - redis:gcr.io/dish-258800/redis:latest

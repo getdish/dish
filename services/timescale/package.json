@@ -1,5 +1,5 @@
 {
-  "name": "timescaledb",
+  "name": "timescale",
   "version": "0.0.1",
   "description": "Dish's TimescaleDB instance for storing scrape data",
   "main": "index.js",
