@@ -1,9 +1,7 @@
-import path from 'path'
-
-import webpack from 'webpack'
-
-import { externalizeModules } from './externalizeModules'
-import { outDir, specDir } from './test-constants'
+const path = require('path')
+const webpack = require('webpack')
+const { externalizeModules } = require('./externalizeModules')
+const { outDir, specDir } = require('./test-constants')
 
 const outFileBabel = 'out-babel.js'
 const outFileWebpack = 'out-webpack.js'
