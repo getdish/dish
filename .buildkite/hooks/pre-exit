@@ -24,7 +24,7 @@ if [ "$DOCKER_TAG" == "true" ]; then
 fi
 
 if [ "$LOG_DOCKER" == "true" ]; then
-  echo "docker log..."
+  echo "docker logs..."
   docker-compose logs --tail 2000
   cat ./*.logs || true
 fi
