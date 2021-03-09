@@ -34,6 +34,7 @@ steps:
     key: run-tests
     env:
       DOCKER_TAG: run-tests
+      REDIS_PASSWORD: redis
     depends_on: base
     plugins:
       - docker-compose#v3.7.0:
