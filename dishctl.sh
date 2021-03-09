@@ -945,7 +945,6 @@ function deploy_all() {
   where=${1:-registry}
   echo "deploying apps via $where"
   deploy "$where" db | sed -e 's/^/db: /;'
-  echo "???"
   deploy "$where" hooks | sed -e 's/^/hooks: /;'
   # depends on postgres
   # depends on hooks
