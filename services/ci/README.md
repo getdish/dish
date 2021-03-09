@@ -1,4 +1,4 @@
-## Buildkite Agent WIP
+## Buildkite Agent
 
 This runs a Buildkite agent with Docker. It usesa persistent volume for Docker layer caching.
 
