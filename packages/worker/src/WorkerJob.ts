@@ -29,7 +29,7 @@ if (redisUrl) {
   }
 }
 
-console.log('redisOptions2', redisOptions)
+console.log('redisOptions234', redisOptions)
 
 export type JobData = {
   className: string
