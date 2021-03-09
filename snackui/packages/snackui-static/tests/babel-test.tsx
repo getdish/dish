@@ -13,10 +13,6 @@ beforeAll(async () => {
   testStyles(test, app)
 })
 
-test('fail on purpose', () => {
-  expect(true).toBe(false)
-})
-
 test('basic extraction', async () => {
   const output = extractBabel(`
     import { VStack } from 'snackui'

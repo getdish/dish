@@ -49,7 +49,6 @@ RUN find . -type d \(  -name "test" -o -name "tests"  \) -print | xargs rm -rf &
     -o -name "ava.config.js" \
     -o -name "*.md" \
     -o -name "*.jpg" \
-    -o name="*.sh" \
   \) -print | xargs rm -rf \
   # link in esdx bugfix
   && ln -s /app/packages/esdx/esdx.js /app/node_modules/.bin/esdx
