@@ -13,16 +13,6 @@ export LD_LIBRARY_PATH="/usr/local/lib"
 
 mkdir -p $HOME/bin
 
-function docker() {
-  if [[ "$1" == "run" ]]; then
-    shift 1
-    command docker run --progress plain "$@"
-  else
-    command docker "$@"
-  fi
-}
-export -f docker
-
 function init_gcloud() {
   echo $(date -u) "gcloud init..."
   ./dishctl.sh gcloud_init

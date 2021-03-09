@@ -9,16 +9,25 @@ import _ from 'lodash'
 
 const is_local_redis =
   process.env.DISH_ENV === 'development' || process.env.CI === 'true'
-
-const redisObject = {
+const redisUrl = process.env.FLY_REDIS_CACHE_URL || process.env.REDIS_URL
+let redisOptions: any = {
   port: 6379,
   host: is_local_redis ? 'localhost' : process.env.REDIS_HOST,
 }
 
-const redisUrl = process.env.FLY_REDIS_CACHE_URL || process.env.REDIS_URL
-const redisOptions = is_local_redis ? redisObject : redisUrl || redisObject
-
-console.log('redisOptions', redisUrl, is_local_redis, redisOptions)
+if (redisUrl) {
+  const matched = redisUrl.match(
+    /redis:\/\/([a-z0-9]*):([a-z0-9]*)@([a-z0-9-_\.]+):([0-9]+)/i
+  )
+  if (matched) {
+    const [url, user, password, host, port] = matched
+    redisOptions = {
+      port: +port,
+      host,
+      password,
+    }
+  }
+}
 
 export type JobData = {
   className: string
