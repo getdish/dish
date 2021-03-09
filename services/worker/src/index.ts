@@ -7,6 +7,7 @@ import { klass_map } from './job_processor'
 const CONCURRENCY = 1
 
 async function main() {
+  console.log('worker main()')
   for (const queue_name in klass_map) {
     const klass = klass_map[queue_name]
     const config = klass.queue_config
