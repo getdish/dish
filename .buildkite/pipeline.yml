@@ -165,8 +165,8 @@ steps:
     plugins:
       - docker-compose#v3.7.0:
           build: cron
-          image-repository: registry.fly.io/cron
-          cache-from: base:registry.fly.io/cron:latest
+          image-repository: registry.fly.io/dish-cron
+          cache-from: base:registry.fly.io/dish-cron:latest
           push: cron:registry.fly.io/dish-cron:latest
 
   - label: ":docker: build gorse"
@@ -175,8 +175,8 @@ steps:
     plugins:
       - docker-compose#v3.7.0:
           build: gorse
-          image-repository: registry.fly.io/gorse
-          cache-from: base:registry.fly.io/gorse:latest
+          image-repository: registry.fly.io/dish-gorse
+          cache-from: base:registry.fly.io/dish-gorse:latest
           push: gorse:registry.fly.io/dish-gorse:latest
 
   - label: ":docker: build bert"
@@ -185,8 +185,8 @@ steps:
     plugins:
       - docker-compose#v3.7.0:
           build: bert
-          image-repository: registry.fly.io/bert
-          cache-from: base:registry.fly.io/bert:latest
+          image-repository: registry.fly.io/dish-bert
+          cache-from: base:registry.fly.io/dish-bert:latest
           push: bert:registry.fly.io/dish-bert:latest
 
   - label: ":docker: build image-proxy"
@@ -195,8 +195,8 @@ steps:
     plugins:
       - docker-compose#v3.7.0:
           build: image-proxy
-          image-repository: registry.fly.io/image-proxy
-          cache-from: base:registry.fly.io/image-proxy:latest
+          image-repository: registry.fly.io/dish-image-proxy
+          cache-from: base:registry.fly.io/dish-image-proxy:latest
           push: image-proxy:registry.fly.io/dish-image-proxy:latest
 
   - label: ":docker: build image-quality"
@@ -205,8 +205,8 @@ steps:
     plugins:
       - docker-compose#v3.7.0:
           build: image-quality
-          image-repository: registry.fly.io/image-quality
-          cache-from: base:registry.fly.io/image-quality:latest
+          image-repository: registry.fly.io/dish-image-quality
+          cache-from: base:registry.fly.io/dish-image-quality:latest
           push: image-quality:registry.fly.io/dish-image-quality:latest
 
   - label: ":docker: build db"
@@ -217,8 +217,8 @@ steps:
     plugins:
       - docker-compose#v3.7.0:
           build: postgres
-          image-repository: registry.fly.io/db
-          cache-from: base:registry.fly.io/db:latest
+          image-repository: registry.fly.io/dish-db
+          cache-from: base:registry.fly.io/dish-db:latest
           push: postgres:registry.fly.io/dish-db:latest
 
   - label: "setup services for tests"
