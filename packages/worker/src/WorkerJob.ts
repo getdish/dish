@@ -10,10 +10,14 @@ import _ from 'lodash'
 const is_local_redis =
   process.env.DISH_ENV === 'development' || process.env.CI === 'true'
 
-export const redisOptions = process.env.REDIS_URL || {
+const redisObject = {
   port: 6379,
   host: is_local_redis ? 'localhost' : process.env.REDIS_HOST,
 }
+
+const redisOptions = is_local_redis
+  ? redisObject
+  : process.env.REDIS_URL || redisObject
 
 export type JobData = {
   className: string
@@ -40,7 +44,7 @@ export class WorkerJob {
     args?: any[],
     specific_config: JobOptions = {}
   ) {
-    console.log('Run on worker', fn)
+    console.log('runOnWorker', fn)
     if (process.env.RUN_WITHOUT_WORKER == 'true') {
       return await this.run(fn, args)
     }

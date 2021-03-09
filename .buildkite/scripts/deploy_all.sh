@@ -1,11 +1,6 @@
 #!/usr/bin/env bash
 set -e pipefail
 
-# if [ "$BUILDKITE_BRANCH" != "production" ]; then
-#   echo "not production branch, skip deploy"
-#   exit 0
-# fi
-
 echo "Deploying apps..."
 
 PROJECT_ROOT=$(git rev-parse --show-toplevel)

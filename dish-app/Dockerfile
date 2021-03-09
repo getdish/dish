@@ -7,11 +7,11 @@ RUN \
       && apt-get clean \
       && rm -rf /var/lib/apt/lists/*
 
-FROM gcr.io/dish-258800/base as base
+WORKDIR /app
+
+FROM gcr.io/dish-258800/base
 COPY --from=0 /bin /usr/local/bin
 ENV NODE_ENV=production
-
-WORKDIR /app
 
 COPY package.json yarn.lock .yarnrc.yml ./
 COPY packages packages

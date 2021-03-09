@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 set -e pipefail
 
-if [ "$GOOGLE_SEARCH_PROXY" = "" ]; then
+if [ "$TF_VAR_GOOGLE_SEARCH_PROXY" = "" ]; then
     echo "missing env"
     exit 1
 fi

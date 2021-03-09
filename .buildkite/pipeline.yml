@@ -217,6 +217,7 @@ steps:
           push: postgres:gcr.io/dish-258800/db:latest
 
   - label: "setup services for tests"
+    if: build.branch != "master"
     command: ".buildkite/scripts/setup_services.sh"
     key: test-setup
     depends_on:
@@ -236,6 +237,7 @@ steps:
             - '/root/.dish/'
 
   - label: "run tests"
+    if: build.branch != "master"
     key: tests
     depends_on: test-setup
     command: "docker run --net host gcr.io/dish-258800/run-tests:latest yarn test"
@@ -249,6 +251,9 @@ steps:
   - wait
 
   - label: "deploy"
+    # if: build.branch == "production"
+    artifact_paths:
+      - "*.log"
     env:
       DOCKER_CLEAN: true
     command: ".buildkite/scripts/deploy_all.sh"
