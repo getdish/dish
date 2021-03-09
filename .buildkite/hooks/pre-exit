@@ -6,6 +6,13 @@ if [ "$FIRST_STEP" == "true" ]; then
   exit 0
 fi
 
+if [ -n "$DOCKER_TAG" ]; then
+  from="$BUILDKITE_PIPELINE_NAME-$BUILDKITE_STEP_KEY-build-$BUILDKITE_BUILD_NUMBER:latest"
+  to="registry.fly.io/dish-$BUILDKITE_STEP_KEY:latest"
+  echo "docker tag $from $to"
+  docker tag "$from" "$to"
+fi
+
 if [ "$BUILDKITE_COMMAND_EXIT_STATUS" -ne 0 ]; then
   touch exit_this_build
   echo "Steps are skipped because $BUILDKITE_AGENT_NAME:$BUILDKITE_LABEL returned $BUILDKITE_COMMAND_EXIT_STATUS" > exit_this_build
