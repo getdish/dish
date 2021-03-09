@@ -35,9 +35,23 @@ if [ "$IS_COMPOSE_RUNNER" = "true" ] && [ "$BUILDKITE_COMMAND_EXIT_STATUS" = "1"
 fi
 
 if [ "$DOCKER_CLEAN" == "true" ] || { [ "$BUILDKITE_COMMAND_EXIT_STATUS" = "1" ] && [ "$BUILDKITE_COMMAND_EXIT_STATUS" = "1" ]; }; then
-  docker system prune -a --filter "until=72h" --force || true
-  docker system df | head -n 60 || true
-  docker images -a | head -n 60 || true
+  clean_if_nearly_full
+  # docker system df | head -n 60 || true
+  # docker images -a | head -n 60 || true
 fi
 
 echo "bye"
+
+function clean_if_nearly_full() {
+  echo "checking if disk near full..."
+  df -H | grep -vE '^Filesystem|tmpfs|cdrom' | awk '{ print $5 " " $1 }' | while read output;
+  do
+    used=$(echo "$output" | awk '{ print $1}' | cut -d'%' -f1  )
+    echo "$output used $used"
+    if [ "$used" -ge 90 ]; then
+      echo "Running out of space"
+      docker system prune -a --filter "until=24h" --force || true
+      docker rmi $(docker images --filter "dangling=true" -q --no-trunc) || true
+    fi
+  done
+}
