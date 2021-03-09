@@ -11,10 +11,10 @@ env:
 steps:
   # images that tests need
 
-  - label: ":docker: build dish-base"
-    key: dish-base
+  - label: ":docker: build base"
+    key: base
     env:
-      DOCKER_TAG: dish-base
+      DOCKER_TAG: base
     plugins:
       - docker-compose#v3.7.0:
           build: base
@@ -24,7 +24,7 @@ steps:
     key: dish-app
     env:
       DOCKER_TAG: dish-app
-    depends_on: dish-base
+    depends_on: base
     plugins:
       - docker-compose#v3.7.0:
           build: dish-app
@@ -34,7 +34,7 @@ steps:
     key: run-tests
     env:
       DOCKER_TAG: run-tests
-    depends_on: dish-base
+    depends_on: base
     plugins:
       - docker-compose#v3.7.0:
           build: run-tests
@@ -43,7 +43,7 @@ steps:
     key: hooks
     env:
       DOCKER_TAG: hooks
-    depends_on: dish-base
+    depends_on: base
     plugins:
       - docker-compose#v3.7.0:
           build: hooks
@@ -53,7 +53,7 @@ steps:
     key: worker
     env:
       DOCKER_TAG: worker
-    depends_on: dish-base
+    depends_on: base
     plugins:
       - docker-compose#v3.7.0:
           build: worker
