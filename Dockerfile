@@ -54,9 +54,9 @@ RUN find . -type d \(  -name "test" -o -name "tests"  \) -print | xargs rm -rf &
 # its potentially fine to remove this one (and the RUN above)
 # since it takes a long time on rebuilds (copy whole app)
 # but rebuilds are now pretty fast
-# FROM node:15.10.0-buster
-# WORKDIR /app
-# COPY --from=1 /app .
+FROM node:15.10.0-buster
+WORKDIR /app
+COPY --from=1 /app .
 
 RUN yarn build:js
 
