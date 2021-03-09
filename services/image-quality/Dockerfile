@@ -22,4 +22,4 @@ RUN pip install -r requirements.txt
 ENV PYTHONPATH='/src/:$PYTHONPATH'
 
 ENTRYPOINT [ "python" ]
-CMD [ "evaluater/server.py", "-b", "MobileNet", "-w", "models/MobileNet/weights_mobilenet_aesthetic_0.07.hdf5" ]
+CMD [ "evaluater/server.py", "-b", "MobileNet", "-w", "../models/MobileNet/weights_mobilenet_aesthetic_0.07.hdf5" ]
