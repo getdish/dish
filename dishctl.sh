@@ -1029,6 +1029,7 @@ function deploy_fly_app() {
     touch "$log_file"
     tail -f "$log_file" &
     tail_pid=$!
+    docker tag gcr.io/dish-258800/$image_name:$tag registry.fly.io/$app:$tag
     flyctl deploy --strategy rolling -i registry.fly.io/$app:$tag &> "$log_file" &
     pid=$!
     while ps | grep "$pid " > /dev/null; do
