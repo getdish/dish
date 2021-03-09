@@ -3590,7 +3590,7 @@ var _useResponderEvents = _interopRequireDefault(__webpack_require__(/*! ../../m
 
 var _StyleSheet = _interopRequireDefault(__webpack_require__(/*! ../StyleSheet */ "../StyleSheet"));
 
-var _TextAncestorContext = _interopRequireDefault(__webpack_require__(/*! ./TextAncestorContext */ "../Text/TextAncestorContext"));
+var _TextAncestorContext = _interopRequireDefault(__webpack_require__(/*! ./TextAncestorContext */ "./TextAncestorContext"));
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -4490,7 +4490,7 @@ var _useResponderEvents = _interopRequireDefault(__webpack_require__(/*! ../../m
 
 var _StyleSheet = _interopRequireDefault(__webpack_require__(/*! ../StyleSheet */ "../StyleSheet"));
 
-var _TextAncestorContext = _interopRequireDefault(__webpack_require__(/*! ../Text/TextAncestorContext */ "../Text/TextAncestorContext"));
+var _TextAncestorContext = _interopRequireDefault(__webpack_require__(/*! ../Text/TextAncestorContext */ "./TextAncestorContext"));
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -11908,7 +11908,7 @@ module.exports = require("react-native-web/dist/exports/Text");;
 
 /***/ }),
 
-/***/ "../Text/TextAncestorContext":
+/***/ "./TextAncestorContext":
 /*!*************************************************************************!*\
   !*** external "react-native-web/dist/exports/Text/TextAncestorContext" ***!
   \*************************************************************************/

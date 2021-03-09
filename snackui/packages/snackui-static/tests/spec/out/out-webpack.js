@@ -9473,7 +9473,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _modules_useResponderEvents__WEBPACK_IMPORTED_MODULE_7___default = /*#__PURE__*/__webpack_require__.n(_modules_useResponderEvents__WEBPACK_IMPORTED_MODULE_7__);
 /* harmony import */ var _StyleSheet__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ../StyleSheet */ "./exports/StyleSheet");
 /* harmony import */ var _StyleSheet__WEBPACK_IMPORTED_MODULE_8___default = /*#__PURE__*/__webpack_require__.n(_StyleSheet__WEBPACK_IMPORTED_MODULE_8__);
-/* harmony import */ var _TextAncestorContext__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! ./TextAncestorContext */ "../Text/TextAncestorContext");
+/* harmony import */ var _TextAncestorContext__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! ./TextAncestorContext */ "./TextAncestorContext");
 /* harmony import */ var _TextAncestorContext__WEBPACK_IMPORTED_MODULE_9___default = /*#__PURE__*/__webpack_require__.n(_TextAncestorContext__WEBPACK_IMPORTED_MODULE_9__);
 /**
  * Copyright (c) Nicolas Gallagher.
@@ -10301,7 +10301,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _modules_useResponderEvents__WEBPACK_IMPORTED_MODULE_7___default = /*#__PURE__*/__webpack_require__.n(_modules_useResponderEvents__WEBPACK_IMPORTED_MODULE_7__);
 /* harmony import */ var _StyleSheet__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ../StyleSheet */ "./exports/StyleSheet");
 /* harmony import */ var _StyleSheet__WEBPACK_IMPORTED_MODULE_8___default = /*#__PURE__*/__webpack_require__.n(_StyleSheet__WEBPACK_IMPORTED_MODULE_8__);
-/* harmony import */ var _Text_TextAncestorContext__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! ../Text/TextAncestorContext */ "../Text/TextAncestorContext");
+/* harmony import */ var _Text_TextAncestorContext__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! ../Text/TextAncestorContext */ "./TextAncestorContext");
 /* harmony import */ var _Text_TextAncestorContext__WEBPACK_IMPORTED_MODULE_9___default = /*#__PURE__*/__webpack_require__.n(_Text_TextAncestorContext__WEBPACK_IMPORTED_MODULE_9__);
 /**
  * Copyright (c) Nicolas Gallagher.
@@ -11748,7 +11748,7 @@ module.exports = require("react-native-web/dist/exports/Text");;
 
 /***/ }),
 
-/***/ "../Text/TextAncestorContext":
+/***/ "./TextAncestorContext":
 /*!*************************************************************************!*\
   !*** external "react-native-web/dist/exports/Text/TextAncestorContext" ***!
   \*************************************************************************/

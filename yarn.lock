@@ -21773,9 +21773,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"timescaledb@workspace:services/timescaledb":
+"timescale@workspace:services/timescale":
   version: 0.0.0-use.local
-  resolution: "timescaledb@workspace:services/timescaledb"
+  resolution: "timescale@workspace:services/timescale"
   dependencies:
     pg: ^8.5.1
     postgrator: ^4.1.1
