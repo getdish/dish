@@ -52,7 +52,7 @@
     "build:ordered": "ultra -r --no-pretty --build",
     "build": "ultra -r --no-pretty --concurrency 30 build",
     "build:force": "ultra --silent -r --no-pretty --rebuild --concurrency 30 build",
-    "build:js": "JS_ONLY=1 time yarn workspaces foreach --exclude dish-monorepo -pitA -j 100 run build",
+    "build:js": "JS_ONLY=1 yarn workspaces foreach --exclude dish-monorepo -pitA -j 100 run build",
     "build:docker": "./dishctl.sh buildkit_build_local",
     "watch": "npm-run-all --parallel check:ts:watch build:ts:watch build:extras:watch",
     "build:refs": "typescript-monorepo-toolkit inject-refs .",
