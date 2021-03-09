@@ -166,7 +166,7 @@ steps:
       - docker-compose#v3.7.0:
           build: cron
           image-repository: registry.fly.io/dish-cron
-          cache-from: base:registry.fly.io/dish-cron:latest
+          cache-from: cron:registry.fly.io/dish-cron:latest
           push: cron:registry.fly.io/dish-cron:latest
 
   - label: ":docker: build gorse"
@@ -176,7 +176,7 @@ steps:
       - docker-compose#v3.7.0:
           build: gorse
           image-repository: registry.fly.io/dish-gorse
-          cache-from: base:registry.fly.io/dish-gorse:latest
+          cache-from: gorse:registry.fly.io/dish-gorse:latest
           push: gorse:registry.fly.io/dish-gorse:latest
 
   - label: ":docker: build bert"
@@ -186,7 +186,7 @@ steps:
       - docker-compose#v3.7.0:
           build: bert
           image-repository: registry.fly.io/dish-bert
-          cache-from: base:registry.fly.io/dish-bert:latest
+          cache-from: bert:registry.fly.io/dish-bert:latest
           push: bert:registry.fly.io/dish-bert:latest
 
   - label: ":docker: build image-proxy"
@@ -196,7 +196,7 @@ steps:
       - docker-compose#v3.7.0:
           build: image-proxy
           image-repository: registry.fly.io/dish-image-proxy
-          cache-from: base:registry.fly.io/dish-image-proxy:latest
+          cache-from: image-proxy:registry.fly.io/dish-image-proxy:latest
           push: image-proxy:registry.fly.io/dish-image-proxy:latest
 
   - label: ":docker: build image-quality"
@@ -206,7 +206,7 @@ steps:
       - docker-compose#v3.7.0:
           build: image-quality
           image-repository: registry.fly.io/dish-image-quality
-          cache-from: base:registry.fly.io/dish-image-quality:latest
+          cache-from: image-quality:registry.fly.io/dish-image-quality:latest
           push: image-quality:registry.fly.io/dish-image-quality:latest
 
   - label: ":docker: build db"
@@ -218,7 +218,7 @@ steps:
       - docker-compose#v3.7.0:
           build: postgres
           image-repository: registry.fly.io/dish-db
-          cache-from: base:registry.fly.io/dish-db:latest
+          cache-from: postgres:registry.fly.io/dish-db:latest
           push: postgres:registry.fly.io/dish-db:latest
 
   - label: "setup services for tests"

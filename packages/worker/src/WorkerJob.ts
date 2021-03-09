@@ -36,7 +36,7 @@ if (process.env.REDIS_URL) {
   }
 }
 
-console.log('redisOptions', redisOptions)
+console.log('redisOptions', redisOptions, process.env.REDIS_PASSWORD)
 
 export type JobData = {
   className: string

@@ -39,13 +39,12 @@ export -f wait_until_dish_app_ready
 
 export POSTGRES_NAME=db
 
-mkdir -p $HOME/.dish/postgresdb
-chown -R root:root $HOME/.dish/postgresdb
+# mkdir -p "$HOME/.dish/postgresdb"
+# chown -R root:root "$HOME/.dish/postgresdb"
 
-# if not already mounted/setup, we need to start postgres once and stop it so it sets up
-if [ ! -d $HOME/.dish/postgresdb/data ]; then
+# if not already mounted/setup, we need to start postgres once and restart it
+if [ ! -d "$HOME/data" ]; then
   echo "doing double start first time"
-  # Postgres needs 2 starts to get everything set up
   docker-compose run -d postgres
   sleep 6
   docker-compose down --remove-orphans -t 3
