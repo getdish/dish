@@ -1004,10 +1004,10 @@ function deploy_fly_app() {
   pushd "$folder"
   if [ "$where" = "registry" ]; then
     echo " >> pulling and tagging..."
-    docker pull gcr.io/dish-258800/$image_name:$tag
-    docker tag gcr.io/dish-258800/$image_name:$tag registry.fly.io/$app:$tag
-    docker push registry.fly.io/$app:$tag
-    printf " done pulling and tagging\n\n"
+    # docker pull gcr.io/dish-258800/$image_name:$tag
+    # docker tag gcr.io/dish-258800/$image_name:$tag registry.fly.io/$app:$tag
+    # docker push registry.fly.io/$app:$tag
+    # printf " done pulling and tagging\n\n"
   fi
   if [ -f ".ci/pre_deploy.sh" ]; then
     echo " >> running pre-deploy script $app..."

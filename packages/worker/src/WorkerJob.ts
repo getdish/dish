@@ -19,6 +19,8 @@ const redisOptions = is_local_redis
   ? redisObject
   : process.env.REDIS_URL || redisObject
 
+console.log('redisOptions', redisOptions)
+
 export type JobData = {
   className: string
   fn: string

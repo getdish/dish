@@ -26,10 +26,13 @@ steps:
           build: dish-app
           image-repository: gcr.io/dish-258800/dish-app
           cache-from: base:gcr.io/dish-258800/dish-app:latest
-          push: dish-app:gcr.io/dish-258800/dish-app:latest
+          push:
+            - dish-app:gcr.io/dish-258800/dish-app:latest
+            - dish-app:registry.fly.io/dish-app:latest
 
   - label: ":docker: build run-tests"
     depends_on: base
+    key: run-tests
     plugins:
       - docker-compose#v3.7.0:
           build: run-tests
@@ -111,17 +114,6 @@ steps:
           image-repository: gcr.io/dish-258800/tileserver
           cache-from: base:gcr.io/dish-258800/tileserver:latest
           push: tileserver:gcr.io/dish-258800/tileserver:latest
-
-  - label: ":docker: build run-tests"
-    key: run-tests
-    retry:
-      automatic: true
-    plugins:
-      - docker-compose#v3.7.0:
-          build: run-tests
-          image-repository: gcr.io/dish-258800/run-tests
-          cache-from: base:gcr.io/dish-258800/run-tests:latest
-          push: run-tests:gcr.io/dish-258800/run-tests:latest
 
   - label: ":docker: build postgres for tests"
     key: postgres
