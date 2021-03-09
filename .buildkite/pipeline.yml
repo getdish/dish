@@ -11,13 +11,16 @@ env:
 steps:
   # images that tests need
 
+  - label: "test"
+    command: "docker images | grep base"
+
   - label: ":docker: build base"
     key: base
     plugins:
       - docker-compose#v3.7.0:
           build: base
           cache-from: base:registry.fly.io/dish-base:latest
-          image-repository: fly.io/dish-base
+          image-repository: registry.fly.io/dish-base
 
   - label: ":docker: build dish-app"
     key: dish-app
@@ -44,7 +47,7 @@ steps:
       - docker-compose#v3.7.0:
           build: hooks
           cache-from: hooks:registry.fly.io/dish-hooks:latest
-          image-repository: fly.io/dish-hooks
+          image-repository: registry.fly.io/dish-hooks
 
   - label: ":docker: build worker"
     key: worker
@@ -115,7 +118,7 @@ steps:
       - docker-compose#v3.7.0:
           build: redis
           cache-from: redis:registry.fly.io/dish-redis:latest
-          image-repository: fly.io/dish-redis
+          image-repository: registry.fly.io/dish-redis
 
   - label: "done with test images"
     command: "true"
