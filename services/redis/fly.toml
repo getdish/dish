@@ -1,5 +1,3 @@
-# fly.toml file generated for dish-redis on 2021-03-09T08:18:36-07:00
-
 app = "dish-redis"
 
 kill_signal = "SIGINT"

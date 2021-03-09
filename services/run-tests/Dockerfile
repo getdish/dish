@@ -17,4 +17,5 @@ ENV NODE_ENV=test
 ENV CI=true
 ENV REDIS_PASSWORD=redis
 
-CMD ["true"]
+RUN touch stay_alive
+CMD ["tail", "-f", "stay_alive"]
