@@ -7,7 +7,6 @@ export SHELLOPTS
 PG_PROXY_PID=
 TS_PROXY_PID=
 DISH_REGISTRY="registry.fly.io"
-PATH=$PATH:~/bin/google-cloud-sdk/bin
 
 function generate_random_port() {
   echo "2$((1000 + RANDOM % 8999))"
@@ -784,7 +783,9 @@ function push_auxillary_images() {
 }
 
 function dish_docker_login() {
-  eval $(./dishctl.sh yaml_to_env) flyctl auth docker
+  if [ ! -f "$HOME/.fly/config.yml" ]; then
+    eval $(./dishctl.sh yaml_to_env) flyctl auth docker
+  fi
 }
 
 function grafana_backup() {
