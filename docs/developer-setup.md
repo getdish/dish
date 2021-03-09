@@ -159,7 +159,7 @@ If you need to deploy something quickly and are willing to skip CI, you can run 
 You'll need a few things set up first:
 
     - On production: `kubectl` and `doctl` installed
-    - `doctl auth init -t $TF_VAR_DO_DISH_KEY` token is avaiable in enc.env.production.yaml
+    - `doctl auth init -t $DO_DISH_KEY` token is avaiable in enc.env.production.yaml
     - `doctl kubernetes cluster kubeconfig save dish[blue/green]`
     - On production and staging, you'll need `flyctl` in order to login to our Docker registry.
 

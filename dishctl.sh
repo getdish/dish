@@ -163,15 +163,15 @@ function db_migrate() {
   pushd $PROJECT_ROOT/services/hasura
   _db_migrate \
     https://hasura.dishapp.com \
-    "$TF_VAR_HASURA_GRAPHQL_ADMIN_SECRET" \
-    "$TF_VAR_POSTGRES_PASSWORD" \
+    "$HASURA_GRAPHQL_ADMIN_SECRET" \
+    "$POSTGRES_PASSWORD" \
     "$_PG_PORT"
   popd
 }
 
 function db_migrate_local() {
   if [[ $USE_PROD_HASURA_PASSWORD == "true" ]]; then
-    HASURA_ADMIN_SECRET="$TF_VAR_HASURA_GRAPHQL_ADMIN_SECRET"
+    HASURA_ADMIN_SECRET="$HASURA_GRAPHQL_ADMIN_SECRET"
   fi
   _db_migrate \
     http://localhost:8080 \
@@ -191,7 +191,7 @@ function timescale_migrate() {
   timescale_proxy $_TIMESCALE_PORT
   pushd $PROJECT_ROOT/services/timescale
   PG_PORT=$_TIMESCALE_PORT \
-  PG_PASS=$TF_VAR_TIMESCALE_SU_PASS \
+  PG_PASS=$TIMESCALE_SU_PASS \
   DISH_ENV=production ./migrate.sh
   popd
 }
@@ -227,8 +227,8 @@ function dump_scrape_data_to_s3() {
     )
     to stdout with csv"
   echo "Dumping scrape table to S3..."
-  PGPASSWORD=$TF_VAR_POSTGRES_PASSWORD psql \
-    -h $TF_VAR_POSTGRES_HOST \
+  PGPASSWORD=$POSTGRES_PASSWORD psql \
+    -h $POSTGRES_HOST \
     -U postgres \
     -d ${POSTGRES_DB:-dish} \
     -c "$copy_out" \
@@ -278,11 +278,11 @@ function local_node_with_prod_env() {
   export USE_PG_SSL=true
   export RUN_WITHOUT_WORKER=${RUN_WITHOUT_WORKER:-true}
   export PGPORT=$_PG_PORT
-  export PGPASSWORD=$TF_VAR_POSTGRES_PASSWORD
+  export PGPASSWORD=$POSTGRES_PASSWORD
   export TIMESCALE_PORT=$_TIMESCALE_PORT
-  export TIMESCALE_PASSWORD=$TF_VAR_TIMESCALE_SU_PASS
+  export TIMESCALE_PASSWORD=$TIMESCALE_SU_PASS
   export HASURA_ENDPOINT=https://hasura.dishapp.com
-  export HASURA_SECRET="$TF_VAR_HASURA_GRAPHQL_ADMIN_SECRET"
+  export HASURA_SECRET="$HASURA_GRAPHQL_ADMIN_SECRET"
   if [[ $DISABLE_GC != "1" ]]; then
     export GC_FLAG="--expose-gc"
   fi
@@ -301,7 +301,7 @@ function local_node_with_staging_env() {
   export TIMESCALE_PORT=15433
   export TIMESCALE_PASSWORD=postgres
   export HASURA_ENDPOINT=https://hasura-staging.dishapp.com
-  export HASURA_SECRET="$TF_VAR_HASURA_GRAPHQL_ADMIN_SECRET"
+  export HASURA_SECRET="$HASURA_GRAPHQL_ADMIN_SECRET"
   node \
     --max-old-space-size=4096 \
     $1
@@ -334,8 +334,8 @@ function s3() {
   s3cmd \
     --host sfo2.digitaloceanspaces.com \
     --host-bucket '%(bucket).sfo2.digitaloceanspaces.com' \
-    --access_key $TF_VAR_DO_SPACES_ID \
-    --secret_key $TF_VAR_DO_SPACES_SECRET \
+    --access_key $DO_SPACES_ID \
+    --secret_key $DO_SPACES_SECRET \
     --human-readable-sizes \
     "$@"
 }
@@ -400,8 +400,8 @@ function _restore_main_backup() {
   backup=$1
   echo "Restoring $backup ..."
   s3 get $backup backup.dump
-  cat backup.dump | PGPASSWORD=$TF_VAR_POSTGRES_PASSWORD pg_restore \
-    -h $TF_VAR_POSTGRES_HOST \
+  cat backup.dump | PGPASSWORD=$POSTGRES_PASSWORD pg_restore \
+    -h $POSTGRES_HOST \
     -U postgres \
     -d dish
 }
@@ -432,8 +432,8 @@ function restore_latest_scrape_backup() {
   latest_backup=$(get_latest_scrape_backup)
   s3 get \$latest_backup backup.dump
   echo "Restoring \$latest_backup ..."
-  cat backup.dump | PGPASSWORD=$TF_VAR_POSTGRES_PASSWORD pg_restore \
-    -h $TF_VAR_TIMESCALE_HOST \
+  cat backup.dump | PGPASSWORD=$POSTGRES_PASSWORD pg_restore \
+    -h $TIMESCALE_HOST \
     -U postgres \
     -d dish
 }
@@ -469,7 +469,7 @@ function timescale_proxy() {
 function timescale_console() {
   PORT=$(generate_random_port)
   timescale_proxy $PORT
-  PGPASSWORD=$TF_VAR_TIMESCALE_SU_PASS pgcli \
+  PGPASSWORD=$TIMESCALE_SU_PASS pgcli \
     -p $PORT \
     -h localhost \
     -U postgres \
@@ -492,7 +492,7 @@ function postgres_proxy() {
 function postgres_console() {
   PORT=$(generate_random_port)
   postgres_proxy $PORT
-  PGPASSWORD=$TF_VAR_POSTGRES_PASSWORD pgcli \
+  PGPASSWORD=$POSTGRES_PASSWORD pgcli \
     --auto-vertical-output \
     -p $PORT \
     -h localhost \
@@ -510,7 +510,7 @@ function main_db_command() {
 function timescale_command() {
   PORT=$(generate_random_port)
   timescale_proxy $PORT
-  echo "$1" | PGPASSWORD=$TF_VAR_TIMESCALE_SU_PASS psql \
+  echo "$1" | PGPASSWORD=$TIMESCALE_SU_PASS psql \
     -p $PORT \
     -h localhost \
     -U postgres \
@@ -561,8 +561,8 @@ function install_doctl() {
 }
 
 function init_doctl() {
-  doctl auth init -t $TF_VAR_DO_DISH_KEY
-  doctl kubernetes cluster kubeconfig save $TF_VAR_CURRENT_DISH_CLUSTER
+  doctl auth init -t $DO_DISH_KEY
+  doctl kubernetes cluster kubeconfig save $CURRENT_DISH_CLUSTER
 }
 
 function install_kubectl() {
@@ -598,7 +598,7 @@ function postgres_replica_ssh() {
 
 function pgpool_status() {
   sql='SHOW pool_processes'
-  command="PGPASSWORD=$TF_VAR_POSTGRES_PASSWORD psql \
+  command="PGPASSWORD=$POSTGRES_PASSWORD psql \
     -U postgres \
     -h localhost \
     -c '$sql'"
