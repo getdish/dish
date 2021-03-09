@@ -15,260 +15,261 @@ steps:
     key: base
     env:
       DOCKER_TAG: dish-base
+      DOCKER_PUSH_SYNC: true
     plugins:
       - docker-compose#v3.7.0:
           build: base
           cache-from: base:registry.fly.io/dish-base:latest
 
-  # - label: ":docker: build dish-app"
-  #   key: dish-app
-  #   depends_on: base
-  #   env:
-  #     DOCKER_TAG: dish-app
-  #   plugins:
-  #     - docker-compose#v3.7.0:
-  #         build: dish-app
-  #         cache-from: dish-app:registry.fly.io/dish-app:latest
+  - label: ":docker: build dish-app"
+    key: dish-app
+    depends_on: base
+    env:
+      DOCKER_TAG: dish-app
+    plugins:
+      - docker-compose#v3.7.0:
+          build: dish-app
+          cache-from: dish-app:registry.fly.io/dish-app:latest
 
-  # - label: ":docker: build run-tests"
-  #   key: run-tests
-  #   env:
-  #     DOCKER_TAG: run-tests
-  #     REDIS_PASSWORD: run-tests
-  #   depends_on: base
-  #   plugins:
-  #     - docker-compose#v3.7.0:
-  #         build: run-tests
+  - label: ":docker: build run-tests"
+    key: run-tests
+    env:
+      DOCKER_TAG: run-tests
+      REDIS_PASSWORD: run-tests
+    depends_on: base
+    plugins:
+      - docker-compose#v3.7.0:
+          build: run-tests
 
-  # - label: ":docker: build hooks"
-  #   key: hooks
-  #   depends_on: base
-  #   env:
-  #     DOCKER_TAG: dish-hooks
-  #   plugins:
-  #     - docker-compose#v3.7.0:
-  #         build: hooks
-  #         cache-from: hooks:registry.fly.io/dish-hooks:latest
+  - label: ":docker: build hooks"
+    key: hooks
+    depends_on: base
+    env:
+      DOCKER_TAG: dish-hooks
+    plugins:
+      - docker-compose#v3.7.0:
+          build: hooks
+          cache-from: hooks:registry.fly.io/dish-hooks:latest
 
-  # - label: ":docker: build worker"
-  #   key: worker
-  #   depends_on: base
-  #   env:
-  #     DOCKER_TAG: dish-worker
-  #   plugins:
-  #     - docker-compose#v3.7.0:
-  #         build: worker
-  #         cache-from: worker:registry.fly.io/dish-worker:latest
+  - label: ":docker: build worker"
+    key: worker
+    depends_on: base
+    env:
+      DOCKER_TAG: dish-worker
+    plugins:
+      - docker-compose#v3.7.0:
+          build: worker
+          cache-from: worker:registry.fly.io/dish-worker:latest
 
-  # - label: ":docker: build search"
-  #   key: search
-  #   env:
-  #     DOCKER_TAG: dish-search
-  #   retry:
-  #     automatic: true
-  #   plugins:
-  #     - docker-compose#v3.7.0:
-  #         build: search
-  #         cache-from: search:registry.fly.io/dish-search:latest
+  - label: ":docker: build search"
+    key: search
+    env:
+      DOCKER_TAG: dish-search
+    retry:
+      automatic: true
+    plugins:
+      - docker-compose#v3.7.0:
+          build: search
+          cache-from: search:registry.fly.io/dish-search:latest
 
-  # - label: ":docker: build hasura"
-  #   key: hasura
-  #   env:
-  #     DOCKER_TAG: dish-hasura
-  #   retry:
-  #     automatic: true
-  #   plugins:
-  #     - docker-compose#v3.7.0:
-  #         build: hasura
-  #         cache-from: hasura:registry.fly.io/dish-hasura:latest
+  - label: ":docker: build hasura"
+    key: hasura
+    env:
+      DOCKER_TAG: dish-hasura
+    retry:
+      automatic: true
+    plugins:
+      - docker-compose#v3.7.0:
+          build: hasura
+          cache-from: hasura:registry.fly.io/dish-hasura:latest
 
-  # - label: ":docker: build timescale"
-  #   key: timescale
-  #   env:
-  #     DOCKER_TAG: dish-timescale
-  #   retry:
-  #     automatic: true
-  #   plugins:
-  #     - docker-compose#v3.7.0:
-  #         build: timescale
-  #         cache-from: timescale:registry.fly.io/dish-timescale:latest
+  - label: ":docker: build timescale"
+    key: timescale
+    env:
+      DOCKER_TAG: dish-timescale
+    retry:
+      automatic: true
+    plugins:
+      - docker-compose#v3.7.0:
+          build: timescale
+          cache-from: timescale:registry.fly.io/dish-timescale:latest
 
-  # - label: ":docker: build tileserver"
-  #   key: tileserver
-  #   env:
-  #     DOCKER_TAG: dish-tileserver
-  #   retry:
-  #     automatic: true
-  #   plugins:
-  #     - docker-compose#v3.7.0:
-  #         build: tileserver
-  #         cache-from: tileserver:registry.fly.io/dish-tileserver:latest
+  - label: ":docker: build tileserver"
+    key: tileserver
+    env:
+      DOCKER_TAG: dish-tileserver
+    retry:
+      automatic: true
+    plugins:
+      - docker-compose#v3.7.0:
+          build: tileserver
+          cache-from: tileserver:registry.fly.io/dish-tileserver:latest
 
-  # - label: ":docker: build postgres for tests"
-  #   key: postgres
-  #   env:
-  #     DOCKER_TAG: dish-postgres
-  #     POSTGRES_NAME: postgres
-  #   retry:
-  #     automatic: true
-  #   plugins:
-  #     - docker-compose#v3.7.0:
-  #         build: postgres
-  #         cache-from: postgres:registry.fly.io/dish-postgres:latest
+  - label: ":docker: build postgres for tests"
+    key: postgres
+    env:
+      DOCKER_TAG: dish-postgres
+      POSTGRES_NAME: postgres
+    retry:
+      automatic: true
+    plugins:
+      - docker-compose#v3.7.0:
+          build: postgres
+          cache-from: postgres:registry.fly.io/dish-postgres:latest
 
-  # - label: ":docker: build redis"
-  #   key: redis
-  #   env:
-  #     DOCKER_TAG: dish-redis
-  #   retry:
-  #     automatic: true
-  #   plugins:
-  #     - docker-compose#v3.7.0:
-  #         build: redis
-  #         cache-from: redis:registry.fly.io/dish-redis:latest
+  - label: ":docker: build redis"
+    key: redis
+    env:
+      DOCKER_TAG: dish-redis
+    retry:
+      automatic: true
+    plugins:
+      - docker-compose#v3.7.0:
+          build: redis
+          cache-from: redis:registry.fly.io/dish-redis:latest
 
-  # - label: "done with test images"
-  #   command: "true"
-  #   key: test-images
-  #   depends_on:
-  #     - dish-app
-  #     - hooks
-  #     - worker
-  #     - search
-  #     - hasura
-  #     - timescale
-  #     - tileserver
-  #     - run-tests
-  #     - postgres
-  #     - redis
+  - label: "done with test images"
+    command: "true"
+    key: test-images
+    depends_on:
+      - dish-app
+      - hooks
+      - worker
+      - search
+      - hasura
+      - timescale
+      - tileserver
+      - run-tests
+      - postgres
+      - redis
 
-  # - label: "push ONLY pre-test images to registry"
-  #   depends_on: test-images
-  #   plugins:
-  #     - docker-compose#v3.7.0:
-  #         push:
-  #           - base:registry.fly.io/dish-base:latest
-  #           - dish-app:registry.fly.io/dish-app:latest
-  #           - hooks:registry.fly.io/dish-hooks:latest
-  #           - worker:registry.fly.io/dish-worker:latest
-  #           - search:registry.fly.io/dish-search:latest
-  #           - hasura:registry.fly.io/dish-hasura:latest
-  #           - timescale:registry.fly.io/dish-timescale:latest
-  #           - tileserver:registry.fly.io/dish-tileserver:latest
-  #           - tileserver:registry.fly.io/dish-tileserver:latest
-  #           - redis:registry.fly.io/dish-redis:latest
+  - label: "push ONLY pre-test images to registry"
+    depends_on: test-images
+    plugins:
+      - docker-compose#v3.7.0:
+          push:
+            - base:registry.fly.io/dish-base:latest
+            - dish-app:registry.fly.io/dish-app:latest
+            - hooks:registry.fly.io/dish-hooks:latest
+            - worker:registry.fly.io/dish-worker:latest
+            - search:registry.fly.io/dish-search:latest
+            - hasura:registry.fly.io/dish-hasura:latest
+            - timescale:registry.fly.io/dish-timescale:latest
+            - tileserver:registry.fly.io/dish-tileserver:latest
+            - tileserver:registry.fly.io/dish-tileserver:latest
+            - redis:registry.fly.io/dish-redis:latest
 
-  # # non test images
+  # non test images
 
-  # - label: ":docker: build cron"
-  #   retry:
-  #     automatic: true
-  #   plugins:
-  #     - docker-compose#v3.7.0:
-  #         build: cron
-  #         image-repository: registry.fly.io/dish-cron
-  #         cache-from: cron:registry.fly.io/dish-cron:latest
-  #         push: cron:registry.fly.io/dish-cron:latest
+  - label: ":docker: build cron"
+    retry:
+      automatic: true
+    plugins:
+      - docker-compose#v3.7.0:
+          build: cron
+          image-repository: registry.fly.io/dish-cron
+          cache-from: cron:registry.fly.io/dish-cron:latest
+          push: cron:registry.fly.io/dish-cron:latest
 
-  # - label: ":docker: build gorse"
-  #   retry:
-  #     automatic: true
-  #   plugins:
-  #     - docker-compose#v3.7.0:
-  #         build: gorse
-  #         image-repository: registry.fly.io/dish-gorse
-  #         cache-from: gorse:registry.fly.io/dish-gorse:latest
-  #         push: gorse:registry.fly.io/dish-gorse:latest
+  - label: ":docker: build gorse"
+    retry:
+      automatic: true
+    plugins:
+      - docker-compose#v3.7.0:
+          build: gorse
+          image-repository: registry.fly.io/dish-gorse
+          cache-from: gorse:registry.fly.io/dish-gorse:latest
+          push: gorse:registry.fly.io/dish-gorse:latest
 
-  # - label: ":docker: build bert"
-  #   retry:
-  #     automatic: true
-  #   plugins:
-  #     - docker-compose#v3.7.0:
-  #         build: bert
-  #         image-repository: registry.fly.io/dish-bert
-  #         cache-from: bert:registry.fly.io/dish-bert:latest
-  #         push: bert:registry.fly.io/dish-bert:latest
+  - label: ":docker: build bert"
+    retry:
+      automatic: true
+    plugins:
+      - docker-compose#v3.7.0:
+          build: bert
+          image-repository: registry.fly.io/dish-bert
+          cache-from: bert:registry.fly.io/dish-bert:latest
+          push: bert:registry.fly.io/dish-bert:latest
 
-  # - label: ":docker: build image-proxy"
-  #   retry:
-  #     automatic: true
-  #   plugins:
-  #     - docker-compose#v3.7.0:
-  #         build: image-proxy
-  #         image-repository: registry.fly.io/dish-image-proxy
-  #         cache-from: image-proxy:registry.fly.io/dish-image-proxy:latest
-  #         push: image-proxy:registry.fly.io/dish-image-proxy:latest
+  - label: ":docker: build image-proxy"
+    retry:
+      automatic: true
+    plugins:
+      - docker-compose#v3.7.0:
+          build: image-proxy
+          image-repository: registry.fly.io/dish-image-proxy
+          cache-from: image-proxy:registry.fly.io/dish-image-proxy:latest
+          push: image-proxy:registry.fly.io/dish-image-proxy:latest
 
-  # - label: ":docker: build image-quality"
-  #   retry:
-  #     automatic: true
-  #   plugins:
-  #     - docker-compose#v3.7.0:
-  #         build: image-quality
-  #         image-repository: registry.fly.io/dish-image-quality
-  #         cache-from: image-quality:registry.fly.io/dish-image-quality:latest
-  #         push: image-quality:registry.fly.io/dish-image-quality:latest
+  - label: ":docker: build image-quality"
+    retry:
+      automatic: true
+    plugins:
+      - docker-compose#v3.7.0:
+          build: image-quality
+          image-repository: registry.fly.io/dish-image-quality
+          cache-from: image-quality:registry.fly.io/dish-image-quality:latest
+          push: image-quality:registry.fly.io/dish-image-quality:latest
 
-  # - label: ":docker: build db"
-  #   retry:
-  #     automatic: true
-  #   env:
-  #     POSTGRES_NAME: db
-  #   plugins:
-  #     - docker-compose#v3.7.0:
-  #         build: postgres
-  #         image-repository: registry.fly.io/dish-db
-  #         cache-from: postgres:registry.fly.io/dish-db:latest
-  #         push: postgres:registry.fly.io/dish-db:latest
+  - label: ":docker: build db"
+    retry:
+      automatic: true
+    env:
+      POSTGRES_NAME: db
+    plugins:
+      - docker-compose#v3.7.0:
+          build: postgres
+          image-repository: registry.fly.io/dish-db
+          cache-from: postgres:registry.fly.io/dish-db:latest
+          push: postgres:registry.fly.io/dish-db:latest
 
-  # - label: "setup services for tests"
-  #   if: build.branch != "master"
-  #   key: test-setup
-  #   command: ".buildkite/scripts/setup_services.sh"
-  #   depends_on:
-  #     - test-images
-  #   env:
-  #     LOG_DOCKER: true
-  #     IS_COMPOSE_RUNNER: true
-  #     DOCKER_CLEAN_ON_FAIL: true
-  #     POSTGRES_STRATEGY: simple
-  #   plugins:
-  #     - gencer/cache#v2.3.10:
-  #         backend: s3
-  #         key: "v1-cache-{{ runner.os }}"
-  #         s3:
-  #           args: "--endpoint-url=https://sfo2.digitaloceanspaces.com"
-  #           bucket: "dish-build-cache"
-  #         paths:
-  #           - '/root/.dish/'
+  - label: "setup services for tests"
+    if: build.branch != "master"
+    key: test-setup
+    command: ".buildkite/scripts/setup_services.sh"
+    depends_on:
+      - test-images
+    env:
+      LOG_DOCKER: true
+      IS_COMPOSE_RUNNER: true
+      DOCKER_CLEAN_ON_FAIL: true
+      POSTGRES_STRATEGY: simple
+    plugins:
+      - gencer/cache#v2.3.10:
+          backend: s3
+          key: "v1-cache-{{ runner.os }}"
+          s3:
+            args: "--endpoint-url=https://sfo2.digitaloceanspaces.com"
+            bucket: "dish-build-cache"
+          paths:
+            - '/root/.dish/'
 
-  # - label: "run tests"
-  #   if: build.branch != "master"
-  #   key: tests
-  #   command: "docker run --net host registry.fly.io/run-tests:latest yarn test"
-  #   depends_on: test-setup
-  #   env:
-  #     LOG_DOCKER: true
-  #     DOCKER_COMPOSE_DOWN: true
-  #     DOCKER_CLEAN_ON_FAIL: true
+  - label: "run tests"
+    if: build.branch != "master"
+    key: tests
+    command: "docker run --net host registry.fly.io/run-tests:latest yarn test"
+    depends_on: test-setup
+    env:
+      LOG_DOCKER: true
+      DOCKER_COMPOSE_DOWN: true
+      DOCKER_CLEAN_ON_FAIL: true
 
-  # # - label: "run integration test"
-  # #   command: ".buildkite/scripts/integration_tests.sh"
+  # - label: "run integration test"
+  #   command: ".buildkite/scripts/integration_tests.sh"
 
-  # - wait
+  - wait
 
-  # - label: "deploy"
-  #   # if: build.branch == "production"
-  #   command: ".buildkite/scripts/deploy_all.sh"
-  #   artifact_paths:
-  #     - "*.log"
-  #   env:
-  #     DOCKER_CLEAN: true
+  - label: "deploy"
+    # if: build.branch == "production"
+    command: ".buildkite/scripts/deploy_all.sh"
+    artifact_paths:
+      - "*.log"
+    env:
+      DOCKER_CLEAN: true
 
-  # - wait
+  - wait
 
-  # - label: "finish"
-  #   command: ".buildkite/scripts/finish.sh"
-  #   env:
-  #     FINISH: true
+  - label: "finish"
+    command: ".buildkite/scripts/finish.sh"
+    env:
+      FINISH: true
