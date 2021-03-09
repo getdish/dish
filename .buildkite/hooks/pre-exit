@@ -6,10 +6,16 @@ if [ "$FIRST_STEP" == "true" ]; then
   exit 0
 fi
 
+if [ "$BUILDKITE_COMMAND_EXIT_STATUS" -ne 0 ]; then
+  echo "Steps are skipped because $BUILDKITE_AGENT_NAME:$BUILDKITE_LABEL returned $BUILDKITE_COMMAND_EXIT_STATUS" > /opt/ci/inner/skip
+fi
+
 if [ "$DOCKER_TAG" == "true" ]; then
+  set -x
   docker tag \
-    "gcr.io/dish-258800/$BUILDKITE_STEP_KEY/$BUILDKITE_PIPELINE_NAME-$BUILDKITE_STEP_KEY-build-$BUILDKITE_BUILD_ID" \
+    "$BUILDKITE_PIPELINE_NAME-$BUILDKITE_STEP_KEY-build-$BUILDKITE_BUILD_NUMBER" \
     "gcr.io/dish-258800/$BUILDKITE_STEP_KEY:latest"
+  set +x
 fi
 
 if [ "$LOG_DOCKER" == "true" ]; then

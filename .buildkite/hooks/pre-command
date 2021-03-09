@@ -32,6 +32,19 @@ if [ "$FIRST_STEP" == "true" ]; then
     ./dishctl.sh install_gcloud_sdk
     gcloud config set component_manager/disable_update_check true
   fi
+
+fi
+
+# bail early on fail
+if [ "$FIRST_STEP" == "true" ]; then
+  rm -f /opt/ci/inner/skip || true
+else
+  if [[ -f "/opt/ci/inner/skip" ]]; then
+      SKIP_STEPS=$(cat /opt/ci/inner/skip)
+      export SKIP_STEPS
+      echo SKIP_STEPS: "$SKIP_STEPS"
+      exit 1
+  fi
 fi
 
 if (which netstat > /dev/null); then
