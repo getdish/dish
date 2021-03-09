@@ -998,12 +998,11 @@ function deploy_fly_app() {
   where=$1
   app=$2
   folder=$3
-  image_name=${4:-$1}
   log_file="$(pwd)/deploy-$app.log"
   pre_deploy_logs="$(pwd)/pre-deploy-$app.log"
   rm "$log_file" &> /dev/null || true
   tag=${5:-latest}
-  echo ">>>> deploying $app in $folder to image $image_name with tag $tag"
+  echo ">>>> deploying $app in $folder with tag $tag"
   pushd "$folder"
   if [ -f ".ci/pre_deploy.sh" ]; then
     echo " >> running pre-deploy script $app..."
@@ -1025,7 +1024,7 @@ function deploy_fly_app() {
   fi
   if [ "$where" = "registry" ]; then
     did_kill_idempotent=0
-    echo " >> deploying..."
+    echo " >> deploy..."
     touch "$log_file"
     tail -f "$log_file" &
     tail_pid=$!

@@ -29,6 +29,8 @@ if (redisUrl) {
   }
 }
 
+console.log('redisOptions2', redisOptions)
+
 export type JobData = {
   className: string
   fn: string
