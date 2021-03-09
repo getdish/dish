@@ -12,7 +12,7 @@ if [ "$LOG_DOCKER" == "true" ]; then
   cat ./*.logs || true
 fi
 
-if [ "$BUILDKITE_COMMAND_EXIT_STATUS" = "1" ]; then
+if [ "$IS_COMPOSE_RUNNER" = "true" ] && [ "$BUILDKITE_COMMAND_EXIT_STATUS" = "1" ]; then
   echo "shutting down docker"
   docker-compose down --volumes || true
 fi
