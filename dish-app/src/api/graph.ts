@@ -4,10 +4,6 @@ import { route, useRouteBodyParser } from '@dish/api'
 import { GRAPH_API_INTERNAL, fetchLog, getAuthHeaders } from '@dish/graph'
 import redis from 'redis'
 
-// for hasura to work
-// may want to try the second answer: https://stackoverflow.com/questions/20082893/unable-to-verify-leaf-signature
-process.env['NODE_TLS_REJECT_UNAUTHORIZED'] = '0'
-
 const url =
   process.env.FLY_REDIS_CACHE_URL ||
   process.env.REDIS_URL ||
