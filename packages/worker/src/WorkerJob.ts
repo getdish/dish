@@ -11,15 +11,19 @@ const is_local_redis =
   process.env.DISH_ENV === 'development' || process.env.CI === 'true'
 
 // fly redis doesnt support .subscribe()
-// process.env.FLY_REDIS_CACHE_URL ||
-const redisUrl = process.env.REDIS_URL
+// dony use process.env.FLY_REDIS_CACHE_URL
+
 let redisOptions: any = {
   port: 6379,
   host: is_local_redis ? 'localhost' : process.env.REDIS_HOST,
 }
 
-if (redisUrl) {
-  const matched = redisUrl.match(
+if (process.env.REDIS_PASSWORD) {
+  redisOptions.password = process.env.REDIS_PASSWORD
+}
+
+if (process.env.REDIS_URL) {
+  const matched = process.env.REDIS_URL.match(
     /redis:\/\/([a-z0-9]*):([a-z0-9]*)@([a-z0-9-_\.]+):([0-9]+)/i
   )
   if (matched) {
@@ -31,6 +35,8 @@ if (redisUrl) {
     }
   }
 }
+
+console.log('redisOptions', redisOptions)
 
 export type JobData = {
   className: string
