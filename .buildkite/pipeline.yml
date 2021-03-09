@@ -124,7 +124,7 @@ steps:
       - worker
       - search
       - hasura
-      - timescaledb
+      - timescale
       - tileserver
       - run-tests
       - postgres
