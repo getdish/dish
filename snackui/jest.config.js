@@ -4,7 +4,7 @@ module.exports = {
     '^.+\\.[jt]sx?$': 'esbuild-jest',
   },
   bail: true,
-  transformIgnorePatterns: ['node_modules/(?!@expo)/', 'packages'],
+  transformIgnorePatterns: ['node_modules/(?!@expo)/', 'dist'],
   testTimeout: 20000,
   // verbose: true,
 }
