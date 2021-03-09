@@ -13,6 +13,7 @@ RUN apt-get update > /dev/null && apt-get install -y \
        > /dev/null \
       && apt-get clean
 
+WORKDIR /app
 COPY services/worker services/worker
 COPY packages packages
 WORKDIR /app/services/worker
