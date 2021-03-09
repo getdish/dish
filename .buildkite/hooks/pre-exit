@@ -14,13 +14,6 @@ if [ "$DOCKER_COMPOSE_DOWN" == "true" ]; then
   docker-compose down &
 fi
 
-if [ -n "$DOCKER_TAG" ]; then
-  from="$BUILDKITE_PIPELINE_NAME-$BUILDKITE_STEP_KEY-build-$BUILDKITE_BUILD_NUMBER:latest"
-  to="registry.fly.io/dish-$BUILDKITE_STEP_KEY"
-  echo "docker tag $from $to:latest"
-  docker tag "$from" "$to:latest"
-fi
-
 if [ "$LOG_DOCKER" == "true" ]; then
   echo "docker logs..."
   docker-compose logs --tail 2000

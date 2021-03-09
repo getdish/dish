@@ -13,27 +13,24 @@ steps:
 
   - label: ":docker: build base"
     key: base
-    env:
-      DOCKER_TAG: base
     plugins:
       - docker-compose#v3.7.0:
           build: base
           cache-from: base:registry.fly.io/dish-base:latest
+          image-repository: fly.io/dish-base
 
   - label: ":docker: build dish-app"
     key: dish-app
-    env:
-      DOCKER_TAG: dish-app
     depends_on: base
     plugins:
       - docker-compose#v3.7.0:
           build: dish-app
           cache-from: dish-app:registry.fly.io/dish-app:latest
+          image-repository: registry.fly.io/dish-app
 
   - label: ":docker: build run-tests"
     key: run-tests
     env:
-      DOCKER_TAG: run-tests
       REDIS_PASSWORD: redis
     depends_on: base
     plugins:
@@ -42,72 +39,65 @@ steps:
 
   - label: ":docker: build hooks"
     key: hooks
-    env:
-      DOCKER_TAG: hooks
     depends_on: base
     plugins:
       - docker-compose#v3.7.0:
           build: hooks
           cache-from: hooks:registry.fly.io/dish-hooks:latest
+          image-repository: fly.io/dish-hooks
 
   - label: ":docker: build worker"
     key: worker
-    env:
-      DOCKER_TAG: worker
     depends_on: base
     plugins:
       - docker-compose#v3.7.0:
           build: worker
           cache-from: worker:registry.fly.io/dish-worker:latest
+          image-repository: registry.fly.io/dish-worker
 
   - label: ":docker: build search"
     key: search
-    env:
-      DOCKER_TAG: search
     retry:
       automatic: true
     plugins:
       - docker-compose#v3.7.0:
           build: search
           cache-from: search:registry.fly.io/dish-search:latest
+          image-repository: registry.fly.io/dish-search
 
   - label: ":docker: build hasura"
     key: hasura
-    env:
-      DOCKER_TAG: hasura
     retry:
       automatic: true
     plugins:
       - docker-compose#v3.7.0:
           build: hasura
           cache-from: hasura:registry.fly.io/dish-hasura:latest
+          image-repository: registry.fly.io/dish-hasura
 
   - label: ":docker: build timescale"
     key: timescale
-    env:
-      DOCKER_TAG: timescale
     retry:
       automatic: true
     plugins:
       - docker-compose#v3.7.0:
           build: timescale
           cache-from: timescale:registry.fly.io/dish-timescale:latest
+          image-repository: registry.fly.io/dish-timescale
 
   - label: ":docker: build tileserver"
     key: tileserver
-    env:
-      DOCKER_TAG: tileserver
     retry:
       automatic: true
     plugins:
       - docker-compose#v3.7.0:
           build: tileserver
           cache-from: tileserver:registry.fly.io/dish-tileserver:latest
+          image-repository: registry.fly.io/dish-tileserver
 
   - label: ":docker: build postgres for tests"
     key: postgres
     env:
-      DOCKER_TAG: postgres
       POSTGRES_NAME: postgres
     retry:
       automatic: true
@@ -115,17 +105,17 @@ steps:
       - docker-compose#v3.7.0:
           build: postgres
           cache-from: postgres:registry.fly.io/dish-postgres:latest
+          image-repository: registry.fly.io/dish-postgres
 
   - label: ":docker: build redis"
     key: redis
-    env:
-      DOCKER_TAG: redis
     retry:
       automatic: true
     plugins:
       - docker-compose#v3.7.0:
           build: redis
           cache-from: redis:registry.fly.io/dish-redis:latest
+          image-repository: fly.io/dish-redis
 
   - label: "done with test images"
     command: "true"
