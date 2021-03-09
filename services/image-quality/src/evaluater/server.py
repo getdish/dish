@@ -42,7 +42,8 @@ def main(image_source, predictions_file):
         samples,
         image_dir,
         64, 10,
-        model.preprocessing_function()
+        model.preprocessing_function(),
+        img_format='jpg'
     )
 
     # get predictions
