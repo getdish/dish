@@ -13,6 +13,11 @@ function generate_random_port() {
 }
 REDIS_PROXY_PORT=$(generate_random_port)
 
+function log-command {
+  echo "$" "$@"
+  eval $(printf '%q ' "$@") < /dev/tty
+}
+
 function dish_registry_auth() {
   eval $(./dishctl.sh yaml_to_env) flyctl auth docker || echo "failed to auth"
 }
@@ -850,36 +855,31 @@ function bert_sentiment() {
   curl "$url"
 }
 
-function docker_compose_up_for_devs() {
-  extra=$1
+function docker_compose_up_subset() {
   services=$(
-    docker-compose config --services \
-      | grep -E -v 'base|nginx|dish-app|image-quality|image-proxy|bert|worker|gorse' \
+    docker-compose config --services 2> /dev/null \
+      | grep -E -v "$1" \
       | tr '\r\n' ' '
   )
-  echo "Starting the following services: $services"
+  extra=$2
   export HASURA_GRAPHQL_ADMIN_SECRET=password
   if [ -z "$extra" ]; then
-    docker-compose up $services
+    log-command -- docker-compose up $services
   else
-    docker-compose up "$extra" $services
+    log-command -- docker-compose up "$extra" $services
   fi
+  printf "\n\n\n"
+}
+
+test_exclude="base|nginx|image-quality|image-proxy|bert|worker|gorse|run-tests|cron"
+dev_exclude="$test_exclude|dish-app|timescale"
+
+function docker_compose_up_for_devs() {
+  docker_compose_up_subset $dev_exclude
 }
 
 function docker_compose_up_for_tests() {
-  extra=$1
-  services=$(
-    docker-compose config --services \
-      | grep -E -v 'base|nginx|image-quality|image-proxy|bert|worker' \
-      | tr '\r\n' ' '
-  )
-  echo "Starting the following services: $services"
-  export HASURA_GRAPHQL_ADMIN_SECRET=password
-  if [ -z "$extra" ]; then
-    docker-compose up $services
-  else
-    docker-compose up "$extra" $services
-  fi
+  docker_compose_up_subset $test_exclude -d
 }
 
 function staging_ssh() {

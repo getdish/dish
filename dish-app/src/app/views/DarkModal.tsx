@@ -1,4 +1,5 @@
-import React from 'react'
+import { series, sleep } from '@dish/async'
+import React, { useEffect, useLayoutEffect, useState } from 'react'
 import { ScrollView } from 'react-native'
 import {
   AbsoluteVStack,
@@ -21,6 +22,16 @@ export const DarkModal = ({
   onDismiss?: any
 }) => {
   const media = useMedia()
+  const [fullHide, setFullHide] = useState(hide)
+
+  useLayoutEffect(() => {
+    if (!hide) {
+      setFullHide(false)
+      return
+    }
+    return series([() => sleep(400), () => setFullHide(true)])
+  }, [hide])
+
   return (
     <Theme name="dark">
       <AbsoluteVStack
@@ -32,6 +43,7 @@ export const DarkModal = ({
         paddingHorizontal={media.sm ? 0 : '2%'}
         backgroundColor="rgba(30,0,12,0.5)"
         opacity={hide ? 0 : 1}
+        display={fullHide ? 'none' : 'flex'}
         pointerEvents={hide ? 'none' : 'auto'}
         onPress={onDismiss}
       >

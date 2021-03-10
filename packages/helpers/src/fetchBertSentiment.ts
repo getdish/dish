@@ -24,6 +24,6 @@ export function bertResultToNumber({ positive }: Sentiment) {
 
 export async function fetchBertSentimentNumber(text: string) {
   const result = await fetchBertSentiment(text)
-  const number = bertResultToNumber(result.result[0])
+  const number = bertResultToNumber(result)
   return number
 }
