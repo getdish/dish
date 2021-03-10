@@ -913,15 +913,18 @@ function deploy_all() {
   set -e
   export_env
   where=${1:-registry}
+  # make them all background so we can handle them the same
   echo "deploying apps via $where"
   deploy "$where" redis | sed -e 's/^/redis: /;' &
   deploy "$where" db | sed -e 's/^/db: /;' &
   wait
   echo "next"
-  deploy "$where" hooks | sed -e 's/^/hooks: /;'
+  deploy "$where" hooks | sed -e 's/^/hooks: /;' &
+  wait
   # depends on postgres
   # depends on hooks
-  deploy "$where" hasura | sed -e 's/^/hasura: /;'
+  deploy "$where" hasura | sed -e 's/^/hasura: /;' &
+  wait
    # depends on hasura
   deploy "$where" tileserver | sed -e 's/^/tileserver: /;' &
   deploy "$where" timescale | sed -e 's/^/timescale: /;' &
@@ -969,7 +972,6 @@ function deploy() {
 }
 
 function deploy_fly_app() {
-  trap 'exit 0' TERM # avoid kill logs
   where=$1
   app=$2
   folder=$3
@@ -1035,6 +1037,7 @@ function deploy_fly_app() {
     echo " >> post-deploy script $app..."
     eval $(yaml_to_env) .ci/post_deploy.sh
   fi
+  # echo $(jobs -p)
   echo " >> 🚀 $app "
   popd
 }
