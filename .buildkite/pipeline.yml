@@ -222,7 +222,6 @@ steps:
           push: postgres:registry.fly.io/dish-db:latest
 
   - label: "setup services for tests"
-    if: build.branch != "master"
     key: test-setup
     command: ".buildkite/scripts/setup_services.sh"
     depends_on:
@@ -243,7 +242,6 @@ steps:
             - '/root/.dish/'
 
   - label: "run tests"
-    if: build.branch != "master"
     key: tests
     command: "docker run --net host registry.fly.io/dish-run-tests:latest yarn test"
     depends_on: test-setup
@@ -258,7 +256,7 @@ steps:
   - wait
 
   - label: "deploy"
-    # if: build.branch == "production"
+    if: build.branch == "production" || build.branch == "nate/dev"
     command: ".buildkite/scripts/deploy_all.sh"
     artifact_paths:
       - "*.log"
