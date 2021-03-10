@@ -60,9 +60,9 @@ if ! timeout --preserve-status 30 bash -c wait_until_hasura_ready; then
 fi
 
 # let it finish setting up
-sleep 2
+sleep 10
 
-echo "Migrating DB"
+echo "Migrating hasura"
 ./dishctl.sh db_migrate_local init
 
 echo "Migrating timescale"
