@@ -1,5 +1,3 @@
-exit 1
-
 # #!/usr/bin/env bash
 # set -e pipefail
 
