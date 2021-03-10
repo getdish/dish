@@ -15,7 +15,6 @@ COPY services services
 
 ENV NODE_ENV=test
 ENV CI=true
-ENV REDIS_PASSWORD=redis
 
 RUN touch stay_alive
 CMD ["tail", "-f", "stay_alive"]

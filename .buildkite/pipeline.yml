@@ -35,7 +35,6 @@ steps:
     key: run-tests
     env:
       DOCKER_TAG: dish-run-tests
-      REDIS_PASSWORD: run-tests
     depends_on: base
     plugins:
       - docker-compose#v3.7.0:
@@ -134,7 +133,6 @@ steps:
     depends_on:
       - dish-app
       - hooks
-      - worker
       - search
       - hasura
       - timescale

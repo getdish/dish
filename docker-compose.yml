@@ -9,8 +9,6 @@ services:
     build:
       context: .
       dockerfile: ./services/run-tests/Dockerfile
-    environment:
-      - REDIS_PASSWORD=redis
   cron:
     image: registry.fly.io/dish-cron${DISH_IMAGE_TAG}
     build:
@@ -49,8 +47,6 @@ services:
       dockerfile: ./Dockerfile
     ports:
       - 6379:6379
-    environment:
-      - REDIS_PASSWORD=redis
   hooks:
     image: registry.fly.io/dish-hooks${DISH_IMAGE_TAG}
     build:
@@ -154,7 +150,6 @@ services:
       - DISH_ENV=staging
       - HASURA_ENDPOINT=http://hasura:8080
       - REDIS_HOST=redis
-      - REDIS_PASSWORD=redis
       - PGHOST=postgres
       - PGPASSWORD=postgres
       - HASURA_SECRET=${HASURA_GRAPHQL_ADMIN_SECRET:-password}

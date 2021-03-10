@@ -861,7 +861,6 @@ function docker_compose_up_for_devs() {
   )
   echo "Starting the following services: $services"
   export HASURA_GRAPHQL_ADMIN_SECRET=password
-  export REDIS_HOST=redis
   if [ -z "$extra" ]; then
     docker-compose up $services
   else
@@ -878,7 +877,6 @@ function docker_compose_up_for_tests() {
   )
   echo "Starting the following services: $services"
   export HASURA_GRAPHQL_ADMIN_SECRET=password
-  export REDIS_HOST=redis
   if [ -z "$extra" ]; then
     docker-compose up $services
   else
