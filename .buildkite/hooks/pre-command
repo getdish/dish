@@ -49,15 +49,14 @@ fi
 echo $(date -u) "node installed"
 
 if [ ! -f $(which npm) ]; then
-  apt-get update && apt-get install -y npm
+  apt-get update && apt-get install -y nodejs npm
+  curl -o- -L https://yarnpkg.com/install.sh | bash
 fi
 echo $(date -u) "npm installed"
 
 if [ ! -f $(which docker) ]; then
-  apt-get update
-  apt-get install -y docker docker-compose nodejs npm
-  curl -o- -L https://yarnpkg.com/install.sh | bash
-  echo $(date -u) "docker/npm installed"
+  apt-get update && apt-get install -y docker docker-compose
+  echo $(date -u) "docker installed"
 fi
 
 if [ ! -f /usr/local/bin/hasura ]; then

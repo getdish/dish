@@ -5,14 +5,13 @@ import { GRAPH_API_INTERNAL, fetchLog, getAuthHeaders } from '@dish/graph'
 import redis from 'redis'
 
 const pass = process.env.REDIS_PASSWORD
-const envUrl = process.env.FLY_REDIS_CACHE_URL || process.env.REDIS_URL
+const envUrl = process.env.REDIS_URL
 const url =
   envUrl ||
   `redis://${pass ? `:${pass}` : ''}:${
     process.env.REDIS_HOST || 'localhost'
   }:6379`
 
-console.log('redis url', url)
 const rc = redis.createClient({
   url,
 })
@@ -27,6 +26,8 @@ const hasuraHeaders = {
   'content-type': 'application/json',
   ...getAuthHeaders(true),
 }
+
+console.log('hasuraHeaders', hasuraHeaders, 'redisurl', url)
 
 function shouldCache(body: string) {
   return body.includes('restaurant_new(')

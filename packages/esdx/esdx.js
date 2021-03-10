@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 
 const exec = require('execa')
-const fs = require('fs')
+const fs = require('fs-extra')
 const { build } = require('esbuild')
 const fg = require('fast-glob')
 const { emitFlatDts } = require('@dish/rollup-plugin-flat-dts/api')
@@ -20,26 +20,27 @@ async function go() {
 
   async function buildTsc() {
     if (process.env.JS_ONLY) return
-    if (legacy) {
-      await exec('tsc', ['--emitDeclarationOnly'])
-    } else {
-      await exec('tsc', ['--emitDeclarationOnly'])
-      const dts = await emitFlatDts({
-        file: 'src/_types.d.ts',
-      })
-      if (dts.diagnostics.length) {
-        console.log(dts.formatDiagnostics())
-      }
-      dts.writeOut('.')
+    await exec('tsc', ['--emitDeclarationOnly'])
+    const dts = await emitFlatDts({
+      file: 'src/_types.d.ts',
+    })
+    if (dts.diagnostics.length) {
+      console.log(dts.formatDiagnostics())
     }
+    dts.writeOut('.')
   }
 
   let files = (await fg(['src/**/*.ts', 'src/**/*.tsx'])).filter(
     (x) => !x.includes('.d.ts')
   )
+
   try {
+    if (legacy) {
+      await exec('tsc', ['--emitDeclarationOnly', '--declarationMap'])
+      await fs.copy('_', 'dist')
+    }
     await Promise.all([
-      buildTsc(),
+      legacy ? null : buildTsc(),
       build({
         entryPoints: files,
         outdir: 'dist',

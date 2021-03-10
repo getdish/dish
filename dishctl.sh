@@ -916,7 +916,7 @@ function deploy_all() {
   # make them all background so we can handle them the same
   echo "deploying apps via $where"
   deploy "$where" redis | sed -e 's/^/redis: /;' &
-  deploy "$where" db | sed -e 's/^/db: /;' &
+  # deploy "$where" db | sed -e 's/^/db: /;' &
   wait
   echo "next"
   deploy "$where" hooks | sed -e 's/^/hooks: /;' &
