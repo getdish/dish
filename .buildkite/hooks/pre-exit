@@ -8,7 +8,7 @@ fi
 
 if [ -n "$DOCKER_TAG" ]; then
   from="$BUILDKITE_PIPELINE_NAME-$BUILDKITE_STEP_KEY-build-$BUILDKITE_BUILD_NUMBER"
-  to="registry.fly.io/dish-$BUILDKITE_STEP_KEY:latest"
+  to="registry.fly.io/$DOCKER_TAG:latest"
   echo docker tag "$from" "$to"
   docker tag "$from" "$to"
   echo docker push "$to"

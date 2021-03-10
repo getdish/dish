@@ -34,7 +34,7 @@ steps:
   - label: ":docker: build run-tests"
     key: run-tests
     env:
-      DOCKER_TAG: run-tests
+      DOCKER_TAG: dish-run-tests
       REDIS_PASSWORD: run-tests
     depends_on: base
     plugins:
