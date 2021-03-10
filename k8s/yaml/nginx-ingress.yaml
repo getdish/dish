@@ -1,4 +1,0 @@
-controller.nodeSelector:
-  "doks.digitalocean.com/node-pool": "dish-pool"
-tcp:
-  "1234": "docker/buildkitd:1234"

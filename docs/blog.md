@@ -1,3 +1,14 @@
+- dishcoin for anti-fraud
+  - dont want to be too machiavellian like incentivizing ratting
+  - but do want to incentivize finding pay-to-play schemes somehow
+  - i think ultimately identity lockdown is key
+  - each account needs to be tied to a phone number + email
+    - alternative we can let geeks tie it to some sort of hard to make key
+    - could also swap either of the two for:
+      - apple login
+      - google login
+  - dont need the login thing right away, you can start as a simple ghost account
+
 -
 
 ---

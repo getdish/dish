@@ -7,7 +7,10 @@ RUN \
       && apt-get clean \
       && rm -rf /var/lib/apt/lists/*
 
-FROM gcr.io/dish-258800/base as base
+# docker only caches after copy ?
+# COPY package.json package.json
+
+FROM registry.fly.io/dish-base:latest
 COPY --from=0 /bin /usr/local/bin
 ENV NODE_ENV=production
 

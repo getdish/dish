@@ -6,15 +6,16 @@ export SHELLOPTS
 
 PG_PROXY_PID=
 TS_PROXY_PID=
-REDIS_PROXY_PID=
-GCLOUD_PROJECT="dish-258800"
-DISH_REGISTRY="gcr.io/$GCLOUD_PROJECT"
-PATH=$PATH:~/bin/google-cloud-sdk/bin
+DISH_REGISTRY="registry.fly.io"
 
 function generate_random_port() {
   echo "2$((1000 + RANDOM % 8999))"
 }
 REDIS_PROXY_PORT=$(generate_random_port)
+
+function dish_registry_auth() {
+  eval $(./dishctl.sh yaml_to_env) flyctl auth docker || echo "failed to auth"
+}
 
 function _kill_port_forwarder {
   echo "Killing script pids for \`kubectl proxy-forward ...\`"
@@ -70,22 +71,14 @@ function send_slack_monitoring_message() {
   message=$1
   curl -X POST $SLACK_MONITORING_HOOK \
     -H 'Content-type: application/json' \
+    --silent \
+    --output /dev/null \
+    --show-error \
     --data @- <<EOF
     {
       "text": "$message",
     }
 EOF
-}
-
-function _worker_k8s() {
-  kubectl exec -it \
-    $(kubectl get pods \
-      | grep -v worker-ui \
-      | grep worker \
-      | grep Running \
-      | awk '{print $1}') \
-    -c worker \
-    -- bash -c "$1"
 }
 
 function worker_cli() {
@@ -140,7 +133,8 @@ function _db_migrate() {
   postgres_password=$3
   postgres_port=$4
   init=$5
-  pushd $PROJECT_ROOT/services/hasura
+  pushd "$PROJECT_ROOT/services/hasura"
+  echo "hasura migrate $admin_secret"
   hasura --skip-update-check \
     migrate apply \
     --endpoint $hasura_endpoint \
@@ -172,17 +166,16 @@ function db_migrate() {
   _PG_PORT=$(generate_random_port)
   postgres_proxy $_PG_PORT
   pushd $PROJECT_ROOT/services/hasura
-  _db_migrate \
-    https://hasura.dishapp.com \
-    "$TF_VAR_HASURA_GRAPHQL_ADMIN_SECRET" \
-    "$TF_VAR_POSTGRES_PASSWORD" \
+  _db_migrate https://hasura.dishapp.com \
+    "$HASURA_GRAPHQL_ADMIN_SECRET" \
+    "$POSTGRES_PASSWORD" \
     "$_PG_PORT"
   popd
 }
 
 function db_migrate_local() {
   if [[ $USE_PROD_HASURA_PASSWORD == "true" ]]; then
-    HASURA_ADMIN_SECRET="$TF_VAR_HASURA_GRAPHQL_ADMIN_SECRET"
+    HASURA_ADMIN_SECRET="$HASURA_GRAPHQL_ADMIN_SECRET"
   fi
   _db_migrate \
     http://localhost:8080 \
@@ -200,15 +193,15 @@ function db_clear_local() {
 function timescale_migrate() {
   _TIMESCALE_PORT=$(generate_random_port)
   timescale_proxy $_TIMESCALE_PORT
-  pushd $PROJECT_ROOT/services/timescaledb
+  pushd $PROJECT_ROOT/services/timescale
   PG_PORT=$_TIMESCALE_PORT \
-  PG_PASS=$TF_VAR_TIMESCALE_SU_PASS \
+  PG_PASS=$TIMESCALE_SU_PASS \
   DISH_ENV=production ./migrate.sh
   popd
 }
 
 function timescale_migrate_local() {
-  pushd $PROJECT_ROOT/services/timescaledb
+  pushd $PROJECT_ROOT/services/timescale
   DISH_ENV=not-production ./migrate.sh
   popd
 }
@@ -238,8 +231,8 @@ function dump_scrape_data_to_s3() {
     )
     to stdout with csv"
   echo "Dumping scrape table to S3..."
-  PGPASSWORD=$TF_VAR_POSTGRES_PASSWORD psql \
-    -h $TF_VAR_POSTGRES_HOST \
+  PGPASSWORD=$POSTGRES_PASSWORD psql \
+    -h $POSTGRES_HOST \
     -U postgres \
     -d ${POSTGRES_DB:-dish} \
     -c "$copy_out" \
@@ -289,11 +282,11 @@ function local_node_with_prod_env() {
   export USE_PG_SSL=true
   export RUN_WITHOUT_WORKER=${RUN_WITHOUT_WORKER:-true}
   export PGPORT=$_PG_PORT
-  export PGPASSWORD=$TF_VAR_POSTGRES_PASSWORD
+  export PGPASSWORD=$POSTGRES_PASSWORD
   export TIMESCALE_PORT=$_TIMESCALE_PORT
-  export TIMESCALE_PASSWORD=$TF_VAR_TIMESCALE_SU_PASS
+  export TIMESCALE_PASSWORD=$TIMESCALE_SU_PASS
   export HASURA_ENDPOINT=https://hasura.dishapp.com
-  export HASURA_SECRET="$TF_VAR_HASURA_GRAPHQL_ADMIN_SECRET"
+  export HASURA_SECRET="$HASURA_GRAPHQL_ADMIN_SECRET"
   if [[ $DISABLE_GC != "1" ]]; then
     export GC_FLAG="--expose-gc"
   fi
@@ -312,7 +305,7 @@ function local_node_with_staging_env() {
   export TIMESCALE_PORT=15433
   export TIMESCALE_PASSWORD=postgres
   export HASURA_ENDPOINT=https://hasura-staging.dishapp.com
-  export HASURA_SECRET="$TF_VAR_HASURA_GRAPHQL_ADMIN_SECRET"
+  export HASURA_SECRET="$HASURA_GRAPHQL_ADMIN_SECRET"
   node \
     --max-old-space-size=4096 \
     $1
@@ -345,8 +338,8 @@ function s3() {
   s3cmd \
     --host sfo2.digitaloceanspaces.com \
     --host-bucket '%(bucket).sfo2.digitaloceanspaces.com' \
-    --access_key $TF_VAR_DO_SPACES_ID \
-    --secret_key $TF_VAR_DO_SPACES_SECRET \
+    --access_key $DO_SPACES_ID \
+    --secret_key $DO_SPACES_SECRET \
     --human-readable-sizes \
     "$@"
 }
@@ -411,8 +404,8 @@ function _restore_main_backup() {
   backup=$1
   echo "Restoring $backup ..."
   s3 get $backup backup.dump
-  cat backup.dump | PGPASSWORD=$TF_VAR_POSTGRES_PASSWORD pg_restore \
-    -h $TF_VAR_POSTGRES_HOST \
+  cat backup.dump | PGPASSWORD=$POSTGRES_PASSWORD pg_restore \
+    -h $POSTGRES_HOST \
     -U postgres \
     -d dish
 }
@@ -443,8 +436,8 @@ function restore_latest_scrape_backup() {
   latest_backup=$(get_latest_scrape_backup)
   s3 get \$latest_backup backup.dump
   echo "Restoring \$latest_backup ..."
-  cat backup.dump | PGPASSWORD=$TF_VAR_POSTGRES_PASSWORD pg_restore \
-    -h $TF_VAR_TIMESCALE_HOST \
+  cat backup.dump | PGPASSWORD=$POSTGRES_PASSWORD pg_restore \
+    -h $TIMESCALE_HOST \
     -U postgres \
     -d dish
 }
@@ -480,7 +473,7 @@ function timescale_proxy() {
 function timescale_console() {
   PORT=$(generate_random_port)
   timescale_proxy $PORT
-  PGPASSWORD=$TF_VAR_TIMESCALE_SU_PASS pgcli \
+  PGPASSWORD=$TIMESCALE_SU_PASS pgcli \
     -p $PORT \
     -h localhost \
     -U postgres \
@@ -503,7 +496,7 @@ function postgres_proxy() {
 function postgres_console() {
   PORT=$(generate_random_port)
   postgres_proxy $PORT
-  PGPASSWORD=$TF_VAR_POSTGRES_PASSWORD pgcli \
+  PGPASSWORD=$POSTGRES_PASSWORD pgcli \
     --auto-vertical-output \
     -p $PORT \
     -h localhost \
@@ -521,7 +514,7 @@ function main_db_command() {
 function timescale_command() {
   PORT=$(generate_random_port)
   timescale_proxy $PORT
-  echo "$1" | PGPASSWORD=$TF_VAR_TIMESCALE_SU_PASS psql \
+  echo "$1" | PGPASSWORD=$TIMESCALE_SU_PASS psql \
     -p $PORT \
     -h localhost \
     -U postgres \
@@ -572,8 +565,8 @@ function install_doctl() {
 }
 
 function init_doctl() {
-  doctl auth init -t $TF_VAR_DO_DISH_KEY
-  doctl kubernetes cluster kubeconfig save $TF_VAR_CURRENT_DISH_CLUSTER
+  doctl auth init -t $DO_DISH_KEY
+  doctl kubernetes cluster kubeconfig save $CURRENT_DISH_CLUSTER
 }
 
 function install_kubectl() {
@@ -583,27 +576,6 @@ function install_kubectl() {
   echo "Installing \`kubectl\` binary v$VERSION..."
   curl -sL -o $INSTALL_PATH/kubectl $BINARY
   chmod a+x $INSTALL_PATH/kubectl
-}
-
-function install_gcloud_sdk() {
-  GCLOUD_VERSION="297.0.1"
-  base=https://dl.google.com/dl/cloudsdk/channels/rapid/downloads
-  archive=$base/google-cloud-sdk-$GCLOUD_VERSION-linux-x86_64.tar.gz
-  install_path=$HOME/bin
-  echo "Installing GCloud SDK v$GCLOUD_VERSION... to $install_path"
-  curl -sL "$archive" | tar xzf - -C /tmp
-  cp -a /tmp/google-cloud-sdk $install_path
-  gcloud_init
-  gcloud config set component_manager/disable_update_check true
-}
-
-function gcloud_init() {
-  # This service account needs the "Project Owner" role! Way too much power.
-  # Follow this issue for any fixes: https://issuetracker.google.com/issues/134928412
-  gcloud auth activate-service-account --key-file k8s/etc/dish-gcloud.enc.json &
-  gcloud config set core/project "$GCLOUD_PROJECT" &
-  gcloud config set builds/use_kaniko False &
-  wait
 }
 
 function ping_home_page() {
@@ -630,7 +602,7 @@ function postgres_replica_ssh() {
 
 function pgpool_status() {
   sql='SHOW pool_processes'
-  command="PGPASSWORD=$TF_VAR_POSTGRES_PASSWORD psql \
+  command="PGPASSWORD=$POSTGRES_PASSWORD psql \
     -U postgres \
     -h localhost \
     -c '$sql'"
@@ -752,7 +724,7 @@ function ci_prettier() {
 }
 
 function ci_rename_tagged_images_to_latest() {
-  dish_docker_login
+  dish_registry_auth
   for image in "${ALL_IMAGES[@]}"
   do
     current=$DISH_REGISTRY/$image:$DOCKER_TAG_NAMESPACE
@@ -765,7 +737,7 @@ function ci_rename_tagged_images_to_latest() {
 function ci_push_images_to() {
   tag=$1
   echo "Pushing new docker images to $tag registry..."
-  dish_docker_login
+  dish_registry_auth
   for image in "${ALL_IMAGES[@]}"
   do
     if [[ "$image" == "worker" ]]; then
@@ -801,10 +773,6 @@ function push_auxillary_images() {
   push_repo_image 'git@github.com:getdish/imageproxy.git' imageproxy
   buildkit_build $PROJECT_ROOT/services/gorse $DISH_REGISTRY/gorse
   buildkit_build $PROJECT_ROOT/services/cron $DISH_REGISTRY/cron
-}
-
-function dish_docker_login() {
-  yes | gcloud auth configure-docker gcr.io &> /dev/null || true
 }
 
 function grafana_backup() {
@@ -943,25 +911,32 @@ function deploy_all() {
   set -e
   export_env
   where=${1:-registry}
+  # make them all background so we can handle them the same
   echo "deploying apps via $where"
-  deploy "$where" db | sed -e 's/^/db: /;'
-  echo "???"
-  deploy "$where" hooks | sed -e 's/^/hooks: /;'
+  deploy "$where" redis | sed -e 's/^/redis: /;' &
+  # deploy "$where" db | sed -e 's/^/db: /;' &
+  wait
+  echo "next"
+  deploy "$where" hooks | sed -e 's/^/hooks: /;' &
+  wait
   # depends on postgres
   # depends on hooks
-  deploy "$where" hasura | sed -e 's/^/hasura: /;'
+  deploy "$where" hasura | sed -e 's/^/hasura: /;' &
+  wait
    # depends on hasura
   deploy "$where" tileserver | sed -e 's/^/tileserver: /;' &
   deploy "$where" timescale | sed -e 's/^/timescale: /;' &
   wait
   deploy "$where" app | sed -e 's/^/app: /;' &
   deploy "$where" search | sed -e 's/^/search: /;' &
-  deploy "$where" hooks | sed -e 's/^/hooks: /;' &
   deploy "$where" worker | sed -e 's/^/worker: /;' &
   deploy "$where" image-quality | sed -e 's/^/image-quality: /;' &
   deploy "$where" image-proxy | sed -e 's/^/image-proxy: /;' &
   deploy "$where" bert | sed -e 's/^/bert: /;' &
   deploy "$where" cron | sed -e 's/^/cron: /;' &
+  wait
+  # depends on redis
+  deploy "$where" hooks | sed -e 's/^/hooks: /;' &
   wait
 }
 
@@ -981,7 +956,7 @@ function deploy() {
   if [ "$app" = "hasura" ];         then deploy_fly_app "$where" dish-hasura services/hasura hasura; fi
   if [ "$app" = "db" ];             then deploy_fly_app "$where" dish-db services/db db; fi
   if [ "$app" = "search" ];         then deploy_fly_app "$where" dish-search services/search search; fi
-  if [ "$app" = "timescale" ];      then deploy_fly_app "$where" dish-timescale services/timescaledb timescaledb; fi
+  if [ "$app" = "timescale" ];      then deploy_fly_app "$where" dish-timescale services/timescale timescale; fi
   if [ "$app" = "tileserver" ];     then deploy_fly_app "$where" dish-tileserver services/tileserver tileserver; fi
   if [ "$app" = "hooks" ];          then deploy_fly_app "$where" dish-hooks services/hooks dish-hooks; fi
   if [ "$app" = "worker" ];         then deploy_fly_app "$where" dish-worker services/worker worker; fi
@@ -990,35 +965,29 @@ function deploy() {
   if [ "$app" = "bert" ];           then deploy_fly_app "$where" dish-bert services/bert bert; fi
   if [ "$app" = "hooks" ];          then deploy_fly_app "$where" dish-hooks services/hooks hooks; fi
   if [ "$app" = "cron" ];           then deploy_fly_app "$where" dish-cron services/cron cron; fi
+  if [ "$app" = "redis" ];          then deploy_fly_app "$where" dish-redis services/redis redis; fi
+  if [ "$app" = "run-tests" ];      then deploy_fly_app "$where" dish-run-tests services/run-tests run-tests; fi
 }
 
 function deploy_fly_app() {
   where=$1
   app=$2
   folder=$3
-  image_name=${4:-$1}
   log_file="$(pwd)/deploy-$app.log"
   pre_deploy_logs="$(pwd)/pre-deploy-$app.log"
   rm "$log_file" &> /dev/null || true
   tag=${5:-latest}
-  echo ">>>> deploying $app in $folder to image $image_name with tag $tag"
+  echo ">>>> deploying $app in $folder with tag $tag"
   pushd "$folder"
-  if [ "$where" = "registry" ]; then
-    echo " >> pulling and tagging..."
-    docker pull gcr.io/dish-258800/$image_name:$tag
-    docker tag gcr.io/dish-258800/$image_name:$tag registry.fly.io/$app:$tag
-    docker push registry.fly.io/$app:$tag
-    printf " done pulling and tagging\n\n"
-  fi
   if [ -f ".ci/pre_deploy.sh" ]; then
     echo " >> running pre-deploy script $app..."
     touch "$pre_deploy_logs"
     eval $(yaml_to_env) .ci/pre_deploy.sh &> "$pre_deploy_logs" &
     pre_deploy_pid=$!
     tail -f "$pre_deploy_logs" &
-    tail_pid=$!
+    pre_tail_pid=$!
     wait $pre_deploy_pid
-    kill $tail_pid
+    kill $pre_tail_pid || true
     printf " >> done pre_deploy\n\n"
     if grep "is being deployed" < "$pre_deploy_logs"; then
       if grep "failed" < "$pre_deploy_logs"; then
@@ -1030,27 +999,27 @@ function deploy_fly_app() {
   fi
   if [ "$where" = "registry" ]; then
     did_kill_idempotent=0
-    echo " >> deploying..."
+    echo " >> deploy..."
     touch "$log_file"
     tail -f "$log_file" &
     tail_pid=$!
-    flyctl deploy --strategy rolling -i registry.fly.io/$app:$tag &> "$log_file" &
+    flyctl deploy --strategy rolling -i registry.fly.io/$app:$tag > "$log_file" 2>&1 &
     pid=$!
     while ps | grep "$pid " > /dev/null; do
       # bugfix fly not deploying if same for now
       if grep 'Release v0 created' < "$log_file"; then
         echo " >> detected idempotent release that will hang (fly issue), continue..."
         did_kill_idempotent=1
-        kill $pid &> /dev/null || true
+        break
+      elif grep ' deployed successfully' < "$log_file"; then
+        echo " >> deployed, killing since it hangs sometimes on success..."
         break
       else
         sleep 3
       fi
     done
+    kill $pid || true
     kill $tail_pid || true
-    if [ $did_kill_idempotent -eq 0 ]; then
-      wait $pid
-    fi
     my_status=$?
     if [[ $did_kill_idempotent -eq 1 ||  $my_status -eq 0 ]]; then
       echo " >> done deploying"
@@ -1059,14 +1028,53 @@ function deploy_fly_app() {
       exit 1
     fi
   else
+    # local
     flyctl deploy --remote-only --strategy rolling
   fi
   if [ -f ".ci/post_deploy.sh" ]; then
     echo " >> post-deploy script $app..."
     eval $(yaml_to_env) .ci/post_deploy.sh
   fi
-  echo "  >> done post_deploy $app "
+  # echo $(jobs -p)
+  echo " >> 🚀 $app "
   popd
+}
+
+function clean_docker_if_disk_full() {
+  echo "checking if disk near full..."
+  df -H | grep -E '/data' | awk '{ print $5 " " $1 }' | while read output;
+  do
+    used=$(echo "$output" | awk '{ print $1}' | cut -d'%' -f1)
+    echo "$output used $used"
+    if [ "$used" -ge 90 ]; then
+      echo "running out of space, pruning docker..."
+      docker image prune -a --filter "until=2h" --force || true
+      docker system prune --filter "until=2h" --force || true
+      docker volume prune --force || true
+      break
+    fi
+  done
+  df -H | grep -E '/data' | awk '{ print $5 " " $1 }' | while read output;
+  do
+    used=$(echo "$output" | awk '{ print $1}' | cut -d'%' -f1)
+    if [ "$used" -ge 90 ]; then
+      echo "really full, delete all.."
+      docker rmi $(docker images -a -q)
+      rm -r /tmp
+      mkdir /tmp
+      break
+    fi
+  done
+  df -H | grep -E '/data' | awk '{ print $5 " " $1 }' | while read output;
+  do
+    used=$(echo "$output" | awk '{ print $1}' | cut -d'%' -f1)
+    if [ "$used" -ge 90 ]; then
+      echo "really really delete all, may break shit.."
+      find ./data/buildkite_builds -name '*' -mtime +1 -exec rm -r {} \;
+      find ./data/docker/overlay2 -name '*' -mtime +1 -exec rm -r {} \;
+      break
+    fi
+  done
 }
 
 function clean_build() {

@@ -1,6 +1,6 @@
 # for running tests in on ci
 
-FROM gcr.io/dish-258800/base
+FROM registry.fly.io/dish-base:latest
 
 WORKDIR /app
 
@@ -16,4 +16,5 @@ COPY services services
 ENV NODE_ENV=test
 ENV CI=true
 
-CMD ["true"]
+RUN touch stay_alive
+CMD ["tail", "-f", "stay_alive"]

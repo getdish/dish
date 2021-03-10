@@ -5,4 +5,5 @@ while true; do
   killall chrome
 done &
 
-xvfb-run node --expose-gc /app/services/worker/dist/index.js
+echo "starting worker..."
+xvfb-run node --expose-gc ./dist/index.js

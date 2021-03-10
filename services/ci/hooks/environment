@@ -8,6 +8,6 @@ ssh-add - <<< "$PRIVATE_SSH_KEY"
 if ($(which git-crypt > /dev/null)); then
   echo "git crypt installed"
 else
-  KEY_PATH=/tmp/gitcrypt-key
+  # KEY_PATH=/tmp/gitcrypt-key
   apt-get install -y git-crypt
 fi

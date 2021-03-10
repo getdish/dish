@@ -10,10 +10,33 @@ import _ from 'lodash'
 const is_local_redis =
   process.env.DISH_ENV === 'development' || process.env.CI === 'true'
 
-export const redisOptions = {
+// fly redis doesnt support .subscribe()
+// dony use process.env.FLY_REDIS_CACHE_URL
+
+let redisOptions: any = {
   port: 6379,
   host: is_local_redis ? 'localhost' : process.env.REDIS_HOST,
 }
+
+if (process.env.REDIS_PASSWORD) {
+  redisOptions.password = process.env.REDIS_PASSWORD
+}
+
+if (process.env.REDIS_URL) {
+  const matched = process.env.REDIS_URL.match(
+    /redis:\/\/([a-z0-9]*):([a-z0-9]*)@([a-z0-9-_\.]+):([0-9]+)/i
+  )
+  if (matched) {
+    const [url, user, password, host, port] = matched
+    redisOptions = {
+      port: +port,
+      host,
+      password,
+    }
+  }
+}
+
+console.log('redisOptions', redisOptions, process.env.REDIS_PASSWORD)
 
 export type JobData = {
   className: string
@@ -40,7 +63,7 @@ export class WorkerJob {
     args?: any[],
     specific_config: JobOptions = {}
   ) {
-    console.log('Run on worker', fn)
+    console.log('runOnWorker', fn)
     if (process.env.RUN_WITHOUT_WORKER == 'true') {
       return await this.run(fn, args)
     }

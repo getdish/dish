@@ -13,8 +13,13 @@ RUN apt-get update > /dev/null && apt-get install -y \
        > /dev/null \
       && apt-get clean
 
-FROM gcr.io/dish-258800/base
-COPY --from=0 /bin /usr/local/bin
+FROM registry.fly.io/dish-base:latest
+COPY --from=0 /bin /bin
+COPY --from=0 /usr/bin /usr/bin
+COPY --from=0 /usr/lib /usr/lib
+COPY --from=0 /usr/share/X11 /usr/share/X11
+ENV NODE_ENV=production
+
 WORKDIR /app
 COPY services/worker services/worker
 COPY packages packages

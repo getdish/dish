@@ -3,7 +3,7 @@
   "private": true,
   "version": "0.0.0",
   "scripts": {
-    "etc:colorize": "eval $(../dishctl.sh yaml_to_env) && DEBUG=1 HASURA_SECRET=$TF_VAR_HASURA_GRAPHQL_ADMIN_SECRET node -r esbuild-register ./etc/add_colors_to_tiles.ts",
+    "etc:colorize": "eval $(../dishctl.sh yaml_to_env) && DEBUG=1 HASURA_SECRET=$HASURA_GRAPHQL_ADMIN_SECRET node -r esbuild-register ./etc/add_colors_to_tiles.ts",
     "etc:colorize:staging": "NODE_ENV=staging yarn etc:colorize",
     "start": "TARGET=native react-native start",
     "preinstall": "node ./etc/update_package_json_workspace_hoist.js",

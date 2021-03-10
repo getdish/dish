@@ -49,6 +49,8 @@ const findTitle = (rr: RR, title: string) => getLastByTitle(rr, title).innerHTML
 describe('basic tests', () => {
   afterEach(cleanup)
 
+  console.log('test if tests updated.... removeme')
+
   it('works as singleton creating a global store', () => {
     class Store3 extends Store<{ id: number }> {
       y = 0

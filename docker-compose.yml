@@ -1,22 +1,21 @@
 version: '3.2'
 services:
   base:
-    image: gcr.io/dish-258800/base${DISH_IMAGE_TAG}
+    image: registry.fly.io/dish-base${DISH_IMAGE_TAG}
     build:
       context: .
       dockerfile: ./Dockerfile
   run-tests:
-    image: gcr.io/dish-258800/run-tests${DISH_IMAGE_TAG}
     build:
       context: .
       dockerfile: ./services/run-tests/Dockerfile
   cron:
-    image: gcr.io/dish-258800/cron${DISH_IMAGE_TAG}
+    image: registry.fly.io/dish-cron${DISH_IMAGE_TAG}
     build:
       context: .
       dockerfile: ./services/cron/Dockerfile
   postgres:
-    image: gcr.io/dish-258800/${POSTGRES_NAME:-postgres}${DISH_IMAGE_TAG}
+    image: registry.fly.io/dish-${POSTGRES_NAME:-postgres}${DISH_IMAGE_TAG}
     command: postgres -c 'max_connections=300'
     build:
       context: ./services/${POSTGRES_NAME:-postgres}
@@ -28,11 +27,11 @@ services:
       POSTGRES_DB: ${POSTGRES_DB:-dish}
     ports:
       - 5432:5432
-  timescaledb:
+  timescale:
     command: ["-c", "max_connections=300"]
-    image: gcr.io/dish-258800/timescaledb${DISH_IMAGE_TAG}
+    image: registry.fly.io/dish-timescale${DISH_IMAGE_TAG}
     build:
-      context: ./services/timescaledb
+      context: ./services/timescale
     volumes:
       - ${HOME}/.dish/timescaledb:/var/lib/postgresql/data
     environment:
@@ -49,21 +48,21 @@ services:
     ports:
       - 6379:6379
   hooks:
-    image: gcr.io/dish-258800/hooks${DISH_IMAGE_TAG}
+    image: registry.fly.io/dish-hooks${DISH_IMAGE_TAG}
     build:
       context: ./
       dockerfile: ./services/hooks/Dockerfile
     ports:
       - 6154:6154
     environment:
-      - DO_SPACES_ID=${TF_VAR_DO_SPACES_ID}
-      - DO_SPACES_SECRET=${TF_VAR_DO_SPACES_SECRET}
+      - DO_SPACES_ID=${DO_SPACES_ID}
+      - DO_SPACES_SECRET=${DO_SPACES_SECRET}
       - GORSE_ENDPOINT=http://gorse:9000
       - DISH_ENV=production
     depends_on:
       - 'gorse'
   hasura:
-    image: ${HASURA_IMAGE:-hasura/graphql-engine:v1.3.3}
+    image: registry.fly.io/dish-hasura${DISH_IMAGE_TAG}
     build:
       context: .
       dockerfile: ./services/hasura/Dockerfile
@@ -74,7 +73,7 @@ services:
       - HASURA_GRAPHQL_DATABASE_URL=${HASURA_GRAPHQL_DATABASE_URL:-postgres://postgres:postgres@postgres/dish}
       - HASURA_GRAPHQL_ENABLED_LOG_TYPES=startup, http-log, webhook-log, websocket-log, query-log
       - HASURA_GRAPHQL_ENABLE_TELEMETRY=false
-      - HASURA_GRAPHQL_ADMIN_SECRET=${TF_VAR_HASURA_GRAPHQL_ADMIN_SECRET:-password}
+      - HASURA_GRAPHQL_ADMIN_SECRET=${HASURA_GRAPHQL_ADMIN_SECRET:-password}
       - HASURA_GRAPHQL_UNAUTHORIZED_ROLE=anon
       - HASURA_GRAPHQL_JWT_SECRET={"type":"HS256", "key":"12345678901234567890123456789012"}
       - HASURA_GRAPHQL_ENABLE_CONSOLE=true
@@ -86,17 +85,17 @@ services:
       - 'redis'
       - 'hooks'
   dish-app:
-    image: gcr.io/dish-258800/dish-app${DISH_IMAGE_TAG}
+    image: registry.fly.io/dish-app${DISH_IMAGE_TAG}
     build:
       context: ./
       dockerfile: ./dish-app/Dockerfile
     environment:
-      - SENDGRID_API_KEY=${TF_VAR_SENDGRID_API_KEY}
-      - DO_SPACES_ID=${TF_VAR_DO_SPACES_ID}
-      - DO_SPACES_SECRET=${TF_VAR_DO_SPACES_SECRET}
+      - SENDGRID_API_KEY=${SENDGRID_API_KEY}
+      - DO_SPACES_ID=${DO_SPACES_ID}
+      - DO_SPACES_SECRET=${DO_SPACES_SECRET}
       - VIRTUAL_HOST=staging.dishapp.com
       - VIRTUAL_PORT=4444
-      - HASURA_SECRET=${TF_VAR_HASURA_GRAPHQL_ADMIN_SECRET:-password}
+      - HASURA_SECRET=${HASURA_GRAPHQL_ADMIN_SECRET:-password}
       - HASURA_ENDPOINT=http://hasura:8080
       - SEARCH_ENDPOINT=http://search:10000
       - REDIS_HOST=redis
@@ -107,7 +106,7 @@ services:
       - 'search'
       - 'worker'
   tileserver:
-    image: urbica/martin
+    image: registry.fly.io/dish-tileserver${DISH_IMAGE_TAG}
     build:
       context: ./services/tileserver
       dockerfile: ./Dockerfile
@@ -120,7 +119,7 @@ services:
     depends_on:
       - 'postgres'
   search:
-    image: gcr.io/dish-258800/dish/search${DISH_IMAGE_TAG}
+    image: registry.fly.io/dish/dish-search${DISH_IMAGE_TAG}
     build:
       context: ./services/search
       dockerfile: ./Dockerfile
@@ -133,7 +132,7 @@ services:
     depends_on:
       - 'postgres'
   gorse:
-    image: gcr.io/dish-258800/gorse
+    image: registry.fly.io/dish-gorse${DISH_IMAGE_TAG}
     build:
       context: ./services/gorse
       dockerfile: ./Dockerfile
@@ -143,7 +142,7 @@ services:
     ports:
       - 9000:9000
   worker:
-    image: gcr.io/dish-258800/worker${DISH_IMAGE_TAG}
+    image: registry.fly.io/dish-worker${DISH_IMAGE_TAG}
     build:
       context: .
       dockerfile: ./services/worker/Dockerfile
@@ -153,42 +152,42 @@ services:
       - REDIS_HOST=redis
       - PGHOST=postgres
       - PGPASSWORD=postgres
-      - HASURA_SECRET=${TF_VAR_HASURA_GRAPHQL_ADMIN_SECRET:-password}
-      - TIMESCALE_HOST=timescaledb
+      - HASURA_SECRET=${HASURA_GRAPHQL_ADMIN_SECRET:-password}
+      - TIMESCALE_HOST=timescale
       - TIMESCALE_PASSWORD=postgres
       - TIMESCALE_PORT=5433
-      - UBEREATS_PROXY=${TF_VAR_UBEREATS_PROXY}
-      - HEREMAPS_API_TOKEN${TF_VAR_HEREMAPS_API_TOKEN}
-      - INFATUATED_PROXY=${TF_VAR_INFATUATED_PROXY}
-      - MICHELIN_PROXY=${TF_VAR_MICHELIN_PROXY}
-      - YELP_AWS_PROXY=${TF_VAR_YELP_AWS_PROXY}
-      - TRIPADVISOR_PROXY=${TF_VAR_TRIPADVISOR_PROXY}
-      - GOOGLE_SEARCH_PROXY=${TF_VAR_GOOGLE_SEARCH_PROXY}
-      - GOOGLE_AWS_PROXY=${TF_VAR_GOOGLE_AWS_PROXY}
-      - GOOGLE_USERCONTENT_AWS_PROXY=${TF_VAR_GOOGLE_USERCONTENT_AWS_PROXY}
-      - DOORDASH_GRAPHQL_AWS_PROXY=${TF_VAR_DOORDASH_GRAPHQL_AWS_PROXY}
-      - GRUBHUB_AWS_PROXY=${TF_VAR_GRUBHUB_AWS_PROXY}
-      - YELP_CDN_AWS_PROXY=${TF_VAR_YELP_CDN_AWS_PROXY}
-      - LUMINATI_PROXY_HOST=${TF_VAR_LUMINATI_PROXY_HOST}
-      - LUMINATI_PROXY_PORT=${TF_VAR_LUMINATI_PROXY_PORT}
-      - LUMINATI_PROXY_DATACENTRE_USER=${TF_VAR_LUMINATI_PROXY_DATACENTRE_USER}
-      - LUMINATI_PROXY_DATACENTRE_PASSWORD=${TF_VAR_LUMINATI_PROXY_DATACENTRE_PASSWORD}
-      - LUMINATI_PROXY_RESIDENTIAL_USER=${TF_VAR_LUMINATI_PROXY_RESIDENTIAL_USER}
-      - LUMINATI_PROXY_RESIDENTIAL_PASSWORD=${TF_VAR_LUMINATI_PROXY_RESIDENTIAL_PASSWORD}
-      - DO_SPACES_ID=${TF_VAR_DO_SPACES_ID}
-      - DO_SPACES_SECRET=${TF_VAR_DO_SPACES_SECRET}
-      - GPT3_KEY=${TF_VAR_GPT3_KEY}
+      - UBEREATS_PROXY=${UBEREATS_PROXY}
+      - HEREMAPS_API_TOKEN${HEREMAPS_API_TOKEN}
+      - INFATUATED_PROXY=${INFATUATED_PROXY}
+      - MICHELIN_PROXY=${MICHELIN_PROXY}
+      - YELP_AWS_PROXY=${YELP_AWS_PROXY}
+      - TRIPADVISOR_PROXY=${TRIPADVISOR_PROXY}
+      - GOOGLE_SEARCH_PROXY=${GOOGLE_SEARCH_PROXY}
+      - GOOGLE_AWS_PROXY=${GOOGLE_AWS_PROXY}
+      - GOOGLE_USERCONTENT_AWS_PROXY=${GOOGLE_USERCONTENT_AWS_PROXY}
+      - DOORDASH_GRAPHQL_AWS_PROXY=${DOORDASH_GRAPHQL_AWS_PROXY}
+      - GRUBHUB_AWS_PROXY=${GRUBHUB_AWS_PROXY}
+      - YELP_CDN_AWS_PROXY=${YELP_CDN_AWS_PROXY}
+      - LUMINATI_PROXY_HOST=${LUMINATI_PROXY_HOST}
+      - LUMINATI_PROXY_PORT=${LUMINATI_PROXY_PORT}
+      - LUMINATI_PROXY_DATACENTRE_USER=${LUMINATI_PROXY_DATACENTRE_USER}
+      - LUMINATI_PROXY_DATACENTRE_PASSWORD=${LUMINATI_PROXY_DATACENTRE_PASSWORD}
+      - LUMINATI_PROXY_RESIDENTIAL_USER=${LUMINATI_PROXY_RESIDENTIAL_USER}
+      - LUMINATI_PROXY_RESIDENTIAL_PASSWORD=${LUMINATI_PROXY_RESIDENTIAL_PASSWORD}
+      - DO_SPACES_ID=${DO_SPACES_ID}
+      - DO_SPACES_SECRET=${DO_SPACES_SECRET}
+      - GPT3_KEY=${GPT3_KEY}
       - NODE_OPTIONS="--max_old_space_size=5120"
       - GORSE_ENDPOINT="http://gorse:9000"
       - DISH_DEBUG=1
   bert:
-    image: gcr.io/dish-258800/bert
+    image: registry.fly.io/dish-bert${DISH_IMAGE_TAG}
     build:
       context: ./services/bert
     ports:
       - 8888:8080
   image-quality:
-    image: gcr.io/dish-258800/image-quality
+    image: registry.fly.io/dish-image-quality${DISH_IMAGE_TAG}
     build:
       context: ./services/image-quality
     ports:
@@ -196,7 +195,7 @@ services:
     environment:
       - VIRTUAL_HOST=image-quality.dishapp.com
   image-proxy:
-    image: gcr.io/dish-258800/imageproxy
+    image: registry.fly.io/dish-image-proxy${DISH_IMAGE_TAG}
     build:
       context: ./services/image-proxy
       dockerfile: ./Dockerfile
@@ -204,47 +203,3 @@ services:
       - 8881:9000
     environment:
       - VIRTUAL_HOST=images.dishapp.com
-  nginx-web:
-    image: nginx:stable-alpine
-    labels:
-      com.github.jrcs.letsencrypt_nginx_proxy_companion.nginx_proxy: 'true'
-    container_name: ${NGINX_WEB:-nginx-web}
-    restart: always
-    ports:
-      - '${IP:-0.0.0.0}:${DOCKER_HTTP:-80}:80'
-      - '${IP:-0.0.0.0}:${DOCKER_HTTPS:-443}:443'
-    volumes:
-      - ${NGINX_FILES_PATH:-./data}/conf.d:/etc/nginx/conf.d
-      - ${NGINX_FILES_PATH:-./data}/vhost.d:/etc/nginx/vhost.d
-      - ${NGINX_FILES_PATH:-./data}/html:/usr/share/nginx/html
-      - ${NGINX_FILES_PATH:-./data}/certs:/etc/nginx/certs:ro
-      - ${NGINX_FILES_PATH:-./data}/htpasswd:/etc/nginx/htpasswd:ro
-    logging:
-      driver: ${NGINX_WEB_LOG_DRIVER:-json-file}
-      options:
-        max-size: ${NGINX_WEB_LOG_MAX_SIZE:-4m}
-        max-file: ${NGINX_WEB_LOG_MAX_FILE:-10}
-    depends_on:
-      - 'hasura'
-  nginx-gen:
-    image: jwilder/docker-gen
-    command: -notify-sighup ${NGINX_WEB:-nginx-web} -watch -wait 5s:30s /etc/docker-gen/templates/nginx.tmpl /etc/nginx/conf.d/default.conf
-    container_name: ${DOCKER_GEN:-nginx-gen}
-    restart: always
-    environment:
-      SSL_POLICY: ${SSL_POLICY:-Mozilla-Intermediate}
-    volumes:
-      - ${NGINX_FILES_PATH:-./data}/conf.d:/etc/nginx/conf.d
-      - ${NGINX_FILES_PATH:-./data}/vhost.d:/etc/nginx/vhost.d
-      - ${NGINX_FILES_PATH:-./data}/html:/usr/share/nginx/html
-      - ${NGINX_FILES_PATH:-./data}/certs:/etc/nginx/certs:ro
-      - ${NGINX_FILES_PATH:-./data}/htpasswd:/etc/nginx/htpasswd:ro
-      - /var/run/docker.sock:/tmp/docker.sock:ro
-      - /app/etc/staging/docker/nginx-gen/templates/nginx.tmpl:/etc/docker-gen/templates/nginx.tmpl:ro
-    logging:
-      driver: ${NGINX_GEN_LOG_DRIVER:-json-file}
-      options:
-        max-size: ${NGINX_GEN_LOG_MAX_SIZE:-2m}
-        max-file: ${NGINX_GEN_LOG_MAX_FILE:-10}
-    depends_on:
-      - 'hasura'

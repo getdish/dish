@@ -2,115 +2,103 @@
 
 set -eo pipefail
 
+# env first
 # ensure data dir for caches
 mkdir -p /data
 mkdir -p $HOME/data
-PWD=$(pwd)
-export GOOGLE_APPLICATION_CREDENTIALS="$PWD/k8s/etc/dish-gcloud.enc.json"
 export PATH=$PATH:$HOME/bin
-export PATH=$PATH:"$HOME/bin/google-cloud-sdk/bin"
-export LD_LIBRARY_PATH="/usr/local/lib"
-
+export FLYCTL_INSTALL="/root/.fly"
+export PATH="$FLYCTL_INSTALL/bin:$PATH"
 mkdir -p $HOME/bin
 
-function init_gcloud() {
-  echo $(date -u) "gcloud init..."
-  ./dishctl.sh gcloud_init
-}
-
+# install second
+# bail early on fail
 if [ "$FIRST_STEP" == "true" ]; then
-  echo $(date -u) "git-crypt..."
+  echo "setting up git-crypt..."
   echo "$GPG_KEY" > key
   gpg --import key > gpg-import.log
   git-crypt unlock > gpg-crypt.log
-
-
-  if ($(which gcloud > /dev/null)); then
-    init_gcloud
-  else
-    apt-get install -y libssl-dev libffi-dev
-    ./dishctl.sh install_gcloud_sdk
-    gcloud config set component_manager/disable_update_check true
+  rm -f exit_this_build || true
+else
+  if [[ -f "exit_this_build" ]]; then
+      SKIP_STEPS=$(cat exit_this_build)
+      export SKIP_STEPS
+      echo "skipped due to: $SKIP_STEPS"
+      exit 1
   fi
 fi
 
-if ($(which netstat > /dev/null)); then
-  echo $(date -u) "netstat installed"
-else
+if ! [ -x "$(command -v netstat)" ]; then
   apt-get update && apt-get install -y net-tools
-  echo $(date -u) "netstat installed"
 fi
+echo "netstat installed"
 
-if ($(which psql > /dev/null)); then
-  echo $(date -u) "psql installed"
-else
+if ! [ -x "$(command -v flyctl)" ]; then
+  curl -L https://fly.io/install.sh | sh
+fi
+echo "flyctl installed"
+
+if ! [ -x "$(command -v psql)" ]; then
   apt-get update && apt-get install -y postgresql-client
-  echo $(date -u) "psql installed"
 fi
+echo "psql installed"
 
-if ($(which node > /dev/null)); then
-  echo $(date -u) "node installed"
-else
+if ! [ -x "$(command -v node)" ]; then
   apt-get update && apt-get install -y nodejs
-  echo $(date -u) "node installed"
 fi
+echo "node installed"
 
-if ($(which npm > /dev/null)); then
-  echo $(date -u) "npm installed"
-else
-  apt-get update && apt-get install -y npm
-  echo $(date -u) "npm installed"
-fi
-
-if ($(which docker > /dev/null)); then
-  echo $(date -u) "node/docker/npm installed"
-else
-  apt-get update
-  apt-get install -y docker docker-compose nodejs npm
+if ! [ -x "$(command -v npm)" ]; then
+  apt-get update && apt-get install -y nodejs npm
   curl -o- -L https://yarnpkg.com/install.sh | bash
-  echo $(date -u) "docker/npm installed"
+fi
+echo "npm installed"
+
+if ! [ -x "$(command -v docker)" ]; then
+  apt-get update && apt-get install -y docker docker-compose
+  echo "docker installed"
 fi
 
-if [ ! -f /usr/local/bin/hasura ]; then
+if ! [ -x "$(command -v hasura)" ]; then
   curl -L https://github.com/hasura/graphql-engine/raw/stable/cli/get.sh | bash
 fi
 
-./dishctl.sh dish_docker_login
-echo $(date -u) "docker logged in"
+if [ "$DOCKER_CLEAN_BEFORE" == "true" ]; then
+  ./dishctl.sh clean_docker_if_disk_full
+fi
+
+./dishctl.sh dish_registry_auth
 
 # export env
 if [ "$ENV_SET" != "true" ]; then
   eval $(./dishctl.sh yaml_to_env)
-  export TF_VAR_DO_SPACES_ID
-  export TF_VAR_DO_SPACES_SECRET
-  export TF_VAR_HASURA_GRAPHQL_ADMIN_SECRET
-  export TF_VAR_SENDGRID_API_KEY
-  export TF_VAR_UBEREATS_PROXY
-  export TF_VAR_HEREMAPS_API_TOKEN
-  export TF_VAR_INFATUATED_PROXY
-  export TF_VAR_MICHELIN_PROXY
-  export TF_VAR_YELP_AWS_PROXY
-  export TF_VAR_TRIPADVISOR_PROXY
-  export TF_VAR_GOOGLE_SEARCH_PROXY
-  export TF_VAR_GOOGLE_AWS_PROXY
-  export TF_VAR_GOOGLE_USERCONTENT_AWS_PROXY
-  export TF_VAR_DOORDASH_GRAPHQL_AWS_PROXY
-  export TF_VAR_GRUBHUB_AWS_PROXY
-  export TF_VAR_YELP_CDN_AWS_PROXY
-  export TF_VAR_LUMINATI_PROXY_HOST
-  export TF_VAR_LUMINATI_PROXY_PORT
-  export TF_VAR_LUMINATI_PROXY_DATACENTRE_USER
-  export TF_VAR_LUMINATI_PROXY_DATACENTRE_PASSWORD
-  export TF_VAR_LUMINATI_PROXY_RESIDENTIAL_USER
-  export TF_VAR_LUMINATI_PROXY_RESIDENTIAL_PASSWORD
-  export TF_VAR_GPT3_KEY
+  export DO_SPACES_ID
+  export DO_SPACES_SECRET
+  export SENDGRID_API_KEY
+  export UBEREATS_PROXY
+  export HEREMAPS_API_TOKEN
+  export INFATUATED_PROXY
+  export MICHELIN_PROXY
+  export YELP_AWS_PROXY
+  export TRIPADVISOR_PROXY
+  export GOOGLE_SEARCH_PROXY
+  export GOOGLE_AWS_PROXY
+  export GOOGLE_USERCONTENT_AWS_PROXY
+  export DOORDASH_GRAPHQL_AWS_PROXY
+  export GRUBHUB_AWS_PROXY
+  export YELP_CDN_AWS_PROXY
+  export LUMINATI_PROXY_HOST
+  export LUMINATI_PROXY_PORT
+  export LUMINATI_PROXY_DATACENTRE_USER
+  export LUMINATI_PROXY_DATACENTRE_PASSWORD
+  export LUMINATI_PROXY_RESIDENTIAL_USER
+  export LUMINATI_PROXY_RESIDENTIAL_PASSWORD
   export SLACK_MONITORING_HOOK
-  export AWS_ACCESS_KEY_ID=$TF_VAR_DO_SPACES_ID
-  export AWS_SECRET_ACCESS_KEY=$TF_VAR_DO_SPACES_SECRET
-  export HASURA_ADMIN_SECRET="$TF_VAR_HASURA_GRAPHQL_ADMIN_SECRET"
+  export AWS_ACCESS_KEY_ID=$DO_SPACES_ID
+  export AWS_SECRET_ACCESS_KEY=$DO_SPACES_SECRET
+  export HASURA_GRAPHQL_ADMIN_SECRET="password"
+  export USE_PROD_HASURA_PASSWORD=false
   export ENV_SET="true"
 fi
 
-echo $AWS_ACCESS_KEY_ID
-
-echo $(date -u) "done"
+echo "done"

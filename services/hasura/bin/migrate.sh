@@ -8,7 +8,7 @@ HASURA_ADMIN=$(\
     | tail -n1 | cut -c 30- | tr -d '"'\
 )
 DISH_PG_PASS=$(\
-  grep 'TF_VAR_POSTGRES_PASSWORD:' env.enc.production.yaml \
+  grep 'POSTGRES_PASSWORD:' env.enc.production.yaml \
     | tail -n1 | cut -c 27- | tr -d '"'\
 )
 popd

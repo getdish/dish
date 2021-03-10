@@ -21,7 +21,7 @@ let db_config = {
   port: process.env.TIMESCALE_PORT || '5433',
   user: process.env.TIMESCALE_USER || 'postgres',
   password: process.env.TIMESCALE_PASSWORD || 'postgres',
-  database: 'scrape_data',
+  database: process.env.TIMESCALE_DB || 'scrape_data',
   ssl: false,
 }
 if (process.env.DISH_ENV == 'production' || process.env.USE_PG_SSL == 'true') {

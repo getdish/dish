@@ -40,7 +40,7 @@ can be easily run with Docker Compose: https://docs.docker.com/compose/install/
 
 When working with Dish's Docker images you'll often need to be logged into our Docker
 
-Registry: `./dishctl.sh dish_docker_login`. Currently we use Google Cloud's Docker registry, so you'll likely be asked to install the GCloud SDK.  After installing Gcloud for the first time, run: `./dishctl.sh gcloud_init`.
+Registry: `./dishctl.sh dish_registry_auth`.
 
 Some helper commands to get started:
 
@@ -159,9 +159,9 @@ If you need to deploy something quickly and are willing to skip CI, you can run 
 You'll need a few things set up first:
 
     - On production: `kubectl` and `doctl` installed
-    - `doctl auth init -t $TF_VAR_DO_DISH_KEY` token is avaiable in enc.env.production.yaml
+    - `doctl auth init -t $DO_DISH_KEY` token is avaiable in enc.env.production.yaml
     - `doctl kubernetes cluster kubeconfig save dish[blue/green]`
-    - On production and staging, you'll need `gcloud` in order to login to our Docker registry.
+    - On production and staging, you'll need `flyctl` in order to login to our Docker registry.
 
 Then you can use the `./dishctl.sh hot_deploy path/to/Dockerfile/folder`
 
@@ -315,13 +315,13 @@ curl -fsSL https://get.docker.com | sh
 apt-get install -y docker-compose git-crypt postgresql-client tmux s3cmd
 curl -L https://github.com/hasura/graphql-engine/raw/stable/cli/get.sh | bash
 curl https://raw.githubusercontent.com/jwilder/nginx-proxy/master/nginx.tmpl > nginx.tmpl
-# Install gcloud sdk: https://cloud.google.com/sdk/docs/install
+# Install flyctl
 # On your own local machine:
 #   `rsync -avP --filter=':- .gitignore' . root@staging.dishapp.com:/app`
 # Back on the VM:
 tmux # Just for developer convenience
 cd /app
-./dishctl.sh dish_docker_login
+./dishctl.sh dish_registry_auth
 mkdir -p ~/.dish/postgres
 chown 1001:1001 -R ~/.dish/postgres
 eval $(./dishctl.sh yaml_to_env) docker-compose up -d
