@@ -3,6 +3,9 @@ app = "dish-redis"
 kill_signal = "SIGINT"
 kill_timeout = 5
 
+[experimental]
+  private_network = true
+
 [mounts]
 source      = "redis_server"
 destination = "/data"

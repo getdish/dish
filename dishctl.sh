@@ -914,7 +914,9 @@ function deploy_all() {
   export_env
   where=${1:-registry}
   echo "deploying apps via $where"
-  deploy "$where" db | sed -e 's/^/db: /;'
+  deploy "$where" redis | sed -e 's/^/redis: /;' &
+  deploy "$where" db | sed -e 's/^/db: /;' &
+  wait
   echo "next"
   deploy "$where" hooks | sed -e 's/^/hooks: /;'
   # depends on postgres
@@ -931,7 +933,6 @@ function deploy_all() {
   deploy "$where" image-proxy | sed -e 's/^/image-proxy: /;' &
   deploy "$where" bert | sed -e 's/^/bert: /;' &
   deploy "$where" cron | sed -e 's/^/cron: /;' &
-  deploy "$where" redis | sed -e 's/^/redis: /;' &
   wait
   # depends on redis
   deploy "$where" hooks | sed -e 's/^/hooks: /;' &
