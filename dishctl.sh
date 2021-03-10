@@ -915,6 +915,7 @@ function deploy_all() {
   where=${1:-registry}
   echo "deploying apps via $where"
   deploy "$where" db | sed -e 's/^/db: /;'
+  echo "next"
   deploy "$where" hooks | sed -e 's/^/hooks: /;'
   # depends on postgres
   # depends on hooks
@@ -967,6 +968,7 @@ function deploy() {
 }
 
 function deploy_fly_app() {
+  trap 'exit 0' TERM # avoid kill logs
   where=$1
   app=$2
   folder=$3
@@ -982,8 +984,9 @@ function deploy_fly_app() {
     eval $(yaml_to_env) .ci/pre_deploy.sh &> "$pre_deploy_logs" &
     pre_deploy_pid=$!
     tail -f "$pre_deploy_logs" &
+    pre_tail_pid=$!
     wait $pre_deploy_pid
-    trap 'kill $(jobs -p)' EXIT
+    kill $pre_tail_pid || true
     printf " >> done pre_deploy\n\n"
     if grep "is being deployed" < "$pre_deploy_logs"; then
       if grep "failed" < "$pre_deploy_logs"; then
@@ -998,7 +1001,8 @@ function deploy_fly_app() {
     echo " >> deploy..."
     touch "$log_file"
     tail -f "$log_file" &
-    flyctl deploy --strategy rolling -i registry.fly.io/$app:$tag &> "$log_file" &
+    tail_pid=$!
+    flyctl deploy --strategy rolling -i registry.fly.io/$app:$tag > "$log_file" 2>&1 &
     pid=$!
     while ps | grep "$pid " > /dev/null; do
       # bugfix fly not deploying if same for now
@@ -1013,10 +1017,8 @@ function deploy_fly_app() {
         sleep 3
       fi
     done
-    trap 'kill $(jobs -p)' EXIT
-    if [ $did_kill_idempotent -eq 0 ]; then
-      wait $pid
-    fi
+    kill $pid || true
+    kill $tail_pid || true
     my_status=$?
     if [[ $did_kill_idempotent -eq 1 ||  $my_status -eq 0 ]]; then
       echo " >> done deploying"
@@ -1032,7 +1034,7 @@ function deploy_fly_app() {
     echo " >> post-deploy script $app..."
     eval $(yaml_to_env) .ci/post_deploy.sh
   fi
-  echo "  >> done post_deploy $app "
+  echo " >> 🚀 $app "
   popd
 }
 
