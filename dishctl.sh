@@ -963,6 +963,7 @@ function deploy() {
   if [ "$app" = "hooks" ];          then deploy_fly_app "$where" dish-hooks services/hooks hooks; fi
   if [ "$app" = "cron" ];           then deploy_fly_app "$where" dish-cron services/cron cron; fi
   if [ "$app" = "redis" ];          then deploy_fly_app "$where" dish-redis services/redis redis; fi
+  if [ "$app" = "run-tests" ];      then deploy_fly_app "$where" dish-run-tests services/run-tests run-tests; fi
 }
 
 function deploy_fly_app() {
