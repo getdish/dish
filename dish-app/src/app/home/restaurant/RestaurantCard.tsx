@@ -22,6 +22,7 @@ export type RestaurantCardProps = {
   below?: CardProps['below']
   aspectFixed?: CardProps['aspectFixed']
   size?: CardProps['size']
+  backgroundColor?: CardProps['backgroundColor']
   isBehind?: boolean
   hideScore?: boolean
   hoverable?: boolean
@@ -68,6 +69,7 @@ export const RestaurantCardContent = graphql(
     isBehind,
     hideScore,
     aspectFixed,
+    backgroundColor,
     padTitleSide,
     hoverable = true,
     dimImage = true,
@@ -86,6 +88,7 @@ export const RestaurantCardContent = graphql(
           subTitle={price_range}
           colorsKey={restaurantSlug}
           dimImage={dimImage}
+          backgroundColor={backgroundColor}
           outside={(colors) => (
             <>
               {!!below && (
@@ -98,11 +101,16 @@ export const RestaurantCardContent = graphql(
                   {typeof below === 'function' ? below(colors) : below}
                 </HStack>
               )}
-              <AbsoluteVStack top={-15} right={-15} zIndex={100}>
+              <AbsoluteVStack
+                transform={size === 'xs' ? [{ scale: 0.85 }] : []}
+                top={-12}
+                right={-12}
+                zIndex={100}
+              >
                 <RestaurantRatingView
                   slug={restaurantSlug}
                   floating
-                  size={40}
+                  size={44}
                 />
               </AbsoluteVStack>
             </>

@@ -36,7 +36,7 @@ export const RestaurantButton = graphql(
 
     const content = (
       <Link name="restaurant" params={{ slug: slug }} asyncClick>
-        <Button noTextWrap>
+        <Button backgroundColor={theme.backgroundColorAlt} noTextWrap>
           <HStack maxWidth={300}>
             {!!restaurant.image && (
               <Image

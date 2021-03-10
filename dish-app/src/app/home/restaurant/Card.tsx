@@ -55,16 +55,19 @@ const heights = {
 }
 
 const scales = {
-  xs: 0.65,
+  xs: 0.6,
   sm: 0.85,
-  md: 1,
+  md: 1.25,
 }
+
+const getLongestWord = (title: string) =>
+  title?.split(' ').reduce((acc, cur) => Math.max(cur.length, acc), 0) ?? 0
 
 export function Card({
   below,
   outside,
   photo,
-  title,
+  title = '',
   colorsKey,
   subTitle,
   padTitleSide,
@@ -92,9 +95,14 @@ export function Card({
     ...sizes,
     width: aspectFixed ? sizes.width : '100%',
   }
-  const longestWord =
-    title?.split(' ').reduce((acc, cur) => Math.max(cur.length, acc), 0) ?? 0
-  const fontSize = Math.round((longestWord > 9 ? 24 : 28) * scales[size])
+  const strTitle = title || ''
+  const baseFontSize =
+    strTitle.length > 30
+      ? 24
+      : strTitle.length > 14 || getLongestWord(strTitle) > 9
+      ? 26
+      : 30
+  const fontSize = Math.round(baseFontSize * scales[size])
 
   return (
     <CardFrame
@@ -120,17 +128,17 @@ export function Card({
               zIndex={1002}
               borderRadius={cardFrameBorderRadius}
               fullscreen
-              backgroundColor="red"
               transform={[{ translateX: -cardFrameWidth }]}
               shadowColor="#000"
-              shadowRadius={50}
+              shadowOpacity={0.5}
+              shadowRadius={100}
               shadowOffset={{ width: 10, height: 0 }}
             />
           )}
 
           <VStack
             className="hover-75-opacity-child"
-            opacity={dimImage ? 0.5 : 0.9}
+            opacity={dimImage ? 0.75 : 0.9}
             {...frame}
           >
             {!!photo && typeof photo === 'string' ? (
@@ -148,17 +156,16 @@ export function Card({
           {/* bottom color gradient */}
           <AbsoluteVStack
             className="hover-0-opacity-child ease-in-out"
-            zIndex={-2}
+            zIndex={10}
             left={0}
             bottom={0}
-            top="0%"
+            top="30%"
             right={-20}
-            opacity={1}
-            transform={[{ rotate: '45deg' }, { scaleX: 2 }, { translateY: 80 }]}
+            transform={[{ rotate: '45deg' }, { scaleX: 2 }, { translateY: 20 }]}
           >
             <LinearGradient
               style={StyleSheet.absoluteFill}
-              colors={['transparent', `${colors.altColor}00`, colors.altColor]}
+              colors={['transparent', colors.darkColor]}
             />
           </AbsoluteVStack>
 
@@ -184,7 +191,7 @@ export function Card({
             paddingVertical={size === 'xs' ? 15 : 20}
             flex={1}
           >
-            <HStack flex={1} width="100%">
+            <HStack flex={1} width="100%" maxWidth="100%">
               {!!padTitleSide &&
                 (isSm ? (
                   <VStack minWidth={30} flex={1} />
@@ -197,35 +204,31 @@ export function Card({
                   <AbsoluteVStack
                     className="hover-75-opacity-child ease-in-out-slow"
                     zIndex={-1}
-                    left={-90}
-                    bottom={-90}
-                    opacity={size === 'xs' ? 0.75 : 1}
+                    left={-120}
+                    bottom={-120}
+                    opacity={size === 'xs' ? 1 : 1}
                     transform={[
-                      { rotate: '20deg' },
-                      { scaleX: 1.7 },
-                      { translateY: -30 },
+                      { rotate: '15deg' },
+                      { scale: 1.65 },
+                      { translateY: -20 },
+                      { translateX: 30 },
                     ]}
                   >
                     <LinearGradient
-                      style={{ width: 220, height: 220 }}
-                      colors={[
-                        colors.pastelColor,
-                        colors.pastelColor,
-                        colors.pastelColor,
-                        `${colors.color}00`,
-                      ]}
+                      style={{ width: 250, height: 250 }}
+                      colors={[colors.color, colors.color, `${colors.color}00`]}
                     />
                   </AbsoluteVStack>
 
                   <Text
                     // not working below :(
-                    className={size === 'xs' ? 'ellipse' : ''}
+                    className={size === 'xs' ? 'ellipse' : 'break-work'}
                     textAlign="right"
                     textShadowColor="#00000033"
-                    textShadowRadius={4}
+                    textShadowRadius={0}
                     textShadowOffset={{ height: 2, width: 0 }}
-                    fontWeight={'800'}
-                    letterSpacing={size === 'xs' ? -0.5 : -1}
+                    fontWeight={size === 'xs' ? '800' : '400'}
+                    letterSpacing={size === 'xs' ? 0 : -1}
                     color="#fff"
                     fontSize={fontSize}
                     lineHeight={fontSize}
@@ -267,9 +270,9 @@ export const CardOverlay = (props: { children: any }) => {
       overflow="hidden"
     >
       <VStack position="relative">
-        <AbsoluteVStack left={0} right={0} bottom={0} top={-30}>
+        <AbsoluteVStack left={0} right={0} bottom={0} top={-40}>
           <LinearGradient
-            colors={['rgba(0,0,0,0)', '#000']}
+            colors={['rgba(0,0,0,0)', '#050505']}
             style={StyleSheet.absoluteFill}
           />
         </AbsoluteVStack>

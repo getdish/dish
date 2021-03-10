@@ -26,7 +26,7 @@ export const SlantedTitle = ({
   return (
     <SlantedBox alignSelf="flex-start" {...(rest as any)}>
       <Title
-        fontWeight="700"
+        fontWeight="800"
         size={size}
         sizeLineHeight={sizeLineHeight}
         textAlign="center"

@@ -593,6 +593,7 @@ mark {
 
 .break-word {
   word-break: break-word;
+  white-space: normal;
 }
 
 .preserve-whitespace {
