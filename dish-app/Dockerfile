@@ -7,8 +7,8 @@ RUN \
       && apt-get clean \
       && rm -rf /var/lib/apt/lists/*
 
-# docker only caches after copy
-COPY package.json package.json
+# docker only caches after copy ?
+# COPY package.json package.json
 
 FROM registry.fly.io/dish-base:latest
 COPY --from=0 /bin /usr/local/bin

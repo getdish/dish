@@ -13,10 +13,7 @@ RUN apt-get update > /dev/null && apt-get install -y \
        > /dev/null \
       && apt-get clean
 
-# cache
-COPY package.json package.json
-
-FROM registry.fly.io/dish-base:latest as base
+FROM registry.fly.io/dish-base:latest
 COPY --from=0 /bin /bin
 COPY --from=0 /usr /usr
 ENV NODE_ENV=production

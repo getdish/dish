@@ -51,7 +51,7 @@ RUN find . -type d \(  -name "test" -o -name "tests"  \) -print | xargs rm -rf &
   # link in esdx bugfix
   && ln -s /app/packages/esdx/esdx.js /app/node_modules/.bin/esdx
 
-# docker only caches after copy
+# docker only caches after copy ?
 COPY package.json package.json
 RUN yarn build:js
 

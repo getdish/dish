@@ -59,6 +59,7 @@ steps:
       - docker-compose#v3.7.0:
           build: worker
           cache-from: worker:registry.fly.io/dish-worker:latest
+          push: worker:registry.fly.io/dish-worker:latest
 
   - label: ":docker: build search"
     key: search
