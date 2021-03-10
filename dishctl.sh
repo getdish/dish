@@ -129,7 +129,8 @@ function _db_migrate() {
   postgres_password=$3
   postgres_port=$4
   init=$5
-  pushd $PROJECT_ROOT/services/hasura
+  pushd "$PROJECT_ROOT/services/hasura"
+  echo "hasura migrate $admin_secret"
   hasura --skip-update-check \
     migrate apply \
     --endpoint $hasura_endpoint \
@@ -161,8 +162,7 @@ function db_migrate() {
   _PG_PORT=$(generate_random_port)
   postgres_proxy $_PG_PORT
   pushd $PROJECT_ROOT/services/hasura
-  _db_migrate \
-    https://hasura.dishapp.com \
+  _db_migrate https://hasura.dishapp.com \
     "$HASURA_GRAPHQL_ADMIN_SECRET" \
     "$POSTGRES_PASSWORD" \
     "$_PG_PORT"

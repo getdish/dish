@@ -103,7 +103,8 @@ if [ "$ENV_SET" != "true" ]; then
   export SLACK_MONITORING_HOOK
   export AWS_ACCESS_KEY_ID=$DO_SPACES_ID
   export AWS_SECRET_ACCESS_KEY=$DO_SPACES_SECRET
-  export HASURA_ADMIN_SECRET="$HASURA_GRAPHQL_ADMIN_SECRET"
+  # i set this up like this for tests, so now keeping it as is
+  export USE_PROD_HASURA_PASSWORD=true
   export ENV_SET="true"
 fi
 
