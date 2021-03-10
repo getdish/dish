@@ -13,6 +13,10 @@ function generate_random_port() {
 }
 REDIS_PROXY_PORT=$(generate_random_port)
 
+function dish_registry_auth() {
+  eval $(./dishctl.sh yaml_to_env) flyctl auth docker || echo "failed to auth"
+}
+
 function _kill_port_forwarder {
   echo "Killing script pids for \`kubectl proxy-forward ...\`"
   ([ ! -z "$PG_PROXY_PID" ] && kill $PG_PROXY_PID) || true
@@ -720,7 +724,7 @@ function ci_prettier() {
 }
 
 function ci_rename_tagged_images_to_latest() {
-  dish_docker_login
+  dish_registry_auth
   for image in "${ALL_IMAGES[@]}"
   do
     current=$DISH_REGISTRY/$image:$DOCKER_TAG_NAMESPACE
@@ -733,7 +737,7 @@ function ci_rename_tagged_images_to_latest() {
 function ci_push_images_to() {
   tag=$1
   echo "Pushing new docker images to $tag registry..."
-  dish_docker_login
+  dish_registry_auth
   for image in "${ALL_IMAGES[@]}"
   do
     if [[ "$image" == "worker" ]]; then
@@ -769,12 +773,6 @@ function push_auxillary_images() {
   push_repo_image 'git@github.com:getdish/imageproxy.git' imageproxy
   buildkit_build $PROJECT_ROOT/services/gorse $DISH_REGISTRY/gorse
   buildkit_build $PROJECT_ROOT/services/cron $DISH_REGISTRY/cron
-}
-
-function dish_docker_login() {
-  if [ ! -f "$HOME/.fly/config.yml" ]; then
-    eval $(./dishctl.sh yaml_to_env) flyctl auth docker
-  fi
 }
 
 function grafana_backup() {

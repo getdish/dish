@@ -40,7 +40,7 @@ can be easily run with Docker Compose: https://docs.docker.com/compose/install/
 
 When working with Dish's Docker images you'll often need to be logged into our Docker
 
-Registry: `./dishctl.sh dish_docker_login`.
+Registry: `./dishctl.sh dish_registry_auth`.
 
 Some helper commands to get started:
 
@@ -321,7 +321,7 @@ curl https://raw.githubusercontent.com/jwilder/nginx-proxy/master/nginx.tmpl > n
 # Back on the VM:
 tmux # Just for developer convenience
 cd /app
-./dishctl.sh dish_docker_login
+./dishctl.sh dish_registry_auth
 mkdir -p ~/.dish/postgres
 chown 1001:1001 -R ~/.dish/postgres
 eval $(./dishctl.sh yaml_to_env) docker-compose up -d

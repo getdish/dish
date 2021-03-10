@@ -15,7 +15,9 @@ RUN apt-get update > /dev/null && apt-get install -y \
 
 FROM registry.fly.io/dish-base:latest
 COPY --from=0 /bin /bin
-COPY --from=0 /usr /usr
+COPY --from=0 /usr/bin /usr/bin
+COPY --from=0 /usr/lib /usr/lib
+COPY --from=0 /usr/share/X11 /usr/share/X11
 ENV NODE_ENV=production
 
 WORKDIR /app

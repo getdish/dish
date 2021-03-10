@@ -6,15 +6,15 @@ set -eo pipefail
 # ensure data dir for caches
 mkdir -p /data
 mkdir -p $HOME/data
-PWD=$(pwd)
 export PATH=$PATH:$HOME/bin
 export FLYCTL_INSTALL="/root/.fly"
 export PATH="$FLYCTL_INSTALL/bin:$PATH"
+mkdir -p $HOME/bin
 
 # install second
 # bail early on fail
 if [ "$FIRST_STEP" == "true" ]; then
-  echo $(date -u) "git-crypt..."
+  echo "setting up git-crypt..."
   echo "$GPG_KEY" > key
   gpg --import key > gpg-import.log
   git-crypt unlock > gpg-crypt.log
@@ -23,43 +23,43 @@ else
   if [[ -f "exit_this_build" ]]; then
       SKIP_STEPS=$(cat exit_this_build)
       export SKIP_STEPS
-      echo SKIP_STEPS: "$SKIP_STEPS"
+      echo "skipped due to: $SKIP_STEPS"
       exit 1
   fi
 fi
 
-if [ ! -f $(which netstat) ]; then
+if ! [ -x "$(command -v netstat)" ]; then
   apt-get update && apt-get install -y net-tools
 fi
-echo $(date -u) "netstat installed"
+echo "netstat installed"
 
-if [ ! -f $(which flyctl) ]; then
+if ! [ -x "$(command -v flyctl)" ]; then
   curl -L https://fly.io/install.sh | sh
 fi
-echo $(date -u) "flyctl installed"
+echo "flyctl installed"
 
-if [ ! -f $(which psql) ]; then
+if ! [ -x "$(command -v psql)" ]; then
   apt-get update && apt-get install -y postgresql-client
 fi
-echo $(date -u) "psql installed"
+echo "psql installed"
 
-if [ ! -f $(which node) ]; then
+if ! [ -x "$(command -v node)" ]; then
   apt-get update && apt-get install -y nodejs
 fi
-echo $(date -u) "node installed"
+echo "node installed"
 
-if [ ! -f $(which npm) ]; then
+if ! [ -x "$(command -v npm)" ]; then
   apt-get update && apt-get install -y nodejs npm
   curl -o- -L https://yarnpkg.com/install.sh | bash
 fi
-echo $(date -u) "npm installed"
+echo "npm installed"
 
-if [ ! -f $(which docker) ]; then
+if ! [ -x "$(command -v docker)" ]; then
   apt-get update && apt-get install -y docker docker-compose
-  echo $(date -u) "docker installed"
+  echo "docker installed"
 fi
 
-if [ ! -f /usr/local/bin/hasura ]; then
+if ! [ -x "$(command -v hasura)" ]; then
   curl -L https://github.com/hasura/graphql-engine/raw/stable/cli/get.sh | bash
 fi
 
@@ -67,11 +67,7 @@ if [ "$DOCKER_CLEAN_BEFORE" == "true" ]; then
   ./dishctl.sh clean_docker_if_disk_full
 fi
 
-
-mkdir -p $HOME/bin
-
-./dishctl.sh dish_docker_login
-echo $(date -u) "docker logged in"
+./dishctl.sh dish_registry_auth
 
 # export env
 if [ "$ENV_SET" != "true" ]; then
@@ -105,4 +101,4 @@ if [ "$ENV_SET" != "true" ]; then
   export ENV_SET="true"
 fi
 
-echo $(date -u) "done"
+echo "done"
