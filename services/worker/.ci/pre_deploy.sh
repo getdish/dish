@@ -10,8 +10,7 @@ flyctl secrets set \
     DISH_ENV="staging" \
     HASURA_ENDPOINT="http://hasura:8080" \
     REDIS_HOST="dish-redis.internal" \
-    REDIS_PORT="${FLY_REDIS_PORT}" \
-    REDIS_PASSWORD="${FLY_REDIS_PASSWORD}" \
+    REDIS_PORT="6379" \
     PGHOST="postgres" \
     PGPASSWORD="postgres" \
     HASURA_SECRET="${HASURA_GRAPHQL_ADMIN_SECRET:-password}" \
