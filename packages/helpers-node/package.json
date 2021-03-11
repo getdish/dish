@@ -2,7 +2,6 @@
   "name": "@dish/helpers-node",
   "version": "0.0.1",
   "sideEffects": false,
-  "private": true,
   "types": "src/_types.d.ts",
   "main": "dist",
   "module": "_",
@@ -14,11 +13,13 @@
   "dependencies": {
     "@dish/graph": "*",
     "bcryptjs": "^2.4.3",
-    "happy-dom": "^2.9.0",
     "jsonwebtoken": "^8.5.1",
     "lodash": "*"
   },
   "devDependencies": {
     "@dish/esdx": "*"
+  },
+  "publishConfig": {
+    "access": "public"
   }
 }

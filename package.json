@@ -9,7 +9,8 @@
       "dish-app",
       "packages/*",
       "services/*",
-      "snackui/packages/*"
+      "snackui/packages/*",
+      "snackui"
     ]
   },
   "scripts": {
