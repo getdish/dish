@@ -28,6 +28,7 @@
     "@dish/babel-preset": "*",
     "@dish/esdx": "*",
     "@dish/proxy-worm": "*",
+    "@dish/react-test-env": "^0.0.7",
     "@dish/testy": "*",
     "@expo/match-media": "^0.1.0",
     "@snackui/helpers": "^0.0.6",

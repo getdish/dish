@@ -1737,7 +1737,7 @@ __metadata:
     metro-react-native-babel-preset: ^0.65.1
     multer: ^1.4.2
     multer-s3: ^2.9.0
-    patch-package: ^6.4.5
+    patch-package: ^6.4.6
     polylabel: ^1.1.0
     prop-types: ^15.7.2
     react: "*"
@@ -1981,7 +1981,7 @@ __metadata:
     isomorphic-unfetch: ^3.1.0
     lodash: "*"
     moment: ^2.29.1
-    patch-package: ^6.4.5
+    patch-package: ^6.4.6
     react: "*"
   languageName: unknown
   linkType: soft
@@ -2059,7 +2059,7 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@dish/react-test-env@*, @dish/react-test-env@workspace:packages/react-test-env":
+"@dish/react-test-env@*, @dish/react-test-env@^0.0.7, @dish/react-test-env@workspace:packages/react-test-env":
   version: 0.0.0-use.local
   resolution: "@dish/react-test-env@workspace:packages/react-test-env"
   dependencies:
@@ -4157,6 +4157,7 @@ __metadata:
     "@dish/babel-preset": "*"
     "@dish/esdx": "*"
     "@dish/proxy-worm": "*"
+    "@dish/react-test-env": ^0.0.7
     "@dish/testy": "*"
     "@expo/match-media": ^0.1.0
     "@snackui/helpers": ^0.0.6
@@ -9308,7 +9309,7 @@ __metadata:
     esm: ^3.2.25
     import-sort-style-module: ^6.0.0
     npm-run-all: ^4.1.5
-    patch-package: ^6.4.5
+    patch-package: ^6.4.6
     prettier: ^2.2.1
     prettier-plugin-import-sort: ^0.0.6
     react: ^17.0.1
@@ -10964,16 +10965,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"find-yarn-workspace-root@npm:^1.2.1":
-  version: 1.2.1
-  resolution: "find-yarn-workspace-root@npm:1.2.1"
-  dependencies:
-    fs-extra: ^4.0.3
-    micromatch: ^3.1.4
-  checksum: df97013b720daefe2746726144ed00b7b33a0e7f90213ba9e8e5c2c43e053903b2007b1496b7ab9a4694ca6dfae82cf97989e1d184c5e249e679412bdb215957
-  languageName: node
-  linkType: hard
-
 "find-yarn-workspace-root@npm:^2.0.0":
   version: 2.0.0
   resolution: "find-yarn-workspace-root@npm:2.0.0"
@@ -11159,17 +11150,6 @@ __metadata:
     jsonfile: ^6.0.1
     universalify: ^1.0.0
   checksum: 518828d6e5c33d71cb075f3c25629f857b4a0d1fca5c3b6c8cdee876fa972e0661003491fc7d49d9e4d1c19aec8af6edf045e849a1110f2f879880975f4f6955
-  languageName: node
-  linkType: hard
-
-"fs-extra@npm:^4.0.3":
-  version: 4.0.3
-  resolution: "fs-extra@npm:4.0.3"
-  dependencies:
-    graceful-fs: ^4.1.2
-    jsonfile: ^4.0.0
-    universalify: ^0.1.0
-  checksum: ad42def19446c82543ebfa707250de2e1adff8f1c902f9cad3946f69b3dad326696f70e86c3aebeab4bc4f19ff3ef9abee0460d7fb775122f3dc9142a4b1280f
   languageName: node
   linkType: hard
 
@@ -17070,14 +17050,14 @@ __metadata:
   languageName: node
   linkType: hard
 
-"patch-package@npm:^6.4.5":
-  version: 6.4.5
-  resolution: "patch-package@npm:6.4.5"
+"patch-package@npm:^6.4.6":
+  version: 6.4.6
+  resolution: "patch-package@npm:6.4.6"
   dependencies:
     "@yarnpkg/lockfile": ^1.1.0
     chalk: ^2.4.2
     cross-spawn: ^6.0.5
-    find-yarn-workspace-root: ^1.2.1
+    find-yarn-workspace-root: ^2.0.0
     fs-extra: ^7.0.1
     is-ci: ^2.0.0
     klaw-sync: ^6.0.0
@@ -17089,7 +17069,7 @@ __metadata:
     tmp: ^0.0.33
   bin:
     patch-package: index.js
-  checksum: d8c4f7aa6024b581ac4588268fe374883f05c3c48ba944774385a007bb18f5402dc16208935b4b3f93170a20b714601c56219a54d8d3b6038353d12424df658f
+  checksum: ebd288155fc113215671be35952a7d0e0c37f36c299f444c6c323b9cfc2d4039d85330ea024243c3e623fc67de00b6e90e6ec3a2117ed7e366ac65479a1b598e
   languageName: node
   linkType: hard
 
@@ -20244,8 +20224,10 @@ __metadata:
   dependencies:
     "@dish/rollup-plugin-flat-dts": ^1.0.1
     esbuild-jest: ^0.5.0
+    patch-package: ^6.4.6
     prettier: ^2.2.1
     prettier-plugin-import-sort: ^0.0.6
+    react-native-web: 0.0.0-466063b7e
     ultra-runner: ^3.10.5
   languageName: unknown
   linkType: soft
