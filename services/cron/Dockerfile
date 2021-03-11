@@ -14,8 +14,6 @@ ADD services/cron/crontab.txt .
 ADD services/cron/entry.sh .
 ADD dishctl.sh .
 
-RUN ./dishctl.sh install_doctl
-RUN ./dishctl.sh install_kubectl
 RUN /usr/bin/crontab crontab.txt
 
 CMD ["/root/entry.sh"]

@@ -13,6 +13,7 @@
     ]
   },
   "scripts": {
+    "env:prod": "./dishctl.sh yaml_to_env > .env",
     "trim-package": "yes | npx json-filter-cli --from=package.json --to=package.json --exclude=scripts",
     "trim-packages": "yarn trim-package && npx yarn workspaces foreach run yes | npx json-filter-cli --confirm --from=package.json --to=package.json --exclude=scripts",
     "bootstrap": "docker-compose build base",
@@ -22,7 +23,6 @@
     "db:init": "./dishctl.sh db_migrate_local init",
     "db:migrate": "./dishctl.sh db_migrate_local",
     "db:migrate:test": "POSTGRES_DB=test ./dishctl.sh db_migrate_local",
-    "db:clear": "./dishctl.sh db_clear_local",
     "app": "yarn workspace @dish/app start",
     "web": "yarn workspace @dish/app web",
     "web:prod": "yarn workspace @dish/app web:prod",
@@ -83,7 +83,6 @@
     "webpack": "5.24.2",
     "terser": "5.5.1",
     "lodash": "4.17.20",
-    "core-js": "3.9.0",
     "resolve": "1.17.0",
     "jsdom": "^16.4.0",
     "tslib": "2.0.3",
