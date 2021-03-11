@@ -19,7 +19,7 @@ function log-command {
 }
 
 function dish_registry_auth() {
-  eval $(./dishctl.sh yaml_to_env) flyctl auth docker || echo "failed to auth"
+  eval $(./dishctl.sh yaml_to_env) flyctl auth docker
 }
 
 function _kill_port_forwarder {

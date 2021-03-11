@@ -76,6 +76,7 @@ eval $(./dishctl.sh yaml_to_env)
 
 if [ ! -f "$HOME/.aws/credentials" ]; then
   echo "setting up aws credentials for space $DO_SPACES_ID"
+  mkdir -p "$HOME/.aws"
   cat <<EOF > "$HOME/.aws/credentials"
 [default]
 aws_access_key_id=$DO_SPACES_ID
