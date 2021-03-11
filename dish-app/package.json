@@ -2,9 +2,6 @@
   "name": "@dish/app",
   "private": true,
   "version": "0.0.0",
-  "installConfig": {
-    "hoistingLimits": "dependencies"
-  },
   "scripts": {
     "etc:colorize": "eval $(../dishctl.sh yaml_to_env) && DEBUG=1 HASURA_SECRET=$HASURA_GRAPHQL_ADMIN_SECRET node -r esbuild-register ./etc/add_colors_to_tiles.ts",
     "postinstall": "patch-package && DEBUG=workspaces expo-yarn-workspaces postinstall",
@@ -101,7 +98,6 @@
     "recyclerlistview": "^3.0.5",
     "redis": "^3.0.2",
     "resize-observer-polyfill": "^1.5.1",
-    "snackui": "*",
     "testcafe": "^1.11.0",
     "uuid": "^8.3.0"
   },

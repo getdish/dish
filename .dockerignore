@@ -12,7 +12,6 @@ Dockerfile
 **/target/*
 dish-app/ios
 dish-app/android
-snackui/examples
 .expo/*
 .expo-shared/*
 .github/*
@@ -20,8 +19,6 @@ snackui/examples
 *.sketch
 assets
 docs
-snackui/website
-snackui/examples
 *.md
 .vscode
 env.enc.production.yaml

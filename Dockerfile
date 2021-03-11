@@ -9,7 +9,6 @@ ENV PUPPETEER_SKIP_CHROMIUM_DOWNLOAD=true
 COPY packages packages
 COPY services services
 COPY dish-app dish-app
-COPY snackui snackui
 COPY package.json .
 
 RUN find . \! -name "package.json" -not -path "*/bin/*" -type f -print | xargs rm -rf
@@ -38,7 +37,6 @@ COPY services/crawlers services/crawlers
 COPY services/hooks services/hooks
 COPY services/worker services/worker
 COPY dish-app dish-app
-COPY snackui snackui
 
 # remove all tests even node modules
 RUN find . -type d \(  -name "test" -o -name "tests"  \) -print | xargs rm -rf && \

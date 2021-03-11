@@ -1,8 +1,6 @@
 *.log
 .ops
 
-*__snack.css
-
 .yarn/*
 !.yarn/cache
 !.yarn/patches

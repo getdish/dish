@@ -39,7 +39,7 @@
     "@oclif/plugin-autocomplete": "0.3.0",
     "@oclif/plugin-help": "3.2.1",
     "@oclif/plugin-not-found": "1.2.4",
-    "@snackui/static": "^0.0.6",
+    "@snackui/static": "*",
     "body-parser": "^1.19.0",
     "browserslist-useragent": "^3.0.3",
     "chokidar": "^3.5.0",

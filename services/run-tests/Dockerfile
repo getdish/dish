@@ -10,7 +10,6 @@ COPY package.json ava.config.js jest.config.js ./
 
 COPY packages packages
 COPY dish-app dish-app
-COPY snackui snackui
 COPY services services
 
 ENV NODE_ENV=test

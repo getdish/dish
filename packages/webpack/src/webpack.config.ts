@@ -147,7 +147,7 @@ export function createWebpackConfig({
       },
       resolve: {
         extensions: ['.ts', '.tsx', '.web.js', '.js'],
-        mainFields: ['tsmain', 'browser', 'module', 'main'],
+        mainFields: ['browser', 'module', 'main'],
         ...resolve,
       },
       resolveLoader: {

@@ -29,25 +29,9 @@ function delete_and_link_duplicate_modules() {
   popd
 }
 
-function delete_duplicate_snack_modules() {
-  pushd $PROJECT_ROOT
-  rm -r snackui/examples/nextjs/node_modules/react || true
-  rm -r snackui/examples/nextjs/node_modules/react-dom || true
-  rm -r snackui/node_modules/@babel/types || true # fix babel single version
-  rm -r snackui/node_modules/@o || true
-  rm -r snackui/node_modules/@types/react || true
-  rm -r snackui/node_modules/@types/react-dom || true
-  rm -r snackui/node_modules/react || true
-  rm -r snackui/node_modules/react-dom || true
-  rm -r snackui/node_modules/react-native-web || true
-  rm -r snackui/packages/snackui-static/node_modules/snackui || true # fix dup install
-  popd
-}
-
 PROJECT_ROOT="$(dirname "$0")/.."
 delete_extra_dish_app_modules &
 delete_and_link_duplicate_modules &
-delete_duplicate_snack_modules &
 yarn patch-package || true &
 patch_app_packages &
 # yarn expo:check-deps &

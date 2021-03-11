@@ -11,9 +11,6 @@
   "references": [
     {
       "path": "../helpers"
-    },
-    {
-      "path": "../../snackui/packages/snackui-static"
     }
   ]
 }
