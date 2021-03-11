@@ -4,7 +4,7 @@ import {
   ensureJSONSyntax,
   restaurantFindOne,
 } from '@dish/graph'
-import { ConfigurationServicePlaceholders } from 'aws-sdk/lib/config_service_placeholders'
+import { PoolConfig } from 'pg'
 
 import { DoorDash } from './doordash/DoorDash'
 import { GoogleGeocoder } from './GoogleGeocoder'
@@ -16,16 +16,13 @@ import { UberEats } from './ubereats/UberEats'
 import { DB } from './utils'
 import { Yelp } from './yelp/Yelp'
 
-let db_config = {
+let db_config: PoolConfig = {
   host: process.env.TIMESCALE_HOST || 'localhost',
-  port: process.env.TIMESCALE_PORT || '5433',
+  port: process.env.TIMESCALE_PORT ? +process.env.TIMESCALE_PORT : 5433,
   user: process.env.TIMESCALE_USER || 'postgres',
   password: process.env.TIMESCALE_PASSWORD || 'postgres',
   database: process.env.TIMESCALE_DB || 'scrape_data',
-  ssl: false,
-}
-if (process.env.DISH_ENV == 'production' || process.env.USE_PG_SSL == 'true') {
-  db_config.ssl = true
+  ssl: process.env.TIMESCALE_SSH ? true : false,
 }
 
 const db = new DB(db_config)
@@ -123,7 +120,6 @@ export async function scrapeInsert(scrape: Scrape) {
       /'/g,
       `''`
     )
-    await db.connect()
     const result = await db.query(`
       INSERT INTO scrape (
         time,

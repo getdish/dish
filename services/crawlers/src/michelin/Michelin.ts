@@ -23,7 +23,7 @@ const axios = axios_base.create({
 export class Michelin extends WorkerJob {
   static queue_config: QueueOptions = {
     limiter: {
-      max: 1,
+      max: 5,
       duration: 1000,
     },
   }

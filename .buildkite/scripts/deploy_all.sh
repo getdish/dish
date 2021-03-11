@@ -13,7 +13,7 @@ cd "$PROJECT_ROOT"
 commit=$(git rev-parse HEAD)
 # link="https://github.com/getdish/dish/tree/$commit"
 message="
-Successful deploy of $commit to staging droplet \n
+Successful deploy of $commit \n
 Code: https://github.com/getdish/dish/tree/$commit \n
 CI Run: $BUILDKITE_BUILD_URL
 "

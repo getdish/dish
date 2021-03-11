@@ -37,8 +37,8 @@ export class DoorDash extends WorkerJob {
 
   static queue_config: QueueOptions = {
     limiter: {
-      max: 3,
-      duration: 1000,
+      max: 5,
+      duration: 500,
     },
   }
 

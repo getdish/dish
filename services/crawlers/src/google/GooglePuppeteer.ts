@@ -32,7 +32,7 @@ export class GooglePuppeteer extends GooglePuppeteerJob {
   static queue_config: QueueOptions = {
     limiter: {
       max: 4,
-      duration: 20000,
+      duration: 5000,
     },
   }
 

@@ -1,9 +1,10 @@
 import { RestaurantOnlyIds, graphql } from '@dish/graph'
 import { isPresent } from '@dish/helpers'
 import React, { Suspense, memo, useMemo, useState } from 'react'
-import { Hoverable, LoadingItems } from 'snackui'
+import { Hoverable, LoadingItems, Spacer } from 'snackui'
 
 import { useSetAppMap } from '../AppMapStore'
+import { FIBase } from './FIBase'
 import { FICuisine, HomeFeedCuisineItem } from './HomeFeedCuisineItem'
 import {
   FIDishRestaurants,
@@ -18,22 +19,42 @@ import {
   useHomeFeedTrendingNew,
 } from './HomeFeedTrendingNew'
 
-type FI = FICuisine | FIDishRestaurants | FIList | FIHotNew
+type FISpace = FIBase & {
+  type: 'space'
+}
+
+type FI = FICuisine | FIDishRestaurants | FIList | FIHotNew | FISpace
 
 function useHomeFeed(props: HomeFeedProps): FI[] {
   const { item, region } = props
   const dishItems = useFeedDishItems(region)
   const hotNewItems = useHomeFeedTrendingNew(props)
   return useMemo(() => {
+    const [newest, hottest] = hotNewItems
     return [
-      ...hotNewItems,
       {
-        id: `0`,
+        id: 'list-0',
         type: 'list',
         region: item.region,
         title: `Lists`,
       } as FIList,
-      ...dishItems,
+      {
+        id: 'space',
+        type: 'space',
+      } as const,
+      ...dishItems.slice(0, 1),
+      hottest,
+      {
+        id: 'space',
+        type: 'space',
+      } as const,
+      ...dishItems.slice(1, 2),
+      newest,
+      {
+        id: 'space',
+        type: 'space',
+      } as const,
+      ...dishItems.slice(2),
     ].filter(isPresent)
   }, [dishItems, hotNewItems])
 }
@@ -74,6 +95,8 @@ export const HomePageFeed = memo(
     const contents = useMemo(() => {
       return items.map((item) => {
         switch (item.type) {
+          case 'space':
+            return <Spacer size="xl" />
           case 'new':
           case 'hot':
             return (

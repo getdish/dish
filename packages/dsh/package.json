@@ -1,0 +1,28 @@
+{
+  "name": "@dish/dsh",
+  "version": "0.0.1",
+  "sideEffects": false,
+  "types": "src/_types.d.ts",
+  "bin": "./bin/run",
+  "main": "dist",
+  "module": "_",
+  "tsmain": "src",
+  "scripts": {
+    "build": "esdx",
+    "watch": "esdx-watch"
+  },
+  "files": [
+    "/bin",
+    "/_",
+    "/dist"
+  ],
+  "dependencies": {
+    "@types/shelljs": "^0.8.8",
+    "esbuild": "0.8.56",
+    "esbuild-register": "^2.2.0",
+    "shelljs": "^0.8.4"
+  },
+  "devDependencies": {
+    "@dish/esdx": "*"
+  }
+}

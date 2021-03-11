@@ -2,7 +2,7 @@ import url from 'url'
 
 import { sleep } from '@dish/async'
 import { sentryMessage } from '@dish/common'
-import { ZeroUUID, restaurantFindOne } from '@dish/graph'
+import { ZeroUUID } from '@dish/graph'
 import { ProxiedRequests, WorkerJob } from '@dish/worker'
 import { JobOptions, QueueOptions } from 'bull'
 import _ from 'lodash'
@@ -17,7 +17,6 @@ import {
 import { aroundCoords, boundingBoxFromcenter, geocode } from '../utils'
 
 const BB_SEARCH = '/search/snippet?cflt=restaurant&l='
-
 const YELP_DOMAIN = 'https://www.yelp.com'
 
 const yelpAPI = new ProxiedRequests(
@@ -25,9 +24,7 @@ const yelpAPI = new ProxiedRequests(
   process.env.YELP_AWS_PROXY || YELP_DOMAIN,
   {
     headers: {
-      common: {
-        'X-My-X-Forwarded-For': 'www.yelp.com',
-      },
+      'X-My-X-Forwarded-For': 'www.yelp.com',
     },
   }
 )
@@ -38,8 +35,8 @@ export class Yelp extends WorkerJob {
 
   static queue_config: QueueOptions = {
     limiter: {
-      max: 3,
-      duration: 1000,
+      max: 5,
+      duration: 300,
     },
   }
 
@@ -49,7 +46,7 @@ export class Yelp extends WorkerJob {
 
   async allForCity(city_name: string) {
     console.log(
-      'Starting Yelp crawler. Using AWS proxy: ' + process.env.YELP_AWS_PROXY
+      `Starting Yelp crawler on city "${city_name}". Using AWS proxy: ${process.env.YELP_AWS_PROXY}`
     )
     const MAPVIEW_SIZE = 4000
     const coords = await geocode(city_name)
@@ -86,9 +83,13 @@ export class Yelp extends WorkerJob {
     ].join(',')
     const bb = encodeURIComponent('g:' + coords)
     const uri = BB_SEARCH + bb + '&start=' + start
-    const response = await yelpAPI.get(uri)
+    const response = await yelpAPI.getJSON(YELP_DOMAIN + uri)
+    if (!response) {
+      console.log('no response!', response)
+      return []
+    }
     const componentsList =
-      response?.data.searchPageProps.mainContentComponentsListProps ?? []
+      response.searchPageProps.mainContentComponentsListProps ?? []
     const pagination = componentsList.find((x) => x.type === 'pagination')
 
     if (!pagination) {
@@ -99,9 +100,9 @@ export class Yelp extends WorkerJob {
     this.find_only = onlyName
 
     if (!componentsList.length) {
-      console.error('searchPageProps.searchResultsProps: ', uri, response?.data)
+      console.error('searchPageProps.searchResultsProps: ', uri, response)
       throw new Error(
-        'YELP: Nothing in `response?.data.searchPageProps.searchResultsProps.searchResults`'
+        'YELP: Nothing in `response.searchPageProps.searchResultsProps.searchResults`'
       )
     }
     console.log(
@@ -125,11 +126,11 @@ export class Yelp extends WorkerJob {
         found_the_one = true
         console.log('YELP SANDBOX: found ' + name)
       }
-      const timeout = sleep(8000)
+      const timeout = sleep(10000)
       await Promise.race([
         this.getRestaurant(data),
         timeout.then(() => {
-          console.warn('Timed out getting restaurant', data)
+          console.warn('Timed out getting restaurant', name)
         }),
       ])
       timeout.cancel()
@@ -164,6 +165,9 @@ export class Yelp extends WorkerJob {
     }
     let biz_page: string
     const id = await this.saveDataFromMapSearch(data)
+    if (!id) {
+      throw new Error(`No id`)
+    }
     const full_uri = url.parse(data.searchResultBusiness.businessUrl, true)
     if (full_uri.query.redirect_url) {
       biz_page = decodeURI(full_uri.query.redirect_url as string)
@@ -204,9 +208,9 @@ export class Yelp extends WorkerJob {
     const SIG2 = 'mapBoxProps'
     this.current = yelp_path
     console.log(`YELP: getting embedded JSON for: ${yelp_path}`)
-    const response = await yelpAPI.get(yelp_path)
+    const response = await yelpAPI.getText(yelp_path)
 
-    for (const line of response.data.split('\n')) {
+    for (const line of response.split('\n')) {
       if (line.includes(SIG1) && line.includes(SIG2)) {
         data = this.extractEmbeddedJSONData(line)
         break
@@ -319,13 +323,13 @@ export class Yelp extends WorkerJob {
     const url =
       '/biz_photos/get_media_slice/' + bizId + '?start=' + start + '&dir=b'
 
-    const response = await yelpAPI.get(url, {
+    const response = await yelpAPI.getJSON(url, {
       headers: {
         'X-Requested-With': 'XMLHttpRequest',
       },
     })
 
-    const media = response.data.media
+    const media = response.media
 
     for (let photo of media) {
       delete photo.media_nav_html
@@ -350,14 +354,14 @@ export class Yelp extends WorkerJob {
       '/review_feed?rl=en&sort_by=relevance_desc&q=&start=' +
       start
 
-    const response = await yelpAPI.get(url, {
+    const response = await yelpAPI.getJSON(url, {
       headers: {
         'X-Requested-With': 'XMLHttpRequest',
-        'X-Requested-By-React': true,
+        'X-Requested-By-React': 'true',
       },
     })
 
-    const data = response.data.reviews
+    const data = response.reviews
 
     let reviews: ScrapeData = {}
     reviews['reviewsp' + page] = data

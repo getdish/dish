@@ -1,0 +1,21 @@
+{
+  "name": "@dish/proxy",
+  "version": "0.0.1",
+  "sideEffects": false,
+  "types": "src/_types.d.ts",
+  "private": true,
+  "main": "dist",
+  "module": "_",
+  "tsmain": "src",
+  "scripts": {
+    "build": "esdx",
+    "watch": "esdx-watch"
+  },
+  "dependencies": {
+    "express": "^4.17.1",
+    "playwright": "^1.9.2"
+  },
+  "devDependencies": {
+    "@dish/esdx": "^0.0.6"
+  }
+}

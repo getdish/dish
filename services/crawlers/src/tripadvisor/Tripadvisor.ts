@@ -36,7 +36,7 @@ export class Tripadvisor extends WorkerJob {
   static queue_config: QueueOptions = {
     limiter: {
       max: 5,
-      duration: 1000,
+      duration: 500,
     },
   }
 

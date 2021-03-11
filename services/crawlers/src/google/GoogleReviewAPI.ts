@@ -1,22 +1,14 @@
 import '@dish/common'
 
-import { sentryException, sentryMessage } from '@dish/common'
+import { sentryMessage } from '@dish/common'
 import { Restaurant, globalTagId, restaurantFindOne } from '@dish/graph'
 import { WorkerJob } from '@dish/worker'
-import * as acorn from 'acorn'
 import axios_base from 'axios'
 import { JobOptions, QueueOptions } from 'bull'
 import * as cheerio from 'cheerio'
-import _ from 'lodash'
 
-import { restaurantSaveCanonical } from '../canonical-restaurant'
-import { ScrapeData, scrapeInsert, scrapeMergeData } from '../scrape-helpers'
-import {
-  aroundCoords,
-  decodeEntities,
-  geocode,
-  restaurantFindIDBatchForCity,
-} from '../utils'
+import { ScrapeData, scrapeInsert } from '../scrape-helpers'
+import { restaurantFindIDBatchForCity } from '../utils'
 
 const GOOGLE_DOMAIN = process.env.GOOGLE_AWS_PROXY || 'https://www.google.com'
 
@@ -37,7 +29,7 @@ export class GoogleReviewAPI extends WorkerJob {
   static queue_config: QueueOptions = {
     limiter: {
       max: 5,
-      duration: 1000,
+      duration: 300,
     },
   }
 

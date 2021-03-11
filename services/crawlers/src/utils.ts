@@ -6,7 +6,7 @@ import { Restaurant, settingGet, settingSet } from '@dish/graph'
 import axios from 'axios'
 import _ from 'lodash'
 import moment, { Moment } from 'moment'
-import { Pool, PoolClient, QueryResult } from 'pg'
+import { Pool, PoolConfig, QueryResult } from 'pg'
 
 import { isGoogleGeocoderID } from './GoogleGeocoder'
 
@@ -26,10 +26,27 @@ export const CITY_LIST = [
   'Istanbul, Turkey',
 ]
 
+function getCityFlagOrEnv() {
+  if (process.env.CITY) return process.env.CITY
+  const i = process.argv.findIndex((x) => x === '--city')
+  if (i > 0) {
+    return process.argv
+      .slice(i + 1)
+      .join(' ')
+      .replaceAll('"', '')
+      .replaceAll("'", '')
+  }
+}
+
+export function getCities() {
+  const specific = getCityFlagOrEnv()
+  return specific ? [specific] : CITY_LIST
+}
+
 export class DB {
   pool: Pool | null = null
 
-  constructor(public config: Object) {
+  constructor(public config: PoolConfig) {
     if (process.env.DEBUG) {
       console.log('setup db', config)
     }
@@ -37,15 +54,18 @@ export class DB {
   }
 
   static main_db() {
-    return new DB({
+    const conf = {
       host: process.env.PGHOST || 'localhost',
-      port: process.env.PGPORT || '5432',
+      port: process.env.PGPORT ? +process.env.PGPORT : 5432,
+      ssl: process.env.NODE_ENV === 'development' ? false : true,
       user: process.env.PGUSER || 'postgres',
       password: process.env.PGPASSWORD || 'postgres',
       database: 'dish',
       idleTimeoutMillis: 10_000,
       connectionTimeoutMillis: 0,
-    })
+    }
+    console.log('db conf', conf)
+    return new DB(conf)
   }
 
   static async one_query_on_main(query: string) {

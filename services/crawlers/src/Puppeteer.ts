@@ -1,6 +1,7 @@
 import '@dish/common'
 
 import ProxyChain from 'proxy-chain'
+// @ts-ignore
 import { Browser, Page, Request } from 'puppeteer'
 import puppeteer from 'puppeteer-extra'
 import StealthPlugin from 'puppeteer-extra-plugin-stealth'
@@ -94,14 +95,16 @@ export class Puppeteer {
   async startPuppeteer() {
     const fireprox_host_sig = '*.execute-api.us-west-2.amazonaws.com'
     const proxy_bypass = fireprox_host_sig
-    this.browser = await puppeteer.launch({
+    puppeteer.defaultArgs({
       headless: false,
-      ignoreDefaultArgs: ['--enable-automation'],
       args: [
         '--proxy-server=localhost:8000',
         `--proxy-bypass-list=${proxy_bypass}`,
         '--no-sandbox',
       ],
+    })
+    this.browser = await puppeteer.launch({
+      ignoreDefaultArgs: ['--enable-automation'],
     })
 
     this.page = await this.browser.newPage()

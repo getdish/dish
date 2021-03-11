@@ -57,7 +57,7 @@ const heights = {
 const scales = {
   xs: 0.6,
   sm: 0.85,
-  md: 1.25,
+  md: 1,
 }
 
 const getLongestWord = (title: string) =>
@@ -111,7 +111,14 @@ export function Card({
       aspectFixed={aspectFixed}
       hoverable={hoverable}
     >
-      <VStack width="100%" height="100%" position="relative">
+      <VStack
+        // borderWidth={2}
+        borderColor={colors.pastelColor}
+        borderRadius={cardFrameBorderRadius}
+        width="100%"
+        height="100%"
+        position="relative"
+      >
         {/* background */}
         <AbsoluteVStack
           fullscreen
@@ -154,7 +161,7 @@ export function Card({
           </VStack>
 
           {/* bottom color gradient */}
-          <AbsoluteVStack
+          {/* <AbsoluteVStack
             className="hover-0-opacity-child ease-in-out"
             zIndex={10}
             left={0}
@@ -167,7 +174,7 @@ export function Card({
               style={StyleSheet.absoluteFill}
               colors={['transparent', colors.darkColor]}
             />
-          </AbsoluteVStack>
+          </AbsoluteVStack> */}
 
           {typeof below === 'function' ? below(colors) : below}
         </AbsoluteVStack>
@@ -184,6 +191,28 @@ export function Card({
           overflow="hidden"
           flex={1}
         >
+          {/* title gradient */}
+          <AbsoluteVStack
+            className="hover-75-opacity-child ease-in-out-slow"
+            zIndex={-1}
+            top={0}
+            right={0}
+            opacity={size === 'xs' ? 1 : 1}
+            transform={[
+              { rotate: '15deg' },
+              { scaleX: 2.5 },
+              { translateY: -20 },
+            ]}
+          >
+            <LinearGradient
+              style={{ width: 150, height: 150 }}
+              colors={[
+                colors.pastelColor,
+                colors.pastelColor,
+                `${colors.color}00`,
+              ]}
+            />
+          </AbsoluteVStack>
           <VStack
             className="ease-in-out"
             opacity={hideInfo ? 0 : 1}
@@ -200,26 +229,6 @@ export function Card({
                 ))}
               <VStack flex={1} alignItems="flex-end">
                 <VStack position="relative">
-                  {/* title gradient */}
-                  <AbsoluteVStack
-                    className="hover-75-opacity-child ease-in-out-slow"
-                    zIndex={-1}
-                    left={-120}
-                    bottom={-120}
-                    opacity={size === 'xs' ? 1 : 1}
-                    transform={[
-                      { rotate: '15deg' },
-                      { scale: 1.65 },
-                      { translateY: -20 },
-                      { translateX: 30 },
-                    ]}
-                  >
-                    <LinearGradient
-                      style={{ width: 250, height: 250 }}
-                      colors={[colors.color, colors.color, `${colors.color}00`]}
-                    />
-                  </AbsoluteVStack>
-
                   <Text
                     // not working below :(
                     className={size === 'xs' ? 'ellipse' : 'break-work'}
@@ -227,7 +236,7 @@ export function Card({
                     textShadowColor="#00000033"
                     textShadowRadius={0}
                     textShadowOffset={{ height: 2, width: 0 }}
-                    fontWeight={size === 'xs' ? '800' : '400'}
+                    fontWeight={size === 'xs' ? '800' : '500'}
                     letterSpacing={size === 'xs' ? 0 : -1}
                     color="#fff"
                     fontSize={fontSize}

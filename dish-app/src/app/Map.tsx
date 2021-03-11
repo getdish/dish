@@ -1,6 +1,6 @@
 import 'mapbox-gl/dist/mapbox-gl.css'
 
-import { fullyIdle, series } from '@dish/async'
+import { fullyIdle, series, sleep } from '@dish/async'
 import { isDev, isStaging, slugify } from '@dish/graph'
 import { supportsTouchWeb } from '@dish/helpers'
 import bbox from '@turf/bbox'
@@ -84,12 +84,26 @@ export const MapView = (props: MapProps) => {
   useEffect(() => {
     if (!map) return undefined
     const handleResize = debounce(() => {
-      map.resize()
+      series([
+        () => map.resize(),
+        () => sleep(300),
+        () => map.resize(),
+        () => sleep(300),
+        () => map.resize(),
+        () => sleep(300),
+        () => map.resize(),
+        () => sleep(300),
+        () => map.resize(),
+      ])
     }, 200)
-    Dimensions.addEventListener('change', handleResize)
+    const handleResizeOuter = () => {
+      handleResize.cancel()
+      handleResize()
+    }
+    Dimensions.addEventListener('change', handleResizeOuter)
     return () => {
       handleResize.cancel()
-      Dimensions.removeEventListener('change', handleResize)
+      Dimensions.removeEventListener('change', handleResizeOuter)
     }
   }, [map])
 

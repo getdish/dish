@@ -1,0 +1,16 @@
+{
+  "extends": "../../tsconfig.base",
+  "compilerOptions": {
+    "composite": true,
+    "esModuleInterop": true,
+    "outDir": "_",
+    "rootDir": "src"
+  },
+  "include": ["src"],
+  "exclude": ["src/_types.d.ts"],
+  "references": [
+    {
+      "path": "../helpers"
+    }
+  ]
+}

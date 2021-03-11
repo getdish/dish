@@ -3,6 +3,7 @@ import { groupBy, pick, sortBy, uniqBy } from 'lodash'
 import React, { useMemo } from 'react'
 import { HStack, Hoverable, Theme } from 'snackui'
 
+import { getColorsForName } from '../../helpers/getColorsForName'
 import {
   DishTagItemSimple,
   selectRishDishViewSimple,
@@ -71,7 +72,6 @@ export function useFeedDishItems(
         region,
         title: `Known for ${tag.name}`,
         type: 'dish-restaurants',
-        expandable: true,
         tag,
       }
     })
@@ -114,7 +114,11 @@ export const HomeFeedDishRestaurants = graphql(
     const contents = useMemo(() => {
       return (
         <>
-          <FeedSlantedTitleLink tag={tag}>
+          <FeedSlantedTitleLink
+            backgroundColor={getColorsForName(tag.name).pastelColor}
+            color="#fff"
+            tag={tag}
+          >
             {tag.icon} {tag.name}
           </FeedSlantedTitleLink>
 

@@ -2,14 +2,13 @@
   "name": "@dish/worker",
   "version": "0.0.1",
   "sideEffects": false,
-  "types": "src/_types.d.ts",
   "private": true,
   "main": "dist",
   "module": "_",
   "tsmain": "src",
   "scripts": {
-    "build": "esdx",
-    "watch": "esdx-watch",
+    "build": "esdx legacy",
+    "watch": "esdx-watch legacy",
     "test": "DISH_ENV=test ava tests/* --verbose",
     "test:watch": "DISH_ENV=test ava tests/* --watch"
   },
@@ -18,10 +17,12 @@
     "axios": "^0.19.2",
     "bull": "^3.12.1",
     "https-proxy-agent": "^5.0.0",
-    "lodash": "*"
+    "lodash": "*",
+    "make-fetch-happen": "^8.0.14"
   },
   "devDependencies": {
     "@dish/esdx": "*",
+    "@types/make-fetch-happen": "^8.0.0",
     "ava": "^3.14.0"
   }
 }

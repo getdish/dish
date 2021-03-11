@@ -1,8 +1,3 @@
-- worker and web can never run apt-get:
-  - apt-get initial layer
-  - new stage from base image
-  - copy apt-get stuff in
-  - build (web:build) can remove all install deps
 
 - comments need voting or else no one will want to use them
 
@@ -19,6 +14,41 @@ THREE BIG AREAS
   3. APPS
      1. need to get a beta version that is testflight deployable
 
+---
+
+BROKEN DOWN
+
+- bugs
+  - back button can break still
+
+- feel
+  - needs many small improvements
+  - mobile web needs a ton of scroll/touch fixes
+
+- speed
+  - homepage/search sql speed fix
+  - search scrolling slowish (svg? images? paint?)
+
+- data working
+  - get cron properly running crawl jobs, verify timings
+  - verify further externals crawlers functioning
+  - test/fix internal crawler
+  - get working on tucson
+  - LA, SD, SF
+
+- data improve
+  - get good feedback loop for one/a few restaurants:
+    - integrate new image quality API
+    - integrate new bert API
+  - image() rather than default_images() for data use reduction
+  - tag image finding
+
+- user
+  - apple sign in broken
+  - a few sign in flow improvements
+  - profiles needs a lot of love
+
+-
 
 # initial family/friends launch at end of month
 

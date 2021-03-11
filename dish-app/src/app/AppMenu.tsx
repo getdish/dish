@@ -2,6 +2,7 @@ import { slugify } from '@dish/graph'
 import { ChevronUp, HelpCircle, Menu } from '@dish/react-feather'
 import { reaction, useStoreInstance } from '@dish/use-store'
 import React, { Suspense, memo, useEffect } from 'react'
+import { Theme } from 'snackui'
 import { HStack, Popover, Spacer, Text, Tooltip, useMedia } from 'snackui'
 
 import { router, useRouterCurPage } from '../router'
@@ -29,10 +30,10 @@ export const AppMenu = memo(() => {
         noArrow
         onChangeOpen={appMenu.setIsVisible}
         contents={
-          <>
+          <Theme name="light">
             {/* CONTENTS HERE */}
             <AppMenuContents hideUserMenu={appMenu.hide} />
-          </>
+          </Theme>
         }
         mountImmediately
       >

@@ -209,6 +209,7 @@ export function createWebpackConfig({
                 include: babelInclude,
                 // @ts-ignore
                 use: [
+                  // 'babel-loader',
                   {
                     loader: require.resolve('esbuild-loader'),
                     options: {
@@ -270,7 +271,7 @@ export function createWebpackConfig({
                 test: /\.mdx?$/,
                 use: [
                   {
-                    loader: require.resolve('babel-loader'),
+                    loader: require.resolve('esbuild-loader'),
                   },
                   {
                     loader: require.resolve('@mdx-js/loader'),

@@ -120,12 +120,13 @@ export default memo(function HomePage(
   }, [isActive, props.item.region])
 
   const regionName = region?.name ?? '...'
+  const media = useMedia()
 
   const homeHeaderContent = useMemo(() => {
     return (
       <>
         <HomeTopSpacer />
-        <Spacer size="md" />
+        <Spacer size="md" {...(media.sm && { size: 0 })} />
         <HStack marginBottom={-20}>
           <ContentScrollViewHorizontal>
             <HStack
@@ -136,6 +137,7 @@ export default memo(function HomePage(
             >
               <VStack position="relative">
                 <SlantedTitle
+                  paddingVertical={12}
                   minWidth={100}
                   backgroundColor={regionColors.color}
                   color="#fff"
@@ -237,6 +239,7 @@ const HomePageIntroDialogue = memo(() => {
       padding={10}
       paddingHorizontal={13}
       margin={10}
+      marginHorizontal={15}
       position="relative"
       maxWidth={740}
       alignSelf="center"

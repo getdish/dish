@@ -10,7 +10,10 @@ const legacy = process.argv.reverse()[0] === 'legacy'
 
 async function go() {
   const x = Date.now()
-  if (process.env.NO_CHECK) {
+
+  fs.existsSync('src/_types.d.ts') && fs.rmSync('src/_types.d.ts')
+
+  if (process.env.NO_CLEAN) {
     console.log('skip typecheck')
   } else {
     fs.existsSync('tsconfig.tsbuildinfo') && fs.rmSync('tsconfig.tsbuildinfo')
@@ -49,6 +52,8 @@ async function go() {
         treeShaking: true,
         format: 'cjs',
         logLevel: 'error',
+      }).then(() => {
+        console.log('built dist')
       }),
       build({
         entryPoints: files,
@@ -58,6 +63,8 @@ async function go() {
         treeShaking: true,
         format: 'esm',
         logLevel: 'error',
+      }).then(() => {
+        console.log('built _')
       }),
     ])
   } catch (error) {

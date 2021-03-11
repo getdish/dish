@@ -19,9 +19,7 @@ const googleAPI = new ProxiedRequests(
   process.env.GOOGLE_AWS_PROXY || GOOGLE_DOMAIN,
   {
     headers: {
-      common: {
-        'X-My-X-Forwarded-For': 'www.google.com',
-      },
+      'X-My-X-Forwarded-For': 'www.google.com',
     },
   },
   true
@@ -61,11 +59,7 @@ export class GoogleGeocoder {
       }
     }
     const message = 'GOOGLE GEOCODER: retries failed getting ID for: ' + query
-    if (process.env.DISH_ENV == 'production') {
-      throw new Error(message)
-    } else {
-      console.error(message)
-    }
+    throw new Error(message)
   }
 
   async _getSearchEndpoint() {
@@ -89,18 +83,18 @@ export class GoogleGeocoder {
 
   async _searchForID() {
     const url = this._formatSearchURL()
-    const response = await googleAPI.get(url, {
+    const response = await googleAPI.getText(url, {
       headers: { 'user-agent': 'PLEASE' },
     })
-    if (this._hasSearchExpired(response.data)) {
+    if (this._hasSearchExpired(response)) {
       throw new Error(SEARCH_ENDPOINT_EXPIRED)
     }
     // For example: 0x7b300695e1e94c7:0x1706843e5f6d1bd2
-    const matches = response.data.match(google_geocoder_id_regex)
+    const matches = response.match(google_geocoder_id_regex)
     if (matches) {
       return matches[0]
     } else {
-      console.error(response.data)
+      console.error(response)
       throw new Error(ID_NOT_FOUND)
     }
   }

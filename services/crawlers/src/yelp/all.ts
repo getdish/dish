@@ -1,11 +1,7 @@
-import { CITY_LIST } from '../utils'
+import { getCities } from '../utils'
 import { Yelp } from './Yelp'
 
-let cities = CITY_LIST
-if (process.env.CITY) {
-  cities = [process.env.CITY]
-}
 const y = new Yelp()
-for (const city of cities) {
+for (const city of getCities()) {
   y.runOnWorker('allForCity', [city])
 }

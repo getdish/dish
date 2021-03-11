@@ -12,7 +12,7 @@ function generate_random_port() {
   echo "2$((1000 + RANDOM % 8999))"
 }
 
-function log-command {
+function log_command {
   echo "$" "$@"
   eval $(printf '%q ' "$@") < /dev/tty
 }
@@ -85,21 +85,30 @@ function send_slack_monitoring_message() {
 EOF
 }
 
-function worker_cli() {
-  worker "bash"
+function worker_ssh() {
+  fly_tunnel
+  log_command ssh -o StrictHostKeyChecking=no -l "root" "dish-worker.internal" -- "$@"
 }
 
-# Note that crawlers are also run on cron schedules. So this is just for
-# manual runs.
+function worker_exec() {
+  worker_ssh "$@"
+}
+
+# Note that crawlers are also run on cron schedules.
+# For cities list see: crawlers/src/utils "CITY_LIST"
+
+# example: ./dishctl.sh start_crawler Yelp
 function start_crawler() {
-  worker "node /app/services/crawlers/_/$1/all.js"
+  worker_exec "node /app/services/crawlers/_/$1/all.js"
 }
 
+# example: ./dishctl.sh start_crawler_for_city yelp  Tucson, Arizona
 function start_crawler_for_city() {
-  worker "CITY='$2' node /app/services/crawlers/_/$1/all.js"
+  worker_exec "node /app/services/crawlers/dist/$1/all.js --city \"$2\""
 }
 
 function start_all_crawlers_for_city() {
+  set -e
   start_crawler_for_city "doordash" "$1"
   start_crawler_for_city "google" "$1"
   start_crawler_for_city "grubhub" "$1"
@@ -110,6 +119,7 @@ function start_all_crawlers_for_city() {
 }
 
 function start_all_crawlers() {
+  set -e
   start_crawler "doordash"
   start_crawler "google"
   start_crawler "grubhub"
@@ -492,33 +502,18 @@ function timescale_command() {
   PORT=$(generate_random_port)
   timescale_proxy $PORT
   echo "$1" | PGPASSWORD=$TIMESCALE_SU_PASS psql \
-    -p $PORT \
+    -p "$PORT" \
     -h localhost \
     -U postgres \
     -d scrape_data
 }
 
-function logs() {
-  namespace=${2:-default}
-  kubectl -n $namespace \
-    logs -f \
-    --selector="app=$2" \
-    --max-log-requests=10
-}
-
 function fly_tunnel() {
-  if dig _apps.internal | grep -q 'dish-redis'; then
+  if dig _apps.internal | grep -q 'dish-'; then
     echo "tunneled into fly"
   else
-    cat <<EOF
-Need to tunnel into fly!
-
-- Initial setup: https://fly.io/docs/reference/privatenetwork/
-
-Once wireguard is set up and tunneled, you just need to:
-
-fly ssh issue --agent
-EOF
+    fly ssh issue dish teamdishapp@gmail.com --agent
+    echo "May need to setup wireguard setup: https://fly.io/docs/reference/privatenetwork/"
   fi
 }
 
@@ -527,7 +522,7 @@ function console() {
 }
 
 function find_app() {
-  find $PROJECT_ROOT -type d \( -name node_modules -o -name packages \) -prune -false -o -type d -name "$1" | head -n 1
+  find "$PROJECT_ROOT" -type d \( -name node_modules -o -name packages \) -prune -false -o -type d -name "$1" | head -n 1
 }
 
 function logs() {
@@ -536,7 +531,11 @@ function logs() {
   popd
 }
 
-function bull_console() {
+function bull_clear() {
+  curl -X POST https://dish-worker.fly.dev/clear
+}
+
+function bull_repl() {
   if [ "$1" = "" ]; then
     echo "Must specify a queue"
     echo "  its the constructor name of any class that extends WorkerJob"
@@ -544,9 +543,11 @@ function bull_console() {
     echo "    Yelp, UberEats, GoogleReviewAPI, GooglePuppeteer, GoogleImages..."
     exit 0
   fi
-  fly_tunnel && "$PROJECT_ROOT/node_modules/.bin/bull-repl" connect \
+  fly_tunnel
+  "$PROJECT_ROOT/node_modules/.bin/bull-repl" connect \
       --host dish-redis.fly.dev \
       --port 10000 \
+      --password redis \
       "$1"
 }
 
@@ -591,7 +592,7 @@ function self_crawl_by_query() {
   [ -z "$1" ] && exit 1
   query="SELECT id FROM restaurant $1"
   echo "Running self crawler with SQL: $query"
-  worker "QUERY=${query@Q} node /app/services/crawlers/_/self/sandbox.js"
+  worker_exec "QUERY=${query@Q} node /app/services/crawlers/_/self/sandbox.js"
 }
 
 # Watch progress at https://worker-ui.k8s.dishapp.com/ui
@@ -607,23 +608,6 @@ function limited_self_crawl_by_sanfran_cuisine() {
     )
   "
   self_crawl_by_query "$query"
-}
-
-function update_node_taints_for() {
-  type="$1"
-  nodes="$(kubectl get nodes | grep dish-$type-pool | cut -d ' ' -f 1 | tr '\n' ' ')"
-  kubectl taint --overwrite node $nodes dish-taint=$type-only:NoSchedule
-}
-
-function update_all_node_taints() {
-  update_node_taints_for "db"
-  update_node_taints_for "critical"
-}
-
-function list_node_taints() {
-  kubectl get nodes \
-    -o 'custom-columns=NAME:.metadata.name,TAINTS:.spec.taints' \
-    --no-headers
 }
 
 # Many thanks to Stefan Farestam
@@ -649,78 +633,6 @@ function yaml_to_env() {
   parse_yaml $PROJECT_ROOT/env.enc.production.yaml | sed 's/\$/\\$/g' | xargs -0
 }
 
-function docker_run_base() {
-  command="docker-compose run --rm base $1"
-  echo "Running: $command"
-  eval $command
-}
-
-# Docker Compose doesn't pull images with a build key in their definition?
-function docker_pull_images_that_compose_would_rather_build() {
-  image="$DISH_REGISTRY/%:$DOCKER_TAG_NAMESPACE"
-  parallel -j 4 --tag --lb -I% docker pull "$image" ::: \
-    'worker' \
-    'dish-hooks' \
-    'search' \
-    'dish-app'
-}
-
-function ci_prettier() {
-  docker_run_base yarn prettier --check "**/*.{ts,tsx}"
-}
-
-function ci_rename_tagged_images_to_latest() {
-  dish_registry_auth
-  for image in "${ALL_IMAGES[@]}"
-  do
-    current=$DISH_REGISTRY/$image:$DOCKER_TAG_NAMESPACE
-    new=$DISH_REGISTRY/$image
-    docker tag $current $new:latest
-  done
-  docker images
-}
-
-function ci_push_images_to() {
-  tag=$1
-  echo "Pushing new docker images to $tag registry..."
-  dish_registry_auth
-  for image in "${ALL_IMAGES[@]}"
-  do
-    if [[ "$image" == "worker" ]]; then
-      continue
-    fi
-    new=$DISH_REGISTRY/$image:$tag
-    docker push $new
-  done
-}
-
-function rollout_all_services() {
-  kubectl rollout \
-    restart deployment \
-    $(kubectl get deployments | grep -v worker | tail -n +2 | cut -d ' ' -f 1)
-}
-
-# Usage dishctl.sh push_repo_image $repo $image_name
-function push_repo_image() {
-  repo=$1
-  default_name=$(basename ${repo%.*})
-  name=${2:-$default_name}
-  image=$DISH_REGISTRY/$name
-  tmp_dir=$(mktemp -d -t dish-XXXXXXXXXX)
-  git clone --depth 1 $repo $tmp_dir
-  echo "Building image: '$image'"
-  buildkit_build $tmp_dir $image '' $tmp_dir
-  rm -rf $tmp_dir
-}
-
-function push_auxillary_images() {
-  push_repo_image 'git@github.com:getdish/image-quality-api.git' image-quality-server
-  push_repo_image 'git@github.com:getdish/grafana-backup-tool.git' grafana-backup-tool
-  push_repo_image 'git@github.com:getdish/imageproxy.git' imageproxy
-  buildkit_build $PROJECT_ROOT/services/gorse $DISH_REGISTRY/gorse
-  buildkit_build $PROJECT_ROOT/services/cron $DISH_REGISTRY/cron
-}
-
 function grafana_backup() {
   _run_on_cluster $DISH_REGISTRY/grafana-backup-tool && return 0
   set -e
@@ -731,58 +643,6 @@ function grafana_backup() {
   destination=$DISH_BACKUP_BUCKET/grafan-backups
   s3 put _OUTPUT_/$backup $destination/$backup
   s3 ls $destination/ | sort -k1,2
-}
-
-function terraform_apply() {
-  pushd $PROJECT_ROOT/k8s
-  eval $(yaml_to_env) terraform apply
-  popd
-}
-
-function scale_min() {
-  kubectl scale --replicas=1 deployment worker
-  kubectl scale --replicas=1 deployment bert
-  kubectl scale --replicas=1 deployment image-quality-api
-}
-
-function volume_debugger() {
-  pvc=$1
-  command=$2
-  namespace=${3:-default}
-  name="volume-debugger"
-  yaml="
-    kind: Pod
-    apiVersion: v1
-    metadata:
-      name: $name
-    spec:
-      volumes:
-      - name: volume-to-debug
-        persistentVolumeClaim:
-          claimName: $pvc
-      containers:
-      - name: debugger
-        image: busybox
-        command: ['sleep', '3600']
-        volumeMounts:
-        - mountPath: '/data'
-          name: volume-to-debug
-  "
-  echo "$yaml" | kubectl -n $namespace create -f -
-  trap "kubectl -n $namespace delete pod $name --grace-period=0 --force" EXIT
-  while [ "$(kubectl -n $namespace get pods | grep 'volume-debugger' | grep 'Running')" = "" ]; do
-    sleep 1
-    echo "Waiting for volume-debugger pod to start..."
-  done
-  kubectl -n $namespace exec -it volume-debugger -- sh -c "$command"
-}
-
-function redis_pvc_wipe() {
-  file="/data/appendonly.aof"
-  command="rm $file && ls -alh $file"
-  volume_debugger 'redis-data-redis-master-0' "$command" 'redis'
-  redis_flush_all
-  kubectl rollout restart deployment/worker
 }
 
 function urlencode() {
@@ -805,16 +665,16 @@ function docker_compose_up_subset() {
   extra=$2
   export HASURA_GRAPHQL_ADMIN_SECRET=password
   if [ -z "$extra" ]; then
-    log-command -- docker-compose up $services
+    log_command -- docker-compose up --remove-orphans $services
   else
-    log-command -- docker-compose up "$extra" $services
+    log_command -- docker-compose up --remove-orphans "$extra" $services
   fi
   printf "\n\n\n"
 }
 
-base_exclude="base|nginx|image-quality|image-proxy|bert|gorse|run-tests|cron"
+base_exclude="base|nginx|image-quality|image-proxy|bert|gorse|run-tests|cron|proxy"
 test_exclude="$base_exclude|worker"
-dev_exclude="$base_exclude|dish-app|timescale"
+dev_exclude="$base_exclude|dish-app"
 
 function docker_compose_up_for_devs() {
   docker_compose_up_subset $dev_exclude
@@ -822,24 +682,6 @@ function docker_compose_up_for_devs() {
 
 function docker_compose_up_for_tests() {
   docker_compose_up_subset $test_exclude -d
-}
-
-function staging_ssh() {
-  ssh root@ssh.staging.dishapp.com \
-    -t \
-    -i $PROJECT_ROOT/k8s/etc/ssh/dish-staging.priv \
-    'tmux attach'
-}
-
-function staging_restart() {
-  ssh root@ssh.staging.dishapp.com \
-    -t \
-    -i $PROJECT_ROOT/k8s/etc/ssh/dish-staging.priv \
-    'cd /app && docker-compose restart'
-}
-
-function sync_local_code_to_staging() {
-  rsync -avP --filter=':- .gitignore' . root@ssh.staging.dishapp.com:/app
 }
 
 function export_env() {
@@ -868,6 +710,8 @@ function deploy_all() {
   deploy "$where" tileserver | sed -e 's/^/tileserver: /;' &
   deploy "$where" timescale | sed -e 's/^/timescale: /;' &
   wait
+  deploy "$where" pg-admin | sed -e 's/^/pg-admin: /;' &
+  deploy "$where" proxy | sed -e 's/^/proxy: /;' &
   deploy "$where" app | sed -e 's/^/app: /;' &
   deploy "$where" search | sed -e 's/^/search: /;' &
   deploy "$where" worker | sed -e 's/^/worker: /;' &
@@ -881,14 +725,15 @@ function deploy_all() {
   wait
 }
 
+function build() {
+  eval $(yaml_to_env) docker-compose build "$@"
+}
+
 function source_env() {
-  if [ "$DISH_HAS_SOURCED_ENV" != "true" ]; then
-    eval $(yaml_to_env)
-  fi
+  eval $(yaml_to_env) bash -c "$@"
 }
 
 function deploy() {
-  source_env
   where=${1:-registry}
   app=$2
   # todo begrudingly learn bash
@@ -898,6 +743,7 @@ function deploy() {
   if [ "$app" = "db" ];             then deploy_fly_app "$where" dish-db services/db db; fi
   if [ "$app" = "search" ];         then deploy_fly_app "$where" dish-search services/search search; fi
   if [ "$app" = "timescale" ];      then deploy_fly_app "$where" dish-timescale services/timescale timescale; fi
+  if [ "$app" = "pg-admin" ];       then deploy_fly_app "$where" dish-pg-admin services/pg-admin pg-admin; fi
   if [ "$app" = "tileserver" ];     then deploy_fly_app "$where" dish-tileserver services/tileserver tileserver; fi
   if [ "$app" = "hooks" ];          then deploy_fly_app "$where" dish-hooks services/hooks dish-hooks; fi
   if [ "$app" = "worker" ];         then deploy_fly_app "$where" dish-worker services/worker worker; fi
@@ -908,6 +754,7 @@ function deploy() {
   if [ "$app" = "cron" ];           then deploy_fly_app "$where" dish-cron services/cron cron; fi
   if [ "$app" = "redis" ];          then deploy_fly_app "$where" dish-redis services/redis redis; fi
   if [ "$app" = "run-tests" ];      then deploy_fly_app "$where" dish-run-tests services/run-tests run-tests; fi
+  if [ "$app" = "proxy" ];          then deploy_fly_app "$where" dish-proxy services/proxy proxy; fi
 }
 
 function deploy_fail() {
@@ -1054,14 +901,6 @@ else
   echo "Not loading ENV from env.enc.production.yaml as there's no \`git\` command"
   export all_env="$(env)"
 fi
-
-declare -a ALL_IMAGES=(
-  "base"
-  "dish-app"
-  "worker"
-  "dish-hooks"
-  "search"
-)
 
 function_to_run=$1
 shift

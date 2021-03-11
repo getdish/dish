@@ -65,7 +65,6 @@ export function useHomeFeedTrendingNew(props: HomeFeedProps): FIHotNew[] {
         title: 'New',
         restaurants: getGraphResults(newest),
         status,
-        expandable: false,
       },
       {
         id: '2',
@@ -74,7 +73,6 @@ export function useHomeFeedTrendingNew(props: HomeFeedProps): FIHotNew[] {
         title: 'Trending',
         restaurants: getGraphResults(trending),
         status,
-        expandable: false,
       },
     ]
   }, [key])
@@ -102,7 +100,7 @@ export const HomeFeedTrendingNew = memo(
             paddingLeft={20}
             pointerEvents="none"
             justifyContent="center"
-            width={100}
+            width={80}
           >
             <SlantedTitle
               alignSelf="flex-end"
