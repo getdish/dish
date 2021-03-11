@@ -858,7 +858,6 @@ function deploy_all() {
   deploy "$where" redis | sed -e 's/^/redis: /;' &
   # deploy "$where" db | sed -e 's/^/db: /;' &
   wait
-  echo "next"
   deploy "$where" hooks | sed -e 's/^/hooks: /;' &
   wait
   # depends on postgres
@@ -911,7 +910,12 @@ function deploy() {
   if [ "$app" = "run-tests" ];      then deploy_fly_app "$where" dish-run-tests services/run-tests run-tests; fi
 }
 
+function deploy_fail() {
+  echo "Error: deploy failed due to exit code 😭😭😭"
+}
+
 function deploy_fly_app() {
+  trap 'deploy_fail && trap - SIGTERM && kill -- -$$' SIGINT SIGTERM EXIT
   where=$1
   app=$2
   folder=$3

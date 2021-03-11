@@ -9357,6 +9357,7 @@ __metadata:
     prettier-plugin-import-sort: ^0.0.6
     react: ^17.0.1
     react-dom: ^17.0.1
+    react-native: ^0.62.2
     react-native-web: 0.0.0-466063b7e
     react-refresh: "*"
     tsconfig-paths: ^3.9.0
@@ -19002,6 +19003,13 @@ __metadata:
     react: ">=16.5.1"
     react-dom: ">=16.5.1"
   checksum: 3d958d9a6556d3f6a42a9ce83932e697d3189507e84303875a5582d47409e23abc58a317f03c6082f7d82b239ed540857c4e02891b483ad949514930a03791d9
+  languageName: node
+  linkType: hard
+
+"react-native@npm:0.0.0":
+  version: 0.0.0
+  resolution: "react-native@npm:0.0.0"
+  checksum: 753a86bf34c312e4113a692847d576acaa29485cdf972cba0927a1fce0fff4c0fd4b75149870904103ab8fd5b9c3c17470610e7bbdc9eab8d3e06bb38d21b71b
   languageName: node
   linkType: hard
 
