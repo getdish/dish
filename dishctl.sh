@@ -812,8 +812,9 @@ function docker_compose_up_subset() {
   printf "\n\n\n"
 }
 
-test_exclude="base|nginx|image-quality|image-proxy|bert|worker|gorse|run-tests|cron"
-dev_exclude="$test_exclude|dish-app|timescale"
+base_exclude="base|nginx|image-quality|image-proxy|bert|gorse|run-tests|cron"
+test_exclude="$base_exclude|worker"
+dev_exclude="$base_exclude|dish-app|timescale"
 
 function docker_compose_up_for_devs() {
   docker_compose_up_subset $dev_exclude

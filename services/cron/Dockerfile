@@ -1,19 +1,23 @@
-FROM alpine:3.11
-WORKDIR /root
-ENV HOME=/root
-ENV PATH="${HOME}/bin:${PATH}"
+FROM node:15.10.0-buster
 
-RUN mkdir bin
-RUN apk add --no-cache -X http://dl-cdn.alpinelinux.org/alpine/edge/testing s3cmd
-RUN apk add --no-cache \
-      curl \
-      postgresql \
-      bash
+RUN apt-get update > /dev/null && apt-get install -y lsb-release > /dev/null && \
+      echo "deb http://apt.postgresql.org/pub/repos/apt $(lsb_release -cs)-pgdg main" > /etc/apt/sources.list.d/pgdg.list && \
+      wget --quiet -O - https://www.postgresql.org/media/keys/ACCC4CF8.asc | apt-key add - && \
+      echo "deb http://deb.debian.org/debian buster-backports main" >> /etc/apt/sources.list && \
+      apt-get update > /dev/null && \
+      apt-get install -y s3cmd > /dev/null && \
+      apt-get install -y cron curl postgresql-client-12 > /dev/null && \
+      apt-get clean
 
-ADD services/cron/crontab.txt .
-ADD services/cron/entry.sh .
-ADD dishctl.sh .
+FROM registry.fly.io/dish-base:latest
+COPY --from=0 /bin /bin
+COPY --from=0 /usr/bin /usr/bin
 
-RUN /usr/bin/crontab crontab.txt
+WORKDIR /app
 
-CMD ["/root/entry.sh"]
+COPY dishctl.sh .
+COPY services/cron services/cron
+
+WORKDIR /app/services/cron
+
+CMD ["/app/services/cron/entry.sh"]
