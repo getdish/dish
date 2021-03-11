@@ -1,5 +1,7 @@
-import { MapPin } from '@dish/react-feather'
+import { ExternalLink, Link, MapPin } from '@dish/react-feather'
 import React from 'react'
+import { Spacer } from 'snackui'
+import { HStack } from 'snackui'
 import { useMedia } from 'snackui'
 
 import { GeocodePlace } from '../../../types/homeTypes'
@@ -30,7 +32,11 @@ export const RestaurantAddress = ({
         address
       )}`}
     >
-      {getAddressText(curLocInfo, address, size)}
+      <HStack alignItems="center">
+        {getAddressText(curLocInfo, address, size)}
+        <Spacer />
+        <ExternalLink size={12} />
+      </HStack>
     </SmallButton>
   )
 }

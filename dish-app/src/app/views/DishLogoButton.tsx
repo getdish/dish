@@ -10,7 +10,7 @@ import {
 import { useHomeStore } from '../homeStore'
 import { Link } from './Link'
 import { LinkButtonProps } from './LinkProps'
-import { LogoColor, LogoSmall } from './Logo'
+import { LogoCircle, LogoColor } from './Logo'
 
 const linkButtonProps: LinkButtonProps = {
   className: 'ease-in-out-fast',
@@ -69,7 +69,7 @@ export const DishLogoButton = memo(() => {
           transform: [{ scale: 0.9 }],
         })}
       >
-        {wrapWithHomeLink(<LogoSmall />)}
+        {wrapWithHomeLink(<LogoCircle />)}
       </AbsoluteVStack>
     </VStack>
   )

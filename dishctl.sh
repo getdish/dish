@@ -849,7 +849,7 @@ function export_env() {
 }
 
 function deploy_all() {
-  flyctl auth docker
+  dish_registry_auth
   set -e
   export_env
   where=${1:-registry}

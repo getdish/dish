@@ -16,10 +16,12 @@ import { drawerBorderRadius } from '../../../constants/constants'
 import { useColorsFor } from '../../../helpers/useColorsFor'
 import { queryRestaurant } from '../../../queries/queryRestaurant'
 import { HomeStateItemRestaurant } from '../../../types/homeTypes'
+import { CommentBubble } from '../../views/CommentBubble'
 import {
   ContentScrollViewHorizontalFitted,
   useContentScrollHorizontalFitter,
 } from '../../views/ContentScrollViewHorizontal'
+import { LogoCircle } from '../../views/Logo'
 import { RestaurantOverview } from '../../views/restaurant/RestaurantOverview'
 import { RestaurantTagsRow } from '../../views/restaurant/RestaurantTagsRow'
 import { SmallButton } from '../../views/SmallButton'
@@ -281,11 +283,20 @@ const RestaurantHeaderContent = memo(
 
                         <Spacer size="lg" />
 
-                        <RestaurantOverview
-                          maxLines={4}
-                          size="lg"
-                          restaurantSlug={restaurantSlug}
-                        />
+                        <VStack marginLeft={-10}>
+                          <CommentBubble
+                            avatar={<LogoCircle />}
+                            name="DishBot"
+                            avatarBackgroundColor="transparent"
+                            text={
+                              <RestaurantOverview
+                                maxLines={4}
+                                size="lg"
+                                restaurantSlug={restaurantSlug}
+                              />
+                            }
+                          />
+                        </VStack>
 
                         <RestaurantDeliveryButtons
                           marginTop={20}
