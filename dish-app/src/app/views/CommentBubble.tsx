@@ -1,7 +1,6 @@
 import { User } from '@dish/react-feather'
 import React, { useState } from 'react'
-import { Image } from 'react-native'
-import { ScrollView } from 'react-native'
+import { Image, ScrollView } from 'react-native'
 import {
   AbsoluteVStack,
   Circle,
@@ -14,7 +13,6 @@ import {
   VStack,
 } from 'snackui'
 
-import { bgLight } from '../../constants/colors'
 import { thirdPartyCrawlSources } from '../../constants/thirdPartyCrawlSources'
 import { getColorsForName } from '../../helpers/getColorsForName'
 import { getTimeFormat } from '../../helpers/getTimeFormat'
@@ -23,14 +21,14 @@ import { ensureFlexText } from '../home/restaurant/ensureFlexText'
 import { CloseButton } from './CloseButton'
 import { Link } from './Link'
 import { PaneControlButtons } from './PaneControlButtons'
-import { SlantedTitle } from './SlantedTitle'
 
 type CommentBubbleProps = Omit<StackProps, 'children'> & {
   title?: any
   name: string
-  avatar: string
+  avatar: string | any
   text: any
   before?: any
+  avatarBackgroundColor?: string
   after?: any
   ellipseContentAbove?: number
   fullWidth?: boolean
@@ -113,6 +111,7 @@ function CommentBubbleContents({
   onExpand,
   expanded,
   belowContent,
+  avatarBackgroundColor,
   scrollable,
 }: CommentBubbleProps & {
   onExpand?: () => any
@@ -129,7 +128,7 @@ function CommentBubbleContents({
   }
   const circleSize = 65
   const imageSize = circleSize * 0.6
-  const colors = getColorsForName(`hi${name}`)
+  const colors = getColorsForName(`${name}`)
 
   const contents = (
     <VStack>
@@ -237,7 +236,10 @@ function CommentBubbleContents({
           <VStack marginBottom={-10}>
             <Circle
               backgroundColor={
-                isYelp ? thirdPartyCrawlSources.yelp.color : colors.pastelColor
+                avatarBackgroundColor ??
+                (isYelp
+                  ? thirdPartyCrawlSources.yelp.color
+                  : colors.pastelColor)
               }
               size={circleSize}
             >
@@ -260,7 +262,7 @@ function CommentBubbleContents({
                       margin: -1,
                     }}
                   />
-                ) : avatar ? (
+                ) : typeof avatar === 'string' ? (
                   <Image
                     source={{ uri: avatar }}
                     style={{
@@ -269,6 +271,8 @@ function CommentBubbleContents({
                       margin: -1,
                     }}
                   />
+                ) : !!avatar ? (
+                  avatar
                 ) : (
                   <User color="#fff" size={imageSize} />
                 )}

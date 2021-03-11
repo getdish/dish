@@ -116,22 +116,22 @@ export const HomeFeedTrendingNew = memo(
           <VStack maxWidth="100%" overflow="hidden">
             <ContentScrollViewHorizontal>
               <VStack
-                paddingVertical={20}
-                paddingHorizontal={40}
+                paddingVertical={13}
+                paddingHorizontal={60}
                 flexWrap="nowrap"
               >
-                <HStack spacing={14}>
+                <HStack spacing="sm">
                   <VStack width={60} />
 
                   {restaurants.map((r, index) => {
                     if (!r) return null
                     return (
-                      <RestaurantCard
+                      <RestaurantButton
                         key={index}
-                        restaurantSlug={r.slug}
-                        restaurantId={r.id}
-                        hoverable
-                        size="xs"
+                        slug={r.slug}
+                        id={r.id}
+                        // hoverable
+                        // size="xs"
                         hoverToMap
                       />
                     )

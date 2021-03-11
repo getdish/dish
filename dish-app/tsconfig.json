@@ -38,8 +38,6 @@
   "exclude": ["_"],
 
   "references": [{
-    "path": "../snackui/packages/snackui"
-  }, {
     "path": "../packages/api"
   }, {
     "path": "../packages/server"

@@ -68,7 +68,7 @@ export const LogoColor = (props: { scale?: number }) => {
   )
 }
 
-export const LogoSmall = memo(() => {
+export const LogoCircle = memo(() => {
   const media = useMedia()
   return (
     <VStack transform={media.sm ? [{ scale: 0.8 }] : [{ scale: 1 }]}>

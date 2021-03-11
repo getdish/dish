@@ -110,7 +110,7 @@ const ReviewSentiment = (props: { text: string }) => {
       Promise.all([
         fetchBertSentiment(props.text).then((response) => {
           return {
-            sentiment: response.result[0][0] + ' ' + response.result[0][1],
+            sentiment: response.positive,
             sentence: `(Entire Text - ${aspect})`,
           }
         }),
@@ -119,7 +119,7 @@ const ReviewSentiment = (props: { text: string }) => {
           .map((sentence) => {
             return fetchBertSentiment(sentence).then((response) => {
               return {
-                sentiment: response.result[0][0] + ' ' + response.result[0][1],
+                sentiment: response.positive,
                 sentence: sentence,
               }
             })

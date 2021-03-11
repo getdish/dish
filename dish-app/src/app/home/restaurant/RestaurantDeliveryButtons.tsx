@@ -26,6 +26,7 @@ export const RestaurantDeliveryButtons = memo(
     const restaurantSources = restaurant.sources()
     const sources = getRestaurantDeliverySources(restaurantSources)
 
+    console.log('sources', sources)
     if (!sources.length) {
       return null
     }

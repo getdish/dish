@@ -5,6 +5,7 @@ RUN echo "deb http://deb.debian.org/debian buster-backports main" >> /etc/apt/so
 
 FROM registry.fly.io/dish-base:latest
 COPY --from=0 /bin /usr/local/bin
+
 WORKDIR /app/services/hooks
 
 CMD ["node", "dist/index.js"]

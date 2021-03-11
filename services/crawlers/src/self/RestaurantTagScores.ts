@@ -92,8 +92,7 @@ export class RestaurantTagScores {
     let retries = 0
     while (true) {
       try {
-        const result = await fetchBertSentiment(text)
-        return result.result[0]
+        return await fetchBertSentiment(text)
       } catch (error) {
         if (!error.message.includes('json')) {
           sentryException(error, {

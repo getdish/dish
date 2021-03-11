@@ -59,10 +59,9 @@ export const AppMapControls = memo(() => {
             <ToggleRegionButton />
 
             {showSearchHere && (
-              <OverlayLinkButton
-                Icon={RefreshCcw}
-                onPress={pagesStore.refresh}
-              />
+              <OverlayLinkButton Icon={RefreshCcw} onPress={pagesStore.refresh}>
+                {media.notSm ? 'Search' : ''}
+              </OverlayLinkButton>
             )}
 
             {isHoverZoomed && (

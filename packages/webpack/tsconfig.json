@@ -10,7 +10,5 @@
   "exclude": ["src/_types.d.ts"],
   "references": [{
     "path": "../helpers"
-  }, {
-    "path": "../../snackui/packages/snackui-static"
   }]
 }

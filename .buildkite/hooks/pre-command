@@ -63,15 +63,31 @@ if ! [ -x "$(command -v hasura)" ]; then
   curl -L https://github.com/hasura/graphql-engine/raw/stable/cli/get.sh | bash
 fi
 
+# hasura_version=$(hasura version | grep "1.3.3")
+# if [ "$hasura_version" = "" ]; then
+#   hasura update-cli --version v2.0.0-alpha.4
+# fi
+
 if [ "$DOCKER_CLEAN_BEFORE" == "true" ]; then
   ./dishctl.sh clean_docker_if_disk_full
+fi
+
+eval $(./dishctl.sh yaml_to_env)
+
+if [ ! -f "$HOME/.aws/credentials" ]; then
+  echo "setting up aws credentials for space $DO_SPACES_ID"
+  mkdir -p "$HOME/.aws"
+  cat <<EOF > "$HOME/.aws/credentials"
+[default]
+aws_access_key_id=$DO_SPACES_ID
+aws_secret_access_key=$DO_SPACES_SECRET
+EOF
 fi
 
 ./dishctl.sh dish_registry_auth
 
 # export env
 if [ "$ENV_SET" != "true" ]; then
-  eval $(./dishctl.sh yaml_to_env)
   export DO_SPACES_ID
   export DO_SPACES_SECRET
   export SENDGRID_API_KEY

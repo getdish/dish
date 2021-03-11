@@ -1,12 +1,12 @@
 import React from 'react'
-import { Box, BoxProps, StackProps, useTheme } from 'snackui'
+import { BoxProps, VStack, useTheme } from 'snackui'
 
 import { slantedBoxStyle } from '../../constants/constants'
 
 export const SlantedBox = (props: BoxProps) => {
   const theme = useTheme()
   return (
-    <Box
+    <VStack
       {...slantedBoxStyle}
       backgroundColor={theme.cardBackgroundColor}
       {...props}

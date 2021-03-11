@@ -9,18 +9,18 @@
 # │    └────────────────  Hour     (0..23)
 # └─────────────────────  Minute   (0..59)
 
-0  0  *  *  6 /root/dishctl.sh backup_main_db
-0  0  *  *  0 /root/dishctl.sh backup_scrape_db
-#0  0  *  *  0  /root/dishctl.sh start_crawler google
-#0 12  *  *  1  /root/dishctl.sh start_crawler infatuated
-#0  0  *  *  2  /root/dishctl.sh start_crawler grubhub
-#0  0  *  *  1  /root/dishctl.sh start_crawler michelin
-#0  0  *  *  3  /root/dishctl.sh start_crawler tripadvisor
-#0  0  *  *  2  /root/dishctl.sh start_crawler self
-#0  0  1  *  4  /root/dishctl.sh start_crawler ubereats
-#0  0  *  *  5  /root/dishctl.sh start_crawler yelp
-#0  0  *  *  6  /root/dishctl.sh start_crawler doordash
-*/15  *  *  *  *  /root/dishctl.sh ping_home_page 1>/dev/null
-0  *  *  *  *     /root/dishctl.sh hasura_clean_event_logs
-#*/15  *  *  *  *  /root/dishctl.sh update_all_node_taints 1>/dev/null
-#0  0  *  *  1 /root/dishctl.sh grafana_backup
+0  0  *  *  6 /app/dishctl.sh backup_main_db >> /var/log/cron.log 2>&1
+0  0  *  *  0 /app/dishctl.sh backup_scrape_db >> /var/log/cron.log 2>&1
+#0  0  *  *  0  /app/dishctl.sh start_crawler google >> /var/log/cron.log 2>&1
+#0 12  *  *  1  /app/dishctl.sh start_crawler infatuated >> /var/log/cron.log 2>&1
+#0  0  *  *  2  /app/dishctl.sh start_crawler grubhub >> /var/log/cron.log 2>&1
+#0  0  *  *  1  /app/dishctl.sh start_crawler michelin >> /var/log/cron.log 2>&1
+#0  0  *  *  3  /app/dishctl.sh start_crawler tripadvisor >> /var/log/cron.log 2>&1
+#0  0  *  *  2  /app/dishctl.sh start_crawler self >> /var/log/cron.log 2>&1
+#0  0  1  *  4  /app/dishctl.sh start_crawler ubereats >> /var/log/cron.log 2>&1
+#0  0  *  *  5  /app/dishctl.sh start_crawler yelp >> /var/log/cron.log 2>&1
+#0  0  *  *  6  /app/dishctl.sh start_crawler doordash >> /var/log/cron.log 2>&1
+*/15  *  *  *  *  /app/dishctl.sh ping_home_page 1>/dev/null >> /var/log/cron.log 2>&1
+0  *  *  *  *     /app/dishctl.sh hasura_clean_event_logs >> /var/log/cron.log 2>&1
+#*/15  *  *  *  *  /app/dishctl.sh update_all_node_taints 1>/dev/null >> /var/log/cron.log 2>&1
+#0  0  *  *  1 /app/dishctl.sh grafana_backup >> /var/log/cron.log 2>&1

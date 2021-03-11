@@ -19,7 +19,6 @@ WORKDIR /app
 COPY package.json yarn.lock .yarnrc.yml ./
 COPY packages packages
 COPY dish-app dish-app
-COPY snackui snackui
 
 WORKDIR /app/dish-app
 

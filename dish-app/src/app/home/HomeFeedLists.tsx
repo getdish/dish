@@ -86,9 +86,7 @@ export const HomeFeedListsContents = graphql(
         <>
           <FeedSlantedTitle>
             <HStack alignItems="center">
-              <Text fontSize={20} fontWeight="700">
-                Top Lists
-              </Text>
+              <Text fontSize={20}>Top Lists</Text>
               <Spacer size="sm" />
               <Link
                 promptLogin

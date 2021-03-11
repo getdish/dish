@@ -27,8 +27,6 @@ const hasuraHeaders = {
   ...getAuthHeaders(true),
 }
 
-console.log('hasuraHeaders', hasuraHeaders, 'redisurl', url)
-
 function shouldCache(body: string) {
   return body.includes('restaurant_new(')
 }

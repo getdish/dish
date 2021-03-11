@@ -6,17 +6,6 @@ echo "Deploying apps..."
 PROJECT_ROOT=$(git rev-parse --show-toplevel)
 cd "$PROJECT_ROOT"
 
-# fly
-if (which flyctl > /dev/null); then
-  echo "flyctl installed"
-else
-  curl -L https://fly.io/install.sh | bash
-fi
-export FLYCTL_INSTALL="$HOME/.fly"
-export PATH="$FLYCTL_INSTALL/bin:$PATH"
-
-export FLY_API_TOKEN=$FLY_API_TOKEN
-
 # deploy
 ./dishctl.sh deploy_all
 

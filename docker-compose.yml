@@ -59,10 +59,8 @@ services:
       - DO_SPACES_SECRET=${DO_SPACES_SECRET}
       - GORSE_ENDPOINT=http://gorse:9000
       - DISH_ENV=production
-    depends_on:
-      - 'gorse'
   hasura:
-    image: registry.fly.io/dish-hasura${DISH_IMAGE_TAG}
+    image: ${DOCKER_HASURA_IMAGE:-registry.fly.io/dish-hasura:latest}
     build:
       context: .
       dockerfile: ./services/hasura/Dockerfile

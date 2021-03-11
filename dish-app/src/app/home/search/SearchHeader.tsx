@@ -43,15 +43,14 @@ export const SearchHeader = memo(() => {
               </AbsoluteVStack>
               <SlantedTitle
                 paddingHorizontal={35}
-                paddingVertical={2}
                 backgroundColor={rgbString(lenseColor)}
                 color="#fff"
                 size="lg"
                 fontWeight="800"
-                // alignSelf="center"
               >
                 <VStack alignItems="center">
                   <Text>{title}</Text>
+                  <Spacer />
                   <Text
                     className="nobreak"
                     marginTop={-18}

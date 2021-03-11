@@ -32,12 +32,12 @@ declare module "@dish/helpers" {
 }
 
 declare module "@dish/helpers" {
-    export function fetchBertSentiment(sentence: string): Promise<any>;
-    export function bertResultToNumber(bert_sentiment: [
-        string,
-        number
-    ]): number;
-    export function fetchBertSentimentNumber(text: string): Promise<number>;
+    type Sentiment = {
+        positive: boolean;
+    };
+    export function fetchBertSentiment(sentence: string): Promise<Sentiment>;
+    export function bertResultToNumber({ positive }: Sentiment): 1 | -1;
+    export function fetchBertSentimentNumber(text: string): Promise<1 | -1>;
 }
 
 declare module "@dish/helpers" {

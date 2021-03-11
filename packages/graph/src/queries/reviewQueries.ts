@@ -2,10 +2,17 @@ import { selectFields } from '@dish/gqless'
 import { uniqBy } from 'lodash'
 
 import { globalTagId } from '../constants'
-import { Scalars, order_by, query, review, review_constraint } from '../graphql'
+import {
+  Scalars,
+  order_by,
+  query,
+  review,
+  review_constraint,
+  review_tag_sentence,
+} from '../graphql'
 import { createQueryHelpersFor } from '../helpers/queryHelpers'
 import { resolvedWithFields } from '../helpers/queryResolvers'
-import { Review } from '../types'
+import { FlatResolvedModel, Review } from '../types'
 
 export type uuid = Scalars['uuid']
 
@@ -16,15 +23,6 @@ export const reviewUpdate = QueryHelpers.update
 export const reviewFindOne = QueryHelpers.findOne
 export const reviewRefresh = QueryHelpers.refresh
 export const reviewDelete = QueryHelpers.delete
-
-export type ReviewTagSentence = {
-  id: string
-  review_id: string
-  tag_id: string
-  sentence?: string
-  ml_sentiment?: number
-  ml_score?: number
-}
 
 export async function reviewFindAllForRestaurant(
   restaurant_id: uuid,
@@ -199,9 +197,10 @@ export function dedupeReviews(reviews: Review[]) {
   return deduped
 }
 
+export type ReviewTagSentence = FlatResolvedModel<review_tag_sentence>
+
 export function dedupeSentiments<A extends ReviewTagSentence>(sentiments: A[]) {
-  const deduped = uniqBy(sentiments, (sentiment: ReviewTagSentence) => {
-    return sentiment.tag_id + sentiment.sentence
+  return uniqBy(sentiments, (x) => {
+    return x.tag_id + x.sentence
   })
-  return deduped
 }

@@ -66,7 +66,7 @@ export const AppMenu = memo(() => {
                     e.preventDefault()
                     homeStore.up()
                   } else {
-                    // @ts-expect-error
+                    // @ts-ignore
                     e.navigate()
                   }
                 }}

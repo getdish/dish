@@ -26,7 +26,7 @@ export const HomeTopSearches = memo(() => {
           search.tags.find((x) => x.type === 'lense')?.rgb ?? tagLenses[0].rgb
         return (
           <Link key={index} tags={search.tags} asyncClick>
-            <GradientButton rgb={rgb.map((x) => x * 1.1)}>
+            <GradientButton rgb={rgb}>
               <TagsText tags={search.tags} color={rgbString(rgb)} />
             </GradientButton>
           </Link>

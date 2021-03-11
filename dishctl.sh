@@ -11,10 +11,14 @@ DISH_REGISTRY="registry.fly.io"
 function generate_random_port() {
   echo "2$((1000 + RANDOM % 8999))"
 }
-REDIS_PROXY_PORT=$(generate_random_port)
+
+function log-command {
+  echo "$" "$@"
+  eval $(printf '%q ' "$@") < /dev/tty
+}
 
 function dish_registry_auth() {
-  eval $(./dishctl.sh yaml_to_env) flyctl auth docker || echo "failed to auth"
+  eval $(./dishctl.sh yaml_to_env) flyctl auth docker
 }
 
 function _kill_port_forwarder {
@@ -69,7 +73,7 @@ function _setup_s3() {
 
 function send_slack_monitoring_message() {
   message=$1
-  curl -X POST $SLACK_MONITORING_HOOK \
+  curl -X POST "$SLACK_MONITORING_HOOK" \
     -H 'Content-type: application/json' \
     --silent \
     --output /dev/null \
@@ -185,15 +189,10 @@ function db_migrate_local() {
     "$1"
 }
 
-function db_clear_local() {
-  rm -rf ~/.dish/postgres
-  mkdir ~/.dish/postgres
-}
-
 function timescale_migrate() {
   _TIMESCALE_PORT=$(generate_random_port)
-  timescale_proxy $_TIMESCALE_PORT
-  pushd $PROJECT_ROOT/services/timescale
+  timescale_proxy "$_TIMESCALE_PORT"
+  pushd "$PROJECT_ROOT/services/timescale"
   PG_PORT=$_TIMESCALE_PORT \
   PG_PASS=$TIMESCALE_SU_PASS \
   DISH_ENV=production ./migrate.sh
@@ -201,19 +200,9 @@ function timescale_migrate() {
 }
 
 function timescale_migrate_local() {
-  pushd $PROJECT_ROOT/services/timescale
+  pushd "$PROJECT_ROOT/services/timescale"
   DISH_ENV=not-production ./migrate.sh
   popd
-}
-
-function timescale_pg_password() {
-  echo $(
-    kubectl get secret \
-      --namespace timescale \
-      timescale-credentials \
-      -o jsonpath="{.data.PATRONI_SUPERUSER_PASSWORD}" \
-      | base64 --decode
-  )
 }
 
 function dump_scrape_data_to_s3() {
@@ -231,19 +220,13 @@ function dump_scrape_data_to_s3() {
     )
     to stdout with csv"
   echo "Dumping scrape table to S3..."
-  PGPASSWORD=$POSTGRES_PASSWORD psql \
-    -h $POSTGRES_HOST \
+  PGPASSWORD="$POSTGRES_PASSWORD" psql \
+    -h "$POSTGRES_HOST" \
     -U postgres \
-    -d ${POSTGRES_DB:-dish} \
+    -d "${POSTGRES_DB:-dish}" \
     -c "$copy_out" \
-  | s3 put - $DISH_BACKUP_BUCKET/scrape.csv
+  | s3 put - "$DISH_BACKUP_BUCKET/scrape.csv"
   echo "...scrape table dumped tpo S3."
-}
-
-function psql_s3_for_big_data() {
-  _run_on_cluster postgres:12-alpine && return 0
-  _setup_s3
-  sh
 }
 
 function redis_command() {
@@ -326,40 +309,34 @@ function dish_app_generate_tags() {
   node -r esbuild-register ./etc/generate_tags.ts
 }
 
-function remove_evicted_pods() {
-  namespace=${1:-default}
-  kubectl get pods -n $namespace \
-    | grep Evicted \
-    | awk '{print $1}' \
-    | xargs kubectl delete pod -n $namespace
-}
-
 function s3() {
   s3cmd \
     --host sfo2.digitaloceanspaces.com \
     --host-bucket '%(bucket).sfo2.digitaloceanspaces.com' \
-    --access_key $DO_SPACES_ID \
-    --secret_key $DO_SPACES_SECRET \
+    --access_key "$DO_SPACES_ID" \
+    --secret_key "$DO_SPACES_SECRET" \
     --human-readable-sizes \
     "$@"
 }
 
 function list_backups() {
-  s3 ls $DISH_BACKUP_BUCKET | sort -k1,2
+  s3 ls "$DISH_BACKUP_BUCKET" | sort -k1,2
 }
 
 function backup_main_db() {
   set -e
+  echo "backing up main db..."
   # _setup_s3
   DUMP_FILE_NAME="dish-db-backup-`date +%Y-%m-%d-%H-%M`.dump"
-  pg_dump $HASURA_FLY_POSTGRES_URL \
+  pg_dump "$HASURA_FLY_POSTGRES_URL" \
     -C -w --format=c | \
-    s3 put - s3://dish-backups/$DUMP_FILE_NAME
+    s3 put - "s3://dish-backups/$DUMP_FILE_NAME"
   echo 'Successfully backed up main database'
 }
 
 function backup_scrape_db() {
   set -e
+  echo "backing up scrape db..."
   _setup_s3
   DUMP_FILE_NAME="dish-scrape-backup-`date +%Y-%m-%d-%H-%M`.dump"
   pg_dump $TIMESCALE_FLY_POSTGRES_URL -C -w --format=c | \
@@ -521,17 +498,6 @@ function timescale_command() {
     -d scrape_data
 }
 
-function redis_proxy() {
-  echo "Waiting for connection to redis..."
-  kubectl port-forward svc/redis-master $REDIS_PROXY_PORT:6379 -n redis &
-  # REDIS_PROXY_PID=$!
-  trap _kill_port_forwarder EXIT
-  while ! netstat -tna | grep 'LISTEN' | grep -q "$REDIS_PROXY_PORT"; do
-    sleep 0.1
-  done
-  echo "...connected to redis."
-}
-
 function logs() {
   namespace=${2:-default}
   kubectl -n $namespace \
@@ -540,42 +506,54 @@ function logs() {
     --max-log-requests=10
 }
 
+function fly_tunnel() {
+  if dig _apps.internal | grep -q 'dish-redis'; then
+    echo "tunneled into fly"
+  else
+    cat <<EOF
+Need to tunnel into fly!
+
+- Initial setup: https://fly.io/docs/reference/privatenetwork/
+
+Once wireguard is set up and tunneled, you just need to:
+
+fly ssh issue --agent
+EOF
+  fi
+}
+
+function console() {
+  ssh "root@$1.internal"
+}
+
+function find_app() {
+  find $PROJECT_ROOT -type d \( -name node_modules -o -name packages \) -prune -false -o -type d -name "$1" | head -n 1
+}
+
+function logs() {
+  pushd "$(find_app $1)"
+  fly logs
+  popd
+}
+
 function bull_console() {
-  redis_proxy
-  $PROJECT_ROOT/services/crawlers/node_modules/.bin/bull-repl \
-    "connect \
-      --host localhost \
-      --port $REDIS_PROXY_PORT \
-      $1"
+  if [ "$1" = "" ]; then
+    echo "Must specify a queue"
+    echo "  its the constructor name of any class that extends WorkerJob"
+    echo "  for example (at time of writing this)"
+    echo "    Yelp, UberEats, GoogleReviewAPI, GooglePuppeteer, GoogleImages..."
+    exit 0
+  fi
+  fly_tunnel && "$PROJECT_ROOT/node_modules/.bin/bull-repl" connect \
+      --host dish-redis.fly.dev \
+      --port 10000 \
+      "$1"
 }
 
 function gorse_status() {
   _run_on_cluster alpine && return 0
   apk add --no-cache curl
   curl http://gorse:9000/status
-}
-
-function install_doctl() {
-  DOCTL_VERSION='1.42.0'
-  DOCTL_BINARY=https://github.com/digitalocean/doctl/releases/download/v$DOCTL_VERSION/doctl-$DOCTL_VERSION-linux-amd64.tar.gz
-  DOCTL_PATH=$HOME/bin/
-  echo "Installing \`doctl\` binary v$DOCTL_VERSION..."
-  curl -sL $DOCTL_BINARY | tar -xzv -C $DOCTL_PATH
-  doctl version
-}
-
-function init_doctl() {
-  doctl auth init -t $DO_DISH_KEY
-  doctl kubernetes cluster kubeconfig save $CURRENT_DISH_CLUSTER
-}
-
-function install_kubectl() {
-  VERSION=1.18.0
-  BINARY=https://storage.googleapis.com/kubernetes-release/release/v$VERSION/bin/linux/amd64/kubectl
-  INSTALL_PATH=$HOME/bin
-  echo "Installing \`kubectl\` binary v$VERSION..."
-  curl -sL -o $INSTALL_PATH/kubectl $BINARY
-  chmod a+x $INSTALL_PATH/kubectl
 }
 
 function ping_home_page() {
@@ -588,38 +566,6 @@ function hasura_clean_event_logs() {
     DELETE FROM hdb_catalog.event_log
       WHERE delivered = true OR error = true;
   '
-}
-
-function postgres_replica_ssh() {
-  number=${1:-0}
-  kubectl ssh \
-    -n postgres-ha \
-    -c postgresql \
-    -u root \
-    postgres-ha-postgresql-ha-postgresql-$number \
-    -- bash
-}
-
-function pgpool_status() {
-  sql='SHOW pool_processes'
-  command="PGPASSWORD=$POSTGRES_PASSWORD psql \
-    -U postgres \
-    -h localhost \
-    -c '$sql'"
-  pods=$(kubectl get pods -n postgres-ha \
-    | grep ha-pgpool \
-    | cut -d ' ' -f 1 \
-    | tail -n +1)
-  echo "$pods" | while read pod; do
-    result=$(kubectl \
-      exec \
-      -n postgres-ha \
-      $pod -- \
-      bash -c "$command")
-    total=$(echo -e "$result" | wc -l)
-    used=$(echo -e "$result" | grep 'dish' | wc -l)
-    echo "$pod: $used/$(expr $total - 3)"
-  done
 }
 
 function scrapes_update_distinct_sources() {
@@ -850,36 +796,32 @@ function bert_sentiment() {
   curl "$url"
 }
 
-function docker_compose_up_for_devs() {
-  extra=$1
+function docker_compose_up_subset() {
   services=$(
-    docker-compose config --services \
-      | grep -E -v 'base|nginx|dish-app|image-quality|image-proxy|bert|worker|gorse' \
+    docker-compose config --services 2> /dev/null \
+      | grep -E -v "$1" \
       | tr '\r\n' ' '
   )
-  echo "Starting the following services: $services"
+  extra=$2
   export HASURA_GRAPHQL_ADMIN_SECRET=password
   if [ -z "$extra" ]; then
-    docker-compose up $services
+    log-command -- docker-compose up $services
   else
-    docker-compose up "$extra" $services
+    log-command -- docker-compose up "$extra" $services
   fi
+  printf "\n\n\n"
+}
+
+base_exclude="base|nginx|image-quality|image-proxy|bert|gorse|run-tests|cron"
+test_exclude="$base_exclude|worker"
+dev_exclude="$base_exclude|dish-app|timescale"
+
+function docker_compose_up_for_devs() {
+  docker_compose_up_subset $dev_exclude
 }
 
 function docker_compose_up_for_tests() {
-  extra=$1
-  services=$(
-    docker-compose config --services \
-      | grep -E -v 'base|nginx|image-quality|image-proxy|bert|worker' \
-      | tr '\r\n' ' '
-  )
-  echo "Starting the following services: $services"
-  export HASURA_GRAPHQL_ADMIN_SECRET=password
-  if [ -z "$extra" ]; then
-    docker-compose up $services
-  else
-    docker-compose up "$extra" $services
-  fi
+  docker_compose_up_subset $test_exclude -d
 }
 
 function staging_ssh() {
@@ -907,7 +849,7 @@ function export_env() {
 }
 
 function deploy_all() {
-  flyctl auth docker
+  dish_registry_auth
   set -e
   export_env
   where=${1:-registry}
@@ -916,7 +858,6 @@ function deploy_all() {
   deploy "$where" redis | sed -e 's/^/redis: /;' &
   # deploy "$where" db | sed -e 's/^/db: /;' &
   wait
-  echo "next"
   deploy "$where" hooks | sed -e 's/^/hooks: /;' &
   wait
   # depends on postgres
@@ -969,7 +910,12 @@ function deploy() {
   if [ "$app" = "run-tests" ];      then deploy_fly_app "$where" dish-run-tests services/run-tests run-tests; fi
 }
 
+function deploy_fail() {
+  echo "Error: deploy failed due to exit code 😭😭😭"
+}
+
 function deploy_fly_app() {
+  trap 'deploy_fail && trap - SIGTERM && kill -- -$$' SIGINT SIGTERM EXIT
   where=$1
   app=$2
   folder=$3

@@ -1,10 +1,6 @@
 /// <reference lib="dom" />
 /// <reference lib="esnext" />
 declare module "@dish/helpers-node" {
-    export function emulateBrowserEnv(): void;
-}
-
-declare module "@dish/helpers-node" {
     export function hashPassword(password: string): any;
 }
 
