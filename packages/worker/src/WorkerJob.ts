@@ -1,3 +1,4 @@
+import Bull from 'bull'
 import BullQueue, {
   EveryRepeatOptions,
   Job,
@@ -14,7 +15,7 @@ const is_local_redis =
 // dony use process.env.FLY_REDIS_CACHE_URL
 
 let redisOptions: any = {
-  port: 6379,
+  port: process.env.REDIS_PORT || 6379,
   host: is_local_redis ? 'localhost' : process.env.REDIS_HOST,
 }
 
@@ -70,7 +71,7 @@ export class WorkerJob {
       fn: fn,
       args: args,
     }
-    const queue = await getBullQueue(this.constructor.name)
+    const queue = getBullQueue(this.constructor.name)
     const default_config = (this.constructor as typeof WorkerJob).job_config
     const config = { ...default_config, ...specific_config }
     if ('repeat' in config) {
@@ -133,32 +134,13 @@ export class WorkerJob {
   }
 }
 
-// There's a curious issue on Kubernetes where the crawler and worker pods
-// get refused a connection to Redis during their startups. So here we just
-// wait until we're allowed to connect. I don't know why the connection is
-// refused as the Redis server never gets rebooted during normal deploys.
-export async function getBullQueue(name: string, config: {} = {}) {
-  let count = 0
-  const max_tries = 300
-  let queue: Queue
-  while (true) {
-    queue = new BullQueue(name, {
-      ...config,
-      redis: redisOptions,
-    })
-    try {
-      await queue.isReady()
-      break
-    } catch (e) {
-      queue.close()
-      console.warn('Trying to startup up Bull queue again...')
-      if (++count == max_tries) throw e
-      if (e.message.includes('ECONNREFUSED')) {
-        await new Promise((r) => setTimeout(r, 2000))
-      } else {
-        throw e
-      }
-    }
-  }
-  return queue
+export function getBullQueue(name: string, config: {} = {}) {
+  return new BullQueue(name, {
+    ...config,
+    redis: redisOptions,
+  })
+}
+
+export async function onBullQueueReady(queue: Bull.Queue) {
+  await queue.isReady()
 }

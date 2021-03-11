@@ -1,7 +1,3 @@
-// TODO: How to make this conditional on being in Node without using async?
-// Async prevents ENV being loaded *before* the rest of the code.
-import './load_env'
-
 import * as Sentry from '@sentry/node'
 
 // export common-web
@@ -48,5 +44,5 @@ export const sentryException = (
     scope.setExtras(data)
     Sentry.captureException(error)
   })
-  console.log('Sent exception to Sentry: ' + error.message)
+  console.log(`Error: ${error.message} (sentry)`)
 }

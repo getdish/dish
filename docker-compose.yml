@@ -40,6 +40,10 @@ services:
       POSTGRES_DB: scrape_data
     ports:
       - 5433:5432
+  pg-admin:
+    image: registry.fly.io/pg-admin${DISH_IMAGE_TAG}
+    build:
+      context: ./services/timescale
   redis:
     image: redis
     build:
@@ -47,6 +51,13 @@ services:
       dockerfile: ./Dockerfile
     ports:
       - 6379:6379
+  proxy:
+    image: proxy
+    build:
+      context: ./services/proxy
+      dockerfile: ./Dockerfile
+    ports:
+      - 3535:3535
   hooks:
     image: registry.fly.io/dish-hooks${DISH_IMAGE_TAG}
     build:

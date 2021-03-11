@@ -79,9 +79,9 @@ export const HomeFeedListsContents = graphql(
     const key = `${recentLists?.map((x) => x.id)}`
 
     return useMemo(() => {
-      // if (!recentLists.length) {
-      //   return null
-      // }
+      if (!recentLists.length) {
+        return null
+      }
       return (
         <>
           <FeedSlantedTitle>

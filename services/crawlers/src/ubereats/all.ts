@@ -1,12 +1,7 @@
-import { CITY_LIST } from '../utils'
+import { getCities } from '../utils'
 import { UberEats } from './UberEats'
-;(async () => {
-  const u = new UberEats()
-  let cities = CITY_LIST
-  if (process.env.CITY) {
-    cities = [process.env.CITY]
-  }
-  for (const city of cities) {
-    u.runOnWorker('getCity', [city])
-  }
-})()
+
+const u = new UberEats()
+for (const city of getCities()) {
+  u.runOnWorker('getCity', [city])
+}

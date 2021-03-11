@@ -7,9 +7,10 @@ if [ "$GOOGLE_SEARCH_PROXY" = "" ]; then
 fi
 
 flyctl secrets set \
-    DISH_ENV="staging" \
+    DISH_ENV="production" \
+    IS_LIVE="1" \
     HASURA_ENDPOINT="http://hasura:8080" \
-    REDIS_HOST="dish-redis.internal" \
+    REDIS_HOST="dish-redis.fly.dev" \
     REDIS_PORT="10000" \
     PGHOST="postgres" \
     PGPASSWORD="postgres" \
@@ -32,6 +33,7 @@ flyctl secrets set \
     DOORDASH_GRAPHQL_AWS_PROXY="${DOORDASH_GRAPHQL_AWS_PROXY}" \
     GRUBHUB_AWS_PROXY="${GRUBHUB_AWS_PROXY}" \
     YELP_CDN_AWS_PROXY="${YELP_CDN_AWS_PROXY}" \
+    STORMPROXY_HOSTS="${STORMPROXY_HOSTS}" \
     LUMINATI_PROXY_HOST="${LUMINATI_PROXY_HOST}" \
     LUMINATI_PROXY_PORT="${LUMINATI_PROXY_PORT}" \
     LUMINATI_PROXY_DATACENTRE_USER="${LUMINATI_PROXY_DATACENTRE_USER}" \

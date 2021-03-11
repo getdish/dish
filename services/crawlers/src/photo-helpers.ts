@@ -534,7 +534,7 @@ export async function sendToDO(url: string, id: string) {
 
   while (true) {
     let retries = 1
-    const result = await doPut(url, id, mime_type)
+    const result = await doPut(url, id, mime_type || 'application/json')
     const status = result.status
     if (status < 300) {
       return

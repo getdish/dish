@@ -1,12 +1,7 @@
-import { CITY_LIST } from '../utils'
+import { getCities } from '../utils'
 import { Tripadvisor } from './Tripadvisor'
-;(async () => {
-  let cities = CITY_LIST
-  if (process.env.CITY) {
-    cities = [process.env.CITY]
-  }
-  const t = new Tripadvisor()
-  for (const city of cities) {
-    t.runOnWorker('allForCity', [city])
-  }
-})()
+
+const t = new Tripadvisor()
+for (const city of getCities()) {
+  t.runOnWorker('allForCity', [city])
+}

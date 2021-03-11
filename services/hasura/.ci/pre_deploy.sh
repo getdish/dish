@@ -2,7 +2,7 @@
 set -e pipefail
 
 if [ "$HASURA_FLY_POSTGRES_URL" = "" ]; then
-    echo "missing env"
+    echo "missing env $HASURA_FLY_POSTGRES_URL $DO_SPACES_ID $YELP_CDN_AWS_PROXY"
     exit 1
 fi
 

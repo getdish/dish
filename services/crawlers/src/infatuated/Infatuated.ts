@@ -28,7 +28,7 @@ export class Infatuated extends WorkerJob {
 
   static queue_config: QueueOptions = {
     limiter: {
-      max: 1,
+      max: 5,
       duration: 1000,
     },
   }

@@ -1,64 +1,121 @@
-import axios, { AxiosRequestConfig } from 'axios'
-import { HttpsProxyAgent } from 'https-proxy-agent'
 import _ from 'lodash'
+import fetch, { FetchOptions } from 'make-fetch-happen'
+
+import { fetchBrowserJSON } from './browser'
+
+if (!process.env.LUMINATI_PROXY_HOST || !process.env.STORMPROXY_HOSTS) {
+  console.error('Warning: Missing proxy config ⚠️ ⚠️ ⚠️', {
+    LUMINATI_PROXY_HOST: process.env.LUMINATI_PROXY_HOST,
+    STORMPROXY_HOSTS: process.env.STORMPROXY_HOSTS,
+  })
+}
 
 export class ProxiedRequests {
   constructor(
     public domain: string,
     public aws_proxy: string,
-    public config: AxiosRequestConfig = {},
+    public config: FetchOptions = {},
     public start_with_aws = false
   ) {}
 
-  async get(uri: string, config: AxiosRequestConfig = {}) {
-    _.merge(config, this.config, {
+  async getJSON(uri: string, props?: FetchOptions) {
+    try {
+      return await fetchBrowserJSON(uri)
+    } catch (err) {
+      console.warn('Error with browser fetch, fall back to proxies', err)
+    }
+    return await this.get(uri, props).then(
+      (x) => x.json() as Promise<{ [key: string]: any }>
+    )
+  }
+
+  async getText(uri: string, props?: FetchOptions) {
+    return await this.get(uri, props).then((x) => x.text())
+  }
+
+  async get(uri: string, props: FetchOptions = {}) {
+    const config = _.merge(this.config, props, {
       headers: {
-        common: {
-          'Accept-Encoding': 'br;q=1.0, gzip;q=0.8, *;q=0.1',
-        },
+        'Accept-Encoding': 'br;q=1.0, gzip;q=0.8, *;q=0.1',
       },
     })
+
+    let agentConfig: any = this.getStormProxyConfig()
     let tries = 0
+    let base: string = this.domain
+    let method: string = 'none'
 
-    let base: string
-    let method: string
+    const setStormProxy = () => {
+      // $50/mo "unlimited"
+      method = 'STORMPROXY RESIDENTIAL PROXY'
+      base = this.domain
+      agentConfig = this.getStormProxyConfig()
+    }
 
-    if (this.start_with_aws) {
-      // $0.000005/request regardless of bandwidth
-      base = this.aws_proxy
-      method = 'AWS GATEWAY PROXY'
-    } else {
+    const setLuminatiProxy = () => {
       // $0.5/GB or ~$0.00005/request for ~100kb requests
       method = 'LUMINATI DATACENTRE PROXY'
       base = this.domain
-      config = {
-        ...config,
-        ...(!process.env.DISABLE_LUMINATI && {
-          httpsAgent: new HttpsProxyAgent(this.luminatiDatacentreConfig()),
-        }),
-      }
+      agentConfig = this.luminatiProxyConfig()
+    }
+
+    const setLuminatiResidentialProxy = () => {
+      // $12.5/GB or ~$0.00125/request for ~100kb requests
+      method = 'LUMINATI RESIDENTIAL PROXY'
+      base = this.domain
+      agentConfig = this.luminatiResidentialConfig()
+    }
+
+    const setAwsProxy = () => {
+      // $0.000005/request regardless of bandwidth
+      base = this.aws_proxy
+      method = 'AWS GATEWAY PROXY'
+    }
+
+    if (this.start_with_aws) {
+      setAwsProxy()
+    } else {
+      setStormProxy()
+      // setLuminatiResidentialProxy()
     }
 
     while (true) {
       const url = base + uri
       try {
-        return await axios.get(url, config)
+        const { host, port, auth } = agentConfig
+        const proto = agentConfig.protocol ?? 'http'
+        const user = auth ? `${auth.username}:${auth.password}@` : ''
+        const proxy = `${proto}://${user}${host}:${port}`
+        const options = {
+          ...config,
+          proxy,
+        }
+        console.trace('\n', `fetching`, url, options)
+        const res = await fetch(url, options)
+        if (res.status !== 200) {
+          console.warn('⚠️ non 200 response: ', res.status, res.statusText)
+        } else {
+          console.log('✅ 200')
+        }
+        return res
       } catch (e) {
-        console.log('error fetching', url)
+        console.log('Error:', e.message)
         // TODO: detect other blocking signatures
         if (!e.response || e.response.status != 503) {
           throw e
         }
         tries++
-        if (tries > 3) {
-          // $12.5/GB or ~$0.00125/request for ~100kb requests
-          method = 'LUMINATI RESIDENTIAL PROXY'
-          config = {
-            ...config,
-            httpsAgent: new HttpsProxyAgent(this.luminatiResidentialConfig()),
+        if (tries > 2) {
+          setStormProxy()
+        } else if (tries < 8) {
+          if (process.env.DISABLE_LUMINATI) {
+            break
           }
+          setLuminatiProxy()
+        } else {
+          setLuminatiResidentialProxy()
         }
-        if (tries > 8) {
+        if (tries > 9) {
           throw new Error('Too many 503 errors for: ' + uri)
         }
         console.warn(
@@ -67,32 +124,45 @@ export class ProxiedRequests {
         )
       }
     }
+
+    throw new Error(`Couldn't make fetch after a few tries, giving up`)
+  }
+
+  getStormProxyConfig() {
+    if (!process.env.STORMPROXY_HOSTS) {
+      throw new Error(`No STORMPROXY_HOSTS env`)
+    }
+    const hosts = process.env.STORMPROXY_HOSTS.split(',')
+    const index = Math.floor(Math.random() * (hosts.length - 1))
+    const [host, port] = hosts[index].split(':')
+    return { host, port: +port, protocol: 'https' }
   }
 
   luminatiBaseConfig() {
     return {
-      host: process.env.LUMINATI_PROXY_HOST,
-      port: process.env.LUMINATI_PROXY_PORT,
+      protocol: 'https',
+      host: process.env.LUMINATI_PROXY_HOST!,
+      port: +`${process.env.LUMINATI_PROXY_PORT ?? 0}`,
     }
   }
 
-  luminatiDatacentreConfig() {
+  luminatiProxyConfig() {
     return {
       ...this.luminatiBaseConfig(),
-      auth:
-        process.env.LUMINATI_PROXY_DATACENTRE_USER +
-        ':' +
-        process.env.LUMINATI_PROXY_DATACENTRE_PASSWORD,
+      auth: {
+        username: process.env.LUMINATI_PROXY_DATACENTRE_USER!,
+        password: process.env.LUMINATI_PROXY_DATACENTRE_PASSWORD!,
+      },
     }
   }
 
   luminatiResidentialConfig() {
     return {
       ...this.luminatiBaseConfig(),
-      auth:
-        process.env.LUMINATI_PROXY_RESIDENTIAL_USER +
-        ':' +
-        process.env.LUMINATI_PROXY_RESIDENTIAL_PASSWORD,
+      auth: {
+        username: process.env.LUMINATI_PROXY_RESIDENTIAL_USER!,
+        password: process.env.LUMINATI_PROXY_RESIDENTIAL_PASSWORD!,
+      },
     }
   }
 }

@@ -16,6 +16,7 @@ steps:
     env:
       DOCKER_TAG: dish-base
       DOCKER_PUSH_SYNC: true
+      DOCKER_CLEAN_BEFORE: true
     plugins:
       - docker-compose#v3.7.0:
           build: base
@@ -59,6 +60,17 @@ steps:
       - docker-compose#v3.7.0:
           build: worker
           cache-from: worker:registry.fly.io/dish-worker:latest
+
+  - label: ":docker: build proxy"
+    key: proxy
+    env:
+      DOCKER_TAG: dish-proxy
+    retry:
+      automatic: true
+    plugins:
+      - docker-compose#v3.7.0:
+          build: proxy
+          cache-from: proxy:registry.fly.io/dish-proxy:latest
 
   - label: ":docker: build search"
     key: search

@@ -1,8 +1,19 @@
 #!/usr/bin/env node
 
 const exec = require('execa')
-
-async function go() {
-  let dirname = await exec(`$(dirname $(realpath $0))`)
-  exec(`chokidar src -c "NO_CHECK=true ${dirname}/esdx.js"`)
-}
+const legacy = process.argv.reverse()[0] === 'legacy'
+const cmd = `chokidar`
+const args = [
+  `src`,
+  '!src/_types.d.ts',
+  `-c`,
+  `"node ${__dirname}/esdx.js${legacy ? ' legacy' : ''}"`,
+]
+console.log(cmd, args.join(' '))
+const proc = exec(cmd, args, {
+  env: {
+    NO_CLEAN: true,
+  },
+})
+proc.stdout.pipe(process.stdout)
+proc.stderr.pipe(process.stderr)

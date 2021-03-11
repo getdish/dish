@@ -1,6 +1,6 @@
 {
   "name": "@dish/esdx",
-  "version": "0.0.2",
+  "version": "0.0.6",
   "bin": {
     "esdx": "esdx.js",
     "esdx-watch": "esdx-watch.js"
@@ -9,12 +9,14 @@
     "build": "true",
     "watch": "true"
   },
-  "devDependencies": {
+  "dependencies": {
     "@dish/rollup-plugin-flat-dts": "^1.0.1",
     "chokidar-cli": "^2.1.0",
     "esbuild": "^0.8.56",
-    "fs-extra": "*",
-    "typescript": "*"
+    "execa": "^5.0.0",
+    "fast-glob": "^3.2.5",
+    "fs-extra": "^9.1.0",
+    "typescript": "^4.2.3"
   },
   "publishConfig": {
     "access": "public"

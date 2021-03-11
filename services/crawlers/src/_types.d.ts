@@ -11,10 +11,10 @@ declare module "@dish/crawlers" {
         lon: number;
         lat: number;
         searchEndpoint: string;
-        searchForID(query: string, lat: number, lon: number): Promise<any>;
+        searchForID(query: string, lat: number, lon: number): Promise<string>;
         _getSearchEndpoint(): Promise<void>;
         _formatSearchURL(): string;
-        _searchForID(): Promise<any>;
+        _searchForID(): Promise<string>;
         _hasSearchExpired(result: string): boolean;
     }
     export function isGoogleGeocoderID(id: string): RegExpMatchArray | null;
@@ -46,9 +46,9 @@ declare module "@dish/crawlers" {
         _logBlockCounts(): void;
         _interceptRequests(request: Request): Promise<void>;
         _blockImage(request: Request): boolean;
-        _rewriteDomainsToAWS(request: Request): string | false;
+        _rewriteDomainsToAWS(request: Request): any;
         _isRequestSensitiveToAWSProxy(request: Request): true | undefined;
-        _isGoogleUserContent(request: Request): boolean;
+        _isGoogleUserContent(request: Request): any;
         _waitForSpecificRequest(request: Request): void;
         getPage(url: string): Promise<void>;
         screenshot(): Promise<void>;
@@ -65,16 +65,17 @@ declare module "@dish/crawlers" {
 declare module "@dish/crawlers" {
     import "@dish/common";
     import { Restaurant } from "@dish/graph";
-    import { Pool, QueryResult } from "pg";
+    import { Pool, PoolConfig, QueryResult } from "pg";
     type Coord = [
         number,
         number
     ];
     export const CITY_LIST: string[];
+    export function getCities(): string[];
     export class DB {
-        config: Object;
+        config: PoolConfig;
         pool: Pool | null;
-        constructor(config: Object);
+        constructor(config: PoolConfig);
         static main_db(): DB;
         static one_query_on_main(query: string): Promise<QueryResult<any>>;
         connect(): void;
@@ -263,7 +264,7 @@ declare module "@dish/crawlers" {
         private _getMenu;
         private _extractEmbeddedJSONData;
     }
-    export function tripadvisorGetFBC(): Promise<any>;
+    export function tripadvisorGetFBC(): Promise<import("@dish/graph").WithID<import("@dish/graph").Restaurant>>;
 }
 
 declare module "@dish/crawlers" {
@@ -327,7 +328,7 @@ declare module "@dish/crawlers" {
         ], bottom_left: readonly [
             number,
             number
-        ], start?: number, onlyName?: string): Promise<void>;
+        ], start?: number, onlyName?: string): Promise<never[] | undefined>;
         getRestaurant(data: ScrapeData): Promise<void>;
         saveDataFromMapSearch(data: ScrapeData): Promise<string | undefined>;
         getEmbeddedJSONData(id: string, yelp_path: string, id_from_source: string): Promise<void>;
@@ -400,7 +401,7 @@ declare module "@dish/crawlers" {
 declare module "@dish/crawlers" {
     import "@dish/common";
     import { PhotoXref, uuid } from "@dish/graph";
-    export const photoXrefUpsert: any;
+    export const photoXrefUpsert: (items: Partial<PhotoXref>[], constraint?: string | undefined, opts?: import("@dish/graph").SelectionOptions | undefined) => Promise<import("@dish/graph").WithID<PhotoXref>[]>;
     export const DO_BASE = "https://dish-images.sfo2.digitaloceanspaces.com/";
     export function photoUpsert(photos: Partial<PhotoXref>[]): Promise<void>;
     export function uploadToDO(photos: Partial<PhotoXref>[]): Promise<void>;
@@ -410,7 +411,7 @@ declare module "@dish/crawlers" {
     export function bestPhotosForTag(tag_id: uuid): Promise<PhotoXref[]>;
     export function bestPhotosForRestaurantTags(restaurant_id: uuid): Promise<PhotoXref[]>;
     export function sendToDO(url: string, id: string): Promise<string | undefined>;
-    export function findHeroImage(restaurant_id: uuid): Promise<any>;
+    export function findHeroImage(restaurant_id: uuid): Promise<import("@dish/graph").WithID<PhotoXref> | null>;
     export function uploadHeroImage(url: string, restaurant_id: uuid): Promise<string | undefined>;
 }
 
@@ -483,15 +484,15 @@ declare module "@dish/crawlers" {
         ALL_SOURCES: string[];
         constructor(crawler: Self);
         calculateScores(): Promise<void>;
-        findAllUnanalyzed(): Promise<any[]>;
-        analyzeSentences(review_tag_sentences: ReviewTagSentence[]): Promise<any[]>;
-        fetchBertBatch(review_tag_sentences: ReviewTagSentence[]): Promise<any[]>;
+        findAllUnanalyzed(): Promise<import("@dish/graph").FlatResolvedModel<import("@dish/graph").review_tag_sentence>[]>;
+        analyzeSentences(review_tag_sentences: ReviewTagSentence[]): Promise<import("@dish/graph").FlatResolvedModel<import("@dish/graph").review_tag_sentence>[]>;
+        fetchBertBatch(review_tag_sentences: ReviewTagSentence[]): Promise<import("@dish/graph").FlatResolvedModel<import("@dish/graph").review_tag_sentence>[]>;
         bertAssessSentence(review_tag_sentence: ReviewTagSentence): Promise<{
             id: any;
-            ml_sentiment: number;
+            ml_sentiment: 1 | -1;
         } | undefined>;
         updateAnalyzed(review_tag_sentences: ReviewTagSentence[]): Promise<void>;
-        fetchBertSentimentWithRetries(text: string): Promise<any>;
+        fetchBertSentimentWithRetries(text: string): Promise<import("@dish/helpers").Sentiment | undefined>;
         updateRestaurantTagScores(): Promise<void>;
         _scoreSQL(tag_id: string, source?: string | undefined): string;
         _scoreFromSentimentSQL(tag_id: string, source?: string | undefined): string;
@@ -506,7 +507,7 @@ declare module "@dish/crawlers" {
 }
 
 declare module "@dish/crawlers" {
-    import { RestaurantTag, Review, Tag } from "@dish/graph";
+    import { PhotoXref, RestaurantTag, Review, Tag } from "@dish/graph";
     type TextSource = Review | string;
     export const GEM_UIID = "da0e0c85-86b5-4b9e-b372-97e133eccb43";
     export class Tagging {
@@ -533,16 +534,16 @@ declare module "@dish/crawlers" {
         promisedRankForTag(tag_id: string): Promise<void>;
         getRankForTag(tag_id: string): Promise<number>;
         scanCorpus(): Promise<void>;
-        cleanAllSources(sources: TextSource[]): any[];
+        cleanAllSources(sources: TextSource[]): (TextSource | undefined)[];
         _collectFoundRestaurantTags(): Promise<void>;
-        findPhotosForTags(): Promise<any[]>;
+        findPhotosForTags(): Promise<Partial<PhotoXref>[]>;
         getPhotosWithText(): any[];
-        findDishesInText(all_sources: TextSource[]): any;
-        tagFound(tag: Tag, text_source: TextSource): any;
+        findDishesInText(all_sources: TextSource[]): Review[];
+        tagFound(tag: Tag, text_source: TextSource): TextSource;
         measureSentiment(sentence: string): any;
-        _getYelpReviews(): any[];
-        _getTripadvisorReviews(): any[];
-        _getGoogleReviews(): any[];
+        _getYelpReviews(): Partial<Review>[];
+        _getTripadvisorReviews(): Partial<Review>[];
+        _getGoogleReviews(): Review[];
         _quantiseGoogleReviewDate(date: string): string;
         _scanMenuItemsForTags(): string[];
         deDepulicateTags(): void;

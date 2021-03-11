@@ -46,7 +46,7 @@ export class GoogleImages extends WorkerJob {
   static queue_config: QueueOptions = {
     limiter: {
       max: 20,
-      duration: 1000,
+      duration: 500,
     },
   }
 

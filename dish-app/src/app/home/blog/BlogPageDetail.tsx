@@ -1,11 +1,15 @@
 import React from 'react'
 import { Divider, Spacer, Title, VStack } from 'snackui'
 
+import { NotFoundPage } from '../../views/NotFoundPage'
 import { SmallButton } from '../../views/SmallButton'
 import { BlogPostMeta } from './BlogPostMeta'
 import { PostEntry } from './posts'
 
 export function BlogPageDetail({ post }: { post: PostEntry }) {
+  if (!post) {
+    return <NotFoundPage />
+  }
   const { View, title } = post
   return (
     <VStack paddingHorizontal={25} paddingVertical={20}>
