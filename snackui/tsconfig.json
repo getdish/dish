@@ -1,0 +1,13 @@
+{
+  "files": [],
+  "compilerOptions": {
+    "typeRoots": ["node_modules/@types"],
+    "skipDefaultLibCheck": true,
+    "skipLibCheck": true
+  },
+  "references": [
+    { "path": "packages/helpers" },
+    { "path": "packages/snackui" },
+    { "path": "packages/snackui-static" }
+  ]
+}
