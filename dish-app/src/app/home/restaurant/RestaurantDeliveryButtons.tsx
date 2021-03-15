@@ -1,10 +1,8 @@
 import { graphql } from '@dish/graph'
 import React, { memo } from 'react'
 import { Image } from 'react-native'
-import { HStack, Spacer, StackProps, Text, Tooltip } from 'snackui'
+import { HStack, StackProps, Text } from 'snackui'
 
-import { bgLight, blue } from '../../../constants/colors'
-import { isWeb } from '../../../constants/constants'
 import { queryRestaurant } from '../../../queries/queryRestaurant'
 import { SmallButton } from '../../views/SmallButton'
 import { getRestaurantDeliverySources } from './getRestaurantDeliverySources'
@@ -26,7 +24,6 @@ export const RestaurantDeliveryButtons = memo(
     const restaurantSources = restaurant.sources()
     const sources = getRestaurantDeliverySources(restaurantSources)
 
-    console.log('sources', sources)
     if (!sources.length) {
       return null
     }

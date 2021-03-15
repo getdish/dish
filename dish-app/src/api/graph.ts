@@ -1,3 +1,4 @@
+import crypto from 'crypto'
 import { promisify } from 'util'
 
 import { route, useRouteBodyParser } from '@dish/api'
@@ -34,10 +35,12 @@ function shouldCache(body: string) {
 export default route(async (req, res) => {
   await useRouteBodyParser(req, res, { text: { type: '*/*' } })
   const { body } = req
-  const doCache = shouldCache(body)
+  const cacheKey = shouldCache(body)
+    ? crypto.createHash('md5').update(body).digest('hex')
+    : null
 
-  if (doCache) {
-    const cache = await rGet(body)
+  if (cacheKey) {
+    const cache = await rGet(cacheKey)
     if (cache) {
       res.send(JSON.parse(cache))
       return
@@ -55,8 +58,8 @@ export default route(async (req, res) => {
       body,
     })
     const response = await hasuraRes.json()
-    if (doCache) {
-      rc.set(body, JSON.stringify(response))
+    if (cacheKey) {
+      rc.set(cacheKey, JSON.stringify(response))
     }
     res.send(response)
   } catch (error) {

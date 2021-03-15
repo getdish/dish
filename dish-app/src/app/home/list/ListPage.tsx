@@ -389,59 +389,6 @@ const ListPageContent = graphql((props: Props) => {
         <PageContentWithFooter>
           <Spacer />
 
-          <HStack
-            position="absolute"
-            zIndex={10}
-            top={-10}
-            left={0}
-            padding={20}
-          >
-            {isMyList && (
-              <>
-                {!isEditing && (
-                  <Button alignSelf="center" onPress={() => setIsEditing(true)}>
-                    Edit
-                  </Button>
-                )}
-                {isEditing && (
-                  <HStack alignItems="center">
-                    <Button
-                      theme="active"
-                      onPress={async () => {
-                        await listUpdate(
-                          {
-                            id: list.id,
-                            ...draft.current,
-                            ...(color !== '#999' && {
-                              color: listColors.indexOf(color),
-                            }),
-                            public: isPublic,
-                          },
-                          {
-                            query: list,
-                          }
-                        )
-                        await refetch(list)
-                        router.setRouteAlert(null)
-                        setIsEditing(false)
-                      }}
-                    >
-                      Save
-                    </Button>
-                    <Spacer size="sm" />
-                    <VStack
-                      onPress={() => {
-                        setIsEditing(false)
-                      }}
-                    >
-                      <X size={20} />
-                    </VStack>
-                  </HStack>
-                )}
-              </>
-            )}
-          </HStack>
-
           {/* overflow clip prevention with marginVerticals here */}
           <VStack marginVertical={-15}>
             <PageTitle
@@ -507,62 +454,114 @@ const ListPageContent = graphql((props: Props) => {
                   </SlantedTitle>
                 </VStack>
               }
-              after={
-                <AbsoluteVStack
-                  top={-10}
-                  right={0}
-                  bottom={0}
-                  alignItems="center"
-                  justifyContent="center"
-                  backgroundColor={theme.backgroundColor}
-                  padding={20}
-                >
-                  <Heart size={30} />
-                </AbsoluteVStack>
-              }
+              // after={
+              //   <AbsoluteVStack
+              //     top={-10}
+              //     right={0}
+              //     bottom={0}
+              //     alignItems="center"
+              //     justifyContent="center"
+              //     backgroundColor={theme.backgroundColor}
+              //     padding={20}
+              //   >
+              //     <Heart size={30} />
+              //   </AbsoluteVStack>
+              // }
             />
           </VStack>
 
-          {isEditing && (
+          {isMyList && (
             <>
               <Spacer />
+
               <HStack alignItems="center" justifyContent="center">
-                <Text>Color:&nbsp;&nbsp;</Text>
-                <ColorPicker
-                  colors={listColors}
-                  color={color}
-                  onChange={setColor}
-                />
-
-                <Spacer size="xl" />
-
-                <Text>Public:&nbsp;&nbsp;</Text>
-                <Switch value={isPublic} onValueChange={setPublic} />
-
-                <Spacer size="xl" />
-
-                <SmallButton
-                  tooltip="Delete"
-                  icon={<Trash size={16} color="red" />}
-                  onPress={async () => {
-                    assertPresent(list.id, 'no list id')
-                    if (confirm('Permanently delete this list?')) {
-                      await mutate((mutation) => {
-                        return mutation.delete_list({
-                          where: {
-                            id: {
-                              _eq: list.id,
+                <>
+                  {!isEditing && (
+                    <Button
+                      alignSelf="center"
+                      onPress={() => setIsEditing(true)}
+                    >
+                      Edit
+                    </Button>
+                  )}
+                  {isEditing && (
+                    <>
+                      <Button
+                        theme="active"
+                        onPress={async () => {
+                          await listUpdate(
+                            {
+                              id: list.id,
+                              ...draft.current,
+                              ...(color !== '#999' && {
+                                color: listColors.indexOf(color),
+                              }),
+                              public: isPublic,
                             },
-                          },
-                        })?.__typename
-                      })
-                      Toast.show('Deleted list')
-                      router.navigate({
-                        name: 'home',
-                      })
-                    }
-                  }}
-                />
+                            {
+                              query: list,
+                            }
+                          )
+                          await refetch(list)
+                          router.setRouteAlert(null)
+                          setIsEditing(false)
+                        }}
+                      >
+                        Save
+                      </Button>
+                      <Spacer size="sm" />
+                      <VStack
+                        onPress={() => {
+                          setIsEditing(false)
+                        }}
+                      >
+                        <X size={20} />
+                      </VStack>
+                      <Spacer size="lg" />
+                    </>
+                  )}
+
+                  {isEditing && (
+                    <>
+                      <Text>Color:&nbsp;&nbsp;</Text>
+                      <ColorPicker
+                        colors={listColors}
+                        color={color}
+                        onChange={setColor}
+                      />
+
+                      <Spacer size="xl" />
+
+                      <Text>Public:&nbsp;&nbsp;</Text>
+                      <Switch value={isPublic} onValueChange={setPublic} />
+
+                      <Spacer size="xl" />
+
+                      <SmallButton
+                        tooltip="Delete"
+                        icon={<Trash size={16} color="red" />}
+                        onPress={async () => {
+                          assertPresent(list.id, 'no list id')
+                          if (confirm('Permanently delete this list?')) {
+                            await mutate((mutation) => {
+                              return mutation.delete_list({
+                                where: {
+                                  id: {
+                                    _eq: list.id,
+                                  },
+                                },
+                              })?.__typename
+                            })
+                            Toast.show('Deleted list')
+                            router.navigate({
+                              name: 'home',
+                            })
+                          }
+                        }}
+                      />
+                    </>
+                  )}
+                </>
               </HStack>
               <Spacer />
             </>
