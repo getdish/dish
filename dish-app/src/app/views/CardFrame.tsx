@@ -32,7 +32,7 @@ export const CardFrame = ({
   const theme = useTheme()
   return (
     <VStack
-      className="hover-parent ease-in-out-fast"
+      className="hover-parent ease-in-out-faster"
       contain="layout"
       borderRadius={cardFrameBorderRadius}
       width={cardFrameWidth}
@@ -76,7 +76,7 @@ export const CardFrame = ({
           transform: [{ scale: 1.015 }],
         },
         pressStyle: {
-          transform: [{ scale: 0.95 }],
+          transform: [{ scale: 0.975 }],
         },
       })}
     >
