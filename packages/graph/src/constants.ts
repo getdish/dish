@@ -39,7 +39,8 @@ const ORIGIN_MINUS_PORT = ORIGIN.replace(/:[0-9]+/, '')
 
 export const DISH_API_ENDPOINT = process.env.DISH_API_ENDPOINT ?? ORIGIN
 
-export const SEARCH_DOMAIN = (() => {
+export const SEARCH_DOMAIN = `${ORIGIN}/api/search`
+export const SEARCH_DOMAIN_INTERNAL = (() => {
   const staging = 'https://search-staging.dishapp.com'
   const live = 'https://search.dishapp.com'
   const local = process.env.SEARCH_ENDPOINT ?? `${ORIGIN_MINUS_PORT}:10000`

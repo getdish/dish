@@ -57,8 +57,6 @@ import { CloseButton } from './views/CloseButton'
 import { Link } from './views/Link'
 import { LinkButton } from './views/LinkButton'
 
-let curPagePos = { x: 0, y: 0 }
-
 export type ShowAutocomplete = 'search' | 'location' | false
 
 type AutocompleteTarget = 'search' | 'location'

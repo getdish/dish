@@ -4735,6 +4735,15 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@types/express-http-proxy@npm:^1.6.1":
+  version: 1.6.1
+  resolution: "@types/express-http-proxy@npm:1.6.1"
+  dependencies:
+    "@types/express": "*"
+  checksum: 92163ca12d8960dd75dc71cfa7eff0c0aa44414bad8fe4ca139ede1cbbff9410b7c4b7a9511d02f33881d81553862c5eb5e9b163652c4746d6d092c994c3f4fc
+  languageName: node
+  linkType: hard
+
 "@types/express-jwt@npm:0.0.42":
   version: 0.0.42
   resolution: "@types/express-jwt@npm:0.0.42"
@@ -9568,6 +9577,7 @@ __metadata:
     "@babel/runtime": ^7.12.5
     "@dish/app": "*"
     "@snackui/node": 0.2.0
+    "@types/express-http-proxy": ^1.6.1
     "@types/fs-extra": ^9.0.8
     "@types/node": ^14.14.12
     "@types/react-native": ^0.63.45

@@ -148,6 +148,7 @@ export async function createApiServer(app: any, config: ServerConfigNormal) {
         console.log(` [api]   · ${url}${route}`)
         handlerStatus[name] = 'loading'
         app.use(route, async (req, res, next) => {
+          console.log('loading', url, route, name, handlers[name])
           let tries = 0
           while (handlerStatus[name] === 'loading') {
             tries++
