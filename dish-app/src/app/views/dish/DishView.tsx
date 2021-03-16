@@ -232,9 +232,9 @@ const DishViewContent = (props: DishViewProps) => {
 
       {!!image && (
         <VStack
-          // BUG cant put transform on same as borderRadius + overflowHidden
-          // https://stackoverflow.com/questions/21087979/probleme-css3-scale-transform-and-overflowhidden-on-safari
-          transform={[{ scale: isFallback ? 0.8 : 0.9 }]}
+        // BUG cant put transform on same as borderRadius + overflowHidden
+        // https://stackoverflow.com/questions/21087979/probleme-css3-scale-transform-and-overflowhidden-on-safari
+        // transform={[{ scale: isFallback ? 0.8 : 0.9 }]}
         >
           <VStack className="dish-image-" overflow="hidden" borderRadius={1000}>
             <ImageAlt
@@ -250,15 +250,17 @@ const DishViewContent = (props: DishViewProps) => {
       )}
 
       <AbsoluteVStack fullscreen borderRadius={10000} overflow="hidden">
-        <AbsoluteVStack
-          fullscreen
-          transform={[
-            { translateX: -size * 0.75 },
-            { translateY: size * 0.35 },
-          ]}
-        >
-          <SineWave color={backgroundColor} size={size} />
-        </AbsoluteVStack>
+        {isFallback && (
+          <AbsoluteVStack
+            fullscreen
+            transform={[
+              { translateX: -size * 0.75 },
+              { translateY: size * 0.42 },
+            ]}
+          >
+            <SineWave color={backgroundColor} size={size + 10} />
+          </AbsoluteVStack>
+        )}
         <LinearGradient
           style={[StyleSheet.absoluteFill]}
           colors={[
