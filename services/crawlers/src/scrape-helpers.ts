@@ -49,17 +49,15 @@ export async function scrapeFindOneBySourceID(
   id: string,
   allow_not_found = false
 ) {
-  await db.connect()
-  const query = `
-    SELECT *, st_asgeojson(location) as location
-    FROM scrape
-      WHERE source = '${source}'
-      AND id_from_source = '${id}'
-      AND restaurant_id != '${ZeroUUID}'
-    ORDER BY time DESC
-    LIMIT 1;
-  `
-  const result = await db.query(query)
+  const result = await db.query(`
+  SELECT *, st_asgeojson(location) as location
+  FROM scrape
+    WHERE source = '${source}'
+    AND id_from_source = '${id}'
+    AND restaurant_id != '${ZeroUUID}'
+  ORDER BY time DESC
+  LIMIT 1;
+`)
   if (result.rows.length == 0) {
     if (allow_not_found) {
       return null
@@ -112,6 +110,18 @@ export async function latestScrapeForRestaurant(
     }
     return result.rows[0] as Scrape
   }
+}
+
+export async function removeScrapeForRestaurant(
+  restaurant: RestaurantWithId,
+  source: string
+) {
+  await db.query(`
+    DELETE
+    FROM scrape
+      WHERE restaurant_id = '${restaurant.id}'
+      AND source = '${source}';
+  `)
 }
 
 export async function scrapeInsert(scrape: Scrape) {

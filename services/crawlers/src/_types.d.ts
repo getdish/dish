@@ -337,9 +337,11 @@ declare module "@dish/crawlers" {
             address: any;
         };
         getNextScrapes(id: string, data: ScrapeData): Promise<void>;
-        extractEmbeddedJSONData(line: string): {
+        extractEmbeddedJSONData(obj: {
+            [key: string]: any;
+        }): {
             [keys: string]: any;
-        };
+        } | null;
         numericKeysFix(data: {
             [key: string]: any;
         }): {
@@ -372,6 +374,7 @@ declare module "@dish/crawlers" {
     export function scrapeFindOneBySourceID(source: string, id: string, allow_not_found?: boolean): Promise<Scrape | null>;
     export function scrapeFindOneByUUID(id: string): Promise<Scrape>;
     export function latestScrapeForRestaurant(restaurant: RestaurantWithId, source: string): Promise<Scrape | null>;
+    export function removeScrapeForRestaurant(restaurant: RestaurantWithId, source: string): Promise<void>;
     export function scrapeInsert(scrape: Scrape): Promise<string | undefined>;
     export function scrapeUpdateBasic(scrape: Scrape): Promise<any>;
     export function scrapeUpdateAllRestaurantIDs(source: string, id_from_source: string, restaurant_id: string | null): Promise<void>;

@@ -48,6 +48,7 @@ export class WorkerJob {
   static job_config: JobOptions = {}
   queue!: Queue
   job!: Job
+  run_all_on_main = false
 
   async run(fn: string, args: any[] = []) {
     if (this[fn].constructor.name === 'AsyncFunction') {
@@ -62,6 +63,10 @@ export class WorkerJob {
     args?: any[],
     specific_config: JobOptions = {}
   ) {
+    if (this.run_all_on_main) {
+      await this.run(fn, args)
+      return
+    }
     console.log('runOnWorker', fn)
     if (process.env.RUN_WITHOUT_WORKER == 'true') {
       return await this.run(fn, args)

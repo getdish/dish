@@ -103,7 +103,7 @@ const DishViewContent = (props: DishViewProps) => {
   const isLong =
     dishName.length > 17 || !!dishName.split(' ').find((x) => x.length >= 8)
   const isTiny = size < 115
-  const fontSize = Math.max(13, (isLong ? 15 : 18) * (isTiny ? 0.75 : 1))
+  const fontSize = Math.max(13, (isLong ? 14 : 16) * (isTiny ? 0.75 : 1))
   const colors = getColorsForName(name)
   const { lightColor, color } = colors
   const backgroundColor = lightColor

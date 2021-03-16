@@ -85,6 +85,7 @@ export class GoogleGeocoder {
     const url = this._formatSearchURL()
     const response = await googleAPI.getText(url, {
       headers: { 'user-agent': 'PLEASE' },
+      skipBrowser: true,
     })
     if (this._hasSearchExpired(response)) {
       throw new Error(SEARCH_ENDPOINT_EXPIRED)

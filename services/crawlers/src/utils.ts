@@ -103,7 +103,7 @@ export class DB {
       throw new Error('no client')
     }
     try {
-      const timeout = sleep(10000)
+      const timeout = sleep(20000)
       const res = await Promise.race([
         client.query(query),
         timeout.then(() => {

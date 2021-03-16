@@ -1,4 +1,5 @@
 import { graphql, order_by } from '@dish/graph'
+import { isPresent } from '@dish/helpers/src'
 import React, { Suspense, memo } from 'react'
 import { Image } from 'react-native'
 import { HStack, Text, VStack } from 'snackui'
@@ -39,16 +40,22 @@ export const RestaurantPhotosRowContent = memo(
       height,
     }: Props) => {
       const [restaurant] = queryRestaurant(restaurantSlug)
-      const photos = restaurant.photo_table({
-        limit: 6,
-        order_by: [
-          {
-            photo: {
-              quality: order_by.desc,
+      const mainPhoto = restaurant.image
+      const otherPhotos = restaurant
+        .photo_table({
+          limit: 6,
+          order_by: [
+            {
+              photo: {
+                quality: order_by.desc,
+              },
             },
-          },
-        ],
-      })
+          ],
+        })
+        .map((x) => x.photo.url)
+        .filter(isPresent)
+
+      const photos = mainPhoto ? [mainPhoto, ...otherPhotos] : otherPhotos
 
       return (
         <HStack>
@@ -59,7 +66,7 @@ export const RestaurantPhotosRowContent = memo(
           )}
           {!!photos.length && (
             <>
-              {photos.map((photo, index) => {
+              {photos.map((url, index) => {
                 const photoHeight = escalating
                   ? index < 2
                     ? 190
@@ -79,9 +86,9 @@ export const RestaurantPhotosRowContent = memo(
                         <Image
                           source={{
                             uri: getImageUrl(
-                              photo.photo.url!,
-                              photoWidth,
-                              photoHeight,
+                              url,
+                              photoWidth * 2,
+                              photoHeight * 2,
                               100
                             ),
                           }}
