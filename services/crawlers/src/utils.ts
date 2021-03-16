@@ -60,7 +60,7 @@ export class DB {
       ssl: process.env.NODE_ENV === 'development' ? false : true,
       user: process.env.PGUSER || 'postgres',
       password: process.env.PGPASSWORD || 'postgres',
-      database: 'dish',
+      database: process.env.POSTGRES_DB || 'dish',
       idleTimeoutMillis: 10_000,
       connectionTimeoutMillis: 0,
     }
