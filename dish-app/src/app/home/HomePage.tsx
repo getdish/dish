@@ -6,6 +6,7 @@ import {
   Paragraph,
   Spacer,
   Text,
+  Theme,
   VStack,
   useMedia,
   useTheme,
@@ -127,7 +128,7 @@ export default memo(function HomePage(
       <>
         <HomeTopSpacer />
         <Spacer size="md" {...(media.sm && { size: 0 })} />
-        <HStack marginBottom={-20}>
+        <HStack marginVertical={-16}>
           <ContentScrollViewHorizontal>
             <HStack
               alignItems="center"
@@ -136,25 +137,28 @@ export default memo(function HomePage(
               paddingHorizontal={10}
             >
               <VStack position="relative">
-                <SlantedTitle
-                  paddingVertical={12}
-                  minWidth={100}
-                  backgroundColor={regionColors.color}
-                  color="#fff"
-                  size={
-                    regionName.length > 24
-                      ? 'xs'
-                      : regionName.length > 17
-                      ? 'sm'
-                      : regionName.length > 14
-                      ? 'md'
-                      : regionName.length > 8
-                      ? 'lg'
-                      : 'xl'
-                  }
-                >
-                  {regionName}
-                </SlantedTitle>
+                <Theme name="dark">
+                  <SlantedTitle
+                    // paddingVertical={12}
+                    backgroundColor={regionColors.darkColor}
+                    color={regionColors.extraLightColor}
+                    minWidth={100}
+                    // color="#fff"
+                    size={
+                      regionName.length > 24
+                        ? 'xs'
+                        : regionName.length > 17
+                        ? 'sm'
+                        : regionName.length > 14
+                        ? 'md'
+                        : regionName.length > 8
+                        ? 'lg'
+                        : 'xl'
+                    }
+                  >
+                    {regionName}
+                  </SlantedTitle>
+                </Theme>
               </VStack>
               <HomeTopSearches />
             </HStack>

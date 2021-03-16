@@ -11,7 +11,7 @@ export const HomeDrawerSmall = (props: { children: any }) => {
 
   useEffect(() => {
     return series([
-      () => sleep(200),
+      // () => sleep(200),
       () => {
         if (autocompletes.visible) {
           drawerStore.setSnapIndex(0)

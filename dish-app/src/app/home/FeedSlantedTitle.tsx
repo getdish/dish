@@ -41,7 +41,7 @@ export const FeedSlantedTitleLink = ({
     <TitleContainer>
       <ScalingPressable>
         <Link asyncClick {...{ tag, tags, name, params }}>
-          <SlantedTitle size="lg" fontWeight="400" {...props} />
+          <SlantedTitle size="sm" fontWeight="600" {...props} />
         </Link>
       </ScalingPressable>
     </TitleContainer>

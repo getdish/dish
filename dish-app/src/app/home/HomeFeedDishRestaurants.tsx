@@ -117,13 +117,11 @@ export const HomeFeedDishRestaurants = graphql(
     const contents = useMemo(() => {
       return (
         <>
-          <FeedSlantedTitleLink
-            backgroundColor={getColorsForName(tag.name).pastelColor}
-            color="#fff"
-            tag={tag}
-          >
-            {tag.icon} {tag.name}
-          </FeedSlantedTitleLink>
+          <Theme name="dark">
+            <FeedSlantedTitleLink tag={tag}>
+              {`${tag.icon ? tag.icon + ' ' : ''}${tag.name}`.trim()}
+            </FeedSlantedTitleLink>
+          </Theme>
 
           <SkewedCardCarousel>
             {restaurants.map((restaurant, i) => {

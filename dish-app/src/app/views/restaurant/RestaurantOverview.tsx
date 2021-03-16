@@ -67,6 +67,7 @@ export const RestaurantOverview = memo(
         <VStack>
           <HStack
             maxHeight={fullHeight ? 'auto' : lineHeight * maxLines - 2}
+            maxWidth="100%"
             overflow="hidden"
             paddingHorizontal={30}
             marginHorizontal={-30}
@@ -120,6 +121,7 @@ export const RestaurantOverview = memo(
               </VStack>
             ) : (
               <Text
+                className="break-word"
                 display="flex"
                 marginTop="auto"
                 marginBottom="auto"

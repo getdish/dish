@@ -69,9 +69,9 @@ export const LogoColor = (props: { scale?: number }) => {
 }
 
 export const LogoCircle = memo(() => {
-  const media = useMedia()
+  // const media = useMedia()
   return (
-    <VStack transform={media.sm ? [{ scale: 0.8 }] : [{ scale: 1 }]}>
+    <>
       <Svg width={logoXsWidth} height={logoXsHeight} viewBox="0 0 1024 1024">
         <Defs>
           <Path
@@ -152,6 +152,6 @@ export const LogoCircle = memo(() => {
           </G>
         </G>
       </Svg>
-    </VStack>
+    </>
   )
 })

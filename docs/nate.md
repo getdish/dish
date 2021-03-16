@@ -37,6 +37,7 @@ BROKEN DOWN
   - LA, SD, SF
 
 - data improve
+  - re-crawl restaurant given name/id
   - get good feedback loop for one/a few restaurants:
     - integrate new image quality API
     - integrate new bert API
