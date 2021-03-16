@@ -16,7 +16,7 @@ import {
 } from '../scrape-helpers'
 import { aroundCoords, boundingBoxFromcenter, geocode } from '../utils'
 
-const BB_SEARCH = '/search/snippet?cflt=restaurant&l='
+const BB_SEARCH = '/search/snippet?cflt=restaurants&l='
 const YELP_DOMAIN = 'https://www.yelp.com'
 
 const yelpAPI = new ProxiedRequests(
@@ -83,7 +83,7 @@ export class Yelp extends WorkerJob {
     ].join(',')
     const bb = encodeURIComponent('g:' + coords)
     const uri = BB_SEARCH + bb + '&start=' + start
-    const response = await yelpAPI.getJSON(YELP_DOMAIN + uri)
+    const response = await yelpAPI.getJSON(uri)
     if (!response) {
       console.log('no response!', response)
       return []
@@ -126,7 +126,7 @@ export class Yelp extends WorkerJob {
         found_the_one = true
         console.log('YELP SANDBOX: found ' + name)
       }
-      const timeout = sleep(10000)
+      const timeout = sleep(20000)
       await Promise.race([
         this.getRestaurant(data),
         timeout.then(() => {
@@ -204,18 +204,18 @@ export class Yelp extends WorkerJob {
     id_from_source: string
   ) {
     let data: { [keys: string]: any } = {}
-    const SIG1 = '<script type="application/json" data-hypernova-key'
-    const SIG2 = 'mapBoxProps'
     this.current = yelp_path
     console.log(`YELP: getting embedded JSON for: ${yelp_path}`)
-    const response = await yelpAPI.getText(yelp_path)
-
-    for (const line of response.split('\n')) {
-      if (line.includes(SIG1) && line.includes(SIG2)) {
-        data = this.extractEmbeddedJSONData(line)
-        break
-      }
+    const response = await yelpAPI.getHyperscript(
+      yelp_path,
+      'script[data-hypernova-key*="BizDetailsApp"]'
+    )
+    const extracted = this.extractEmbeddedJSONData(response)
+    if (!extracted) {
+      throw new Error(`No extraction found`)
     }
+
+    data = extracted
     if (!('mapBoxProps' in data)) {
       const message = "YELP: Error Couldn't extract embedded data"
       sentryMessage(message, { path: yelp_path })
@@ -271,26 +271,28 @@ export class Yelp extends WorkerJob {
     await this.runOnWorker('getReviews', [id, bizId])
   }
 
-  extractEmbeddedJSONData(line: string) {
-    const match = line.match(/<!\-\-([\w\s\S]+?)\-\->/)![1]
-    const json = JSON.parse(match).bizDetailsPageProps
-    let data: { [keys: string]: any } = {}
-    const required_fields = [
-      'bizHoursProps',
-      'mapBoxProps',
-      'moreBusinessInfoProps',
-      'bizContactInfoProps',
-      'photoHeaderProps',
-    ]
-    for (const key of Object.keys(json)) {
-      if (required_fields.includes(key)) {
-        data[key] = json[key]
+  extractEmbeddedJSONData(obj: { [key: string]: any }) {
+    const json = obj.bizDetailsPageProps
+    if (json) {
+      let data: { [keys: string]: any } = {}
+      const required_fields = [
+        'bizHoursProps',
+        'mapBoxProps',
+        'moreBusinessInfoProps',
+        'bizContactInfoProps',
+        'photoHeaderProps',
+      ]
+      for (const key of Object.keys(json)) {
+        if (required_fields.includes(key)) {
+          data[key] = json[key]
+        }
       }
+      if (data?.photoHeaderProps?.photoFlagReasons)
+        delete data.photoHeaderProps.photoFlagReasons
+      data = this.numericKeysFix(data)
+      return data
     }
-    if (data?.photoHeaderProps?.photoFlagReasons)
-      delete data.photoHeaderProps.photoFlagReasons
-    data = this.numericKeysFix(data)
-    return data
+    return null
   }
 
   numericKeysFix(data: { [key: string]: any }) {
@@ -362,7 +364,6 @@ export class Yelp extends WorkerJob {
     })
 
     const data = response.reviews
-
     let reviews: ScrapeData = {}
     reviews['reviewsp' + page] = data
     await scrapeMergeData(id, reviews)
@@ -376,7 +377,7 @@ export class Yelp extends WorkerJob {
     }
 
     const next_page = start + PER_PAGE
-    if (next_page <= response.data.pagination.totalResults) {
+    if (next_page <= response.pagination.totalResults) {
       await this.runOnWorker('getReviews', [id, bizId, next_page])
     }
   }

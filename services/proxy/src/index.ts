@@ -26,6 +26,12 @@ async function main() {
   }
 }
 
+const types = {
+  html: 'html',
+  json: 'json',
+  hyperscript: 'hyperscript',
+} as const
+
 function startServer() {
   app.use(async (req, res, next) => {
     const headers = req.headers
@@ -34,10 +40,10 @@ function startServer() {
       res.status(500).send('no url')
       return
     }
-    const type =
-      headers['content-type'] === 'application/json' ? 'json' : 'html'
-    console.log(`Processing ${type}: ${url}`)
-    return res.json(await runInQueue(() => fetchBrowser(url, type)))
+    const type = types[`${headers['parse'] ?? 'html'}`]
+    const selector = `${headers['selector']}`
+    console.log(`Processing ${type} ${selector}: ${url}`)
+    return res.json(await runInQueue(() => fetchBrowser(url, type, selector)))
   })
   console.log('Listening on', 3535)
   app.listen(3535)

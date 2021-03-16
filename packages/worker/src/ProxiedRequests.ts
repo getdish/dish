@@ -1,7 +1,11 @@
 import _ from 'lodash'
 import fetch, { FetchOptions } from 'make-fetch-happen'
 
-import { fetchBrowserJSON } from './browser'
+import {
+  fetchBrowserHTML,
+  fetchBrowserHyperscript,
+  fetchBrowserJSON,
+} from './browser'
 
 if (!process.env.LUMINATI_PROXY_HOST || !process.env.STORMPROXY_HOSTS) {
   console.error('Warning: Missing proxy config ⚠️ ⚠️ ⚠️', {
@@ -10,30 +14,47 @@ if (!process.env.LUMINATI_PROXY_HOST || !process.env.STORMPROXY_HOSTS) {
   })
 }
 
+type Opts = FetchOptions & {
+  skipBrowser?: boolean
+}
+
 export class ProxiedRequests {
   constructor(
     public domain: string,
     public aws_proxy: string,
-    public config: FetchOptions = {},
+    public config: Opts = {},
     public start_with_aws = false
   ) {}
 
-  async getJSON(uri: string, props?: FetchOptions) {
-    try {
-      return await fetchBrowserJSON(uri)
-    } catch (err) {
-      console.warn('Error with browser fetch, fall back to proxies', err)
+  async getJSON(uri: string, props?: Opts) {
+    if (!props?.skipBrowser) {
+      try {
+        return await fetchBrowserJSON(this.domain + uri)
+      } catch (err) {
+        console.warn('Error with browser fetch, fall back to proxies', err)
+      }
     }
     return await this.get(uri, props).then(
       (x) => x.json() as Promise<{ [key: string]: any }>
     )
   }
 
-  async getText(uri: string, props?: FetchOptions) {
+  async getHyperscript(uri: string, selector: string) {
+    return await fetchBrowserHyperscript(this.domain + uri, selector)
+  }
+
+  async getText(uri: string, props?: Opts) {
+    if (!props?.skipBrowser) {
+      try {
+        return await fetchBrowserHTML(this.domain + uri)
+      } catch (err) {
+        console.warn('Error with browser fetch, fall back to proxies', err)
+      }
+    }
     return await this.get(uri, props).then((x) => x.text())
   }
 
-  async get(uri: string, props: FetchOptions = {}) {
+  async get(uri: string, props: Opts = {}) {
     const config = _.merge(this.config, props, {
       headers: {
         'Accept-Encoding': 'br;q=1.0, gzip;q=0.8, *;q=0.1',
@@ -102,12 +123,12 @@ export class ProxiedRequests {
         console.log('Error:', e.message)
         // TODO: detect other blocking signatures
         if (!e.response || e.response.status != 503) {
-          throw e
+          console.log('proxy err', e)
         }
         tries++
         if (tries > 2) {
           setStormProxy()
-        } else if (tries < 8) {
+        } else if (tries < 4) {
           if (process.env.DISABLE_LUMINATI) {
             break
           }
@@ -115,7 +136,7 @@ export class ProxiedRequests {
         } else {
           setLuminatiResidentialProxy()
         }
-        if (tries > 9) {
+        if (tries > 5) {
           throw new Error('Too many 503 errors for: ' + uri)
         }
         console.warn(

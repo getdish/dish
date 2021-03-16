@@ -167,9 +167,10 @@ export const AppSearchInput = memo(() => {
       if (!input) return
       let mouseDownAt = Date.now()
       const showSearch = () => {
-        if (Date.now() - mouseDownAt < 500) {
-          autocompletesStore.setTarget('search')
+        if (!isFocused && Date.now() - mouseDownAt > 500) {
+          return
         }
+        autocompletesStore.setTarget('search')
       }
       const mouseDown = () => {
         mouseDownAt = Date.now()
@@ -242,6 +243,7 @@ export const AppSearchInput = memo(() => {
                   // leave uncontrolled for perf?
                   value={search ?? ''}
                   onBlur={(e) => {
+                    isFocused = false
                     avoidNextFocus = false
                     if (isWeb && !getMedia().sm) {
                       if (autocompletesStore.target === 'search') {
@@ -250,15 +252,18 @@ export const AppSearchInput = memo(() => {
                     }
                   }}
                   onKeyPress={handleKeyPressInner}
-                  {...(!isWeb && {
-                    onFocus: () => {
-                      if (home.searchbarFocusedTag) {
-                        home.setSearchBarTagIndex(0)
-                      } else {
-                        autocompletesStore.setTarget('search')
-                      }
-                    },
-                  })}
+                  onFocus={() => {
+                    isFocused = true
+                    if (isWeb) {
+                      // web we handle above for better text selection properties
+                      return
+                    }
+                    if (home.searchbarFocusedTag) {
+                      home.setSearchBarTagIndex(0)
+                    } else {
+                      autocompletesStore.setTarget('search')
+                    }
+                  }}
                   onChangeText={(text) => {
                     if (getSearch() == '' && text !== '') {
                       if (autocompletesStore.target !== 'search') {

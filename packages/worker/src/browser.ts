@@ -1,12 +1,23 @@
 export async function fetchBrowserJSON(url: string) {
   const res = await fetchBrowser(url, {
     'content-type': 'application/json',
+    parse: 'json',
   })
   return await res.json()
 }
 
-export function fetchBrowserHTML(url: string) {
-  return fetchBrowser(url)
+export async function fetchBrowserHyperscript(url: string, selector: string) {
+  const res = await fetchBrowser(url, {
+    'content-type': 'application/json',
+    parse: 'hyperscript',
+    selector,
+  })
+  return await res.json()
+}
+
+export async function fetchBrowserHTML(url: string) {
+  const res = await fetchBrowser(url)
+  return await res.text()
 }
 
 const regions = ['atl', 'sea', 'lax', 'dfw', 'ord', 'iad', 'sjc', 'vin', 'yyz']
