@@ -118,7 +118,7 @@ export class Yelp extends WorkerJob {
         continue
       }
       const name = data.searchResultBusiness.name
-      if (onlyName != '' && name != onlyName) {
+      if (onlyName && name != onlyName) {
         console.log('YELP SANDBOX: Skipping ' + name)
         continue
       }

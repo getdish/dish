@@ -34,6 +34,7 @@ export class RestaurantTagScores {
   }
 
   async findAllUnanalyzed() {
+    this.crawler.log('Finding unanalyzed...')
     const restaurant_id = this.crawler.restaurant.id
     const result = await this.crawler.main_db.query(`
       SELECT rts.id, sentence FROM review_tag_sentence rts
@@ -47,7 +48,9 @@ export class RestaurantTagScores {
   async analyzeSentences(review_tag_sentences: ReviewTagSentence[]) {
     const BERT_BATCH_SIZE = 20
     let assessed: ReviewTagSentence[] = []
-    for (const batch of chunk(review_tag_sentences, BERT_BATCH_SIZE)) {
+    const batches = chunk(review_tag_sentences, BERT_BATCH_SIZE)
+    for (const [index, batch] of batches.entries()) {
+      console.log('Analyzing sentiment for batch', index, 'of ', batches.length)
       const assessed_batch = await this.fetchBertBatch(batch)
       assessed.push(...assessed_batch)
     }

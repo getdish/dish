@@ -1,24 +1,24 @@
 import { sentryMessage } from '@dish/common'
 import {
-  DeepPartial,
   PhotoXref,
   RestaurantTag,
   Review,
   Tag,
-  cleanReviewText,
   convertSimpleTagsToRestaurantTags,
-  dedupeReviews,
-  dedupeSentiments,
   externalUserUUID,
   globalTagId,
   restaurantGetAllPossibleTags,
-  reviewExternalUpsert,
   tagFindCountryMatches,
-  tagSlug,
 } from '@dish/graph'
 import { breakIntoSentences, doesStringContainTag } from '@dish/helpers'
+import {
+  cleanReviewText,
+  dedupeReviews,
+  dedupeSentiments,
+  reviewExternalUpsert,
+} from '@dish/helpers-node'
 import * as chrono from 'chrono-node'
-import { uniq } from 'lodash'
+import { chunk, uniq } from 'lodash'
 import moment from 'moment'
 import Sentiment from 'sentiment'
 
@@ -111,11 +111,15 @@ export class Tagging {
 
   async updateTagRankings() {
     const all_tags = this.crawler.restaurant.tags || []
-    await Promise.all(
-      all_tags.map((tag) => {
-        return this.promisedRankForTag(tag.tag.id)
-      })
-    )
+    const chunks = chunk(all_tags, 30)
+    console.log('Update tag rankings chunks', chunks.length)
+    for (const chunk of chunks) {
+      await Promise.all(
+        chunk.map((tag) => {
+          return this.promisedRankForTag(tag.tag.id)
+        })
+      )
+    }
   }
 
   async promisedRankForTag(tag_id: string) {
@@ -134,18 +138,17 @@ export class Tagging {
 
   async getRankForTag(tag_id: string) {
     const RADIUS = 0.1
-    const query = `
-      SELECT * FROM (
-        SELECT
-          restaurant.id AS restaurant_id,
-          DENSE_RANK() OVER(ORDER BY rt.score DESC NULLS LAST) AS rank
-        FROM restaurant
-        LEFT JOIN restaurant_tag rt ON rt.restaurant_id = restaurant.id
-          WHERE ST_DWithin(location, location, ${RADIUS})
-          AND rt.tag_id = '${tag_id}'
-      ) league
-      WHERE restaurant_id = '${this.crawler.restaurant.id}'`
-    const result = await this.crawler.main_db.query(query)
+    const result = await this.crawler.main_db.query(`
+    SELECT * FROM (
+      SELECT
+        restaurant.id AS restaurant_id,
+        DENSE_RANK() OVER(ORDER BY rt.score DESC NULLS LAST) AS rank
+      FROM restaurant
+      LEFT JOIN restaurant_tag rt ON rt.restaurant_id = restaurant.id
+        WHERE ST_DWithin(location, location, ${RADIUS})
+        AND rt.tag_id = '${tag_id}'
+    ) league
+    WHERE restaurant_id = '${this.crawler.restaurant.id}'`)
     if (result.rows.length == 0) {
       sentryMessage('No rank for tag', {
         restaurant_id: this.crawler.restaurant.id,
@@ -158,8 +161,10 @@ export class Tagging {
 
   async scanCorpus() {
     this.found_tags = {}
+    console.log('Getting all possible tags...')
     this.all_tags = await restaurantGetAllPossibleTags(this.crawler.restaurant)
     this.restaurant_tag_ratings = {}
+    console.log('Getting reviews...')
     this.all_reviews = [
       ...this._getYelpReviews(),
       ...this._getTripadvisorReviews(),
@@ -168,7 +173,9 @@ export class Tagging {
     let all_sources = [...this.all_reviews, ...this._scanMenuItemsForTags()]
     all_sources = this.cleanAllSources(all_sources) as TextSource[]
     const reviews_with_sentiments = this.findDishesInText(all_sources)
+    console.log('Collecting restaurant tags...')
     await this._collectFoundRestaurantTags()
+    console.log('Upserting reviews...')
     await reviewExternalUpsert(reviews_with_sentiments)
   }
 

@@ -23,6 +23,8 @@ let db_config: PoolConfig = {
   password: process.env.TIMESCALE_PASSWORD || 'postgres',
   database: process.env.TIMESCALE_DB || 'scrape_data',
   ssl: process.env.TIMESCALE_SSH ? true : false,
+  connectionTimeoutMillis: 50_000,
+  idleTimeoutMillis: 500_000,
 }
 
 const db = new DB(db_config)
@@ -91,6 +93,7 @@ export async function latestScrapeForRestaurant(
   restaurant: RestaurantWithId,
   source: string
 ) {
+  console.log('Getting latest scrape for', restaurant.id, source)
   const result = await db.query(`
     SELECT *
     FROM scrape
@@ -100,14 +103,10 @@ export async function latestScrapeForRestaurant(
     LIMIT 1;
   `)
   if (result.rows.length == 0) {
-    if (process.env.NODE_ENV != 'test') {
-      console.debug(`No ${source} scrapes found for: ` + restaurant.name)
-    }
+    console.log(`No ${source} scrapes found for: ` + restaurant.name)
     return null
   } else {
-    if (process.env.NODE_ENV != 'test') {
-      console.debug(`${source} scrape found for: ` + restaurant.name)
-    }
+    console.log(`${source} scrape found for: ` + restaurant.name)
     return result.rows[0] as Scrape
   }
 }
@@ -116,6 +115,7 @@ export async function removeScrapeForRestaurant(
   restaurant: RestaurantWithId,
   source: string
 ) {
+  console.log('Removing scrape for', restaurant.id)
   await db.query(`
     DELETE
     FROM scrape

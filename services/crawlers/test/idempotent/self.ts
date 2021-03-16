@@ -8,10 +8,10 @@ import {
   restaurantTagUpsert,
   restaurantUpdate,
   restaurantUpsertOrphanTags,
-  reviewFindAllForRestaurant,
   tagInsert,
   tagUpsert,
 } from '@dish/graph'
+import { reviewFindAllForRestaurant } from '@dish/helpers-node'
 import anyTest, { ExecutionContext, TestInterface } from 'ava'
 import sinon from 'sinon'
 

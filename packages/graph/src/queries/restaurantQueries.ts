@@ -1,5 +1,5 @@
 import { selectFields } from '@dish/gqless'
-import _ from 'lodash'
+import _, { chunk } from 'lodash'
 
 import { globalTagId } from '../constants'
 import { Maybe, client, order_by, resolved, restaurant } from '../graphql'
@@ -118,7 +118,13 @@ export async function restaurantUpsertManyTags(
     const existing = getRestaurantTagFromTag(restaurant, rt.tag_id)
     return { ...existing, ...rt }
   })
-  const next = await restaurantUpsertRestaurantTags(restaurant, populated, opts)
+  const chunks = chunk(populated, 10)
+  console.log('Upserting tags chunks...', chunks.length)
+  let next: RestaurantWithId | null = null
+  for (const [index, chunk] of chunks.entries()) {
+    console.log('Inserting tags chunk...', index)
+    next = await restaurantUpsertRestaurantTags(restaurant, chunk, opts)
+  }
   return next
 }
 

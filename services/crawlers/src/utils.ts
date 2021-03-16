@@ -65,8 +65,8 @@ export class DB {
       user: process.env.PGUSER || 'postgres',
       password: process.env.PGPASSWORD || 'postgres',
       database: process.env.POSTGRES_DB || 'dish',
-      idleTimeoutMillis: 10_000,
-      connectionTimeoutMillis: 0,
+      idleTimeoutMillis: 100_000,
+      connectionTimeoutMillis: 50_000,
     }
     return new DB(conf)
   }
@@ -103,7 +103,7 @@ export class DB {
       throw new Error('no client')
     }
     try {
-      const timeout = sleep(20000)
+      const timeout = sleep(25000)
       const res = await Promise.race([
         client.query(query),
         timeout.then(() => {
