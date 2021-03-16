@@ -26,8 +26,8 @@ COPY dish-app/etc dish-app/etc
 
 # install
 RUN yarn install --immutable-cache \
+  && yarn postinstall \
   && yarn cache clean \
-  && yarn patch-package \
   && rm .yarn/install-state.gz
 
 COPY tsconfig.json tsconfig.build.json \

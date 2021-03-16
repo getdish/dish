@@ -64,7 +64,7 @@ import { openingHours, priceRange } from './RestaurantDetailRow'
 import { RestaurantFavoriteStar } from './RestaurantFavoriteButton'
 import { useTotalReviews } from './useTotalReviews'
 
-export const ITEM_HEIGHT = 270
+export const ITEM_HEIGHT = 250
 
 type RestaurantListItemProps = {
   curLocInfo: GeocodePlace | null
@@ -713,7 +713,7 @@ const RestaurantPeekDishes = memo(
                   restaurantSlug={props.restaurantSlug}
                   restaurantId={props.restaurantId}
                   {...dish}
-                  marginRight={-16}
+                  marginRight={-26}
                   marginTop={isEven ? 0 : -20}
                   showSearchButton={!props.editable}
                 />
