@@ -377,7 +377,7 @@ const RestaurantListItemContent = memo(
               </VStack>
             </Link>
 
-            <Spacer size={18} />
+            <Spacer size={10} />
 
             {/* SECOND ROW TITLE */}
             <VStack {...contentSideProps}>
@@ -443,7 +443,7 @@ const RestaurantListItemContent = memo(
               <VStack
                 justifyContent="center"
                 flex={1}
-                paddingLeft={20}
+                paddingTop={10}
                 paddingRight={10}
                 marginTop={flexibleHeight ? 15 : 0}
                 marginBottom={flexibleHeight ? 30 : 0}
@@ -464,6 +464,7 @@ const RestaurantListItemContent = memo(
 
               <Suspense fallback={null}>
                 <HStack
+                  marginTop={-5}
                   minHeight={44} // prevents clipping in lg size
                   transform={[{ translateY: -15 }]}
                   className="safari-fix-overflow"
@@ -543,7 +544,7 @@ const RestaurantListItemContent = memo(
               paddingLeft={10}
               position="relative"
               marginTop={-60}
-              transform={[{ translateY: -25 }]}
+              transform={[{ translateY: -10 }]}
               pointerEvents="none"
             >
               <Suspense fallback={null}>
@@ -563,7 +564,8 @@ const RestaurantListItemContent = memo(
               {!hideTagRow && (
                 <HStack
                   height={34}
-                  paddingTop={30}
+                  zIndex={10}
+                  paddingTop={10}
                   paddingLeft={25}
                   overflow="hidden"
                   alignItems="center"

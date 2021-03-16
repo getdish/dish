@@ -1,6 +1,6 @@
 import React from 'react'
 
-import CircularProgress from '../views/CircularProgress'
+import { CircularProgress } from '../views/CircularProgress'
 
 export const ProgressRing = ({
   size,

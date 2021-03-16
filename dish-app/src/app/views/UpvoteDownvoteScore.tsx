@@ -1,12 +1,21 @@
 import { supportsTouchWeb } from '@dish/helpers'
 import { ArrowDown, ArrowUp, ChevronDown, ChevronUp } from '@dish/react-feather'
 import React, { memo } from 'react'
-import { AbsoluteVStack, StackProps, Text, Tooltip, VStack } from 'snackui'
+import {
+  AbsoluteVStack,
+  StackProps,
+  Text,
+  Theme,
+  Tooltip,
+  VStack,
+} from 'snackui'
 
 import { green, grey, red } from '../../constants/colors'
 import { isWeb } from '../../constants/constants'
 import { getColorsForColor } from '../../helpers/getColorsForName'
 import { numberFormat } from '../../helpers/numberFormat'
+import { ProgressRing } from '../home/ProgressRing'
+import { CircularProgress } from './CircularProgress'
 import { Pie } from './Pie'
 import { VoteButton } from './VoteButton'
 
@@ -48,7 +57,7 @@ export const Score = memo(
         : {
             isOpen: false,
           }
-    const fontSize = Math.round(16 * scale + (size === 'sm' ? 2 : 0))
+    const fontSize = Math.round(18 * scale + (size === 'sm' ? 2 : 0))
 
     const upvote = (
       <VoteButton
@@ -90,6 +99,7 @@ export const Score = memo(
     return (
       <VStack
         pointerEvents="auto"
+        backgroundColor={colors.darkColor}
         alignItems="center"
         justifyContent="center"
         className={
@@ -97,7 +107,6 @@ export const Score = memo(
         }
         width={sizePx}
         height={sizePx}
-        backgroundColor="#fff"
         {...(shadowed && {
           shadowColor: 'rgba(0,0,0,0.125)',
           shadowRadius: 6,
@@ -108,7 +117,7 @@ export const Score = memo(
       >
         {votable && (
           <>
-            <AbsoluteVStack zIndex={-1} top={-15}>
+            <AbsoluteVStack zIndex={-1} top={-20}>
               {subtle ? (
                 upvote
               ) : (
@@ -121,7 +130,7 @@ export const Score = memo(
                 </Tooltip>
               )}
             </AbsoluteVStack>
-            <AbsoluteVStack zIndex={-1} bottom={-15}>
+            <AbsoluteVStack zIndex={-1} bottom={-20}>
               {subtle ? (
                 downvote
               ) : (
@@ -136,18 +145,25 @@ export const Score = memo(
             </AbsoluteVStack>
           </>
         )}
+
         {typeof rating === 'number' && (
           <AbsoluteVStack
             fullscreen
-            transform={[{ rotate: `${(1 - rating / 10) * 180}deg` }]}
+            alignItems="center"
+            justifyContent="center"
+            // transform={[{ rotate: `${(1 - rating / 10) * 180}deg` }]}
           >
-            <Pie size={sizePx} color={colors.color} percent={rating * 10} />
+            <ProgressRing
+              size={Math.round(sizePx + 3)}
+              color={colors.color}
+              percent={rating * 10}
+              width={sizePx * 0.1}
+            />
           </AbsoluteVStack>
         )}
 
         <VStack
           zIndex={100}
-          backgroundColor="#fff"
           borderRadius={100}
           width={sizePx * 0.75}
           height={sizePx * 0.75}
@@ -156,9 +172,9 @@ export const Score = memo(
         >
           <Text
             fontSize={fontSize}
-            fontWeight="600"
+            fontWeight="800"
             letterSpacing={-1}
-            color={`${colors.darkColor}99`}
+            color="#fff"
           >
             {numberFormat(score, 'sm')}
           </Text>
