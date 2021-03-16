@@ -92,24 +92,27 @@ export const HomeFeedDishRestaurants = graphql(
       },
     })
 
-    const restaurants = restaurantsQuery.map((restaurant) => {
-      const rtag = restaurant.tags({
-        where: {
-          tag: {
-            slug: {
-              _eq: tag.slug,
+    const restaurants = uniqBy(
+      restaurantsQuery.map((restaurant) => {
+        const rtag = restaurant.tags({
+          where: {
+            tag: {
+              slug: {
+                _eq: tag.slug,
+              },
             },
           },
-        },
-        limit: 1,
-      })[0]
+          limit: 1,
+        })[0]
 
-      return {
-        id: restaurant.id,
-        slug: restaurant.slug,
-        dish: selectRishDishViewSimple(rtag),
-      }
-    })
+        return {
+          id: restaurant.id,
+          slug: restaurant.slug,
+          dish: selectRishDishViewSimple(rtag),
+        }
+      }),
+      (x) => x.id
+    )
 
     const contents = useMemo(() => {
       return (
@@ -125,7 +128,7 @@ export const HomeFeedDishRestaurants = graphql(
           <SkewedCardCarousel>
             {restaurants.map((restaurant, i) => {
               return (
-                <SkewedCard zIndex={1000 - i} key={restaurant.id}>
+                <SkewedCard zIndex={1000 - i} key={restaurant.id || i}>
                   <RestaurantCard
                     padTitleSide
                     hoverToMap

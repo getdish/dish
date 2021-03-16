@@ -3,6 +3,7 @@ import { isPresent } from '@dish/helpers'
 import React, { Suspense, memo, useMemo, useState } from 'react'
 import { Hoverable, LoadingItems, Spacer } from 'snackui'
 
+import { getRestaurantIdentifiers } from '../../helpers/getRestaurantIdentifiers'
 import { useSetAppMap } from '../AppMapStore'
 import { FIBase } from './FIBase'
 import { FICuisine, HomeFeedCuisineItem } from './HomeFeedCuisineItem'
@@ -28,9 +29,9 @@ type FI = FICuisine | FIDishRestaurants | FIList | FIHotNew | FISpace
 function useHomeFeed(props: HomeFeedProps): FI[] {
   const { item, region } = props
   const dishItems = useFeedDishItems(region)
-  const hotNewItems = useHomeFeedTrendingNew(props)
+  // const hotNewItems = useHomeFeedTrendingNew(props)
   return useMemo(() => {
-    const [newest, hottest] = hotNewItems
+    // const [newest, hottest] = hotNewItems
     return [
       {
         id: 'list-0',
@@ -43,20 +44,23 @@ function useHomeFeed(props: HomeFeedProps): FI[] {
         type: 'space',
       } as const,
       ...dishItems.slice(0, 1),
-      hottest,
+      // hottest,
       {
         id: 'space',
         type: 'space',
       } as const,
       ...dishItems.slice(1, 2),
-      newest,
+      // newest,
       {
         id: 'space',
         type: 'space',
       } as const,
       ...dishItems.slice(2),
     ].filter(isPresent)
-  }, [dishItems, hotNewItems])
+  }, [
+    dishItems,
+    // hotNewItems
+  ])
 }
 
 export const HomePageFeed = memo(
@@ -79,7 +83,7 @@ export const HomePageFeed = memo(
           return hoveredResults.results
         }
         if ('restaurants' in x) {
-          return x.restaurants
+          return x.restaurants.map(getRestaurantIdentifiers)
         }
         return []
       })
