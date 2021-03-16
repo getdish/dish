@@ -681,7 +681,10 @@ function docker_compose_up_for_devs() {
 }
 
 function docker_compose_up_for_tests() {
-  docker_compose_up_subset $test_exclude -d
+  export NODE_ENV=test
+  export HASURA_GRAPHQL_DATABASE_URL=postgres://postgres:postgres@postgres/test
+  export POSTGRES_DB=test
+  docker_compose_up_subset $test_exclude "$@"
 }
 
 function export_env() {

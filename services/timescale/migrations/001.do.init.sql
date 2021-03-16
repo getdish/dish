@@ -2,6 +2,7 @@ BEGIN;
 
 CREATE EXTENSION IF NOT EXISTS postgis;
 CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
+CREATE EXTENSION IF NOT EXISTS timescaledb CASCADE;
 
 CREATE TABLE scrape (
   id              UUID         DEFAULT uuid_generate_v4(),

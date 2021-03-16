@@ -9,7 +9,7 @@
     "start": "node dist/index.js",
     "build": "esdx",
     "watch": "esdx-watch",
-    "test:disable": "TARGET=node RUN_WITHOUT_WORKER=true DISH_ENV=test ava test/idempotent/* --verbose --serial",
+    "test": "./run_tests.sh",
     "test-new": "TARGET=node RUN_WITHOUT_WORKER=true DISH_ENV=test ava test/idempotent/self.ts --verbose",
     "test:scheduled": "TARGET=node RUN_WITHOUT_WORKER=true DISH_ENV=test ava test/http-dependent/* --verbose"
   },
