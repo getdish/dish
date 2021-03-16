@@ -38,6 +38,7 @@ export -f wait_until_dish_app_ready
 # SCRIPT
 
 export POSTGRES_NAME=db
+export POSTGRES_DB=test
 
 # mkdir -p "$HOME/.dish/postgresdb"
 # chown -R root:root "$HOME/.dish/postgresdb"

@@ -392,7 +392,7 @@ async function assessPhotoQuality(urls: string[]) {
     try {
       return await assessPhotoQualityWithoutRetries(urls)
     } catch (error) {
-      console.log(error.message)
+      console.log(error.message, 'on urls', urls, error.stack)
       if (!error.message.includes('json')) {
         throw error
       }
@@ -424,10 +424,14 @@ async function assessPhotoQualityWithoutRetries(urls: string[]) {
   let results = await response.json()
   let photo_bases: Partial<PhotoBase>[] = []
   for (const url of urls) {
+    const id = crypto.createHash('md5').update(url).digest('hex')
     const result = results.find((r) => {
-      const id = crypto.createHash('md5').update(url).digest('hex')
       return id == r.image_id
     })
+    if (!result) {
+      console.warn('No result found!')
+      continue
+    }
     photo_bases.push({
       url,
       quality: result['mean_score_prediction'],

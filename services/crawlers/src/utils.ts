@@ -57,14 +57,17 @@ export class DB {
     const conf = {
       host: process.env.PGHOST || 'localhost',
       port: process.env.PGPORT ? +process.env.PGPORT : 5432,
-      ssl: process.env.NODE_ENV === 'development' ? false : true,
+      ssl:
+        process.env.NODE_ENV === 'development' ||
+        process.env.NODE_ENV === 'test'
+          ? false
+          : true,
       user: process.env.PGUSER || 'postgres',
       password: process.env.PGPASSWORD || 'postgres',
       database: process.env.POSTGRES_DB || 'dish',
       idleTimeoutMillis: 10_000,
       connectionTimeoutMillis: 0,
     }
-    console.log('db conf', conf)
     return new DB(conf)
   }
 
@@ -100,7 +103,7 @@ export class DB {
       throw new Error('no client')
     }
     try {
-      const timeout = sleep(15000)
+      const timeout = sleep(10000)
       const res = await Promise.race([
         client.query(query),
         timeout.then(() => {

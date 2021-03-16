@@ -14,6 +14,7 @@ COPY services services
 COPY snackui snackui
 
 ENV NODE_ENV=test
+ENV POSTGRES_DB=test
 ENV CI=true
 
 RUN touch stay_alive
