@@ -384,13 +384,13 @@ const RestaurantListItemContent = memo(
               <VStack
                 overflow="hidden"
                 zIndex={2}
-                paddingLeft={showAbove ? 70 : 22}
+                paddingLeft={showAbove ? 75 : 22}
                 paddingRight={20}
                 marginTop={media.sm ? -6 : 0}
                 transform={[{ translateY: -10 }]}
                 pointerEvents="auto"
               >
-                <HStack alignItems="center" cursor="pointer" spacing="xs">
+                <HStack alignItems="center" cursor="pointer" spacing="sm">
                   {!!price_range && (
                     <Text
                       fontSize={14}

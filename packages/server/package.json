@@ -9,7 +9,6 @@
   },
   "main": "dist",
   "module": "_",
-  "tsmain": "src",
   "scripts": {
     "build": "esdx",
     "watch": "esdx-watch"

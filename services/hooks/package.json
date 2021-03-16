@@ -4,7 +4,6 @@
   "description": "",
   "types": "src/_types.d.ts",
   "main": "dist",
-  "tsmain": "src",
   "private": true,
   "scripts": {
     "build": "esdx",
