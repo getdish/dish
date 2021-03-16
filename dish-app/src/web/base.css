@@ -95,6 +95,9 @@ textarea {
 .ease-in-out-top {
   transition: top ease-out 140ms;
 }
+.ease-in-out-fastest {
+  transition: all 25ms ease-in-out;
+}
 .ease-in-out-faster {
   transition: all 50ms ease-in-out;
 }

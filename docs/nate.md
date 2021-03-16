@@ -37,6 +37,7 @@ BROKEN DOWN
   - LA, SD, SF
 
 - data improve
+  - better images will make a big difference
   - re-crawl restaurant given name/id
   - get good feedback loop for one/a few restaurants:
     - integrate new image quality API

@@ -132,7 +132,7 @@ export default memo(function HomePage(
           <ContentScrollViewHorizontal>
             <HStack
               alignItems="center"
-              paddingVertical={12}
+              paddingVertical={media.sm ? 12 : 20}
               paddingBottom={25}
               paddingHorizontal={10}
             >
