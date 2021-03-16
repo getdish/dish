@@ -1,6 +1,6 @@
 import { ExternalLink, Link, MapPin } from '@dish/react-feather'
 import React from 'react'
-import { Spacer } from 'snackui'
+import { Spacer, Text } from 'snackui'
 import { HStack } from 'snackui'
 import { useMedia } from 'snackui'
 
@@ -22,7 +22,6 @@ export const RestaurantAddress = ({
   const media = useMedia()
   return (
     <SmallButton
-      maxWidth={media.sm ? 160 : 200}
       borderWidth={0}
       icon={<MapPin color={color} size={16} style={{ opacity: 0.5 }} />}
       textProps={{
@@ -31,9 +30,12 @@ export const RestaurantAddress = ({
       href={`https://www.google.com/maps/search/?q=${encodeURIComponent(
         address
       )}`}
+      overflow="hidden"
     >
       <HStack alignItems="center">
-        {getAddressText(curLocInfo, address, size)}
+        <Text ellipse maxWidth={media.sm ? 160 : 200}>
+          {getAddressText(curLocInfo, address, size)}
+        </Text>
         <Spacer />
         <ExternalLink size={12} />
       </HStack>

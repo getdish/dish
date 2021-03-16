@@ -56,10 +56,10 @@ export default memo(function HomePage(
   const region = regionResponse.data
   const { center, span } = region ?? {}
 
-  if (process.env.NODE_ENV === 'development') {
-    // prettier-ignore
-    console.log('👀 HomePage', state.region, { position, item: props.item, region, state, isActive, center, span })
-  }
+  // if (process.env.NODE_ENV === 'development') {
+  //   // prettier-ignore
+  //   console.log('👀 HomePage', state.region, { position, item: props.item, region, state, isActive, center, span })
+  // }
 
   // on load home clear search effect!
   useEffect(() => {

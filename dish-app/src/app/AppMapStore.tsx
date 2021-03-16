@@ -60,7 +60,6 @@ type AppMapLastRegion = {
 let defaultLocation = getDefaultLocation()
 
 // fix broken localstorage
-console.log('123', defaultLocation.center?.lat)
 if (!defaultLocation.center?.lat) {
   setDefaultLocation(initialLocation)
   defaultLocation = getDefaultLocation()

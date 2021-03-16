@@ -5,7 +5,6 @@
   "private": true,
   "main": "dist",
   "module": "_",
-  "tsmain": "src",
   "scripts": {
     "build": "esdx legacy",
     "watch": "esdx-watch legacy",

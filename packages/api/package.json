@@ -4,7 +4,6 @@
   "types": "src/_types.d.ts",
   "main": "dist",
   "module": "_",
-  "tsmain": "src",
   "sideEffects": false,
   "files": [
     "/_"
