@@ -1,4 +1,4 @@
-import { RestaurantOnlyIds, graphql, query } from '@dish/graph'
+import { RestaurantOnlyIds, graphql, query, restaurant } from '@dish/graph'
 import React, { memo, useMemo } from 'react'
 import { AbsoluteVStack, HStack, VStack } from 'snackui'
 
@@ -17,11 +17,11 @@ import { SkewedCard, SkewedCardCarousel } from './SkewedCard'
 export type FIHotNew = FIBase & {
   type: 'new' | 'hot'
   size: 'sm' | 'md'
-  restaurants: RestaurantOnlyIds[]
+  restaurants: restaurant[]
   status: 'loading' | 'complete'
 }
 
-const getGraphResults = (r: any) => {
+const getGraphResults = (r: restaurant[]) => {
   return r[0]?.slug ? r : []
 }
 
@@ -29,25 +29,21 @@ export function useHomeFeedTrendingNew(props: HomeFeedProps): FIHotNew[] {
   const { item, region } = props
   const slug = item.region || region?.slug || ''
   const newest = slug
-    ? query
-        .restaurant_new({
-          args: {
-            region_slug: slug,
-          },
-          limit: 8,
-        })
-        .map(getRestaurantIdentifiers)
+    ? query.restaurant_new({
+        args: {
+          region_slug: slug,
+        },
+        limit: 8,
+      })
     : []
 
   const trending = slug
-    ? query
-        .restaurant_trending({
-          args: {
-            region_slug: slug,
-          },
-          limit: 8,
-        })
-        .map(getRestaurantIdentifiers)
+    ? query.restaurant_trending({
+        args: {
+          region_slug: slug,
+        },
+        limit: 8,
+      })
     : []
 
   const status =
@@ -126,7 +122,7 @@ export const HomeFeedTrendingNew = memo(
                     return (
                       <RestaurantButton
                         key={index}
-                        slug={r.slug}
+                        slug={r.slug || ''}
                         id={r.id}
                         // hoverable
                         // size="xs"
@@ -158,7 +154,7 @@ export const HomeFeedTrendingNew = memo(
                     isBehind={i > 0}
                     hideScore
                     restaurantId={r.id}
-                    restaurantSlug={r.slug}
+                    restaurantSlug={r.slug || ''}
                     hoverable={false}
                     hoverToMap
                   />
@@ -173,7 +169,7 @@ export const HomeFeedTrendingNew = memo(
     return (
       <ContentSectionHoverable
         onHoverIn={() => {
-          onHoverResults(restaurants)
+          onHoverResults(restaurants.map(getRestaurantIdentifiers))
         }}
       >
         {contents}

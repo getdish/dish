@@ -15,7 +15,7 @@ import { Pie } from '../views/Pie'
 import { ProgressRing } from './ProgressRing'
 
 export const RatingView = ({
-  rating,
+  rating = 0,
   count,
   size,
   floating,

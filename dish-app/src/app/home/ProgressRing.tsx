@@ -15,7 +15,7 @@ export const ProgressRing = ({
   color: string
   width?: number
 }) => {
-  const ratio = percent / 100
+  const ratio = (percent ?? 0) / 100
   const rotation = (1 - ratio) * 180
   return (
     <CircularProgress

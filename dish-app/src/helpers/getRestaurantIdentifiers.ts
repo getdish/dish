@@ -1,8 +1,10 @@
-import { RestaurantQuery } from '@dish/graph'
+import { RestaurantOnlyIds, RestaurantQuery } from '@dish/graph'
 
-export function getRestaurantIdentifiers(r: RestaurantQuery) {
+export function getRestaurantIdentifiers(
+  r: RestaurantQuery | RestaurantOnlyIds
+) {
   return {
     id: r.id,
-    slug: r.slug,
+    slug: r.slug || '',
   }
 }
