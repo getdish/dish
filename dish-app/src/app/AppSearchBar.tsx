@@ -193,9 +193,7 @@ const AppSearchBarContents = memo(() => {
         className="ease-in-out"
         position="relative"
         width={media.sm ? 'auto' : '43%'}
-        maxWidth={
-          media.sm && focus === 'location' ? '30%' : media.xs ? 'auto' : '100%'
-        }
+        maxWidth={media.xs ? 'auto' : '100%'}
         // ipad
         flex={media.sm ? 6 : 1}
         alignItems="center"
@@ -263,7 +261,7 @@ const AppSearchBarContents = memo(() => {
       {media.xs && (
         <HStack padding={12}>
           <TouchableOpacity
-            onPress={() => {
+            onPressOut={() => {
               autocompletes.setTarget(showLocation ? 'search' : 'location')
             }}
           >
