@@ -32,7 +32,7 @@ export const CardFrame = ({
   const theme = useTheme()
   return (
     <VStack
-      className="hover-parent ease-in-out-faster"
+      className="hover-parent ease-in-out-fastest"
       contain="layout"
       borderRadius={cardFrameBorderRadius}
       width={cardFrameWidth}
