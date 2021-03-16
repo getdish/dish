@@ -1,7 +1,14 @@
 import { fullyIdle, idle, series } from '@dish/async'
 import { Loader, Search, X } from '@dish/react-feather'
 import { getStore, reaction } from '@dish/use-store'
-import React, { memo, useCallback, useEffect, useRef, useState } from 'react'
+import React, {
+  forwardRef,
+  memo,
+  useCallback,
+  useEffect,
+  useRef,
+  useState,
+} from 'react'
 import {
   Platform,
   ScrollView,
@@ -151,22 +158,32 @@ export const AppSearchInput = memo(() => {
     )
   }, [])
 
-  // shortcuts
-  if (Platform.OS === 'web') {
-    useEffect(() => {
-      const handleClick = () => {
-        autocompletesStore.setTarget('search')
-      }
-      const node = inputStore.node
-      node?.addEventListener('click', handleClick)
-      return () => {
-        node?.removeEventListener('click', handleClick)
-      }
-    }, [])
-  }
-
   const input = inputStore.node
   const searchInputContainer = useRef<View>()
+
+  // focus for web
+  if (Platform.OS === 'web') {
+    useEffect(() => {
+      if (!input) return
+      let mouseDownAt = Date.now()
+      const showSearch = () => {
+        if (Date.now() - mouseDownAt < 500) {
+          autocompletesStore.setTarget('search')
+        }
+      }
+      const mouseDown = () => {
+        mouseDownAt = Date.now()
+      }
+      input.addEventListener('pointerup', showSearch)
+      input.addEventListener('mouseup', showSearch)
+      input.addEventListener('mousedown', mouseDown)
+      return () => {
+        input.removeEventListener('pointerup', showSearch)
+        input.removeEventListener('mouseup', showSearch)
+        input.removeEventListener('mousedown', mouseDown)
+      }
+    }, [input])
+  }
 
   const handleKeyPressInner = useCallback((e) => {
     handleKeyPress(e, inputStore)
@@ -233,13 +250,15 @@ export const AppSearchInput = memo(() => {
                     }
                   }}
                   onKeyPress={handleKeyPressInner}
-                  onFocus={() => {
-                    if (home.searchbarFocusedTag) {
-                      home.setSearchBarTagIndex(0)
-                    } else {
-                      autocompletesStore.setTarget('search')
-                    }
-                  }}
+                  {...(!isWeb && {
+                    onFocus: () => {
+                      if (home.searchbarFocusedTag) {
+                        home.setSearchBarTagIndex(0)
+                      } else {
+                        autocompletesStore.setTarget('search')
+                      }
+                    },
+                  })}
                   onChangeText={(text) => {
                     if (getSearch() == '' && text !== '') {
                       if (autocompletesStore.target !== 'search') {
@@ -313,7 +332,7 @@ const SearchInputIcon = memo(({ color }: { color: string }) => {
   )
 })
 
-function InputFrame({ children }: { children: any }) {
+const InputFrame = forwardRef(({ children }: { children: any }, ref) => {
   const theme = useTheme()
   const media = useMedia()
   return (
@@ -356,7 +375,7 @@ function InputFrame({ children }: { children: any }) {
       {children}
     </HStack>
   )
-}
+})
 
 const SearchCancelButton = memo(() => {
   const home = useHomeStore()
