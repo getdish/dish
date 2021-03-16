@@ -29,15 +29,14 @@ export async function ensurePage(forceRefresh = false) {
       await browser.close()
     }
     const proxy = getNextProxy()
-    console.log('Disabling proxy for now... ', proxy)
+    console.log('Starting browser with proxy', proxy)
     browser = await webkit.launch({
       headless: true,
-      // ...(proxy && {
-      //   env: {
-      //     // https_proxy: `https://${proxy}`,
-      //     http_proxy: `http://${proxy}`,
-      //   },
-      // }),
+      ...(proxy && {
+        env: {
+          all_proxy: proxy,
+        },
+      }),
     })
     page = await browser.newPage()
   }
@@ -48,7 +47,7 @@ export async function fetchBrowser(
   uri: string,
   type: 'html' | 'json' | 'hyperscript',
   selector?: string,
-  maxTries = 0
+  maxTries = 3
 ) {
   try {
     if (type === 'hyperscript') {
@@ -61,6 +60,7 @@ export async function fetchBrowser(
   } catch (err) {
     if (maxTries > 0) {
       console.log(`Trying again (${maxTries} tries left)`)
+      await ensurePage(true)
       return await fetchBrowser(uri, type, selector, maxTries - 1)
     } else {
       console.error(`Failed: ${err.message}`)
@@ -88,7 +88,6 @@ export async function fetchBrowserJSON(uri: string, retry = false) {
       await page.goto(url.origin)
       return await fetchBrowserJSON(uri, true)
     }
-    await ensurePage(true)
     throw err
   }
   return null
@@ -103,7 +102,6 @@ export async function fetchBrowserHTML(uri: string) {
     return content
   } catch (err) {
     console.error(`Error: ${err.message}`)
-    await ensurePage(true)
     throw err
   }
 }

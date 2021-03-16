@@ -48,6 +48,8 @@ import {
   updateGeocoderID,
 } from './update_all_geocoder_ids'
 
+const DEBUG_LEVEL = +(process.env.DISH_DEBUG ?? 0)
+
 process.on('unhandledRejection', (reason, promise) => {
   process.exit(1)
 })
@@ -137,9 +139,7 @@ export class Self extends WorkerJob {
   async mergeAll(id: string) {
     this._job_identifier_restaurant_id = id
     const restaurant = await restaurantFindOneWithTagsSQL(id)
-    console.log(
-      '`restaurant.tag` bytes: ' + roughSizeOfObject(restaurant?.tags)
-    )
+    this.log('`restaurant.tag` bytes: ' + roughSizeOfObject(restaurant?.tags))
     if (!restaurant) {
       sentryMessage('SELF CRAWLER restaurantFindOneWithTags() null', {
         hasura: global['latestUnhandledGQLessRejection']?.errors[0]?.message,
@@ -164,6 +164,7 @@ export class Self extends WorkerJob {
         this.addReviewHeadlines,
       ]
       for (const async_func of async_steps) {
+        this.log('running step', async_func.name)
         await this._runFailableFunction(async_func)
       }
       await this.postMerge()
@@ -192,9 +193,10 @@ export class Self extends WorkerJob {
     this.main_db = DB.main_db()
     this._debugDaemon()
     this.restaurant = restaurant
-    console.log('Merging: ' + this.restaurant.name)
+    this.log('Merging: ' + this.restaurant.name)
     this.resetTimer()
     await this.getScrapeData()
+    this.log('got scrape data')
     this.noteAvailableSources()
     this.log('scrapes fetched')
   }
@@ -210,15 +212,18 @@ export class Self extends WorkerJob {
     await this.oldestReview()
     await this._runFailableFunction(this.finishTagsEtc)
     await this._runFailableFunction(this.finalScores)
+    this.log('merging final restaurant')
     await restaurantUpdate(this.restaurant)
     clearInterval(this._debugRamIntervalFunction)
     this.log('postMerge()')
-    console.log(`Merged: ${this.restaurant.name}`)
+    this.log(`Merged: ${this.restaurant.name}`)
   }
 
   async finishTagsEtc() {
+    this.log('Finishing tags...')
     await restaurantUpdate(this.restaurant, { keys: ['__typename'] })
     this.tagging.deDepulicateTags()
+    this.log('Updating rankings...')
     await this.tagging.updateTagRankings()
     await restaurantUpsertManyTags(
       this.restaurant,
@@ -234,6 +239,7 @@ export class Self extends WorkerJob {
   }
 
   async finalScores() {
+    this.log('Final scores calculation...')
     await this.restaurant_tag_scores.calculateScores()
     await this.restaurant_base_score.calculateScore()
   }
@@ -253,6 +259,7 @@ export class Self extends WorkerJob {
       }
     } catch (e) {
       result = 'failed'
+      console.log('Error', e.message, e.stack)
       sentryException(
         e,
         { function: func.name, restaurant: this.restaurant.name },
@@ -311,13 +318,16 @@ export class Self extends WorkerJob {
   }
 
   async getScrapeData() {
-    let at_least_one_scrape = false
+    let at_least_one = false
     for (const source of this.ALL_SOURCES) {
       const scrape = await latestScrapeForRestaurant(this.restaurant, source)
-      if (scrape) at_least_one_scrape = true
+      if (scrape) {
+        console.log('got scrape', scrape.id)
+        at_least_one = true
+      }
       this[source] = scrape
     }
-    if (!at_least_one_scrape) {
+    if (!at_least_one) {
       throw new Error('No scrapes found for restaurant')
     }
   }
@@ -818,13 +828,15 @@ export class Self extends WorkerJob {
     this._start_time = process.hrtime()
   }
 
-  log(message: string) {
-    if (process.env.DISH_DEBUG != '1') return
+  log(...messages: string[]) {
+    if (DEBUG_LEVEL < 1) {
+      return
+    }
     const time = this.elapsedTime() + 's'
     const memory =
       Math.round(process.memoryUsage().heapUsed / 1024 / 1024) + 'Mb'
     const restaurant = this.restaurant?.name || '...'
-    console.log(`${restaurant}: ${message} | ${time} | ${memory}`)
+    console.log(`${restaurant}: ${messages.join(' ')} | ${time} | ${memory}`)
   }
 
   _debugDaemon() {
@@ -833,10 +845,13 @@ export class Self extends WorkerJob {
       this._checkNulls()
     }
     // @ts-ignore
-    this._debugRamIntervalFunction = setInterval(fn, 5000)
+    this._debugRamIntervalFunction = setInterval(fn, 10000)
   }
 
   _checkRAM(marker?: string) {
+    if (DEBUG_LEVEL < 2) {
+      return
+    }
     const ram_value = Math.round(process.memoryUsage().heapUsed / 1024 / 1024)
     const ram = ram_value + 'Mb'
     const limit = 5000

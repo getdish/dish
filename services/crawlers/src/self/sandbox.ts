@@ -63,19 +63,19 @@ async function gpt3_many(query: string) {
 
 async function main() {
   if (process.env.SLUG) {
-    await one()
+    return await one()
   }
 
   if (process.env.ALL == '1') {
-    await all()
+    return await all()
   }
 
   if (process.env.QUERY) {
-    await query()
+    return await query()
   }
 
   if (process.env.GPT3) {
-    await gpt3_one()
+    return await gpt3_one()
   }
 
   if (process.env.GPT3_TOP_100) {
@@ -85,7 +85,7 @@ async function main() {
       ORDER BY score DESC NULLS LAST
       LIMIT 1
     `
-    await gpt3_many(query)
+    return await gpt3_many(query)
   }
 }
 

@@ -12,6 +12,7 @@
   "dependencies": {
     "@dish/graph": "*",
     "bcryptjs": "^2.4.3",
+    "html-entities": "^2.1.1",
     "jsonwebtoken": "^8.5.1",
     "lodash": "*"
   },

@@ -89,7 +89,7 @@ export class ProxiedRequests {
 
     const setAwsProxy = () => {
       // $0.000005/request regardless of bandwidth
-      base = this.aws_proxy
+      base = this.aws_proxy.replace(/\/$/, '')
       method = 'AWS GATEWAY PROXY'
     }
 

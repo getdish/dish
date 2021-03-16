@@ -29,6 +29,7 @@
   "devDependencies": {
     "@dish/esdx": "*",
     "@dish/gqless-cli": "^4.0.4",
+    "@dish/helpers-node": "*",
     "@dish/react-test-env": "*",
     "ava": "^3.14.0",
     "patch-package": "^6.4.6"
