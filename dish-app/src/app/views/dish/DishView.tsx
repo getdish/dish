@@ -116,6 +116,8 @@ const DishViewContent = (props: DishViewProps) => {
     !!restaurantSlug &&
     !!name
 
+  const showSearchButton_ = showSearchButton && isActive && slug
+
   let contents = (
     <Hoverable
       onHoverIn={() => setIsHovered(true)}
@@ -149,16 +151,12 @@ const DishViewContent = (props: DishViewProps) => {
       )}
 
       <AbsoluteVStack
-        className="ease-in-out"
+        className="ease-in-out-fast"
         fullscreen
         pointerEvents="none"
         alignItems="flex-end"
         justifyContent="center"
         zIndex={4}
-        {...(isActive && {
-          transform: [{ scale: 1.05 }],
-          zIndex: 3,
-        })}
       >
         {/* {!!icon && (
           <Text
@@ -174,21 +172,20 @@ const DishViewContent = (props: DishViewProps) => {
           </Text>
         )} */}
 
-        {showSearchButton && isActive && slug && (
-          <AbsoluteVStack
-            onPress={prevent}
-            zIndex={888}
-            bottom="7.5%"
-            right="7.5%"
-            pointerEvents="auto"
-          >
-            <SearchTagButton
-              backgroundColor={colors.lightColor}
-              color={colors.color}
-              tag={{ slug, type: 'dish' }}
-            />
-          </AbsoluteVStack>
-        )}
+        <AbsoluteVStack
+          opacity={showSearchButton_ ? 1 : 0}
+          pointerEvents={showSearchButton_ ? 'auto' : 'none'}
+          onPress={prevent}
+          zIndex={888}
+          bottom="7.5%"
+          right="7.5%"
+        >
+          <SearchTagButton
+            backgroundColor={colors.lightColor}
+            color={colors.color}
+            tag={{ slug, type: 'dish' }}
+          />
+        </AbsoluteVStack>
 
         <Box
           position="absolute"

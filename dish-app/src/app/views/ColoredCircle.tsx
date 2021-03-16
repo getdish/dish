@@ -21,7 +21,7 @@ export const ColoredCircle = ({
         opacity: 1,
       }}
       hoverStyle={{
-        zIndex: 1,
+        // zIndex: 1,
         transform: [{ scale: 1.02 }],
       }}
       width={size}
