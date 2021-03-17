@@ -240,11 +240,12 @@ export const TagButton = memo((props: TagButtonProps) => {
               opacity={0.25}
             />
           </AbsoluteVStack>
-          <Pie
+          <Text></Text>
+          {/* <Pie
             size={size === 'sm' ? 16 : 18}
-            percent={rating * 10}
+            percent={}
             color={floating ? `#fff` : `${colors.color}`}
-          />
+          /> */}
         </VStack>
       )}
 
