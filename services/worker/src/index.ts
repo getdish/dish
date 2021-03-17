@@ -15,18 +15,23 @@ type Queue = {
 
 const queues = createQueues()
 
-function clearAllJobs() {
+function clearJobs(filter?: string[]) {
   console.log('clearing all jobs')
-  queues.map((q) => {
-    q.queue.clean(10_000_000_000)
-    q.queue.removeJobs('*')
-    q.queue.empty()
-    q.queue.getActive().then((jobs) => {
-      jobs.map((job) => {
-        job.moveToFailed({ message: 'cancelled' })
+  queues
+    .filter((x) => {
+      if (!filter) return true
+      return filter.includes(x.name)
+    })
+    .map((q) => {
+      q.queue.clean(10_000_000_000)
+      q.queue.removeJobs('*')
+      q.queue.empty()
+      q.queue.getActive().then((jobs) => {
+        jobs.map((job) => {
+          job.moveToFailed({ message: 'cancelled' })
+        })
       })
     })
-  })
 }
 
 async function main() {
@@ -36,7 +41,7 @@ async function main() {
     process.env.CLEAR_JOBS
   )
   if (process.env.CLEAR_JOBS) {
-    clearAllJobs()
+    clearJobs()
   }
   await Promise.all([startDashboard(queues), startQueues(queues)])
 }
@@ -47,7 +52,8 @@ function startDashboard(queues: Queue[]) {
     setQueues(queues.map((x) => new BullAdapter(x.queue)))
     const app = express()
     app.post('/clear', (req, res) => {
-      clearAllJobs()
+      const queues = `${req.headers['queues'] ?? ''}`.split(',')
+      clearJobs(queues)
       res.send(200)
     })
     app.use('/', router)
