@@ -7,7 +7,7 @@ async function main() {
   await dd.runOnWorker('allForCity', ['San Francisco, CA'])
 }
 
-async function one() {
+export async function one() {
   const range = 0.001
   const name = 'Solstice'
   const coords = [37.797519, -122.4314282]
