@@ -252,7 +252,7 @@ export class Tagging {
       if (item.media_data) {
         photos.push({
           url: item.src,
-          text: item.media_data?.caption,
+          text: item.media_data.caption,
         })
       }
     }
@@ -263,6 +263,9 @@ export class Tagging {
           .flatMap((x) => x.photos)
           .map(async (item) => {
             const photo = item.src
+            if (!photo) {
+              return null
+            }
             if (photo.includes('180s')) {
               // skip lower res images
               return

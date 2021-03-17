@@ -35,7 +35,6 @@ async function main(slug: string) {
     rest.name
   )
   const scrape = await latestScrapeForRestaurant(rest, 'yelp')
-  console.log('got scrape', scrape)
 }
 
 main([...process.argv].reverse()[0])

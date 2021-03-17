@@ -422,7 +422,9 @@ export async function restaurantFindOneWithTagsSQL(restaurant_id: string) {
   `
   const response = await DB.one_query_on_main(query)
   const restaurant = response.rows[0].json_agg[0]
-  if (!restaurant.tags) restaurant.tags = []
+  if (!restaurant.tags) {
+    restaurant.tags = []
+  }
   restaurant.location = JSON.parse(restaurant.location)
   return restaurant
 }

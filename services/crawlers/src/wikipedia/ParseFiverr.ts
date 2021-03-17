@@ -24,16 +24,12 @@ export class ParseFiverr {
 
   static async start(dirname: string = process.argv[2]) {
     const filenames = fs.readdirSync(dirname)
-    let skip = true
     for (const filename of filenames) {
-      //if (filename == 'latinamerica-asunci.txt') skip = false
-      //if (skip) continue
       if (!filename.endsWith('.txt')) continue
       const content = fs.readFileSync(dirname + '/' + filename, 'utf-8')
       while (running_count > MAX_PARALLEL) {
         await sleep(100)
       }
-      console.log(filename)
       if (!dirname.includes('test')) {
         ParseFiverr.parseFile(content)
       } else {

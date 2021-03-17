@@ -322,7 +322,6 @@ export class Self extends WorkerJob {
     for (const source of this.ALL_SOURCES) {
       const scrape = await latestScrapeForRestaurant(this.restaurant, source)
       if (scrape) {
-        console.log('got scrape', scrape.id)
         at_least_one = true
       }
       this[source] = scrape
@@ -668,9 +667,7 @@ export class Self extends WorkerJob {
   }
 
   async mergePhotos() {
-    // @ts-ignore
     const yelp_data = this.yelp?.data || {}
-    // @ts-ignore
     let photos_urls = [
       ...scrapeGetData(this.tripadvisor, 'photos', []),
       ...this._getGooglePhotos(),
@@ -687,7 +684,6 @@ export class Self extends WorkerJob {
     await photoUpsert(photos)
     const most_aesthetic =
       (await bestPhotosForRestaurant(this.restaurant.id)) || []
-    //@ts-ignore
     this.restaurant.photos = most_aesthetic.map((p) => p.photo?.url)
   }
 
