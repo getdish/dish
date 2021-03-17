@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="1480px" height="2770px" viewBox="0 0 1480 2770" version="1.1"
+  xmlns="http://www.w3.org/2000/svg"
+  xmlns:xlink="http://www.w3.org/1999/xlink">
+  <!-- Generator: Sketch 54.1 (76490) - https://sketchapp.com -->
+  <title>redshift</title>
+  <desc>Created with Sketch.</desc>
+  <defs>
+    <linearGradient x1="50%" y1="94.3585526%" x2="50%" y2="0%" id="linearGradient-1">
+      <stop stop-color="none" stop-opacity="0" offset="0%"></stop>
+      <stop stop-color="#871D1D" stop-opacity="0.519134964" offset="2.94567113%"></stop>
+      <stop stop-color="#180623" stop-opacity="0.829234616" offset="89.4102856%"></stop>
+      <stop stop-color="none" offset="100%"></stop>
+    </linearGradient>
+    <radialGradient cx="50%" cy="47.5545913%" fx="50%" fy="47.5545913%" r="90.2505954%" gradientTransform="translate(0.500000,0.475546),scale(1.000000,0.534296),rotate(90.000000),scale(1.000000,0.564425),translate(-0.500000,-0.475546)" id="radialGradient-2">
+      <stop stop-color="none" stop-opacity="0.417402627" offset="0%"></stop>
+      <stop stop-color="#0E0F18" stop-opacity="0.384915865" offset="76.7894848%"></stop>
+      <stop stop-color="none" offset="100%"></stop>
+    </radialGradient>
+    <linearGradient x1="50%" y1="0%" x2="50%" y2="34.0638025%" id="linearGradient-3">
+      <stop stop-color="none" offset="0%"></stop>
+      <stop stop-color="none" stop-opacity="0" offset="100%"></stop>
+    </linearGradient>
+    <polygon id="path-4" points="0 0 1480 0 1480 2770 0 2770"></polygon>
+  </defs>
+  <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd" opacity="0.568894159">
+    <g id="home" transform="translate(0.000000, -2626.000000)">
+      <g id="second" transform="translate(-675.000000, 902.000000)">
+        <g id="bg" transform="translate(675.000000, 1724.000000)">
+          <g id="redshift">
+            <use fill="url(#linearGradient-1)" xlink:href="#path-4"></use>
+            <use fill="url(#radialGradient-2)" xlink:href="#path-4"></use>
+            <use fill="url(#linearGradient-3)" xlink:href="#path-4"></use>
+          </g>
+        </g>
+      </g>
+    </g>
+  </g>
+</svg>

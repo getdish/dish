@@ -1882,7 +1882,7 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@dish/babel-preset@*, @dish/babel-preset@workspace:packages/babel-preset":
+"@dish/babel-preset@*, @dish/babel-preset@^0.0.2, @dish/babel-preset@workspace:packages/babel-preset":
   version: 0.0.0-use.local
   resolution: "@dish/babel-preset@workspace:packages/babel-preset"
   dependencies:
@@ -1976,7 +1976,7 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@dish/esdx@*, @dish/esdx@workspace:packages/esdx":
+"@dish/esdx@*, @dish/esdx@^0.0.7, @dish/esdx@workspace:packages/esdx":
   version: 0.0.0-use.local
   resolution: "@dish/esdx@workspace:packages/esdx"
   dependencies:
@@ -4221,7 +4221,7 @@ __metadata:
     "@babel/template": "*"
     "@babel/traverse": "*"
     "@babel/types": "*"
-    "@dish/esdx": "*"
+    "@dish/esdx": ^0.0.7
     "@snackui/static": ^0.2.0
   languageName: unknown
   linkType: soft
@@ -4230,7 +4230,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@snackui/helpers@workspace:snackui/packages/helpers"
   dependencies:
-    "@dish/esdx": "*"
+    "@dish/esdx": ^0.0.7
   languageName: unknown
   linkType: soft
 
@@ -4256,8 +4256,8 @@ __metadata:
     "@babel/plugin-syntax-typescript": ^7.12.1
     "@babel/traverse": ^7.12.9
     "@babel/types": ^7.12.7
-    "@dish/babel-preset": "*"
-    "@dish/esdx": "*"
+    "@dish/babel-preset": ^0.0.2
+    "@dish/esdx": ^0.0.7
     "@dish/proxy-worm": "*"
     "@dish/react-test-env": ^0.0.7
     "@dish/testy": "*"
@@ -20728,7 +20728,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "snackui-loader@workspace:snackui/packages/snackui-loader"
   dependencies:
-    "@dish/esdx": "*"
+    "@dish/esdx": ^0.0.7
     "@snackui/static": ^0.2.0
     fs-extra: ^9.1.0
     loader-utils: ^2.0.0
@@ -20741,7 +20741,7 @@ __metadata:
   resolution: "snackui@workspace:snackui/packages/snackui"
   dependencies:
     "@dish/async": ^0.0.1
-    "@dish/esdx": "*"
+    "@dish/esdx": ^0.0.7
     "@dish/fast-compare": ^2.7.6
     "@dish/proxy-worm": ^0.0.4
     "@react-native-community/blur": ^3.6.0

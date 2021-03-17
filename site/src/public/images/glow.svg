@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="1199px" height="678px" viewBox="0 0 1199 678" version="1.1"
+  xmlns="http://www.w3.org/2000/svg"
+  xmlns:xlink="http://www.w3.org/1999/xlink">
+  <!-- Generator: Sketch 53.2 (72643) - https://sketchapp.com -->
+  <title>Oval</title>
+  <desc>Created with Sketch.</desc>
+  <defs>
+    <filter x="-15.6%" y="-35.2%" width="131.2%" height="170.4%" filterUnits="objectBoundingBox" id="filter-1">
+      <feGaussianBlur stdDeviation="50" in="SourceGraphic"></feGaussianBlur>
+    </filter>
+  </defs>
+  <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd" opacity="1">
+    <g id="home" transform="translate(-141.000000, -169.000000)" fill="#2D0539">
+      <g transform="translate(-19.000000, -1.000000)" id="abovefold">
+        <g transform="translate(17.000000, 0.000000)">
+          <ellipse id="Oval" filter="url(#filter-1)" cx="742.335938" cy="510.075384" rx="480.335938" ry="213.075384"></ellipse>
+        </g>
+      </g>
+    </g>
+  </g>
+</svg>

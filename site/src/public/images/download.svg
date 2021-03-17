@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="159px" height="45px" viewBox="0 0 159 45" version="1.1"
+  xmlns="http://www.w3.org/2000/svg"
+  xmlns:xlink="http://www.w3.org/1999/xlink">
+  <!-- Generator: Sketch 53.2 (72643) - https://sketchapp.com -->
+  <title>download</title>
+  <desc>Created with Sketch.</desc>
+  <defs>
+    <path d="M21,0 L136,0 C147.59798,-2.13051432e-15 157,9.40202025 157,21 L157,22 C157,33.5979797 147.59798,43 136,43 L21,43 C9.40202025,43 4.59720407e-13,33.5979797 4.58300065e-13,22 L4.58300065e-13,21 C4.56879722e-13,9.40202025 9.40202025,2.13051432e-15 21,0 Z" id="path-1"></path>
+  </defs>
+  <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+    <g id="home" transform="translate(-660.000000, -575.000000)">
+      <g transform="translate(-19.000000, -1.000000)" id="download">
+        <g transform="translate(680.000000, 577.000000)">
+          <mask id="mask-2" fill="white">
+            <use xlink:href="#path-1"></use>
+          </mask>
+          <use id="Mask" stroke="#21AA0F" stroke-width="2" fill="#0D0719" stroke-linecap="square" xlink:href="#path-1"></use>
+          <path d="M127.5,20.15625 L122.177419,24.84375 L127.5,20.15625 L133,25 L127.5,20.15625 Z M127.5,20.15625 L127.511815,20.1458449 L127.5,20.15625 L127.322581,20 L127.5,20.15625 Z" id="Line-2" stroke="#21AA0F" stroke-width="3" stroke-linecap="square" mask="url(#mask-2)" transform="translate(127.500000, 22.500000) rotate(-180.000000) translate(-127.500000, -22.500000) "></path>
+        </g>
+      </g>
+    </g>
+  </g>
+</svg>

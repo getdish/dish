@@ -1,0 +1,42 @@
+{
+  "name": "@dish/site",
+  "version": "2.7.9",
+  "private": true,
+  "main": "./src/index.tsx",
+  "scripts": {
+    "start": "mcro-build --port 5000 --extract-static-styles --target web",
+    "start:prod": "mcro-build --extract-static-styles --prod --port 5000 --report --target web",
+    "build": "OPTIMIZE_REACT=1 ANALYZE_BUNDLE=1 mcro-build --extract-static-styles --prod --build --target web",
+    "build:no-min": "NO_OPTIMIZE=1 mcro-build --prod --build --target web",
+    "build:debug": "NODE_ENV=development mcro-build --prod --build --target web",
+    "serve": "static-server -p 3999 -n dist/index.html dist"
+  },
+  "resolutions": {
+    "mobx": "5.15.7"
+  },
+  "dependencies": {
+    "@babel/runtime": "^7.4.5",
+    "@o/babel-preset-motion": "^2.8.19",
+    "@o/ui": "^2.8.19",
+    "@o/use-store": "^2.8.19",
+    "@o/utils": "^2.8.19",
+    "@o/wait-for-fonts": "^2.8.19",
+    "array-flat-polyfill": "^1.0.1",
+    "gloss": "^2.7.21",
+    "gloss-theme": "^2.7.21",
+    "intersection-observer": "0.5.1",
+    "jsonp": "^0.2.1",
+    "lodash": "^4.17.21",
+    "navi": "^0.13.6",
+    "react": "^16.9.0",
+    "react-dom": "^16.9.0",
+    "react-navi": "^0.13.6",
+    "resize-observer-polyfill": "1.5.1"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.6.0",
+    "@babel/preset-env": "*",
+    "@babel/preset-react": "*",
+    "@o/build": "^2.8.19"
+  }
+}

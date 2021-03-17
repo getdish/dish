@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="1519px" height="153px" viewBox="0 0 1519 153" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 54.1 (76490) - https://sketchapp.com -->
+    <title>line-sep</title>
+    <desc>Created with Sketch.</desc>
+    <defs>
+        <linearGradient x1="0%" y1="95.1564631%" x2="100%" y2="95.1564631%" id="linearGradient-1">
+            <stop stop-color="#61554C" stop-opacity="0" offset="0%"></stop>
+            <stop stop-color="#FFC097" offset="11.2331081%"></stop>
+            <stop stop-color="#0092FF" offset="37.2289541%"></stop>
+            <stop stop-color="#0792FB" offset="37.7271549%"></stop>
+            <stop stop-color="#408CDC" offset="41.6792006%"></stop>
+            <stop stop-color="#C68092" offset="51.3249177%"></stop>
+            <stop stop-color="#E07E84" offset="52.817128%"></stop>
+            <stop stop-color="#E66789" offset="65.3796516%"></stop>
+            <stop stop-color="#7C86FF" offset="86.2225507%"></stop>
+            <stop stop-color="#8992FF" stop-opacity="0" offset="100%"></stop>
+        </linearGradient>
+        <linearGradient x1="0%" y1="95.1564631%" x2="100%" y2="95.1564631%" id="linearGradient-2">
+            <stop stop-color="#61554C" stop-opacity="0" offset="0%"></stop>
+            <stop stop-color="#0092FF" offset="14.9202914%"></stop>
+            <stop stop-color="#0792FB" offset="28.2780828%"></stop>
+            <stop stop-color="#408CDC" offset="41.6792006%"></stop>
+            <stop stop-color="#FF535E" offset="57.3426943%"></stop>
+            <stop stop-color="#67E696" offset="71.6189823%"></stop>
+            <stop stop-color="#515DF3" offset="88.6665963%"></stop>
+            <stop stop-color="#5360FA" stop-opacity="0" offset="100%"></stop>
+        </linearGradient>
+        <linearGradient x1="100%" y1="50.4470027%" x2="1.29590744%" y2="50.4470377%" id="linearGradient-3">
+            <stop stop-color="#61554C" stop-opacity="0" offset="0%"></stop>
+            <stop stop-color="#85C8FA" offset="14.9202914%"></stop>
+            <stop stop-color="#51B1F9" offset="28.2780828%"></stop>
+            <stop stop-color="#79B6F6" offset="41.6792006%"></stop>
+            <stop stop-color="#FFA3A9" offset="57.3426943%"></stop>
+            <stop stop-color="#93FFBB" offset="71.6189823%"></stop>
+            <stop stop-color="#717CFD" offset="88.6665963%"></stop>
+            <stop stop-color="#5360FA" stop-opacity="0" offset="100%"></stop>
+        </linearGradient>
+    </defs>
+    <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="line-sep" transform="translate(-19.000000, -1.000000)">
+            <path d="M383.663642,67.64716 C275.611967,69.5317619 154.55742,73.2741938 20.5000004,78.8744556 L20.5,2 C156.194762,31.1754086 277.249311,53.0577955 383.663647,67.6471606 Z M832.109607,74.8690582 C988.274852,55.0753644 1219.40498,37.452345 1525.5,22 L1525.5,155 L1522.5,155 L1522.5,24 C1281.13308,85.4947917 1080.31542,105.408854 920.047028,83.7421875 C894.348919,80.268063 865.036446,77.3103532 832.109607,74.8690582 Z" id="Rectangle-6" fill="url(#linearGradient-1)" opacity="0.225911458"></path>
+            <path d="M1531.5,22 C1189.28115,39.4184368 940.454963,59.5062296 785.021445,82.2633783 C629.587926,105.020527 375.080778,78.2660675 21.5,2 L21.5,0 C375.080778,76.2660675 629.587926,103.020527 785.021445,80.2633783 C940.454963,57.5062296 1189.28115,37.4184368 1531.5,20 L1531.5,22 Z" id="Rectangle-6" fill="url(#linearGradient-2)"></path>
+            <path d="M1537.5,80.9584618 C1092.80298,62.4971703 789.688604,64.0917456 628.156885,85.7421875 C466.504115,107.408854 263.95182,84.828125 20.5,18 L20.5,18.7647059 L19.5,16 C262.95182,82.828125 465.504115,105.408854 627.156885,83.7421875 C788.809655,62.0755208 1092.25736,60.4947917 1537.5,79 L1537.5,80.9584618 Z" id="Rectangle-6" fill="url(#linearGradient-3)" transform="translate(778.500000, 86.500000) scale(-1, 1) translate(-778.500000, -86.500000) "></path>
+        </g>
+    </g>
+</svg>

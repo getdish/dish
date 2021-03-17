@@ -6,7 +6,7 @@ import express from 'express'
 
 import { klass_map } from './job_processor'
 
-const CONCURRENCY = 2
+const CONCURRENCY = 4
 
 type Queue = {
   name: string
