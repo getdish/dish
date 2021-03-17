@@ -171,6 +171,25 @@ function crawl_self_sf_limited_cuisine() {
   crawl_self_by_query "$query"
 }
 
+function redis_command() {
+  kubectl exec \
+    redis-master-0 -n redis -c redis \
+    -- bash -c "echo ${1@Q} | redis-cli"
+}
+
+function redis_cli() {
+  fly_tunnel
+  eval $(./dishctl.sh yaml_to_env) redis-cli -h dish-redis.fly.dev -a "$REDIS_PASSWORD" -p 10000 "$@"
+}
+
+function redis_cli_list_all() {
+  redis_cli keys "\*"
+}
+
+function redis_flush_all() {
+  redis_command 'FLUSHALL'
+}
+
 function _db_migrate() {
   hasura_endpoint=$1
   admin_secret=$2
@@ -267,22 +286,6 @@ function dump_scrape_data_to_s3() {
     -c "$copy_out" \
   | s3 put - "$DISH_BACKUP_BUCKET/scrape.csv"
   echo "...scrape table dumped tpo S3."
-}
-
-function redis_command() {
-  kubectl exec \
-    redis-master-0 -n redis -c redis \
-    -- bash -c "echo ${1@Q} | redis-cli"
-}
-
-function redis_console() {
-  kubectl exec -it \
-    redis-master-0 -n redis -c redis \
-    -- bash -c "redis-cli"
-}
-
-function redis_flush_all() {
-  redis_command 'FLUSHALL'
 }
 
 function bull_delete_queue() {
