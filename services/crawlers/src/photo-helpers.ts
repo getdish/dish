@@ -55,8 +55,7 @@ export async function photoUpsert(photos: Partial<PhotoXref>[]) {
     if (!p.photo || !p.photo.url) {
       throw 'Photo must have URL'
     }
-    p.photo.origin = clone(p.photo?.url)
-    delete p.photo.url
+    p.photo.origin = p.photo?.url
   })
   await photoXrefUpsert(photos)
   await postUpsert(photos)
@@ -65,8 +64,6 @@ export async function photoUpsert(photos: Partial<PhotoXref>[]) {
 async function postUpsert(photos: Partial<PhotoXref>[]) {
   if (process.env.NODE_ENV != 'test') {
     await uploadToDO(photos)
-  } else {
-    await photoXrefUpsert(photos)
   }
   await updatePhotoQuality(photos)
 }

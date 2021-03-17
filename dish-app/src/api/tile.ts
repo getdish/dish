@@ -8,11 +8,7 @@ const host = MARTIN_TILES_HOST
 
 export default route(async (req, res) => {
   const url = `${host}${req.path}`
-  console.log('fetch', url)
   const martinRes = await fetch(url).then((res) => res.json())
-
-  console.log('got', url, martinRes)
-
   if (martinRes.attribution == null) {
     res.send({
       ...martinRes,
@@ -20,6 +16,5 @@ export default route(async (req, res) => {
     })
     return
   }
-
   res.send(martinRes)
 })

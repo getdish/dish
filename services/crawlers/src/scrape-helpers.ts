@@ -93,7 +93,9 @@ export async function latestScrapeForRestaurant(
   restaurant: RestaurantWithId,
   source: string
 ) {
-  console.log('Getting latest scrape for', restaurant.id, source)
+  if (process.env.NODE_ENV !== 'test') {
+    console.debug('Getting latest scrape for', restaurant.id, source)
+  }
   const result = await db.query(`
     SELECT *
     FROM scrape
@@ -103,10 +105,14 @@ export async function latestScrapeForRestaurant(
     LIMIT 1;
   `)
   if (result.rows.length == 0) {
-    console.log(`No ${source} scrapes found for: ` + restaurant.name)
+    if (process.env.NODE_ENV !== 'test') {
+      console.debug(`No ${source} scrapes found for: ` + restaurant.name)
+    }
     return null
   } else {
-    console.log(`${source} scrape found for: ` + restaurant.name)
+    if (process.env.NODE_ENV !== 'test') {
+      console.log(`${source} scrape found for: ` + restaurant.name)
+    }
     return result.rows[0] as Scrape
   }
 }

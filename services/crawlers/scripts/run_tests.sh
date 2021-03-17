@@ -7,4 +7,4 @@ eval $(../../dishctl.sh yaml_to_env) \
   RUN_WITHOUT_WORKER=true \
   DISH_ENV=test \
   POSTGRES_DB=test \
-  ava test/idempotent/* --verbose --serial
+  ava test/idempotent/* --verbose --serial "$@"
