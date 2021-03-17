@@ -126,13 +126,14 @@ export class WorkerJob {
   async addBigJob(fn: string, args: any[]) {
     const job_data: JobData = {
       className: this.constructor.name,
-      fn: fn,
-      args: args,
+      fn,
+      args,
     }
     if (process.env.RUN_WITHOUT_WORKER == 'true') {
       return await this.run(fn, args)
     }
-    const queue = await getBullQueue('BigJobs')
+    const queue = getBullQueue('BigJobs')
+    console.log('Adding self crawl job', job_data)
     const job = await queue.add(job_data, { attempts: 1 })
     await queue.close()
     return job

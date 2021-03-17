@@ -95,7 +95,7 @@ export class GoogleGeocoder {
     if (matches) {
       return matches[0]
     } else {
-      console.error(response)
+      console.error('response doesnt match', response.slice(0, 200) + '...')
       throw new Error(ID_NOT_FOUND)
     }
   }
@@ -106,8 +106,13 @@ export class GoogleGeocoder {
     const query_matches = result.match(/q=(.*?)\\u0026/)
     if (!query_matches) return true
     const google_formatted_query = query_matches[1]
+    const google_clean_query = decodeURIComponent(google_formatted_query)
     const expected_query = encodeURIComponent(this.query)
-    if (google_formatted_query === expected_query) {
+    if (
+      google_clean_query === this.query ||
+      google_clean_query === expected_query ||
+      google_formatted_query === expected_query
+    ) {
       return false
     }
     const expected_query_2 = expected_query
@@ -118,22 +123,25 @@ export class GoogleGeocoder {
       .replaceAll('%40', '@')
       .replaceAll('%3B', ';')
       .replaceAll('%24', '$')
-    const has_expired =
+    if (
       google_formatted_query != expected_query &&
-      google_formatted_query != expected_query_2
-    if (has_expired) {
+      google_formatted_query != expected_query_2 &&
+      google_clean_query != this.query
+    ) {
       console.log(
         `GOOGLE GEOCODER: possible search expiry, query mismatch:
-        Query:     "${expected_query}"
-        Formatted: "${google_formatted_query}"
-        Google:    "${google_formatted_query}"
-        Dish:      "${expected_query}
-        Dish2:     "${expected_query_2}
+        Query:       "${this.query}"
+        Expected:     "${expected_query}"
+        GoogleClean: "${google_clean_query}"
+        Google:      "${google_formatted_query}"
+        Dish:        "${expected_query}"
+        Dish2:       "${expected_query_2}"
         `,
         result
       )
+      return true
     }
-    return has_expired
+    return false
   }
 }
 
