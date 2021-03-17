@@ -2,7 +2,7 @@
   "name": "@dish/worker-app",
   "version": "0.0.1",
   "main": "dist",
-  "typings": "_types.d.ts",
+  "types": "types.d.ts",
   "sideEffects": false,
   "license": "none",
   "scripts": {

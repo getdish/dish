@@ -2,7 +2,7 @@
   "name": "@dish/hooks",
   "version": "0.0.1",
   "description": "",
-  "types": "src/_types.d.ts",
+  "types": "types.d.ts",
   "main": "dist",
   "private": true,
   "scripts": {

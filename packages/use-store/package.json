@@ -3,7 +3,7 @@
   "version": "0.0.1",
   "sideEffects": false,
   "private": true,
-  "types": "src/_types.d.ts",
+  "types": "types.d.ts",
   "main": "dist",
   "module": "_",
   "scripts": {

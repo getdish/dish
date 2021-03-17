@@ -27,7 +27,7 @@
     "types": ["node", "jest"],
     "lib": ["dom", "esnext"]
   },
-  "exclude": ["_", "test/**/*", "src/_types.d.ts"],
+  "exclude": ["_", "test/**/*"],
   "typeAcquisition": {
     "enable": true
   }

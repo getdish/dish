@@ -18,9 +18,9 @@ declare module "@dish/server" {
     export type ServerConfig = {
         rootDir: string;
         watch: boolean;
-        env: "production" | "development";
+        env: 'production' | 'development';
         inspect?: boolean;
-        clean?: "web" | "legacy" | "node" | "all" | false | string;
+        clean?: 'web' | 'legacy' | 'node' | 'all' | false | string;
         port?: number;
         host?: string;
         apiDir?: string | null;
@@ -35,12 +35,12 @@ declare module "@dish/server" {
         buildDir: string;
         protocol: string;
         createConfig: (opts: CreateWebpackConfig) => Configuration;
-        webpackConfig: Omit<CreateWebpackConfig, "target">;
+        webpackConfig: Omit<CreateWebpackConfig, 'target'>;
     };
     export type CreateWebpackConfig = {
         entry: string;
-        target: "node" | "web";
-        env: "development" | "production";
+        target: 'node' | 'web';
+        env: 'development' | 'production';
         cwd?: string;
         babelInclude?: (path: string) => boolean;
         snackOptions: {
@@ -69,10 +69,10 @@ declare module "@dish/server" {
 declare module "@dish/server" {
     import { Configuration } from "webpack";
     export function buildApp({ webpackConfig, createConfig, watch, clean, serial, }: {
-        webpackConfig: Omit<CreateWebpackConfig, "target">;
+        webpackConfig: Omit<CreateWebpackConfig, 'target'>;
         createConfig: (config: CreateWebpackConfig) => Configuration;
         watch?: boolean;
-        clean?: ServerConfig["clean"];
+        clean?: ServerConfig['clean'];
         serial?: boolean;
     }): Promise<void>;
 }
@@ -113,7 +113,7 @@ declare module "@dish/server" {
         static aliases: string[];
         static flags: {
             help: import("@oclif/parser/lib/flags").IBooleanFlag<void>;
-            "no-api": import("@oclif/parser/lib/flags").IBooleanFlag<boolean>;
+            'no-api': import("@oclif/parser/lib/flags").IBooleanFlag<boolean>;
             port: import("@oclif/parser/lib/flags").IOptionFlag<number | undefined>;
             host: flags.IOptionFlag<string | undefined>;
             clean: flags.IOptionFlag<string>;
@@ -133,7 +133,7 @@ declare module "@dish/server" {
             help: import("@oclif/parser/lib/flags").IBooleanFlag<void>;
             prod: import("@oclif/parser/lib/flags").IBooleanFlag<boolean>;
             ssr: import("@oclif/parser/lib/flags").IBooleanFlag<boolean>;
-            "no-api": import("@oclif/parser/lib/flags").IOptionFlag<number | undefined>;
+            'no-api': import("@oclif/parser/lib/flags").IOptionFlag<number | undefined>;
             port: import("@oclif/parser/lib/flags").IOptionFlag<number | undefined>;
             host: flags.IOptionFlag<string | undefined>;
             inspect: import("@oclif/parser/lib/flags").IBooleanFlag<boolean>;
@@ -165,3 +165,4 @@ declare module "@dish/server" {
     import { CompilerOptions } from "typescript";
     export const typescriptOptions: CompilerOptions;
 }
+//# sourceMappingURL=types.d.ts.map

@@ -12,3 +12,4 @@ declare module "@dish/fast-compare" {
     };
     export function isEqual(a: any, b: any, options?: IsEqualOptions): boolean;
 }
+//# sourceMappingURL=types.d.ts.map

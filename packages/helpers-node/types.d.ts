@@ -14,12 +14,12 @@ declare module "@dish/helpers-node" {
 
 declare module "@dish/helpers-node" {
     import { User } from "@dish/graph";
-    export function jwtSign(user: Pick<User, "username" | "id" | "role">): any;
+    export function jwtSign(user: Pick<User, 'username' | 'id' | 'role'>): any;
 }
 
 declare module "@dish/helpers-node" {
     import { Review, ReviewTagSentence, ReviewWithId, Scalars } from "@dish/graph";
-    type uuid = Scalars["uuid"];
+    type uuid = Scalars['uuid'];
     export function reviewFindAllForRestaurant(restaurant_id: uuid): Promise<any>;
     export function reviewFindAllForUser(user_id: uuid): Promise<any>;
     export function userFavoriteARestaurant(user_id: uuid, restaurant_id: uuid, favorited?: boolean): Promise<import("@dish/graph").WithID<Review>>;
@@ -29,3 +29,4 @@ declare module "@dish/helpers-node" {
     export function dedupeReviews(reviews: Review[]): Review[];
     export function dedupeSentiments<A extends ReviewTagSentence>(sentiments: A[]): A[];
 }
+//# sourceMappingURL=types.d.ts.map

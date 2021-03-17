@@ -5,7 +5,6 @@ const legacy = process.argv.reverse()[0] === 'legacy'
 const cmd = `chokidar`
 const args = [
   `src`,
-  '!src/_types.d.ts',
   `-c`,
   `"node ${__dirname}/esdx.js${legacy ? ' legacy' : ''}"`,
 ]

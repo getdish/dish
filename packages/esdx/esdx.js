@@ -4,14 +4,12 @@ const exec = require('execa')
 const fs = require('fs-extra')
 const { build } = require('esbuild')
 const fg = require('fast-glob')
-const { emitFlatDts } = require('@dish/rollup-plugin-flat-dts/api')
+const { emitFlatDts } = require('rollup-plugin-flat-dts/api')
 
 const legacy = process.argv.reverse()[0] === 'legacy'
 
 async function go() {
   const x = Date.now()
-
-  fs.existsSync('src/_types.d.ts') && fs.rmSync('src/_types.d.ts')
 
   if (process.env.NO_CLEAN) {
     console.log('skip typecheck')
@@ -23,9 +21,12 @@ async function go() {
 
   async function buildTsc() {
     if (process.env.JS_ONLY) return
-    await exec('tsc', ['--emitDeclarationOnly'])
+    await exec('tsc', ['--emitDeclarationOnly', '--declarationMap'])
     const dts = await emitFlatDts({
-      file: 'src/_types.d.ts',
+      file: 'types.d.ts',
+      compilerOptions: {
+        declarationMap: true,
+      },
     })
     if (dts.diagnostics.length) {
       console.log(dts.formatDiagnostics())
