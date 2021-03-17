@@ -1,3 +1,7 @@
+**/_
+!**/_/_types.d.ts
+!**/_/_types.d.ts.map
+
 *.log
 .ops
 
@@ -31,7 +35,6 @@ yarn-error.log
 dist
 tsconfig.tsbuildinfo
 node_modules
-**/_
 
 .DS_Store
 # Xcode
