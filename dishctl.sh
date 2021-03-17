@@ -94,6 +94,10 @@ function worker_exec() {
   worker_ssh "$@"
 }
 
+function stop_all_crawls() {
+  curl -X 'POST' https://worker.dishapp.com/clear
+}
+
 # Note that crawlers are also run on cron schedules.
 # For cities list see: crawlers/src/utils "CITY_LIST"
 
