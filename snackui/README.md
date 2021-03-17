@@ -214,7 +214,7 @@ module.exports = {
 
 react-native-web is currently taking a hard stance against supporting className and removed support for it in v0.14. We've opened an issue, but received pushback. We are going to try and work with them to see if there's a way they can enable a workaround now that we've published SnackUI. You'll have to use `patch-package` to restore className support for now.
 
-- Example [patch for react-native-web experimental](docs/react-native-web+0.0.0-466063b7e.patch) (includes a extra patch for faster Text styles)
+- Example [patch for react-native-web experimental](/etc/react-native-web%2B0.0.0-466063b7e.patch) (includes a extra patch for faster Text styles)
 
 ## Documentation
 
@@ -384,9 +384,9 @@ SnackUI is still early stage. It works well for us, and we've built a fairly lar
 
 ## Roadmap
 
-See [the roadmap](roadmap.md) for details:
+See [the roadmap](ROADMAP.md) for details:
 
-- [x] [Themes](roadmap.md#themes)
+- [x] Themes
 - [x] Test performance of useMemo calls / splitProps
 - [ ] Media Queries test coverage, docs and configuration
 - [ ] Docs / docs site
@@ -399,8 +399,9 @@ See [the roadmap](roadmap.md) for details:
 - [ ] Compiler contains memory leak(s)
 - [ ] Support extraction of custom components that extend lower level ones
   - [ ] Support user-defined components that just spread props onto simple child thats extractable
-- [ ] [Scaling](roadmap.md#scaling)
-- [ ] Extraction - advanced traversals (see [plan](roadmap.md#advanced-traversal))
+- [ ] [Variants/Scaling](ROADMAP.md#variants)
+- [x] Compiler contains memory leak(s) (mostly fixed with esbuild-loader)
+- [ ] Extraction - advanced traversals (see [plan](ROADMAP.md#advanced-traversal))
 - [ ] Support `<Stack spacing />` extraction
 - [ ] Support `<Input />`, `<Spacer flex />`, `<LinearGradient />`, maybe `<Image />`
 - [ ] Compile a few directly-translatable HTML props: onPress, etc
