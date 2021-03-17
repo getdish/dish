@@ -24,6 +24,7 @@ async function go() {
     await exec('tsc', ['--emitDeclarationOnly', '--declarationMap'])
     const dts = await emitFlatDts({
       file: 'types.d.ts',
+      internal: '**/*.native',
       compilerOptions: {
         declarationMap: true,
       },
