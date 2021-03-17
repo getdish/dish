@@ -107,6 +107,9 @@ export class GoogleGeocoder {
     if (!query_matches) return true
     const google_formatted_query = query_matches[1]
     const expected_query = encodeURIComponent(this.query)
+    if (google_formatted_query === expected_query) {
+      return false
+    }
     const expected_query_2 = expected_query
       .replaceAll('%20', '+')
       .replaceAll('%2C', ',')
@@ -121,9 +124,11 @@ export class GoogleGeocoder {
     if (has_expired) {
       console.log(
         `GOOGLE GEOCODER: possible search expiry, query mismatch:
-        Google: "${google_formatted_query}"
-        Dish:   "${expected_query}
-        Dish2:  "${expected_query_2}
+        Query:     "${expected_query}"
+        Formatted: "${google_formatted_query}"
+        Google:    "${google_formatted_query}"
+        Dish:      "${expected_query}
+        Dish2:     "${expected_query_2}
         `,
         result
       )

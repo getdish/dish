@@ -7,35 +7,68 @@ if (!process.env.LUMINATI_PROXY_HOST) {
 let browser: WebKitBrowser | null = null
 let browserHasLoadedOriginOnce = false
 let page: Page | null = null
+let tries = 0
+
+const baseProxy = {
+  server: `${process.env.LUMINATI_PROXY_HOST}:${process.env.LUMINATI_PROXY_PORT}`,
+  username: process.env.LUMINATI_PROXY_RESIDENTIAL_USER,
+  password: process.env.LUMINATI_PROXY_RESIDENTIAL_USER,
+}
+
+let activeProxy: typeof baseProxy | null = baseProxy
+
+const awsProxies = {
+  'https://ubereats.com/': process.env.UBEREATS_PROXY,
+  'https://yelp.com/': process.env.YELP_AWS_PROXY,
+  'https://infatuated.com/': process.env.INFATUATED_PROXY,
+  'https://michelin.com/': process.env.MICHELIN_PROXY,
+  'https://tripadvisor.com/': process.env.TRIPADVISOR_PROXY,
+  'https://google.com/': process.env.GOOGLE_AWS_PROXY,
+  'https://doordash_graphql.com/': process.env.DOORDASH_GRAPHQL_AWS_PROXY,
+  'https://grubhub.com/': process.env.GRUBHUB_AWS_PROXY,
+}
 
 export async function ensurePage(forceRefresh = false) {
   if (!browser || forceRefresh) {
+    tries++
     if (browser) {
       console.log('Force refresh from failed proxy, opening new browser')
       await browser.close()
     }
-    const proxy = {
-      server: `${process.env.LUMINATI_PROXY_HOST}:${process.env.LUMINATI_PROXY_PORT}`,
-      username: process.env.LUMINATI_PROXY_RESIDENTIAL_USER,
-      password: process.env.LUMINATI_PROXY_RESIDENTIAL_USER,
+    if (tries > 1) {
+      activeProxy = null
     }
-    console.log('Starting browser', proxy)
+    console.log('Starting browser, proxies:', activeProxy, awsProxies)
     browserHasLoadedOriginOnce = false
     browser = await webkit.launch({
       headless: true,
-      proxy,
+      ...(activeProxy && {
+        proxy: activeProxy,
+      }),
     })
+    console.log('Browser version', browser.version())
     page = await browser.newPage()
   }
   return page!
 }
 
 export async function fetchBrowser(
-  uri: string,
+  uriBase: string,
   type: 'html' | 'json' | 'hyperscript',
   selector?: string,
   maxTries = 3
 ) {
+  let uri = uriBase
+  if (!activeProxy) {
+    uri = uri.replace('//www.', '//')
+    for (const key in awsProxies) {
+      if (uri.startsWith(key)) {
+        console.log('Using aws proxy', key)
+        uri = uri.replace(key, awsProxies[key])
+      }
+    }
+  }
+  console.log('fetchBrowser', uri)
   try {
     if (type === 'hyperscript') {
       return await fetchBrowserHyperscript(uri, selector ?? '')
@@ -62,42 +95,43 @@ export async function fetchBrowserJSON(uri: string, retry = 0) {
     if (!browserHasLoadedOriginOnce) {
       console.log('loading origin once first')
       await page.goto(url.origin)
-      await page.waitForLoadState('domcontentloaded')
       browserHasLoadedOriginOnce = true
     }
-    // if (retry == 0) {
-    //   console.log('inline fetch', uri)
-    //   // first attempt, lets try fetch inline
-    //   let tm
-    //   const timeout = new Promise((res) => {
-    //     tm = setTimeout(() => res('failed'), 10_000)
-    //   })
-    //   const res = await Promise.race([
-    //     timeout,
-    //     page.evaluate((uri: string) => {
-    //       return fetch(uri, {
-    //         headers: {
-    //           'content-type': 'application/json',
-    //           accept: 'application/json',
-    //           'Accept-Encoding': 'br;q=1.0, gzip;q=0.8, *;q=0.1',
-    //         },
-    //       }).then((res) => res.json())
-    //     }, uri),
-    //   ])
-    //   console.log('res is', `${res}`.slice(0, 100) + '...')
-    //   if (res !== 'failed') {
-    //     clearTimeout(tm)
-    //     return res
-    //   }
-    //   console.log('timed out inline fetch')
-    // }
+    if (retry == 0) {
+      // first attempt, lets try fetch inline
+      try {
+        console.log('inline fetch', uri)
+        return await timeout(
+          page.evaluate((uri: string) => {
+            return fetch(uri, {
+              headers: {
+                'content-type': 'application/json',
+                accept: 'application/json',
+                'Accept-Encoding': 'br;q=1.0, gzip;q=0.8, *;q=0.1',
+              },
+            }).then((res) => res.json())
+          }, uri),
+          5_000
+        )
+      } catch (err) {
+        console.error(`Error inline fetching: ${err.message}`)
+        // allow to continue
+      }
+    }
     console.log('goto url', uri)
-    await page.goto(uri)
-    const out = ((await page.textContent('body')) ?? '').trim()
-    console.log('got body', out.slice(0, 100) + '...')
+    await page.goto(uri, {
+      waitUntil: 'domcontentloaded',
+      timeout: 10_000,
+    })
+    console.log('get text content')
+    const out = await page.textContent('body', {
+      timeout: 10_000,
+    })
     if (out) {
+      console.log('got body', typeof out, out)
       return JSON.parse(out) as { [key: string]: any }
     }
+    console.log('got no out')
   } catch (err) {
     console.error(`Error: ${err.message}`)
     if (retry < 2) {
@@ -153,4 +187,24 @@ function decode(res) {
   }, res)
 
   return JSON.parse(jsonPayload)
+}
+
+async function timeout<A extends Promise<any>>(
+  promise: A,
+  time = 0
+): Promise<any> {
+  const failed = Symbol()
+  let tm
+  // @ts-ignore
+  const res = await Promise.race([
+    promise,
+    new Promise((res) => {
+      tm = setTimeout(() => res(failed), time)
+    }),
+  ])
+  if (res === failed) {
+    throw new Error(`Timed out in ${time}ms`)
+  }
+  clearTimeout(tm)
+  return res
 }

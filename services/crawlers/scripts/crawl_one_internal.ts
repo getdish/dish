@@ -8,7 +8,7 @@ async function main(slug: string) {
     throw new Error('no slug')
   }
   process.env.SLUG = slug
-  require('../src/self/sandbox')
+  require('../src/self/one')
 }
 
 main([...process.argv].reverse()[0])

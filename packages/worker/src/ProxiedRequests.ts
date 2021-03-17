@@ -102,16 +102,15 @@ export class ProxiedRequests {
 
     while (true) {
       const url = base + uri
+      const { host, port, auth } = agentConfig
+      const proto = agentConfig.protocol ?? 'http'
+      const user = auth ? `${auth.username}:${auth.password}@` : ''
+      const proxy = `${proto}://${user}${host}:${port}`
+      const options = {
+        ...config,
+        proxy,
+      }
       try {
-        const { host, port, auth } = agentConfig
-        const proto = agentConfig.protocol ?? 'http'
-        const user = auth ? `${auth.username}:${auth.password}@` : ''
-        const proxy = `${proto}://${user}${host}:${port}`
-        const options = {
-          ...config,
-          proxy,
-        }
-        console.trace('\n', `fetching`, url, options)
         const res = await fetch(url, options)
         if (res.status !== 200) {
           console.warn('⚠️ non 200 response: ', res.status, res.statusText)
@@ -120,11 +119,7 @@ export class ProxiedRequests {
         }
         return res
       } catch (e) {
-        console.log('Error:', e.message)
-        // TODO: detect other blocking signatures
-        if (!e.response || e.response.status != 503) {
-          console.log('proxy err', e)
-        }
+        console.log('Error:', e.message, options)
         tries++
         if (tries > 2) {
           setStormProxy()

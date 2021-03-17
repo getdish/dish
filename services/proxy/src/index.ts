@@ -1,6 +1,6 @@
 import express from 'express'
 
-import { fetchBrowser } from './browser'
+import { ensurePage, fetchBrowser } from './browser'
 
 const queue = new Set<Function>()
 const app = express()
@@ -15,6 +15,7 @@ function runInQueue(fn: Function) {
 
 async function main() {
   startServer()
+  ensurePage()
   while (true) {
     if (queue.size) {
       const first = [...queue][0]

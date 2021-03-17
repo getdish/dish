@@ -596,7 +596,7 @@ function self_crawl_by_query() {
   [ -z "$1" ] && exit 1
   query="SELECT id FROM restaurant $1"
   echo "Running self crawler with SQL: $query"
-  worker_exec "QUERY=${query@Q} node /app/services/crawlers/_/self/sandbox.js"
+  worker_exec "QUERY=${query@Q} node /app/services/crawlers/_/self/one.js"
 }
 
 # Watch progress at https://worker-ui.k8s.dishapp.com/ui

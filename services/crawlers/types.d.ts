@@ -741,6 +741,10 @@ declare module "@dish/crawlers" {
 }
 
 declare module "@dish/crawlers" {
+    export function one(): Promise<void>;
+}
+
+declare module "@dish/crawlers" {
     import { JobOptions, QueueOptions } from "bull";
     export class UpdateSearchEndpoint extends GooglePuppeteerJob {
         searchEndpoint: string;
@@ -812,5 +816,6 @@ declare module "@dish/crawlers" {
 
 declare module "@dish/crawlers" {
     import "@dish/helpers/polyfill";
+    export function one(slug: string): Promise<void>;
 }
 //# sourceMappingURL=types.d.ts.map
