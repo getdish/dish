@@ -23,6 +23,8 @@ let browser: WebKitBrowser | null = null
 let browserHasLoadedOriginOnce = false
 let page: Page | null = null
 
+const fetchFnName = '__fetcheroo'
+
 export async function ensurePage(forceRefresh = false) {
   if (!browser || forceRefresh) {
     if (browser) {
@@ -41,6 +43,15 @@ export async function ensurePage(forceRefresh = false) {
       }),
     })
     page = await browser.newPage()
+    await page.exposeFunction(fetchFnName, (uri) => {
+      return fetch(uri, {
+        headers: {
+          'content-type': 'application/json',
+          accept: 'application/json',
+          'Accept-Encoding': 'br;q=1.0, gzip;q=0.8, *;q=0.1',
+        },
+      }).then((res) => res.json())
+    })
   }
   return page!
 }
@@ -70,7 +81,7 @@ export async function fetchBrowser(
   }
 }
 
-export async function fetchBrowserJSON(uri: string, retry = false) {
+export async function fetchBrowserJSON(uri: string, retry = 0) {
   const page = await ensurePage()
   const url = new URL(uri)
   try {
@@ -78,9 +89,12 @@ export async function fetchBrowserJSON(uri: string, retry = false) {
       console.log('loading origin once first')
       await page.goto(url.origin)
       await page.waitForLoadState('domcontentloaded')
-      console.log('clicking a semi random link')
-      await page.click('a.homepage-hero_link')
       browserHasLoadedOriginOnce = true
+    }
+    if (retry == 0) {
+      console.log('inline fetch', uri)
+      // first attempt, lets try fetch inline
+      return await page.evaluate(fetchFnName, uri)
     }
     console.log('goto url', uri)
     await page.goto(uri)
@@ -92,10 +106,10 @@ export async function fetchBrowserJSON(uri: string, retry = false) {
     }
   } catch (err) {
     console.error(`Error: ${err.message}`)
-    if (!retry) {
-      console.log('try again again')
+    if (retry < 2) {
+      console.log('try again')
       browserHasLoadedOriginOnce = false
-      return await fetchBrowserJSON(uri, true)
+      return await fetchBrowserJSON(uri, retry + 1)
     }
     throw err
   }
