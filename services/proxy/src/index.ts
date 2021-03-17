@@ -35,11 +35,11 @@ const types = {
 function startServer() {
   app.use(async (req, res, next) => {
     const headers = req.headers
-    const url = `${req.headers['url']}`
-    if (!url) {
+    if (!req.headers['url']) {
       res.status(500).send('no url')
       return
     }
+    const url = `${req.headers['url']}`
     const type = types[`${headers['parse'] ?? 'html'}`]
     const selector = `${headers['selector']}`
     console.log(`Processing ${type} ${selector}: ${url}`)
