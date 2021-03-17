@@ -57,11 +57,7 @@ export class DB {
     const conf = {
       host: process.env.PGHOST || 'localhost',
       port: process.env.PGPORT ? +process.env.PGPORT : 5432,
-      ssl:
-        process.env.NODE_ENV === 'development' ||
-        process.env.NODE_ENV === 'test'
-          ? false
-          : true,
+      ssl: process.env.USE_SSL ? true : false,
       user: process.env.PGUSER || 'postgres',
       password: process.env.PGPASSWORD || 'postgres',
       database: process.env.POSTGRES_DB || 'dish',
