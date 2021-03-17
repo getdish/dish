@@ -91,6 +91,7 @@ function worker_ssh() {
 }
 
 function worker_exec() {
+  set -e
   worker_ssh "$@"
 }
 

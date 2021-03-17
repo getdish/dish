@@ -1,5 +1,7 @@
 **/_
 
+site/.cache
+
 # no need to commit the maps, right?
 # may as well for dx.... lets see
 # **/types.d.ts.map

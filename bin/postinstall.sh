@@ -44,3 +44,6 @@ delete_and_link_duplicate_modules &
 yarn patch-package || true &
 patch_app_packages &
 wait
+
+echo "to use snackui/website or site, be sure to use npm NOT yarn"
+echo "this is to keep cache clean"

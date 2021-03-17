@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="1480px" height="237px" viewBox="0 0 1480 237" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 54.1 (76490) - https://sketchapp.com -->
+    <title>bottom-sep</title>
+    <desc>Created with Sketch.</desc>
+    <defs>
+        <linearGradient x1="-11.4193931%" y1="51.0848462%" x2="99.7702573%" y2="49.8195599%" id="linearGradient-1">
+            <stop stop-color="#61554C" offset="0%"></stop>
+            <stop stop-color="#0792FB" offset="15.9478987%"></stop>
+            <stop stop-color="#0092FF" offset="23.1914548%"></stop>
+            <stop stop-color="#408CDC" offset="37.8668244%"></stop>
+            <stop stop-color="#92495C" offset="51.0681406%"></stop>
+            <stop stop-color="#BA454D" offset="61.8352979%"></stop>
+            <stop stop-color="#3CB42F" offset="83.1937166%"></stop>
+            <stop stop-color="#858EFF" offset="100%"></stop>
+        </linearGradient>
+        <linearGradient x1="126.705713%" y1="49.5613412%" x2="86.2815976%" y2="50.0304157%" id="linearGradient-2">
+            <stop stop-color="#FF0000" stop-opacity="0.5" offset="0%"></stop>
+            <stop stop-color="#FF0000" stop-opacity="0" offset="100%"></stop>
+        </linearGradient>
+        <linearGradient x1="69.6783923%" y1="51.1483386%" x2="39.6689951%" y2="50.5719568%" id="linearGradient-3">
+            <stop stop-color="#0C677F" stop-opacity="0.0766813859" offset="0%"></stop>
+            <stop stop-color="#0B8292" stop-opacity="0.175965288" offset="24.5007895%"></stop>
+            <stop stop-color="#07C5C0" stop-opacity="0.415369448" offset="83.5797622%"></stop>
+            <stop stop-color="#00FDFF" stop-opacity="0.47729846" offset="100%"></stop>
+            <stop stop-color="#00FFA2" stop-opacity="0" offset="100%"></stop>
+        </linearGradient>
+        <radialGradient cx="56.8333877%" cy="100%" fx="56.8333877%" fy="100%" r="88.2872966%" gradientTransform="translate(0.568334,1.000000),scale(0.154997,1.000000),rotate(-90.000000),scale(1.000000,2.709788),translate(-0.568334,-1.000000)" id="radialGradient-4">
+            <stop stop-color="#A8001E" offset="0%"></stop>
+            <stop stop-color="#FFFFFF" stop-opacity="0.119367074" offset="75.0052787%"></stop>
+            <stop stop-color="#FF0000" stop-opacity="0" offset="100%"></stop>
+        </radialGradient>
+        <radialGradient cx="22.1682237%" cy="104.828696%" fx="22.1682237%" fy="104.828696%" r="93.5140924%" gradientTransform="translate(0.221682,1.048287),scale(0.154997,1.000000),rotate(-90.000000),scale(1.000000,1.717567),translate(-0.221682,-1.048287)" id="radialGradient-5">
+            <stop stop-color="#9D31A5" offset="0%"></stop>
+            <stop stop-color="#FFFFFF" stop-opacity="0.119367074" offset="79.0566934%"></stop>
+            <stop stop-color="#FF0000" stop-opacity="0" offset="100%"></stop>
+        </radialGradient>
+        <linearGradient x1="50%" y1="0.131924367%" x2="50%" y2="100%" id="linearGradient-6">
+            <stop stop-color="#2B2B40" offset="0.0659839527%"></stop>
+            <stop stop-color="#2C2B40" stop-opacity="0.871011801" offset="100%"></stop>
+        </linearGradient>
+        <path d="M0,189.588026 C357.666667,226.529342 615.881866,242.088957 774.645598,236.26687 C1012.7912,227.53374 1251,205.398438 1532,223.554239 C1532,239.148357 1532,164.630277 1532,0 L0,0 L0,189.588026 Z" id="path-7"></path>
+    </defs>
+    <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="home" transform="translate(0.000000, -6521.000000)">
+            <g id="bottom-sep" transform="translate(-6.000000, 6521.000000)">
+                <g id="Rectangle-6" transform="translate(766.000000, 118.727927) scale(-1, 1) translate(-766.000000, -118.727927) ">
+                    <use fill="url(#linearGradient-1)" xlink:href="#path-7"></use>
+                    <use fill="url(#linearGradient-2)" xlink:href="#path-7"></use>
+                    <use fill-opacity="0.1" fill="url(#linearGradient-3)" xlink:href="#path-7"></use>
+                    <use fill-opacity="0.15" fill="url(#radialGradient-4)" xlink:href="#path-7"></use>
+                    <use fill-opacity="0.08" fill="url(#radialGradient-5)" xlink:href="#path-7"></use>
+                    <use fill="url(#linearGradient-6)" xlink:href="#path-7"></use>
+                </g>
+            </g>
+        </g>
+    </g>
+</svg>
