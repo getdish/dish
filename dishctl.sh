@@ -95,7 +95,12 @@ function worker_exec() {
 }
 
 function stop_all_crawls() {
-  curl -X 'POST' https://worker.dishapp.com/clear
+  curl -X 'POST' https://worker.dishapp.com/clear -H 'queues: all'
+}
+
+# comma separated
+function stop_crawl() {
+  curl -X 'POST' https://worker.dishapp.com/clear -H "queues: $@"
 }
 
 # Note that crawlers are also run on cron schedules.

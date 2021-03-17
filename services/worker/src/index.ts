@@ -52,8 +52,12 @@ function startDashboard(queues: Queue[]) {
     setQueues(queues.map((x) => new BullAdapter(x.queue)))
     const app = express()
     app.post('/clear', (req, res) => {
-      const queues = `${req.headers['queues'] ?? ''}`.split(',')
-      clearJobs(queues)
+      const queueHeader = `${req.headers['queues'] ?? ''}`.trim()
+      if (queueHeader === 'all') {
+        clearJobs()
+      } else {
+        clearJobs(queueHeader.split(','))
+      }
       res.send(200)
     })
     app.use('/', router)
