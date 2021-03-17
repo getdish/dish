@@ -65,12 +65,11 @@ function startDashboard(queues: Queue[]) {
 }
 
 function createQueues() {
-  return Object.keys(klass_map).map((queue_name) => {
-    const klass = klass_map[queue_name]
-    const config = klass.queue_config
+  return ['BigJobs', ...Object.keys(klass_map)].map((name) => {
+    const config = klass_map[name]?.queue_config
     return {
-      name: queue_name,
-      queue: getBullQueue(queue_name, config),
+      name,
+      queue: getBullQueue(name, config),
     }
   })
 }

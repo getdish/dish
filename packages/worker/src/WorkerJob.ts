@@ -132,7 +132,7 @@ export class WorkerJob {
     if (process.env.RUN_WITHOUT_WORKER == 'true') {
       return await this.run(fn, args)
     }
-    const queue = getBullQueue('Self')
+    const queue = getBullQueue('BigJobs')
     console.log('Adding self crawl job', job_data)
     const job = await queue.add(job_data, { attempts: 1 })
     await queue.close()
