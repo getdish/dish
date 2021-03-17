@@ -16,7 +16,7 @@
     "react-dom": "*"
   },
   "devDependencies": {
-    "@dish/esdx": "0.0.1",
+    "@dish/esdx": "*",
     "@dish/react-test-env": "*",
     "@testing-library/react": "^11.2.5",
     "@types/jest": "^26.0.20",
