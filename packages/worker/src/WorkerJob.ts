@@ -135,6 +135,7 @@ export class WorkerJob {
     const queue = getBullQueue('BigJobs')
     console.log('Adding self crawl job', job_data)
     const job = await queue.add(job_data, { attempts: 1 })
+    console.log('Added', job)
     await queue.close()
     return job
   }
