@@ -51,7 +51,7 @@ async function go() {
         outdir: 'dist',
         sourcemap: true,
         target: 'node12',
-        treeShaking: true,
+        keepNames: true,
         format: 'cjs',
         logLevel: 'error',
       }).then(() => {
@@ -62,7 +62,7 @@ async function go() {
         outdir: '_',
         sourcemap: true,
         target: 'safari13',
-        treeShaking: true,
+        keepNames: true,
         format: 'esm',
         logLevel: 'error',
       }).then(() => {

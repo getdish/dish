@@ -145,6 +145,32 @@ function all_crawlers_for_cities() {
   #start_all_crawlers_for_city 'Istanbul, Turkey'
 }
 
+function crawl_self() {
+  echo "Running self crawler"
+  worker_exec "node /app/services/crawlers/dist/self/all.js"
+}
+
+function crawl_self_by_query() {
+  [ -z "$1" ] && exit 1
+  query="SELECT id FROM restaurant $1"
+  echo "Running self crawler with SQL: $query"
+  worker_exec "QUERY=${query@Q} node /app/services/crawlers/dist/self/one.js"
+}
+
+function crawl_self_sf_limited_cuisine() {
+  query="
+    WHERE st_dwithin(
+      location, st_makepoint(-122.42, 37.76), 0.2
+    )
+    AND (
+      tag_names @> '\"mexican__taco\"'
+      OR
+      tag_names @> '\"vietnamese__pho\"'
+    )
+  "
+  crawl_self_by_query "$query"
+}
+
 function _db_migrate() {
   hasura_endpoint=$1
   admin_secret=$2
@@ -590,28 +616,6 @@ function crawler_mem_usage() {
     | cut -d "" -f2 \
     | cut -d "-" -f1 \
     | grep sandbox
-}
-
-function self_crawl_by_query() {
-  [ -z "$1" ] && exit 1
-  query="SELECT id FROM restaurant $1"
-  echo "Running self crawler with SQL: $query"
-  worker_exec "QUERY=${query@Q} node /app/services/crawlers/_/self/one.js"
-}
-
-# Watch progress at https://worker-ui.k8s.dishapp.com/ui
-function limited_self_crawl_by_sanfran_cuisine() {
-  query="
-    WHERE st_dwithin(
-      location, st_makepoint(-122.42, 37.76), 0.2
-    )
-    AND (
-      tag_names @> '\"mexican__taco\"'
-      OR
-      tag_names @> '\"vietnamese__pho\"'
-    )
-  "
-  self_crawl_by_query "$query"
 }
 
 # Many thanks to Stefan Farestam
