@@ -6,6 +6,7 @@ import {
   restaurant,
   restaurant_tag,
   review,
+  review_tag_sentence,
   setting,
   tag,
   tag_tag,
@@ -28,6 +29,7 @@ export type FlatResolvedModel<O> = {
 // this fixes our type explosion, i think
 // we can use this to represent values returned by `query`
 
+export interface ReviewTagSentenceQuery extends review_tag_sentence {}
 export interface RestaurantQuery extends restaurant {}
 export interface TagQuery extends tag {}
 export interface RestaurantTagQuery extends restaurant_tag {}
@@ -43,6 +45,8 @@ export interface ListQuery extends list {}
 // SECTION 1
 // this flattens them to a partial of all resolved values, minus sub-nodes
 
+export interface ReviewTagSentence
+  extends FlatResolvedModel<review_tag_sentence> {}
 export interface Restaurant extends FlatResolvedModel<RestaurantQuery> {}
 export interface Tag extends FlatResolvedModel<TagQuery> {}
 export interface RestaurantTag extends FlatResolvedModel<RestaurantTagQuery> {}
@@ -82,6 +86,7 @@ export type ModelType =
   | PhotoXref
   | Setting
   | List
+  | ReviewTagSentence
 
 // DONE
 

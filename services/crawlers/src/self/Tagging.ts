@@ -10,7 +10,11 @@ import {
   restaurantGetAllPossibleTags,
   tagFindCountryMatches,
 } from '@dish/graph'
-import { breakIntoSentences, doesStringContainTag } from '@dish/helpers'
+import {
+  breakIntoSentences,
+  doesStringContainTag,
+  isPresent,
+} from '@dish/helpers'
 import {
   cleanReviewText,
   dedupeReviews,
@@ -206,16 +210,20 @@ export class Tagging {
       this.crawler.restaurant
     )
     const all_tag_photos: Partial<PhotoXref>[] = []
-    const photos = this.getPhotosWithText()
-    if (!photos) return []
+    const photos = await this.getPhotosWithText()
+    if (!photos.length) {
+      return []
+    }
     for (const tag of all_possible_tags) {
       let restaurant_tag = {
         tag_id: tag.id,
-        // @ts-ignore
         photos: [] as string[],
       }
       let is_at_least_one_photo = false
       for (const photo of photos) {
+        if (!photo.text) {
+          continue
+        }
         if (doesStringContainTag(photo.text, tag)) {
           is_at_least_one_photo = true
           all_tag_photos.push({
@@ -234,23 +242,59 @@ export class Tagging {
     return all_tag_photos
   }
 
-  getPhotosWithText() {
-    let yelps = this.crawler.getPaginatedData(this.crawler.yelp?.data, 'photos')
-    yelps = yelps.map((y) => {
-      return {
-        url: y.src,
-        text: y.media_data?.caption,
+  async getPhotosWithText() {
+    type PhotoWithText = { url: string; text: string }
+    let photos: PhotoWithText[] = []
+    for (const item of this.crawler.getPaginatedData(
+      this.crawler.yelp?.data,
+      'photos'
+    )) {
+      if (item.media_data) {
+        photos.push({
+          url: item.src,
+          text: item.media_data?.caption,
+        })
       }
-    })
-    let tripadvisors =
-      scrapeGetData(this.crawler.tripadvisor, 'photos_with_captions') || []
-    tripadvisors = tripadvisors.map((t) => {
-      return {
-        url: t.url,
-        text: t.caption,
+    }
+    const reviewPhotos = (
+      await Promise.all(
+        this.crawler
+          .getPaginatedData(this.crawler.yelp?.data, 'reviews')
+          .flatMap((x) => x.photos)
+          .map(async (item) => {
+            const photo = item.src
+            if (photo.includes('180s')) {
+              // skip lower res images
+              return
+            }
+            if (item.caption) {
+              // replace with bigger image
+              const largeResUrl = photo.replace('300s', '1000s')
+              const largeResExists = await fetch(largeResUrl).then(
+                (res) => res.status === 200
+              )
+              const url = largeResExists ? largeResUrl : photo
+              return {
+                url,
+                text: item.caption,
+              } as PhotoWithText
+            }
+          })
+      )
+    ).filter(isPresent)
+    photos = [...photos, ...reviewPhotos]
+    for (const item of scrapeGetData(
+      this.crawler.tripadvisor,
+      'photos_with_captions'
+    ) || []) {
+      if (item.caption) {
+        photos.push({
+          url: item.url,
+          text: item.caption,
+        })
       }
-    })
-    return [...yelps, ...tripadvisors]
+    }
+    return photos
   }
 
   findDishesInText(all_sources: TextSource[]) {

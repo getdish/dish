@@ -1,5 +1,3 @@
-const fs = require('fs').promises
-
 import { sentryException, sentryMessage } from '@dish/common'
 import { ReviewTagSentence } from '@dish/graph'
 import { bertResultToNumber, fetchBertSentiment } from '@dish/helpers'
@@ -46,25 +44,25 @@ export class RestaurantTagScores {
   }
 
   async analyzeSentences(review_tag_sentences: ReviewTagSentence[]) {
-    const BERT_BATCH_SIZE = 20
+    const BERT_BATCH_SIZE = 30
     let assessed: ReviewTagSentence[] = []
     const batches = chunk(review_tag_sentences, BERT_BATCH_SIZE)
     for (const [index, batch] of batches.entries()) {
       console.log('Analyzing sentiment for batch', index, 'of ', batches.length)
-      const assessed_batch = await this.fetchBertBatch(batch)
+      const assessed_batch = await this.getBertSentimentBatch(batch)
       assessed.push(...assessed_batch)
     }
     return assessed
   }
 
-  async fetchBertBatch(review_tag_sentences: ReviewTagSentence[]) {
+  async getBertSentimentBatch(review_tag_sentences: ReviewTagSentence[]) {
     let completed = await Promise.all(
-      review_tag_sentences.map((rts) => this.bertAssessSentence(rts))
+      review_tag_sentences.map((rts) => this.getBertSentiment(rts))
     )
     return completed.filter(Boolean) as ReviewTagSentence[]
   }
 
-  async bertAssessSentence(review_tag_sentence: ReviewTagSentence) {
+  async getBertSentiment(review_tag_sentence: ReviewTagSentence) {
     if (!review_tag_sentence.sentence) return
     this.current_sentence = this.current_sentence + 1
     const result = await this.fetchBertSentimentWithRetries(
@@ -78,16 +76,14 @@ export class RestaurantTagScores {
   }
 
   async updateAnalyzed(review_tag_sentences: ReviewTagSentence[]) {
-    let sql: string[] = []
+    // do granularly to avoid timeouts
     for (const rts of review_tag_sentences) {
-      sql.push(`
+      await this.crawler.main_db.query(`
         UPDATE review_tag_sentence
         SET ml_sentiment = '${rts.ml_sentiment}'
         WHERE id = '${rts.id}';
       `)
     }
-    const all = sql.join('\n')
-    await this.crawler.main_db.query(all)
   }
 
   async fetchBertSentimentWithRetries(text: string) {
@@ -121,14 +117,16 @@ export class RestaurantTagScores {
   }
 
   async updateRestaurantTagScores() {
+    console.log('Updating tag scores...')
     const tags = this.crawler.tagging.found_tags // TODO: query DB for all rish tag IDs??
-    let all_updates: string[] = []
     for (const tag_id in tags) {
       const all_sources_score_sql = this._scoreSQL(tag_id)
       const breakdown_sql = this.generateBreakdownSQL(tag_id)
       const mention_count_sql = this.generateMentionsCountSQL(tag_id)
       const updown_sql = this.generateUpDownSQL()
-      const sql = `
+      // one at a time to avoid timeouts
+      await this.crawler.main_db.query(
+        `
         WITH
         breakdown_builder AS (
           ${breakdown_sql}
@@ -149,10 +147,8 @@ export class RestaurantTagScores {
         WHERE restaurant_id = '${this.crawler.restaurant.id}'
         AND tag_id = '${tag_id}';
       `
-      all_updates.push(sql)
+      )
     }
-    const query = all_updates.join('\n')
-    await this.crawler.main_db.query(query)
   }
 
   _scoreSQL(tag_id: string, source: string | undefined = undefined) {

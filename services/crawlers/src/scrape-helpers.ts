@@ -23,7 +23,7 @@ let db_config: PoolConfig = {
   password: process.env.TIMESCALE_PASSWORD || 'postgres',
   database: process.env.TIMESCALE_DB || 'scrape_data',
   ssl: process.env.TIMESCALE_SSH ? true : false,
-  connectionTimeoutMillis: 50_000,
+  connectionTimeoutMillis: 300_000,
   idleTimeoutMillis: 500_000,
 }
 

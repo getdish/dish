@@ -14,6 +14,7 @@ export class RestaurantBaseScore {
   }
 
   async calculateScore() {
+    console.log('Calculating scores...')
     this.crawler.restaurant.score_breakdown = {}
     this.breakdown.sources = {}
     const all_sources = [...this.crawler.available_sources, 'dish', 'all']
@@ -23,6 +24,7 @@ export class RestaurantBaseScore {
     }
     this.unique_tag_id = unique_tag?.id
     for (const source of all_sources) {
+      console.log('Generate breakdown for', source)
       this.breakdown.sources[source] = { ratings: {}, summaries: {} } as any
       if (source != 'dish' && source != 'all') {
         await this.scoreFromExternalratings(source)
@@ -31,7 +33,9 @@ export class RestaurantBaseScore {
       }
       await this.generateSummaries(source)
     }
+    console.log('Updating score from votes...')
     await this.scoreFromVotes()
+    console.log('Updating score from photos...')
     await this.scoreFromPhotos()
     this.sumScores()
     this.crawler.restaurant.source_breakdown = this.breakdown

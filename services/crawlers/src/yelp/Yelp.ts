@@ -203,23 +203,21 @@ export class Yelp extends WorkerJob {
     yelp_path: string,
     id_from_source: string
   ) {
-    let data: { [keys: string]: any } = {}
     this.current = yelp_path
     console.log(`YELP: getting embedded JSON for: ${yelp_path}`)
     const response = await yelpAPI.getHyperscript(
       yelp_path,
       'script[data-hypernova-key*="BizDetailsApp"]'
     )
-    const extracted = this.extractEmbeddedJSONData(response)
-    if (!extracted) {
+    const data = this.extractEmbeddedJSONData(response)
+    if (!data) {
       throw new Error(`No extraction found`)
     }
 
-    data = extracted
     if (!('mapBoxProps' in data)) {
       const message = "YELP: Error Couldn't extract embedded data"
-      sentryMessage(message, { path: yelp_path })
       console.log(message)
+      sentryMessage(message, { path: yelp_path })
       return
     }
 
@@ -227,11 +225,10 @@ export class Yelp extends WorkerJob {
       data.mapBoxProps.staticMapProps.src.replace(/&amp;/g, '&'),
       true
     )
-
     const coords = (uri.query.center as string).split(',')
     const lat = parseFloat(coords[0])
     const lon = parseFloat(coords[1])
-    let scrape = (await scrapeMergeData(id, { data_from_html_embed: data }))!
+    const scrape = (await scrapeMergeData(id, { data_from_html_embed: data }))!
     const restaurant_id = await restaurantSaveCanonical(
       'yelp',
       id_from_source,
@@ -287,8 +284,9 @@ export class Yelp extends WorkerJob {
           data[key] = json[key]
         }
       }
-      if (data?.photoHeaderProps?.photoFlagReasons)
+      if (data?.photoHeaderProps?.photoFlagReasons) {
         delete data.photoHeaderProps.photoFlagReasons
+      }
       data = this.numericKeysFix(data)
       return data
     }
@@ -324,20 +322,16 @@ export class Yelp extends WorkerJob {
   async getPhotoPage(id: string, bizId: string, start: number, page: number) {
     const url =
       '/biz_photos/get_media_slice/' + bizId + '?start=' + start + '&dir=b'
-
     const response = await yelpAPI.getJSON(url, {
       headers: {
         'X-Requested-With': 'XMLHttpRequest',
       },
     })
-
     const media = response.media
-
     for (let photo of media) {
       delete photo.media_nav_html
       delete photo.selected_media_html
     }
-
     let photos: { [keys: string]: any } = {}
     photos['photosp' + page] = media
     await scrapeMergeData(id, photos)
