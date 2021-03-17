@@ -20,6 +20,7 @@ const getNextProxy = () => {
 }
 
 let browser: WebKitBrowser | null = null
+let browserHasLoadedOriginOnce = false
 let page: Page | null = null
 
 export async function ensurePage(forceRefresh = false) {
@@ -30,6 +31,7 @@ export async function ensurePage(forceRefresh = false) {
     }
     const proxy = getNextProxy()
     console.log('Starting browser with proxy', proxy)
+    browserHasLoadedOriginOnce = false
     browser = await webkit.launch({
       headless: true,
       ...(proxy && {
@@ -72,8 +74,15 @@ export async function fetchBrowserJSON(uri: string, retry = false) {
   const page = await ensurePage()
   const url = new URL(uri)
   try {
-    console.log('first visiting the origin', url.origin)
-    console.log('now going to url', uri)
+    if (!browserHasLoadedOriginOnce) {
+      console.log('loading origin once first')
+      await page.goto(url.origin)
+      await page.waitForLoadState('domcontentloaded')
+      console.log('clicking a semi random link')
+      await page.click('a.homepage-hero_link')
+      browserHasLoadedOriginOnce = true
+    }
+    console.log('goto url', uri)
     await page.goto(uri)
     await page.waitForLoadState('domcontentloaded')
     let out = ((await page.textContent('body')) ?? '').trim()
@@ -84,8 +93,8 @@ export async function fetchBrowserJSON(uri: string, retry = false) {
   } catch (err) {
     console.error(`Error: ${err.message}`)
     if (!retry) {
-      console.log('try again first visit origin')
-      await page.goto(url.origin)
+      console.log('try again again')
+      browserHasLoadedOriginOnce = false
       return await fetchBrowserJSON(uri, true)
     }
     throw err

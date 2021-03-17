@@ -16,6 +16,7 @@ type Queue = {
 const queues = createQueues()
 
 function clearAllJobs() {
+  console.log('clearing all jobs')
   queues.map((q) => {
     q.queue.clean(10_000_000_000)
     q.queue.removeJobs('*')
