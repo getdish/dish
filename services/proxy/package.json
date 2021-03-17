@@ -15,6 +15,6 @@
     "playwright": "^1.9.2"
   },
   "devDependencies": {
-    "@dish/esdx": "^0.0.6"
+    "@dish/esdx": "*"
   }
 }

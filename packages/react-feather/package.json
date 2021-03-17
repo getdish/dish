@@ -17,7 +17,7 @@
     "react-native-svg": "^12.1.0"
   },
   "devDependencies": {
-    "@dish/esdx": "^0.0.1",
+    "@dish/esdx": "*",
     "camelcase": "^6.0.0",
     "cheerio": "^1.0.0-rc.5",
     "feather-icons": "^4.28.0",

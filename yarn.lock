@@ -1976,7 +1976,7 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@dish/esdx@*, @dish/esdx@^0.0.6, @dish/esdx@workspace:packages/esdx":
+"@dish/esdx@*, @dish/esdx@workspace:packages/esdx":
   version: 0.0.0-use.local
   resolution: "@dish/esdx@workspace:packages/esdx"
   dependencies:
@@ -1992,31 +1992,6 @@ __metadata:
     esdx-watch: esdx-watch.js
   languageName: unknown
   linkType: soft
-
-"@dish/esdx@npm:0.0.1, @dish/esdx@npm:^0.0.1":
-  version: 0.0.1
-  resolution: "@dish/esdx@npm:0.0.1"
-  dependencies:
-    chokidar-cli: ^2.1.0
-    esbuild: ^0.8.53
-    esbuild-node-tsc: ^1.2.0
-    typescript: "*"
-  bin:
-    esdx: esdx
-    esdx-watch: esdx-watch
-  checksum: 2a5a157f4ca12ad27161941dca323cf1db047c0f3227a2fbf432b5f64c30e770ffbaf339aa0539145d5195dfe9bf84f07f70c3a6412814967ae9ca5cc451909b
-  languageName: node
-  linkType: hard
-
-"@dish/esdx@npm:^0.0.2":
-  version: 0.0.2
-  resolution: "@dish/esdx@npm:0.0.2"
-  bin:
-    esdx: esdx.js
-    esdx-watch: esdx-watch.js
-  checksum: b44375398c8106671ad14c8724f4c382fbc4d98680d03ac08c35475ffee67501fffcfadd271dd28be77e3945482705fdce3ecbf4912944bedaea2662712ca523
-  languageName: node
-  linkType: hard
 
 "@dish/fast-compare@*, @dish/fast-compare@2.7.6, @dish/fast-compare@^2.7.6, @dish/fast-compare@workspace:packages/fast-compare":
   version: 0.0.0-use.local
@@ -2174,7 +2149,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@dish/proxy@workspace:services/proxy"
   dependencies:
-    "@dish/esdx": ^0.0.6
+    "@dish/esdx": "*"
     express: ^4.17.1
     playwright: ^1.9.2
   languageName: unknown
@@ -2184,7 +2159,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@dish/react-feather@workspace:packages/react-feather"
   dependencies:
-    "@dish/esdx": ^0.0.1
+    "@dish/esdx": "*"
     camelcase: ^6.0.0
     cheerio: ^1.0.0-rc.5
     feather-icons: ^4.28.0
@@ -2203,7 +2178,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@dish/react-test-env@workspace:packages/react-test-env"
   dependencies:
-    "@dish/esdx": ^0.0.2
+    "@dish/esdx": "*"
     "@testing-library/react": ^11.2.3
     "@types/react": ^16.9.44
     "@types/react-dom": ^16.9.8
@@ -2293,7 +2268,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@dish/testy@workspace:packages/testy"
   dependencies:
-    "@dish/esdx": 0.0.1
+    "@dish/esdx": "*"
     "@dish/react-test-env": "*"
     "@testing-library/react": ^11.2.5
     "@types/jest": ^26.0.20
@@ -8520,35 +8495,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"cp-file@npm:^7.0.0":
-  version: 7.0.0
-  resolution: "cp-file@npm:7.0.0"
-  dependencies:
-    graceful-fs: ^4.1.2
-    make-dir: ^3.0.0
-    nested-error-stacks: ^2.0.0
-    p-event: ^4.1.0
-  checksum: e6a1ae934081d61468ff340b7ec6002be454e5bf1a30feffb2804a82d0aed8828814e409ccacf4a96513dff1adddd6ccfdb87a1349f5a481605bb1bf0c44cc59
-  languageName: node
-  linkType: hard
-
-"cpy@npm:^8.1.1":
-  version: 8.1.2
-  resolution: "cpy@npm:8.1.2"
-  dependencies:
-    arrify: ^2.0.1
-    cp-file: ^7.0.0
-    globby: ^9.2.0
-    has-glob: ^1.0.0
-    junk: ^3.1.0
-    nested-error-stacks: ^2.1.0
-    p-all: ^2.1.0
-    p-filter: ^2.1.0
-    p-map: ^3.0.0
-  checksum: 1610bec653e53b78bb1719b356920d11636386e195b4e39363702716ad904f4286374a4185faaf6513645ce75109d1ebad37357fce51cffa6dcaab0eeb0e0029
-  languageName: node
-  linkType: hard
-
 "create-react-class@npm:^15.6.2":
   version: 15.7.0
   resolution: "create-react-class@npm:15.7.0"
@@ -10113,22 +10059,6 @@ __metadata:
   peerDependencies:
     webpack: ^4.40.0 || ^5.0.0
   checksum: a1251dab1ed72f68ce9b50a2b58ffef83594627f1bbf8fc53a098525166d1413f22374eeb966bac2848bc61fbf9f593f170c44e23786ae38f64ff5e5a5ff6724
-  languageName: node
-  linkType: hard
-
-"esbuild-node-tsc@npm:^1.2.0":
-  version: 1.2.0
-  resolution: "esbuild-node-tsc@npm:1.2.0"
-  dependencies:
-    cpy: ^8.1.1
-    esbuild: ^0.8.34
-    rimraf: ^3.0.2
-  peerDependencies:
-    typescript: "*"
-  bin:
-    esbuild-node-tsc: dist/index.js
-    etsc: dist/index.js
-  checksum: 9e94e7db415060f7c30cae1f8181b4c6ab429c05fbd1546f8dcb56fd50620a2aa3d3c13228b10408f2a346c012e2ae7b8a2cf4a536529a44c8cec20eb1f2e1ce
   languageName: node
   linkType: hard
 
@@ -12101,15 +12031,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"has-glob@npm:^1.0.0":
-  version: 1.0.0
-  resolution: "has-glob@npm:1.0.0"
-  dependencies:
-    is-glob: ^3.0.0
-  checksum: ae0838ca4097ca9420f4fc93e4dee81ba38ed8b92b2f3ea065d94092ff0646013a71a1d43578bdebc5b116ca5b764278c15c38378374ade1c1f65dd07c337ade
-  languageName: node
-  linkType: hard
-
 "has-symbol-support-x@npm:^1.4.1":
   version: 1.4.2
   resolution: "has-symbol-support-x@npm:1.4.2"
@@ -13421,7 +13342,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"is-glob@npm:^3.0.0, is-glob@npm:^3.1.0":
+"is-glob@npm:^3.1.0":
   version: 3.1.0
   resolution: "is-glob@npm:3.1.0"
   dependencies:
@@ -14769,13 +14690,6 @@ __metadata:
     json-schema: 0.2.3
     verror: 1.10.0
   checksum: ee0177b7ef39e6becf18c586d31fabe15d62be88e7867d3aff86466e4a3de9a2cd47b6e597417aebc1cd3c2d43bc662e79ab5eecdadf3ce0643e909432ed6d2c
-  languageName: node
-  linkType: hard
-
-"junk@npm:^3.1.0":
-  version: 3.1.0
-  resolution: "junk@npm:3.1.0"
-  checksum: fedb1a2eab7f90e3c833211fecf1e1659cf995594981fb657b4215bae86883e7ec39074215a3a92cb0657fa46b0da87db121c6f12b125cc19c7911119db9c452
   languageName: node
   linkType: hard
 
@@ -16379,13 +16293,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"nested-error-stacks@npm:^2.0.0, nested-error-stacks@npm:^2.1.0":
-  version: 2.1.0
-  resolution: "nested-error-stacks@npm:2.1.0"
-  checksum: f3f930722ef2b02e6dd5d91662d3b39820d3fc1440e50174ee354f2744243587cabebdd659887b577a593684aa0caec428d0706a587455e3320e164a1ad5290d
-  languageName: node
-  linkType: hard
-
 "newline@npm:0.0.3":
   version: 0.0.3
   resolution: "newline@npm:0.0.3"
@@ -16982,15 +16889,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"p-all@npm:^2.1.0":
-  version: 2.1.0
-  resolution: "p-all@npm:2.1.0"
-  dependencies:
-    p-map: ^2.0.0
-  checksum: 07dc64e624d947c8f9afaf3fed4c44f2eb62aae3af78489e486fe6a31d433f88c1f8f046aed354d1c10d959bc8f97e7330678bb89796e59f719e61335310c890
-  languageName: node
-  linkType: hard
-
 "p-cancelable@npm:^0.3.0":
   version: 0.3.0
   resolution: "p-cancelable@npm:0.3.0"
@@ -17051,21 +16949,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"p-event@npm:^4.0.0, p-event@npm:^4.1.0, p-event@npm:^4.2.0":
+"p-event@npm:^4.0.0, p-event@npm:^4.2.0":
   version: 4.2.0
   resolution: "p-event@npm:4.2.0"
   dependencies:
     p-timeout: ^3.1.0
   checksum: 2f57be65972285794231072b188a1f0ff542285e5629066b6902db4420ce09bec9b4c75829ce0f996132d2ca0e38b16f675e2be15a20a03fc9e7ab515571b0b8
-  languageName: node
-  linkType: hard
-
-"p-filter@npm:^2.1.0":
-  version: 2.1.0
-  resolution: "p-filter@npm:2.1.0"
-  dependencies:
-    p-map: ^2.0.0
-  checksum: d3db3d215325e7c46d543bad2b9b2c8e8203fcde13ee22fe483114abf4b32c13a183f565ada64bd1267f49f17bab4100b9200e464aa92de9da36068cad8b9ffc
   languageName: node
   linkType: hard
 
@@ -17169,7 +17058,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"p-map@npm:^2.0.0, p-map@npm:^2.1.0":
+"p-map@npm:^2.1.0":
   version: 2.1.0
   resolution: "p-map@npm:2.1.0"
   checksum: 8557e841ed832a489aaee7d825b7bea73e0559c452578821f5af418f430a8455727ab8dd5b4318b6b6733096029cfa571aa0e8d21bdd2c213025f02f919f7a9a
@@ -20852,7 +20741,7 @@ __metadata:
   resolution: "snackui@workspace:snackui/packages/snackui"
   dependencies:
     "@dish/async": ^0.0.1
-    "@dish/esdx": ^0.0.2
+    "@dish/esdx": "*"
     "@dish/fast-compare": ^2.7.6
     "@dish/proxy-worm": ^0.0.4
     "@react-native-community/blur": ^3.6.0
