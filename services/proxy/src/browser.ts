@@ -1,29 +1,12 @@
 import { Page, WebKitBrowser, webkit } from 'playwright'
 
-if (!process.env.STORMPROXY_HOSTS) {
+if (!process.env.LUMINATI_PROXY_HOST) {
   throw new Error(`No proxy`)
-}
-
-const proxies = process.env.STORMPROXY_HOSTS.split(',')
-const maxProxies = proxies.length
-console.log('Proxies', proxies, maxProxies)
-let proxyIndex = Math.floor(Math.random() * maxProxies)
-let proxiesUsed = 0
-const getNextProxy = () => {
-  proxyIndex++
-  proxiesUsed++
-  if (proxiesUsed === maxProxies) {
-    console.log('Tried every proxy, next attempt will not use one')
-    return null
-  }
-  return proxies[proxyIndex % maxProxies]
 }
 
 let browser: WebKitBrowser | null = null
 let browserHasLoadedOriginOnce = false
 let page: Page | null = null
-
-const fetchFnName = '__fetcheroo'
 
 export async function ensurePage(forceRefresh = false) {
   if (!browser || forceRefresh) {
@@ -31,27 +14,18 @@ export async function ensurePage(forceRefresh = false) {
       console.log('Force refresh from failed proxy, opening new browser')
       await browser.close()
     }
-    const proxy = getNextProxy()
-    console.log('Starting browser with proxy', proxy)
+    const proxy = {
+      server: `${process.env.LUMINATI_PROXY_HOST}:${process.env.LUMINATI_PROXY_PORT}`,
+      username: process.env.LUMINATI_PROXY_RESIDENTIAL_USER,
+      password: process.env.LUMINATI_PROXY_RESIDENTIAL_USER,
+    }
+    console.log('Starting browser', proxy)
     browserHasLoadedOriginOnce = false
     browser = await webkit.launch({
       headless: true,
-      ...(proxy && {
-        env: {
-          all_proxy: proxy,
-        },
-      }),
+      proxy,
     })
     page = await browser.newPage()
-    await page.exposeFunction(fetchFnName, (uri) => {
-      return fetch(uri, {
-        headers: {
-          'content-type': 'application/json',
-          accept: 'application/json',
-          'Accept-Encoding': 'br;q=1.0, gzip;q=0.8, *;q=0.1',
-        },
-      }).then((res) => res.json())
-    })
   }
   return page!
 }
@@ -91,15 +65,35 @@ export async function fetchBrowserJSON(uri: string, retry = 0) {
       await page.waitForLoadState('domcontentloaded')
       browserHasLoadedOriginOnce = true
     }
-    if (retry == 0) {
-      console.log('inline fetch', uri)
-      // first attempt, lets try fetch inline
-      return await page.evaluate(fetchFnName, uri)
-    }
+    // if (retry == 0) {
+    //   console.log('inline fetch', uri)
+    //   // first attempt, lets try fetch inline
+    //   let tm
+    //   const timeout = new Promise((res) => {
+    //     tm = setTimeout(() => res('failed'), 10_000)
+    //   })
+    //   const res = await Promise.race([
+    //     timeout,
+    //     page.evaluate((uri: string) => {
+    //       return fetch(uri, {
+    //         headers: {
+    //           'content-type': 'application/json',
+    //           accept: 'application/json',
+    //           'Accept-Encoding': 'br;q=1.0, gzip;q=0.8, *;q=0.1',
+    //         },
+    //       }).then((res) => res.json())
+    //     }, uri),
+    //   ])
+    //   console.log('res is', `${res}`.slice(0, 100) + '...')
+    //   if (res !== 'failed') {
+    //     clearTimeout(tm)
+    //     return res
+    //   }
+    //   console.log('timed out inline fetch')
+    // }
     console.log('goto url', uri)
     await page.goto(uri)
-    await page.waitForLoadState('domcontentloaded')
-    let out = ((await page.textContent('body')) ?? '').trim()
+    const out = ((await page.textContent('body')) ?? '').trim()
     console.log('got body', out.slice(0, 100) + '...')
     if (out) {
       return JSON.parse(out) as { [key: string]: any }
@@ -107,7 +101,7 @@ export async function fetchBrowserJSON(uri: string, retry = 0) {
   } catch (err) {
     console.error(`Error: ${err.message}`)
     if (retry < 2) {
-      console.log('try again')
+      console.log('rety', retry)
       browserHasLoadedOriginOnce = false
       return await fetchBrowserJSON(uri, retry + 1)
     }
