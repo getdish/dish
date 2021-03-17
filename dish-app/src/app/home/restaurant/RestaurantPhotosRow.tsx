@@ -69,7 +69,7 @@ export const RestaurantPhotosRowContent = memo(
               {photos.map((url, index) => {
                 const photoHeight = escalating
                   ? index < 2
-                    ? 190
+                    ? height
                     : 500
                   : height
                 const isEscalated = escalating && index >= 2

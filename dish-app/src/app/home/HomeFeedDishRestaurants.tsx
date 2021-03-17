@@ -1,15 +1,13 @@
 import { graphql, order_by, query } from '@dish/graph'
 import { groupBy, pick, sortBy, uniqBy } from 'lodash'
 import React, { useMemo } from 'react'
-import { HStack, Hoverable, Theme } from 'snackui'
+import { Theme } from 'snackui'
 
-import { getColorsForName } from '../../helpers/getColorsForName'
 import {
   DishTagItemSimple,
   selectRishDishViewSimple,
 } from '../../helpers/selectDishViewSimple'
 import { RegionNormalized } from '../../types/homeTypes'
-import { TagButtonSlanted } from '../views/dish/TagButtonSlanted'
 import { TagButton } from '../views/TagButton'
 import { ContentSectionHoverable } from './ContentSectionHoverable'
 import { FeedSlantedTitleLink } from './FeedSlantedTitle'

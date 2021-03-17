@@ -64,7 +64,7 @@ export const useUserReviewsQuery = (
       })
     : null
   const reviews = reviewsQuery
-    ? reviewsQuery.map<ReviewWithTag>((review) => {
+    ? reviewsQuery.map((review) => {
         const tag = {
           name: review?.tag?.name ?? '',
           type: review?.tag?.type ?? '',
@@ -83,7 +83,7 @@ export const useUserReviewsQuery = (
           },
           favorited: review.favorited ?? false,
           updated_at: review.updated_at ?? '',
-        }
+        } as ReviewWithTag
       })
     : []
 

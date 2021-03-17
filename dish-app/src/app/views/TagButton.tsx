@@ -76,6 +76,8 @@ export type TagButtonProps = StackProps &
     replaceSearch?: boolean
     after?: any
     floating?: boolean
+    hideRating?: boolean
+    hideRank?: boolean
   }
 
 const typeColors = {
@@ -93,7 +95,7 @@ export const TagButton = memo((props: TagButtonProps) => {
     type,
     size,
     slug,
-    rating,
+    rating = 0,
     noColor,
     floating,
     closable,
@@ -114,6 +116,8 @@ export const TagButton = memo((props: TagButtonProps) => {
     onPress,
     hoverStyle,
     restaurantSlug,
+    hideRating,
+    hideRank,
     ...rest
   } = props
 
@@ -129,6 +133,8 @@ export const TagButton = memo((props: TagButtonProps) => {
   const fontSize = fontSizeProp ? fontSizeProp : 15 * scale
   const smallerFontSize: any =
     typeof fontSize === 'number' ? fontSize * 0.85 : fontSize
+
+  const ratingPts = rating * 10 - 50
 
   const contents = (
     <HStack
@@ -149,7 +155,7 @@ export const TagButton = memo((props: TagButtonProps) => {
       {...rest}
     >
       <Spacer size={5} />
-      {!!rank && (
+      {!hideRank && !!rank && (
         <Text
           fontSize={smallerFontSize}
           fontWeight="500"
@@ -228,19 +234,19 @@ export const TagButton = memo((props: TagButtonProps) => {
         </Text>
       )} */}
 
-      {typeof rating !== 'undefined' && (
+      {!hideRating && typeof rating !== 'undefined' && (
         <VStack
           position="relative"
-          transform={[{ rotate: `${(1 - rating / 10) * 180}deg` }]}
+          // transform={[{ rotate: `${(1 - rating / 10) * 180}deg` }]}
         >
-          <AbsoluteVStack fullscreen zIndex={-1}>
-            <Circle
-              size={size === 'sm' ? 16 : 18}
-              backgroundColor="#fff"
-              opacity={0.25}
-            />
-          </AbsoluteVStack>
-          <Text></Text>
+          <Text
+            color={colors.color}
+            fontSize={13}
+            fontWeight="900"
+            letterSpacing={-0.5}
+          >
+            {ratingPts < 0 ? ratingPts : `+${ratingPts}`}
+          </Text>
           {/* <Pie
             size={size === 'sm' ? 16 : 18}
             percent={}

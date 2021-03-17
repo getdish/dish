@@ -53,7 +53,7 @@ export const RestaurantHeader = (props: RestaurantHeaderProps) => {
 const RestaurantHeaderContent = memo(
   graphql(
     ({ state, restaurantSlug, afterAddress, size }: RestaurantHeaderProps) => {
-      const imageHeight = 190
+      const imgHeight = 250
       const [restaurant] = queryRestaurant(restaurantSlug)
       const [open_text, open_color, next_time] = openingHours(restaurant)
       const paddingPx = size === 'sm' ? 10 : 30
@@ -104,14 +104,14 @@ const RestaurantHeaderContent = memo(
               <RestaurantPhotosRow
                 restaurantSlug={restaurantSlug}
                 width={photoWidth}
-                height={imageHeight}
+                height={imgHeight}
                 escalating
                 showEscalated={hasScrolled}
               />
               <AbsoluteVStack
                 left={0}
                 right={0}
-                height={imageHeight}
+                height={imgHeight}
                 width={width}
                 pointerEvents="none"
                 transform={[{ translateY: 1 }]}
@@ -121,6 +121,7 @@ const RestaurantHeaderContent = memo(
                   colors={[
                     // `${colors.themeColorAlt}aa`,
                     `${colors.themeColor}00`,
+                    `${colors.themeColor}00`,
                     colors.themeColor,
                   ]}
                 />
@@ -129,7 +130,7 @@ const RestaurantHeaderContent = memo(
 
             <Theme name={colors.name}>
               <VStack
-                marginTop={imageHeight - 70}
+                marginTop={imgHeight - 70}
                 minWidth={minWidth}
                 maxWidth={width}
                 borderTopRightRadius={drawerBorderRadius - 1}
@@ -161,8 +162,8 @@ const RestaurantHeaderContent = memo(
                         shadowRadius={5}
                         shadowOffset={{ height: 3, width: 0 }}
                         borderRadius={16}
-                        paddingHorizontal={15}
-                        paddingVertical={5}
+                        paddingHorizontal={20}
+                        paddingVertical={9}
                         alignItems="center"
                         justifyContent="center"
                         minWidth={100}
@@ -180,7 +181,7 @@ const RestaurantHeaderContent = memo(
                           ]}
                         >
                           <Text
-                            color={colors.themeColor}
+                            color="#fff"
                             alignSelf="flex-start"
                             selectable
                             letterSpacing={-1.2}

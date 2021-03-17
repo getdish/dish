@@ -83,6 +83,7 @@ export const SearchPageScoring = memo(() => {
           {tagsWithPct.map(({ tag, pct }, index) => {
             return (
               <TagButton
+                hideRating
                 key={tag.slug ?? index}
                 size="sm"
                 {...getTagButtonProps(tag)}
