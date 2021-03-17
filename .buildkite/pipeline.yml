@@ -105,6 +105,17 @@ steps:
           build: timescale
           cache-from: timescale:registry.fly.io/dish-timescale:latest
 
+  - label: ":docker: build site"
+    key: site
+    env:
+      DOCKER_TAG: dish-site
+    retry:
+      automatic: true
+    plugins:
+      - docker-compose#v3.7.0:
+          build: site
+          cache-from: site:registry.fly.io/dish-site:latest
+
   - label: ":docker: build tileserver"
     key: tileserver
     env:
@@ -238,6 +249,8 @@ steps:
     command: ".buildkite/scripts/setup_services.sh"
     depends_on:
       - test-images
+    retry:
+      automatic: true
     env:
       LOG_DOCKER: true
       IS_COMPOSE_RUNNER: true

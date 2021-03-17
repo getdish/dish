@@ -195,6 +195,12 @@ services:
       context: ./services/bert
     ports:
       - 8888:8080
+  site:
+    image: registry.fly.io/dish-site${DISH_IMAGE_TAG}
+    build:
+      context: ./site
+    ports:
+      - 3999:3999
   image-quality:
     image: registry.fly.io/dish-image-quality${DISH_IMAGE_TAG}
     build:
