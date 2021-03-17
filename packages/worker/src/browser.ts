@@ -20,7 +20,7 @@ export async function fetchBrowserHTML(url: string) {
   return await res.text()
 }
 
-const regions = ['atl', 'sea', 'lax', 'dfw', 'ord', 'iad', 'sjc', 'vin', 'yyz']
+const regions = ['atl', 'sea', 'lax', 'dfw'] // , 'ord', 'iad', 'sjc', 'vin', 'yyz'
 async function fetchBrowser(url: string, headers = {}, retry = 3) {
   let i = 0
   while (i < retry) {
