@@ -1,6 +1,6 @@
 {
   "name": "@dish/babel-preset",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "main": "babel.config.js",
   "publishConfig": {
     "access": "public"
