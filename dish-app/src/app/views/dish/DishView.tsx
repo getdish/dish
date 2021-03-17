@@ -183,6 +183,7 @@ const DishViewContent = (props: DishViewProps) => {
           <SearchTagButton
             backgroundColor={colors.lightColor}
             color={colors.color}
+            // @ts-ignore
             tag={{ slug, type: 'dish' }}
           />
         </AbsoluteVStack>

@@ -572,6 +572,8 @@ const AppSearchInputTags = memo(
                   shadowOffset={{ height: 2, width: 0 }}
                   borderColor={'transparent'}
                   borderRadius={100}
+                  hideRating
+                  hideRank
                   hoverStyle={{
                     backgroundColor: 'rgba(150,150,150,0.7)',
                   }}
