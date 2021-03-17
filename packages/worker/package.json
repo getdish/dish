@@ -3,11 +3,12 @@
   "version": "0.0.1",
   "sideEffects": false,
   "private": true,
+  "types": "types.d.ts",
   "main": "dist",
   "module": "_",
   "scripts": {
-    "build": "esdx legacy",
-    "watch": "esdx-watch legacy",
+    "build": "esdx",
+    "watch": "esdx-watch",
     "test": "DISH_ENV=test ava tests/* --verbose",
     "test:watch": "DISH_ENV=test ava tests/* --watch"
   },

@@ -1,7 +1,7 @@
 {
   "name": "@dish/crawlers",
   "version": "0.0.1",
-  "types": "src/_types.d.ts",
+  "types": "types.d.ts",
   "main": "dist",
   "sideEffects": false,
   "scripts": {

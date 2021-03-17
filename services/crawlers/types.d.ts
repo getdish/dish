@@ -632,7 +632,7 @@ declare module "@dish/crawlers" {
         getGrubHubDishes(): Promise<void>;
         mergePhotos(): Promise<void>;
         _getGooglePhotos(): string[];
-        getPaginatedData(data: ScrapeData, type: "photos" | "reviews"): any[];
+        getPaginatedData(data: ScrapeData, type: 'photos' | 'reviews'): any[];
         getRatingFactors(): void;
         addReviewHeadlines(): Promise<void>;
         updateAllGeocoderIDs(): Promise<void>;
@@ -813,3 +813,4 @@ declare module "@dish/crawlers" {
 declare module "@dish/crawlers" {
     import "@dish/helpers/polyfill";
 }
+//# sourceMappingURL=types.d.ts.map

@@ -9,18 +9,18 @@ declare module "@dish/router" {
     };
     export type RouteName = keyof RoutesTable;
     export type RouteAlert<A extends RoutesTable> = {
-        condition: (next: "unload" | NavigateItem<A>) => boolean;
+        condition: (next: 'unload' | NavigateItem<A>) => boolean;
         message: string;
     };
-    export type HistoryType = "push" | "pop" | "replace";
-    export type HistoryDirection = "forward" | "backward" | "none";
+    export type HistoryType = 'push' | 'pop' | 'replace';
+    export type HistoryDirection = 'forward' | 'backward' | 'none';
     export type HistoryItem<A extends RouteName = string> = {
         id: string;
         name: A;
         path: string;
         type: HistoryType;
         search: string;
-        params: Exclude<RoutesTable[A]["params"], void> | {
+        params: Exclude<RoutesTable[A]['params'], void> | {
             [key: string]: string;
         };
         direction: HistoryDirection;
@@ -31,7 +31,7 @@ declare module "@dish/router" {
         skipInitial?: boolean;
     };
     type HistoryCb = (cb: HistoryItem) => void;
-    export class Router<Props extends RouterProps, RT extends RoutesTable = Props["routes"]> extends Store<Props> {
+    export class Router<Props extends RouterProps, RT extends RoutesTable = Props['routes']> extends Store<Props> {
         router: TinyRouter<any>;
         routes: RoutesTable;
         routeNames: string[];
@@ -84,7 +84,7 @@ declare module "@dish/router" {
         toString(): string;
     }
     type NavigableItems<Table extends RoutesTable> = {
-        [Property in keyof Table]: Table[Property]["params"] extends void ? {
+        [Property in keyof Table]: Table[Property]['params'] extends void ? {
             name: Property;
             search?: string;
             params?: void;
@@ -92,7 +92,7 @@ declare module "@dish/router" {
             callback?: OnRouteChangeCb;
         } : {
             name: Property;
-            params: Table[Property]["params"];
+            params: Table[Property]['params'];
             search?: string;
             replace?: boolean;
             callback?: OnRouteChangeCb;
@@ -100,3 +100,4 @@ declare module "@dish/router" {
     };
     export type NavigateItem<RT extends RoutesTable = any, Items extends NavigableItems<RT> = NavigableItems<RT>> = Items[keyof Items];
 }
+//# sourceMappingURL=types.d.ts.map

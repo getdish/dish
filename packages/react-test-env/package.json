@@ -2,7 +2,7 @@
   "name": "@dish/react-test-env",
   "version": "0.0.7",
   "sideEffects": false,
-  "types": "src/_types.d.ts",
+  "types": "types.d.ts",
   "publishConfig": {
     "access": "public"
   },

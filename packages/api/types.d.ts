@@ -37,10 +37,11 @@ declare module "@dish/api" {
     };
     export function useRouteBodyParser(req: Request, res: Response, opts: BodyParseOpts): Promise<unknown>;
     export function bodyParsedRoute(fn: Handler, opts?: BodyParseOpts): (req: Request<import("express-serve-static-core").ParamsDictionary, any, any, import("qs").ParsedQs, Record<string, any>>, res: Response<any, Record<string, any>>) => Promise<void>;
-    export const jsonRoute: (fn: Handler, opts?: BodyParseOptsJSON["json"]) => (req: Request, res: Response) => Promise<void>;
-    export const rawRoute: (fn: Handler, opts?: BodyParseOptsRaw["raw"]) => (req: Request, res: Response) => Promise<void>;
-    export const textRoute: (fn: Handler, opts?: BodyParseOptsText["text"]) => (req: Request, res: Response) => Promise<void>;
-    export const urlEncodedRoute: (fn: Handler, opts?: BodyParseOptsURLEncoded["urlEncoded"]) => (req: Request, res: Response) => Promise<void>;
+    export const jsonRoute: (fn: Handler, opts?: BodyParseOptsJSON['json']) => (req: Request, res: Response) => Promise<void>;
+    export const rawRoute: (fn: Handler, opts?: BodyParseOptsRaw['raw']) => (req: Request, res: Response) => Promise<void>;
+    export const textRoute: (fn: Handler, opts?: BodyParseOptsText['text']) => (req: Request, res: Response) => Promise<void>;
+    export const urlEncodedRoute: (fn: Handler, opts?: BodyParseOptsURLEncoded['urlEncoded']) => (req: Request, res: Response) => Promise<void>;
     export function handleErrors(fn: Handler): (req: Request, res: Response) => Promise<void>;
     export function runMiddleware(req: Request, res: Response, fn: ExpressHandler): Promise<unknown>;
 }
+//# sourceMappingURL=types.d.ts.map

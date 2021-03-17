@@ -20,3 +20,4 @@ declare module "@dish/dsh" {
     export const sed: (str: TemplateStringsArray) => sh.ShellString;
     export const mkdir: (str: TemplateStringsArray) => sh.ShellString;
 }
+//# sourceMappingURL=types.d.ts.map

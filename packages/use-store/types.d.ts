@@ -26,14 +26,14 @@ declare module "@dish/use-store" {
         };
     };
     export type UseStoreConfig = {
-        logLevel?: "debug" | "info" | "error";
+        logLevel?: 'debug' | 'info' | 'error';
     };
 }
 
 declare module "@dish/use-store" {
     export const useCurrentComponent: () => any;
     export function useDebugStoreComponent(StoreCons: any): void;
-    export const shouldDebug: (component: any, info: Pick<StoreInfo, "storeInstance">) => boolean | undefined;
+    export const shouldDebug: (component: any, info: Pick<StoreInfo, 'storeInstance'>) => boolean | undefined;
     export const DebugComponents: Map<any, Set<any>>;
     export const DebugStores: Set<any>;
 }
@@ -124,3 +124,4 @@ declare module "@dish/use-store" {
 declare module "@dish/use-store" {
     export function reaction<StoreInstance extends Store, Selector extends (a: StoreInstance) => any>(store: StoreInstance, selector: Selector, receiver: Selector extends (a: StoreInstance) => infer Derived ? (a: Derived) => any : unknown, equalityFn?: (a: any, b: any) => boolean): () => void;
 }
+//# sourceMappingURL=types.d.ts.map

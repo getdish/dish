@@ -2,7 +2,7 @@
 /// <reference lib="esnext" />
 declare module "@dish/react-feather" {
     import { SvgProps } from "react-native-svg";
-    export type IconProps = Omit<SvgProps, "onPress" | "onPressIn" | "onPressOut"> & {
+    export type IconProps = Omit<SvgProps, 'onPress' | 'onPressIn' | 'onPressOut'> & {
         size?: number;
         color?: string;
         style?: any;
@@ -1152,3 +1152,4 @@ declare module "@dish/react-feather" {
 declare module "@dish/react-feather" {
     export const ZoomOut: (props: IconProps) => JSX.Element;
 }
+//# sourceMappingURL=types.d.ts.map

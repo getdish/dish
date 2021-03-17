@@ -10,3 +10,4 @@ declare module "@dish/worker-app" {
     const _default: (job: Job) => Promise<void>;
     export default _default;
 }
+//# sourceMappingURL=types.d.ts.map

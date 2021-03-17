@@ -8,3 +8,4 @@ declare module "@dish/common" {
         [key: string]: string;
     } | undefined) => void;
 }
+//# sourceMappingURL=types.d.ts.map

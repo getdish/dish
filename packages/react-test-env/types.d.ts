@@ -5,3 +5,4 @@ declare module "@dish/react-test-env" {
     export { render, cleanup, fireEvent, waitFor, screen, } from "@testing-library/react";
     export { default as TestRenderer, act } from "react-test-renderer";
 }
+//# sourceMappingURL=types.d.ts.map

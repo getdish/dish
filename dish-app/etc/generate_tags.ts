@@ -1,7 +1,7 @@
 import { join } from 'path'
 
 import { order_by, query, resolved, startLogging } from '@dish/graph'
-import { writeFile, writeJSON } from 'fs-extra'
+import { writeFile } from 'fs-extra'
 import { sortBy } from 'lodash'
 
 import { getFullTag } from '../src/helpers/getFullTag'

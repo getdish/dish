@@ -97,3 +97,4 @@ declare type NavigableItems<Table extends RoutesTable> = {
 };
 export declare type NavigateItem<RT extends RoutesTable = any, Items extends NavigableItems<RT> = NavigableItems<RT>> = Items[keyof Items];
 export {};
+//# sourceMappingURL=index.d.ts.map

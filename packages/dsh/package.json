@@ -2,7 +2,7 @@
   "name": "@dish/dsh",
   "version": "0.0.1",
   "sideEffects": false,
-  "types": "src/_types.d.ts",
+  "types": "types.d.ts",
   "bin": "./bin/run",
   "main": "dist",
   "module": "_",

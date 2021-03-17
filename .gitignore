@@ -1,6 +1,8 @@
 **/_
-!**/_/_types.d.ts
-!**/_/_types.d.ts.map
+
+# no need to commit the maps, right?
+# may as well for dx.... lets see
+# **/types.d.ts.map
 
 *.log
 .ops
