@@ -6,7 +6,7 @@
   "scripts": {
     "start": "mcro-build --port 5000 --extract-static-styles --target web",
     "start:prod": "mcro-build --extract-static-styles --prod --port 5000 --report --target web",
-    "build": "OPTIMIZE_REACT=1 ANALYZE_BUNDLE=1 mcro-build --extract-static-styles --prod --build --target web",
+    "build": "OPTIMIZE_REACT=1 ANALYZE_BUNDLE=1 mcro-build --extract-static-styles --prod --build --target web && ./post_build.sh",
     "build:no-min": "NO_OPTIMIZE=1 mcro-build --prod --build --target web",
     "build:debug": "NODE_ENV=development mcro-build --prod --build --target web",
     "serve": "static-server -p 3999 -n dist/index.html dist"
@@ -17,6 +17,7 @@
   "dependencies": {
     "@babel/runtime": "^7.4.5",
     "@o/babel-preset-motion": "^2.8.19",
+    "@o/plugin-transform-react-constant-elements": "^2.7.1",
     "@o/ui": "^2.8.19",
     "@o/use-store": "^2.8.19",
     "@o/utils": "^2.8.19",
@@ -31,7 +32,8 @@
     "react": "^16.9.0",
     "react-dom": "^16.9.0",
     "react-navi": "^0.13.6",
-    "resize-observer-polyfill": "1.5.1"
+    "resize-observer-polyfill": "1.5.1",
+    "static-server": "^2.2.1"
   },
   "devDependencies": {
     "@babel/core": "^7.6.0",

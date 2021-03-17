@@ -689,7 +689,7 @@ function docker_compose_up_subset() {
   printf "\n\n\n"
 }
 
-base_exclude="base|nginx|image-quality|image-proxy|bert|gorse|run-tests|cron|proxy"
+base_exclude="site|base|nginx|image-quality|image-proxy|bert|gorse|run-tests|cron|proxy"
 test_exclude="$base_exclude|worker"
 dev_exclude="$base_exclude|dish-app"
 
@@ -739,6 +739,7 @@ function deploy_all() {
   deploy "$where" image-proxy | sed -e 's/^/image-proxy: /;' &
   deploy "$where" bert | sed -e 's/^/bert: /;' &
   deploy "$where" cron | sed -e 's/^/cron: /;' &
+  deploy "$where" site | sed -e 's/^/site: /;' &
   wait
   # depends on redis
   deploy "$where" hooks | sed -e 's/^/hooks: /;' &
@@ -775,6 +776,7 @@ function deploy() {
   if [ "$app" = "redis" ];          then deploy_fly_app "$where" dish-redis services/redis redis; fi
   if [ "$app" = "run-tests" ];      then deploy_fly_app "$where" dish-run-tests services/run-tests run-tests; fi
   if [ "$app" = "proxy" ];          then deploy_fly_app "$where" dish-proxy services/proxy proxy; fi
+  if [ "$app" = "site" ];           then deploy_fly_app "$where" dish-site site site; fi
 }
 
 function deploy_fail() {
