@@ -1,7 +1,7 @@
 import { selectFields } from '@dish/gqless'
 import {
-  FlatResolvedModel,
   Review,
+  ReviewTagSentence,
   ReviewWithId,
   Scalars,
   globalTagId,
@@ -11,7 +11,6 @@ import {
   review,
   reviewUpsert,
   review_constraint,
-  review_tag_sentence,
 } from '@dish/graph'
 import { decode } from 'html-entities'
 import { chunk, uniqBy } from 'lodash'
@@ -190,8 +189,6 @@ export function dedupeReviews(reviews: Review[]) {
   })
   return deduped
 }
-
-export type ReviewTagSentence = FlatResolvedModel<review_tag_sentence>
 
 export function dedupeSentiments<A extends ReviewTagSentence>(sentiments: A[]) {
   return uniqBy(sentiments, (x) => {

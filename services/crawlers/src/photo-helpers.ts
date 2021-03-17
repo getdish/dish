@@ -2,6 +2,7 @@ import '@dish/common'
 
 import crypto from 'crypto'
 
+import { sleep } from '@dish/async'
 import { sentryException, sentryMessage } from '@dish/common'
 import { selectFields } from '@dish/gqless'
 import {
@@ -51,7 +52,9 @@ export async function photoUpsert(photos: Partial<PhotoXref>[]) {
     [el.tag_id, el.restaurant_id, el.photo?.url].join()
   )
   photos.map((p) => {
-    if (!p.photo || !p.photo.url) throw 'Photo must have URL'
+    if (!p.photo || !p.photo.url) {
+      throw 'Photo must have URL'
+    }
     p.photo.origin = clone(p.photo?.url)
     delete p.photo.url
   })
@@ -63,8 +66,6 @@ async function postUpsert(photos: Partial<PhotoXref>[]) {
   if (process.env.NODE_ENV != 'test') {
     await uploadToDO(photos)
   } else {
-    //@ts-ignore
-    photos.map((p) => (p.photo.url = p.photo.origin))
     await photoXrefUpsert(photos)
   }
   await updatePhotoQuality(photos)
@@ -377,7 +378,7 @@ export async function bestPhotosForRestaurantTags(
 }
 
 async function assessNewPhotos(unassessed_photos: string[]) {
-  const IMAGE_QUALITY_API_BATCH_SIZE = 30
+  const IMAGE_QUALITY_API_BATCH_SIZE = 20
   let assessed: Partial<PhotoBase>[] = []
   for (const batch of chunk(unassessed_photos, IMAGE_QUALITY_API_BATCH_SIZE)) {
     assessed.push(...(await assessPhotoQuality(batch)))
@@ -386,7 +387,7 @@ async function assessNewPhotos(unassessed_photos: string[]) {
 }
 
 async function assessPhotoQuality(urls: string[]) {
-  const MAX_RETRIES = 5
+  const MAX_RETRIES = 3
   let retries = 0
   while (true) {
     try {
@@ -405,6 +406,7 @@ async function assessPhotoQuality(urls: string[]) {
         return []
       }
       console.log('Retrying Image Quality API')
+      await sleep(1000 * retries)
     }
   }
 }
@@ -468,12 +470,15 @@ async function findUnassessedPhotos(
   if (photos[0].tag_id != ZeroUUID && photos[0].restaurant_id == ZeroUUID) {
     unassessed_photos = await unassessedPhotosForTag(photos[0].tag_id)
   }
-  return unassessed_photos.map((p) => {
-    if (!p.photo || !p.photo.url) {
-      throw 'findUnassessedPhotos(): Photo.url NOT NULL violation'
-    }
-    return p.photo.url
-  })
+  return unassessed_photos
+    .filter((p) => {
+      if (!p.photo?.url) {
+        console.error('findUnassessedPhotos(): Photo.url NOT NULL violation')
+        return false
+      }
+      return true
+    })
+    .map((p) => p.photo.url!)
 }
 
 async function findNotUploadedPhotos(photos: Partial<PhotoXref>[]) {

@@ -18,7 +18,7 @@ declare module "@dish/helpers-node" {
 }
 
 declare module "@dish/helpers-node" {
-    import { FlatResolvedModel, Review, ReviewWithId, Scalars, review_tag_sentence } from "@dish/graph";
+    import { Review, ReviewTagSentence, ReviewWithId, Scalars } from "@dish/graph";
     type uuid = Scalars["uuid"];
     export function reviewFindAllForRestaurant(restaurant_id: uuid): Promise<any>;
     export function reviewFindAllForUser(user_id: uuid): Promise<any>;
@@ -27,6 +27,5 @@ declare module "@dish/helpers-node" {
     export function reviewExternalUpsert(reviews: Review[]): Promise<ReviewWithId[]>;
     export function cleanReviewText(text: string | null | undefined): string | null;
     export function dedupeReviews(reviews: Review[]): Review[];
-    export type ReviewTagSentence = FlatResolvedModel<review_tag_sentence>;
     export function dedupeSentiments<A extends ReviewTagSentence>(sentiments: A[]): A[];
 }

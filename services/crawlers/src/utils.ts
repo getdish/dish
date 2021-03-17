@@ -65,8 +65,8 @@ export class DB {
       user: process.env.PGUSER || 'postgres',
       password: process.env.PGPASSWORD || 'postgres',
       database: process.env.POSTGRES_DB || 'dish',
-      idleTimeoutMillis: 100_000,
-      connectionTimeoutMillis: 50_000,
+      idleTimeoutMillis: 500_000,
+      connectionTimeoutMillis: 300_000,
     }
     return new DB(conf)
   }
@@ -79,7 +79,14 @@ export class DB {
   }
 
   connect() {
-    this.pool = new Pool(this.config)
+    if (this.pool) {
+      return this.pool
+    }
+    this.pool = new Pool({
+      idleTimeoutMillis: 500_000,
+      connectionTimeoutMillis: 300_000,
+      ...this.config,
+    })
     this.pool.setMaxListeners(800)
     this.pool.on('error', (e) => {
       sentryException(e, {
@@ -87,6 +94,7 @@ export class DB {
       })
       this.pool = null
     })
+    return this.pool
   }
 
   async query(query: string) {
@@ -94,16 +102,13 @@ export class DB {
       console.log('DB.query', this.config['port'], query)
     }
     let result: QueryResult
-    if (!this.pool) {
-      this.connect()
-    }
-    const pool = this.pool!
+    const pool = this.connect()
     const client = await pool.connect()
     if (!client) {
       throw new Error('no client')
     }
     try {
-      const timeout = sleep(25000)
+      const timeout = sleep(100_000)
       const res = await Promise.race([
         client.query(query),
         timeout.then(() => {
