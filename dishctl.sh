@@ -18,33 +18,13 @@ function log_command {
 }
 
 function dish_registry_auth() {
-  eval $(./dishctl.sh yaml_to_env) flyctl auth docker
+  flyctl auth docker
 }
 
 function _kill_port_forwarder {
   echo "Killing script pids for \`kubectl proxy-forward ...\`"
   ([ ! -z "$PG_PROXY_PID" ] && kill $PG_PROXY_PID) || true
   ([ ! -z "$TS_PROXY_PID" ] && kill $TS_PROXY_PID) || true
-}
-
-function patch_service_account() {
-  kubectl patch serviceaccount default \
-    -p '{"imagePullSecrets": [{"name": "docker-config-json"}]}'
-}
-
-function _get_function_body() {
-  echo $(declare -f $1 | sed '1,3d;$d')
-}
-
-function _build_script() {
-  script=$(echo "$all_env" | sed 's/.*/export &/')
-  for f in $(declare -F | cut -d ' ' -f3); do
-    if [[ "$f" == "_buildkit_build" ]]; then
-      continue
-    fi
-    script+=$(echo -e "\nfunction $(declare -f $f)")
-  done
-  echo -e "$script\n"
 }
 
 function _setup_s3() {
@@ -165,7 +145,7 @@ function redis_command() {
 
 function redis_cli() {
   fly_tunnel
-  eval $(./dishctl.sh yaml_to_env) redis-cli -h dish-redis.fly.dev -a "$REDIS_PASSWORD" -p 10000 "$@"
+  redis-cli -h dish-redis.fly.dev -a "$REDIS_PASSWORD" -p 10000 "$@"
 }
 
 function redis_cli_list_all() {
@@ -183,7 +163,6 @@ function _db_migrate() {
   postgres_port=$4
   init=$5
   pushd "$PROJECT_ROOT/services/hasura"
-  echo "hasura migrate $admin_secret"
   hasura --skip-update-check \
     migrate apply \
     --endpoint $hasura_endpoint \
@@ -607,29 +586,6 @@ function crawler_mem_usage() {
     | grep sandbox
 }
 
-# Many thanks to Stefan Farestam
-# https://stackoverflow.com/a/21189044/575773
-function parse_yaml {
-   local prefix=$2
-   local s='[[:space:]]*' w='[a-zA-Z0-9_]*' fs=$(echo @|tr @ '\034')
-   sed -ne "s|^\($s\):|\1|" \
-        -e "s|^\($s\)\($w\)$s:$s[\"']\(.*\)[\"']$s\$|\1$fs\2$fs\3|p" \
-        -e "s|^\($s\)\($w\)$s:$s\(.*\)$s\$|\1$fs\2$fs\3|p"  $1 |
-   awk -F$fs '{
-      indent = length($1)/2;
-      vname[indent] = $2;
-      for (i in vname) {if (i > indent) {delete vname[i]}}
-      if (length($3) > 0) {
-         vn=""; for (i=0; i<indent; i++) {vn=(vn)(vname[i])("_")}
-         printf("%s%s%s=\"%s\"\n", "'$prefix'",vn, $2, $3);
-      }
-   }'
-}
-
-function yaml_to_env() {
-  parse_yaml $PROJECT_ROOT/env.enc.production.yaml | sed 's/\$/\\$/g' | xargs -0
-}
-
 function grafana_backup() {
   _run_on_cluster $DISH_REGISTRY/grafana-backup-tool && return 0
   set -e
@@ -688,16 +644,8 @@ function docker_compose_up_for_tests() {
   fi
 }
 
-function export_env() {
-  set -a
-  eval $(./dishctl.sh yaml_to_env)
-  set +a
-}
-
 function deploy_all() {
-  dish_registry_auth
   set -e
-  export_env
   where=${1:-registry}
   # make them all background so we can handle them the same
   echo "deploying apps via $where"
@@ -731,11 +679,7 @@ function deploy_all() {
 }
 
 function build() {
-  eval $(yaml_to_env) docker-compose build "$@"
-}
-
-function source_env() {
-  eval $(yaml_to_env) bash -c "$@"
+  docker-compose build "$@"
 }
 
 function deploy() {
@@ -765,6 +709,7 @@ function deploy() {
 
 function deploy_fail() {
   echo "Error: deploy failed due to exit code 😭😭😭"
+  exit 1
 }
 
 function deploy_fly_app() {
@@ -781,7 +726,7 @@ function deploy_fly_app() {
   if [ -f ".ci/pre_deploy.sh" ]; then
     echo " >> running pre-deploy script $app..."
     touch "$pre_deploy_logs"
-    eval $(yaml_to_env) .ci/pre_deploy.sh &> "$pre_deploy_logs" &
+    .ci/pre_deploy.sh &> "$pre_deploy_logs" &
     pre_deploy_pid=$!
     tail -f "$pre_deploy_logs" &
     pre_tail_pid=$!
@@ -832,7 +777,7 @@ function deploy_fly_app() {
   fi
   if [ -f ".ci/post_deploy.sh" ]; then
     echo " >> post-deploy script $app..."
-    eval $(yaml_to_env) .ci/post_deploy.sh
+    .ci/post_deploy.sh
   fi
   # echo $(jobs -p)
   echo " >> 🚀 $app "
@@ -896,15 +841,14 @@ if command -v git &> /dev/null; then
   export DOCKER_TAG_NAMESPACE=${branch//\//-}
   export BASE_IMAGE=$DISH_REGISTRY/base:$DOCKER_TAG_NAMESPACE
   pushd $PROJECT_ROOT >/dev/null
-    if [ -f "env.enc.production.yaml" ]; then
-      export all_env="$(yaml_to_env)"
-      eval "$all_env"
+    if [ -f ".env.production" ]; then
+      source .env.production
     else
-      echo "Not loading ENV from env.enc.production.yaml as it doesn't exist"
+      echo "Not loading ENV from .env.production as it doesn't exist"
     fi
   popd >/dev/null
 else
-  echo "Not loading ENV from env.enc.production.yaml as there's no \`git\` command"
+  echo "Not loading ENV from .env.production as there's no \`git\` command"
   export all_env="$(env)"
 fi
 

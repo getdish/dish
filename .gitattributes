@@ -1,2 +1,2 @@
-env.enc.production.yaml filter=git-crypt diff=git-crypt
+.env.production filter=git-crypt diff=git-crypt
 etc/dish-wire.conf filter=git-crypt diff=git-crypt
