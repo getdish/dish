@@ -14,6 +14,9 @@ FROM registry.fly.io/dish-base:latest
 COPY --from=0 /bin /usr/local/bin
 ENV NODE_ENV=production
 
+# avoid rebuilds
+RUN rm -r services && rm -r packages/worker
+
 WORKDIR /app
 
 COPY package.json yarn.lock .yarnrc.yml ./
