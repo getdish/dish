@@ -142,6 +142,10 @@ export class WorkerJob {
 
 export function getBullQueue(name: string, config: {} = {}) {
   return new BullQueue(name, {
+    limiter: {
+      max: 100,
+      duration: 1000,
+    },
     ...config,
     redis: redisOptions,
   })
