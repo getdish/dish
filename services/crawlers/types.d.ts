@@ -75,10 +75,10 @@ declare module "@dish/crawlers" {
     export class DB {
         config: PoolConfig;
         pool: Pool | null;
+        static main_db: DB;
         constructor(config: PoolConfig);
-        static main_db(): DB;
         static one_query_on_main(query: string): Promise<QueryResult<any>>;
-        connect(): Pool;
+        connect(): Promise<import("pg").PoolClient>;
         query(query: string): Promise<QueryResult<any>>;
     }
     export function shiftLatLonByMetres(lat: number, lon: number, diff_north: number, diff_east: number): [
@@ -602,6 +602,7 @@ declare module "@dish/crawlers" {
         constructor();
         allForCity(city: string): Promise<void>;
         mergeAll(id: string): Promise<void>;
+        getScrapeData(): Promise<void>;
         mergeMainData(): Promise<void>;
         preMerge(restaurant: RestaurantWithId): Promise<void>;
         postMerge(): Promise<void>;
@@ -613,7 +614,6 @@ declare module "@dish/crawlers" {
         addPriceTags(): Promise<void>;
         findPhotosForTags(): Promise<void>;
         scanCorpus(): Promise<void>;
-        getScrapeData(): Promise<void>;
         merge(strings: string[]): string;
         mergeName(): void;
         mergeTelephone(): void;

@@ -46,6 +46,17 @@ export function getCities() {
 export class DB {
   pool: Pool | null = null
 
+  static main_db = new DB({
+    host: process.env.PGHOST || 'localhost',
+    port: process.env.PGPORT ? +process.env.PGPORT : 5432,
+    ssl: process.env.USE_SSL ? true : false,
+    user: process.env.PGUSER || 'postgres',
+    password: process.env.PGPASSWORD || 'postgres',
+    database: process.env.POSTGRES_DB || 'dish',
+    idleTimeoutMillis: 500_000,
+    connectionTimeoutMillis: 300_000,
+  })
+
   constructor(public config: PoolConfig) {
     if (process.env.DEBUG) {
       console.log('setup db', config)
@@ -53,23 +64,8 @@ export class DB {
     this.connect()
   }
 
-  static main_db() {
-    const conf = {
-      host: process.env.PGHOST || 'localhost',
-      port: process.env.PGPORT ? +process.env.PGPORT : 5432,
-      ssl: process.env.USE_SSL ? true : false,
-      user: process.env.PGUSER || 'postgres',
-      password: process.env.PGPASSWORD || 'postgres',
-      database: process.env.POSTGRES_DB || 'dish',
-      idleTimeoutMillis: 500_000,
-      connectionTimeoutMillis: 300_000,
-    }
-    return new DB(conf)
-  }
-
   static async one_query_on_main(query: string) {
-    const db = DB.main_db()
-    return await db.query(query)
+    return await DB.main_db.query(query)
   }
 
   async connect() {
@@ -79,6 +75,7 @@ export class DB {
     this.pool = new Pool({
       idleTimeoutMillis: 500_000,
       connectionTimeoutMillis: 300_000,
+      max: 20,
       ...this.config,
     })
     this.pool.on('error', (e) => {
