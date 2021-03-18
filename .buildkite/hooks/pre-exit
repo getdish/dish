@@ -8,9 +8,11 @@ fi
 
 if [ -n "$DOCKER_TAG" ]; then
   from="$BUILDKITE_PIPELINE_NAME-$BUILDKITE_STEP_KEY-build-$BUILDKITE_BUILD_NUMBER"
-  to="registry.fly.io/$DOCKER_TAG:latest"
-  echo "docker tag $from $to"
+  to="registry.fly.io/$DOCKER_TAG"
+  set -x
   docker tag "$from" "$to"
+  docker tag "$from" "$to:latest"
+  set +x
   echo "docker push $to"
   if [ "$DOCKER_PUSH_SYNC" = "true" ]; then
     docker push "$to"
