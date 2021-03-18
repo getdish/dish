@@ -30,6 +30,10 @@ RUN apt-get install -y wget gnupg ca-certificates \
      && apt-get clean
 
 FROM registry.fly.io/dish-base:latest
+
+# slim
+RUN rm -r dish-app && rm -r services
+
 COPY --from=0 /bin /bin
 COPY --from=0 /usr/bin /usr/bin
 COPY --from=0 /usr/lib /usr/lib
@@ -38,6 +42,7 @@ ENV NODE_ENV=production
 
 WORKDIR /app
 COPY services/worker services/worker
+COPY services/crawlers services/crawlers
 
 COPY packages packages
 WORKDIR /app/services/worker
