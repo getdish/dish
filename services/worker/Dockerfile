@@ -32,7 +32,7 @@ RUN apt-get install -y wget gnupg ca-certificates \
 FROM registry.fly.io/dish-base:latest
 
 # slim
-RUN rm -r dish-app && rm -r services
+RUN rm -r dish-app
 
 COPY --from=0 /bin /bin
 COPY --from=0 /usr/bin /usr/bin
