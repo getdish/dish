@@ -127,7 +127,10 @@ export class Self extends WorkerJob {
         break
       }
       for (const result of results) {
-        await this.runOnWorker('mergeAll', [result.id])
+        // check before running to prevent spawning massive amount of jobs
+        if (await restaurantFindOneWithTagsSQL(result.id)) {
+          await this.runOnWorker('mergeAll', [result.id])
+        }
         count += 1
         const progress = (count / total) * 100
         await this.job.progress(progress)

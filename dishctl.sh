@@ -27,18 +27,6 @@ function _kill_port_forwarder {
   ([ ! -z "$TS_PROXY_PID" ] && kill $TS_PROXY_PID) || true
 }
 
-function _ephemeral_pod() {
-  random=$(cat /dev/urandom | tr -dc 'a-z' | fold -w 4 | head -n 1)
-  name="ephemeral-pod-$random"
-  image=$1
-  cmd="$2"
-  kubectl run -it $name \
-    --image=$image \
-    --restart=Never \
-    -- sh -c "$cmd"
-  kubectl delete pod $name
-}
-
 function patch_service_account() {
   kubectl patch serviceaccount default \
     -p '{"imagePullSecrets": [{"name": "docker-config-json"}]}'
@@ -57,14 +45,6 @@ function _build_script() {
     script+=$(echo -e "\nfunction $(declare -f $f)")
   done
   echo -e "$script\n"
-}
-
-function _run_on_cluster() {
-  caller=$(echo "${FUNCNAME[1]}")
-  function_body=$(_get_function_body $caller)
-  script="$(_build_script)\n$function_body"
-  code="echo -e ${script@Q} > /tmp/run.sh && source /tmp/run.sh $ORIGINAL_ARGS"
-  _ephemeral_pod $1 "$code"
 }
 
 function _setup_s3() {
