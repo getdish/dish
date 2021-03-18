@@ -235,11 +235,11 @@ const HeadTextSection = memo(() => {
                 maxWidth={710}
                 fontWeight={300}
               >
-                A community, curating a better map of the world.
+                Curating a better map of the world together.
                 <br />{' '}
                 <span style={{ color: '#feac1f' }}>
                   {' '}
-                  Designed to last: non-profit, with a coin.
+                  Designed to last: non-profit, with a community token.
                 </span>
                 <br />
                 <span style={{ opacity: 0.5 }}>Meet dish, an experiment.</span>
