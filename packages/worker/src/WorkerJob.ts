@@ -143,7 +143,7 @@ export class WorkerJob {
 export function getBullQueue(name: string, config: {} = {}) {
   return new BullQueue(name, {
     limiter: {
-      max: 100,
+      max: 10,
       duration: 1000,
     },
     ...config,

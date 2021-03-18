@@ -74,22 +74,38 @@ export class DB {
     return result
   }
 
-  connect() {
+  poolConnecting: any = null
+
+  async connect() {
     if (this.pool) {
+      if (this.poolConnecting) {
+        this.poolConnecting.then(() => {
+          console.log('pc done')
+        })
+      }
       return this.pool
     }
+    let done
+    this.poolConnecting = new Promise((res) => {
+      done = res
+    })
+    console.log('pool config', this.config)
     this.pool = new Pool({
       idleTimeoutMillis: 500_000,
       connectionTimeoutMillis: 300_000,
       ...this.config,
     })
-    this.pool.setMaxListeners(800)
     this.pool.on('error', (e) => {
       sentryException(e, {
         more: 'Error likely from long-lived pool connection in node-pg',
       })
       this.pool = null
     })
+    console.log('wait for init pool connect')
+    await this.pool.connect()
+    console.log('connected')
+    done()
+    this.poolConnecting = null
     return this.pool
   }
 
@@ -98,15 +114,15 @@ export class DB {
       console.log('DB.query', this.config['port'], query)
     }
     let result: QueryResult
-    const pool = this.connect()
-    const client = await pool.connect()
-    if (!client) {
+    console.log('connect...', query)
+    const pool = await this.connect()
+    if (!pool) {
       throw new Error('no client')
     }
     try {
       const timeout = sleep(100_000)
       const res = await Promise.race([
-        client.query(query),
+        pool.query(query),
         timeout.then(() => {
           console.error(`Timed out on query`, query)
           return 'timed_out'
@@ -121,11 +137,9 @@ export class DB {
       console.error('Errored query: ' + query)
       console.error(e.message)
       if (query.includes('BEGIN;') || query.includes('TRANSACTION;')) {
-        await client.query('ROLLBACK')
+        await pool.query('ROLLBACK')
       }
       throw e
-    } finally {
-      client.release()
     }
     if (process.env.DEBUG) {
       console.log(' DB.query response', result.rowCount, result.rows)
