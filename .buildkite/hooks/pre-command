@@ -11,6 +11,11 @@ export FLYCTL_INSTALL="/root/.fly"
 export PATH="$FLYCTL_INSTALL/bin:$PATH"
 mkdir -p $HOME/bin
 
+# set prod env
+set -a
+eval $(./dishctl.sh yaml_to_env)
+set +a
+
 # install second
 # bail early on fail
 if [ "$FIRST_STEP" == "true" ]; then
@@ -67,8 +72,6 @@ if [ "$DOCKER_CLEAN_BEFORE" == "true" ]; then
   ./dishctl.sh clean_docker_if_disk_full
 fi
 
-eval $(./dishctl.sh yaml_to_env)
-
 if [ ! -f "$HOME/.aws/credentials" ]; then
   echo "setting up aws credentials for space $DO_SPACES_ID"
   mkdir -p "$HOME/.aws"
@@ -82,36 +85,33 @@ fi
 ./dishctl.sh dish_registry_auth
 
 # export env
-if [ "$ENV_SET" != "true" ]; then
-  export DO_SPACES_ID
-  export DO_SPACES_SECRET
-  export SENDGRID_API_KEY
-  export UBEREATS_PROXY
-  export HEREMAPS_API_TOKEN
-  export INFATUATED_PROXY
-  export MICHELIN_PROXY
-  export YELP_AWS_PROXY
-  export TRIPADVISOR_PROXY
-  export GOOGLE_SEARCH_PROXY
-  export GOOGLE_AWS_PROXY
-  export GOOGLE_USERCONTENT_AWS_PROXY
-  export DOORDASH_GRAPHQL_AWS_PROXY
-  export GRUBHUB_AWS_PROXY
-  export YELP_CDN_AWS_PROXY
-  export LUMINATI_PROXY_HOST
-  export LUMINATI_PROXY_PORT
-  export LUMINATI_PROXY_DATACENTRE_USER
-  export LUMINATI_PROXY_DATACENTRE_PASSWORD
-  export LUMINATI_PROXY_RESIDENTIAL_USER
-  export LUMINATI_PROXY_RESIDENTIAL_PASSWORD
-  export HASURA_FLY_POSTGRES_URL
-  export SLACK_MONITORING_HOOK
-  export AWS_ACCESS_KEY_ID=$DO_SPACES_ID
-  export AWS_SECRET_ACCESS_KEY=$DO_SPACES_SECRET
-  export HASURA_GRAPHQL_ADMIN_SECRET="password"
-  export USE_PROD_HASURA_PASSWORD=false
-  export ENV_SET="true"
-  echo "HASURA_FLY_POSTGRES_URL $HASURA_FLY_POSTGRES_URL"
-fi
+export DO_SPACES_ID
+export DO_SPACES_SECRET
+export SENDGRID_API_KEY
+export UBEREATS_PROXY
+export HEREMAPS_API_TOKEN
+export INFATUATED_PROXY
+export MICHELIN_PROXY
+export YELP_AWS_PROXY
+export TRIPADVISOR_PROXY
+export GOOGLE_SEARCH_PROXY
+export GOOGLE_AWS_PROXY
+export GOOGLE_USERCONTENT_AWS_PROXY
+export DOORDASH_GRAPHQL_AWS_PROXY
+export GRUBHUB_AWS_PROXY
+export YELP_CDN_AWS_PROXY
+export LUMINATI_PROXY_HOST
+export LUMINATI_PROXY_PORT
+export LUMINATI_PROXY_DATACENTRE_USER
+export LUMINATI_PROXY_DATACENTRE_PASSWORD
+export LUMINATI_PROXY_RESIDENTIAL_USER
+export LUMINATI_PROXY_RESIDENTIAL_PASSWORD
+export HASURA_FLY_POSTGRES_URL
+export SLACK_MONITORING_HOOK
+export AWS_ACCESS_KEY_ID=$DO_SPACES_ID
+export AWS_SECRET_ACCESS_KEY=$DO_SPACES_SECRET
+export HASURA_GRAPHQL_ADMIN_SECRET="password"
+export USE_PROD_HASURA_PASSWORD=false
+echo "HASURA_FLY_POSTGRES_URL $HASURA_FLY_POSTGRES_URL"
 
 echo "done"
