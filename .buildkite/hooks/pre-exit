@@ -12,12 +12,10 @@ if [ -n "$DOCKER_TAG" ]; then
   set -x
   docker tag "$from" "$to"
   docker tag "$from" "$to:latest"
+  docker push "$to" & # do it in the background to be faster
   set +x
-  echo "docker push $to"
   if [ "$DOCKER_PUSH_SYNC" = "true" ]; then
-    docker push "$to"
-  else
-    docker push "$to" & # do it in the background to be faster
+    wait
   fi
 fi
 
