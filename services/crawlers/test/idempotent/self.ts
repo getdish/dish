@@ -8,6 +8,7 @@ import {
   restaurantTagUpsert,
   restaurantUpdate,
   restaurantUpsertOrphanTags,
+  tagFindOne,
   tagInsert,
   tagUpsert,
 } from '@dish/graph'
@@ -32,6 +33,7 @@ import {
   ubereats,
   yelp,
 } from '../fixtures'
+import { breakdown } from '../restaurant_base_breakdown'
 
 interface Context {
   restaurant: RestaurantWithId
@@ -118,8 +120,9 @@ async function addTags(
 
 test.beforeEach(async (t) => {
   sinon.restore()
-  t.timeout(30000)
+  console.log('what')
   await reset(t)
+  console.log('done')
 })
 
 test('Merging', async (t) => {
@@ -537,109 +540,107 @@ test('Finds an existing scrape', async (t) => {
   t.is(restaurant?.name, 'Test Name Original')
 })
 
-console.warn(
-  '⚠️⚠️⚠️ disabled breakdown test for now due to ml fuzziness ⚠️⚠️⚠️'
-)
+// disabled due to ml fuzzy
+test.skip('Scoring for restaurants', async (t) => {
+  const self = new Self()
+  await addTags(t.context.restaurant, [
+    'Test tag',
+    'Testpho',
+    'Test 3',
+    'Test 4',
+  ])
+  const restaurant = (await restaurantFindOneWithTagsSQL(
+    t.context.restaurant.id
+  )) as RestaurantWithId
+  await self.preMerge(restaurant)
+  await self.mergePhotos()
+  await self.scanCorpus()
+  await self.postMerge()
+  const updated = await restaurantFindOneWithTagsSQL(t.context.restaurant.id)
 
-// test('Scoring for restaurants', async (t) => {
-//   const self = new Self()
-//   await addTags(t.context.restaurant, [
-//     'Test tag',
-//     'Testpho',
-//     'Test 3',
-//     'Test 4',
-//   ])
-//   const restaurant = (await restaurantFindOneWithTagsSQL(
-//     t.context.restaurant.id
-//   )) as RestaurantWithId
-//   await self.preMerge(restaurant)
-//   await self.mergePhotos()
-//   await self.scanCorpus()
-//   await self.postMerge()
-//   const updated = await restaurantFindOneWithTagsSQL(t.context.restaurant.id)
+  const test_pho = await tagFindOne({ name: 'Testpho' })
+  breakdown.sources.all.summaries.unique_tags[0].id = test_pho.id
+  breakdown.sources.tripadvisor.summaries.unique_tags[0].id = test_pho.id
 
-//   const test_pho = await tagFindOne({ name: 'Testpho' })
-//   breakdown.sources.all.summaries.unique_tags[0].id = test_pho.id
-//   breakdown.sources.tripadvisor.summaries.unique_tags[0].id = test_pho.id
+  t.deepEqual(updated?.upvotes, 9.1)
+  t.deepEqual(updated?.downvotes, 2)
+  t.deepEqual(updated?.votes_ratio, 0.8198198198198198)
+  t.deepEqual(updated?.source_breakdown, breakdown)
+})
 
-//   t.deepEqual(updated?.upvotes, 9.1)
-//   t.deepEqual(updated?.downvotes, 2)
-//   t.deepEqual(updated?.votes_ratio, 0.8198198198198198)
-//   t.deepEqual(updated?.source_breakdown, breakdown)
-// })
+test.skip('Scoring for rishes', async (t) => {
+  const self = new Self()
+  await addTags(t.context.restaurant, [
+    'Test tag',
+    'Testpho',
+    'Test 3',
+    'Test 4',
+  ])
+  const restaurant = (await restaurantFindOneWithTagsSQL(
+    t.context.restaurant.id
+  )) as RestaurantWithId
+  await self.preMerge(restaurant)
+  await self.doTags()
+  await self.scanCorpus()
+  await self.postMerge()
 
-// test('Scoring for rishes', async (t) => {
-//   const self = new Self()
-//   await addTags(t.context.restaurant, [
-//     'Test tag',
-//     'Testpho',
-//     'Test 3',
-//     'Test 4',
-//   ])
-//   const restaurant = (await restaurantFindOneWithTagsSQL(
-//     t.context.restaurant.id
-//   )) as RestaurantWithId
-//   await self.preMerge(restaurant)
-//   await self.doTags()
-//   await self.scanCorpus()
-//   await self.postMerge()
+  const updated = await restaurantFindOneWithTags({
+    id: t.context.restaurant.id,
+  })
 
-//   const updated = await restaurantFindOneWithTags({
-//     id: t.context.restaurant.id,
-//   })
-
-//   const rish1 = updated?.tags.filter((t) => t.tag.name == 'Test tag')[0]
-//   const rish2 = updated?.tags.filter((t) => t.tag.name == 'Testpho')[0]
-//   t.is(rish1.score, 3)
-//   t.is(rish1.upvotes, 4)
-//   t.is(rish1.downvotes, 1)
-//   t.is(rish1.votes_ratio, 0.8)
-//   t.is(rish1.review_mentions_count, 6)
-//   t.is(rish2.review_mentions_count, 1)
-//   t.deepEqual(rish1.source_breakdown.yelp, {
-//     score: 0,
-//     summary: {
-//       negative: ['This restaurant had the worst Test tag existing 1 dishes!'],
-//       positive: [' Vegetarian An amazing photo of Test tag existing 2!'],
-//     },
-//     upvotes: 1,
-//     downvotes: 1,
-//   })
-//   t.deepEqual(rish1.source_breakdown.google, {
-//     score: 1,
-//     summary: { negative: null, positive: ['Test tag was great'] },
-//     upvotes: 1,
-//     downvotes: 0,
-//   })
-//   t.deepEqual(rish1.source_breakdown.tripadvisor, {
-//     score: 2,
-//     summary: {
-//       negative: null,
-//       positive: [' Test tag was amazing.', 'Test tag was good.'],
-//     },
-//     upvotes: 2,
-//     downvotes: 0,
-//   })
-//   t.is(rish2.score, 1)
-//   t.deepEqual(rish2.source_breakdown.tripadvisor, {
-//     score: 1,
-//     summary: {
-//       negative: null,
-//       positive: ['Notable Testpho was delicious'],
-//     },
-//     upvotes: 1,
-//     downvotes: 0,
-//   })
-//   t.is(rish1.sentences.length, 6)
-//   t.assert(
-//     rish1.sentences.find(
-//       (s) =>
-//         s.sentence ==
-//         'This restaurant had the worst Test tag existing 1 dishes!'
-//     )
-//   )
-//   t.assert(rish1.sentences.find((s) => s.sentence == 'Test tag was good.'))
-// })
+  const rish1 = updated?.tags.filter((t) => t.tag.name == 'Test tag')[0]
+  const rish2 = updated?.tags.filter((t) => t.tag.name == 'Testpho')[0]
+  console.log('what is', rish1, rish2)
+  t.is(rish1.score, 3)
+  t.is(rish1.upvotes, 4)
+  t.is(rish1.downvotes, 1)
+  t.is(rish1.votes_ratio, 0.8)
+  t.is(rish1.review_mentions_count, 6)
+  t.is(rish2.review_mentions_count, 1)
+  t.deepEqual(rish1.source_breakdown.yelp, {
+    score: 0,
+    summary: {
+      negative: ['This restaurant had the worst Test tag existing 1 dishes!'],
+      positive: [' Vegetarian An amazing photo of Test tag existing 2!'],
+    },
+    upvotes: 1,
+    downvotes: 1,
+  })
+  t.deepEqual(rish1.source_breakdown.google, {
+    score: 1,
+    summary: { negative: null, positive: ['Test tag was great'] },
+    upvotes: 1,
+    downvotes: 0,
+  })
+  t.deepEqual(rish1.source_breakdown.tripadvisor, {
+    score: 2,
+    summary: {
+      negative: null,
+      positive: [' Test tag was amazing.', 'Test tag was good.'],
+    },
+    upvotes: 2,
+    downvotes: 0,
+  })
+  t.is(rish2.score, 1)
+  t.deepEqual(rish2.source_breakdown.tripadvisor, {
+    score: 1,
+    summary: {
+      negative: null,
+      positive: ['Notable Testpho was delicious'],
+    },
+    upvotes: 1,
+    downvotes: 0,
+  })
+  t.is(rish1.sentences.length, 6)
+  t.assert(
+    rish1.sentences.find(
+      (s) =>
+        s.sentence ==
+        'This restaurant had the worst Test tag existing 1 dishes!'
+    )
+  )
+  t.assert(rish1.sentences.find((s) => s.sentence == 'Test tag was good.'))
+})
 
 test('Sets oldest review date', async (t) => {
   const self = new Self()

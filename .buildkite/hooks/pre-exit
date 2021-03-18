@@ -8,16 +8,15 @@ fi
 
 if [ -n "$DOCKER_TAG" ]; then
   from="$BUILDKITE_PIPELINE_NAME-$BUILDKITE_STEP_KEY-build-$BUILDKITE_BUILD_NUMBER"
-  to="registry.fly.io/$DOCKER_TAG:latest"
-  echo docker tag "$from" "$to"
+  to="registry.fly.io/$DOCKER_TAG"
+  set -x
   docker tag "$from" "$to"
-  echo docker push "$to"
-  if [ "$DOCKER_PUSH_SYNC" = "true" ]; then
-    docker push "$to"
-  else
-    docker push "$to" & # do it in the background to be faster
-  fi
+  docker tag "$from" "$to:latest"
+  docker push "$to" & # do it in the background to be faster
   set +x
+  if [ "$DOCKER_PUSH_SYNC" = "true" ]; then
+    wait
+  fi
 fi
 
 if [ "$BUILDKITE_COMMAND_EXIT_STATUS" -ne 0 ]; then

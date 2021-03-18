@@ -2,7 +2,7 @@ import '@dish/common'
 
 import { sleep } from '@dish/async'
 import { sentryException } from '@dish/common'
-import { Restaurant, settingGet, settingSet } from '@dish/graph'
+import { Restaurant, client, settingGet, settingSet } from '@dish/graph'
 import axios from 'axios'
 import _ from 'lodash'
 import moment, { Moment } from 'moment'
@@ -69,28 +69,26 @@ export class DB {
 
   static async one_query_on_main(query: string) {
     const db = DB.main_db()
-    const result = await db.query(query)
-    await db.pool?.end()
-    return result
+    return await db.query(query)
   }
 
-  connect() {
+  async connect() {
     if (this.pool) {
-      return this.pool
+      return await this.pool.connect()
     }
     this.pool = new Pool({
       idleTimeoutMillis: 500_000,
       connectionTimeoutMillis: 300_000,
       ...this.config,
     })
-    this.pool.setMaxListeners(800)
     this.pool.on('error', (e) => {
+      console.log('Error: pool', e.message, e.stack)
       sentryException(e, {
         more: 'Error likely from long-lived pool connection in node-pg',
       })
       this.pool = null
     })
-    return this.pool
+    return await this.pool.connect()
   }
 
   async query(query: string) {
@@ -98,13 +96,12 @@ export class DB {
       console.log('DB.query', this.config['port'], query)
     }
     let result: QueryResult
-    const pool = this.connect()
-    const client = await pool.connect()
+    const client = await this.connect()
     if (!client) {
       throw new Error('no client')
     }
     try {
-      const timeout = sleep(100_000)
+      const timeout = sleep(80_000)
       const res = await Promise.race([
         client.query(query),
         timeout.then(() => {

@@ -100,7 +100,7 @@ export class Self extends WorkerJob {
   }
 
   static job_config: JobOptions = {
-    attempts: 3,
+    attempts: 2,
   }
 
   constructor() {
@@ -113,7 +113,7 @@ export class Self extends WorkerJob {
   }
 
   async allForCity(city: string) {
-    const PER_PAGE = 1000
+    const PER_PAGE = 30
     let previous_id = globalTagId
     const total = await restaurantCountForCity(city)
     let count = 0
@@ -126,16 +126,23 @@ export class Self extends WorkerJob {
       if (results.length == 0) {
         break
       }
-      for (const result of results) {
-        // check before running to prevent spawning massive amount of jobs
-        if (await restaurantFindOneWithTagsSQL(result.id)) {
-          await this.runOnWorker('mergeAll', [result.id])
-        }
-        count += 1
-        const progress = (count / total) * 100
-        await this.job.progress(progress)
-        previous_id = result.id as string
-      }
+      await Promise.all(
+        results.map(async (result) => {
+          // avoid a ton of jobs by checking for scrapes first
+          const anyScrape = await Promise.all(
+            this.ALL_SOURCES.map(async (source) => {
+              return await latestScrapeForRestaurant(result, source)
+            })
+          )
+          if (anyScrape.some(Boolean)) {
+            await this.runOnWorker('mergeAll', [result.id])
+          }
+        })
+      )
+      count += results.length
+      const progress = (count / total) * 100
+      await this.job.progress(progress)
+      previous_id = results[results.length - 1].id
     }
   }
 
@@ -172,7 +179,20 @@ export class Self extends WorkerJob {
       }
       await this.postMerge()
     }
-    await this.main_db.pool?.end()
+  }
+
+  async getScrapeData() {
+    let at_least_one = false
+    for (const source of this.ALL_SOURCES) {
+      const scrape = await latestScrapeForRestaurant(this.restaurant, source)
+      if (scrape) {
+        at_least_one = true
+      }
+      this[source] = scrape
+    }
+    if (!at_least_one) {
+      throw new Error('No scrapes found for restaurant')
+    }
   }
 
   async mergeMainData() {
@@ -318,20 +338,6 @@ export class Self extends WorkerJob {
 
   async scanCorpus() {
     await this.tagging.scanCorpus()
-  }
-
-  async getScrapeData() {
-    let at_least_one = false
-    for (const source of this.ALL_SOURCES) {
-      const scrape = await latestScrapeForRestaurant(this.restaurant, source)
-      if (scrape) {
-        at_least_one = true
-      }
-      this[source] = scrape
-    }
-    if (!at_least_one) {
-      throw new Error('No scrapes found for restaurant')
-    }
   }
 
   merge(strings: string[]) {
@@ -788,7 +794,6 @@ export class Self extends WorkerJob {
       this.restaurant = restaurant
       await this.gpt3.generateGPT3Summary()
       await restaurantUpdate(this.restaurant)
-      await this.main_db.pool?.end()
     }
   }
 
