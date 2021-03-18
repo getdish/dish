@@ -16,7 +16,7 @@ RUN apt-get update > /dev/null && \
 
 RUN apt-get install -y wget gnupg ca-certificates \
      && wget -q -O - https://dl-ssl.google.com/linux/linux_signing_key.pub | apt-key add - \
-     && sh -c 'echo "deb [arch=amd64] http://dl.google.com/linux/chrome/deb/ stable main" >> /etc/apt/sources.list.d/google.list' \
+     && echo "deb [arch=amd64] http://dl.google.com/linux/chrome/deb/ stable main" >> /etc/apt/sources.list.d/google.list \
      && apt-get update \
      # We install Chrome to get all the OS level dependencies, but Chrome itself
      # is not actually used as it's packaged in the node puppeteer library.

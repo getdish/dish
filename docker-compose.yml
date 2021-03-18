@@ -72,6 +72,7 @@ services:
       - DISH_ENV=production
   hasura:
     image: ${DOCKER_HASURA_IMAGE:-registry.fly.io/dish-hasura:latest}
+    restart: always
     build:
       context: .
       dockerfile: ./services/hasura/Dockerfile

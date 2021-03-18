@@ -50,6 +50,7 @@ export class RestaurantTagScores {
     for (const [index, batch] of batches.entries()) {
       console.log('Analyzing sentiment for batch', index, 'of ', batches.length)
       const assessed_batch = await this.getBertSentimentBatch(batch)
+
       assessed.push(...assessed_batch)
     }
     return assessed

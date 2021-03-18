@@ -179,7 +179,6 @@ export class Self extends WorkerJob {
       }
       await this.postMerge()
     }
-    await this.main_db.pool?.end()
   }
 
   async getScrapeData() {
@@ -795,7 +794,6 @@ export class Self extends WorkerJob {
       this.restaurant = restaurant
       await this.gpt3.generateGPT3Summary()
       await restaurantUpdate(this.restaurant)
-      await this.main_db.pool?.end()
     }
   }
 

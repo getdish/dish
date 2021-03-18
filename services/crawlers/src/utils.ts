@@ -2,7 +2,7 @@ import '@dish/common'
 
 import { sleep } from '@dish/async'
 import { sentryException } from '@dish/common'
-import { Restaurant, settingGet, settingSet } from '@dish/graph'
+import { Restaurant, client, settingGet, settingSet } from '@dish/graph'
 import axios from 'axios'
 import _ from 'lodash'
 import moment, { Moment } from 'moment'
@@ -69,44 +69,26 @@ export class DB {
 
   static async one_query_on_main(query: string) {
     const db = DB.main_db()
-    const result = await db.query(query)
-    await db.pool?.end()
-    return result
+    return await db.query(query)
   }
-
-  poolConnecting: any = null
 
   async connect() {
     if (this.pool) {
-      if (this.poolConnecting) {
-        this.poolConnecting.then(() => {
-          console.log('pc done')
-        })
-      }
-      return this.pool
+      return await this.pool.connect()
     }
-    let done
-    this.poolConnecting = new Promise((res) => {
-      done = res
-    })
-    console.log('pool config', this.config)
     this.pool = new Pool({
       idleTimeoutMillis: 500_000,
       connectionTimeoutMillis: 300_000,
       ...this.config,
     })
     this.pool.on('error', (e) => {
+      console.log('Error: pool', e.message, e.stack)
       sentryException(e, {
         more: 'Error likely from long-lived pool connection in node-pg',
       })
       this.pool = null
     })
-    console.log('wait for init pool connect')
-    await this.pool.connect()
-    console.log('connected')
-    done()
-    this.poolConnecting = null
-    return this.pool
+    return await this.pool.connect()
   }
 
   async query(query: string) {
@@ -114,15 +96,14 @@ export class DB {
       console.log('DB.query', this.config['port'], query)
     }
     let result: QueryResult
-    console.log('connect...', query)
-    const pool = await this.connect()
-    if (!pool) {
+    const client = await this.connect()
+    if (!client) {
       throw new Error('no client')
     }
     try {
-      const timeout = sleep(100_000)
+      const timeout = sleep(80_000)
       const res = await Promise.race([
-        pool.query(query),
+        client.query(query),
         timeout.then(() => {
           console.error(`Timed out on query`, query)
           return 'timed_out'
@@ -137,9 +118,11 @@ export class DB {
       console.error('Errored query: ' + query)
       console.error(e.message)
       if (query.includes('BEGIN;') || query.includes('TRANSACTION;')) {
-        await pool.query('ROLLBACK')
+        await client.query('ROLLBACK')
       }
       throw e
+    } finally {
+      client.release()
     }
     if (process.env.DEBUG) {
       console.log(' DB.query response', result.rowCount, result.rows)

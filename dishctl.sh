@@ -681,7 +681,11 @@ function docker_compose_up_for_tests() {
   export NODE_ENV=test
   export HASURA_GRAPHQL_DATABASE_URL=postgres://postgres:postgres@postgres/test
   export POSTGRES_DB=test
-  docker_compose_up_subset $test_exclude "$@"
+  if [ "$EXCLUDE_DISH_APP" != "" ]; then
+    docker_compose_up_subset "$test_exclude|dish-app" "$@"
+  else
+    docker_compose_up_subset $test_exclude "$@"
+  fi
 }
 
 function export_env() {

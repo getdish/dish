@@ -18,7 +18,7 @@
     "trim-packages": "yarn trim-package && npx yarn workspaces foreach run yes | npx json-filter-cli --confirm --from=package.json --to=package.json --exclude=scripts",
     "bootstrap": "docker-compose build base",
     "start": "DOCKER_HASURA_IMAGE=fedormelexin/graphql-engine-arm64 ./dishctl.sh docker_compose_up_for_devs",
-    "start:test": "DOCKER_HASURA_IMAGE=fedormelexin/graphql-engine-arm64 ./dishctl.sh docker_compose_up_for_tests",
+    "start:test": "EXCLUDE_DISH_APP=1 DOCKER_HASURA_IMAGE=fedormelexin/graphql-engine-arm64 ./dishctl.sh docker_compose_up_for_tests",
     "test:migrate": "POSTGRES_DB=test ./dishctl.sh db_migrate_local init && (cd services/timescale && npm install && DISH_ENV=not-production PG_DATABASE=scrape_data ./scripts/migrate.js)",
     "start:bak": "./dishctl.sh docker_compose_up_for_devs",
     "db:init": "./dishctl.sh db_migrate_local init",
