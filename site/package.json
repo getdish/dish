@@ -16,12 +16,12 @@
   },
   "dependencies": {
     "@babel/runtime": "^7.4.5",
-    "@o/babel-preset-motion": "^2.8.19",
+    "@o/babel-preset-motion": "^2.8.23",
     "@o/plugin-transform-react-constant-elements": "^2.7.1",
-    "@o/ui": "^2.8.19",
-    "@o/use-store": "^2.8.19",
-    "@o/utils": "^2.8.19",
-    "@o/wait-for-fonts": "^2.8.19",
+    "@o/ui": "^2.8.23",
+    "@o/use-store": "^2.8.23",
+    "@o/utils": "^2.8.23",
+    "@o/wait-for-fonts": "^2.8.23",
     "array-flat-polyfill": "^1.0.1",
     "gloss": "^2.7.21",
     "gloss-theme": "^2.7.21",
@@ -39,6 +39,6 @@
     "@babel/core": "^7.6.0",
     "@babel/preset-env": "*",
     "@babel/preset-react": "*",
-    "@o/build": "^2.8.19"
+    "@o/build": "^2.8.23"
   }
 }

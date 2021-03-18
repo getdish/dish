@@ -111,6 +111,7 @@ if [ "$ENV_SET" != "true" ]; then
   export HASURA_GRAPHQL_ADMIN_SECRET="password"
   export USE_PROD_HASURA_PASSWORD=false
   export ENV_SET="true"
+  echo "HASURA_FLY_POSTGRES_URL $HASURA_FLY_POSTGRES_URL"
 fi
 
 echo "done"
