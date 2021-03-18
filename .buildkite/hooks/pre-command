@@ -2,27 +2,10 @@
 
 set -eo pipefail
 
-# env first
-# ensure data dir for caches
-mkdir -p /data
-mkdir -p $HOME/data
-export PATH=$PATH:$HOME/bin
-export FLYCTL_INSTALL="/root/.fly"
-export PATH="$FLYCTL_INSTALL/bin:$PATH"
-mkdir -p $HOME/bin
-
-# set prod env
-set -a
-eval $(./dishctl.sh yaml_to_env)
-set +a
-
-# install second
-# bail early on fail
 if [ "$FIRST_STEP" == "true" ]; then
   echo "setting up git-crypt..."
   echo "$GPG_KEY" > key
   gpg --import key > gpg-import.log
-  git-crypt unlock > gpg-crypt.log
   rm -f exit_this_build || true
 else
   if [[ -f "exit_this_build" ]]; then
@@ -32,6 +15,32 @@ else
       exit 1
   fi
 fi
+
+git-crypt unlock > git-crypt.log
+
+# ensure dirs
+
+mkdir -p "$HOME/data"
+mkdir -p "$HOME/bin"
+
+# environment
+
+mkdir -p /data
+
+export PATH=$PATH:$HOME/bin
+export FLYCTL_INSTALL="/root/.fly"
+export PATH="$FLYCTL_INSTALL/bin:$PATH"
+
+set -a
+source .env.production
+set +a
+
+export AWS_ACCESS_KEY_ID=$DO_SPACES_ID
+export AWS_SECRET_ACCESS_KEY=$DO_SPACES_SECRET
+export HASURA_GRAPHQL_ADMIN_SECRET="password"
+export USE_PROD_HASURA_PASSWORD=false
+
+# install
 
 if ! [ -x "$(command -v netstat)" ]; then
   apt-get update && apt-get install -y net-tools
@@ -63,11 +72,6 @@ if ! [ -x "$(command -v hasura)" ]; then
   curl -L https://github.com/hasura/graphql-engine/raw/stable/cli/get.sh | bash
 fi
 
-# hasura_version=$(hasura version | grep "1.3.3")
-# if [ "$hasura_version" = "" ]; then
-#   hasura update-cli --version v2.0.0-alpha.4
-# fi
-
 if [ "$DOCKER_CLEAN_BEFORE" == "true" ]; then
   ./dishctl.sh clean_docker_if_disk_full
 fi
@@ -83,35 +87,5 @@ EOF
 fi
 
 ./dishctl.sh dish_registry_auth
-
-# export env
-export DO_SPACES_ID
-export DO_SPACES_SECRET
-export SENDGRID_API_KEY
-export UBEREATS_PROXY
-export HEREMAPS_API_TOKEN
-export INFATUATED_PROXY
-export MICHELIN_PROXY
-export YELP_AWS_PROXY
-export TRIPADVISOR_PROXY
-export GOOGLE_SEARCH_PROXY
-export GOOGLE_AWS_PROXY
-export GOOGLE_USERCONTENT_AWS_PROXY
-export DOORDASH_GRAPHQL_AWS_PROXY
-export GRUBHUB_AWS_PROXY
-export YELP_CDN_AWS_PROXY
-export LUMINATI_PROXY_HOST
-export LUMINATI_PROXY_PORT
-export LUMINATI_PROXY_DATACENTRE_USER
-export LUMINATI_PROXY_DATACENTRE_PASSWORD
-export LUMINATI_PROXY_RESIDENTIAL_USER
-export LUMINATI_PROXY_RESIDENTIAL_PASSWORD
-export HASURA_FLY_POSTGRES_URL
-export SLACK_MONITORING_HOOK
-export AWS_ACCESS_KEY_ID=$DO_SPACES_ID
-export AWS_SECRET_ACCESS_KEY=$DO_SPACES_SECRET
-export HASURA_GRAPHQL_ADMIN_SECRET="password"
-export USE_PROD_HASURA_PASSWORD=false
-echo "HASURA_FLY_POSTGRES_URL $HASURA_FLY_POSTGRES_URL"
 
 echo "done"

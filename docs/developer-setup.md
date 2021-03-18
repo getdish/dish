@@ -13,7 +13,7 @@ Contents:
 
 ### Repo encrypted credentials
 
-All Dish's credentials are stored in `.env.enc.production.yaml`. Even third-party web logins are contained in this file. To decrypt it:
+All Dish's credentials are stored in `.env.production`. Even third-party web logins are contained in this file. To decrypt it:
 
 - Install [git-crypt](https://github.com/AGWA/git-crypt).
 - If you're GPG key hasn't been added to the repo then ask your nearest Dish dev to either be added to the repo or ask for the decryption key.
@@ -278,14 +278,14 @@ We have wildcard certs `*.k8s.dishapp.com`. If you want lower level subdomains (
 Prometheus is a monitoring framework. It collects metrics from all kinds of places, both from
 the cluster itself and the various apps and services running on the cluster. The main access
 to Prometheus is via its Grafana UI: https://grafana.k8s.dishapp.com The username is `admin`
-and the password is in `env.enc.production.yaml`
+and the password is in `.env.production`
 
 #### Sentry error tracking and management
 
 Sentry is an advanced error tracking interface: https://sentry.io/welcome/
 
 Our service is at https://sentry.k8s.dishapp.com The username is 'admin@sentry.local'
-and the password is in `env.enc.production.yaml`.
+and the password is in `.env.production`.
 
 #### Kubernetes dashboard
 
