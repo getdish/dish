@@ -109,6 +109,7 @@ steps:
     key: site
     env:
       DOCKER_TAG: dish-site
+      DOCKER_PUSH_SYNC: true
     retry:
       automatic: true
     plugins:

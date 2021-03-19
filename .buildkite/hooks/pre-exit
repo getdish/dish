@@ -9,11 +9,10 @@ fi
 if [ -n "$DOCKER_TAG" ]; then
   from="$BUILDKITE_PIPELINE_NAME-$BUILDKITE_STEP_KEY-build-$BUILDKITE_BUILD_NUMBER"
   to="registry.fly.io/$DOCKER_TAG"
-  set -x
+  echo "tagging $to and pushing"
   docker tag "$from" "$to"
   docker tag "$from" "$to:latest"
-  docker push "$to" & # do it in the background to be faster
-  set +x
+  docker push "$to" > "$HOME/$DOCKER_TAG.push.log" & # do it in the background to be faster
   if [ "$DOCKER_PUSH_SYNC" = "true" ]; then
     wait
   fi
@@ -31,7 +30,8 @@ fi
 if [ "$LOG_DOCKER" == "true" ]; then
   echo "docker logs..."
   docker-compose logs --tail 2000
-  cat ./*.logs || true
+  echo "other logs..."
+  cat ./*.log || true
 fi
 
 if [ "$IS_COMPOSE_RUNNER" = "true" ] && [ "$BUILDKITE_COMMAND_EXIT_STATUS" = "1" ]; then

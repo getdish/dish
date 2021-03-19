@@ -44,5 +44,11 @@ export const sentryException = (
     scope.setExtras(data)
     Sentry.captureException(error)
   })
-  console.log(`Error: ${error.message} (sentry)\n`, error.stack)
+  let tagsString = ''
+  try {
+    tagsString = JSON.stringify(tags)
+  } catch (err) {
+    tagsString = `${tags}`
+  }
+  console.log(`Error: ${error.message} (sentry)\n`, tagsString, error.stack)
 }

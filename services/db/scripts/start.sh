@@ -55,6 +55,9 @@ if [ "$primary_region" != "" ]; then
     fi
 fi
 
+export $(cat /data/.env | xargs)
+# presumable run here
+stolonctl update --patch '{ "pgParameters":{"max_connections":"400"} }'
 
 export STKEEPER_PG_SU_PASSWORD=$su_password
 export STKEEPER_PG_REPL_PASSWORD=$repl_password

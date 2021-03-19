@@ -94,8 +94,8 @@ export class Self extends WorkerJob {
 
   static queue_config: QueueOptions = {
     limiter: {
-      max: 100,
-      duration: 1000,
+      max: 10,
+      duration: 5000,
     },
   }
 
@@ -282,7 +282,11 @@ export class Self extends WorkerJob {
       }
     } catch (e) {
       result = 'failed'
-      console.log('Error', e.message, e.stack)
+      console.log(
+        `Error (runFailableFunction ${func.name})`,
+        e.message,
+        e.stack
+      )
       sentryException(
         e,
         { function: func.name, restaurant: this.restaurant.name },
