@@ -55,6 +55,7 @@ export class DB {
     database: process.env.POSTGRES_DB || 'dish',
     idleTimeoutMillis: 500_000,
     connectionTimeoutMillis: 300_000,
+    max: 10,
   })
 
   constructor(public config: PoolConfig) {
@@ -75,11 +76,15 @@ export class DB {
     this.pool = new Pool({
       idleTimeoutMillis: 500_000,
       connectionTimeoutMillis: 300_000,
-      max: 20,
+      max: 10,
       ...this.config,
     })
     this.pool.on('error', (e) => {
-      console.log('Error: pool', e.message, e.stack)
+      console.log(
+        `Error: pool (${this.config.host}:${this.config.port})`,
+        e.message,
+        e.stack
+      )
       sentryException(e, {
         more: 'Error likely from long-lived pool connection in node-pg',
       })

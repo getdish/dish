@@ -38,11 +38,11 @@ function clearJobs(filter?: string[]) {
 }
 
 async function main() {
-  console.log(
-    'running worker',
-    queues.map((x) => x.name),
-    process.env.CLEAR_JOBS
-  )
+  console.log('running worker', {
+    queues: queues.map((x) => x.name),
+    CLEAR_JOBS: process.env.CLEAR_JOBS,
+    CONCURRENCY,
+  })
   if (process.env.CLEAR_JOBS) {
     clearJobs()
   }
@@ -85,8 +85,8 @@ async function startQueues(queues: Queue[]) {
   return await Promise.all(
     queues.map(({ queue, name }) => {
       const path = __dirname + '/job_processor.js'
-      console.log('  processing', path)
-      queue.process(CONCURRENCY, path)
+      console.log('startQueue', name, CONCURRENCY, path)
+      queue.process(name, CONCURRENCY, path)
       console.log('Created Bull worker queue for: ' + name)
       queue.on('failed', (job, err) => {
         console.log('Queue failed', name)
