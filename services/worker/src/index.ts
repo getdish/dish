@@ -6,7 +6,10 @@ import express from 'express'
 
 import { klass_map } from './job_processor'
 
-const CONCURRENCY = 4
+// this is actually concurrency PER-QUEUE
+// but we have one process per queue by default
+// so its Queues (~8 right now) * Processes (1)
+const CONCURRENCY = 1
 
 type Queue = {
   name: string
@@ -86,6 +89,7 @@ async function startQueues(queues: Queue[]) {
       queue.process(CONCURRENCY, path)
       console.log('Created Bull worker queue for: ' + name)
       queue.on('failed', (job, err) => {
+        console.log('Queue failed', name)
         sentryException(err, job, { crawler: name })
       })
     })
