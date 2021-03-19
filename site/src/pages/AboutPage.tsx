@@ -168,7 +168,7 @@ export function AboutPage() {
                       </BigParagraph>
 
                       <BigParagraph>
-                        <Inline {...linkProps('mailto:hi@tryorbit.com')}>
+                        <Inline {...linkProps('mailto:team@dishapp.com')}>
                           Get in touch
                         </Inline>
                         .
@@ -183,13 +183,13 @@ export function AboutPage() {
                       <BigTitle>Get in touch</BigTitle>
 
                       <BigParagraph>
-                        <Inline {...linkProps('mailto:hi@tryorbit.com')}>
+                        <Inline {...linkProps('mailto:team@dishapp.com')}>
                           Email
                         </Inline>
                       </BigParagraph>
 
                       <BigParagraph>
-                        <Inline {...linkProps('https://twitter.com/tryorbit')}>
+                        <Inline {...linkProps('https://twitter.com/dishapp')}>
                           Twitter
                         </Inline>
                       </BigParagraph>

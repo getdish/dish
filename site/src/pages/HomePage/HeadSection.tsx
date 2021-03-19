@@ -211,9 +211,6 @@ const HeadTextSection = memo(() => {
             whiteSpace="nowrap"
             maxHeight={260}
           >
-            {/* <FadeInView {...animation.blog} disable={!measured}>
-              <WelcomeBlogPostButton />
-            </FadeInView> */}
             <FadeInView
               disable={!measured}
               {...animation.title}
@@ -223,9 +220,6 @@ const HeadTextSection = memo(() => {
             </FadeInView>
           </TextFitTitle>
           {br}
-          {/* <FadeInView {...animation.sub1} minHeight="min-content">
-            <TitleParagraph {...para}>Dish is a search app we own.</TitleParagraph>
-          </FadeInView> */}
           <span style={{ userSelect: 'none' }}>&nbsp;</span>
           <View sm-display="none">
             <FadeInView {...animation.sub2} minHeight="min-content">
@@ -241,8 +235,6 @@ const HeadTextSection = memo(() => {
                   {' '}
                   Designed to last: non-profit, with a community token.
                 </span>
-                <br />
-                <span style={{ opacity: 0.5 }}>Meet dish, an experiment.</span>
               </Paragraph>
             </FadeInView>
           </View>

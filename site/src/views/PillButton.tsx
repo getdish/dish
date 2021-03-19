@@ -11,15 +11,15 @@ export function PillButton({ children, ...props }: ButtonProps) {
       hoverStyle={false}
       color="#000"
       {...fontProps.TitleFont}
-      fontWeight={600}
-      fontSize={16}
+      fontWeight={500}
+      fontSize={14}
       lineHeight={24}
-      letterSpacing={3}
+      letterSpacing={4}
       whiteSpace="pre"
       textTransform="uppercase"
       userSelect="none"
       width="max-content"
-      padding={[5, 16]}
+      padding={[5, 14, 3]}
       margin={[0, 'auto']}
       {...props}
     >

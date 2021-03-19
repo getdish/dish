@@ -26,19 +26,6 @@ p a:hover {
   display: block;
 }
 
-.orbit-example-section > * {
-  max-width: 700px;
-}
-
-.orbit-example-section > .orbit-example {
-  max-width: 100%;
-}
-
-.orbit-example pre {
-  min-height: 100%;
-  box-sizing: border-box;
-}
-
 .ui-title {
   font-family: 'GTEesti', Helvetica, Arial, sans-serif;
 }
@@ -482,46 +469,6 @@ fieldset {
   height: 0px;
   width: 0px;
   background: transparent;
-}
-
-.mini-scrollbars ::-webkit-scrollbar {
-  width: 1px;
-  border-radius: 20px;
-  background-color: transparent;
-}
-
-.mini-scrollbars ::-webkit-scrollbar-track {
-  background-color: transparent;
-}
-
-.mini-scrollbars ::-webkit-scrollbar-thumb {
-  background-color: rgba(100, 100, 100, 0.4);
-  border-radius: 20px;
-}
-
-.mini-scrollbars ::-webkit-scrollbar-thumb:hover {
-  background-color: rgba(100, 100, 100, 0.7);
-  width: 1px;
-}
-
-.mini-scrollbars *:hover::-webkit-scrollbar {
-  width: 4px;
-}
-
-.mini-scrollbars *:hover::-webkit-scrollbar-thumb {
-  width: 1px;
-}
-
-/* for StickySidebar */
-
-#sidebar {
-  will-change: min-height;
-}
-
-.sidebar__inner {
-  transform: translate(0, 0); /* For browsers don't support translate3d. */
-  transform: translate3d(0, 0, 0);
-  will-change: position, transform;
 }
 
 svg .animate-path {

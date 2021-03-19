@@ -9,7 +9,7 @@ import { routeTable } from './routeTable'
 export const Navigation = createBrowserNavigation({
   routes: mount({
     '/': route({
-      title: 'Orbit',
+      title: 'Dish',
       view: <HomePage />,
     }),
     // wrap routes in lazy
@@ -23,12 +23,12 @@ export const Navigation = createBrowserNavigation({
 // google analytics
 
 const gtag = window['gtag']
-const gevent = obj => {
+const gevent = (obj) => {
   console.debug('analytics', window['gid'], obj)
   gtag('config', window['gid'], obj)
 }
 
-Navigation.subscribe(next => {
+Navigation.subscribe((next) => {
   if (next.type === 'ready') {
     gevent({
       page_title: next.title,
