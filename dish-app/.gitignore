@@ -11,7 +11,7 @@ web-build/
 
 # for now, expire this before live TODO
 # TODO change
-!AuthKey_J6D3B439WA.p8
+!AppleAuthKey.p8
 
 # macOS
 .DS_Store

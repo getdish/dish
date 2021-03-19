@@ -1,5 +1,4 @@
 import { series, sleep } from '@dish/async'
-import { isPresent } from '@dish/helpers'
 import { isEqual, omit } from 'lodash'
 import React, { useEffect, useRef } from 'react'
 import { Platform, TouchableOpacity } from 'react-native'
