@@ -120,9 +120,7 @@ async function addTags(
 
 test.beforeEach(async (t) => {
   sinon.restore()
-  console.log('what')
   await reset(t)
-  console.log('done')
 })
 
 test('Merging', async (t) => {

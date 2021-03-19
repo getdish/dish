@@ -627,13 +627,13 @@ function docker_build_file() {
 }
 
 function docker_compose_up_subset() {
+  echo "starting docker with in env $ENV"
   services=$(
     docker-compose config --services 2> /dev/null \
       | grep -E -v "$1" \
       | tr '\r\n' ' '
   )
   extra=$2
-  export HASURA_GRAPHQL_ADMIN_SECRET=password
   if [ -z "$extra" ]; then
     log_command -- docker-compose up --remove-orphans $services
   else
