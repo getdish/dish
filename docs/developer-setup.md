@@ -30,7 +30,7 @@ All Dish's credentials are stored in `.env`. Even third-party web logins are con
 You can avoid copy-pasting environment variables using this:
 
 ```
-eval $(./dishctl.sh yaml_to_env) some_command_that_needs_dish_ENV
+./dishctl.sh source_env && some_command_that_needs_dish_ENV
 ```
 
 ## Core Stack
@@ -302,31 +302,3 @@ Our staging VM is completely independent of our Kubernetes cluster. The staging 
 `./dishctl.sh staging_ssh`
 
 Deployment should happen automatically for all succesful builds on the staging branch. However, if you want changes to `docker-compose.yaml` to take affect you'll need to SSH in and manually deal with it.
-
-### Notes
-
-These are the steps needed to set up the staging VM on Digital Ocean:
-
-```
-# Add `webish` firewall
-# Add your SSH key if you want and SSH in:
-apt-get update
-curl -fsSL https://get.docker.com | sh
-apt-get install -y docker-compose git-crypt postgresql-client tmux s3cmd
-curl -L https://github.com/hasura/graphql-engine/raw/stable/cli/get.sh | bash
-curl https://raw.githubusercontent.com/jwilder/nginx-proxy/master/nginx.tmpl > nginx.tmpl
-# Install flyctl
-# On your own local machine:
-#   `rsync -avP --filter=':- .gitignore' . root@staging.dishapp.com:/app`
-# Back on the VM:
-tmux # Just for developer convenience
-cd /app
-./dishctl.sh dish_registry_auth
-mkdir -p ~/.dish/postgres
-chown 1001:1001 -R ~/.dish/postgres
-eval $(./dishctl.sh yaml_to_env) docker-compose up -d
-docker-compose logs
-```
-
-If you run into "unexpected EOF" from hasura, i dont know the fix,
-but if you run migrations like 10 times it'll eventually fix...

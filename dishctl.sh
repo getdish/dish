@@ -7,6 +7,15 @@ export SHELLOPTS
 PG_PROXY_PID=
 TS_PROXY_PID=
 DISH_REGISTRY="registry.fly.io"
+CUR_ENV="${ENV:-prod}"
+ENV_FILE=".env.$CUR_ENV"
+
+function source_env() {
+  set -a
+  source .env
+  source $ENV_FILE
+  set +a
+}
 
 function generate_random_port() {
   echo "2$((1000 + RANDOM % 8999))"
@@ -609,6 +618,14 @@ function bert_sentiment() {
   curl "$url"
 }
 
+function docker_build() {
+  docker-compose build "$@"
+}
+
+function docker_build_file() {
+  docker buildx build --progress=plain --platform linux/amd64 "$@"
+}
+
 function docker_compose_up_subset() {
   services=$(
     docker-compose config --services 2> /dev/null \
@@ -833,8 +850,6 @@ if command -v git &> /dev/null; then
     # source base env first
     source .env
     # source current env next, .env.prod by default
-    CUR_ENV="${ENV:-prod}"
-    ENV_FILE=".env.$CUR_ENV"
     if [ -f "$ENV_FILE" ]; then
       source "$ENV_FILE"
     else

@@ -3,8 +3,5 @@ set -e
 
 export CLEAR_JOBS
 
-eval $(../../dishctl.sh yaml_to_env) \
-  NODE_ENV=development \
-  DISH_ENV=development \
-  REDIS_PASSWORD= node \
-  dist/index.js
+ENV=dev ../../dishctl.sh source_env
+node dist/index.js

@@ -8,8 +8,8 @@
     "start": "node dist/index.js",
     "build": "esdx",
     "watch": "esdx-watch",
-    "crawl:one": "DISH_ENV=development NODE_ENV=test ./scripts/run_crawl.sh --one",
-    "crawl:one:internal": "DISH_ENV=development NODE_ENV=test ./scripts/run_crawl.sh --one-internal",
+    "crawl:one": "ENV=dev ./scripts/run_crawl.sh --one",
+    "crawl:one:internal": "ENV=dev ./scripts/run_crawl.sh --one-internal",
     "test": "DISH_DEBUG=1 ./scripts/run_tests.sh",
     "test-new": "TARGET=node RUN_WITHOUT_WORKER=true DISH_ENV=test ava test/idempotent/self.ts --verbose",
     "test:scheduled": "TARGET=node RUN_WITHOUT_WORKER=true DISH_ENV=test ava test/http-dependent/* --verbose"
