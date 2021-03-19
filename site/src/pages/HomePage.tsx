@@ -1,6 +1,14 @@
 import { ErrorBoundary, Loading, Theme, useIntersectionObserver } from '@o/ui'
 import { once } from 'lodash'
-import React, { lazy, memo, Suspense, useEffect, useLayoutEffect, useRef, useState } from 'react'
+import React, {
+  Suspense,
+  lazy,
+  memo,
+  useEffect,
+  useLayoutEffect,
+  useRef,
+  useState,
+} from 'react'
 
 import { requestIdleCallback } from '../etc/requestIdle'
 import { Header } from '../Header'
@@ -14,11 +22,20 @@ import { LoadingPage } from './LoadingPage'
 
 const Sections = {
   AllInOnePitchDemoSection: loadOnIntersect(
-    lazy(() => retry(() => import('./HomePage/AllInOnePitchDemoSection'))),
+    lazy(() => retry(() => import('./HomePage/AllInOnePitchDemoSection')))
   ),
-  FeaturesSection: loadOnIntersect(lazy(() => retry(() => import('./HomePage/FeaturesSection')))),
-  FooterSection: loadOnIntersect(lazy(() => retry(() => import('./HomePage/FooterSection')))),
-  // IntroSection: loadOnIntersect(lazy(() => retry(() => import('./HomePage/IntroSection')))),
+  FeaturesSection: loadOnIntersect(
+    lazy(() => retry(() => import('./HomePage/FeaturesSection')))
+  ),
+  FooterSection: loadOnIntersect(
+    lazy(() => retry(() => import('./HomePage/FooterSection')))
+  ),
+  DataAppKitFeaturesSection: loadOnIntersect(
+    lazy(() => retry(() => import('./HomePage/DataAppKitFeaturesSection')))
+  ),
+  MissionMottoSection: loadOnIntersect(
+    lazy(() => retry(() => import('./HomePage/MissionMottoSection')))
+  ),
 }
 
 const props = {
@@ -62,11 +79,17 @@ export const HomePage = memo(() => {
         <Page {...props}>
           <IntroSection />
         </Page>
+        <Page {...props}>
+          <Sections.DataAppKitFeaturesSection />
+        </Page>
         <Page {...props} maxHeight={1000}>
           <FeaturesSection />
         </Page>
         <Page {...props}>
           <Sections.AllInOnePitchDemoSection />
+        </Page>
+        <Page {...props}>
+          <Sections.MissionMottoSection />
         </Page>
         <Page {...props} maxHeight={600}>
           <Theme name="home">
@@ -85,22 +108,27 @@ HomePage.showPeekHeader = true
 
 let allUpcoming = []
 
-const onIdle = () => new Promise(res => requestIdleCallback(res))
+const onIdle = () => new Promise((res) => requestIdleCallback(res))
 
 const startLoading = once(async () => {
   // let them all add
-  await new Promise(res => setTimeout(res, 4000))
+  await new Promise((res) => setTimeout(res, 4000))
   // load rest of page
   while (allUpcoming.length) {
     await onIdle()
-    const next = allUpcoming.reduce((a, b) => (b.top < a.top ? b : a), { top: Infinity })
+    const next = allUpcoming.reduce((a, b) => (b.top < a.top ? b : a), {
+      top: Infinity,
+    })
     next.load()
-    allUpcoming.splice(allUpcoming.findIndex(x => x.load === next.load), 1)
+    allUpcoming.splice(
+      allUpcoming.findIndex((x) => x.load === next.load),
+      1
+    )
   }
 })
 
 function loadOnIntersect(Component: any) {
-  return props => {
+  return (props) => {
     const [show, setShow] = useState(false)
     const ref = useRef(null)
 
@@ -152,7 +180,9 @@ function loadOnIntersect(Component: any) {
 
     return (
       <ErrorBoundary name={`${Component.name}`}>
-        <Suspense fallback={fallback}>{show ? <Component {...props} /> : fallback}</Suspense>
+        <Suspense fallback={fallback}>
+          {show ? <Component {...props} /> : fallback}
+        </Suspense>
       </ErrorBoundary>
     )
   }
@@ -162,7 +192,7 @@ function retry<A>(fn, retriesLeft = 5, interval = 1000) {
   return new Promise<A>((resolve, reject) => {
     fn()
       .then(resolve)
-      .catch(error => {
+      .catch((error) => {
         setTimeout(() => {
           if (retriesLeft === 1) {
             console.log('maximum retries exceeded', fn)
@@ -170,15 +200,18 @@ function retry<A>(fn, retriesLeft = 5, interval = 1000) {
             return
           }
           // Passing on "reject" is the important part
-          retry(fn, retriesLeft - 1, interval).then(x => resolve(x as A), reject)
+          retry(fn, retriesLeft - 1, interval).then(
+            (x) => resolve(x as A),
+            reject
+          )
         }, interval)
       })
   })
 }
 
 function onLoadAllImages() {
-  return new Promise(res => {
-    let imgs = Array.from(document.images).filter(x => !x.complete)
+  return new Promise((res) => {
+    let imgs = Array.from(document.images).filter((x) => !x.complete)
     let len = imgs.length
     let counter = 0
 

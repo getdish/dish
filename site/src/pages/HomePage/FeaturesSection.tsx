@@ -2,7 +2,7 @@ import { Grid, Image, ParallaxView, Space, Stack, View } from '@o/ui'
 import { flatMap } from 'lodash'
 import React, { memo, useRef, useState } from 'react'
 
-import { LogoCircle } from '../../views/DishLogo'
+import { LogoCircle, LogoColor } from '../../views/DishLogo'
 import { useFadePage } from '../../views/FadeInView'
 import { Page } from '../../views/Page'
 import { ParallaxStageItem } from '../../views/ParallaxStage'
@@ -76,13 +76,7 @@ export default memo(function FeaturesSection() {
                 Why use a coin?
               </TitleText>
               <Space size={10} />
-              <TitleText
-                alignItems="flex-start"
-                justifyContent="flex-start"
-                size="xxxl"
-              >
-                It's a better deal.
-              </TitleText>
+              <TitleText size="xxxl">It's a better deal.</TitleText>
               <Space size={14} />
               <IntroPara
                 delayIndex={1}
@@ -208,7 +202,7 @@ export default memo(function FeaturesSection() {
               },
             }}
           >
-            <LogoCircle scale={12} />
+            <LogoColor scale={12} />
           </ParallaxStageItem>
         </View>
       </Stack>
