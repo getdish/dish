@@ -19,8 +19,8 @@ import { Link } from '../Link'
 import { Score } from '../UpvoteDownvoteScore'
 
 type ListIDProps = {
-  slug: string | null
-  userSlug: string | null
+  slug?: string
+  userSlug?: string
   region: string
 }
 

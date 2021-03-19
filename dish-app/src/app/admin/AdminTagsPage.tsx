@@ -456,6 +456,7 @@ const TagEdit = memo(
           tag={fullTag}
           onChange={async (x) => {
             const tagMutation = await mutate(
+              // @ts-ignore
               (mutation, { assignSelections }) => {
                 const res = mutation.update_tag_by_pk({
                   pk_columns: {

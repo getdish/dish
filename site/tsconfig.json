@@ -1,5 +1,5 @@
 {
-  "extends": "../../tsconfig.base",
+  "extends": "../tsconfig.base",
   "compilerOptions": {
     "outDir": "_",
     "baseUrl": "./src",
@@ -10,23 +10,6 @@
     "isolatedModules": true,
     "jsx": "preserve"
   },
-  "exclude": ["_", "node_modules", "tmp", "dist", "server.ts", ".firebase"],
-  "references": [
-    {
-      "path": "../../app/config"
-    },
-    {
-      "path": "../../packages/gloss"
-    },
-    {
-      "path": "../../packages/color"
-    },
-    {
-      "path": "../../packages/use-store"
-    },
-    {
-      "path": "../../packages/react-textfit"
-    }
-  ],
+  "exclude": ["_", "node_modules", "tmp", "dist", "server.ts"],
   "include": ["**/*.ts", "**/*.tsx"]
 }

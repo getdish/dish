@@ -13,7 +13,7 @@ export const tagDefaultAutocomplete = [
     type: 'dish',
     icon: '🌮',
     slug: 'mexican__taco',
-    rgb: null,
+    rgb: undefined,
   },
   {
     id: 'caa833fd-0f81-4fde-b5f3-457bca68cf56',
@@ -34,7 +34,7 @@ export const tagDefaultAutocomplete = [
   {
     id: '1cb327c1-fbc6-4366-94e0-e795e015ef31',
     name: 'Dim Sum',
-    type: null,
+    type: undefined,
     icon: '🥟',
     slug: 'global__dim-sum',
     rgb: [],
@@ -53,7 +53,7 @@ export const tagDefaultAutocomplete = [
     type: 'category',
     icon: '🍕',
     slug: 'categories__pizza',
-    rgb: null,
+    rgb: undefined,
   },
   {
     id: '36224884-6441-4585-b68a-a605d682bfa2',
@@ -61,7 +61,7 @@ export const tagDefaultAutocomplete = [
     type: 'dish',
     icon: '🧋',
     slug: 'chinese-american__boba',
-    rgb: null,
+    rgb: undefined,
   },
   {
     id: '2ce796f2-fb67-44af-979b-9badc8e41621',
@@ -69,7 +69,7 @@ export const tagDefaultAutocomplete = [
     type: 'dish',
     icon: '🦪',
     slug: 'namibian__oysters',
-    rgb: null,
+    rgb: undefined,
   },
   {
     id: '6c08b98a-b334-4ce4-8a90-25c58ca860ba',
@@ -77,7 +77,7 @@ export const tagDefaultAutocomplete = [
     type: 'dish',
     icon: '☕️',
     slug: 'medieval__coffee',
-    rgb: null,
+    rgb: undefined,
   },
   {
     id: '7bef7997-267c-4656-ab72-d28155a6f0e7',
@@ -85,7 +85,7 @@ export const tagDefaultAutocomplete = [
     type: 'category',
     icon: '🍳',
     slug: 'categories__breakfast',
-    rgb: null,
+    rgb: undefined,
   },
   {
     id: 'aa774a25-bd12-4249-a39a-43c2edeeafd3',
@@ -93,7 +93,7 @@ export const tagDefaultAutocomplete = [
     type: 'category',
     icon: '🥘',
     slug: 'categories__curry',
-    rgb: null,
+    rgb: undefined,
   },
   {
     id: '27f5e461-6c19-4d5c-af9f-73ccad11714d',
@@ -101,7 +101,7 @@ export const tagDefaultAutocomplete = [
     type: 'dish',
     icon: '🍔',
     slug: 'american__burger',
-    rgb: null,
+    rgb: undefined,
   },
   {
     id: 'a541d172-5e96-412a-b71b-278372060e30',
@@ -109,7 +109,7 @@ export const tagDefaultAutocomplete = [
     type: 'category',
     icon: '🥗',
     slug: 'categories__salad',
-    rgb: null,
+    rgb: undefined,
   },
   {
     id: '87747f18-25fe-45d1-abbc-96741bfefeb1',
@@ -117,7 +117,7 @@ export const tagDefaultAutocomplete = [
     type: 'category',
     icon: '🍪',
     slug: 'categories__cookie',
-    rgb: null,
+    rgb: undefined,
   },
 ]
 export const tagLenses = [
@@ -159,25 +159,25 @@ export const tagFilters = [
     id: '507e6614-3265-4857-8911-a9ffbd45e212',
     name: 'price-high',
     type: 'filter',
-    icon: null,
+    icon: undefined,
     slug: 'filters__price-high',
-    rgb: null,
+    rgb: undefined,
   },
   {
     id: '19610cd0-cc12-401a-bc65-f2289c92ef2b',
     name: 'price-mid',
     type: 'filter',
-    icon: null,
+    icon: undefined,
     slug: 'filters__price-mid',
-    rgb: null,
+    rgb: undefined,
   },
   {
     id: 'ed6de29e-2dc1-4f2a-98a1-bd99e24406e8',
     name: 'price-low',
     type: 'filter',
-    icon: null,
+    icon: undefined,
     slug: 'filters__price-low',
-    rgb: null,
+    rgb: undefined,
   },
   {
     id: 'c5318460-a925-4f88-aaa8-232ec3faa893',
@@ -185,7 +185,7 @@ export const tagFilters = [
     type: 'filter',
     icon: '🚗',
     slug: 'filters__delivery',
-    rgb: null,
+    rgb: undefined,
   },
   {
     id: '6ba8fef3-25fb-4494-91f5-3c44cdbb8f4b',
@@ -193,6 +193,6 @@ export const tagFilters = [
     type: 'filter',
     icon: '🕐',
     slug: 'filters__open',
-    rgb: null,
+    rgb: undefined,
   },
 ]

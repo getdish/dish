@@ -172,7 +172,7 @@ export async function reviewExternalUpsert(reviews: Review[]) {
 }
 
 export function cleanReviewText(text: string | null | undefined) {
-  if (!text) return null
+  if (!text) return ''
   const br = /<br\s*[\/]?>/gi
   const cleaned = text.replace(br, '\n')
   return decode(cleaned)

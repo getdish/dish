@@ -143,6 +143,7 @@ const getNormalizedLink = (props: Partial<LinkButtonProps>) => {
         // TODO ideally our data is cleaner, no need for this
         // default to dish which is important! used later
         // by searchPageStore.runSearch to pick out dish tag
+        // @ts-expect-error
         type: 'dish',
         ...(allTags[tag.slug] ?? tag),
       }

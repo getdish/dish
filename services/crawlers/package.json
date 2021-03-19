@@ -18,7 +18,7 @@
     "@dish/async": "*",
     "@dish/common": "*",
     "@dish/esdx": "*",
-    "@dish/gqless": "^3.0.13",
+    "@dish/gqless": "^5.0.0",
     "@dish/graph": "*",
     "@dish/helpers": "*",
     "@dish/worker": "*",
