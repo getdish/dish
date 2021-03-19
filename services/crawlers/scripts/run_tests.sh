@@ -3,8 +3,10 @@ set -e
 
 export TARGET=node
 
-set -a
-source ../../../.env.test
-set +a
+pushd ../..
+  set -a
+  source .env.test
+  set +a
+popd
 
 ava test/idempotent/* --verbose --serial "$@"
