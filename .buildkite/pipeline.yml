@@ -132,6 +132,7 @@ steps:
     key: postgres
     env:
       DOCKER_TAG: dish-postgres
+      DOCKER_SKIP_PUSH: true
       POSTGRES_NAME: postgres
     retry:
       automatic: true
