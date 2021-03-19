@@ -625,22 +625,11 @@ function docker_compose_up_subset() {
   printf "\n\n\n"
 }
 
-base_exclude="site|base|nginx|image-quality|image-proxy|bert|gorse|run-tests|cron|proxy"
-test_exclude="$base_exclude|worker"
-dev_exclude="$base_exclude|dish-app"
-
-function docker_compose_up_for_devs() {
-  docker_compose_up_subset $dev_exclude
-}
-
-function docker_compose_up_for_tests() {
-  export NODE_ENV=test
-  export HASURA_GRAPHQL_DATABASE_URL=postgres://postgres:postgres@postgres/test
-  export POSTGRES_DB=test
+function docker_compose_up() {
   if [ "$EXCLUDE_DISH_APP" != "" ]; then
-    docker_compose_up_subset "$test_exclude|dish-app" "$@"
+    docker_compose_up_subset "$DOCKER_COMPOSE_EXCLUDE|dish-app" "$@"
   else
-    docker_compose_up_subset $test_exclude "$@"
+    docker_compose_up_subset "$DOCKER_COMPOSE_EXCLUDE" "$@"
   fi
 }
 
@@ -841,14 +830,19 @@ if command -v git &> /dev/null; then
   export DOCKER_TAG_NAMESPACE=${branch//\//-}
   export BASE_IMAGE=$DISH_REGISTRY/base:$DOCKER_TAG_NAMESPACE
   pushd $PROJECT_ROOT >/dev/null
-    if [ -f ".env.production" ]; then
-      source .env.production
+    # source base env first
+    source .env
+    # source current env next, .env.prod by default
+    CUR_ENV="${ENV:-prod}"
+    ENV_FILE=".env.$CUR_ENV"
+    if [ -f "$ENV_FILE" ]; then
+      source "$ENV_FILE"
     else
-      echo "Not loading ENV from .env.production as it doesn't exist"
+      echo "Not loading ENV from $ENV_FILE as it doesn't exist"
     fi
   popd >/dev/null
 else
-  echo "Not loading ENV from .env.production as there's no \`git\` command"
+  echo "Not loading ENV as there's no \`git\` command"
   export all_env="$(env)"
 fi
 

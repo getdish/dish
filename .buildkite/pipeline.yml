@@ -246,7 +246,7 @@ steps:
 
   - label: "setup services for tests"
     key: test-setup
-    command: ".buildkite/scripts/setup_services.sh"
+    command: ".buildkite/scripts/setup_test_services.sh"
     depends_on:
       - test-images
     retry:
