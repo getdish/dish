@@ -103,7 +103,6 @@ fastlane/test_output
 iOSInjectionProject/
 
 .vim
-.env
 
 hasura.logs
 

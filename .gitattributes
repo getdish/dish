@@ -1,2 +1,3 @@
-.env.production filter=git-crypt diff=git-crypt
+.env.prod filter=git-crypt diff=git-crypt
+.env filter=git-crypt diff=git-crypt
 etc/dish-wire.conf filter=git-crypt diff=git-crypt

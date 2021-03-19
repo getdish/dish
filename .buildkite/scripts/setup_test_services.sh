@@ -2,7 +2,7 @@
 
 set -eo pipefail
 
-export DISH_IMAGE_TAG=":latest"
+source .env.test
 
 # HELPERS
 
@@ -37,9 +37,6 @@ export -f wait_until_dish_app_ready
 
 # SCRIPT
 
-export POSTGRES_NAME=db
-export POSTGRES_DB=test
-
 # mkdir -p "$HOME/.dish/postgresdb"
 # chown -R root:root "$HOME/.dish/postgresdb"
 
@@ -52,7 +49,7 @@ if [ ! -d "$HOME/data" ]; then
 fi
 
 echo "Starting docker for tests"
-./dishctl.sh docker_compose_up_for_tests -d
+./dishctl.sh docker_compose_up -d
 
 echo "Waiting for hasura to finish starting"
 if ! timeout --preserve-status 30 bash -c wait_until_hasura_ready; then
