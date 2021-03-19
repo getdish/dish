@@ -3,9 +3,6 @@
 set -eo pipefail
 
 if [ "$FIRST_STEP" == "true" ]; then
-  echo "setting up git-crypt..."
-  echo "$GPG_KEY" > key
-  gpg --import key > gpg-import.log
   rm -f exit_this_build || true
 else
   if [[ -f "exit_this_build" ]]; then
@@ -14,6 +11,12 @@ else
       echo "skipped due to: $SKIP_STEPS"
       exit 1
   fi
+fi
+
+gpg_file="$HOME/.gpg-key"
+if [ ! -f "$gpg_file" ]; then
+  echo "$GPG_KEY" > /root/.gpg-key
+  gpg --import /root/.gpg-key > gpg-import.log
 fi
 
 git-crypt unlock > git-crypt.log

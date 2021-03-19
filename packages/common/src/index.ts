@@ -44,5 +44,5 @@ export const sentryException = (
     scope.setExtras(data)
     Sentry.captureException(error)
   })
-  console.log(`Error: ${error.message} (sentry)`)
+  console.log(`Error: ${error.message} (sentry)\n`, error.stack)
 }
