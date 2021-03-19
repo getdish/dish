@@ -25,7 +25,7 @@ declare module "@dish/helpers-node" {
     export function userFavoriteARestaurant(user_id: uuid, restaurant_id: uuid, favorited?: boolean): Promise<import("@dish/graph").WithID<Review>>;
     export function userFavorites(user_id: string): Promise<any>;
     export function reviewExternalUpsert(reviews: Review[]): Promise<ReviewWithId[]>;
-    export function cleanReviewText(text: string | null | undefined): string | null;
+    export function cleanReviewText(text: string | null | undefined): string;
     export function dedupeReviews(reviews: Review[]): Review[];
     export function dedupeSentiments<A extends ReviewTagSentence>(sentiments: A[]): A[];
 }
