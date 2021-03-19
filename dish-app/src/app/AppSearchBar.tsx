@@ -52,6 +52,7 @@ const borderRadiusInner = 19
 
 export const AppSearchBarFloating = () => {
   const media = useMedia()
+  const theme = useTheme()
   // const { background, backgroundRgb } = useSearchBarTheme()
   const height = searchBarHeight + 4
 
@@ -120,30 +121,16 @@ export const AppSearchBarFloating = () => {
               height={height}
               justifyContent="center"
               alignItems="center"
-              backgroundColor="rgba(0,0,0,0.95)"
-              shadowColor="rgba(0,0,0,0.3)"
+              backgroundColor={theme.backgroundColor}
+              shadowColor={theme.shadowColor}
               shadowOffset={{ height: 1, width: 0 }}
               shadowRadius={15}
             >
               <AbsoluteVStack
-                borderWidth={3}
-                borderColor="rgba(0,0,0,0.2)"
+                borderWidth={2}
+                borderColor={theme.borderColor}
                 borderRadius={borderRadiusInner}
                 fullscreen
-              />
-              <AbsoluteVStack
-                borderWidth={1}
-                borderColor="rgba(0,0,0,0.35)"
-                borderRadius={borderRadiusInner}
-                fullscreen
-              />
-              <LinearGradient
-                style={[StyleSheet.absoluteFill]}
-                colors={[
-                  'rgba(0,0,0,0.05)',
-                  `rgba(0,0,0,0.05)`,
-                  'rgba(0,0,0,0.05)',
-                ]}
               />
             </AbsoluteVStack>
             <VStack
@@ -170,7 +157,6 @@ const AppSearchBarContents = memo(() => {
   const autocompletes = useStoreInstance(autocompletesStore)
   const focus = autocompletes.visible ? autocompletes.target : false
   const media = useMedia()
-  const { color, background } = useSearchBarTheme()
   const showLocation = focus === 'location'
 
   return (
@@ -266,9 +252,17 @@ const AppSearchBarContents = memo(() => {
             }}
           >
             {showLocation ? (
-              <Search color={color} size={22} opacity={0.65} />
+              <Search
+                color={isWeb ? 'var(--color)' : '#999'}
+                size={22}
+                opacity={0.65}
+              />
             ) : (
-              <MapPin color={color} size={22} opacity={0.65} />
+              <MapPin
+                color={isWeb ? 'var(--color)' : '#999'}
+                size={22}
+                opacity={0.65}
+              />
             )}
           </TouchableOpacity>
         </HStack>
@@ -284,8 +278,6 @@ const AppSearchBarContents = memo(() => {
 })
 
 const SearchBarActionButton = memo(() => {
-  // const media = useMedia()
-  const { color } = useSearchBarTheme()
   const home = useHomeStore()
   const autocompletes = useStoreInstance(autocompletesStore)
   const showAutocomplete = autocompletes.visible
@@ -323,7 +315,7 @@ const SearchBarActionButton = memo(() => {
           borderBottomLeftRadius={borderRadius}
           alignItems="center"
           justifyContent="center"
-          opacity={0.05}
+          opacity={0.5}
           padding={0}
           backgroundColor={theme.backgroundColorSecondary}
           {...(!isDisabled && {
@@ -337,7 +329,7 @@ const SearchBarActionButton = memo(() => {
           })}
         >
           <VStack transform={[{ skewX: '12deg' }]}>
-            <Icon color={color} size={20} />
+            <Icon color={isWeb ? 'var(--color)' : '#888'} size={20} />
           </VStack>
         </VStack>
       </Link>

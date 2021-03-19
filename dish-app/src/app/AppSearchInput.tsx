@@ -126,7 +126,7 @@ export const AppSearchInput = memo(() => {
   // focus on visible
   useAutocompleteInputFocus(inputStore)
 
-  const height = searchBarHeight - 2
+  const height = searchBarHeight - 6
   const outerHeight = height - 1
   const innerHeight = height - 1
 
@@ -193,13 +193,6 @@ export const AppSearchInput = memo(() => {
   return (
     <AppAutocompleteHoverableInput input={input} autocompleteTarget="search">
       <InputFrame>
-        <AbsoluteVStack
-          fullscreen
-          borderRadius={1000}
-          borderWidth={1}
-          borderColor="rgba(255,255,255,0.2)"
-        />
-
         {/* Loading / Search Icon */}
         <SearchInputIcon color={color} />
 
@@ -343,13 +336,10 @@ const InputFrame = forwardRef(({ children }: { children: any }, ref) => {
   return (
     <HStack
       alignItems="center"
+      backgroundColor={theme.backgroundColorTertiary}
       borderRadius={180}
-      backgroundColor={theme.backgroundColorSecondary}
-      borderWidth={2}
-      borderColor={theme.borderColor}
-      shadowColor="#333"
-      shadowRadius={15}
-      shadowOpacity={0.2}
+      // borderWidth={2}
+      // borderColor={theme.borderColor}
       flex={1}
       maxWidth="100%"
       paddingLeft={10}

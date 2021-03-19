@@ -1,6 +1,7 @@
 import { MapPin, Navigation } from '@dish/react-feather'
 import React, { memo, useCallback } from 'react'
 import { TextInput } from 'react-native'
+import { useTheme } from 'snackui'
 import {
   AbsoluteVStack,
   Button,
@@ -27,6 +28,7 @@ import { SearchInputNativeDragFix } from './SearchInputNativeDragFix'
 import { setLocation } from './setLocation'
 
 export const AppSearchInputLocation = memo(() => {
+  const theme = useTheme()
   const media = useMedia()
   const inputStore = useInputStoreLocation()
   const home = useHomeStore()
@@ -83,17 +85,17 @@ export const AppSearchInputLocation = memo(() => {
           flex={1}
           minHeight={44}
           alignItems="center"
-          backgroundColor="rgba(50,50,50,0.7)"
+          backgroundColor={theme.backgroundColorTertiary}
           justifyContent="center"
           paddingHorizontal={8}
           position="relative"
           borderRadius={12}
           overflow="hidden"
           hoverStyle={{
-            backgroundColor: 'rgba(155,155,155,0.1)',
+            backgroundColor: theme.backgroundColorSecondary,
           }}
           focusStyle={{
-            backgroundColor: 'rgba(0,0,0,0.6)',
+            backgroundColor: theme.backgroundColorQuartenary,
           }}
           {...(media.sm && {
             backgroundColor: '#eee',
@@ -121,7 +123,11 @@ export const AppSearchInputLocation = memo(() => {
               justifyContent="center"
               pointerEvents="none"
             >
-              <MapPin color={color} size={18} opacity={0.35} />
+              <MapPin
+                color={isWeb ? 'var(--color)' : color}
+                size={18}
+                opacity={0.35}
+              />
             </AbsoluteVStack>
             {!isWeb && <SearchInputNativeDragFix name="location" />}
             <TextInput
@@ -165,7 +171,7 @@ export const AppSearchInputLocation = memo(() => {
             <Navigation
               size={20}
               opacity={0.5}
-              color={color === '#fff' ? '#fff' : blue}
+              color={isWeb ? 'var(--color)' : color}
             />
           </Button>
         </HStack>
