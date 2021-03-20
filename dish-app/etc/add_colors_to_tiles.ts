@@ -4,8 +4,6 @@ import { mutate, query, resolved } from '@dish/graph'
 
 import { getColorsForName } from '../src/helpers/getColorsForName'
 
-console.log('hasura pass is', process.env.HASURA_SECRET)
-
 async function main() {
   await updateNeighborhoods()
   await updateCounties()

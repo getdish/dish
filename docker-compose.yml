@@ -105,7 +105,6 @@ services:
       - DO_SPACES_SECRET=${DO_SPACES_SECRET}
       - VIRTUAL_HOST=staging.dishapp.com
       - VIRTUAL_PORT=4444
-      - HASURA_SECRET=${HASURA_GRAPHQL_ADMIN_SECRET:-password}
       - HASURA_ENDPOINT=http://hasura:8080
       - SEARCH_ENDPOINT=http://search:10000
       - REDIS_HOST=redis
@@ -162,7 +161,6 @@ services:
       - REDIS_HOST=redis
       - PGHOST=postgres
       - PGPASSWORD=postgres
-      - HASURA_SECRET=${HASURA_GRAPHQL_ADMIN_SECRET:-password}
       - TIMESCALE_HOST=timescale
       - TIMESCALE_PASSWORD=postgres
       - TIMESCALE_PORT=5433

@@ -12,7 +12,7 @@ flyctl secrets set \
     SENDGRID_API_KEY="$SENDGRID_API_KEY" \
     JWT_ADMIN_PASSWORD="$JWT_ADMIN_PASSWORD" \
     HASURA_ENDPOINT="http://dish-hasura.fly.dev" \
-    HASURA_SECRET="$HASURA_GRAPHQL_ADMIN_SECRET" \
+    HASURA_GRAPHQL_ADMIN_SECRET="$HASURA_GRAPHQL_ADMIN_SECRET" \
     SEARCH_ENDPOINT="http://dish-search.fly.dev" \
     REDIS_URL="$FLY_REDIS_CACHE_URL" \
     || true

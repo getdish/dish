@@ -30,8 +30,10 @@ All Dish's credentials are stored in `.env`. Even third-party web logins are con
 You can avoid copy-pasting environment variables using this:
 
 ```
-./dishctl.sh source_env && some_command_that_needs_dish_ENV
+./dishctl.sh run 'some_command_that_needs_dish_ENV'
 ```
+
+To switch env set DISH_ENV.
 
 ## Core Stack
 

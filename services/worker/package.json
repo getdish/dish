@@ -8,8 +8,8 @@
   "scripts": {
     "build": "esdx",
     "watch": "esdx-watch",
-    "start": "./entry-development.sh",
-    "start:clear": "CLEAR_JOBS=1 ./entry-development.sh",
+    "start": "./entry.sh",
+    "start:clear": "CLEAR_JOBS=1 ./entry.sh",
     "repl": "bull-repl connect",
     "worker": "node dist/worker.js",
     "test": "true"

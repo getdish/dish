@@ -10,7 +10,7 @@ const pass = process.env.REDIS_PASSWORD
 const envUrl = process.env.REDIS_URL
 const url =
   envUrl ||
-  `redis://${pass ? `:${pass}` : ''}:${
+  `redis://${pass ? `:${pass}:` : ''}${
     process.env.REDIS_HOST || 'localhost'
   }:6379`
 

@@ -9,7 +9,7 @@
   "scripts": {
     "build": "esdx legacy",
     "watch": "esdx-watch legacy",
-    "generate": "HASURA_SECRET=password node ./dist/generate.js",
+    "generate": "ENV=dev ../../dishctl.sh source_env && node ./dist/generate.js",
     "test": "TARGET=node DISH_ENV=test ava test/* --verbose --serial",
     "test:debug": "TARGET=node DEBUG=1 DISH_ENV=test ava test/* --verbose --serial",
     "test:watch": "TARGET=node DISH_ENV=test ava test/* --watch --verbose --serial",

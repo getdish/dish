@@ -9,7 +9,9 @@ export function startLogging(verbose = false) {
   if (process.env.NODE_ENV !== 'production') {
     if (isLogging) return
     isLogging = true
-    if (!isSafari) {
+    if (isSafari) {
+      console.log('Disable gqless logging as it doesnt collapse')
+    } else {
       import('@dish/gqless-logger').then(({ createLogger }) => {
         const Logger = createLogger(client, { stringifyJSON: false })
 
