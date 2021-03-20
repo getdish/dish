@@ -8,19 +8,19 @@ function patch_app_packages() {
   popd
 }
 
-# function delete_and_link_duplicate_modules() {
-#   pushd $PROJECT_ROOT/node_modules
-#   rm -r react-native &> /dev/null || true
-#   rm -r react &> /dev/null || true
-#   rm -r react-dom &> /dev/null || true
-#   rm -r react-native-svg &> /dev/null || true
-#   ln -s ../dish-app/node_modules/typescript . &> /dev/null || true
-#   ln -s ../dish-app/node_modules/react-native . &> /dev/null || true
-#   ln -s ../dish-app/node_modules/react . &> /dev/null || true
-#   ln -s ../dish-app/node_modules/react-dom . &> /dev/null || true
-#   ln -s ../dish-app/node_modules/react-native-svg . &> /dev/null || true
-#   popd
-# }
+function delete_and_link_duplicate_modules() {
+  pushd $PROJECT_ROOT/node_modules
+  rm -r react-native &> /dev/null || true
+  rm -r react &> /dev/null || true
+  rm -r react-dom &> /dev/null || true
+  rm -r react-native-svg &> /dev/null || true
+  ln -s ../dish-app/node_modules/typescript . &> /dev/null || true
+  ln -s ../dish-app/node_modules/react-native . &> /dev/null || true
+  ln -s ../dish-app/node_modules/react . &> /dev/null || true
+  ln -s ../dish-app/node_modules/react-dom . &> /dev/null || true
+  ln -s ../dish-app/node_modules/react-native-svg . &> /dev/null || true
+  popd
+}
 
 function delete_duplicate_snack_modules() {
   pushd $PROJECT_ROOT
@@ -40,7 +40,7 @@ function delete_duplicate_snack_modules() {
 
 PROJECT_ROOT="$(dirname "$0")/.."
 delete_duplicate_snack_modules &
-# delete_and_link_duplicate_modules &
+delete_and_link_duplicate_modules &
 yarn patch-package || true &
 patch_app_packages &
 wait
