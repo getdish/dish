@@ -35,7 +35,8 @@ export FLYCTL_INSTALL="/root/.fly"
 export PATH="$FLYCTL_INSTALL/bin:$PATH"
 
 set -a
-source .env.prod
+source .env
+source .env.production
 set +a
 
 export AWS_ACCESS_KEY_ID=$DO_SPACES_ID

@@ -4291,7 +4291,7 @@ __metadata:
     react-test-renderer: ^17.0.1
     style-loader: ^2.0.0
     typescript: ^4.2.2
-    webpack: ^5.24.2
+    webpack: ^5.27.0
   peerDependencies:
     react-native-web: "*"
   languageName: unknown
@@ -23549,9 +23549,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"webpack@npm:5.25.0":
-  version: 5.25.0
-  resolution: "webpack@npm:5.25.0"
+"webpack@npm:5.27.0":
+  version: 5.27.0
+  resolution: "webpack@npm:5.27.0"
   dependencies:
     "@types/eslint-scope": ^3.7.0
     "@types/estree": ^0.0.46
@@ -23581,7 +23581,7 @@ __metadata:
       optional: true
   bin:
     webpack: bin/webpack.js
-  checksum: d80832dddef57b1f64647749ff1c78388ad875f7e9e63e614cee6b62da84853f6bb0150a50684ef7cdd4982adc5381994b44b166101dd68bed78d862bff7fab4
+  checksum: c37a74ae986c22674cf185c4527e55db4ee0d65f9ec039769c1a84da8335e8d17e4fe06678eb02e37f7ff32e6bfff45a0337ac9c7c6e9e033f94d10d6b935d52
   languageName: node
   linkType: hard
 

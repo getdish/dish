@@ -6,16 +6,9 @@ export SHELLOPTS
 
 PG_PROXY_PID=
 TS_PROXY_PID=
-DISH_REGISTRY="registry.fly.io"
-CUR_ENV="${ENV:-prod}"
-ENV_FILE=".env.$CUR_ENV"
 
-function source_env() {
-  set -a
-  source .env
-  source $ENV_FILE
-  set +a
-}
+DISH_ENV="${DISH_ENV:-production}"
+ENV_FILE=".env.$DISH_ENV"
 
 function generate_random_port() {
   echo "2$((1000 + RANDOM % 8999))"
@@ -154,7 +147,7 @@ function redis_command() {
 
 function redis_cli() {
   fly_tunnel
-  redis-cli -h dish-redis.fly.dev -a "$REDIS_PASSWORD" -p 10000 "$@"
+  redis-cli -h "$REDIS_HOST" -a "$REDIS_PASSWORD" -p 10000 "$@"
 }
 
 function redis_cli_list_all() {
@@ -286,7 +279,6 @@ function local_node_with_prod_env() {
   export TIMESCALE_PORT=$_TIMESCALE_PORT
   export TIMESCALE_PASSWORD=$TIMESCALE_SU_PASS
   export HASURA_ENDPOINT=https://hasura.dishapp.com
-  export HASURA_SECRET="$HASURA_GRAPHQL_ADMIN_SECRET"
   if [[ $DISABLE_GC != "1" ]]; then
     export GC_FLAG="--expose-gc"
   fi
@@ -305,7 +297,6 @@ function local_node_with_staging_env() {
   export TIMESCALE_PORT=15433
   export TIMESCALE_PASSWORD=postgres
   export HASURA_ENDPOINT=https://hasura-staging.dishapp.com
-  export HASURA_SECRET="$HASURA_GRAPHQL_ADMIN_SECRET"
   node \
     --max-old-space-size=4096 \
     $1
@@ -320,7 +311,6 @@ function staging_ports_tunnel() {
 
 function dish_app_generate_tags() {
   export HASURA_ENDPOINT=https://hasura.dishapp.com
-  export HASURA_SECRET="password"
   export IS_LIVE=1
   pushd $PROJECT_ROOT/dish-app
   node -r esbuild-register ./etc/generate_tags.ts
@@ -516,11 +506,13 @@ function timescale_command() {
 }
 
 function fly_tunnel() {
-  if dig _apps.internal | grep -q 'dish-'; then
-    echo "tunneled into fly"
-  else
-    fly ssh issue dish teamdishapp@gmail.com --agent
-    echo "May need to setup wireguard setup: https://fly.io/docs/reference/privatenetwork/"
+  if [ "$DISH_ENV" = "production" ]; then
+    if dig _apps.internal | grep -q 'dish-'; then
+      echo "tunneled into fly"
+    else
+      fly ssh issue dish teamdishapp@gmail.com --agent
+      echo "May need to setup wireguard setup: https://fly.io/docs/reference/privatenetwork/"
+    fi
   fi
 }
 
@@ -627,7 +619,7 @@ function docker_build_file() {
 }
 
 function docker_compose_up_subset() {
-  echo "starting docker with in env $ENV"
+  echo "starting docker in env $DISH_ENV"
   services=$(
     docker-compose config --services 2> /dev/null \
       | grep -E -v "$1" \
@@ -841,20 +833,29 @@ function clean() {
   find $PROJECT_ROOT -name "yarn-error.log" -prune -exec rm -rf '{}' \;
 }
 
+function run() {
+  bash -c "$@"
+}
+
 if command -v git &> /dev/null; then
   export PROJECT_ROOT=$(git rev-parse --show-toplevel)
   branch=$(git rev-parse --abbrev-ref HEAD)
   export DOCKER_TAG_NAMESPACE=${branch//\//-}
   export BASE_IMAGE=$DISH_REGISTRY/base:$DOCKER_TAG_NAMESPACE
   pushd $PROJECT_ROOT >/dev/null
-    # source base env first
-    source .env
-    # source current env next, .env.prod by default
-    if [ -f "$ENV_FILE" ]; then
-      source "$ENV_FILE"
-    else
-      echo "Not loading ENV from $ENV_FILE as it doesn't exist"
-    fi
+  set -a
+  source .env
+  arch="$(uname -m)"
+  if [ "${arch}" = "arm64" ]; then
+    source .env.m1
+  fi
+  # source current env next, .env.production by default
+  if [ -f "$ENV_FILE" ]; then
+    source "$ENV_FILE"
+  else
+    echo "Not loading ENV from $ENV_FILE as it doesn't exist"
+  fi
+  set +a
   popd >/dev/null
 else
   echo "Not loading ENV as there's no \`git\` command"

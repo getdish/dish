@@ -50,6 +50,7 @@ declare module "@dish/helpers" {
 
 declare module "@dish/helpers" {
     export const stringify: (a: any) => string;
+    export const timer: () => (name: string) => void;
     export function ellipseText(str: string, { maxLength, ellipse, }?: {
         maxLength?: number;
         ellipse?: string;

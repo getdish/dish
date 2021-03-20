@@ -2,7 +2,7 @@
 
 set -eo pipefail
 
-export ENV=test
+source .env
 source .env.test
 
 # HELPERS
