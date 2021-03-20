@@ -3,6 +3,7 @@ import { promisify } from 'util'
 
 import { route, useRouteBodyParser } from '@dish/api'
 import { GRAPH_API_INTERNAL, fetchLog, getAuthHeaders } from '@dish/graph'
+import { timer } from '@dish/helpers'
 import redis from 'redis'
 
 const pass = process.env.REDIS_PASSWORD
@@ -33,11 +34,14 @@ function shouldCache(body: string) {
 }
 
 export default route(async (req, res) => {
+  const time = timer()
   await useRouteBodyParser(req, res, { text: { type: '*/*', limit: '8192mb' } })
+  time('body parse')
   const { body } = req
   const cacheKey = shouldCache(body)
     ? crypto.createHash('md5').update(body).digest('hex')
     : null
+  time('cache key hash')
 
   if (cacheKey) {
     const cache = await rGet(cacheKey)
@@ -58,6 +62,7 @@ export default route(async (req, res) => {
       body,
     })
     const response = await hasuraRes.json()
+    time('hasura request')
     if (cacheKey) {
       rc.set(cacheKey, JSON.stringify(response))
     }
