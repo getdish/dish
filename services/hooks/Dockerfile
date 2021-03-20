@@ -7,6 +7,8 @@ FROM registry.fly.io/dish-base:latest
 COPY --from=0 /bin /usr/local/bin
 COPY --from=0 /usr/bin /usr/bin
 
+ENV PATH=$PATH:/usr/bin
+
 WORKDIR /app/services/hooks
 
 CMD ["node", "dist/index.js"]

@@ -560,7 +560,8 @@ export async function sendToDO(url: string, id: string) {
 }
 
 async function doPut(url: string, id: uuid, content_type: string) {
-  const result = await fetch(DISH_HOOKS_ENDPOINT + '/do_image_upload', {
+  const uploadUrl = DISH_HOOKS_ENDPOINT + '/do_image_upload'
+  const result = await fetch(uploadUrl, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
@@ -574,7 +575,8 @@ async function doPut(url: string, id: uuid, content_type: string) {
   console.log(
     'Dish hook do_image_upload response: ',
     result.status,
-    await result.text()
+    await result.text(),
+    url
   )
   return result
 }
