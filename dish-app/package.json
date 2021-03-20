@@ -2,9 +2,6 @@
   "name": "@dish/app",
   "private": true,
   "version": "0.0.0",
-  "installConfig": {
-    "hoistingLimits": "workspaces"
-  },
   "scripts": {
     "etc:colorize": "../dishctl.sh source_env && DEBUG=1 HASURA_SECRET=$HASURA_GRAPHQL_ADMIN_SECRET node -r esbuild-register ./etc/add_colors_to_tiles.ts",
     "postinstall": "yarn patch-package || true && DEBUG=workspaces expo-yarn-workspaces postinstall",
