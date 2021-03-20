@@ -53,7 +53,8 @@ const borderRadiusInner = 19
 export const AppSearchBarFloating = () => {
   const media = useMedia()
   const theme = useTheme()
-  // const { background, backgroundRgb } = useSearchBarTheme()
+  const { color, background, backgroundRgb, isColored } = useSearchBarTheme()
+  console.log(color, background)
   const height = searchBarHeight + 4
 
   if (media.sm) {
@@ -121,29 +122,23 @@ export const AppSearchBarFloating = () => {
               height={height}
               justifyContent="center"
               alignItems="center"
-              backgroundColor={theme.backgroundColor}
+              backgroundColor={background}
               shadowColor={theme.shadowColor}
               shadowOffset={{ height: 1, width: 0 }}
               shadowRadius={15}
-            >
-              <AbsoluteVStack
-                borderWidth={2}
-                borderColor={theme.borderColor}
-                borderRadius={borderRadiusInner}
-                fullscreen
-              />
-            </AbsoluteVStack>
+            />
             <VStack
               position="relative"
               zIndex={104}
               flex={1}
               height={height}
+              paddingRight={10}
               justifyContent="center"
               width="100%"
               maxWidth={searchBarMaxWidth}
             >
               <Suspense fallback={null}>
-                <AppSearchBarContents />
+                <AppSearchBarContents isColored={isColored} />
               </Suspense>
             </VStack>
           </VStack>
@@ -153,7 +148,7 @@ export const AppSearchBarFloating = () => {
   )
 }
 
-const AppSearchBarContents = memo(() => {
+const AppSearchBarContents = memo(({ isColored }: { isColored: boolean }) => {
   const autocompletes = useStoreInstance(autocompletesStore)
   const focus = autocompletes.visible ? autocompletes.target : false
   const media = useMedia()
@@ -172,7 +167,7 @@ const AppSearchBarContents = memo(() => {
       {!media.sm && <SearchBarActionButton />}
 
       <VStack paddingHorizontal={media.xs ? 6 : 12}>
-        <DishLogoButton />
+        <DishLogoButton color={isColored ? '#fff' : undefined} />
       </VStack>
 
       <HStack
@@ -282,7 +277,7 @@ const SearchBarActionButton = memo(() => {
   const autocompletes = useStoreInstance(autocompletesStore)
   const showAutocomplete = autocompletes.visible
   const isDisabled = !showAutocomplete && home.currentStateType === 'home'
-  const theme = useTheme()
+  // const theme = useTheme()
 
   const Icon = (() => {
     if (showAutocomplete) {
@@ -317,7 +312,7 @@ const SearchBarActionButton = memo(() => {
           justifyContent="center"
           opacity={0.5}
           padding={0}
-          backgroundColor={theme.backgroundColorSecondary}
+          backgroundColor="rgba(0,0,0,0.1)"
           {...(!isDisabled && {
             opacity: 0.7,
             hoverStyle: {

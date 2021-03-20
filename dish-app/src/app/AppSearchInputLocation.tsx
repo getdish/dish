@@ -1,7 +1,6 @@
 import { MapPin, Navigation } from '@dish/react-feather'
 import React, { memo, useCallback } from 'react'
 import { TextInput } from 'react-native'
-import { useTheme } from 'snackui'
 import {
   AbsoluteVStack,
   Button,
@@ -9,9 +8,9 @@ import {
   VStack,
   getMedia,
   useMedia,
+  useTheme,
 } from 'snackui'
 
-import { blue } from '../constants/colors'
 import { isWeb } from '../constants/constants'
 import {
   autocompleteLocationStore,
@@ -23,6 +22,7 @@ import { inputTextStyles } from './AppSearchInput'
 import { useHomeStore } from './homeStore'
 import { useAutocompleteInputFocus } from './hooks/useAutocompleteInputFocus'
 import { useSearchBarTheme } from './hooks/useSearchBarTheme'
+import { InputFrame } from './InputFrame'
 import { setNodeOnInputStore, useInputStoreLocation } from './inputStore'
 import { SearchInputNativeDragFix } from './SearchInputNativeDragFix'
 import { setLocation } from './setLocation'
@@ -81,32 +81,7 @@ export const AppSearchInputLocation = memo(() => {
         input={inputStore.node}
         autocompleteTarget="location"
       >
-        <HStack
-          flex={1}
-          minHeight={44}
-          alignItems="center"
-          backgroundColor={theme.backgroundColorTertiary}
-          justifyContent="center"
-          paddingHorizontal={8}
-          position="relative"
-          borderRadius={12}
-          overflow="hidden"
-          hoverStyle={{
-            backgroundColor: theme.backgroundColorSecondary,
-          }}
-          focusStyle={{
-            backgroundColor: theme.backgroundColorQuartenary,
-          }}
-          {...(media.sm && {
-            backgroundColor: '#eee',
-            hoverStyle: {
-              backgroundColor: '#eee',
-            },
-            focusStyle: {
-              backgroundColor: '#eee',
-            },
-          })}
-        >
+        <InputFrame>
           <HStack
             position="relative"
             minWidth="78.7%" // this is the hackiest ever fix for react native width issue for now
@@ -174,7 +149,7 @@ export const AppSearchInputLocation = memo(() => {
               color={isWeb ? 'var(--color)' : color}
             />
           </Button>
-        </HStack>
+        </InputFrame>
       </AppAutocompleteHoverableInput>
     </VStack>
   )

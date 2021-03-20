@@ -1,14 +1,7 @@
 import { fullyIdle, idle, series } from '@dish/async'
 import { Loader, Search, X } from '@dish/react-feather'
 import { getStore, reaction } from '@dish/use-store'
-import React, {
-  forwardRef,
-  memo,
-  useCallback,
-  useEffect,
-  useRef,
-  useState,
-} from 'react'
+import React, { memo, useCallback, useEffect, useRef, useState } from 'react'
 import {
   Platform,
   ScrollView,
@@ -18,7 +11,6 @@ import {
   View,
 } from 'react-native'
 import {
-  AbsoluteVStack,
   HStack,
   Spacer,
   VStack,
@@ -45,6 +37,7 @@ import {
 import { homeStore, useHomeStore } from './homeStore'
 import { useAutocompleteInputFocus } from './hooks/useAutocompleteInputFocus'
 import { useSearchBarTheme } from './hooks/useSearchBarTheme'
+import { InputFrame } from './InputFrame'
 import {
   InputStore,
   setNodeOnInputStore,
@@ -113,7 +106,7 @@ export const isSearchInputFocused = () => {
 export const AppSearchInput = memo(() => {
   const inputStore = useInputStoreSearch()
   const home = useHomeStore()
-  const { color, backgroundRgb } = useSearchBarTheme()
+  const { color } = useSearchBarTheme()
   const media = useMedia()
   const [search, setSearchFast] = useState('')
   const getSearch = useGet(search)
@@ -327,48 +320,6 @@ const SearchInputIcon = memo(({ color }: { color: string }) => {
         )}
       </TouchableOpacity>
     </VStack>
-  )
-})
-
-const InputFrame = forwardRef(({ children }: { children: any }, ref) => {
-  const theme = useTheme()
-  const media = useMedia()
-  return (
-    <HStack
-      alignItems="center"
-      backgroundColor={theme.backgroundColorTertiary}
-      borderRadius={180}
-      // borderWidth={2}
-      // borderColor={theme.borderColor}
-      flex={1}
-      maxWidth="100%"
-      paddingLeft={10}
-      overflow="hidden"
-      position="relative"
-      hoverStyle={{
-        borderColor: theme.backgroundColorTertiary,
-        backgroundColor: theme.backgroundColorTertiary,
-      }}
-      focusStyle={{
-        borderColor: theme.backgroundColorQuartenary,
-        backgroundColor: theme.backgroundColorQuartenary,
-      }}
-      {...(media.sm && {
-        backgroundColor: theme.backgroundColorSecondary,
-        borderRadius: 12,
-        borderWidth: 0,
-        shadowRadius: 0,
-        shadowColor: 'transparent',
-        hoverStyle: {
-          backgroundColor: theme.backgroundColorSecondary,
-        },
-        focusStyle: {
-          backgroundColor: theme.backgroundColorSecondary,
-        },
-      })}
-    >
-      {children}
-    </HStack>
   )
 })
 

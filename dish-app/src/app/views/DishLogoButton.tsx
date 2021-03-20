@@ -23,7 +23,7 @@ const linkButtonProps: LinkButtonProps = {
   },
 }
 
-export const DishLogoButton = memo(() => {
+export const DishLogoButton = memo(({ color }: { color?: string }) => {
   const media = useMedia()
   const { currentStateType } = useHomeStore()
   const wrapWithHomeLink = (el: any) => {
@@ -52,7 +52,7 @@ export const DishLogoButton = memo(() => {
       >
         {wrapWithHomeLink(
           <VStack marginVertical={-5}>
-            <LogoColor scale={1.05} />
+            <LogoColor scale={1.1} color={color} />
           </VStack>
         )}
       </VStack>

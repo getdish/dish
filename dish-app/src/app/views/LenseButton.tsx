@@ -48,11 +48,17 @@ export const LenseButton = ({
         height={scaledSize}
         backgroundColor={bg}
         borderRadius={100}
-        transform={[
-          { scale: media.sm ? (isActive ? 1.25 : 0.85) : isActive ? 1.25 : 1 },
-        ]}
+        marginRight={10}
+        transform={[{ scale: isActive ? 1.3 : 1.1 }]}
+        {...(media.sm && {
+          marginRight: 5,
+          transform: [
+            {
+              scale: isActive ? 1.25 : 0.85,
+            },
+          ],
+        })}
         padding={0}
-        marginRight={5}
         marginTop={-10}
         pressStyle={{
           opacity: 0.8,
