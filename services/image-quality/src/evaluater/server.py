@@ -15,6 +15,7 @@ from tensorflow.keras import backend as K
 from PIL import ImageFile, Image
 from handlers.model_builder import Nima
 from handlers.data_generator import TestDataGenerator
+from flask_cors import CORS
 
 app = Flask('server')
 
@@ -67,6 +68,7 @@ def main(image_source, predictions_file):
     return samples
 
 @app.route('/prediction', methods=['POST'])
+@cross_origin()
 def prediction():
 
     global images
@@ -82,7 +84,9 @@ def prediction():
                     try:
                         urllib.request.urlretrieve(image, temp + '/' + hashed)
                     except:
-                        print('An exception occurred downloading: ' + image)
+                        msg = 'An exception occurred downloading: ' + image
+                        print(msg)
+                        return jsonify({ 'error': msg })
 
                 result = main(temp, None)
 

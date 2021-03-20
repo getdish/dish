@@ -6,6 +6,13 @@ export * from './doesStringContainTag'
 
 export const stringify = (a: any) => JSON.stringify(a)
 
+export const timer = () => {
+  const start = Date.now()
+  return (name: string) => {
+    console.log(` - (${Date.now() - start}ms) ${name}`)
+  }
+}
+
 export function ellipseText(
   str: string,
   {

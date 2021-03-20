@@ -14,9 +14,7 @@
     "noEmit": true,
     "noEmitHelpers": true,
     "noImplicitReturns": false,
-    "skipLibCheck": true,
     "target": "es2019",
-    "baseUrl": ".",
     "strict": false,
     "strictNullChecks": true,
     "removeComments": true,
@@ -30,8 +28,6 @@
 
   "include": [
     "src",
-    "web",
-    "src/**/*.json",
     "declaration.d.ts"
   ],
 

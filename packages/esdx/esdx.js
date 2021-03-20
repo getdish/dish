@@ -15,12 +15,19 @@ async function go() {
     console.log('skip typecheck')
   } else {
     fs.existsSync('tsconfig.tsbuildinfo') && fs.rmSync('tsconfig.tsbuildinfo')
-    fs.existsSync('_') && fs.rmdirSync('_', { recursive: true })
-    fs.existsSync('dist') && fs.rmdirSync('dist', { recursive: true })
   }
 
   async function buildTsc() {
     if (process.env.JS_ONLY) return
+    if (legacy) {
+      await exec('tsc', [
+        '--emitDeclarationOnly',
+        '--declarationMap',
+        '--declarationDir',
+        'types',
+      ])
+      return
+    }
     await exec('tsc', ['--emitDeclarationOnly', '--declarationMap'])
     const dts = await emitFlatDts({
       file: 'types.d.ts',
@@ -40,12 +47,8 @@ async function go() {
   )
 
   try {
-    if (legacy) {
-      await exec('tsc', ['--emitDeclarationOnly', '--declarationMap'])
-      await fs.copy('_', 'dist')
-    }
     await Promise.all([
-      legacy ? null : buildTsc(),
+      buildTsc(),
       build({
         entryPoints: files,
         outdir: 'dist',

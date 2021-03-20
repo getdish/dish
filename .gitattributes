@@ -1,3 +1,4 @@
 .env.prod filter=git-crypt diff=git-crypt
 .env filter=git-crypt diff=git-crypt
 etc/dish-wire.conf filter=git-crypt diff=git-crypt
+AppleAuthKey.p8 filter=git-crypt diff=git-crypt

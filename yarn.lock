@@ -9528,7 +9528,7 @@ __metadata:
     prettier-plugin-import-sort: ^0.0.6
     react: ^17.0.1
     react-dom: ^17.0.1
-    react-native: ^0.62.2
+    react-native: ^0.64.0
     react-native-web: 0.0.0-466063b7e
     react-refresh: "*"
     snackui: 0.2.0

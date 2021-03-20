@@ -1,4 +1,6 @@
 **/_
+**/types/**/*.d.ts
+**/types/**/*.d.ts.map
 
 site/.cache
 

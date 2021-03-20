@@ -40,6 +40,7 @@ BROKEN DOWN
   - better images will make a big difference
   - re-crawl restaurant given name/id
   - get good feedback loop for one/a few restaurants:
+    - LOCALLY IDEALLY
     - integrate new image quality API
     - integrate new bert API
   - image() rather than default_images() for data use reduction
