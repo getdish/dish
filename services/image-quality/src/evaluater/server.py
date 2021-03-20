@@ -84,7 +84,9 @@ def prediction():
                     try:
                         urllib.request.urlretrieve(image, temp + '/' + hashed)
                     except:
-                        print('An exception occurred downloading: ' + image)
+                        msg = 'An exception occurred downloading: ' + image
+                        print(msg)
+                        return jsonify({ 'error': msg })
 
                 result = main(temp, None)
 

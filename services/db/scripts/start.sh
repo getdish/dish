@@ -35,10 +35,19 @@ sed 's/STOLONCTL_/STKEEPER_/' /data/.env >> /data/.env
 sed 's/STOLONCTL_/STSENTINEL_/' /data/.env >> /data/.env
 sed 's/STOLONCTL_/STPROXY_/' /data/.env >> /data/.env
 
+PG_PARAMS='"pgParameters":{"max_connections":"400", "work_mem": "64MB"}'
+
 # write stolon initial cluster spec
 cat <<EOF > /fly/initial-cluster-spec.json
-{"initMode":"new", "pgParameters": {"work_mem": "64MB"}}
+{"initMode":"new", $PG_PARAMS}
 EOF
+
+inited=$(stolonctl status || echo "false")
+if [[ "$inited" != "false" ]]; then
+    echo "updating stolon config"
+    export $(cat /data/.env | xargs)
+    stolonctl update --patch "{ $PG_PARAMS }"
+fi
 
 su_password="${SU_PASSWORD:-supassword}"
 repl_password="${REPL_PASSWORD:-replpassword}"
@@ -54,10 +63,6 @@ if [ "$primary_region" != "" ]; then
         keeper_options="$keeper_options --can-be-master=false --can-be-synchronous-replica=false"
     fi
 fi
-
-export $(cat /data/.env | xargs)
-# presumable run here
-stolonctl update --patch '{ "pgParameters":{"max_connections":"400"} }'
 
 export STKEEPER_PG_SU_PASSWORD=$su_password
 export STKEEPER_PG_REPL_PASSWORD=$repl_password
