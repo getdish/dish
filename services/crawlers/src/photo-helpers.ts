@@ -421,6 +421,7 @@ async function assessPhotoQualityWithoutRetries(urls: string[]) {
     body: JSON.stringify(urls),
   })
   let results = await response.json()
+  console.log('got image quality results', results)
   let photo_bases: Partial<PhotoBase>[] = []
   for (const url of urls) {
     const id = crypto.createHash('md5').update(url).digest('hex')

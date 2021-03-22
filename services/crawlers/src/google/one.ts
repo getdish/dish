@@ -1,14 +1,11 @@
 import { restaurantFindOne } from '@dish/graph'
 
-import { GoogleGeocoder } from '../GoogleGeocoder'
+import { GoogleGeocoder } from './GoogleGeocoder'
 import { GooglePuppeteer } from './GooglePuppeteer'
 import { GoogleReviewAPI } from './GoogleReviewAPI'
 
-//const name = 'Kokkari Estiatorio'
-const name = 'Haseki Ev Yemekleri'
-
-async function one_puppeteer() {
-  const restaurant = await restaurantFindOne({ name })
+async function one_puppeteer(slug: string) {
+  const restaurant = await restaurantFindOne({ slug })
   if (!restaurant) throw new Error('Google sandbox: could not find ' + name)
   const google = new GooglePuppeteer()
   console.log(
@@ -17,8 +14,8 @@ async function one_puppeteer() {
   await google.getRestaurant(restaurant)
 }
 
-async function geocoder() {
-  const restaurant = await restaurantFindOne({ name })
+async function one_geocoder(slug: string) {
+  const restaurant = await restaurantFindOne({ slug })
   if (!restaurant) throw new Error('Google sandbox: could not find ' + name)
   const geocoder = new GoogleGeocoder()
   const query = restaurant.name + ',' + restaurant?.address
@@ -30,8 +27,8 @@ async function geocoder() {
   console.log(id)
 }
 
-async function one_review_api() {
-  const restaurant = await restaurantFindOne({ name })
+async function one_review_api(slug: string) {
+  const restaurant = await restaurantFindOne({ slug })
   if (!restaurant) throw new Error('Google sandbox: could not find ' + name)
   const google = new GoogleReviewAPI()
   console.log(
@@ -40,6 +37,12 @@ async function one_review_api() {
   await google.getRestaurant(restaurant.id)
 }
 
-//one()
-//geocoder()
-one_review_api()
+export async function one(slug: string) {
+  await one_geocoder(slug)
+  await one_review_api(slug)
+  await one_puppeteer(slug)
+}
+
+if (process.env.RUN && process.env.SLUG) {
+  one(process.env.SLUG)
+}

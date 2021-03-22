@@ -24,12 +24,12 @@ export async function one(slug: string) {
     const yelp = new Yelp()
     yelp.run_all_on_main = true
     const mv = 0.001
-    console.log('Getting restaurants')
+    console.log('Yelp, getting restaurants')
     await yelp.getRestaurants(
       [lat - mv, lng - mv],
       [lat + mv, lng + mv],
       0,
-      rest.name
+      rest
     )
   } catch (err) {
     console.error('error', err)
@@ -37,6 +37,7 @@ export async function one(slug: string) {
 }
 
 if (process.env.RUN) {
+  console.log('running yelp')
   one(process.env.SLUG || '').then(() => {
     process.exit(0)
   })

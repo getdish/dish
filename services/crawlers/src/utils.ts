@@ -2,13 +2,13 @@ import '@dish/common'
 
 import { sleep } from '@dish/async'
 import { sentryException } from '@dish/common'
-import { Restaurant, client, settingGet, settingSet } from '@dish/graph'
+import { Restaurant, settingGet, settingSet } from '@dish/graph'
 import axios from 'axios'
 import _ from 'lodash'
 import moment, { Moment } from 'moment'
 import { Pool, PoolConfig, QueryResult } from 'pg'
 
-import { isGoogleGeocoderID } from './GoogleGeocoder'
+import { isGoogleGeocoderID } from './google/GoogleGeocoder'
 
 const HEREMAPS_API_TOKEN = process.env.HEREMAPS_API_TOKEN
 

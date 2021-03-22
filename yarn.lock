@@ -1937,7 +1937,7 @@ __metadata:
     "@types/puppeteer": ^5.4.3
     acorn: ^7.1.1
     ava: ^3.14.0
-    aws-sdk: ^2.719.0
+    aws-sdk: ^2.762.0
     axios: ^0.19.1
     bull: ^3.18.0
     bull-repl: ^0.26.3
@@ -1952,8 +1952,8 @@ __metadata:
     pg: ^8.5.1
     proxy-chain: ^0.4.4
     puppeteer: ^8.0.0
-    puppeteer-extra: ^3.1.17
-    puppeteer-extra-plugin-stealth: ^2.7.5
+    puppeteer-extra: ^3.1.18
+    puppeteer-extra-plugin-stealth: ^2.7.6
     sentiment: ^5.0.2
     sinon: ^9.0.3
     tabletojson: ^2.0.4
@@ -2149,6 +2149,7 @@ __metadata:
   dependencies:
     "@dish/esdx": "*"
     ava: ^3.14.0
+    aws-sdk: ^2.762.0
     express: ^4.17.1
     node-fetch: ^2.6.1
     typescript: "*"
@@ -18686,64 +18687,64 @@ __metadata:
   languageName: node
   linkType: hard
 
-"puppeteer-extra-plugin-stealth@npm:^2.7.5":
-  version: 2.7.5
-  resolution: "puppeteer-extra-plugin-stealth@npm:2.7.5"
+"puppeteer-extra-plugin-stealth@npm:^2.7.6":
+  version: 2.7.6
+  resolution: "puppeteer-extra-plugin-stealth@npm:2.7.6"
   dependencies:
     debug: ^4.1.1
-    puppeteer-extra-plugin: ^3.1.8
-    puppeteer-extra-plugin-user-preferences: ^2.2.11
-  checksum: 68fee4dbc96d7b492c5cf33f0165447352f4d4a79b8a1b753e1928ccd74048e8d39b0a95f6be88f8a266f5abcbc1f728fcfec09dc8f1a233fe54c887838cadee
+    puppeteer-extra-plugin: ^3.1.9
+    puppeteer-extra-plugin-user-preferences: ^2.2.12
+  checksum: 87d07fdc4e948d829d9ed212330a0ded84c32c548529aaf64db234ba58119123d71317ce727f5ce5461fa593d74460bb760e34f82afc51e98160b4f9c49b0e5c
   languageName: node
   linkType: hard
 
-"puppeteer-extra-plugin-user-data-dir@npm:^2.2.11":
-  version: 2.2.11
-  resolution: "puppeteer-extra-plugin-user-data-dir@npm:2.2.11"
+"puppeteer-extra-plugin-user-data-dir@npm:^2.2.12":
+  version: 2.2.12
+  resolution: "puppeteer-extra-plugin-user-data-dir@npm:2.2.12"
   dependencies:
     debug: ^4.1.1
-    fs-extra: ^8.1.0
-    puppeteer-extra-plugin: ^3.1.8
-  checksum: 0364f7efae65e1472135612a1eb8079e596e9a1aa5d62514e3b8960733a86d7229d84f43fa9da33f4608f5001be036b8cc28baef86c0e4cfec7fb99fd1c97824
+    fs-extra: ^9.1.0
+    puppeteer-extra-plugin: ^3.1.9
+  checksum: fe507da1fc112f7a8dc907fed4d189c966af3fff12ca231d4d1ce48f66d18d8235ae2c4afa6c29412b6294ad9e9ef72b9b28b2b57bc28009548ef856d21b0a42
   languageName: node
   linkType: hard
 
-"puppeteer-extra-plugin-user-preferences@npm:^2.2.11":
-  version: 2.2.11
-  resolution: "puppeteer-extra-plugin-user-preferences@npm:2.2.11"
+"puppeteer-extra-plugin-user-preferences@npm:^2.2.12":
+  version: 2.2.12
+  resolution: "puppeteer-extra-plugin-user-preferences@npm:2.2.12"
   dependencies:
     debug: ^4.1.1
     deepmerge: ^4.2.2
-    puppeteer-extra-plugin: ^3.1.8
-    puppeteer-extra-plugin-user-data-dir: ^2.2.11
-  checksum: 0fc515adbc804a9b65627ff31ecc05f359d1cf7983ff0658da19dd998aa71fc8c1518b9735f025f7687076797ee8a74255b187d5bdba1ab5e8a63da0c82bca0c
+    puppeteer-extra-plugin: ^3.1.9
+    puppeteer-extra-plugin-user-data-dir: ^2.2.12
+  checksum: c9e8067d58f3edf6323001d0dd2629a8b2562515da749a8f64ad5a6a052e1708220c5c766f1596c5c08767ce8fd5df654a6526e7a4ae91c2dfcb65383a844523
   languageName: node
   linkType: hard
 
-"puppeteer-extra-plugin@npm:^3.1.8":
-  version: 3.1.8
-  resolution: "puppeteer-extra-plugin@npm:3.1.8"
+"puppeteer-extra-plugin@npm:^3.1.9":
+  version: 3.1.9
+  resolution: "puppeteer-extra-plugin@npm:3.1.9"
   dependencies:
     "@types/debug": ^4.1.0
     debug: ^4.1.1
     merge-deep: ^3.0.1
   peerDependencies:
     puppeteer-extra: "*"
-  checksum: a512023b51c5c242e669632a55b446ce9715472c45d6e5397da860b62b32cd29df78ff98f1387d6de3a130796e12aa90828e252fe789031ff0d678201c429ce3
+  checksum: 6d30b7192c48496cf59ab7bd2f1363f145d43dbf9fd2f011f0bd4ad58c83b8c8e602867d4051adc7314999fc9d5768e092b0ed82db2d6dec8b674f0281c31e17
   languageName: node
   linkType: hard
 
-"puppeteer-extra@npm:^3.1.17":
-  version: 3.1.17
-  resolution: "puppeteer-extra@npm:3.1.17"
+"puppeteer-extra@npm:^3.1.18":
+  version: 3.1.18
+  resolution: "puppeteer-extra@npm:3.1.18"
   dependencies:
     "@types/debug": ^4.1.0
-    "@types/puppeteer": "*"
+    "@types/puppeteer": 5.4.3
     debug: ^4.1.1
     deepmerge: ^4.2.2
   peerDependencies:
     puppeteer: "*"
-  checksum: 866fd43ab8376adc9d40480ec651e360a801ec00825ca569cfda3a34de502f9d377dbffb02997fffbba1b23100c338bc36bfdade5e5351bfaeb8f66b62b0c752
+  checksum: 02f218749384370caaa281efdc1c4e349013a5d5880d2b8e39d082df9878458ee4456f9cab6056d0e814d0762ba5c9da429012a0fddad7bda89fedac16bf506f
   languageName: node
   linkType: hard
 

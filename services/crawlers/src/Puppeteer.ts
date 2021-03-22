@@ -1,5 +1,7 @@
 import '@dish/common'
 
+import { exec } from 'child_process'
+
 import ProxyChain from 'proxy-chain'
 // @ts-ignore
 import { Browser, Page, Request } from 'puppeteer'
@@ -103,8 +105,17 @@ export class Puppeteer {
         '--no-sandbox',
       ],
     })
+    const chromium = await new Promise<string>((res) => {
+      exec(`which chromium`, (err, stdout) => {
+        res(stdout.trim())
+      })
+    })
+    console.log('chromium', chromium)
     this.browser = await puppeteer.launch({
       ignoreDefaultArgs: ['--enable-automation'],
+      ...(chromium && {
+        executablePath: chromium,
+      }),
     })
 
     this.page = await this.browser.newPage()

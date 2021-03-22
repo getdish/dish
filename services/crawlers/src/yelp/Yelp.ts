@@ -2,10 +2,10 @@ import url from 'url'
 
 import { sleep } from '@dish/async'
 import { sentryMessage } from '@dish/common'
-import { ZeroUUID } from '@dish/graph'
+import { Restaurant, ZeroUUID } from '@dish/graph'
 import { ProxiedRequests, WorkerJob } from '@dish/worker'
 import { JobOptions, QueueOptions } from 'bull'
-import _ from 'lodash'
+import _, { isMatch } from 'lodash'
 
 import { restaurantSaveCanonical } from '../canonical-restaurant'
 import {
@@ -31,7 +31,7 @@ const yelpAPI = new ProxiedRequests(
 
 export class Yelp extends WorkerJob {
   current?: string
-  find_only = ''
+  find_only: Restaurant | null = null
 
   static queue_config: QueueOptions = {
     limiter: {
@@ -72,7 +72,7 @@ export class Yelp extends WorkerJob {
     top_right: readonly [number, number],
     bottom_left: readonly [number, number],
     start = 0,
-    onlyName = ''
+    onlyRestaurant: Restaurant | null = null
   ) {
     const PER_PAGE = 30
     const coords = [
@@ -97,7 +97,7 @@ export class Yelp extends WorkerJob {
     }
 
     let found_the_one = false
-    this.find_only = onlyName
+    this.find_only = onlyRestaurant
 
     if (!componentsList.length) {
       console.error('searchPageProps.searchResultsProps: ', uri, response)
@@ -117,12 +117,14 @@ export class Yelp extends WorkerJob {
       if (data?.searchResultLayoutType == 'separator') {
         continue
       }
-      const name = data.searchResultBusiness.name
-      if (onlyName && name != onlyName) {
-        console.log('YELP SANDBOX: Skipping ' + name)
-        continue
-      }
-      if (name == onlyName) {
+
+      const info = data.searchResultBusiness
+      const name = info.name
+      if (onlyRestaurant) {
+        if (!isMatchingRestaurant(info, onlyRestaurant)) {
+          console.log('YELP SANDBOX: Skipping ' + name)
+          continue
+        }
         found_the_one = true
         console.log('YELP SANDBOX: found ' + name)
       }
@@ -134,25 +136,28 @@ export class Yelp extends WorkerJob {
         }),
       ])
       timeout.cancel()
+      if (found_the_one) {
+        break
+      }
     }
 
     console.log('YELP: done with getRestaurants page')
 
-    if (pagination) {
+    if (pagination && !found_the_one) {
       const next_page = start + PER_PAGE
       if (next_page <= pagination.totalResults) {
         await this.runOnWorker('getRestaurants', [
           top_right,
           bottom_left,
           next_page,
-          onlyName,
+          onlyRestaurant,
         ])
       }
     }
 
-    if (onlyName && !found_the_one) {
+    if (onlyRestaurant && !found_the_one) {
       console.log('error componentsList', uri, componentsList)
-      throw new Error(`Couldn't find ${onlyName}`)
+      throw new Error(`Couldn't find ${onlyRestaurant}`)
     }
 
     console.log('YELP: done with getRestaurants')
@@ -238,7 +243,7 @@ export class Yelp extends WorkerJob {
       scrape.data.data_from_map_search.formattedAddress
     )
     if (this.find_only) {
-      console.log(`Slug for ${this.find_only} is ${restaurant_id}`)
+      console.log(`Slug for ${this.find_only.name} is ${restaurant_id}`)
     }
     scrape.location = {
       lon: lon,
@@ -375,4 +380,14 @@ export class Yelp extends WorkerJob {
       await this.runOnWorker('getReviews', [id, bizId, next_page])
     }
   }
+}
+
+function isMatchingRestaurant(data, restaurant: Restaurant) {
+  if (restaurant.address?.includes(data.formattedAddress)) {
+    return true
+  }
+  if (restaurant.telephone === data.phone) {
+    return true
+  }
+  return false
 }

@@ -12,6 +12,7 @@
   },
   "dependencies": {
     "@dish/esdx": "*",
+    "aws-sdk": "^2.762.0",
     "express": "^4.17.1",
     "node-fetch": "^2.6.1"
   },

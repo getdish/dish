@@ -122,7 +122,7 @@ function crawl_self_by_query() {
   [ -z "$1" ] && exit 1
   query="SELECT id FROM restaurant $1"
   echo "Running self crawler with SQL: $query"
-  worker_exec "QUERY=${query@Q} node /app/services/crawlers/dist/self/one.js"
+  worker_exec "RUN=1 QUERY=${query@Q} node /app/services/crawlers/dist/self/one.js"
 }
 
 function crawl_self_sf_limited_cuisine() {

@@ -1,6 +1,6 @@
 import { Restaurant, globalTagId } from '@dish/graph'
 
-import { GoogleGeocoder } from '../GoogleGeocoder'
+import { GoogleGeocoder } from '../google/GoogleGeocoder'
 import {
   getTableCount,
   googlePermalink,

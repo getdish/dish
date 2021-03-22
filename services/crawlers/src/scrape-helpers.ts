@@ -7,7 +7,7 @@ import {
 import { PoolConfig } from 'pg'
 
 import { DoorDash } from './doordash/DoorDash'
-import { GoogleGeocoder } from './GoogleGeocoder'
+import { GoogleGeocoder } from './google/GoogleGeocoder'
 import { GrubHub } from './grubhub/GrubHub'
 import { Infatuated } from './infatuated/Infatuated'
 import { Michelin } from './michelin/Michelin'
@@ -106,7 +106,7 @@ export async function latestScrapeForRestaurant(
   `)
   if (result.rows.length == 0) {
     if (process.env.NODE_ENV !== 'test') {
-      console.debug(`No ${source} scrapes found for: ` + restaurant.name)
+      console.debug(`No scrapes found for ${source}: ` + restaurant.name)
     }
     return null
   } else {

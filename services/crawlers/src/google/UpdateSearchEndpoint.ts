@@ -6,7 +6,7 @@ import {
   GOOGLE_SEARCH_ENDPOINT_KEY,
   LAT_TOKEN,
   LON_TOKEN,
-} from '../GoogleGeocoder'
+} from './GoogleGeocoder'
 import { GooglePuppeteerJob } from './GooglePuppeteerJob'
 
 const sleep = (ms: number) => new Promise((res) => setTimeout(res, ms))

@@ -1,7 +1,14 @@
 import { exec } from 'child_process'
 
+import AWS from 'aws-sdk'
 import express from 'express'
 import fetch from 'node-fetch'
+
+const s3 = new AWS.S3({
+  endpoint: 'sfo2.digitaloceanspaces.com',
+  accessKeyId: process.env.DO_SPACES_ID,
+  secretAccessKey: process.env.DO_SPACES_SECRET,
+})
 
 const app = express()
 app.use(express.json())
@@ -42,13 +49,19 @@ async function putFeedback(feedback: GorseFeedback) {
 
 function shell(cmd: string) {
   return new Promise((resolve, reject) => {
-    exec(cmd, (error, stdout, stderr) => {
-      if (error) {
-        console.warn(error)
-        return reject(error)
+    exec(
+      cmd,
+      {
+        env: process.env,
+      },
+      (error, stdout, stderr) => {
+        if (error) {
+          console.warn(error)
+          return reject(error)
+        }
+        return resolve(stdout ? stdout : stderr)
       }
-      return resolve(stdout ? stdout : stderr)
-    })
+    )
   })
 }
 
@@ -79,9 +92,28 @@ app.post('/gorse_sync', async (req, res) => {
 app.post('/do_image_upload', async (req, res) => {
   try {
     const payload = req.body
-    const args = `'${payload.photo_url}' ${payload.photo_id} ${payload.content_type}`
-    const result = await shell(`${ROOT}/do_image_upload.sh ${args}`)
-    console.log(result)
+    // const args = `'${payload.photo_url}' ${payload.photo_id} ${payload.content_type}`
+    const contents = await fetch(payload.photo_url).then((res) => res.buffer())
+    await new Promise((res, rej) => {
+      s3.upload(
+        {
+          Bucket: 'dish-images',
+          Body: contents,
+          Key: payload.photo_id,
+          ACL: 'public-read',
+          ContentType: payload.content_type,
+        },
+        {},
+        (err, data) => {
+          if (err) {
+            return rej(err)
+          }
+          res(data)
+        }
+      )
+    })
+    // const result = await shell(`${ROOT}/do_image_upload.sh ${args}`)
+    // console.log(result)
     res.send('OK')
   } catch (error) {
     if (error.message.includes('rate')) {

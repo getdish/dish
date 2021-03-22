@@ -6,11 +6,10 @@ import { JobOptions, QueueOptions } from 'bull'
 import _ from 'lodash'
 import { Tabletojson } from 'tabletojson'
 
-import { GoogleGeocoder } from '../GoogleGeocoder'
 import { scrapeInsert } from '../scrape-helpers'
+import { GoogleGeocoder } from './GoogleGeocoder'
 import { GooglePuppeteerJob } from './GooglePuppeteerJob'
 
-const sleep = (ms: number) => new Promise((res) => setTimeout(res, ms))
 const GOOGLE_DOMAIN = 'https://www.google.com'
 
 const PER_PAGE = 50
@@ -131,7 +130,16 @@ export class GooglePuppeteer extends GooglePuppeteerJob {
         `/maps/place/@${this.lat},${this.lon},17z/` +
         `data=!3m1!4b1!4m5!3m4!1s${this.googleRestaurantID}` +
         `!8m2!3d${this.lat}!4d${this.lon}`
-      await this.puppeteer.page.goto(url)
+      console.log('Google Loading', url)
+      try {
+        await this.puppeteer.page.goto(url, {
+          timeout: 10000,
+        })
+        return true
+      } catch (err) {
+        console.error(`Error loading`, err.message)
+        throw err
+      }
     }
     throw "GOOGLE CRAWLER: Couldn't get main page for: " + this.name
   }
@@ -142,6 +150,10 @@ export class GooglePuppeteer extends GooglePuppeteerJob {
       headings: ['day', 'hours'],
       ignoreColumns: [2],
     })[0]
+    if (!Array.isArray(json)) {
+      console.warn('Not an array', json, 'from html', html)
+      return []
+    }
     return json.map((row) => {
       const hours = row.hours.split('\n')[0]
       return { day: row.day, hours }

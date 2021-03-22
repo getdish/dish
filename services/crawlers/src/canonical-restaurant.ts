@@ -1,6 +1,6 @@
-import { ZeroUUID, restaurantFindOne, restaurantInsert } from '@dish/graph/'
+import { ZeroUUID, restaurantFindOne, restaurantInsert } from '@dish/graph'
 
-import { GoogleGeocoder } from './GoogleGeocoder'
+import { GoogleGeocoder } from './google/GoogleGeocoder'
 import { scrapeFindOneBySourceID } from './scrape-helpers'
 
 export async function restaurantSaveCanonical(
