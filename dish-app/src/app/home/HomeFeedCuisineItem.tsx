@@ -106,7 +106,7 @@ export const HomeFeedCuisineItem = memo(
                     const rgb = hexToRGB(color).rgb
                     return (
                       <Link key={index} tag={{ slug: dish.slug }} asyncClick>
-                        <GradientButton rgb={rgb.map((x) => x * 1.1)}>
+                        <GradientButton rgb={rgb.map((x) => x * 1.1) as any}>
                           <TagsText
                             tags={[{ name: dish.name, icon: dish.icon }]}
                             color={color}

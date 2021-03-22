@@ -37,7 +37,7 @@ export const AppSearchBar = () => {
   }
   return (
     <VStack width="100%" paddingVertical={2} minHeight={searchBarHeight}>
-      <AppSearchBarContents />
+      <AppSearchBarContents isColored={false} />
     </VStack>
   )
 }

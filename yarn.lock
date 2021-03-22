@@ -1789,7 +1789,7 @@ __metadata:
     "@dish/babel-preset": "*"
     "@dish/dsh": "*"
     "@dish/fast-compare": 2.7.6
-    "@dish/gqless": ^5.0.0
+    "@dish/gqless": ^6.0.0
     "@dish/graph": "*"
     "@dish/helpers": "*"
     "@dish/helpers-node": "*"
@@ -2034,28 +2034,28 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@dish/gqless-logger@npm:^1.0.0":
-  version: 1.0.0
-  resolution: "@dish/gqless-logger@npm:1.0.0"
+"@dish/gqless-logger@npm:^3.0.0":
+  version: 3.0.0
+  resolution: "@dish/gqless-logger@npm:3.0.0"
   dependencies:
     prettier: ^2.2.1
     serialize-error: ^8.0.1
   peerDependencies:
-    "@dish/gqless": ^5.0.0
-  checksum: 899ac1a8f05ce817f8dd9eb103ce32c82755eb792aa46e85f46648da1eb2810773b8dbf2cf312c18c610dba80daf259d1ea05e0c74bbb385444758d8cd20d052
+    "@dish/gqless": ^6.0.0
+  checksum: df07b78946f0b269c032f233b62f7263c26f9b776b0f7a52cc1d0099c70e7d6d4925562b62a69237cffb9c7cecb60c032f639970206c6a943f9ac011f80b1f7a
   languageName: node
   linkType: hard
 
-"@dish/gqless-react@npm:^4.0.0":
-  version: 4.0.0
-  resolution: "@dish/gqless-react@npm:4.0.0"
+"@dish/gqless-react@npm:^9.0.0":
+  version: 9.0.0
+  resolution: "@dish/gqless-react@npm:9.0.0"
   dependencies:
     react-ssr-prepass: ^1.4.0
   peerDependencies:
-    "@dish/gqless": ^5.0.0
+    "@dish/gqless": ^6.0.0
     graphql: ^15.4.0
     react: ">=16"
-  checksum: 96bde3193cd34c54d8b221379a7faf0b5ac1a1069b257e2ec35b735e1bb732a587ad9b4f7d218435a3b663641da8041e8a275597d372c6edf858a7bea659a18d
+  checksum: 098a6a6508cd3f0de9266ecdd9d9cf910ef3184464d3d919d2f5e1d42049cc2c52b8bd03d16cb7a25761a8bf8c74f22cfaef34ac101b0508cf18aa258d219619
   languageName: node
   linkType: hard
 
@@ -2071,15 +2071,27 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@dish/gqless@npm:^6.0.0":
+  version: 6.0.0
+  resolution: "@dish/gqless@npm:6.0.0"
+  dependencies:
+    lodash: ^4.17.21
+    lodash-es: ^4.17.21
+  peerDependencies:
+    graphql: ^15.4.0
+  checksum: 074405814d504c74a1521a400048a6d810ebf6b5f299e0efcb573c760352403a0c66b497f7d2271802edd4d708a8d9201f8bf07a846405e4fe17194ace48e41f
+  languageName: node
+  linkType: hard
+
 "@dish/graph@*, @dish/graph@workspace:packages/graph":
   version: 0.0.0-use.local
   resolution: "@dish/graph@workspace:packages/graph"
   dependencies:
     "@dish/esdx": "*"
-    "@dish/gqless": ^5.0.0
+    "@dish/gqless": ^6.0.0
     "@dish/gqless-cli": ^4.0.4
-    "@dish/gqless-logger": ^1.0.0
-    "@dish/gqless-react": ^4.0.0
+    "@dish/gqless-logger": ^3.0.0
+    "@dish/gqless-react": ^9.0.0
     "@dish/helpers": "*"
     "@dish/helpers-node": "*"
     "@dish/react-test-env": "*"
