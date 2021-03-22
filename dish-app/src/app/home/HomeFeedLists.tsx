@@ -92,6 +92,7 @@ export const HomeFeedListsContents = graphql(
               <Spacer size="sm" />
               <Link
                 promptLogin
+                marginTop={-4}
                 name="list"
                 params={{
                   userSlug: 'me',
@@ -99,7 +100,7 @@ export const HomeFeedListsContents = graphql(
                   region: homeStore.lastRegionSlug,
                 }}
               >
-                <SmallCircleButton alignSelf="center">
+                <SmallCircleButton>
                   <Plus size={14} color="#fff" />
                 </SmallCircleButton>
               </Link>

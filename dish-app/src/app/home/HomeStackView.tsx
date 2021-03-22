@@ -1,11 +1,5 @@
 import { useStore } from '@dish/use-store'
-import React, {
-  Suspense,
-  memo,
-  useEffect,
-  useLayoutEffect,
-  useMemo,
-} from 'react'
+import React, { Suspense, memo, useLayoutEffect, useMemo } from 'react'
 import { AnimatedVStack, VStack, useDebounceValue, useMedia } from 'snackui'
 
 import {
