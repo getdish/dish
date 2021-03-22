@@ -162,7 +162,6 @@ export const useAppAutocompleteEffects = () => {
 
 export const AppAutocompleteSearch = () => {
   const autocompletes = useStoreInstance(autocompletesStore)
-  console.log('autocompletes', autocompletes.target)
   return (
     <Theme name="darkTranslucent">
       <AbsoluteVStack

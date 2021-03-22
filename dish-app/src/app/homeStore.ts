@@ -447,14 +447,6 @@ class HomeStore extends Store {
 
       this.updateHomeState('handleRouteChange', next)
     }
-
-    console.log(
-      'DONE ROUTE CHANGE',
-      item.type,
-      this.stateIndex,
-      this.states.map((x) => `${x.type} - ${x.id}`),
-      { next, item }
-    )
   }
 
   setSearchBarFocusedTag(val: NavigableTag | null) {

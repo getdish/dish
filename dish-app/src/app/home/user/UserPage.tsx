@@ -144,7 +144,7 @@ const UserPageContent = graphql(
               <SkewedCardCarousel>
                 {lists.map((list, i) => {
                   return (
-                    <SkewedCard zIndex={1000 - i} key={list.slug}>
+                    <SkewedCard zIndex={1000 - i} key={list.slug || i}>
                       <ListCard
                         isBehind={i > 0}
                         userSlug={list.user?.username ?? ''}
