@@ -421,10 +421,14 @@ class HomeStore extends Store {
       return
     }
 
-    // remove future states no longer accessible
-    this.stateIds = this.stateIds.slice(0, this.stateIndex + 1)
+    if (item.type !== 'replace') {
+      // remove future states no longer accessible
+      this.stateIds = this.stateIds.slice(0, this.stateIndex + 1)
+    }
+
     const next = this.getHomeState(item)
     if (next) {
+      // TODO this logic shoudln't be here
       // show map on some routes
       if (next.type === 'search' || next.type === 'restaurant') {
         if (drawerStore.snapIndex === 0 && getMedia().sm) {
@@ -433,8 +437,22 @@ class HomeStore extends Store {
         }
       }
 
+      if (item.type === 'replace') {
+        if (item.name !== this.currentState.type) {
+          console.warn('replace with diff type ⚠️⚠️⚠️⚠️')
+        }
+        // ensure same id
+        next.id = this.currentState.id
+      }
+
       this.updateHomeState('handleRouteChange', next)
     }
+
+    console.log(
+      'DONE ROUTE CHANGE',
+      this.stateIndex,
+      this.states.map((x) => `${x.type} - ${x.id}`)
+    )
   }
 
   setSearchBarFocusedTag(val: NavigableTag | null) {
