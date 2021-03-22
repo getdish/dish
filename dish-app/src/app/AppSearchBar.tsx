@@ -309,11 +309,11 @@ const SearchBarActionButton = memo(() => {
           borderBottomLeftRadius={borderRadius}
           alignItems="center"
           justifyContent="center"
-          opacity={0.5}
+          opacity={0}
           padding={0}
           backgroundColor="rgba(0,0,0,0.1)"
           {...(!isDisabled && {
-            opacity: 0.7,
+            opacity: 0.5,
             hoverStyle: {
               opacity: 1,
             },

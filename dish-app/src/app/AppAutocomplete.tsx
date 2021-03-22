@@ -62,15 +62,15 @@ export type ShowAutocomplete = 'search' | 'location' | false
 type AutocompleteTarget = 'search' | 'location'
 
 class AutocompletesStore extends Store {
-  visible = false
+  visible: 'partial' | true | false = false
   target: AutocompleteTarget = 'search'
 
   setVisible(n: boolean) {
     this.visible = n
   }
 
-  setTarget(n: AutocompleteTarget) {
-    this.visible = true
+  setTarget(n: AutocompleteTarget, fullyVisible = !!n) {
+    this.visible = fullyVisible == false ? 'partial' : true
     this.target = n
   }
 
@@ -162,6 +162,7 @@ export const useAppAutocompleteEffects = () => {
 
 export const AppAutocompleteSearch = () => {
   const autocompletes = useStoreInstance(autocompletesStore)
+  console.log('autocompletes', autocompletes.target)
   return (
     <Theme name="darkTranslucent">
       <AbsoluteVStack
