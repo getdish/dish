@@ -7,7 +7,7 @@ import { ContentScrollViewHorizontal } from '../views/ContentScrollViewHorizonta
 export const SkewedCard = ({ children, ...props }: StackProps) => {
   return (
     <VStack
-      marginRight={-64}
+      marginRight={-56}
       className="disable-hover-touch ease-in-out-faster"
       borderRadius={cardFrameBorderRadius}
       shadowColor="#000"

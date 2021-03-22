@@ -36,7 +36,7 @@ export const shouldDebug = (
   component: any,
   info: Pick<StoreInfo, 'storeInstance'>
 ) => {
-  const StoreCons = info.storeInstance.constructor
+  const StoreCons = info.storeInstance?.constructor
   return DebugComponents.get(component)?.has(StoreCons)
 }
 
