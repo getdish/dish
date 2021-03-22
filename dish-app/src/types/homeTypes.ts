@@ -71,6 +71,8 @@ export type HomeStateTagNavigable = Partial<HomeStateItemBase> & {
   activeTags?: HomeActiveTagsRecord
   type: HomeStateItem['type']
   region?: string
+  center?: LngLat
+  span?: LngLat
 }
 
 export type HomeActiveTagsRecord = { [id: string]: boolean }
@@ -128,6 +130,8 @@ export type HomeStateItemSearch = HomeStateItemBase & {
   type: 'search'
   activeTags: HomeActiveTagsRecord
   region?: string
+  center?: LngLat
+  span?: LngLat
 }
 
 export type HomeStateItemRestaurant = HomeStateItemBase & {
