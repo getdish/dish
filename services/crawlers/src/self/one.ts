@@ -6,8 +6,7 @@ import { DB } from '../utils'
 import { GPT3 } from './GPT3'
 import { Self } from './Self'
 
-async function one() {
-  const slug = process.env.SLUG || ''
+export async function one(slug: string) {
   console.log('one', slug)
   const restaurant = await restaurantFindOne({
     slug,
@@ -59,9 +58,9 @@ async function gpt3_many(query: string) {
   }
 }
 
-async function main() {
-  if (process.env.SLUG) {
-    return await one()
+async function main(slug?: string) {
+  if (slug) {
+    return await one(slug)
   }
 
   if (process.env.ALL == '1') {
@@ -87,6 +86,8 @@ async function main() {
   }
 }
 
-main().then(() => {
-  process.exit(0)
-})
+if (process.env.RUN) {
+  main(process.env.SLUG).then(() => {
+    process.exit(0)
+  })
+}

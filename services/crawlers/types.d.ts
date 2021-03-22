@@ -2,26 +2,6 @@
 /// <reference lib="esnext" />
 declare module "@dish/crawlers" {
     import "@dish/common";
-    export const GOOGLE_SEARCH_ENDPOINT_KEY = "GOOGLE_SEARCH_ENDPOINT";
-    export const LON_TOKEN = "%LON%";
-    export const LAT_TOKEN = "%LAT%";
-    export const google_geocoder_id_regex: RegExp;
-    export class GoogleGeocoder {
-        query: string;
-        lon: number;
-        lat: number;
-        searchEndpoint: string;
-        searchForID(query: string, lat: number, lon: number): Promise<string>;
-        _getSearchEndpoint(): Promise<void>;
-        _formatSearchURL(): string;
-        _searchForID(): Promise<string>;
-        _hasSearchExpired(result: string): boolean;
-    }
-    export function isGoogleGeocoderID(id: string): RegExpMatchArray | null;
-}
-
-declare module "@dish/crawlers" {
-    import "@dish/common";
     import { Browser, Page, Request } from "puppeteer";
     export class Puppeteer {
         domain: string;
@@ -60,6 +40,26 @@ declare module "@dish/crawlers" {
         _scrollIntoView(selector: string): Promise<void>;
         _countSelectors(selector: string): Promise<number>;
     }
+}
+
+declare module "@dish/crawlers" {
+    import "@dish/common";
+    export const GOOGLE_SEARCH_ENDPOINT_KEY = "GOOGLE_SEARCH_ENDPOINT";
+    export const LON_TOKEN = "%LON%";
+    export const LAT_TOKEN = "%LAT%";
+    export const google_geocoder_id_regex: RegExp;
+    export class GoogleGeocoder {
+        query: string;
+        lon: number;
+        lat: number;
+        searchEndpoint: string;
+        searchForID(query: string, lat: number, lon: number): Promise<string>;
+        _getSearchEndpoint(): Promise<void>;
+        _formatSearchURL(): string;
+        _searchForID(): Promise<string>;
+        _hasSearchExpired(result: string): boolean;
+    }
+    export function isGoogleGeocoderID(id: string): RegExpMatchArray | null;
 }
 
 declare module "@dish/crawlers" {
@@ -314,11 +314,12 @@ declare module "@dish/crawlers" {
 }
 
 declare module "@dish/crawlers" {
+    import { Restaurant } from "@dish/graph";
     import { WorkerJob } from "@dish/worker";
     import { JobOptions, QueueOptions } from "bull";
     export class Yelp extends WorkerJob {
         current?: string;
-        find_only: string;
+        find_only: Restaurant | null;
         static queue_config: QueueOptions;
         static job_config: JobOptions;
         allForCity(city_name: string): Promise<void>;
@@ -328,7 +329,7 @@ declare module "@dish/crawlers" {
         ], bottom_left: readonly [
             number,
             number
-        ], start?: number, onlyName?: string): Promise<never[] | undefined>;
+        ], start?: number, onlyRestaurant?: Restaurant | null): Promise<never[] | undefined>;
         getRestaurant(data: ScrapeData): Promise<void>;
         saveDataFromMapSearch(data: ScrapeData): Promise<string | undefined>;
         getEmbeddedJSONData(id: string, yelp_path: string, id_from_source: string): Promise<void>;
@@ -684,8 +685,11 @@ declare module "@dish/crawlers" {
         getRestaurant(restaurant: Restaurant): Promise<void>;
         getAllData(restaurant: Restaurant): Promise<void>;
         _runFailableFunction(func: Function, restaurant: Restaurant): Promise<void>;
-        getMainPage(): Promise<void>;
-        static convertTableToJSON(html: string): any;
+        getMainPage(): Promise<boolean>;
+        static convertTableToJSON(html: string): {
+            day: any;
+            hours: any;
+        }[];
         getHeroImage(): Promise<void>;
         getSynopsis(): Promise<void>;
         getRating(): Promise<void>;
@@ -741,6 +745,25 @@ declare module "@dish/crawlers" {
 }
 
 declare module "@dish/crawlers" {
+    export function one(slug: string): Promise<void>;
+}
+
+declare module "@dish/crawlers" {
+    import "@dish/helpers/polyfill";
+    export function one(slug: string): Promise<void>;
+}
+
+declare module "@dish/crawlers" {
+    import "@dish/helpers/polyfill";
+    export function one(slug: string): Promise<void>;
+}
+
+declare module "@dish/crawlers" {
+    import "@dish/helpers/polyfill";
+    export function main(slug: string): Promise<void>;
+}
+
+declare module "@dish/crawlers" {
     export function one(): Promise<void>;
 }
 
@@ -760,10 +783,6 @@ declare module "@dish/crawlers" {
         _catchSearchEndpoint(): Promise<void>;
         _waitForSearchAPIRequest(): Promise<void>;
     }
-}
-
-declare module "@dish/crawlers" {
-    import "@dish/helpers/polyfill";
 }
 
 declare module "@dish/crawlers" {
@@ -812,10 +831,5 @@ declare module "@dish/crawlers" {
         static start(source?: string, destination?: string): void;
         writeTxtFile(destination: string): void;
     }
-}
-
-declare module "@dish/crawlers" {
-    import "@dish/helpers/polyfill";
-    export function one(slug: string): Promise<void>;
 }
 //# sourceMappingURL=types.d.ts.map

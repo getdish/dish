@@ -10,7 +10,7 @@ import * as cheerio from 'cheerio'
 import _ from 'lodash'
 
 import { restaurantSaveCanonical } from '../canonical-restaurant'
-import { GoogleGeocoder, isGoogleGeocoderID } from '../GoogleGeocoder'
+import { GoogleGeocoder } from '../google/GoogleGeocoder'
 import { ScrapeData, scrapeInsert, scrapeMergeData } from '../scrape-helpers'
 import { aroundCoords, decodeEntities, geocode } from '../utils'
 

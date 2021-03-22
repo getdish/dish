@@ -17,7 +17,7 @@ import anyTest, { ExecutionContext, TestInterface } from 'ava'
 import sinon from 'sinon'
 
 import { restaurantSaveCanonical } from '../../src/canonical-restaurant'
-import { GoogleGeocoder } from '../../src/GoogleGeocoder'
+import { GoogleGeocoder } from '../../src/google/GoogleGeocoder'
 import { bestPhotosForRestaurant } from '../../src/photo-helpers'
 import { deleteAllTestScrapes, scrapeInsert } from '../../src/scrape-helpers'
 import { Self } from '../../src/self/Self'
