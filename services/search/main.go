@@ -123,7 +123,6 @@ func handleSpecialTags(tags string, r *http.Request) (map[string]string, string)
 		"open",
 		"price",
 	}
-
 	for _, tag := range special_tags {
 		if tagsHas(tag, r) {
 			filter_by[tag] = "FILTER BY " + strings.ToUpper(tag)

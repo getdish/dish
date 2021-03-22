@@ -86,13 +86,11 @@ export const MapView = (props: MapProps) => {
     const handleResize = debounce(() => {
       series([
         () => map.resize(),
-        () => sleep(300),
+        () => sleep(150),
         () => map.resize(),
-        () => sleep(300),
+        () => sleep(150),
         () => map.resize(),
-        () => sleep(300),
-        () => map.resize(),
-        () => sleep(300),
+        () => sleep(400),
         () => map.resize(),
       ])
     }, 200)

@@ -134,8 +134,8 @@ class SearchPageStore extends Store {
       // SEARCH
       const res = await search(searchArgs)
       if (shouldCancel()) return
-      if (!res || !res.restaurants) {
-        console.log('no restaurants', res)
+      if (!res) {
+        console.log('no res', res)
         this.status = 'complete'
         return
       }
@@ -147,13 +147,13 @@ class SearchPageStore extends Store {
       console.warn('same saerch again?')
     }
 
+    // ok
     this.status = 'complete'
     // set this at very end of search
     const searchedPosition = {
       center: appMapStore.nextPosition.center,
       span: appMapStore.nextPosition.span,
     }
-    console.log('SET IT', JSON.stringify(searchedPosition))
     this.searchPosition = searchedPosition
 
     // clear it so we can check if any currently running already at start

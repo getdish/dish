@@ -203,14 +203,16 @@ export function createWebpackConfig({
                 include: babelInclude,
                 // @ts-ignore
                 use: [
-                  // 'babel-loader',
-                  {
-                    loader: require.resolve('esbuild-loader'),
-                    options: {
-                      loader: 'tsx',
-                      target: 'es2019',
-                    },
-                  },
+                  // no fast refresh for esbuild
+                  isProduction
+                    ? {
+                        loader: require.resolve('esbuild-loader'),
+                        options: {
+                          loader: 'tsx',
+                          target: 'es2019',
+                        },
+                      }
+                    : 'babel-loader',
                   isStaticExtracted
                     ? {
                         loader: require.resolve('snackui-loader'),
@@ -265,7 +267,7 @@ export function createWebpackConfig({
                 test: /\.mdx?$/,
                 use: [
                   {
-                    loader: require.resolve('esbuild-loader'),
+                    loader: require.resolve('babel-loader'),
                   },
                   {
                     loader: require.resolve('@mdx-js/loader'),
