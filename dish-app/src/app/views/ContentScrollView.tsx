@@ -1,6 +1,4 @@
-import { series, sleep } from '@dish/async'
-import { assertPresent } from '@dish/helpers/src'
-import { Store, getStore, reaction, useStoreInstance } from '@dish/use-store'
+import { Store, getStore, reaction } from '@dish/use-store'
 import React, {
   Suspense,
   createContext,
@@ -16,7 +14,6 @@ import { VStack, combineRefs, getMedia, useMedia } from 'snackui'
 import { isWeb } from '../../constants/constants'
 import { supportsTouchWeb } from '../../constants/platforms'
 import { drawerStore } from '../drawerStore'
-import { homeStore } from '../homeStore'
 
 type ScrollLock = 'horizontal' | 'vertical' | 'none'
 

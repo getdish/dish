@@ -318,6 +318,7 @@ const RestaurantListItemContent = memo(
               tagName="div"
               name="restaurant"
               params={{ slug: restaurantSlug }}
+              zIndex={2}
             >
               <VStack paddingLeft={showAbove ? 47 : 10} paddingTop={25}>
                 <HStack position="relative" alignItems="center">
@@ -379,7 +380,7 @@ const RestaurantListItemContent = memo(
             <Spacer size={12} />
 
             {/* SECOND ROW TITLE */}
-            <VStack zIndex={-1} {...contentSideProps}>
+            <VStack zIndex={0} {...contentSideProps}>
               <VStack
                 overflow="hidden"
                 zIndex={2}

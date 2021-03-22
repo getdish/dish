@@ -69,9 +69,12 @@ class SearchPageStore extends Store {
     let curId = this.lastSearchAt
 
     const shouldCancel = () => {
-      if (this.lastSearchAt != curId) return true
-      if (homeStore.currentStateType !== 'search') return true
-      return false
+      const val =
+        this.lastSearchAt != curId ||
+        homeStore.currentStateType !== 'search' ||
+        false
+      if (val) console.log('cancelling')
+      return val
     }
 
     // prevent searching back to back quickly
@@ -133,6 +136,7 @@ class SearchPageStore extends Store {
     ) {
       // SEARCH
       const res = await search(searchArgs)
+      console.log('search res', res)
       if (shouldCancel()) return
       if (!res) {
         console.log('no res', res)

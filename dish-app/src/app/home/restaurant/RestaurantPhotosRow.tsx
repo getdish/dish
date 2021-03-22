@@ -1,5 +1,5 @@
 import { graphql, order_by } from '@dish/graph'
-import { isPresent } from '@dish/helpers/src'
+import { isPresent } from '@dish/helpers'
 import React, { Suspense, memo } from 'react'
 import { Image } from 'react-native'
 import { HStack, Text, VStack } from 'snackui'

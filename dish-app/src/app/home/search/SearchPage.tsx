@@ -2,7 +2,7 @@ import { series, sleep } from '@dish/async'
 import { RestaurantSearchItem, slugify } from '@dish/graph'
 import { ArrowUp } from '@dish/react-feather'
 import { HistoryItem } from '@dish/router'
-import { reaction, reaction2 } from '@dish/use-store'
+import { reaction } from '@dish/use-store'
 import React, {
   Suspense,
   forwardRef,
@@ -109,7 +109,6 @@ const SearchPageContent = memo(function SearchPageContent(
   const location = useLocationFromRoute(props.route)
   const tags = useTagsFromRoute(props.route)
   const searchStore = useSearchPageStore()
-  const getProps = useGet(props)
   const center = location.data?.center
 
   usePageLoadEffect(props, ({ isRefreshing }) => {
