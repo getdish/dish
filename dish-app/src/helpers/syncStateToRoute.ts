@@ -5,6 +5,9 @@ import { getShouldNavigate } from './getShouldNavigate'
 
 // avoid nasty two way sync bugs as much as possible
 
+let recentTries = 0
+let synctm
+
 export async function syncStateToRoute(state: HomeStateTagNavigable) {
   const should = getShouldNavigate(state)
   if (should) {
@@ -25,5 +28,3 @@ export async function syncStateToRoute(state: HomeStateTagNavigable) {
   }
   return false
 }
-let recentTries = 0
-let synctm

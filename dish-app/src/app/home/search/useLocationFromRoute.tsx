@@ -8,6 +8,7 @@ import { searchLocations } from '../../../helpers/searchLocations'
 import { useQueryLoud } from '../../../helpers/useQueryLoud'
 import { SearchRouteParams } from '../../../router'
 import { RegionNormalized } from '../../../types/homeTypes'
+import { urlSerializers } from './urlSerializers'
 
 export function useLocationFromRoute(route: HistoryItem<'search'>) {
   const key = `location-${route.name + route.params.region}`
@@ -27,19 +28,9 @@ export async function getLocationFromRoute(
       return null
     }
 
-    // lat _ lng _ span
-    if (+params.region[0] >= 0) {
-      const [latStr, lngStr, spanLatStr, spanLngStr] = params.region.split('_')
-      return {
-        center: {
-          lat: +latStr,
-          lng: +lngStr,
-        },
-        span: {
-          lat: +spanLatStr,
-          lng: +spanLngStr,
-        },
-      }
+    // lat _ lng _ spanlat _ spanlng
+    if (urlSerializers.search.region.match(params.region)) {
+      return urlSerializers.search.region.deserialize(params.region)
     }
 
     // find by slug

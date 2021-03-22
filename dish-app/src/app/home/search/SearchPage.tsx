@@ -36,11 +36,12 @@ import { isWeb } from '../../../constants/constants'
 import { addTagsToCache, allTags } from '../../../helpers/allTags'
 import { getFullTagsFromRoute } from '../../../helpers/getTagsFromRoute'
 import { getTitleForState } from '../../../helpers/getTitleForState'
+import { syncStateToRoute } from '../../../helpers/syncStateToRoute'
 import { useQueryLoud } from '../../../helpers/useQueryLoud'
 import { router } from '../../../router'
 import { HomeStateItemSearch } from '../../../types/homeTypes'
 import { appMapStore, useSetAppMap } from '../../AppMapStore'
-import { useHomeStateById } from '../../homeStore'
+import { homeStore, useHomeStateById } from '../../homeStore'
 import { useAppDrawerWidth } from '../../hooks/useAppDrawerWidth'
 import { useLastValueWhen } from '../../hooks/useLastValueWhen'
 import { usePageLoadEffect } from '../../hooks/usePageLoadEffect'
@@ -109,6 +110,8 @@ const SearchPageContent = memo(function SearchPageContent(
   const location = useLocationFromRoute(props.route)
   const tags = useTagsFromRoute(props.route)
   const searchStore = useSearchPageStore()
+  const { searchArgs, results, searchRegion, status } = searchStore
+  const isLoading = status === 'loading'
   const center = location.data?.center
 
   usePageLoadEffect(props, ({ isRefreshing }) => {
@@ -117,11 +120,25 @@ const SearchPageContent = memo(function SearchPageContent(
     }
   })
 
+  // sync search location to url
+  useEffect(() => {
+    if (!props.isActive) return
+    const isSpecific = searchArgs?.center
+    syncStateToRoute({
+      ...props.item,
+      ...(isSpecific && {
+        center: searchArgs!.center,
+        span: searchArgs!.span,
+        region: undefined,
+      }),
+    })
+  }, [searchArgs])
+
   useSetAppMap({
     isActive: props.isActive,
-    results: searchStore.results,
+    results: results,
     showRank: true,
-    hideRegions: !searchStore.searchRegion,
+    hideRegions: !searchRegion,
     center,
     span: location.data?.span,
     ...(location.data?.region && {
@@ -229,8 +246,6 @@ const SearchPageContent = memo(function SearchPageContent(
       }
     )
   }, [])
-
-  const isLoading = searchStore.status === 'loading'
 
   return (
     <Suspense fallback={<SearchLoading />}>

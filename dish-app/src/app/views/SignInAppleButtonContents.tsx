@@ -32,6 +32,7 @@ export default memo(function SignInAppleButton() {
       }
     }, 3000)
     try {
+      await sleep(16)
       const res = await auth.signIn()
       if (!res) {
         console.log('no res')

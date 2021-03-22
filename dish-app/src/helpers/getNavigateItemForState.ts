@@ -1,18 +1,10 @@
-import { findLast } from 'lodash'
-
+import { urlSerializers } from '../app/home/search/urlSerializers'
 import { homeStore } from '../app/homeStore'
 import { tagLenses } from '../constants/localTags'
 import { SPLIT_TAG } from '../constants/SPLIT_TAG'
 import { NavigateItem, SearchRouteParams, router } from '../router'
-import {
-  HomeStateItem,
-  HomeStateItemHome,
-  HomeStateItemSearch,
-  HomeStateTagNavigable,
-} from '../types/homeTypes'
-import { NavigableTag } from '../types/tagTypes'
+import { HomeStateItem, HomeStateTagNavigable } from '../types/homeTypes'
 import { getActiveTags } from './getActiveTags'
-import { getTagSlug } from './getTagSlug'
 import { isHomeState, isSearchState } from './homeStateHelpers'
 import { shouldBeOnSearch } from './shouldBeOnSearch'
 
@@ -79,9 +71,11 @@ const getParamsForState = (
           addTag(tag.slug)
       }
     }
-    const prev = homeStore.lastHomeOrSearchState
     return {
-      region: state.region ?? prev?.region ?? 'ca-san-francisco',
+      region:
+        state.type === 'search'
+          ? urlSerializers.search.region.serialize(state)
+          : urlSerializers.home.region.serialize(state), //state.region ?? prev?.region ?? 'ca-san-francisco'
       tags: tags.length ? tags : '-',
       search: state.searchQuery,
       lense,

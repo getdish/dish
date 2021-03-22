@@ -27,6 +27,7 @@ class SearchPageStore extends Store {
   meta: HomeMeta | null = null
   searchPosition = initialPosition
   searchRegion = false
+  searchArgs: RestaurantSearchArgs | null = null
   private lastSearchKey = ''
   private lastSearchAt = 0
 
@@ -125,16 +126,17 @@ class SearchPageStore extends Store {
       tags: otherTags,
       main_tag: mainTag,
     }
-    console.log('search', searchArgs, tags, mainTag)
+    console.log('search', this.searchArgs, tags, mainTag)
 
     // prevent duplicate searches
-    const searchKey = stringify(searchArgs)
+    const searchKey = stringify(this.searchArgs)
     if (
       opts.force ||
       searchKey !== this.lastSearchKey ||
       !this.results.length
     ) {
       // SEARCH
+      this.searchArgs = searchArgs
       const res = await search(searchArgs)
       console.log('search res', res)
       if (shouldCancel()) return
