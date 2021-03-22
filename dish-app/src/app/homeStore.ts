@@ -450,8 +450,10 @@ class HomeStore extends Store {
 
     console.log(
       'DONE ROUTE CHANGE',
+      item.type,
       this.stateIndex,
-      this.states.map((x) => `${x.type} - ${x.id}`)
+      this.states.map((x) => `${x.type} - ${x.id}`),
+      { next, item }
     )
   }
 

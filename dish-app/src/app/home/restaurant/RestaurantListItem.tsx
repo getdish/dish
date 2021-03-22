@@ -153,7 +153,6 @@ function RestaurantListItemMain(props: RestaurantListItemProps) {
 }
 
 const fadeOutWidth = 40
-const fadeOutWidthHalf = 20
 
 const RestaurantListItemContent = memo(
   graphql(function RestaurantListItemContent(
@@ -377,10 +376,10 @@ const RestaurantListItemContent = memo(
               </VStack>
             </Link>
 
-            <Spacer size={10} />
+            <Spacer size={12} />
 
             {/* SECOND ROW TITLE */}
-            <VStack {...contentSideProps}>
+            <VStack zIndex={-1} {...contentSideProps}>
               <VStack
                 overflow="hidden"
                 zIndex={2}

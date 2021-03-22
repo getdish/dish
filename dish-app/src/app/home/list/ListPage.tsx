@@ -41,7 +41,7 @@ import { queryList } from '../../../queries/queryList'
 import { router } from '../../../router'
 import { HomeStateItemList } from '../../../types/homeTypes'
 import { useSetAppMap } from '../../AppMapStore'
-import { homeStore } from '../../homeStore'
+import { homeStore, useHomeStateById } from '../../homeStore'
 import { useStateSynced } from '../../hooks/useStateSynced'
 import { useUserStore, userStore } from '../../userStore'
 import { BottomFloatingArea } from '../../views/BottomFloatingArea'
@@ -68,7 +68,8 @@ import { getListColor, listColors, randomListColor } from './listColors'
 type Props = StackItemProps<HomeStateItemList>
 
 export default function ListPage(props: Props) {
-  const isCreating = props.item.slug.startsWith('create')
+  const item = useHomeStateById<HomeStateItemList>(props.item.id)
+  const isCreating = item.slug === 'create'
 
   useEffect(() => {
     if (!isCreating) return
@@ -129,7 +130,7 @@ export default function ListPage(props: Props) {
 
       {!isCreating && (
         <Suspense fallback={<StackDrawer closable title={`...`} />}>
-          <ListPageContent {...props} />
+          <ListPageContent {...props} item={item} />
         </Suspense>
       )}
     </>

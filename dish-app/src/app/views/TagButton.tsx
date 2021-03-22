@@ -78,6 +78,7 @@ export type TagButtonProps = StackProps &
     floating?: boolean
     hideRating?: boolean
     hideRank?: boolean
+    ratingStyle?: 'points' | 'pie'
   }
 
 const typeColors = {
@@ -118,6 +119,7 @@ export const TagButton = memo((props: TagButtonProps) => {
     restaurantSlug,
     hideRating,
     hideRank,
+    ratingStyle,
     ...rest
   } = props
 
@@ -195,9 +197,7 @@ export const TagButton = memo((props: TagButtonProps) => {
 
       <Text
         ellipse
-        // @ts-ignore
         fontSize={fontSize}
-        // @ts-ignore
         fontWeight={fontWeight ?? '600'}
         lineHeight={isSmall ? 22 : 26}
         color={fg}
@@ -211,15 +211,6 @@ export const TagButton = memo((props: TagButtonProps) => {
       </Text>
 
       <VStack width={7 * scale} />
-
-      {/* <DishUpvoteDownvote
-        slug={slug ?? ''}
-        restaurantSlug={restaurantSlug}
-        score={score}
-        rating={rating}
-        size="sm"
-        subtle
-      /> */}
 
       {/*
 {!!score && (
@@ -237,21 +228,26 @@ export const TagButton = memo((props: TagButtonProps) => {
       {!hideRating && typeof rating !== 'undefined' && (
         <VStack
           position="relative"
-          // transform={[{ rotate: `${(1 - rating / 10) * 180}deg` }]}
+          {...(ratingStyle === 'pie' && {
+            transform: [{ rotate: `${(1 - rating / 10) * 180}deg` }],
+          })}
         >
-          <Text
-            color={colors.color}
-            fontSize={13}
-            fontWeight="900"
-            letterSpacing={-0.5}
-          >
-            {ratingPts < 0 ? ratingPts : `+${ratingPts}`}
-          </Text>
-          {/* <Pie
-            size={size === 'sm' ? 16 : 18}
-            percent={}
-            color={floating ? `#fff` : `${colors.color}`}
-          /> */}
+          {ratingStyle === 'pie' ? (
+            <Pie
+              size={size === 'sm' ? 16 : 18}
+              percent={rating * 10}
+              color={floating ? `#fff` : `${colors.color}`}
+            />
+          ) : (
+            <Text
+              color={colors.color}
+              fontSize={13}
+              fontWeight="900"
+              letterSpacing={-0.5}
+            >
+              {ratingPts < 0 ? ratingPts : `+${ratingPts}`}
+            </Text>
+          )}
         </VStack>
       )}
 

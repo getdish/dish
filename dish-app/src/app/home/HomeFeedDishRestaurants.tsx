@@ -137,6 +137,7 @@ export const HomeFeedDishRestaurants = graphql(
                     below={(colors) => (
                       <CardOverlay>
                         <TagButton
+                          ratingStyle="pie"
                           size="lg"
                           restaurantSlug={restaurant.slug || ''}
                           color="#fff"
