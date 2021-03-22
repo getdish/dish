@@ -1,0 +1,19 @@
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+  output   = "./src/prisma/client-js"
+}
+
+generator typegraphql {
+  provider = "typegraphql-prisma"
+  output   = "./src/prisma/type-graphql"
+}
+
+generator nexus {
+  provider = "nexus-plugin-prisma"
+  output   = "./src/prisma/nexus"
+}
