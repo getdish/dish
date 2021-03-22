@@ -148,13 +148,15 @@ export function Card({
             opacity={dimImage ? 0.75 : 0.9}
             {...frame}
           >
-            {!!photo && typeof photo === 'string' ? (
-              <Image
-                resizeMode="cover"
-                {...sizes}
-                style={frame}
-                source={{ uri: photo }}
-              />
+            {typeof photo === 'string' ? (
+              photo ? (
+                <Image
+                  resizeMode="cover"
+                  {...sizes}
+                  style={frame}
+                  source={{ uri: photo }}
+                />
+              ) : null
             ) : (
               photo
             )}

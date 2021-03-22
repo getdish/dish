@@ -54,7 +54,6 @@ export const AppSearchBarFloating = () => {
   const media = useMedia()
   const theme = useTheme()
   const { color, background, backgroundRgb, isColored } = useSearchBarTheme()
-  console.log(color, background)
   const height = searchBarHeight + 4
 
   if (media.sm) {
