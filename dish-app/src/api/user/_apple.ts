@@ -1,7 +1,13 @@
 import { join } from 'path'
 
 import { RouteExit, urlEncodedRoute } from '@dish/api'
-import { User, WithID, userFindOne, userUpsert } from '@dish/graph'
+import {
+  DISH_API_ENDPOINT,
+  User,
+  WithID,
+  userFindOne,
+  userUpsert,
+} from '@dish/graph'
 import { jwtSign } from '@dish/helpers-node'
 import AppleSignIn, { AppleSignInOptions } from 'apple-sign-in-rest'
 
@@ -10,7 +16,7 @@ import AppleSignIn, { AppleSignInOptions } from 'apple-sign-in-rest'
 // may want to switch if we get issues:
 // https://github.com/A-Tokyo/apple-signin-auth
 
-export const redirectUri = 'https://dishapp.com/api/auth/appleAuthorize'
+export const redirectUri = `${DISH_API_ENDPOINT}/auth/appleAuthorize`
 const rootPath = join(__dirname, '..', '..', '..')
 
 const privateKeyPath = join(rootPath, 'etc', 'AppleAuthKey.p8')
@@ -68,7 +74,7 @@ export const authorizeRoute = urlEncodedRoute(
     })
     const apple_token = tokens.access_token
     const apple_refresh_token = tokens.refresh_token
-    const isChrome = req.path.includes('_chrome')
+    const isChrome = req.path.includes('Chrome')
     const sendResponse = (success?: boolean) => {
       if (isChrome) {
         if (!success) {

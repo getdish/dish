@@ -31,7 +31,6 @@ export default memo(function SignInAppleButton() {
         setLoading(false)
       }
     }, 3000)
-    await sleep(40)
     try {
       const res = await auth.signIn()
       if (!res) {
