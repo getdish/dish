@@ -9,7 +9,7 @@ export function GradientButton({
   children,
   bordered,
 }: {
-  rgb: number[]
+  rgb: readonly [number, number, number]
   children?: any
   bordered?: boolean
 }) {

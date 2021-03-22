@@ -45,7 +45,7 @@
     "@dish/api": "*",
     "@dish/async": "*",
     "@dish/fast-compare": "2.7.6",
-    "@dish/gqless": "^5.0.0",
+    "@dish/gqless": "^6.0.0",
     "@dish/graph": "*",
     "@dish/helpers": "*",
     "@dish/helpers-node": "*",
