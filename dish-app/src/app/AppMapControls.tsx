@@ -1,6 +1,5 @@
 import { RefreshCcw, X } from '@dish/react-feather'
 import { useSelector, useStoreInstance } from '@dish/use-store'
-import { useDebugStoreComponent } from '@dish/use-store/src/useStoreDebug'
 import React, { memo } from 'react'
 import { Switch } from 'react-native'
 import { AbsoluteVStack, HStack, Text, Theme, VStack, useMedia } from 'snackui'
@@ -108,7 +107,7 @@ function useShowSearchHere() {
     const { center, span } = appMapStore.nextPosition
     if (searchPageStore.status === 'loading') return false
     if (!isOnSearch) return false
-    const hasMoved = hasMovedAtLeast(sp, { center, span })
+    const hasMoved = hasMovedAtLeast(sp, { center, span }, 0.001)
     return hasMoved
   })
 }

@@ -455,7 +455,6 @@ function createProxiedStore(storeInfo: Omit<StoreInfo, 'store' | 'source'>) {
   const constr = storeInstance.constructor
 
   let didSet = false
-  let withinAction = false
 
   const proxiedStore = new Proxy(storeInstance, {
     // GET
@@ -519,14 +518,12 @@ function createProxiedStore(storeInfo: Omit<StoreInfo, 'store' | 'source'>) {
               return actionFn.apply(proxiedStore, args)
             }
 
-            const isWithin = withinAction
-
             const finishAction = () => {
-              // if (storeInstance[SHOULD_DEBUG]()) {
-              //   // prettier-ignore
-              //   console.log('finish action', constr.name, key, { isWithin, didSet })
-              // }
-              if (didSet && !isWithin) {
+              if (storeInstance[SHOULD_DEBUG]()) {
+                // prettier-ignore
+                console.log('finish action', constr.name, key, {  didSet })
+              }
+              if (didSet) {
                 storeInfo.triggerUpdate()
                 didSet = false
               }
@@ -534,11 +531,9 @@ function createProxiedStore(storeInfo: Omit<StoreInfo, 'store' | 'source'>) {
 
             let res
             try {
-              withinAction = true
               res = actionFn.apply(proxiedStore, args)
               return res
             } finally {
-              withinAction = false
               if (res instanceof Promise) {
                 res.then(finishAction)
               } else {
@@ -547,98 +542,102 @@ function createProxiedStore(storeInfo: Omit<StoreInfo, 'store' | 'source'>) {
             }
           }
 
-          if (
-            process.env.LOG_LEVEL &&
-            (isDebugging || configureOpts.logLevel !== 'error') &&
-            !key.startsWith('get')
-          ) {
-            const ogAction = action
-            action = (...args: any[]) => {
-              setters = new Set()
-              const curSetters = setters
+          // debug mode wrapper
+          if (process.env.NODE_ENV === 'development') {
+            if (
+              process.env.LOG_LEVEL &&
+              (isDebugging || configureOpts.logLevel !== 'error') &&
+              !key.startsWith('get')
+            ) {
+              const ogAction = action
+              action = (...args: any[]) => {
+                setters = new Set()
+                const curSetters = setters
 
-              // dev mode do a lot of nice logging
-              const isTopLevelLogger = logStack.size == 0
-              const logs = new Set<any[]>()
-              logStack.add(logs)
+                // dev mode do a lot of nice logging
+                const isTopLevelLogger = logStack.size == 0
+                const logs = new Set<any[]>()
+                logStack.add(logs)
 
-              //
-              // 🏃‍♀️ run action here now
-              //
-              const res = ogAction(...args)
+                //
+                // 🏃‍♀️ run action here now
+                //
+                const res = ogAction(...args)
 
-              logStack.add('end')
+                logStack.add('end')
 
-              const name = constr.name
-              const color = strColor(name)
-              const simpleArgs = args.map(simpleStr)
-              logs.add([
-                `💰 %c${name}%c.${key}(${simpleArgs.join(', ')})${
-                  isTopLevelLogger && logStack.size > 1
-                    ? ` (+${logStack.size - 1})`
-                    : ''
-                }`,
-                `color: ${color};`,
-                'color: black;',
-              ])
-              logs.add([` ARGS`, ...args])
-              if (curSetters.size) {
-                curSetters.forEach(({ key, value }) => {
-                  logs.add([` SET`, key, '=', value])
-                })
-              }
-              if (typeof res !== 'undefined') {
-                logs.add([' =>', res])
-              }
+                const name = constr.name
+                const color = strColor(name)
+                const simpleArgs = args.map(simpleStr)
+                logs.add([
+                  `💰 %c${name}%c.${key}(${simpleArgs.join(', ')})${
+                    isTopLevelLogger && logStack.size > 1
+                      ? ` (+${logStack.size - 1})`
+                      : ''
+                  }`,
+                  `color: ${color};`,
+                  'color: black;',
+                ])
+                logs.add([` ARGS`, ...args])
+                if (curSetters.size) {
+                  curSetters.forEach(({ key, value }) => {
+                    logs.add([` SET`, key, '=', value])
+                  })
+                }
+                if (typeof res !== 'undefined') {
+                  logs.add([' =>', res])
+                }
 
-              if (isTopLevelLogger) {
-                let error = null
-                try {
-                  for (const item of [...logStack]) {
-                    if (item === 'end') {
-                      console.groupEnd()
-                      continue
-                    }
-                    const [head, ...rest] = item
-                    if (head) {
-                      console.groupCollapsed(...head)
-                      console.groupCollapsed('trace >')
-                      console.trace()
-                      console.groupEnd()
-                      for (const log of rest) {
-                        console.log(...log)
+                if (isTopLevelLogger) {
+                  let error = null
+                  try {
+                    for (const item of [...logStack]) {
+                      if (item === 'end') {
+                        console.groupEnd()
+                        continue
                       }
-                    } else {
-                      console.log('Weird log', head, ...rest)
+                      const [head, ...rest] = item
+                      if (head) {
+                        console.groupCollapsed(...head)
+                        console.groupCollapsed('trace >')
+                        console.trace()
+                        console.groupEnd()
+                        for (const log of rest) {
+                          console.log(...log)
+                        }
+                      } else {
+                        console.log('Weird log', head, ...rest)
+                      }
                     }
+                  } catch (err) {
+                    error = err
                   }
-                } catch (err) {
-                  error = err
+                  for (const _ of [...logStack]) {
+                    console.groupEnd()
+                  }
+                  if (error) {
+                    console.error(`error loggin`, error)
+                  }
+                  logStack.clear()
                 }
-                for (const _ of [...logStack]) {
-                  console.groupEnd()
-                }
-                if (error) {
-                  console.error(`error loggin`, error)
-                }
-                logStack.clear()
-              }
 
-              return res
+                return res
 
-              // dev-mode colored output
-              function hashCode(str: string) {
-                let hash = 0
-                for (var i = 0; i < str.length; i++) {
-                  hash = str.charCodeAt(i) + ((hash << 5) - hash)
+                // dev-mode colored output
+                function hashCode(str: string) {
+                  let hash = 0
+                  for (var i = 0; i < str.length; i++) {
+                    hash = str.charCodeAt(i) + ((hash << 5) - hash)
+                  }
+                  return hash
                 }
-                return hash
-              }
-              function strColor(str: string) {
-                return `hsl(${hashCode(str) % 360}, 90%, 40%)`
+                function strColor(str: string) {
+                  return `hsl(${hashCode(str) % 360}, 90%, 40%)`
+                }
               }
             }
           }
+
           return action
         }
         if (!gettersState.isGetting) {
