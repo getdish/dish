@@ -290,9 +290,9 @@ function getOrCreateStoreInfo(
         console.warn(
           'Error: Stores must have a unique name (ignore if this is a hot reload)'
         )
-        cache.set(uid, StoreKlass.toString())
+      } else {
+        return cached
       }
-      return cached
     }
   }
 
@@ -376,6 +376,11 @@ function useStoreFromInfo(
   info: StoreInfo,
   userSelector?: Selector<any> | undefined
 ): any {
+  if (!info.store) {
+    console.warn('hmr?')
+    debugger
+    return null
+  }
   const internal = useRef<StoreTracker>()
   const component = useCurrentComponent()
   if (!internal.current) {

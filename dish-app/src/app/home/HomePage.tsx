@@ -132,18 +132,17 @@ export default memo(function HomePage(
           <ContentScrollViewHorizontal>
             <HStack
               alignItems="center"
-              paddingVertical={media.sm ? 12 : 20}
-              paddingBottom={25}
+              paddingVertical={media.sm ? 10 : 20}
+              paddingBottom={media.sm ? 25 : 25}
               paddingHorizontal={10}
             >
               <VStack position="relative">
                 <Theme name="dark">
                   <SlantedTitle
                     // paddingVertical={12}
-                    backgroundColor={regionColors.darkColor}
-                    color={regionColors.extraLightColor}
+                    backgroundColor={regionColors.color}
+                    color="#fff"
                     minWidth={100}
-                    // color="#fff"
                     size={
                       regionName.length > 24
                         ? 'xs'

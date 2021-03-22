@@ -174,6 +174,10 @@ const AppSearchBarContents = memo(({ isColored }: { isColored: boolean }) => {
         position="relative"
         width={media.sm ? 'auto' : '43%'}
         maxWidth={media.xs ? 'auto' : '100%'}
+        // fixes a weird bug where it wouldn't shrink even though this is already
+        // applied in base.css, adding it here fixes letting search shrink horizontally
+        // on mobile...
+        minWidth={0}
         // ipad
         flex={media.sm ? 6 : 1}
         alignItems="center"
