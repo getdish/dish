@@ -11,7 +11,10 @@ export const useBreakdownsBySources = (
   let total = 0
   const [restaurant] = queryRestaurant(restaurantSlug)
   const sources = restaurant?.sources?.() ?? {}
-  const rtags = restaurant?.tags()
+  if (!restaurant) {
+    return null
+  }
+  const rtags = restaurant.tags()
   let scoreContributingTags: restaurant_tag[] = []
   if (reviewTags.length) {
     scoreContributingTags = reviewTags

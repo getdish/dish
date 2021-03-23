@@ -23,6 +23,9 @@ export const RestaurantDetailRow = memo(
     }) => {
       const sizeSm = size === 'sm'
       const [restaurant] = queryRestaurant(restaurantSlug)
+      if (!restaurant) {
+        return null
+      }
       // const restaurantSources = getRestaurantDeliverySources(
       //   restaurant.sources()
       // )

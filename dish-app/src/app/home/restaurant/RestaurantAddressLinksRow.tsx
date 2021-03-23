@@ -26,6 +26,9 @@ export const RestaurantAddressLinksRow = memo(
       showMenu?: boolean
     }) => {
       const [restaurant] = queryRestaurant(restaurantSlug)
+      if (!restaurant) {
+        return null
+      }
       const fontSize = size == 'lg' ? 16 : 14
       const iconSize = size === 'lg' ? 18 : 16
 

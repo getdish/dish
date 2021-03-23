@@ -34,6 +34,10 @@ export const RestaurantButton = graphql(
       })
     }, [hoverToMap])
 
+    if (!restaurant) {
+      return null
+    }
+
     const content = (
       <Link name="restaurant" params={{ slug: slug }} asyncClick>
         <Button backgroundColor={theme.backgroundColorAlt} noTextWrap>

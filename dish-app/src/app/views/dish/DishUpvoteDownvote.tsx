@@ -45,7 +45,7 @@ const DishUpvoteDownvoteContent = graphql(
     const intScore =
       score ??
       (restaurantSlug
-        ? queryRestaurant(restaurantSlug)[0].tags({
+        ? queryRestaurant(restaurantSlug)[0]?.tags({
             limit: 1,
             where: {
               tag: {

@@ -27,6 +27,9 @@ export default memo(
   graphql<any>(function RestaurantHoursPage() {
     const params = router.curPage.params
     const [restaurant] = queryRestaurant(params.slug)
+    if (!restaurant) {
+      return null
+    }
     const hours = restaurant.hours() ?? []
     const dayOfWeek = new Intl.DateTimeFormat(['en'], {
       weekday: 'short',

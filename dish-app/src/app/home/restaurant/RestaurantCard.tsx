@@ -76,6 +76,9 @@ export const RestaurantCardContent = graphql(
     below,
   }: RestaurantCardProps) => {
     const [restaurant] = queryRestaurant(restaurantSlug)
+    if (!restaurant) {
+      return null
+    }
     const [price_label, price_color, price_range] = priceRange(restaurant)
     const restaurantPhoto = queryRestaurantCoverPhoto(restaurant)
     // const rating = Math.round(restaurant.rating * 2)

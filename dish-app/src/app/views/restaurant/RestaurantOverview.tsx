@@ -48,6 +48,11 @@ export const RestaurantOverview = memo(
   }) {
     const theme = useTheme()
     const [restaurant] = queryRestaurant(restaurantSlug)
+
+    if (!restaurant) {
+      return null
+    }
+
     const headlines = (restaurant.headlines() ?? [])
       .slice(0, 3)
       .map((x) => x.sentence)

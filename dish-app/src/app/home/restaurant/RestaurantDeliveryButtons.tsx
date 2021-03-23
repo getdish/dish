@@ -21,6 +21,9 @@ export const RestaurantDeliveryButtons = memo(
     ...props
   }: Props) {
     const [restaurant] = queryRestaurant(restaurantSlug)
+    if (!restaurant) {
+      return null
+    }
     const restaurantSources = restaurant.sources()
     const sources = getRestaurantDeliverySources(restaurantSources)
 

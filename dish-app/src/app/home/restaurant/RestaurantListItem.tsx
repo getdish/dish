@@ -181,6 +181,10 @@ const RestaurantListItemContent = memo(
     const media = useMedia()
     const [restaurant] = queryRestaurant(restaurantSlug)
 
+    if (!restaurant) {
+      return null
+    }
+
     useEffect(() => {
       if (!!restaurant.name && props.onFinishRender) {
         return series([() => fullyIdle({ min: 50 }), props.onFinishRender!])
@@ -659,7 +663,7 @@ const RestaurantPeekDishes = memo(
     const { isLoaded, size = 'md' } = props
     const dishes = props.tagSlugs
       ? queryRestaurant(props.restaurantSlug)[0]
-          .tags({
+          ?.tags({
             where: {
               tag: {
                 slug: {
@@ -668,7 +672,7 @@ const RestaurantPeekDishes = memo(
               },
             },
           })
-          .map(selectRishDishViewSimple)
+          .map(selectRishDishViewSimple) ?? []
       : getRestaurantDishes({
           restaurantSlug: props.restaurantSlug,
           tagSlugs: props.activeTagSlugs,
@@ -741,6 +745,10 @@ const EditRestaurantTags = graphql(
     const [slugs, setSlugs] = useState<string[]>(tagSlugs)
     const [restaurant] = queryRestaurant(restaurantSlug)
     const theme = useTheme()
+
+    if (!restaurant) {
+      return null
+    }
 
     const dishes = (() => {
       const items = slugs.map((slug) => {

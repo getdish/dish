@@ -93,7 +93,7 @@ export const ListAddRestuarant = graphql(
             result={result}
             onAdd={async () => {
               const slug = result.id
-              const id = await resolved(() => queryRestaurant(slug)[0].id)
+              const id = await resolved(() => queryRestaurant(slug)[0]?.id)
               onAdd({ id })
             }}
           />

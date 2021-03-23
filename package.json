@@ -57,7 +57,7 @@
     "build:refs": "typescript-monorepo-toolkit inject-refs .",
     "test": "ultra -r --no-pretty --serial test",
     "crawl:tucson": "node services/crawlers/dist/yelp/all.js --city 'Tucson, Arizona'",
-    "crawl:one": "SLUG=$SLUG ./dishctl.sh run 'node services/crawlers/dist/one.js'",
+    "crawl:one": "SLUG=$1 ./dishctl.sh run 'node services/crawlers/dist/one.js'",
     "crawl:internal": "./dishctl.sh run 'QUERY=\"SELECT id from restaurant $QUERY\" node ./services/crawlers/_/self/one.js'",
     "crawl:internal:slug": "QUERY=\"WHERE slug = '$SLUG'\" yarn crawl:internal",
     "graph:generate": "yarn workspace @dish/graph generate",

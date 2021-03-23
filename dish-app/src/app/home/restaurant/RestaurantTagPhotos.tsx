@@ -23,6 +23,9 @@ export const RestaurantTagPhotos = (props: Props) => {
 export const RestaurantTagPhotosContent = memo(
   graphql(({ tagSlug, restaurantSlug }: Props) => {
     const [restaurant] = queryRestaurant(restaurantSlug)
+    if (!restaurant) {
+      return null
+    }
     const tag = tagSlug
       ? restaurant.tags({
           where: {

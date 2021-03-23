@@ -19,6 +19,9 @@ export const RestaurantRatingView = suspense(
       floating?: boolean
     }) => {
       const [restaurant] = queryRestaurant(slug)
+      if (!restaurant) {
+        return null
+      }
       const count = restaurant.reviews_aggregate({}).aggregate?.count({}) ?? 0
       const ratingViewProps = {
         rating: (restaurant.rating ?? 0) * 20,

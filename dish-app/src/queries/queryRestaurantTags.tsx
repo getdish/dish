@@ -10,6 +10,9 @@ export const queryRestaurantTags = ({
   limit?: number
 }) => {
   const [restaurant] = queryRestaurant(restaurantSlug)
+  if (!restaurant) {
+    return []
+  }
   const restaurantTags = restaurant.tags({
     limit,
     where: {
