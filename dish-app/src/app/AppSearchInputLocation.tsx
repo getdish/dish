@@ -12,6 +12,7 @@ import {
 } from 'snackui'
 
 import { isWeb } from '../constants/constants'
+import { supportsTouchWeb } from '../constants/platforms'
 import {
   autocompleteLocationStore,
   autocompletesStore,
@@ -26,17 +27,26 @@ import { InputFrame } from './InputFrame'
 import { setNodeOnInputStore, useInputStoreLocation } from './inputStore'
 import { SearchInputNativeDragFix } from './SearchInputNativeDragFix'
 import { setLocation } from './setLocation'
+import { useAutocompleteFocusWeb } from './useAutocompleteFocusWeb'
+
+const isWebNonTouch = isWeb && !supportsTouchWeb
 
 export const AppSearchInputLocation = memo(() => {
-  const theme = useTheme()
-  const media = useMedia()
+  // const theme = useTheme()
+  // const media = useMedia()
   const inputStore = useInputStoreLocation()
+  const input = inputStore.node
   const home = useHomeStore()
   const { color } = useSearchBarTheme()
   const { curLocName } = home.currentState
 
   // focus on visible
   useAutocompleteInputFocus(inputStore)
+
+  // focus for web
+  if (isWebNonTouch) {
+    useAutocompleteFocusWeb({ input, target: 'search' })
+  }
 
   const handleKeyPress = useCallback((e) => {
     // @ts-ignore

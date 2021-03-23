@@ -8,7 +8,7 @@ export function LoadingPage({ loading }: { loading: boolean }) {
     <FullScreen
       transition="all ease 300ms"
       opacity={1}
-      background={theme => theme.background}
+      background={(theme) => theme.background}
       zIndex={10000000}
       position="fixed"
       alignItems="center"

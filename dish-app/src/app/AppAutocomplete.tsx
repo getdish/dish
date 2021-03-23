@@ -59,7 +59,7 @@ import { LinkButton } from './views/LinkButton'
 
 export type ShowAutocomplete = 'search' | 'location' | false
 
-type AutocompleteTarget = 'search' | 'location'
+export type AutocompleteTarget = 'search' | 'location'
 
 class AutocompletesStore extends Store {
   visible: 'partial' | true | false = false
@@ -512,6 +512,7 @@ const AutocompleteResults = ({
                 index={index}
                 result={result}
                 onSelect={onSelect}
+                isActive={isActive}
               />
             </Theme>
             <Spacer size={1} />
@@ -531,6 +532,7 @@ export const AutocompleteItemView = memo(
     onAdd,
     hideBackground,
     preventNavigate,
+    isActive,
     index,
   }: {
     result: AutocompleteItem
@@ -541,6 +543,7 @@ export const AutocompleteItemView = memo(
     onSelect: AutocompleteSelectCb
     hideBackground?: boolean
     onAdd?: () => any
+    isActive?: boolean
   }) => {
     const showLocation = target === 'location'
     const theme = useTheme()
@@ -577,9 +580,10 @@ export const AutocompleteItemView = memo(
       <LinkButton
         width="100%"
         justifyContent={target === 'location' ? 'flex-end' : 'flex-start'}
-        {...(hideBackground && {
-          backgroundColor: 'transparent',
-        })}
+        backgroundColor={isActive ? theme.backgroundColor : 'transparent'}
+        hoverStyle={{
+          backgroundColor: theme.backgroundColor,
+        }}
         onPressOut={() => {
           hideAutocompleteSlow()
           onSelect(result, index)

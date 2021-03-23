@@ -128,7 +128,7 @@ export class Yelp extends WorkerJob {
         found_the_one = true
         console.log('YELP SANDBOX: found ' + name)
       }
-      const timeout = sleep(20000)
+      const timeout = sleep(35000)
       await Promise.race([
         this.getRestaurant(data),
         timeout.then(() => {
@@ -169,6 +169,7 @@ export class Yelp extends WorkerJob {
       return
     }
     let biz_page: string
+    console.log('YELP: Inserting scrape data')
     const id = await this.saveDataFromMapSearch(data)
     if (!id) {
       throw new Error(`No id`)
@@ -233,6 +234,7 @@ export class Yelp extends WorkerJob {
     const coords = (uri.query.center as string).split(',')
     const lat = parseFloat(coords[0])
     const lon = parseFloat(coords[1])
+    console.log(`YELP: merge scrape data: ${yelp_path}`)
     const scrape = (await scrapeMergeData(id, { data_from_html_embed: data }))!
     const restaurant_id = await restaurantSaveCanonical(
       'yelp',

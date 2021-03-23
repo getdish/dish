@@ -13,6 +13,7 @@ export async function main(slug: string) {
     })
     console.log(
       'crawling restaurant',
+      slug,
       rest?.name,
       rest?.address,
       rest?.telephone
@@ -25,6 +26,8 @@ export async function main(slug: string) {
   }
 }
 
-if (process.env.SLUG) {
-  main(process.env.SLUG)
+const slug = process.env.SLUG ?? process.argv[process.argv.length - 1]
+
+if (slug) {
+  main(slug)
 }
