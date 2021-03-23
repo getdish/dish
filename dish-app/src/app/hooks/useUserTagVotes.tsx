@@ -93,7 +93,7 @@ export const useUserTagVote = (props: VoteStoreProps) => {
   const tagId = tag?.id
   let review: review | null = null
 
-  if (restaurant.id && userId && tagId) {
+  if (restaurant?.id && userId && tagId) {
     review = query.review({
       where: {
         restaurant_id: {
@@ -141,6 +141,9 @@ export const useUserTagVote = (props: VoteStoreProps) => {
     voteStore.vote,
     async (userVote: VoteNumber | 'toggle') => {
       if (userStore.promptLogin()) {
+        return
+      }
+      if (!restaurant) {
         return
       }
       const vote =

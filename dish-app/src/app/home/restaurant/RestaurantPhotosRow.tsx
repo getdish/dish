@@ -40,6 +40,9 @@ export const RestaurantPhotosRowContent = memo(
       height,
     }: Props) => {
       const [restaurant] = queryRestaurant(restaurantSlug)
+      if (!restaurant) {
+        return null
+      }
       const mainPhoto = restaurant.image
       const otherPhotos = restaurant
         .photo_table({

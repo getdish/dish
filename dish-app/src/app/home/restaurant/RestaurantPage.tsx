@@ -231,6 +231,11 @@ const RestaurantPage = memo(
 const RestaurantLists = memo(
   graphql(({ restaurantSlug }: { restaurantSlug: string }) => {
     const [restaurant] = queryRestaurant(restaurantSlug)
+
+    if (!restaurant) {
+      return null
+    }
+
     const lists = restaurant.lists({
       limit: 10,
       order_by: [{ list: { created_at: order_by.asc } }],

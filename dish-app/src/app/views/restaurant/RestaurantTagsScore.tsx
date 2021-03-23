@@ -31,6 +31,11 @@ export const RestaurantTagsScore = graphql(function RestaurantTagsScore({
   userVote: number
 }) {
   const [restaurant] = queryRestaurant(restaurantSlug)
+
+  if (!restaurant) {
+    return null
+  }
+
   const breakdown = restaurant.score_breakdown()
   const tagScores = queryRestaurantTagScores({
     restaurantSlug,

@@ -21,6 +21,9 @@ export const RestaurantStatBars = graphql(
     colors: ColorShades
   }) => {
     const [restaurant] = queryRestaurant(restaurantSlug)
+    if (!restaurant) {
+      return null
+    }
     const givenTags =
       tags?.flatMap((tag) => {
         return restaurant.tags({

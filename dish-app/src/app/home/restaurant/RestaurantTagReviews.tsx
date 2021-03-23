@@ -5,10 +5,8 @@ import React, { Suspense, memo } from 'react'
 import { Image, StyleSheet } from 'react-native'
 import {
   AbsoluteVStack,
-  Grid,
   HStack,
   LinearGradient,
-  LoadingItems,
   Paragraph,
   Spacer,
   Text,
@@ -24,7 +22,6 @@ import { queryRestaurant } from '../../../queries/queryRestaurant'
 import { CloseButton } from '../../views/CloseButton'
 import { ContentScrollViewHorizontal } from '../../views/ContentScrollViewHorizontal'
 import { SlantedTitle } from '../../views/SlantedTitle'
-import { PageTitle } from '../PageTitle'
 import { SentimentText } from './SentimentText'
 
 export class RestaurantReviewsDisplayStore extends Store<{ id: string }> {
@@ -70,6 +67,9 @@ export const RestaurantTagReviewsContent = memo(
       showScoreTable,
     }: Props) => {
       const [restaurant] = queryRestaurant(restaurantSlug)
+      if (!restaurant) {
+        return null
+      }
       const tag = tagSlug
         ? restaurant.tags({
             where: {

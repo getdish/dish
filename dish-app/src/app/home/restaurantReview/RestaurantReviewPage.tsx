@@ -78,6 +78,10 @@ const HomePageReviewContent = memo(
 
     const [restaurant] = queryRestaurant(state.restaurantSlug)
 
+    if (!restaurant) {
+      return null
+    }
+
     return (
       <VStack width="100%" maxWidth="100%" padding={18} spacing="lg" flex={1}>
         <SmallTitle fontWeight="600">{restaurant.name}</SmallTitle>

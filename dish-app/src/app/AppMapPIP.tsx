@@ -58,7 +58,8 @@ const AppPIPContent = graphql(() => {
 
   if (state.type === 'restaurant') {
     slug = state.restaurantSlug
-    restaurants = [queryRestaurant(slug)[0]]
+    const r = queryRestaurant(slug)[0]
+    if (r) restaurants = [r]
     // zoom out on pip for restaurant
     span = {
       lat: span.lat * 2.5,
@@ -67,7 +68,8 @@ const AppPIPContent = graphql(() => {
   } else if (focusedRestaurant) {
     slug = focusedRestaurant.slug ?? ''
     // @ts-ignore
-    restaurants = [queryRestaurant(slug)[0]]
+    const r = queryRestaurant(slug)[0]
+    if (r) restaurants = [r]
     // zoom in on pip for search
     span = {
       lat: 0.005,

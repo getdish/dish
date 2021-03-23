@@ -55,6 +55,9 @@ const RestaurantHeaderContent = memo(
     ({ state, restaurantSlug, afterAddress, size }: RestaurantHeaderProps) => {
       const imgHeight = 250
       const [restaurant] = queryRestaurant(restaurantSlug)
+      if (!restaurant) {
+        return null
+      }
       const [open_text, open_color, next_time] = openingHours(restaurant)
       const paddingPx = size === 'sm' ? 10 : 30
       const spacer = <Spacer size={paddingPx} />

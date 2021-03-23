@@ -11,6 +11,9 @@ export function queryRestaurantTagScores({
   tagSlugs: string[]
 }) {
   const [restaurant] = queryRestaurant(restaurantSlug)
+  if (!restaurant) {
+    return []
+  }
   return tagSlugs
     .map((slug) => {
       const rtag = restaurant.tags({

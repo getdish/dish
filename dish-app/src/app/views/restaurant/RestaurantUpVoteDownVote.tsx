@@ -73,6 +73,10 @@ const RestaurantUpVoteDownVoteContents = graphql(
     )
     const theme = useTheme()
 
+    if (!restaurant) {
+      return null
+    }
+
     ratio = ratio ?? restaurantRatio(restaurant)
     score =
       display === 'ratio'

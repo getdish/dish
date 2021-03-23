@@ -44,6 +44,11 @@ export const RestaurantSourcesBreakdown = memo(
       (a) => (a.type === 'lense' ? 0 : a.type === 'dish' ? 2 : 1)
     )
     const breakdowns = useBreakdownsBySources(restaurantSlug, reviewTags)
+
+    if (!breakdowns) {
+      return null
+    }
+
     return (
       <>
         <Spacer size="lg" />

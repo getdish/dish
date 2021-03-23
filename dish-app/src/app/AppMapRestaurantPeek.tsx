@@ -61,6 +61,10 @@ export const AppMapRestaurantPeek = memo(
 
     const [restaurant] = queryRestaurant(slug)
 
+    if (!restaurant) {
+      return null
+    }
+
     return containerWrap(
       <>
         <HStack
