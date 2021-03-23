@@ -8,7 +8,6 @@ export const {
   useQuery,
   useMutation,
   useLazyQuery,
-  usePolling,
   useTransactionQuery,
   useRefetch,
   prepareReactRender,
