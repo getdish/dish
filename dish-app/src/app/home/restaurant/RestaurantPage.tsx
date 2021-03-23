@@ -21,6 +21,7 @@ import { appMapStore, useSetAppMap } from '../../AppMapStore'
 import { drawerStore } from '../../drawerStore'
 import { ContentScrollView } from '../../views/ContentScrollView'
 import { ListCard } from '../../views/list/ListCard'
+import { NotFoundPage } from '../../views/NotFoundPage'
 import { PageTitleTag } from '../../views/PageTitleTag'
 import { SlantedTitle } from '../../views/SlantedTitle'
 import { StackDrawer } from '../../views/StackDrawer'
@@ -88,7 +89,7 @@ const RestaurantPage = memo(
       results: [
         {
           slug: restaurantSlug,
-          id: restaurant.id,
+          id: restaurant?.id,
         },
       ],
       ...position,
@@ -127,6 +128,10 @@ const RestaurantPage = memo(
     }, [scrollView, item.sectionSlug])
 
     const scrollY = useRef(0)
+
+    if (!restaurant) {
+      return <NotFoundPage />
+    }
 
     return (
       <>

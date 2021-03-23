@@ -1,4 +1,4 @@
-import { RestaurantQuery, order_by, query } from '@dish/graph'
+import { RestaurantQuery, order_by, query, restaurant } from '@dish/graph'
 
 export const queryRestaurant = (slug: string) => {
   if (typeof slug !== 'string') {
@@ -11,7 +11,7 @@ export const queryRestaurant = (slug: string) => {
       },
     },
     limit: 1,
-  })
+  }) as [restaurant | null]
 }
 
 export const queryRestaurantCoverPhoto = (restaurant: RestaurantQuery) => {
