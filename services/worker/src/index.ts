@@ -99,8 +99,9 @@ async function startQueues(queues: Queue[]) {
 main()
 
 // for dev it should quit background jobs better
-var cleanExit = function () {
-  process.exit()
+const cleanExit = () => {
+  console.log('clean exit')
+  process.exit(0)
 }
 process.on('SIGINT', cleanExit) // catch ctrl-c
 process.on('SIGTERM', cleanExit) // catch kill
