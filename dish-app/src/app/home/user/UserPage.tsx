@@ -1,4 +1,4 @@
-import { ReviewQuery, UserQuery, graphql, order_by } from '@dish/graph'
+import { ReviewQuery, UserQuery, graphql, order_by, query } from '@dish/graph'
 import { useRouterSelector } from '@dish/router'
 import React, { Suspense, memo } from 'react'
 import {
@@ -77,19 +77,6 @@ export default function UserPageContainer(
   )
 }
 
-function useUserReviews(user: UserQuery, type: UserPane | 'both') {
-  return user?.reviews({
-    limit: 10,
-    ...(type === 'review' && {
-      where: { text: { _neq: '' } },
-    }),
-    ...(type === 'vote' && {
-      where: { text: { _eq: '' } },
-    }),
-    order_by: [{ updated_at: order_by.desc }],
-  })
-}
-
 const getReviewRestuarants = (x: ReviewQuery) => {
   return {
     id: x.restaurant.id,
@@ -103,7 +90,11 @@ const UserPageContent = graphql(
     isActive,
     pane,
   }: StackItemProps<HomeStateItemUser> & { pane: UserPane | null }) => {
-    const user = queryUser(item.username ?? '')
+    const username = item.username
+    if (!username) {
+      return null
+    }
+    const user = queryUser(username)
     const lists = user.lists({
       limit: 10,
       where: {
@@ -113,7 +104,23 @@ const UserPageContent = graphql(
       },
       order_by: [{ created_at: order_by.desc }],
     })
-    const reviews = useUserReviews(user, pane || 'both')
+    // not doing this nested until hasura fixes:
+    // https://github.com/hasura/graphql-engine/issues/5745
+    const reviews = query.review({
+      where: {
+        username: {
+          _eq: username,
+        },
+      },
+      limit: 10,
+      ...(pane === 'review' && {
+        where: { text: { _neq: '' } },
+      }),
+      ...(pane === 'vote' && {
+        where: { text: { _eq: '' } },
+      }),
+      order_by: [{ updated_at: order_by.desc }],
+    })
     const hasReviews = !!reviews?.length
 
     useSnapToFullscreenOnMount()

@@ -61,6 +61,8 @@ export class RestaurantBaseScore {
   async scoreFromPhotos() {
     const PHOTO_SCORE_FACTOR = 0.1
     const PHOTO_QUALITY_CRITERIA = 5.25
+    const id = this.crawler.restaurant.id
+    console.log('Counting photos for', id)
     const result = await this.crawler.main_db.query(`
       SELECT count(DISTINCT p.id) FROM photo_xref px
       JOIN photo p ON px.photo_id = p.id
