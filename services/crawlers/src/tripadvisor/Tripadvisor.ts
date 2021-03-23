@@ -36,7 +36,7 @@ export class Tripadvisor extends WorkerJob {
   static queue_config: QueueOptions = {
     limiter: {
       max: 5,
-      duration: 500,
+      duration: 2000,
     },
   }
 
@@ -44,10 +44,12 @@ export class Tripadvisor extends WorkerJob {
     attempts: 3,
   }
 
+  get logName() {
+    return `Tripadvisor`
+  }
+
   async allForCity(city_name: string) {
-    console.log(
-      'Starting Tripadvisor crawler. Using domain: ' + TRIPADVISOR_DOMAIN
-    )
+    this.log('Starting crawler. Using domain: ' + TRIPADVISOR_DOMAIN)
     const coords = await geocode(city_name)
     const region_coords = _.shuffle(
       aroundCoords(
@@ -81,18 +83,22 @@ export class Tripadvisor extends WorkerJob {
   async getRestaurant(path: string) {
     this.detail_id = this.extractDetailID(path)
     const response = await axios.get(TRIPADVISOR_DOMAIN + path)
+    this.log(`Got html response`)
     let data = this._extractEmbeddedJSONData(response.data)
     const scrape_id = await this.saveRestaurant(data)
+    this.log(`Saved restaurant data`)
     if (!scrape_id) return
     await this.savePhotos(response.data, scrape_id)
+    this.log(`Saved photos`)
     await this.saveReviews(path, scrape_id, 0, response.data)
+    this.log(`Saved reviews`)
   }
 
   async saveRestaurant(data: ScrapeData) {
     const overview = this._getOverview(data)
     const menu = this._getMenu(data)
     if (process.env.RUN_WITHOUT_WORKER != 'true') {
-      console.info('Tripadvisor: saving ' + overview.name)
+      this.log('saving ' + overview.name)
     }
     const id_from_source = overview.detailId.toString()
     const lon = overview.location.longitude
@@ -106,11 +112,7 @@ export class Tripadvisor extends WorkerJob {
       restaurant_name,
       overview.contact.address
     )
-    if (process.env.RUN_WITHOUT_WORKER == 'true') {
-      console.log(
-        'TRIPADVISOR: found canonical restaurant ID: ' + restaurant_id
-      )
-    }
+    this.log('found canonical restaurant ID: ' + restaurant_id)
     const id = await scrapeInsert({
       source: 'tripadvisor',
       restaurant_id,
@@ -336,6 +338,9 @@ export class Tripadvisor extends WorkerJob {
       if (line.includes(signature)) {
         the_data_line = line
         break
+      }
+      if (line.includes('window.__WEB_CONTEXT__')) {
+        console.log('what is', line)
       }
     }
     if (the_data_line != '') {

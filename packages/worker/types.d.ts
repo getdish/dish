@@ -1,6 +1,16 @@
 /// <reference lib="dom" />
 /// <reference lib="esnext" />
 declare module "@dish/worker" {
+    export class Loggable {
+        #private;
+        get logName(): string | undefined;
+        log(...messages: any[]): void;
+        elapsedTime(): number;
+        resetTimer(): void;
+    }
+}
+
+declare module "@dish/worker" {
     export function fetchBrowserJSON(url: string): Promise<any>;
     export function fetchBrowserHyperscript(url: string, selector: string): Promise<any>;
     export function fetchBrowserHTML(url: string): Promise<string>;
@@ -60,7 +70,7 @@ declare module "@dish/worker" {
         fn: string;
         args?: any;
     };
-    export class WorkerJob {
+    export class WorkerJob extends Loggable {
         static queue_config: QueueOptions;
         static job_config: JobOptions;
         queue: Queue;
@@ -68,11 +78,16 @@ declare module "@dish/worker" {
         run_all_on_main: boolean;
         run(fn: string, args?: any[]): Promise<void>;
         runOnWorker(fn: string, args?: any[], specific_config?: JobOptions): Promise<void>;
+        _runFailableFunction(func: Function): Promise<void>;
         private addJob;
         private manageRepeatable;
         addBigJob(fn: string, args: any[]): Promise<void | Bull.Job<any>>;
     }
     export function getBullQueue(name: string, config?: {}): Bull.Queue<any>;
     export function onBullQueueReady(queue: Bull.Queue): Promise<void>;
+}
+
+declare module "@dish/worker" {
+    export const DEBUG_LEVEL: number;
 }
 //# sourceMappingURL=types.d.ts.map

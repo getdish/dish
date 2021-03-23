@@ -37,6 +37,10 @@ export class GoogleReviewAPI extends WorkerJob {
     attempts: 3,
   }
 
+  get logName() {
+    return `GoogleReviewAPI`
+  }
+
   async allForCity(city: string) {
     let previous_id = globalTagId
     while (true) {
@@ -69,9 +73,7 @@ export class GoogleReviewAPI extends WorkerJob {
     let data: any[] = []
     let page = 0
     while (true) {
-      console.log(
-        `GoogleReviewAPI: fetching page ${page} for ${restaurant.name}`
-      )
+      this.log(`fetching page ${page} for ${restaurant.name}`)
       const html = await this.fetchReviewPage(restaurant.geocoder_id, page)
       const new_data = this.parseReviewPage(html)
       if (new_data.length == 0) break

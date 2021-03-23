@@ -58,12 +58,16 @@ export class GoogleImages extends WorkerJob {
     super()
   }
 
+  get logName() {
+    return `GOOGLE IMAGES`
+  }
+
   async main() {
     const batch_size = 100
     let page = 0
     await this.checkForZeroUUIDRestaurant()
     while (true) {
-      console.log('GOOGLE IMAGES: Dish batch...')
+      this.log('Dish batch...')
       const dishes_batch = await tagGetAllCuisinesWithDishes(batch_size, page)
       if (dishes_batch.length == 0) break
       for (const dish of dishes_batch) {

@@ -7,7 +7,6 @@ import { GPT3 } from './GPT3'
 import { Self } from './Self'
 
 export async function one(slug: string) {
-  console.log('one', slug)
   const restaurant = await restaurantFindOne({
     slug,
   })

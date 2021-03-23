@@ -16,6 +16,7 @@ import {
   photo,
   photo_constraint,
   photo_xref,
+  photo_xref_constraint,
   photo_xref_select_column,
   query,
   resolvedWithFields,
@@ -584,7 +585,7 @@ async function doPut(url: string, id: uuid, content_type: string) {
 export async function findHeroImage(restaurant_id: uuid) {
   return await PhotoXrefQueryHelpers.findOne(
     {
-      restaurant_id: restaurant_id,
+      restaurant_id,
       type: 'hero',
     },
     {
@@ -604,29 +605,35 @@ export async function uploadHeroImage(url: string, restaurant_id: uuid) {
   const do_url = DO_BASE + restaurant_id
   let shouldUpdate = false
   if (existing) {
-    if (existing.photo?.origin != url) {
+    if (!existing.photo?.origin) {
       shouldUpdate = true
       // delete previous before insert to avoid constraint
       await PhotoXrefQueryHelpers.delete({
         id: existing.id,
       })
+    } else if (existing.photo?.origin != url) {
+      shouldUpdate = true
     }
   }
   if (!existing || shouldUpdate) {
     const failed_id = await sendToDO(url, restaurant_id)
     if (failed_id) return
+    const photo =
+      (await PhotoBaseQueryHelpers.findOne({ url })) ||
+      (
+        await PhotoBaseQueryHelpers.upsert([
+          {
+            origin: url,
+            url: do_url,
+          },
+        ])
+      )[0]
     await photoXrefUpsert([
       {
-        ...(existing && {
-          id: existing.id,
-        }),
-        restaurant_id: restaurant_id,
+        restaurant_id,
         tag_id: globalTagId,
         type: 'hero',
-        photo: {
-          origin: url,
-          url: do_url,
-        } as photo,
+        photo,
       },
     ])
   }

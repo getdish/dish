@@ -1,3 +1,5 @@
 export { JobData, WorkerJob, getBullQueue } from './WorkerJob'
 export { ProxiedRequests } from './ProxiedRequests'
 export * from './browser'
+export * from './constants'
+export { Loggable } from './Loggable'

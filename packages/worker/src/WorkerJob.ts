@@ -1,3 +1,4 @@
+import { sentryException } from '@dish/common'
 import Bull from 'bull'
 import BullQueue, {
   EveryRepeatOptions,
@@ -7,6 +8,8 @@ import BullQueue, {
   QueueOptions,
 } from 'bull'
 import _ from 'lodash'
+
+import { Loggable } from './Loggable'
 
 // fly redis doesnt support .subscribe()
 // dony use process.env.FLY_REDIS_CACHE_URL
@@ -38,7 +41,7 @@ export type JobData = {
   args?: any
 }
 
-export class WorkerJob {
+export class WorkerJob extends Loggable {
   static queue_config: QueueOptions = {}
   static job_config: JobOptions = {}
   queue!: Queue
@@ -62,7 +65,7 @@ export class WorkerJob {
       await this.run(fn, args)
       return
     }
-    console.log('runOnWorker', fn)
+    this.log('runOnWorker', fn)
     if (process.env.RUN_WITHOUT_WORKER == 'true') {
       return await this.run(fn, args)
     }
@@ -82,6 +85,27 @@ export class WorkerJob {
     await queue.close()
   }
 
+  async _runFailableFunction(func: Function) {
+    this.resetTimer()
+    let result = 'success'
+    try {
+      if (func.constructor.name == 'AsyncFunction') {
+        await func.bind(this)()
+      } else {
+        func.bind(this)()
+      }
+    } catch (e) {
+      result = 'failed'
+      this.log(`Error (runFailableFunction ${func.name})`, e.message, e.stack)
+      sentryException(
+        e,
+        { function: func.name, restaurant: this.logName },
+        { source: `${this.constructor.name} job` }
+      )
+    }
+    this.log(`${func.name} | ${result}`)
+  }
+
   private async addJob(
     queue: Queue,
     job: JobData,
@@ -91,10 +115,10 @@ export class WorkerJob {
     if (repeatable) {
       let run_now = _.cloneDeep(config)
       delete run_now.repeat
-      console.log(`Adding instant run of repeatable job ...`)
+      this.log(`Adding instant run of repeatable job ...`)
       await this.addJob(queue, job, run_now)
     }
-    console.log(`Adding job to worker (${this.constructor.name}):`, job, config)
+    this.log(`Adding job to worker (${this.constructor.name}):`, job, config)
     await queue.add(job, config)
   }
 
@@ -109,11 +133,11 @@ export class WorkerJob {
       await this.addJob(queue, job, config, true)
     } else {
       if (existing.every != (config?.repeat as EveryRepeatOptions).every) {
-        console.log('Removing job for update: ', existing)
+        this.log('Removing job for update: ', existing)
         await queue.removeRepeatableByKey(existing.key)
         await this.addJob(queue, job, config, true)
       } else {
-        console.log('Repeating job already exists: ', job, config)
+        this.log('Repeating job already exists: ', job, config)
       }
     }
   }

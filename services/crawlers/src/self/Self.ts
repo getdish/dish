@@ -1,6 +1,6 @@
 import '@dish/common'
 
-import { sentryException, sentryMessage } from '@dish/common'
+import { sentryMessage } from '@dish/common'
 import {
   MenuItem,
   PhotoXref,
@@ -10,7 +10,7 @@ import {
   restaurantUpdate,
   restaurantUpsertManyTags,
 } from '@dish/graph'
-import { WorkerJob } from '@dish/worker'
+import { DEBUG_LEVEL, WorkerJob } from '@dish/worker'
 import { JobOptions, QueueOptions } from 'bull'
 import { Base64 } from 'js-base64'
 import moment from 'moment'
@@ -21,12 +21,13 @@ import {
   photoUpsert,
   uploadHeroImage,
 } from '../photo-helpers'
-import { scrapeGetAllDistinct, scrapeUpdateGeocoderID } from '../scrape-helpers'
 import {
   Scrape,
   ScrapeData,
   latestScrapeForRestaurant,
+  scrapeGetAllDistinct,
   scrapeGetData,
+  scrapeUpdateGeocoderID,
 } from '../scrape-helpers'
 import { Tripadvisor } from '../tripadvisor/Tripadvisor'
 import {
@@ -48,12 +49,6 @@ import {
   updateGeocoderID,
 } from './update_all_geocoder_ids'
 
-const DEBUG_LEVEL = +(process.env.DISH_DEBUG ?? 0)
-
-if (DEBUG_LEVEL > 0) {
-  console.log('DEBUG_LEVEL', DEBUG_LEVEL)
-}
-
 process.on('unhandledRejection', (reason, promise) => {
   process.exit(1)
 })
@@ -70,21 +65,20 @@ export class Self extends WorkerJob {
     'google',
     'google_review_api',
   ]
-  yelp!: Scrape
-  ubereats!: Scrape
-  infatuated!: Scrape
-  michelin!: Scrape
-  tripadvisor!: Scrape
-  doordash!: Scrape
-  grubhub!: Scrape
-  google!: Scrape
-  google_review_api!: Scrape
+  yelp: Scrape | null = null
+  ubereats: Scrape | null = null
+  infatuated: Scrape | null = null
+  michelin: Scrape | null = null
+  tripadvisor: Scrape | null = null
+  doordash: Scrape | null = null
+  grubhub: Scrape | null = null
+  google: Scrape | null = null
+  google_review_api: Scrape | null = null
   available_sources: string[] = []
 
   main_db!: DB
   restaurant!: RestaurantWithId
   ratings!: { [key: string]: number }
-  _start_time!: [number, number]
   tagging: Tagging
   restaurant_ratings: RestaurantRatings
   restaurant_base_score: RestaurantBaseScore
@@ -105,6 +99,10 @@ export class Self extends WorkerJob {
 
   static job_config: JobOptions = {
     attempts: 2,
+  }
+
+  get logName() {
+    return `Self - ${this.restaurant?.name || '...'}`
   }
 
   constructor() {
@@ -207,6 +205,7 @@ export class Self extends WorkerJob {
       this.mergeAddress,
       this.mergeRatings,
       this.addWebsite,
+      this.addSourceOgIds,
       this.addSources,
       this.noteAvailableSources,
       this.addPriceRange,
@@ -275,31 +274,6 @@ export class Self extends WorkerJob {
     this.available_sources = Object.keys(this.restaurant.sources)
   }
 
-  async _runFailableFunction(func: Function) {
-    this._start_time = process.hrtime()
-    let result = 'success'
-    try {
-      if (func.constructor.name == 'AsyncFunction') {
-        await func.bind(this)()
-      } else {
-        func.bind(this)()
-      }
-    } catch (e) {
-      result = 'failed'
-      console.log(
-        `Error (runFailableFunction ${func.name})`,
-        e.message,
-        e.stack
-      )
-      sentryException(
-        e,
-        { function: func.name, restaurant: this.restaurant.name },
-        { source: 'Self crawler' }
-      )
-    }
-    this.log(`${func.name} | ${result}`)
-  }
-
   async doTags() {
     await this.tagging.main()
   }
@@ -356,7 +330,6 @@ export class Self extends WorkerJob {
         overlaps.push(overlap)
       }
     }
-
     const shortest_string = Self.shortestString(strings)
     const shortest_overlap = Self.shortestString(overlaps)
     if (shortest_overlap.length) {
@@ -500,13 +473,38 @@ export class Self extends WorkerJob {
     this.restaurant.oldest_review_date = oldest_review
   }
 
+  // used for doing easier re-crawls of specific restaurants
+  // can be useful in future for tracking changed names, address, etc
+  addSourceOgIds() {
+    this.restaurant.og_source_ids = {
+      ...(this.restaurant.og_source_ids || null),
+    }
+    const sources = [
+      this.tripadvisor,
+      this.michelin,
+      this.infatuated,
+      this.yelp,
+      this.doordash,
+      this.grubhub,
+      this.ubereats,
+      this.google_review_api,
+    ]
+    for (const source of sources) {
+      if (source) {
+        this.restaurant.og_source_ids[source.source] = source.id_from_source
+      }
+    }
+  }
+
   addSources() {
     let url: string
     let path: string
     let parts: string[]
 
     // @ts-ignore
-    this.restaurant.sources = {} as {
+    this.restaurant.sources = {
+      ...this.restaurant.sources,
+    } as {
       [key: string]: { url: string; rating: number }
     }
 
@@ -515,9 +513,8 @@ export class Self extends WorkerJob {
       parts = path.split('-')
       parts.shift()
       url = 'https://www.tripadvisor.com/' + parts.join('-')
-      // @ts-ignore
       this.restaurant.sources.tripadvisor = {
-        url: url,
+        url,
         rating: this.ratings?.tripadvisor,
       }
     }
@@ -620,9 +617,11 @@ export class Self extends WorkerJob {
     if (michelins) {
       hero = michelins
     }
-
     if (hero != '') {
-      this.restaurant.image = (await uploadHeroImage(hero, this.restaurant.id))!
+      const uploaded = await uploadHeroImage(hero, this.restaurant.id)
+      if (uploaded) {
+        this.restaurant.image = uploaded
+      }
     }
   }
 
@@ -715,13 +714,13 @@ export class Self extends WorkerJob {
     return urls
   }
 
-  getPaginatedData(data: ScrapeData, type: 'photos' | 'reviews') {
-    let items: any[] = []
-    let page = 0
-    let key: string | undefined
+  getPaginatedData(data: ScrapeData | null, type: 'photos' | 'reviews') {
     if (!data) {
       return []
     }
+    let items: any[] = []
+    let page = 0
+    let key: string | undefined
     while (true) {
       const base = type + 'p' + page
       const variations = [base, base.replace('reviews', 'review')]
@@ -828,27 +827,6 @@ export class Self extends WorkerJob {
       return a
     }
     return null
-  }
-
-  elapsedTime() {
-    const elapsed = process.hrtime(this._start_time)[0]
-    this._start_time = process.hrtime()
-    return elapsed
-  }
-
-  resetTimer() {
-    this._start_time = process.hrtime()
-  }
-
-  log(...messages: string[]) {
-    if (DEBUG_LEVEL < 1) {
-      return
-    }
-    const time = this.elapsedTime() + 's'
-    const memory =
-      Math.round(process.memoryUsage().heapUsed / 1024 / 1024) + 'Mb'
-    const restaurant = this.restaurant?.name || '...'
-    console.log(`${restaurant}: ${messages.join(' ')} | ${time} | ${memory}`)
   }
 
   _debugDaemon() {
