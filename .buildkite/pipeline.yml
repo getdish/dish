@@ -270,7 +270,7 @@ steps:
 
   - label: "run tests"
     key: tests
-    command: "docker run --net host registry.fly.io/dish-run-tests:latest yarn test && docker-compose down --remove-orphans -t 3"
+    command: ".buildkite/scripts/run_all_tests.sh; docker-compose down --remove-orphans -t 3"
     depends_on: test-setup
     env:
       LOG_DOCKER: true
