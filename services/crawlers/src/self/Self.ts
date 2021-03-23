@@ -50,6 +50,10 @@ import {
 
 const DEBUG_LEVEL = +(process.env.DISH_DEBUG ?? 0)
 
+if (DEBUG_LEVEL > 0) {
+  console.log('DEBUG_LEVEL', DEBUG_LEVEL)
+}
+
 process.on('unhandledRejection', (reason, promise) => {
   process.exit(1)
 })
@@ -178,6 +182,7 @@ export class Self extends WorkerJob {
         await this._runFailableFunction(async_func)
       }
       await this.postMerge()
+      this.log('done with restaurant', id)
     }
   }
 
@@ -238,7 +243,6 @@ export class Self extends WorkerJob {
     this.log('merging final restaurant')
     await restaurantUpdate(this.restaurant)
     clearInterval(this._debugRamIntervalFunction)
-    this.log('postMerge()')
     this.log(`Merged: ${this.restaurant.name}`)
   }
 

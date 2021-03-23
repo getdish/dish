@@ -253,8 +253,8 @@ export class Puppeteer {
       preCount = await this._countSelectors(selector)
       console.log('scrolling to', selector, preCount)
       await this._scrollIntoView(selector)
-      if (process.env.DISH_ENV != 'production' && preCount > 10) {
-        console.log('GOOGLE: Exiting scroll loop, not in production')
+      if (process.env.DISH_ENV == 'test' && preCount > 10) {
+        console.log('GOOGLE: Exiting scroll loop, in test')
         break
       }
       withinTimeout = await this.waitForMoreElements(selector, preCount)

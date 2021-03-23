@@ -372,8 +372,8 @@ export class Yelp extends WorkerJob {
       `YELP: ${this.current}, got review page ${page} with ${data.length} reviews`
     )
 
-    if (process.env.DISH_ENV != 'production') {
-      console.log('YELP: Exiting review loop, not in production')
+    if (process.env.DISH_ENV == 'test') {
+      console.log('YELP: Exiting review loop, in test')
       return
     }
 

@@ -421,7 +421,6 @@ async function assessPhotoQualityWithoutRetries(urls: string[]) {
     body: JSON.stringify(urls),
   })
   let results = await response.json()
-  console.log('got image quality results', results)
   let photo_bases: Partial<PhotoBase>[] = []
   for (const url of urls) {
     const id = crypto.createHash('md5').update(url).digest('hex')
@@ -603,15 +602,24 @@ export async function findHeroImage(restaurant_id: uuid) {
 export async function uploadHeroImage(url: string, restaurant_id: uuid) {
   const existing = await findHeroImage(restaurant_id)
   const do_url = DO_BASE + restaurant_id
-  let is_needs_uploading = false
+  let shouldUpdate = false
   if (existing) {
-    if (existing.photo?.origin != url) is_needs_uploading = true
+    if (existing.photo?.origin != url) {
+      shouldUpdate = true
+      // delete previous before insert to avoid constraint
+      await PhotoXrefQueryHelpers.delete({
+        id: existing.id,
+      })
+    }
   }
-  if (!existing || is_needs_uploading) {
+  if (!existing || shouldUpdate) {
     const failed_id = await sendToDO(url, restaurant_id)
     if (failed_id) return
     await photoXrefUpsert([
       {
+        ...(existing && {
+          id: existing.id,
+        }),
         restaurant_id: restaurant_id,
         tag_id: globalTagId,
         type: 'hero',
