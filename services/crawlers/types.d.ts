@@ -242,6 +242,7 @@ declare module "@dish/crawlers" {
         detail_id: string;
         static queue_config: QueueOptions;
         static job_config: JobOptions;
+        get logName(): string;
         allForCity(city_name: string): Promise<void>;
         getRestaurants(lat: number, lon: number): Promise<void>;
         getRestaurant(path: string): Promise<void>;
@@ -295,6 +296,7 @@ declare module "@dish/crawlers" {
         static queue_config: QueueOptions;
         static job_config: JobOptions;
         static DELIVERY_RADIUS: number;
+        get logName(): string;
         world(): Promise<void>;
         getCity(city: string): Promise<void>;
         aroundCoords(lat: number, lon: number): Promise<void>;
@@ -322,6 +324,7 @@ declare module "@dish/crawlers" {
         find_only: Restaurant | null;
         static queue_config: QueueOptions;
         static job_config: JobOptions;
+        get logName(): string;
         allForCity(city_name: string): Promise<void>;
         getRestaurants(top_right: readonly [
             number,
@@ -380,7 +383,7 @@ declare module "@dish/crawlers" {
     export function scrapeUpdateBasic(scrape: Scrape): Promise<any>;
     export function scrapeUpdateAllRestaurantIDs(source: string, id_from_source: string, restaurant_id: string | null): Promise<void>;
     export function scrapeMergeData(id: string, data: ScrapeData): Promise<any>;
-    export function scrapeGetData(scrape: Scrape, path: string, default_value?: any): any;
+    export function scrapeGetData(scrape: Scrape | null, path: string, default_value?: any): any;
     export function deleteAllScrapesBySourceID(id: string): Promise<void>;
     export function deleteAllTestScrapes(): Promise<void>;
     export function scrapeGetAllDistinct(): Promise<any[]>;
@@ -442,7 +445,8 @@ declare module "@dish/crawlers" {
 }
 
 declare module "@dish/crawlers" {
-    export class RestaurantBaseScore {
+    import { Loggable } from "@dish/worker";
+    export class RestaurantBaseScore extends Loggable {
         crawler: Self;
         breakdown: any;
         unique_tag_id?: string;
@@ -480,7 +484,8 @@ declare module "@dish/crawlers" {
 
 declare module "@dish/crawlers" {
     import { ReviewTagSentence } from "@dish/graph";
-    export class RestaurantTagScores {
+    import { Loggable } from "@dish/worker";
+    export class RestaurantTagScores extends Loggable {
         crawler: Self;
         breakdown: any;
         total_sentences: number;
@@ -570,25 +575,21 @@ declare module "@dish/crawlers" {
     import { JobOptions, QueueOptions } from "bull";
     export class Self extends WorkerJob {
         ALL_SOURCES: string[];
-        yelp: Scrape;
-        ubereats: Scrape;
-        infatuated: Scrape;
-        michelin: Scrape;
-        tripadvisor: Scrape;
-        doordash: Scrape;
-        grubhub: Scrape;
-        google: Scrape;
-        google_review_api: Scrape;
+        yelp: Scrape | null;
+        ubereats: Scrape | null;
+        infatuated: Scrape | null;
+        michelin: Scrape | null;
+        tripadvisor: Scrape | null;
+        doordash: Scrape | null;
+        grubhub: Scrape | null;
+        google: Scrape | null;
+        google_review_api: Scrape | null;
         available_sources: string[];
         main_db: DB;
         restaurant: RestaurantWithId;
         ratings: {
             [key: string]: number;
         };
-        _start_time: [
-            number,
-            number
-        ];
         tagging: Tagging;
         restaurant_ratings: RestaurantRatings;
         restaurant_base_score: RestaurantBaseScore;
@@ -600,6 +601,7 @@ declare module "@dish/crawlers" {
         _debugRamIntervalFunction: number;
         static queue_config: QueueOptions;
         static job_config: JobOptions;
+        get logName(): string;
         constructor();
         allForCity(city: string): Promise<void>;
         mergeAll(id: string): Promise<void>;
@@ -610,7 +612,6 @@ declare module "@dish/crawlers" {
         finishTagsEtc(): Promise<void>;
         finalScores(): Promise<void>;
         noteAvailableSources(): void;
-        _runFailableFunction(func: Function): Promise<void>;
         doTags(): Promise<void>;
         addPriceTags(): Promise<void>;
         findPhotosForTags(): Promise<void>;
@@ -625,6 +626,7 @@ declare module "@dish/crawlers" {
         addHours(): Promise<any>;
         _toPostgresTime(day: string, time: string): string;
         oldestReview(): Promise<void>;
+        addSourceOgIds(): void;
         addSources(): void;
         _getGoogleSource(): void;
         mergeImage(): Promise<void>;
@@ -633,7 +635,7 @@ declare module "@dish/crawlers" {
         getGrubHubDishes(): Promise<void>;
         mergePhotos(): Promise<void>;
         _getGooglePhotos(): string[];
-        getPaginatedData(data: ScrapeData, type: 'photos' | 'reviews'): any[];
+        getPaginatedData(data: ScrapeData | null, type: 'photos' | 'reviews'): any[];
         getRatingFactors(): void;
         addReviewHeadlines(): Promise<void>;
         updateAllGeocoderIDs(): Promise<void>;
@@ -646,9 +648,6 @@ declare module "@dish/crawlers" {
         private static shortestString;
         private static allPairs;
         private static findOverlap;
-        elapsedTime(): number;
-        resetTimer(): void;
-        log(...messages: string[]): void;
         _debugDaemon(): void;
         _checkRAM(marker?: string): void;
         _checkNulls(): void;
@@ -684,7 +683,7 @@ declare module "@dish/crawlers" {
         allForCity(city: string): Promise<void>;
         getRestaurant(restaurant: Restaurant): Promise<void>;
         getAllData(restaurant: Restaurant): Promise<void>;
-        _runFailableFunction(func: Function, restaurant: Restaurant): Promise<void>;
+        runFailableFn(func: Function, restaurant: Restaurant): Promise<void>;
         getMainPage(): Promise<boolean>;
         static convertTableToJSON(html: string): {
             day: any;
@@ -709,6 +708,7 @@ declare module "@dish/crawlers" {
     export class GoogleReviewAPI extends WorkerJob {
         static queue_config: QueueOptions;
         static job_config: JobOptions;
+        get logName(): string;
         allForCity(city: string): Promise<void>;
         getRestaurant(id: string): Promise<void>;
         fetchReviewPage(geocoder_id: string, page?: number): Promise<any>;
@@ -732,6 +732,7 @@ declare module "@dish/crawlers" {
         static queue_config: QueueOptions;
         static job_config: JobOptions;
         constructor();
+        get logName(): string;
         main(): Promise<void>;
         checkForZeroUUIDRestaurant(): Promise<void>;
         imagesForDish(dish: TagWithId): Promise<void>;
@@ -750,6 +751,10 @@ declare module "@dish/crawlers" {
 
 declare module "@dish/crawlers" {
     import "@dish/helpers/polyfill";
+    export function one(slug: string): Promise<void>;
+}
+
+declare module "@dish/crawlers" {
     export function one(slug: string): Promise<void>;
 }
 

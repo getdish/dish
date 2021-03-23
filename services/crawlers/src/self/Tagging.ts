@@ -88,7 +88,7 @@ export class Tagging {
   }
 
   async upsertCountryTags(tags: string[]) {
-    this.crawler._start_time = process.hrtime()
+    this.crawler.resetTimer()
     const country_tags = await tagFindCountryMatches(tags)
     this.addRestaurantTags(
       country_tags.map((tag: Tag) => {
@@ -246,7 +246,7 @@ export class Tagging {
     type PhotoWithText = { url: string; text: string }
     let photos: PhotoWithText[] = []
     for (const item of this.crawler.getPaginatedData(
-      this.crawler.yelp?.data,
+      this.crawler.yelp?.data ?? null,
       'photos'
     )) {
       if (item.media_data) {
@@ -259,7 +259,7 @@ export class Tagging {
     const reviewPhotos = (
       await Promise.all(
         this.crawler
-          .getPaginatedData(this.crawler.yelp?.data, 'reviews')
+          .getPaginatedData(this.crawler.yelp?.data ?? null, 'reviews')
           .flatMap((x) => x.photos)
           .map(async (item) => {
             const photo = item.src

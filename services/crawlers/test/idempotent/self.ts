@@ -160,6 +160,14 @@ test('Merging', async (t) => {
       url:
         'https://www.google.com/maps/place/@0,0,11z/data=!3m1!4b1!4m5!3m4!1stest-google123!8m2!3d0!4d0',
     },
+    tripadvisor: {
+      rating: 2.5,
+      url: 'https://tripadvisor.com',
+    },
+    yelp: {
+      rating: 3.5,
+      url: 'https://yelp.com',
+    },
   })
 })
 

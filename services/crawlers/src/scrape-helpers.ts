@@ -202,11 +202,13 @@ export async function scrapeMergeData(id: string, data: ScrapeData) {
 }
 
 export function scrapeGetData(
-  scrape: Scrape,
+  scrape: Scrape | null,
   path: string,
   default_value: any = ''
 ): any {
-  if (!scrape) return default_value
+  if (!scrape) {
+    return default_value
+  }
   let obj = scrape.data
   if (!obj) {
     return

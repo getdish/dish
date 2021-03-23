@@ -3,8 +3,11 @@
   "compilerOptions": {
     "composite": true,
     "outDir": "_",
+    "baseUrl": ".",
     "rootDir": "src",
   },
   "include": ["src"],
-  "references": []
+  "references": [{
+    "path": "../common"
+  }]
 }

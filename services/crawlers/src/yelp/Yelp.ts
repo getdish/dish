@@ -5,7 +5,7 @@ import { sentryMessage } from '@dish/common'
 import { Restaurant, ZeroUUID } from '@dish/graph'
 import { ProxiedRequests, WorkerJob } from '@dish/worker'
 import { JobOptions, QueueOptions } from 'bull'
-import _, { isMatch } from 'lodash'
+import _ from 'lodash'
 
 import { restaurantSaveCanonical } from '../canonical-restaurant'
 import {
@@ -44,9 +44,13 @@ export class Yelp extends WorkerJob {
     attempts: 3,
   }
 
+  get logName() {
+    return `Yelp ${this.current || this.find_only?.name || '...'}`
+  }
+
   async allForCity(city_name: string) {
-    console.log(
-      `Starting Yelp crawler on city "${city_name}". Using AWS proxy: ${process.env.YELP_AWS_PROXY}`
+    this.log(
+      `Starting on city "${city_name}". Using AWS proxy: ${process.env.YELP_AWS_PROXY}`
     )
     const MAPVIEW_SIZE = 4000
     const coords = await geocode(city_name)
@@ -85,7 +89,7 @@ export class Yelp extends WorkerJob {
     const uri = BB_SEARCH + bb + '&start=' + start
     const response = await yelpAPI.getJSON(uri)
     if (!response) {
-      console.log('no response!', response)
+      this.log('no response!', response)
       return []
     }
     const componentsList =
@@ -93,7 +97,7 @@ export class Yelp extends WorkerJob {
     const pagination = componentsList.find((x) => x.type === 'pagination')
 
     if (!pagination) {
-      console.log('no pagination', componentsList)
+      this.log('no pagination', componentsList)
     }
 
     let found_the_one = false
@@ -102,16 +106,16 @@ export class Yelp extends WorkerJob {
     if (!componentsList.length) {
       console.error('searchPageProps.searchResultsProps: ', uri, response)
       throw new Error(
-        'YELP: Nothing in `response.searchPageProps.searchResultsProps.searchResults`'
+        'Nothing in `response.searchPageProps.searchResultsProps.searchResults`'
       )
     }
-    console.log(
-      `YELP: geo search: ${coords}, page ${start}, ${componentsList.length} results`
+    this.log(
+      `geo search: ${coords}, page ${start}, ${componentsList.length} results`
     )
 
     for (const data of componentsList) {
       if (data?.props?.text?.includes('Sponsored Results')) {
-        console.log('YELP: Skipping sponsored result')
+        this.log('Skipping sponsored result')
         continue
       }
       if (data?.searchResultLayoutType == 'separator') {
@@ -122,11 +126,11 @@ export class Yelp extends WorkerJob {
       const name = info.name
       if (onlyRestaurant) {
         if (!isMatchingRestaurant(info, onlyRestaurant)) {
-          console.log('YELP SANDBOX: Skipping ' + name)
+          this.log('YELP SANDBOX: Skipping ' + name)
           continue
         }
         found_the_one = true
-        console.log('YELP SANDBOX: found ' + name)
+        this.log('YELP SANDBOX: found ' + name)
       }
       const timeout = sleep(35000)
       await Promise.race([
@@ -141,7 +145,7 @@ export class Yelp extends WorkerJob {
       }
     }
 
-    console.log('YELP: done with getRestaurants page')
+    this.log('done with getRestaurants page')
 
     if (pagination && !found_the_one) {
       const next_page = start + PER_PAGE
@@ -156,11 +160,11 @@ export class Yelp extends WorkerJob {
     }
 
     if (onlyRestaurant && !found_the_one) {
-      console.log('error componentsList', uri, componentsList)
+      this.log('error componentsList', uri, componentsList)
       throw new Error(`Couldn't find ${onlyRestaurant}`)
     }
 
-    console.log('YELP: done with getRestaurants')
+    this.log('done with getRestaurants')
   }
 
   async getRestaurant(data: ScrapeData) {
@@ -169,7 +173,7 @@ export class Yelp extends WorkerJob {
       return
     }
     let biz_page: string
-    console.log('YELP: Inserting scrape data')
+    this.log('Inserting scrape data')
     const id = await this.saveDataFromMapSearch(data)
     if (!id) {
       throw new Error(`No id`)
@@ -210,7 +214,7 @@ export class Yelp extends WorkerJob {
     id_from_source: string
   ) {
     this.current = yelp_path
-    console.log(`YELP: getting embedded JSON for: ${yelp_path}`)
+    this.log(`getting embedded JSON for: ${yelp_path}`)
     const response = await yelpAPI.getHyperscript(
       yelp_path,
       'script[data-hypernova-key*="BizDetailsApp"]'
@@ -221,8 +225,8 @@ export class Yelp extends WorkerJob {
     }
 
     if (!('mapBoxProps' in data)) {
-      const message = "YELP: Error Couldn't extract embedded data"
-      console.log(message)
+      const message = "Error Couldn't extract embedded data"
+      this.log(message)
       sentryMessage(message, { path: yelp_path })
       return
     }
@@ -234,7 +238,7 @@ export class Yelp extends WorkerJob {
     const coords = (uri.query.center as string).split(',')
     const lat = parseFloat(coords[0])
     const lon = parseFloat(coords[1])
-    console.log(`YELP: merge scrape data: ${yelp_path}`)
+    this.log(`merge scrape data: ${yelp_path}`)
     const scrape = (await scrapeMergeData(id, { data_from_html_embed: data }))!
     const restaurant_id = await restaurantSaveCanonical(
       'yelp',
@@ -245,7 +249,7 @@ export class Yelp extends WorkerJob {
       scrape.data.data_from_map_search.formattedAddress
     )
     if (this.find_only) {
-      console.log(`Slug for ${this.find_only.name} is ${restaurant_id}`)
+      this.log(`ID for ${this.find_only.name} is ${restaurant_id}`)
     }
     scrape.location = {
       lon: lon,
@@ -264,8 +268,9 @@ export class Yelp extends WorkerJob {
   }
 
   async getNextScrapes(id: string, data: ScrapeData) {
-    let photo_total = data.photoHeaderProps?.mediaTotal
-    if (photo_total > 31 && process.env.DISH_ENV != 'production') {
+    let photo_total = data.photoHeaderProps?.mediaTotal ?? 0
+    this.log(`getNextScrapes photo_total ${photo_total}`)
+    if (photo_total > 31 && process.env.DISH_ENV == 'test') {
       photo_total = 31
     }
     const bizId = data.bizContactInfoProps.businessId
@@ -342,8 +347,8 @@ export class Yelp extends WorkerJob {
     let photos: { [keys: string]: any } = {}
     photos['photosp' + page] = media
     await scrapeMergeData(id, photos)
-    console.log(
-      `YELP: ${this.current}, got photo page ${page} with ${media.length} photos`
+    this.log(
+      `${this.current}, got photo page ${page} with ${media.length} photos`
     )
   }
 
@@ -368,12 +373,12 @@ export class Yelp extends WorkerJob {
     let reviews: ScrapeData = {}
     reviews['reviewsp' + page] = data
     await scrapeMergeData(id, reviews)
-    console.log(
-      `YELP: ${this.current}, got review page ${page} with ${data.length} reviews`
+    this.log(
+      `${this.current}, got review page ${page} with ${data.length} reviews`
     )
 
     if (process.env.DISH_ENV == 'test') {
-      console.log('YELP: Exiting review loop, in test')
+      this.log('Exiting review loop, in test')
       return
     }
 

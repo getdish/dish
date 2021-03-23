@@ -13,6 +13,7 @@
     "test:watch": "DISH_ENV=test ava tests/* --watch"
   },
   "dependencies": {
+    "@dish/common": "*",
     "@types/bull": "^3.14.4",
     "axios": "^0.19.2",
     "bull": "^3.12.1",

@@ -1,13 +1,14 @@
 import { sentryException, sentryMessage } from '@dish/common'
 import { ReviewTagSentence } from '@dish/graph'
 import { bertResultToNumber, fetchBertSentiment } from '@dish/helpers'
+import { Loggable } from '@dish/worker'
 import { chunk } from 'lodash'
 
 import { Self } from './Self'
 
 const BERT_NEGATIVE_SENTIMENT_CRITERIA = -0.999
 
-export class RestaurantTagScores {
+export class RestaurantTagScores extends Loggable {
   crawler: Self
   breakdown: any = {}
   total_sentences = 0
@@ -15,6 +16,7 @@ export class RestaurantTagScores {
   ALL_SOURCES: string[] = []
 
   constructor(crawler: Self) {
+    super()
     this.crawler = crawler
     this.ALL_SOURCES = [...this.crawler.ALL_SOURCES, 'dish']
   }
@@ -48,7 +50,7 @@ export class RestaurantTagScores {
     let assessed: ReviewTagSentence[] = []
     const batches = chunk(review_tag_sentences, BERT_BATCH_SIZE)
     for (const [index, batch] of batches.entries()) {
-      console.log('Analyzing sentiment for batch', index, 'of ', batches.length)
+      this.log('Analyzing sentiment for batch', index, 'of ', batches.length)
       const assessed_batch = await this.getBertSentimentBatch(batch)
 
       assessed.push(...assessed_batch)
@@ -109,7 +111,7 @@ export class RestaurantTagScores {
           })
           return
         }
-        console.log(
+        this.log(
           `Retrying Bert sentiment API: ${retries}/${MAX_RETRIES}. ` +
             `Sentence ${this.current_sentence}/${this.total_sentences}`
         )
@@ -118,7 +120,7 @@ export class RestaurantTagScores {
   }
 
   async updateRestaurantTagScores() {
-    console.log('Updating tag scores...')
+    this.log('Updating tag scores...')
     const tags = this.crawler.tagging.found_tags // TODO: query DB for all rish tag IDs??
     for (const tag_id in tags) {
       const all_sources_score_sql = this._scoreSQL(tag_id)

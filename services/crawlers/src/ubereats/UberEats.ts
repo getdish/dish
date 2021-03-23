@@ -41,8 +41,12 @@ export class UberEats extends WorkerJob {
 
   static DELIVERY_RADIUS = 30000
 
+  get logName() {
+    return `UberEats`
+  }
+
   async world() {
-    console.log('Starting UberEats crawler. Using domain: ' + UBEREATS_DOMAIN)
+    this.log('Starting crawler. Using domain: ' + UBEREATS_DOMAIN)
     const response = await axios.post(CITIES, {})
     const countries = _.shuffle(response.data.data.countryLinks.links)
     for (let country of countries) {
@@ -57,7 +61,7 @@ export class UberEats extends WorkerJob {
   }
 
   async getCity(city: string) {
-    console.log('Getting UberEats for: ' + city)
+    this.log('Getting city: ' + city)
     const coords = await geocode(city)
     await this.runOnWorker('aroundCoords', [coords[0], coords[1]])
   }
@@ -81,7 +85,7 @@ export class UberEats extends WorkerJob {
     lat: number,
     lon: number
   ) {
-    console.log(
+    this.log(
       `Getting feed for coords: ${lat}, ${lon}, category: '${category}', offset: ${offset}`
     )
     const response = await axios.post(
@@ -118,7 +122,7 @@ export class UberEats extends WorkerJob {
     category: string
   ) {
     const items = response.data.data.feedItems
-    console.log(
+    this.log(
       items.length +
         ' restaurants on page: ' +
         offset / 80 +
@@ -152,7 +156,7 @@ export class UberEats extends WorkerJob {
   }
 
   private async saveRestaurant(data: any, uuid: string) {
-    console.log('Saving restaurant: ' + data.title)
+    this.log('Saving restaurant: ' + data.title)
     const restaurant_id = await restaurantSaveCanonical(
       'ubereats',
       uuid,

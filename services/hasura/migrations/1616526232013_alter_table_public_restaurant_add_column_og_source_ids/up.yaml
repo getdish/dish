@@ -1,0 +1,5 @@
+- args:
+    cascade: false
+    read_only: false
+    sql: ALTER TABLE "public"."restaurant" ADD COLUMN "og_source_ids" jsonb NULL;
+  type: run_sql
