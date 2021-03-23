@@ -45,7 +45,7 @@ SnackUI is a UI kit for react native and react native web that builds on the ide
   - Shows component name in DOM elements.
   - Add `// debug` to the top of file for detailed optimization info.
 
-SnackUI views flatten all style props onto the base props so there's no separate `style` prop to use, if you want to read reasoning on why, [see why JSXStyle does it](https://github.com/jsxstyle/jsxstyle#why-write-styles-inline-with-jsxstyle), SnackUI has all the same upsides listed there.
+SnackUI views flatten all style props onto the base props so there's no separate `style` prop to use, if you want to read reasoning on why flattening style props is good, [read here on why JSXStyle does it](https://github.com/jsxstyle/jsxstyle#why-write-styles-inline-with-jsxstyle), SnackUI adopts the same idea.
 
 ## Example
 
@@ -396,7 +396,6 @@ See [the roadmap](ROADMAP.md) for details:
     - [ ] maxWidth={{ sm: x ? 10 : 0 }}
   - [ ] flat transforms to prevent awkward spreads
     - scale={} x={} y={}
-- [ ] Compiler contains memory leak(s)
 - [ ] Support extraction of custom components that extend lower level ones
   - [ ] Support user-defined components that just spread props onto simple child thats extractable
 - [ ] [Variants/Scaling](ROADMAP.md#variants)
