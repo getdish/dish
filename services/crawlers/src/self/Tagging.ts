@@ -72,6 +72,9 @@ export class Tagging extends Loggable {
       []
     ).map((c) => c.tagValue)
     const tags = uniq([...yelps, ...tripadvisors])
+    this.log(
+      `Tags minus orphans: yelp (${yelps.length}), tripadvisor (${tripadvisors.length})`
+    )
     const orphan_tags = await this.upsertCountryTags(tags)
     if (orphan_tags.length) {
       await this.addSimpleTags(orphan_tags)

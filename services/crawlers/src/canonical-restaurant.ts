@@ -50,6 +50,7 @@ async function findExistingCanonical(
   if (scrape && scrape.restaurant_id !== ZeroUUID) {
     return scrape.restaurant_id
   }
+  console.log('findExistingCanonical, no scrape, geocoding...')
   const geocoder = new GoogleGeocoder()
   const query = name + ',' + address
   const google_id = await geocoder.searchForID(query, lat, lon)
