@@ -4,11 +4,17 @@ import _, { chunk } from 'lodash'
 import { globalTagId } from '../constants'
 import { Maybe, client, order_by, resolved, restaurant } from '../graphql'
 import { createQueryHelpersFor } from '../helpers/queryHelpers'
-import { SelectionOptions } from '../helpers/queryResolvers'
+import { SelectionOptions, resolvedWithFields } from '../helpers/queryResolvers'
 import { tagSlugs } from '../helpers/tagHelpers'
 import { Restaurant, RestaurantTag, RestaurantWithId } from '../types'
 import { restaurantTagUpsert } from './restaurantTagQueries'
-import { tagGetAllChildren, tagGetAllGenerics, tagUpsert } from './tagQueries'
+import {
+  tagFindAll,
+  tagGetAllChildren,
+  tagGetAllGenerics,
+  tagSelectAll,
+  tagUpsert,
+} from './tagQueries'
 
 const query = client.query
 
@@ -122,7 +128,7 @@ export async function restaurantUpsertManyTags(
   console.log('Upserting tags chunks...', chunks.length)
   let next: RestaurantWithId | null = null
   for (const [index, chunk] of chunks.entries()) {
-    console.log('Inserting tags chunk...', index)
+    console.log('Inserting tags chunk...', index, chunk[0].tag?.name)
     next = await restaurantUpsertRestaurantTags(restaurant, chunk, opts)
   }
   return next
@@ -235,11 +241,33 @@ function getRestaurantTagFromTag(restaurant: Restaurant, tag_id: string) {
   return rt
 }
 
+let topPopularDishes = []
+
 export async function restaurantGetAllPossibleTags(restaurant: Restaurant) {
-  const cuisine_dishes = await tagGetAllChildren(
-    (restaurant.tags ?? []).map((i) => {
-      return i.tag.id
-    })
+  const cuisineDishes = [
+    // get tagged cuisine dishes
+    ...(await tagGetAllChildren(
+      (restaurant.tags ?? []).map((i) => {
+        return i.tag.id
+      })
+    )),
+    // to ensure we scan at least some dishes if no cuisine tags found
+    // for now just default to grabbing the top 50 popular dish tags
+    ...(await resolvedWithFields(() => {
+      return query.tag({
+        order_by: [{ popularity: order_by.desc_nulls_last }],
+        where: {
+          type: {
+            _eq: 'dish',
+          },
+        },
+        limit: 50,
+      })
+    }, tagSelectAll)),
+  ]
+  console.log(
+    'Dish tags',
+    cuisineDishes.map((x) => x.name)
   )
   const orphans = restaurant.tags
     .filter((rt) => {
@@ -247,5 +275,5 @@ export async function restaurantGetAllPossibleTags(restaurant: Restaurant) {
     })
     .map((rt) => rt?.tag)
   const generics = await tagGetAllGenerics()
-  return [...cuisine_dishes, ...orphans, ...generics]
+  return _.uniqBy([...cuisineDishes, ...orphans, ...generics], (x) => x.id)
 }
