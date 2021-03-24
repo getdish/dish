@@ -11,7 +11,7 @@ import React, { useEffect, useRef, useState } from 'react'
 import { Dimensions } from 'react-native'
 import { useGet } from 'snackui'
 
-import { darkPurple, red } from '../constants/colors'
+import { darkPurple, grey, red } from '../constants/colors'
 import { MAPBOX_ACCESS_TOKEN, isM1Sim } from '../constants/constants'
 import { hexToRGB } from '../helpers/hexToRGB'
 import { hasMovedAtLeast } from '../helpers/mapHelpers'
@@ -668,7 +668,7 @@ function setupMapEffect({
           generateId: true,
         })
 
-        const rgb = hexToRGB(red).rgb
+        const rgb = hexToRGB(grey).rgb
         map.addLayer({
           id: POINT_LAYER_ID,
           type: 'circle',
@@ -850,7 +850,7 @@ function setupMapEffect({
                   ['==', ['feature-state', 'hover'], true],
                   0.1,
                   ['==', ['feature-state', 'active'], null],
-                  0.25,
+                  0.3,
                   0,
                 ],
                 'fill-color': [
@@ -869,31 +869,31 @@ function setupMapEffect({
             firstSymbolLayerId
           )
 
-          // map.addLayer(
-          //   {
-          //     id: `${name}.line`,
-          //     type: 'line',
-          //     source: name,
-          //     minzoom: minZoom,
-          //     maxzoom: maxZoom,
-          //     paint: {
-          //       'line-color': [
-          //         'case',
-          //         ['==', ['feature-state', 'active'], true],
-          //         ['get', 'color'],
-          //         ['==', ['feature-state', 'hover'], true],
-          //         ['get', 'color'],
-          //         ['==', ['feature-state', 'active'], null],
-          //         ['get', 'color'],
-          //         'green',
-          //       ],
-          //       'line-opacity': 0.1,
-          //       'line-width': 3,
-          //     },
-          //     'source-layer': name,
-          //   },
-          //   firstSymbolLayerId
-          // )
+          map.addLayer(
+            {
+              id: `${name}.line`,
+              type: 'line',
+              source: name,
+              minzoom: minZoom,
+              maxzoom: maxZoom,
+              paint: {
+                'line-color': [
+                  'case',
+                  ['==', ['feature-state', 'active'], true],
+                  ['get', 'color'],
+                  ['==', ['feature-state', 'hover'], true],
+                  'rgba(0,0,0,0.0)',
+                  ['==', ['feature-state', 'active'], null],
+                  'rgba(0,0,0,0.0)',
+                  'green',
+                ],
+                'line-opacity': 1,
+                'line-width': 3,
+              },
+              'source-layer': name,
+            },
+            firstSymbolLayerId
+          )
 
           if (label) {
             if (labelSource) {
@@ -947,9 +947,7 @@ function setupMapEffect({
 
           cancels.add(() => {
             map.removeLayer(`${name}.fill`)
-            // if (lineColor) {
-            //   map.removeLayer(`${name}.line`)
-            // }
+            map.removeLayer(`${name}.line`)
             if (label) {
               map.removeLayer(`${name}.label`)
             }
