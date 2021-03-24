@@ -35,3 +35,11 @@ const slug = process.env.SLUG ?? process.argv[process.argv.length - 1]
 if (slug) {
   main(slug)
 }
+
+// for dev it should quit background jobs better
+const cleanExit = () => {
+  console.log('clean exit')
+  process.exit(0)
+}
+process.on('SIGINT', cleanExit) // catch ctrl-c
+process.on('SIGTERM', cleanExit) // catch kill
