@@ -159,12 +159,6 @@ const RestaurantPage = memo(
                 restaurantSlug={restaurantSlug}
               />
 
-              <Suspense fallback={null}>
-                <RestaurantLists restaurantSlug={restaurantSlug} />
-              </Suspense>
-
-              <Spacer />
-
               <VStack marginHorizontal={-20} marginBottom={-36}>
                 <RestaurantTagReviews
                   tagSlug={selectedDish}
@@ -196,6 +190,10 @@ const RestaurantPage = memo(
 
               {/* END head color AREA */}
             </VStack>
+
+            <Suspense fallback={null}>
+              <RestaurantLists restaurantSlug={restaurantSlug} />
+            </Suspense>
 
             <VStack
               // backgroundColor={theme.backgroundColorSecondary}
@@ -246,9 +244,9 @@ const RestaurantLists = memo(
     }
 
     return (
-      <VStack marginTop={20}>
+      <VStack marginTop={-20}>
         <SlantedTitle
-          size="sm"
+          size="md"
           marginBottom={-26}
           alignSelf="center"
           fontWeight="700"
