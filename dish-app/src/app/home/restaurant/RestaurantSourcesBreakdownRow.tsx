@@ -1,21 +1,11 @@
 import { graphql } from '@dish/graph'
 import React, { Suspense, memo } from 'react'
-import { Image } from 'react-native'
-import {
-  Box,
-  HStack,
-  HoverablePopover,
-  Spacer,
-  Text,
-  Tooltip,
-  VStack,
-} from 'snackui'
+import { Box, HStack, HoverablePopover, Text } from 'snackui'
 
 import { bgLight } from '../../../constants/colors'
 import { thirdPartyCrawlSources } from '../../../constants/thirdPartyCrawlSources'
 import { queryRestaurant } from '../../../queries/queryRestaurant'
 import { Link } from '../../views/Link'
-import { LinkButton } from '../../views/LinkButton'
 import { PointsText } from '../../views/PointsText'
 import { RestaurantSourcesBreakdown } from './RestaurantSourcesBreakdown'
 

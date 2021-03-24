@@ -11,6 +11,7 @@ export const tagInsert = QueryHelpers.insert
 export const tagUpsert = QueryHelpers.upsert
 export const tagUpdate = QueryHelpers.update
 export const tagFindOne = QueryHelpers.findOne
+export const tagFindAll = QueryHelpers.findAll
 export const tagDelete = QueryHelpers.delete
 export const tagRefresh = QueryHelpers.refresh
 
@@ -43,84 +44,59 @@ export const tagFindOneWithCategories = async (tag: Partial<Tag>) => {
   })
 }
 
+export const tagSelectAll = {
+  select: (vTags: tag[]) => {
+    return vTags.map((v_t) => {
+      return {
+        ...selectFields(v_t, '*', 2),
+        alternates: v_t.alternates(),
+      }
+    })
+  },
+}
+
 export async function tagGetAllChildren(
   parents: Pick<Tag, 'id'>[]
 ): Promise<Tag[]> {
-  return await resolvedWithFields(
-    () => {
-      return query.tag({
-        where: {
-          parentId: {
-            _in: parents,
-          },
+  return await resolvedWithFields(() => {
+    return query.tag({
+      where: {
+        parentId: {
+          _in: parents,
         },
-      })
-    },
-    {
-      select: (vTags: tag[]) => {
-        return vTags.map((v_t) => {
-          return {
-            ...selectFields(v_t, '*', 2),
-            alternates: v_t.alternates(),
-          }
-        })
       },
-    }
-  )
+    })
+  }, tagSelectAll)
 }
 
 export async function tagFindCountryMatches(
   countries: string[]
 ): Promise<Tag[]> {
-  return await resolvedWithFields(
-    () => {
-      return query.tag({
-        where: {
-          _or: [
-            { name: { _in: countries } },
-            { alternates: { _has_keys_any: countries } },
-          ],
-          type: { _eq: 'country' },
-        },
-      })
-    },
-    {
-      select: (vTags: tag[]) => {
-        return vTags.map((v_t: tag) => {
-          return {
-            ...selectFields(v_t, '*', 2),
-            alternates: v_t.alternates(),
-          }
-        })
+  return await resolvedWithFields(() => {
+    return query.tag({
+      where: {
+        _or: [
+          { name: { _in: countries } },
+          { alternates: { _has_keys_any: countries } },
+        ],
+        type: { _eq: 'country' },
       },
-    }
-  )
+    })
+  }, tagSelectAll)
 }
 
 export async function tagGetAllGenerics(): Promise<Tag[]> {
-  return await resolvedWithFields(
-    () => {
-      return query.tag({
-        where: {
-          _or: [
-            { type: { _eq: 'filter' } },
-            { type: { _eq: 'lense' } },
-            { type: { _eq: 'category' } },
-          ],
-        },
-      })
-    },
-    {
-      select: (vTags: tag[]) => {
-        return vTags.map((v_t) => {
-          return {
-            ...selectFields(v_t, '*', 2),
-            alternates: v_t.alternates(),
-          }
-        })
+  return await resolvedWithFields(() => {
+    return query.tag({
+      where: {
+        _or: [
+          { type: { _eq: 'filter' } },
+          { type: { _eq: 'lense' } },
+          { type: { _eq: 'category' } },
+        ],
       },
-    }
-  )
+    })
+  }, tagSelectAll)
 }
 
 export async function tagGetAllCuisinesWithDishes(

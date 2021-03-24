@@ -21,6 +21,7 @@ import { numberFormat } from '../../../helpers/numberFormat'
 import { queryRestaurant } from '../../../queries/queryRestaurant'
 import { CloseButton } from '../../views/CloseButton'
 import { ContentScrollViewHorizontal } from '../../views/ContentScrollViewHorizontal'
+import { Link } from '../../views/Link'
 import { SlantedTitle } from '../../views/SlantedTitle'
 import { SentimentText } from './SentimentText'
 
@@ -87,6 +88,7 @@ export const RestaurantTagReviewsContent = memo(
       })
       const spacing = 12
       const theme = useTheme()
+      const sources = restaurant.sources() ?? {}
       const items = (
         (tagName
           ? getTagSourceBreakdowns(
@@ -159,14 +161,16 @@ export const RestaurantTagReviewsContent = memo(
 
                         <HStack>
                           <VStack marginTop={-18} spacing alignItems="center">
-                            <Image
-                              source={{ uri: image }}
-                              style={{
-                                width: 32,
-                                height: 32,
-                                borderRadius: 100,
-                              }}
-                            />
+                            <Link href={sources[name.toLowerCase()]?.url}>
+                              <Image
+                                source={{ uri: image }}
+                                style={{
+                                  width: 32,
+                                  height: 32,
+                                  borderRadius: 100,
+                                }}
+                              />
+                            </Link>
 
                             <Text
                               fontSize={22}
