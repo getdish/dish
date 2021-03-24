@@ -241,29 +241,30 @@ function getRestaurantTagFromTag(restaurant: Restaurant, tag_id: string) {
   return rt
 }
 
-let topPopularDishes = []
-
 export async function restaurantGetAllPossibleTags(restaurant: Restaurant) {
+  const directCuisineDishes = await tagGetAllChildren(
+    (restaurant.tags ?? []).map((i) => {
+      return i.tag.id
+    })
+  )
+  const nonDirectCuisineDishes = await resolvedWithFields(() => {
+    return query.tag({
+      order_by: [{ popularity: order_by.desc_nulls_last }],
+      where: {
+        type: {
+          _eq: 'dish',
+        },
+      },
+      // get more or less if they already have a lot of cuisine tags
+      limit: directCuisineDishes.length > 20 ? 25 : 100,
+    })
+  }, tagSelectAll)
   const cuisineDishes = [
     // get tagged cuisine dishes
-    ...(await tagGetAllChildren(
-      (restaurant.tags ?? []).map((i) => {
-        return i.tag.id
-      })
-    )),
+    ...directCuisineDishes,
     // to ensure we scan at least some dishes if no cuisine tags found
-    // for now just default to grabbing the top 50 popular dish tags
-    ...(await resolvedWithFields(() => {
-      return query.tag({
-        order_by: [{ popularity: order_by.desc_nulls_last }],
-        where: {
-          type: {
-            _eq: 'dish',
-          },
-        },
-        limit: 50,
-      })
-    }, tagSelectAll)),
+    // for now just default to grabbing the top popular dish tags
+    ...nonDirectCuisineDishes,
   ]
   console.log(
     'Dish tags',

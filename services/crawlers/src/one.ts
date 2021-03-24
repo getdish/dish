@@ -14,12 +14,13 @@ export async function main(slug: string) {
     })
     console.log(
       'crawling restaurant',
-      slug,
-      rest?.name,
-      rest?.address,
-      rest?.telephone
+      `${slug} ${rest?.id} ${rest?.name} ${rest?.address} ${rest?.telephone}`
     )
-    await Tripadvisor.one(slug)
+    try {
+      await Tripadvisor.one(slug)
+    } catch (err) {
+      console.error(err)
+    }
     await Yelp.one(slug)
     await Google.one(slug)
     await Self.one(slug)
