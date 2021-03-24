@@ -47,7 +47,15 @@ type MapInternalState = {
   active: null | number
   hasSetInitialSource: boolean
   currentMoveCancel: Function | null
-  isAwaitingNextMove: boolean
+  preventMoveEnd: boolean
+}
+
+// this is a singleton view anyway
+const internal: MapInternalState = {
+  active: null as null | number,
+  hasSetInitialSource: false,
+  currentMoveCancel: null as Function | null,
+  preventMoveEnd: false,
 }
 
 export const MapView = (props: MapProps) => {
@@ -69,15 +77,6 @@ export const MapView = (props: MapProps) => {
   const isMounted = useIsMountedRef()
   const mapNode = useRef<HTMLDivElement>(null)
   const [map, setMap] = useState<mapboxgl.Map | null>(null)
-  const internal = useRef<MapInternalState>()
-  if (!internal.current) {
-    internal.current = {
-      active: null as null | number,
-      hasSetInitialSource: false,
-      currentMoveCancel: null as Function | null,
-      isAwaitingNextMove: false,
-    }
-  }
   const getProps = useGet(props)
 
   // window resize
@@ -152,7 +151,7 @@ export const MapView = (props: MapProps) => {
     if (!selected) return
     if (!map) return
     const index = features.findIndex((x) => x.properties?.id === selected)
-    setActive(map, props, internal.current!, index, false)
+    setActive(map, props, internal, index, false)
   }, [map, features, selected])
 
   const prevHoveredId = useRef<number>()
@@ -208,9 +207,7 @@ export const MapView = (props: MapProps) => {
     if (!map) return
 
     // be sure to cancel next move callback
-    const int = internal.current
-    if (!int) return
-    int.currentMoveCancel?.()
+    internal.currentMoveCancel?.()
 
     // west, south, east, north
     const next: [number, number, number, number] = [
@@ -221,19 +218,25 @@ export const MapView = (props: MapProps) => {
     ]
 
     if (hasMovedAtLeast(getCurrentLocation(map), { center, span })) {
-      int.isAwaitingNextMove = true
+      const duration = 605
       const cancelSeries = series([
+        () => {
+          internal.preventMoveEnd = true
+        },
         () => fullyIdle({ max: 200 }),
         () => {
           map!.fitBounds(next, {
-            duration: 650,
+            duration,
           })
-          int.isAwaitingNextMove = false
+        },
+        () => sleep(duration),
+        () => {
+          internal.preventMoveEnd = false
         },
       ])
       return () => {
         cancelSeries()
-        int.isAwaitingNextMove = false
+        internal.preventMoveEnd = false
       }
     }
 
@@ -332,7 +335,7 @@ function setupMapEffect({
   setMap: React.Dispatch<React.SetStateAction<mapboxgl.Map>>
   props: MapProps
   mapNode: HTMLElement
-  internal: React.MutableRefObject<MapInternalState | undefined | null>
+  internal: MapInternalState
   isMounted: React.RefObject<boolean>
   getProps: () => MapProps
 }) {
@@ -422,7 +425,7 @@ function setupMapEffect({
       const isNear = (x: number) => Math.abs(zoom - x) < x * 0.1
       const isNearBoundary = isNear(min) || isNear(max)
       if (curRegionId && isNearBoundary) {
-        // console.warn('near border')
+        console.warn('near border')
         return
       }
     }
@@ -608,7 +611,7 @@ function setupMapEffect({
             if (point.properties?.id) {
               console.log('click set active')
               // click
-              setActive(map, getProps(), internal.current!, +(point?.id ?? 0))
+              setActive(map, getProps(), internal, +(point?.id ?? 0))
               return
             } else {
               console.warn('no features', e)
@@ -1034,16 +1037,16 @@ function setupMapEffect({
           }
           lastLoc = next
           props.onMoveEnd?.(next)
-        }, 20)
+        }, 100)
 
         const handleMoveEnd = () => {
-          if (internal.current?.isAwaitingNextMove) {
+          if (internal.preventMoveEnd) {
             return
           }
           handleMoveEndDebounced()
         }
 
-        internal.current!.currentMoveCancel = handleMoveEndDebounced.cancel
+        internal.currentMoveCancel = handleMoveEndDebounced.cancel
 
         const handleMoveStart = () => {
           handleMoveEndDebounced.cancel()

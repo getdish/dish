@@ -98,6 +98,7 @@ export default memo(function HomePage(
     if (!isActive) return
     if (regionResponse.status !== 'success') return
     if (region) {
+      console.warn('canceling move end on region change')
       const regionSlug = region.slug ?? slugify(region.name)
       setDefaultLocation({
         center: region.center,

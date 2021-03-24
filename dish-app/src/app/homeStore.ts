@@ -303,6 +303,8 @@ class HomeStore extends Store {
           activeTags: {},
           region: item.params.region ?? prev?.region,
           section: item.params.section ?? '',
+          center: appMapStore.currentPosition.center,
+          span: appMapStore.currentPosition.span,
         }
         break
       }
@@ -439,7 +441,12 @@ class HomeStore extends Store {
 
       if (item.type === 'replace') {
         if (item.name !== this.currentState.type) {
-          console.warn('replace with diff type ⚠️⚠️⚠️⚠️')
+          // for now allow homeRegion to replace home,
+          // TODO make homeRegion/home the same route but fix issues with router
+          // to support that
+          if (item.name !== 'homeRegion') {
+            console.warn('replace with diff type ⚠️⚠️⚠️⚠️')
+          }
         }
         // ensure same id
         next.id = this.currentState.id

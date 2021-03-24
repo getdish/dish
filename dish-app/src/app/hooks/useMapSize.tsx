@@ -1,3 +1,5 @@
+import { useMemo } from 'react'
+
 import { getWindowWidth } from '../../helpers/getWindow'
 import { useAppDrawerWidth } from './useAppDrawerWidth'
 
@@ -10,5 +12,7 @@ export const useMapSize = (isSmall: boolean) => {
     ? getWindowWidth()
     : Math.min(MAP_MAX_WIDTH, getWindowWidth() - drawerWidth + overlapAmt)
   let paddingLeft = isSmall ? 0 : overlapAmt
-  return { width, paddingLeft, drawerWidth }
+  return useMemo(() => {
+    return { width, paddingLeft, drawerWidth }
+  }, [width, paddingLeft, drawerWidth])
 }

@@ -4,7 +4,9 @@ import React, { Suspense, memo, useMemo, useState } from 'react'
 import { Hoverable, LoadingItems, Spacer } from 'snackui'
 
 import { getRestaurantIdentifiers } from '../../helpers/getRestaurantIdentifiers'
+import { HomeStateItemHome } from '../../types/homeTypes'
 import { useSetAppMap } from '../AppMapStore'
+import { useHomeStateById } from '../homeStore'
 import { FIBase } from './FIBase'
 import { FICuisine, HomeFeedCuisineItem } from './HomeFeedCuisineItem'
 import {
@@ -65,7 +67,10 @@ function useHomeFeed(props: HomeFeedProps): FI[] {
 
 export const HomePageFeed = memo(
   graphql(function HomePageFeed(props: HomeFeedProps) {
-    const { region, isActive, center, span } = props
+    const { item, isActive } = props
+    const { region, center, span } = useHomeStateById<HomeStateItemHome>(
+      item.id
+    )
     const items = useHomeFeed(props)
     const isLoading = !region || items[0]?.id === null
     const [hovered, setHovered] = useState<null | string>(null)
