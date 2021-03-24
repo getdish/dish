@@ -179,7 +179,7 @@ export function cleanReviewText(text: string | null | undefined) {
 }
 
 export function dedupeReviews(reviews: Review[]) {
-  const deduped = uniqBy(reviews, (review: Review) => {
+  return uniqBy(reviews, (review: Review) => {
     return (
       review.username +
       review.restaurant_id +
@@ -187,7 +187,6 @@ export function dedupeReviews(reviews: Review[]) {
       review.authored_at
     )
   })
-  return deduped
 }
 
 export function dedupeSentiments<A extends ReviewTagSentence>(sentiments: A[]) {

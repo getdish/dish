@@ -21,6 +21,7 @@ import {
   dedupeSentiments,
   reviewExternalUpsert,
 } from '@dish/helpers-node'
+import { Loggable } from '@dish/worker'
 import * as chrono from 'chrono-node'
 import { chunk, uniq } from 'lodash'
 import moment from 'moment'
@@ -31,12 +32,14 @@ import { toDBDate } from '../utils'
 import { Self } from './Self'
 
 type TextSource = Review | string
+type PhotoWithText = { url: string; text: string }
+
 const isReview = (variableToCheck: any): variableToCheck is Review =>
   (variableToCheck as Review).text !== undefined
 
 export const GEM_UIID = 'da0e0c85-86b5-4b9e-b372-97e133eccb43'
 
-export class Tagging {
+export class Tagging extends Loggable {
   crawler: Self
   restaurant_tags: Partial<RestaurantTag>[] = []
   restaurant_tag_ratings: {
@@ -48,7 +51,12 @@ export class Tagging {
   naive_sentiment = new Sentiment()
   all_reviews: Review[] = []
 
+  get logName() {
+    return `Tagging ${this.crawler.restaurant?.name}`
+  }
+
   constructor(crawler: Self) {
+    super()
     this.crawler = crawler
   }
 
@@ -116,7 +124,7 @@ export class Tagging {
   async updateTagRankings() {
     const all_tags = this.crawler.restaurant.tags || []
     const chunks = chunk(all_tags, 30)
-    console.log('Update tag rankings chunks', chunks.length)
+    this.log('Update tag rankings chunks', chunks.length)
     for (const chunk of chunks) {
       await Promise.all(
         chunk.map((tag) => {
@@ -165,21 +173,23 @@ export class Tagging {
 
   async scanCorpus() {
     this.found_tags = {}
-    console.log('Getting all possible tags...')
+    this.log('Getting all possible tags...')
     this.all_tags = await restaurantGetAllPossibleTags(this.crawler.restaurant)
     this.restaurant_tag_ratings = {}
-    console.log('Getting reviews...')
+    this.log('Getting reviews...')
     this.all_reviews = [
       ...this._getYelpReviews(),
       ...this._getTripadvisorReviews(),
       ...this._getGoogleReviews(),
     ] as Review[]
-    let all_sources = [...this.all_reviews, ...this._scanMenuItemsForTags()]
-    all_sources = this.cleanAllSources(all_sources) as TextSource[]
-    const reviews_with_sentiments = this.findDishesInText(all_sources)
-    console.log('Collecting restaurant tags...')
-    await this._collectFoundRestaurantTags()
-    console.log('Upserting reviews...')
+    const allSources = this.cleanAllSources([
+      ...this.all_reviews,
+      ...this._scanMenuItemsForTags(),
+    ])
+    const reviews_with_sentiments = this.findDishesInText(allSources)
+    this.log('Collecting restaurant tags...')
+    await this.collectFoundRestaurantTags()
+    this.log('Upserting reviews...')
     await reviewExternalUpsert(reviews_with_sentiments)
   }
 
@@ -194,39 +204,40 @@ export class Tagging {
         }
         return s
       })
-      .filter(Boolean)
+      .filter(isPresent)
   }
 
-  async _collectFoundRestaurantTags() {
+  async collectFoundRestaurantTags() {
     for (const tag_id of Object.keys(this.restaurant_tag_ratings)) {
       this.restaurant_tags.push({
-        tag_id: tag_id,
+        tag_id,
       })
     }
   }
 
   async findPhotosForTags() {
-    const all_possible_tags = await restaurantGetAllPossibleTags(
+    const possibleTags = await restaurantGetAllPossibleTags(
       this.crawler.restaurant
     )
-    const all_tag_photos: Partial<PhotoXref>[] = []
+    const tagPhotos: Partial<PhotoXref>[] = []
     const photos = await this.getPhotosWithText()
+    this.log(`Found ${photos.length} photos with captions for tags`)
     if (!photos.length) {
       return []
     }
-    for (const tag of all_possible_tags) {
-      let restaurant_tag = {
+    for (const tag of possibleTags) {
+      const rtag = {
         tag_id: tag.id,
         photos: [] as string[],
       }
-      let is_at_least_one_photo = false
+      let atLeastOnePhoto = false
       for (const photo of photos) {
         if (!photo.text) {
           continue
         }
         if (doesStringContainTag(photo.text, tag)) {
-          is_at_least_one_photo = true
-          all_tag_photos.push({
+          atLeastOnePhoto = true
+          tagPhotos.push({
             restaurant_id: this.crawler.restaurant.id,
             tag_id: tag.id,
             photo: {
@@ -235,20 +246,22 @@ export class Tagging {
           })
         }
       }
-      if (is_at_least_one_photo) {
-        this.restaurant_tags.push(restaurant_tag)
+      if (atLeastOnePhoto) {
+        this.restaurant_tags.push(rtag)
       }
     }
-    return all_tag_photos
+    this.log(`Added ${tagPhotos.length} tag photos`)
+    return tagPhotos
   }
 
   async getPhotosWithText() {
-    type PhotoWithText = { url: string; text: string }
     let photos: PhotoWithText[] = []
-    for (const item of this.crawler.getPaginatedData(
+    const photoData = this.crawler.getPaginatedData(
       this.crawler.yelp?.data ?? null,
       'photos'
-    )) {
+    )
+    this.log(`Yelp main photos: ${photoData.length}`)
+    for (const item of photoData) {
       if (item.media_data) {
         photos.push({
           url: item.src,
@@ -285,11 +298,12 @@ export class Tagging {
           })
       )
     ).filter(isPresent)
+    this.log(`Yelp review photos: ${reviewPhotos.length}`)
     photos = [...photos, ...reviewPhotos]
-    for (const item of scrapeGetData(
-      this.crawler.tripadvisor,
-      'photos_with_captions'
-    ) || []) {
+    const tripAdvisorPhotos =
+      scrapeGetData(this.crawler.tripadvisor, 'photos_with_captions') || []
+    this.log(`Tripadvisor photos with captions ${tripAdvisorPhotos.length}`)
+    for (const item of tripAdvisorPhotos) {
       if (item.caption) {
         photos.push({
           url: item.url,
@@ -300,26 +314,25 @@ export class Tagging {
     return photos
   }
 
-  findDishesInText(all_sources: TextSource[]) {
+  findDishesInText(allSources: TextSource[]) {
     let text: string
-    let updated_reviews: Review[] = []
-    for (let source of all_sources) {
+    let reviews: Review[] = []
+    for (let source of allSources) {
       if (!isReview(source)) {
         text = source
       } else {
         text = source.text ?? ''
       }
       for (const tag of this.all_tags) {
-        const is_tags_found = doesStringContainTag(text, tag)
-        if (is_tags_found) {
+        if (doesStringContainTag(text, tag)) {
           source = this.tagFound(tag, source)
         }
       }
       if (isReview(source)) {
-        updated_reviews.push(source)
+        reviews.push(source)
       }
     }
-    return dedupeReviews(updated_reviews)
+    return dedupeReviews(reviews)
   }
 
   tagFound(tag: Tag, text_source: TextSource) {

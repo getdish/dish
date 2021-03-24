@@ -119,7 +119,7 @@ export const TagButton = memo((props: TagButtonProps) => {
     restaurantSlug,
     hideRating,
     hideRank,
-    ratingStyle,
+    ratingStyle = 'pie',
     ...rest
   } = props
 
