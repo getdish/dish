@@ -127,9 +127,7 @@ export class DoorDash extends WorkerJob {
   async getStore(store: BasicStore) {
     const response = await this.graphRequest(this._getStoreGQL(store.id))
     const main = response.storeInformation
-    if (process.env.RUN_WITHOUT_WORKER != 'true') {
-      console.info('DoorDash: saving "' + main.name + '"')
-    }
+    this.log('DoorDash: saving "' + main.name + '"')
     const id_from_source = main.id
     const restaurant_id = await restaurantSaveCanonical(
       'doordash',

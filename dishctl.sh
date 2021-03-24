@@ -667,6 +667,7 @@ function deploy_all() {
   deploy "$where" worker | sed -e 's/^/worker: /;' &
   deploy "$where" image-quality | sed -e 's/^/image-quality: /;' &
   deploy "$where" image-proxy | sed -e 's/^/image-proxy: /;' &
+  deploy "$where" image-recognize | sed -e 's/^/image-recognize: /;' &
   deploy "$where" bert | sed -e 's/^/bert: /;' &
   deploy "$where" cron | sed -e 's/^/cron: /;' &
   deploy "$where" site | sed -e 's/^/site: /;' &
@@ -685,24 +686,25 @@ function deploy() {
   app=$2
   # todo begrudingly learn bash
   if [ "$app" = "" ]; then exit 1; fi
-  if [ "$app" = "app" ];            then deploy_fly_app "$where" dish-app dish-app dish-app; fi
-  if [ "$app" = "hasura" ];         then deploy_fly_app "$where" dish-hasura services/hasura hasura; fi
-  if [ "$app" = "db" ];             then deploy_fly_app "$where" dish-db services/db db; fi
-  if [ "$app" = "search" ];         then deploy_fly_app "$where" dish-search services/search search; fi
-  if [ "$app" = "timescale" ];      then deploy_fly_app "$where" dish-timescale services/timescale timescale; fi
-  if [ "$app" = "pg-admin" ];       then deploy_fly_app "$where" dish-pg-admin services/pg-admin pg-admin; fi
-  if [ "$app" = "tileserver" ];     then deploy_fly_app "$where" dish-tileserver services/tileserver tileserver; fi
-  if [ "$app" = "hooks" ];          then deploy_fly_app "$where" dish-hooks services/hooks dish-hooks; fi
-  if [ "$app" = "worker" ];         then deploy_fly_app "$where" dish-worker services/worker worker; fi
-  if [ "$app" = "image-quality" ];  then deploy_fly_app "$where" dish-image-quality services/image-quality image-quality; fi
-  if [ "$app" = "image-proxy" ];    then deploy_fly_app "$where" dish-image-proxy services/image-proxy image-proxy; fi
-  if [ "$app" = "bert" ];           then deploy_fly_app "$where" dish-bert services/bert bert; fi
-  if [ "$app" = "hooks" ];          then deploy_fly_app "$where" dish-hooks services/hooks hooks; fi
-  if [ "$app" = "cron" ];           then deploy_fly_app "$where" dish-cron services/cron cron; fi
-  if [ "$app" = "redis" ];          then deploy_fly_app "$where" dish-redis services/redis redis; fi
-  if [ "$app" = "run-tests" ];      then deploy_fly_app "$where" dish-run-tests services/run-tests run-tests; fi
-  if [ "$app" = "proxy" ];          then deploy_fly_app "$where" dish-proxy services/proxy proxy; fi
-  if [ "$app" = "site" ];           then deploy_fly_app "$where" dish-site site site; fi
+  if [ "$app" = "app" ];              then deploy_fly_app "$where" dish-app dish-app dish-app; fi
+  if [ "$app" = "hasura" ];           then deploy_fly_app "$where" dish-hasura services/hasura hasura; fi
+  if [ "$app" = "db" ];               then deploy_fly_app "$where" dish-db services/db db; fi
+  if [ "$app" = "search" ];           then deploy_fly_app "$where" dish-search services/search search; fi
+  if [ "$app" = "timescale" ];        then deploy_fly_app "$where" dish-timescale services/timescale timescale; fi
+  if [ "$app" = "pg-admin" ];         then deploy_fly_app "$where" dish-pg-admin services/pg-admin pg-admin; fi
+  if [ "$app" = "tileserver" ];       then deploy_fly_app "$where" dish-tileserver services/tileserver tileserver; fi
+  if [ "$app" = "hooks" ];            then deploy_fly_app "$where" dish-hooks services/hooks dish-hooks; fi
+  if [ "$app" = "worker" ];           then deploy_fly_app "$where" dish-worker services/worker worker; fi
+  if [ "$app" = "image-quality" ];    then deploy_fly_app "$where" dish-image-quality services/image-quality image-quality; fi
+  if [ "$app" = "image-recognize" ];  then deploy_fly_app "$where" dish-image-recognize services/image-recognize image-recognize; fi
+  if [ "$app" = "image-proxy" ];      then deploy_fly_app "$where" dish-image-proxy services/image-proxy image-proxy; fi
+  if [ "$app" = "bert" ];             then deploy_fly_app "$where" dish-bert services/bert bert; fi
+  if [ "$app" = "hooks" ];            then deploy_fly_app "$where" dish-hooks services/hooks hooks; fi
+  if [ "$app" = "cron" ];             then deploy_fly_app "$where" dish-cron services/cron cron; fi
+  if [ "$app" = "redis" ];            then deploy_fly_app "$where" dish-redis services/redis redis; fi
+  if [ "$app" = "run-tests" ];        then deploy_fly_app "$where" dish-run-tests services/run-tests run-tests; fi
+  if [ "$app" = "proxy" ];            then deploy_fly_app "$where" dish-proxy services/proxy proxy; fi
+  if [ "$app" = "site" ];             then deploy_fly_app "$where" dish-site site site; fi
 }
 
 function deploy_fail() {
