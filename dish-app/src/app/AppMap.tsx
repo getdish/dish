@@ -49,8 +49,10 @@ export default memo(function AppMap() {
     hideRegions,
   } = useAppMapStore()
   const media = useMedia()
-  const { width, paddingLeft } = useDebounceValue(useMapSize(media.sm), 1000)
-  const { position } = useStoreInstance(appMapStore)
+  const mapSize = useMapSize(media.sm)
+  const { width, paddingLeft } = useDebounceValue(mapSize, 1000)
+  const store = useStoreInstance(appMapStore)
+  const position = store.currentPosition
   const { center, span } = position
 
   // HOVERED
@@ -118,6 +120,10 @@ export default memo(function AppMap() {
 
   const handleMoveEnd = useCallback(
     ({ center, span }) => {
+      if (drawerStore.snapIndex === 0) {
+        console.log('avoid map pos while fully open')
+        return
+      }
       appMapStore.setNextPosition({ center, span })
       // cancelUpdateRegion()
       if (media.sm && (drawerStore.isDragging || drawerStore.snapIndex === 0)) {
@@ -264,8 +270,8 @@ export default memo(function AppMap() {
           <AppMapControls />
           <MapView
             center={center}
-            style={mapStyles[themeName]}
             span={span}
+            style={mapStyles[themeName]}
             padding={padding}
             features={features}
             selected={position.id}

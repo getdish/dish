@@ -111,6 +111,10 @@ class AppMapStore extends Store {
     this.lastPositions = n.reverse().slice(0, 15).reverse() // keep only 15
   }
 
+  get currentPosition() {
+    return this.nextPosition ?? this.position
+  }
+
   setNextPosition(pos: Partial<AppMapPosition>) {
     this.nextPosition = {
       center: pos.center ?? this.position.center,
