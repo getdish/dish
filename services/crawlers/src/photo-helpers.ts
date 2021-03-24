@@ -618,16 +618,22 @@ export async function uploadHeroImage(url: string, restaurant_id: uuid) {
   if (!existing || shouldUpdate) {
     const failed_id = await sendToDO(url, restaurant_id)
     if (failed_id) return
+    const existingPhoto = await PhotoBaseQueryHelpers.findOne({ url })
+    console.log('Setting new hero image', url, restaurant_id, existingPhoto)
     const photo =
-      (await PhotoBaseQueryHelpers.findOne({ url })) ||
+      existingPhoto ||
       (
-        await PhotoBaseQueryHelpers.upsert([
-          {
-            origin: url,
-            url: do_url,
-          },
-        ])
-      )[0]
+        await PhotoBaseQueryHelpers.upsert(
+          [
+            {
+              origin: url,
+              url: do_url,
+            },
+          ],
+          photo_constraint.photo_url_key
+        )
+      )?.[0]
+
     await photoXrefUpsert([
       {
         restaurant_id,

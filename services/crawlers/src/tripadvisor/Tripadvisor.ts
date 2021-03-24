@@ -97,9 +97,7 @@ export class Tripadvisor extends WorkerJob {
   async saveRestaurant(data: ScrapeData) {
     const overview = this._getOverview(data)
     const menu = this._getMenu(data)
-    if (process.env.RUN_WITHOUT_WORKER != 'true') {
-      this.log('saving ' + overview.name)
-    }
+    this.log('saving ' + overview.name)
     const id_from_source = overview.detailId.toString()
     const lon = overview.location.longitude
     const lat = overview.location.latitude
@@ -289,7 +287,11 @@ export class Tripadvisor extends WorkerJob {
       },
     })
     try {
-      if (!$('.ui_pagination > a.next')!.attr('class')!.includes('disabled')) {
+      const pagination = $('.ui_pagination > a.next')
+      if (!pagination) {
+        require('fs').writeFileSync('./debug-html.tmp', html)
+        this.log(`No pagination found`)
+      } else if (!pagination.attr('class')?.includes('disabled')) {
         more = true
       }
     } catch (error) {
