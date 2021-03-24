@@ -517,9 +517,14 @@ declare module "@dish/crawlers" {
 
 declare module "@dish/crawlers" {
     import { PhotoXref, RestaurantTag, Review, Tag } from "@dish/graph";
+    import { Loggable } from "@dish/worker";
     type TextSource = Review | string;
+    type PhotoWithText = {
+        url: string;
+        text: string;
+    };
     export const GEM_UIID = "da0e0c85-86b5-4b9e-b372-97e133eccb43";
-    export class Tagging {
+    export class Tagging extends Loggable {
         crawler: Self;
         restaurant_tags: Partial<RestaurantTag>[];
         restaurant_tag_ratings: {
@@ -532,6 +537,7 @@ declare module "@dish/crawlers" {
         SPECIAL_FILTER_THRESHOLD: number;
         naive_sentiment: any;
         all_reviews: Review[];
+        get logName(): string;
         constructor(crawler: Self);
         main(): Promise<void>;
         tagIfGem(): void;
@@ -543,14 +549,11 @@ declare module "@dish/crawlers" {
         promisedRankForTag(tag_id: string): Promise<void>;
         getRankForTag(tag_id: string): Promise<number>;
         scanCorpus(): Promise<void>;
-        cleanAllSources(sources: TextSource[]): (TextSource | undefined)[];
-        _collectFoundRestaurantTags(): Promise<void>;
+        cleanAllSources(sources: TextSource[]): (string | Review)[];
+        collectFoundRestaurantTags(): Promise<void>;
         findPhotosForTags(): Promise<Partial<PhotoXref>[]>;
-        getPhotosWithText(): Promise<{
-            url: string;
-            text: string;
-        }[]>;
-        findDishesInText(all_sources: TextSource[]): Review[];
+        getPhotosWithText(): Promise<PhotoWithText[]>;
+        findDishesInText(allSources: TextSource[]): Review[];
         tagFound(tag: Tag, text_source: TextSource): TextSource;
         measureSentiment(sentence: string): any;
         _getYelpReviews(): Partial<Review>[];
