@@ -85,11 +85,16 @@ export const autocompletesStore = createStore(AutocompletesStore)
 
 export class AutocompleteStore extends Store<{ target: AutocompleteTarget }> {
   index = 0
+  query = ''
   results: AutocompleteItem[] = []
   isLoading = false
 
   get activeResult() {
     return this.results[this.index]
+  }
+
+  setQuery(next: string) {
+    this.query = next
   }
 
   setIsLoading(n: boolean) {
@@ -191,10 +196,10 @@ export const AppAutocompleteLocation = () => {
 const AutocompleteSearchInner = memo(() => {
   const home = useHomeStore()
   const store = useStoreInstance(autocompleteSearchStore)
-  const { currentSearchQuery, lastActiveTags } = home
+  const { lastActiveTags } = home
   const searchState = useMemo(
-    () => [currentSearchQuery.trim(), lastActiveTags] as const,
-    [currentSearchQuery, lastActiveTags]
+    () => [store.query.trim(), lastActiveTags] as const,
+    [store.query, lastActiveTags]
   )
   const [query, activeTags] = useDebounceValue(searchState, 250)
 
@@ -313,7 +318,7 @@ const AutocompleteSearchInner = memo(() => {
           // clear query
           if (result.type === 'orphan') {
             home.clearTags()
-            home.setSearchQuery(home.currentSearchQuery)
+            home.setSearchQuery(query)
           } else if (result.type !== 'restaurant') {
             home.setSearchQuery('')
           }
