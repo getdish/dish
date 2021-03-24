@@ -1,7 +1,7 @@
 import { fullyIdle, idle, series } from '@dish/async'
 import { supportsTouchWeb } from '@dish/helpers'
 import { Loader, Search, X } from '@dish/react-feather'
-import { getStore, reaction } from '@dish/use-store'
+import { getStore, reaction, useStoreInstance } from '@dish/use-store'
 import React, { memo, useCallback, useEffect, useRef, useState } from 'react'
 import {
   Platform,
@@ -29,7 +29,11 @@ import { getTagSlug } from '../helpers/getTagSlug'
 import { isWebIOS } from '../helpers/isIOS'
 import { filterToNavigable } from '../helpers/tagHelpers'
 import { router, useIsRouteActive } from '../router'
-import { AutocompleteStore, autocompletesStore } from './AppAutocomplete'
+import {
+  AutocompleteStore,
+  autocompleteSearchStore,
+  autocompletesStore,
+} from './AppAutocomplete'
 import { AppAutocompleteHoverableInput } from './AppAutocompleteHoverableInput'
 import {
   searchPageStore,
@@ -108,6 +112,7 @@ export const isSearchInputFocused = () => {
 }
 
 export const AppSearchInput = memo(() => {
+  const autocompleteStore = useStoreInstance(autocompleteSearchStore)
   const inputStore = useInputStoreSearch()
   const home = useHomeStore()
   const { color } = useSearchBarTheme()
@@ -117,7 +122,7 @@ export const AppSearchInput = memo(() => {
   const isSearchingCuisine = !!home.searchBarTags.length
   const isEditingList = false // useRouterSelector((x) => x.curPage.name === 'list' && x.curPage.params.state === 'edit')
 
-  const setSearchSlow = useDebounce(homeStore.setSearchQuery, 300)
+  const setSearchSlow = useDebounce(autocompleteStore.setQuery, 250)
   const setSearch = combineFns(setSearchFast, setSearchSlow)
 
   // focus on visible
