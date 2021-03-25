@@ -1,4 +1,5 @@
 import { graphql } from '@dish/graph'
+import { pick } from 'lodash'
 import React, { SuspenseProps, useState } from 'react'
 import { FallbackProps } from 'react-error-boundary'
 import { Box, HoverablePopover, Popover, VStack } from 'snackui'
@@ -28,6 +29,31 @@ export const RestaurantRatingView = suspense(
         size,
         floating,
       }
+
+      console.log(
+        'TODO SHOW SERVICE + VIBE',
+        restaurant
+          .tags({
+            where: {
+              tag: {
+                id: {
+                  _in: [
+                    '30d67fcc-759b-4cd6-8241-400028de9196',
+                    '5da93fbe-5715-43b4-8b15-6521e3897bd9',
+                  ],
+                },
+              },
+            },
+          })
+          .map((rtag) => {
+            rtag.rating
+            rtag.upvotes
+            rtag.votes_ratio
+            rtag.score
+            return { ...rtag }
+          })
+      )
+
       return (
         <VStack pointerEvents="auto">
           <HoverablePopover

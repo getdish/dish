@@ -14,7 +14,7 @@ import {
 } from './graphql'
 
 export type FlatResolvedModel<O> = {
-  [K in keyof O]: O[K] extends (...args: any) => any
+  [K in keyof O]: O[K] extends (args: any) => any
     ? ReturnType<O[K]> extends object
       ? FlatResolvedModel<ReturnType<O[K]>>
       : ReturnType<O[K]>
@@ -45,19 +45,18 @@ export interface ListQuery extends list {}
 // SECTION 1
 // this flattens them to a partial of all resolved values, minus sub-nodes
 
-export interface ReviewTagSentence
-  extends FlatResolvedModel<review_tag_sentence> {}
-export interface Restaurant extends FlatResolvedModel<RestaurantQuery> {}
-export interface Tag extends FlatResolvedModel<TagQuery> {}
-export interface RestaurantTag extends FlatResolvedModel<RestaurantTagQuery> {}
-export interface TagTag extends FlatResolvedModel<TagTagQuery> {}
-export interface User extends FlatResolvedModel<UserQuery> {}
-export interface Review extends FlatResolvedModel<ReviewQuery> {}
-export interface MenuItem extends FlatResolvedModel<MenuItemQuery> {}
-export interface Setting extends FlatResolvedModel<SettingQuery> {}
-export interface PhotoBase extends FlatResolvedModel<PhotoBaseQuery> {}
-export interface PhotoXref extends FlatResolvedModel<PhotoXrefQuery> {}
-export interface List extends FlatResolvedModel<ListQuery> {}
+export type ReviewTagSentence = FlatResolvedModel<review_tag_sentence>
+export type Restaurant = FlatResolvedModel<RestaurantQuery>
+export type Tag = FlatResolvedModel<TagQuery>
+export type RestaurantTag = FlatResolvedModel<RestaurantTagQuery>
+export type TagTag = FlatResolvedModel<TagTagQuery>
+export type User = FlatResolvedModel<UserQuery>
+export type Review = FlatResolvedModel<ReviewQuery>
+export type MenuItem = FlatResolvedModel<MenuItemQuery>
+export type Setting = FlatResolvedModel<SettingQuery>
+export type PhotoBase = FlatResolvedModel<PhotoBaseQuery>
+export type PhotoXref = FlatResolvedModel<PhotoXrefQuery>
+export type List = FlatResolvedModel<ListQuery>
 
 // SECTION 3
 // this just adds a requirement on the id being present, for things like update()

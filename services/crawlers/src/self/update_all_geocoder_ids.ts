@@ -55,29 +55,24 @@ export async function updateAllRestaurantGeocoderIDs(internal: Self) {
   }
 }
 
-export async function updateGeocoderID(restaurant: Restaurant) {
-  console.log(
-    'UPDATE GEOCODER IDS: ',
-    restaurant.id,
-    `"${restaurant.name}"`,
-    restaurant.address,
-    restaurant.location
-  )
-  if (!restaurant.name) {
-    console.log('Bad restaurant: ', restaurant)
+export async function updateGeocoderID(rest: Restaurant) {
+  // prettier-ignore
+  console.log('UPDATE GEOCODER IDS: ', rest.id, `"${rest.name}"`, rest.address, rest.location)
+  if (!rest.name) {
+    console.log('Bad restaurant: ', rest)
     return false
   }
   const geocoder = new GoogleGeocoder()
-  const coords = restaurant.location
+  const coords = rest.location
   const lon = coords.coordinates[0]
   const lat = coords.coordinates[1]
-  const query = restaurant.name + ',' + restaurant.address
+  const query = rest.name + ',' + rest.address
   const google_id = await geocoder.searchForID(query, lat, lon)
   if (google_id) {
     const permalink = googlePermalink(google_id, lat, lon)
-    restaurant.geocoder_id = google_id
-    await restaurantDeleteOrUpdateByGeocoderID(restaurant.id, google_id)
-    console.log('GEOCODER RESULT: ', `"${restaurant.name}"`, permalink)
+    rest.geocoder_id = google_id
+    await restaurantDeleteOrUpdateByGeocoderID(rest.id, google_id)
+    console.log('GEOCODER RESULT: ', `"${rest.name}"`, permalink)
   }
 }
 

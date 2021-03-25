@@ -2,7 +2,7 @@ import test from 'ava'
 
 import {
   aroundCoords,
-  boundingBoxFromcenter,
+  boundingBoxFromCenter,
   shiftLatLonByMetres,
 } from '../../src/utils'
 
@@ -25,7 +25,7 @@ test('Generating array of coords around a center', (t) => {
 })
 
 test('Generating bounding box', (t) => {
-  const result = boundingBoxFromcenter(51, 0, 100)
+  const result = boundingBoxFromCenter(51, 0, 100)
   t.is(result.length, 2)
   t.deepEqual(result[0], [51.00089831528412, 0.0014274371161260872])
   t.deepEqual(result[1], [50.99910168471588, -0.0014274371161260872])

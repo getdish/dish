@@ -29,4 +29,8 @@ declare module "@dish/helpers-node" {
     export function dedupeReviews(reviews: Review[]): Review[];
     export function dedupeSentiments<A extends ReviewTagSentence>(sentiments: A[]): A[];
 }
+
+declare module "@dish/helpers-node" {
+    export { decode, encode } from "html-entities";
+}
 //# sourceMappingURL=types.d.ts.map

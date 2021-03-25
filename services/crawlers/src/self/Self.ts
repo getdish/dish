@@ -51,6 +51,7 @@ import {
 } from './update_all_geocoder_ids'
 
 process.on('unhandledRejection', (reason, promise) => {
+  console.log('unhandled rejection', reason)
   process.exit(1)
 })
 

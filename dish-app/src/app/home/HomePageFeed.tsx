@@ -31,9 +31,9 @@ type FI = FICuisine | FIDishRestaurants | FIList | FIHotNew | FISpace
 function useHomeFeed(props: HomeFeedProps): FI[] {
   const { item, region } = props
   const dishItems = useFeedDishItems(region)
-  // const hotNewItems = useHomeFeedTrendingNew(props)
+  const hotNewItems = useHomeFeedTrendingNew(props)
   return useMemo(() => {
-    // const [newest, hottest] = hotNewItems
+    const [newest, hottest] = hotNewItems
     return [
       {
         id: 'list-0',
@@ -46,23 +46,20 @@ function useHomeFeed(props: HomeFeedProps): FI[] {
         type: 'space',
       } as const,
       ...dishItems.slice(0, 1),
-      // hottest,
+      hottest,
       {
         id: 'space',
         type: 'space',
       } as const,
       ...dishItems.slice(1, 2),
-      // newest,
+      newest,
       {
         id: 'space',
         type: 'space',
       } as const,
       ...dishItems.slice(2),
     ].filter(isPresent)
-  }, [
-    dishItems,
-    // hotNewItems
-  ])
+  }, [dishItems, hotNewItems])
 }
 
 export const HomePageFeed = memo(
