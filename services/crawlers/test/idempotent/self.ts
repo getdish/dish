@@ -50,9 +50,7 @@ async function reset(t: ExecutionContext<Context>) {
     restaurant_fixture,
     restaurant_fixture_nearly_matches,
   ])
-  t.context.restaurant = (await restaurantFindOneWithTagsSQL(
-    restaurant.id
-  )) as RestaurantWithId
+  t.context.restaurant = (await restaurantFindOneWithTagsSQL(restaurant.id)) as RestaurantWithId
   const zero_coord = { lat: 0, lon: 0 }
   const scrapes = [
     { restaurant_id: restaurant.id, location: zero_coord, ...google },
@@ -130,12 +128,8 @@ test('Merging', async (t) => {
     id: t.context.restaurant.id,
   })
   const photos = await bestPhotosForRestaurant(t.context.restaurant.id)
-  const p0 = photos.find(
-    (p) => p.photo?.origin == 'https://i.imgur.com/N6YtgRI.jpeg'
-  )
-  const p1 = photos.find(
-    (p) => p.photo?.origin == 'https://i.imgur.com/92a8cNI.jpg'
-  )
+  const p0 = photos.find((p) => p.photo?.origin == 'https://i.imgur.com/N6YtgRI.jpeg')
+  const p1 = photos.find((p) => p.photo?.origin == 'https://i.imgur.com/92a8cNI.jpg')
   t.assert(parseFloat(p0.photo?.quality).toFixed(3), '5.374')
   t.assert(parseFloat(p1.photo?.quality).toFixed(3), '4.575')
   t.is(!!updated, true)
@@ -182,11 +176,7 @@ test('Merging dishes', async (t) => {
   if (!updated) return
   t.is(updated.menu_items.length, 2)
   t.assert(updated.menu_items.map((m) => m.name).includes('Nice Dish'))
-  t.assert(
-    updated.menu_items
-      .map((m) => m.description)
-      .includes('I am unique to DoorDash')
-  )
+  t.assert(updated.menu_items.map((m) => m.description).includes('I am unique to DoorDash'))
 })
 
 test('Weighted ratings when all sources are present', (t) => {
@@ -201,10 +191,7 @@ test('Weighted ratings when all sources are present', (t) => {
     b: 0.5,
     c: 1,
   }
-  t.is(
-    self.restaurant_ratings.weightRatings(ratings, weights),
-    4.470588235294118
-  )
+  t.is(self.restaurant_ratings.weightRatings(ratings, weights), 4.470588235294118)
 })
 
 test('Weighted ratings when some sources are missing', (t) => {
@@ -218,10 +205,7 @@ test('Weighted ratings when some sources are missing', (t) => {
     b: 0.5,
     c: 1,
   }
-  t.is(
-    self.restaurant_ratings.weightRatings(ratings, weights),
-    3.7142857142857144
-  )
+  t.is(self.restaurant_ratings.weightRatings(ratings, weights), 3.7142857142857144)
 })
 
 test('Weighted ratings when there is a weight less than 1', (t) => {
@@ -234,10 +218,7 @@ test('Weighted ratings when there is a weight less than 1', (t) => {
     a: 0.2,
     b: 0.5,
   }
-  t.is(
-    self.restaurant_ratings.weightRatings(ratings, weights),
-    3.7142857142857144
-  )
+  t.is(self.restaurant_ratings.weightRatings(ratings, weights), 3.7142857142857144)
 })
 
 test('Weighted ratings when there is only 1 weight', (t) => {
@@ -326,16 +307,11 @@ test('Tag rankings', async (t) => {
 
 test('Finding dishes in the corpus', async (t) => {
   const self = new Self()
-  const [
-    existing_tag1,
-    existing_tag2,
-    existing_tag3,
-    existing_tag4,
-  ] = await addTags(t.context.restaurant)
+  const [existing_tag1, existing_tag2, existing_tag3, existing_tag4] = await addTags(
+    t.context.restaurant
+  )
 
-  t.context.restaurant = (await restaurantFindOneWithTagsSQL(
-    t.context.restaurant.id
-  ))!
+  t.context.restaurant = (await restaurantFindOneWithTagsSQL(t.context.restaurant.id))!
   await self.preMerge(t.context.restaurant)
   await self.getUberDishes()
   await self.scanCorpus()
@@ -366,18 +342,12 @@ test('Review naive sentiments', async (t) => {
   reviews = await reviewFindAllForRestaurant(t.context.restaurant.id)
   t.is(reviews.length, 6)
   const rv1 = reviews.find((rv) => rv.username == 'yelp-FsLRE98uOHkBNzO1Ta5hIw')
-  const rv1s1 = rv1.sentiments.find((s) =>
-    s.sentence.includes('Test tag existing 1')
-  )
+  const rv1s1 = rv1.sentiments.find((s) => s.sentence.includes('Test tag existing 1'))
   t.is(rv1s1.naive_sentiment, -3)
-  const rv1s2 = rv1.sentiments.find((s) =>
-    s.sentence.includes('Test tag existing 2')
-  )
+  const rv1s2 = rv1.sentiments.find((s) => s.sentence.includes('Test tag existing 2'))
   t.is(rv1s2.naive_sentiment, 4)
   const rv2 = reviews.find((rv) => rv.username == 'tripadvisor-tauser')
-  const rv2s1 = rv2.sentiments.find((s) =>
-    s.sentence.includes('Test tag existing 3')
-  )
+  const rv2s1 = rv2.sentiments.find((s) => s.sentence.includes('Test tag existing 3'))
   t.is(rv2s1.naive_sentiment, 0)
   const rv3 = reviews.find((rv) => rv.username == 'tripadvisor-tauser2')
   t.is(rv3.sentiments.length, 0)
@@ -430,10 +400,8 @@ test('Find photos of dishes', async (t) => {
   const updated = await restaurantFindOneWithTagsSQL(t.context.restaurant.id)
   t.is(updated?.id, t.context.restaurant.id)
   if (!updated) return
-  const tag1 =
-    updated.tags.find((i) => i.tag.id == existing_tag1.id) || ({} as Tag)
-  const tag2 =
-    updated.tags.find((i) => i.tag.id == existing_tag2.id) || ({} as Tag)
+  const tag1 = updated.tags.find((i) => i.tag.id == existing_tag1.id) || ({} as Tag)
+  const tag2 = updated.tags.find((i) => i.tag.id == existing_tag2.id) || ({} as Tag)
   t.is(updated.tags.length, 3)
   t.is(tag1.tag.name, existing_tag1.name)
   t.deepEqual(tag1.photos, ['https://i.imgur.com/92a8cNI.jpg'])
@@ -460,12 +428,9 @@ test('Identifying country tags', async (t) => {
   t.assert(updated, 'not found')
   if (!updated) return
   t.is(updated.tags.length, 5)
-  const tag1 =
-    updated.tags.find((i) => i.tag.id == existing_tag1.id) || ({} as Tag)
-  const tag2 =
-    updated.tags.find((i) => i.tag.id == existing_tag2.id) || ({} as Tag)
-  const tag3 =
-    updated.tags.find((i) => i.tag.name == 'Test Pizza') || ({} as Tag)
+  const tag1 = updated.tags.find((i) => i.tag.id == existing_tag1.id) || ({} as Tag)
+  const tag2 = updated.tags.find((i) => i.tag.id == existing_tag2.id) || ({} as Tag)
+  const tag3 = updated.tags.find((i) => i.tag.name == 'Test Pizza') || ({} as Tag)
   t.is(tag1.tag.name, 'Test Mexican')
   t.is(tag1.tag.type, 'country')
   t.is(tag2.tag.name, 'Test Spanish')
@@ -511,9 +476,7 @@ test('Inserts a new canonical restaurant', async (t) => {
 })
 
 test('Finds an existing canonical restaurant', async (t) => {
-  sinon
-    .stub(GoogleGeocoder.prototype, 'searchForID')
-    .resolves(GOOGLE_GEOCODER_ID)
+  sinon.stub(GoogleGeocoder.prototype, 'searchForID').resolves(GOOGLE_GEOCODER_ID)
   const restaurant_id = await restaurantSaveCanonical(
     'yelp',
     'test123ish',
@@ -549,12 +512,7 @@ test('Finds an existing scrape', async (t) => {
 // disabled due to ml fuzzy
 test.skip('Scoring for restaurants', async (t) => {
   const self = new Self()
-  await addTags(t.context.restaurant, [
-    'Test tag',
-    'Testpho',
-    'Test 3',
-    'Test 4',
-  ])
+  await addTags(t.context.restaurant, ['Test tag', 'Testpho', 'Test 3', 'Test 4'])
   const restaurant = (await restaurantFindOneWithTagsSQL(
     t.context.restaurant.id
   )) as RestaurantWithId
@@ -576,12 +534,7 @@ test.skip('Scoring for restaurants', async (t) => {
 
 test.skip('Scoring for rishes', async (t) => {
   const self = new Self()
-  await addTags(t.context.restaurant, [
-    'Test tag',
-    'Testpho',
-    'Test 3',
-    'Test 4',
-  ])
+  await addTags(t.context.restaurant, ['Test tag', 'Testpho', 'Test 3', 'Test 4'])
   const restaurant = (await restaurantFindOneWithTagsSQL(
     t.context.restaurant.id
   )) as RestaurantWithId
@@ -640,9 +593,7 @@ test.skip('Scoring for rishes', async (t) => {
   t.is(rish1.sentences.length, 6)
   t.assert(
     rish1.sentences.find(
-      (s) =>
-        s.sentence ==
-        'This restaurant had the worst Test tag existing 1 dishes!'
+      (s) => s.sentence == 'This restaurant had the worst Test tag existing 1 dishes!'
     )
   )
   t.assert(rish1.sentences.find((s) => s.sentence == 'Test tag was good.'))

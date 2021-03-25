@@ -4,11 +4,7 @@ import React, { useEffect, useState } from 'react'
  * Loading bar at top of browser
  */
 
-const baseClass =
-  'BusyIndicator-' +
-  Math.random()
-    .toString(36)
-    .slice(2)
+const baseClass = 'BusyIndicator-' + Math.random().toString(36).slice(2)
 
 // Add busy indicator stylesheet
 var baseStyle = document.createElement('style')

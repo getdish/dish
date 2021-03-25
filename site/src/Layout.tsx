@@ -1,4 +1,4 @@
-import { Button, ErrorBoundary, FullScreen, Portal, scrollTo, Theme, Title, View } from '@o/ui'
+import { Button, ErrorBoundary, FullScreen, Portal, Theme, Title, View, scrollTo } from '@o/ui'
 import { useForceUpdate } from '@o/use-store'
 import { isDefined } from '@o/utils'
 import { throttle } from 'lodash'
@@ -20,14 +20,14 @@ let updateLayout = null
 export const usePageTheme = () => {
   const [setTheme, setNext] = useState()
   const route = useCurrentRoute()
-  const curView = route.views.find(x => x && x.type && x.type.theme)
+  const curView = route.views.find((x) => x && x.type && x.type.theme)
   const key = `theme-${route.url.pathname.split('/')[1] || ''}`
   const theme = setTheme || (curView && curView.type && curView.type.theme) || 'home'
   return [
     theme,
     useCallback(
-      next => {
-        setNext(prev => {
+      (next) => {
+        setNext((prev) => {
           if (prev !== next) {
             console.log('setting theme', next, prev)
             updateLayout()
@@ -36,7 +36,7 @@ export const usePageTheme = () => {
           return prev
         })
       },
-      [key],
+      [key]
     ),
   ]
 }
@@ -79,7 +79,7 @@ export const Layout = memo((props: any) => {
       'resize',
       throttle(() => {
         siteStore.windowHeight = window.innerHeight
-      }, 64),
+      }, 64)
     )
   }, [])
 
@@ -94,7 +94,7 @@ export const Layout = memo((props: any) => {
   return (
     <Theme name={theme}>
       <PageLoading />
-      <PeekHeader isActive={route.views.some(x => x.type && x.type.showPeekHeader)} />
+      <PeekHeader isActive={route.views.some((x) => x.type && x.type.showPeekHeader)} />
       {/* small */}
       <Theme name="home">
         <Button
@@ -190,7 +190,7 @@ const LayoutSidebar = memo(() => {
   )
 })
 
-const bg = theme => theme.background
+const bg = (theme) => theme.background
 
 function NotFound() {
   return (

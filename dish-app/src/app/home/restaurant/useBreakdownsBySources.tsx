@@ -4,10 +4,7 @@ import { isPresent } from '@dish/helpers'
 import { queryRestaurant } from '../../../queries/queryRestaurant'
 import { NavigableTag } from '../../../types/tagTypes'
 
-export const useBreakdownsBySources = (
-  restaurantSlug: string,
-  reviewTags: NavigableTag[]
-) => {
+export const useBreakdownsBySources = (restaurantSlug: string, reviewTags: NavigableTag[]) => {
   let total = 0
   const [restaurant] = queryRestaurant(restaurantSlug)
   const sources = restaurant?.sources?.() ?? {}

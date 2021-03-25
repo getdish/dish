@@ -40,9 +40,7 @@ async function putFeedback(feedback: GorseFeedback) {
   try {
     result = JSON.parse(result)
   } catch (error) {
-    throw new Error(
-      'Gorse response error: ' + error.message + ' for response: ' + result
-    )
+    throw new Error('Gorse response error: ' + error.message + ' for response: ' + result)
   }
   return result
 }

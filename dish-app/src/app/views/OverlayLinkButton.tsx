@@ -8,11 +8,7 @@ import { LinkButtonProps } from './LinkProps'
 export function OverlayLinkButton<
   Name extends keyof RoutesTable = keyof RoutesTable,
   Params = RoutesTable[Name]['params']
->({
-  Icon,
-  children,
-  ...props
-}: LinkButtonProps<Name, Params> & { Icon?: any }) {
+>({ Icon, children, ...props }: LinkButtonProps<Name, Params> & { Icon?: any }) {
   const theme = useTheme()
   return (
     <BlurView borderRadius={20} marginHorizontal={5}>

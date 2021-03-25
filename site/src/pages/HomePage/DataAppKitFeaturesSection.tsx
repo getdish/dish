@@ -82,8 +82,7 @@ const apps = [
   {
     icon: <Icon name="moon" />,
     title: 'Confluence',
-    description:
-      'Data App: Read and write to Confluence with a fully typed API.',
+    description: 'Data App: Read and write to Confluence with a fully typed API.',
     downloads: '923',
     hearts: '7',
   },
@@ -139,9 +138,8 @@ export default memo(() => {
               </FadeInView>
               <FadeInView parallax delayIndex={2}>
                 <TitleTextSub>
-                  Sync data, expose GraphQL and TypeScript APIs, and
-                  render&nbsp;content. The&nbsp;app&nbsp;store&nbsp;enables
-                  cooperative app-building.
+                  Sync data, expose GraphQL and TypeScript APIs, and render&nbsp;content.
+                  The&nbsp;app&nbsp;store&nbsp;enables cooperative app-building.
                 </TitleTextSub>
               </FadeInView>
             </Stack>
@@ -192,54 +190,52 @@ export default memo(() => {
   )
 })
 
-const Integration = memoIsEqualDeep(
-  ({ icon, title, index, downloads, hearts, ...props }: any) => {
-    const theme = useTheme()
-    const borderColor = theme.borderColor.setAlpha(0.1)
-    return (
-      <FadeInView
-        parallax
-        {...(index % 1 == 0 ? fadeAnimations.up : fadeAnimations.down)}
-        delay={index * 100 + 250}
+const Integration = memoIsEqualDeep(({ icon, title, index, downloads, hearts, ...props }: any) => {
+  const theme = useTheme()
+  const borderColor = theme.borderColor.setAlpha(0.1)
+  return (
+    <FadeInView
+      parallax
+      {...(index % 1 == 0 ? fadeAnimations.up : fadeAnimations.down)}
+      delay={index * 100 + 250}
+    >
+      <View
+        animate={{
+          y: -10,
+        }}
+        transition={{ yoyo: Infinity, duration: 2, repeatDelay: index * 1 }}
       >
         <View
-          animate={{
-            y: -10,
-          }}
-          transition={{ yoyo: Infinity, duration: 2, repeatDelay: index * 1 }}
+          userSelect="none"
+          height={140}
+          width={130}
+          borderRadius={10}
+          border={[1, borderColor]}
+          {...props}
         >
-          <View
-            userSelect="none"
-            height={140}
-            width={130}
-            borderRadius={10}
-            border={[1, borderColor]}
-            {...props}
+          <Stack padding space alignItems="center" justifyContent="center">
+            {icon}
+            <Paragraph selectable={false} size="sm">
+              {title}
+            </Paragraph>
+          </Stack>
+          <Stack
+            direction="horizontal"
+            opacity={0.5}
+            position="relative"
+            alignItems="center"
+            justifyContent="space-between"
           >
-            <Stack padding space alignItems="center" justifyContent="center">
-              {icon}
-              <Paragraph selectable={false} size="sm">
-                {title}
-              </Paragraph>
-            </Stack>
-            <Stack
-              direction="horizontal"
-              opacity={0.5}
-              position="relative"
-              alignItems="center"
-              justifyContent="space-between"
-            >
-              <BorderTop borderColor={borderColor} />
-              <Button chromeless size={0.9} icon="download">
-                {downloads}
-              </Button>
-              <Button chromeless size={0.9} icon="heart" iconAfter>
-                {hearts}
-              </Button>
-            </Stack>
-          </View>
+            <BorderTop borderColor={borderColor} />
+            <Button chromeless size={0.9} icon="download">
+              {downloads}
+            </Button>
+            <Button chromeless size={0.9} icon="heart" iconAfter>
+              {hearts}
+            </Button>
+          </Stack>
         </View>
-      </FadeInView>
-    )
-  }
-)
+      </View>
+    </FadeInView>
+  )
+})

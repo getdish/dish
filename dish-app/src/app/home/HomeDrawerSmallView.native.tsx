@@ -1,20 +1,9 @@
-import {
-  Store,
-  createStore,
-  getStore,
-  reaction,
-  useStore,
-  useStoreInstance,
-} from '@dish/use-store'
+import { Store, createStore, getStore, reaction, useStore, useStoreInstance } from '@dish/use-store'
 import React, { memo, useEffect, useMemo } from 'react'
 import { Animated, PanResponder, StyleSheet, View } from 'react-native'
 import { AbsoluteVStack, VStack, useConstant, useGet } from 'snackui'
 
-import {
-  pageWidthMax,
-  searchBarHeight,
-  zIndexDrawer,
-} from '../../constants/constants'
+import { pageWidthMax, searchBarHeight, zIndexDrawer } from '../../constants/constants'
 import { getWindowHeight } from '../../helpers/getWindow'
 import { autocompletesStore } from '../AppAutocomplete'
 import { AppSearchBar } from '../AppSearchBar'
@@ -22,11 +11,7 @@ import { blurSearchInput } from '../AppSearchInput'
 import { drawerStore as ds } from '../drawerStore'
 import { isTouchingSearchBar } from '../SearchInputNativeDragFix'
 import { BottomSheetContainer } from '../views/BottomSheetContainer'
-import {
-  ScrollStore,
-  isScrollAtTop,
-  usePreventVerticalScroll,
-} from '../views/ContentScrollView'
+import { ScrollStore, isScrollAtTop, usePreventVerticalScroll } from '../views/ContentScrollView'
 import { isScrollingSubDrawer } from '../views/ContentScrollViewHorizontal'
 
 class HomeActiveContent extends Store {
@@ -108,13 +93,7 @@ export const HomeDrawerSmallView = memo((props: { children: any }) => {
   })
 
   return (
-    <VStack
-      pointerEvents="none"
-      zIndex={zIndexDrawer}
-      width="100%"
-      height="100%"
-      maxHeight="100%"
-    >
+    <VStack pointerEvents="none" zIndex={zIndexDrawer} width="100%" height="100%" maxHeight="100%">
       <Animated.View
         style={[
           styles.animatedView,
@@ -128,11 +107,7 @@ export const HomeDrawerSmallView = memo((props: { children: any }) => {
         ]}
       >
         {/* handle */}
-        <View
-          pointerEvents="auto"
-          style={styles.panView}
-          {...panResponder.panHandlers}
-        >
+        <View pointerEvents="auto" style={styles.panView} {...panResponder.panHandlers}>
           <VStack
             pointerEvents="auto"
             paddingHorizontal={20}
@@ -152,11 +127,7 @@ export const HomeDrawerSmallView = memo((props: { children: any }) => {
         {/* DONT OVERLAY BECAUSE WE NEED HORIZONTAL SCROLLING */}
         {/* SEE CONTENTSCROLLVIEW FOR PREVENTING SCROLL */}
 
-        <VStack
-          width="100%"
-          flex={1}
-          pointerEvents={preventScrolling ? 'none' : 'auto'}
-        >
+        <VStack width="100%" flex={1} pointerEvents={preventScrolling ? 'none' : 'auto'}>
           {useMemo(
             () => (
               <BottomSheetContainer>

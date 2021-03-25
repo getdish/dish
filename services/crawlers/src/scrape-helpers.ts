@@ -1,9 +1,4 @@
-import {
-  RestaurantWithId,
-  ZeroUUID,
-  ensureJSONSyntax,
-  restaurantFindOne,
-} from '@dish/graph'
+import { RestaurantWithId, ZeroUUID, ensureJSONSyntax, restaurantFindOne } from '@dish/graph'
 import { PoolConfig } from 'pg'
 
 import { DoorDash } from './doordash/DoorDash'
@@ -46,11 +41,7 @@ export type Scrape = {
 
 export type ScrapeData = { [key: string]: any }
 
-export async function scrapeFindOneBySourceID(
-  source: string,
-  id: string,
-  allow_not_found = false
-) {
+export async function scrapeFindOneBySourceID(source: string, id: string, allow_not_found = false) {
   const result = await db.query(`
   SELECT *, st_asgeojson(location) as location
   FROM scrape
@@ -89,10 +80,7 @@ function parseLocation(json: string) {
   }
 }
 
-export async function latestScrapeForRestaurant(
-  restaurant: RestaurantWithId,
-  source: string
-) {
+export async function latestScrapeForRestaurant(restaurant: RestaurantWithId, source: string) {
   const result = await db.query(`
     SELECT *
     FROM scrape
@@ -114,10 +102,7 @@ export async function latestScrapeForRestaurant(
   }
 }
 
-export async function removeScrapeForRestaurant(
-  restaurant: RestaurantWithId,
-  source: string
-) {
+export async function removeScrapeForRestaurant(restaurant: RestaurantWithId, source: string) {
   console.log('Removing scrape for', restaurant.id)
   await db.query(`
     DELETE
@@ -129,10 +114,7 @@ export async function removeScrapeForRestaurant(
 
 export async function scrapeInsert(scrape: Scrape) {
   try {
-    const data = JSON.stringify(ensureJSONSyntax(scrape.data)).replace(
-      /'/g,
-      `''`
-    )
+    const data = JSON.stringify(ensureJSONSyntax(scrape.data)).replace(/'/g, `''`)
     const result = await db.query(`
       INSERT INTO scrape (
         time,
@@ -161,9 +143,7 @@ export async function scrapeInsert(scrape: Scrape) {
 }
 
 export async function scrapeUpdateBasic(scrape: Scrape) {
-  console.log(
-    `Updating scrape ${scrape.id} to point to restaurant ${scrape.restaurant_id}`
-  )
+  console.log(`Updating scrape ${scrape.id} to point to restaurant ${scrape.restaurant_id}`)
   const result = await db.query(`
     UPDATE scrape SET
       restaurant_id = '${scrape.restaurant_id}',
@@ -201,11 +181,7 @@ export async function scrapeMergeData(id: string, data: ScrapeData) {
   return result.rows[0]
 }
 
-export function scrapeGetData(
-  scrape: Scrape | null,
-  path: string,
-  default_value: any = ''
-): any {
+export function scrapeGetData(scrape: Scrape | null, path: string, default_value: any = ''): any {
   if (!scrape) {
     return default_value
   }
@@ -309,25 +285,12 @@ export async function scrapeUpdateGeocoderID(scrape_id: string) {
   if (google_id) {
     const restaurant = await restaurantFindOne({ geocoder_id: google_id })
     if (restaurant) {
-      console.log(
-        'SCRAPE GEOCODES',
-        deets.name,
-        scrape.restaurant_id,
-        restaurant.id
-      )
+      console.log('SCRAPE GEOCODES', deets.name, scrape.restaurant_id, restaurant.id)
       scrape.restaurant_id = restaurant.id
-      await scrapeUpdateAllRestaurantIDs(
-        scrape.source,
-        scrape.id_from_source,
-        restaurant.id
-      )
+      await scrapeUpdateAllRestaurantIDs(scrape.source, scrape.id_from_source, restaurant.id)
     }
   } else {
     console.log('SCRAPE GEOCODES', deets.name, scrape.restaurant_id, null)
-    await scrapeUpdateAllRestaurantIDs(
-      scrape.source,
-      scrape.id_from_source,
-      null
-    )
+    await scrapeUpdateAllRestaurantIDs(scrape.source, scrape.id_from_source, null)
   }
 }

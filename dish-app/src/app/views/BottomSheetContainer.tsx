@@ -2,10 +2,7 @@ import React from 'react'
 import { VStack, useTheme } from 'snackui'
 
 import { drawerBorderRadius } from '../../constants/constants'
-import {
-  AppAutocompleteLocation,
-  AppAutocompleteSearch,
-} from '../AppAutocomplete'
+import { AppAutocompleteLocation, AppAutocompleteSearch } from '../AppAutocomplete'
 import { DrawerPortalProvider } from '../Portal'
 
 // only renders on small views

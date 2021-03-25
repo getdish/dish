@@ -1,13 +1,4 @@
-import {
-  AnimatePresence,
-  Button,
-  Image,
-  Space,
-  Stack,
-  View,
-  animation,
-  gloss,
-} from '@o/ui'
+import { AnimatePresence, Button, Image, Space, Stack, View, animation, gloss } from '@o/ui'
 import { Box, Inline } from 'gloss'
 import React, { memo, useState } from 'react'
 
@@ -15,12 +6,7 @@ import { mediaStyles } from '../../constants'
 // import listScreen from '../../public/images/screen-list.jpg'
 // import tableScreen from '../../public/images/screen-table.jpg'
 import { linkProps } from '../../useLink'
-import {
-  FadeInView,
-  fadeAnimations,
-  transitions,
-  useFadePage,
-} from '../../views/FadeInView'
+import { FadeInView, fadeAnimations, transitions, useFadePage } from '../../views/FadeInView'
 import { Page } from '../../views/Page'
 import { Paragraph } from '../../views/Paragraph'
 import { PillButton } from '../../views/PillButton'
@@ -187,20 +173,14 @@ export default memo(() => {
             </FadeInView>
             <TitleTextSub margin="auto" minWidth={320}>
               <FadeInView parallax sm-display="inline" delayIndex={2}>
-                When building a better food search app, we realized we needed to
-                think differently. How do you sustain high quality? It's all in
-                the community.
+                When building a better food search app, we realized we needed to think differently.
+                How do you sustain high quality? It's all in the community.
               </FadeInView>
             </TitleTextSub>
           </>
         }
       >
-        <Stack
-          minWidth={300}
-          maxWidth="100%"
-          margin={[0, 'auto', 0]}
-          sm-margin={0}
-        >
+        <Stack minWidth={300} maxWidth="100%" margin={[0, 'auto', 0]} sm-margin={0}>
           <Space />
 
           <Stack direction="horizontal" space>
@@ -212,12 +192,7 @@ export default memo(() => {
               margin={0}
               sm-margin={[0, '-5%']}
             >
-              <FadeInView
-                parallax
-                width="100%"
-                delayIndex={6}
-                {...fadeAnimations.up}
-              >
+              <FadeInView parallax width="100%" delayIndex={6} {...fadeAnimations.up}>
                 <Button
                   coat="flat"
                   cursor="pointer"
@@ -278,12 +253,7 @@ export default memo(() => {
                     {`<${elements[index].title} />`}
                   </TitleText>
                   <Space />
-                  <Paragraph
-                    cursor="inherit"
-                    sizeLineHeight={1.2}
-                    size={1.2}
-                    alpha={0.8}
-                  >
+                  <Paragraph cursor="inherit" sizeLineHeight={1.2} size={1.2} alpha={0.8}>
                     {elements[index].body}
                   </Paragraph>
                 </TiltSquircle>
@@ -321,18 +291,9 @@ export default memo(() => {
             </FlexView>
           </Stack>
 
-          <FadeInView
-            parallax
-            delayIndex={8}
-            flexFlow="row"
-            margin={[42, 'auto', 0]}
-          >
+          <FadeInView parallax delayIndex={8} flexFlow="row" margin={[42, 'auto', 0]}>
             {[0, 1, 2].map((x) => (
-              <Dot
-                key={`dot-${x}`}
-                active={x === index}
-                onClick={() => goTo(x)}
-              />
+              <Dot key={`dot-${x}`} active={x === index} onClick={() => goTo(x)} />
             ))}
           </FadeInView>
         </Stack>

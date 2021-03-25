@@ -55,8 +55,7 @@ export const RestaurantReview = memo(
 
       const authoredAt = review.authored_at ? (
         <Text {...bottomMetaTextProps} marginLeft={6}>
-          {new Intl.DateTimeFormat().format(new Date(review.authored_at))}{' '}
-          &nbsp; &nbsp;
+          {new Intl.DateTimeFormat().format(new Date(review.authored_at))} &nbsp; &nbsp;
         </Text>
       ) : null
 
@@ -67,11 +66,7 @@ export const RestaurantReview = memo(
               {...bottomMetaTextProps}
               borderRadius={100}
               backgroundColor={
-                review.rating >= 4
-                  ? lightGreen
-                  : review.rating >= 3
-                  ? lightYellow
-                  : lightRed
+                review.rating >= 4 ? lightGreen : review.rating >= 3 ? lightYellow : lightRed
               }
               lineHeight={20}
               paddingHorizontal={12}
@@ -100,19 +95,14 @@ export const RestaurantReview = memo(
           {...(!hideRestaurantName && {
             title: (
               <Text fontWeight="800">
-                <Link
-                  name="restaurant"
-                  params={{ slug: review.restaurant.slug ?? '' }}
-                >
+                <Link name="restaurant" params={{ slug: review.restaurant.slug ?? '' }}>
                   {review.restaurant.name ?? ''}
                 </Link>
               </Text>
             ),
           })}
           date={review.updated_at}
-          belowContent={
-            review.vote ? <SentimentText sentiment={review.vote} /> : null
-          }
+          belowContent={review.vote ? <SentimentText sentiment={review.vote} /> : null}
           bubbleHeight={height}
           avatar={review.user.avatar ?? ''}
           height={height}
@@ -121,21 +111,14 @@ export const RestaurantReview = memo(
           name={name}
           after={
             !!review.text ? (
-              <HStack
-                width="100%"
-                overflow="hidden"
-                alignItems="center"
-                maxWidth="100%"
-              >
+              <HStack width="100%" overflow="hidden" alignItems="center" maxWidth="100%">
                 <ScrollView horizontal showsHorizontalScrollIndicator={false}>
                   {!!sentiments?.length
                     ? uniqBy(sentiments, (x) => x.tag.name).map((x, i) => {
                         const snt = x.ml_sentiment
                         return (
                           <React.Fragment key={i}>
-                            <SentimentText sentiment={snt}>
-                              {x.tag.name}
-                            </SentimentText>
+                            <SentimentText sentiment={snt}>{x.tag.name}</SentimentText>
                             <Text>&nbsp;</Text>
                           </React.Fragment>
                         )

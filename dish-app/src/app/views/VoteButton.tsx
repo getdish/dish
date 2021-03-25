@@ -1,12 +1,5 @@
 import React, { useState } from 'react'
-import {
-  AbsoluteVStack,
-  StackProps,
-  VStack,
-  prevent,
-  useMedia,
-  useTheme,
-} from 'snackui'
+import { AbsoluteVStack, StackProps, VStack, prevent, useMedia, useTheme } from 'snackui'
 
 import { bgLight } from '../../constants/colors'
 

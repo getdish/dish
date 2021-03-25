@@ -14,15 +14,7 @@ import { RestaurantRatingView } from './RestaurantRatingView'
 const setHovered = debounce(appMapStore.setHovered, 300)
 
 export const RestaurantButton = graphql(
-  ({
-    slug,
-    id,
-    hoverToMap,
-  }: {
-    slug: string
-    id: string
-    hoverToMap?: boolean
-  }) => {
+  ({ slug, id, hoverToMap }: { slug: string; id: string; hoverToMap?: boolean }) => {
     const [restaurant] = queryRestaurant(slug)
     // const colors = getColorsForName(slug)
     const theme = useTheme()

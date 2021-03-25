@@ -1,4 +1,5 @@
 import React from 'react'
+
 import { FadeInView } from '../../views/FadeInView'
 import { Paragraph } from '../../views/Paragraph'
 

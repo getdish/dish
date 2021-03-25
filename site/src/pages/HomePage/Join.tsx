@@ -13,13 +13,13 @@ export class Join extends React.Component<any> {
   clearState() {
     this.setState({ error: null, success: null, submitting: false })
   }
-  submit = async e => {
+  submit = async (e) => {
     console.log('got submit')
     e.preventDefault()
     this.clearState()
     this.setState({ submitting: true })
     try {
-      const finish = state => {
+      const finish = (state) => {
         this.clearState()
         this.setState(state)
       }
@@ -114,9 +114,9 @@ export class Join extends React.Component<any> {
   }
 }
 
-const queryString = query => {
+const queryString = (query) => {
   const esc = encodeURIComponent
   return Object.keys(query)
-    .map(k => `${esc(k)}=${k === 'c' ? query[k] : esc(query[k])}`)
+    .map((k) => `${esc(k)}=${k === 'c' ? query[k] : esc(query[k])}`)
     .join('&')
 }

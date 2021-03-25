@@ -47,9 +47,7 @@ export const DO_BASE = 'https://dish-images.sfo2.digitaloceanspaces.com/'
 const prod_hooks_endpoint = 'https://hooks.dishapp.com'
 const dev_hooks_endpoint = 'http://localhost:6154'
 const DISH_HOOKS_ENDPOINT =
-  process.env.DISH_ENV == 'production'
-    ? prod_hooks_endpoint
-    : dev_hooks_endpoint
+  process.env.DISH_ENV == 'production' ? prod_hooks_endpoint : dev_hooks_endpoint
 
 export async function photoUpsert(photosOg: Partial<PhotoXref>[]) {
   if (photosOg.length == 0) return
@@ -66,9 +64,7 @@ function normalizePhotos(photos: Partial<PhotoXref>[]) {
   if (next[0].tag_id && !next[0].restaurant_id) {
     next.map((p) => (p.restaurant_id = ZeroUUID))
   }
-  next = uniqBy(next, (el) =>
-    [el.tag_id, el.restaurant_id, el.photo?.url].join()
-  )
+  next = uniqBy(next, (el) => [el.tag_id, el.restaurant_id, el.photo?.url].join())
   return next.map((p) => {
     if (!p.photo || !p.photo.url) {
       throw 'Photo must have URL'
@@ -99,16 +95,12 @@ export async function uploadToDO(photos: Partial<PhotoXref>[]) {
   await photoBaseUpsert(updated, photo_constraint.photos_pkey)
 }
 
-export async function updatePhotoQualityAndCategories(
-  photos: Partial<PhotoXref>[]
-) {
+export async function updatePhotoQualityAndCategories(photos: Partial<PhotoXref>[]) {
   const unassessed_photos = await findUnassessedPhotos(photos)
   await assessNewPhotos(unassessed_photos)
 }
 
-async function findNotUploadedRestaurantPhotos(
-  restaurant_id: uuid
-): Promise<PhotoXref[]> {
+async function findNotUploadedRestaurantPhotos(restaurant_id: uuid): Promise<PhotoXref[]> {
   const photos = await resolvedWithFields(() => {
     const d = query.photo_xref({
       where: {
@@ -143,9 +135,7 @@ async function findNotUploadedRestaurantPhotos(
   return photos
 }
 
-export async function findNotUploadedTagPhotos(
-  tag_id: uuid
-): Promise<PhotoXref[]> {
+export async function findNotUploadedTagPhotos(tag_id: uuid): Promise<PhotoXref[]> {
   const photos = await resolvedWithFields(
     () =>
       query.photo_xref({
@@ -180,9 +170,7 @@ export async function findNotUploadedTagPhotos(
   return photos
 }
 
-async function unassessedPhotosForRestaurant(
-  restaurant_id: uuid
-): Promise<PhotoXref[]> {
+async function unassessedPhotosForRestaurant(restaurant_id: uuid): Promise<PhotoXref[]> {
   const photos = await resolvedWithFields(
     () =>
       query.photo_xref({
@@ -224,9 +212,7 @@ async function unassessedPhotosForTag(tag_id: uuid): Promise<PhotoXref[]> {
   return photos
 }
 
-async function unassessedPhotosForRestaurantTag(
-  restaurant_id: uuid
-): Promise<PhotoXref[]> {
+async function unassessedPhotosForRestaurantTag(restaurant_id: uuid): Promise<PhotoXref[]> {
   const photos = await resolvedWithFields(
     () =>
       query.photo_xref({
@@ -260,9 +246,7 @@ async function unassessedPhotosForRestaurantTag(
   return photos
 }
 
-export async function bestPhotosForRestaurant(
-  restaurant_id: uuid
-): Promise<PhotoXref[]> {
+export async function bestPhotosForRestaurant(restaurant_id: uuid): Promise<PhotoXref[]> {
   const TOP_FRACTION_CUTOFF = process.env.NODE_ENV == 'test' ? 1 : 0.2
   const result = await DB.one_query_on_main(`
     SELECT json_agg(j1) FROM (
@@ -315,9 +299,7 @@ export async function bestPhotosForTag(tag_id: uuid): Promise<PhotoXref[]> {
   return uniqBy(photos, (p) => p.photo_id)
 }
 
-export async function bestPhotosForRestaurantTags(
-  restaurant_id: uuid
-): Promise<PhotoXref[]> {
+export async function bestPhotosForRestaurantTags(restaurant_id: uuid): Promise<PhotoXref[]> {
   const photos = await resolvedWithFields(
     () =>
       query.photo_xref({
@@ -366,10 +348,7 @@ async function assessPhoto(urls: string[]) {
       }
       retries += 1
       if (retries > MAX_RETRIES) {
-        sentryMessage(
-          MAX_RETRIES + ' failed attempts requesting image quality',
-          urls
-        )
+        sentryMessage(MAX_RETRIES + ' failed attempts requesting image quality', urls)
         return []
       }
       console.log('Retrying Image Quality API')
@@ -391,8 +370,7 @@ async function assessPhotoWithoutRetries(urls: string[]) {
   const res: Partial<PhotoBase>[] = []
   for (const url of urls) {
     const id = crypto.createHash('md5').update(url).digest('hex')
-    const quality = imageQualities.find((r) => id == r.image_id)
-      ?.mean_score_prediction
+    const quality = imageQualities.find((r) => id == r.image_id)?.mean_score_prediction
     const categories = imageCategories.find((x) => x.url === url)?.categories
     if (!quality || !categories) {
       console.warn('No result found!')
@@ -409,9 +387,7 @@ async function assessPhotoWithoutRetries(urls: string[]) {
 
 async function getImageCategory(
   urls: string[]
-): Promise<
-  { url: string; categories: { label: string; probability: number }[] }[]
-> {
+): Promise<{ url: string; categories: { label: string; probability: number }[] }[]> {
   const IMAGE_CATEGORY_API = 'https://dish-image-recognize.fly.dev/recognize'
   // lets do serially to not overload the memory of image-recognize
   return Promise.all(
@@ -454,19 +430,13 @@ function proxyYelpCDN(photo: string) {
   )
 }
 
-async function findUnassessedPhotos(
-  photos: Partial<PhotoXref>[]
-): Promise<string[]> {
+async function findUnassessedPhotos(photos: Partial<PhotoXref>[]): Promise<string[]> {
   let unassessed_photos: PhotoXref[] = []
   if (photos[0].restaurant_id != ZeroUUID && photos[0].tag_id == ZeroUUID) {
-    unassessed_photos = await unassessedPhotosForRestaurant(
-      photos[0].restaurant_id
-    )
+    unassessed_photos = await unassessedPhotosForRestaurant(photos[0].restaurant_id)
   }
   if (photos[0].restaurant_id != ZeroUUID && photos[0].tag_id != ZeroUUID) {
-    unassessed_photos = await unassessedPhotosForRestaurantTag(
-      photos[0].restaurant_id
-    )
+    unassessed_photos = await unassessedPhotosForRestaurantTag(photos[0].restaurant_id)
   }
   if (photos[0].tag_id != ZeroUUID && photos[0].restaurant_id == ZeroUUID) {
     unassessed_photos = await unassessedPhotosForTag(photos[0].tag_id)
@@ -485,14 +455,10 @@ async function findUnassessedPhotos(
 async function findNotUploadedPhotos(photos: Partial<PhotoXref>[]) {
   let not_uploaded: PhotoXref[] = []
   if (photos[0].restaurant_id != ZeroUUID && photos[0].tag_id == ZeroUUID) {
-    not_uploaded = await findNotUploadedRestaurantPhotos(
-      photos[0].restaurant_id
-    )
+    not_uploaded = await findNotUploadedRestaurantPhotos(photos[0].restaurant_id)
   }
   if (photos[0].restaurant_id != ZeroUUID && photos[0].tag_id != ZeroUUID) {
-    not_uploaded = await findNotUploadedRestaurantPhotos(
-      photos[0].restaurant_id
-    )
+    not_uploaded = await findNotUploadedRestaurantPhotos(photos[0].restaurant_id)
   }
   if (photos[0].tag_id != ZeroUUID && photos[0].restaurant_id == ZeroUUID) {
     not_uploaded = await findNotUploadedTagPhotos(photos[0].tag_id)
@@ -525,9 +491,7 @@ async function uploadToDOSpacesBatch(photos: PhotoXref[]) {
   const uploaded = photos.filter((p) => {
     return !failed_ids.includes(p.id)
   })
-  console.log(
-    `... ${uploaded.length} (${failed_ids.length} failed) images uploaded DO Spaces.`
-  )
+  console.log(`... ${uploaded.length} (${failed_ids.length} failed) images uploaded DO Spaces.`)
   return uploaded
 }
 
@@ -576,12 +540,7 @@ async function doPut(url: string, id: uuid, content_type: string) {
       content_type,
     }),
   })
-  console.log(
-    'Dish hook do_image_upload response: ',
-    result.status,
-    await result.text(),
-    url
-  )
+  console.log('Dish hook do_image_upload response: ', result.status, await result.text(), url)
   return result
 }
 

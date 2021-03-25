@@ -1,29 +1,10 @@
-import {
-  order_by,
-  photo,
-  useLazyQuery,
-  useQuery,
-  useTransactionQuery,
-} from '@dish/graph'
+import { order_by, photo, useLazyQuery, useQuery, useTransactionQuery } from '@dish/graph'
 import { isPresent } from '@dish/helpers'
 import { ChevronLeft, ChevronRight } from '@dish/react-feather'
 import { isPlainObject, orderBy, uniqBy } from 'lodash'
-import React, {
-  Suspense,
-  memo,
-  useEffect,
-  useMemo,
-  useRef,
-  useState,
-} from 'react'
+import React, { Suspense, memo, useEffect, useMemo, useRef, useState } from 'react'
 import { Image, ScrollView } from 'react-native'
-import {
-  AbsoluteVStack,
-  HStack,
-  LoadingItems,
-  VStack,
-  useWindowSize,
-} from 'snackui'
+import { AbsoluteVStack, HStack, LoadingItems, VStack, useWindowSize } from 'snackui'
 
 import { isWeb } from '../../../constants/constants'
 import { getImageUrl } from '../../../helpers/getImageUrl'
@@ -196,8 +177,7 @@ export const GalleryLightbox = ({
       setLeftImage() {
         setActiveImage((prevActive) => {
           const currentIndex = prevActive.index
-          const newIndex =
-            currentIndex - 1 < 0 ? photosList.length - 1 : currentIndex - 1
+          const newIndex = currentIndex - 1 < 0 ? photosList.length - 1 : currentIndex - 1
           if (photosList[newIndex]?.url) {
             return {
               url: photosList[newIndex].url ?? '',
@@ -210,8 +190,7 @@ export const GalleryLightbox = ({
       setRightImage() {
         setActiveImage((prevActive) => {
           const currentIndex = prevActive.index
-          const newIndex =
-            currentIndex + 1 >= photosList.length - 1 ? 0 : currentIndex + 1
+          const newIndex = currentIndex + 1 >= photosList.length - 1 ? 0 : currentIndex + 1
           if (photosList[newIndex]?.url) {
             return {
               url: photosList[newIndex].url ?? '',
@@ -260,12 +239,7 @@ export const GalleryLightbox = ({
         >
           <ChevronLeft color="#fff" size={30} />
         </VStack>
-        <VStack
-          alignItems="center"
-          justifyContent="center"
-          flex={1}
-          marginVertical={3}
-        >
+        <VStack alignItems="center" justifyContent="center" flex={1} marginVertical={3}>
           {!!activeImage.url && (
             <Image
               source={{ uri: activeImage.url }}

@@ -7,10 +7,7 @@ import { AutocompleteItemFull, createAutocomplete } from './createAutocomplete'
 
 const baseUrl = `https://api.mapbox.com/geocoding/v5/mapbox.places`
 
-export async function searchLocations(
-  query: string,
-  near?: LngLat
-): Promise<GeocodePlace[]> {
+export async function searchLocations(query: string, near?: LngLat): Promise<GeocodePlace[]> {
   if (!query) {
     return Promise.resolve([])
   }
@@ -58,9 +55,7 @@ export async function searchLocations(
     .filter(isPresent)
 }
 
-export const locationToAutocomplete = (
-  place: GeocodePlace
-): AutocompleteItemFull => {
+export const locationToAutocomplete = (place: GeocodePlace): AutocompleteItemFull => {
   return createAutocomplete({
     name: place.name,
     description: place.fullName,

@@ -1,12 +1,4 @@
-import {
-  Grid,
-  ListItem,
-  SimpleText,
-  Stack,
-  TextProps,
-  Theme,
-  View,
-} from '@o/ui'
+import { Grid, ListItem, SimpleText, Stack, TextProps, Theme, View } from '@o/ui'
 import React, { memo } from 'react'
 
 // import earth from '../../public/images/earth.jpg'
@@ -51,10 +43,7 @@ export default function MissionMottoSection() {
 }
 
 const Item = (props) => (
-  <ListItem
-    title={<SimpleText flex={1} size="sm" alpha={0.75} {...props} />}
-    icon="tick"
-  />
+  <ListItem title={<SimpleText flex={1} size="sm" alpha={0.75} {...props} />} icon="tick" />
 )
 
 export const AboutSection = memo(() => {
@@ -69,9 +58,7 @@ export const AboutSection = memo(() => {
               <PillButton>About</PillButton>
             </FadeInView>
             <FadeInView delayIndex={1}>
-              <TitleText textAlign="center">
-                A better deal for developers.
-              </TitleText>
+              <TitleText textAlign="center">A better deal for developers.</TitleText>
             </FadeInView>
           </>
         }
@@ -81,22 +68,21 @@ export const AboutSection = memo(() => {
           <Stack space="lg">
             <FadeInView delayIndex={2}>
               <TitleTextSub textAlign="left" alpha={1}>
-                It's way too hard to build a decent application that gives you
-                control, and lets you deploy where you want.
+                It's way too hard to build a decent application that gives you control, and lets you
+                deploy where you want.
               </TitleTextSub>
             </FadeInView>
 
             <FadeInView delayIndex={3}>
               <SubParagraph>
-                Let's give developers more control and users a better experience
-                out of the box.
+                Let's give developers more control and users a better experience out of the box.
               </SubParagraph>
             </FadeInView>
 
             <FadeInView delayIndex={4}>
               <SubParagraph>
-                It starts with apps that are easier to build and are built to
-                last: open source, and cross-platform by default.
+                It starts with apps that are easier to build and are built to last: open source, and
+                cross-platform by default.
               </SubParagraph>
             </FadeInView>
 
@@ -116,9 +102,7 @@ export const AboutSection = memo(() => {
               <FadeInView delayIndex={6}>
                 <Item>Build apps without infrastructure.</Item>
 
-                <Item>
-                  Deliver a truly native-feeling, multi-platform app experience.
-                </Item>
+                <Item>Deliver a truly native-feeling, multi-platform app experience.</Item>
 
                 <Item>Make DX a first-class citizen.</Item>
 

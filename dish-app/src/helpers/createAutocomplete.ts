@@ -23,9 +23,7 @@ export type AutocompleteItemFull = AutocompleteItem & {
   id: string
 }
 
-export function createAutocomplete(
-  item: AutocompleteItem
-): AutocompleteItemFull {
+export function createAutocomplete(item: AutocompleteItem): AutocompleteItemFull {
   return {
     id:
       item['slug'] ??

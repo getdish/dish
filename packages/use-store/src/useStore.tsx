@@ -1,11 +1,4 @@
-import {
-  useCallback,
-  useEffect,
-  useLayoutEffect,
-  useMemo,
-  useRef,
-  useState,
-} from 'react'
+import { useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react'
 
 import { configureOpts } from './configureUseStore'
 import { UNWRAP_PROXY, defaultOptions } from './constants'
@@ -19,14 +12,7 @@ import {
 } from './helpers'
 import { Selector, StoreInfo, UseStoreOptions } from './interfaces'
 import { isEqualSubsetShallow } from './isEqualShallow'
-import {
-  ADD_TRACKER,
-  SHOULD_DEBUG,
-  Store,
-  StoreTracker,
-  TRACK,
-  TRIGGER_UPDATE,
-} from './Store'
+import { ADD_TRACKER, SHOULD_DEBUG, Store, StoreTracker, TRACK, TRIGGER_UPDATE } from './Store'
 import { createMutableSource, useMutableSource } from './useMutableSource'
 import {
   DebugStores,
@@ -56,9 +42,7 @@ export function useStore<A extends Store<B>, B>(
   props?: B,
   options: UseStoreOptions<A, any> = defaultOptions
 ): A {
-  const cachedSelector = options.selector
-    ? useCallback(options.selector, [])
-    : undefined
+  const cachedSelector = options.selector ? useCallback(options.selector, []) : undefined
 
   if (options.once) {
     const key = props ? getKey(props) : ''
@@ -101,9 +85,7 @@ export function useStoreInstance<A extends Store<B>, B>(instance: A): A {
   if (arguments[3]) {
     useDebugStoreComponent(store.constructor)
   }
-  const selector = arguments[1]
-    ? useCallback(arguments[1], arguments[2] ?? [])
-    : undefined
+  const selector = arguments[1] ? useCallback(arguments[1], arguments[2] ?? []) : undefined
   return useStoreFromInfo(info, selector)
 }
 
@@ -113,10 +95,7 @@ export function useStoreInstance<A extends Store<B>, B>(instance: A): A {
 // and its the only way i can get the type to properly narrow...
 // but requires the @ts-expect-error on the next function def :/
 
-export function useStoreInstance<
-  A extends Store<any>,
-  Selector extends ((a: A) => any) | void
->(
+export function useStoreInstance<A extends Store<any>, Selector extends ((a: A) => any) | void>(
   instance: A,
   selector?: Selector,
   memoArgs?: any[],
@@ -154,11 +133,7 @@ export function useStoreSelector<
   B,
   S extends Selector<any, Selected>,
   Selected
->(
-  StoreKlass: (new (props: B) => A) | (new () => A),
-  selector: S,
-  props?: B
-): Selected {
+>(StoreKlass: (new (props: B) => A) | (new () => A), selector: S, props?: B): Selected {
   return useStore(StoreKlass, props, { selector }) as any
 }
 
@@ -219,9 +194,7 @@ export function useSelector<A>(fn: () => A): A {
   return state.value
 }
 
-function runStoreSelector<A>(
-  selector: () => A
-): { value: A; stores: Set<any> } {
+function runStoreSelector<A>(selector: () => A): { value: A; stores: Set<any> } {
   const stores = new Set()
   const dispose = trackStoresAccess((store) => {
     stores.add(store)
@@ -284,12 +257,8 @@ function getOrCreateStoreInfo(
     if (cached) {
       // warn if creating an already existing store!
       // need to detect HMR more cleanly if possible
-      if (
-        cached.storeInstance.constructor.toString() !== StoreKlass.toString()
-      ) {
-        console.warn(
-          'Error: Stores must have a unique name (ignore if this is a hot reload)'
-        )
+      if (cached.storeInstance.constructor.toString() !== StoreKlass.toString()) {
+        console.warn('Error: Stores must have a unique name (ignore if this is a hot reload)')
       } else {
         return cached
       }
@@ -372,10 +341,7 @@ const selectKeys = (obj: any, keys: string[]) => {
   return res
 }
 
-function useStoreFromInfo(
-  info: StoreInfo,
-  userSelector?: Selector<any> | undefined
-): any {
+function useStoreFromInfo(info: StoreInfo, userSelector?: Selector<any> | undefined): any {
   if (!info.store) {
     console.warn('hmr?')
     debugger
@@ -398,14 +364,11 @@ function useStoreFromInfo(
   const selector = userSelector ?? selectKeys
 
   const shouldPrintDebug =
-    !!process.env.LOG_LEVEL &&
-    (configureOpts.logLevel === 'debug' || shouldDebug(component, info))
+    !!process.env.LOG_LEVEL && (configureOpts.logLevel === 'debug' || shouldDebug(component, info))
 
   const getSnapshot = useCallback(
     (store) => {
-      const keys = curInternal.firstRun
-        ? info.stateKeys
-        : [...curInternal.tracked]
+      const keys = curInternal.firstRun ? info.stateKeys : [...curInternal.tracked]
       const snap = selector(store, keys)
       if (shouldPrintDebug) {
         console.log('💰 getSnapshot', { info, component, keys, snap })
@@ -415,12 +378,7 @@ function useStoreFromInfo(
     [selector]
   )
 
-  const state = useMutableSource(
-    info.source,
-    getSnapshot,
-    subscribe,
-    shouldPrintDebug
-  )
+  const state = useMutableSource(info.source, getSnapshot, subscribe, shouldPrintDebug)
 
   // before each render
   curInternal.isTracking = true
@@ -465,10 +423,7 @@ function createProxiedStore(storeInfo: Omit<StoreInfo, 'store' | 'source'>) {
       }
       const isDebugging = DebugStores.has(constr)
       if (typeof key === 'string') {
-        if (
-          storeAccessTrackers.size &&
-          !storeAccessTrackers.has(storeInstance)
-        ) {
+        if (storeAccessTrackers.size && !storeAccessTrackers.has(storeInstance)) {
           storeAccessTrackers.forEach((t) => {
             t(storeInstance)
           })
@@ -571,9 +526,7 @@ function createProxiedStore(storeInfo: Omit<StoreInfo, 'store' | 'source'>) {
                 const simpleArgs = args.map(simpleStr)
                 logs.add([
                   `💰 %c${name}%c.${key}(${simpleArgs.join(', ')})${
-                    isTopLevelLogger && logStack.size > 1
-                      ? ` (+${logStack.size - 1})`
-                      : ''
+                    isTopLevelLogger && logStack.size > 1 ? ` (+${logStack.size - 1})` : ''
                   }`,
                   `color: ${color};`,
                   'color: black;',

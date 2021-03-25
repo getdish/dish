@@ -29,8 +29,7 @@ export const HomeStackViewPages = (props: HomeStackViewProps) => {
   )
 }
 
-const isntLoadable =
-  process.env.TARGET === 'ssr' || process.env.NODE_ENV === 'development'
+const isntLoadable = process.env.TARGET === 'ssr' || process.env.NODE_ENV === 'development'
 
 const RestaurantPage = isntLoadable
   ? require('./restaurant/RestaurantPage').default

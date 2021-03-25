@@ -9,8 +9,7 @@ import { restaurantSaveCanonical } from '../canonical-restaurant'
 import { ScrapeData, scrapeInsert } from '../scrape-helpers'
 import { aroundCoords, geocode } from '../utils'
 
-const INFATUATED_DOMAIN =
-  process.env.INFATUATED_PROXY || 'https://www.theinfatuation.com'
+const INFATUATED_DOMAIN = process.env.INFATUATED_PROXY || 'https://www.theinfatuation.com'
 
 const axios = axios_base.create({
   baseURL: INFATUATED_DOMAIN,
@@ -43,13 +42,9 @@ export class Infatuated extends WorkerJob {
   }
 
   async allForCity(city_name: string) {
-    console.log(
-      'Starting The Infatuation crawler. Using domain: ' + INFATUATED_DOMAIN
-    )
+    console.log('Starting The Infatuation crawler. Using domain: ' + INFATUATED_DOMAIN)
     const coords = await geocode(city_name)
-    const region_coords = _.shuffle(
-      aroundCoords(coords[0], coords[1], MAPVIEW_SIZE, 5)
-    )
+    const region_coords = _.shuffle(aroundCoords(coords[0], coords[1], MAPVIEW_SIZE, 5))
     for (const box_center of region_coords) {
       await this.runOnWorker('getRestaurants', [box_center])
     }

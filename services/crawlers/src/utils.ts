@@ -80,11 +80,7 @@ export class DB {
       ...this.config,
     })
     this.pool.on('error', (e) => {
-      console.log(
-        `Error: pool (${this.config.host}:${this.config.port})`,
-        e.message,
-        e.stack
-      )
+      console.log(`Error: pool (${this.config.host}:${this.config.port})`, e.message, e.stack)
       sentryException(e, {
         more: 'Error likely from long-lived pool connection in node-pg',
       })
@@ -151,12 +147,7 @@ export function shiftLatLonByMetres(
 // Returns an array of coords that fill an area. Think of it as a way
 // to fill a space with a number of equally spaced boxes. The number of
 // boxes is (chunk_factor + 1)^2
-export function aroundCoords(
-  lat: number,
-  lon: number,
-  chunk_size: number,
-  chunk_factor: number
-) {
+export function aroundCoords(lat: number, lon: number, chunk_size: number, chunk_factor: number) {
   let coords: Coord[] = []
   const edge = chunk_size * chunk_factor
   for (let y = edge; y >= -edge; y = y - chunk_size) {
@@ -167,11 +158,7 @@ export function aroundCoords(
   return coords
 }
 
-export function boundingBoxFromCenter(
-  lat: number,
-  lon: number,
-  radius: number
-): [Coord, Coord] {
+export function boundingBoxFromCenter(lat: number, lon: number, radius: number): [Coord, Coord] {
   const top_right = shiftLatLonByMetres(lat, lon, radius, radius)
   const bottom_left = shiftLatLonByMetres(lat, lon, -radius, -radius)
   return [top_right, bottom_left]
@@ -214,12 +201,7 @@ function geoJSONPolygon(corners: Coord[]) {
   }
 }
 
-export function aroundCoordsGeoJSON(
-  lat: number,
-  lon: number,
-  radius: number,
-  size: number
-) {
+export function aroundCoordsGeoJSON(lat: number, lon: number, radius: number, size: number) {
   const coords = aroundCoords(lat, lon, radius, size)
   let boxes: any[] = []
   const offset = radius / 2
@@ -328,11 +310,7 @@ export async function batchIDsForAll(
   return result.rows.map((r) => r.id)
 }
 
-export async function photoBatchForAll(
-  size: number,
-  previous_id: string,
-  extra_where = ''
-) {
+export async function photoBatchForAll(size: number, previous_id: string, extra_where = '') {
   const query = `
     SELECT id, url FROM photo
       WHERE id > '${previous_id}'
@@ -344,10 +322,7 @@ export async function photoBatchForAll(
   return result.rows
 }
 
-export async function getTableCount(
-  table: string,
-  where = ''
-): Promise<number> {
+export async function getTableCount(table: string, where = ''): Promise<number> {
   const query = `SELECT count(id) FROM ${table} ${where}`
   const result = await DB.one_query_on_main(query)
   return parseInt(result.rows[0].count)

@@ -102,19 +102,12 @@ test('Voting triggers restaurant_tag score change', async (t) => {
 })
 
 test('Favorite a restaurant', async (t) => {
-  const r1 = await userFavoriteARestaurant(
-    t.context.user.id,
-    t.context.restaurant.id
-  )
+  const r1 = await userFavoriteARestaurant(t.context.user.id, t.context.restaurant.id)
   const f1 = await userFavorites(t.context.user.id)
   t.is(r1.id, f1[0].id)
   t.is(r1.favorited, true)
 
-  const ru1 = await userFavoriteARestaurant(
-    t.context.user.id,
-    t.context.restaurant.id,
-    false
-  )
+  const ru1 = await userFavoriteARestaurant(t.context.user.id, t.context.restaurant.id, false)
   t.is(r1.id, ru1.id)
 
   const f2 = await userFavorites(t.context.user.id)

@@ -1,5 +1,5 @@
 import { configureUI } from '@o/ui/config'
-import { configureUseStore, debugUseStore, IS_STORE } from '@o/use-store'
+import { IS_STORE, configureUseStore, debugUseStore } from '@o/use-store'
 
 import * as Constants from './constants'
 
@@ -30,7 +30,7 @@ function configure() {
       debugStoreState: true,
     })
 
-    debugUseStore(event => {
+    debugUseStore((event) => {
       if (event.type === 'state') {
         globalizeStores(event.value)
       }

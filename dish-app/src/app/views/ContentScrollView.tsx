@@ -68,10 +68,7 @@ export const usePreventVerticalScroll = (id: string) => {
 
     const update = () => {
       const isLarge = getMedia().lg
-      const prevent =
-        !isLarge &&
-        isAtTop &&
-        (isMinimized || !isParentActive || isLockedHorizontal)
+      const prevent = !isLarge && isAtTop && (isMinimized || !isParentActive || isLockedHorizontal)
       setPrevent(prevent)
     }
 
@@ -209,11 +206,7 @@ export const ContentScrollView = forwardRef<ScrollView, ContentScrollViewProps>(
 
     return (
       <ContentScrollContext.Provider value={id}>
-        <VStack
-          flex={1}
-          overflow="hidden"
-          pointerEvents={preventScrolling ? 'none' : 'auto'}
-        >
+        <VStack flex={1} overflow="hidden" pointerEvents={preventScrolling ? 'none' : 'auto'}>
           <ScrollView
             ref={combineRefs(scrollRef, ref)}
             {...props}

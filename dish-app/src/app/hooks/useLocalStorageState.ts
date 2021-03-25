@@ -11,10 +11,7 @@ export function useLocalStorageState<A>(key: string, initialValue: A) {
   return [
     state,
     (next: A) => {
-      localStorage.setItem(
-        key,
-        typeof next === 'object' ? JSON.stringify(next) : `${next}`
-      )
+      localStorage.setItem(key, typeof next === 'object' ? JSON.stringify(next) : `${next}`)
       setState(next)
     },
   ] as const

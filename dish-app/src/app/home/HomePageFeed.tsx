@@ -16,11 +16,7 @@ import {
 } from './HomeFeedDishRestaurants'
 import { FIList, HomeFeedLists } from './HomeFeedLists'
 import { HomeFeedProps } from './HomeFeedProps'
-import {
-  FIHotNew,
-  HomeFeedTrendingNew,
-  useHomeFeedTrendingNew,
-} from './HomeFeedTrendingNew'
+import { FIHotNew, HomeFeedTrendingNew, useHomeFeedTrendingNew } from './HomeFeedTrendingNew'
 
 type FISpace = FIBase & {
   type: 'space'
@@ -65,9 +61,7 @@ function useHomeFeed(props: HomeFeedProps): FI[] {
 export const HomePageFeed = memo(
   graphql(function HomePageFeed(props: HomeFeedProps) {
     const { item, isActive } = props
-    const { region, center, span } = useHomeStateById<HomeStateItemHome>(
-      item.id
-    )
+    const { region, center, span } = useHomeStateById<HomeStateItemHome>(item.id)
     const items = useHomeFeed(props)
     const isLoading = !region || items[0]?.id === null
     const [hovered, setHovered] = useState<null | string>(null)

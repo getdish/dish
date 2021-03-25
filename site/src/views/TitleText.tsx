@@ -1,4 +1,4 @@
-import { getSizeRelative, Title, TitleProps } from '@o/ui'
+import { Title, TitleProps, getSizeRelative } from '@o/ui'
 import React from 'react'
 
 export const TitleText = ({

@@ -23,12 +23,7 @@ import {
   useTheme,
 } from 'snackui'
 
-import {
-  drawerWidthMax,
-  isNative,
-  isWeb,
-  searchBarHeight,
-} from '../constants/constants'
+import { drawerWidthMax, isNative, isWeb, searchBarHeight } from '../constants/constants'
 import { defaultLocationAutocompleteResults } from '../constants/defaultLocationAutocompleteResults'
 import { tagDefaultAutocomplete } from '../constants/localTags'
 import { tagDisplayName } from '../constants/tagMeta'
@@ -39,10 +34,7 @@ import {
 } from '../helpers/createAutocomplete'
 import { fuzzySearch } from '../helpers/fuzzySearch'
 import { getFuzzyMatchQuery } from '../helpers/getFuzzyMatchQuery'
-import {
-  locationToAutocomplete,
-  searchLocations,
-} from '../helpers/searchLocations'
+import { locationToAutocomplete, searchLocations } from '../helpers/searchLocations'
 import { searchRestaurants } from '../helpers/searchRestaurants'
 import { filterToNavigable } from '../helpers/tagHelpers'
 import { useRouterCurPage } from '../router'
@@ -169,10 +161,7 @@ export const AppAutocompleteSearch = () => {
   const autocompletes = useStoreInstance(autocompletesStore)
   return (
     <Theme name="darkTranslucent">
-      <AbsoluteVStack
-        fullscreen
-        opacity={autocompletes.target === 'search' ? 1 : 0}
-      >
+      <AbsoluteVStack fullscreen opacity={autocompletes.target === 'search' ? 1 : 0}>
         <AutocompleteSearchInner />
       </AbsoluteVStack>
     </Theme>
@@ -183,10 +172,7 @@ export const AppAutocompleteLocation = () => {
   const autocompletes = useStoreInstance(autocompletesStore)
   return (
     <Theme name="darkTranslucent">
-      <AbsoluteVStack
-        fullscreen
-        opacity={autocompletes.target === 'location' ? 1 : 0}
-      >
+      <AbsoluteVStack fullscreen opacity={autocompletes.target === 'location' ? 1 : 0}>
         <AutocompleteLocationInner />
       </AbsoluteVStack>
     </Theme>
@@ -197,10 +183,10 @@ const AutocompleteSearchInner = memo(() => {
   const home = useHomeStore()
   const store = useStoreInstance(autocompleteSearchStore)
   const { lastActiveTags } = home
-  const searchState = useMemo(
-    () => [store.query.trim(), lastActiveTags] as const,
-    [store.query, lastActiveTags]
-  )
+  const searchState = useMemo(() => [store.query.trim(), lastActiveTags] as const, [
+    store.query,
+    lastActiveTags,
+  ])
   const [query, activeTags] = useDebounceValue(searchState, 250)
 
   useEffect(() => {
@@ -215,8 +201,7 @@ const AutocompleteSearchInner = memo(() => {
     let results: AutocompleteItemFull[] = []
     const postion = appMapStore.position
     const tags = filterToNavigable(activeTags)
-    const countryTag =
-      tags.length === 2 ? tags.find((x) => x.type === 'country') : null
+    const countryTag = tags.length === 2 ? tags.find((x) => x.type === 'country') : null
     const cuisineName = countryTag?.name
 
     return series([
@@ -225,21 +210,12 @@ const AutocompleteSearchInner = memo(() => {
           results = await resolved(() => {
             return [
               ...searchDishTags(query, cuisineName),
-              ...searchRestaurants(
-                query,
-                postion.center,
-                postion.span,
-                cuisineName
-              ),
+              ...searchRestaurants(query, postion.center, postion.span, cuisineName),
             ]
           })
         } else {
           try {
-            results = await searchAutocomplete(
-              query,
-              postion.center,
-              postion.span
-            )
+            results = await searchAutocomplete(query, postion.center, postion.span)
           } catch (err) {
             Toast.error(`Error searching ${err.message}`)
             console.error(err)
@@ -285,10 +261,7 @@ const AutocompleteSearchInner = memo(() => {
       const sqlower = query.toLowerCase()
       const partialCountryMatches = results
         .map((item, index) => {
-          return item.type === 'country' &&
-            item.name.toLowerCase().startsWith(sqlower)
-            ? index
-            : -1
+          return item.type === 'country' && item.name.toLowerCase().startsWith(sqlower) ? index : -1
         })
         .filter((x) => x > 0)
       for (const index of partialCountryMatches) {
@@ -436,12 +409,7 @@ const AutocompleteFrame = ({ children }: { children: any }) => {
           />
         </AbsoluteVStack>
         <AbsoluteVStack top={10} right={10}>
-          <CloseButton
-            size={20}
-            onPressOut={prevent}
-            zIndex={1000}
-            onPress={hideAutocompletes}
-          />
+          <CloseButton size={20} onPressOut={prevent} zIndex={1000} onPress={hideAutocompletes} />
         </AbsoluteVStack>
         <VStack
           className="ease-in-out"
@@ -457,10 +425,7 @@ const AutocompleteFrame = ({ children }: { children: any }) => {
             autocompletes.setVisible(false)
           }}
         >
-          <ScrollView
-            style={{ maxHeight: '100%' }}
-            keyboardShouldPersistTaps="always"
-          >
+          <ScrollView style={{ maxHeight: '100%' }} keyboardShouldPersistTaps="always">
             {children}
 
             {/* pad bottom to scroll */}
@@ -552,10 +517,7 @@ export const AutocompleteItemView = memo(
   }) => {
     const showLocation = target === 'location'
     const theme = useTheme()
-    const hideAutocompleteSlow = useDebounce(
-      () => autocompletesStore.setVisible(false),
-      50
-    )
+    const hideAutocompleteSlow = useDebounce(() => autocompletesStore.setVisible(false), 50)
     const plusButtonEl = showAddButton ? (
       <>
         <VStack flex={1} />
@@ -673,11 +635,7 @@ const HomeAutocompleteDefault = memo(() => {
           >
             <Link disallowDisableWhenActive tag={tag}>
               <VStack>
-                <Text
-                  textAlign="center"
-                  width="100%"
-                  fontSize={media.sm ? 42 : 58}
-                >
+                <Text textAlign="center" width="100%" fontSize={media.sm ? 42 : 58}>
                   {tag.icon}
                 </Text>
                 <Spacer size="sm" />
@@ -700,10 +658,7 @@ const HomeAutocompleteDefault = memo(() => {
   )
 })
 
-async function filterAutocompletes(
-  query: string,
-  results: AutocompleteItemFull[]
-) {
+async function filterAutocompletes(query: string, results: AutocompleteItemFull[]) {
   let matched: AutocompleteItemFull[] = []
   if (results.length) {
     matched = await fuzzySearch({

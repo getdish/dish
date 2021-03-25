@@ -1,7 +1,7 @@
 import React, { memo } from 'react'
 
 import { LinkState } from '../LinkState'
-import { fadeAnimations, FadeInView, transitions } from './FadeInView'
+import { FadeInView, fadeAnimations, transitions } from './FadeInView'
 import { HeaderContext } from './HeaderContext'
 import { Link } from './Link'
 
@@ -31,7 +31,7 @@ export const HeaderLink = memo(({ delay, children, ...props }: any) => {
 
 const linkDelay = 80
 
-export const LinksLeft = props => {
+export const LinksLeft = (props) => {
   return (
     <>
       {/* <HeaderLink delay={linkDelay * 1} {...props} href="/guides">
@@ -47,7 +47,7 @@ export const LinksLeft = props => {
   )
 }
 
-export const LinksRight = props => (
+export const LinksRight = (props) => (
   <>
     {/* <HeaderLink delay={linkDelay * 4} {...props} href="/beta">
       Beta

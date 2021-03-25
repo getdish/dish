@@ -5,19 +5,13 @@ declare class ResizeObserver {
   disconnect: () => void
 }
 
-type ResizeObserverBoxOptions =
-  | 'border-box'
-  | 'content-box'
-  | 'device-pixel-content-box'
+type ResizeObserverBoxOptions = 'border-box' | 'content-box' | 'device-pixel-content-box'
 
 interface ResizeObserverOptions {
   box?: ResizeObserverBoxOptions
 }
 
-type ResizeObserverCallback = (
-  entries: ResizeObserverEntry[],
-  observer: ResizeObserver
-) => void
+type ResizeObserverCallback = (entries: ResizeObserverEntry[], observer: ResizeObserver) => void
 
 interface ResizeObserverEntry {
   readonly target: Element

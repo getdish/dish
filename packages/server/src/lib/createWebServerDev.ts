@@ -6,10 +6,7 @@ import hotMiddleware from 'webpack-hot-middleware'
 import { ServerConfigNormal } from '../types'
 import { getWebpackConfigBuilder } from './getWebpackConfigBuilder'
 
-export function createWebServerDev(
-  app: any,
-  { webpackConfig, rootDir }: ServerConfigNormal
-) {
+export function createWebServerDev(app: any, { webpackConfig, rootDir }: ServerConfigNormal) {
   const createConfig = getWebpackConfigBuilder({ rootDir })
   const config = createConfig({
     target: 'web',
@@ -26,8 +23,7 @@ export function createWebServerDev(
   const headers = {
     'Access-Control-Allow-Origin': '*',
     'Access-Control-Allow-Methods': 'GET, POST, PUT, DELETE, PATCH, OPTIONS',
-    'Access-Control-Allow-Headers':
-      'X-Requested-With, content-type, Authorization',
+    'Access-Control-Allow-Headers': 'X-Requested-With, content-type, Authorization',
   }
   // @ts-ignore
   app.all((_req, res, next) => {

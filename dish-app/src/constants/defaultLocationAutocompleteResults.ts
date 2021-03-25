@@ -1,7 +1,4 @@
-import {
-  AutocompleteItemFull,
-  createAutocomplete,
-} from '../helpers/createAutocomplete'
+import { AutocompleteItemFull, createAutocomplete } from '../helpers/createAutocomplete'
 
 export const defaultCenter = {
   lng: -122.421351,

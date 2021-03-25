@@ -51,8 +51,7 @@ const DishButtonContent = (props: TagButtonSlantedProps) => {
     .join(' ')
 
   const imageUrl = getImageUrl(image ?? '', 120, 120, 120)
-  const isLong =
-    dishName.length > 20 || !!dishName.split(' ').find((x) => x.length >= 10)
+  const isLong = dishName.length > 20 || !!dishName.split(' ').find((x) => x.length >= 10)
   const fontSize = isLong ? 16 : 18
   const theme = useTheme()
 
@@ -73,11 +72,7 @@ const DishButtonContent = (props: TagButtonSlantedProps) => {
         cursor="pointer"
         // {...rest}
       >
-        <HStack
-          transform={[{ skewX: '12deg' }]}
-          spacing="sm"
-          alignItems="center"
-        >
+        <HStack transform={[{ skewX: '12deg' }]} spacing="sm" alignItems="center">
           {!!image && (
             <VStack
               overflow="hidden"
@@ -111,11 +106,7 @@ const DishButtonContent = (props: TagButtonSlantedProps) => {
           )}
 
           {!!rank && (
-            <Text
-              fontSize={fontSize * 0.7}
-              fontWeight="700"
-              color={theme.color}
-            >
+            <Text fontSize={fontSize * 0.7} fontWeight="700" color={theme.color}>
               <TextSuperScript fontWeight="300" opacity={0.5}>
                 #
               </TextSuperScript>
@@ -149,11 +140,7 @@ const DishButtonContent = (props: TagButtonSlantedProps) => {
 
           {showSearchButton && !!slug && (
             <AbsoluteVStack bottom="-15%" right="-10%">
-              <SearchTagButton
-                tag={{ type: 'dish', slug }}
-                backgroundColor="#fff"
-                color="#000"
-              />
+              <SearchTagButton tag={{ type: 'dish', slug }} backgroundColor="#fff" color="#000" />
             </AbsoluteVStack>
           )}
         </HStack>

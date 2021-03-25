@@ -20,16 +20,7 @@ export const DishUpvoteDownvote = (props: Props) => {
     return null
   }
   return (
-    <Suspense
-      fallback={
-        <Score
-          size={props.size}
-          score={0}
-          rating={0}
-          shadowed={props.shadowed}
-        />
-      }
-    >
+    <Suspense fallback={<Score size={props.size} score={0} rating={0} shadowed={props.shadowed} />}>
       <DishUpvoteDownvoteContent
         subtle={false}
         score={0}

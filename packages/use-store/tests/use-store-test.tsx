@@ -1,10 +1,4 @@
-import {
-  RenderResult,
-  act,
-  cleanup,
-  fireEvent,
-  render,
-} from '@testing-library/react'
+import { RenderResult, act, cleanup, fireEvent, render } from '@testing-library/react'
 import { last } from 'lodash'
 import React, { StrictMode } from 'react'
 
@@ -267,10 +261,7 @@ class TodoList extends Store<{
   }
 
   add() {
-    this.items = [
-      ...this.items,
-      { text: `item-${this.items.length}`, done: false },
-    ]
+    this.items = [...this.items, { text: `item-${this.items.length}`, done: false }]
   }
 
   async asyncAdd() {

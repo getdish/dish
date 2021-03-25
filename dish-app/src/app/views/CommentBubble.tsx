@@ -87,11 +87,7 @@ export const CommentBubble = (props: CommentBubbleProps) => {
         </Modal>
       )}
 
-      <CommentBubbleContents
-        {...props}
-        onExpand={() => setIsExpanded(true)}
-        expanded={false}
-      />
+      <CommentBubbleContents {...props} onExpand={() => setIsExpanded(true)} expanded={false} />
     </VStack>
   )
 }
@@ -204,9 +200,7 @@ function CommentBubbleContents({
         />
 
         {scrollable ? (
-          <ScrollView
-            style={{ maxHeight: Math.min(getWindowHeight() * 0.8, 600) }}
-          >
+          <ScrollView style={{ maxHeight: Math.min(getWindowHeight() * 0.8, 600) }}>
             {contents}
           </ScrollView>
         ) : (
@@ -219,9 +213,7 @@ function CommentBubbleContents({
             <HStack>
               {!!date && (
                 <>
-                  <Paragraph opacity={0.5}>
-                    {getTimeFormat(new Date(date))}
-                  </Paragraph>
+                  <Paragraph opacity={0.5}>{getTimeFormat(new Date(date))}</Paragraph>
                   <Spacer size="sm" />
                 </>
               )}
@@ -237,9 +229,7 @@ function CommentBubbleContents({
             <Circle
               backgroundColor={
                 avatarBackgroundColor ??
-                (isYelp
-                  ? thirdPartyCrawlSources.yelp.color
-                  : colors.pastelColor)
+                (isYelp ? thirdPartyCrawlSources.yelp.color : colors.pastelColor)
               }
               size={circleSize}
             >

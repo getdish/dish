@@ -1,14 +1,7 @@
 import { graphql } from '@dish/graph'
 import React from 'react'
 import { Image } from 'react-native'
-import {
-  AbsoluteVStack,
-  HStack,
-  Hoverable,
-  Text,
-  VStack,
-  useTheme,
-} from 'snackui'
+import { AbsoluteVStack, HStack, Hoverable, Text, VStack, useTheme } from 'snackui'
 
 import { getColorsForName } from '../../../helpers/getColorsForName'
 import { getImageUrl } from '../../../helpers/getImageUrl'
@@ -99,10 +92,7 @@ export const ListCard = graphql(
 
     if (onHover) {
       return (
-        <Hoverable
-          onHoverIn={() => onHover(true)}
-          onHoverOut={() => onHover(true)}
-        >
+        <Hoverable onHoverIn={() => onHover(true)} onHoverOut={() => onHover(true)}>
           {contents}
         </Hoverable>
       )

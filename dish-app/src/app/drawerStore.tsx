@@ -30,10 +30,7 @@ class DrawerStore extends Store {
   }
 
   get bottomOccludedIgnoreFullyClosed() {
-    return (
-      getWindowHeight() -
-      getWindowHeight() * this.snapPoints[Math.max(1, this.snapIndex)]
-    )
+    return getWindowHeight() - getWindowHeight() * this.snapPoints[Math.max(1, this.snapIndex)]
   }
 
   setIsDragging(val: boolean) {
@@ -46,10 +43,7 @@ class DrawerStore extends Store {
     this.animateDrawerToPx(this.getSnapPointOffset(), 2)
   }
 
-  animateDrawerToPx(
-    px: number = this.getSnapPointOffset(),
-    velocity: number = 0
-  ) {
+  animateDrawerToPx(px: number = this.getSnapPointOffset(), velocity: number = 0) {
     this.lastSnapAt = Date.now()
     this.isDragging = true
     this.snapIndex = this.getSnapIndex(px, velocity)

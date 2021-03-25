@@ -21,13 +21,7 @@ export const Footer = () => {
       flex={8}
       alignItems="center"
     >
-      <Stack
-        {...sectionMinWidth}
-        alignItems="center"
-        justifyContent="center"
-        flex={1}
-        space={12}
-      >
+      <Stack {...sectionMinWidth} alignItems="center" justifyContent="center" flex={1} space={12}>
         <SmallLink href="/">Home</SmallLink>
         <SmallLink href="/beta">Download</SmallLink>
         <SmallLink href="/start">Getting Started</SmallLink>

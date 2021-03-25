@@ -133,8 +133,7 @@ export const TagButton = memo((props: TagButtonProps) => {
   const bg = backgroundColor ?? colors.lightColor
   const fg = color ?? colors.color
   const fontSize = fontSizeProp ? fontSizeProp : 15 * scale
-  const smallerFontSize: any =
-    typeof fontSize === 'number' ? fontSize * 0.85 : fontSize
+  const smallerFontSize: any = typeof fontSize === 'number' ? fontSize * 0.85 : fontSize
 
   const ratingPts = rating * 10 - 50
 
@@ -239,12 +238,7 @@ export const TagButton = memo((props: TagButtonProps) => {
               color={floating ? `#fff` : `${colors.color}`}
             />
           ) : (
-            <Text
-              color={colors.color}
-              fontSize={13}
-              fontWeight="900"
-              letterSpacing={-0.5}
-            >
+            <Text color={colors.color} fontSize={13} fontWeight="900" letterSpacing={-0.5}>
               {ratingPts < 0 ? ratingPts : `+${ratingPts}`}
             </Text>
           )}
@@ -269,11 +263,7 @@ export const TagButton = memo((props: TagButtonProps) => {
         </Text>
       )}
       {!!closable && (
-        <VStack
-          onPress={prevent}
-          onPressIn={prevent}
-          onPressOut={onClose as any}
-        >
+        <VStack onPress={prevent} onPressIn={prevent} onPressOut={onClose as any}>
           <VStack
             backgroundColor="transparent"
             borderRadius={10}

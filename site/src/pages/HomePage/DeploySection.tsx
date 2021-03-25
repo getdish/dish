@@ -4,7 +4,7 @@ import React from 'react'
 import appScreenshot from '../../public/images/app-screenshot.jpg'
 import arrow from '../../public/images/callout-arrow.svg'
 import codeScreenshot from '../../public/images/code-screenshot.jpg'
-import { fadeAnimations, FadeInView, useFadePage } from '../../views/FadeInView'
+import { FadeInView, fadeAnimations, useFadePage } from '../../views/FadeInView'
 import { Link } from '../../views/Link'
 import { Page } from '../../views/Page'
 import { ParagraphIntro } from '../../views/ParagraphIntro'
@@ -25,9 +25,9 @@ export default function DeploySection() {
         scale={1.5}
         opacity={0.34}
         background="radial-gradient(circle closest-side, #9930C9, transparent)"
-        parallax={geometry => ({
+        parallax={(geometry) => ({
           y: geometry.useParallax(),
-          x: geometry.useParallax().transform(x => x * 1 - 240),
+          x: geometry.useParallax().transform((x) => x * 1 - 240),
         })}
       />
 
@@ -74,8 +74,8 @@ export default function DeploySection() {
                 backgroundPosition="center center"
                 backgroundRepeat="no-repeat"
                 position="relative"
-                parallax={geometry => ({
-                  x: geometry.useParallax().transform(x => (x > 0 ? -x : x) * 0.1),
+                parallax={(geometry) => ({
+                  x: geometry.useParallax().transform((x) => (x > 0 ? -x : x) * 0.1),
                 })}
               >
                 <Image
@@ -137,8 +137,8 @@ export default function DeploySection() {
                 backgroundPosition="center center"
                 backgroundRepeat="no-repeat"
                 overflow="hidden"
-                parallax={geometry => ({
-                  x: geometry.useParallax().transform(x => -(x > 0 ? -x : x) * 0.1),
+                parallax={(geometry) => ({
+                  x: geometry.useParallax().transform((x) => -(x > 0 ? -x : x) * 0.1),
                 })}
               />
             </FadeInView>

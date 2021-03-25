@@ -1,14 +1,7 @@
 import '@dish/helpers/polyfill'
 
 import { sleep } from '@dish/async'
-import {
-  Auth,
-  Restaurant,
-  User,
-  flushTestData,
-  restaurantUpsert,
-  reviewUpsert,
-} from '@dish/graph'
+import { Auth, Restaurant, User, flushTestData, restaurantUpsert, reviewUpsert } from '@dish/graph'
 import anyTest, { TestInterface } from 'ava'
 import fetch from 'node-fetch'
 
@@ -50,9 +43,7 @@ test.skip('Adds and updates Gorse feedback', async (t) => {
     },
   ])
   await sleep(2000)
-  let response = await fetch(
-    GORSE_ENDPOINT + `/user/${t.context.user.username}/feedback`
-  )
+  let response = await fetch(GORSE_ENDPOINT + `/user/${t.context.user.username}/feedback`)
   let history = await response.json()
   let candidate = history.find((i) => i.ItemId == t.context.restaurant.id)
   t.deepEqual(candidate, {
@@ -69,9 +60,7 @@ test.skip('Adds and updates Gorse feedback', async (t) => {
     },
   ])
   await sleep(1000)
-  response = await fetch(
-    GORSE_ENDPOINT + `/user/${t.context.user.username}/feedback`
-  )
+  response = await fetch(GORSE_ENDPOINT + `/user/${t.context.user.username}/feedback`)
   history = await response.json()
   candidate = history.find((i) => i.ItemId == t.context.restaurant.id)
   t.deepEqual(candidate, {

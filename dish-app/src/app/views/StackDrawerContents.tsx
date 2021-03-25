@@ -69,9 +69,7 @@ export const StackDrawer = ({
         overflow="hidden"
         {...props}
       >
-        <HomeSuspense fallback={fallback ?? <LoadingItems />}>
-          {children}
-        </HomeSuspense>
+        <HomeSuspense fallback={fallback ?? <LoadingItems />}>{children}</HomeSuspense>
       </VStack>
     </HStack>
   )

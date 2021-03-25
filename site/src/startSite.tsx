@@ -18,6 +18,4 @@ export function render() {
 render()
 window['rerender'] = render
 
-process.env.NODE_ENV === 'development' &&
-  module['hot'] &&
-  module['hot'].accept()
+process.env.NODE_ENV === 'development' && module['hot'] && module['hot'].accept()

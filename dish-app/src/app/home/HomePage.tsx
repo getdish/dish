@@ -38,9 +38,7 @@ import { HomeStackViewProps } from './HomeStackViewProps'
 import { HomeTopSearches } from './HomeTopSearches'
 import { PageContentWithFooter } from './PageContentWithFooter'
 
-export default memo(function HomePage(
-  props: HomeStackViewProps<HomeStateItemHome>
-) {
+export default memo(function HomePage(props: HomeStackViewProps<HomeStateItemHome>) {
   const home = useHomeStore()
   const theme = useTheme()
   const [isLoaded, setIsLoaded] = useState(false)
@@ -211,12 +209,7 @@ export default memo(function HomePage(
 
               <PageContentWithFooter>
                 {isLoaded && (
-                  <HomePageFeed
-                    key={state.region}
-                    {...props}
-                    region={region}
-                    {...position}
-                  />
+                  <HomePageFeed key={state.region} {...props} region={region} {...position} />
                 )}
               </PageContentWithFooter>
             </VStack>
@@ -252,10 +245,9 @@ const HomePageIntroDialogue = memo(() => {
         <CloseButton onPress={() => setShow(false)} />
       </AbsoluteVStack>
       <Paragraph>
-        <Text fontWeight="700">Welcome!</Text> Dish is a better pocket map of
-        the world, starting with food. We want to make it easier to know what's
-        uniquely good in each city and neighborhood.{' '}
-        <Link name="about">Read more</Link>.
+        <Text fontWeight="700">Welcome!</Text> Dish is a better pocket map of the world, starting
+        with food. We want to make it easier to know what's uniquely good in each city and
+        neighborhood. <Link name="about">Read more</Link>.
       </Paragraph>
     </VStack>
   )
@@ -263,11 +255,5 @@ const HomePageIntroDialogue = memo(() => {
 
 const HomeTopSpacer = () => {
   const media = useMedia()
-  return (
-    <VStack
-      pointerEvents="none"
-      marginTop={5}
-      height={media.sm ? 0 : searchBarHeight}
-    />
-  )
+  return <VStack pointerEvents="none" marginTop={5} height={media.sm ? 0 : searchBarHeight} />
 }

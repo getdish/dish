@@ -146,5 +146,4 @@ const removeLongZip = (str: string) => {
   return str
 }
 
-const removeZip = (str: string) =>
-  str.replace(/,(\s[A-Z]{2})?[\s]+([0-9\-]+$)/g, '')
+const removeZip = (str: string) => str.replace(/,(\s[A-Z]{2})?[\s]+([0-9\-]+$)/g, '')

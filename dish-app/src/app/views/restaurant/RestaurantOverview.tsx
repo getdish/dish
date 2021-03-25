@@ -2,16 +2,7 @@ import { graphql } from '@dish/graph'
 import { ellipseText } from '@dish/helpers'
 import { capitalize } from 'lodash'
 import React, { memo, useRef, useState } from 'react'
-import {
-  AbsoluteVStack,
-  Button,
-  HStack,
-  Input,
-  Spacer,
-  Text,
-  VStack,
-  useTheme,
-} from 'snackui'
+import { AbsoluteVStack, Button, HStack, Input, Spacer, Text, VStack, useTheme } from 'snackui'
 
 import { blue } from '../../../constants/colors'
 import { queryRestaurant } from '../../../queries/queryRestaurant'
@@ -60,9 +51,7 @@ export const RestaurantOverview = memo(
     const summary = text ?? restaurant.summary ?? headlines
     const scale = 2.1 - Math.max(1.0, Math.min(1.1, summary.length / 250))
     const extra = size === 'lg' ? 4 : 1
-    const lineHeight = Math.round(
-      (size === 'lg' ? 26 : 24) * scale + extra * scale
-    )
+    const lineHeight = Math.round((size === 'lg' ? 26 : 24) * scale + extra * scale)
     const fontSize = Math.round(16 * scale + extra)
     const [isEditing, setIsEditing] = useState(false)
     const editedText = useRef('')
@@ -98,12 +87,7 @@ export const RestaurantOverview = memo(
                     editedText.current = text
                   }}
                 />
-                <HStack
-                  marginVertical={10}
-                  alignItems="center"
-                  justifyContent="center"
-                  flex={1}
-                >
+                <HStack marginVertical={10} alignItems="center" justifyContent="center" flex={1}>
                   <VStack flex={1} />
                   <Text
                     color={blue}

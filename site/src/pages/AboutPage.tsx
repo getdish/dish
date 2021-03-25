@@ -33,19 +33,10 @@ export default mount({
 })
 
 const BigParagraph = (props: TextProps) => (
-  <Title
-    selectable
-    size="xs"
-    alpha={0.6}
-    fontWeight={100}
-    sizeLineHeight={1.35}
-    {...props}
-  />
+  <Title selectable size="xs" alpha={0.6} fontWeight={100} sizeLineHeight={1.35} {...props} />
 )
 
-const BigTitle = (props: TextProps) => (
-  <Title selectable size={1.5} fontWeight={100} {...props} />
-)
+const BigTitle = (props: TextProps) => <Title selectable size={1.5} fontWeight={100} {...props} />
 
 export function AboutPage() {
   const Fade = useFadePage({
@@ -57,11 +48,7 @@ export function AboutPage() {
       <Theme name={AboutPage.theme}>
         <Header noBorder background="transparent" slim />
         <Page pages="auto">
-          <main
-            className="main-contents"
-            ref={Fade.ref}
-            style={{ minHeight: 2000 }}
-          >
+          <main className="main-contents" ref={Fade.ref} style={{ minHeight: 2000 }}>
             <SectionContent paddingTop={60}>
               {/* <Image
                 margin="auto"
@@ -73,18 +60,8 @@ export function AboutPage() {
 
             <SectionContent flex={1} paddingTop="5%" paddingBottom="5%">
               <Stack direction="horizontal" id="main" alignItems="flex-start">
-                <Stack
-                  id="sidebar"
-                  width={200}
-                  pointerEvents="auto"
-                  sm-width={0}
-                  sm-opacity={0}
-                >
-                  <Stack
-                    position="relative"
-                    className="sidebar__inner"
-                    flex={1}
-                  >
+                <Stack id="sidebar" width={200} pointerEvents="auto" sm-width={0} sm-opacity={0}>
+                  <Stack position="relative" className="sidebar__inner" flex={1}>
                     <FadeInView delay={200}>
                       <Space size={35} />
                       <PassProps
@@ -135,43 +112,34 @@ export function AboutPage() {
                   >
                     <Stack space="xxxl" id="mission">
                       <BigTitle>
-                        Make it easy to put together powerful tools for your
-                        team.
+                        Make it easy to put together powerful tools for your team.
                       </BigTitle>
 
                       <BigParagraph>
-                        There's a better future ahead where building apps and
-                        managing data is unified into a collaborative IDE and
-                        workspace. One where it's easy to explore, easy to
-                        build, and totally under our control.
+                        There's a better future ahead where building apps and managing data is
+                        unified into a collaborative IDE and workspace. One where it's easy to
+                        explore, easy to build, and totally under our control.
                       </BigParagraph>
 
                       <BigParagraph>
-                        Orbis is a new type of thing: an app platform focused on
-                        work apps.
+                        Orbis is a new type of thing: an app platform focused on work apps.
                       </BigParagraph>
                     </Stack>
 
                     <Divider />
 
                     <Stack space="xxxl" id="team">
-                      <BigTitle>
-                        Passionate about the future of software and creation.
-                      </BigTitle>
+                      <BigTitle>Passionate about the future of software and creation.</BigTitle>
 
                       <BigParagraph>
-                        Our team is all over the world. We're always looking for
-                        great developers who are passionate about rethinking and
-                        improving our interfaces, making development far easier
-                        and more intuitive, and who are driven by creating
+                        Our team is all over the world. We're always looking for great developers
+                        who are passionate about rethinking and improving our interfaces, making
+                        development far easier and more intuitive, and who are driven by creating
                         things of high quality.
                       </BigParagraph>
 
                       <BigParagraph>
-                        <Inline {...linkProps('mailto:team@dishapp.com')}>
-                          Get in touch
-                        </Inline>
-                        .
+                        <Inline {...linkProps('mailto:team@dishapp.com')}>Get in touch</Inline>.
                       </BigParagraph>
                     </Stack>
 
@@ -183,21 +151,15 @@ export function AboutPage() {
                       <BigTitle>Get in touch</BigTitle>
 
                       <BigParagraph>
-                        <Inline {...linkProps('mailto:team@dishapp.com')}>
-                          Email
-                        </Inline>
+                        <Inline {...linkProps('mailto:team@dishapp.com')}>Email</Inline>
                       </BigParagraph>
 
                       <BigParagraph>
-                        <Inline {...linkProps('https://twitter.com/dishapp')}>
-                          Twitter
-                        </Inline>
+                        <Inline {...linkProps('https://twitter.com/dishapp')}>Twitter</Inline>
                       </BigParagraph>
 
                       <BigParagraph>
-                        <Inline {...linkProps('https://github.com/natew')}>
-                          Github
-                        </Inline>
+                        <Inline {...linkProps('https://github.com/natew')}>Github</Inline>
                       </BigParagraph>
                     </Stack>
                   </Stack>

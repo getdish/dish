@@ -7,10 +7,7 @@ import getPort from 'get-port'
 
 import { ServerConfigNormal } from '../types'
 
-export async function createWebServer(
-  app: any,
-  serverConfig: ServerConfigNormal
-) {
+export async function createWebServer(app: any, serverConfig: ServerConfigNormal) {
   if (serverConfig.resetCache) {
     await clearWebpackCache()
   }
@@ -29,11 +26,7 @@ export async function createWebServer(
   await start()
 
   async function start() {
-    console.log(
-      ` [web] starting web in ${config.env} mode ${
-        config.watch ? '(watch)' : ''
-      }...`
-    )
+    console.log(` [web] starting web in ${config.env} mode ${config.watch ? '(watch)' : ''}...`)
     const args = {
       ...config,
       port,

@@ -22,10 +22,7 @@ export const Home = memo(function Home() {
     return reaction(
       homeStore,
       (x) => {
-        if (
-          x.currentState.type === 'home' ||
-          x.currentState.type === 'search'
-        ) {
+        if (x.currentState.type === 'home' || x.currentState.type === 'search') {
           return x.currentState
         }
         return null

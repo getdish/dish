@@ -1,4 +1,4 @@
-import { gloss, InlineFlex } from 'gloss'
+import { InlineFlex, gloss } from 'gloss'
 
 export const LinkText = gloss(InlineFlex, {
   userSelect: 'none',

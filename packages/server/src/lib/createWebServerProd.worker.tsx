@@ -31,14 +31,7 @@ createWebServerProd(app, {
 
 async function createWebServerProd(app: any, config: ServerConfigNormal) {
   try {
-    const {
-      clean,
-      watch,
-      createConfig,
-      rootDir,
-      buildDir,
-      webpackConfig,
-    } = config
+    const { clean, watch, createConfig, rootDir, buildDir, webpackConfig } = config
     if (watch) {
       createWebServerDev(app, config)
       app.listen(port)
@@ -106,10 +99,7 @@ async function createWebServerProd(app: any, config: ServerConfigNormal) {
     // fallback to index.html
     const root = clientRoot
     app.use((req, res, next) => {
-      if (
-        (req.method === 'GET' || req.method === 'HEAD') &&
-        req.accepts('html')
-      ) {
+      if ((req.method === 'GET' || req.method === 'HEAD') && req.accepts('html')) {
         res.sendFile('index.html', { root }, (err) => err && next())
       }
     })

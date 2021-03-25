@@ -3,10 +3,7 @@ import { groupBy, pick, sortBy, uniqBy } from 'lodash'
 import React, { useMemo } from 'react'
 import { Theme } from 'snackui'
 
-import {
-  DishTagItemSimple,
-  selectRishDishViewSimple,
-} from '../../helpers/selectDishViewSimple'
+import { DishTagItemSimple, selectRishDishViewSimple } from '../../helpers/selectDishViewSimple'
 import { RegionNormalized } from '../../types/homeTypes'
 import { TagButton } from '../views/TagButton'
 import { ContentSectionHoverable } from './ContentSectionHoverable'
@@ -23,9 +20,7 @@ export type FIDishRestaurants = FIBase & {
   tag: DishTagItemSimple
 }
 
-export function useFeedDishItems(
-  region?: RegionNormalized | null
-): FIDishRestaurants[] {
+export function useFeedDishItems(region?: RegionNormalized | null): FIDishRestaurants[] {
   const bbox = region?.bbox
   const popularDishTags = bbox
     ? query

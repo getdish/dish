@@ -4,5 +4,5 @@
   "singleQuote": true,
   "arrowParens": "always",
   "plugins": ["./node_modules/prettier-plugin-import-sort"],
-  "printWidth": 80
+  "printWidth": 100
 }

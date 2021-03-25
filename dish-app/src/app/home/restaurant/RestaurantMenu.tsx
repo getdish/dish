@@ -13,12 +13,7 @@ export const RestaurantMenu = memo(
     return (
       <>
         {!items.length && (
-          <VStack
-            width="100%"
-            padding={40}
-            alignItems="center"
-            justifyContent="center"
-          >
+          <VStack width="100%" padding={40} alignItems="center" justifyContent="center">
             <Text opacity={0.5}>No menu found.</Text>
           </VStack>
         )}
@@ -70,19 +65,13 @@ export const RestaurantMenu = memo(
                         {item.name}
                       </Paragraph>
                       <Spacer size="xs" />
-                      <Paragraph
-                        maxHeight={104}
-                        sizeLineHeight={0.8}
-                        opacity={0.5}
-                      >
+                      <Paragraph maxHeight={104} sizeLineHeight={0.8} opacity={0.5}>
                         {item.description}
                       </Paragraph>
                     </VStack>
                     <Spacer />
 
-                    <Paragraph fontWeight="400">
-                      {toPrice(item.price ?? 0)}
-                    </Paragraph>
+                    <Paragraph fontWeight="400">{toPrice(item.price ?? 0)}</Paragraph>
                   </HStack>
                 </VStack>
               ))}

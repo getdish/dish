@@ -30,15 +30,11 @@ import { aroundCoords, boundingBoxFromCenter, geocode } from '../utils'
 const BB_SEARCH = '/search/snippet?cflt=restaurants&l='
 const YELP_DOMAIN = 'https://www.yelp.com'
 
-const yelpAPI = new ProxiedRequests(
-  YELP_DOMAIN,
-  process.env.YELP_AWS_PROXY || YELP_DOMAIN,
-  {
-    headers: {
-      'X-My-X-Forwarded-For': 'www.yelp.com',
-    },
-  }
-)
+const yelpAPI = new ProxiedRequests(YELP_DOMAIN, process.env.YELP_AWS_PROXY || YELP_DOMAIN, {
+  headers: {
+    'X-My-X-Forwarded-For': 'www.yelp.com',
+  },
+})
 
 export class Yelp extends WorkerJob {
   current?: string
@@ -96,9 +92,7 @@ export class Yelp extends WorkerJob {
           rest
         )
       } catch (err) {
-        this.log(
-          'Error finding by searching for exact location, switch to general search'
-        )
+        this.log('Error finding by searching for exact location, switch to general search')
         // @ts-ignore
         await this.refindRestaurant(rest)
       }
@@ -126,9 +120,7 @@ export class Yelp extends WorkerJob {
       throw new Error(`No response: ${JSON.stringify(res || null)}`)
     }
     const yelpUrl = rest.sources?.yelp?.url
-    const street = decode(
-      addrs.slice(0, addrs.length - 2).join(', ')
-    ).toLowerCase()
+    const street = decode(addrs.slice(0, addrs.length - 2).join(', ')).toLowerCase()
     this.log('check for match', yelpUrl, street, JSON.stringify(suggestions))
     const found = suggestions.find((x) => {
       if (yelpUrl) {
@@ -147,35 +139,18 @@ export class Yelp extends WorkerJob {
     const mv = 0.0025
     const [lat, lng] = await geocode(found.subtitle)
     this.log('found new coords, try again at', JSON.stringify({ lat, lng }))
-    await this.getRestaurants(
-      [lat - mv, lng - mv],
-      [lat + mv, lng + mv],
-      0,
-      rest
-    )
+    await this.getRestaurants([lat - mv, lng - mv], [lat + mv, lng + mv], 0, rest)
   }
 
   async allForCity(city_name: string) {
-    this.log(
-      `Starting on city "${city_name}". Using AWS proxy: ${process.env.YELP_AWS_PROXY}`
-    )
+    this.log(`Starting on city "${city_name}". Using AWS proxy: ${process.env.YELP_AWS_PROXY}`)
     const MAPVIEW_SIZE = 4000
     const coords = await geocode(city_name)
-    const region_coords = _.shuffle(
-      aroundCoords(coords[0], coords[1], MAPVIEW_SIZE, 6)
-    )
+    const region_coords = _.shuffle(aroundCoords(coords[0], coords[1], MAPVIEW_SIZE, 6))
     const longest_radius = (MAPVIEW_SIZE * Math.sqrt(2)) / 2
     for (const box_center of region_coords) {
-      const bounding_box = boundingBoxFromCenter(
-        box_center[0],
-        box_center[1],
-        longest_radius
-      )
-      await this.runOnWorker('getRestaurants', [
-        bounding_box[0],
-        bounding_box[1],
-        0,
-      ])
+      const bounding_box = boundingBoxFromCenter(box_center[0], box_center[1], longest_radius)
+      await this.runOnWorker('getRestaurants', [bounding_box[0], bounding_box[1], 0])
     }
   }
 
@@ -186,12 +161,7 @@ export class Yelp extends WorkerJob {
     onlyRestaurant: Restaurant | null = null
   ) {
     const PER_PAGE = 30
-    const coords = [
-      top_right[1],
-      top_right[0],
-      bottom_left[1],
-      bottom_left[0],
-    ].join(',')
+    const coords = [top_right[1], top_right[0], bottom_left[1], bottom_left[0]].join(',')
     const bb = encodeURIComponent('g:' + coords)
     const uri = BB_SEARCH + bb + '&start=' + start
     const response = await yelpAPI.getJSON(uri)
@@ -199,8 +169,7 @@ export class Yelp extends WorkerJob {
       this.log('no response!', response)
       return []
     }
-    const componentsList =
-      response.searchPageProps.mainContentComponentsListProps ?? []
+    const componentsList = response.searchPageProps.mainContentComponentsListProps ?? []
     const pagination = componentsList.find((x) => x.type === 'pagination')
 
     if (!pagination) {
@@ -212,9 +181,7 @@ export class Yelp extends WorkerJob {
 
     if (!componentsList.length) {
       console.error('searchPageProps.searchResultsProps: ', uri, response)
-      throw new Error(
-        'Nothing in `response.searchPageProps.searchResultsProps.searchResults`'
-      )
+      throw new Error('Nothing in `response.searchPageProps.searchResultsProps.searchResults`')
     }
 
     const validResults = componentsList.filter((data) => {
@@ -227,9 +194,7 @@ export class Yelp extends WorkerJob {
       return true
     })
 
-    this.log(
-      `geo search: ${coords}, page ${start}, ${validResults.length} results`
-    )
+    this.log(`geo search: ${coords}, page ${start}, ${validResults.length} results`)
 
     for (const data of validResults) {
       const info = data.searchResultBusiness
@@ -298,11 +263,7 @@ export class Yelp extends WorkerJob {
       biz_page = data.searchResultBusiness.businessUrl
     }
     const biz_page_uri = url.parse(biz_page, true)
-    await this.runOnWorker('getEmbeddedJSONData', [
-      id,
-      biz_page_uri.path,
-      data.bizId,
-    ])
+    await this.runOnWorker('getEmbeddedJSONData', [id, biz_page_uri.path, data.bizId])
   }
 
   async saveDataFromMapSearch(data: ScrapeData) {
@@ -321,11 +282,7 @@ export class Yelp extends WorkerJob {
     return id
   }
 
-  async getEmbeddedJSONData(
-    id: string,
-    yelp_path: string,
-    id_from_source: string
-  ) {
+  async getEmbeddedJSONData(id: string, yelp_path: string, id_from_source: string) {
     this.current = yelp_path
     this.log(`getting embedded JSON for: ${yelp_path}`)
     const response = await yelpAPI.getHyperscript(
@@ -344,10 +301,7 @@ export class Yelp extends WorkerJob {
       return
     }
 
-    const uri = url.parse(
-      data.mapBoxProps.staticMapProps.src.replace(/&amp;/g, '&'),
-      true
-    )
+    const uri = url.parse(data.mapBoxProps.staticMapProps.src.replace(/&amp;/g, '&'), true)
     const coords = (uri.query.center as string).split(',')
     const lat = parseFloat(coords[0])
     const lon = parseFloat(coords[1])
@@ -441,18 +395,12 @@ export class Yelp extends WorkerJob {
       start <= photoTotal + PER_PAGE;
       start += PER_PAGE
     ) {
-      await this.runOnWorker('getPhotoPage', [
-        id,
-        bizId,
-        start,
-        Math.floor(start / PER_PAGE) - 1,
-      ])
+      await this.runOnWorker('getPhotoPage', [id, bizId, start, Math.floor(start / PER_PAGE) - 1])
     }
   }
 
   async getPhotoPage(id: string, bizId: string, start: number, page: number) {
-    const url =
-      '/biz_photos/get_media_slice/' + bizId + '?start=' + start + '&dir=b'
+    const url = '/biz_photos/get_media_slice/' + bizId + '?start=' + start + '&dir=b'
     const response = await yelpAPI.getJSON(url, {
       headers: {
         'X-Requested-With': 'XMLHttpRequest',
@@ -466,20 +414,14 @@ export class Yelp extends WorkerJob {
     let photos: { [keys: string]: any } = {}
     photos['photosp' + page] = media
     await scrapeMergeData(id, photos)
-    this.log(
-      `${this.current}, got photo page ${page} with ${media.length} photos`
-    )
+    this.log(`${this.current}, got photo page ${page} with ${media.length} photos`)
   }
 
   async getReviews(id: string, bizId: string, start: number = 0) {
     const PER_PAGE = 20
     const page = start / PER_PAGE
 
-    const url =
-      '/biz/' +
-      bizId +
-      '/review_feed?rl=en&sort_by=relevance_desc&q=&start=' +
-      start
+    const url = '/biz/' + bizId + '/review_feed?rl=en&sort_by=relevance_desc&q=&start=' + start
 
     const response = await yelpAPI.getJSON(url, {
       headers: {
@@ -492,9 +434,7 @@ export class Yelp extends WorkerJob {
     let reviews: ScrapeData = {}
     reviews['reviewsp' + page] = data
     await scrapeMergeData(id, reviews)
-    this.log(
-      `${this.current}, got review page ${page} with ${data.length} reviews`
-    )
+    this.log(`${this.current}, got review page ${page} with ${data.length} reviews`)
 
     if (process.env.DISH_ENV == 'test') {
       this.log('Exiting review loop, in test')

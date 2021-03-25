@@ -52,7 +52,6 @@ export const cd = (str: TemplateStringsArray) => sh.cd(str.join(' '))
 export const ls = (str: TemplateStringsArray) => sh.ls(str.join(' '))
 export const which = (str: TemplateStringsArray) => sh.which(str[0])
 export const rm = (str: TemplateStringsArray) => sh.rm(...str)
-export const sed = (str: TemplateStringsArray) =>
-  sh.sed(str[0], str[1], ...str.slice(2))
+export const sed = (str: TemplateStringsArray) => sh.sed(str[0], str[1], ...str.slice(2))
 
 export const mkdir = (str: TemplateStringsArray) => sh.mkdir(...str)

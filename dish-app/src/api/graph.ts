@@ -9,10 +9,7 @@ import redis from 'redis'
 const pass = process.env.REDIS_PASSWORD
 const envUrl = process.env.REDIS_URL
 const url =
-  envUrl ||
-  `redis://${pass ? `:${pass}:` : ''}${
-    process.env.REDIS_HOST || 'localhost'
-  }:6379`
+  envUrl || `redis://${pass ? `:${pass}:` : ''}${process.env.REDIS_HOST || 'localhost'}:6379`
 
 const rc = redis.createClient({
   url,
@@ -38,9 +35,7 @@ export default route(async (req, res) => {
   await useRouteBodyParser(req, res, { text: { type: '*/*', limit: '8192mb' } })
   time('body parse')
   const { body } = req
-  const cacheKey = shouldCache(body)
-    ? crypto.createHash('md5').update(body).digest('hex')
-    : null
+  const cacheKey = shouldCache(body) ? crypto.createHash('md5').update(body).digest('hex') : null
   time('cache key hash')
 
   if (cacheKey) {

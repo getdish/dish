@@ -40,21 +40,12 @@ export class TagVoteStore extends Store<VoteStoreProps> {
   }
 }
 
-export const useUserTagVotes = (
-  restaurantSlug: string,
-  activeTags: HomeActiveTagsRecord
-) => {
-  const tagSlugList = useConstant(() =>
-    Object.keys(activeTags).filter((x) => activeTags[x])
-  )
+export const useUserTagVotes = (restaurantSlug: string, activeTags: HomeActiveTagsRecord) => {
+  const tagSlugList = useConstant(() => Object.keys(activeTags).filter((x) => activeTags[x]))
 
   if (process.env.NODE_ENV === 'development') {
     useLazyEffect(() => {
-      console.warn(
-        'CHANGING ACTIVE TAGS NOT ALLOWED< USE KEY INSTEAD',
-        activeTags,
-        tagSlugList
-      )
+      console.warn('CHANGING ACTIVE TAGS NOT ALLOWED< USE KEY INSTEAD', activeTags, tagSlugList)
     }, [JSON.stringify(activeTags)])
   }
 
@@ -146,8 +137,7 @@ export const useUserTagVote = (props: VoteStoreProps) => {
       if (!restaurant) {
         return
       }
-      const vote =
-        userVote == 'toggle' ? toggleRating(voteStore.vote) : userVote
+      const vote = userVote == 'toggle' ? toggleRating(voteStore.vote) : userVote
       voteStore.setVote(vote)
       voteStore.writeVote(restaurant.id, vote)
       Toast.show(`Saved`)

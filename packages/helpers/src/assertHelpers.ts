@@ -13,10 +13,7 @@ function logAssert(why?: string) {
   assertConfig.onAssertFail?.(why)
 }
 
-export function assertPresent(
-  value: any,
-  why?: string
-): asserts value is NonNullish {
+export function assertPresent(value: any, why?: string): asserts value is NonNullish {
   if (value == undefined || value == null) {
     logAssert(why)
     throw new AssertionError(`${why ?? 'value: ' + value}`)
@@ -29,10 +26,7 @@ export function assertSame<T>(a: T, b: T) {
   }
 }
 
-export function assertIsString(
-  val: unknown,
-  why?: string
-): asserts val is string {
+export function assertIsString(val: unknown, why?: string): asserts val is string {
   if (typeof val !== 'string') {
     logAssert(why)
     throw new AssertionError(`Expected ${why ?? 'string ' + val}`)

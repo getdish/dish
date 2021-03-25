@@ -1,14 +1,6 @@
 import { ErrorBoundary, Loading, Theme, useIntersectionObserver } from '@o/ui'
 import { once } from 'lodash'
-import React, {
-  Suspense,
-  lazy,
-  memo,
-  useEffect,
-  useLayoutEffect,
-  useRef,
-  useState,
-} from 'react'
+import React, { Suspense, lazy, memo, useEffect, useLayoutEffect, useRef, useState } from 'react'
 
 import { requestIdleCallback } from '../etc/requestIdle'
 import { Header } from '../Header'
@@ -24,12 +16,8 @@ const Sections = {
   AllInOnePitchDemoSection: loadOnIntersect(
     lazy(() => retry(() => import('./HomePage/AllInOnePitchDemoSection')))
   ),
-  FeaturesSection: loadOnIntersect(
-    lazy(() => retry(() => import('./HomePage/FeaturesSection')))
-  ),
-  FooterSection: loadOnIntersect(
-    lazy(() => retry(() => import('./HomePage/FooterSection')))
-  ),
+  FeaturesSection: loadOnIntersect(lazy(() => retry(() => import('./HomePage/FeaturesSection')))),
+  FooterSection: loadOnIntersect(lazy(() => retry(() => import('./HomePage/FooterSection')))),
   DataAppKitFeaturesSection: loadOnIntersect(
     lazy(() => retry(() => import('./HomePage/DataAppKitFeaturesSection')))
   ),
@@ -180,9 +168,7 @@ function loadOnIntersect(Component: any) {
 
     return (
       <ErrorBoundary name={`${Component.name}`}>
-        <Suspense fallback={fallback}>
-          {show ? <Component {...props} /> : fallback}
-        </Suspense>
+        <Suspense fallback={fallback}>{show ? <Component {...props} /> : fallback}</Suspense>
       </ErrorBoundary>
     )
   }
@@ -200,10 +186,7 @@ function retry<A>(fn, retriesLeft = 5, interval = 1000) {
             return
           }
           // Passing on "reject" is the important part
-          retry(fn, retriesLeft - 1, interval).then(
-            (x) => resolve(x as A),
-            reject
-          )
+          retry(fn, retriesLeft - 1, interval).then((x) => resolve(x as A), reject)
         }, interval)
       })
   })

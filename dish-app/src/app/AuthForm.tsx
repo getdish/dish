@@ -1,11 +1,6 @@
 import { capitalize } from 'lodash'
 import React, { Suspense, memo, useEffect, useRef, useState } from 'react'
-import {
-  Controller,
-  FieldError,
-  RegisterOptions,
-  useForm,
-} from 'react-hook-form'
+import { Controller, FieldError, RegisterOptions, useForm } from 'react-hook-form'
 import {
   Button,
   Form,
@@ -37,19 +32,11 @@ type AuthFormProps = {
 const pages = ['login', 'register', 'forgotPassword', 'passwordReset']
 
 export const AuthForm = memo(
-  ({
-    onDidLogin,
-    autoFocus,
-  }: {
-    onDidLogin?: Function
-    autoFocus?: boolean
-  }) => {
+  ({ onDidLogin, autoFocus }: { onDidLogin?: Function; autoFocus?: boolean }) => {
     const userStore = useUserStore()
     const isLoggedIn = userStore.isLoggedIn
     const curPageName = useRouterCurPage().name
-    const [formPage, setFormPage] = useState(
-      pages.find((x) => x === curPageName) ?? 'login'
-    )
+    const [formPage, setFormPage] = useState(pages.find((x) => x === curPageName) ?? 'login')
 
     useEffect(() => {
       if (isLoggedIn) {
@@ -89,19 +76,11 @@ export const AuthForm = memo(
             </VStack>
             <Spacer />
             <HStack width="100%" alignItems="center">
-              <VStack
-                height={1}
-                flex={1}
-                backgroundColor="rgba(255,255,255,0.1)"
-              />
+              <VStack height={1} flex={1} backgroundColor="rgba(255,255,255,0.1)" />
               <SmallTitle fontSize={14} divider="center">
                 or
               </SmallTitle>
-              <VStack
-                height={1}
-                flex={1}
-                backgroundColor="rgba(255,255,255,0.1)"
-              />
+              <VStack height={1} flex={1} backgroundColor="rgba(255,255,255,0.1)" />
             </HStack>
           </>
         )}
@@ -138,15 +117,7 @@ export const AuthForm = memo(
 )
 
 const PasswordReset = ({ autoFocus }: AuthFormProps) => {
-  const {
-    onChange,
-    onSubmit,
-    isSubmitting,
-    control,
-    errors,
-    watch,
-    isSuccess,
-  } = useFormAction({
+  const { onChange, onSubmit, isSubmitting, control, errors, watch, isSuccess } = useFormAction({
     name: 'passwordReset',
     initialValues: {
       password: '',
@@ -200,14 +171,7 @@ const PasswordReset = ({ autoFocus }: AuthFormProps) => {
 }
 
 const ForgotPassword = ({ autoFocus, setFormPage }: AuthFormProps) => {
-  const {
-    onChange,
-    onSubmit,
-    control,
-    errors,
-    isSuccess,
-    isSubmitting,
-  } = useFormAction({
+  const { onChange, onSubmit, control, errors, isSuccess, isSubmitting } = useFormAction({
     name: 'forgotPassword',
     initialValues: {
       login: '',
@@ -230,8 +194,7 @@ const ForgotPassword = ({ autoFocus, setFormPage }: AuthFormProps) => {
       }
     >
       <Paragraph maxWidth={280} paddingVertical={15}>
-        Enter username or email, we'll send you an email with a reset link if
-        account exists:
+        Enter username or email, we'll send you an email with a reset link if account exists:
       </Paragraph>
       <ValidatedInput
         control={control}
@@ -251,14 +214,7 @@ const ForgotPassword = ({ autoFocus, setFormPage }: AuthFormProps) => {
 }
 
 const LoginForm = ({ autoFocus, setFormPage }: AuthFormProps) => {
-  const {
-    onChange,
-    onSubmit,
-    control,
-    errors,
-    isSuccess,
-    isSubmitting,
-  } = useFormAction({
+  const { onChange, onSubmit, control, errors, isSuccess, isSubmitting } = useFormAction({
     name: 'login',
     initialValues: {
       login: '',
@@ -273,11 +229,7 @@ const LoginForm = ({ autoFocus, setFormPage }: AuthFormProps) => {
       isSuccess={isSuccess}
       submitText="Go"
       after={
-        <Link
-          alignSelf="flex-end"
-          fontSize={14}
-          onClick={(e) => setFormPage('forgotPassword')}
-        >
+        <Link alignSelf="flex-end" fontSize={14} onClick={(e) => setFormPage('forgotPassword')}>
           Forgot password?
         </Link>
       }
@@ -321,11 +273,7 @@ const SignupForm = ({ autoFocus }: AuthFormProps) => {
     submit: userStore.register,
   })
   return (
-    <SubmittableForm
-      isSubmitting={isSubmitting}
-      onSubmit={onSubmit}
-      submitText="Signup"
-    >
+    <SubmittableForm isSubmitting={isSubmitting} onSubmit={onSubmit} submitText="Signup">
       <ValidatedInput
         control={control}
         errors={errors.email}

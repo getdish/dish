@@ -13,11 +13,7 @@ import {
   useThemeName,
 } from 'snackui'
 
-import {
-  pageWidthMax,
-  searchBarHeight,
-  zIndexMap,
-} from '../constants/constants'
+import { pageWidthMax, searchBarHeight, zIndexMap } from '../constants/constants'
 import { coordsToLngLat, getMinLngLat } from '../helpers/mapHelpers'
 import { queryRestaurant } from '../queries/queryRestaurant'
 import { router } from '../router'
@@ -40,14 +36,7 @@ import { MapView } from './Map'
 import { mapStyles } from './mapStyles'
 
 export default memo(function AppMap() {
-  const {
-    features,
-    results,
-    showRank,
-    zoomOnHover,
-    hovered,
-    hideRegions,
-  } = useAppMapStore()
+  const { features, results, showRank, zoomOnHover, hovered, hideRegions } = useAppMapStore()
   const media = useMedia()
   const mapSize = useMapSize(media.sm)
   const { width, paddingLeft } = useDebounceValue(mapSize, 1000)
@@ -76,9 +65,7 @@ export default memo(function AppMap() {
   const isLoading = !results.length
   const key = useLastValueWhen(
     () =>
-      `${position.id ?? ''}${JSON.stringify(
-        results.map((x) => x.location?.coordinates ?? '-')
-      )}`,
+      `${position.id ?? ''}${JSON.stringify(results.map((x) => x.location?.coordinates ?? '-'))}`,
     isLoading
   )
 
@@ -206,26 +193,23 @@ export default memo(function AppMap() {
     }
   }, [])
 
-  const handleSelectRegion = useCallback(
-    (region: RegionWithVia | null, position) => {
-      if (!region) return
-      if (!region.slug) {
-        console.log('no region slug', region)
-        return
-      }
-      if (region.via === 'drag' && homeStore.currentStateType === 'search') {
-        // ignore region drag during search to be less aggressive
-        return
-      }
-      if (region.via === 'click') {
-        // avoid handleMoveStart being called next frame
-        updateRegionFaster(region, position)
-      } else {
-        updateRegion(region, position)
-      }
-    },
-    []
-  )
+  const handleSelectRegion = useCallback((region: RegionWithVia | null, position) => {
+    if (!region) return
+    if (!region.slug) {
+      console.log('no region slug', region)
+      return
+    }
+    if (region.via === 'drag' && homeStore.currentStateType === 'search') {
+      // ignore region drag during search to be less aggressive
+      return
+    }
+    if (region.via === 'click') {
+      // avoid handleMoveStart being called next frame
+      updateRegionFaster(region, position)
+    } else {
+      updateRegion(region, position)
+    }
+  }, [])
 
   const themeName = useThemeName()
   const handleMoveStart = useCallback(() => {
@@ -233,12 +217,7 @@ export default memo(function AppMap() {
   }, [])
 
   return (
-    <HStack
-      position="absolute"
-      fullscreen
-      alignItems="center"
-      justifyContent="center"
-    >
+    <HStack position="absolute" fullscreen alignItems="center" justifyContent="center">
       <HStack height="100%" maxWidth={pageWidthMax} width="100%">
         {!media.sm && (
           <VStack height="100%" flex={2}>
@@ -257,12 +236,7 @@ export default memo(function AppMap() {
         >
           {!media.sm && (
             <Theme name="dark">
-              <AbsoluteVStack
-                left={0}
-                right={0}
-                bottom={0}
-                top={searchBarHeight}
-              >
+              <AbsoluteVStack left={0} right={0} bottom={0} top={searchBarHeight}>
                 <AppAutocompleteLocation />
               </AbsoluteVStack>
             </Theme>

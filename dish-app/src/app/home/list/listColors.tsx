@@ -1,8 +1,4 @@
-import {
-  allColors,
-  allColorsPastel,
-  allDarkColor,
-} from '../../../constants/colors'
+import { allColors, allColorsPastel, allDarkColor } from '../../../constants/colors'
 
 export const listColors = [...allColors, ...allColorsPastel, ...allDarkColor]
 
@@ -11,8 +7,5 @@ export function getListColor(index?: number | null) {
 }
 
 export function randomListColor() {
-  return Math.min(
-    Math.floor(Math.random() * listColors.length),
-    listColors.length - 1
-  )
+  return Math.min(Math.floor(Math.random() * listColors.length), listColors.length - 1)
 }

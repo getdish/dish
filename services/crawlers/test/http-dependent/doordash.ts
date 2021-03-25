@@ -1,10 +1,7 @@
 import test from 'ava'
 
 import { DoorDash } from '../../src/doordash/DoorDash'
-import {
-  deleteAllScrapesBySourceID,
-  scrapeFindOneBySourceID,
-} from '../../src/scrape-helpers'
+import { deleteAllScrapesBySourceID, scrapeFindOneBySourceID } from '../../src/scrape-helpers'
 
 const store = { id: '34003', lat: 37.7069206237793, lng: -122.45873260498 }
 

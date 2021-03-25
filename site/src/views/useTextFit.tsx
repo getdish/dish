@@ -22,13 +22,13 @@ export function useTextFit({
   const [scale, setScale] = useState(1)
   const height = useMemo(() => (node && node.getBoundingClientRect().height) || min, [node])
   const setScaleBounded = useCallback(
-    x => {
+    (x) => {
       const nh = x * height
       const nhc = Math.max(min, Math.min(max, nh))
       const adj = nhc / nh
       setScale(x * adj)
     },
-    [min, max, height],
+    [min, max, height]
   )
   const measureFn = useCallback(() => updateScale(scale, ref.current, setScaleBounded), [
     setScaleBounded,
@@ -44,7 +44,7 @@ export function useTextFit({
       ref: parentRef,
       onChange: measure,
     },
-    [parentRef.current],
+    [parentRef.current]
   )
 
   useResizeObserver(
@@ -52,7 +52,7 @@ export function useTextFit({
       ref,
       onChange: measure,
     },
-    [parentRef.current],
+    [parentRef.current]
   )
 
   useMutationObserver(
@@ -64,7 +64,7 @@ export function useTextFit({
         subtree: true,
       },
     },
-    [ref.current],
+    [ref.current]
   )
 
   useLayoutEffect(() => {

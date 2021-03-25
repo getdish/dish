@@ -42,9 +42,7 @@ export const useMutableSource = (
         return false
       }
       const hasChangedRefs =
-        state[0] !== source ||
-        state[1] !== getSnapshot ||
-        state[2] !== subscribe
+        state[0] !== source || state[1] !== getSnapshot || state[2] !== subscribe
       if (!hasChangedRefs) {
         return false
       }

@@ -12,8 +12,7 @@ export class Loggable {
       return
     }
     const time = this.elapsedTime() + 's'
-    const memory =
-      Math.round(process.memoryUsage().heapUsed / 1024 / 1024) + 'Mb'
+    const memory = Math.round(process.memoryUsage().heapUsed / 1024 / 1024) + 'Mb'
     console.log(`${this.logName}: ${messages.join(' ')} | ${time} | ${memory}`)
   }
 

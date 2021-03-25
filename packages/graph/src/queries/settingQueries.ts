@@ -10,9 +10,7 @@ export const settingInsert = QueryHelpers.insert
 export const settingUpsert = QueryHelpers.upsert
 export const _settingFindOne = QueryHelpers.findOne
 
-export async function settingFindOne(
-  requested_setting: Partial<Setting>
-): Promise<Setting | null> {
+export async function settingFindOne(requested_setting: Partial<Setting>): Promise<Setting | null> {
   if (!requested_setting.key) {
     return null
   }

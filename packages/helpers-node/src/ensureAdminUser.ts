@@ -4,10 +4,7 @@ import { hashPassword } from './hashPassword'
 
 const DEFAULT_PASSWORD = 'password'
 const JWT_ADMIN_PASSWORD = process.env.JWT_ADMIN_PASSWORD || DEFAULT_PASSWORD
-if (
-  process.env.DISH_ENV == 'production' &&
-  JWT_ADMIN_PASSWORD == DEFAULT_PASSWORD
-) {
+if (process.env.DISH_ENV == 'production' && JWT_ADMIN_PASSWORD == DEFAULT_PASSWORD) {
   throw new Error('Default admin password being used in production')
 }
 

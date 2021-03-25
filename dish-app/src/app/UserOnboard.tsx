@@ -1,16 +1,7 @@
 import { Auth, graphql, useRefetch } from '@dish/graph'
 import React, { useEffect, useRef, useState } from 'react'
 import { Image } from 'react-native'
-import {
-  HStack,
-  Input,
-  Paragraph,
-  Spacer,
-  Text,
-  TextArea,
-  Toast,
-  VStack,
-} from 'snackui'
+import { HStack, Input, Paragraph, Spacer, Text, TextArea, Toast, VStack } from 'snackui'
 
 import dishNeon from '../assets/dish-neon.jpg'
 import { queryUser } from '../queries/queryUser'

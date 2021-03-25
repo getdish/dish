@@ -1,13 +1,5 @@
 import React, { memo } from 'react'
-import {
-  Divider,
-  HStack,
-  Spacer,
-  StackProps,
-  Text,
-  TextProps,
-  VStack,
-} from 'snackui'
+import { Divider, HStack, Spacer, StackProps, Text, TextProps, VStack } from 'snackui'
 
 export const SmallTitle = memo(
   ({
@@ -28,11 +20,7 @@ export const SmallTitle = memo(
       isActive?: boolean
       divider?: 'center' | 'bottom' | 'off'
     }) => {
-    const dividerElement = color ? (
-      <Divider backgroundColor={color} opacity={0.1} />
-    ) : (
-      <Divider />
-    )
+    const dividerElement = color ? <Divider backgroundColor={color} opacity={0.1} /> : <Divider />
     return (
       <VStack alignItems="center" {...rest}>
         <HStack width="100%" alignItems="center" justifyContent="center">
@@ -70,11 +58,7 @@ export const SmallTitle = memo(
 )
 
 export const SmallerTitle = memo(
-  ({
-    children,
-    hideDivider,
-    ...rest
-  }: StackProps & { hideDivider?: boolean }) => {
+  ({ children, hideDivider, ...rest }: StackProps & { hideDivider?: boolean }) => {
     return (
       <HStack alignItems="center" justifyContent="center" spacing {...rest}>
         {!hideDivider && <Divider flex />}

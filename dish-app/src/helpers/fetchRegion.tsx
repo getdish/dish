@@ -3,12 +3,7 @@ import { capitalize } from 'lodash'
 import { UseQueryOptions } from 'react-query'
 
 import { RegionApiResponse, RegionNormalized } from '../types/homeTypes'
-import {
-  coordsToLngLat,
-  getMinLngLat,
-  padLngLat,
-  polygonToLngLat,
-} from './mapHelpers'
+import { coordsToLngLat, getMinLngLat, padLngLat, polygonToLngLat } from './mapHelpers'
 import { queryClient } from './queryClient'
 import { useQueryLoud } from './useQueryLoud'
 
@@ -50,16 +45,9 @@ export const fetchRegion = async (slug?: string | null) => {
   }
 }
 
-export const useRegionQuery = (
-  slug?: string | null,
-  config?: UseQueryOptions<any>
-) => {
-  return useQueryLoud<RegionNormalized | null>(
-    getKey(slug),
-    () => fetchRegion(slug),
-    {
-      ...config,
-      enabled: !!slug,
-    }
-  )
+export const useRegionQuery = (slug?: string | null, config?: UseQueryOptions<any>) => {
+  return useQueryLoud<RegionNormalized | null>(getKey(slug), () => fetchRegion(slug), {
+    ...config,
+    enabled: !!slug,
+  })
 }

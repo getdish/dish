@@ -21,12 +21,9 @@ puppeteer.use(stealth)
 
 const USER_AGENT =
   'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/78.0.3904.108 Safari/537.36'
-const proxy_host =
-  process.env.LUMINATI_PROXY_HOST + ':' + process.env.LUMINATI_PROXY_PORT
+const proxy_host = process.env.LUMINATI_PROXY_HOST + ':' + process.env.LUMINATI_PROXY_PORT
 const proxy_auth =
-  process.env.LUMINATI_PROXY_DATACENTRE_USER +
-  ':' +
-  process.env.LUMINATI_PROXY_DATACENTRE_PASSWORD
+  process.env.LUMINATI_PROXY_DATACENTRE_USER + ':' + process.env.LUMINATI_PROXY_DATACENTRE_PASSWORD
 const PROXY = 'http://' + proxy_auth + '@' + proxy_host
 
 export class Puppeteer {
@@ -143,10 +140,7 @@ export class Puppeteer {
   }
 
   _logBlockCounts() {
-    console.log(
-      'Blocked: ' + this.blocked_count,
-      'Allowed: ' + this.request_count
-    )
+    console.log('Blocked: ' + this.blocked_count, 'Allowed: ' + this.request_count)
   }
 
   async _interceptRequests(request: Request) {
@@ -165,15 +159,7 @@ export class Puppeteer {
   }
 
   _blockImage(request: Request) {
-    const blockable = [
-      /\.png/,
-      /\.gif/,
-      /.jpg/,
-      /.jpeg/,
-      /k-no$/,
-      /k-mo$/,
-      /\.woff/,
-    ]
+    const blockable = [/\.png/, /\.gif/, /.jpg/, /.jpeg/, /k-no$/, /k-mo$/, /\.woff/]
     const is_image = blockable.some((e) => {
       return e.test(request.url())
     })
@@ -197,10 +183,7 @@ export class Puppeteer {
     } else if (is_googleusercontent) {
       const proxied_url = request
         .url()
-        .replace(
-          /https:\/\/.*\.com\//,
-          process.env.GOOGLE_USERCONTENT_AWS_PROXY || ''
-        )
+        .replace(/https:\/\/.*\.com\//, process.env.GOOGLE_USERCONTENT_AWS_PROXY || '')
       return proxied_url
     } else {
       request.abort()

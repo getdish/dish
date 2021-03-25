@@ -51,12 +51,8 @@ for (let klass of all) {
 export { klass_map }
 
 export default async (job: Job) => {
-  const description = `${job.data.className}.${job.data.fn}(${JSON.stringify(
-    job.data.args
-  )})`
-  console.log(
-    `Processing job (${job.id}, attempt: ${job.attemptsMade}): ${description}`
-  )
+  const description = `${job.data.className}.${job.data.fn}(${JSON.stringify(job.data.args)})`
+  console.log(`Processing job (${job.id}, attempt: ${job.attemptsMade}): ${description}`)
   const worker = new klass_map[job.data.className]()
   worker.job = job
   await worker.run(job.data.fn, job.data.args)

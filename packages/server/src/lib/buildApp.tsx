@@ -51,9 +51,7 @@ export async function buildApp({
           }
         }
         if (await pathExists(path)) {
-          console.log(
-            ` [web] build skipping ${name} (rebuild with --clean ${name})`
-          )
+          console.log(` [web] build skipping ${name} (rebuild with --clean ${name})`)
           return
         }
         console.log(`No ${path}`)

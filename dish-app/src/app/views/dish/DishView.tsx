@@ -55,9 +55,7 @@ export type DishViewProps = DishTagItem &
   }
 
 export const DishView = memo((props: DishViewProps) => {
-  const fallback = (
-    <ColoredCircle size={props.size ?? 150} backgroundColor="#ccc" />
-  )
+  const fallback = <ColoredCircle size={props.size ?? 150} backgroundColor="#ccc" />
   if (props.preventLoad) {
     return fallback
   }
@@ -100,8 +98,7 @@ const DishViewContent = (props: DishViewProps) => {
 
   // @ts-expect-error
   const imageUrl = getImageUrl(image, ...getRoundedDishViewSize(size), 100)
-  const isLong =
-    dishName.length > 17 || !!dishName.split(' ').find((x) => x.length >= 8)
+  const isLong = dishName.length > 17 || !!dishName.split(' ').find((x) => x.length >= 8)
   const isTiny = size < 115
   const fontSize = Math.max(13, (isLong ? 14 : 16) * (isTiny ? 0.75 : 1))
   const colors = getColorsForName(name)
@@ -110,19 +107,12 @@ const DishViewContent = (props: DishViewProps) => {
   const isActive = (isHovered || selected) ?? false
 
   const showVote =
-    !hideVote &&
-    typeof score === 'number' &&
-    !!restaurantId &&
-    !!restaurantSlug &&
-    !!name
+    !hideVote && typeof score === 'number' && !!restaurantId && !!restaurantSlug && !!name
 
   const showSearchButton_ = showSearchButton && isActive && slug
 
   let contents = (
-    <Hoverable
-      onHoverIn={() => setIsHovered(true)}
-      onHoverOut={() => setIsHovered(false)}
-    >
+    <Hoverable onHoverIn={() => setIsHovered(true)} onHoverOut={() => setIsHovered(false)}>
       {showVote && !!slug && (
         <AbsoluteVStack
           width={20}
@@ -206,11 +196,7 @@ const DishViewContent = (props: DishViewProps) => {
           {...(isActive && {
             backgroundColor: '#000',
             shadowColor: 'rgba(0,0,0,0.2)',
-            transform: [
-              { scale: 1.05 },
-              { translateX: -10 },
-              { skewX: '-12deg' },
-            ],
+            transform: [{ scale: 1.05 }, { translateX: -10 }, { skewX: '-12deg' }],
           })}
         >
           <Text
@@ -251,10 +237,7 @@ const DishViewContent = (props: DishViewProps) => {
         {isFallback && (
           <AbsoluteVStack
             fullscreen
-            transform={[
-              { translateX: -size * 0.75 },
-              { translateY: size * 0.42 },
-            ]}
+            transform={[{ translateX: -size * 0.75 }, { translateY: size * 0.42 }]}
           >
             <SineWave color={backgroundColor} size={size + 10} />
           </AbsoluteVStack>
@@ -262,12 +245,8 @@ const DishViewContent = (props: DishViewProps) => {
         <LinearGradient
           style={[StyleSheet.absoluteFill]}
           colors={[
-            `${backgroundColor}${
-              isFallback && !disableFallbackFade ? 'aa' : '44'
-            }`,
-            `${backgroundColor}${
-              isFallback && !disableFallbackFade ? '55' : '00'
-            }`,
+            `${backgroundColor}${isFallback && !disableFallbackFade ? 'aa' : '44'}`,
+            `${backgroundColor}${isFallback && !disableFallbackFade ? '55' : '00'}`,
             `${color}${isFallback && !disableFallbackFade ? 'aa' : '44'}`,
           ]}
           start={[0, 0.5]}
@@ -320,12 +299,7 @@ const DishViewContent = (props: DishViewProps) => {
 
 const SineWave = ({ color, size }: { color: string; size: number }) => {
   return (
-    <VStack
-      transform={[
-        { scale: size / 385 },
-        { translateX: (385 - size / 385) / 2 },
-      ]}
-    >
+    <VStack transform={[{ scale: size / 385 }, { translateX: (385 - size / 385) / 2 }]}>
       <Svg width="385px" height="169px" viewBox="0 0 385 169">
         <G transform="translate(-83.000000, -142.000000)" fill={color}>
           <Path d="M83,169.121094 C153.643229,133.990885 221.466146,133.990885 286.46875,169.121094 C351.471354,204.251302 411.981771,204.251302 468,169.121094 L468,310.121094 L83,310.121094 L83,169.121094 Z" />

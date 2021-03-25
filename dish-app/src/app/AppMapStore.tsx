@@ -19,12 +19,7 @@ import {
   initialLocation,
   setDefaultLocation,
 } from '../constants/initialHomeState'
-import {
-  bboxToLngLat,
-  getZoomLevel,
-  hasMovedAtLeast,
-  padLngLat,
-} from '../helpers/mapHelpers'
+import { bboxToLngLat, getZoomLevel, hasMovedAtLeast, padLngLat } from '../helpers/mapHelpers'
 import { queryRestaurant } from '../queries/queryRestaurant'
 import { RegionWithVia } from '../types/homeTypes'
 import { AppMapPosition, MapResultItem } from '../types/mapTypes'
@@ -128,10 +123,7 @@ class AppMapStore extends Store {
   }
 
   get isOnRegion() {
-    return (
-      !!this.lastRegion &&
-      !hasMovedAtLeast(this.lastRegion.position, this.position, 0.04)
-    )
+    return !!this.lastRegion && !hasMovedAtLeast(this.lastRegion.position, this.position, 0.04)
   }
 
   clearHover() {
@@ -175,10 +167,7 @@ class AppMapStore extends Store {
     return this.ids[id]
   }
 
-  getMapFeatures = (
-    results: MapResultItem[] | null,
-    selectedId?: string | null
-  ) => {
+  getMapFeatures = (results: MapResultItem[] | null, selectedId?: string | null) => {
     const result: GeoJSON.Feature[] = []
     if (!results) {
       return result
@@ -239,16 +228,10 @@ export const mapZoomToMedium = () => {
   })
 }
 
-export function updateRegionImmediate(
-  region: RegionWithVia,
-  position: MapPosition
-) {
+export function updateRegionImmediate(region: RegionWithVia, position: MapPosition) {
   cancelUpdateRegion()
   const { currentState } = homeStore
-  if (
-    currentState.type === 'home' ||
-    (currentState.type === 'search' && region.via === 'click')
-  ) {
+  if (currentState.type === 'home' || (currentState.type === 'search' && region.via === 'click')) {
     if (currentState.region === region.slug) {
       return
     }
@@ -392,11 +375,5 @@ export const useSetAppMap = (
         features: [],
       })
     }
-  }, [
-    JSON.stringify(results),
-    fitToResults,
-    isActive,
-    zoomOnHover,
-    hideRegions,
-  ])
+  }, [JSON.stringify(results), fitToResults, isActive, zoomOnHover, hideRegions])
 }

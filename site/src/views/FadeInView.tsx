@@ -1,10 +1,4 @@
-import {
-  MotionProps,
-  View,
-  ViewProps,
-  useIntersectionObserver,
-  useParallaxContainer,
-} from '@o/ui'
+import { MotionProps, View, ViewProps, useIntersectionObserver, useParallaxContainer } from '@o/ui'
 import { createStoreContext } from '@o/use-store'
 import React, { memo, useCallback, useEffect, useRef } from 'react'
 
@@ -167,8 +161,7 @@ export const FadeInView = memo(
     ...rest
   }: FadeChildProps) => {
     const fadeStore = FadeStoreContext.useStore()
-    const shown =
-      !disable && (fadeStore.shown !== null ? fadeStore.shown : false)
+    const shown = !disable && (fadeStore.shown !== null ? fadeStore.shown : false)
 
     const parent = useParallaxContainer()
 
@@ -263,10 +256,7 @@ export const useFadePage = ({
   ...props
 }: UseFadePageProps = {}) => {
   const ref = useRef(null)
-  const store = FadeStoreContext.useCreateStore(
-    { disable: props.disable },
-    { react: false }
-  )
+  const store = FadeStoreContext.useCreateStore({ disable: props.disable }, { react: false })
 
   useEffect(() => {
     if (hasLoadedFadeViews) {
@@ -294,22 +284,16 @@ export const useFadePage = ({
   return {
     ref,
     FadeProvide: useCallback(({ children }) => {
-      return (
-        <FadeStoreContext.ProvideStore value={store}>
-          {children}
-        </FadeStoreContext.ProvideStore>
-      )
+      return <FadeStoreContext.ProvideStore value={store}>{children}</FadeStoreContext.ProvideStore>
     }, []),
   }
 }
 
-export const FadeParent = memo(
-  ({ children, ...props }: UseFadePageProps & { children?: any }) => {
-    const Fade = useFadePage(props)
-    return (
-      <Fade.FadeProvide>
-        <View nodeRef={Fade.ref}>{children}</View>
-      </Fade.FadeProvide>
-    )
-  }
-)
+export const FadeParent = memo(({ children, ...props }: UseFadePageProps & { children?: any }) => {
+  const Fade = useFadePage(props)
+  return (
+    <Fade.FadeProvide>
+      <View nodeRef={Fade.ref}>{children}</View>
+    </Fade.FadeProvide>
+  )
+})

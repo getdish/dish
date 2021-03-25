@@ -6,10 +6,7 @@ import { FullTag, NavigableTag, TagWithNameAndType } from '../types/tagTypes'
 import { addTagsToCache, allTags } from './allTags'
 import { getFullTag } from './getFullTag'
 
-type TagPartial =
-  | TagWithNameAndType
-  | NavigableTag
-  | { name?: string; type?: string; slug: string }
+type TagPartial = TagWithNameAndType | NavigableTag | { name?: string; type?: string; slug: string }
 
 const noIdTagSlugs = new Set<string>()
 

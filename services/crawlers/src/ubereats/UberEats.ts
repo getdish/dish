@@ -10,8 +10,7 @@ import { ScrapeData, scrapeInsert, scrapeMergeData } from '../scrape-helpers'
 import { aroundCoords, geocode } from '../utils'
 import categories from './categories'
 
-const UBEREATS_DOMAIN =
-  process.env.UBEREATS_PROXY || 'https://www.ubereats.com/'
+const UBEREATS_DOMAIN = process.env.UBEREATS_PROXY || 'https://www.ubereats.com/'
 const LOCALE = '?localeCode=en-US'
 const CITIES = 'getCountriesWithCitiesV1'
 const FEED = 'getFeedV1'
@@ -68,26 +67,14 @@ export class UberEats extends WorkerJob {
 
   async aroundCoords(lat: number, lon: number) {
     const delivery_radius_multiplier = 2
-    const coords_set = aroundCoords(
-      lat,
-      lon,
-      UberEats.DELIVERY_RADIUS,
-      delivery_radius_multiplier
-    )
+    const coords_set = aroundCoords(lat, lon, UberEats.DELIVERY_RADIUS, delivery_radius_multiplier)
     for (let coords of coords_set) {
       await this.runOnWorker('getFeedPage', [0, '', coords[0], coords[1]])
     }
   }
 
-  async getFeedPage(
-    offset: number,
-    category: string,
-    lat: number,
-    lon: number
-  ) {
-    this.log(
-      `Getting feed for coords: ${lat}, ${lon}, category: '${category}', offset: ${offset}`
-    )
+  async getFeedPage(offset: number, category: string, lat: number, lon: number) {
+    this.log(`Getting feed for coords: ${lat}, ${lon}, category: '${category}', offset: ${offset}`)
     const response = await axios.post(
       FEED + LOCALE,
       {
@@ -107,28 +94,14 @@ export class UberEats extends WorkerJob {
     await this.extractRestaurantsFromFeed(response, offset, category)
 
     if (response.data.data.meta.hasMore) {
-      await this.runOnWorker('getFeedPage', [
-        response.data.data.meta.offset,
-        category,
-        lat,
-        lon,
-      ])
+      await this.runOnWorker('getFeedPage', [response.data.data.meta.offset, category, lat, lon])
     }
   }
 
-  async extractRestaurantsFromFeed(
-    response: AxiosResponse,
-    offset: number,
-    category: string
-  ) {
+  async extractRestaurantsFromFeed(response: AxiosResponse, offset: number, category: string) {
     const items = response.data.data.feedItems
     this.log(
-      items.length +
-        ' restaurants on page: ' +
-        offset / 80 +
-        ', for category: "' +
-        category +
-        '"'
+      items.length + ' restaurants on page: ' + offset / 80 + ', for category: "' + category + '"'
     )
 
     for (let item of items) {

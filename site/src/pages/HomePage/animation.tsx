@@ -1,8 +1,4 @@
-import {
-  FadeChildProps,
-  fadeAnimations,
-  transitions,
-} from '../../views/FadeInView'
+import { FadeChildProps, fadeAnimations, transitions } from '../../views/FadeInView'
 import { allDelay } from './allDelay'
 
 export const animation: {

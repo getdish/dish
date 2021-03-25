@@ -38,9 +38,7 @@ import { UserAvatar } from './UserAvatar'
 
 type UserPane = 'vote' | 'review' | ''
 
-export default function UserPageContainer(
-  props: StackItemProps<HomeStateItemUser>
-) {
+export default function UserPageContainer(props: StackItemProps<HomeStateItemUser>) {
   const pane = useRouterSelector((x) =>
     x.curPage.name === 'user' ? (x.curPage.params.pane as UserPane) : null
   )
@@ -85,11 +83,7 @@ const getReviewRestuarants = (x: ReviewQuery) => {
 }
 
 const UserPageContent = graphql(
-  ({
-    item,
-    isActive,
-    pane,
-  }: StackItemProps<HomeStateItemUser> & { pane: UserPane | null }) => {
+  ({ item, isActive, pane }: StackItemProps<HomeStateItemUser> & { pane: UserPane | null }) => {
     const username = item.username
     if (!username) {
       return null
@@ -208,10 +202,7 @@ const UserHeader = memo(
               <VStack flex={1} padding={20} paddingVertical={25}>
                 <HStack alignItems="center" flex={1} position="relative">
                   <VStack marginTop={-10} marginBottom={5} marginRight={10}>
-                    <UserAvatar
-                      avatar={user.avatar ?? ''}
-                      charIndex={user.charIndex ?? 0}
-                    />
+                    <UserAvatar avatar={user.avatar ?? ''} charIndex={user.charIndex ?? 0} />
                   </VStack>
                   <VStack flex={1}>
                     <Text fontSize={28} fontWeight="bold" paddingRight={30}>

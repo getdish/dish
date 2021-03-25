@@ -1,12 +1,6 @@
 import { HStack, Spacer, Text } from 'snackui'
 
-export const ColumnHeader = ({
-  children,
-  after,
-}: {
-  children: any
-  after?: any
-}) => {
+export const ColumnHeader = ({ children, after }: { children: any; after?: any }) => {
   return (
     <HStack
       minHeight={30}

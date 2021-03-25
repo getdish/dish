@@ -59,14 +59,7 @@ export const RestaurantTagReviews = (props: Props) => {
 
 export const RestaurantTagReviewsContent = memo(
   graphql(
-    ({
-      tagSlug,
-      restaurantId,
-      restaurantSlug,
-      closable,
-      borderless,
-      showScoreTable,
-    }: Props) => {
+    ({ tagSlug, restaurantId, restaurantSlug, closable, borderless, showScoreTable }: Props) => {
       const [restaurant] = queryRestaurant(restaurantSlug)
       if (!restaurant) {
         return null
@@ -218,13 +211,7 @@ export const RestaurantTagReviewsContent = memo(
                               )}
                             </Paragraph>
 
-                            <AbsoluteVStack
-                              zIndex={10}
-                              bottom={0}
-                              left={0}
-                              height={20}
-                              right={0}
-                            >
+                            <AbsoluteVStack zIndex={10} bottom={0} left={0} height={20} right={0}>
                               <LinearGradient
                                 colors={['rgba(255,255,255,0)', '#fff']}
                                 style={StyleSheet.absoluteFill}
@@ -325,9 +312,7 @@ function getSourceBreakdowns(breakdowns?: SourceBreakdowns) {
         }
       }
       const summary =
-        positive > negative
-          ? breakdown.summaries.reviews.best
-          : breakdown.summaries.reviews.worst
+        positive > negative ? breakdown.summaries.reviews.best : breakdown.summaries.reviews.worst
       const sentence = summary
         ? ellipseText(summary, {
             maxLength: 115,
@@ -344,11 +329,7 @@ function getTagSourceBreakdowns(breakdowns?: TagSourceBreakdown) {
     return null
   }
   const sourceNames = Object.keys(breakdowns).filter(
-    (x) =>
-      !!(
-        breakdowns[x].summary.negative?.[0] ||
-        breakdowns[x].summary.positive?.[0]
-      )
+    (x) => !!(breakdowns[x].summary.negative?.[0] || breakdowns[x].summary.positive?.[0])
   )
 
   return sourceNames
@@ -372,8 +353,7 @@ function getTagSourceBreakdowns(breakdowns?: TagSourceBreakdown) {
       const defaultSummary = positive > negative ? 'positive' : 'negative'
       const oppositeSummary = positive > negative ? 'negative' : 'positive'
       const summary =
-        breakdown.summary[defaultSummary]?.[0] ??
-        breakdown.summary[oppositeSummary]?.[0]
+        breakdown.summary[defaultSummary]?.[0] ?? breakdown.summary[oppositeSummary]?.[0]
       const sentence = summary
         ? ellipseText(summary, {
             maxLength: 115,

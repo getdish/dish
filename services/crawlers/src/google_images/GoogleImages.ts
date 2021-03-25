@@ -34,8 +34,7 @@ const axios = axios_base.create({
   baseURL: process.env.GOOGLE_SEARCH_PROXY + 'search',
   headers: {
     common: {
-      'User-Agent':
-        'Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101 Firefox/78.0',
+      'User-Agent': 'Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101 Firefox/78.0',
     },
   },
 })
@@ -106,8 +105,7 @@ export class GoogleImages extends WorkerJob {
     await updatePhotoQualityAndCategories(photos_xref)
     const best_photos = await bestPhotosForTag(dish.id)
     const default_images = best_photos.map((p) => {
-      if (!p.photo || !p.photo.url)
-        throw 'imagesForDish(): Photo.url is undefined!?'
+      if (!p.photo || !p.photo.url) throw 'imagesForDish(): Photo.url is undefined!?'
       return p.photo.url
     })
     const updated_dish = {

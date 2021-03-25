@@ -106,9 +106,7 @@ export class ParseFiverr {
         }
       )
       tagAddAlternate(tag, original)
-      ;[tag] = await tagUpsert([
-        pick(tag, ['name', 'alternates', 'type', 'parentId']),
-      ])
+      ;[tag] = await tagUpsert([pick(tag, ['name', 'alternates', 'type', 'parentId'])])
       // ;[tag] = await tagUpsert([tag])
       this.category = tag
     }
@@ -147,9 +145,7 @@ export class ParseFiverr {
       }
     )
     tagAddAlternate(tag, original)
-    ;[tag] = await tagUpsert([
-      pick(tag, ['name', 'alternates', 'type', 'parentId']),
-    ])
+    ;[tag] = await tagUpsert([pick(tag, ['name', 'alternates', 'type', 'parentId'])])
     // ;[tag] = await tagUpsert([tag])
 
     if (this.category) {
@@ -168,10 +164,7 @@ export class ParseFiverr {
 export class ParseAisha {
   output = [] as string[]
 
-  static start(
-    source: string = process.argv[2],
-    destination: string = process.argv[3]
-  ) {
+  static start(source: string = process.argv[2], destination: string = process.argv[3]) {
     const aisha = new ParseAisha()
     const filenames = fs.readdirSync(source)
     for (const filename of filenames) {
@@ -220,10 +213,7 @@ export class ParseAisha {
       .split(',')
       .join('-')
       .toLowerCase()
-    fs.writeFileSync(
-      destination + '/' + filename + '.txt',
-      this.output.join('\n')
-    )
+    fs.writeFileSync(destination + '/' + filename + '.txt', this.output.join('\n'))
     this.output = [] as string[]
   }
 }
@@ -233,10 +223,7 @@ export class ParseAisha {
 export class ParseOneBigFile {
   output = [] as string[]
 
-  static start(
-    source: string = process.argv[2],
-    destination: string = process.argv[3]
-  ) {
+  static start(source: string = process.argv[2], destination: string = process.argv[3]) {
     const one = new ParseOneBigFile()
     const text = fs.readFileSync(source, 'utf-8')
     const lines = text.split('\n')
@@ -256,10 +243,7 @@ export class ParseOneBigFile {
       .split(',')
       .join('-')
       .toLowerCase()
-    fs.writeFileSync(
-      destination + '/' + filename + '.txt',
-      this.output.join('\n')
-    )
+    fs.writeFileSync(destination + '/' + filename + '.txt', this.output.join('\n'))
     this.output = [] as string[]
   }
 }

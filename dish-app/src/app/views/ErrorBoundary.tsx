@@ -3,13 +3,7 @@ import { ErrorBoundary as ReactErrorBoundary } from 'react-error-boundary'
 import { ScrollView } from 'react-native'
 import { AbsoluteVStack, Button, Spacer, Text, VStack } from 'snackui'
 
-export function ErrorBoundary({
-  children,
-  name,
-}: {
-  children: any
-  name: string
-}) {
+export function ErrorBoundary({ children, name }: { children: any; name: string }) {
   const [errorState, setErrorState] = useState<{
     error: Error
     componentStack?: string
@@ -47,11 +41,7 @@ export function ErrorBoundary({
               <ScrollView style={{ width: '100%' }}>
                 <VStack spacing>
                   {tryButton}
-                  <Text
-                    fontWeight="400"
-                    className="white-space-pre font-mono"
-                    color="#fff"
-                  >
+                  <Text fontWeight="400" className="white-space-pre font-mono" color="#fff">
                     {error?.message}
                     <Spacer />
                     <Text fontWeight="900">Stack</Text>

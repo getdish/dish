@@ -30,7 +30,7 @@ export const Header = memo(({ slim, noBorder, before, logoProps, ...rest }: Head
   useScreenSize({
     onChange(size) {
       const next = size === 'small' ? siteStore.showSidebar : true
-      setShown(last => {
+      setShown((last) => {
         // only update once
         if (last === true) return true
         headerStore.setShown(next)

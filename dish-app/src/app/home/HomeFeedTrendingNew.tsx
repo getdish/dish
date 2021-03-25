@@ -46,12 +46,9 @@ export function useHomeFeedTrendingNew(props: HomeFeedProps): FIHotNew[] {
       })
     : []
 
-  const status =
-    !trending[0] || trending[0].id === null ? 'loading' : 'complete'
+  const status = !trending[0] || trending[0].id === null ? 'loading' : 'complete'
 
-  const key = `${status}${newest.map((x) => x.slug)}${trending.map(
-    (x) => x.slug
-  )}`
+  const key = `${status}${newest.map((x) => x.slug)}${trending.map((x) => x.slug)}`
   return useMemo(() => {
     return [
       {
@@ -98,22 +95,13 @@ export const HomeFeedTrendingNew = memo(
             justifyContent="center"
             width={80}
           >
-            <SlantedTitle
-              alignSelf="flex-end"
-              fontWeight="300"
-              size="xs"
-              zIndex={10}
-            >
+            <SlantedTitle alignSelf="flex-end" fontWeight="300" size="xs" zIndex={10}>
               {props.title}
             </SlantedTitle>
           </AbsoluteVStack>
           <VStack maxWidth="100%" overflow="hidden">
             <ContentScrollViewHorizontal>
-              <VStack
-                paddingVertical={13}
-                paddingHorizontal={60}
-                flexWrap="nowrap"
-              >
+              <VStack paddingVertical={13} paddingHorizontal={60} flexWrap="nowrap">
                 <HStack spacing="sm">
                   <VStack width={60} />
 

@@ -6,7 +6,7 @@ import React from 'react'
 if (CSS.paintWorklet) {
   // @ts-ignore
   CSS.paintWorklet.addModule(
-    process.env.NODE_ENV === 'development' ? '/public/smooth-corners.js' : '/smooth-corners.js',
+    process.env.NODE_ENV === 'development' ? '/public/smooth-corners.js' : '/smooth-corners.js'
   )
 }
 

@@ -21,9 +21,8 @@ export function BlogRatingDescription() {
         <Text fontWeight="700" color={purple}>
           ambience
         </Text>{' '}
-        all in one, it takes a sec to get used to, let it grow on you - it gives
-        a good intuition based on it's "fullness", so you don't need to
-        understand it right away.
+        all in one, it takes a sec to get used to, let it grow on you - it gives a good intuition
+        based on it's "fullness", so you don't need to understand it right away.
       </Paragraph>
 
       <HStack justifyContent="center">
