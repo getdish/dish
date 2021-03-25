@@ -2,11 +2,17 @@ import '@dish/common'
 
 import { exec } from 'child_process'
 
+import { allSettledFirstFulfilled } from '@dish/helpers'
 import ProxyChain from 'proxy-chain'
 // @ts-ignore
 import { Browser, Page, Request } from 'puppeteer'
 import puppeteer from 'puppeteer-extra'
 import StealthPlugin from 'puppeteer-extra-plugin-stealth'
+
+const execP = (cmd: string) =>
+  new Promise<string>((res, rej) => {
+    exec(cmd, (err, stdout) => (err ? rej(err) : res(stdout.trim())))
+  })
 
 const stealth = StealthPlugin()
 // @ts-ignore
@@ -105,11 +111,11 @@ export class Puppeteer {
         '--no-sandbox',
       ],
     })
-    const chromium = await new Promise<string>((res) => {
-      exec(`which chromium`, (err, stdout) => {
-        res(stdout.trim())
-      })
-    })
+    const chromium = await allSettledFirstFulfilled<string>([
+      execP(`which chromium`),
+      execP(`which google-chrome`),
+      execP(`which google-chrome-stable`),
+    ])
     console.log('chromium', chromium)
     this.browser = await puppeteer.launch({
       ignoreDefaultArgs: ['--enable-automation'],

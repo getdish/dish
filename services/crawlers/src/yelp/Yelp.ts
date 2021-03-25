@@ -268,14 +268,14 @@ export class Yelp extends WorkerJob {
   }
 
   async getNextScrapes(id: string, data: ScrapeData) {
-    let photo_total = data.photoHeaderProps?.mediaTotal ?? 0
-    this.log(`getNextScrapes photo_total ${photo_total}`)
-    if (photo_total > 31 && process.env.DISH_ENV == 'test') {
-      photo_total = 31
+    let photoTotal = data.photoHeaderProps?.mediaTotal ?? 0
+    this.log(`getNextScrapes photoTotal ${photoTotal}`)
+    if (photoTotal > 31 && process.env.DISH_ENV == 'test') {
+      photoTotal = 31
     }
     const bizId = data.bizContactInfoProps.businessId
-    if (photo_total > 0) {
-      await this.runOnWorker('getPhotos', [id, bizId, photo_total])
+    if (photoTotal > 0) {
+      await this.runOnWorker('getPhotos', [id, bizId, photoTotal])
     }
     await this.runOnWorker('getReviews', [id, bizId])
   }
@@ -314,12 +314,12 @@ export class Yelp extends WorkerJob {
     return data
   }
 
-  async getPhotos(id: string, bizId: string, photo_total: number) {
+  async getPhotos(id: string, bizId: string, photoTotal: number) {
     const PER_PAGE = 30
     const YELPS_START_IS_THE_CEILING_OF_THE_PAGE = PER_PAGE
     for (
       let start = YELPS_START_IS_THE_CEILING_OF_THE_PAGE;
-      start <= photo_total + PER_PAGE;
+      start <= photoTotal + PER_PAGE;
       start += PER_PAGE
     ) {
       await this.runOnWorker('getPhotoPage', [

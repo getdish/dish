@@ -134,6 +134,7 @@ export class GooglePuppeteer extends GooglePuppeteerJob {
       try {
         await this.puppeteer.page.goto(url, {
           timeout: 10000,
+          waitUntil: 'domcontentloaded',
         })
         return true
       } catch (err) {

@@ -14,6 +14,9 @@ const presets = {
   },
 }
 
+// in order of most powerful => least
+type OpenAIEngines = 'davinci' | 'curie' | 'babbage' | 'ada'
+
 export class GPT3 {
   crawler: Self
 
@@ -24,18 +27,11 @@ export class GPT3 {
   async generateGPT3Summary() {
     const is_in_sanfran = this.crawler.restaurant.address?.includes('Francisco')
     const is_high_scoring = this.crawler.restaurant.score >= 700
-    if (is_in_sanfran && is_high_scoring) {
-      this.crawler.log('Running GPT3 summariser for restaurant...')
-    } else {
-      this.crawler.log(
-        `Not running GPT3 for restaurant. ` +
-          `Score: ${this.crawler.restaurant.score}, ` +
-          `address: ${this.crawler.restaurant.address}`
-      )
-      return
-    }
+    const engine: OpenAIEngines =
+      is_in_sanfran && is_high_scoring ? 'davinci' : 'curie'
+    this.crawler.log('Running GPT3 summariser for restaurant...')
     const highlights = await this.findHighlights()
-    const completion = await this.complete(highlights)
+    const completion = await this.complete(highlights, engine)
     this.crawler.restaurant.summary = completion
   }
 
@@ -71,7 +67,11 @@ export class GPT3 {
     `
   }
 
-  async complete(input: string, preset = 'witty_guidebook') {
+  async complete(
+    input: string,
+    engine: OpenAIEngines = 'curie',
+    preset = 'witty_guidebook'
+  ) {
     let body = presets[preset]
     body.prompt = pre_prompt + '\n' + input + `\n` + post_prompt
     const request: RequestInit = {
@@ -87,7 +87,7 @@ export class GPT3 {
       console.log(body.prompt)
     }
     const result = await fetch(
-      'https://api.openai.com/v1/engines/davinci/completions',
+      `https://api.openai.com/v1/engines/${engine}/completions`,
       request
     )
     const response = await result.json()

@@ -13,6 +13,21 @@ export const timer = () => {
   }
 }
 
+export const allSettledFirstFulfilled = async <
+  A,
+  B extends Promise<A> = Promise<A>
+>(
+  args: B[]
+): Promise<A | undefined> => {
+  const res = await Promise.allSettled(args)
+  return res.find((x) => x.status === 'fulfilled')?.['value'] as B
+}
+
+export const log = (val: any) => {
+  console.log(val)
+  return val
+}
+
 export function ellipseText(
   str: string,
   {

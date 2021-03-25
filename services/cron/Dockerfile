@@ -13,11 +13,6 @@ FROM registry.fly.io/dish-base:latest
 COPY --from=0 /bin /bin
 COPY --from=0 /usr/bin /usr/bin
 
-WORKDIR /app
-
-COPY dishctl.sh .
-COPY services/cron services/cron
-
 WORKDIR /app/services/cron
 
-CMD ["/app/services/cron/entry.sh"]
+CMD ["entry.sh"]

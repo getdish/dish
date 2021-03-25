@@ -100,6 +100,8 @@ export class ProxiedRequests {
       // setLuminatiResidentialProxy()
     }
 
+    let tried: any[] = []
+
     while (true) {
       const url = base + uri
       const { host, port, auth } = agentConfig
@@ -110,6 +112,7 @@ export class ProxiedRequests {
         ...config,
         proxy,
       }
+      tried.push({ url, options })
       try {
         const res = await fetch(url, options)
         if (res.status !== 200) {
@@ -119,7 +122,6 @@ export class ProxiedRequests {
         }
         return res
       } catch (e) {
-        console.log('Error:', e.message, options)
         tries++
         if (tries > 2) {
           setStormProxy()
@@ -131,17 +133,23 @@ export class ProxiedRequests {
         } else {
           setLuminatiResidentialProxy()
         }
-        if (tries > 5) {
+        if (tries > 4) {
+          console.log('Error:', e.message, options)
           throw new Error('Too many 503 errors for: ' + uri)
         }
         console.warn(
-          `CRAWLER PROXY: 503 response, so retrying (${tries}) with ${method}: ` +
-            uri
+          `CRAWLER PROXY: 503 response, so retrying (${tries}) with ${method}`
         )
       }
     }
 
-    throw new Error(`Couldn't make fetch after a few tries, giving up`)
+    throw new Error(
+      `Couldn't make fetch after a few tries, giving up: ${JSON.stringify(
+        tried,
+        null,
+        2
+      )}`
+    )
   }
 
   getStormProxyConfig() {

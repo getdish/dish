@@ -16,7 +16,7 @@ import { JobOptions, QueueOptions } from 'bull'
 import {
   bestPhotosForTag,
   photoXrefUpsert,
-  updatePhotoQuality,
+  updatePhotoQualityAndCategories,
   uploadToDO,
 } from '../photo-helpers'
 
@@ -103,7 +103,7 @@ export class GoogleImages extends WorkerJob {
     })
     await photoXrefUpsert(photos_xref)
     await uploadToDO(photos_xref)
-    await updatePhotoQuality(photos_xref)
+    await updatePhotoQualityAndCategories(photos_xref)
     const best_photos = await bestPhotosForTag(dish.id)
     const default_images = best_photos.map((p) => {
       if (!p.photo || !p.photo.url)
