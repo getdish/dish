@@ -22,7 +22,6 @@ assets
 docs
 *.md
 .vscode
-.env.production
 **/fly.toml
 fly.toml
 docker-compose.yml
