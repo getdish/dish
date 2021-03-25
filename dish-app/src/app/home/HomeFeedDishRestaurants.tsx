@@ -34,8 +34,11 @@ export function useFeedDishItems(
             location: {
               _st_within: bbox,
             },
+            upvotes: {
+              _gt: 15,
+            },
           },
-          order_by: [{ upvotes: order_by.desc_nulls_last }],
+          order_by: [{ votes_ratio: order_by.desc_nulls_last }],
           limit: 12,
         })
         .flatMap((r) => {

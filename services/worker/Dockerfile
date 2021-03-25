@@ -44,10 +44,6 @@ COPY --from=0 /opt /opt
 COPY --from=0 /etc/alternatives /etc/alternatives
 ENV NODE_ENV=production
 
-# WORKDIR /app
-# COPY services/worker services/worker
-# COPY services/crawlers services/crawlers
-# COPY packages packages
 WORKDIR /app/services/worker
 
 CMD ["./entry.sh"]

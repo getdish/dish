@@ -1,4 +1,4 @@
-import { selectFields } from '@dish/gqless'
+import { selectFields } from 'gqless'
 import { merge } from 'lodash'
 
 import { resolved } from '../graphql'

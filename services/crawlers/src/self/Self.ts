@@ -688,7 +688,7 @@ export class Self extends WorkerJob {
     let urls: string[] = [
       ...scrapeGetData(this.tripadvisor, 'photos', []),
       ...this._getGooglePhotos(),
-      ...this.getPaginatedData(yelp_data, 'photos').map((i) => i.src),
+      ...(this.getPaginatedData(yelp_data, 'photos')?.map((i) => i.src) ?? []),
     ]
     let photos: PhotoXref[] = urls.map((url) => {
       return {

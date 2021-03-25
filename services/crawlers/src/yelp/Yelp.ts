@@ -161,7 +161,7 @@ export class Yelp extends WorkerJob {
 
     if (onlyRestaurant && !found_the_one) {
       this.log('error componentsList', uri, componentsList)
-      throw new Error(`Couldn't find ${onlyRestaurant}`)
+      throw new Error(`Couldn't find ${onlyRestaurant.id}`)
     }
 
     this.log('done with getRestaurants')
@@ -394,6 +394,9 @@ function isMatchingRestaurant(data, restaurant: Restaurant) {
     return true
   }
   if (restaurant.telephone === data.phone) {
+    return true
+  }
+  if (restaurant.name === data.name) {
     return true
   }
   return false

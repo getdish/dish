@@ -1,4 +1,4 @@
-import { QueryFetcher, createClient } from '@dish/gqless'
+import { QueryFetcher, createClient } from 'gqless'
 
 import { Auth } from '../Auth'
 import { GRAPH_API } from '../constants'

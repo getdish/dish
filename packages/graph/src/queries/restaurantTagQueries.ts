@@ -1,4 +1,4 @@
-import { selectFields } from '@dish/gqless'
+import { selectFields } from 'gqless'
 
 import {
   mutation,

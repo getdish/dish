@@ -12,7 +12,7 @@ export function startLogging(verbose = false) {
     if (isSafari) {
       console.log('Disable gqless logging as it doesnt collapse')
     } else {
-      import('@dish/gqless-logger').then(({ createLogger }) => {
+      import('@gqless/logger').then(({ createLogger }) => {
         const Logger = createLogger(client, { stringifyJSON: false })
 
         Logger.start()
