@@ -2371,6 +2371,7 @@ __metadata:
     bull-board: ^1.4.2
     bull-repl: ^0.26.3
     express: ^4.17.1
+    react: ^17.0.1
     typescript: "*"
   languageName: unknown
   linkType: soft
