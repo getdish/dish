@@ -2,10 +2,7 @@ import { restaurantFindOne } from '@dish/graph'
 import test from 'ava'
 
 import { GoogleReviewAPI } from '../../src/google/GoogleReviewAPI'
-import {
-  deleteAllScrapesBySourceID,
-  scrapeFindOneBySourceID,
-} from '../../src/scrape-helpers'
+import { deleteAllScrapesBySourceID, scrapeFindOneBySourceID } from '../../src/scrape-helpers'
 import { tripadvisorGetFBC } from '../../src/utils'
 
 const name = 'Fresh Brew Coffee'

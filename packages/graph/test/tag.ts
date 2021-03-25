@@ -32,25 +32,16 @@ test.beforeEach(async (t) => {
 
 test('Tagging a restaurant with orphaned tags', async (t) => {
   let restaurant = t.context.restaurant
-  await restaurantUpsertOrphanTags(restaurant, [
-    'Test tag',
-    'Test tag existing',
-  ])
+  await restaurantUpsertOrphanTags(restaurant, ['Test tag', 'Test tag existing'])
   const next = await restaurantFindOneWithTags(restaurant)
   if (!next) {
     throw new Error(`invalid`)
   }
   restaurant = next
   t.is(restaurant.tags?.length, 2)
-  t.is(
-    restaurant.tags?.map((t) => t.tag.id).includes(t.context.existing_tag.id),
-    true
-  )
+  t.is(restaurant.tags?.map((t) => t.tag.id).includes(t.context.existing_tag.id), true)
   t.is(restaurant.tags?.map((t) => t.tag.name).includes('Test tag'), true)
-  t.is(
-    restaurant.tags?.map((t) => t.tag.displayName).includes('Test tag'),
-    true
-  )
+  t.is(restaurant.tags?.map((t) => t.tag.displayName).includes('Test tag'), true)
   t.is(restaurant.tag_names.length, 4)
   t.is(restaurant.tag_names.includes('test-tag'), true)
   t.is(restaurant.tag_names.includes('global__test-tag'), true)
@@ -60,16 +51,9 @@ test('Tagging a restaurant with orphaned tags', async (t) => {
 
 test('Tagging a restaurant with a tag that has a parent', async (t) => {
   let restaurant = t.context.restaurant
-  await restaurantUpsertOrphanTags(restaurant, [
-    'Test tag',
-    'Test tag existing',
-  ])
-  const [tag] = await tagInsert([
-    { name: 'Test tag', parentId: t.context.existing_tag.id },
-  ])
-  restaurant = (await restaurantUpsertRestaurantTags(restaurant, [
-    { tag_id: tag.id },
-  ]))!
+  await restaurantUpsertOrphanTags(restaurant, ['Test tag', 'Test tag existing'])
+  const [tag] = await tagInsert([{ name: 'Test tag', parentId: t.context.existing_tag.id }])
+  restaurant = (await restaurantUpsertRestaurantTags(restaurant, [{ tag_id: tag.id }]))!
   t.is(restaurant.tags?.length, 3)
   t.is(restaurant.tags?.map((t) => t.tag.name).includes('Test tag'), true)
   t.is(restaurant.tag_names.length, 5)
@@ -101,9 +85,7 @@ test('Tagging a restaurant with a tag that has categories', async (t) => {
 
 test('Ambiguous tags get marked', async (t) => {
   const tag_name = 'Test tag'
-  let [tag1] = await tagInsert([
-    { name: tag_name, parentId: t.context.existing_tag.id },
-  ])
+  let [tag1] = await tagInsert([{ name: tag_name, parentId: t.context.existing_tag.id }])
   const tag2 = await tagFindOne({ id: tag1.id })
   t.is(tag2?.is_ambiguous, false)
 

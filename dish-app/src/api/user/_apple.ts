@@ -1,13 +1,7 @@
 import { join } from 'path'
 
 import { RouteExit, urlEncodedRoute } from '@dish/api'
-import {
-  DISH_API_ENDPOINT,
-  User,
-  WithID,
-  userFindOne,
-  userUpsert,
-} from '@dish/graph'
+import { DISH_API_ENDPOINT, User, WithID, userFindOne, userUpsert } from '@dish/graph'
 import { jwtSign } from '@dish/helpers-node'
 import AppleSignIn, { AppleSignInOptions } from 'apple-sign-in-rest'
 
@@ -30,13 +24,7 @@ export const appleConfig: AppleSignInOptions = {
 let appleSignIn: AppleSignIn | null = null
 let clientSecret: string | null = null
 
-export async function appleAuth({
-  code,
-  redirectUri,
-}: {
-  code: string
-  redirectUri?: string
-}) {
+export async function appleAuth({ code, redirectUri }: { code: string; redirectUri?: string }) {
   try {
     if (!appleSignIn) {
       appleSignIn = new AppleSignIn(appleConfig)

@@ -9,8 +9,7 @@ import { restaurantSaveCanonical } from '../canonical-restaurant'
 import { ScrapeData, scrapeInsert } from '../scrape-helpers'
 import { aroundCoords, geocode } from '../utils'
 
-const GRUBHUB_DOMAIN =
-  process.env.GRUBHUB_AWS_PROXY || 'https://api-gtm.grubhub.com/'
+const GRUBHUB_DOMAIN = process.env.GRUBHUB_AWS_PROXY || 'https://api-gtm.grubhub.com/'
 
 const axios = axios_base.create({
   baseURL: GRUBHUB_DOMAIN,
@@ -44,12 +43,7 @@ export class GrubHub extends WorkerJob {
     let all: string[] = []
     const coords = await geocode(city_name)
     const region_coords = shuffle(
-      aroundCoords(
-        coords[0],
-        coords[1],
-        this.MAPVIEW_SIZE,
-        this.SEARCH_RADIUS_MULTIPLIER
-      )
+      aroundCoords(coords[0], coords[1], this.MAPVIEW_SIZE, this.SEARCH_RADIUS_MULTIPLIER)
     )
     for (const coords of region_coords) {
       const restaurants = await this.search(coords[0], coords[1])

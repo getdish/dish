@@ -60,14 +60,10 @@ export function createWebpackConfig({
       'process.env.TARGET': JSON.stringify(target || null),
       'process.env.IS_STATIC': false,
       'process.env.DISABLE_CACHE': false,
-      'process.env.IS_LIVE': JSON.stringify(
-        process.env.IS_LIVE ?? (isProduction ? '1' : '0')
-      ),
+      'process.env.IS_LIVE': JSON.stringify(process.env.IS_LIVE ?? (isProduction ? '1' : '0')),
       'process.env.DEBUG': JSON.stringify(process.env.DEBUG || false),
       'process.env.LOG_LEVEL': JSON.stringify(process.env.LOG_LEVEL || 0),
-      'process.env.DEBUG_ASSERT': JSON.stringify(
-        process.env.DEBUG_ASSERT || false
-      ),
+      'process.env.DEBUG_ASSERT': JSON.stringify(process.env.DEBUG_ASSERT || false),
       ...defineOptions,
     }
 
@@ -226,10 +222,7 @@ export function createWebpackConfig({
                 use:
                   !noMinify && isProduction && !isSSR
                     ? [ExtractCssChunks.loader, require.resolve('css-loader')]
-                    : [
-                        require.resolve('style-loader'),
-                        require.resolve('css-loader'),
-                      ],
+                    : [require.resolve('style-loader'), require.resolve('css-loader')],
               },
               {
                 test: /\.(png|svg|jpe?g|gif)$/,

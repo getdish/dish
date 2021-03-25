@@ -30,10 +30,7 @@ export async function remove404Images(internal: Self) {
           arrived = true
         }
       }
-      await internal.runOnWorker('checkMaybeDeletePhoto', [
-        result.id,
-        result.url,
-      ])
+      await internal.runOnWorker('checkMaybeDeletePhoto', [result.id, result.url])
     }
     page += 1
     progress = ((page * PER_PAGE) / count) * 100

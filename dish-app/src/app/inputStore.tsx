@@ -1,10 +1,6 @@
 import { Store, createStore, useStoreInstance } from '@dish/use-store'
 
-import {
-  inputClearSelection,
-  inputGetNode,
-  inputIsTextSelected,
-} from '../helpers/input'
+import { inputClearSelection, inputGetNode, inputIsTextSelected } from '../helpers/input'
 import { autocompletesStore } from './AppAutocomplete'
 import { searchPageStore } from './home/search/SearchPageStore'
 

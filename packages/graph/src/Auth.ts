@@ -21,9 +21,7 @@ export type EditUserResponse = {
   username: string
 }
 
-export async function userEdit(
-  user: EditUserProps
-): Promise<EditUserResponse | null> {
+export async function userEdit(user: EditUserProps): Promise<EditUserResponse | null> {
   return await (await userFetchSimple('POST', '/api/user/edit', user)).json()
 }
 
@@ -55,14 +53,7 @@ export async function userFetchSimple(
     if (response.status == 401) {
       handleLogOut?.()
     }
-    console.error(
-      'Auth fetch() error',
-      method,
-      path,
-      data,
-      response.status,
-      response.statusText
-    )
+    console.error('Auth fetch() error', method, path, data, response.status, response.statusText)
   }
   return response
 }
@@ -80,9 +71,7 @@ class AuthModel {
       : `${DISH_API_ENDPOINT}/api/user/appleAuthorizeChrome`
   }
 
-  hasEverLoggedIn =
-    typeof window !== 'undefined' &&
-    !!localStorage.getItem(HAS_LOGGED_IN_BEFORE)
+  hasEverLoggedIn = typeof window !== 'undefined' && !!localStorage.getItem(HAS_LOGGED_IN_BEFORE)
 
   constructor() {
     if (isNode) {
@@ -104,12 +93,7 @@ class AuthModel {
     }
   }
 
-  async api(
-    method: 'POST' | 'GET',
-    path: string,
-    data: any = {},
-    opts?: UserFetchOpts
-  ) {
+  async api(method: 'POST' | 'GET', path: string, data: any = {}, opts?: UserFetchOpts) {
     return await userFetchSimple(method, path, data, {
       ...opts,
       isAdmin: this.isAdmin,
@@ -148,9 +132,7 @@ class AuthModel {
       email,
     })
     if (response.status !== 201) {
-      console.error(
-        `Error registering: ${response.status} ${response.statusText}`
-      )
+      console.error(`Error registering: ${response.status} ${response.statusText}`)
       const data = await response.json()
       return [response.status, data] as const
     } else {

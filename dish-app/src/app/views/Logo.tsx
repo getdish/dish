@@ -2,12 +2,7 @@ import React, { memo } from 'react'
 import { Defs, Ellipse, G, Mask, Path, Svg, Use } from 'react-native-svg'
 import { VStack, useMedia } from 'snackui'
 
-import {
-  logoHeight,
-  logoWidth,
-  logoXsHeight,
-  logoXsWidth,
-} from '../../constants/constants'
+import { logoHeight, logoWidth, logoXsHeight, logoXsWidth } from '../../constants/constants'
 import { useSearchBarTheme } from '../hooks/useSearchBarTheme'
 
 export const Logo = (props: { scale?: number; color?: string }) => {
@@ -17,10 +12,7 @@ export const Logo = (props: { scale?: number; color?: string }) => {
     <VStack transform={[{ scale }]}>
       <Svg width={logoWidth} height={logoHeight} viewBox={`0 0 1201 544`}>
         <G stroke="none" strokeWidth="1" fill="none" fillRule="evenodd">
-          <G
-            transform="translate(-167.000000, -474.000000)"
-            fill={props.color ?? color ?? '#fff'}
-          >
+          <G transform="translate(-167.000000, -474.000000)" fill={props.color ?? color ?? '#fff'}>
             <G transform="translate(167.000000, 474.000000)">
               <G>
                 <Path d="M709.7372,119.757576 C752.615653,119.757576 816.578863,140.039619 841.18392,199.737093 C821.88072,218.680667 795.429798,230.360269 766.250958,230.360269 C765.585593,230.360269 764.921646,230.354196 764.259171,230.342102 C756.859926,206.693979 727.462723,204.440604 712.517309,204.440604 C695.833388,204.440604 674.644672,213.907856 674.644672,233.118695 C674.644672,245.66283 686.853685,251.486938 712.471138,251.486938 C787.204976,251.486938 846.581515,274.731894 847.731975,340.012577 L847.749429,341.994621 C847.749429,408.189485 793.128997,458.323232 712.471138,458.323232 C656.599236,458.323232 601.797717,421.452364 581.730037,375.010645 C600.868459,353.814808 627.961236,340.205387 658.000193,340.205387 C660.639477,340.205387 663.256017,340.302938 665.846417,340.494638 C669.675777,360.551862 693.486979,368.797607 711.691029,368.797607 C731.544922,368.797607 752.563666,361.517291 752.563666,341.276918 C752.563666,327.4938 738.019423,322.951388 713.51785,322.06808 L712.7372,322.07895 C641.505994,322.07895 579.626823,299.66372 578.476363,234.383037 L578.458909,232.400992 C578.458909,170.206129 639.786486,119.757576 709.7372,119.757576 Z"></Path>
@@ -36,13 +28,7 @@ export const Logo = (props: { scale?: number; color?: string }) => {
   )
 }
 
-export const LogoColor = ({
-  scale = 1,
-  color,
-}: {
-  scale?: number
-  color?: string
-}) => {
+export const LogoColor = ({ scale = 1, color }: { scale?: number; color?: string }) => {
   return (
     <VStack transform={[{ scale }]} marginVertical={scale * 5}>
       <Svg width={logoWidth} height={logoHeight} viewBox={`0 0 1303 608`}>
@@ -84,13 +70,7 @@ export const LogoCircle = memo(() => {
             id="path-1"
           />
         </Defs>
-        <G
-          id="icon"
-          stroke="none"
-          strokeWidth="1"
-          fill="none"
-          fillRule="evenodd"
-        >
+        <G id="icon" stroke="none" strokeWidth="1" fill="none" fillRule="evenodd">
           <Mask id="mask-2" fill="white">
             <Use xlinkHref="#path-1"></Use>
           </Mask>

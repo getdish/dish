@@ -17,11 +17,7 @@ export class CancellablePromise<T> extends Promise<T> {
 }
 
 export const createCancellablePromise = <A>(
-  cb: (
-    res: (value?: any) => any,
-    rej: (value?: any) => any,
-    onCancel: Function
-  ) => A
+  cb: (res: (value?: any) => any, rej: (value?: any) => any, onCancel: Function) => A
 ): CancellablePromise<A> => {
   let canceller: any = null
   const promise = new Promise((res, rej) => {
@@ -34,9 +30,7 @@ export const createCancellablePromise = <A>(
   return promise as CancellablePromise<A>
 }
 
-export const cancelPromise = (
-  promise: CancellablePromise<any> | Promise<any>
-) => {
+export const cancelPromise = (promise: CancellablePromise<any> | Promise<any>) => {
   if (!promise) return
   if ('cancel' in promise) {
     promise.cancel?.()

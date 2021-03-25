@@ -11,14 +11,7 @@ export async function restaurantSaveCanonical(
   name: string,
   address: string
 ) {
-  const found = await findExistingCanonical(
-    source,
-    id_from_source,
-    lon,
-    lat,
-    name,
-    address
-  )
+  const found = await findExistingCanonical(source, id_from_source, lon, lat, name, address)
   if (found) {
     return found
   }

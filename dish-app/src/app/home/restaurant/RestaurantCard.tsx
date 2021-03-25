@@ -5,10 +5,7 @@ import { AbsoluteVStack, HStack, Hoverable } from 'snackui'
 
 import { cardFrameHeight, cardFrameWidth } from '../../../constants/constants'
 import { getImageUrl } from '../../../helpers/getImageUrl'
-import {
-  queryRestaurant,
-  queryRestaurantCoverPhoto,
-} from '../../../queries/queryRestaurant'
+import { queryRestaurant, queryRestaurantCoverPhoto } from '../../../queries/queryRestaurant'
 import { appMapStore } from '../../AppMapStore'
 import { CardFrame } from '../../views/CardFrame'
 import { Link } from '../../views/Link'
@@ -95,12 +92,7 @@ export const RestaurantCardContent = graphql(
           outside={(colors) => (
             <>
               {!!below && (
-                <HStack
-                  zIndex={10000}
-                  pointerEvents="none"
-                  position="absolute"
-                  fullscreen
-                >
+                <HStack zIndex={10000} pointerEvents="none" position="absolute" fullscreen>
                   {typeof below === 'function' ? below(colors) : below}
                 </HStack>
               )}
@@ -110,11 +102,7 @@ export const RestaurantCardContent = graphql(
                 right={-12}
                 zIndex={100}
               >
-                <RestaurantRatingView
-                  slug={restaurantSlug}
-                  floating
-                  size={38}
-                />
+                <RestaurantRatingView slug={restaurantSlug} floating size={38} />
               </AbsoluteVStack>
             </>
           )}

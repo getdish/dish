@@ -1,14 +1,7 @@
 import { supportsTouchWeb } from '@dish/helpers'
 import { ArrowDown, ArrowUp, ChevronDown, ChevronUp } from '@dish/react-feather'
 import React, { memo } from 'react'
-import {
-  AbsoluteVStack,
-  StackProps,
-  Text,
-  Theme,
-  Tooltip,
-  VStack,
-} from 'snackui'
+import { AbsoluteVStack, StackProps, Text, Theme, Tooltip, VStack } from 'snackui'
 
 import { green, grey, red } from '../../constants/colors'
 import { isWeb } from '../../constants/constants'
@@ -87,13 +80,7 @@ export const Score = memo(
     )
 
     const colors = getColorsForColor(
-      typeof rating === 'number'
-        ? rating >= 7
-          ? green
-          : rating < 5
-          ? red
-          : grey
-        : grey
+      typeof rating === 'number' ? (rating >= 7 ? green : rating < 5 ? red : grey) : grey
     )
 
     return (
@@ -102,9 +89,7 @@ export const Score = memo(
         backgroundColor={colors.darkColor}
         alignItems="center"
         justifyContent="center"
-        className={
-          isWeb && !supportsTouchWeb && showVoteOnHover ? ' show-on-hover' : ''
-        }
+        className={isWeb && !supportsTouchWeb && showVoteOnHover ? ' show-on-hover' : ''}
         width={sizePx}
         height={sizePx}
         {...(shadowed && {
@@ -121,11 +106,7 @@ export const Score = memo(
               {subtle ? (
                 upvote
               ) : (
-                <Tooltip
-                  position="right"
-                  contents={upTooltip ?? 'Upvote'}
-                  {...isOpenProp}
-                >
+                <Tooltip position="right" contents={upTooltip ?? 'Upvote'} {...isOpenProp}>
                   {upvote}
                 </Tooltip>
               )}
@@ -134,11 +115,7 @@ export const Score = memo(
               {subtle ? (
                 downvote
               ) : (
-                <Tooltip
-                  position="right"
-                  contents={downTooltip ?? 'Downvote'}
-                  {...isOpenProp}
-                >
+                <Tooltip position="right" contents={downTooltip ?? 'Downvote'} {...isOpenProp}>
                   {downvote}
                 </Tooltip>
               )}
@@ -170,12 +147,7 @@ export const Score = memo(
           alignItems="center"
           justifyContent="center"
         >
-          <Text
-            fontSize={fontSize}
-            fontWeight="800"
-            letterSpacing={-1}
-            color="#fff"
-          >
+          <Text fontSize={fontSize} fontWeight="800" letterSpacing={-1} color="#fff">
             {numberFormat(score, 'sm')}
           </Text>
         </VStack>

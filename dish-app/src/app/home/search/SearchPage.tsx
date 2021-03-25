@@ -3,21 +3,9 @@ import { RestaurantSearchItem, slugify } from '@dish/graph'
 import { ArrowUp } from '@dish/react-feather'
 import { HistoryItem } from '@dish/router'
 import { reaction } from '@dish/use-store'
-import React, {
-  Suspense,
-  forwardRef,
-  memo,
-  useCallback,
-  useEffect,
-  useMemo,
-  useRef,
-} from 'react'
+import React, { Suspense, forwardRef, memo, useCallback, useEffect, useMemo, useRef } from 'react'
 import { ScrollView, ScrollViewProps } from 'react-native'
-import {
-  DataProvider,
-  LayoutProvider,
-  RecyclerListView,
-} from 'recyclerlistview'
+import { DataProvider, LayoutProvider, RecyclerListView } from 'recyclerlistview'
 import {
   AbsoluteVStack,
   Button,
@@ -52,10 +40,7 @@ import { StackDrawer } from '../../views/StackDrawer'
 import { HomeStackViewProps } from '../HomeStackViewProps'
 import { HomeSuspense } from '../HomeSuspense'
 import { PageContentWithFooter } from '../PageContentWithFooter'
-import {
-  ITEM_HEIGHT,
-  RestaurantListItem,
-} from '../restaurant/RestaurantListItem'
+import { ITEM_HEIGHT, RestaurantListItem } from '../restaurant/RestaurantListItem'
 import { SearchHeader } from './SearchHeader'
 import { SearchPageNavBar } from './SearchPageNavBar'
 import { SearchPagePropsContext } from './SearchPagePropsContext'
@@ -86,14 +71,7 @@ export default memo(function SearchPage(props: Props) {
         </HomeSuspense>
         <HomeSuspense fallback={<SearchLoading />}>
           <SearchPageContent
-            key={
-              state.id +
-              JSON.stringify([
-                state.activeTags,
-                state.searchQuery,
-                state.region,
-              ])
-            }
+            key={state.id + JSON.stringify([state.activeTags, state.searchQuery, state.region])}
             {...props}
             route={route}
             item={state}
@@ -237,10 +215,7 @@ const SearchPageContent = memo(function SearchPageContent(
         return series([
           () => sleep(300),
           () => {
-            searchPageStore.setIndex(
-              index,
-              appMapStore.hovered ? 'hover' : 'pin'
-            )
+            searchPageStore.setIndex(index, appMapStore.hovered ? 'hover' : 'pin')
           },
         ])
       }
@@ -442,11 +417,7 @@ const SearchPageScrollView = forwardRef<ScrollView, SearchPageScrollViewProps>(
 
     return (
       <VStack onLayout={handleLayout} flex={1}>
-        <ContentScrollView
-          id="search"
-          ref={combineRefs(ref, scrollRef) as any}
-          {...props}
-        >
+        <ContentScrollView id="search" ref={combineRefs(ref, scrollRef) as any} {...props}>
           <PageContentWithFooter>
             <SearchHeader />
             <Spacer />
@@ -474,12 +445,7 @@ const SearchFooter = ({
   scrollToTop: Function
 }) => {
   return (
-    <VStack
-      alignItems="center"
-      justifyContent="center"
-      minHeight={300}
-      width="100%"
-    >
+    <VStack alignItems="center" justifyContent="center" minHeight={300} width="100%">
       <Button
         alignSelf="center"
         borderRadius={1000}

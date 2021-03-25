@@ -96,12 +96,7 @@ export const AppSearchBarFloating = () => {
         </AbsoluteVStack>
 
         {/* container */}
-        <AbsoluteVStack
-          top={searchBarTopOffset}
-          left={20}
-          right={20}
-          alignItems="center"
-        >
+        <AbsoluteVStack top={searchBarTopOffset} left={20} right={20} alignItems="center">
           {/* bg/shadows */}
           <VStack
             position="relative"
@@ -199,18 +194,10 @@ const AppSearchBarContents = memo(({ isColored }: { isColored: boolean }) => {
         {media.xs && isWeb && (
           <>
             {/* keep both in dom so we have access to ref */}
-            <VStack
-              flex={1}
-              overflow="hidden"
-              display={showLocation ? 'contents' : 'none'}
-            >
+            <VStack flex={1} overflow="hidden" display={showLocation ? 'contents' : 'none'}>
               <AppSearchInputLocation />
             </VStack>
-            <VStack
-              flex={1}
-              overflow="hidden"
-              display={!showLocation ? 'contents' : 'none'}
-            >
+            <VStack flex={1} overflow="hidden" display={!showLocation ? 'contents' : 'none'}>
               <AppSearchInput />
             </VStack>
           </>
@@ -227,12 +214,7 @@ const AppSearchBarContents = memo(({ isColored }: { isColored: boolean }) => {
             width="19%"
             maxWidth="50%"
             {...(media.sm && {
-              maxWidth:
-                focus === 'search'
-                  ? 120
-                  : focus === 'location'
-                  ? '100%'
-                  : '25%',
+              maxWidth: focus === 'search' ? 120 : focus === 'location' ? '100%' : '25%',
             })}
             flex={1}
           >
@@ -250,17 +232,9 @@ const AppSearchBarContents = memo(({ isColored }: { isColored: boolean }) => {
             }}
           >
             {showLocation ? (
-              <Search
-                color={isWeb ? 'var(--color)' : '#999'}
-                size={22}
-                opacity={0.65}
-              />
+              <Search color={isWeb ? 'var(--color)' : '#999'} size={22} opacity={0.65} />
             ) : (
-              <MapPin
-                color={isWeb ? 'var(--color)' : '#999'}
-                size={22}
-                opacity={0.65}
-              />
+              <MapPin color={isWeb ? 'var(--color)' : '#999'} size={22} opacity={0.65} />
             )}
           </TouchableOpacity>
         </HStack>

@@ -57,12 +57,7 @@ export const RestaurantDetailRow = memo(
         rows.push({
           title: 'Delivery',
           // @ts-ignore
-          content: (
-            <RestaurantDeliveryButtons
-              showLabels
-              restaurantSlug={restaurantSlug}
-            />
-          ),
+          content: <RestaurantDeliveryButtons showLabels restaurantSlug={restaurantSlug} />,
           color: 'gray',
         })
       }
@@ -70,12 +65,7 @@ export const RestaurantDetailRow = memo(
       const spaceSize = sizeSm ? 0 : '6%'
 
       return (
-        <HStack
-          alignItems="center"
-          spacing={spaceSize}
-          overflow="visible"
-          {...rest}
-        >
+        <HStack alignItems="center" spacing={spaceSize} overflow="visible" {...rest}>
           {rows
             .filter((x) => !sizeSm || x.content !== '')
             .map((row, index) => (
@@ -117,9 +107,7 @@ export const RestaurantDetailRow = memo(
                       ellipse
                       fontSize={sizeSm ? 14 : 16}
                       textAlign={centered ? 'center' : 'left'}
-                      color={
-                        sizeSm ? row.color ?? '' : isWeb ? 'inherit' : '#999'
-                      }
+                      color={sizeSm ? row.color ?? '' : isWeb ? 'inherit' : '#999'}
                       margin="auto"
                       paddingHorizontal={4} // prevents cutoff of image
                     >
@@ -159,8 +147,7 @@ export function openingHours(restaurant: RestaurantQuery) {
     // TODO: Tomorrow isn't always when the next opening time is.
     // Eg; when it's the morning and the restaurant opens in the evening.
     const tomorrow = (dayOfWeek + 1) % 7
-    const tomorrowsHours =
-      restaurant.hours()[tomorrow]?.hoursInfo.hours[0] ?? ''
+    const tomorrowsHours = restaurant.hours()[tomorrow]?.hoursInfo.hours[0] ?? ''
     next_time = getHours(tomorrowsHours)
   }
 

@@ -40,8 +40,7 @@ export class DishTag {
   async getEthnicCuisines() {
     const response = await this.api('List_of_cuisines')
     const sections = await this.getSections(response.data, true)
-    const countries =
-      sections.find((i) => i.title.includes('Ethnic')) || <Section>{}
+    const countries = sections.find((i) => i.title.includes('Ethnic')) || <Section>{}
     for (const country of countries.points) {
       await this.getDishes(country)
     }
@@ -159,15 +158,7 @@ export class DishTag {
 
   _inIgnoredNames(name: string) {
     if (name.length <= 2) return true
-    return [
-      /transl/,
-      /link multi/,
-      /cuisine/i,
-      /^lang$/,
-      /^Cr$/,
-      /^The $/,
-      / is /,
-    ].some((i) => {
+    return [/transl/, /link multi/, /cuisine/i, /^lang$/, /^Cr$/, /^The $/, / is /].some((i) => {
       return i.test(name)
     })
   }

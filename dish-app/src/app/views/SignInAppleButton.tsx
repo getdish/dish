@@ -23,6 +23,4 @@ export const SignInAppleButton = () => {
 }
 
 const SignInAppleButtonInner =
-  isSSR || !isWeb
-    ? () => null
-    : loadable(() => import('./SignInAppleButtonContents'))
+  isSSR || !isWeb ? () => null : loadable(() => import('./SignInAppleButtonContents'))

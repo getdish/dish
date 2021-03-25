@@ -62,10 +62,7 @@ class HomeStore extends Store {
   }
 
   getLastStateByType<Type extends HomeStateItem['type']>(type: Type) {
-    return (findLast(
-      this.states,
-      (x) => x.type === type
-    ) as any) as HomeStatesByType[Type]
+    return (findLast(this.states, (x) => x.type === type) as any) as HomeStatesByType[Type]
   }
 
   get currentStates() {
@@ -105,10 +102,9 @@ class HomeStore extends Store {
   }
 
   get lastActiveTags(): NavigableTag[] {
-    const lastTaggable = _.findLast(
-      this.states,
-      (x) => isHomeState(x) || isSearchState(x)
-    ) as HomeStateItemSearch | HomeStateItemHome
+    const lastTaggable = _.findLast(this.states, (x) => isHomeState(x) || isSearchState(x)) as
+      | HomeStateItemSearch
+      | HomeStateItemHome
     return getActiveTags(lastTaggable)
   }
 
@@ -174,9 +170,7 @@ class HomeStore extends Store {
 
   get upRoute() {
     const cur = this.currentState
-    return this.getUpRouteForType(
-      findLast(this.states, (x) => x.type !== cur.type)?.type ?? 'home'
-    )
+    return this.getUpRouteForType(findLast(this.states, (x) => x.type !== cur.type)?.type ?? 'home')
   }
 
   getIsUpBack(type: HomeStateItem['type']) {
@@ -184,9 +178,7 @@ class HomeStore extends Store {
     const lastRouterName = router.prevHistory?.name
     const lastRouterType = normalizeItemName[lastRouterName] ?? lastRouterName
     return (
-      this.previousState?.type === type &&
-      lastRouterType === type &&
-      router.curPage?.type !== 'pop'
+      this.previousState?.type === type && lastRouterType === type && router.curPage?.type !== 'pop'
     )
   }
 
@@ -202,18 +194,13 @@ class HomeStore extends Store {
       router.history.find((x) => x.id === stateItem?.id) ??
       _.findLast(router.history, (x) => x.name === type)
     const homeRegionParams = {
-      region:
-        stateItem?.['region'] ??
-        this.lastHomeState.region ??
-        'ca-san-francisco',
+      region: stateItem?.['region'] ?? this.lastHomeState.region ?? 'ca-san-francisco',
     }
     if (routerItem) {
       return {
         name: type == 'home' ? 'homeRegion' : type,
         params:
-          type == 'home'
-            ? { ...homeRegionParams, ...routerItem?.params }
-            : routerItem?.params,
+          type == 'home' ? { ...homeRegionParams, ...routerItem?.params } : routerItem?.params,
       } as const
     }
     return {
@@ -236,13 +223,9 @@ class HomeStore extends Store {
     const { center, span } = appMapStore.position
     const curLocInfo = await reverseGeocode(center, span)
     if (curLocInfo) {
-      const curLocName =
-        curLocInfo.fullName ?? curLocInfo.name ?? curLocInfo.country
+      const curLocName = curLocInfo.fullName ?? curLocInfo.name ?? curLocInfo.country
       const cur = this.currentState
-      if (
-        !isEqual(cur.curLocInfo, curLocInfo) ||
-        !isEqual(cur.curLocName, curLocName)
-      ) {
+      if (!isEqual(cur.curLocInfo, curLocInfo) || !isEqual(cur.curLocName, curLocName)) {
         homeStore.updateCurrentState('appMapStore.updateAreaInfo', {
           curLocInfo,
           curLocName,
@@ -462,19 +445,14 @@ class HomeStore extends Store {
       return
     }
     const tags = this.searchBarTags
-    const tagIndex = tags.findIndex(
-      (x) => getTagSlug(x.slug) === getTagSlug(val.slug)
-    )
+    const tagIndex = tags.findIndex((x) => getTagSlug(x.slug) === getTagSlug(val.slug))
     console.warn('todo comented out')
     this.searchBarTagIndex = tagIndex
     // this.autocompleteIndex = -tags.length + tagIndex
   }
 
   updateActiveTags(next: HomeStateTagNavigable) {
-    const state = _.findLast(
-      this.states,
-      (state) => isSearchState(state) || isHomeState(state)
-    )
+    const state = _.findLast(this.states, (state) => isSearchState(state) || isHomeState(state))
     if (!state) return
     try {
       assert(!!next['activeTags'])
@@ -570,10 +548,7 @@ class HomeStore extends Store {
     // do a quick update first
     const curType = curState.type
     const nextType = nextState.type
-    if (
-      nextType !== curType ||
-      (isSearchState(curState) && nextType === 'search')
-    ) {
+    if (nextType !== curType || (isSearchState(curState) && nextType === 'search')) {
       this.isOptimisticUpdating = true
       // optimistic update active tags
       updateTags()
@@ -617,14 +592,8 @@ export const useHomeStore = (debug?: boolean): HomeStore => {
   return useStoreInstance(homeStore, undefined, [], debug)
 }
 
-export const useLastHomeState = <Type extends HomeStateItem['type']>(
-  type: Type
-) => {
-  return useStoreInstance(
-    homeStore,
-    (x) => _.findLast(x.states, (s) => s.type === type),
-    [type]
-  )
+export const useLastHomeState = <Type extends HomeStateItem['type']>(type: Type) => {
+  return useStoreInstance(homeStore, (x) => _.findLast(x.states, (s) => s.type === type), [type])
 }
 
 export const useCurrentHomeType = () => {
@@ -632,9 +601,7 @@ export const useCurrentHomeType = () => {
 }
 
 export const useIsHomeTypeActive = (type?: HomeStateItem['type']) => {
-  return useStoreInstance(homeStore, (x) => x.currentState.type === type, [
-    type,
-  ])
+  return useStoreInstance(homeStore, (x) => x.currentState.type === type, [type])
 }
 
 export const useHomeStateById = <Type extends HomeStateItem>(id: string) => {

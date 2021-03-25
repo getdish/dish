@@ -8,10 +8,7 @@ import { homeStore } from './homeStore'
 import { inputStoreLocation } from './inputStore'
 
 export async function setLocation(val: string) {
-  const current = [
-    ...autocompleteLocationStore.results,
-    ...defaultLocationAutocompleteResults,
-  ]
+  const current = [...autocompleteLocationStore.results, ...defaultLocationAutocompleteResults]
   inputStoreLocation.setValue(val)
   const exact = current.find((x) => x.name === val)
   if (!exact) return

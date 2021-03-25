@@ -11,11 +11,7 @@ import { Toast } from 'snackui'
 // automatically logs errors to toast
 // but allows things to fail without failing entire app
 
-export function useQueryLoud<
-  TData = unknown,
-  TError = unknown,
-  TQueryFnData = TData
->(
+export function useQueryLoud<TData = unknown, TError = unknown, TQueryFnData = TData>(
   queryKey: QueryKey,
   queryFn: QueryFunction<TQueryFnData | TData>,
   options?: UseQueryOptions<TData, TError, TQueryFnData>

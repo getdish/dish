@@ -13,13 +13,8 @@ const weakKey = (obj: any, prefix = '') => {
 export function getStoreUid(Constructor: any, props: string | Object | void) {
   // in dev mode we can use name which gives us nice `allStores.StoreName` access
   // in prod mode it usually is minified and mangled, unsafe to use name so use weakkey
-  const storeName =
-    process.env.NODE_ENV === 'development'
-      ? Constructor.name
-      : weakKey(Constructor)
-  return `${storeName}${
-    !props ? '' : typeof props === 'string' ? props : getKey(props)
-  }`
+  const storeName = process.env.NODE_ENV === 'development' ? Constructor.name : weakKey(Constructor)
+  return `${storeName}${!props ? '' : typeof props === 'string' ? props : getKey(props)}`
 }
 
 export const UNWRAP_STORE_INFO = Symbol('UNWRAP_STORE_INFO')
@@ -38,10 +33,7 @@ export function getStoreDescriptors(storeInstance: any) {
   return descriptors
 }
 
-export function get<A>(
-  _: A,
-  b?: any
-): A extends new (props?: any) => infer B ? B : A {
+export function get<A>(_: A, b?: any): A extends new (props?: any) => infer B ? B : A {
   return _ as any
 }
 
@@ -85,8 +77,5 @@ export function simpleStr(arg: any) {
 // helper for debugging
 
 export function getStoreDebugInfo(store: any) {
-  return (
-    store[UNWRAP_STORE_INFO] ??
-    cache.get(getStoreUid(store.constructor, store.props))
-  )
+  return store[UNWRAP_STORE_INFO] ?? cache.get(getStoreUid(store.constructor, store.props))
 }

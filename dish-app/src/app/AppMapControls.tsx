@@ -8,10 +8,7 @@ import { isWeb, searchBarHeight, zIndexDrawer } from '../constants/constants'
 import { hasMovedAtLeast } from '../helpers/mapHelpers'
 import { useIsRouteActive } from '../router'
 import { appMapStore } from './AppMapStore'
-import {
-  searchPageStore,
-  useSearchPageStore,
-} from './home/search/SearchPageStore'
+import { searchPageStore, useSearchPageStore } from './home/search/SearchPageStore'
 import { homeStore } from './homeStore'
 import { useSafeArea } from './hooks/useSafeArea'
 import { pagesStore } from './pagesStore'

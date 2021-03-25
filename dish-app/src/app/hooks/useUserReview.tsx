@@ -37,10 +37,7 @@ export type ReviewWithTag = Pick<
 
 type ReviewTypes = 'vote' | 'favorite' | 'comment'
 
-export const useUserReviewsQuery = (
-  restaurantId: string,
-  type?: ReviewTypes
-) => {
+export const useUserReviewsQuery = (restaurantId: string, type?: ReviewTypes) => {
   const refetch = useRefetch()
   const userStore = useUserStore()
   const userId = (userStore.user?.id as string) ?? ''
@@ -169,8 +166,7 @@ export const useUserReviewsQuery = (
   }
 }
 
-export const isTagReview = (r: DeepPartial<Review>) =>
-  !!r.tag_id && r.tag_id !== globalTagId
+export const isTagReview = (r: DeepPartial<Review>) => !!r.tag_id && r.tag_id !== globalTagId
 
 export const useUserReviewCommentQuery = (
   restaurantId: string,
@@ -182,10 +178,7 @@ export const useUserReviewCommentQuery = (
     onDelete?: () => void
   } = {}
 ) => {
-  const { reviews, upsert, reviewsQuery } = useUserReviewsQuery(
-    restaurantId,
-    'comment'
-  )
+  const { reviews, upsert, reviewsQuery } = useUserReviewsQuery(restaurantId, 'comment')
   const review = reviews.filter((x) => !isTagReview(x) && !!x.text)[0]
   return {
     review,

@@ -8,10 +8,8 @@ export type Maybe<T> = T | null
 export type Exact<T extends { [key: string]: unknown }> = {
   [K in keyof T]: T[K]
 }
-export type MakeOptional<T, K extends keyof T> = Omit<T, K> &
-  { [SubKey in K]?: Maybe<T[SubKey]> }
-export type MakeMaybe<T, K extends keyof T> = Omit<T, K> &
-  { [SubKey in K]: Maybe<T[SubKey]> }
+export type MakeOptional<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]?: Maybe<T[SubKey]> }
+export type MakeMaybe<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]: Maybe<T[SubKey]> }
 /** All built-in and custom scalars, mapped to their actual values */
 export interface Scalars {
   ID: string
@@ -11144,9 +11142,7 @@ export interface Query {
     order_by?: Maybe<Array<list_restaurant_tag_order_by>>
     where?: Maybe<list_restaurant_tag_bool_exp>
   }) => list_restaurant_tag_aggregate
-  list_restaurant_tag_by_pk: (args: {
-    id: ScalarsEnums['uuid']
-  }) => Maybe<list_restaurant_tag>
+  list_restaurant_tag_by_pk: (args: { id: ScalarsEnums['uuid'] }) => Maybe<list_restaurant_tag>
   list_tag: (args?: {
     distinct_on?: Array<ScalarsEnums['list_tag_select_column']>
     limit?: ScalarsEnums['Int']
@@ -11191,9 +11187,7 @@ export interface Query {
     order_by?: Maybe<Array<nhood_labels_order_by>>
     where?: Maybe<nhood_labels_bool_exp>
   }) => nhood_labels_aggregate
-  nhood_labels_by_pk: (args: {
-    ogc_fid: ScalarsEnums['Int']
-  }) => Maybe<nhood_labels>
+  nhood_labels_by_pk: (args: { ogc_fid: ScalarsEnums['Int'] }) => Maybe<nhood_labels>
   opening_hours: (args?: {
     distinct_on?: Array<ScalarsEnums['opening_hours_select_column']>
     limit?: ScalarsEnums['Int']
@@ -11208,9 +11202,7 @@ export interface Query {
     order_by?: Maybe<Array<opening_hours_order_by>>
     where?: Maybe<opening_hours_bool_exp>
   }) => opening_hours_aggregate
-  opening_hours_by_pk: (args: {
-    id: ScalarsEnums['uuid']
-  }) => Maybe<opening_hours>
+  opening_hours_by_pk: (args: { id: ScalarsEnums['uuid'] }) => Maybe<opening_hours>
   photo: (args?: {
     distinct_on?: Array<ScalarsEnums['photo_select_column']>
     limit?: ScalarsEnums['Int']
@@ -11367,9 +11359,7 @@ export interface Query {
     order_by?: Maybe<Array<review_tag_sentence_order_by>>
     where?: Maybe<review_tag_sentence_bool_exp>
   }) => review_tag_sentence_aggregate
-  review_tag_sentence_by_pk: (args: {
-    id: ScalarsEnums['uuid']
-  }) => Maybe<review_tag_sentence>
+  review_tag_sentence_by_pk: (args: { id: ScalarsEnums['uuid'] }) => Maybe<review_tag_sentence>
   setting: (args?: {
     distinct_on?: Array<ScalarsEnums['setting_select_column']>
     limit?: ScalarsEnums['Int']
@@ -11469,44 +11459,24 @@ export interface Mutation {
   delete_list_restaurant_tag_by_pk: (args: {
     id: ScalarsEnums['uuid']
   }) => Maybe<list_restaurant_tag>
-  delete_list_tag: (args: {
-    where: list_tag_bool_exp
-  }) => Maybe<list_tag_mutation_response>
+  delete_list_tag: (args: { where: list_tag_bool_exp }) => Maybe<list_tag_mutation_response>
   delete_list_tag_by_pk: (args: { id: ScalarsEnums['uuid'] }) => Maybe<list_tag>
-  delete_menu_item: (args: {
-    where: menu_item_bool_exp
-  }) => Maybe<menu_item_mutation_response>
-  delete_menu_item_by_pk: (args: {
-    id: ScalarsEnums['uuid']
-  }) => Maybe<menu_item>
+  delete_menu_item: (args: { where: menu_item_bool_exp }) => Maybe<menu_item_mutation_response>
+  delete_menu_item_by_pk: (args: { id: ScalarsEnums['uuid'] }) => Maybe<menu_item>
   delete_nhood_labels: (args: {
     where: nhood_labels_bool_exp
   }) => Maybe<nhood_labels_mutation_response>
-  delete_nhood_labels_by_pk: (args: {
-    ogc_fid: ScalarsEnums['Int']
-  }) => Maybe<nhood_labels>
+  delete_nhood_labels_by_pk: (args: { ogc_fid: ScalarsEnums['Int'] }) => Maybe<nhood_labels>
   delete_opening_hours: (args: {
     where: opening_hours_bool_exp
   }) => Maybe<opening_hours_mutation_response>
-  delete_opening_hours_by_pk: (args: {
-    id: ScalarsEnums['uuid']
-  }) => Maybe<opening_hours>
-  delete_photo: (args: {
-    where: photo_bool_exp
-  }) => Maybe<photo_mutation_response>
+  delete_opening_hours_by_pk: (args: { id: ScalarsEnums['uuid'] }) => Maybe<opening_hours>
+  delete_photo: (args: { where: photo_bool_exp }) => Maybe<photo_mutation_response>
   delete_photo_by_pk: (args: { id: ScalarsEnums['uuid'] }) => Maybe<photo>
-  delete_photo_xref: (args: {
-    where: photo_xref_bool_exp
-  }) => Maybe<photo_xref_mutation_response>
-  delete_photo_xref_by_pk: (args: {
-    id: ScalarsEnums['uuid']
-  }) => Maybe<photo_xref>
-  delete_restaurant: (args: {
-    where: restaurant_bool_exp
-  }) => Maybe<restaurant_mutation_response>
-  delete_restaurant_by_pk: (args: {
-    id: ScalarsEnums['uuid']
-  }) => Maybe<restaurant>
+  delete_photo_xref: (args: { where: photo_xref_bool_exp }) => Maybe<photo_xref_mutation_response>
+  delete_photo_xref_by_pk: (args: { id: ScalarsEnums['uuid'] }) => Maybe<photo_xref>
+  delete_restaurant: (args: { where: restaurant_bool_exp }) => Maybe<restaurant_mutation_response>
+  delete_restaurant_by_pk: (args: { id: ScalarsEnums['uuid'] }) => Maybe<restaurant>
   delete_restaurant_tag: (args: {
     where: restaurant_tag_bool_exp
   }) => Maybe<restaurant_tag_mutation_response>
@@ -11514,9 +11484,7 @@ export interface Mutation {
     restaurant_id: ScalarsEnums['uuid']
     tag_id: ScalarsEnums['uuid']
   }) => Maybe<restaurant_tag>
-  delete_review: (args: {
-    where: review_bool_exp
-  }) => Maybe<review_mutation_response>
+  delete_review: (args: { where: review_bool_exp }) => Maybe<review_mutation_response>
   delete_review_by_pk: (args: { id: ScalarsEnums['uuid'] }) => Maybe<review>
   delete_review_tag_sentence: (args: {
     where: review_tag_sentence_bool_exp
@@ -11524,26 +11492,18 @@ export interface Mutation {
   delete_review_tag_sentence_by_pk: (args: {
     id: ScalarsEnums['uuid']
   }) => Maybe<review_tag_sentence>
-  delete_setting: (args: {
-    where: setting_bool_exp
-  }) => Maybe<setting_mutation_response>
-  delete_setting_by_pk: (args: {
-    key: ScalarsEnums['String']
-  }) => Maybe<setting>
+  delete_setting: (args: { where: setting_bool_exp }) => Maybe<setting_mutation_response>
+  delete_setting_by_pk: (args: { key: ScalarsEnums['String'] }) => Maybe<setting>
   delete_tag: (args: { where: tag_bool_exp }) => Maybe<tag_mutation_response>
   delete_tag_by_pk: (args: { id: ScalarsEnums['uuid'] }) => Maybe<tag>
-  delete_tag_tag: (args: {
-    where: tag_tag_bool_exp
-  }) => Maybe<tag_tag_mutation_response>
+  delete_tag_tag: (args: { where: tag_tag_bool_exp }) => Maybe<tag_tag_mutation_response>
   delete_tag_tag_by_pk: (args: {
     category_tag_id: ScalarsEnums['uuid']
     tag_id: ScalarsEnums['uuid']
   }) => Maybe<tag_tag>
   delete_user: (args: { where: user_bool_exp }) => Maybe<user_mutation_response>
   delete_user_by_pk: (args: { id: ScalarsEnums['uuid'] }) => Maybe<user>
-  delete_zcta5: (args: {
-    where: zcta5_bool_exp
-  }) => Maybe<zcta5_mutation_response>
+  delete_zcta5: (args: { where: zcta5_bool_exp }) => Maybe<zcta5_mutation_response>
   delete_zcta5_by_pk: (args: { ogc_fid: ScalarsEnums['Int'] }) => Maybe<zcta5>
   insert_hrr: (args: {
     objects: Array<hrr_insert_input>
@@ -12019,9 +11979,7 @@ export interface Subscription {
     order_by?: Maybe<Array<list_restaurant_tag_order_by>>
     where?: Maybe<list_restaurant_tag_bool_exp>
   }) => list_restaurant_tag_aggregate
-  list_restaurant_tag_by_pk: (args: {
-    id: ScalarsEnums['uuid']
-  }) => Maybe<list_restaurant_tag>
+  list_restaurant_tag_by_pk: (args: { id: ScalarsEnums['uuid'] }) => Maybe<list_restaurant_tag>
   list_tag: (args?: {
     distinct_on?: Array<ScalarsEnums['list_tag_select_column']>
     limit?: ScalarsEnums['Int']
@@ -12066,9 +12024,7 @@ export interface Subscription {
     order_by?: Maybe<Array<nhood_labels_order_by>>
     where?: Maybe<nhood_labels_bool_exp>
   }) => nhood_labels_aggregate
-  nhood_labels_by_pk: (args: {
-    ogc_fid: ScalarsEnums['Int']
-  }) => Maybe<nhood_labels>
+  nhood_labels_by_pk: (args: { ogc_fid: ScalarsEnums['Int'] }) => Maybe<nhood_labels>
   opening_hours: (args?: {
     distinct_on?: Array<ScalarsEnums['opening_hours_select_column']>
     limit?: ScalarsEnums['Int']
@@ -12083,9 +12039,7 @@ export interface Subscription {
     order_by?: Maybe<Array<opening_hours_order_by>>
     where?: Maybe<opening_hours_bool_exp>
   }) => opening_hours_aggregate
-  opening_hours_by_pk: (args: {
-    id: ScalarsEnums['uuid']
-  }) => Maybe<opening_hours>
+  opening_hours_by_pk: (args: { id: ScalarsEnums['uuid'] }) => Maybe<opening_hours>
   photo: (args?: {
     distinct_on?: Array<ScalarsEnums['photo_select_column']>
     limit?: ScalarsEnums['Int']
@@ -12242,9 +12196,7 @@ export interface Subscription {
     order_by?: Maybe<Array<review_tag_sentence_order_by>>
     where?: Maybe<review_tag_sentence_bool_exp>
   }) => review_tag_sentence_aggregate
-  review_tag_sentence_by_pk: (args: {
-    id: ScalarsEnums['uuid']
-  }) => Maybe<review_tag_sentence>
+  review_tag_sentence_by_pk: (args: { id: ScalarsEnums['uuid'] }) => Maybe<review_tag_sentence>
   setting: (args?: {
     distinct_on?: Array<ScalarsEnums['setting_select_column']>
     limit?: ScalarsEnums['Int']
@@ -13080,9 +13032,7 @@ export interface opening_hours_mutation_response {
 
 export interface photo {
   __typename: 'photo' | undefined
-  categories: (args?: {
-    path?: ScalarsEnums['String']
-  }) => ScalarsEnums['jsonb']
+  categories: (args?: { path?: ScalarsEnums['String'] }) => ScalarsEnums['jsonb']
   created_at: ScalarsEnums['timestamptz']
   id: ScalarsEnums['uuid']
   origin?: ScalarsEnums['String']
@@ -13274,9 +13224,7 @@ export interface restaurant {
     where?: Maybe<menu_item_bool_exp>
   }) => menu_item_aggregate
   name: ScalarsEnums['String']
-  og_source_ids: (args?: {
-    path?: ScalarsEnums['String']
-  }) => ScalarsEnums['jsonb']
+  og_source_ids: (args?: { path?: ScalarsEnums['String'] }) => ScalarsEnums['jsonb']
   oldest_review_date?: ScalarsEnums['timestamptz']
   photo_table: (args?: {
     distinct_on?: Array<ScalarsEnums['photo_xref_select_column']>
@@ -13295,9 +13243,7 @@ export interface restaurant {
   photos: (args?: { path?: ScalarsEnums['String'] }) => ScalarsEnums['jsonb']
   price_range?: ScalarsEnums['String']
   rating?: ScalarsEnums['numeric']
-  rating_factors: (args?: {
-    path?: ScalarsEnums['String']
-  }) => ScalarsEnums['jsonb']
+  rating_factors: (args?: { path?: ScalarsEnums['String'] }) => ScalarsEnums['jsonb']
   reviews: (args?: {
     distinct_on?: Array<ScalarsEnums['review_select_column']>
     limit?: ScalarsEnums['Int']
@@ -13313,16 +13259,10 @@ export interface restaurant {
     where?: Maybe<review_bool_exp>
   }) => review_aggregate
   score?: ScalarsEnums['numeric']
-  score_breakdown: (args?: {
-    path?: ScalarsEnums['String']
-  }) => ScalarsEnums['jsonb']
-  scrape_metadata: (args?: {
-    path?: ScalarsEnums['String']
-  }) => ScalarsEnums['jsonb']
+  score_breakdown: (args?: { path?: ScalarsEnums['String'] }) => ScalarsEnums['jsonb']
+  scrape_metadata: (args?: { path?: ScalarsEnums['String'] }) => ScalarsEnums['jsonb']
   slug: ScalarsEnums['String']
-  source_breakdown: (args?: {
-    path?: ScalarsEnums['String']
-  }) => ScalarsEnums['jsonb']
+  source_breakdown: (args?: { path?: ScalarsEnums['String'] }) => ScalarsEnums['jsonb']
   sources: (args?: { path?: ScalarsEnums['String'] }) => ScalarsEnums['jsonb']
   state?: ScalarsEnums['String']
   summary?: ScalarsEnums['String']
@@ -13514,9 +13454,7 @@ export interface restaurant_tag {
     where?: Maybe<review_bool_exp>
   }) => review_aggregate
   score?: ScalarsEnums['numeric']
-  score_breakdown: (args?: {
-    path?: ScalarsEnums['String']
-  }) => ScalarsEnums['jsonb']
+  score_breakdown: (args?: { path?: ScalarsEnums['String'] }) => ScalarsEnums['jsonb']
   sentences: (args?: {
     distinct_on?: Array<ScalarsEnums['review_tag_sentence_select_column']>
     limit?: ScalarsEnums['Int']
@@ -13531,9 +13469,7 @@ export interface restaurant_tag {
     order_by?: Maybe<Array<review_tag_sentence_order_by>>
     where?: Maybe<review_tag_sentence_bool_exp>
   }) => review_tag_sentence_aggregate
-  source_breakdown: (args?: {
-    path?: ScalarsEnums['String']
-  }) => ScalarsEnums['jsonb']
+  source_breakdown: (args?: { path?: ScalarsEnums['String'] }) => ScalarsEnums['jsonb']
   tag: tag
   tag_id: ScalarsEnums['uuid']
   upvotes?: ScalarsEnums['numeric']
@@ -13719,9 +13655,7 @@ export interface restaurant_variance_fields {
 export interface review {
   __typename: 'review' | undefined
   authored_at: ScalarsEnums['timestamptz']
-  categories: (args?: {
-    path?: ScalarsEnums['String']
-  }) => ScalarsEnums['jsonb']
+  categories: (args?: { path?: ScalarsEnums['String'] }) => ScalarsEnums['jsonb']
   favorited?: ScalarsEnums['Boolean']
   id: ScalarsEnums['uuid']
   list_id?: ScalarsEnums['uuid']
@@ -14032,9 +13966,7 @@ export interface setting_mutation_response {
 
 export interface tag {
   __typename: 'tag' | undefined
-  alternates: (args?: {
-    path?: ScalarsEnums['String']
-  }) => ScalarsEnums['jsonb']
+  alternates: (args?: { path?: ScalarsEnums['String'] }) => ScalarsEnums['jsonb']
   categories: (args?: {
     distinct_on?: Array<ScalarsEnums['tag_tag_select_column']>
     limit?: ScalarsEnums['Int']
@@ -14051,9 +13983,7 @@ export interface tag {
   }) => tag_tag_aggregate
   created_at: ScalarsEnums['timestamptz']
   default_image?: ScalarsEnums['String']
-  default_images: (args?: {
-    path?: ScalarsEnums['String']
-  }) => ScalarsEnums['jsonb']
+  default_images: (args?: { path?: ScalarsEnums['String'] }) => ScalarsEnums['jsonb']
   description?: ScalarsEnums['String']
   displayName?: ScalarsEnums['String']
   frequency?: ScalarsEnums['Int']
@@ -14996,12 +14926,8 @@ export interface ScalarsEnums extends MakeNullable<Scalars> {
   list_restaurant_constraint: list_restaurant_constraint | undefined
   list_restaurant_select_column: list_restaurant_select_column | undefined
   list_restaurant_tag_constraint: list_restaurant_tag_constraint | undefined
-  list_restaurant_tag_select_column:
-    | list_restaurant_tag_select_column
-    | undefined
-  list_restaurant_tag_update_column:
-    | list_restaurant_tag_update_column
-    | undefined
+  list_restaurant_tag_select_column: list_restaurant_tag_select_column | undefined
+  list_restaurant_tag_update_column: list_restaurant_tag_update_column | undefined
   list_restaurant_update_column: list_restaurant_update_column | undefined
   list_select_column: list_select_column | undefined
   list_tag_constraint: list_tag_constraint | undefined
@@ -15033,12 +14959,8 @@ export interface ScalarsEnums extends MakeNullable<Scalars> {
   review_constraint: review_constraint | undefined
   review_select_column: review_select_column | undefined
   review_tag_sentence_constraint: review_tag_sentence_constraint | undefined
-  review_tag_sentence_select_column:
-    | review_tag_sentence_select_column
-    | undefined
-  review_tag_sentence_update_column:
-    | review_tag_sentence_update_column
-    | undefined
+  review_tag_sentence_select_column: review_tag_sentence_select_column | undefined
+  review_tag_sentence_update_column: review_tag_sentence_update_column | undefined
   review_update_column: review_update_column | undefined
   setting_constraint: setting_constraint | undefined
   setting_select_column: setting_select_column | undefined

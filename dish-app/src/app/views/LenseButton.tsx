@@ -36,10 +36,7 @@ export const LenseButton = ({
   const lineHeight = sizePx * scale * 0.39
 
   return (
-    <Link
-      {...(onPress ? { onPress } : { tag: lense })}
-      disallowDisableWhenActive
-    >
+    <Link {...(onPress ? { onPress } : { tag: lense })} disallowDisableWhenActive>
       <VStack
         className="unselectable ease-in-out-fast"
         alignItems="center"

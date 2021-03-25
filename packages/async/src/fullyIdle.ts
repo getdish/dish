@@ -8,8 +8,5 @@ export async function fullyIdle({
   min?: number
   max?: number
 } = {}) {
-  return await Promise.all([
-    sleepFn(min),
-    Promise.race([sleepFn(max), requestIdle()]),
-  ])
+  return await Promise.all([sleepFn(min), Promise.race([sleepFn(max), requestIdle()])])
 }

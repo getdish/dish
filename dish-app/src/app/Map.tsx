@@ -64,16 +64,7 @@ export const MapView = (props: MapProps) => {
     return null
   }
 
-  const {
-    center,
-    span,
-    padding,
-    features,
-    style,
-    hovered,
-    selected,
-    hideRegions,
-  } = props
+  const { center, span, padding, features, style, hovered, selected, hideRegions } = props
   const isMounted = useIsMountedRef()
   const mapNode = useRef<HTMLDivElement>(null)
   const [map, setMap] = useState<mapboxgl.Map | null>(null)
@@ -167,9 +158,7 @@ export const MapView = (props: MapProps) => {
     if (prevHoveredId.current != null) {
       mapSetFeature(map, prevHoveredId.current, { hover: false })
     }
-    const index = features.findIndex(
-      (feature) => feature.properties?.id === hovered
-    )
+    const index = features.findIndex((feature) => feature.properties?.id === hovered)
 
     if (index === -1) {
       return
@@ -189,10 +178,7 @@ export const MapView = (props: MapProps) => {
       offset: 12,
     })
       .setLngLat(
-        new mapboxgl.LngLat(
-          feature.geometry.coordinates[0],
-          feature.geometry.coordinates[1]
-        )
+        new mapboxgl.LngLat(feature.geometry.coordinates[0], feature.geometry.coordinates[1])
       )
       .setHTML(`${feature.properties?.title}`)
       .addTo(map)
@@ -450,10 +436,7 @@ function setupMapEffect({
     }
   }, 150)
 
-  function setCurrentRegion(
-    feature: MapboxGeoJSONFeature,
-    via: 'click' | 'drag'
-  ) {
+  function setCurrentRegion(feature: MapboxGeoJSONFeature, via: 'click' | 'drag') {
     const layerName = getCurrentLayerName()
     try {
       if (curRegionId) {
@@ -551,12 +534,7 @@ function setupMapEffect({
         const handleMouseMove = throttle((e) => {
           const features = getFeatures(e)
           const [feature] = features
-          if (
-            feature &&
-            hovered &&
-            feature.source === hovered.source &&
-            feature.id == hovered.id
-          ) {
+          if (feature && hovered && feature.source === hovered.source && feature.id == hovered.id) {
             return
           }
 

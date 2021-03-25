@@ -1,12 +1,5 @@
 import React, { memo } from 'react'
-import {
-  AbsoluteVStack,
-  Divider,
-  Spacer,
-  Theme,
-  VStack,
-  useTheme,
-} from 'snackui'
+import { AbsoluteVStack, Divider, Spacer, Theme, VStack, useTheme } from 'snackui'
 
 import { isWeb } from '../../constants/constants'
 import { AppIntroLogin } from '../AppIntroLogin'

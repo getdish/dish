@@ -4,9 +4,7 @@ export const inputGetNode = (instance: any): HTMLInputElement | null => {
   if (Platform.OS !== 'web') {
     return instance
   }
-  return (
-    (instance instanceof HTMLElement ? instance : instance?.['_node']) ?? null
-  )
+  return (instance instanceof HTMLElement ? instance : instance?.['_node']) ?? null
 }
 
 export const inputCaretPosition = (input?: HTMLInputElement) => {

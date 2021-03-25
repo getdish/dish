@@ -4,11 +4,7 @@ import React, { memo, useEffect, useMemo } from 'react'
 import { Animated, PanResponder, StyleSheet, View } from 'react-native'
 import { AbsoluteVStack, VStack, useMedia } from 'snackui'
 
-import {
-  pageWidthMax,
-  searchBarHeight,
-  zIndexDrawer,
-} from '../../constants/constants'
+import { pageWidthMax, searchBarHeight, zIndexDrawer } from '../../constants/constants'
 import { isWebIOS } from '../../helpers/isIOS'
 import { autocompletesStore } from '../AppAutocomplete'
 import { AppSearchBar } from '../AppSearchBar'
@@ -133,10 +129,7 @@ export const HomeDrawerSmallView = memo((props: { children: any }) => {
             {/* overlay over entire content to make dragging it up easy */}
             {(isWebIOS || drawerStore.snapIndex === 2) && (
               <AbsoluteVStack pointerEvents="auto" fullscreen zIndex={1000000}>
-                <View
-                  style={{ width: '100%', height: '100%' }}
-                  {...panResponder.panHandlers}
-                />
+                <View style={{ width: '100%', height: '100%' }} {...panResponder.panHandlers} />
               </AbsoluteVStack>
             )}
 

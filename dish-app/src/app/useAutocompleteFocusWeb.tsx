@@ -27,9 +27,7 @@ export const useAutocompleteFocusWeb = ({
       if (!shouldFocus) {
         return
       }
-      const didMoveALot =
-        Math.abs(moveInit[0] - moveAt[0]) + Math.abs(moveInit[1] - moveAt[1]) >
-        15
+      const didMoveALot = Math.abs(moveInit[0] - moveAt[0]) + Math.abs(moveInit[1] - moveAt[1]) > 15
       const didLeaveMouseDown = Date.now() - mouseDownAt > 500
       // dont slide up to be nice to text selection!
       const shouldSlideOpen = didMoveALot || didLeaveMouseDown

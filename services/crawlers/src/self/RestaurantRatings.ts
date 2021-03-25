@@ -12,34 +12,22 @@ export class RestaurantRatings {
 
   mergeRatings() {
     this.crawler.ratings = {
-      yelp: parseFloat(
-        scrapeGetData(this.crawler.yelp, 'data_from_map_search.rating')
-      ),
-      ubereats: parseFloat(
-        scrapeGetData(this.crawler.ubereats, 'main.rating.ratingValue')
-      ),
+      yelp: parseFloat(scrapeGetData(this.crawler.yelp, 'data_from_map_search.rating')),
+      ubereats: parseFloat(scrapeGetData(this.crawler.ubereats, 'main.rating.ratingValue')),
       infatuated: this._infatuatedRating(),
       tripadvisor: parseFloat(
         scrapeGetData(this.crawler.tripadvisor, 'overview.rating.primaryRating')
       ),
       michelin: this._getMichelinRating(),
       doordash: this._doorDashRating(),
-      grubhub: parseFloat(
-        scrapeGetData(this.crawler.grubhub, 'main.rating.rating_value')
-      ),
+      grubhub: parseFloat(scrapeGetData(this.crawler.grubhub, 'main.rating.rating_value')),
       google: parseFloat(scrapeGetData(this.crawler.google, 'rating')),
     }
-    this.crawler.restaurant.rating = this.weightRatings(
-      this.crawler.ratings,
-      RESTAURANT_WEIGHTS
-    )
+    this.crawler.restaurant.rating = this.weightRatings(this.crawler.ratings, RESTAURANT_WEIGHTS)
   }
 
   _infatuatedRating() {
-    const rating = scrapeGetData(
-      this.crawler.infatuated,
-      'data_from_map_search.post.rating'
-    )
+    const rating = scrapeGetData(this.crawler.infatuated, 'data_from_map_search.post.rating')
     if (rating < 0) return NaN
     return parseFloat(rating) / 2
   }
@@ -57,11 +45,7 @@ export class RestaurantRatings {
     let total_weight = 0
     let final_rating = 0
     Object.entries(ratings).forEach(([source, rating]) => {
-      if (
-        Number.isNaN(rating) ||
-        typeof rating !== 'number' ||
-        rating == null
-      ) {
+      if (Number.isNaN(rating) || typeof rating !== 'number' || rating == null) {
         delete ratings[source]
       } else {
         weights[source] = master_weights[source]

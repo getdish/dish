@@ -31,11 +31,7 @@ function getBodyParser(opts: BodyParseOpts) {
   return bodyParser[key](opts?.[key] ?? { limit: '2048mb' })
 }
 
-export async function useRouteBodyParser(
-  req: Request,
-  res: Response,
-  opts: BodyParseOpts
-) {
+export async function useRouteBodyParser(req: Request, res: Response, opts: BodyParseOpts) {
   return await runMiddleware(req, res, getBodyParser(opts))
 }
 
@@ -55,10 +51,8 @@ export const rawRoute = (fn: Handler, opts?: BodyParseOptsRaw['raw']) =>
 export const textRoute = (fn: Handler, opts?: BodyParseOptsText['text']) =>
   bodyParsedRoute(fn, { text: opts })
 
-export const urlEncodedRoute = (
-  fn: Handler,
-  opts?: BodyParseOptsURLEncoded['urlEncoded']
-) => bodyParsedRoute(fn, { urlEncoded: opts })
+export const urlEncodedRoute = (fn: Handler, opts?: BodyParseOptsURLEncoded['urlEncoded']) =>
+  bodyParsedRoute(fn, { urlEncoded: opts })
 
 export function handleErrors(fn: Handler) {
   return async (req: Request, res: Response) => {
@@ -87,11 +81,7 @@ export function handleErrors(fn: Handler) {
   }
 }
 
-export async function runMiddleware(
-  req: Request,
-  res: Response,
-  fn: ExpressHandler
-) {
+export async function runMiddleware(req: Request, res: Response, fn: ExpressHandler) {
   return new Promise((resolve, reject) => {
     fn(req, res, (result) => {
       if (result instanceof Error) {

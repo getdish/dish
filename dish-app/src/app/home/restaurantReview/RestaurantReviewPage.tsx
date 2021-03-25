@@ -2,15 +2,7 @@ import { graphql, query, refetch, reviewAnalyze } from '@dish/graph'
 import { useStoreInstance } from '@dish/use-store'
 import React, { Suspense, memo, useEffect, useState } from 'react'
 import { Image, ScrollView, TextInput } from 'react-native'
-import {
-  HStack,
-  LoadingItems,
-  Modal,
-  Spacer,
-  Text,
-  VStack,
-  useDebounceEffect,
-} from 'snackui'
+import { HStack, LoadingItems, Modal, Spacer, Text, VStack, useDebounceEffect } from 'snackui'
 
 import { red } from '../../../constants/colors'
 import { getRestaurantDishes } from '../../../helpers/getRestaurantDishes'
@@ -63,11 +55,7 @@ function RestaurantReviewPageContent() {
 }
 
 const HomePageReviewContent = memo(
-  graphql(function HomePageReviewContent({
-    state,
-  }: {
-    state: HomeStateItemReview
-  }) {
+  graphql(function HomePageReviewContent({ state }: { state: HomeStateItemReview }) {
     if (!state.restaurantSlug) {
       return (
         <VStack>
@@ -98,208 +86,178 @@ const HomePageReviewContent = memo(
 )
 
 export const RestaurantReviewCommentForm = memo(
-  graphql(
-    ({
+  graphql(({ restaurantId, restaurantSlug }: { restaurantId: string; restaurantSlug: string }) => {
+    const user = useUserStore().user
+    const { review, upsertReview, deleteReview, reviewsQuery } = useUserReviewCommentQuery(
       restaurantId,
-      restaurantSlug,
-    }: {
-      restaurantId: string
-      restaurantSlug: string
-    }) => {
-      const user = useUserStore().user
-      const {
-        review,
-        upsertReview,
-        deleteReview,
-        reviewsQuery,
-      } = useUserReviewCommentQuery(restaurantId, {
+      {
         onUpsert: () => {
           refetch(reviewsQuery).catch(console.error)
         },
         onDelete: () => {
           refetch(reviewsQuery).catch(console.error)
         },
-      })
-      const [reviewText, setReviewText] = useState('')
-      const [isSaved, setIsSaved] = useState(false)
-      const lineHeight = 22
-      const [height, setHeight] = useState(lineHeight)
-      const dishTags = getRestaurantDishes({ restaurantSlug })
-
-      useDebounceEffect(
-        () => {
-          let isMounted = true
-
-          reviewAnalyze({
-            text: reviewText,
-            restaurantId,
-          }).then((res) => {
-            console.log('got', res)
-            // getStore(TagVoteStore)
-          })
-
-          return () => {
-            isMounted = false
-          }
-        },
-        3000,
-        [reviewText]
-      )
-
-      useEffect(() => {
-        if (review?.text) {
-          setReviewText(review.text)
-        }
-      }, [review?.text])
-
-      if (!user) {
-        console.warn('no user')
-        return <AuthForm />
       }
+    )
+    const [reviewText, setReviewText] = useState('')
+    const [isSaved, setIsSaved] = useState(false)
+    const lineHeight = 22
+    const [height, setHeight] = useState(lineHeight)
+    const dishTags = getRestaurantDishes({ restaurantSlug })
 
-      return (
-        <VStack minHeight="100%">
-          <CommentBubble
-            name={user.username ?? ''}
-            avatar={''}
-            text={
-              <TextInput
-                value={reviewText}
-                onChange={(e) => {
-                  // @ts-ignore
-                  const height = e.nativeEvent.srcElement.scrollHeight
-                  setHeight(height)
-                }}
-                onChangeText={(text) => {
-                  if (isSaved) {
-                    setIsSaved(false)
-                  }
-                  setReviewText(text)
-                }}
-                multiline
-                numberOfLines={5}
-                placeholder="A note, a tip, a whole review, it's up to you."
-                style={{
-                  borderWidth: 1,
-                  borderColor: '#ddd',
-                  borderRadius: 10,
-                  minHeight: height,
-                  lineHeight: 22,
-                  fontSize: 16,
-                  width: '100%',
-                  padding: 15,
-                }}
-              />
-            }
-            after={
-              <HStack flex={1}>
-                <Suspense fallback={null}>
-                  <UserReviewVotesRow
-                    restaurantId={restaurantId}
-                    userId={user?.id}
-                  />
-                </Suspense>
-                <VStack flex={1} />
-                <HStack
-                  alignItems="center"
-                  justifyContent="center"
-                  marginVertical={-10}
-                  flex={1}
-                >
-                  <Spacer flex={1} />
-                  <SmallButton
-                    accessible
-                    accessibilityRole="button"
-                    // TODO use theme?
-                    textProps={{
-                      color: red,
-                    }}
-                    onPress={() => {
-                      if (
-                        confirm('Are you sure you want to delete the review?')
-                      ) {
-                        deleteReview()
-                      }
-                    }}
-                  >
-                    Delete
-                  </SmallButton>
-                  <Spacer size="sm" />
-                  <SmallButton
-                    accessible
-                    accessibilityRole="button"
-                    disabled={isSaved}
-                    alignSelf="center"
-                    textProps={{
-                      fontWeight: '700',
-                    }}
-                    marginVertical={10}
-                    onPress={() => {
-                      upsertReview({
-                        text: reviewText,
-                      })
-                      setIsSaved(true)
-                    }}
-                  >
-                    Save
-                  </SmallButton>
-                </HStack>
-              </HStack>
-            }
-          />
+    useDebounceEffect(
+      () => {
+        let isMounted = true
 
-          <Spacer />
+        reviewAnalyze({
+          text: reviewText,
+          restaurantId,
+        }).then((res) => {
+          console.log('got', res)
+          // getStore(TagVoteStore)
+        })
 
-          <SmallTitle divider="center">Votes</SmallTitle>
-          <Spacer />
-          <HStack spacing="xl">
-            <VStack
-              borderRadius={10}
-              paddingHorizontal={45}
-              paddingVertical={15}
-              flex={1}
-              spacing
-            >
-              <SmallTitle divider="off">Lenses</SmallTitle>
+        return () => {
+          isMounted = false
+        }
+      },
+      3000,
+      [reviewText]
+    )
+
+    useEffect(() => {
+      if (review?.text) {
+        setReviewText(review.text)
+      }
+    }, [review?.text])
+
+    if (!user) {
+      console.warn('no user')
+      return <AuthForm />
+    }
+
+    return (
+      <VStack minHeight="100%">
+        <CommentBubble
+          name={user.username ?? ''}
+          avatar={''}
+          text={
+            <TextInput
+              value={reviewText}
+              onChange={(e) => {
+                // @ts-ignore
+                const height = e.nativeEvent.srcElement.scrollHeight
+                setHeight(height)
+              }}
+              onChangeText={(text) => {
+                if (isSaved) {
+                  setIsSaved(false)
+                }
+                setReviewText(text)
+              }}
+              multiline
+              numberOfLines={5}
+              placeholder="A note, a tip, a whole review, it's up to you."
+              style={{
+                borderWidth: 1,
+                borderColor: '#ddd',
+                borderRadius: 10,
+                minHeight: height,
+                lineHeight: 22,
+                fontSize: 16,
+                width: '100%',
+                padding: 15,
+              }}
+            />
+          }
+          after={
+            <HStack flex={1}>
               <Suspense fallback={null}>
-                <RestaurantLenseVote restaurantSlug={restaurantSlug} />
+                <UserReviewVotesRow restaurantId={restaurantId} userId={user?.id} />
               </Suspense>
-            </VStack>
-
-            <VStack borderRadius={10} paddingTop={15} flex={1} spacing>
-              <SmallTitle divider="off">Dishes</SmallTitle>
-              <ScrollView style={{ width: '100%', maxHeight: 300 }}>
-                <HStack
-                  flexWrap="wrap"
-                  alignItems="center"
-                  justifyContent="center"
-                  padding={15}
+              <VStack flex={1} />
+              <HStack alignItems="center" justifyContent="center" marginVertical={-10} flex={1}>
+                <Spacer flex={1} />
+                <SmallButton
+                  accessible
+                  accessibilityRole="button"
+                  // TODO use theme?
+                  textProps={{
+                    color: red,
+                  }}
+                  onPress={() => {
+                    if (confirm('Are you sure you want to delete the review?')) {
+                      deleteReview()
+                    }
+                  }}
                 >
-                  {dishTags.map((tag) => {
-                    return (
-                      <TagSmallButton
-                        tag={tag as any}
-                        restaurantSlug={restaurantSlug}
-                        key={tag.name}
-                        image={
-                          <Image
-                            style={{
-                              width: 36,
-                              height: 36,
-                              borderRadius: 100,
-                            }}
-                            source={{ uri: tag.image }}
-                          />
-                        }
-                      />
-                    )
-                  })}
-                </HStack>
-              </ScrollView>
-            </VStack>
-          </HStack>
+                  Delete
+                </SmallButton>
+                <Spacer size="sm" />
+                <SmallButton
+                  accessible
+                  accessibilityRole="button"
+                  disabled={isSaved}
+                  alignSelf="center"
+                  textProps={{
+                    fontWeight: '700',
+                  }}
+                  marginVertical={10}
+                  onPress={() => {
+                    upsertReview({
+                      text: reviewText,
+                    })
+                    setIsSaved(true)
+                  }}
+                >
+                  Save
+                </SmallButton>
+              </HStack>
+            </HStack>
+          }
+        />
 
-          {/* {review && (
+        <Spacer />
+
+        <SmallTitle divider="center">Votes</SmallTitle>
+        <Spacer />
+        <HStack spacing="xl">
+          <VStack borderRadius={10} paddingHorizontal={45} paddingVertical={15} flex={1} spacing>
+            <SmallTitle divider="off">Lenses</SmallTitle>
+            <Suspense fallback={null}>
+              <RestaurantLenseVote restaurantSlug={restaurantSlug} />
+            </Suspense>
+          </VStack>
+
+          <VStack borderRadius={10} paddingTop={15} flex={1} spacing>
+            <SmallTitle divider="off">Dishes</SmallTitle>
+            <ScrollView style={{ width: '100%', maxHeight: 300 }}>
+              <HStack flexWrap="wrap" alignItems="center" justifyContent="center" padding={15}>
+                {dishTags.map((tag) => {
+                  return (
+                    <TagSmallButton
+                      tag={tag as any}
+                      restaurantSlug={restaurantSlug}
+                      key={tag.name}
+                      image={
+                        <Image
+                          style={{
+                            width: 36,
+                            height: 36,
+                            borderRadius: 100,
+                          }}
+                          source={{ uri: tag.image }}
+                        />
+                      }
+                    />
+                  )
+                })}
+              </HStack>
+            </ScrollView>
+          </VStack>
+        </HStack>
+
+        {/* {review && (
             <>
               <Spacer size="xl" />
               <VStack
@@ -321,10 +279,9 @@ export const RestaurantReviewCommentForm = memo(
               </VStack>
             </>
           )} */}
-        </VStack>
-      )
-    }
-  )
+      </VStack>
+    )
+  })
 )
 
 const UserReviewVotesRow = graphql(
@@ -354,11 +311,7 @@ const UserReviewVotesRow = graphql(
         <HStack spacing="xs">
           {allVotes.map((vote) => {
             return (
-              <SentimentText
-                marginRight={4}
-                key={vote.id}
-                sentiment={vote.vote ?? 0}
-              >
+              <SentimentText marginRight={4} key={vote.id} sentiment={vote.vote ?? 0}>
                 {vote.tag?.name}
               </SentimentText>
             )

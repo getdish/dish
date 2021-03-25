@@ -1,13 +1,6 @@
 import React, { Suspense, memo } from 'react'
 import Svg, { G, Path } from 'react-native-svg'
-import {
-  AbsoluteVStack,
-  HStack,
-  Theme,
-  VStack,
-  useMedia,
-  useTheme,
-} from 'snackui'
+import { AbsoluteVStack, HStack, Theme, VStack, useMedia, useTheme } from 'snackui'
 
 import { drawerWidthMax } from '../../../constants/constants'
 import { titleHeight } from '../../../constants/titleHeight'
@@ -21,10 +14,7 @@ const InverseRoundedEdge = () => {
   return (
     <Svg width="20px" height="20px" viewBox="0 0 20 20">
       <G stroke="none">
-        <Path
-          d="M20,5 L20,20 L5,20 C13.2842712,20 20,13.2842712 20,5 L20,5 Z"
-          fill="#000000"
-        />
+        <Path d="M20,5 L20,20 L5,20 C13.2842712,20 20,13.2842712 20,5 L20,5 Z" fill="#000000" />
       </G>
     </Svg>
   )
@@ -94,12 +84,7 @@ const SearchPageNavBarContent = memo(() => {
         paddingHorizontal={16}
         pointerEvents="auto"
       >
-        <HStack
-          width="100%"
-          alignItems="center"
-          justifyContent="space-between"
-          height="100%"
-        >
+        <HStack width="100%" alignItems="center" justifyContent="space-between" height="100%">
           <HStack height="100%" alignItems="center" justifyContent="center">
             <HomeLenseBar activeTags={state.activeTags} />
           </HStack>

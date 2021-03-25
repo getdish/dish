@@ -1,14 +1,6 @@
 import React from 'react'
 import { Image, StyleSheet } from 'react-native'
-import {
-  AbsoluteVStack,
-  HStack,
-  LinearGradient,
-  Paragraph,
-  Spacer,
-  Text,
-  VStack,
-} from 'snackui'
+import { AbsoluteVStack, HStack, LinearGradient, Paragraph, Spacer, Text, VStack } from 'snackui'
 
 import {
   cardFrameBorderRadius,
@@ -17,11 +9,7 @@ import {
   cardFrameWidth,
   cardFrameWidthSm,
 } from '../../../constants/constants'
-import {
-  ColorShades,
-  getColorsForColor,
-  getColorsForName,
-} from '../../../helpers/getColorsForName'
+import { ColorShades, getColorsForColor, getColorsForName } from '../../../helpers/getColorsForName'
 import { CardFrame } from '../../views/CardFrame'
 
 export type CardProps = {
@@ -97,20 +85,11 @@ export function Card({
   }
   const strTitle = title || ''
   const baseFontSize =
-    strTitle.length > 30
-      ? 24
-      : strTitle.length > 14 || getLongestWord(strTitle) > 9
-      ? 26
-      : 30
+    strTitle.length > 30 ? 24 : strTitle.length > 14 || getLongestWord(strTitle) > 9 ? 26 : 30
   const fontSize = Math.round(baseFontSize * scales[size])
 
   return (
-    <CardFrame
-      square={square}
-      size={size}
-      aspectFixed={aspectFixed}
-      hoverable={hoverable}
-    >
+    <CardFrame square={square} size={size} aspectFixed={aspectFixed} hoverable={hoverable}>
       <VStack
         // borderWidth={2}
         borderColor={colors.pastelColor}
@@ -143,19 +122,10 @@ export function Card({
             />
           )}
 
-          <VStack
-            className="hover-75-opacity-child"
-            opacity={dimImage ? 0.75 : 0.9}
-            {...frame}
-          >
+          <VStack className="hover-75-opacity-child" opacity={dimImage ? 0.75 : 0.9} {...frame}>
             {typeof photo === 'string' ? (
               photo ? (
-                <Image
-                  resizeMode="cover"
-                  {...sizes}
-                  style={frame}
-                  source={{ uri: photo }}
-                />
+                <Image resizeMode="cover" {...sizes} style={frame} source={{ uri: photo }} />
               ) : null
             ) : (
               photo
@@ -200,19 +170,11 @@ export function Card({
             top={0}
             right={0}
             opacity={size === 'xs' ? 1 : 1}
-            transform={[
-              { rotate: '15deg' },
-              { scaleX: 2.5 },
-              { translateY: -20 },
-            ]}
+            transform={[{ rotate: '15deg' }, { scaleX: 2.5 }, { translateY: -20 }]}
           >
             <LinearGradient
               style={{ width: 150, height: 150 }}
-              colors={[
-                colors.pastelColor,
-                colors.pastelColor,
-                `${colors.color}00`,
-              ]}
+              colors={[colors.pastelColor, colors.pastelColor, `${colors.color}00`]}
             />
           </AbsoluteVStack>
           <VStack
@@ -224,11 +186,7 @@ export function Card({
           >
             <HStack flex={1} width="100%" maxWidth="100%">
               {!!padTitleSide &&
-                (isSm ? (
-                  <VStack minWidth={30} flex={1} />
-                ) : (
-                  <VStack minWidth={45} flex={1} />
-                ))}
+                (isSm ? <VStack minWidth={30} flex={1} /> : <VStack minWidth={45} flex={1} />)}
               <VStack flex={1} alignItems="flex-end">
                 <VStack position="relative">
                   <Text
@@ -282,10 +240,7 @@ export const CardOverlay = (props: { children: any }) => {
     >
       <VStack position="relative">
         <AbsoluteVStack left={0} right={0} bottom={0} top={-40}>
-          <LinearGradient
-            colors={['rgba(0,0,0,0)', '#050505']}
-            style={StyleSheet.absoluteFill}
-          />
+          <LinearGradient colors={['rgba(0,0,0,0)', '#050505']} style={StyleSheet.absoluteFill} />
         </AbsoluteVStack>
         <VStack padding={10}>{props.children}</VStack>
       </VStack>

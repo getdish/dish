@@ -2,13 +2,9 @@ import React, { useLayoutEffect } from 'react'
 
 import { StoreInfo } from './interfaces'
 
-const {
-  ReactCurrentOwner,
-} = (React as any).__SECRET_INTERNALS_DO_NOT_USE_OR_YOU_WILL_BE_FIRED
+const { ReactCurrentOwner } = (React as any).__SECRET_INTERNALS_DO_NOT_USE_OR_YOU_WILL_BE_FIRED
 export const useCurrentComponent = () => {
-  return ReactCurrentOwner &&
-    ReactCurrentOwner.current &&
-    ReactCurrentOwner.current.elementType
+  return ReactCurrentOwner && ReactCurrentOwner.current && ReactCurrentOwner.current.elementType
     ? ReactCurrentOwner.current.elementType
     : {}
 }
@@ -32,10 +28,7 @@ export function useDebugStoreComponent(StoreCons: any) {
   }, [])
 }
 
-export const shouldDebug = (
-  component: any,
-  info: Pick<StoreInfo, 'storeInstance'>
-) => {
+export const shouldDebug = (component: any, info: Pick<StoreInfo, 'storeInstance'>) => {
   const StoreCons = info.storeInstance?.constructor
   return DebugComponents.get(component)?.has(StoreCons)
 }

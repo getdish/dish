@@ -1,10 +1,5 @@
 import { SEARCH_DOMAIN } from '../constants'
-import {
-  HomeMeta,
-  RestaurantOnlyIds,
-  RestaurantSearchArgs,
-  TopCuisine,
-} from '../typesExtra'
+import { HomeMeta, RestaurantOnlyIds, RestaurantSearchArgs, TopCuisine } from '../typesExtra'
 
 export type RestaurantItemMeta = {
   effective_score: number

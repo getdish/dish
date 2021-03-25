@@ -1,10 +1,4 @@
-import {
-  RestaurantOnlyIds,
-  TopCuisineDish,
-  graphql,
-  order_by,
-  query,
-} from '@dish/graph'
+import { RestaurantOnlyIds, TopCuisineDish, graphql, order_by, query } from '@dish/graph'
 import React, { memo, useMemo, useState } from 'react'
 import { HStack, Hoverable, VStack } from 'snackui'
 
@@ -81,18 +75,9 @@ export const HomeFeedCuisineItem = memo(
             {props.title}
           </FeedSlantedTitleLink>
 
-          <VStack
-            maxWidth="100%"
-            overflow="hidden"
-            marginBottom={-20}
-            marginTop={-16}
-          >
+          <VStack maxWidth="100%" overflow="hidden" marginBottom={-20} marginTop={-16}>
             <ContentScrollViewHorizontal>
-              <VStack
-                paddingVertical={12}
-                paddingHorizontal={40}
-                flexWrap="nowrap"
-              >
+              <VStack paddingVertical={12} paddingHorizontal={40} flexWrap="nowrap">
                 <HStack
                   spacing={6}
                   marginHorizontal="auto"
@@ -107,10 +92,7 @@ export const HomeFeedCuisineItem = memo(
                     return (
                       <Link key={index} tag={{ slug: dish.slug }} asyncClick>
                         <GradientButton rgb={rgb.map((x) => x * 1.1) as any}>
-                          <TagsText
-                            tags={[{ name: dish.name, icon: dish.icon }]}
-                            color={color}
-                          />
+                          <TagsText tags={[{ name: dish.name, icon: dish.icon }]} color={color} />
                         </GradientButton>
                       </Link>
                     )
@@ -135,10 +117,7 @@ export const HomeFeedCuisineItem = memo(
                         hoverable={false}
                         below={(colors) => (
                           <CardOverlay>
-                            <RestaurantStatBars
-                              restaurantSlug={r.slug}
-                              colors={colors}
-                            />
+                            <RestaurantStatBars restaurantSlug={r.slug} colors={colors} />
                           </CardOverlay>
                         )}
                       />

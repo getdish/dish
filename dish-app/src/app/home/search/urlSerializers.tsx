@@ -1,7 +1,4 @@
-import {
-  HomeStateItemHome,
-  HomeStateItemSearch,
-} from '../../../types/homeTypes'
+import { HomeStateItemHome, HomeStateItemSearch } from '../../../types/homeTypes'
 
 const coordShort = (coord: number) => `${coord}`.slice(0, 7)
 
@@ -21,9 +18,7 @@ export const urlSerializers = {
           return region
         }
         if (center && span) {
-          const val = [center.lat, center.lng, span.lat, span.lng]
-            .map(coordShort)
-            .join('_')
+          const val = [center.lat, center.lng, span.lat, span.lng].map(coordShort).join('_')
           console.log('val', val)
           return val
         }

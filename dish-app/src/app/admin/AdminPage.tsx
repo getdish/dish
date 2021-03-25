@@ -12,12 +12,7 @@ import { SmallTitle } from '../views/SmallTitle'
 
 export default memo(function AdminPage() {
   return (
-    <VStack
-      pointerEvents="auto"
-      flex={1}
-      alignItems="center"
-      backgroundColor="#fff"
-    >
+    <VStack pointerEvents="auto" flex={1} alignItems="center" backgroundColor="#fff">
       <HStack backgroundColor="#eee" width="100%" spacing={20} padding={5}>
         <Link name="admin">
           <Text fontWeight="700">Admin</Text>
@@ -58,32 +53,20 @@ export default memo(function AdminPage() {
                 <AdminLinkButton icon="💽" href={GRAPH_DOMAIN}>
                   Hasura
                 </AdminLinkButton>
-                <AdminLinkButton
-                  icon="💪"
-                  href="https://worker-ui.k8s.dishapp.com/ui"
-                >
+                <AdminLinkButton icon="💪" href="https://worker-ui.k8s.dishapp.com/ui">
                   Workers
                 </AdminLinkButton>
-                <AdminLinkButton
-                  icon="📈"
-                  href="https://grafana.k8s.dishapp.com"
-                >
+                <AdminLinkButton icon="📈" href="https://grafana.k8s.dishapp.com">
                   Graphs
                 </AdminLinkButton>
               </HStack>
 
               <SmallTitle>Intranet</SmallTitle>
               <HStack justifyContent="center" flexWrap="wrap" spacing="lg">
-                <AdminLinkButton
-                  icon="💬"
-                  href="http://dish-headquarters.slack.com/"
-                >
+                <AdminLinkButton icon="💬" href="http://dish-headquarters.slack.com/">
                   Slack
                 </AdminLinkButton>
-                <AdminLinkButton
-                  icon="👨‍💻"
-                  href="https://github.com/getdish/dish"
-                >
+                <AdminLinkButton icon="👨‍💻" href="https://github.com/getdish/dish">
                   Github
                 </AdminLinkButton>
               </HStack>

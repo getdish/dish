@@ -59,20 +59,10 @@ export const AppIntroLetter = memo(() => {
           >
             <Home size={24} color="#fff" />
           </SmallCircleButton>
-          <AbsoluteVStack
-            bottom={-20}
-            zIndex={1000}
-            right={-20}
-            transform={[{ rotate: '-10deg' }]}
-          >
+          <AbsoluteVStack bottom={-20} zIndex={1000} right={-20} transform={[{ rotate: '-10deg' }]}>
             <Text fontSize={70}>🌮</Text>
           </AbsoluteVStack>
-          <AbsoluteVStack
-            bottom={-20}
-            zIndex={1000}
-            left={-20}
-            transform={[{ rotate: '10deg' }]}
-          >
+          <AbsoluteVStack bottom={-20} zIndex={1000} left={-20} transform={[{ rotate: '10deg' }]}>
             <Text fontSize={70}>🍜</Text>
           </AbsoluteVStack>
         </>

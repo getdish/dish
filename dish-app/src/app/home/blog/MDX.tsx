@@ -31,18 +31,10 @@ const spaceVertical = (Component: any, space?: any) => (props: any) => (
 )
 
 const Alt = spaceVertical((props) => (
-  <Text
-    marginTop={-16}
-    marginBottom={16}
-    fontSize="75%"
-    opacity={0.5}
-    {...props}
-  />
+  <Text marginTop={-16} marginBottom={16} fontSize="75%" opacity={0.5} {...props} />
 ))
 
-const ParagraphSpaced = spaceVertical((props) => (
-  <Paragraph sizeLineHeight={1.1} {...props} />
-))
+const ParagraphSpaced = spaceVertical((props) => <Paragraph sizeLineHeight={1.1} {...props} />)
 
 const components = {
   IntroText: spaceVertical(IntroText),
@@ -53,12 +45,7 @@ const components = {
 
   LargeImage: ({ alt, ...rest }: ImageProps & { alt?: string }) => (
     <>
-      <VStack
-        width="110%"
-        margin="20px -5%"
-        md-margin={[20, -20]}
-        md-width="calc(100% + 40px)"
-      >
+      <VStack width="110%" margin="20px -5%" md-margin={[20, -20]} md-width="calc(100% + 40px)">
         <Image
           style={{
             width: '100%',
@@ -93,10 +80,7 @@ const components = {
   h5: spaceVertical(H5),
   pre: spaceVertical(Text),
 
-  li: spaceVertical(
-    (props) => <UnorderedListItem {...props} />,
-    contentSpaceSm
-  ),
+  li: spaceVertical((props) => <UnorderedListItem {...props} />, contentSpaceSm),
   ul: spaceVertical((props) => <UnorderedList {...props} />),
 
   a: (props: any) => {

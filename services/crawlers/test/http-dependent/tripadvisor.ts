@@ -1,9 +1,6 @@
 import test from 'ava'
 
-import {
-  deleteAllScrapesBySourceID,
-  scrapeFindOneBySourceID,
-} from '../../src/scrape-helpers'
+import { deleteAllScrapesBySourceID, scrapeFindOneBySourceID } from '../../src/scrape-helpers'
 import { Tripadvisor } from '../../src/tripadvisor/Tripadvisor'
 
 const ID = '1516973'

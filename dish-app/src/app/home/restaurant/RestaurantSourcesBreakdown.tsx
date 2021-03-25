@@ -117,16 +117,8 @@ export const RestaurantSourcesBreakdown = memo(
                     <TableCell {...col0Props} />
 
                     <TableCell>
-                      <HStack
-                        flexWrap="nowrap"
-                        overflow="hidden"
-                        alignItems="center"
-                      >
-                        <VStack
-                          className="dotted-line"
-                          width={10}
-                          marginRight={5}
-                        />
+                      <HStack flexWrap="nowrap" overflow="hidden" alignItems="center">
+                        <VStack className="dotted-line" width={10} marginRight={5} />
                         <Text ellipse fontSize={12} opacity={0.5}>
                           {tagDisplayName(tag)}
                         </Text>

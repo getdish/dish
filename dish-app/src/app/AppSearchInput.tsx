@@ -3,14 +3,7 @@ import { supportsTouchWeb } from '@dish/helpers'
 import { Loader, Search, X } from '@dish/react-feather'
 import { getStore, reaction, useStoreInstance } from '@dish/use-store'
 import React, { memo, useCallback, useEffect, useRef, useState } from 'react'
-import {
-  Platform,
-  ScrollView,
-  StyleSheet,
-  TextInput,
-  TouchableOpacity,
-  View,
-} from 'react-native'
+import { Platform, ScrollView, StyleSheet, TextInput, TouchableOpacity, View } from 'react-native'
 import {
   HStack,
   Spacer,
@@ -29,25 +22,14 @@ import { getTagSlug } from '../helpers/getTagSlug'
 import { isWebIOS } from '../helpers/isIOS'
 import { filterToNavigable } from '../helpers/tagHelpers'
 import { router, useIsRouteActive } from '../router'
-import {
-  AutocompleteStore,
-  autocompleteSearchStore,
-  autocompletesStore,
-} from './AppAutocomplete'
+import { AutocompleteStore, autocompleteSearchStore, autocompletesStore } from './AppAutocomplete'
 import { AppAutocompleteHoverableInput } from './AppAutocompleteHoverableInput'
-import {
-  searchPageStore,
-  useSearchPageStore,
-} from './home/search/SearchPageStore'
+import { searchPageStore, useSearchPageStore } from './home/search/SearchPageStore'
 import { homeStore, useHomeStore } from './homeStore'
 import { useAutocompleteInputFocus } from './hooks/useAutocompleteInputFocus'
 import { useSearchBarTheme } from './hooks/useSearchBarTheme'
 import { InputFrame } from './InputFrame'
-import {
-  InputStore,
-  setNodeOnInputStore,
-  useInputStoreSearch,
-} from './inputStore'
+import { InputStore, setNodeOnInputStore, useInputStoreSearch } from './inputStore'
 import { SearchInputNativeDragFix } from './SearchInputNativeDragFix'
 import { useAutocompleteFocusWeb } from './useAutocompleteFocusWeb'
 import { TagButton, getTagButtonProps } from './views/TagButton'
@@ -72,9 +54,7 @@ const placeholders = [
   'italian',
 ]
 
-const placeHolder = `Search ${
-  placeholders[Math.floor(placeholders.length * Math.random())]
-}`
+const placeHolder = `Search ${placeholders[Math.floor(placeholders.length * Math.random())]}`
 
 // avoid first one on iniital focus
 let avoidNextFocus = true
@@ -196,12 +176,7 @@ export const AppSearchInput = memo(() => {
               flex: 1,
             }}
           >
-            <HStack
-              alignSelf="center"
-              alignItems="center"
-              minWidth="100%"
-              height={innerHeight}
-            >
+            <HStack alignSelf="center" alignItems="center" minWidth="100%" height={innerHeight}>
               <AppSearchInputTags input={input} />
               <HStack
                 height={innerHeight}
@@ -286,11 +261,7 @@ const SearchInputIcon = memo(({ color }: { color: string }) => {
   const isOnSearch = useIsRouteActive('search')
   const loading = home.loading || (isOnSearch && search.status === 'loading')
   return (
-    <VStack
-      width={16}
-      marginLeft={3}
-      transform={[{ scale: loading ? 1.2 : 1 }]}
-    >
+    <VStack width={16} marginLeft={3} transform={[{ scale: loading ? 1.2 : 1 }]}>
       <TouchableOpacity onPress={focusSearchInput}>
         {loading ? (
           <VStack className="rotating" opacity={1}>
@@ -334,11 +305,7 @@ const SearchCancelButton = memo(() => {
         }
       }}
     >
-      <X
-        size={16}
-        color={media.sm ? '#888' : '#fff'}
-        style={{ marginTop: 1 }}
-      />
+      <X size={16} color={media.sm ? '#888' : '#fff'} style={{ marginTop: 1 }} />
     </VStack>
   )
 })
@@ -370,8 +337,7 @@ const handleKeyPress = async (e: any, inputStore: InputStore) => {
       focusedInput = document.activeElement
     }
     isSelecting = focusedInput?.selectionStart !== focusedInput?.selectionEnd
-    isCaretAtEnd =
-      !isSelecting && focusedInput?.selectionEnd === focusedInput?.value.length
+    isCaretAtEnd = !isSelecting && focusedInput?.selectionEnd === focusedInput?.value.length
     isCaretAtStart = focusedInput?.selectionEnd == 0
   }
 
@@ -473,66 +439,64 @@ export const inputTextStyles = StyleSheet.create({
   },
 })
 
-const AppSearchInputTags = memo(
-  ({ input }: { input: HTMLInputElement | null }) => {
-    const home = useHomeStore()
-    const tags = home.searchBarTags
-    const theme = useTheme()
-    const focusedTag = home.searchbarFocusedTag
+const AppSearchInputTags = memo(({ input }: { input: HTMLInputElement | null }) => {
+  const home = useHomeStore()
+  const tags = home.searchBarTags
+  const theme = useTheme()
+  const focusedTag = home.searchbarFocusedTag
 
-    return (
-      <>
-        {!!tags.length && (
-          <HStack marginLeft={10} marginTop={-1} spacing={4}>
-            {tags.map((tag) => {
-              const isActive = focusedTag === tag
-              return (
-                <TagButton
-                  key={getTagSlug(tag.slug)}
-                  size="lg"
-                  subtleIcon
-                  backgroundColor={theme.backgroundColor}
-                  color={theme.color}
-                  shadowColor="#00000022"
-                  fontWeight="600"
-                  height={40}
-                  shadowRadius={10}
-                  shadowOffset={{ height: 2, width: 0 }}
-                  borderColor={'transparent'}
-                  borderRadius={100}
-                  hideRating
-                  hideRank
-                  hoverStyle={{
-                    backgroundColor: 'rgba(150,150,150,0.7)',
-                  }}
-                  {...(isActive && {
+  return (
+    <>
+      {!!tags.length && (
+        <HStack marginLeft={10} marginTop={-1} spacing={4}>
+          {tags.map((tag) => {
+            const isActive = focusedTag === tag
+            return (
+              <TagButton
+                key={getTagSlug(tag.slug)}
+                size="lg"
+                subtleIcon
+                backgroundColor={theme.backgroundColor}
+                color={theme.color}
+                shadowColor="#00000022"
+                fontWeight="600"
+                height={40}
+                shadowRadius={10}
+                shadowOffset={{ height: 2, width: 0 }}
+                borderColor={'transparent'}
+                borderRadius={100}
+                hideRating
+                hideRank
+                hoverStyle={{
+                  backgroundColor: 'rgba(150,150,150,0.7)',
+                }}
+                {...(isActive && {
+                  backgroundColor: 'rgba(150,150,150,0.1)',
+                  color: '#fff',
+                  hoverStyle: {
                     backgroundColor: 'rgba(150,150,150,0.1)',
-                    color: '#fff',
-                    hoverStyle: {
-                      backgroundColor: 'rgba(150,150,150,0.1)',
-                    },
-                  })}
-                  {...(!isWeb && {
-                    transform: [{ translateY: 2 }],
-                  })}
-                  {...getTagButtonProps(tag)}
-                  onPressOut={() => {
-                    home.setSearchBarFocusedTag(tag)
-                  }}
-                  closable
-                  onClose={async () => {
-                    console.log('navigate to close', tag)
-                    home.navigate({ tags: [tag] })
-                    await fullyIdle()
-                    setAvoidNextAutocompleteShowOnFocus()
-                    focusSearchInput()
-                  }}
-                />
-              )
-            })}
-          </HStack>
-        )}
-      </>
-    )
-  }
-)
+                  },
+                })}
+                {...(!isWeb && {
+                  transform: [{ translateY: 2 }],
+                })}
+                {...getTagButtonProps(tag)}
+                onPressOut={() => {
+                  home.setSearchBarFocusedTag(tag)
+                }}
+                closable
+                onClose={async () => {
+                  console.log('navigate to close', tag)
+                  home.navigate({ tags: [tag] })
+                  await fullyIdle()
+                  setAvoidNextAutocompleteShowOnFocus()
+                  focusSearchInput()
+                }}
+              />
+            )
+          })}
+        </HStack>
+      )}
+    </>
+  )
+})

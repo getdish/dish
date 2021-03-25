@@ -39,11 +39,7 @@ export const useLink = (href: string) => {
 
 let tm = null
 
-export const createLink = (
-  href: string,
-  header = null,
-  isExternal = false
-) => async (e) => {
+export const createLink = (href: string, header = null, isExternal = false) => async (e) => {
   if (isExternal || checkExternal(href)) {
     return
   }
@@ -93,11 +89,8 @@ export const linkProps = (
     textDecoration: 'none',
     cursor: 'pointer',
     target: opts.isExternal || checkExternal(href) ? '_blank' : undefined,
-    onClick: opts.isActive
-      ? nullLink
-      : createLink(href, opts.header, opts.isExternal),
+    onClick: opts.isActive ? nullLink : createLink(href, opts.header, opts.isExternal),
     onMouseEnter: createPreloadLink(href),
   }
 }
-const checkExternal = (href) =>
-  href.indexOf('http') === 0 || href.indexOf('mailto') === 0
+const checkExternal = (href) => href.indexOf('http') === 0 || href.indexOf('mailto') === 0

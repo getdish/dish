@@ -6,10 +6,7 @@ import Animated, {
   withSpring,
 } from 'react-native-reanimated'
 
-import {
-  StackDrawer as StackDrawerContents,
-  StackDrawerProps,
-} from './StackDrawerContents'
+import { StackDrawer as StackDrawerContents, StackDrawerProps } from './StackDrawerContents'
 
 export function StackDrawer(props: StackDrawerProps) {
   const x = useSharedValue(0)

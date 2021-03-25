@@ -58,11 +58,7 @@ class SearchPageStore extends Store {
     this.results = []
   }
 
-  async runSearch(opts: {
-    searchQuery?: string
-    quiet?: boolean
-    force?: boolean
-  }) {
+  async runSearch(opts: { searchQuery?: string; quiet?: boolean; force?: boolean }) {
     opts = opts || { quiet: false }
     const wasSearching = this.lastSearchAt !== 0
     this.lastSearchAt = Date.now()
@@ -70,10 +66,7 @@ class SearchPageStore extends Store {
     let curId = this.lastSearchAt
 
     const shouldCancel = () => {
-      const val =
-        this.lastSearchAt != curId ||
-        homeStore.currentStateType !== 'search' ||
-        false
+      const val = this.lastSearchAt != curId || homeStore.currentStateType !== 'search' || false
       if (val) console.log('cancelling')
       return val
     }
@@ -110,13 +103,9 @@ class SearchPageStore extends Store {
     const tags = curState ? getActiveTags(curState) : []
     const center = appMapStore.nextPosition.center
     const span = appMapStore.nextPosition.span
-    const dishSearchedTag = tags.find((k) => allTags[k.slug!]?.type === 'dish')
-      ?.slug
+    const dishSearchedTag = tags.find((k) => allTags[k.slug!]?.type === 'dish')?.slug
     let otherTags = tags
-      .map(
-        (tag) =>
-          tag.slug?.replace('lenses__', '').replace('filters__', '') ?? ''
-      )
+      .map((tag) => tag.slug?.replace('lenses__', '').replace('filters__', '') ?? '')
       .filter((t) => (dishSearchedTag ? !t.includes(dishSearchedTag) : true))
     const mainTag = dishSearchedTag ?? otherTags[0]
     const searchArgs: RestaurantSearchArgs = {
@@ -130,11 +119,7 @@ class SearchPageStore extends Store {
 
     // prevent duplicate searches
     const searchKey = stringify(this.searchArgs)
-    if (
-      opts.force ||
-      searchKey !== this.lastSearchKey ||
-      !this.results.length
-    ) {
+    if (opts.force || searchKey !== this.lastSearchKey || !this.results.length) {
       // SEARCH
       this.searchArgs = searchArgs
       const res = await search(searchArgs)

@@ -17,10 +17,7 @@ export function isEqual(a: any, b: any, options?: IsEqualOptions) {
   try {
     return isEqualInner(a, b, options)
   } catch (err) {
-    if (
-      (err.message && err.message.match(/stack|recursion/i)) ||
-      err.number === -2146828260
-    ) {
+    if ((err.message && err.message.match(/stack|recursion/i)) || err.number === -2146828260) {
       // warn on circular references, don't crash
       // browsers give this different errors name and messages:
       // chrome/safari: "RangeError", "Maximum call stack size exceeded"
@@ -108,8 +105,7 @@ function isEqualInner(a: any, b: any, options?: IsEqualOptions) {
 
     // start @dish/fast-compare
     // custom handling for DOM elements
-    if (hasElementType && a instanceof Element && b instanceof Element)
-      return a === b
+    if (hasElementType && a instanceof Element && b instanceof Element) return a === b
 
     for (i = length; i-- !== 0; ) {
       key = keys[i]

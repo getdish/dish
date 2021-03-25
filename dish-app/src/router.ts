@@ -1,9 +1,4 @@
-import {
-  HistoryItem,
-  NavigateItem as RNavigateItem,
-  Route,
-  Router,
-} from '@dish/router'
+import { HistoryItem, NavigateItem as RNavigateItem, Route, Router } from '@dish/router'
 import { createStore, useStoreInstance } from '@dish/use-store'
 
 export type RoutesTable = typeof routes
@@ -56,9 +51,7 @@ export const routes = {
   search: new Route<SearchRouteParams>('/s/:lense/:region/:tags?/:search?'),
 
   // home region is catch-all, goes near end
-  homeRegion: new Route<{ region?: string; section?: 'new' }>(
-    '/:region?/:section?'
-  ),
+  homeRegion: new Route<{ region?: string; section?: 'new' }>('/:region?/:section?'),
 
   notFound: new Route('*'),
 }
@@ -76,18 +69,13 @@ export const useRouterCurPage = () => {
 }
 
 export const useIsRouteActive = (...names: RouteName[]) => {
-  return useStoreInstance(
-    router,
-    (router) => names.includes(router.curPage.name as any),
-    names
-  )
+  return useStoreInstance(router, (router) => names.includes(router.curPage.name as any), names)
 }
 
 export const useRoute = <N extends RouteName>(name: N): HistoryItem<N> => {
   return useStoreInstance(
     router,
-    (router) =>
-      (router.curPage.name === name ? router.curPage : null) as HistoryItem<N>,
+    (router) => (router.curPage.name === name ? router.curPage : null) as HistoryItem<N>,
     [name]
   )
 }

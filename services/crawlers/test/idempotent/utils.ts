@@ -1,10 +1,6 @@
 import test from 'ava'
 
-import {
-  aroundCoords,
-  boundingBoxFromCenter,
-  shiftLatLonByMetres,
-} from '../../src/utils'
+import { aroundCoords, boundingBoxFromCenter, shiftLatLonByMetres } from '../../src/utils'
 
 test('Shifting lat/lon by metres (positive)', (t) => {
   const result = shiftLatLonByMetres(51, 0, 100, 100)

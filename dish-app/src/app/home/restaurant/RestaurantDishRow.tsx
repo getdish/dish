@@ -111,12 +111,7 @@ export const RestaurantDishRowContent = memo(
                       onSelect?.('')
                     }}
                   >
-                    <TagButtonSlanted
-                      noLink
-                      bold
-                      name="Overall"
-                      selected={selected === ''}
-                    />
+                    <TagButtonSlanted noLink bold name="Overall" selected={selected === ''} />
                   </ScalingPressable>
                 </Theme>
                 {getDishRow(dishGroups[0])}

@@ -85,14 +85,10 @@ export const RestaurantTagsScore = graphql(function RestaurantTagsScore({
                   </HStack>
                 </TableCell>
                 <TableCell {...col1Props}>
-                  {i === 0 && (
-                    <PointsText points={breakdownScoreDown(breakdown)} />
-                  )}
+                  {i === 0 && <PointsText points={breakdownScoreDown(breakdown)} />}
                 </TableCell>
                 <TableCell {...col1Props}>
-                  {i === 0 && (
-                    <PointsText points={breakdownScoreUp(breakdown)} />
-                  )}
+                  {i === 0 && <PointsText points={breakdownScoreUp(breakdown)} />}
                 </TableCell>
                 <TableCell {...col1Props}>
                   <PointsText fontWeight="600" points={finalScore} />
@@ -118,9 +114,7 @@ const col1Props: TableCellProps = {
 }
 
 function breakdownScoreDown(breakdown: any) {
-  return (
-    breakdown?.reviews['_1'].score ?? 0 + breakdown?.reviews['_2'].score ?? 0
-  )
+  return breakdown?.reviews['_1'].score ?? 0 + breakdown?.reviews['_2'].score ?? 0
 }
 
 function breakdownScoreUp(breakdown: any) {

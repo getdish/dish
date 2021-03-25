@@ -3,13 +3,7 @@ import { Minus, ThumbsDown, ThumbsUp } from '@dish/react-feather'
 import React, { Suspense, memo } from 'react'
 import { AbsoluteVStack, HStack, Spacer, Text, VStack } from 'snackui'
 
-import {
-  darkGreen,
-  darkGrey,
-  darkRed,
-  green,
-  red,
-} from '../../constants/colors'
+import { darkGreen, darkGrey, darkRed, green, red } from '../../constants/colors'
 import { tagDisplayName } from '../../constants/tagMeta'
 import { getTagSlug } from '../../helpers/getTagSlug'
 import { FullTag } from '../../types/tagTypes'
@@ -38,8 +32,7 @@ export const TagSmallButtonContent = graphql(
     const hasVoted = vote === 1 || vote === -1
     const VoteIcon = vote === 0 ? Minus : vote == 1 ? ThumbsUp : ThumbsDown
     const backgroundColor = vote === 1 ? green : vote === -1 ? red : '#111'
-    const backgroundColorHover =
-      vote === 1 ? darkGreen : vote === -1 ? darkRed : darkGrey
+    const backgroundColorHover = vote === 1 ? darkGreen : vote === -1 ? darkRed : darkGrey
 
     return (
       <HStack

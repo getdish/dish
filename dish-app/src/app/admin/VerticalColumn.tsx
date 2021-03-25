@@ -3,11 +3,7 @@ import { LoadingItems, StackProps, VStack } from 'snackui'
 
 import { ColumnHeader } from './ColumnHeader'
 
-export const VerticalColumn = ({
-  children,
-  title,
-  ...props
-}: StackProps & { title?: any }) => {
+export const VerticalColumn = ({ children, title, ...props }: StackProps & { title?: any }) => {
   return (
     <VStack
       minWidth={180}

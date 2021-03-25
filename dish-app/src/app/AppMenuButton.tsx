@@ -1,14 +1,7 @@
 import { Menu } from '@dish/react-feather'
 import { useStoreInstance } from '@dish/use-store'
 import React from 'react'
-import {
-  AbsoluteVStack,
-  BlurView,
-  HStack,
-  Modal,
-  VStack,
-  useMedia,
-} from 'snackui'
+import { AbsoluteVStack, BlurView, HStack, Modal, VStack, useMedia } from 'snackui'
 
 import { zIndexDrawer } from '../constants/constants'
 import { AppMenuContents } from './AppMenuContents'

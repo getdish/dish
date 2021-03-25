@@ -12,10 +12,7 @@ export class GooglePuppeteerJob extends WorkerJob {
 
   constructor() {
     super()
-    this.puppeteer = new Puppeteer(
-      this.GOOGLE_DOMAIN,
-      process.env.GOOGLE_AWS_PROXY
-    )
+    this.puppeteer = new Puppeteer(this.GOOGLE_DOMAIN, process.env.GOOGLE_AWS_PROXY)
   }
 
   async boot() {

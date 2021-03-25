@@ -5,10 +5,7 @@ import { restaurantFindOne } from '@dish/graph'
 import test from 'ava'
 
 import { Google } from '../../src/google/Google'
-import {
-  deleteAllScrapesBySourceID,
-  scrapeFindOneBySourceID,
-} from '../../src/scrape-helpers'
+import { deleteAllScrapesBySourceID, scrapeFindOneBySourceID } from '../../src/scrape-helpers'
 import { tripadvisorGetFBC } from '../../src/tripadvisor/Tripadvisor'
 
 const name = 'Fresh Brew Coffee'
@@ -33,11 +30,7 @@ test.skip('Gets and persists a restaurant', async (t) => {
   const scrape = await scrapeFindOneBySourceID('google', ID)
   t.assert(scrape)
   if (!scrape) return
-  t.assert(
-    scrape.data.synopsis.includes(
-      'Snug cafe offering American & Vietnamese sandwiches'
-    )
-  )
+  t.assert(scrape.data.synopsis.includes('Snug cafe offering American & Vietnamese sandwiches'))
   t.assert(scrape.data.hero_image.includes('googleusercontent.com'))
   t.assert(scrape.data.rating, '4.8')
   t.assert(scrape.data.hours[0].day, 'Friday')
@@ -52,10 +45,9 @@ test.skip('Gets and persists a restaurant', async (t) => {
 })
 
 test('Converting table to JSON', (t) => {
-  const html = fs.readFileSync(
-    path.resolve(__dirname, './etc/google_hours_table.html'),
-    { encoding: 'utf8' }
-  )
+  const html = fs.readFileSync(path.resolve(__dirname, './etc/google_hours_table.html'), {
+    encoding: 'utf8',
+  })
   const json = Google.convertTableToJSON(html)
   t.deepEqual(json, [
     { day: 'Friday', hours: '7am–3pm' },

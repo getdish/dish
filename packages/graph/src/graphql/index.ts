@@ -3,18 +3,11 @@ import { QueryFetcher, createClient } from 'gqless'
 import { Auth } from '../Auth'
 import { GRAPH_API } from '../constants'
 import { getAuthHeaders } from '../getAuth'
-import {
-  GeneratedSchema,
-  generatedSchema,
-  scalarsEnumsHash,
-} from './schema.generated'
+import { GeneratedSchema, generatedSchema, scalarsEnumsHash } from './schema.generated'
 
 export * from './schema.generated'
 
-export const fetchLog = (
-  input: RequestInfo,
-  init?: RequestInit | undefined
-): Promise<Response> => {
+export const fetchLog = (input: RequestInfo, init?: RequestInit | undefined): Promise<Response> => {
   if (process.env.DEBUG || process.env.LOG_FETCH) {
     console.log(` [gqless]
       fetch('${input}', ${
@@ -61,12 +54,4 @@ export const client = createClient<GeneratedSchema>({
   normalization: true,
 })
 
-export const {
-  query,
-  mutation,
-  subscription,
-  resolved,
-  refetch,
-  setCache,
-  mutate,
-} = client
+export const { query, mutation, subscription, resolved, refetch, setCache, mutate } = client

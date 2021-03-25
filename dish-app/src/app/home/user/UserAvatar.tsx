@@ -6,15 +6,7 @@ import { defaultUserImage } from '../../../constants/defaultUserImage'
 import { characters } from './characters'
 
 export const UserAvatar = memo(
-  ({
-    size = 100,
-    avatar,
-    charIndex,
-  }: {
-    size?: number
-    avatar: string
-    charIndex: number
-  }) => {
+  ({ size = 100, avatar, charIndex }: { size?: number; avatar: string; charIndex: number }) => {
     const char = characters[charIndex]
     const theme = useTheme()
     return (
@@ -32,12 +24,7 @@ export const UserAvatar = memo(
             borderRadius: size,
           }}
         />
-        <Text
-          position="absolute"
-          bottom={-size * 0.1}
-          left={-size * 0.1}
-          fontSize={size * 0.4}
-        >
+        <Text position="absolute" bottom={-size * 0.1} left={-size * 0.1} fontSize={size * 0.4}>
           {char ?? '👻'}
         </Text>
       </VStack>

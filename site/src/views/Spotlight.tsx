@@ -1,4 +1,4 @@
-import { gloss, Stack, useTheme, View } from '@o/ui'
+import { Stack, View, gloss, useTheme } from '@o/ui'
 import { Box } from 'gloss'
 import React from 'react'
 
@@ -28,7 +28,7 @@ export const Spotlight = () => {
 
 const Square = gloss(View)
 
-const bg = theme => ({ background: theme.background })
+const bg = (theme) => ({ background: theme.background })
 
 const Above = gloss(Box, {
   flex: 1,

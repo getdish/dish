@@ -170,9 +170,7 @@ export async function fetchBrowserHyperscript(uri: string, selector: string) {
 }
 
 function hyperDecode(jsonPayload: string) {
-  return decode(
-    jsonPayload.slice(LEFT.length, jsonPayload.length - RIGHT.length)
-  )
+  return decode(jsonPayload.slice(LEFT.length, jsonPayload.length - RIGHT.length))
 }
 const LEFT = '<!--'
 const RIGHT = '-->'
@@ -189,10 +187,7 @@ function decode(res) {
   return JSON.parse(jsonPayload)
 }
 
-async function timeout<A extends Promise<any>>(
-  promise: A,
-  time = 0
-): Promise<any> {
+async function timeout<A extends Promise<any>>(promise: A, time = 0): Promise<any> {
   const failed = Symbol()
   let tm
   // @ts-ignore

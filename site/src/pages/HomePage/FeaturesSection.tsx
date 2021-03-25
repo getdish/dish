@@ -78,24 +78,13 @@ export default memo(function FeaturesSection() {
               <Space size={10} />
               <TitleText size="xxxl">It's a better deal.</TitleText>
               <Space size={14} />
-              <IntroPara
-                delayIndex={1}
-                stagger={0}
-                size={1.7}
-                sizeLineHeight={1.2}
-              >
-                <strong style={{ color: '#e61277' }}>
-                  Earn for your contributions
-                </strong>
+              <IntroPara delayIndex={1} stagger={0} size={1.7} sizeLineHeight={1.2}>
+                <strong style={{ color: '#e61277' }}>Earn for your contributions</strong>
               </IntroPara>
             </ParallaxStageItem>
             <Space size={10} />
             <ParallaxStageItem stagger={1}>
-              <Stack
-                direction="horizontal"
-                space="lg"
-                margin={['4%', 'auto', '8%', 0]}
-              >
+              <Stack direction="horizontal" space="lg" margin={['4%', 'auto', '8%', 0]}>
                 {sectionNames.map((section) => (
                   <PillButtonDark key={section} {...btnProps(section)}>
                     {section}
@@ -140,33 +129,27 @@ export default memo(function FeaturesSection() {
                     alignItems="start"
                     marginRight="-100%"
                   >
-                    {sections[section].items.map(
-                      ({ title, icon, body }, index) => (
-                        <Item
-                          key={`${section}${index}`}
-                          delay={dly * (index + 1)}
-                          title={title}
-                        >
-                          <SectionP>
-                            {/* <SectionIcon name={icon} /> */}
-                            {flatMap(body, (x, i) => {
-                              return (
-                                <React.Fragment key={i}>
-                                  {+i === body.length - 1 ? (
-                                    x
-                                  ) : (
-                                    <>
-                                      {x}
-                                      <Space />
-                                    </>
-                                  )}
-                                </React.Fragment>
-                              )
-                            })}
-                          </SectionP>
-                        </Item>
-                      )
-                    )}
+                    {sections[section].items.map(({ title, icon, body }, index) => (
+                      <Item key={`${section}${index}`} delay={dly * (index + 1)} title={title}>
+                        <SectionP>
+                          {/* <SectionIcon name={icon} /> */}
+                          {flatMap(body, (x, i) => {
+                            return (
+                              <React.Fragment key={i}>
+                                {+i === body.length - 1 ? (
+                                  x
+                                ) : (
+                                  <>
+                                    {x}
+                                    <Space />
+                                  </>
+                                )}
+                              </React.Fragment>
+                            )
+                          })}
+                        </SectionP>
+                      </Item>
+                    ))}
                   </Stack>
                 )
               })}
@@ -176,13 +159,7 @@ export default memo(function FeaturesSection() {
 
         <View flex={0.15} />
 
-        <View
-          sm-display="none"
-          position="relative"
-          transform={{ x: -40 }}
-          flex={1.25}
-          height={500}
-        >
+        <View sm-display="none" position="relative" transform={{ x: -40 }} flex={1.25} height={500}>
           <ParallaxStageItem
             stagger={2}
             parallax={{
@@ -243,9 +220,7 @@ const sections = {
       },
       {
         icon: `shop`,
-        body: [
-          `Invite chains and strong ID verification make moderation easier.`,
-        ],
+        body: [`Invite chains and strong ID verification make moderation easier.`],
       },
     ],
   },

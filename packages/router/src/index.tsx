@@ -79,17 +79,9 @@ export class Router<
       const prevItem = this.stack[this.stackIndex - 1]
       const nextItem = this.stack[this.stackIndex + 1]
       const direction: HistoryDirection =
-        prevItem?.id === id
-          ? 'backward'
-          : nextItem?.id === id
-          ? 'forward'
-          : 'none'
+        prevItem?.id === id ? 'backward' : nextItem?.id === id ? 'forward' : 'none'
       let type: HistoryType =
-        event.action === 'REPLACE'
-          ? 'replace'
-          : event.action === 'POP'
-          ? 'pop'
-          : 'push'
+        event.action === 'REPLACE' ? 'replace' : event.action === 'POP' ? 'pop' : 'push'
 
       // if (process.env.DEBUG) {
       //   // prettier-ignore
@@ -142,10 +134,7 @@ export class Router<
     return this.history[this.history.length - 1] ?? defaultPage
   }
 
-  private handlePath(
-    pathname: string,
-    item: Pick<HistoryItem, 'id' | 'type' | 'direction'>
-  ) {
+  private handlePath(pathname: string, item: Pick<HistoryItem, 'id' | 'type' | 'direction'>) {
     const match = this.router.match('GET', pathname)
     if (!match) {
       console.log('no match', pathname, item)
@@ -344,19 +333,13 @@ export function getPathFromParams(
   }
 
   if (replaceSplatParams.length) {
-    path = path.replace(
-      '*',
-      replaceSplatParams.map((key) => `${key}/${params[key]}`).join('/')
-    )
+    path = path.replace('*', replaceSplatParams.map((key) => `${key}/${params[key]}`).join('/'))
   }
 
   return path
 }
 
-export function getHistoryItem(
-  router: Router<any>,
-  navItem: NavigateItem
-): HistoryItem {
+export function getHistoryItem(router: Router<any>, navItem: NavigateItem): HistoryItem {
   const params: any = {}
   // remove undefined params
   if ('params' in navItem) {
@@ -392,9 +375,7 @@ export type ProvideRouterProps = {
 
 export function ProvideRouter(props: ProvideRouterProps) {
   return (
-    <RouterPropsContext.Provider value={props.routes}>
-      {props.children}
-    </RouterPropsContext.Provider>
+    <RouterPropsContext.Provider value={props.routes}>{props.children}</RouterPropsContext.Provider>
   )
 }
 
@@ -425,11 +406,7 @@ export type LoadableView = React.FunctionComponent & {
 export type PageRouteView = LoadableView | Promise<LoadableView>
 
 export class Route<A extends Object | void = void> {
-  constructor(
-    public path: string,
-    public page?: PageRouteView,
-    public params?: A
-  ) {}
+  constructor(public path: string, public page?: PageRouteView, public params?: A) {}
 
   toString() {
     return JSON.stringify({
@@ -474,8 +451,7 @@ const isEqual = (a: any, b: any) => {
 }
 
 function setUnloadCondition(alert: RouteAlert<any> | null) {
-  window.onbeforeunload = () =>
-    alert?.condition('unload') ? alert.message : null
+  window.onbeforeunload = () => (alert?.condition('unload') ? alert.message : null)
 }
 
 // sanity check types

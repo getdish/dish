@@ -6,11 +6,7 @@ import { Box, Popover } from 'snackui'
 import { HomeLenseBar } from '../../views/HomeLenseBar'
 import { LinkButton } from '../../views/LinkButton'
 
-export const RestaurantAddTagButton = ({
-  restaurant,
-}: {
-  restaurant: Restaurant
-}) => {
+export const RestaurantAddTagButton = ({ restaurant }: { restaurant: Restaurant }) => {
   const [isOpen, setIsOpen] = useState(false)
   return (
     <Popover

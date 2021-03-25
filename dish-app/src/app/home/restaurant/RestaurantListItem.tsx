@@ -1,12 +1,6 @@
 import { fullyIdle, series } from '@dish/async'
 import { RestaurantItemMeta, graphql, restaurant_tag } from '@dish/graph'
-import {
-  ChevronDown,
-  ChevronUp,
-  MessageSquare,
-  Plus,
-  X,
-} from '@dish/react-feather'
+import { ChevronDown, ChevronUp, MessageSquare, Plus, X } from '@dish/react-feather'
 import { useStoreInstance } from '@dish/use-store'
 import { debounce, sortBy } from 'lodash'
 import React, { Suspense, memo, useCallback, useEffect, useState } from 'react'
@@ -120,10 +114,7 @@ function RestaurantListItemMain(props: RestaurantListItemProps) {
       position="relative"
       className="restaurant-list-item"
     >
-      <ContentScrollViewHorizontal
-        onScroll={handleScroll}
-        scrollEventThrottle={100}
-      >
+      <ContentScrollViewHorizontal onScroll={handleScroll} scrollEventThrottle={100}>
         <RestaurantListItemContent isLoaded={isLoaded} {...props} />
       </ContentScrollViewHorizontal>
     </VStack>
@@ -192,23 +183,13 @@ const RestaurantListItemContent = memo(
     }, [restaurant.name])
 
     const restaurantName = (restaurant.name ?? '').slice(0, 300)
-    const isActive = useStoreInstance(
-      searchPageStore,
-      (x) => x.index === rank - 1
-    )
+    const isActive = useStoreInstance(searchPageStore, (x) => x.index === rank - 1)
     const [isExpanded, setIsExpanded] = useState(false)
 
     const contentSideProps: StackProps = {
       width: media.sm ? '75%' : '60%',
-      minWidth: media.sm
-        ? isWeb
-          ? '40vw'
-          : Dimensions.get('window').width * 0.65
-        : 320,
-      maxWidth: Math.min(
-        Dimensions.get('window').width * 0.74,
-        media.sm ? 360 : 460
-      ),
+      minWidth: media.sm ? (isWeb ? '40vw' : Dimensions.get('window').width * 0.65) : 320,
+      maxWidth: Math.min(Dimensions.get('window').width * 0.74, media.sm ? 360 : 460),
     }
 
     const handleChangeDishes = useCallback(onChangeDishes as any, [])
@@ -318,12 +299,7 @@ const RestaurantListItemContent = memo(
             position="relative"
           >
             {/* LINK */}
-            <Link
-              tagName="div"
-              name="restaurant"
-              params={{ slug: restaurantSlug }}
-              zIndex={2}
-            >
+            <Link tagName="div" name="restaurant" params={{ slug: restaurantSlug }} zIndex={2}>
               <VStack paddingLeft={showAbove ? 47 : 10} paddingTop={25}>
                 <HStack position="relative" alignItems="center">
                   <AbsoluteVStack
@@ -491,39 +467,26 @@ const RestaurantListItemContent = memo(
                     tooltip={`Rating Breakdown (${totalReviews} reviews)`}
                     icon={<MessageSquare size={16} color="rgba(0,0,0,0.3)" />}
                   >
-                    {numberFormat(
-                      restaurant.reviews_aggregate().aggregate?.count() ?? 0,
-                      'sm'
-                    )}
+                    {numberFormat(restaurant.reviews_aggregate().aggregate?.count() ?? 0, 'sm')}
                   </SmallButton>
 
                   <Spacer />
 
                   <Suspense fallback={<Spacer size={44} />}>
-                    <RestaurantFavoriteStar
-                      size="md"
-                      restaurantId={restaurantId}
-                    />
+                    <RestaurantFavoriteStar size="md" restaurantId={restaurantId} />
                   </Suspense>
 
                   <Spacer />
 
                   <Suspense fallback={<Spacer size={44} />}>
-                    <RestaurantAddToListButton
-                      restaurantSlug={restaurantSlug}
-                      noLabel
-                      subtle
-                    />
+                    <RestaurantAddToListButton restaurantSlug={restaurantSlug} noLabel subtle />
                   </Suspense>
 
                   <Spacer />
 
                   <VStack flex={1} minWidth={12} />
 
-                  <RestaurantDeliveryButtons
-                    label="🚗"
-                    restaurantSlug={restaurantSlug}
-                  />
+                  <RestaurantDeliveryButtons label="🚗" restaurantSlug={restaurantSlug} />
 
                   <Spacer />
                   {/*
@@ -679,9 +642,7 @@ const RestaurantPeekDishes = memo(
           max: 5,
         })
 
-    const foundMatchingSearchedDish = props.activeTagSlugs?.includes(
-      dishes?.[0]?.slug
-    )
+    const foundMatchingSearchedDish = props.activeTagSlugs?.includes(dishes?.[0]?.slug)
     const dishSize = 150
 
     return (
@@ -786,11 +747,7 @@ const EditRestaurantTags = graphql(
       setSlugs(tagSlugs)
     }, [JSON.stringify(tagSlugs)])
 
-    function getDishItem(
-      dish: restaurant_tag,
-      before: any = null,
-      after: any = null
-    ) {
+    function getDishItem(dish: restaurant_tag, before: any = null, after: any = null) {
       return (
         <HStack key={dish.tag.slug} spacing padding={5} alignItems="center">
           {before}
@@ -817,13 +774,7 @@ const EditRestaurantTags = graphql(
           <Button onPress={() => setIsOpen(true)}>Edit</Button>
         </AbsoluteVStack>
 
-        <Modal
-          visible={isOpen}
-          maxWidth={480}
-          width="90%"
-          maxHeight="90%"
-          onDismiss={hide}
-        >
+        <Modal visible={isOpen} maxWidth={480} width="90%" maxHeight="90%" onDismiss={hide}>
           <PaneControlButtons>
             <CloseButton onPress={hide} />
           </PaneControlButtons>

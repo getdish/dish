@@ -8,10 +8,7 @@ import { Divider, HStack, Text, VStack, useDebounceValue } from 'snackui'
 import { lightGreen, lightRed } from '../../constants/colors'
 import { defaultLocationAutocompleteResults } from '../../constants/defaultLocationAutocompleteResults'
 import { AutocompleteItem } from '../../helpers/createAutocomplete'
-import {
-  locationToAutocomplete,
-  searchLocations,
-} from '../../helpers/searchLocations'
+import { locationToAutocomplete, searchLocations } from '../../helpers/searchLocations'
 import { SmallTitle } from '../views/SmallTitle'
 import { AdminListItem } from './AdminListItem'
 import { AdminSearchableColumn } from './AdminSearchableColumn'
@@ -135,19 +132,13 @@ const ReviewSentiment = (props: { text: string }) => {
     <VStack spacing="lg">
       <SmallTitle>Sentiment</SmallTitle>
 
-      <TextInput
-        style={{ borderWidth: 1, padding: 5 }}
-        onChangeText={(text) => setAspect(text)}
-      />
+      <TextInput style={{ borderWidth: 1, padding: 5 }} onChangeText={(text) => setAspect(text)} />
 
       <Divider />
 
       {sentiments.map(({ sentiment, sentence }) => {
         return (
-          <Text
-            backgroundColor={sentiment === 'Negative' ? lightRed : lightGreen}
-            key={sentence}
-          >
+          <Text backgroundColor={sentiment === 'Negative' ? lightRed : lightGreen} key={sentence}>
             {sentence} <strong>({sentiment})</strong>.
           </Text>
         )
@@ -174,139 +165,126 @@ const defaultPlaces: AutocompleteItem[] = [
   ...defaultLocationAutocompleteResults,
 ]
 
-const PlacesListContent = graphql(
-  ({ search, column }: { search: string; column: number }) => {
-    const adminStore = useStore(AdminReviewsStore)
-    const [results, setResults] = useState<AutocompleteItem[]>(defaultPlaces)
+const PlacesListContent = graphql(({ search, column }: { search: string; column: number }) => {
+  const adminStore = useStore(AdminReviewsStore)
+  const [results, setResults] = useState<AutocompleteItem[]>(defaultPlaces)
 
-    useEffect(() => {
-      let cancelled = false
-      searchLocations(search).then((locations) => {
-        if (!cancelled) {
-          setResults([
-            ...defaultPlaces,
-            ...locations.map(locationToAutocomplete),
-          ])
-        }
-      })
-      return () => {
-        cancelled = true
+  useEffect(() => {
+    let cancelled = false
+    searchLocations(search).then((locations) => {
+      if (!cancelled) {
+        setResults([...defaultPlaces, ...locations.map(locationToAutocomplete)])
       }
-    }, [search])
+    })
+    return () => {
+      cancelled = true
+    }
+  }, [search])
 
-    return (
-      <ScrollView style={{ paddingBottom: 100 }}>
-        {results.map((item, row) => {
-          return (
-            <AdminListItem
-              key={item.name + row}
-              text={item.name ?? 'no name'}
-              id="reviews"
-              row={row}
-              column={column}
-              onSelect={() => {
-                if (item.type === 'orphan') {
-                  adminStore.setSelectedCity(null)
-                } else {
-                  adminStore.setSelectedCity(item)
-                }
-              }}
-            />
-          )
-        })}
-      </ScrollView>
-    )
-  }
-)
+  return (
+    <ScrollView style={{ paddingBottom: 100 }}>
+      {results.map((item, row) => {
+        return (
+          <AdminListItem
+            key={item.name + row}
+            text={item.name ?? 'no name'}
+            id="reviews"
+            row={row}
+            column={column}
+            onSelect={() => {
+              if (item.type === 'orphan') {
+                adminStore.setSelectedCity(null)
+              } else {
+                adminStore.setSelectedCity(item)
+              }
+            }}
+          />
+        )
+      })}
+    </ScrollView>
+  )
+})
 
 const RestaurantList = () => {
   const [searchRaw, setSearch] = useState('')
   const search = useDebounceValue(searchRaw, 100)
   return (
-    <AdminSearchableColumn
-      title="Restaurants"
-      onChangeSearch={(x) => setSearch(x)}
-    >
+    <AdminSearchableColumn title="Restaurants" onChangeSearch={(x) => setSearch(x)}>
       <RestaurantsListContent column={1} search={search} />
     </AdminSearchableColumn>
   )
 }
 
-const RestaurantsListContent = graphql(
-  ({ search, column }: { search: string; column: number }) => {
-    const adminStore = useStore(AdminReviewsStore)
-    const { selectedCity } = adminStore
-    const limit = 200
-    const [page, setPage] = useState(1)
-    const results = query.restaurant({
-      where: {
-        name: {
-          ...(!!search && {
-            _ilike: `%${search}%`,
-          }),
-          _neq: '',
-        },
-        ...(selectedCity &&
-          'center' in selectedCity && {
-            location: {
-              _st_d_within: {
-                // search outside current bounds a bit
-                distance: 1,
-                from: {
-                  type: 'Point',
-                  coordinates: [
-                    selectedCity.center?.lng,
-                    selectedCity.center?.lat,
-                  ],
-                },
+const RestaurantsListContent = graphql(({ search, column }: { search: string; column: number }) => {
+  const adminStore = useStore(AdminReviewsStore)
+  const { selectedCity } = adminStore
+  const limit = 200
+  const [page, setPage] = useState(1)
+  const results = query.restaurant({
+    where: {
+      name: {
+        ...(!!search && {
+          _ilike: `%${search}%`,
+        }),
+        _neq: '',
+      },
+      ...(selectedCity &&
+        'center' in selectedCity && {
+          location: {
+            _st_d_within: {
+              // search outside current bounds a bit
+              distance: 1,
+              from: {
+                type: 'Point',
+                coordinates: [selectedCity.center?.lng, selectedCity.center?.lat],
               },
             },
-          }),
+          },
+        }),
+    },
+    limit: limit,
+    offset: (page - 1) * limit,
+    order_by: [
+      {
+        name: order_by.asc,
       },
-      limit: limit,
-      offset: (page - 1) * limit,
-      order_by: [
-        {
-          name: order_by.asc,
-        },
-      ],
-    })
+    ],
+  })
 
-    return (
-      <ScrollView style={{ paddingBottom: 100 }}>
-        {results.map((item, index) => {
-          return (
-            <AdminListItem
-              key={item.id}
-              text={item.name ?? 'no name'}
-              id="reviews"
-              row={index}
-              column={column}
-              onSelect={() => {
-                adminStore.setSelectedRestaurantId(item.id)
-              }}
-            />
-          )
-        })}
+  return (
+    <ScrollView style={{ paddingBottom: 100 }}>
+      {results.map((item, index) => {
+        return (
+          <AdminListItem
+            key={item.id}
+            text={item.name ?? 'no name'}
+            id="reviews"
+            row={index}
+            column={column}
+            onSelect={() => {
+              adminStore.setSelectedRestaurantId(item.id)
+            }}
+          />
+        )
+      })}
 
-        {results.length === limit && (
-          <HStack
-            height={32}
-            padding={6}
-            hoverStyle={{
-              backgroundColor: '#f2f2f2',
-            }}
-            onPress={() => {
-              setPage((x) => x + 1)
-            }}
-          >
-            <Text>Next page</Text>
-          </HStack>
-        )}
-      </ScrollView>
-    )
-  }
-)
+      {results.length === limit && (
+        <HStack
+          height={32}
+          padding={6}
+          hoverStyle={{
+            backgroundColor: '#f2f2f2',
+          }}
+          onPress={() => {
+            setPage((x) => x + 1)
+          }}
+        >
+          <Text>Next page</Text>
+        </HStack>
+      )}
+    </ScrollView>
+  )
+})
 
 const ReviewList = () => {
   const [searchRaw, setSearch] = useState('')
@@ -320,69 +298,64 @@ const ReviewList = () => {
   )
 }
 
-const ReviewListContent = graphql(
-  ({ search, column }: { search: string; column: number }) => {
-    const adminStore = useStore(AdminReviewsStore)
-    const limit = 200
-    const [page, setPage] = useState(1)
-    const results = query.review({
-      where: {
-        ...(!!adminStore.selectedRestaurantId && {
-          restaurant_id: {
-            _eq: adminStore.selectedRestaurantId,
-          },
-        }),
-        ...(!!search && {
-          text: {
-            _ilike: `%${search}%`,
-            _neq: '',
-          },
-        }),
-      },
-      limit: limit,
-      offset: (page - 1) * limit,
-      order_by: [
-        {
-          id: order_by.asc,
+const ReviewListContent = graphql(({ search, column }: { search: string; column: number }) => {
+  const adminStore = useStore(AdminReviewsStore)
+  const limit = 200
+  const [page, setPage] = useState(1)
+  const results = query.review({
+    where: {
+      ...(!!adminStore.selectedRestaurantId && {
+        restaurant_id: {
+          _eq: adminStore.selectedRestaurantId,
         },
-      ],
-    })
+      }),
+      ...(!!search && {
+        text: {
+          _ilike: `%${search}%`,
+          _neq: '',
+        },
+      }),
+    },
+    limit: limit,
+    offset: (page - 1) * limit,
+    order_by: [
+      {
+        id: order_by.asc,
+      },
+    ],
+  })
 
-    return (
-      <ScrollView style={{ paddingBottom: 100 }}>
-        {results.map((item, row) => {
-          return (
-            <AdminListItem
-              key={item.id}
-              text={`${item.user.username ?? 'no name'} - ${item.text?.slice(
-                0,
-                100
-              )}`}
-              id="reviews"
-              row={row}
-              column={column}
-              onSelect={() => {
-                adminStore.setSelectedReviewId(item.id)
-              }}
-            />
-          )
-        })}
+  return (
+    <ScrollView style={{ paddingBottom: 100 }}>
+      {results.map((item, row) => {
+        return (
+          <AdminListItem
+            key={item.id}
+            text={`${item.user.username ?? 'no name'} - ${item.text?.slice(0, 100)}`}
+            id="reviews"
+            row={row}
+            column={column}
+            onSelect={() => {
+              adminStore.setSelectedReviewId(item.id)
+            }}
+          />
+        )
+      })}
 
-        {results.length === limit && (
-          <HStack
-            height={32}
-            padding={6}
-            hoverStyle={{
-              backgroundColor: '#f2f2f2',
-            }}
-            onPress={() => {
-              setPage((x) => x + 1)
-            }}
-          >
-            <Text>Next page</Text>
-          </HStack>
-        )}
-      </ScrollView>
-    )
-  }
-)
+      {results.length === limit && (
+        <HStack
+          height={32}
+          padding={6}
+          hoverStyle={{
+            backgroundColor: '#f2f2f2',
+          }}
+          onPress={() => {
+            setPage((x) => x + 1)
+          }}
+        >
+          <Text>Next page</Text>
+        </HStack>
+      )}
+    </ScrollView>
+  )
+})

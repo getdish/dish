@@ -18,12 +18,7 @@ export const AdminSearchableColumn = ({
     <VStack flex={1} maxHeight="100%">
       <ColumnHeader
         after={
-          <HStack
-            flex={1}
-            spacing={10}
-            alignItems="center"
-            justifyContent="space-between"
-          >
+          <HStack flex={1} spacing={10} alignItems="center" justifyContent="space-between">
             <TextInput
               placeholder="Search..."
               style={[styles.textInput, { flex: 1 }]}

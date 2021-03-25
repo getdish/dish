@@ -1,4 +1,4 @@
-import { createContextualProps, Parallax, ParallaxViewProps } from '@o/ui'
+import { Parallax, ParallaxViewProps, createContextualProps } from '@o/ui'
 import { selectDefined } from '@o/utils'
 import React, { memo, useEffect, useState } from 'react'
 

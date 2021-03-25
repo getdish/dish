@@ -1,15 +1,7 @@
 import { graphql } from '@dish/graph'
 import React, { memo, useState } from 'react'
 import { View } from 'react-native'
-import {
-  Divider,
-  HStack,
-  Paragraph,
-  Spacer,
-  Text,
-  TextProps,
-  VStack,
-} from 'snackui'
+import { Divider, HStack, Paragraph, Spacer, Text, TextProps, VStack } from 'snackui'
 
 import { lightGreen, lightYellow } from '../../../constants/colors'
 import { thirdPartyCrawlSources } from '../../../constants/thirdPartyCrawlSources'
@@ -17,11 +9,7 @@ import { numberFormat } from '../../../helpers/numberFormat'
 import { queryRestaurant } from '../../../queries/queryRestaurant'
 import { SmallButton } from '../../views/SmallButton'
 import { RestaurantSourcesBreakdown } from './RestaurantSourcesBreakdown'
-import {
-  useTotalExternalReviews,
-  useTotalNativeReviews,
-  useTotalReviews,
-} from './useTotalReviews'
+import { useTotalExternalReviews, useTotalNativeReviews, useTotalReviews } from './useTotalReviews'
 
 const TextHighlight = (props: TextProps) => (
   <Text paddingHorizontal={4} borderRadius={8} {...props} />
@@ -33,9 +21,7 @@ const REVIEW_FACTOR = 0.1
 const sourceNames = (sources: any[]) => {
   const sourceKeys = Object.keys(sources)
   if (!sourceKeys.length) return 'no sources'
-  const upperCasedSources = sourceKeys.map(
-    (s) => thirdPartyCrawlSources[s].name
-  )
+  const upperCasedSources = sourceKeys.map((s) => thirdPartyCrawlSources[s].name)
   const count = upperCasedSources.length
   if (count == 1) return upperCasedSources[0]
   const final = upperCasedSources.pop()
@@ -63,11 +49,9 @@ export const RestaurantPointsBreakdown = memo(
       const [showTable, setShowTable] = useState(showTableDefault)
       const totalReviews = useTotalReviews(restaurant)
       const totalNativeReviews = useTotalNativeReviews(restaurant)
-      const nativeReviewPoints =
-        Math.round(totalNativeReviews * REVIEW_FACTOR * 10) / 10
+      const nativeReviewPoints = Math.round(totalNativeReviews * REVIEW_FACTOR * 10) / 10
       const totalExternalReviews = useTotalExternalReviews(restaurant)
-      const externalReviewPoints =
-        Math.round(totalExternalReviews * REVIEW_FACTOR * 10) / 10
+      const externalReviewPoints = Math.round(totalExternalReviews * REVIEW_FACTOR * 10) / 10
       const reviewsBreakdown = restaurant.score_breakdown()?.['reviews'] ?? {}
       const photosBreakdown = restaurant.score_breakdown()?.['photos'] ?? {}
 
@@ -108,13 +92,11 @@ export const RestaurantPointsBreakdown = memo(
               <TextHighlight fontWeight="700" backgroundColor={lightGreen}>
                 {numberFormat(Math.round(nativeReviewPoints))}
               </TextHighlight>{' '}
-              points from {numberFormat(totalNativeReviews)} Dish reviews and{' '}
-              <View />
+              points from {numberFormat(totalNativeReviews)} Dish reviews and <View />
               <TextHighlight fontWeight="700" backgroundColor={lightYellow}>
                 {numberFormat(Math.round(externalReviewPoints))}
               </TextHighlight>{' '}
-              from {numberFormat(totalExternalReviews)} {sourceNames(sources)}{' '}
-              reviews.
+              from {numberFormat(totalExternalReviews)} {sourceNames(sources)} reviews.
             </Paragraph>
 
             {/* <RestaurantTagsScore
@@ -128,18 +110,13 @@ export const RestaurantPointsBreakdown = memo(
 
             <Spacer size="lg" />
 
-            {showTable && (
-              <RestaurantSourcesBreakdown restaurantSlug={restaurantSlug} />
-            )}
+            {showTable && <RestaurantSourcesBreakdown restaurantSlug={restaurantSlug} />}
 
             {!showTable && (
               <>
                 <Spacer size="lg" />
 
-                <SmallButton
-                  alignSelf="center"
-                  onPress={() => setShowTable((x) => !x)}
-                >
+                <SmallButton alignSelf="center" onPress={() => setShowTable((x) => !x)}>
                   {showTable ? 'Hide breakdown' : 'Points breakdown'}
                 </SmallButton>
               </>

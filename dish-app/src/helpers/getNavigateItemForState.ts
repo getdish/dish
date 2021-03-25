@@ -45,9 +45,7 @@ const getNameForState = (state: HomeStateTagNavigable) => {
 
 // this function is written quite functionally
 // and called often, maybe worth profiling
-const getParamsForState = (
-  state: HomeStateTagNavigable
-): SearchRouteParams | any => {
+const getParamsForState = (state: HomeStateTagNavigable): SearchRouteParams | any => {
   if (isHomeState(state) || isSearchState(state)) {
     const allActiveTags = getActiveTags(state)
     let tags = ''

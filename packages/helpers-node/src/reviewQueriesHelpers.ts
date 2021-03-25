@@ -180,12 +180,7 @@ export function cleanReviewText(text: string | null | undefined) {
 
 export function dedupeReviews(reviews: Review[]) {
   return uniqBy(reviews, (review: Review) => {
-    return (
-      review.username +
-      review.restaurant_id +
-      review.tag_id +
-      review.authored_at
-    )
+    return review.username + review.restaurant_id + review.tag_id + review.authored_at
   })
 }
 

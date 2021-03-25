@@ -48,14 +48,12 @@ const defaultConstraints = {
   restaurant: restaurant_constraint.restaurant_name_address_key,
   list: list_constraint.list_slug_user_id_region_key,
   review: review_constraint.review_native_data_unique_key_key,
-  review_tag_sentence:
-    review_tag_sentence_constraint.review_tag_tag_id_review_id_sentence_key,
+  review_tag_sentence: review_tag_sentence_constraint.review_tag_tag_id_review_id_sentence_key,
   setting: setting_constraint.setting_pkey,
   tag_tag: tag_tag_constraint.tag_tag_pkey,
   user: user_constraint.user_username_key,
   photo: photo_constraint.photo_origin_key,
-  photo_xref:
-    photo_xref_constraint.photos_xref_photos_id_restaurant_id_tag_id_key,
+  photo_xref: photo_xref_constraint.photos_xref_photos_id_restaurant_id_tag_id_key,
 }
 
 export function createQueryHelpersFor<A extends ModelType>(
@@ -66,17 +64,8 @@ export function createQueryHelpersFor<A extends ModelType>(
     async insert(items: Partial<A>[], opts?: SelectionOptions) {
       return await insert<A>(modelName, items, opts)
     },
-    async upsert(
-      items: Partial<A>[],
-      constraint?: string,
-      opts?: SelectionOptions
-    ) {
-      return await upsert<A>(
-        modelName,
-        items,
-        constraint ?? defaultUpsertConstraint,
-        opts
-      )
+    async upsert(items: Partial<A>[], constraint?: string, opts?: SelectionOptions) {
+      return await upsert<A>(modelName, items, constraint ?? defaultUpsertConstraint, opts)
     },
     async update(a: WithID<Partial<A>>, opts?: SelectionOptions) {
       //@ts-expect-error
@@ -209,11 +198,7 @@ export async function deleteAllFuzzyBy(
   })
 }
 
-export async function deleteAllBy(
-  table: string,
-  key: string,
-  value: string
-): Promise<void> {
+export async function deleteAllBy(table: string, key: string, value: string): Promise<void> {
   await resolvedMutation(() => {
     const m = mutation[`delete_${table}`]?.({
       where: { [key]: { _eq: value } },
@@ -222,10 +207,7 @@ export async function deleteAllBy(
   })
 }
 
-export async function deleteByIDs(
-  table: string,
-  ids: scaleUid[]
-): Promise<void> {
+export async function deleteByIDs(table: string, ids: scaleUid[]): Promise<void> {
   await resolvedMutation(() => {
     return mutation[`delete_${table}`]?.({
       where: { id: { _in: ids } },
@@ -268,12 +250,7 @@ function formatRelationData<T>(
     return Object.keys(cur).reduce((acc, key) => {
       const hasArgs = !!generatedSchema[table][key]['__args']
       const schemaType = generatedSchema[table][key]['__type']
-      const {
-        pureType: typeName,
-        isArray,
-        isNullable,
-        nullableItems,
-      } = parseSchemaType(schemaType)
+      const { pureType: typeName, isArray, isNullable, nullableItems } = parseSchemaType(schemaType)
       const inputKeys = Object.keys(generatedSchema[table + inputType])
 
       const fieldName = key

@@ -50,10 +50,7 @@ export async function createApiServer(app: any, config: ServerConfigNormal) {
         }),
         winston.format.printf((info) => {
           const { req, res, responseTime } = info.metadata.meta
-          let out = ` [api] ${info.message.replace(
-            /^https?\s+/i,
-            ''
-          )} ${responseTime}ms`
+          let out = ` [api] ${info.message.replace(/^https?\s+/i, '')} ${responseTime}ms`
           if (info.metadata.error) {
             out = out + ' ' + info.metadata.error
             if (info.metadata.error.stack) {
@@ -62,11 +59,7 @@ export async function createApiServer(app: any, config: ServerConfigNormal) {
           }
           const reqstr = Object.keys(req.headers)
             .map((k) => {
-              const val = secret[k]
-                ? `${k}:🔒`
-                : filtered[k]
-                ? ''
-                : `${k}:${req.headers[k]}`
+              const val = secret[k] ? `${k}:🔒` : filtered[k] ? '' : `${k}:${req.headers[k]}`
               return `${val}`
             })
             .filter(Boolean)
@@ -97,9 +90,7 @@ export async function createApiServer(app: any, config: ServerConfigNormal) {
         return relative(apiDir, fullPath)
       })
       .filter((x) => {
-        return (
-          (basename(x)[0] !== '_' && x.endsWith('.ts')) || x.endsWith('.tsx')
-        )
+        return (basename(x)[0] !== '_' && x.endsWith('.ts')) || x.endsWith('.tsx')
       })
       .map((file) => {
         const name = file.replace(/\.tsx?$/, '')
@@ -211,10 +202,7 @@ export async function createApiServer(app: any, config: ServerConfigNormal) {
           continue
         }
         if (typeof endpoint !== 'function' && !Array.isArray(endpoint)) {
-          console.warn(
-            ` [api] ⚠️  no function/array export, ignoring ${file}`,
-            endpoint
-          )
+          console.warn(` [api] ⚠️  no function/array export, ignoring ${file}`, endpoint)
           continue
         }
         handlers[name] = endpoint

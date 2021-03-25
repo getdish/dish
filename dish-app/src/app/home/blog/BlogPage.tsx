@@ -43,18 +43,12 @@ function BlogPageIndex() {
       id,
     }))
     .filter((x) => !x.private)
-    .sort((a, b) =>
-      new Date(a.date).getTime() > new Date(b.date).getTime() ? -1 : 1
-    )
+    .sort((a, b) => (new Date(a.date).getTime() > new Date(b.date).getTime() ? -1 : 1))
 
   return (
     <>
       <VStack>
-        <VStack
-          paddingHorizontal={25}
-          paddingVertical={40}
-          backgroundColor={bgLightLight}
-        >
+        <VStack paddingHorizontal={25} paddingVertical={40} backgroundColor={bgLightLight}>
           <Title size="xl">Dish Blog</Title>
         </VStack>
         <Divider />

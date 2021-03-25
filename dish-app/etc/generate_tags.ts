@@ -15,10 +15,7 @@ async function main() {
   for (const key in tags) {
     output += `export const ${key} = ${JSON.stringify(tags[key], null, 2)}\n`
   }
-  await writeFile(
-    join(__dirname, '..', 'src', 'constants', 'localTags.ts'),
-    output
-  )
+  await writeFile(join(__dirname, '..', 'src', 'constants', 'localTags.ts'), output)
   console.log('wrote tags', tags)
 }
 

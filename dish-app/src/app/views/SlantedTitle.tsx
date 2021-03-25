@@ -8,20 +8,11 @@ export type SlantedTitleProps = Omit<BoxProps, 'color'> &
   Partial<
     Pick<
       SizableTextProps,
-      | 'size'
-      | 'sizeLineHeight'
-      | 'color'
-      | 'lineHeight'
-      | 'fontSize'
-      | 'fontWeight'
+      'size' | 'sizeLineHeight' | 'color' | 'lineHeight' | 'fontSize' | 'fontWeight'
     >
   >
 
-export const SlantedTitle = ({
-  size,
-  sizeLineHeight,
-  ...props
-}: SlantedTitleProps) => {
+export const SlantedTitle = ({ size, sizeLineHeight, ...props }: SlantedTitleProps) => {
   const [{ children, ...rest }, textProps] = useTextStyle(props as any, true)
   return (
     <SlantedBox alignSelf="flex-start" {...(rest as any)}>

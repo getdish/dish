@@ -8,9 +8,7 @@ async function one_puppeteer(slug: string) {
   const restaurant = await restaurantFindOne({ slug })
   if (!restaurant) throw new Error('Google sandbox: could not find ' + name)
   const google = new GooglePuppeteer()
-  console.log(
-    'Restaurant from DB being used for Google crawl: ' + restaurant.name
-  )
+  console.log('Restaurant from DB being used for Google crawl: ' + restaurant.name)
   await google.getRestaurant(restaurant)
 }
 
@@ -31,9 +29,7 @@ async function one_review_api(slug: string) {
   const restaurant = await restaurantFindOne({ slug })
   if (!restaurant) throw new Error('Google sandbox: could not find ' + name)
   const google = new GoogleReviewAPI()
-  console.log(
-    'Restaurant from DB being used for Google crawl: ' + restaurant.name
-  )
+  console.log('Restaurant from DB being used for Google crawl: ' + restaurant.name)
   await google.getRestaurant(restaurant.id)
 }
 

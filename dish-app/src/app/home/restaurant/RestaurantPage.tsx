@@ -1,13 +1,6 @@
 import { fullyIdle, series } from '@dish/async'
 import { graphql, order_by } from '@dish/graph'
-import React, {
-  Suspense,
-  memo,
-  useEffect,
-  useMemo,
-  useRef,
-  useState,
-} from 'react'
+import React, { Suspense, memo, useEffect, useMemo, useRef, useState } from 'react'
 import { ScrollView, View } from 'react-native'
 import { LoadingItems, Spacer, VStack } from 'snackui'
 
@@ -135,9 +128,7 @@ const RestaurantPage = memo(
 
     return (
       <>
-        <PageTitleTag>
-          Dish - {restaurant?.name ?? ''} has the best [...tags] dishes.
-        </PageTitleTag>
+        <PageTitleTag>Dish - {restaurant?.name ?? ''} has the best [...tags] dishes.</PageTitleTag>
 
         <ContentScrollView
           ref={setScrollView}
@@ -154,10 +145,7 @@ const RestaurantPage = memo(
               borderBottomColor={colors.lightColor}
               borderBottomWidth={1}
             >
-              <RestaurantHeader
-                minHeight={450}
-                restaurantSlug={restaurantSlug}
-              />
+              <RestaurantHeader minHeight={450} restaurantSlug={restaurantSlug} />
 
               <VStack marginHorizontal={-20} marginBottom={-36}>
                 <RestaurantTagReviews
@@ -183,10 +171,7 @@ const RestaurantPage = memo(
 
               <Spacer size="xl" />
 
-              <RestaurantTagPhotos
-                tagSlug={selectedDish}
-                restaurantSlug={restaurantSlug}
-              />
+              <RestaurantTagPhotos tagSlug={selectedDish} restaurantSlug={restaurantSlug} />
 
               {/* END head color AREA */}
             </VStack>
@@ -245,12 +230,7 @@ const RestaurantLists = memo(
 
     return (
       <VStack marginTop={-20}>
-        <SlantedTitle
-          size="md"
-          marginBottom={-26}
-          alignSelf="center"
-          fontWeight="700"
-        >
+        <SlantedTitle size="md" marginBottom={-26} alignSelf="center" fontWeight="700">
           Lists
         </SlantedTitle>
         <SkewedCardCarousel>

@@ -5,12 +5,7 @@ import { HStack, Spacer, StackProps, VStack } from 'snackui'
 
 import { selectRishDishViewSimple } from '../../../helpers/selectDishViewSimple'
 import { queryRestaurantTags } from '../../../queries/queryRestaurantTags'
-import {
-  TagButton,
-  TagButtonProps,
-  TagButtonTagProps,
-  getTagButtonProps,
-} from '../TagButton'
+import { TagButton, TagButtonProps, TagButtonTagProps, getTagButtonProps } from '../TagButton'
 
 type TagRowProps = {
   restaurantSlug: string
@@ -45,9 +40,7 @@ const RestaurantTagsRowContent = memo(
     if (props.tags) {
       tags = props.tags.map(getTagButtonProps)
     } else {
-      tags = queryRestaurantTags({ restaurantSlug, limit: props.max }).map(
-        selectRishDishViewSimple
-      )
+      tags = queryRestaurantTags({ restaurantSlug, limit: props.max }).map(selectRishDishViewSimple)
     }
     if (showMore) {
       tags = tags.slice(0, 2)

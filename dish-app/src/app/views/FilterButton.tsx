@@ -42,9 +42,7 @@ export const FilterButton = ({
         ...rest.textProps,
       }}
     >
-      {rest.children ??
-        (tag.name ? tagDisplayNames[tag.name] : null) ??
-        tag.name}
+      {rest.children ?? (tag.name ? tagDisplayNames[tag.name] : null) ?? tag.name}
     </SmallButton>
   )
 }

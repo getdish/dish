@@ -58,10 +58,7 @@ export const RestaurantDeliveryButtons = memo(
   })
 )
 
-const RestaurantDeliveryButton = ({
-  source,
-  showLabels,
-}: Props & { source: any }) => {
+const RestaurantDeliveryButton = ({ source, showLabels }: Props & { source: any }) => {
   return (
     <SmallButton
       href={source.url}

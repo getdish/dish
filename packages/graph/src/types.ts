@@ -97,8 +97,7 @@ type GetModelTypeName<U> = U extends ModelType ? U['__typename'] : never
 
 export type WithID<A> = A & { id: string }
 
-export type RestaurantTagWithID = Partial<RestaurantTag> &
-  Pick<RestaurantTag, 'tag_id'>
+export type RestaurantTagWithID = Partial<RestaurantTag> & Pick<RestaurantTag, 'tag_id'>
 
 export type NonNullObject<A extends Object> = {
   [K in keyof A]: Exclude<A[K], null>

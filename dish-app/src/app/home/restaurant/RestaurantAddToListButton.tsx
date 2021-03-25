@@ -28,10 +28,7 @@ export const RestaurantAddToListButton = ({
     <>
       {!!(showModal && restaurantSlug) && (
         <Suspense fallback={null}>
-          <RestaurantAddToListModal
-            slug={restaurantSlug}
-            onDismiss={() => setShowModal(false)}
-          />
+          <RestaurantAddToListModal slug={restaurantSlug} onDismiss={() => setShowModal(false)} />
         </Suspense>
       )}
       <Tooltip contents="Add to list">

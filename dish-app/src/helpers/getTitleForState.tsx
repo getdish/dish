@@ -11,10 +11,7 @@ const getTitleForQuery = (query: string) => {
   return query
 }
 
-export function getTitleForState(
-  state: HomeStateItem,
-  options: { lowerCase?: boolean } = {}
-) {
+export function getTitleForState(state: HomeStateItem, options: { lowerCase?: boolean } = {}) {
   const { curLocName = '...' } = state
   const tags = getActiveTags(state)
   const lense = tags.find((x) => x.type === 'lense')
@@ -45,9 +42,7 @@ export function getTitleForState(
     titleParts.push(countryTag.name)
   }
   if (dishTag?.name) {
-    titleParts.push(
-      dishTag.icon ? `${dishTag.name} ${dishTag.icon}` : dishTag.name
-    )
+    titleParts.push(dishTag.icon ? `${dishTag.name} ${dishTag.icon}` : dishTag.name)
   }
   const titleSpace = titleParts.length ? ' ' : ''
   const searchName = getTitleForQuery(state.searchQuery ?? '')

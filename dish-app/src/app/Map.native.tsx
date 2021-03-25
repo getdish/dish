@@ -21,13 +21,7 @@ MapboxGL.setTelemetryEnabled(false)
 
 const idFn = (_) => _
 
-export const MapView = ({
-  center,
-  span,
-  features,
-  onMoveEnd,
-  onSelect,
-}: MapProps) => {
+export const MapView = ({ center, span, features, onMoveEnd, onSelect }: MapProps) => {
   const { width, height } = Dimensions.get('screen')
   const drawerStore = useStoreInstance(drawerStoreInstance)
   const drawerHeight = drawerStore.currentHeight
@@ -163,17 +157,10 @@ export const MapView = ({
           }) => {
             const url = `${DISH_API_ENDPOINT}/api/tile/${name}.json`
             const sourceId = `${name}`.replace('.', '')
-            const labelUrl = labelSource
-              ? `${MARTIN_TILES_HOST}/${labelSource}.json`
-              : ''
+            const labelUrl = labelSource ? `${MARTIN_TILES_HOST}/${labelSource}.json` : ''
             console.log('Loading tile url', sourceId, url, labelUrl)
             return (
-              <MapboxGL.VectorSource
-                key={name}
-                ref={tileSource}
-                url={url}
-                id={sourceId}
-              >
+              <MapboxGL.VectorSource key={name} ref={tileSource} url={url} id={sourceId}>
                 <MapboxGL.FillLayer
                   id={`${name}fill`}
                   sourceLayerID={`${name}fillLayer`}
@@ -295,12 +282,7 @@ export const MapView = ({
           <MapboxGL.SymbolLayer
             id="pointCount"
             style={{
-              textField: [
-                'case',
-                ['has', 'point_count'],
-                '{point_count}',
-                ['get', 'rank'],
-              ],
+              textField: ['case', ['has', 'point_count'], '{point_count}', ['get', 'rank']],
               textSize: 12,
               textColor: '#000',
               textAllowOverlap: true,
@@ -335,17 +317,7 @@ export const MapView = ({
                 'rgba(20,30,240,0.5)',
                 'rgba(20,30,240,0.5)',
               ],
-              circleRadius: [
-                'interpolate',
-                ['exponential', 1.5],
-                ['zoom'],
-                9,
-                4,
-                11,
-                8,
-                16,
-                22,
-              ],
+              circleRadius: ['interpolate', ['exponential', 1.5], ['zoom'], 9, 4, 11, 8, 16, 22],
             }}
           />
         </MapboxGL.ShapeSource>

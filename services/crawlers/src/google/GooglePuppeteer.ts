@@ -164,12 +164,9 @@ export class GooglePuppeteer extends GooglePuppeteerJob {
   async getHeroImage() {
     const selector = '.section-hero-header-image-hero img'
     await this.puppeteer.getElementText(selector)
-    this.scrape_data.hero_image = await this.puppeteer.page.evaluate(
-      (selector) => {
-        return document.querySelector(selector)?.getAttribute('src')
-      },
-      selector
-    )
+    this.scrape_data.hero_image = await this.puppeteer.page.evaluate((selector) => {
+      return document.querySelector(selector)?.getAttribute('src')
+    }, selector)
   }
 
   async getSynopsis() {
@@ -179,9 +176,7 @@ export class GooglePuppeteer extends GooglePuppeteerJob {
   }
 
   async getRating() {
-    this.scrape_data.rating = (
-      await this.puppeteer.getElementText('.section-star-display')
-    ).trim()
+    this.scrape_data.rating = (await this.puppeteer.getElementText('.section-star-display')).trim()
   }
 
   async getPricing() {

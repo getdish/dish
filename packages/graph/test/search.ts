@@ -154,18 +154,10 @@ test('Supports main_tag priority ordering', async (t) => {
   r3.name = 'test worst'
   r3.score = 1
   const [rr1, rr2, rr3] = await restaurantUpsert([r1, r2, r3])
-  const [lesser_tag] = await tagInsert([
-    { name: 'Test rated tag', type: 'dish' },
-  ])
-  await restaurantUpsertRestaurantTags(rr1, [
-    { tag_id: lesser_tag.id, score: 3 },
-  ])
-  await restaurantUpsertRestaurantTags(rr2, [
-    { tag_id: lesser_tag.id, score: 1 },
-  ])
-  await restaurantUpsertRestaurantTags(rr3, [
-    { tag_id: lesser_tag.id, score: 5 },
-  ])
+  const [lesser_tag] = await tagInsert([{ name: 'Test rated tag', type: 'dish' }])
+  await restaurantUpsertRestaurantTags(rr1, [{ tag_id: lesser_tag.id, score: 3 }])
+  await restaurantUpsertRestaurantTags(rr2, [{ tag_id: lesser_tag.id, score: 1 }])
+  await restaurantUpsertRestaurantTags(rr3, [{ tag_id: lesser_tag.id, score: 5 }])
   const [main_tag] = await tagInsert([{ name: 'Test main tag', type: 'dish' }])
   await restaurantUpsertRestaurantTags(rr1, [{ tag_id: main_tag.id, score: 3 }])
   await restaurantUpsertRestaurantTags(rr2, [{ tag_id: main_tag.id, score: 5 }])
@@ -210,11 +202,7 @@ test('Home page feed', async (t) => {
   ])
   const response = await fetch(SEARCH_DOMAIN + '/feed')
   const json = await response.json()
-  t.deepEqual(Object.keys(json), [
-    'trending',
-    'newest',
-    'total_restaurants_in_region',
-  ])
+  t.deepEqual(Object.keys(json), ['trending', 'newest', 'total_restaurants_in_region'])
 })
 
 test('Regions', async (t) => {

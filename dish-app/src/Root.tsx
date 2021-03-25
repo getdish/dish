@@ -35,11 +35,7 @@ import { homeStore } from './app/homeStore'
 import { PlatformSpecificProvider } from './app/PlatformSpecificProvider'
 import { RootPortalProvider } from './app/Portal'
 import { userStore } from './app/userStore'
-import {
-  tagDefaultAutocomplete,
-  tagFilters,
-  tagLenses,
-} from './constants/localTags'
+import { tagDefaultAutocomplete, tagFilters, tagLenses } from './constants/localTags'
 import themes, { MyTheme, MyThemes } from './constants/themes'
 import { addTagsToCache } from './helpers/allTags'
 import { queryClient } from './helpers/queryClient'

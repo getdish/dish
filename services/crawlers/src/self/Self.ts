@@ -45,10 +45,7 @@ import { RestaurantBaseScore } from './RestaurantBaseScore'
 import { RestaurantRatings } from './RestaurantRatings'
 import { RestaurantTagScores } from './RestaurantTagScores'
 import { Tagging } from './Tagging'
-import {
-  updateAllRestaurantGeocoderIDs,
-  updateGeocoderID,
-} from './update_all_geocoder_ids'
+import { updateAllRestaurantGeocoderIDs, updateGeocoderID } from './update_all_geocoder_ids'
 
 process.on('unhandledRejection', (reason, promise) => {
   console.log('unhandled rejection', reason)
@@ -122,11 +119,7 @@ export class Self extends WorkerJob {
     const total = await restaurantCountForCity(city)
     let count = 0
     while (true) {
-      const results = await restaurantFindIDBatchForCity(
-        PER_PAGE,
-        previous_id,
-        city
-      )
+      const results = await restaurantFindIDBatchForCity(PER_PAGE, previous_id, city)
       if (results.length == 0) {
         break
       }
@@ -257,14 +250,10 @@ export class Self extends WorkerJob {
     this.tagging.deDepulicateTags()
     this.log('Updating rankings...')
     await this.tagging.updateTagRankings()
-    await restaurantUpsertManyTags(
-      this.restaurant,
-      this.tagging.restaurant_tags,
-      {
-        select: () => ({}),
-        keys: ['__typename'],
-      }
-    )
+    await restaurantUpsertManyTags(this.restaurant, this.tagging.restaurant_tags, {
+      select: () => ({}),
+      keys: ['__typename'],
+    })
     if (this.menu_items.length != 0) {
       await menuItemsUpsertMerge(this.menu_items)
     }
@@ -315,9 +304,7 @@ export class Self extends WorkerJob {
     await photoUpsert(all_tag_photos)
     const most_aesthetic = await bestPhotosForRestaurantTags(this.restaurant.id)
     for (const photo_xref of most_aesthetic) {
-      const match = this.tagging.restaurant_tags.find(
-        (rt) => rt.tag_id == photo_xref.tag_id
-      )
+      const match = this.tagging.restaurant_tags.find((rt) => rt.tag_id == photo_xref.tag_id)
       if (!match) continue
       if (!match?.photos) match.photos = []
       match?.photos.push(photo_xref.photo?.url)
@@ -346,9 +333,7 @@ export class Self extends WorkerJob {
   }
 
   mergeName() {
-    const tripadvisor_name = Tripadvisor.cleanName(
-      scrapeGetData(this.tripadvisor, 'overview.name')
-    )
+    const tripadvisor_name = Tripadvisor.cleanName(scrapeGetData(this.tripadvisor, 'overview.name'))
     const names = [
       scrapeGetData(this.yelp, 'data_from_map_search.name'),
       scrapeGetData(this.ubereats, 'main.title'),
@@ -376,8 +361,7 @@ export class Self extends WorkerJob {
   }
 
   mergeAddress() {
-    const yelp_address_path =
-      'data_from_html_embed.mapBoxProps.addressProps.addressLines'
+    const yelp_address_path = 'data_from_html_embed.mapBoxProps.addressProps.addressLines'
     this.restaurant.address = this.merge([
       scrapeGetData(this.yelp, yelp_address_path, ['']).join(', '),
       scrapeGetData(this.ubereats, 'main.location.address'),
@@ -397,8 +381,7 @@ export class Self extends WorkerJob {
     this.restaurant.website = parts.join('_')
 
     if (!this.restaurant.website) {
-      this.restaurant.website =
-        'https://' + scrapeGetData(this.google, 'website')
+      this.restaurant.website = 'https://' + scrapeGetData(this.google, 'website')
     }
   }
 
@@ -416,10 +399,7 @@ export class Self extends WorkerJob {
     }
 
     if (!this.restaurant.price_range?.includes('$')) {
-      this.restaurant.price_range = scrapeGetData(
-        this.yelp,
-        'data_from_map_search.priceRange'
-      )
+      this.restaurant.price_range = scrapeGetData(this.yelp, 'data_from_map_search.priceRange')
     }
   }
 
@@ -534,10 +514,7 @@ export class Self extends WorkerJob {
       }
     }
 
-    path = scrapeGetData(
-      this.infatuated,
-      'data_from_map_search.post.review_link'
-    )
+    path = scrapeGetData(this.infatuated, 'data_from_map_search.post.review_link')
     if (path != '') {
       // @ts-ignore
       this.restaurant.sources.infatuated = {
@@ -555,9 +532,7 @@ export class Self extends WorkerJob {
       }
     }
 
-    const json_ue = JSON.parse(
-      scrapeGetData(this.ubereats, 'main.metaJson', '"{}"')
-    )
+    const json_ue = JSON.parse(scrapeGetData(this.ubereats, 'main.metaJson', '"{}"'))
     if (json_ue['@id']) {
       // @ts-ignore
       this.restaurant.sources.ubereats = {
@@ -612,10 +587,7 @@ export class Self extends WorkerJob {
     if (googles) {
       hero = googles
     }
-    const infatuateds = scrapeGetData(
-      this.infatuated,
-      'data_from_map_search.post.venue_image'
-    )
+    const infatuateds = scrapeGetData(this.infatuated, 'data_from_map_search.post.venue_image')
     if (infatuateds) {
       hero = infatuateds
     }
@@ -705,8 +677,7 @@ export class Self extends WorkerJob {
     })
     this.log(`mergePhotos ${photos.length} photos`)
     await photoUpsert(photos)
-    const most_aesthetic =
-      (await bestPhotosForRestaurant(this.restaurant.id)) || []
+    const most_aesthetic = (await bestPhotosForRestaurant(this.restaurant.id)) || []
     this.restaurant.photos = most_aesthetic.map((p) => p.photo?.url)
   }
 
@@ -746,11 +717,7 @@ export class Self extends WorkerJob {
   }
 
   getRatingFactors() {
-    const factors = scrapeGetData(
-      this.tripadvisor,
-      'overview.rating.ratingQuestions',
-      []
-    )
+    const factors = scrapeGetData(this.tripadvisor, 'overview.rating.ratingQuestions', [])
     // @ts-ignore weird bug the type is right in graph but comes in null | undefined here
     this.restaurant.rating_factors = {
       food: factors.find((i) => i.name == 'Food')?.rating / 10,

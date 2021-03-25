@@ -11,9 +11,7 @@ export type RestaurantFavoriteButtonProps = {
   restaurantId: string
 }
 
-export const RestaurantFavoriteButton = (
-  props: RestaurantFavoriteButtonProps
-) => {
+export const RestaurantFavoriteButton = (props: RestaurantFavoriteButtonProps) => {
   return (
     <SmallButton
       padding={0}
@@ -28,17 +26,8 @@ export const RestaurantFavoriteButton = (
 }
 
 export const RestaurantFavoriteStar = memo(
-  graphql(function RestaurantFavoriteButton({
-    size,
-    restaurantId,
-  }: RestaurantFavoriteButtonProps) {
+  graphql(function RestaurantFavoriteButton({ size, restaurantId }: RestaurantFavoriteButtonProps) {
     const [isFavorite, setIsFavorite] = useUserFavoriteQuery(restaurantId)
-    return (
-      <FavoriteButton
-        isFavorite={!!isFavorite}
-        onChange={setIsFavorite}
-        size={size}
-      />
-    )
+    return <FavoriteButton isFavorite={!!isFavorite} onChange={setIsFavorite} size={size} />
   })
 )

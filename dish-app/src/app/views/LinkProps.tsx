@@ -42,10 +42,7 @@ export type LinkButtonNamedProps<A = any, B = any> = {
   onPress?: Function
 }
 
-export type LinkButtonProps<
-  Name extends RouteName = any,
-  Params = any
-> = StackProps &
+export type LinkButtonProps<Name extends RouteName = any, Params = any> = StackProps &
   ButtonProps &
   LinkSharedProps & {
     enableActiveStyle?: boolean

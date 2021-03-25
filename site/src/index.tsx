@@ -20,9 +20,7 @@ async function start() {
   }
   if (!window['ResizeObserver']) {
     polyfills.push(async () => {
-      window['ResizeObserver'] = (
-        await import('resize-observer-polyfill')
-      ).default
+      window['ResizeObserver'] = (await import('resize-observer-polyfill')).default
     })
   }
 
@@ -46,6 +44,4 @@ async function start() {
 
 start()
 
-process.env.NODE_ENV === 'development' &&
-  module['hot'] &&
-  module['hot'].accept()
+process.env.NODE_ENV === 'development' && module['hot'] && module['hot'].accept()

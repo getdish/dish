@@ -1,9 +1,6 @@
 import test from 'ava'
 
-import {
-  deleteAllScrapesBySourceID,
-  scrapeFindOneBySourceID,
-} from '../../src/scrape-helpers'
+import { deleteAllScrapesBySourceID, scrapeFindOneBySourceID } from '../../src/scrape-helpers'
 import { UberEats } from '../../src/ubereats/UberEats'
 
 const ID = '03b6b762-fc01-4547-a81f-87bb7af42c6a'

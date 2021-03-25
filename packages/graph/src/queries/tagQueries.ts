@@ -55,9 +55,7 @@ export const tagSelectAll = {
   },
 }
 
-export async function tagGetAllChildren(
-  parents: Pick<Tag, 'id'>[]
-): Promise<Tag[]> {
+export async function tagGetAllChildren(parents: Pick<Tag, 'id'>[]): Promise<Tag[]> {
   return await resolvedWithFields(() => {
     return query.tag({
       where: {
@@ -69,16 +67,11 @@ export async function tagGetAllChildren(
   }, tagSelectAll)
 }
 
-export async function tagFindCountryMatches(
-  countries: string[]
-): Promise<Tag[]> {
+export async function tagFindCountryMatches(countries: string[]): Promise<Tag[]> {
   return await resolvedWithFields(() => {
     return query.tag({
       where: {
-        _or: [
-          { name: { _in: countries } },
-          { alternates: { _has_keys_any: countries } },
-        ],
+        _or: [{ name: { _in: countries } }, { alternates: { _has_keys_any: countries } }],
         type: { _eq: 'country' },
       },
     })
@@ -99,10 +92,7 @@ export async function tagGetAllGenerics(): Promise<Tag[]> {
   }, tagSelectAll)
 }
 
-export async function tagGetAllCuisinesWithDishes(
-  batch_size: number,
-  page: number
-) {
+export async function tagGetAllCuisinesWithDishes(batch_size: number, page: number) {
   return await resolvedWithFields(
     () => {
       const r = query.tag({
@@ -136,10 +126,7 @@ export async function tagGetAllCuisinesWithDishes(
   )
 }
 
-export async function tagUpsertCategorizations(
-  tag: TagWithId,
-  category_tag_ids: string[]
-) {
+export async function tagUpsertCategorizations(tag: TagWithId, category_tag_ids: string[]) {
   const objects = category_tag_ids.map((tag_id) => ({
     category_tag_id: tag_id,
     tag_id: tag.id,

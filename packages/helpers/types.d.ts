@@ -53,7 +53,7 @@ declare module "@dish/helpers" {
     export const timer: () => (name: string) => void;
     export const allSettledFirstFulfilled: <A, B extends Promise<A> = Promise<A>>(args: B[]) => Promise<A | undefined>;
     export const log: (val: any) => any;
-    export function ellipseText(str: string, { maxLength, ellipse, }?: {
+    export function ellipseText(str: string, { maxLength, ellipse }?: {
         maxLength?: number;
         ellipse?: string;
     }): string;

@@ -32,9 +32,7 @@ export const restaurant_fixture = {
   location: { type: 'Point', coordinates: [0, 0] },
 }
 
-export async function restaurantFindOneWithTags(
-  restaurant: Partial<RestaurantWithId>
-) {
+export async function restaurantFindOneWithTags(restaurant: Partial<RestaurantWithId>) {
   return await restaurantFindOne(restaurant, {
     select: (v: Maybe<restaurant>[]) => {
       return v.map((rest) => {
@@ -160,17 +158,11 @@ export async function restaurantUpsertRestaurantTags(
   restaurant_tags: Partial<RestaurantTag>[],
   opts?: SelectionOptions
 ) {
-  const updated_restaurant = await restaurantTagUpsert(
-    restaurant.id,
-    restaurant_tags
-  )
+  const updated_restaurant = await restaurantTagUpsert(restaurant.id, restaurant_tags)
   return await restaurantUpdateTagNames(updated_restaurant, opts)
 }
 
-async function restaurantUpdateTagNames(
-  restaurant: RestaurantWithId,
-  opts?: SelectionOptions
-) {
+async function restaurantUpdateTagNames(restaurant: RestaurantWithId, opts?: SelectionOptions) {
   if (!restaurant) {
     return null
   }

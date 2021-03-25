@@ -12,7 +12,7 @@ export const SearchInput = (props: InputProps) => (
     icon="search"
     placeholder="Search..."
     boxShadow={[[0, 5, 8, [0, 0, 0, 0.05]]]}
-    onKeyDown={useCallback(e => {
+    onKeyDown={useCallback((e) => {
       // avoid movement on down/up
       if (e.keyCode === 38 || e.keyCode === 40) {
         e.preventDefault()

@@ -2,17 +2,7 @@ import { graphql, order_by, query, useMutation, useRefetch } from '@dish/graph'
 import { Plus, X } from '@dish/react-feather'
 import React from 'react'
 import { ScrollView } from 'react-native'
-import {
-  AbsoluteVStack,
-  Button,
-  HStack,
-  Modal,
-  Spacer,
-  Text,
-  Title,
-  Toast,
-  VStack,
-} from 'snackui'
+import { AbsoluteVStack, Button, HStack, Modal, Spacer, Text, Title, Toast, VStack } from 'snackui'
 
 import { useColorsFor } from '../../../helpers/useColorsFor'
 import { queryRestaurant } from '../../../queries/queryRestaurant'

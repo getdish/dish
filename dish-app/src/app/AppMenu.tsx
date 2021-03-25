@@ -97,11 +97,7 @@ const UserMenuButton = () => {
           username: slugify(user.username ?? ''),
         }}
       >
-        <UserAvatar
-          size={32}
-          avatar={user.avatar ?? ''}
-          charIndex={user.charIndex ?? 0}
-        />
+        <UserAvatar size={32} avatar={user.avatar ?? ''} charIndex={user.charIndex ?? 0} />
       </LinkButton>
     </Tooltip>
   )

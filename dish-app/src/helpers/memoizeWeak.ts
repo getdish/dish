@@ -20,10 +20,7 @@ class MemoCache {
   }
 }
 
-export function memoize<A extends Function>(
-  fn: A,
-  opts?: { ttl?: number; debugId?: string }
-): A {
+export function memoize<A extends Function>(fn: A, opts?: { ttl?: number; debugId?: string }): A {
   const cache = new MemoCache()
   return function (this: A, ...args: any[]) {
     // get (or create) a cache item

@@ -70,17 +70,11 @@ export const ContentScrollViewHorizontalFitted = (
 }
 
 // takes children but we memo so we can optimize if wanted
-export const ContentScrollViewHorizontal = (
-  props: ContentScrollViewHorizontalProps
-) => {
+export const ContentScrollViewHorizontal = (props: ContentScrollViewHorizontalProps) => {
   const id = useContext(ContentScrollContext)
   const scrollTm = useRef<any>(0)
   const $scroller = useRef<ScrollView>()
-  const isLockedVertical = useStoreSelector(
-    ScrollStore,
-    (x) => x.lock === 'vertical',
-    { id }
-  )
+  const isLockedVertical = useStoreSelector(ScrollStore, (x) => x.lock === 'vertical', { id })
 
   const updateLock = (val: boolean) => {
     isScrollingSubDrawer = val

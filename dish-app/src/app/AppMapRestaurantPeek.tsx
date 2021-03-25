@@ -76,19 +76,8 @@ export const AppMapRestaurantPeek = memo(
           borderRadius={20}
         >
           <VStack flex={5} overflow="hidden">
-            <LinkButton
-              pointerEvents="auto"
-              key={slug}
-              name="restaurant"
-              params={{ slug }}
-            >
-              <Text
-                ellipse
-                selectable
-                fontSize={16}
-                fontWeight="600"
-                paddingRight={30}
-              >
+            <LinkButton pointerEvents="auto" key={slug} name="restaurant" params={{ slug }}>
+              <Text ellipse selectable fontSize={16} fontWeight="600" paddingRight={30}>
                 {restaurant.name}
               </Text>
             </LinkButton>

@@ -72,12 +72,7 @@ const HomePageFilterBarSmall = memo(({ activeTags }: FilterBarProps) => {
               <CloseButton onPress={() => setShow(false)} />
             </PaneControlButtons>
             <SlantedTitle>Filters</SlantedTitle>
-            <VStack
-              alignItems="center"
-              justifyContent="center"
-              flex={1}
-              spacing="sm"
-            >
+            <VStack alignItems="center" justifyContent="center" flex={1} spacing="sm">
               {filterButtons}
             </VStack>
           </Modal>

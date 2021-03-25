@@ -4,9 +4,7 @@ import { CreateWebpackConfig } from '../types'
 
 export function getWebpackConfigBuilder({ rootDir }: { rootDir: string }) {
   try {
-    return require(join(rootDir, 'webpack.config.js')) as (
-      config: CreateWebpackConfig
-    ) => any
+    return require(join(rootDir, 'webpack.config.js')) as (config: CreateWebpackConfig) => any
   } catch (err) {
     console.error('No webpack.config.js', err)
     process.exit(1)

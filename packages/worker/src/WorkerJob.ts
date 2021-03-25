@@ -1,12 +1,6 @@
 import { sentryException } from '@dish/common'
 import Bull from 'bull'
-import BullQueue, {
-  EveryRepeatOptions,
-  Job,
-  JobOptions,
-  Queue,
-  QueueOptions,
-} from 'bull'
+import BullQueue, { EveryRepeatOptions, Job, JobOptions, Queue, QueueOptions } from 'bull'
 import _ from 'lodash'
 
 import { Loggable } from './Loggable'
@@ -56,11 +50,7 @@ export class WorkerJob extends Loggable {
     }
   }
 
-  async runOnWorker(
-    fn: string,
-    args?: any[],
-    specific_config: JobOptions = {}
-  ) {
+  async runOnWorker(fn: string, args?: any[], specific_config: JobOptions = {}) {
     if (this.run_all_on_main) {
       await this.run(fn, args)
       return
@@ -122,11 +112,7 @@ export class WorkerJob extends Loggable {
     await queue.add(job, config)
   }
 
-  private async manageRepeatable(
-    queue: Queue,
-    job: JobData,
-    config: JobOptions
-  ) {
+  private async manageRepeatable(queue: Queue, job: JobData, config: JobOptions) {
     const repeats = await queue.getRepeatableJobs()
     const existing = repeats.find((job) => job.id == config.jobId)
     if (!existing) {

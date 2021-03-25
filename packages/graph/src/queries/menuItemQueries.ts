@@ -25,9 +25,7 @@ export const menuItemsUpsertMerge = async (items: Partial<MenuItem>[]) => {
       return i.name == item.name
     })
     if (matches.length > 0) continue
-    const match = existing_items.find(
-      (e) => e.name == item.name && e.price == item.price
-    )
+    const match = existing_items.find((e) => e.name == item.name && e.price == item.price)
     if (match) {
       item = merge(match, item)
     }

@@ -1,9 +1,9 @@
-import { gloss, Icon, Space, Stack, View } from '@o/ui'
+import { Icon, Space, Stack, View, gloss } from '@o/ui'
 import { isDefined } from '@o/utils'
 import { Box } from 'gloss'
 import React from 'react'
 
-import { fadeAnimations, FadeInView } from '../../views/FadeInView'
+import { FadeInView, fadeAnimations } from '../../views/FadeInView'
 import { Paragraph } from '../../views/Paragraph'
 import { TitleText } from '../../views/TitleText'
 
@@ -48,7 +48,7 @@ const SectionChrome = gloss(Stack, {
   position: 'relative',
 })
 
-export const SectionP = props => (
+export const SectionP = (props) => (
   <Paragraph
     tagName="div"
     display="flex"
@@ -84,7 +84,7 @@ const Badge = gloss(View, {
   alignItems: 'center',
   justifyContent: 'center',
   fontSize: 20,
-}).theme(theme => ({
+}).theme((theme) => ({
   // color: theme.color.setAlpha(0.5),
   // border: [1, theme.color.setAlpha(0.1)],
 }))

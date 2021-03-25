@@ -27,8 +27,7 @@ export class GPT3 {
   async generateGPT3Summary() {
     const is_in_sanfran = this.crawler.restaurant.address?.includes('Francisco')
     const is_high_scoring = this.crawler.restaurant.score >= 700
-    const engine: OpenAIEngines =
-      is_in_sanfran && is_high_scoring ? 'davinci' : 'curie'
+    const engine: OpenAIEngines = is_in_sanfran && is_high_scoring ? 'davinci' : 'curie'
     this.crawler.log('Running GPT3 summariser for restaurant...')
     const highlights = await this.findHighlights()
     const completion = await this.complete(highlights, engine)
@@ -67,11 +66,7 @@ export class GPT3 {
     `
   }
 
-  async complete(
-    input: string,
-    engine: OpenAIEngines = 'curie',
-    preset = 'witty_guidebook'
-  ) {
+  async complete(input: string, engine: OpenAIEngines = 'curie', preset = 'witty_guidebook') {
     let body = presets[preset]
     body.prompt = pre_prompt + '\n' + input + `\n` + post_prompt
     const request: RequestInit = {
@@ -86,10 +81,7 @@ export class GPT3 {
       console.log('Requesting GPT3 summary...')
       console.log(body.prompt)
     }
-    const result = await fetch(
-      `https://api.openai.com/v1/engines/${engine}/completions`,
-      request
-    )
+    const result = await fetch(`https://api.openai.com/v1/engines/${engine}/completions`, request)
     const response = await result.json()
     let answer = ''
     if (!response.choices || response.choices.length == 0) {

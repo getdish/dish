@@ -16,15 +16,7 @@ import { Store, useStore, useStoreSelector } from '@dish/use-store'
 import { capitalize } from 'lodash'
 import React, { Suspense, memo, useCallback, useEffect, useState } from 'react'
 import { ScrollView, StyleSheet, TextInput } from 'react-native'
-import {
-  HStack,
-  LoadingItems,
-  Text,
-  Toast,
-  VStack,
-  useDebounce,
-  useDebounceValue,
-} from 'snackui'
+import { HStack, LoadingItems, Text, Toast, VStack, useDebounce, useDebounceValue } from 'snackui'
 
 import { emojiRegex } from '../../helpers/emojiRegex'
 import { queryTag } from '../../queries/queryTag'
@@ -59,17 +51,7 @@ class AdminTagStore extends Store {
     this.draft = { ...this.draft, ...next }
   }
 
-  setSelected({
-    id,
-    col,
-    name,
-    type,
-  }: {
-    id: string
-    col: number
-    name: string
-    type: TagType
-  }) {
+  setSelected({ id, col, name, type }: { id: string; col: number; name: string; type: TagType }) {
     console.log('setting selected', name, type, id)
     this.selectedId = id
     this.selectedByColumn[col] = { name, type }
@@ -168,12 +150,7 @@ const TagList = memo(
       <VStack flex={1} maxHeight="100%">
         <ColumnHeader
           after={
-            <HStack
-              flex={1}
-              spacing={10}
-              alignItems="center"
-              justifyContent="space-between"
-            >
+            <HStack flex={1} spacing={10} alignItems="center" justifyContent="space-between">
               <TextInput
                 placeholder="Search..."
                 style={[styles.textInput, { flex: 1, maxWidth: '70%' }]}
@@ -192,8 +169,7 @@ const TagList = memo(
             </HStack>
           }
         >
-          {capitalize(type)}{' '}
-          {lastRowSelection ? `(${lastRowSelection.name})` : ''}
+          {capitalize(type)} {lastRowSelection ? `(${lastRowSelection.name})` : ''}
         </ColumnHeader>
         <Suspense fallback={<LoadingItems />}>
           <TagListContent
@@ -267,8 +243,7 @@ const TagListContent = memo(
       })
       const tagStore = useStore(AdminTagStore)
 
-      const allResults =
-        column === 0 ? [allTagsTag as tag, ...results] : results
+      const allResults = column === 0 ? [allTagsTag as tag, ...results] : results
 
       // refetch on every re-render so we dont have stale reads from gqless
       useEffect(() => {
@@ -289,10 +264,7 @@ const TagListContent = memo(
       }, [tagStore.forceRefreshColumnByType])
 
       return (
-        <ScrollView
-          showsVerticalScrollIndicator={false}
-          style={{ paddingBottom: 50 }}
-        >
+        <ScrollView showsVerticalScrollIndicator={false} style={{ paddingBottom: 50 }}>
           <HStack
             paddingVertical={2}
             alignItems="center"
@@ -302,11 +274,7 @@ const TagListContent = memo(
           >
             <Text opacity={0.5}>{total} total</Text>
           </HStack>
-          <PaginationNav
-            totalPages={totalPages}
-            setPage={setPage}
-            page={page}
-          />
+          <PaginationNav totalPages={totalPages} setPage={setPage} page={page} />
           <Suspense fallback={<LoadingItems />}>
             {allResults.map((tag, row) => {
               const selection = {
@@ -335,11 +303,7 @@ const TagListContent = memo(
               )
             })}
           </Suspense>
-          <PaginationNav
-            totalPages={totalPages}
-            setPage={setPage}
-            page={page}
-          />
+          <PaginationNav totalPages={totalPages} setPage={setPage} page={page} />
         </ScrollView>
       )
     }
@@ -383,9 +347,7 @@ const TagListItem = graphql(
       )
     }
 
-    return (
-      <AdminListItem id="tags" column={column} row={row} text="All" {...rest} />
-    )
+    return <AdminListItem id="tags" column={column} row={row} text="All" {...rest} />
   }
 )
 
@@ -399,9 +361,7 @@ const TagEditColumn = memo(() => {
     <VStack spacing="lg">
       <>
         <Text>Create</Text>
-        <SmallButton
-          onPress={() => tagStore.setShowCreate(!tagStore.showCreate)}
-        >
+        <SmallButton onPress={() => tagStore.setShowCreate(!tagStore.showCreate)}>
           {tagStore.showCreate ? 'Hide' : 'Create'}
         </SmallButton>
         {tagStore.showCreate && (
@@ -547,9 +507,7 @@ const TagCRUDContent = graphql(({ tag, onChange }: TagCRUDProps) => {
           description,
         })),
         ...(subNames.length > 1
-          ? subNames.map((name) =>
-              getWikiInfo(name).then((description) => ({ name, description }))
-            )
+          ? subNames.map((name) => getWikiInfo(name).then((description) => ({ name, description })))
           : []),
       ]).then((results) => {
         if (!unmounted) {
@@ -602,9 +560,7 @@ const TagCRUDContent = graphql(({ tag, onChange }: TagCRUDProps) => {
       <TableRow label="Alternate Names">
         <TextInput
           style={styles.textInput}
-          onChange={(e) =>
-            onChange?.({ alternates: e.target['value'].split(', ') })
-          }
+          onChange={(e) => onChange?.({ alternates: e.target['value'].split(', ') })}
           defaultValue={(tag.alternates ?? []).join(', ')}
         />
       </TableRow>

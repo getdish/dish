@@ -1,4 +1,4 @@
-import { linearGradient, themes as UIThemes, toColor } from '@o/ui'
+import { themes as UIThemes, linearGradient, toColor } from '@o/ui'
 import { createThemes } from 'gloss'
 import { colorize, fromStyles } from 'gloss-theme'
 
@@ -66,7 +66,7 @@ export const themes = createThemes({
 
     button: {
       background: buttonBackground,
-      backgroundHover: buttonBackground.adjust(c => toColor(c).lighten(0.035)),
+      backgroundHover: buttonBackground.adjust((c) => toColor(c).lighten(0.035)),
     },
   }),
 

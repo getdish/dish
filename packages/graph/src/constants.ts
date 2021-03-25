@@ -7,25 +7,18 @@ export const isNode = process.env.TARGET !== 'web' || !getWindow() || false
 const hostname = getWindow()?.location?.hostname ?? ''
 
 export const isProd =
-  process.env.IS_LIVE === '1' ||
-  hostname === 'dishapp' ||
-  hostname.includes('live') ||
-  false
+  process.env.IS_LIVE === '1' || hostname === 'dishapp' || hostname.includes('live') || false
 
 export const isStaging =
-  process.env.NODE_ENV === 'staging' ||
-  getWindow()?.location?.hostname.includes('staging') ||
-  false
+  process.env.NODE_ENV === 'staging' || getWindow()?.location?.hostname.includes('staging') || false
 
 export const isDev = (!isProd && !isStaging) || false
 export const isNative = process.env.TARGET === 'native'
 
-export const JWT_SECRET =
-  process.env.JWT_SECRET || '12345678901234567890123456789012'
+export const JWT_SECRET = process.env.JWT_SECRET || '12345678901234567890123456789012'
 
 export const HASURA_SECRET =
-  process.env.HASURA_GRAPHQL_ADMIN_SECRET ||
-  (process.env.TARGET === 'node' ? 'password' : '')
+  process.env.HASURA_GRAPHQL_ADMIN_SECRET || (process.env.TARGET === 'node' ? 'password' : '')
 
 const PROD_ORIGIN = 'https://dishapp.com'
 const ORIGIN = isProd
@@ -76,7 +69,6 @@ export const MARTIN_TILES_HOST = (() => {
   return dev
 })()
 
-export const GRAPH_DOMAIN =
-  process.env.HASURA_ENDPOINT || 'http://localhost:8080'
+export const GRAPH_DOMAIN = process.env.HASURA_ENDPOINT || 'http://localhost:8080'
 export const GRAPH_API_INTERNAL = `${GRAPH_DOMAIN}/v1/graphql`
 export const GRAPH_API = `${DISH_API_ENDPOINT}/api/graph`

@@ -1,15 +1,6 @@
 import React from 'react'
 import { Image } from 'react-native'
-import {
-  AbsoluteVStack,
-  Divider,
-  H3,
-  HStack,
-  Paragraph,
-  Spacer,
-  Text,
-  VStack,
-} from 'snackui'
+import { AbsoluteVStack, Divider, H3, HStack, Paragraph, Spacer, Text, VStack } from 'snackui'
 
 import dontPanic from '../../../assets/dont-panic.svg'
 import {
@@ -40,10 +31,7 @@ const inlineButton = {
   display: 'inline-flex',
 } as const
 
-export default function AboutPage({
-  item,
-  isActive,
-}: StackItemProps<HomeStateItemAbout>) {
+export default function AboutPage({ item, isActive }: StackItemProps<HomeStateItemAbout>) {
   useSnapToFullscreenOnMount()
 
   return (
@@ -90,8 +78,7 @@ export default function AboutPage({
               fontWeight="300"
               marginHorizontal="auto"
             >
-              See what makes each restaurant unique, debate top lists of each
-              dish
+              See what makes each restaurant unique, debate top lists of each dish
             </Paragraph>
 
             <Paragraph size="xl">
@@ -129,9 +116,9 @@ export default function AboutPage({
               >
                 birria taco
               </LinkButton>{' '}
-              requires Google-fu, 30 minutes and a lack of appetite. Too many
-              hole-in-the-walls have great food and ⭐️⭐️⭐️ stars. Delivery
-              apps have sketchy reviews and fake popups to boot.
+              requires Google-fu, 30 minutes and a lack of appetite. Too many hole-in-the-walls have
+              great food and ⭐️⭐️⭐️ stars. Delivery apps have sketchy reviews and fake popups to
+              boot.
             </Paragraph>
 
             <Paragraph size="xl">
@@ -163,15 +150,14 @@ export default function AboutPage({
               >
                 date night 🌃
               </LinkButton>{' '}
-              don't fit neatly into five stars, and often five stars hides what
-              you care about. Dish solves this in a few ways:
+              don't fit neatly into five stars, and often five stars hides what you care about. Dish
+              solves this in a few ways:
             </Paragraph>
 
             <H3>Ratings</H3>
 
             <Paragraph size="lg">
-              Dish cuts one dimensional stars into a three-part flower giving
-              you{' '}
+              Dish cuts one dimensional stars into a three-part flower giving you{' '}
               <Text fontWeight="700" color={green}>
                 food
               </Text>
@@ -193,29 +179,27 @@ export default function AboutPage({
             <H3>Stats</H3>
 
             <Paragraph size="lg">
-              Dish crawls the web and gathers sentiment towards tags:
-              birria-taco, service, vibe, veggie-friendly... then ranks each
-              restaurant on exactly the tags you search for. You can see the top
-              Chinese, but also the top Vegetarian Chinese Dim Sum, for delivery
+              Dish crawls the web and gathers sentiment towards tags: birria-taco, service, vibe,
+              veggie-friendly... then ranks each restaurant on exactly the tags you search for. You
+              can see the top Chinese, but also the top Vegetarian Chinese Dim Sum, for delivery
               etc.
             </Paragraph>
 
             <H3>Lists</H3>
 
             <Paragraph size="lg">
-              Vote on top lists in each area across any tags, plus make your own
-              for yourself or others.
+              Vote on top lists in each area across any tags, plus make your own for yourself or
+              others.
             </Paragraph>
 
             <Paragraph size="xl" fontWeight="800">
-              To maintain a high quality though, we need to avoid becoming an ad
-              company.
+              To maintain a high quality though, we need to avoid becoming an ad company.
             </Paragraph>
 
             <Paragraph size="lg">
-              Ultimately we're building what we want: a high quality Pokedex for
-              the real world, driven by a community. We'll be writing more about
-              how we plan to achieve this on <Link name="blog">the blog</Link>.
+              Ultimately we're building what we want: a high quality Pokedex for the real world,
+              driven by a community. We'll be writing more about how we plan to achieve this on{' '}
+              <Link name="blog">the blog</Link>.
             </Paragraph>
 
             <Paragraph size="lg">

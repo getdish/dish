@@ -28,11 +28,7 @@ export const yelp: Partial<Scrape> = {
   data: {
     data_from_map_search: {
       name: 'Test Name Yelp',
-      categories: [
-        { title: 'Test Mexican' },
-        { title: 'Test Pizza' },
-        { title: 'Test Spain' },
-      ],
+      categories: [{ title: 'Test Mexican' }, { title: 'Test Pizza' }, { title: 'Test Spain' }],
       rating: 4.0,
     },
     data_from_html_embed: {
@@ -73,8 +69,7 @@ export const yelp: Partial<Scrape> = {
         localizedDate: '5/16/2020',
         userId: 'FsLRE98uOHkBNzO1Ta5hIw',
         comment: {
-          text:
-            'This restaurant had the worst Test tag existing 1 dishes! Vegetarian',
+          text: 'This restaurant had the worst Test tag existing 1 dishes! Vegetarian',
           language: 'en',
         },
         lightboxMediaItems: [
@@ -151,8 +146,7 @@ export const tripadvisor: Partial<Scrape> = {
   data: {
     overview: {
       contact: {
-        website:
-          'OFdCX2h0dHA6Ly93d3cuaW50ZXJjb250aW5lbnRhbHNhbmZyYW5jaXNjby5jb20vX1o3cQ==',
+        website: 'OFdCX2h0dHA6Ly93d3cuaW50ZXJjb250aW5lbnRhbHNhbmZyYW5jaXNjby5jb20vX1o3cQ==',
       },
       rating: {
         ratingQuestions: [
@@ -176,9 +170,7 @@ export const tripadvisor: Partial<Scrape> = {
       },
     },
     photos: ['https://i.imgur.com/udwFNWI.jpeg'],
-    photos_with_captions: [
-      { url: 'https://i.imgur.com/udwFNWI.jpeg', caption: 'Test tag' },
-    ],
+    photos_with_captions: [{ url: 'https://i.imgur.com/udwFNWI.jpeg', caption: 'Test tag' }],
     reviewsp0: [
       {
         text: 'Test tag existing 3 was ok. Vegan',

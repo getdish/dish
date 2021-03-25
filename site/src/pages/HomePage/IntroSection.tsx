@@ -1,4 +1,4 @@
-import { Box, gloss, Image, Space, Stack, View } from '@o/ui'
+import { Box, Image, Space, Stack, View, gloss } from '@o/ui'
 import React from 'react'
 
 import { mediaQueries } from '../../constants'

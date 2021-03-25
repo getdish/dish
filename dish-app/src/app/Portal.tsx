@@ -53,16 +53,12 @@ export function PortalProvider({ id }: PortalStoreProps) {
   )
 }
 
-export const RootPortalItem = (props: PortalItemProps) => (
-  <PortalItem {...props} id="root" />
-)
+export const RootPortalItem = (props: PortalItemProps) => <PortalItem {...props} id="root" />
 export const RootPortalProvider = (props: { children?: any }) => (
   <PortalProvider {...props} id="root" />
 )
 
-export const DrawerPortalItem = (props: PortalItemProps) => (
-  <PortalItem {...props} id="drawer" />
-)
+export const DrawerPortalItem = (props: PortalItemProps) => <PortalItem {...props} id="drawer" />
 export const DrawerPortalProvider = (props: { children?: any }) => (
   <PortalProvider {...props} id="drawer" />
 )

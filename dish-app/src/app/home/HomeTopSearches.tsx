@@ -22,8 +22,7 @@ export const HomeTopSearches = memo(() => {
       overflow="hidden"
     >
       {recentSearches.map((search, index) => {
-        const rgb =
-          search.tags.find((x) => x.type === 'lense')?.rgb ?? tagLenses[0].rgb
+        const rgb = search.tags.find((x) => x.type === 'lense')?.rgb ?? tagLenses[0].rgb
         return (
           <Link key={index} tags={search.tags} asyncClick>
             <GradientButton rgb={rgb}>
@@ -61,10 +60,7 @@ const recentSearches: { tags: NavigableTag[] }[] = [
     ],
   },
   {
-    tags: [
-      tagLenses[1],
-      { name: 'Steak', icon: '🥩', type: 'dish', slug: 'american__steak' },
-    ],
+    tags: [tagLenses[1], { name: 'Steak', icon: '🥩', type: 'dish', slug: 'american__steak' }],
   },
   {
     tags: [

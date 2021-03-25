@@ -9,12 +9,7 @@ export function TagsText({ tags, color }: { tags: any[]; color?: string }) {
       {tags.map((tag, index) => (
         <React.Fragment key={tag.name}>
           {tag.icon ? (
-            <Text
-              marginRight={6}
-              fontSize={20}
-              lineHeight={20}
-              transform={[{ translateY: 0.5 }]}
-            >
+            <Text marginRight={6} fontSize={20} lineHeight={20} transform={[{ translateY: 0.5 }]}>
               {tag.icon.trim()}{' '}
             </Text>
           ) : null}

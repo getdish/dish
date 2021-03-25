@@ -2,15 +2,12 @@
 // this file is statically extracted so only things that can be
 // fully optmized away during compile time should go here
 
-export const isSSR =
-  process.env.IS_SSR_RENDERING || process.env.TARGET === 'ssr'
+export const isSSR = process.env.IS_SSR_RENDERING || process.env.TARGET === 'ssr'
 export const isWeb = process.env.TARGET === 'web'
 export const isNative = process.env.TARGET === 'native'
 
 export const isM1Sim =
-  isWeb && typeof window !== 'undefined'
-    ? window.location.search === '?m1'
-    : false
+  isWeb && typeof window !== 'undefined' ? window.location.search === '?m1' : false
 
 export const drawerPad = 8
 export const drawerBorderRadius = 17
@@ -28,8 +25,7 @@ export const pageWidthMax = 2000
 
 export const searchBarTopOffset = 3
 export const searchBarHeight = 50
-export const searchBarHeightWithPadding =
-  searchBarHeight + searchBarTopOffset + 12
+export const searchBarHeightWithPadding = searchBarHeight + searchBarTopOffset + 12
 export const searchBarMaxWidth = pageWidthMax - 640
 
 export const IMAGE_PROXY_DOMAIN = 'https://images.dishapp.com'

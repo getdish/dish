@@ -9,11 +9,26 @@ import { Page } from './Page'
  */
 
 const transitionTransforms = {
-  'ease-in-out': [[-1, -0.2, 0, 0.2, 1], [-1, -0.2, 0, 0.2, 1]],
-  'ease-in-out-quad': [[-1, -0.2, -0.1, 0, 1], [-2, -0.1, 0, 0.1, 2]],
-  'ease-in': [[-1, -0.15, 0, 0.3, 1], [-3, 1, 1, 1, 1]],
-  'ease-in-quad': [[-1, -0.2, -0.1, 0, 1], [-2, -0.1, 0, 0, 0]],
-  'ease-out': [[-1, -0.15, 0, 0.3, 1.5], [1, 1, 1, 1, -1.5]],
+  'ease-in-out': [
+    [-1, -0.2, 0, 0.2, 1],
+    [-1, -0.2, 0, 0.2, 1],
+  ],
+  'ease-in-out-quad': [
+    [-1, -0.2, -0.1, 0, 1],
+    [-2, -0.1, 0, 0.1, 2],
+  ],
+  'ease-in': [
+    [-1, -0.15, 0, 0.3, 1],
+    [-3, 1, 1, 1, 1],
+  ],
+  'ease-in-quad': [
+    [-1, -0.2, -0.1, 0, 1],
+    [-2, -0.1, 0, 0, 0],
+  ],
+  'ease-out': [
+    [-1, -0.15, 0, 0.3, 1.5],
+    [1, 1, 1, 1, -1.5],
+  ],
 } as const
 
 export type ParallaxProp =
@@ -21,11 +36,11 @@ export type ParallaxProp =
   | {
       [key in keyof (CSSPropertySet & MotionTransform)]:
         | boolean
-        | ParallaxItemProps & {
+        | (ParallaxItemProps & {
             transition?: keyof typeof transitionTransforms
             move?: number
             transform?: (animation: AnimationStore) => AnimationStore
-          }
+          })
     }
 
 type ParallaxStageItemProps = Omit<ParallaxViewProps, 'parallax'> & {
@@ -52,7 +67,7 @@ function getParallax(props: ParallaxStageItemProps): ParallaxViewProps['parallax
     props.parallax === true || typeof props.parallax === 'undefined'
       ? defaultParallax
       : props.parallax
-  return geometry => {
+  return (geometry) => {
     return Object.keys(parallax).reduce((acc, key) => {
       const { clamp, ...prop } = parallax[key]
       let cur = geometry.useParallaxIntersection({
@@ -66,13 +81,13 @@ function getParallax(props: ParallaxStageItemProps): ParallaxViewProps['parallax
         cur = cur.transform(...transitionTransforms[prop.transition])
       }
       if (prop.move) {
-        cur = cur.transform(x => x * prop.move)
+        cur = cur.transform((x) => x * prop.move)
       }
       if (prop.transform) {
         cur = cur.transform(prop.transform)
       }
       if (clamp) {
-        cur = cur.transform(x => {
+        cur = cur.transform((x) => {
           return Math.max(clamp[0], Math.min(x, clamp[1]))
         })
       }

@@ -14,7 +14,7 @@ export const SignupForm = memo((props: ViewProps) => {
       margin="auto"
       borderRadius={14}
       elevation={1}
-      background={theme => theme.backgroundStrong}
+      background={(theme) => theme.backgroundStrong}
       alignSelf="center"
       {...props}
     >

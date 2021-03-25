@@ -1,11 +1,4 @@
-import React, {
-  createContext,
-  useContext,
-  useLayoutEffect,
-  useMemo,
-  useRef,
-  useState,
-} from 'react'
+import React, { createContext, useContext, useLayoutEffect, useMemo, useRef, useState } from 'react'
 import { useForceUpdate } from 'snackui'
 
 import { routePathToName, routes, useRouter, useRouterCurPage } from '../router'
@@ -32,11 +25,7 @@ export function RouteSwitch(props: { children: any }) {
 
   const nextActiveIndex = names.findIndex((x) => activeRoutes[x])
   const getState = (index: number): RouteState =>
-    activeIndex.current <= -1
-      ? 'collect'
-      : activeIndex.current === index
-      ? 'active'
-      : 'inactive'
+    activeIndex.current <= -1 ? 'collect' : activeIndex.current === index ? 'active' : 'inactive'
 
   useLayoutEffect(() => {
     activeIndex.current = nextActiveIndex
@@ -129,13 +118,7 @@ export function Route(props: { name: string; exact?: boolean; children: any }) {
     }
 
     return null
-  }, [
-    props.exact,
-    props.children,
-    isMatched,
-    isExactMatching,
-    isParentMatching,
-  ])
+  }, [props.exact, props.children, isMatched, isExactMatching, isParentMatching])
 
   const children = (() => {
     const state = stateRef.current

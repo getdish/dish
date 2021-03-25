@@ -50,17 +50,12 @@ export const RestaurantStatBars = graphql(
       order_by: [{ upvotes: order_by.desc_nulls_last }],
     })
 
-    const rtags = uniqBy([...givenTags, ...restTags], (x) => x.tag.slug).slice(
-      0,
-      showTags
-    )
+    const rtags = uniqBy([...givenTags, ...restTags], (x) => x.tag.slug).slice(0, showTags)
 
     const theme = useTheme()
 
     return (
-      <Theme
-        name={theme.name === 'dark' ? 'darkTranslucent' : 'lightTranslucent'}
-      >
+      <Theme name={theme.name === 'dark' ? 'darkTranslucent' : 'lightTranslucent'}>
         <VStack alignItems="flex-end" justifyContent="flex-end">
           {rtags.map((rtag, index) => {
             return (

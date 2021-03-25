@@ -15,8 +15,7 @@ import { GoogleGeocoder } from '../google/GoogleGeocoder'
 import { ScrapeData, scrapeInsert, scrapeMergeData } from '../scrape-helpers'
 import { aroundCoords, decodeEntities, geocode } from '../utils'
 
-const TRIPADVISOR_DOMAIN =
-  process.env.TRIPADVISOR_PROXY || 'https://www.tripadvisor.com'
+const TRIPADVISOR_DOMAIN = process.env.TRIPADVISOR_PROXY || 'https://www.tripadvisor.com'
 
 const axios = axios_base.create({
   baseURL: TRIPADVISOR_DOMAIN,
@@ -53,12 +52,7 @@ export class Tripadvisor extends WorkerJob {
     this.log('Starting crawler. Using domain: ' + TRIPADVISOR_DOMAIN)
     const coords = await geocode(city_name)
     const region_coords = _.shuffle(
-      aroundCoords(
-        coords[0],
-        coords[1],
-        this.MAPVIEW_SIZE,
-        this.SEARCH_RADIUS_MULTIPLIER
-      )
+      aroundCoords(coords[0], coords[1], this.MAPVIEW_SIZE, this.SEARCH_RADIUS_MULTIPLIER)
     )
     for (const coords of region_coords) {
       await this.runOnWorker('getRestaurants', [coords[0], coords[1], 0])
@@ -135,12 +129,7 @@ export class Tripadvisor extends WorkerJob {
     }
   }
 
-  async saveReviews(
-    path: string,
-    scrape_id: string,
-    page: number,
-    html: string = ''
-  ) {
+  async saveReviews(path: string, scrape_id: string, page: number, html: string = '') {
     this.log(`saveReviews for ${TRIPADVISOR_DOMAIN + path}`)
     if (html == '') {
       const response = await axios.get(TRIPADVISOR_DOMAIN + path)
@@ -232,12 +221,7 @@ export class Tripadvisor extends WorkerJob {
     return restaurant_name_parts.join(', ')
   }
 
-  private async _persistReviewData(
-    html: string,
-    scrape_id: string,
-    page: number,
-    path: string
-  ) {
+  private async _persistReviewData(html: string, scrape_id: string, page: number, path: string) {
     if (process.env.DISH_ENV == 'test' && page > 2) {
       return false
     }
@@ -247,9 +231,7 @@ export class Tripadvisor extends WorkerJob {
     }
     let scrape_data: ScrapeData = {}
     scrape_data['reviewsp' + page] = review_data
-    this.log(
-      `Merging review data for page ${page}: ${review_data.length} ${more}`
-    )
+    this.log(`Merging review data for page ${page}: ${review_data.length} ${more}`)
     await scrapeMergeData(scrape_id, scrape_data)
     return more
   }

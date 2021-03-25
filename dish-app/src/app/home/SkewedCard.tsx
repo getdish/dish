@@ -16,12 +16,7 @@ export const SkewedCard = ({ children, ...props }: StackProps) => {
       shadowOffset={{ height: 4, width: 4 }}
       position="relative"
       opacity={1}
-      transform={[
-        { scale: 0.8 },
-        { perspective: 1000 },
-        { rotateY: '-10deg' },
-        { translateX: 0 },
-      ]}
+      transform={[{ scale: 0.8 }, { perspective: 1000 }, { rotateY: '-10deg' }, { translateX: 0 }]}
       hoverStyle={{
         transform: [
           { scale: 0.81 },

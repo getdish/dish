@@ -27,9 +27,7 @@ export const RestaurantAddress = ({
       textProps={{
         opacity: 0.5,
       }}
-      href={`https://www.google.com/maps/search/?q=${encodeURIComponent(
-        address
-      )}`}
+      href={`https://www.google.com/maps/search/?q=${encodeURIComponent(address)}`}
       overflow="hidden"
     >
       <HStack alignItems="center">

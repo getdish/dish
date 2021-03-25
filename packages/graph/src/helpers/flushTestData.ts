@@ -5,9 +5,7 @@ export async function flushTestData() {
   let hasCompletedSome = false
   setTimeout(() => {
     if (!hasCompletedSome) {
-      console.warn(
-        'LONG RUNNING! are you sure you arent running against prod data?'
-      )
+      console.warn('LONG RUNNING! are you sure you arent running against prod data?')
       process.exit(0)
     }
   }, 8000)

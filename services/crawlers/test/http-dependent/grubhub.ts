@@ -2,10 +2,7 @@ import { deleteAllFuzzyBy } from '@dish/graph'
 import test from 'ava'
 
 import { GrubHub } from '../../src/grubhub/GrubHub'
-import {
-  deleteAllScrapesBySourceID,
-  scrapeFindOneBySourceID,
-} from '../../src/scrape-helpers'
+import { deleteAllScrapesBySourceID, scrapeFindOneBySourceID } from '../../src/scrape-helpers'
 
 const ID = '548837'
 const name = 'Squat & Gobble West Portal'

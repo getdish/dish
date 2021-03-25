@@ -11,10 +11,7 @@ export function createRestaurantAutocomplete(r: restaurant) {
     type: 'restaurant',
     icon: r.image || '📍',
     description:
-      getAddressText(
-        homeStore.currentState.curLocInfo ?? null,
-        r.address ?? '',
-        'xs'
-      ) || 'No Address',
+      getAddressText(homeStore.currentState.curLocInfo ?? null, r.address ?? '', 'xs') ||
+      'No Address',
   })
 }

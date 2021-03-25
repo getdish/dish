@@ -25,15 +25,11 @@ export const SearchHeader = memo(() => {
   const { title, subTitle } = getTitleForState(curProps.item, {
     lowerCase: true,
   })
-  const lenseTag =
-    getActiveTags(curProps.item).find((x) => x.type === 'lense') ?? tagLenses[0]
+  const lenseTag = getActiveTags(curProps.item).find((x) => x.type === 'lense') ?? tagLenses[0]
   const lenseColor = lenseTag.rgb
   return (
     <>
-      <ContentScrollViewHorizontalFitted
-        width={width}
-        setWidth={setWidthDebounce}
-      >
+      <ContentScrollViewHorizontalFitted width={width} setWidth={setWidthDebounce}>
         <VStack width="100%">
           <VStack paddingTop={media.sm ? 12 : 12 + 52 + 10} />
           <HStack position="relative">

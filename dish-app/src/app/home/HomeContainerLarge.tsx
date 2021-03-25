@@ -1,13 +1,6 @@
 import React, { memo } from 'react'
 import { StyleSheet } from 'react-native'
-import {
-  AbsoluteVStack,
-  HStack,
-  LinearGradient,
-  VStack,
-  useMedia,
-  useTheme,
-} from 'snackui'
+import { AbsoluteVStack, HStack, LinearGradient, VStack, useMedia, useTheme } from 'snackui'
 
 import { searchBarHeight } from '../../constants/constants'
 import { AppAutocompleteSearch } from '../AppAutocomplete'
@@ -49,13 +42,7 @@ export const HomeContainerLarge = (props) => {
       >
         <UnderFade />
 
-        <VStack
-          flex={1}
-          maxWidth="100%"
-          marginLeft="auto"
-          position="relative"
-          opacity={1}
-        >
+        <VStack flex={1} maxWidth="100%" marginLeft="auto" position="relative" opacity={1}>
           <AbsoluteVStack left={0} right={0} bottom={0} top={searchBarHeight}>
             <AppAutocompleteSearch />
           </AbsoluteVStack>

@@ -17,10 +17,7 @@ import { SmallCircleButton } from '../../views/CloseButton'
 import { Link } from '../../views/Link'
 import { randomListColor } from '../list/listColors'
 import { SearchPagePropsContext } from './SearchPagePropsContext'
-import {
-  getLocationFromRoute,
-  useLocationFromRoute,
-} from './useLocationFromRoute'
+import { getLocationFromRoute, useLocationFromRoute } from './useLocationFromRoute'
 
 export const SearchForkListButton = memo(
   ({ size, children }: { size?: 'sm' | 'md'; children?: any }) => {
@@ -35,9 +32,7 @@ export const SearchForkListButton = memo(
     ) as HistoryItem<'search'>
     const location = useLocationFromRoute(route)
     const regionName = location.data?.region?.name
-    const tooltip = `my ${title.replace('the ', '')} in ${
-      regionName?.toLowerCase() ?? ''
-    } list`
+    const tooltip = `my ${title.replace('the ', '')} in ${regionName?.toLowerCase() ?? ''} list`
     return (
       <Tooltip contents={tooltip}>
         <Link

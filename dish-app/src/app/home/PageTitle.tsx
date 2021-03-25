@@ -23,15 +23,7 @@ export const PageTitle = memo(
     const titleLen = (title + subTitle).length
     const titleSize = size == 'sm' ? 0.75 : 1
     const titleScale =
-      titleLen > 65
-        ? 0.7
-        : titleLen > 55
-        ? 0.75
-        : titleLen > 45
-        ? 0.85
-        : titleLen > 35
-        ? 0.95
-        : 1
+      titleLen > 65 ? 0.7 : titleLen > 55 ? 0.75 : titleLen > 45 ? 0.85 : titleLen > 35 ? 0.95 : 1
     const titleFontSize = Math.round(26 * titleScale * titleSize)
     const theme = useTheme()
     return (
@@ -48,9 +40,7 @@ export const PageTitle = memo(
       >
         {before}
         <HStack spacing="xxl" flex={1} alignItems="center">
-          {!noDivider && (
-            <VStack backgroundColor={theme.borderColor} height={1} flex={1} />
-          )}
+          {!noDivider && <VStack backgroundColor={theme.borderColor} height={1} flex={1} />}
           <Text
             textAlign="center"
             letterSpacing={-0.25}
@@ -74,9 +64,7 @@ export const PageTitle = memo(
               </Text>
             )}
           </Text>
-          {!noDivider && (
-            <VStack backgroundColor={theme.borderColor} height={1} flex={1} />
-          )}
+          {!noDivider && <VStack backgroundColor={theme.borderColor} height={1} flex={1} />}
         </HStack>
         {after}
       </HStack>

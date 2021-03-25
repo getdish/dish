@@ -24,9 +24,7 @@ export class RestaurantTagScores extends Loggable {
   async calculateScores() {
     const unanalysed = await this.findAllUnanalyzed()
     this.total_sentences = unanalysed.length
-    this.crawler.log(
-      `Starting Bert sentiment requests (${this.total_sentences} to analyze)...`
-    )
+    this.crawler.log(`Starting Bert sentiment requests (${this.total_sentences} to analyze)...`)
     const analyzed = await this.analyzeSentences(unanalysed)
     await this.updateAnalyzed(analyzed)
     this.crawler.log(`... ${analyzed.length} Bert sentiment requests done`)
@@ -59,18 +57,14 @@ export class RestaurantTagScores extends Loggable {
   }
 
   async getBertSentimentBatch(review_tag_sentences: ReviewTagSentence[]) {
-    let completed = await Promise.all(
-      review_tag_sentences.map((rts) => this.getBertSentiment(rts))
-    )
+    let completed = await Promise.all(review_tag_sentences.map((rts) => this.getBertSentiment(rts)))
     return completed.filter(Boolean) as ReviewTagSentence[]
   }
 
   async getBertSentiment(review_tag_sentence: ReviewTagSentence) {
     if (!review_tag_sentence.sentence) return
     this.current_sentence = this.current_sentence + 1
-    const result = await this.fetchBertSentimentWithRetries(
-      review_tag_sentence.sentence
-    )
+    const result = await this.fetchBertSentimentWithRetries(review_tag_sentence.sentence)
     if (!result) return
     return {
       id: review_tag_sentence.id,
@@ -163,10 +157,7 @@ export class RestaurantTagScores extends Loggable {
     `
   }
 
-  _scoreFromSentimentSQL(
-    tag_id: string,
-    source: string | undefined = undefined
-  ) {
+  _scoreFromSentimentSQL(tag_id: string, source: string | undefined = undefined) {
     if (source) {
       source = `AND review.source = '${source}'`
     } else {
@@ -243,11 +234,7 @@ export class RestaurantTagScores extends Loggable {
     return this._scoreSQL(tag_id, source)
   }
 
-  sqlForPerSourceSentiment(
-    tag_id: string,
-    source: string,
-    sentiment_criteria: string
-  ) {
+  sqlForPerSourceSentiment(tag_id: string, source: string, sentiment_criteria: string) {
     if (source) {
       source = `AND source = '${source}'`
     } else {
@@ -265,8 +252,7 @@ export class RestaurantTagScores extends Loggable {
 
   sqlForPerSourceSummary(tag_id: string, source: string, vector: string) {
     const order = vector == 'postive' ? 'DESC' : 'ASC'
-    const vector_filter =
-      vector == 'postive' ? '> 0' : '< ' + BERT_NEGATIVE_SENTIMENT_CRITERIA
+    const vector_filter = vector == 'postive' ? '> 0' : '< ' + BERT_NEGATIVE_SENTIMENT_CRITERIA
     const sub_query_name = `${source}_summaries`
     if (source) {
       source = `AND source = '${source}'`

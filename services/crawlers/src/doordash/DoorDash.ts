@@ -16,8 +16,7 @@ type BasicStore = {
 }
 
 const DOORDASH_DOMAIN =
-  process.env.DOORDASH_GRAPHQL_AWS_PROXY ||
-  'https://api-consumer-client.doordash.com/'
+  process.env.DOORDASH_GRAPHQL_AWS_PROXY || 'https://api-consumer-client.doordash.com/'
 
 const axios = axios_base.create({
   baseURL: DOORDASH_DOMAIN + 'graphql',
@@ -51,12 +50,7 @@ export class DoorDash extends WorkerJob {
     console.log('Starting DoorDash crawler. Using domain: ' + DOORDASH_DOMAIN)
     const coords = await geocode(city_name)
     const region_coords = _.shuffle(
-      aroundCoords(
-        coords[0],
-        coords[1],
-        this.MAPVIEW_SIZE,
-        this.SEARCH_RADIUS_MULTIPLIER
-      )
+      aroundCoords(coords[0], coords[1], this.MAPVIEW_SIZE, this.SEARCH_RADIUS_MULTIPLIER)
     )
     for (const coords of region_coords) {
       const new_stores = await this.search(coords[0], coords[1])
@@ -67,9 +61,7 @@ export class DoorDash extends WorkerJob {
         if (Object.keys(stores).length > 0) break
       }
     }
-    console.log(
-      `DoorDash ${Object.keys(stores).length} store IDs found for ${city_name}`
-    )
+    console.log(`DoorDash ${Object.keys(stores).length} store IDs found for ${city_name}`)
     for (const id of Object.keys(stores)) {
       await this.runOnWorker('getStore', [stores[id]])
     }
@@ -81,9 +73,7 @@ export class DoorDash extends WorkerJob {
       variables: {},
       query: 'query viewstate {viewstate {id experiments __typename}}',
     })
-    const dd_guest_id = response.headers['set-cookie'].find((c) =>
-      c.includes('dd_guest_id')
-    )
+    const dd_guest_id = response.headers['set-cookie'].find((c) => c.includes('dd_guest_id'))
     this.cookie = dd_guest_id.split(';')[0].split('=')[1]
   }
 

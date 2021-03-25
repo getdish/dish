@@ -30,11 +30,7 @@ export function GradientButton({
         transform: [{ scale: 0.98 }],
       }}
     >
-      <AbsoluteVStack
-        opacity={0.35}
-        className="hover-50-opacity-child"
-        fullscreen
-      >
+      <AbsoluteVStack opacity={0.35} className="hover-50-opacity-child" fullscreen>
         <LinearGradient
           colors={[rgbString(rgb, 0.35), rgbString(rgb, 0.5)]}
           start={[0, 1]}

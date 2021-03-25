@@ -6,9 +6,7 @@ export function suspense<
 >(Component: A, fallback: ((props: Props) => any) | any): A {
   return ((props) => {
     return (
-      <Suspense
-        fallback={typeof fallback === 'function' ? fallback(props) : fallback}
-      >
+      <Suspense fallback={typeof fallback === 'function' ? fallback(props) : fallback}>
         <Component {...props} />
       </Suspense>
     )

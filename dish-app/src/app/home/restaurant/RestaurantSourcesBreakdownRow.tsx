@@ -33,9 +33,7 @@ export const RestaurantSourcesBreakdownRow = memo(
           return (
             <Box width={280} minHeight={200}>
               <Suspense fallback={null}>
-                {isOpen ? (
-                  <RestaurantSourcesBreakdown restaurantSlug={restaurantSlug} />
-                ) : null}
+                {isOpen ? <RestaurantSourcesBreakdown restaurantSlug={restaurantSlug} /> : null}
               </Suspense>
             </Box>
           )
@@ -52,19 +50,13 @@ export const RestaurantSourcesBreakdownRow = memo(
           alignItems="center"
         >
           {Object.keys(sources)
-            .filter(
-              (source) => thirdPartyCrawlSources[source]?.delivery === false
-            )
+            .filter((source) => thirdPartyCrawlSources[source]?.delivery === false)
             .map((source, i) => {
               const item = sources[source]
               const info = thirdPartyCrawlSources[source]
               return (
                 <Link key={source} href={item.url}>
-                  <HStack
-                    alignItems="center"
-                    paddingHorizontal={5}
-                    paddingVertical={3}
-                  >
+                  <HStack alignItems="center" paddingHorizontal={5} paddingVertical={3}>
                     {/* {info?.image ? (
                       <VStack className="faded-out">
                         <Image
@@ -82,11 +74,7 @@ export const RestaurantSourcesBreakdownRow = memo(
                       {info?.name}
                     </Text>
                     {size !== 'sm' && (
-                      <PointsText
-                        marginLeft={4}
-                        points={+(item.rating ?? 0) * 10}
-                        color="#999"
-                      />
+                      <PointsText marginLeft={4} points={+(item.rating ?? 0) * 10} color="#999" />
                     )}
                   </HStack>
                 </Link>

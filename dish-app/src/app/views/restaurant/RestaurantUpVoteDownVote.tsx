@@ -1,20 +1,8 @@
 import { graphql } from '@dish/graph'
-import {
-  ChevronDown,
-  ChevronUp,
-  ChevronsDown,
-  ChevronsUp,
-} from '@dish/react-feather'
+import { ChevronDown, ChevronUp, ChevronsDown, ChevronsUp } from '@dish/react-feather'
 import React, { Suspense, memo } from 'react'
 import { GestureResponderEvent } from 'react-native'
-import {
-  AbsoluteVStack,
-  HStack,
-  Text,
-  Tooltip,
-  VStack,
-  useTheme,
-} from 'snackui'
+import { AbsoluteVStack, HStack, Text, Tooltip, VStack, useTheme } from 'snackui'
 
 import { tagLenses } from '../../../constants/localTags'
 import { numberFormat } from '../../../helpers/numberFormat'
@@ -43,11 +31,7 @@ export const RestaurantUpVoteDownVote = (props: UpvoteDownvoteProps) => {
   const key = JSON.stringify(activeTags)
   return (
     <Suspense fallback={null}>
-      <RestaurantUpVoteDownVoteContents
-        key={key}
-        {...props}
-        activeTagSlugs={activeTags}
-      />
+      <RestaurantUpVoteDownVoteContents key={key} {...props} activeTagSlugs={activeTags} />
     </Suspense>
   )
 }
@@ -67,10 +51,7 @@ const RestaurantUpVoteDownVoteContents = graphql(
       (acc, cur) => ({ ...acc, [cur]: true }),
       {}
     )
-    const { vote, setVote } = useUserTagVotes(
-      restaurantSlug,
-      restaurantTagSlugs
-    )
+    const { vote, setVote } = useUserTagVotes(restaurantSlug, restaurantTagSlugs)
     const theme = useTheme()
 
     if (!restaurant) {
@@ -79,9 +60,7 @@ const RestaurantUpVoteDownVoteContents = graphql(
 
     ratio = ratio ?? restaurantRatio(restaurant)
     score =
-      display === 'ratio'
-        ? Math.round(ratio * 100)
-        : score ?? Math.round(restaurant.score) + vote
+      display === 'ratio' ? Math.round(ratio * 100) : score ?? Math.round(restaurant.score) + vote
 
     return (
       <VStack pointerEvents="auto" position="relative">
@@ -188,12 +167,7 @@ const RatingWithVotes = memo(
     const fontSize = Math.min(16, sizePx / `${score}`.length) * scale * 1.075
 
     return (
-      <VStack
-        alignItems="center"
-        justifyContent="center"
-        width={sizePx}
-        height={sizePx}
-      >
+      <VStack alignItems="center" justifyContent="center" width={sizePx} height={sizePx}>
         <AbsoluteVStack top={-10}>
           {subtle ? (
             upvote
@@ -215,10 +189,7 @@ const RatingWithVotes = memo(
             {numberFormat(score ?? 0)}
           </Text>
           {display === 'ratio' && (
-            <TextSuperScript
-              marginRight={-fontSize * 0.4}
-              fontSize={fontSize * 0.6}
-            >
+            <TextSuperScript marginRight={-fontSize * 0.4} fontSize={fontSize * 0.6}>
               %
             </TextSuperScript>
           )}

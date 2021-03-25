@@ -8,8 +8,7 @@ import { JobOptions, QueueOptions } from 'bull'
 import { restaurantSaveCanonical } from '../canonical-restaurant'
 import { ScrapeData, scrapeInsert } from '../scrape-helpers'
 
-const MICHELIN_DOMAIN =
-  process.env.MICHELIN_PROXY || 'https://8nvhrd7onv-dsn.algolia.net'
+const MICHELIN_DOMAIN = process.env.MICHELIN_PROXY || 'https://8nvhrd7onv-dsn.algolia.net'
 
 const axios = axios_base.create({
   baseURL: MICHELIN_DOMAIN,

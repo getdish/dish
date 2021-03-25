@@ -2,10 +2,7 @@ import { restaurant_tag } from '@dish/graph'
 import { isPresent } from '@dish/helpers'
 
 import { queryRestaurant } from '../queries/queryRestaurant'
-import {
-  DishTagItemSimple,
-  selectRishDishViewSimple,
-} from './selectDishViewSimple'
+import { DishTagItemSimple, selectRishDishViewSimple } from './selectDishViewSimple'
 
 /**
  * Careful with query helpers, they need to be DETERMINISTIC
@@ -65,10 +62,7 @@ export const getRestaurantDishes = ({
 // be necessary. Postgres is perfectly capabale of doing this itself. However, for whatever
 // reason Postgres or Hasura takes it on itself to choose a different field to order on. Hence
 // we force the ordering back to its intended ordering here.
-const prependSearchedForTags = (
-  topTags: restaurant_tag[],
-  tagSlugs: string[]
-) => {
+const prependSearchedForTags = (topTags: restaurant_tag[], tagSlugs: string[]) => {
   const searchedForTags = topTags.filter((t) => tagSlugs.includes(t.tag.slug!))
   const allOthers = topTags.filter((t) => !tagSlugs.includes(t.tag.slug!))
   const ordered = [...searchedForTags, ...allOthers]

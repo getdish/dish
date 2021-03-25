@@ -5,11 +5,7 @@ import { Platform, TouchableOpacity } from 'react-native'
 import { useForceUpdate } from 'snackui'
 
 import { isWeb } from '../../constants/constants'
-import {
-  addTagsToCache,
-  allTags,
-  getFullTagFromNameAndType,
-} from '../../helpers/allTags'
+import { addTagsToCache, allTags, getFullTagFromNameAndType } from '../../helpers/allTags'
 import { getNavigateItemForState } from '../../helpers/getNavigateItemForState'
 import { getNextState } from '../../helpers/getNextState'
 import { filterToNavigable } from '../../helpers/tagHelpers'
@@ -130,9 +126,7 @@ const getNormalizeLinkProps = (
 // dont memoize relies on homeStore.currentState
 const getNormalizedLink = (props: Partial<LinkButtonProps>) => {
   if (props.tags || props.tag) {
-    const tags = filterToNavigable(
-      props.tags ?? (props.tag ? [props.tag] : [])
-    ).map((tag) => {
+    const tags = filterToNavigable(props.tags ?? (props.tag ? [props.tag] : [])).map((tag) => {
       // TEMP bugfix, until we do new home, we need to fallback to getFullTagFromNameAndType
       if (!tag.slug) {
         console.warn('no slug?')

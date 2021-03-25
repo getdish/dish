@@ -68,14 +68,9 @@ export default memo(
                   </TableHeadRow>
 
                   {hours.map((hour, i) => {
-                    const isToday = (hour.hoursInfo.day ?? '').startsWith(
-                      dayOfWeek
-                    )
+                    const isToday = (hour.hoursInfo.day ?? '').startsWith(dayOfWeek)
                     return (
-                      <TableRow
-                        backgroundColor={isToday ? bgLight : 'transparent'}
-                        key={i}
-                      >
+                      <TableRow backgroundColor={isToday ? bgLight : 'transparent'} key={i}>
                         <TableCell fontWeight="600" {...col0Props}>
                           {hour.hoursInfo.day}
                         </TableCell>
@@ -91,9 +86,7 @@ export default memo(
                                   key={i}
                                 >
                                   {text}
-                                  {i < hour.hoursInfo.hours.length - 1 && (
-                                    <Spacer size="sm" />
-                                  )}
+                                  {i < hour.hoursInfo.hours.length - 1 && <Spacer size="sm" />}
                                 </Text>
                               )
                             })}

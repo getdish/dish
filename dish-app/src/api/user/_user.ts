@@ -10,10 +10,7 @@ const access = {
   user: ['user'],
 }
 
-export function secureRoute(
-  minimumPermission: PermissionLevel,
-  route: Handler
-) {
+export function secureRoute(minimumPermission: PermissionLevel, route: Handler) {
   return handleErrors(async (req, res) => {
     ensureJWT(req, res)
     await ensureRole(req, res, minimumPermission)
@@ -41,11 +38,7 @@ export async function ensureUserOnRoute(req: Req) {
   return res
 }
 
-export async function ensureRole(
-  req: Req,
-  res: Res,
-  minimumPermission: PermissionLevel
-) {
+export async function ensureRole(req: Req, res: Res, minimumPermission: PermissionLevel) {
   try {
     const user = await getUserFromRoute(req)
     if (!user) {

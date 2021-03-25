@@ -1,14 +1,6 @@
 import { graphql, query } from '@dish/graph'
 import React, { Suspense, memo } from 'react'
-import {
-  AbsoluteVStack,
-  Grid,
-  HStack,
-  Spacer,
-  Text,
-  Theme,
-  VStack,
-} from 'snackui'
+import { AbsoluteVStack, Grid, HStack, Spacer, Text, Theme, VStack } from 'snackui'
 
 import { useUserReviewCommentQuery } from '../../hooks/useUserReview'
 import { SlantedTitle } from '../../views/SlantedTitle'
@@ -63,11 +55,7 @@ export const RestaurantReviewsList = memo(
 
           <Suspense fallback={null}>
             {!topReviews.length && !ownReview && (
-              <VStack
-                minHeight={100}
-                alignItems="center"
-                justifyContent="center"
-              >
+              <VStack minHeight={100} alignItems="center" justifyContent="center">
                 <Text opacity={0.5} fontSize={12}>
                   No reviews, yet!
                 </Text>

@@ -1,10 +1,7 @@
 import test from 'ava'
 
 import { Infatuated } from '../../src/infatuated/Infatuated'
-import {
-  deleteAllScrapesBySourceID,
-  scrapeFindOneBySourceID,
-} from '../../src/scrape-helpers'
+import { deleteAllScrapesBySourceID, scrapeFindOneBySourceID } from '../../src/scrape-helpers'
 
 const ID = '438'
 

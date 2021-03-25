@@ -2,11 +2,7 @@ import { sleep } from '@dish/async'
 import _ from 'lodash'
 import fetch, { FetchOptions } from 'make-fetch-happen'
 
-import {
-  fetchBrowserHTML,
-  fetchBrowserHyperscript,
-  fetchBrowserJSON,
-} from './browser'
+import { fetchBrowserHTML, fetchBrowserHyperscript, fetchBrowserJSON } from './browser'
 
 if (!process.env.LUMINATI_PROXY_HOST || !process.env.STORMPROXY_HOSTS) {
   console.error('Warning: Missing proxy config ⚠️ ⚠️ ⚠️', {
@@ -37,9 +33,7 @@ export class ProxiedRequests {
         console.warn('Error with browser fetch, fall back to proxies', err)
       }
     }
-    return await this.get(uri, props).then(
-      (x) => x.json() as Promise<{ [key: string]: any }>
-    )
+    return await this.get(uri, props).then((x) => x.json() as Promise<{ [key: string]: any }>)
   }
 
   async getHyperscript(uri: string, selector: string) {
@@ -145,18 +139,12 @@ export class ProxiedRequests {
           console.log('Error:', e.message, options)
           throw new Error('Too many 503 errors for: ' + uri)
         }
-        console.warn(
-          `CRAWLER PROXY: 503 response, so retrying (${tries}) with ${method}`
-        )
+        console.warn(`CRAWLER PROXY: 503 response, so retrying (${tries}) with ${method}`)
       }
     }
 
     throw new Error(
-      `Couldn't make fetch after a few tries, giving up: ${JSON.stringify(
-        tried,
-        null,
-        2
-      )}`
+      `Couldn't make fetch after a few tries, giving up: ${JSON.stringify(tried, null, 2)}`
     )
   }
 

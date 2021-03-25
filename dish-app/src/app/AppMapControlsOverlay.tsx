@@ -107,7 +107,4 @@ export const AppMapControlsOverlay = memo(() => {
 //               </VStack>
 //             )} */}
 
-const AppMapPIP =
-  process.env.TARGET === 'ssr'
-    ? () => null
-    : loadable(() => import('./AppMapPIP'))
+const AppMapPIP = process.env.TARGET === 'ssr' ? () => null : loadable(() => import('./AppMapPIP'))

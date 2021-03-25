@@ -80,10 +80,7 @@ export async function createServer(serverConf: ServerConfig) {
   }
 }
 
-async function createApiServer(
-  app: any,
-  { createConfig, ...config }: ServerConfigNormal
-) {
+async function createApiServer(app: any, { createConfig, ...config }: ServerConfigNormal) {
   const port = await getPort()
   const pa = `localhost:${port}`
   app.use('/api', proxy(pa))
@@ -122,10 +119,7 @@ function cors() {
     res.header('Access-Control-Allow-Origin', req.headers.origin)
     res.header('Access-Control-Allow-Credentials', 'true')
     res.header('Access-Control-Allow-Headers', HEADER_ALLOWED)
-    res.header(
-      'Access-Control-Allow-Methods',
-      'GET,HEAD,POST,PUT,DELETE,OPTIONS'
-    )
+    res.header('Access-Control-Allow-Methods', 'GET,HEAD,POST,PUT,DELETE,OPTIONS')
     next()
   }
 }

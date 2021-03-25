@@ -1,17 +1,17 @@
-export const requestIdleCallback = function(cb) {
+export const requestIdleCallback = function (cb) {
   if (window.requestIdleCallback) return window.requestIdleCallback(cb)
   var start = Date.now()
-  return setTimeout(function() {
+  return setTimeout(function () {
     cb({
       didTimeout: false,
-      timeRemaining: function() {
+      timeRemaining: function () {
         return Math.max(0, 50 - (Date.now() - start))
       },
     })
   }, 1)
 }
 
-export const cancelIdleCallback = function(id) {
+export const cancelIdleCallback = function (id) {
   if (window.cancelIdleCallback) return window.cancelIdleCallback(id)
   return clearTimeout(id)
 }

@@ -2,11 +2,7 @@ import { isPresent } from '@dish/helpers'
 import { uniqBy } from 'lodash'
 
 import { initialHomeState } from '../constants/initialHomeState'
-import {
-  HomeActiveTagsRecord,
-  HomeStateItem,
-  HomeStateNav,
-} from '../types/homeTypes'
+import { HomeActiveTagsRecord, HomeStateItem, HomeStateNav } from '../types/homeTypes'
 import { NavigableTag } from '../types/tagTypes'
 import { allTags, allTagsNameToSlug, tagNameKey } from './allTags'
 import { getActiveTagSlugs } from './getActiveTagSlugs'
@@ -15,11 +11,7 @@ import { shouldBeOnSearch } from './shouldBeOnSearch'
 const ensureUnique = new Set(['lense', 'country', 'dish'])
 
 export const getNextState = (navState: HomeStateNav): HomeStateItem => {
-  const {
-    tags = [],
-    disallowDisableWhenActive = false,
-    replaceSearch = false,
-  } = navState
+  const { tags = [], disallowDisableWhenActive = false, replaceSearch = false } = navState
   let { state } = navState
   if (!state) {
     state = initialHomeState
@@ -31,11 +23,7 @@ export const getNextState = (navState: HomeStateNav): HomeStateItem => {
       : getActiveTagSlugs(curActive).filter((a) => {
           // if type is being added, dont use it here
           const type = allTags[a]?.type
-          if (
-            type &&
-            ensureUnique.has(type) &&
-            tags.some((b) => type === b.type)
-          ) {
+          if (type && ensureUnique.has(type) && tags.some((b) => type === b.type)) {
             return false
           }
           return true
@@ -68,9 +56,7 @@ export const getNextState = (navState: HomeStateNav): HomeStateItem => {
   // update query
   searchQuery = words.join(' ')
 
-  const activeTags = Object.fromEntries(
-    [...existing].map((slug) => [slug, true])
-  )
+  const activeTags = Object.fromEntries([...existing].map((slug) => [slug, true]))
 
   const nextState = {
     id: state.id,

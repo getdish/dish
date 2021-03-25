@@ -29,109 +29,107 @@ export const HomeFeedLists = (props: Props) => {
   )
 }
 
-export const HomeFeedListsContents = graphql(
-  ({ region, onHoverResults }: Props) => {
-    const recentLists = query.list_populated({
-      args: {
-        min_items: 2,
+export const HomeFeedListsContents = graphql(({ region, onHoverResults }: Props) => {
+  const recentLists = query.list_populated({
+    args: {
+      min_items: 2,
+    },
+    limit: 10,
+    where: {
+      public: {
+        _neq: false,
       },
-      limit: 10,
-      where: {
-        public: {
-          _neq: false,
-        },
-        region: {
-          _eq: region,
-        },
+      region: {
+        _eq: region,
       },
-      order_by: [{ created_at: order_by.desc }],
-    })
-    const [hoveredList, setHoveredListFast] = useState<string | null>(null)
-    const setHoveredList = useDebounce(setHoveredListFast, 300)
+    },
+    order_by: [{ created_at: order_by.desc }],
+  })
+  const [hoveredList, setHoveredListFast] = useState<string | null>(null)
+  const setHoveredList = useDebounce(setHoveredListFast, 300)
 
-    useEffect(() => {
-      return series([
-        () =>
-          resolved(() => {
-            return query
-              .list({
-                where: {
-                  id: {
-                    _eq: hoveredList,
-                  },
+  useEffect(() => {
+    return series([
+      () =>
+        resolved(() => {
+          return query
+            .list({
+              where: {
+                id: {
+                  _eq: hoveredList,
                 },
-                limit: 1,
-              })
-              .flatMap((x) => {
-                return x
-                  .restaurants({
-                    limit: 40,
-                  })
-                  .map((r) => getRestaurantIdentifiers(r.restaurant))
-              })
-          }),
-        (results) => {
-          onHoverResults(results)
-        },
-      ])
-    }, [hoveredList])
+              },
+              limit: 1,
+            })
+            .flatMap((x) => {
+              return x
+                .restaurants({
+                  limit: 40,
+                })
+                .map((r) => getRestaurantIdentifiers(r.restaurant))
+            })
+        }),
+      (results) => {
+        onHoverResults(results)
+      },
+    ])
+  }, [hoveredList])
 
-    const key = `${recentLists?.map((x) => x.id)}`
+  const key = `${recentLists?.map((x) => x.id)}`
 
-    return useMemo(() => {
-      if (!recentLists.length) {
-        return null
-      }
-      return (
-        <>
-          <FeedSlantedTitle>
-            <HStack alignItems="center" marginVertical={-4}>
-              <Text fontWeight="700" fontSize={20}>
-                Top Lists
-              </Text>
-              <Spacer size="sm" />
-              <Link
-                promptLogin
-                marginTop={-4}
-                name="list"
-                params={{
-                  userSlug: 'me',
-                  slug: 'create',
-                  region: homeStore.lastRegionSlug,
-                }}
-              >
-                <SmallCircleButton>
-                  <Plus size={14} color="#fff" />
-                </SmallCircleButton>
-              </Link>
-            </HStack>
-          </FeedSlantedTitle>
+  return useMemo(() => {
+    if (!recentLists.length) {
+      return null
+    }
+    return (
+      <>
+        <FeedSlantedTitle>
+          <HStack alignItems="center" marginVertical={-4}>
+            <Text fontWeight="700" fontSize={20}>
+              Top Lists
+            </Text>
+            <Spacer size="sm" />
+            <Link
+              promptLogin
+              marginTop={-4}
+              name="list"
+              params={{
+                userSlug: 'me',
+                slug: 'create',
+                region: homeStore.lastRegionSlug,
+              }}
+            >
+              <SmallCircleButton>
+                <Plus size={14} color="#fff" />
+              </SmallCircleButton>
+            </Link>
+          </HStack>
+        </FeedSlantedTitle>
 
-          <Spacer size="lg" />
+        <Spacer size="lg" />
 
-          <SkewedCardCarousel>
-            {recentLists.map((list, i) => {
-              if (!list) {
-                return null
-              }
-              return (
-                <SkewedCard zIndex={1000 - i} key={list.id || i}>
-                  <ListCard
-                    isBehind={i > 0}
-                    hoverable={false}
-                    slug={list.slug}
-                    userSlug={list.user?.username ?? ''}
-                    region={list.region ?? ''}
-                    onHover={(hovered) => {
-                      hovered ? setHoveredList(list.id) : null
-                    }}
-                  />
-                </SkewedCard>
-              )
-            })}
-          </SkewedCardCarousel>
-        </>
-      )
-    }, [key])
-  }
-)
+        <SkewedCardCarousel>
+          {recentLists.map((list, i) => {
+            if (!list) {
+              return null
+            }
+            return (
+              <SkewedCard zIndex={1000 - i} key={list.id || i}>
+                <ListCard
+                  isBehind={i > 0}
+                  hoverable={false}
+                  slug={list.slug}
+                  userSlug={list.user?.username ?? ''}
+                  region={list.region ?? ''}
+                  onHover={(hovered) => {
+                    hovered ? setHoveredList(list.id) : null
+                  }}
+                />
+              </SkewedCard>
+            )
+          })}
+        </SkewedCardCarousel>
+      </>
+    )
+  }, [key])
+})

@@ -1,10 +1,7 @@
 import test from 'ava'
 
 import { Michelin } from '../../src/michelin/Michelin'
-import {
-  deleteAllScrapesBySourceID,
-  scrapeFindOneBySourceID,
-} from '../../src/scrape-helpers'
+import { deleteAllScrapesBySourceID, scrapeFindOneBySourceID } from '../../src/scrape-helpers'
 
 const ID = '34525'
 

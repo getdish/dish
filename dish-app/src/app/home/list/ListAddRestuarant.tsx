@@ -18,13 +18,7 @@ import { appMapStore } from '../../AppMapStore'
 import { SlantedTitle } from '../../views/SlantedTitle'
 
 export const ListAddRestuarant = graphql(
-  ({
-    onAdd,
-    listSlug,
-  }: {
-    onAdd: (r: { id: string }) => any
-    listSlug: string
-  }) => {
+  ({ onAdd, listSlug }: { onAdd: (r: { id: string }) => any; listSlug: string }) => {
     const [list] = queryList(listSlug)
     const listRegion = list.region
     const region = useRegionQuery(listRegion)
@@ -123,9 +117,7 @@ export const ListAddRestuarant = graphql(
             )}
             {!isSearching && (
               <>
-                {!results.length && (
-                  <Text>No results found, try zooming map out</Text>
-                )}
+                {!results.length && <Text>No results found, try zooming map out</Text>}
                 {resultsItems}
               </>
             )}

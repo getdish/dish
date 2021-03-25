@@ -35,9 +35,7 @@ export const getTagsFromRoute = (item: HistoryItem<'search'>) => {
   return tags
 }
 
-export const getFullTagsFromRoute = async (
-  item: HistoryItem<'search'>
-): Promise<FullTag[]> => {
+export const getFullTagsFromRoute = async (item: HistoryItem<'search'>): Promise<FullTag[]> => {
   // @ts-ignore
   return await getFullTags(getTagsFromRoute(item))
 }

@@ -13,10 +13,7 @@ export const timer = () => {
   }
 }
 
-export const allSettledFirstFulfilled = async <
-  A,
-  B extends Promise<A> = Promise<A>
->(
+export const allSettledFirstFulfilled = async <A, B extends Promise<A> = Promise<A>>(
   args: B[]
 ): Promise<A | undefined> => {
   const res = await Promise.allSettled(args)
@@ -30,10 +27,7 @@ export const log = (val: any) => {
 
 export function ellipseText(
   str: string,
-  {
-    maxLength = 100,
-    ellipse = '…',
-  }: { maxLength?: number; ellipse?: string } = {}
+  { maxLength = 100, ellipse = '…' }: { maxLength?: number; ellipse?: string } = {}
 ) {
   if (str.length > maxLength) {
     return str.slice(0, maxLength - 1) + ellipse
@@ -48,9 +42,7 @@ export function hasProperty<X extends {}, Y extends PropertyKey>(
   return obj.hasOwnProperty(prop)
 }
 
-export function isPresent<T extends Object>(
-  input: null | undefined | T
-): input is T {
+export function isPresent<T extends Object>(input: null | undefined | T): input is T {
   return input != null
 }
 

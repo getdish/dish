@@ -30,103 +30,85 @@ export const RestaurantPhotosRow = (props: Props) => {
 }
 
 export const RestaurantPhotosRowContent = memo(
-  graphql(
-    ({
-      escalating,
-      showEscalated,
-      restaurantSlug,
-      onIsAtStart,
-      width,
-      height,
-    }: Props) => {
-      const [restaurant] = queryRestaurant(restaurantSlug)
-      if (!restaurant) {
-        return null
-      }
-      const mainPhoto = restaurant.image
-      const otherPhotos = restaurant
-        .photo_table({
-          limit: 6,
-          order_by: [
-            {
-              photo: {
-                quality: order_by.desc,
-              },
-            },
-          ],
-        })
-        .map((x) => x.photo.url)
-        .filter(isPresent)
-
-      const photos = mainPhoto ? [mainPhoto, ...otherPhotos] : otherPhotos
-
-      return (
-        <HStack>
-          {!photos.length && (
-            <HStack backgroundColor={bgLight}>
-              <Text>No photos!</Text>
-            </HStack>
-          )}
-          {!!photos.length && (
-            <>
-              {photos.map((url, index) => {
-                const photoHeight = escalating
-                  ? index < 2
-                    ? height
-                    : 500
-                  : height
-                const isEscalated = escalating && index >= 2
-                const photoWidth = isEscalated ? width * 1.25 : width
-                return (
-                  <VStack
-                    width={photoWidth}
-                    height={photoHeight}
-                    key={index}
-                    className={`scroll-snap-photo`}
-                  >
-                    {(!isEscalated || showEscalated || index === 2) && (
-                      <Link name="gallery" params={{ restaurantSlug }}>
-                        <Image
-                          source={{
-                            uri: getImageUrl(
-                              url,
-                              photoWidth * 2,
-                              photoHeight * 2,
-                              100
-                            ),
-                          }}
-                          style={{
-                            height: photoHeight,
-                            width: photoWidth,
-                          }}
-                          resizeMode="cover"
-                        />
-                      </Link>
-                    )}
-                  </VStack>
-                )
-              })}
-              <VStack>
-                <LinkButton
-                  width={width * 2}
-                  height="100%"
-                  name="gallery"
-                  alignItems="center"
-                  justifyContent="center"
-                  params={{ restaurantSlug }}
-                  textProps={{
-                    textAlign: 'center',
-                    fontSize: 28,
-                    fontWeight: '800',
-                  }}
-                >
-                  Gallery 🖼
-                </LinkButton>
-              </VStack>
-            </>
-          )}
-        </HStack>
-      )
+  graphql(({ escalating, showEscalated, restaurantSlug, onIsAtStart, width, height }: Props) => {
+    const [restaurant] = queryRestaurant(restaurantSlug)
+    if (!restaurant) {
+      return null
     }
-  )
+    const mainPhoto = restaurant.image
+    const otherPhotos = restaurant
+      .photo_table({
+        limit: 6,
+        order_by: [
+          {
+            photo: {
+              quality: order_by.desc,
+            },
+          },
+        ],
+      })
+      .map((x) => x.photo.url)
+      .filter(isPresent)
+
+    const photos = mainPhoto ? [mainPhoto, ...otherPhotos] : otherPhotos
+
+    return (
+      <HStack>
+        {!photos.length && (
+          <HStack backgroundColor={bgLight}>
+            <Text>No photos!</Text>
+          </HStack>
+        )}
+        {!!photos.length && (
+          <>
+            {photos.map((url, index) => {
+              const photoHeight = escalating ? (index < 2 ? height : 500) : height
+              const isEscalated = escalating && index >= 2
+              const photoWidth = isEscalated ? width * 1.25 : width
+              return (
+                <VStack
+                  width={photoWidth}
+                  height={photoHeight}
+                  key={index}
+                  className={`scroll-snap-photo`}
+                >
+                  {(!isEscalated || showEscalated || index === 2) && (
+                    <Link name="gallery" params={{ restaurantSlug }}>
+                      <Image
+                        source={{
+                          uri: getImageUrl(url, photoWidth * 2, photoHeight * 2, 100),
+                        }}
+                        style={{
+                          height: photoHeight,
+                          width: photoWidth,
+                        }}
+                        resizeMode="cover"
+                      />
+                    </Link>
+                  )}
+                </VStack>
+              )
+            })}
+            <VStack>
+              <LinkButton
+                width={width * 2}
+                height="100%"
+                name="gallery"
+                alignItems="center"
+                justifyContent="center"
+                params={{ restaurantSlug }}
+                textProps={{
+                  textAlign: 'center',
+                  fontSize: 28,
+                  fontWeight: '800',
+                }}
+              >
+                Gallery 🖼
+              </LinkButton>
+            </VStack>
+          </>
+        )}
+      </HStack>
+    )
+  })
 )

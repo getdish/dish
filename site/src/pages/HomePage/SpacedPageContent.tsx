@@ -1,4 +1,4 @@
-import { getSizeRelative, SizeName, Stack, StackProps } from '@o/ui'
+import { SizeName, Stack, StackProps, getSizeRelative } from '@o/ui'
 import React from 'react'
 
 import { useScreenSize } from '../../hooks/useScreenSize'

@@ -1,14 +1,7 @@
 import { series, sleep } from '@dish/async'
 import React, { useEffect, useLayoutEffect, useState } from 'react'
 import { ScrollView } from 'react-native'
-import {
-  AbsoluteVStack,
-  AnimatedVStack,
-  Theme,
-  VStack,
-  prevent,
-  useMedia,
-} from 'snackui'
+import { AbsoluteVStack, AnimatedVStack, Theme, VStack, prevent, useMedia } from 'snackui'
 
 export const DarkModal = ({
   hide,
@@ -74,12 +67,7 @@ export const DarkModal = ({
                 minHeight: '100%',
               }}
             >
-              <VStack
-                flex={1}
-                justifyContent="center"
-                minHeight="100%"
-                alignItems="center"
-              >
+              <VStack flex={1} justifyContent="center" minHeight="100%" alignItems="center">
                 {children}
               </VStack>
             </ScrollView>

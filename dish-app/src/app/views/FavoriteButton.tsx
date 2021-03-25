@@ -8,11 +8,7 @@ export type FavoriteButtonProps = {
   size?: 'lg' | 'md' | 'sm'
 }
 
-export const FavoriteButton = ({
-  isFavorite,
-  onChange,
-  size = 'md',
-}: FavoriteButtonProps) => {
+export const FavoriteButton = ({ isFavorite, onChange, size = 'md' }: FavoriteButtonProps) => {
   const sizePx = size === 'sm' ? 18 : size == 'lg' ? 26 : 22
   return (
     <HStack

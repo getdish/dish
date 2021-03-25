@@ -12,8 +12,7 @@ test('creates a store and routes', () => {
   act(() => {
     r = TestRenderer.create(<Test.RecoilStoreRouterTest1 />)
   })
-  const findCurPageName = () =>
-    r.root.findAllByProps({ id: 'curPageName' })[0].children[0]
+  const findCurPageName = () => r.root.findAllByProps({ id: 'curPageName' })[0].children[0]
   const [navigate] = r.root.findAllByProps({ id: 'navigate' })
   expect(findCurPageName()).toBe('home')
   act(() => {

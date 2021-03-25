@@ -42,9 +42,7 @@ export function tagNameKey(name: string) {
   return slugify(name, ' ').replace(/\./g, '-')
 }
 
-export function getFullTagFromNameAndType(
-  tag: TagWithNameAndType
-): NavigableTag | null {
+export function getFullTagFromNameAndType(tag: TagWithNameAndType): NavigableTag | null {
   if (!tag.name) return null
   const res = allTags[allTagsNameToSlug[tagNameKey(tag.name)]]
   if (res) return res

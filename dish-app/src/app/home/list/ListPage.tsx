@@ -117,12 +117,7 @@ export default function ListPage(props: Props) {
     <>
       {isCreating && (
         <StackDrawer closable title={`Create playlist`}>
-          <VStack
-            paddingBottom="50%"
-            alignItems="center"
-            justifyContent="center"
-            flex={1}
-          >
+          <VStack paddingBottom="50%" alignItems="center" justifyContent="center" flex={1}>
             <Paragraph opacity={0.5}>Creating...</Paragraph>
           </VStack>
         </StackDrawer>
@@ -247,9 +242,7 @@ function useListRestaurants(list?: list) {
       async setDishes(id: string, dishTags: string[]) {
         const { dishQuery } = items.find((x) => x.restaurantId === id) ?? {}
         const rtagids = await resolved(() =>
-          query
-            .restaurant_tag({ where: { tag: { slug: { _in: dishTags } } } })
-            .map((x) => x.id)
+          query.restaurant_tag({ where: { tag: { slug: { _in: dishTags } } } }).map((x) => x.id)
         )
         await mutate((mutation) => {
           // immutable style
@@ -397,10 +390,7 @@ const ListPageContent = graphql((props: Props) => {
               title={
                 <VStack marginVertical={15}>
                   <ScalingPressable>
-                    <Link
-                      name="user"
-                      params={{ username: list.user?.username ?? '' }}
-                    >
+                    <Link name="user" params={{ username: list.user?.username ?? '' }}>
                       <SlantedTitle size="xs" alignSelf="center">
                         {username}'s
                       </SlantedTitle>
@@ -409,12 +399,7 @@ const ListPageContent = graphql((props: Props) => {
 
                   <VStack position="relative" alignSelf="center">
                     {list.user?.avatar && (
-                      <AbsoluteVStack
-                        overflow="visible"
-                        bottom={-50}
-                        left={-80}
-                        zIndex={-1}
-                      >
+                      <AbsoluteVStack overflow="visible" bottom={-50} left={-80} zIndex={-1}>
                         <UserAvatar
                           size={150}
                           charIndex={list.user.charIndex!}
@@ -478,10 +463,7 @@ const ListPageContent = graphql((props: Props) => {
               <HStack alignItems="center" justifyContent="center">
                 <>
                   {!isEditing && (
-                    <Button
-                      alignSelf="center"
-                      onPress={() => setIsEditing(true)}
-                    >
+                    <Button alignSelf="center" onPress={() => setIsEditing(true)}>
                       Edit
                     </Button>
                   )}
@@ -525,11 +507,7 @@ const ListPageContent = graphql((props: Props) => {
                   {isEditing && (
                     <>
                       <Text>Color:&nbsp;&nbsp;</Text>
-                      <ColorPicker
-                        colors={listColors}
-                        color={color}
-                        onChange={setColor}
-                      />
+                      <ColorPicker colors={listColors} color={color} onChange={setColor} />
 
                       <Spacer size="xl" />
 
@@ -615,88 +593,77 @@ const ListPageContent = graphql((props: Props) => {
                 borderColor="rgba(100,100,100,0.1)"
                 borderRadius={10}
               >
-                <Paragraph fontWeight="800">
-                  Nothing added to this list, yet.
-                </Paragraph>
+                <Paragraph fontWeight="800">Nothing added to this list, yet.</Paragraph>
                 {isMyList && (
                   <Paragraph>
-                    Use the blue (+) button at the bottom. You can also add from
-                    any search page results.
+                    Use the blue (+) button at the bottom. You can also add from any search page
+                    results.
                   </Paragraph>
                 )}
               </VStack>
             )}
 
-            {restaurants.map(
-              (
-                { restaurantId, restaurant, comment, dishes, position },
-                index
-              ) => {
-                const dishSlugs = dishes
-                  .map((x) => x?.tag.slug)
-                  .filter(isPresent)
-                if (!restaurant.slug) {
-                  return null
-                }
-                return (
-                  <RestaurantListItem
-                    key={restaurant.slug}
-                    curLocInfo={props.item.curLocInfo ?? null}
-                    restaurantId={restaurantId}
-                    restaurantSlug={restaurant.slug}
-                    rank={index + 1}
-                    description={comment}
-                    hideTagRow
-                    above={
-                      isEditing && (
-                        <>
-                          <AbsoluteVStack top={-28} left={28}>
-                            <CircleButton
-                              backgroundColor={bgLight}
-                              width={44}
-                              height={44}
-                              onPress={() => {
-                                restaurantActions.delete(restaurantId)
-                              }}
-                            >
-                              <X size={20} />
-                            </CircleButton>
-                          </AbsoluteVStack>
-                          <Score
-                            votable
-                            upTooltip="Move up"
-                            downTooltip="Move down"
-                            score={index + 1}
-                            setVote={async (vote) => {
-                              restaurantActions.promote(
-                                vote === 1 ? index : index + 1
-                              )
-                            }}
-                          />
-                        </>
-                      )
-                    }
-                    flexibleHeight
-                    dishSlugs={dishSlugs.length ? dishSlugs : undefined}
-                    editableDishes={isEditing}
-                    onChangeDishes={async (dishes) => {
-                      console.log('should change dishes', dishes)
-                      await restaurantActions.setDishes(restaurantId, dishes)
-                      Toast.success(`Updated dishes`)
-                    }}
-                    editableDescription={isEditing}
-                    onChangeDescription={async (next) => {
-                      await restaurantActions.setComment(restaurantId, next)
-                      Toast.success('Updated description')
-                    }}
-                    editablePosition={isEditing}
-                    onChangePosition={(next) => {
-                      console.log('should change position', next)
-                    }}
-                  />
-                )
+            {restaurants.map(({ restaurantId, restaurant, comment, dishes, position }, index) => {
+              const dishSlugs = dishes.map((x) => x?.tag.slug).filter(isPresent)
+              if (!restaurant.slug) {
+                return null
               }
-            )}
+              return (
+                <RestaurantListItem
+                  key={restaurant.slug}
+                  curLocInfo={props.item.curLocInfo ?? null}
+                  restaurantId={restaurantId}
+                  restaurantSlug={restaurant.slug}
+                  rank={index + 1}
+                  description={comment}
+                  hideTagRow
+                  above={
+                    isEditing && (
+                      <>
+                        <AbsoluteVStack top={-28} left={28}>
+                          <CircleButton
+                            backgroundColor={bgLight}
+                            width={44}
+                            height={44}
+                            onPress={() => {
+                              restaurantActions.delete(restaurantId)
+                            }}
+                          >
+                            <X size={20} />
+                          </CircleButton>
+                        </AbsoluteVStack>
+                        <Score
+                          votable
+                          upTooltip="Move up"
+                          downTooltip="Move down"
+                          score={index + 1}
+                          setVote={async (vote) => {
+                            restaurantActions.promote(vote === 1 ? index : index + 1)
+                          }}
+                        />
+                      </>
+                    )
+                  }
+                  flexibleHeight
+                  dishSlugs={dishSlugs.length ? dishSlugs : undefined}
+                  editableDishes={isEditing}
+                  onChangeDishes={async (dishes) => {
+                    console.log('should change dishes', dishes)
+                    await restaurantActions.setDishes(restaurantId, dishes)
+                    Toast.success(`Updated dishes`)
+                  }}
+                  editableDescription={isEditing}
+                  onChangeDescription={async (next) => {
+                    await restaurantActions.setComment(restaurantId, next)
+                    Toast.success('Updated description')
+                  }}
+                  editablePosition={isEditing}
+                  onChangePosition={(next) => {
+                    console.log('should change position', next)
+                  }}
+                />
+              )
+            })}
           </VStack>
         </PageContentWithFooter>
       </ContentScrollView>

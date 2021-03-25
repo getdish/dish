@@ -1,10 +1,4 @@
-import {
-  Tag,
-  flushTestData,
-  tagFindOne,
-  tagFindOneWithCategories,
-  tagUpsert,
-} from '@dish/graph'
+import { Tag, flushTestData, tagFindOne, tagFindOneWithCategories, tagUpsert } from '@dish/graph'
 import anyTest, { TestInterface } from 'ava'
 
 import { ParseFiverr } from '../../src/wikipedia/ParseFiverr'
@@ -56,11 +50,7 @@ test('Parsing Fiverr text files', async (t) => {
   }))!
   t.is(khichdi_dish_tag.type, 'dish')
   t.is(khichdi_dish_tag.parentId, country_tag.id)
-  t.truthy(
-    khichdi_dish_tag.categories
-      .map((i) => i.category?.name)
-      .includes('Test Vegetarian')
-  )
+  t.truthy(khichdi_dish_tag.categories.map((i) => i.category?.name).includes('Test Vegetarian'))
   const diakritik_dish_tag = (await tagFindOneWithCategories({
     name: 'test diakritikos',
   }))!
@@ -68,9 +58,5 @@ test('Parsing Fiverr text files', async (t) => {
   // @ts-ignore weird bug the type is right in graph but comes in null | undefined here
   t.deepEqual(diakritik_dish_tag.alternates, ['test diakritikós'])
   t.is(diakritik_dish_tag.parentId, country_tag.id)
-  t.truthy(
-    diakritik_dish_tag.categories
-      .map((i) => i.category.name)
-      .includes('Test Diacritics')
-  )
+  t.truthy(diakritik_dish_tag.categories.map((i) => i.category.name).includes('Test Diacritics'))
 })

@@ -8,15 +8,10 @@ const dispose = (d: any) => {
   }
 }
 
-export function reaction<
-  StoreInstance extends Store,
-  Selector extends (a: StoreInstance) => any
->(
+export function reaction<StoreInstance extends Store, Selector extends (a: StoreInstance) => any>(
   store: StoreInstance,
   selector: Selector,
-  receiver: Selector extends (a: StoreInstance) => infer Derived
-    ? (a: Derived) => any
-    : unknown,
+  receiver: Selector extends (a: StoreInstance) => infer Derived ? (a: Derived) => any : unknown,
   equalityFn: (a: any, b: any) => boolean = isEqualSubsetShallow
 ) {
   let last: any = undefined

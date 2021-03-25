@@ -28,9 +28,7 @@ export const RestaurantAddCommentButton = graphql(
         pressStyle={{
           opacity: 0.6,
         }}
-        icon={
-          <Edit color={isWeb ? 'var(--color)' : '#000'} size={size ?? 16} />
-        }
+        icon={<Edit color={isWeb ? 'var(--color)' : '#000'} size={size ?? 16} />}
         {...props}
       >
         {hideLabel ? null : !!review?.text ? 'Edit' : 'Add'}

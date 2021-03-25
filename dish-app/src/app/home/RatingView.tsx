@@ -1,13 +1,5 @@
 import React from 'react'
-import {
-  AbsoluteVStack,
-  Circle,
-  HStack,
-  Spacer,
-  Text,
-  VStack,
-  useTheme,
-} from 'snackui'
+import { AbsoluteVStack, Circle, HStack, Spacer, Text, VStack, useTheme } from 'snackui'
 
 import { green, purple, yellow } from '../../constants/colors'
 import { numberFormat } from '../../helpers/numberFormat'
@@ -45,12 +37,7 @@ export const RatingView = ({
   )
 
   const middleRing = (
-    <ProgressRing
-      percent={ratingMiddle}
-      size={middleSize}
-      color={yellow}
-      width={width}
-    >
+    <ProgressRing percent={ratingMiddle} size={middleSize} color={yellow} width={width}>
       {stacked ? null : innerRing}
     </ProgressRing>
   )
@@ -92,12 +79,7 @@ export const RatingView = ({
             alignItems="center"
             justifyContent="center"
           >
-            <Text
-              color={theme.color}
-              opacity={0.5}
-              fontWeight="600"
-              fontSize={longText ? 10 : 12}
-            >
+            <Text color={theme.color} opacity={0.5} fontWeight="600" fontSize={longText ? 10 : 12}>
               {countText}
             </Text>
           </AbsoluteVStack>
@@ -109,12 +91,7 @@ export const RatingView = ({
   return (
     <>
       <HStack display="inline-flex" alignItems="center">
-        <VStack
-          width={size}
-          height={size}
-          alignItems="center"
-          justifyContent="center"
-        >
+        <VStack width={size} height={size} alignItems="center" justifyContent="center">
           {outerRing}
         </VStack>
         <Spacer />
@@ -126,12 +103,7 @@ export const RatingView = ({
         </Text>
       </HStack>
       <HStack alignItems="center">
-        <VStack
-          width={size}
-          height={size}
-          alignItems="center"
-          justifyContent="center"
-        >
+        <VStack width={size} height={size} alignItems="center" justifyContent="center">
           {middleRing}
         </VStack>
         <Spacer />
@@ -143,12 +115,7 @@ export const RatingView = ({
         </Text>
       </HStack>
       <HStack alignItems="center">
-        <VStack
-          width={size}
-          height={size}
-          alignItems="center"
-          justifyContent="center"
-        >
+        <VStack width={size} height={size} alignItems="center" justifyContent="center">
           {innerRing}
         </VStack>
         <Spacer />
@@ -161,18 +128,8 @@ export const RatingView = ({
       </HStack>
       {typeof count !== 'undefined' && (
         <HStack alignItems="center">
-          <VStack
-            width={size}
-            height={size}
-            alignItems="center"
-            justifyContent="center"
-          >
-            <Text
-              color={theme.color}
-              opacity={0.5}
-              fontWeight="600"
-              fontSize={longText ? 10 : 12}
-            >
+          <VStack width={size} height={size} alignItems="center" justifyContent="center">
+            <Text color={theme.color} opacity={0.5} fontWeight="600" fontSize={longText ? 10 : 12}>
               {countText}
             </Text>
           </VStack>

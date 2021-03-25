@@ -11,8 +11,7 @@ export const TrendingIcon = ({
   size?: number
   trending?: 'up' | 'down' | 'neutral'
 }) => {
-  const Icon =
-    trending == 'neutral' ? Minus : trending === 'up' ? ChevronUp : ChevronDown
+  const Icon = trending == 'neutral' ? Minus : trending === 'up' ? ChevronUp : ChevronDown
   return (
     <VStack {...rest}>
       <Icon color={color} size={size} />

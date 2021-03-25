@@ -122,12 +122,7 @@ export const AdminListItem = memo(
           }
 
           return (
-            <Text
-              cursor="default"
-              color={isActive ? '#fff' : '#000'}
-              fontSize={16}
-              ellipse
-            >
+            <Text cursor="default" color={isActive ? '#fff' : '#000'} fontSize={16} ellipse>
               {text}
             </Text>
           )

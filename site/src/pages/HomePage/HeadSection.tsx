@@ -100,11 +100,7 @@ export function HeadSection() {
         <Star top="0%" left="80%" />
       </Page.ParallaxView>
 
-      <Stack
-        opacity={fontsLoaded ? 1 : 0}
-        margin={['auto', 0]}
-        height="calc(100% - 100px)"
-      >
+      <Stack opacity={fontsLoaded ? 1 : 0} margin={['auto', 0]} height="calc(100% - 100px)">
         <Space size="xxl" />
         <Stack
           maxHeight="80vh"
@@ -211,11 +207,7 @@ const HeadTextSection = memo(() => {
             whiteSpace="nowrap"
             maxHeight={260}
           >
-            <FadeInView
-              disable={!measured}
-              {...animation.title}
-              {...fontProps.TitleFont}
-            >
+            <FadeInView disable={!measured} {...animation.title} {...fontProps.TitleFont}>
               your pokédex for the real world
             </FadeInView>
           </TextFitTitle>
@@ -223,12 +215,7 @@ const HeadTextSection = memo(() => {
           <span style={{ userSelect: 'none' }}>&nbsp;</span>
           <View sm-display="none">
             <FadeInView {...animation.sub2} minHeight="min-content">
-              <Paragraph
-                size={1.8}
-                sizeLineHeight={1.6}
-                maxWidth={710}
-                fontWeight={300}
-              >
+              <Paragraph size={1.8} sizeLineHeight={1.6} maxWidth={710} fontWeight={300}>
                 Curating a better map of the world together.
                 <br />{' '}
                 <span style={{ color: '#feac1f' }}>

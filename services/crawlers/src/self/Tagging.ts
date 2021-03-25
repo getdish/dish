@@ -10,11 +10,7 @@ import {
   restaurantGetAllPossibleTags,
   tagFindCountryMatches,
 } from '@dish/graph'
-import {
-  breakIntoSentences,
-  doesStringContainTag,
-  isPresent,
-} from '@dish/helpers'
+import { breakIntoSentences, doesStringContainTag, isPresent } from '@dish/helpers'
 import {
   cleanReviewText,
   dedupeReviews,
@@ -62,20 +58,16 @@ export class Tagging extends Loggable {
   }
 
   async main() {
-    const yelps = scrapeGetData(
-      this.crawler.yelp,
-      'data_from_map_search.categories',
-      []
-    ).map((c) => c.title)
+    const yelps = scrapeGetData(this.crawler.yelp, 'data_from_map_search.categories', []).map(
+      (c) => c.title
+    )
     const tripadvisors = scrapeGetData(
       this.crawler.tripadvisor,
       'overview.detailCard.tagTexts.cuisines.tags',
       []
     ).map((c) => c.tagValue)
     const tags = uniq([...yelps, ...tripadvisors])
-    this.log(
-      `Tags minus orphans: yelp (${yelps.length}), tripadvisor (${tripadvisors.length})`
-    )
+    this.log(`Tags minus orphans: yelp (${yelps.length}), tripadvisor (${tripadvisors.length})`)
     const orphan_tags = await this.upsertCountryTags(tags)
     if (orphan_tags.length) {
       await this.addSimpleTags(orphan_tags)
@@ -186,10 +178,7 @@ export class Tagging extends Loggable {
       ...this._getGoogleReviews(),
     ] as Review[]
     this.log(`Got reviews ${this.all_reviews.length}...`)
-    const allSources = this.cleanAllSources([
-      ...this.all_reviews,
-      ...this._scanMenuItemsForTags(),
-    ])
+    const allSources = this.cleanAllSources([...this.all_reviews, ...this._scanMenuItemsForTags()])
     const reviews_with_sentiments = this.findDishesInText(allSources)
     this.log('Collecting restaurant tags...')
     await this.collectFoundRestaurantTags()
@@ -220,9 +209,7 @@ export class Tagging extends Loggable {
   }
 
   async findPhotosForTags() {
-    const possibleTags = await restaurantGetAllPossibleTags(
-      this.crawler.restaurant
-    )
+    const possibleTags = await restaurantGetAllPossibleTags(this.crawler.restaurant)
     const tagPhotos: Partial<PhotoXref>[] = []
     const photos = await this.getPhotosWithText()
     this.log(`Found ${photos.length} photos with captions for tags`)
@@ -260,10 +247,7 @@ export class Tagging extends Loggable {
 
   async getPhotosWithText() {
     let photos: PhotoWithText[] = []
-    const photoData = this.crawler.getPaginatedData(
-      this.crawler.yelp?.data ?? null,
-      'photos'
-    )
+    const photoData = this.crawler.getPaginatedData(this.crawler.yelp?.data ?? null, 'photos')
     this.log(`Yelp main photos: ${photoData.length}`)
     for (const item of photoData) {
       if (item.media_data) {
@@ -290,9 +274,7 @@ export class Tagging extends Loggable {
             if (item.caption) {
               // replace with bigger image
               const largeResUrl = photo.replace('300s', '1000s')
-              const largeResExists = await fetch(largeResUrl).then(
-                (res) => res.status === 200
-              )
+              const largeResExists = await fetch(largeResUrl).then((res) => res.status === 200)
               const url = largeResExists ? largeResUrl : photo
               return {
                 url,
@@ -304,8 +286,7 @@ export class Tagging extends Loggable {
     ).filter(isPresent)
     this.log(`Yelp review photos: ${reviewPhotos.length}`)
     photos = [...photos, ...reviewPhotos]
-    const tripAdvisorPhotos =
-      scrapeGetData(this.crawler.tripadvisor, 'photos_with_captions') || []
+    const tripAdvisorPhotos = scrapeGetData(this.crawler.tripadvisor, 'photos_with_captions') || []
     this.log(`Tripadvisor photos with captions ${tripAdvisorPhotos.length}`)
     for (const item of tripAdvisorPhotos) {
       if (item.caption) {
@@ -348,8 +329,7 @@ export class Tagging extends Loggable {
       text = text_source as string
     }
     this.found_tags[tag.id] = tag
-    this.restaurant_tag_ratings[tag.id] =
-      this.restaurant_tag_ratings[tag.id] || []
+    this.restaurant_tag_ratings[tag.id] = this.restaurant_tag_ratings[tag.id] || []
     const sentences = breakIntoSentences(text)
     for (const sentence of sentences) {
       if (!doesStringContainTag(sentence, tag)) continue
@@ -406,10 +386,7 @@ export class Tagging extends Loggable {
 
   _getTripadvisorReviews() {
     const td_data = this.crawler.tripadvisor?.data || {}
-    const tripadvisor_reviews = this.crawler.getPaginatedData(
-      td_data,
-      'reviews'
-    )
+    const tripadvisor_reviews = this.crawler.getPaginatedData(td_data, 'reviews')
     let reviews: Partial<Review>[] = []
     for (const tripadvisor_review of tripadvisor_reviews) {
       if (!tripadvisor_review.username || tripadvisor_review.username == '') {

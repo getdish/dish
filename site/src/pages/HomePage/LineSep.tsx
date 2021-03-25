@@ -1,6 +1,6 @@
 import sepFilled from '!raw-loader!../../public/images/line-sep-filled.svg'
 import sep from '!raw-loader!../../public/images/line-sep.svg'
-import { useTheme, View, ViewProps } from '@o/ui'
+import { View, ViewProps, useTheme } from '@o/ui'
 import React from 'react'
 
 export function LineSep({
@@ -15,7 +15,7 @@ export function LineSep({
   let svg = fill
     ? sepFilled.replace(
         'fill="#000000"',
-        `fill="${fill === true ? theme.background.toHexString() : fill}"`,
+        `fill="${fill === true ? theme.background.toHexString() : fill}"`
       )
     : sep
   if (noOverlay) {

@@ -10,8 +10,7 @@ export function snapCoordsToTileCentre(lon: number, lat: number, zoom: number) {
   const n = Math.pow(2, zoom)
   const in_lat_rad = lat * (Math.PI / 180)
   const x_coord = n * ((lon + 180) / 360)
-  const magic =
-    1 - Math.log(Math.tan(in_lat_rad) + 1 / Math.cos(in_lat_rad)) / Math.PI
+  const magic = 1 - Math.log(Math.tan(in_lat_rad) + 1 / Math.cos(in_lat_rad)) / Math.PI
   const y_coord = 0.5 * n * magic
   const xtile = Math.floor(x_coord)
   const ytile = Math.floor(y_coord)
@@ -95,9 +94,7 @@ export const coordsToLngLat = (coords: number[]) => {
   }
 }
 
-export function bboxToLngLat(
-  bbox: BBox | readonly [number, number, number, number]
-) {
+export function bboxToLngLat(bbox: BBox | readonly [number, number, number, number]) {
   return {
     lat: dist(bbox[0], bbox[2]) / 2,
     lng: dist(bbox[1], bbox[3]) / 2,

@@ -26,11 +26,7 @@ export const RankView = memo(({ rank }: { rank: number }) => {
       justifyContent="center"
     >
       <Text transform={[{ translateY: -0 }]} textAlign="center" lineHeight={38}>
-        <TextSuperScript
-          color={theme.colorAlt}
-          transform={[{ translateY: -15 }]}
-          fontSize={11}
-        >
+        <TextSuperScript color={theme.colorAlt} transform={[{ translateY: -15 }]} fontSize={11}>
           #
         </TextSuperScript>
         <Text
