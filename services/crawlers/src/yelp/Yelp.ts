@@ -8,8 +8,10 @@ import { JobOptions, QueueOptions } from 'bull'
 import _ from 'lodash'
 
 import { restaurantSaveCanonical } from '../canonical-restaurant'
+import { DISH_DEBUG } from '../constants'
 import {
   ScrapeData,
+  scrapeFindOneBySourceID,
   scrapeInsert,
   scrapeMergeData,
   scrapeUpdateBasic,
@@ -132,7 +134,7 @@ export class Yelp extends WorkerJob {
         found_the_one = true
         this.log('YELP SANDBOX: found ' + name)
       }
-      const timeout = sleep(35000)
+      const timeout = sleep(40000)
       await Promise.race([
         this.getRestaurant(data),
         timeout.then(() => {
@@ -159,9 +161,11 @@ export class Yelp extends WorkerJob {
       }
     }
 
-    if (onlyRestaurant && !found_the_one) {
-      this.log('error componentsList', uri, componentsList)
-      throw new Error(`Couldn't find ${onlyRestaurant.id}`)
+    if (onlyRestaurant) {
+      if (!found_the_one) {
+        this.log('error componentsList', uri, componentsList)
+        throw new Error(`Couldn't find ${onlyRestaurant.id}`)
+      }
     }
 
     this.log('done with getRestaurants')
@@ -173,8 +177,8 @@ export class Yelp extends WorkerJob {
       return
     }
     let biz_page: string
-    this.log('Inserting scrape data')
     const id = await this.saveDataFromMapSearch(data)
+    this.log('Inserting scrape data for scrape id', id)
     if (!id) {
       throw new Error(`No id`)
     }
@@ -258,6 +262,10 @@ export class Yelp extends WorkerJob {
     scrape.restaurant_id = restaurant_id
     await scrapeUpdateBasic(scrape)
     await this.getNextScrapes(id, data)
+    if (DISH_DEBUG > 1) {
+      const data = await scrapeFindOneBySourceID('yelp', id_from_source)
+      this.log(`Scrape:`, JSON.stringify(data, null, 2))
+    }
   }
 
   static getNameAndAddress(scrape: ScrapeData) {
@@ -284,7 +292,7 @@ export class Yelp extends WorkerJob {
     const json = obj.bizDetailsPageProps
     if (json) {
       let data: { [keys: string]: any } = {}
-      const required_fields = [
+      const fields = [
         'bizHoursProps',
         'mapBoxProps',
         'moreBusinessInfoProps',
@@ -292,7 +300,7 @@ export class Yelp extends WorkerJob {
         'photoHeaderProps',
       ]
       for (const key of Object.keys(json)) {
-        if (required_fields.includes(key)) {
+        if (fields.includes(key)) {
           data[key] = json[key]
         }
       }
@@ -301,6 +309,8 @@ export class Yelp extends WorkerJob {
       }
       data = this.numericKeysFix(data)
       return data
+    } else {
+      this.log(`no json found!`)
     }
     return null
   }

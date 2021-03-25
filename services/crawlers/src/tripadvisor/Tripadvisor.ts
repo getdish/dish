@@ -10,6 +10,7 @@ import * as cheerio from 'cheerio'
 import _ from 'lodash'
 
 import { restaurantSaveCanonical } from '../canonical-restaurant'
+import { DISH_DEBUG } from '../constants'
 import { GoogleGeocoder } from '../google/GoogleGeocoder'
 import { ScrapeData, scrapeInsert, scrapeMergeData } from '../scrape-helpers'
 import { aroundCoords, decodeEntities, geocode } from '../utils'
@@ -140,6 +141,7 @@ export class Tripadvisor extends WorkerJob {
     page: number,
     html: string = ''
   ) {
+    this.log(`saveReviews for ${TRIPADVISOR_DOMAIN + path}`)
     if (html == '') {
       const response = await axios.get(TRIPADVISOR_DOMAIN + path)
       html = response.data
@@ -167,6 +169,7 @@ export class Tripadvisor extends WorkerJob {
       page++
     }
     const uris = photos.map((p) => p.url)
+    this.log(`Saving ${uris.length} photos...`)
     await scrapeMergeData(scrape_id, {
       photos: uris, // field is kept for backwards compat
       photos_with_captions: photos,
@@ -235,10 +238,13 @@ export class Tripadvisor extends WorkerJob {
     page: number,
     path: string
   ) {
-    if (process.env.DISH_ENV != 'production' && page > 2) return false
+    if (process.env.DISH_ENV == 'test' && page > 2) {
+      return false
+    }
     const { more, data: review_data } = await this._extractReviews(html, path)
     let scrape_data: ScrapeData = {}
     scrape_data['reviewsp' + page] = review_data
+    this.log(`Merging review data for page ${page}: ${review_data.length}`)
     await scrapeMergeData(scrape_id, scrape_data)
     return more
   }
@@ -247,10 +253,10 @@ export class Tripadvisor extends WorkerJob {
     const full = await this.getFullReviews(html, path)
     const updated_html = full.data
     const $ = cheerio.load(updated_html)
-    const reviews = $('.reviewSelector')
-    let data: ScrapeData[] = []
-    for (let i = 0; i < reviews.length; i++) {
-      const review = $(reviews[i])
+    const reviews = $('.reviewSelector').toArray()
+    const data: ScrapeData[] = []
+    for (const review of reviews) {
+      const review = $(reviews)
       data.push({
         // TODO: Get actual internal username
         username: review.find('.memberInfoColumn .info_text').text(),
@@ -260,7 +266,7 @@ export class Tripadvisor extends WorkerJob {
         date: review.find('.ratingDate').attr('title'),
       })
     }
-    return { more: full.more, data: data }
+    return { more: full.more, data }
   }
 
   private async getFullReviews(html: string, referer_path: string) {
@@ -297,8 +303,7 @@ export class Tripadvisor extends WorkerJob {
     } catch (error) {
       sentryException(error)
     }
-    const updated_html = response.data
-    return { more, data: updated_html }
+    return { more, data: response.data }
   }
 
   private _getRatingFromClasses(review: any) {

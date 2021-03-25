@@ -15,6 +15,7 @@ import { JobOptions, QueueOptions } from 'bull'
 import { Base64 } from 'js-base64'
 import moment from 'moment'
 
+import { DISH_DEBUG } from '../constants'
 import {
   bestPhotosForRestaurant,
   bestPhotosForRestaurantTags,
@@ -193,6 +194,9 @@ export class Self extends WorkerJob {
         at_least_one = true
       }
       this[source] = scrape
+      if (DISH_DEBUG > 1) {
+        this.log(`Found scrape for ${source} with data`, scrape?.data)
+      }
     }
     if (!at_least_one) {
       throw new Error('No scrapes found for restaurant')

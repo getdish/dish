@@ -2310,6 +2310,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@dish/worker@workspace:packages/worker"
   dependencies:
+    "@dish/async": "*"
     "@dish/common": "*"
     "@dish/esdx": "*"
     "@types/bull": ^3.14.4

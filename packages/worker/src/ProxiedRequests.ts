@@ -1,3 +1,4 @@
+import { sleep } from '@dish/async'
 import _ from 'lodash'
 import fetch, { FetchOptions } from 'make-fetch-happen'
 
@@ -29,7 +30,9 @@ export class ProxiedRequests {
   async getJSON(uri: string, props?: Opts) {
     if (!props?.skipBrowser) {
       try {
-        return await fetchBrowserJSON(this.domain + uri)
+        const url = this.domain + uri
+        console.log(`ProxiedRequests.getJSON`, url)
+        return await fetchBrowserJSON(url)
       } catch (err) {
         console.warn('Error with browser fetch, fall back to proxies', err)
       }
@@ -104,6 +107,7 @@ export class ProxiedRequests {
 
     while (true) {
       const url = base + uri
+      console.log('ProxiedRequests.get', url)
       const { host, port, auth } = agentConfig
       const proto = agentConfig.protocol ?? 'http'
       const user = auth ? `${auth.username}:${auth.password}@` : ''
@@ -114,7 +118,11 @@ export class ProxiedRequests {
       }
       tried.push({ url, options })
       try {
-        const res = await fetch(url, options)
+        const tm = sleep(8000).then(() => 'failed')
+        const res = await Promise.race([fetch(url, options), tm])
+        if (res === 'failed') {
+          throw `ProxiedRequests.get Timed out`
+        }
         if (res.status !== 200) {
           console.warn('⚠️ non 200 response: ', res.status, res.statusText)
         } else {
