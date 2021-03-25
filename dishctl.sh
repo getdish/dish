@@ -47,6 +47,12 @@ function send_slack_monitoring_message() {
 EOF
 }
 
+function reset_hosts() {
+  egrep -v "internal" ~/.ssh/known_hosts > /tmp/known_hosts \
+    && rm ~/.ssh/known_hosts \
+    && mv /tmp/known_hosts ~/.ssh/known_hosts
+}
+
 function worker_ssh() {
   fly_tunnel
   log_command ssh -o StrictHostKeyChecking=no -l "root" "dish-worker.internal" -- "$@"
@@ -80,6 +86,7 @@ function start_crawler_for_city() {
 }
 
 function start_all_crawlers_for_city() {
+  reset_hosts
   set -e
   start_crawler_for_city "doordash" "$1"
   start_crawler_for_city "google" "$1"
