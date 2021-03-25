@@ -86,7 +86,7 @@ declare module "@dish/crawlers" {
         number
     ];
     export function aroundCoords(lat: number, lon: number, chunk_size: number, chunk_factor: number): Coord[];
-    export function boundingBoxFromcenter(lat: number, lon: number, radius: number): [
+    export function boundingBoxFromCenter(lat: number, lon: number, radius: number): [
         Coord,
         Coord
     ];
@@ -269,7 +269,7 @@ declare module "@dish/crawlers" {
         private _getMenu;
         private _extractEmbeddedJSONData;
     }
-    export function tripadvisorGetFBC(): Promise<import("@dish/graph").WithID<import("@dish/graph").Restaurant>>;
+    export function tripadvisorGetFBC(): Promise<import("@dish/graph").WithID<import("@dish/graph").FlatResolvedModel<import("@dish/graph").RestaurantQuery>>>;
 }
 
 declare module "@dish/crawlers" {
@@ -329,6 +329,8 @@ declare module "@dish/crawlers" {
         static queue_config: QueueOptions;
         static job_config: JobOptions;
         get logName(): string;
+        crawlSingle(slug: string): Promise<void>;
+        refindRestaurant(rest: Restaurant): Promise<void>;
         allForCity(city_name: string): Promise<void>;
         getRestaurants(top_right: readonly [
             number,
@@ -413,7 +415,7 @@ declare module "@dish/crawlers" {
 declare module "@dish/crawlers" {
     import "@dish/common";
     import { PhotoXref, uuid } from "@dish/graph";
-    export const photoXrefUpsert: (items: Partial<PhotoXref>[], constraint?: string | undefined, opts?: import("@dish/graph").SelectionOptions | undefined) => Promise<import("@dish/graph").WithID<PhotoXref>[]>;
+    export const photoXrefUpsert: (items: Partial<import("@dish/graph").FlatResolvedModel<import("@dish/graph").PhotoXrefQuery>>[], constraint?: string | undefined, opts?: import("@dish/graph").SelectionOptions | undefined) => Promise<import("@dish/graph").WithID<import("@dish/graph").FlatResolvedModel<import("@dish/graph").PhotoXrefQuery>>[]>;
     export const DO_BASE = "https://dish-images.sfo2.digitaloceanspaces.com/";
     export function photoUpsert(photosOg: Partial<PhotoXref>[]): Promise<void>;
     export function uploadToDO(photos: Partial<PhotoXref>[]): Promise<void>;
@@ -423,7 +425,7 @@ declare module "@dish/crawlers" {
     export function bestPhotosForTag(tag_id: uuid): Promise<PhotoXref[]>;
     export function bestPhotosForRestaurantTags(restaurant_id: uuid): Promise<PhotoXref[]>;
     export function sendToDO(url: string, id: string): Promise<string | undefined>;
-    export function findHeroImage(restaurant_id: uuid): Promise<import("@dish/graph").WithID<PhotoXref> | null>;
+    export function findHeroImage(restaurant_id: uuid): Promise<import("@dish/graph").WithID<import("@dish/graph").FlatResolvedModel<import("@dish/graph").PhotoXrefQuery>> | null>;
     export function uploadHeroImage(url: string, restaurant_id: uuid): Promise<string | undefined>;
 }
 
@@ -499,9 +501,9 @@ declare module "@dish/crawlers" {
         ALL_SOURCES: string[];
         constructor(crawler: Self);
         calculateScores(): Promise<void>;
-        findAllUnanalyzed(): Promise<ReviewTagSentence[]>;
-        analyzeSentences(review_tag_sentences: ReviewTagSentence[]): Promise<ReviewTagSentence[]>;
-        getBertSentimentBatch(review_tag_sentences: ReviewTagSentence[]): Promise<ReviewTagSentence[]>;
+        findAllUnanalyzed(): Promise<import("@dish/graph").FlatResolvedModel<import("@dish/graph").review_tag_sentence>[]>;
+        analyzeSentences(review_tag_sentences: ReviewTagSentence[]): Promise<import("@dish/graph").FlatResolvedModel<import("@dish/graph").review_tag_sentence>[]>;
+        getBertSentimentBatch(review_tag_sentences: ReviewTagSentence[]): Promise<import("@dish/graph").FlatResolvedModel<import("@dish/graph").review_tag_sentence>[]>;
         getBertSentiment(review_tag_sentence: ReviewTagSentence): Promise<{
             id: any;
             ml_sentiment: 1 | -1;
@@ -522,7 +524,7 @@ declare module "@dish/crawlers" {
 }
 
 declare module "@dish/crawlers" {
-    import { PhotoXref, RestaurantTag, Review, Tag } from "@dish/graph";
+    import { RestaurantTag, Review, Tag } from "@dish/graph";
     import { Loggable } from "@dish/worker";
     type TextSource = Review | string;
     type PhotoWithText = {
@@ -555,16 +557,16 @@ declare module "@dish/crawlers" {
         promisedRankForTag(tag_id: string): Promise<void>;
         getRankForTag(tag_id: string): Promise<number>;
         scanCorpus(): Promise<void>;
-        cleanAllSources(sources: TextSource[]): (string | Review)[];
+        cleanAllSources(sources: TextSource[]): (string | import("@dish/graph").FlatResolvedModel<import("@dish/graph").ReviewQuery>)[];
         collectFoundRestaurantTags(): Promise<void>;
-        findPhotosForTags(): Promise<Partial<PhotoXref>[]>;
+        findPhotosForTags(): Promise<Partial<import("@dish/graph").FlatResolvedModel<import("@dish/graph").PhotoXrefQuery>>[]>;
         getPhotosWithText(): Promise<PhotoWithText[]>;
-        findDishesInText(allSources: TextSource[]): Review[];
+        findDishesInText(allSources: TextSource[]): import("@dish/graph").FlatResolvedModel<import("@dish/graph").ReviewQuery>[];
         tagFound(tag: Tag, text_source: TextSource): TextSource;
         measureSentiment(sentence: string): any;
-        _getYelpReviews(): Partial<Review>[];
-        _getTripadvisorReviews(): Partial<Review>[];
-        _getGoogleReviews(): Review[];
+        _getYelpReviews(): Partial<import("@dish/graph").FlatResolvedModel<import("@dish/graph").ReviewQuery>>[];
+        _getTripadvisorReviews(): Partial<import("@dish/graph").FlatResolvedModel<import("@dish/graph").ReviewQuery>>[];
+        _getGoogleReviews(): import("@dish/graph").FlatResolvedModel<import("@dish/graph").ReviewQuery>[];
         _quantiseGoogleReviewDate(date: string): string;
         _scanMenuItemsForTags(): string[];
         deDepulicateTags(): void;
@@ -574,7 +576,7 @@ declare module "@dish/crawlers" {
 declare module "@dish/crawlers" {
     import { Restaurant } from "@dish/graph";
     export function updateAllRestaurantGeocoderIDs(internal: Self): Promise<void>;
-    export function updateGeocoderID(restaurant: Restaurant): Promise<false | undefined>;
+    export function updateGeocoderID(rest: Restaurant): Promise<false | undefined>;
 }
 
 declare module "@dish/crawlers" {

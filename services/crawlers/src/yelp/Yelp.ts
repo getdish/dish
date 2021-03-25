@@ -2,9 +2,18 @@ import url from 'url'
 
 import { sleep } from '@dish/async'
 import { sentryMessage } from '@dish/common'
-import { Restaurant, ZeroUUID } from '@dish/graph'
+import {
+  Restaurant,
+  ZeroUUID,
+  query,
+  resolved,
+  restaurantFindOne,
+  restaurantFindOneWithTags,
+} from '@dish/graph'
+import { decode } from '@dish/helpers-node'
 import { ProxiedRequests, WorkerJob } from '@dish/worker'
 import { JobOptions, QueueOptions } from 'bull'
+import { selectFields } from 'gqless'
 import _ from 'lodash'
 
 import { restaurantSaveCanonical } from '../canonical-restaurant'
@@ -16,7 +25,7 @@ import {
   scrapeMergeData,
   scrapeUpdateBasic,
 } from '../scrape-helpers'
-import { aroundCoords, boundingBoxFromcenter, geocode } from '../utils'
+import { aroundCoords, boundingBoxFromCenter, geocode } from '../utils'
 
 const BB_SEARCH = '/search/snippet?cflt=restaurants&l='
 const YELP_DOMAIN = 'https://www.yelp.com'
@@ -50,6 +59,102 @@ export class Yelp extends WorkerJob {
     return `Yelp ${this.current || this.find_only?.name || '...'}`
   }
 
+  async crawlSingle(slug: string) {
+    const rest = await resolved(() => {
+      return query
+        .restaurant({
+          where: {
+            slug: {
+              _eq: slug,
+            },
+          },
+        })
+        .map((x) => {
+          return {
+            name: x.name,
+            id: x.id,
+            slug: x.slug,
+            address: x.address,
+            location: x.location,
+            sources: x.sources(),
+          }
+        })[0]
+    })
+    if (!rest?.name) {
+      this.log('not found, no name')
+      return
+    }
+    const mv = 0.001
+    const [lng, lat] = rest.location?.coordinates ?? []
+    if (lng && lat) {
+      try {
+        await this.getRestaurants(
+          [lat - mv, lng - mv],
+          [lat + mv, lng + mv],
+          0,
+          // @ts-ignore
+          rest
+        )
+      } catch (err) {
+        this.log(
+          'Error finding by searching for exact location, switch to general search'
+        )
+        // @ts-ignore
+        await this.refindRestaurant(rest)
+      }
+    } else {
+      this.log(`no lng or lat ${rest.location}`)
+      // @ts-ignore
+      await this.refindRestaurant(rest)
+    }
+  }
+
+  async refindRestaurant(rest: Restaurant) {
+    if (!rest.address) {
+      this.log(`No address`)
+      return
+    }
+    const addrs = rest.address.split(', ')
+    const city = addrs.slice(addrs.length - 2, addrs.length).join(', ')
+    const name = decode(rest.name).replace(/[^a-z0-9]/, '')
+    // prettier-ignore
+    const searchUrl = `/search_suggest/v2/prefetch?loc=${encodeURIComponent(city)}&loc_name_param=loc&is_new_loc=&prefix=${encodeURIComponent(name)}&is_initial_prefetch=`
+    this.log(`Searching for restaurant ${YELP_DOMAIN + searchUrl}`)
+    const res = await yelpAPI.getJSON(searchUrl)
+    const suggestions = res?.response?.flatMap((x) => x.suggestions)
+    if (!suggestions) {
+      throw new Error(`No response: ${JSON.stringify(res || null)}`)
+    }
+    const yelpUrl = rest.sources?.yelp?.url
+    const street = decode(
+      addrs.slice(0, addrs.length - 2).join(', ')
+    ).toLowerCase()
+    this.log('check for match', yelpUrl, street, JSON.stringify(suggestions))
+    const found = suggestions.find((x) => {
+      if (yelpUrl) {
+        return yelpUrl.includes(x.redirect_url)
+      }
+      if (street) {
+        // subtitle is the street address
+        return street.includes(decode(x.subtitle).toLowerCase())
+      }
+      return false
+    })
+    if (!found) {
+      this.log(`not found anymore, may be closed?`)
+      return
+    }
+    const mv = 0.0025
+    const [lat, lng] = await geocode(found.subtitle)
+    this.log('found new coords, try again at', JSON.stringify({ lat, lng }))
+    await this.getRestaurants(
+      [lat - mv, lng - mv],
+      [lat + mv, lng + mv],
+      0,
+      rest
+    )
+  }
+
   async allForCity(city_name: string) {
     this.log(
       `Starting on city "${city_name}". Using AWS proxy: ${process.env.YELP_AWS_PROXY}`
@@ -61,7 +166,7 @@ export class Yelp extends WorkerJob {
     )
     const longest_radius = (MAPVIEW_SIZE * Math.sqrt(2)) / 2
     for (const box_center of region_coords) {
-      const bounding_box = boundingBoxFromcenter(
+      const bounding_box = boundingBoxFromCenter(
         box_center[0],
         box_center[1],
         longest_radius
@@ -111,19 +216,22 @@ export class Yelp extends WorkerJob {
         'Nothing in `response.searchPageProps.searchResultsProps.searchResults`'
       )
     }
-    this.log(
-      `geo search: ${coords}, page ${start}, ${componentsList.length} results`
-    )
 
-    for (const data of componentsList) {
+    const validResults = componentsList.filter((data) => {
       if (data?.props?.text?.includes('Sponsored Results')) {
-        this.log('Skipping sponsored result')
-        continue
+        return false
       }
       if (data?.searchResultLayoutType == 'separator') {
-        continue
+        return false
       }
+      return true
+    })
 
+    this.log(
+      `geo search: ${coords}, page ${start}, ${validResults.length} results`
+    )
+
+    for (const data of validResults) {
       const info = data.searchResultBusiness
       const name = info.name
       if (onlyRestaurant) {
@@ -163,8 +271,9 @@ export class Yelp extends WorkerJob {
 
     if (onlyRestaurant) {
       if (!found_the_one) {
-        this.log('error componentsList', uri, componentsList)
-        throw new Error(`Couldn't find ${onlyRestaurant.id}`)
+        // prettier-ignore
+        this.log('error componentsList\n', ` > ${YELP_DOMAIN}${uri}\n`, componentsList?.length)
+        throw new Error(`Couldn't find ${onlyRestaurant.name}`)
       }
     }
 
