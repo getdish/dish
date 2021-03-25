@@ -50,5 +50,5 @@ export const sentryException = (
   } catch (err) {
     tagsString = `${tags}`
   }
-  console.log(`Error: ${error.message} (sentry)\n`, tagsString, error.stack)
+  console.trace(`Error: ${error.message} (sentry)\n`, tagsString, error.stack)
 }

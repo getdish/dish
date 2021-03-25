@@ -30,7 +30,7 @@ const hasuraHeaders = {
 }
 
 function shouldCache(body: string) {
-  return body.includes('restaurant_new(')
+  return body.includes('restaurant_with_tags')
 }
 
 export default route(async (req, res) => {

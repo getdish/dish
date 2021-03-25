@@ -5,8 +5,9 @@ import {
   useQuery,
   useTransactionQuery,
 } from '@dish/graph'
+import { isPresent } from '@dish/helpers'
 import { ChevronLeft, ChevronRight } from '@dish/react-feather'
-import { orderBy, uniqBy } from 'lodash'
+import { isPlainObject, orderBy, uniqBy } from 'lodash'
 import React, {
   Suspense,
   memo,
@@ -76,12 +77,24 @@ export const GalleryLightbox = ({
   })
   const query = useQuery()
   const [pagination, setPagination] = useState(() => ({ limit: 20, offset: 0 }))
-  const [photosList, setPhotosList] = useState<photo[]>(() => [])
+  const [photosListRaw, setPhotosList] = useState<photo[]>(() => [])
   const [hasLoadedFirstImage, setHasLoadedFirstImage] = useState(false)
   const [restaurant] = queryRestaurant(restaurantSlug)
   if (!restaurant) {
     return null
   }
+  const heroImage = restaurant.image
+    ? ({
+        url: restaurant.image,
+        quality: 100,
+      } as photo)
+    : null
+
+  const photosList = useMemo(() => {
+    return heroImage ? [heroImage, ...photosListRaw] : photosListRaw
+  }, [restaurant.image, photosListRaw])
+
+  // ??
   restaurant.id
 
   useTransactionQuery(
@@ -97,12 +110,14 @@ export const GalleryLightbox = ({
           },
         ],
       })
-      photoTable.forEach(({ photo }) => {
-        photo.id
-        photo.url
-        photo.quality
-      })
-      return photoTable.map((v) => v.photo)
+      return photoTable
+        .map((v) => {
+          v.photo.id
+          v.photo.url
+          v.photo.quality
+          return v.photo
+        })
+        .filter(isPresent)
     },
     {
       onCompleted(data) {

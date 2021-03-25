@@ -1,5 +1,6 @@
 import '@dish/common'
 
+import { sleep } from '@dish/async'
 import { settingFindOne } from '@dish/graph'
 import { ProxiedRequests } from '@dish/worker'
 import _ from 'lodash'
@@ -9,7 +10,6 @@ export const LON_TOKEN = '%LON%'
 export const LAT_TOKEN = '%LAT%'
 export const google_geocoder_id_regex = /(0x[a-f0-9]{13,16}:0x[a-f0-9]{13,16})/
 
-const sleep = (ms: number) => new Promise((res) => setTimeout(res, ms))
 const PLEASE = 'PLEASE'
 const GOOGLE_DOMAIN = 'https://www.google.com'
 const SEARCH_ENDPOINT_EXPIRED = 'GOOGLE GEOCODER: search endpoint expired'

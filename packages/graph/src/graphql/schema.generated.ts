@@ -1609,6 +1609,11 @@ export interface photo_aggregate_order_by {
   variance?: Maybe<photo_variance_order_by>
 }
 
+/** append existing jsonb value of filtered columns with new jsonb value */
+export interface photo_append_input {
+  categories?: Maybe<Scalars['jsonb']>
+}
+
 /** input type for inserting array relation for remote table "photo" */
 export interface photo_arr_rel_insert_input {
   data: Array<photo_insert_input>
@@ -1625,6 +1630,7 @@ export interface photo_bool_exp {
   _and?: Maybe<Array<Maybe<photo_bool_exp>>>
   _not?: Maybe<photo_bool_exp>
   _or?: Maybe<Array<Maybe<photo_bool_exp>>>
+  categories?: Maybe<jsonb_comparison_exp>
   created_at?: Maybe<timestamptz_comparison_exp>
   id?: Maybe<uuid_comparison_exp>
   origin?: Maybe<String_comparison_exp>
@@ -1643,6 +1649,21 @@ export enum photo_constraint {
   photos_pkey = 'photos_pkey',
 }
 
+/** delete the field or element with specified path (for JSON arrays, negative integers count from the end) */
+export interface photo_delete_at_path_input {
+  categories?: Maybe<Array<Maybe<Scalars['String']>>>
+}
+
+/** delete the array element with specified index (negative integers count from the end). throws an error if top level container is not an array */
+export interface photo_delete_elem_input {
+  categories?: Maybe<Scalars['Int']>
+}
+
+/** delete key/value pair or string element. key/value pairs are matched based on their key value */
+export interface photo_delete_key_input {
+  categories?: Maybe<Scalars['String']>
+}
+
 /** input type for incrementing integer column in table "photo" */
 export interface photo_inc_input {
   quality?: Maybe<Scalars['numeric']>
@@ -1650,6 +1671,7 @@ export interface photo_inc_input {
 
 /** input type for inserting data into table "photo" */
 export interface photo_insert_input {
+  categories?: Maybe<Scalars['jsonb']>
   created_at?: Maybe<Scalars['timestamptz']>
   id?: Maybe<Scalars['uuid']>
   origin?: Maybe<Scalars['String']>
@@ -1693,6 +1715,7 @@ export interface photo_on_conflict {
 
 /** ordering options when selecting data from "photo" */
 export interface photo_order_by {
+  categories?: Maybe<order_by>
   created_at?: Maybe<order_by>
   id?: Maybe<order_by>
   origin?: Maybe<order_by>
@@ -1706,8 +1729,15 @@ export interface photo_pk_columns_input {
   id: Scalars['uuid']
 }
 
+/** prepend existing jsonb value of filtered columns with new jsonb value */
+export interface photo_prepend_input {
+  categories?: Maybe<Scalars['jsonb']>
+}
+
 /** select columns of table "photo" */
 export enum photo_select_column {
+  /** column name */
+  categories = 'categories',
   /** column name */
   created_at = 'created_at',
   /** column name */
@@ -1724,6 +1754,7 @@ export enum photo_select_column {
 
 /** input type for updating data in table "photo" */
 export interface photo_set_input {
+  categories?: Maybe<Scalars['jsonb']>
   created_at?: Maybe<Scalars['timestamptz']>
   id?: Maybe<Scalars['uuid']>
   origin?: Maybe<Scalars['String']>
@@ -1754,6 +1785,8 @@ export interface photo_sum_order_by {
 
 /** update columns of table "photo" */
 export enum photo_update_column {
+  /** column name */
+  categories = 'categories',
   /** column name */
   created_at = 'created_at',
   /** column name */
@@ -1933,6 +1966,7 @@ export interface restaurant_append_input {
   photos?: Maybe<Scalars['jsonb']>
   rating_factors?: Maybe<Scalars['jsonb']>
   score_breakdown?: Maybe<Scalars['jsonb']>
+  scrape_metadata?: Maybe<Scalars['jsonb']>
   source_breakdown?: Maybe<Scalars['jsonb']>
   sources?: Maybe<Scalars['jsonb']>
   tag_names?: Maybe<Scalars['jsonb']>
@@ -1983,6 +2017,7 @@ export interface restaurant_bool_exp {
   reviews?: Maybe<review_bool_exp>
   score?: Maybe<numeric_comparison_exp>
   score_breakdown?: Maybe<jsonb_comparison_exp>
+  scrape_metadata?: Maybe<jsonb_comparison_exp>
   slug?: Maybe<String_comparison_exp>
   source_breakdown?: Maybe<jsonb_comparison_exp>
   sources?: Maybe<jsonb_comparison_exp>
@@ -2018,6 +2053,7 @@ export interface restaurant_delete_at_path_input {
   photos?: Maybe<Array<Maybe<Scalars['String']>>>
   rating_factors?: Maybe<Array<Maybe<Scalars['String']>>>
   score_breakdown?: Maybe<Array<Maybe<Scalars['String']>>>
+  scrape_metadata?: Maybe<Array<Maybe<Scalars['String']>>>
   source_breakdown?: Maybe<Array<Maybe<Scalars['String']>>>
   sources?: Maybe<Array<Maybe<Scalars['String']>>>
   tag_names?: Maybe<Array<Maybe<Scalars['String']>>>
@@ -2031,6 +2067,7 @@ export interface restaurant_delete_elem_input {
   photos?: Maybe<Scalars['Int']>
   rating_factors?: Maybe<Scalars['Int']>
   score_breakdown?: Maybe<Scalars['Int']>
+  scrape_metadata?: Maybe<Scalars['Int']>
   source_breakdown?: Maybe<Scalars['Int']>
   sources?: Maybe<Scalars['Int']>
   tag_names?: Maybe<Scalars['Int']>
@@ -2044,6 +2081,7 @@ export interface restaurant_delete_key_input {
   photos?: Maybe<Scalars['String']>
   rating_factors?: Maybe<Scalars['String']>
   score_breakdown?: Maybe<Scalars['String']>
+  scrape_metadata?: Maybe<Scalars['String']>
   source_breakdown?: Maybe<Scalars['String']>
   sources?: Maybe<Scalars['String']>
   tag_names?: Maybe<Scalars['String']>
@@ -2085,6 +2123,7 @@ export interface restaurant_insert_input {
   reviews?: Maybe<review_arr_rel_insert_input>
   score?: Maybe<Scalars['numeric']>
   score_breakdown?: Maybe<Scalars['jsonb']>
+  scrape_metadata?: Maybe<Scalars['jsonb']>
   slug?: Maybe<Scalars['String']>
   source_breakdown?: Maybe<Scalars['jsonb']>
   sources?: Maybe<Scalars['jsonb']>
@@ -2195,6 +2234,7 @@ export interface restaurant_order_by {
   reviews_aggregate?: Maybe<review_aggregate_order_by>
   score?: Maybe<order_by>
   score_breakdown?: Maybe<order_by>
+  scrape_metadata?: Maybe<order_by>
   slug?: Maybe<order_by>
   source_breakdown?: Maybe<order_by>
   sources?: Maybe<order_by>
@@ -2223,6 +2263,7 @@ export interface restaurant_prepend_input {
   photos?: Maybe<Scalars['jsonb']>
   rating_factors?: Maybe<Scalars['jsonb']>
   score_breakdown?: Maybe<Scalars['jsonb']>
+  scrape_metadata?: Maybe<Scalars['jsonb']>
   source_breakdown?: Maybe<Scalars['jsonb']>
   sources?: Maybe<Scalars['jsonb']>
   tag_names?: Maybe<Scalars['jsonb']>
@@ -2271,6 +2312,8 @@ export enum restaurant_select_column {
   /** column name */
   score_breakdown = 'score_breakdown',
   /** column name */
+  scrape_metadata = 'scrape_metadata',
+  /** column name */
   slug = 'slug',
   /** column name */
   source_breakdown = 'source_breakdown',
@@ -2318,6 +2361,7 @@ export interface restaurant_set_input {
   rating_factors?: Maybe<Scalars['jsonb']>
   score?: Maybe<Scalars['numeric']>
   score_breakdown?: Maybe<Scalars['jsonb']>
+  scrape_metadata?: Maybe<Scalars['jsonb']>
   slug?: Maybe<Scalars['String']>
   source_breakdown?: Maybe<Scalars['jsonb']>
   sources?: Maybe<Scalars['jsonb']>
@@ -2776,6 +2820,8 @@ export enum restaurant_update_column {
   score = 'score',
   /** column name */
   score_breakdown = 'score_breakdown',
+  /** column name */
+  scrape_metadata = 'scrape_metadata',
   /** column name */
   slug = 'slug',
   /** column name */
@@ -5679,7 +5725,12 @@ export const generatedSchema = {
     update_photo: {
       __type: 'photo_mutation_response',
       __args: {
+        _append: 'photo_append_input',
+        _delete_at_path: 'photo_delete_at_path_input',
+        _delete_elem: 'photo_delete_elem_input',
+        _delete_key: 'photo_delete_key_input',
         _inc: 'photo_inc_input',
+        _prepend: 'photo_prepend_input',
         _set: 'photo_set_input',
         where: 'photo_bool_exp!',
       },
@@ -5687,7 +5738,12 @@ export const generatedSchema = {
     update_photo_by_pk: {
       __type: 'photo',
       __args: {
+        _append: 'photo_append_input',
+        _delete_at_path: 'photo_delete_at_path_input',
+        _delete_elem: 'photo_delete_elem_input',
+        _delete_key: 'photo_delete_key_input',
         _inc: 'photo_inc_input',
+        _prepend: 'photo_prepend_input',
         _set: 'photo_set_input',
         pk_columns: 'photo_pk_columns_input!',
       },
@@ -7898,6 +7954,7 @@ export const generatedSchema = {
   },
   photo: {
     __typename: { __type: 'String!' },
+    categories: { __type: 'jsonb', __args: { path: 'String' } },
     created_at: { __type: 'timestamptz!' },
     id: { __type: 'uuid!' },
     origin: { __type: 'String' },
@@ -7940,6 +7997,7 @@ export const generatedSchema = {
     var_samp: { __type: 'photo_var_samp_order_by' },
     variance: { __type: 'photo_variance_order_by' },
   },
+  photo_append_input: { categories: { __type: 'jsonb' } },
   photo_arr_rel_insert_input: {
     data: { __type: '[photo_insert_input!]!' },
     on_conflict: { __type: 'photo_on_conflict' },
@@ -7953,6 +8011,7 @@ export const generatedSchema = {
     _and: { __type: '[photo_bool_exp]' },
     _not: { __type: 'photo_bool_exp' },
     _or: { __type: '[photo_bool_exp]' },
+    categories: { __type: 'jsonb_comparison_exp' },
     created_at: { __type: 'timestamptz_comparison_exp' },
     id: { __type: 'uuid_comparison_exp' },
     origin: { __type: 'String_comparison_exp' },
@@ -7960,8 +8019,12 @@ export const generatedSchema = {
     updated_at: { __type: 'timestamptz_comparison_exp' },
     url: { __type: 'String_comparison_exp' },
   },
+  photo_delete_at_path_input: { categories: { __type: '[String]' } },
+  photo_delete_elem_input: { categories: { __type: 'Int' } },
+  photo_delete_key_input: { categories: { __type: 'String' } },
   photo_inc_input: { quality: { __type: 'numeric' } },
   photo_insert_input: {
+    categories: { __type: 'jsonb' },
     created_at: { __type: 'timestamptz' },
     id: { __type: 'uuid' },
     origin: { __type: 'String' },
@@ -8018,6 +8081,7 @@ export const generatedSchema = {
     where: { __type: 'photo_bool_exp' },
   },
   photo_order_by: {
+    categories: { __type: 'order_by' },
     created_at: { __type: 'order_by' },
     id: { __type: 'order_by' },
     origin: { __type: 'order_by' },
@@ -8026,7 +8090,9 @@ export const generatedSchema = {
     url: { __type: 'order_by' },
   },
   photo_pk_columns_input: { id: { __type: 'uuid!' } },
+  photo_prepend_input: { categories: { __type: 'jsonb' } },
   photo_set_input: {
+    categories: { __type: 'jsonb' },
     created_at: { __type: 'timestamptz' },
     id: { __type: 'uuid' },
     origin: { __type: 'String' },
@@ -8283,6 +8349,7 @@ export const generatedSchema = {
     },
     score: { __type: 'numeric' },
     score_breakdown: { __type: 'jsonb', __args: { path: 'String' } },
+    scrape_metadata: { __type: 'jsonb', __args: { path: 'String' } },
     slug: { __type: 'String!' },
     source_breakdown: { __type: 'jsonb', __args: { path: 'String' } },
     sources: { __type: 'jsonb', __args: { path: 'String' } },
@@ -8369,6 +8436,7 @@ export const generatedSchema = {
     photos: { __type: 'jsonb' },
     rating_factors: { __type: 'jsonb' },
     score_breakdown: { __type: 'jsonb' },
+    scrape_metadata: { __type: 'jsonb' },
     source_breakdown: { __type: 'jsonb' },
     sources: { __type: 'jsonb' },
     tag_names: { __type: 'jsonb' },
@@ -8422,6 +8490,7 @@ export const generatedSchema = {
     reviews: { __type: 'review_bool_exp' },
     score: { __type: 'numeric_comparison_exp' },
     score_breakdown: { __type: 'jsonb_comparison_exp' },
+    scrape_metadata: { __type: 'jsonb_comparison_exp' },
     slug: { __type: 'String_comparison_exp' },
     source_breakdown: { __type: 'jsonb_comparison_exp' },
     sources: { __type: 'jsonb_comparison_exp' },
@@ -8443,6 +8512,7 @@ export const generatedSchema = {
     photos: { __type: '[String]' },
     rating_factors: { __type: '[String]' },
     score_breakdown: { __type: '[String]' },
+    scrape_metadata: { __type: '[String]' },
     source_breakdown: { __type: '[String]' },
     sources: { __type: '[String]' },
     tag_names: { __type: '[String]' },
@@ -8454,6 +8524,7 @@ export const generatedSchema = {
     photos: { __type: 'Int' },
     rating_factors: { __type: 'Int' },
     score_breakdown: { __type: 'Int' },
+    scrape_metadata: { __type: 'Int' },
     source_breakdown: { __type: 'Int' },
     sources: { __type: 'Int' },
     tag_names: { __type: 'Int' },
@@ -8465,6 +8536,7 @@ export const generatedSchema = {
     photos: { __type: 'String' },
     rating_factors: { __type: 'String' },
     score_breakdown: { __type: 'String' },
+    scrape_metadata: { __type: 'String' },
     source_breakdown: { __type: 'String' },
     sources: { __type: 'String' },
     tag_names: { __type: 'String' },
@@ -8502,6 +8574,7 @@ export const generatedSchema = {
     reviews: { __type: 'review_arr_rel_insert_input' },
     score: { __type: 'numeric' },
     score_breakdown: { __type: 'jsonb' },
+    scrape_metadata: { __type: 'jsonb' },
     slug: { __type: 'String' },
     source_breakdown: { __type: 'jsonb' },
     sources: { __type: 'jsonb' },
@@ -8654,6 +8727,7 @@ export const generatedSchema = {
     reviews_aggregate: { __type: 'review_aggregate_order_by' },
     score: { __type: 'order_by' },
     score_breakdown: { __type: 'order_by' },
+    scrape_metadata: { __type: 'order_by' },
     slug: { __type: 'order_by' },
     source_breakdown: { __type: 'order_by' },
     sources: { __type: 'order_by' },
@@ -8676,6 +8750,7 @@ export const generatedSchema = {
     photos: { __type: 'jsonb' },
     rating_factors: { __type: 'jsonb' },
     score_breakdown: { __type: 'jsonb' },
+    scrape_metadata: { __type: 'jsonb' },
     source_breakdown: { __type: 'jsonb' },
     sources: { __type: 'jsonb' },
     tag_names: { __type: 'jsonb' },
@@ -8701,6 +8776,7 @@ export const generatedSchema = {
     rating_factors: { __type: 'jsonb' },
     score: { __type: 'numeric' },
     score_breakdown: { __type: 'jsonb' },
+    scrape_metadata: { __type: 'jsonb' },
     slug: { __type: 'String' },
     source_breakdown: { __type: 'jsonb' },
     sources: { __type: 'jsonb' },
@@ -11698,12 +11774,22 @@ export interface Mutation {
     pk_columns: opening_hours_pk_columns_input
   }) => Maybe<opening_hours>
   update_photo: (args: {
+    _append?: Maybe<photo_append_input>
+    _delete_at_path?: Maybe<photo_delete_at_path_input>
+    _delete_elem?: Maybe<photo_delete_elem_input>
+    _delete_key?: Maybe<photo_delete_key_input>
     _inc?: Maybe<photo_inc_input>
+    _prepend?: Maybe<photo_prepend_input>
     _set?: Maybe<photo_set_input>
     where: photo_bool_exp
   }) => Maybe<photo_mutation_response>
   update_photo_by_pk: (args: {
+    _append?: Maybe<photo_append_input>
+    _delete_at_path?: Maybe<photo_delete_at_path_input>
+    _delete_elem?: Maybe<photo_delete_elem_input>
+    _delete_key?: Maybe<photo_delete_key_input>
     _inc?: Maybe<photo_inc_input>
+    _prepend?: Maybe<photo_prepend_input>
     _set?: Maybe<photo_set_input>
     pk_columns: photo_pk_columns_input
   }) => Maybe<photo>
@@ -12994,6 +13080,9 @@ export interface opening_hours_mutation_response {
 
 export interface photo {
   __typename: 'photo' | undefined
+  categories: (args?: {
+    path?: ScalarsEnums['String']
+  }) => ScalarsEnums['jsonb']
   created_at: ScalarsEnums['timestamptz']
   id: ScalarsEnums['uuid']
   origin?: ScalarsEnums['String']
@@ -13225,6 +13314,9 @@ export interface restaurant {
   }) => review_aggregate
   score?: ScalarsEnums['numeric']
   score_breakdown: (args?: {
+    path?: ScalarsEnums['String']
+  }) => ScalarsEnums['jsonb']
+  scrape_metadata: (args?: {
     path?: ScalarsEnums['String']
   }) => ScalarsEnums['jsonb']
   slug: ScalarsEnums['String']

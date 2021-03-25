@@ -1954,6 +1954,7 @@ __metadata:
     puppeteer: ^8.0.0
     puppeteer-extra: ^3.1.18
     puppeteer-extra-plugin-stealth: ^2.7.6
+    react: ^17.0.1
     sentiment: ^5.0.2
     sinon: ^9.0.3
     tabletojson: ^2.0.4
@@ -2388,6 +2389,7 @@ __metadata:
     https-proxy-agent: ^5.0.0
     lodash: "*"
     make-fetch-happen: ^8.0.14
+    react: ^17.0.1
   languageName: unknown
   linkType: soft
 

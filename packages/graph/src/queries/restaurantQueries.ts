@@ -128,7 +128,7 @@ export async function restaurantUpsertManyTags(
   console.log('Upserting tags chunks...', chunks.length)
   let next: RestaurantWithId | null = null
   for (const [index, chunk] of chunks.entries()) {
-    console.log('Inserting tags chunk...', index, chunk[0].tag?.name)
+    console.log('Inserting tags chunk...', index)
     next = await restaurantUpsertRestaurantTags(restaurant, chunk, opts)
   }
   return next
@@ -266,10 +266,8 @@ export async function restaurantGetAllPossibleTags(restaurant: Restaurant) {
     // for now just default to grabbing the top popular dish tags
     ...nonDirectCuisineDishes,
   ]
-  console.log(
-    'Dish tags',
-    cuisineDishes.map((x) => x.name)
-  )
+  // prettier-ignore
+  console.log('Dish tags', cuisineDishes.map((x) => x.name).slice(0, 10).join(', '), '...', cuisineDishes.length)
   const orphans = restaurant.tags
     .filter((rt) => {
       return rt?.tag.parentId == globalTagId

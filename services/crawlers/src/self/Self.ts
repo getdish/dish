@@ -174,6 +174,7 @@ export class Self extends WorkerJob {
         this.getGrubHubDishes,
         this.scanCorpus,
         this.addReviewHeadlines,
+        this.generateSummary,
       ]
       for (const async_func of async_steps) {
         this.log('running step', async_func.name)
@@ -684,19 +685,20 @@ export class Self extends WorkerJob {
 
   async mergePhotos() {
     const yelp_data = this.yelp?.data || {}
-    let photos_urls = [
+    let urls: string[] = [
       ...scrapeGetData(this.tripadvisor, 'photos', []),
       ...this._getGooglePhotos(),
       ...this.getPaginatedData(yelp_data, 'photos').map((i) => i.src),
     ]
-    let photos: PhotoXref[] = photos_urls.map((url: string) => {
+    let photos: PhotoXref[] = urls.map((url) => {
       return {
         restaurant_id: this.restaurant.id,
         photo: {
-          url: url,
+          url,
         },
       } as PhotoXref
     })
+    this.log(`mergePhotos ${photos.length} photos`)
     await photoUpsert(photos)
     const most_aesthetic =
       (await bestPhotosForRestaurant(this.restaurant.id)) || []
@@ -791,6 +793,17 @@ export class Self extends WorkerJob {
 
   async checkMaybeDeletePhoto(photo_id: string, url: string) {
     await checkMaybeDeletePhoto(photo_id, url)
+  }
+
+  async generateSummary() {
+    if (!this.restaurant.scrape_metadata?.gpt_summary_updated_at) {
+      await this.gpt3.generateGPT3Summary()
+      this.restaurant.scrape_metadata = {
+        ...this.restaurant.scrape_metadata,
+        gpt_summary_updated_at: Date.now(),
+      }
+      await restaurantUpdate(this.restaurant)
+    }
   }
 
   async generateGPT3Summary(id: string) {

@@ -296,12 +296,12 @@ export const useSetAppMap = (
 
   useEffect(() => {
     if (!isActive) return
-    if (center || span) {
-      appMapStore.setPosition({
-        center,
-        span,
-      })
-    }
+    if (!center && !span) return
+    console.warn('update set position', center)
+    appMapStore.setPosition({
+      center,
+      span,
+    })
   }, [fitToResults, isActive, center?.lat, center?.lng, span?.lat, span?.lng])
 
   useEffect(() => {

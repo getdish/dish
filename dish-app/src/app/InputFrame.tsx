@@ -13,12 +13,12 @@ export const InputFrame = forwardRef(({ children }: { children: any }, ref) => {
       paddingLeft={10}
       overflow="hidden"
       position="relative"
-      backgroundColor="rgba(0,0,0,0.1)"
+      backgroundColor="rgba(50,50,50,0.2)"
       hoverStyle={{
-        backgroundColor: 'rgba(0,0,0,0.15)',
+        backgroundColor: 'rgba(50,50,50,0.3)',
       }}
       focusStyle={{
-        backgroundColor: 'rgba(0,0,0,0.2)',
+        backgroundColor: 'rgba(50,50,50,0.35)',
       }}
       {...(media.sm && {
         backgroundColor: theme.backgroundColorSecondary,

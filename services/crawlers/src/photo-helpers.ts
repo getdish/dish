@@ -32,6 +32,16 @@ const PhotoXrefQueryHelpers = createQueryHelpersFor<PhotoXref>('photo_xref')
 const photoBaseUpsert = PhotoBaseQueryHelpers.upsert
 export const photoXrefUpsert = PhotoXrefQueryHelpers.upsert
 
+const selectBasePhotoXrefFields = {
+  select: (v: photo_xref[]) => {
+    return v.map((p) => {
+      return {
+        ...selectFields(p, '*', 2),
+      }
+    })
+  },
+}
+
 export const DO_BASE = 'https://dish-images.sfo2.digitaloceanspaces.com/'
 
 const prod_hooks_endpoint = 'https://hooks.dishapp.com'
@@ -41,32 +51,38 @@ const DISH_HOOKS_ENDPOINT =
     ? prod_hooks_endpoint
     : dev_hooks_endpoint
 
-export async function photoUpsert(photos: Partial<PhotoXref>[]) {
-  if (photos.length == 0) return
-  if (photos[0].restaurant_id && !photos[0].tag_id) {
-    photos.map((p) => (p.tag_id = ZeroUUID))
+export async function photoUpsert(photosOg: Partial<PhotoXref>[]) {
+  if (photosOg.length == 0) return
+  const photos = normalizePhotos(photosOg)
+  await photoXrefUpsert(photos)
+  await postUpsert(photos)
+}
+
+function normalizePhotos(photos: Partial<PhotoXref>[]) {
+  let next = [...photos]
+  if (next[0].restaurant_id && !next[0].tag_id) {
+    next.map((p) => (p.tag_id = ZeroUUID))
   }
-  if (photos[0].tag_id && !photos[0].restaurant_id) {
-    photos.map((p) => (p.restaurant_id = ZeroUUID))
+  if (next[0].tag_id && !next[0].restaurant_id) {
+    next.map((p) => (p.restaurant_id = ZeroUUID))
   }
-  photos = uniqBy(photos, (el) =>
+  next = uniqBy(next, (el) =>
     [el.tag_id, el.restaurant_id, el.photo?.url].join()
   )
-  photos.map((p) => {
+  return next.map((p) => {
     if (!p.photo || !p.photo.url) {
       throw 'Photo must have URL'
     }
     p.photo.origin = p.photo?.url
+    return p
   })
-  await photoXrefUpsert(photos)
-  await postUpsert(photos)
 }
 
 async function postUpsert(photos: Partial<PhotoXref>[]) {
   if (process.env.NODE_ENV != 'test') {
     await uploadToDO(photos)
   }
-  await updatePhotoQuality(photos)
+  await updatePhotoQualityAndCategories(photos)
 }
 
 export async function uploadToDO(photos: Partial<PhotoXref>[]) {
@@ -83,7 +99,9 @@ export async function uploadToDO(photos: Partial<PhotoXref>[]) {
   await photoBaseUpsert(updated, photo_constraint.photos_pkey)
 }
 
-export async function updatePhotoQuality(photos: Partial<PhotoXref>[]) {
+export async function updatePhotoQualityAndCategories(
+  photos: Partial<PhotoXref>[]
+) {
   const unassessed_photos = await findUnassessedPhotos(photos)
   await assessNewPhotos(unassessed_photos)
 }
@@ -91,48 +109,37 @@ export async function updatePhotoQuality(photos: Partial<PhotoXref>[]) {
 async function findNotUploadedRestaurantPhotos(
   restaurant_id: uuid
 ): Promise<PhotoXref[]> {
-  const photos = await resolvedWithFields(
-    () => {
-      const d = query.photo_xref({
-        where: {
-          _or: [
-            {
-              restaurant_id: {
-                _eq: restaurant_id,
-              },
-              photo: {
-                url: {
-                  _nlike: '%digitalocean%',
-                },
+  const photos = await resolvedWithFields(() => {
+    const d = query.photo_xref({
+      where: {
+        _or: [
+          {
+            restaurant_id: {
+              _eq: restaurant_id,
+            },
+            photo: {
+              url: {
+                _nlike: '%digitalocean%',
               },
             },
-            {
-              restaurant_id: {
-                _eq: restaurant_id,
-              },
-              photo: {
-                url: {
-                  _is_null: true,
-                },
+          },
+          {
+            restaurant_id: {
+              _eq: restaurant_id,
+            },
+            photo: {
+              url: {
+                _is_null: true,
               },
             },
-          ],
-        },
-        distinct_on: [photo_xref_select_column.photo_id],
-      })
-
-      return d
-    },
-    {
-      select: (v: photo_xref[]) => {
-        return v.map((p) => {
-          return {
-            ...selectFields(p, '*', 2),
-          }
-        })
+          },
+        ],
       },
-    }
-  )
+      distinct_on: [photo_xref_select_column.photo_id],
+    })
+
+    return d
+  }, selectBasePhotoXrefFields)
   return photos
 }
 
@@ -168,15 +175,7 @@ export async function findNotUploadedTagPhotos(
         },
         distinct_on: [photo_xref_select_column.photo_id],
       }),
-    {
-      select: (v: photo_xref[]) => {
-        return v.map((p) => {
-          return {
-            ...selectFields(p, '*', 2),
-          }
-        })
-      },
-    }
+    selectBasePhotoXrefFields
   )
   return photos
 }
@@ -199,15 +198,7 @@ async function unassessedPhotosForRestaurant(
         },
         distinct_on: [photo_xref_select_column.photo_id],
       }),
-    {
-      select: (v: photo_xref[]) => {
-        return v.map((p) => {
-          return {
-            ...selectFields(p, '*', 2),
-          }
-        })
-      },
-    }
+    selectBasePhotoXrefFields
   )
   return photos
 }
@@ -228,15 +219,7 @@ async function unassessedPhotosForTag(tag_id: uuid): Promise<PhotoXref[]> {
         },
         distinct_on: [photo_xref_select_column.photo_id],
       }),
-    {
-      select: (v: photo_xref[]) => {
-        return v.map((p) => {
-          return {
-            ...selectFields(p, '*', 2),
-          }
-        })
-      },
-    }
+    selectBasePhotoXrefFields
   )
   return photos
 }
@@ -326,15 +309,7 @@ export async function bestPhotosForTag(tag_id: uuid): Promise<PhotoXref[]> {
         ],
         limit: 10,
       }),
-    {
-      select: (v: photo_xref[]) => {
-        return v.map((p) => {
-          return {
-            ...selectFields(p, '*', 2),
-          }
-        })
-      },
-    }
+    selectBasePhotoXrefFields
   )
   return uniqBy(photos, (p) => p.photo_id)
 }
@@ -362,34 +337,27 @@ export async function bestPhotosForRestaurantTags(
         ],
         limit: 10,
       }),
-    {
-      select: (v: photo_xref[]) => {
-        return v.map((p) => {
-          return {
-            ...selectFields(p, '*', 2),
-          }
-        })
-      },
-    }
+    selectBasePhotoXrefFields
   )
   return uniqBy(photos, (p) => p.photo_id)
 }
 
+const IMAGE_QUALITY_API_BATCH_SIZE = 10
+
 async function assessNewPhotos(unassessed_photos: string[]) {
-  const IMAGE_QUALITY_API_BATCH_SIZE = 20
   let assessed: Partial<PhotoBase>[] = []
   for (const batch of chunk(unassessed_photos, IMAGE_QUALITY_API_BATCH_SIZE)) {
-    assessed.push(...(await assessPhotoQuality(batch)))
+    assessed.push(...(await assessPhoto(batch)))
   }
   await photoBaseUpsert(assessed, photo_constraint.photo_url_key)
 }
 
-async function assessPhotoQuality(urls: string[]) {
+async function assessPhoto(urls: string[]) {
   const MAX_RETRIES = 3
   let retries = 0
   while (true) {
     try {
-      return await assessPhotoQualityWithoutRetries(urls)
+      return await assessPhotoWithoutRetries(urls)
     } catch (error) {
       console.log(error.message, 'on urls', urls, error.stack)
       if (!error.message.includes('json')) {
@@ -409,35 +377,69 @@ async function assessPhotoQuality(urls: string[]) {
   }
 }
 
-async function assessPhotoQualityWithoutRetries(urls: string[]) {
-  const IMAGE_QUALITY_API = 'https://image-quality.dishapp.com/prediction'
-  if (process.env.DISH_DEBUG == '1') {
-    console.log('Fetching Image Quality API batch...')
+// gets quality + categories
+async function assessPhotoWithoutRetries(urls: string[]) {
+  if (process.env.DISH_DEBUG) {
+    // prettier-ignore
+    console.log('Fetching Image Quality API batch...', urls.length, 'first:', urls[0])
   }
-  const response = await fetch(IMAGE_QUALITY_API, {
+  const [imageQualities, imageCategories] = await Promise.all([
+    getImageQuality(urls),
+    getImageCategory(urls),
+  ])
+  const res: Partial<PhotoBase>[] = []
+  for (const url of urls) {
+    const id = crypto.createHash('md5').update(url).digest('hex')
+    const quality = imageQualities.find((r) => id == r.image_id)
+      ?.mean_score_prediction
+    const categories = imageCategories.find((x) => x.url === url)?.categories
+    if (!quality || !categories) {
+      console.warn('No result found!')
+      continue
+    }
+    res.push({
+      url,
+      quality,
+      categories,
+    })
+  }
+  return res
+}
+
+async function getImageCategory(
+  urls: string[]
+): Promise<
+  { url: string; categories: { label: string; probability: number }[] }[]
+> {
+  const IMAGE_CATEGORY_API = 'https://dish-image-recognize.fly.dev/recognize'
+  // lets do serially to not overload the memory of image-recognize
+  return Promise.all(
+    urls.map(async (url) => {
+      const body = await fetch(url).then((res) => res.buffer())
+      const response = await fetch(IMAGE_CATEGORY_API, {
+        method: 'POST',
+        body,
+      }).then((res) => res.json())
+      return {
+        categories: response.labels,
+        url,
+      }
+    })
+  )
+}
+
+async function getImageQuality(
+  urls: string[]
+): Promise<{ mean_score_prediction: number; image_id: string }[]> {
+  const IMAGE_QUALITY_API = 'https://image-quality.dishapp.com/prediction'
+  const qualityResponse = await fetch(IMAGE_QUALITY_API, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
     },
     body: JSON.stringify(urls),
   })
-  let results = await response.json()
-  let photo_bases: Partial<PhotoBase>[] = []
-  for (const url of urls) {
-    const id = crypto.createHash('md5').update(url).digest('hex')
-    const result = results.find((r) => {
-      return id == r.image_id
-    })
-    if (!result) {
-      console.warn('No result found!')
-      continue
-    }
-    photo_bases.push({
-      url,
-      quality: result['mean_score_prediction'],
-    })
-  }
-  return photo_bases
+  return await qualityResponse.json()
 }
 
 function proxyYelpCDN(photo: string) {
@@ -588,15 +590,7 @@ export async function findHeroImage(restaurant_id: uuid) {
       restaurant_id,
       type: 'hero',
     },
-    {
-      select: (v: photo_xref[]) => {
-        return v.map((p) => {
-          return {
-            ...selectFields(p, '*', 2),
-          }
-        })
-      },
-    }
+    selectBasePhotoXrefFields
   )
 }
 

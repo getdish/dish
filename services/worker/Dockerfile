@@ -38,13 +38,16 @@ COPY --from=0 /bin /bin
 COPY --from=0 /usr/bin /usr/bin
 COPY --from=0 /usr/lib /usr/lib
 COPY --from=0 /usr/share/X11 /usr/share/X11
+# google-chrome in here
+COPY --from=0 /opt /opt
+# google-chrome-stable in here
+COPY --from=0 /etc/alternatives /etc/alternatives
 ENV NODE_ENV=production
 
-WORKDIR /app
-COPY services/worker services/worker
-COPY services/crawlers services/crawlers
-
-COPY packages packages
+# WORKDIR /app
+# COPY services/worker services/worker
+# COPY services/crawlers services/crawlers
+# COPY packages packages
 WORKDIR /app/services/worker
 
 CMD ["./entry.sh"]
