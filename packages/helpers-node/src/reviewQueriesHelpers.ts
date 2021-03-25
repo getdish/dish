@@ -1,4 +1,3 @@
-import { selectFields } from '@dish/gqless'
 import {
   Review,
   ReviewTagSentence,
@@ -12,6 +11,7 @@ import {
   reviewUpsert,
   review_constraint,
 } from '@dish/graph'
+import { selectFields } from 'gqless'
 import { decode } from 'html-entities'
 import { chunk, uniqBy } from 'lodash'
 

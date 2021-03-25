@@ -1,4 +1,4 @@
-import { selectFields } from '@dish/gqless'
+import { selectFields } from 'gqless'
 import _, { chunk } from 'lodash'
 
 import { globalTagId } from '../constants'

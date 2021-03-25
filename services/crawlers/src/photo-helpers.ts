@@ -4,7 +4,6 @@ import crypto from 'crypto'
 
 import { sleep } from '@dish/async'
 import { sentryException, sentryMessage } from '@dish/common'
-import { selectFields } from '@dish/gqless'
 import {
   PhotoBase,
   PhotoXref,
@@ -22,6 +21,7 @@ import {
   resolvedWithFields,
   uuid,
 } from '@dish/graph'
+import { selectFields } from 'gqless'
 import { chunk, clone, uniqBy } from 'lodash'
 import fetch, { Response } from 'node-fetch'
 
@@ -284,7 +284,8 @@ export async function bestPhotosForRestaurant(
       LIMIT 50
     ) j1;
   `)
-  const photos = result.rows[0].json_agg.map((p) => {
+  const agg = result.rows[0].json_agg ?? []
+  const photos = agg.map((p) => {
     p.photo = JSON.parse(p.photo)
     return p
   })

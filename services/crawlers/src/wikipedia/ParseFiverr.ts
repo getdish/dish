@@ -1,6 +1,5 @@
 import fs from 'fs'
 
-import { selectFields } from '@dish/gqless'
 import {
   Tag,
   tag,
@@ -10,6 +9,7 @@ import {
   tagUpsertCategorizations,
 } from '@dish/graph'
 import parse from 'csv-parse/lib/sync'
+import { selectFields } from 'gqless'
 import { pick } from 'lodash'
 import _ from 'lodash'
 import { transliterate } from 'transliteration'

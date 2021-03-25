@@ -1,4 +1,4 @@
-import { selectFields } from '@dish/gqless'
+import { selectFields } from 'gqless'
 
 import { mutation, setting } from '../graphql'
 import { createQueryHelpersFor, prepareData } from '../helpers/queryHelpers'
