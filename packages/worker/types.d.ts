@@ -29,8 +29,8 @@ declare module "@dish/worker" {
         constructor(domain: string, aws_proxy: string, config?: Opts, start_with_aws?: boolean);
         getJSON(uri: string, props?: Opts): Promise<any>;
         getHyperscript(uri: string, selector: string): Promise<any>;
-        getText(uri: string, props?: Opts): Promise<string>;
-        get(uri: string, props?: Opts): Promise<import("node-fetch").Response>;
+        getText(uri: string, props?: Opts): Promise<any>;
+        get(uri: string, props?: Opts): Promise<any>;
         getStormProxyConfig(): {
             host: string;
             port: number;

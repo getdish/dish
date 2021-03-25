@@ -27,6 +27,7 @@ import { chunk, uniq } from 'lodash'
 import moment from 'moment'
 import Sentiment from 'sentiment'
 
+import { DISH_DEBUG } from '../constants'
 import { scrapeGetData } from '../scrape-helpers'
 import { toDBDate } from '../utils'
 import { Self } from './Self'
@@ -179,12 +180,12 @@ export class Tagging extends Loggable {
     this.log('Getting all possible tags...')
     this.all_tags = await restaurantGetAllPossibleTags(this.crawler.restaurant)
     this.restaurant_tag_ratings = {}
-    this.log('Getting reviews...')
     this.all_reviews = [
       ...this._getYelpReviews(),
       ...this._getTripadvisorReviews(),
       ...this._getGoogleReviews(),
     ] as Review[]
+    this.log(`Got reviews ${this.all_reviews.length}...`)
     const allSources = this.cleanAllSources([
       ...this.all_reviews,
       ...this._scanMenuItemsForTags(),
@@ -375,11 +376,15 @@ export class Tagging extends Loggable {
   }
 
   _getYelpReviews() {
-    const yelp_reviews = this.crawler.getPaginatedData(
-      // @ts-ignore weird bug the type is right in graph but comes in null | undefined here
-      this.crawler.yelp?.data,
-      'reviews'
-    )
+    const data = this.crawler.yelp?.data
+    if (!data) {
+      this.log(`getYelpReviews: No yelp data found`, this.crawler.yelp)
+      return []
+    }
+    const yelp_reviews = this.crawler.getPaginatedData(data, 'reviews')
+    if (DISH_DEBUG > 1) {
+      this.log(`Get yelp reviews`, yelp_reviews)
+    }
     let reviews: Partial<Review>[] = []
     for (const yelp_review of yelp_reviews) {
       reviews.push({

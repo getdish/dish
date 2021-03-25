@@ -16,7 +16,7 @@ import { UberEats } from './ubereats/UberEats'
 import { DB } from './utils'
 import { Yelp } from './yelp/Yelp'
 
-let db_config: PoolConfig = {
+const db_config: PoolConfig = {
   host: process.env.TIMESCALE_HOST || 'localhost',
   port: process.env.TIMESCALE_PORT ? +process.env.TIMESCALE_PORT : 5433,
   user: process.env.TIMESCALE_USER || 'postgres',
@@ -27,7 +27,7 @@ let db_config: PoolConfig = {
   idleTimeoutMillis: 500_000,
 }
 
-const db = new DB(db_config)
+export const db = new DB(db_config)
 
 type LatLon = {
   lon: number
@@ -93,9 +93,6 @@ export async function latestScrapeForRestaurant(
   restaurant: RestaurantWithId,
   source: string
 ) {
-  if (process.env.NODE_ENV !== 'test') {
-    console.debug('Getting latest scrape for', restaurant.id, source)
-  }
   const result = await db.query(`
     SELECT *
     FROM scrape
@@ -164,6 +161,9 @@ export async function scrapeInsert(scrape: Scrape) {
 }
 
 export async function scrapeUpdateBasic(scrape: Scrape) {
+  console.log(
+    `Updating scrape ${scrape.id} to point to restaurant ${scrape.restaurant_id}`
+  )
   const result = await db.query(`
     UPDATE scrape SET
       restaurant_id = '${scrape.restaurant_id}',

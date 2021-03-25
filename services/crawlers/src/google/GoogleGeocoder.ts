@@ -62,7 +62,7 @@ export class GoogleGeocoder {
     throw new Error(message)
   }
 
-  async _getSearchEndpoint() {
+  private async _getSearchEndpoint() {
     const result = await settingFindOne({
       key: GOOGLE_SEARCH_ENDPOINT_KEY,
     })
@@ -81,7 +81,7 @@ export class GoogleGeocoder {
       .replaceAll(PLEASE, encodeURIComponent(this.query))
   }
 
-  async _searchForID() {
+  private async _searchForID() {
     const url = this._formatSearchURL()
     const response = await googleAPI.getText(url, {
       headers: { 'user-agent': 'PLEASE' },
