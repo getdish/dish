@@ -407,8 +407,8 @@ const TagEdit = memo(
         type: tag.type,
         parentId: tag.parentId,
         icon: tag.icon,
-        alternates: parseJSONB(tag.alternates() ?? []),
-        rgb: parseJSONB(tag.rgb() ?? []),
+        alternates: parseJSONB(tag.alternates ?? []),
+        rgb: parseJSONB(tag.rgb ?? []),
       } as Tag
       return (
         <TagCRUD

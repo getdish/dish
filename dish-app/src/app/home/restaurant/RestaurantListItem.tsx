@@ -751,9 +751,9 @@ const EditRestaurantTags = graphql(
       return (
         <HStack key={dish.tag.slug} spacing padding={5} alignItems="center">
           {before}
-          {!!dish.photos()?.[0] ? (
+          {!!dish.photos ? (
             <Image
-              source={{ uri: dish.photos()[0] }}
+              source={{ uri: dish.photos[0] }}
               style={{ width: 40, height: 40, borderRadius: 100 }}
             />
           ) : (

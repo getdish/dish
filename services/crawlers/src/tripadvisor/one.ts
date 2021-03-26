@@ -14,7 +14,7 @@ export async function one(slug: string) {
       })
       .map((r) => ({
         slug: r.slug,
-        sources: r.sources(),
+        sources: r.sources,
       }))[0]
   })
   if (!r) {

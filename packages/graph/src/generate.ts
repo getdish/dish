@@ -9,9 +9,13 @@ const run = async () => {
   await inspectWriteGenerate({
     endpoint: GRAPH_API_INTERNAL,
     destination: 'src/graphql/schema.generated.ts',
-    // overwrite: true,
     headers: getAuthHeaders(true),
     generateOptions: {},
+    transformSchemaOptions: {
+      ignoreArgs: ({ type }) => {
+        return type.toString().startsWith('jsonb')
+      },
+    },
   })
 }
 

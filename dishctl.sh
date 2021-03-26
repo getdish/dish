@@ -166,6 +166,7 @@ function redis_flush_all() {
 }
 
 function _db_migrate() {
+  echo "migrating db $POSTGRES_DB"
   hasura_endpoint=$1
   admin_secret=$2
   postgres_password=$3

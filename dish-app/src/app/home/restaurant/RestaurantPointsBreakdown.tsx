@@ -52,8 +52,8 @@ export const RestaurantPointsBreakdown = memo(
       const nativeReviewPoints = Math.round(totalNativeReviews * REVIEW_FACTOR * 10) / 10
       const totalExternalReviews = useTotalExternalReviews(restaurant)
       const externalReviewPoints = Math.round(totalExternalReviews * REVIEW_FACTOR * 10) / 10
-      const reviewsBreakdown = restaurant.score_breakdown()?.['reviews'] ?? {}
-      const photosBreakdown = restaurant.score_breakdown()?.['photos'] ?? {}
+      const reviewsBreakdown = restaurant.score_breakdown?.['reviews'] ?? {}
+      const photosBreakdown = restaurant.score_breakdown?.['photos'] ?? {}
 
       return (
         <HStack overflow="hidden" paddingVertical={12}>

@@ -768,6 +768,9 @@ export class Self extends WorkerJob {
   }
 
   async generateSummary() {
+    if (process.env.NODE_ENV === 'test') {
+      return
+    }
     if (!this.restaurant.scrape_metadata?.gpt_summary_updated_at) {
       await this.gpt3.generateGPT3Summary()
       this.restaurant.scrape_metadata = {

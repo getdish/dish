@@ -1,6 +1,7 @@
 import '@dish/common'
 
 import crypto from 'crypto'
+import { basename } from 'path'
 
 import { sleep } from '@dish/async'
 import { sentryException, sentryMessage } from '@dish/common'
@@ -12,17 +13,16 @@ import {
   deleteByIDs,
   globalTagId,
   order_by,
-  photo,
   photo_constraint,
   photo_xref,
-  photo_xref_constraint,
   photo_xref_select_column,
   query,
   resolvedWithFields,
   uuid,
 } from '@dish/graph'
+import FormData from 'form-data'
 import { selectFields } from 'gqless'
-import { chunk, clone, uniqBy } from 'lodash'
+import { chunk, uniqBy } from 'lodash'
 import fetch, { Response } from 'node-fetch'
 
 import { DB } from './utils'
@@ -376,6 +376,7 @@ async function assessPhotoWithoutRetries(urls: string[]) {
       console.warn('No result found!')
       continue
     }
+    console.log('got categories', categories)
     res.push({
       url,
       quality,
@@ -389,13 +390,16 @@ async function getImageCategory(
   urls: string[]
 ): Promise<{ url: string; categories: { label: string; probability: number }[] }[]> {
   const IMAGE_CATEGORY_API = 'https://dish-image-recognize.fly.dev/recognize'
-  // lets do serially to not overload the memory of image-recognize
-  return Promise.all(
+  return await Promise.all(
     urls.map(async (url) => {
-      const body = await fetch(url).then((res) => res.buffer())
+      const data = await fetch(url).then((res) => res.buffer())
+      const formdata = new FormData()
+      const parsedUrl = new URL(url)
+      const filename = basename(parsedUrl.pathname)
+      formdata.append('image', data, filename)
       const response = await fetch(IMAGE_CATEGORY_API, {
         method: 'POST',
-        body,
+        body: formdata,
       }).then((res) => res.json())
       return {
         categories: response.labels,
@@ -403,6 +407,12 @@ async function getImageCategory(
       }
     })
   )
+  // serially to not overload the memory of image-recognize
+  // const res: { categories: any; url: string }[] = []
+  // for (const url of urls) {
+
+  // }
+  // return res
 }
 
 async function getImageQuality(

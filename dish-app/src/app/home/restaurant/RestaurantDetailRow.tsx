@@ -130,7 +130,7 @@ const getDayOfWeek = () => {
 }
 
 export function openingHours(restaurant: RestaurantQuery) {
-  if (restaurant.hours() == null) {
+  if (restaurant.hours == null) {
     return ['Unknown Hours', 'grey', '']
   }
 
@@ -141,13 +141,13 @@ export function openingHours(restaurant: RestaurantQuery) {
   const dayOfWeek = getDayOfWeek()
 
   if (is_open_now) {
-    const todaysHours = restaurant.hours()[dayOfWeek]?.hoursInfo.hours[0] ?? ''
+    const todaysHours = restaurant.hours[dayOfWeek]?.hoursInfo.hours[0] ?? ''
     next_time = getHours(todaysHours)
   } else {
     // TODO: Tomorrow isn't always when the next opening time is.
     // Eg; when it's the morning and the restaurant opens in the evening.
     const tomorrow = (dayOfWeek + 1) % 7
-    const tomorrowsHours = restaurant.hours()[tomorrow]?.hoursInfo.hours[0] ?? ''
+    const tomorrowsHours = restaurant.hours[tomorrow]?.hoursInfo.hours[0] ?? ''
     next_time = getHours(tomorrowsHours)
   }
 

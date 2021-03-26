@@ -36,7 +36,7 @@ export const RestaurantTagsScore = graphql(function RestaurantTagsScore({
     return null
   }
 
-  const breakdown = restaurant.score_breakdown()
+  const breakdown = restaurant.score_breakdown
   const tagScores = queryRestaurantTagScores({
     restaurantSlug,
     tagSlugs: getActiveTagSlugs(activeTags),

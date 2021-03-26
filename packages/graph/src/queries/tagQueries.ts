@@ -17,7 +17,7 @@ export const tagRefresh = QueryHelpers.refresh
 
 export const tagFindOneWithCategories = async (tag: Partial<Tag>) => {
   return await tagFindOne(tag, {
-    select: (tagV: tag) => {
+    select: (tagV: tag | tag[]) => {
       if (Array.isArray(tagV)) {
         return tagV.map((tagV) => {
           return {
@@ -27,7 +27,7 @@ export const tagFindOneWithCategories = async (tag: Partial<Tag>) => {
                 ...selectFields(catV, '*', 2),
               }
             }),
-            alternates: tagV.alternates(),
+            alternates: tagV.alternates,
           }
         })
       }
@@ -38,7 +38,7 @@ export const tagFindOneWithCategories = async (tag: Partial<Tag>) => {
             ...selectFields(catV, '*', 2),
           }
         }),
-        alternates: tagV.alternates(),
+        alternates: tagV.alternates,
       }
     },
   })
@@ -49,7 +49,7 @@ export const tagSelectAll = {
     return vTags.map((v_t) => {
       return {
         ...selectFields(v_t, '*', 2),
-        alternates: v_t.alternates(),
+        alternates: v_t.alternates,
       }
     })
   },
@@ -118,7 +118,7 @@ export async function tagGetAllCuisinesWithDishes(batch_size: number, page: numb
           return {
             ...selectFields(v, '*', 2),
             parent: selectFields(v.parent),
-            alternates: v.alternates(),
+            alternates: v.alternates,
           }
         })
       },
@@ -136,11 +136,8 @@ export async function tagUpsertCategorizations(tag: TagWithId, category_tag_ids:
 
 export function tagAddAlternate(tag: Tag, alternate: string) {
   if (alternate != tag.name) {
-    // @ts-ignore
     tag.alternates = tag.alternates || []
-    // @ts-ignore
     tag.alternates?.push(alternate)
-    // @ts-ignore
     tag.alternates = [...new Set(tag.alternates)]
   }
 }

@@ -99,7 +99,7 @@ export class ParseFiverr {
             return v_t.map((v) => {
               return {
                 ...selectFields(v, '*', 1),
-                alternates: v.alternates(),
+                alternates: v.alternates,
               }
             })
           },
@@ -134,20 +134,11 @@ export class ParseFiverr {
       ],
       undefined,
       {
-        select: (v_t: tag[]) => {
-          return v_t.map((v) => {
-            return {
-              ...selectFields(v),
-              alternates: v.alternates(),
-            }
-          })
-        },
+        keys: '*',
       }
     )
     tagAddAlternate(tag, original)
     ;[tag] = await tagUpsert([pick(tag, ['name', 'alternates', 'type', 'parentId'])])
-    // ;[tag] = await tagUpsert([tag])
-
     if (this.category) {
       await tagUpsertCategorizations(tag, [this.category.id])
     }

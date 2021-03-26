@@ -37,7 +37,7 @@ export const RestaurantTagPhotosContent = memo(
           },
         })[0]
       : null
-    const tagPhotos = tag?.photos() ?? []
+    const tagPhotos = tag?.photos ?? []
     const numTags = tagPhotos?.length
 
     return (

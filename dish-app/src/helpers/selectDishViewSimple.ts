@@ -14,8 +14,8 @@ export type DishTagItemSimple = {
 }
 
 export const selectRishDishViewSimple = (tag: restaurant_tag): DishTagItemSimple => {
-  const tagImage = tag.photos()?.[0]
-  const tagFallbackImage = tagImage ? null : tag.tag?.default_images()?.[0]
+  const tagImage = tag.photos?.[0]
+  const tagFallbackImage = tagImage ? null : tag.tag?.default_images?.[0]
   const rawRating = tag.rating ? tag.rating * 100 : null
   const totalVotes = tag.upvotes + tag.downvotes
   const ratioRating = totalVotes > 0 ? (tag.upvotes / totalVotes) * 100 : 0
@@ -35,7 +35,7 @@ export const selectRishDishViewSimple = (tag: restaurant_tag): DishTagItemSimple
 }
 
 export const selectTagDishViewSimple = (tag: tag) => {
-  const [tagImage, tagFallbackImage] = tag.default_images?.() ?? []
+  const [tagImage, tagFallbackImage] = tag.default_images ?? []
   return {
     id: tag.id,
     name: tag.name || '',

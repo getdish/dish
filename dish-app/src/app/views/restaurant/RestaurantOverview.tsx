@@ -44,7 +44,7 @@ export const RestaurantOverview = memo(
       return null
     }
 
-    const headlines = (restaurant.headlines() ?? [])
+    const headlines = (restaurant.headlines ?? [])
       .slice(0, 3)
       .map((x) => x.sentence)
       .join(' ')

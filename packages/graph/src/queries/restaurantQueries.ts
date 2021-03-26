@@ -37,8 +37,8 @@ export async function restaurantFindOneWithTags(restaurant: Partial<RestaurantWi
     select: (v: Maybe<restaurant>[]) => {
       return v.map((rest) => {
         return {
-          ...selectFields(rest),
-          tag_names: rest?.tag_names(),
+          ...selectFields(rest, '*'),
+          menu_items: selectFields(rest?.menu_items),
           tags: rest?.tags().map((tagV) => {
             return {
               ...selectFields(tagV),
@@ -50,19 +50,13 @@ export async function restaurantFindOneWithTags(restaurant: Partial<RestaurantWi
                   }
                 }),
                 parent: selectFields(tagV.tag.parent),
-                alternates: tagV.tag.alternates(),
+                alternates: tagV.tag.alternates,
               },
-              sentences: selectFields(tagV.sentences()),
-              score_breakdown: tagV.score_breakdown(),
-              source_breakdown: tagV.source_breakdown(),
+              sentences: selectFields(tagV.sentences),
+              score_breakdown: tagV.score_breakdown,
+              source_breakdown: tagV.source_breakdown,
             }
           }),
-          menu_items: selectFields(rest?.menu_items()),
-          score_breakdown: rest?.score_breakdown(),
-          source_breakdown: rest?.source_breakdown(),
-          photos: rest?.photos(),
-          rating_factors: rest?.rating_factors(),
-          sources: rest?.sources(),
         }
       })
     },
@@ -188,7 +182,7 @@ async function restaurantUpdateTagNames(restaurant: RestaurantWithId, opts?: Sel
         return v.map((rest) => {
           return {
             ...selectFields(rest),
-            tag_names: rest.tag_names(),
+            tag_names: rest.tag_names,
             tags: rest.tags().map((r_t) => {
               const tagInfo = selectFields(r_t.tag)
 

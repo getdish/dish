@@ -1831,7 +1831,7 @@ __metadata:
     express: ^4.17.1
     flexsearch: ^0.6.32
     fs-extra: ^9.1.0
-    gqless: ^2.0.4
+    gqless: ^2.0.5
     graphql: ^15.5.0
     immer: ^8.0.0
     jsonwebtoken: ^8.4.0
@@ -1943,7 +1943,8 @@ __metadata:
     cheerio: ^1.0.0-rc.5
     chrono-node: ^2.1.6
     csv-parse: ^4.9.0
-    gqless: ^2.0.4
+    form-data: ^4.0.0
+    gqless: ^2.0.5
     graphql: ^15.5.0
     js-base64: ^2.5.2
     lodash: "*"
@@ -2023,11 +2024,11 @@ __metadata:
     "@dish/helpers-node": "*"
     "@dish/react-test-env": "*"
     "@dish/use-store": "*"
-    "@gqless/cli": ^2.0.5
-    "@gqless/logger": ^2.0.4
-    "@gqless/react": ^2.0.5
+    "@gqless/cli": ^2.0.6
+    "@gqless/logger": ^2.0.5
+    "@gqless/react": ^2.0.6
     ava: ^3.14.0
-    gqless: ^2.0.4
+    gqless: ^2.0.5
     graphql: ^15.5.0
     isomorphic-unfetch: ^3.1.0
     lodash: "*"
@@ -2548,19 +2549,19 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@gqless/cli@npm:^2.0.5":
-  version: 2.0.5
-  resolution: "@gqless/cli@npm:2.0.5"
+"@gqless/cli@npm:^2.0.6":
+  version: 2.0.6
+  resolution: "@gqless/cli@npm:2.0.6"
   dependencies:
     "@graphql-codegen/core": ^1.17.9
     "@graphql-codegen/typescript": ^1.21.1
-    "@graphql-tools/delegate": ^7.0.10
-    "@graphql-tools/utils": ^7.6.0
+    "@graphql-tools/delegate": ^7.1.1
+    "@graphql-tools/utils": ^7.7.1
     "@graphql-tools/wrap": ^7.0.5
     commander: ^7.2.0
     cosmiconfig: ^7.0.0
     cross-fetch: ^3.1.2
-    gqless: ^2.0.4
+    gqless: ^2.0.5
     mkdirp: ^1.0.4
     prettier: ^2.2.1
   peerDependencies:
@@ -2570,29 +2571,29 @@ __metadata:
       optional: true
   bin:
     gqless: bin/gqless.js
-  checksum: 5449ac142ec2da6f623ecbea10b0c0bd0b94ca58716a86fcadce2a796d704bcdc5d79b97aee66a96864baa6d26e911933bc7c24cf39da41d9f23aab14c8c5845
+  checksum: 640cc10332e1e20be4c65de9ba9aa5be5e2277dc56a6135d61a020e42734a7a04409f65ca4da2284850f9eb8d3424fcce72165a97ebe59ba272ab00c257cc86b
   languageName: node
   linkType: hard
 
-"@gqless/logger@npm:^2.0.4":
-  version: 2.0.4
-  resolution: "@gqless/logger@npm:2.0.4"
+"@gqless/logger@npm:^2.0.5":
+  version: 2.0.5
+  resolution: "@gqless/logger@npm:2.0.5"
   dependencies:
     prettier: ^2.2.1
     serialize-error: ^8.0.1
   peerDependencies:
-    gqless: ^2.0.4
-  checksum: 0d667fea8608b686e542d47b35ec47677db0680d53bbf8e3437659b1e388e7884b686ab8e1085f55cc924176424cd003fad7860316bfbd4032087ba3870bd40a
+    gqless: ^2.0.5
+  checksum: cfde1720f5c6808739f869fd11c4c4c97ba927b25e4532deeddb14a01b89e2215291760f68d8572ec7a22f024b3f898091c9f291c9dc6e77906f897d4afb8fbc
   languageName: node
   linkType: hard
 
-"@gqless/react@npm:^2.0.5":
-  version: 2.0.5
-  resolution: "@gqless/react@npm:2.0.5"
+"@gqless/react@npm:^2.0.6":
+  version: 2.0.6
+  resolution: "@gqless/react@npm:2.0.6"
   dependencies:
     react-ssr-prepass: ^1.4.0
   peerDependencies:
-    gqless: ^2.0.4
+    gqless: ^2.0.5
     graphql: ^15.5.0
     react: ">=16.8"
   peerDependenciesMeta:
@@ -2600,7 +2601,7 @@ __metadata:
       optional: true
     react:
       optional: true
-  checksum: 3c5e196005f2ad76465f01fb8be569dd71a2ac99e772b0ae6a842523f633af4ca668abc87cd24d549209505e75f3268572127911efcab843e3609332edb26569
+  checksum: c923cf892a6b0785407b8e994d6f206836b337d25523b5f53900e0ad16f3e7602b378d6d553a183f5c579e5b1a8e6fc6b515dbfd57e3c63681e4b73daa01f0c9
   languageName: node
   linkType: hard
 
@@ -2702,7 +2703,21 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@graphql-tools/delegate@npm:^7.0.10, @graphql-tools/delegate@npm:^7.0.7":
+"@graphql-tools/batch-execute@npm:^7.1.0":
+  version: 7.1.0
+  resolution: "@graphql-tools/batch-execute@npm:7.1.0"
+  dependencies:
+    "@graphql-tools/utils": ^7.7.0
+    dataloader: 2.0.0
+    is-promise: 4.0.0
+    tslib: ~2.1.0
+  peerDependencies:
+    graphql: ^14.0.0 || ^15.0.0
+  checksum: 11de2a669b127d489da1a5c8110a8b000defb5776de08c37898ada6d973c81a0989b4902ed6745c15d7639e4006e0775027c255b7b6bbfcb3f8aab37f2ec23c6
+  languageName: node
+  linkType: hard
+
+"@graphql-tools/delegate@npm:^7.0.7":
   version: 7.0.10
   resolution: "@graphql-tools/delegate@npm:7.0.10"
   dependencies:
@@ -2716,6 +2731,23 @@ __metadata:
   peerDependencies:
     graphql: ^14.0.0 || ^15.0.0
   checksum: 5222adc360a15528a6594f6c8d76d7693b16de73887cb546a8987042f1af2e65e533024ee1c9213bd73ce4e94d29cd9c913514c3bed7b5a5261feabb713b7bfb
+  languageName: node
+  linkType: hard
+
+"@graphql-tools/delegate@npm:^7.1.1":
+  version: 7.1.1
+  resolution: "@graphql-tools/delegate@npm:7.1.1"
+  dependencies:
+    "@ardatan/aggregate-error": 0.0.6
+    "@graphql-tools/batch-execute": ^7.1.0
+    "@graphql-tools/schema": ^7.0.0
+    "@graphql-tools/utils": ^7.7.1
+    dataloader: 2.0.0
+    is-promise: 4.0.0
+    tslib: ~2.1.0
+  peerDependencies:
+    graphql: ^14.0.0 || ^15.0.0
+  checksum: 9f8cdf00a01f35382c4889a343913f3d2469ba27106a7c0f3d50b1d4b65f6430ae546cfea7e79fe3721b778e765ee67b5925f971f36990a4c9c448c460efaec5
   languageName: node
   linkType: hard
 
@@ -2794,7 +2826,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@graphql-tools/utils@npm:^7.6.0":
+"@graphql-tools/utils@npm:^7.7.0, @graphql-tools/utils@npm:^7.7.1":
   version: 7.7.1
   resolution: "@graphql-tools/utils@npm:7.7.1"
   dependencies:
@@ -11306,6 +11338,17 @@ __metadata:
   languageName: node
   linkType: hard
 
+"form-data@npm:^4.0.0":
+  version: 4.0.0
+  resolution: "form-data@npm:4.0.0"
+  dependencies:
+    asynckit: ^0.4.0
+    combined-stream: ^1.0.8
+    mime-types: ^2.1.12
+  checksum: ecbe8f41bcf5c415f38e39058b34598a9261bb74a3d54b633d0b5dd8b7cf9a30b0626cd06ae8e79874a2ca88c222041142a7893e5afdd35fdfc3272264d03d44
+  languageName: node
+  linkType: hard
+
 "form-data@npm:~2.3.2":
   version: 2.3.3
   resolution: "form-data@npm:2.3.3"
@@ -11869,9 +11912,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"gqless@npm:^2.0.4":
-  version: 2.0.4
-  resolution: "gqless@npm:2.0.4"
+"gqless@npm:^2.0.5":
+  version: 2.0.5
+  resolution: "gqless@npm:2.0.5"
   dependencies:
     lodash: ^4.17.21
     lodash-es: ^4.17.21
@@ -11880,7 +11923,7 @@ __metadata:
   peerDependenciesMeta:
     graphql:
       optional: true
-  checksum: 2aa390760f2e4cc6d74a7eee8ff9ca8abe45302fef74a0da0bbf56f6245eacf42b5558f4f06fedc0a615841b07fc08190bf6abd1097dd9901d4b82015a697b93
+  checksum: b2f1521f4a906385804660cb6a668c1e53ed78f047730accc9f431f02e5098efe93341ca18bcea7b52e3d7463b5e8947078bba872a1a7030ae8b93b50b0103da
   languageName: node
   linkType: hard
 

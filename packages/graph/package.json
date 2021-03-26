@@ -18,9 +18,9 @@
   "dependencies": {
     "@dish/helpers": "*",
     "@dish/use-store": "*",
-    "@gqless/logger": "^2.0.4",
-    "@gqless/react": "^2.0.5",
-    "gqless": "^2.0.4",
+    "@gqless/logger": "^2.0.5",
+    "@gqless/react": "^2.0.6",
+    "gqless": "^2.0.5",
     "graphql": "^15.5.0",
     "isomorphic-unfetch": "^3.1.0",
     "lodash": "*",
@@ -31,7 +31,7 @@
     "@dish/esdx": "*",
     "@dish/helpers-node": "*",
     "@dish/react-test-env": "*",
-    "@gqless/cli": "^2.0.5",
+    "@gqless/cli": "^2.0.6",
     "ava": "^3.14.0",
     "patch-package": "^6.4.6"
   }
