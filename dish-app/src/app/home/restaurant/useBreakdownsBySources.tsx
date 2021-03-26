@@ -27,7 +27,7 @@ export const useBreakdownsBySources = (restaurantSlug: string, reviewTags: Navig
     let source_total = 0
     for (const rtag of scoreContributingTags) {
       if (!rtag) continue
-      const breakdown = rtag.score_breakdown()
+      const breakdown = rtag.score_breakdown
       if (!breakdown) continue
       const score = breakdown[source].score ?? 0
       rtag_breakdowns_by_source[source][rtag.tag.name] = score

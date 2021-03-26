@@ -81,23 +81,21 @@ export const RestaurantTagReviewsContent = memo(
       })
       const spacing = 12
       const theme = useTheme()
-      const sources = restaurant.sources() ?? {}
+      const sources = restaurant.sources ?? {}
       const items = (
         (tagName
           ? getTagSourceBreakdowns(
-              restaurant
-                .tags({
-                  where: {
-                    tag: {
-                      name: {
-                        _ilike: tagName,
-                      },
+              restaurant.tags({
+                where: {
+                  tag: {
+                    name: {
+                      _ilike: tagName,
                     },
                   },
-                })[0]
-                ?.source_breakdown()
+                },
+              })[0]?.source_breakdown
             )
-          : getSourceBreakdowns(restaurant.source_breakdown()?.sources)) ?? []
+          : getSourceBreakdowns(restaurant.source_breakdown?.sources)) ?? []
       ).filter(isPresent)
 
       return (

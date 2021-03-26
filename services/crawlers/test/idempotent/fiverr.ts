@@ -21,7 +21,6 @@ test.beforeEach(async (t) => {
 
 test('Parsing Fiverr text files', async (t) => {
   await ParseFiverr.start(__dirname)
-
   const continent_tag = (await tagFindOne({
     name: 'Test Asian',
   }))!

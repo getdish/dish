@@ -19,7 +19,7 @@ export async function settingFindOne(requested_setting: Partial<Setting>): Promi
       return v_s.map((v) => {
         return {
           ...selectFields(v, '*', 2),
-          value: v.value(),
+          value: v.value,
         }
       })
     },

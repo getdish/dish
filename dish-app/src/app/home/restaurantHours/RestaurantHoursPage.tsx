@@ -30,7 +30,7 @@ export default memo(
     if (!restaurant) {
       return null
     }
-    const hours = restaurant.hours() ?? []
+    const hours = restaurant.hours ?? []
     const dayOfWeek = new Intl.DateTimeFormat(['en'], {
       weekday: 'short',
     }).format(new Date())

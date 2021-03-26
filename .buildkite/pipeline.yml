@@ -15,7 +15,7 @@ steps:
     key: base
     env:
       DOCKER_TAG: dish-base
-      DOCKER_PUSH_SYNC: true
+      # DOCKER_PUSH_SYNC: true
       DOCKER_CLEAN_BEFORE: true
     plugins:
       - docker-compose#v3.7.0:

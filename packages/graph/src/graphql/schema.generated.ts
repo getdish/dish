@@ -5,9 +5,7 @@
 import { ScalarsEnumsHash } from 'gqless'
 
 export type Maybe<T> = T | null
-export type Exact<T extends { [key: string]: unknown }> = {
-  [K in keyof T]: T[K]
-}
+export type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] }
 export type MakeOptional<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]?: Maybe<T[SubKey]> }
 export type MakeMaybe<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]: Maybe<T[SubKey]> }
 /** All built-in and custom scalars, mapped to their actual values */
@@ -4810,10 +4808,7 @@ export const generatedSchema = {
         where: 'list_restaurant_tag_bool_exp',
       },
     },
-    list_restaurant_tag_by_pk: {
-      __type: 'list_restaurant_tag',
-      __args: { id: 'uuid!' },
-    },
+    list_restaurant_tag_by_pk: { __type: 'list_restaurant_tag', __args: { id: 'uuid!' } },
     list_tag: {
       __type: '[list_tag!]!',
       __args: {
@@ -5114,10 +5109,7 @@ export const generatedSchema = {
         where: 'review_tag_sentence_bool_exp',
       },
     },
-    review_tag_sentence_by_pk: {
-      __type: 'review_tag_sentence',
-      __args: { id: 'uuid!' },
-    },
+    review_tag_sentence_by_pk: { __type: 'review_tag_sentence', __args: { id: 'uuid!' } },
     setting: {
       __type: '[setting!]!',
       __args: {
@@ -5180,10 +5172,7 @@ export const generatedSchema = {
         where: 'tag_tag_bool_exp',
       },
     },
-    tag_tag_by_pk: {
-      __type: 'tag_tag',
-      __args: { category_tag_id: 'uuid!', tag_id: 'uuid!' },
-    },
+    tag_tag_by_pk: { __type: 'tag_tag', __args: { category_tag_id: 'uuid!', tag_id: 'uuid!' } },
     user: {
       __type: '[user!]!',
       __args: {
@@ -5229,15 +5218,9 @@ export const generatedSchema = {
   },
   mutation: {
     __typename: { __type: 'String!' },
-    delete_hrr: {
-      __type: 'hrr_mutation_response',
-      __args: { where: 'hrr_bool_exp!' },
-    },
+    delete_hrr: { __type: 'hrr_mutation_response', __args: { where: 'hrr_bool_exp!' } },
     delete_hrr_by_pk: { __type: 'hrr', __args: { ogc_fid: 'Int!' } },
-    delete_list: {
-      __type: 'list_mutation_response',
-      __args: { where: 'list_bool_exp!' },
-    },
+    delete_list: { __type: 'list_mutation_response', __args: { where: 'list_bool_exp!' } },
     delete_list_by_pk: { __type: 'list', __args: { id: 'uuid!' } },
     delete_list_restaurant: {
       __type: 'list_restaurant_mutation_response',
@@ -5251,10 +5234,7 @@ export const generatedSchema = {
       __type: 'list_restaurant_tag_mutation_response',
       __args: { where: 'list_restaurant_tag_bool_exp!' },
     },
-    delete_list_restaurant_tag_by_pk: {
-      __type: 'list_restaurant_tag',
-      __args: { id: 'uuid!' },
-    },
+    delete_list_restaurant_tag_by_pk: { __type: 'list_restaurant_tag', __args: { id: 'uuid!' } },
     delete_list_tag: {
       __type: 'list_tag_mutation_response',
       __args: { where: 'list_tag_bool_exp!' },
@@ -5269,22 +5249,13 @@ export const generatedSchema = {
       __type: 'nhood_labels_mutation_response',
       __args: { where: 'nhood_labels_bool_exp!' },
     },
-    delete_nhood_labels_by_pk: {
-      __type: 'nhood_labels',
-      __args: { ogc_fid: 'Int!' },
-    },
+    delete_nhood_labels_by_pk: { __type: 'nhood_labels', __args: { ogc_fid: 'Int!' } },
     delete_opening_hours: {
       __type: 'opening_hours_mutation_response',
       __args: { where: 'opening_hours_bool_exp!' },
     },
-    delete_opening_hours_by_pk: {
-      __type: 'opening_hours',
-      __args: { id: 'uuid!' },
-    },
-    delete_photo: {
-      __type: 'photo_mutation_response',
-      __args: { where: 'photo_bool_exp!' },
-    },
+    delete_opening_hours_by_pk: { __type: 'opening_hours', __args: { id: 'uuid!' } },
+    delete_photo: { __type: 'photo_mutation_response', __args: { where: 'photo_bool_exp!' } },
     delete_photo_by_pk: { __type: 'photo', __args: { id: 'uuid!' } },
     delete_photo_xref: {
       __type: 'photo_xref_mutation_response',
@@ -5304,53 +5275,29 @@ export const generatedSchema = {
       __type: 'restaurant_tag',
       __args: { restaurant_id: 'uuid!', tag_id: 'uuid!' },
     },
-    delete_review: {
-      __type: 'review_mutation_response',
-      __args: { where: 'review_bool_exp!' },
-    },
+    delete_review: { __type: 'review_mutation_response', __args: { where: 'review_bool_exp!' } },
     delete_review_by_pk: { __type: 'review', __args: { id: 'uuid!' } },
     delete_review_tag_sentence: {
       __type: 'review_tag_sentence_mutation_response',
       __args: { where: 'review_tag_sentence_bool_exp!' },
     },
-    delete_review_tag_sentence_by_pk: {
-      __type: 'review_tag_sentence',
-      __args: { id: 'uuid!' },
-    },
-    delete_setting: {
-      __type: 'setting_mutation_response',
-      __args: { where: 'setting_bool_exp!' },
-    },
+    delete_review_tag_sentence_by_pk: { __type: 'review_tag_sentence', __args: { id: 'uuid!' } },
+    delete_setting: { __type: 'setting_mutation_response', __args: { where: 'setting_bool_exp!' } },
     delete_setting_by_pk: { __type: 'setting', __args: { key: 'String!' } },
-    delete_tag: {
-      __type: 'tag_mutation_response',
-      __args: { where: 'tag_bool_exp!' },
-    },
+    delete_tag: { __type: 'tag_mutation_response', __args: { where: 'tag_bool_exp!' } },
     delete_tag_by_pk: { __type: 'tag', __args: { id: 'uuid!' } },
-    delete_tag_tag: {
-      __type: 'tag_tag_mutation_response',
-      __args: { where: 'tag_tag_bool_exp!' },
-    },
+    delete_tag_tag: { __type: 'tag_tag_mutation_response', __args: { where: 'tag_tag_bool_exp!' } },
     delete_tag_tag_by_pk: {
       __type: 'tag_tag',
       __args: { category_tag_id: 'uuid!', tag_id: 'uuid!' },
     },
-    delete_user: {
-      __type: 'user_mutation_response',
-      __args: { where: 'user_bool_exp!' },
-    },
+    delete_user: { __type: 'user_mutation_response', __args: { where: 'user_bool_exp!' } },
     delete_user_by_pk: { __type: 'user', __args: { id: 'uuid!' } },
-    delete_zcta5: {
-      __type: 'zcta5_mutation_response',
-      __args: { where: 'zcta5_bool_exp!' },
-    },
+    delete_zcta5: { __type: 'zcta5_mutation_response', __args: { where: 'zcta5_bool_exp!' } },
     delete_zcta5_by_pk: { __type: 'zcta5', __args: { ogc_fid: 'Int!' } },
     insert_hrr: {
       __type: 'hrr_mutation_response',
-      __args: {
-        objects: '[hrr_insert_input!]!',
-        on_conflict: 'hrr_on_conflict',
-      },
+      __args: { objects: '[hrr_insert_input!]!', on_conflict: 'hrr_on_conflict' },
     },
     insert_hrr_one: {
       __type: 'hrr',
@@ -5358,10 +5305,7 @@ export const generatedSchema = {
     },
     insert_list: {
       __type: 'list_mutation_response',
-      __args: {
-        objects: '[list_insert_input!]!',
-        on_conflict: 'list_on_conflict',
-      },
+      __args: { objects: '[list_insert_input!]!', on_conflict: 'list_on_conflict' },
     },
     insert_list_one: {
       __type: 'list',
@@ -5397,45 +5341,27 @@ export const generatedSchema = {
     },
     insert_list_tag: {
       __type: 'list_tag_mutation_response',
-      __args: {
-        objects: '[list_tag_insert_input!]!',
-        on_conflict: 'list_tag_on_conflict',
-      },
+      __args: { objects: '[list_tag_insert_input!]!', on_conflict: 'list_tag_on_conflict' },
     },
     insert_list_tag_one: {
       __type: 'list_tag',
-      __args: {
-        object: 'list_tag_insert_input!',
-        on_conflict: 'list_tag_on_conflict',
-      },
+      __args: { object: 'list_tag_insert_input!', on_conflict: 'list_tag_on_conflict' },
     },
     insert_menu_item: {
       __type: 'menu_item_mutation_response',
-      __args: {
-        objects: '[menu_item_insert_input!]!',
-        on_conflict: 'menu_item_on_conflict',
-      },
+      __args: { objects: '[menu_item_insert_input!]!', on_conflict: 'menu_item_on_conflict' },
     },
     insert_menu_item_one: {
       __type: 'menu_item',
-      __args: {
-        object: 'menu_item_insert_input!',
-        on_conflict: 'menu_item_on_conflict',
-      },
+      __args: { object: 'menu_item_insert_input!', on_conflict: 'menu_item_on_conflict' },
     },
     insert_nhood_labels: {
       __type: 'nhood_labels_mutation_response',
-      __args: {
-        objects: '[nhood_labels_insert_input!]!',
-        on_conflict: 'nhood_labels_on_conflict',
-      },
+      __args: { objects: '[nhood_labels_insert_input!]!', on_conflict: 'nhood_labels_on_conflict' },
     },
     insert_nhood_labels_one: {
       __type: 'nhood_labels',
-      __args: {
-        object: 'nhood_labels_insert_input!',
-        on_conflict: 'nhood_labels_on_conflict',
-      },
+      __args: { object: 'nhood_labels_insert_input!', on_conflict: 'nhood_labels_on_conflict' },
     },
     insert_opening_hours: {
       __type: 'opening_hours_mutation_response',
@@ -5446,52 +5372,31 @@ export const generatedSchema = {
     },
     insert_opening_hours_one: {
       __type: 'opening_hours',
-      __args: {
-        object: 'opening_hours_insert_input!',
-        on_conflict: 'opening_hours_on_conflict',
-      },
+      __args: { object: 'opening_hours_insert_input!', on_conflict: 'opening_hours_on_conflict' },
     },
     insert_photo: {
       __type: 'photo_mutation_response',
-      __args: {
-        objects: '[photo_insert_input!]!',
-        on_conflict: 'photo_on_conflict',
-      },
+      __args: { objects: '[photo_insert_input!]!', on_conflict: 'photo_on_conflict' },
     },
     insert_photo_one: {
       __type: 'photo',
-      __args: {
-        object: 'photo_insert_input!',
-        on_conflict: 'photo_on_conflict',
-      },
+      __args: { object: 'photo_insert_input!', on_conflict: 'photo_on_conflict' },
     },
     insert_photo_xref: {
       __type: 'photo_xref_mutation_response',
-      __args: {
-        objects: '[photo_xref_insert_input!]!',
-        on_conflict: 'photo_xref_on_conflict',
-      },
+      __args: { objects: '[photo_xref_insert_input!]!', on_conflict: 'photo_xref_on_conflict' },
     },
     insert_photo_xref_one: {
       __type: 'photo_xref',
-      __args: {
-        object: 'photo_xref_insert_input!',
-        on_conflict: 'photo_xref_on_conflict',
-      },
+      __args: { object: 'photo_xref_insert_input!', on_conflict: 'photo_xref_on_conflict' },
     },
     insert_restaurant: {
       __type: 'restaurant_mutation_response',
-      __args: {
-        objects: '[restaurant_insert_input!]!',
-        on_conflict: 'restaurant_on_conflict',
-      },
+      __args: { objects: '[restaurant_insert_input!]!', on_conflict: 'restaurant_on_conflict' },
     },
     insert_restaurant_one: {
       __type: 'restaurant',
-      __args: {
-        object: 'restaurant_insert_input!',
-        on_conflict: 'restaurant_on_conflict',
-      },
+      __args: { object: 'restaurant_insert_input!', on_conflict: 'restaurant_on_conflict' },
     },
     insert_restaurant_tag: {
       __type: 'restaurant_tag_mutation_response',
@@ -5502,24 +5407,15 @@ export const generatedSchema = {
     },
     insert_restaurant_tag_one: {
       __type: 'restaurant_tag',
-      __args: {
-        object: 'restaurant_tag_insert_input!',
-        on_conflict: 'restaurant_tag_on_conflict',
-      },
+      __args: { object: 'restaurant_tag_insert_input!', on_conflict: 'restaurant_tag_on_conflict' },
     },
     insert_review: {
       __type: 'review_mutation_response',
-      __args: {
-        objects: '[review_insert_input!]!',
-        on_conflict: 'review_on_conflict',
-      },
+      __args: { objects: '[review_insert_input!]!', on_conflict: 'review_on_conflict' },
     },
     insert_review_one: {
       __type: 'review',
-      __args: {
-        object: 'review_insert_input!',
-        on_conflict: 'review_on_conflict',
-      },
+      __args: { object: 'review_insert_input!', on_conflict: 'review_on_conflict' },
     },
     insert_review_tag_sentence: {
       __type: 'review_tag_sentence_mutation_response',
@@ -5537,24 +5433,15 @@ export const generatedSchema = {
     },
     insert_setting: {
       __type: 'setting_mutation_response',
-      __args: {
-        objects: '[setting_insert_input!]!',
-        on_conflict: 'setting_on_conflict',
-      },
+      __args: { objects: '[setting_insert_input!]!', on_conflict: 'setting_on_conflict' },
     },
     insert_setting_one: {
       __type: 'setting',
-      __args: {
-        object: 'setting_insert_input!',
-        on_conflict: 'setting_on_conflict',
-      },
+      __args: { object: 'setting_insert_input!', on_conflict: 'setting_on_conflict' },
     },
     insert_tag: {
       __type: 'tag_mutation_response',
-      __args: {
-        objects: '[tag_insert_input!]!',
-        on_conflict: 'tag_on_conflict',
-      },
+      __args: { objects: '[tag_insert_input!]!', on_conflict: 'tag_on_conflict' },
     },
     insert_tag_one: {
       __type: 'tag',
@@ -5562,24 +5449,15 @@ export const generatedSchema = {
     },
     insert_tag_tag: {
       __type: 'tag_tag_mutation_response',
-      __args: {
-        objects: '[tag_tag_insert_input!]!',
-        on_conflict: 'tag_tag_on_conflict',
-      },
+      __args: { objects: '[tag_tag_insert_input!]!', on_conflict: 'tag_tag_on_conflict' },
     },
     insert_tag_tag_one: {
       __type: 'tag_tag',
-      __args: {
-        object: 'tag_tag_insert_input!',
-        on_conflict: 'tag_tag_on_conflict',
-      },
+      __args: { object: 'tag_tag_insert_input!', on_conflict: 'tag_tag_on_conflict' },
     },
     insert_user: {
       __type: 'user_mutation_response',
-      __args: {
-        objects: '[user_insert_input!]!',
-        on_conflict: 'user_on_conflict',
-      },
+      __args: { objects: '[user_insert_input!]!', on_conflict: 'user_on_conflict' },
     },
     insert_user_one: {
       __type: 'user',
@@ -5587,41 +5465,23 @@ export const generatedSchema = {
     },
     insert_zcta5: {
       __type: 'zcta5_mutation_response',
-      __args: {
-        objects: '[zcta5_insert_input!]!',
-        on_conflict: 'zcta5_on_conflict',
-      },
+      __args: { objects: '[zcta5_insert_input!]!', on_conflict: 'zcta5_on_conflict' },
     },
     insert_zcta5_one: {
       __type: 'zcta5',
-      __args: {
-        object: 'zcta5_insert_input!',
-        on_conflict: 'zcta5_on_conflict',
-      },
+      __args: { object: 'zcta5_insert_input!', on_conflict: 'zcta5_on_conflict' },
     },
     update_hrr: {
       __type: 'hrr_mutation_response',
-      __args: {
-        _inc: 'hrr_inc_input',
-        _set: 'hrr_set_input',
-        where: 'hrr_bool_exp!',
-      },
+      __args: { _inc: 'hrr_inc_input', _set: 'hrr_set_input', where: 'hrr_bool_exp!' },
     },
     update_hrr_by_pk: {
       __type: 'hrr',
-      __args: {
-        _inc: 'hrr_inc_input',
-        _set: 'hrr_set_input',
-        pk_columns: 'hrr_pk_columns_input!',
-      },
+      __args: { _inc: 'hrr_inc_input', _set: 'hrr_set_input', pk_columns: 'hrr_pk_columns_input!' },
     },
     update_list: {
       __type: 'list_mutation_response',
-      __args: {
-        _inc: 'list_inc_input',
-        _set: 'list_set_input',
-        where: 'list_bool_exp!',
-      },
+      __args: { _inc: 'list_inc_input', _set: 'list_set_input', where: 'list_bool_exp!' },
     },
     update_list_by_pk: {
       __type: 'list',
@@ -5669,10 +5529,7 @@ export const generatedSchema = {
     },
     update_list_tag_by_pk: {
       __type: 'list_tag',
-      __args: {
-        _set: 'list_tag_set_input',
-        pk_columns: 'list_tag_pk_columns_input!',
-      },
+      __args: { _set: 'list_tag_set_input', pk_columns: 'list_tag_pk_columns_input!' },
     },
     update_menu_item: {
       __type: 'menu_item_mutation_response',
@@ -5708,17 +5565,11 @@ export const generatedSchema = {
     },
     update_opening_hours: {
       __type: 'opening_hours_mutation_response',
-      __args: {
-        _set: 'opening_hours_set_input',
-        where: 'opening_hours_bool_exp!',
-      },
+      __args: { _set: 'opening_hours_set_input', where: 'opening_hours_bool_exp!' },
     },
     update_opening_hours_by_pk: {
       __type: 'opening_hours',
-      __args: {
-        _set: 'opening_hours_set_input',
-        pk_columns: 'opening_hours_pk_columns_input!',
-      },
+      __args: { _set: 'opening_hours_set_input', pk_columns: 'opening_hours_pk_columns_input!' },
     },
     update_photo: {
       __type: 'photo_mutation_response',
@@ -5752,10 +5603,7 @@ export const generatedSchema = {
     },
     update_photo_xref_by_pk: {
       __type: 'photo_xref',
-      __args: {
-        _set: 'photo_xref_set_input',
-        pk_columns: 'photo_xref_pk_columns_input!',
-      },
+      __args: { _set: 'photo_xref_set_input', pk_columns: 'photo_xref_pk_columns_input!' },
     },
     update_restaurant: {
       __type: 'restaurant_mutation_response',
@@ -5907,18 +5755,11 @@ export const generatedSchema = {
     },
     update_tag_tag_by_pk: {
       __type: 'tag_tag',
-      __args: {
-        _set: 'tag_tag_set_input',
-        pk_columns: 'tag_tag_pk_columns_input!',
-      },
+      __args: { _set: 'tag_tag_set_input', pk_columns: 'tag_tag_pk_columns_input!' },
     },
     update_user: {
       __type: 'user_mutation_response',
-      __args: {
-        _inc: 'user_inc_input',
-        _set: 'user_set_input',
-        where: 'user_bool_exp!',
-      },
+      __args: { _inc: 'user_inc_input', _set: 'user_set_input', where: 'user_bool_exp!' },
     },
     update_user_by_pk: {
       __type: 'user',
@@ -5930,11 +5771,7 @@ export const generatedSchema = {
     },
     update_zcta5: {
       __type: 'zcta5_mutation_response',
-      __args: {
-        _inc: 'zcta5_inc_input',
-        _set: 'zcta5_set_input',
-        where: 'zcta5_bool_exp!',
-      },
+      __args: { _inc: 'zcta5_inc_input', _set: 'zcta5_set_input', where: 'zcta5_bool_exp!' },
     },
     update_zcta5_by_pk: {
       __type: 'zcta5',
@@ -6055,10 +5892,7 @@ export const generatedSchema = {
         where: 'list_restaurant_tag_bool_exp',
       },
     },
-    list_restaurant_tag_by_pk: {
-      __type: 'list_restaurant_tag',
-      __args: { id: 'uuid!' },
-    },
+    list_restaurant_tag_by_pk: { __type: 'list_restaurant_tag', __args: { id: 'uuid!' } },
     list_tag: {
       __type: '[list_tag!]!',
       __args: {
@@ -6359,10 +6193,7 @@ export const generatedSchema = {
         where: 'review_tag_sentence_bool_exp',
       },
     },
-    review_tag_sentence_by_pk: {
-      __type: 'review_tag_sentence',
-      __args: { id: 'uuid!' },
-    },
+    review_tag_sentence_by_pk: { __type: 'review_tag_sentence', __args: { id: 'uuid!' } },
     setting: {
       __type: '[setting!]!',
       __args: {
@@ -6425,10 +6256,7 @@ export const generatedSchema = {
         where: 'tag_tag_bool_exp',
       },
     },
-    tag_tag_by_pk: {
-      __type: 'tag_tag',
-      __args: { category_tag_id: 'uuid!', tag_id: 'uuid!' },
-    },
+    tag_tag_by_pk: { __type: 'tag_tag', __args: { category_tag_id: 'uuid!', tag_id: 'uuid!' } },
     user: {
       __type: '[user!]!',
       __args: {
@@ -6563,10 +6391,7 @@ export const generatedSchema = {
   hrr_aggregate_fields: {
     __typename: { __type: 'String!' },
     avg: { __type: 'hrr_avg_fields' },
-    count: {
-      __type: 'Int',
-      __args: { columns: '[hrr_select_column!]', distinct: 'Boolean' },
-    },
+    count: { __type: 'Int', __args: { columns: '[hrr_select_column!]', distinct: 'Boolean' } },
     max: { __type: 'hrr_max_fields' },
     min: { __type: 'hrr_min_fields' },
     stddev: { __type: 'hrr_stddev_fields' },
@@ -6594,10 +6419,7 @@ export const generatedSchema = {
     data: { __type: '[hrr_insert_input!]!' },
     on_conflict: { __type: 'hrr_on_conflict' },
   },
-  hrr_avg_fields: {
-    __typename: { __type: 'String!' },
-    ogc_fid: { __type: 'Float' },
-  },
+  hrr_avg_fields: { __typename: { __type: 'String!' }, ogc_fid: { __type: 'Float' } },
   hrr_avg_order_by: { ogc_fid: { __type: 'order_by' } },
   hrr_bool_exp: {
     _and: { __type: '[hrr_bool_exp]' },
@@ -6672,40 +6494,19 @@ export const generatedSchema = {
     slug: { __type: 'String' },
     wkb_geometry: { __type: 'geometry' },
   },
-  hrr_stddev_fields: {
-    __typename: { __type: 'String!' },
-    ogc_fid: { __type: 'Float' },
-  },
+  hrr_stddev_fields: { __typename: { __type: 'String!' }, ogc_fid: { __type: 'Float' } },
   hrr_stddev_order_by: { ogc_fid: { __type: 'order_by' } },
-  hrr_stddev_pop_fields: {
-    __typename: { __type: 'String!' },
-    ogc_fid: { __type: 'Float' },
-  },
+  hrr_stddev_pop_fields: { __typename: { __type: 'String!' }, ogc_fid: { __type: 'Float' } },
   hrr_stddev_pop_order_by: { ogc_fid: { __type: 'order_by' } },
-  hrr_stddev_samp_fields: {
-    __typename: { __type: 'String!' },
-    ogc_fid: { __type: 'Float' },
-  },
+  hrr_stddev_samp_fields: { __typename: { __type: 'String!' }, ogc_fid: { __type: 'Float' } },
   hrr_stddev_samp_order_by: { ogc_fid: { __type: 'order_by' } },
-  hrr_sum_fields: {
-    __typename: { __type: 'String!' },
-    ogc_fid: { __type: 'Int' },
-  },
+  hrr_sum_fields: { __typename: { __type: 'String!' }, ogc_fid: { __type: 'Int' } },
   hrr_sum_order_by: { ogc_fid: { __type: 'order_by' } },
-  hrr_var_pop_fields: {
-    __typename: { __type: 'String!' },
-    ogc_fid: { __type: 'Float' },
-  },
+  hrr_var_pop_fields: { __typename: { __type: 'String!' }, ogc_fid: { __type: 'Float' } },
   hrr_var_pop_order_by: { ogc_fid: { __type: 'order_by' } },
-  hrr_var_samp_fields: {
-    __typename: { __type: 'String!' },
-    ogc_fid: { __type: 'Float' },
-  },
+  hrr_var_samp_fields: { __typename: { __type: 'String!' }, ogc_fid: { __type: 'Float' } },
   hrr_var_samp_order_by: { ogc_fid: { __type: 'order_by' } },
-  hrr_variance_fields: {
-    __typename: { __type: 'String!' },
-    ogc_fid: { __type: 'Float' },
-  },
+  hrr_variance_fields: { __typename: { __type: 'String!' }, ogc_fid: { __type: 'Float' } },
   hrr_variance_order_by: { ogc_fid: { __type: 'order_by' } },
   jsonb_comparison_exp: {
     _contained_in: { __type: 'jsonb' },
@@ -6786,10 +6587,7 @@ export const generatedSchema = {
   list_aggregate_fields: {
     __typename: { __type: 'String!' },
     avg: { __type: 'list_avg_fields' },
-    count: {
-      __type: 'Int',
-      __args: { columns: '[list_select_column!]', distinct: 'Boolean' },
-    },
+    count: { __type: 'Int', __args: { columns: '[list_select_column!]', distinct: 'Boolean' } },
     max: { __type: 'list_max_fields' },
     min: { __type: 'list_min_fields' },
     stddev: { __type: 'list_stddev_fields' },
@@ -6817,10 +6615,7 @@ export const generatedSchema = {
     data: { __type: '[list_insert_input!]!' },
     on_conflict: { __type: 'list_on_conflict' },
   },
-  list_avg_fields: {
-    __typename: { __type: 'String!' },
-    color: { __type: 'Float' },
-  },
+  list_avg_fields: { __typename: { __type: 'String!' }, color: { __type: 'Float' } },
   list_avg_order_by: { color: { __type: 'order_by' } },
   list_bool_exp: {
     _and: { __type: '[list_bool_exp]' },
@@ -6997,10 +6792,7 @@ export const generatedSchema = {
     avg: { __type: 'list_restaurant_avg_fields' },
     count: {
       __type: 'Int',
-      __args: {
-        columns: '[list_restaurant_select_column!]',
-        distinct: 'Boolean',
-      },
+      __args: { columns: '[list_restaurant_select_column!]', distinct: 'Boolean' },
     },
     max: { __type: 'list_restaurant_max_fields' },
     min: { __type: 'list_restaurant_min_fields' },
@@ -7029,10 +6821,7 @@ export const generatedSchema = {
     data: { __type: '[list_restaurant_insert_input!]!' },
     on_conflict: { __type: 'list_restaurant_on_conflict' },
   },
-  list_restaurant_avg_fields: {
-    __typename: { __type: 'String!' },
-    position: { __type: 'Float' },
-  },
+  list_restaurant_avg_fields: { __typename: { __type: 'String!' }, position: { __type: 'Float' } },
   list_restaurant_avg_order_by: { position: { __type: 'order_by' } },
   list_restaurant_bool_exp: {
     _and: { __type: '[list_restaurant_bool_exp]' },
@@ -7149,10 +6938,7 @@ export const generatedSchema = {
     position: { __type: 'Float' },
   },
   list_restaurant_stddev_samp_order_by: { position: { __type: 'order_by' } },
-  list_restaurant_sum_fields: {
-    __typename: { __type: 'String!' },
-    position: { __type: 'Int' },
-  },
+  list_restaurant_sum_fields: { __typename: { __type: 'String!' }, position: { __type: 'Int' } },
   list_restaurant_sum_order_by: { position: { __type: 'order_by' } },
   list_restaurant_tag: {
     __typename: { __type: 'String!' },
@@ -7174,10 +6960,7 @@ export const generatedSchema = {
     avg: { __type: 'list_restaurant_tag_avg_fields' },
     count: {
       __type: 'Int',
-      __args: {
-        columns: '[list_restaurant_tag_select_column!]',
-        distinct: 'Boolean',
-      },
+      __args: { columns: '[list_restaurant_tag_select_column!]', distinct: 'Boolean' },
     },
     max: { __type: 'list_restaurant_tag_max_fields' },
     min: { __type: 'list_restaurant_tag_min_fields' },
@@ -7313,9 +7096,7 @@ export const generatedSchema = {
     __typename: { __type: 'String!' },
     position: { __type: 'Float' },
   },
-  list_restaurant_tag_stddev_samp_order_by: {
-    position: { __type: 'order_by' },
-  },
+  list_restaurant_tag_stddev_samp_order_by: { position: { __type: 'order_by' } },
   list_restaurant_tag_sum_fields: {
     __typename: { __type: 'String!' },
     position: { __type: 'Int' },
@@ -7364,25 +7145,13 @@ export const generatedSchema = {
     updated_at: { __type: 'timestamptz' },
     user_id: { __type: 'uuid' },
   },
-  list_stddev_fields: {
-    __typename: { __type: 'String!' },
-    color: { __type: 'Float' },
-  },
+  list_stddev_fields: { __typename: { __type: 'String!' }, color: { __type: 'Float' } },
   list_stddev_order_by: { color: { __type: 'order_by' } },
-  list_stddev_pop_fields: {
-    __typename: { __type: 'String!' },
-    color: { __type: 'Float' },
-  },
+  list_stddev_pop_fields: { __typename: { __type: 'String!' }, color: { __type: 'Float' } },
   list_stddev_pop_order_by: { color: { __type: 'order_by' } },
-  list_stddev_samp_fields: {
-    __typename: { __type: 'String!' },
-    color: { __type: 'Float' },
-  },
+  list_stddev_samp_fields: { __typename: { __type: 'String!' }, color: { __type: 'Float' } },
   list_stddev_samp_order_by: { color: { __type: 'order_by' } },
-  list_sum_fields: {
-    __typename: { __type: 'String!' },
-    color: { __type: 'Int' },
-  },
+  list_sum_fields: { __typename: { __type: 'String!' }, color: { __type: 'Int' } },
   list_sum_order_by: { color: { __type: 'order_by' } },
   list_tag: {
     __typename: { __type: 'String!' },
@@ -7400,10 +7169,7 @@ export const generatedSchema = {
   },
   list_tag_aggregate_fields: {
     __typename: { __type: 'String!' },
-    count: {
-      __type: 'Int',
-      __args: { columns: '[list_tag_select_column!]', distinct: 'Boolean' },
-    },
+    count: { __type: 'Int', __args: { columns: '[list_tag_select_column!]', distinct: 'Boolean' } },
     max: { __type: 'list_tag_max_fields' },
     min: { __type: 'list_tag_min_fields' },
   },
@@ -7490,20 +7256,11 @@ export const generatedSchema = {
     list_id: { __type: 'uuid' },
     tag_id: { __type: 'uuid' },
   },
-  list_var_pop_fields: {
-    __typename: { __type: 'String!' },
-    color: { __type: 'Float' },
-  },
+  list_var_pop_fields: { __typename: { __type: 'String!' }, color: { __type: 'Float' } },
   list_var_pop_order_by: { color: { __type: 'order_by' } },
-  list_var_samp_fields: {
-    __typename: { __type: 'String!' },
-    color: { __type: 'Float' },
-  },
+  list_var_samp_fields: { __typename: { __type: 'String!' }, color: { __type: 'Float' } },
   list_var_samp_order_by: { color: { __type: 'order_by' } },
-  list_variance_fields: {
-    __typename: { __type: 'String!' },
-    color: { __type: 'Float' },
-  },
+  list_variance_fields: { __typename: { __type: 'String!' }, color: { __type: 'Float' } },
   list_variance_order_by: { color: { __type: 'order_by' } },
   menu_item: {
     __typename: { __type: 'String!' },
@@ -7557,10 +7314,7 @@ export const generatedSchema = {
     data: { __type: '[menu_item_insert_input!]!' },
     on_conflict: { __type: 'menu_item_on_conflict' },
   },
-  menu_item_avg_fields: {
-    __typename: { __type: 'String!' },
-    price: { __type: 'Float' },
-  },
+  menu_item_avg_fields: { __typename: { __type: 'String!' }, price: { __type: 'Float' } },
   menu_item_avg_order_by: { price: { __type: 'order_by' } },
   menu_item_bool_exp: {
     _and: { __type: '[menu_item_bool_exp]' },
@@ -7670,40 +7424,19 @@ export const generatedSchema = {
     restaurant_id: { __type: 'uuid' },
     updated_at: { __type: 'timestamptz' },
   },
-  menu_item_stddev_fields: {
-    __typename: { __type: 'String!' },
-    price: { __type: 'Float' },
-  },
+  menu_item_stddev_fields: { __typename: { __type: 'String!' }, price: { __type: 'Float' } },
   menu_item_stddev_order_by: { price: { __type: 'order_by' } },
-  menu_item_stddev_pop_fields: {
-    __typename: { __type: 'String!' },
-    price: { __type: 'Float' },
-  },
+  menu_item_stddev_pop_fields: { __typename: { __type: 'String!' }, price: { __type: 'Float' } },
   menu_item_stddev_pop_order_by: { price: { __type: 'order_by' } },
-  menu_item_stddev_samp_fields: {
-    __typename: { __type: 'String!' },
-    price: { __type: 'Float' },
-  },
+  menu_item_stddev_samp_fields: { __typename: { __type: 'String!' }, price: { __type: 'Float' } },
   menu_item_stddev_samp_order_by: { price: { __type: 'order_by' } },
-  menu_item_sum_fields: {
-    __typename: { __type: 'String!' },
-    price: { __type: 'Int' },
-  },
+  menu_item_sum_fields: { __typename: { __type: 'String!' }, price: { __type: 'Int' } },
   menu_item_sum_order_by: { price: { __type: 'order_by' } },
-  menu_item_var_pop_fields: {
-    __typename: { __type: 'String!' },
-    price: { __type: 'Float' },
-  },
+  menu_item_var_pop_fields: { __typename: { __type: 'String!' }, price: { __type: 'Float' } },
   menu_item_var_pop_order_by: { price: { __type: 'order_by' } },
-  menu_item_var_samp_fields: {
-    __typename: { __type: 'String!' },
-    price: { __type: 'Float' },
-  },
+  menu_item_var_samp_fields: { __typename: { __type: 'String!' }, price: { __type: 'Float' } },
   menu_item_var_samp_order_by: { price: { __type: 'order_by' } },
-  menu_item_variance_fields: {
-    __typename: { __type: 'String!' },
-    price: { __type: 'Float' },
-  },
+  menu_item_variance_fields: { __typename: { __type: 'String!' }, price: { __type: 'Float' } },
   menu_item_variance_order_by: { price: { __type: 'order_by' } },
   nhood_labels: {
     __typename: { __type: 'String!' },
@@ -7750,10 +7483,7 @@ export const generatedSchema = {
     data: { __type: '[nhood_labels_insert_input!]!' },
     on_conflict: { __type: 'nhood_labels_on_conflict' },
   },
-  nhood_labels_avg_fields: {
-    __typename: { __type: 'String!' },
-    ogc_fid: { __type: 'Float' },
-  },
+  nhood_labels_avg_fields: { __typename: { __type: 'String!' }, ogc_fid: { __type: 'Float' } },
   nhood_labels_avg_order_by: { ogc_fid: { __type: 'order_by' } },
   nhood_labels_bool_exp: {
     _and: { __type: '[nhood_labels_bool_exp]' },
@@ -7774,19 +7504,13 @@ export const generatedSchema = {
     name: { __type: 'String' },
     ogc_fid: { __type: 'Int' },
   },
-  nhood_labels_max_order_by: {
-    name: { __type: 'order_by' },
-    ogc_fid: { __type: 'order_by' },
-  },
+  nhood_labels_max_order_by: { name: { __type: 'order_by' }, ogc_fid: { __type: 'order_by' } },
   nhood_labels_min_fields: {
     __typename: { __type: 'String!' },
     name: { __type: 'String' },
     ogc_fid: { __type: 'Int' },
   },
-  nhood_labels_min_order_by: {
-    name: { __type: 'order_by' },
-    ogc_fid: { __type: 'order_by' },
-  },
+  nhood_labels_min_order_by: { name: { __type: 'order_by' }, ogc_fid: { __type: 'order_by' } },
   nhood_labels_mutation_response: {
     __typename: { __type: 'String!' },
     affected_rows: { __type: 'Int!' },
@@ -7812,10 +7536,7 @@ export const generatedSchema = {
     name: { __type: 'String' },
     ogc_fid: { __type: 'Int' },
   },
-  nhood_labels_stddev_fields: {
-    __typename: { __type: 'String!' },
-    ogc_fid: { __type: 'Float' },
-  },
+  nhood_labels_stddev_fields: { __typename: { __type: 'String!' }, ogc_fid: { __type: 'Float' } },
   nhood_labels_stddev_order_by: { ogc_fid: { __type: 'order_by' } },
   nhood_labels_stddev_pop_fields: {
     __typename: { __type: 'String!' },
@@ -7827,25 +7548,13 @@ export const generatedSchema = {
     ogc_fid: { __type: 'Float' },
   },
   nhood_labels_stddev_samp_order_by: { ogc_fid: { __type: 'order_by' } },
-  nhood_labels_sum_fields: {
-    __typename: { __type: 'String!' },
-    ogc_fid: { __type: 'Int' },
-  },
+  nhood_labels_sum_fields: { __typename: { __type: 'String!' }, ogc_fid: { __type: 'Int' } },
   nhood_labels_sum_order_by: { ogc_fid: { __type: 'order_by' } },
-  nhood_labels_var_pop_fields: {
-    __typename: { __type: 'String!' },
-    ogc_fid: { __type: 'Float' },
-  },
+  nhood_labels_var_pop_fields: { __typename: { __type: 'String!' }, ogc_fid: { __type: 'Float' } },
   nhood_labels_var_pop_order_by: { ogc_fid: { __type: 'order_by' } },
-  nhood_labels_var_samp_fields: {
-    __typename: { __type: 'String!' },
-    ogc_fid: { __type: 'Float' },
-  },
+  nhood_labels_var_samp_fields: { __typename: { __type: 'String!' }, ogc_fid: { __type: 'Float' } },
   nhood_labels_var_samp_order_by: { ogc_fid: { __type: 'order_by' } },
-  nhood_labels_variance_fields: {
-    __typename: { __type: 'String!' },
-    ogc_fid: { __type: 'Float' },
-  },
+  nhood_labels_variance_fields: { __typename: { __type: 'String!' }, ogc_fid: { __type: 'Float' } },
   nhood_labels_variance_order_by: { ogc_fid: { __type: 'order_by' } },
   numeric_comparison_exp: {
     _eq: { __type: 'numeric' },
@@ -7874,10 +7583,7 @@ export const generatedSchema = {
     __typename: { __type: 'String!' },
     count: {
       __type: 'Int',
-      __args: {
-        columns: '[opening_hours_select_column!]',
-        distinct: 'Boolean',
-      },
+      __args: { columns: '[opening_hours_select_column!]', distinct: 'Boolean' },
     },
     max: { __type: 'opening_hours_max_fields' },
     min: { __type: 'opening_hours_min_fields' },
@@ -7911,19 +7617,13 @@ export const generatedSchema = {
     id: { __type: 'uuid' },
     restaurant_id: { __type: 'uuid' },
   },
-  opening_hours_max_order_by: {
-    id: { __type: 'order_by' },
-    restaurant_id: { __type: 'order_by' },
-  },
+  opening_hours_max_order_by: { id: { __type: 'order_by' }, restaurant_id: { __type: 'order_by' } },
   opening_hours_min_fields: {
     __typename: { __type: 'String!' },
     id: { __type: 'uuid' },
     restaurant_id: { __type: 'uuid' },
   },
-  opening_hours_min_order_by: {
-    id: { __type: 'order_by' },
-    restaurant_id: { __type: 'order_by' },
-  },
+  opening_hours_min_order_by: { id: { __type: 'order_by' }, restaurant_id: { __type: 'order_by' } },
   opening_hours_mutation_response: {
     __typename: { __type: 'String!' },
     affected_rows: { __type: 'Int!' },
@@ -7952,7 +7652,7 @@ export const generatedSchema = {
   },
   photo: {
     __typename: { __type: 'String!' },
-    categories: { __type: 'jsonb', __args: { path: 'String' } },
+    categories: { __type: 'jsonb' },
     created_at: { __type: 'timestamptz!' },
     id: { __type: 'uuid!' },
     origin: { __type: 'String' },
@@ -7968,10 +7668,7 @@ export const generatedSchema = {
   photo_aggregate_fields: {
     __typename: { __type: 'String!' },
     avg: { __type: 'photo_avg_fields' },
-    count: {
-      __type: 'Int',
-      __args: { columns: '[photo_select_column!]', distinct: 'Boolean' },
-    },
+    count: { __type: 'Int', __args: { columns: '[photo_select_column!]', distinct: 'Boolean' } },
     max: { __type: 'photo_max_fields' },
     min: { __type: 'photo_min_fields' },
     stddev: { __type: 'photo_stddev_fields' },
@@ -8000,10 +7697,7 @@ export const generatedSchema = {
     data: { __type: '[photo_insert_input!]!' },
     on_conflict: { __type: 'photo_on_conflict' },
   },
-  photo_avg_fields: {
-    __typename: { __type: 'String!' },
-    quality: { __type: 'Float' },
-  },
+  photo_avg_fields: { __typename: { __type: 'String!' }, quality: { __type: 'Float' } },
   photo_avg_order_by: { quality: { __type: 'order_by' } },
   photo_bool_exp: {
     _and: { __type: '[photo_bool_exp]' },
@@ -8098,40 +7792,19 @@ export const generatedSchema = {
     updated_at: { __type: 'timestamptz' },
     url: { __type: 'String' },
   },
-  photo_stddev_fields: {
-    __typename: { __type: 'String!' },
-    quality: { __type: 'Float' },
-  },
+  photo_stddev_fields: { __typename: { __type: 'String!' }, quality: { __type: 'Float' } },
   photo_stddev_order_by: { quality: { __type: 'order_by' } },
-  photo_stddev_pop_fields: {
-    __typename: { __type: 'String!' },
-    quality: { __type: 'Float' },
-  },
+  photo_stddev_pop_fields: { __typename: { __type: 'String!' }, quality: { __type: 'Float' } },
   photo_stddev_pop_order_by: { quality: { __type: 'order_by' } },
-  photo_stddev_samp_fields: {
-    __typename: { __type: 'String!' },
-    quality: { __type: 'Float' },
-  },
+  photo_stddev_samp_fields: { __typename: { __type: 'String!' }, quality: { __type: 'Float' } },
   photo_stddev_samp_order_by: { quality: { __type: 'order_by' } },
-  photo_sum_fields: {
-    __typename: { __type: 'String!' },
-    quality: { __type: 'numeric' },
-  },
+  photo_sum_fields: { __typename: { __type: 'String!' }, quality: { __type: 'numeric' } },
   photo_sum_order_by: { quality: { __type: 'order_by' } },
-  photo_var_pop_fields: {
-    __typename: { __type: 'String!' },
-    quality: { __type: 'Float' },
-  },
+  photo_var_pop_fields: { __typename: { __type: 'String!' }, quality: { __type: 'Float' } },
   photo_var_pop_order_by: { quality: { __type: 'order_by' } },
-  photo_var_samp_fields: {
-    __typename: { __type: 'String!' },
-    quality: { __type: 'Float' },
-  },
+  photo_var_samp_fields: { __typename: { __type: 'String!' }, quality: { __type: 'Float' } },
   photo_var_samp_order_by: { quality: { __type: 'order_by' } },
-  photo_variance_fields: {
-    __typename: { __type: 'String!' },
-    quality: { __type: 'Float' },
-  },
+  photo_variance_fields: { __typename: { __type: 'String!' }, quality: { __type: 'Float' } },
   photo_variance_order_by: { quality: { __type: 'order_by' } },
   photo_xref: {
     __typename: { __type: 'String!' },
@@ -8252,8 +7925,8 @@ export const generatedSchema = {
     description: { __type: 'String' },
     downvotes: { __type: 'numeric' },
     geocoder_id: { __type: 'String' },
-    headlines: { __type: 'jsonb', __args: { path: 'String' } },
-    hours: { __type: 'jsonb', __args: { path: 'String' } },
+    headlines: { __type: 'jsonb' },
+    hours: { __type: 'jsonb' },
     id: { __type: 'uuid!' },
     image: { __type: 'String' },
     is_open_now: { __type: 'Boolean' },
@@ -8299,7 +7972,7 @@ export const generatedSchema = {
       },
     },
     name: { __type: 'String!' },
-    og_source_ids: { __type: 'jsonb', __args: { path: 'String' } },
+    og_source_ids: { __type: 'jsonb' },
     oldest_review_date: { __type: 'timestamptz' },
     photo_table: {
       __type: '[photo_xref!]!',
@@ -8321,10 +7994,10 @@ export const generatedSchema = {
         where: 'photo_xref_bool_exp',
       },
     },
-    photos: { __type: 'jsonb', __args: { path: 'String' } },
+    photos: { __type: 'jsonb' },
     price_range: { __type: 'String' },
     rating: { __type: 'numeric' },
-    rating_factors: { __type: 'jsonb', __args: { path: 'String' } },
+    rating_factors: { __type: 'jsonb' },
     reviews: {
       __type: '[review!]!',
       __args: {
@@ -8346,14 +8019,14 @@ export const generatedSchema = {
       },
     },
     score: { __type: 'numeric' },
-    score_breakdown: { __type: 'jsonb', __args: { path: 'String' } },
-    scrape_metadata: { __type: 'jsonb', __args: { path: 'String' } },
+    score_breakdown: { __type: 'jsonb' },
+    scrape_metadata: { __type: 'jsonb' },
     slug: { __type: 'String!' },
-    source_breakdown: { __type: 'jsonb', __args: { path: 'String' } },
-    sources: { __type: 'jsonb', __args: { path: 'String' } },
+    source_breakdown: { __type: 'jsonb' },
+    sources: { __type: 'jsonb' },
     state: { __type: 'String' },
     summary: { __type: 'String' },
-    tag_names: { __type: 'jsonb', __args: { path: 'String' } },
+    tag_names: { __type: 'jsonb' },
     tags: {
       __type: '[restaurant_tag!]!',
       __args: {
@@ -8860,7 +8533,7 @@ export const generatedSchema = {
     __typename: { __type: 'String!' },
     downvotes: { __type: 'numeric' },
     id: { __type: 'uuid!' },
-    photos: { __type: 'jsonb', __args: { path: 'String' } },
+    photos: { __type: 'jsonb' },
     rank: { __type: 'Int' },
     rating: { __type: 'numeric' },
     restaurant: { __type: 'restaurant!' },
@@ -8887,7 +8560,7 @@ export const generatedSchema = {
       },
     },
     score: { __type: 'numeric' },
-    score_breakdown: { __type: 'jsonb', __args: { path: 'String' } },
+    score_breakdown: { __type: 'jsonb' },
     sentences: {
       __type: '[review_tag_sentence!]!',
       __args: {
@@ -8908,7 +8581,7 @@ export const generatedSchema = {
         where: 'review_tag_sentence_bool_exp',
       },
     },
-    source_breakdown: { __type: 'jsonb', __args: { path: 'String' } },
+    source_breakdown: { __type: 'jsonb' },
     tag: { __type: 'tag!' },
     tag_id: { __type: 'uuid!' },
     upvotes: { __type: 'numeric' },
@@ -8924,10 +8597,7 @@ export const generatedSchema = {
     avg: { __type: 'restaurant_tag_avg_fields' },
     count: {
       __type: 'Int',
-      __args: {
-        columns: '[restaurant_tag_select_column!]',
-        distinct: 'Boolean',
-      },
+      __args: { columns: '[restaurant_tag_select_column!]', distinct: 'Boolean' },
     },
     max: { __type: 'restaurant_tag_max_fields' },
     min: { __type: 'restaurant_tag_min_fields' },
@@ -9285,10 +8955,7 @@ export const generatedSchema = {
     upvotes: { __type: 'order_by' },
     votes_ratio: { __type: 'order_by' },
   },
-  restaurant_top_tags_args: {
-    _tag_types: { __type: 'String' },
-    tag_slugs: { __type: 'String' },
-  },
+  restaurant_top_tags_args: { _tag_types: { __type: 'String' }, tag_slugs: { __type: 'String' } },
   restaurant_trending_args: { region_slug: { __type: 'String' } },
   restaurant_var_pop_fields: {
     __typename: { __type: 'String!' },
@@ -9345,7 +9012,7 @@ export const generatedSchema = {
   review: {
     __typename: { __type: 'String!' },
     authored_at: { __type: 'timestamptz!' },
-    categories: { __type: 'jsonb', __args: { path: 'String' } },
+    categories: { __type: 'jsonb' },
     favorited: { __type: 'Boolean' },
     id: { __type: 'uuid!' },
     list_id: { __type: 'uuid' },
@@ -9393,10 +9060,7 @@ export const generatedSchema = {
   review_aggregate_fields: {
     __typename: { __type: 'String!' },
     avg: { __type: 'review_avg_fields' },
-    count: {
-      __type: 'Int',
-      __args: { columns: '[review_select_column!]', distinct: 'Boolean' },
-    },
+    count: { __type: 'Int', __args: { columns: '[review_select_column!]', distinct: 'Boolean' } },
     max: { __type: 'review_max_fields' },
     min: { __type: 'review_min_fields' },
     stddev: { __type: 'review_stddev_fields' },
@@ -9430,10 +9094,7 @@ export const generatedSchema = {
     rating: { __type: 'Float' },
     vote: { __type: 'Float' },
   },
-  review_avg_order_by: {
-    rating: { __type: 'order_by' },
-    vote: { __type: 'order_by' },
-  },
+  review_avg_order_by: { rating: { __type: 'order_by' }, vote: { __type: 'order_by' } },
   review_bool_exp: {
     _and: { __type: '[review_bool_exp]' },
     _not: { __type: 'review_bool_exp' },
@@ -9463,10 +9124,7 @@ export const generatedSchema = {
   review_delete_at_path_input: { categories: { __type: '[String]' } },
   review_delete_elem_input: { categories: { __type: 'Int' } },
   review_delete_key_input: { categories: { __type: 'String' } },
-  review_inc_input: {
-    rating: { __type: 'numeric' },
-    vote: { __type: 'numeric' },
-  },
+  review_inc_input: { rating: { __type: 'numeric' }, vote: { __type: 'numeric' } },
   review_insert_input: {
     authored_at: { __type: 'timestamptz' },
     categories: { __type: 'jsonb' },
@@ -9619,37 +9277,25 @@ export const generatedSchema = {
     rating: { __type: 'Float' },
     vote: { __type: 'Float' },
   },
-  review_stddev_order_by: {
-    rating: { __type: 'order_by' },
-    vote: { __type: 'order_by' },
-  },
+  review_stddev_order_by: { rating: { __type: 'order_by' }, vote: { __type: 'order_by' } },
   review_stddev_pop_fields: {
     __typename: { __type: 'String!' },
     rating: { __type: 'Float' },
     vote: { __type: 'Float' },
   },
-  review_stddev_pop_order_by: {
-    rating: { __type: 'order_by' },
-    vote: { __type: 'order_by' },
-  },
+  review_stddev_pop_order_by: { rating: { __type: 'order_by' }, vote: { __type: 'order_by' } },
   review_stddev_samp_fields: {
     __typename: { __type: 'String!' },
     rating: { __type: 'Float' },
     vote: { __type: 'Float' },
   },
-  review_stddev_samp_order_by: {
-    rating: { __type: 'order_by' },
-    vote: { __type: 'order_by' },
-  },
+  review_stddev_samp_order_by: { rating: { __type: 'order_by' }, vote: { __type: 'order_by' } },
   review_sum_fields: {
     __typename: { __type: 'String!' },
     rating: { __type: 'numeric' },
     vote: { __type: 'numeric' },
   },
-  review_sum_order_by: {
-    rating: { __type: 'order_by' },
-    vote: { __type: 'order_by' },
-  },
+  review_sum_order_by: { rating: { __type: 'order_by' }, vote: { __type: 'order_by' } },
   review_tag_sentence: {
     __typename: { __type: 'String!' },
     id: { __type: 'uuid!' },
@@ -9672,10 +9318,7 @@ export const generatedSchema = {
     avg: { __type: 'review_tag_sentence_avg_fields' },
     count: {
       __type: 'Int',
-      __args: {
-        columns: '[review_tag_sentence_select_column!]',
-        distinct: 'Boolean',
-      },
+      __args: { columns: '[review_tag_sentence_select_column!]', distinct: 'Boolean' },
     },
     max: { __type: 'review_tag_sentence_max_fields' },
     min: { __type: 'review_tag_sentence_min_fields' },
@@ -9883,35 +9526,26 @@ export const generatedSchema = {
     rating: { __type: 'Float' },
     vote: { __type: 'Float' },
   },
-  review_var_pop_order_by: {
-    rating: { __type: 'order_by' },
-    vote: { __type: 'order_by' },
-  },
+  review_var_pop_order_by: { rating: { __type: 'order_by' }, vote: { __type: 'order_by' } },
   review_var_samp_fields: {
     __typename: { __type: 'String!' },
     rating: { __type: 'Float' },
     vote: { __type: 'Float' },
   },
-  review_var_samp_order_by: {
-    rating: { __type: 'order_by' },
-    vote: { __type: 'order_by' },
-  },
+  review_var_samp_order_by: { rating: { __type: 'order_by' }, vote: { __type: 'order_by' } },
   review_variance_fields: {
     __typename: { __type: 'String!' },
     rating: { __type: 'Float' },
     vote: { __type: 'Float' },
   },
-  review_variance_order_by: {
-    rating: { __type: 'order_by' },
-    vote: { __type: 'order_by' },
-  },
+  review_variance_order_by: { rating: { __type: 'order_by' }, vote: { __type: 'order_by' } },
   setting: {
     __typename: { __type: 'String!' },
     created_at: { __type: 'timestamptz' },
     id: { __type: 'uuid!' },
     key: { __type: 'String!' },
     updated_at: { __type: 'timestamptz' },
-    value: { __type: 'jsonb!', __args: { path: 'String' } },
+    value: { __type: 'jsonb!' },
   },
   setting_aggregate: {
     __typename: { __type: 'String!' },
@@ -9920,10 +9554,7 @@ export const generatedSchema = {
   },
   setting_aggregate_fields: {
     __typename: { __type: 'String!' },
-    count: {
-      __type: 'Int',
-      __args: { columns: '[setting_select_column!]', distinct: 'Boolean' },
-    },
+    count: { __type: 'Int', __args: { columns: '[setting_select_column!]', distinct: 'Boolean' } },
     max: { __type: 'setting_max_fields' },
     min: { __type: 'setting_min_fields' },
   },
@@ -10018,13 +9649,10 @@ export const generatedSchema = {
     from: { __type: 'geography!' },
     use_spheroid: { __type: 'Boolean' },
   },
-  st_d_within_input: {
-    distance: { __type: 'Float!' },
-    from: { __type: 'geometry!' },
-  },
+  st_d_within_input: { distance: { __type: 'Float!' }, from: { __type: 'geometry!' } },
   tag: {
     __typename: { __type: 'String!' },
-    alternates: { __type: 'jsonb', __args: { path: 'String' } },
+    alternates: { __type: 'jsonb' },
     categories: {
       __type: '[tag_tag!]!',
       __args: {
@@ -10047,14 +9675,14 @@ export const generatedSchema = {
     },
     created_at: { __type: 'timestamptz!' },
     default_image: { __type: 'String' },
-    default_images: { __type: 'jsonb', __args: { path: 'String' } },
+    default_images: { __type: 'jsonb' },
     description: { __type: 'String' },
     displayName: { __type: 'String' },
     frequency: { __type: 'Int' },
     icon: { __type: 'String' },
     id: { __type: 'uuid!' },
     is_ambiguous: { __type: 'Boolean!' },
-    misc: { __type: 'jsonb', __args: { path: 'String' } },
+    misc: { __type: 'jsonb' },
     name: { __type: 'String!' },
     order: { __type: 'Int!' },
     parent: { __type: 'tag' },
@@ -10080,7 +9708,7 @@ export const generatedSchema = {
         where: 'restaurant_tag_bool_exp',
       },
     },
-    rgb: { __type: 'jsonb', __args: { path: 'String' } },
+    rgb: { __type: 'jsonb' },
     slug: { __type: 'String' },
     type: { __type: 'String' },
     updated_at: { __type: 'timestamptz!' },
@@ -10093,10 +9721,7 @@ export const generatedSchema = {
   tag_aggregate_fields: {
     __typename: { __type: 'String!' },
     avg: { __type: 'tag_avg_fields' },
-    count: {
-      __type: 'Int',
-      __args: { columns: '[tag_select_column!]', distinct: 'Boolean' },
-    },
+    count: { __type: 'Int', __args: { columns: '[tag_select_column!]', distinct: 'Boolean' } },
     max: { __type: 'tag_max_fields' },
     min: { __type: 'tag_min_fields' },
     stddev: { __type: 'tag_stddev_fields' },
@@ -10313,9 +9938,7 @@ export const generatedSchema = {
     parent: { __type: 'tag_order_by' },
     parentId: { __type: 'order_by' },
     popularity: { __type: 'order_by' },
-    restaurant_taxonomies_aggregate: {
-      __type: 'restaurant_tag_aggregate_order_by',
-    },
+    restaurant_taxonomies_aggregate: { __type: 'restaurant_tag_aggregate_order_by' },
     rgb: { __type: 'order_by' },
     slug: { __type: 'order_by' },
     type: { __type: 'order_by' },
@@ -10407,10 +10030,7 @@ export const generatedSchema = {
   },
   tag_tag_aggregate_fields: {
     __typename: { __type: 'String!' },
-    count: {
-      __type: 'Int',
-      __args: { columns: '[tag_tag_select_column!]', distinct: 'Boolean' },
-    },
+    count: { __type: 'Int', __args: { columns: '[tag_tag_select_column!]', distinct: 'Boolean' } },
     max: { __type: 'tag_tag_max_fields' },
     min: { __type: 'tag_tag_min_fields' },
   },
@@ -10443,19 +10063,13 @@ export const generatedSchema = {
     category_tag_id: { __type: 'uuid' },
     tag_id: { __type: 'uuid' },
   },
-  tag_tag_max_order_by: {
-    category_tag_id: { __type: 'order_by' },
-    tag_id: { __type: 'order_by' },
-  },
+  tag_tag_max_order_by: { category_tag_id: { __type: 'order_by' }, tag_id: { __type: 'order_by' } },
   tag_tag_min_fields: {
     __typename: { __type: 'String!' },
     category_tag_id: { __type: 'uuid' },
     tag_id: { __type: 'uuid' },
   },
-  tag_tag_min_order_by: {
-    category_tag_id: { __type: 'order_by' },
-    tag_id: { __type: 'order_by' },
-  },
+  tag_tag_min_order_by: { category_tag_id: { __type: 'order_by' }, tag_id: { __type: 'order_by' } },
   tag_tag_mutation_response: {
     __typename: { __type: 'String!' },
     affected_rows: { __type: 'Int!' },
@@ -10476,14 +10090,8 @@ export const generatedSchema = {
     main: { __type: 'tag_order_by' },
     tag_id: { __type: 'order_by' },
   },
-  tag_tag_pk_columns_input: {
-    category_tag_id: { __type: 'uuid!' },
-    tag_id: { __type: 'uuid!' },
-  },
-  tag_tag_set_input: {
-    category_tag_id: { __type: 'uuid' },
-    tag_id: { __type: 'uuid' },
-  },
+  tag_tag_pk_columns_input: { category_tag_id: { __type: 'uuid!' }, tag_id: { __type: 'uuid!' } },
+  tag_tag_set_input: { category_tag_id: { __type: 'uuid' }, tag_id: { __type: 'uuid' } },
   tag_var_pop_fields: {
     __typename: { __type: 'String!' },
     frequency: { __type: 'Float' },
@@ -10609,10 +10217,7 @@ export const generatedSchema = {
   user_aggregate_fields: {
     __typename: { __type: 'String!' },
     avg: { __type: 'user_avg_fields' },
-    count: {
-      __type: 'Int',
-      __args: { columns: '[user_select_column!]', distinct: 'Boolean' },
-    },
+    count: { __type: 'Int', __args: { columns: '[user_select_column!]', distinct: 'Boolean' } },
     max: { __type: 'user_max_fields' },
     min: { __type: 'user_min_fields' },
     stddev: { __type: 'user_stddev_fields' },
@@ -10640,10 +10245,7 @@ export const generatedSchema = {
     data: { __type: '[user_insert_input!]!' },
     on_conflict: { __type: 'user_on_conflict' },
   },
-  user_avg_fields: {
-    __typename: { __type: 'String!' },
-    charIndex: { __type: 'Float' },
-  },
+  user_avg_fields: { __typename: { __type: 'String!' }, charIndex: { __type: 'Float' } },
   user_avg_order_by: { charIndex: { __type: 'order_by' } },
   user_bool_exp: {
     _and: { __type: '[user_bool_exp]' },
@@ -10836,40 +10438,19 @@ export const generatedSchema = {
     updated_at: { __type: 'timestamptz' },
     username: { __type: 'String' },
   },
-  user_stddev_fields: {
-    __typename: { __type: 'String!' },
-    charIndex: { __type: 'Float' },
-  },
+  user_stddev_fields: { __typename: { __type: 'String!' }, charIndex: { __type: 'Float' } },
   user_stddev_order_by: { charIndex: { __type: 'order_by' } },
-  user_stddev_pop_fields: {
-    __typename: { __type: 'String!' },
-    charIndex: { __type: 'Float' },
-  },
+  user_stddev_pop_fields: { __typename: { __type: 'String!' }, charIndex: { __type: 'Float' } },
   user_stddev_pop_order_by: { charIndex: { __type: 'order_by' } },
-  user_stddev_samp_fields: {
-    __typename: { __type: 'String!' },
-    charIndex: { __type: 'Float' },
-  },
+  user_stddev_samp_fields: { __typename: { __type: 'String!' }, charIndex: { __type: 'Float' } },
   user_stddev_samp_order_by: { charIndex: { __type: 'order_by' } },
-  user_sum_fields: {
-    __typename: { __type: 'String!' },
-    charIndex: { __type: 'Int' },
-  },
+  user_sum_fields: { __typename: { __type: 'String!' }, charIndex: { __type: 'Int' } },
   user_sum_order_by: { charIndex: { __type: 'order_by' } },
-  user_var_pop_fields: {
-    __typename: { __type: 'String!' },
-    charIndex: { __type: 'Float' },
-  },
+  user_var_pop_fields: { __typename: { __type: 'String!' }, charIndex: { __type: 'Float' } },
   user_var_pop_order_by: { charIndex: { __type: 'order_by' } },
-  user_var_samp_fields: {
-    __typename: { __type: 'String!' },
-    charIndex: { __type: 'Float' },
-  },
+  user_var_samp_fields: { __typename: { __type: 'String!' }, charIndex: { __type: 'Float' } },
   user_var_samp_order_by: { charIndex: { __type: 'order_by' } },
-  user_variance_fields: {
-    __typename: { __type: 'String!' },
-    charIndex: { __type: 'Float' },
-  },
+  user_variance_fields: { __typename: { __type: 'String!' }, charIndex: { __type: 'Float' } },
   user_variance_order_by: { charIndex: { __type: 'order_by' } },
   uuid_comparison_exp: {
     _eq: { __type: 'uuid' },
@@ -10900,10 +10481,7 @@ export const generatedSchema = {
   zcta5_aggregate_fields: {
     __typename: { __type: 'String!' },
     avg: { __type: 'zcta5_avg_fields' },
-    count: {
-      __type: 'Int',
-      __args: { columns: '[zcta5_select_column!]', distinct: 'Boolean' },
-    },
+    count: { __type: 'Int', __args: { columns: '[zcta5_select_column!]', distinct: 'Boolean' } },
     max: { __type: 'zcta5_max_fields' },
     min: { __type: 'zcta5_min_fields' },
     stddev: { __type: 'zcta5_stddev_fields' },
@@ -10931,10 +10509,7 @@ export const generatedSchema = {
     data: { __type: '[zcta5_insert_input!]!' },
     on_conflict: { __type: 'zcta5_on_conflict' },
   },
-  zcta5_avg_fields: {
-    __typename: { __type: 'String!' },
-    ogc_fid: { __type: 'Float' },
-  },
+  zcta5_avg_fields: { __typename: { __type: 'String!' }, ogc_fid: { __type: 'Float' } },
   zcta5_avg_order_by: { ogc_fid: { __type: 'order_by' } },
   zcta5_bool_exp: {
     _and: { __type: '[zcta5_bool_exp]' },
@@ -11025,40 +10600,19 @@ export const generatedSchema = {
     slug: { __type: 'String' },
     wkb_geometry: { __type: 'geometry' },
   },
-  zcta5_stddev_fields: {
-    __typename: { __type: 'String!' },
-    ogc_fid: { __type: 'Float' },
-  },
+  zcta5_stddev_fields: { __typename: { __type: 'String!' }, ogc_fid: { __type: 'Float' } },
   zcta5_stddev_order_by: { ogc_fid: { __type: 'order_by' } },
-  zcta5_stddev_pop_fields: {
-    __typename: { __type: 'String!' },
-    ogc_fid: { __type: 'Float' },
-  },
+  zcta5_stddev_pop_fields: { __typename: { __type: 'String!' }, ogc_fid: { __type: 'Float' } },
   zcta5_stddev_pop_order_by: { ogc_fid: { __type: 'order_by' } },
-  zcta5_stddev_samp_fields: {
-    __typename: { __type: 'String!' },
-    ogc_fid: { __type: 'Float' },
-  },
+  zcta5_stddev_samp_fields: { __typename: { __type: 'String!' }, ogc_fid: { __type: 'Float' } },
   zcta5_stddev_samp_order_by: { ogc_fid: { __type: 'order_by' } },
-  zcta5_sum_fields: {
-    __typename: { __type: 'String!' },
-    ogc_fid: { __type: 'Int' },
-  },
+  zcta5_sum_fields: { __typename: { __type: 'String!' }, ogc_fid: { __type: 'Int' } },
   zcta5_sum_order_by: { ogc_fid: { __type: 'order_by' } },
-  zcta5_var_pop_fields: {
-    __typename: { __type: 'String!' },
-    ogc_fid: { __type: 'Float' },
-  },
+  zcta5_var_pop_fields: { __typename: { __type: 'String!' }, ogc_fid: { __type: 'Float' } },
   zcta5_var_pop_order_by: { ogc_fid: { __type: 'order_by' } },
-  zcta5_var_samp_fields: {
-    __typename: { __type: 'String!' },
-    ogc_fid: { __type: 'Float' },
-  },
+  zcta5_var_samp_fields: { __typename: { __type: 'String!' }, ogc_fid: { __type: 'Float' } },
   zcta5_var_samp_order_by: { ogc_fid: { __type: 'order_by' } },
-  zcta5_variance_fields: {
-    __typename: { __type: 'String!' },
-    ogc_fid: { __type: 'Float' },
-  },
+  zcta5_variance_fields: { __typename: { __type: 'String!' }, ogc_fid: { __type: 'Float' } },
   zcta5_variance_order_by: { ogc_fid: { __type: 'order_by' } },
 } as const
 
@@ -12277,6 +11831,9 @@ export interface Subscription {
   zcta5_by_pk: (args: { ogc_fid: ScalarsEnums['Int'] }) => Maybe<zcta5>
 }
 
+/**
+ * columns and relationships of "hrr"
+ */
 export interface hrr {
   __typename: 'hrr' | undefined
   color?: ScalarsEnums['String']
@@ -12286,12 +11843,18 @@ export interface hrr {
   wkb_geometry?: ScalarsEnums['geometry']
 }
 
+/**
+ * aggregated selection of "hrr"
+ */
 export interface hrr_aggregate {
   __typename: 'hrr_aggregate' | undefined
   aggregate?: Maybe<hrr_aggregate_fields>
   nodes: Array<hrr>
 }
 
+/**
+ * aggregate fields of "hrr"
+ */
 export interface hrr_aggregate_fields {
   __typename: 'hrr_aggregate_fields' | undefined
   avg?: Maybe<hrr_avg_fields>
@@ -12310,11 +11873,17 @@ export interface hrr_aggregate_fields {
   variance?: Maybe<hrr_variance_fields>
 }
 
+/**
+ * aggregate avg on columns
+ */
 export interface hrr_avg_fields {
   __typename: 'hrr_avg_fields' | undefined
   ogc_fid?: ScalarsEnums['Float']
 }
 
+/**
+ * aggregate max on columns
+ */
 export interface hrr_max_fields {
   __typename: 'hrr_max_fields' | undefined
   color?: ScalarsEnums['String']
@@ -12323,6 +11892,9 @@ export interface hrr_max_fields {
   slug?: ScalarsEnums['String']
 }
 
+/**
+ * aggregate min on columns
+ */
 export interface hrr_min_fields {
   __typename: 'hrr_min_fields' | undefined
   color?: ScalarsEnums['String']
@@ -12331,47 +11903,80 @@ export interface hrr_min_fields {
   slug?: ScalarsEnums['String']
 }
 
+/**
+ * response of any mutation on the table "hrr"
+ */
 export interface hrr_mutation_response {
   __typename: 'hrr_mutation_response' | undefined
+  /**
+   * number of affected rows by the mutation
+   */
   affected_rows: ScalarsEnums['Int']
+  /**
+   * data of the affected rows by the mutation
+   */
   returning: Array<hrr>
 }
 
+/**
+ * aggregate stddev on columns
+ */
 export interface hrr_stddev_fields {
   __typename: 'hrr_stddev_fields' | undefined
   ogc_fid?: ScalarsEnums['Float']
 }
 
+/**
+ * aggregate stddev_pop on columns
+ */
 export interface hrr_stddev_pop_fields {
   __typename: 'hrr_stddev_pop_fields' | undefined
   ogc_fid?: ScalarsEnums['Float']
 }
 
+/**
+ * aggregate stddev_samp on columns
+ */
 export interface hrr_stddev_samp_fields {
   __typename: 'hrr_stddev_samp_fields' | undefined
   ogc_fid?: ScalarsEnums['Float']
 }
 
+/**
+ * aggregate sum on columns
+ */
 export interface hrr_sum_fields {
   __typename: 'hrr_sum_fields' | undefined
   ogc_fid?: ScalarsEnums['Int']
 }
 
+/**
+ * aggregate var_pop on columns
+ */
 export interface hrr_var_pop_fields {
   __typename: 'hrr_var_pop_fields' | undefined
   ogc_fid?: ScalarsEnums['Float']
 }
 
+/**
+ * aggregate var_samp on columns
+ */
 export interface hrr_var_samp_fields {
   __typename: 'hrr_var_samp_fields' | undefined
   ogc_fid?: ScalarsEnums['Float']
 }
 
+/**
+ * aggregate variance on columns
+ */
 export interface hrr_variance_fields {
   __typename: 'hrr_variance_fields' | undefined
   ogc_fid?: ScalarsEnums['Float']
 }
 
+/**
+ * columns and relationships of "list"
+ */
 export interface list {
   __typename: 'list' | undefined
   color?: ScalarsEnums['Int']
@@ -12382,46 +11987,127 @@ export interface list {
   name: ScalarsEnums['String']
   public: ScalarsEnums['Boolean']
   region?: ScalarsEnums['String']
+  /**
+   * An array relationship
+   */
   restaurants: (args?: {
+    /**
+     * distinct select on columns
+     */
     distinct_on?: Array<ScalarsEnums['list_restaurant_select_column']>
+    /**
+     * limit the number of rows returned
+     */
     limit?: ScalarsEnums['Int']
+    /**
+     * skip the first n rows. Use only with order_by
+     */
     offset?: ScalarsEnums['Int']
+    /**
+     * sort the rows by one or more columns
+     */
     order_by?: Maybe<Array<list_restaurant_order_by>>
+    /**
+     * filter the rows returned
+     */
     where?: Maybe<list_restaurant_bool_exp>
   }) => Array<list_restaurant>
+  /**
+   * An aggregated array relationship
+   */
   restaurants_aggregate: (args?: {
+    /**
+     * distinct select on columns
+     */
     distinct_on?: Array<ScalarsEnums['list_restaurant_select_column']>
+    /**
+     * limit the number of rows returned
+     */
     limit?: ScalarsEnums['Int']
+    /**
+     * skip the first n rows. Use only with order_by
+     */
     offset?: ScalarsEnums['Int']
+    /**
+     * sort the rows by one or more columns
+     */
     order_by?: Maybe<Array<list_restaurant_order_by>>
+    /**
+     * filter the rows returned
+     */
     where?: Maybe<list_restaurant_bool_exp>
   }) => list_restaurant_aggregate
   slug: ScalarsEnums['String']
+  /**
+   * An array relationship
+   */
   tags: (args?: {
+    /**
+     * distinct select on columns
+     */
     distinct_on?: Array<ScalarsEnums['list_tag_select_column']>
+    /**
+     * limit the number of rows returned
+     */
     limit?: ScalarsEnums['Int']
+    /**
+     * skip the first n rows. Use only with order_by
+     */
     offset?: ScalarsEnums['Int']
+    /**
+     * sort the rows by one or more columns
+     */
     order_by?: Maybe<Array<list_tag_order_by>>
+    /**
+     * filter the rows returned
+     */
     where?: Maybe<list_tag_bool_exp>
   }) => Array<list_tag>
+  /**
+   * An aggregated array relationship
+   */
   tags_aggregate: (args?: {
+    /**
+     * distinct select on columns
+     */
     distinct_on?: Array<ScalarsEnums['list_tag_select_column']>
+    /**
+     * limit the number of rows returned
+     */
     limit?: ScalarsEnums['Int']
+    /**
+     * skip the first n rows. Use only with order_by
+     */
     offset?: ScalarsEnums['Int']
+    /**
+     * sort the rows by one or more columns
+     */
     order_by?: Maybe<Array<list_tag_order_by>>
+    /**
+     * filter the rows returned
+     */
     where?: Maybe<list_tag_bool_exp>
   }) => list_tag_aggregate
   updated_at: ScalarsEnums['timestamptz']
+  /**
+   * An object relationship
+   */
   user?: Maybe<user>
   user_id: ScalarsEnums['uuid']
 }
 
+/**
+ * aggregated selection of "list"
+ */
 export interface list_aggregate {
   __typename: 'list_aggregate' | undefined
   aggregate?: Maybe<list_aggregate_fields>
   nodes: Array<list>
 }
 
+/**
+ * aggregate fields of "list"
+ */
 export interface list_aggregate_fields {
   __typename: 'list_aggregate_fields' | undefined
   avg?: Maybe<list_avg_fields>
@@ -12440,11 +12126,17 @@ export interface list_aggregate_fields {
   variance?: Maybe<list_variance_fields>
 }
 
+/**
+ * aggregate avg on columns
+ */
 export interface list_avg_fields {
   __typename: 'list_avg_fields' | undefined
   color?: ScalarsEnums['Float']
 }
 
+/**
+ * aggregate max on columns
+ */
 export interface list_max_fields {
   __typename: 'list_max_fields' | undefined
   color?: ScalarsEnums['Int']
@@ -12458,6 +12150,9 @@ export interface list_max_fields {
   user_id?: ScalarsEnums['uuid']
 }
 
+/**
+ * aggregate min on columns
+ */
 export interface list_min_fields {
   __typename: 'list_min_fields' | undefined
   color?: ScalarsEnums['Int']
@@ -12471,58 +12166,154 @@ export interface list_min_fields {
   user_id?: ScalarsEnums['uuid']
 }
 
+/**
+ * response of any mutation on the table "list"
+ */
 export interface list_mutation_response {
   __typename: 'list_mutation_response' | undefined
+  /**
+   * number of affected rows by the mutation
+   */
   affected_rows: ScalarsEnums['Int']
+  /**
+   * data of the affected rows by the mutation
+   */
   returning: Array<list>
 }
 
+/**
+ * columns and relationships of "list_restaurant"
+ */
 export interface list_restaurant {
   __typename: 'list_restaurant' | undefined
   comment?: ScalarsEnums['String']
   id: ScalarsEnums['uuid']
+  /**
+   * An object relationship
+   */
   list: list
   list_id: ScalarsEnums['uuid']
   position?: ScalarsEnums['Int']
+  /**
+   * An object relationship
+   */
   restaurant: restaurant
   restaurant_id: ScalarsEnums['uuid']
+  /**
+   * An array relationship
+   */
   restaurants: (args?: {
+    /**
+     * distinct select on columns
+     */
     distinct_on?: Array<ScalarsEnums['restaurant_select_column']>
+    /**
+     * limit the number of rows returned
+     */
     limit?: ScalarsEnums['Int']
+    /**
+     * skip the first n rows. Use only with order_by
+     */
     offset?: ScalarsEnums['Int']
+    /**
+     * sort the rows by one or more columns
+     */
     order_by?: Maybe<Array<restaurant_order_by>>
+    /**
+     * filter the rows returned
+     */
     where?: Maybe<restaurant_bool_exp>
   }) => Array<restaurant>
+  /**
+   * An aggregated array relationship
+   */
   restaurants_aggregate: (args?: {
+    /**
+     * distinct select on columns
+     */
     distinct_on?: Array<ScalarsEnums['restaurant_select_column']>
+    /**
+     * limit the number of rows returned
+     */
     limit?: ScalarsEnums['Int']
+    /**
+     * skip the first n rows. Use only with order_by
+     */
     offset?: ScalarsEnums['Int']
+    /**
+     * sort the rows by one or more columns
+     */
     order_by?: Maybe<Array<restaurant_order_by>>
+    /**
+     * filter the rows returned
+     */
     where?: Maybe<restaurant_bool_exp>
   }) => restaurant_aggregate
+  /**
+   * An array relationship
+   */
   tags: (args?: {
+    /**
+     * distinct select on columns
+     */
     distinct_on?: Array<ScalarsEnums['list_restaurant_tag_select_column']>
+    /**
+     * limit the number of rows returned
+     */
     limit?: ScalarsEnums['Int']
+    /**
+     * skip the first n rows. Use only with order_by
+     */
     offset?: ScalarsEnums['Int']
+    /**
+     * sort the rows by one or more columns
+     */
     order_by?: Maybe<Array<list_restaurant_tag_order_by>>
+    /**
+     * filter the rows returned
+     */
     where?: Maybe<list_restaurant_tag_bool_exp>
   }) => Array<list_restaurant_tag>
+  /**
+   * An aggregated array relationship
+   */
   tags_aggregate: (args?: {
+    /**
+     * distinct select on columns
+     */
     distinct_on?: Array<ScalarsEnums['list_restaurant_tag_select_column']>
+    /**
+     * limit the number of rows returned
+     */
     limit?: ScalarsEnums['Int']
+    /**
+     * skip the first n rows. Use only with order_by
+     */
     offset?: ScalarsEnums['Int']
+    /**
+     * sort the rows by one or more columns
+     */
     order_by?: Maybe<Array<list_restaurant_tag_order_by>>
+    /**
+     * filter the rows returned
+     */
     where?: Maybe<list_restaurant_tag_bool_exp>
   }) => list_restaurant_tag_aggregate
   user_id: ScalarsEnums['uuid']
 }
 
+/**
+ * aggregated selection of "list_restaurant"
+ */
 export interface list_restaurant_aggregate {
   __typename: 'list_restaurant_aggregate' | undefined
   aggregate?: Maybe<list_restaurant_aggregate_fields>
   nodes: Array<list_restaurant>
 }
 
+/**
+ * aggregate fields of "list_restaurant"
+ */
 export interface list_restaurant_aggregate_fields {
   __typename: 'list_restaurant_aggregate_fields' | undefined
   avg?: Maybe<list_restaurant_avg_fields>
@@ -12541,11 +12332,17 @@ export interface list_restaurant_aggregate_fields {
   variance?: Maybe<list_restaurant_variance_fields>
 }
 
+/**
+ * aggregate avg on columns
+ */
 export interface list_restaurant_avg_fields {
   __typename: 'list_restaurant_avg_fields' | undefined
   position?: ScalarsEnums['Float']
 }
 
+/**
+ * aggregate max on columns
+ */
 export interface list_restaurant_max_fields {
   __typename: 'list_restaurant_max_fields' | undefined
   comment?: ScalarsEnums['String']
@@ -12556,6 +12353,9 @@ export interface list_restaurant_max_fields {
   user_id?: ScalarsEnums['uuid']
 }
 
+/**
+ * aggregate min on columns
+ */
 export interface list_restaurant_min_fields {
   __typename: 'list_restaurant_min_fields' | undefined
   comment?: ScalarsEnums['String']
@@ -12566,49 +12366,82 @@ export interface list_restaurant_min_fields {
   user_id?: ScalarsEnums['uuid']
 }
 
+/**
+ * response of any mutation on the table "list_restaurant"
+ */
 export interface list_restaurant_mutation_response {
   __typename: 'list_restaurant_mutation_response' | undefined
+  /**
+   * number of affected rows by the mutation
+   */
   affected_rows: ScalarsEnums['Int']
+  /**
+   * data of the affected rows by the mutation
+   */
   returning: Array<list_restaurant>
 }
 
+/**
+ * aggregate stddev on columns
+ */
 export interface list_restaurant_stddev_fields {
   __typename: 'list_restaurant_stddev_fields' | undefined
   position?: ScalarsEnums['Float']
 }
 
+/**
+ * aggregate stddev_pop on columns
+ */
 export interface list_restaurant_stddev_pop_fields {
   __typename: 'list_restaurant_stddev_pop_fields' | undefined
   position?: ScalarsEnums['Float']
 }
 
+/**
+ * aggregate stddev_samp on columns
+ */
 export interface list_restaurant_stddev_samp_fields {
   __typename: 'list_restaurant_stddev_samp_fields' | undefined
   position?: ScalarsEnums['Float']
 }
 
+/**
+ * aggregate sum on columns
+ */
 export interface list_restaurant_sum_fields {
   __typename: 'list_restaurant_sum_fields' | undefined
   position?: ScalarsEnums['Int']
 }
 
+/**
+ * columns and relationships of "list_restaurant_tag"
+ */
 export interface list_restaurant_tag {
   __typename: 'list_restaurant_tag' | undefined
   id: ScalarsEnums['uuid']
   list_id: ScalarsEnums['uuid']
   list_restaurant_id: ScalarsEnums['uuid']
   position: ScalarsEnums['Int']
+  /**
+   * An object relationship
+   */
   restaurant_tag?: Maybe<restaurant_tag>
   restaurant_tag_id: ScalarsEnums['uuid']
   user_id: ScalarsEnums['uuid']
 }
 
+/**
+ * aggregated selection of "list_restaurant_tag"
+ */
 export interface list_restaurant_tag_aggregate {
   __typename: 'list_restaurant_tag_aggregate' | undefined
   aggregate?: Maybe<list_restaurant_tag_aggregate_fields>
   nodes: Array<list_restaurant_tag>
 }
 
+/**
+ * aggregate fields of "list_restaurant_tag"
+ */
 export interface list_restaurant_tag_aggregate_fields {
   __typename: 'list_restaurant_tag_aggregate_fields' | undefined
   avg?: Maybe<list_restaurant_tag_avg_fields>
@@ -12627,11 +12460,17 @@ export interface list_restaurant_tag_aggregate_fields {
   variance?: Maybe<list_restaurant_tag_variance_fields>
 }
 
+/**
+ * aggregate avg on columns
+ */
 export interface list_restaurant_tag_avg_fields {
   __typename: 'list_restaurant_tag_avg_fields' | undefined
   position?: ScalarsEnums['Float']
 }
 
+/**
+ * aggregate max on columns
+ */
 export interface list_restaurant_tag_max_fields {
   __typename: 'list_restaurant_tag_max_fields' | undefined
   id?: ScalarsEnums['uuid']
@@ -12642,6 +12481,9 @@ export interface list_restaurant_tag_max_fields {
   user_id?: ScalarsEnums['uuid']
 }
 
+/**
+ * aggregate min on columns
+ */
 export interface list_restaurant_tag_min_fields {
   __typename: 'list_restaurant_tag_min_fields' | undefined
   id?: ScalarsEnums['uuid']
@@ -12652,98 +12494,164 @@ export interface list_restaurant_tag_min_fields {
   user_id?: ScalarsEnums['uuid']
 }
 
+/**
+ * response of any mutation on the table "list_restaurant_tag"
+ */
 export interface list_restaurant_tag_mutation_response {
   __typename: 'list_restaurant_tag_mutation_response' | undefined
+  /**
+   * number of affected rows by the mutation
+   */
   affected_rows: ScalarsEnums['Int']
+  /**
+   * data of the affected rows by the mutation
+   */
   returning: Array<list_restaurant_tag>
 }
 
+/**
+ * aggregate stddev on columns
+ */
 export interface list_restaurant_tag_stddev_fields {
   __typename: 'list_restaurant_tag_stddev_fields' | undefined
   position?: ScalarsEnums['Float']
 }
 
+/**
+ * aggregate stddev_pop on columns
+ */
 export interface list_restaurant_tag_stddev_pop_fields {
   __typename: 'list_restaurant_tag_stddev_pop_fields' | undefined
   position?: ScalarsEnums['Float']
 }
 
+/**
+ * aggregate stddev_samp on columns
+ */
 export interface list_restaurant_tag_stddev_samp_fields {
   __typename: 'list_restaurant_tag_stddev_samp_fields' | undefined
   position?: ScalarsEnums['Float']
 }
 
+/**
+ * aggregate sum on columns
+ */
 export interface list_restaurant_tag_sum_fields {
   __typename: 'list_restaurant_tag_sum_fields' | undefined
   position?: ScalarsEnums['Int']
 }
 
+/**
+ * aggregate var_pop on columns
+ */
 export interface list_restaurant_tag_var_pop_fields {
   __typename: 'list_restaurant_tag_var_pop_fields' | undefined
   position?: ScalarsEnums['Float']
 }
 
+/**
+ * aggregate var_samp on columns
+ */
 export interface list_restaurant_tag_var_samp_fields {
   __typename: 'list_restaurant_tag_var_samp_fields' | undefined
   position?: ScalarsEnums['Float']
 }
 
+/**
+ * aggregate variance on columns
+ */
 export interface list_restaurant_tag_variance_fields {
   __typename: 'list_restaurant_tag_variance_fields' | undefined
   position?: ScalarsEnums['Float']
 }
 
+/**
+ * aggregate var_pop on columns
+ */
 export interface list_restaurant_var_pop_fields {
   __typename: 'list_restaurant_var_pop_fields' | undefined
   position?: ScalarsEnums['Float']
 }
 
+/**
+ * aggregate var_samp on columns
+ */
 export interface list_restaurant_var_samp_fields {
   __typename: 'list_restaurant_var_samp_fields' | undefined
   position?: ScalarsEnums['Float']
 }
 
+/**
+ * aggregate variance on columns
+ */
 export interface list_restaurant_variance_fields {
   __typename: 'list_restaurant_variance_fields' | undefined
   position?: ScalarsEnums['Float']
 }
 
+/**
+ * aggregate stddev on columns
+ */
 export interface list_stddev_fields {
   __typename: 'list_stddev_fields' | undefined
   color?: ScalarsEnums['Float']
 }
 
+/**
+ * aggregate stddev_pop on columns
+ */
 export interface list_stddev_pop_fields {
   __typename: 'list_stddev_pop_fields' | undefined
   color?: ScalarsEnums['Float']
 }
 
+/**
+ * aggregate stddev_samp on columns
+ */
 export interface list_stddev_samp_fields {
   __typename: 'list_stddev_samp_fields' | undefined
   color?: ScalarsEnums['Float']
 }
 
+/**
+ * aggregate sum on columns
+ */
 export interface list_sum_fields {
   __typename: 'list_sum_fields' | undefined
   color?: ScalarsEnums['Int']
 }
 
+/**
+ * columns and relationships of "list_tag"
+ */
 export interface list_tag {
   __typename: 'list_tag' | undefined
   created_at: ScalarsEnums['timestamptz']
   id: ScalarsEnums['uuid']
+  /**
+   * An object relationship
+   */
   list?: Maybe<list>
   list_id: ScalarsEnums['uuid']
+  /**
+   * An object relationship
+   */
   tag?: Maybe<tag>
   tag_id: ScalarsEnums['uuid']
 }
 
+/**
+ * aggregated selection of "list_tag"
+ */
 export interface list_tag_aggregate {
   __typename: 'list_tag_aggregate' | undefined
   aggregate?: Maybe<list_tag_aggregate_fields>
   nodes: Array<list_tag>
 }
 
+/**
+ * aggregate fields of "list_tag"
+ */
 export interface list_tag_aggregate_fields {
   __typename: 'list_tag_aggregate_fields' | undefined
   count: (args?: {
@@ -12754,6 +12662,9 @@ export interface list_tag_aggregate_fields {
   min?: Maybe<list_tag_min_fields>
 }
 
+/**
+ * aggregate max on columns
+ */
 export interface list_tag_max_fields {
   __typename: 'list_tag_max_fields' | undefined
   created_at?: ScalarsEnums['timestamptz']
@@ -12762,6 +12673,9 @@ export interface list_tag_max_fields {
   tag_id?: ScalarsEnums['uuid']
 }
 
+/**
+ * aggregate min on columns
+ */
 export interface list_tag_min_fields {
   __typename: 'list_tag_min_fields' | undefined
   created_at?: ScalarsEnums['timestamptz']
@@ -12770,27 +12684,48 @@ export interface list_tag_min_fields {
   tag_id?: ScalarsEnums['uuid']
 }
 
+/**
+ * response of any mutation on the table "list_tag"
+ */
 export interface list_tag_mutation_response {
   __typename: 'list_tag_mutation_response' | undefined
+  /**
+   * number of affected rows by the mutation
+   */
   affected_rows: ScalarsEnums['Int']
+  /**
+   * data of the affected rows by the mutation
+   */
   returning: Array<list_tag>
 }
 
+/**
+ * aggregate var_pop on columns
+ */
 export interface list_var_pop_fields {
   __typename: 'list_var_pop_fields' | undefined
   color?: ScalarsEnums['Float']
 }
 
+/**
+ * aggregate var_samp on columns
+ */
 export interface list_var_samp_fields {
   __typename: 'list_var_samp_fields' | undefined
   color?: ScalarsEnums['Float']
 }
 
+/**
+ * aggregate variance on columns
+ */
 export interface list_variance_fields {
   __typename: 'list_variance_fields' | undefined
   color?: ScalarsEnums['Float']
 }
 
+/**
+ * columns and relationships of "menu_item"
+ */
 export interface menu_item {
   __typename: 'menu_item' | undefined
   created_at: ScalarsEnums['timestamptz']
@@ -12800,17 +12735,26 @@ export interface menu_item {
   location?: ScalarsEnums['geometry']
   name: ScalarsEnums['String']
   price?: ScalarsEnums['Int']
+  /**
+   * An object relationship
+   */
   restaurant: restaurant
   restaurant_id: ScalarsEnums['uuid']
   updated_at: ScalarsEnums['timestamptz']
 }
 
+/**
+ * aggregated selection of "menu_item"
+ */
 export interface menu_item_aggregate {
   __typename: 'menu_item_aggregate' | undefined
   aggregate?: Maybe<menu_item_aggregate_fields>
   nodes: Array<menu_item>
 }
 
+/**
+ * aggregate fields of "menu_item"
+ */
 export interface menu_item_aggregate_fields {
   __typename: 'menu_item_aggregate_fields' | undefined
   avg?: Maybe<menu_item_avg_fields>
@@ -12829,11 +12773,17 @@ export interface menu_item_aggregate_fields {
   variance?: Maybe<menu_item_variance_fields>
 }
 
+/**
+ * aggregate avg on columns
+ */
 export interface menu_item_avg_fields {
   __typename: 'menu_item_avg_fields' | undefined
   price?: ScalarsEnums['Float']
 }
 
+/**
+ * aggregate max on columns
+ */
 export interface menu_item_max_fields {
   __typename: 'menu_item_max_fields' | undefined
   created_at?: ScalarsEnums['timestamptz']
@@ -12846,6 +12796,9 @@ export interface menu_item_max_fields {
   updated_at?: ScalarsEnums['timestamptz']
 }
 
+/**
+ * aggregate min on columns
+ */
 export interface menu_item_min_fields {
   __typename: 'menu_item_min_fields' | undefined
   created_at?: ScalarsEnums['timestamptz']
@@ -12858,47 +12811,80 @@ export interface menu_item_min_fields {
   updated_at?: ScalarsEnums['timestamptz']
 }
 
+/**
+ * response of any mutation on the table "menu_item"
+ */
 export interface menu_item_mutation_response {
   __typename: 'menu_item_mutation_response' | undefined
+  /**
+   * number of affected rows by the mutation
+   */
   affected_rows: ScalarsEnums['Int']
+  /**
+   * data of the affected rows by the mutation
+   */
   returning: Array<menu_item>
 }
 
+/**
+ * aggregate stddev on columns
+ */
 export interface menu_item_stddev_fields {
   __typename: 'menu_item_stddev_fields' | undefined
   price?: ScalarsEnums['Float']
 }
 
+/**
+ * aggregate stddev_pop on columns
+ */
 export interface menu_item_stddev_pop_fields {
   __typename: 'menu_item_stddev_pop_fields' | undefined
   price?: ScalarsEnums['Float']
 }
 
+/**
+ * aggregate stddev_samp on columns
+ */
 export interface menu_item_stddev_samp_fields {
   __typename: 'menu_item_stddev_samp_fields' | undefined
   price?: ScalarsEnums['Float']
 }
 
+/**
+ * aggregate sum on columns
+ */
 export interface menu_item_sum_fields {
   __typename: 'menu_item_sum_fields' | undefined
   price?: ScalarsEnums['Int']
 }
 
+/**
+ * aggregate var_pop on columns
+ */
 export interface menu_item_var_pop_fields {
   __typename: 'menu_item_var_pop_fields' | undefined
   price?: ScalarsEnums['Float']
 }
 
+/**
+ * aggregate var_samp on columns
+ */
 export interface menu_item_var_samp_fields {
   __typename: 'menu_item_var_samp_fields' | undefined
   price?: ScalarsEnums['Float']
 }
 
+/**
+ * aggregate variance on columns
+ */
 export interface menu_item_variance_fields {
   __typename: 'menu_item_variance_fields' | undefined
   price?: ScalarsEnums['Float']
 }
 
+/**
+ * columns and relationships of "nhood_labels"
+ */
 export interface nhood_labels {
   __typename: 'nhood_labels' | undefined
   center: ScalarsEnums['geometry']
@@ -12906,12 +12892,18 @@ export interface nhood_labels {
   ogc_fid: ScalarsEnums['Int']
 }
 
+/**
+ * aggregated selection of "nhood_labels"
+ */
 export interface nhood_labels_aggregate {
   __typename: 'nhood_labels_aggregate' | undefined
   aggregate?: Maybe<nhood_labels_aggregate_fields>
   nodes: Array<nhood_labels>
 }
 
+/**
+ * aggregate fields of "nhood_labels"
+ */
 export interface nhood_labels_aggregate_fields {
   __typename: 'nhood_labels_aggregate_fields' | undefined
   avg?: Maybe<nhood_labels_avg_fields>
@@ -12930,78 +12922,129 @@ export interface nhood_labels_aggregate_fields {
   variance?: Maybe<nhood_labels_variance_fields>
 }
 
+/**
+ * aggregate avg on columns
+ */
 export interface nhood_labels_avg_fields {
   __typename: 'nhood_labels_avg_fields' | undefined
   ogc_fid?: ScalarsEnums['Float']
 }
 
+/**
+ * aggregate max on columns
+ */
 export interface nhood_labels_max_fields {
   __typename: 'nhood_labels_max_fields' | undefined
   name?: ScalarsEnums['String']
   ogc_fid?: ScalarsEnums['Int']
 }
 
+/**
+ * aggregate min on columns
+ */
 export interface nhood_labels_min_fields {
   __typename: 'nhood_labels_min_fields' | undefined
   name?: ScalarsEnums['String']
   ogc_fid?: ScalarsEnums['Int']
 }
 
+/**
+ * response of any mutation on the table "nhood_labels"
+ */
 export interface nhood_labels_mutation_response {
   __typename: 'nhood_labels_mutation_response' | undefined
+  /**
+   * number of affected rows by the mutation
+   */
   affected_rows: ScalarsEnums['Int']
+  /**
+   * data of the affected rows by the mutation
+   */
   returning: Array<nhood_labels>
 }
 
+/**
+ * aggregate stddev on columns
+ */
 export interface nhood_labels_stddev_fields {
   __typename: 'nhood_labels_stddev_fields' | undefined
   ogc_fid?: ScalarsEnums['Float']
 }
 
+/**
+ * aggregate stddev_pop on columns
+ */
 export interface nhood_labels_stddev_pop_fields {
   __typename: 'nhood_labels_stddev_pop_fields' | undefined
   ogc_fid?: ScalarsEnums['Float']
 }
 
+/**
+ * aggregate stddev_samp on columns
+ */
 export interface nhood_labels_stddev_samp_fields {
   __typename: 'nhood_labels_stddev_samp_fields' | undefined
   ogc_fid?: ScalarsEnums['Float']
 }
 
+/**
+ * aggregate sum on columns
+ */
 export interface nhood_labels_sum_fields {
   __typename: 'nhood_labels_sum_fields' | undefined
   ogc_fid?: ScalarsEnums['Int']
 }
 
+/**
+ * aggregate var_pop on columns
+ */
 export interface nhood_labels_var_pop_fields {
   __typename: 'nhood_labels_var_pop_fields' | undefined
   ogc_fid?: ScalarsEnums['Float']
 }
 
+/**
+ * aggregate var_samp on columns
+ */
 export interface nhood_labels_var_samp_fields {
   __typename: 'nhood_labels_var_samp_fields' | undefined
   ogc_fid?: ScalarsEnums['Float']
 }
 
+/**
+ * aggregate variance on columns
+ */
 export interface nhood_labels_variance_fields {
   __typename: 'nhood_labels_variance_fields' | undefined
   ogc_fid?: ScalarsEnums['Float']
 }
 
+/**
+ * columns and relationships of "opening_hours"
+ */
 export interface opening_hours {
   __typename: 'opening_hours' | undefined
   hours: ScalarsEnums['tsrange']
   id: ScalarsEnums['uuid']
+  /**
+   * An object relationship
+   */
   restaurant: restaurant
   restaurant_id: ScalarsEnums['uuid']
 }
 
+/**
+ * aggregated selection of "opening_hours"
+ */
 export interface opening_hours_aggregate {
   __typename: 'opening_hours_aggregate' | undefined
   aggregate?: Maybe<opening_hours_aggregate_fields>
   nodes: Array<opening_hours>
 }
 
+/**
+ * aggregate fields of "opening_hours"
+ */
 export interface opening_hours_aggregate_fields {
   __typename: 'opening_hours_aggregate_fields' | undefined
   count: (args?: {
@@ -13012,27 +13055,45 @@ export interface opening_hours_aggregate_fields {
   min?: Maybe<opening_hours_min_fields>
 }
 
+/**
+ * aggregate max on columns
+ */
 export interface opening_hours_max_fields {
   __typename: 'opening_hours_max_fields' | undefined
   id?: ScalarsEnums['uuid']
   restaurant_id?: ScalarsEnums['uuid']
 }
 
+/**
+ * aggregate min on columns
+ */
 export interface opening_hours_min_fields {
   __typename: 'opening_hours_min_fields' | undefined
   id?: ScalarsEnums['uuid']
   restaurant_id?: ScalarsEnums['uuid']
 }
 
+/**
+ * response of any mutation on the table "opening_hours"
+ */
 export interface opening_hours_mutation_response {
   __typename: 'opening_hours_mutation_response' | undefined
+  /**
+   * number of affected rows by the mutation
+   */
   affected_rows: ScalarsEnums['Int']
+  /**
+   * data of the affected rows by the mutation
+   */
   returning: Array<opening_hours>
 }
 
+/**
+ * columns and relationships of "photo"
+ */
 export interface photo {
   __typename: 'photo' | undefined
-  categories: (args?: { path?: ScalarsEnums['String'] }) => ScalarsEnums['jsonb']
+  categories?: ScalarsEnums['jsonb']
   created_at: ScalarsEnums['timestamptz']
   id: ScalarsEnums['uuid']
   origin?: ScalarsEnums['String']
@@ -13041,12 +13102,18 @@ export interface photo {
   url?: ScalarsEnums['String']
 }
 
+/**
+ * aggregated selection of "photo"
+ */
 export interface photo_aggregate {
   __typename: 'photo_aggregate' | undefined
   aggregate?: Maybe<photo_aggregate_fields>
   nodes: Array<photo>
 }
 
+/**
+ * aggregate fields of "photo"
+ */
 export interface photo_aggregate_fields {
   __typename: 'photo_aggregate_fields' | undefined
   avg?: Maybe<photo_avg_fields>
@@ -13065,11 +13132,17 @@ export interface photo_aggregate_fields {
   variance?: Maybe<photo_variance_fields>
 }
 
+/**
+ * aggregate avg on columns
+ */
 export interface photo_avg_fields {
   __typename: 'photo_avg_fields' | undefined
   quality?: ScalarsEnums['Float']
 }
 
+/**
+ * aggregate max on columns
+ */
 export interface photo_max_fields {
   __typename: 'photo_max_fields' | undefined
   created_at?: ScalarsEnums['timestamptz']
@@ -13080,6 +13153,9 @@ export interface photo_max_fields {
   url?: ScalarsEnums['String']
 }
 
+/**
+ * aggregate min on columns
+ */
 export interface photo_min_fields {
   __typename: 'photo_min_fields' | undefined
   created_at?: ScalarsEnums['timestamptz']
@@ -13090,50 +13166,86 @@ export interface photo_min_fields {
   url?: ScalarsEnums['String']
 }
 
+/**
+ * response of any mutation on the table "photo"
+ */
 export interface photo_mutation_response {
   __typename: 'photo_mutation_response' | undefined
+  /**
+   * number of affected rows by the mutation
+   */
   affected_rows: ScalarsEnums['Int']
+  /**
+   * data of the affected rows by the mutation
+   */
   returning: Array<photo>
 }
 
+/**
+ * aggregate stddev on columns
+ */
 export interface photo_stddev_fields {
   __typename: 'photo_stddev_fields' | undefined
   quality?: ScalarsEnums['Float']
 }
 
+/**
+ * aggregate stddev_pop on columns
+ */
 export interface photo_stddev_pop_fields {
   __typename: 'photo_stddev_pop_fields' | undefined
   quality?: ScalarsEnums['Float']
 }
 
+/**
+ * aggregate stddev_samp on columns
+ */
 export interface photo_stddev_samp_fields {
   __typename: 'photo_stddev_samp_fields' | undefined
   quality?: ScalarsEnums['Float']
 }
 
+/**
+ * aggregate sum on columns
+ */
 export interface photo_sum_fields {
   __typename: 'photo_sum_fields' | undefined
   quality?: ScalarsEnums['numeric']
 }
 
+/**
+ * aggregate var_pop on columns
+ */
 export interface photo_var_pop_fields {
   __typename: 'photo_var_pop_fields' | undefined
   quality?: ScalarsEnums['Float']
 }
 
+/**
+ * aggregate var_samp on columns
+ */
 export interface photo_var_samp_fields {
   __typename: 'photo_var_samp_fields' | undefined
   quality?: ScalarsEnums['Float']
 }
 
+/**
+ * aggregate variance on columns
+ */
 export interface photo_variance_fields {
   __typename: 'photo_variance_fields' | undefined
   quality?: ScalarsEnums['Float']
 }
 
+/**
+ * columns and relationships of "photo_xref"
+ */
 export interface photo_xref {
   __typename: 'photo_xref' | undefined
   id: ScalarsEnums['uuid']
+  /**
+   * An object relationship
+   */
   photo: photo
   photo_id: ScalarsEnums['uuid']
   restaurant_id: ScalarsEnums['uuid']
@@ -13141,12 +13253,18 @@ export interface photo_xref {
   type?: ScalarsEnums['String']
 }
 
+/**
+ * aggregated selection of "photo_xref"
+ */
 export interface photo_xref_aggregate {
   __typename: 'photo_xref_aggregate' | undefined
   aggregate?: Maybe<photo_xref_aggregate_fields>
   nodes: Array<photo_xref>
 }
 
+/**
+ * aggregate fields of "photo_xref"
+ */
 export interface photo_xref_aggregate_fields {
   __typename: 'photo_xref_aggregate_fields' | undefined
   count: (args?: {
@@ -13157,6 +13275,9 @@ export interface photo_xref_aggregate_fields {
   min?: Maybe<photo_xref_min_fields>
 }
 
+/**
+ * aggregate max on columns
+ */
 export interface photo_xref_max_fields {
   __typename: 'photo_xref_max_fields' | undefined
   id?: ScalarsEnums['uuid']
@@ -13166,6 +13287,9 @@ export interface photo_xref_max_fields {
   type?: ScalarsEnums['String']
 }
 
+/**
+ * aggregate min on columns
+ */
 export interface photo_xref_min_fields {
   __typename: 'photo_xref_min_fields' | undefined
   id?: ScalarsEnums['uuid']
@@ -13175,12 +13299,24 @@ export interface photo_xref_min_fields {
   type?: ScalarsEnums['String']
 }
 
+/**
+ * response of any mutation on the table "photo_xref"
+ */
 export interface photo_xref_mutation_response {
   __typename: 'photo_xref_mutation_response' | undefined
+  /**
+   * number of affected rows by the mutation
+   */
   affected_rows: ScalarsEnums['Int']
+  /**
+   * data of the affected rows by the mutation
+   */
   returning: Array<photo_xref>
 }
 
+/**
+ * columns and relationships of "restaurant"
+ */
 export interface restaurant {
   __typename: 'restaurant' | undefined
   address?: ScalarsEnums['String']
@@ -13189,105 +13325,309 @@ export interface restaurant {
   description?: ScalarsEnums['String']
   downvotes?: ScalarsEnums['numeric']
   geocoder_id?: ScalarsEnums['String']
-  headlines: (args?: { path?: ScalarsEnums['String'] }) => ScalarsEnums['jsonb']
-  hours: (args?: { path?: ScalarsEnums['String'] }) => ScalarsEnums['jsonb']
+  headlines?: ScalarsEnums['jsonb']
+  hours?: ScalarsEnums['jsonb']
   id: ScalarsEnums['uuid']
   image?: ScalarsEnums['String']
+  /**
+   * A computed field, executes function "is_restaurant_open"
+   */
   is_open_now?: ScalarsEnums['Boolean']
+  /**
+   * An array relationship
+   */
   lists: (args?: {
+    /**
+     * distinct select on columns
+     */
     distinct_on?: Array<ScalarsEnums['list_restaurant_select_column']>
+    /**
+     * limit the number of rows returned
+     */
     limit?: ScalarsEnums['Int']
+    /**
+     * skip the first n rows. Use only with order_by
+     */
     offset?: ScalarsEnums['Int']
+    /**
+     * sort the rows by one or more columns
+     */
     order_by?: Maybe<Array<list_restaurant_order_by>>
+    /**
+     * filter the rows returned
+     */
     where?: Maybe<list_restaurant_bool_exp>
   }) => Array<list_restaurant>
+  /**
+   * An aggregated array relationship
+   */
   lists_aggregate: (args?: {
+    /**
+     * distinct select on columns
+     */
     distinct_on?: Array<ScalarsEnums['list_restaurant_select_column']>
+    /**
+     * limit the number of rows returned
+     */
     limit?: ScalarsEnums['Int']
+    /**
+     * skip the first n rows. Use only with order_by
+     */
     offset?: ScalarsEnums['Int']
+    /**
+     * sort the rows by one or more columns
+     */
     order_by?: Maybe<Array<list_restaurant_order_by>>
+    /**
+     * filter the rows returned
+     */
     where?: Maybe<list_restaurant_bool_exp>
   }) => list_restaurant_aggregate
   location: ScalarsEnums['geometry']
+  /**
+   * An array relationship
+   */
   menu_items: (args?: {
+    /**
+     * distinct select on columns
+     */
     distinct_on?: Array<ScalarsEnums['menu_item_select_column']>
+    /**
+     * limit the number of rows returned
+     */
     limit?: ScalarsEnums['Int']
+    /**
+     * skip the first n rows. Use only with order_by
+     */
     offset?: ScalarsEnums['Int']
+    /**
+     * sort the rows by one or more columns
+     */
     order_by?: Maybe<Array<menu_item_order_by>>
+    /**
+     * filter the rows returned
+     */
     where?: Maybe<menu_item_bool_exp>
   }) => Array<menu_item>
+  /**
+   * An aggregated array relationship
+   */
   menu_items_aggregate: (args?: {
+    /**
+     * distinct select on columns
+     */
     distinct_on?: Array<ScalarsEnums['menu_item_select_column']>
+    /**
+     * limit the number of rows returned
+     */
     limit?: ScalarsEnums['Int']
+    /**
+     * skip the first n rows. Use only with order_by
+     */
     offset?: ScalarsEnums['Int']
+    /**
+     * sort the rows by one or more columns
+     */
     order_by?: Maybe<Array<menu_item_order_by>>
+    /**
+     * filter the rows returned
+     */
     where?: Maybe<menu_item_bool_exp>
   }) => menu_item_aggregate
   name: ScalarsEnums['String']
-  og_source_ids: (args?: { path?: ScalarsEnums['String'] }) => ScalarsEnums['jsonb']
+  og_source_ids?: ScalarsEnums['jsonb']
   oldest_review_date?: ScalarsEnums['timestamptz']
+  /**
+   * An array relationship
+   */
   photo_table: (args?: {
+    /**
+     * distinct select on columns
+     */
     distinct_on?: Array<ScalarsEnums['photo_xref_select_column']>
+    /**
+     * limit the number of rows returned
+     */
     limit?: ScalarsEnums['Int']
+    /**
+     * skip the first n rows. Use only with order_by
+     */
     offset?: ScalarsEnums['Int']
+    /**
+     * sort the rows by one or more columns
+     */
     order_by?: Maybe<Array<photo_xref_order_by>>
+    /**
+     * filter the rows returned
+     */
     where?: Maybe<photo_xref_bool_exp>
   }) => Array<photo_xref>
+  /**
+   * An aggregated array relationship
+   */
   photo_table_aggregate: (args?: {
+    /**
+     * distinct select on columns
+     */
     distinct_on?: Array<ScalarsEnums['photo_xref_select_column']>
+    /**
+     * limit the number of rows returned
+     */
     limit?: ScalarsEnums['Int']
+    /**
+     * skip the first n rows. Use only with order_by
+     */
     offset?: ScalarsEnums['Int']
+    /**
+     * sort the rows by one or more columns
+     */
     order_by?: Maybe<Array<photo_xref_order_by>>
+    /**
+     * filter the rows returned
+     */
     where?: Maybe<photo_xref_bool_exp>
   }) => photo_xref_aggregate
-  photos: (args?: { path?: ScalarsEnums['String'] }) => ScalarsEnums['jsonb']
+  photos?: ScalarsEnums['jsonb']
   price_range?: ScalarsEnums['String']
   rating?: ScalarsEnums['numeric']
-  rating_factors: (args?: { path?: ScalarsEnums['String'] }) => ScalarsEnums['jsonb']
+  rating_factors?: ScalarsEnums['jsonb']
+  /**
+   * An array relationship
+   */
   reviews: (args?: {
+    /**
+     * distinct select on columns
+     */
     distinct_on?: Array<ScalarsEnums['review_select_column']>
+    /**
+     * limit the number of rows returned
+     */
     limit?: ScalarsEnums['Int']
+    /**
+     * skip the first n rows. Use only with order_by
+     */
     offset?: ScalarsEnums['Int']
+    /**
+     * sort the rows by one or more columns
+     */
     order_by?: Maybe<Array<review_order_by>>
+    /**
+     * filter the rows returned
+     */
     where?: Maybe<review_bool_exp>
   }) => Array<review>
+  /**
+   * An aggregated array relationship
+   */
   reviews_aggregate: (args?: {
+    /**
+     * distinct select on columns
+     */
     distinct_on?: Array<ScalarsEnums['review_select_column']>
+    /**
+     * limit the number of rows returned
+     */
     limit?: ScalarsEnums['Int']
+    /**
+     * skip the first n rows. Use only with order_by
+     */
     offset?: ScalarsEnums['Int']
+    /**
+     * sort the rows by one or more columns
+     */
     order_by?: Maybe<Array<review_order_by>>
+    /**
+     * filter the rows returned
+     */
     where?: Maybe<review_bool_exp>
   }) => review_aggregate
   score?: ScalarsEnums['numeric']
-  score_breakdown: (args?: { path?: ScalarsEnums['String'] }) => ScalarsEnums['jsonb']
-  scrape_metadata: (args?: { path?: ScalarsEnums['String'] }) => ScalarsEnums['jsonb']
+  score_breakdown?: ScalarsEnums['jsonb']
+  scrape_metadata?: ScalarsEnums['jsonb']
   slug: ScalarsEnums['String']
-  source_breakdown: (args?: { path?: ScalarsEnums['String'] }) => ScalarsEnums['jsonb']
-  sources: (args?: { path?: ScalarsEnums['String'] }) => ScalarsEnums['jsonb']
+  source_breakdown?: ScalarsEnums['jsonb']
+  sources?: ScalarsEnums['jsonb']
   state?: ScalarsEnums['String']
   summary?: ScalarsEnums['String']
-  tag_names: (args?: { path?: ScalarsEnums['String'] }) => ScalarsEnums['jsonb']
+  tag_names?: ScalarsEnums['jsonb']
+  /**
+   * An array relationship
+   */
   tags: (args?: {
+    /**
+     * distinct select on columns
+     */
     distinct_on?: Array<ScalarsEnums['restaurant_tag_select_column']>
+    /**
+     * limit the number of rows returned
+     */
     limit?: ScalarsEnums['Int']
+    /**
+     * skip the first n rows. Use only with order_by
+     */
     offset?: ScalarsEnums['Int']
+    /**
+     * sort the rows by one or more columns
+     */
     order_by?: Maybe<Array<restaurant_tag_order_by>>
+    /**
+     * filter the rows returned
+     */
     where?: Maybe<restaurant_tag_bool_exp>
   }) => Array<restaurant_tag>
+  /**
+   * An aggregated array relationship
+   */
   tags_aggregate: (args?: {
+    /**
+     * distinct select on columns
+     */
     distinct_on?: Array<ScalarsEnums['restaurant_tag_select_column']>
+    /**
+     * limit the number of rows returned
+     */
     limit?: ScalarsEnums['Int']
+    /**
+     * skip the first n rows. Use only with order_by
+     */
     offset?: ScalarsEnums['Int']
+    /**
+     * sort the rows by one or more columns
+     */
     order_by?: Maybe<Array<restaurant_tag_order_by>>
+    /**
+     * filter the rows returned
+     */
     where?: Maybe<restaurant_tag_bool_exp>
   }) => restaurant_tag_aggregate
   telephone?: ScalarsEnums['String']
+  /**
+   * A computed field, executes function "restaurant_top_tags"
+   */
   top_tags: (args: {
+    /**
+     * input parameters for function "restaurant_top_tags"
+     */
     args: restaurant_top_tags_args
+    /**
+     * distinct select on columns
+     */
     distinct_on?: Array<ScalarsEnums['restaurant_tag_select_column']>
+    /**
+     * limit the number of rows returned
+     */
     limit?: ScalarsEnums['Int']
+    /**
+     * skip the first n rows. Use only with order_by
+     */
     offset?: ScalarsEnums['Int']
+    /**
+     * sort the rows by one or more columns
+     */
     order_by?: Maybe<Array<restaurant_tag_order_by>>
+    /**
+     * filter the rows returned
+     */
     where?: Maybe<restaurant_tag_bool_exp>
   }) => Maybe<Array<restaurant_tag>>
   updated_at: ScalarsEnums['timestamptz']
@@ -13297,12 +13637,18 @@ export interface restaurant {
   zip?: ScalarsEnums['numeric']
 }
 
+/**
+ * aggregated selection of "restaurant"
+ */
 export interface restaurant_aggregate {
   __typename: 'restaurant_aggregate' | undefined
   aggregate?: Maybe<restaurant_aggregate_fields>
   nodes: Array<restaurant>
 }
 
+/**
+ * aggregate fields of "restaurant"
+ */
 export interface restaurant_aggregate_fields {
   __typename: 'restaurant_aggregate_fields' | undefined
   avg?: Maybe<restaurant_avg_fields>
@@ -13321,6 +13667,9 @@ export interface restaurant_aggregate_fields {
   variance?: Maybe<restaurant_variance_fields>
 }
 
+/**
+ * aggregate avg on columns
+ */
 export interface restaurant_avg_fields {
   __typename: 'restaurant_avg_fields' | undefined
   downvotes?: ScalarsEnums['Float']
@@ -13331,6 +13680,9 @@ export interface restaurant_avg_fields {
   zip?: ScalarsEnums['Float']
 }
 
+/**
+ * aggregate max on columns
+ */
 export interface restaurant_max_fields {
   __typename: 'restaurant_max_fields' | undefined
   address?: ScalarsEnums['String']
@@ -13357,6 +13709,9 @@ export interface restaurant_max_fields {
   zip?: ScalarsEnums['numeric']
 }
 
+/**
+ * aggregate min on columns
+ */
 export interface restaurant_min_fields {
   __typename: 'restaurant_min_fields' | undefined
   address?: ScalarsEnums['String']
@@ -13383,12 +13738,24 @@ export interface restaurant_min_fields {
   zip?: ScalarsEnums['numeric']
 }
 
+/**
+ * response of any mutation on the table "restaurant"
+ */
 export interface restaurant_mutation_response {
   __typename: 'restaurant_mutation_response' | undefined
+  /**
+   * number of affected rows by the mutation
+   */
   affected_rows: ScalarsEnums['Int']
+  /**
+   * data of the affected rows by the mutation
+   */
   returning: Array<restaurant>
 }
 
+/**
+ * aggregate stddev on columns
+ */
 export interface restaurant_stddev_fields {
   __typename: 'restaurant_stddev_fields' | undefined
   downvotes?: ScalarsEnums['Float']
@@ -13399,6 +13766,9 @@ export interface restaurant_stddev_fields {
   zip?: ScalarsEnums['Float']
 }
 
+/**
+ * aggregate stddev_pop on columns
+ */
 export interface restaurant_stddev_pop_fields {
   __typename: 'restaurant_stddev_pop_fields' | undefined
   downvotes?: ScalarsEnums['Float']
@@ -13409,6 +13779,9 @@ export interface restaurant_stddev_pop_fields {
   zip?: ScalarsEnums['Float']
 }
 
+/**
+ * aggregate stddev_samp on columns
+ */
 export interface restaurant_stddev_samp_fields {
   __typename: 'restaurant_stddev_samp_fields' | undefined
   downvotes?: ScalarsEnums['Float']
@@ -13419,6 +13792,9 @@ export interface restaurant_stddev_samp_fields {
   zip?: ScalarsEnums['Float']
 }
 
+/**
+ * aggregate sum on columns
+ */
 export interface restaurant_sum_fields {
   __typename: 'restaurant_sum_fields' | undefined
   downvotes?: ScalarsEnums['numeric']
@@ -13429,59 +13805,146 @@ export interface restaurant_sum_fields {
   zip?: ScalarsEnums['numeric']
 }
 
+/**
+ * columns and relationships of "restaurant_tag"
+ */
 export interface restaurant_tag {
   __typename: 'restaurant_tag' | undefined
   downvotes?: ScalarsEnums['numeric']
   id: ScalarsEnums['uuid']
-  photos: (args?: { path?: ScalarsEnums['String'] }) => ScalarsEnums['jsonb']
+  photos?: ScalarsEnums['jsonb']
   rank?: ScalarsEnums['Int']
   rating?: ScalarsEnums['numeric']
+  /**
+   * An object relationship
+   */
   restaurant: restaurant
   restaurant_id: ScalarsEnums['uuid']
   review_mentions_count?: ScalarsEnums['numeric']
+  /**
+   * An array relationship
+   */
   reviews: (args?: {
+    /**
+     * distinct select on columns
+     */
     distinct_on?: Array<ScalarsEnums['review_select_column']>
+    /**
+     * limit the number of rows returned
+     */
     limit?: ScalarsEnums['Int']
+    /**
+     * skip the first n rows. Use only with order_by
+     */
     offset?: ScalarsEnums['Int']
+    /**
+     * sort the rows by one or more columns
+     */
     order_by?: Maybe<Array<review_order_by>>
+    /**
+     * filter the rows returned
+     */
     where?: Maybe<review_bool_exp>
   }) => Array<review>
+  /**
+   * An aggregated array relationship
+   */
   reviews_aggregate: (args?: {
+    /**
+     * distinct select on columns
+     */
     distinct_on?: Array<ScalarsEnums['review_select_column']>
+    /**
+     * limit the number of rows returned
+     */
     limit?: ScalarsEnums['Int']
+    /**
+     * skip the first n rows. Use only with order_by
+     */
     offset?: ScalarsEnums['Int']
+    /**
+     * sort the rows by one or more columns
+     */
     order_by?: Maybe<Array<review_order_by>>
+    /**
+     * filter the rows returned
+     */
     where?: Maybe<review_bool_exp>
   }) => review_aggregate
   score?: ScalarsEnums['numeric']
-  score_breakdown: (args?: { path?: ScalarsEnums['String'] }) => ScalarsEnums['jsonb']
+  score_breakdown?: ScalarsEnums['jsonb']
+  /**
+   * An array relationship
+   */
   sentences: (args?: {
+    /**
+     * distinct select on columns
+     */
     distinct_on?: Array<ScalarsEnums['review_tag_sentence_select_column']>
+    /**
+     * limit the number of rows returned
+     */
     limit?: ScalarsEnums['Int']
+    /**
+     * skip the first n rows. Use only with order_by
+     */
     offset?: ScalarsEnums['Int']
+    /**
+     * sort the rows by one or more columns
+     */
     order_by?: Maybe<Array<review_tag_sentence_order_by>>
+    /**
+     * filter the rows returned
+     */
     where?: Maybe<review_tag_sentence_bool_exp>
   }) => Array<review_tag_sentence>
+  /**
+   * An aggregated array relationship
+   */
   sentences_aggregate: (args?: {
+    /**
+     * distinct select on columns
+     */
     distinct_on?: Array<ScalarsEnums['review_tag_sentence_select_column']>
+    /**
+     * limit the number of rows returned
+     */
     limit?: ScalarsEnums['Int']
+    /**
+     * skip the first n rows. Use only with order_by
+     */
     offset?: ScalarsEnums['Int']
+    /**
+     * sort the rows by one or more columns
+     */
     order_by?: Maybe<Array<review_tag_sentence_order_by>>
+    /**
+     * filter the rows returned
+     */
     where?: Maybe<review_tag_sentence_bool_exp>
   }) => review_tag_sentence_aggregate
-  source_breakdown: (args?: { path?: ScalarsEnums['String'] }) => ScalarsEnums['jsonb']
+  source_breakdown?: ScalarsEnums['jsonb']
+  /**
+   * An object relationship
+   */
   tag: tag
   tag_id: ScalarsEnums['uuid']
   upvotes?: ScalarsEnums['numeric']
   votes_ratio?: ScalarsEnums['numeric']
 }
 
+/**
+ * aggregated selection of "restaurant_tag"
+ */
 export interface restaurant_tag_aggregate {
   __typename: 'restaurant_tag_aggregate' | undefined
   aggregate?: Maybe<restaurant_tag_aggregate_fields>
   nodes: Array<restaurant_tag>
 }
 
+/**
+ * aggregate fields of "restaurant_tag"
+ */
 export interface restaurant_tag_aggregate_fields {
   __typename: 'restaurant_tag_aggregate_fields' | undefined
   avg?: Maybe<restaurant_tag_avg_fields>
@@ -13500,6 +13963,9 @@ export interface restaurant_tag_aggregate_fields {
   variance?: Maybe<restaurant_tag_variance_fields>
 }
 
+/**
+ * aggregate avg on columns
+ */
 export interface restaurant_tag_avg_fields {
   __typename: 'restaurant_tag_avg_fields' | undefined
   downvotes?: ScalarsEnums['Float']
@@ -13511,6 +13977,9 @@ export interface restaurant_tag_avg_fields {
   votes_ratio?: ScalarsEnums['Float']
 }
 
+/**
+ * aggregate max on columns
+ */
 export interface restaurant_tag_max_fields {
   __typename: 'restaurant_tag_max_fields' | undefined
   downvotes?: ScalarsEnums['numeric']
@@ -13525,6 +13994,9 @@ export interface restaurant_tag_max_fields {
   votes_ratio?: ScalarsEnums['numeric']
 }
 
+/**
+ * aggregate min on columns
+ */
 export interface restaurant_tag_min_fields {
   __typename: 'restaurant_tag_min_fields' | undefined
   downvotes?: ScalarsEnums['numeric']
@@ -13539,12 +14011,24 @@ export interface restaurant_tag_min_fields {
   votes_ratio?: ScalarsEnums['numeric']
 }
 
+/**
+ * response of any mutation on the table "restaurant_tag"
+ */
 export interface restaurant_tag_mutation_response {
   __typename: 'restaurant_tag_mutation_response' | undefined
+  /**
+   * number of affected rows by the mutation
+   */
   affected_rows: ScalarsEnums['Int']
+  /**
+   * data of the affected rows by the mutation
+   */
   returning: Array<restaurant_tag>
 }
 
+/**
+ * aggregate stddev on columns
+ */
 export interface restaurant_tag_stddev_fields {
   __typename: 'restaurant_tag_stddev_fields' | undefined
   downvotes?: ScalarsEnums['Float']
@@ -13556,6 +14040,9 @@ export interface restaurant_tag_stddev_fields {
   votes_ratio?: ScalarsEnums['Float']
 }
 
+/**
+ * aggregate stddev_pop on columns
+ */
 export interface restaurant_tag_stddev_pop_fields {
   __typename: 'restaurant_tag_stddev_pop_fields' | undefined
   downvotes?: ScalarsEnums['Float']
@@ -13567,6 +14054,9 @@ export interface restaurant_tag_stddev_pop_fields {
   votes_ratio?: ScalarsEnums['Float']
 }
 
+/**
+ * aggregate stddev_samp on columns
+ */
 export interface restaurant_tag_stddev_samp_fields {
   __typename: 'restaurant_tag_stddev_samp_fields' | undefined
   downvotes?: ScalarsEnums['Float']
@@ -13578,6 +14068,9 @@ export interface restaurant_tag_stddev_samp_fields {
   votes_ratio?: ScalarsEnums['Float']
 }
 
+/**
+ * aggregate sum on columns
+ */
 export interface restaurant_tag_sum_fields {
   __typename: 'restaurant_tag_sum_fields' | undefined
   downvotes?: ScalarsEnums['numeric']
@@ -13589,6 +14082,9 @@ export interface restaurant_tag_sum_fields {
   votes_ratio?: ScalarsEnums['numeric']
 }
 
+/**
+ * aggregate var_pop on columns
+ */
 export interface restaurant_tag_var_pop_fields {
   __typename: 'restaurant_tag_var_pop_fields' | undefined
   downvotes?: ScalarsEnums['Float']
@@ -13600,6 +14096,9 @@ export interface restaurant_tag_var_pop_fields {
   votes_ratio?: ScalarsEnums['Float']
 }
 
+/**
+ * aggregate var_samp on columns
+ */
 export interface restaurant_tag_var_samp_fields {
   __typename: 'restaurant_tag_var_samp_fields' | undefined
   downvotes?: ScalarsEnums['Float']
@@ -13611,6 +14110,9 @@ export interface restaurant_tag_var_samp_fields {
   votes_ratio?: ScalarsEnums['Float']
 }
 
+/**
+ * aggregate variance on columns
+ */
 export interface restaurant_tag_variance_fields {
   __typename: 'restaurant_tag_variance_fields' | undefined
   downvotes?: ScalarsEnums['Float']
@@ -13622,6 +14124,9 @@ export interface restaurant_tag_variance_fields {
   votes_ratio?: ScalarsEnums['Float']
 }
 
+/**
+ * aggregate var_pop on columns
+ */
 export interface restaurant_var_pop_fields {
   __typename: 'restaurant_var_pop_fields' | undefined
   downvotes?: ScalarsEnums['Float']
@@ -13632,6 +14137,9 @@ export interface restaurant_var_pop_fields {
   zip?: ScalarsEnums['Float']
 }
 
+/**
+ * aggregate var_samp on columns
+ */
 export interface restaurant_var_samp_fields {
   __typename: 'restaurant_var_samp_fields' | undefined
   downvotes?: ScalarsEnums['Float']
@@ -13642,6 +14150,9 @@ export interface restaurant_var_samp_fields {
   zip?: ScalarsEnums['Float']
 }
 
+/**
+ * aggregate variance on columns
+ */
 export interface restaurant_variance_fields {
   __typename: 'restaurant_variance_fields' | undefined
   downvotes?: ScalarsEnums['Float']
@@ -13652,50 +14163,104 @@ export interface restaurant_variance_fields {
   zip?: ScalarsEnums['Float']
 }
 
+/**
+ * columns and relationships of "review"
+ */
 export interface review {
   __typename: 'review' | undefined
   authored_at: ScalarsEnums['timestamptz']
-  categories: (args?: { path?: ScalarsEnums['String'] }) => ScalarsEnums['jsonb']
+  categories?: ScalarsEnums['jsonb']
   favorited?: ScalarsEnums['Boolean']
   id: ScalarsEnums['uuid']
   list_id?: ScalarsEnums['uuid']
   location?: ScalarsEnums['geometry']
   native_data_unique_key?: ScalarsEnums['String']
   rating?: ScalarsEnums['numeric']
+  /**
+   * An object relationship
+   */
   restaurant: restaurant
   restaurant_id: ScalarsEnums['uuid']
+  /**
+   * An array relationship
+   */
   sentiments: (args?: {
+    /**
+     * distinct select on columns
+     */
     distinct_on?: Array<ScalarsEnums['review_tag_sentence_select_column']>
+    /**
+     * limit the number of rows returned
+     */
     limit?: ScalarsEnums['Int']
+    /**
+     * skip the first n rows. Use only with order_by
+     */
     offset?: ScalarsEnums['Int']
+    /**
+     * sort the rows by one or more columns
+     */
     order_by?: Maybe<Array<review_tag_sentence_order_by>>
+    /**
+     * filter the rows returned
+     */
     where?: Maybe<review_tag_sentence_bool_exp>
   }) => Array<review_tag_sentence>
+  /**
+   * An aggregated array relationship
+   */
   sentiments_aggregate: (args?: {
+    /**
+     * distinct select on columns
+     */
     distinct_on?: Array<ScalarsEnums['review_tag_sentence_select_column']>
+    /**
+     * limit the number of rows returned
+     */
     limit?: ScalarsEnums['Int']
+    /**
+     * skip the first n rows. Use only with order_by
+     */
     offset?: ScalarsEnums['Int']
+    /**
+     * sort the rows by one or more columns
+     */
     order_by?: Maybe<Array<review_tag_sentence_order_by>>
+    /**
+     * filter the rows returned
+     */
     where?: Maybe<review_tag_sentence_bool_exp>
   }) => review_tag_sentence_aggregate
   source?: ScalarsEnums['String']
+  /**
+   * An object relationship
+   */
   tag?: Maybe<tag>
   tag_id?: ScalarsEnums['uuid']
   text?: ScalarsEnums['String']
   type?: ScalarsEnums['String']
   updated_at: ScalarsEnums['timestamptz']
+  /**
+   * An object relationship
+   */
   user: user
   user_id: ScalarsEnums['uuid']
   username?: ScalarsEnums['String']
   vote?: ScalarsEnums['numeric']
 }
 
+/**
+ * aggregated selection of "review"
+ */
 export interface review_aggregate {
   __typename: 'review_aggregate' | undefined
   aggregate?: Maybe<review_aggregate_fields>
   nodes: Array<review>
 }
 
+/**
+ * aggregate fields of "review"
+ */
 export interface review_aggregate_fields {
   __typename: 'review_aggregate_fields' | undefined
   avg?: Maybe<review_avg_fields>
@@ -13714,12 +14279,18 @@ export interface review_aggregate_fields {
   variance?: Maybe<review_variance_fields>
 }
 
+/**
+ * aggregate avg on columns
+ */
 export interface review_avg_fields {
   __typename: 'review_avg_fields' | undefined
   rating?: ScalarsEnums['Float']
   vote?: ScalarsEnums['Float']
 }
 
+/**
+ * aggregate max on columns
+ */
 export interface review_max_fields {
   __typename: 'review_max_fields' | undefined
   authored_at?: ScalarsEnums['timestamptz']
@@ -13738,6 +14309,9 @@ export interface review_max_fields {
   vote?: ScalarsEnums['numeric']
 }
 
+/**
+ * aggregate min on columns
+ */
 export interface review_min_fields {
   __typename: 'review_min_fields' | undefined
   authored_at?: ScalarsEnums['timestamptz']
@@ -13756,55 +14330,91 @@ export interface review_min_fields {
   vote?: ScalarsEnums['numeric']
 }
 
+/**
+ * response of any mutation on the table "review"
+ */
 export interface review_mutation_response {
   __typename: 'review_mutation_response' | undefined
+  /**
+   * number of affected rows by the mutation
+   */
   affected_rows: ScalarsEnums['Int']
+  /**
+   * data of the affected rows by the mutation
+   */
   returning: Array<review>
 }
 
+/**
+ * aggregate stddev on columns
+ */
 export interface review_stddev_fields {
   __typename: 'review_stddev_fields' | undefined
   rating?: ScalarsEnums['Float']
   vote?: ScalarsEnums['Float']
 }
 
+/**
+ * aggregate stddev_pop on columns
+ */
 export interface review_stddev_pop_fields {
   __typename: 'review_stddev_pop_fields' | undefined
   rating?: ScalarsEnums['Float']
   vote?: ScalarsEnums['Float']
 }
 
+/**
+ * aggregate stddev_samp on columns
+ */
 export interface review_stddev_samp_fields {
   __typename: 'review_stddev_samp_fields' | undefined
   rating?: ScalarsEnums['Float']
   vote?: ScalarsEnums['Float']
 }
 
+/**
+ * aggregate sum on columns
+ */
 export interface review_sum_fields {
   __typename: 'review_sum_fields' | undefined
   rating?: ScalarsEnums['numeric']
   vote?: ScalarsEnums['numeric']
 }
 
+/**
+ * columns and relationships of "review_tag_sentence"
+ */
 export interface review_tag_sentence {
   __typename: 'review_tag_sentence' | undefined
   id: ScalarsEnums['uuid']
   ml_sentiment?: ScalarsEnums['numeric']
   naive_sentiment: ScalarsEnums['numeric']
   restaurant_id?: ScalarsEnums['uuid']
+  /**
+   * An object relationship
+   */
   review: review
   review_id: ScalarsEnums['uuid']
   sentence: ScalarsEnums['String']
+  /**
+   * An object relationship
+   */
   tag: tag
   tag_id: ScalarsEnums['uuid']
 }
 
+/**
+ * aggregated selection of "review_tag_sentence"
+ */
 export interface review_tag_sentence_aggregate {
   __typename: 'review_tag_sentence_aggregate' | undefined
   aggregate?: Maybe<review_tag_sentence_aggregate_fields>
   nodes: Array<review_tag_sentence>
 }
 
+/**
+ * aggregate fields of "review_tag_sentence"
+ */
 export interface review_tag_sentence_aggregate_fields {
   __typename: 'review_tag_sentence_aggregate_fields' | undefined
   avg?: Maybe<review_tag_sentence_avg_fields>
@@ -13823,12 +14433,18 @@ export interface review_tag_sentence_aggregate_fields {
   variance?: Maybe<review_tag_sentence_variance_fields>
 }
 
+/**
+ * aggregate avg on columns
+ */
 export interface review_tag_sentence_avg_fields {
   __typename: 'review_tag_sentence_avg_fields' | undefined
   ml_sentiment?: ScalarsEnums['Float']
   naive_sentiment?: ScalarsEnums['Float']
 }
 
+/**
+ * aggregate max on columns
+ */
 export interface review_tag_sentence_max_fields {
   __typename: 'review_tag_sentence_max_fields' | undefined
   id?: ScalarsEnums['uuid']
@@ -13840,6 +14456,9 @@ export interface review_tag_sentence_max_fields {
   tag_id?: ScalarsEnums['uuid']
 }
 
+/**
+ * aggregate min on columns
+ */
 export interface review_tag_sentence_min_fields {
   __typename: 'review_tag_sentence_min_fields' | undefined
   id?: ScalarsEnums['uuid']
@@ -13851,87 +14470,135 @@ export interface review_tag_sentence_min_fields {
   tag_id?: ScalarsEnums['uuid']
 }
 
+/**
+ * response of any mutation on the table "review_tag_sentence"
+ */
 export interface review_tag_sentence_mutation_response {
   __typename: 'review_tag_sentence_mutation_response' | undefined
+  /**
+   * number of affected rows by the mutation
+   */
   affected_rows: ScalarsEnums['Int']
+  /**
+   * data of the affected rows by the mutation
+   */
   returning: Array<review_tag_sentence>
 }
 
+/**
+ * aggregate stddev on columns
+ */
 export interface review_tag_sentence_stddev_fields {
   __typename: 'review_tag_sentence_stddev_fields' | undefined
   ml_sentiment?: ScalarsEnums['Float']
   naive_sentiment?: ScalarsEnums['Float']
 }
 
+/**
+ * aggregate stddev_pop on columns
+ */
 export interface review_tag_sentence_stddev_pop_fields {
   __typename: 'review_tag_sentence_stddev_pop_fields' | undefined
   ml_sentiment?: ScalarsEnums['Float']
   naive_sentiment?: ScalarsEnums['Float']
 }
 
+/**
+ * aggregate stddev_samp on columns
+ */
 export interface review_tag_sentence_stddev_samp_fields {
   __typename: 'review_tag_sentence_stddev_samp_fields' | undefined
   ml_sentiment?: ScalarsEnums['Float']
   naive_sentiment?: ScalarsEnums['Float']
 }
 
+/**
+ * aggregate sum on columns
+ */
 export interface review_tag_sentence_sum_fields {
   __typename: 'review_tag_sentence_sum_fields' | undefined
   ml_sentiment?: ScalarsEnums['numeric']
   naive_sentiment?: ScalarsEnums['numeric']
 }
 
+/**
+ * aggregate var_pop on columns
+ */
 export interface review_tag_sentence_var_pop_fields {
   __typename: 'review_tag_sentence_var_pop_fields' | undefined
   ml_sentiment?: ScalarsEnums['Float']
   naive_sentiment?: ScalarsEnums['Float']
 }
 
+/**
+ * aggregate var_samp on columns
+ */
 export interface review_tag_sentence_var_samp_fields {
   __typename: 'review_tag_sentence_var_samp_fields' | undefined
   ml_sentiment?: ScalarsEnums['Float']
   naive_sentiment?: ScalarsEnums['Float']
 }
 
+/**
+ * aggregate variance on columns
+ */
 export interface review_tag_sentence_variance_fields {
   __typename: 'review_tag_sentence_variance_fields' | undefined
   ml_sentiment?: ScalarsEnums['Float']
   naive_sentiment?: ScalarsEnums['Float']
 }
 
+/**
+ * aggregate var_pop on columns
+ */
 export interface review_var_pop_fields {
   __typename: 'review_var_pop_fields' | undefined
   rating?: ScalarsEnums['Float']
   vote?: ScalarsEnums['Float']
 }
 
+/**
+ * aggregate var_samp on columns
+ */
 export interface review_var_samp_fields {
   __typename: 'review_var_samp_fields' | undefined
   rating?: ScalarsEnums['Float']
   vote?: ScalarsEnums['Float']
 }
 
+/**
+ * aggregate variance on columns
+ */
 export interface review_variance_fields {
   __typename: 'review_variance_fields' | undefined
   rating?: ScalarsEnums['Float']
   vote?: ScalarsEnums['Float']
 }
 
+/**
+ * columns and relationships of "setting"
+ */
 export interface setting {
   __typename: 'setting' | undefined
   created_at?: ScalarsEnums['timestamptz']
   id: ScalarsEnums['uuid']
   key: ScalarsEnums['String']
   updated_at?: ScalarsEnums['timestamptz']
-  value: (args?: { path?: ScalarsEnums['String'] }) => ScalarsEnums['jsonb']
+  value: ScalarsEnums['jsonb']
 }
 
+/**
+ * aggregated selection of "setting"
+ */
 export interface setting_aggregate {
   __typename: 'setting_aggregate' | undefined
   aggregate?: Maybe<setting_aggregate_fields>
   nodes: Array<setting>
 }
 
+/**
+ * aggregate fields of "setting"
+ */
 export interface setting_aggregate_fields {
   __typename: 'setting_aggregate_fields' | undefined
   count: (args?: {
@@ -13942,6 +14609,9 @@ export interface setting_aggregate_fields {
   min?: Maybe<setting_min_fields>
 }
 
+/**
+ * aggregate max on columns
+ */
 export interface setting_max_fields {
   __typename: 'setting_max_fields' | undefined
   created_at?: ScalarsEnums['timestamptz']
@@ -13950,6 +14620,9 @@ export interface setting_max_fields {
   updated_at?: ScalarsEnums['timestamptz']
 }
 
+/**
+ * aggregate min on columns
+ */
 export interface setting_min_fields {
   __typename: 'setting_min_fields' | undefined
   created_at?: ScalarsEnums['timestamptz']
@@ -13958,70 +14631,163 @@ export interface setting_min_fields {
   updated_at?: ScalarsEnums['timestamptz']
 }
 
+/**
+ * response of any mutation on the table "setting"
+ */
 export interface setting_mutation_response {
   __typename: 'setting_mutation_response' | undefined
+  /**
+   * number of affected rows by the mutation
+   */
   affected_rows: ScalarsEnums['Int']
+  /**
+   * data of the affected rows by the mutation
+   */
   returning: Array<setting>
 }
 
+/**
+ * columns and relationships of "tag"
+ */
 export interface tag {
   __typename: 'tag' | undefined
-  alternates: (args?: { path?: ScalarsEnums['String'] }) => ScalarsEnums['jsonb']
+  alternates?: ScalarsEnums['jsonb']
+  /**
+   * An array relationship
+   */
   categories: (args?: {
+    /**
+     * distinct select on columns
+     */
     distinct_on?: Array<ScalarsEnums['tag_tag_select_column']>
+    /**
+     * limit the number of rows returned
+     */
     limit?: ScalarsEnums['Int']
+    /**
+     * skip the first n rows. Use only with order_by
+     */
     offset?: ScalarsEnums['Int']
+    /**
+     * sort the rows by one or more columns
+     */
     order_by?: Maybe<Array<tag_tag_order_by>>
+    /**
+     * filter the rows returned
+     */
     where?: Maybe<tag_tag_bool_exp>
   }) => Array<tag_tag>
+  /**
+   * An aggregated array relationship
+   */
   categories_aggregate: (args?: {
+    /**
+     * distinct select on columns
+     */
     distinct_on?: Array<ScalarsEnums['tag_tag_select_column']>
+    /**
+     * limit the number of rows returned
+     */
     limit?: ScalarsEnums['Int']
+    /**
+     * skip the first n rows. Use only with order_by
+     */
     offset?: ScalarsEnums['Int']
+    /**
+     * sort the rows by one or more columns
+     */
     order_by?: Maybe<Array<tag_tag_order_by>>
+    /**
+     * filter the rows returned
+     */
     where?: Maybe<tag_tag_bool_exp>
   }) => tag_tag_aggregate
   created_at: ScalarsEnums['timestamptz']
   default_image?: ScalarsEnums['String']
-  default_images: (args?: { path?: ScalarsEnums['String'] }) => ScalarsEnums['jsonb']
+  default_images?: ScalarsEnums['jsonb']
   description?: ScalarsEnums['String']
   displayName?: ScalarsEnums['String']
   frequency?: ScalarsEnums['Int']
   icon?: ScalarsEnums['String']
   id: ScalarsEnums['uuid']
   is_ambiguous: ScalarsEnums['Boolean']
-  misc: (args?: { path?: ScalarsEnums['String'] }) => ScalarsEnums['jsonb']
+  misc?: ScalarsEnums['jsonb']
   name: ScalarsEnums['String']
   order: ScalarsEnums['Int']
+  /**
+   * An object relationship
+   */
   parent?: Maybe<tag>
   parentId?: ScalarsEnums['uuid']
   popularity?: ScalarsEnums['Int']
+  /**
+   * An array relationship
+   */
   restaurant_taxonomies: (args?: {
+    /**
+     * distinct select on columns
+     */
     distinct_on?: Array<ScalarsEnums['restaurant_tag_select_column']>
+    /**
+     * limit the number of rows returned
+     */
     limit?: ScalarsEnums['Int']
+    /**
+     * skip the first n rows. Use only with order_by
+     */
     offset?: ScalarsEnums['Int']
+    /**
+     * sort the rows by one or more columns
+     */
     order_by?: Maybe<Array<restaurant_tag_order_by>>
+    /**
+     * filter the rows returned
+     */
     where?: Maybe<restaurant_tag_bool_exp>
   }) => Array<restaurant_tag>
+  /**
+   * An aggregated array relationship
+   */
   restaurant_taxonomies_aggregate: (args?: {
+    /**
+     * distinct select on columns
+     */
     distinct_on?: Array<ScalarsEnums['restaurant_tag_select_column']>
+    /**
+     * limit the number of rows returned
+     */
     limit?: ScalarsEnums['Int']
+    /**
+     * skip the first n rows. Use only with order_by
+     */
     offset?: ScalarsEnums['Int']
+    /**
+     * sort the rows by one or more columns
+     */
     order_by?: Maybe<Array<restaurant_tag_order_by>>
+    /**
+     * filter the rows returned
+     */
     where?: Maybe<restaurant_tag_bool_exp>
   }) => restaurant_tag_aggregate
-  rgb: (args?: { path?: ScalarsEnums['String'] }) => ScalarsEnums['jsonb']
+  rgb?: ScalarsEnums['jsonb']
   slug?: ScalarsEnums['String']
   type?: ScalarsEnums['String']
   updated_at: ScalarsEnums['timestamptz']
 }
 
+/**
+ * aggregated selection of "tag"
+ */
 export interface tag_aggregate {
   __typename: 'tag_aggregate' | undefined
   aggregate?: Maybe<tag_aggregate_fields>
   nodes: Array<tag>
 }
 
+/**
+ * aggregate fields of "tag"
+ */
 export interface tag_aggregate_fields {
   __typename: 'tag_aggregate_fields' | undefined
   avg?: Maybe<tag_avg_fields>
@@ -14040,6 +14806,9 @@ export interface tag_aggregate_fields {
   variance?: Maybe<tag_variance_fields>
 }
 
+/**
+ * aggregate avg on columns
+ */
 export interface tag_avg_fields {
   __typename: 'tag_avg_fields' | undefined
   frequency?: ScalarsEnums['Float']
@@ -14047,6 +14816,9 @@ export interface tag_avg_fields {
   popularity?: ScalarsEnums['Float']
 }
 
+/**
+ * aggregate max on columns
+ */
 export interface tag_max_fields {
   __typename: 'tag_max_fields' | undefined
   created_at?: ScalarsEnums['timestamptz']
@@ -14065,6 +14837,9 @@ export interface tag_max_fields {
   updated_at?: ScalarsEnums['timestamptz']
 }
 
+/**
+ * aggregate min on columns
+ */
 export interface tag_min_fields {
   __typename: 'tag_min_fields' | undefined
   created_at?: ScalarsEnums['timestamptz']
@@ -14083,12 +14858,24 @@ export interface tag_min_fields {
   updated_at?: ScalarsEnums['timestamptz']
 }
 
+/**
+ * response of any mutation on the table "tag"
+ */
 export interface tag_mutation_response {
   __typename: 'tag_mutation_response' | undefined
+  /**
+   * number of affected rows by the mutation
+   */
   affected_rows: ScalarsEnums['Int']
+  /**
+   * data of the affected rows by the mutation
+   */
   returning: Array<tag>
 }
 
+/**
+ * aggregate stddev on columns
+ */
 export interface tag_stddev_fields {
   __typename: 'tag_stddev_fields' | undefined
   frequency?: ScalarsEnums['Float']
@@ -14096,6 +14883,9 @@ export interface tag_stddev_fields {
   popularity?: ScalarsEnums['Float']
 }
 
+/**
+ * aggregate stddev_pop on columns
+ */
 export interface tag_stddev_pop_fields {
   __typename: 'tag_stddev_pop_fields' | undefined
   frequency?: ScalarsEnums['Float']
@@ -14103,6 +14893,9 @@ export interface tag_stddev_pop_fields {
   popularity?: ScalarsEnums['Float']
 }
 
+/**
+ * aggregate stddev_samp on columns
+ */
 export interface tag_stddev_samp_fields {
   __typename: 'tag_stddev_samp_fields' | undefined
   frequency?: ScalarsEnums['Float']
@@ -14110,6 +14903,9 @@ export interface tag_stddev_samp_fields {
   popularity?: ScalarsEnums['Float']
 }
 
+/**
+ * aggregate sum on columns
+ */
 export interface tag_sum_fields {
   __typename: 'tag_sum_fields' | undefined
   frequency?: ScalarsEnums['Int']
@@ -14117,20 +14913,35 @@ export interface tag_sum_fields {
   popularity?: ScalarsEnums['Int']
 }
 
+/**
+ * columns and relationships of "tag_tag"
+ */
 export interface tag_tag {
   __typename: 'tag_tag' | undefined
+  /**
+   * An object relationship
+   */
   category: tag
   category_tag_id: ScalarsEnums['uuid']
+  /**
+   * An object relationship
+   */
   main: tag
   tag_id: ScalarsEnums['uuid']
 }
 
+/**
+ * aggregated selection of "tag_tag"
+ */
 export interface tag_tag_aggregate {
   __typename: 'tag_tag_aggregate' | undefined
   aggregate?: Maybe<tag_tag_aggregate_fields>
   nodes: Array<tag_tag>
 }
 
+/**
+ * aggregate fields of "tag_tag"
+ */
 export interface tag_tag_aggregate_fields {
   __typename: 'tag_tag_aggregate_fields' | undefined
   count: (args?: {
@@ -14141,24 +14952,42 @@ export interface tag_tag_aggregate_fields {
   min?: Maybe<tag_tag_min_fields>
 }
 
+/**
+ * aggregate max on columns
+ */
 export interface tag_tag_max_fields {
   __typename: 'tag_tag_max_fields' | undefined
   category_tag_id?: ScalarsEnums['uuid']
   tag_id?: ScalarsEnums['uuid']
 }
 
+/**
+ * aggregate min on columns
+ */
 export interface tag_tag_min_fields {
   __typename: 'tag_tag_min_fields' | undefined
   category_tag_id?: ScalarsEnums['uuid']
   tag_id?: ScalarsEnums['uuid']
 }
 
+/**
+ * response of any mutation on the table "tag_tag"
+ */
 export interface tag_tag_mutation_response {
   __typename: 'tag_tag_mutation_response' | undefined
+  /**
+   * number of affected rows by the mutation
+   */
   affected_rows: ScalarsEnums['Int']
+  /**
+   * data of the affected rows by the mutation
+   */
   returning: Array<tag_tag>
 }
 
+/**
+ * aggregate var_pop on columns
+ */
 export interface tag_var_pop_fields {
   __typename: 'tag_var_pop_fields' | undefined
   frequency?: ScalarsEnums['Float']
@@ -14166,6 +14995,9 @@ export interface tag_var_pop_fields {
   popularity?: ScalarsEnums['Float']
 }
 
+/**
+ * aggregate var_samp on columns
+ */
 export interface tag_var_samp_fields {
   __typename: 'tag_var_samp_fields' | undefined
   frequency?: ScalarsEnums['Float']
@@ -14173,6 +15005,9 @@ export interface tag_var_samp_fields {
   popularity?: ScalarsEnums['Float']
 }
 
+/**
+ * aggregate variance on columns
+ */
 export interface tag_variance_fields {
   __typename: 'tag_variance_fields' | undefined
   frequency?: ScalarsEnums['Float']
@@ -14180,6 +15015,9 @@ export interface tag_variance_fields {
   popularity?: ScalarsEnums['Float']
 }
 
+/**
+ * columns and relationships of "user"
+ */
 export interface user {
   __typename: 'user' | undefined
   about?: ScalarsEnums['String']
@@ -14193,18 +15031,54 @@ export interface user {
   email?: ScalarsEnums['String']
   has_onboarded: ScalarsEnums['Boolean']
   id: ScalarsEnums['uuid']
+  /**
+   * An array relationship
+   */
   lists: (args?: {
+    /**
+     * distinct select on columns
+     */
     distinct_on?: Array<ScalarsEnums['list_select_column']>
+    /**
+     * limit the number of rows returned
+     */
     limit?: ScalarsEnums['Int']
+    /**
+     * skip the first n rows. Use only with order_by
+     */
     offset?: ScalarsEnums['Int']
+    /**
+     * sort the rows by one or more columns
+     */
     order_by?: Maybe<Array<list_order_by>>
+    /**
+     * filter the rows returned
+     */
     where?: Maybe<list_bool_exp>
   }) => Array<list>
+  /**
+   * An aggregated array relationship
+   */
   lists_aggregate: (args?: {
+    /**
+     * distinct select on columns
+     */
     distinct_on?: Array<ScalarsEnums['list_select_column']>
+    /**
+     * limit the number of rows returned
+     */
     limit?: ScalarsEnums['Int']
+    /**
+     * skip the first n rows. Use only with order_by
+     */
     offset?: ScalarsEnums['Int']
+    /**
+     * sort the rows by one or more columns
+     */
     order_by?: Maybe<Array<list_order_by>>
+    /**
+     * filter the rows returned
+     */
     where?: Maybe<list_bool_exp>
   }) => list_aggregate
   location?: ScalarsEnums['String']
@@ -14212,18 +15086,54 @@ export interface user {
   password: ScalarsEnums['String']
   password_reset_date?: ScalarsEnums['timestamptz']
   password_reset_token?: ScalarsEnums['String']
+  /**
+   * An array relationship
+   */
   reviews: (args?: {
+    /**
+     * distinct select on columns
+     */
     distinct_on?: Array<ScalarsEnums['review_select_column']>
+    /**
+     * limit the number of rows returned
+     */
     limit?: ScalarsEnums['Int']
+    /**
+     * skip the first n rows. Use only with order_by
+     */
     offset?: ScalarsEnums['Int']
+    /**
+     * sort the rows by one or more columns
+     */
     order_by?: Maybe<Array<review_order_by>>
+    /**
+     * filter the rows returned
+     */
     where?: Maybe<review_bool_exp>
   }) => Array<review>
+  /**
+   * An aggregated array relationship
+   */
   reviews_aggregate: (args?: {
+    /**
+     * distinct select on columns
+     */
     distinct_on?: Array<ScalarsEnums['review_select_column']>
+    /**
+     * limit the number of rows returned
+     */
     limit?: ScalarsEnums['Int']
+    /**
+     * skip the first n rows. Use only with order_by
+     */
     offset?: ScalarsEnums['Int']
+    /**
+     * sort the rows by one or more columns
+     */
     order_by?: Maybe<Array<review_order_by>>
+    /**
+     * filter the rows returned
+     */
     where?: Maybe<review_bool_exp>
   }) => review_aggregate
   role?: ScalarsEnums['String']
@@ -14231,12 +15141,18 @@ export interface user {
   username: ScalarsEnums['String']
 }
 
+/**
+ * aggregated selection of "user"
+ */
 export interface user_aggregate {
   __typename: 'user_aggregate' | undefined
   aggregate?: Maybe<user_aggregate_fields>
   nodes: Array<user>
 }
 
+/**
+ * aggregate fields of "user"
+ */
 export interface user_aggregate_fields {
   __typename: 'user_aggregate_fields' | undefined
   avg?: Maybe<user_avg_fields>
@@ -14255,11 +15171,17 @@ export interface user_aggregate_fields {
   variance?: Maybe<user_variance_fields>
 }
 
+/**
+ * aggregate avg on columns
+ */
 export interface user_avg_fields {
   __typename: 'user_avg_fields' | undefined
   charIndex?: ScalarsEnums['Float']
 }
 
+/**
+ * aggregate max on columns
+ */
 export interface user_max_fields {
   __typename: 'user_max_fields' | undefined
   about?: ScalarsEnums['String']
@@ -14282,6 +15204,9 @@ export interface user_max_fields {
   username?: ScalarsEnums['String']
 }
 
+/**
+ * aggregate min on columns
+ */
 export interface user_min_fields {
   __typename: 'user_min_fields' | undefined
   about?: ScalarsEnums['String']
@@ -14304,47 +15229,80 @@ export interface user_min_fields {
   username?: ScalarsEnums['String']
 }
 
+/**
+ * response of any mutation on the table "user"
+ */
 export interface user_mutation_response {
   __typename: 'user_mutation_response' | undefined
+  /**
+   * number of affected rows by the mutation
+   */
   affected_rows: ScalarsEnums['Int']
+  /**
+   * data of the affected rows by the mutation
+   */
   returning: Array<user>
 }
 
+/**
+ * aggregate stddev on columns
+ */
 export interface user_stddev_fields {
   __typename: 'user_stddev_fields' | undefined
   charIndex?: ScalarsEnums['Float']
 }
 
+/**
+ * aggregate stddev_pop on columns
+ */
 export interface user_stddev_pop_fields {
   __typename: 'user_stddev_pop_fields' | undefined
   charIndex?: ScalarsEnums['Float']
 }
 
+/**
+ * aggregate stddev_samp on columns
+ */
 export interface user_stddev_samp_fields {
   __typename: 'user_stddev_samp_fields' | undefined
   charIndex?: ScalarsEnums['Float']
 }
 
+/**
+ * aggregate sum on columns
+ */
 export interface user_sum_fields {
   __typename: 'user_sum_fields' | undefined
   charIndex?: ScalarsEnums['Int']
 }
 
+/**
+ * aggregate var_pop on columns
+ */
 export interface user_var_pop_fields {
   __typename: 'user_var_pop_fields' | undefined
   charIndex?: ScalarsEnums['Float']
 }
 
+/**
+ * aggregate var_samp on columns
+ */
 export interface user_var_samp_fields {
   __typename: 'user_var_samp_fields' | undefined
   charIndex?: ScalarsEnums['Float']
 }
 
+/**
+ * aggregate variance on columns
+ */
 export interface user_variance_fields {
   __typename: 'user_variance_fields' | undefined
   charIndex?: ScalarsEnums['Float']
 }
 
+/**
+ * columns and relationships of "zcta5"
+ */
 export interface zcta5 {
   __typename: 'zcta5' | undefined
   color?: ScalarsEnums['String']
@@ -14356,12 +15314,18 @@ export interface zcta5 {
   wkb_geometry?: ScalarsEnums['geometry']
 }
 
+/**
+ * aggregated selection of "zcta5"
+ */
 export interface zcta5_aggregate {
   __typename: 'zcta5_aggregate' | undefined
   aggregate?: Maybe<zcta5_aggregate_fields>
   nodes: Array<zcta5>
 }
 
+/**
+ * aggregate fields of "zcta5"
+ */
 export interface zcta5_aggregate_fields {
   __typename: 'zcta5_aggregate_fields' | undefined
   avg?: Maybe<zcta5_avg_fields>
@@ -14380,11 +15344,17 @@ export interface zcta5_aggregate_fields {
   variance?: Maybe<zcta5_variance_fields>
 }
 
+/**
+ * aggregate avg on columns
+ */
 export interface zcta5_avg_fields {
   __typename: 'zcta5_avg_fields' | undefined
   ogc_fid?: ScalarsEnums['Float']
 }
 
+/**
+ * aggregate max on columns
+ */
 export interface zcta5_max_fields {
   __typename: 'zcta5_max_fields' | undefined
   color?: ScalarsEnums['String']
@@ -14395,6 +15365,9 @@ export interface zcta5_max_fields {
   slug?: ScalarsEnums['String']
 }
 
+/**
+ * aggregate min on columns
+ */
 export interface zcta5_min_fields {
   __typename: 'zcta5_min_fields' | undefined
   color?: ScalarsEnums['String']
@@ -14405,42 +15378,72 @@ export interface zcta5_min_fields {
   slug?: ScalarsEnums['String']
 }
 
+/**
+ * response of any mutation on the table "zcta5"
+ */
 export interface zcta5_mutation_response {
   __typename: 'zcta5_mutation_response' | undefined
+  /**
+   * number of affected rows by the mutation
+   */
   affected_rows: ScalarsEnums['Int']
+  /**
+   * data of the affected rows by the mutation
+   */
   returning: Array<zcta5>
 }
 
+/**
+ * aggregate stddev on columns
+ */
 export interface zcta5_stddev_fields {
   __typename: 'zcta5_stddev_fields' | undefined
   ogc_fid?: ScalarsEnums['Float']
 }
 
+/**
+ * aggregate stddev_pop on columns
+ */
 export interface zcta5_stddev_pop_fields {
   __typename: 'zcta5_stddev_pop_fields' | undefined
   ogc_fid?: ScalarsEnums['Float']
 }
 
+/**
+ * aggregate stddev_samp on columns
+ */
 export interface zcta5_stddev_samp_fields {
   __typename: 'zcta5_stddev_samp_fields' | undefined
   ogc_fid?: ScalarsEnums['Float']
 }
 
+/**
+ * aggregate sum on columns
+ */
 export interface zcta5_sum_fields {
   __typename: 'zcta5_sum_fields' | undefined
   ogc_fid?: ScalarsEnums['Int']
 }
 
+/**
+ * aggregate var_pop on columns
+ */
 export interface zcta5_var_pop_fields {
   __typename: 'zcta5_var_pop_fields' | undefined
   ogc_fid?: ScalarsEnums['Float']
 }
 
+/**
+ * aggregate var_samp on columns
+ */
 export interface zcta5_var_samp_fields {
   __typename: 'zcta5_var_samp_fields' | undefined
   ogc_fid?: ScalarsEnums['Float']
 }
 
+/**
+ * aggregate variance on columns
+ */
 export interface zcta5_variance_fields {
   __typename: 'zcta5_variance_fields' | undefined
   ogc_fid?: ScalarsEnums['Float']

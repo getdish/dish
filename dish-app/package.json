@@ -73,7 +73,7 @@
     "express": "^4.17.1",
     "flexsearch": "^0.6.32",
     "fs-extra": "^9.1.0",
-    "gqless": "^2.0.4",
+    "gqless": "^2.0.5",
     "graphql": "^15.5.0",
     "immer": "^8.0.0",
     "jsonwebtoken": "^8.4.0",

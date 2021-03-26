@@ -72,7 +72,7 @@ export class Yelp extends WorkerJob {
             slug: x.slug,
             address: x.address,
             location: x.location,
-            sources: x.sources(),
+            sources: x.sources,
           }
         })[0]
     })
