@@ -1,12 +1,11 @@
 module.exports = function (api) {
   const isSSR = process.env.TARGET === 'ssr'
-  const isLegacy = process.env.LEGACY === '1'
-  const isDev = api.env('develpoment') || process.env.NODE_ENV === 'development'
+  // NOTE: we dont use this for NATIVE, we use metro-babel
+  const isLegacy = process.env.TARGET === 'native' || process.env.LEGACY === '1'
+  const isDev = api.env('development') || process.env.NODE_ENV === 'development'
   const isProd = !isDev
 
-  api.cache.using(
-    () => `${process.env.NODE_ENV}${process.env.TARGET}${process.env.LEGACY}`
-  )
+  api.cache.using(() => `${process.env.NODE_ENV}${process.env.TARGET}${process.env.LEGACY}`)
 
   const shouldOptimize = isProd && !isSSR
 
@@ -47,10 +46,7 @@ module.exports = function (api) {
       .filter(Boolean)
       .map(resolvePlugin),
     presets: [
-      [
-        '@babel/preset-typescript',
-        { onlyRemoveTypeImports: true, isTSX: true, allExtensions: true },
-      ],
+      ['@babel/preset-typescript', { onlyRemoveTypeImports: true, isTSX: true }],
       [
         '@babel/preset-react',
         {

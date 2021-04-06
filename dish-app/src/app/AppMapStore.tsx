@@ -23,7 +23,6 @@ import { bboxToLngLat, getZoomLevel, hasMovedAtLeast, padLngLat } from '../helpe
 import { queryRestaurant } from '../queries/queryRestaurant'
 import { RegionWithVia } from '../types/homeTypes'
 import { AppMapPosition, MapResultItem } from '../types/mapTypes'
-import { searchPageStore } from './home/search/SearchPageStore'
 import { homeStore } from './homeStore'
 
 type MapOpts = {
@@ -99,8 +98,8 @@ class AppMapStore extends Store {
       via: pos.via ?? this.position.via,
     }
     // fix if it gets bad value...
-    this.position.center.lat ??= defaultLocation.center.lat
-    this.position.center.lng ??= defaultLocation.center.lng
+    this.position.center.lat = this.position.center.lat ?? defaultLocation.center.lat
+    this.position.center.lng = this.position.center.lng ?? defaultLocation.center.lng
     this.nextPosition = this.position
     const n = [...this.lastPositions, this.position]
     this.lastPositions = n.reverse().slice(0, 15).reverse() // keep only 15
@@ -163,7 +162,7 @@ class AppMapStore extends Store {
   }
 
   private getNumId = (id: string): number => {
-    this.ids[id] = this.ids[id] ?? Math.round(Math.random() * 10000000000)
+    this.ids[id] = this.ids[id] || Math.round(Math.random() * 10000000000)
     return this.ids[id]
   }
 
