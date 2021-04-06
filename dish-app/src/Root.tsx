@@ -1,8 +1,8 @@
 // // for testing quickly
 // import React from 'react'
-// import { Button, ThemeProvider, configureThemes } from 'snackui'
+// import { ThemeProvider, configureThemes } from 'snackui'
 
-// import { Pie } from "./app/views/Pie"
+// import { RatingView } from './app/home/RatingView'
 // import themes from './constants/themes'
 
 // configureThemes(themes)
@@ -11,10 +11,7 @@
 //   console.log('hi')
 //   return (
 //     <ThemeProvider themes={themes} defaultTheme="light">
-//       <Pie />
-//       {/* <Button pointerEvents="auto" backgroundColor="red">
-//         hello
-//       </Button> */}
+//       <RatingView />
 //     </ThemeProvider>
 //   )
 // }
