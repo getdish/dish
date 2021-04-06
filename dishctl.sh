@@ -321,7 +321,7 @@ function dish_app_generate_tags() {
   export HASURA_ENDPOINT=https://hasura.dishapp.com
   export IS_LIVE=1
   pushd $PROJECT_ROOT/dish-app
-  node -r esbuild-register ./etc/generate_tags.ts
+  node -r @dish/esbuild-register ./etc/generate_tags.ts
 }
 
 function s3() {

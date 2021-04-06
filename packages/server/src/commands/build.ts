@@ -5,7 +5,9 @@ import { Command, flags } from '@oclif/command'
 import { buildApp } from '../lib/buildApp'
 import { getWebpackConfigBuilder } from '../lib/getWebpackConfigBuilder'
 
-process.env.NODE_ENV === 'production'
+if (!process.env.NODE_ENV) {
+  throw new Error(`No NODE_ENV set`)
+}
 
 export class Build extends Command {
   static description = 'Build app to filesystem'
@@ -29,7 +31,6 @@ export class Build extends Command {
     const { flags } = this.parse(Build)
 
     try {
-      process.env.NODE_ENV = 'production'
       const rootDir = process.cwd()
       await buildApp({
         serial: flags.serial,

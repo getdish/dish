@@ -20,7 +20,7 @@ import Webpack from 'webpack'
 
 // import WebpackPwaManifest from 'webpack-pwa-manifest'
 
-const { ESBuildPlugin } = require('esbuild-loader')
+const { ESBuildPlugin } = require('@dish/esbuild-loader')
 
 const CssMinimizerPlugin = require('css-minimizer-webpack-plugin')
 
@@ -202,7 +202,7 @@ export function createWebpackConfig({
                   // no fast refresh for esbuild
                   isProduction
                     ? {
-                        loader: require.resolve('esbuild-loader'),
+                        loader: require.resolve('@dish/esbuild-loader'),
                         options: {
                           loader: 'tsx',
                           target: 'es2019',

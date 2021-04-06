@@ -170,7 +170,7 @@ export default memo(function HomePage(props: HomeStackViewProps<HomeStateItemHom
 
   return (
     <>
-      <PageTitleTag>Dish - Uniquely Good Food</PageTitleTag>
+      <PageTitleTag>Dish - Uniquely Great Food</PageTitleTag>
 
       {/* TOP FADE */}
       <AbsoluteVStack
@@ -245,9 +245,9 @@ const HomePageIntroDialogue = memo(() => {
         <CloseButton onPress={() => setShow(false)} />
       </AbsoluteVStack>
       <Paragraph>
-        <Text fontWeight="700">Welcome!</Text> Dish is a better pocket map of the world, starting
+        <Text fontWeight="700">Welcome!</Text> Dish is building a pocket map of the world, starting
         with food. We want to make it easier to know what's uniquely good in each city and
-        neighborhood. <Link name="about">Read more</Link>.
+        neighborhood and share great things to do. <Link name="about">Read more</Link>.
       </Paragraph>
     </VStack>
   )

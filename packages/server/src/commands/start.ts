@@ -5,6 +5,10 @@ import { Command, flags } from '@oclif/command'
 import { createServer } from '../lib/createServer'
 import { ServerConfig } from '../types'
 
+if (!process.env.NODE_ENV) {
+  throw new Error(`No NODE_ENV set`)
+}
+
 export class Start extends Command {
   static description = 'Start development server'
   static aliases = ['s']
@@ -66,12 +70,6 @@ export class Start extends Command {
       https: flags.https,
       serial: flags.serial,
       resetCache: flags['reset-cache'],
-    }
-
-    if (config.env === 'development') {
-      process.env.NODE_ENV = 'development'
-    } else {
-      process.env.NODE_ENV = 'production'
     }
 
     try {

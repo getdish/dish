@@ -7,5 +7,5 @@ if (!fileName) {
   throw new Error(`No fileName given: ${fileName}`)
 }
 const script = path.join(process.cwd(), fileName)
-require('esbuild-register')
+require('@dish/esbuild-register')
 require(script)
