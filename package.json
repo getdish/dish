@@ -110,7 +110,8 @@
     "esbuild": "^0.11.5",
     "expo-linear-gradient": "9.0.0",
     "@unimodules/react-native-adapter": "6.1.0",
-    "react-native-unimodules": "0.12.0"
+    "react-native-unimodules": "0.12.0",
+    "dish-monorepo": "portal:/Users/n8/dish"
   },
   "dependencies": {
     "@dish/app": "*",

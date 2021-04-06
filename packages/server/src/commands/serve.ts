@@ -5,6 +5,10 @@ import { Command, flags } from '@oclif/command'
 import { createServer } from '../lib/createServer'
 import { ServerConfig } from '../types'
 
+if (!process.env.NODE_ENV) {
+  throw new Error(`No NODE_ENV set`)
+}
+
 export class Start extends Command {
   static description = 'Serve built app with api'
   static aliases = ['s']
@@ -51,8 +55,6 @@ export class Start extends Command {
       https: flags.https,
       verbose: flags.verbose,
     }
-
-    process.env.NODE_ENV = 'production'
 
     try {
       await createServer(config)

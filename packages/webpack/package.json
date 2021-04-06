@@ -11,6 +11,7 @@
   },
   "devDependencies": {
     "@babel/core": "^7.12.9",
+    "@dish/esbuild-loader": "0.0.0-semantic-release",
     "@dish/esdx": "*",
     "@dish/helpers": "*",
     "@dish/proxy-worm": "*",
@@ -24,7 +25,6 @@
     "css-loader": "^5.0.2",
     "css-minimizer-webpack-plugin": "^1.2.0",
     "dedupe-parent-css-from-chunks-webpack-plugin": "^3.0.0",
-    "esbuild-loader": "^2.9.2",
     "extract-css-chunks-webpack-plugin": "^4.9.0",
     "file-loader": "^6.2.0",
     "fs-extra": "^9.1.0",

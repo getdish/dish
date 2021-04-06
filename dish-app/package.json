@@ -6,7 +6,7 @@
     "hoistingLimits": "workspaces"
   },
   "scripts": {
-    "etc:colorize": "../dishctl.sh run 'DEBUG=1 node -r esbuild-register ./etc/add_colors_to_tiles.ts'",
+    "etc:colorize": "../dishctl.sh run 'DEBUG=1 node -r @dish/esbuild-register ./etc/add_colors_to_tiles.ts'",
     "postinstall": "yarn patch-package || true && DEBUG=workspaces expo-yarn-workspaces postinstall",
     "etc:colorize:staging": "NODE_ENV=staging yarn etc:colorize",
     "start": "TARGET=native react-native start",
@@ -15,8 +15,8 @@
     "web:debug": "DEBUG_WEBPACK=1 node --max_old_space_size=8192 --inspect ../node_modules/.bin/dish start --serial",
     "web:prod": "DEBUG_PATHS=1 VERBOSE=1 yarn web --prod",
     "web:prod:dev": "DEBUG_PATHS=1 VERBOSE=1 yarn web --prod --no-optimize",
-    "web:serve": "dish serve",
-    "web:build": "dish build",
+    "web:serve": "NODE_ENV=production dish serve",
+    "web:build": "NODE_ENV=production dish build",
     "web:build:analyze": "ANALYZE_BUNDLE=1 yarn web:build",
     "web:no-extract": "NO_EXTRACT=1 yarn web",
     "web:ssr": "PORT=80 node _/web/server.js",
