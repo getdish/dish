@@ -1,5 +1,4 @@
-const useOurBabel =
-  process.env.TARGET === 'web' || process.env.TARGET === 'node'
+const useOurBabel = process.env.TARGET === 'web' || process.env.TARGET === 'node'
 
 module.exports = function (api) {
   api.cache(true)

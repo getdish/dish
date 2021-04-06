@@ -1,7 +1,7 @@
-import { Store, createStore, getStore, reaction, useStore, useStoreInstance } from '@dish/use-store'
-import React, { memo, useEffect, useMemo } from 'react'
+import { Store, createStore, getStore, useStoreInstance } from '@dish/use-store'
+import React, { memo, useMemo } from 'react'
 import { Animated, PanResponder, StyleSheet, View } from 'react-native'
-import { AbsoluteVStack, VStack, useConstant, useGet } from 'snackui'
+import { VStack, useConstant } from 'snackui'
 
 import { pageWidthMax, searchBarHeight, zIndexDrawer } from '../../constants/constants'
 import { getWindowHeight } from '../../helpers/getWindow'
