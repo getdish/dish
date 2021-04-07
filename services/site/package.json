@@ -1,0 +1,25 @@
+{
+  "name": "@dish/site",
+  "version": "0.0.1",
+  "types": "types.d.ts",
+  "sideEffects": false,
+  "scripts": {
+    "start": "dish start --port 4555",
+    "build": "NODE_ENV=production dish build",
+    "serve": "NODE_ENV=production dish serve"
+  },
+  "dependencies": {
+    "@dish/server": "*",
+    "@dish/webpack": "*",
+    "react": "*",
+    "react-dom": "*",
+    "react-native-web": "*",
+    "snackui": "*"
+  },
+  "devDependencies": {
+    "@dish/babel-preset": "*",
+    "@snackui/babel-plugin": "^0.2.0",
+    "@types/react": "*",
+    "@types/react-native": "*"
+  }
+}

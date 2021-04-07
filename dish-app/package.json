@@ -109,7 +109,6 @@
   },
   "devDependencies": {
     "@dish/babel-preset": "*",
-    "@dish/dsh": "*",
     "@snackui/babel-plugin": "^0.2.0",
     "@types/lodash": "^4.14.165",
     "@types/mapbox-gl": "^2.1.1",

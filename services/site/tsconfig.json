@@ -1,0 +1,15 @@
+{
+  "extends": "../../tsconfig.base",
+  "compilerOptions": {
+    "jsx": "react-native",
+    "lib": ["dom", "esnext"],
+    "outDir": "_",
+    "noEmit": true,
+    "noEmitHelpers": true,
+    "noImplicitReturns": false,
+    "target": "es2019",
+    "composite": true
+  },
+  "include": ["src"],
+  "exclude": ["_"],
+}
