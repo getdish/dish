@@ -25,7 +25,7 @@ import { queryClient } from '../../helpers/queryClient'
 import { router, useIsRouteActive } from '../../router'
 import { HomeStateItemHome } from '../../types/homeTypes'
 import { appMapStore, cancelUpdateRegion } from '../AppMapStore'
-import { useHomeStore } from '../homeStore'
+import { useHomeStateById, useHomeStore } from '../homeStore'
 import { useLocalStorageState } from '../hooks/useLocalStorageState'
 import { CloseButton } from '../views/CloseButton'
 import { ContentScrollView } from '../views/ContentScrollView'
@@ -42,7 +42,7 @@ export default memo(function HomePage(props: HomeStackViewProps<HomeStateItemHom
   const home = useHomeStore()
   const theme = useTheme()
   const [isLoaded, setIsLoaded] = useState(false)
-  const state = home.lastHomeState
+  const state = useHomeStateById<HomeStateItemHome>(props.item.id)
   const isRouteActive = useIsRouteActive('home', 'homeRegion')
   // first one is if the route is active, second is if the stack view active
   const isActive = isRouteActive && props.isActive
@@ -51,7 +51,7 @@ export default memo(function HomePage(props: HomeStackViewProps<HomeStateItemHom
     suspense: false,
   })
   const [position, setPosition] = useState<MapPosition>(initialPosition)
-  const regionColors = getColorsForName(props.item.region)
+  const regionColors = getColorsForName(state.region)
   const region = regionResponse.data
   const { center, span } = region ?? {}
 
@@ -107,7 +107,7 @@ export default memo(function HomePage(props: HomeStackViewProps<HomeStateItemHom
   }, [isActive, regionResponse.status, region?.slug])
 
   useEffect(() => {
-    if (isActive && !props.item.region) {
+    if (isActive && !state.region) {
       // no region found!
       console.warn('no region, nav', region)
       router.navigate({
@@ -117,7 +117,7 @@ export default memo(function HomePage(props: HomeStackViewProps<HomeStateItemHom
         },
       })
     }
-  }, [isActive, props.item.region])
+  }, [isActive, state.region])
 
   const regionName = region?.name ?? '...'
   const media = useMedia()
@@ -166,7 +166,7 @@ export default memo(function HomePage(props: HomeStackViewProps<HomeStateItemHom
         <HomePageIntroDialogue />
       </>
     )
-  }, [regionColors, regionName])
+  }, [regionColors.color, regionName])
 
   return (
     <>

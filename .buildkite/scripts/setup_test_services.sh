@@ -20,10 +20,10 @@ is_dish_up() {
 }
 export -f is_dish_up
 
-echo "dish endpoint: $DISH_ENDPOINT"
+echo "HOME: $HOME, dish endpoint: $DISH_ENDPOINT"
 
 wait_until_hasura_ready() {
-  echo "Waiting for Hasura to start..."
+  echo "Waiting for Hasura to start ($HASURA_ENDPOINT)..."
   until is_hasura_up; do sleep 0.1; done
   echo "Hasura is up"
 }
@@ -67,9 +67,9 @@ echo "Migrating hasura"
 echo "Migrating timescale"
 cd services/timescale && npm install && DISH_ENV=not-production ./scripts/migrate.js
 
-echo "Waiting for dish-app to finish starting"
-if ! timeout --preserve-status 30 bash -c wait_until_dish_app_ready; then
-  echo "Timed out waiting for dish container to start"
-  exit 1
-fi
+# echo "Waiting for dish-app to finish starting"
+# if ! timeout --preserve-status 30 bash -c wait_until_dish_app_ready; then
+#   echo "Timed out waiting for dish container to start"
+#   exit 1
+# fi
 

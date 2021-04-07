@@ -799,7 +799,10 @@ function clean_docker_if_disk_full() {
     used=$(echo "$output" | awk '{ print $1}' | cut -d'%' -f1)
     echo "$output used $used"
     if [ "$used" -ge 90 ]; then
-      echo "running out of space, pruning docker..."
+      echo "running out of space, pruning..."
+      if [ "$CLEAN_BUILDKITE_BUILDS" == "true" ]; then
+        rm -r /data/buildkite_builds/*
+      fi
       docker image prune --all --filter "until=2h" --force || true
       docker system prune --filter "until=2h" --force || true
       docker volume prune --force || true
