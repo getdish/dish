@@ -1787,7 +1787,6 @@ __metadata:
     "@dish/api": "*"
     "@dish/async": "*"
     "@dish/babel-preset": "*"
-    "@dish/dsh": "*"
     "@dish/fast-compare": 2.7.6
     "@dish/graph": "*"
     "@dish/helpers": "*"
@@ -1964,7 +1963,7 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@dish/dsh@*, @dish/dsh@workspace:packages/dsh":
+"@dish/dsh@workspace:packages/dsh":
   version: 0.0.0-use.local
   resolution: "@dish/dsh@workspace:packages/dsh"
   dependencies:
@@ -2233,6 +2232,23 @@ __metadata:
       optional: true
   bin:
     dish: ./bin/run
+  languageName: unknown
+  linkType: soft
+
+"@dish/site@workspace:services/site":
+  version: 0.0.0-use.local
+  resolution: "@dish/site@workspace:services/site"
+  dependencies:
+    "@dish/babel-preset": "*"
+    "@dish/server": "*"
+    "@dish/webpack": "*"
+    "@snackui/babel-plugin": ^0.2.0
+    "@types/react": "*"
+    "@types/react-native": "*"
+    react: "*"
+    react-dom: "*"
+    react-native-web: "*"
+    snackui: "*"
   languageName: unknown
   linkType: soft
 
@@ -20839,7 +20855,7 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"snackui@0.2.0, snackui@workspace:snackui/packages/snackui":
+"snackui@*, snackui@0.2.0, snackui@workspace:snackui/packages/snackui":
   version: 0.0.0-use.local
   resolution: "snackui@workspace:snackui/packages/snackui"
   dependencies:

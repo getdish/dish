@@ -20,8 +20,6 @@ import Webpack from 'webpack'
 
 // import WebpackPwaManifest from 'webpack-pwa-manifest'
 
-const { ESBuildPlugin } = require('@dish/esbuild-loader')
-
 const CssMinimizerPlugin = require('css-minimizer-webpack-plugin')
 
 export function createWebpackConfig({
@@ -196,7 +194,7 @@ export function createWebpackConfig({
             oneOf: [
               {
                 test: /\.[jt]sx?$/,
-                include: babelInclude,
+                include: babelInclude ?? defaultBabelInclude,
                 // @ts-ignore
                 use: [
                   // no fast refresh for esbuild
@@ -283,8 +281,6 @@ export function createWebpackConfig({
         ],
       },
       plugins: [
-        new ESBuildPlugin(),
-
         isSSR && new LoadablePlugin(),
 
         // slim down unused react-native-web modules
@@ -379,4 +375,33 @@ export function createWebpackConfig({
   }
 
   return conf
+}
+
+const excludedRootPaths = [
+  '/node_modules',
+  // Prevent transpiling webpack generated files.
+  '(webpack)',
+]
+
+function defaultBabelInclude(inputPath) {
+  if (inputPath.includes('@dish/')) {
+    return true
+  }
+  if (inputPath.includes('react-native-animatable')) {
+    return true
+  }
+  if (inputPath.includes('expo-linear-gradient')) {
+    return true
+  }
+  if (inputPath.includes('match-media')) {
+    return true
+  }
+  if (inputPath.includes('react-native-reanimated')) {
+    return true
+  }
+
+  if (excludedRootPaths.some((excluded) => inputPath.includes(path.normalize(excluded)))) {
+    return false
+  }
+  return true
 }

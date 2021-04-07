@@ -529,7 +529,7 @@ function console() {
 }
 
 function find_app() {
-  find "$PROJECT_ROOT" -type d \( -name node_modules -o -name packages \) -prune -false -o -type d -name "$1" | head -n 1
+  find "$PROJECT_ROOT" -type d \( -name node_modules -o -name packages -o -name dist -o -name _ -o -name src \) -prune -false -o -type d -name "$1" | head -n 1
 }
 
 function logs() {
