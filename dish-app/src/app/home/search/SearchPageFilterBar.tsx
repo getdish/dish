@@ -21,20 +21,23 @@ type FilterBarProps = { activeTags: HomeActiveTagsRecord }
 
 export const SearchPageFilterBar = memo(({ activeTags }: FilterBarProps) => {
   const media = useMedia()
+  return media.sm ? (
+    <HomePageFilterBarSmall activeTags={activeTags} />
+  ) : (
+    <HomePageFilterBarLarge activeTags={activeTags} />
+  )
+})
+
+const HomePageFilterBarLarge = ({ activeTags }: FilterBarProps) => {
   const filterButtons = useSearchFilterButtons({ activeTags })
-
-  if (media.sm) {
-    return <HomePageFilterBarSmall activeTags={activeTags} />
-  }
-
   return (
     <HStack alignItems="center" spacing={4} justifyContent="center">
       {filterButtons}
     </HStack>
   )
-})
+}
 
-const HomePageFilterBarSmall = memo(({ activeTags }: FilterBarProps) => {
+const HomePageFilterBarSmall = ({ activeTags }: FilterBarProps) => {
   const num = Object.keys(activeTags).length
   const theme = useTheme()
   const [show, setShow] = useState(false)
@@ -80,10 +83,10 @@ const HomePageFilterBarSmall = memo(({ activeTags }: FilterBarProps) => {
       )}
     </>
   )
-})
+}
 
 const useSearchFilterButtons = ({ activeTags }: FilterBarProps) => {
-  const color = useCurrentLenseColor()
+  const { name, rgb } = useCurrentLenseColor()
   let last = 0
   const grouped = groupBy(
     sortBy(tagFilters, (x) => tagSort[x.slug]),
@@ -95,23 +98,24 @@ const useSearchFilterButtons = ({ activeTags }: FilterBarProps) => {
       <HStack key={index} borderRadius={100}>
         {group.map((tag, groupIndex) => {
           const isActive = activeTags[getTagSlug(tag.slug)] ?? false
+          const themeName = isActive ? `${name}-dark` : null
           return (
-            <FilterButton
-              key={`tag-${tag.id}`}
-              tag={tag}
-              position="relative"
-              {...(!isActive && {
-                textProps: {
-                  color: rgbString(color),
-                },
-              })}
-              zIndex={100 - index - groupIndex + (isActive ? 1 : 0)}
-              theme={isActive ? 'active' : null}
-              {...getGroupedButtonProps({
-                index: groupIndex,
-                items: group,
-              })}
-            />
+            <Theme key={`tag-${tag.id}`} name={themeName}>
+              <FilterButton
+                tag={tag}
+                position="relative"
+                {...(!isActive && {
+                  textProps: {
+                    color: rgbString(rgb),
+                  },
+                })}
+                zIndex={100 - index - groupIndex + (isActive ? 1 : 0)}
+                {...getGroupedButtonProps({
+                  index: groupIndex,
+                  items: group,
+                })}
+              />
+            </Theme>
           )
         })}
       </HStack>

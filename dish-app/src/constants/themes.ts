@@ -125,8 +125,9 @@ for (const [index, name] of colorNames.entries()) {
     borderColor: colors.lightColor,
     backgroundColorAlt: colors.darkColor,
   }
-  colorThemes[`${name}Dark`] = {
-    name,
+  const darkName = `${name}-dark`
+  colorThemes[darkName] = {
+    name: darkName,
     ...shared,
     ...lightBase,
     color: colors.extraLightColor,
@@ -147,6 +148,10 @@ const themes = {
   active,
   error,
   ...colorThemes,
+}
+
+if (typeof window !== 'undefined') {
+  window['themes'] = window['themes'] || themes
 }
 
 export default themes
