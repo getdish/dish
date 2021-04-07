@@ -35,7 +35,7 @@ sed 's/STOLONCTL_/STKEEPER_/' /data/.env >> /data/.env
 sed 's/STOLONCTL_/STSENTINEL_/' /data/.env >> /data/.env
 sed 's/STOLONCTL_/STPROXY_/' /data/.env >> /data/.env
 
-PG_PARAMS='"pgParameters":{"max_connections":"400", "work_mem": "64MB"}'
+PG_PARAMS='"pgParameters":{"max_connections":"400", "work_mem": "64MB", "jit": "on"}'
 
 # write stolon initial cluster spec
 cat <<EOF > /fly/initial-cluster-spec.json
