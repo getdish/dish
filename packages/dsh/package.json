@@ -16,7 +16,7 @@
     "/dist"
   ],
   "dependencies": {
-    "@dish/esbuild-register": "^0.0.0",
+    "@dish/esbuild-register": "^0.1.0",
     "@types/shelljs": "^0.8.8",
     "esbuild": "^0.11.5",
     "shelljs": "^0.8.4"

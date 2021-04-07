@@ -32,7 +32,6 @@
     "@dish/helpers-node": "*",
     "@dish/react-test-env": "*",
     "@gqless/cli": "^2.0.6",
-    "ava": "^3.14.0",
-    "patch-package": "^6.4.6"
+    "ava": "^3.14.0"
   }
 }

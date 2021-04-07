@@ -26,7 +26,7 @@
     ]
   },
   "dependencies": {
-    "@dish/esbuild-register": "^0.0.0",
+    "@dish/esbuild-register": "^0.1.0",
     "@dish/graph": "*",
     "@dish/helpers": "*",
     "@loadable/component": "^5.14.1",
