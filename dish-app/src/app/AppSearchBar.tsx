@@ -48,7 +48,6 @@ export const parentIds = {
 }
 
 const borderRadius = 20
-const borderRadiusInner = 19
 
 export const AppSearchBarFloating = () => {
   const media = useMedia()

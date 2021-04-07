@@ -31,13 +31,9 @@ function shouldCache(body: string) {
 }
 
 export default route(async (req, res) => {
-  const time = timer()
   await useRouteBodyParser(req, res, { text: { type: '*/*', limit: '8192mb' } })
-  time('body parse')
   const { body } = req
   const cacheKey = shouldCache(body) ? crypto.createHash('md5').update(body).digest('hex') : null
-  time('cache key hash')
-
   if (cacheKey) {
     const cache = await rGet(cacheKey)
     if (cache) {
@@ -45,7 +41,6 @@ export default route(async (req, res) => {
       return
     }
   }
-
   try {
     const headers = {
       ...req.headers,
@@ -57,7 +52,6 @@ export default route(async (req, res) => {
       body,
     })
     const response = await hasuraRes.json()
-    time('hasura request')
     if (cacheKey) {
       rc.set(cacheKey, JSON.stringify(response))
     }

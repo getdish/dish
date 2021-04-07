@@ -1831,7 +1831,7 @@ __metadata:
     express: ^4.17.1
     flexsearch: ^0.6.32
     fs-extra: ^9.1.0
-    gqless: ^2.0.5
+    gqless: ^2.0.11
     graphql: ^15.5.0
     immer: ^8.0.0
     jsonwebtoken: ^8.4.0
@@ -1944,7 +1944,7 @@ __metadata:
     chrono-node: ^2.1.6
     csv-parse: ^4.9.0
     form-data: ^4.0.0
-    gqless: ^2.0.5
+    gqless: ^2.0.11
     graphql: ^15.5.0
     js-base64: ^2.5.2
     lodash: "*"
@@ -2051,10 +2051,10 @@ __metadata:
     "@dish/react-test-env": "*"
     "@dish/use-store": "*"
     "@gqless/cli": ^2.0.6
-    "@gqless/logger": ^2.0.5
-    "@gqless/react": ^2.0.6
+    "@gqless/logger": ^2.0.10
+    "@gqless/react": ^2.0.12
     ava: ^3.14.0
-    gqless: ^2.0.5
+    gqless: ^2.0.11
     graphql: ^15.5.0
     isomorphic-unfetch: ^3.1.0
     lodash: "*"
@@ -2601,25 +2601,25 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@gqless/logger@npm:^2.0.5":
-  version: 2.0.5
-  resolution: "@gqless/logger@npm:2.0.5"
+"@gqless/logger@npm:^2.0.10":
+  version: 2.0.10
+  resolution: "@gqless/logger@npm:2.0.10"
   dependencies:
     prettier: ^2.2.1
     serialize-error: ^8.0.1
   peerDependencies:
-    gqless: ^2.0.5
-  checksum: cfde1720f5c6808739f869fd11c4c4c97ba927b25e4532deeddb14a01b89e2215291760f68d8572ec7a22f024b3f898091c9f291c9dc6e77906f897d4afb8fbc
+    gqless: ^2.0.10
+  checksum: abe99026eeec01fabfe5f9d146f5f9383584eef61d2cc13ef3416ad2a4ec85b4c499255cf9231b0c19566f50e9b8c61b3a6838cb891813bc76d1978c03c81eb0
   languageName: node
   linkType: hard
 
-"@gqless/react@npm:^2.0.6":
-  version: 2.0.6
-  resolution: "@gqless/react@npm:2.0.6"
+"@gqless/react@npm:^2.0.12":
+  version: 2.0.12
+  resolution: "@gqless/react@npm:2.0.12"
   dependencies:
     react-ssr-prepass: ^1.4.0
   peerDependencies:
-    gqless: ^2.0.5
+    gqless: ^2.0.11
     graphql: ^15.5.0
     react: ">=16.8"
   peerDependenciesMeta:
@@ -2627,7 +2627,7 @@ __metadata:
       optional: true
     react:
       optional: true
-  checksum: c923cf892a6b0785407b8e994d6f206836b337d25523b5f53900e0ad16f3e7602b378d6d553a183f5c579e5b1a8e6fc6b515dbfd57e3c63681e4b73daa01f0c9
+  checksum: 3227fa8699fd2686f0f29e90cc23d7541bca04151e62390f7fede7be3f69d0f1cc2ffbf5c17ad0e6eaf252067fda8de02dd4fd62ca27e15be11aa3c3c9fba9c6
   languageName: node
   linkType: hard
 
@@ -11908,6 +11908,21 @@ __metadata:
     to-readable-stream: ^1.0.0
     url-parse-lax: ^3.0.0
   checksum: 4cfb862eb7e2d023f486efbd9ad5ab199ea44f957dc72be9518bf54d832ad4281ef3b63eac4d861b189690c3b7674eef3e1cb4f41285a83fa43293431ab879bd
+  languageName: node
+  linkType: hard
+
+"gqless@npm:^2.0.11":
+  version: 2.0.11
+  resolution: "gqless@npm:2.0.11"
+  dependencies:
+    lodash: ^4.17.21
+    lodash-es: ^4.17.21
+  peerDependencies:
+    graphql: ^15.5.0
+  peerDependenciesMeta:
+    graphql:
+      optional: true
+  checksum: f11da2f212901c84480671a62caaa1426e18fd430e965c4b11dbf38c9f7a67ada908da9702ed50e76e3aff066bec2441cba46a95baf2c0294b8e37eeee656b66
   languageName: node
   linkType: hard
 

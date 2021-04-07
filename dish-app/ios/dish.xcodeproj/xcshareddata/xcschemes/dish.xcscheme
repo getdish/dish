@@ -57,6 +57,11 @@
             isEnabled = "YES">
          </EnvironmentVariable>
          <EnvironmentVariable
+            key = "NODE_ENV"
+            value = "production"
+            isEnabled = "YES">
+         </EnvironmentVariable>
+         <EnvironmentVariable
             key = "NODE_BINARY"
             value = "/Users/n8/n/bin/node"
             isEnabled = "YES">
