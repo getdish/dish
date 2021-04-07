@@ -11,14 +11,12 @@ if [ -n "$DOCKER_TAG" ]; then
   to="registry.fly.io/$DOCKER_TAG"
   echo "docker tag $from $to:latest"
   docker tag "$from" "$to:latest"
-  docker images | grep "$to:latest"
+  # docker images | grep "$to:latest"
   if [ -z "$DOCKER_SKIP_PUSH" ]; then
-    echo "docker push $to"
-      docker push "$to" &
-    if [ "$DOCKER_PUSH_SYNC" = "true" ]; then
-      wait
-    fi
+    echo "docker push $to:latest"
+    docker push "$to:latest"
   fi
+  echo "done tagging"
 fi
 
 if [ "$BUILDKITE_COMMAND_EXIT_STATUS" -ne 0 ]; then

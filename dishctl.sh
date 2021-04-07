@@ -800,7 +800,7 @@ function clean_docker_if_disk_full() {
     echo "$output used $used"
     if [ "$used" -ge 90 ]; then
       echo "running out of space, pruning docker..."
-      docker image prune -a --filter "until=2h" --force || true
+      docker image prune --all --filter "until=2h" --force || true
       docker system prune --filter "until=2h" --force || true
       docker volume prune --force || true
       break

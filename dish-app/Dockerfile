@@ -25,6 +25,7 @@ COPY dish-app dish-app
 
 WORKDIR /app/dish-app
 
+RUN ls -la ../node_modules/.bin/dish
 RUN npm run web:build
 
 EXPOSE 4444

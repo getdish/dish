@@ -4,6 +4,8 @@ set -eo pipefail
 
 if [ "$FIRST_STEP" == "true" ]; then
   rm -f exit_this_build || true
+  # remove dangling images which can mess up pull/push
+  docker rmi --force $(docker images --filter "dangling=true" -q --no-trunc) || true
 else
   if [[ -f "exit_this_build" ]]; then
       SKIP_STEPS=$(cat exit_this_build)
