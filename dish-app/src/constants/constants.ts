@@ -49,16 +49,3 @@ export const cardFrameHeightSm = 240 * 0.7
 
 export const MAPBOX_ACCESS_TOKEN =
   'pk.eyJ1IjoibndpZW5lcnQiLCJhIjoiY2lvbWlhYjRjMDA0NnVpbTIxMHM5ZW95eCJ9.DQyBjCEuPRVt1400yejGhA'
-
-export const slantedBoxStyle: any = {
-  position: 'relative',
-  zIndex: 10,
-  paddingVertical: 7,
-  paddingHorizontal: 10,
-  shadowColor: '#000',
-  shadowOpacity: 0.125,
-  shadowRadius: 6,
-  shadowOffset: { height: 2, width: 0 },
-  borderRadius: 7,
-  transform: [{ rotate: '-2deg' }],
-}

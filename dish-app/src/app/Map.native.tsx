@@ -187,13 +187,15 @@ export const MapView = ({ center, span, features, onMoveEnd, onSelect }: MapProp
                     // sourceLayerID={sourceId}
                     minZoomLevel={minZoom}
                     maxZoomLevel={maxZoom}
+                    // TODO after updating to 8.2 beta this regressed
+                    // @ts-ignore
                     style={{
                       lineCap: [
                         'case',
                         ['==', ['feature-state', 'active'], true],
-                        lineColorActive,
+                        lineColorActive || '',
                         ['==', ['feature-state', 'hover'], true],
-                        lineColorHover,
+                        lineColorHover || '',
                         ['==', ['feature-state', 'active'], null],
                         lineColor,
                         'green',
