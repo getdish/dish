@@ -126,7 +126,7 @@ export default memo(function HomePage(props: HomeStackViewProps<HomeStateItemHom
     return (
       <>
         <HomeTopSpacer />
-        <Spacer size="md" {...(media.sm && { size: 0 })} />
+        <Spacer size="md" {...(media.sm && { size: 4 })} />
         <HStack marginVertical={-16}>
           <ContentScrollViewHorizontal>
             <HStack
@@ -174,7 +174,7 @@ export default memo(function HomePage(props: HomeStackViewProps<HomeStateItemHom
 
       {/* TOP FADE */}
       <AbsoluteVStack
-        top={-searchBarHeight + 11}
+        top={-searchBarHeight + 8}
         right={0}
         left={0}
         overflow="hidden"

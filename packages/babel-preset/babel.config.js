@@ -46,7 +46,10 @@ module.exports = function (api) {
       .filter(Boolean)
       .map(resolvePlugin),
     presets: [
-      ['@babel/preset-typescript', { onlyRemoveTypeImports: true, isTSX: true }],
+      [
+        '@babel/preset-typescript',
+        { onlyRemoveTypeImports: true, isTSX: true, allExtensions: true },
+      ],
       [
         '@babel/preset-react',
         {

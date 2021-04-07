@@ -1,0 +1,5 @@
+- args:
+    cascade: false
+    read_only: false
+    sql: DROP FUNCTION "public"."restaurant_new"("pg_catalog"."text");
+  type: run_sql
