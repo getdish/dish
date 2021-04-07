@@ -49,7 +49,7 @@ const RestaurantHeaderContent = memo(
     if (!restaurant) {
       return null
     }
-    const [open_text, open_color, next_time] = openingHours(restaurant)
+    const open = openingHours(restaurant)
     const paddingPx = size === 'sm' ? 10 : 30
     const spacer = <Spacer size={paddingPx} />
     const nameLen = restaurant.name?.length ?? 10
@@ -211,7 +211,7 @@ const RestaurantHeaderContent = memo(
                                 opacity: 0.5,
                               }}
                               icon={<Clock size={14} color="#999" style={{ marginRight: 5 }} />}
-                              children={`${open_text}${next_time ? ` (${next_time})` : ''}`}
+                              children={`${open.text}${open.nextTime ? ` (${open.nextTime})` : ''}`}
                             />
                           </VStack>
                         </Suspense>

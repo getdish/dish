@@ -26,7 +26,7 @@ import {
   useTheme,
 } from 'snackui'
 
-import { bgLight, brandColor } from '../../../constants/colors'
+import { bgLight, brandColor, green } from '../../../constants/colors'
 import { isWeb } from '../../../constants/constants'
 import { getRestaurantDishes } from '../../../helpers/getRestaurantDishes'
 import { isWebIOS } from '../../../helpers/isIOS'
@@ -193,7 +193,7 @@ const RestaurantListItemContent = memo(
     }
 
     const handleChangeDishes = useCallback(onChangeDishes as any, [])
-    const [open_text, open_color, opening_hours] = openingHours(restaurant)
+    const open = openingHours(restaurant)
     const [price_label, price_color, price_range] = priceRange(restaurant)
     const totalReviews = useTotalReviews(restaurant)
     const nameLen = restaurantName.length
@@ -382,17 +382,20 @@ const RestaurantListItemContent = memo(
                     </Text>
                   )}
 
-                  {!!opening_hours && (
-                    <SmallButton
-                      name="restaurantHours"
-                      params={{ slug: restaurantSlug }}
-                      borderWidth={0}
-                      textProps={{
-                        opacity: 0.5,
-                      }}
-                    >
-                      {opening_hours}
-                    </SmallButton>
+                  {!!open.text && (
+                    <>
+                      {!!open.isOpen && <Circle size={8} backgroundColor={green} />}
+                      <SmallButton
+                        name="restaurantHours"
+                        params={{ slug: restaurantSlug }}
+                        borderWidth={0}
+                        textProps={{
+                          opacity: 0.5,
+                        }}
+                      >
+                        {open.nextTime}
+                      </SmallButton>
+                    </>
                   )}
 
                   {!!restaurant.address && (

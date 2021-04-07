@@ -29,26 +29,26 @@ export const RestaurantDetailRow = memo(
       // const restaurantSources = getRestaurantDeliverySources(
       //   restaurant.sources()
       // )
-      const [open_text, open_color, next_time] = openingHours(restaurant)
+      const open = openingHours(restaurant)
       const [price_label, price_color, price_range] = priceRange(restaurant)
 
       const rows = [
         {
-          title: open_text,
-          content: next_time ? (
+          title: open.text,
+          content: open.nextTime ? (
             <Link
               className="underline-link"
               name="restaurantHours"
               params={{ slug: restaurantSlug }}
-              color={open_color}
+              color={open.color}
               ellipse
             >
-              {next_time}
+              {open.nextTime}
             </Link>
           ) : (
             'No hours :('
           ),
-          color: open_color,
+          color: open.color,
         },
         { title: price_label, content: price_range, color: price_color },
       ]
@@ -131,27 +131,37 @@ const getDayOfWeek = () => {
 
 export function openingHours(restaurant: RestaurantQuery) {
   if (restaurant.hours == null) {
-    return ['Unknown Hours', 'grey', '']
+    return {
+      text: '',
+      color: '#999',
+      nextTime: '',
+      isOpen: false,
+    }
   }
 
-  const is_open_now = restaurant.is_open_now ?? false
-  let text = is_open_now ? 'Open' : 'Closed'
-  let color = is_open_now ? '#337777' : '#999'
-  let next_time = ''
+  const isOpen = !!restaurant.is_open_now
+  let text = isOpen ? 'Open' : 'Closed'
+  let color = isOpen ? '#337777' : '#999'
+  let nextTime = ''
   const dayOfWeek = getDayOfWeek()
 
-  if (is_open_now) {
+  if (isOpen) {
     const todaysHours = restaurant.hours[dayOfWeek]?.hoursInfo.hours[0] ?? ''
-    next_time = getHours(todaysHours)
+    nextTime = getHours(todaysHours)
   } else {
     // TODO: Tomorrow isn't always when the next opening time is.
     // Eg; when it's the morning and the restaurant opens in the evening.
     const tomorrow = (dayOfWeek + 1) % 7
     const tomorrowsHours = restaurant.hours[tomorrow]?.hoursInfo.hours[0] ?? ''
-    next_time = getHours(tomorrowsHours)
+    nextTime = getHours(tomorrowsHours)
   }
 
-  return [text, color, next_time]
+  return {
+    text,
+    color,
+    nextTime,
+    isOpen,
+  }
 }
 
 const getHours = (hours: string) => {

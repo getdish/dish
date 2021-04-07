@@ -16,7 +16,6 @@ import {
   Text,
   VStack,
   combineRefs,
-  useGet,
   useMedia,
 } from 'snackui'
 
@@ -29,7 +28,7 @@ import { useQueryLoud } from '../../../helpers/useQueryLoud'
 import { router } from '../../../router'
 import { HomeStateItemSearch } from '../../../types/homeTypes'
 import { appMapStore, useSetAppMap } from '../../AppMapStore'
-import { homeStore, useHomeStateById } from '../../homeStore'
+import { useHomeStateById } from '../../homeStore'
 import { useAppDrawerWidth } from '../../hooks/useAppDrawerWidth'
 import { useLastValueWhen } from '../../hooks/useLastValueWhen'
 import { usePageLoadEffect } from '../../hooks/usePageLoadEffect'
