@@ -1,19 +1,17 @@
 import { TopCuisine } from '@dish/graph'
 import { ChevronRight } from '@dish/react-feather'
-import _ from 'lodash'
-import React, { Suspense, memo, useMemo } from 'react'
-import { AbsoluteVStack, HStack, LoadingItemsSmall, Spacer, Text, VStack } from 'snackui'
+import React, { memo, useMemo } from 'react'
+import { AbsoluteVStack, HStack, Spacer, Text, VStack } from 'snackui'
 
 import { isWeb } from '../../constants/constants'
 import { addTagsToCache, getFullTagFromNameAndType } from '../../helpers/allTags'
 import { getColorsForName } from '../../helpers/getColorsForName'
 import { getFullTags } from '../../helpers/getFullTags'
 import { TagWithNameAndType } from '../../types/tagTypes'
-import { appMapStore } from '../AppMapStore'
 import { ContentScrollViewHorizontal } from '../views/ContentScrollViewHorizontal'
 import { DishView } from '../views/dish/DishView'
 import { LinkButton } from '../views/LinkButton'
-import { SlantedLinkButton } from '../views/SlantedLinkButton'
+import { SlantedLinkButton } from '../views/SlantedBox'
 
 // import { RestaurantButton } from './restaurant/RestaurantButton'
 

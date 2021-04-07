@@ -83,11 +83,11 @@ static void InitializeFlipper(UIApplication *application) {
 }
 
 - (NSURL *)sourceURLForBridge:(RCTBridge *)bridge {
- #ifdef DEBUG
+#if DEBUG
   return [[RCTBundleURLProvider sharedSettings] jsBundleURLForBundleRoot:@"index" fallbackResource:nil];
- #else
-  return [[EXUpdatesAppController sharedInstance] launchAssetUrl];
- #endif
+#else
+  return [[NSBundle mainBundle] URLForResource:@"main" withExtension:@"jsbundle"];
+#endif
 }
 
 - (void)appController:(EXUpdatesAppController *)appController didStartWithSuccess:(BOOL)success {
