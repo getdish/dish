@@ -19,7 +19,7 @@
     "bootstrap": "docker-compose build base",
     "start": "./dishctl.sh docker_compose_up",
     "start:test": "EXCLUDE_DISH_APP=1 DISH_ENV=test ./dishctl.sh docker_compose_up",
-    "start:site": "cd site && npm start",
+    "site:start": "yarn workspace @dish/site start",
     "test:migrate": "POSTGRES_DB=test ./dishctl.sh db_migrate_local init && (cd services/timescale && npm install && DISH_ENV=not-production PG_DATABASE=scrape_data ./scripts/migrate.js)",
     "db:init": "./dishctl.sh db_migrate_local init",
     "db:migrate": "./dishctl.sh db_migrate_local",

@@ -44,7 +44,7 @@ export function createWebpackConfig({
   const isStaticExtracted = !process.env.NO_EXTRACT
   const isVerbose = process.env.ANALYZE_BUNDLE || process.env.INSPECT
   const minimize = noMinify || isSSR ? false : isProduction && !isSSR
-  const hashFileNamePart = isProduction ? '[contenthash]' : '[fullhash]'
+  const hashFileNamePart = '[contenthash]'
   const hotEntry = isHot ? 'webpack-hot-middleware/client' : null
   const smp = new SpeedMeasurePlugin()
 

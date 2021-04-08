@@ -1,4 +1,4 @@
-.ui-title {
+.title-font {
   font-family: 'GTEesti', Helvetica, Arial, sans-serif;
 }
 
@@ -41,6 +41,26 @@ html {
 #root {
   pointer-events: auto;
   overflow-x: hidden;
+}
+
+.purple-bg::before {
+  display: block;
+  position: absolute;
+  content: ' ';
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background:
+    radial-gradient(circle at 50% 0,
+    #af10fe77,
+    rgba(255,0,0,0) 70.71%),
+  radial-gradient(circle at 6.7% 75%,
+  #ed137b77,
+    rgba(0,0,255,0) 70.71%),
+  radial-gradient(circle at 93.3% 75%,
+  #249bea77,
+    rgba(0,255,0,0) 70.71%) #feac1f77;
 }
 
 img {
