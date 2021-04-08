@@ -1,5 +1,4 @@
 import {
-  Icon,
   Image,
   Parallax,
   SimpleText,
@@ -23,7 +22,6 @@ import { Paragraph } from '../../views/Paragraph'
 import { SectionContentChrome } from '../../views/SectionContent'
 import { animation } from './animation'
 import { Join } from './Join'
-import { WelcomeBlogPostButton } from './WelcomeBlogPostButton'
 
 const Star = gloss(Flex, {
   borderRadius: 100,
