@@ -1,15 +1,22 @@
 import './assets/font-gteesti/stylesheet.css'
 import './site.css'
 
-import React, { useEffect } from 'react'
-import { Paragraph, StackProps, Text, VStack, defaultMediaQueries, useMedia } from 'snackui'
-import { Title } from 'snackui'
-import { Spacer } from 'snackui'
-import { TitleProps } from 'snackui'
-import { Theme } from 'snackui'
-import { Circle } from 'snackui'
-import { ParagraphProps } from 'snackui'
-import { TextProps } from 'snackui'
+import React from 'react'
+import {
+  Circle,
+  Paragraph,
+  ParagraphProps,
+  Spacer,
+  StackProps,
+  Text,
+  TextProps,
+  Theme,
+  Title,
+  TitleProps,
+  VStack,
+  defaultMediaQueries,
+  useMedia,
+} from 'snackui'
 
 import { LogoVertical } from './LogoVertical'
 
@@ -65,21 +72,35 @@ export const App = () => {
       <Container position="relative" zIndex={1} paddingVertical={40} marginHorizontal="auto">
         <LogoVertical />
 
-        <VStack height={150} alignItems="center" justifyContent="center">
+        <VStack height={120} alignItems="center" justifyContent="center">
           <DishTitleFitted>real world pokédex</DishTitleFitted>
         </VStack>
+
+        <DishParagraph
+          color="rgba(255,255,255,0.65)"
+          size="xxl"
+          sizeLineHeight={0.9}
+          textAlign="center"
+        >
+          a guide to the world,
+          <br />
+          powered by a community,
+          <br />
+          incenvitized by a coin.
+        </DishParagraph>
+
+        <Spacer size="xl" />
 
         <VStack className="float-up-down">
           <VStack
             alignSelf="center"
-            backgroundColor="#333"
-            padding={8}
-            borderRadius={28}
-            shadowColor="blue"
-            shadowRadius={100}
+            shadowColor="#000"
+            shadowRadius={60}
             shadowOpacity={0.5}
-            marginTop={-60}
-            marginBottom={-60}
+            shadowOffset={{
+              width: -20,
+              height: 100,
+            }}
             transform={[
               {
                 perspective: 100000,
@@ -95,14 +116,27 @@ export const App = () => {
               },
             ]}
           >
-            <img
-              width={563 / 2}
-              height={1144 / 2}
-              style={{
-                borderRadius: 20,
+            <VStack
+              borderRadius={30}
+              shadowColor="blue"
+              shadowRadius={130}
+              shadowOpacity={0.5}
+              shadowOffset={{
+                width: -20,
+                height: 20,
               }}
-              src={require('./assets/iphone-home-screen.jpg').default}
-            />
+              marginTop={-60}
+              marginBottom={-60}
+            >
+              <img
+                width={563 / 2}
+                height={1144 / 2}
+                style={{
+                  borderRadius: 20,
+                }}
+                src={require('./assets/iphone-home-screen.jpg').default}
+              />
+            </VStack>
           </VStack>
         </VStack>
       </Container>
@@ -111,7 +145,7 @@ export const App = () => {
         <VStack
           position="relative"
           zIndex={0}
-          marginTop={-500}
+          marginTop={-480}
           paddingTop={500}
           className="purple-bg"
           backgroundColor="#af10fe"
@@ -126,53 +160,96 @@ export const App = () => {
           />
 
           <Container marginHorizontal="auto">
-            <ContentSection>
-              <DishParagraph size="xxxl">
-                It's 2028 and your Apple VR CryptoKitty, Jerry, nestles on your lap with a ethereal
-                calm while you work. He looks up at you as you wave away some excel sheets and asks,
-                "should we reschedule the dentists tomorrow? You have that matinee with your mom,
-                and traffic looks not-so-good."
+            <ContentSection paddingTop={0}>
+              <DishParagraph textAlign="center" fontWeight="800" size="xxxxl">
+                Review platforms keep failing us.
               </DishParagraph>
 
               <DishParagraph size="xxxl">
-                "Jerry," you sigh... "is the minute I finish work really the time to be reminding me
-                of dentists, traffic, and <b>matinees</b>?"
-              </DishParagraph>
-
-              <DishParagraph size="xxl">
-                Sheesh. Still, the word matinee for some reason sticks in your mind... "<b>mat</b>
-                -in-ay.. with mom" you repeat.
-              </DishParagraph>
-
-              <DishParagraph size="xxl">
-                "Wait a second... <b>Matt</b>!" you jump up, passing right through Jerry. "Matt's
-                birthday dinner is tomorrow, too!"
-              </DishParagraph>
-
-              <DishParagraph size="xxl">
-                Holy cow, you almost forgot - and he's like, your best friend! But there's no way
-                you can make it... you have the <em>matinee</em>.
-              </DishParagraph>
-
-              <DishParagraph size="xxl">Luckily, Jerry has just the solution:</DishParagraph>
-
-              <DishParagraph size="xxxl">
-                He shows you a sweet little NFT, a{' '}
-                <b>1-of-100, paisley, Kaws x Apple CryptoKitty Handkerchief</b> for Matt's own kitty
-                - and it's only $150.
-              </DishParagraph>
-
-              <DishParagraph size="xxl">
-                You hit purchase, record a voice note (reminding him how much he likes paisley), and{' '}
-                <b>boom</b>. Matt's happy, mom's happy, and Jerry purrs with delight.
+                Reviews are hidden and faked. VC pressure to grow sacrifices product. Pleasing
+                advertisers leads to unopinionated rankings.
               </DishParagraph>
 
               <DishParagraph size="xxxl">
-                <b>Yet another NFT success story</b>.
+                Sure, a new startup can come along and fix it, but in time they will fall for the
+                same old pressures.
               </DishParagraph>
+
+              <DishParagraph size="xxxl">
+                Dish wants to solve reviews long-term by by tying{' '}
+                <b>a strong single-identity system</b> that retains privacy to a{' '}
+                <b>incentivizing coin</b>, and a non-profit that keeps the core team <b>small</b>{' '}
+                forever. This should allow:
+              </DishParagraph>
+
+              <ul style={{ marginLeft: 40 }}>
+                <DishParagraph size="xxl">
+                  <li>Deliberate, slow growth. No VC sell-out pressure.</li>
+                </DishParagraph>
+                <Spacer />
+                <DishParagraph size="xxl">
+                  <li>Early adopter buy-in and organic, heirachical leadership.</li>
+                </DishParagraph>
+                <Spacer />
+                <DishParagraph size="xxl">
+                  <li>Rewarding users for work, leading to better content.</li>
+                </DishParagraph>
+              </ul>
             </ContentSection>
           </Container>
         </VStack>
+
+        <ContentSection marginHorizontal="auto">
+          <DishParagraph size="xxxl">
+            It's 2038 and your Apple VR CryptoKitty, Jerry, nestles ethereally on your lap. He looks
+            up at you cloyingly, so you wave away the excel sheets.
+          </DishParagraph>
+
+          <DishParagraph size="xxxl">
+            "Should we reschedule the dentists tomorrow?" he asks, "you have that matinee with your
+            mom, and traffics looking to be not-so-good."
+          </DishParagraph>
+
+          <DishParagraph size="xxxl">
+            "Jerry," you sigh... "is the minute I finish work really the time to be reminding me of
+            dentists, traffic, and <b>matinees</b>?"
+          </DishParagraph>
+
+          <DishParagraph size="xxl">Sheesh.</DishParagraph>
+
+          <DishParagraph size="xxl">
+            For some reason though the word matinee reverberates in your mind... "<b>mat</b>
+            -in-ayy..." you repeat out loud, "mat-in-ay".
+          </DishParagraph>
+
+          <DishParagraph size="xxl">
+            "Wait a second... <b>Matt</b>!" you jump up, passing clean through Jerry, who's hair
+            raises. "Matt's birthday dinner... is tomorrow!"
+          </DishParagraph>
+
+          <DishParagraph size="xxl">
+            Holy cow, you had almost forgot. There's no way you can make it... you have the damn{' '}
+            <b>matinee</b>. But you've got to do <em>something</em>.
+          </DishParagraph>
+
+          <DishParagraph size="xxl">Luckily, Jerry has an idea:</DishParagraph>
+
+          <DishParagraph size="xxxl">
+            "How about this, a{' '}
+            <b>1-of-100 limited edition paisley, Kaws x Apple CryptoKitty VR Handkerchief</b> for
+            Matt's kitty - and it's only $150."
+          </DishParagraph>
+
+          <DishParagraph size="xxl">
+            Brilliant. Without a moments hestitation you buy it, record a quick voice note, and{' '}
+            <b>boom</b>. Matt'll be happy, mom'll be happy, and Jerry is practically purring with
+            delight.
+          </DishParagraph>
+
+          <DishParagraph size="xxxl">
+            <b>Yet another NFT success story</b>.
+          </DishParagraph>
+        </ContentSection>
 
         <VStack marginVertical={-20} alignItems="center">
           <DishTitleSlanted size="xl" fontWeight="800" backgroundColor="yellow" color="#000">
@@ -181,13 +258,15 @@ export const App = () => {
         </VStack>
 
         <ContentSection marginHorizontal="auto">
-          <DishParagraph size="xxxl">
-            You (as in you you, not 2028 you) must be confused.
-          </DishParagraph>
+          <DishParagraph size="xxxl">You must be confused.</DishParagraph>
 
           <DishParagraph size="xxxxl">
-            What the hell does a <b>real world pokedex</b> have to do with futuristic CryptoKitty
-            NFTs?
+            What the hell does any of that have to do with a '<b>real world pokedex</b>', and why
+            the NFT fiction?
+          </DishParagraph>
+
+          <DishParagraph size="xxxl">
+            <b>What do CryptoKitty NFTs have to do with Dish?</b>
           </DishParagraph>
 
           <DishParagraph size="xxxl">
@@ -195,35 +274,44 @@ export const App = () => {
           </DishParagraph>
 
           <DishParagraph size="xxxl">
-            The whole Jerry thing is just to show that{' '}
-            <b>the crypto world is like any other: it can be used for good, silly, or bad</b>.
+            The whole Jerry story is just to make the point that{' '}
+            <b>the crypto world is a lot like all tech: it can be used for good, bad, or silly</b>.
           </DishParagraph>
 
           <DishParagraph size="xxxxl">
-            <b>
-              And I'll be the first to say that an NFT of a gif or blog post, or any other thing you
-              can already see on the internet, is, well, stupid.
-            </b>
+            I'll be the first to say that basically all NFT's today are worthless, especially ones
+            of a gif or blog post - they're <b>stupid</b>.
           </DishParagraph>
 
           <DishParagraph size="xxxl">
             But some day a unique VR paisley handkerchief may actually be a decent, if silly, gift
-            for someone. At least then it's hard to replicate.
+            for someone. Because it will be an in-game item that you can't replicate, and your
+            friend may really like it.
           </DishParagraph>
 
           <DishParagraph size="xxl">
-            The funny thing is <b>Dish has nothing to do with NFTs at all</b>, in fact, it was
-            designed and built entirely without crypto in mind.
+            I just felt like writing that all out because it seems anytime anyone comes around with
+            a new coin it's usually full of hot air, and given the{' '}
+            <em>incredible amount of work</em> we've put into dish, that's entirely non-crypto
+            related at all, it feels like even mentioning a coin just earns justified disdain.
           </DishParagraph>
 
-          <DishParagraph size="xxl">
-            But we're launching it with a coin, because we think a coin <em>can</em> be{' '}
-            <b>immensely valuable</b>, if used for the right purpose.
+          <DishParagraph fontWeight="800" size="xxxl">
+            I get it.
           </DishParagraph>
 
           <DishParagraph size="xxxl">
-            And it took us a lot of convincing, but in the end, we think it actually makes a whole
-            lot of sense. At least, more than the handkercheif.
+            It even took me a lot of convincing - even once I ackowledged it was probably a good
+            idea on just the technical merits. It's easy to see a bubble and dismiss 100% of what's
+            inside it, but I've come around to thinking that there are some great uses for crypto
+            outside buying drugs on the dark web. Hell, Amazon was created near peak-dot-com bubble,
+            and they've done alright.
+          </DishParagraph>
+
+          <DishParagraph size="xxl">
+            I think it'd be nice to give myself a chance to explain <em>why</em> I feel a coin can
+            actually be incredibly compelling for bootstrapping communities, in particular. But
+            first, what is Dish?
           </DishParagraph>
         </ContentSection>
 
@@ -236,8 +324,6 @@ export const App = () => {
         <Theme name="light">
           <VStack backgroundColor="#feac20" marginTop={-30}>
             <ContentSection marginHorizontal="auto">
-              <DishParagraph size="xxxl">Maybe it's time to explain Dish? Here:</DishParagraph>
-
               <DishParagraph size={5}>
                 <b>
                   <Highlight backgroundColor="red" color="#fff">
@@ -252,34 +338,51 @@ export const App = () => {
               </DishParagraph>
 
               <DishParagraph size="xxl">
-                We're not claiming to be anything crazy new, app-wise. But we are doing a few things
-                differently - we're making it fun, social, and open.
+                Yea, so these things already exist. It's not rocket science 🚀. But we are doing a
+                few things differently - we think the ratings systems in general are failing us, and
+                we've done some really cool things to improve them.
               </DishParagraph>
 
               <DishParagraph size="xxl">
-                But one of the more important things we're doing is we're thinking really hard about
-                how to design something that <b>maintains high quality over time</b> and{' '}
-                <b>doesn't sell out to advertisers and pressure from VC's to grow</b>.
+                But importantly, we think a lot of what makes a ratings site good is incentives,
+                community, and good moderation. From another point of view,{' '}
+                <b>
+                  what's the point of writing reviews free reviews for Google, when they keep all
+                  the money for themselves?
+                </b>
               </DishParagraph>
 
-              <DishParagraph size="xxxxl">The key? 🔑</DishParagraph>
-
-              <DishParagraph size="xxxl">
-                Well, it's not that simple. It will take a lot of hard work from a passionate team,
-                and focus on value and users at every step.
+              <DishParagraph size="xxl">
+                So much like YouTube and TikTok pay their content creators, we're going to pay
+                DishCoin for all sorts of actions that improve the <b>quality</b> of Dish. From
+                writing reviews, to moderating sub-communities, to uploading good quality images,
+                and more.
               </DishParagraph>
 
-              <DishParagraph size="xxxl">
-                But we do have one idea for how we keep our community invested and incentivized to
-                pursue quality, and that's a coin: DishCoin, that is.
+              <DishParagraph size="xxl">
+                Before the whole coin thing ever even became a twinkle of an idea, Dish was years in
+                the making. We've spent grueling months designing something that's beautiful, and
+                works well - <b>even without a drop of crypto</b>.
               </DishParagraph>
+
+              <DishParagraph size="xxl">But then we kept asking ourselves:</DishParagraph>
+
+              <DishParagraph size="xxxxl">
+                How will we grow it without VC money that will pressure use to sell out?
+              </DishParagraph>
+
+              <DishParagraph size="xxl">
+                And that's finally when the whole coin idea came up.
+              </DishParagraph>
+
+              <DishParagraph size="xxxxl">With all that said,</DishParagraph>
             </ContentSection>
           </VStack>
         </Theme>
 
         <VStack marginTop={-20} alignItems="center">
           <DishTitleSlanted size="lg" fontWeight="800" backgroundColor="yellow" color="#000">
-            It uses a coin
+            How a coin saves us from selling out:
           </DishTitleSlanted>
         </VStack>
 

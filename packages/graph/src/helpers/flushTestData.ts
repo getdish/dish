@@ -10,13 +10,18 @@ export async function flushTestData() {
     }
   }, 8000)
 
-  await deleteAllFuzzyBy('review', 'text', 'test')
-  hasCompletedSome = true
-  await deleteAllFuzzyBy('tag', 'name', 'test')
-  await deleteAllFuzzyBy('user', 'username', 'test')
-  await deleteAllFuzzyBy('menu_item', 'name', 'Test')
-  await deleteAllFuzzyBy('restaurant', 'name', 'Test')
-  await deleteAllFuzzyBy('photo', 'url', 'imgur.com')
+  try {
+    await deleteAllFuzzyBy('review', 'text', 'test')
+    hasCompletedSome = true
+    await deleteAllFuzzyBy('tag', 'name', 'test')
+    await deleteAllFuzzyBy('user', 'username', 'test')
+    await deleteAllFuzzyBy('menu_item', 'name', 'Test')
+    await deleteAllFuzzyBy('restaurant', 'name', 'Test')
+    await deleteAllFuzzyBy('photo', 'url', 'imgur.com')
+  } catch (err) {
+    console.error(err)
+    console.log('continuing anyway for now...')
+  }
   // ensure parent tag there
   // await tagInsert([
   //   {
