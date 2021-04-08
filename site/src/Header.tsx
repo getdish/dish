@@ -1,8 +1,7 @@
 import { BorderBottom, Stack, ViewProps } from '@o/ui'
 import { Box, gloss, useTheme } from 'gloss'
-import React, { memo, useLayoutEffect, useRef, useState } from 'react'
+import React, { memo, useState } from 'react'
 
-import { useScreenSize } from './hooks/useScreenSize'
 import { LinkState } from './LinkState'
 import { useSiteStore } from './SiteStore'
 import { FadeInView, transitions, useFadePage } from './views/FadeInView'
@@ -26,18 +25,6 @@ export const Header = memo(({ slim, noBorder, before, logoProps, ...rest }: Head
   // only animate once
   const [shown, setShown] = useState(false)
   const Fade = useFadePage({ shown, threshold: 0 })
-
-  useScreenSize({
-    onChange(size) {
-      const next = size === 'small' ? siteStore.showSidebar : true
-      setShown((last) => {
-        // only update once
-        if (last === true) return true
-        headerStore.setShown(next)
-        return next
-      })
-    },
-  })
 
   const linksLeft = (
     <LinkSection md-display="none" alignRight>

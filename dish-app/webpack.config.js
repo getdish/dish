@@ -20,7 +20,6 @@ module.exports = (opts) => {
       },
     },
     pollyFillPath: path.join(__dirname, 'src', 'web', 'polyfill.legacy.js'),
-    babelInclude,
     snackOptions: {
       evaluateImportsWhitelist: ['constants.js', 'colors.js'],
       themesFile: require.resolve('./src/constants/themes.ts'),

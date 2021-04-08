@@ -15,10 +15,15 @@ render(<Root />, document.getElementById('root'))
 
 function Root() {
   return (
-    <ThemeProvider themes={themes} defaultTheme="light">
+    <ThemeProvider themes={themes} defaultTheme="dark">
       <Suspense fallback={null}>
         <App />
       </Suspense>
     </ThemeProvider>
   )
+}
+
+if (process.env.NODE_ENV === 'development') {
+  // @ts-expect-error
+  module.hot.accept()
 }
