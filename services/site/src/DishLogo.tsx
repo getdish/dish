@@ -1,7 +1,7 @@
 import React, { memo } from 'react'
 
-export const logoWidth = 1303 * 0.15
-export const logoHeight = 608 * 0.15
+export const logoWidth = 1303 * 0.22
+export const logoHeight = 608 * 0.22
 export const logoXsWidth = 1024 * 0.045
 export const logoXsHeight = 1024 * 0.045
 
