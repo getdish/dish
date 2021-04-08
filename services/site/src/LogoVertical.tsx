@@ -15,7 +15,7 @@ export const LogoVertical = memo(({ size }: { size?: Size }) => {
       userSelect="none"
       paddingHorizontal={35}
     >
-      <LogoCircle />
+      <LogoCircle scale={1.5} />
       <Spacer size={40} />
       <LogoColor />
     </VStack>

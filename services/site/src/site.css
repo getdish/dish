@@ -43,26 +43,6 @@ html {
   overflow-x: hidden;
 }
 
-.purple-bg::before {
-  display: block;
-  position: absolute;
-  content: ' ';
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background:
-    radial-gradient(circle at 50% 0,
-    #af10fe77,
-    rgba(255,0,0,0) 70.71%),
-  radial-gradient(circle at 6.7% 75%,
-  #ed137b77,
-    rgba(0,0,255,0) 70.71%),
-  radial-gradient(circle at 93.3% 75%,
-  #249bea77,
-    rgba(0,255,0,0) 70.71%) #feac1f77;
-}
-
 img {
   border: none;
 }
@@ -328,4 +308,42 @@ svg .animate-path {
 
 .hover-will-transform:hover {
   will-change: transform, opacity;
+}
+
+.float-up-down {
+  animation-name: float-up-down;
+  animation-duration: 10s;
+  animation-iteration-count: infinite;
+}
+
+@keyframes float-up-down {
+  from, to {
+    transform: translate3d(0, 0, 0);
+  }
+
+  50% {
+    transform: translate3d(0, -20px, 0);
+  }
+}
+
+.head-circle {
+  background:
+    radial-gradient(circle at 50% 0,rgba(68, 52, 216),transparent 62%),
+    radial-gradient(circle at 50% 100%, rgba(68, 52, 216), transparent 65%),
+    #000;
+}
+
+.purple-bg::before {
+  display: block;
+  position: absolute;
+  content: ' ';
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background:
+    radial-gradient(circle at 50% 0, #af10fe, rgba(255,0,0,0) 70.71%),
+    radial-gradient(circle at 6.7% 75%,#ed137b,rgba(0,0,255,0) 70.71%),
+    radial-gradient(circle at 93.3% 75%, #249bea, rgba(0,255,0,0) 70.71%)
+    #feac1f;
 }
