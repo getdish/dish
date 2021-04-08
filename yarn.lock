@@ -10102,12 +10102,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"esbuild@npm:^0.11.5":
-  version: 0.11.5
-  resolution: "esbuild@npm:0.11.5"
+"esbuild@npm:0.8.56":
+  version: 0.8.56
+  resolution: "esbuild@npm:0.8.56"
   bin:
     esbuild: bin/esbuild
-  checksum: d4fdb966101ce44c9ecf9c847d82b28c368a8a43f2ef604036c1702ecc176677d4e757ee682997d3c972d9fa5024c8683cf15cd993176feae3ee7e6a0a61c189
+  checksum: d6500c634a6d80b51f9a6bfe55be47f1cc84e3ac3e1c503752a9334b02b7d2d94261bc0e794b8bc546a0a8d892ead10bd767b359fc31704c337f872f3f9f7e8f
   languageName: node
   linkType: hard
 
@@ -11926,7 +11926,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"gqless@npm:^2.0.11":
+"gqless@npm:^2.0.11, gqless@npm:^2.0.5":
   version: 2.0.11
   resolution: "gqless@npm:2.0.11"
   dependencies:
@@ -11938,21 +11938,6 @@ __metadata:
     graphql:
       optional: true
   checksum: f11da2f212901c84480671a62caaa1426e18fd430e965c4b11dbf38c9f7a67ada908da9702ed50e76e3aff066bec2441cba46a95baf2c0294b8e37eeee656b66
-  languageName: node
-  linkType: hard
-
-"gqless@npm:^2.0.5":
-  version: 2.0.5
-  resolution: "gqless@npm:2.0.5"
-  dependencies:
-    lodash: ^4.17.21
-    lodash-es: ^4.17.21
-  peerDependencies:
-    graphql: ^15.5.0
-  peerDependenciesMeta:
-    graphql:
-      optional: true
-  checksum: b2f1521f4a906385804660cb6a668c1e53ed78f047730accc9f431f02e5098efe93341ca18bcea7b52e3d7463b5e8947078bba872a1a7030ae8b93b50b0103da
   languageName: node
   linkType: hard
 

@@ -111,7 +111,7 @@
     "@types/react-dom": "16.9.8",
     "@types/react-native": "0.63.45",
     "@types/puppeteer": "3.0.1",
-    "esbuild": "^0.11.5",
+    "esbuild": "0.8.56",
     "expo-linear-gradient": "9.0.0",
     "@unimodules/react-native-adapter": "6.1.0",
     "react-native-unimodules": "0.12.0",

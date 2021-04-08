@@ -2,6 +2,10 @@
   font-family: 'GTEesti', Helvetica, Arial, sans-serif;
 }
 
+.phone-frame {
+  transform-style: preserve-3d;
+}
+
 /* HTML */
 
 body {
