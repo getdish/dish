@@ -1,3 +1,7 @@
+- move ci to ionos
+- crawlers get working
+  - may want to move image-recognize + bert to ionos
+
 
 - comments need voting or else no one will want to use them
 
