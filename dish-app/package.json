@@ -6,7 +6,7 @@
     "hoistingLimits": "workspaces"
   },
   "scripts": {
-    "etc:colorize": "../dishctl.sh run 'DEBUG=1 node -r @dish/esbuild-register ./etc/add_colors_to_tiles.ts'",
+    "etc:colorize": "../dishctl.sh run 'DEBUG=1 node -r esbuild-register ./etc/add_colors_to_tiles.ts'",
     "postinstall": "yarn patch-package || true && DEBUG=workspaces expo-yarn-workspaces postinstall",
     "etc:colorize:staging": "NODE_ENV=staging yarn etc:colorize",
     "app": "TARGET=native react-native start",
