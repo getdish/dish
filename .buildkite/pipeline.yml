@@ -1,10 +1,6 @@
 env:
   BUILDKITE_TIMEOUT: "40"
-  DISH_IMAGE_TAG: ":latest"
   DISH_ENV: 'test'
-  DISH_REGISTRY: 'registry.fly.io'
-  HASURA_ENDPOINT: 'http://localhost:8080'
-  DISH_ENDPOINT: 'http://localhost:4444'
   DOCKER_BUILDKIT: 0
   COMPOSE_DOCKER_CLI_BUILD: 0
 
