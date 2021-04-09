@@ -17,6 +17,7 @@ import {
   defaultMediaQueries,
   useMedia,
 } from 'snackui'
+import { AbsoluteVStack } from 'snackui'
 
 import { LogoVertical } from './LogoVertical'
 
@@ -54,12 +55,12 @@ const DishTitleFitted = (props: TitleProps) => {
       alignSelf="center"
       textAlign="center"
       // @ts-expect-error
-      fontSize="5vw"
+      fontSize="5.5vw"
       {...(media.sm && {
         fontSize: 44,
       })}
       {...(media.xl && {
-        fontSize: 64,
+        fontSize: 70,
       })}
       {...props}
     />
@@ -72,7 +73,7 @@ export const App = () => {
       <Container position="relative" zIndex={1} paddingVertical={40} marginHorizontal="auto">
         <LogoVertical />
 
-        <VStack height={120} alignItems="center" justifyContent="center">
+        <VStack height={130} alignItems="center" justifyContent="center">
           <DishTitleFitted>real world pokédex</DishTitleFitted>
         </VStack>
 
@@ -80,6 +81,7 @@ export const App = () => {
           color="rgba(255,255,255,0.65)"
           size="xxl"
           sizeLineHeight={0.9}
+          letterSpacing={1.2}
           textAlign="center"
         >
           a guide to the world,
@@ -89,7 +91,7 @@ export const App = () => {
           incenvitized by a coin.
         </DishParagraph>
 
-        <Spacer size="xl" />
+        <Spacer size="xxl" />
 
         <VStack className="float-up-down">
           <VStack
@@ -98,7 +100,7 @@ export const App = () => {
             shadowRadius={60}
             shadowOpacity={0.5}
             shadowOffset={{
-              width: -20,
+              width: -60,
               height: 100,
             }}
             transform={[
@@ -145,7 +147,7 @@ export const App = () => {
         <VStack
           position="relative"
           zIndex={0}
-          marginTop={-480}
+          marginTop={-500}
           paddingTop={500}
           className="purple-bg"
           backgroundColor="#af10fe"
@@ -153,8 +155,8 @@ export const App = () => {
           <Circle
             position="absolute"
             className="head-circle"
-            top={-940}
-            size={1260}
+            top={-1140}
+            size={1460}
             backgroundColor="#000"
             alignSelf="center"
           />
@@ -166,152 +168,151 @@ export const App = () => {
               </DishParagraph>
 
               <DishParagraph size="xxxl">
-                Reviews are hidden and faked. VC pressure to grow sacrifices product. Pleasing
-                advertisers leads to unopinionated rankings.
+                Hidden & faked reviews. VC pressure to grow sacrificing product. Fear of advertisers
+                = unopinionated rankings. And no fun to be had anywhere.
               </DishParagraph>
 
-              <DishParagraph size="xxxl">
-                Sure, a new startup can come along and fix it, but in time they will fall for the
-                same old pressures.
+              <DishParagraph size="xxl">
+                Sure, a new startup can come along and fix it, for a while, but ultimately they'll
+                raise money, see 💸 signs, and... the cycle repeats.
               </DishParagraph>
 
-              <DishParagraph size="xxxl">
-                Dish wants to solve reviews long-term by by tying{' '}
-                <b>a strong single-identity system</b> that retains privacy to a{' '}
-                <b>incentivizing coin</b>, and a non-profit that keeps the core team <b>small</b>{' '}
-                forever. This should allow:
+              <DishParagraph size="xxl">
+                Dish aims to solve the bigger problem by tying a strong, referral-based{' '}
+                <b>single-identity system</b> that allows anonymity, to an{' '}
+                <b>incentivizing community-owned coin</b>, and finally, a{' '}
+                <b>non-profit organization</b>, led by a small team of experienced tech product
+                developers.
+              </DishParagraph>
+
+              <DishParagraph size="xxl">
+                It's web 3.0, with a real product. Think this model unlocks:
               </DishParagraph>
 
               <ul style={{ marginLeft: 40 }}>
                 <DishParagraph size="xxl">
-                  <li>Deliberate, slow growth. No VC sell-out pressure.</li>
+                  <li>Deliberate, slow growth without the downsides of VC pressure.</li>
                 </DishParagraph>
                 <Spacer />
                 <DishParagraph size="xxl">
-                  <li>Early adopter buy-in and organic, heirachical leadership.</li>
+                  <li>Early adopter buy-in, ownership and leadership.</li>
                 </DishParagraph>
                 <Spacer />
                 <DishParagraph size="xxl">
-                  <li>Rewarding users for work, leading to better content.</li>
+                  <li>Users being rewarded for their work, leading to better content.</li>
                 </DishParagraph>
               </ul>
+
+              <Spacer />
             </ContentSection>
           </Container>
         </VStack>
 
-        <ContentSection marginHorizontal="auto">
-          <DishParagraph size="xxxl">
-            It's 2038 and your Apple VR CryptoKitty, Jerry, nestles ethereally on your lap. He looks
-            up at you cloyingly, so you wave away the excel sheets.
-          </DishParagraph>
+        <VStack backgroundColor="var(--second-section-bg)" position="relative">
+          <ContentSection marginHorizontal="auto">
+            <>
+              <Slants />
+              <DishParagraph size="xxxl">
+                It's 2038 and your Apple VR CryptoKitty, Jerry, nestles ethereally on your lap. He
+                looks up at you cloyingly, so you wave away the excel sheets.
+              </DishParagraph>
+            </>
 
-          <DishParagraph size="xxxl">
-            "Should we reschedule the dentists tomorrow?" he asks, "you have that matinee with your
-            mom, and traffics looking to be not-so-good."
-          </DishParagraph>
+            <DishParagraph size="xxxl">
+              "Should we reschedule the dentists tomorrow?" he asks, "you have that matinee with
+              your mom, and traffics looking to be not-so-good."
+            </DishParagraph>
 
-          <DishParagraph size="xxxl">
-            "Jerry," you sigh... "is the minute I finish work really the time to be reminding me of
-            dentists, traffic, and <b>matinees</b>?"
-          </DishParagraph>
+            <DishParagraph size="xxxl">
+              "Jerry," you sigh, "is the minute I finish work really the time to be reminding me of
+              dentists and traffic and <b>matinees</b>?"
+            </DishParagraph>
 
-          <DishParagraph size="xxl">Sheesh.</DishParagraph>
+            <DishParagraph size="xxl">
+              Sheesh... he's a cute bugger, but they still haven't really figured out <b>timing</b>{' '}
+              with these things. But, for some reason, the words reverberate in your mind...
+              dentist, traffic, matinee. Why is that ringing a bell? "Mat-in-<b>ayy</b>..." you
+              repeat out loud, "<b>mat</b>
+              -in-ay"...
+            </DishParagraph>
 
-          <DishParagraph size="xxl">
-            For some reason though the word matinee reverberates in your mind... "<b>mat</b>
-            -in-ayy..." you repeat out loud, "mat-in-ay".
-          </DishParagraph>
+            <DishParagraph size="xxl">
+              Wait a second... "<b>Matt</b>!" you jump up, passing clean through Jerry, who's hair
+              raises. "Matt's birthday dinner is... tomorrow!"
+            </DishParagraph>
 
-          <DishParagraph size="xxl">
-            "Wait a second... <b>Matt</b>!" you jump up, passing clean through Jerry, who's hair
-            raises. "Matt's birthday dinner... is tomorrow!"
-          </DishParagraph>
+            <DishParagraph size="xxl">
+              Holy cow, you forgot to tell Jerry about it altogether. It's a miracle you remembered.
+              But there's no way you can make it... you have the <b>matinee</b>. Still... you've got
+              to do <em>something</em>.
+            </DishParagraph>
 
-          <DishParagraph size="xxl">
-            Holy cow, you had almost forgot. There's no way you can make it... you have the damn{' '}
-            <b>matinee</b>. But you've got to do <em>something</em>.
-          </DishParagraph>
+            <DishParagraph size="xxl">Lucky for you, Jerry has an idea:</DishParagraph>
 
-          <DishParagraph size="xxl">Luckily, Jerry has an idea:</DishParagraph>
+            <DishParagraph size="xxxl">
+              "How about a{' '}
+              <b>1-of-100 limited edition paisley, Kaws x Apple CryptoKitty VR Handkerchief</b> for
+              Matt's kitty Jeff - it's only $150."
+            </DishParagraph>
 
-          <DishParagraph size="xxxl">
-            "How about this, a{' '}
-            <b>1-of-100 limited edition paisley, Kaws x Apple CryptoKitty VR Handkerchief</b> for
-            Matt's kitty - and it's only $150."
-          </DishParagraph>
+            <DishParagraph size="xxl">
+              Brilliant. Without a moments hestitation you buy it, wrap it with a voice note,
+              reschedule the dentists and <b>boom</b>. Matt, mom, the dentist - all taken care of.
+              Jerry purrs with satisfication.
+            </DishParagraph>
 
-          <DishParagraph size="xxl">
-            Brilliant. Without a moments hestitation you buy it, record a quick voice note, and{' '}
-            <b>boom</b>. Matt'll be happy, mom'll be happy, and Jerry is practically purring with
-            delight.
-          </DishParagraph>
-
-          <DishParagraph size="xxxl">
-            <b>Yet another NFT success story</b>.
-          </DishParagraph>
-        </ContentSection>
+            <DishParagraph size="xxxl">
+              <b>Yet another NFT success story, right?</b>
+            </DishParagraph>
+          </ContentSection>
+        </VStack>
 
         <VStack marginVertical={-20} alignItems="center">
           <DishTitleSlanted size="xl" fontWeight="800" backgroundColor="yellow" color="#000">
-            Wait a second...
+            It's complicated
           </DishTitleSlanted>
         </VStack>
 
         <ContentSection marginHorizontal="auto">
-          <DishParagraph size="xxxl">You must be confused.</DishParagraph>
-
-          <DishParagraph size="xxxxl">
-            What the hell does any of that have to do with a '<b>real world pokedex</b>', and why
-            the NFT fiction?
-          </DishParagraph>
-
           <DishParagraph size="xxxl">
-            <b>What do CryptoKitty NFTs have to do with Dish?</b>
-          </DishParagraph>
-
-          <DishParagraph size="xxxl">
-            The good news is: <b>nothing</b>.
-          </DishParagraph>
-
-          <DishParagraph size="xxxl">
-            The whole Jerry story is just to make the point that{' '}
-            <b>the crypto world is a lot like all tech: it can be used for good, bad, or silly</b>.
-          </DishParagraph>
-
-          <DishParagraph size="xxxxl">
-            I'll be the first to say that basically all NFT's today are worthless, especially ones
-            of a gif or blog post - they're <b>stupid</b>.
-          </DishParagraph>
-
-          <DishParagraph size="xxxl">
-            But some day a unique VR paisley handkerchief may actually be a decent, if silly, gift
-            for someone. Because it will be an in-game item that you can't replicate, and your
-            friend may really like it.
+            First of all, I think the above story is an example of an alright use of crypto, in some
+            distant future.
           </DishParagraph>
 
           <DishParagraph size="xxl">
-            I just felt like writing that all out because it seems anytime anyone comes around with
-            a new coin it's usually full of hot air, and given the{' '}
-            <em>incredible amount of work</em> we've put into dish, that's entirely non-crypto
-            related at all, it feels like even mentioning a coin just earns justified disdain.
+            At least the handkerchief is an animated in-game asset that isn't just freely available
+            for anyone else. <b>That said</b>, the only point of the whole Jerry story is just show
+            it's hard to understand how to draw the line between good and bad uses of any
+            technology.
+          </DishParagraph>
+
+          <DishParagraph size="xxxl">
+            <b>So what in the world do NFTs have to do with Dish?</b>
+          </DishParagraph>
+
+          <DishParagraph size="xxxl">
+            The good news is, <b>they don't</b>.
+          </DishParagraph>
+
+          <DishParagraph size="xxl">
+            Some day a unique VR paisley handkerchief may actually be a decent, if silly, gift for
+            someone. But we risk losing a lot in manically chasing money for value-less things.
+          </DishParagraph>
+
+          <DishParagraph size="xxxl">
+            All the value of any crypto offering outside of being a security (rare) or a currency
+            (also rare) is in <b>how real and good the product behind it is</b>.
+          </DishParagraph>
+
+          <DishParagraph size="xxl">
+            That's the point. You can't just add "crypto" to some half-baked app or gif and make it
+            worth something. At least not outside of a bubble. The NFT bubble today is being
+            entirely driven by a few insiders self-dealing, a bunch of grifters hoping to ride the
+            wave, and a few unfortunate suckers.
           </DishParagraph>
 
           <DishParagraph fontWeight="800" size="xxxl">
-            I get it.
-          </DishParagraph>
-
-          <DishParagraph size="xxxl">
-            It even took me a lot of convincing - even once I ackowledged it was probably a good
-            idea on just the technical merits. It's easy to see a bubble and dismiss 100% of what's
-            inside it, but I've come around to thinking that there are some great uses for crypto
-            outside buying drugs on the dark web. Hell, Amazon was created near peak-dot-com bubble,
-            and they've done alright.
-          </DishParagraph>
-
-          <DishParagraph size="xxl">
-            I think it'd be nice to give myself a chance to explain <em>why</em> I feel a coin can
-            actually be incredibly compelling for bootstrapping communities, in particular. But
-            first, what is Dish?
+            So, what's the deal?
           </DishParagraph>
         </ContentSection>
 
@@ -338,9 +339,15 @@ export const App = () => {
               </DishParagraph>
 
               <DishParagraph size="xxl">
-                Yea, so these things already exist. It's not rocket science 🚀. But we are doing a
-                few things differently - we think the ratings systems in general are failing us, and
-                we've done some really cool things to improve them.
+                And the cool thing is <b>it actually already exists</b> and the team behind it is a
+                team of experience product people who've done this before.
+              </DishParagraph>
+
+              <DishParagraph size="xxxxl">It's not rocket science 🚀, for sure.</DishParagraph>
+
+              <DishParagraph size="xxl">
+                But we are doing a few things differently - we think the ratings systems in general
+                are failing us, and we've done some really cool things to improve them.
               </DishParagraph>
 
               <DishParagraph size="xxl">
@@ -441,6 +448,7 @@ const Highlight = (props: TextProps) => {
 const ContentSection = (props: StackProps) => {
   return (
     <VStack
+      position="relative"
       maxWidth={800}
       alignSelf="center"
       spacing="xxxl"
@@ -467,5 +475,42 @@ const Container = (props: StackProps) => {
       })}
       {...props}
     />
+  )
+}
+
+const Slants = () => {
+  return (
+    <>
+      <VStack
+        zIndex={-1}
+        className="transform-origin-tl"
+        backgroundColor="var(--second-section-bg)"
+        width="100vw"
+        height={300}
+        position="absolute"
+        top={0}
+        left="50%"
+        transform={[
+          {
+            rotate: '-5deg',
+          },
+        ]}
+      />
+      <VStack
+        zIndex={-1}
+        className="transform-origin-tr"
+        backgroundColor="var(--second-section-bg)"
+        width="100vw"
+        height={300}
+        position="absolute"
+        top={0}
+        right="50%"
+        transform={[
+          {
+            rotate: '5deg',
+          },
+        ]}
+      />
+    </>
   )
 }

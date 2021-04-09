@@ -514,13 +514,11 @@ function timescale_command() {
 }
 
 function fly_tunnel() {
-  if [ "$DISH_ENV" = "production" ]; then
-    if dig _apps.internal | grep -q 'dish-'; then
-      echo "tunneled into fly"
-    else
-      fly ssh issue dish teamdishapp@gmail.com --agent
-      echo "May need to setup wireguard setup: https://fly.io/docs/reference/privatenetwork/"
-    fi
+  if dig _apps.internal | grep -q 'dish-'; then
+    echo "tunneled into fly"
+  else
+    fly ssh issue dish teamdishapp@gmail.com --agent
+    echo "May need to setup wireguard setup: https://fly.io/docs/reference/privatenetwork/"
   fi
 }
 
