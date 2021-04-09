@@ -17,7 +17,7 @@ export async function createApiServer(app: any, config: ServerConfigNormal) {
     return
   }
 
-  require('@dish/esbuild-register/dist/node').register({
+  require('esbuild-register/dist/node').register({
     target: 'es2019',
     format: 'cjs',
   })
