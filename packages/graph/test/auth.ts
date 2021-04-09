@@ -2,7 +2,7 @@ import '@dish/react-test-env'
 
 import anyTest, { TestInterface } from 'ava'
 
-import { Auth, flushTestData } from '../_'
+import { Auth, flushTestData } from '..'
 
 interface Context {}
 

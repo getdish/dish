@@ -3,6 +3,7 @@ import '@dish/react-test-env'
 import anyTest, { TestInterface } from 'ava'
 import moment from 'moment'
 
+import { menu_item_fixture, restaurant_fixture } from './etc/fixtures'
 import {
   Restaurant,
   RestaurantWithId,
@@ -13,8 +14,7 @@ import {
   restaurantFindOne,
   restaurantUpdate,
   restaurantUpsert,
-} from '../_'
-import { menu_item_fixture, restaurant_fixture } from './etc/fixtures'
+} from '..'
 
 interface Context {
   restaurant: Restaurant

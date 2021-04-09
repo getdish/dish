@@ -1,3 +1,5 @@
+import { globalTagId } from '../constants'
+import { tagDelete, tagInsert } from '../queries/tagQueries'
 import { deleteAllFuzzyBy } from './queryHelpers'
 
 export async function flushTestData() {
@@ -10,23 +12,22 @@ export async function flushTestData() {
     }
   }, 8000)
 
-  try {
-    await deleteAllFuzzyBy('review', 'text', 'test')
-    hasCompletedSome = true
-    await deleteAllFuzzyBy('tag', 'name', 'test')
-    await deleteAllFuzzyBy('user', 'username', 'test')
-    await deleteAllFuzzyBy('menu_item', 'name', 'Test')
-    await deleteAllFuzzyBy('restaurant', 'name', 'Test')
-    await deleteAllFuzzyBy('photo', 'url', 'imgur.com')
-  } catch (err) {
-    console.error(err)
-    console.log('continuing anyway for now...')
-  }
+  await deleteAllFuzzyBy('review', 'text', 'test')
+  hasCompletedSome = true
+  await deleteAllFuzzyBy('tag', 'name', 'test')
+  await deleteAllFuzzyBy('user', 'username', 'test')
+  await deleteAllFuzzyBy('menu_item', 'name', 'Test')
+  await deleteAllFuzzyBy('restaurant', 'name', 'Test')
+  await deleteAllFuzzyBy('photo', 'url', 'imgur.com')
   // ensure parent tag there
-  // await tagInsert([
-  //   {
-  //     id: globalTagId,
-  //     name: 'Parent test tag',
-  //   },
-  // ])
+  await tagDelete({
+    id: globalTagId,
+  })
+  await tagInsert([
+    {
+      id: globalTagId,
+      slug: 'global',
+      name: 'Global',
+    },
+  ])
 }

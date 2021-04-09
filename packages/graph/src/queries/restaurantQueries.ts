@@ -99,7 +99,6 @@ export async function restaurantFindNear(
         },
       },
     })
-
     return selectFields(restaurant, '*', 1)
   })
 }

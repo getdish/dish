@@ -1,9 +1,36 @@
+.transform-origin-tr {
+  transform-origin: top right;
+}
+
+.transform-origin-tl {
+  transform-origin: top left;
+}
+
 .title-font {
   font-family: 'GTEesti', Helvetica, Arial, sans-serif;
 }
 
-.phone-frame {
-  transform-style: preserve-3d;
+.purple-bg::before {
+  display: block;
+  position: absolute;
+  content: ' ';
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background:
+    radial-gradient(circle at 50% 0, var(--purple), rgba(255,0,0,0) 70.71%),
+    radial-gradient(circle at 6.7% 75%, var(--pink),rgba(0,0,255,0) 70.71%),
+    radial-gradient(circle at 93.3% 75%, var(--teal), rgba(0,255,0,0) 70.71%)
+    var(--yellow);
+}
+
+:root {
+  --purple: #af10fe;
+  --pink: #ed137b;
+  --teal: #249bea;
+  --yellow: #feac1f;
+  --second-section-bg: #000;
 }
 
 /* HTML */
@@ -332,22 +359,7 @@ svg .animate-path {
 
 .head-circle {
   background:
-    radial-gradient(circle at 50% 0,rgba(68, 52, 216),transparent 62%),
-    radial-gradient(circle at 50% 100%, rgba(68, 52, 216), transparent 65%),
+    radial-gradient(circle at 50% -10%,rgb(123, 52, 216),transparent 62%),
+    radial-gradient(circle at 50% 100%, rgb(63, 28, 146), transparent 65%),
     #000;
-}
-
-.purple-bg::before {
-  display: block;
-  position: absolute;
-  content: ' ';
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background:
-    radial-gradient(circle at 50% 0, #af10fe, rgba(255,0,0,0) 70.71%),
-    radial-gradient(circle at 6.7% 75%,#ed137b,rgba(0,0,255,0) 70.71%),
-    radial-gradient(circle at 93.3% 75%, #249bea, rgba(0,255,0,0) 70.71%)
-    #feac1f;
 }

@@ -1,5 +1,6 @@
 import anyTest, { TestInterface } from 'ava'
 
+import { restaurant_fixture } from './etc/fixtures'
 import {
   RestaurantWithId,
   TagWithId,
@@ -12,8 +13,7 @@ import {
   tagInsert,
   tagUpsert,
   tagUpsertCategorizations,
-} from '../_'
-import { restaurant_fixture } from './etc/fixtures'
+} from '..'
 
 interface Context {
   existing_tag: TagWithId

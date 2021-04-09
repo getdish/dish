@@ -7,6 +7,8 @@ import {
 } from '@dish/helpers-node'
 import anyTest, { TestInterface } from 'ava'
 
+import { restaurant, user } from '../src/graphql'
+import { restaurant_fixture } from './etc/fixtures'
 import {
   Auth,
   Tag,
@@ -17,9 +19,7 @@ import {
   restaurantUpsert,
   reviewInsert,
   tagInsert,
-} from '../_'
-import { restaurant, user } from '../src/graphql'
-import { restaurant_fixture } from './etc/fixtures'
+} from '..'
 
 interface Context {
   restaurant: restaurant

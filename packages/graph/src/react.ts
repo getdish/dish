@@ -15,6 +15,8 @@ export const {
   useRefetch,
   prepareReactRender,
   useHydrateCache,
+  usePaginatedQuery,
+  state,
 } = createReactClient<GeneratedSchema>(client, {
   defaults: {
     suspense: true,

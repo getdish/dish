@@ -3,6 +3,7 @@ import '@dish/react-test-env'
 import anyTest, { TestInterface } from 'ava'
 import { clone } from 'lodash'
 
+import { restaurant_fixture } from './etc/fixtures'
 import {
   Auth,
   SEARCH_DOMAIN,
@@ -15,8 +16,7 @@ import {
   search,
   tagFindOne,
   tagInsert,
-} from '../_'
-import { restaurant_fixture } from './etc/fixtures'
+} from '..'
 
 interface Context {
   user: User
