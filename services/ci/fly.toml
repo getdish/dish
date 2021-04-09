@@ -1,11 +1,4 @@
-app = "buildkite"
+app = "dish-ci"
 
 kill_signal = "SIGINT"
 kill_timeout = 5
-
-[mount]
-source = "buildkite_cache2"
-destination = "/data"
-
-[env]
-BUILDKITE_BUILD_PATH = "/data/buildkite_builds"

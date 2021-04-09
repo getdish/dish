@@ -88,11 +88,9 @@ export const App = () => {
           letterSpacing={1.2}
           textAlign="center"
         >
-          a guide to the world,
+          what's <em>actually</em> good in every neighborhood
           <br />
-          powered by a community,
-          <br />
-          incenvitized by a coin.
+          <Text fontSize="80%">a community, a coin, a non-profit, a guide</Text>
         </DishParagraph>
 
         <Spacer size="xxxl" />
@@ -147,66 +145,86 @@ export const App = () => {
         </VStack>
       </Container>
 
-      <Theme name="dark">
-        <VStack
-          position="relative"
-          zIndex={0}
-          marginTop={-500}
-          paddingTop={500}
-          className="before-bg purple-bg fade-lighter-bg"
-          backgroundColor="#6400ab"
-        >
-          <Circle
-            position="absolute"
-            className="head-circle"
-            top={-1140}
-            size={1460}
-            backgroundColor="#000"
-            alignSelf="center"
-          />
+      <VStack
+        position="relative"
+        zIndex={0}
+        marginTop={-500}
+        paddingTop={500}
+        className="before-bg purple-bg fade-lighter-bg"
+        backgroundColor="#6400ab"
+      >
+        <Circle
+          position="absolute"
+          className="head-circle"
+          top={-1140}
+          size={1460}
+          zIndex={10000}
+          backgroundColor="#000"
+          alignSelf="center"
+        />
 
-          <Container marginHorizontal="auto">
+        <VStack position="relative">
+          <input id="toggle-platforms" type="checkbox" className="toggle-check" />
+
+          <label className="toggle-cover" htmlFor="toggle-platforms">
+            <AbsoluteVStack
+              className="before-bg purple-bg purple-bg-hover hover-cursor-pointer tr-all tr-ease-in-out"
+              // pointerEvents="none"
+              // top={-1000}
+              top={-500}
+              left={0}
+              right={0}
+              bottom={1500}
+              zIndex={100}
+              pressStyle={{
+                opacity: 0.4,
+              }}
+            />
+          </label>
+
+          <Container className="toggle-section" marginHorizontal="auto">
             <ContentSection paddingTop={0}>
-              <DishParagraph textAlign="center" fontWeight="800" size={5} sizeLineHeight={0.7}>
-                Review platforms keep failing us.
+              <VStack>
+                <label htmlFor="toggle-platforms">
+                  <DishParagraph fontWeight="800" size={3}>
+                    <Highlight backgroundColor="var(--pink)" color="#fff">
+                      Review platforms have problems.
+                    </Highlight>
+                  </DishParagraph>
+                </label>
+              </VStack>
+
+              <DishParagraph size="xxxxl">
+                Hidden. Faked. Averaged. Inflated.
+                <br />
+                Pressure to grow fast = easy ad cash 💸,
+                <br />
+                but advertisers hate to be hated.
               </DishParagraph>
 
               <DishParagraph size="xxxl">
-                Hidden. Faked. Averaged. Unopinionated. All because of a fear of advertisers, growth
-                pressure from VC, and a lack of focus on product / community / incentives.
+                There's a misalignment between a guide to purchasing, and profiting off advertising.
+                So we're starting a <b>non-profit</b> with a <b>community-owned coin</b> that
+                rewards curation.
               </DishParagraph>
 
-              <DishParagraph size="xxl">
-                Sure, any startup could come and fix it. But ultimately they raise 💸, need to show
-                hockey stick graphs 🏒 and the cycle starts again.
-              </DishParagraph>
-
-              <DishParagraph size="xxl">
-                Dish aims to solve this. A small team of top talent at a{' '}
-                <b>non-profit organization</b> designed to stay small. An{' '}
-                <b>incentivizing, community-owned coin</b> tied to a referral-based{' '}
-                <b>single-identity user system</b>. And <b>voting and governance</b> built in.
-              </DishParagraph>
-
-              <DishParagraph size="xxl">
-                It's web 3.0, with a real product. We think this model achieves:
-              </DishParagraph>
+              <DishParagraph size="xxl">We think it solves many alignment issues:</DishParagraph>
 
               <ul style={{ marginLeft: 40 }}>
-                <DishParagraph size="xl">
-                  <li>Deliberate, slow growth without the downsides of VC pressure.</li>
+                <DishParagraph size="xxl">
+                  <li>Can grow slow without VC pressure and focus on quality.</li>
                 </DishParagraph>
                 <Spacer />
-                <DishParagraph size="xl">
-                  <li>Early adopter buy-in, ownership and leadership.</li>
+                <DishParagraph size="xxl">
+                  <li>Early adopters have incentive for success.</li>
                 </DishParagraph>
                 <Spacer />
-                <DishParagraph size="xl">
+                <DishParagraph size="xxl">
                   <li>Ability to reward users for contibuting, leading to better content.</li>
                 </DishParagraph>
                 <Spacer />
-                <DishParagraph size="xl">
-                  <li>Better alignment of incentives all around.</li>
+                <DishParagraph size="xxl">
+                  <li>Higher trust, ownership, involvement of community.</li>
                 </DishParagraph>
               </ul>
 
@@ -224,7 +242,7 @@ export const App = () => {
                           fontSize: 20,
                         }}
                       >
-                        Why a coin?
+                        Time for a story
                       </Button>
                     </Pressable>
                   </label>
@@ -240,182 +258,119 @@ export const App = () => {
                       fontSize: 20,
                     }}
                   >
-                    What is dish?
+                    <b>What is dish?</b>
                   </Button>
                 </Pressable>
               </HStack>
             </ContentSection>
           </Container>
         </VStack>
+      </VStack>
 
-        <VStack backgroundColor="var(--blue)">
-          <VStack zIndex={1} position="relative">
-            <Slants />
-          </VStack>
+      <VStack position="relative" zIndex={100} backgroundColor="var(--blue)">
+        <Slants />
 
-          <input id="toggle-story-time" type="checkbox" className="story-time-check" />
+        <input id="toggle-story-time" type="checkbox" className="toggle-check" />
 
-          <VStack position="relative" zIndex={2} className="story-time" position="relative">
-            <AbsoluteVStack top={0} left={-300} right={-300}>
-              <VStack transform={[{ rotate: '-10deg' }]}>
-                {[...new Array(10)].map((_, i) => {
-                  return (
-                    <VStack
-                      opacity={0.08}
-                      key={i}
-                      marginBottom={-120}
-                      transform={[{ scaleX: 2.5 }]}
-                    >
-                      <Wave
-                        key={i}
-                        direction="vertical"
-                        stopColor="var(--blue)"
-                        {...(i % 2 === 0
-                          ? {
-                              startColor: '#ed137b',
-                            }
-                          : {
-                              startColor: '#249bea',
-                              stopColor: 'var(--blue)',
-                            })}
-                      />
-                    </VStack>
-                  )
-                })}
-              </VStack>
-            </AbsoluteVStack>
-
-            <ContentSection marginHorizontal="auto">
-              <label htmlFor="toggle-story-time">
+        <VStack zIndex={2} className="toggle-section" position="relative">
+          <AbsoluteVStack pointerEvents="none" top={0} left={-300} right={-300} minWidth={2000}>
+            {[...new Array(10)].map((_, i) => {
+              return (
                 <VStack
-                  marginTop={-40}
-                  marginBottom={20}
-                  alignItems="center"
-                  zIndex={100}
-                  position="relative"
+                  opacity={0.08}
+                  key={i}
+                  marginBottom={-220}
+                  transform={[{ scaleX: 2.5 }, { rotate: `${i % 2 === 0 ? 10 : -10}deg` }]}
                 >
-                  <DishTitleSlanted
-                    size="xl"
-                    fontWeight="800"
-                    backgroundColor="var(--blue)"
-                    color="#fff"
-                  >
-                    Why a coin?
-                  </DishTitleSlanted>
+                  <Wave
+                    key={i}
+                    direction="vertical"
+                    stopColor="transparent"
+                    {...(i % 2 === 0
+                      ? {
+                          startColor: '#ed137b',
+                        }
+                      : {
+                          startColor: '#249bea',
+                        })}
+                  />
                 </VStack>
-              </label>
+              )
+            })}
+          </AbsoluteVStack>
 
-              <DishParagraph size="xxxxl">
-                It's 2038: your VR CryptoKitty, Jerry, nestles ethereally on your lap. He looks up
-                at you, again. You wave floating excel sheets away and smile.
-              </DishParagraph>
-
-              <DishParagraph size="xxl">
-                “Should we reschedule the dentists tomorrow?” he asks, “you have that matinee with
-                your mom, and traffics looking to be not-so-a-good-a."
-              </DishParagraph>
-
-              <DishParagraph size="xxl">
-                “Jerry,” you sigh, “is the minute I finish work really the time to be reminding me
-                of dentists, traffic and <b>matinees</b>?"
-              </DishParagraph>
-
-              <DishParagraph size="xxl">
-                Still, the words reverberate in your mind... dentist, traffic, matinee. Why is that
-                ringing a bell? “Mat-in-<b>ayy</b>...” you repeat out loud, “<b>mat</b>
-                -in-ay"...
-              </DishParagraph>
-
-              <DishParagraph size="xxl">
-                Wait a second... “<b>Matt</b>!” you jump up, passing clean through Jerry, who leaps
-                away. “Matt's birthday dinner is... tomorrow!"
-              </DishParagraph>
-
-              <DishParagraph size="xxl">
-                Holy cow. How did Jerry miss that? And now there's no way you can make the party...
-                you have that <b>matinee</b>. Still... you've got to do <em>something</em>.
-              </DishParagraph>
-
-              <DishParagraph size="xxl">Luckily, Jerry has an idea:</DishParagraph>
-
-              <DishParagraph size="xxxl">
-                “Why not get him this{' '}
-                <b>1-of-100 CryptoKitty Kaws x Apple Paisley Handkerchief NFT</b> - it's only $150.”
-              </DishParagraph>
-
-              <DishParagraph size="xxl">
-                Brilliant. Without a moments hestitation you buy it, wrap it with a voice note,
-                reschedule the dentists and <b>boom</b>. Problems solved.
-              </DishParagraph>
-
-              <DishParagraph size="xxxl">
-                <b>An NFT success story, right?</b>
-              </DishParagraph>
-            </ContentSection>
-
-            <VStack marginVertical={-20} alignItems="center">
-              <DishTitleSlanted
-                size="xxl"
-                fontWeight="800"
-                backgroundColor="var(--pink)"
-                color="#fff"
+          <ContentSection marginHorizontal="auto">
+            <label htmlFor="toggle-story-time">
+              <VStack
+                marginTop={-60}
+                marginBottom={20}
+                alignItems="center"
+                zIndex={100}
+                position="relative"
               >
-                Sort of!
-              </DishTitleSlanted>
-            </VStack>
-
-            <VStack className="pink-section-not">
-              <Theme name="dark">
-                <VStack marginTop={-20}>
-                  <ContentSection marginHorizontal="auto">
-                    <DishParagraph size="xxxxl">
-                      First of all, listen. I think the above story is an <em>okay</em> use of
-                      crypto. I'm not here to pillory digital kitties or virtual goods as dystopian.
-                    </DishParagraph>
-
-                    <DishParagraph size="xl">
-                      (At least handkerchief is not just freely available for anyone else to use
-                      exactly like you.)
-                    </DishParagraph>
-
-                    <DishParagraph size="xxxl">
-                      The whole Jerry story is just to say that{' '}
-                      <b>
-                        the quality of Jerry is what lends value to the handkerchief, not some
-                        inherent scarcity
-                      </b>
-                      .
-                    </DishParagraph>
-
-                    <DishParagraph size="xxxl">
-                      In other words,{' '}
-                      <b>
-                        the valuable, lasting web 3.0 startups will look and be valued like any
-                        other startup - their value is based how they execute outside any "crypto"
-                        stuff
-                      </b>
-                      . That is, at least once the dust settles a bit and outside of direct
-                      financial type applications.
-                    </DishParagraph>
-
-                    <DishParagraph size="xxxl">
-                      They'll just have more interesting ownership, incentivization, governance, and
-                      community mechanisms.
-                    </DishParagraph>
-
-                    <DishParagraph size="xl">Ok, that said...</DishParagraph>
-                  </ContentSection>
-                </VStack>
-              </Theme>
-            </VStack>
-          </VStack>
+                <DishTitleSlanted
+                  size="lg"
+                  fontWeight="800"
+                  backgroundColor="var(--teal)"
+                  hoverStyle={{
+                    backgroundColor: 'red',
+                  }}
+                  color="#fff"
+                >
+                  a crypto non-profit
+                </DishTitleSlanted>
+              </VStack>
+            </label>
+            <DishParagraph size="xxxxl">
+              It's 2038, your Apple AR CryptoKitty, Jerry, nestles in your lap amongst ethereal
+              excel sheets. You flick smile glowing kitty and he looks up at you.
+            </DishParagraph>
+            <DishParagraph size="xxl">
+              “Should we reschedule the dentists?” Jerry begins, stretching, “you have that matinee,
+              and traffic'll be tricky."
+            </DishParagraph>
+            <DishParagraph size="xxxl">
+              You sigh, “is the minute I finish work really the time to be reminding me of dentists
+              and traffic? And matinees?"
+            </DishParagraph>
+            <DishParagraph size="xxl">
+              Of course, he was right. You <b>had</b> forgotten about the matinee, with mom.
+              “Mat-in-
+              <b>ayy</b> with mom...” you repeat, “<b>mat</b>-in-ay"...
+            </DishParagraph>
+            <DishParagraph size="xxl">
+              Wait a second... “<b>Matt</b>!”
+            </DishParagraph>
+            <DishParagraph size="xxxl">
+              You jump up, “Matt's birthday is tomorrow! There's no way I can make it!"
+            </DishParagraph>
+            <DishParagraph size="xxxl">
+              “Why not just get him a 1-of-1000 <b>Kaws paisley Handkerchief NFT</b>,” Jerry offers
+              right back, “only $10, and you guys just joked about paisley last week.”
+            </DishParagraph>
+            ---
+            <DishParagraph size="xxl">
+              They'll just have more interesting ownership, incentivization, governance, and
+              community mechanisms.
+            </DishParagraph>
+          </ContentSection>
         </VStack>
+      </VStack>
 
-        <VStack zIndex={1000} className="shadow-above" marginTop={-120} position="relative">
-          <VStack marginTop={-40} height={250} zIndex={10} transform={[{ scaleX: 2 }]}>
-            <Wave direction="vertical" />
-          </VStack>
-
+      <VStack pointerEvents="none" zIndex={1000} marginTop={-120} position="relative">
+        <VStack
+          className="shadow-above"
+          // marginVertical={-40}
+          height={200}
+          alignItems="flex-end"
+          justifyContent="flex-end"
+          minWidth={1000}
+          zIndex={10}
+          transform={[{ scaleX: 3.5 }]}
+        >
+          <Wave direction="vertical" />
+        </VStack>
+        {/*
           <VStack marginTop={-70} marginBottom={-20} alignItems="center">
             <DishTitleSlanted
               size="lg"
@@ -423,134 +378,141 @@ export const App = () => {
               backgroundColor="var(--yellow)"
               color="#000"
             >
-              What is dish?
+              whats dish?
             </DishTitleSlanted>
-          </VStack>
+          </VStack> */}
 
-          <Theme name="light">
-            <VStack className="yellow-section" marginTop={-40}>
-              <ContentSection marginHorizontal="auto">
-                <DishParagraph sizeLineHeight={0.8} size={4}>
-                  <b>
-                    <Highlight backgroundColor="red" color="#fff">
-                      Dish is a pocket guide to the world
-                    </Highlight>
-                  </b>
-                </DishParagraph>
+        <Theme name="light">
+          <VStack className="yellow-section" marginTop={-50}>
+            <ContentSection marginHorizontal="auto" zIndex={1000}>
+              <DishParagraph textAlign="center" marginTop={-60} sizeLineHeight={0.8} size={4}>
+                <b>
+                  <Highlight backgroundColor="yellow" color="#000">
+                    a pocket guide to the world
+                  </Highlight>{' '}
+                  <Text fontWeight="200">starting with food</Text>
+                </b>
+              </DishParagraph>
 
-                <DishParagraph size="xxxl">
-                  <b>Honestly, it's a lot like Yelp or Google Maps, or TripAdvisor.</b> Or
-                  FourSquare. Remember FourSquare?
-                </DishParagraph>
+              <ul style={{ marginLeft: 40 }}>
+                <VStack spacing="xl">
+                  <DishParagraph size="xxxl">
+                    <li>
+                      <b>restaurants and delivery</b> - unique 💎 by neighborhood, taste based
+                      recommendations.
+                    </li>
+                  </DishParagraph>
+                  <DishParagraph size="xxxl">
+                    <li>
+                      <b>"TottenTomatoes"</b> reviews from around the web broken down, debated and
+                      added to.
+                    </li>
+                  </DishParagraph>
+                  <DishParagraph size="xxxl">
+                    <li>
+                      <b>playlists</b> make your list, vote, see top ones by tag, earn coins votes..
+                    </li>
+                  </DishParagraph>
+                </VStack>
+              </ul>
 
-                <DishParagraph size="xxl">
-                  And the cool thing is <b>it actually already exists</b> and the team behind it is
-                  a team of experience product people who've done this before.
-                </DishParagraph>
-
-                <DishParagraph size="xxxxl">It's not rocket science 🚀, for sure.</DishParagraph>
-
-                <DishParagraph size="xxl">
-                  But we are doing a few things differently - we think the ratings systems in
-                  general are failing us, and we've done some really cool things to improve them.
-                </DishParagraph>
-
-                <DishParagraph size="xxl">
-                  But importantly, we think a lot of what makes a ratings site good is incentives,
-                  community, and good moderation. From another point of view,{' '}
-                  <b>
-                    what's the point of writing reviews free reviews for Google, when they keep all
-                    the money for themselves?
-                  </b>
-                </DishParagraph>
-
-                <DishParagraph size="xxl">
-                  So much like YouTube and TikTok pay their content creators, we're going to pay
-                  DishCoin for all sorts of actions that improve the <b>quality</b> of Dish. From
-                  writing reviews, to moderating sub-communities, to uploading good quality images,
-                  and more.
-                </DishParagraph>
-
-                <DishParagraph size="xxl">
-                  Before the whole coin thing ever even became a twinkle of an idea, Dish was years
-                  in the making. We've spent grueling months designing something that's beautiful,
-                  and works well - <b>even without a drop of crypto</b>.
-                </DishParagraph>
-
-                <DishParagraph size="xxl">But then we kept asking ourselves:</DishParagraph>
-
-                <DishParagraph size="xxxxl">
-                  How will we grow it without VC money that will pressure use to sell out?
-                </DishParagraph>
-
-                <DishParagraph size="xxl">
-                  And that's finally when the whole coin idea came up.
-                </DishParagraph>
-
-                <DishParagraph size="xxxxl">With all that said,</DishParagraph>
-              </ContentSection>
-            </VStack>
-          </Theme>
-        </VStack>
-
-        <VStack className="before-bg purple-bg-alt">
-          <VStack zIndex={1000} position="relative" marginVertical={-20} alignItems="center">
-            <DishTitleSlanted size="lg" fontWeight="800" backgroundColor="yellow" color="#000">
-              How a coin saves us from selling out:
-            </DishTitleSlanted>
-          </VStack>
-
-          <Theme name="light">
-            <ContentSection marginHorizontal="auto">
-              <DishParagraph size="xxxxl">
-                I do think the <b>how</b> of making the best guide in the world is really
-                interesting.
+              <DishParagraph size="xxxl">
+                <b>You get paid for YouTube and TikTok videos.</b>
               </DishParagraph>
 
               <DishParagraph size="xxxl">
-                And that's where we get back to Jerry, and crypto.
+                Google and Yelp make tremendous amounts of money off your content. Yet when writing
+                reviews you get back... nada.
               </DishParagraph>
 
               <DishParagraph size="xxxl">
-                You see, <b>Dish has a coin.</b>
+                Google's ad business does gangbusters, and a huge chunk of map searches are powered
+                by the content and reviews you write.
               </DishParagraph>
-
-              <DishParagraph size="xxl">Ok? There, I said it.</DishParagraph>
 
               <DishParagraph size="xxl">
-                That's the downside of everyone buying into all these fly-by-night crypto scams.{' '}
-                <em>They're using the tool terribly,</em> and that means I have to write a boring
-                and long blog post about virtual cats when all I want to do is build a more
-                equitable Yelp.
+                So much like YouTube and TikTok pay their content creators, we're going to give
+                DishCoin for all sorts of actions that improve the <b>quality</b> of Dish. A coin
+                backed directly by company profits.
               </DishParagraph>
 
-              <DishParagraph marginLeft={20} size="xl">
-                <li>
-                  A personalized map of the gems 💎 to eat out at or order for delivery, unique to
-                  you, down to the neighborhood.
-                </li>
+              <DishParagraph size="xl">
+                Writing reviews, moderating, flagging, labeling, uploading good quality images,
+                suggesting tags, and voting on lists and comments. There's so many ways a content
+                site needs curators. It's a really good fit for a coin.
               </DishParagraph>
 
-              <DishParagraph marginLeft={20} size="xl">
-                <li>
-                  Definitive rankings of the best dishes. We crawl the whole damn web and use "AI"
-                  (off-the-shelf neural networks) to get sentiment towards each and every dish at
-                  each and every restaurant. Think RottenTomatoes but for 🌮 and with a great
-                  community.
-                </li>
+              <DishParagraph size="xl">
+                All of this made sense, but it wasn't until we thought about the benefits of{' '}
+                <b>not taking VC money</b> that things really clicked. You see, there's some
+                fundamental tension between rating quality and pressure to make money. It's pretty
+                obvious in retrospect, I mean:
               </DishParagraph>
 
-              <DishParagraph marginLeft={20} size="xl">
-                <li>
-                  And <b>playlists</b>. This ones fun. Share your favorite days out, cafe's to work
-                  at, or a really nice date night as a playlist. Vote, explore, and try out others
-                  lists.
-                </li>
+              <ul style={{ marginLeft: 40 }}>
+                <DishParagraph size="xl">
+                  <li>Hiding negative reviews = increased ad money.</li>
+                </DishParagraph>
+                <Spacer />
+                <DishParagraph size="xl">
+                  <li>Inflating scores = increased ad money.</li>
+                </DishParagraph>
+                <Spacer />
+                <DishParagraph size="xl">
+                  <li>Showing more negative reviews unless businesses pay you = more money.</li>
+                </DishParagraph>
+              </ul>
+
+              <DishParagraph size="xxl">
+                And on and on. You may say,{' '}
+                <b>
+                  "but you can make a huge list like this for almost any type of business! But most
+                  businesses respond to the market, so they tend not to do overtly evil things!"
+                </b>
+              </DishParagraph>
+
+              <DishParagraph size="xxl">
+                Well, that's the thing. The pernicious thing about rankings and reviews is that they
+                can be <b>quiet</b>. Just a few reviews hidden, a half star boost, and a little
+                shuffling to let poorly ranked places show up high, and boom, no one notices.
               </DishParagraph>
             </ContentSection>
-          </Theme>
+          </VStack>
+        </Theme>
+      </VStack>
+
+      <VStack className="before-bg purple-bg-alt">
+        <VStack zIndex={1000} position="relative" marginVertical={-20} alignItems="center">
+          <DishTitleSlanted size="lg" fontWeight="800" backgroundColor="yellow" color="#000">
+            How a coin saves us from selling out:
+          </DishTitleSlanted>
         </VStack>
-      </Theme>
+
+        <Theme name="light">
+          <ContentSection marginHorizontal="auto">
+            <DishParagraph size="xxxxl">
+              I do think the <b>how</b> of making the best guide in the world is really interesting.
+            </DishParagraph>
+
+            <DishParagraph size="xxxl">
+              And that's where we get back to Jerry, and crypto.
+            </DishParagraph>
+
+            <DishParagraph size="xxxl">
+              You see, <b>Dish has a coin.</b>
+            </DishParagraph>
+
+            <DishParagraph size="xxl">Ok? There, I said it.</DishParagraph>
+
+            <DishParagraph size="xxl">
+              That's the downside of everyone buying into all these fly-by-night crypto scams.{' '}
+              <em>They're using the tool terribly,</em> and that means I have to write a boring and
+              long blog post about virtual cats when all I want to do is build a more equitable
+              Yelp.
+            </DishParagraph>
+          </ContentSection>
+        </Theme>
+      </VStack>
     </>
   )
 }
@@ -595,38 +557,58 @@ const Container = (props: StackProps) => {
 const Slants = () => {
   return (
     <>
-      <VStack
-        className="slant-bg transform-origin-tl"
-        width="100vw"
-        height={500}
-        position="absolute"
-        top={0}
-        left="50%"
-        transform={[
-          {
-            rotate: '-3deg',
-          },
-          {
-            translateX: -30,
-          },
-        ]}
-      />
-      <VStack
-        className="slant-bg transform-origin-tr"
-        width="100vw"
-        height={500}
-        position="absolute"
-        top={0}
-        right="50%"
-        transform={[
-          {
-            rotate: '3deg',
-          },
-          {
-            translateX: 30,
-          },
-        ]}
-      />
+      <HStack pointerEvents="none" zIndex={1} position="absolute" fullscreen>
+        <VStack
+          zIndex={1000}
+          position="absolute"
+          top={-200}
+          left="50%"
+          right={0}
+          bottom={0}
+          overflow="hidden"
+        >
+          <AbsoluteVStack
+            top={250}
+            right={0}
+            className="slant-bg transform-origin-tl"
+            width="100vw"
+            height={500}
+            transform={[
+              {
+                rotate: '-5deg',
+              },
+              {
+                scaleX: 1.5,
+              },
+            ]}
+          />
+        </VStack>
+        <VStack
+          zIndex={1000}
+          position="absolute"
+          top={-200}
+          right="50%"
+          left={0}
+          bottom={0}
+          overflow="hidden"
+        >
+          <AbsoluteVStack
+            top={250}
+            left={0}
+            className="slant-bg transform-origin-tr"
+            width="100vw"
+            height={500}
+            transform={[
+              {
+                rotate: '5deg',
+              },
+              {
+                scaleX: 1.5,
+              },
+            ]}
+          />
+        </VStack>
+      </HStack>
     </>
   )
 }
@@ -643,7 +625,7 @@ const Wave = ({
   const id = useRef(`svg-${Math.round(Math.random() * 100000)}`)
   const gradientId = `${id.current}`
   return (
-    <svg viewBox="7.5 0 60 10">
+    <svg style={{ pointerEvents: 'none' }} viewBox="7.5 0 60 10">
       <defs>
         <linearGradient
           id={gradientId}
