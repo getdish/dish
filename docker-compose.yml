@@ -5,6 +5,9 @@ services:
     build:
       context: .
       dockerfile: ./Dockerfile
+  ci:
+    build:
+      context: ./services/ci
   run-tests:
     build:
       context: .

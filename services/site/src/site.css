@@ -1,3 +1,76 @@
+:root {
+  --purple: #af10fe;
+  --pink: #ed137b;
+  --teal: #249bea;
+  --yellow: #feac1f;
+  --blue: #211c63;
+  --second-section-bg: var(--blue);
+  --rainbow-bg-purple:
+    linear-gradient(rgba(0,0,0,0.8), rgba(0,0,0,0) 85%),
+    linear-gradient(to left, rgba(0,0,0,0.3), rgba(0,0,0,0) 40%),
+    linear-gradient(to right, rgba(0,0,0,0.3), rgba(0,0,0,0) 40%),
+    radial-gradient(circle at 50% 10%, var(--purple), rgba(0,0,0,0) 95%),
+    radial-gradient(circle at 5% 50%, var(--teal),rgba(0,0,0,0)),
+    radial-gradient(circle at 50% 100%, var(--pink), rgba(0,255,0,0));
+  --rainbow-bg:
+    radial-gradient(circle at 50% 0, var(--purple), rgba(255,255,255,0.5) 55%),
+    radial-gradient(circle at 5% 100%, var(--pink),rgba(255,255,255,0) 55%),
+    radial-gradient(circle at 95% 75%, var(--teal), rgba(255,255,255,0) 55%),
+    var(--yellow);
+}
+
+.head-circle {
+  background:
+    radial-gradient(circle at 50% 10%,rgba(63, 28, 146, 0.75), transparent 72%),
+    radial-gradient(circle at 50% 120%, rgba(63, 28, 146, 1), transparent 65%),
+    #000;
+}
+
+.slant-bg {
+  background: linear-gradient(rgb(5, 5, 45), var(--second-section-bg));
+}
+
+.rainbow-bg {
+  background: var(--rainbow-bg);
+}
+
+.pink-section {
+  background: linear-gradient(var(--pink), #000);
+}
+
+.shadow-above::before {
+  display: block;
+  content: ' ';
+  position: absolute;
+  top: 0px;
+  left: 0;
+  right: 0;
+  height: 200px;
+  background: linear-gradient(rgba(0,0,0,0), #000);
+  z-index: 0;
+}
+
+.story-time-check {
+  position: absolute;
+  z-index: 1000;
+  display: none;
+}
+
+.story-time {
+  max-height: 200px;
+  overflow: hidden;
+  transition: all ease-out 200ms;
+}
+
+.story-time-check:checked ~ .story-time {
+  transition: all ease-in 1000ms;
+  max-height: 10000px !important;
+}
+
+.yellow-section {
+  background: linear-gradient(to top, #FFC338, #FFEA68);
+}
+
 .transform-origin-tr {
   transform-origin: top right;
 }
@@ -10,7 +83,11 @@
   font-family: 'GTEesti', Helvetica, Arial, sans-serif;
 }
 
-.purple-bg::before {
+.before-bg {
+  position: relative;
+}
+
+.before-bg::before {
   display: block;
   position: absolute;
   content: ' ';
@@ -18,19 +95,18 @@
   left: 0;
   right: 0;
   bottom: 0;
-  background:
-    radial-gradient(circle at 50% 0, var(--purple), rgba(255,0,0,0) 70.71%),
-    radial-gradient(circle at 6.7% 75%, var(--pink),rgba(0,0,255,0) 70.71%),
-    radial-gradient(circle at 93.3% 75%, var(--teal), rgba(0,255,0,0) 70.71%)
-    var(--yellow);
 }
 
-:root {
-  --purple: #af10fe;
-  --pink: #ed137b;
-  --teal: #249bea;
-  --yellow: #feac1f;
-  --second-section-bg: #000;
+.fade-lighter-bg {
+  background: linear-gradient(#000, pink);
+}
+
+.purple-bg::before {
+  background: var(--rainbow-bg-purple);
+}
+
+.purple-bg-alt::before {
+  background: var(--rainbow-bg);
 }
 
 /* HTML */
@@ -355,11 +431,4 @@ svg .animate-path {
   50% {
     transform: translate3d(0, -20px, 0);
   }
-}
-
-.head-circle {
-  background:
-    radial-gradient(circle at 50% -10%,rgb(123, 52, 216),transparent 62%),
-    radial-gradient(circle at 50% 100%, rgb(63, 28, 146), transparent 65%),
-    #000;
 }

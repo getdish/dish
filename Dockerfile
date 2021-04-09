@@ -57,4 +57,5 @@ RUN yarn build:js
 
 # so we can deploy/tag on fly
 RUN touch ./__noop__
+RUN touch ./__test__remove_me__
 CMD ["tail -f ./__noop__"]

@@ -1,5 +1,5 @@
 import { globalTagId } from '../constants'
-import { tagDelete, tagInsert } from '../queries/tagQueries'
+import { tagUpsert } from '../queries/tagQueries'
 import { deleteAllFuzzyBy } from './queryHelpers'
 
 export async function flushTestData() {
@@ -19,11 +19,7 @@ export async function flushTestData() {
   await deleteAllFuzzyBy('menu_item', 'name', 'Test')
   await deleteAllFuzzyBy('restaurant', 'name', 'Test')
   await deleteAllFuzzyBy('photo', 'url', 'imgur.com')
-  // ensure parent tag there
-  await tagDelete({
-    id: globalTagId,
-  })
-  await tagInsert([
+  await tagUpsert([
     {
       id: globalTagId,
       slug: 'global',

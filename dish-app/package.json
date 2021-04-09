@@ -11,7 +11,7 @@
     "etc:colorize:staging": "NODE_ENV=staging yarn etc:colorize",
     "app": "TARGET=native react-native start",
     "app:reset": "watchman watch-del-all && yarn app --reset-cache",
-    "web": "../dishctl.sh run 'yarn dish start'",
+    "web": "NODE_ENV=development ../dishctl.sh run 'yarn dish start'",
     "web:https": "sudo dish start --https --host d1sh.com --port 443",
     "web:debug": "DEBUG_WEBPACK=1 node --max_old_space_size=8192 --inspect ../node_modules/.bin/dish start --serial",
     "web:prod": "DEBUG_PATHS=1 VERBOSE=1 yarn web --prod",
