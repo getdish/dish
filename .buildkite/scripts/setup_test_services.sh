@@ -38,16 +38,12 @@ export -f wait_until_dish_app_ready
 
 # SCRIPT
 
-# mkdir -p "$HOME/.dish/postgresdb"
-# chown -R root:root "$HOME/.dish/postgresdb"
+mkdir -p "$HOME/.dish/postgresdb"
+chown -R root:root "$HOME/.dish/postgresdb"
 
-# if not already mounted/setup, we need to start postgres once and restart it
-if [ ! -d "$HOME/data" ]; then
-  echo "doing double start first time"
-  docker-compose run -d postgres
-  sleep 6
-  docker-compose down --remove-orphans -t 3
-fi
+echo "POSTGRES_DB: $POSTGRES_DB"
+ls -la "$HOME/.dish/postgresdb"
+ls -la "$HOME/.dish/postgresdb/test" || true
 
 echo "Starting docker for tests"
 ./dishctl.sh docker_compose_up -d
@@ -59,13 +55,13 @@ if ! timeout --preserve-status 30 bash -c wait_until_hasura_ready; then
 fi
 
 # let it finish setting up
-sleep 10
+sleep 3
 
-echo "Migrating hasura"
-./dishctl.sh db_migrate_local init
+# echo "Migrating hasura"
+# ./dishctl.sh db_migrate_local init
 
-echo "Migrating timescale"
-cd services/timescale && npm install && DISH_ENV=not-production ./scripts/migrate.js
+# echo "Migrating timescale"
+# cd services/timescale && npm install || true && DISH_ENV=not-production ./scripts/migrate.js
 
 # echo "Waiting for dish-app to finish starting"
 # if ! timeout --preserve-status 30 bash -c wait_until_dish_app_ready; then
@@ -73,3 +69,4 @@ cd services/timescale && npm install && DISH_ENV=not-production ./scripts/migrat
 #   exit 1
 # fi
 
+echo "done"

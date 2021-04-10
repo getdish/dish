@@ -2,4 +2,5 @@
 .env filter=git-crypt diff=git-crypt
 etc/dish-wire.conf filter=git-crypt diff=git-crypt
 etc/keys/d1_reliablesite_dish filter=git-crypt diff=git-crypt
+etc/keys/teamdish_gpg filter=git-crypt diff=git-crypt
 AppleAuthKey.p8 filter=git-crypt diff=git-crypt

@@ -6,7 +6,7 @@
   "scripts": {
     "start": "mcro-build --port 5000 --extract-static-styles --target web",
     "start:prod": "mcro-build --extract-static-styles --prod --port 5000 --report --target web",
-    "build": "ANALYZE_BUNDLE=1 mcro-build --extract-static-styles --prod --build --target web && ./post_build.sh",
+    "build:prod": "ANALYZE_BUNDLE=1 mcro-build --extract-static-styles --prod --build --target web && ./post_build.sh",
     "build:no-min": "NO_OPTIMIZE=1 mcro-build --prod --build --target web",
     "build:debug": "NODE_ENV=development mcro-build --prod --build --target web",
     "serve": "static-server -p 3999 -n dist/index.html dist"

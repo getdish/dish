@@ -9,8 +9,7 @@ RUN apt-get update && apt-get install --no-install-recommends -y \
     && apt-get update && apt-get install --no-install-recommends -y \
         docker-ce docker-ce-cli containerd.io
 
+COPY ./docker-entrypoint.d /docker-entrypoint.d
 COPY hooks/ /buildkite/hooks/
 
-COPY ./docker-entrypoint.d /docker-entrypoint.d
-
-CMD ["start", "--spawn", "8"]
+CMD ["start"]

@@ -6,8 +6,16 @@ services:
       context: .
       dockerfile: ./Dockerfile
   ci:
+    image: registry.fly.io/dish-ci${DISH_IMAGE_TAG}
+    command: start --spawn 6 --token ${BUILDITE_AGENT_TOKEN}
+    privileged: true
     build:
       context: ./services/ci
+    volumes:
+      - ./etc/keys:/buildkite-secrets:ro
+      - ./data:/data
+    environment:
+      BUILDITE_AGENT_TOKEN: ${BUILDITE_AGENT_TOKEN}
   run-tests:
     build:
       context: .

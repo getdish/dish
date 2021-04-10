@@ -6,16 +6,23 @@ if [ "$FIRST_STEP" == "true" ]; then
   exit 0
 fi
 
+from="$BUILDKITE_PIPELINE_NAME-$BUILDKITE_STEP_KEY-build-$BUILDKITE_BUILD_NUMBER"
+to="registry.fly.io/$DOCKER_TAG"
+
 if [ -n "$DOCKER_TAG" ]; then
-  from="$BUILDKITE_PIPELINE_NAME-$BUILDKITE_STEP_KEY-build-$BUILDKITE_BUILD_NUMBER"
-  to="registry.fly.io/$DOCKER_TAG"
   echo "docker tag $from $to:latest"
+  docker images | grep "$from"
   docker tag "$from" "$to:latest"
+  docker images | grep "$to"
 fi
 
-if [ -z "$DOCKER_PUSH" ]; then
+if [ -n "$DOCKER_PUSH" ]; then
   echo "docker push $to:latest"
   docker push "$to:latest"
+fi
+
+if [ "$SHOW_DOCKER_IMAGES" = "true" ]; then
+  docker images | head -n 30 || true
 fi
 
 if [ "$BUILDKITE_COMMAND_EXIT_STATUS" -ne 0 ]; then
