@@ -74,7 +74,7 @@ const DishTitleFitted = (props: TitleProps) => {
 export const App = () => {
   return (
     <>
-      <Container position="relative" zIndex={1} paddingVertical={40} marginHorizontal="auto">
+      <Container position="relative" zIndex={1} paddingTop={40} marginHorizontal="auto">
         <LogoVertical />
 
         <VStack height={150} alignItems="center" justifyContent="center">
@@ -92,58 +92,58 @@ export const App = () => {
           <br />
           <Text fontSize="80%">a community, a coin, a non-profit, a guide</Text>
         </DishParagraph>
+      </Container>
 
-        <Spacer size="xxxl" />
+      <Spacer size="xxxl" />
 
-        <VStack className="float-up-down">
+      <VStack zIndex={100000} position="relative" className="float-up-down">
+        <VStack
+          alignSelf="center"
+          shadowColor="#000"
+          shadowRadius={60}
+          shadowOpacity={0.5}
+          shadowOffset={{
+            width: -60,
+            height: 100,
+          }}
+          transform={[
+            {
+              perspective: 100000,
+            },
+            {
+              rotateX: '52deg',
+            },
+            {
+              rotateY: '10deg',
+            },
+            {
+              rotateZ: '-30deg',
+            },
+          ]}
+        >
           <VStack
-            alignSelf="center"
-            shadowColor="#000"
-            shadowRadius={60}
+            borderRadius={30}
+            shadowColor="blue"
+            shadowRadius={130}
             shadowOpacity={0.5}
             shadowOffset={{
-              width: -60,
-              height: 100,
+              width: -20,
+              height: 20,
             }}
-            transform={[
-              {
-                perspective: 100000,
-              },
-              {
-                rotateX: '52deg',
-              },
-              {
-                rotateY: '10deg',
-              },
-              {
-                rotateZ: '-30deg',
-              },
-            ]}
+            marginTop={-60}
+            marginBottom={-60}
           >
-            <VStack
-              borderRadius={30}
-              shadowColor="blue"
-              shadowRadius={130}
-              shadowOpacity={0.5}
-              shadowOffset={{
-                width: -20,
-                height: 20,
+            <img
+              width={563 / 2}
+              height={1144 / 2}
+              style={{
+                borderRadius: 20,
               }}
-              marginTop={-60}
-              marginBottom={-60}
-            >
-              <img
-                width={563 / 2}
-                height={1144 / 2}
-                style={{
-                  borderRadius: 20,
-                }}
-                src={require('./assets/iphone-home-screen.jpg').default}
-              />
-            </VStack>
+              src={require('./assets/iphone-home-screen.jpg').default}
+            />
           </VStack>
         </VStack>
-      </Container>
+      </VStack>
 
       <VStack
         position="relative"
@@ -184,9 +184,9 @@ export const App = () => {
 
           <Container className="toggle-section" marginHorizontal="auto">
             <ContentSection paddingTop={0}>
-              <VStack>
+              <VStack marginBottom={-10}>
                 <label htmlFor="toggle-platforms">
-                  <DishParagraph fontWeight="800" size={3}>
+                  <DishParagraph sizeLineHeight={0.8} fontWeight="800" size={4}>
                     <Highlight backgroundColor="var(--pink)" color="#fff">
                       Review platforms have problems.
                     </Highlight>
@@ -197,15 +197,18 @@ export const App = () => {
               <DishParagraph size="xxxxl">
                 Hidden. Faked. Averaged. Inflated.
                 <br />
-                Pressure to grow fast = easy ad cash 💸,
-                <br />
-                but advertisers hate to be hated.
+                <DishParagraph size="xxxl">
+                  Pressure to grow fast means easy ad cash 💸,
+                  <br />
+                  but advertisers hate to be hated.
+                </DishParagraph>
               </DishParagraph>
 
               <DishParagraph size="xxxl">
                 There's a misalignment between a guide to purchasing, and profiting off advertising.
-                So we're starting a <b>non-profit</b> with a <b>community-owned coin</b> that
-                rewards curation.
+                Dish aims to solve these tensions with a <b>non-profit</b> and a{' '}
+                <b>community-owned coin</b> with strictly equitable distribution, rewarding good
+                curation.
               </DishParagraph>
 
               <DishParagraph size="xxl">We think it solves many alignment issues:</DishParagraph>
@@ -229,38 +232,22 @@ export const App = () => {
               </ul>
 
               <HStack className="nav-buttons" spacing="xl" justifyContent="center">
-                <VStack className="story-time-button">
-                  <label htmlFor="toggle-story-time">
-                    <Pressable>
-                      <Button
-                        paddingVertical={15}
-                        paddingHorizontal={27}
-                        backgroundColor="rgba(0,0,0,0.2)"
-                        textProps={{
-                          fontWeight: '300',
-                          lineHeight: 24,
-                          fontSize: 20,
-                        }}
-                      >
-                        Time for a story
-                      </Button>
-                    </Pressable>
-                  </label>
-                </VStack>
-                <Pressable>
-                  <Button
-                    paddingVertical={15}
-                    paddingHorizontal={27}
-                    backgroundColor="rgba(0,0,0,0.2)"
-                    textProps={{
-                      fontWeight: '300',
-                      lineHeight: 24,
-                      fontSize: 20,
-                    }}
-                  >
-                    <b>What is dish?</b>
-                  </Button>
-                </Pressable>
+                <label htmlFor="toggle-story-time">
+                  <Pressable>
+                    <Button
+                      paddingVertical={15}
+                      paddingHorizontal={27}
+                      backgroundColor="rgba(0,0,0,0.2)"
+                      textProps={{
+                        fontWeight: '300',
+                        lineHeight: 24,
+                        fontSize: 20,
+                      }}
+                    >
+                      a crypto story ⬇️
+                    </Button>
+                  </Pressable>
+                </label>
               </HStack>
             </ContentSection>
           </Container>
@@ -348,44 +335,52 @@ export const App = () => {
               “Why not just get him a 1-of-1000 <b>Kaws paisley Handkerchief NFT</b>,” Jerry offers
               right back, “only $10, and you guys just joked about paisley last week.”
             </DishParagraph>
-            ---
             <DishParagraph size="xxl">
               They'll just have more interesting ownership, incentivization, governance, and
               community mechanisms.
             </DishParagraph>
+
+            <Spacer size="xxxl" />
           </ContentSection>
         </VStack>
       </VStack>
 
-      <VStack pointerEvents="none" zIndex={1000} marginTop={-120} position="relative">
+      <VStack pointerEvents="none" zIndex={1000} marginTop={-180} position="relative">
         <VStack
           className="shadow-above"
           // marginVertical={-40}
           height={200}
           alignItems="flex-end"
           justifyContent="flex-end"
-          minWidth={1000}
+          minWidth={1200}
           zIndex={10}
-          transform={[{ scaleX: 3.5 }]}
+          transform={[{ scaleX: 3.2 }, { translateX: -100 }]}
         >
           <Wave direction="vertical" />
         </VStack>
-        {/*
-          <VStack marginTop={-70} marginBottom={-20} alignItems="center">
-            <DishTitleSlanted
-              size="lg"
-              fontWeight="800"
-              backgroundColor="var(--yellow)"
-              color="#000"
-            >
-              whats dish?
-            </DishTitleSlanted>
-          </VStack> */}
 
         <Theme name="light">
-          <VStack className="yellow-section" marginTop={-50}>
-            <ContentSection marginHorizontal="auto" zIndex={1000}>
-              <DishParagraph textAlign="center" marginTop={-60} sizeLineHeight={0.8} size={4}>
+          <VStack className="yellow-section">
+            <ContentSection marginTop={-150} marginHorizontal="auto" zIndex={1000}>
+              <Spacer />
+
+              <HStack spacing="md" justifyContent="center">
+                <Text fontSize={20} paddingHorizontal={10} color="#000">
+                  <b>what is dish?</b>
+                </Text>
+                <label htmlFor="toggle-story-time">
+                  <Text fontSize={20} paddingHorizontal={10} color="var(--purple)">
+                    <a>why review platforms fail</a>
+                  </Text>
+                </label>
+                <label htmlFor="toggle-story-time">
+                  <Text fontSize={20} paddingHorizontal={10} color="var(--purple)">
+                    <a>a crypto story</a>
+                  </Text>
+                </label>
+              </HStack>
+
+              <DishParagraph textAlign="center" sizeLineHeight={0.8} size={4}>
                 <b>
                   <Highlight backgroundColor="yellow" color="#000">
                     a pocket guide to the world
@@ -518,7 +513,7 @@ export const App = () => {
 }
 
 const Highlight = (props: TextProps) => {
-  return <Text padding={4} margin={-4} borderRadius={4} {...props} />
+  return <Text paddingHorizontal={8} paddingVertical={2} {...props} />
 }
 
 const ContentSection = (props: StackProps) => {

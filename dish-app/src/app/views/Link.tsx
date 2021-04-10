@@ -1,5 +1,5 @@
 import React from 'react'
-import { Text, VStack } from 'snackui'
+import { Text } from 'snackui'
 
 import { brandColor } from '../../constants/colors'
 import { isStringChild } from '../../helpers/isStringChild'
