@@ -9,7 +9,7 @@ cd "$PROJECT_ROOT"
 # deploy dedicated
 function deploy_dedicated_server() {
   PRIVATE_KEY="$PROJECT_ROOT/etc/keys/d1_reliablesite_dish"
-  DEDICATED_APPS="dish-app-web dish-hooks search tileserver worker"
+  DEDICATED_APPS="ci"
   DISH_IMAGE_TAG=":latest"
   SERVER_HOST="104.243.45.240"
   rsync \
@@ -27,9 +27,9 @@ function deploy_dedicated_server() {
       git checkout nate/dev
       source .env
       source .env.production
-      docker-compose stop $DEDICATED_APPS
-      docker-compose rm -f dish-app-web dish-hooks search worker || true
-      ./dishctl.sh docker_pull_images_that_compose_would_rather_build
+      docker-compose stop $DEDICATED_APPS || true
+      docker-compose rm -f $DEDICATED_APPS || true
+      ./dishctl.sh docker_pull_images_that_compose_would_rather_build || true
       DISH_IMAGE_TAG=$DISH_IMAGE_TAG docker-compose up -d $DEDICATED_APPS
     "
   echo "success"

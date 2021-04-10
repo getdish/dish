@@ -195,7 +195,7 @@ html {
 
 #root {
   pointer-events: auto;
-  overflow-x: hidden;
+  /* overflow-x: hidden; */
 }
 
 img {

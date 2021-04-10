@@ -3,6 +3,8 @@ env:
   DISH_ENV: 'test'
   DOCKER_BUILDKIT: 0
   COMPOSE_DOCKER_CLI_BUILD: 0
+  DOCKER_CLIENT_TIMEOUT: 360
+  COMPOSE_HTTP_TIMEOUT: 360
 
 steps:
   # images that tests need
@@ -12,6 +14,7 @@ steps:
     env:
       DOCKER_TAG: dish-base
       DOCKER_CLEAN_BEFORE: true
+      SHOW_DOCKER_IMAGES: true
     plugins:
       - docker-compose#v3.7.0:
           build: base
@@ -22,6 +25,7 @@ steps:
     depends_on: base
     env:
       DOCKER_TAG: dish-app
+      SHOW_DOCKER_IMAGES: true
     plugins:
       - docker-compose#v3.7.0:
           build: dish-app
@@ -169,6 +173,7 @@ steps:
             - base:registry.fly.io/dish-base:latest
             - dish-app:registry.fly.io/dish-app:latest
             - hooks:registry.fly.io/dish-hooks:latest
+            - run-tests:registry.fly.io/dish-run-tests:latest
             - worker:registry.fly.io/dish-worker:latest
             - search:registry.fly.io/dish-search:latest
             - hasura:registry.fly.io/dish-hasura:latest
@@ -254,8 +259,9 @@ steps:
       DOCKER_CLEAN_ON_FAIL: true
       POSTGRES_STRATEGY: simple
     plugins:
-      - gencer/cache#v2.3.10:
+      - gencer/cache#v2.4.7:
           backend: s3
+          id: data
           key: "v1-cache-{{ runner.os }}"
           s3:
             args: "--endpoint-url=https://sfo2.digitaloceanspaces.com"
@@ -269,6 +275,7 @@ steps:
     depends_on: test-setup
     env:
       LOG_DOCKER: true
+      SHOW_DOCKER_IMAGES: true
       DOCKER_COMPOSE_DOWN: true
       DOCKER_CLEAN_ON_FAIL: true
 

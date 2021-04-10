@@ -1,112 +1,14 @@
-- move ci to ionos
-- crawlers get working
-  - may want to move image-recognize + bert to ionos
-
-
+- site: words, sections, make it dishapp.com main page
+- site: signup form, links to substack
+- move rest of site to beta.dishapp.com with login required
+- fix many data issues on specific restaurants
+- re-run crawl successfully on SF
+- run it on a bunch more places
+- beta version that is testflight deployable
+- mobile web various interaction fixes
 - comments need voting or else no one will want to use them
-
-THREE BIG AREAS
-
-  1. WEB
-     1. lots of bugs, mobile, etc, get it stable
-     2. blog post / substack
-  2. DATA
-     1. need to fix tons of data issues on specific restaurants
-     2. re-run crawl successfully on SF
-     3. run it on a bunch more places
-     4. need to have a beter plan for getting off yelp
-  3. APPS
-     1. need to get a beta version that is testflight deployable
-
----
-
-BROKEN DOWN
-
-- bugs
-  - back button can break still
-
-- feel
-  - needs many small improvements
-  - mobile web needs a ton of scroll/touch fixes
-
-- speed
-  - homepage/search sql speed fix
-  - search scrolling slowish (svg? images? paint?)
-
-- data working
-  - get cron properly running crawl jobs, verify timings
-  - verify further externals crawlers functioning
-  - test/fix internal crawler
-  - get working on tucson
-  - LA, SD, SF
-
-- data improve
-  - better images will make a big difference
-  - re-crawl restaurant given name/id
-  - get good feedback loop for one/a few restaurants:
-    - LOCALLY IDEALLY
-    - integrate new image quality API
-    - integrate new bert API
-  - image() rather than default_images() for data use reduction
-  - tag image finding
-
-- user
-  - apple sign in broken
-  - a few sign in flow improvements
-  - profiles needs a lot of love
-
--
-
-# initial family/friends launch at end of month
-
-    - fix up blog and write something (or remove blog)
-    - dish substack! have mailing list that actually emails once a month with new release
-    - improve some profiles and some onboarding
-
-- fix home speed / home data
-- mobile fixes: get it fully working mobile web
-- fix back sometimes still breaking stack
-- fix home not showing tag data properly
-- may be able to remove a few states from homeStore
-- search page fixes:
-  - search page - show popular lists for that region + tags
-- home
-  - fix feed up a bunch to actually show real feed items
-  - show real comments (recent?)
-- cleanup
-  - fixup profile pages a lot
-  - show onboard if not yet
-  - better intro / intro callout
-  - touch up commenting/rating
-- location <=> url
-- organize all map/geo helpers a bit
-- ensure usernames are the same set as slugifed (no special chars)
-
-for pablo:
-
-  - flow that breaks due to caching (needs to do background refetch)
-    - go to search page
-    - hit top left button "make your ____ list"
-    - close list
-    - on search page hit "+" on an item
-    - on "add to list" modal hit "+" to add to list you just made
-    - on "add to list" modal hit ">>" to go to that list
-    - bug: list is empty still, doesnt show newly added item until next refresh
-  - "add to list" modal, works, then stops working sometimes
-  - search page, sometimes results come back empty until i scroll down/up again
-  - "Edit Profile" on UserPage, after I edit it doesn't update profile apge
-    - a simple way to have it update *all* queryUser()
-  - we need to generate two schemas, one for admin, one for user
-  - need `mutate` helper accept options (noCache so we can replace resolveMutation in queryResolvers with mutate)
-  - ListPage various fixes:
-    - delete isn't removing items (sometimes works, usually doesnt)
-  - normalize/direct-mutate
-  - mutate() should automatically add __typename if nothing else exists otherwise really confusing that mutations silently fail
-
-  1. prototype playlists / improve home (bonus)
-
-     - in general playlists are fun and affect regions a bit (may lessen need)
-     - home page can be simpler and faster list, improve that
+- blog/signup
+- LAUNCH
 
 ---
 
@@ -151,32 +53,9 @@ making it actually a community:
 
 ---
 
-  - playlists for play
-  - pokedex strikes the right balance: polished, personal, fun
-  - trading cards - stats on each thing broken down, data driven, create "stacks" of favorite coffee shops
-  - hitchhikers guide to the galaxy - whats unique, a place to store real opinion
-  - ultimately the concerns wouldnt just be commercial like yelp or google, but also exploration, activity, outdoors, culture, history - wikipedia for a map
-  - but the community aspect should drive it - "map reduce" from discussions into a "current best of page"
-  - no great way to plan trips, to explore cities by what makes them great, long term goal is this
-  - want to be on user side and not data mine, because we want people to trust they can really invest in curating their own adventure book.
-    - able to post things privately, and have a "friends" scope
-    - we are exploring paid-for models for upgraded features to avoid advertising pressures
-    - want to invest in communities and have local champions, invest in local popups
-  - by breaking down things by the factors that matter, not just a single 5 star ratings, we want to foster the japanese style in a sense - do "one thing well" - or the portland style of embracing quirkyness - let restaurants and shops avoid tyranny of the majority and specialize without negative effects
-
----
-
-after alpha:
-
-- revisit ssr
-- show a list of hot & new restaurants on homepage, simple and easy win, with link to breakdown to comment easily...
-- mobile web needs some sort of slight redesign
-
----
-
 big impact changes
 
-- social - having chef profiles
+- show comments everywhere (search, home, lists)
 - showing the icons for top/vibe/bar/green on list items with one click vote
 - threading on comments is the only way you get discussion which leads to clarfiication, which is both what keeps people around and what allows us to get much richer info
 - make map more alive
@@ -205,9 +84,3 @@ big impact changes
 - importing instagram and other feed data to have more aliveness
 - top dishes <=> map pins + easily moving around cities.
   - then easily filter it down to any cuisine (top right input opposite "Uniquely Good")
-
-# Ratings
-
-- Get experts on board
-- have them easily rate/comment, etc
-- Use them as profiles

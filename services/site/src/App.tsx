@@ -194,13 +194,13 @@ export const App = () => {
                 </label>
               </VStack>
 
-              <DishParagraph size="xxxxl">
+              <DishParagraph size="xxxxl" sizeLineHeight={0.9}>
                 Hidden. Faked. Averaged. Inflated.
                 <br />
                 <DishParagraph size="xxxl">
-                  Pressure to grow fast means easy ad cash 💸,
+                  Pressure to grow fast, easy ad cash 💸,
                   <br />
-                  but advertisers hate to be hated.
+                  advertisers hate to be hated.
                 </DishParagraph>
               </DishParagraph>
 
@@ -310,34 +310,66 @@ export const App = () => {
             </label>
             <DishParagraph size="xxxxl">
               It's 2038, your Apple AR CryptoKitty, Jerry, nestles in your lap amongst ethereal
-              excel sheets. You flick smile glowing kitty and he looks up at you.
+              excel sheets. You smile at the glowing kitty as he looks up at you.
             </DishParagraph>
             <DishParagraph size="xxl">
               “Should we reschedule the dentists?” Jerry begins, stretching, “you have that matinee,
-              and traffic'll be tricky."
+              and traffic looks to be bad."
             </DishParagraph>
             <DishParagraph size="xxxl">
               You sigh, “is the minute I finish work really the time to be reminding me of dentists
               and traffic? And matinees?"
             </DishParagraph>
             <DishParagraph size="xxl">
-              Of course, he was right. You <b>had</b> forgotten about the matinee, with mom.
-              “Mat-in-
-              <b>ayy</b> with mom...” you repeat, “<b>mat</b>-in-ay"...
+              Jerry looks taken aback, but he's right. You <b>had</b> forgotten about the matinee
+              with your mom. “The mat-in-ay with mom...” you repeat, thinking, “<b>mat</b>-in-ay"...
             </DishParagraph>
             <DishParagraph size="xxl">
-              Wait a second... “<b>Matt</b>!”
-            </DishParagraph>
-            <DishParagraph size="xxxl">
-              You jump up, “Matt's birthday is tomorrow! There's no way I can make it!"
-            </DishParagraph>
-            <DishParagraph size="xxxl">
-              “Why not just get him a 1-of-1000 <b>Kaws paisley Handkerchief NFT</b>,” Jerry offers
-              right back, “only $10, and you guys just joked about paisley last week.”
+              Wait a second... “<b>Matt</b>!” you jump up, right through a startled Jerry.
             </DishParagraph>
             <DishParagraph size="xxl">
-              They'll just have more interesting ownership, incentivization, governance, and
-              community mechanisms.
+              “his birthday's tomorrow! What do I get for him?"
+            </DishParagraph>
+            <DishParagraph size="xxxl">
+              “Well... how about this 1-of-1000 <b>Kaws paisley Handkerchief NFT</b>,” Jerry offers
+              without hesitation, “only $10, and you guys just joked about paisley last week.”
+            </DishParagraph>
+            <DishParagraph size="xxl">
+              <b>“Done and done!”</b>
+            </DishParagraph>
+            <DishParagraph size="xxl">
+              <b>Another NFT success story?</b>
+            </DishParagraph>
+
+            <VStack alignItems="center">
+              <DishTitleSlanted size="lg">what?</DishTitleSlanted>
+            </VStack>
+
+            <DishParagraph size="xxl">
+              Ok, so the story is a bit silly. We're just trying to point out this: crypto, like any
+              tool, can be used for good, bad, or, well... silly.
+            </DishParagraph>
+
+            <DishParagraph size="xxl">
+              We think the best applications of it will look a lot like your successful valuable web
+              2.0 startups. For example, Jerry, the augmented reality cryptokitty, would need to be
+              pretty good before you'd care to buy it a digital good (outside whatever current
+              bubble is happening or people want you to believe is happening).
+            </DishParagraph>
+
+            <DishParagraph size="xxl">
+              Make no mistake: Dish isn't doing <b>anything</b> with NFTs. In fact, close to the
+              opposite: Dish is a <b>real app</b> that will compete with other apps{' '}
+              <b>100% based on how good the app itself is, and based 0% on how it uses crypto</b>.
+            </DishParagraph>
+
+            <DishParagraph size="xxl">
+              We just think the coin solves primarily for incentivizing growth and getting early
+              adopters to promote the platform, and promote good content to it. It helps with
+              revenue sharing for content, simply by making paying out for content simple and
+              equity-rather-than-cash based, which we think many will prefer. And finally, it lets
+              us do all sorts of nice things to foster trust and quality, from governance to
+              referral-chain-enforcement, etc.
             </DishParagraph>
 
             <Spacer size="xxxl" />
@@ -353,6 +385,7 @@ export const App = () => {
           alignItems="flex-end"
           justifyContent="flex-end"
           minWidth={1200}
+          pointerEvents="none"
           zIndex={10}
           transform={[{ scaleX: 3.2 }, { translateX: -100 }]}
         >
@@ -360,7 +393,7 @@ export const App = () => {
         </VStack>
 
         <Theme name="light">
-          <VStack className="yellow-section">
+          <VStack pointerEvents="auto" className="yellow-section">
             <ContentSection marginTop={-150} marginHorizontal="auto" zIndex={1000}>
               <Spacer />
 
@@ -368,7 +401,7 @@ export const App = () => {
                 <Text fontSize={20} paddingHorizontal={10} color="#000">
                   <b>what is dish?</b>
                 </Text>
-                <label htmlFor="toggle-story-time">
+                <label htmlFor="toggle-platforms">
                   <Text fontSize={20} paddingHorizontal={10} color="var(--purple)">
                     <a>why review platforms fail</a>
                   </Text>
@@ -476,7 +509,7 @@ export const App = () => {
         </Theme>
       </VStack>
 
-      <VStack className="before-bg purple-bg-alt">
+      <VStack className="before-bg purple-bg">
         <VStack zIndex={1000} position="relative" marginVertical={-20} alignItems="center">
           <DishTitleSlanted size="lg" fontWeight="800" backgroundColor="yellow" color="#000">
             How a coin saves us from selling out:

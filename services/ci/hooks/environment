@@ -2,12 +2,13 @@
 
 set -euo pipefail
 
+GITHUB_SSH_KEY=$(cat /buildkite-secrets/d1_reliablesite_dish)
+
 eval "$(ssh-agent -s)"
-ssh-add - <<< "$PRIVATE_SSH_KEY"
+ssh-add - <<< "$GITHUB_SSH_KEY"
 
 if ($(which git-crypt > /dev/null)); then
   echo "git crypt installed"
 else
-  # KEY_PATH=/tmp/gitcrypt-key
   apt-get install -y git-crypt
 fi

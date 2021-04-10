@@ -595,11 +595,13 @@ function crawler_mem_usage() {
 
 # Docker Compose doesn't pull images with a build key in their definition?
 function docker_pull_images_that_compose_would_rather_build() {
-  DOCKER_TAG_NAMESPACE=":latest" # just use latest for now until we get proper staging/prod setup
+  dish_registry_auth
+  DOCKER_TAG_NAMESPACE="latest" # just use latest for now until we get proper staging/prod setup
   image="$DISH_REGISTRY/%:$DOCKER_TAG_NAMESPACE"
+  echo "image is $image"
   parallel -j 4 --tag --lb -I% docker pull "$image" ::: \
-    'ci' \
-    'worker'
+    'dish-ci' \
+    'dish-worker'
 }
 
 function grafana_backup() {

@@ -23,13 +23,14 @@ else
   fi
 fi
 
-gpg_file="$HOME/.gpg-key"
-if [ ! -f "$gpg_file" ]; then
-  echo "$GPG_KEY" > /root/.gpg-key
-  gpg --import /root/.gpg-key > gpg-import.log
+if [ "$SHOW_DOCKER_IMAGES" == "true" ]; then
+  docker images | head -n 30 || true
+  echo "done"
 fi
 
-git-crypt unlock > git-crypt.log
+gpg --import /buildkite-secrets/teamdish_gpg
+echo "unlocking"
+git-crypt unlock
 
 # environment
 
