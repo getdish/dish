@@ -80,11 +80,11 @@
   content: ' ';
   pointer-events: none;
   position: absolute;
-  top: 0px;
+  top: 50px;
   left: 0;
   right: 0;
-  height: 200px;
-  background: linear-gradient(rgba(0,0,0,0), rgba(0,0,0,0.15));
+  height: 100px;
+  background: linear-gradient(rgba(0,0,0,0), rgba(0,0,0,0.45));
   z-index: -1;
 }
 
@@ -95,7 +95,7 @@
 }
 
 .toggle-section {
-  max-height: 180px;
+  max-height: 30px;
   overflow: hidden;
   transition: all ease-out 200ms;
 }
