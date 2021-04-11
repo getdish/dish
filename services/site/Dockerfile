@@ -1,4 +1,4 @@
-FROM node:15.10.0-buster
+FROM registry.fly.io/dish-base:latest
 
 RUN \
   apt-get update >/dev/null && apt-get install -y parallel build-essential \
@@ -7,17 +7,14 @@ RUN \
       && apt-get clean \
       && rm -rf /var/lib/apt/lists/*
 
-WORKDIR /app
+WORKDIR /app/services/site
 
-COPY package.json package-lock.json .babelrc post_build.sh build.config.js ./
+COPY services/site/public public
+COPY services/site/src src
+COPY services/site/webpack.config.js webpack.config.js
 
-RUN npm install
-
-COPY src src
-COPY public public
-
-RUN npm run build
+RUN yarn build:prod
 
 EXPOSE 3999
 
-CMD ["npm", "run", "serve"]
+CMD ["yarn", "serve"]

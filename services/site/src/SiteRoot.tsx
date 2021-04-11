@@ -1,11 +1,15 @@
 import './assets/font-gteesti/stylesheet.css'
 import './site.css'
 
-import React, { useReducer, useRef } from 'react'
-import { Pressable } from 'react-native'
+// import jsonp from 'jsonp'
+import React, { useRef } from 'react'
+import { Image, Pressable } from 'react-native'
 import {
+  AbsoluteVStack,
+  Button,
   Circle,
   HStack,
+  Input,
   Paragraph,
   ParagraphProps,
   Spacer,
@@ -19,9 +23,8 @@ import {
   defaultMediaQueries,
   useMedia,
 } from 'snackui'
-import { Button } from 'snackui'
-import { AbsoluteVStack } from 'snackui'
 
+import { LogoCircle } from './DishLogo'
 import { LogoVertical } from './LogoVertical'
 
 const DishParagraph = (props: ParagraphProps) => {
@@ -71,7 +74,7 @@ const DishTitleFitted = (props: TitleProps) => {
   )
 }
 
-export const App = () => {
+export const SiteRoot = () => {
   return (
     <>
       <Container position="relative" zIndex={1} paddingTop={40} marginHorizontal="auto">
@@ -313,63 +316,45 @@ export const App = () => {
               excel sheets. You smile at the glowing kitty as he looks up at you.
             </DishParagraph>
             <DishParagraph size="xxl">
-              “Should we reschedule the dentists?” Jerry begins, stretching, “you have that matinee,
-              and traffic looks to be bad."
+              “Should we reschedule the dentists?” Jerry begins, stretching, “with traffic, you may
+              miss the matinee tomorrow."
+            </DishParagraph>
+            <DishParagraph size="xxl">
+              A sigh. “Is the minute I finish work really the time to be reminding me of dentists
+              and traffic?"
+            </DishParagraph>
+            <DishParagraph size="xxl">
+              Jerry frowns. He is right. You <b>did</b> forget the matinee, with mom. “The mat-in-ay
+              with mom...” you repeat out loud, “<b>mat</b>-in-ay”...
+            </DishParagraph>
+            <DishParagraph size="xxl">
+              The fridge compressor turns on, and something clicks. “Wait a second... <b>Matt</b>!”
+              you jump up, right through a startled Jerry. “His birthday's tomorrow! I'll have to
+              cancel going... he'll be upset..."
             </DishParagraph>
             <DishParagraph size="xxxl">
-              You sigh, “is the minute I finish work really the time to be reminding me of dentists
-              and traffic? And matinees?"
-            </DishParagraph>
-            <DishParagraph size="xxl">
-              Jerry looks taken aback, but he's right. You <b>had</b> forgotten about the matinee
-              with your mom. “The mat-in-ay with mom...” you repeat, thinking, “<b>mat</b>-in-ay"...
-            </DishParagraph>
-            <DishParagraph size="xxl">
-              Wait a second... “<b>Matt</b>!” you jump up, right through a startled Jerry.
-            </DishParagraph>
-            <DishParagraph size="xxl">
-              “his birthday's tomorrow! What do I get for him?"
-            </DishParagraph>
-            <DishParagraph size="xxxl">
-              “Well... how about this 1-of-1000 <b>Kaws paisley Handkerchief NFT</b>,” Jerry offers
-              without hesitation, “only $10, and you guys just joked about paisley last week.”
+              “Why not grab him a 1-of-1000 <b>Kaws paisley Handkerchief NFT</b>,” Jerry offers
+              without hesitation, “only $20, plus you guys joked about paisley just last week.”
             </DishParagraph>
             <DishParagraph size="xxl">
               <b>“Done and done!”</b>
             </DishParagraph>
-            <DishParagraph size="xxl">
-              <b>Another NFT success story?</b>
-            </DishParagraph>
 
             <VStack alignItems="center">
-              <DishTitleSlanted size="lg">what?</DishTitleSlanted>
+              <DishTitleSlanted size="lg">Jerry & Dish</DishTitleSlanted>
             </VStack>
 
-            <DishParagraph size="xxl">
-              Ok, so the story is a bit silly. We're just trying to point out this: crypto, like any
-              tool, can be used for good, bad, or, well... silly.
+            <DishParagraph size="xxxl">
+              Crypto is only as valuable as what it's tied to. As a good store of value, a good
+              payment system, or a way to drive behavior within a network. Even NFT's can make
+              sense, if the product is good: Jerry is a fully animated, augmented reality AI cat.
             </DishParagraph>
 
             <DishParagraph size="xxl">
-              We think the best applications of it will look a lot like your successful valuable web
-              2.0 startups. For example, Jerry, the augmented reality cryptokitty, would need to be
-              pretty good before you'd care to buy it a digital good (outside whatever current
-              bubble is happening or people want you to believe is happening).
-            </DishParagraph>
-
-            <DishParagraph size="xxl">
-              Make no mistake: Dish isn't doing <b>anything</b> with NFTs. In fact, close to the
-              opposite: Dish is a <b>real app</b> that will compete with other apps{' '}
-              <b>100% based on how good the app itself is, and based 0% on how it uses crypto</b>.
-            </DishParagraph>
-
-            <DishParagraph size="xxl">
-              We just think the coin solves primarily for incentivizing growth and getting early
-              adopters to promote the platform, and promote good content to it. It helps with
-              revenue sharing for content, simply by making paying out for content simple and
-              equity-rather-than-cash based, which we think many will prefer. And finally, it lets
-              us do all sorts of nice things to foster trust and quality, from governance to
-              referral-chain-enforcement, etc.
+              We just a coin works particularly well for bootstrapping a network of content. It
+              incentivizes growth by distributing equity more fairly than traditional VC companies.
+              It also lets us do all sorts of nice things to foster trust and quality with open,
+              codified contracts, governance and more.
             </DishParagraph>
 
             <Spacer size="xxxl" />
@@ -415,94 +400,67 @@ export const App = () => {
 
               <DishParagraph textAlign="center" sizeLineHeight={0.8} size={4}>
                 <b>
-                  <Highlight backgroundColor="yellow" color="#000">
+                  <Highlight backgroundColor="red" color="#fff">
                     a pocket guide to the world
                   </Highlight>{' '}
                   <Text fontWeight="200">starting with food</Text>
                 </b>
               </DishParagraph>
 
+              <Join />
+
+              <DishParagraph size="xxl">
+                <b>YouTube and TikTok pay content creators.</b> We're doing the same for the
+                explorers of the world, on a beautiful app designed to last.
+              </DishParagraph>
+
+              <VStack alignItems="center">
+                <DishTitleSlanted backgroundColor="#fff">The App</DishTitleSlanted>
+              </VStack>
+
               <ul style={{ marginLeft: 40 }}>
                 <VStack spacing="xl">
-                  <DishParagraph size="xxxl">
+                  <DishParagraph size="xxl">
                     <li>
-                      <b>restaurants and delivery</b> - unique 💎 by neighborhood, taste based
-                      recommendations.
+                      <b>find gems 💎 broken down by neighborhood</b>
                     </li>
                   </DishParagraph>
-                  <DishParagraph size="xxxl">
+                  <DishParagraph size="xxl">
                     <li>
-                      <b>"TottenTomatoes"</b> reviews from around the web broken down, debated and
-                      added to.
+                      <b>search every delivery service 🚗 at once</b>
                     </li>
                   </DishParagraph>
-                  <DishParagraph size="xxxl">
+                  <DishParagraph size="xxl">
                     <li>
-                      <b>playlists</b> make your list, vote, see top ones by tag, earn coins votes..
+                      <b>playlists</b> of top dishes 🍽, nights out 🌃, cafes ☕️, you name it
                     </li>
                   </DishParagraph>
                 </VStack>
               </ul>
 
-              <DishParagraph size="xxxl">
-                <b>You get paid for YouTube and TikTok videos.</b>
-              </DishParagraph>
-
-              <DishParagraph size="xxxl">
-                Google and Yelp make tremendous amounts of money off your content. Yet when writing
-                reviews you get back... nada.
-              </DishParagraph>
-
-              <DishParagraph size="xxxl">
-                Google's ad business does gangbusters, and a huge chunk of map searches are powered
-                by the content and reviews you write.
-              </DishParagraph>
+              <VStack alignItems="center">
+                <DishTitleSlanted backgroundColor="#fff">The Coin</DishTitleSlanted>
+              </VStack>
 
               <DishParagraph size="xxl">
-                So much like YouTube and TikTok pay their content creators, we're going to give
-                DishCoin for all sorts of actions that improve the <b>quality</b> of Dish. A coin
-                backed directly by company profits.
+                How we solve for <b>steadier growth</b> and <b>quality</b>. Earn DishCoin{' '}
+                <Text marginVertical={-2}>
+                  <LogoCircle scale={0.7} />
+                </Text>{' '}
+                for writing, moderating, flagging, labeling, images, tags, lists and comments.
+                There's so many ways a content site needs curators, and a coin makes it easy to
+                incentivize that, even for small actions.
               </DishParagraph>
 
-              <DishParagraph size="xl">
-                Writing reviews, moderating, flagging, labeling, uploading good quality images,
-                suggesting tags, and voting on lists and comments. There's so many ways a content
-                site needs curators. It's a really good fit for a coin.
-              </DishParagraph>
-
-              <DishParagraph size="xl">
-                All of this made sense, but it wasn't until we thought about the benefits of{' '}
-                <b>not taking VC money</b> that things really clicked. You see, there's some
-                fundamental tension between rating quality and pressure to make money. It's pretty
-                obvious in retrospect, I mean:
-              </DishParagraph>
-
-              <ul style={{ marginLeft: 40 }}>
-                <DishParagraph size="xl">
-                  <li>Hiding negative reviews = increased ad money.</li>
-                </DishParagraph>
-                <Spacer />
-                <DishParagraph size="xl">
-                  <li>Inflating scores = increased ad money.</li>
-                </DishParagraph>
-                <Spacer />
-                <DishParagraph size="xl">
-                  <li>Showing more negative reviews unless businesses pay you = more money.</li>
-                </DishParagraph>
-              </ul>
+              <VStack alignItems="center">
+                <DishTitleSlanted backgroundColor="#fff">The mission</DishTitleSlanted>
+              </VStack>
 
               <DishParagraph size="xxl">
-                And on and on. You may say,{' '}
-                <b>
-                  "but you can make a huge list like this for almost any type of business! But most
-                  businesses respond to the market, so they tend not to do overtly evil things!"
-                </b>
-              </DishParagraph>
-
-              <DishParagraph size="xxl">
-                Well, that's the thing. The pernicious thing about rankings and reviews is that they
-                can be <b>quiet</b>. Just a few reviews hidden, a half star boost, and a little
-                shuffling to let poorly ranked places show up high, and boom, no one notices.
+                The thing about rankings and reviews is that it's easy for companies to get away
+                with <b>quietly manipulating them</b> and degrading over time. Hide a few negative
+                comments here, round star counts up, maybe shuffle the search results a bit to let
+                poorly ranked places show up.
               </DishParagraph>
             </ContentSection>
           </VStack>
@@ -555,7 +513,7 @@ const ContentSection = (props: StackProps) => {
       position="relative"
       maxWidth={800}
       alignSelf="center"
-      spacing="xxl"
+      spacing="xxxl"
       paddingHorizontal={20}
       paddingVertical={100}
       {...props}
@@ -674,4 +632,129 @@ const Wave = ({
       />
     </svg>
   )
+}
+
+export class Join extends React.Component<any> {
+  state = {
+    error: null,
+    success: null,
+    submitting: false,
+  }
+
+  form = React.createRef<HTMLFormElement>()
+  email = React.createRef<HTMLInputElement>()
+  clearState() {
+    this.setState({ error: null, success: null, submitting: false })
+  }
+
+  submit = async (e) => {
+    console.log('got submit')
+    e.preventDefault()
+    this.clearState()
+    this.setState({ submitting: true })
+    try {
+      const finish = (state) => {
+        this.clearState()
+        this.setState(state)
+      }
+      console.log('this.form', this.form)
+      const form = this.form.current
+      const query = {
+        id: '015e5a3442',
+        EMAIL: this.email.current?.value,
+        b_019909d3efb283014d35674e5_015e5a3442: '',
+      }
+      let url = form!.getAttribute('action')?.replace('/post', '/post-json')
+      url = `${url}&${queryString(query)}`
+      jsonp(url, { param: 'c' }, (error, data) => {
+        if (error) {
+          return finish({ error })
+        }
+        if (data && data.result === 'error') {
+          return finish({ error: data.msg })
+        }
+        return finish({ success: data.msg })
+      })
+    } catch (err) {
+      console.log('errrr', err)
+      this.clearState()
+      this.setState({ error: err.message })
+    }
+  }
+  render() {
+    const { success, error, submitting } = this.state
+    const { header, inputProps, ...props } = this.props
+    const message = success || error || ''
+    return (
+      <HStack
+        maxWidth={500}
+        alignSelf="center"
+        padding={20}
+        backgroundColor="#fff"
+        shadowColor="#000"
+        shadowOpacity={0.15}
+        shadowRadius={60}
+        shadowOffset={{ height: 15, width: 0 }}
+        borderRadius={20}
+      >
+        <form
+          action="https://tryorbit.us18.list-manage.com/subscribe/post?u=019909d3efb283014d35674e5"
+          method="post"
+          id="mc-embedded-subscribe-form-1"
+          name="mc-embedded-subscribe-form"
+          target="_blank"
+          ref={this.form}
+          onSubmit={this.submit}
+        >
+          <VStack {...props}>
+            {header}
+
+            <HStack spacing>
+              <Input
+                type="email"
+                nodeRef={this.email}
+                name="EMAIL"
+                id="mce-EMAIL"
+                placeholder="Email address..."
+                flex={1}
+                fontSize={22}
+                defaultValue=""
+                {...inputProps}
+              />
+              <Button
+                type="submit"
+                disabled={submitting}
+                opacity={submitting ? 0.5 : 1}
+                pointerEvents={submitting ? 'none' : 'auto'}
+                cursor="pointer"
+                maxWidth={300}
+                alignSelf="center"
+                glint={false}
+              >
+                Early access
+              </Button>
+            </HStack>
+          </VStack>
+        </form>
+        {!!message && (
+          <VStack maxWidth={500} marginHorizontal="auto">
+            <Spacer size="lg" />
+            <Text
+              color={success ? 'red' : error ? 'green' : undefined}
+              dangerouslySetInnerHTML={{
+                __html: message,
+              }}
+            />
+          </VStack>
+        )}
+      </HStack>
+    )
+  }
+}
+
+const queryString = (query) => {
+  const esc = encodeURIComponent
+  return Object.keys(query)
+    .map((k) => `${esc(k)}=${k === 'c' ? query[k] : esc(query[k])}`)
+    .join('&')
 }

@@ -2,9 +2,7 @@ FROM registry.fly.io/dish-base:latest
 
 WORKDIR /app
 
-RUN rm -r dish-app \
-      && rm -r snackui
-      # && rm -r services
+RUN rm -r snackui
 
 # FROM registry.fly.io/dish-base:latest
 

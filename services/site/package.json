@@ -5,7 +5,7 @@
   "sideEffects": false,
   "scripts": {
     "start": "TARGET=web NODE_ENV=development dish start --port 4555",
-    "build": "TARGET=web NODE_ENV=production dish build",
+    "build:prod": "TARGET=web NODE_ENV=production dish build",
     "serve": "TARGET=web NODE_ENV=production dish serve"
   },
   "dependencies": {

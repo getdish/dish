@@ -1,7 +1,5 @@
 FROM registry.fly.io/dish-base:latest
 
-RUN cat ./__test__remove_me__
-
 FROM node:15.10.0-buster
 
 RUN \

@@ -2,7 +2,7 @@ import React, { Suspense } from 'react'
 import { render } from 'react-dom'
 import { ThemeProvider, configureThemes } from 'snackui'
 
-import { App } from './App'
+import { SiteRoot } from './SiteRoot'
 import themes, { MyTheme, MyThemes } from './themes'
 
 declare module 'snackui' {
@@ -17,7 +17,7 @@ function Root() {
   return (
     <ThemeProvider themes={themes} defaultTheme="dark">
       <Suspense fallback={null}>
-        <App />
+        <SiteRoot />
       </Suspense>
     </ThemeProvider>
   )

@@ -21,8 +21,8 @@ module.exports = (opts) => {
     },
     htmlOptions: {
       inject: true,
-      favicon: 'favicon.png',
-      template: 'index.html',
+      favicon: 'public/favicon.png',
+      template: 'public/index.html',
     },
   })
 }

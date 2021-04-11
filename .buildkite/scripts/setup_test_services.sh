@@ -38,15 +38,15 @@ export -f wait_until_dish_app_ready
 
 # SCRIPT
 
-mkdir -p "$HOME/.dish/postgresdb"
-chown -R root:root "$HOME/.dish/postgresdb"
-
+mkdir -p "/data/postgresdb"
+chown -R root:root "/data/postgresdb"
 echo "POSTGRES_DB: $POSTGRES_DB"
-ls -la "$HOME/.dish/postgresdb"
-ls -la "$HOME/.dish/postgresdb/test" || true
 
-echo "Starting docker for tests"
-./dishctl.sh docker_compose_up -d
+echo "Starting docker for $DISH_ENV"
+
+DB_DATA_DIR="/data/postgresdb/" \
+FORCE_REMOVE=true \
+  ./dishctl.sh docker_compose_up -d
 
 echo "Waiting for hasura to finish starting"
 if ! timeout --preserve-status 30 bash -c wait_until_hasura_ready; then
@@ -57,11 +57,11 @@ fi
 # let it finish setting up
 sleep 3
 
-# echo "Migrating hasura"
-# ./dishctl.sh db_migrate_local init
+echo "Migrating hasura"
+./dishctl.sh db_migrate_local init
 
-# echo "Migrating timescale"
-# cd services/timescale && npm install || true && DISH_ENV=not-production ./scripts/migrate.js
+echo "Migrating timescale"
+cd services/timescale && npm install || true && DISH_ENV=not-production ./scripts/migrate.js
 
 # echo "Waiting for dish-app to finish starting"
 # if ! timeout --preserve-status 30 bash -c wait_until_dish_app_ready; then

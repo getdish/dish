@@ -376,7 +376,6 @@ async function assessPhotoWithoutRetries(urls: string[]) {
       console.warn('No result found!')
       continue
     }
-    console.log('got categories', categories)
     res.push({
       url,
       quality,

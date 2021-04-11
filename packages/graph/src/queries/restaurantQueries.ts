@@ -38,7 +38,10 @@ export async function restaurantFindOneWithTags(restaurant: Partial<RestaurantWi
       return v.map((rest) => {
         return {
           ...selectFields(rest, '*'),
-          menu_items: selectFields(rest?.menu_items),
+          menu_items: selectFields(rest?.menu_items(), '*'),
+          rating_factors: rest?.rating_factors,
+          sources: rest?.sources,
+          photos: rest?.photos,
           tags: rest?.tags().map((tagV) => {
             return {
               ...selectFields(tagV),

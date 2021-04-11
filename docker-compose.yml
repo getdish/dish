@@ -17,6 +17,7 @@ services:
     environment:
       BUILDITE_AGENT_TOKEN: ${BUILDITE_AGENT_TOKEN}
   run-tests:
+    image: registry.fly.io/dish-run-tests${DISH_IMAGE_TAG}
     build:
       context: .
       dockerfile: ./services/run-tests/Dockerfile
@@ -31,7 +32,7 @@ services:
     build:
       context: ./services/${POSTGRES_NAME:-postgres}
     volumes:
-      - ${HOME}/.dish/postgresdb/${POSTGRES_DB:-dish}:/var/lib/postgresql/data
+      - ${DB_DATA_DIR:-~/.dish/postgresdb/}/${POSTGRES_DB:-dish}:/var/lib/postgresql/data
     environment:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: 'postgres'
@@ -124,7 +125,6 @@ services:
     depends_on:
       - 'hasura'
       - 'search'
-      - 'worker'
   tileserver:
     image: registry.fly.io/dish-tileserver${DISH_IMAGE_TAG}
     build:
@@ -208,7 +208,8 @@ services:
   site:
     image: registry.fly.io/dish-site${DISH_IMAGE_TAG}
     build:
-      context: ./site
+      context: .
+      dockerfile: ./services/site/Dockerfile
     ports:
       - 3999:3999
   image-quality:
@@ -223,7 +224,6 @@ services:
     image: registry.fly.io/dish-image-proxy${DISH_IMAGE_TAG}
     build:
       context: ./services/image-proxy
-      dockerfile: ./Dockerfile
     ports:
       - 8881:9000
     environment:
