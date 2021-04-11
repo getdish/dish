@@ -150,17 +150,17 @@ test('Merging', async (t) => {
   })
   t.is(updated.website, 'http://www.intercontinentalsanfrancisco.com/')
   t.deepEqual(updated.sources, {
+    yelp: {
+      url: 'https://yelp.com',
+      rating: 3.5,
+    },
     google: {
       url:
         'https://www.google.com/maps/place/@0,0,11z/data=!3m1!4b1!4m5!3m4!1stest-google123!8m2!3d0!4d0',
     },
     tripadvisor: {
-      rating: 2.5,
       url: 'https://tripadvisor.com',
-    },
-    yelp: {
-      rating: 3.5,
-      url: 'https://yelp.com',
+      rating: 2.5,
     },
   })
 })
@@ -174,6 +174,7 @@ test('Merging dishes', async (t) => {
   })
   t.is(!!updated, true)
   if (!updated) return
+  console.log('updated!', updated)
   t.is(updated.menu_items.length, 2)
   t.assert(updated.menu_items.map((m) => m.name).includes('Nice Dish'))
   t.assert(updated.menu_items.map((m) => m.description).includes('I am unique to DoorDash'))

@@ -637,26 +637,31 @@ function docker_build_file() {
 
 function docker_compose_up_subset() {
   echo "starting docker in env $DISH_ENV"
-  services=$(
-    docker-compose config --services 2> /dev/null \
-      | grep -E -v "$1" \
-      | tr '\r\n' ' '
-  )
+  services=$1
   extra=$2
   if [ -z "$extra" ]; then
-    log_command -- docker-compose up --remove-orphans $services
+    log_command -- docker-compose up --force-recreate --remove-orphans $services
   else
-    log_command -- docker-compose up --remove-orphans "$extra" $services
+    log_command -- docker-compose up --force-recreate --remove-orphans "$extra" $services
   fi
   printf "\n\n\n"
 }
 
 function docker_compose_up() {
-  if [ "$EXCLUDE_DISH_APP" != "" ]; then
-    docker_compose_up_subset "$DOCKER_COMPOSE_EXCLUDE|dish-app" "$@"
-  else
-    docker_compose_up_subset "$DOCKER_COMPOSE_EXCLUDE" "$@"
+  services_list="$COMPOSE_EXCLUDE${COMPOSE_EXCLUDE_EXTRA:-}"
+  services=$(
+    docker-compose config --services 2> /dev/null \
+      | grep -E -v "$services_list" \
+      | tr '\r\n' ' '
+  )
+  echo "docker_compose_up: $DB_DATA_DIR $FORCE_REMOVE $DISH_IMAGE_TAG: $services"
+  # cleans up misbehaving old containers
+  if [ "$DISH_ENV" = "test" ]; then
+    for service in $services; do
+      docker-compose rm --force "$service" || true
+    done
   fi
+  docker_compose_up_subset "$services" "$@"
 }
 
 function deploy_all() {
