@@ -40,44 +40,43 @@ steps:
 
   - label: ":docker: build proxy"
     key: proxy
+    depends_on: base
+    command: .buildkite/scripts/build_docker_compose.sh proxy
     env:
-      DOCKER_TAG: dish-proxy
-    retry:
-      automatic: true
-    plugins:
-      - docker-compose#v3.7.0:
-          build: proxy
-          cache-from: proxy:registry.fly.io/dish-proxy:latest
+      PUSH: true
 
   - label: ":docker: build search"
     key: search
     depends_on: base
     command: .buildkite/scripts/build_docker_compose.sh search
+    env:
+      PUSH: true
 
   - label: ":docker: build hasura"
     key: hasura
     depends_on: base
     command: .buildkite/scripts/build_docker_compose.sh hasura
+    env:
+      PUSH: true
 
   - label: ":docker: build timescale"
     key: timescale
     depends_on: base
     command: .buildkite/scripts/build_docker_compose.sh timescale
+    env:
+      PUSH: true
 
   - label: ":docker: build tileserver"
     key: tileserver
     depends_on: base
     command: .buildkite/scripts/build_docker_compose.sh tileserver
+    env:
+      PUSH: true
 
   - label: ":docker: build postgres"
     key: postgres
     depends_on: base
     command: .buildkite/scripts/build_docker_compose.sh postgres
-
-  - label: ":docker: build redis"
-    key: redis
-    depends_on: base
-    command: .buildkite/scripts/build_docker_compose.sh redis
 
   - label: "done with test images"
     command: "true"
@@ -91,64 +90,48 @@ steps:
       - tileserver
       - run-tests
       - postgres
-      - redis
       - worker
 
-  - label: "push ONLY pre-test images to registry"
+  - label: "push BASE images to registry"
     depends_on: test-images
-    command: .buildkite/scripts/push_pre_test_images.sh
+    command: .buildkite/scripts/push_images.sh
 
   # non test images
 
   - label: ":docker: build cron"
-    retry:
-      automatic: true
-    plugins:
-      - docker-compose#v3.7.0:
-          build: cron
-          image-repository: registry.fly.io/dish-cron
-          cache-from: cron:registry.fly.io/dish-cron:latest
-          push: cron:registry.fly.io/dish-cron:latest
-
-  - label: ":docker: build gorse"
-    retry:
-      automatic: true
-    plugins:
-      - docker-compose#v3.7.0:
-          build: gorse
-          image-repository: registry.fly.io/dish-gorse
-          cache-from: gorse:registry.fly.io/dish-gorse:latest
-          push: gorse:registry.fly.io/dish-gorse:latest
+    key: cron
+    depends_on: base
+    command: .buildkite/scripts/build_docker_compose.sh cron
+    env:
+      PUSH: true
 
   - label: ":docker: build bert"
-    retry:
-      automatic: true
-    plugins:
-      - docker-compose#v3.7.0:
-          build: bert
-          image-repository: registry.fly.io/dish-bert
-          cache-from: bert:registry.fly.io/dish-bert:latest
-          push: bert:registry.fly.io/dish-bert:latest
+    key: bert
+    depends_on: base
+    command: .buildkite/scripts/build_docker_compose.sh bert
+    env:
+      PUSH: true
+
+  - label: ":docker: build gorse"
+    key: gorse
+    depends_on: base
+    command: .buildkite/scripts/build_docker_compose.sh gorse
+    env:
+      PUSH: true
 
   - label: ":docker: build image-proxy"
-    retry:
-      automatic: true
-    plugins:
-      - docker-compose#v3.7.0:
-          build: image-proxy
-          image-repository: registry.fly.io/dish-image-proxy
-          cache-from: image-proxy:registry.fly.io/dish-image-proxy:latest
-          push: image-proxy:registry.fly.io/dish-image-proxy:latest
+    key: image-proxy
+    depends_on: base
+    command: .buildkite/scripts/build_docker_compose.sh image-proxy
+    env:
+      PUSH: true
 
   - label: ":docker: build image-quality"
-    retry:
-      automatic: true
-    plugins:
-      - docker-compose#v3.7.0:
-          build: image-quality
-          image-repository: registry.fly.io/dish-image-quality
-          cache-from: image-quality:registry.fly.io/dish-image-quality:latest
-          push: image-quality:registry.fly.io/dish-image-quality:latest
+    key: image-quality
+    depends_on: base
+    command: .buildkite/scripts/build_docker_compose.sh image-quality
+    env:
+      PUSH: true
 
   - label: ":docker: build db"
     retry:
