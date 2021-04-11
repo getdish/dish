@@ -7,7 +7,7 @@ services:
       dockerfile: ./Dockerfile
   ci:
     image: registry.fly.io/dish-ci${DISH_IMAGE_TAG}
-    command: start --spawn 6 --token ${BUILDITE_AGENT_TOKEN}
+    command: start --spawn 12 --token ${BUILDITE_AGENT_TOKEN}
     privileged: true
     build:
       context: ./services/ci
@@ -64,7 +64,7 @@ services:
     ports:
       - 6379:6379
   proxy:
-    image: proxy
+    image: registry.fly.io/dish-proxy${DISH_IMAGE_TAG}
     build:
       context: ./services/proxy
       dockerfile: ./Dockerfile
@@ -139,7 +139,7 @@ services:
     depends_on:
       - 'postgres'
   search:
-    image: registry.fly.io/dish/dish-search${DISH_IMAGE_TAG}
+    image: registry.fly.io/dish-search${DISH_IMAGE_TAG}
     build:
       context: ./services/search
       dockerfile: ./Dockerfile
