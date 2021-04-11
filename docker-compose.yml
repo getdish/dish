@@ -7,7 +7,7 @@ services:
       dockerfile: ./Dockerfile
   ci:
     image: registry.fly.io/dish-ci${DISH_IMAGE_TAG}
-    command: start --spawn 12 --token ${BUILDITE_AGENT_TOKEN}
+    command: start --spawn 8 --token ${BUILDITE_AGENT_TOKEN}
     privileged: true
     build:
       context: ./services/ci

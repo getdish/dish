@@ -105,12 +105,13 @@ steps:
     env:
       PUSH: true
 
-  - label: ":docker: build bert"
-    key: bert
-    depends_on: base
-    command: .buildkite/scripts/build_docker_compose.sh bert
-    env:
-      PUSH: true
+  # disable, https://community.fly.io/t/docker-push-failing-on-2-8gb-image/1117/2
+  # - label: ":docker: build bert"
+  #   key: bert
+  #   depends_on: base
+  #   command: .buildkite/scripts/build_docker_compose.sh bert
+  #   env:
+  #     PUSH: true
 
   - label: ":docker: build gorse"
     key: gorse
