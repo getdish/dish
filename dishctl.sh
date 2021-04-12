@@ -690,7 +690,8 @@ function deploy_all() {
   deploy "$where" image-quality | sed -e 's/^/image-quality: /;' &
   deploy "$where" image-proxy | sed -e 's/^/image-proxy: /;' &
   deploy "$where" image-recognize | sed -e 's/^/image-recognize: /;' &
-  deploy "$where" bert | sed -e 's/^/bert: /;' &
+  # disabled until fixed with fly
+  # deploy "$where" bert | sed -e 's/^/bert: /;' &
   deploy "$where" cron | sed -e 's/^/cron: /;' &
   deploy "$where" site | sed -e 's/^/site: /;' &
   wait
