@@ -727,7 +727,7 @@ function deploy() {
   if [ "$app" = "redis" ];            then deploy_fly_app "$where" dish-redis services/redis redis; fi
   if [ "$app" = "run-tests" ];        then deploy_fly_app "$where" dish-run-tests services/run-tests run-tests; fi
   if [ "$app" = "proxy" ];            then deploy_fly_app "$where" dish-proxy services/proxy proxy; fi
-  if [ "$app" = "site" ];             then deploy_fly_app "$where" dish-site site site; fi
+  if [ "$app" = "site" ];             then deploy_fly_app "$where" dish-site services/site site; fi
 }
 
 function deploy_fail() {
