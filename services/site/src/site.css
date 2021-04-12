@@ -3,10 +3,11 @@
   --pink: #ed137b;
   --teal: #249bea;
   --yellow: #feac1f;
-  --blue: #211c63;
+  --orange: #C7893C;
+  --blue: #1e1c3d;
   --second-section-bg: var(--blue);
   --rainbow-bg-purple:
-    linear-gradient(rgba(0,0,0,0.8), rgba(0,0,0,0) 85%),
+    linear-gradient(rgba(0,0,0,0.7), rgba(0,0,0,0) 85%),
     linear-gradient(to left, rgba(0,0,0,0.3), rgba(0,0,0,0) 40%),
     linear-gradient(to right, rgba(0,0,0,0.3), rgba(0,0,0,0) 40%),
     radial-gradient(circle at 50% 10%, var(--purple), rgba(0,0,0,0) 95%),
@@ -32,17 +33,20 @@
   transition-duration: 300ms;
 }
 
-.head-circle {
-  background:
-    radial-gradient(circle at 50% 10%,rgba(63, 28, 146, 0.75), transparent 52%),
-    radial-gradient(circle at 50% 120%, rgba(63, 28, 146, 1), transparent 65%),
-    #000;
+.bg-pink {
+  background: var(--pink);
 }
 
-.slant-bg {
-  background:
-    linear-gradient(rgba(12, 5, 114, 0.5), rgba(25, 255, 235, 0)),
-    var(--second-section-bg);
+.bg-yellow {
+  background: var(--yellow);
+}
+
+.bg-black {
+  background: #111;
+}
+
+.bg-blue {
+  background: var(--blue);
 }
 
 .slant-bg::before {
@@ -75,7 +79,8 @@
   background: linear-gradient(var(--pink), #000);
 }
 
-.shadow-above::before {
+.shadow-above::before,
+.shadow-below::before {
   display: block;
   content: ' ';
   pointer-events: none;
@@ -86,6 +91,10 @@
   height: 100px;
   background: linear-gradient(rgba(0,0,0,0), rgba(0,0,0,0.45));
   z-index: -1;
+}
+
+.shadow-below::before {
+  background: linear-gradient(to bottom, rgba(0,0,0,0), rgba(0,0,0,0.45));
 }
 
 .toggle-check {
@@ -110,7 +119,7 @@
 }
 
 .yellow-section {
-  background: linear-gradient(to top, #FFC338, #FFEA68);
+  background: linear-gradient(#FFEA68, #FFEA68, #FFEA68);
 }
 
 .title-font {
@@ -133,6 +142,23 @@
 
 .fade-lighter-bg {
   background: linear-gradient(#000, pink);
+}
+
+.purple-bg-fade::after {
+  display: block;
+  position: absolute;
+  content: ' ';
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(#000, transparent 50%);
+}
+
+.head-circle {
+  background:
+    radial-gradient(circle at 50% 150%, #000 0%, rgba(0, 0, 0, 0) 50%),
+    radial-gradient(circle at 50% 40%, #feac1f11 0%, rgba(0,0,0,0) 40%);
 }
 
 .purple-bg::before {
@@ -195,8 +221,13 @@ html {
 
 #root {
   pointer-events: auto;
-  overflow-x: hidden;
-  overflow-y: visible;
+}
+
+@media screen and (pointer: coarse) {
+  #root {
+    overflow-x: hidden;
+    overflow-y: visible;
+  }
 }
 
 img {
