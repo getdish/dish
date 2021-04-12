@@ -159,16 +159,6 @@ steps:
       DOCKER_CLEAN_ON_FAIL: true
       SHOW_DOCKER_IMAGES: true
       POSTGRES_STRATEGY: simple
-    # plugins:
-    #   - gencer/cache#v2.4.7:
-    #       backend: s3
-    #       id: data
-    #       key: "v1-cache-{{ runner.os }}"
-    #       s3:
-    #         args: "--endpoint-url=https://sfo2.digitaloceanspaces.com"
-    #         bucket: "dish-build-cache"
-    #       paths:
-    #         - '/root/.dish/'
 
   - label: "run tests"
     key: tests

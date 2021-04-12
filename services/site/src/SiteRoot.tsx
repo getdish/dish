@@ -153,7 +153,7 @@ export const SiteRoot = () => {
         zIndex={0}
         marginTop={-500}
         paddingTop={500}
-        className="before-bg purple-bg fade-lighter-bg"
+        className="before-bg purple-bg"
         backgroundColor="#6400ab"
       >
         <Circle
@@ -200,36 +200,47 @@ export const SiteRoot = () => {
               <DishParagraph size="xxxxl" sizeLineHeight={0.9}>
                 Hidden. Faked. Averaged. Inflated.
                 <br />
-                <DishParagraph size="xxxl">
-                  Pressure to grow fast, easy ad cash 💸,
-                  <br />
-                  advertisers hate to be hated.
-                </DishParagraph>
+                <DishParagraph size="xxxl">Pressure to grow fast + easy ad cash 💸</DishParagraph>
+                <br />
+                <DishParagraph size="xxl">(but advertisers hate to be hated).</DishParagraph>
               </DishParagraph>
 
-              <DishParagraph size="xxxl">
-                There's a misalignment between a guide to purchasing, and profiting off advertising.
-                Dish aims to solve these tensions with a <b>non-profit</b> and a{' '}
-                <b>community-owned coin</b> with strictly equitable distribution, rewarding good
-                curation.
+              <DishParagraph size="xxl">
+                Growing fast is good for many types of companies, but when you make{' '}
+                <em>recommendations for products</em> it presents problems. Advertisers don't like
+                bad reviews, simple as that.{' '}
+                <b>
+                  Having your income stream being actively against your company's purpose just
+                  doesn't work.
+                </b>
               </DishParagraph>
 
-              <DishParagraph size="xxl">We think it solves many alignment issues:</DishParagraph>
+              <DishParagraph size="xl">
+                There's a single example that seems to have stood the test of time of providing
+                quality reviews: <b>ConsumerReports</b>. A non-profit, without ads. One example
+                doesn't prove a lot. But we think the the non-profit part is foundational.
+              </DishParagraph>
+
+              <DishParagraph size="xl">
+                We also think our users need to be paid for their content. That's just table-stakes
+                for todays startups, but doesn't exist in the review world. Of course that can
+                invite problems, but we have plans for that. Read more on the blog.
+              </DishParagraph>
+
+              <DishParagraph size="xl">
+                We think a <b>non-profit</b> married to a <b>community coin</b> solves for:
+              </DishParagraph>
 
               <ul style={{ marginLeft: 40 }}>
-                <DishParagraph size="xxl">
-                  <li>Can grow slow without VC pressure and focus on quality.</li>
+                <DishParagraph size="xl">
+                  <li>Slower growth, focus on quality.</li>
                 </DishParagraph>
                 <Spacer />
-                <DishParagraph size="xxl">
-                  <li>Early adopters have incentive for success.</li>
+                <DishParagraph size="xl">
+                  <li>Incentivizing early adopters for good content and sharing.</li>
                 </DishParagraph>
                 <Spacer />
-                <DishParagraph size="xxl">
-                  <li>Ability to reward users for contibuting, leading to better content.</li>
-                </DishParagraph>
-                <Spacer />
-                <DishParagraph size="xxl">
+                <DishParagraph size="xl">
                   <li>Higher trust, ownership, involvement of community.</li>
                 </DishParagraph>
               </ul>
@@ -247,7 +258,7 @@ export const SiteRoot = () => {
                         fontSize: 20,
                       }}
                     >
-                      a crypto story ⬇️
+                      more about the crypto stuff ⬇️
                     </Button>
                   </Pressable>
                 </label>
@@ -262,7 +273,7 @@ export const SiteRoot = () => {
 
         <input id="toggle-story-time" type="checkbox" className="toggle-check" />
 
-        <VStack zIndex={2} className="toggle-section" position="relative">
+        <VStack zIndex={2} marginTop={-40} className="toggle-section" position="relative">
           <AbsoluteVStack pointerEvents="none" top={0} left={-300} right={-300} minWidth={2000}>
             {[...new Array(10)].map((_, i) => {
               return (
@@ -270,7 +281,11 @@ export const SiteRoot = () => {
                   opacity={0.08}
                   key={i}
                   marginBottom={-220}
-                  transform={[{ scaleX: 2.5 }, { rotate: `${i % 2 === 0 ? 10 : -10}deg` }]}
+                  transform={[
+                    { scaleX: 2.5 },
+                    { rotate: `-20deg` },
+                    { translateX: i % 2 == 0 ? 230 : 0 },
+                  ]}
                 >
                   <Wave
                     key={i}
@@ -290,71 +305,61 @@ export const SiteRoot = () => {
           </AbsoluteVStack>
 
           <ContentSection marginHorizontal="auto">
-            <label htmlFor="toggle-story-time">
-              <VStack
-                marginTop={-60}
-                marginBottom={20}
-                alignItems="center"
-                zIndex={100}
-                position="relative"
-              >
-                <DishTitleSlanted
-                  size="lg"
-                  fontWeight="800"
-                  backgroundColor="var(--teal)"
-                  hoverStyle={{
-                    backgroundColor: 'red',
-                  }}
-                  color="#fff"
-                >
-                  a crypto non-profit
-                </DishTitleSlanted>
-              </VStack>
-            </label>
+            <DishParagraph textAlign="center" size="xl">
+              ⚠️ Unecessary fictional prologue ⚠️
+            </DishParagraph>
             <DishParagraph size="xxxxl">
-              It's 2038, your Apple AR CryptoKitty, Jerry, nestles in your lap amongst ethereal
-              excel sheets. You smile at the glowing kitty as he looks up at you.
+              It's 2033, an augmented reality CryptoKitty, Jerry, nestles among ethereal excel
+              sheets in your lap. You smile at the glowing kitty.
             </DishParagraph>
             <DishParagraph size="xxl">
-              “Should we reschedule the dentists?” Jerry begins, stretching, “with traffic, you may
+              “Should we reschedule the dentists?” a stretching Jerry says, “with traffic, you'd
               miss the matinee tomorrow."
             </DishParagraph>
             <DishParagraph size="xxl">
-              A sigh. “Is the minute I finish work really the time to be reminding me of dentists
-              and traffic?"
+              You sigh, tilting your head forward. “Is the minute I finish work really the time to
+              be reminding me of dentists and traffic?”
             </DishParagraph>
             <DishParagraph size="xxl">
-              Jerry frowns. He is right. You <b>did</b> forget the matinee, with mom. “The mat-in-ay
-              with mom...” you repeat out loud, “<b>mat</b>-in-ay”...
+              Still, you have to give Jerry credit. You <b>did</b> forget about the matinee. You tap
+              your fingers on your chin. “The mat-in-ay...” you repeat out loud, “<b>mat</b>
+              -in-ayyyy. What am I forgetting, Jer?”
             </DishParagraph>
+
             <DishParagraph size="xxl">
-              The fridge compressor turns on, and something clicks. “Wait a second... <b>Matt</b>!”
-              you jump up, right through a startled Jerry. “His birthday's tomorrow! I'll have to
-              cancel going... he'll be upset..."
+              The compressor clicks. You jump up, “wait a second... <b>Matt</b>... his birthday's
+              tomorrow! Jer, how did you forget that?”
             </DishParagraph>
-            <DishParagraph size="xxxl">
-              “Why not grab him a 1-of-1000 <b>Kaws paisley Handkerchief NFT</b>,” Jerry offers
-              without hesitation, “only $20, plus you guys joked about paisley just last week.”
-            </DishParagraph>
+
             <DishParagraph size="xxl">
-              <b>“Done and done!”</b>
+              “I didn't. We'll just get him this 1-of-1000 <b>Kaws paisley Handkerchief NFT</b>,
+              perfect for his kitty” Jerry offers without hesitation, “only $20.”
             </DishParagraph>
 
             <VStack alignItems="center">
-              <DishTitleSlanted size="lg">Jerry & Dish</DishTitleSlanted>
+              <DishTitleSlanted fontWeight="800" backgroundColor="#000" color="#fff">
+                Should you do it?
+              </DishTitleSlanted>
             </VStack>
 
-            <DishParagraph size="xxxl">
-              Crypto is only as valuable as what it's tied to. As a good store of value, a good
-              payment system, or a way to drive behavior within a network. Even NFT's can make
-              sense, if the product is good: Jerry is a fully animated, augmented reality AI cat.
+            <DishParagraph size="xxxl">It depends. Does Matt like CryptoKitties?</DishParagraph>
+
+            <DishParagraph size="xxl">Do their NFT's hold value?</DishParagraph>
+
+            <DishParagraph size="xxl">
+              To get to the point, the long run value of any crypto project should be judged on two
+              things: how good the <b>non-crypto part is</b> (eg, Jerry), and{' '}
+              <b>if a chain/coin add value</b>.
             </DishParagraph>
 
             <DishParagraph size="xxl">
-              We just a coin works particularly well for bootstrapping a network of content. It
-              incentivizes growth by distributing equity more fairly than traditional VC companies.
-              It also lets us do all sorts of nice things to foster trust and quality with open,
-              codified contracts, governance and more.
+              Dish works without a coin. It's simply a great app. We expect to compete entirely
+              based on the app itself.
+            </DishParagraph>
+
+            <DishParagraph size="xxl">
+              But we think a coin is a really smart way to grow it more sustainably and distribute
+              equity more fairly than traditional VC.
             </DishParagraph>
 
             <Spacer size="xxxl" />
@@ -400,7 +405,7 @@ export const SiteRoot = () => {
 
               <DishParagraph textAlign="center" sizeLineHeight={0.8} size={4}>
                 <b>
-                  <Highlight backgroundColor="red" color="#fff">
+                  <Highlight backgroundColor="var(--teal)" color="#fff">
                     a pocket guide to the world
                   </Highlight>{' '}
                   <Text fontWeight="200">starting with food</Text>
@@ -409,37 +414,50 @@ export const SiteRoot = () => {
 
               <Join />
 
-              <DishParagraph size="xxl">
-                <b>YouTube and TikTok pay content creators.</b> We're doing the same for the
-                explorers of the world, on a beautiful app designed to last.
-              </DishParagraph>
-
-              <VStack alignItems="center">
-                <DishTitleSlanted backgroundColor="#fff">The App</DishTitleSlanted>
-              </VStack>
-
               <ul style={{ marginLeft: 40 }}>
                 <VStack spacing="xl">
                   <DishParagraph size="xxl">
                     <li>
-                      <b>find gems 💎 broken down by neighborhood</b>
+                      <b>Playlists of the world.</b> Top dishes 🍽, nights out 🌃, cafes ☕️, you
+                      name it - a fun place to find and curate real-world things.
                     </li>
                   </DishParagraph>
                   <DishParagraph size="xxl">
                     <li>
-                      <b>search every delivery service 🚗 at once</b>
+                      <b>Give content creators equity.</b> Stop giving free content to massively
+                      profitable companies, get paid like you do on Youtube or TikTok.
                     </li>
                   </DishParagraph>
                   <DishParagraph size="xxl">
                     <li>
-                      <b>playlists</b> of top dishes 🍽, nights out 🌃, cafes ☕️, you name it
+                      <b>A social, explorable map of the world.</b> Find gems 💎 broken down by
+                      neighborhood on a realtime map, suited to your taste.
+                    </li>
+                  </DishParagraph>
+                  <DishParagraph size="xxl">
+                    <li>
+                      <b>Search every delivery service 🚗</b> with ratings down to the dish.
                     </li>
                   </DishParagraph>
                 </VStack>
               </ul>
 
               <VStack alignItems="center">
-                <DishTitleSlanted backgroundColor="#fff">The Coin</DishTitleSlanted>
+                <DishTitleSlanted size="sm" backgroundColor="var(--pink)" color="#fff">
+                  What's different
+                </DishTitleSlanted>
+              </VStack>
+
+              <DishParagraph size="xxl">
+                <b>Review platforms sell out.</b> We're looking to fix that. In short, with three
+                things: a non-profit that distributes equity to our community, a platform that
+                builds in guarantees on a blockchain, and a product focused team that stays small.
+              </DishParagraph>
+
+              <VStack alignItems="center">
+                <DishTitleSlanted size="sm" backgroundColor="var(--pink)" color="#fff">
+                  The Coin
+                </DishTitleSlanted>
               </VStack>
 
               <DishParagraph size="xxl">
@@ -453,7 +471,9 @@ export const SiteRoot = () => {
               </DishParagraph>
 
               <VStack alignItems="center">
-                <DishTitleSlanted backgroundColor="#fff">The mission</DishTitleSlanted>
+                <DishTitleSlanted size="sm" backgroundColor="var(--pink)" color="#fff">
+                  The mission
+                </DishTitleSlanted>
               </VStack>
 
               <DishParagraph size="xxl">
@@ -464,39 +484,6 @@ export const SiteRoot = () => {
               </DishParagraph>
             </ContentSection>
           </VStack>
-        </Theme>
-      </VStack>
-
-      <VStack className="before-bg purple-bg">
-        <VStack zIndex={1000} position="relative" marginVertical={-20} alignItems="center">
-          <DishTitleSlanted size="lg" fontWeight="800" backgroundColor="yellow" color="#000">
-            How a coin saves us from selling out:
-          </DishTitleSlanted>
-        </VStack>
-
-        <Theme name="light">
-          <ContentSection marginHorizontal="auto">
-            <DishParagraph size="xxxxl">
-              I do think the <b>how</b> of making the best guide in the world is really interesting.
-            </DishParagraph>
-
-            <DishParagraph size="xxxl">
-              And that's where we get back to Jerry, and crypto.
-            </DishParagraph>
-
-            <DishParagraph size="xxxl">
-              You see, <b>Dish has a coin.</b>
-            </DishParagraph>
-
-            <DishParagraph size="xxl">Ok? There, I said it.</DishParagraph>
-
-            <DishParagraph size="xxl">
-              That's the downside of everyone buying into all these fly-by-night crypto scams.{' '}
-              <em>They're using the tool terribly,</em> and that means I have to write a boring and
-              long blog post about virtual cats when all I want to do is build a more equitable
-              Yelp.
-            </DishParagraph>
-          </ContentSection>
         </Theme>
       </VStack>
     </>
@@ -513,7 +500,7 @@ const ContentSection = (props: StackProps) => {
       position="relative"
       maxWidth={800}
       alignSelf="center"
-      spacing="xxxl"
+      spacing="xxl"
       paddingHorizontal={20}
       paddingVertical={100}
       {...props}
