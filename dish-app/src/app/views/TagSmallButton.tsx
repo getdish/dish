@@ -4,7 +4,7 @@ import React, { Suspense, memo } from 'react'
 import { AbsoluteVStack, HStack, Spacer, Text, VStack } from 'snackui'
 
 import { darkGreen, darkGrey, darkRed, green, red } from '../../constants/colors'
-import { tagDisplayName } from '../../constants/tagMeta'
+import { tagDisplayName } from '../../constants/tagDisplayName'
 import { getTagSlug } from '../../helpers/getTagSlug'
 import { FullTag } from '../../types/tagTypes'
 import { useUserTagVote } from '../hooks/useUserTagVotes'

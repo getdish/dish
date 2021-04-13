@@ -1,10 +1,10 @@
 import { HistoryItem } from '@dish/router'
-import { capitalize } from 'lodash'
 
 import { tagLenses } from '../constants/localTags'
-import { SPLIT_TAG, SPLIT_TAG_PARENT } from '../constants/SPLIT_TAG'
+import { SPLIT_TAG } from '../constants/SPLIT_TAG'
 import { FullTag, NavigableTag } from '../types/tagTypes'
 import { getFullTags } from './getFullTags'
+import { guessTagName } from './guessTagName'
 
 const typePrefixes = {
   lenses: 'lense',
@@ -51,10 +51,4 @@ const getUrlTagInfo = (part: string): NavigableTag => {
     type = typePrefixes[prefix] ?? 'dish'
   }
   return { type, name: guessTagName(part), slug }
-}
-
-export function guessTagName(slug: string) {
-  const postfix = slug.split(SPLIT_TAG_PARENT)[1] ?? ''
-  // best guess at a name
-  return postfix.split('-').map(capitalize).join(' ')
 }

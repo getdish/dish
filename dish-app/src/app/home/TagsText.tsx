@@ -1,7 +1,7 @@
 import React from 'react'
 import { Text } from 'snackui'
 
-import { tagDisplayName } from '../../constants/tagMeta'
+import { tagDisplayName } from '../../constants/tagDisplayName'
 
 export function TagsText({ tags, color }: { tags: any[]; color?: string }) {
   return (

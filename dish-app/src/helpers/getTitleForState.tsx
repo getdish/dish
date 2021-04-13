@@ -3,7 +3,8 @@ import React from 'react'
 import { Text } from 'snackui'
 
 import { isWeb } from '../constants/constants'
-import { tagDescriptions, tagDisplayName } from '../constants/tagMeta'
+import { tagDisplayName } from '../constants/tagDisplayName'
+import { tagDescriptions } from '../constants/tagMeta'
 import { HomeStateItem } from '../types/homeTypes'
 import { getActiveTags } from './getActiveTags'
 

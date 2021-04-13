@@ -15,7 +15,7 @@ import {
   VStack,
 } from 'snackui'
 
-import { tagDisplayName } from '../../../constants/tagMeta'
+import { tagDisplayName } from '../../../constants/tagDisplayName'
 import { thirdPartyCrawlSources } from '../../../constants/thirdPartyCrawlSources'
 import { queryRestaurant } from '../../../queries/queryRestaurant'
 import { homeStore } from '../../homeStore'

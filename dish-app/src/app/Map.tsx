@@ -1,7 +1,7 @@
 import 'mapbox-gl/dist/mapbox-gl.css'
 
 import { fullyIdle, series, sleep } from '@dish/async'
-import { isDev, isStaging, slugify } from '@dish/graph'
+import { TILES_HOST, slugify } from '@dish/graph'
 import { supportsTouchWeb } from '@dish/helpers'
 import bbox from '@turf/bbox'
 import union from '@turf/union'
@@ -11,7 +11,7 @@ import React, { useEffect, useRef, useState } from 'react'
 import { Dimensions } from 'react-native'
 import { useGet } from 'snackui'
 
-import { darkPurple, grey, red } from '../constants/colors'
+import { darkPurple, grey } from '../constants/colors'
 import { MAPBOX_ACCESS_TOKEN, isM1Sim } from '../constants/constants'
 import { hexToRGB } from '../helpers/hexToRGB'
 import { hasMovedAtLeast } from '../helpers/mapHelpers'
@@ -29,15 +29,6 @@ const RESTAURANT_RANK_LABEL_ID = 'RESTAURANT_RANK_LABEL_ID'
 const UNCLUSTERED_LABEL_LAYER_ID = 'UNCLUSTERED_LABEL_LAYER_ID'
 const CLUSTER_LABEL_LAYER_ID = 'CLUSTER_LABEL_LAYER_ID'
 const POINT_LAYER_ID = 'POINT_LAYER_ID'
-
-const MARTIN_TILES_HOST = (() => {
-  const prod = 'https://martin-tiles.dishapp.com'
-  const staging = 'https://martin-tiles-staging.dishapp.com'
-  const dev = 'http://localhost:3005'
-  if (isStaging) return staging
-  if (isDev) return dev
-  return prod
-})()
 
 const round = (val: number, dec = 100000) => {
   return Math.round(val * dec) / dec
@@ -812,7 +803,7 @@ function setupMapEffect({
 
           map.addSource(name, {
             type: 'vector',
-            url: `${MARTIN_TILES_HOST}/${name}.json`,
+            url: `${TILES_HOST}/${name}.json`,
             promoteId,
           })
 
@@ -880,7 +871,7 @@ function setupMapEffect({
             if (labelSource) {
               map.addSource(labelSource, {
                 type: 'vector',
-                url: `${MARTIN_TILES_HOST}/${labelSource}.json`,
+                url: `${TILES_HOST}/${labelSource}.json`,
                 promoteId: 'ogc_fid',
               })
             }

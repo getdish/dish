@@ -1,18 +1,29 @@
+// // debug
 // // for testing quickly
 // import React from 'react'
-// import { ThemeProvider, configureThemes } from 'snackui'
+// import { ThemeProvider, VStack, configureThemes, useTheme } from 'snackui'
 
 // import { RatingView } from './app/home/RatingView'
 // import themes from './constants/themes'
 
 // configureThemes(themes)
 
-// export function Root() {
-//   console.log('hi')
+// export function Root({ floating, size }) {
+//   const theme = useTheme()
 //   return (
-//     <ThemeProvider themes={themes} defaultTheme="light">
-//       <RatingView />
-//     </ThemeProvider>
+//     <VStack
+//       alignItems="center"
+//       justifyContent="center"
+//       position="relative"
+//       borderRadius={1000}
+//       width={size}
+//       height={size}
+//       {...(floating && {
+//         backgroundColor: theme.backgroundColor,
+//         shadowColor: theme.shadowColor,
+//         shadowRadius: 5,
+//       })}
+//     />
 //   )
 // }
 

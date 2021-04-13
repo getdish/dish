@@ -20,12 +20,14 @@ export const JWT_SECRET = process.env.JWT_SECRET || '123456789012345678901234567
 export const HASURA_SECRET =
   process.env.HASURA_GRAPHQL_ADMIN_SECRET || (process.env.TARGET === 'node' ? 'password' : '')
 
+const LOCAL_HOST = process.env.LOCAL_HOST ?? `localhost`
+
 const PROD_ORIGIN = 'https://dishapp.com'
 const ORIGIN = isProd
   ? PROD_ORIGIN
   : isStaging
   ? PROD_ORIGIN
-  : getWindow()?.location?.origin ?? 'http://localhost:4444'
+  : getWindow()?.location?.origin ?? `http://${LOCAL_HOST}:4444`
 
 const ORIGIN_MINUS_PORT = ORIGIN.replace(/:[0-9]+/, '')
 
@@ -60,7 +62,8 @@ export const RESTAURANT_WEIGHTS = {
   google: 0.4,
 }
 
-export const MARTIN_TILES_HOST = (() => {
+export const TILES_HOST = `${DISH_API_ENDPOINT}/api/tile`
+export const TILES_HOST_INTERNAL = (() => {
   const prod = 'https://martin-tiles.dishapp.com'
   const staging = 'https://martin-tiles-staging.dishapp.com'
   const dev = `${ORIGIN_MINUS_PORT}:3005`
@@ -69,6 +72,16 @@ export const MARTIN_TILES_HOST = (() => {
   return dev
 })()
 
-export const GRAPH_DOMAIN = process.env.HASURA_ENDPOINT || 'http://localhost:8080'
+export const GRAPH_DOMAIN = process.env.HASURA_ENDPOINT || `http://${LOCAL_HOST}:8080`
 export const GRAPH_API_INTERNAL = `${GRAPH_DOMAIN}/v1/graphql`
 export const GRAPH_API = `${DISH_API_ENDPOINT}/api/graph`
+
+console.log('graph.constants', {
+  LOCAL_HOST,
+  TILES_HOST,
+  GRAPH_API,
+  SEARCH_DOMAIN,
+  isNode,
+  isProd,
+  isNative,
+})

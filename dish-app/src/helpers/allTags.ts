@@ -1,7 +1,7 @@
 import { slugify } from '@dish/graph'
 
 import { FullTag, NavigableTag, TagWithNameAndType } from '../types/tagTypes'
-import { guessTagName } from './getTagsFromRoute'
+import { guessTagName } from './guessTagName'
 
 // cache for lookups in various places
 // not the happiest with this

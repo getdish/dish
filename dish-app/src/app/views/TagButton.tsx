@@ -17,7 +17,7 @@ import {
 
 import { blue, green, orange, purple, red } from '../../constants/colors'
 import { isWeb } from '../../constants/constants'
-import { tagDisplayName } from '../../constants/tagMeta'
+import { tagDisplayName } from '../../constants/tagDisplayName'
 import { getColorsForColor } from '../../helpers/getColorsForName'
 import { getTagSlug } from '../../helpers/getTagSlug'
 import { NavigableTag } from '../../types/tagTypes'

@@ -26,7 +26,7 @@ import {
 import { drawerWidthMax, isNative, isWeb, searchBarHeight } from '../constants/constants'
 import { defaultLocationAutocompleteResults } from '../constants/defaultLocationAutocompleteResults'
 import { tagDefaultAutocomplete } from '../constants/localTags'
-import { tagDisplayName } from '../constants/tagMeta'
+import { tagDisplayName } from '../constants/tagDisplayName'
 import {
   AutocompleteItem,
   AutocompleteItemFull,

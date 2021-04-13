@@ -1,10 +1,3 @@
-import { Tag } from '@dish/graph'
-
-export const tagDisplayName = (tag: Partial<Tag>) => {
-  const name = tag.name || ''
-  return tagDisplayNames[name] ?? tag.displayName ?? name
-}
-
 export const tagDisplayNames = {
   'price-low': '$',
   'price-mid': '$$',
