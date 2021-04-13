@@ -4316,7 +4316,7 @@ __metadata:
     "@snackui/node": ^0.3.0
     "@types/jest": "*"
     "@types/node": ^14.14.12
-    "@types/react-native": ^0.62.12
+    "@types/react-native": ^0.64.2
     "@types/webpack": ^4.41.26
     babel-literal-to-ast: ^2.1.0
     babel-loader: ^8.2.2
@@ -5171,12 +5171,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/react-native@npm:0.63.45":
-  version: 0.63.45
-  resolution: "@types/react-native@npm:0.63.45"
+"@types/react-native@npm:0.64.2":
+  version: 0.64.2
+  resolution: "@types/react-native@npm:0.64.2"
   dependencies:
     "@types/react": "*"
-  checksum: 1fe4bc616bd2864eeff0cdce793aedbe25090d04550b3b4365f9d4153b46ad7af6641c5637015da328fff0fece2e1f3c52e28bdef2b3a802bfdd23c8286353cb
+  checksum: 6536667ffc06fc87580be381146ef393b5e695ce6d176df46bf1dcda2470625480113bf13352b5ad2df833f6e888ab8a2564a225e825a2888056e565750f060c
   languageName: node
   linkType: hard
 
@@ -9559,7 +9559,7 @@ __metadata:
     "@types/express-http-proxy": ^1.6.1
     "@types/fs-extra": ^9.0.8
     "@types/node": ^14.14.12
-    "@types/react-native": ^0.63.45
+    "@types/react-native": ^0.64.2
     "@yarnpkg/plugin-patch": ^2.1.2
     ava: ^3.14.0
     esbuild: ^0.11.5

@@ -165,7 +165,7 @@ const RestaurantPage = memo(
                   selectable
                   selected={selectedDish}
                   onSelect={setSelectedDishToggle}
-                  themeName={`${colors.name}Dark`}
+                  themeName={`${colors.name}-dark`}
                 />
               </View>
 

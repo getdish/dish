@@ -19,14 +19,7 @@ export const slantedBoxStyle: BoxProps = {
 
 export const SlantedBox = (props: BoxProps) => {
   const theme = useTheme()
-  return (
-    <VStack
-      data-is="slanted-box"
-      {...slantedBoxStyle}
-      backgroundColor={theme.cardBackgroundColor}
-      {...props}
-    />
-  )
+  return <VStack {...slantedBoxStyle} backgroundColor={theme.cardBackgroundColor} {...props} />
 }
 
 export const SlantedLinkButton = (props: LinkButtonProps) => {
