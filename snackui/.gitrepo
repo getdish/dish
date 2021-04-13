@@ -7,6 +7,6 @@
 	remote = git@github.com:snackui/snackui.git
 	branch = master
 	commit = bf4ff7387df5cb76aadd0c8ef0695aef6af095a4
-	parent = e1ccb15b81a1e6cab9344725356c51f0413dbc6c
+	parent = a5ecda8a3e418b7132b3831684159fbdcd7d238e
 	method = merge
 	cmdver = 0.4.3
