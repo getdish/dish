@@ -1802,7 +1802,7 @@ __metadata:
     "@react-native-community/blur": ^3.6.0
     "@react-native-mapbox-gl/maps": 8.2.0-beta1
     "@sendgrid/mail": 7.4.0
-    "@snackui/babel-plugin": ^0.2.0
+    "@snackui/babel-plugin": "*"
     "@turf/bbox": ^6.3.0
     "@turf/center": ^6.3.0
     "@turf/helpers": 6.3.0
@@ -2233,7 +2233,7 @@ __metadata:
     "@dish/babel-preset": "*"
     "@dish/server": "*"
     "@dish/webpack": "*"
-    "@snackui/babel-plugin": ^0.2.0
+    "@snackui/babel-plugin": "*"
     "@types/react": "*"
     "@types/react-native": "*"
     react: "*"
@@ -4262,7 +4262,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@snackui/babel-plugin@*, @snackui/babel-plugin@^0.2.0, @snackui/babel-plugin@workspace:snackui/packages/babel-plugin":
+"@snackui/babel-plugin@*, @snackui/babel-plugin@workspace:snackui/packages/babel-plugin":
   version: 0.0.0-use.local
   resolution: "@snackui/babel-plugin@workspace:snackui/packages/babel-plugin"
   dependencies:
@@ -4272,11 +4272,11 @@ __metadata:
     "@babel/traverse": "*"
     "@babel/types": "*"
     "@dish/esdx": ^0.0.7
-    "@snackui/static": ^0.2.0
+    "@snackui/static": ^0.3.0
   languageName: unknown
   linkType: soft
 
-"@snackui/helpers@^0.2.0, @snackui/helpers@workspace:snackui/packages/helpers":
+"@snackui/helpers@^0.3.0, @snackui/helpers@workspace:snackui/packages/helpers":
   version: 0.0.0-use.local
   resolution: "@snackui/helpers@workspace:snackui/packages/helpers"
   dependencies:
@@ -4284,18 +4284,18 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@snackui/node@0.2.0, @snackui/node@^0.2.0, @snackui/node@workspace:snackui/packages/snackui-node":
+"@snackui/node@*, @snackui/node@^0.3.0, @snackui/node@workspace:snackui/packages/snackui-node":
   version: 0.0.0-use.local
   resolution: "@snackui/node@workspace:snackui/packages/snackui-node"
   dependencies:
-    "@snackui/helpers": ^0.2.0
+    "@snackui/helpers": ^0.3.0
     ts-transform-import-path-rewrite: ^0.3.0
     ttypescript: ^1.5.12
     typescript: ^4.2.3
   languageName: unknown
   linkType: soft
 
-"@snackui/static@*, @snackui/static@^0.2.0, @snackui/static@workspace:snackui/packages/snackui-static":
+"@snackui/static@*, @snackui/static@^0.3.0, @snackui/static@workspace:snackui/packages/snackui-static":
   version: 0.0.0-use.local
   resolution: "@snackui/static@workspace:snackui/packages/snackui-static"
   dependencies:
@@ -4312,8 +4312,8 @@ __metadata:
     "@dish/react-test-env": ^0.0.7
     "@dish/testy": "*"
     "@expo/match-media": ^0.1.0
-    "@snackui/helpers": ^0.2.0
-    "@snackui/node": ^0.2.0
+    "@snackui/helpers": ^0.3.0
+    "@snackui/node": ^0.3.0
     "@types/jest": "*"
     "@types/node": ^14.14.12
     "@types/react-native": ^0.62.12
@@ -9555,7 +9555,7 @@ __metadata:
   dependencies:
     "@babel/runtime": ^7.12.5
     "@dish/app": "*"
-    "@snackui/node": 0.2.0
+    "@snackui/node": "*"
     "@types/express-http-proxy": ^1.6.1
     "@types/fs-extra": ^9.0.8
     "@types/node": ^14.14.12
@@ -9575,7 +9575,7 @@ __metadata:
     react-native: ^0.64.0
     react-native-web: ^0.15.6
     react-refresh: "*"
-    snackui: 0.2.0
+    snackui: "*"
     tsconfig-paths: ^3.9.0
     typescript: 4.2.2
     typescript-monorepo-toolkit: ^0.2.0
@@ -20826,14 +20826,14 @@ __metadata:
   resolution: "snackui-loader@workspace:snackui/packages/snackui-loader"
   dependencies:
     "@dish/esdx": ^0.0.7
-    "@snackui/static": ^0.2.0
+    "@snackui/static": ^0.3.0
     fs-extra: ^9.1.0
     loader-utils: ^2.0.0
     lodash: ^4.17.21
   languageName: unknown
   linkType: soft
 
-"snackui@*, snackui@0.2.0, snackui@workspace:snackui/packages/snackui":
+"snackui@*, snackui@workspace:snackui/packages/snackui":
   version: 0.0.0-use.local
   resolution: "snackui@workspace:snackui/packages/snackui"
   dependencies:
@@ -20842,7 +20842,7 @@ __metadata:
     "@dish/fast-compare": ^2.7.6
     "@dish/proxy-worm": ^0.0.4
     "@react-native-community/blur": ^3.6.0
-    "@snackui/helpers": ^0.2.0
+    "@snackui/helpers": ^0.3.0
     "@types/node": ^14.11.10
     "@types/react": ^16.9.35
     "@types/react-dom": ^16.9.8
