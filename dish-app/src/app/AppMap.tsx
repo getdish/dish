@@ -236,7 +236,14 @@ export default memo(function AppMap() {
         >
           {!media.sm && (
             <Theme name="dark">
-              <AbsoluteVStack left={0} right={0} bottom={0} top={searchBarHeight}>
+              <AbsoluteVStack
+                zIndex={1000000000}
+                pointerEvents="none"
+                left={0}
+                right={0}
+                bottom={0}
+                top={searchBarHeight}
+              >
                 <AppAutocompleteLocation />
               </AbsoluteVStack>
             </Theme>
