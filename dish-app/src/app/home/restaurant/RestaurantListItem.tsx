@@ -393,7 +393,7 @@ const RestaurantListItemContent = memo(
                           opacity: 0.5,
                         }}
                       >
-                        {open.nextTime}
+                        {open.nextTime || '~~'}
                       </SmallButton>
                     </>
                   )}

@@ -1,11 +1,10 @@
 import React, { Suspense, memo, useContext } from 'react'
-import { AbsoluteVStack, HStack, Spacer, Text, VStack, useMedia } from 'snackui'
+import { AbsoluteVStack, HStack, Text, VStack, useMedia } from 'snackui'
 
 import { tagLenses } from '../../../constants/localTags'
 import { getActiveTags } from '../../../helpers/getActiveTags'
 import { getTitleForState } from '../../../helpers/getTitleForState'
 import { rgbString } from '../../../helpers/rgbString'
-import { useCurrentLenseColor } from '../../hooks/useCurrentLenseColor'
 import {
   ContentScrollViewHorizontalFitted,
   useContentScrollHorizontalFitter,
@@ -37,22 +36,12 @@ export const SearchHeader = memo(() => {
               <AbsoluteVStack zIndex={10000} top={-9} left={15}>
                 <SearchForkListButton size="sm" />
               </AbsoluteVStack>
-              <SlantedTitle
-                paddingHorizontal={35}
-                backgroundColor={rgbString(lenseColor)}
-                color="#fff"
-                size="lg"
-                fontWeight="800"
-              >
+              <SlantedTitle paddingHorizontal={35} backgroundColor={rgbString(lenseColor)}>
                 <VStack alignItems="center">
-                  <Text>{title}</Text>
-                  <Text
-                    className="nobreak"
-                    marginTop={-18}
-                    marginBottom={-3}
-                    fontSize={16}
-                    fontWeight="300"
-                  >
+                  <Text fontWeight="800" color="#fff" fontSize={20} lineHeight={28}>
+                    {title}
+                  </Text>
+                  <Text color="#fff" className="nobreak" fontSize={16} fontWeight="300">
                     {subTitle}
                   </Text>
                 </VStack>

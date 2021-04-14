@@ -27,6 +27,7 @@ export function Link<Name extends keyof RoutesTable = keyof RoutesTable>(
     tag,
     children,
     promptLogin,
+    href,
     ...textProps
   } = allProps
   const { wrapWithLinkElement } = useLink(allProps)
