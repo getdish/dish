@@ -388,7 +388,12 @@ const ListPageContent = graphql((props: Props) => {
             <PageTitle
               noDivider
               title={
-                <VStack marginVertical={15}>
+                <VStack
+                  marginHorizontal="auto"
+                  marginVertical={15}
+                  alignItems="center"
+                  justifyContent="center"
+                >
                   <ScalingPressable>
                     <Link name="user" params={{ username: list.user?.username ?? '' }}>
                       <SlantedTitle size="xs" alignSelf="center">

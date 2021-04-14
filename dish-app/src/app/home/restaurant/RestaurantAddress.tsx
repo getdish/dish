@@ -32,11 +32,11 @@ export const RestaurantAddress = ({
     >
       <HStack alignItems="center">
         <Text
-          ellipse
           flexShrink={0}
           flexGrow={1}
-          backgroundColor="red"
+          overflow="hidden"
           maxWidth={media.sm ? 160 : 200}
+          maxHeight={20}
         >
           {getAddressText(curLocInfo, address, size)}
         </Text>

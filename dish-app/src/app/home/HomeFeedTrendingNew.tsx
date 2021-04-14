@@ -93,9 +93,9 @@ export const HomeFeedTrendingNew = memo(
             paddingLeft={20}
             pointerEvents="none"
             justifyContent="center"
-            width={80}
+            minWidth={100}
           >
-            <SlantedTitle alignSelf="flex-end" fontWeight="300" size="xs" zIndex={10}>
+            <SlantedTitle alignSelf="flex-end" size="xs" zIndex={10}>
               {props.title}
             </SlantedTitle>
           </AbsoluteVStack>

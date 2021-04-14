@@ -14,14 +14,12 @@ import { setMap } from './getMap'
 import { MapProps } from './MapProps'
 import { tiles } from './tiles'
 
-console.log('tiles, tiles', tiles)
-
 MapboxGL.setAccessToken(MAPBOX_ACCESS_TOKEN)
 MapboxGL.setTelemetryEnabled(false)
 
 const idFn = (_) => _
 
-export const MapView = ({ center, span, features, onMoveEnd, onSelect }: MapProps) => {
+export const MapView = ({ center, span, features, onMoveEnd, onSelect, style }: MapProps) => {
   const { width, height } = Dimensions.get('screen')
   const drawerStore = useStoreInstance(drawerStoreInstance)
   const drawerHeight = drawerStore.currentHeight
@@ -73,7 +71,7 @@ export const MapView = ({ center, span, features, onMoveEnd, onSelect }: MapProp
       <MapboxGL.MapView
         style={styles.map}
         ref={mapRef}
-        styleURL="mapbox://styles/nwienert/ckddrrcg14e4y1ipj0l4kf1xy"
+        styleURL={style}
         onDidFinishLoadingMap={() => {
           console.log('did load map')
           setIsLoaded(1)

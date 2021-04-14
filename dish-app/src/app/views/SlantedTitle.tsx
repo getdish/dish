@@ -1,4 +1,3 @@
-// TODO useTheme here and fix bugs
 import React from 'react'
 import { BoxProps, SizableTextProps, Title, useTextStyle } from 'snackui'
 
