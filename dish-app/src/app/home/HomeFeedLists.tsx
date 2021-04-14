@@ -84,14 +84,13 @@ export const HomeFeedListsContents = graphql(({ region, onHoverResults }: Props)
     return (
       <>
         <FeedSlantedTitle>
-          <HStack alignItems="center" marginVertical={-4}>
+          <HStack alignItems="center" marginVertical={-2}>
             <Text fontWeight="700" fontSize={20}>
               Top Lists
             </Text>
             <Spacer size="sm" />
             <Link
               promptLogin
-              marginTop={-4}
               name="list"
               params={{
                 userSlug: 'me',

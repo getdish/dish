@@ -187,7 +187,7 @@ export function Card({
             <HStack flex={1} width="100%" maxWidth="100%">
               {!!padTitleSide &&
                 (isSm ? <VStack minWidth={30} flex={1} /> : <VStack minWidth={45} flex={1} />)}
-              <VStack flex={1} alignItems="flex-end">
+              <VStack flex={10} alignItems="flex-end">
                 <VStack position="relative">
                   <Text
                     // not working below :(

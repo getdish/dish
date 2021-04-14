@@ -270,7 +270,7 @@ const SearchInputIcon = memo(({ color }: { color: string }) => {
         ) : (
           <Search
             color={color}
-            size={media.xs ? 16 : 20}
+            size={media.xs ? 18 : 20}
             style={{
               opacity: 0.8,
             }}

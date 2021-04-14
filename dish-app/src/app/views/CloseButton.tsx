@@ -1,5 +1,7 @@
 import { CornerLeftUp, X } from '@dish/react-feather'
 import React, { memo } from 'react'
+import { Pressable } from 'react-native'
+import { TouchableOpacity } from 'react-native-gesture-handler'
 import { HStack, StackProps, VStack, useTheme } from 'snackui'
 
 type CircleButtonProps = StackProps & {
@@ -24,8 +26,6 @@ export const BackButton = memo((props: CircleButtonProps) => {
   )
 })
 
-const DeoptHStackForNative = HStack
-
 export const SmallCircleButton = ({
   shadowed,
   children,
@@ -39,8 +39,8 @@ export const SmallCircleButton = ({
 }: CircleButtonProps) => {
   const theme = useTheme()
   return (
-    <VStack {...props} padding={10} margin={-10}>
-      <DeoptHStackForNative
+    <VStack {...props}>
+      <HStack
         borderRadius={1000}
         backgroundColor={theme.colorQuartenary}
         alignItems="center"
@@ -72,7 +72,7 @@ export const SmallCircleButton = ({
         padding={padding}
       >
         {children}
-      </DeoptHStackForNative>
+      </HStack>
     </VStack>
   )
 }

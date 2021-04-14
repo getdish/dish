@@ -13,7 +13,6 @@ const TitleContainer = ({ children }: { children: any }) => {
       marginTop={-10}
       marginLeft={15}
       marginBottom={-10}
-      // marginBottom={-52}
       position="relative"
       zIndex={10}
     >
