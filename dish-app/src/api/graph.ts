@@ -33,6 +33,10 @@ function shouldCache(body?: string) {
 export default route(async (req, res) => {
   await useRouteBodyParser(req, res, { text: { type: '*/*', limit: '8192mb' } })
   const { body } = req
+  if (!body) {
+    res.send(200)
+    return
+  }
   const cacheKey = shouldCache(body) ? crypto.createHash('md5').update(body).digest('hex') : null
   if (cacheKey) {
     const cache = await rGet(cacheKey)
