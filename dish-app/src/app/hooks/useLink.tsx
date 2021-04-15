@@ -40,12 +40,12 @@ export const useLink = (
     }
 
     if (isWeb) {
+      if (props.preventNavigate) {
+        return
+      }
+      e.preventDefault()
+      e.stopPropagation()
       if (props.href || e.metaKey || e.ctrlKey) {
-        if (props.preventNavigate) {
-          return
-        }
-        e.preventDefault()
-        e.stopPropagation()
         window.open(props.href ?? e.currentTarget.href, '_blank')
         return
       }
@@ -78,11 +78,31 @@ export const useLink = (
       if (Platform.OS === 'web') {
         const element = props.tagName ?? 'a'
         const href = props.href ?? router.getPathFromParams(navItem)
+        const a$ = useRef<HTMLAnchorElement | null>(null)
+
+        useEffect(() => {
+          const a = a$.current
+          if (!a) return
+          const child = Array.from(a.childNodes).find((x) => x instanceof HTMLElement)
+          if (!child) {
+            console.warn('no child?', a)
+            a.parentElement?.addEventListener('click', onPress)
+            return () => {
+              a.parentElement?.removeEventListener('click', onPress)
+            }
+            return
+          }
+          child.addEventListener('click', onPress)
+          return () => {
+            child.removeEventListener('click', onPress)
+          }
+        }, [a$])
+
         return React.createElement(
           element,
           {
-            onClick: onPress,
-            className: `display-contents dish-link ${props.className ?? ''}`,
+            ref: a$,
+            className: `display-contents cursor-pointer ${props.className ?? ''}`,
             target: props.target,
             ...(element === 'a' &&
               href && {
@@ -107,20 +127,18 @@ const getNormalizeLinkProps = (
   const next = {
     ...props,
     ...linkProps,
-    onMouseEnter,
+    // get latest on mouseenter, lets you update tags without re-rendering every link
+    onMouseEnter(e) {
+      const next = getNormalizedLink(props)
+      if (!isEqual(omit(next, 'onPress'), omit(linkProps, 'onPress'))) {
+        forceUpdate()
+      }
+      props['onMouseEnter']?.(e)
+    },
   }
   delete next['tag']
   delete next['tags']
   return next
-
-  // get latest on mouseenter, lets you update tags without re-rendering every link
-  function onMouseEnter(e) {
-    const next = getNormalizedLink(props)
-    if (!isEqual(omit(next, 'onPress'), omit(linkProps, 'onPress'))) {
-      forceUpdate()
-    }
-    props['onMouseEnter']?.(e)
-  }
 }
 
 // dont memoize relies on homeStore.currentState

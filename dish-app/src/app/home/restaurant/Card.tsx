@@ -174,7 +174,7 @@ export function Card({
           >
             <LinearGradient
               style={{ width: 200, height: 200 }}
-              colors={[colors.pastelColor, colors.pastelColor, `${colors.color}00`]}
+              colors={[colors.pastelColor, colors.pastelColor, `${colors.darkColor}33`]}
             />
           </AbsoluteVStack>
           <VStack
@@ -240,7 +240,10 @@ export const CardOverlay = (props: { children: any }) => {
     >
       <VStack position="relative">
         <AbsoluteVStack left={0} right={0} bottom={0} top={-40}>
-          <LinearGradient colors={['rgba(0,0,0,0)', '#050505']} style={StyleSheet.absoluteFill} />
+          <LinearGradient
+            colors={['rgba(0,0,0,0)', '#rgba(40, 40, 40, 0.9)']}
+            style={StyleSheet.absoluteFill}
+          />
         </AbsoluteVStack>
         <VStack padding={10}>{props.children}</VStack>
       </VStack>

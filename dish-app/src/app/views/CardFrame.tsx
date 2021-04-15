@@ -29,7 +29,6 @@ export const CardFrame = ({
   square?: boolean
   skew?: boolean
 }) => {
-  const theme = useTheme()
   return (
     <VStack
       className="hover-parent ease-in-out-fastest"

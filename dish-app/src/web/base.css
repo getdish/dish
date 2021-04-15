@@ -122,11 +122,6 @@ textarea {
   transition-property: opacity;
 }
 
-.force-disable,
-.force-disable * {
-  pointer-events: none !important;
-}
-
 .no-transition {
   transition: unset;
 }
@@ -320,12 +315,6 @@ li {
   overflow-y: auto;
 }
 
-.dish-link {
-  cursor: pointer;
-  max-width: 100%;
-  flex-direction: inherit;
-}
-
 .hover-underline:hover {
   text-decoration: underline;
   text-decoration-color: rgba(150, 150, 150, 1);
@@ -361,17 +350,8 @@ li {
   pointer-events: none !important;
 }
 
-.invisible {
+.opacity-0 {
   opacity: 0;
-}
-
-.box-shadow-inset-large {
-  box-shadow: inset 0 0 25px rgba(0, 0, 0, 0.1);
-}
-
-.scroll-bounce > div {
-  -webkit-overflow-scrolling: touch;
-  overscroll-behavior: auto;
 }
 
 .dotted-line {
@@ -379,7 +359,7 @@ li {
 }
 
 .inset-shadow-xxxl {
-  box-shadow: inset 0 0 10000px rgba(0, 0, 0, 0.15);
+  box-shadow: inset 0 0 1000px rgba(0, 0, 0, 0.5);
 }
 
 .dish-inset-shadow::after {
