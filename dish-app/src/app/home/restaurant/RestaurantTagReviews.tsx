@@ -51,13 +51,13 @@ export const RestaurantTagReviews = (props: Props) => {
   return (
     <VStack height={height + 40}>
       <Suspense fallback={null}>
-        <RestaurantTagReviewsContent {...props} />
+        <Content {...props} />
       </Suspense>
     </VStack>
   )
 }
 
-export const RestaurantTagReviewsContent = memo(
+const Content = memo(
   graphql(
     ({ tagSlug, restaurantId, restaurantSlug, closable, borderless, showScoreTable }: Props) => {
       const [restaurant] = queryRestaurant(restaurantSlug)
@@ -211,7 +211,10 @@ export const RestaurantTagReviewsContent = memo(
 
                             <AbsoluteVStack zIndex={10} bottom={0} left={0} height={20} right={0}>
                               <LinearGradient
-                                colors={['rgba(255,255,255,0)', '#fff']}
+                                colors={[
+                                  `${theme.cardBackgroundColor}00`,
+                                  theme.cardBackgroundColor,
+                                ]}
                                 style={StyleSheet.absoluteFill}
                               />
                             </AbsoluteVStack>

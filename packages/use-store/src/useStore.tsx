@@ -138,38 +138,35 @@ export function useStoreSelector<
 }
 
 // start on simpler reaction
-export function reaction2(fn: () => any): () => void {
-  let state = runStoreSelector(fn)
-  let disposeSubscribe
-  const disposePrev = () => {
-    // treat return functions as dispose
-    if (typeof state.value === 'function') {
-      state.value()
-    }
-  }
-  const dispose = () => {
-    disposeSubscribe?.()
-    disposePrev()
-  }
-
-  function update() {
-    dispose()
-    disposeSubscribe = subscribeToStores([...state.stores], () => {
-      const next = runStoreSelector(fn)
-      disposePrev()
-      if (!isEqualSubsetShallow(state.stores, next.stores)) {
-        state = next
-        update()
-      } else {
-        state = next
-      }
-    })
-  }
-
-  update()
-
-  return dispose
-}
+// export function reaction2(fn: () => any): () => void {
+//   let state = runStoreSelector(fn)
+//   let disposeSubscribe
+//   const disposePrev = () => {
+//     // treat return functions as dispose
+//     if (typeof state.value === 'function') {
+//       state.value()
+//     }
+//   }
+//   const dispose = () => {
+//     disposeSubscribe?.()
+//     disposePrev()
+//   }
+//   function update() {
+//     dispose()
+//     disposeSubscribe = subscribeToStores([...state.stores], () => {
+//       const next = runStoreSelector(fn)
+//       disposePrev()
+//       if (!isEqualSubsetShallow(state.stores, next.stores)) {
+//         state = next
+//         update()
+//       } else {
+//         state = next
+//       }
+//     })
+//   }
+//   update()
+//   return dispose
+// }
 
 export function useSelector<A>(fn: () => A): A {
   const [state, setState] = useState(() => {

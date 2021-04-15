@@ -1,5 +1,5 @@
 import React from 'react'
-import { Text } from 'snackui'
+import { Spacer, Text } from 'snackui'
 
 import { tagDisplayName } from '../../constants/tagDisplayName'
 
@@ -9,11 +9,12 @@ export function TagsText({ tags, color }: { tags: any[]; color?: string }) {
       {tags.map((tag, index) => (
         <React.Fragment key={tag.name}>
           {tag.icon ? (
-            <Text marginRight={6} fontSize={20} lineHeight={20} transform={[{ translateY: 0.5 }]}>
+            <Text width={20} fontSize={20} lineHeight={20} transform={[{ translateY: 0.5 }]}>
               {tag.icon.trim()}{' '}
             </Text>
           ) : null}
-          <Text color={color} fontSize={16} fontWeight="400">
+          <Spacer size="sm" />
+          <Text color={color} fontSize={16} fontWeight="600">
             {tagDisplayName(tag)}
           </Text>
           {index < tags.length - 1 ? (

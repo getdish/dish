@@ -126,7 +126,8 @@ const RatingWithVotes = memo(
     isMultiple?: boolean
     display?: RatingDisplay
   }) => {
-    const voteButtonColor = subtle ? '#f2f2f2' : null
+    const theme = useTheme()
+    const voteButtonColor = subtle ? theme.color : null
     const scale = size === 'sm' ? 0.75 : 1
     const sizePx = 46 * scale
     const isOpenProp =
@@ -163,7 +164,6 @@ const RatingWithVotes = memo(
       />
     )
 
-    const color = '#000' //ratio < 0.4 ? lightRed : ratio < 0.6 ? lightOrange : '#fff'
     const fontSize = Math.min(16, sizePx / `${score}`.length) * scale * 1.075
 
     return (
@@ -182,7 +182,7 @@ const RatingWithVotes = memo(
             fontSize={fontSize}
             fontWeight="600"
             letterSpacing={-0.5}
-            color={color}
+            color={theme.color}
             cursor="default"
             onPress={onClickPoints}
           >

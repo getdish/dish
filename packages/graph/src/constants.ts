@@ -58,6 +58,7 @@ export const GRAPH_API_INTERNAL = `${GRAPH_DOMAIN}/v1/graphql`
 export const GRAPH_API = `${DISH_API_ENDPOINT}/api/graph`
 
 console.log('graph.constants', {
+  DISH_API_ENDPOINT,
   LOCAL_HOST,
   TILES_HOST,
   GRAPH_API,

@@ -11,7 +11,7 @@ import React, { useEffect, useRef, useState } from 'react'
 import { Dimensions } from 'react-native'
 import { useGet } from 'snackui'
 
-import { darkPurple, grey } from '../constants/colors'
+import { darkPurple, grey, purple } from '../constants/colors'
 import { MAPBOX_ACCESS_TOKEN, isM1Sim } from '../constants/constants'
 import { hexToRGB } from '../helpers/hexToRGB'
 import { hasMovedAtLeast } from '../helpers/mapHelpers'
@@ -724,7 +724,7 @@ function setupMapEffect({
             // 'text-anchor': 'bottom',
           },
           paint: {
-            'text-color': darkPurple,
+            'text-color': purple,
             // 'text-halo-color': blue,
             // 'text-halo-width': 1,
           },

@@ -21,9 +21,11 @@ type TagRowProps = {
 }
 
 export const RestaurantTagsRow = (props: TagRowProps) => {
+  const height = 80 * (props.size === 'sm' ? 0.8 : 1)
   return (
-    <HStack maxHeight={70} overflow="hidden" flexWrap="wrap">
-      <Suspense fallback={<VStack height={80} />}>
+    <HStack maxHeight={height} maxWidth="100%" overflow="hidden" flexWrap="wrap">
+      {/* may jump up a bit on load */}
+      <Suspense fallback={<VStack height={height} />}>
         <RestaurantTagsRowContent {...props} />
       </Suspense>
     </HStack>

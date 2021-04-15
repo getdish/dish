@@ -33,8 +33,9 @@ import './globals'
 import { useHydrateCache } from '@dish/graph'
 import { configureAssertHelpers } from '@dish/helpers'
 import { ProvideRouter } from '@dish/router'
-import { configureUseStore } from '@dish/use-store'
+import { configureUseStore, reaction, reaction2 } from '@dish/use-store'
 import React, { Suspense, useEffect } from 'react'
+import { useColorScheme } from 'react-native'
 import { QueryClientProvider } from 'react-query'
 import { ThemeProvider, Toast, configureThemes } from 'snackui'
 
@@ -42,7 +43,7 @@ import { App } from './app/App'
 import { homeStore } from './app/homeStore'
 import { PlatformSpecificProvider } from './app/PlatformSpecificProvider'
 import { RootPortalProvider } from './app/Portal'
-import { userStore } from './app/userStore'
+import { useUserStore, userStore } from './app/userStore'
 import { tagDefaultAutocomplete, tagFilters, tagLenses } from './constants/localTags'
 import themes, { MyTheme, MyThemes } from './constants/themes'
 import { addTagsToCache } from './helpers/allTags'
@@ -104,6 +105,9 @@ export function RootSuspenseLoad(props: any) {
 }
 
 export function Root() {
+  const userStore = useUserStore()
+  const colorScheme = useColorScheme()
+
   if (cacheSnapshot) {
     useHydrateCache({
       cacheSnapshot,
@@ -116,7 +120,7 @@ export function Root() {
 
   return (
     <PlatformSpecificProvider>
-      <ThemeProvider themes={themes} defaultTheme="light">
+      <ThemeProvider themes={themes} defaultTheme={userStore.theme ?? colorScheme ?? 'dark'}>
         <ProvideRouter routes={routes}>
           <QueryClientProvider client={queryClient}>
             <Suspense fallback={null}>

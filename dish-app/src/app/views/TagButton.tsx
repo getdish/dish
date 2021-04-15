@@ -13,6 +13,7 @@ import {
   TextProps,
   VStack,
   prevent,
+  useTheme,
 } from 'snackui'
 
 import { blue, green, orange, purple, red } from '../../constants/colors'
@@ -150,9 +151,9 @@ export const TagButton = memo((props: TagButtonProps) => {
       position="relative"
       // used again down below
       minHeight={isSmall ? 22 : 26}
-      hoverStyle={{
-        backgroundColor: `${colors.lightColor}99`,
-      }}
+      // hoverStyle={{
+      //   backgroundColor: `${colors.lightColor}99`,
+      // }}
       {...rest}
     >
       <Spacer size={5} />
@@ -302,6 +303,7 @@ export const TagButton = memo((props: TagButtonProps) => {
 })
 
 const TagButtonVote = (props: TagButtonProps & { scale: number }) => {
+  const theme = useTheme()
   const { scale } = props
   const { vote, setVote } = useUserTagVotes(props.restaurantSlug ?? '', {
     [getTagSlug(props.slug)]: true,
@@ -316,13 +318,14 @@ const TagButtonVote = (props: TagButtonProps & { scale: number }) => {
   return (
     <>
       <VStack
-        paddingHorizontal={3 * scale}
+        backgroundColor="rgba(255,255,255,0.5)"
         alignItems="center"
         justifyContent="center"
         borderRadius={100}
-        width={24 * scale}
-        height={24 * scale}
+        width={32 * scale}
+        height={32 * scale}
         marginRight={5 * scale}
+        marginVertical={-3 * scale}
         opacity={0.6}
         hoverStyle={{
           opacity: 1,

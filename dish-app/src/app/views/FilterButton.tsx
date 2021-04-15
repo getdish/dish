@@ -18,7 +18,6 @@ export const FilterButton = ({
 }: FilterButtonProps & {
   color?: string
 }) => {
-  console.log('color', color)
   const iconElement = (() => {
     switch (tag.slug) {
       case 'filters__open':
@@ -37,9 +36,9 @@ export const FilterButton = ({
       {...rest}
       textProps={{
         fontWeight: '600',
-        ...(typeof color !== 'undefined' && {
-          color,
-        }),
+        // ...(typeof color !== 'undefined' && {
+        //   color,
+        // }),
         ...rest.textProps,
       }}
     >

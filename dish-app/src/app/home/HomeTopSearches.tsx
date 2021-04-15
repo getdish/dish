@@ -1,4 +1,5 @@
 import React, { memo } from 'react'
+import { useThemeName } from 'snackui'
 import { HStack } from 'snackui'
 
 import { tagLenses } from '../../constants/localTags'
@@ -9,12 +10,12 @@ import { GradientButton } from './GradientButton'
 import { TagsText } from './TagsText'
 
 export const HomeTopSearches = memo(() => {
+  const themeName = useThemeName()
   return (
     <HStack
       paddingHorizontal={20}
       // for easier touchability
       paddingVertical={16}
-      marginVertical={-10}
       spacing="sm"
       marginHorizontal="auto"
       alignItems="center"
@@ -26,7 +27,7 @@ export const HomeTopSearches = memo(() => {
         return (
           <Link key={index} tags={search.tags} asyncClick>
             <GradientButton rgb={rgb}>
-              <TagsText tags={search.tags} color={rgbString(rgb)} />
+              <TagsText tags={search.tags} color={themeName === 'dark' ? '#fff' : rgbString(rgb)} />
             </GradientButton>
           </Link>
         )

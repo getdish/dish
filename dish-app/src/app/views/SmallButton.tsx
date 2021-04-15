@@ -1,5 +1,5 @@
 import React from 'react'
-import { Button, Tooltip, themeable, useTheme } from 'snackui'
+import { Button, Text, Tooltip, themeable, useTheme } from 'snackui'
 
 import { isWeb } from '../../constants/constants'
 import { Link } from './Link'
@@ -49,7 +49,7 @@ export const SmallButton = themeable(
     if (name || tag || tags || params || href) {
       contents = (
         <Link name={name} tag={tag} tags={tags} params={params} href={href}>
-          {contents}
+          <Text color={theme.color}>{contents}</Text>
         </Link>
       )
     }

@@ -30,7 +30,7 @@ export const AppMenu = memo(() => {
         noArrow
         onChangeOpen={appMenu.setIsVisible}
         contents={
-          <Theme name="light">
+          <Theme name="dark">
             {/* CONTENTS HERE */}
             <AppMenuContents hideUserMenu={appMenu.hide} />
           </Theme>
@@ -80,7 +80,7 @@ export const AppMenu = memo(() => {
   )
 })
 
-const UserMenuButton = () => {
+export const UserMenuButton = () => {
   const user = useUserStore().user
 
   if (!user) {

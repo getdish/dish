@@ -13,19 +13,21 @@ export function GradientButton({
   children?: any
   bordered?: boolean
 }) {
+  // const themeName = useThemeName()
+  // const isDark = themeName === 'dark'
   return (
     <HStack
       paddingVertical={12}
-      paddingHorizontal={16}
+      paddingHorizontal={35}
       alignItems="center"
       justifyContent="center"
-      borderRadius={18}
+      borderRadius={10}
       borderWidth={bordered ? 1 : 0}
       backgroundColor="transparent"
       className="hover-parent ease-in-out-faster safari-fix-overflow"
       position="relative"
       overflow="hidden"
-      flexShrink={1}
+      // flexShrink={1}
       pressStyle={{
         transform: [{ scale: 0.98 }],
       }}

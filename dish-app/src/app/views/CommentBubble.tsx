@@ -1,6 +1,8 @@
 import { User } from '@dish/react-feather'
 import React, { useState } from 'react'
 import { Image, ScrollView } from 'react-native'
+import { Theme } from 'snackui'
+import { useTheme } from 'snackui'
 import {
   AbsoluteVStack,
   Circle,
@@ -114,6 +116,7 @@ function CommentBubbleContents({
   expanded?: boolean
   scrollable?: boolean
 }) {
+  const theme = useTheme()
   const isTripAdvisor = name?.startsWith('tripadvisor-')
   const isYelp = name?.startsWith('Yelp')
   if (isTripAdvisor) {
@@ -177,7 +180,7 @@ function CommentBubbleContents({
         padding={15}
         marginBottom={-30}
         marginLeft={20}
-        backgroundColor="#fff"
+        backgroundColor={theme.cardBackgroundColor}
         borderRadius={20}
         position="relative"
         zIndex={10}
@@ -193,7 +196,7 @@ function CommentBubbleContents({
           width={20}
           height={20}
           borderRadius={100}
-          backgroundColor="#fff"
+          backgroundColor={theme.cardBackgroundColor}
           shadowColor="rgba(0,0,0,0.2)"
           shadowRadius={4}
           shadowOffset={{ height: 3, width: -3 }}

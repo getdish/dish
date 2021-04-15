@@ -17,6 +17,7 @@ export const PageFooter = memo(() => {
         zIndex={-1}
         top={-15}
         left={-100}
+        backgroundColor="#000"
         right={-100}
         bottom={-55}
         transform={[{ rotate: '-2deg' }]}

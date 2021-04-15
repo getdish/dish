@@ -6,6 +6,7 @@ import { reaction } from '@dish/use-store'
 import React, { Suspense, forwardRef, memo, useCallback, useEffect, useMemo, useRef } from 'react'
 import { ScrollView, ScrollViewProps } from 'react-native'
 import { DataProvider, LayoutProvider, RecyclerListView } from 'recyclerlistview'
+import { Paragraph } from 'snackui'
 import {
   AbsoluteVStack,
   Button,
@@ -168,6 +169,7 @@ const SearchPageContent = memo(function SearchPageContent(
   // // sync mapStore.selected to activeIndex in results
   // if (isWeb) {
   //   useEffect(() => {
+  // should i try without reaction2? that couldve been causing weridness?
   //     return reaction2(() => {
   //       const { searchPosition, status } = searchPageStore
   //       const { nextPosition, isOnRegion } = appMapStore
@@ -350,7 +352,7 @@ const SearchResultsContent = (props: Props) => {
       <>
         <SearchHeader />
         <VStack paddingVertical={100} alignItems="center" spacing>
-          <Text fontSize={22}>Nothing found</Text>
+          <Paragraph fontSize={22}>Nothing found</Paragraph>
           <Text fontSize={32}>😞</Text>
         </VStack>
       </>

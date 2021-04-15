@@ -15,18 +15,19 @@ const baseTheme = {
   backgroundColorTransparent: 'rgba(40,40,200,0)',
   cardBackgroundColor: '#333',
   backgroundColorAlt: bgAlt,
+  mapBackground: '#dbdeeb',
   colorAlt: blue,
 }
 
 const active: MyTheme = {
   name: 'active',
   ...baseTheme,
-  backgroundColor: 'rgb(152, 88, 255)',
-  backgroundColorSecondary: 'rgb(152, 88, 255)',
-  backgroundColorTertiary: 'rgba(152, 88, 255, 0.85)',
-  backgroundColorQuartenary: 'rgba(152, 88, 255, 0.7)',
-  borderColor: 'rgb(142, 78, 245)',
-  borderColorHover: 'rgb(132, 68, 235)',
+  backgroundColor: 'rgb(217, 109, 134)',
+  backgroundColorSecondary: 'rgb(217, 109, 134)',
+  backgroundColorTertiary: 'rgba(217, 109, 134, 0.85)',
+  backgroundColorQuartenary: 'rgba(217, 109, 134, 0.7)',
+  borderColor: 'rgb(217, 109, 134)',
+  borderColorHover: 'rgb(217, 109, 134)',
 }
 
 const error: MyTheme = {
@@ -41,6 +42,7 @@ const error: MyTheme = {
 }
 
 const darkBase = {
+  mapBackground: '#111',
   backgroundColorAlt: 'rgba(240, 250, 255, 0.1)',
   colorAlt: '#fff',
   borderColor: '#252525',
@@ -50,7 +52,7 @@ const darkBase = {
   colorTertiary: '#777',
   colorQuartenary: '#aaa',
   cardBackgroundColor: '#333',
-  shadowColor: `rgba(0,0,0,0.7)`,
+  shadowColor: `rgba(0,0,0,0.6)`,
   backgroundColorTransparent: 'rgba(0,0,0,0)',
 }
 

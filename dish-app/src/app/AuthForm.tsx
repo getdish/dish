@@ -48,10 +48,6 @@ export const AuthForm = memo(
       return null
     }
 
-    const activeStyle: LinkButtonProps = {
-      backgroundColor: 'rgba(150,150,150,0.35)',
-    }
-
     function getContent() {
       if (formPage === 'login') {
         return <LoginForm autoFocus={autoFocus} setFormPage={setFormPage} />
@@ -88,14 +84,14 @@ export const AuthForm = memo(
         <InteractiveContainer height={40} alignSelf="center">
           <Button
             borderRadius={0}
-            {...(formPage == 'login' && activeStyle)}
+            active={formPage == 'login'}
             onPress={() => setFormPage('login')}
           >
             Login
           </Button>
           <Button
             borderRadius={0}
-            {...(formPage == 'signup' && activeStyle)}
+            active={formPage == 'signup' && activeStyle}
             onPress={() => setFormPage('signup')}
           >
             Signup

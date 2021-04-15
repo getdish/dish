@@ -15,14 +15,21 @@ import { Toast } from 'snackui'
 import { router } from '../router'
 import { appMenuStore } from './AppMenuStore'
 
+type ThemeName = 'dark' | 'light'
+
 class UserStore extends Store {
   user: Partial<User> | null = null
   loading = false
   messages: string[] = []
   allVotes: { [id: string]: Review } = {}
+  theme: ThemeName | null = null
 
   get isLoggedIn() {
     return !!this.user
+  }
+
+  setTheme(theme: ThemeName) {
+    this.theme = theme
   }
 
   async fetch(

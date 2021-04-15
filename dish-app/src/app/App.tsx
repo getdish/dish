@@ -1,5 +1,6 @@
 import loadable from '@loadable/component'
 import React, { Suspense, useEffect } from 'react'
+import { useTheme } from 'snackui'
 import { LoadingItems, ToastRoot, VStack } from 'snackui'
 
 import { isSSR } from '../constants/constants'
@@ -51,6 +52,7 @@ export function App() {
 }
 
 function AppHomeContent() {
+  const theme = useTheme()
   return (
     <>
       <VStack
@@ -59,7 +61,8 @@ function AppHomeContent() {
         maxWidth="100%"
         maxHeight="100%"
         overflow="hidden"
-        backgroundColor="#dbdeeb"
+        // map bg
+        backgroundColor={theme.mapBackground}
       >
         <Suspense fallback={null}>
           <Home />

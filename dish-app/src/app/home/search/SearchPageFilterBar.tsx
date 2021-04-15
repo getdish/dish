@@ -100,22 +100,22 @@ const useSearchFilterButtons = ({ activeTags }: FilterBarProps) => {
           const isActive = activeTags[getTagSlug(tag.slug)] ?? false
           const themeName = isActive ? `${name}-dark` : null
           return (
-            <Theme key={`tag-${tag.id}`} name={themeName}>
-              <FilterButton
-                tag={tag}
-                position="relative"
-                {...(!isActive && {
-                  textProps: {
-                    color: rgbString(rgb),
-                  },
-                })}
-                zIndex={100 - index - groupIndex + (isActive ? 1 : 0)}
-                {...getGroupedButtonProps({
-                  index: groupIndex,
-                  items: group,
-                })}
-              />
-            </Theme>
+            <FilterButton
+              key={tag.id}
+              tag={tag}
+              theme={themeName}
+              position="relative"
+              // {...(!isActive && {
+              //   textProps: {
+              //     color: rgbString(rgb),
+              //   },
+              // })}
+              zIndex={100 - index - groupIndex + (isActive ? 1 : 0)}
+              {...getGroupedButtonProps({
+                index: groupIndex,
+                items: group,
+              })}
+            />
           )
         })}
       </HStack>

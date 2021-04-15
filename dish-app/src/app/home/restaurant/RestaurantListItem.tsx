@@ -58,7 +58,7 @@ import { openingHours, priceRange } from './RestaurantDetailRow'
 import { RestaurantFavoriteStar } from './RestaurantFavoriteButton'
 import { useTotalReviews } from './useTotalReviews'
 
-export const ITEM_HEIGHT = 250
+export const ITEM_HEIGHT = 320
 
 type RestaurantListItemProps = {
   curLocInfo: GeocodePlace | null
@@ -411,7 +411,7 @@ const RestaurantListItemContent = memo(
           </VStack>
 
           {/* CENTER CONTENT AREA */}
-          <HStack paddingLeft={10} marginTop={-15} flex={1}>
+          <HStack paddingLeft={10} flex={1}>
             <VStack
               {...contentSideProps}
               width="5%"
@@ -423,17 +423,9 @@ const RestaurantListItemContent = memo(
               {/* ensures it always flexes all the way even if short text */}
               {ensureFlexText}
 
-              {!hideTagRow && (
-                <HStack
-                  zIndex={10}
-                  paddingTop={10}
-                  paddingLeft={25}
-                  paddingBottom={20}
-                  overflow="hidden"
-                  alignItems="center"
-                  pointerEvents="auto"
-                >
-                  <HStack marginBottom={-8}>
+              <VStack flex={4} flexShrink={0} justifyContent="center">
+                <VStack spacing="md">
+                  {!hideTagRow && (
                     <RestaurantTagsRow
                       size="sm"
                       restaurantSlug={restaurantSlug}
@@ -442,15 +434,10 @@ const RestaurantListItemContent = memo(
                       grid
                       max={4}
                     />
-                  </HStack>
-                  <VStack
-                    flex={1}
-                    backgroundColor="#fafafa"
-                    height={1}
-                    transform={[{ translateY: -0.5 }]}
-                  />
-                </HStack>
-              )}
+                  )}
+                  <RestaurantOverview restaurantSlug={restaurantSlug} maxLines={2} />
+                </VStack>
+              </VStack>
 
               {/* BOTTOM ROW */}
 
@@ -513,7 +500,7 @@ const RestaurantListItemContent = memo(
                     </Suspense>
                   </VStack> */}
 
-                  {fadeOutRightElement}
+                  <FadeOut to="right" />
                 </HStack>
               </Suspense>
             </VStack>
@@ -548,23 +535,26 @@ const RestaurantListItemContent = memo(
   })
 )
 
-const fadeOutRightElement = (
-  <VStack
-    width={fadeOutWidth}
-    position="absolute"
-    top={0}
-    right={0}
-    bottom={0}
-    pointerEvents="none"
-  >
-    <LinearGradient
-      style={StyleSheet.absoluteFill}
-      colors={['rgba(255,255,255,0)', 'rgba(255,255,255,1)']}
-      start={[0, 0]}
-      end={[1, 0]}
-    />
-  </VStack>
-)
+const FadeOut = (props: { to: 'right' }) => {
+  const theme = useTheme()
+  return (
+    <VStack
+      width={fadeOutWidth}
+      position="absolute"
+      top={0}
+      right={0}
+      bottom={0}
+      pointerEvents="none"
+    >
+      <LinearGradient
+        style={StyleSheet.absoluteFill}
+        colors={[theme.backgroundColorTransparent, theme.backgroundColor]}
+        start={[0, 0]}
+        end={[1, 0]}
+      />
+    </VStack>
+  )
+}
 
 const RestaurantListItemScoreBreakdown = memo(
   graphql(

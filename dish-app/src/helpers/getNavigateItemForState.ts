@@ -60,7 +60,7 @@ const getParamsForState = (state: HomeStateTagNavigable): SearchRouteParams | an
       }
       switch (tag.type) {
         case 'lense': // dont add to tags str its in a diff route segment
-          lense = tag.slug.replace('lenses__', '')
+          lense = tag.slug.replace('lenses__', '').replace('filters__', 'f_')
           break
         case 'country':
           addTag(`in-${tag.slug}`)

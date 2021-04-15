@@ -46,8 +46,8 @@ export const RatingView = ({
     <ProgressRing percent={rating} size={outerSize} color={green} width={width}>
       {/* {stacked ? null : middleRing} */}
       <Text
+        color={theme.color}
         letterSpacing={-0.125 * width}
-        color="#000"
         opacity={0.7}
         fontWeight="900"
         fontSize={3.5 * width}
