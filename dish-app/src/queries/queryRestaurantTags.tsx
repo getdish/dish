@@ -18,11 +18,11 @@ export const queryRestaurantTags = ({
     where: {
       tag: {
         type: {
-          _neq: 'dish',
+          _neq: 'category',
         },
       },
     },
-    order_by: [{ score: order_by.desc }],
+    order_by: [{ votes_ratio: order_by.desc }],
   })
   return restaurantTags
 }
