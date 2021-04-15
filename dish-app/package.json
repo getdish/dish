@@ -41,7 +41,7 @@
     "build:splash": "expo-splash-screen --image-resize-mode contain -b '#000000' -i src/assets/splash.png",
     "build:icon": "npx react-native-svg-app-icon",
     "watch": "tsc --watch --preserveWatchOutput",
-    "generate:tags": "../dishctl.sh dish_app_generate_tags"
+    "tags:generate": "../dishctl.sh dish_app_generate_tags"
   },
   "dependencies": {
     "@babel/cli": "^7.13.0",
@@ -123,6 +123,7 @@
     "@welldone-software/why-did-you-render": "^6.0.5",
     "babel-plugin-transform-inline-environment-variables": "^0.4.3",
     "expo": "^40.0.1",
+    "expo-app-loading": "^1.0.3",
     "expo-splash-screen": "^0.9.0",
     "expo-updates": "^0.4.2",
     "expo-yarn-workspaces": "^1.3.1",

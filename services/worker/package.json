@@ -10,7 +10,7 @@
     "watch": "esdx-watch",
     "start": "./entry.sh",
     "start:clear": "CLEAR_JOBS=1 ./entry.sh",
-    "repl": "bull-repl connect",
+    "repl": "npx bull-repl connect",
     "worker": "node dist/worker.js",
     "test": "true"
   },
@@ -26,7 +26,6 @@
     "react": "^17.0.1"
   },
   "devDependencies": {
-    "bull-repl": "^0.26.3",
     "typescript": "*"
   }
 }

@@ -2,6 +2,7 @@ import { fullyIdle, series } from '@dish/async'
 import { graphql, order_by } from '@dish/graph'
 import React, { Suspense, memo, useEffect, useMemo, useRef, useState } from 'react'
 import { ScrollView, View } from 'react-native'
+import { useTheme } from 'snackui'
 import { LoadingItems, Spacer, VStack } from 'snackui'
 
 import { searchBarHeight } from '../../../constants/constants'
@@ -54,6 +55,7 @@ const RestaurantPage = memo(
   graphql((props: Props & { colors: UseColors }) => {
     const { item, colors } = props
     const { restaurantSlug, section, sectionSlug } = item
+    const theme = useTheme()
     const [restaurant] = queryRestaurant(restaurantSlug)
     const coords = restaurant?.location?.coordinates ?? []
     const { selectedDish, setSelectedDishToggle } = useSelectedDish(
@@ -142,7 +144,7 @@ const RestaurantPage = memo(
             {/* -1 margin bottom to overlap bottom border */}
             <VStack
               backgroundColor={colors.themeColor}
-              borderBottomColor={colors.lightColor}
+              borderBottomColor={theme.borderColor}
               borderBottomWidth={1}
             >
               <RestaurantHeader minHeight={450} restaurantSlug={restaurantSlug} />

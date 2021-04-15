@@ -26,14 +26,16 @@ export const LenseButton = ({
   const media = useMedia()
   const lenseColorLight = rgbString(lense.rgb, media.sm ? 0.6 : 0.4)
   const lenseColorDark = rgbString(lense.rgb.map((x) => x * 1.2))
-  const scale = size == 'md' ? 1 : size === 'lg' ? 1.2 : 1.3
+  const scale = size == 'md' ? 1 : size === 'lg' ? 1.15 : 1.2
   const sizePx = media.sm ? 42 : 42
   const bg = backgroundColor ?? (isActive ? lenseColorLight : 'transparent')
-  const iconSize = sizePx * (isActive ? 0.7 : 0.6) * scale
+  const iconSize = sizePx * (isActive ? 0.6 : 0.4) * scale
   const scaledSize = sizePx * scale
   const scaledWidth = scaledSize
   const color = media.sm || isActive ? '#ffffff' : lenseColorDark
   const lineHeight = sizePx * scale * 0.39
+  const name = tagDisplayName(lense)
+  const isLong = name.length > 4
 
   return (
     <Link {...(onPress ? { onPress } : { tag: lense })} disallowDisableWhenActive>
@@ -62,9 +64,9 @@ export const LenseButton = ({
           transform: [{ scale: 0.9 }],
         }}
         {...(isActive && {
-          transform: [{ scale: 1.12 }],
+          transform: [{ scale: 1.1 }],
           hoverStyle: {
-            transform: [{ scale: 1.12 }],
+            transform: [{ scale: 1.1 }],
           },
         })}
       >
@@ -77,8 +79,7 @@ export const LenseButton = ({
           alignItems="center"
           borderRadius={4}
           paddingHorizontal={4}
-          paddingVertical={1}
-          marginTop={-12}
+          marginTop={-10}
           backgroundColor="transparent"
           {...(isActive && {
             backgroundColor: lenseColorDark,
@@ -87,13 +88,12 @@ export const LenseButton = ({
           <Text
             fontWeight="700"
             lineHeight={lineHeight}
-            fontSize={14}
+            fontSize={isLong ? 12 : 14}
             color={color}
-            paddingHorizontal={2}
             textAlign="center"
             height={16}
           >
-            {tagDisplayName(lense)}
+            {name}
           </Text>
         </VStack>
       </VStack>

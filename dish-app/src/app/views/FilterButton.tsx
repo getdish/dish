@@ -36,9 +36,9 @@ export const FilterButton = ({
       {...rest}
       textProps={{
         fontWeight: '600',
-        // ...(typeof color !== 'undefined' && {
-        //   color,
-        // }),
+        ...(typeof color !== 'undefined' && {
+          color,
+        }),
         ...rest.textProps,
       }}
     >

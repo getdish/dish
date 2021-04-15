@@ -1,5 +1,6 @@
 import { MapPosition, slugify } from '@dish/graph'
 import React, { memo, useEffect, useMemo, useState } from 'react'
+import { useThemeName } from 'snackui'
 import {
   AbsoluteVStack,
   HStack,
@@ -220,8 +221,23 @@ export default memo(function HomePage(props: HomeStackViewProps<HomeStateItemHom
   )
 })
 
+const useThemeColor = (name: string) => {
+  const themeName = useThemeName()
+  return `${name}${themeName === 'dark' ? '-dark' : ''}`
+}
+
 const HomePageIntroDialogue = memo(() => {
+  const themeColor = useThemeColor('yellow')
+  return (
+    <Theme name={themeColor}>
+      <Inner />
+    </Theme>
+  )
+})
+
+const Inner = () => {
   const [show, setShow] = useLocalStorageState('home-intro-dialogue', true)
+  const theme = useTheme()
 
   if (!show) {
     return null
@@ -229,8 +245,8 @@ const HomePageIntroDialogue = memo(() => {
 
   return (
     <VStack
-      backgroundColor={allExtraLightColors[0]}
-      borderColor={allLightColors[0]}
+      backgroundColor={theme.backgroundColor}
+      borderColor={theme.borderColor}
       borderWidth={1}
       borderRadius={15}
       padding={10}
@@ -251,7 +267,7 @@ const HomePageIntroDialogue = memo(() => {
       </Paragraph>
     </VStack>
   )
-})
+}
 
 const HomeTopSpacer = () => {
   const media = useMedia()

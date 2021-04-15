@@ -41,17 +41,17 @@ export const SmallCircleButton = ({
   return (
     <HStack
       borderRadius={1000}
-      backgroundColor={theme.colorQuartenary}
+      backgroundColor={theme.colorTertiary}
       alignItems="center"
       justifyContent="center"
       hoverStyle={{
-        backgroundColor: theme.colorTertiary,
+        backgroundColor: theme.colorQuartenary,
       }}
       pressStyle={{
         backgroundColor: theme.colorQuartenary,
       }}
       {...(shadowed && {
-        shadowColor: 'rgba(0,0,0,0.25)',
+        shadowColor: theme.shadowColor,
         shadowRadius: 10,
         shadowOffset: { width: 0, height: 2 },
       })}

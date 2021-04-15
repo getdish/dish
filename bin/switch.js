@@ -23,7 +23,7 @@ const exec = (cmd, args, opts) => {
 async function main() {
   if (pkg.resolutions['react-native'] === '0.0.0') {
     console.log('ENABLE react-native')
-    pkg.resolutions['react-native'] = '0.63.2'
+    pkg.resolutions['react-native'] = pkg.scripts['react-native-version'] ?? '0.64.0'
     fs.writeJSONSync(pkgPath, pkg, {
       spaces: 2,
     })

@@ -16,9 +16,9 @@ import { InputFrame } from './InputFrame'
 import { setNodeOnInputStore, useInputStoreLocation } from './inputStore'
 import { SearchInputNativeDragFix } from './SearchInputNativeDragFix'
 import { setLocation } from './setLocation'
-import { useAutocompleteFocusWeb } from './useAutocompleteFocusWeb'
+import { useAutocompleteFocusWebNonTouch } from './useAutocompleteFocusWeb'
 
-const isWebNonTouch = isWeb && !supportsTouchWeb
+const isWebTouch = supportsTouchWeb
 
 export const AppSearchInputLocation = memo(() => {
   // const theme = useTheme()
@@ -33,8 +33,8 @@ export const AppSearchInputLocation = memo(() => {
   useAutocompleteInputFocus(inputStore)
 
   // focus for web
-  if (isWebNonTouch) {
-    useAutocompleteFocusWeb({ input, target: 'search' })
+  if (isWeb && !isWebTouch) {
+    useAutocompleteFocusWebNonTouch({ input, target: 'search' })
   }
 
   const handleKeyPress = useCallback((e) => {

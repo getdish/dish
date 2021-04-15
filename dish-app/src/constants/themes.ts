@@ -4,14 +4,15 @@ import { allColors, bgAlt, blue, colorNames } from './colors'
 export type MyTheme = typeof dark
 export type MyThemes = typeof themes
 
-const shared = {}
-
 const baseTheme = {
   color: '#fff',
   colorSecondary: '#ccc',
   colorTertiary: '#777',
   colorQuartenary: '#444',
   shadowColor: `rgba(0,0,0,0.3)`,
+  shadowColorLighter: `rgba(0,0,0,0.15)`,
+  backgroundColorTransluscent: '#1111155',
+  backgroundColorDarker: '#11111',
   backgroundColorTransparent: 'rgba(40,40,200,0)',
   cardBackgroundColor: '#333',
   backgroundColorAlt: bgAlt,
@@ -44,21 +45,24 @@ const error: MyTheme = {
 const darkBase = {
   mapBackground: '#111',
   backgroundColorAlt: 'rgba(240, 250, 255, 0.1)',
+  backgroundColorTransluscent: '#1111155',
+  backgroundColorDarker: '#11111',
   colorAlt: '#fff',
-  borderColor: '#252525',
+  borderColor: '#353535',
   borderColorHover: '#353535',
   color: '#fefefe',
   colorSecondary: '#ccc',
   colorTertiary: '#777',
   colorQuartenary: '#aaa',
   cardBackgroundColor: '#333',
-  shadowColor: `rgba(0,0,0,0.6)`,
+  shadowColor: `rgba(0,0,0,0.4)`,
+  shadowColorLighter: `rgba(0,0,0,0.2)`,
   backgroundColorTransparent: 'rgba(0,0,0,0)',
 }
 
 const dark = {
   name: 'dark',
-  ...shared,
+  ...baseTheme,
   ...darkBase,
   backgroundColor: '#222',
   backgroundColorSecondary: '#333',
@@ -68,7 +72,7 @@ const dark = {
 
 const darkTranslucent: MyTheme = {
   name: 'darkTranslucent',
-  ...shared,
+  ...baseTheme,
   ...darkBase,
   backgroundColor: 'rgba(0,0,0,0.7)',
   backgroundColorSecondary: 'rgba(0,0,0,0.5)',
@@ -78,6 +82,8 @@ const darkTranslucent: MyTheme = {
 
 const lightBase = {
   colorAlt: blue,
+  backgroundColorTransluscent: '#f2f2f255',
+  backgroundColorDarker: '#f2f2f2',
   backgroundColorAlt: 'rgb(240, 250, 255)',
   borderColor: '#eee',
   borderColorHover: '#d5d5d5',
@@ -88,11 +94,12 @@ const lightBase = {
   cardBackgroundColor: '#fff',
   backgroundColorTransparent: 'rgba(255,255,255,0)',
   shadowColor: `rgba(0,0,0,0.1)`,
+  shadowColorLighter: `rgba(0,0,0,0.05)`,
 }
 
 const light: MyTheme = {
   name: 'light',
-  ...shared,
+  ...baseTheme,
   ...lightBase,
   backgroundColor: '#fff',
   backgroundColorSecondary: '#f2f2f2',
@@ -102,7 +109,7 @@ const light: MyTheme = {
 
 const lightTranslucent: MyTheme = {
   name: 'lightTranslucent',
-  ...shared,
+  ...baseTheme,
   ...lightBase,
   backgroundColor: 'rgba(255,255,255,0.85)',
   backgroundColorSecondary: 'rgba(250,250,250,0.85)',
@@ -117,7 +124,7 @@ for (const [index, name] of colorNames.entries()) {
   const colors = getColorsForColor(color)
   colorThemes[name] = {
     name,
-    ...shared,
+    ...baseTheme,
     ...lightBase,
     color: colors.darkColor,
     backgroundColor: colors.extraLightColor,
@@ -130,7 +137,7 @@ for (const [index, name] of colorNames.entries()) {
   const darkName = `${name}-dark`
   colorThemes[darkName] = {
     name: darkName,
-    ...shared,
+    ...baseTheme,
     ...lightBase,
     color: colors.extraLightColor,
     backgroundColor: colors.darkColor,

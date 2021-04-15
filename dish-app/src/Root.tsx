@@ -34,7 +34,8 @@ import { useHydrateCache } from '@dish/graph'
 import { configureAssertHelpers } from '@dish/helpers'
 import { ProvideRouter } from '@dish/router'
 import { configureUseStore, reaction, reaction2 } from '@dish/use-store'
-import React, { Suspense, useEffect } from 'react'
+import AppLoading from 'expo-app-loading'
+import React, { Suspense, useEffect, useState } from 'react'
 import { useColorScheme } from 'react-native'
 import { QueryClientProvider } from 'react-query'
 import { ThemeProvider, Toast, configureThemes } from 'snackui'
@@ -105,6 +106,7 @@ export function RootSuspenseLoad(props: any) {
 }
 
 export function Root() {
+  const [isLoaded, setIsLoaded] = useState(false)
   const userStore = useUserStore()
   const colorScheme = useColorScheme()
 
@@ -115,7 +117,9 @@ export function Root() {
   }
 
   useEffect(() => {
-    start()
+    start().then(() => {
+      setIsLoaded(true)
+    })
   }, [])
 
   return (
@@ -124,6 +128,7 @@ export function Root() {
         <ProvideRouter routes={routes}>
           <QueryClientProvider client={queryClient}>
             <Suspense fallback={null}>
+              {!isLoaded && <AppLoading />}
               <App />
             </Suspense>
             <RootPortalProvider />

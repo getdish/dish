@@ -29,6 +29,7 @@ export const SearchPageFilterBar = memo(({ activeTags }: FilterBarProps) => {
 })
 
 const HomePageFilterBarLarge = ({ activeTags }: FilterBarProps) => {
+  const theme = useTheme()
   const filterButtons = useSearchFilterButtons({ activeTags })
   return (
     <HStack alignItems="center" spacing={4} justifyContent="center">
@@ -105,11 +106,11 @@ const useSearchFilterButtons = ({ activeTags }: FilterBarProps) => {
               tag={tag}
               theme={themeName}
               position="relative"
-              // {...(!isActive && {
-              //   textProps: {
-              //     color: rgbString(rgb),
-              //   },
-              // })}
+              {...(!isActive && {
+                textProps: {
+                  color: rgbString(rgb),
+                },
+              })}
               zIndex={100 - index - groupIndex + (isActive ? 1 : 0)}
               {...getGroupedButtonProps({
                 index: groupIndex,

@@ -1,9 +1,9 @@
 import { useEffect } from 'react'
 
 import { AutocompleteTarget, autocompletesStore } from './AppAutocomplete'
-import { isFocused } from './AppSearchInput'
+import { getIsFocused } from './AppSearchInput'
 
-export const useAutocompleteFocusWeb = ({
+export const useAutocompleteFocusWebNonTouch = ({
   target,
   input,
 }: {
@@ -23,7 +23,9 @@ export const useAutocompleteFocusWeb = ({
 
     const onMouseUp = () => {
       window.removeEventListener('mousemove', mouseMove)
+      const isFocused = getIsFocused()
       const shouldFocus = !wasFocused && isFocused
+      console.log('should focus', { shouldFocus, wasFocused, isFocused })
       if (!shouldFocus) {
         return
       }
@@ -35,7 +37,7 @@ export const useAutocompleteFocusWeb = ({
     }
 
     const mouseDown = (e: MouseEvent) => {
-      wasFocused = isFocused
+      wasFocused = getIsFocused()
       mouseDownAt = Date.now()
       moveInit = [e.pageX, e.pageY]
       moveAt = moveInit

@@ -51,7 +51,6 @@
     "@types/cheerio": "^0.22.24",
     "@types/pg": "^7.14.10",
     "@types/puppeteer": "^5.4.3",
-    "bull-repl": "^0.26.3",
     "typescript": "*"
   }
 }

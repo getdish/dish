@@ -3,7 +3,6 @@ require_relative '../node_modules/react-native-unimodules/cocoapods.rb'
 require_relative '../node_modules/@react-native-community/cli-platform-ios/native_modules'
 
 platform :ios, '11.0'
-# is_arm = '/usr/sbin/sysctl -n hw.optional.arm64 2>&1'.to_i
 
 target 'dish' do
   config = use_native_modules!
@@ -15,12 +14,6 @@ target 'dish' do
   )
   use_unimodules!
   use_flipper!
-
-  # if is_arm == 1 then
-  #   pod 'hermes-engine', :git => 'https://github.com/Arkkeeper/hermes.git'
-  # else
-  #   pod 'hermes-engine', '~> 0.7.2'
-  # end
 end
 
 pre_install do |installer|

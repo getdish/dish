@@ -7,7 +7,7 @@ export const InputFrame = forwardRef(({ children }: { children: any }, ref) => {
   return (
     <HStack
       alignItems="center"
-      // borderRadius={180}
+      borderRadius={6}
       flex={1}
       maxWidth="100%"
       paddingLeft={10}
@@ -15,10 +15,10 @@ export const InputFrame = forwardRef(({ children }: { children: any }, ref) => {
       position="relative"
       backgroundColor="rgba(50,50,50,0.1)"
       hoverStyle={{
-        backgroundColor: 'rgba(50,50,50,0.3)',
+        backgroundColor: 'rgba(150,150,150,0.15)',
       }}
       focusStyle={{
-        backgroundColor: 'rgba(50,50,50,0.35)',
+        backgroundColor: 'rgba(150,150,150,0.25)',
       }}
       {...(media.sm && {
         backgroundColor: theme.backgroundColorSecondary,

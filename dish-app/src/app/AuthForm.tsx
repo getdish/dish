@@ -91,7 +91,7 @@ export const AuthForm = memo(
           </Button>
           <Button
             borderRadius={0}
-            active={formPage == 'signup' && activeStyle}
+            active={formPage == 'signup'}
             onPress={() => setFormPage('signup')}
           >
             Signup

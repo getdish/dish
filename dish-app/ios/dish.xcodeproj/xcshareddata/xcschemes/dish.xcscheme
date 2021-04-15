@@ -63,7 +63,7 @@
          </EnvironmentVariable>
          <EnvironmentVariable
             key = "NODE_BINARY"
-            value = "/Users/n8/n/bin/node"
+            value = "/opt/homebrew/bin/node"
             isEnabled = "YES">
          </EnvironmentVariable>
          <EnvironmentVariable

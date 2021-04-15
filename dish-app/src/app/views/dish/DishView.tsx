@@ -182,7 +182,7 @@ const DishViewContent = (props: DishViewProps) => {
           position="absolute"
           bottom="8%"
           left="10%"
-          className="ease-in-out-fast"
+          className="ease-in-out-fast will-change-transform"
           backgroundColor="#fff"
           borderRadius={8}
           paddingVertical={3}

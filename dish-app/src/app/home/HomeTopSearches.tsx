@@ -13,10 +13,10 @@ export const HomeTopSearches = memo(() => {
   const themeName = useThemeName()
   return (
     <HStack
-      paddingHorizontal={20}
+      paddingHorizontal={18}
       // for easier touchability
       paddingVertical={16}
-      spacing="sm"
+      spacing="xs"
       marginHorizontal="auto"
       alignItems="center"
       justifyContent="center"

@@ -1,3 +1,5 @@
+import '@dish/helpers/polyfill'
+
 import { join } from 'path'
 
 import { order_by, query, resolved, startLogging } from '@dish/graph'
@@ -32,53 +34,66 @@ async function getAllTags() {
       .map(getFullTag)
   })
 
-  const tagDefaultAutocomplete = await resolved(() => {
-    const names = [
-      'Pho',
-      'Taco',
-      'Steak',
-      'Poke',
-      'Dim Sum',
-      'Banh mi',
-      'Pizza',
-      'Boba',
-      'Oysters',
-      'Coffee',
-      'Breakfast',
-      'Curry',
-      'Burger',
-      'Salad',
-      'Cookie',
-    ]
+  const tagDefaultAutocomplete = (
+    await resolved(() => {
+      const names = [
+        'Pho',
+        'Taco',
+        'Steak',
+        'Poke',
+        'Dim Sum',
+        'Banh mi',
+        'Pizza',
+        'Boba',
+        'Oysters',
+        'Coffee',
+        'Breakfast',
+        'Curry',
+        'Burger',
+        'Salad',
+        'Cookie',
+        'Sundae',
+        'Wings',
+        'Eggs Benedict',
+        'Lasagna',
+        'Wine',
+        'Audupak',
+        'Bubble Tea',
+        'Injera',
+        'Sushi',
+        'Coffee',
+        'Tea',
+      ]
 
-    return names.map((name) => {
-      const exact = query.tag({
-        where: {
-          name: {
-            _eq: name,
+      return names.map((name) => {
+        const exact = query.tag({
+          where: {
+            name: {
+              _eq: name,
+            },
+            // icon: {
+            //   _neq: '',
+            // },
           },
-          icon: {
-            _neq: '',
+          limit: 1,
+          order_by: [{ popularity: order_by.desc }],
+        })[0]
+        const fuzzy = query.tag({
+          where: {
+            name: {
+              _ilike: `%${name}%`,
+            },
+            // icon: {
+            //   _neq: '',
+            // },
           },
-        },
-        limit: 1,
-        order_by: [{ popularity: order_by.desc }],
-      })[0]
-      const fuzzy = query.tag({
-        where: {
-          name: {
-            _ilike: `%${name}%`,
-          },
-          icon: {
-            _neq: '',
-          },
-        },
-        limit: 1,
-        order_by: [{ popularity: order_by.desc }],
-      })[0]
-      return getFullTag(exact || fuzzy)
+          limit: 1,
+          order_by: [{ popularity: order_by.desc }],
+        })[0]
+        return getFullTag(exact || fuzzy)
+      })
     })
-  })
+  ).filter((x) => x.name)
 
   const tagLensesAll = await resolved(() => {
     return query

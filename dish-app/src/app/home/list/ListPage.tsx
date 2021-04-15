@@ -34,6 +34,7 @@ import {
 } from 'snackui'
 
 import { bgLight } from '../../../constants/colors'
+import { isWeb } from '../../../constants/constants'
 import { useRegionQuery } from '../../../helpers/fetchRegion'
 import { getRestaurantIdentifiers } from '../../../helpers/getRestaurantIdentifiers'
 import { promote } from '../../../helpers/listHelpers'
@@ -499,11 +500,15 @@ const ListPageContent = graphql((props: Props) => {
                       </Button>
                       <Spacer size="sm" />
                       <VStack
+                        opacity={0.8}
+                        hoverStyle={{
+                          opacity: 1,
+                        }}
                         onPress={() => {
                           setIsEditing(false)
                         }}
                       >
-                        <X size={20} />
+                        <X color={isWeb ? 'var(--color)' : '#777'} size={20} />
                       </VStack>
                       <Spacer size="lg" />
                     </>
@@ -511,12 +516,12 @@ const ListPageContent = graphql((props: Props) => {
 
                   {isEditing && (
                     <>
-                      <Text>Color:&nbsp;&nbsp;</Text>
+                      <Paragraph>Color:&nbsp;&nbsp;</Paragraph>
                       <ColorPicker colors={listColors} color={color} onChange={setColor} />
 
                       <Spacer size="xl" />
 
-                      <Text>Public:&nbsp;&nbsp;</Text>
+                      <Paragraph>Public:&nbsp;&nbsp;</Paragraph>
                       <Switch value={isPublic} onValueChange={setPublic} />
 
                       <Spacer size="xl" />

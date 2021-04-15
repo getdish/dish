@@ -127,7 +127,7 @@ export const HomeContainerLarge = (props) => {
         flex={1}
         backgroundColor={theme.backgroundColor}
         shadowColor={theme.shadowColor}
-        shadowRadius={15}
+        shadowRadius={25}
         shadowOffset={{ width: 10, height: 0 }}
         justifyContent="flex-end"
       >

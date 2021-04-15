@@ -52,7 +52,13 @@ const borderRadius = 20
 export const AppSearchBarFloating = () => {
   const media = useMedia()
   const theme = useTheme()
-  const { color, background, backgroundRgb, isColored } = useSearchBarTheme()
+  const {
+    theme: searchThemeName,
+    color,
+    background,
+    backgroundRgb,
+    isColored,
+  } = useSearchBarTheme()
   const height = searchBarHeight + 4
 
   if (media.sm) {
@@ -69,8 +75,9 @@ export const AppSearchBarFloating = () => {
   //   sendReparentableChild(parent, newParent, 0, 0)
   // }, [media.sm])
 
+  console.log('searchThemeName', searchThemeName)
   return (
-    <Theme name="dark">
+    <Theme name={media.sm ? 'light' : searchThemeName}>
       <AbsoluteVStack
         className="searchbar-container ease-in-out"
         zIndex={zIndexSearchBarFloating}

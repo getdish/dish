@@ -54,7 +54,7 @@ module.exports = function (api) {
         '@babel/preset-react',
         {
           // auto adds react import if necessaty
-          // runtime: 'automatic',
+          runtime: 'automatic',
           useBuiltIns: true,
           development: isDev,
         },

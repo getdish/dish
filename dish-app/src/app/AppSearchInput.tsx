@@ -4,6 +4,7 @@ import { Loader, Search, X } from '@dish/react-feather'
 import { getStore, reaction, useStoreInstance } from '@dish/use-store'
 import React, { memo, useCallback, useEffect, useRef, useState } from 'react'
 import { Platform, ScrollView, StyleSheet, TextInput, TouchableOpacity, View } from 'react-native'
+import { useThemeName } from 'snackui'
 import {
   HStack,
   Spacer,
@@ -31,10 +32,10 @@ import { useSearchBarTheme } from './hooks/useSearchBarTheme'
 import { InputFrame } from './InputFrame'
 import { InputStore, setNodeOnInputStore, useInputStoreSearch } from './inputStore'
 import { SearchInputNativeDragFix } from './SearchInputNativeDragFix'
-import { useAutocompleteFocusWeb } from './useAutocompleteFocusWeb'
+import { useAutocompleteFocusWebNonTouch } from './useAutocompleteFocusWeb'
 import { TagButton, getTagButtonProps } from './views/TagButton'
 
-const isWebNonTouch = isWeb && !supportsTouchWeb
+const isWebTouch = isWeb && supportsTouchWeb
 
 const placeholders = [
   'pho',
@@ -86,8 +87,8 @@ export const getSearchInput = () => {
   return searchBar
 }
 
-export let isFocused = false
-export const isSearchInputFocused = () => {
+let isFocused = false
+export const getIsFocused = () => {
   return isFocused
 }
 
@@ -142,8 +143,8 @@ export const AppSearchInput = memo(() => {
   const searchInputContainer = useRef<View>()
 
   // focus for web
-  if (isWebNonTouch) {
-    useAutocompleteFocusWeb({ input, target: 'search' })
+  if (isWeb && !isWebTouch) {
+    useAutocompleteFocusWebNonTouch({ input, target: 'search' })
   }
 
   const handleKeyPressInner = useCallback((e) => {
@@ -202,7 +203,8 @@ export const AppSearchInput = memo(() => {
                   onKeyPress={handleKeyPressInner}
                   onFocus={() => {
                     isFocused = true
-                    if (isWebNonTouch) {
+                    if (isWebTouch) {
+                      console.log('ignore focus')
                       // see above, we handle better for text selection
                       return
                     }
@@ -442,7 +444,7 @@ export const inputTextStyles = StyleSheet.create({
 const AppSearchInputTags = memo(({ input }: { input: HTMLInputElement | null }) => {
   const home = useHomeStore()
   const tags = home.searchBarTags
-  const theme = useTheme()
+  const themeName = useThemeName()
   const focusedTag = home.searchbarFocusedTag
 
   return (
@@ -454,17 +456,14 @@ const AppSearchInputTags = memo(({ input }: { input: HTMLInputElement | null }) 
             return (
               <TagButton
                 key={getTagSlug(tag.slug)}
+                theme={themeName}
                 size="lg"
                 subtleIcon
-                backgroundColor={theme.backgroundColor}
-                color={theme.color}
                 shadowColor="#00000022"
                 fontWeight="600"
-                height={40}
+                height={38}
                 shadowRadius={10}
                 shadowOffset={{ height: 2, width: 0 }}
-                borderColor={'transparent'}
-                borderRadius={100}
                 hideRating
                 hideRank
                 hoverStyle={{
