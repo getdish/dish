@@ -29,6 +29,7 @@ export const CardFrame = ({
   square?: boolean
   skew?: boolean
 }) => {
+  const theme = useTheme()
   return (
     <VStack
       className="hover-parent ease-in-out-fastest"
@@ -36,9 +37,8 @@ export const CardFrame = ({
       borderRadius={cardFrameBorderRadius}
       width={cardFrameWidth}
       height={square ? cardFrameWidth : cardFrameHeight}
-      backgroundColor="#000"
-      shadowColor="#000"
-      shadowOpacity={transparent ? 0 : 0.1}
+      backgroundColor={theme.cardBackgroundColor}
+      shadowColor={theme.shadowColor}
       shadowRadius={4}
       shadowOffset={{ height: 1, width: 0 }}
       position="relative"

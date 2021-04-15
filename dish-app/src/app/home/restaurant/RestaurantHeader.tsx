@@ -2,9 +2,11 @@ import { graphql } from '@dish/graph'
 import { Clock } from '@dish/react-feather'
 import React, { Suspense, memo, useState } from 'react'
 import { StyleSheet } from 'react-native'
+import { useThemeName } from 'snackui'
+import { useTheme } from 'snackui'
 import { AbsoluteVStack, HStack, LinearGradient, Spacer, Text, Theme, VStack } from 'snackui'
 
-import { drawerBorderRadius } from '../../../constants/constants'
+import { drawerBorderRadius, isWeb } from '../../../constants/constants'
 import { useColorsFor } from '../../../helpers/useColorsFor'
 import { queryRestaurant } from '../../../queries/queryRestaurant'
 import { HomeStateItemRestaurant } from '../../../types/homeTypes'
@@ -64,6 +66,8 @@ const RestaurantHeaderContent = memo(
     const photoWidth = width * 0.5
     const [hasScrolled, setHasScrolled] = useState(false)
     const colors = useColorsFor(restaurantSlug)
+    const themeName = useThemeName()
+    const theme = useTheme()
 
     return (
       <ContentScrollViewHorizontalFitted
@@ -99,7 +103,7 @@ const RestaurantHeaderContent = memo(
                 colors={[
                   // `${colors.themeColorAlt}aa`,
                   `${colors.themeColor}00`,
-                  `${colors.themeColor}00`,
+                  // `${colors.themeColor}00`,
                   colors.themeColor,
                 ]}
               />
@@ -177,44 +181,55 @@ const RestaurantHeaderContent = memo(
                   <VStack flex={10} overflow="hidden">
                     <VStack pointerEvents="auto" overflow="hidden" paddingRight={20}>
                       <HStack alignItems="center" flexWrap="wrap" maxWidth="100%" minHeight={55}>
-                        <Suspense fallback={null}>
-                          <HStack marginBottom={10}>
-                            <RestaurantFavoriteStar size="lg" restaurantId={restaurantId} />
-                            <Spacer size="xs" />
+                        <Theme name={themeName === 'dark' ? `${colors.name}-dark` : null}>
+                          <Suspense fallback={null}>
+                            <HStack marginBottom={10}>
+                              <RestaurantFavoriteStar size="lg" restaurantId={restaurantId} />
+                              <Spacer size="xs" />
 
-                            <RestaurantAddressLinksRow
-                              curLocInfo={state?.curLocInfo ?? null}
-                              showMenu
-                              size="lg"
-                              restaurantSlug={restaurantSlug}
-                            />
-                          </HStack>
+                              <RestaurantAddressLinksRow
+                                curLocInfo={state?.curLocInfo ?? null}
+                                showMenu
+                                size="lg"
+                                restaurantSlug={restaurantSlug}
+                              />
+                            </HStack>
 
-                          <Spacer size="sm" />
+                            <Spacer size="sm" />
 
-                          <VStack marginBottom={10}>
-                            <RestaurantAddress
-                              size="xs"
-                              address={restaurant.address ?? ''}
-                              curLocInfo={state?.curLocInfo ?? null}
-                            />
-                          </VStack>
+                            <VStack marginBottom={10}>
+                              <RestaurantAddress
+                                size="xs"
+                                address={restaurant.address ?? ''}
+                                curLocInfo={state?.curLocInfo ?? null}
+                              />
+                            </VStack>
 
-                          <VStack marginBottom={10}>
-                            <SmallButton
-                              backgroundColor="transparent"
-                              borderWidth={0}
-                              name="restaurantHours"
-                              params={{ slug: restaurantSlug }}
-                              textProps={{
-                                ellipse: true,
-                                opacity: 0.5,
-                              }}
-                              icon={<Clock size={14} color="#999" style={{ marginRight: 5 }} />}
-                              children={`${open.text}${open.nextTime ? ` (${open.nextTime})` : ''}`}
-                            />
-                          </VStack>
-                        </Suspense>
+                            <VStack marginBottom={10}>
+                              <SmallButton
+                                backgroundColor="transparent"
+                                borderWidth={0}
+                                name="restaurantHours"
+                                params={{ slug: restaurantSlug }}
+                                textProps={{
+                                  ellipse: true,
+                                  opacity: 0.5,
+                                }}
+                                icon={
+                                  <Clock
+                                    size={14}
+                                    color={isWeb ? 'var(--color)' : '#999'}
+                                    style={{ marginRight: 5 }}
+                                  />
+                                }
+                              >
+                                <Text color={theme.color}>
+                                  {`${open.text}${open.nextTime ? ` (${open.nextTime})` : ''}`}
+                                </Text>
+                              </SmallButton>
+                            </VStack>
+                          </Suspense>
+                        </Theme>
                       </HStack>
 
                       {afterAddress}
@@ -234,18 +249,21 @@ const RestaurantHeaderContent = memo(
                       <Spacer size="lg" />
 
                       <VStack marginLeft={-10}>
-                        <CommentBubble
-                          avatar={<LogoCircle />}
-                          name="DishBot"
-                          avatarBackgroundColor="transparent"
-                          text={
-                            <RestaurantOverview
-                              maxLines={4}
-                              size="lg"
-                              restaurantSlug={restaurantSlug}
-                            />
-                          }
-                        />
+                        {/* idk why this theme here is necessary */}
+                        <Theme name={themeName}>
+                          <CommentBubble
+                            avatar={<LogoCircle />}
+                            name="DishBot"
+                            avatarBackgroundColor="transparent"
+                            text={
+                              <RestaurantOverview
+                                maxLines={4}
+                                size="lg"
+                                restaurantSlug={restaurantSlug}
+                              />
+                            }
+                          />
+                        </Theme>
                       </VStack>
 
                       <RestaurantDeliveryButtons

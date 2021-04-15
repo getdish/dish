@@ -9,14 +9,14 @@ PRIMARY_REGION = "lax"
 [checks.role]
 type     = "script"
 interval = 60000
-timeout  = 10000
+timeout  = 40000
 command  = "flycheck"
 args     = [ "role" ]
 
 [checks.pg]
 type         = "script"
 interval     = 30000
-timeout      = 10000
+timeout      = 40000
 grace_period = "10s"
 command      = "flycheck"
 args         = [ "pg" ]
@@ -24,7 +24,7 @@ args         = [ "pg" ]
 [checks.vm]
 type     = "script"
 interval = 30000
-timeout  = 10000
+timeout  = 40000
 command  = "flycheck"
 args     = [ "vm" ]
 

@@ -234,14 +234,14 @@ const DishViewContent = (props: DishViewProps) => {
       )}
 
       <AbsoluteVStack fullscreen borderRadius={10000} overflow="hidden">
-        {isFallback && (
+        {/* {isFallback && (
           <AbsoluteVStack
             fullscreen
             transform={[{ translateX: -size * 0.75 }, { translateY: size * 0.42 }]}
           >
             <SineWave color={backgroundColor} size={size + 10} />
           </AbsoluteVStack>
-        )}
+        )} */}
         <LinearGradient
           style={[StyleSheet.absoluteFill]}
           colors={[

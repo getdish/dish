@@ -1,9 +1,11 @@
 import { ExternalLink, Link, MapPin } from '@dish/react-feather'
 import React from 'react'
 import { Spacer, Text } from 'snackui'
+import { useTheme } from 'snackui'
 import { HStack } from 'snackui'
 import { useMedia } from 'snackui'
 
+import { isWeb } from '../../../constants/constants'
 import { GeocodePlace } from '../../../types/homeTypes'
 import { SmallButton } from '../../views/SmallButton'
 import { AddressSize, getAddressText } from './RestaurantAddressLinksRow'
@@ -20,6 +22,7 @@ export const RestaurantAddress = ({
   color?: string
 }) => {
   const media = useMedia()
+  const theme = useTheme()
   return (
     <SmallButton
       borderWidth={0}
@@ -36,12 +39,13 @@ export const RestaurantAddress = ({
           flexGrow={1}
           overflow="hidden"
           maxWidth={media.sm ? 160 : 200}
+          color={theme.color}
           maxHeight={20}
         >
           {getAddressText(curLocInfo, address, size)}
         </Text>
         <Spacer />
-        <ExternalLink size={12} />
+        <ExternalLink style={{ opacity: 0.5 }} color={isWeb ? 'var(--color)' : '#777'} size={12} />
       </HStack>
     </SmallButton>
   )

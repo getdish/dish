@@ -10,8 +10,15 @@ const url =
 export const redisClient = redis.createClient({
   url,
 })
+
 redisClient.on('error', (err) => {
-  console.log('redis ', JSON.stringify(err))
+  console.log('redis error ', JSON.stringify(err))
 })
 
-export const redisGet = promisify(redisClient.get).bind(redisClient)
+const rg = promisify(redisClient.get).bind(redisClient)
+export const redisGet = async (key: string) => {
+  if (redisClient.connected) {
+    return await rg(key)
+  }
+  return null
+}

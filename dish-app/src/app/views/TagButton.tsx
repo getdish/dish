@@ -151,7 +151,7 @@ const TagButtonInner = (props: TagButtonProps) => {
     // @ts-expect-error
     <Button
       noTextWrap
-      backgroundColor={backgroundColor ?? theme.backgroundColorTertiary}
+      backgroundColor={backgroundColor || theme.backgroundColorTertiary}
       className="ease-in-out-faster"
       // height={isSmall ? 28 : 34}
       borderRadius={isSmall ? 8 : 10}
@@ -200,9 +200,9 @@ const TagButtonInner = (props: TagButtonProps) => {
       <Text
         ellipse
         fontSize={fontSize}
-        fontWeight={fontWeight ?? '600'}
+        fontWeight={fontWeight || '600'}
         lineHeight={isSmall ? 22 : 26}
-        color={theme.color}
+        color={color || theme.color}
         {...(floating && {
           color: '#fff',
           textShadowColor: 'rgba(0,0,0,0.4)',

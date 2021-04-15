@@ -93,6 +93,7 @@ steps:
       - worker
 
   - label: "push BASE images to registry"
+    if: build.branch == "production" || build.branch == "nate/dev"
     depends_on: test-images
     command: .buildkite/scripts/push_images.sh
 

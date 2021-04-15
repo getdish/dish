@@ -42,7 +42,6 @@ export const AppIntroLogin = memo(() => {
         )}
 
         <Paragraph
-          color={isWeb ? 'var(--color)' : '#777'}
           paddingHorizontal="3%"
           minWidth={280}
           fontWeight="800"
