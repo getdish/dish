@@ -58,7 +58,7 @@
          </EnvironmentVariable>
          <EnvironmentVariable
             key = "NODE_ENV"
-            value = "production"
+            value = "development"
             isEnabled = "YES">
          </EnvironmentVariable>
          <EnvironmentVariable

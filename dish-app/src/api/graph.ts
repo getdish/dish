@@ -26,8 +26,8 @@ const hasuraHeaders = {
   ...getAuthHeaders(true),
 }
 
-function shouldCache(body: string) {
-  return body.includes('restaurant_with_tags')
+function shouldCache(body?: string) {
+  return body?.includes('restaurant_with_tags')
 }
 
 export default route(async (req, res) => {

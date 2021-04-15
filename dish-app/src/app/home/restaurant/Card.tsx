@@ -122,7 +122,7 @@ export function Card({
             />
           )}
 
-          <VStack className="hover-75-opacity-child" opacity={dimImage ? 0.75 : 0.9} {...frame}>
+          <VStack className="hover-75-opacity-child" opacity={dimImage ? 0.8 : 1} {...frame}>
             {typeof photo === 'string' ? (
               photo ? (
                 <Image resizeMode="cover" {...sizes} style={frame} source={{ uri: photo }} />
@@ -173,7 +173,7 @@ export function Card({
             transform={[{ rotate: '15deg' }, { scaleX: 2.5 }, { translateY: -20 }]}
           >
             <LinearGradient
-              style={{ width: 150, height: 150 }}
+              style={{ width: 200, height: 200 }}
               colors={[colors.pastelColor, colors.pastelColor, `${colors.color}00`]}
             />
           </AbsoluteVStack>

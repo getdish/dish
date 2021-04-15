@@ -29,7 +29,7 @@ import { LogoCircle } from './DishLogo'
 import { LogoVertical } from './LogoVertical'
 
 const DishParagraph = (props: ParagraphProps) => {
-  return <Paragraph className="title-font" sizeLineHeight={1.4} {...props} />
+  return <Paragraph className="title-font" sizeLineHeight={1.1} {...props} />
 }
 
 const DishTitle = (props: TitleProps) => {
@@ -43,7 +43,7 @@ const DishTitleSlanted = (props: TitleProps) => {
       selectable
       backgroundColor="#444"
       paddingHorizontal={15}
-      paddingVertical={6}
+      paddingVertical={12}
       borderRadius={10}
       zIndex={10}
       transform={[
@@ -169,7 +169,7 @@ export const SiteRoot = () => {
           </VStack>
         </VStack>
 
-        <ContentSection marginTop={-80} marginHorizontal="auto" zIndex={1000}>
+        <ContentSection marginTop={-85} marginHorizontal="auto" zIndex={900}>
           <DishParagraph textAlign="center" sizeLineHeight={0.8} size={3}>
             <b>
               <Highlight backgroundColor="var(--teal)" color="#fff">
@@ -341,7 +341,7 @@ export const SiteRoot = () => {
           <VStack
             className="shadow-above"
             height={200}
-            marginBottom={-50}
+            marginBottom={-60}
             marginTop={-100}
             alignItems="flex-end"
             justifyContent="flex-end"
@@ -446,31 +446,31 @@ export const SiteRoot = () => {
                 </DishParagraph>
 
                 <DishParagraph size="xxxxl">
-                  It's 2033, an augmented reality CryptoKitty, Jerry, nestles among ethereal excel
-                  sheets in your lap. You smile at the glowing kitty.
+                  It's 2033, your virtual CryptoKitty, Jerry, nestles ethereally among excel sheets
+                  in your lap. You smile at the glowing bugger.
                 </DishParagraph>
                 <DishParagraph size="xxl">
-                  “Should we reschedule the dentists?” a stretching Jerry asks, “with traffic,
-                  you'll miss the matinee tomorrow."
+                  “Should we reschedule the dentists tomorrow?” Jerry asks, “with traffic, you'll
+                  miss the matinee."
                 </DishParagraph>
                 <DishParagraph size="xxl">
-                  You sigh, tilting your head, “is the minute I finish work the time for this?”
+                  You sigh and raise a brow, “is the minute I finish work really the time for this,
+                  Jer?”
                 </DishParagraph>
                 <DishParagraph size="xxl">
-                  Still, you have to give Jerry credit. You did forget about the matinee. Suddenly,
-                  you realize you're forgetting something. “The mat-in-ay...” you repeat out loud,
-                  lazily, “<b>mat</b>
-                  -in-ayyyy. What am I forgetting, Jer?”
-                </DishParagraph>
-
-                <DishParagraph size="xxl">
-                  A compressor clicks. “Wait a second...” you jump up, “<b>Matt</b>... his
-                  birthday's tomorrow! Jer, how did you forget that?”
+                  Still, give Jerry credit. You had forgetten the matinee. “Going to the
+                  mat-in-ay...” you repeat out loud, “the <b>mat</b>
+                  -in-ayyyy...” hangs in your mouth. “Am I forgetting something, Jer?”
                 </DishParagraph>
 
                 <DishParagraph size="xxl">
-                  “I didn't. We'll just get him this 1-of-1000 <b>Kaws paisley Handkerchief NFT</b>,
-                  perfect for his kitty” Jerry offers without hesitation, “only $20.”
+                  The compressor clicks. “Wait a second... the matinee... <b>Matt</b>... his
+                  birthday's tomorrow! Jer, how'd you forget?”
+                </DishParagraph>
+
+                <DishParagraph size="xxl">
+                  “I didn't! Just get him this 1-of-1000 <b>Kaws paisley Handkerchief NFT</b>, the
+                  perfect accessory for his kitty... only $50.”
                 </DishParagraph>
 
                 <VStack alignItems="center">
@@ -478,10 +478,6 @@ export const SiteRoot = () => {
                     Should you do it?
                   </DishTitleSlanted>
                 </VStack>
-
-                <DishParagraph size="xxxl">It depends. Does Matt like CryptoKitties?</DishParagraph>
-
-                <DishParagraph size="xxl">Do their NFT's hold value?</DishParagraph>
 
                 <DishParagraph size="xxl">
                   To get to the point, the long run value of any crypto project should be judged on
@@ -510,7 +506,7 @@ export const SiteRoot = () => {
 }
 
 const Highlight = (props: TextProps) => {
-  return <Text paddingHorizontal={8} paddingVertical={2} {...props} />
+  return <Text paddingHorizontal={12} paddingVertical={4} borderRadius={3} {...props} />
 }
 
 const ContentSection = (props: StackProps) => {

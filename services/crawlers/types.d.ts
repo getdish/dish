@@ -475,6 +475,16 @@ declare module "@dish/crawlers" {
 }
 
 declare module "@dish/crawlers" {
+    export const RESTAURANT_WEIGHTS: {
+        yelp: number;
+        tripadvisor: number;
+        michelin: number;
+        infatuated: number;
+        ubereats: number;
+        doordash: number;
+        grubhub: number;
+        google: number;
+    };
     export class RestaurantRatings {
         crawler: Self;
         constructor(crawler: Self);
