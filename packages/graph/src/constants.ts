@@ -18,17 +18,12 @@ export const isNative = process.env.TARGET === 'native'
 export const JWT_SECRET = process.env.JWT_SECRET || '12345678901234567890123456789012'
 export const HASURA_SECRET =
   process.env.HASURA_GRAPHQL_ADMIN_SECRET || (process.env.TARGET === 'node' ? 'password' : '')
-const LOCAL_HOST = process.env.LOCAL_HOST ?? `localhost`
+const LOCAL_HOST = process.env.LOCAL_HOST ?? getWindow()?.location?.hostname ?? `localhost`
 const PROD_ORIGIN = 'https://dishapp.com'
-const ORIGIN = isProd
-  ? PROD_ORIGIN
-  : isStaging
-  ? PROD_ORIGIN
-  : getWindow()?.location?.origin ?? `http://${LOCAL_HOST}:4444`
+const ORIGIN = isProd ? PROD_ORIGIN : isStaging ? PROD_ORIGIN : `http://${LOCAL_HOST}:4444`
 const ORIGIN_MINUS_PORT = ORIGIN.replace(/:[0-9]+/, '')
-
-export const DISH_API_ENDPOINT = process.env.DISH_API_ENDPOINT ?? ORIGIN
-export const SEARCH_DOMAIN = `${ORIGIN}/api/search`
+export const DISH_API_ENDPOINT = `${ORIGIN}/api`
+export const SEARCH_DOMAIN = `${DISH_API_ENDPOINT}/search`
 export const SEARCH_DOMAIN_INTERNAL = (() => {
   const staging = 'https://search-staging.dishapp.com'
   const live = 'https://search.dishapp.com'
@@ -43,7 +38,7 @@ export const OneUUID = '00000000-0000-0000-0000-000000000001'
 export const globalTagId = ZeroUUID
 export const externalUserUUID = OneUUID
 
-export const TILES_HOST = `${DISH_API_ENDPOINT}/api/tile`
+export const TILES_HOST = `${DISH_API_ENDPOINT}/tile`
 export const TILES_HOST_INTERNAL = (() => {
   const prod = 'https://martin-tiles.dishapp.com'
   const staging = 'https://martin-tiles-staging.dishapp.com'
@@ -53,11 +48,11 @@ export const TILES_HOST_INTERNAL = (() => {
   return dev
 })()
 
-export const GRAPH_DOMAIN = process.env.HASURA_ENDPOINT || `http://${LOCAL_HOST}:8080`
+export const GRAPH_DOMAIN = process.env.HASURA_ENDPOINT || `http://${ORIGIN_MINUS_PORT}:8080`
 export const GRAPH_API_INTERNAL = `${GRAPH_DOMAIN}/v1/graphql`
-export const GRAPH_API = `${DISH_API_ENDPOINT}/api/graph`
+export const GRAPH_API = `${DISH_API_ENDPOINT}/graph`
 
-console.log('graph.constants', {
+console.log('graph.const', {
   DISH_API_ENDPOINT,
   LOCAL_HOST,
   TILES_HOST,

@@ -151,11 +151,12 @@ const TagButtonInner = (props: TagButtonProps) => {
     // @ts-expect-error
     <Button
       noTextWrap
-      backgroundColor={theme.backgroundColorTertiary}
+      backgroundColor={backgroundColor ?? theme.backgroundColorTertiary}
       className="ease-in-out-faster"
-      height={isSmall ? 28 : 34}
+      // height={isSmall ? 28 : 34}
       borderRadius={isSmall ? 8 : 10}
       paddingHorizontal={isSmall ? 4 : 8}
+      paddingVertical={isSmall ? 2 : 4}
       // used again down below
       minHeight={isSmall ? 22 : 26}
       {...rest}
@@ -203,6 +204,7 @@ const TagButtonInner = (props: TagButtonProps) => {
         lineHeight={isSmall ? 22 : 26}
         color={theme.color}
         {...(floating && {
+          color: '#fff',
           textShadowColor: 'rgba(0,0,0,0.4)',
           textShadowOffset: { height: 1, width: 0 },
           textShadowRadius: 3,
@@ -244,7 +246,7 @@ const TagButtonInner = (props: TagButtonProps) => {
       )}
 
       {!!after && (
-        <Text fontWeight="300" fontSize={smallerFontSize}>
+        <Text color={theme.color} fontWeight="300" fontSize={smallerFontSize}>
           {after}
         </Text>
       )}

@@ -35,12 +35,14 @@ sed 's/STOLONCTL_/STKEEPER_/' /data/.env >> /data/.env
 sed 's/STOLONCTL_/STSENTINEL_/' /data/.env >> /data/.env
 sed 's/STOLONCTL_/STPROXY_/' /data/.env >> /data/.env
 
-PG_PARAMS='"pgParameters":{"max_connections":"400", "work_mem": "64MB", "jit": "on"}'
+PG_PARAMS='"pgParameters":{"max_connections":"300", "work_mem": "40MB" }'
 
 # write stolon initial cluster spec
 cat <<EOF > /fly/initial-cluster-spec.json
 {"initMode":"new", $PG_PARAMS}
 EOF
+
+cat /fly/initial-cluster-spec.json
 
 inited=$(stolonctl status || echo "false")
 if [[ "$inited" != "false" ]]; then

@@ -25,6 +25,7 @@
     "db:migrate": "./dishctl.sh db_migrate_local",
     "db:migrate:test": "POSTGRES_DB=test ./dishctl.sh db_migrate_local",
     "app": "yarn workspace @dish/app app",
+    "app:native": "yarn workspace @dish/app app:native",
     "app:reset": "yarn workspace @dish/app app:reset",
     "web": "yarn workspace @dish/app web",
     "web:prod": "yarn workspace @dish/app web:prod",

@@ -9,9 +9,9 @@ import _, { capitalize, debounce, isEqual, throttle } from 'lodash'
 import mapboxgl, { MapboxGeoJSONFeature } from 'mapbox-gl'
 import React, { useEffect, useRef, useState } from 'react'
 import { Dimensions } from 'react-native'
-import { useGet } from 'snackui'
+import { useGet, useThemeName } from 'snackui'
 
-import { darkPurple, grey, purple } from '../constants/colors'
+import { darkPurple, grey } from '../constants/colors'
 import { MAPBOX_ACCESS_TOKEN, isM1Sim } from '../constants/constants'
 import { hexToRGB } from '../helpers/hexToRGB'
 import { hasMovedAtLeast } from '../helpers/mapHelpers'
@@ -60,6 +60,7 @@ export const MapView = (props: MapProps) => {
   const mapNode = useRef<HTMLDivElement>(null)
   const [map, setMap] = useState<mapboxgl.Map | null>(null)
   const getProps = useGet(props)
+  const themeName = useThemeName() as any
 
   // window resize
   useEffect(() => {
@@ -99,8 +100,9 @@ export const MapView = (props: MapProps) => {
       getProps,
       props,
       internal,
+      themeName,
     })
-  }, [])
+  }, [themeName])
 
   // hide regions
   useEffect(() => {
@@ -308,6 +310,7 @@ function setupMapEffect({
   internal,
   isMounted,
   getProps,
+  themeName,
 }: {
   setMap: React.Dispatch<React.SetStateAction<mapboxgl.Map>>
   props: MapProps
@@ -315,7 +318,9 @@ function setupMapEffect({
   internal: MapInternalState
   isMounted: React.RefObject<boolean>
   getProps: () => MapProps
+  themeName: 'light' | 'dark'
 }) {
+  const isDark = themeName === 'dark'
   const map = new mapboxgl.Map({
     container: mapNode,
     style: props.style,
@@ -724,7 +729,7 @@ function setupMapEffect({
             // 'text-anchor': 'bottom',
           },
           paint: {
-            'text-color': purple,
+            'text-color': isDark ? '#fff' : darkPurple,
             // 'text-halo-color': blue,
             // 'text-halo-width': 1,
           },
@@ -807,39 +812,36 @@ function setupMapEffect({
             promoteId,
           })
 
-          map.addLayer(
-            {
-              id: `${name}.fill`,
-              type: 'fill',
-              source: name,
-              minzoom: minZoom,
-              maxzoom: maxZoom,
-              paint: {
-                'fill-opacity': [
-                  'case',
-                  ['==', ['feature-state', 'active'], true],
-                  1.0,
-                  ['==', ['feature-state', 'hover'], true],
-                  0.3,
-                  ['==', ['feature-state', 'active'], null],
-                  0.15,
-                  0,
-                ],
-                'fill-color': [
-                  'case',
-                  ['==', ['feature-state', 'active'], true],
-                  activeColor,
-                  ['==', ['feature-state', 'hover'], true],
-                  ['get', 'color'],
-                  ['==', ['feature-state', 'active'], null],
-                  ['case', ['has', 'color'], ['get', 'color'], 'rgba(100,200,100,0.4)'],
-                  'green',
-                ],
-              },
-              'source-layer': name,
+          map.addLayer({
+            id: `${name}.fill`,
+            type: 'fill',
+            source: name,
+            minzoom: minZoom,
+            maxzoom: maxZoom,
+            paint: {
+              'fill-opacity': [
+                'case',
+                ['==', ['feature-state', 'active'], true],
+                1.0,
+                ['==', ['feature-state', 'hover'], true],
+                isDark ? 0.5 : 0.3,
+                ['==', ['feature-state', 'active'], null],
+                isDark ? 0.25 : 0.15,
+                0,
+              ],
+              'fill-color': [
+                'case',
+                ['==', ['feature-state', 'active'], true],
+                activeColor,
+                ['==', ['feature-state', 'hover'], true],
+                ['get', 'color'],
+                ['==', ['feature-state', 'active'], null],
+                ['case', ['has', 'color'], ['get', 'color'], 'rgba(100,200,100,0.4)'],
+                'green',
+              ],
             },
-            firstSymbolLayerId
-          )
+            'source-layer': name,
+          })
 
           map.addLayer(
             {
@@ -904,11 +906,11 @@ function setupMapEffect({
                 'text-color': [
                   'case',
                   ['==', ['feature-state', 'active'], true],
-                  '#000',
+                  isDark ? '#fff' : '#000',
                   ['==', ['feature-state', 'hover'], true],
-                  'rgba(0,0,0,0.5)',
+                  isDark ? 'rgba(255,255,255,0.65)' : 'rgba(0,0,0,0.5)',
                   ['==', ['feature-state', 'active'], null],
-                  'rgba(0,0,0,0.65)',
+                  isDark ? 'rgba(255,255,255,0.85)' : 'rgba(0,0,0,0.65)',
                   'green',
                 ],
                 // 'text-halo-color': 'rgba(255,255,255,0.1)',

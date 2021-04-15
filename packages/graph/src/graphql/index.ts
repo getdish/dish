@@ -8,7 +8,7 @@ import { GeneratedSchema, generatedSchema, scalarsEnumsHash } from './schema.gen
 export * from './schema.generated'
 
 export const fetchLog = (input: RequestInfo, init?: RequestInit | undefined): Promise<Response> => {
-  if (process.env.DEBUG || process.env.LOG_FETCH) {
+  if (true || process.env.DEBUG || process.env.LOG_FETCH) {
     console.log(` [gqless]
       fetch('${input}', ${
       init ? JSON.stringify(init, null, 2) : undefined

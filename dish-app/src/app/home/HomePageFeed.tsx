@@ -63,7 +63,7 @@ export const HomePageFeed = memo(
     const { item, isActive } = props
     const { region, center, span } = useHomeStateById<HomeStateItemHome>(item.id)
     const items = useHomeFeed(props)
-    const isLoading = !region || items[0]?.id === null
+    const isLoading = !!(!region || !items[0]?.id)
     const [hovered, setHovered] = useState<null | string>(null)
     const [hoveredResults, setHoveredResults] = useState<null | {
       via: FI['type']
@@ -84,6 +84,8 @@ export const HomePageFeed = memo(
         return []
       })
     }, [items, hoveredResults])
+
+    console.log(items, results, isLoading)
 
     useSetAppMap({
       isActive,
@@ -161,7 +163,6 @@ export const HomePageFeed = memo(
       <>
         {isLoading && (
           <>
-            <LoadingItems />
             <LoadingItems />
           </>
         )}

@@ -84,7 +84,7 @@ export const HomeFeedListsContents = graphql(({ region, onHoverResults }: Props)
     return (
       <>
         <FeedSlantedTitle>
-          <HStack alignItems="center" marginVertical={-2}>
+          <HStack alignItems="center">
             <Text fontWeight="700" fontSize={20}>
               Top Lists
             </Text>
@@ -98,8 +98,8 @@ export const HomeFeedListsContents = graphql(({ region, onHoverResults }: Props)
                 region: homeStore.lastRegionSlug,
               }}
             >
-              <SmallCircleButton>
-                <Plus size={14} color="#fff" />
+              <SmallCircleButton padding={6}>
+                <Plus size={20} color="#fff" />
               </SmallCircleButton>
             </Link>
           </HStack>

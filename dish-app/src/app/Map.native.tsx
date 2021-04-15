@@ -153,7 +153,7 @@ export const MapView = ({ center, span, features, onMoveEnd, onSelect, style }: 
             lineColorActive,
             lineColorHover,
           }) => {
-            const url = `${DISH_API_ENDPOINT}/api/tile/${name}.json`
+            const url = `${DISH_API_ENDPOINT}/tile/${name}.json`
             const sourceId = `${name}`.replace('.', '')
             const labelUrl = labelSource ? `${TILES_HOST}/${labelSource}.json` : ''
             console.log('Loading tile url', sourceId, url, labelUrl)

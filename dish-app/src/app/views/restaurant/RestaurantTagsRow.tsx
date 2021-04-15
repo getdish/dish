@@ -21,7 +21,7 @@ type TagRowProps = {
 }
 
 export const RestaurantTagsRow = (props: TagRowProps) => {
-  const height = 80 * (props.size === 'sm' ? 0.8 : 1)
+  const height = 80 * (props.size === 'sm' ? 0.9 : 1)
   return (
     <HStack maxHeight={height} maxWidth="100%" overflow="hidden" flexWrap="wrap">
       {/* may jump up a bit on load */}

@@ -418,13 +418,14 @@ const RestaurantListItemContent = memo(
               className="fix-safari-shrink-height"
               justifyContent="center"
               flex={1}
+              overflow="hidden"
             >
               {/* ROW: OVERVIEW */}
               {/* ensures it always flexes all the way even if short text */}
               {ensureFlexText}
 
-              <VStack flex={4} flexShrink={0} justifyContent="center">
-                <VStack spacing="md">
+              <VStack flex={1} flexShrink={0} justifyContent="center">
+                <VStack flex={1} overflow="hidden" spacing="md">
                   {!hideTagRow && (
                     <RestaurantTagsRow
                       size="sm"

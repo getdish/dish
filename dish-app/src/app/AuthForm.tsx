@@ -20,7 +20,6 @@ import { useQueryLoud } from '../helpers/useQueryLoud'
 import { router, useRouterCurPage } from '../router'
 import { useUserStore, userStore } from './userStore'
 import { Link } from './views/Link'
-import { LinkButtonProps } from './views/LinkProps'
 import { SignInAppleButton } from './views/SignInAppleButton'
 import { SmallTitle } from './views/SmallTitle'
 

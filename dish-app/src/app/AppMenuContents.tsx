@@ -1,15 +1,11 @@
 import { slugify } from '@dish/graph'
 import React, { memo } from 'react'
-import { Paragraph } from 'snackui'
-import { AbsoluteVStack, Text } from 'snackui'
-import { HStack } from 'snackui'
-import { Box, BoxProps, Divider, Spacer, Toast, VStack } from 'snackui'
+import { AbsoluteVStack, Box, BoxProps, Divider, Paragraph, Spacer, Toast, VStack } from 'snackui'
 
 import { isHermes } from '../constants/platforms'
 import { UserMenuButton } from './AppMenu'
 import { appMenuStore } from './AppMenuStore'
 import { AuthForm } from './AuthForm'
-import { UserAvatar } from './home/user/UserAvatar'
 import { useUserStore } from './userStore'
 import { LinkButton } from './views/LinkButton'
 import { LinkButtonProps } from './views/LinkProps'
@@ -20,7 +16,13 @@ export const AppMenuContents = memo(
     const { isLoggedIn, user, logout } = userStore
 
     return (
-      <Box backgroundColor="#000" alignItems="stretch" minWidth={240} {...props}>
+      <Box
+        backgroundColor="#000"
+        alignItems="stretch"
+        pointerEvents="auto"
+        minWidth={240}
+        {...props}
+      >
         <VStack spacing="sm" padding={10}>
           {isLoggedIn && (
             <MenuLinkButton

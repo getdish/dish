@@ -1,6 +1,8 @@
 import { Filter } from '@dish/react-feather'
 import { groupBy, sortBy } from 'lodash'
 import React, { memo, useState } from 'react'
+import { SafeAreaView } from 'react-native-safe-area-context'
+import { AbsoluteVStack } from 'snackui'
 import { HStack, Modal, Text, Theme, VStack, useMedia, useTheme } from 'snackui'
 
 import { isWeb } from '../../../constants/constants'
@@ -29,7 +31,6 @@ export const SearchPageFilterBar = memo(({ activeTags }: FilterBarProps) => {
 })
 
 const HomePageFilterBarLarge = ({ activeTags }: FilterBarProps) => {
-  const theme = useTheme()
   const filterButtons = useSearchFilterButtons({ activeTags })
   return (
     <HStack alignItems="center" spacing={4} justifyContent="center">
@@ -72,13 +73,16 @@ const HomePageFilterBarSmall = ({ activeTags }: FilterBarProps) => {
             maxHeight={300}
             visible
           >
-            <PaneControlButtons>
-              <CloseButton onPress={() => setShow(false)} />
-            </PaneControlButtons>
-            <SlantedTitle>Filters</SlantedTitle>
-            <VStack alignItems="center" justifyContent="center" flex={1} spacing="sm">
-              {filterButtons}
-            </VStack>
+            <SafeAreaView style={{ flex: 1, position: 'relative' }}>
+              <VStack alignSelf="flex-end" padding={20} marginVertical={-20}>
+                <CloseButton onPress={() => setShow(false)} />
+              </VStack>
+
+              <SlantedTitle>Filters</SlantedTitle>
+              <VStack alignItems="center" justifyContent="center" flex={1} spacing="sm">
+                {filterButtons}
+              </VStack>
+            </SafeAreaView>
           </Modal>
         </Theme>
       )}

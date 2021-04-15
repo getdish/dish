@@ -72,11 +72,11 @@ class UserStore extends Store {
   }
 
   async login(obj) {
-    await this.fetch('POST', '/api/user/login', obj, this.afterLogin)
+    await this.fetch('POST', '/user/login', obj, this.afterLogin)
   }
 
   async register(obj) {
-    await this.fetch('POST', '/api/user/new', obj, this.afterLogin)
+    await this.fetch('POST', '/user/new', obj, this.afterLogin)
   }
 
   async afterLogin(data) {

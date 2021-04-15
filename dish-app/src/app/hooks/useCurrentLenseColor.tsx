@@ -4,8 +4,8 @@ import { HomeStateItemRestaurant } from '../../types/homeTypes'
 import { useHomeStore } from '../homeStore'
 
 export const defaultLenseColor = {
-  name: 'grey',
-  rgb: [20, 20, 20] as RGB,
+  name: 'dark',
+  rgb: [40, 40, 40] as RGB,
 }
 
 export const useCurrentLenseColor = () => {

@@ -21,6 +21,4 @@ RUN git init && git add ./dishctl.sh && git commit -m 'init'
 
 WORKDIR /app/services/cron
 
-RUN crontab crontab.txt
-
 CMD ["entry.sh"]

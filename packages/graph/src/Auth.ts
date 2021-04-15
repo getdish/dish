@@ -22,7 +22,7 @@ export type EditUserResponse = {
 }
 
 export async function userEdit(user: EditUserProps): Promise<EditUserResponse | null> {
-  return await (await userFetchSimple('POST', '/api/user/edit', user)).json()
+  return await (await userFetchSimple('POST', '/user/edit', user)).json()
 }
 
 type UserFetchOpts = {
@@ -48,12 +48,13 @@ export async function userFetchSimple(
     },
     body: rawData ? data : JSON.stringify(data),
   }
-  const response = await fetch(DISH_API_ENDPOINT + path, init)
+  const url = DISH_API_ENDPOINT + path
+  const response = await fetch(url, init)
   if (response.status >= 300) {
     if (response.status == 401) {
       handleLogOut?.()
     }
-    console.error('Auth fetch() error', method, path, data, response.status, response.statusText)
+    console.error('Auth fetch() error', url, method, data, response.status, response.statusText)
   }
   return response
 }
@@ -67,8 +68,8 @@ class AuthModel {
 
   getRedirectUri() {
     return isSafari
-      ? `${DISH_API_ENDPOINT}/api/user/appleAuthorize`
-      : `${DISH_API_ENDPOINT}/api/user/appleAuthorizeChrome`
+      ? `${DISH_API_ENDPOINT}/user/appleAuthorize`
+      : `${DISH_API_ENDPOINT}/user/appleAuthorizeChrome`
   }
 
   hasEverLoggedIn = typeof window !== 'undefined' && !!localStorage.getItem(HAS_LOGGED_IN_BEFORE)
@@ -115,7 +116,7 @@ class AuthModel {
   }
 
   async uploadAvatar(body: FormData) {
-    const response = await this.api('POST', '/api/user/uploadAvatar', body, {
+    const response = await this.api('POST', '/user/uploadAvatar', body, {
       rawData: true,
     })
     if (response.status !== 200) {
@@ -126,7 +127,7 @@ class AuthModel {
   }
 
   async register(username: string, email: string, password: string) {
-    const response = await this.api('POST', '/api/user/new', {
+    const response = await this.api('POST', '/user/new', {
       username,
       password,
       email,
@@ -145,7 +146,7 @@ class AuthModel {
     if (!login || !password) {
       throw new Error(`no login/password`)
     }
-    const response = await this.api('POST', '/api/user/login', {
+    const response = await this.api('POST', '/user/login', {
       login,
       password,
     })
@@ -172,7 +173,7 @@ class AuthModel {
 
   // mostly same as login
   async appleAuth(authorization: { id_token: string; code: string }) {
-    const response = await this.api('POST', '/api/user/appleVerify', {
+    const response = await this.api('POST', '/user/appleVerify', {
       ...authorization,
       redirectUri: Auth.getRedirectUri(),
     })

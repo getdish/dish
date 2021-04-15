@@ -22,8 +22,10 @@ export const AppMenuButton = () => {
       <Modal
         visible={appMenu.isVisible}
         presentationStyle="formSheet"
-        overlayDismisses
-        onDismiss={appMenu.hide}
+        onDismiss={() => {
+          console.log('hide')
+          appMenu.hide()
+        }}
         onRequestClose={appMenu.hide}
       >
         <AppMenuContents flex={1} hideUserMenu={appMenu.hide} />
