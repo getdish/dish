@@ -421,7 +421,7 @@ const SearchPageScrollView = forwardRef<ScrollView, SearchPageScrollViewProps>(
             <SearchHeader />
             <Spacer />
             <VStack position="relative" flex={10} minHeight={600}>
-              {children}
+              <Suspense fallback={null}>{children}</Suspense>
             </VStack>
             <Suspense fallback={null}>
               <SearchFooter

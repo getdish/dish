@@ -423,33 +423,43 @@ const RestaurantListItemContent = memo(
               {/* ensures it always flexes all the way even if short text */}
               {ensureFlexText}
 
-              <VStack
-                justifyContent="center"
-                flex={1}
-                paddingTop={10}
-                paddingRight={10}
-                marginTop={flexibleHeight ? 15 : 0}
-                marginBottom={flexibleHeight ? 30 : 0}
-                transform={[{ translateY: -10 }]}
-              >
-                <RestaurantOverview
-                  fullHeight={flexibleHeight}
-                  // disableEllipse={flexibleHeight}
-                  text={editedDescription || description}
-                  editableDescription={editableDescription}
-                  onEdit={handleEdit}
-                  restaurantSlug={restaurantSlug}
-                  maxLines={3}
-                />
-              </VStack>
+              {!hideTagRow && (
+                <HStack
+                  zIndex={10}
+                  paddingTop={10}
+                  paddingLeft={25}
+                  paddingBottom={20}
+                  overflow="hidden"
+                  alignItems="center"
+                  pointerEvents="auto"
+                >
+                  <HStack marginBottom={-8}>
+                    <RestaurantTagsRow
+                      size="sm"
+                      restaurantSlug={restaurantSlug}
+                      restaurantId={restaurantId}
+                      spacing={8}
+                      grid
+                      max={4}
+                    />
+                  </HStack>
+                  <VStack
+                    flex={1}
+                    backgroundColor="#fafafa"
+                    height={1}
+                    transform={[{ translateY: -0.5 }]}
+                  />
+                </HStack>
+              )}
 
               {/* BOTTOM ROW */}
 
               <Suspense fallback={null}>
                 <HStack
+                  alignSelf="flex-end"
                   marginTop={-5}
                   minHeight={44} // prevents clipping in lg size
-                  transform={[{ translateY: -15 }]}
+                  // transform={[{ translateY: -15 }]}
                   className="safari-fix-overflow"
                   position="relative"
                   alignItems="center"
@@ -530,35 +540,6 @@ const RestaurantListItemContent = memo(
               </Suspense>
 
               <VStack flex={1} />
-
-              {!hideTagRow && (
-                <HStack
-                  height={34}
-                  zIndex={10}
-                  paddingTop={10}
-                  paddingLeft={25}
-                  overflow="hidden"
-                  alignItems="center"
-                  pointerEvents="auto"
-                >
-                  <HStack marginBottom={-8}>
-                    <RestaurantTagsRow
-                      size="sm"
-                      restaurantSlug={restaurantSlug}
-                      restaurantId={restaurantId}
-                      spacing={8}
-                      grid
-                      max={4}
-                    />
-                  </HStack>
-                  <VStack
-                    flex={1}
-                    backgroundColor="#fafafa"
-                    height={1}
-                    transform={[{ translateY: -0.5 }]}
-                  />
-                </HStack>
-              )}
             </VStack>
           </HStack>
         </VStack>

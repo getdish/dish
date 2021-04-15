@@ -33,7 +33,7 @@ export const SmallCircleButton = ({
   height,
   minWidth,
   minHeight,
-  padding = 6,
+  padding = 10,
   subtle,
   ...props
 }: CircleButtonProps) => {

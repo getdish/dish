@@ -147,7 +147,7 @@ export const Score = memo(
           alignItems="center"
           justifyContent="center"
         >
-          <Text fontSize={fontSize} fontWeight="800" letterSpacing={-1} color="#fff">
+          <Text fontSize={fontSize} fontWeight="300" letterSpacing={-1} color="#fff">
             {numberFormat(score, 'sm')}
           </Text>
         </VStack>
