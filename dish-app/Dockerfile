@@ -2,10 +2,9 @@ FROM registry.fly.io/dish-base:latest
 
 FROM node:15.10.0-buster
 
-RUN \
-  apt-get update >/dev/null && apt-get install -y parallel build-essential \
-            libcairo2-dev libpixman-1-dev libpango1.0-dev \
-            libjpeg62-turbo-dev libgif-dev patch > /dev/null \
+ENV BUILD_PACKAGES=parallel build-essential libcairo2-dev libpixman-1-dev libpango1.0-dev libjpeg62-turbo-dev libgif-dev patch
+
+RUN apt-get update >/dev/null && apt-get install -y $BUILD_PACKAGES  > /dev/null \
       && apt-get clean \
       && rm -rf /var/lib/apt/lists/*
 
@@ -28,6 +27,8 @@ COPY dish-app dish-app
 WORKDIR /app/dish-app
 
 RUN npm run web:build
+
+RUN apt-get remove --purge -y $BUILD_PACKAGES $(apt-mark showauto) && rm -rf /var/lib/apt/lists/*
 
 EXPOSE 4444
 

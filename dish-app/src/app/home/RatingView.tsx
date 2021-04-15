@@ -44,7 +44,16 @@ export const RatingView = ({
 
   const outerRing = (
     <ProgressRing percent={rating} size={outerSize} color={green} width={width}>
-      {stacked ? null : middleRing}
+      {/* {stacked ? null : middleRing} */}
+      <Text
+        letterSpacing={-0.125 * width}
+        color="#000"
+        opacity={0.7}
+        fontWeight="900"
+        fontSize={3.5 * width}
+      >
+        10
+      </Text>
     </ProgressRing>
   )
 
@@ -63,10 +72,11 @@ export const RatingView = ({
           shadowRadius: 5,
         })}
       >
-        <AbsoluteVStack zIndex={-1} opacity={0.5}>
-          <Circle size={size} backgroundColor={theme.backgroundColor} />
-        </AbsoluteVStack>
+        {/* <AbsoluteVStack zIndex={-1} opacity={0.5}>
+          <Circle size={size} backgroundColor={theme.color} opacity={0.9} />
+        </AbsoluteVStack> */}
         {outerRing}
+
         {typeof count !== 'undefined' && (
           <AbsoluteVStack
             zIndex={-1}
