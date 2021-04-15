@@ -9,7 +9,7 @@ export default route(async (req, res) => {
   const martinRes = await fetch(url).then((res) => res.json())
   if (process.env.LOCAL_HOST) {
     martinRes.tiles = martinRes.tiles?.map((tile) => {
-      return tile.replace('localhost', process.env.LOCAL_HOST)
+      return tile.replace('//localhost', `//${process.env.LOCAL_HOST}`)
     })
   }
   if (martinRes.attribution == null) {

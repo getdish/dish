@@ -7,6 +7,7 @@ if [ "$DO_SPACES_ID" = "" ]; then
 fi
 
 flyctl secrets set \
+    IS_LIVE="1" \
     DO_SPACES_ID="$DO_SPACES_ID" \
     DO_SPACES_SECRET="$DO_SPACES_SECRET" \
     SENDGRID_API_KEY="$SENDGRID_API_KEY" \
