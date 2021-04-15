@@ -5,8 +5,6 @@ import { isWeb } from '../../constants/constants'
 import { AppIntroLogin } from '../AppIntroLogin'
 
 export const PageFooter = memo(() => {
-  const theme = useTheme()
-
   if (!isWeb) {
     return null
   }
@@ -26,7 +24,9 @@ export const PageFooter = memo(() => {
       </AbsoluteVStack>
 
       <VStack paddingVertical={20} alignItems="center" paddingHorizontal="5%">
-        <AppIntroLogin />
+        <Theme name="dark">
+          <AppIntroLogin />
+        </Theme>
         <Spacer size="xxl" />
       </VStack>
     </VStack>

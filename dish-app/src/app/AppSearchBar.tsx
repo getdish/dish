@@ -51,14 +51,7 @@ const borderRadius = 20
 
 export const AppSearchBarFloating = () => {
   const media = useMedia()
-  const theme = useTheme()
-  const {
-    theme: searchThemeName,
-    color,
-    background,
-    backgroundRgb,
-    isColored,
-  } = useSearchBarTheme()
+  const { theme: searchThemeName, background, isColored } = useSearchBarTheme()
   const height = searchBarHeight + 4
 
   if (media.sm) {
@@ -123,8 +116,9 @@ export const AppSearchBarFloating = () => {
               justifyContent="center"
               alignItems="center"
               backgroundColor={background}
-              shadowColor={theme.shadowColor}
-              shadowOffset={{ height: 1, width: 0 }}
+              shadowColor="#000"
+              shadowOpacity={0.5}
+              shadowOffset={{ height: 2, width: 0 }}
               shadowRadius={15}
             />
             <VStack

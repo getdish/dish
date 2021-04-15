@@ -3,6 +3,9 @@ function getWindow() {
 }
 
 const hostname = getWindow()?.location?.hostname ?? ''
+const search = getWindow()?.location.search ?? ''
+
+export const isManualDebugMode = search.startsWith('?debug')
 
 // why not NODE_ENV?
 // Because its nice to be able to test production endpoints in dev mode
@@ -10,15 +13,14 @@ export const isProd =
   process.env.IS_LIVE === '1' || hostname === 'dishapp' || hostname.includes('live') || false
 
 export const isNode = process.env.TARGET !== 'web' || !getWindow() || false
-export const isStaging =
-  process.env.NODE_ENV === 'staging' || getWindow()?.location?.hostname.includes('staging') || false
+export const isStaging = process.env.NODE_ENV === 'staging' || hostname.includes('staging') || false
 export const isDev = (!isProd && !isStaging) || false
 export const isNative = process.env.TARGET === 'native'
 
 export const JWT_SECRET = process.env.JWT_SECRET || '12345678901234567890123456789012'
 export const HASURA_SECRET =
   process.env.HASURA_GRAPHQL_ADMIN_SECRET || (process.env.TARGET === 'node' ? 'password' : '')
-const LOCAL_HOST = process.env.LOCAL_HOST ?? getWindow()?.location?.hostname ?? `localhost`
+const LOCAL_HOST = process.env.LOCAL_HOST ?? (hostname || `localhost`)
 const PROD_ORIGIN = 'https://dishapp.com'
 const ORIGIN = isProd ? PROD_ORIGIN : isStaging ? PROD_ORIGIN : `http://${LOCAL_HOST}:4444`
 const ORIGIN_MINUS_PORT = ORIGIN.replace(/:[0-9]+/, '')
@@ -54,6 +56,7 @@ export const GRAPH_API = `${DISH_API_ENDPOINT}/graph`
 
 console.log('graph.const', {
   DISH_API_ENDPOINT,
+  SEARCH_DOMAIN_INTERNAL,
   LOCAL_HOST,
   TILES_HOST,
   GRAPH_API,

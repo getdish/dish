@@ -1,14 +1,14 @@
 import { QueryFetcher, createClient } from 'gqless'
 
 import { Auth } from '../Auth'
-import { GRAPH_API } from '../constants'
+import { GRAPH_API, isManualDebugMode } from '../constants'
 import { getAuthHeaders } from '../getAuth'
 import { GeneratedSchema, generatedSchema, scalarsEnumsHash } from './schema.generated'
 
 export * from './schema.generated'
 
 export const fetchLog = (input: RequestInfo, init?: RequestInit | undefined): Promise<Response> => {
-  if (true || process.env.DEBUG || process.env.LOG_FETCH) {
+  if (isManualDebugMode || process.env.DEBUG || process.env.LOG_FETCH) {
     console.log(` [gqless]
       fetch('${input}', ${
       init ? JSON.stringify(init, null, 2) : undefined

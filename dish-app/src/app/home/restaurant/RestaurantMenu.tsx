@@ -1,6 +1,7 @@
 import { graphql } from '@dish/graph'
 import React, { memo } from 'react'
 import { Image } from 'react-native'
+import { useTheme } from 'snackui'
 import { Grid, HStack, Paragraph, Spacer, Text, VStack } from 'snackui'
 
 import { queryRestaurant } from '../../../queries/queryRestaurant'
@@ -10,6 +11,7 @@ export const RestaurantMenu = memo(
   graphql(({ restaurantSlug }: { restaurantSlug: string }) => {
     const [restaurant] = queryRestaurant(restaurantSlug)
     const items = restaurant?.menu_items({ limit: 120 }) ?? []
+    const theme = useTheme()
     return (
       <>
         {!items.length && (
@@ -29,7 +31,7 @@ export const RestaurantMenu = memo(
                   paddingVertical={10}
                   paddingHorizontal={20}
                   borderBottomWidth={1}
-                  borderBottomColor="#f2f2f2"
+                  borderBottomColor={theme.borderColor}
                   flex={1}
                   overflow="hidden"
                   key={i}
@@ -56,7 +58,7 @@ export const RestaurantMenu = memo(
                         maxWidth={50}
                         maxHeight={50}
                         borderRadius={100}
-                        backgroundColor="#eee"
+                        backgroundColor={theme.cardBackgroundColor}
                       />
                     )}
                     <Spacer />

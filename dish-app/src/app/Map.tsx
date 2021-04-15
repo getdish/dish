@@ -64,18 +64,18 @@ export const MapView = (props: MapProps) => {
 
   // window resize
   useEffect(() => {
-    if (!map) return undefined
+    if (!map) return
     const handleResize = debounce(() => {
       series([
         () => map.resize(),
-        () => sleep(150),
-        () => map.resize(),
-        () => sleep(150),
+        () => sleep(350),
         () => map.resize(),
         () => sleep(400),
         () => map.resize(),
+        () => sleep(700),
+        () => map.resize(),
       ])
-    }, 200)
+    }, 100)
     const handleResizeOuter = () => {
       handleResize.cancel()
       handleResize()

@@ -94,6 +94,10 @@ aws_secret_access_key=$DO_SPACES_SECRET
 EOF
 fi
 
+if [ "$FIRST_STEP" == "true" ]; then
+  flyctl version update || true
+fi
+
 ./dishctl.sh dish_registry_auth
 
 echo "done"

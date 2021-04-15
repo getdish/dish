@@ -4,7 +4,7 @@ import { Loader, Search, X } from '@dish/react-feather'
 import { getStore, reaction, useStoreInstance } from '@dish/use-store'
 import React, { memo, useCallback, useEffect, useRef, useState } from 'react'
 import { Platform, ScrollView, StyleSheet, TextInput, TouchableOpacity, View } from 'react-native'
-import { useThemeName } from 'snackui'
+import { useTheme } from 'snackui'
 import {
   HStack,
   Spacer,
@@ -14,7 +14,7 @@ import {
   useGet,
   useMedia,
   useOnMount,
-  useTheme,
+  useThemeName,
 } from 'snackui'
 
 import { isWeb, searchBarHeight } from '../constants/constants'
@@ -445,6 +445,7 @@ const AppSearchInputTags = memo(({ input }: { input: HTMLInputElement | null }) 
   const home = useHomeStore()
   const tags = home.searchBarTags
   const themeName = useThemeName()
+  const theme = useTheme()
   const focusedTag = home.searchbarFocusedTag
 
   return (
@@ -460,10 +461,11 @@ const AppSearchInputTags = memo(({ input }: { input: HTMLInputElement | null }) 
                 size="lg"
                 subtleIcon
                 shadowColor="#00000022"
+                color="#fff"
                 fontWeight="600"
+                backgroundColor="rgba(255,255,255,0.1)"
                 height={38}
-                shadowRadius={10}
-                shadowOffset={{ height: 2, width: 0 }}
+                shadowRadius={8}
                 hideRating
                 hideRank
                 hoverStyle={{
@@ -471,7 +473,6 @@ const AppSearchInputTags = memo(({ input }: { input: HTMLInputElement | null }) 
                 }}
                 {...(isActive && {
                   backgroundColor: 'rgba(150,150,150,0.1)',
-                  color: '#fff',
                   hoverStyle: {
                     backgroundColor: 'rgba(150,150,150,0.1)',
                   },

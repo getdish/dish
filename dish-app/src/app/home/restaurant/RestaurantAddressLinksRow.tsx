@@ -1,8 +1,10 @@
 import { graphql } from '@dish/graph'
 import { ExternalLink, Link2, PhoneCall } from '@dish/react-feather'
 import React, { memo } from 'react'
+import { useTheme } from 'snackui'
 import { Box, HStack, HoverablePopover, Text, VStack } from 'snackui'
 
+import { isWeb } from '../../../constants/constants'
 import { queryRestaurant } from '../../../queries/queryRestaurant'
 import { GeocodePlace } from '../../../types/homeTypes'
 import { SmallCircleButton } from '../../views/CloseButton'
@@ -26,11 +28,14 @@ export const RestaurantAddressLinksRow = memo(
       showMenu?: boolean
     }) => {
       const [restaurant] = queryRestaurant(restaurantSlug)
+      const fontSize = size == 'lg' ? 16 : 14
+      const iconSize = size === 'lg' ? 18 : 16
+      const iconColor = isWeb ? 'var(--color)' : '#777'
+      const theme = useTheme()
+
       if (!restaurant) {
         return null
       }
-      const fontSize = size == 'lg' ? 16 : 14
-      const iconSize = size === 'lg' ? 18 : 16
 
       const linkElements = (
         <HStack alignItems="center" spacing="xs">
@@ -48,7 +53,7 @@ export const RestaurantAddressLinksRow = memo(
               borderWidth={0}
               tooltip="Call"
               href={`tel:${restaurant.telephone}`}
-              icon={<PhoneCall size={iconSize} />}
+              icon={<PhoneCall color={iconColor} size={iconSize} />}
             />
           )}
           {!!restaurant.website && (
@@ -57,17 +62,17 @@ export const RestaurantAddressLinksRow = memo(
               borderWidth={0}
               tooltip="Website"
               href={restaurant.website ?? ''}
-              icon={<Link2 size={iconSize} />}
+              icon={<Link2 color={iconColor} size={iconSize} />}
             />
           )}
         </HStack>
       )
 
       return (
-        <Text color="#999" fontSize={fontSize}>
+        <Text fontSize={fontSize}>
           <VStack>
             {!!(curLocInfo && showAddress) && (
-              <Text selectable ellipse fontSize={14} maxWidth={240}>
+              <Text color={theme.color} selectable ellipse fontSize={14} maxWidth={240}>
                 {getAddressText(
                   curLocInfo,
                   restaurant.address ?? '',
@@ -84,7 +89,7 @@ export const RestaurantAddressLinksRow = memo(
                 contents={<Box padding={10}>{linkElements}</Box>}
               >
                 <SmallCircleButton>
-                  <ExternalLink size={10} color="#fff" />
+                  <ExternalLink size={10} color={iconColor} />
                 </SmallCircleButton>
               </HoverablePopover>
             )}

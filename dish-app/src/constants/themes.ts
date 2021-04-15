@@ -44,6 +44,7 @@ const error: MyTheme = {
 
 const darkBase = {
   mapBackground: '#111',
+  backgroundColorTransparent: 'rgba(25,25,25,0)',
   backgroundColorAlt: 'rgba(240, 250, 255, 0.1)',
   backgroundColorTransluscent: '#1111155',
   backgroundColorDarker: '#111111',
@@ -57,7 +58,6 @@ const darkBase = {
   cardBackgroundColor: '#333',
   shadowColor: `rgba(0,0,0,0.4)`,
   shadowColorLighter: `rgba(0,0,0,0.2)`,
-  backgroundColorTransparent: 'rgba(0,0,0,0)',
 }
 
 const dark = {

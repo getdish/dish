@@ -654,7 +654,7 @@ function docker_compose_up() {
       | grep -E -v "$services_list" \
       | tr '\r\n' ' '
   )
-  echo "docker_compose_up: $DB_DATA_DIR $FORCE_REMOVE $DISH_IMAGE_TAG: $services"
+  echo "docker_compose_up: $DB_DATA_DIR $FORCE_REMOVE $DISH_IMAGE_TAG"
   # cleans up misbehaving old containers
   if [ "$DISH_ENV" = "test" ]; then
     for service in $services; do
