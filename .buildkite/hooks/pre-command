@@ -28,7 +28,7 @@ if [ "$SHOW_DOCKER_IMAGES" == "true" ]; then
   echo "done"
 fi
 
-gpg --import /buildkite-secrets/teamdish_gpg
+gpg --import "$DISH_KEYS_PATH/teamdish_gpg"
 echo "unlocking"
 git-crypt unlock
 

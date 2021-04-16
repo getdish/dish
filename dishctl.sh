@@ -343,7 +343,7 @@ function backup_main_db() {
   echo "backing up main db..."
   # _setup_s3
   DUMP_FILE_NAME="dish-db-backup-`date +%Y-%m-%d-%H-%M`.dump"
-  pg_dump "$HASURA_FLY_POSTGRES_URL" \
+  pg_dump "$POSTGRES_URL" \
     -C -w --format=c | \
     s3 put - "s3://dish-backups/$DUMP_FILE_NAME"
   echo 'Successfully backed up main database'
@@ -497,10 +497,10 @@ function postgres_console() {
 }
 
 function main_db_command() {
-  if [ "$HASURA_FLY_POSTGRES_URL" = "" ]; then
+  if [ "$POSTGRES_URL" = "" ]; then
     echo "no url given"
   fi
-  echo "$1" | psql "$HASURA_FLY_POSTGRES_URL" -P pager=off -P format=unaligned
+  echo "$1" | psql "$POSTGRES_URL" -P pager=off -P format=unaligned
 }
 
 function timescale_command() {
@@ -593,17 +593,6 @@ function crawler_mem_usage() {
     | grep sandbox
 }
 
-# Docker Compose doesn't pull images with a build key in their definition?
-function docker_pull_images_that_compose_would_rather_build() {
-  dish_registry_auth
-  DOCKER_TAG_NAMESPACE="latest" # just use latest for now until we get proper staging/prod setup
-  image="$DISH_REGISTRY/%:$DOCKER_TAG_NAMESPACE"
-  echo "image is $image"
-  parallel -j 4 --tag --lb -I% docker pull "$image" ::: \
-    'dish-ci' \
-    'dish-worker'
-}
-
 function grafana_backup() {
   _run_on_cluster $DISH_REGISTRY/grafana-backup-tool && return 0
   set -e
@@ -654,7 +643,7 @@ function docker_compose_up() {
       | grep -E -v "$services_list" \
       | tr '\r\n' ' '
   )
-  echo "docker_compose_up: $DB_DATA_DIR $FORCE_REMOVE $DISH_IMAGE_TAG"
+  echo "docker_compose_up: $DB_DATA_DIR $FORCE_REMOVE $DISH_IMAGE_TAG $POSTGRES_DB"
   # cleans up misbehaving old containers
   if [ "$DISH_ENV" = "test" ]; then
     for service in $services; do
