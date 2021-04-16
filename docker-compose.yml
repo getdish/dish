@@ -7,14 +7,18 @@ services:
       dockerfile: ./Dockerfile
   ci:
     image: registry.fly.io/dish-ci${DISH_IMAGE_TAG}
-    command: start --spawn 8 --token ${BUILDITE_AGENT_TOKEN}
-    privileged: true
+    command: start --spawn 6 --token ${BUILDITE_AGENT_TOKEN}
     build:
       context: ./services/ci
     volumes:
+      - /var/lib/buildkite/builds:/var/lib/buildkite/builds
+      - /usr/local/bin/buildkite-agent:/usr/local/bin/buildkite-agent
+      - /var/run/docker.sock:/var/run/docker.sock
       - ./etc/keys:/buildkite-secrets:ro
       - ./data:/data
     environment:
+      DISH_KEYS_PATH: /buildkite-secrets
+      BUILDKITE_BUILD_PATH: /var/lib/buildkite/builds
       BUILDITE_AGENT_TOKEN: ${BUILDITE_AGENT_TOKEN}
   run-tests:
     image: registry.fly.io/dish-run-tests${DISH_IMAGE_TAG}
@@ -34,11 +38,11 @@ services:
     volumes:
       - ${DB_DATA_DIR:-~/.dish/postgresdb/}/${POSTGRES_DB:-dish}:/var/lib/postgresql/data
     environment:
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: 'postgres'
+      POSTGRES_USER: ${POSTGRES_USER:-postgres}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-postgres}
       POSTGRES_DB: ${POSTGRES_DB:-dish}
     ports:
-      - 5432:5432
+      - ${POSTGRES_PORT:5432}:5432
   timescale:
     command: ["-c", "max_connections=300"]
     image: registry.fly.io/dish-timescale${DISH_IMAGE_TAG}
@@ -62,7 +66,7 @@ services:
       context: ./services/redis
       dockerfile: ./Dockerfile
     ports:
-      - 6379:6379
+      - ${REDIS_PORT:-6379}:6379
   proxy:
     image: registry.fly.io/dish-proxy${DISH_IMAGE_TAG}
     build:
@@ -89,10 +93,10 @@ services:
       context: .
       dockerfile: ./services/hasura/Dockerfile
     ports:
-      - 8080:8080
+      - ${HASURA_PORT:-8080}:8080
     environment:
       - HASURA_GRAPHQL_NO_OF_RETRIES=50
-      - HASURA_GRAPHQL_DATABASE_URL=${HASURA_GRAPHQL_DATABASE_URL:-postgres://postgres:postgres@postgres/dish}
+      - HASURA_GRAPHQL_DATABASE_URL=${HASURA_GRAPHQL_DATABASE_URL_INTERNAL:-postgres://postgres:postgres@postgres/dish}
       - HASURA_GRAPHQL_ENABLED_LOG_TYPES=startup, http-log, webhook-log, websocket-log, query-log
       - HASURA_GRAPHQL_ENABLE_TELEMETRY=false
       - HASURA_GRAPHQL_ADMIN_SECRET=${HASURA_GRAPHQL_ADMIN_SECRET:-password}
