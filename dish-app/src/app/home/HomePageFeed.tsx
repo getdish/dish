@@ -85,8 +85,6 @@ export const HomePageFeed = memo(
       })
     }, [items, hoveredResults])
 
-    console.log(items, results, isLoading)
-
     useSetAppMap({
       isActive,
       results,

@@ -58,7 +58,7 @@ import { openingHours, priceRange } from './RestaurantDetailRow'
 import { RestaurantFavoriteStar } from './RestaurantFavoriteButton'
 import { useTotalReviews } from './useTotalReviews'
 
-export const ITEM_HEIGHT = 320
+export const ITEM_HEIGHT = 300
 
 type RestaurantListItemProps = {
   curLocInfo: GeocodePlace | null
@@ -425,7 +425,7 @@ const RestaurantListItemContent = memo(
               {ensureFlexText}
 
               <VStack flex={1} flexShrink={0} justifyContent="center">
-                <VStack flex={1} overflow="hidden" spacing="md">
+                <VStack paddingLeft={15} flex={1} overflow="hidden" spacing="md">
                   {!hideTagRow && (
                     <RestaurantTagsRow
                       size="sm"
@@ -436,7 +436,9 @@ const RestaurantListItemContent = memo(
                       max={4}
                     />
                   )}
-                  <RestaurantOverview restaurantSlug={restaurantSlug} maxLines={2} />
+                  <VStack marginLeft={-25}>
+                    <RestaurantOverview restaurantSlug={restaurantSlug} maxLines={2} />
+                  </VStack>
                 </VStack>
               </VStack>
 
@@ -618,7 +620,7 @@ const RestaurantPeekDishes = memo(
         })
 
     const foundMatchingSearchedDish = props.activeTagSlugs?.includes(dishes?.[0]?.slug)
-    const dishSize = 150
+    const dishSize = 160
 
     return (
       <>
@@ -632,9 +634,8 @@ const RestaurantPeekDishes = memo(
         <HStack
           pointerEvents="none"
           padding={20}
-          paddingVertical={10}
+          transform={[{ translateY: -30 }]}
           alignItems="center"
-          marginBottom={-35}
           height="100%"
           width={dishSize * 5}
         >
