@@ -35,7 +35,8 @@ sed 's/STOLONCTL_/STKEEPER_/' /data/.env >> /data/.env
 sed 's/STOLONCTL_/STSENTINEL_/' /data/.env >> /data/.env
 sed 's/STOLONCTL_/STPROXY_/' /data/.env >> /data/.env
 
-PG_PARAMS='"pgParameters":{"max_connections":"300", "work_mem": "40MB"}'
+PG_CONF='{  "max_connections": "300", "shared_buffers": "1GB", "effective_cache_size": "3GB", "maintenance_work_mem": "256MB", "checkpoint_completion_target": "0.7", "wal_buffers": "16MB", "default_statistics_target": "100", "random_page_cost": "1.1", "effective_io_concurrency": "200", "work_mem": "3495kB", "min_wal_size": "1GB", "max_wal_size": "4GB", "max_worker_processes": "2", "max_parallel_workers_per_gather": "1", "max_parallel_workers": "2", "max_parallel_maintenance_workers": "1" }'
+PG_PARAMS="\"pgParameters\": $PG_CONF"
 
 # write stolon initial cluster spec
 cat <<EOF > /fly/initial-cluster-spec.json
@@ -46,7 +47,7 @@ inited=$(stolonctl status || echo "false")
 if [[ "$inited" != "false" ]]; then
     echo "updating stolon config"
     export $(cat /data/.env | xargs)
-    stolonctl update --patch "{ $PG_PARAMS }"
+    stolonctl update --patch -f /fly/initial-cluster-spec.json
 fi
 
 su_password="${SU_PASSWORD:-supassword}"

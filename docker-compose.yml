@@ -28,7 +28,7 @@ services:
       dockerfile: ./services/cron/Dockerfile
   postgres:
     image: registry.fly.io/dish-${POSTGRES_NAME:-postgres}${DISH_IMAGE_TAG}
-    command: postgres -c 'max_connections=300'
+    command: postgres -c config_file=/etc/postgresql.conf
     build:
       context: ./services/${POSTGRES_NAME:-postgres}
     volumes:
