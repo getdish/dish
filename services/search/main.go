@@ -327,6 +327,12 @@ func main() {
 		Addr:     addr,
 		Database: getEnv("POSTGRES_DB", "dish"),
 	})
+
+	// check if working
+	var n int
+	_, err := db.QueryOne(pg.Scan(&n), "SELECT 1")
+	fmt.Println("search test connection, err?", err, "res", n)
+
 	defer db.Close()
 	fmt.Println("Start server on", pg_port, "with postgres", addr)
 	handleRequests()

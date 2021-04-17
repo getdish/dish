@@ -499,6 +499,7 @@ function docker_compose_up_subset() {
 }
 
 function docker_compose_up() {
+  echo "$HASURA_GRAPHQL_DATABASE_URL_INTERNAL $POSTGRES_USER $POSTGRES_PASSWORD"
   services_list="$COMPOSE_EXCLUDE${COMPOSE_EXCLUDE_EXTRA:-}"
   services=$(
     docker-compose config --services 2> /dev/null \
