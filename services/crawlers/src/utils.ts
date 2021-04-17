@@ -48,10 +48,10 @@ export class DB {
 
   static main_db = new DB({
     host: process.env.PGHOST || 'localhost',
-    port: process.env.PGPORT ? +process.env.PGPORT : 5432,
+    port: process.env.POSTGRES_PORT ? +process.env.POSTGRES_PORT : 5432,
     ssl: process.env.USE_SSL ? true : false,
     user: process.env.PGUSER || 'postgres',
-    password: process.env.PGPASSWORD || 'postgres',
+    password: process.env.POSTGRES_PASSWORD || 'postgres',
     database: process.env.POSTGRES_DB || 'dish',
     idleTimeoutMillis: 500_000,
     connectionTimeoutMillis: 300_000,

@@ -14,11 +14,11 @@ const config = {
   ssl: process.env.USE_SSL === 'true' ? true : false,
 }
 
+// console.log(config)
+
 const postgrator = new Postgrator(config)
 
 postgrator
   .migrate()
-  .then((appliedMigrations) =>
-    console.log('up to date', appliedMigrations.length)
-  )
+  .then((appliedMigrations) => console.log('up to date', appliedMigrations.length))
   .catch((error) => console.error('Error migrating', error))
