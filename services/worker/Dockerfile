@@ -1,7 +1,10 @@
-FROM node:15.10.0-buster
+FROM node:15.10.0-buster as base
 
-RUN apt-get update > /dev/null && \
-      apt-get install -y \
+RUN apt-get update > /dev/null
+
+FROM base as deps
+
+RUN apt-get install -y \
       gconf-service libasound2 libatk1.0-0 libatk-bridge2.0-0 \
       libc6 libcairo2 libcups2 libdbus-1-3 libexpat1 libgbm-dev \
       libfontconfig1 libgcc1 libgconf-2-4 libgdk-pixbuf2.0-0\
@@ -13,6 +16,8 @@ RUN apt-get update > /dev/null && \
       lsb-release xdg-utils wget xvfb procps psmisc htop \
        > /dev/null \
       && apt-get clean
+
+FROM base as deps-chrome
 
 RUN apt-get install -y wget gnupg ca-certificates \
      && wget -q -O - https://dl-ssl.google.com/linux/linux_signing_key.pub | apt-key add - \
@@ -29,7 +34,7 @@ RUN apt-get install -y wget gnupg ca-certificates \
      && chmod +x /usr/sbin/wait-for-it.sh \
      && apt-get clean
 
-FROM registry.fly.io/dish-base:latest
+FROM registry.fly.io/dish-base
 
 COPY --from=0 /bin /bin
 COPY --from=0 /usr/bin /usr/bin
@@ -39,8 +44,8 @@ COPY --from=0 /usr/share/X11 /usr/share/X11
 COPY --from=0 /opt /opt
 # google-chrome-stable in here
 COPY --from=0 /etc/alternatives /etc/alternatives
-ENV NODE_ENV=production
 
 WORKDIR /app/services/worker
 
+ENV NODE_ENV=production
 CMD ["./entry.sh"]

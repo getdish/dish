@@ -50,7 +50,8 @@ export const TILES_HOST_INTERNAL = (() => {
   return dev
 })()
 
-export const GRAPH_DOMAIN = process.env.HASURA_ENDPOINT || `http://${ORIGIN_MINUS_PORT}:8080`
+export const GRAPH_DOMAIN =
+  process.env.HASURA_ENDPOINT || `http://${ORIGIN_MINUS_PORT}:${process.env.HASURA_PORT || 8080}`
 export const GRAPH_API_INTERNAL = `${GRAPH_DOMAIN}/v1/graphql`
 export const GRAPH_API = `${DISH_API_ENDPOINT}/graph`
 

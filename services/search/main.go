@@ -319,7 +319,7 @@ func handleRequests() {
 }
 
 func main() {
-	pg_port := ":" + getEnv("PGPORT", "5432")
+	pg_port := ":" + getEnv("POSTGRES_PORT", "5432")
 	addr := getEnv("POSTGRES_HOST", "localhost") + pg_port
 	db = pg.Connect(&pg.Options{
 		User:     getEnv("POSTGRES_USER", "postgres"),

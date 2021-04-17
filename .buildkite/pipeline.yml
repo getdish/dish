@@ -47,35 +47,30 @@ steps:
 
   - label: ":docker: build search"
     key: search
-    depends_on: base
     command: .buildkite/scripts/build_docker_compose.sh search
     env:
       PUSH: true
 
   - label: ":docker: build hasura"
     key: hasura
-    depends_on: base
     command: .buildkite/scripts/build_docker_compose.sh hasura
     env:
       PUSH: true
 
   - label: ":docker: build timescale"
     key: timescale
-    depends_on: base
     command: .buildkite/scripts/build_docker_compose.sh timescale
     env:
       PUSH: true
 
   - label: ":docker: build tileserver"
     key: tileserver
-    depends_on: base
     command: .buildkite/scripts/build_docker_compose.sh tileserver
     env:
       PUSH: true
 
   - label: ":docker: build postgres"
     key: postgres
-    depends_on: base
     command: .buildkite/scripts/build_docker_compose.sh postgres
 
   - label: "done with test images"
@@ -91,11 +86,6 @@ steps:
       - run-tests
       - postgres
       - worker
-
-  - label: "push BASE images to registry"
-    if: build.branch == "production" || build.branch == "nate/dev"
-    depends_on: test-images
-    command: .buildkite/scripts/push_images.sh
 
   # non test images
 
@@ -116,21 +106,18 @@ steps:
 
   - label: ":docker: build gorse"
     key: gorse
-    depends_on: base
     command: .buildkite/scripts/build_docker_compose.sh gorse
     env:
       PUSH: true
 
   - label: ":docker: build image-proxy"
     key: image-proxy
-    depends_on: base
     command: .buildkite/scripts/build_docker_compose.sh image-proxy
     env:
       PUSH: true
 
   - label: ":docker: build image-quality"
     key: image-quality
-    depends_on: base
     command: .buildkite/scripts/build_docker_compose.sh image-quality
     env:
       PUSH: true
@@ -145,11 +132,11 @@ steps:
           build: postgres
           image-repository: registry.fly.io/dish-db
           cache-from: postgres:registry.fly.io/dish-db:latest
-          push: postgres:registry.fly.io/dish-db:latest
 
   - label: "setup services for tests"
     key: test-setup
     command: ".buildkite/scripts/setup_test_services.sh"
+    timeout_in_minutes: 15
     depends_on:
       - test-images
     retry:
@@ -163,6 +150,7 @@ steps:
 
   - label: "run tests"
     key: tests
+    timeout_in_minutes: 10
     command: ".buildkite/scripts/run_all_tests.sh; docker-compose down -t 3"
     depends_on: test-setup
     env:
@@ -176,8 +164,14 @@ steps:
 
   - wait
 
+  - label: "prepush some images to registry"
+    if: build.branch == "production" || build.branch == "nate/dev"
+    depends_on: test-images
+    command: .buildkite/scripts/push_images.sh
+
   - label: "deploy"
     if: build.branch == "production" || build.branch == "nate/dev"
+    timeout_in_minutes: 15
     command: ".buildkite/scripts/deploy_all.sh"
     artifact_paths:
       - "*.log"

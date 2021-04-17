@@ -2,8 +2,12 @@
 
 set -eo pipefail
 
+export DISH_ENV=test
+
+set -a
 source .env
 source .env.test
+set +a
 
 # HELPERS
 
@@ -45,8 +49,7 @@ echo "POSTGRES_DB: $POSTGRES_DB"
 echo "Starting docker for $DISH_ENV"
 
 DB_DATA_DIR="/data/postgresdb/" \
-FORCE_REMOVE=true \
-  ./dishctl.sh docker_compose_up -d
+./dishctl.sh docker_compose_up -d
 
 echo "Waiting for hasura to finish starting"
 if ! timeout --preserve-status 30 bash -c wait_until_hasura_ready; then
@@ -54,19 +57,18 @@ if ! timeout --preserve-status 30 bash -c wait_until_hasura_ready; then
   exit 1
 fi
 
-# let it finish setting up
-sleep 3
+sleep 1 # bugfix let it finish setting up
 
 echo "Migrating hasura"
-./dishctl.sh db_migrate_local init
+./dishctl.sh db_migrate_init
 
 echo "Migrating timescale"
 cd services/timescale && npm install || true && DISH_ENV=not-production ./scripts/migrate.js
 
-# echo "Waiting for dish-app to finish starting"
-# if ! timeout --preserve-status 30 bash -c wait_until_dish_app_ready; then
-#   echo "Timed out waiting for dish container to start"
-#   exit 1
-# fi
+echo "Waiting for dish-app to finish starting"
+if ! timeout --preserve-status 30 bash -c wait_until_dish_app_ready; then
+  echo "Timed out waiting for dish container to start"
+  exit 1
+fi
 
 echo "done"

@@ -3,11 +3,13 @@ set -e pipefail
 
 echo "Deploying apps..."
 
+export DISH_ENV=production
 PROJECT_ROOT=$(git rev-parse --show-toplevel)
 cd "$PROJECT_ROOT"
 
 # deploy dedicated
 function deploy_dedicated_server() {
+  echo "🖥 deploying dedicated server..."
   PRIVATE_KEY="$PROJECT_ROOT/etc/keys/d1_reliablesite_dish"
   DEDICATED_APPS="hasura postgres"
   DISH_IMAGE_TAG=":latest"
@@ -36,7 +38,7 @@ function deploy_dedicated_server() {
       docker-compose rm -f $DEDICATED_APPS || true
       docker-compose up -d $DEDICATED_APPS
     "
-  echo "success"
+  printf "\n\n 🖥 deploying dedicated server done ✅ \n\n"
 }
 
 deploy_dedicated_server

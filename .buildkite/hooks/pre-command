@@ -6,8 +6,6 @@ echo "HOME = $HOME"
 
 if [ "$FIRST_STEP" == "true" ]; then
   rm -f exit_this_build || true
-  # remove dangling images which can mess up pull/push
-  docker rmi --force $(docker images --filter "dangling=true" -q --no-trunc) || true
 
   # remove old data cache which can mess up tests db, recreate
   rm -r "$HOME/.dish" || true
@@ -40,13 +38,14 @@ export PATH="$FLYCTL_INSTALL/bin:$PATH"
 
 set -a
 source .env
-source .env.production
 set +a
 
 export AWS_ACCESS_KEY_ID=$DO_SPACES_ID
 export AWS_SECRET_ACCESS_KEY=$DO_SPACES_SECRET
-export HASURA_GRAPHQL_ADMIN_SECRET="password"
-export USE_PROD_HASURA_PASSWORD=false
+
+if [[ "$BUILDKITE_BRANCH" == "nate/dev" || "$BUILDKITE_BRANCH" == "production" ]]; then
+  export SHOULD_DEPLOY="1"
+fi
 
 # install
 
@@ -81,7 +80,7 @@ if ! [ -x "$(command -v hasura)" ]; then
 fi
 
 if [ "$DOCKER_CLEAN_BEFORE" == "true" ]; then
-  ./dishctl.sh clean_docker_if_disk_full
+  ./dishctl.sh clean_docker_if_disk_full &
 fi
 
 if [ ! -f "$HOME/.aws/credentials" ]; then
@@ -95,9 +94,12 @@ EOF
 fi
 
 if [ "$FIRST_STEP" == "true" ]; then
-  flyctl version update || true
+  flyctl version update || true &
 fi
 
-./dishctl.sh dish_registry_auth
+./dishctl.sh dish_registry_auth &
+
+echo "wait for background jobs to finish..."
+wait
 
 echo "done"

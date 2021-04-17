@@ -45,7 +45,7 @@ const selectBasePhotoXrefFields = {
 export const DO_BASE = 'https://dish-images.sfo2.digitaloceanspaces.com/'
 
 const prod_hooks_endpoint = 'https://hooks.dishapp.com'
-const dev_hooks_endpoint = 'http://localhost:6154'
+const dev_hooks_endpoint = `http://localhost:${process.env.HOOKS_PORT || 6154}`
 const DISH_HOOKS_ENDPOINT =
   process.env.DISH_ENV == 'production' ? prod_hooks_endpoint : dev_hooks_endpoint
 

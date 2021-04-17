@@ -1,13 +1,13 @@
 #!/usr/bin/env bash
 set -e pipefail
 
-if [ "$POSTGRES_URL" = "" ]; then
-    echo "missing env $POSTGRES_URL $DO_SPACES_ID $YELP_CDN_AWS_PROXY"
+if [ "$HASURA_GRAPHQL_DATABASE_URL" = "" ]; then
+    echo "missing env"
     exit 1
 fi
 
 flyctl secrets set \
-    HASURA_GRAPHQL_DATABASE_URL="$POSTGRES_URL" \
+    HASURA_GRAPHQL_DATABASE_URL="$HASURA_GRAPHQL_DATABASE_URL" \
     HASURA_GRAPHQL_NO_OF_RETRIES="50" \
     HASURA_GRAPHQL_ENABLED_LOG_TYPES="startup, http-log, webhook-log, websocket-log, query-log" \
     HASURA_GRAPHQL_ENABLE_TELEMETRY="false" \

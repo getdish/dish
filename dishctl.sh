@@ -8,6 +8,7 @@ PG_PROXY_PID=
 TS_PROXY_PID=
 
 DISH_ENV="${DISH_ENV:-production}"
+echo "running in env $DISH_ENV"
 ENV_FILE=".env.$DISH_ENV"
 
 function generate_random_port() {
@@ -165,75 +166,37 @@ function redis_flush_all() {
   redis_command 'FLUSHALL'
 }
 
-function _db_migrate() {
+function db_migrate() {
   echo "migrating db $POSTGRES_DB"
-  hasura_endpoint=$1
-  admin_secret=$2
-  postgres_password=$3
-  postgres_port=$4
-  init=$5
   pushd "$PROJECT_ROOT/services/hasura"
+  echo "hasura migrate"
   hasura --skip-update-check \
     migrate apply \
-    --endpoint $hasura_endpoint \
-    --admin-secret $admin_secret
+    --endpoint "$HASURA_ENDPOINT" \
+    --admin-secret "$HASURA_GRAPHQL_ADMIN_SECRET"
+  echo "hasura metadata"
   hasura --skip-update-check \
     metadata apply \
-    --endpoint $hasura_endpoint \
-    --admin-secret $admin_secret
-  cat functions/*.sql | \
-    PGPASSWORD=$postgres_password psql \
-    -p $postgres_port \
-    -h localhost \
-    -U postgres \
-    -d ${POSTGRES_DB:-dish} \
-    --single-transaction
-  if [[ "$init" != "init" ]]; then
-    cat functions/*.sql | \
-      PGPASSWORD=$postgres_password psql \
-      -p $postgres_port \
-      -h localhost \
-      -U postgres \
-      -d ${POSTGRES_DB:-dish} \
-      --single-transaction
-  fi
+    --endpoint "$HASURA_ENDPOINT" \
+    --admin-secret "$HASURA_GRAPHQL_ADMIN_SECRET"
   popd
 }
 
-function db_migrate() {
-  _PG_PORT=$(generate_random_port)
-  postgres_proxy $_PG_PORT
-  pushd $PROJECT_ROOT/services/hasura
-  _db_migrate https://hasura.dishapp.com \
-    "$HASURA_GRAPHQL_ADMIN_SECRET" \
-    "$POSTGRES_PASSWORD" \
-    "$_PG_PORT"
-  popd
-}
-
-function db_migrate_local() {
-  if [[ $USE_PROD_HASURA_PASSWORD == "true" ]]; then
-    HASURA_ADMIN_SECRET="$HASURA_GRAPHQL_ADMIN_SECRET"
-  fi
-  _db_migrate \
-    http://localhost:8080 \
-    "${HASURA_ADMIN_SECRET:-password}" \
-    postgres \
-    5432 \
-    "$1"
+function db_migrate_init() {
+  db_migrate
+  echo "cat init (disbaled until i can fix on tests)"
+  # pushd "$PROJECT_ROOT/services/hasura"
+  # PGPASSWORD=$POSTGRES_PASSWORD cat functions/*.sql | \
+  #   psql \
+  #   -p "$POSTGRES_PORT" \
+  #   -h localhost \
+  #   -U "${POSTGRES_USER:-postgres}" \
+  #   -d "${POSTGRES_DB:-dish}" \
+  #   --single-transaction
+  # popd
 }
 
 function timescale_migrate() {
-  _TIMESCALE_PORT=$(generate_random_port)
-  timescale_proxy "$_TIMESCALE_PORT"
-  pushd "$PROJECT_ROOT/services/timescale"
-  PG_PORT=$_TIMESCALE_PORT \
-  PG_PASS=$TIMESCALE_SU_PASS \
-  DISH_ENV=production ./migrate.sh
-  popd
-}
-
-function timescale_migrate_local() {
   pushd "$PROJECT_ROOT/services/timescale"
   DISH_ENV=not-production ./migrate.sh
   popd
@@ -272,49 +235,6 @@ function bull_delete_queue() {
     end \
     return keys \
   \" 0 bull:$queue*"
-}
-
-function local_node_with_prod_env() {
-  _TIMESCALE_PORT=$(generate_random_port)
-  _PG_PORT=$(generate_random_port)
-  postgres_proxy $_PG_PORT
-  timescale_proxy $_TIMESCALE_PORT
-  export DISH_DEBUG=1
-  export USE_PG_SSL=true
-  export RUN_WITHOUT_WORKER=${RUN_WITHOUT_WORKER:-true}
-  export PGPORT=$_PG_PORT
-  export PGPASSWORD=$POSTGRES_PASSWORD
-  export TIMESCALE_PORT=$_TIMESCALE_PORT
-  export TIMESCALE_PASSWORD=$TIMESCALE_SU_PASS
-  export HASURA_ENDPOINT=https://hasura.dishapp.com
-  if [[ $DISABLE_GC != "1" ]]; then
-    export GC_FLAG="--expose-gc"
-  fi
-  node \
-    --max-old-space-size=4096 \
-    $GC_FLAG \
-    $1
-}
-
-# NB this needs the function `staging_ports_tunnel` to have been run
-function local_node_with_staging_env() {
-  export DISH_DEBUG=1
-  export RUN_WITHOUT_WORKER=${RUN_WITHOUT_WORKER:-true}
-  export PGPORT=15432
-  export PGPASSWORD=postgres
-  export TIMESCALE_PORT=15433
-  export TIMESCALE_PASSWORD=postgres
-  export HASURA_ENDPOINT=https://hasura-staging.dishapp.com
-  node \
-    --max-old-space-size=4096 \
-    $1
-}
-
-function staging_ports_tunnel() {
-  ssh \
-    -L 15432:localhost:5432 \
-    -L 15433:localhost:5433 \
-    root@ssh.staging.dishapp.com
 }
 
 function dish_app_generate_tags() {
@@ -373,14 +293,14 @@ restore_latest_main_backup_to_local() {
   latest_backup=$(get_latest_main_backup)
   dump_file="/tmp/latest_dish_backup.dump"
   s3 get "$latest_backup" "$dump_file"
-  # PGPASSWORD=postgres pg_restore -h localhost -U postgres -p 5432 -d dish "$dump_file"
+  # POSTGRES_PASSWORD=postgres pg_restore -h localhost -U postgres -p 5432 -d dish "$dump_file"
 }
 
 restore_latest_scrapes_backup_to_local() {
   latest_backup=$(get_latest_scrape_backup)
   dump_file="/tmp/latest_scrape_backup.dump"
   s3 get "$latest_backup" "$dump_file"
-  PGPASSWORD=postgres pg_restore -h localhost -U postgres -p 5433 -d dish "$dump_file"
+  POSTGRES_PASSWORD=postgres pg_restore -h localhost -U postgres -p 5433 -d dish "$dump_file"
 }
 
 get_latest_scrape_backup() {
@@ -396,7 +316,7 @@ function _restore_main_backup() {
   backup=$1
   echo "Restoring $backup ..."
   s3 get $backup backup.dump
-  cat backup.dump | PGPASSWORD=$POSTGRES_PASSWORD pg_restore \
+  cat backup.dump | POSTGRES_PASSWORD=$POSTGRES_PASSWORD pg_restore \
     -h $POSTGRES_HOST \
     -U postgres \
     -d dish
@@ -428,7 +348,7 @@ function restore_latest_scrape_backup() {
   latest_backup=$(get_latest_scrape_backup)
   s3 get \$latest_backup backup.dump
   echo "Restoring \$latest_backup ..."
-  cat backup.dump | PGPASSWORD=$POSTGRES_PASSWORD pg_restore \
+  cat backup.dump | POSTGRES_PASSWORD=$POSTGRES_PASSWORD pg_restore \
     -h $TIMESCALE_HOST \
     -U postgres \
     -d dish
@@ -449,68 +369,11 @@ function delete_unattached_volumes() {
   done
 }
 
-function timescale_proxy() {
-  random_port="$(generate_random_port)"
-  PORT=${1:-$random_port}
-  echo "Waiting for connection to timescale..."
-  kubectl port-forward pod/timescale-timescaledb-0 $PORT:5432 -n timescale &
-  TS_PROXY_PID=$!
-  trap _kill_port_forwarder EXIT
-  while ! netstat -tna | grep 'LISTEN' | grep -q "$PORT"; do
-    sleep 0.1
-  done
-  echo "...connected to timescale."
-}
-
-function timescale_console() {
-  PORT=$(generate_random_port)
-  timescale_proxy $PORT
-  PGPASSWORD=$TIMESCALE_SU_PASS pgcli \
-    -p $PORT \
-    -h localhost \
-    -U postgres \
-    -d scrape_data
-}
-
-function postgres_proxy() {
-  random_port="$(generate_random_port)"
-  PORT=${1:-$random_port}
-  echo "Waiting for connection to Postgres..."
-  kubectl port-forward svc/postgres-ha-postgresql-ha-pgpool $PORT:5432 -n postgres-ha &
-  PG_PROXY_PID=$!
-  trap _kill_port_forwarder EXIT
-  while ! netstat -tna | grep 'LISTEN' | grep -q "$PORT"; do
-    sleep 0.1
-  done
-  echo "...connected to Postgres."
-}
-
-function postgres_console() {
-  PORT=$(generate_random_port)
-  postgres_proxy $PORT
-  PGPASSWORD=$POSTGRES_PASSWORD pgcli \
-    --auto-vertical-output \
-    -p $PORT \
-    -h localhost \
-    -U postgres \
-    -d dish
-}
-
 function main_db_command() {
   if [ "$POSTGRES_URL" = "" ]; then
     echo "no url given"
   fi
   echo "$1" | psql "$POSTGRES_URL" -P pager=off -P format=unaligned
-}
-
-function timescale_command() {
-  PORT=$(generate_random_port)
-  timescale_proxy $PORT
-  echo "$1" | PGPASSWORD=$TIMESCALE_SU_PASS psql \
-    -p "$PORT" \
-    -h localhost \
-    -U postgres \
-    -d scrape_data
 }
 
 function fly_tunnel() {
@@ -625,7 +488,6 @@ function docker_build_file() {
 }
 
 function docker_compose_up_subset() {
-  echo "starting docker in env $DISH_ENV"
   services=$1
   extra=$2
   if [ -z "$extra" ]; then
@@ -643,7 +505,7 @@ function docker_compose_up() {
       | grep -E -v "$services_list" \
       | tr '\r\n' ' '
   )
-  echo "docker_compose_up: $DB_DATA_DIR $FORCE_REMOVE $DISH_IMAGE_TAG $POSTGRES_DB"
+  echo "docker_compose_up: $DB_DATA_DIR $DISH_IMAGE_TAG $POSTGRES_DB $HASURA_PORT"
   # cleans up misbehaving old containers
   if [ "$DISH_ENV" = "test" ]; then
     for service in $services; do
@@ -659,14 +521,15 @@ function deploy_all() {
   # make them all background so we can handle them the same
   echo "deploying apps via $where"
   deploy "$where" redis | sed -e 's/^/redis: /;' &
-  # deploy "$where" db | sed -e 's/^/db: /;' &
-  wait
   deploy "$where" hooks | sed -e 's/^/hooks: /;' &
-  wait
+  # runs on dedicated now
+  # runs on dedicated now
+  # deploy "$where" db | sed -e 's/^/db: /;' &
+  # wait
   # depends on postgres
   # depends on hooks
-  deploy "$where" hasura | sed -e 's/^/hasura: /;' &
-  wait
+  # deploy "$where" hasura | sed -e 's/^/hasura: /;' &
+  # wait
    # depends on hasura
   deploy "$where" tileserver | sed -e 's/^/tileserver: /;' &
   deploy "$where" timescale | sed -e 's/^/timescale: /;' &
@@ -680,12 +543,9 @@ function deploy_all() {
   deploy "$where" image-proxy | sed -e 's/^/image-proxy: /;' &
   deploy "$where" image-recognize | sed -e 's/^/image-recognize: /;' &
   # disabled until fixed with fly
-  # deploy "$where" bert | sed -e 's/^/bert: /;' &
+  deploy "$where" bert | sed -e 's/^/bert: /;' &
   deploy "$where" cron | sed -e 's/^/cron: /;' &
   deploy "$where" site | sed -e 's/^/site: /;' &
-  wait
-  # depends on redis
-  deploy "$where" hooks | sed -e 's/^/hooks: /;' &
   wait
 }
 

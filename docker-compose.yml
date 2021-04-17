@@ -6,6 +6,7 @@ services:
       context: .
       dockerfile: ./Dockerfile
   ci:
+    privileged: true
     image: registry.fly.io/dish-ci${DISH_IMAGE_TAG}
     command: start --spawn 6 --token ${BUILDITE_AGENT_TOKEN}
     build:
@@ -13,7 +14,6 @@ services:
     volumes:
       - /var/lib/buildkite/builds:/var/lib/buildkite/builds
       - /usr/local/bin/buildkite-agent:/usr/local/bin/buildkite-agent
-      - /var/run/docker.sock:/var/run/docker.sock
       - ./etc/keys:/buildkite-secrets:ro
       - ./data:/data
     environment:
@@ -42,7 +42,7 @@ services:
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-postgres}
       POSTGRES_DB: ${POSTGRES_DB:-dish}
     ports:
-      - ${POSTGRES_PORT:5432}:5432
+      - ${POSTGRES_PORT:-5432}:5432
   timescale:
     command: ["-c", "max_connections=300"]
     image: registry.fly.io/dish-timescale${DISH_IMAGE_TAG}
@@ -80,7 +80,7 @@ services:
       context: ./
       dockerfile: ./services/hooks/Dockerfile
     ports:
-      - 6154:6154
+      - ${HOOKS_PORT:-6154}:6154
     environment:
       - DO_SPACES_ID=${DO_SPACES_ID}
       - DO_SPACES_SECRET=${DO_SPACES_SECRET}
@@ -96,15 +96,15 @@ services:
       - ${HASURA_PORT:-8080}:8080
     environment:
       - HASURA_GRAPHQL_NO_OF_RETRIES=50
-      - HASURA_GRAPHQL_DATABASE_URL=${HASURA_GRAPHQL_DATABASE_URL_INTERNAL:-postgres://postgres:postgres@postgres/dish}
+      - HASURA_GRAPHQL_DATABASE_URL=${HASURA_GRAPHQL_DATABASE_URL_INTERNAL:-"postgres://postgres:postgres@postgres/dish"}
       - HASURA_GRAPHQL_ENABLED_LOG_TYPES=startup, http-log, webhook-log, websocket-log, query-log
       - HASURA_GRAPHQL_ENABLE_TELEMETRY=false
       - HASURA_GRAPHQL_ADMIN_SECRET=${HASURA_GRAPHQL_ADMIN_SECRET:-password}
       - HASURA_GRAPHQL_UNAUTHORIZED_ROLE=anon
       - HASURA_GRAPHQL_JWT_SECRET={"type":"HS256", "key":"12345678901234567890123456789012"}
       - HASURA_GRAPHQL_ENABLE_CONSOLE=true
-      - DISH_HOOKS_ENDPOINT=http://hooks:6154
-      - GORSE_SYNC_HOOK=http://hooks:6154/gorse_sync
+      - DISH_HOOKS_ENDPOINT=http://hooks:${HOOKS_PORT:-6154}
+      - GORSE_SYNC_HOOK=http://hooks:${HOOKS_PORT:-6154}/gorse_sync
       - VIRTUAL_HOST=hasura-staging.dishapp.com
     depends_on:
       - 'postgres'
@@ -175,7 +175,7 @@ services:
       - HASURA_ENDPOINT=http://hasura:8080
       - REDIS_HOST=redis
       - PGHOST=postgres
-      - PGPASSWORD=postgres
+      - POSTGRES_PASSWORD=postgres
       - TIMESCALE_HOST=timescale
       - TIMESCALE_PASSWORD=postgres
       - TIMESCALE_PORT=5433

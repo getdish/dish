@@ -55,7 +55,7 @@ Once you're logged in and have Docker Compose installed, go to the root of this 
 
 For initial installation you may need to run this command a few times so postgres can generate encryption keys. You will also need to use an `init` arg to the first migrations run:
 
-`./dishctl.sh db_migrate_local init`
+`./dishctl.sh db_migrate_init`
 
 When you need to rebuild the containers to update their code run:
 
