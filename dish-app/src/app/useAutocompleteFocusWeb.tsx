@@ -25,7 +25,6 @@ export const useAutocompleteFocusWebNonTouch = ({
       window.removeEventListener('mousemove', mouseMove)
       const isFocused = getIsFocused()
       const shouldFocus = !wasFocused && isFocused
-      console.log('should focus', { shouldFocus, wasFocused, isFocused })
       if (!shouldFocus) {
         return
       }

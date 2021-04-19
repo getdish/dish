@@ -145,7 +145,6 @@ const SearchPageContent = memo(function SearchPageContent(
   // SEARCH
   //
   const sk = JSON.stringify([item.activeTags, item.searchQuery, item.id])
-  console.log('ITEM IS', sk, item)
   useEffect(() => {
     if (!props.isActive) return
     searchPageStore.runSearch({})

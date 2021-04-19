@@ -209,14 +209,14 @@ export const tagLenses = [
     slug: 'lenses__veg',
     rgb: ['51', ' 153', ' 51'],
   },
-  {
-    id: '30d67fcc-759b-4cd6-8241-400028de9196',
-    name: 'Date',
-    type: 'lense',
-    icon: '🌴',
-    slug: 'lenses__service',
-    rgb: [88, 75, 34],
-  },
+  // {
+  //   id: '30d67fcc-759b-4cd6-8241-400028de9196',
+  //   name: 'Date',
+  //   type: 'lense',
+  //   icon: '🌴',
+  //   slug: 'lenses__service',
+  //   rgb: [88, 75, 34],
+  // },
 ]
 export const tagFilters = [
   {

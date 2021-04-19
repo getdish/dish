@@ -31,7 +31,10 @@ export const Home = memo(function Home() {
       homeStore,
       (x) => {
         if (x.currentState.type === 'home' || x.currentState.type === 'search') {
-          return x.currentState
+          // only if not already found
+          if (!x.currentState.curLocName) {
+            return x.currentState
+          }
         }
         return null
       },

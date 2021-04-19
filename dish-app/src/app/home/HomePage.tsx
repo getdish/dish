@@ -40,9 +40,7 @@ import { HomeTopSearches } from './HomeTopSearches'
 import { PageContentWithFooter } from './PageContentWithFooter'
 
 export default memo(function HomePage(props: HomeStackViewProps<HomeStateItemHome>) {
-  const home = useHomeStore()
   const theme = useTheme()
-  const [isLoaded, setIsLoaded] = useState(false)
   const state = useHomeStateById<HomeStateItemHome>(props.item.id)
   const isRouteActive = useIsRouteActive('home', 'homeRegion')
   // first one is if the route is active, second is if the stack view active
@@ -61,21 +59,11 @@ export default memo(function HomePage(props: HomeStackViewProps<HomeStateItemHom
   //   console.log('👀 HomePage', state.region, { position, item: props.item, region, state, isActive, center, span })
   // }
 
-  // on load home clear search effect!
-  useEffect(() => {
-    // not on first load
-    if (isActive && isLoaded) {
-      home.clearSearch()
-      home.clearTags()
-    }
-  }, [isActive, isLoaded])
-
   // center map to region
   useEffect(() => {
     if (!isActive) return
     if (!region || !center || !span) return
     if (region.slug !== state.region) return
-    setIsLoaded(true)
     if (appMapStore.lastRegion) {
       const via = appMapStore.lastRegion.region.via
       if (via !== 'url') {
@@ -85,7 +73,7 @@ export default memo(function HomePage(props: HomeStackViewProps<HomeStateItemHom
     }
     cancelUpdateRegion()
     setPosition({ center, span })
-  }, [isActive, isLoaded, JSON.stringify([center, span])])
+  }, [isActive, JSON.stringify([center, span])])
 
   useEffect(() => {
     return () => {
@@ -209,9 +197,7 @@ export default memo(function HomePage(props: HomeStackViewProps<HomeStateItemHom
               {homeHeaderContent}
 
               <PageContentWithFooter>
-                {isLoaded && (
-                  <HomePageFeed key={state.region} {...props} region={region} {...position} />
-                )}
+                <HomePageFeed {...props} region={region} {...position} />
               </PageContentWithFooter>
             </VStack>
           </VStack>
