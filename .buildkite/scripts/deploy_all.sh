@@ -17,6 +17,7 @@ function deploy_dedicated_server() {
   rsync \
     -avP \
     --filter=':- .gitignore' \
+    --filter='- .git' \
     -e "ssh -o StrictHostKeyChecking=no -i $PRIVATE_KEY" \
     . "root@$DEDICATED_SERVER_HOST:/app" > /dev/null
   ssh \
@@ -26,7 +27,6 @@ function deploy_dedicated_server() {
       set -e
       docker system prune --force
       cd /app
-      git checkout nate/dev
       ./dishctl.sh dish_registry_auth
       set -a
       source .env
