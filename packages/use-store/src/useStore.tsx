@@ -25,18 +25,16 @@ import {
 // class StoreTest extends Store<{ id: number }> {}
 // const storeTest = createStore(StoreTest, { id: 3 })
 // const useStoreTest = createUseStore(StoreTest)
-// const useStoreSelectorTest = createUseStoreSelector(
-//   StoreTest,
-//   (s) => s.props.id
-// )
+// const useStoreSelectorTest = createUseStoreSelector(StoreTest, (s) => s.props.id)
 // const num = useStoreSelectorTest({ id: 0 })
 // const ya = useStoreTest({ id: 1 })
 // const yb = useStoreTest({ id: 1 }, (x) => x.props.id)
 // const z = useStore(StoreTest)
 // const abc = useStoreInstance(storeTest)
-// const abcSel = useStoreInstance(storeTest, (x) => x.props.id)
-// no singleton, just react
+// const abc2 = useStoreInstance(storeTest)
+// const abcSel = useStoreInstanceSelector(storeTest, (x) => x.props.id)
 
+// no singleton, just react
 export function useStore<A extends Store<B>, B>(
   StoreKlass: (new (props: B) => A) | (new () => A),
   props?: B,
@@ -75,35 +73,38 @@ export function createStore<A extends Store<B>, B>(
 // use singleton with react
 // TODO selector support with types...
 
-export function useStoreInstance<A extends Store<B>, B>(instance: A): A {
+export function useStoreInstance<A extends Store<B>, B>(instance: A, debug?: boolean): A {
   const store = instance[UNWRAP_PROXY]
   const uid = getStoreUid(store.constructor, store.props)
   const info = cache.get(uid)
   if (!info) {
     throw new Error(`This store not created using createStore()`)
   }
-  if (arguments[3]) {
+  if (debug) {
     useDebugStoreComponent(store.constructor)
   }
-  const selector = arguments[1] ? useCallback(arguments[1], arguments[2] ?? []) : undefined
-  return useStoreFromInfo(info, selector)
+  return useStoreFromInfo(info)
 }
 
-// super hack! but it works!
-// putting this below the above function is technically incorrect
-// as TS expected override types to be above, but it still works!
-// and its the only way i can get the type to properly narrow...
-// but requires the @ts-expect-error on the next function def :/
-
-export function useStoreInstance<A extends Store<any>, Selector extends ((a: A) => any) | void>(
+export function useStoreInstanceSelector<A extends Store<B>, B, Selector extends (store: A) => any>(
   instance: A,
-  selector?: Selector,
-  memoArgs?: any[],
+  selector: Selector,
+  memo?: any[],
   debug?: boolean
-): Selector extends (a: A) => infer C ? C : A
+): Selector extends (a: A) => infer C ? C : unknown {
+  const store = instance[UNWRAP_PROXY]
+  const uid = getStoreUid(store.constructor, store.props)
+  const info = cache.get(uid)
+  if (!info) {
+    throw new Error(`This store not created using createStore()`)
+  }
+  if (debug) {
+    useDebugStoreComponent(store.constructor)
+  }
+  return useStoreFromInfo(info, useCallback(selector, memo || []))
+}
 
 // for creating a usable store hook
-// @ts-expect-error
 export function createUseStore<Props, Store>(
   StoreKlass: (new (props: Props) => Store) | (new () => Store)
 ) {

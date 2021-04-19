@@ -7,7 +7,7 @@ import {
   resolved,
 } from '@dish/graph'
 import { isPresent } from '@dish/helpers'
-import { Store, createStore, useStoreInstance } from '@dish/use-store'
+import { Store, createStore, useStoreInstance, useStoreInstanceSelector } from '@dish/use-store'
 import bbox from '@turf/bbox'
 import getCenter from '@turf/center'
 import { featureCollection } from '@turf/helpers'
@@ -203,11 +203,11 @@ class AppMapStore extends Store {
 export const appMapStore = createStore(AppMapStore)
 
 export const useAppMapStore = () => useStoreInstance(appMapStore)
-export const useAppMap = <A extends keyof AppMapStore>(key: A) =>
-  useStoreInstance(appMapStore, (x) => x[key])
+export const useAppMapKey = <A extends keyof AppMapStore>(key: A) =>
+  useStoreInstanceSelector(appMapStore, (x) => x[key])
 
 export const useZoomLevel = () => {
-  const position = useAppMap('position')
+  const position = useAppMapKey('position')
   return getZoomLevel(position.span!)
 }
 
