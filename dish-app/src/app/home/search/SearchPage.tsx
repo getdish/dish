@@ -5,6 +5,7 @@ import { HistoryItem } from '@dish/router'
 import { reaction } from '@dish/use-store'
 import React, {
   Suspense,
+  unstable_SuspenseList as SuspenseList,
   forwardRef,
   memo,
   useCallback,
@@ -303,20 +304,12 @@ const useActiveTagSlugs = (props: Props) => {
 
 // web was feeling really slow with recyclerlistview:
 // https://github.com/Flipkart/recyclerlistview/issues/601
-const SearchResultsSimpleScroll = (props: Props) => {
+const SearchResultsSimpleScroll = memo((props: Props) => {
   const { results, status } = useSearchPageStore()
   const activeTagSlugs = useActiveTagSlugs(props)
-  const [page, setPage] = useState(0)
   const scrollRef = useRef<ScrollView>(null)
   const scrollToTopHandler = useCallback(() => {
     scrollRef.current?.scrollTo({ x: 0, y: 0, animated: true })
-  }, [])
-
-  console.warn('REDNDER ME')
-
-  // load above fold once, then load rest
-  const loadMore = useCallback(() => {
-    setPage(1)
   }, [])
 
   if (status === 'loading') {
@@ -327,15 +320,13 @@ const SearchResultsSimpleScroll = (props: Props) => {
     return <SearchEmptyResults />
   }
 
-  const visibleResults = page === 0 ? results.slice(0, 3) : results
-
   return (
     <ScrollView ref={scrollRef}>
       <PageContentWithFooter>
         <SearchHeader />
         <VStack position="relative" flex={10} minHeight={600}>
-          <Suspense fallback={null}>
-            {visibleResults.map((data, index) => {
+          <SuspenseList revealOrder="forwards">
+            {results.map((data, index) => {
               return (
                 <VStack key={index} height={ITEM_HEIGHT}>
                   <RestaurantListItem
@@ -345,12 +336,11 @@ const SearchResultsSimpleScroll = (props: Props) => {
                     rank={index + 1}
                     activeTagSlugs={activeTagSlugs}
                     meta={data.meta}
-                    onFinishRender={loadMore}
                   />
                 </VStack>
               )
             })}
-          </Suspense>
+          </SuspenseList>
         </VStack>
         <Suspense fallback={null}>
           <SearchFooter
@@ -361,9 +351,9 @@ const SearchResultsSimpleScroll = (props: Props) => {
       </PageContentWithFooter>
     </ScrollView>
   )
-}
+})
 
-const SearchResultsInfiniteScroll = (props: Props) => {
+const SearchResultsInfiniteScroll = memo((props: Props) => {
   const drawerWidth = useAppDrawerWidth()
   const searchStore = useSearchPageStore()
   const activeTagSlugs = useActiveTagSlugs(props)
@@ -443,7 +433,7 @@ const SearchResultsInfiniteScroll = (props: Props) => {
       />
     </>
   )
-}
+})
 
 const SearchEmptyResults = () => {
   return (

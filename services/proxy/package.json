@@ -15,7 +15,7 @@
     "playwright": "^1.9.2"
   },
   "devDependencies": {
-    "typescript": "^4.2.4",
-    "@dish/esdx": "*"
+    "@dish/esdx": "*",
+    "typescript": "^4.2.4"
   }
 }

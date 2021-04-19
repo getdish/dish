@@ -1938,7 +1938,7 @@ __metadata:
     react-native-gesture-handler: ^1.10.3
     react-native-reanimated: ^2.1.0
     react-native-safe-area-context: ^3.1.9
-    react-native-svg: ^12.1.0
+    react-native-svg: ^12.1.1
     react-native-unimodules: ^0.12.0
     react-query: ^3.12.0
     react-reparenting: ^0.6.1
@@ -2198,6 +2198,7 @@ __metadata:
     "@dish/esdx": "*"
     express: ^4.17.1
     playwright: ^1.9.2
+    typescript: ^4.2.4
   languageName: unknown
   linkType: soft
 
@@ -2215,7 +2216,7 @@ __metadata:
     prop-types: ^15.7.2
     react: "*"
     react-dom: "*"
-    react-native-svg: ^12.1.0
+    react-native-svg: ^12.1.1
     uppercamelcase: ^3.0.0
   languageName: unknown
   linkType: soft
@@ -5437,12 +5438,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/react-dom@npm:16.9.8":
-  version: 16.9.8
-  resolution: "@types/react-dom@npm:16.9.8"
+"@types/react-dom@npm:^17.0.3":
+  version: 17.0.3
+  resolution: "@types/react-dom@npm:17.0.3"
   dependencies:
     "@types/react": "*"
-  checksum: 53a223c0266178bca9161301d18ee6199e8f75f88caed5c4601c5aaedaf4c68f03bd72f6aafa979254beb20759f0b68a542ce04295d704eb67ae179769c50813
+  checksum: 9314c91a985f153591e1e74aef3d63d8b22e098069773f32745bf0733740a49802731761a46da8788a7d3dd2c21346036f12c2c24627630e5a6210b120a650e6
   languageName: node
   linkType: hard
 
@@ -5464,13 +5465,14 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/react@npm:16.9.46":
-  version: 16.9.46
-  resolution: "@types/react@npm:16.9.46"
+"@types/react@npm:^17.0.3":
+  version: 17.0.3
+  resolution: "@types/react@npm:17.0.3"
   dependencies:
     "@types/prop-types": "*"
+    "@types/scheduler": "*"
     csstype: ^3.0.2
-  checksum: ad8d07195dc483f9186dc7886bba15c39e6f9c29bbbd97e52a7a117016f07ac6f923b202749d40833bef62fe60f4af6847b82dcfa0c539495e541ad6d819e49a
+  checksum: 5bcaabadc90a23ad9008540eae98a5819b638c4cf1b968adc67be47d6a8dc8cb100061d877dae97618fb275e405dc484b37154080c7ac0ea7df5efcdd8f98c24
   languageName: node
   linkType: hard
 
@@ -5513,6 +5515,13 @@ __metadata:
     "@types/glob": "*"
     "@types/node": "*"
   checksum: b50fd076c454890f9efd8e876972908d3d9503611a2e5207ef6d4e3dece4ff2367eab4c6889db726098db148a29bd29eeed6a1fc3154bf1d09d3da2f691470af
+  languageName: node
+  linkType: hard
+
+"@types/scheduler@npm:*":
+  version: 0.16.1
+  resolution: "@types/scheduler@npm:0.16.1"
+  checksum: 0124c2e4dee5e9b8c8524fcd6b1b8ea0b807b132e593925db04cdcc92ca2779a0d27c79414e60454b4458361a4d8319fa2b59d20585054f21617d1e9acf46a6f
   languageName: node
   linkType: hard
 
@@ -19099,16 +19108,16 @@ __metadata:
   languageName: node
   linkType: hard
 
-"react-dom@npm:17.0.2":
-  version: 17.0.2
-  resolution: "react-dom@npm:17.0.2"
+"react-dom@npm:0.0.0-experimental-73e900b0e":
+  version: 0.0.0-experimental-73e900b0e
+  resolution: "react-dom@npm:0.0.0-experimental-73e900b0e"
   dependencies:
     loose-envify: ^1.1.0
     object-assign: ^4.1.1
-    scheduler: ^0.20.2
+    scheduler: 0.0.0-experimental-73e900b0e
   peerDependencies:
-    react: 17.0.2
-  checksum: 960a74ff6670766846a73097a599115963df1574833c59ca0c2fd909758ebe7a6214cd14f5e6aa63ce846d8f39fde7f3b80474ccfcfadc45dd7f3246364718c6
+    react: 0.0.0-experimental-73e900b0e
+  checksum: d91936d29e5dd73c3efe4f9797736eb4f0a00aa8c6b0a68771d154567fdc40f6c9b739fd02e1f72c1a9b00ae8354a828e030e191f948af4b557bb391aa9e581e
   languageName: node
   linkType: hard
 
@@ -19258,16 +19267,16 @@ __metadata:
   languageName: node
   linkType: hard
 
-"react-native-svg@npm:":
-  version: 12.1.0
-  resolution: "react-native-svg@npm:12.1.0"
+"react-native-svg@npm:^12.1.1":
+  version: 12.1.1
+  resolution: "react-native-svg@npm:12.1.1"
   dependencies:
     css-select: ^2.1.0
     css-tree: ^1.0.0-alpha.39
   peerDependencies:
     react: "*"
     react-native: ">=0.50.0"
-  checksum: e962d59ce518c0a0baf04835a5030c2b38c8d16081abf25f995daf5f4c6e5e8ce44e1bd93053a89e63ed6d4ed1bb23672ada39089a9173907cd862677a149de1
+  checksum: 9c2e353d5d28960c0fe79017d2ac3c592bdeb822b854714e0d8f9975d588ca4eceb68100abfff04f4ad2d672158a9b704b3bd8e3c5806d79724c8839dfdb4b08
   languageName: node
   linkType: hard
 
@@ -19558,13 +19567,13 @@ __metadata:
   languageName: node
   linkType: hard
 
-"react@npm:17.0.2":
-  version: 17.0.2
-  resolution: "react@npm:17.0.2"
+"react@npm:0.0.0-experimental-73e900b0e":
+  version: 0.0.0-experimental-73e900b0e
+  resolution: "react@npm:0.0.0-experimental-73e900b0e"
   dependencies:
     loose-envify: ^1.1.0
     object-assign: ^4.1.1
-  checksum: 7d0dfebafe1d297503157abb2e9acdb49852185deb8700c16f4a6faad87642f84903ab18cfc16f40b9a0dfe97540f99834982ee953e6d48b39c41608dc3e4b29
+  checksum: f2147fe1277a9205dbdf07810de69b192963971fe22ffb8acc38e2bd4ff196b4144357725226deed42f98621d5d5bf70384f3a372b7f86d27adb8343eaa7904c
   languageName: node
   linkType: hard
 
@@ -20474,6 +20483,16 @@ __metadata:
   languageName: node
   linkType: hard
 
+"scheduler@npm:0.0.0-experimental-73e900b0e":
+  version: 0.0.0-experimental-73e900b0e
+  resolution: "scheduler@npm:0.0.0-experimental-73e900b0e"
+  dependencies:
+    loose-envify: ^1.1.0
+    object-assign: ^4.1.1
+  checksum: 21f6560dc51d33e164663e867cfc298d2321c3cb76c31d6e8b520fc74cbe5cb75bfae9d292a4610f5e0a5d292db17d7ec72d15f96c798c124e48736405cff59a
+  languageName: node
+  linkType: hard
+
 "scheduler@npm:^0.20.1":
   version: 0.20.1
   resolution: "scheduler@npm:0.20.1"
@@ -20481,16 +20500,6 @@ __metadata:
     loose-envify: ^1.1.0
     object-assign: ^4.1.1
   checksum: 377b4ad0d8313c4548bac7374bc38409e9d142799979ce396787efa04d1bcabf2591540f243f2131e3df8e56e7f5b29c5415248523e88ecb60f13a32db2e076f
-  languageName: node
-  linkType: hard
-
-"scheduler@npm:^0.20.2":
-  version: 0.20.2
-  resolution: "scheduler@npm:0.20.2"
-  dependencies:
-    loose-envify: ^1.1.0
-    object-assign: ^4.1.1
-  checksum: 2ba121e53e8a438394598612ec9a8f465b39157042f912d2dd5956af643e0d45ec6937ae4eeb0a807d1945b209515263aed12fc3bca95c7a027ec2a54e76b399
   languageName: node
   linkType: hard
 

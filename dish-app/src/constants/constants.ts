@@ -50,4 +50,4 @@ export const cardFrameHeightSm = 240 * 0.7
 export const MAPBOX_ACCESS_TOKEN =
   'pk.eyJ1IjoibndpZW5lcnQiLCJhIjoiY2lvbWlhYjRjMDA0NnVpbTIxMHM5ZW95eCJ9.DQyBjCEuPRVt1400yejGhA'
 
-console.log('dishapp.constants', { isWeb, isNative })
+// console.log('dishapp.constants', { isWeb, isNative })

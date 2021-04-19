@@ -8,11 +8,13 @@ Error.stackTraceLimit = Infinity
 
 if (isSSR) {
   console.log('Patching useLayoutEffect to avoid many warnings in server mode')
+  // @ts-ignore
   React.useLayoutEffect = React.useEffect
 }
 
 global['stores'] = UseStore.allStores
 global['useStore'] = UseStore
+// @ts-ignore
 global['React'] = React
 global['gqless'] = {
   query,
