@@ -4,10 +4,12 @@ import { HStack, StackProps, VStack } from 'snackui'
 import { cardFrameBorderRadius } from '../../constants/constants'
 import { ContentScrollViewHorizontal } from '../views/ContentScrollViewHorizontal'
 
-export const SkewedCard = ({ children, ...props }: StackProps) => {
+type CarouselSize = 'md' | 'sm'
+
+export const SkewedCard = ({ children, size, ...props }: StackProps & { size?: CarouselSize }) => {
   return (
     <VStack
-      marginRight={-56}
+      marginRight={size === 'sm' ? -20 : -56}
       className="disable-hover-touch ease-in-out-faster"
       borderRadius={cardFrameBorderRadius}
       shadowColor="#000"

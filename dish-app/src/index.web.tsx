@@ -3,7 +3,7 @@ import './web/base.css'
 import { startLogging } from '@dish/graph'
 import { loadableReady } from '@loadable/component'
 import React from 'react'
-import { hydrate, render } from 'react-dom'
+import ReactDOM, { hydrate, render } from 'react-dom'
 import { AppRegistry } from 'react-native'
 
 import { isSSR } from './constants/constants'
@@ -13,17 +13,15 @@ if (process.env.NODE_ENV === 'development' && !window['STARTED']) {
   startLogging()
 }
 
-const IS_CONCURRENT = window.location.search.indexOf(`concurrent`) > -1
-const ROOT = document.getElementById('root')
+const IS_NOT_CONCURRENT = window.location.search.indexOf(`not-concurrent`) > -1
+const ROOT = document.getElementById('root')!
 
 // register root component
 AppRegistry.registerComponent('dish', () => Root)
 
 async function start() {
-  if (IS_CONCURRENT) {
-    console.warn('👟 Concurrent Mode Running')
-    // @ts-expect-error
-    React.unstable_createRoot(ROOT).render(<Root />)
+  if (IS_NOT_CONCURRENT) {
+    render(<Root />, ROOT)
     return
   }
 
@@ -33,7 +31,8 @@ async function start() {
       hydrate(<Root />, ROOT)
     })
   } else {
-    render(<Root />, ROOT)
+    console.warn('👟 Concurrent Blocking Mode Running')
+    ReactDOM.unstable_createRoot(ROOT).render(<Root />)
   }
 }
 

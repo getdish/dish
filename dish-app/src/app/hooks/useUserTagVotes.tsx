@@ -43,15 +43,6 @@ export class TagVoteStore extends Store<VoteStoreProps> {
 export const useUserTagVotes = (restaurantSlug: string, activeTags: HomeActiveTagsRecord) => {
   const tagSlugList = useConstant(() => Object.keys(activeTags).filter((x) => activeTags[x]))
 
-  if (process.env.NODE_ENV === 'development') {
-    useLazyEffect(() => {
-      console.warn('CHANGING ACTIVE TAGS NOT ALLOWED< USE KEY INSTEAD', activeTags, tagSlugList)
-      console.groupCollapsed('>>')
-      console.trace()
-      console.groupEnd()
-    }, [JSON.stringify(activeTags)])
-  }
-
   // handles multiple
   const votes: VoteNumber[] = []
   const setVotes = useRef<Function[]>([])

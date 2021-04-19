@@ -113,7 +113,7 @@ export const HomeFeedListsContents = graphql(({ region, onHoverResults }: Props)
               return null
             }
             return (
-              <SkewedCard zIndex={1000 - i} key={list.id || i}>
+              <SkewedCard size="sm" zIndex={1000 - i} key={list.id || i}>
                 <ListCard
                   isBehind={i > 0}
                   hoverable={false}
