@@ -396,13 +396,13 @@ const AutocompleteFrame = ({ children }: { children: any }) => {
         <AbsoluteVStack backgroundColor={theme.backgroundColor} fullscreen />
         <AbsoluteVStack
           fullscreen
-          backgroundColor="rgba(20,20,20,0.85)"
+          backgroundColor="rgba(30,30,30,0.85)"
           display={media.sm ? 'flex' : 'none'}
         />
         <AbsoluteVStack fullscreen display={media.sm ? 'none' : 'flex'}>
           <BlurView
             fallbackBackgroundColor="transparent"
-            blurRadius={100}
+            blurRadius={200}
             blurType="dark"
             position="absolute"
             fullscreen
@@ -550,7 +550,7 @@ export const AutocompleteItemView = memo(
         minHeight={58}
         backgroundColor={isActive ? theme.backgroundColor : 'transparent'}
         hoverStyle={{
-          backgroundColor: theme.backgroundColor,
+          backgroundColor: theme.backgroundColorTertiary,
         }}
         onPressOut={() => {
           hideAutocompleteSlow()

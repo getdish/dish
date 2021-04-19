@@ -55,7 +55,9 @@ export type DishViewProps = DishTagItem &
   }
 
 export const DishView = memo((props: DishViewProps) => {
-  const fallback = <ColoredCircle size={props.size ?? 150} backgroundColor="#ccc" />
+  const fallback = (
+    <ColoredCircle size={props.size ?? 150} backgroundColor="rgba(100,100,100,0.15)" />
+  )
   if (props.preventLoad) {
     return fallback
   }

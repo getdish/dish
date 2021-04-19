@@ -132,6 +132,7 @@ export const AppSearchInput = memo(() => {
       homeStore,
       (x) => x.currentSearchQuery,
       function searchQuerySync(val) {
+        console.log('changed search query', val)
         if (val !== getSearch()) {
           setSearch(val)
         }
@@ -329,6 +330,9 @@ const handleKeyPress = async (e: any, inputStore: InputStore) => {
   })
   const { index, results } = autocomplete
 
+  autocompletesStore.setTarget(inputStore.props.name)
+  autocompletesStore.setVisible(true)
+
   let focusedInput: HTMLInputElement | null = null
   let isSelecting = false
   let isCaretAtEnd = false
@@ -355,6 +359,7 @@ const handleKeyPress = async (e: any, inputStore: InputStore) => {
             params: { slug: item.slug },
           })
         } else if ('slug' in item) {
+          console.log('clear')
           homeStore.clearSearch()
           homeStore.navigate({
             tags: [item],
@@ -445,7 +450,6 @@ const AppSearchInputTags = memo(({ input }: { input: HTMLInputElement | null }) 
   const home = useHomeStore()
   const tags = home.searchBarTags
   const themeName = useThemeName()
-  const theme = useTheme()
   const focusedTag = home.searchbarFocusedTag
 
   return (
