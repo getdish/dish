@@ -11,7 +11,7 @@ import {
   defaultLocationAutocompleteResults,
 } from '../constants/defaultLocationAutocompleteResults'
 import { queryRestaurant } from '../queries/queryRestaurant'
-import { appMapStore, useAppMap } from './AppMapStore'
+import { appMapStore, useAppMapKey } from './AppMapStore'
 import { drawerStore } from './drawerStore'
 import { useHomeStore } from './homeStore'
 import { mapStyles } from './mapStyles'
@@ -46,7 +46,7 @@ export default memo(() => {
 
 const AppPIPContent = graphql(() => {
   const home = useHomeStore()
-  const position = useAppMap('position')
+  const position = useAppMapKey('position')
   const mapNode = useRef<HTMLDivElement>(null)
   const state = home.currentState
   const appMap = useStoreInstance(appMapStore)

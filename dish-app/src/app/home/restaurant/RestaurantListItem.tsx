@@ -1,7 +1,7 @@
 import { fullyIdle, series } from '@dish/async'
 import { RestaurantItemMeta, graphql, restaurant_tag } from '@dish/graph'
 import { ChevronDown, ChevronUp, MessageSquare, Plus, X } from '@dish/react-feather'
-import { useStoreInstance } from '@dish/use-store'
+import { useStoreInstance, useStoreInstanceSelector } from '@dish/use-store'
 import { debounce, sortBy } from 'lodash'
 import React, { Suspense, memo, useCallback, useEffect, useState } from 'react'
 import { Dimensions, Image, ScrollView, StyleSheet } from 'react-native'
@@ -183,7 +183,7 @@ const RestaurantListItemContent = memo(
     }, [restaurant.name])
 
     const restaurantName = (restaurant.name ?? '').slice(0, 300)
-    const isActive = useStoreInstance(searchPageStore, (x) => x.index === rank - 1)
+    const isActive = useStoreInstanceSelector(searchPageStore, (x) => x.index === rank - 1)
     const [isExpanded, setIsExpanded] = useState(false)
 
     const contentSideProps: StackProps = {

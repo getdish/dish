@@ -2,7 +2,7 @@ import { idle } from '@dish/async'
 import { isEqual } from '@dish/fast-compare'
 import { assert, handleAssertionError, stringify } from '@dish/helpers'
 import { HistoryItem } from '@dish/router'
-import { Store, createStore, useStoreInstance } from '@dish/use-store'
+import { Store, createStore, useStoreInstance, useStoreInstanceSelector } from '@dish/use-store'
 import _, { clamp, findLast } from 'lodash'
 import { Keyboard } from 'react-native'
 import { getMedia } from 'snackui'
@@ -588,24 +588,25 @@ const normalizeItemName = {
 export const homeStore = createStore(HomeStore)
 
 export const useHomeStore = (debug?: boolean): HomeStore => {
-  // @ts-ignore
-  return useStoreInstance(homeStore, undefined, [], debug)
+  return useStoreInstance(homeStore, debug)
 }
 
 export const useLastHomeState = <Type extends HomeStateItem['type']>(type: Type) => {
-  return useStoreInstance(homeStore, (x) => _.findLast(x.states, (s) => s.type === type), [type])
+  return useStoreInstanceSelector(homeStore, (x) => _.findLast(x.states, (s) => s.type === type), [
+    type,
+  ])
 }
 
 export const useCurrentHomeType = () => {
-  return useStoreInstance(homeStore, (x) => x.currentState.type)
+  return useStoreInstanceSelector(homeStore, (x) => x.currentState.type)
 }
 
 export const useIsHomeTypeActive = (type?: HomeStateItem['type']) => {
-  return useStoreInstance(homeStore, (x) => x.currentState.type === type, [type])
+  return useStoreInstanceSelector(homeStore, (x) => x.currentState.type === type, [type])
 }
 
 export const useHomeStateById = <Type extends HomeStateItem>(id: string) => {
-  return useStoreInstance(homeStore, (x) => x.allStates[id], [id]) as Type
+  return useStoreInstanceSelector(homeStore, (x) => x.allStates[id], [id]) as Type
 }
 
 const uid = () => `${Math.random()}`.replace('.', '')

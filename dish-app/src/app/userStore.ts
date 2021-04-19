@@ -28,7 +28,7 @@ class UserStore extends Store {
     return !!this.user
   }
 
-  setTheme(theme: ThemeName) {
+  setTheme(theme: ThemeName | null) {
     this.theme = theme
   }
 

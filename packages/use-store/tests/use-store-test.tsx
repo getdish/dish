@@ -2,7 +2,7 @@ import { RenderResult, act, cleanup, fireEvent, render } from '@testing-library/
 import { last } from 'lodash'
 import React, { StrictMode } from 'react'
 
-import { Store, createStore, useStore, useStoreInstance } from '../src'
+import { Store, createStore, useStore, useStoreInstance, useStoreInstanceSelector } from '../src'
 
 Error.stackTraceLimit = Infinity
 
@@ -80,7 +80,7 @@ describe('basic tests', () => {
 
     function SingletonStoreSelector() {
       const store = useStoreInstance(store3)
-      const storeZ = useStoreInstance(store3, (x) => x.z)
+      const storeZ = useStoreInstanceSelector(store3, (x) => x.z)
       return (
         <>
           <div title="z">{storeZ}</div>
@@ -191,7 +191,7 @@ describe('basic tests', () => {
     const todoStore = createStore(TodoList, { id: 1001 })
     function Component() {
       // should change twice, first undefined, second not
-      const thirdItem = useStoreInstance(todoStore, (x) => x.items[2])
+      const thirdItem = useStoreInstanceSelector(todoStore, (x) => x.items[2])
       renderCount++
       return <button title="add" onClick={() => todoStore.add()}></button>
     }

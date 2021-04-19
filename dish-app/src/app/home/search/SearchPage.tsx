@@ -38,7 +38,7 @@ import { syncStateToRoute } from '../../../helpers/syncStateToRoute'
 import { useQueryLoud } from '../../../helpers/useQueryLoud'
 import { router } from '../../../router'
 import { HomeStateItemSearch } from '../../../types/homeTypes'
-import { appMapStore, useSetAppMap } from '../../AppMapStore'
+import { appMapStore, useAppMapStore, useSetAppMap } from '../../AppMapStore'
 import { useHomeStateById } from '../../homeStore'
 import { useAppDrawerWidth } from '../../hooks/useAppDrawerWidth'
 import { useLastValueWhen } from '../../hooks/useLastValueWhen'
@@ -159,21 +159,21 @@ const SearchPageContent = memo(function SearchPageContent(
   // from map we can safely ignore! because it will almost always change
   // worst case is not bad: we miss a movement, but they can just touch
   // map again and it will show "re-search in area button"
-  useEffect(() => {
-    let runs = 0
-    const dispose = reaction(
-      appMapStore,
-      (x) => x.nextPosition,
-      function setSearchPosition(x) {
-        searchPageStore.setSearchPosition(x)
-        runs++
-        if (runs > 1) {
-          dispose()
-        }
-      }
-    )
-    return dispose
-  }, [props.item.id, center])
+  // useEffect(() => {
+  //   let runs = 0
+  //   const dispose = reaction(
+  //     appMapStore,
+  //     (x) => x.nextPosition,
+  //     function setSearchPosition(x) {
+  //       searchPageStore.setSearchPosition(x)
+  //       runs++
+  //       if (runs > 1) {
+  //         dispose()
+  //       }
+  //     }
+  //   )
+  //   return dispose
+  // }, [props.item.id, center])
 
   // disabled for now, too easy to regress
   // // sync mapStore.selected to activeIndex in results
@@ -245,7 +245,7 @@ const SearchPageContent = memo(function SearchPageContent(
       >
         <SearchPagePropsContext.Provider value={props}>
           {isWeb ? (
-            <SearchResultsSimpleScroll {...props} />
+            <SearchResultsSimpleScroll key={`${isLoading}`} {...props} />
           ) : (
             <SearchResultsInfiniteScroll key={`${isLoading}`} {...props} />
           )}

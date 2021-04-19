@@ -164,8 +164,7 @@ class SearchPageStore extends Store {
 }
 
 export const searchPageStore = createStore(SearchPageStore)
-export const useSearchPageStore = (debug?: boolean) =>
-  useStoreInstance(searchPageStore, undefined, undefined, debug)
+export const useSearchPageStore = (debug?: boolean) => useStoreInstance(searchPageStore, debug)
 
 // used to help prevent duplicate searches on slight diff in map move
 const roundLngLat = (val: LngLat): LngLat => {

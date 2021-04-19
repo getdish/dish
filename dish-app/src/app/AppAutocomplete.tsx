@@ -545,7 +545,6 @@ export const AutocompleteItemView = memo(
 
     return (
       <LinkButton
-        debug
         width="100%"
         justifyContent={target === 'location' ? 'flex-end' : 'flex-start'}
         minHeight={58}

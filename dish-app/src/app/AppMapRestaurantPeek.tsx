@@ -1,8 +1,8 @@
 import { graphql } from '@dish/graph'
-import { useStoreInstance } from '@dish/use-store'
+import { useStoreInstanceSelector } from '@dish/use-store'
 import React, { memo, useEffect, useState } from 'react'
 import { Image } from 'react-native'
-import { AbsoluteVStack, Box, HStack, Spacer, Text, VStack } from 'snackui'
+import { Box, HStack, Spacer, Text, VStack } from 'snackui'
 
 import { queryRestaurant } from '../queries/queryRestaurant'
 import { appMapStore } from './AppMapStore'
@@ -13,7 +13,7 @@ export const AppMapRestaurantPeek = memo(
   graphql<any>(() => {
     const home = useHomeStore()
     const [slug, setSlug] = useState('')
-    const [selectedSlug, hoveredSlug] = useStoreInstance(
+    const [selectedSlug, hoveredSlug] = useStoreInstanceSelector(
       appMapStore,
       (x) => [x.selected?.slug ?? '', x.hovered?.slug ?? ''] as const
     )

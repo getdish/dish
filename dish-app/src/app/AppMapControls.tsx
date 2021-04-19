@@ -1,5 +1,5 @@
 import { RefreshCcw, X } from '@dish/react-feather'
-import { useSelector, useStoreInstance } from '@dish/use-store'
+import { useSelector, useStoreInstance, useStoreInstanceSelector } from '@dish/use-store'
 import React, { memo } from 'react'
 import { Switch } from 'react-native'
 import { AbsoluteVStack, HStack, Text, Theme, VStack, useMedia } from 'snackui'
@@ -18,7 +18,7 @@ export const AppMapControls = memo(() => {
   const media = useMedia()
   const safeArea = useSafeArea()
   const showSearchHere = useShowSearchHere()
-  const isHoverZoomed = useStoreInstance(
+  const isHoverZoomed = useStoreInstanceSelector(
     appMapStore,
     (x) => x.hovered?.via === 'list' && x.zoomOnHover
   )
