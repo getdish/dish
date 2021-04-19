@@ -33,9 +33,12 @@ export const useLink = (
   }, [])
 
   const onPress = (e: any) => {
+    if (props.stopPropagation) {
+      e.stopPropagation()
+    }
+
     if (props.promptLogin && userStore.promptLogin()) {
       e.preventDefault()
-      e.stopPropagation()
       return
     }
 
@@ -44,7 +47,6 @@ export const useLink = (
         return
       }
       e.preventDefault()
-      e.stopPropagation()
       if (props.href || e.metaKey || e.ctrlKey) {
         window.open(props.href ?? e.currentTarget.href, '_blank')
         return
@@ -52,9 +54,6 @@ export const useLink = (
     }
 
     e.preventDefault()
-    if (props.stopPropagation) {
-      e.stopPropagation()
-    }
 
     const newLinkProps = getNormalizeLinkProps(props, forceUpdate)
 
