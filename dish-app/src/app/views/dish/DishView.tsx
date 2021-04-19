@@ -63,7 +63,7 @@ export const DishView = memo((props: DishViewProps) => {
   }
   return (
     <Suspense fallback={fallback}>
-      <DishViewContent {...props} />
+      <DishViewContent key={props.slug} {...props} />
     </Suspense>
   )
 })

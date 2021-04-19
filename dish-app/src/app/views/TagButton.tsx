@@ -290,7 +290,6 @@ const TagButtonInner = (props: TagButtonProps) => {
 }
 
 const TagButtonVote = (props: TagButtonProps & { scale: number }) => {
-  const theme = useTheme()
   const { scale } = props
   const { vote, setVote } = useUserTagVotes(props.restaurantSlug ?? '', {
     [getTagSlug(props.slug)]: true,

@@ -4,6 +4,8 @@ import React from 'react'
 
 import { isSSR } from './constants/constants'
 
+Error.stackTraceLimit = Infinity
+
 if (isSSR) {
   console.log('Patching useLayoutEffect to avoid many warnings in server mode')
   React.useLayoutEffect = React.useEffect

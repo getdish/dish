@@ -23,7 +23,13 @@ type TagRowProps = {
 export const RestaurantTagsRow = (props: TagRowProps) => {
   const height = 80 * (props.size === 'sm' ? 0.9 : 1)
   return (
-    <HStack maxHeight={height} maxWidth="100%" overflow="hidden" flexWrap="wrap">
+    <HStack
+      marginBottom={typeof props.spacing === 'number' ? -props.spacing : 0}
+      maxHeight={height}
+      maxWidth="100%"
+      overflow="hidden"
+      flexWrap="wrap"
+    >
       {/* may jump up a bit on load */}
       <Suspense fallback={<VStack height={height} />}>
         <RestaurantTagsRowContent {...props} />
@@ -66,8 +72,8 @@ const RestaurantTagsRowContent = memo(
                 votable
                 restaurantSlug={restaurantSlug}
                 marginBottom={props.spacing ?? 5}
+                marginRight={props.spacing ?? 0}
               />
-              {!!props.spacing && <Spacer size={props.spacing} />}
             </React.Fragment>
           )
         })}

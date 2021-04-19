@@ -32,7 +32,7 @@ export const RankView = memo(({ rank }: { rank: number }) => {
         <Text
           letterSpacing={-1}
           fontSize={+rank > 9 ? 18 : 24}
-          fontWeight="800"
+          fontWeight="300"
           color={theme.colorAlt}
         >
           {rank}

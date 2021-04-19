@@ -1,5 +1,5 @@
 import { graphql } from '@dish/graph'
-import React, { Suspense } from 'react'
+import React, { Suspense, useEffect, useRef } from 'react'
 
 import { queryRestaurant } from '../../../queries/queryRestaurant'
 import { useUserTagVotes } from '../../hooks/useUserTagVotes'
