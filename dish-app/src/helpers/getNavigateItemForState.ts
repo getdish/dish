@@ -23,10 +23,11 @@ export const getNavigateItemForState = (
     }
   }
 
-  const curName = router.curPage.name
+  const curState = homeStore.currentState
   const name = getNameForState(state)
-  const isChangingType = name !== curName
-  const replace = !isChangingType
+  const isChangingType = name !== router.curPage.name
+  const isChangingRegion = state.region !== curState['region']
+  const replace = !isChangingType && !isChangingRegion
   const params = getParamsForState(state)
   return {
     name,

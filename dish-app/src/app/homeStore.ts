@@ -451,7 +451,7 @@ class HomeStore extends Store {
     // this.autocompleteIndex = -tags.length + tagIndex
   }
 
-  updateActiveTags(next: HomeStateTagNavigable) {
+  private updateActiveSearchState(next: HomeStateTagNavigable) {
     const state = _.findLast(this.states, (state) => isSearchState(state) || isHomeState(state))
     if (!state) return
     try {
@@ -462,9 +462,10 @@ class HomeStore extends Store {
       assert(!sameTagIds || !sameSearchQuery)
       const nextState = {
         activeTags: ensureLenseTag(next.activeTags),
+        searchQuery: next.searchQuery,
         id: this.currentState.id,
       }
-      this.updateHomeState('homeStore.updateActiveTags', nextState)
+      this.updateHomeState('homeStore.updateActiveSearchState', nextState)
     } catch (err) {
       handleAssertionError(err)
     }
@@ -525,7 +526,7 @@ class HomeStore extends Store {
       if (isEqual(curActive, nextActive)) {
         return
       }
-      this.updateActiveTags({
+      this.updateActiveSearchState({
         id: curState.id,
         type: curState.type,
         searchQuery: nextState.searchQuery,
@@ -560,7 +561,7 @@ class HomeStore extends Store {
     const didNav = await syncStateToRoute(nextState)
 
     if (curNav !== this.lastNav) return false
-    this.updateActiveTags(nextState)
+    this.updateActiveSearchState(nextState)
 
     return didNav
   }

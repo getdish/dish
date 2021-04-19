@@ -18,7 +18,7 @@ import { coordsToLngLat, getMinLngLat } from '../helpers/mapHelpers'
 import { queryRestaurant } from '../queries/queryRestaurant'
 import { router } from '../router'
 import { RegionWithVia } from '../types/homeTypes'
-import { AppAutocompleteLocation } from './AppAutocomplete'
+import { AppAutocompleteLocation } from './AppAutocompleteLocation'
 import { AppMapControls } from './AppMapControls'
 import {
   appMapStore,

@@ -13,8 +13,8 @@ import { getFuzzyMatchQuery } from '../../../helpers/getFuzzyMatchQuery'
 import { searchRestaurants } from '../../../helpers/searchRestaurants'
 import { queryList } from '../../../queries/queryList'
 import { queryRestaurant } from '../../../queries/queryRestaurant'
-import { AutocompleteItemView } from '../../AppAutocomplete'
 import { appMapStore } from '../../AppMapStore'
+import { AutocompleteItemView } from '../../AutocompleteItemView'
 import { SlantedTitle } from '../../views/SlantedTitle'
 
 export const ListAddRestuarant = graphql(

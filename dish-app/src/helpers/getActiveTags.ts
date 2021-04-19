@@ -3,7 +3,7 @@ import { NavigableTag } from '../types/tagTypes'
 import { allTags } from './allTags'
 import { memoize } from './memoizeWeak'
 
-export const getActiveTags = memoize((state: HomeStateItem): NavigableTag[] => {
+export const getActiveTags = memoize((state: Partial<HomeStateItem>): NavigableTag[] => {
   if (!('activeTags' in state)) return []
   const { activeTags } = state
   if (!activeTags) return []

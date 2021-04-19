@@ -2,7 +2,7 @@ import { series, sleep } from '@dish/async'
 import { reaction } from '@dish/use-store'
 import { useEffect } from 'react'
 
-import { autocompletesStore } from '../AppAutocomplete'
+import { autocompletesStore } from '../AutocompletesStore'
 import { InputStore } from '../inputStore'
 
 export function useAutocompleteInputFocus(inputStore: InputStore) {

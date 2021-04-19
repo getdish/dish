@@ -1,9 +1,10 @@
-import { isPresent } from '@dish/helpers'
-import { uniqBy } from 'lodash'
-
 import { initialHomeState } from '../constants/initialHomeState'
-import { HomeActiveTagsRecord, HomeStateItem, HomeStateNav } from '../types/homeTypes'
-import { NavigableTag } from '../types/tagTypes'
+import {
+  HomeStateItem,
+  HomeStateItemHome,
+  HomeStateItemSearch,
+  HomeStateNav,
+} from '../types/homeTypes'
 import { allTags, allTagsNameToSlug, tagNameKey } from './allTags'
 import { getActiveTagSlugs } from './getActiveTagSlugs'
 import { shouldBeOnSearch } from './shouldBeOnSearch'
@@ -65,6 +66,7 @@ export const getNextState = (navState: HomeStateNav): HomeStateItem => {
     region: state.region,
     type: state.type,
   }
+
   nextState.type = shouldBeOnSearch(nextState) ? 'search' : 'home'
   return nextState as any
 }

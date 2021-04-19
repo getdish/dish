@@ -1,15 +1,14 @@
 import loadable from '@loadable/component'
 import React, { Suspense, useEffect } from 'react'
-import { useTheme } from 'snackui'
-import { LoadingItems, ToastRoot, VStack } from 'snackui'
+import { LoadingItems, ToastRoot, VStack, useTheme } from 'snackui'
 
 import { isSSR } from '../constants/constants'
 import AdminPage from './admin/AdminPage'
-import { useAppAutocompleteEffects } from './AppAutocomplete'
 import { AppIntroLetter } from './AppIntroLetter'
 import { AppMapControlsOverlay } from './AppMapControlsOverlay'
 import { AppMenuButton } from './AppMenuButton'
 import { AppSearchBarFloating } from './AppSearchBar'
+import { useAppAutocompleteEffects } from './AutocompletesStore'
 import { Home } from './home/Home'
 import { PrivateRoute, Route, RouteSwitch } from './Route'
 import { Shortcuts } from './Shortcuts'
@@ -26,13 +25,12 @@ export function App() {
     }, [])
   }
 
-  useAppAutocompleteEffects()
-
   return (
     <>
       <Suspense fallback={null}>
         <ToastRoot />
         <Shortcuts />
+        <Effects />
       </Suspense>
       <Suspense fallback={<LoadingItems />}>
         <RouteSwitch>
@@ -49,6 +47,12 @@ export function App() {
       </Suspense>
     </>
   )
+}
+
+function Effects() {
+  useAppAutocompleteEffects()
+
+  return null
 }
 
 function AppHomeContent() {

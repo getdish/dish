@@ -1,7 +1,7 @@
 import { useEffect } from 'react'
 
-import { AutocompleteTarget, autocompletesStore } from './AppAutocomplete'
 import { getIsFocused } from './AppSearchInput'
+import { AutocompleteTarget, autocompletesStore } from './AutocompletesStore'
 
 export const useAutocompleteFocusWebNonTouch = ({
   target,
