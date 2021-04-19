@@ -38,12 +38,9 @@ export const useMutableSource = (
     const shouldUpdate = (() => {
       const hasChangedVersion =
         currentVersion !== state[3] && currentVersion !== internal.current[3]
-      if (!hasChangedVersion) {
-        return false
-      }
       const hasChangedRefs =
         state[0] !== source || state[1] !== getSnapshot || state[2] !== subscribe
-      if (!hasChangedRefs) {
+      if (!hasChangedRefs && !hasChangedVersion) {
         return false
       }
       const prev = currentSnapshot
