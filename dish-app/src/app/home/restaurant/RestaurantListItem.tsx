@@ -58,7 +58,7 @@ import { openingHours, priceRange } from './RestaurantDetailRow'
 import { RestaurantFavoriteStar } from './RestaurantFavoriteButton'
 import { useTotalReviews } from './useTotalReviews'
 
-export const ITEM_HEIGHT = 300
+export const ITEM_HEIGHT = 315
 
 type RestaurantListItemProps = {
   curLocInfo: GeocodePlace | null
@@ -89,7 +89,7 @@ type RestaurantListItemProps = {
  * for logged in calls, we often need to user restaurant_id
  */
 
-const setHoveredSlow = debounce(appMapStore.setHovered, 250)
+const setHoveredSlow = debounce(appMapStore.setHovered, 300)
 
 export const RestaurantListItem = (props: RestaurantListItemProps) => {
   return (
@@ -289,7 +289,7 @@ const RestaurantListItemContent = memo(
             : null}
         </AbsoluteVStack>
 
-        <VStack flex={1} alignItems="flex-start" maxWidth="100%">
+        <VStack paddingBottom={20} flex={1} alignItems="flex-start" maxWidth="100%">
           {/* ROW: TITLE */}
           <VStack
             hoverStyle={{ backgroundColor: 'rgba(0,0,0,0.015)' }}
@@ -446,7 +446,6 @@ const RestaurantListItemContent = memo(
 
               <Suspense fallback={null}>
                 <HStack
-                  alignSelf="flex-end"
                   marginTop={-5}
                   minHeight={44} // prevents clipping in lg size
                   // transform={[{ translateY: -15 }]}
@@ -468,7 +467,12 @@ const RestaurantListItemContent = memo(
                       fontWeight: '600',
                     }}
                     tooltip={`Rating Breakdown (${totalReviews} reviews)`}
-                    icon={<MessageSquare size={16} color="rgba(0,0,0,0.3)" />}
+                    icon={
+                      <MessageSquare
+                        size={16}
+                        color={isWeb ? 'var(--color)' : 'rgba(150,150,150,0.3)'}
+                      />
+                    }
                   >
                     {numberFormat(restaurant.reviews_aggregate().aggregate?.count() ?? 0, 'sm')}
                   </SmallButton>
@@ -503,7 +507,7 @@ const RestaurantListItemContent = memo(
                     </Suspense>
                   </VStack> */}
 
-                  <FadeOut to="right" />
+                  {/* <FadeOut to="right" /> */}
                 </HStack>
               </Suspense>
             </VStack>
@@ -650,7 +654,7 @@ const RestaurantPeekDishes = memo(
 
               return (
                 <DishView
-                  key={i}
+                  key={dish.slug}
                   preventLoad={!isLoaded && i > 2}
                   size={baseSize * (isEven ? 1.2 : 1)}
                   restaurantSlug={props.restaurantSlug}

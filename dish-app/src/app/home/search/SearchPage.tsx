@@ -3,10 +3,19 @@ import { RestaurantSearchItem, slugify } from '@dish/graph'
 import { ArrowUp } from '@dish/react-feather'
 import { HistoryItem } from '@dish/router'
 import { reaction } from '@dish/use-store'
-import React, { Suspense, forwardRef, memo, useCallback, useEffect, useMemo, useRef } from 'react'
+import React, {
+  Suspense,
+  forwardRef,
+  memo,
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from 'react'
 import { ScrollView, ScrollViewProps } from 'react-native'
 import { DataProvider, LayoutProvider, RecyclerListView } from 'recyclerlistview'
-import { Paragraph } from 'snackui'
+import { LoadingItems, Paragraph } from 'snackui'
 import {
   AbsoluteVStack,
   Button,
@@ -234,7 +243,11 @@ const SearchPageContent = memo(function SearchPageContent(
         minWidth={10}
       >
         <SearchPagePropsContext.Provider value={props}>
-          <SearchResultsContent key={`${isLoading}`} {...props} />
+          {isWeb ? (
+            <SearchResultsSimpleScroll {...props} />
+          ) : (
+            <SearchResultsInfiniteScroll key={`${isLoading}`} {...props} />
+          )}
         </SearchPagePropsContext.Provider>
       </VStack>
     </Suspense>
@@ -272,9 +285,88 @@ const loadingResults: RestaurantSearchItem[] = [
   },
 ]
 
-const SearchResultsContent = (props: Props) => {
+const useActiveTagSlugs = (props: Props) => {
+  return useMemo(() => {
+    return [
+      ...slugify(props.item.searchQuery),
+      ...Object.keys(props.item.activeTags || {}).filter((x) => {
+        const isActive = props.item.activeTags[x]
+        if (!isActive) {
+          return false
+        }
+        const type = allTags[x]?.type ?? 'outlier'
+        return type != 'lense' && type != 'filter' && type != 'outlier'
+      }),
+    ]
+  }, [props.item.activeTags])
+}
+
+// web was feeling really slow with recyclerlistview:
+// https://github.com/Flipkart/recyclerlistview/issues/601
+const SearchResultsSimpleScroll = (props: Props) => {
+  const { results, status } = useSearchPageStore()
+  const activeTagSlugs = useActiveTagSlugs(props)
+  const [page, setPage] = useState(0)
+  const scrollRef = useRef<ScrollView>(null)
+  const scrollToTopHandler = useCallback(() => {
+    scrollRef.current?.scrollTo({ x: 0, y: 0, animated: true })
+  }, [])
+
+  console.warn('REDNDER ME')
+
+  // load above fold once, then load rest
+  const loadMore = useCallback(() => {
+    setPage(1)
+  }, [])
+
+  if (status === 'loading') {
+    return <LoadingItems />
+  }
+
+  if (!results.length) {
+    return <SearchEmptyResults />
+  }
+
+  const visibleResults = page === 0 ? results.slice(0, 3) : results
+
+  return (
+    <ScrollView ref={scrollRef}>
+      <PageContentWithFooter>
+        <SearchHeader />
+        <VStack position="relative" flex={10} minHeight={600}>
+          <Suspense fallback={null}>
+            {visibleResults.map((data, index) => {
+              return (
+                <VStack key={index} height={ITEM_HEIGHT}>
+                  <RestaurantListItem
+                    curLocInfo={props.item.curLocInfo ?? null}
+                    restaurantId={data.id}
+                    restaurantSlug={data.slug}
+                    rank={index + 1}
+                    activeTagSlugs={activeTagSlugs}
+                    meta={data.meta}
+                    onFinishRender={loadMore}
+                  />
+                </VStack>
+              )
+            })}
+          </Suspense>
+        </VStack>
+        <Suspense fallback={null}>
+          <SearchFooter
+            numResults={searchPageStore.results.length}
+            scrollToTop={scrollToTopHandler}
+          />
+        </Suspense>
+      </PageContentWithFooter>
+    </ScrollView>
+  )
+}
+
+const SearchResultsInfiniteScroll = (props: Props) => {
   const drawerWidth = useAppDrawerWidth()
   const searchStore = useSearchPageStore()
+  const activeTagSlugs = useActiveTagSlugs(props)
   const { status } = searchStore
 
   let results = searchStore.results
@@ -301,20 +393,6 @@ const SearchResultsContent = (props: Props) => {
     )
   }, [drawerWidth])
 
-  const activeTagSlugs = useMemo(() => {
-    return [
-      ...slugify(props.item.searchQuery),
-      ...Object.keys(props.item.activeTags || {}).filter((x) => {
-        const isActive = props.item.activeTags[x]
-        if (!isActive) {
-          return false
-        }
-        const type = allTags[x]?.type ?? 'outlier'
-        return type != 'lense' && type != 'filter' && type != 'outlier'
-      }),
-    ]
-  }, [props.item.activeTags])
-
   const rowRenderer = useCallback(
     (
       type: string | number,
@@ -336,7 +414,7 @@ const SearchResultsContent = (props: Props) => {
         />
       )
     },
-    [results]
+    [activeTagSlugs]
   )
 
   useEffect(() => {
@@ -348,15 +426,7 @@ const SearchResultsContent = (props: Props) => {
   }, [results])
 
   if (status !== 'loading' && results.length === 0) {
-    return (
-      <>
-        <SearchHeader />
-        <VStack paddingVertical={100} alignItems="center" spacing>
-          <Paragraph fontSize={22}>Nothing found</Paragraph>
-          <Text fontSize={32}>😞</Text>
-        </VStack>
-      </>
-    )
+    return <SearchEmptyResults />
   }
 
   return (
@@ -365,12 +435,24 @@ const SearchResultsContent = (props: Props) => {
         style={listStyle}
         canChangeSize
         externalScrollView={SearchPageScrollView as any}
-        renderAheadOffset={1000}
+        renderAheadOffset={ITEM_HEIGHT * 12}
         rowRenderer={rowRenderer}
         dataProvider={dataProvider}
         layoutProvider={layoutProvider}
         deterministic
       />
+    </>
+  )
+}
+
+const SearchEmptyResults = () => {
+  return (
+    <>
+      <SearchHeader />
+      <VStack paddingVertical={100} alignItems="center" spacing>
+        <Paragraph fontSize={22}>Nothing found</Paragraph>
+        <Text fontSize={32}>😞</Text>
+      </VStack>
     </>
   )
 }

@@ -46,6 +46,9 @@ export const useUserTagVotes = (restaurantSlug: string, activeTags: HomeActiveTa
   if (process.env.NODE_ENV === 'development') {
     useLazyEffect(() => {
       console.warn('CHANGING ACTIVE TAGS NOT ALLOWED< USE KEY INSTEAD', activeTags, tagSlugList)
+      console.groupCollapsed('>>')
+      console.trace()
+      console.groupEnd()
     }, [JSON.stringify(activeTags)])
   }
 

@@ -45,7 +45,7 @@ const error: MyTheme = {
 const darkBase = {
   mapBackground: '#111',
   backgroundColorTransparent: 'rgba(25,25,25,0)',
-  backgroundColorAlt: 'rgba(240, 250, 255, 0.1)',
+  backgroundColorAlt: 'rgba(54, 54, 104, 0.39)',
   backgroundColorTransluscent: '#1111155',
   backgroundColorDarker: '#111111',
   colorAlt: '#fff',

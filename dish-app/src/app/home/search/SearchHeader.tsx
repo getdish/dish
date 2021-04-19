@@ -39,6 +39,7 @@ export const SearchHeader = memo(() => {
               <SlantedTitle
                 paddingLeft={55}
                 paddingRight={35}
+                marginBottom={-5}
                 backgroundColor={rgbString(lenseColor)}
               >
                 <VStack alignItems="center">
