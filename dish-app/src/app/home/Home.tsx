@@ -6,7 +6,7 @@ import { AbsoluteVStack, HStack, LinearGradient, VStack, useMedia, useTheme } fr
 
 import { searchBarHeight, zIndexDrawer } from '../../constants/constants'
 import { router } from '../../router'
-import { AppAutocompleteSearch } from '../AppAutocomplete'
+import { AppAutocompleteSearch } from '../AppAutocompleteSearch'
 import { appMenuStore } from '../AppMenuStore'
 import { homeStore } from '../homeStore'
 import { useAppDrawerWidth } from '../hooks/useAppDrawerWidth'

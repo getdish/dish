@@ -5,10 +5,11 @@ import { AbsoluteVStack, Button, HStack, VStack, getMedia, useMedia, useTheme } 
 
 import { isWeb } from '../constants/constants'
 import { supportsTouchWeb } from '../constants/platforms'
-import { autocompleteLocationStore, autocompletesStore } from './AppAutocomplete'
+import { AutocompleteItem } from '../helpers/createAutocomplete'
 import { AppAutocompleteHoverableInput } from './AppAutocompleteHoverableInput'
 import { appMapStore } from './AppMapStore'
 import { inputTextStyles } from './AppSearchInput'
+import { autocompleteLocationStore, autocompletesStore } from './AutocompletesStore'
 import { useHomeStore } from './homeStore'
 import { useAutocompleteInputFocus } from './hooks/useAutocompleteInputFocus'
 import { useSearchBarTheme } from './hooks/useSearchBarTheme'
@@ -46,9 +47,11 @@ export const AppSearchInputLocation = memo(() => {
       case 13: {
         // enter
         const result = autocompleteLocationStore.activeResult
-        if (result) {
-          setLocation(result.name)
+        if (result?.type === 'place') {
+          setLocation(result.name, result.slug)
           autocompletesStore.setVisible(false)
+        } else {
+          console.warn('not a place?')
         }
         return
       }

@@ -1,7 +1,7 @@
 import { Store, createStore, useStoreInstance } from '@dish/use-store'
 
 import { inputClearSelection, inputGetNode, inputIsTextSelected } from '../helpers/input'
-import { autocompletesStore } from './AppAutocomplete'
+import { autocompletesStore } from './AutocompletesStore'
 import { searchPageStore } from './home/search/SearchPageStore'
 
 export class InputStore extends Store<{ name: 'location' | 'search' }> {

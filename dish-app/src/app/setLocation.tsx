@@ -2,18 +2,17 @@ import { defaultLocationAutocompleteResults } from '../constants/defaultLocation
 import { setDefaultLocation } from '../constants/initialHomeState'
 import { getNavigateItemForState } from '../helpers/getNavigateItemForState'
 import { router } from '../router'
-import { autocompleteLocationStore } from './AppAutocomplete'
 import { appMapStore } from './AppMapStore'
+import { autocompleteLocationStore } from './AutocompletesStore'
 import { homeStore } from './homeStore'
 import { inputStoreLocation } from './inputStore'
 
-export async function setLocation(val: string) {
+export async function setLocation(val: string, region?: string) {
   const current = [...autocompleteLocationStore.results, ...defaultLocationAutocompleteResults]
   inputStoreLocation.setValue(val)
   const exact = current.find((x) => x.name === val)
   if (!exact) return
   if ('center' in exact) {
-    const curState = homeStore.currentState
     const center = exact.center
     const span = exact.span
     appMapStore.setPosition(exact)
@@ -21,7 +20,12 @@ export async function setLocation(val: string) {
       center,
       span,
     })
-    const navItem = getNavigateItemForState(curState)
+    const navItem = getNavigateItemForState({
+      ...homeStore.lastHomeOrSearchState,
+      center,
+      span,
+      ...(region && { region }),
+    })
     if (router.getShouldNavigate(navItem)) {
       router.navigate(navItem)
     }

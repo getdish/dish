@@ -3,7 +3,7 @@ import { Animated } from 'react-native'
 
 import { isWeb } from '../constants/constants'
 import { getWindowHeight } from '../helpers/getWindow'
-import { autocompletesStore } from './AppAutocomplete'
+import { autocompletesStore } from './AutocompletesStore'
 
 class DrawerStore extends Store {
   snapPoints = [isWeb ? 0.02 : 0.05, 0.28, 0.75]

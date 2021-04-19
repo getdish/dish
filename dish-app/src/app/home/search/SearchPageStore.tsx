@@ -58,8 +58,13 @@ class SearchPageStore extends Store {
     this.results = []
   }
 
-  async runSearch(opts: { searchQuery?: string; quiet?: boolean; force?: boolean }) {
-    opts = opts || { quiet: false }
+  async runSearch({
+    searchQuery = homeStore.lastHomeOrSearchState?.searchQuery ?? '',
+    force,
+  }: {
+    searchQuery?: string
+    force?: boolean
+  }) {
     const wasSearching = this.lastSearchAt !== 0
     this.lastSearchAt = Date.now()
     this.status = 'loading'
@@ -72,19 +77,15 @@ class SearchPageStore extends Store {
     }
 
     // prevent searching back to back quickly
-    if (!opts.force) {
-      await sleep(wasSearching ? 250 : 100)
+    if (!force) {
+      await sleep(wasSearching ? 250 : 50)
       await fullyIdle({ max: 200 })
       if (shouldCancel()) return
     }
 
-    const curState = homeStore.lastSearchState
-    const searchQuery = opts.searchQuery ?? curState?.searchQuery ?? ''
     const navItem: HomeStateNav = {
       state: {
-        id: '',
-        type: 'home',
-        ...curState,
+        ...homeStore.lastHomeOrSearchState,
         searchQuery,
       },
     }
@@ -95,12 +96,12 @@ class SearchPageStore extends Store {
       return
     }
 
-    const state = homeStore.lastSearchState
+    const state = homeStore.lastHomeOrSearchState
     if (!state) {
       console.log('no search state')
       return
     }
-    const tags = curState ? getActiveTags(curState) : []
+    const tags = state ? getActiveTags(state) : []
     const center = appMapStore.nextPosition.center
     const span = appMapStore.nextPosition.span
     const dishSearchedTag = tags.find((k) => allTags[k.slug!]?.type === 'dish')?.slug
@@ -119,7 +120,7 @@ class SearchPageStore extends Store {
 
     // prevent duplicate searches
     const searchKey = stringify(this.searchArgs)
-    if (opts.force || searchKey !== this.lastSearchKey || !this.results.length) {
+    if (force || searchKey !== this.lastSearchKey || !this.results.length) {
       // SEARCH
       this.searchArgs = searchArgs
       const res = await search(searchArgs)

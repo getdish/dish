@@ -21,10 +21,10 @@ import {
   searchBarTopOffset,
   zIndexSearchBarFloating,
 } from '../constants/constants'
-import { autocompletesStore } from './AppAutocomplete'
 import { AppMenu } from './AppMenu'
 import { AppSearchInput } from './AppSearchInput'
 import { AppSearchInputLocation } from './AppSearchInputLocation'
+import { autocompletesStore } from './AutocompletesStore'
 import { useHomeStore } from './homeStore'
 import { useSearchBarTheme } from './hooks/useSearchBarTheme'
 import { DishLogoButton } from './views/DishLogoButton'

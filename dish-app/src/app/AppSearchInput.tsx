@@ -2,29 +2,30 @@ import { fullyIdle, idle, series } from '@dish/async'
 import { supportsTouchWeb } from '@dish/helpers'
 import { Loader, Search, X } from '@dish/react-feather'
 import { getStore, reaction, useStoreInstance } from '@dish/use-store'
-import React, { memo, useCallback, useEffect, useRef, useState } from 'react'
+import React, { memo, useCallback, useEffect, useRef } from 'react'
 import { Platform, ScrollView, StyleSheet, TextInput, TouchableOpacity, View } from 'react-native'
-import { useTheme } from 'snackui'
 import {
   HStack,
   Spacer,
   VStack,
   getMedia,
   useDebounce,
-  useGet,
   useMedia,
   useOnMount,
   useThemeName,
 } from 'snackui'
 
 import { isWeb, searchBarHeight } from '../constants/constants'
-import { combineFns } from '../helpers/combineFns'
 import { getTagSlug } from '../helpers/getTagSlug'
 import { isWebIOS } from '../helpers/isIOS'
 import { filterToNavigable } from '../helpers/tagHelpers'
 import { router, useIsRouteActive } from '../router'
-import { AutocompleteStore, autocompleteSearchStore, autocompletesStore } from './AppAutocomplete'
 import { AppAutocompleteHoverableInput } from './AppAutocompleteHoverableInput'
+import {
+  AutocompleteStore,
+  autocompleteSearchStore,
+  autocompletesStore,
+} from './AutocompletesStore'
 import { searchPageStore, useSearchPageStore } from './home/search/SearchPageStore'
 import { homeStore, useHomeStore } from './homeStore'
 import { useAutocompleteInputFocus } from './hooks/useAutocompleteInputFocus'
@@ -98,13 +99,10 @@ export const AppSearchInput = memo(() => {
   const home = useHomeStore()
   const { color } = useSearchBarTheme()
   const media = useMedia()
-  const [search, setSearchFast] = useState('')
-  const getSearch = useGet(search)
   const isSearchingCuisine = !!home.searchBarTags.length
   const isEditingList = false // useRouterSelector((x) => x.curPage.name === 'list' && x.curPage.params.state === 'edit')
-
-  const setSearchSlow = useDebounce(autocompleteStore.setQuery, 250)
-  const setSearch = combineFns(setSearchFast, setSearchSlow)
+  const textInput$ = useRef<TextInput | null>(null)
+  const setSearch = useDebounce(autocompleteStore.setQuery, 250)
 
   // focus on visible
   useAutocompleteInputFocus(inputStore)
@@ -115,7 +113,9 @@ export const AppSearchInput = memo(() => {
 
   useOnMount(() => {
     searchBar = inputStore.node
-    setSearch(home.currentSearchQuery)
+    textInput$.current?.setNativeProps({
+      value: home.currentSearchQuery,
+    })
     return series([
       () => fullyIdle({ max: 600 }),
       () => {
@@ -133,9 +133,7 @@ export const AppSearchInput = memo(() => {
       (x) => x.currentSearchQuery,
       function searchQuerySync(val) {
         console.log('changed search query', val)
-        if (val !== getSearch()) {
-          setSearch(val)
-        }
+        setSearch(val)
       }
     )
   }, [])
@@ -189,9 +187,10 @@ export const AppSearchInput = memo(() => {
               >
                 {!isWeb && <SearchInputNativeDragFix name="search" />}
                 <TextInput
-                  ref={(view) => setNodeOnInputStore(inputStore, view)}
-                  // leave uncontrolled for perf?
-                  value={search ?? ''}
+                  ref={(view) => {
+                    textInput$.current = view
+                    setNodeOnInputStore(inputStore, view)
+                  }}
                   onBlur={(e) => {
                     isFocused = false
                     avoidNextFocus = false
@@ -216,7 +215,7 @@ export const AppSearchInput = memo(() => {
                     }
                   }}
                   onChangeText={(text) => {
-                    if (getSearch() == '' && text !== '') {
+                    if (text !== '') {
                       if (autocompletesStore.target !== 'search') {
                         autocompletesStore.setTarget('search')
                       }
@@ -352,6 +351,8 @@ const handleKeyPress = async (e: any, inputStore: InputStore) => {
       // enter
       // just searching normal
       const item = results[index - 1]
+
+      // if selecting an item in the list
       if (isAutocompleteActive && item && index !== 0) {
         if (item.type === 'restaurant') {
           router.navigate({
@@ -365,7 +366,9 @@ const handleKeyPress = async (e: any, inputStore: InputStore) => {
             tags: [item],
           })
         }
-      } else {
+      }
+      // if searching with text
+      else {
         // TODO move this to top-down approach
         // inputStore.setValue(e.target.value)
         // and have SearchPage useEffect() listen to inputStore.value

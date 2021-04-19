@@ -91,7 +91,6 @@ export const SearchForkListButton = memo(
               const tags = await getFullTags(getActiveTags(state))
               if (tags.some((tag) => !tag.id)) {
                 console.error(`no tag id??`, tags)
-                debugger
                 return
               }
               await mutate((mutation) => {

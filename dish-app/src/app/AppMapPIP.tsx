@@ -89,14 +89,14 @@ const AppPIPContent = graphql(() => {
         drawerStore.setSnapIndex(2)
       }
     }
-    if (center[0] && !isEqual(center, appMapStore.position.center)) {
-      return () => {
-        appMapStore.setPosition({
-          center: center,
-          span: pipSpan(span),
-        })
-      }
-    }
+    // if (center[0] && !isEqual(center, appMapStore.position.center)) {
+    //   return () => {
+    //     appMapStore.setPosition({
+    //       center: center,
+    //       span: pipSpan(span),
+    //     })
+    //   }
+    // }
   })()
 
   // const coordinate = useMemo(

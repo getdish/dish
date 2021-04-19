@@ -1,7 +1,7 @@
 import { reaction } from '@dish/use-store'
 import React, { useEffect } from 'react'
 
-import { autocompletesStore } from '../AppAutocomplete'
+import { autocompletesStore } from '../AutocompletesStore'
 import { drawerStore } from '../drawerStore'
 import { HomeDrawerSmallView } from './HomeDrawerSmallView'
 
