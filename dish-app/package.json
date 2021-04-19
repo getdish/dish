@@ -14,6 +14,7 @@
     "app:native": "LOCAL_HOST=$(ipconfig getifaddr en0) yarn app",
     "app:native:reset": "watchman watch-del-all && yarn app:native --reset-cache",
     "web": "NODE_ENV=development ../dishctl.sh run 'yarn dish start'",
+    "web:reset": "NODE_ENV=development ../dishctl.sh run 'yarn dish start --reset-cache'",
     "web:native": "LOCAL_HOST=$(ipconfig getifaddr en0) yarn web",
     "web:https": "sudo dish start --https --host d1sh.com --port 443",
     "web:debug": "DEBUG_WEBPACK=1 node --max_old_space_size=8192 --inspect ../node_modules/.bin/dish start --serial",

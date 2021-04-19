@@ -36,6 +36,7 @@ export const AppMapControls = memo(() => {
           bottom={0}
           paddingHorizontal={30}
           pointerEvents="none"
+          top={5}
           {...(!isWeb && {
             top: safeArea.top - 10,
           })}
