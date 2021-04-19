@@ -2,16 +2,7 @@ import { ArrowUp, ChevronLeft, MapPin, Search } from '@dish/react-feather'
 import { useStoreInstance } from '@dish/use-store'
 import React, { Suspense, memo } from 'react'
 import { StyleSheet, TouchableOpacity } from 'react-native'
-import {
-  AbsoluteVStack,
-  HStack,
-  LinearGradient,
-  Spacer,
-  Theme,
-  VStack,
-  useMedia,
-  useTheme,
-} from 'snackui'
+import { AbsoluteVStack, HStack, LinearGradient, Spacer, Theme, VStack, useMedia } from 'snackui'
 
 import { bgLightTranslucent } from '../constants/colors'
 import {

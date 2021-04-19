@@ -19,7 +19,6 @@ export const urlSerializers = {
         }
         if (center && span) {
           const val = [center.lat, center.lng, span.lat, span.lng].map(coordShort).join('_')
-          console.log('val', val)
           return val
         }
         return 'ca-san-francisco'

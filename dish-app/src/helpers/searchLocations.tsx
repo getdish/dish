@@ -35,7 +35,6 @@ export async function searchLocations(query: string, near?: LngLat): Promise<Geo
           lng: lngDist,
           lat: latDist,
         }
-        console.log('TODO get slug and set here')
         return {
           name: feat.text,
           fullName: feat.place_name,

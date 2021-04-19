@@ -284,6 +284,8 @@ class HomeStore extends Store {
           type: 'home',
           searchQuery: '',
           activeTags: {},
+          curLocInfo: null,
+          curLocName: '',
           region: item.params.region ?? prev?.region,
           section: item.params.section ?? '',
           center: appMapStore.currentPosition.center,

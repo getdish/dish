@@ -12,7 +12,7 @@ export const defaultLenseColor = {
 
 export const defaultLenseColorDark = {
   name: 'dark',
-  rgb: [40, 40, 40] as RGB,
+  rgb: [50, 50, 50] as RGB,
 }
 
 export const useCurrentLenseColor = () => {
