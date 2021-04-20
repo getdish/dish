@@ -89,7 +89,7 @@
   left: 0;
   right: 0;
   height: 100px;
-  background: linear-gradient(rgba(0,0,0,0), rgba(0,0,0,0.45));
+  background: linear-gradient(rgba(0,0,0,0), rgba(0,0,0,0.145));
   z-index: -1;
 }
 

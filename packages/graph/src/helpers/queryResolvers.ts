@@ -49,20 +49,18 @@ export async function resolvedWithFields<T extends () => unknown>(
   resolver: T,
   { keys, select, depth }: SelectionOptions = {}
 ): Promise<any> {
-  const next = await resolvedWithoutCache(() => {
-    const res = resolver()
-    const obj = selectFields(res as object, keys ?? '*', depth ?? 2)
-    if (select) {
-      merge(obj, select(res))
+  const next = await resolved(
+    () => {
+      const res = resolver()
+      const obj = selectFields(res as object, keys ?? '*', depth ?? 2)
+      if (select) {
+        merge(obj, select(res))
+      }
+      return obj
+    },
+    {
+      noCache: true,
     }
-    return obj
-  })
-  return next
-}
-
-export async function resolvedWithoutCache<T>(resolver: () => T): Promise<T> {
-  const next = await resolved(resolver, {
-    noCache: true,
-  })
+  )
   return next
 }

@@ -51,9 +51,9 @@ RUN find . -type d \(  -name "test" -o -name "tests"  \) -print | xargs rm -rf &
   # link in esdx bugfix
   && ln -s /app/packages/esdx/esdx.js /app/node_modules/.bin/esdx
 
-# docker only caches after copy ?
-COPY package.json package.json
-RUN yarn build:js
+RUN yarn build:js \
+  # remove package.json scripts
+  && sed -i '/\"scripts\"/,/}/ d; /^$/d' package.json
 
 # so we can deploy/tag on fly
 RUN touch ./__noop__
