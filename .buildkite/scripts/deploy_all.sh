@@ -27,11 +27,11 @@ function deploy_dedicated_server() {
       set -e
       docker system prune --force
       cd /app
-      ./dishctl.sh dish_registry_auth
       set -a
       source .env
       source .env.production
       set +a
+      flyctl auth docker
       parallel -j 6 --tag --lb -I% docker pull $IMAGE ::: 'dish-hasura' 'dish-hooks'
       docker-compose build postgres
       docker-compose stop $DEDICATED_APPS || true

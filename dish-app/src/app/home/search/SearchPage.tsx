@@ -243,7 +243,7 @@ const SearchPageContent = memo(function SearchPageContent(
         minWidth={10}
       >
         <SearchPagePropsContext.Provider value={props}>
-          {isWeb ? (
+          {false ? (
             <SearchResultsSimpleScroll key={`${isLoading}`} {...props} />
           ) : (
             <SearchResultsInfiniteScroll key={`${isLoading}`} {...props} />

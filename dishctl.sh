@@ -717,9 +717,9 @@ function run() {
 
 if command -v git &> /dev/null; then
   export PROJECT_ROOT=$(git rev-parse --show-toplevel)
-  branch=$(git rev-parse --abbrev-ref HEAD)
-  export DOCKER_TAG_NAMESPACE=${branch//\//-}
-  export BASE_IMAGE=$DISH_REGISTRY/base:$DOCKER_TAG_NAMESPACE
+  # branch=$(git rev-parse --abbrev-ref HEAD)
+  # export DOCKER_TAG_NAMESPACE=${branch//\//-}
+  # export BASE_IMAGE=$DISH_REGISTRY/base:$DOCKER_TAG_NAMESPACE
   pushd $PROJECT_ROOT >/dev/null
   set -a
   source .env
