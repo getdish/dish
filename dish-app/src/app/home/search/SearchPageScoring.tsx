@@ -1,10 +1,8 @@
 import { sortBy } from 'lodash'
 import React, { memo, useContext } from 'react'
-import { ScrollView } from 'react-native'
 import { AbsoluteVStack, HStack, VStack, useTheme } from 'snackui'
 
 import { getActiveTags } from '../../../helpers/getActiveTags'
-import { ContentScrollViewHorizontal } from '../../views/ContentScrollViewHorizontal'
 import { SlantedTitle } from '../../views/SlantedTitle'
 import { TagButton, getTagButtonProps } from '../../views/TagButton'
 import { Arrow } from './Arrow'
