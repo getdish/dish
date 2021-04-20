@@ -6,6 +6,7 @@ import { Divider, HStack, Text, TextProps, useLazyEffect } from 'snackui'
 
 import { lightGreen, lightRed, lightYellow } from '../../../constants/colors'
 import { isWeb } from '../../../constants/constants'
+import { dateTimeFormat } from '../../../helpers/dateTimeFormat'
 import { CommentBubble } from '../../views/CommentBubble'
 import { Link } from '../../views/Link'
 import { SentimentText } from './SentimentText'
@@ -55,7 +56,7 @@ export const RestaurantReview = memo(
 
       const authoredAt = review.authored_at ? (
         <Text {...bottomMetaTextProps} marginLeft={6}>
-          {new Intl.DateTimeFormat().format(new Date(review.authored_at))} &nbsp; &nbsp;
+          {dateTimeFormat(new Date(review.authored_at))} &nbsp; &nbsp;
         </Text>
       ) : null
 

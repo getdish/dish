@@ -307,7 +307,7 @@ func isDeliveryTag(tag string) bool {
 }
 
 func handleRequests() {
-	port := getEnv("PORT", "9999")
+	port := getEnv("PORT", "10000")
 	mux := http.NewServeMux()
 	mux.HandleFunc("/search", search)
 	mux.HandleFunc("/top_cuisines", top_cuisines)
@@ -315,17 +315,23 @@ func handleRequests() {
 	mux.HandleFunc("/feed", feed)
 	mux.HandleFunc("/regions", regions)
 	handler := cors.Default().Handler(mux)
-	log.Fatal(http.ListenAndServe(":"+port, handler))
+	addr := "0.0.0.0:" + port
+	log.Fatal(http.ListenAndServe(addr, handler))
+	fmt.Println("Start server on", addr)
 }
 
 func main() {
 	pg_port := ":" + getEnv("POSTGRES_PORT", "5432")
-	addr := getEnv("POSTGRES_HOST", "localhost") + pg_port
+	Addr := getEnv("POSTGRES_HOST", "localhost") + pg_port
+	User := getEnv("POSTGRES_USER", "postgres")
+	Password := getEnv("POSTGRES_PASSWORD", "postgres")
+	Database := getEnv("POSTGRES_DB", "dish")
+	fmt.Println("postgres", User, Database)
 	db = pg.Connect(&pg.Options{
-		User:     getEnv("POSTGRES_USER", "postgres"),
-		Password: getEnv("POSTGRES_PASSWORD", "postgres"),
-		Addr:     addr,
-		Database: getEnv("POSTGRES_DB", "dish"),
+		User:     User,
+		Password: Password,
+		Addr:     Addr,
+		Database: Database,
 	})
 
 	// check if working
@@ -334,6 +340,5 @@ func main() {
 	fmt.Println("search test connection, err?", err, "res", n)
 
 	defer db.Close()
-	fmt.Println("Start server on", pg_port, "with postgres", addr)
 	handleRequests()
 }

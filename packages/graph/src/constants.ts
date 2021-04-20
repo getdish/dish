@@ -3,7 +3,7 @@ function getWindow() {
 }
 
 const hostname = getWindow()?.location?.hostname ?? ''
-const search = getWindow()?.location.search ?? ''
+const search = getWindow()?.location?.search ?? ''
 
 export const isManualDebugMode = search.startsWith('?debug')
 
@@ -29,7 +29,7 @@ export const SEARCH_DOMAIN = `${DISH_API_ENDPOINT}/search`
 export const SEARCH_DOMAIN_INTERNAL = (() => {
   const staging = 'https://search-staging.dishapp.com'
   const live = 'https://search.dishapp.com'
-  const local = process.env.SEARCH_ENDPOINT ?? `${ORIGIN_MINUS_PORT}:10000`
+  const local = process.env.SEARCH_ENDPOINT ?? `${ORIGIN_MINUS_PORT}:9999`
   if (isProd) return live
   if (isStaging) return staging
   return local
@@ -55,14 +55,16 @@ export const GRAPH_DOMAIN =
 export const GRAPH_API_INTERNAL = `${GRAPH_DOMAIN}/v1/graphql`
 export const GRAPH_API = `${DISH_API_ENDPOINT}/graph`
 
-// console.log('graph.const', {
-//   DISH_API_ENDPOINT,
-//   SEARCH_DOMAIN_INTERNAL,
-//   LOCAL_HOST,
-//   TILES_HOST,
-//   GRAPH_API,
-//   SEARCH_DOMAIN,
-//   isNode,
-//   isProd,
-//   isNative,
-// })
+if (process.env.TARGET === 'native') {
+  console.log('graph.const', {
+    DISH_API_ENDPOINT,
+    SEARCH_DOMAIN_INTERNAL,
+    LOCAL_HOST,
+    TILES_HOST,
+    GRAPH_API,
+    SEARCH_DOMAIN,
+    isNode,
+    isProd,
+    isNative,
+  })
+}

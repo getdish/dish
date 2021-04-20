@@ -94,7 +94,7 @@ const typeColors = {
 export const TagButton = memo((props: TagButtonProps) => {
   const themeName = useThemeName()
   const color = (props.type && typeColors[props.type]) || 'green'
-  const next = props.theme || themeName === 'dark' ? `${color}-dark` : color
+  const next = props.theme || themeName.includes('light') ? color : `${color}-dark`
   return (
     <Theme name={next}>
       <TagButtonInner {...props} />
@@ -151,7 +151,7 @@ const TagButtonInner = (props: TagButtonProps) => {
     // @ts-expect-error
     <Button
       noTextWrap
-      backgroundColor={backgroundColor || theme.backgroundColorTertiary}
+      backgroundColor={backgroundColor || theme.backgroundColor}
       className="ease-in-out-faster"
       // height={isSmall ? 28 : 34}
       borderRadius={isSmall ? 8 : 10}
@@ -319,6 +319,7 @@ const TagButtonVote = (props: TagButtonProps & { scale: number }) => {
           transform: [{ scale: 1.1 }],
         }}
         onPressIn={prevent}
+        onPressOut={prevent}
         onPress={(e) => {
           prevent(e)
           setVote(vote == 0 ? 1 : vote === -1 ? 0 : -1)

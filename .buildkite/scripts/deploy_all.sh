@@ -11,7 +11,7 @@ cd "$PROJECT_ROOT"
 function deploy_dedicated_server() {
   echo "🖥 deploying dedicated server..."
   PRIVATE_KEY="$PROJECT_ROOT/etc/keys/d1_reliablesite_dish"
-  DEDICATED_APPS="hasura postgres"
+  DEDICATED_APPS="hasura postgres image-proxy"
   DISH_IMAGE_TAG=":latest"
   IMAGE="$DISH_REGISTRY/%$DISH_IMAGE_TAG"
   rsync \

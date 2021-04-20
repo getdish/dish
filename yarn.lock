@@ -1878,6 +1878,8 @@ __metadata:
     "@dish/use-store": "*"
     "@dish/webpack": "*"
     "@expo/html-elements": ^0.0.1
+    "@formatjs/intl-datetimeformat": ^3.3.2
+    "@formatjs/intl-relativetimeformat": ^8.1.5
     "@loadable/component": ^5.14.1
     "@mdx-js/react": ^1.6.22
     "@react-native-community/blur": ^3.6.0
@@ -2724,6 +2726,35 @@ __metadata:
     pouchdb-collections: ^1.0.1
     tiny-queue: ^0.2.1
   checksum: 7eb0c76e637e2d85d30d53af0be97a84b863a17b868ace6652a7fb262ba2cc58b62de627e7682015ec2ffeef89dc63c2f1fc466a853da786b0714b6ccd7e5c65
+  languageName: node
+  linkType: hard
+
+"@formatjs/ecma402-abstract@npm:1.6.5":
+  version: 1.6.5
+  resolution: "@formatjs/ecma402-abstract@npm:1.6.5"
+  dependencies:
+    tslib: ^2.1.0
+  checksum: 54b6a3e0cd0506f561f1244add9e763f2fa458ec7cef0731ff28ef9ea2b4ad978207bfb8a6ae0e50bce7825ee1d75d80a4e6822894ba73c0bb7c8dcc77c01ea4
+  languageName: node
+  linkType: hard
+
+"@formatjs/intl-datetimeformat@npm:^3.3.2":
+  version: 3.3.2
+  resolution: "@formatjs/intl-datetimeformat@npm:3.3.2"
+  dependencies:
+    "@formatjs/ecma402-abstract": 1.6.5
+    tslib: ^2.1.0
+  checksum: 8d67c91bfad40ccbcce566f3d46a86e23e3c29a9765a3241e73d470698a4d764cccfb2fd78cd336af0d539ad8715b0e3bf0899e50de2a876aba8a9c8d207629a
+  languageName: node
+  linkType: hard
+
+"@formatjs/intl-relativetimeformat@npm:^8.1.5":
+  version: 8.1.5
+  resolution: "@formatjs/intl-relativetimeformat@npm:8.1.5"
+  dependencies:
+    "@formatjs/ecma402-abstract": 1.6.5
+    tslib: ^2.1.0
+  checksum: 97d36e6c0f670aa45558a7390e43bbacbd147c984591f961398e21b256b67221bd104baa0cf4d17d8285973680c1af0597e476ead917fca8bca86438c77f51cd
   languageName: node
   linkType: hard
 
