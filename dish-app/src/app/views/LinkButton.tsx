@@ -1,7 +1,9 @@
 import { RoutesTable } from '@dish/router'
 import React, { useEffect, useState } from 'react'
+import { useThemeName } from 'snackui'
 import { Button } from 'snackui'
 
+import { colorNames } from '../../constants/colors'
 import { DRouteName, router } from '../../router'
 import { useLink } from '../hooks/useLink'
 import { LinkButtonProps } from './LinkProps'
@@ -28,8 +30,10 @@ export function LinkButton<Name extends DRouteName = DRouteName>(
     textProps,
     opacity,
     disabled,
+    theme,
     ...restProps
   } = props
+  const themeName = useThemeName()
 
   useEffect(() => {
     if (!props.enableActiveStyle) {
@@ -62,6 +66,17 @@ export function LinkButton<Name extends DRouteName = DRouteName>(
         typeof opacity !== 'number' && {
           opacity: 0.5,
         })}
+      {...(theme &&
+        themeName === 'dark' && {
+          textProps: {
+            color: '#fff',
+          },
+        })}
+      {...(theme && {
+        theme:
+          // @ts-expect-error
+          colorNames.includes(theme) && themeName === 'dark' ? `${theme}-dark` : theme,
+      })}
     >
       {getChildren(props, isActive)}
     </Button>
