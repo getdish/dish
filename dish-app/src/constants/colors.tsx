@@ -51,7 +51,7 @@ export const allLightColors = [
   lightPurple,
 ]
 
-export const yellow = '#E0C057'
+export const yellow = '#D3B348'
 export const pink = `#C94375`
 export const green = `#3DAF6E`
 export const red = `#E34646`
@@ -77,7 +77,7 @@ export const allColorsPastel = [
   purplePastel,
 ]
 
-export const darkYellow = '#8C7C3C'
+export const darkYellow = '#74693D'
 export const darkPink = '#8C2347'
 export const darkGreen = `#1D783A`
 export const darkRed = `#7D1E1E`

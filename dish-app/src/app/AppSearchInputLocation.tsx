@@ -1,11 +1,10 @@
 import { MapPin, Navigation } from '@dish/react-feather'
 import React, { memo, useCallback } from 'react'
 import { TextInput } from 'react-native'
-import { AbsoluteVStack, Button, HStack, VStack, getMedia, useMedia, useTheme } from 'snackui'
+import { AbsoluteVStack, Button, HStack, VStack, getMedia } from 'snackui'
 
 import { isWeb } from '../constants/constants'
 import { supportsTouchWeb } from '../constants/platforms'
-import { AutocompleteItem } from '../helpers/createAutocomplete'
 import { AppAutocompleteHoverableInput } from './AppAutocompleteHoverableInput'
 import { appMapStore } from './AppMapStore'
 import { inputTextStyles } from './AppSearchInput'
@@ -97,7 +96,7 @@ export const AppSearchInputLocation = memo(() => {
               justifyContent="center"
               pointerEvents="none"
             >
-              <MapPin color={isWeb ? 'var(--color)' : color} size={18} opacity={0.35} />
+              <MapPin color={color} size={18} opacity={0.35} />
             </AbsoluteVStack>
             {!isWeb && <SearchInputNativeDragFix name="location" />}
             <TextInput
@@ -138,7 +137,7 @@ export const AppSearchInputLocation = memo(() => {
             borderRadius={1000}
             onPress={appMapStore.moveToUserLocation}
           >
-            <Navigation size={20} opacity={0.5} color={isWeb ? 'var(--color)' : color} />
+            <Navigation size={20} opacity={0.5} color={color} />
           </Button>
         </InputFrame>
       </AppAutocompleteHoverableInput>
