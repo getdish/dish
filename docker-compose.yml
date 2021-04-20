@@ -123,13 +123,12 @@ services:
       - VIRTUAL_HOST=staging.dishapp.com
       - VIRTUAL_PORT=4444
       - HASURA_ENDPOINT=http://hasura:8080
-      - SEARCH_ENDPOINT=http://search:10000
+      - SEARCH_ENDPOINT=http://search:9999
       - REDIS_HOST=redis
     ports:
       - 4444:4444
     depends_on:
       - 'hasura'
-      - 'search'
   tileserver:
     image: registry.fly.io/dish-tileserver${DISH_IMAGE_TAG}
     build:
@@ -149,7 +148,7 @@ services:
       context: ./services/search
       dockerfile: ./Dockerfile
     ports:
-      - 10000:10000
+      - 9999:9999
     environment:
       - POSTGRES_DB=${POSTGRES_DB:-dish}
       - VIRTUAL_HOST=search-staging.dishapp.com

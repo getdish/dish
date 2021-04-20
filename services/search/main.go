@@ -307,7 +307,7 @@ func isDeliveryTag(tag string) bool {
 }
 
 func handleRequests() {
-	port := getEnv("PORT", "10000")
+	port := getEnv("PORT", "9999")
 	mux := http.NewServeMux()
 	mux.HandleFunc("/search", search)
 	mux.HandleFunc("/top_cuisines", top_cuisines)
