@@ -19,7 +19,6 @@ body {
   z-index: 0;
   overflow: hidden;
   position: relative;
-
   max-height: 100vh;
 }
 
@@ -623,4 +622,8 @@ mark {
 
 .will-change-transform {
   will-change: transform;
+}
+
+.transform-origin-center {
+  transform-origin: center;
 }

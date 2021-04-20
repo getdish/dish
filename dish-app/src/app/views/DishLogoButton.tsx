@@ -8,9 +8,10 @@ import { LinkButtonProps } from './LinkProps'
 import { LogoCircle, LogoColor } from './Logo'
 
 const linkButtonProps: LinkButtonProps = {
-  className: 'ease-in-out-fast',
+  className: 'ease-in-out-fast transform-origin-center',
+  transform: [{ scale: 1 }],
   hoverStyle: {
-    transform: [{ scale: 1.05 }],
+    transform: [{ scale: 1.05 }, { translateY: -1 }],
   },
   pressStyle: {
     opacity: 0.8,
@@ -33,7 +34,7 @@ export const DishLogoButton = memo(({ color }: { color?: string }) => {
 
   return (
     <VStack
-      className="ease-in-out-faster transform-transform"
+      className="ease-in-out-faster"
       width={media.xs ? logoXsWidth : logoWidth}
       height={logoHeight}
       position="relative"

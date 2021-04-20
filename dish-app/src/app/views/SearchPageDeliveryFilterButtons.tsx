@@ -26,7 +26,7 @@ export const SearchPageDeliveryFilterButtons = memo(() => {
           return (
             <FilterButton
               key={key}
-              theme={isActive ? 'active' : null}
+              isActive={isActive}
               tag={{
                 name: key,
                 type: 'filter',

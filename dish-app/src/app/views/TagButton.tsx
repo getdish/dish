@@ -108,7 +108,7 @@ const TagButtonInner = (props: TagButtonProps) => {
     type,
     size,
     slug,
-    rating = 0,
+    rating,
     noColor,
     floating,
     closable,
@@ -145,7 +145,7 @@ const TagButtonInner = (props: TagButtonProps) => {
   const scale = isSmall ? 0.85 : size == 'lg' ? 1.2 : 1
   const fontSize = fontSizeProp ? fontSizeProp : 15 * scale
   const smallerFontSize: any = typeof fontSize === 'number' ? fontSize * 0.85 : fontSize
-  const ratingPts = rating * 10 - 50
+  const ratingPts = typeof rating === 'number' ? rating * 10 - 50 : 0
 
   const contents = (
     // @ts-expect-error
@@ -250,6 +250,7 @@ const TagButtonInner = (props: TagButtonProps) => {
           {after}
         </Text>
       )}
+
       {!!closable && (
         <VStack onPress={prevent} onPressIn={prevent} onPressOut={onClose as any}>
           <VStack

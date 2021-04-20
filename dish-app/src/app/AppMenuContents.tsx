@@ -1,4 +1,5 @@
 import { slugify } from '@dish/graph'
+import { Sun } from '@dish/react-feather'
 import React, { memo } from 'react'
 import { AbsoluteVStack, Box, BoxProps, Divider, Paragraph, Spacer, Toast, VStack } from 'snackui'
 
@@ -73,7 +74,8 @@ export const AppMenuContents = memo(
           )}
 
           <MenuLinkButton
-            onPress={() => {
+            icon={<Sun color="rgba(150,150,150,0.5)" size={16} />}
+            onPress={(e) => {
               const next = (() => {
                 switch (userStore.theme) {
                   case 'dark':
@@ -85,6 +87,7 @@ export const AppMenuContents = memo(
                 }
               })()
               userStore.setTheme(next)
+              e.stopPropagation()
             }}
           >
             {userStore.theme ?? 'auto'}

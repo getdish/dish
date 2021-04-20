@@ -46,7 +46,13 @@ export const SearchHeader = memo(() => {
                   <Text fontWeight="800" color="#fff" fontSize={24} lineHeight={28}>
                     {title}
                   </Text>
-                  <Text color="#fff" className="nobreak" fontSize={16} fontWeight="300">
+                  <Text
+                    color="#fff"
+                    opacity={0.8}
+                    className="nobreak"
+                    fontSize={16}
+                    fontWeight="300"
+                  >
                     {subTitle}
                   </Text>
                 </VStack>
