@@ -31,6 +31,7 @@ async function start() {
       hydrate(<Root />, ROOT)
     })
   } else {
+    // render(<Root />, ROOT)
     console.warn('👟 Concurrent Blocking Mode Running')
     ReactDOM.unstable_createRoot(ROOT).render(<Root />)
   }

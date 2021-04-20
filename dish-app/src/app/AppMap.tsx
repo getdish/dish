@@ -1,5 +1,4 @@
-import { series } from '@dish/async'
-import { resolved } from '@dish/graph'
+import { MapPosition } from '@dish/graph'
 import { useStoreInstance } from '@dish/use-store'
 import React, { memo, useCallback, useEffect, useMemo } from 'react'
 import {
@@ -14,8 +13,7 @@ import {
 } from 'snackui'
 
 import { pageWidthMax, searchBarHeight, zIndexMap } from '../constants/constants'
-import { coordsToLngLat, getMinLngLat } from '../helpers/mapHelpers'
-import { queryRestaurant } from '../queries/queryRestaurant'
+import { coordsToLngLat } from '../helpers/mapHelpers'
 import { router } from '../router'
 import { RegionWithVia } from '../types/homeTypes'
 import { AppAutocompleteLocation } from './AppAutocompleteLocation'
@@ -45,21 +43,21 @@ export default memo(function AppMap() {
   const { center, span } = position
 
   // HOVERED
-  useEffect(() => {
-    if (!hovered || !zoomOnHover) return
-    if (hovered.via !== 'list') return
-    return series([
-      () => resolved(() => queryRestaurant(hovered.slug)[0]?.location),
-      (location) => {
-        if (!location) return
-        appMapStore.setPosition({
-          via: 'hover',
-          center: coordsToLngLat(location.coordinates),
-          span: getMinLngLat(span, { lng: 0.1, lat: 0.1 }),
-        })
-      },
-    ])
-  }, [hovered, zoomOnHover])
+  // useEffect(() => {
+  //   if (!hovered || !zoomOnHover) return
+  //   if (hovered.via !== 'list') return
+  //   return series([
+  //     () => resolved(() => queryRestaurant(hovered.slug)[0]?.location),
+  //     (location) => {
+  //       if (!location) return
+  //       appMapStore.setPosition({
+  //         via: 'hover',
+  //         center: coordsToLngLat(location.coordinates),
+  //         span: getMinLngLat(span, { lng: 0.1, lat: 0.1 }),
+  //       })
+  //     },
+  //   ])
+  // }, [hovered, zoomOnHover])
 
   // gather restaruants
   const isLoading = !results.length
@@ -193,7 +191,7 @@ export default memo(function AppMap() {
     }
   }, [])
 
-  const handleSelectRegion = useCallback((region: RegionWithVia | null, position) => {
+  const handleSelectRegion = useCallback((region: RegionWithVia | null) => {
     if (!region) return
     if (!region.slug) {
       console.log('no region slug', region)
@@ -205,9 +203,9 @@ export default memo(function AppMap() {
     }
     if (region.via === 'click') {
       // avoid handleMoveStart being called next frame
-      updateRegionFaster(region, position)
+      updateRegionFaster(region)
     } else {
-      updateRegion(region, position)
+      updateRegion(region)
     }
   }, [])
 

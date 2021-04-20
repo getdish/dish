@@ -1,5 +1,5 @@
 import { MapPosition, slugify } from '@dish/graph'
-import React, { memo, useEffect, useMemo, useState } from 'react'
+import React, { memo, useEffect, useLayoutEffect, useMemo, useState } from 'react'
 import { useThemeName } from 'snackui'
 import {
   AbsoluteVStack,
@@ -28,6 +28,7 @@ import { HomeStateItemHome } from '../../types/homeTypes'
 import { appMapStore, cancelUpdateRegion } from '../AppMapStore'
 import { useHomeStateById, useHomeStore } from '../homeStore'
 import { useLocalStorageState } from '../hooks/useLocalStorageState'
+import { setMapInitialRegion } from '../Map'
 import { CloseButton } from '../views/CloseButton'
 import { ContentScrollView } from '../views/ContentScrollView'
 import { ContentScrollViewHorizontal } from '../views/ContentScrollViewHorizontal'
@@ -52,28 +53,31 @@ export default memo(function HomePage(props: HomeStackViewProps<HomeStateItemHom
   const [position, setPosition] = useState<MapPosition>(initialPosition)
   const regionColors = getColorsForName(state.region)
   const region = regionResponse.data
-  const { center, span } = region ?? {}
 
   // if (process.env.NODE_ENV === 'development') {
   //   // prettier-ignore
   //   console.log('👀 HomePage', state.region, { position, item: props.item, region, state, isActive, center, span })
   // }
 
-  // center map to region
+  useEffect(() => {
+    if (!region) return
+    setMapInitialRegion(props.item.region)
+  }, [region])
+
+  // // center map to region
   useEffect(() => {
     if (!isActive) return
-    if (!region || !center || !span) return
-    if (region.slug !== state.region) return
-    if (appMapStore.lastRegion) {
-      const via = appMapStore.lastRegion.region.via
-      if (via !== 'url') {
-        console.warn('avoid map zoom unless coming from external', via)
-        return
-      }
-    }
+    if (!region || !region.center || !region.span) return
+    // if (appMapStore.lastRegion) {
+    //   const via = appMapStore.lastRegion.via
+    //   if (via !== 'url') {
+    //     console.warn('avoid map zoom unless coming from external', via)
+    //     return
+    //   }
+    // }
     cancelUpdateRegion()
-    setPosition({ center, span })
-  }, [isActive, JSON.stringify([center, span])])
+    setPosition(region)
+  }, [isActive, JSON.stringify([region])])
 
   useEffect(() => {
     return () => {
@@ -85,7 +89,6 @@ export default memo(function HomePage(props: HomeStackViewProps<HomeStateItemHom
     if (!isActive) return
     if (regionResponse.status !== 'success') return
     if (region) {
-      console.warn('canceling move end on region change')
       const regionSlug = region.slug ?? slugify(region.name)
       setDefaultLocation({
         center: region.center,
@@ -197,7 +200,7 @@ export default memo(function HomePage(props: HomeStackViewProps<HomeStateItemHom
               {homeHeaderContent}
 
               <PageContentWithFooter>
-                <HomePageFeed {...props} region={region} {...position} />
+                <HomePageFeed {...props} regionName={regionName} region={region} {...position} />
               </PageContentWithFooter>
             </VStack>
           </VStack>

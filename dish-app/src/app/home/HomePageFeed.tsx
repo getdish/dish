@@ -4,9 +4,7 @@ import React, { Suspense, memo, useMemo, useState } from 'react'
 import { Hoverable, LoadingItems, Spacer } from 'snackui'
 
 import { getRestaurantIdentifiers } from '../../helpers/getRestaurantIdentifiers'
-import { HomeStateItemHome } from '../../types/homeTypes'
 import { useSetAppMap } from '../AppMapStore'
-import { useHomeStateById } from '../homeStore'
 import { FIBase } from './FIBase'
 import { FICuisine, HomeFeedCuisineItem } from './HomeFeedCuisineItem'
 import {
@@ -60,10 +58,9 @@ function useHomeFeed(props: HomeFeedProps): FI[] {
 
 export const HomePageFeed = memo(
   graphql(function HomePageFeed(props: HomeFeedProps) {
-    const { item, isActive } = props
-    const { region, center, span } = useHomeStateById<HomeStateItemHome>(item.id)
+    const { regionName, region, center, span, item, isActive } = props
     const items = useHomeFeed(props)
-    const isLoading = !!(!region || !items[0]?.id)
+    const isLoading = !!(!regionName || !items[0]?.id)
     const [hovered, setHovered] = useState<null | string>(null)
     const [hoveredResults, setHoveredResults] = useState<null | {
       via: FI['type']
@@ -84,6 +81,15 @@ export const HomePageFeed = memo(
         return []
       })
     }, [items, hoveredResults])
+
+    // const mapRegion = region
+    //   ? ({
+    //       slug: region.slug,
+    //       name: region.name,
+    //       geometry: region.bbox,
+    //       via: 'click',
+    //     } as const)
+    //   : null
 
     useSetAppMap({
       isActive,

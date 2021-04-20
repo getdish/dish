@@ -31,7 +31,7 @@ import {
   HomeStatesByType,
 } from '../types/homeTypes'
 import { NavigableTag } from '../types/tagTypes'
-import { appMapStore } from './AppMapStore'
+import { appMapStore, cancelUpdateRegion } from './AppMapStore'
 import { drawerStore } from './drawerStore'
 
 class HomeStore extends Store {
@@ -220,17 +220,18 @@ class HomeStore extends Store {
   }
 
   async updateAreaInfo() {
-    const { center, span } = appMapStore.position
+    const { center, span } = appMapStore.currentPosition
+    const curId = homeStore.currentState.id
     const curLocInfo = await reverseGeocode(center, span)
-    if (curLocInfo) {
-      const curLocName = curLocInfo.fullName ?? curLocInfo.name ?? curLocInfo.country
-      const cur = this.currentState
-      if (!isEqual(cur.curLocInfo, curLocInfo) || !isEqual(cur.curLocName, curLocName)) {
-        homeStore.updateCurrentState('appMapStore.updateAreaInfo', {
-          curLocInfo,
-          curLocName,
-        })
-      }
+    if (!curLocInfo) return
+    if (curId !== homeStore.currentState.id) return
+    const curLocName = curLocInfo.fullName ?? curLocInfo.name ?? curLocInfo.country
+    const cur = this.currentState
+    if (!isEqual(cur.curLocInfo, curLocInfo) || !isEqual(cur.curLocName, curLocName)) {
+      homeStore.updateCurrentState('appMapStore.updateAreaInfo', {
+        curLocInfo,
+        curLocName,
+      })
     }
   }
 
@@ -243,6 +244,9 @@ class HomeStore extends Store {
       if (val.type && state.type !== val.type) {
         throw new Error(`Cant change the type`)
       }
+    }
+    if (val['center']) {
+      console.log('UPDATE HOME CENTER', val['id'], val['region'], val['center'])
     }
     this.allStates = {
       ...this.allStates,

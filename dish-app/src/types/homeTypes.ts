@@ -1,3 +1,6 @@
+import { MapPosition } from '@dish/graph'
+import { MultiPolygon, Polygon } from '@turf/helpers'
+
 import { NavigableTag } from './tagTypes'
 
 export type GeocodePlace = {
@@ -29,10 +32,8 @@ export type HomeStateNav = {
 
 export type LngLat = { lng: number; lat: number }
 
-export type HomeStateItemLocation = {
+export type HomeStateItemLocation = MapPosition & {
   region?: string
-  center: LngLat
-  span: LngLat
 }
 
 export type HomeStateItemBase = {
@@ -77,13 +78,9 @@ export type HomeStateTagNavigable = Partial<HomeStateItemBase> & {
 
 export type HomeActiveTagsRecord = { [id: string]: boolean }
 
-export type Region = {
+export type Region = MapPosition & {
   name: string
   slug: string
-  geometry: {
-    type: 'Polygon' | 'MultiPolygon'
-    coordinates: any[]
-  }
 }
 
 export type Point = [number, number]
@@ -105,10 +102,7 @@ export type RegionApiResponse = {
   }
 }
 
-export type RegionNormalized = RegionApiResponse & {
-  center: LngLat
-  span: LngLat
-}
+export type RegionNormalized = RegionApiResponse & MapPosition
 
 export type HomeStateItemHome = HomeStateItemBase & {
   type: 'home'
