@@ -11,7 +11,7 @@ import { shouldBeOnSearch } from './shouldBeOnSearch'
 
 const ensureUnique = new Set(['lense', 'country', 'dish'])
 
-export const getNextState = (navState: HomeStateNav): HomeStateItem => {
+export const getNextHomeState = (navState: HomeStateNav): HomeStateItem => {
   const { tags = [], disallowDisableWhenActive = false, replaceSearch = false } = navState
   let { state } = navState
   if (!state) {
@@ -55,7 +55,7 @@ export const getNextState = (navState: HomeStateNav): HomeStateItem => {
     }
   }
   // update query
-  searchQuery = words.join(' ')
+  searchQuery = words.join(' ').trim()
 
   const activeTags = Object.fromEntries([...existing].map((slug) => [slug, true]))
 

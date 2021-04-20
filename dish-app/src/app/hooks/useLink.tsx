@@ -7,7 +7,7 @@ import { useForceUpdate } from 'snackui'
 import { isWeb } from '../../constants/constants'
 import { addTagsToCache, allTags, getFullTagFromNameAndType } from '../../helpers/allTags'
 import { getNavigateItemForState } from '../../helpers/getNavigateItemForState'
-import { getNextState } from '../../helpers/getNextState'
+import { getNextHomeState } from '../../helpers/getNextHomeState'
 import { filterToNavigable } from '../../helpers/tagHelpers'
 import { NavigateItem, router } from '../../router'
 import { homeStore } from '../homeStore'
@@ -162,7 +162,7 @@ const getNormalizedLink = (props: Partial<LinkButtonProps>) => {
     // add to cache
     addTagsToCache(tags)
 
-    const nextState = getNextState({
+    const nextState = getNextHomeState({
       ...props,
       state: homeStore.currentState,
       tags,

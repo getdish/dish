@@ -114,7 +114,7 @@ class SearchPageStore extends Store {
     this.searchArgs = {
       center: roundLngLat(center),
       span: roundLngLat(span),
-      query: state!.searchQuery,
+      query: state.searchQuery,
       tags: otherTags,
       main_tag: mainTag,
     }

@@ -75,7 +75,7 @@ const getParamsForState = (state: HomeStateTagNavigable): SearchRouteParams | an
         state.type === 'search'
           ? urlSerializers.search.region.serialize(state)
           : urlSerializers.home.region.serialize(state), //state.region ?? prev?.region ?? 'ca-san-francisco'
-      tags: tags.length ? tags : '-',
+      tags: tags || '-',
       search: state.searchQuery,
       lense,
     }

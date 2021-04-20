@@ -13,7 +13,7 @@ import { addTagsToCache, allTags } from '../helpers/allTags'
 import { ensureLenseTag } from '../helpers/ensureLenseTag'
 import { getActiveTags } from '../helpers/getActiveTags'
 import { getBreadcrumbs, isBreadcrumbState } from '../helpers/getBreadcrumbs'
-import { getNextState } from '../helpers/getNextState'
+import { getNextHomeState } from '../helpers/getNextHomeState'
 import { getShouldNavigate } from '../helpers/getShouldNavigate'
 import { getTagSlug } from '../helpers/getTagSlug'
 import { isHomeState, isSearchState } from '../helpers/homeStateHelpers'
@@ -516,13 +516,14 @@ class HomeStore extends Store {
 
   getShouldNavigate({ state, ...rest }: HomeStateNav) {
     const navState = { state: state ?? this.currentState, ...rest }
-    const nextState = getNextState(navState)
+    const nextState = getNextHomeState(navState)
     return getShouldNavigate(nextState)
   }
 
   async navigate({ state, ...rest }: HomeStateNav) {
     const navState = { state: state ?? this.currentState, ...rest }
-    const nextState = getNextState(navState)
+    const nextState = getNextHomeState(navState)
+    console.log('navigate.nextState', nextState)
     const curState = this.currentState
 
     const updateTags = () => {
