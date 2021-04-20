@@ -26,6 +26,10 @@ export function OverlayLinkButton<
           transform: [{ scale: 1.025 }],
           backgroundColor: theme.backgroundColor,
         }}
+        textProps={{
+          fontWeight: '600',
+          fontSize: 16,
+        }}
         icon={
           !Icon || React.isValidElement(Icon) ? (
             Icon

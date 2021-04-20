@@ -72,7 +72,9 @@ export const SearchPageScoring = memo(() => {
         position="relative"
       >
         <AbsoluteVStack left={-66}>
-          <SlantedTitle size="xs">Scoring</SlantedTitle>
+          <SlantedTitle size="xs" fontWeight="300" color={theme.colorSecondary}>
+            Scoring
+          </SlantedTitle>
         </AbsoluteVStack>
 
         <HStack spacing="sm">

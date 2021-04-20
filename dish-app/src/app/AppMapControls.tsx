@@ -54,7 +54,7 @@ export const AppMapControls = memo(() => {
             flexWrap="wrap"
             pointerEvents="none"
           >
-            {isWeb && <ToggleRegionButton />}
+            {/* {isWeb && <ToggleRegionButton />} */}
 
             {showSearchHere && (
               <OverlayLinkButton Icon={RefreshCcw} onPress={pagesStore.refresh}>

@@ -59,7 +59,6 @@ export const AppSearchBarFloating = () => {
   //   sendReparentableChild(parent, newParent, 0, 0)
   // }, [media.sm])
 
-  console.log('searchThemeName', searchThemeName)
   return (
     <Theme name={media.sm ? 'light' : searchThemeName}>
       <AbsoluteVStack
@@ -223,9 +222,9 @@ const AppSearchBarContents = memo(({ isColored }: { isColored: boolean }) => {
             }}
           >
             {showLocation ? (
-              <Search color={isWeb ? 'var(--color)' : '#999'} size={22} opacity={0.65} />
+              <Search color={isWeb ? 'var(--color)' : '#999'} size={22} opacity={0.5} />
             ) : (
-              <MapPin color={isWeb ? 'var(--color)' : '#999'} size={22} opacity={0.65} />
+              <MapPin color={isWeb ? 'var(--color)' : '#999'} size={22} opacity={0.5} />
             )}
           </TouchableOpacity>
         </HStack>

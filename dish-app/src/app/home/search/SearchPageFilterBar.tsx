@@ -89,7 +89,6 @@ const HomePageFilterBarSmall = ({ activeTags }: FilterBarProps) => {
 }
 
 const useSearchFilterButtons = ({ activeTags }: FilterBarProps) => {
-  const { name, rgb } = useCurrentLenseColor()
   let last = 0
   const grouped = groupBy(
     sortBy(tagFilters, (x) => tagSort[x.slug]),
@@ -101,19 +100,13 @@ const useSearchFilterButtons = ({ activeTags }: FilterBarProps) => {
       <HStack key={index} borderRadius={100}>
         {group.map((tag, groupIndex) => {
           const isActive = activeTags[getTagSlug(tag.slug)] ?? false
-          const themeName = isActive ? `${name}-dark` : null
           return (
             <FilterButton
-              key={tag.id}
+              key={tag.id + isActive}
               tag={tag}
-              theme={themeName}
+              index={index - groupIndex}
+              isActive={isActive}
               position="relative"
-              {...(!isActive && {
-                textProps: {
-                  color: rgbString(rgb),
-                },
-              })}
-              zIndex={100 - index - groupIndex + (isActive ? 1 : 0)}
               {...getGroupedButtonProps({
                 index: groupIndex,
                 items: group,
