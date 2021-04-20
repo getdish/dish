@@ -17,9 +17,6 @@ export const isStaging = process.env.NODE_ENV === 'staging' || hostname.includes
 export const isDev = (!isProd && !isStaging) || false
 export const isNative = process.env.TARGET === 'native'
 
-export const JWT_SECRET = process.env.JWT_SECRET || '12345678901234567890123456789012'
-export const HASURA_SECRET =
-  process.env.HASURA_GRAPHQL_ADMIN_SECRET || (process.env.TARGET === 'node' ? 'password' : '')
 const LOCAL_HOST = process.env.LOCAL_HOST ?? (hostname || `localhost`)
 const PROD_ORIGIN = 'https://dishapp.com'
 const ORIGIN = isProd ? PROD_ORIGIN : isStaging ? PROD_ORIGIN : `http://${LOCAL_HOST}:4444`
@@ -41,30 +38,21 @@ export const globalTagId = ZeroUUID
 export const externalUserUUID = OneUUID
 
 export const TILES_HOST = `${DISH_API_ENDPOINT}/tile`
-export const TILES_HOST_INTERNAL = (() => {
-  const prod = 'https://martin-tiles.dishapp.com'
-  const staging = 'https://martin-tiles-staging.dishapp.com'
-  const dev = `${ORIGIN_MINUS_PORT}:3005`
-  if (isProd) return prod
-  if (isStaging) return staging
-  return dev
-})()
+export const TILES_HOST_INTERNAL = process.env.TILES_HOST ?? `tileserver:3000`
 
 export const GRAPH_DOMAIN =
   process.env.HASURA_ENDPOINT || `http://${ORIGIN_MINUS_PORT}:${process.env.HASURA_PORT || 8080}`
 export const GRAPH_API_INTERNAL = `${GRAPH_DOMAIN}/v1/graphql`
 export const GRAPH_API = `${DISH_API_ENDPOINT}/graph`
 
-if (process.env.TARGET === 'native') {
-  console.log('graph.const', {
-    DISH_API_ENDPOINT,
-    SEARCH_DOMAIN_INTERNAL,
-    LOCAL_HOST,
-    TILES_HOST,
-    GRAPH_API,
-    SEARCH_DOMAIN,
-    isNode,
-    isProd,
-    isNative,
-  })
-}
+console.log('graph.const', {
+  DISH_API_ENDPOINT,
+  SEARCH_DOMAIN_INTERNAL,
+  LOCAL_HOST,
+  TILES_HOST,
+  GRAPH_API,
+  SEARCH_DOMAIN,
+  isNode,
+  isProd,
+  isNative,
+})

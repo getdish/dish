@@ -488,6 +488,7 @@ function docker_build_file() {
 }
 
 function docker_compose_up_subset() {
+  echo "starting $services"
   services=$1
   extra=$2
   if [ -z "$extra" ]; then
@@ -499,7 +500,6 @@ function docker_compose_up_subset() {
 }
 
 function docker_compose_up() {
-  echo "$HASURA_GRAPHQL_DATABASE_URL_INTERNAL $POSTGRES_USER $POSTGRES_PASSWORD"
   services_list="$COMPOSE_EXCLUDE${COMPOSE_EXCLUDE_EXTRA:-}"
   services=$(
     docker-compose config --services 2> /dev/null \
@@ -532,19 +532,19 @@ function deploy_all() {
   # deploy "$where" hasura | sed -e 's/^/hasura: /;' &
   # wait
    # depends on hasura
-  deploy "$where" tileserver | sed -e 's/^/tileserver: /;' &
+  # deploy "$where" tileserver | sed -e 's/^/tileserver: /;' &
   deploy "$where" timescale | sed -e 's/^/timescale: /;' &
   wait
   deploy "$where" pg-admin | sed -e 's/^/pg-admin: /;' &
-  deploy "$where" proxy | sed -e 's/^/proxy: /;' &
-  deploy "$where" app | sed -e 's/^/app: /;' &
-  deploy "$where" search | sed -e 's/^/search: /;' &
-  deploy "$where" worker | sed -e 's/^/worker: /;' &
-  deploy "$where" image-quality | sed -e 's/^/image-quality: /;' &
-  deploy "$where" image-proxy | sed -e 's/^/image-proxy: /;' &
+  deploy "$where" worker-proxy | sed -e 's/^/worker-proxy: /;' &
+  # deploy "$where" app | sed -e 's/^/app: /;' &
+  # deploy "$where" search | sed -e 's/^/search: /;' &
+  # deploy "$where" worker | sed -e 's/^/worker: /;' &
+  # deploy "$where" image-quality | sed -e 's/^/image-quality: /;' &
+  # deploy "$where" image-proxy | sed -e 's/^/image-proxy: /;' &
   deploy "$where" image-recognize | sed -e 's/^/image-recognize: /;' &
   # disabled until fixed with fly
-  deploy "$where" bert | sed -e 's/^/bert: /;' &
+  # deploy "$where" bert | sed -e 's/^/bert: /;' &
   deploy "$where" cron | sed -e 's/^/cron: /;' &
   deploy "$where" site | sed -e 's/^/site: /;' &
   wait
@@ -576,7 +576,7 @@ function deploy() {
   if [ "$app" = "cron" ];             then deploy_fly_app "$where" dish-cron services/cron cron; fi
   if [ "$app" = "redis" ];            then deploy_fly_app "$where" dish-redis services/redis redis; fi
   if [ "$app" = "run-tests" ];        then deploy_fly_app "$where" dish-run-tests services/run-tests run-tests; fi
-  if [ "$app" = "proxy" ];            then deploy_fly_app "$where" dish-proxy services/proxy proxy; fi
+  if [ "$app" = "worker-proxy" ];     then deploy_fly_app "$where" dish-proxy services/worker-proxy worker-proxy; fi
   if [ "$app" = "site" ];             then deploy_fly_app "$where" dish-site services/site site; fi
 }
 

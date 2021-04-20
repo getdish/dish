@@ -1,6 +1,11 @@
 /// <reference lib="dom" />
 /// <reference lib="esnext" />
 declare module "@dish/helpers-node" {
+    export const JWT_SECRET: string;
+    export const HASURA_SECRET: string;
+}
+
+declare module "@dish/helpers-node" {
     export function hashPassword(password: string): any;
 }
 

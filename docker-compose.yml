@@ -68,10 +68,10 @@ services:
       dockerfile: ./Dockerfile
     ports:
       - ${REDIS_PORT:-6379}:6379
-  proxy:
+  worker-proxy:
     image: registry.fly.io/dish-proxy${DISH_IMAGE_TAG}
     build:
-      context: ./services/proxy
+      context: ./services/worker-proxy
       dockerfile: ./Dockerfile
     ports:
       - 3535:3535
@@ -97,7 +97,7 @@ services:
       - ${HASURA_PORT:-8080}:8080
     environment:
       - HASURA_GRAPHQL_NO_OF_RETRIES=50
-      - HASURA_GRAPHQL_DATABASE_URL=${HASURA_GRAPHQL_DATABASE_URL_INTERNAL:-postgres://postgres:postgres@postgres/dish}
+      - HASURA_GRAPHQL_DATABASE_URL=${POSTGRES_URL_INTERNAL:-postgres://postgres:postgres@postgres/dish}
       - HASURA_GRAPHQL_ENABLED_LOG_TYPES=startup, http-log, webhook-log, websocket-log, query-log
       - HASURA_GRAPHQL_ENABLE_TELEMETRY=false
       - HASURA_GRAPHQL_ADMIN_SECRET=${HASURA_GRAPHQL_ADMIN_SECRET:-password}
@@ -106,7 +106,8 @@ services:
       - HASURA_GRAPHQL_ENABLE_CONSOLE=true
       - DISH_HOOKS_ENDPOINT=http://hooks:${HOOKS_PORT:-6154}
       - GORSE_SYNC_HOOK=http://hooks:${HOOKS_PORT:-6154}/gorse_sync
-      - VIRTUAL_HOST=hasura-staging.dishapp.com
+      - VIRTUAL_HOST=hasura.dishapp.com
+      - VIRTUAL_PORT=8080
     depends_on:
       - 'postgres'
       - 'redis'
@@ -117,10 +118,14 @@ services:
       context: ./
       dockerfile: ./dish-app/Dockerfile
     environment:
+      - MARTIN_ENDPOINT=https://martin-tiles.dishapp.com
+      - HASURA_SECRET=${HASURA_GRAPHQL_ADMIN_SECRET:-password}
+      - HASURA_GRAPHQL_ADMIN_SECRET=${HASURA_GRAPHQL_ADMIN_SECRET:-password}
+      - JWT_ADMIN_PASSWORD=${JWT_ADMIN_PASSWORD}
       - SENDGRID_API_KEY=${SENDGRID_API_KEY}
       - DO_SPACES_ID=${DO_SPACES_ID}
       - DO_SPACES_SECRET=${DO_SPACES_SECRET}
-      - VIRTUAL_HOST=staging.dishapp.com
+      - VIRTUAL_HOST=dishapp.com,www.dishapp.com
       - VIRTUAL_PORT=4444
       - HASURA_ENDPOINT=http://hasura:8080
       - SEARCH_ENDPOINT=http://search:9999
@@ -129,6 +134,8 @@ services:
       - 4444:4444
     depends_on:
       - 'hasura'
+      - 'redis'
+      - 'tileserver'
   tileserver:
     image: registry.fly.io/dish-tileserver${DISH_IMAGE_TAG}
     build:
@@ -138,8 +145,9 @@ services:
       - 3005:3000
     environment:
       - WATCH_MODE=true
-      - DATABASE_URL=postgres://postgres:postgres@postgres/${POSTGRES_DB:-dish}
-      - VIRTUAL_HOST=martin-tiles-staging.dishapp.com
+      - DATABASE_URL=${POSTGRES_URL_INTERNAL:-postgres://postgres:postgres@postgres/dish}
+      - VIRTUAL_HOST=martin-tiles.dishapp.com
+      - VIRTUAL_PORT=3005
     depends_on:
       - 'postgres'
   search:
@@ -151,8 +159,11 @@ services:
       - 9999:9999
     environment:
       - POSTGRES_DB=${POSTGRES_DB:-dish}
-      - VIRTUAL_HOST=search-staging.dishapp.com
+      - POSTGRES_USER=${POSTGRES_USER:-postgres}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD:-postgres}
       - POSTGRES_HOST=postgres
+      - VIRTUAL_HOST=search.dishapp.com
+      - VIRTUAL_PORT=9999
     depends_on:
       - 'postgres'
   gorse:
@@ -172,7 +183,10 @@ services:
       dockerfile: ./services/worker/Dockerfile
     environment:
       - DISH_ENV=staging
+      - VIRTUAL_HOST=worker.dishapp.com
+      - VIRTUAL_PORT=9000
       - HASURA_ENDPOINT=http://hasura:8080
+      - HASURA_SECRET=${HASURA_GRAPHQL_ADMIN_SECRET:-password}
       - REDIS_HOST=redis
       - PGHOST=postgres
       - POSTGRES_PASSWORD=${POSTGRES_PASSWORD:-postgres}
@@ -209,6 +223,9 @@ services:
       context: ./services/bert
     ports:
       - 8888:8080
+    environment:
+      - VIRTUAL_HOST=bert.dishapp.com
+      - VIRTUAL_PORT=8888
   site:
     image: registry.fly.io/dish-site${DISH_IMAGE_TAG}
     build:
@@ -216,6 +233,8 @@ services:
       dockerfile: ./services/site/Dockerfile
     ports:
       - 3999:3999
+    environment:
+      - VIRTUAL_HOST=site.dishapp.com
   image-quality:
     image: registry.fly.io/dish-image-quality${DISH_IMAGE_TAG}
     build:
@@ -224,11 +243,50 @@ services:
       - 8883:5005
     environment:
       - VIRTUAL_HOST=image-quality.dishapp.com
+      - VIRTUAL_PORT=8883
   image-proxy:
     image: registry.fly.io/dish-image-proxy${DISH_IMAGE_TAG}
     build:
       context: ./services/image-proxy
     ports:
-      - 8881:9000
+      - 8981:8981
     environment:
-      - VIRTUAL_HOST=images.dishapp.com
+      - VIRTUAL_HOST=image-proxy.dishapp.com
+      - VIRTUAL_PORT=8981
+  nginx-proxy:
+    image: jwilder/nginx-proxy
+    container_name: nginx-proxy
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - conf:/etc/nginx/conf.d
+      - vhost:/etc/nginx/vhost.d
+      - html:/usr/share/nginx/html
+      - dhparam:/etc/nginx/dhparam
+      - certs:/etc/nginx/certs:ro
+      - /var/run/docker.sock:/tmp/docker.sock:ro
+    labels:
+      - "com.github.jrcs.letsencrypt_nginx_proxy_companion.nginx_proxy"
+    restart: always
+  letsencrypt:
+    image: jrcs/letsencrypt-nginx-proxy-companion
+    container_name: nginx-proxy-le
+    depends_on:
+      - nginx-proxy
+    volumes:
+      - vhost:/etc/nginx/vhost.d
+      - html:/usr/share/nginx/html
+      - dhparam:/etc/nginx/dhparam:ro
+      - certs:/etc/nginx/certs
+      - acme:/etc/acme.sh
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+    restart: always
+
+volumes:
+    conf:
+    vhost:
+    html:
+    dhparam:
+    certs:
+    acme:

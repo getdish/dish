@@ -1,5 +1,7 @@
-import { JWT_SECRET, User } from '@dish/graph'
+import { User } from '@dish/graph'
 import jwt from 'jsonwebtoken'
+
+import { JWT_SECRET } from './constants'
 
 export function jwtSign(user: Pick<User, 'username' | 'id' | 'role'>) {
   return jwt.sign(

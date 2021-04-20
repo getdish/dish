@@ -1,5 +1,6 @@
 import { Handler, Req, Res, RouteExit, handleErrors } from '@dish/api'
-import { JWT_SECRET, userFindOne } from '@dish/graph'
+import { userFindOne } from '@dish/graph'
+import { JWT_SECRET } from '@dish/helpers-node'
 import * as jwt from 'jsonwebtoken'
 
 type PermissionLevel = 'admin' | 'user' | 'contributor'

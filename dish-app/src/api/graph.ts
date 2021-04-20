@@ -1,13 +1,13 @@
 import crypto from 'crypto'
 
 import { route, useRouteBodyParser } from '@dish/api'
-import { GRAPH_API_INTERNAL, fetchLog, getAuthHeaders } from '@dish/graph'
+import { GRAPH_API_INTERNAL, fetchLog } from '@dish/graph'
 
 import { redisClient, redisGet } from './_rc'
 
 const hasuraHeaders = {
   'content-type': 'application/json',
-  ...getAuthHeaders(true),
+  'x-hasura-admin-secret': process.env.HASURA_SECRET,
 }
 
 function shouldCache(body?: string) {

@@ -38,10 +38,10 @@ steps:
     depends_on: base
     command: .buildkite/scripts/build_docker_compose.sh worker
 
-  - label: ":docker: build proxy"
-    key: proxy
+  - label: ":docker: build worker-proxy"
+    key: worker-proxy
     depends_on: base
-    command: .buildkite/scripts/build_docker_compose.sh proxy
+    command: .buildkite/scripts/build_docker_compose.sh worker-proxy
     env:
       PUSH: true
 
@@ -122,16 +122,16 @@ steps:
     env:
       PUSH: true
 
-  - label: ":docker: build db"
-    retry:
-      automatic: true
-    env:
-      POSTGRES_NAME: db
-    plugins:
-      - docker-compose#v3.7.0:
-          build: postgres
-          image-repository: registry.fly.io/dish-db
-          cache-from: postgres:registry.fly.io/dish-db:latest
+  # - label: ":docker: build db"
+  #   retry:
+  #     automatic: true
+  #   env:
+  #     POSTGRES_NAME: db
+  #   plugins:
+  #     - docker-compose#v3.7.0:
+  #         build: postgres
+  #         image-repository: registry.fly.io/dish-db
+  #         cache-from: postgres:registry.fly.io/dish-db:latest
 
   - label: "setup services for tests"
     key: test-setup
@@ -169,11 +169,24 @@ steps:
     depends_on: test-images
     command: .buildkite/scripts/push_images.sh
 
-  - label: "deploy"
+  - label: "deploy dedicated"
     if: build.branch == "production" || build.branch == "nate/dev"
-    timeout_in_minutes: 15
+    timeout_in_minutes: 10
+    command: ".buildkite/scripts/deploy_dedicated.sh"
+    artifact_paths:
+      - "*.log"
+
+  - label: "deploy fly"
+    if: build.branch == "production" || build.branch == "nate/dev"
+    timeout_in_minutes: 10
     command: ".buildkite/scripts/deploy_all.sh"
     artifact_paths:
       - "*.log"
+
+  - wait
+
+  - label: "slack done"
+    if: build.branch == "production" || build.branch == "nate/dev"
+    command: ".buildkite/scripts/deploy_done.sh"
     env:
       DOCKER_CLEAN: true

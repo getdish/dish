@@ -1,5 +1,3 @@
-import { HASURA_SECRET } from './constants'
-
 export const LOGIN_KEY = 'auth'
 export const HAS_LOGGED_IN_BEFORE = 'HAS_LOGGED_IN_BEFORE'
 
@@ -18,9 +16,6 @@ export function getAuth(): null | {
 export function getAuthHeaders(isAdmin?: boolean) {
   const auth = getAuth()
   return {
-    ...(isAdmin && {
-      'x-hasura-admin-secret': HASURA_SECRET,
-    }),
     ...(auth && {
       Authorization: `Bearer ${auth.token}`,
     }),

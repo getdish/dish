@@ -2202,17 +2202,6 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@dish/proxy@workspace:services/proxy":
-  version: 0.0.0-use.local
-  resolution: "@dish/proxy@workspace:services/proxy"
-  dependencies:
-    "@dish/esdx": "*"
-    express: ^4.17.1
-    playwright: ^1.9.2
-    typescript: ^4.2.4
-  languageName: unknown
-  linkType: soft
-
 "@dish/react-feather@*, @dish/react-feather@workspace:packages/react-feather":
   version: 0.0.0-use.local
   resolution: "@dish/react-feather@workspace:packages/react-feather"
@@ -2429,6 +2418,17 @@ __metadata:
     express: ^4.17.1
     react: ^17.0.1
     typescript: "*"
+  languageName: unknown
+  linkType: soft
+
+"@dish/worker-proxy@workspace:services/worker-proxy":
+  version: 0.0.0-use.local
+  resolution: "@dish/worker-proxy@workspace:services/worker-proxy"
+  dependencies:
+    "@dish/esdx": "*"
+    express: ^4.17.1
+    playwright: ^1.9.2
+    typescript: ^4.2.4
   languageName: unknown
   linkType: soft
 
