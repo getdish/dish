@@ -666,7 +666,7 @@ function clean_docker_if_disk_full() {
     if [ "$used" -ge 90 ]; then
       echo "running out of space, pruning..."
       if [ "$CLEAN_BUILDKITE_BUILDS" == "true" ]; then
-        rm -r /buildkite/builds/*
+        rm -r /var/lib/buildkite/builds*
       fi
       docker image prune --all --filter "until=2h" --force || true
       docker system prune --filter "until=2h" --force || true
@@ -690,7 +690,7 @@ function clean_docker_if_disk_full() {
     used=$(echo "$output" | awk '{ print $1}' | cut -d'%' -f1)
     if [ "$used" -ge 90 ]; then
       echo "really really delete all, may break shit.."
-      find ./buildkite/builds -name '*' -mtime +1 -exec rm -r {} \;
+      # find ./buildkite/builds -name '*' -mtime +1 -exec rm -r {} \;
       find ./data/docker/overlay2 -name '*' -mtime +1 -exec rm -r {} \;
       break
     fi

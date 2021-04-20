@@ -7,7 +7,7 @@ kill_timeout = 5
   private_network = true
 
 [[services]]
-  internal_port = 10000
+  internal_port = 9999
   protocol = "tcp"
 
   [services.concurrency]
