@@ -177,10 +177,3 @@ steps:
       - "*.log"
     env:
       DOCKER_CLEAN: true
-
-  - wait
-
-  - label: "finish"
-    command: ".buildkite/scripts/finish.sh"
-    env:
-      FINISH: true

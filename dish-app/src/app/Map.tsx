@@ -853,31 +853,28 @@ function setupMapEffect({
             'source-layer': name,
           })
 
-          map.addLayer(
-            {
-              id: `${name}.line`,
-              type: 'line',
-              source: name,
-              minzoom: minZoom,
-              maxzoom: maxZoom,
-              paint: {
-                'line-color': [
-                  'case',
-                  ['==', ['feature-state', 'active'], true],
-                  ['get', 'color'],
-                  ['==', ['feature-state', 'hover'], true],
-                  ['get', 'color'],
-                  ['==', ['feature-state', 'active'], null],
-                  'rgba(0,0,0,0.0)',
-                  'green',
-                ],
-                'line-opacity': 1,
-                'line-width': 3,
-              },
-              'source-layer': name,
+          map.addLayer({
+            id: `${name}.line`,
+            type: 'line',
+            source: name,
+            minzoom: minZoom,
+            maxzoom: maxZoom,
+            paint: {
+              'line-color': [
+                'case',
+                ['==', ['feature-state', 'active'], true],
+                ['get', 'color'],
+                ['==', ['feature-state', 'hover'], true],
+                ['get', 'color'],
+                ['==', ['feature-state', 'active'], null],
+                'rgba(0,0,0,0.0)',
+                'green',
+              ],
+              'line-opacity': 1,
+              'line-width': 3,
             },
-            firstSymbolLayerId
-          )
+            'source-layer': name,
+          })
 
           if (label) {
             if (labelSource) {

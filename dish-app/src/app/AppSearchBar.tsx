@@ -99,7 +99,7 @@ export const AppSearchBarFloating = () => {
           >
             <AbsoluteVStack
               borderRadius={borderRadius}
-              className="searchbar-shadow"
+              className="searchbar-shadow "
               transform={[{ skewX: '-12deg' }]}
               overflow="hidden"
               zIndex={102}
@@ -108,6 +108,7 @@ export const AppSearchBarFloating = () => {
               justifyContent="center"
               alignItems="center"
               backgroundColor={background}
+              opacity={0.8}
               shadowColor="#000"
               shadowOpacity={0.5}
               shadowOffset={{ height: 2, width: 0 }}

@@ -38,7 +38,7 @@ export const AutocompleteItemView = memo(
       <>
         <VStack flex={1} />
         <VStack padding={8} flexShrink={0}>
-          <CircleButton onPressOut={onAdd}>
+          <CircleButton onPress={onAdd}>
             <Plus size={16} />
           </CircleButton>
         </VStack>
@@ -59,6 +59,7 @@ export const AutocompleteItemView = memo(
         <Text fontSize={32}>{result.icon} </Text>
       ) : null
 
+    // return null
     return (
       <LinkButton
         width="100%"

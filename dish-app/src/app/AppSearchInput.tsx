@@ -144,7 +144,8 @@ export const AppSearchInput = memo(() => {
   const searchInputContainer = useRef<View>()
 
   // focus for web
-  if (isWeb && !isWebTouch) {
+  const isDesktop = isWeb && !isWebTouch
+  if (isDesktop) {
     useAutocompleteFocusWebNonTouch({ input, target: 'search' })
   }
 
@@ -206,7 +207,7 @@ export const AppSearchInput = memo(() => {
                   onKeyPress={handleKeyPressInner}
                   onFocus={() => {
                     isFocused = true
-                    if (isWebTouch) {
+                    if (isDesktop) {
                       console.log('ignore focus')
                       // see above, we handle better for text selection
                       return
@@ -214,6 +215,7 @@ export const AppSearchInput = memo(() => {
                     if (home.searchbarFocusedTag) {
                       home.setSearchBarTagIndex(0)
                     } else {
+                      console.log('open autocomplete search')
                       autocompletesStore.setTarget('search')
                     }
                   }}

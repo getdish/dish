@@ -244,9 +244,10 @@ const RestaurantHeaderContent = memo(
                         spacing={10}
                         grid
                         max={8}
+                        size="lg"
                       />
 
-                      <Spacer size="lg" />
+                      <Spacer size="xl" />
 
                       <VStack marginLeft={-10}>
                         {/* idk why this theme here is necessary */}
