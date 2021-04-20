@@ -39,7 +39,7 @@ import { useQueryLoud } from '../../../helpers/useQueryLoud'
 import { router } from '../../../router'
 import { HomeStateItemSearch } from '../../../types/homeTypes'
 import { appMapStore, useAppMapStore, useSetAppMap } from '../../AppMapStore'
-import { useHomeStateById } from '../../homeStore'
+import { homeStore, useHomeStateById } from '../../homeStore'
 import { useAppDrawerWidth } from '../../hooks/useAppDrawerWidth'
 import { useLastValueWhen } from '../../hooks/useLastValueWhen'
 import { usePageLoadEffect } from '../../hooks/usePageLoadEffect'
@@ -100,7 +100,7 @@ const SearchPageContent = memo(function SearchPageContent(
   const searchStore = useSearchPageStore()
   const { searchArgs, results, searchRegion, status } = searchStore
   const isLoading = status === 'loading'
-  const center = location.data?.center
+  const center = location.data?.center ?? homeStore.lastHomeOrSearchState.center!
 
   usePageLoadEffect(props, ({ isRefreshing }) => {
     if (isRefreshing && props.isActive) {
@@ -127,13 +127,12 @@ const SearchPageContent = memo(function SearchPageContent(
     results: results,
     showRank: true,
     hideRegions: !searchRegion,
-    center,
-    span: location.data?.span,
     ...(location.data?.region && {
       region: {
         name: location.data.region.name,
         slug: location.data.region.name,
-        geometry: {} as any,
+        span: location.data.span,
+        center,
         via: 'url',
       },
     }),

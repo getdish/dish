@@ -11,7 +11,7 @@ import { Store, createStore, useStoreInstance, useStoreInstanceSelector } from '
 import bbox from '@turf/bbox'
 import getCenter from '@turf/center'
 import { featureCollection } from '@turf/helpers'
-import { debounce, findLast, uniqBy } from 'lodash'
+import { findLast, uniqBy } from 'lodash'
 import { useEffect } from 'react'
 
 import {
@@ -46,11 +46,6 @@ export type MapHoveredRestaurant = RestaurantOnlyIds & {
 // that way we can do things like hovering on states to see them
 // and have it pop back to show last state before hover
 
-type AppMapLastRegion = {
-  region: RegionWithVia
-  position: MapPosition
-}
-
 let defaultLocation = getDefaultLocation()
 
 // fix broken localstorage
@@ -72,7 +67,7 @@ class AppMapStore extends Store {
   zoomOnHover = false
   hideRegions = false
   ids = {}
-  lastRegion: null | AppMapLastRegion = null
+  lastRegion: null | RegionWithVia = null
 
   setState(
     val: MapOpts & {
@@ -117,12 +112,12 @@ class AppMapStore extends Store {
     }
   }
 
-  setLastRegion(next: AppMapLastRegion | null) {
+  setLastRegion(next: RegionWithVia | null) {
     this.lastRegion = next
   }
 
   get isOnRegion() {
-    return !!this.lastRegion && !hasMovedAtLeast(this.lastRegion.position, this.position, 0.04)
+    return !!this.lastRegion && !hasMovedAtLeast(this.lastRegion, this.position, 0.04)
   }
 
   clearHover() {
@@ -227,32 +222,33 @@ export const mapZoomToMedium = () => {
   })
 }
 
-export function updateRegionImmediate(region: RegionWithVia, position: MapPosition) {
+export function updateRegionImmediate(region: RegionWithVia) {
   cancelUpdateRegion()
   const { currentState } = homeStore
   if (currentState.type === 'home' || (currentState.type === 'search' && region.via === 'click')) {
     if (currentState.region === region.slug) {
       return
     }
-    appMapStore.setLastRegion({
-      region,
-      position,
-    })
+    appMapStore.setLastRegion(region)
     homeStore.navigate({
       state: {
         ...currentState,
-        ...position,
         region: region.slug,
+        curLocName: region.name,
+        center: region.center,
+        span: region.span,
       },
     })
   }
 }
 
-export const updateRegion = debounce(updateRegionImmediate, 340)
-export const updateRegionFaster = debounce(updateRegionImmediate, 300)
+export const updateRegion = updateRegionImmediate // debounce(updateRegionImmediate, 340)
+export const updateRegionFaster = updateRegionImmediate // debounce(updateRegionImmediate, 300)
 
 export const cancelUpdateRegion = () => {
-  updateRegion.cancel()
+  // only for non-concurrent mode
+  // updateRegion.cancel()
+  // updateRegionFaster.cancel()
 }
 
 export const useSetAppMap = (
@@ -261,7 +257,7 @@ export const useSetAppMap = (
     span?: MapPosition['span']
     results?: RestaurantOnlyIdsPartial[]
     isActive: boolean
-    region?: RegionWithVia
+    region?: RegionWithVia | null
   }
 ) => {
   const {
@@ -279,7 +275,6 @@ export const useSetAppMap = (
   useEffect(() => {
     if (!isActive) return
     if (!center && !span) return
-    console.warn('update set position', center)
     appMapStore.setPosition({
       center,
       span,
@@ -290,7 +285,7 @@ export const useSetAppMap = (
     if (!isActive) return
     if (!region) return
     if (!center || !span) return
-    appMapStore.setLastRegion({ position: { center, span }, region })
+    appMapStore.setLastRegion(region)
   }, [region?.slug, isActive])
 
   useEffect(() => {
@@ -348,8 +343,7 @@ export const useSetAppMap = (
           const collection = featureCollection(features)
           const resultsBbox = bbox(collection)
           if (resultsBbox) {
-            // @ts-expect-error
-            const centerCoord = getCenter(collection)
+            const centerCoord = getCenter(collection as any)
             const position = {
               center: {
                 lng: centerCoord.geometry.coordinates[0],

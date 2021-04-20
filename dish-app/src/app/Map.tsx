@@ -14,9 +14,11 @@ import { useGet, useThemeName } from 'snackui'
 import { darkPurple, grey } from '../constants/colors'
 import { MAPBOX_ACCESS_TOKEN, isM1Sim } from '../constants/constants'
 import { hexToRGB } from '../helpers/hexToRGB'
-import { hasMovedAtLeast } from '../helpers/mapHelpers'
+import { hasMovedAtLeast, mapPositionToBBox } from '../helpers/mapHelpers'
+import * as mapHelpers from '../helpers/mapHelpers'
 import { useIsMountedRef } from '../helpers/useIsMountedRef'
 import { RegionWithVia } from '../types/homeTypes'
+import { appMapStore } from './AppMapStore'
 import { setMap as setMapRef } from './getMap'
 import { MapProps } from './MapProps'
 import { tiles } from './tiles'
@@ -30,7 +32,7 @@ const UNCLUSTERED_LABEL_LAYER_ID = 'UNCLUSTERED_LABEL_LAYER_ID'
 const CLUSTER_LABEL_LAYER_ID = 'CLUSTER_LABEL_LAYER_ID'
 const POINT_LAYER_ID = 'POINT_LAYER_ID'
 
-const round = (val: number, dec = 100000) => {
+const round = (val: number, dec = 1000000) => {
   return Math.round(val * dec) / dec
 }
 
@@ -189,12 +191,7 @@ export const MapView = (props: MapProps) => {
     internal.currentMoveCancel?.()
 
     // west, south, east, north
-    const next: [number, number, number, number] = [
-      center.lng - span.lng,
-      center.lat - span.lat,
-      center.lng + span.lng,
-      center.lat + span.lat,
-    ]
+    const next = mapPositionToBBox({ center, span })
 
     if (hasMovedAtLeast(getCurrentLocation(map), { center, span })) {
       const duration = 605
@@ -303,6 +300,11 @@ const setActive = (
   }
 }
 
+let initialRegionSlug = ''
+export const setMapInitialRegion = (slug: string) => {
+  initialRegionSlug = slug
+}
+
 function setupMapEffect({
   setMap,
   props,
@@ -339,6 +341,7 @@ function setupMapEffect({
   }
 
   window['map'] = map
+  window['mapHelpers'] = mapHelpers
 
   // const loadMarker = (name: string, asset: string) => {
   //   return new Promise((res, rej) => {
@@ -377,7 +380,7 @@ function setupMapEffect({
   function updateOnSelectRegion() {
     if (!curRegion || isMouseDown) return
     if (!isEqual(lastUpdate, curRegion)) {
-      getProps().onSelectRegion?.(curRegion, getCurrentLocation(map))
+      getProps().onSelectRegion?.(curRegion)
       curRegion = null
     } else {
       console.log('is same')
@@ -400,18 +403,17 @@ function setupMapEffect({
   }
 
   const handleMoveDbc = debounce(() => {
-    // IF NEAR BOUNDARY DONT AUTO SELECT
-    const zoom = map.getZoom()
-    for (const tile of tiles) {
-      const [min, max] = [tile.minZoom, tile.maxZoom]
-      const isNear = (x: number) => Math.abs(zoom - x) < x * 0.1
-      const isNearBoundary = isNear(min) || isNear(max)
-      if (curRegionId && isNearBoundary) {
-        console.warn('near border')
-        return
-      }
-    }
+    if (curRegionId || !initialRegionSlug) return
+    const feature = getRegionAtCenter()
+    if (!feature) return
+    if (feature.id === curRegionId) return
+    const props = getRegionProps(feature)
+    if (props.slug !== initialRegionSlug) return
+    setCurrentRegion(feature, 'click')
+    initialRegionSlug = ''
+  }, 100)
 
+  const getRegionAtCenter = () => {
     const { padding } = getProps()
     const width = map.getContainer().clientWidth - padding.right
     const height = map.getContainer().clientHeight - padding.bottom
@@ -424,13 +426,33 @@ function setupMapEffect({
         layers: [`${layerName}.fill`],
       })
       const feature = features[0]
-      if (!feature) return
-      if (feature.id === curRegionId) return
-      setCurrentRegion(feature, 'drag')
+      if (!feature) {
+        return null
+      }
+      return feature
     } catch (err) {
       console.error('error querying map', err)
+      return null
     }
-  }, 150)
+  }
+
+  const getRegionProps = (feature: MapboxGeoJSONFeature) => {
+    const props = feature.properties ?? {}
+    const name =
+      props.nhood ??
+      (props.hrrcity
+        ? props.hrrcity
+            .toLowerCase()
+            .replace('ca- ', '')
+            .split(' ')
+            .map((x) => capitalize(x))
+            .join(' ')
+        : '')
+    return {
+      name,
+      slug: props.slug ?? slugify(name),
+    }
+  }
 
   function setCurrentRegion(feature: MapboxGeoJSONFeature, via: 'click' | 'drag') {
     const layerName = getCurrentLayerName()
@@ -446,22 +468,12 @@ function setupMapEffect({
         curRegionId = null
       }
       // temp regions supprot until we normalize naming at tile level
-      const props = feature.properties ?? {}
-      const name =
-        props.nhood ??
-        (props.hrrcity
-          ? props.hrrcity
-              .toLowerCase()
-              .replace('ca- ', '')
-              .split(' ')
-              .map((x) => capitalize(x))
-              .join(' ')
-          : '')
-      if (!name) {
+      const props = getRegionProps(feature)
+      if (!props.name) {
         console.warn('No available region', feature)
         return
       }
-      if (name === curRegion?.name) {
+      if (props.name === curRegion?.name) {
         console.log('same region, not changing')
         return
       }
@@ -474,9 +486,8 @@ function setupMapEffect({
         active: true,
       })
       curRegion = {
-        geometry: feature.geometry as any,
-        name,
-        slug: props.slug ?? slugify(name),
+        ...mapHelpers.polygonToMapPosition(feature.geometry as any),
+        ...props,
         via,
       }
       updateOnSelectRegion()
@@ -502,7 +513,6 @@ function setupMapEffect({
         if (!map) return
 
         map.on('sourcedata', () => {
-          // console.log('source data update')
           handleMoveDbc()
         })
 
@@ -1214,3 +1224,15 @@ function hasChangedStyle(map: mapboxgl.Map, style: string) {
   const { sprite } = map.getStyle()
   return !sprite?.includes(style.replace('mapbox://styles', ''))
 }
+
+// // IF NEAR BOUNDARY DONT AUTO SELECT
+// const zoom = map.getZoom()
+// for (const tile of tiles) {
+//   const [min, max] = [tile.minZoom, tile.maxZoom]
+//   const isNear = (x: number) => Math.abs(zoom - x) < x * 0.1
+//   const isNearBoundary = isNear(min) || isNear(max)
+//   if (curRegionId && isNearBoundary) {
+//     console.warn('near border')
+//     return
+//   }
+// }

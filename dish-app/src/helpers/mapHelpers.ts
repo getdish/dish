@@ -1,6 +1,8 @@
-import { LngLat } from '@dish/graph'
+import { LngLat, MapPosition } from '@dish/graph'
 import { reduce } from '@dish/helpers'
-import { BBox } from '@turf/helpers'
+import bbox from '@turf/bbox'
+import getCenter from '@turf/center'
+import { BBox, MultiPolygon, Polygon } from '@turf/helpers'
 
 import { Point } from '../types/homeTypes'
 
@@ -72,19 +74,35 @@ export function spanToScope(
   return 'country'
 }
 
-export const polygonToLngLat = ({
-  coordinates,
-}: {
-  type: 'Polygon'
-  coordinates: [[Point, Point, Point, Point, Point]]
-}) => {
-  const simpleBbox = [
-    coordinates[0][0][0],
-    coordinates[0][0][1],
-    coordinates[0][2][0],
-    coordinates[0][2][1],
-  ] as const
-  return bboxToLngLat(simpleBbox)
+export const polygonToLngLat = (poly: MultiPolygon | Polygon) => {
+  return bboxToLngLat(bbox(poly))
+}
+
+export const polygonToMapPosition = (geo: MultiPolygon | Polygon): MapPosition => {
+  const full = bboxToLngLat(bbox(geo))
+  const centerCoord = getCenter(geo)
+  return {
+    center: {
+      lng: centerCoord.geometry.coordinates[0],
+      lat: centerCoord.geometry.coordinates[1],
+    },
+    span: {
+      lng: full.lng / 2,
+      lat: full.lat / 2,
+    },
+  }
+}
+
+export const mapPositionToBBox = ({
+  center,
+  span,
+}: MapPosition): [number, number, number, number] => {
+  return [
+    center.lng - span.lng,
+    center.lat - span.lat,
+    center.lng + span.lng,
+    center.lat + span.lat,
+  ]
 }
 
 export const coordsToLngLat = (coords: number[]) => {

@@ -14,7 +14,6 @@ export function startLogging(verbose = false) {
     } else {
       import('@gqless/logger').then(({ createLogger }) => {
         const Logger = createLogger(client, { stringifyJSON: false })
-
         Logger.start()
       })
     }

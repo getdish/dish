@@ -12,7 +12,7 @@ export type MapProps = {
   style?: string
   onHover?: (id: string | null) => void
   onSelect?: (id: string) => void
-  onSelectRegion?: (region: RegionWithVia, position: MapPosition) => void
+  onSelectRegion?: (region: RegionWithVia) => void
   onDoubleClick?: (id: string) => void
   onMoveEnd?: (props: MapPosition) => void
   onMoveStart?: () => void
