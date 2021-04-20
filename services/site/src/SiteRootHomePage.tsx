@@ -176,8 +176,8 @@ export const SiteRoot = () => {
                 a pocket guide to the world
               </Highlight>
               <br />
-              <Text fontWeight="200" fontSize="80%">
-                starting with food
+              <Text fontWeight="200" fontSize="50%">
+                (just food * playlists for now)
               </Text>
             </b>
           </DishParagraph>
@@ -204,7 +204,8 @@ export const SiteRoot = () => {
                 >
                   Playlists.
                 </b>{' '}
-                Top dishes 🍽, nights out 🌃, cafes ☕️, you name it - curate real-world things.
+                Your personal favorites are optionally shared, vote and explore top playlists by
+                neighborhood.
               </DishParagraph>
             </VStack>
             <VStack padding={18}>
@@ -217,9 +218,9 @@ export const SiteRoot = () => {
                     color: 'var(--yellow)',
                   }}
                 >
-                  Content creator equity.
+                  Curate and earn.
                 </b>{' '}
-                Don't give free content to massively profitable companies, get equity instead.
+                DAO with majority share.
               </DishParagraph>
             </VStack>
             <VStack padding={18}>
@@ -232,9 +233,10 @@ export const SiteRoot = () => {
                     color: 'var(--purple)',
                   }}
                 >
-                  A social map of the world.
+                  Trust.
                 </b>{' '}
-                Gens 💎 by neighborhood on a realtime map, suited to your taste.
+                Follow friends and chefs to get better recommendations as you travel the world for
+                you.
               </DishParagraph>
             </VStack>
           </Grid>
@@ -286,22 +288,12 @@ export const SiteRoot = () => {
         <ContentSection paddingTop={50} zIndex={10}>
           <DishParagraph textAlign="center" sizeLineHeight={0.8} fontWeight="800" size={4}>
             <Highlight backgroundColor="var(--pink)" color="#fff">
-              Reviews are broken.
+              A network of recommending.
             </Highlight>
           </DishParagraph>
 
-          <DishParagraph opacity={0.7} textAlign="center" size="xl">
-            Hidden, faked, averaged, inflated.
-            <br />
-            Pressure to grow fast + easy ad cash 💸,
-            <br />
-            advertisers hate to be hated.
-          </DishParagraph>
-
-          <DishParagraph size="xxxl">
-            Advertisers don't like bad reviews, and for-profit companies really need advertisers.{' '}
-            <b>ConsumerReports</b> is the only guide that's maintained high quality over time: a
-            non-profit without ads.
+          <DishParagraph size="xxxxl">
+            Social networks should be small, personal, and mostly just your friends.
           </DishParagraph>
 
           <DishParagraph size="xxl">
@@ -325,6 +317,14 @@ export const SiteRoot = () => {
           <DishParagraph size="xxl">
             The end result is a <b>non-profit</b>, <b>community-owned</b>, with a coin for
             incentivizing good behavior.
+          </DishParagraph>
+
+          <DishParagraph opacity={0.7} textAlign="center" size="xl">
+            Hidden, faked, averaged, inflated.
+            <br />
+            Pressure to grow fast + easy ad cash 💸,
+            <br />
+            advertisers hate to be hated.
           </DishParagraph>
         </ContentSection>
       </VStack>

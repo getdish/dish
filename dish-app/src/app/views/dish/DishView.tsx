@@ -3,6 +3,7 @@ import { capitalize } from 'lodash'
 import React, { Suspense, memo, useState } from 'react'
 import { Image, StyleSheet } from 'react-native'
 import Svg, { G, Path } from 'react-native-svg'
+import { useThemeName } from 'snackui'
 import {
   AbsoluteVStack,
   Box,
@@ -104,8 +105,9 @@ const DishViewContent = (props: DishViewProps) => {
   const isTiny = size < 115
   const fontSize = Math.max(13, (isLong ? 14 : 16) * (isTiny ? 0.75 : 1))
   const colors = getColorsForName(name)
-  const { lightColor, color } = colors
-  const backgroundColor = lightColor
+  const themeName = useThemeName()
+  const { lightColor, darkColor, color } = colors
+  const backgroundColor = themeName === 'dark' ? darkColor : lightColor
   const isActive = (isHovered || selected) ?? false
 
   const showVote =

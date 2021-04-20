@@ -57,7 +57,7 @@ export const green = `#3DAF6E`
 export const red = `#E34646`
 export const orange = '#DC953D'
 export const blue = '#3658AA'
-export const purple = '#712EAA'
+export const purple = '#7F37BC'
 export const allColors = [yellow, pink, green, red, orange, blue, purple]
 
 export const yellowPastel = '#C4B88D'

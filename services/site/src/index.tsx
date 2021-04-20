@@ -2,7 +2,7 @@ import React, { Suspense } from 'react'
 import { render } from 'react-dom'
 import { ThemeProvider, configureThemes } from 'snackui'
 
-import { SiteRoot } from './SiteRoot'
+import { SiteRoot } from './SiteRootHomePage'
 import themes, { MyTheme, MyThemes } from './themes'
 
 declare module 'snackui' {
