@@ -169,7 +169,7 @@ export function Card({
             zIndex={-1}
             top={0}
             right={0}
-            opacity={size === 'xs' ? 1 : 1}
+            opacity={0.8}
             transform={[{ rotate: '15deg' }, { scaleX: 2.5 }, { translateY: -20 }]}
           >
             <LinearGradient

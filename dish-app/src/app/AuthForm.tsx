@@ -341,6 +341,7 @@ const ValidatedInput = ({
         render={({ onChange, onBlur, value }) => {
           return (
             <Input
+              color={isWeb ? 'var(--color)' : '#777'}
               {...rest}
               name={name}
               onBlur={onBlur}

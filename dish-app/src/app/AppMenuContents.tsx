@@ -25,6 +25,15 @@ export const AppMenuContents = memo(
         {...props}
       >
         <VStack spacing="sm" padding={10}>
+          {!isLoggedIn && (
+            <>
+              <AuthForm onDidLogin={hideUserMenu} />
+              <Spacer size="md" />
+              <Divider />
+              <Spacer size="md" />
+            </>
+          )}
+
           {isLoggedIn && (
             <MenuLinkButton
               name="user"
@@ -58,15 +67,6 @@ export const AppMenuContents = memo(
 
           {isLoggedIn && (
             <>
-              <Spacer size="md" />
-              <Divider />
-              <Spacer size="md" />
-            </>
-          )}
-
-          {!isLoggedIn && (
-            <>
-              <AuthForm onDidLogin={hideUserMenu} />
               <Spacer size="md" />
               <Divider />
               <Spacer size="md" />

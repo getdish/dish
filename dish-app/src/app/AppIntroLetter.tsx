@@ -39,6 +39,7 @@ export const AppIntroLetter = memo(() => {
   return (
     <DarkModal
       hide={store.hidden}
+      onDismiss={store.setHidden}
       outside={
         <>
           <SmallCircleButton

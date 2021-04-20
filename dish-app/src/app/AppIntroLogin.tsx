@@ -5,7 +5,6 @@ import { Paragraph, VStack, useThemeName } from 'snackui'
 
 import dishLogo from '../assets/dish-neon.jpg'
 import { pinkPastel } from '../constants/colors'
-import { isWeb } from '../constants/constants'
 import { AuthForm } from './AuthForm'
 import { IntroModalStore } from './IntroModalStore'
 import { LinkButton } from './views/LinkButton'
