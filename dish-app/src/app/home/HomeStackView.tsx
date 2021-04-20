@@ -29,9 +29,7 @@ export function HomeStackView<A extends HomeStateItem>(props: { children: GetChi
   const isAdding = currentStates.length < homeStates.length
   const items = isRemoving ? currentStates : homeStates
 
-  // useEffect(() => {
-  //   console.log('👀 HomeStackView', items)
-  // }, [items])
+  console.log('👀 HomeStackView', items)
 
   return (
     <>

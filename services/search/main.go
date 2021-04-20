@@ -64,6 +64,7 @@ func getBoundingBox(r *http.Request) (string, string, string, string) {
 
 func search(w http.ResponseWriter, r *http.Request) {
 	var json string
+	start := time.Now()
 	filter_by := make(map[string]string)
 	tags := getParam("tags", r)
 	var limit = getParam("limit", r)
@@ -88,6 +89,7 @@ func search(w http.ResponseWriter, r *http.Request) {
 	prices := getPrices(r)
 	deliveries := getDeliveries(r)
 	filter_by, tags = handleSpecialTags(tags, r)
+	fmt.Println("search", search_query)
 	_, err := db.Query(
 		pg.Scan(&json),
 		search_query,
@@ -113,6 +115,8 @@ func search(w http.ResponseWriter, r *http.Request) {
 	if json == "" {
 		json = "[]"
 	}
+	duration := time.Since(start)
+	fmt.Println("response", duration)
 	fmt.Fprintf(w, json)
 }
 
@@ -307,7 +311,7 @@ func isDeliveryTag(tag string) bool {
 }
 
 func handleRequests() {
-	port := getEnv("PORT", "10000")
+	port := getEnv("PORT", "9999")
 	mux := http.NewServeMux()
 	mux.HandleFunc("/search", search)
 	mux.HandleFunc("/top_cuisines", top_cuisines)
@@ -321,23 +325,27 @@ func handleRequests() {
 }
 
 func main() {
-	pg_port := ":" + getEnv("POSTGRES_PORT", "5432")
-	Addr := getEnv("POSTGRES_HOST", "localhost") + pg_port
-	User := getEnv("POSTGRES_USER", "postgres")
-	Password := getEnv("POSTGRES_PASSWORD", "postgres")
-	Database := getEnv("POSTGRES_DB", "dish")
-	fmt.Println("postgres", User, Database)
+	pg_port := getEnv("POSTGRES_PORT", "5432")
+	addr := getEnv("POSTGRES_HOST", "localhost") + ":" + pg_port
+	user := getEnv("POSTGRES_USER", "postgres")
+	password := getEnv("POSTGRES_PASSWORD", "postgres")
+	database := getEnv("POSTGRES_DB", "dish")
+	fmt.Println("postgres", addr, user, database)
 	db = pg.Connect(&pg.Options{
-		User:     User,
-		Password: Password,
-		Addr:     Addr,
-		Database: Database,
+		User:     user,
+		Password: password,
+		Addr:     addr,
+		Database: database,
 	})
 
 	// check if working
 	var n int
 	_, err := db.QueryOne(pg.Scan(&n), "SELECT 1")
-	fmt.Println("search test connection, err?", err, "res", n)
+	if err != nil {
+		fmt.Println("error connecting")
+	} else {
+		fmt.Println("connected to pg")
+	}
 
 	defer db.Close()
 	handleRequests()
