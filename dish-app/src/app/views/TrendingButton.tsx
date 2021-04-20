@@ -1,13 +1,14 @@
 import { ChevronDown, ChevronUp } from '@dish/react-feather'
+import { RoutesTable } from '@dish/router'
 import React from 'react'
 import { HStack, Text } from 'snackui'
 
-import { RoutesTable } from '../../router'
+import { DRouteName } from '../../router'
 import { LinkButton } from './LinkButton'
 import { LinkButtonProps } from './LinkProps'
 
 export const TrendingButton = <
-  Name extends keyof RoutesTable = keyof RoutesTable,
+  Name extends DRouteName = DRouteName,
   Params = RoutesTable[Name]['params']
 >({
   rank,

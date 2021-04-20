@@ -305,7 +305,7 @@ const TagButtonVote = (props: TagButtonProps & { scale: number }) => {
   return (
     <>
       <VStack
-        backgroundColor="rgba(255,255,255,0.5)"
+        backgroundColor="rgba(0,0,0,0.35)"
         alignItems="center"
         justifyContent="center"
         borderRadius={100}

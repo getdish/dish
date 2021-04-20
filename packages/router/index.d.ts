@@ -1,10 +1,10 @@
 import { Store } from '@dish/use-store';
 import * as React from 'react';
 import { Router as TinyRouter } from 'tiny-request-router';
-export declare type RoutesTable = {
+export interface RoutesTable {
     [key: string]: Route<any>;
-};
-export declare type RouteName = keyof RoutesTable;
+}
+export declare type RouteName = string;
 export declare type RouteAlert<A extends RoutesTable> = {
     condition: (next: 'unload' | NavigateItem<A>) => boolean;
     message: string;

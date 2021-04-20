@@ -130,9 +130,8 @@ export const AppSearchInput = memo(() => {
   useEffect(() => {
     return reaction(
       homeStore,
-      (x) => x.currentSearchQuery,
+      (x) => x.currentSearchQuery || '',
       function searchQuerySync(val) {
-        console.log('changed search query', val)
         setSearch(val)
       }
     )

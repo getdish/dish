@@ -1,9 +1,9 @@
 import { HistoryItem, NavigateItem as RNavigateItem, Route, Router } from '@dish/router'
 import { createStore, useStoreInstance, useStoreInstanceSelector } from '@dish/use-store'
 
-export type RoutesTable = typeof routes
-export type RouteName = keyof RoutesTable
-export type NavigateItem = RNavigateItem<RoutesTable>
+export type DRoutesTable = typeof routes
+export type DRouteName = keyof DRoutesTable
+export type NavigateItem = RNavigateItem<DRoutesTable>
 
 export const routes = {
   // order important
@@ -68,7 +68,7 @@ export const useRouterCurPage = () => {
   return useStoreInstanceSelector(router, (router) => router.curPage)
 }
 
-export const useIsRouteActive = (...names: RouteName[]) => {
+export const useIsRouteActive = (...names: DRouteName[]) => {
   return useStoreInstanceSelector(
     router,
     (router) => names.includes(router.curPage.name as any),
@@ -76,7 +76,7 @@ export const useIsRouteActive = (...names: RouteName[]) => {
   )
 }
 
-export const useRoute = <N extends RouteName>(name: N): HistoryItem<N> => {
+export const useRoute = <N extends DRouteName>(name: N): HistoryItem<N> => {
   return useStoreInstanceSelector(
     router,
     (router) => (router.curPage.name === name ? router.curPage : null) as HistoryItem<N>,
@@ -92,9 +92,9 @@ export type SearchRouteParams = {
   tags?: string
 }
 
-export const routeNames = Object.keys(routes) as RouteName[]
+export const routeNames = Object.keys(routes) as DRouteName[]
 export const routePathToName: {
-  [key in RouteName]: string
+  [key in DRouteName]: string
 } = Object.keys(routes).reduce((acc, key) => {
   acc[routes[key].path] = key
   return acc

@@ -21,7 +21,7 @@ export const Home = memo(function Home() {
   if (process.env.NODE_ENV === 'development') {
     useEffect(() => {
       return () => {
-        console.warn('\n\nUNCAUGHT SUSPENSE SOMEWHERE -- FIX IT!!\n\ns')
+        console.warn('🏡🏡🏡 Home UNCAUGHT SUSPENSE SOMEWHERE -- FIX IT!!\n\ns')
       }
     }, [])
   }

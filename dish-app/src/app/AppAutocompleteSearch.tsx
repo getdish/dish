@@ -2,7 +2,7 @@ import { series, sleep } from '@dish/async'
 import { order_by, query, resolved } from '@dish/graph'
 import { useStoreInstance } from '@dish/use-store'
 import { groupBy } from 'lodash'
-import React, { memo, useEffect, useMemo } from 'react'
+import React, { Suspense, memo, useEffect, useMemo } from 'react'
 import { AbsoluteVStack, Theme, Toast, useDebounceValue } from 'snackui'
 
 import { tagDefaultAutocomplete } from '../constants/localTags'
@@ -20,11 +20,13 @@ import { useHomeStore } from './homeStore'
 export const AppAutocompleteSearch = () => {
   const autocompletes = useStoreInstance(autocompletesStore)
   return (
-    <Theme name="darkTranslucent">
-      <AbsoluteVStack fullscreen opacity={autocompletes.target === 'search' ? 1 : 0}>
-        <AutocompleteSearchInner />
-      </AbsoluteVStack>
-    </Theme>
+    <Suspense fallback={null}>
+      <Theme name="darkTranslucent">
+        <AbsoluteVStack fullscreen opacity={autocompletes.target === 'search' ? 1 : 0}>
+          <AutocompleteSearchInner />
+        </AbsoluteVStack>
+      </Theme>
+    </Suspense>
   )
 }
 const AutocompleteSearchInner = memo(() => {

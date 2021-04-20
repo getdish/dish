@@ -1,13 +1,14 @@
+import { RoutesTable } from '@dish/router'
 import React from 'react'
 import { Text } from 'snackui'
 
 import { brandColor } from '../../constants/colors'
 import { isStringChild } from '../../helpers/isStringChild'
-import { RoutesTable } from '../../router'
+import { DRouteName } from '../../router'
 import { useLink } from '../hooks/useLink'
 import { LinkProps } from './LinkProps'
 
-export function Link<Name extends keyof RoutesTable = keyof RoutesTable>(
+export function Link<Name extends DRouteName = DRouteName>(
   allProps: LinkProps<Name, RoutesTable[Name]['params']>
 ) {
   const {

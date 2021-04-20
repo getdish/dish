@@ -1,4 +1,5 @@
 import { fullyIdle, sleep } from '@dish/async'
+import { isEqual } from '@dish/fast-compare'
 import {
   HomeMeta,
   LngLat,
@@ -28,7 +29,6 @@ class SearchPageStore extends Store {
   searchPosition = initialPosition
   searchRegion = false
   searchArgs: RestaurantSearchArgs | null = null
-  private lastSearchKey = ''
   private lastSearchAt = 0
 
   setIndex(index: number, event: ActiveEvent) {
@@ -109,21 +109,20 @@ class SearchPageStore extends Store {
       .map((tag) => tag.slug?.replace('lenses__', '').replace('filters__', '') ?? '')
       .filter((t) => (dishSearchedTag ? !t.includes(dishSearchedTag) : true))
     const mainTag = dishSearchedTag ?? otherTags[0]
-    const searchArgs: RestaurantSearchArgs = {
+
+    const lastSearch = this.searchArgs
+    this.searchArgs = {
       center: roundLngLat(center),
       span: roundLngLat(span),
       query: state!.searchQuery,
       tags: otherTags,
       main_tag: mainTag,
     }
-    console.log('search', this.searchArgs, tags, mainTag)
+    console.log('🔦🔦  search', this.searchArgs, tags, mainTag)
 
     // prevent duplicate searches
-    const searchKey = stringify(this.searchArgs)
-    if (force || searchKey !== this.lastSearchKey || !this.results.length) {
-      // SEARCH
-      this.searchArgs = searchArgs
-      const res = await search(searchArgs)
+    if (force || !isEqual(this.searchArgs, lastSearch) || !this.results.length) {
+      const res = await search(this.searchArgs)
       console.log('search res', res)
       if (shouldCancel()) return
       if (!res) {
@@ -132,7 +131,6 @@ class SearchPageStore extends Store {
         return
       }
       // only update searchkey once finished
-      this.lastSearchKey = searchKey
       this.results = (res.restaurants ?? []).filter(isPresent).slice(0, 80)
       this.meta = res.meta
     } else {
@@ -142,11 +140,10 @@ class SearchPageStore extends Store {
     // ok
     this.status = 'complete'
     // set this at very end of search
-    const searchedPosition = {
+    this.searchPosition = {
       center: appMapStore.nextPosition.center,
       span: appMapStore.nextPosition.span,
     }
-    this.searchPosition = searchedPosition
 
     // clear it so we can check if any currently running already at start
     if (this.lastSearchAt === curId) {
