@@ -9,8 +9,8 @@ import {
   deleteAllFuzzyBy,
   mutation,
   query,
+  resolved,
   resolvedMutation,
-  resolvedWithoutCache,
   restaurantInsert,
   userFindOne,
   userUpdate,
@@ -21,21 +21,29 @@ interface Context {}
 
 const test = anyTest as TestInterface<Context>
 
-const sleep = (ms: number) => new Promise((res) => setTimeout(res, ms))
-
-const getRestaurantSimple = async (name: string) => {
-  return await resolvedWithoutCache(() => {
-    const _r = query.restaurant({
-      where: { name: { _eq: name } },
-    })
-    const r = {
-      id: _r[0].id,
-      name: _r[0].name,
-      address: _r[0].address,
-      rating: _r[0].rating,
+const getRestaurantSimple = async (rname: string) => {
+  return await resolved(
+    () => {
+      const [result] =
+        query.restaurant({
+          where: { name: { _eq: rname } },
+          limit: 1,
+        }) ?? []
+      if (result) {
+        const { id, name, address, rating } = result
+        return {
+          id,
+          name,
+          address,
+          rating,
+        }
+      }
+      return null
+    },
+    {
+      noCache: true,
     }
-    return r
-  })
+  )
 }
 
 const updateRestaurantSimple = async (restaurant: Restaurant) => {

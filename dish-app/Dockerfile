@@ -2,8 +2,6 @@ FROM registry.fly.io/dish-base:latest
 
 FROM node:15.10.0-buster
 
-COPY package.json package.json
-
 RUN \
   apt-get update >/dev/null && apt-get install -y parallel build-essential \
             libcairo2-dev libpixman-1-dev libpango1.0-dev \
@@ -20,7 +18,7 @@ RUN rm -r services && rm -r packages/worker
 
 WORKDIR /app
 
-COPY package.json yarn.lock .yarnrc.yml ./
+COPY yarn.lock .yarnrc.yml ./
 COPY packages packages
 COPY dish-app dish-app
 
