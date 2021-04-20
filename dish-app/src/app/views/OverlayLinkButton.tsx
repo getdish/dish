@@ -1,12 +1,13 @@
+import { RoutesTable } from '@dish/router'
 import React from 'react'
 import { BlurView, useTheme } from 'snackui'
 
-import { RoutesTable } from '../../router'
+import { DRouteName } from '../../router'
 import { LinkButton } from './LinkButton'
 import { LinkButtonProps } from './LinkProps'
 
 export function OverlayLinkButton<
-  Name extends keyof RoutesTable = keyof RoutesTable,
+  Name extends DRouteName = DRouteName,
   Params = RoutesTable[Name]['params']
 >({ Icon, children, ...props }: LinkButtonProps<Name, Params> & { Icon?: any }) {
   const theme = useTheme()

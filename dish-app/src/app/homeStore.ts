@@ -15,11 +15,11 @@ import { getActiveTags } from '../helpers/getActiveTags'
 import { getBreadcrumbs, isBreadcrumbState } from '../helpers/getBreadcrumbs'
 import { getNextState } from '../helpers/getNextState'
 import { getShouldNavigate } from '../helpers/getShouldNavigate'
-import { getTagsFromRoute } from '../helpers/getTagsFromRoute'
 import { getTagSlug } from '../helpers/getTagSlug'
 import { isHomeState, isSearchState } from '../helpers/homeStateHelpers'
 import { isSearchBarTag } from '../helpers/isSearchBarTag'
 import { reverseGeocode } from '../helpers/reverseGeocode'
+import { syncStateFromRoute } from '../helpers/syncStateFromRoute'
 import { syncStateToRoute } from '../helpers/syncStateToRoute'
 import { router } from '../router'
 import {
@@ -78,7 +78,7 @@ class HomeStore extends Store {
   }
 
   get currentSearchQuery() {
-    return this.currentState.searchQuery
+    return this.currentState.searchQuery || ''
   }
 
   get currentStateType() {
@@ -325,19 +325,20 @@ class HomeStore extends Store {
         if (!prev) {
           throw new Error('unreachable')
         }
-        const tags = getTagsFromRoute(router.curPage as HistoryItem<'search'>)
+        const { tags, searchQuery } = syncStateFromRoute(router.curPage as HistoryItem<'search'>)
         const activeTags = tags.reduce((acc, cur) => {
           acc[cur.slug!] = true
           return acc
         }, {})
 
         addTagsToCache(tags)
-
-        nextState = {
+        const state: Partial<HomeStateItemSearch> = {
           type: 'search',
           region: router.curPage.params.region ?? prev.region,
           activeTags,
+          searchQuery,
         }
+        nextState = state
         break
       }
 

@@ -12,16 +12,16 @@ import React, {
   useEffect,
   useMemo,
   useRef,
-  useState,
 } from 'react'
 import { ScrollView, ScrollViewProps } from 'react-native'
 import { DataProvider, LayoutProvider, RecyclerListView } from 'recyclerlistview'
-import { LoadingItems, Paragraph } from 'snackui'
 import {
   AbsoluteVStack,
   Button,
   HStack,
   LoadingItem,
+  LoadingItems,
+  Paragraph,
   Spacer,
   StackProps,
   Text,
@@ -32,13 +32,13 @@ import {
 
 import { isWeb } from '../../../constants/constants'
 import { addTagsToCache, allTags } from '../../../helpers/allTags'
-import { getFullTagsFromRoute } from '../../../helpers/getTagsFromRoute'
 import { getTitleForState } from '../../../helpers/getTitleForState'
+import { getFullTagsFromRoute } from '../../../helpers/syncStateFromRoute'
 import { syncStateToRoute } from '../../../helpers/syncStateToRoute'
 import { useQueryLoud } from '../../../helpers/useQueryLoud'
 import { router } from '../../../router'
 import { HomeStateItemSearch } from '../../../types/homeTypes'
-import { appMapStore, useAppMapStore, useSetAppMap } from '../../AppMapStore'
+import { appMapStore, useSetAppMap } from '../../AppMapStore'
 import { homeStore, useHomeStateById } from '../../homeStore'
 import { useAppDrawerWidth } from '../../hooks/useAppDrawerWidth'
 import { useLastValueWhen } from '../../hooks/useLastValueWhen'
@@ -544,7 +544,9 @@ const SearchLoading = (props: StackProps) => {
 }
 
 function useTagsFromRoute(route: HistoryItem<'search'>) {
-  const key = `tags-${Object.values(route).join(',')}`
+  const key = `tags-${Object.entries(route)
+    .map((x) => x.join(','))
+    .join(',')}`
   return useQueryLoud(key, () => getFullTagsFromRoute(route), {
     suspense: false,
   })

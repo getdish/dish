@@ -51,13 +51,20 @@ export default memo(function HomePage(props: HomeStackViewProps<HomeStateItemHom
     suspense: false,
   })
   const [position, setPosition] = useState<MapPosition>(initialPosition)
+  const [showFeed, setShowFeed] = useState(isActive)
   const regionColors = getColorsForName(state.region)
   const region = regionResponse.data
 
-  // if (process.env.NODE_ENV === 'development') {
-  //   // prettier-ignore
-  //   console.log('👀 HomePage', state.region, { position, item: props.item, region, state, isActive, center, span })
-  // }
+  useEffect(() => {
+    if (isActive) {
+      setShowFeed(true)
+    }
+  }, [isActive])
+
+  if (process.env.NODE_ENV === 'development') {
+    // prettier-ignore
+    console.log('👀 HomePage', state.region, { position, item: props.item, region, state, isActive, showFeed })
+  }
 
   useEffect(() => {
     if (!region) return
@@ -200,7 +207,9 @@ export default memo(function HomePage(props: HomeStackViewProps<HomeStateItemHom
               {homeHeaderContent}
 
               <PageContentWithFooter>
-                <HomePageFeed {...props} regionName={regionName} region={region} {...position} />
+                {showFeed && (
+                  <HomePageFeed {...props} regionName={regionName} region={region} {...position} />
+                )}
               </PageContentWithFooter>
             </VStack>
           </VStack>

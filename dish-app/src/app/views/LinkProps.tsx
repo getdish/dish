@@ -2,7 +2,7 @@ import React from 'react'
 import { TextStyle, ViewStyle } from 'react-native'
 import { ButtonProps, StackProps, TextProps } from 'snackui'
 
-import { RouteName } from '../../router'
+import { DRouteName } from '../../router'
 import { NavigableTag } from '../../types/tagTypes'
 
 type AProps = React.DetailedHTMLProps<
@@ -42,7 +42,7 @@ export type LinkButtonNamedProps<A = any, B = any> = {
   onPress?: Function
 }
 
-export type LinkButtonProps<Name extends RouteName = any, Params = any> = StackProps &
+export type LinkButtonProps<Name extends DRouteName = any, Params = any> = StackProps &
   ButtonProps &
   LinkSharedProps & {
     enableActiveStyle?: boolean

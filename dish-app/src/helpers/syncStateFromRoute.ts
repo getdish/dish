@@ -11,10 +11,14 @@ const typePrefixes = {
   filters: 'filter',
 }
 
-export const getTagsFromRoute = (item: HistoryItem<'search'>) => {
+// not really a sync but i want to match the naming with syncStateToRoute
+// TODO refactor this into a more logical structure
+export const syncStateFromRoute = (item: HistoryItem<'search'>) => {
   const tags: NavigableTag[] = []
+  const searchQuery = item.params.search || ''
+
   if (!item?.params) {
-    return tags
+    return { tags, searchQuery }
   }
   if (item.params.lense) {
     const slug = `lenses__${item.params.lense}`
@@ -32,12 +36,11 @@ export const getTagsFromRoute = (item: HistoryItem<'search'>) => {
       }
     }
   }
-  return tags
+  return { tags, searchQuery }
 }
 
 export const getFullTagsFromRoute = async (item: HistoryItem<'search'>): Promise<FullTag[]> => {
-  // @ts-ignore
-  return await getFullTags(getTagsFromRoute(item))
+  return await getFullTags(syncStateFromRoute(item).tags)
 }
 
 const getUrlTagInfo = (part: string): NavigableTag => {

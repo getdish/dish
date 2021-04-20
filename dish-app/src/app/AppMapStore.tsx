@@ -304,6 +304,10 @@ export const useSetAppMap = (
           }
         }
 
+        if (!allResults.length) {
+          return []
+        }
+
         return await resolved(() => {
           return (
             uniqBy(

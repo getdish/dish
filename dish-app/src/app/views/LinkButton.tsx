@@ -1,13 +1,14 @@
+import { RoutesTable } from '@dish/router'
 import React, { useEffect, useState } from 'react'
 import { Button } from 'snackui'
 
-import { RoutesTable, router } from '../../router'
+import { DRouteName, router } from '../../router'
 import { useLink } from '../hooks/useLink'
 import { LinkButtonProps } from './LinkProps'
 
 // most the logic here comes from useLink
 
-export function LinkButton<Name extends keyof RoutesTable = keyof RoutesTable>(
+export function LinkButton<Name extends DRouteName = DRouteName>(
   props: LinkButtonProps<Name, RoutesTable[Name]['params']>
 ) {
   const [isActive, setIsActive] = useState(false)

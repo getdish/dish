@@ -49,11 +49,15 @@ import { tagDefaultAutocomplete, tagFilters, tagLenses } from './constants/local
 import themes, { MyTheme, MyThemes } from './constants/themes'
 import { addTagsToCache } from './helpers/allTags'
 import { queryClient } from './helpers/queryClient'
-import { router, routes } from './router'
+import { DRoutesTable, router, routes } from './router'
 
 declare module 'snackui' {
   interface ThemeObject extends MyTheme {}
   interface Themes extends MyThemes {}
+}
+
+declare module '@dish/router' {
+  interface RoutesTable extends DRoutesTable {}
 }
 
 let isStarted = false

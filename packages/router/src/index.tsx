@@ -14,10 +14,10 @@ const history =
     : createBrowserHistory()
 
 // need them to declare the types here
-export type RoutesTable = {
+export interface RoutesTable {
   [key: string]: Route<any>
 }
-export type RouteName = keyof RoutesTable
+export type RouteName = string
 
 export type RouteAlert<A extends RoutesTable> = {
   condition: (next: 'unload' | NavigateItem<A>) => boolean
