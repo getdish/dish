@@ -130,9 +130,12 @@ export const AppSearchInput = memo(() => {
   useEffect(() => {
     return reaction(
       homeStore,
-      (x) => x.currentSearchQuery || '',
-      function searchQuerySync(val) {
-        setSearch(val)
+      (x) => x.currentSearchQuery,
+      function searchQuerySync(value) {
+        setSearch(value)
+        textInput$.current?.setNativeProps({
+          value,
+        })
       }
     )
   }, [])
@@ -186,6 +189,7 @@ export const AppSearchInput = memo(() => {
               >
                 {!isWeb && <SearchInputNativeDragFix name="search" />}
                 <TextInput
+                  key={0}
                   ref={(view) => {
                     textInput$.current = view
                     setNodeOnInputStore(inputStore, view)
@@ -350,9 +354,8 @@ const handleKeyPress = async (e: any, inputStore: InputStore) => {
       // enter
       // just searching normal
       const item = results[index - 1]
-
-      // if selecting an item in the list
-      if (isAutocompleteActive && item && index !== 0) {
+      const isSelectingFromList = isAutocompleteActive && item && index !== 0
+      if (isSelectingFromList) {
         if (item.type === 'restaurant') {
           router.navigate({
             name: 'restaurant',

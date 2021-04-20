@@ -50,6 +50,6 @@ export const useInputStoreSearch = () => useStoreInstance(inputStoreSearch)
 export function setNodeOnInputStore(inputStore: InputStore, view: any) {
   if (!view) return
   const next = inputGetNode(view)
-  if (!next || inputStore.node) return
+  if (!next) return
   inputStore.setNode(next)
 }
