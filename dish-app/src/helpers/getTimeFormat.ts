@@ -1,3 +1,5 @@
+import { relativeTimeFormat } from './relativeTimeFormat'
+
 export function getTimeFormat(date: Date): string {
   // @ts-expect-error
   return relatime(Date.now() - +date)
@@ -12,11 +14,14 @@ const units = [
   ['second', 1000],
 ] as const
 
-const rtf = new Intl.RelativeTimeFormat('en', { style: 'narrow' })
 const relatime = (elapsed: number) => {
   for (const [unit, amount] of units) {
     if (Math.abs(elapsed) > amount || unit === 'second') {
-      return rtf.format(Math.round(elapsed / amount), unit)
+      return relativeTimeFormat(Math.round(elapsed / amount), {
+        locales: 'en',
+        style: 'narrow',
+        unit,
+      })
     }
   }
 }

@@ -34,7 +34,9 @@ export const queryFetcher: QueryFetcher = async function (query, variables) {
     mode: 'cors',
   })
   if (!response.ok) {
-    throw new Error(`Network error, received status code ${response.status}`)
+    throw new Error(
+      `Network error, received status code ${response.status} from GraphQL request at ${GRAPH_API}`
+    )
   }
   const json = await response.json()
   if (process.env.DEBUG || process.env.LOG_FETCH) {

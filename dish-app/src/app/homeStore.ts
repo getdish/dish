@@ -146,7 +146,7 @@ class HomeStore extends Store {
     this.loading = n
   }
 
-  private getUpType = () => {
+  private getUpType() {
     const curType = this.currentState.type
     const crumbs = this.breadcrumbs
     if (!isBreadcrumbState(curType)) {
@@ -523,7 +523,6 @@ class HomeStore extends Store {
   async navigate({ state, ...rest }: HomeStateNav) {
     const navState = { state: state ?? this.currentState, ...rest }
     const nextState = getNextHomeState(navState)
-    console.log('navigate.nextState', nextState)
     const curState = this.currentState
 
     const updateTags = () => {

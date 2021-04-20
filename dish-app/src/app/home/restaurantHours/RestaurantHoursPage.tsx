@@ -15,6 +15,7 @@ import {
 } from 'snackui'
 
 import { bgLight } from '../../../constants/colors'
+import { dateTimeFormat } from '../../../helpers/dateTimeFormat'
 import { queryRestaurant } from '../../../queries/queryRestaurant'
 import { router } from '../../../router'
 import { homeStore } from '../../homeStore'
@@ -31,10 +32,10 @@ export default memo(
       return null
     }
     const hours = restaurant.hours ?? []
-    const dayOfWeek = new Intl.DateTimeFormat(['en'], {
+    const dayOfWeek = dateTimeFormat(new Date(), {
+      locales: 'en',
       weekday: 'short',
-    }).format(new Date())
-
+    })
     const title = `${restaurant.name} Open Hours`
 
     return (

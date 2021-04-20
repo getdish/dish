@@ -15,7 +15,7 @@ const typePrefixes = {
 // TODO refactor this into a more logical structure
 export const syncStateFromRoute = (item: HistoryItem<'search'>) => {
   const tags: NavigableTag[] = []
-  const searchQuery = item.params.search || ''
+  const searchQuery = item.params?.search || ''
 
   if (!item?.params) {
     return { tags, searchQuery }
