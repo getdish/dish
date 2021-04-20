@@ -72,7 +72,9 @@ export const SearchHeader = memo(() => {
                 </AbsoluteVStack>
               </VStack>
 
-              <SearchPageListsRow />
+              <Suspense fallback={null}>
+                <SearchPageListsRow />
+              </Suspense>
             </HStack>
           </HStack>
         </VStack>
