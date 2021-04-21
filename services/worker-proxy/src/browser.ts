@@ -1,4 +1,4 @@
-import { Page, WebKitBrowser, webkit } from 'playwright'
+import { Page, WebKitBrowser, webkit } from 'playwright-webkit'
 
 if (!process.env.LUMINATI_PROXY_HOST) {
   throw new Error(`No proxy`)

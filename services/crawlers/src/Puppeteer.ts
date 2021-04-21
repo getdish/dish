@@ -4,8 +4,7 @@ import { exec } from 'child_process'
 
 import { allSettledFirstFulfilled } from '@dish/helpers'
 import ProxyChain from 'proxy-chain'
-// @ts-ignore
-import { Browser, Page, Request } from 'puppeteer'
+import { Browser, Page, Request } from 'puppeteer-core'
 import puppeteer from 'puppeteer-extra'
 import StealthPlugin from 'puppeteer-extra-plugin-stealth'
 

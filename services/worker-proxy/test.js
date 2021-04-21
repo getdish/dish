@@ -1,4 +1,4 @@
-const { webkit } = require('playwright')
+const { webkit } = require('playwright-webkit')
 
 ;(async () => {
   const browser = await webkit.launch({

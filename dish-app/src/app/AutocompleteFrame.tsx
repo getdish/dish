@@ -1,4 +1,3 @@
-// debug
 import { useStore, useStoreInstance } from '@dish/use-store'
 import React from 'react'
 import { Pressable, ScrollView } from 'react-native'
@@ -47,6 +46,7 @@ export const AutocompleteFrame = ({ children }: { children: any }) => {
         onPress={() => autocompletes.setVisible(false)}
         flex={1}
         height="100%"
+        width="100%"
         maxWidth={drawerWidthMax}
       >
         <AbsoluteVStack backgroundColor={theme.backgroundColor} fullscreen opacity={0.9} />

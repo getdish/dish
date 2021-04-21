@@ -1,7 +1,5 @@
 FROM postgres:12
 
-LABEL maintainer="PostGIS Project - https://postgis.net"
-
 ENV POSTGIS_MAJOR 2.5
 ENV POSTGIS_VERSION 2.5.5+dfsg-1.pgdg100+2
 

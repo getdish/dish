@@ -2044,7 +2044,7 @@ __metadata:
     node-fetch: ^2.6.1
     pg: ^8.5.1
     proxy-chain: ^0.4.4
-    puppeteer: ^8.0.0
+    puppeteer-core: ^9.0.0
     puppeteer-extra: ^3.1.18
     puppeteer-extra-plugin-stealth: ^2.7.6
     react: ^17.0.1
@@ -2427,8 +2427,9 @@ __metadata:
   dependencies:
     "@dish/esdx": "*"
     express: ^4.17.1
-    playwright: ^1.9.2
     typescript: ^4.2.4
+  peerDependencies:
+    playwright-webkit: ^1.10.0
   languageName: unknown
   linkType: soft
 
@@ -9708,10 +9709,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"devtools-protocol@npm:0.0.854822":
-  version: 0.0.854822
-  resolution: "devtools-protocol@npm:0.0.854822"
-  checksum: 18cad06cae75b8c05b04d7532bab25da03f70f3637cdf070dd7140eb75427e75ee81f1b93fe643e7d21434afdf99f7cbba336ea5a30f5bcf9689d2fbd4077849
+"devtools-protocol@npm:0.0.869402":
+  version: 0.0.869402
+  resolution: "devtools-protocol@npm:0.0.869402"
+  checksum: 6cc3e031d66a6fb55220a660c601b6cde6235eb0e7a96c53b98f138b5789ee3eab5ab8d7d818b9bca285cef1cd7a3ac446b7a142c774e96e08137674b0061727
   languageName: node
   linkType: hard
 
@@ -10988,7 +10989,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"extract-zip@npm:^2.0.0, extract-zip@npm:^2.0.1":
+"extract-zip@npm:^2.0.0":
   version: 2.0.1
   resolution: "extract-zip@npm:2.0.1"
   dependencies:
@@ -14462,7 +14463,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"jpeg-js@npm:^0.4.0, jpeg-js@npm:^0.4.2":
+"jpeg-js@npm:^0.4.0":
   version: 0.4.3
   resolution: "jpeg-js@npm:0.4.3"
   checksum: c882ae02b8639d92b0004520dc949363dd1ff9dcfbadbb93f1760c9a3aab894fdca66af2ff57bcdb85a2741dba51cbaf748745eb3165bf2b73bdef2cfd639442
@@ -16148,7 +16149,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"mime@npm:^2.3.1, mime@npm:^2.4.1, mime@npm:^2.4.4, mime@npm:^2.4.6":
+"mime@npm:^2.3.1, mime@npm:^2.4.1, mime@npm:^2.4.4":
   version: 2.5.2
   resolution: "mime@npm:2.5.2"
   bin:
@@ -17976,29 +17977,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"playwright@npm:^1.9.2":
-  version: 1.9.2
-  resolution: "playwright@npm:1.9.2"
-  dependencies:
-    commander: ^6.1.0
-    debug: ^4.1.1
-    extract-zip: ^2.0.1
-    https-proxy-agent: ^5.0.0
-    jpeg-js: ^0.4.2
-    mime: ^2.4.6
-    pngjs: ^5.0.0
-    progress: ^2.0.3
-    proper-lockfile: ^4.1.1
-    proxy-from-env: ^1.1.0
-    rimraf: ^3.0.2
-    stack-utils: ^2.0.3
-    ws: ^7.3.1
-  bin:
-    playwright: lib/cli/cli.js
-  checksum: cbcdd4adc56eb30dfc758392f03424c3fb919f1e2202ac092d9c4761c4860d2c2e6e6cfd0b0752c7cb8f7313cf739ee4b49012bf80f9904b0373a6212af726ec
-  languageName: node
-  linkType: hard
-
 "plist@npm:^3.0.1":
   version: 3.0.1
   resolution: "plist@npm:3.0.1"
@@ -18673,7 +18651,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"progress@npm:^2.0.1, progress@npm:^2.0.3":
+"progress@npm:^2.0.1":
   version: 2.0.3
   resolution: "progress@npm:2.0.3"
   checksum: c46ef5a1de4d527dfd32fe56a7df0c1c8b420a4c02617196813bf7f10ac7c2a929afc265d44fdd68f5c439a7e7cb3d70d569716c82d6b4148ec72089860a1312
@@ -18772,17 +18750,6 @@ __metadata:
     object-assign: ^4.1.1
     react-is: ^16.8.1
   checksum: a440dd406c5cf53bf39f3e898d2c65178511d34ca3c8c789b30c177992408b9e4273969726b274719aa69ccce5ab34b2fd8caa60b90f23cd2e910cdcf682de52
-  languageName: node
-  linkType: hard
-
-"proper-lockfile@npm:^4.1.1":
-  version: 4.1.2
-  resolution: "proper-lockfile@npm:4.1.2"
-  dependencies:
-    graceful-fs: ^4.2.4
-    retry: ^0.12.0
-    signal-exit: ^3.0.2
-  checksum: a89fe12b3ed2a1413731cfa3b705b94f2411354cce660a2120cc0bd9337cef3710c41f73b88bc4f13eca8efa6530883645dea8e077b32d519d067f0f11271c34
   languageName: node
   linkType: hard
 
@@ -18890,6 +18857,26 @@ __metadata:
   languageName: node
   linkType: hard
 
+"puppeteer-core@npm:^9.0.0":
+  version: 9.0.0
+  resolution: "puppeteer-core@npm:9.0.0"
+  dependencies:
+    debug: ^4.1.0
+    devtools-protocol: 0.0.869402
+    extract-zip: ^2.0.0
+    https-proxy-agent: ^5.0.0
+    node-fetch: ^2.6.1
+    pkg-dir: ^4.2.0
+    progress: ^2.0.1
+    proxy-from-env: ^1.1.0
+    rimraf: ^3.0.2
+    tar-fs: ^2.0.0
+    unbzip2-stream: ^1.3.3
+    ws: ^7.2.3
+  checksum: 354e76d25bf46415233683f52c24aaf01eef3ef0c639ce2b8df12bbe126fa9e547cd04c37dbf3524569baa65b24330ea9a32cde64e1e26fe71b420ffab61aa10
+  languageName: node
+  linkType: hard
+
 "puppeteer-extra-plugin-stealth@npm:^2.7.6":
   version: 2.7.6
   resolution: "puppeteer-extra-plugin-stealth@npm:2.7.6"
@@ -18948,26 +18935,6 @@ __metadata:
   peerDependencies:
     puppeteer: "*"
   checksum: 02f218749384370caaa281efdc1c4e349013a5d5880d2b8e39d082df9878458ee4456f9cab6056d0e814d0762ba5c9da429012a0fddad7bda89fedac16bf506f
-  languageName: node
-  linkType: hard
-
-"puppeteer@npm:^8.0.0":
-  version: 8.0.0
-  resolution: "puppeteer@npm:8.0.0"
-  dependencies:
-    debug: ^4.1.0
-    devtools-protocol: 0.0.854822
-    extract-zip: ^2.0.0
-    https-proxy-agent: ^5.0.0
-    node-fetch: ^2.6.1
-    pkg-dir: ^4.2.0
-    progress: ^2.0.1
-    proxy-from-env: ^1.1.0
-    rimraf: ^3.0.2
-    tar-fs: ^2.0.0
-    unbzip2-stream: ^1.3.3
-    ws: ^7.2.3
-  checksum: d5fe2bbe40c65db645990dd2cee0b797d981a58e10c1274ffb0398372be7cbb667ec891f31d5e3f319500194217a446c48a0a2c32dfcef2348734da4616bade0
   languageName: node
   linkType: hard
 

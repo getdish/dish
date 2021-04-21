@@ -11,11 +11,13 @@
     "watch": "esdx-watch"
   },
   "dependencies": {
-    "express": "^4.17.1",
-    "playwright": "^1.9.2"
+    "express": "^4.17.1"
   },
   "devDependencies": {
     "@dish/esdx": "*",
     "typescript": "^4.2.4"
+  },
+  "peerDependencies": {
+    "playwright-webkit": "^1.10.0"
   }
 }
