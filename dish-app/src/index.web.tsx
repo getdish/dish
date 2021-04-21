@@ -31,9 +31,9 @@ async function start() {
       hydrate(<Root />, ROOT)
     })
   } else {
-    // render(<Root />, ROOT)
-    console.warn('👟 Concurrent Mode')
-    ReactDOM.unstable_createRoot(ROOT).render(<Root />)
+    render(<Root />, ROOT)
+    // console.warn('👟 Concurrent Mode')
+    // ReactDOM.unstable_createRoot(ROOT).render(<Root />)
   }
 }
 

@@ -510,12 +510,14 @@ tables:
       - created_at
       - description
       - downvotes
+      - geocoder_id
       - headlines
       - hours
       - id
       - image
       - location
       - name
+      - oldest_review_date
       - photos
       - price_range
       - rating
@@ -924,9 +926,13 @@ tables:
   - role: anon
     permission:
       columns:
+      - id
       - ml_sentiment
       - naive_sentiment
+      - restaurant_id
+      - review_id
       - sentence
+      - tag_id
       filter: {}
   - role: contributor
     permission:

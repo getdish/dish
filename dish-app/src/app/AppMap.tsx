@@ -211,7 +211,6 @@ export default memo(function AppMap() {
 
   const themeName = useThemeName()
   const handleMoveStart = useCallback(() => {
-    console.log('move start')
     cancelUpdateRegion()
     if (!isWeb || supportsTouchWeb) {
       console.log(drawerStore.snapIndex)

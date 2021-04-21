@@ -71,8 +71,6 @@ export default memo(function SearchPage(props: Props) {
     router.curPage.name !== 'search'
   ) as HistoryItem<'search'>
 
-  console.log('👀 SearchPage', state.activeTags, title)
-
   return (
     <>
       <PageTitleTag>{title}</PageTitleTag>
@@ -106,16 +104,6 @@ const SearchPageContent = memo(function SearchPageContent(
   } = searchState
   const { searchArgs, results, searchRegion, status } = searchStore
   const isLoading = status === 'loading'
-  // const activeTime = useMemo(() => (props.isActive ? Date.now() : 0), [])
-  // const lastActiveAt = useLastValueWhen(() => activeTime, props.isActive)
-
-  console.log(
-    'search apge at',
-    center,
-    span,
-    defaultLocationAutocompleteResults[0],
-    defaultLocationAutocompleteResults[1]
-  )
 
   usePageLoadEffect(props, ({ isRefreshing }) => {
     if (isRefreshing && props.isActive) {
@@ -123,21 +111,18 @@ const SearchPageContent = memo(function SearchPageContent(
     }
   })
 
-  // useEffect(() => {
-  //   if (!location.data) return
-  //   // dont move it again quickly
-  //   // this sort of logic could be put at the map level
-  //   if (lastActiveAt - 250 < appMapStore.currentPosition.at) {
-  //     console.warn('moved map since')
-  //     return
-  //   }
-  //   console.warn('loading new center from location', appMapStore.currentPosition.at, location.data)
-  //   homeStore.updateHomeState(`search.location`, {
-  //     ...searchState,
-  //     center: location.data.center,
-  //     span: location.data.span,
-  //   })
-  // }, [lastActiveAt, JSON.stringify(location.data)])
+  useEffect(() => {
+    if (!location.data) return
+    // only on first time
+    if (center) return
+    // dont move it again quickly
+    // this sort of logic could be put at the map level
+    homeStore.updateHomeState(`search.location`, {
+      id: props.item.id,
+      center: location.data.center,
+      span: location.data.span,
+    })
+  }, [center, JSON.stringify(location.data)])
 
   // sync search location to url
   useEffect(() => {

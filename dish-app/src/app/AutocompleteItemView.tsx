@@ -1,6 +1,6 @@
 import { Plus } from '@dish/react-feather'
 import React, { memo } from 'react'
-import { Image } from 'react-native'
+import { Image, Keyboard } from 'react-native'
 import { HStack, Spacer, Text, VStack, useDebounce, useTheme } from 'snackui'
 
 import { AutocompleteItem } from '../helpers/createAutocomplete'
@@ -69,6 +69,7 @@ export const AutocompleteItemView = memo(
           backgroundColor: theme.backgroundColorTertiary,
         }}
         onPressOut={() => {
+          Keyboard.dismiss()
           hideAutocompleteSlow()
           onSelect(result, index)
         }}

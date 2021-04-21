@@ -28,10 +28,9 @@ export const AutocompleteFrame = ({ children }: { children: any }) => {
   const theme = useTheme()
   const topOffsetSm = searchBarHeight
 
-  const content = (
+  return (
     <AbsoluteVStack
       position="absolute"
-      zIndex={100000000}
       opacity={isShowing ? 1 : 0}
       pointerEvents={isShowing ? 'auto' : 'none'}
       fullscreen
@@ -91,7 +90,8 @@ export const AutocompleteFrame = ({ children }: { children: any }) => {
               style={{ maxHeight: '100%', flex: 1, height: '100%' }}
               keyboardShouldPersistTaps="always"
             >
-              {children}
+              {/* bugfix AutocompleteItemView causes dragging to disable */}
+              {isWeb ? children : isShowing ? children : null}
 
               {/* pad bottom to scroll */}
               <VStack height={100} />
@@ -101,23 +101,6 @@ export const AutocompleteFrame = ({ children }: { children: any }) => {
       </VStack>
     </AbsoluteVStack>
   )
-
-  if (!isWeb) {
-    return (
-      <AnimatedVStack
-        position="absolute"
-        pointerEvents="none"
-        fullscreen
-        height="100%"
-        zIndex={100000000}
-        flex={1}
-      >
-        {content}
-      </AnimatedVStack>
-    )
-  }
-
-  return content
 }
 const hideAutocompletes = (e) => {
   e.stopPropagation()

@@ -78,6 +78,8 @@ const RestaurantPage = memo(
       }
     }, [JSON.stringify(coords)])
 
+    console.log('Restaurant.position', position, props.isActive)
+
     useSetAppMap({
       hideRegions: true,
       isActive: props.isActive,

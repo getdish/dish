@@ -1,4 +1,3 @@
-console.log(123)
 export const dateTimeFormatter = (
   date?: number | Date | null,
   {

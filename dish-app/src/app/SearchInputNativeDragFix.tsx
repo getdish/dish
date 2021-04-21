@@ -16,7 +16,7 @@ export const SearchInputNativeDragFix = ({ name }: { name: 'search' | 'location'
         return true
       },
       onPanResponderTerminate: () => {
-        console.log(123)
+        // console.log(123)
       },
       onPanResponderReject: () => {
         getInputStore().node?.focus()

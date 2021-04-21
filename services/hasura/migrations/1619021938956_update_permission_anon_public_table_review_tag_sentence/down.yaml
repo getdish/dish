@@ -1,0 +1,20 @@
+- args:
+    role: anon
+    table:
+      name: review_tag_sentence
+      schema: public
+  type: drop_select_permission
+- args:
+    permission:
+      allow_aggregations: false
+      columns:
+      - ml_sentiment
+      - naive_sentiment
+      - sentence
+      computed_fields: []
+      filter: {}
+    role: anon
+    table:
+      name: review_tag_sentence
+      schema: public
+  type: create_select_permission
