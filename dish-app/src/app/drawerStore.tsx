@@ -6,7 +6,7 @@ import { getWindowHeight } from '../helpers/getWindow'
 import { autocompletesStore } from './AutocompletesStore'
 
 class DrawerStore extends Store {
-  snapPoints = [isWeb ? 0.02 : 0.05, 0.28, 0.75]
+  snapPoints = [isWeb ? 0.02 : 0.05, 0.28, 0.8]
   snapIndex = 1
   isDragging = false
   pan = new Animated.Value(this.getSnapPointOffset())
@@ -14,6 +14,7 @@ class DrawerStore extends Store {
   lastSnapAt = Date.now()
 
   get currentSnapPoint() {
+    console.log('currentSnapPoint', this.snapPoints[this.snapIndex])
     return this.snapPoints[this.snapIndex]
   }
 
@@ -40,13 +41,19 @@ class DrawerStore extends Store {
 
   setSnapIndex(point: number) {
     this.snapIndex = point
-    this.animateDrawerToPx(this.getSnapPointOffset(), 2)
+    this.animateDrawerToPx(this.getSnapPointOffset(), 2, true)
   }
 
-  animateDrawerToPx(px: number = this.getSnapPointOffset(), velocity: number = 0) {
+  animateDrawerToPx(
+    px: number = this.getSnapPointOffset(),
+    velocity: number = 0,
+    avoidSnap = false
+  ) {
     this.lastSnapAt = Date.now()
     this.isDragging = true
-    this.snapIndex = this.getSnapIndex(px, velocity)
+    if (!avoidSnap) {
+      this.snapIndex = this.getSnapIndex(px, velocity)
+    }
     const toValue = this.getSnapPointOffset()
     this.spring = Animated.spring(this.pan, {
       useNativeDriver: true,

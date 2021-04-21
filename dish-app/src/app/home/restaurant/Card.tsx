@@ -122,7 +122,7 @@ export function Card({
             />
           )}
 
-          <VStack className="hover-75-opacity-child" opacity={dimImage ? 0.8 : 1} {...frame}>
+          <VStack className="hover-75-opacity-child" opacity={dimImage ? 0.5 : 1} {...frame}>
             {typeof photo === 'string' ? (
               photo ? (
                 <Image resizeMode="cover" {...sizes} style={frame} source={{ uri: photo }} />

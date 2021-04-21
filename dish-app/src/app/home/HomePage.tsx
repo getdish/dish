@@ -27,7 +27,7 @@ import { HomeStateItemHome } from '../../types/homeTypes'
 import { cancelUpdateRegion } from '../AppMapStore'
 import { useHomeStateById } from '../homeStore'
 import { useLocalStorageState } from '../hooks/useLocalStorageState'
-import { setMapInitialRegion } from '../Map'
+import { setInitialRegionSlug } from '../initialRegionSlug'
 import { CloseButton } from '../views/CloseButton'
 import { ContentScrollView } from '../views/ContentScrollView'
 import { ContentScrollViewHorizontal } from '../views/ContentScrollViewHorizontal'
@@ -67,7 +67,7 @@ export default memo(function HomePage(props: HomeStackViewProps<HomeStateItemHom
 
   useEffect(() => {
     if (!region) return
-    setMapInitialRegion(props.item.region)
+    setInitialRegionSlug(props.item.region)
   }, [region])
 
   // // center map to region

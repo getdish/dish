@@ -36,6 +36,7 @@ export const emptyArr = Object.freeze([])
 export const zIndexMap = 100
 export const zIndexMapControlsUnderlay = 150
 export const zIndexDrawer = 300
+export const zIndexAutocomplete = 350
 export const zIndexMapControls = 400
 export const zIndexMapControlsUnderlaySmall = 500
 export const zIndexSearchBarFloating = 450

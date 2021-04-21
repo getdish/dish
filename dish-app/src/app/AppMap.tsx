@@ -1,4 +1,3 @@
-import { MapPosition } from '@dish/graph'
 import { useStoreInstance } from '@dish/use-store'
 import React, { memo, useCallback, useEffect, useMemo } from 'react'
 import {
@@ -12,7 +11,8 @@ import {
   useThemeName,
 } from 'snackui'
 
-import { pageWidthMax, searchBarHeight, zIndexMap } from '../constants/constants'
+import { isWeb, pageWidthMax, searchBarHeight, zIndexMap } from '../constants/constants'
+import { supportsTouchWeb } from '../constants/platforms'
 import { coordsToLngLat } from '../helpers/mapHelpers'
 import { router } from '../router'
 import { RegionWithVia } from '../types/homeTypes'
@@ -211,7 +211,14 @@ export default memo(function AppMap() {
 
   const themeName = useThemeName()
   const handleMoveStart = useCallback(() => {
+    console.log('move start')
     cancelUpdateRegion()
+    if (!isWeb || supportsTouchWeb) {
+      console.log(drawerStore.snapIndex)
+      if (drawerStore.snapIndex !== 2) {
+        drawerStore.setSnapIndex(2)
+      }
+    }
   }, [])
 
   return (

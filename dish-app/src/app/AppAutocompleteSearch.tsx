@@ -5,7 +5,9 @@ import { groupBy } from 'lodash'
 import React, { Suspense, memo, useEffect, useMemo } from 'react'
 import { AbsoluteVStack, Theme, Toast, useDebounceValue } from 'snackui'
 
+import { zIndexAutocomplete } from '../constants/constants'
 import { tagDefaultAutocomplete } from '../constants/localTags'
+import { isTouchDevice } from '../constants/platforms'
 import { AutocompleteItemFull, createAutocomplete } from '../helpers/createAutocomplete'
 import { getFuzzyMatchQuery } from '../helpers/getFuzzyMatchQuery'
 import { searchRestaurants } from '../helpers/searchRestaurants'
@@ -13,7 +15,11 @@ import { filterToNavigable } from '../helpers/tagHelpers'
 import { LngLat } from '../types/homeTypes'
 import { appMapStore } from './AppMapStore'
 import { AutocompleteFrame, AutocompleteResults } from './AutocompleteFrame'
-import { autocompleteSearchStore, autocompletesStore } from './AutocompletesStore'
+import {
+  AutocompleteStore,
+  autocompleteSearchStore,
+  autocompletesStore,
+} from './AutocompletesStore'
 import { filterAutocompletes } from './filterAutocompletes'
 import { useHomeStore } from './homeStore'
 
@@ -22,7 +28,12 @@ export const AppAutocompleteSearch = () => {
   return (
     <Suspense fallback={null}>
       <Theme name="darkTranslucent">
-        <AbsoluteVStack fullscreen opacity={autocompletes.target === 'search' ? 1 : 0}>
+        <AbsoluteVStack
+          zIndex={zIndexAutocomplete}
+          fullscreen
+          opacity={autocompletes.target === 'search' ? 1 : 0}
+          pointerEvents="none"
+        >
           <AutocompleteSearchInner />
         </AbsoluteVStack>
       </Theme>
@@ -32,7 +43,7 @@ export const AppAutocompleteSearch = () => {
 const AutocompleteSearchInner = memo(() => {
   const home = useHomeStore()
   const store = useStoreInstance(autocompleteSearchStore)
-  const { lastActiveTags } = home
+  const { lastActiveTags, currentSearchQuery } = home
   const searchState = useMemo(() => [store.query.trim(), lastActiveTags] as const, [
     store.query,
     lastActiveTags,
@@ -43,6 +54,52 @@ const AutocompleteSearchInner = memo(() => {
     query && store.setIsLoading(true)
   }, [query])
 
+  useSearchQueryEffect(query, store, activeTags)
+
+  return (
+    <AutocompleteFrame>
+      <AutocompleteResults
+        target="search"
+        prefixResults={
+          currentSearchQuery
+            ? [
+                {
+                  name: isTouchDevice ? 'Tap to search' : 'Enter to search',
+                  icon: '🔍',
+                  tagId: '',
+                  type: 'orphan' as const,
+                  description: '',
+                },
+              ]
+            : []
+        }
+        onSelect={(result) => {
+          // clear query
+          if (result.type === 'orphan') {
+            home.clearTags()
+            home.setSearchQuery(query)
+          } else if (result.type !== 'restaurant') {
+            home.setSearchQuery('')
+          }
+        }}
+      />
+    </AutocompleteFrame>
+  )
+})
+const homeDefaultResults = tagDefaultAutocomplete.map((tag) => {
+  return createAutocomplete({
+    type: 'dish',
+    slug: tag.slug,
+    icon: tag.icon,
+    name: tag.name,
+    namePrefix: 'The best',
+  })
+})
+function useSearchQueryEffect(
+  query: string,
+  store: AutocompleteStore,
+  activeTags: import('/Users/n8/dish/dish-app/src/types/tagTypes').NavigableTag[]
+) {
   useEffect(() => {
     if (!query) {
       store.setResults(homeDefaultResults)
@@ -123,42 +180,8 @@ const AutocompleteSearchInner = memo(() => {
       store.setResults(results)
     }
   }, [query])
+}
 
-  return (
-    <AutocompleteFrame>
-      <AutocompleteResults
-        target="search"
-        prefixResults={[
-          {
-            name: 'Enter to search',
-            icon: '🔍',
-            tagId: '',
-            type: 'orphan' as const,
-            description: '',
-          },
-        ]}
-        onSelect={(result) => {
-          // clear query
-          if (result.type === 'orphan') {
-            home.clearTags()
-            home.setSearchQuery(query)
-          } else if (result.type !== 'restaurant') {
-            home.setSearchQuery('')
-          }
-        }}
-      />
-    </AutocompleteFrame>
-  )
-})
-const homeDefaultResults = tagDefaultAutocomplete.map((tag) => {
-  return createAutocomplete({
-    type: 'dish',
-    slug: tag.slug,
-    icon: tag.icon,
-    name: tag.name,
-    namePrefix: 'The best',
-  })
-})
 function searchAutocomplete(searchQuery: string, center: LngLat, span: LngLat) {
   return resolved(() => {
     return [

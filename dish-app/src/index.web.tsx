@@ -32,7 +32,7 @@ async function start() {
     })
   } else {
     // render(<Root />, ROOT)
-    console.warn('👟 Concurrent Blocking Mode Running')
+    console.warn('👟 Concurrent Mode')
     ReactDOM.unstable_createRoot(ROOT).render(<Root />)
   }
 }

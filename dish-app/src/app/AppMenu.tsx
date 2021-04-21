@@ -1,11 +1,10 @@
 import { slugify } from '@dish/graph'
 import { ChevronUp, HelpCircle, Menu } from '@dish/react-feather'
-import { reaction, useStoreInstance } from '@dish/use-store'
-import React, { Suspense, memo, useEffect } from 'react'
-import { Theme } from 'snackui'
-import { HStack, Popover, Spacer, Text, Tooltip, useMedia } from 'snackui'
+import { useStoreInstance } from '@dish/use-store'
+import React, { Suspense, memo } from 'react'
+import { HStack, Popover, Spacer, Text, Theme, Tooltip, useMedia } from 'snackui'
 
-import { router, useRouterCurPage } from '../router'
+import { useRouterCurPage } from '../router'
 import { AppMenuContents } from './AppMenuContents'
 import { appMenuStore } from './AppMenuStore'
 import { UserAvatar } from './home/user/UserAvatar'
@@ -13,6 +12,7 @@ import { homeStore } from './homeStore'
 import { useSearchBarTheme } from './hooks/useSearchBarTheme'
 import { useUserStore } from './userStore'
 import { LinkButton } from './views/LinkButton'
+import { LinkButtonAutoActive } from './views/LinkButtonAutoActive'
 import { LinkButtonProps } from './views/LinkProps'
 
 export const AppMenu = memo(() => {
@@ -119,8 +119,7 @@ const MenuLinkButton = memo(
     const { color } = useSearchBarTheme()
 
     const linkButtonElement = (
-      <LinkButton
-        enableActiveStyle
+      <LinkButtonAutoActive
         className="ease-in-out-fast"
         padding={12}
         backgroundColor="transparent"
@@ -150,7 +149,7 @@ const MenuLinkButton = memo(
             </HStack>
           )
         }}
-      </LinkButton>
+      </LinkButtonAutoActive>
     )
 
     if (!!tooltip) {

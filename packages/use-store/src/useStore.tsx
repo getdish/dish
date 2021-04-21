@@ -1,15 +1,8 @@
-import { useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react'
+import { useCallback, useEffect, useLayoutEffect, useRef, useState } from 'react'
 
 import { configureOpts } from './configureUseStore'
 import { UNWRAP_PROXY, defaultOptions } from './constants'
-import {
-  UNWRAP_STORE_INFO,
-  cache,
-  getKey,
-  getStoreDescriptors,
-  getStoreUid,
-  simpleStr,
-} from './helpers'
+import { UNWRAP_STORE_INFO, cache, getStoreDescriptors, getStoreUid, simpleStr } from './helpers'
 import { Selector, StoreInfo, UseStoreOptions } from './interfaces'
 import { isEqualSubsetShallow } from './isEqualShallow'
 import { ADD_TRACKER, SHOULD_DEBUG, Store, StoreTracker, TRACK, TRIGGER_UPDATE } from './Store'
@@ -34,24 +27,27 @@ import {
 // const abc2 = useStoreInstance(storeTest)
 // const abcSel = useStoreInstanceSelector(storeTest, (x) => x.props.id)
 
+const idFn = (_) => _
+
 // no singleton, just react
 export function useStore<A extends Store<B>, B>(
   StoreKlass: (new (props: B) => A) | (new () => A),
   props?: B,
   options: UseStoreOptions<A, any> = defaultOptions
 ): A {
-  const cachedSelector = options.selector ? useCallback(options.selector, []) : undefined
+  const selectorCb = useCallback(options.selector || idFn, [])
+  const selector = options.selector ? selectorCb : options.selector
 
-  if (options.once) {
-    const key = props ? getKey(props) : ''
-    const info = useMemo(() => {
-      return getOrCreateStoreInfo(StoreKlass, props, { avoidCache: true }, key)
-    }, [key])
-    return useStoreFromInfo(info, cachedSelector)
-  }
+  // if (options.once) {
+  //   const key = props ? getKey(props) : ''
+  //   const info = useMemo(() => {
+  //     return getOrCreateStoreInfo(StoreKlass, props, { avoidCache: true }, key)
+  //   }, [key])
+  //   return useStoreFromInfo(info, selector)
+  // }
 
   const info = getOrCreateStoreInfo(StoreKlass, props)
-  return useStoreFromInfo(info, cachedSelector)
+  return useStoreFromInfo(info, selector)
 }
 
 export function useStoreDebug<A extends Store<B>, B>(
@@ -495,7 +491,10 @@ function createProxiedStore(storeInfo: Omit<StoreInfo, 'store' | 'source'>) {
             }
           }
 
-          // debug mode wrapper
+          //
+          // just action debug logger!
+          //
+          //
           if (process.env.NODE_ENV === 'development') {
             if (
               process.env.LOG_LEVEL &&

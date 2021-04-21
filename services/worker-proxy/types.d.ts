@@ -1,6 +1,6 @@
 /// <reference lib="dom" />
 /// <reference lib="esnext" />
-declare module "@dish/proxy" {
+declare module "@dish/worker-proxy" {
     import { Page } from "playwright";
     export function ensurePage(forceRefresh?: boolean): Promise<Page>;
     export function fetchBrowser(uriBase: string, type: 'html' | 'json' | 'hyperscript', selector?: string, maxTries?: number): any;

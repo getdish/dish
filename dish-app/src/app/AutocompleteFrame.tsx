@@ -1,6 +1,7 @@
+// debug
 import { useStore, useStoreInstance } from '@dish/use-store'
 import React from 'react'
-import { ScrollView } from 'react-native'
+import { Pressable, ScrollView } from 'react-native'
 import {
   AbsoluteVStack,
   AnimatedVStack,
@@ -14,6 +15,7 @@ import {
 } from 'snackui'
 
 import { drawerWidthMax, isWeb, searchBarHeight } from '../constants/constants'
+import { isTouchDevice } from '../constants/platforms'
 import { AutocompleteItem } from '../helpers/createAutocomplete'
 import { AutocompleteItemView } from './AutocompleteItemView'
 import { AutocompleteStore, AutocompleteTarget, autocompletesStore } from './AutocompletesStore'
@@ -28,19 +30,27 @@ export const AutocompleteFrame = ({ children }: { children: any }) => {
 
   const content = (
     <AbsoluteVStack
+      position="absolute"
       zIndex={100000000}
       opacity={isShowing ? 1 : 0}
       pointerEvents={isShowing ? 'auto' : 'none'}
       fullscreen
       alignItems="flex-end"
-      marginTop={5}
       borderRadius={12}
       overflow="hidden"
       top={media.sm ? topOffsetSm : 0}
-      onPress={() => autocompletes.setVisible(false)}
+      left={0}
+      right={0}
+      bottom={0}
+      // DONT PUT EVENT HERE NEED TO DEBUG WHY IT BREAKS ON NATIVE
     >
-      <VStack width="100%" height="100%" maxWidth={drawerWidthMax}>
-        <AbsoluteVStack backgroundColor={theme.backgroundColor} fullscreen />
+      <VStack
+        onPress={() => autocompletes.setVisible(false)}
+        flex={1}
+        height="100%"
+        maxWidth={drawerWidthMax}
+      >
+        <AbsoluteVStack backgroundColor={theme.backgroundColor} fullscreen opacity={0.9} />
         <AbsoluteVStack
           fullscreen
           backgroundColor="rgba(30,30,30,0.85)"
@@ -55,7 +65,7 @@ export const AutocompleteFrame = ({ children }: { children: any }) => {
             fullscreen
           />
         </AbsoluteVStack>
-        <AbsoluteVStack top={10} right={10}>
+        <AbsoluteVStack zIndex={10000} top={10} right={10} pointerEvents="auto">
           <CloseButton size={20} onPressOut={prevent} zIndex={1000} onPress={hideAutocompletes} />
         </AbsoluteVStack>
         <VStack
@@ -68,16 +78,25 @@ export const AutocompleteFrame = ({ children }: { children: any }) => {
           padding={5}
           borderRadius={media.sm ? 0 : 10}
           flex={media.sm ? 1 : 0}
-          onPress={() => {
-            autocompletes.setVisible(false)
-          }}
+          // dont add events here :(
         >
-          <ScrollView style={{ maxHeight: '100%' }} keyboardShouldPersistTaps="always">
-            {children}
+          <Pressable
+            style={{ flex: 1 }}
+            onPress={() => {
+              autocompletes.setVisible(false)
+            }}
+          >
+            <ScrollView
+              // styles for native
+              style={{ maxHeight: '100%', flex: 1, height: '100%' }}
+              keyboardShouldPersistTaps="always"
+            >
+              {children}
 
-            {/* pad bottom to scroll */}
-            <VStack height={100} />
-          </ScrollView>
+              {/* pad bottom to scroll */}
+              <VStack height={100} />
+            </ScrollView>
+          </Pressable>
         </VStack>
       </VStack>
     </AbsoluteVStack>
@@ -124,10 +143,10 @@ export const AutocompleteResults = ({
   return (
     <VStack paddingVertical={10}>
       {results.map((result, index) => {
-        const isActive = activeIndex === index
+        const isActive = !isTouchDevice && activeIndex === index
         return (
           <React.Fragment key={`${result.id}${index}`}>
-            <Theme name={isActive ? 'active' : null}>
+            <Theme name={isActive ? 'active' : 'dark'}>
               <AutocompleteItemView
                 target={target}
                 index={index}

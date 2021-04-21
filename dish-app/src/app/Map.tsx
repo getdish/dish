@@ -14,12 +14,12 @@ import { useGet, useThemeName } from 'snackui'
 import { darkPurple, grey } from '../constants/colors'
 import { MAPBOX_ACCESS_TOKEN, isM1Sim } from '../constants/constants'
 import { hexToRGB } from '../helpers/hexToRGB'
-import { hasMovedAtLeast, mapPositionToBBox } from '../helpers/mapHelpers'
 import * as mapHelpers from '../helpers/mapHelpers'
+import { hasMovedAtLeast, mapPositionToBBox } from '../helpers/mapHelpers'
 import { useIsMountedRef } from '../helpers/useIsMountedRef'
 import { RegionWithVia } from '../types/homeTypes'
-import { appMapStore } from './AppMapStore'
 import { setMap as setMapRef } from './getMap'
+import { getInitialRegionSlug } from './initialRegionSlug'
 import { MapProps } from './MapProps'
 import { tiles } from './tiles'
 
@@ -300,11 +300,6 @@ const setActive = (
   }
 }
 
-let initialRegionSlug = ''
-export const setMapInitialRegion = (slug: string) => {
-  initialRegionSlug = slug
-}
-
 function setupMapEffect({
   setMap,
   props,
@@ -403,6 +398,7 @@ function setupMapEffect({
   }
 
   const handleMoveDbc = debounce(() => {
+    const initialRegionSlug = getInitialRegionSlug()
     if (curRegionId || !initialRegionSlug) return
     const feature = getRegionAtCenter()
     if (!feature) return
@@ -410,7 +406,6 @@ function setupMapEffect({
     const props = getRegionProps(feature)
     if (props.slug !== initialRegionSlug) return
     setCurrentRegion(feature, 'click')
-    initialRegionSlug = ''
   }, 100)
 
   const getRegionAtCenter = () => {

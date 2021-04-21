@@ -19,7 +19,15 @@ MapboxGL.setTelemetryEnabled(false)
 
 const idFn = (_) => _
 
-export const MapView = ({ center, span, features, onMoveEnd, onSelect, style }: MapProps) => {
+export const MapView = ({
+  center,
+  span,
+  features,
+  onMoveEnd,
+  onMoveStart,
+  onSelect,
+  style,
+}: MapProps) => {
   const { width, height } = Dimensions.get('screen')
   const drawerStore = useStoreInstance(drawerStoreInstance)
   const drawerHeight = drawerStore.currentHeight
@@ -80,6 +88,7 @@ export const MapView = ({ center, span, features, onMoveEnd, onSelect, style }: 
           console.warn('DID FAIL LOADING MAP!!!!!!!')
           setIsLoaded(1)
         }}
+        onTouchStart={onMoveStart}
         onPress={async (e) => {
           console.log('pressing', e)
           const map = mapRef.current

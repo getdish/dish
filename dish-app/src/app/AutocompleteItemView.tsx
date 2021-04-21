@@ -59,7 +59,6 @@ export const AutocompleteItemView = memo(
         <Text fontSize={32}>{result.icon} </Text>
       ) : null
 
-    // return null
     return (
       <LinkButton
         width="100%"
@@ -73,6 +72,7 @@ export const AutocompleteItemView = memo(
           hideAutocompleteSlow()
           onSelect(result, index)
         }}
+        stopPropagation
         preventNavigate={preventNavigate}
         {...(!showLocation &&
           result?.type !== 'orphan' && {
@@ -85,13 +85,14 @@ export const AutocompleteItemView = memo(
             slug: result.slug,
           },
         })}
+        noTextWrap
       >
-        <HStack width="100%">
+        <HStack minWidth="100%">
           <VStack flex={1}>
             <HStack marginVertical={-3} flex={1} alignItems="center">
               {icon}
               {!!icon && <Spacer size="lg" />}
-              <Text fontWeight="700" ellipse color={theme.color} fontSize={24} lineHeight={28}>
+              <Text fontWeight="700" ellipse color="#fff" fontSize={24} lineHeight={28}>
                 {!!result.namePrefix && (
                   <>
                     <Text fontWeight="300">{result.namePrefix}</Text>{' '}

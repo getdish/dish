@@ -45,7 +45,7 @@ export type LinkButtonNamedProps<A = any, B = any> = {
 export type LinkButtonProps<Name extends DRouteName = any, Params = any> = StackProps &
   ButtonProps &
   LinkSharedProps & {
-    enableActiveStyle?: boolean
+    isActive?: boolean
     activeStyle?: ViewStyle
     activeTextStyle?: TextStyle
   } & LinkButtonNamedProps<Name, Params>
