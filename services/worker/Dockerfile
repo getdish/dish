@@ -17,7 +17,7 @@ RUN apt-get install -y \
        > /dev/null \
       && apt-get clean
 
-FROM base as deps-chrome
+FROM base as chrome
 
 RUN apt-get install -y wget gnupg ca-certificates \
      && wget -q -O - https://dl-ssl.google.com/linux/linux_signing_key.pub | apt-key add - \
@@ -36,14 +36,14 @@ RUN apt-get install -y wget gnupg ca-certificates \
 
 FROM registry.fly.io/dish-base
 
-COPY --from=0 /bin /bin
-COPY --from=0 /usr/bin /usr/bin
-COPY --from=0 /usr/lib /usr/lib
-COPY --from=0 /usr/share/X11 /usr/share/X11
+COPY --from=deps /bin /bin
+COPY --from=deps /usr/bin /usr/bin
+COPY --from=deps /usr/lib /usr/lib
+COPY --from=deps /usr/share/X11 /usr/share/X11
 # google-chrome in here
-COPY --from=0 /opt /opt
+COPY --from=chrome /opt /opt
 # google-chrome-stable in here
-COPY --from=0 /etc/alternatives /etc/alternatives
+COPY --from=chrome /etc/alternatives /etc/alternatives
 
 WORKDIR /app/services/worker
 

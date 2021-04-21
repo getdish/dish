@@ -7,7 +7,9 @@ import { redisClient, redisGet } from './_rc'
 
 const hasuraHeaders = {
   'content-type': 'application/json',
-  'x-hasura-admin-secret': process.env.HASURA_SECRET,
+  ...(process.env.HASURA_SECRET && {
+    'x-hasura-admin-secret': process.env.HASURA_SECRET,
+  }),
 }
 
 function shouldCache(body?: string) {

@@ -152,6 +152,7 @@ services:
       - 'postgres'
   search:
     image: registry.fly.io/dish-search${DISH_IMAGE_TAG}
+    restart: on-failure:5
     build:
       context: ./services/search
       dockerfile: ./Dockerfile
