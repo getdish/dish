@@ -11,6 +11,9 @@ export declare type RouteAlert<A extends RoutesTable> = {
 };
 export declare type HistoryType = 'push' | 'pop' | 'replace';
 export declare type HistoryDirection = 'forward' | 'backward' | 'none';
+export declare type RouteData = {
+    [key: string]: string | number | Object;
+};
 export declare type HistoryItem<A extends RouteName = string> = {
     id: string;
     name: A;
@@ -21,6 +24,7 @@ export declare type HistoryItem<A extends RouteName = string> = {
         [key: string]: string;
     };
     direction: HistoryDirection;
+    data?: RouteData;
 };
 export declare type OnRouteChangeCb = (item: HistoryItem) => Promise<void>;
 declare type RouterProps = {
@@ -50,6 +54,7 @@ export declare class Router<Props extends RouterProps, RT extends RoutesTable = 
     getShouldNavigate(navItem: NavigateItem<RT>): boolean;
     private getNormalizedParams;
     getIsRouteActive(navItem: NavigateItem<RT>): boolean;
+    private nextNavItem;
     navigate(navItem: NavigateItem<RT>): void;
     setParams(params: any): void;
     back(): void;
@@ -95,6 +100,8 @@ declare type NavigableItems<Table extends RoutesTable> = {
         callback?: OnRouteChangeCb;
     };
 };
-export declare type NavigateItem<RT extends RoutesTable = any, Items extends NavigableItems<RT> = NavigableItems<RT>> = Items[keyof Items];
+export declare type NavigateItem<RT extends RoutesTable = any, Items extends NavigableItems<RT> = NavigableItems<RT>> = Items[keyof Items] & {
+    data?: RouteData;
+};
 export {};
 //# sourceMappingURL=index.d.ts.map

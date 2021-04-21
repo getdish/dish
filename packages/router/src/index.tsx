@@ -27,6 +27,8 @@ export type RouteAlert<A extends RoutesTable> = {
 export type HistoryType = 'push' | 'pop' | 'replace'
 export type HistoryDirection = 'forward' | 'backward' | 'none'
 
+export type RouteData = { [key: string]: string | number | Object }
+
 export type HistoryItem<A extends RouteName = string> = {
   id: string
   name: A
@@ -35,6 +37,7 @@ export type HistoryItem<A extends RouteName = string> = {
   search: string
   params: Exclude<RoutesTable[A]['params'], void> | { [key: string]: string }
   direction: HistoryDirection
+  data?: RouteData
 }
 
 export type OnRouteChangeCb = (item: HistoryItem) => Promise<void>
@@ -153,6 +156,10 @@ export class Router<
         }, {}),
       },
       search: window.location?.search ?? '',
+      ...(item.type === 'push' &&
+        this.nextNavItem && {
+          data: this.nextNavItem.data,
+        }),
     }
     this.history = [...this.history, next]
 
@@ -225,6 +232,8 @@ export class Router<
     return !this.getShouldNavigate(navItem)
   }
 
+  private nextNavItem: NavigateItem<RT> | null = null
+
   navigate(navItem: NavigateItem<RT>) {
     const item = getHistoryItem(this, navItem as any)
     if (this.notFound) {
@@ -233,6 +242,7 @@ export class Router<
     if (!this.getShouldNavigate(navItem)) {
       return
     }
+    this.nextNavItem = navItem
     const params = {
       id: item?.id ?? uid(),
     }
@@ -477,7 +487,9 @@ type NavigableItems<Table extends RoutesTable> = {
 export type NavigateItem<
   RT extends RoutesTable = any,
   Items extends NavigableItems<RT> = NavigableItems<RT>
-> = Items[keyof Items]
+> = Items[keyof Items] & {
+  data?: RouteData
+}
 
 // const router = createStore(Router, {
 //   routes: {

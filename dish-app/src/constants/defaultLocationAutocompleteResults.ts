@@ -1,12 +1,12 @@
-import { AutocompleteItemFull, createAutocomplete } from '../helpers/createAutocomplete'
+import { AutocompleteItemLocation, createAutocomplete } from '../helpers/createAutocomplete'
 
 export const defaultCenter = {
   lng: -122.421351,
   lat: 37.759251,
 }
 
-export const defaultLocationAutocompleteResults: AutocompleteItemFull[] = [
-  createAutocomplete({
+export const defaultLocationAutocompleteResults = [
+  createAutocomplete<AutocompleteItemLocation>({
     slug: 'new-york',
     name: 'New York',
     center: {
@@ -20,7 +20,7 @@ export const defaultLocationAutocompleteResults: AutocompleteItemFull[] = [
     icon: '📍',
     type: 'place',
   }),
-  createAutocomplete({
+  createAutocomplete<AutocompleteItemLocation>({
     name: 'Los Angeles',
     slug: 'ca-los-angeles',
     center: {
@@ -34,7 +34,7 @@ export const defaultLocationAutocompleteResults: AutocompleteItemFull[] = [
     icon: '📍',
     type: 'place',
   }),
-  createAutocomplete({
+  createAutocomplete<AutocompleteItemLocation>({
     name: 'Las Vegas',
     slug: 'nv-las-vegas',
     center: {
@@ -48,7 +48,7 @@ export const defaultLocationAutocompleteResults: AutocompleteItemFull[] = [
     icon: '📍',
     type: 'place',
   }),
-  createAutocomplete({
+  createAutocomplete<AutocompleteItemLocation>({
     name: 'San Francisco',
     slug: 'ca-san-francisco',
     center: defaultCenter,
@@ -59,7 +59,7 @@ export const defaultLocationAutocompleteResults: AutocompleteItemFull[] = [
     icon: '📍',
     type: 'place',
   }),
-  createAutocomplete({
+  createAutocomplete<AutocompleteItemLocation>({
     name: 'Miami',
     slug: 'fl-miami',
     center: {
@@ -73,7 +73,7 @@ export const defaultLocationAutocompleteResults: AutocompleteItemFull[] = [
     icon: '📍',
     type: 'place',
   }),
-  createAutocomplete({
+  createAutocomplete<AutocompleteItemLocation>({
     name: 'Chicago',
     slug: 'il-chicago',
     center: {
@@ -87,7 +87,7 @@ export const defaultLocationAutocompleteResults: AutocompleteItemFull[] = [
     icon: '📍',
     type: 'place',
   }),
-  createAutocomplete({
+  createAutocomplete<AutocompleteItemLocation>({
     name: 'New Orleans',
     slug: 'la-new-orleans',
     center: {

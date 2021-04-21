@@ -1,6 +1,14 @@
+import { MapPosition } from '@dish/graph'
+
 import { HomeStateItemHome, HomeStateItemSearch } from '../../../types/homeTypes'
 
 const coordShort = (coord: number) => `${coord}`.slice(0, 7)
+
+// allows us to remember and retain nice slug names
+const knownLocationSlugs: { [key: string]: string } = {}
+export function setKnownLocationSlug(slug: string, { span, center }: MapPosition) {
+  knownLocationSlugs[urlSerializers.search.region.serialize({ center, span })] = slug
+}
 
 export const urlSerializers = {
   home: {
@@ -13,13 +21,13 @@ export const urlSerializers = {
   search: {
     region: {
       match: (param: string) => +param[0] === +param[0] && param.includes('_'),
-      serialize: ({ center, span, region }: HomeStateItemSearch) => {
+      serialize: ({ center, span, region }: Partial<HomeStateItemSearch>) => {
         if (region) {
           return region
         }
         if (center && span) {
-          const val = [center.lat, center.lng, span.lat, span.lng].map(coordShort).join('_')
-          return val
+          const key = [center.lat, center.lng, span.lat, span.lng].map(coordShort).join('_')
+          return knownLocationSlugs[key] || key
         }
         return 'ca-san-francisco'
       },

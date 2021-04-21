@@ -31,6 +31,7 @@ import {
 } from 'snackui'
 
 import { isWeb } from '../../../constants/constants'
+import { defaultLocationAutocompleteResults } from '../../../constants/defaultLocationAutocompleteResults'
 import { addTagsToCache, allTags } from '../../../helpers/allTags'
 import { getTitleForState } from '../../../helpers/getTitleForState'
 import { getFullTagsFromRoute } from '../../../helpers/syncStateFromRoute'
@@ -98,15 +99,45 @@ const SearchPageContent = memo(function SearchPageContent(
   const location = useLocationFromRoute(props.route)
   const tags = useTagsFromRoute(props.route)
   const searchStore = useSearchPageStore()
+  const searchState = useHomeStateById<HomeStateItemSearch>(props.item.id)
+  const {
+    center = homeStore.lastHomeOrSearchState.center!,
+    span = homeStore.lastHomeOrSearchState.span!,
+  } = searchState
   const { searchArgs, results, searchRegion, status } = searchStore
   const isLoading = status === 'loading'
-  const center = location.data?.center ?? homeStore.lastHomeOrSearchState.center!
+  // const activeTime = useMemo(() => (props.isActive ? Date.now() : 0), [])
+  // const lastActiveAt = useLastValueWhen(() => activeTime, props.isActive)
+
+  console.log(
+    'search apge at',
+    center,
+    span,
+    defaultLocationAutocompleteResults[0],
+    defaultLocationAutocompleteResults[1]
+  )
 
   usePageLoadEffect(props, ({ isRefreshing }) => {
     if (isRefreshing && props.isActive) {
       searchPageStore.refresh()
     }
   })
+
+  // useEffect(() => {
+  //   if (!location.data) return
+  //   // dont move it again quickly
+  //   // this sort of logic could be put at the map level
+  //   if (lastActiveAt - 250 < appMapStore.currentPosition.at) {
+  //     console.warn('moved map since')
+  //     return
+  //   }
+  //   console.warn('loading new center from location', appMapStore.currentPosition.at, location.data)
+  //   homeStore.updateHomeState(`search.location`, {
+  //     ...searchState,
+  //     center: location.data.center,
+  //     span: location.data.span,
+  //   })
+  // }, [lastActiveAt, JSON.stringify(location.data)])
 
   // sync search location to url
   useEffect(() => {
@@ -127,12 +158,14 @@ const SearchPageContent = memo(function SearchPageContent(
     results: results,
     showRank: true,
     hideRegions: !searchRegion,
+    center,
+    span,
     ...(location.data?.region && {
       region: {
         name: location.data.region.name,
         slug: location.data.region.name,
-        span: location.data.span,
         center,
+        span,
         via: 'url',
       },
     }),

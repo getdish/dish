@@ -22,15 +22,17 @@ export type AutocompleteItemLocation = Base & {
 export type AutocompleteItem =
   | (Base & { type: 'orphan' })
   | (Base & { type: 'dish' | 'cuisine' | 'country'; slug: string })
-  | AutocompleteItemRestuarant
-  | AutocompleteItemLocation
+  | (Base & AutocompleteItemRestuarant)
+  | (Base & AutocompleteItemLocation)
 
 export type AutocompleteItemFull = AutocompleteItem & {
   is: 'autocomplete'
   id: string
 }
 
-export function createAutocomplete(item: AutocompleteItem): AutocompleteItemFull {
+export function createAutocomplete<A extends Base>(
+  item: AutocompleteItem
+): A & AutocompleteItemFull {
   return {
     id:
       item['slug'] ??
@@ -39,5 +41,5 @@ export function createAutocomplete(item: AutocompleteItem): AutocompleteItemFull
     is: 'autocomplete',
     ...item,
     type: item.type as any,
-  }
+  } as any
 }

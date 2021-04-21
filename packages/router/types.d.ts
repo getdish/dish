@@ -14,6 +14,9 @@ declare module "@dish/router" {
     };
     export type HistoryType = 'push' | 'pop' | 'replace';
     export type HistoryDirection = 'forward' | 'backward' | 'none';
+    export type RouteData = {
+        [key: string]: string | number | Object;
+    };
     export type HistoryItem<A extends RouteName = string> = {
         id: string;
         name: A;
@@ -24,6 +27,7 @@ declare module "@dish/router" {
             [key: string]: string;
         };
         direction: HistoryDirection;
+        data?: RouteData;
     };
     export type OnRouteChangeCb = (item: HistoryItem) => Promise<void>;
     type RouterProps = {
@@ -53,6 +57,7 @@ declare module "@dish/router" {
         getShouldNavigate(navItem: NavigateItem<RT>): boolean;
         private getNormalizedParams;
         getIsRouteActive(navItem: NavigateItem<RT>): boolean;
+        private nextNavItem;
         navigate(navItem: NavigateItem<RT>): void;
         setParams(params: any): void;
         back(): void;
@@ -98,6 +103,8 @@ declare module "@dish/router" {
             callback?: OnRouteChangeCb;
         };
     };
-    export type NavigateItem<RT extends RoutesTable = any, Items extends NavigableItems<RT> = NavigableItems<RT>> = Items[keyof Items];
+    export type NavigateItem<RT extends RoutesTable = any, Items extends NavigableItems<RT> = NavigableItems<RT>> = Items[keyof Items] & {
+        data?: RouteData;
+    };
 }
 //# sourceMappingURL=types.d.ts.map

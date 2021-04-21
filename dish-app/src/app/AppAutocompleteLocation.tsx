@@ -5,11 +5,7 @@ import React, { memo, useCallback, useEffect } from 'react'
 import { AbsoluteVStack, Theme, useDebounceValue } from 'snackui'
 
 import { defaultLocationAutocompleteResults } from '../constants/defaultLocationAutocompleteResults'
-import {
-  AutocompleteItem,
-  AutocompleteItemFull,
-  AutocompleteItemLocation,
-} from '../helpers/createAutocomplete'
+import { AutocompleteItemFull, AutocompleteItemLocation } from '../helpers/createAutocomplete'
 import { locationToAutocomplete, searchLocations } from '../helpers/searchLocations'
 import { appMapStore } from './AppMapStore'
 import { AutocompleteFrame, AutocompleteResults } from './AutocompleteFrame'

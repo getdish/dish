@@ -37,7 +37,6 @@ import { drawerStore } from './drawerStore'
 class HomeStore extends Store {
   showUserMenu = false
   searchBarTagIndex = 0
-  isOptimisticUpdating = false
   stateIndex = 0
   stateIds = ['0']
   allStates: {
@@ -332,11 +331,18 @@ class HomeStore extends Store {
         }, {})
 
         addTagsToCache(tags)
+
+        const region = router.curPage.params.region ?? prev.region
+        const isChangingRegion = region !== prev.region
         const state: Partial<HomeStateItemSearch> = {
           type: 'search',
-          region: router.curPage.params.region ?? prev.region,
+          region,
           activeTags,
           searchQuery,
+          ...(isChangingRegion && {
+            curLocInfo: null,
+            curLocName: `${router.curPage.data?.name ?? ''}`,
+          }),
         }
         nextState = state
         break
@@ -551,19 +557,6 @@ class HomeStore extends Store {
 
     this.lastNav = Date.now()
     let curNav = this.lastNav
-    this.isOptimisticUpdating = false
-
-    // do a quick update first
-    const curType = curState.type
-    const nextType = nextState.type
-    if (nextType !== curType || (isSearchState(curState) && nextType === 'search')) {
-      this.isOptimisticUpdating = true
-      // optimistic update active tags
-      updateTags()
-      await idle(30)
-      if (curNav !== this.lastNav) return false
-      this.isOptimisticUpdating = false
-    }
 
     const didNav = await syncStateToRoute(nextState)
 

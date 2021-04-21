@@ -1,6 +1,5 @@
 import { MapPosition, slugify } from '@dish/graph'
-import React, { memo, useEffect, useLayoutEffect, useMemo, useState } from 'react'
-import { useThemeName } from 'snackui'
+import React, { memo, useEffect, useMemo, useState } from 'react'
 import {
   AbsoluteVStack,
   HStack,
@@ -11,9 +10,9 @@ import {
   VStack,
   useMedia,
   useTheme,
+  useThemeName,
 } from 'snackui'
 
-import { allExtraLightColors, allLightColors } from '../../constants/colors'
 import { drawerWidthMax, searchBarHeight } from '../../constants/constants'
 import {
   getDefaultLocation,
@@ -25,8 +24,8 @@ import { getColorsForName } from '../../helpers/getColorsForName'
 import { queryClient } from '../../helpers/queryClient'
 import { router, useIsRouteActive } from '../../router'
 import { HomeStateItemHome } from '../../types/homeTypes'
-import { appMapStore, cancelUpdateRegion } from '../AppMapStore'
-import { useHomeStateById, useHomeStore } from '../homeStore'
+import { cancelUpdateRegion } from '../AppMapStore'
+import { useHomeStateById } from '../homeStore'
 import { useLocalStorageState } from '../hooks/useLocalStorageState'
 import { setMapInitialRegion } from '../Map'
 import { CloseButton } from '../views/CloseButton'
@@ -82,6 +81,7 @@ export default memo(function HomePage(props: HomeStackViewProps<HomeStateItemHom
     //     return
     //   }
     // }
+    console.log('got region set pos', region)
     cancelUpdateRegion()
     setPosition(region)
   }, [isActive, JSON.stringify([region])])
@@ -118,7 +118,7 @@ export default memo(function HomePage(props: HomeStackViewProps<HomeStateItemHom
     }
   }, [isActive, state.region])
 
-  const regionName = region?.name ?? '...'
+  const regionName = region?.name || state.curLocName || '...'
   const media = useMedia()
 
   const homeHeaderContent = useMemo(() => {

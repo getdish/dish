@@ -4,6 +4,7 @@ export type AppMapPosition = {
   via: 'home' | 'click' | 'hover' | 'init' | 'results'
   center: LngLat
   span: LngLat
+  at: number
   id?: string
 }
 

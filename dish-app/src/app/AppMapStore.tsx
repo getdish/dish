@@ -91,6 +91,7 @@ class AppMapStore extends Store {
       center: pos.center ?? this.position.center,
       span: pos.span ?? this.position.span,
       via: pos.via ?? this.position.via,
+      at: Date.now(),
     }
     // fix if it gets bad value...
     this.position.center.lat = this.position.center.lat ?? defaultLocation.center.lat
@@ -109,6 +110,7 @@ class AppMapStore extends Store {
       center: pos.center ?? this.position.center,
       span: pos.span ?? this.position.span,
       via: pos.via ?? this.position.via,
+      at: Date.now(),
     }
   }
 
@@ -275,6 +277,7 @@ export const useSetAppMap = (
   useEffect(() => {
     if (!isActive) return
     if (!center && !span) return
+    console.log('got new map pos from useSetAppMap', center)
     appMapStore.setPosition({
       center,
       span,
