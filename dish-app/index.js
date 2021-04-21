@@ -2,8 +2,11 @@
 // for web just skip to src/index
 
 import '@dish/helpers/polyfill'
+import '@expo/match-media'
 
 import { registerRootComponent } from 'expo'
+
+console.log('what is match', window.matchMedia)
 
 // import { activateKeepAwake } from 'expo-keep-awake'
 

@@ -60,10 +60,10 @@ export default memo(function HomePage(props: HomeStackViewProps<HomeStateItemHom
     }
   }, [isActive])
 
-  if (process.env.NODE_ENV === 'development') {
-    // prettier-ignore
-    console.log('👀 HomePage', state.region, { position, item: props.item, region, state, isActive, showFeed })
-  }
+  // if (process.env.NODE_ENV === 'development') {
+  //   // prettier-ignore
+  //   console.log('👀 HomePage', state.region, { position, item: props.item, region, state, isActive, showFeed })
+  // }
 
   useEffect(() => {
     if (!region) return
