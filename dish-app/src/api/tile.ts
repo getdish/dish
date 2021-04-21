@@ -11,7 +11,7 @@ export default route(async (req, res) => {
   const martinRes = await fetch(url).then((res) => res.json())
   martinRes.tiles = martinRes.tiles?.map((tile) => {
     if (process.env.LOCAL_HOST) {
-      return tile.replace(TILES_HOST_INTERNAL, process.env.LOCAL_HOST)
+      return tile.replace(TILES_HOST_INTERNAL.replace(/:[0-9]+/, ''), process.env.LOCAL_HOST)
     }
     if (process.env.MARTIN_ENDPOINT) {
       return tile.replace(origin, process.env.MARTIN_ENDPOINT)

@@ -680,10 +680,12 @@ tables:
     permission:
       columns:
       - downvotes
+      - id
       - photos
       - rank
       - rating
       - restaurant_id
+      - review_mentions_count
       - score
       - score_breakdown
       - source_breakdown
