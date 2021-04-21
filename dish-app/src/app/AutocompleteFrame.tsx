@@ -43,11 +43,10 @@ export const AutocompleteFrame = ({ children }: { children: any }) => {
       // DONT PUT EVENT HERE NEED TO DEBUG WHY IT BREAKS ON NATIVE
     >
       <VStack
-        onPress={() => autocompletes.setVisible(false)}
-        flex={1}
-        height="100%"
-        width="100%"
+        position="absolute"
+        fullscreen
         maxWidth={drawerWidthMax}
+        // DONT PUT EVENT HERE NEED TO DEBUG WHY IT BREAKS ON NATIVE
       >
         <AbsoluteVStack backgroundColor={theme.backgroundColor} fullscreen opacity={0.9} />
         <AbsoluteVStack

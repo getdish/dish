@@ -88,7 +88,7 @@ export const AutocompleteItemView = memo(
         })}
         noTextWrap
       >
-        <HStack minWidth="100%">
+        <HStack>
           <VStack flex={1}>
             <HStack marginVertical={-3} flex={1} alignItems="center">
               {icon}
