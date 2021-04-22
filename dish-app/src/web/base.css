@@ -194,14 +194,14 @@ textarea {
   z-index: -1;
 }
 
-.searchbar-container ::placeholder {
-  color: rgba(255, 255, 255, 0.9);
-  font-weight: 700;
-  letter-spacing: -0.5px;
-}
-
 ::placeholder {
   color: rgba(200, 200, 200, 0.5);
+  text-overflow: ellipsis;
+}
+
+
+.theme--light .searchbar-container  ::placeholder {
+  color: rgba(250, 250, 250, 0.5);
   text-overflow: ellipsis;
 }
 

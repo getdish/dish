@@ -17,7 +17,7 @@ module.exports = (opts) => {
     // pollyFillPath: path.join(__dirname, 'src', 'web', 'polyfill.legacy.js'),
     snackOptions: {
       evaluateImportsWhitelist: ['constants.js', 'colors.js'],
-      themesFile: require.resolve('./src/themes.ts'),
+      themesFile: require.resolve('./src/siteThemes.ts'),
     },
     htmlOptions: {
       inject: true,

@@ -2,10 +2,11 @@
 import { Tag, TagQuery, TagType } from '@dish/graph'
 import { ThumbsDown, ThumbsUp, X } from '@dish/react-feather'
 import React, { memo } from 'react'
-import { Image } from 'react-native'
+import { Image, Pressable } from 'react-native'
 import { HStack } from 'snackui'
 import { ThemeName } from 'snackui'
 import { useThemeName } from 'snackui'
+import { AbsoluteVStack } from 'snackui'
 import {
   Button,
   Spacer,
@@ -94,7 +95,7 @@ const typeColors = {
 export const TagButton = memo((props: TagButtonProps) => {
   const themeName = useThemeName()
   const color = (props.type && typeColors[props.type]) || 'green'
-  const next = props.theme || themeName.includes('light') ? color : `${color}-dark`
+  const next = props.theme || themeName.includes('dark') ? `${color}-dark` : color
   return (
     <Theme name={next}>
       <TagButtonInner {...props} />
@@ -118,7 +119,6 @@ const TagButtonInner = (props: TagButtonProps) => {
     fontSize: fontSizeProp,
     fontWeight,
     color,
-    backgroundColor,
     icon,
     rgb,
     score,
@@ -142,16 +142,16 @@ const TagButtonInner = (props: TagButtonProps) => {
   }
 
   const isSmall = size === 'sm'
-  const scale = isSmall ? 0.85 : size == 'lg' ? 1.2 : 1
+  const scale = isSmall ? 0.85 : size == 'lg' ? 1.15 : 1
   const fontSize = fontSizeProp ? fontSizeProp : 15 * scale
   const smallerFontSize: any = typeof fontSize === 'number' ? fontSize * 0.85 : fontSize
   const ratingPts = typeof rating === 'number' ? rating * 10 - 50 : 0
+  const pieSize = size === 'sm' ? 16 : 20
 
   const contents = (
     // @ts-expect-error
     <Button
       noTextWrap
-      backgroundColor={backgroundColor || theme.backgroundColor}
       className="ease-in-out-faster"
       // height={isSmall ? 28 : 34}
       borderRadius={isSmall ? 8 : 10}
@@ -214,26 +214,32 @@ const TagButtonInner = (props: TagButtonProps) => {
       </Text>
 
       {!hideRating && typeof rating !== 'undefined' && (
-        <VStack
-          position="relative"
-          backgroundColor={theme.backgroundColorQuartenary}
-          borderRadius={100}
-          {...(ratingStyle === 'pie' && {
-            transform: [{ rotate: `${(1 - rating / 10) * 180}deg` }],
-          })}
-        >
-          {ratingStyle === 'pie' ? (
-            <Pie
-              size={size === 'sm' ? 16 : 18}
-              percent={rating * 10}
-              color={floating ? `#fff` : theme.color}
-            />
-          ) : (
-            <Text color={theme.color} fontSize={13} fontWeight="900" letterSpacing={-0.5}>
-              {ratingPts < 0 ? ratingPts : `+${ratingPts}`}
-            </Text>
+        <>
+          {ratingStyle === 'pie' && (
+            <VStack
+              position="relative"
+              backgroundColor={theme.backgroundColorQuartenary}
+              borderRadius={100}
+              width={pieSize + 2}
+              height={pieSize + 2}
+              transform={[{ rotate: `${(1 - rating / 10) * 180}deg` }]}
+              borderWidth={1}
+              borderColor={theme.backgroundColorAlt}
+            >
+              <AbsoluteVStack opacity={floating ? 1 : 0.7} fullscreen>
+                <Pie size={pieSize} percent={rating * 10} color={floating ? `#fff` : theme.color} />
+              </AbsoluteVStack>
+            </VStack>
           )}
-        </VStack>
+
+          {ratingStyle !== 'pie' && (
+            <VStack position="relative" backgroundColor={floating ? `#fff` : theme.color}>
+              <Text color={theme.color} fontSize={13} fontWeight="900" letterSpacing={-0.5}>
+                {ratingPts < 0 ? ratingPts : `+${ratingPts}`}
+              </Text>
+            </VStack>
+          )}
+        </>
       )}
 
       {!!votable && !!props.restaurantSlug && (
@@ -298,49 +304,49 @@ const TagButtonVote = (props: TagButtonProps & { scale: number }) => {
   const Icon = vote ? ThumbsDown : ThumbsUp
   const color = props.color ?? 'rgba(0,0,0,0.7)'
   const iconProps = {
-    size: 12 * scale,
+    size: 16 * scale,
     color,
   }
 
   return (
-    <>
-      <VStack
-        backgroundColor="rgba(0,0,0,0.35)"
-        alignItems="center"
-        justifyContent="center"
-        borderRadius={100}
-        width={32 * scale}
-        height={32 * scale}
-        marginRight={5 * scale}
-        marginVertical={-3 * scale}
-        opacity={0.6}
-        hoverStyle={{
-          opacity: 1,
-          transform: [{ scale: 1.1 }],
-        }}
-        onPressIn={prevent}
-        onPressOut={prevent}
-        onPress={(e) => {
-          prevent(e)
-          setVote(vote == 0 ? 1 : vote === -1 ? 0 : -1)
-        }}
-      >
-        {vote === 0 && <Icon {...iconProps} />}
-        {vote !== 0 && (
-          <VStack
-            width={24 * scale}
-            height={24 * scale}
-            backgroundColor={color}
-            borderRadius={100}
-            alignItems="center"
-            justifyContent="center"
-          >
-            <Text color="#fff" fontSize={12 * scale} fontWeight="600">
-              {vote < 0 ? vote : `+${vote}`}
-            </Text>
-          </VStack>
-        )}
-      </VStack>
-    </>
+    <VStack
+      backgroundColor="rgba(100,100,100,0.15)"
+      alignItems="center"
+      justifyContent="center"
+      borderRadius={100}
+      width={32 * scale}
+      height={32 * scale}
+      marginRight={5 * scale}
+      marginVertical={-3 * scale}
+      opacity={0.6}
+      hoverStyle={{
+        opacity: 1,
+        transform: [{ scale: 1.1 }],
+      }}
+      pressStyle={{
+        opacity: 0.5,
+        transform: [{ scale: 0.9 }],
+      }}
+      onPress={(e) => {
+        prevent(e)
+        setVote(vote == 0 ? 1 : vote === -1 ? 0 : -1)
+      }}
+    >
+      {vote === 0 && <Icon {...iconProps} />}
+      {vote !== 0 && (
+        <VStack
+          width={24 * scale}
+          height={24 * scale}
+          backgroundColor={color}
+          borderRadius={100}
+          alignItems="center"
+          justifyContent="center"
+        >
+          <Text color="#fff" fontSize={12 * scale} fontWeight="600">
+            {vote < 0 ? vote : `+${vote}`}
+          </Text>
+        </VStack>
+      )}
+    </VStack>
   )
 }

@@ -25,7 +25,7 @@ export const AutocompleteFrame = ({ children }: { children: any }) => {
   const isShowing = autocompletes.visible
   const media = useMedia()
   const theme = useTheme()
-  const topOffsetSm = searchBarHeight
+  const topOffsetSm = searchBarHeight + 5
 
   return (
     <AbsoluteVStack
@@ -37,15 +37,11 @@ export const AutocompleteFrame = ({ children }: { children: any }) => {
       borderRadius={12}
       overflow="hidden"
       top={media.sm ? topOffsetSm : 0}
-      left={0}
-      right={0}
-      bottom={0}
       // DONT PUT EVENT HERE NEED TO DEBUG WHY IT BREAKS ON NATIVE
     >
       <VStack
-        position="absolute"
-        fullscreen
         maxWidth={drawerWidthMax}
+        width="100%"
         // DONT PUT EVENT HERE NEED TO DEBUG WHY IT BREAKS ON NATIVE
       >
         <AbsoluteVStack backgroundColor={theme.backgroundColor} fullscreen opacity={0.9} />
@@ -69,7 +65,8 @@ export const AutocompleteFrame = ({ children }: { children: any }) => {
         <VStack
           className="ease-in-out"
           position="relative"
-          width="100%"
+          // width 100% messes up width on web to be too wide, using alignSelf instead
+          alignSelf="stretch"
           height="100%"
           overflow="hidden"
           minHeight={200}
@@ -123,7 +120,7 @@ export const AutocompleteResults = ({
   const ogResults = autocompleteStore.results
   const results = [...prefixResults, ...ogResults]
   return (
-    <VStack paddingVertical={10}>
+    <>
       {results.map((result, index) => {
         const isActive = !isTouchDevice && activeIndex === index
         return (
@@ -141,6 +138,6 @@ export const AutocompleteResults = ({
           </React.Fragment>
         )
       })}
-    </VStack>
+    </>
   )
 }

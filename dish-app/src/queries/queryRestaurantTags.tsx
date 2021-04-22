@@ -22,7 +22,7 @@ export const queryRestaurantTags = ({
         },
       },
     },
-    order_by: [{ votes_ratio: order_by.desc }],
+    order_by: [{ rating: order_by.desc_nulls_last }, { votes_ratio: order_by.desc_nulls_last }],
   })
   return restaurantTags
 }

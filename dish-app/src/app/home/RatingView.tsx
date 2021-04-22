@@ -1,7 +1,7 @@
 import React from 'react'
 import { AbsoluteVStack, Circle, HStack, Spacer, Text, VStack, useTheme } from 'snackui'
 
-import { green, purple, yellow } from '../../constants/colors'
+import { green, orange, purple, red, yellow } from '../../constants/colors'
 import { numberFormat } from '../../helpers/numberFormat'
 import { Pie } from '../views/Pie'
 import { ProgressRing } from './ProgressRing'
@@ -43,7 +43,12 @@ export const RatingView = ({
   )
 
   const outerRing = (
-    <ProgressRing percent={rating} size={outerSize} color={green} width={width}>
+    <ProgressRing
+      percent={rating}
+      size={outerSize}
+      color={rating >= 80 ? green : rating <= 50 ? red : orange}
+      width={width}
+    >
       {/* {stacked ? null : middleRing} */}
       <Text
         color={theme.color}
@@ -52,7 +57,7 @@ export const RatingView = ({
         fontWeight="900"
         fontSize={3.5 * width}
       >
-        10
+        {Math.round(rating)}
       </Text>
     </ProgressRing>
   )

@@ -129,8 +129,8 @@ for (const [index, name] of colorNames.entries()) {
     color: colors.darkColor,
     backgroundColor: colors.extraLightColor,
     backgroundColorSecondary: colors.lightColor,
-    backgroundColorTertiary: `${colors.lightColor}aa`,
-    backgroundColorQuartenary: `${colors.lightColor}77`,
+    backgroundColorTertiary: `${colors.lightColor}dd`,
+    backgroundColorQuartenary: `${colors.lightColor}bb`,
     borderColor: colors.lightColor,
     backgroundColorAlt: colors.darkColor,
   }
@@ -142,8 +142,8 @@ for (const [index, name] of colorNames.entries()) {
     color: colors.extraLightColor,
     backgroundColor: colors.darkColor,
     backgroundColorSecondary: colors.color,
-    backgroundColorTertiary: `${colors.darkColor}aa`,
-    backgroundColorQuartenary: `${colors.darkColor}77`,
+    backgroundColorTertiary: `${colors.darkColor}dd`,
+    backgroundColorQuartenary: `${colors.darkColor}bb`,
     borderColor: colors.color,
     backgroundColorAlt: colors.lightColor,
   }

@@ -23,6 +23,7 @@ module.exports = (opts) => {
     snackOptions: {
       evaluateImportsWhitelist: ['constants.js', 'colors.js'],
       themesFile: require.resolve('./src/constants/themes.ts'),
+      logTimings: true,
     },
     htmlOptions: {
       inject: true,

@@ -4,26 +4,20 @@
 // import { ThemeProvider, VStack, configureThemes, useTheme } from 'snackui'
 
 // import { RatingView } from './app/home/RatingView'
+// import { TagButton } from './app/views/TagButton'
+// import { tagDefaultAutocomplete, tagLenses } from './constants/localTags'
 // import themes from './constants/themes'
 
 // configureThemes(themes)
 
 // export function Root({ floating, size }) {
-//   const theme = useTheme()
 //   return (
-//     <VStack
-//       alignItems="center"
-//       justifyContent="center"
-//       position="relative"
-//       borderRadius={1000}
-//       width={size}
-//       height={size}
-//       {...(floating && {
-//         backgroundColor: theme.backgroundColor,
-//         shadowColor: theme.shadowColor,
-//         shadowRadius: 5,
-//       })}
-//     />
+//     <ThemeProvider themes={themes} defaultTheme="light">
+//       <VStack pointerEvents="auto">
+//         <TagButton {...tagLenses[0]} restaurantSlug="miss-saigon" votable />
+//         <TagButton {...tagLenses[0]} restaurantSlug="miss-saigon" votable />
+//       </VStack>
+//     </ThemeProvider>
 //   )
 // }
 
@@ -37,6 +31,7 @@ import { configureUseStore } from '@dish/use-store'
 import AppLoading from 'expo-app-loading'
 import React, { Suspense, useEffect, useState } from 'react'
 import { useColorScheme } from 'react-native'
+import { SafeAreaProvider } from 'react-native-safe-area-context'
 import { QueryClientProvider } from 'react-query'
 import { ThemeProvider, Toast, configureThemes } from 'snackui'
 
@@ -127,18 +122,20 @@ export function Root() {
   }, [])
 
   return (
-    <PlatformSpecificProvider>
-      <ThemeProvider themes={themes} defaultTheme={userStore.theme ?? colorScheme ?? 'dark'}>
-        <ProvideRouter routes={routes}>
-          <QueryClientProvider client={queryClient}>
-            <Suspense fallback={null}>
-              {!isLoaded && <AppLoading />}
-              <App />
-            </Suspense>
-            <RootPortalProvider />
-          </QueryClientProvider>
-        </ProvideRouter>
-      </ThemeProvider>
-    </PlatformSpecificProvider>
+    <SafeAreaProvider>
+      <PlatformSpecificProvider>
+        <ThemeProvider themes={themes} defaultTheme={userStore.theme ?? colorScheme ?? 'dark'}>
+          <ProvideRouter routes={routes}>
+            <QueryClientProvider client={queryClient}>
+              <Suspense fallback={null}>
+                {!isLoaded && <AppLoading />}
+                <App />
+              </Suspense>
+              <RootPortalProvider />
+            </QueryClientProvider>
+          </ProvideRouter>
+        </ThemeProvider>
+      </PlatformSpecificProvider>
+    </SafeAreaProvider>
   )
 }

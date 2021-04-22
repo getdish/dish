@@ -77,30 +77,10 @@ export const useLink = (
       if (Platform.OS === 'web') {
         const element = props.tagName ?? 'a'
         const href = props.href ?? router.getPathFromParams(navItem)
-        const a$ = useRef<HTMLAnchorElement | null>(null)
-
-        useEffect(() => {
-          const a = a$.current
-          if (!a) return
-          const child = Array.from(a.childNodes).find((x) => x instanceof HTMLElement)
-          if (!child) {
-            console.warn('no child?', a)
-            a.parentElement?.addEventListener('click', onPress)
-            return () => {
-              a.parentElement?.removeEventListener('click', onPress)
-            }
-            return
-          }
-          child.addEventListener('click', onPress)
-          return () => {
-            child.removeEventListener('click', onPress)
-          }
-        }, [a$])
-
         return React.createElement(
-          element,
+          'div',
           {
-            ref: a$,
+            onClick: onPress,
             className: `display-contents cursor-pointer ${props.className ?? ''}`,
             target: props.target,
             ...(element === 'a' &&

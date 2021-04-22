@@ -29,7 +29,7 @@ export const AppAutocompleteSearch = () => {
     <Suspense fallback={null}>
       <Theme name="darkTranslucent">
         <AbsoluteVStack
-          zIndex={zIndexAutocomplete}
+          zIndex={autocompletes.visible ? zIndexAutocomplete : -100}
           fullscreen
           opacity={autocompletes.target === 'search' ? 1 : 0}
           pointerEvents="none"

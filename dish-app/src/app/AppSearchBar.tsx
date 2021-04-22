@@ -61,8 +61,10 @@ export const AppSearchBarFloating = () => {
   //   sendReparentableChild(parent, newParent, 0, 0)
   // }, [media.sm])
 
+  const themeName = media.sm ? 'light' : searchThemeName
+
   return (
-    <Theme name={media.sm ? 'light' : searchThemeName}>
+    <Theme name={themeName}>
       <AbsoluteVStack
         className="searchbar-container ease-in-out"
         zIndex={zIndexSearchBarFloating}
@@ -108,7 +110,7 @@ export const AppSearchBarFloating = () => {
               justifyContent="center"
               alignItems="center"
               backgroundColor={background}
-              opacity={0.8}
+              opacity={themeName === 'dark' ? 0.8 : 1}
               shadowColor="#000"
               shadowOpacity={0.5}
               shadowOffset={{ height: 2, width: 0 }}

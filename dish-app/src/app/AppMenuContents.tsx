@@ -17,13 +17,7 @@ export const AppMenuContents = memo(
     const { isLoggedIn, user, logout } = userStore
 
     return (
-      <Box
-        backgroundColor="#000"
-        alignItems="stretch"
-        pointerEvents="auto"
-        minWidth={240}
-        {...props}
-      >
+      <Box alignItems="stretch" pointerEvents="auto" minWidth={240} {...props}>
         <VStack spacing="sm" padding={10}>
           {!isLoggedIn && (
             <>

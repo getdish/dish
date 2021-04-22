@@ -195,14 +195,16 @@ export const AppSearchInput = memo(() => {
                     textInput$.current = view
                     setNodeOnInputStore(inputStore, view)
                   }}
-                  onBlur={(e) => {
+                  onBlur={async (e) => {
                     isFocused = false
                     avoidNextFocus = false
-                    if (isWeb && !getMedia().sm) {
-                      if (autocompletesStore.target === 'search') {
-                        autocompletesStore.setVisible(false)
-                      }
-                    }
+                    // dont because it hides during autocomplete click
+                    // and event is before mousedown even
+                    // if (isWeb && !getMedia().sm) {
+                    //   if (autocompletesStore.target === 'search') {
+                    //     autocompletesStore.setVisible(false)
+                    //   }
+                    // }
                   }}
                   onKeyPress={handleKeyPressInner}
                   onFocus={() => {

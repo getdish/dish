@@ -3,7 +3,7 @@ import { render } from 'react-dom'
 import { ThemeProvider, configureThemes } from 'snackui'
 
 import { SiteRoot } from './SiteRootHomePage'
-import themes, { MyTheme, MyThemes } from './themes'
+import themes, { MyTheme, MyThemes } from './siteThemes'
 
 declare module 'snackui' {
   interface ThemeObject extends MyTheme {}
