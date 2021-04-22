@@ -1,3 +1,4 @@
+// @ts-ignore
 import { Page, WebKitBrowser, webkit } from 'playwright-webkit'
 
 if (!process.env.LUMINATI_PROXY_HOST) {

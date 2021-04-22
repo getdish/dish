@@ -2,7 +2,7 @@ import { series, sleep } from '@dish/async'
 import { DISH_API_ENDPOINT, TILES_HOST } from '@dish/graph'
 import { useStoreInstance } from '@dish/use-store'
 import MapboxGL from '@react-native-mapbox-gl/maps'
-import React, { useEffect, useRef, useState } from 'react'
+import React, { useEffect, useMemo, useRef, useState } from 'react'
 import { Animated, Dimensions, StyleSheet } from 'react-native'
 import { useDebounce } from 'snackui'
 
@@ -30,7 +30,8 @@ export const MapView = ({
 }: MapProps) => {
   const { width, height } = Dimensions.get('screen')
   const drawerStore = useStoreInstance(drawerStoreInstance)
-  const drawerHeight = drawerStore.currentHeight
+  const drawerHeight = drawerStore.heightIgnoringFullyOpen
+  console.log('drawerHeight', drawerHeight, drawerStore.heightIgnoringFullyOpen)
   const [isLoaded, setIsLoaded] = useState(0)
   const paddingVertical = isLoaded ? drawerHeight / 2 : 0
   const ty = -paddingVertical
@@ -38,7 +39,6 @@ export const MapView = ({
   const cameraRef = useRef<MapboxGL.Camera>(null)
   const mapRef = useRef<MapboxGL.MapView>(null)
   const onMoveEndDelayed = useDebounce(onMoveEnd ?? idFn, 250)
-  const tileSource = useRef<MapboxGL.VectorSource | null>(null)
 
   useEffect(() => {
     console.log('animating', ty)
@@ -165,70 +165,71 @@ export const MapView = ({
             const url = `${DISH_API_ENDPOINT}/tile/${name}.json`
             const sourceId = `${name}`.replace('.', '')
             const labelUrl = labelSource ? `${TILES_HOST}/${labelSource}.json` : ''
-            console.log('Loading tile url', sourceId, url, labelUrl)
+            console.log('Loading tile url', name, sourceId, url, labelUrl)
             return (
-              <MapboxGL.VectorSource key={name} ref={tileSource} url={url} id={sourceId}>
+              <MapboxGL.VectorSource key={sourceId} url={url} id={sourceId}>
                 <MapboxGL.FillLayer
-                  id={`${name}fill`}
-                  sourceLayerID={`${name}fillLayer`}
-                  minZoomLevel={minZoom}
-                  maxZoomLevel={maxZoom}
+                  id={`${sourceId}fill`}
+                  sourceLayerID={sourceId}
+                  sourceID={sourceId}
+                  minZoomLevel={0 ?? minZoom}
+                  maxZoomLevel={30 ?? maxZoom}
                   style={{
-                    fillColor: '#000' ?? [
-                      'case',
-                      ['==', ['feature-state', 'active'], true],
-                      activeColor,
-                      ['==', ['feature-state', 'hover'], true],
-                      hoverColor,
-                      ['==', ['feature-state', 'active'], null],
-                      color,
-                      'green',
-                    ],
-                    fillAntialias: true,
-                    fillOpacity: 1,
+                    fillColor: 'rgba(255,255,255,0.5)',
+                    //  [
+                    //   'case',
+                    //   ['==', ['feature-state', 'active'], true],
+                    //   activeColor,
+                    //   ['==', ['feature-state', 'hover'], true],
+                    //   hoverColor,
+                    //   ['==', ['feature-state', 'active'], false],
+                    //   color,
+                    //   'green',
+                    // ],
+                    // fillAntialias: true,
+                    // fillOpacity: 1,
                   }}
                 />
-                {lineColor && (
-                  <MapboxGL.LineLayer
-                    id={`${name}line`}
-                    // sourceLayerID={sourceId}
-                    minZoomLevel={minZoom}
-                    maxZoomLevel={maxZoom}
-                    // TODO after updating to 8.2 beta this regressed
-                    // @ts-ignore
-                    style={{
-                      lineCap: [
-                        'case',
-                        ['==', ['feature-state', 'active'], true],
-                        lineColorActive || '',
-                        ['==', ['feature-state', 'hover'], true],
-                        lineColorHover || '',
-                        ['==', ['feature-state', 'active'], null],
-                        lineColor,
-                        'green',
-                      ],
-                      lineOpacity: 0.05,
-                      lineWidth: [
-                        'case',
-                        ['==', ['feature-state', 'active'], true],
-                        1,
-                        ['==', ['feature-state', 'hover'], true],
-                        2,
-                        ['==', ['feature-state', 'active'], null],
-                        3,
-                        4,
-                      ],
-                    }}
-                  />
-                )}
+                {/* {lineColor && (
+                <MapboxGL.LineLayer
+                  id={`${name}line`}
+                  // sourceLayerID={sourceId}
+                  minZoomLevel={minZoom}
+                  maxZoomLevel={maxZoom}
+                  // TODO after updating to 8.2 beta this regressed
+                  // @ts-ignore
+                  style={{
+                    lineCap: [
+                      'case',
+                      ['==', ['feature-state', 'active'], true],
+                      lineColorActive || '',
+                      ['==', ['feature-state', 'hover'], true],
+                      lineColorHover || '',
+                      ['==', ['feature-state', 'active'], null],
+                      lineColor,
+                      'green',
+                    ],
+                    lineOpacity: 0.05,
+                    lineWidth: [
+                      'case',
+                      ['==', ['feature-state', 'active'], true],
+                      1,
+                      ['==', ['feature-state', 'hover'], true],
+                      2,
+                      ['==', ['feature-state', 'active'], null],
+                      3,
+                      4,
+                    ],
+                  }}
+                />
+              )} */}
                 {labelSource && (
                   <MapboxGL.VectorSource url={labelUrl} id={`${name}-labels`}>
                     <MapboxGL.SymbolLayer
                       id={`${name}label`}
                       // TODO move it to a centroid computed source}
-                      // sourceID={null as any}
-                      // sourceLayerID={`${name}-labels`}
-                      // source-layer={labelSource ?? name}
+                      sourceID={null as any}
+                      sourceLayerID={`${name}-labels`}
                       minZoomLevel={minZoom}
                       maxZoomLevel={maxZoom}
                       style={{
@@ -268,7 +269,6 @@ export const MapView = ({
             )
           }
         )}
-
         <MapboxGL.ShapeSource
           id="trackClustersSource"
           shape={{

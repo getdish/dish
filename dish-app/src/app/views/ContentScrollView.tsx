@@ -218,7 +218,7 @@ export const ContentScrollView = forwardRef<ScrollView, ContentScrollViewProps>(
 
     return (
       <ContentScrollContext.Provider value={id}>
-        <VStack flex={1} overflow="hidden" pointerEvents={preventScrolling ? 'none' : 'auto'}>
+        <VStack flex={1} overflow="hidden" pointerEvents={preventScrolling ? 'none' : undefined}>
           <ScrollView
             ref={combineRefs(scrollRef, ref)}
             {...props}

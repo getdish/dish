@@ -1,7 +1,7 @@
 export const dateTimeFormatter = (
   date?: number | Date | null,
   {
-    locales,
+    locales = ['en'],
     ...rest
   }: Intl.DateTimeFormatOptions & {
     locales?: string | string[] | undefined

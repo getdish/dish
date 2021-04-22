@@ -86,7 +86,7 @@ export default memo(function AppMap() {
 
   const drawer = useStoreInstance(drawerStore)
   // ensure never goes to 0
-  const bottomOcclude = drawer.bottomOccludedIgnoreFullyClosed + 10
+  const bottomOcclude = drawer.heightIgnoringFullyOpen + 10
   const padding = useMemo(() => {
     return media.sm
       ? {

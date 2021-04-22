@@ -1,0 +1,9 @@
+{
+  "name": "dish",
+  "displayName": "dish",
+  "expo": {
+    "name": "dish",
+    "slug": "dish",
+    "sdkVersion": "38.0.0"
+  }
+}
