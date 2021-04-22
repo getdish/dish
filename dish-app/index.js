@@ -2,6 +2,7 @@
 // for web just skip to src/index
 
 import '@dish/helpers/polyfill'
+import 'expo-asset'
 
 import { registerRootComponent } from 'expo'
 

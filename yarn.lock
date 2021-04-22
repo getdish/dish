@@ -1915,10 +1915,11 @@ __metadata:
     bcryptjs: ^2.4.3
     expo: ^40.0.1
     expo-app-loading: ^1.0.3
+    expo-asset: ^8.3.1
     expo-linear-gradient: ^9.0.0
     expo-splash-screen: ^0.9.0
     expo-status-bar: ^1.0.3
-    expo-updates: ^0.4.2
+    expo-updates: ^0.5.4
     expo-yarn-workspaces: ^1.3.1
     express: ^4.17.1
     flexsearch: ^0.6.32
@@ -2492,6 +2493,28 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@expo/config-plugins@npm:1.0.28":
+  version: 1.0.28
+  resolution: "@expo/config-plugins@npm:1.0.28"
+  dependencies:
+    "@expo/config-types": ^40.0.0-beta.2
+    "@expo/configure-splash-screen": 0.3.4
+    "@expo/image-utils": 0.3.13
+    "@expo/json-file": 8.2.29
+    "@expo/plist": 0.0.12
+    find-up: ~5.0.0
+    fs-extra: 9.0.0
+    getenv: ^1.0.0
+    glob: 7.1.6
+    resolve-from: ^5.0.0
+    slash: ^3.0.0
+    slugify: ^1.3.4
+    xcode: ^3.0.1
+    xml2js: ^0.4.23
+  checksum: e4a20af66c9c5c6a0ed6d956fa608ea681f594d9111539fbada3910dca68173eef5de56c256e204875d07ca6635410ba66a5db5f9467b617b405000b37a4a91d
+  languageName: node
+  linkType: hard
+
 "@expo/config-plugins@npm:^1.0.18":
   version: 1.0.26
   resolution: "@expo/config-plugins@npm:1.0.26"
@@ -2521,7 +2544,29 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@expo/config@npm:3.3.30, @expo/config@npm:^3.3.18":
+"@expo/config@npm:3.3.38":
+  version: 3.3.38
+  resolution: "@expo/config@npm:3.3.38"
+  dependencies:
+    "@babel/core": 7.9.0
+    "@babel/plugin-proposal-class-properties": ~7.12.13
+    "@babel/preset-env": ~7.12.13
+    "@babel/preset-typescript": ~7.12.13
+    "@expo/config-plugins": 1.0.28
+    "@expo/config-types": ^40.0.0-beta.2
+    "@expo/json-file": 8.2.29
+    fs-extra: 9.0.0
+    getenv: ^1.0.0
+    glob: 7.1.6
+    require-from-string: ^2.0.2
+    resolve-from: ^5.0.0
+    semver: 7.3.2
+    slugify: ^1.3.4
+  checksum: 16e2aced5faaee86091dbd079e1eb16e9be60c48ff5bbb7ffe04fdd79d03990a96fc004484a0004a4c68e05e8146da99a1765d7d74457f23ec92a1652ee8ae5c
+  languageName: node
+  linkType: hard
+
+"@expo/config@npm:^3.3.18":
   version: 3.3.30
   resolution: "@expo/config@npm:3.3.30"
   dependencies:
@@ -2635,6 +2680,25 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@expo/image-utils@npm:0.3.13":
+  version: 0.3.13
+  resolution: "@expo/image-utils@npm:0.3.13"
+  dependencies:
+    "@expo/spawn-async": 1.5.0
+    chalk: ^4.0.0
+    fs-extra: 9.0.0
+    getenv: ^1.0.0
+    jimp: 0.12.1
+    mime: ^2.4.4
+    node-fetch: ^2.6.0
+    parse-png: ^2.1.0
+    resolve-from: ^5.0.0
+    semver: 7.3.2
+    tempy: 0.3.0
+  checksum: 9a1747fcdff6e9da8a4c8fa1a2c27cf9796af3b1d3f37ce7c877e8561a14d415fa780e839e3b0b86a49939ac67f9195e33b1d45b04498bfe31866aa88fe9be94
+  languageName: node
+  linkType: hard
+
 "@expo/json-file@npm:8.2.28":
   version: 8.2.28
   resolution: "@expo/json-file@npm:8.2.28"
@@ -2659,6 +2723,18 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@expo/json-file@npm:8.2.29":
+  version: 8.2.29
+  resolution: "@expo/json-file@npm:8.2.29"
+  dependencies:
+    "@babel/code-frame": ~7.10.4
+    fs-extra: 9.0.0
+    json5: ^1.0.1
+    write-file-atomic: ^2.3.0
+  checksum: 7b88906f2d728a22f3989dc6a941bf3d7d992f608b1f0d581f15dd49e2abe2f792f0e10cb1fca3a88200eb9cdf0bd40b5b171346dae4f7ae234e157d79c75320
+  languageName: node
+  linkType: hard
+
 "@expo/match-media@npm:^0.1.0":
   version: 0.1.0
   resolution: "@expo/match-media@npm:0.1.0"
@@ -2669,15 +2745,15 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@expo/metro-config@npm:^0.1.16":
-  version: 0.1.56
-  resolution: "@expo/metro-config@npm:0.1.56"
+"@expo/metro-config@npm:^0.1.59":
+  version: 0.1.64
+  resolution: "@expo/metro-config@npm:0.1.64"
   dependencies:
-    "@expo/config": 3.3.30
+    "@expo/config": 3.3.38
     chalk: ^4.1.0
-    getenv: ^0.7.0
+    getenv: ^1.0.0
     metro-react-native-babel-transformer: ^0.59.0
-  checksum: e9e45a42a382dae93046fd278bb65dcbee37808f125a3458c5ae0b5f4b1c392d5eae1d4cd7ec0c05691243bde8f0fcc5670a8d592410842a4f16a6b96323e8f2
+  checksum: 0c3de4367ba6e5c45b54dbfb414f94a95bc0509cbf0b2a8c239710054353a03fc1190d00d0e8be3b1a9e14545dc830e5c93de0ff6af650d2a90be156e6a260dd
   languageName: node
   linkType: hard
 
@@ -10599,6 +10675,19 @@ __metadata:
   languageName: node
   linkType: hard
 
+"expo-asset@npm:^8.3.1":
+  version: 8.3.2
+  resolution: "expo-asset@npm:8.3.2"
+  dependencies:
+    blueimp-md5: ^2.10.0
+    invariant: ^2.2.4
+    md5-file: ^3.2.3
+    path-browserify: ^1.0.0
+    url-parse: ^1.4.4
+  checksum: 71154db80f033a50f5b1a7f697902544016d681925004a043da1f92cfa5a0dac00d22795fe517f3b42564369c55a38987bde7504fc5ea639496ad922951d4510
+  languageName: node
+  linkType: hard
+
 "expo-asset@npm:~8.2.1":
   version: 8.2.2
   resolution: "expo-asset@npm:8.2.2"
@@ -10790,14 +10879,24 @@ __metadata:
   languageName: node
   linkType: hard
 
-"expo-updates@npm:^0.4.2":
-  version: 0.4.2
-  resolution: "expo-updates@npm:0.4.2"
+"expo-structured-headers@npm:~1.0.1":
+  version: 1.0.1
+  resolution: "expo-structured-headers@npm:1.0.1"
+  checksum: 37fc4e8129bbf227aecd4df643fc6dc1ce7f76adbb2f1b2122a6cac1f2daaaff0ae804d13afe799157d3826b7786e264014817e9b5920a529276329345ef9164
+  languageName: node
+  linkType: hard
+
+"expo-updates@npm:^0.5.4":
+  version: 0.5.4
+  resolution: "expo-updates@npm:0.5.4"
   dependencies:
-    "@expo/metro-config": ^0.1.16
+    "@expo/config-plugins": ^1.0.18
+    "@expo/metro-config": ^0.1.59
+    expo-structured-headers: ~1.0.1
     fbemitter: ^2.1.1
+    resolve-from: ^5.0.0
     uuid: ^3.4.0
-  checksum: 60993775773384e779b77ad82577a2f472e1094c39892e1235d7c92476da6c6f689da595160d75e7befc996a2aab18fb74981d1f941f4903ba7025db10442a96
+  checksum: fffff1e1d4d0aad1de7d8aed98c28070d950a105e42825b4a19bcbf125599e6b30e63216d84ac88c05a132d8c5b468c27660c82ef73bc1385f1d5142867daefe
   languageName: node
   linkType: hard
 
@@ -11796,7 +11895,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"getenv@npm:0.7.0, getenv@npm:^0.7.0":
+"getenv@npm:0.7.0":
   version: 0.7.0
   resolution: "getenv@npm:0.7.0"
   checksum: b385fb7590b5957de835202c4bb5d0915695324b35e600a64ed5ef605719a3d47663e363c678c220689533175cb254d5de2155f3940b83571e4fc01613d73e2b

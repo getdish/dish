@@ -1,3 +1,5 @@
+import { basename } from 'path'
+
 import { route } from '@dish/api'
 import { TILES_HOST_INTERNAL } from '@dish/graph'
 
@@ -9,6 +11,11 @@ const origin = `http://${TILES_HOST_INTERNAL}`
 export default route(async (req, res) => {
   const url = `${origin}${req.path}`
   const martinRes = await fetch(url).then((res) => res.json())
+
+  if (url.endsWith('json')) {
+    martinRes.id = basename(req.path).replace('.', '').replace('.json', '')
+  }
+
   martinRes.tiles = martinRes.tiles?.map((tile) => {
     if (process.env.LOCAL_HOST) {
       return tile.replace(TILES_HOST_INTERNAL.replace(/:[0-9]+/, ''), process.env.LOCAL_HOST)

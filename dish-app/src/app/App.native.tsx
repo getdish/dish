@@ -4,6 +4,7 @@ import { LogBox } from 'react-native'
 import { VStack } from 'snackui'
 
 import { mapBackgroundColor } from '../constants/colors'
+import AppMap from './AppMap'
 import { AppMenuButton } from './AppMenuButton'
 import { AutocompleteEffects } from './AutocompletesStore'
 import GalleryPage from './home/gallery/GalleryPage'
@@ -25,9 +26,9 @@ export function App() {
         alignItems="center"
         justifyContent="center"
       >
-        {/* <Suspense fallback={null}>
+        <Suspense fallback={null}>
           <AppMap />
-        </Suspense> */}
+        </Suspense>
 
         <Home />
 

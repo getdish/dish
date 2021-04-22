@@ -29,8 +29,12 @@ class DrawerStore extends Store {
     return this.snapPoints.map((_, i) => this.getSnapPointOffset(i))
   }
 
-  get bottomOccludedIgnoreFullyClosed() {
-    return getWindowHeight() - getWindowHeight() * this.snapPoints[Math.max(1, this.snapIndex)]
+  get snapPointIgnoringFullyOpen() {
+    return this.snapPoints[Math.max(1, this.snapIndex)]
+  }
+
+  get heightIgnoringFullyOpen() {
+    return getWindowHeight() - this.snapPointIgnoringFullyOpen * getWindowHeight()
   }
 
   setIsDragging(val: boolean) {

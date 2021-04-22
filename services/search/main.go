@@ -343,6 +343,7 @@ func main() {
 	_, err := db.QueryOne(pg.Scan(&n), "SELECT 1")
 	if err != nil {
 		fmt.Println("error connecting")
+		os.Exit(1)
 	} else {
 		fmt.Println("connected to pg")
 	}

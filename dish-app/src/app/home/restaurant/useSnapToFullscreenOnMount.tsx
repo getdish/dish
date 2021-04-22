@@ -27,17 +27,18 @@ export const useSnapToFullscreenOnMount = () => {
     }
     const tm = setTimeout(() => {
       drawerStore.setSnapIndex(0)
-    }, 500)
-    return () => {
-      clearTimeout(tm)
+    }, 350)
 
-      const promise = sleep(400)
-      disposes.add(promise.cancel)
-      promise.then(() => {
-        if (!snapToTopTypes[homeStore.currentStateType]) {
-          drawerStore.setSnapIndex(prevIndex)
-        }
-      })
-    }
+    // return () => {
+    //   clearTimeout(tm)
+
+    //   const promise = sleep(400)
+    //   disposes.add(promise.cancel)
+    //   promise.then(() => {
+    //     if (!snapToTopTypes[homeStore.currentStateType]) {
+    //       drawerStore.setSnapIndex(prevIndex)
+    //     }
+    //   })
+    // }
   })
 }

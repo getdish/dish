@@ -2,21 +2,20 @@
 import { Tag, TagQuery, TagType } from '@dish/graph'
 import { ThumbsDown, ThumbsUp, X } from '@dish/react-feather'
 import React, { memo } from 'react'
-import { Image, Pressable } from 'react-native'
-import { HStack } from 'snackui'
-import { ThemeName } from 'snackui'
-import { useThemeName } from 'snackui'
-import { AbsoluteVStack } from 'snackui'
+import { Image } from 'react-native'
 import {
+  AbsoluteVStack,
   Button,
   Spacer,
   StackProps,
   Text,
   TextProps,
   Theme,
+  ThemeName,
   VStack,
   prevent,
   useTheme,
+  useThemeName,
 } from 'snackui'
 
 import { isWeb } from '../../constants/constants'

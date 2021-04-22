@@ -93,9 +93,11 @@ export const useLink = (
         )
       }
       return (
-        <Pressable onStartShouldSetResponderCapture={() => true} onPress={onPress}>
-          {children}
-        </Pressable>
+        <TouchableOpacity>
+          <Pressable onStartShouldSetResponderCapture={() => true} onPress={onPress}>
+            {children}
+          </Pressable>
+        </TouchableOpacity>
       )
     },
   }

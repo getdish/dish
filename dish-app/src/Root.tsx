@@ -77,19 +77,19 @@ configureThemes(themes)
 configureUseStore({
   logLevel: process.env.LOG_LEVEL ? 'info' : 'error',
 })
-configureAssertHelpers({
-  onAssertFail: (why) => {
-    if (why) {
-      Toast.error(why)
-    } else {
-      if (process.env.NODE_ENV === 'development') {
+if (process.env.NODE_ENV === 'development') {
+  configureAssertHelpers({
+    onAssertFail: (why) => {
+      if (why) {
+        Toast.error(why)
+      } else {
         console.groupCollapsed('Assertion exited')
         console.trace()
         console.groupEnd()
       }
-    }
-  },
-})
+    },
+  })
+}
 
 // @ts-expect-error
 const cacheSnapshot = global.__CACHE_SNAPSHOT

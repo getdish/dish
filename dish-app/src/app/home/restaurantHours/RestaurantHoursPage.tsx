@@ -33,7 +33,6 @@ export default memo(
     }
     const hours = restaurant.hours ?? []
     const dayOfWeek = dateTimeFormat(new Date(), {
-      locales: 'en',
       weekday: 'short',
     })
     const title = `${restaurant.name} Open Hours`
