@@ -1,7 +1,7 @@
 import { series, sleep } from '@dish/async'
 import { isEqual, omit } from 'lodash'
 import React, { useEffect, useRef } from 'react'
-import { Platform, TouchableOpacity } from 'react-native'
+import { Pressable, TouchableOpacity } from 'react-native'
 import { useForceUpdate } from 'snackui'
 
 import { isWeb } from '../../constants/constants'
@@ -74,11 +74,11 @@ export const useLink = (
     onPress,
     navItem,
     wrapWithLinkElement(children: any) {
-      if (Platform.OS === 'web') {
+      if (isWeb) {
         const element = props.tagName ?? 'a'
         const href = props.href ?? router.getPathFromParams(navItem)
         return React.createElement(
-          'div',
+          element,
           {
             onClick: onPress,
             className: `display-contents cursor-pointer ${props.className ?? ''}`,
@@ -92,7 +92,11 @@ export const useLink = (
           children
         )
       }
-      return <TouchableOpacity onPress={onPress}>{children}</TouchableOpacity>
+      return (
+        <Pressable onStartShouldSetResponderCapture={() => true} onPress={onPress}>
+          {children}
+        </Pressable>
+      )
     },
   }
 }

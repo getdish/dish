@@ -5,7 +5,6 @@ import { Keyboard } from 'react-native'
 
 import { AutocompleteItem } from '../helpers/createAutocomplete'
 import { useRouterCurPage } from '../router'
-import { drawerStore } from './drawerStore'
 
 class AutocompletesStore extends Store {
   visible: 'partial' | true | false = false
@@ -87,7 +86,6 @@ export const useAppAutocompleteEffects = () => {
       autocompletes.setVisible(false)
     }, 40)
     const handleShow = () => {
-      console.log('handleShowKeyboard')
       handleHide.cancel()
     }
     Keyboard.addListener('keyboardWillHide', handleHide)

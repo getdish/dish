@@ -88,6 +88,7 @@ const AutocompleteSearchInner = memo(() => {
     </AutocompleteFrame>
   )
 })
+
 const homeDefaultResults = tagDefaultAutocomplete.map((tag) => {
   return createAutocomplete({
     type: 'dish',
@@ -97,6 +98,7 @@ const homeDefaultResults = tagDefaultAutocomplete.map((tag) => {
     namePrefix: 'The best',
   })
 })
+
 function useSearchQueryEffect(
   query: string,
   store: AutocompleteStore,
@@ -193,6 +195,7 @@ function searchAutocomplete(searchQuery: string, center: LngLat, span: LngLat) {
     ]
   })
 }
+
 function searchCuisines(searchQuery: string) {
   return query
     .tag({
@@ -227,6 +230,7 @@ function searchCuisines(searchQuery: string) {
           })
     })
 }
+
 function searchDishTags(searchQuery: string, cuisine?: string) {
   return [
     ...searchDishes(
@@ -278,6 +282,7 @@ function searchDishTags(searchQuery: string, cuisine?: string) {
     })
   )
 }
+
 const searchDishes = (whereCondition: any, extraQuery: any = {}, limit = 5) => {
   return query.tag({
     ...extraQuery,

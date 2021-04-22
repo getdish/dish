@@ -68,11 +68,11 @@ export const AutocompleteItemView = memo(
         hoverStyle={{
           backgroundColor: theme.backgroundColorTertiary,
         }}
-        onPressOut={() => {
-          Keyboard.dismiss()
-          hideAutocompleteSlow()
-          onSelect(result, index)
-        }}
+        // onPressOut={() => {
+        //   Keyboard.dismiss()
+        //   hideAutocompleteSlow()
+        //   onSelect(result, index)
+        // }}
         stopPropagation
         preventNavigate={preventNavigate}
         {...(!showLocation &&

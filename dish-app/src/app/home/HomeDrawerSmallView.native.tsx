@@ -62,7 +62,6 @@ export const HomeDrawerSmallView = memo((props: { children: any }) => {
         drawer.spring?.stop()
         drawer.spring = null
         curSnapY = drawer.pan['_value']
-        console.log('pan grant')
         drawer.pan.setOffset(curSnapY)
         drawer.pan.setValue(0)
         drawer.setIsDragging(true)
@@ -80,7 +79,6 @@ export const HomeDrawerSmallView = memo((props: { children: any }) => {
         if (y > maxY) {
           return
         }
-        console.log('move')
         move(e, gestureState)
       },
       onPanResponderRelease: (e, gestureState) => {
