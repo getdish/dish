@@ -2,8 +2,6 @@ import React from 'react'
 import { VStack, useTheme } from 'snackui'
 
 import { drawerBorderRadius } from '../../constants/constants'
-import { AppAutocompleteLocation } from '../AppAutocompleteLocation'
-import { AppAutocompleteSearch } from '../AppAutocompleteSearch'
 import { DrawerPortalProvider } from '../Portal'
 
 // only renders on small views
@@ -17,16 +15,14 @@ export const BottomSheetContainer = (props: { children: any }) => {
       flex={1}
       shadowColor="rgba(0,0,0,0.15)"
       shadowRadius={28}
-      shadowOffset={{ width: 10, height: 0 }}
       borderTopRightRadius={drawerBorderRadius}
       borderTopLeftRadius={drawerBorderRadius}
       pointerEvents="auto"
       backgroundColor={theme.backgroundColor}
+      overflow="hidden"
       position="relative"
     >
       <DrawerPortalProvider />
-      <AppAutocompleteLocation />
-      <AppAutocompleteSearch />
       {props.children}
     </VStack>
   )

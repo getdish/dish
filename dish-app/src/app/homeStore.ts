@@ -430,7 +430,6 @@ class HomeStore extends Store {
       // show map on some routes
       if (next.type === 'search' || next.type === 'restaurant') {
         if (drawerStore.snapIndex === 0 && getMedia().sm) {
-          console.log('close drawer from fully open')
           drawerStore.setSnapIndex(1)
         }
       }

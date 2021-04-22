@@ -14,7 +14,6 @@ class DrawerStore extends Store {
   lastSnapAt = Date.now()
 
   get currentSnapPoint() {
-    console.log('currentSnapPoint', this.snapPoints[this.snapIndex])
     return this.snapPoints[this.snapIndex]
   }
 
@@ -91,11 +90,12 @@ class DrawerStore extends Store {
   }
 
   private getSnapIndex(px: number, velocity: number) {
-    const estFinalPx = px + velocity * 50
+    const estFinalPx = px + velocity * 1.5
     for (const [index, point] of this.snapPoints.entries()) {
       const cur = point * getWindowHeight()
       const next = (this.snapPoints[index + 1] ?? 1) * getWindowHeight()
       const midWayToNext = cur + (next - cur) / 2
+      console.log(index, 'estFinalPx', estFinalPx, '<', midWayToNext)
       if (estFinalPx < midWayToNext) {
         return index
       }

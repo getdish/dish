@@ -1,5 +1,6 @@
 import { reaction } from '@dish/use-store'
 import React, { useEffect } from 'react'
+import { Keyboard } from 'react-native'
 
 import { autocompletesStore } from '../AutocompletesStore'
 import { drawerStore } from '../drawerStore'
@@ -15,6 +16,7 @@ export const HomeDrawerSmall = (props: { children: any }) => {
           drawerStore.setSnapIndex(0)
         } else {
           drawerStore.setSnapIndex(1)
+          Keyboard.dismiss()
         }
       }
     )

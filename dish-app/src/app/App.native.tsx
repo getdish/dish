@@ -4,8 +4,8 @@ import { LogBox } from 'react-native'
 import { VStack } from 'snackui'
 
 import { mapBackgroundColor } from '../constants/colors'
-import AppMap from './AppMap'
 import { AppMenuButton } from './AppMenuButton'
+import { AutocompleteEffects } from './AutocompletesStore'
 import GalleryPage from './home/gallery/GalleryPage'
 import { Home } from './home/Home'
 import RestaurantHoursPage from './home/restaurantHours/RestaurantHoursPage'
@@ -18,15 +18,16 @@ export function App() {
   return (
     <>
       <StatusBar style="dark" />
+      <AutocompleteEffects />
       <VStack
         flex={1}
         backgroundColor={mapBackgroundColor}
         alignItems="center"
         justifyContent="center"
       >
-        <Suspense fallback={null}>
+        {/* <Suspense fallback={null}>
           <AppMap />
-        </Suspense>
+        </Suspense> */}
 
         <Home />
 

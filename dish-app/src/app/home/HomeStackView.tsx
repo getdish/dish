@@ -1,5 +1,5 @@
 import { useStore } from '@dish/use-store'
-import React, { Suspense, memo, useLayoutEffect, useMemo } from 'react'
+import React, { Suspense, memo, useEffect, useLayoutEffect, useMemo } from 'react'
 import { AnimatedVStack, VStack, useDebounceValue, useMedia } from 'snackui'
 
 import { isWeb, searchBarHeight, searchBarTopOffset } from '../../constants/constants'
@@ -8,7 +8,6 @@ import { useHomeStore } from '../homeStore'
 import { useLastValueWhen } from '../hooks/useLastValueWhen'
 import { ContentParentStore } from '../views/ContentScrollView'
 import { ErrorBoundary } from '../views/ErrorBoundary'
-import { homeActiveContent } from './HomeDrawerSmallView.native'
 
 export type StackItemProps<A> = {
   item: A
@@ -87,10 +86,9 @@ const AppStackViewItem = memo(
 
     const children = useMemo(() => getChildren(childProps), [childProps])
 
-    useLayoutEffect(() => {
+    useEffect(() => {
       if (isActive) {
         contentParentStore.setActiveId(item.type)
-        homeActiveContent.setId(item.type)
       }
     }, [isActive])
 

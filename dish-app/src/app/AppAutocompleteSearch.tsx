@@ -3,6 +3,7 @@ import { order_by, query, resolved } from '@dish/graph'
 import { useStoreInstance } from '@dish/use-store'
 import { groupBy } from 'lodash'
 import React, { Suspense, memo, useEffect, useMemo } from 'react'
+import { VStack } from 'snackui'
 import { AbsoluteVStack, Theme, Toast, useDebounceValue } from 'snackui'
 
 import { zIndexAutocomplete } from '../constants/constants'
@@ -25,6 +26,7 @@ import { useHomeStore } from './homeStore'
 
 export const AppAutocompleteSearch = () => {
   const autocompletes = useStoreInstance(autocompletesStore)
+
   return (
     <Suspense fallback={null}>
       <Theme name="darkTranslucent">

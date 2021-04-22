@@ -1,4 +1,11 @@
-import { Store, getStore, reaction } from '@dish/use-store'
+import {
+  Store,
+  getStore,
+  reaction,
+  useStoreInstance,
+  useStoreInstanceSelector,
+  useStoreSelector,
+} from '@dish/use-store'
 import React, {
   Suspense,
   createContext,
@@ -12,10 +19,10 @@ import { ScrollView, ScrollViewProps, StyleSheet } from 'react-native'
 import { VStack, combineRefs, getMedia, useMedia } from 'snackui'
 
 import { isWeb } from '../../constants/constants'
-import { supportsTouchWeb } from '../../constants/platforms'
+import { isTouchDevice, supportsTouchWeb } from '../../constants/platforms'
 import { drawerStore } from '../drawerStore'
 
-type ScrollLock = 'horizontal' | 'vertical' | 'none'
+export type ScrollLock = 'horizontal' | 'vertical' | 'none'
 
 export class ScrollStore extends Store<{ id: string }> {
   lock: ScrollLock = 'none'
@@ -137,6 +144,9 @@ const cancelTouchContentIfDrawerDragging = (e) => {
 export const ContentScrollView = forwardRef<ScrollView, ContentScrollViewProps>(
   ({ children, onScrollYThrottled, style, id, ...props }, ref) => {
     // this updates when drawer moves to top
+    // this is already handled in usePreventVerticalScroll i think
+    // const isActive = useStoreSelector(ContentParentStore, x => x.activeId === id, { id })
+    // const isDraggingParent = useStoreInstanceSelector(drawerStore, x => isActive && x.isDragging, [isActive])
     const preventScrolling = usePreventVerticalScroll(id)
     const media = useMedia()
     const lastUpdate = useRef<any>(0)
@@ -161,7 +171,9 @@ export const ContentScrollView = forwardRef<ScrollView, ContentScrollViewProps>(
         if (!scrollStore.isAtTop) {
           scrollStore.setIsAtTop(true)
         }
-        scrollStore.setLock('none')
+        if (!isTouchDevice) {
+          scrollStore.setLock('none')
+        }
       } else {
         if (scrollStore.isAtTop) {
           scrollStore.setIsAtTop(false)
@@ -215,12 +227,16 @@ export const ContentScrollView = forwardRef<ScrollView, ContentScrollViewProps>(
               onTouchMove: cancelTouchContentIfDrawerDragging,
               onTouchStart: cancelTouchContentIfDrawerDragging,
             })}
+            {...(isTouchDevice && {
+              onTouchEnd: () => {
+                scrollStore.setLock('none')
+              },
+            })}
             // for native...
-            // bounces={false}
-            // bouncesZoom={false}
+            bounces={!preventScrolling}
+            scrollEnabled={!preventScrolling}
             // short duration to catch before vertical scroll
             scrollEventThrottle={14}
-            // scrollEnabled={!preventScrolling}
             // disableScrollViewPanResponder={preventScrolling}
             style={[styles.scroll, style]}
           >

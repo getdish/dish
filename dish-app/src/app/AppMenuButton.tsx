@@ -1,12 +1,14 @@
 import { Menu } from '@dish/react-feather'
 import { useStoreInstance } from '@dish/use-store'
 import React from 'react'
+import { TouchableWithoutFeedback } from 'react-native'
 import { AbsoluteVStack, BlurView, HStack, Modal, VStack, useMedia } from 'snackui'
 
 import { zIndexDrawer } from '../constants/constants'
 import { AppMenuContents } from './AppMenuContents'
 import { appMenuStore } from './AppMenuStore'
 import { useSafeArea } from './hooks/useSafeArea'
+import { CloseButton } from './views/CloseButton'
 
 export const AppMenuButton = () => {
   const media = useMedia()
@@ -21,14 +23,22 @@ export const AppMenuButton = () => {
     <>
       <Modal
         visible={appMenu.isVisible}
-        presentationStyle="formSheet"
-        onDismiss={() => {
-          console.log('hide')
-          appMenu.hide()
-        }}
+        animationType="slide"
+        hardwareAccelerated
+        presentationStyle="pageSheet"
+        onDismiss={appMenu.hide}
         onRequestClose={appMenu.hide}
       >
-        <AppMenuContents flex={1} hideUserMenu={appMenu.hide} />
+        <TouchableWithoutFeedback
+          // for bug which prevents dismiss from firing on swipe close
+          // https://github.com/facebook/react-native/issues/26892
+          onPressOut={appMenu.hide}
+        >
+          <AppMenuContents flex={1} hideUserMenu={appMenu.hide} />
+        </TouchableWithoutFeedback>
+        <AbsoluteVStack top={10} right={10}>
+          <CloseButton onPress={appMenu.hide} />
+        </AbsoluteVStack>
       </Modal>
       <AbsoluteVStack
         top={safeArea.top ? safeArea.top : 10}

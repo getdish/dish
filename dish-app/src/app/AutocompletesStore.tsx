@@ -73,27 +73,27 @@ export const autocompleteSearchStore = createStore(AutocompleteStore, {
   target: 'search',
 })
 
+export function AutocompleteEffects() {
+  useAppAutocompleteEffects()
+  return null
+}
+
 export const useAppAutocompleteEffects = () => {
   const autocompletes = useStoreInstance(autocompletesStore)
 
   useEffect(() => {
     // debounce to go after press event
     const handleHide = debounce(() => {
-      if (autocompletes.visible) {
-        autocompletes.setVisible(false)
-      }
-      if (drawerStore.snapIndex === 0) {
-        drawerStore.setSnapIndex(1)
-      }
-    }, 100)
+      autocompletes.setVisible(false)
+    }, 40)
     const handleShow = () => {
       console.log('handleShowKeyboard')
       handleHide.cancel()
     }
-    Keyboard.addListener('keyboardDidHide', handleHide)
+    Keyboard.addListener('keyboardWillHide', handleHide)
     Keyboard.addListener('keyboardWillShow', handleShow)
     return () => {
-      Keyboard.removeListener('keyboardDidHide', handleHide)
+      Keyboard.removeListener('keyboardWillHide', handleHide)
       Keyboard.removeListener('keyboardWillShow', handleShow)
     }
   }, [])

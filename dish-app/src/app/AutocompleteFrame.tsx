@@ -1,5 +1,5 @@
 import { useStore, useStoreInstance } from '@dish/use-store'
-import React from 'react'
+import React, { useEffect } from 'react'
 import { Pressable, ScrollView } from 'react-native'
 import {
   AbsoluteVStack,
@@ -19,13 +19,24 @@ import { AutocompleteItem } from '../helpers/createAutocomplete'
 import { AutocompleteItemView } from './AutocompleteItemView'
 import { AutocompleteStore, AutocompleteTarget, autocompletesStore } from './AutocompletesStore'
 import { CloseButton } from './views/CloseButton'
+import { ContentParentStore, ContentScrollView } from './views/ContentScrollView'
 
 export const AutocompleteFrame = ({ children }: { children: any }) => {
   const autocompletes = useStoreInstance(autocompletesStore)
   const isShowing = autocompletes.visible
   const media = useMedia()
   const theme = useTheme()
-  const topOffsetSm = searchBarHeight + 5
+
+  const contentParentStore = useStore(ContentParentStore)
+  useEffect(() => {
+    if (isShowing) {
+      let prev = contentParentStore.activeId
+      contentParentStore.setActiveId('autocomplete')
+      return () => {
+        contentParentStore.setActiveId(prev)
+      }
+    }
+  }, [isShowing])
 
   return (
     <AbsoluteVStack
@@ -36,12 +47,13 @@ export const AutocompleteFrame = ({ children }: { children: any }) => {
       alignItems="flex-end"
       borderRadius={12}
       overflow="hidden"
-      top={media.sm ? topOffsetSm : 0}
+      top={media.sm ? 10 : 0}
       // DONT PUT EVENT HERE NEED TO DEBUG WHY IT BREAKS ON NATIVE
     >
       <VStack
         maxWidth={drawerWidthMax}
         width="100%"
+        height="100%"
         // DONT PUT EVENT HERE NEED TO DEBUG WHY IT BREAKS ON NATIVE
       >
         <AbsoluteVStack backgroundColor={theme.backgroundColor} fullscreen opacity={0.9} />
@@ -75,24 +87,25 @@ export const AutocompleteFrame = ({ children }: { children: any }) => {
           flex={media.sm ? 1 : 0}
           // dont add events here :(
         >
-          <Pressable
+          {/* <Pressable
             style={{ flex: 1 }}
             onPress={() => {
               autocompletes.setVisible(false)
             }}
+          > */}
+          <ContentScrollView
+            id="autocomplete"
+            // styles for native
+            style={{ maxHeight: '100%', flex: 1, height: '100%' }}
+            keyboardShouldPersistTaps="always"
           >
-            <ScrollView
-              // styles for native
-              style={{ maxHeight: '100%', flex: 1, height: '100%' }}
-              keyboardShouldPersistTaps="always"
-            >
-              {/* bugfix AutocompleteItemView causes dragging to disable */}
-              {isWeb ? children : isShowing ? children : null}
+            {/* bugfix AutocompleteItemView causes dragging to disable */}
+            {isWeb ? children : isShowing ? children : null}
 
-              {/* pad bottom to scroll */}
-              <VStack height={100} />
-            </ScrollView>
-          </Pressable>
+            {/* pad bottom to scroll */}
+            <VStack height={100} />
+          </ContentScrollView>
+          {/* </Pressable> */}
         </VStack>
       </VStack>
     </AbsoluteVStack>
