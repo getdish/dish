@@ -167,22 +167,28 @@ export const SiteRoot = () => {
           </VStack>
         </VStack>
 
-        <ContentSection marginTop={-85} marginHorizontal="auto" zIndex={900}>
-          <DishParagraph textAlign="center" sizeLineHeight={0.8} size={3}>
+        <ContentSection marginTop={-150} marginHorizontal="auto" zIndex={900}>
+          <DishParagraph textAlign="center" sizeLineHeight={0.8} size={3.9}>
             <b>
               <Highlight backgroundColor="var(--teal)" color="#fff">
-                a pocket guide to the world
+                playlists of fun nights out, trips, the true top 🌮 in your city: you name it.
               </Highlight>
-              <br />
-              <Text fontWeight="200" fontSize="50%">
-                playlists for cities
-              </Text>
             </b>
+          </DishParagraph>
+          <DishParagraph textAlign="center" sizeLineHeight={0.9} size={2.25}>
+            <Highlight backgroundColor="#000" color="#fff">
+              A social&nbsp;network meets a map.
+            </Highlight>
           </DishParagraph>
 
           <Theme name="light">
             <Join />
           </Theme>
+
+          <DishParagraph textAlign="center" size="xxxl">
+            Dish crawls the entire web for quality reviews and information on every restaurant,
+            landmark, and more.
+          </DishParagraph>
 
           <Grid itemMinWidth={270}>
             <VStack padding={18}>
@@ -231,31 +237,111 @@ export const SiteRoot = () => {
                     color: 'var(--purple)',
                   }}
                 >
-                  Personalized
+                  Personal
                 </b>{' '}
-                follow friends & chefs to get better recommendations as you travel.
+                plan a trip, share highlights with and follow friends & see what chefs with similar
+                taste recommend.
               </DishParagraph>
             </VStack>
           </Grid>
 
           <DishParagraph textAlign="center" size="xxxl">
-            Earn DishCoin{' '}
-            <Text marginVertical={-2}>
-              <LogoCircle scale={0.7} />
-            </Text>{' '}
-            for writing, moderating, flagging, labeling, images, tags, lists and comments. We're
-            building a DAO that autonomously pays for content.
+            We've built a fun app for curating your favorite things: coffee shops to work at, your
+            top 5 BBQ places, and more. But there's a big question:
           </DishParagraph>
 
-          <DishParagraph textAlign="center" sizeLineHeight={0.8} fontWeight="800" size={3}>
-            <Highlight backgroundColor="var(--teal)" color="#fff">
-              Whitepaper
-            </Highlight>
+          <DishParagraph fontWeight="800" textAlign="center" size="xxxl">
+            How do you trust it will last?
           </DishParagraph>
 
           <Spacer />
         </ContentSection>
       </VStack>
+
+      <Theme name="light">
+        <VStack
+          overflow="hidden"
+          paddingTop={100}
+          marginVertical={-180}
+          pointerEvents="none"
+          zIndex={10000}
+          position="relative"
+        >
+          <VStack
+            className="shadow-above"
+            height={200}
+            marginTop={-100}
+            alignItems="flex-end"
+            justifyContent="flex-end"
+            minWidth={1200}
+            pointerEvents="none"
+            zIndex={200}
+            transform={[{ scaleX: 7 }, { translateX: -200 }]}
+          >
+            <Wave direction="vertical" />
+          </VStack>
+
+          <DishTitleSlanted
+            fontWeight="600"
+            backgroundColor="pink"
+            marginTop={-20}
+            zIndex={1000}
+            alignSelf="center"
+          >
+            Our plan to not be evil, sell out, and die
+          </DishTitleSlanted>
+
+          <VStack
+            backgroundColor="red"
+            marginBottom={-60}
+            paddingVertical={10}
+            paddingTop={60}
+            marginTop={-60}
+            position="relative"
+            className="yellow-section"
+          >
+            <ContentSection paddingTop={40} paddingVertical={0}>
+              <DishParagraph fontWeight="800" size={3} textAlign="center" size="xxxxxl">
+                A non-profit + a DAO
+              </DishParagraph>
+
+              <DishParagraph textAlign="center" size="xxxl" sizeLineHeight={0.95}>
+                An egalitarian distribution of tokens distributed under a community govenernance
+                structure that incentivies high quality content. Open source, open core.
+              </DishParagraph>
+
+              <DishParagraph textAlign="center" size="xl" sizeLineHeight={0.95}>
+                With DishCoin{' '}
+                <Text marginVertical={-2}>
+                  <LogoCircle scale={0.7} />
+                </Text>{' '}
+                to pay out for good writing, moderating, images, lists, tags, and comments. We
+                giving users literal investment in the success of the company.
+              </DishParagraph>
+
+              <DishParagraph textAlign="center" sizeLineHeight={0.8} fontWeight="800" size={2}>
+                <Highlight backgroundColor="#000" color="#fff">
+                  read the whitepaper
+                </Highlight>
+              </DishParagraph>
+            </ContentSection>
+            <Spacer size="xxxl" />
+          </VStack>
+
+          <VStack
+            className="shadow-below"
+            height={200}
+            alignItems="flex-end"
+            justifyContent="flex-end"
+            minWidth={1200}
+            pointerEvents="none"
+            zIndex={100000}
+            transform={[{ rotate: '180deg' }, { scaleX: 7 }, { translateX: -200 }]}
+          >
+            <Wave direction="vertical" />
+          </VStack>
+        </VStack>
+      </Theme>
 
       <VStack backgroundColor="#111" position="relative" zIndex={1000}>
         <Slants color="black" />
@@ -276,8 +362,8 @@ export const SiteRoot = () => {
                 marginBottom={-220}
                 transform={[
                   { scaleX: 2.5 },
-                  { rotate: `-12deg` },
-                  { translateX: i % 2 == 0 ? 200 : 0 },
+                  { rotate: `-${2 * (i % 3) * 5}deg` },
+                  { translateX: i % 2 == 0 ? 150 : 0 },
                 ]}
               >
                 <Wave
@@ -296,68 +382,8 @@ export const SiteRoot = () => {
             )
           })}
         </AbsoluteVStack>
-        {/*
-        <Theme name="light">
-          <VStack
-            overflow="hidden"
-            paddingTop={100}
-            marginVertical={-180}
-            pointerEvents="none"
-            zIndex={10000}
-            position="relative"
-          >
-            <VStack
-              className="shadow-above"
-              height={200}
-              marginBottom={-60}
-              marginTop={-100}
-              alignItems="flex-end"
-              justifyContent="flex-end"
-              minWidth={1200}
-              pointerEvents="none"
-              zIndex={100000}
-              transform={[{ scaleX: 7 }, { translateX: -200 }]}
-            >
-              <Wave direction="vertical" />
-            </VStack>
 
-            <VStack
-              backgroundColor="red"
-              marginBottom={-60}
-              paddingVertical={10}
-              zIndex={100}
-              position="relative"
-              className="yellow-section"
-            >
-              <ContentSection paddingVertical={0}>
-                <Spacer />
-
-
-              </ContentSection>
-              <Spacer size="xxxxl" />
-            </VStack>
-
-            <VStack
-              className="shadow-below"
-              height={200}
-              alignItems="flex-end"
-              justifyContent="flex-end"
-              minWidth={1200}
-              pointerEvents="none"
-              zIndex={100000}
-              transform={[{ rotate: '180deg' }, { scaleX: 7 }, { translateX: -200 }]}
-            >
-              <Wave direction="vertical" />
-            </VStack>
-          </VStack>
-        </Theme> */}
-
-        <ContentSection paddingTop={50} zIndex={10}>
-          <DishParagraph size="xxxxl">
-            It's 2033, your virtual CryptoKitty, Jerry, nestles ethereally among excel sheets in
-            your lap. You smile at the glowing bugger.
-          </DishParagraph>
-
+        <ContentSection paddingTop={200} zIndex={10}>
           <VStack overflow="hidden" spacing="xxxl">
             <DishParagraph size="xxxxl">
               It's 2033, your virtual CryptoKitty, Jerry, nestles ethereally among excel sheets in
@@ -366,16 +392,13 @@ export const SiteRoot = () => {
 
             <DishParagraph size="xxl">
               “Should we reschedule the dentists tomorrow?” Jerry asks, “with traffic, you'll miss
-              the matinee."
-            </DishParagraph>
-            <DishParagraph size="xxl">
-              You sigh and raise a brow, “is the minute I finish work really the time for this,
-              Jer?”
+              the matinee." You sigh and look down, “is the minute I finish work really the time for
+              this, Jer?”
             </DishParagraph>
             <DishParagraph size="xxl">
               Still, give Jerry credit. You had forgetten the matinee. “Going to the mat-in-ay...”
               you repeat out loud, “the <b>mat</b>
-              -in-ayyyy...” hangs in your mouth. “Am I forgetting something, Jer?”
+              -in-ayyyy...” hangs on your mouth. “Am I forgetting something, Jer?”
             </DishParagraph>
 
             <DishParagraph size="xxl">
@@ -615,7 +638,7 @@ export class Join extends React.Component<any> {
                 nodeRef={this.email}
                 name="EMAIL"
                 id="mce-EMAIL"
-                placeholder="Email address..."
+                placeholder="Get on the early access list"
                 flex={1}
                 borderWidth={0}
                 fontSize={22}
@@ -629,10 +652,13 @@ export class Join extends React.Component<any> {
                 pointerEvents={submitting ? 'none' : 'auto'}
                 cursor="pointer"
                 maxWidth={300}
+                textProps={{
+                  fontWeight: '800',
+                }}
                 alignSelf="center"
                 glint={false}
               >
-                Early access
+                Add email
               </Button>
             </HStack>
           </VStack>
