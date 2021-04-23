@@ -2071,22 +2071,6 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@dish/esbuild-loader@npm:0.0.0-semantic-release":
-  version: 0.0.0-semantic-release
-  resolution: "@dish/esbuild-loader@npm:0.0.0-semantic-release"
-  dependencies:
-    esbuild: ^0.11.5
-    joycon: ^3.0.1
-    json5: ^2.2.0
-    loader-utils: ^2.0.0
-    type-fest: ^1.0.1
-    webpack-sources: ^2.2.0
-  peerDependencies:
-    webpack: ^4.40.0 || ^5.0.0
-  checksum: ddb39f29304660febe285739617b8e396300460d5fe2cacf6967a69f436cd9d652a57cafebd21d82068de577b41f9d2917cab006903cfb7103191416f64bd78e
-  languageName: node
-  linkType: hard
-
 "@dish/esdx@*, @dish/esdx@^0.0.7, @dish/esdx@workspace:packages/esdx":
   version: 0.0.0-use.local
   resolution: "@dish/esdx@workspace:packages/esdx"
@@ -2364,7 +2348,6 @@ __metadata:
   resolution: "@dish/webpack@workspace:packages/webpack"
   dependencies:
     "@babel/core": ^7.12.9
-    "@dish/esbuild-loader": 0.0.0-semantic-release
     "@dish/esdx": "*"
     "@dish/helpers": "*"
     "@dish/proxy-worm": "*"
@@ -2379,6 +2362,7 @@ __metadata:
     css-loader: ^5.0.2
     css-minimizer-webpack-plugin: ^1.2.0
     dedupe-parent-css-from-chunks-webpack-plugin: ^3.0.0
+    esbuild-loader: ^2.12.0
     extract-css-chunks-webpack-plugin: ^4.9.0
     file-loader: ^6.2.0
     fs-extra: ^9.1.0
@@ -9847,7 +9831,7 @@ __metadata:
     "@types/react-native": ^0.64.2
     "@yarnpkg/plugin-patch": ^2.1.2
     ava: ^3.14.0
-    esbuild: ^0.11.5
+    esbuild: ^0.11.13
     esbuild-register: ^2.4.0
     esm: ^3.2.25
     import-sort-style-module: ^6.0.0
@@ -10359,6 +10343,22 @@ __metadata:
   languageName: node
   linkType: hard
 
+"esbuild-loader@npm:^2.12.0":
+  version: 2.12.0
+  resolution: "esbuild-loader@npm:2.12.0"
+  dependencies:
+    esbuild: ^0.10.2
+    joycon: ^3.0.1
+    json5: ^2.2.0
+    loader-utils: ^2.0.0
+    type-fest: ^1.0.1
+    webpack-sources: ^2.2.0
+  peerDependencies:
+    webpack: ^4.40.0 || ^5.0.0
+  checksum: a9f81365e80b54648f020aebe148f5a16659ff0df85ed4f74825b76bb8e78a0fa57bf1c161d7a875a32665a14a717b468f482e08bf907910658073e5dde6cd29
+  languageName: node
+  linkType: hard
+
 "esbuild-register@npm:2.4.0":
   version: 2.4.0
   resolution: "esbuild-register@npm:2.4.0"
@@ -10369,12 +10369,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"esbuild@npm:0.8.56":
-  version: 0.8.56
-  resolution: "esbuild@npm:0.8.56"
+"esbuild@npm:0.11.13":
+  version: 0.11.13
+  resolution: "esbuild@npm:0.11.13"
   bin:
     esbuild: bin/esbuild
-  checksum: d6500c634a6d80b51f9a6bfe55be47f1cc84e3ac3e1c503752a9334b02b7d2d94261bc0e794b8bc546a0a8d892ead10bd767b359fc31704c337f872f3f9f7e8f
+  checksum: 0fc99418c4f8d3c3d889b807e2494348655e36221135b3b5266d6adabb3f458d8ec94a577f1936889b892f2edd840ca1e274f89c1701d20073f7a880d5a78d26
   languageName: node
   linkType: hard
 

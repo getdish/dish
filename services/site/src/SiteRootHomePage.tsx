@@ -1,5 +1,5 @@
-import './assets/font-gteesti/stylesheet.css'
 import './site.css'
+import './assets/font-gteesti/stylesheet.css'
 
 import React, { useRef } from 'react'
 import {

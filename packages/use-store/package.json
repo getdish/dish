@@ -9,7 +9,7 @@
   "scripts": {
     "build": "esdx legacy",
     "watch": "esdx-watch legacy",
-    "test": "jest test"
+    "test": "NODE_ENV=test jest test"
   },
   "dependencies": {
     "lodash": "^4.17.21",

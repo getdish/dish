@@ -6,6 +6,8 @@ import LoadablePlugin from '@loadable/webpack-plugin'
 import ReactRefreshWebpack4Plugin from '@pmmmwh/react-refresh-webpack-plugin'
 import CircularDependencyPlugin from 'circular-dependency-plugin'
 import DedupeParentCssFromChunksWebpackPlugin from 'dedupe-parent-css-from-chunks-webpack-plugin'
+import esbuild from 'esbuild'
+import { ESBuildMinifyPlugin } from 'esbuild-loader'
 import ExtractCssChunks from 'extract-css-chunks-webpack-plugin'
 import { ensureDirSync } from 'fs-extra'
 import HTMLWebpackPlugin from 'html-webpack-plugin'
@@ -15,12 +17,17 @@ import { DuplicatesPlugin } from 'inspectpack/plugin'
 // import OptimizeCSSAssetsPlugin from 'optimize-css-assets-webpack-plugin'
 // import nodeExternals from 'webpack-node-externals'
 import SpeedMeasurePlugin from 'speed-measure-webpack-plugin'
-import TerserPlugin from 'terser-webpack-plugin'
+// import TerserPlugin from 'terser-webpack-plugin'
 import Webpack from 'webpack'
 
 // import WebpackPwaManifest from 'webpack-pwa-manifest'
 
-const CssMinimizerPlugin = require('css-minimizer-webpack-plugin')
+let GIT_SHA = ''
+try {
+  GIT_SHA = `${require('child_process').execSync('git rev-parse HEAD')}`
+} catch {
+  // ok
+}
 
 export function createWebpackConfig({
   entry,
@@ -79,7 +86,7 @@ export function createWebpackConfig({
         // lazyCompilation: true,
       },
       cache: {
-        name: `${process.env.TARGET}${process.env.NODE_ENV}`,
+        name: `${process.env.TARGET}${process.env.NODE_ENV}${GIT_SHA}`,
         type: 'filesystem',
         buildDependencies: {
           defaultConfig: [__filename],
@@ -173,18 +180,10 @@ export function createWebpackConfig({
           minimize == false || noMinify
             ? []
             : [
-                new CssMinimizerPlugin({
-                  minimizerOptions: {
-                    preset: [
-                      'default',
-                      {
-                        discardComments: { removeAll: true },
-                      },
-                    ],
-                  },
-                }),
-                new TerserPlugin({
-                  parallel: true,
+                new ESBuildMinifyPlugin({
+                  target: 'es2019',
+                  treeShaking: true,
+                  css: true,
                 }),
               ],
       },
@@ -199,10 +198,11 @@ export function createWebpackConfig({
                 use: [
                   // fast refresh seems to work??
                   {
-                    loader: require.resolve('@dish/esbuild-loader'),
+                    loader: require.resolve('esbuild-loader'),
                     options: {
                       loader: 'tsx',
                       target: 'es2019',
+                      implementation: esbuild,
                     },
                   },
                   isStaticExtracted
