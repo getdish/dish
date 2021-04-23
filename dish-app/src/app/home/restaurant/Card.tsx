@@ -107,7 +107,7 @@ export function Card({
           backgroundColor={backgroundColor || underColor || ''}
         >
           {/* behind shadow */}
-          {isBehind && (
+          {/* {isBehind && (
             <AbsoluteVStack
               className="ease-in-out"
               opacity={hideInfo ? 0 : 1}
@@ -120,7 +120,7 @@ export function Card({
               shadowRadius={100}
               shadowOffset={{ width: 10, height: 0 }}
             />
-          )}
+          )} */}
 
           <VStack className="hover-75-opacity-child" opacity={dimImage ? 0.5 : 1} {...frame}>
             {typeof photo === 'string' ? (
@@ -169,12 +169,12 @@ export function Card({
             zIndex={-1}
             top={0}
             right={0}
-            opacity={0.8}
+            // opacity={0.8}
             transform={[{ rotate: '15deg' }, { scaleX: 2.5 }, { translateY: -20 }]}
           >
             <LinearGradient
-              style={{ width: 200, height: 200 }}
-              colors={[colors.pastelColor, colors.pastelColor, `${colors.darkColor}33`]}
+              style={{ width: 150, height: 150 }}
+              colors={[colors.pastelColor, colors.pastelColor, `${colors.darkColor}00`]}
             />
           </AbsoluteVStack>
           <VStack
@@ -185,8 +185,7 @@ export function Card({
             flex={1}
           >
             <HStack flex={1} width="100%" maxWidth="100%">
-              {!!padTitleSide &&
-                (isSm ? <VStack minWidth={30} flex={1} /> : <VStack minWidth={45} flex={1} />)}
+              {!!padTitleSide && !isSm && <VStack minWidth={10} flex={1} />}
               <VStack flex={10} alignItems="flex-end">
                 <VStack position="relative">
                   <Text
@@ -200,7 +199,7 @@ export function Card({
                     letterSpacing={size === 'xs' ? 0 : -1}
                     color="#fff"
                     fontSize={fontSize}
-                    lineHeight={fontSize}
+                    lineHeight={fontSize * 1.15}
                     flexShrink={0}
                   >
                     {title}
@@ -241,7 +240,7 @@ export const CardOverlay = (props: { children: any }) => {
       <VStack position="relative">
         <AbsoluteVStack left={0} right={0} bottom={0} top={-40}>
           <LinearGradient
-            colors={['rgba(0,0,0,0)', '#rgba(40, 40, 40, 0.9)']}
+            colors={['rgba(0,0,0,0)', '#rgba(0, 0, 0, 0.5)']}
             style={StyleSheet.absoluteFill}
           />
         </AbsoluteVStack>

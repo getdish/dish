@@ -27,6 +27,7 @@ export default route(async (req, res) => {
   if (cacheKey) {
     const cache = await redisGet(cacheKey)
     if (cache) {
+      console.log('🏓 cache hit redis')
       res.send(JSON.parse(cache))
       return
     }

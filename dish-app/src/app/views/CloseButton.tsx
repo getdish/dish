@@ -1,8 +1,6 @@
 import { CornerLeftUp, X } from '@dish/react-feather'
 import React, { memo } from 'react'
-import { Pressable } from 'react-native'
-import { TouchableOpacity } from 'react-native-gesture-handler'
-import { HStack, StackProps, VStack, useTheme } from 'snackui'
+import { HStack, StackProps, useTheme } from 'snackui'
 
 type CircleButtonProps = StackProps & {
   size?: number

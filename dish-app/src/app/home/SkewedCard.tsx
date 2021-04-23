@@ -9,7 +9,7 @@ type CarouselSize = 'md' | 'sm'
 export const SkewedCard = ({ children, size, ...props }: StackProps & { size?: CarouselSize }) => {
   return (
     <VStack
-      marginRight={size === 'sm' ? -20 : -56}
+      marginRight={size === 'sm' ? -10 : -38}
       className="disable-hover-touch ease-in-out-faster"
       borderRadius={cardFrameBorderRadius}
       shadowColor="#000"
@@ -18,7 +18,7 @@ export const SkewedCard = ({ children, size, ...props }: StackProps & { size?: C
       shadowOffset={{ height: 4, width: 4 }}
       position="relative"
       opacity={1}
-      transform={[{ scale: 0.8 }, { perspective: 1000 }, { rotateY: '-10deg' }, { translateX: 0 }]}
+      transform={[{ scale: 0.85 }, { perspective: 1000 }, { rotateY: '-15deg' }, { translateX: 0 }]}
       hoverStyle={{
         transform: [
           { scale: 0.81 },

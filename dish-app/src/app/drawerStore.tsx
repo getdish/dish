@@ -94,13 +94,13 @@ class DrawerStore extends Store {
   }
 
   private getSnapIndex(px: number, velocity: number) {
-    const estFinalPx = px + velocity * 1.5
+    const estFinalPx = px + velocity * 2.5
     for (const [index, point] of this.snapPoints.entries()) {
       const cur = point * getWindowHeight()
       const next = (this.snapPoints[index + 1] ?? 1) * getWindowHeight()
-      const midWayToNext = cur + (next - cur) / 2
-      console.log(index, 'estFinalPx', estFinalPx, '<', midWayToNext)
-      if (estFinalPx < midWayToNext) {
+      const partWayThere = cur + (next - cur) / 3
+      console.log(index, 'estFinalPx', estFinalPx, '<', partWayThere)
+      if (estFinalPx < partWayThere) {
         return index
       }
     }

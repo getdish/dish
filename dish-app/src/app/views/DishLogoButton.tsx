@@ -1,7 +1,7 @@
 import React, { memo } from 'react'
 import { AbsoluteVStack, HStack, VStack, useMedia } from 'snackui'
 
-import { logoHeight, logoWidth, logoXsHeight, logoXsWidth } from '../../constants/constants'
+import { isWeb, logoHeight, logoWidth, logoXsHeight, logoXsWidth } from '../../constants/constants'
 import { useHomeStore } from '../homeStore'
 import { Link } from './Link'
 import { LinkButtonProps } from './LinkProps'
@@ -58,11 +58,10 @@ export const DishLogoButton = memo(({ color }: { color?: string }) => {
         fullscreen
         alignItems="center"
         justifyContent="center"
-        top={-2}
         width={logoXsWidth}
         height={logoXsHeight}
         {...(media.sm && {
-          transform: [{ scale: 0.9 }],
+          transform: [{ scale: 0.9 }, { translateY: -3.5 }],
         })}
       >
         {wrapWithHomeLink(<LogoCircle />)}

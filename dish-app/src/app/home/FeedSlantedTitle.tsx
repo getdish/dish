@@ -8,14 +8,7 @@ import { SlantedTitle, SlantedTitleProps } from '../views/SlantedTitle'
 
 const TitleContainer = ({ children }: { children: any }) => {
   return (
-    <VStack
-      alignSelf="center"
-      marginTop={-10}
-      marginLeft={15}
-      marginBottom={-10}
-      position="relative"
-      zIndex={10}
-    >
+    <VStack alignSelf="center" position="relative" zIndex={10}>
       {children}
     </VStack>
   )
@@ -40,7 +33,7 @@ export const FeedSlantedTitleLink = ({
     <TitleContainer>
       <ScalingPressable>
         <Link asyncClick {...{ tag, tags, name, params }}>
-          <SlantedTitle size="sm" fontWeight="600" {...props} />
+          <SlantedTitle paddingVertical={10} size="sm" fontWeight="600" {...props} />
         </Link>
       </ScalingPressable>
     </TitleContainer>

@@ -12,6 +12,7 @@
     "app": "LOG_LEVEL=1 TARGET=native NODE_ENV=development react-native start",
     "app:reset": "watchman watch-del-all && yarn app --reset-cache",
     "app:native": "LOCAL_HOST=$(ipconfig getifaddr en0) yarn app",
+    "app:native:prod": "NODE_ENV=production yarn app:native",
     "app:native:reset": "watchman watch-del-all && yarn app:native --reset-cache",
     "web": "NODE_ENV=development ../dishctl.sh run 'yarn dish start'",
     "web:reset": "NODE_ENV=development ../dishctl.sh run 'yarn dish start --reset-cache'",

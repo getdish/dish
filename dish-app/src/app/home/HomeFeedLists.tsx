@@ -2,11 +2,13 @@ import { series } from '@dish/async'
 import { graphql, order_by, query, resolved } from '@dish/graph'
 import { Plus } from '@dish/react-feather'
 import React, { Suspense, useEffect, useMemo, useState } from 'react'
+import { VStack } from 'snackui'
 import { HStack, Spacer, Text, useDebounce } from 'snackui'
 
 import { getRestaurantIdentifiers } from '../../helpers/getRestaurantIdentifiers'
 import { homeStore } from '../homeStore'
 import { SmallCircleButton } from '../views/CloseButton'
+import { ContentScrollViewHorizontal } from '../views/ContentScrollViewHorizontal'
 import { Link } from '../views/Link'
 import { ListCard } from '../views/list/ListCard'
 import { FeedSlantedTitle } from './FeedSlantedTitle'
@@ -84,7 +86,8 @@ export const HomeFeedListsContents = graphql(({ region, onHoverResults }: Props)
     return (
       <>
         <FeedSlantedTitle>
-          <HStack alignItems="center">
+          {/* marginVertical good on native */}
+          <HStack alignItems="center" marginVertical={-2}>
             <Text fontWeight="700" fontSize={20}>
               Top Lists
             </Text>
@@ -107,27 +110,34 @@ export const HomeFeedListsContents = graphql(({ region, onHoverResults }: Props)
 
         <Spacer size="lg" />
 
-        <SkewedCardCarousel>
-          {recentLists.map((list, i) => {
-            if (!list) {
-              return null
-            }
-            return (
-              <SkewedCard size="sm" zIndex={1000 - i} key={list.id || i}>
-                <ListCard
-                  isBehind={i > 0}
-                  hoverable={false}
-                  slug={list.slug}
-                  userSlug={list.user?.username ?? ''}
-                  region={list.region ?? ''}
-                  onHover={(hovered) => {
-                    hovered ? setHoveredList(list.id) : null
-                  }}
-                />
-              </SkewedCard>
-            )
-          })}
-        </SkewedCardCarousel>
+        <ContentScrollViewHorizontal>
+          <HStack paddingHorizontal={20} spacing="md" paddingVertical={12}>
+            {recentLists.map((list, i) => {
+              if (!list) {
+                return null
+              }
+              return (
+                <VStack
+                  key={list.id || i}
+                  transform={[{ scale: 0.8 }]}
+                  marginHorizontal={-17}
+                  marginVertical={-18}
+                >
+                  <ListCard
+                    isBehind={i > 0}
+                    hoverable={false}
+                    slug={list.slug}
+                    userSlug={list.user?.username ?? ''}
+                    region={list.region ?? ''}
+                    onHover={(hovered) => {
+                      hovered ? setHoveredList(list.id) : null
+                    }}
+                  />
+                </VStack>
+              )
+            })}
+          </HStack>
+        </ContentScrollViewHorizontal>
       </>
     )
   }, [key])

@@ -17,7 +17,7 @@ export const isStaging = process.env.NODE_ENV === 'staging' || hostname.includes
 export const isDev = (!isProd && !isStaging) || false
 export const isNative = process.env.TARGET === 'native'
 
-const LOCAL_HOST = process.env.LOCAL_HOST ?? (hostname || `localhost`)
+export const LOCAL_HOST = process.env.LOCAL_HOST ?? (hostname || `localhost`)
 const PROD_ORIGIN = 'https://dishapp.com'
 const ORIGIN = isProd ? PROD_ORIGIN : isStaging ? PROD_ORIGIN : `http://${LOCAL_HOST}:4444`
 const ORIGIN_MINUS_PORT = ORIGIN.replace(/:[0-9]+/, '')

@@ -3,6 +3,7 @@ import { groupBy, pick, sortBy, uniqBy } from 'lodash'
 import React, { useMemo } from 'react'
 import { Theme } from 'snackui'
 
+import { isTouchDevice } from '../../constants/platforms'
 import { DishTagItemSimple, selectRishDishViewSimple } from '../../helpers/selectDishViewSimple'
 import { RegionNormalized } from '../../types/homeTypes'
 import { TagButton } from '../views/TagButton'
@@ -80,7 +81,7 @@ export const HomeFeedDishRestaurants = graphql(
       args: {
         tag_slugs: tag.slug,
       },
-      limit: 8,
+      limit: isTouchDevice ? 6 : 8,
       where: {
         location: {
           _st_within: region.bbox,

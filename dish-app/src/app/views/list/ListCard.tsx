@@ -63,7 +63,7 @@ export const ListCard = graphql(
           backgroundColor={backgroundColor}
           isBehind={isBehind}
           outside={
-            <AbsoluteVStack zIndex={1000000} top="-2%" right="-2%">
+            <AbsoluteVStack zIndex={1000000} top="-5%" right="-5%">
               <Score
                 size="sm"
                 score={Math.round(Math.random() * 100)}
