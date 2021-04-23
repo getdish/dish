@@ -20,12 +20,7 @@ async function go() {
   async function buildTsc() {
     if (process.env.JS_ONLY) return
     if (legacy) {
-      await exec('tsc', [
-        '--emitDeclarationOnly',
-        '--declarationMap',
-        '--declarationDir',
-        'types',
-      ])
+      await exec('tsc', ['--emitDeclarationOnly', '--declarationMap', '--declarationDir', 'types'])
       return
     }
     await exec('tsc', ['--emitDeclarationOnly', '--declarationMap'])
@@ -42,9 +37,7 @@ async function go() {
     dts.writeOut('.')
   }
 
-  let files = (await fg(['src/**/*.ts', 'src/**/*.tsx'])).filter(
-    (x) => !x.includes('.d.ts')
-  )
+  let files = (await fg(['src/**/*.ts', 'src/**/*.tsx'])).filter((x) => !x.includes('.d.ts'))
 
   try {
     await Promise.all([
@@ -57,6 +50,8 @@ async function go() {
         keepNames: true,
         format: 'cjs',
         logLevel: 'error',
+        minify: false,
+        platform: 'neutral',
       }).then(() => {
         console.log('built dist')
       }),
@@ -68,6 +63,8 @@ async function go() {
         keepNames: true,
         format: 'esm',
         logLevel: 'error',
+        minify: false,
+        platform: 'neutral',
       }).then(() => {
         console.log('built _')
       }),

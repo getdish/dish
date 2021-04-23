@@ -85,7 +85,7 @@ async function async<A extends any>(
 async function buildWebpack(config: Configuration) {
   const env = process.env.NODE_ENV
   const stats = await new Promise<Stats | null>((res, rej) => {
-    console.log(` [web] building ${config.output?.path ?? ''} in ${env}...`)
+    console.log(` [web] building ${config.output?.path ?? ''} with NODE_ENV ${env}...`)
     const webpack = require('webpack')
     webpack(config, (err, stats) => {
       if (err || stats?.hasErrors()) {

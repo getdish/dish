@@ -2071,7 +2071,7 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@dish/esdx@*, @dish/esdx@^0.0.7, @dish/esdx@workspace:packages/esdx":
+"@dish/esdx@*, @dish/esdx@^0.0.9, @dish/esdx@workspace:packages/esdx":
   version: 0.0.0-use.local
   resolution: "@dish/esdx@workspace:packages/esdx"
   dependencies:
@@ -4655,7 +4655,7 @@ __metadata:
     "@babel/template": "*"
     "@babel/traverse": "*"
     "@babel/types": "*"
-    "@dish/esdx": ^0.0.7
+    "@dish/esdx": ^0.0.9
     "@snackui/static": ^0.3.2
   languageName: unknown
   linkType: soft
@@ -4664,7 +4664,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@snackui/helpers@workspace:snackui/packages/helpers"
   dependencies:
-    "@dish/esdx": ^0.0.7
+    "@dish/esdx": ^0.0.9
   languageName: unknown
   linkType: soft
 
@@ -4691,7 +4691,7 @@ __metadata:
     "@babel/traverse": ^7.12.9
     "@babel/types": ^7.12.7
     "@dish/babel-preset": ^0.0.2
-    "@dish/esdx": ^0.0.7
+    "@dish/esdx": ^0.0.9
     "@dish/proxy-worm": "*"
     "@dish/react-test-env": ^0.0.7
     "@dish/testy": "*"
@@ -21130,7 +21130,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "snackui-loader@workspace:snackui/packages/snackui-loader"
   dependencies:
-    "@dish/esdx": ^0.0.7
+    "@dish/esdx": ^0.0.9
     "@snackui/static": ^0.3.2
     fs-extra: ^9.1.0
     loader-utils: ^2.0.0
@@ -21143,7 +21143,7 @@ __metadata:
   resolution: "snackui@workspace:snackui/packages/snackui"
   dependencies:
     "@dish/async": ^0.0.1
-    "@dish/esdx": ^0.0.7
+    "@dish/esdx": ^0.0.9
     "@dish/fast-compare": ^2.7.6
     "@dish/proxy-worm": ^0.0.4
     "@react-native-community/blur": ^3.6.0
