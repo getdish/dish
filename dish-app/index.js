@@ -3,6 +3,9 @@
 
 import '@dish/helpers/polyfill'
 import 'expo-asset'
+import '@formatjs/intl-relativetimeformat/polyfill'
+import '@formatjs/intl-datetimeformat/polyfill'
+import '@formatjs/intl-datetimeformat/locale-data/en'
 
 import { registerRootComponent } from 'expo'
 

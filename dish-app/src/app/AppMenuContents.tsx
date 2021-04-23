@@ -106,8 +106,8 @@ export const AppMenuContents = memo(
             </>
           )}
 
-          <Paragraph opacity={0.5} size="xxs">
-            {isHermes ? 'h' : 'x'}
+          <Paragraph opacity={0.05} size="xxs">
+            {isHermes ? 'hermes' : 'jsc'}
           </Paragraph>
         </VStack>
       </Box>

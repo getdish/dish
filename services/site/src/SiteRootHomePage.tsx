@@ -1,13 +1,12 @@
 import './assets/font-gteesti/stylesheet.css'
 import './site.css'
 
-// import jsonp from 'jsonp'
 import React, { useRef } from 'react'
-import { Image, Pressable } from 'react-native'
 import {
   AbsoluteVStack,
   Button,
   Circle,
+  Grid,
   HStack,
   Input,
   Paragraph,
@@ -23,7 +22,6 @@ import {
   defaultMediaQueries,
   useMedia,
 } from 'snackui'
-import { Grid } from 'snackui'
 
 import { LogoCircle } from './DishLogo'
 import { LogoVertical } from './LogoVertical'
@@ -177,7 +175,7 @@ export const SiteRoot = () => {
               </Highlight>
               <br />
               <Text fontWeight="200" fontSize="50%">
-                (just food * playlists for now)
+                playlists for cities
               </Text>
             </b>
           </DishParagraph>

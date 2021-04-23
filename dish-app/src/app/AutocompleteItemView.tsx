@@ -62,7 +62,7 @@ export const AutocompleteItemView = memo(
     return (
       <LinkButton
         alignSelf="stretch"
-        justifyContent={target === 'location' ? 'flex-end' : 'flex-start'}
+        justifyContent={'flex-start'}
         minHeight={56}
         backgroundColor={isActive ? theme.backgroundColor : 'transparent'}
         hoverStyle={{

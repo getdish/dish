@@ -1,9 +1,7 @@
 import { useStore, useStoreInstance } from '@dish/use-store'
 import React, { useEffect } from 'react'
-import { Pressable, ScrollView } from 'react-native'
 import {
   AbsoluteVStack,
-  AnimatedVStack,
   BlurView,
   Spacer,
   Theme,
@@ -13,7 +11,7 @@ import {
   useTheme,
 } from 'snackui'
 
-import { drawerWidthMax, isWeb, searchBarHeight } from '../constants/constants'
+import { drawerWidthMax, isWeb } from '../constants/constants'
 import { isTouchDevice } from '../constants/platforms'
 import { AutocompleteItem } from '../helpers/createAutocomplete'
 import { AutocompleteItemView } from './AutocompleteItemView'

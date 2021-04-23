@@ -3,16 +3,7 @@ import { RestaurantSearchItem, slugify } from '@dish/graph'
 import { ArrowUp } from '@dish/react-feather'
 import { HistoryItem } from '@dish/router'
 import { reaction } from '@dish/use-store'
-import React, {
-  Suspense,
-  unstable_SuspenseList as SuspenseList,
-  forwardRef,
-  memo,
-  useCallback,
-  useEffect,
-  useMemo,
-  useRef,
-} from 'react'
+import React, { Suspense, forwardRef, memo, useCallback, useEffect, useMemo, useRef } from 'react'
 import { ScrollView, ScrollViewProps } from 'react-native'
 import { DataProvider, LayoutProvider, RecyclerListView } from 'recyclerlistview'
 import {
@@ -261,11 +252,9 @@ const SearchPageContent = memo(function SearchPageContent(
         minWidth={10}
       >
         <SearchPagePropsContext.Provider value={props}>
-          {false ? (
-            <SearchResultsSimpleScroll key={`${isLoading}`} {...props} />
-          ) : (
-            <SearchResultsInfiniteScroll key={`${isLoading}`} {...props} />
-          )}
+          {/* for web, disabled for now */}
+          {/* <SearchResultsSimpleScroll key={`${isLoading}`} {...props} /> */}
+          <SearchResultsInfiniteScroll key={`${isLoading}`} {...props} />
         </SearchPagePropsContext.Provider>
       </VStack>
     </Suspense>
@@ -319,56 +308,56 @@ const useActiveTagSlugs = (props: Props) => {
   }, [props.item.activeTags])
 }
 
-// web was feeling really slow with recyclerlistview:
-// https://github.com/Flipkart/recyclerlistview/issues/601
-const SearchResultsSimpleScroll = memo((props: Props) => {
-  const { results, status } = useSearchPageStore()
-  const activeTagSlugs = useActiveTagSlugs(props)
-  const scrollRef = useRef<ScrollView>(null)
-  const scrollToTopHandler = useCallback(() => {
-    scrollRef.current?.scrollTo({ x: 0, y: 0, animated: true })
-  }, [])
+// // web was feeling slow with recyclerlistview:
+// // https://github.com/Flipkart/recyclerlistview/issues/601
+// const SearchResultsSimpleScroll = memo((props: Props) => {
+//   const { results, status } = useSearchPageStore()
+//   const activeTagSlugs = useActiveTagSlugs(props)
+//   const scrollRef = useRef<ScrollView>(null)
+//   const scrollToTopHandler = useCallback(() => {
+//     scrollRef.current?.scrollTo({ x: 0, y: 0, animated: true })
+//   }, [])
 
-  if (status === 'loading') {
-    return <LoadingItems />
-  }
+//   if (status === 'loading') {
+//     return <LoadingItems />
+//   }
 
-  if (!results.length) {
-    return <SearchEmptyResults />
-  }
+//   if (!results.length) {
+//     return <SearchEmptyResults />
+//   }
 
-  return (
-    <ScrollView ref={scrollRef}>
-      <PageContentWithFooter>
-        <SearchHeader />
-        <VStack position="relative" flex={10} minHeight={600}>
-          <SuspenseList revealOrder="forwards">
-            {results.map((data, index) => {
-              return (
-                <VStack key={index} height={ITEM_HEIGHT}>
-                  <RestaurantListItem
-                    curLocInfo={props.item.curLocInfo ?? null}
-                    restaurantId={data.id}
-                    restaurantSlug={data.slug}
-                    rank={index + 1}
-                    activeTagSlugs={activeTagSlugs}
-                    meta={data.meta}
-                  />
-                </VStack>
-              )
-            })}
-          </SuspenseList>
-        </VStack>
-        <Suspense fallback={null}>
-          <SearchFooter
-            numResults={searchPageStore.results.length}
-            scrollToTop={scrollToTopHandler}
-          />
-        </Suspense>
-      </PageContentWithFooter>
-    </ScrollView>
-  )
-})
+//   return (
+//     <ScrollView ref={scrollRef}>
+//       <PageContentWithFooter>
+//         <SearchHeader />
+//         <VStack position="relative" flex={10} minHeight={600}>
+//           <SuspenseList revealOrder="forwards">
+//             {results.map((data, index) => {
+//               return (
+//                 <VStack key={index} height={ITEM_HEIGHT}>
+//                   <RestaurantListItem
+//                     curLocInfo={props.item.curLocInfo ?? null}
+//                     restaurantId={data.id}
+//                     restaurantSlug={data.slug}
+//                     rank={index + 1}
+//                     activeTagSlugs={activeTagSlugs}
+//                     meta={data.meta}
+//                   />
+//                 </VStack>
+//               )
+//             })}
+//           </SuspenseList>
+//         </VStack>
+//         <Suspense fallback={null}>
+//           <SearchFooter
+//             numResults={searchPageStore.results.length}
+//             scrollToTop={scrollToTopHandler}
+//           />
+//         </Suspense>
+//       </PageContentWithFooter>
+//     </ScrollView>
+//   )
+// })
 
 const SearchResultsInfiniteScroll = memo((props: Props) => {
   const drawerWidth = useAppDrawerWidth()
