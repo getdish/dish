@@ -277,7 +277,7 @@ export const useSetAppMap = (
   useEffect(() => {
     if (!isActive) return
     if (!center && !span) return
-    console.log('got new map pos from useSetAppMap', center)
+    // console.log('got new map pos from useSetAppMap', center)
     appMapStore.setPosition({
       center,
       span,

@@ -5,6 +5,7 @@ import { AbsoluteVStack, StackProps, Text, Theme, Tooltip, VStack } from 'snacku
 
 import { green, grey, red } from '../../constants/colors'
 import { isWeb } from '../../constants/constants'
+import { isTouchDevice } from '../../constants/platforms'
 import { getColorsForColor } from '../../helpers/getColorsForName'
 import { numberFormat } from '../../helpers/numberFormat'
 import { ProgressRing } from '../home/ProgressRing'
@@ -52,32 +53,58 @@ export const Score = memo(
           }
     const fontSize = Math.round(18 * scale + (size === 'sm' ? 2 : 0))
 
-    const upvote = (
-      <VoteButton
-        size={22 * scale}
-        Icon={ArrowUp}
-        shadowDirection="up"
-        voted={vote == 1}
-        color={vote === 1 ? 'green' : voteButtonColor}
-        onPress={(e) => {
-          e.stopPropagation()
-          setVote?.(vote === 1 ? 0 : 1)
-        }}
-      />
-    )
+    let voteContent: any = null
 
-    const downvote = (
-      <VoteButton
-        size={22 * scale}
-        Icon={ArrowDown}
-        voted={vote == -1}
-        color={vote === -1 ? 'red' : voteButtonColor}
-        onPress={(e) => {
-          e.stopPropagation()
-          setVote?.(vote == -1 ? 0 : -1)
-        }}
-      />
-    )
+    // disable voting on touch device directly on score
+    if (votable && !isTouchDevice) {
+      const upvote = (
+        <VoteButton
+          size={22 * scale}
+          Icon={ArrowUp}
+          shadowDirection="up"
+          voted={vote == 1}
+          color={vote === 1 ? 'green' : voteButtonColor}
+          onPress={(e) => {
+            e.stopPropagation()
+            setVote?.(vote === 1 ? 0 : 1)
+          }}
+        />
+      )
+      const downvote = (
+        <VoteButton
+          size={22 * scale}
+          Icon={ArrowDown}
+          voted={vote == -1}
+          color={vote === -1 ? 'red' : voteButtonColor}
+          onPress={(e) => {
+            e.stopPropagation()
+            setVote?.(vote == -1 ? 0 : -1)
+          }}
+        />
+      )
+      voteContent = (
+        <>
+          <AbsoluteVStack zIndex={-1} top={-20}>
+            {subtle ? (
+              upvote
+            ) : (
+              <Tooltip position="right" contents={upTooltip ?? 'Upvote'} {...isOpenProp}>
+                {upvote}
+              </Tooltip>
+            )}
+          </AbsoluteVStack>
+          <AbsoluteVStack zIndex={-1} bottom={-20}>
+            {subtle ? (
+              downvote
+            ) : (
+              <Tooltip position="right" contents={downTooltip ?? 'Downvote'} {...isOpenProp}>
+                {downvote}
+              </Tooltip>
+            )}
+          </AbsoluteVStack>
+        </>
+      )
+    }
 
     const colors = getColorsForColor(
       typeof rating === 'number' ? (rating >= 7 ? green : rating < 5 ? red : grey) : grey
@@ -100,28 +127,7 @@ export const Score = memo(
         borderRadius={1000}
         {...props}
       >
-        {votable && (
-          <>
-            <AbsoluteVStack zIndex={-1} top={-20}>
-              {subtle ? (
-                upvote
-              ) : (
-                <Tooltip position="right" contents={upTooltip ?? 'Upvote'} {...isOpenProp}>
-                  {upvote}
-                </Tooltip>
-              )}
-            </AbsoluteVStack>
-            <AbsoluteVStack zIndex={-1} bottom={-20}>
-              {subtle ? (
-                downvote
-              ) : (
-                <Tooltip position="right" contents={downTooltip ?? 'Downvote'} {...isOpenProp}>
-                  {downvote}
-                </Tooltip>
-              )}
-            </AbsoluteVStack>
-          </>
-        )}
+        {voteContent}
 
         {typeof rating === 'number' && (
           <AbsoluteVStack

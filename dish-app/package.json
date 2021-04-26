@@ -5,6 +5,11 @@
   "installConfig": {
     "hoistingLimits": "workspaces"
   },
+  "expo-yarn-workspaces": {
+    "symlinks": [
+      "expo-constants"
+    ]
+  },
   "scripts": {
     "etc:colorize": "../dishctl.sh run 'DEBUG=1 node -r esbuild-register ./etc/add_colors_to_tiles.ts'",
     "postinstall": "yarn patch-package || true && DEBUG=workspaces expo-yarn-workspaces postinstall",
@@ -78,6 +83,7 @@
     "aws-sdk": "^2.762.0",
     "bcryptjs": "^2.4.3",
     "expo": "^40.0.1",
+    "expo-constants": "^10.1.3",
     "expo-linear-gradient": "^9.0.0",
     "expo-status-bar": "^1.0.3",
     "express": "^4.17.1",

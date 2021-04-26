@@ -289,6 +289,7 @@ const TagButtonInner = (props: TagButtonProps) => {
       })}
       replace={replace}
       replaceSearch={replaceSearch}
+      asyncClick
     >
       {contents}
     </Link>

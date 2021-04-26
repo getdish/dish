@@ -80,7 +80,7 @@ export const AuthForm = memo(
           </>
         )}
 
-        <InteractiveContainer height={40} alignSelf="center">
+        <InteractiveContainer alignSelf="center">
           <Button
             borderRadius={0}
             active={formPage == 'login'}

@@ -81,7 +81,6 @@ export default memo(function HomePage(props: HomeStackViewProps<HomeStateItemHom
     //     return
     //   }
     // }
-    console.log('got region set pos', region)
     cancelUpdateRegion()
     setPosition(region)
   }, [isActive, JSON.stringify([region])])

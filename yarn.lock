@@ -1916,6 +1916,7 @@ __metadata:
     expo: ^40.0.1
     expo-app-loading: ^1.0.3
     expo-asset: ^8.3.1
+    expo-constants: ^10.1.3
     expo-linear-gradient: ^9.0.0
     expo-splash-screen: ^0.9.0
     expo-status-bar: ^1.0.3
@@ -2528,7 +2529,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@expo/config@npm:3.3.38":
+"@expo/config@npm:3.3.38, @expo/config@npm:^3.3.35":
   version: 3.3.38
   resolution: "@expo/config@npm:3.3.38"
   dependencies:
@@ -10701,6 +10702,16 @@ __metadata:
     react: "*"
     react-native: "*"
   checksum: 5b63e97ce2608b243425f839d49d7facb72e6d565e3b5743da24e60f57c6b9aa26b6e2b80d223d310a28d42b7ddc39bcf97ba3c4c6175ed809b44f822a5d2f31
+  languageName: node
+  linkType: hard
+
+"expo-constants@npm:^10.1.3":
+  version: 10.1.3
+  resolution: "expo-constants@npm:10.1.3"
+  dependencies:
+    "@expo/config": ^3.3.35
+    uuid: ^3.3.2
+  checksum: 8d4a581e0aa46e1dfbaa7ca93a0f92dab28e207a5e3f7056771d90319b3e1f5cf60945cf0eaa6f7f4432abfbe79840c3e0c0a1bc3fb6ac252ab2fcf4c5be9928
   languageName: node
   linkType: hard
 

@@ -31,7 +31,6 @@ export const MapView = ({
   const { width, height } = Dimensions.get('screen')
   const drawerStore = useStoreInstance(drawerStoreInstance)
   const drawerHeight = drawerStore.heightIgnoringFullyOpen
-  console.log('drawerHeight', drawerHeight, drawerStore.heightIgnoringFullyOpen)
   const [isLoaded, setIsLoaded] = useState(0)
   const paddingVertical = isLoaded ? drawerHeight / 2 : 0
   const ty = -paddingVertical
@@ -41,7 +40,6 @@ export const MapView = ({
   const onMoveEndDelayed = useDebounce(onMoveEnd ?? idFn, 250)
 
   useEffect(() => {
-    console.log('animating', ty)
     const spring = Animated.spring(tyRef.current, {
       useNativeDriver: true,
       toValue: ty,
@@ -81,11 +79,10 @@ export const MapView = ({
         ref={mapRef}
         styleURL={style}
         onDidFinishLoadingMap={() => {
-          console.log('did load map')
           setIsLoaded(1)
         }}
         onDidFailLoadingMap={() => {
-          console.warn('DID FAIL LOADING MAP!!!!!!!')
+          console.warn('FAIL LOADING MAP!!!!!!!')
           setIsLoaded(1)
         }}
         onTouchStart={onMoveStart}
@@ -165,7 +162,6 @@ export const MapView = ({
             const url = `${DISH_API_ENDPOINT}/tile/${name}.json`
             const sourceId = `${name}`.replace('.', '')
             const labelUrl = labelSource ? `${TILES_HOST}/${labelSource}.json` : ''
-            console.log('Loading tile url', name, sourceId, url, labelUrl)
             return (
               <MapboxGL.VectorSource key={sourceId} url={url} id={sourceId}>
                 <MapboxGL.FillLayer
@@ -314,7 +310,6 @@ export const MapView = ({
           />
           <MapboxGL.CircleLayer
             id="circlePointsLayer"
-            layerIndex={200}
             filter={['!', ['has', 'point_count']]}
             style={{
               circleColor: [
