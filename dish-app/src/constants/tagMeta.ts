@@ -22,7 +22,7 @@ export const tagDisplayIcons = {
 export const tagDescriptions = {
   gems: {
     dish: 'The best 🍔',
-    cuisine: 'The Best 🍔 Restaurants',
+    cuisine: 'The Best 🍔',
     plain: 'Uniquely Good',
   },
   vibe: {
