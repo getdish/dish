@@ -497,8 +497,9 @@ function createProxiedStore(storeInfo: Omit<StoreInfo, 'store' | 'source'>) {
           //
           if (process.env.NODE_ENV === 'development') {
             if (
-              process.env.LOG_LEVEL !== '0' ||
-              ((isDebugging || configureOpts.logLevel !== 'error') && !key.startsWith('get'))
+              process.env.LOG_LEVEL !== '0' &&
+              (isDebugging || configureOpts.logLevel !== 'error') &&
+              !key.startsWith('get')
             ) {
               const ogAction = action
               action = (...args: any[]) => {
