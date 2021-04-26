@@ -1,5 +1,36 @@
-- site: words, sections, make it dishapp.com main page
-- site: signup form, links to substack
+- mobile app:
+  - [0] (restaurantpage) hours modal text error
+  - [0] dont pop open full screen on restaurantpage etc
+  - [0] horizontal/vertiacal drag can get stuck moving between panes (noticed on search pane horizontal stuck)
+  - [0] remove vote arrows on dishes
+  - [0] cleanup searchpage spacing/styling
+  - [0] super slow autocomplete item tap
+  - [0] tapping list card stays touchable opacity 0.5 until after transition, shouldn't
+  - [0] add logo to login/signup drawer
+  - [0] map doesnt go to bottom on drawer open sometimes
+  - [0] (restaurantpage) many glitchy/layout fixes
+  - [0] (restaurantpage) cant go into gallery
+  - [0] (restaurantpage) dont do anything on change tag selected (scroll etc)
+  - [0] (restaurantpage) quick fix (or remove if takes more than a few minutes) header horizontal scroll for images
+  - [0] (restaurantpage) tap: address, phone, website get working
+  - [0] (searchpage) cant tap vote on tag
+  - [1] horizontal swipe on tags messes up drawer position
+  - [1] swipe back to go back on drawer cards
+  - [1] scroll UP should work when you are scrolled down on HOME, go to SEARCH, then go back to HOME, i think contentActive isn't being set or not propagating to scrolllock
+  - [1] (searchpage) no subtitle on header
+  - [1] map zooms out every drawer shift
+  - [1] speed up tag optimistic update
+  - [2] remove fork list button on searchpage (non touch)
+  - [2] re-search button should look like app menu button (bigger, shadow, blur, spaced bettter)
+  - [2] too easy to move horizontal a little bit before moving vertical, in general the vertical/horizontal scroll fighting needs to be improved
+  - [3] too much delay between open/close drawer and animate
+  - [3] dragging drawer seems to drop frames in dev mode at least, useNative possible?
+  - [3] map shouldn't shift down until touchend on drawer move
+  - [3] stack drawer should be faster, "optimistic" show/hide before state
+  - [3] login/signup animation is glitchy and slow
+  - get login/signup working
+  - [4] add apple sign in
+
 - move rest of site to beta.dishapp.com with login required
 - fix many data issues on specific restaurants
 - re-run crawl successfully on SF
