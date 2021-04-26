@@ -4,6 +4,7 @@ import { useStoreInstance } from '@dish/use-store'
 import React, { memo, useCallback, useEffect } from 'react'
 import { AbsoluteVStack, Theme, useDebounceValue } from 'snackui'
 
+import { zIndexAutocomplete } from '../constants/constants'
 import { defaultLocationAutocompleteResults } from '../constants/defaultLocationAutocompleteResults'
 import { AutocompleteItemFull, AutocompleteItemLocation } from '../helpers/createAutocomplete'
 import { locationToAutocomplete, searchLocations } from '../helpers/searchLocations'
@@ -19,7 +20,12 @@ export const AppAutocompleteLocation = () => {
   const autocompletes = useStoreInstance(autocompletesStore)
   return (
     <Theme name="darkTranslucent">
-      <AbsoluteVStack fullscreen opacity={autocompletes.target === 'location' ? 1 : 0}>
+      <AbsoluteVStack
+        fullscreen
+        opacity={autocompletes.target === 'location' ? 1 : 0}
+        zIndex={autocompletes.visible ? zIndexAutocomplete : -100}
+        pointerEvents="none"
+      >
         <AutocompleteLocationInner />
       </AbsoluteVStack>
     </Theme>
@@ -76,7 +82,7 @@ const AutocompleteLocationInner = memo(() => {
   }, [])
 
   return (
-    <AutocompleteFrame>
+    <AutocompleteFrame target="location">
       <AutocompleteResults target="location" onSelect={handleSelect} />
     </AutocompleteFrame>
   )

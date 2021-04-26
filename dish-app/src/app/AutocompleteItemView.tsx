@@ -74,6 +74,7 @@ export const AutocompleteItemView = memo(
           onSelect(result, index)
         }}
         stopPropagation
+        asyncClick
         preventNavigate={preventNavigate}
         {...(!showLocation &&
           result?.type !== 'orphan' && {

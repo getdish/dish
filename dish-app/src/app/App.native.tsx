@@ -1,9 +1,8 @@
 import { StatusBar } from 'expo-status-bar'
 import React, { Suspense } from 'react'
 import { LogBox } from 'react-native'
-import { VStack } from 'snackui'
+import { VStack, useTheme } from 'snackui'
 
-import { mapBackgroundColor } from '../constants/colors'
 import AppMap from './AppMap'
 import { AppMenuButton } from './AppMenuButton'
 import { AutocompleteEffects } from './AutocompletesStore'
@@ -16,13 +15,15 @@ import { Route } from './Route'
 LogBox.ignoreAllLogs(true)
 
 export function App() {
+  const theme = useTheme()
+
   return (
     <>
       <StatusBar style="dark" />
       <AutocompleteEffects />
       <VStack
         flex={1}
-        backgroundColor={mapBackgroundColor}
+        backgroundColor={theme.mapBackground}
         alignItems="center"
         justifyContent="center"
       >

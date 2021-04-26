@@ -59,7 +59,7 @@ const AutocompleteSearchInner = memo(() => {
   useSearchQueryEffect(query, store, activeTags)
 
   return (
-    <AutocompleteFrame>
+    <AutocompleteFrame target="search">
       <AutocompleteResults
         target="search"
         prefixResults={

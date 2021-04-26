@@ -1,7 +1,5 @@
 export const bgLightLight = '#B8E0F333'
 
-export const mapBackgroundColor = '#D7E6F5'
-
 export const bgAlt = 'rgb(230, 250, 255)'
 export const bgLight = 'rgb(240, 250, 255)'
 export const bgLightTranslucent = 'rgba(220, 234, 255, 0.25)'

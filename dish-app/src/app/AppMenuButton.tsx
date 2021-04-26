@@ -1,6 +1,6 @@
 import { Menu } from '@dish/react-feather'
 import { useStoreInstance } from '@dish/use-store'
-import React from 'react'
+import React, { memo } from 'react'
 import { TouchableWithoutFeedback } from 'react-native'
 import { AbsoluteVStack, BlurView, HStack, Modal, VStack, useMedia } from 'snackui'
 
@@ -10,7 +10,7 @@ import { appMenuStore } from './AppMenuStore'
 import { useSafeArea } from './hooks/useSafeArea'
 import { CloseButton } from './views/CloseButton'
 
-export const AppMenuButton = () => {
+export const AppMenuButton = memo(() => {
   const media = useMedia()
   const appMenu = useStoreInstance(appMenuStore)
   const safeArea = useSafeArea()
@@ -79,4 +79,4 @@ export const AppMenuButton = () => {
       </AbsoluteVStack>
     </>
   )
-}
+})

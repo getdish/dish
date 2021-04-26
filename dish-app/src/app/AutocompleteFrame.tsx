@@ -19,9 +19,15 @@ import { AutocompleteStore, AutocompleteTarget, autocompletesStore } from './Aut
 import { CloseButton } from './views/CloseButton'
 import { ContentParentStore, ContentScrollView } from './views/ContentScrollView'
 
-export const AutocompleteFrame = ({ children }: { children: any }) => {
+export const AutocompleteFrame = ({
+  children,
+  target,
+}: {
+  children: any
+  target: AutocompleteTarget
+}) => {
   const autocompletes = useStoreInstance(autocompletesStore)
-  const isShowing = autocompletes.visible
+  const isShowing = autocompletes.visible && autocompletes.target === target
   const media = useMedia()
   const theme = useTheme()
 
@@ -133,7 +139,7 @@ export const AutocompleteResults = ({
   return (
     <>
       {results.map((result, index) => {
-        const isActive = !isTouchDevice && activeIndex === index
+        const isActive = isTouchDevice ? index === 0 : activeIndex === index
         return (
           <React.Fragment key={`${result.id}${index}`}>
             <Theme name={isActive ? 'active' : 'dark'}>

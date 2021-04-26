@@ -11,7 +11,7 @@ export const HomeDrawerSmall = (props: { children: any }) => {
     return reaction(
       autocompletesStore,
       (x) => x.visible,
-      (visible) => {
+      function autocompleteVisibleToSnapAndKeyboard(visible) {
         if (visible === true) {
           drawerStore.setSnapIndex(0)
         } else {
