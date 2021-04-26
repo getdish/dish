@@ -1,7 +1,10 @@
 import React, { Suspense, memo, useContext } from 'react'
+import { Spacer } from 'snackui'
 import { AbsoluteVStack, HStack, Text, VStack, useMedia } from 'snackui'
 
+import { isWeb } from '../../../constants/constants'
 import { tagLenses } from '../../../constants/localTags'
+import { isTouchDevice } from '../../../constants/platforms'
 import { getActiveTags } from '../../../helpers/getActiveTags'
 import { getTitleForState } from '../../../helpers/getTitleForState'
 import { rgbString } from '../../../helpers/rgbString'
@@ -33,28 +36,36 @@ export const SearchHeader = memo(() => {
           <VStack paddingTop={media.sm ? 12 : 12 + 52 + 10} />
           <HStack position="relative">
             <VStack zIndex={0} transform={[{ translateX: -10 }]}>
-              <AbsoluteVStack zIndex={10000} top={-9} left={15}>
-                <SearchForkListButton size="sm" />
-              </AbsoluteVStack>
+              {!isTouchDevice && (
+                <AbsoluteVStack zIndex={10000} top={-9} left={15}>
+                  <SearchForkListButton size="sm" />
+                </AbsoluteVStack>
+              )}
               <SlantedTitle
-                paddingLeft={55}
-                paddingRight={35}
-                marginBottom={-5}
+                paddingLeft={35}
+                paddingRight={25}
+                paddingVertical={5}
+                marginBottom={-3}
                 backgroundColor={rgbString(lenseColor)}
               >
-                <VStack alignItems="center">
-                  <Text fontWeight="800" color="#fff" fontSize={24} lineHeight={28}>
+                <VStack alignItems="center" paddingTop={isWeb ? 0 : 5}>
+                  <Text height={28} fontWeight="800" color="#fff" fontSize={24} lineHeight={28}>
                     {title}
                   </Text>
-                  <Text
-                    color="#fff"
-                    opacity={0.8}
-                    className="nobreak"
-                    fontSize={16}
-                    fontWeight="300"
-                  >
-                    {subTitle}
-                  </Text>
+                  {!!subTitle && (
+                    <>
+                      <Spacer size={2} />
+                      <Text
+                        color="#fff"
+                        opacity={0.8}
+                        className="nobreak"
+                        fontSize={16}
+                        fontWeight="300"
+                      >
+                        {subTitle}
+                      </Text>
+                    </>
+                  )}
                 </VStack>
               </SlantedTitle>
               <SearchPageScoring />

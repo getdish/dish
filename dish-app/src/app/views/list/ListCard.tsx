@@ -75,11 +75,15 @@ export const ListCard = graphql(
             <VStack alignItems="center" justifyContent="center" flex={1}>
               <HStack flexWrap="wrap">
                 {photos.map((photo, index) => {
+                  const uri = getImageUrl(photo ?? '', 93, 93)
+                  if (!uri) {
+                    return null
+                  }
                   return (
                     <Image
                       key={index}
                       style={{ width: 93, height: 93, opacity: 0.5 }}
-                      source={{ uri: getImageUrl(photo ?? '', 93, 93) }}
+                      source={{ uri }}
                     />
                   )
                 })}

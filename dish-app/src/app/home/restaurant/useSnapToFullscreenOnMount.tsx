@@ -10,10 +10,10 @@ const snapToTopTypes = {}
 const disposes = new Set<Function>()
 
 export const useSnapToFullscreenOnMount = () => {
-  if (isWeb && !supportsTouchWeb) {
-    console.log('disable useSnapToFullscreenOnMount')
-    return
-  }
+  // if (isWeb && !supportsTouchWeb) {
+  console.log('disable useSnapToFullscreenOnMount')
+  return
+  // }
   useOnMount(() => {
     disposes.forEach((x) => x())
     disposes.clear()

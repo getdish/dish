@@ -1,15 +1,19 @@
 import { slugify } from '@dish/graph'
 import { Sun } from '@dish/react-feather'
 import React, { memo } from 'react'
+import { HStack } from 'snackui'
 import { AbsoluteVStack, Box, BoxProps, Divider, Paragraph, Spacer, Toast, VStack } from 'snackui'
 
+import { isWeb } from '../constants/constants'
 import { isHermes } from '../constants/platforms'
 import { UserMenuButton } from './AppMenu'
 import { appMenuStore } from './AppMenuStore'
 import { AuthForm } from './AuthForm'
 import { useUserStore } from './userStore'
+import { DishLogoButton } from './views/DishLogoButton'
 import { LinkButton } from './views/LinkButton'
 import { LinkButtonProps } from './views/LinkProps'
+import { LogoColor } from './views/Logo'
 
 export const AppMenuContents = memo(
   ({ hideUserMenu, ...props }: { hideUserMenu: Function } & BoxProps) => {
@@ -19,6 +23,13 @@ export const AppMenuContents = memo(
     return (
       <Box alignItems="stretch" pointerEvents="auto" minWidth={240} {...props}>
         <VStack spacing="sm" padding={10}>
+          {!isWeb && (
+            <VStack alignItems="center" justifyContent="center">
+              <LogoColor scale={1.5} />
+              <Spacer />
+            </VStack>
+          )}
+
           {!isLoggedIn && (
             <>
               <AuthForm onDidLogin={hideUserMenu} />

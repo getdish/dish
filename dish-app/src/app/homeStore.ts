@@ -244,9 +244,6 @@ class HomeStore extends Store {
         throw new Error(`Cant change the type`)
       }
     }
-    if (val['center']) {
-      console.log('UPDATE HOME CENTER', val['id'], val['region'], val['center'])
-    }
     this.allStates = {
       ...this.allStates,
       [val.id]: { ...state, ...val },
