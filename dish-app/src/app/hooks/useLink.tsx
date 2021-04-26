@@ -1,8 +1,7 @@
 import { series, sleep } from '@dish/async'
 import { isEqual, omit } from 'lodash'
 import React, { useEffect, useRef } from 'react'
-import { Pressable, TouchableOpacity } from 'react-native'
-import { useForceUpdate } from 'snackui'
+import { TouchableOpacity, useForceUpdate } from 'snackui'
 
 import { isWeb } from '../../constants/constants'
 import { addTagsToCache, allTags, getFullTagFromNameAndType } from '../../helpers/allTags'
@@ -93,9 +92,9 @@ export const useLink = (
         )
       }
       return (
-        // <Pressable onStartShouldSetResponderCapture={() => true} onPress={onPress}>
-        <TouchableOpacity onPress={onPress}>{children}</TouchableOpacity>
-        // </Pressable>
+        <TouchableOpacity onStartShouldSetResponderCapture={() => true} onPress={onPress}>
+          {children}
+        </TouchableOpacity>
       )
     },
   }
