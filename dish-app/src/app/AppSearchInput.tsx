@@ -490,9 +490,6 @@ const AppSearchInputTags = memo(({ input }: { input: HTMLInputElement | null }) 
                     backgroundColor: 'rgba(150,150,150,0.1)',
                   },
                 })}
-                {...(!isWeb && {
-                  transform: [{ translateY: 2 }],
-                })}
                 {...getTagButtonProps(tag)}
                 onPressOut={() => {
                   home.setSearchBarFocusedTag(tag)

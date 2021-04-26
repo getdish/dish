@@ -85,7 +85,7 @@ export const useAppAutocompleteEffects = () => {
     // ⚠️ NOTE: if your software keyboard is off on simulator, this will flicker and kill autocomplete right away
     const handleHide = debounce(() => {
       autocompletes.setVisible(false)
-    }, 40)
+    }, 200)
     const handleShow = () => {
       handleHide.cancel()
     }
