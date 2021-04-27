@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import {
   AbsoluteVStack,
   HStack,
@@ -31,6 +31,9 @@ export const StackDrawer = ({
 }: StackDrawerProps) => {
   const media = useMedia()
   const theme = useTheme()
+  useEffect(() => {
+    console.log('MOUNTED', title)
+  }, [])
   return (
     <HStack
       position="absolute"

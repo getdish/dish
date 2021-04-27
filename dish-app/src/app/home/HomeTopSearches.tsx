@@ -3,7 +3,7 @@ import { useThemeName } from 'snackui'
 import { HStack } from 'snackui'
 
 import { tagLenses } from '../../constants/localTags'
-import { rgbString } from '../../helpers/rgbString'
+import { rgbString } from '../../helpers/rgb'
 import { NavigableTag } from '../../types/tagTypes'
 import { Link } from '../views/Link'
 import { GradientButton } from './GradientButton'

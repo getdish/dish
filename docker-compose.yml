@@ -86,7 +86,8 @@ services:
       - DO_SPACES_ID=${DO_SPACES_ID}
       - DO_SPACES_SECRET=${DO_SPACES_SECRET}
       - GORSE_ENDPOINT=http://gorse:9000
-      - DISH_ENV=production
+      - DISH_ENV=${DISH_ENV:-production}
+      - NODE_ENV=${NODE_ENV:-production}
   hasura:
     image: ${DOCKER_HASURA_IMAGE:-registry.fly.io/dish-hasura:latest}
     restart: on-failure:5
@@ -119,7 +120,6 @@ services:
       dockerfile: ./dish-app/Dockerfile
     environment:
       - MARTIN_ENDPOINT=https://martin-tiles.dishapp.com
-      - HASURA_SECRET=${HASURA_GRAPHQL_ADMIN_SECRET:-password}
       - HASURA_GRAPHQL_ADMIN_SECRET=${HASURA_GRAPHQL_ADMIN_SECRET:-password}
       - JWT_ADMIN_PASSWORD=${JWT_ADMIN_PASSWORD}
       - SENDGRID_API_KEY=${SENDGRID_API_KEY}
@@ -130,6 +130,8 @@ services:
       - HASURA_ENDPOINT=http://hasura:8080
       - SEARCH_ENDPOINT=http://search:9999
       - REDIS_HOST=redis
+      - DISH_ENV=${DISH_ENV:-production}
+      - NODE_ENV=${NODE_ENV:-production}
     ports:
       - 4444:4444
     depends_on:
@@ -183,11 +185,10 @@ services:
       context: .
       dockerfile: ./services/worker/Dockerfile
     environment:
-      - DISH_ENV=staging
       - VIRTUAL_HOST=worker.dishapp.com
       - VIRTUAL_PORT=9000
       - HASURA_ENDPOINT=http://hasura:8080
-      - HASURA_SECRET=${HASURA_GRAPHQL_ADMIN_SECRET:-password}
+      - HASURA_GRAPHQL_ADMIN_SECRET=${HASURA_GRAPHQL_ADMIN_SECRET:-password}
       - REDIS_HOST=redis
       - PGHOST=postgres
       - POSTGRES_PASSWORD=${POSTGRES_PASSWORD:-postgres}

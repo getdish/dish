@@ -7,9 +7,12 @@ import { getAuthHeaders } from './getAuth'
 
 const run = async () => {
   await inspectWriteGenerate({
-    endpoint: GRAPH_API_INTERNAL,
     destination: 'src/graphql/schema.generated.ts',
-    headers: getAuthHeaders(true),
+    // @ts-ignore
+    introspection: {
+      endpoint: GRAPH_API_INTERNAL,
+      headers: getAuthHeaders(true),
+    },
     generateOptions: {},
     transformSchemaOptions: {
       ignoreArgs: ({ type }) => {

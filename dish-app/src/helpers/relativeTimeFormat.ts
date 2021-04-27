@@ -4,10 +4,11 @@ export const relativeTimeFormat = (
     locales,
     unit = 'hours',
     ...rest
-  }: Intl.RelativeTimeFormatOptions & {
+  }: any & {
     locales?: string | string[]
-    unit?: Intl.RelativeTimeFormatUnit
+    unit?: any
   } = {}
 ) => {
-  return new Intl.RelativeTimeFormat(locales, rest).format(date, unit)
+  return ''
+  // return new Intl.RelativeTimeFormat(locales, rest).format(date, unit)
 }

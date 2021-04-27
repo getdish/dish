@@ -106,7 +106,9 @@ export const RestaurantCardContent = graphql(
               </AbsoluteVStack>
             </>
           )}
-          photo={getImageUrl(restaurantPhoto, cardFrameWidth, cardFrameHeight)}
+          photo={
+            restaurantPhoto ? getImageUrl(restaurantPhoto, cardFrameWidth, cardFrameHeight) : null
+          }
           aspectFixed={aspectFixed}
           hoverable={hoverable}
           padTitleSide={padTitleSide}

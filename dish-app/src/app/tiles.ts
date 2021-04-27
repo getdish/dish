@@ -1,5 +1,5 @@
 import { green, purple } from '../constants/colors'
-import { hexToRGB } from '../helpers/hexToRGB'
+import { hexToRGB } from '../helpers/rgb'
 
 export type Tile = {
   name: string

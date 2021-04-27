@@ -16,6 +16,7 @@ import { registerRootComponent } from 'expo'
 // }
 
 try {
+  console.log('🥾')
   const { Root } = require('./src/Root')
   // registerRootComponent calls AppRegistry.registerComponent('main', () => App);
   // It also ensures that whether you load the app in the Expo client or in a native build,

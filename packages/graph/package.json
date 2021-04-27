@@ -9,19 +9,20 @@
   "scripts": {
     "build": "esdx legacy",
     "watch": "esdx-watch legacy",
-    "generate": "ENV=dev ../../dishctl.sh run 'node ./dist/generate.js'",
-    "test": "TARGET=node DISH_ENV=test ava test/* --verbose --serial",
-    "test:debug": "TARGET=node DEBUG=1 DISH_ENV=test ava test/* --verbose --serial",
-    "test:watch": "TARGET=node DISH_ENV=test ava test/* --watch --verbose --serial",
-    "test-new": "TARGET=node DISH_ENV=test ava test/tag.ts --verbose"
+    "generate": "DISH_ENV=development ../../dishctl.sh run 'node ./dist/generate.js'",
+    "test": "NODE_ENV=test TARGET=node ava test/* --verbose --serial",
+    "test:only": "NODE_ENV=test TARGET=node ava test/* --verbose --serial",
+    "test:debug": "NODE_ENV=test TARGET=node DEBUG=1 ava test/* --verbose --serial",
+    "test:watch": "NODE_ENV=test TARGET=node ava test/* --watch --verbose --serial",
+    "test-new": "NODE_ENV=test TARGET=node ava test/tag.ts --verbose"
   },
   "dependencies": {
     "@dish/helpers": "*",
     "@dish/use-store": "*",
-    "@gqless/logger": "^2.0.10",
-    "@gqless/react": "^2.0.12",
+    "@gqless/logger": "^2.0.11",
+    "@gqless/react": "^2.0.15",
     "esbuild-register": "*",
-    "gqless": "^2.0.11",
+    "gqless": "^2.0.13",
     "graphql": "^15.5.0",
     "isomorphic-unfetch": "^3.1.0",
     "lodash": "*",
@@ -32,7 +33,7 @@
     "@dish/esdx": "*",
     "@dish/helpers-node": "*",
     "@dish/react-test-env": "*",
-    "@gqless/cli": "^2.0.6",
+    "@gqless/cli": "^2.0.15",
     "ava": "^3.14.0"
   }
 }

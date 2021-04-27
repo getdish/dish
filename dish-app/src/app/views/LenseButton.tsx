@@ -2,7 +2,7 @@ import React from 'react'
 import { Text, VStack, useMedia } from 'snackui'
 
 import { tagDisplayName } from '../../constants/tagDisplayName'
-import { rgbString } from '../../helpers/rgbString'
+import { rgbString } from '../../helpers/rgb'
 import { NavigableTag } from '../../types/tagTypes'
 import { Link } from './Link'
 

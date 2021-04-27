@@ -54,6 +54,9 @@ export function createWebpackConfig({
   const hashFileNamePart = '[contenthash]'
   const hotEntry = isHot ? 'webpack-hot-middleware/client' : null
   const smp = new SpeedMeasurePlugin()
+  const cacheName = `${process.env.TARGET}${process.env.NODE_ENV}${GIT_SHA}`
+
+  console.log(' [webpack] cacheName', cacheName)
 
   function getConfig() {
     const defines = {
@@ -86,7 +89,7 @@ export function createWebpackConfig({
         // lazyCompilation: true,
       },
       cache: {
-        name: `${process.env.TARGET}${process.env.NODE_ENV}${GIT_SHA}`,
+        name: cacheName,
         type: 'filesystem',
         buildDependencies: {
           defaultConfig: [__filename],
@@ -366,7 +369,7 @@ export function createWebpackConfig({
   const conf = getConfig()
 
   if (process.env.VERBOSE) {
-    console.log('Config:\n', conf)
+    console.log('Config:\n', cacheName, conf)
     if (!Array.isArray(conf)) {
       console.log('rules', JSON.stringify(conf.module.rules, null, 2))
     }

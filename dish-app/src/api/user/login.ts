@@ -4,7 +4,10 @@ import { isPasswordValid, jwtSign } from '@dish/helpers-node'
 import { getUserFromEmailOrUsername } from './_user'
 
 export default jsonRoute(async (req, res) => {
-  if (req.method !== 'POST') return
+  if (req.method !== 'POST') {
+    res.send(200)
+    return
+  }
   const { login, password } = req.body
   try {
     const user = await getUserFromEmailOrUsername(login)

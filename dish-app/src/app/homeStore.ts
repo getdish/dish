@@ -525,27 +525,27 @@ class HomeStore extends Store {
   async navigate({ state, ...rest }: HomeStateNav) {
     const navState = { state: state ?? this.currentState, ...rest }
     const nextState = getNextHomeState(navState)
-    const curState = this.currentState
+    // const curState = this.currentState
 
-    const updateTags = () => {
-      if (!('activeTags' in curState)) return
-      if (!('activeTags' in nextState)) return
-      const curActive = curState.activeTags
-      const nextActive = nextState.activeTags
-      if (isEqual(curActive, nextActive)) {
-        return
-      }
-      this.updateActiveSearchState({
-        id: curState.id,
-        type: curState.type,
-        searchQuery: nextState.searchQuery,
-        activeTags: nextActive,
-      })
-    }
+    // const updateTags = () => {
+    //   if (!('activeTags' in curState)) return
+    //   if (!('activeTags' in nextState)) return
+    //   const curActive = curState.activeTags
+    //   const nextActive = nextState.activeTags
+    //   if (isEqual(curActive, nextActive)) {
+    //     return
+    //   }
+    //   this.updateActiveSearchState({
+    //     id: curState.id,
+    //     type: curState.type,
+    //     searchQuery: nextState.searchQuery,
+    //     activeTags: nextActive,
+    //   })
+    // }
 
     const shouldNav = getShouldNavigate(nextState)
     if (!shouldNav) {
-      updateTags()
+      // updateTags()
       return false
     }
 

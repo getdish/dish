@@ -183,7 +183,7 @@ export const tagLenses = [
     type: 'lense',
     icon: '💎',
     slug: 'lenses__gems',
-    rgb: ['199', ' 58', ' 107'],
+    rgb: ['169', ' 88', ' 127'],
   },
   {
     id: 'b1580bd8-4f60-45e3-a5a9-c31effe8e7a3',

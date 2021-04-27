@@ -8,6 +8,7 @@ export const EQUALITY_KEY = Symbol('EQUALITY_KEY')
 export type IsEqualOptions = {
   ignoreKeys?: { [key: string]: boolean }
   simpleCompareKeys?: { [key: string]: boolean }
+  log: boolean
 }
 
 export function isEqual(a: any, b: any, options?: IsEqualOptions) {
@@ -98,14 +99,26 @@ function isEqualInner(a: any, b: any, options?: IsEqualOptions) {
     var keys = keyList(a)
     length = keys.length
 
-    if (length !== keyList(b).length) return false
+    const log = (options && options.log) || false
 
-    for (i = length; i-- !== 0; ) if (!hasProp.call(b, keys[i])) return false
-    // end fast-deep-equal
+    const keysB = keyList(b)
+    if (length !== keysB.length) {
+      if (log) console.log('diff keylist', keysB)
+      return false
+    }
 
-    // start @dish/fast-compare
+    for (i = length; i-- !== 0; ) {
+      if (!hasProp.call(b, keys[i])) {
+        if (log) console.log('diff no key in', keys[i])
+        return false
+      }
+    }
+
     // custom handling for DOM elements
-    if (hasElementType && a instanceof Element && b instanceof Element) return a === b
+    if (hasElementType && a instanceof Element && b instanceof Element) {
+      if (log) console.log('diff dom not equal')
+      return a === b
+    }
 
     for (i = length; i-- !== 0; ) {
       key = keys[i]
@@ -117,6 +130,7 @@ function isEqualInner(a: any, b: any, options?: IsEqualOptions) {
           if (a[key] === b[key]) {
             continue
           } else {
+            if (log) console.log('diff simplecomapre', key)
             return false
           }
         }
@@ -130,7 +144,12 @@ function isEqualInner(a: any, b: any, options?: IsEqualOptions) {
         continue
       } else {
         // all other properties should be traversed as usual
-        if (!isEqualInner(a[key], b[key])) return false
+        if (!isEqualInner(a[key], b[key])) {
+          if (log) {
+            console.log('diff', key, a[key], b[key])
+          }
+          return false
+        }
       }
     }
     return true

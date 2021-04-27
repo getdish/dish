@@ -21,20 +21,19 @@
 //   )
 // }
 
-// import './whydidyourender'
 import './globals'
 
+// import './whydidyourender'
 import { useHydrateCache } from '@dish/graph'
 import { configureAssertHelpers } from '@dish/helpers'
 import { ProvideRouter } from '@dish/router'
 import { configureUseStore } from '@dish/use-store'
 import AppLoading from 'expo-app-loading'
 import React, { Suspense, useEffect, useState } from 'react'
-import { Pressable, useColorScheme } from 'react-native'
+import { useColorScheme } from 'react-native'
 import { SafeAreaProvider } from 'react-native-safe-area-context'
 import { QueryClientProvider } from 'react-query'
-import { ThemeProvider, Toast, configureThemes } from 'snackui'
-import { VStack } from 'snackui'
+import { ThemeProvider, Toast, VStack, configureThemes } from 'snackui'
 
 import { App } from './app/App'
 import { homeStore } from './app/homeStore'

@@ -3,7 +3,16 @@ import { RestaurantSearchItem, slugify } from '@dish/graph'
 import { ArrowUp } from '@dish/react-feather'
 import { HistoryItem } from '@dish/router'
 import { reaction } from '@dish/use-store'
-import React, { Suspense, forwardRef, memo, useCallback, useEffect, useMemo, useRef } from 'react'
+import React, {
+  Suspense,
+  forwardRef,
+  memo,
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from 'react'
 import { ScrollView, ScrollViewProps } from 'react-native'
 import { DataProvider, LayoutProvider, RecyclerListView } from 'recyclerlistview'
 import {
@@ -57,26 +66,41 @@ export default memo(function SearchPage(props: Props) {
   const { title } = getTitleForState(state, {
     lowerCase: true,
   })
-  const route = useLastValueWhen(
+  const route = useLastValueWhen<HistoryItem<'search'>>(
+    // @ts-expect-error
     () => router.curPage,
     router.curPage.name !== 'search'
-  ) as HistoryItem<'search'>
+  )
+  const [isLoaded, setIsLoaded] = useState(false)
+  useEffect(() => {
+    return series([
+      // dont show right away to get animation
+      () => sleep(150),
+      () => setIsLoaded(true),
+    ])
+  }, [])
+
+  console.log('SearchPage', props.isActive)
 
   return (
     <>
       <PageTitleTag>{title}</PageTitleTag>
       <StackDrawer closable>
-        <HomeSuspense>
-          <SearchNavBarContainer isActive={props.isActive} />
-        </HomeSuspense>
-        <HomeSuspense fallback={<SearchLoading />}>
-          <SearchPageContent
-            key={state.id + JSON.stringify([state.activeTags, state.searchQuery, state.region])}
-            {...props}
-            route={route}
-            item={state}
-          />
-        </HomeSuspense>
+        {isLoaded ? (
+          <>
+            <HomeSuspense>
+              <SearchNavBarContainer isActive={props.isActive} />
+            </HomeSuspense>
+            <HomeSuspense fallback={<SearchLoading />}>
+              <SearchPageContent
+                key={state.id + JSON.stringify([state.activeTags, state.searchQuery, state.region])}
+                {...props}
+                route={route}
+                item={state}
+              />
+            </HomeSuspense>
+          </>
+        ) : null}
       </StackDrawer>
     </>
   )

@@ -79,17 +79,17 @@ test('Finding a restaurant by location', async (t) => {
   t.is(restaurants[0].name, 'Test Restaurant')
 })
 
-test.skip('is open now', async (t) => {
-  const url = 'http://worldtimeapi.org/api/timezone/America/Los_Angeles'
-  const now_string = await fetch(url).then((res) => res.json())
-  const now = moment(now_string.datetime)
-  const tz_offset = now_string.utc_offset
-  const today = now.format('YYYY-MM-DD')
-  const open = moment(`${today}T11:00:00${tz_offset}`)
-  const close = moment(`${today}T20:30:00${tz_offset}`)
-  const is_open = now.isBetween(open, close)
-  const restaurant = await restaurantFindOne({
-    name: `Test Restaurant`,
-  })
-  t.is(restaurant?.is_open_now, is_open)
-})
+// test.skip('is open now', async (t) => {
+//   const url = 'http://worldtimeapi.org/api/timezone/America/Los_Angeles'
+//   const now_string = await fetch(url).then((res) => res.json())
+//   const now = moment(now_string.datetime)
+//   const tz_offset = now_string.utc_offset
+//   const today = now.format('YYYY-MM-DD')
+//   const open = moment(`${today}T11:00:00${tz_offset}`)
+//   const close = moment(`${today}T20:30:00${tz_offset}`)
+//   const is_open = now.isBetween(open, close)
+//   const restaurant = await restaurantFindOne({
+//     name: `Test Restaurant`,
+//   })
+//   t.is(restaurant?.is_open_now, is_open)
+// })
