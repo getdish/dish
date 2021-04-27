@@ -222,11 +222,15 @@ const TagButtonInner = (props: TagButtonProps) => {
               width={pieSize + 2}
               height={pieSize + 2}
               transform={[{ rotate: `${(1 - rating / 10) * 180}deg` }]}
-              borderWidth={1}
+              borderWidth={2}
               borderColor={theme.backgroundColorAlt}
             >
               <AbsoluteVStack opacity={floating ? 1 : 0.7} fullscreen>
-                <Pie size={pieSize} percent={rating * 10} color={floating ? `#fff` : theme.color} />
+                <Pie
+                  size={pieSize - 2}
+                  percent={rating * 10}
+                  color={floating ? `#fff` : theme.color}
+                />
               </AbsoluteVStack>
             </VStack>
           )}
