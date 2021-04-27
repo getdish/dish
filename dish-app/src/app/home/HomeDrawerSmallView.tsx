@@ -6,6 +6,8 @@ import { AbsoluteVStack, VStack, useMedia } from 'snackui'
 
 import { pageWidthMax, searchBarHeight, zIndexDrawer } from '../../constants/constants'
 import { isWebIOS } from '../../helpers/isIOS'
+import { AppAutocompleteLocation } from '../AppAutocompleteLocation'
+import { AppAutocompleteSearch } from '../AppAutocompleteSearch'
 import { AppSearchBar } from '../AppSearchBar'
 import { blurSearchInput } from '../AppSearchInput'
 import { autocompletesStore } from '../AutocompletesStore'
@@ -133,7 +135,11 @@ export const HomeDrawerSmallView = memo((props: { children: any }) => {
               </AbsoluteVStack>
             )}
 
-            {children}
+            <VStack position="relative" flex={1}>
+              <AppAutocompleteLocation />
+              <AppAutocompleteSearch />
+              {children}
+            </VStack>
           </VStack>
         </BottomSheetContainer>
       </Animated.View>

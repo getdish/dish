@@ -329,7 +329,6 @@ const next = () => {
 const handleKeyPress = async (e: any, inputStore: InputStore) => {
   // @ts-ignore
   const code = e.keyCode
-  console.log('key', code)
   const isAutocompleteActive = autocompletesStore.visible
   const autocomplete = getStore(AutocompleteStore, {
     target: autocompletesStore.target,
@@ -496,7 +495,6 @@ const AppSearchInputTags = memo(({ input }: { input: HTMLInputElement | null }) 
                 }}
                 closable
                 onClose={async () => {
-                  console.log('navigate to close', tag)
                   home.navigate({ tags: [tag] })
                   await fullyIdle()
                   setAvoidNextAutocompleteShowOnFocus()

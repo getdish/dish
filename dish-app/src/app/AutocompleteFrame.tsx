@@ -44,20 +44,25 @@ export const AutocompleteFrame = ({
 
   return (
     <AbsoluteVStack
-      position="absolute"
       opacity={isShowing ? 1 : 0}
       pointerEvents={isShowing ? 'auto' : 'none'}
-      fullscreen
-      alignItems="flex-end"
-      borderRadius={12}
+      borderRadius={14}
       overflow="hidden"
-      top={media.sm ? 10 : 0}
+      top={0}
+      bottom={0}
+      left={0}
+      right={0}
+      {...(media.sm && {
+        top: 10,
+      })}
+
       // DONT PUT EVENT HERE NEED TO DEBUG WHY IT BREAKS ON NATIVE
     >
       <VStack
         maxWidth={drawerWidthMax}
         width="100%"
         height="100%"
+        maxHeight="100%"
         // DONT PUT EVENT HERE NEED TO DEBUG WHY IT BREAKS ON NATIVE
       >
         <AbsoluteVStack backgroundColor={theme.backgroundColor} fullscreen opacity={0.9} />
