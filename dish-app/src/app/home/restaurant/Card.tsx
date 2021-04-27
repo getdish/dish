@@ -45,7 +45,7 @@ const heights = {
 const scales = {
   xs: 0.6,
   sm: 0.85,
-  md: 1,
+  md: 0.95,
 }
 
 const getLongestWord = (title: string) =>
@@ -199,7 +199,7 @@ export function Card({
                     letterSpacing={size === 'xs' ? 0 : -1}
                     color="#fff"
                     fontSize={fontSize}
-                    lineHeight={fontSize * 1.15}
+                    lineHeight={fontSize * 1.1}
                     flexShrink={0}
                   >
                     {title}

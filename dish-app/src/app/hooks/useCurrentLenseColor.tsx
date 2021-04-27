@@ -7,7 +7,7 @@ import { useHomeStore } from '../homeStore'
 
 export const defaultLenseColor = {
   name: 'light',
-  rgb: [0, 0, 0] as RGB,
+  rgb: [0, 0, 0, 0.85] as RGB,
 }
 
 export const defaultLenseColorDark = {
