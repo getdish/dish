@@ -34,7 +34,7 @@ const fetchFromGraph = async (req: Request, body?: any) => {
     })
     return await hasuraRes.json()
   } finally {
-    console.log(` [graph] fetch: ${start}ms`)
+    console.log(` [graph] fetch: ${Date.now() - start}ms`)
   }
 }
 
@@ -110,31 +110,32 @@ export default route(async (req, res) => {
         return { type: 'empty', body, keys } as const
       }
       // partial cache, re-create query without cached items
+      const parsedQuery = print({
+        ...parsed,
+        definitions: [
+          {
+            ...operation,
+            selectionSet: {
+              ...operation.selectionSet,
+              selections: uncachedSelections,
+            },
+          },
+        ],
+      })
+      const partialBody = JSON.stringify({
+        query: parsedQuery,
+        variables,
+      })
       return {
         type: 'partial',
         data,
         keys,
-        body: JSON.stringify({
-          query: print({
-            ...parsed,
-            definitions: [
-              {
-                ...operation,
-                selectionSet: {
-                  ...operation.selectionSet,
-                  selections: uncachedSelections,
-                },
-              },
-            ],
-          }),
-          variables,
-        }),
+        body: partialBody,
       } as const
     })()
 
     // not at all cacheable
     if (!cache) {
-      console.log('non-cacheable', req.body)
       res.send(await fetchFromGraph(req))
       return
     }
@@ -159,11 +160,13 @@ export default route(async (req, res) => {
     // update cache
     for (const name in response.data) {
       const cacheKey = cache.keys[name]
-      const val = response.data[name]
-      // console.log('set into cache', name, cacheKey)
-      redisClient.set(cacheKey, JSON.stringify(val), () => {
-        //
-      })
+      if (cacheKey) {
+        const val = response.data[name]
+        // console.log('set into cache', name, cacheKey)
+        redisClient.set(cacheKey, JSON.stringify(val), () => {
+          //
+        })
+      }
     }
 
     // merge in cached parts to response

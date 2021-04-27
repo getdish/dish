@@ -1,5 +1,5 @@
 // TODO if we can have compiler pick up a few more things speeds will go up a lot
-import { Tag, TagQuery, TagType } from '@dish/graph'
+import { Tag, TagQuery, TagType, graphql } from '@dish/graph'
 import { ThumbsDown, ThumbsUp, X } from '@dish/react-feather'
 import React, { memo } from 'react'
 import { Image } from 'react-native'
@@ -300,57 +300,62 @@ const TagButtonInner = (props: TagButtonProps) => {
   )
 }
 
-const TagButtonVote = (props: TagButtonProps & { scale: number }) => {
-  const { scale } = props
-  const { vote, setVote } = useUserTagVotes(props.restaurantSlug ?? '', {
-    [getTagSlug(props.slug)]: true,
-  })
-  const Icon = vote ? ThumbsDown : ThumbsUp
-  const color = props.color ?? 'rgba(0,0,0,0.7)'
-  const iconProps = {
-    size: 16 * scale,
-    color,
-  }
+const TagButtonVote = graphql(
+  (props: TagButtonProps & { scale: number }) => {
+    const { scale } = props
+    const { vote, setVote } = useUserTagVotes(props.restaurantSlug ?? '', {
+      [getTagSlug(props.slug)]: true,
+    })
+    const Icon = vote ? ThumbsDown : ThumbsUp
+    const color = props.color ?? 'rgba(0,0,0,0.7)'
+    const iconProps = {
+      size: 16 * scale,
+      color,
+    }
 
-  return (
-    <VStack
-      backgroundColor="rgba(100,100,100,0.15)"
-      alignItems="center"
-      justifyContent="center"
-      borderRadius={100}
-      width={32 * scale}
-      height={32 * scale}
-      marginRight={5 * scale}
-      marginVertical={-3 * scale}
-      opacity={0.6}
-      hoverStyle={{
-        opacity: 1,
-        transform: [{ scale: 1.1 }],
-      }}
-      pressStyle={{
-        opacity: 0.5,
-        transform: [{ scale: 0.9 }],
-      }}
-      onPress={(e) => {
-        prevent(e)
-        setVote(vote == 0 ? 1 : vote === -1 ? 0 : -1)
-      }}
-    >
-      {vote === 0 && <Icon {...iconProps} />}
-      {vote !== 0 && (
-        <VStack
-          width={24 * scale}
-          height={24 * scale}
-          backgroundColor={color}
-          borderRadius={100}
-          alignItems="center"
-          justifyContent="center"
-        >
-          <Text color="#fff" fontSize={12 * scale} fontWeight="600">
-            {vote < 0 ? vote : `+${vote}`}
-          </Text>
-        </VStack>
-      )}
-    </VStack>
-  )
-}
+    return (
+      <VStack
+        backgroundColor="rgba(100,100,100,0.15)"
+        alignItems="center"
+        justifyContent="center"
+        borderRadius={100}
+        width={32 * scale}
+        height={32 * scale}
+        marginRight={5 * scale}
+        marginVertical={-3 * scale}
+        opacity={0.6}
+        hoverStyle={{
+          opacity: 1,
+          transform: [{ scale: 1.1 }],
+        }}
+        pressStyle={{
+          opacity: 0.5,
+          transform: [{ scale: 0.9 }],
+        }}
+        onPress={(e) => {
+          prevent(e)
+          setVote(vote == 0 ? 1 : vote === -1 ? 0 : -1)
+        }}
+      >
+        {vote === 0 && <Icon {...iconProps} />}
+        {vote !== 0 && (
+          <VStack
+            width={24 * scale}
+            height={24 * scale}
+            backgroundColor={color}
+            borderRadius={100}
+            alignItems="center"
+            justifyContent="center"
+          >
+            <Text color="#fff" fontSize={12 * scale} fontWeight="600">
+              {vote < 0 ? vote : `+${vote}`}
+            </Text>
+          </VStack>
+        )}
+      </VStack>
+    )
+  },
+  {
+    suspense: false,
+  }
+)
