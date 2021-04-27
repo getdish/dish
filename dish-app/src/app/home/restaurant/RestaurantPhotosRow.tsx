@@ -1,7 +1,8 @@
 import { graphql, order_by } from '@dish/graph'
 import { isPresent } from '@dish/helpers'
-import React, { Suspense, memo } from 'react'
+import React, { Suspense, memo, useMemo } from 'react'
 import { Image } from 'react-native'
+import { useConstant } from 'snackui'
 import { HStack, Text, VStack } from 'snackui'
 
 import { bgLight } from '../../../constants/colors'
@@ -51,6 +52,7 @@ export const RestaurantPhotosRowContent = memo(
       .filter(isPresent)
 
     const photos = mainPhoto ? [mainPhoto, ...otherPhotos] : otherPhotos
+    const initialWidth = useConstant(() => width)
 
     return (
       <HStack>
@@ -64,10 +66,13 @@ export const RestaurantPhotosRowContent = memo(
             {photos.map((url, index) => {
               const photoHeight = escalating ? (index < 2 ? height : 500) : height
               const isEscalated = escalating && index >= 2
-              const photoWidth = isEscalated ? width * 1.25 : width
+              const wScale = isEscalated ? 1.25 : 1
+              const containerWidth = width * wScale
+              // dont change uri
+              const uri = getImageUrl(url, initialWidth * wScale * 1.5, photoHeight * 1.5, 100)
               return (
                 <VStack
-                  width={photoWidth}
+                  width={containerWidth}
                   height={photoHeight}
                   key={index}
                   className={`scroll-snap-photo`}
@@ -76,11 +81,11 @@ export const RestaurantPhotosRowContent = memo(
                     <Link name="gallery" params={{ restaurantSlug }}>
                       <Image
                         source={{
-                          uri: getImageUrl(url, photoWidth * 2, photoHeight * 2, 100),
+                          uri,
                         }}
                         style={{
                           height: photoHeight,
-                          width: photoWidth,
+                          width: containerWidth,
                         }}
                         resizeMode="cover"
                       />

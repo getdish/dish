@@ -20,7 +20,7 @@
     "@dish/helpers": "*",
     "@dish/use-store": "*",
     "@gqless/logger": "^2.0.11",
-    "@gqless/react": "^2.0.15",
+    "@gqless/react": "^2.0.12",
     "esbuild-register": "*",
     "gqless": "^2.0.13",
     "graphql": "^15.5.0",

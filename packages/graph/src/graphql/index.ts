@@ -53,7 +53,7 @@ export const client = createClient<GeneratedSchema>({
   schema: generatedSchema,
   scalarsEnumsHash,
   queryFetcher,
-  catchSelectionsTimeMS: 20,
+  catchSelectionsTimeMS: 15,
   normalization: true,
 })
 
