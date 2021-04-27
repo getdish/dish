@@ -22,7 +22,6 @@ export const useSearchBarTheme = () => {
       backgroundRgb: [255, 255, 255],
     }
   }
-  console.log('what is', rgbString(color.rgb))
   return {
     theme: color.name,
     color: '#fff',

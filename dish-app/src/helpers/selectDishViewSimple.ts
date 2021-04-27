@@ -25,7 +25,7 @@ export const selectRishDishViewSimple = (tag: restaurant_tag): DishTagItemSimple
     name: tag.tag?.name || '',
     icon: tag.tag?.icon || '',
     slug: tag.tag?.slug || '',
-    score: (tag.upvotes || 0) - Math.abs(tag.downvotes || 0),
+    score: rating,
     rating,
     image: tagImage || tagFallbackImage,
     isFallback: !tagImage,

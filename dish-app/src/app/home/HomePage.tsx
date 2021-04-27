@@ -210,7 +210,13 @@ export default memo(function HomePage(props: HomeStackViewProps<HomeStateItemHom
 
               <PageContentWithFooter>
                 {showFeed && (
-                  <HomePageFeed {...props} regionName={regionName} region={region} {...position} />
+                  <HomePageFeed
+                    {...props}
+                    item={state}
+                    regionName={regionName}
+                    region={region}
+                    {...position}
+                  />
                 )}
               </PageContentWithFooter>
             </VStack>

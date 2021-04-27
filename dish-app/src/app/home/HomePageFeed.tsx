@@ -26,6 +26,7 @@ function useHomeFeed(props: HomeFeedProps): FI[] {
   const { item, region } = props
   const dishItems = useFeedDishItems(region)
   const hotNewItems = useHomeFeedTrendingNew(props)
+
   return useMemo(() => {
     const [newest, hottest] = hotNewItems
     return [
@@ -56,123 +57,121 @@ function useHomeFeed(props: HomeFeedProps): FI[] {
   }, [dishItems, hotNewItems])
 }
 
-export const HomePageFeed = memo(
-  graphql(function HomePageFeed(props: HomeFeedProps) {
-    const { regionName, region, center, span, item, isActive } = props
-    const items = useHomeFeed(props)
-    const isLoading = !!(!regionName || !items[0]?.id)
-    const [hovered, setHovered] = useState<null | string>(null)
-    const [hoveredResults, setHoveredResults] = useState<null | {
-      via: FI['type']
-      results: RestaurantOnlyIds[]
-    }>(null)
+export const HomePageFeed = graphql(function HomePageFeed(props: HomeFeedProps) {
+  const { regionName, region, center, span, item, isActive } = props
+  const items = useHomeFeed(props)
+  const isLoading = !!(!regionName || !items[0]?.id)
+  const [hovered, setHovered] = useState<null | string>(null)
+  const [hoveredResults, setHoveredResults] = useState<null | {
+    via: FI['type']
+    results: RestaurantOnlyIds[]
+  }>(null)
 
-    const results = useMemo(() => {
-      return items.flatMap((x) => {
-        if (hovered && hovered !== x.id) {
-          return []
-        }
-        if (hoveredResults?.via === x.type) {
-          return hoveredResults.results
-        }
-        if ('restaurants' in x) {
-          return x.restaurants.map(getRestaurantIdentifiers)
-        }
+  const results = useMemo(() => {
+    return items.flatMap((x) => {
+      if (hovered && hovered !== x.id) {
         return []
-      })
-    }, [items, hoveredResults])
-
-    // const mapRegion = region
-    //   ? ({
-    //       slug: region.slug,
-    //       name: region.name,
-    //       geometry: region.bbox,
-    //       via: 'click',
-    //     } as const)
-    //   : null
-
-    useSetAppMap({
-      isActive,
-      results,
-      center,
-      span,
+      }
+      if (hoveredResults?.via === x.type) {
+        return hoveredResults.results
+      }
+      if ('restaurants' in x) {
+        return x.restaurants.map(getRestaurantIdentifiers)
+      }
+      return []
     })
+  }, [items, hoveredResults])
 
-    const contents = useMemo(() => {
-      return items.map((item) => {
-        switch (item.type) {
-          case 'space':
-            return <Spacer size="xl" />
-          case 'new':
-          case 'hot':
-            return (
-              <HomeFeedTrendingNew
-                {...item}
-                onHoverResults={(results) => {
-                  setHoveredResults({ via: item.type, results })
-                }}
-              />
-            )
-          case 'dish-restaurants':
-            return (
-              <HomeFeedDishRestaurants
-                {...item}
-                onHoverResults={(results) => {
-                  setHoveredResults({ via: item.type, results })
-                }}
-              />
-            )
-          case 'cuisine':
-            return (
-              <HomeFeedCuisineItem
-                {...item}
-                onHoverResults={(results) => {
-                  console.log('setting hover', results)
-                  setHoveredResults({ via: item.type, results })
-                }}
-              />
-            )
-          case 'list':
-            return (
-              <HomeFeedLists
-                {...item}
-                onHoverResults={(results) => {
-                  setHoveredResults({ via: item.type, results })
-                }}
-              />
-            )
-          default:
-            return null
-        }
-      })
-    }, [items])
+  // const mapRegion = region
+  //   ? ({
+  //       slug: region.slug,
+  //       name: region.name,
+  //       geometry: region.bbox,
+  //       via: 'click',
+  //     } as const)
+  //   : null
 
-    const feedContents = useMemo(() => {
-      return contents.map((content, index) => {
-        const item = items[index]
-        return (
-          <Hoverable
-            key={item.id + index}
-            onHoverIn={() => {
-              setHovered(item.id)
-            }}
-          >
-            {content}
-          </Hoverable>
-        )
-      })
-    }, [contents])
-
-    return (
-      <>
-        {isLoading && (
-          <>
-            <LoadingItems />
-          </>
-        )}
-
-        {!isLoading && <Suspense fallback={null}>{feedContents}</Suspense>}
-      </>
-    )
+  useSetAppMap({
+    isActive,
+    results,
+    center,
+    span,
   })
-)
+
+  const contents = useMemo(() => {
+    return items.map((item) => {
+      switch (item.type) {
+        case 'space':
+          return <Spacer size="xl" />
+        case 'new':
+        case 'hot':
+          return (
+            <HomeFeedTrendingNew
+              {...item}
+              onHoverResults={(results) => {
+                setHoveredResults({ via: item.type, results })
+              }}
+            />
+          )
+        case 'dish-restaurants':
+          return (
+            <HomeFeedDishRestaurants
+              {...item}
+              onHoverResults={(results) => {
+                setHoveredResults({ via: item.type, results })
+              }}
+            />
+          )
+        case 'cuisine':
+          return (
+            <HomeFeedCuisineItem
+              {...item}
+              onHoverResults={(results) => {
+                console.log('setting hover', results)
+                setHoveredResults({ via: item.type, results })
+              }}
+            />
+          )
+        case 'list':
+          return (
+            <HomeFeedLists
+              {...item}
+              onHoverResults={(results) => {
+                setHoveredResults({ via: item.type, results })
+              }}
+            />
+          )
+        default:
+          return null
+      }
+    })
+  }, [items])
+
+  const feedContents = useMemo(() => {
+    return contents.map((content, index) => {
+      const item = items[index]
+      return (
+        <Hoverable
+          key={item.id + index}
+          onHoverIn={() => {
+            setHovered(item.id)
+          }}
+        >
+          {content}
+        </Hoverable>
+      )
+    })
+  }, [contents])
+
+  return (
+    <>
+      {isLoading && (
+        <>
+          <LoadingItems />
+        </>
+      )}
+
+      {!isLoading && <Suspense fallback={<LoadingItems />}>{feedContents}</Suspense>}
+    </>
+  )
+})

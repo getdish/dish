@@ -1,3 +1,4 @@
+import { isSafari } from '@dish/helpers'
 import { QueryFetcher, createClient } from 'gqless'
 
 import { Auth } from '../Auth'
@@ -28,18 +29,17 @@ export const queryFetcher: QueryFetcher = async function (query, variables) {
     query,
     variables,
   })
+  const startTime = Date.now()
   const response = await fetchLog(GRAPH_API, {
     method: 'POST',
     headers,
     body,
     mode: 'cors',
   })
-  if (!response.ok) {
-    throw new Error(
-      `Network error, received status code ${response.status} from GraphQL request at ${GRAPH_API}`
-    )
-  }
   const json = await response.json()
+  if (process.env.NODE_ENV === 'developmnet' && isSafari) {
+    console.log(` [gqless] (${Date.now() - startTime}ms)`)
+  }
   if (process.env.DEBUG || process.env.LOG_FETCH) {
     console.log(` [gqless] =>`, JSON.stringify(json, null, 2))
   }
@@ -53,7 +53,7 @@ export const client = createClient<GeneratedSchema>({
   schema: generatedSchema,
   scalarsEnumsHash,
   queryFetcher,
-  catchSelectionsTimeMS: 10,
+  catchSelectionsTimeMS: 20,
   normalization: true,
 })
 
