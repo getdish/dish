@@ -3,7 +3,7 @@ import React, { memo, useMemo, useState } from 'react'
 import { HStack, Hoverable, VStack } from 'snackui'
 
 import { getColorsForName } from '../../helpers/getColorsForName'
-import { hexToRGB } from '../../helpers/hexToRGB'
+import { hexToRGB } from '../../helpers/rgb'
 import { ContentScrollViewHorizontal } from '../views/ContentScrollViewHorizontal'
 import { Link } from '../views/Link'
 import { FeedSlantedTitleLink } from './FeedSlantedTitle'

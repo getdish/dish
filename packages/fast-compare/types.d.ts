@@ -9,6 +9,7 @@ declare module "@dish/fast-compare" {
         simpleCompareKeys?: {
             [key: string]: boolean;
         };
+        log: boolean;
     };
     export function isEqual(a: any, b: any, options?: IsEqualOptions): boolean;
 }

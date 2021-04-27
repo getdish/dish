@@ -20,7 +20,8 @@ export const fetchLog = (input: RequestInfo, init?: RequestInit | undefined): Pr
 
 export const queryFetcher: QueryFetcher = async function (query, variables) {
   const headers = {
-    'Content-Type': 'application/json',
+    'content-type': 'application/json',
+    'x-user-is-logged-in': `${Auth.isLoggedIn}`,
     ...getAuthHeaders(Auth.isAdmin),
   }
   const body = JSON.stringify({

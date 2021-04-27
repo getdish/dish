@@ -33,7 +33,7 @@ async function start() {
   } else {
     render(<Root />, ROOT)
     // console.warn('👟 Concurrent Mode')
-    // ReactDOM.unstable_createRoot(ROOT).render(<Root />)
+    // require('react-dom').unstable_createRoot(ROOT).render(<Root />)
   }
 }
 

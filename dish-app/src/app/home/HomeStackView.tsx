@@ -17,7 +17,7 @@ export type StackItemProps<A> = {
 
 type GetChildren<A> = (props: StackItemProps<A>) => React.ReactNode
 
-const ANIMATION_DURATION = 150
+const ANIMATION_DURATION = 0
 
 export function HomeStackView<A extends HomeStateItem>(props: { children: GetChildren<A> }) {
   const { breadcrumbs } = useHomeStore()
@@ -28,7 +28,7 @@ export function HomeStackView<A extends HomeStateItem>(props: { children: GetChi
   const isAdding = currentStates.length < homeStates.length
   const items = isRemoving ? currentStates : homeStates
 
-  // console.log('👀 HomeStackView', items)
+  console.log('👀 HomeStackView', items)
 
   return (
     <>
@@ -121,7 +121,7 @@ const AppStackViewItem = memo(
 
     if (!isWeb) {
       return (
-        <AnimatedVStack position="absolute" fullscreen>
+        <AnimatedVStack position="absolute" fullscreen animateState={isFullyActive ? 'in' : 'out'}>
           {contents}
         </AnimatedVStack>
       )

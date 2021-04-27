@@ -1,7 +1,7 @@
 import { useTheme } from 'snackui'
 import { useMedia } from 'snackui'
 
-import { rgbString } from '../../helpers/rgbString'
+import { rgbString } from '../../helpers/rgb'
 import {
   defaultLenseColor,
   defaultLenseColorDark,
@@ -12,11 +12,22 @@ export const useSearchBarTheme = () => {
   const media = useMedia()
   const color = useCurrentLenseColor()
   const theme = useTheme()
+  const isColored = color.rgb !== defaultLenseColor.rgb && color.rgb !== defaultLenseColorDark.rgb
+  if (media.sm) {
+    return {
+      theme: 'light',
+      color: theme.color,
+      background: '#fff',
+      isColored: color.rgb !== defaultLenseColor.rgb && color.rgb !== defaultLenseColorDark.rgb,
+      backgroundRgb: [255, 255, 255],
+    }
+  }
+  console.log('what is', rgbString(color.rgb))
   return {
-    theme: media.sm ? 'light' : color.name,
-    color: media.sm ? theme.color : '#fff',
-    background: media.sm ? '#fff' : rgbString(color.rgb),
-    isColored: color.rgb !== defaultLenseColor.rgb && color.rgb !== defaultLenseColorDark.rgb,
-    backgroundRgb: media.sm ? [255, 255, 255] : color.rgb, //isSmall ? [255, 255, 255] : rgb,
+    theme: color.name,
+    color: '#fff',
+    background: rgbString(color.rgb),
+    isColored,
+    backgroundRgb: color.rgb,
   }
 }

@@ -3,12 +3,17 @@ export const dateTimeFormat = (
   {
     locales = ['en'],
     ...rest
-  }: Intl.DateTimeFormatOptions & {
+  }: any & {
     locales?: string | string[] | undefined
   } = {}
 ) => {
   if (!date) {
     return null
   }
-  return new Intl.DateTimeFormat(locales, rest).format()
+  if (process.env.TARGET === 'native') {
+    global['Intl'] = require('@formatjs/intl-datetimeformat')
+    console.log('date time import')
+  }
+  return ''
+  // return new Intl.DateTimeFormat(locales, rest).format()
 }

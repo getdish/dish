@@ -1,43 +1,39 @@
-- mobile app:
-  - [0] (restaurantpage) hours modal text error
-  - [0] horizontal/vertiacal drag can get stuck moving between panes (noticed on search pane horizontal stuck)
-  - [0] remove vote arrows on dishes
-  - [0] cleanup searchpage spacing/styling
-  - [0] super slow autocomplete item tap
-  - [0] map doesnt go to bottom on drawer open sometimes
-  - [0] (restaurantpage) many glitchy/layout fixes
-  - [0] (restaurantpage) cant go into gallery
-  - [0] (restaurantpage) dont do anything on change tag selected (scroll etc)
-  - [0] (restaurantpage) quick fix (or remove if takes more than a few minutes) header horizontal scroll for images
-  - [0] (restaurantpage) tap: address, phone, website get working
-  - [0] (searchpage) cant tap vote on tag
-  - [1] horizontal swipe on tags messes up drawer position
-  - [1] swipe back to go back on drawer cards
-  - [1] scroll UP should work when you are scrolled down on HOME, go to SEARCH, then go back to HOME, i think contentActive isn't being set or not propagating to scrolllock
-  - [1] map zooms out every drawer shift
-  - [1] speed up tag optimistic update
-  - [2] remove fork list button on searchpage (non touch)
-  - [2] re-search button should look like app menu button (bigger, shadow, blur, spaced bettter)
-  - [2] too easy to move horizontal a little bit before moving vertical, in general the vertical/horizontal scroll fighting needs to be improved
-  - [3] too much delay between open/close drawer and animate
-  - [3] dragging drawer seems to drop frames in dev mode at least, useNative possible?
-  - [3] map shouldn't shift down until touchend on drawer move
-  - [3] stack drawer should be faster, "optimistic" show/hide before state
-  - [3] login/signup animation is glitchy and slow
-  - get login/signup working
-  - [4] add apple sign in
-
-- move rest of site to beta.dishapp.com with login required
-- fix many data issues on specific restaurants
-- re-run crawl successfully on SF
-- run it on a bunch more places
-- beta version that is testflight deployable
-- mobile web various interaction fixes
-- comments need voting or else no one will want to use them
-- blog/signup
-- LAUNCH
+- [c] [0] crawl one restaurant, fix
+- [c] [0] test on ~10 restaurants
+- [c] [0] recrawl tucson, la, sd, sf
+- [m] [0] (restaurantpage) hours modal text error
+- [m] [0] horizontal/vertiacal drag can get stuck moving between panes (noticed on search pane horizontal stuck)
+- [m] [0] remove vote arrows on dishes
+- [m] [0] cleanup searchpage spacing/styling
+- [m] [0] super slow autocomplete item tap
+- [m] [0] map doesnt go to bottom on drawer open sometimes
+- [m] [0] (restaurantpage) many glitchy/layout fixes
+- [m] [0] (restaurantpage) cant go into gallery
+- [m] [0] (restaurantpage) dont do anything on change tag selected (scroll etc)
+- [m] [0] (restaurantpage) quick fix (or remove if takes more than a few minutes) header horizontal scroll for images
+- [m] [0] (restaurantpage) tap: address, phone, website get working
+- [m] [0] (searchpage) cant tap vote on tag
+- [m] [1] horizontal swipe on tags messes up drawer position
+- [m] [1] swipe back to go back on drawer cards
+- [m] [1] scroll UP should work when you are scrolled down on HOME, go to SEARCH, then go back to HOME, i think contentActive isn't being set or not propagating to scrolllock
+- [m] [1] map zooms out every drawer shift
+- [m] [1] speed up tag optimistic update
+- [m] [2] remove fork list button on searchpage (non touch)
+- [m] [2] re-search button should look like app menu button (bigger, shadow, blur, spaced bettter)
+- [m] [2] too easy to move horizontal a little bit before moving vertical, in general the vertical/horizontal scroll fighting needs to be improved
+- [m] [3] too much delay between open/close drawer and animate
+- [m] [3] dragging drawer seems to drop frames in dev mode at least, useNative possible?
+- [m] [3] map shouldn't shift down until touchend on drawer move
+- [m] [3] stack drawer should be faster, "optimistic" show/hide before state
+- [m] [3] login/signup animation is glitchy and slow
+- [m] get login/signup working
+- [m] [3] add apple sign in
 
 ---
+
+- [a] [4] comments need voting or else no one will want to use them
+- blog/signup
+- LAUNCH
 
 making it actually a community:
 

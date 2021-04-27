@@ -2,14 +2,14 @@ import React, { useMemo } from 'react'
 import { StyleSheet } from 'react-native'
 import { AbsoluteVStack, HStack, LinearGradient } from 'snackui'
 
-import { rgbString } from '../../helpers/rgbString'
+import { RGB, rgbString } from '../../helpers/rgb'
 
 export function GradientButton({
   rgb,
   children,
   bordered,
 }: {
-  rgb: readonly [number, number, number]
+  rgb: RGB
   children?: any
   bordered?: boolean
 }) {
@@ -21,7 +21,7 @@ export function GradientButton({
       paddingHorizontal={35}
       alignItems="center"
       justifyContent="center"
-      borderRadius={10}
+      borderRadius={14}
       borderWidth={bordered ? 1 : 0}
       backgroundColor="transparent"
       className="hover-parent ease-in-out-faster safari-fix-overflow"

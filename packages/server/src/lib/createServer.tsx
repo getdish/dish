@@ -113,8 +113,7 @@ async function createApiServer(app: any, { createConfig, ...config }: ServerConf
 }
 
 function cors() {
-  const HEADER_ALLOWED =
-    'Origin, X-Requested-With, Content-Type, Accept, Authorization, X-Token, Access-Control-Allow-Headers'
+  const HEADER_ALLOWED = '*'
   return (req, res, next) => {
     res.header('Access-Control-Allow-Origin', req.headers.origin)
     res.header('Access-Control-Allow-Credentials', 'true')

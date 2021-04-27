@@ -25,6 +25,7 @@ import { queryClient } from '../../helpers/queryClient'
 import { router, useIsRouteActive } from '../../router'
 import { HomeStateItemHome } from '../../types/homeTypes'
 import { cancelUpdateRegion } from '../AppMapStore'
+import { autocompletesStore } from '../AutocompletesStore'
 import { useHomeStateById } from '../homeStore'
 import { useLocalStorageState } from '../hooks/useLocalStorageState'
 import { setInitialRegionSlug } from '../initialRegionSlug'
@@ -135,25 +136,27 @@ export default memo(function HomePage(props: HomeStackViewProps<HomeStateItemHom
             >
               <VStack position="relative">
                 <Theme name="dark">
-                  <SlantedTitle
-                    // paddingVertical={12}
-                    backgroundColor={regionColors.color}
-                    color="#fff"
-                    minWidth={100}
-                    size={
-                      regionName.length > 24
-                        ? 'xs'
-                        : regionName.length > 17
-                        ? 'sm'
-                        : regionName.length > 14
-                        ? 'md'
-                        : regionName.length > 8
-                        ? 'lg'
-                        : 'xl'
-                    }
-                  >
-                    {regionName}
-                  </SlantedTitle>
+                  <Link onPress={() => autocompletesStore.setTarget('location')}>
+                    <SlantedTitle
+                      // paddingVertical={12}
+                      backgroundColor={regionColors.color}
+                      color="#fff"
+                      minWidth={100}
+                      size={
+                        regionName.length > 24
+                          ? 'xs'
+                          : regionName.length > 17
+                          ? 'sm'
+                          : regionName.length > 14
+                          ? 'md'
+                          : regionName.length > 8
+                          ? 'lg'
+                          : 'xl'
+                      }
+                    >
+                      {regionName}
+                    </SlantedTitle>
+                  </Link>
                 </Theme>
               </VStack>
               <HomeTopSearches />

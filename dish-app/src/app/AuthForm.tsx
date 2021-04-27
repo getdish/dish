@@ -422,6 +422,7 @@ function SubmittableForm({
             accessible
             accessibilityRole="button"
             alignSelf="flex-end"
+            marginLeft="auto"
             onPress={onSubmit}
             theme="active"
             disabled={isSubmitting}

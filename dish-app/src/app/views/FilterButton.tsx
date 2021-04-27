@@ -4,7 +4,7 @@ import { VStack } from 'snackui'
 
 import { isWeb } from '../../constants/constants'
 import { tagDisplayNames } from '../../constants/tagMeta'
-import { rgbString } from '../../helpers/rgbString'
+import { rgbString } from '../../helpers/rgb'
 import { NavigableTag } from '../../types/tagTypes'
 import { useCurrentLenseColor } from '../hooks/useCurrentLenseColor'
 import { SmallButton, SmallButtonProps } from './SmallButton'

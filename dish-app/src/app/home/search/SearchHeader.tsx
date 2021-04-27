@@ -7,7 +7,7 @@ import { tagLenses } from '../../../constants/localTags'
 import { isTouchDevice } from '../../../constants/platforms'
 import { getActiveTags } from '../../../helpers/getActiveTags'
 import { getTitleForState } from '../../../helpers/getTitleForState'
-import { rgbString } from '../../../helpers/rgbString'
+import { rgbString } from '../../../helpers/rgb'
 import {
   ContentScrollViewHorizontalFitted,
   useContentScrollHorizontalFitter,

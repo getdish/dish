@@ -1,7 +1,7 @@
 import { useThemeName } from 'snackui'
 
 import { getColorsForName } from '../../helpers/getColorsForName'
-import { RGB, hexToRGB } from '../../helpers/hexToRGB'
+import { RGB, hexToRGB } from '../../helpers/rgb'
 import { HomeStateItemRestaurant } from '../../types/homeTypes'
 import { useHomeStore } from '../homeStore'
 
@@ -12,7 +12,7 @@ export const defaultLenseColor = {
 
 export const defaultLenseColorDark = {
   name: 'dark',
-  rgb: [50, 50, 50] as RGB,
+  rgb: [10, 10, 10, 0.875] as RGB,
 }
 
 export const useCurrentLenseColor = () => {

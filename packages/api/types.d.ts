@@ -2,7 +2,7 @@
 /// <reference lib="esnext" />
 declare module "@dish/api" {
     import { Request, Response } from "express";
-    export type Handler = (req: Request, res: Response) => Promise<void> | void;
+    export type Handler = (req: Request, res: Response, next?: any) => Promise<void> | void;
     export type Req = Request;
     export type Res = Response;
     export class RouteNext extends Error {

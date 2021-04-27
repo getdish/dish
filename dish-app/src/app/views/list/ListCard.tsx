@@ -9,7 +9,7 @@ import { queryList } from '../../../queries/queryList'
 import { getListColor } from '../../home/list/listColors'
 import { Card } from '../../home/restaurant/Card'
 import { Link } from '../Link'
-import { Score } from '../UpvoteDownvoteScore'
+import { Score } from '../Score'
 
 type ListIDProps = {
   slug?: string
@@ -64,11 +64,11 @@ export const ListCard = graphql(
           isBehind={isBehind}
           outside={
             <AbsoluteVStack zIndex={1000000} top="-5%" right="-5%">
-              <Score
+              {/* <Score
                 size="sm"
                 score={Math.round(Math.random() * 100)}
                 rating={Math.random() * 100}
-              />
+              /> */}
             </AbsoluteVStack>
           }
           photo={

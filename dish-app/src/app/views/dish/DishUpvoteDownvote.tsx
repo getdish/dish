@@ -3,7 +3,7 @@ import React, { Suspense, useEffect, useRef } from 'react'
 
 import { queryRestaurant } from '../../../queries/queryRestaurant'
 import { useUserTagVotes } from '../../hooks/useUserTagVotes'
-import { Score } from '../UpvoteDownvoteScore'
+import { Score } from '../Score'
 
 type Props = {
   size: 'sm' | 'md'

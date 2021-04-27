@@ -1,7 +1,7 @@
 import { supportsTouchWeb } from '@dish/helpers'
-import { ArrowDown, ArrowUp, ChevronDown, ChevronUp } from '@dish/react-feather'
+import { ArrowDown, ArrowUp } from '@dish/react-feather'
 import React, { memo } from 'react'
-import { AbsoluteVStack, StackProps, Text, Theme, Tooltip, VStack } from 'snackui'
+import { AbsoluteVStack, StackProps, Text, Tooltip, VStack, useTheme } from 'snackui'
 
 import { green, grey, red } from '../../constants/colors'
 import { isWeb } from '../../constants/constants'
@@ -9,8 +9,6 @@ import { isTouchDevice } from '../../constants/platforms'
 import { getColorsForColor } from '../../helpers/getColorsForName'
 import { numberFormat } from '../../helpers/numberFormat'
 import { ProgressRing } from '../home/ProgressRing'
-import { CircularProgress } from './CircularProgress'
-import { Pie } from './Pie'
 import { VoteButton } from './VoteButton'
 
 type Props = StackProps & {
@@ -110,10 +108,12 @@ export const Score = memo(
       typeof rating === 'number' ? (rating >= 7 ? green : rating < 5 ? red : grey) : grey
     )
 
+    const theme = useTheme()
+
     return (
       <VStack
         pointerEvents="auto"
-        backgroundColor={colors.darkColor}
+        backgroundColor={theme.cardBackgroundColor}
         alignItems="center"
         justifyContent="center"
         className={isWeb && !supportsTouchWeb && showVoteOnHover ? ' show-on-hover' : ''}
