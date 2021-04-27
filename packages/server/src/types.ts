@@ -48,6 +48,7 @@ export type CreateWebpackConfig = {
   disableHot?: boolean
   noMinify?: boolean
   verbose?: boolean
+  resetCache?: boolean
 }
 
 export type File = {

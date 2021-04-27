@@ -1,3 +1,4 @@
+// debug
 import { useStore, useStoreInstance } from '@dish/use-store'
 import React, { useEffect } from 'react'
 import {
@@ -43,17 +44,14 @@ export const AutocompleteFrame = ({
   }, [isShowing])
 
   return (
-    <AbsoluteVStack
+    <VStack
       opacity={isShowing ? 1 : 0}
       pointerEvents={isShowing ? 'auto' : 'none'}
       borderRadius={14}
       overflow="hidden"
-      top={0}
-      bottom={0}
-      left={0}
-      right={0}
+      flex={1}
       {...(media.sm && {
-        top: 10,
+        transform: [{ translateX: 10 }],
       })}
 
       // DONT PUT EVENT HERE NEED TO DEBUG WHY IT BREAKS ON NATIVE
@@ -117,7 +115,7 @@ export const AutocompleteFrame = ({
           {/* </Pressable> */}
         </VStack>
       </VStack>
-    </AbsoluteVStack>
+    </VStack>
   )
 }
 const hideAutocompletes = (e) => {
