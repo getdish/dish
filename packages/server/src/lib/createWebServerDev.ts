@@ -6,11 +6,15 @@ import hotMiddleware from 'webpack-hot-middleware'
 import { ServerConfigNormal } from '../types'
 import { getWebpackConfigBuilder } from './getWebpackConfigBuilder'
 
-export function createWebServerDev(app: any, { webpackConfig, rootDir }: ServerConfigNormal) {
+export function createWebServerDev(
+  app: any,
+  { webpackConfig, rootDir, resetCache }: ServerConfigNormal
+) {
   const createConfig = getWebpackConfigBuilder({ rootDir })
   const config = createConfig({
     target: 'web',
     noMinify: true,
+    resetCache,
     ...webpackConfig,
   })
   const compiler = webpack(config)

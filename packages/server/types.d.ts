@@ -57,6 +57,7 @@ declare module "@dish/server" {
         disableHot?: boolean;
         noMinify?: boolean;
         verbose?: boolean;
+        resetCache?: boolean;
     };
     export type File = {
         name: string;
@@ -153,7 +154,7 @@ declare module "@dish/server" {
 
 declare module "@dish/server" {
     import webpack from "webpack";
-    export function createWebServerDev(app: any, { webpackConfig, rootDir }: ServerConfigNormal): webpack.Compiler;
+    export function createWebServerDev(app: any, { webpackConfig, rootDir, resetCache }: ServerConfigNormal): webpack.Compiler;
 }
 
 declare module "@dish/server" {

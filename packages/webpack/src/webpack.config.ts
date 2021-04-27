@@ -29,6 +29,21 @@ try {
   // ok
 }
 
+// ⚠️ DONT USE process.env.NODE_ENV it differs from env!!!!!!!!!!!
+// ⚠️ DONT USE process.env.NODE_ENV it differs from env!!!!!!!!!!!
+// ⚠️ DONT USE process.env.NODE_ENV it differs from env!!!!!!!!!!!
+// ⚠️ DONT USE process.env.NODE_ENV it differs from env!!!!!!!!!!!
+// ⚠️ DONT USE process.env.NODE_ENV it differs from env!!!!!!!!!!!
+// ⚠️ DONT USE process.env.NODE_ENV it differs from env!!!!!!!!!!!
+// ⚠️ DONT USE process.env.NODE_ENV it differs from env!!!!!!!!!!!
+// ⚠️ DONT USE process.env.NODE_ENV it differs from env!!!!!!!!!!!
+// ⚠️ DONT USE process.env.NODE_ENV it differs from env!!!!!!!!!!!
+// ⚠️ DONT USE process.env.NODE_ENV it differs from env!!!!!!!!!!!
+// ⚠️ DONT USE process.env.NODE_ENV it differs from env!!!!!!!!!!!
+// ⚠️ DONT USE process.env.NODE_ENV it differs from env!!!!!!!!!!!
+// ⚠️ DONT USE process.env.NODE_ENV it differs from env!!!!!!!!!!!
+// ⚠️ DONT USE process.env.NODE_ENV it differs from env!!!!!!!!!!!
+
 export function createWebpackConfig({
   entry,
   env,
@@ -40,6 +55,7 @@ export function createWebpackConfig({
   resolve,
   polyFillPath,
   htmlOptions,
+  resetCache,
   defineOptions,
   // pwaOptions,
   noMinify,
@@ -54,7 +70,9 @@ export function createWebpackConfig({
   const hashFileNamePart = '[contenthash]'
   const hotEntry = isHot ? 'webpack-hot-middleware/client' : null
   const smp = new SpeedMeasurePlugin()
-  const cacheName = `${process.env.TARGET}${process.env.NODE_ENV}${GIT_SHA}`
+  const cacheName = `${process.env.TARGET}${env}${GIT_SHA}${noMinify}${isHot}${isSSR}${
+    resetCache ? Math.random() : ''
+  }`
 
   console.log(' [webpack] cacheName', cacheName)
 
@@ -95,7 +113,7 @@ export function createWebpackConfig({
           defaultConfig: [__filename],
         },
       },
-      mode: process.env.NODE_ENV as any,
+      mode: env,
       context: cwd,
       target,
       stats: {
@@ -130,7 +148,7 @@ export function createWebpackConfig({
         pathinfo: !!(isDevelopment || process.env.DEBUG_PATHS),
         ...(isSSR && {
           libraryTarget: 'commonjs',
-          filename: `static/js/app.ssr.${process.env.NODE_ENV}.js`,
+          filename: `static/js/app.ssr.${env}.js`,
           path: path.join(cwd, 'build', 'ssr'),
         }),
         // ...(legacy && {
