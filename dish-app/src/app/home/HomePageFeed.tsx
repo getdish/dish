@@ -173,7 +173,7 @@ export const HomePageFeed = graphql(
           </>
         )}
 
-        {!isLoading && <Suspense fallback={null}>{feedContents}</Suspense>}
+        {!isLoading && <Suspense fallback={<LoadingItems />}>{feedContents}</Suspense>}
       </>
     )
   },

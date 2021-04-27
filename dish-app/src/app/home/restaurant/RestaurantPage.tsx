@@ -239,7 +239,7 @@ const RestaurantLists = memo(
         <SkewedCardCarousel>
           {lists.map(({ list }, i) => {
             return (
-              <SkewedCard zIndex={1000 - i} key={list.id}>
+              <SkewedCard zIndex={1000 - i} key={list.id || i}>
                 <ListCard
                   isBehind={i > 0}
                   hoverable={false}

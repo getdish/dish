@@ -32,13 +32,11 @@ export async function getFullTags(tags: TagPartial[]): Promise<FullTag[]> {
     const found = tag.slug ? allTags[tag.slug] : null
     if (found) {
       if (!found.id) {
-        if ('id' in tag) {
+        if ('id' in tag && tag.id) {
           found.id = tag.id
         } else {
-          const slug = found.slug || tag.slug
-          if (slug) {
-            noIdTagSlugs.add(slug)
-          }
+          uncached.push(tag)
+          continue
         }
       }
       cached.push(found)

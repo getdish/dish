@@ -1,10 +1,9 @@
-import { query, review, reviewUpsert } from '@dish/graph'
+import { Review, ReviewWithId, query, review, reviewUpsert } from '@dish/graph'
 import { Store, useStore } from '@dish/use-store'
-import { isNumber } from 'lodash'
-import { useCallback, useEffect, useLayoutEffect, useRef } from 'react'
-import { Toast, useConstant, useForceUpdate, useLazyEffect } from 'snackui'
+import { debounce, isNumber } from 'lodash'
+import { useCallback, useLayoutEffect, useRef } from 'react'
+import { Toast, useConstant, useForceUpdate } from 'snackui'
 
-import { addTagsToCache, allTags } from '../../helpers/allTags'
 import { getFullTags } from '../../helpers/getFullTags'
 import { queryRestaurant } from '../../queries/queryRestaurant'
 import { HomeActiveTagsRecord } from '../../types/homeTypes'
@@ -36,9 +35,14 @@ export class TagVoteStore extends Store<VoteStoreProps> {
       vote,
       type: 'vote',
     }
-    return await reviewUpsert([review])
+    return writeReview(review)
   }
 }
+
+const writeReview = debounce(async (review: Partial<Review>) => {
+  console.log('writing', review)
+  await reviewUpsert([review])
+}, 50)
 
 export const useUserTagVotes = (restaurantSlug: string, activeTags: HomeActiveTagsRecord) => {
   const tagSlugList = useConstant(() => Object.keys(activeTags).filter((x) => activeTags[x]))
@@ -73,19 +77,13 @@ export const useUserTagVote = (props: VoteStoreProps) => {
   const userId = userStore.user?.id
   const voteStore = useStore(TagVoteStore, props)
   const [restaurant] = queryRestaurant(props.restaurantSlug)
-  const forceUpdate = useForceUpdate()
-  const tag = allTags[props.tagSlug]
-  const tagId = tag?.id
-  let review: review | null = null
+  let vote: 1 | -1 | 0 = 0
 
-  if (restaurant?.id && userId && tagId) {
-    review = query.review({
+  if (restaurant?.id && userId) {
+    const res = query.review({
       where: {
         restaurant_id: {
           _eq: restaurant.id,
-        },
-        tag_id: {
-          _eq: tagId,
         },
         user_id: {
           _eq: userId,
@@ -94,33 +92,21 @@ export const useUserTagVote = (props: VoteStoreProps) => {
           _eq: 'vote',
         },
       },
-    })[0]
+      limit: 200,
+    })
+    const found = res.find((x) => x.tag?.slug === props.tagSlug)
+    if (found) {
+      vote = found.vote ?? 0
+    }
   } else {
     // console.warn('none', restaurant.id, userId, tagId)
   }
 
   useLayoutEffect(() => {
-    if (!review) return
-    if (isNumber(review.vote)) {
-      voteStore.setVote(review.vote! as VoteNumber)
+    if (vote !== voteStore.vote) {
+      voteStore.setVote(vote)
     }
-  }, [review?.vote])
-
-  useEffect(() => {
-    let unmounted = false
-    if (!tagId && tag) {
-      // @ts-ignore
-      getFullTags([tag]).then(([fullTag]) => {
-        if (unmounted) return
-        if (addTagsToCache([fullTag])) {
-          forceUpdate()
-        }
-      })
-    }
-    return () => {
-      unmounted = true
-    }
-  }, [tagId])
+  }, [vote])
 
   return [
     voteStore.vote,

@@ -4,7 +4,7 @@ import { StyleSheet } from 'react-native'
 // import { createReparentableSpace } from 'react-reparenting'
 import { AbsoluteVStack, HStack, LinearGradient, VStack, useMedia, useTheme } from 'snackui'
 
-import { searchBarHeight, zIndexDrawer } from '../../constants/constants'
+import { drawerWidthMax, searchBarHeight, zIndexDrawer } from '../../constants/constants'
 import { router } from '../../router'
 import { AppAutocompleteSearch } from '../AppAutocompleteSearch'
 import { appMenuStore } from '../AppMenuStore'
@@ -140,10 +140,11 @@ export const HomeContainerLarge = (props) => {
           <AbsoluteVStack
             zIndex={100000000}
             pointerEvents="none"
-            left={0}
             right={0}
             bottom={0}
             top={searchBarHeight}
+            width="100%"
+            maxWidth={drawerWidthMax}
           >
             <AppAutocompleteSearch />
           </AbsoluteVStack>
