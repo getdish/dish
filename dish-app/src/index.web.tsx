@@ -3,7 +3,7 @@ import './web/base.css'
 import { startLogging } from '@dish/graph'
 import { loadableReady } from '@loadable/component'
 import React from 'react'
-import ReactDOM, { hydrate, render } from 'react-dom'
+import { hydrate, render } from 'react-dom'
 import { AppRegistry } from 'react-native'
 
 import { isSSR } from './constants/constants'

@@ -3,16 +3,7 @@ import { RestaurantSearchItem, slugify } from '@dish/graph'
 import { ArrowUp } from '@dish/react-feather'
 import { HistoryItem } from '@dish/router'
 import { reaction } from '@dish/use-store'
-import React, {
-  Suspense,
-  forwardRef,
-  memo,
-  useCallback,
-  useEffect,
-  useMemo,
-  useRef,
-  useState,
-} from 'react'
+import React, { Suspense, forwardRef, memo, useCallback, useEffect, useMemo, useRef } from 'react'
 import { ScrollView, ScrollViewProps } from 'react-native'
 import { DataProvider, LayoutProvider, RecyclerListView } from 'recyclerlistview'
 import {
@@ -20,7 +11,6 @@ import {
   Button,
   HStack,
   LoadingItem,
-  LoadingItems,
   Paragraph,
   Spacer,
   StackProps,
@@ -31,7 +21,6 @@ import {
 } from 'snackui'
 
 import { isWeb } from '../../../constants/constants'
-import { defaultLocationAutocompleteResults } from '../../../constants/defaultLocationAutocompleteResults'
 import { addTagsToCache, allTags } from '../../../helpers/allTags'
 import { getTitleForState } from '../../../helpers/getTitleForState'
 import { getFullTagsFromRoute } from '../../../helpers/syncStateFromRoute'
@@ -71,36 +60,22 @@ export default memo(function SearchPage(props: Props) {
     () => router.curPage,
     router.curPage.name !== 'search'
   )
-  const [isLoaded, setIsLoaded] = useState(false)
-  useEffect(() => {
-    return series([
-      // dont show right away to get animation
-      () => sleep(150),
-      () => setIsLoaded(true),
-    ])
-  }, [])
-
-  console.log('SearchPage', props.isActive)
 
   return (
     <>
       <PageTitleTag>{title}</PageTitleTag>
       <StackDrawer closable>
-        {isLoaded ? (
-          <>
-            <HomeSuspense>
-              <SearchNavBarContainer isActive={props.isActive} />
-            </HomeSuspense>
-            <HomeSuspense fallback={<SearchLoading />}>
-              <SearchPageContent
-                key={state.id + JSON.stringify([state.activeTags, state.searchQuery, state.region])}
-                {...props}
-                route={route}
-                item={state}
-              />
-            </HomeSuspense>
-          </>
-        ) : null}
+        <HomeSuspense>
+          <SearchNavBarContainer isActive={props.isActive} />
+        </HomeSuspense>
+        <HomeSuspense fallback={<SearchLoading />}>
+          <SearchPageContent
+            key={state.id + JSON.stringify([state.activeTags, state.searchQuery, state.region])}
+            {...props}
+            route={route}
+            item={state}
+          />
+        </HomeSuspense>
       </StackDrawer>
     </>
   )

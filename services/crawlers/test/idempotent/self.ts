@@ -550,7 +550,6 @@ test.skip('Scoring for rishes', async (t) => {
 
   const rish1 = updated?.tags.filter((t) => t.tag.name == 'Test tag')[0]
   const rish2 = updated?.tags.filter((t) => t.tag.name == 'Testpho')[0]
-  console.log('what is', rish1, rish2)
   t.is(rish1.score, 3)
   t.is(rish1.upvotes, 4)
   t.is(rish1.downvotes, 1)

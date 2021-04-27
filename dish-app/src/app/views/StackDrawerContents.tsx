@@ -1,4 +1,5 @@
-import React, { useEffect } from 'react'
+import { series, sleep } from '@dish/async'
+import React, { useEffect, useState } from 'react'
 import {
   AbsoluteVStack,
   HStack,
@@ -31,9 +32,16 @@ export const StackDrawer = ({
 }: StackDrawerProps) => {
   const media = useMedia()
   const theme = useTheme()
+  const [isLoaded, setIsLoaded] = useState(false)
+
   useEffect(() => {
-    console.log('MOUNTED', title)
+    return series([
+      // dont show right away to get animation
+      () => sleep(120),
+      () => setIsLoaded(true),
+    ])
   }, [])
+
   return (
     <HStack
       position="absolute"
@@ -72,7 +80,9 @@ export const StackDrawer = ({
         overflow="hidden"
         {...props}
       >
-        <HomeSuspense fallback={fallback ?? <LoadingItems />}>{children}</HomeSuspense>
+        <HomeSuspense fallback={fallback ?? <LoadingItems />}>
+          {isLoaded ? children : null}
+        </HomeSuspense>
       </VStack>
     </HStack>
   )

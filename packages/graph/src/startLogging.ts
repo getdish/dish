@@ -10,7 +10,7 @@ export function startLogging(verbose = false) {
     if (isLogging) return
     isLogging = true
     if (isSafari) {
-      console.log('Disable gqless logging as it doesnt collapse')
+      // console.log('Disable gqless logging as it doesnt collapse')
     } else {
       import('@gqless/logger').then(({ createLogger }) => {
         const Logger = createLogger(client, { stringifyJSON: false })

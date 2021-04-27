@@ -141,8 +141,16 @@ class HomeStore extends Store {
     return initialHomeState.region
   }
 
+  tm: any = null
   setLoading(n: boolean) {
+    clearTimeout(this.tm)
     this.loading = n
+    if (n) {
+      // max time to show loading in case stuck somehow
+      this.tm = setTimeout(() => {
+        this.setLoading(false)
+      }, 1000)
+    }
   }
 
   private getUpType() {

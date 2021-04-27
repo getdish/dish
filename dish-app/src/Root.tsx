@@ -104,6 +104,8 @@ export function RootSuspenseLoad(props: any) {
   return <Suspense fallback={null}>{props.children}</Suspense>
 }
 
+const startTime = Date.now()
+
 export function Root() {
   const [isLoaded, setIsLoaded] = useState(false)
   const userStore = useUserStore()
@@ -117,6 +119,7 @@ export function Root() {
 
   useEffect(() => {
     start().then(() => {
+      console.log('app loaded first route', Date.now() - startTime)
       setIsLoaded(true)
     })
   }, [])
@@ -129,7 +132,7 @@ export function Root() {
             <QueryClientProvider client={queryClient}>
               <Suspense fallback={null}>
                 {!isLoaded && <AppLoading />}
-                <App />
+                {isLoaded ? <App /> : null}
               </Suspense>
               <RootPortalProvider />
             </QueryClientProvider>

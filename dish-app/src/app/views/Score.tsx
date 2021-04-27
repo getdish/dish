@@ -41,7 +41,7 @@ export const Score = memo(
     ...props
   }: Props) => {
     const voteButtonColor = subtle ? '#ccc' : '#999'
-    const scale = size === 'sm' ? 0.65 : 1
+    const scale = size === 'sm' ? 0.5 : 1
     const sizePx = 53 * scale
     const isOpenProp =
       vote === 0
@@ -49,7 +49,7 @@ export const Score = memo(
         : {
             isOpen: false,
           }
-    const fontSize = Math.round(18 * scale + (size === 'sm' ? 2 : 0))
+    const fontSize = Math.round(22 * scale + (size === 'sm' ? 2 : 0))
 
     let voteContent: any = null
 
@@ -153,7 +153,7 @@ export const Score = memo(
           alignItems="center"
           justifyContent="center"
         >
-          <Text fontSize={fontSize} fontWeight="300" letterSpacing={-1} color="#fff">
+          <Text fontSize={fontSize} fontWeight="700" letterSpacing={-1}>
             {numberFormat(score, 'sm')}
           </Text>
         </VStack>
