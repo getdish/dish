@@ -8,8 +8,8 @@ export const hexToRGB = (hex: string, a = 1) => {
 
 export const rgbString = (color: RGB, alpha = 1) => {
   if (color.length === 4) {
-    color = color.slice(0, 3) as RGB
     alpha = color[3] ?? alpha ?? 1
+    color = color.slice(0, 3) as RGB
   }
   return alpha !== 1 ? `rgba(${color.join(',')},${alpha})` : `rgb(${color.join(',')})`
 }
