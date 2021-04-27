@@ -10619,442 +10619,446 @@ export const generatedSchema = {
 export interface Query {
   __typename: 'Query' | undefined
   hrr: (args?: {
-    distinct_on?: Maybe<Array<hrr_select_column>>
-    limit?: Maybe<Scalars['Int']>
-    offset?: Maybe<Scalars['Int']>
+    distinct_on?: Array<ScalarsEnums['hrr_select_column']>
+    limit?: ScalarsEnums['Int']
+    offset?: ScalarsEnums['Int']
     order_by?: Maybe<Array<hrr_order_by>>
     where?: Maybe<hrr_bool_exp>
   }) => Array<hrr>
   hrr_aggregate: (args?: {
-    distinct_on?: Maybe<Array<hrr_select_column>>
-    limit?: Maybe<Scalars['Int']>
-    offset?: Maybe<Scalars['Int']>
+    distinct_on?: Array<ScalarsEnums['hrr_select_column']>
+    limit?: ScalarsEnums['Int']
+    offset?: ScalarsEnums['Int']
     order_by?: Maybe<Array<hrr_order_by>>
     where?: Maybe<hrr_bool_exp>
   }) => hrr_aggregate
-  hrr_by_pk: (args: { ogc_fid: Scalars['Int'] }) => Maybe<hrr>
+  hrr_by_pk: (args: { ogc_fid: ScalarsEnums['Int'] }) => Maybe<hrr>
   list: (args?: {
-    distinct_on?: Maybe<Array<list_select_column>>
-    limit?: Maybe<Scalars['Int']>
-    offset?: Maybe<Scalars['Int']>
+    distinct_on?: Array<ScalarsEnums['list_select_column']>
+    limit?: ScalarsEnums['Int']
+    offset?: ScalarsEnums['Int']
     order_by?: Maybe<Array<list_order_by>>
     where?: Maybe<list_bool_exp>
   }) => Array<list>
   list_aggregate: (args?: {
-    distinct_on?: Maybe<Array<list_select_column>>
-    limit?: Maybe<Scalars['Int']>
-    offset?: Maybe<Scalars['Int']>
+    distinct_on?: Array<ScalarsEnums['list_select_column']>
+    limit?: ScalarsEnums['Int']
+    offset?: ScalarsEnums['Int']
     order_by?: Maybe<Array<list_order_by>>
     where?: Maybe<list_bool_exp>
   }) => list_aggregate
-  list_by_pk: (args: { id: Scalars['uuid'] }) => Maybe<list>
+  list_by_pk: (args: { id: ScalarsEnums['uuid'] }) => Maybe<list>
   list_populated: (args: {
     args: list_populated_args
-    distinct_on?: Maybe<Array<list_select_column>>
-    limit?: Maybe<Scalars['Int']>
-    offset?: Maybe<Scalars['Int']>
+    distinct_on?: Array<ScalarsEnums['list_select_column']>
+    limit?: ScalarsEnums['Int']
+    offset?: ScalarsEnums['Int']
     order_by?: Maybe<Array<list_order_by>>
     where?: Maybe<list_bool_exp>
   }) => Array<list>
   list_populated_aggregate: (args: {
     args: list_populated_args
-    distinct_on?: Maybe<Array<list_select_column>>
-    limit?: Maybe<Scalars['Int']>
-    offset?: Maybe<Scalars['Int']>
+    distinct_on?: Array<ScalarsEnums['list_select_column']>
+    limit?: ScalarsEnums['Int']
+    offset?: ScalarsEnums['Int']
     order_by?: Maybe<Array<list_order_by>>
     where?: Maybe<list_bool_exp>
   }) => list_aggregate
   list_restaurant: (args?: {
-    distinct_on?: Maybe<Array<list_restaurant_select_column>>
-    limit?: Maybe<Scalars['Int']>
-    offset?: Maybe<Scalars['Int']>
+    distinct_on?: Array<ScalarsEnums['list_restaurant_select_column']>
+    limit?: ScalarsEnums['Int']
+    offset?: ScalarsEnums['Int']
     order_by?: Maybe<Array<list_restaurant_order_by>>
     where?: Maybe<list_restaurant_bool_exp>
   }) => Array<list_restaurant>
   list_restaurant_aggregate: (args?: {
-    distinct_on?: Maybe<Array<list_restaurant_select_column>>
-    limit?: Maybe<Scalars['Int']>
-    offset?: Maybe<Scalars['Int']>
+    distinct_on?: Array<ScalarsEnums['list_restaurant_select_column']>
+    limit?: ScalarsEnums['Int']
+    offset?: ScalarsEnums['Int']
     order_by?: Maybe<Array<list_restaurant_order_by>>
     where?: Maybe<list_restaurant_bool_exp>
   }) => list_restaurant_aggregate
   list_restaurant_by_pk: (args: {
-    list_id: Scalars['uuid']
-    restaurant_id: Scalars['uuid']
+    list_id: ScalarsEnums['uuid']
+    restaurant_id: ScalarsEnums['uuid']
   }) => Maybe<list_restaurant>
   list_restaurant_tag: (args?: {
-    distinct_on?: Maybe<Array<list_restaurant_tag_select_column>>
-    limit?: Maybe<Scalars['Int']>
-    offset?: Maybe<Scalars['Int']>
+    distinct_on?: Array<ScalarsEnums['list_restaurant_tag_select_column']>
+    limit?: ScalarsEnums['Int']
+    offset?: ScalarsEnums['Int']
     order_by?: Maybe<Array<list_restaurant_tag_order_by>>
     where?: Maybe<list_restaurant_tag_bool_exp>
   }) => Array<list_restaurant_tag>
   list_restaurant_tag_aggregate: (args?: {
-    distinct_on?: Maybe<Array<list_restaurant_tag_select_column>>
-    limit?: Maybe<Scalars['Int']>
-    offset?: Maybe<Scalars['Int']>
+    distinct_on?: Array<ScalarsEnums['list_restaurant_tag_select_column']>
+    limit?: ScalarsEnums['Int']
+    offset?: ScalarsEnums['Int']
     order_by?: Maybe<Array<list_restaurant_tag_order_by>>
     where?: Maybe<list_restaurant_tag_bool_exp>
   }) => list_restaurant_tag_aggregate
-  list_restaurant_tag_by_pk: (args: { id: Scalars['uuid'] }) => Maybe<list_restaurant_tag>
+  list_restaurant_tag_by_pk: (args: { id: ScalarsEnums['uuid'] }) => Maybe<list_restaurant_tag>
   list_tag: (args?: {
-    distinct_on?: Maybe<Array<list_tag_select_column>>
-    limit?: Maybe<Scalars['Int']>
-    offset?: Maybe<Scalars['Int']>
+    distinct_on?: Array<ScalarsEnums['list_tag_select_column']>
+    limit?: ScalarsEnums['Int']
+    offset?: ScalarsEnums['Int']
     order_by?: Maybe<Array<list_tag_order_by>>
     where?: Maybe<list_tag_bool_exp>
   }) => Array<list_tag>
   list_tag_aggregate: (args?: {
-    distinct_on?: Maybe<Array<list_tag_select_column>>
-    limit?: Maybe<Scalars['Int']>
-    offset?: Maybe<Scalars['Int']>
+    distinct_on?: Array<ScalarsEnums['list_tag_select_column']>
+    limit?: ScalarsEnums['Int']
+    offset?: ScalarsEnums['Int']
     order_by?: Maybe<Array<list_tag_order_by>>
     where?: Maybe<list_tag_bool_exp>
   }) => list_tag_aggregate
-  list_tag_by_pk: (args: { id: Scalars['uuid'] }) => Maybe<list_tag>
+  list_tag_by_pk: (args: { id: ScalarsEnums['uuid'] }) => Maybe<list_tag>
   menu_item: (args?: {
-    distinct_on?: Maybe<Array<menu_item_select_column>>
-    limit?: Maybe<Scalars['Int']>
-    offset?: Maybe<Scalars['Int']>
+    distinct_on?: Array<ScalarsEnums['menu_item_select_column']>
+    limit?: ScalarsEnums['Int']
+    offset?: ScalarsEnums['Int']
     order_by?: Maybe<Array<menu_item_order_by>>
     where?: Maybe<menu_item_bool_exp>
   }) => Array<menu_item>
   menu_item_aggregate: (args?: {
-    distinct_on?: Maybe<Array<menu_item_select_column>>
-    limit?: Maybe<Scalars['Int']>
-    offset?: Maybe<Scalars['Int']>
+    distinct_on?: Array<ScalarsEnums['menu_item_select_column']>
+    limit?: ScalarsEnums['Int']
+    offset?: ScalarsEnums['Int']
     order_by?: Maybe<Array<menu_item_order_by>>
     where?: Maybe<menu_item_bool_exp>
   }) => menu_item_aggregate
-  menu_item_by_pk: (args: { id: Scalars['uuid'] }) => Maybe<menu_item>
+  menu_item_by_pk: (args: { id: ScalarsEnums['uuid'] }) => Maybe<menu_item>
   nhood_labels: (args?: {
-    distinct_on?: Maybe<Array<nhood_labels_select_column>>
-    limit?: Maybe<Scalars['Int']>
-    offset?: Maybe<Scalars['Int']>
+    distinct_on?: Array<ScalarsEnums['nhood_labels_select_column']>
+    limit?: ScalarsEnums['Int']
+    offset?: ScalarsEnums['Int']
     order_by?: Maybe<Array<nhood_labels_order_by>>
     where?: Maybe<nhood_labels_bool_exp>
   }) => Array<nhood_labels>
   nhood_labels_aggregate: (args?: {
-    distinct_on?: Maybe<Array<nhood_labels_select_column>>
-    limit?: Maybe<Scalars['Int']>
-    offset?: Maybe<Scalars['Int']>
+    distinct_on?: Array<ScalarsEnums['nhood_labels_select_column']>
+    limit?: ScalarsEnums['Int']
+    offset?: ScalarsEnums['Int']
     order_by?: Maybe<Array<nhood_labels_order_by>>
     where?: Maybe<nhood_labels_bool_exp>
   }) => nhood_labels_aggregate
-  nhood_labels_by_pk: (args: { ogc_fid: Scalars['Int'] }) => Maybe<nhood_labels>
+  nhood_labels_by_pk: (args: { ogc_fid: ScalarsEnums['Int'] }) => Maybe<nhood_labels>
   opening_hours: (args?: {
-    distinct_on?: Maybe<Array<opening_hours_select_column>>
-    limit?: Maybe<Scalars['Int']>
-    offset?: Maybe<Scalars['Int']>
+    distinct_on?: Array<ScalarsEnums['opening_hours_select_column']>
+    limit?: ScalarsEnums['Int']
+    offset?: ScalarsEnums['Int']
     order_by?: Maybe<Array<opening_hours_order_by>>
     where?: Maybe<opening_hours_bool_exp>
   }) => Array<opening_hours>
   opening_hours_aggregate: (args?: {
-    distinct_on?: Maybe<Array<opening_hours_select_column>>
-    limit?: Maybe<Scalars['Int']>
-    offset?: Maybe<Scalars['Int']>
+    distinct_on?: Array<ScalarsEnums['opening_hours_select_column']>
+    limit?: ScalarsEnums['Int']
+    offset?: ScalarsEnums['Int']
     order_by?: Maybe<Array<opening_hours_order_by>>
     where?: Maybe<opening_hours_bool_exp>
   }) => opening_hours_aggregate
-  opening_hours_by_pk: (args: { id: Scalars['uuid'] }) => Maybe<opening_hours>
+  opening_hours_by_pk: (args: { id: ScalarsEnums['uuid'] }) => Maybe<opening_hours>
   photo: (args?: {
-    distinct_on?: Maybe<Array<photo_select_column>>
-    limit?: Maybe<Scalars['Int']>
-    offset?: Maybe<Scalars['Int']>
+    distinct_on?: Array<ScalarsEnums['photo_select_column']>
+    limit?: ScalarsEnums['Int']
+    offset?: ScalarsEnums['Int']
     order_by?: Maybe<Array<photo_order_by>>
     where?: Maybe<photo_bool_exp>
   }) => Array<photo>
   photo_aggregate: (args?: {
-    distinct_on?: Maybe<Array<photo_select_column>>
-    limit?: Maybe<Scalars['Int']>
-    offset?: Maybe<Scalars['Int']>
+    distinct_on?: Array<ScalarsEnums['photo_select_column']>
+    limit?: ScalarsEnums['Int']
+    offset?: ScalarsEnums['Int']
     order_by?: Maybe<Array<photo_order_by>>
     where?: Maybe<photo_bool_exp>
   }) => photo_aggregate
-  photo_by_pk: (args: { id: Scalars['uuid'] }) => Maybe<photo>
+  photo_by_pk: (args: { id: ScalarsEnums['uuid'] }) => Maybe<photo>
   photo_xref: (args?: {
-    distinct_on?: Maybe<Array<photo_xref_select_column>>
-    limit?: Maybe<Scalars['Int']>
-    offset?: Maybe<Scalars['Int']>
+    distinct_on?: Array<ScalarsEnums['photo_xref_select_column']>
+    limit?: ScalarsEnums['Int']
+    offset?: ScalarsEnums['Int']
     order_by?: Maybe<Array<photo_xref_order_by>>
     where?: Maybe<photo_xref_bool_exp>
   }) => Array<photo_xref>
   photo_xref_aggregate: (args?: {
-    distinct_on?: Maybe<Array<photo_xref_select_column>>
-    limit?: Maybe<Scalars['Int']>
-    offset?: Maybe<Scalars['Int']>
+    distinct_on?: Array<ScalarsEnums['photo_xref_select_column']>
+    limit?: ScalarsEnums['Int']
+    offset?: ScalarsEnums['Int']
     order_by?: Maybe<Array<photo_xref_order_by>>
     where?: Maybe<photo_xref_bool_exp>
   }) => photo_xref_aggregate
-  photo_xref_by_pk: (args: { id: Scalars['uuid'] }) => Maybe<photo_xref>
+  photo_xref_by_pk: (args: { id: ScalarsEnums['uuid'] }) => Maybe<photo_xref>
   restaurant: (args?: {
-    distinct_on?: Maybe<Array<restaurant_select_column>>
-    limit?: Maybe<Scalars['Int']>
-    offset?: Maybe<Scalars['Int']>
+    distinct_on?: Array<ScalarsEnums['restaurant_select_column']>
+    limit?: ScalarsEnums['Int']
+    offset?: ScalarsEnums['Int']
     order_by?: Maybe<Array<restaurant_order_by>>
     where?: Maybe<restaurant_bool_exp>
   }) => Array<restaurant>
   restaurant_aggregate: (args?: {
-    distinct_on?: Maybe<Array<restaurant_select_column>>
-    limit?: Maybe<Scalars['Int']>
-    offset?: Maybe<Scalars['Int']>
+    distinct_on?: Array<ScalarsEnums['restaurant_select_column']>
+    limit?: ScalarsEnums['Int']
+    offset?: ScalarsEnums['Int']
     order_by?: Maybe<Array<restaurant_order_by>>
     where?: Maybe<restaurant_bool_exp>
   }) => restaurant_aggregate
-  restaurant_by_pk: (args: { id: Scalars['uuid'] }) => Maybe<restaurant>
+  restaurant_by_pk: (args: { id: ScalarsEnums['uuid'] }) => Maybe<restaurant>
   restaurant_new: (args: {
     args: restaurant_new_args
-    distinct_on?: Maybe<Array<restaurant_select_column>>
-    limit?: Maybe<Scalars['Int']>
-    offset?: Maybe<Scalars['Int']>
+    distinct_on?: Array<ScalarsEnums['restaurant_select_column']>
+    limit?: ScalarsEnums['Int']
+    offset?: ScalarsEnums['Int']
     order_by?: Maybe<Array<restaurant_order_by>>
     where?: Maybe<restaurant_bool_exp>
   }) => Array<restaurant>
   restaurant_new_aggregate: (args: {
     args: restaurant_new_args
-    distinct_on?: Maybe<Array<restaurant_select_column>>
-    limit?: Maybe<Scalars['Int']>
-    offset?: Maybe<Scalars['Int']>
+    distinct_on?: Array<ScalarsEnums['restaurant_select_column']>
+    limit?: ScalarsEnums['Int']
+    offset?: ScalarsEnums['Int']
     order_by?: Maybe<Array<restaurant_order_by>>
     where?: Maybe<restaurant_bool_exp>
   }) => restaurant_aggregate
   restaurant_tag: (args?: {
-    distinct_on?: Maybe<Array<restaurant_tag_select_column>>
-    limit?: Maybe<Scalars['Int']>
-    offset?: Maybe<Scalars['Int']>
+    distinct_on?: Array<ScalarsEnums['restaurant_tag_select_column']>
+    limit?: ScalarsEnums['Int']
+    offset?: ScalarsEnums['Int']
     order_by?: Maybe<Array<restaurant_tag_order_by>>
     where?: Maybe<restaurant_tag_bool_exp>
   }) => Array<restaurant_tag>
   restaurant_tag_aggregate: (args?: {
-    distinct_on?: Maybe<Array<restaurant_tag_select_column>>
-    limit?: Maybe<Scalars['Int']>
-    offset?: Maybe<Scalars['Int']>
+    distinct_on?: Array<ScalarsEnums['restaurant_tag_select_column']>
+    limit?: ScalarsEnums['Int']
+    offset?: ScalarsEnums['Int']
     order_by?: Maybe<Array<restaurant_tag_order_by>>
     where?: Maybe<restaurant_tag_bool_exp>
   }) => restaurant_tag_aggregate
   restaurant_tag_by_pk: (args: {
-    restaurant_id: Scalars['uuid']
-    tag_id: Scalars['uuid']
+    restaurant_id: ScalarsEnums['uuid']
+    tag_id: ScalarsEnums['uuid']
   }) => Maybe<restaurant_tag>
   restaurant_top_tags: (args: {
     args: restaurant_top_tags_args
-    distinct_on?: Maybe<Array<restaurant_tag_select_column>>
-    limit?: Maybe<Scalars['Int']>
-    offset?: Maybe<Scalars['Int']>
+    distinct_on?: Array<ScalarsEnums['restaurant_tag_select_column']>
+    limit?: ScalarsEnums['Int']
+    offset?: ScalarsEnums['Int']
     order_by?: Maybe<Array<restaurant_tag_order_by>>
     where?: Maybe<restaurant_tag_bool_exp>
   }) => Array<restaurant_tag>
   restaurant_top_tags_aggregate: (args: {
     args: restaurant_top_tags_args
-    distinct_on?: Maybe<Array<restaurant_tag_select_column>>
-    limit?: Maybe<Scalars['Int']>
-    offset?: Maybe<Scalars['Int']>
+    distinct_on?: Array<ScalarsEnums['restaurant_tag_select_column']>
+    limit?: ScalarsEnums['Int']
+    offset?: ScalarsEnums['Int']
     order_by?: Maybe<Array<restaurant_tag_order_by>>
     where?: Maybe<restaurant_tag_bool_exp>
   }) => restaurant_tag_aggregate
   restaurant_trending: (args: {
     args: restaurant_trending_args
-    distinct_on?: Maybe<Array<restaurant_select_column>>
-    limit?: Maybe<Scalars['Int']>
-    offset?: Maybe<Scalars['Int']>
+    distinct_on?: Array<ScalarsEnums['restaurant_select_column']>
+    limit?: ScalarsEnums['Int']
+    offset?: ScalarsEnums['Int']
     order_by?: Maybe<Array<restaurant_order_by>>
     where?: Maybe<restaurant_bool_exp>
   }) => Array<restaurant>
   restaurant_trending_aggregate: (args: {
     args: restaurant_trending_args
-    distinct_on?: Maybe<Array<restaurant_select_column>>
-    limit?: Maybe<Scalars['Int']>
-    offset?: Maybe<Scalars['Int']>
+    distinct_on?: Array<ScalarsEnums['restaurant_select_column']>
+    limit?: ScalarsEnums['Int']
+    offset?: ScalarsEnums['Int']
     order_by?: Maybe<Array<restaurant_order_by>>
     where?: Maybe<restaurant_bool_exp>
   }) => restaurant_aggregate
   restaurant_with_tags: (args: {
     args: restaurant_with_tags_args
-    distinct_on?: Maybe<Array<restaurant_select_column>>
-    limit?: Maybe<Scalars['Int']>
-    offset?: Maybe<Scalars['Int']>
+    distinct_on?: Array<ScalarsEnums['restaurant_select_column']>
+    limit?: ScalarsEnums['Int']
+    offset?: ScalarsEnums['Int']
     order_by?: Maybe<Array<restaurant_order_by>>
     where?: Maybe<restaurant_bool_exp>
   }) => Array<restaurant>
   restaurant_with_tags_aggregate: (args: {
     args: restaurant_with_tags_args
-    distinct_on?: Maybe<Array<restaurant_select_column>>
-    limit?: Maybe<Scalars['Int']>
-    offset?: Maybe<Scalars['Int']>
+    distinct_on?: Array<ScalarsEnums['restaurant_select_column']>
+    limit?: ScalarsEnums['Int']
+    offset?: ScalarsEnums['Int']
     order_by?: Maybe<Array<restaurant_order_by>>
     where?: Maybe<restaurant_bool_exp>
   }) => restaurant_aggregate
   review: (args?: {
-    distinct_on?: Maybe<Array<review_select_column>>
-    limit?: Maybe<Scalars['Int']>
-    offset?: Maybe<Scalars['Int']>
+    distinct_on?: Array<ScalarsEnums['review_select_column']>
+    limit?: ScalarsEnums['Int']
+    offset?: ScalarsEnums['Int']
     order_by?: Maybe<Array<review_order_by>>
     where?: Maybe<review_bool_exp>
   }) => Array<review>
   review_aggregate: (args?: {
-    distinct_on?: Maybe<Array<review_select_column>>
-    limit?: Maybe<Scalars['Int']>
-    offset?: Maybe<Scalars['Int']>
+    distinct_on?: Array<ScalarsEnums['review_select_column']>
+    limit?: ScalarsEnums['Int']
+    offset?: ScalarsEnums['Int']
     order_by?: Maybe<Array<review_order_by>>
     where?: Maybe<review_bool_exp>
   }) => review_aggregate
-  review_by_pk: (args: { id: Scalars['uuid'] }) => Maybe<review>
+  review_by_pk: (args: { id: ScalarsEnums['uuid'] }) => Maybe<review>
   review_tag_sentence: (args?: {
-    distinct_on?: Maybe<Array<review_tag_sentence_select_column>>
-    limit?: Maybe<Scalars['Int']>
-    offset?: Maybe<Scalars['Int']>
+    distinct_on?: Array<ScalarsEnums['review_tag_sentence_select_column']>
+    limit?: ScalarsEnums['Int']
+    offset?: ScalarsEnums['Int']
     order_by?: Maybe<Array<review_tag_sentence_order_by>>
     where?: Maybe<review_tag_sentence_bool_exp>
   }) => Array<review_tag_sentence>
   review_tag_sentence_aggregate: (args?: {
-    distinct_on?: Maybe<Array<review_tag_sentence_select_column>>
-    limit?: Maybe<Scalars['Int']>
-    offset?: Maybe<Scalars['Int']>
+    distinct_on?: Array<ScalarsEnums['review_tag_sentence_select_column']>
+    limit?: ScalarsEnums['Int']
+    offset?: ScalarsEnums['Int']
     order_by?: Maybe<Array<review_tag_sentence_order_by>>
     where?: Maybe<review_tag_sentence_bool_exp>
   }) => review_tag_sentence_aggregate
-  review_tag_sentence_by_pk: (args: { id: Scalars['uuid'] }) => Maybe<review_tag_sentence>
+  review_tag_sentence_by_pk: (args: { id: ScalarsEnums['uuid'] }) => Maybe<review_tag_sentence>
   setting: (args?: {
-    distinct_on?: Maybe<Array<setting_select_column>>
-    limit?: Maybe<Scalars['Int']>
-    offset?: Maybe<Scalars['Int']>
+    distinct_on?: Array<ScalarsEnums['setting_select_column']>
+    limit?: ScalarsEnums['Int']
+    offset?: ScalarsEnums['Int']
     order_by?: Maybe<Array<setting_order_by>>
     where?: Maybe<setting_bool_exp>
   }) => Array<setting>
   setting_aggregate: (args?: {
-    distinct_on?: Maybe<Array<setting_select_column>>
-    limit?: Maybe<Scalars['Int']>
-    offset?: Maybe<Scalars['Int']>
+    distinct_on?: Array<ScalarsEnums['setting_select_column']>
+    limit?: ScalarsEnums['Int']
+    offset?: ScalarsEnums['Int']
     order_by?: Maybe<Array<setting_order_by>>
     where?: Maybe<setting_bool_exp>
   }) => setting_aggregate
-  setting_by_pk: (args: { key: Scalars['String'] }) => Maybe<setting>
+  setting_by_pk: (args: { key: ScalarsEnums['String'] }) => Maybe<setting>
   tag: (args?: {
-    distinct_on?: Maybe<Array<tag_select_column>>
-    limit?: Maybe<Scalars['Int']>
-    offset?: Maybe<Scalars['Int']>
+    distinct_on?: Array<ScalarsEnums['tag_select_column']>
+    limit?: ScalarsEnums['Int']
+    offset?: ScalarsEnums['Int']
     order_by?: Maybe<Array<tag_order_by>>
     where?: Maybe<tag_bool_exp>
   }) => Array<tag>
   tag_aggregate: (args?: {
-    distinct_on?: Maybe<Array<tag_select_column>>
-    limit?: Maybe<Scalars['Int']>
-    offset?: Maybe<Scalars['Int']>
+    distinct_on?: Array<ScalarsEnums['tag_select_column']>
+    limit?: ScalarsEnums['Int']
+    offset?: ScalarsEnums['Int']
     order_by?: Maybe<Array<tag_order_by>>
     where?: Maybe<tag_bool_exp>
   }) => tag_aggregate
-  tag_by_pk: (args: { id: Scalars['uuid'] }) => Maybe<tag>
+  tag_by_pk: (args: { id: ScalarsEnums['uuid'] }) => Maybe<tag>
   tag_tag: (args?: {
-    distinct_on?: Maybe<Array<tag_tag_select_column>>
-    limit?: Maybe<Scalars['Int']>
-    offset?: Maybe<Scalars['Int']>
+    distinct_on?: Array<ScalarsEnums['tag_tag_select_column']>
+    limit?: ScalarsEnums['Int']
+    offset?: ScalarsEnums['Int']
     order_by?: Maybe<Array<tag_tag_order_by>>
     where?: Maybe<tag_tag_bool_exp>
   }) => Array<tag_tag>
   tag_tag_aggregate: (args?: {
-    distinct_on?: Maybe<Array<tag_tag_select_column>>
-    limit?: Maybe<Scalars['Int']>
-    offset?: Maybe<Scalars['Int']>
+    distinct_on?: Array<ScalarsEnums['tag_tag_select_column']>
+    limit?: ScalarsEnums['Int']
+    offset?: ScalarsEnums['Int']
     order_by?: Maybe<Array<tag_tag_order_by>>
     where?: Maybe<tag_tag_bool_exp>
   }) => tag_tag_aggregate
   tag_tag_by_pk: (args: {
-    category_tag_id: Scalars['uuid']
-    tag_id: Scalars['uuid']
+    category_tag_id: ScalarsEnums['uuid']
+    tag_id: ScalarsEnums['uuid']
   }) => Maybe<tag_tag>
   user: (args?: {
-    distinct_on?: Maybe<Array<user_select_column>>
-    limit?: Maybe<Scalars['Int']>
-    offset?: Maybe<Scalars['Int']>
+    distinct_on?: Array<ScalarsEnums['user_select_column']>
+    limit?: ScalarsEnums['Int']
+    offset?: ScalarsEnums['Int']
     order_by?: Maybe<Array<user_order_by>>
     where?: Maybe<user_bool_exp>
   }) => Array<user>
   user_aggregate: (args?: {
-    distinct_on?: Maybe<Array<user_select_column>>
-    limit?: Maybe<Scalars['Int']>
-    offset?: Maybe<Scalars['Int']>
+    distinct_on?: Array<ScalarsEnums['user_select_column']>
+    limit?: ScalarsEnums['Int']
+    offset?: ScalarsEnums['Int']
     order_by?: Maybe<Array<user_order_by>>
     where?: Maybe<user_bool_exp>
   }) => user_aggregate
-  user_by_pk: (args: { id: Scalars['uuid'] }) => Maybe<user>
+  user_by_pk: (args: { id: ScalarsEnums['uuid'] }) => Maybe<user>
   zcta5: (args?: {
-    distinct_on?: Maybe<Array<zcta5_select_column>>
-    limit?: Maybe<Scalars['Int']>
-    offset?: Maybe<Scalars['Int']>
+    distinct_on?: Array<ScalarsEnums['zcta5_select_column']>
+    limit?: ScalarsEnums['Int']
+    offset?: ScalarsEnums['Int']
     order_by?: Maybe<Array<zcta5_order_by>>
     where?: Maybe<zcta5_bool_exp>
   }) => Array<zcta5>
   zcta5_aggregate: (args?: {
-    distinct_on?: Maybe<Array<zcta5_select_column>>
-    limit?: Maybe<Scalars['Int']>
-    offset?: Maybe<Scalars['Int']>
+    distinct_on?: Array<ScalarsEnums['zcta5_select_column']>
+    limit?: ScalarsEnums['Int']
+    offset?: ScalarsEnums['Int']
     order_by?: Maybe<Array<zcta5_order_by>>
     where?: Maybe<zcta5_bool_exp>
   }) => zcta5_aggregate
-  zcta5_by_pk: (args: { ogc_fid: Scalars['Int'] }) => Maybe<zcta5>
+  zcta5_by_pk: (args: { ogc_fid: ScalarsEnums['Int'] }) => Maybe<zcta5>
 }
 
 export interface Mutation {
   __typename: 'Mutation' | undefined
   delete_hrr: (args: { where: hrr_bool_exp }) => Maybe<hrr_mutation_response>
-  delete_hrr_by_pk: (args: { ogc_fid: Scalars['Int'] }) => Maybe<hrr>
+  delete_hrr_by_pk: (args: { ogc_fid: ScalarsEnums['Int'] }) => Maybe<hrr>
   delete_list: (args: { where: list_bool_exp }) => Maybe<list_mutation_response>
-  delete_list_by_pk: (args: { id: Scalars['uuid'] }) => Maybe<list>
+  delete_list_by_pk: (args: { id: ScalarsEnums['uuid'] }) => Maybe<list>
   delete_list_restaurant: (args: {
     where: list_restaurant_bool_exp
   }) => Maybe<list_restaurant_mutation_response>
   delete_list_restaurant_by_pk: (args: {
-    list_id: Scalars['uuid']
-    restaurant_id: Scalars['uuid']
+    list_id: ScalarsEnums['uuid']
+    restaurant_id: ScalarsEnums['uuid']
   }) => Maybe<list_restaurant>
   delete_list_restaurant_tag: (args: {
     where: list_restaurant_tag_bool_exp
   }) => Maybe<list_restaurant_tag_mutation_response>
-  delete_list_restaurant_tag_by_pk: (args: { id: Scalars['uuid'] }) => Maybe<list_restaurant_tag>
+  delete_list_restaurant_tag_by_pk: (args: {
+    id: ScalarsEnums['uuid']
+  }) => Maybe<list_restaurant_tag>
   delete_list_tag: (args: { where: list_tag_bool_exp }) => Maybe<list_tag_mutation_response>
-  delete_list_tag_by_pk: (args: { id: Scalars['uuid'] }) => Maybe<list_tag>
+  delete_list_tag_by_pk: (args: { id: ScalarsEnums['uuid'] }) => Maybe<list_tag>
   delete_menu_item: (args: { where: menu_item_bool_exp }) => Maybe<menu_item_mutation_response>
-  delete_menu_item_by_pk: (args: { id: Scalars['uuid'] }) => Maybe<menu_item>
+  delete_menu_item_by_pk: (args: { id: ScalarsEnums['uuid'] }) => Maybe<menu_item>
   delete_nhood_labels: (args: {
     where: nhood_labels_bool_exp
   }) => Maybe<nhood_labels_mutation_response>
-  delete_nhood_labels_by_pk: (args: { ogc_fid: Scalars['Int'] }) => Maybe<nhood_labels>
+  delete_nhood_labels_by_pk: (args: { ogc_fid: ScalarsEnums['Int'] }) => Maybe<nhood_labels>
   delete_opening_hours: (args: {
     where: opening_hours_bool_exp
   }) => Maybe<opening_hours_mutation_response>
-  delete_opening_hours_by_pk: (args: { id: Scalars['uuid'] }) => Maybe<opening_hours>
+  delete_opening_hours_by_pk: (args: { id: ScalarsEnums['uuid'] }) => Maybe<opening_hours>
   delete_photo: (args: { where: photo_bool_exp }) => Maybe<photo_mutation_response>
-  delete_photo_by_pk: (args: { id: Scalars['uuid'] }) => Maybe<photo>
+  delete_photo_by_pk: (args: { id: ScalarsEnums['uuid'] }) => Maybe<photo>
   delete_photo_xref: (args: { where: photo_xref_bool_exp }) => Maybe<photo_xref_mutation_response>
-  delete_photo_xref_by_pk: (args: { id: Scalars['uuid'] }) => Maybe<photo_xref>
+  delete_photo_xref_by_pk: (args: { id: ScalarsEnums['uuid'] }) => Maybe<photo_xref>
   delete_restaurant: (args: { where: restaurant_bool_exp }) => Maybe<restaurant_mutation_response>
-  delete_restaurant_by_pk: (args: { id: Scalars['uuid'] }) => Maybe<restaurant>
+  delete_restaurant_by_pk: (args: { id: ScalarsEnums['uuid'] }) => Maybe<restaurant>
   delete_restaurant_tag: (args: {
     where: restaurant_tag_bool_exp
   }) => Maybe<restaurant_tag_mutation_response>
   delete_restaurant_tag_by_pk: (args: {
-    restaurant_id: Scalars['uuid']
-    tag_id: Scalars['uuid']
+    restaurant_id: ScalarsEnums['uuid']
+    tag_id: ScalarsEnums['uuid']
   }) => Maybe<restaurant_tag>
   delete_review: (args: { where: review_bool_exp }) => Maybe<review_mutation_response>
-  delete_review_by_pk: (args: { id: Scalars['uuid'] }) => Maybe<review>
+  delete_review_by_pk: (args: { id: ScalarsEnums['uuid'] }) => Maybe<review>
   delete_review_tag_sentence: (args: {
     where: review_tag_sentence_bool_exp
   }) => Maybe<review_tag_sentence_mutation_response>
-  delete_review_tag_sentence_by_pk: (args: { id: Scalars['uuid'] }) => Maybe<review_tag_sentence>
+  delete_review_tag_sentence_by_pk: (args: {
+    id: ScalarsEnums['uuid']
+  }) => Maybe<review_tag_sentence>
   delete_setting: (args: { where: setting_bool_exp }) => Maybe<setting_mutation_response>
-  delete_setting_by_pk: (args: { key: Scalars['String'] }) => Maybe<setting>
+  delete_setting_by_pk: (args: { key: ScalarsEnums['String'] }) => Maybe<setting>
   delete_tag: (args: { where: tag_bool_exp }) => Maybe<tag_mutation_response>
-  delete_tag_by_pk: (args: { id: Scalars['uuid'] }) => Maybe<tag>
+  delete_tag_by_pk: (args: { id: ScalarsEnums['uuid'] }) => Maybe<tag>
   delete_tag_tag: (args: { where: tag_tag_bool_exp }) => Maybe<tag_tag_mutation_response>
   delete_tag_tag_by_pk: (args: {
-    category_tag_id: Scalars['uuid']
-    tag_id: Scalars['uuid']
+    category_tag_id: ScalarsEnums['uuid']
+    tag_id: ScalarsEnums['uuid']
   }) => Maybe<tag_tag>
   delete_user: (args: { where: user_bool_exp }) => Maybe<user_mutation_response>
-  delete_user_by_pk: (args: { id: Scalars['uuid'] }) => Maybe<user>
+  delete_user_by_pk: (args: { id: ScalarsEnums['uuid'] }) => Maybe<user>
   delete_zcta5: (args: { where: zcta5_bool_exp }) => Maybe<zcta5_mutation_response>
-  delete_zcta5_by_pk: (args: { ogc_fid: Scalars['Int'] }) => Maybe<zcta5>
+  delete_zcta5_by_pk: (args: { ogc_fid: ScalarsEnums['Int'] }) => Maybe<zcta5>
   insert_hrr: (args: {
     objects: Array<hrr_insert_input>
     on_conflict?: Maybe<hrr_on_conflict>
@@ -11452,379 +11456,379 @@ export interface Mutation {
 export interface Subscription {
   __typename: 'Subscription' | undefined
   hrr: (args?: {
-    distinct_on?: Maybe<Array<hrr_select_column>>
-    limit?: Maybe<Scalars['Int']>
-    offset?: Maybe<Scalars['Int']>
+    distinct_on?: Array<ScalarsEnums['hrr_select_column']>
+    limit?: ScalarsEnums['Int']
+    offset?: ScalarsEnums['Int']
     order_by?: Maybe<Array<hrr_order_by>>
     where?: Maybe<hrr_bool_exp>
   }) => Array<hrr>
   hrr_aggregate: (args?: {
-    distinct_on?: Maybe<Array<hrr_select_column>>
-    limit?: Maybe<Scalars['Int']>
-    offset?: Maybe<Scalars['Int']>
+    distinct_on?: Array<ScalarsEnums['hrr_select_column']>
+    limit?: ScalarsEnums['Int']
+    offset?: ScalarsEnums['Int']
     order_by?: Maybe<Array<hrr_order_by>>
     where?: Maybe<hrr_bool_exp>
   }) => hrr_aggregate
-  hrr_by_pk: (args: { ogc_fid: Scalars['Int'] }) => Maybe<hrr>
+  hrr_by_pk: (args: { ogc_fid: ScalarsEnums['Int'] }) => Maybe<hrr>
   list: (args?: {
-    distinct_on?: Maybe<Array<list_select_column>>
-    limit?: Maybe<Scalars['Int']>
-    offset?: Maybe<Scalars['Int']>
+    distinct_on?: Array<ScalarsEnums['list_select_column']>
+    limit?: ScalarsEnums['Int']
+    offset?: ScalarsEnums['Int']
     order_by?: Maybe<Array<list_order_by>>
     where?: Maybe<list_bool_exp>
   }) => Array<list>
   list_aggregate: (args?: {
-    distinct_on?: Maybe<Array<list_select_column>>
-    limit?: Maybe<Scalars['Int']>
-    offset?: Maybe<Scalars['Int']>
+    distinct_on?: Array<ScalarsEnums['list_select_column']>
+    limit?: ScalarsEnums['Int']
+    offset?: ScalarsEnums['Int']
     order_by?: Maybe<Array<list_order_by>>
     where?: Maybe<list_bool_exp>
   }) => list_aggregate
-  list_by_pk: (args: { id: Scalars['uuid'] }) => Maybe<list>
+  list_by_pk: (args: { id: ScalarsEnums['uuid'] }) => Maybe<list>
   list_populated: (args: {
     args: list_populated_args
-    distinct_on?: Maybe<Array<list_select_column>>
-    limit?: Maybe<Scalars['Int']>
-    offset?: Maybe<Scalars['Int']>
+    distinct_on?: Array<ScalarsEnums['list_select_column']>
+    limit?: ScalarsEnums['Int']
+    offset?: ScalarsEnums['Int']
     order_by?: Maybe<Array<list_order_by>>
     where?: Maybe<list_bool_exp>
   }) => Array<list>
   list_populated_aggregate: (args: {
     args: list_populated_args
-    distinct_on?: Maybe<Array<list_select_column>>
-    limit?: Maybe<Scalars['Int']>
-    offset?: Maybe<Scalars['Int']>
+    distinct_on?: Array<ScalarsEnums['list_select_column']>
+    limit?: ScalarsEnums['Int']
+    offset?: ScalarsEnums['Int']
     order_by?: Maybe<Array<list_order_by>>
     where?: Maybe<list_bool_exp>
   }) => list_aggregate
   list_restaurant: (args?: {
-    distinct_on?: Maybe<Array<list_restaurant_select_column>>
-    limit?: Maybe<Scalars['Int']>
-    offset?: Maybe<Scalars['Int']>
+    distinct_on?: Array<ScalarsEnums['list_restaurant_select_column']>
+    limit?: ScalarsEnums['Int']
+    offset?: ScalarsEnums['Int']
     order_by?: Maybe<Array<list_restaurant_order_by>>
     where?: Maybe<list_restaurant_bool_exp>
   }) => Array<list_restaurant>
   list_restaurant_aggregate: (args?: {
-    distinct_on?: Maybe<Array<list_restaurant_select_column>>
-    limit?: Maybe<Scalars['Int']>
-    offset?: Maybe<Scalars['Int']>
+    distinct_on?: Array<ScalarsEnums['list_restaurant_select_column']>
+    limit?: ScalarsEnums['Int']
+    offset?: ScalarsEnums['Int']
     order_by?: Maybe<Array<list_restaurant_order_by>>
     where?: Maybe<list_restaurant_bool_exp>
   }) => list_restaurant_aggregate
   list_restaurant_by_pk: (args: {
-    list_id: Scalars['uuid']
-    restaurant_id: Scalars['uuid']
+    list_id: ScalarsEnums['uuid']
+    restaurant_id: ScalarsEnums['uuid']
   }) => Maybe<list_restaurant>
   list_restaurant_tag: (args?: {
-    distinct_on?: Maybe<Array<list_restaurant_tag_select_column>>
-    limit?: Maybe<Scalars['Int']>
-    offset?: Maybe<Scalars['Int']>
+    distinct_on?: Array<ScalarsEnums['list_restaurant_tag_select_column']>
+    limit?: ScalarsEnums['Int']
+    offset?: ScalarsEnums['Int']
     order_by?: Maybe<Array<list_restaurant_tag_order_by>>
     where?: Maybe<list_restaurant_tag_bool_exp>
   }) => Array<list_restaurant_tag>
   list_restaurant_tag_aggregate: (args?: {
-    distinct_on?: Maybe<Array<list_restaurant_tag_select_column>>
-    limit?: Maybe<Scalars['Int']>
-    offset?: Maybe<Scalars['Int']>
+    distinct_on?: Array<ScalarsEnums['list_restaurant_tag_select_column']>
+    limit?: ScalarsEnums['Int']
+    offset?: ScalarsEnums['Int']
     order_by?: Maybe<Array<list_restaurant_tag_order_by>>
     where?: Maybe<list_restaurant_tag_bool_exp>
   }) => list_restaurant_tag_aggregate
-  list_restaurant_tag_by_pk: (args: { id: Scalars['uuid'] }) => Maybe<list_restaurant_tag>
+  list_restaurant_tag_by_pk: (args: { id: ScalarsEnums['uuid'] }) => Maybe<list_restaurant_tag>
   list_tag: (args?: {
-    distinct_on?: Maybe<Array<list_tag_select_column>>
-    limit?: Maybe<Scalars['Int']>
-    offset?: Maybe<Scalars['Int']>
+    distinct_on?: Array<ScalarsEnums['list_tag_select_column']>
+    limit?: ScalarsEnums['Int']
+    offset?: ScalarsEnums['Int']
     order_by?: Maybe<Array<list_tag_order_by>>
     where?: Maybe<list_tag_bool_exp>
   }) => Array<list_tag>
   list_tag_aggregate: (args?: {
-    distinct_on?: Maybe<Array<list_tag_select_column>>
-    limit?: Maybe<Scalars['Int']>
-    offset?: Maybe<Scalars['Int']>
+    distinct_on?: Array<ScalarsEnums['list_tag_select_column']>
+    limit?: ScalarsEnums['Int']
+    offset?: ScalarsEnums['Int']
     order_by?: Maybe<Array<list_tag_order_by>>
     where?: Maybe<list_tag_bool_exp>
   }) => list_tag_aggregate
-  list_tag_by_pk: (args: { id: Scalars['uuid'] }) => Maybe<list_tag>
+  list_tag_by_pk: (args: { id: ScalarsEnums['uuid'] }) => Maybe<list_tag>
   menu_item: (args?: {
-    distinct_on?: Maybe<Array<menu_item_select_column>>
-    limit?: Maybe<Scalars['Int']>
-    offset?: Maybe<Scalars['Int']>
+    distinct_on?: Array<ScalarsEnums['menu_item_select_column']>
+    limit?: ScalarsEnums['Int']
+    offset?: ScalarsEnums['Int']
     order_by?: Maybe<Array<menu_item_order_by>>
     where?: Maybe<menu_item_bool_exp>
   }) => Array<menu_item>
   menu_item_aggregate: (args?: {
-    distinct_on?: Maybe<Array<menu_item_select_column>>
-    limit?: Maybe<Scalars['Int']>
-    offset?: Maybe<Scalars['Int']>
+    distinct_on?: Array<ScalarsEnums['menu_item_select_column']>
+    limit?: ScalarsEnums['Int']
+    offset?: ScalarsEnums['Int']
     order_by?: Maybe<Array<menu_item_order_by>>
     where?: Maybe<menu_item_bool_exp>
   }) => menu_item_aggregate
-  menu_item_by_pk: (args: { id: Scalars['uuid'] }) => Maybe<menu_item>
+  menu_item_by_pk: (args: { id: ScalarsEnums['uuid'] }) => Maybe<menu_item>
   nhood_labels: (args?: {
-    distinct_on?: Maybe<Array<nhood_labels_select_column>>
-    limit?: Maybe<Scalars['Int']>
-    offset?: Maybe<Scalars['Int']>
+    distinct_on?: Array<ScalarsEnums['nhood_labels_select_column']>
+    limit?: ScalarsEnums['Int']
+    offset?: ScalarsEnums['Int']
     order_by?: Maybe<Array<nhood_labels_order_by>>
     where?: Maybe<nhood_labels_bool_exp>
   }) => Array<nhood_labels>
   nhood_labels_aggregate: (args?: {
-    distinct_on?: Maybe<Array<nhood_labels_select_column>>
-    limit?: Maybe<Scalars['Int']>
-    offset?: Maybe<Scalars['Int']>
+    distinct_on?: Array<ScalarsEnums['nhood_labels_select_column']>
+    limit?: ScalarsEnums['Int']
+    offset?: ScalarsEnums['Int']
     order_by?: Maybe<Array<nhood_labels_order_by>>
     where?: Maybe<nhood_labels_bool_exp>
   }) => nhood_labels_aggregate
-  nhood_labels_by_pk: (args: { ogc_fid: Scalars['Int'] }) => Maybe<nhood_labels>
+  nhood_labels_by_pk: (args: { ogc_fid: ScalarsEnums['Int'] }) => Maybe<nhood_labels>
   opening_hours: (args?: {
-    distinct_on?: Maybe<Array<opening_hours_select_column>>
-    limit?: Maybe<Scalars['Int']>
-    offset?: Maybe<Scalars['Int']>
+    distinct_on?: Array<ScalarsEnums['opening_hours_select_column']>
+    limit?: ScalarsEnums['Int']
+    offset?: ScalarsEnums['Int']
     order_by?: Maybe<Array<opening_hours_order_by>>
     where?: Maybe<opening_hours_bool_exp>
   }) => Array<opening_hours>
   opening_hours_aggregate: (args?: {
-    distinct_on?: Maybe<Array<opening_hours_select_column>>
-    limit?: Maybe<Scalars['Int']>
-    offset?: Maybe<Scalars['Int']>
+    distinct_on?: Array<ScalarsEnums['opening_hours_select_column']>
+    limit?: ScalarsEnums['Int']
+    offset?: ScalarsEnums['Int']
     order_by?: Maybe<Array<opening_hours_order_by>>
     where?: Maybe<opening_hours_bool_exp>
   }) => opening_hours_aggregate
-  opening_hours_by_pk: (args: { id: Scalars['uuid'] }) => Maybe<opening_hours>
+  opening_hours_by_pk: (args: { id: ScalarsEnums['uuid'] }) => Maybe<opening_hours>
   photo: (args?: {
-    distinct_on?: Maybe<Array<photo_select_column>>
-    limit?: Maybe<Scalars['Int']>
-    offset?: Maybe<Scalars['Int']>
+    distinct_on?: Array<ScalarsEnums['photo_select_column']>
+    limit?: ScalarsEnums['Int']
+    offset?: ScalarsEnums['Int']
     order_by?: Maybe<Array<photo_order_by>>
     where?: Maybe<photo_bool_exp>
   }) => Array<photo>
   photo_aggregate: (args?: {
-    distinct_on?: Maybe<Array<photo_select_column>>
-    limit?: Maybe<Scalars['Int']>
-    offset?: Maybe<Scalars['Int']>
+    distinct_on?: Array<ScalarsEnums['photo_select_column']>
+    limit?: ScalarsEnums['Int']
+    offset?: ScalarsEnums['Int']
     order_by?: Maybe<Array<photo_order_by>>
     where?: Maybe<photo_bool_exp>
   }) => photo_aggregate
-  photo_by_pk: (args: { id: Scalars['uuid'] }) => Maybe<photo>
+  photo_by_pk: (args: { id: ScalarsEnums['uuid'] }) => Maybe<photo>
   photo_xref: (args?: {
-    distinct_on?: Maybe<Array<photo_xref_select_column>>
-    limit?: Maybe<Scalars['Int']>
-    offset?: Maybe<Scalars['Int']>
+    distinct_on?: Array<ScalarsEnums['photo_xref_select_column']>
+    limit?: ScalarsEnums['Int']
+    offset?: ScalarsEnums['Int']
     order_by?: Maybe<Array<photo_xref_order_by>>
     where?: Maybe<photo_xref_bool_exp>
   }) => Array<photo_xref>
   photo_xref_aggregate: (args?: {
-    distinct_on?: Maybe<Array<photo_xref_select_column>>
-    limit?: Maybe<Scalars['Int']>
-    offset?: Maybe<Scalars['Int']>
+    distinct_on?: Array<ScalarsEnums['photo_xref_select_column']>
+    limit?: ScalarsEnums['Int']
+    offset?: ScalarsEnums['Int']
     order_by?: Maybe<Array<photo_xref_order_by>>
     where?: Maybe<photo_xref_bool_exp>
   }) => photo_xref_aggregate
-  photo_xref_by_pk: (args: { id: Scalars['uuid'] }) => Maybe<photo_xref>
+  photo_xref_by_pk: (args: { id: ScalarsEnums['uuid'] }) => Maybe<photo_xref>
   restaurant: (args?: {
-    distinct_on?: Maybe<Array<restaurant_select_column>>
-    limit?: Maybe<Scalars['Int']>
-    offset?: Maybe<Scalars['Int']>
+    distinct_on?: Array<ScalarsEnums['restaurant_select_column']>
+    limit?: ScalarsEnums['Int']
+    offset?: ScalarsEnums['Int']
     order_by?: Maybe<Array<restaurant_order_by>>
     where?: Maybe<restaurant_bool_exp>
   }) => Array<restaurant>
   restaurant_aggregate: (args?: {
-    distinct_on?: Maybe<Array<restaurant_select_column>>
-    limit?: Maybe<Scalars['Int']>
-    offset?: Maybe<Scalars['Int']>
+    distinct_on?: Array<ScalarsEnums['restaurant_select_column']>
+    limit?: ScalarsEnums['Int']
+    offset?: ScalarsEnums['Int']
     order_by?: Maybe<Array<restaurant_order_by>>
     where?: Maybe<restaurant_bool_exp>
   }) => restaurant_aggregate
-  restaurant_by_pk: (args: { id: Scalars['uuid'] }) => Maybe<restaurant>
+  restaurant_by_pk: (args: { id: ScalarsEnums['uuid'] }) => Maybe<restaurant>
   restaurant_new: (args: {
     args: restaurant_new_args
-    distinct_on?: Maybe<Array<restaurant_select_column>>
-    limit?: Maybe<Scalars['Int']>
-    offset?: Maybe<Scalars['Int']>
+    distinct_on?: Array<ScalarsEnums['restaurant_select_column']>
+    limit?: ScalarsEnums['Int']
+    offset?: ScalarsEnums['Int']
     order_by?: Maybe<Array<restaurant_order_by>>
     where?: Maybe<restaurant_bool_exp>
   }) => Array<restaurant>
   restaurant_new_aggregate: (args: {
     args: restaurant_new_args
-    distinct_on?: Maybe<Array<restaurant_select_column>>
-    limit?: Maybe<Scalars['Int']>
-    offset?: Maybe<Scalars['Int']>
+    distinct_on?: Array<ScalarsEnums['restaurant_select_column']>
+    limit?: ScalarsEnums['Int']
+    offset?: ScalarsEnums['Int']
     order_by?: Maybe<Array<restaurant_order_by>>
     where?: Maybe<restaurant_bool_exp>
   }) => restaurant_aggregate
   restaurant_tag: (args?: {
-    distinct_on?: Maybe<Array<restaurant_tag_select_column>>
-    limit?: Maybe<Scalars['Int']>
-    offset?: Maybe<Scalars['Int']>
+    distinct_on?: Array<ScalarsEnums['restaurant_tag_select_column']>
+    limit?: ScalarsEnums['Int']
+    offset?: ScalarsEnums['Int']
     order_by?: Maybe<Array<restaurant_tag_order_by>>
     where?: Maybe<restaurant_tag_bool_exp>
   }) => Array<restaurant_tag>
   restaurant_tag_aggregate: (args?: {
-    distinct_on?: Maybe<Array<restaurant_tag_select_column>>
-    limit?: Maybe<Scalars['Int']>
-    offset?: Maybe<Scalars['Int']>
+    distinct_on?: Array<ScalarsEnums['restaurant_tag_select_column']>
+    limit?: ScalarsEnums['Int']
+    offset?: ScalarsEnums['Int']
     order_by?: Maybe<Array<restaurant_tag_order_by>>
     where?: Maybe<restaurant_tag_bool_exp>
   }) => restaurant_tag_aggregate
   restaurant_tag_by_pk: (args: {
-    restaurant_id: Scalars['uuid']
-    tag_id: Scalars['uuid']
+    restaurant_id: ScalarsEnums['uuid']
+    tag_id: ScalarsEnums['uuid']
   }) => Maybe<restaurant_tag>
   restaurant_top_tags: (args: {
     args: restaurant_top_tags_args
-    distinct_on?: Maybe<Array<restaurant_tag_select_column>>
-    limit?: Maybe<Scalars['Int']>
-    offset?: Maybe<Scalars['Int']>
+    distinct_on?: Array<ScalarsEnums['restaurant_tag_select_column']>
+    limit?: ScalarsEnums['Int']
+    offset?: ScalarsEnums['Int']
     order_by?: Maybe<Array<restaurant_tag_order_by>>
     where?: Maybe<restaurant_tag_bool_exp>
   }) => Array<restaurant_tag>
   restaurant_top_tags_aggregate: (args: {
     args: restaurant_top_tags_args
-    distinct_on?: Maybe<Array<restaurant_tag_select_column>>
-    limit?: Maybe<Scalars['Int']>
-    offset?: Maybe<Scalars['Int']>
+    distinct_on?: Array<ScalarsEnums['restaurant_tag_select_column']>
+    limit?: ScalarsEnums['Int']
+    offset?: ScalarsEnums['Int']
     order_by?: Maybe<Array<restaurant_tag_order_by>>
     where?: Maybe<restaurant_tag_bool_exp>
   }) => restaurant_tag_aggregate
   restaurant_trending: (args: {
     args: restaurant_trending_args
-    distinct_on?: Maybe<Array<restaurant_select_column>>
-    limit?: Maybe<Scalars['Int']>
-    offset?: Maybe<Scalars['Int']>
+    distinct_on?: Array<ScalarsEnums['restaurant_select_column']>
+    limit?: ScalarsEnums['Int']
+    offset?: ScalarsEnums['Int']
     order_by?: Maybe<Array<restaurant_order_by>>
     where?: Maybe<restaurant_bool_exp>
   }) => Array<restaurant>
   restaurant_trending_aggregate: (args: {
     args: restaurant_trending_args
-    distinct_on?: Maybe<Array<restaurant_select_column>>
-    limit?: Maybe<Scalars['Int']>
-    offset?: Maybe<Scalars['Int']>
+    distinct_on?: Array<ScalarsEnums['restaurant_select_column']>
+    limit?: ScalarsEnums['Int']
+    offset?: ScalarsEnums['Int']
     order_by?: Maybe<Array<restaurant_order_by>>
     where?: Maybe<restaurant_bool_exp>
   }) => restaurant_aggregate
   restaurant_with_tags: (args: {
     args: restaurant_with_tags_args
-    distinct_on?: Maybe<Array<restaurant_select_column>>
-    limit?: Maybe<Scalars['Int']>
-    offset?: Maybe<Scalars['Int']>
+    distinct_on?: Array<ScalarsEnums['restaurant_select_column']>
+    limit?: ScalarsEnums['Int']
+    offset?: ScalarsEnums['Int']
     order_by?: Maybe<Array<restaurant_order_by>>
     where?: Maybe<restaurant_bool_exp>
   }) => Array<restaurant>
   restaurant_with_tags_aggregate: (args: {
     args: restaurant_with_tags_args
-    distinct_on?: Maybe<Array<restaurant_select_column>>
-    limit?: Maybe<Scalars['Int']>
-    offset?: Maybe<Scalars['Int']>
+    distinct_on?: Array<ScalarsEnums['restaurant_select_column']>
+    limit?: ScalarsEnums['Int']
+    offset?: ScalarsEnums['Int']
     order_by?: Maybe<Array<restaurant_order_by>>
     where?: Maybe<restaurant_bool_exp>
   }) => restaurant_aggregate
   review: (args?: {
-    distinct_on?: Maybe<Array<review_select_column>>
-    limit?: Maybe<Scalars['Int']>
-    offset?: Maybe<Scalars['Int']>
+    distinct_on?: Array<ScalarsEnums['review_select_column']>
+    limit?: ScalarsEnums['Int']
+    offset?: ScalarsEnums['Int']
     order_by?: Maybe<Array<review_order_by>>
     where?: Maybe<review_bool_exp>
   }) => Array<review>
   review_aggregate: (args?: {
-    distinct_on?: Maybe<Array<review_select_column>>
-    limit?: Maybe<Scalars['Int']>
-    offset?: Maybe<Scalars['Int']>
+    distinct_on?: Array<ScalarsEnums['review_select_column']>
+    limit?: ScalarsEnums['Int']
+    offset?: ScalarsEnums['Int']
     order_by?: Maybe<Array<review_order_by>>
     where?: Maybe<review_bool_exp>
   }) => review_aggregate
-  review_by_pk: (args: { id: Scalars['uuid'] }) => Maybe<review>
+  review_by_pk: (args: { id: ScalarsEnums['uuid'] }) => Maybe<review>
   review_tag_sentence: (args?: {
-    distinct_on?: Maybe<Array<review_tag_sentence_select_column>>
-    limit?: Maybe<Scalars['Int']>
-    offset?: Maybe<Scalars['Int']>
+    distinct_on?: Array<ScalarsEnums['review_tag_sentence_select_column']>
+    limit?: ScalarsEnums['Int']
+    offset?: ScalarsEnums['Int']
     order_by?: Maybe<Array<review_tag_sentence_order_by>>
     where?: Maybe<review_tag_sentence_bool_exp>
   }) => Array<review_tag_sentence>
   review_tag_sentence_aggregate: (args?: {
-    distinct_on?: Maybe<Array<review_tag_sentence_select_column>>
-    limit?: Maybe<Scalars['Int']>
-    offset?: Maybe<Scalars['Int']>
+    distinct_on?: Array<ScalarsEnums['review_tag_sentence_select_column']>
+    limit?: ScalarsEnums['Int']
+    offset?: ScalarsEnums['Int']
     order_by?: Maybe<Array<review_tag_sentence_order_by>>
     where?: Maybe<review_tag_sentence_bool_exp>
   }) => review_tag_sentence_aggregate
-  review_tag_sentence_by_pk: (args: { id: Scalars['uuid'] }) => Maybe<review_tag_sentence>
+  review_tag_sentence_by_pk: (args: { id: ScalarsEnums['uuid'] }) => Maybe<review_tag_sentence>
   setting: (args?: {
-    distinct_on?: Maybe<Array<setting_select_column>>
-    limit?: Maybe<Scalars['Int']>
-    offset?: Maybe<Scalars['Int']>
+    distinct_on?: Array<ScalarsEnums['setting_select_column']>
+    limit?: ScalarsEnums['Int']
+    offset?: ScalarsEnums['Int']
     order_by?: Maybe<Array<setting_order_by>>
     where?: Maybe<setting_bool_exp>
   }) => Array<setting>
   setting_aggregate: (args?: {
-    distinct_on?: Maybe<Array<setting_select_column>>
-    limit?: Maybe<Scalars['Int']>
-    offset?: Maybe<Scalars['Int']>
+    distinct_on?: Array<ScalarsEnums['setting_select_column']>
+    limit?: ScalarsEnums['Int']
+    offset?: ScalarsEnums['Int']
     order_by?: Maybe<Array<setting_order_by>>
     where?: Maybe<setting_bool_exp>
   }) => setting_aggregate
-  setting_by_pk: (args: { key: Scalars['String'] }) => Maybe<setting>
+  setting_by_pk: (args: { key: ScalarsEnums['String'] }) => Maybe<setting>
   tag: (args?: {
-    distinct_on?: Maybe<Array<tag_select_column>>
-    limit?: Maybe<Scalars['Int']>
-    offset?: Maybe<Scalars['Int']>
+    distinct_on?: Array<ScalarsEnums['tag_select_column']>
+    limit?: ScalarsEnums['Int']
+    offset?: ScalarsEnums['Int']
     order_by?: Maybe<Array<tag_order_by>>
     where?: Maybe<tag_bool_exp>
   }) => Array<tag>
   tag_aggregate: (args?: {
-    distinct_on?: Maybe<Array<tag_select_column>>
-    limit?: Maybe<Scalars['Int']>
-    offset?: Maybe<Scalars['Int']>
+    distinct_on?: Array<ScalarsEnums['tag_select_column']>
+    limit?: ScalarsEnums['Int']
+    offset?: ScalarsEnums['Int']
     order_by?: Maybe<Array<tag_order_by>>
     where?: Maybe<tag_bool_exp>
   }) => tag_aggregate
-  tag_by_pk: (args: { id: Scalars['uuid'] }) => Maybe<tag>
+  tag_by_pk: (args: { id: ScalarsEnums['uuid'] }) => Maybe<tag>
   tag_tag: (args?: {
-    distinct_on?: Maybe<Array<tag_tag_select_column>>
-    limit?: Maybe<Scalars['Int']>
-    offset?: Maybe<Scalars['Int']>
+    distinct_on?: Array<ScalarsEnums['tag_tag_select_column']>
+    limit?: ScalarsEnums['Int']
+    offset?: ScalarsEnums['Int']
     order_by?: Maybe<Array<tag_tag_order_by>>
     where?: Maybe<tag_tag_bool_exp>
   }) => Array<tag_tag>
   tag_tag_aggregate: (args?: {
-    distinct_on?: Maybe<Array<tag_tag_select_column>>
-    limit?: Maybe<Scalars['Int']>
-    offset?: Maybe<Scalars['Int']>
+    distinct_on?: Array<ScalarsEnums['tag_tag_select_column']>
+    limit?: ScalarsEnums['Int']
+    offset?: ScalarsEnums['Int']
     order_by?: Maybe<Array<tag_tag_order_by>>
     where?: Maybe<tag_tag_bool_exp>
   }) => tag_tag_aggregate
   tag_tag_by_pk: (args: {
-    category_tag_id: Scalars['uuid']
-    tag_id: Scalars['uuid']
+    category_tag_id: ScalarsEnums['uuid']
+    tag_id: ScalarsEnums['uuid']
   }) => Maybe<tag_tag>
   user: (args?: {
-    distinct_on?: Maybe<Array<user_select_column>>
-    limit?: Maybe<Scalars['Int']>
-    offset?: Maybe<Scalars['Int']>
+    distinct_on?: Array<ScalarsEnums['user_select_column']>
+    limit?: ScalarsEnums['Int']
+    offset?: ScalarsEnums['Int']
     order_by?: Maybe<Array<user_order_by>>
     where?: Maybe<user_bool_exp>
   }) => Array<user>
   user_aggregate: (args?: {
-    distinct_on?: Maybe<Array<user_select_column>>
-    limit?: Maybe<Scalars['Int']>
-    offset?: Maybe<Scalars['Int']>
+    distinct_on?: Array<ScalarsEnums['user_select_column']>
+    limit?: ScalarsEnums['Int']
+    offset?: ScalarsEnums['Int']
     order_by?: Maybe<Array<user_order_by>>
     where?: Maybe<user_bool_exp>
   }) => user_aggregate
-  user_by_pk: (args: { id: Scalars['uuid'] }) => Maybe<user>
+  user_by_pk: (args: { id: ScalarsEnums['uuid'] }) => Maybe<user>
   zcta5: (args?: {
-    distinct_on?: Maybe<Array<zcta5_select_column>>
-    limit?: Maybe<Scalars['Int']>
-    offset?: Maybe<Scalars['Int']>
+    distinct_on?: Array<ScalarsEnums['zcta5_select_column']>
+    limit?: ScalarsEnums['Int']
+    offset?: ScalarsEnums['Int']
     order_by?: Maybe<Array<zcta5_order_by>>
     where?: Maybe<zcta5_bool_exp>
   }) => Array<zcta5>
   zcta5_aggregate: (args?: {
-    distinct_on?: Maybe<Array<zcta5_select_column>>
-    limit?: Maybe<Scalars['Int']>
-    offset?: Maybe<Scalars['Int']>
+    distinct_on?: Array<ScalarsEnums['zcta5_select_column']>
+    limit?: ScalarsEnums['Int']
+    offset?: ScalarsEnums['Int']
     order_by?: Maybe<Array<zcta5_order_by>>
     where?: Maybe<zcta5_bool_exp>
   }) => zcta5_aggregate
-  zcta5_by_pk: (args: { ogc_fid: Scalars['Int'] }) => Maybe<zcta5>
+  zcta5_by_pk: (args: { ogc_fid: ScalarsEnums['Int'] }) => Maybe<zcta5>
 }
 
 /**
@@ -11832,11 +11836,11 @@ export interface Subscription {
  */
 export interface hrr {
   __typename: 'hrr' | undefined
-  color?: Maybe<ScalarsEnums['String']>
-  hrrcity?: Maybe<ScalarsEnums['String']>
+  color?: ScalarsEnums['String']
+  hrrcity?: ScalarsEnums['String']
   ogc_fid: ScalarsEnums['Int']
-  slug?: Maybe<ScalarsEnums['String']>
-  wkb_geometry?: Maybe<ScalarsEnums['geometry']>
+  slug?: ScalarsEnums['String']
+  wkb_geometry?: ScalarsEnums['geometry']
 }
 
 /**
@@ -11855,9 +11859,9 @@ export interface hrr_aggregate_fields {
   __typename: 'hrr_aggregate_fields' | undefined
   avg?: Maybe<hrr_avg_fields>
   count: (args?: {
-    columns?: Maybe<Array<hrr_select_column>>
-    distinct?: Maybe<Scalars['Boolean']>
-  }) => Maybe<ScalarsEnums['Int']>
+    columns?: Array<ScalarsEnums['hrr_select_column']>
+    distinct?: ScalarsEnums['Boolean']
+  }) => ScalarsEnums['Int']
   max?: Maybe<hrr_max_fields>
   min?: Maybe<hrr_min_fields>
   stddev?: Maybe<hrr_stddev_fields>
@@ -11874,7 +11878,7 @@ export interface hrr_aggregate_fields {
  */
 export interface hrr_avg_fields {
   __typename: 'hrr_avg_fields' | undefined
-  ogc_fid?: Maybe<ScalarsEnums['Float']>
+  ogc_fid?: ScalarsEnums['Float']
 }
 
 /**
@@ -11882,10 +11886,10 @@ export interface hrr_avg_fields {
  */
 export interface hrr_max_fields {
   __typename: 'hrr_max_fields' | undefined
-  color?: Maybe<ScalarsEnums['String']>
-  hrrcity?: Maybe<ScalarsEnums['String']>
-  ogc_fid?: Maybe<ScalarsEnums['Int']>
-  slug?: Maybe<ScalarsEnums['String']>
+  color?: ScalarsEnums['String']
+  hrrcity?: ScalarsEnums['String']
+  ogc_fid?: ScalarsEnums['Int']
+  slug?: ScalarsEnums['String']
 }
 
 /**
@@ -11893,10 +11897,10 @@ export interface hrr_max_fields {
  */
 export interface hrr_min_fields {
   __typename: 'hrr_min_fields' | undefined
-  color?: Maybe<ScalarsEnums['String']>
-  hrrcity?: Maybe<ScalarsEnums['String']>
-  ogc_fid?: Maybe<ScalarsEnums['Int']>
-  slug?: Maybe<ScalarsEnums['String']>
+  color?: ScalarsEnums['String']
+  hrrcity?: ScalarsEnums['String']
+  ogc_fid?: ScalarsEnums['Int']
+  slug?: ScalarsEnums['String']
 }
 
 /**
@@ -11919,7 +11923,7 @@ export interface hrr_mutation_response {
  */
 export interface hrr_stddev_fields {
   __typename: 'hrr_stddev_fields' | undefined
-  ogc_fid?: Maybe<ScalarsEnums['Float']>
+  ogc_fid?: ScalarsEnums['Float']
 }
 
 /**
@@ -11927,7 +11931,7 @@ export interface hrr_stddev_fields {
  */
 export interface hrr_stddev_pop_fields {
   __typename: 'hrr_stddev_pop_fields' | undefined
-  ogc_fid?: Maybe<ScalarsEnums['Float']>
+  ogc_fid?: ScalarsEnums['Float']
 }
 
 /**
@@ -11935,7 +11939,7 @@ export interface hrr_stddev_pop_fields {
  */
 export interface hrr_stddev_samp_fields {
   __typename: 'hrr_stddev_samp_fields' | undefined
-  ogc_fid?: Maybe<ScalarsEnums['Float']>
+  ogc_fid?: ScalarsEnums['Float']
 }
 
 /**
@@ -11943,7 +11947,7 @@ export interface hrr_stddev_samp_fields {
  */
 export interface hrr_sum_fields {
   __typename: 'hrr_sum_fields' | undefined
-  ogc_fid?: Maybe<ScalarsEnums['Int']>
+  ogc_fid?: ScalarsEnums['Int']
 }
 
 /**
@@ -11951,7 +11955,7 @@ export interface hrr_sum_fields {
  */
 export interface hrr_var_pop_fields {
   __typename: 'hrr_var_pop_fields' | undefined
-  ogc_fid?: Maybe<ScalarsEnums['Float']>
+  ogc_fid?: ScalarsEnums['Float']
 }
 
 /**
@@ -11959,7 +11963,7 @@ export interface hrr_var_pop_fields {
  */
 export interface hrr_var_samp_fields {
   __typename: 'hrr_var_samp_fields' | undefined
-  ogc_fid?: Maybe<ScalarsEnums['Float']>
+  ogc_fid?: ScalarsEnums['Float']
 }
 
 /**
@@ -11967,7 +11971,7 @@ export interface hrr_var_samp_fields {
  */
 export interface hrr_variance_fields {
   __typename: 'hrr_variance_fields' | undefined
-  ogc_fid?: Maybe<ScalarsEnums['Float']>
+  ogc_fid?: ScalarsEnums['Float']
 }
 
 /**
@@ -11975,14 +11979,14 @@ export interface hrr_variance_fields {
  */
 export interface list {
   __typename: 'list' | undefined
-  color?: Maybe<ScalarsEnums['Int']>
+  color?: ScalarsEnums['Int']
   created_at: ScalarsEnums['timestamptz']
-  description?: Maybe<ScalarsEnums['String']>
+  description?: ScalarsEnums['String']
   id: ScalarsEnums['uuid']
-  location?: Maybe<ScalarsEnums['geometry']>
+  location?: ScalarsEnums['geometry']
   name: ScalarsEnums['String']
   public: ScalarsEnums['Boolean']
-  region?: Maybe<ScalarsEnums['String']>
+  region?: ScalarsEnums['String']
   /**
    * An array relationship
    */
@@ -11990,15 +11994,15 @@ export interface list {
     /**
      * distinct select on columns
      */
-    distinct_on?: Maybe<Array<list_restaurant_select_column>>
+    distinct_on?: Array<ScalarsEnums['list_restaurant_select_column']>
     /**
      * limit the number of rows returned
      */
-    limit?: Maybe<Scalars['Int']>
+    limit?: ScalarsEnums['Int']
     /**
      * skip the first n rows. Use only with order_by
      */
-    offset?: Maybe<Scalars['Int']>
+    offset?: ScalarsEnums['Int']
     /**
      * sort the rows by one or more columns
      */
@@ -12015,15 +12019,15 @@ export interface list {
     /**
      * distinct select on columns
      */
-    distinct_on?: Maybe<Array<list_restaurant_select_column>>
+    distinct_on?: Array<ScalarsEnums['list_restaurant_select_column']>
     /**
      * limit the number of rows returned
      */
-    limit?: Maybe<Scalars['Int']>
+    limit?: ScalarsEnums['Int']
     /**
      * skip the first n rows. Use only with order_by
      */
-    offset?: Maybe<Scalars['Int']>
+    offset?: ScalarsEnums['Int']
     /**
      * sort the rows by one or more columns
      */
@@ -12041,15 +12045,15 @@ export interface list {
     /**
      * distinct select on columns
      */
-    distinct_on?: Maybe<Array<list_tag_select_column>>
+    distinct_on?: Array<ScalarsEnums['list_tag_select_column']>
     /**
      * limit the number of rows returned
      */
-    limit?: Maybe<Scalars['Int']>
+    limit?: ScalarsEnums['Int']
     /**
      * skip the first n rows. Use only with order_by
      */
-    offset?: Maybe<Scalars['Int']>
+    offset?: ScalarsEnums['Int']
     /**
      * sort the rows by one or more columns
      */
@@ -12066,15 +12070,15 @@ export interface list {
     /**
      * distinct select on columns
      */
-    distinct_on?: Maybe<Array<list_tag_select_column>>
+    distinct_on?: Array<ScalarsEnums['list_tag_select_column']>
     /**
      * limit the number of rows returned
      */
-    limit?: Maybe<Scalars['Int']>
+    limit?: ScalarsEnums['Int']
     /**
      * skip the first n rows. Use only with order_by
      */
-    offset?: Maybe<Scalars['Int']>
+    offset?: ScalarsEnums['Int']
     /**
      * sort the rows by one or more columns
      */
@@ -12108,9 +12112,9 @@ export interface list_aggregate_fields {
   __typename: 'list_aggregate_fields' | undefined
   avg?: Maybe<list_avg_fields>
   count: (args?: {
-    columns?: Maybe<Array<list_select_column>>
-    distinct?: Maybe<Scalars['Boolean']>
-  }) => Maybe<ScalarsEnums['Int']>
+    columns?: Array<ScalarsEnums['list_select_column']>
+    distinct?: ScalarsEnums['Boolean']
+  }) => ScalarsEnums['Int']
   max?: Maybe<list_max_fields>
   min?: Maybe<list_min_fields>
   stddev?: Maybe<list_stddev_fields>
@@ -12127,7 +12131,7 @@ export interface list_aggregate_fields {
  */
 export interface list_avg_fields {
   __typename: 'list_avg_fields' | undefined
-  color?: Maybe<ScalarsEnums['Float']>
+  color?: ScalarsEnums['Float']
 }
 
 /**
@@ -12135,15 +12139,15 @@ export interface list_avg_fields {
  */
 export interface list_max_fields {
   __typename: 'list_max_fields' | undefined
-  color?: Maybe<ScalarsEnums['Int']>
-  created_at?: Maybe<ScalarsEnums['timestamptz']>
-  description?: Maybe<ScalarsEnums['String']>
-  id?: Maybe<ScalarsEnums['uuid']>
-  name?: Maybe<ScalarsEnums['String']>
-  region?: Maybe<ScalarsEnums['String']>
-  slug?: Maybe<ScalarsEnums['String']>
-  updated_at?: Maybe<ScalarsEnums['timestamptz']>
-  user_id?: Maybe<ScalarsEnums['uuid']>
+  color?: ScalarsEnums['Int']
+  created_at?: ScalarsEnums['timestamptz']
+  description?: ScalarsEnums['String']
+  id?: ScalarsEnums['uuid']
+  name?: ScalarsEnums['String']
+  region?: ScalarsEnums['String']
+  slug?: ScalarsEnums['String']
+  updated_at?: ScalarsEnums['timestamptz']
+  user_id?: ScalarsEnums['uuid']
 }
 
 /**
@@ -12151,15 +12155,15 @@ export interface list_max_fields {
  */
 export interface list_min_fields {
   __typename: 'list_min_fields' | undefined
-  color?: Maybe<ScalarsEnums['Int']>
-  created_at?: Maybe<ScalarsEnums['timestamptz']>
-  description?: Maybe<ScalarsEnums['String']>
-  id?: Maybe<ScalarsEnums['uuid']>
-  name?: Maybe<ScalarsEnums['String']>
-  region?: Maybe<ScalarsEnums['String']>
-  slug?: Maybe<ScalarsEnums['String']>
-  updated_at?: Maybe<ScalarsEnums['timestamptz']>
-  user_id?: Maybe<ScalarsEnums['uuid']>
+  color?: ScalarsEnums['Int']
+  created_at?: ScalarsEnums['timestamptz']
+  description?: ScalarsEnums['String']
+  id?: ScalarsEnums['uuid']
+  name?: ScalarsEnums['String']
+  region?: ScalarsEnums['String']
+  slug?: ScalarsEnums['String']
+  updated_at?: ScalarsEnums['timestamptz']
+  user_id?: ScalarsEnums['uuid']
 }
 
 /**
@@ -12182,14 +12186,14 @@ export interface list_mutation_response {
  */
 export interface list_restaurant {
   __typename: 'list_restaurant' | undefined
-  comment?: Maybe<ScalarsEnums['String']>
+  comment?: ScalarsEnums['String']
   id: ScalarsEnums['uuid']
   /**
    * An object relationship
    */
   list: list
   list_id: ScalarsEnums['uuid']
-  position?: Maybe<ScalarsEnums['Int']>
+  position?: ScalarsEnums['Int']
   /**
    * An object relationship
    */
@@ -12202,15 +12206,15 @@ export interface list_restaurant {
     /**
      * distinct select on columns
      */
-    distinct_on?: Maybe<Array<restaurant_select_column>>
+    distinct_on?: Array<ScalarsEnums['restaurant_select_column']>
     /**
      * limit the number of rows returned
      */
-    limit?: Maybe<Scalars['Int']>
+    limit?: ScalarsEnums['Int']
     /**
      * skip the first n rows. Use only with order_by
      */
-    offset?: Maybe<Scalars['Int']>
+    offset?: ScalarsEnums['Int']
     /**
      * sort the rows by one or more columns
      */
@@ -12227,15 +12231,15 @@ export interface list_restaurant {
     /**
      * distinct select on columns
      */
-    distinct_on?: Maybe<Array<restaurant_select_column>>
+    distinct_on?: Array<ScalarsEnums['restaurant_select_column']>
     /**
      * limit the number of rows returned
      */
-    limit?: Maybe<Scalars['Int']>
+    limit?: ScalarsEnums['Int']
     /**
      * skip the first n rows. Use only with order_by
      */
-    offset?: Maybe<Scalars['Int']>
+    offset?: ScalarsEnums['Int']
     /**
      * sort the rows by one or more columns
      */
@@ -12252,15 +12256,15 @@ export interface list_restaurant {
     /**
      * distinct select on columns
      */
-    distinct_on?: Maybe<Array<list_restaurant_tag_select_column>>
+    distinct_on?: Array<ScalarsEnums['list_restaurant_tag_select_column']>
     /**
      * limit the number of rows returned
      */
-    limit?: Maybe<Scalars['Int']>
+    limit?: ScalarsEnums['Int']
     /**
      * skip the first n rows. Use only with order_by
      */
-    offset?: Maybe<Scalars['Int']>
+    offset?: ScalarsEnums['Int']
     /**
      * sort the rows by one or more columns
      */
@@ -12277,15 +12281,15 @@ export interface list_restaurant {
     /**
      * distinct select on columns
      */
-    distinct_on?: Maybe<Array<list_restaurant_tag_select_column>>
+    distinct_on?: Array<ScalarsEnums['list_restaurant_tag_select_column']>
     /**
      * limit the number of rows returned
      */
-    limit?: Maybe<Scalars['Int']>
+    limit?: ScalarsEnums['Int']
     /**
      * skip the first n rows. Use only with order_by
      */
-    offset?: Maybe<Scalars['Int']>
+    offset?: ScalarsEnums['Int']
     /**
      * sort the rows by one or more columns
      */
@@ -12314,9 +12318,9 @@ export interface list_restaurant_aggregate_fields {
   __typename: 'list_restaurant_aggregate_fields' | undefined
   avg?: Maybe<list_restaurant_avg_fields>
   count: (args?: {
-    columns?: Maybe<Array<list_restaurant_select_column>>
-    distinct?: Maybe<Scalars['Boolean']>
-  }) => Maybe<ScalarsEnums['Int']>
+    columns?: Array<ScalarsEnums['list_restaurant_select_column']>
+    distinct?: ScalarsEnums['Boolean']
+  }) => ScalarsEnums['Int']
   max?: Maybe<list_restaurant_max_fields>
   min?: Maybe<list_restaurant_min_fields>
   stddev?: Maybe<list_restaurant_stddev_fields>
@@ -12333,7 +12337,7 @@ export interface list_restaurant_aggregate_fields {
  */
 export interface list_restaurant_avg_fields {
   __typename: 'list_restaurant_avg_fields' | undefined
-  position?: Maybe<ScalarsEnums['Float']>
+  position?: ScalarsEnums['Float']
 }
 
 /**
@@ -12341,12 +12345,12 @@ export interface list_restaurant_avg_fields {
  */
 export interface list_restaurant_max_fields {
   __typename: 'list_restaurant_max_fields' | undefined
-  comment?: Maybe<ScalarsEnums['String']>
-  id?: Maybe<ScalarsEnums['uuid']>
-  list_id?: Maybe<ScalarsEnums['uuid']>
-  position?: Maybe<ScalarsEnums['Int']>
-  restaurant_id?: Maybe<ScalarsEnums['uuid']>
-  user_id?: Maybe<ScalarsEnums['uuid']>
+  comment?: ScalarsEnums['String']
+  id?: ScalarsEnums['uuid']
+  list_id?: ScalarsEnums['uuid']
+  position?: ScalarsEnums['Int']
+  restaurant_id?: ScalarsEnums['uuid']
+  user_id?: ScalarsEnums['uuid']
 }
 
 /**
@@ -12354,12 +12358,12 @@ export interface list_restaurant_max_fields {
  */
 export interface list_restaurant_min_fields {
   __typename: 'list_restaurant_min_fields' | undefined
-  comment?: Maybe<ScalarsEnums['String']>
-  id?: Maybe<ScalarsEnums['uuid']>
-  list_id?: Maybe<ScalarsEnums['uuid']>
-  position?: Maybe<ScalarsEnums['Int']>
-  restaurant_id?: Maybe<ScalarsEnums['uuid']>
-  user_id?: Maybe<ScalarsEnums['uuid']>
+  comment?: ScalarsEnums['String']
+  id?: ScalarsEnums['uuid']
+  list_id?: ScalarsEnums['uuid']
+  position?: ScalarsEnums['Int']
+  restaurant_id?: ScalarsEnums['uuid']
+  user_id?: ScalarsEnums['uuid']
 }
 
 /**
@@ -12382,7 +12386,7 @@ export interface list_restaurant_mutation_response {
  */
 export interface list_restaurant_stddev_fields {
   __typename: 'list_restaurant_stddev_fields' | undefined
-  position?: Maybe<ScalarsEnums['Float']>
+  position?: ScalarsEnums['Float']
 }
 
 /**
@@ -12390,7 +12394,7 @@ export interface list_restaurant_stddev_fields {
  */
 export interface list_restaurant_stddev_pop_fields {
   __typename: 'list_restaurant_stddev_pop_fields' | undefined
-  position?: Maybe<ScalarsEnums['Float']>
+  position?: ScalarsEnums['Float']
 }
 
 /**
@@ -12398,7 +12402,7 @@ export interface list_restaurant_stddev_pop_fields {
  */
 export interface list_restaurant_stddev_samp_fields {
   __typename: 'list_restaurant_stddev_samp_fields' | undefined
-  position?: Maybe<ScalarsEnums['Float']>
+  position?: ScalarsEnums['Float']
 }
 
 /**
@@ -12406,7 +12410,7 @@ export interface list_restaurant_stddev_samp_fields {
  */
 export interface list_restaurant_sum_fields {
   __typename: 'list_restaurant_sum_fields' | undefined
-  position?: Maybe<ScalarsEnums['Int']>
+  position?: ScalarsEnums['Int']
 }
 
 /**
@@ -12442,9 +12446,9 @@ export interface list_restaurant_tag_aggregate_fields {
   __typename: 'list_restaurant_tag_aggregate_fields' | undefined
   avg?: Maybe<list_restaurant_tag_avg_fields>
   count: (args?: {
-    columns?: Maybe<Array<list_restaurant_tag_select_column>>
-    distinct?: Maybe<Scalars['Boolean']>
-  }) => Maybe<ScalarsEnums['Int']>
+    columns?: Array<ScalarsEnums['list_restaurant_tag_select_column']>
+    distinct?: ScalarsEnums['Boolean']
+  }) => ScalarsEnums['Int']
   max?: Maybe<list_restaurant_tag_max_fields>
   min?: Maybe<list_restaurant_tag_min_fields>
   stddev?: Maybe<list_restaurant_tag_stddev_fields>
@@ -12461,7 +12465,7 @@ export interface list_restaurant_tag_aggregate_fields {
  */
 export interface list_restaurant_tag_avg_fields {
   __typename: 'list_restaurant_tag_avg_fields' | undefined
-  position?: Maybe<ScalarsEnums['Float']>
+  position?: ScalarsEnums['Float']
 }
 
 /**
@@ -12469,12 +12473,12 @@ export interface list_restaurant_tag_avg_fields {
  */
 export interface list_restaurant_tag_max_fields {
   __typename: 'list_restaurant_tag_max_fields' | undefined
-  id?: Maybe<ScalarsEnums['uuid']>
-  list_id?: Maybe<ScalarsEnums['uuid']>
-  list_restaurant_id?: Maybe<ScalarsEnums['uuid']>
-  position?: Maybe<ScalarsEnums['Int']>
-  restaurant_tag_id?: Maybe<ScalarsEnums['uuid']>
-  user_id?: Maybe<ScalarsEnums['uuid']>
+  id?: ScalarsEnums['uuid']
+  list_id?: ScalarsEnums['uuid']
+  list_restaurant_id?: ScalarsEnums['uuid']
+  position?: ScalarsEnums['Int']
+  restaurant_tag_id?: ScalarsEnums['uuid']
+  user_id?: ScalarsEnums['uuid']
 }
 
 /**
@@ -12482,12 +12486,12 @@ export interface list_restaurant_tag_max_fields {
  */
 export interface list_restaurant_tag_min_fields {
   __typename: 'list_restaurant_tag_min_fields' | undefined
-  id?: Maybe<ScalarsEnums['uuid']>
-  list_id?: Maybe<ScalarsEnums['uuid']>
-  list_restaurant_id?: Maybe<ScalarsEnums['uuid']>
-  position?: Maybe<ScalarsEnums['Int']>
-  restaurant_tag_id?: Maybe<ScalarsEnums['uuid']>
-  user_id?: Maybe<ScalarsEnums['uuid']>
+  id?: ScalarsEnums['uuid']
+  list_id?: ScalarsEnums['uuid']
+  list_restaurant_id?: ScalarsEnums['uuid']
+  position?: ScalarsEnums['Int']
+  restaurant_tag_id?: ScalarsEnums['uuid']
+  user_id?: ScalarsEnums['uuid']
 }
 
 /**
@@ -12510,7 +12514,7 @@ export interface list_restaurant_tag_mutation_response {
  */
 export interface list_restaurant_tag_stddev_fields {
   __typename: 'list_restaurant_tag_stddev_fields' | undefined
-  position?: Maybe<ScalarsEnums['Float']>
+  position?: ScalarsEnums['Float']
 }
 
 /**
@@ -12518,7 +12522,7 @@ export interface list_restaurant_tag_stddev_fields {
  */
 export interface list_restaurant_tag_stddev_pop_fields {
   __typename: 'list_restaurant_tag_stddev_pop_fields' | undefined
-  position?: Maybe<ScalarsEnums['Float']>
+  position?: ScalarsEnums['Float']
 }
 
 /**
@@ -12526,7 +12530,7 @@ export interface list_restaurant_tag_stddev_pop_fields {
  */
 export interface list_restaurant_tag_stddev_samp_fields {
   __typename: 'list_restaurant_tag_stddev_samp_fields' | undefined
-  position?: Maybe<ScalarsEnums['Float']>
+  position?: ScalarsEnums['Float']
 }
 
 /**
@@ -12534,7 +12538,7 @@ export interface list_restaurant_tag_stddev_samp_fields {
  */
 export interface list_restaurant_tag_sum_fields {
   __typename: 'list_restaurant_tag_sum_fields' | undefined
-  position?: Maybe<ScalarsEnums['Int']>
+  position?: ScalarsEnums['Int']
 }
 
 /**
@@ -12542,7 +12546,7 @@ export interface list_restaurant_tag_sum_fields {
  */
 export interface list_restaurant_tag_var_pop_fields {
   __typename: 'list_restaurant_tag_var_pop_fields' | undefined
-  position?: Maybe<ScalarsEnums['Float']>
+  position?: ScalarsEnums['Float']
 }
 
 /**
@@ -12550,7 +12554,7 @@ export interface list_restaurant_tag_var_pop_fields {
  */
 export interface list_restaurant_tag_var_samp_fields {
   __typename: 'list_restaurant_tag_var_samp_fields' | undefined
-  position?: Maybe<ScalarsEnums['Float']>
+  position?: ScalarsEnums['Float']
 }
 
 /**
@@ -12558,7 +12562,7 @@ export interface list_restaurant_tag_var_samp_fields {
  */
 export interface list_restaurant_tag_variance_fields {
   __typename: 'list_restaurant_tag_variance_fields' | undefined
-  position?: Maybe<ScalarsEnums['Float']>
+  position?: ScalarsEnums['Float']
 }
 
 /**
@@ -12566,7 +12570,7 @@ export interface list_restaurant_tag_variance_fields {
  */
 export interface list_restaurant_var_pop_fields {
   __typename: 'list_restaurant_var_pop_fields' | undefined
-  position?: Maybe<ScalarsEnums['Float']>
+  position?: ScalarsEnums['Float']
 }
 
 /**
@@ -12574,7 +12578,7 @@ export interface list_restaurant_var_pop_fields {
  */
 export interface list_restaurant_var_samp_fields {
   __typename: 'list_restaurant_var_samp_fields' | undefined
-  position?: Maybe<ScalarsEnums['Float']>
+  position?: ScalarsEnums['Float']
 }
 
 /**
@@ -12582,7 +12586,7 @@ export interface list_restaurant_var_samp_fields {
  */
 export interface list_restaurant_variance_fields {
   __typename: 'list_restaurant_variance_fields' | undefined
-  position?: Maybe<ScalarsEnums['Float']>
+  position?: ScalarsEnums['Float']
 }
 
 /**
@@ -12590,7 +12594,7 @@ export interface list_restaurant_variance_fields {
  */
 export interface list_stddev_fields {
   __typename: 'list_stddev_fields' | undefined
-  color?: Maybe<ScalarsEnums['Float']>
+  color?: ScalarsEnums['Float']
 }
 
 /**
@@ -12598,7 +12602,7 @@ export interface list_stddev_fields {
  */
 export interface list_stddev_pop_fields {
   __typename: 'list_stddev_pop_fields' | undefined
-  color?: Maybe<ScalarsEnums['Float']>
+  color?: ScalarsEnums['Float']
 }
 
 /**
@@ -12606,7 +12610,7 @@ export interface list_stddev_pop_fields {
  */
 export interface list_stddev_samp_fields {
   __typename: 'list_stddev_samp_fields' | undefined
-  color?: Maybe<ScalarsEnums['Float']>
+  color?: ScalarsEnums['Float']
 }
 
 /**
@@ -12614,7 +12618,7 @@ export interface list_stddev_samp_fields {
  */
 export interface list_sum_fields {
   __typename: 'list_sum_fields' | undefined
-  color?: Maybe<ScalarsEnums['Int']>
+  color?: ScalarsEnums['Int']
 }
 
 /**
@@ -12651,9 +12655,9 @@ export interface list_tag_aggregate {
 export interface list_tag_aggregate_fields {
   __typename: 'list_tag_aggregate_fields' | undefined
   count: (args?: {
-    columns?: Maybe<Array<list_tag_select_column>>
-    distinct?: Maybe<Scalars['Boolean']>
-  }) => Maybe<ScalarsEnums['Int']>
+    columns?: Array<ScalarsEnums['list_tag_select_column']>
+    distinct?: ScalarsEnums['Boolean']
+  }) => ScalarsEnums['Int']
   max?: Maybe<list_tag_max_fields>
   min?: Maybe<list_tag_min_fields>
 }
@@ -12663,10 +12667,10 @@ export interface list_tag_aggregate_fields {
  */
 export interface list_tag_max_fields {
   __typename: 'list_tag_max_fields' | undefined
-  created_at?: Maybe<ScalarsEnums['timestamptz']>
-  id?: Maybe<ScalarsEnums['uuid']>
-  list_id?: Maybe<ScalarsEnums['uuid']>
-  tag_id?: Maybe<ScalarsEnums['uuid']>
+  created_at?: ScalarsEnums['timestamptz']
+  id?: ScalarsEnums['uuid']
+  list_id?: ScalarsEnums['uuid']
+  tag_id?: ScalarsEnums['uuid']
 }
 
 /**
@@ -12674,10 +12678,10 @@ export interface list_tag_max_fields {
  */
 export interface list_tag_min_fields {
   __typename: 'list_tag_min_fields' | undefined
-  created_at?: Maybe<ScalarsEnums['timestamptz']>
-  id?: Maybe<ScalarsEnums['uuid']>
-  list_id?: Maybe<ScalarsEnums['uuid']>
-  tag_id?: Maybe<ScalarsEnums['uuid']>
+  created_at?: ScalarsEnums['timestamptz']
+  id?: ScalarsEnums['uuid']
+  list_id?: ScalarsEnums['uuid']
+  tag_id?: ScalarsEnums['uuid']
 }
 
 /**
@@ -12700,7 +12704,7 @@ export interface list_tag_mutation_response {
  */
 export interface list_var_pop_fields {
   __typename: 'list_var_pop_fields' | undefined
-  color?: Maybe<ScalarsEnums['Float']>
+  color?: ScalarsEnums['Float']
 }
 
 /**
@@ -12708,7 +12712,7 @@ export interface list_var_pop_fields {
  */
 export interface list_var_samp_fields {
   __typename: 'list_var_samp_fields' | undefined
-  color?: Maybe<ScalarsEnums['Float']>
+  color?: ScalarsEnums['Float']
 }
 
 /**
@@ -12716,7 +12720,7 @@ export interface list_var_samp_fields {
  */
 export interface list_variance_fields {
   __typename: 'list_variance_fields' | undefined
-  color?: Maybe<ScalarsEnums['Float']>
+  color?: ScalarsEnums['Float']
 }
 
 /**
@@ -12725,12 +12729,12 @@ export interface list_variance_fields {
 export interface menu_item {
   __typename: 'menu_item' | undefined
   created_at: ScalarsEnums['timestamptz']
-  description?: Maybe<ScalarsEnums['String']>
+  description?: ScalarsEnums['String']
   id: ScalarsEnums['uuid']
-  image?: Maybe<ScalarsEnums['String']>
-  location?: Maybe<ScalarsEnums['geometry']>
+  image?: ScalarsEnums['String']
+  location?: ScalarsEnums['geometry']
   name: ScalarsEnums['String']
-  price?: Maybe<ScalarsEnums['Int']>
+  price?: ScalarsEnums['Int']
   /**
    * An object relationship
    */
@@ -12755,9 +12759,9 @@ export interface menu_item_aggregate_fields {
   __typename: 'menu_item_aggregate_fields' | undefined
   avg?: Maybe<menu_item_avg_fields>
   count: (args?: {
-    columns?: Maybe<Array<menu_item_select_column>>
-    distinct?: Maybe<Scalars['Boolean']>
-  }) => Maybe<ScalarsEnums['Int']>
+    columns?: Array<ScalarsEnums['menu_item_select_column']>
+    distinct?: ScalarsEnums['Boolean']
+  }) => ScalarsEnums['Int']
   max?: Maybe<menu_item_max_fields>
   min?: Maybe<menu_item_min_fields>
   stddev?: Maybe<menu_item_stddev_fields>
@@ -12774,7 +12778,7 @@ export interface menu_item_aggregate_fields {
  */
 export interface menu_item_avg_fields {
   __typename: 'menu_item_avg_fields' | undefined
-  price?: Maybe<ScalarsEnums['Float']>
+  price?: ScalarsEnums['Float']
 }
 
 /**
@@ -12782,14 +12786,14 @@ export interface menu_item_avg_fields {
  */
 export interface menu_item_max_fields {
   __typename: 'menu_item_max_fields' | undefined
-  created_at?: Maybe<ScalarsEnums['timestamptz']>
-  description?: Maybe<ScalarsEnums['String']>
-  id?: Maybe<ScalarsEnums['uuid']>
-  image?: Maybe<ScalarsEnums['String']>
-  name?: Maybe<ScalarsEnums['String']>
-  price?: Maybe<ScalarsEnums['Int']>
-  restaurant_id?: Maybe<ScalarsEnums['uuid']>
-  updated_at?: Maybe<ScalarsEnums['timestamptz']>
+  created_at?: ScalarsEnums['timestamptz']
+  description?: ScalarsEnums['String']
+  id?: ScalarsEnums['uuid']
+  image?: ScalarsEnums['String']
+  name?: ScalarsEnums['String']
+  price?: ScalarsEnums['Int']
+  restaurant_id?: ScalarsEnums['uuid']
+  updated_at?: ScalarsEnums['timestamptz']
 }
 
 /**
@@ -12797,14 +12801,14 @@ export interface menu_item_max_fields {
  */
 export interface menu_item_min_fields {
   __typename: 'menu_item_min_fields' | undefined
-  created_at?: Maybe<ScalarsEnums['timestamptz']>
-  description?: Maybe<ScalarsEnums['String']>
-  id?: Maybe<ScalarsEnums['uuid']>
-  image?: Maybe<ScalarsEnums['String']>
-  name?: Maybe<ScalarsEnums['String']>
-  price?: Maybe<ScalarsEnums['Int']>
-  restaurant_id?: Maybe<ScalarsEnums['uuid']>
-  updated_at?: Maybe<ScalarsEnums['timestamptz']>
+  created_at?: ScalarsEnums['timestamptz']
+  description?: ScalarsEnums['String']
+  id?: ScalarsEnums['uuid']
+  image?: ScalarsEnums['String']
+  name?: ScalarsEnums['String']
+  price?: ScalarsEnums['Int']
+  restaurant_id?: ScalarsEnums['uuid']
+  updated_at?: ScalarsEnums['timestamptz']
 }
 
 /**
@@ -12827,7 +12831,7 @@ export interface menu_item_mutation_response {
  */
 export interface menu_item_stddev_fields {
   __typename: 'menu_item_stddev_fields' | undefined
-  price?: Maybe<ScalarsEnums['Float']>
+  price?: ScalarsEnums['Float']
 }
 
 /**
@@ -12835,7 +12839,7 @@ export interface menu_item_stddev_fields {
  */
 export interface menu_item_stddev_pop_fields {
   __typename: 'menu_item_stddev_pop_fields' | undefined
-  price?: Maybe<ScalarsEnums['Float']>
+  price?: ScalarsEnums['Float']
 }
 
 /**
@@ -12843,7 +12847,7 @@ export interface menu_item_stddev_pop_fields {
  */
 export interface menu_item_stddev_samp_fields {
   __typename: 'menu_item_stddev_samp_fields' | undefined
-  price?: Maybe<ScalarsEnums['Float']>
+  price?: ScalarsEnums['Float']
 }
 
 /**
@@ -12851,7 +12855,7 @@ export interface menu_item_stddev_samp_fields {
  */
 export interface menu_item_sum_fields {
   __typename: 'menu_item_sum_fields' | undefined
-  price?: Maybe<ScalarsEnums['Int']>
+  price?: ScalarsEnums['Int']
 }
 
 /**
@@ -12859,7 +12863,7 @@ export interface menu_item_sum_fields {
  */
 export interface menu_item_var_pop_fields {
   __typename: 'menu_item_var_pop_fields' | undefined
-  price?: Maybe<ScalarsEnums['Float']>
+  price?: ScalarsEnums['Float']
 }
 
 /**
@@ -12867,7 +12871,7 @@ export interface menu_item_var_pop_fields {
  */
 export interface menu_item_var_samp_fields {
   __typename: 'menu_item_var_samp_fields' | undefined
-  price?: Maybe<ScalarsEnums['Float']>
+  price?: ScalarsEnums['Float']
 }
 
 /**
@@ -12875,7 +12879,7 @@ export interface menu_item_var_samp_fields {
  */
 export interface menu_item_variance_fields {
   __typename: 'menu_item_variance_fields' | undefined
-  price?: Maybe<ScalarsEnums['Float']>
+  price?: ScalarsEnums['Float']
 }
 
 /**
@@ -12904,9 +12908,9 @@ export interface nhood_labels_aggregate_fields {
   __typename: 'nhood_labels_aggregate_fields' | undefined
   avg?: Maybe<nhood_labels_avg_fields>
   count: (args?: {
-    columns?: Maybe<Array<nhood_labels_select_column>>
-    distinct?: Maybe<Scalars['Boolean']>
-  }) => Maybe<ScalarsEnums['Int']>
+    columns?: Array<ScalarsEnums['nhood_labels_select_column']>
+    distinct?: ScalarsEnums['Boolean']
+  }) => ScalarsEnums['Int']
   max?: Maybe<nhood_labels_max_fields>
   min?: Maybe<nhood_labels_min_fields>
   stddev?: Maybe<nhood_labels_stddev_fields>
@@ -12923,7 +12927,7 @@ export interface nhood_labels_aggregate_fields {
  */
 export interface nhood_labels_avg_fields {
   __typename: 'nhood_labels_avg_fields' | undefined
-  ogc_fid?: Maybe<ScalarsEnums['Float']>
+  ogc_fid?: ScalarsEnums['Float']
 }
 
 /**
@@ -12931,8 +12935,8 @@ export interface nhood_labels_avg_fields {
  */
 export interface nhood_labels_max_fields {
   __typename: 'nhood_labels_max_fields' | undefined
-  name?: Maybe<ScalarsEnums['String']>
-  ogc_fid?: Maybe<ScalarsEnums['Int']>
+  name?: ScalarsEnums['String']
+  ogc_fid?: ScalarsEnums['Int']
 }
 
 /**
@@ -12940,8 +12944,8 @@ export interface nhood_labels_max_fields {
  */
 export interface nhood_labels_min_fields {
   __typename: 'nhood_labels_min_fields' | undefined
-  name?: Maybe<ScalarsEnums['String']>
-  ogc_fid?: Maybe<ScalarsEnums['Int']>
+  name?: ScalarsEnums['String']
+  ogc_fid?: ScalarsEnums['Int']
 }
 
 /**
@@ -12964,7 +12968,7 @@ export interface nhood_labels_mutation_response {
  */
 export interface nhood_labels_stddev_fields {
   __typename: 'nhood_labels_stddev_fields' | undefined
-  ogc_fid?: Maybe<ScalarsEnums['Float']>
+  ogc_fid?: ScalarsEnums['Float']
 }
 
 /**
@@ -12972,7 +12976,7 @@ export interface nhood_labels_stddev_fields {
  */
 export interface nhood_labels_stddev_pop_fields {
   __typename: 'nhood_labels_stddev_pop_fields' | undefined
-  ogc_fid?: Maybe<ScalarsEnums['Float']>
+  ogc_fid?: ScalarsEnums['Float']
 }
 
 /**
@@ -12980,7 +12984,7 @@ export interface nhood_labels_stddev_pop_fields {
  */
 export interface nhood_labels_stddev_samp_fields {
   __typename: 'nhood_labels_stddev_samp_fields' | undefined
-  ogc_fid?: Maybe<ScalarsEnums['Float']>
+  ogc_fid?: ScalarsEnums['Float']
 }
 
 /**
@@ -12988,7 +12992,7 @@ export interface nhood_labels_stddev_samp_fields {
  */
 export interface nhood_labels_sum_fields {
   __typename: 'nhood_labels_sum_fields' | undefined
-  ogc_fid?: Maybe<ScalarsEnums['Int']>
+  ogc_fid?: ScalarsEnums['Int']
 }
 
 /**
@@ -12996,7 +13000,7 @@ export interface nhood_labels_sum_fields {
  */
 export interface nhood_labels_var_pop_fields {
   __typename: 'nhood_labels_var_pop_fields' | undefined
-  ogc_fid?: Maybe<ScalarsEnums['Float']>
+  ogc_fid?: ScalarsEnums['Float']
 }
 
 /**
@@ -13004,7 +13008,7 @@ export interface nhood_labels_var_pop_fields {
  */
 export interface nhood_labels_var_samp_fields {
   __typename: 'nhood_labels_var_samp_fields' | undefined
-  ogc_fid?: Maybe<ScalarsEnums['Float']>
+  ogc_fid?: ScalarsEnums['Float']
 }
 
 /**
@@ -13012,7 +13016,7 @@ export interface nhood_labels_var_samp_fields {
  */
 export interface nhood_labels_variance_fields {
   __typename: 'nhood_labels_variance_fields' | undefined
-  ogc_fid?: Maybe<ScalarsEnums['Float']>
+  ogc_fid?: ScalarsEnums['Float']
 }
 
 /**
@@ -13044,9 +13048,9 @@ export interface opening_hours_aggregate {
 export interface opening_hours_aggregate_fields {
   __typename: 'opening_hours_aggregate_fields' | undefined
   count: (args?: {
-    columns?: Maybe<Array<opening_hours_select_column>>
-    distinct?: Maybe<Scalars['Boolean']>
-  }) => Maybe<ScalarsEnums['Int']>
+    columns?: Array<ScalarsEnums['opening_hours_select_column']>
+    distinct?: ScalarsEnums['Boolean']
+  }) => ScalarsEnums['Int']
   max?: Maybe<opening_hours_max_fields>
   min?: Maybe<opening_hours_min_fields>
 }
@@ -13056,8 +13060,8 @@ export interface opening_hours_aggregate_fields {
  */
 export interface opening_hours_max_fields {
   __typename: 'opening_hours_max_fields' | undefined
-  id?: Maybe<ScalarsEnums['uuid']>
-  restaurant_id?: Maybe<ScalarsEnums['uuid']>
+  id?: ScalarsEnums['uuid']
+  restaurant_id?: ScalarsEnums['uuid']
 }
 
 /**
@@ -13065,8 +13069,8 @@ export interface opening_hours_max_fields {
  */
 export interface opening_hours_min_fields {
   __typename: 'opening_hours_min_fields' | undefined
-  id?: Maybe<ScalarsEnums['uuid']>
-  restaurant_id?: Maybe<ScalarsEnums['uuid']>
+  id?: ScalarsEnums['uuid']
+  restaurant_id?: ScalarsEnums['uuid']
 }
 
 /**
@@ -13089,13 +13093,13 @@ export interface opening_hours_mutation_response {
  */
 export interface photo {
   __typename: 'photo' | undefined
-  categories?: Maybe<ScalarsEnums['jsonb']>
+  categories?: ScalarsEnums['jsonb']
   created_at: ScalarsEnums['timestamptz']
   id: ScalarsEnums['uuid']
-  origin?: Maybe<ScalarsEnums['String']>
-  quality?: Maybe<ScalarsEnums['numeric']>
+  origin?: ScalarsEnums['String']
+  quality?: ScalarsEnums['numeric']
   updated_at: ScalarsEnums['timestamptz']
-  url?: Maybe<ScalarsEnums['String']>
+  url?: ScalarsEnums['String']
 }
 
 /**
@@ -13114,9 +13118,9 @@ export interface photo_aggregate_fields {
   __typename: 'photo_aggregate_fields' | undefined
   avg?: Maybe<photo_avg_fields>
   count: (args?: {
-    columns?: Maybe<Array<photo_select_column>>
-    distinct?: Maybe<Scalars['Boolean']>
-  }) => Maybe<ScalarsEnums['Int']>
+    columns?: Array<ScalarsEnums['photo_select_column']>
+    distinct?: ScalarsEnums['Boolean']
+  }) => ScalarsEnums['Int']
   max?: Maybe<photo_max_fields>
   min?: Maybe<photo_min_fields>
   stddev?: Maybe<photo_stddev_fields>
@@ -13133,7 +13137,7 @@ export interface photo_aggregate_fields {
  */
 export interface photo_avg_fields {
   __typename: 'photo_avg_fields' | undefined
-  quality?: Maybe<ScalarsEnums['Float']>
+  quality?: ScalarsEnums['Float']
 }
 
 /**
@@ -13141,12 +13145,12 @@ export interface photo_avg_fields {
  */
 export interface photo_max_fields {
   __typename: 'photo_max_fields' | undefined
-  created_at?: Maybe<ScalarsEnums['timestamptz']>
-  id?: Maybe<ScalarsEnums['uuid']>
-  origin?: Maybe<ScalarsEnums['String']>
-  quality?: Maybe<ScalarsEnums['numeric']>
-  updated_at?: Maybe<ScalarsEnums['timestamptz']>
-  url?: Maybe<ScalarsEnums['String']>
+  created_at?: ScalarsEnums['timestamptz']
+  id?: ScalarsEnums['uuid']
+  origin?: ScalarsEnums['String']
+  quality?: ScalarsEnums['numeric']
+  updated_at?: ScalarsEnums['timestamptz']
+  url?: ScalarsEnums['String']
 }
 
 /**
@@ -13154,12 +13158,12 @@ export interface photo_max_fields {
  */
 export interface photo_min_fields {
   __typename: 'photo_min_fields' | undefined
-  created_at?: Maybe<ScalarsEnums['timestamptz']>
-  id?: Maybe<ScalarsEnums['uuid']>
-  origin?: Maybe<ScalarsEnums['String']>
-  quality?: Maybe<ScalarsEnums['numeric']>
-  updated_at?: Maybe<ScalarsEnums['timestamptz']>
-  url?: Maybe<ScalarsEnums['String']>
+  created_at?: ScalarsEnums['timestamptz']
+  id?: ScalarsEnums['uuid']
+  origin?: ScalarsEnums['String']
+  quality?: ScalarsEnums['numeric']
+  updated_at?: ScalarsEnums['timestamptz']
+  url?: ScalarsEnums['String']
 }
 
 /**
@@ -13182,7 +13186,7 @@ export interface photo_mutation_response {
  */
 export interface photo_stddev_fields {
   __typename: 'photo_stddev_fields' | undefined
-  quality?: Maybe<ScalarsEnums['Float']>
+  quality?: ScalarsEnums['Float']
 }
 
 /**
@@ -13190,7 +13194,7 @@ export interface photo_stddev_fields {
  */
 export interface photo_stddev_pop_fields {
   __typename: 'photo_stddev_pop_fields' | undefined
-  quality?: Maybe<ScalarsEnums['Float']>
+  quality?: ScalarsEnums['Float']
 }
 
 /**
@@ -13198,7 +13202,7 @@ export interface photo_stddev_pop_fields {
  */
 export interface photo_stddev_samp_fields {
   __typename: 'photo_stddev_samp_fields' | undefined
-  quality?: Maybe<ScalarsEnums['Float']>
+  quality?: ScalarsEnums['Float']
 }
 
 /**
@@ -13206,7 +13210,7 @@ export interface photo_stddev_samp_fields {
  */
 export interface photo_sum_fields {
   __typename: 'photo_sum_fields' | undefined
-  quality?: Maybe<ScalarsEnums['numeric']>
+  quality?: ScalarsEnums['numeric']
 }
 
 /**
@@ -13214,7 +13218,7 @@ export interface photo_sum_fields {
  */
 export interface photo_var_pop_fields {
   __typename: 'photo_var_pop_fields' | undefined
-  quality?: Maybe<ScalarsEnums['Float']>
+  quality?: ScalarsEnums['Float']
 }
 
 /**
@@ -13222,7 +13226,7 @@ export interface photo_var_pop_fields {
  */
 export interface photo_var_samp_fields {
   __typename: 'photo_var_samp_fields' | undefined
-  quality?: Maybe<ScalarsEnums['Float']>
+  quality?: ScalarsEnums['Float']
 }
 
 /**
@@ -13230,7 +13234,7 @@ export interface photo_var_samp_fields {
  */
 export interface photo_variance_fields {
   __typename: 'photo_variance_fields' | undefined
-  quality?: Maybe<ScalarsEnums['Float']>
+  quality?: ScalarsEnums['Float']
 }
 
 /**
@@ -13246,7 +13250,7 @@ export interface photo_xref {
   photo_id: ScalarsEnums['uuid']
   restaurant_id: ScalarsEnums['uuid']
   tag_id: ScalarsEnums['uuid']
-  type?: Maybe<ScalarsEnums['String']>
+  type?: ScalarsEnums['String']
 }
 
 /**
@@ -13264,9 +13268,9 @@ export interface photo_xref_aggregate {
 export interface photo_xref_aggregate_fields {
   __typename: 'photo_xref_aggregate_fields' | undefined
   count: (args?: {
-    columns?: Maybe<Array<photo_xref_select_column>>
-    distinct?: Maybe<Scalars['Boolean']>
-  }) => Maybe<ScalarsEnums['Int']>
+    columns?: Array<ScalarsEnums['photo_xref_select_column']>
+    distinct?: ScalarsEnums['Boolean']
+  }) => ScalarsEnums['Int']
   max?: Maybe<photo_xref_max_fields>
   min?: Maybe<photo_xref_min_fields>
 }
@@ -13276,11 +13280,11 @@ export interface photo_xref_aggregate_fields {
  */
 export interface photo_xref_max_fields {
   __typename: 'photo_xref_max_fields' | undefined
-  id?: Maybe<ScalarsEnums['uuid']>
-  photo_id?: Maybe<ScalarsEnums['uuid']>
-  restaurant_id?: Maybe<ScalarsEnums['uuid']>
-  tag_id?: Maybe<ScalarsEnums['uuid']>
-  type?: Maybe<ScalarsEnums['String']>
+  id?: ScalarsEnums['uuid']
+  photo_id?: ScalarsEnums['uuid']
+  restaurant_id?: ScalarsEnums['uuid']
+  tag_id?: ScalarsEnums['uuid']
+  type?: ScalarsEnums['String']
 }
 
 /**
@@ -13288,11 +13292,11 @@ export interface photo_xref_max_fields {
  */
 export interface photo_xref_min_fields {
   __typename: 'photo_xref_min_fields' | undefined
-  id?: Maybe<ScalarsEnums['uuid']>
-  photo_id?: Maybe<ScalarsEnums['uuid']>
-  restaurant_id?: Maybe<ScalarsEnums['uuid']>
-  tag_id?: Maybe<ScalarsEnums['uuid']>
-  type?: Maybe<ScalarsEnums['String']>
+  id?: ScalarsEnums['uuid']
+  photo_id?: ScalarsEnums['uuid']
+  restaurant_id?: ScalarsEnums['uuid']
+  tag_id?: ScalarsEnums['uuid']
+  type?: ScalarsEnums['String']
 }
 
 /**
@@ -13315,20 +13319,20 @@ export interface photo_xref_mutation_response {
  */
 export interface restaurant {
   __typename: 'restaurant' | undefined
-  address?: Maybe<ScalarsEnums['String']>
-  city?: Maybe<ScalarsEnums['String']>
+  address?: ScalarsEnums['String']
+  city?: ScalarsEnums['String']
   created_at: ScalarsEnums['timestamptz']
-  description?: Maybe<ScalarsEnums['String']>
-  downvotes?: Maybe<ScalarsEnums['numeric']>
-  geocoder_id?: Maybe<ScalarsEnums['String']>
-  headlines?: Maybe<ScalarsEnums['jsonb']>
-  hours?: Maybe<ScalarsEnums['jsonb']>
+  description?: ScalarsEnums['String']
+  downvotes?: ScalarsEnums['numeric']
+  geocoder_id?: ScalarsEnums['String']
+  headlines?: ScalarsEnums['jsonb']
+  hours?: ScalarsEnums['jsonb']
   id: ScalarsEnums['uuid']
-  image?: Maybe<ScalarsEnums['String']>
+  image?: ScalarsEnums['String']
   /**
    * A computed field, executes function "is_restaurant_open"
    */
-  is_open_now?: Maybe<ScalarsEnums['Boolean']>
+  is_open_now?: ScalarsEnums['Boolean']
   /**
    * An array relationship
    */
@@ -13336,15 +13340,15 @@ export interface restaurant {
     /**
      * distinct select on columns
      */
-    distinct_on?: Maybe<Array<list_restaurant_select_column>>
+    distinct_on?: Array<ScalarsEnums['list_restaurant_select_column']>
     /**
      * limit the number of rows returned
      */
-    limit?: Maybe<Scalars['Int']>
+    limit?: ScalarsEnums['Int']
     /**
      * skip the first n rows. Use only with order_by
      */
-    offset?: Maybe<Scalars['Int']>
+    offset?: ScalarsEnums['Int']
     /**
      * sort the rows by one or more columns
      */
@@ -13361,15 +13365,15 @@ export interface restaurant {
     /**
      * distinct select on columns
      */
-    distinct_on?: Maybe<Array<list_restaurant_select_column>>
+    distinct_on?: Array<ScalarsEnums['list_restaurant_select_column']>
     /**
      * limit the number of rows returned
      */
-    limit?: Maybe<Scalars['Int']>
+    limit?: ScalarsEnums['Int']
     /**
      * skip the first n rows. Use only with order_by
      */
-    offset?: Maybe<Scalars['Int']>
+    offset?: ScalarsEnums['Int']
     /**
      * sort the rows by one or more columns
      */
@@ -13387,15 +13391,15 @@ export interface restaurant {
     /**
      * distinct select on columns
      */
-    distinct_on?: Maybe<Array<menu_item_select_column>>
+    distinct_on?: Array<ScalarsEnums['menu_item_select_column']>
     /**
      * limit the number of rows returned
      */
-    limit?: Maybe<Scalars['Int']>
+    limit?: ScalarsEnums['Int']
     /**
      * skip the first n rows. Use only with order_by
      */
-    offset?: Maybe<Scalars['Int']>
+    offset?: ScalarsEnums['Int']
     /**
      * sort the rows by one or more columns
      */
@@ -13412,15 +13416,15 @@ export interface restaurant {
     /**
      * distinct select on columns
      */
-    distinct_on?: Maybe<Array<menu_item_select_column>>
+    distinct_on?: Array<ScalarsEnums['menu_item_select_column']>
     /**
      * limit the number of rows returned
      */
-    limit?: Maybe<Scalars['Int']>
+    limit?: ScalarsEnums['Int']
     /**
      * skip the first n rows. Use only with order_by
      */
-    offset?: Maybe<Scalars['Int']>
+    offset?: ScalarsEnums['Int']
     /**
      * sort the rows by one or more columns
      */
@@ -13431,8 +13435,8 @@ export interface restaurant {
     where?: Maybe<menu_item_bool_exp>
   }) => menu_item_aggregate
   name: ScalarsEnums['String']
-  og_source_ids?: Maybe<ScalarsEnums['jsonb']>
-  oldest_review_date?: Maybe<ScalarsEnums['timestamptz']>
+  og_source_ids?: ScalarsEnums['jsonb']
+  oldest_review_date?: ScalarsEnums['timestamptz']
   /**
    * An array relationship
    */
@@ -13440,15 +13444,15 @@ export interface restaurant {
     /**
      * distinct select on columns
      */
-    distinct_on?: Maybe<Array<photo_xref_select_column>>
+    distinct_on?: Array<ScalarsEnums['photo_xref_select_column']>
     /**
      * limit the number of rows returned
      */
-    limit?: Maybe<Scalars['Int']>
+    limit?: ScalarsEnums['Int']
     /**
      * skip the first n rows. Use only with order_by
      */
-    offset?: Maybe<Scalars['Int']>
+    offset?: ScalarsEnums['Int']
     /**
      * sort the rows by one or more columns
      */
@@ -13465,15 +13469,15 @@ export interface restaurant {
     /**
      * distinct select on columns
      */
-    distinct_on?: Maybe<Array<photo_xref_select_column>>
+    distinct_on?: Array<ScalarsEnums['photo_xref_select_column']>
     /**
      * limit the number of rows returned
      */
-    limit?: Maybe<Scalars['Int']>
+    limit?: ScalarsEnums['Int']
     /**
      * skip the first n rows. Use only with order_by
      */
-    offset?: Maybe<Scalars['Int']>
+    offset?: ScalarsEnums['Int']
     /**
      * sort the rows by one or more columns
      */
@@ -13483,10 +13487,10 @@ export interface restaurant {
      */
     where?: Maybe<photo_xref_bool_exp>
   }) => photo_xref_aggregate
-  photos?: Maybe<ScalarsEnums['jsonb']>
-  price_range?: Maybe<ScalarsEnums['String']>
-  rating?: Maybe<ScalarsEnums['numeric']>
-  rating_factors?: Maybe<ScalarsEnums['jsonb']>
+  photos?: ScalarsEnums['jsonb']
+  price_range?: ScalarsEnums['String']
+  rating?: ScalarsEnums['numeric']
+  rating_factors?: ScalarsEnums['jsonb']
   /**
    * An array relationship
    */
@@ -13494,15 +13498,15 @@ export interface restaurant {
     /**
      * distinct select on columns
      */
-    distinct_on?: Maybe<Array<review_select_column>>
+    distinct_on?: Array<ScalarsEnums['review_select_column']>
     /**
      * limit the number of rows returned
      */
-    limit?: Maybe<Scalars['Int']>
+    limit?: ScalarsEnums['Int']
     /**
      * skip the first n rows. Use only with order_by
      */
-    offset?: Maybe<Scalars['Int']>
+    offset?: ScalarsEnums['Int']
     /**
      * sort the rows by one or more columns
      */
@@ -13519,15 +13523,15 @@ export interface restaurant {
     /**
      * distinct select on columns
      */
-    distinct_on?: Maybe<Array<review_select_column>>
+    distinct_on?: Array<ScalarsEnums['review_select_column']>
     /**
      * limit the number of rows returned
      */
-    limit?: Maybe<Scalars['Int']>
+    limit?: ScalarsEnums['Int']
     /**
      * skip the first n rows. Use only with order_by
      */
-    offset?: Maybe<Scalars['Int']>
+    offset?: ScalarsEnums['Int']
     /**
      * sort the rows by one or more columns
      */
@@ -13537,15 +13541,15 @@ export interface restaurant {
      */
     where?: Maybe<review_bool_exp>
   }) => review_aggregate
-  score?: Maybe<ScalarsEnums['numeric']>
-  score_breakdown?: Maybe<ScalarsEnums['jsonb']>
-  scrape_metadata?: Maybe<ScalarsEnums['jsonb']>
+  score?: ScalarsEnums['numeric']
+  score_breakdown?: ScalarsEnums['jsonb']
+  scrape_metadata?: ScalarsEnums['jsonb']
   slug: ScalarsEnums['String']
-  source_breakdown?: Maybe<ScalarsEnums['jsonb']>
-  sources?: Maybe<ScalarsEnums['jsonb']>
-  state?: Maybe<ScalarsEnums['String']>
-  summary?: Maybe<ScalarsEnums['String']>
-  tag_names?: Maybe<ScalarsEnums['jsonb']>
+  source_breakdown?: ScalarsEnums['jsonb']
+  sources?: ScalarsEnums['jsonb']
+  state?: ScalarsEnums['String']
+  summary?: ScalarsEnums['String']
+  tag_names?: ScalarsEnums['jsonb']
   /**
    * An array relationship
    */
@@ -13553,15 +13557,15 @@ export interface restaurant {
     /**
      * distinct select on columns
      */
-    distinct_on?: Maybe<Array<restaurant_tag_select_column>>
+    distinct_on?: Array<ScalarsEnums['restaurant_tag_select_column']>
     /**
      * limit the number of rows returned
      */
-    limit?: Maybe<Scalars['Int']>
+    limit?: ScalarsEnums['Int']
     /**
      * skip the first n rows. Use only with order_by
      */
-    offset?: Maybe<Scalars['Int']>
+    offset?: ScalarsEnums['Int']
     /**
      * sort the rows by one or more columns
      */
@@ -13578,15 +13582,15 @@ export interface restaurant {
     /**
      * distinct select on columns
      */
-    distinct_on?: Maybe<Array<restaurant_tag_select_column>>
+    distinct_on?: Array<ScalarsEnums['restaurant_tag_select_column']>
     /**
      * limit the number of rows returned
      */
-    limit?: Maybe<Scalars['Int']>
+    limit?: ScalarsEnums['Int']
     /**
      * skip the first n rows. Use only with order_by
      */
-    offset?: Maybe<Scalars['Int']>
+    offset?: ScalarsEnums['Int']
     /**
      * sort the rows by one or more columns
      */
@@ -13596,7 +13600,7 @@ export interface restaurant {
      */
     where?: Maybe<restaurant_tag_bool_exp>
   }) => restaurant_tag_aggregate
-  telephone?: Maybe<ScalarsEnums['String']>
+  telephone?: ScalarsEnums['String']
   /**
    * A computed field, executes function "restaurant_top_tags"
    */
@@ -13608,15 +13612,15 @@ export interface restaurant {
     /**
      * distinct select on columns
      */
-    distinct_on?: Maybe<Array<restaurant_tag_select_column>>
+    distinct_on?: Array<ScalarsEnums['restaurant_tag_select_column']>
     /**
      * limit the number of rows returned
      */
-    limit?: Maybe<Scalars['Int']>
+    limit?: ScalarsEnums['Int']
     /**
      * skip the first n rows. Use only with order_by
      */
-    offset?: Maybe<Scalars['Int']>
+    offset?: ScalarsEnums['Int']
     /**
      * sort the rows by one or more columns
      */
@@ -13627,10 +13631,10 @@ export interface restaurant {
     where?: Maybe<restaurant_tag_bool_exp>
   }) => Maybe<Array<restaurant_tag>>
   updated_at: ScalarsEnums['timestamptz']
-  upvotes?: Maybe<ScalarsEnums['numeric']>
-  votes_ratio?: Maybe<ScalarsEnums['numeric']>
-  website?: Maybe<ScalarsEnums['String']>
-  zip?: Maybe<ScalarsEnums['numeric']>
+  upvotes?: ScalarsEnums['numeric']
+  votes_ratio?: ScalarsEnums['numeric']
+  website?: ScalarsEnums['String']
+  zip?: ScalarsEnums['numeric']
 }
 
 /**
@@ -13649,9 +13653,9 @@ export interface restaurant_aggregate_fields {
   __typename: 'restaurant_aggregate_fields' | undefined
   avg?: Maybe<restaurant_avg_fields>
   count: (args?: {
-    columns?: Maybe<Array<restaurant_select_column>>
-    distinct?: Maybe<Scalars['Boolean']>
-  }) => Maybe<ScalarsEnums['Int']>
+    columns?: Array<ScalarsEnums['restaurant_select_column']>
+    distinct?: ScalarsEnums['Boolean']
+  }) => ScalarsEnums['Int']
   max?: Maybe<restaurant_max_fields>
   min?: Maybe<restaurant_min_fields>
   stddev?: Maybe<restaurant_stddev_fields>
@@ -13668,12 +13672,12 @@ export interface restaurant_aggregate_fields {
  */
 export interface restaurant_avg_fields {
   __typename: 'restaurant_avg_fields' | undefined
-  downvotes?: Maybe<ScalarsEnums['Float']>
-  rating?: Maybe<ScalarsEnums['Float']>
-  score?: Maybe<ScalarsEnums['Float']>
-  upvotes?: Maybe<ScalarsEnums['Float']>
-  votes_ratio?: Maybe<ScalarsEnums['Float']>
-  zip?: Maybe<ScalarsEnums['Float']>
+  downvotes?: ScalarsEnums['Float']
+  rating?: ScalarsEnums['Float']
+  score?: ScalarsEnums['Float']
+  upvotes?: ScalarsEnums['Float']
+  votes_ratio?: ScalarsEnums['Float']
+  zip?: ScalarsEnums['Float']
 }
 
 /**
@@ -13681,28 +13685,28 @@ export interface restaurant_avg_fields {
  */
 export interface restaurant_max_fields {
   __typename: 'restaurant_max_fields' | undefined
-  address?: Maybe<ScalarsEnums['String']>
-  city?: Maybe<ScalarsEnums['String']>
-  created_at?: Maybe<ScalarsEnums['timestamptz']>
-  description?: Maybe<ScalarsEnums['String']>
-  downvotes?: Maybe<ScalarsEnums['numeric']>
-  geocoder_id?: Maybe<ScalarsEnums['String']>
-  id?: Maybe<ScalarsEnums['uuid']>
-  image?: Maybe<ScalarsEnums['String']>
-  name?: Maybe<ScalarsEnums['String']>
-  oldest_review_date?: Maybe<ScalarsEnums['timestamptz']>
-  price_range?: Maybe<ScalarsEnums['String']>
-  rating?: Maybe<ScalarsEnums['numeric']>
-  score?: Maybe<ScalarsEnums['numeric']>
-  slug?: Maybe<ScalarsEnums['String']>
-  state?: Maybe<ScalarsEnums['String']>
-  summary?: Maybe<ScalarsEnums['String']>
-  telephone?: Maybe<ScalarsEnums['String']>
-  updated_at?: Maybe<ScalarsEnums['timestamptz']>
-  upvotes?: Maybe<ScalarsEnums['numeric']>
-  votes_ratio?: Maybe<ScalarsEnums['numeric']>
-  website?: Maybe<ScalarsEnums['String']>
-  zip?: Maybe<ScalarsEnums['numeric']>
+  address?: ScalarsEnums['String']
+  city?: ScalarsEnums['String']
+  created_at?: ScalarsEnums['timestamptz']
+  description?: ScalarsEnums['String']
+  downvotes?: ScalarsEnums['numeric']
+  geocoder_id?: ScalarsEnums['String']
+  id?: ScalarsEnums['uuid']
+  image?: ScalarsEnums['String']
+  name?: ScalarsEnums['String']
+  oldest_review_date?: ScalarsEnums['timestamptz']
+  price_range?: ScalarsEnums['String']
+  rating?: ScalarsEnums['numeric']
+  score?: ScalarsEnums['numeric']
+  slug?: ScalarsEnums['String']
+  state?: ScalarsEnums['String']
+  summary?: ScalarsEnums['String']
+  telephone?: ScalarsEnums['String']
+  updated_at?: ScalarsEnums['timestamptz']
+  upvotes?: ScalarsEnums['numeric']
+  votes_ratio?: ScalarsEnums['numeric']
+  website?: ScalarsEnums['String']
+  zip?: ScalarsEnums['numeric']
 }
 
 /**
@@ -13710,28 +13714,28 @@ export interface restaurant_max_fields {
  */
 export interface restaurant_min_fields {
   __typename: 'restaurant_min_fields' | undefined
-  address?: Maybe<ScalarsEnums['String']>
-  city?: Maybe<ScalarsEnums['String']>
-  created_at?: Maybe<ScalarsEnums['timestamptz']>
-  description?: Maybe<ScalarsEnums['String']>
-  downvotes?: Maybe<ScalarsEnums['numeric']>
-  geocoder_id?: Maybe<ScalarsEnums['String']>
-  id?: Maybe<ScalarsEnums['uuid']>
-  image?: Maybe<ScalarsEnums['String']>
-  name?: Maybe<ScalarsEnums['String']>
-  oldest_review_date?: Maybe<ScalarsEnums['timestamptz']>
-  price_range?: Maybe<ScalarsEnums['String']>
-  rating?: Maybe<ScalarsEnums['numeric']>
-  score?: Maybe<ScalarsEnums['numeric']>
-  slug?: Maybe<ScalarsEnums['String']>
-  state?: Maybe<ScalarsEnums['String']>
-  summary?: Maybe<ScalarsEnums['String']>
-  telephone?: Maybe<ScalarsEnums['String']>
-  updated_at?: Maybe<ScalarsEnums['timestamptz']>
-  upvotes?: Maybe<ScalarsEnums['numeric']>
-  votes_ratio?: Maybe<ScalarsEnums['numeric']>
-  website?: Maybe<ScalarsEnums['String']>
-  zip?: Maybe<ScalarsEnums['numeric']>
+  address?: ScalarsEnums['String']
+  city?: ScalarsEnums['String']
+  created_at?: ScalarsEnums['timestamptz']
+  description?: ScalarsEnums['String']
+  downvotes?: ScalarsEnums['numeric']
+  geocoder_id?: ScalarsEnums['String']
+  id?: ScalarsEnums['uuid']
+  image?: ScalarsEnums['String']
+  name?: ScalarsEnums['String']
+  oldest_review_date?: ScalarsEnums['timestamptz']
+  price_range?: ScalarsEnums['String']
+  rating?: ScalarsEnums['numeric']
+  score?: ScalarsEnums['numeric']
+  slug?: ScalarsEnums['String']
+  state?: ScalarsEnums['String']
+  summary?: ScalarsEnums['String']
+  telephone?: ScalarsEnums['String']
+  updated_at?: ScalarsEnums['timestamptz']
+  upvotes?: ScalarsEnums['numeric']
+  votes_ratio?: ScalarsEnums['numeric']
+  website?: ScalarsEnums['String']
+  zip?: ScalarsEnums['numeric']
 }
 
 /**
@@ -13754,12 +13758,12 @@ export interface restaurant_mutation_response {
  */
 export interface restaurant_stddev_fields {
   __typename: 'restaurant_stddev_fields' | undefined
-  downvotes?: Maybe<ScalarsEnums['Float']>
-  rating?: Maybe<ScalarsEnums['Float']>
-  score?: Maybe<ScalarsEnums['Float']>
-  upvotes?: Maybe<ScalarsEnums['Float']>
-  votes_ratio?: Maybe<ScalarsEnums['Float']>
-  zip?: Maybe<ScalarsEnums['Float']>
+  downvotes?: ScalarsEnums['Float']
+  rating?: ScalarsEnums['Float']
+  score?: ScalarsEnums['Float']
+  upvotes?: ScalarsEnums['Float']
+  votes_ratio?: ScalarsEnums['Float']
+  zip?: ScalarsEnums['Float']
 }
 
 /**
@@ -13767,12 +13771,12 @@ export interface restaurant_stddev_fields {
  */
 export interface restaurant_stddev_pop_fields {
   __typename: 'restaurant_stddev_pop_fields' | undefined
-  downvotes?: Maybe<ScalarsEnums['Float']>
-  rating?: Maybe<ScalarsEnums['Float']>
-  score?: Maybe<ScalarsEnums['Float']>
-  upvotes?: Maybe<ScalarsEnums['Float']>
-  votes_ratio?: Maybe<ScalarsEnums['Float']>
-  zip?: Maybe<ScalarsEnums['Float']>
+  downvotes?: ScalarsEnums['Float']
+  rating?: ScalarsEnums['Float']
+  score?: ScalarsEnums['Float']
+  upvotes?: ScalarsEnums['Float']
+  votes_ratio?: ScalarsEnums['Float']
+  zip?: ScalarsEnums['Float']
 }
 
 /**
@@ -13780,12 +13784,12 @@ export interface restaurant_stddev_pop_fields {
  */
 export interface restaurant_stddev_samp_fields {
   __typename: 'restaurant_stddev_samp_fields' | undefined
-  downvotes?: Maybe<ScalarsEnums['Float']>
-  rating?: Maybe<ScalarsEnums['Float']>
-  score?: Maybe<ScalarsEnums['Float']>
-  upvotes?: Maybe<ScalarsEnums['Float']>
-  votes_ratio?: Maybe<ScalarsEnums['Float']>
-  zip?: Maybe<ScalarsEnums['Float']>
+  downvotes?: ScalarsEnums['Float']
+  rating?: ScalarsEnums['Float']
+  score?: ScalarsEnums['Float']
+  upvotes?: ScalarsEnums['Float']
+  votes_ratio?: ScalarsEnums['Float']
+  zip?: ScalarsEnums['Float']
 }
 
 /**
@@ -13793,12 +13797,12 @@ export interface restaurant_stddev_samp_fields {
  */
 export interface restaurant_sum_fields {
   __typename: 'restaurant_sum_fields' | undefined
-  downvotes?: Maybe<ScalarsEnums['numeric']>
-  rating?: Maybe<ScalarsEnums['numeric']>
-  score?: Maybe<ScalarsEnums['numeric']>
-  upvotes?: Maybe<ScalarsEnums['numeric']>
-  votes_ratio?: Maybe<ScalarsEnums['numeric']>
-  zip?: Maybe<ScalarsEnums['numeric']>
+  downvotes?: ScalarsEnums['numeric']
+  rating?: ScalarsEnums['numeric']
+  score?: ScalarsEnums['numeric']
+  upvotes?: ScalarsEnums['numeric']
+  votes_ratio?: ScalarsEnums['numeric']
+  zip?: ScalarsEnums['numeric']
 }
 
 /**
@@ -13806,17 +13810,17 @@ export interface restaurant_sum_fields {
  */
 export interface restaurant_tag {
   __typename: 'restaurant_tag' | undefined
-  downvotes?: Maybe<ScalarsEnums['numeric']>
+  downvotes?: ScalarsEnums['numeric']
   id: ScalarsEnums['uuid']
-  photos?: Maybe<ScalarsEnums['jsonb']>
-  rank?: Maybe<ScalarsEnums['Int']>
-  rating?: Maybe<ScalarsEnums['numeric']>
+  photos?: ScalarsEnums['jsonb']
+  rank?: ScalarsEnums['Int']
+  rating?: ScalarsEnums['numeric']
   /**
    * An object relationship
    */
   restaurant: restaurant
   restaurant_id: ScalarsEnums['uuid']
-  review_mentions_count?: Maybe<ScalarsEnums['numeric']>
+  review_mentions_count?: ScalarsEnums['numeric']
   /**
    * An array relationship
    */
@@ -13824,15 +13828,15 @@ export interface restaurant_tag {
     /**
      * distinct select on columns
      */
-    distinct_on?: Maybe<Array<review_select_column>>
+    distinct_on?: Array<ScalarsEnums['review_select_column']>
     /**
      * limit the number of rows returned
      */
-    limit?: Maybe<Scalars['Int']>
+    limit?: ScalarsEnums['Int']
     /**
      * skip the first n rows. Use only with order_by
      */
-    offset?: Maybe<Scalars['Int']>
+    offset?: ScalarsEnums['Int']
     /**
      * sort the rows by one or more columns
      */
@@ -13849,15 +13853,15 @@ export interface restaurant_tag {
     /**
      * distinct select on columns
      */
-    distinct_on?: Maybe<Array<review_select_column>>
+    distinct_on?: Array<ScalarsEnums['review_select_column']>
     /**
      * limit the number of rows returned
      */
-    limit?: Maybe<Scalars['Int']>
+    limit?: ScalarsEnums['Int']
     /**
      * skip the first n rows. Use only with order_by
      */
-    offset?: Maybe<Scalars['Int']>
+    offset?: ScalarsEnums['Int']
     /**
      * sort the rows by one or more columns
      */
@@ -13867,8 +13871,8 @@ export interface restaurant_tag {
      */
     where?: Maybe<review_bool_exp>
   }) => review_aggregate
-  score?: Maybe<ScalarsEnums['numeric']>
-  score_breakdown?: Maybe<ScalarsEnums['jsonb']>
+  score?: ScalarsEnums['numeric']
+  score_breakdown?: ScalarsEnums['jsonb']
   /**
    * An array relationship
    */
@@ -13876,15 +13880,15 @@ export interface restaurant_tag {
     /**
      * distinct select on columns
      */
-    distinct_on?: Maybe<Array<review_tag_sentence_select_column>>
+    distinct_on?: Array<ScalarsEnums['review_tag_sentence_select_column']>
     /**
      * limit the number of rows returned
      */
-    limit?: Maybe<Scalars['Int']>
+    limit?: ScalarsEnums['Int']
     /**
      * skip the first n rows. Use only with order_by
      */
-    offset?: Maybe<Scalars['Int']>
+    offset?: ScalarsEnums['Int']
     /**
      * sort the rows by one or more columns
      */
@@ -13901,15 +13905,15 @@ export interface restaurant_tag {
     /**
      * distinct select on columns
      */
-    distinct_on?: Maybe<Array<review_tag_sentence_select_column>>
+    distinct_on?: Array<ScalarsEnums['review_tag_sentence_select_column']>
     /**
      * limit the number of rows returned
      */
-    limit?: Maybe<Scalars['Int']>
+    limit?: ScalarsEnums['Int']
     /**
      * skip the first n rows. Use only with order_by
      */
-    offset?: Maybe<Scalars['Int']>
+    offset?: ScalarsEnums['Int']
     /**
      * sort the rows by one or more columns
      */
@@ -13919,14 +13923,14 @@ export interface restaurant_tag {
      */
     where?: Maybe<review_tag_sentence_bool_exp>
   }) => review_tag_sentence_aggregate
-  source_breakdown?: Maybe<ScalarsEnums['jsonb']>
+  source_breakdown?: ScalarsEnums['jsonb']
   /**
    * An object relationship
    */
   tag: tag
   tag_id: ScalarsEnums['uuid']
-  upvotes?: Maybe<ScalarsEnums['numeric']>
-  votes_ratio?: Maybe<ScalarsEnums['numeric']>
+  upvotes?: ScalarsEnums['numeric']
+  votes_ratio?: ScalarsEnums['numeric']
 }
 
 /**
@@ -13945,9 +13949,9 @@ export interface restaurant_tag_aggregate_fields {
   __typename: 'restaurant_tag_aggregate_fields' | undefined
   avg?: Maybe<restaurant_tag_avg_fields>
   count: (args?: {
-    columns?: Maybe<Array<restaurant_tag_select_column>>
-    distinct?: Maybe<Scalars['Boolean']>
-  }) => Maybe<ScalarsEnums['Int']>
+    columns?: Array<ScalarsEnums['restaurant_tag_select_column']>
+    distinct?: ScalarsEnums['Boolean']
+  }) => ScalarsEnums['Int']
   max?: Maybe<restaurant_tag_max_fields>
   min?: Maybe<restaurant_tag_min_fields>
   stddev?: Maybe<restaurant_tag_stddev_fields>
@@ -13964,13 +13968,13 @@ export interface restaurant_tag_aggregate_fields {
  */
 export interface restaurant_tag_avg_fields {
   __typename: 'restaurant_tag_avg_fields' | undefined
-  downvotes?: Maybe<ScalarsEnums['Float']>
-  rank?: Maybe<ScalarsEnums['Float']>
-  rating?: Maybe<ScalarsEnums['Float']>
-  review_mentions_count?: Maybe<ScalarsEnums['Float']>
-  score?: Maybe<ScalarsEnums['Float']>
-  upvotes?: Maybe<ScalarsEnums['Float']>
-  votes_ratio?: Maybe<ScalarsEnums['Float']>
+  downvotes?: ScalarsEnums['Float']
+  rank?: ScalarsEnums['Float']
+  rating?: ScalarsEnums['Float']
+  review_mentions_count?: ScalarsEnums['Float']
+  score?: ScalarsEnums['Float']
+  upvotes?: ScalarsEnums['Float']
+  votes_ratio?: ScalarsEnums['Float']
 }
 
 /**
@@ -13978,16 +13982,16 @@ export interface restaurant_tag_avg_fields {
  */
 export interface restaurant_tag_max_fields {
   __typename: 'restaurant_tag_max_fields' | undefined
-  downvotes?: Maybe<ScalarsEnums['numeric']>
-  id?: Maybe<ScalarsEnums['uuid']>
-  rank?: Maybe<ScalarsEnums['Int']>
-  rating?: Maybe<ScalarsEnums['numeric']>
-  restaurant_id?: Maybe<ScalarsEnums['uuid']>
-  review_mentions_count?: Maybe<ScalarsEnums['numeric']>
-  score?: Maybe<ScalarsEnums['numeric']>
-  tag_id?: Maybe<ScalarsEnums['uuid']>
-  upvotes?: Maybe<ScalarsEnums['numeric']>
-  votes_ratio?: Maybe<ScalarsEnums['numeric']>
+  downvotes?: ScalarsEnums['numeric']
+  id?: ScalarsEnums['uuid']
+  rank?: ScalarsEnums['Int']
+  rating?: ScalarsEnums['numeric']
+  restaurant_id?: ScalarsEnums['uuid']
+  review_mentions_count?: ScalarsEnums['numeric']
+  score?: ScalarsEnums['numeric']
+  tag_id?: ScalarsEnums['uuid']
+  upvotes?: ScalarsEnums['numeric']
+  votes_ratio?: ScalarsEnums['numeric']
 }
 
 /**
@@ -13995,16 +13999,16 @@ export interface restaurant_tag_max_fields {
  */
 export interface restaurant_tag_min_fields {
   __typename: 'restaurant_tag_min_fields' | undefined
-  downvotes?: Maybe<ScalarsEnums['numeric']>
-  id?: Maybe<ScalarsEnums['uuid']>
-  rank?: Maybe<ScalarsEnums['Int']>
-  rating?: Maybe<ScalarsEnums['numeric']>
-  restaurant_id?: Maybe<ScalarsEnums['uuid']>
-  review_mentions_count?: Maybe<ScalarsEnums['numeric']>
-  score?: Maybe<ScalarsEnums['numeric']>
-  tag_id?: Maybe<ScalarsEnums['uuid']>
-  upvotes?: Maybe<ScalarsEnums['numeric']>
-  votes_ratio?: Maybe<ScalarsEnums['numeric']>
+  downvotes?: ScalarsEnums['numeric']
+  id?: ScalarsEnums['uuid']
+  rank?: ScalarsEnums['Int']
+  rating?: ScalarsEnums['numeric']
+  restaurant_id?: ScalarsEnums['uuid']
+  review_mentions_count?: ScalarsEnums['numeric']
+  score?: ScalarsEnums['numeric']
+  tag_id?: ScalarsEnums['uuid']
+  upvotes?: ScalarsEnums['numeric']
+  votes_ratio?: ScalarsEnums['numeric']
 }
 
 /**
@@ -14027,13 +14031,13 @@ export interface restaurant_tag_mutation_response {
  */
 export interface restaurant_tag_stddev_fields {
   __typename: 'restaurant_tag_stddev_fields' | undefined
-  downvotes?: Maybe<ScalarsEnums['Float']>
-  rank?: Maybe<ScalarsEnums['Float']>
-  rating?: Maybe<ScalarsEnums['Float']>
-  review_mentions_count?: Maybe<ScalarsEnums['Float']>
-  score?: Maybe<ScalarsEnums['Float']>
-  upvotes?: Maybe<ScalarsEnums['Float']>
-  votes_ratio?: Maybe<ScalarsEnums['Float']>
+  downvotes?: ScalarsEnums['Float']
+  rank?: ScalarsEnums['Float']
+  rating?: ScalarsEnums['Float']
+  review_mentions_count?: ScalarsEnums['Float']
+  score?: ScalarsEnums['Float']
+  upvotes?: ScalarsEnums['Float']
+  votes_ratio?: ScalarsEnums['Float']
 }
 
 /**
@@ -14041,13 +14045,13 @@ export interface restaurant_tag_stddev_fields {
  */
 export interface restaurant_tag_stddev_pop_fields {
   __typename: 'restaurant_tag_stddev_pop_fields' | undefined
-  downvotes?: Maybe<ScalarsEnums['Float']>
-  rank?: Maybe<ScalarsEnums['Float']>
-  rating?: Maybe<ScalarsEnums['Float']>
-  review_mentions_count?: Maybe<ScalarsEnums['Float']>
-  score?: Maybe<ScalarsEnums['Float']>
-  upvotes?: Maybe<ScalarsEnums['Float']>
-  votes_ratio?: Maybe<ScalarsEnums['Float']>
+  downvotes?: ScalarsEnums['Float']
+  rank?: ScalarsEnums['Float']
+  rating?: ScalarsEnums['Float']
+  review_mentions_count?: ScalarsEnums['Float']
+  score?: ScalarsEnums['Float']
+  upvotes?: ScalarsEnums['Float']
+  votes_ratio?: ScalarsEnums['Float']
 }
 
 /**
@@ -14055,13 +14059,13 @@ export interface restaurant_tag_stddev_pop_fields {
  */
 export interface restaurant_tag_stddev_samp_fields {
   __typename: 'restaurant_tag_stddev_samp_fields' | undefined
-  downvotes?: Maybe<ScalarsEnums['Float']>
-  rank?: Maybe<ScalarsEnums['Float']>
-  rating?: Maybe<ScalarsEnums['Float']>
-  review_mentions_count?: Maybe<ScalarsEnums['Float']>
-  score?: Maybe<ScalarsEnums['Float']>
-  upvotes?: Maybe<ScalarsEnums['Float']>
-  votes_ratio?: Maybe<ScalarsEnums['Float']>
+  downvotes?: ScalarsEnums['Float']
+  rank?: ScalarsEnums['Float']
+  rating?: ScalarsEnums['Float']
+  review_mentions_count?: ScalarsEnums['Float']
+  score?: ScalarsEnums['Float']
+  upvotes?: ScalarsEnums['Float']
+  votes_ratio?: ScalarsEnums['Float']
 }
 
 /**
@@ -14069,13 +14073,13 @@ export interface restaurant_tag_stddev_samp_fields {
  */
 export interface restaurant_tag_sum_fields {
   __typename: 'restaurant_tag_sum_fields' | undefined
-  downvotes?: Maybe<ScalarsEnums['numeric']>
-  rank?: Maybe<ScalarsEnums['Int']>
-  rating?: Maybe<ScalarsEnums['numeric']>
-  review_mentions_count?: Maybe<ScalarsEnums['numeric']>
-  score?: Maybe<ScalarsEnums['numeric']>
-  upvotes?: Maybe<ScalarsEnums['numeric']>
-  votes_ratio?: Maybe<ScalarsEnums['numeric']>
+  downvotes?: ScalarsEnums['numeric']
+  rank?: ScalarsEnums['Int']
+  rating?: ScalarsEnums['numeric']
+  review_mentions_count?: ScalarsEnums['numeric']
+  score?: ScalarsEnums['numeric']
+  upvotes?: ScalarsEnums['numeric']
+  votes_ratio?: ScalarsEnums['numeric']
 }
 
 /**
@@ -14083,13 +14087,13 @@ export interface restaurant_tag_sum_fields {
  */
 export interface restaurant_tag_var_pop_fields {
   __typename: 'restaurant_tag_var_pop_fields' | undefined
-  downvotes?: Maybe<ScalarsEnums['Float']>
-  rank?: Maybe<ScalarsEnums['Float']>
-  rating?: Maybe<ScalarsEnums['Float']>
-  review_mentions_count?: Maybe<ScalarsEnums['Float']>
-  score?: Maybe<ScalarsEnums['Float']>
-  upvotes?: Maybe<ScalarsEnums['Float']>
-  votes_ratio?: Maybe<ScalarsEnums['Float']>
+  downvotes?: ScalarsEnums['Float']
+  rank?: ScalarsEnums['Float']
+  rating?: ScalarsEnums['Float']
+  review_mentions_count?: ScalarsEnums['Float']
+  score?: ScalarsEnums['Float']
+  upvotes?: ScalarsEnums['Float']
+  votes_ratio?: ScalarsEnums['Float']
 }
 
 /**
@@ -14097,13 +14101,13 @@ export interface restaurant_tag_var_pop_fields {
  */
 export interface restaurant_tag_var_samp_fields {
   __typename: 'restaurant_tag_var_samp_fields' | undefined
-  downvotes?: Maybe<ScalarsEnums['Float']>
-  rank?: Maybe<ScalarsEnums['Float']>
-  rating?: Maybe<ScalarsEnums['Float']>
-  review_mentions_count?: Maybe<ScalarsEnums['Float']>
-  score?: Maybe<ScalarsEnums['Float']>
-  upvotes?: Maybe<ScalarsEnums['Float']>
-  votes_ratio?: Maybe<ScalarsEnums['Float']>
+  downvotes?: ScalarsEnums['Float']
+  rank?: ScalarsEnums['Float']
+  rating?: ScalarsEnums['Float']
+  review_mentions_count?: ScalarsEnums['Float']
+  score?: ScalarsEnums['Float']
+  upvotes?: ScalarsEnums['Float']
+  votes_ratio?: ScalarsEnums['Float']
 }
 
 /**
@@ -14111,13 +14115,13 @@ export interface restaurant_tag_var_samp_fields {
  */
 export interface restaurant_tag_variance_fields {
   __typename: 'restaurant_tag_variance_fields' | undefined
-  downvotes?: Maybe<ScalarsEnums['Float']>
-  rank?: Maybe<ScalarsEnums['Float']>
-  rating?: Maybe<ScalarsEnums['Float']>
-  review_mentions_count?: Maybe<ScalarsEnums['Float']>
-  score?: Maybe<ScalarsEnums['Float']>
-  upvotes?: Maybe<ScalarsEnums['Float']>
-  votes_ratio?: Maybe<ScalarsEnums['Float']>
+  downvotes?: ScalarsEnums['Float']
+  rank?: ScalarsEnums['Float']
+  rating?: ScalarsEnums['Float']
+  review_mentions_count?: ScalarsEnums['Float']
+  score?: ScalarsEnums['Float']
+  upvotes?: ScalarsEnums['Float']
+  votes_ratio?: ScalarsEnums['Float']
 }
 
 /**
@@ -14125,12 +14129,12 @@ export interface restaurant_tag_variance_fields {
  */
 export interface restaurant_var_pop_fields {
   __typename: 'restaurant_var_pop_fields' | undefined
-  downvotes?: Maybe<ScalarsEnums['Float']>
-  rating?: Maybe<ScalarsEnums['Float']>
-  score?: Maybe<ScalarsEnums['Float']>
-  upvotes?: Maybe<ScalarsEnums['Float']>
-  votes_ratio?: Maybe<ScalarsEnums['Float']>
-  zip?: Maybe<ScalarsEnums['Float']>
+  downvotes?: ScalarsEnums['Float']
+  rating?: ScalarsEnums['Float']
+  score?: ScalarsEnums['Float']
+  upvotes?: ScalarsEnums['Float']
+  votes_ratio?: ScalarsEnums['Float']
+  zip?: ScalarsEnums['Float']
 }
 
 /**
@@ -14138,12 +14142,12 @@ export interface restaurant_var_pop_fields {
  */
 export interface restaurant_var_samp_fields {
   __typename: 'restaurant_var_samp_fields' | undefined
-  downvotes?: Maybe<ScalarsEnums['Float']>
-  rating?: Maybe<ScalarsEnums['Float']>
-  score?: Maybe<ScalarsEnums['Float']>
-  upvotes?: Maybe<ScalarsEnums['Float']>
-  votes_ratio?: Maybe<ScalarsEnums['Float']>
-  zip?: Maybe<ScalarsEnums['Float']>
+  downvotes?: ScalarsEnums['Float']
+  rating?: ScalarsEnums['Float']
+  score?: ScalarsEnums['Float']
+  upvotes?: ScalarsEnums['Float']
+  votes_ratio?: ScalarsEnums['Float']
+  zip?: ScalarsEnums['Float']
 }
 
 /**
@@ -14151,12 +14155,12 @@ export interface restaurant_var_samp_fields {
  */
 export interface restaurant_variance_fields {
   __typename: 'restaurant_variance_fields' | undefined
-  downvotes?: Maybe<ScalarsEnums['Float']>
-  rating?: Maybe<ScalarsEnums['Float']>
-  score?: Maybe<ScalarsEnums['Float']>
-  upvotes?: Maybe<ScalarsEnums['Float']>
-  votes_ratio?: Maybe<ScalarsEnums['Float']>
-  zip?: Maybe<ScalarsEnums['Float']>
+  downvotes?: ScalarsEnums['Float']
+  rating?: ScalarsEnums['Float']
+  score?: ScalarsEnums['Float']
+  upvotes?: ScalarsEnums['Float']
+  votes_ratio?: ScalarsEnums['Float']
+  zip?: ScalarsEnums['Float']
 }
 
 /**
@@ -14165,13 +14169,13 @@ export interface restaurant_variance_fields {
 export interface review {
   __typename: 'review' | undefined
   authored_at: ScalarsEnums['timestamptz']
-  categories?: Maybe<ScalarsEnums['jsonb']>
-  favorited?: Maybe<ScalarsEnums['Boolean']>
+  categories?: ScalarsEnums['jsonb']
+  favorited?: ScalarsEnums['Boolean']
   id: ScalarsEnums['uuid']
-  list_id?: Maybe<ScalarsEnums['uuid']>
-  location?: Maybe<ScalarsEnums['geometry']>
-  native_data_unique_key?: Maybe<ScalarsEnums['String']>
-  rating?: Maybe<ScalarsEnums['numeric']>
+  list_id?: ScalarsEnums['uuid']
+  location?: ScalarsEnums['geometry']
+  native_data_unique_key?: ScalarsEnums['String']
+  rating?: ScalarsEnums['numeric']
   /**
    * An object relationship
    */
@@ -14184,15 +14188,15 @@ export interface review {
     /**
      * distinct select on columns
      */
-    distinct_on?: Maybe<Array<review_tag_sentence_select_column>>
+    distinct_on?: Array<ScalarsEnums['review_tag_sentence_select_column']>
     /**
      * limit the number of rows returned
      */
-    limit?: Maybe<Scalars['Int']>
+    limit?: ScalarsEnums['Int']
     /**
      * skip the first n rows. Use only with order_by
      */
-    offset?: Maybe<Scalars['Int']>
+    offset?: ScalarsEnums['Int']
     /**
      * sort the rows by one or more columns
      */
@@ -14209,15 +14213,15 @@ export interface review {
     /**
      * distinct select on columns
      */
-    distinct_on?: Maybe<Array<review_tag_sentence_select_column>>
+    distinct_on?: Array<ScalarsEnums['review_tag_sentence_select_column']>
     /**
      * limit the number of rows returned
      */
-    limit?: Maybe<Scalars['Int']>
+    limit?: ScalarsEnums['Int']
     /**
      * skip the first n rows. Use only with order_by
      */
-    offset?: Maybe<Scalars['Int']>
+    offset?: ScalarsEnums['Int']
     /**
      * sort the rows by one or more columns
      */
@@ -14227,22 +14231,22 @@ export interface review {
      */
     where?: Maybe<review_tag_sentence_bool_exp>
   }) => review_tag_sentence_aggregate
-  source?: Maybe<ScalarsEnums['String']>
+  source?: ScalarsEnums['String']
   /**
    * An object relationship
    */
   tag?: Maybe<tag>
-  tag_id?: Maybe<ScalarsEnums['uuid']>
-  text?: Maybe<ScalarsEnums['String']>
-  type?: Maybe<ScalarsEnums['String']>
+  tag_id?: ScalarsEnums['uuid']
+  text?: ScalarsEnums['String']
+  type?: ScalarsEnums['String']
   updated_at: ScalarsEnums['timestamptz']
   /**
    * An object relationship
    */
   user: user
   user_id: ScalarsEnums['uuid']
-  username?: Maybe<ScalarsEnums['String']>
-  vote?: Maybe<ScalarsEnums['numeric']>
+  username?: ScalarsEnums['String']
+  vote?: ScalarsEnums['numeric']
 }
 
 /**
@@ -14261,9 +14265,9 @@ export interface review_aggregate_fields {
   __typename: 'review_aggregate_fields' | undefined
   avg?: Maybe<review_avg_fields>
   count: (args?: {
-    columns?: Maybe<Array<review_select_column>>
-    distinct?: Maybe<Scalars['Boolean']>
-  }) => Maybe<ScalarsEnums['Int']>
+    columns?: Array<ScalarsEnums['review_select_column']>
+    distinct?: ScalarsEnums['Boolean']
+  }) => ScalarsEnums['Int']
   max?: Maybe<review_max_fields>
   min?: Maybe<review_min_fields>
   stddev?: Maybe<review_stddev_fields>
@@ -14280,8 +14284,8 @@ export interface review_aggregate_fields {
  */
 export interface review_avg_fields {
   __typename: 'review_avg_fields' | undefined
-  rating?: Maybe<ScalarsEnums['Float']>
-  vote?: Maybe<ScalarsEnums['Float']>
+  rating?: ScalarsEnums['Float']
+  vote?: ScalarsEnums['Float']
 }
 
 /**
@@ -14289,20 +14293,20 @@ export interface review_avg_fields {
  */
 export interface review_max_fields {
   __typename: 'review_max_fields' | undefined
-  authored_at?: Maybe<ScalarsEnums['timestamptz']>
-  id?: Maybe<ScalarsEnums['uuid']>
-  list_id?: Maybe<ScalarsEnums['uuid']>
-  native_data_unique_key?: Maybe<ScalarsEnums['String']>
-  rating?: Maybe<ScalarsEnums['numeric']>
-  restaurant_id?: Maybe<ScalarsEnums['uuid']>
-  source?: Maybe<ScalarsEnums['String']>
-  tag_id?: Maybe<ScalarsEnums['uuid']>
-  text?: Maybe<ScalarsEnums['String']>
-  type?: Maybe<ScalarsEnums['String']>
-  updated_at?: Maybe<ScalarsEnums['timestamptz']>
-  user_id?: Maybe<ScalarsEnums['uuid']>
-  username?: Maybe<ScalarsEnums['String']>
-  vote?: Maybe<ScalarsEnums['numeric']>
+  authored_at?: ScalarsEnums['timestamptz']
+  id?: ScalarsEnums['uuid']
+  list_id?: ScalarsEnums['uuid']
+  native_data_unique_key?: ScalarsEnums['String']
+  rating?: ScalarsEnums['numeric']
+  restaurant_id?: ScalarsEnums['uuid']
+  source?: ScalarsEnums['String']
+  tag_id?: ScalarsEnums['uuid']
+  text?: ScalarsEnums['String']
+  type?: ScalarsEnums['String']
+  updated_at?: ScalarsEnums['timestamptz']
+  user_id?: ScalarsEnums['uuid']
+  username?: ScalarsEnums['String']
+  vote?: ScalarsEnums['numeric']
 }
 
 /**
@@ -14310,20 +14314,20 @@ export interface review_max_fields {
  */
 export interface review_min_fields {
   __typename: 'review_min_fields' | undefined
-  authored_at?: Maybe<ScalarsEnums['timestamptz']>
-  id?: Maybe<ScalarsEnums['uuid']>
-  list_id?: Maybe<ScalarsEnums['uuid']>
-  native_data_unique_key?: Maybe<ScalarsEnums['String']>
-  rating?: Maybe<ScalarsEnums['numeric']>
-  restaurant_id?: Maybe<ScalarsEnums['uuid']>
-  source?: Maybe<ScalarsEnums['String']>
-  tag_id?: Maybe<ScalarsEnums['uuid']>
-  text?: Maybe<ScalarsEnums['String']>
-  type?: Maybe<ScalarsEnums['String']>
-  updated_at?: Maybe<ScalarsEnums['timestamptz']>
-  user_id?: Maybe<ScalarsEnums['uuid']>
-  username?: Maybe<ScalarsEnums['String']>
-  vote?: Maybe<ScalarsEnums['numeric']>
+  authored_at?: ScalarsEnums['timestamptz']
+  id?: ScalarsEnums['uuid']
+  list_id?: ScalarsEnums['uuid']
+  native_data_unique_key?: ScalarsEnums['String']
+  rating?: ScalarsEnums['numeric']
+  restaurant_id?: ScalarsEnums['uuid']
+  source?: ScalarsEnums['String']
+  tag_id?: ScalarsEnums['uuid']
+  text?: ScalarsEnums['String']
+  type?: ScalarsEnums['String']
+  updated_at?: ScalarsEnums['timestamptz']
+  user_id?: ScalarsEnums['uuid']
+  username?: ScalarsEnums['String']
+  vote?: ScalarsEnums['numeric']
 }
 
 /**
@@ -14346,8 +14350,8 @@ export interface review_mutation_response {
  */
 export interface review_stddev_fields {
   __typename: 'review_stddev_fields' | undefined
-  rating?: Maybe<ScalarsEnums['Float']>
-  vote?: Maybe<ScalarsEnums['Float']>
+  rating?: ScalarsEnums['Float']
+  vote?: ScalarsEnums['Float']
 }
 
 /**
@@ -14355,8 +14359,8 @@ export interface review_stddev_fields {
  */
 export interface review_stddev_pop_fields {
   __typename: 'review_stddev_pop_fields' | undefined
-  rating?: Maybe<ScalarsEnums['Float']>
-  vote?: Maybe<ScalarsEnums['Float']>
+  rating?: ScalarsEnums['Float']
+  vote?: ScalarsEnums['Float']
 }
 
 /**
@@ -14364,8 +14368,8 @@ export interface review_stddev_pop_fields {
  */
 export interface review_stddev_samp_fields {
   __typename: 'review_stddev_samp_fields' | undefined
-  rating?: Maybe<ScalarsEnums['Float']>
-  vote?: Maybe<ScalarsEnums['Float']>
+  rating?: ScalarsEnums['Float']
+  vote?: ScalarsEnums['Float']
 }
 
 /**
@@ -14373,8 +14377,8 @@ export interface review_stddev_samp_fields {
  */
 export interface review_sum_fields {
   __typename: 'review_sum_fields' | undefined
-  rating?: Maybe<ScalarsEnums['numeric']>
-  vote?: Maybe<ScalarsEnums['numeric']>
+  rating?: ScalarsEnums['numeric']
+  vote?: ScalarsEnums['numeric']
 }
 
 /**
@@ -14383,9 +14387,9 @@ export interface review_sum_fields {
 export interface review_tag_sentence {
   __typename: 'review_tag_sentence' | undefined
   id: ScalarsEnums['uuid']
-  ml_sentiment?: Maybe<ScalarsEnums['numeric']>
+  ml_sentiment?: ScalarsEnums['numeric']
   naive_sentiment: ScalarsEnums['numeric']
-  restaurant_id?: Maybe<ScalarsEnums['uuid']>
+  restaurant_id?: ScalarsEnums['uuid']
   /**
    * An object relationship
    */
@@ -14415,9 +14419,9 @@ export interface review_tag_sentence_aggregate_fields {
   __typename: 'review_tag_sentence_aggregate_fields' | undefined
   avg?: Maybe<review_tag_sentence_avg_fields>
   count: (args?: {
-    columns?: Maybe<Array<review_tag_sentence_select_column>>
-    distinct?: Maybe<Scalars['Boolean']>
-  }) => Maybe<ScalarsEnums['Int']>
+    columns?: Array<ScalarsEnums['review_tag_sentence_select_column']>
+    distinct?: ScalarsEnums['Boolean']
+  }) => ScalarsEnums['Int']
   max?: Maybe<review_tag_sentence_max_fields>
   min?: Maybe<review_tag_sentence_min_fields>
   stddev?: Maybe<review_tag_sentence_stddev_fields>
@@ -14434,8 +14438,8 @@ export interface review_tag_sentence_aggregate_fields {
  */
 export interface review_tag_sentence_avg_fields {
   __typename: 'review_tag_sentence_avg_fields' | undefined
-  ml_sentiment?: Maybe<ScalarsEnums['Float']>
-  naive_sentiment?: Maybe<ScalarsEnums['Float']>
+  ml_sentiment?: ScalarsEnums['Float']
+  naive_sentiment?: ScalarsEnums['Float']
 }
 
 /**
@@ -14443,13 +14447,13 @@ export interface review_tag_sentence_avg_fields {
  */
 export interface review_tag_sentence_max_fields {
   __typename: 'review_tag_sentence_max_fields' | undefined
-  id?: Maybe<ScalarsEnums['uuid']>
-  ml_sentiment?: Maybe<ScalarsEnums['numeric']>
-  naive_sentiment?: Maybe<ScalarsEnums['numeric']>
-  restaurant_id?: Maybe<ScalarsEnums['uuid']>
-  review_id?: Maybe<ScalarsEnums['uuid']>
-  sentence?: Maybe<ScalarsEnums['String']>
-  tag_id?: Maybe<ScalarsEnums['uuid']>
+  id?: ScalarsEnums['uuid']
+  ml_sentiment?: ScalarsEnums['numeric']
+  naive_sentiment?: ScalarsEnums['numeric']
+  restaurant_id?: ScalarsEnums['uuid']
+  review_id?: ScalarsEnums['uuid']
+  sentence?: ScalarsEnums['String']
+  tag_id?: ScalarsEnums['uuid']
 }
 
 /**
@@ -14457,13 +14461,13 @@ export interface review_tag_sentence_max_fields {
  */
 export interface review_tag_sentence_min_fields {
   __typename: 'review_tag_sentence_min_fields' | undefined
-  id?: Maybe<ScalarsEnums['uuid']>
-  ml_sentiment?: Maybe<ScalarsEnums['numeric']>
-  naive_sentiment?: Maybe<ScalarsEnums['numeric']>
-  restaurant_id?: Maybe<ScalarsEnums['uuid']>
-  review_id?: Maybe<ScalarsEnums['uuid']>
-  sentence?: Maybe<ScalarsEnums['String']>
-  tag_id?: Maybe<ScalarsEnums['uuid']>
+  id?: ScalarsEnums['uuid']
+  ml_sentiment?: ScalarsEnums['numeric']
+  naive_sentiment?: ScalarsEnums['numeric']
+  restaurant_id?: ScalarsEnums['uuid']
+  review_id?: ScalarsEnums['uuid']
+  sentence?: ScalarsEnums['String']
+  tag_id?: ScalarsEnums['uuid']
 }
 
 /**
@@ -14486,8 +14490,8 @@ export interface review_tag_sentence_mutation_response {
  */
 export interface review_tag_sentence_stddev_fields {
   __typename: 'review_tag_sentence_stddev_fields' | undefined
-  ml_sentiment?: Maybe<ScalarsEnums['Float']>
-  naive_sentiment?: Maybe<ScalarsEnums['Float']>
+  ml_sentiment?: ScalarsEnums['Float']
+  naive_sentiment?: ScalarsEnums['Float']
 }
 
 /**
@@ -14495,8 +14499,8 @@ export interface review_tag_sentence_stddev_fields {
  */
 export interface review_tag_sentence_stddev_pop_fields {
   __typename: 'review_tag_sentence_stddev_pop_fields' | undefined
-  ml_sentiment?: Maybe<ScalarsEnums['Float']>
-  naive_sentiment?: Maybe<ScalarsEnums['Float']>
+  ml_sentiment?: ScalarsEnums['Float']
+  naive_sentiment?: ScalarsEnums['Float']
 }
 
 /**
@@ -14504,8 +14508,8 @@ export interface review_tag_sentence_stddev_pop_fields {
  */
 export interface review_tag_sentence_stddev_samp_fields {
   __typename: 'review_tag_sentence_stddev_samp_fields' | undefined
-  ml_sentiment?: Maybe<ScalarsEnums['Float']>
-  naive_sentiment?: Maybe<ScalarsEnums['Float']>
+  ml_sentiment?: ScalarsEnums['Float']
+  naive_sentiment?: ScalarsEnums['Float']
 }
 
 /**
@@ -14513,8 +14517,8 @@ export interface review_tag_sentence_stddev_samp_fields {
  */
 export interface review_tag_sentence_sum_fields {
   __typename: 'review_tag_sentence_sum_fields' | undefined
-  ml_sentiment?: Maybe<ScalarsEnums['numeric']>
-  naive_sentiment?: Maybe<ScalarsEnums['numeric']>
+  ml_sentiment?: ScalarsEnums['numeric']
+  naive_sentiment?: ScalarsEnums['numeric']
 }
 
 /**
@@ -14522,8 +14526,8 @@ export interface review_tag_sentence_sum_fields {
  */
 export interface review_tag_sentence_var_pop_fields {
   __typename: 'review_tag_sentence_var_pop_fields' | undefined
-  ml_sentiment?: Maybe<ScalarsEnums['Float']>
-  naive_sentiment?: Maybe<ScalarsEnums['Float']>
+  ml_sentiment?: ScalarsEnums['Float']
+  naive_sentiment?: ScalarsEnums['Float']
 }
 
 /**
@@ -14531,8 +14535,8 @@ export interface review_tag_sentence_var_pop_fields {
  */
 export interface review_tag_sentence_var_samp_fields {
   __typename: 'review_tag_sentence_var_samp_fields' | undefined
-  ml_sentiment?: Maybe<ScalarsEnums['Float']>
-  naive_sentiment?: Maybe<ScalarsEnums['Float']>
+  ml_sentiment?: ScalarsEnums['Float']
+  naive_sentiment?: ScalarsEnums['Float']
 }
 
 /**
@@ -14540,8 +14544,8 @@ export interface review_tag_sentence_var_samp_fields {
  */
 export interface review_tag_sentence_variance_fields {
   __typename: 'review_tag_sentence_variance_fields' | undefined
-  ml_sentiment?: Maybe<ScalarsEnums['Float']>
-  naive_sentiment?: Maybe<ScalarsEnums['Float']>
+  ml_sentiment?: ScalarsEnums['Float']
+  naive_sentiment?: ScalarsEnums['Float']
 }
 
 /**
@@ -14549,8 +14553,8 @@ export interface review_tag_sentence_variance_fields {
  */
 export interface review_var_pop_fields {
   __typename: 'review_var_pop_fields' | undefined
-  rating?: Maybe<ScalarsEnums['Float']>
-  vote?: Maybe<ScalarsEnums['Float']>
+  rating?: ScalarsEnums['Float']
+  vote?: ScalarsEnums['Float']
 }
 
 /**
@@ -14558,8 +14562,8 @@ export interface review_var_pop_fields {
  */
 export interface review_var_samp_fields {
   __typename: 'review_var_samp_fields' | undefined
-  rating?: Maybe<ScalarsEnums['Float']>
-  vote?: Maybe<ScalarsEnums['Float']>
+  rating?: ScalarsEnums['Float']
+  vote?: ScalarsEnums['Float']
 }
 
 /**
@@ -14567,8 +14571,8 @@ export interface review_var_samp_fields {
  */
 export interface review_variance_fields {
   __typename: 'review_variance_fields' | undefined
-  rating?: Maybe<ScalarsEnums['Float']>
-  vote?: Maybe<ScalarsEnums['Float']>
+  rating?: ScalarsEnums['Float']
+  vote?: ScalarsEnums['Float']
 }
 
 /**
@@ -14576,10 +14580,10 @@ export interface review_variance_fields {
  */
 export interface setting {
   __typename: 'setting' | undefined
-  created_at?: Maybe<ScalarsEnums['timestamptz']>
+  created_at?: ScalarsEnums['timestamptz']
   id: ScalarsEnums['uuid']
   key: ScalarsEnums['String']
-  updated_at?: Maybe<ScalarsEnums['timestamptz']>
+  updated_at?: ScalarsEnums['timestamptz']
   value: ScalarsEnums['jsonb']
 }
 
@@ -14598,9 +14602,9 @@ export interface setting_aggregate {
 export interface setting_aggregate_fields {
   __typename: 'setting_aggregate_fields' | undefined
   count: (args?: {
-    columns?: Maybe<Array<setting_select_column>>
-    distinct?: Maybe<Scalars['Boolean']>
-  }) => Maybe<ScalarsEnums['Int']>
+    columns?: Array<ScalarsEnums['setting_select_column']>
+    distinct?: ScalarsEnums['Boolean']
+  }) => ScalarsEnums['Int']
   max?: Maybe<setting_max_fields>
   min?: Maybe<setting_min_fields>
 }
@@ -14610,10 +14614,10 @@ export interface setting_aggregate_fields {
  */
 export interface setting_max_fields {
   __typename: 'setting_max_fields' | undefined
-  created_at?: Maybe<ScalarsEnums['timestamptz']>
-  id?: Maybe<ScalarsEnums['uuid']>
-  key?: Maybe<ScalarsEnums['String']>
-  updated_at?: Maybe<ScalarsEnums['timestamptz']>
+  created_at?: ScalarsEnums['timestamptz']
+  id?: ScalarsEnums['uuid']
+  key?: ScalarsEnums['String']
+  updated_at?: ScalarsEnums['timestamptz']
 }
 
 /**
@@ -14621,10 +14625,10 @@ export interface setting_max_fields {
  */
 export interface setting_min_fields {
   __typename: 'setting_min_fields' | undefined
-  created_at?: Maybe<ScalarsEnums['timestamptz']>
-  id?: Maybe<ScalarsEnums['uuid']>
-  key?: Maybe<ScalarsEnums['String']>
-  updated_at?: Maybe<ScalarsEnums['timestamptz']>
+  created_at?: ScalarsEnums['timestamptz']
+  id?: ScalarsEnums['uuid']
+  key?: ScalarsEnums['String']
+  updated_at?: ScalarsEnums['timestamptz']
 }
 
 /**
@@ -14647,7 +14651,7 @@ export interface setting_mutation_response {
  */
 export interface tag {
   __typename: 'tag' | undefined
-  alternates?: Maybe<ScalarsEnums['jsonb']>
+  alternates?: ScalarsEnums['jsonb']
   /**
    * An array relationship
    */
@@ -14655,15 +14659,15 @@ export interface tag {
     /**
      * distinct select on columns
      */
-    distinct_on?: Maybe<Array<tag_tag_select_column>>
+    distinct_on?: Array<ScalarsEnums['tag_tag_select_column']>
     /**
      * limit the number of rows returned
      */
-    limit?: Maybe<Scalars['Int']>
+    limit?: ScalarsEnums['Int']
     /**
      * skip the first n rows. Use only with order_by
      */
-    offset?: Maybe<Scalars['Int']>
+    offset?: ScalarsEnums['Int']
     /**
      * sort the rows by one or more columns
      */
@@ -14680,15 +14684,15 @@ export interface tag {
     /**
      * distinct select on columns
      */
-    distinct_on?: Maybe<Array<tag_tag_select_column>>
+    distinct_on?: Array<ScalarsEnums['tag_tag_select_column']>
     /**
      * limit the number of rows returned
      */
-    limit?: Maybe<Scalars['Int']>
+    limit?: ScalarsEnums['Int']
     /**
      * skip the first n rows. Use only with order_by
      */
-    offset?: Maybe<Scalars['Int']>
+    offset?: ScalarsEnums['Int']
     /**
      * sort the rows by one or more columns
      */
@@ -14699,23 +14703,23 @@ export interface tag {
     where?: Maybe<tag_tag_bool_exp>
   }) => tag_tag_aggregate
   created_at: ScalarsEnums['timestamptz']
-  default_image?: Maybe<ScalarsEnums['String']>
-  default_images?: Maybe<ScalarsEnums['jsonb']>
-  description?: Maybe<ScalarsEnums['String']>
-  displayName?: Maybe<ScalarsEnums['String']>
-  frequency?: Maybe<ScalarsEnums['Int']>
-  icon?: Maybe<ScalarsEnums['String']>
+  default_image?: ScalarsEnums['String']
+  default_images?: ScalarsEnums['jsonb']
+  description?: ScalarsEnums['String']
+  displayName?: ScalarsEnums['String']
+  frequency?: ScalarsEnums['Int']
+  icon?: ScalarsEnums['String']
   id: ScalarsEnums['uuid']
   is_ambiguous: ScalarsEnums['Boolean']
-  misc?: Maybe<ScalarsEnums['jsonb']>
+  misc?: ScalarsEnums['jsonb']
   name: ScalarsEnums['String']
   order: ScalarsEnums['Int']
   /**
    * An object relationship
    */
   parent?: Maybe<tag>
-  parentId?: Maybe<ScalarsEnums['uuid']>
-  popularity?: Maybe<ScalarsEnums['Int']>
+  parentId?: ScalarsEnums['uuid']
+  popularity?: ScalarsEnums['Int']
   /**
    * An array relationship
    */
@@ -14723,15 +14727,15 @@ export interface tag {
     /**
      * distinct select on columns
      */
-    distinct_on?: Maybe<Array<restaurant_tag_select_column>>
+    distinct_on?: Array<ScalarsEnums['restaurant_tag_select_column']>
     /**
      * limit the number of rows returned
      */
-    limit?: Maybe<Scalars['Int']>
+    limit?: ScalarsEnums['Int']
     /**
      * skip the first n rows. Use only with order_by
      */
-    offset?: Maybe<Scalars['Int']>
+    offset?: ScalarsEnums['Int']
     /**
      * sort the rows by one or more columns
      */
@@ -14748,15 +14752,15 @@ export interface tag {
     /**
      * distinct select on columns
      */
-    distinct_on?: Maybe<Array<restaurant_tag_select_column>>
+    distinct_on?: Array<ScalarsEnums['restaurant_tag_select_column']>
     /**
      * limit the number of rows returned
      */
-    limit?: Maybe<Scalars['Int']>
+    limit?: ScalarsEnums['Int']
     /**
      * skip the first n rows. Use only with order_by
      */
-    offset?: Maybe<Scalars['Int']>
+    offset?: ScalarsEnums['Int']
     /**
      * sort the rows by one or more columns
      */
@@ -14766,9 +14770,9 @@ export interface tag {
      */
     where?: Maybe<restaurant_tag_bool_exp>
   }) => restaurant_tag_aggregate
-  rgb?: Maybe<ScalarsEnums['jsonb']>
-  slug?: Maybe<ScalarsEnums['String']>
-  type?: Maybe<ScalarsEnums['String']>
+  rgb?: ScalarsEnums['jsonb']
+  slug?: ScalarsEnums['String']
+  type?: ScalarsEnums['String']
   updated_at: ScalarsEnums['timestamptz']
 }
 
@@ -14788,9 +14792,9 @@ export interface tag_aggregate_fields {
   __typename: 'tag_aggregate_fields' | undefined
   avg?: Maybe<tag_avg_fields>
   count: (args?: {
-    columns?: Maybe<Array<tag_select_column>>
-    distinct?: Maybe<Scalars['Boolean']>
-  }) => Maybe<ScalarsEnums['Int']>
+    columns?: Array<ScalarsEnums['tag_select_column']>
+    distinct?: ScalarsEnums['Boolean']
+  }) => ScalarsEnums['Int']
   max?: Maybe<tag_max_fields>
   min?: Maybe<tag_min_fields>
   stddev?: Maybe<tag_stddev_fields>
@@ -14807,9 +14811,9 @@ export interface tag_aggregate_fields {
  */
 export interface tag_avg_fields {
   __typename: 'tag_avg_fields' | undefined
-  frequency?: Maybe<ScalarsEnums['Float']>
-  order?: Maybe<ScalarsEnums['Float']>
-  popularity?: Maybe<ScalarsEnums['Float']>
+  frequency?: ScalarsEnums['Float']
+  order?: ScalarsEnums['Float']
+  popularity?: ScalarsEnums['Float']
 }
 
 /**
@@ -14817,20 +14821,20 @@ export interface tag_avg_fields {
  */
 export interface tag_max_fields {
   __typename: 'tag_max_fields' | undefined
-  created_at?: Maybe<ScalarsEnums['timestamptz']>
-  default_image?: Maybe<ScalarsEnums['String']>
-  description?: Maybe<ScalarsEnums['String']>
-  displayName?: Maybe<ScalarsEnums['String']>
-  frequency?: Maybe<ScalarsEnums['Int']>
-  icon?: Maybe<ScalarsEnums['String']>
-  id?: Maybe<ScalarsEnums['uuid']>
-  name?: Maybe<ScalarsEnums['String']>
-  order?: Maybe<ScalarsEnums['Int']>
-  parentId?: Maybe<ScalarsEnums['uuid']>
-  popularity?: Maybe<ScalarsEnums['Int']>
-  slug?: Maybe<ScalarsEnums['String']>
-  type?: Maybe<ScalarsEnums['String']>
-  updated_at?: Maybe<ScalarsEnums['timestamptz']>
+  created_at?: ScalarsEnums['timestamptz']
+  default_image?: ScalarsEnums['String']
+  description?: ScalarsEnums['String']
+  displayName?: ScalarsEnums['String']
+  frequency?: ScalarsEnums['Int']
+  icon?: ScalarsEnums['String']
+  id?: ScalarsEnums['uuid']
+  name?: ScalarsEnums['String']
+  order?: ScalarsEnums['Int']
+  parentId?: ScalarsEnums['uuid']
+  popularity?: ScalarsEnums['Int']
+  slug?: ScalarsEnums['String']
+  type?: ScalarsEnums['String']
+  updated_at?: ScalarsEnums['timestamptz']
 }
 
 /**
@@ -14838,20 +14842,20 @@ export interface tag_max_fields {
  */
 export interface tag_min_fields {
   __typename: 'tag_min_fields' | undefined
-  created_at?: Maybe<ScalarsEnums['timestamptz']>
-  default_image?: Maybe<ScalarsEnums['String']>
-  description?: Maybe<ScalarsEnums['String']>
-  displayName?: Maybe<ScalarsEnums['String']>
-  frequency?: Maybe<ScalarsEnums['Int']>
-  icon?: Maybe<ScalarsEnums['String']>
-  id?: Maybe<ScalarsEnums['uuid']>
-  name?: Maybe<ScalarsEnums['String']>
-  order?: Maybe<ScalarsEnums['Int']>
-  parentId?: Maybe<ScalarsEnums['uuid']>
-  popularity?: Maybe<ScalarsEnums['Int']>
-  slug?: Maybe<ScalarsEnums['String']>
-  type?: Maybe<ScalarsEnums['String']>
-  updated_at?: Maybe<ScalarsEnums['timestamptz']>
+  created_at?: ScalarsEnums['timestamptz']
+  default_image?: ScalarsEnums['String']
+  description?: ScalarsEnums['String']
+  displayName?: ScalarsEnums['String']
+  frequency?: ScalarsEnums['Int']
+  icon?: ScalarsEnums['String']
+  id?: ScalarsEnums['uuid']
+  name?: ScalarsEnums['String']
+  order?: ScalarsEnums['Int']
+  parentId?: ScalarsEnums['uuid']
+  popularity?: ScalarsEnums['Int']
+  slug?: ScalarsEnums['String']
+  type?: ScalarsEnums['String']
+  updated_at?: ScalarsEnums['timestamptz']
 }
 
 /**
@@ -14874,9 +14878,9 @@ export interface tag_mutation_response {
  */
 export interface tag_stddev_fields {
   __typename: 'tag_stddev_fields' | undefined
-  frequency?: Maybe<ScalarsEnums['Float']>
-  order?: Maybe<ScalarsEnums['Float']>
-  popularity?: Maybe<ScalarsEnums['Float']>
+  frequency?: ScalarsEnums['Float']
+  order?: ScalarsEnums['Float']
+  popularity?: ScalarsEnums['Float']
 }
 
 /**
@@ -14884,9 +14888,9 @@ export interface tag_stddev_fields {
  */
 export interface tag_stddev_pop_fields {
   __typename: 'tag_stddev_pop_fields' | undefined
-  frequency?: Maybe<ScalarsEnums['Float']>
-  order?: Maybe<ScalarsEnums['Float']>
-  popularity?: Maybe<ScalarsEnums['Float']>
+  frequency?: ScalarsEnums['Float']
+  order?: ScalarsEnums['Float']
+  popularity?: ScalarsEnums['Float']
 }
 
 /**
@@ -14894,9 +14898,9 @@ export interface tag_stddev_pop_fields {
  */
 export interface tag_stddev_samp_fields {
   __typename: 'tag_stddev_samp_fields' | undefined
-  frequency?: Maybe<ScalarsEnums['Float']>
-  order?: Maybe<ScalarsEnums['Float']>
-  popularity?: Maybe<ScalarsEnums['Float']>
+  frequency?: ScalarsEnums['Float']
+  order?: ScalarsEnums['Float']
+  popularity?: ScalarsEnums['Float']
 }
 
 /**
@@ -14904,9 +14908,9 @@ export interface tag_stddev_samp_fields {
  */
 export interface tag_sum_fields {
   __typename: 'tag_sum_fields' | undefined
-  frequency?: Maybe<ScalarsEnums['Int']>
-  order?: Maybe<ScalarsEnums['Int']>
-  popularity?: Maybe<ScalarsEnums['Int']>
+  frequency?: ScalarsEnums['Int']
+  order?: ScalarsEnums['Int']
+  popularity?: ScalarsEnums['Int']
 }
 
 /**
@@ -14941,9 +14945,9 @@ export interface tag_tag_aggregate {
 export interface tag_tag_aggregate_fields {
   __typename: 'tag_tag_aggregate_fields' | undefined
   count: (args?: {
-    columns?: Maybe<Array<tag_tag_select_column>>
-    distinct?: Maybe<Scalars['Boolean']>
-  }) => Maybe<ScalarsEnums['Int']>
+    columns?: Array<ScalarsEnums['tag_tag_select_column']>
+    distinct?: ScalarsEnums['Boolean']
+  }) => ScalarsEnums['Int']
   max?: Maybe<tag_tag_max_fields>
   min?: Maybe<tag_tag_min_fields>
 }
@@ -14953,8 +14957,8 @@ export interface tag_tag_aggregate_fields {
  */
 export interface tag_tag_max_fields {
   __typename: 'tag_tag_max_fields' | undefined
-  category_tag_id?: Maybe<ScalarsEnums['uuid']>
-  tag_id?: Maybe<ScalarsEnums['uuid']>
+  category_tag_id?: ScalarsEnums['uuid']
+  tag_id?: ScalarsEnums['uuid']
 }
 
 /**
@@ -14962,8 +14966,8 @@ export interface tag_tag_max_fields {
  */
 export interface tag_tag_min_fields {
   __typename: 'tag_tag_min_fields' | undefined
-  category_tag_id?: Maybe<ScalarsEnums['uuid']>
-  tag_id?: Maybe<ScalarsEnums['uuid']>
+  category_tag_id?: ScalarsEnums['uuid']
+  tag_id?: ScalarsEnums['uuid']
 }
 
 /**
@@ -14986,9 +14990,9 @@ export interface tag_tag_mutation_response {
  */
 export interface tag_var_pop_fields {
   __typename: 'tag_var_pop_fields' | undefined
-  frequency?: Maybe<ScalarsEnums['Float']>
-  order?: Maybe<ScalarsEnums['Float']>
-  popularity?: Maybe<ScalarsEnums['Float']>
+  frequency?: ScalarsEnums['Float']
+  order?: ScalarsEnums['Float']
+  popularity?: ScalarsEnums['Float']
 }
 
 /**
@@ -14996,9 +15000,9 @@ export interface tag_var_pop_fields {
  */
 export interface tag_var_samp_fields {
   __typename: 'tag_var_samp_fields' | undefined
-  frequency?: Maybe<ScalarsEnums['Float']>
-  order?: Maybe<ScalarsEnums['Float']>
-  popularity?: Maybe<ScalarsEnums['Float']>
+  frequency?: ScalarsEnums['Float']
+  order?: ScalarsEnums['Float']
+  popularity?: ScalarsEnums['Float']
 }
 
 /**
@@ -15006,9 +15010,9 @@ export interface tag_var_samp_fields {
  */
 export interface tag_variance_fields {
   __typename: 'tag_variance_fields' | undefined
-  frequency?: Maybe<ScalarsEnums['Float']>
-  order?: Maybe<ScalarsEnums['Float']>
-  popularity?: Maybe<ScalarsEnums['Float']>
+  frequency?: ScalarsEnums['Float']
+  order?: ScalarsEnums['Float']
+  popularity?: ScalarsEnums['Float']
 }
 
 /**
@@ -15016,15 +15020,15 @@ export interface tag_variance_fields {
  */
 export interface user {
   __typename: 'user' | undefined
-  about?: Maybe<ScalarsEnums['String']>
-  apple_email?: Maybe<ScalarsEnums['String']>
-  apple_refresh_token?: Maybe<ScalarsEnums['String']>
-  apple_token?: Maybe<ScalarsEnums['String']>
-  apple_uid?: Maybe<ScalarsEnums['String']>
-  avatar?: Maybe<ScalarsEnums['String']>
+  about?: ScalarsEnums['String']
+  apple_email?: ScalarsEnums['String']
+  apple_refresh_token?: ScalarsEnums['String']
+  apple_token?: ScalarsEnums['String']
+  apple_uid?: ScalarsEnums['String']
+  avatar?: ScalarsEnums['String']
   charIndex: ScalarsEnums['Int']
   created_at: ScalarsEnums['timestamptz']
-  email?: Maybe<ScalarsEnums['String']>
+  email?: ScalarsEnums['String']
   has_onboarded: ScalarsEnums['Boolean']
   id: ScalarsEnums['uuid']
   /**
@@ -15034,15 +15038,15 @@ export interface user {
     /**
      * distinct select on columns
      */
-    distinct_on?: Maybe<Array<list_select_column>>
+    distinct_on?: Array<ScalarsEnums['list_select_column']>
     /**
      * limit the number of rows returned
      */
-    limit?: Maybe<Scalars['Int']>
+    limit?: ScalarsEnums['Int']
     /**
      * skip the first n rows. Use only with order_by
      */
-    offset?: Maybe<Scalars['Int']>
+    offset?: ScalarsEnums['Int']
     /**
      * sort the rows by one or more columns
      */
@@ -15059,15 +15063,15 @@ export interface user {
     /**
      * distinct select on columns
      */
-    distinct_on?: Maybe<Array<list_select_column>>
+    distinct_on?: Array<ScalarsEnums['list_select_column']>
     /**
      * limit the number of rows returned
      */
-    limit?: Maybe<Scalars['Int']>
+    limit?: ScalarsEnums['Int']
     /**
      * skip the first n rows. Use only with order_by
      */
-    offset?: Maybe<Scalars['Int']>
+    offset?: ScalarsEnums['Int']
     /**
      * sort the rows by one or more columns
      */
@@ -15077,11 +15081,11 @@ export interface user {
      */
     where?: Maybe<list_bool_exp>
   }) => list_aggregate
-  location?: Maybe<ScalarsEnums['String']>
-  name?: Maybe<ScalarsEnums['String']>
+  location?: ScalarsEnums['String']
+  name?: ScalarsEnums['String']
   password: ScalarsEnums['String']
-  password_reset_date?: Maybe<ScalarsEnums['timestamptz']>
-  password_reset_token?: Maybe<ScalarsEnums['String']>
+  password_reset_date?: ScalarsEnums['timestamptz']
+  password_reset_token?: ScalarsEnums['String']
   /**
    * An array relationship
    */
@@ -15089,15 +15093,15 @@ export interface user {
     /**
      * distinct select on columns
      */
-    distinct_on?: Maybe<Array<review_select_column>>
+    distinct_on?: Array<ScalarsEnums['review_select_column']>
     /**
      * limit the number of rows returned
      */
-    limit?: Maybe<Scalars['Int']>
+    limit?: ScalarsEnums['Int']
     /**
      * skip the first n rows. Use only with order_by
      */
-    offset?: Maybe<Scalars['Int']>
+    offset?: ScalarsEnums['Int']
     /**
      * sort the rows by one or more columns
      */
@@ -15114,15 +15118,15 @@ export interface user {
     /**
      * distinct select on columns
      */
-    distinct_on?: Maybe<Array<review_select_column>>
+    distinct_on?: Array<ScalarsEnums['review_select_column']>
     /**
      * limit the number of rows returned
      */
-    limit?: Maybe<Scalars['Int']>
+    limit?: ScalarsEnums['Int']
     /**
      * skip the first n rows. Use only with order_by
      */
-    offset?: Maybe<Scalars['Int']>
+    offset?: ScalarsEnums['Int']
     /**
      * sort the rows by one or more columns
      */
@@ -15132,7 +15136,7 @@ export interface user {
      */
     where?: Maybe<review_bool_exp>
   }) => review_aggregate
-  role?: Maybe<ScalarsEnums['String']>
+  role?: ScalarsEnums['String']
   updated_at: ScalarsEnums['timestamptz']
   username: ScalarsEnums['String']
 }
@@ -15153,9 +15157,9 @@ export interface user_aggregate_fields {
   __typename: 'user_aggregate_fields' | undefined
   avg?: Maybe<user_avg_fields>
   count: (args?: {
-    columns?: Maybe<Array<user_select_column>>
-    distinct?: Maybe<Scalars['Boolean']>
-  }) => Maybe<ScalarsEnums['Int']>
+    columns?: Array<ScalarsEnums['user_select_column']>
+    distinct?: ScalarsEnums['Boolean']
+  }) => ScalarsEnums['Int']
   max?: Maybe<user_max_fields>
   min?: Maybe<user_min_fields>
   stddev?: Maybe<user_stddev_fields>
@@ -15172,7 +15176,7 @@ export interface user_aggregate_fields {
  */
 export interface user_avg_fields {
   __typename: 'user_avg_fields' | undefined
-  charIndex?: Maybe<ScalarsEnums['Float']>
+  charIndex?: ScalarsEnums['Float']
 }
 
 /**
@@ -15180,24 +15184,24 @@ export interface user_avg_fields {
  */
 export interface user_max_fields {
   __typename: 'user_max_fields' | undefined
-  about?: Maybe<ScalarsEnums['String']>
-  apple_email?: Maybe<ScalarsEnums['String']>
-  apple_refresh_token?: Maybe<ScalarsEnums['String']>
-  apple_token?: Maybe<ScalarsEnums['String']>
-  apple_uid?: Maybe<ScalarsEnums['String']>
-  avatar?: Maybe<ScalarsEnums['String']>
-  charIndex?: Maybe<ScalarsEnums['Int']>
-  created_at?: Maybe<ScalarsEnums['timestamptz']>
-  email?: Maybe<ScalarsEnums['String']>
-  id?: Maybe<ScalarsEnums['uuid']>
-  location?: Maybe<ScalarsEnums['String']>
-  name?: Maybe<ScalarsEnums['String']>
-  password?: Maybe<ScalarsEnums['String']>
-  password_reset_date?: Maybe<ScalarsEnums['timestamptz']>
-  password_reset_token?: Maybe<ScalarsEnums['String']>
-  role?: Maybe<ScalarsEnums['String']>
-  updated_at?: Maybe<ScalarsEnums['timestamptz']>
-  username?: Maybe<ScalarsEnums['String']>
+  about?: ScalarsEnums['String']
+  apple_email?: ScalarsEnums['String']
+  apple_refresh_token?: ScalarsEnums['String']
+  apple_token?: ScalarsEnums['String']
+  apple_uid?: ScalarsEnums['String']
+  avatar?: ScalarsEnums['String']
+  charIndex?: ScalarsEnums['Int']
+  created_at?: ScalarsEnums['timestamptz']
+  email?: ScalarsEnums['String']
+  id?: ScalarsEnums['uuid']
+  location?: ScalarsEnums['String']
+  name?: ScalarsEnums['String']
+  password?: ScalarsEnums['String']
+  password_reset_date?: ScalarsEnums['timestamptz']
+  password_reset_token?: ScalarsEnums['String']
+  role?: ScalarsEnums['String']
+  updated_at?: ScalarsEnums['timestamptz']
+  username?: ScalarsEnums['String']
 }
 
 /**
@@ -15205,24 +15209,24 @@ export interface user_max_fields {
  */
 export interface user_min_fields {
   __typename: 'user_min_fields' | undefined
-  about?: Maybe<ScalarsEnums['String']>
-  apple_email?: Maybe<ScalarsEnums['String']>
-  apple_refresh_token?: Maybe<ScalarsEnums['String']>
-  apple_token?: Maybe<ScalarsEnums['String']>
-  apple_uid?: Maybe<ScalarsEnums['String']>
-  avatar?: Maybe<ScalarsEnums['String']>
-  charIndex?: Maybe<ScalarsEnums['Int']>
-  created_at?: Maybe<ScalarsEnums['timestamptz']>
-  email?: Maybe<ScalarsEnums['String']>
-  id?: Maybe<ScalarsEnums['uuid']>
-  location?: Maybe<ScalarsEnums['String']>
-  name?: Maybe<ScalarsEnums['String']>
-  password?: Maybe<ScalarsEnums['String']>
-  password_reset_date?: Maybe<ScalarsEnums['timestamptz']>
-  password_reset_token?: Maybe<ScalarsEnums['String']>
-  role?: Maybe<ScalarsEnums['String']>
-  updated_at?: Maybe<ScalarsEnums['timestamptz']>
-  username?: Maybe<ScalarsEnums['String']>
+  about?: ScalarsEnums['String']
+  apple_email?: ScalarsEnums['String']
+  apple_refresh_token?: ScalarsEnums['String']
+  apple_token?: ScalarsEnums['String']
+  apple_uid?: ScalarsEnums['String']
+  avatar?: ScalarsEnums['String']
+  charIndex?: ScalarsEnums['Int']
+  created_at?: ScalarsEnums['timestamptz']
+  email?: ScalarsEnums['String']
+  id?: ScalarsEnums['uuid']
+  location?: ScalarsEnums['String']
+  name?: ScalarsEnums['String']
+  password?: ScalarsEnums['String']
+  password_reset_date?: ScalarsEnums['timestamptz']
+  password_reset_token?: ScalarsEnums['String']
+  role?: ScalarsEnums['String']
+  updated_at?: ScalarsEnums['timestamptz']
+  username?: ScalarsEnums['String']
 }
 
 /**
@@ -15245,7 +15249,7 @@ export interface user_mutation_response {
  */
 export interface user_stddev_fields {
   __typename: 'user_stddev_fields' | undefined
-  charIndex?: Maybe<ScalarsEnums['Float']>
+  charIndex?: ScalarsEnums['Float']
 }
 
 /**
@@ -15253,7 +15257,7 @@ export interface user_stddev_fields {
  */
 export interface user_stddev_pop_fields {
   __typename: 'user_stddev_pop_fields' | undefined
-  charIndex?: Maybe<ScalarsEnums['Float']>
+  charIndex?: ScalarsEnums['Float']
 }
 
 /**
@@ -15261,7 +15265,7 @@ export interface user_stddev_pop_fields {
  */
 export interface user_stddev_samp_fields {
   __typename: 'user_stddev_samp_fields' | undefined
-  charIndex?: Maybe<ScalarsEnums['Float']>
+  charIndex?: ScalarsEnums['Float']
 }
 
 /**
@@ -15269,7 +15273,7 @@ export interface user_stddev_samp_fields {
  */
 export interface user_sum_fields {
   __typename: 'user_sum_fields' | undefined
-  charIndex?: Maybe<ScalarsEnums['Int']>
+  charIndex?: ScalarsEnums['Int']
 }
 
 /**
@@ -15277,7 +15281,7 @@ export interface user_sum_fields {
  */
 export interface user_var_pop_fields {
   __typename: 'user_var_pop_fields' | undefined
-  charIndex?: Maybe<ScalarsEnums['Float']>
+  charIndex?: ScalarsEnums['Float']
 }
 
 /**
@@ -15285,7 +15289,7 @@ export interface user_var_pop_fields {
  */
 export interface user_var_samp_fields {
   __typename: 'user_var_samp_fields' | undefined
-  charIndex?: Maybe<ScalarsEnums['Float']>
+  charIndex?: ScalarsEnums['Float']
 }
 
 /**
@@ -15293,7 +15297,7 @@ export interface user_var_samp_fields {
  */
 export interface user_variance_fields {
   __typename: 'user_variance_fields' | undefined
-  charIndex?: Maybe<ScalarsEnums['Float']>
+  charIndex?: ScalarsEnums['Float']
 }
 
 /**
@@ -15301,13 +15305,13 @@ export interface user_variance_fields {
  */
 export interface zcta5 {
   __typename: 'zcta5' | undefined
-  color?: Maybe<ScalarsEnums['String']>
-  intptlat10?: Maybe<ScalarsEnums['String']>
-  intptlon10?: Maybe<ScalarsEnums['String']>
-  nhood?: Maybe<ScalarsEnums['String']>
+  color?: ScalarsEnums['String']
+  intptlat10?: ScalarsEnums['String']
+  intptlon10?: ScalarsEnums['String']
+  nhood?: ScalarsEnums['String']
   ogc_fid: ScalarsEnums['Int']
-  slug?: Maybe<ScalarsEnums['String']>
-  wkb_geometry?: Maybe<ScalarsEnums['geometry']>
+  slug?: ScalarsEnums['String']
+  wkb_geometry?: ScalarsEnums['geometry']
 }
 
 /**
@@ -15326,9 +15330,9 @@ export interface zcta5_aggregate_fields {
   __typename: 'zcta5_aggregate_fields' | undefined
   avg?: Maybe<zcta5_avg_fields>
   count: (args?: {
-    columns?: Maybe<Array<zcta5_select_column>>
-    distinct?: Maybe<Scalars['Boolean']>
-  }) => Maybe<ScalarsEnums['Int']>
+    columns?: Array<ScalarsEnums['zcta5_select_column']>
+    distinct?: ScalarsEnums['Boolean']
+  }) => ScalarsEnums['Int']
   max?: Maybe<zcta5_max_fields>
   min?: Maybe<zcta5_min_fields>
   stddev?: Maybe<zcta5_stddev_fields>
@@ -15345,7 +15349,7 @@ export interface zcta5_aggregate_fields {
  */
 export interface zcta5_avg_fields {
   __typename: 'zcta5_avg_fields' | undefined
-  ogc_fid?: Maybe<ScalarsEnums['Float']>
+  ogc_fid?: ScalarsEnums['Float']
 }
 
 /**
@@ -15353,12 +15357,12 @@ export interface zcta5_avg_fields {
  */
 export interface zcta5_max_fields {
   __typename: 'zcta5_max_fields' | undefined
-  color?: Maybe<ScalarsEnums['String']>
-  intptlat10?: Maybe<ScalarsEnums['String']>
-  intptlon10?: Maybe<ScalarsEnums['String']>
-  nhood?: Maybe<ScalarsEnums['String']>
-  ogc_fid?: Maybe<ScalarsEnums['Int']>
-  slug?: Maybe<ScalarsEnums['String']>
+  color?: ScalarsEnums['String']
+  intptlat10?: ScalarsEnums['String']
+  intptlon10?: ScalarsEnums['String']
+  nhood?: ScalarsEnums['String']
+  ogc_fid?: ScalarsEnums['Int']
+  slug?: ScalarsEnums['String']
 }
 
 /**
@@ -15366,12 +15370,12 @@ export interface zcta5_max_fields {
  */
 export interface zcta5_min_fields {
   __typename: 'zcta5_min_fields' | undefined
-  color?: Maybe<ScalarsEnums['String']>
-  intptlat10?: Maybe<ScalarsEnums['String']>
-  intptlon10?: Maybe<ScalarsEnums['String']>
-  nhood?: Maybe<ScalarsEnums['String']>
-  ogc_fid?: Maybe<ScalarsEnums['Int']>
-  slug?: Maybe<ScalarsEnums['String']>
+  color?: ScalarsEnums['String']
+  intptlat10?: ScalarsEnums['String']
+  intptlon10?: ScalarsEnums['String']
+  nhood?: ScalarsEnums['String']
+  ogc_fid?: ScalarsEnums['Int']
+  slug?: ScalarsEnums['String']
 }
 
 /**
@@ -15394,7 +15398,7 @@ export interface zcta5_mutation_response {
  */
 export interface zcta5_stddev_fields {
   __typename: 'zcta5_stddev_fields' | undefined
-  ogc_fid?: Maybe<ScalarsEnums['Float']>
+  ogc_fid?: ScalarsEnums['Float']
 }
 
 /**
@@ -15402,7 +15406,7 @@ export interface zcta5_stddev_fields {
  */
 export interface zcta5_stddev_pop_fields {
   __typename: 'zcta5_stddev_pop_fields' | undefined
-  ogc_fid?: Maybe<ScalarsEnums['Float']>
+  ogc_fid?: ScalarsEnums['Float']
 }
 
 /**
@@ -15410,7 +15414,7 @@ export interface zcta5_stddev_pop_fields {
  */
 export interface zcta5_stddev_samp_fields {
   __typename: 'zcta5_stddev_samp_fields' | undefined
-  ogc_fid?: Maybe<ScalarsEnums['Float']>
+  ogc_fid?: ScalarsEnums['Float']
 }
 
 /**
@@ -15418,7 +15422,7 @@ export interface zcta5_stddev_samp_fields {
  */
 export interface zcta5_sum_fields {
   __typename: 'zcta5_sum_fields' | undefined
-  ogc_fid?: Maybe<ScalarsEnums['Int']>
+  ogc_fid?: ScalarsEnums['Int']
 }
 
 /**
@@ -15426,7 +15430,7 @@ export interface zcta5_sum_fields {
  */
 export interface zcta5_var_pop_fields {
   __typename: 'zcta5_var_pop_fields' | undefined
-  ogc_fid?: Maybe<ScalarsEnums['Float']>
+  ogc_fid?: ScalarsEnums['Float']
 }
 
 /**
@@ -15434,7 +15438,7 @@ export interface zcta5_var_pop_fields {
  */
 export interface zcta5_var_samp_fields {
   __typename: 'zcta5_var_samp_fields' | undefined
-  ogc_fid?: Maybe<ScalarsEnums['Float']>
+  ogc_fid?: ScalarsEnums['Float']
 }
 
 /**
@@ -15442,7 +15446,7 @@ export interface zcta5_var_samp_fields {
  */
 export interface zcta5_variance_fields {
   __typename: 'zcta5_variance_fields' | undefined
-  ogc_fid?: Maybe<ScalarsEnums['Float']>
+  ogc_fid?: ScalarsEnums['Float']
 }
 
 export interface SchemaObjectTypes {

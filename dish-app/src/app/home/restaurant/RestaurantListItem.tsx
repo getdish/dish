@@ -58,7 +58,7 @@ import { openingHours, priceRange } from './RestaurantDetailRow'
 import { RestaurantFavoriteStar } from './RestaurantFavoriteButton'
 import { useTotalReviews } from './useTotalReviews'
 
-export const ITEM_HEIGHT = 315
+export const ITEM_HEIGHT = 300
 
 type RestaurantListItemProps = {
   curLocInfo: GeocodePlace | null

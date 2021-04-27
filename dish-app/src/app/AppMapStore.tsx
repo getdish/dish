@@ -1,4 +1,4 @@
-import { series } from '@dish/async'
+import { series, sleep } from '@dish/async'
 import {
   LngLat,
   MapPosition,
@@ -295,6 +295,10 @@ export const useSetAppMap = (
     if (!isActive) return
 
     const disposeSeries = series([
+      () => {
+        // fetch map items after page may be fetched so we may get cache hits
+        return sleep(200)
+      },
       async () => {
         const all = results
         if (!all) return

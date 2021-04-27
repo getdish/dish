@@ -118,6 +118,7 @@ export const RestaurantOverview = memo(
                 fontSize={fontSize}
                 lineHeight={lineHeight}
                 opacity={1}
+                minHeight={lineHeight * 2}
                 // fontWeight="500"
                 color={theme.colorSecondary}
               >

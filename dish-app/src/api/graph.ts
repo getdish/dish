@@ -7,6 +7,7 @@ import { Request } from 'express'
 import { FieldNode, SelectionNode, print } from 'graphql'
 import { DefinitionNode, OperationDefinitionNode } from 'graphql'
 import gql from 'graphql-tag'
+import { omit } from 'lodash'
 
 import { redisClient, redisGet } from './_rc'
 
@@ -16,8 +17,6 @@ const hasuraHeaders = {
     'x-hasura-admin-secret': process.env.HASURA_GRAPHQL_ADMIN_SECRET,
   }),
 }
-
-console.log('process.env.NODE_ENV', process.env.NODE_ENV)
 
 const avoidCache = !process.env.NODE_ENV || process.env.NODE_ENV === 'test'
 
@@ -55,7 +54,6 @@ export default route(async (req, res) => {
       return
     }
     const isLoggedIn = req.headers['x-user-is-logged-in'] === 'true'
-    const variablesKey = crypto.createHash('md5').update(JSON.stringify(variables)).digest('hex')
 
     const cache = await (async () => {
       if (avoidCache) {
@@ -82,7 +80,8 @@ export default route(async (req, res) => {
           continue
         }
         const name = `${selection.name.value || ''}`
-        const alias = selection.alias?.value || name
+        const alias = `${selection.alias?.value || ''}`
+
         // avoid cache
         if (isLoggedIn) {
           if (name == 'review' || name == 'user') {
@@ -90,13 +89,14 @@ export default route(async (req, res) => {
             continue
           }
         }
-        const selHash = crypto.createHash('md5').update(JSON.stringify(selection)).digest('hex')
-        const key = `${selHash}-${variablesKey}`
+        const key = `${name}-${getKey(selection, variables)}`
         keys[alias] = key
         const cached = await redisGet(key)
         if (cached) {
           vals.set(selection, cached)
           data[alias] = JSON.parse(cached)
+        } else {
+          // console.log('cache miss', alias, name, key)
         }
       }
       const uncachedSelections = selections.filter((x) => !vals.has(x))
@@ -160,7 +160,7 @@ export default route(async (req, res) => {
     for (const name in response.data) {
       const cacheKey = cache.keys[name]
       const val = response.data[name]
-      console.log('set into cache', name, cacheKey)
+      // console.log('set into cache', name, cacheKey)
       redisClient.set(cacheKey, JSON.stringify(val), () => {
         //
       })
@@ -169,7 +169,7 @@ export default route(async (req, res) => {
     // merge in cached parts to response
     for (const key in cache.data) {
       response.data[key] = cache.data[key]
-      console.log('merge cache in', key, cache.data[key])
+      // console.log('merge cache in', key)
     }
 
     res.send(response)
@@ -178,3 +178,50 @@ export default route(async (req, res) => {
     res.status(500).send({ error })
   }
 })
+
+const getKey = (obj: FieldNode | SelectionNode, variables?: any) => {
+  let key = ''
+  if ('selectionSet' in obj) {
+    if (obj.selectionSet) {
+      for (const item of obj.selectionSet.selections) {
+        key += getKey(item, variables)
+      }
+    }
+  }
+  const sortedKeys = Object.keys(obj)
+  sortedKeys.sort()
+  for (const k of sortedKeys) {
+    if (k == 'alias') continue
+    if (k === 'selectionSet') continue
+    if (k === 'kind') continue
+    const val = obj[k]
+    if (k === 'arguments') {
+      for (const arg of val) {
+        if (!arg || !arg.value) continue
+        const name = arg.value.name.value
+        if (!name) {
+          // should never hit here...
+          key += JSON.stringify(arg.value)
+          continue
+        }
+        key += JSON.stringify(variables?.[name] ?? null)
+      }
+      continue
+    }
+    if (val == null || val == undefined) continue
+    if (!val) {
+      key += val
+      continue
+    }
+    if (Array.isArray(val)) {
+      key += val.map((x) => getKey(x, variables)).join(',')
+      continue
+    }
+    if (val?.value) {
+      key += val.value
+      continue
+    }
+    key += typeof val === 'string' ? val : JSON.stringify(val)
+  }
+  return key
+}

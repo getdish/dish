@@ -1,4 +1,5 @@
 import { Store, createStore, useStoreInstance } from '@dish/use-store'
+import { debounce } from 'lodash'
 
 import { inputClearSelection, inputGetNode, inputIsTextSelected } from '../helpers/input'
 import { autocompletesStore } from './AutocompletesStore'
@@ -47,9 +48,9 @@ export const useInputStoreLocation = () => useStoreInstance(inputStoreLocation)
 export const inputStoreSearch = createStore(InputStore, { name: 'search' })
 export const useInputStoreSearch = () => useStoreInstance(inputStoreSearch)
 
-export function setNodeOnInputStore(inputStore: InputStore, view: any) {
+export const setNodeOnInputStore = debounce((inputStore: InputStore, view: any) => {
   if (!view) return
   const next = inputGetNode(view)
   if (!next) return
   inputStore.setNode(next)
-}
+}, 20)
