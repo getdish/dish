@@ -46,25 +46,31 @@ export const SearchHeader = memo(() => {
                 paddingRight={25}
                 paddingVertical={5}
                 marginBottom={-3}
-                backgroundColor={rgbString(lenseColor)}
+                borderColor={rgbString(lenseColor)}
+                borderWidth={2}
+                backgroundColor="transparent"
               >
                 <VStack alignItems="center" paddingTop={isWeb ? 0 : 5}>
-                  <Text height={28} fontWeight="800" color="#fff" fontSize={24} lineHeight={28}>
+                  <Text
+                    marginTop={-2}
+                    height={28}
+                    fontWeight="800"
+                    color="#fff"
+                    fontSize={22}
+                    lineHeight={28}
+                  >
                     {title}
                   </Text>
                   {!!subTitle && (
-                    <>
-                      <Spacer size={2} />
-                      <Text
-                        color="#fff"
-                        opacity={0.8}
-                        className="nobreak"
-                        fontSize={16}
-                        fontWeight="300"
-                      >
-                        {subTitle}
-                      </Text>
-                    </>
+                    <Text
+                      color="#fff"
+                      opacity={0.8}
+                      className="nobreak"
+                      fontSize={16}
+                      fontWeight="300"
+                    >
+                      {subTitle}
+                    </Text>
                   )}
                 </VStack>
               </SlantedTitle>

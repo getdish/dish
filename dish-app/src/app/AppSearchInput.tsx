@@ -358,6 +358,7 @@ const handleKeyPress = async (e: any, inputStore: InputStore) => {
       // just searching normal
       const item = results[index - 1]
       const isSelectingFromList = isAutocompleteActive && item && index !== 0
+
       if (isSelectingFromList) {
         if (item.type === 'restaurant') {
           router.navigate({

@@ -543,6 +543,10 @@ body > div {
   -webkit-mask-image: -webkit-radial-gradient(white, black);
 }
 
+.chrome-fix-overflow {
+  transform: translateZ(0);
+}
+
 mark {
   display: inline !important;
 }

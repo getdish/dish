@@ -44,12 +44,12 @@ export const HomeDrawerSmallView = memo((props: { children: any }) => {
       onMoveShouldSetPanResponder: (_, { dy }) => {
         try {
           assert(!isTouchingSearchBar, 'touching searchbar')
-          const isAtTop = isScrollAtTop.get(contentParent.activeId)
+          const isAtTop = isScrollAtTop.get(contentParent.activeId) ?? true
           // if at top, we avoid checking lock
           if (!isAtTop) {
+            return false
             assert(!isScrollLocked(contentParent.activeId), 'scroll locked')
           }
-          assert(isAtTop || dy <= 6, 'scrolled down a bit while dragging up')
           if (drawer.snapIndex === 2) {
             // try and prevent grabbing both horizontal + vertical
             return Math.abs(dy) > 12

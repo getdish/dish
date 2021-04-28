@@ -19,7 +19,7 @@ class AutocompletesStore extends Store {
     this.target = n
   }
 
-  get active() {
+  get activeStore() {
     if (!this.visible) return null
     if (this.target === 'location') return autocompleteLocationStore
     return autocompleteSearchStore

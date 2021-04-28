@@ -17,7 +17,7 @@ export function searchRestaurants(
         location: {
           _st_d_within: {
             // search outside current bounds a bit
-            distance: Math.max(span.lng, span.lat) * 3,
+            distance: Math.max(span.lng, span.lat) * 6,
             from: {
               type: 'Point',
               coordinates: [center.lng, center.lat],

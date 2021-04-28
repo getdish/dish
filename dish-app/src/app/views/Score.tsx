@@ -1,6 +1,7 @@
 import { supportsTouchWeb } from '@dish/helpers'
 import { ArrowDown, ArrowUp } from '@dish/react-feather'
 import React, { memo } from 'react'
+import { Paragraph } from 'snackui'
 import { AbsoluteVStack, StackProps, Text, Tooltip, VStack, useTheme } from 'snackui'
 
 import { green, grey, red } from '../../constants/colors'
@@ -153,9 +154,9 @@ export const Score = memo(
           alignItems="center"
           justifyContent="center"
         >
-          <Text fontSize={fontSize} fontWeight="700" letterSpacing={-1}>
+          <Paragraph fontSize={fontSize} fontWeight="700" letterSpacing={-1}>
             {numberFormat(score, 'sm')}
-          </Text>
+          </Paragraph>
         </VStack>
       </VStack>
     )

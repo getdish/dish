@@ -101,7 +101,7 @@ export function Card({
         {/* background */}
         <AbsoluteVStack
           fullscreen
-          className="safari-fix-overflow"
+          className="safari-fix-overflow chrome-fix-overflow"
           overflow="hidden"
           borderRadius={cardFrameBorderRadius}
           backgroundColor={backgroundColor || underColor || ''}
@@ -165,7 +165,6 @@ export function Card({
         >
           {/* title gradient */}
           <AbsoluteVStack
-            className="hover-75-opacity-child ease-in-out-slow"
             zIndex={-1}
             top={0}
             right={0}

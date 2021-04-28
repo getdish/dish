@@ -50,7 +50,7 @@ export const AutocompleteFrame = ({
       overflow="hidden"
       flex={1}
       {...(media.sm && {
-        transform: [{ translateX: 10 }],
+        transform: [{ translateY: 10 }],
       })}
 
       // DONT PUT EVENT HERE NEED TO DEBUG WHY IT BREAKS ON NATIVE
@@ -141,7 +141,7 @@ export const AutocompleteResults = ({
   return (
     <>
       {results.map((result, index) => {
-        const isActive = isTouchDevice ? index === 0 : activeIndex === index
+        const isActive = !isWeb ? index === 0 : activeIndex === index
         return (
           <React.Fragment key={`${result.id}${index}`}>
             <Theme name={isActive ? 'active' : 'dark'}>

@@ -12,7 +12,7 @@ import {
 } from 'snackui'
 
 import { isWeb, pageWidthMax, searchBarHeight, zIndexMap } from '../constants/constants'
-import { supportsTouchWeb } from '../constants/platforms'
+import { isTouchDevice, supportsTouchWeb } from '../constants/platforms'
 import { coordsToLngLat } from '../helpers/mapHelpers'
 import { router } from '../router'
 import { RegionWithVia } from '../types/homeTypes'
@@ -210,15 +210,6 @@ export default memo(function AppMap() {
   }, [])
 
   const themeName = useThemeName()
-  const handleMoveStart = useCallback(() => {
-    cancelUpdateRegion()
-    if (!isWeb || supportsTouchWeb) {
-      console.log(drawerStore.snapIndex)
-      if (drawerStore.snapIndex !== 2) {
-        drawerStore.setSnapIndex(2)
-      }
-    }
-  }, [])
 
   return (
     <HStack position="absolute" fullscreen alignItems="center" justifyContent="center">
@@ -253,23 +244,37 @@ export default memo(function AppMap() {
             </Theme>
           )}
           <AppMapControls />
-          <MapView
-            center={center}
-            span={span}
-            style={mapStyles[themeName]}
-            padding={padding}
-            features={features}
-            selected={position.id}
-            hovered={appMapStore.hovered?.id}
-            onMoveStart={handleMoveStart}
-            onMoveEnd={handleMoveEnd}
-            onDoubleClick={handleDoubleClick}
-            onHover={handleHover}
-            onSelect={handleSelect}
-            onSelectRegion={handleSelectRegion}
-            showRank={showRank}
-            hideRegions={hideRegions}
-          />
+          <VStack
+            width="100%"
+            height="100%"
+            {...(isTouchDevice && {
+              onTouchMove: () => {
+                if (!isWeb || supportsTouchWeb) {
+                  if (drawerStore.snapIndex !== 2) {
+                    drawerStore.setSnapIndex(2)
+                  }
+                }
+              },
+            })}
+          >
+            <MapView
+              center={center}
+              span={span}
+              style={mapStyles[themeName]}
+              padding={padding}
+              features={features}
+              selected={position.id}
+              hovered={appMapStore.hovered?.id}
+              // onMoveStart={handleMoveStart}
+              onMoveEnd={handleMoveEnd}
+              onDoubleClick={handleDoubleClick}
+              onHover={handleHover}
+              onSelect={handleSelect}
+              onSelectRegion={handleSelectRegion}
+              showRank={showRank}
+              hideRegions={hideRegions}
+            />
+          </VStack>
         </VStack>
       </HStack>
     </HStack>

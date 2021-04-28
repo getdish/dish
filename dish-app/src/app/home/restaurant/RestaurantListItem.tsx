@@ -187,7 +187,7 @@ const RestaurantListItemContent = memo(
     const [isExpanded, setIsExpanded] = useState(false)
 
     const contentSideProps: StackProps = {
-      width: media.sm ? '75%' : '60%',
+      width: media.sm ? '70%' : '60%',
       minWidth: media.sm ? (isWeb ? '40vw' : Dimensions.get('window').width * 0.65) : 320,
       maxWidth: Math.min(Dimensions.get('window').width * 0.74, media.sm ? 360 : 460),
     }
@@ -515,10 +515,9 @@ const RestaurantListItemContent = memo(
             {/* PEEK / TAGS (RIGHT SIDE) */}
             {/* margin top: negative the titles second row height */}
             <VStack
-              paddingLeft={10}
               position="relative"
-              marginTop={-60}
-              transform={[{ translateY: -10 }]}
+              marginTop={-55}
+              transform={[{ translateY: -10 }, { translateX: -20 }]}
               pointerEvents="none"
             >
               <Suspense fallback={null}>

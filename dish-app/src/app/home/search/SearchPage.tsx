@@ -534,9 +534,7 @@ const SearchFooter = ({
         <ArrowUp />
       </Button>
       <Spacer size={40} />
-      <Text opacity={0.5} fontSize={12}>
-        Showing {numResults} results
-      </Text>
+      <Paragraph opacity={0.5}>Showing {numResults} results</Paragraph>
     </VStack>
   )
 }

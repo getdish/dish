@@ -1,5 +1,6 @@
 import { CornerLeftUp, X } from '@dish/react-feather'
 import React, { memo } from 'react'
+import { AbsoluteVStack } from 'snackui'
 import { HStack, StackProps, useTheme } from 'snackui'
 
 type CircleButtonProps = StackProps & {
@@ -39,14 +40,13 @@ export const SmallCircleButton = ({
   return (
     <HStack
       borderRadius={1000}
-      backgroundColor={theme.colorTertiary}
       alignItems="center"
       justifyContent="center"
       hoverStyle={{
-        backgroundColor: theme.colorQuartenary,
+        opacity: 0.9,
       }}
       pressStyle={{
-        backgroundColor: theme.colorQuartenary,
+        opacity: 0.6,
       }}
       {...(shadowed && {
         shadowColor: theme.shadowColor,
@@ -69,6 +69,12 @@ export const SmallCircleButton = ({
       padding={padding}
       {...props}
     >
+      <AbsoluteVStack
+        fullscreen
+        borderRadius={1000}
+        backgroundColor={theme.colorTertiary}
+        zIndex={-1}
+      />
       {children}
     </HStack>
   )

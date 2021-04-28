@@ -19,8 +19,8 @@ export class InputStore extends Store<{ name: 'location' | 'search' }> {
   }
 
   moveActive(num: -1 | 1) {
-    if (autocompletesStore.active) {
-      autocompletesStore.active.move(num)
+    if (autocompletesStore.visible) {
+      autocompletesStore.activeStore?.move(num)
     } else {
       searchPageStore.setIndex(searchPageStore.index + num, 'key')
     }
