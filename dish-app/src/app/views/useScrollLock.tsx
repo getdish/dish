@@ -8,7 +8,7 @@ import { ScrollLock, ScrollStore } from './ContentScrollView'
 
 export const isScrollLocked = (id: string, direction?: ScrollLock) => {
   const store = getStore(ScrollStore, { id })
-  return direction ? store.lock === direction : store.lock !== 'none'
+  return direction ? store.lock === direction : store.lock !== 'none' && store.lock !== 'drawer'
 }
 
 export const useScrollLock = ({ id, direction }: { id: string; direction: ScrollLock }) => {

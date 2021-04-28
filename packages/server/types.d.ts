@@ -143,6 +143,7 @@ declare module "@dish/server" {
             serial: import("@oclif/parser/lib/flags").IBooleanFlag<boolean>;
             "no-optimize": import("@oclif/parser/lib/flags").IBooleanFlag<boolean>;
             "reset-cache": import("@oclif/parser/lib/flags").IBooleanFlag<boolean>;
+            "local-proxy": import("@oclif/parser/lib/flags").IBooleanFlag<boolean>;
         };
         run(): Promise<void>;
     }

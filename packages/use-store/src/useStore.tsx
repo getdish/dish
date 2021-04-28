@@ -417,44 +417,6 @@ function createProxiedStore(storeInfo: Omit<StoreInfo, 'store' | 'source'>) {
       }
       const isDebugging = DebugStores.has(constr)
       if (typeof key === 'string') {
-        if (storeAccessTrackers.size && !storeAccessTrackers.has(storeInstance)) {
-          storeAccessTrackers.forEach((t) => {
-            t(storeInstance)
-          })
-        }
-        if (gettersState.isGetting) {
-          gettersState.curGetKeys.add(key)
-        }
-        if (key in getters) {
-          if (!gettersState.isGetting) {
-            storeInstance[TRACK](key)
-          }
-          if (getCache.has(key)) {
-            return getCache.get(key)
-          }
-          // track get deps
-          curGetKeys.clear()
-          const isSubGetter = gettersState.isGetting
-          gettersState.isGetting = true
-          const res = getters[key].call(proxiedStore)
-          if (!isSubGetter) {
-            gettersState.isGetting = false
-          }
-          // store inverse lookup
-          curGetKeys.forEach((gk) => {
-            if (!depsToGetter.has(gk)) {
-              depsToGetter.set(gk, new Set())
-            }
-            const cur = depsToGetter.get(gk)!
-            cur.add(key)
-          })
-          // TODO i added this !isSubGetter, seems logical but haven't validated
-          // has diff performance tradeoffs, not sure whats desirable
-          // if (!isSubGetter) {
-          getCache.set(key, res)
-          // }
-          return res
-        }
         if (key in actions) {
           // wrap action and call didSet after
           const actionFn = actions[key]
@@ -589,6 +551,44 @@ function createProxiedStore(storeInfo: Omit<StoreInfo, 'store' | 'source'>) {
           }
 
           return action
+        }
+        if (storeAccessTrackers.size && !storeAccessTrackers.has(storeInstance)) {
+          storeAccessTrackers.forEach((t) => {
+            t(storeInstance)
+          })
+        }
+        if (gettersState.isGetting) {
+          gettersState.curGetKeys.add(key)
+        }
+        if (key in getters) {
+          if (!gettersState.isGetting) {
+            storeInstance[TRACK](key)
+          }
+          if (getCache.has(key)) {
+            return getCache.get(key)
+          }
+          // track get deps
+          curGetKeys.clear()
+          const isSubGetter = gettersState.isGetting
+          gettersState.isGetting = true
+          const res = getters[key].call(proxiedStore)
+          if (!isSubGetter) {
+            gettersState.isGetting = false
+          }
+          // store inverse lookup
+          curGetKeys.forEach((gk) => {
+            if (!depsToGetter.has(gk)) {
+              depsToGetter.set(gk, new Set())
+            }
+            const cur = depsToGetter.get(gk)!
+            cur.add(key)
+          })
+          // TODO i added this !isSubGetter, seems logical but haven't validated
+          // has diff performance tradeoffs, not sure whats desirable
+          // if (!isSubGetter) {
+          getCache.set(key, res)
+          // }
+          return res
         }
         if (!gettersState.isGetting) {
           storeInstance[TRACK](key)

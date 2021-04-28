@@ -1,6 +1,6 @@
 import { AssertionError, assert } from '@dish/helpers'
 import { getStore, useStore } from '@dish/use-store'
-import React, { memo, useMemo } from 'react'
+import React, { createContext, memo, useMemo } from 'react'
 import { Animated, PanResponder, StyleSheet, View } from 'react-native'
 import { VStack, useConstant } from 'snackui'
 
@@ -24,11 +24,16 @@ import {
 } from '../views/ContentScrollView'
 import { isScrollLocked } from '../views/useScrollLock'
 
+let isTouchingHandle = false
+let isPanActive = false
+
+export const X = createContext(null)
+
 export const HomeDrawerSmallView = memo((props: { children: any }) => {
   const contentParent = useStore(ContentParentStore)
-  const preventScrolling = usePreventVerticalScroll(contentParent.activeId)
+  // const preventScrolling = usePreventVerticalScroll(contentParent.activeId)
 
-  const panResponder = useConstant(() => {
+  const pan = useConstant(() => {
     const move = Animated.event(
       // [x, y] mapping
       [null, { dy: drawerStore.pan }],
@@ -43,26 +48,39 @@ export const HomeDrawerSmallView = memo((props: { children: any }) => {
     const minY = getWindowHeight() * drawerStore.snapPoints[0] - 10
     const maxY = getWindowHeight() * drawerStore.snapPoints[2] + 10
 
-    const getShouldActivate = (dy: number) => {
+    const getShouldActivate = (dy: number = drawerStore.pan['_value']) => {
       try {
+        if (isScrollLocked(contentParent.activeId)) {
+          return false
+        }
+        if (isPanActive) {
+          return true
+        }
+        if (isTouchingHandle) {
+          return true
+        }
         if (isTouchingSearchBar) {
-          return dy > 6
+          return Math.abs(dy) > 10
         }
         const isAtTop = isScrollAtTop.get(contentParent.activeId) ?? true
         // if at top, we avoid checking lock
         if (!isAtTop) {
           return false
-          assert(!isScrollLocked(contentParent.activeId), 'scroll locked')
         }
         if (drawerStore.snapIndex === 2) {
           // try and prevent grabbing both horizontal + vertical
-          return Math.abs(dy) > 12
+          assert(Math.abs(dy) > 12, 'snapIndex = 2, dy > 12')
+          return true
         }
         if (drawerStore.snapIndex === 0) {
-          return dy > 6
+          assert(dy > 6, 'snapIndex = 0, dy > 6')
+          return true
         }
         const threshold = 6
-        return Math.abs(dy) > threshold
+        // const isAboveThreshold = Math.abs(dy) > threshold
+        // console.log('dy', dy)
+        // assert(isAboveThreshold, 'isAboveThreshold')
+        return true
       } catch (err) {
         if (!(err instanceof AssertionError)) {
           console.error(err.message, err.stack)
@@ -71,47 +89,47 @@ export const HomeDrawerSmallView = memo((props: { children: any }) => {
       return false
     }
 
-    return PanResponder.create({
-      onMoveShouldSetPanResponder: (_, { dy }) => {
+    const responder = PanResponder.create({
+      // onStartShouldSetPanResponderCapture(e, { dy }) {
+      //   return getShouldActivate(dy)
+      // },
+      onMoveShouldSetPanResponder: (e, { dy }) => {
         const should = getShouldActivate(dy)
-        console.log('should', should)
         return should
       },
       onPanResponderGrant: (e, gestureState) => {
+        isPanActive = true
         curScrollerYMove = -1
         drawerStore.spring?.stop()
         drawerStore.spring = null
         curSnapY = Math.max(minY, Math.min(maxY, drawerStore.pan['_value']))
         const scrollStore = getStore(ScrollStore, { id: contentParent.activeId })
-        scrollStore.setLock('drawer')
+        if (scrollStore.lock !== 'drawer') {
+          scrollStore.setLock('drawer')
+        }
         drawerStore.pan.setOffset(curSnapY)
         drawerStore.pan.setValue(0)
-        drawerStore.setIsDragging(true)
-        autocompletesStore.setVisible(false)
+        if (!drawerStore.isDragging) {
+          drawerStore.setIsDragging(true)
+        }
+        if (autocompletesStore.visible) {
+          autocompletesStore.setVisible(false)
+        }
         blurSearchInput()
       },
-      // onMoveShouldSetPanResponderCapture: (e, { dy }) => {
-      //   return getShouldActivate(dy)
-      // },
-      // onPanResponderTerminationRequest: (e, { dy }) => {
-      //   console.log(e)
-      //   return getShouldActivate(dy)
-      // },
-      onStartShouldSetPanResponder(e, g) {
-        console.log('SHOULD___________')
-        return getShouldActivate(g.dy)
-      },
-      onPanResponderReject: (e) => {
-        console.log('rejected!!!!!!!!!', e)
+      onPanResponderReject: (e, g) => {
+        isPanActive = false
+        console.log('rejected!!!!!!!!!', e, g.dy)
       },
       onPanResponderTerminate: () => {
         console.log('terminated????????')
       },
       onPanResponderMove: (e, gestureState) => {
-        const y = curSnapY + gestureState.dy
+        const { dy } = gestureState
+        const y = curSnapY + dy
         // limit movement (TODO make it "resist" at edge)
         const scroller = scrollViews.get(contentParent.activeId)
-        if (y < minY) {
+        if (y < minY || curScrollerYMove > 0) {
           if (!scroller) return
           const curY = scrollLastY.get(contentParent.activeId) ?? 0
           curScrollerYMove = curY + minY - y
@@ -124,6 +142,7 @@ export const HomeDrawerSmallView = memo((props: { children: any }) => {
         move(e, gestureState)
       },
       onPanResponderRelease: (e, gestureState) => {
+        isPanActive = false
         const scrollStore = getStore(ScrollStore, { id: contentParent.activeId })
         scrollStore.setLock('none')
         drawerStore.setIsDragging(false)
@@ -135,8 +154,8 @@ export const HomeDrawerSmallView = memo((props: { children: any }) => {
         if (scrolledY !== -1) {
           const scroller = scrollViews.get(contentParent.activeId)
           if (scroller) {
-            console.log('finish scroll via drag')
             scroller.scrollTo({ y: scrolledY + -velocity * 2 })
+            drawerStore.setSnapIndex(0)
             return
           }
         }
@@ -144,13 +163,32 @@ export const HomeDrawerSmallView = memo((props: { children: any }) => {
         drawerStore.animateDrawerToPx(drawerStore.pan['_value'], velocity)
       },
     })
+
+    // responder.panHandlers = Object.keys(responder.panHandlers).reduce((acc, cur) => {
+    //   console.log('what is', cur)
+    //   const og = responder.panHandlers[cur]
+    //   acc[cur] = (...args) => {
+    //     const res = og(...args)
+    //     console.log('>>>>', cur, args, 'return', res)
+    //     return res
+    //   }
+    //   return acc
+    // }, {})
+
+    return { move, responder, getShouldActivate }
   })
 
   return (
-    <VStack pointerEvents="none" zIndex={zIndexDrawer} width="100%" height="100%" maxHeight="100%">
-      <Animated.View
-        style={useMemo(
-          () => [
+    <X.Provider value={pan as any}>
+      <VStack
+        pointerEvents="none"
+        zIndex={zIndexDrawer}
+        width="100%"
+        height="100%"
+        maxHeight="100%"
+      >
+        <Animated.View
+          style={[
             styles.animatedView,
             {
               transform: [
@@ -159,52 +197,86 @@ export const HomeDrawerSmallView = memo((props: { children: any }) => {
                 },
               ],
             },
-          ],
-          []
-        )}
-      >
-        {/* handle */}
-        <View pointerEvents="auto" style={styles.panView} {...panResponder.panHandlers}>
-          <VStack
+          ]}
+        >
+          {/* handle */}
+          <View
             pointerEvents="auto"
-            paddingHorizontal={20}
-            paddingVertical={20}
-            marginTop={-10}
-            onPress={drawerStore.toggleDrawerPosition}
+            style={styles.panView}
+            onTouchStart={() => {
+              console.log('TOUCH START')
+              isTouchingHandle = true
+            }}
+            onTouchEnd={() => (isTouchingHandle = false)}
+            {...pan.responder.panHandlers}
           >
             <VStack
-              backgroundColor="rgba(100,100,100,0.35)"
-              width={60}
-              height={8}
-              borderRadius={100}
-            />
+              pointerEvents="auto"
+              paddingHorizontal={20}
+              paddingVertical={20}
+              onPress={drawerStore.toggleDrawerPosition}
+            >
+              <VStack
+                backgroundColor="rgba(100,100,100,0.35)"
+                width={60}
+                height={8}
+                borderRadius={100}
+              />
+            </VStack>
+          </View>
+
+          {/* DONT OVERLAY BECAUSE WE NEED HORIZONTAL SCROLLING */}
+          {/* SEE CONTENTSCROLLVIEW FOR PREVENTING SCROLL */}
+
+          <VStack
+            width="100%"
+            flex={1}
+            //pointerEvents={preventScrolling ? 'none' : 'auto'}
+          >
+            {useMemo(
+              () => (
+                <BottomSheetContainer>
+                  <View
+                    style={styles.container}
+                    {...pan.responder.panHandlers}
+                    // onMoveShouldSetResponder={(e) => {
+                    //   const isAtTop = isScrollAtTop.get(contentParent.activeId) ?? true
+                    //   if (isAtTop) {
+                    //     console.log('yep2')
+                    //     return true
+                    //   }
+                    //   const x = pan.responder.panHandlers.onMoveShouldSetResponder?.(e) ?? true
+                    //   console.log('huh2', x)
+                    //   return x
+                    // }}
+                    // onMoveShouldSetResponderCapture={(e) => {
+                    //   const isAtTop = isScrollAtTop.get(contentParent.activeId) ?? true
+                    //   if (isAtTop) {
+                    //     console.log('yep')
+                    //     return true
+                    //   }
+                    //   const x = pan.responder.panHandlers.onMoveShouldSetResponderCapture?.(e) ?? true
+                    //   console.log('huh', x)
+                    //   return x
+                    // }}
+                  >
+                    <VStack zIndex={1000} maxHeight={searchBarHeight}>
+                      <AppSearchBar />
+                    </VStack>
+                    <VStack position="relative" flex={1}>
+                      <AppAutocompleteLocation />
+                      <AppAutocompleteSearch />
+                      {props.children}
+                    </VStack>
+                  </View>
+                </BottomSheetContainer>
+              ),
+              [props.children]
+            )}
           </VStack>
-        </View>
-
-        {/* DONT OVERLAY BECAUSE WE NEED HORIZONTAL SCROLLING */}
-        {/* SEE CONTENTSCROLLVIEW FOR PREVENTING SCROLL */}
-
-        <VStack width="100%" flex={1} pointerEvents={preventScrolling ? 'none' : 'auto'}>
-          {useMemo(
-            () => (
-              <BottomSheetContainer>
-                <View style={styles.container} {...panResponder.panHandlers}>
-                  <VStack zIndex={1000} maxHeight={searchBarHeight}>
-                    <AppSearchBar />
-                  </VStack>
-                  <VStack position="relative" flex={1}>
-                    <AppAutocompleteLocation />
-                    <AppAutocompleteSearch />
-                    {props.children}
-                  </VStack>
-                </View>
-              </BottomSheetContainer>
-            ),
-            [props.children]
-          )}
-        </VStack>
-      </Animated.View>
-    </VStack>
+        </Animated.View>
+      </VStack>
+    </X.Provider>
   )
 })
 
@@ -227,7 +299,7 @@ const styles = StyleSheet.create({
   },
   panView: {
     position: 'absolute',
-    top: -30,
+    top: -40,
     padding: 5,
   },
 })

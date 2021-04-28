@@ -52,11 +52,23 @@ export class Start extends Command {
     ['reset-cache']: flags.boolean({
       description: 'Clear cache on start',
     }),
+    ['local-proxy']: flags.boolean({
+      description: 'Proxy localhost to your ip for external use',
+    }),
   }
 
   async run() {
     const { flags } = this.parse(Start)
     const rootDir = process.cwd()
+
+    if (flags['local-proxy']) {
+      process.env.LOCAL_HOST = require('child_process')
+        .execSync('ipconfig getifaddr en0')
+        .toString()
+        .trim()
+      console.log('process.env.LOCAL_HOST', process.env.LOCAL_HOST)
+    }
+
     const config: ServerConfig = {
       rootDir,
       port: flags.port,

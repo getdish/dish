@@ -53,7 +53,7 @@ class DrawerStore extends Store {
     avoidSnap = false
   ) {
     this.lastSnapAt = Date.now()
-    this.isDragging = true
+    // this.isDragging = true
     if (!avoidSnap) {
       this.snapIndex = this.getSnapIndex(px, velocity)
     }
@@ -101,7 +101,6 @@ class DrawerStore extends Store {
       const next = (this.snapPoints[index + 1] ?? 1) * getWindowHeight()
       const halfDif = next - cur
       const partWayThere = cur + halfDif * (direction === 'up' ? 0.66 : 0.33)
-      console.log(index, px, velocity, 'estFinalPx', estFinalPx, '<', partWayThere, halfDif)
       if (estFinalPx < partWayThere) {
         return index
       }
