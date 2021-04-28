@@ -1,7 +1,7 @@
 import { AssertionError, assert } from '@dish/helpers'
 import { useStore, useStoreInstance } from '@dish/use-store'
 import React, { memo, useMemo } from 'react'
-import { Animated, PanResponder, StyleSheet, View } from 'react-native'
+import { Animated, PanResponder, ScrollView, StyleSheet, View } from 'react-native'
 import { VStack, useConstant } from 'snackui'
 
 import { pageWidthMax, searchBarHeight, zIndexDrawer } from '../../constants/constants'
@@ -17,6 +17,8 @@ import { BottomSheetContainer } from '../views/BottomSheetContainer'
 import {
   ContentParentStore,
   isScrollAtTop,
+  scrollViews,
+  scrollYs,
   usePreventVerticalScroll,
 } from '../views/ContentScrollView'
 import { isScrollLocked } from '../views/useScrollLock'
@@ -36,12 +38,18 @@ export const HomeDrawerSmallView = memo((props: { children: any }) => {
     )
 
     let curSnapY = 0
+    let curScrollerYMove = -1
+
     return PanResponder.create({
       onMoveShouldSetPanResponder: (_, { dy }) => {
         try {
           assert(!isTouchingSearchBar, 'touching searchbar')
-          assert(!isScrollLocked(contentParent.activeId), 'scroll locked')
-          assert(isScrollAtTop || dy <= 6, 'scrolled down a bit while dragging up')
+          const isAtTop = isScrollAtTop.get(contentParent.activeId)
+          // if at top, we avoid checking lock
+          if (!isAtTop) {
+            assert(!isScrollLocked(contentParent.activeId), 'scroll locked')
+          }
+          assert(isAtTop || dy <= 6, 'scrolled down a bit while dragging up')
           if (drawer.snapIndex === 2) {
             // try and prevent grabbing both horizontal + vertical
             return Math.abs(dy) > 12
@@ -59,6 +67,7 @@ export const HomeDrawerSmallView = memo((props: { children: any }) => {
         return false
       },
       onPanResponderGrant: (e, gestureState) => {
+        curScrollerYMove = -1
         drawer.spring?.stop()
         drawer.spring = null
         curSnapY = drawer.pan['_value']
@@ -73,7 +82,12 @@ export const HomeDrawerSmallView = memo((props: { children: any }) => {
         const minY = getWindowHeight() * drawer.snapPoints[0] - 10
         const maxY = getWindowHeight() * drawer.snapPoints[2] + 10
         // limit movement (TODO make it "resist" at edge)
+        const scroller = scrollViews.get(contentParent.activeId)
         if (y < minY) {
+          if (!scroller) return
+          const curY = scrollYs.get(contentParent.activeId) ?? 0
+          curScrollerYMove = curY + minY - y
+          scroller.scrollTo({ y: curScrollerYMove, animated: false })
           return
         }
         if (y > maxY) {
@@ -85,6 +99,18 @@ export const HomeDrawerSmallView = memo((props: { children: any }) => {
         drawer.setIsDragging(false)
         drawer.pan.flattenOffset()
         const velocity = gestureState.vy
+
+        const scrolledY = curScrollerYMove
+        curScrollerYMove = -1
+        if (scrolledY !== -1) {
+          const scroller = scrollViews.get(contentParent.activeId)
+          if (scroller) {
+            console.log('finish scroll via drag')
+            scroller.scrollTo({ y: scrolledY + -velocity * 2 })
+            return
+          }
+        }
+
         drawer.animateDrawerToPx(drawer.pan['_value'], velocity)
       },
     })

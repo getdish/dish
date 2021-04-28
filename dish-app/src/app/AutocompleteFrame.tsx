@@ -1,4 +1,3 @@
-// debug
 import { useStore, useStoreInstance } from '@dish/use-store'
 import React, { useEffect } from 'react'
 import {

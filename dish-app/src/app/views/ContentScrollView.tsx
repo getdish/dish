@@ -1,11 +1,4 @@
-import {
-  Store,
-  getStore,
-  reaction,
-  useStoreInstance,
-  useStoreInstanceSelector,
-  useStoreSelector,
-} from '@dish/use-store'
+import { Store, getStore, reaction } from '@dish/use-store'
 import React, {
   Suspense,
   createContext,
@@ -23,6 +16,10 @@ import { isTouchDevice, supportsTouchWeb } from '../../constants/platforms'
 import { drawerStore } from '../drawerStore'
 
 export type ScrollLock = 'horizontal' | 'vertical' | 'none'
+
+export const scrollViews = new Map<string, ScrollView>()
+export const scrollYs = new Map<string, number>()
+export const isScrollAtTop = new Map<string, boolean>()
 
 export class ScrollStore extends Store<{ id: string }> {
   lock: ScrollLock = 'none'
@@ -46,12 +43,6 @@ export class ContentParentStore extends Store {
   setActiveId(id: string) {
     this.activeId = id
   }
-}
-
-export let isScrollAtTop = true
-
-export function setIsScrollAtTop(val: boolean) {
-  isScrollAtTop = val
 }
 
 export const usePreventVerticalScroll = (id: string) => {
@@ -159,7 +150,7 @@ export const ContentScrollView = forwardRef<ScrollView, ContentScrollViewProps>(
       clearTimeout(finish.current)
       lastUpdate.current = Date.now()
       const isAtTop = y <= 0
-      setIsScrollAtTop(isAtTop)
+      isScrollAtTop.set(id, isAtTop)
       onScrollYThrottled?.(y)
 
       // calls the recyclerview scroll, we may want to not throttle this...
@@ -189,9 +180,9 @@ export const ContentScrollView = forwardRef<ScrollView, ContentScrollViewProps>(
 
     const setIsScrolling = (e) => {
       const y = e.nativeEvent.contentOffset.y
-      const nextScrollAtTop = y <= 0
-      const hasBeenAWhile = Date.now() - lastUpdate.current > 200
-      if (nextScrollAtTop !== isScrollAtTop || hasBeenAWhile) {
+      const atTop = y <= 0
+      const hasBeenAWhile = Date.now() - lastUpdate.current > 150
+      if (atTop !== isScrollAtTop.get(id) || hasBeenAWhile) {
         doUpdate(y, e)
       }
     }
@@ -201,6 +192,12 @@ export const ContentScrollView = forwardRef<ScrollView, ContentScrollViewProps>(
       return children
     }, [children])
     const scrollRef = useRef<ScrollView | null>(null)
+
+    useEffect(() => {
+      if (scrollRef.current) {
+        scrollViews.set(id, scrollRef.current)
+      }
+    }, [id, scrollRef.current])
 
     // useEffect(() => {
     //   const view =scrollRef.current
@@ -223,6 +220,9 @@ export const ContentScrollView = forwardRef<ScrollView, ContentScrollViewProps>(
             ref={combineRefs(scrollRef, ref)}
             {...props}
             onScroll={setIsScrolling}
+            onMomentumScrollEnd={({ nativeEvent }) => {
+              scrollYs.set(id, nativeEvent.contentOffset.y)
+            }}
             {...(supportsTouchWeb && {
               onTouchMove: cancelTouchContentIfDrawerDragging,
               onTouchStart: cancelTouchContentIfDrawerDragging,
@@ -236,7 +236,7 @@ export const ContentScrollView = forwardRef<ScrollView, ContentScrollViewProps>(
             bounces={!preventScrolling}
             scrollEnabled={!preventScrolling}
             // short duration to catch before vertical scroll
-            scrollEventThrottle={14}
+            scrollEventThrottle={8}
             // disableScrollViewPanResponder={preventScrolling}
             style={[styles.scroll, style]}
           >

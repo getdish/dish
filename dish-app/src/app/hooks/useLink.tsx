@@ -91,6 +91,7 @@ export const useLink = (
           children
         )
       }
+      // return children
       return (
         <TouchableOpacity onStartShouldSetResponderCapture={() => true} onPress={onPress}>
           {children}
