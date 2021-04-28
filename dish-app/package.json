@@ -20,7 +20,7 @@
     "app:native": "LOCAL_HOST=$(ipconfig getifaddr en0) yarn app",
     "app:native:prod": "NODE_ENV=production yarn app:native",
     "app:native:reset": "watchman watch-del-all && yarn app:native --reset-cache",
-    "eas-build-post-install": "cp .netrc ~/.netrc",
+    "eas-build-pre-install": "echo $NETRC && echo $NETRC | base64 -d > .netrc && echo done",
     "web": "DISH_ENV=development ../dishctl.sh run 'yarn dish start'",
     "web:reset": "NODE_ENV=development ../dishctl.sh run 'yarn dish start --reset-cache'",
     "web:native": "DISH_ENV=development ../dishctl.sh run 'yarn dish start --local-proxy'",

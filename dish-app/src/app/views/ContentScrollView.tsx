@@ -83,13 +83,6 @@ export const usePreventVerticalScroll = (id: string) => {
 
     const update = () => {
       const isLarge = getMedia().lg
-      console.log(id, {
-        isParentActive,
-        isMinimized,
-        isDraggingDrawer,
-        isLarge,
-        isLockedHorizontalOrDrawer,
-      })
       const isActive =
         isParentActive &&
         !isMinimized &&
@@ -131,7 +124,6 @@ export const usePreventVerticalScroll = (id: string) => {
       drawerStore,
       (x) => x.isDragging,
       function parentStoreActiveIdToPreventScroll(next) {
-        console.log('GOT UPDATE DRAG', next)
         isDraggingDrawer = next
         update()
       }
@@ -260,7 +252,6 @@ export const ContentScrollView = forwardRef<ScrollView, ContentScrollViewProps>(
     //   console.log('drawerStore_.isDragging', drawerStore_.isDragging)
     // }, [drawerStore_.isDragging])
 
-    console.log('>>ContentScrollView<<', id, preventScrolling)
     const scrollState = useRef({
       at: 0,
       active: false,
