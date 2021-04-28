@@ -21,6 +21,8 @@ export const {
   defaults: {
     suspense: true,
     staleWhileRevalidate: false,
-    retry: false,
+    retry: {
+      maxRetries: 1,
+    },
   },
 })
