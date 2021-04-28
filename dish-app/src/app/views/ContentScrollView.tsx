@@ -15,10 +15,11 @@ import { isWeb } from '../../constants/constants'
 import { isTouchDevice, supportsTouchWeb } from '../../constants/platforms'
 import { drawerStore } from '../drawerStore'
 
-export type ScrollLock = 'horizontal' | 'vertical' | 'none'
+export type ScrollLock = 'horizontal' | 'vertical' | 'drawer' | 'none'
 
 export const scrollViews = new Map<string, ScrollView>()
-export const scrollYs = new Map<string, number>()
+export const scrollLastY = new Map<string, number>()
+export const scrollCurY = new Map<string, number>()
 export const isScrollAtTop = new Map<string, boolean>()
 
 export class ScrollStore extends Store<{ id: string }> {
@@ -55,8 +56,9 @@ export const usePreventVerticalScroll = (id: string) => {
 
     let isParentActive = false
     let isMinimized = false
-    let isLockedHorizontal = false
+    let isLockedHorizontalOrDrawer = false
     let isAtTop = true
+    let isDraggingDrawer = false
 
     const parentStore = getStore(ContentParentStore)
     const scrollStore = getStore(ScrollStore, { id })
@@ -66,8 +68,13 @@ export const usePreventVerticalScroll = (id: string) => {
 
     const update = () => {
       const isLarge = getMedia().lg
-      const prevent = !isLarge && isAtTop && (isMinimized || !isParentActive || isLockedHorizontal)
-      setPrevent(prevent)
+      const isActive =
+        isParentActive &&
+        !isMinimized &&
+        !isDraggingDrawer &&
+        !isLarge &&
+        !isLockedHorizontalOrDrawer
+      setPrevent(!isActive)
     }
 
     const d0 = reaction(
@@ -81,8 +88,9 @@ export const usePreventVerticalScroll = (id: string) => {
 
     const d1 = reaction(
       drawerStore,
-      (x) => x.snapIndex > 0,
+      (x) => x.snapIndex === 0,
       function drawerStoreSnapIndexToPreventScroll(x) {
+        console.log('set is minimzed', x, drawerStore.snapIndex)
         isMinimized = x
         update()
       }
@@ -93,7 +101,16 @@ export const usePreventVerticalScroll = (id: string) => {
       (x) => [x.lock, x.isAtTop] as const,
       function scrollLockToPreventScroll([lock, t]) {
         isAtTop = t
-        isLockedHorizontal = lock === 'horizontal'
+        isLockedHorizontalOrDrawer = lock === 'horizontal' || lock === 'drawer'
+        update()
+      }
+    )
+
+    const d3 = reaction(
+      drawerStore,
+      (x) => x.isDragging,
+      function parentStoreActiveIdToPreventScroll(next) {
+        isDraggingDrawer = next
         update()
       }
     )
@@ -102,6 +119,7 @@ export const usePreventVerticalScroll = (id: string) => {
       d0()
       d1()
       d2()
+      d3()
     }
   }, [id])
 
@@ -180,6 +198,7 @@ export const ContentScrollView = forwardRef<ScrollView, ContentScrollViewProps>(
 
     const setIsScrolling = (e) => {
       const y = e.nativeEvent.contentOffset.y
+      scrollCurY.set(id, y)
       const atTop = y <= 0
       const hasBeenAWhile = Date.now() - lastUpdate.current > 150
       if (atTop !== isScrollAtTop.get(id) || hasBeenAWhile) {
@@ -221,7 +240,7 @@ export const ContentScrollView = forwardRef<ScrollView, ContentScrollViewProps>(
             {...props}
             onScroll={setIsScrolling}
             onMomentumScrollEnd={({ nativeEvent }) => {
-              scrollYs.set(id, nativeEvent.contentOffset.y)
+              scrollLastY.set(id, nativeEvent.contentOffset.y)
             }}
             {...(supportsTouchWeb && {
               onTouchMove: cancelTouchContentIfDrawerDragging,
@@ -233,7 +252,7 @@ export const ContentScrollView = forwardRef<ScrollView, ContentScrollViewProps>(
               },
             })}
             // for native...
-            bounces={!preventScrolling}
+            bounces={false}
             scrollEnabled={!preventScrolling}
             // short duration to catch before vertical scroll
             scrollEventThrottle={8}
