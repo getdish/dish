@@ -141,6 +141,7 @@
     "@unimodules/react-native-adapter": "^6.1.0",
     "@welldone-software/why-did-you-render": "^6.0.5",
     "babel-plugin-transform-inline-environment-variables": "^0.4.3",
+    "eas-cli": "^0.13.0",
     "expo": "^40.0.1",
     "expo-app-loading": "^1.0.3",
     "expo-asset": "^8.3.1",
