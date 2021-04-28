@@ -63,7 +63,7 @@ echo "Migrating hasura"
 ./dishctl.sh db_migrate_init
 
 echo "Migrating timescale"
-cd services/timescale && npm install || true && DISH_ENV=not-production ./scripts/migrate.js
+cd services/timescale && npm install &> /dev/null || true && node ./scripts/migrate.js
 
 echo "Waiting for dish-app to finish starting"
 if ! timeout --preserve-status 30 bash -c wait_until_dish_app_ready; then

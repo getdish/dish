@@ -169,7 +169,7 @@ function redis_flush_all() {
 function db_migrate() {
   echo "migrating db $POSTGRES_DB"
   pushd "$PROJECT_ROOT/services/hasura"
-  echo "hasura migrate"
+  echo "hasura migrate $HASURA_ENDPOINT"
   hasura --skip-update-check \
     migrate apply \
     --endpoint "$HASURA_ENDPOINT" \
