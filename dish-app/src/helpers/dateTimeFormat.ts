@@ -1,7 +1,7 @@
 export const dateTimeFormat = (
   date?: number | Date | null,
   {
-    locales = ['en'],
+    locales = 'en',
     ...rest
   }: any & {
     locales?: string | string[] | undefined
@@ -10,10 +10,10 @@ export const dateTimeFormat = (
   if (!date) {
     return null
   }
-  if (process.env.TARGET === 'native') {
-    global['Intl'] = require('@formatjs/intl-datetimeformat')
-    console.log('date time import')
+  if (process.env.TARGET === 'web') {
+    return new Intl.DateTimeFormat(locales, rest).format()
+  } else {
+    const format = require('date-fns').format
+    return format(date, 'MM/dd/yyyy')
   }
-  return ''
-  // return new Intl.DateTimeFormat(locales, rest).format()
 }
