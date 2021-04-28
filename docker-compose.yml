@@ -52,8 +52,8 @@ services:
     volumes:
       - ${HOME}/.dish/timescaledb:/var/lib/postgresql/data
     environment:
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: postgres
+      POSTGRES_USER: ${TIMESCALE_USER:-postgres}
+      POSTGRES_PASSWORD: ${TIMESCALE_PASSWORD:-postgres}
       POSTGRES_DB: scrape_data
     ports:
       - 5433:5432
