@@ -9,6 +9,10 @@ export const relativeTimeFormat = (
     unit?: any
   } = {}
 ) => {
-  return ''
-  // return new Intl.RelativeTimeFormat(locales, rest).format(date, unit)
+  if (process.env.TARGET === 'web') {
+    return new Intl.RelativeTimeFormat(locales, rest).format(date, unit)
+  } else {
+    const formatRelative = require('date-fns').formatRelative
+    return formatRelative(new Date(), date)
+  }
 }

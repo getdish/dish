@@ -3,11 +3,21 @@
 
 import '@dish/helpers/polyfill'
 import 'expo-asset'
-import '@formatjs/intl-relativetimeformat/polyfill'
-import '@formatjs/intl-datetimeformat/polyfill'
-import '@formatjs/intl-datetimeformat/locale-data/en'
 
 import { registerRootComponent } from 'expo'
+
+// console.log('polyfill..........')
+// require('@formatjs/intl-getcanonicallocales/polyfill')
+// require('@formatjs/intl-locale/polyfill')
+// require('@formatjs/intl-numberformat/polyfill')
+// require('@formatjs/intl-displaynames/polyfill')
+// require('@formatjs/intl-displaynames/locale-data/en')
+// require('@formatjs/intl-pluralrules/polyfill')
+// require('@formatjs/intl-pluralrules/locale-data/en')
+// require('@formatjs/intl-datetimeformat/polyfill')
+// require('@formatjs/intl-datetimeformat/locale-data/en')
+// require('@formatjs/intl-relativetimeformat/polyfill')
+// require('@formatjs/intl-relativetimeformat/locale-data/en')
 
 // import { activateKeepAwake } from 'expo-keep-awake'
 

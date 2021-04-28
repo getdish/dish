@@ -61,7 +61,6 @@ export const HomePageFeed = graphql(
   function HomePageFeed(props: HomeFeedProps) {
     const { regionName, region, center, span, item, isActive } = props
     const items = useHomeFeed(props)
-    console.log('items', items)
     const isLoading = !!(!regionName || !items[0]?.id)
     const [hovered, setHovered] = useState<null | string>(null)
     const [hoveredResults, setHoveredResults] = useState<null | {
