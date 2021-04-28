@@ -5,20 +5,18 @@ import { CreateWebpackConfig } from '@dish/server'
 import LoadablePlugin from '@loadable/webpack-plugin'
 import ReactRefreshWebpack4Plugin from '@pmmmwh/react-refresh-webpack-plugin'
 import CircularDependencyPlugin from 'circular-dependency-plugin'
-import DedupeParentCssFromChunksWebpackPlugin from 'dedupe-parent-css-from-chunks-webpack-plugin'
 import esbuild from 'esbuild'
 import { ESBuildMinifyPlugin } from 'esbuild-loader'
-import ExtractCssChunks from 'extract-css-chunks-webpack-plugin'
 import { ensureDirSync } from 'fs-extra'
 import HTMLWebpackPlugin from 'html-webpack-plugin'
 import { DuplicatesPlugin } from 'inspectpack/plugin'
 // import PnpWebpackPlugin from 'pnp-webpack-plugin'
-// import MiniCssExtractPlugin from 'mini-css-extract-plugin'
-// import OptimizeCSSAssetsPlugin from 'optimize-css-assets-webpack-plugin'
+import MiniCssExtractPlugin from 'mini-css-extract-plugin'
 // import nodeExternals from 'webpack-node-externals'
 import SpeedMeasurePlugin from 'speed-measure-webpack-plugin'
-// import TerserPlugin from 'terser-webpack-plugin'
 import Webpack from 'webpack'
+
+const CssMinimizerPlugin = require('css-minimizer-webpack-plugin')
 
 // import WebpackPwaManifest from 'webpack-pwa-manifest'
 
@@ -70,6 +68,7 @@ export function createWebpackConfig({
   const hashFileNamePart = '[contenthash]'
   const hotEntry = isHot ? 'webpack-hot-middleware/client' : null
   const smp = new SpeedMeasurePlugin()
+  const shouldExtractCSS = !noMinify && isProduction && !isSSR
   const cacheName = `${process.env.TARGET}${env}${GIT_SHA}${noMinify}${isHot}${isSSR}${
     resetCache ? Math.random() : ''
   }`
@@ -201,10 +200,11 @@ export function createWebpackConfig({
           minimize == false || noMinify
             ? []
             : [
+                new CssMinimizerPlugin(),
                 new ESBuildMinifyPlugin({
                   target: 'es2019',
                   treeShaking: true,
-                  css: true,
+                  // css: true,
                 }),
               ],
       },
@@ -236,10 +236,9 @@ export function createWebpackConfig({
               },
               {
                 test: /\.css$/i,
-                use:
-                  !noMinify && isProduction && !isSSR
-                    ? [ExtractCssChunks.loader, require.resolve('css-loader')]
-                    : [require.resolve('style-loader'), require.resolve('css-loader')],
+                use: shouldExtractCSS
+                  ? [MiniCssExtractPlugin.loader, require.resolve('css-loader')]
+                  : [require.resolve('style-loader'), require.resolve('css-loader')],
               },
               {
                 test: /\.(png|svg|jpe?g|gif)$/,
@@ -300,6 +299,8 @@ export function createWebpackConfig({
         ],
       },
       plugins: [
+        shouldExtractCSS && new MiniCssExtractPlugin(),
+
         isSSR && new LoadablePlugin(),
 
         // slim down unused react-native-web modules
@@ -307,27 +308,6 @@ export function createWebpackConfig({
           /react-native-web.*Virtualized(Section)?List.*/,
           require.resolve('@dish/proxy-worm')
         ),
-
-        // breaks a couple things, possible to ignore them to fix
-        // isClient && isProduction && new ShakePlugin({}),
-
-        ...((isProduction &&
-          !isSSR && [
-            new ExtractCssChunks({
-              filename: '[name].css',
-              chunkFilename: '[id].css',
-              // @ts-ignore
-              esModule: true,
-              ignoreOrder: true,
-            }),
-            new DedupeParentCssFromChunksWebpackPlugin({
-              canPrint: true, // the default is true
-            }),
-            // new MiniCssExtractPlugin({
-            //   filename: '[name].out.css',
-            // }),
-          ]) ||
-          []),
 
         new Webpack.DefinePlugin(defines),
 

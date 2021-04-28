@@ -29,7 +29,7 @@
     "core-js": "^3.10.1",
     "react": "*",
     "react-dom": "*",
-    "react-refresh": "^0.9.0"
+    "react-refresh": "^0.10.0"
   },
   "peerDependencies": {
     "react-native-web": "*"
