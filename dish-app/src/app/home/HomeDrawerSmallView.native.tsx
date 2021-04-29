@@ -27,8 +27,6 @@ import { isScrollLocked } from '../views/useScrollLock'
 let isTouchingHandle = false
 let isPanActive = false
 
-export const X = createContext(null)
-
 export const HomeDrawerSmallView = memo((props: { children: any }) => {
   const contentParent = useStore(ContentParentStore)
   // const preventScrolling = usePreventVerticalScroll(contentParent.activeId)
@@ -38,7 +36,7 @@ export const HomeDrawerSmallView = memo((props: { children: any }) => {
       // [x, y] mapping
       [null, { dy: drawerStore.pan }],
       {
-        useNativeDriver: false,
+        useNativeDriver: true,
       }
     )
 
@@ -69,6 +67,7 @@ export const HomeDrawerSmallView = memo((props: { children: any }) => {
         }
         if (drawerStore.snapIndex === 2) {
           // try and prevent grabbing both horizontal + vertical
+          console.log('giving a bit more at the top... may be want only in one direction? or less?')
           assert(Math.abs(dy) > 12, 'snapIndex = 2, dy > 12')
           return true
         }
@@ -76,10 +75,8 @@ export const HomeDrawerSmallView = memo((props: { children: any }) => {
           assert(dy > 6, 'snapIndex = 0, dy > 6')
           return true
         }
-        const threshold = 6
+        // const threshold = 6
         // const isAboveThreshold = Math.abs(dy) > threshold
-        // console.log('dy', dy)
-        // assert(isAboveThreshold, 'isAboveThreshold')
         return true
       } catch (err) {
         if (!(err instanceof AssertionError)) {
@@ -119,10 +116,9 @@ export const HomeDrawerSmallView = memo((props: { children: any }) => {
       },
       onPanResponderReject: (e, g) => {
         isPanActive = false
-        console.log('rejected!!!!!!!!!', e, g.dy)
       },
       onPanResponderTerminate: () => {
-        console.log('terminated????????')
+        isPanActive = false
       },
       onPanResponderMove: (e, gestureState) => {
         const { dy } = gestureState
@@ -139,7 +135,7 @@ export const HomeDrawerSmallView = memo((props: { children: any }) => {
         if (y > maxY) {
           return
         }
-        move(e, gestureState)
+        drawerStore.pan.setValue(gestureState.dy)
       },
       onPanResponderRelease: (e, gestureState) => {
         isPanActive = false
@@ -179,104 +175,68 @@ export const HomeDrawerSmallView = memo((props: { children: any }) => {
   })
 
   return (
-    <X.Provider value={pan as any}>
-      <VStack
-        pointerEvents="none"
-        zIndex={zIndexDrawer}
-        width="100%"
-        height="100%"
-        maxHeight="100%"
+    <VStack pointerEvents="none" zIndex={zIndexDrawer} width="100%" height="100%" maxHeight="100%">
+      <Animated.View
+        style={[
+          styles.animatedView,
+          {
+            transform: [
+              {
+                translateY: drawerStore.pan,
+              },
+            ],
+          },
+        ]}
       >
-        <Animated.View
-          style={[
-            styles.animatedView,
-            {
-              transform: [
-                {
-                  translateY: drawerStore.pan,
-                },
-              ],
-            },
-          ]}
+        {/* handle */}
+        <View
+          pointerEvents="auto"
+          style={styles.panView}
+          onTouchStart={() => {
+            isTouchingHandle = true
+          }}
+          onTouchEnd={() => (isTouchingHandle = false)}
+          {...pan.responder.panHandlers}
         >
-          {/* handle */}
-          <View
+          <VStack
             pointerEvents="auto"
-            style={styles.panView}
-            onTouchStart={() => {
-              console.log('TOUCH START')
-              isTouchingHandle = true
-            }}
-            onTouchEnd={() => (isTouchingHandle = false)}
-            {...pan.responder.panHandlers}
+            paddingHorizontal={20}
+            paddingVertical={20}
+            onPress={drawerStore.toggleDrawerPosition}
           >
             <VStack
-              pointerEvents="auto"
-              paddingHorizontal={20}
-              paddingVertical={20}
-              onPress={drawerStore.toggleDrawerPosition}
-            >
-              <VStack
-                backgroundColor="rgba(100,100,100,0.35)"
-                width={60}
-                height={8}
-                borderRadius={100}
-              />
-            </VStack>
-          </View>
-
-          {/* DONT OVERLAY BECAUSE WE NEED HORIZONTAL SCROLLING */}
-          {/* SEE CONTENTSCROLLVIEW FOR PREVENTING SCROLL */}
-
-          <VStack
-            width="100%"
-            flex={1}
-            //pointerEvents={preventScrolling ? 'none' : 'auto'}
-          >
-            {useMemo(
-              () => (
-                <BottomSheetContainer>
-                  <View
-                    style={styles.container}
-                    {...pan.responder.panHandlers}
-                    // onMoveShouldSetResponder={(e) => {
-                    //   const isAtTop = isScrollAtTop.get(contentParent.activeId) ?? true
-                    //   if (isAtTop) {
-                    //     console.log('yep2')
-                    //     return true
-                    //   }
-                    //   const x = pan.responder.panHandlers.onMoveShouldSetResponder?.(e) ?? true
-                    //   console.log('huh2', x)
-                    //   return x
-                    // }}
-                    // onMoveShouldSetResponderCapture={(e) => {
-                    //   const isAtTop = isScrollAtTop.get(contentParent.activeId) ?? true
-                    //   if (isAtTop) {
-                    //     console.log('yep')
-                    //     return true
-                    //   }
-                    //   const x = pan.responder.panHandlers.onMoveShouldSetResponderCapture?.(e) ?? true
-                    //   console.log('huh', x)
-                    //   return x
-                    // }}
-                  >
-                    <VStack zIndex={1000} maxHeight={searchBarHeight}>
-                      <AppSearchBar />
-                    </VStack>
-                    <VStack position="relative" flex={1}>
-                      <AppAutocompleteLocation />
-                      <AppAutocompleteSearch />
-                      {props.children}
-                    </VStack>
-                  </View>
-                </BottomSheetContainer>
-              ),
-              [props.children]
-            )}
+              backgroundColor="rgba(100,100,100,0.35)"
+              width={60}
+              height={8}
+              borderRadius={100}
+            />
           </VStack>
-        </Animated.View>
-      </VStack>
-    </X.Provider>
+        </View>
+
+        {/* DONT OVERLAY BECAUSE WE NEED HORIZONTAL SCROLLING */}
+        {/* SEE CONTENTSCROLLVIEW FOR PREVENTING SCROLL */}
+
+        <VStack width="100%" flex={1}>
+          {useMemo(
+            () => (
+              <BottomSheetContainer>
+                <View style={styles.container} {...pan.responder.panHandlers}>
+                  <VStack zIndex={1000} maxHeight={searchBarHeight}>
+                    <AppSearchBar />
+                  </VStack>
+                  <VStack position="relative" flex={1}>
+                    <AppAutocompleteLocation />
+                    <AppAutocompleteSearch />
+                    {props.children}
+                  </VStack>
+                </View>
+              </BottomSheetContainer>
+            ),
+            [props.children]
+          )}
+        </VStack>
+      </Animated.View>
+    </VStack>
   )
 })
 

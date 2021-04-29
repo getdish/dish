@@ -46,9 +46,7 @@ export const SearchHeader = memo(() => {
                 paddingRight={25}
                 paddingVertical={5}
                 marginBottom={-3}
-                borderColor={rgbString(lenseColor)}
-                borderWidth={2}
-                backgroundColor="transparent"
+                backgroundColor={rgbString(lenseColor)}
               >
                 <VStack alignItems="center" paddingTop={isWeb ? 0 : 5}>
                   <Text

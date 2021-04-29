@@ -3,28 +3,18 @@ import React, {
   Suspense,
   createContext,
   forwardRef,
-  useContext,
   useEffect,
   useMemo,
   useRef,
   useState,
 } from 'react'
-import {
-  PanResponder,
-  ScrollView,
-  ScrollViewProps,
-  StyleSheet,
-  Touchable,
-  View,
-} from 'react-native'
-import { prevent, useConstant } from 'snackui'
+import { ScrollView, ScrollViewProps, StyleSheet, View } from 'react-native'
 import { VStack, combineRefs, getMedia, useMedia } from 'snackui'
 
 import { isWeb } from '../../constants/constants'
 import { isTouchDevice, supportsTouchWeb } from '../../constants/platforms'
 import { getWindowHeight } from '../../helpers/getWindow'
 import { drawerStore } from '../drawerStore'
-import { X } from '../home/HomeDrawerSmallView.native'
 
 export type ScrollLock = 'horizontal' | 'vertical' | 'drawer' | 'none'
 
@@ -170,7 +160,6 @@ export const ContentScrollView = forwardRef<ScrollView, ContentScrollViewProps>(
     // this is already handled in usePreventVerticalScroll i think
     // const isActive = useStoreSelector(ContentParentStore, x => x.activeId === id, { id })
     // const isDraggingParent = useStoreInstanceSelector(drawerStore, x => isActive && x.isDragging, [isActive])
-    const xxx = useContext(X)
     const preventScrolling = usePreventVerticalScroll(id)
     const media = useMedia()
     const lastUpdate = useRef<any>(0)
@@ -198,10 +187,10 @@ export const ContentScrollView = forwardRef<ScrollView, ContentScrollViewProps>(
         if (!scrollStore.isAtTop) {
           scrollStore.setIsAtTop(true)
         }
-        console.log('\n\n\nlets do it from here...\n\n\n')
         // @ts-ignore
         // drawerStore.pan.setValue(-y)
         // scrollStore.setLock('none')
+        console.log('commented out, do we need to set lock none still here?')
       } else {
         if (scrollStore.isAtTop) {
           scrollStore.setIsAtTop(false)
@@ -240,22 +229,14 @@ export const ContentScrollView = forwardRef<ScrollView, ContentScrollViewProps>(
       }
     }, [id, scrollRef.current])
 
-    // useEffect(() => {
-    //   const view =scrollRef.current
-    //   scrollViews.add(view)
-    //   return () => {
-    //     scrollViews.delete(view)
-    //   }
-    // }, [])
-
-    // useEffect(() => {
-    //   console.log('drawerStore_.isDragging', drawerStore_.isDragging)
-    // }, [drawerStore_.isDragging])
-
     const scrollState = useRef({
       at: 0,
       active: false,
     })
+
+    const isScrollingVerticalFromTop = () => {
+      return scrollStore.lock === 'vertical' && scrollStore.isAtTop && drawerStore.snapIndex === 0
+    }
 
     return (
       <ContentScrollContext.Provider value={id}>
@@ -276,14 +257,8 @@ export const ContentScrollView = forwardRef<ScrollView, ContentScrollViewProps>(
                 scrollStore.setLock('none')
               },
             })}
-            // onMoveShouldSetResponderCapture={() => scrollStore.lock !== 'drawer'}
-            // onStartShouldSetResponder={() => scrollStore.lock !== 'drawer'}
             // for native...
             bounces={false}
-            // onStartShouldSetResponder={() => false}
-            // onMoveShouldSetResponder={() => false}
-            // onMoveShouldSetResponderCapture={() => false}
-            // onStartShouldSetResponderCapture={() => false}
             scrollEnabled={!preventScrolling}
             // short duration to catch before vertical scroll
             scrollEventThrottle={8}
@@ -291,19 +266,18 @@ export const ContentScrollView = forwardRef<ScrollView, ContentScrollViewProps>(
           >
             <View
               style={{ flex: 1 }}
-              onMoveShouldSetResponderCapture={() => {
-                return scrollStore.isAtTop
-              }}
+              onMoveShouldSetResponderCapture={isScrollingVerticalFromTop}
               onTouchMove={(e) => {
-                if (scrollStore.isAtTop && drawerStore.snapIndex === 0) {
-                  if (!scrollState.current.active) {
-                    scrollState.current.active = true
-                    scrollState.current.at = e.nativeEvent.pageY
-                  }
-                  const start = getWindowHeight() - drawerStore.currentHeight
-                  const y = scrollState.current.at - e.nativeEvent.pageY
-                  drawerStore.pan.setValue(start - y)
+                if (!isScrollingVerticalFromTop()) {
+                  return false
                 }
+                if (!scrollState.current.active) {
+                  scrollState.current.active = true
+                  scrollState.current.at = e.nativeEvent.pageY
+                }
+                const start = getWindowHeight() - drawerStore.currentHeight
+                const y = scrollState.current.at - e.nativeEvent.pageY
+                drawerStore.pan.setValue(start - y)
               }}
               onTouchEnd={() => {
                 if (scrollState.current.active) {
