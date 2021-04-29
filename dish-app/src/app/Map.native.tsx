@@ -4,6 +4,8 @@ import { useStoreInstance } from '@dish/use-store'
 import MapboxGL from '@react-native-mapbox-gl/maps'
 import React, { useEffect, useMemo, useRef, useState } from 'react'
 import { Animated, Dimensions, StyleSheet } from 'react-native'
+import { useThemeName } from 'snackui'
+import { useTheme } from 'snackui'
 import { useDebounce } from 'snackui'
 
 import { green } from '../constants/colors'
@@ -38,6 +40,7 @@ export const MapView = ({
   const cameraRef = useRef<MapboxGL.Camera>(null)
   const mapRef = useRef<MapboxGL.MapView>(null)
   const onMoveEndDelayed = useDebounce(onMoveEnd ?? idFn, 250)
+  const theme = useTheme()
 
   useEffect(() => {
     const spring = Animated.spring(tyRef.current, {
@@ -171,7 +174,7 @@ export const MapView = ({
                   minZoomLevel={0 ?? minZoom}
                   maxZoomLevel={30 ?? maxZoom}
                   style={{
-                    fillColor: 'rgba(255,255,255,0.5)',
+                    fillColor: '#000000',
                     //  [
                     //   'case',
                     //   ['==', ['feature-state', 'active'], true],
@@ -245,16 +248,18 @@ export const MapView = ({
                         // },
                         textJustify: 'center',
                         symbolPlacement: 'point',
-                        textColor: '#000' ?? [
-                          'case',
-                          ['==', ['feature-state', 'active'], true],
-                          '#000',
-                          ['==', ['feature-state', 'hover'], true],
-                          green,
-                          ['==', ['feature-state', 'active'], null],
-                          'rgba(0,0,0,0.8)',
-                          'green',
-                        ],
+                        textColor: theme.color,
+                        // getting typescript err here
+                        // [
+                        //   'case',
+                        //   ['==', ['feature-state', 'active'], true],
+                        //   theme.color,
+                        //   ['==', ['feature-state', 'hover'], true],
+                        //   green,
+                        //   ['==', ['feature-state', 'active'], null],
+                        //   theme.colorSecondary,
+                        //   'green',
+                        // ],
                         textHaloColor: 'rgba(255,255,255,0.1)',
                         textHaloWidth: 1,
                       }}
@@ -289,7 +294,7 @@ export const MapView = ({
             style={{
               textField: ['case', ['has', 'point_count'], '{point_count}', ['get', 'rank']],
               textSize: 12,
-              textColor: '#000',
+              textColor: theme.color,
               textAllowOverlap: true,
               iconAllowOverlap: true,
             }}
@@ -301,7 +306,7 @@ export const MapView = ({
               textField: ['format', ['get', 'title']],
               textSize: 12,
               textFont: ['DIN Offc Pro Medium', 'Arial Unicode MS Bold'],
-              textColor: '#000',
+              textColor: theme.color,
               // doesnt support interpolate for now
               textOffset: [0, 1.25],
               textAnchor: 'top',

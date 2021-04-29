@@ -1,6 +1,7 @@
 import { capitalize } from 'lodash'
 import React, { Suspense, memo, useEffect, useRef, useState } from 'react'
 import { Controller, FieldError, RegisterOptions, useForm } from 'react-hook-form'
+import { useTheme } from 'snackui'
 import {
   Button,
   Form,
@@ -331,6 +332,7 @@ const ValidatedInput = ({
   rules?: RegisterOptions
   errors?: FieldError | null
 }) => {
+  const theme = useTheme()
   return (
     <>
       <Controller
@@ -342,6 +344,9 @@ const ValidatedInput = ({
           return (
             <Input
               color={isWeb ? 'var(--color)' : '#777'}
+              {...(!isWeb && {
+                placeholderTextColor: theme.colorTertiary,
+              })}
               {...rest}
               name={name}
               onBlur={onBlur}
@@ -417,19 +422,22 @@ function SubmittableForm({
         )}
 
         {!isSuccess && (
-          <Button
-            // accessibilityComponentType="button"
-            accessible
-            accessibilityRole="button"
-            alignSelf="flex-end"
-            marginLeft="auto"
-            onPress={onSubmit}
-            theme="active"
-            disabled={isSubmitting}
-          >
-            {submitText}
-            {isSubmitting ? '...' : ''}
-          </Button>
+          <HStack>
+            <VStack flex={1} />
+            <Button
+              // accessibilityComponentType="button"
+              accessible
+              accessibilityRole="button"
+              alignSelf="flex-end"
+              marginLeft="auto"
+              onPress={onSubmit}
+              theme="active"
+              disabled={isSubmitting}
+            >
+              {submitText}
+              {isSubmitting ? '...' : ''}
+            </Button>
+          </HStack>
         )}
 
         {isSuccess && (

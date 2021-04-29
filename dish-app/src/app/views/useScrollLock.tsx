@@ -6,18 +6,15 @@ import { NativeScrollEvent, NativeSyntheticEvent, ScrollView } from 'react-nativ
 import { isWeb } from '../../constants/constants'
 import { ScrollLock, ScrollStore } from './ContentScrollView'
 
-export const isScrollLocked = (id: string, direction?: ScrollLock) => {
-  const store = getStore(ScrollStore, { id })
-  return direction ? store.lock === direction : store.lock !== 'none' && store.lock !== 'drawer'
-}
-
 export const useScrollLock = ({ id, direction }: { id: string; direction: ScrollLock }) => {
+  const isActivelyScrolling = useRef(false)
   const scrollRef = useRef<ScrollView>(null)
   const scrollTm = useRef<any>(0)
   const store = getStore(ScrollStore, { id })
   const isLocked = () => store.lock === direction
 
   const updateLock = (val: boolean) => {
+    console.log('lock check cur', store.lock, 'next', direction, val)
     if (store.lock === 'vertical') {
       return
     }
@@ -61,24 +58,32 @@ export const useScrollLock = ({ id, direction }: { id: string; direction: Scroll
     scrollRef,
     updateLock,
     onScroll: (e: NativeSyntheticEvent<NativeScrollEvent>) => {
-      if (!isWeb || supportsTouchWeb) {
+      if (supportsTouchWeb) {
         // see hook above
         return
       }
-      clearTimeout(scrollTm.current)
-      scrollTm.current = setTimeout(() => {
-        updateLock(false)
-      }, 200)
+      if (isWeb) {
+        clearTimeout(scrollTm.current)
+        scrollTm.current = setTimeout(() => {
+          updateLock(false)
+        }, 200)
+      }
+      console.log('scroll hz', store.lock)
+      if (!isWeb && isActivelyScrolling.current === false) {
+        // avoid locking because onScroll calls after onScrollEndDrag
+        return
+      }
       if (!isLocked()) {
-        console.log('SCROLL')
         updateLock(true)
       }
     },
     onScrollBeginDrag: () => {
+      isActivelyScrolling.current = true
       clearTimeout(scrollTm.current)
       updateLock(true)
     },
     onScrollEndDrag: () => {
+      isActivelyScrolling.current = false
       clearTimeout(scrollTm.current)
       updateLock(false)
     },

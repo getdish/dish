@@ -187,11 +187,9 @@ export const ContentScrollView = forwardRef<ScrollView, ContentScrollViewProps>(
         if (!scrollStore.isAtTop) {
           scrollStore.setIsAtTop(true)
         }
-        // @ts-ignore
-        // drawerStore.pan.setValue(-y)
-        // scrollStore.setLock('none')
-        console.log('commented out, do we need to set lock none still here?')
+        // DONT LOCK HERE WILL INTERFERE WITH VERTICAL SCROLL PULL DOWN
       } else {
+        console.log('scrolling', scrollStore.lock)
         if (scrollStore.isAtTop) {
           scrollStore.setIsAtTop(false)
         }
@@ -200,7 +198,7 @@ export const ContentScrollView = forwardRef<ScrollView, ContentScrollViewProps>(
         }
         finish.current = setTimeout(() => {
           scrollStore.setLock('none')
-        }, 220)
+        }, 120)
       }
     }
 
@@ -231,11 +229,16 @@ export const ContentScrollView = forwardRef<ScrollView, ContentScrollViewProps>(
 
     const scrollState = useRef({
       at: 0,
+      start: 0,
       active: false,
     })
 
     const isScrollingVerticalFromTop = () => {
-      return scrollStore.lock === 'vertical' && scrollStore.isAtTop && drawerStore.snapIndex === 0
+      return (
+        scrollStore.lock === 'vertical' &&
+        scrollStore.isAtTop &&
+        drawerStore.snapIndexName === 'top'
+      )
     }
 
     return (
@@ -268,16 +271,21 @@ export const ContentScrollView = forwardRef<ScrollView, ContentScrollViewProps>(
               style={{ flex: 1 }}
               onMoveShouldSetResponderCapture={isScrollingVerticalFromTop}
               onTouchMove={(e) => {
+                console.log('is', isScrollingVerticalFromTop())
                 if (!isScrollingVerticalFromTop()) {
                   return false
                 }
-                if (!scrollState.current.active) {
-                  scrollState.current.active = true
-                  scrollState.current.at = e.nativeEvent.pageY
+                const ss = scrollState.current
+                if (!ss.active) {
+                  ss.active = true
+                  ss.at = e.nativeEvent.pageY
+                  ss.start = getWindowHeight() - drawerStore.currentHeight
                 }
                 const start = getWindowHeight() - drawerStore.currentHeight
-                const y = scrollState.current.at - e.nativeEvent.pageY
-                drawerStore.pan.setValue(start - y)
+                const y = ss.at - e.nativeEvent.pageY
+                const dy = start - y
+                console.log('set', y, dy, ss)
+                drawerStore.pan.setValue(dy)
               }}
               onTouchEnd={() => {
                 if (scrollState.current.active) {

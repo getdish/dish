@@ -52,7 +52,7 @@ const placeholders = [
   'ceasar salad',
   'sushi',
   'sisig',
-  'szechuan chicken',
+  'szechuan',
   'italian',
 ]
 
@@ -207,6 +207,9 @@ export const AppSearchInput = memo(() => {
                     // }
                   }}
                   onKeyPress={handleKeyPressInner}
+                  {...(!isWeb && {
+                    placeholderTextColor: '#777',
+                  })}
                   onFocus={() => {
                     isFocused = true
                     if (isDesktop) {

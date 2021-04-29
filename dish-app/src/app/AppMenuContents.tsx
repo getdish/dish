@@ -81,18 +81,20 @@ export const AppMenuContents = memo(
           <MenuLinkButton
             icon={<Sun color="rgba(150,150,150,0.5)" size={16} />}
             onPress={(e) => {
-              const next = (() => {
-                switch (userStore.theme) {
-                  case 'dark':
-                    return null
-                  case 'light':
-                    return 'dark'
-                  case null:
-                    return 'light'
-                }
-              })()
-              userStore.setTheme(next)
-              e.stopPropagation()
+              setTimeout(() => {
+                const next = (() => {
+                  switch (userStore.theme) {
+                    case 'dark':
+                      return null
+                    case 'light':
+                      return 'dark'
+                    case null:
+                      return 'light'
+                  }
+                })()
+                userStore.setTheme(next)
+                e.stopPropagation()
+              })
             }}
           >
             {userStore.theme ?? 'auto'}
@@ -130,6 +132,11 @@ const MenuLinkButton = (props: LinkButtonProps) => {
   return (
     <LinkButton
       width="100%"
+      paddingVertical={12}
+      paddingHorizontal={16}
+      textProps={{
+        fontSize: 16,
+      }}
       hoverStyle={{
         transform: [{ scale: 1.03 }],
       }}

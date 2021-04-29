@@ -7,21 +7,31 @@ import { autocompletesStore } from './AutocompletesStore'
 
 class DrawerStore extends Store {
   snapPoints = [isWeb ? 0.02 : 0.05, 0.28, 0.8]
+  // 0 = top, 1 = middle, 2 = bottom
   snapIndex = 1
   isDragging = false
   pan = new Animated.Value(this.getSnapPointOffset())
   spring: Animated.CompositeAnimation | null = null
   lastSnapAt = Date.now()
 
+  get snapIndexName() {
+    return this.snapIndex === 0 ? 'top' : this.snapIndex === 2 ? 'bottom' : 'middle'
+  }
+
   get currentSnapPoint() {
     return this.snapPoints[this.snapIndex]
   }
 
+  get currentSnapPx() {
+    return this.currentSnapPoint * getWindowHeight()
+  }
+
   get currentHeight() {
-    return getWindowHeight() - this.currentSnapPoint * getWindowHeight()
+    return getWindowHeight() - this.currentSnapPx
   }
 
   get currentMapHeight() {
+    // todo this can just be this.currentSnapPx
     return getWindowHeight() - this.currentHeight
   }
 
@@ -43,8 +53,12 @@ class DrawerStore extends Store {
   }
 
   setSnapIndex(point: number) {
+    if (this.isDragging) {
+      console.log('AVOID SNAP WHILE DRAGGING')
+      return
+    }
     this.snapIndex = point
-    this.animateDrawerToPx(this.getSnapPointOffset(), 2, true)
+    this.animateDrawerToPx(this.getSnapPointOffset(), 4, true)
   }
 
   animateDrawerToPx(
@@ -52,6 +66,11 @@ class DrawerStore extends Store {
     velocity: number = 0,
     avoidSnap = false
   ) {
+    if (this.isDragging) {
+      console.log('AVOID SNAP WHILE DRAGGING')
+      return
+    }
+    console.log('ANIMATE TO PX', px)
     this.lastSnapAt = Date.now()
     // this.isDragging = true
     if (!avoidSnap) {
@@ -101,6 +120,7 @@ class DrawerStore extends Store {
       const next = (this.snapPoints[index + 1] ?? 1) * getWindowHeight()
       const halfDif = next - cur
       const partWayThere = cur + halfDif * (direction === 'up' ? 0.66 : 0.33)
+      console.log('get snap index', cur, next, halfDif, partWayThere, estFinalPx < partWayThere)
       if (estFinalPx < partWayThere) {
         return index
       }

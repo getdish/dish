@@ -134,7 +134,7 @@ export default memo(function HomePage(props: HomeStackViewProps<HomeStateItemHom
               paddingBottom={media.sm ? 25 : 25}
               paddingHorizontal={10}
             >
-              <VStack transform={[{ translateY: 9 }]} position="relative">
+              <VStack transform={[{ translateY: 3 }]} position="relative">
                 <Theme name="dark">
                   <Link onPress={() => autocompletesStore.setTarget('location')}>
                     <SlantedTitle

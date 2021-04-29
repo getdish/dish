@@ -1,5 +1,5 @@
 import { useStore, useStoreInstance } from '@dish/use-store'
-import React, { useEffect } from 'react'
+import React, { memo, useEffect } from 'react'
 import {
   AbsoluteVStack,
   BlurView,
@@ -106,7 +106,8 @@ export const AutocompleteFrame = ({
             keyboardShouldPersistTaps="always"
           >
             {/* bugfix AutocompleteItemView causes dragging to disable */}
-            {isWeb ? children : isShowing ? children : null}
+            {/* second bugfix dont change children slows down rendering a ton... see if dragging bug happens again */}
+            {children}
 
             {/* pad bottom to scroll */}
             <VStack height={100} />
@@ -124,39 +125,41 @@ const hideAutocompletes = (e) => {
 
 export type AutocompleteSelectCb = (result: AutocompleteItem, index: number) => void
 
-export const AutocompleteResults = ({
-  target,
-  prefixResults = [],
-  onSelect,
-}: {
-  target: AutocompleteTarget
-  prefixResults?: any[]
-  onSelect: AutocompleteSelectCb
-  emptyResults?: AutocompleteItem[]
-}) => {
-  const autocompleteStore = useStore(AutocompleteStore, { target })
-  const activeIndex = autocompleteStore.index
-  const ogResults = autocompleteStore.results
-  const results = [...prefixResults, ...ogResults]
-  return (
-    <>
-      {results.map((result, index) => {
-        const isActive = !isWeb ? index === 0 : activeIndex === index
-        return (
-          <React.Fragment key={`${result.id}${index}`}>
-            <Theme name={isActive ? 'active' : 'dark'}>
-              <AutocompleteItemView
-                target={target}
-                index={index}
-                result={result}
-                onSelect={onSelect}
-                isActive={isActive}
-              />
-            </Theme>
-            <Spacer size={1} />
-          </React.Fragment>
-        )
-      })}
-    </>
-  )
-}
+export const AutocompleteResults = memo(
+  ({
+    target,
+    prefixResults = [],
+    onSelect,
+  }: {
+    target: AutocompleteTarget
+    prefixResults?: any[]
+    onSelect: AutocompleteSelectCb
+    emptyResults?: AutocompleteItem[]
+  }) => {
+    const autocompleteStore = useStore(AutocompleteStore, { target })
+    const activeIndex = autocompleteStore.index
+    const ogResults = autocompleteStore.results
+    const results = [...prefixResults, ...ogResults]
+    return (
+      <>
+        {results.map((result, index) => {
+          const isActive = !isWeb ? index === 0 : activeIndex === index
+          return (
+            <React.Fragment key={`${result.id}${index}`}>
+              <Theme name={isActive ? 'active' : 'dark'}>
+                <AutocompleteItemView
+                  target={target}
+                  index={index}
+                  result={result}
+                  onSelect={onSelect}
+                  isActive={isActive}
+                />
+              </Theme>
+              <Spacer size={1} />
+            </React.Fragment>
+          )
+        })}
+      </>
+    )
+  }
+)

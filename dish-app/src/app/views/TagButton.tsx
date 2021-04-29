@@ -157,7 +157,7 @@ const TagButtonInner = (props: TagButtonProps) => {
       paddingHorizontal={isSmall ? 4 : 8}
       paddingVertical={isSmall ? 2 : 4}
       // used again down below
-      minHeight={isSmall ? 22 : 26}
+      height={isSmall ? 26 : 32}
       {...rest}
     >
       <Spacer size="xxxs" />
@@ -322,7 +322,7 @@ const TagButtonVote = graphql(
         width={32 * scale}
         height={32 * scale}
         marginRight={5 * scale}
-        marginVertical={-3 * scale}
+        marginVertical={-2 * scale}
         opacity={0.6}
         hoverStyle={{
           opacity: 1,

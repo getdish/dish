@@ -3,6 +3,7 @@ import { graphql, order_by, query, resolved } from '@dish/graph'
 import { Plus } from '@dish/react-feather'
 import React, { Suspense, useEffect, useMemo, useState } from 'react'
 import { VStack } from 'snackui'
+import { Paragraph } from 'snackui'
 import { HStack, Spacer, Text, useDebounce } from 'snackui'
 
 import { getRestaurantIdentifiers } from '../../helpers/getRestaurantIdentifiers'
@@ -88,9 +89,9 @@ export const HomeFeedListsContents = graphql(({ region, onHoverResults }: Props)
         <FeedSlantedTitle>
           {/* marginVertical good on native */}
           <HStack alignItems="center" marginVertical={-2}>
-            <Text fontWeight="700" fontSize={20}>
+            <Paragraph fontWeight="700" fontSize={18}>
               Top Lists
-            </Text>
+            </Paragraph>
             <Spacer size="sm" />
             <Link
               promptLogin

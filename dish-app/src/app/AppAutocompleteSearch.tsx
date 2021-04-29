@@ -2,7 +2,8 @@ import { series, sleep } from '@dish/async'
 import { order_by, query, resolved } from '@dish/graph'
 import { useStoreInstance } from '@dish/use-store'
 import { groupBy } from 'lodash'
-import React, { Suspense, memo, useEffect, useMemo } from 'react'
+import React, { Suspense, memo, useCallback, useEffect, useMemo } from 'react'
+import { useGet } from 'snackui'
 import { AbsoluteVStack, Theme, Toast, useDebounceValue } from 'snackui'
 
 import { zIndexAutocomplete } from '../constants/constants'
@@ -50,6 +51,7 @@ const AutocompleteSearchInner = memo(() => {
     lastActiveTags,
   ])
   const [query, activeTags] = useDebounceValue(searchState, 250)
+  const getQuery = useGet(query)
 
   useEffect(() => {
     query && store.setIsLoading(true)
@@ -57,33 +59,33 @@ const AutocompleteSearchInner = memo(() => {
 
   useSearchQueryEffect(query, store, activeTags)
 
+  const prefixResults = useMemo(() => {
+    return currentSearchQuery
+      ? [
+          {
+            name: isTouchDevice ? 'Tap to search' : 'Enter to search',
+            icon: '🔍',
+            tagId: '',
+            type: 'orphan' as const,
+            description: '',
+          },
+        ]
+      : []
+  }, [currentSearchQuery])
+
+  const handleSelect = useCallback((result) => {
+    // clear query
+    if (result.type === 'orphan') {
+      home.clearTags()
+      home.setSearchQuery(getQuery())
+    } else if (result.type !== 'restaurant') {
+      home.setSearchQuery('')
+    }
+  }, [])
+
   return (
     <AutocompleteFrame target="search">
-      <AutocompleteResults
-        target="search"
-        prefixResults={
-          currentSearchQuery
-            ? [
-                {
-                  name: isTouchDevice ? 'Tap to search' : 'Enter to search',
-                  icon: '🔍',
-                  tagId: '',
-                  type: 'orphan' as const,
-                  description: '',
-                },
-              ]
-            : []
-        }
-        onSelect={(result) => {
-          // clear query
-          if (result.type === 'orphan') {
-            home.clearTags()
-            home.setSearchQuery(query)
-          } else if (result.type !== 'restaurant') {
-            home.setSearchQuery('')
-          }
-        }}
-      />
+      <AutocompleteResults target="search" prefixResults={prefixResults} onSelect={handleSelect} />
     </AutocompleteFrame>
   )
 })
