@@ -5,6 +5,7 @@ import { VStack, useTheme } from 'snackui'
 
 import AppMap from './AppMap'
 import { AppMenuButton } from './AppMenuButton'
+import { useAppShouldShow } from './AppStore'
 import { AutocompleteEffects } from './AutocompletesStore'
 import GalleryPage from './home/gallery/GalleryPage'
 import { Home } from './home/Home'
@@ -16,6 +17,7 @@ LogBox.ignoreAllLogs(true)
 
 export function App() {
   const theme = useTheme()
+  const show = useAppShouldShow('map')
 
   return (
     <>
@@ -27,9 +29,11 @@ export function App() {
         alignItems="center"
         justifyContent="center"
       >
-        <Suspense fallback={null}>
-          <AppMap />
-        </Suspense>
+        {show && (
+          <Suspense fallback={null}>
+            <AppMap />
+          </Suspense>
+        )}
 
         <Home />
 

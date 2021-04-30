@@ -306,14 +306,14 @@ const DishViewContent = (props: DishViewProps) => {
   )
 }
 
-const SineWave = ({ color, size }: { color: string; size: number }) => {
-  return (
-    <VStack transform={[{ scale: size / 385 }, { translateX: (385 - size / 385) / 2 }]}>
-      <Svg width="385px" height="169px" viewBox="0 0 385 169">
-        <G transform="translate(-83.000000, -142.000000)" fill={color}>
-          <Path d="M83,169.121094 C153.643229,133.990885 221.466146,133.990885 286.46875,169.121094 C351.471354,204.251302 411.981771,204.251302 468,169.121094 L468,310.121094 L83,310.121094 L83,169.121094 Z" />
-        </G>
-      </Svg>
-    </VStack>
-  )
-}
+// const SineWave = ({ color, size }: { color: string; size: number }) => {
+//   return (
+//     <VStack transform={[{ scale: size / 385 }, { translateX: (385 - size / 385) / 2 }]}>
+//       <Svg width="385px" height="169px" viewBox="0 0 385 169">
+//         <G transform="translate(-83.000000, -142.000000)" fill={color}>
+//           <Path d="M83,169.121094 C153.643229,133.990885 221.466146,133.990885 286.46875,169.121094 C351.471354,204.251302 411.981771,204.251302 468,169.121094 L468,310.121094 L83,310.121094 L83,169.121094 Z" />
+//         </G>
+//       </Svg>
+//     </VStack>
+//   )
+// }

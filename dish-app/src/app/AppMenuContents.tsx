@@ -8,6 +8,7 @@ import { isWeb } from '../constants/constants'
 import { isHermes } from '../constants/platforms'
 import { UserMenuButton } from './AppMenu'
 import { appMenuStore } from './AppMenuStore'
+import { appStore } from './AppStore'
 import { AuthForm } from './AuthForm'
 import { useUserStore } from './userStore'
 import { DishLogoButton } from './views/DishLogoButton'
@@ -118,6 +119,22 @@ export const AppMenuContents = memo(
               </MenuLinkButton>
             </>
           )}
+
+          {Object.keys(appStore.show).map((key) => {
+            return (
+              <MenuLinkButton
+                key={key}
+                onPress={() => {
+                  appStore.show = {
+                    ...appStore.show,
+                    [key]: !appStore.show[key],
+                  }
+                }}
+              >
+                toggle {key}
+              </MenuLinkButton>
+            )
+          })}
 
           <Paragraph opacity={0.05} size="xxs">
             {isHermes ? 'hermes' : 'jsc'}

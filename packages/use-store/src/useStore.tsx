@@ -407,6 +407,7 @@ function createProxiedStore(storeInfo: Omit<StoreInfo, 'store' | 'source'>) {
   const constr = storeInstance.constructor
 
   let didSet = false
+  let isInAction = false
 
   const proxiedStore = new Proxy(storeInstance, {
     // GET
@@ -429,7 +430,11 @@ function createProxiedStore(storeInfo: Omit<StoreInfo, 'store' | 'source'>) {
               return actionFn.apply(proxiedStore, args)
             }
 
+            // dumb for now
+            isInAction = true
+
             const finishAction = () => {
+              isInAction = false
               if (storeInstance[SHOULD_DEBUG]()) {
                 // prettier-ignore
                 console.log('finish action', constr.name, key, {  didSet })
@@ -620,7 +625,11 @@ function createProxiedStore(storeInfo: Omit<StoreInfo, 'store' | 'source'>) {
             console.log('(debug) SET', res, key, value)
           }
         }
-        didSet = true
+        if (isInAction) {
+          didSet = true
+        } else {
+          storeInfo.triggerUpdate()
+        }
       }
       return res
     },
