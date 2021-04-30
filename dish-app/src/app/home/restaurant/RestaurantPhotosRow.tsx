@@ -54,8 +54,20 @@ export const RestaurantPhotosRowContent = memo(
     const photos = mainPhoto ? [mainPhoto, ...otherPhotos] : otherPhotos
     const initialWidth = useConstant(() => width)
 
+    const photosData = photos.map((url, index) => {
+      const photoHeight = escalating ? (index < 2 ? height : 500) : height
+      const isEscalated = escalating && index >= 2
+      const wScale = isEscalated ? 1.25 : 1
+      const photoWidth = width * wScale
+      // dont change uri
+      const uri = getImageUrl(url, initialWidth * wScale * 1.5, photoHeight * 1.5, 100)
+      return { uri, height: photoHeight, width: photoWidth, isEscalated }
+    })
+
+    const fullWidth = photosData.reduce((a, b) => a + b.width, 0)
     return (
-      <HStack>
+      // an attempt to get native to scroll but not working
+      <HStack minWidth={fullWidth}>
         {!photos.length && (
           <HStack backgroundColor={bgLight}>
             <Text>No photos!</Text>
@@ -63,20 +75,9 @@ export const RestaurantPhotosRowContent = memo(
         )}
         {!!photos.length && (
           <>
-            {photos.map((url, index) => {
-              const photoHeight = escalating ? (index < 2 ? height : 500) : height
-              const isEscalated = escalating && index >= 2
-              const wScale = isEscalated ? 1.25 : 1
-              const containerWidth = width * wScale
-              // dont change uri
-              const uri = getImageUrl(url, initialWidth * wScale * 1.5, photoHeight * 1.5, 100)
+            {photosData.map(({ uri, width, height, isEscalated }, index) => {
               return (
-                <VStack
-                  width={containerWidth}
-                  height={photoHeight}
-                  key={index}
-                  className={`scroll-snap-photo`}
-                >
+                <VStack width={width} height={height} key={index} className={`scroll-snap-photo`}>
                   {(!isEscalated || showEscalated || index === 2) && (
                     <Link name="gallery" params={{ restaurantSlug }}>
                       <Image
@@ -84,8 +85,8 @@ export const RestaurantPhotosRowContent = memo(
                           uri,
                         }}
                         style={{
-                          height: photoHeight,
-                          width: containerWidth,
+                          height,
+                          width,
                         }}
                         resizeMode="cover"
                       />

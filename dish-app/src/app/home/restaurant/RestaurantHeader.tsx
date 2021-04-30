@@ -78,217 +78,226 @@ const RestaurantHeaderContent = memo(
       const themeName = useThemeName()
       const theme = useTheme()
 
+      const content = (
+        <VStack>
+          <AbsoluteVStack top={5} left={5} zIndex={100}>
+            <Suspense fallback={null}>
+              <RestaurantAddToListButton shadowed restaurantSlug={restaurantSlug} />
+            </Suspense>
+          </AbsoluteVStack>
+
+          <AbsoluteVStack zIndex={0} pointerEvents="auto">
+            <RestaurantPhotosRow
+              restaurantSlug={restaurantSlug}
+              width={photoWidth}
+              height={imgHeight}
+              escalating
+              showEscalated={hasScrolled}
+            />
+            <AbsoluteVStack
+              left={0}
+              right={0}
+              height={imgHeight}
+              width={width}
+              pointerEvents="none"
+              transform={[{ translateY: 1 }]}
+            >
+              <LinearGradient
+                style={[StyleSheet.absoluteFill]}
+                colors={[
+                  // `${colors.themeColorAlt}aa`,
+                  `${colors.themeColor}00`,
+                  // `${colors.themeColor}00`,
+                  colors.themeColor,
+                ]}
+              />
+            </AbsoluteVStack>
+          </AbsoluteVStack>
+
+          <Theme name={colors.name}>
+            <VStack
+              marginTop={imgHeight - 70}
+              minWidth={minWidth}
+              maxWidth={width}
+              borderTopRightRadius={drawerBorderRadius - 1}
+              borderTopLeftRadius={drawerBorderRadius - 1}
+              width="100%"
+              position="relative"
+              pointerEvents="none"
+              zIndex={10}
+            >
+              <VStack flex={1}>
+                {/* title row */}
+                <HStack paddingLeft={20} alignItems="center">
+                  <HStack position="relative">
+                    <VStack marginVertical={-6}>
+                      <Theme name="light">
+                        <RestaurantRatingView floating size={72} slug={restaurantSlug} />
+                      </Theme>
+                    </VStack>
+                    <Spacer size="lg" />
+                    <HStack
+                      backgroundColor={colors.themeColorAlt}
+                      shadowColor="#000"
+                      shadowOpacity={0.2}
+                      pointerEvents="auto"
+                      shadowRadius={5}
+                      shadowOffset={{ height: 3, width: 0 }}
+                      borderRadius={16}
+                      paddingHorizontal={20}
+                      paddingVertical={9}
+                      alignItems="center"
+                      justifyContent="center"
+                      minWidth={100}
+                      transform={[
+                        {
+                          skewX: '-12deg',
+                        },
+                      ]}
+                    >
+                      <HStack
+                        transform={[
+                          {
+                            skewX: '12deg',
+                          },
+                        ]}
+                      >
+                        <Text
+                          color="#fff"
+                          alignSelf="flex-start"
+                          selectable
+                          letterSpacing={-1.2}
+                          fontSize={fontSize}
+                          fontWeight="800"
+                        >
+                          {restaurant.name || ' '}
+                        </Text>
+                      </HStack>
+                    </HStack>
+                  </HStack>
+                </HStack>
+
+                <Spacer size="lg" />
+
+                {/* below title row */}
+                <HStack pointerEvents="auto" flex={1} alignItems="flex-start" minWidth={280}>
+                  {spacer}
+                  <VStack flex={10}>
+                    <VStack pointerEvents="auto" overflow="hidden" paddingRight={20}>
+                      <HStack alignItems="center" flexWrap="wrap" maxWidth="100%" minHeight={55}>
+                        <Theme name={themeName === 'dark' ? `${colors.name}-dark` : null}>
+                          <Suspense fallback={null}>
+                            <HStack marginBottom={10}>
+                              <RestaurantFavoriteStar size="lg" restaurantId={restaurantId} />
+                              <Spacer size="xs" />
+
+                              <RestaurantAddressLinksRow
+                                curLocInfo={state?.curLocInfo ?? null}
+                                showMenu
+                                size="lg"
+                                restaurantSlug={restaurantSlug}
+                              />
+                            </HStack>
+
+                            <Spacer size="sm" />
+
+                            <VStack marginBottom={10}>
+                              <RestaurantAddress
+                                size="xs"
+                                address={restaurant.address ?? ''}
+                                curLocInfo={state?.curLocInfo ?? null}
+                              />
+                            </VStack>
+
+                            <VStack marginBottom={10}>
+                              <SmallButton
+                                backgroundColor="transparent"
+                                borderWidth={0}
+                                name="restaurantHours"
+                                params={{ slug: restaurantSlug }}
+                                textProps={{
+                                  ellipse: true,
+                                  opacity: 0.5,
+                                }}
+                                icon={
+                                  <Clock
+                                    size={14}
+                                    color={isWeb ? 'var(--color)' : '#999'}
+                                    style={{ marginRight: 5 }}
+                                  />
+                                }
+                              >
+                                <Text color={theme.color}>
+                                  {`${open.text}${open.nextTime ? ` (${open.nextTime})` : ''}`}
+                                </Text>
+                              </SmallButton>
+                            </VStack>
+                          </Suspense>
+                        </Theme>
+                      </HStack>
+
+                      {afterAddress}
+                    </VStack>
+
+                    <Spacer size="sm" />
+
+                    <VStack width={contentLeftWidth}>
+                      <RestaurantTagsRow
+                        restaurantSlug={restaurantSlug}
+                        restaurantId={restaurantId}
+                        spacing={10}
+                        grid
+                        max={8}
+                        size="lg"
+                      />
+
+                      <Spacer size="xl" />
+
+                      <VStack marginLeft={-30} marginRight={-10}>
+                        {/* idk why this theme here is necessary */}
+                        <Theme name={themeName}>
+                          <CommentBubble
+                            avatar={<LogoCircle />}
+                            name="DishBot"
+                            avatarBackgroundColor="transparent"
+                            text={
+                              <RestaurantOverview
+                                maxLines={4}
+                                size="lg"
+                                restaurantSlug={restaurantSlug}
+                              />
+                            }
+                          />
+                        </Theme>
+                      </VStack>
+
+                      <RestaurantDeliveryButtons
+                        marginTop={20}
+                        marginBottom={20}
+                        label="Delivers"
+                        showLabels
+                        restaurantSlug={restaurantSlug}
+                      />
+                    </VStack>
+                  </VStack>
+                </HStack>
+              </VStack>
+            </VStack>
+          </Theme>
+        </VStack>
+      )
+
+      if (!isWeb) {
+        return content
+      }
+
       return (
         <ContentScrollViewHorizontalFitted
           onScroll={hasScrolled ? undefined : () => setHasScrolled(true)}
           width={width}
           setWidth={setWidthDebounce}
         >
-          <VStack>
-            <AbsoluteVStack top={5} left={5} zIndex={100}>
-              <Suspense fallback={null}>
-                <RestaurantAddToListButton shadowed restaurantSlug={restaurantSlug} />
-              </Suspense>
-            </AbsoluteVStack>
-
-            <AbsoluteVStack zIndex={0} pointerEvents="auto">
-              <RestaurantPhotosRow
-                restaurantSlug={restaurantSlug}
-                width={photoWidth}
-                height={imgHeight}
-                escalating
-                showEscalated={hasScrolled}
-              />
-              <AbsoluteVStack
-                left={0}
-                right={0}
-                height={imgHeight}
-                width={width}
-                pointerEvents="none"
-                transform={[{ translateY: 1 }]}
-              >
-                <LinearGradient
-                  style={[StyleSheet.absoluteFill]}
-                  colors={[
-                    // `${colors.themeColorAlt}aa`,
-                    `${colors.themeColor}00`,
-                    // `${colors.themeColor}00`,
-                    colors.themeColor,
-                  ]}
-                />
-              </AbsoluteVStack>
-            </AbsoluteVStack>
-
-            <Theme name={colors.name}>
-              <VStack
-                marginTop={imgHeight - 70}
-                minWidth={minWidth}
-                maxWidth={width}
-                borderTopRightRadius={drawerBorderRadius - 1}
-                borderTopLeftRadius={drawerBorderRadius - 1}
-                width="100%"
-                position="relative"
-                pointerEvents="none"
-                zIndex={10}
-              >
-                <VStack flex={1}>
-                  {/* title row */}
-                  <HStack paddingLeft={20} alignItems="center">
-                    <HStack position="relative">
-                      <VStack marginVertical={-14}>
-                        <Theme name="light">
-                          <RestaurantRatingView floating size={82} slug={restaurantSlug} />
-                        </Theme>
-                      </VStack>
-                      <Spacer size="lg" />
-                      <HStack
-                        backgroundColor={colors.themeColorAlt}
-                        shadowColor="#000"
-                        shadowOpacity={0.2}
-                        pointerEvents="auto"
-                        shadowRadius={5}
-                        shadowOffset={{ height: 3, width: 0 }}
-                        borderRadius={16}
-                        paddingHorizontal={20}
-                        paddingVertical={9}
-                        alignItems="center"
-                        justifyContent="center"
-                        minWidth={100}
-                        transform={[
-                          {
-                            skewX: '-12deg',
-                          },
-                        ]}
-                      >
-                        <HStack
-                          transform={[
-                            {
-                              skewX: '12deg',
-                            },
-                          ]}
-                        >
-                          <Text
-                            color="#fff"
-                            alignSelf="flex-start"
-                            selectable
-                            letterSpacing={-1.2}
-                            fontSize={fontSize}
-                            fontWeight="800"
-                          >
-                            {restaurant.name || ' '}
-                          </Text>
-                        </HStack>
-                      </HStack>
-                    </HStack>
-                  </HStack>
-
-                  <Spacer size="lg" />
-
-                  {/* below title row */}
-                  <HStack pointerEvents="auto" flex={1} alignItems="flex-start" minWidth={280}>
-                    {spacer}
-                    <VStack flex={10} overflow="hidden">
-                      <VStack pointerEvents="auto" overflow="hidden" paddingRight={20}>
-                        <HStack alignItems="center" flexWrap="wrap" maxWidth="100%" minHeight={55}>
-                          <Theme name={themeName === 'dark' ? `${colors.name}-dark` : null}>
-                            <Suspense fallback={null}>
-                              <HStack marginBottom={10}>
-                                <RestaurantFavoriteStar size="lg" restaurantId={restaurantId} />
-                                <Spacer size="xs" />
-
-                                <RestaurantAddressLinksRow
-                                  curLocInfo={state?.curLocInfo ?? null}
-                                  showMenu
-                                  size="lg"
-                                  restaurantSlug={restaurantSlug}
-                                />
-                              </HStack>
-
-                              <Spacer size="sm" />
-
-                              <VStack marginBottom={10}>
-                                <RestaurantAddress
-                                  size="xs"
-                                  address={restaurant.address ?? ''}
-                                  curLocInfo={state?.curLocInfo ?? null}
-                                />
-                              </VStack>
-
-                              <VStack marginBottom={10}>
-                                <SmallButton
-                                  backgroundColor="transparent"
-                                  borderWidth={0}
-                                  name="restaurantHours"
-                                  params={{ slug: restaurantSlug }}
-                                  textProps={{
-                                    ellipse: true,
-                                    opacity: 0.5,
-                                  }}
-                                  icon={
-                                    <Clock
-                                      size={14}
-                                      color={isWeb ? 'var(--color)' : '#999'}
-                                      style={{ marginRight: 5 }}
-                                    />
-                                  }
-                                >
-                                  <Text color={theme.color}>
-                                    {`${open.text}${open.nextTime ? ` (${open.nextTime})` : ''}`}
-                                  </Text>
-                                </SmallButton>
-                              </VStack>
-                            </Suspense>
-                          </Theme>
-                        </HStack>
-
-                        {afterAddress}
-                      </VStack>
-
-                      <Spacer size="sm" />
-
-                      <VStack width={contentLeftWidth}>
-                        <RestaurantTagsRow
-                          restaurantSlug={restaurantSlug}
-                          restaurantId={restaurantId}
-                          spacing={10}
-                          grid
-                          max={8}
-                          size="lg"
-                        />
-
-                        <Spacer size="xl" />
-
-                        <VStack marginLeft={-10}>
-                          {/* idk why this theme here is necessary */}
-                          <Theme name={themeName}>
-                            <CommentBubble
-                              avatar={<LogoCircle />}
-                              name="DishBot"
-                              avatarBackgroundColor="transparent"
-                              text={
-                                <RestaurantOverview
-                                  maxLines={4}
-                                  size="lg"
-                                  restaurantSlug={restaurantSlug}
-                                />
-                              }
-                            />
-                          </Theme>
-                        </VStack>
-
-                        <RestaurantDeliveryButtons
-                          marginTop={20}
-                          label="Delivers"
-                          showLabels
-                          restaurantSlug={restaurantSlug}
-                        />
-                      </VStack>
-                    </VStack>
-                  </HStack>
-                </VStack>
-              </VStack>
-            </Theme>
-          </VStack>
+          {content}
         </ContentScrollViewHorizontalFitted>
       )
     },

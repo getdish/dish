@@ -76,7 +76,7 @@ const HomePageFilterBarSmall = ({ activeTags }: FilterBarProps) => {
                 <CloseButton onPress={() => setShow(false)} />
               </VStack>
 
-              <SlantedTitle>Filters</SlantedTitle>
+              <SlantedTitle alignSelf="center">Filters</SlantedTitle>
               <VStack alignItems="center" justifyContent="center" flex={1} spacing="sm">
                 {filterButtons}
               </VStack>

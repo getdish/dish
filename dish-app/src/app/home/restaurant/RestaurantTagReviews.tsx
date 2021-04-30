@@ -99,7 +99,7 @@ const Content = memo(
       ).filter(isPresent)
 
       return (
-        <VStack maxWidth="100%" width="100%" position="relative">
+        <VStack maxWidth="100%" width="100%" height="100%" position="relative">
           {closable && (
             <AbsoluteVStack zIndex={1000} top={10} right={10}>
               <CloseButton onPress={store.toggleShowComments} />
@@ -212,7 +212,7 @@ const Content = memo(
                             <AbsoluteVStack zIndex={10} bottom={0} left={0} height={20} right={0}>
                               <LinearGradient
                                 colors={[
-                                  `${theme.cardBackgroundColor}00`,
+                                  theme.backgroundColorTransparent,
                                   theme.cardBackgroundColor,
                                 ]}
                                 style={StyleSheet.absoluteFill}

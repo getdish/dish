@@ -1,9 +1,8 @@
 import { Plus } from '@dish/react-feather'
 import React, { Suspense, useState } from 'react'
-import { Spacer, Text, Tooltip } from 'snackui'
+import { Button, Tooltip } from 'snackui'
 
 import { userStore } from '../../userStore'
-import { SmallCircleButton } from '../../views/CloseButton'
 import { SmallButtonProps } from '../../views/SmallButton'
 import { RestaurantAddToListModal } from './RestaurantAddToListModal'
 
@@ -32,10 +31,9 @@ export const RestaurantAddToListButton = ({
         </Suspense>
       )}
       <Tooltip contents="Add to list">
-        <SmallCircleButton
-          subtle={subtle}
+        <Button
           cursor="pointer"
-          shadowed={shadowed}
+          icon={<Plus color={'#777'} size={size ?? 16} />}
           tooltip="Add to list"
           onPress={() => {
             if (!userStore.promptLogin()) {
@@ -47,18 +45,8 @@ export const RestaurantAddToListButton = ({
           }}
           {...props}
         >
-          <Spacer size="xs" />
-          <Plus color={subtle ? '#555' : '#fff'} size={size ?? 16} />
-          {!noLabel && (
-            <>
-              <Spacer size="xs" />
-              <Text color="#fff" fontSize={14} fontWeight="600">
-                List
-              </Text>
-            </>
-          )}
-          <Spacer size="xs" />
-        </SmallCircleButton>
+          {noLabel ? null : 'List'}
+        </Button>
       </Tooltip>
     </>
   )

@@ -98,12 +98,11 @@ export const RestaurantDishRowContent = memo(
         <ContentScrollViewHorizontal
           onScroll={handleScroll}
           style={{
-            width: isWeb ? 'calc(100% + 30px)' : '98%',
-            marginHorizontal: -5,
+            marginHorizontal: -20,
           }}
         >
           {hasDishes ? (
-            <VStack paddingHorizontal={30} paddingVertical={10}>
+            <VStack paddingHorizontal={40} paddingVertical={10}>
               <HStack spacing="md">
                 <Theme name={themeName && selected === '' ? themeName : null}>
                   <ScalingPressable

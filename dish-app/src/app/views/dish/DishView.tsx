@@ -191,7 +191,7 @@ const DishViewContent = (props: DishViewProps) => {
           borderRadius={8}
           paddingVertical={3}
           paddingHorizontal={8}
-          maxWidth="70%"
+          maxWidth={isWeb ? '70%' : '100%'}
           overflow="hidden"
           transform={[{ translateX: -10 }, { skewX: '-12deg' }]}
           shadowColor="rgba(0,0,0,0.1)"
@@ -204,7 +204,7 @@ const DishViewContent = (props: DishViewProps) => {
           })}
         >
           <Text
-            className="unskewX ease-in-out-fast"
+            className="ease-in-out-fast"
             // flex={1} breaks native
             overflow="hidden"
             fontWeight="700"
@@ -212,6 +212,7 @@ const DishViewContent = (props: DishViewProps) => {
             color={isActive ? '#fff' : '#000'}
             fontSize={fontSize}
             textAlign="center"
+            transform={[{ skewX: '12deg' }]}
           >
             {dishName}
           </Text>
@@ -257,7 +258,12 @@ const DishViewContent = (props: DishViewProps) => {
           end={[0.5, 0.5]}
         />
       </AbsoluteVStack>
-      {!image && <Text fontSize={80}>🥗</Text>}
+      {!image && (
+        // native needs this vstack
+        <VStack width={size} height={size} alignItems="center" justifyContent="center">
+          <Text fontSize={80}>🥗</Text>
+        </VStack>
+      )}
     </Hoverable>
   )
 
@@ -294,7 +300,6 @@ const DishViewContent = (props: DishViewProps) => {
       pointerEvents="auto"
       size={size}
       {...rest}
-      // zIndex={isHovered ? 10000000 : rest.zIndex}
     >
       {contents}
     </ColoredCircle>

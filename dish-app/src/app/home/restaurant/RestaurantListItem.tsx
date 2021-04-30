@@ -517,7 +517,7 @@ const RestaurantListItemContent = memo(
             <VStack
               position="relative"
               marginTop={-55}
-              transform={[{ translateY: -10 }, { translateX: -20 }]}
+              transform={[{ translateY: -10 }, { translateX: -15 }]}
               pointerEvents="none"
             >
               <Suspense fallback={null}>
@@ -652,17 +652,16 @@ const RestaurantPeekDishes = memo(
                 : dishSize
 
               return (
-                <DishView
-                  key={dish.slug}
-                  preventLoad={!isLoaded && i > 2}
-                  size={baseSize * (isEven ? 1.2 : 1)}
-                  restaurantSlug={props.restaurantSlug}
-                  restaurantId={props.restaurantId}
-                  {...dish}
-                  marginRight={-26}
-                  marginTop={isEven ? 0 : -20}
-                  showSearchButton={!props.editable}
-                />
+                <VStack key={dish.slug} marginRight={-26} marginTop={isEven ? 0 : -20}>
+                  <DishView
+                    preventLoad={!isLoaded && i > 2}
+                    size={baseSize * (isEven ? 1.2 : 1)}
+                    restaurantSlug={props.restaurantSlug}
+                    restaurantId={props.restaurantId}
+                    {...dish}
+                    showSearchButton={!props.editable}
+                  />
+                </VStack>
               )
             })}
         </HStack>

@@ -41,7 +41,7 @@ export const ContentScrollViewHorizontalFitted = (
         style={[
           {
             width: '100%',
-            maxWidth: isWeb ? '100vw' : '100%',
+            maxWidth: '100%',
           },
           props.contentContainerStyle,
         ]}

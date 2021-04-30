@@ -141,7 +141,7 @@ const TagButtonInner = (props: TagButtonProps) => {
   }
 
   const isSmall = size === 'sm'
-  const scale = isSmall ? 0.85 : size == 'lg' ? 1.15 : 1
+  const scale = isSmall ? 0.85 : size == 'lg' ? 1.05 : 1
   const fontSize = fontSizeProp ? fontSizeProp : 15 * scale
   const smallerFontSize: any = typeof fontSize === 'number' ? fontSize * 0.85 : fontSize
   const ratingPts = typeof rating === 'number' ? rating * 10 - 50 : 0
@@ -219,10 +219,10 @@ const TagButtonInner = (props: TagButtonProps) => {
               position="relative"
               backgroundColor={theme.backgroundColorQuartenary}
               borderRadius={100}
-              width={pieSize + 2}
-              height={pieSize + 2}
+              width={pieSize}
+              height={pieSize}
               transform={[{ rotate: `${(1 - rating / 10) * 180}deg` }]}
-              borderWidth={2}
+              // borderWidth={1}
               borderColor={theme.backgroundColorAlt}
             >
               <AbsoluteVStack opacity={floating ? 1 : 0.7} fullscreen>

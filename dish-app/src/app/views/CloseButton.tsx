@@ -1,3 +1,4 @@
+// debug
 import { CornerLeftUp, X } from '@dish/react-feather'
 import React, { memo } from 'react'
 import { AbsoluteVStack } from 'snackui'
@@ -37,6 +38,7 @@ export const SmallCircleButton = ({
   ...props
 }: CircleButtonProps) => {
   const theme = useTheme()
+  if (props['debug']) console.log('shadowed', shadowed)
   return (
     <HStack
       borderRadius={1000}

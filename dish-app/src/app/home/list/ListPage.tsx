@@ -13,7 +13,7 @@ import {
   useRefetch,
 } from '@dish/graph'
 import { assertPresent, isPresent } from '@dish/helpers'
-import { Heart, Plus, Trash, X } from '@dish/react-feather'
+import { Plus, Trash, X } from '@dish/react-feather'
 import React, { Suspense, useEffect, useRef, useState } from 'react'
 import { Switch } from 'react-native'
 import {
@@ -405,9 +405,9 @@ const ListPageContent = graphql((props: Props) => {
 
                   <VStack position="relative" alignSelf="center">
                     {list.user?.avatar && (
-                      <AbsoluteVStack overflow="visible" bottom={-50} left={-80} zIndex={-1}>
+                      <AbsoluteVStack overflow="visible" bottom={-15} left={-60} zIndex={-3}>
                         <UserAvatar
-                          size={150}
+                          size={130}
                           charIndex={list.user.charIndex!}
                           avatar={list.user.avatar}
                         />
@@ -439,11 +439,10 @@ const ListPageContent = graphql((props: Props) => {
                         list.name
                       )}
                     </SlantedTitle>
+                    <SlantedTitle zIndex={-1} size="xs" alignSelf="center">
+                      {region.data?.name ?? props.item.region}
+                    </SlantedTitle>
                   </VStack>
-
-                  <SlantedTitle zIndex={-1} size="xs" alignSelf="center">
-                    {region.data?.name ?? props.item.region}
-                  </SlantedTitle>
                 </VStack>
               }
               // after={
