@@ -1,13 +1,13 @@
 import { graphql, order_by } from '@dish/graph'
 import { isPresent } from '@dish/helpers'
 import React, { Suspense, memo, useMemo } from 'react'
-import { Image } from 'react-native'
 import { useConstant } from 'snackui'
 import { HStack, Text, VStack } from 'snackui'
 
 import { bgLight } from '../../../constants/colors'
 import { getImageUrl } from '../../../helpers/getImageUrl'
 import { queryRestaurant } from '../../../queries/queryRestaurant'
+import { Image } from '../../views/Image'
 import { Link } from '../../views/Link'
 import { LinkButton } from '../../views/LinkButton'
 

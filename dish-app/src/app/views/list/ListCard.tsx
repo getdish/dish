@@ -1,6 +1,5 @@
 import { graphql } from '@dish/graph'
 import React from 'react'
-import { Image } from 'react-native'
 import { AbsoluteVStack, HStack, Hoverable, Text, VStack, useTheme } from 'snackui'
 
 import { getColorsForName } from '../../../helpers/getColorsForName'
@@ -8,6 +7,7 @@ import { getImageUrl } from '../../../helpers/getImageUrl'
 import { queryList } from '../../../queries/queryList'
 import { getListColor } from '../../home/list/listColors'
 import { Card } from '../../home/restaurant/Card'
+import { Image } from '../Image.native'
 import { Link } from '../Link'
 import { Score } from '../Score'
 

@@ -1,11 +1,10 @@
 import { capitalize } from 'lodash'
 import React, { Suspense, memo } from 'react'
-import { Image } from 'react-native'
 import { AbsoluteVStack, Box, HStack, Text, VStack, useTheme } from 'snackui'
 
-import { isWeb } from '../../../constants/constants'
 import { getImageUrl } from '../../../helpers/getImageUrl'
 import { DishTagItem } from '../../../helpers/getRestaurantDishes'
+import { Image } from '../Image'
 import { Link } from '../Link'
 import { TextSuperScript } from '../TextSuperScript'
 import { DishUpvoteDownvote } from './DishUpvoteDownvote'
@@ -82,7 +81,7 @@ const DishButtonContent = (props: TagButtonSlantedProps) => {
               marginVertical={-5}
               marginLeft={-5}
             >
-              <ImageAlt
+              <Image
                 source={{ uri: imageUrl }}
                 style={{
                   width: 50,
@@ -172,11 +171,4 @@ const DishButtonContent = (props: TagButtonSlantedProps) => {
   }
 
   return contents
-}
-
-const ImageAlt = (props: any) => {
-  if (isWeb) {
-    return <img src={props.source.uri} style={props.style} loading="lazy" />
-  }
-  return <Image {...props} />
 }

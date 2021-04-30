@@ -1,8 +1,8 @@
 import React, { memo } from 'react'
-import { Image } from 'react-native'
 import { Text, VStack, useTheme } from 'snackui'
 
 import { defaultUserImage } from '../../../constants/defaultUserImage'
+import { Image } from '../../views/Image'
 import { characters } from './characters'
 
 export const UserAvatar = memo(

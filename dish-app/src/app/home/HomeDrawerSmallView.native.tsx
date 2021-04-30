@@ -9,7 +9,7 @@ import {
   StyleSheet,
   View,
 } from 'react-native'
-import { VStack, useConstant } from 'snackui'
+import { VStack } from 'snackui'
 
 import { pageWidthMax, searchBarHeight, zIndexDrawer } from '../../constants/constants'
 import { getWindowHeight } from '../../helpers/getWindow'

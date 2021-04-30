@@ -27,9 +27,9 @@ export function App() {
         alignItems="center"
         justifyContent="center"
       >
-        {/* <Suspense fallback={null}>
+        <Suspense fallback={null}>
           <AppMap />
-        </Suspense> */}
+        </Suspense>
 
         <Home />
 

@@ -1,10 +1,10 @@
 import { graphql } from '@dish/graph'
 import React, { Suspense, memo } from 'react'
-import { Image } from 'react-native'
 import { HStack, LoadingItems, VStack } from 'snackui'
 
 import { queryRestaurant } from '../../../queries/queryRestaurant'
 import { ContentScrollViewHorizontal } from '../../views/ContentScrollViewHorizontal'
+import { Image } from '../../views/Image'
 import { Link } from '../../views/Link'
 
 type Props = {

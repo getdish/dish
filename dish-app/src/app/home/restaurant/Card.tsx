@@ -1,5 +1,5 @@
 import React from 'react'
-import { Image, StyleSheet } from 'react-native'
+import { StyleSheet } from 'react-native'
 import { AbsoluteVStack, HStack, LinearGradient, Paragraph, Spacer, Text, VStack } from 'snackui'
 
 import {
@@ -11,6 +11,7 @@ import {
 } from '../../../constants/constants'
 import { ColorShades, getColorsForColor, getColorsForName } from '../../../helpers/getColorsForName'
 import { CardFrame } from '../../views/CardFrame'
+import { Image } from '../../views/Image'
 
 export type CardProps = {
   below?: ((colors: ColorShades) => any) | JSX.Element | string | null

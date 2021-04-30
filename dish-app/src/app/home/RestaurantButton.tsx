@@ -1,13 +1,13 @@
 import { graphql } from '@dish/graph'
 import { debounce } from 'lodash'
 import React, { useCallback } from 'react'
-import { Image } from 'react-native'
 import { Button, HStack, Hoverable, Text, VStack, useTheme } from 'snackui'
 
 import { getColorsForName } from '../../helpers/getColorsForName'
 import { getImageUrl } from '../../helpers/getImageUrl'
 import { queryRestaurant } from '../../queries/queryRestaurant'
 import { appMapStore } from '../AppMapStore'
+import { Image } from '../views/Image'
 import { Link } from '../views/Link'
 import { RestaurantRatingView } from './RestaurantRatingView'
 

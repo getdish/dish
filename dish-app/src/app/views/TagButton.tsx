@@ -2,7 +2,6 @@
 import { Tag, TagQuery, TagType, graphql } from '@dish/graph'
 import { ThumbsDown, ThumbsUp, X } from '@dish/react-feather'
 import React, { memo } from 'react'
-import { Image } from 'react-native'
 import {
   AbsoluteVStack,
   Button,
@@ -23,6 +22,7 @@ import { tagDisplayName } from '../../constants/tagDisplayName'
 import { getTagSlug } from '../../helpers/getTagSlug'
 import { NavigableTag } from '../../types/tagTypes'
 import { useUserTagVotes } from '../hooks/useUserTagVotes'
+import { Image } from './Image'
 import { Link } from './Link'
 import { Pie } from './Pie'
 import { TextSuperScript } from './TextSuperScript'

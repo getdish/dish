@@ -3,7 +3,7 @@ PODS:
   - DoubleConversion (1.1.6)
   - EXApplication (2.4.1):
     - UMCore
-  - EXConstants (9.3.5):
+  - EXConstants (10.1.3):
     - UMConstantsInterface
     - UMCore
   - EXErrorRecovery (1.4.0):
@@ -57,6 +57,15 @@ PODS:
   - glog (0.3.5)
   - hermes-engine (0.7.2)
   - libevent (2.1.12)
+  - libwebp (1.2.0):
+    - libwebp/demux (= 1.2.0)
+    - libwebp/mux (= 1.2.0)
+    - libwebp/webp (= 1.2.0)
+  - libwebp/demux (1.2.0):
+    - libwebp/webp
+  - libwebp/mux (1.2.0):
+    - libwebp/demux
+  - libwebp/webp (1.2.0)
   - Mapbox-iOS-SDK (6.3.0):
     - MapboxMobileEvents (~> 0.10.4)
   - MapboxMobileEvents (0.10.8)
@@ -350,6 +359,10 @@ PODS:
     - React-cxxreact (= 0.64.0)
     - React-jsi (= 0.64.0)
     - React-perflogger (= 0.64.0)
+  - RNFastImage (8.3.4):
+    - React-Core
+    - SDWebImage (~> 5.8)
+    - SDWebImageWebPCoder (~> 0.6.1)
   - RNGestureHandler (1.10.3):
     - React-Core
   - RNReanimated (2.1.0):
@@ -383,6 +396,12 @@ PODS:
     - Yoga
   - RNSVG (12.1.1):
     - React
+  - SDWebImage (5.11.1):
+    - SDWebImage/Core (= 5.11.1)
+  - SDWebImage/Core (5.11.1)
+  - SDWebImageWebPCoder (0.6.1):
+    - libwebp (~> 1.0)
+    - SDWebImage/Core (~> 5.7)
   - UMAppLoader (1.4.0)
   - UMBarCodeScannerInterface (5.4.0)
   - UMCameraInterface (5.4.0)
@@ -454,6 +473,7 @@ DEPENDENCIES:
   - React-RCTVibration (from `../node_modules/react-native/Libraries/Vibration`)
   - React-runtimeexecutor (from `../node_modules/react-native/ReactCommon/runtimeexecutor`)
   - ReactCommon/turbomodule/core (from `../node_modules/react-native/ReactCommon`)
+  - RNFastImage (from `../node_modules/react-native-fast-image`)
   - RNGestureHandler (from `../node_modules/react-native-gesture-handler`)
   - RNReanimated (from `../node_modules/react-native-reanimated`)
   - RNSVG (from `../node_modules/react-native-svg`)
@@ -477,8 +497,11 @@ SPEC REPOS:
     - boost-for-react-native
     - hermes-engine
     - libevent
+    - libwebp
     - Mapbox-iOS-SDK
     - MapboxMobileEvents
+    - SDWebImage
+    - SDWebImageWebPCoder
 
 EXTERNAL SOURCES:
   DoubleConversion:
@@ -573,6 +596,8 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native/ReactCommon/runtimeexecutor"
   ReactCommon:
     :path: "../node_modules/react-native/ReactCommon"
+  RNFastImage:
+    :path: "../node_modules/react-native-fast-image"
   RNGestureHandler:
     :path: "../node_modules/react-native-gesture-handler"
   RNReanimated:
@@ -612,7 +637,7 @@ SPEC CHECKSUMS:
   boost-for-react-native: 39c7adb57c4e60d6c5479dd8623128eb5b3f0f2c
   DoubleConversion: cde416483dac037923206447da6e1454df403714
   EXApplication: e3c201e7b913d081bbd37bd3c5d0e2cdc21733b4
-  EXConstants: 54d0bf04319d1692c6c7bc03ca151ef7a71705a4
+  EXConstants: c4dd28acc12039c999612507a5f935556f2c86ce
   EXErrorRecovery: b46af4b91e2b4ec598ab1fa51d2cf088aaf5511f
   EXFileSystem: 0e4974ab77bff04cda68d2886d070cbe64b93a6b
   EXFont: 30c64ed8735a180e3f20046e4fdac4ea074d71d3
@@ -632,6 +657,7 @@ SPEC CHECKSUMS:
   glog: 40a13f7840415b9a77023fbcae0f1e6f43192af3
   hermes-engine: 7d97ba46a1e29bacf3e3c61ecb2804a5ddd02d4f
   libevent: 4049cae6c81cdb3654a443be001fb9bdceff7913
+  libwebp: e90b9c01d99205d03b6bb8f2c8c415e5a4ef66f0
   Mapbox-iOS-SDK: 2563ed87ead6ec08f1c2090873977b8a7be335a8
   MapboxMobileEvents: 36ff53b135aac486eed94b61f813c7967a0c2c6f
   RCT-Folly: ec7a233ccc97cc556cf7237f0db1ff65b986f27c
@@ -660,9 +686,12 @@ SPEC CHECKSUMS:
   React-RCTVibration: 0fd6b21751a33cb72fce1a4a33ab9678416d307a
   React-runtimeexecutor: cad74a1eaa53ee6e7a3620231939d8fe2c6afcf0
   ReactCommon: cfe2b7fd20e0dbd2d1185cd7d8f99633fbc5ff05
+  RNFastImage: d4870d58f5936111c56218dbd7fcfc18e65b58ff
   RNGestureHandler: a479ebd5ed4221a810967000735517df0d2db211
   RNReanimated: b8c8004b43446e3c2709fe64b2b41072f87428ad
   RNSVG: 551acb6562324b1d52a4e0758f7ca0ec234e278f
+  SDWebImage: a7f831e1a65eb5e285e3fb046a23fcfbf08e696d
+  SDWebImageWebPCoder: d0dac55073088d24b2ac1b191a71a8f8d0adac21
   UMAppLoader: 92d044af52626af3d81a69796ad666fc7a9a7d78
   UMBarCodeScannerInterface: 3f6c1b09ef4b867ce752b8c0b3893bcf9cd85f32
   UMCameraInterface: d516032121192fee9a6c93bdfff0bb2cc7282796

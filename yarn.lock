@@ -1996,6 +1996,7 @@ __metadata:
     react-native: ^0.64.0
     react-native-animatable: ^1.3.3
     react-native-dotenv: ^2.5.3
+    react-native-fast-image: ^8.3.4
     react-native-gesture-handler: ^1.10.3
     react-native-reanimated: ^2.1.0
     react-native-safe-area-context: ^3.1.9
@@ -19740,6 +19741,16 @@ __metadata:
   dependencies:
     dotenv: ^8.0.0
   checksum: 662e72b6996cd8d91d218fbc464036d03bea29c617dc44faaa302cf039e9cb782494b06bf3b66f6e9e2572b985406613948553dc34bbf76a77347daa2320e352
+  languageName: node
+  linkType: hard
+
+"react-native-fast-image@npm:^8.3.4":
+  version: 8.3.4
+  resolution: "react-native-fast-image@npm:8.3.4"
+  peerDependencies:
+    react: ^16.8.6
+    react-native: ">=0.60.0"
+  checksum: ff7037b7740c73aaaef2d8976d6e9ec516cf3f01099cf77ceba2a8656411f9204661ba39c8e9acbdc8b37464be96e7c5776876ebce82d47157ff0071a52ac6a4
   languageName: node
   linkType: hard
 

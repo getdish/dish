@@ -1,9 +1,9 @@
 import { graphql } from '@dish/graph'
 import React, { memo } from 'react'
-import { Image } from 'react-native'
 import { HStack, StackProps, Text } from 'snackui'
 
 import { queryRestaurant } from '../../../queries/queryRestaurant'
+import { Image } from '../../views/Image'
 import { SmallButton } from '../../views/SmallButton'
 import { getRestaurantDeliverySources } from './getRestaurantDeliverySources'
 

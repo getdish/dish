@@ -1,9 +1,8 @@
 import { supportsTouchWeb } from '@dish/helpers'
 import { capitalize } from 'lodash'
 import React, { Suspense, memo, useState } from 'react'
-import { Image, StyleSheet } from 'react-native'
+import { StyleSheet } from 'react-native'
 import Svg, { G, Path } from 'react-native-svg'
-import { useThemeName } from 'snackui'
 import {
   AbsoluteVStack,
   Box,
@@ -13,15 +12,16 @@ import {
   Text,
   VStack,
   prevent,
+  useThemeName,
 } from 'snackui'
 
 import { isWeb } from '../../../constants/constants'
 import { getColorsForName } from '../../../helpers/getColorsForName'
 import { getImageUrl } from '../../../helpers/getImageUrl'
 import { DishTagItem } from '../../../helpers/getRestaurantDishes'
-import { UseColors } from '../../../helpers/useColorsFor'
 import { NavigableTag } from '../../../types/tagTypes'
 import { ColoredCircle } from '../ColoredCircle'
+import { Image } from '../Image'
 import { Link } from '../Link'
 import { DishUpvoteDownvote } from './DishUpvoteDownvote'
 import { SearchTagButton } from './SearchTagButton'
@@ -226,7 +226,7 @@ const DishViewContent = (props: DishViewProps) => {
         // transform={[{ scale: isFallback ? 0.8 : 0.9 }]}
         >
           <VStack className="dish-image-" overflow="hidden" borderRadius={1000}>
-            <ImageAlt
+            <Image
               source={{ uri: imageUrl }}
               style={{
                 width: size,
@@ -316,11 +316,4 @@ const SineWave = ({ color, size }: { color: string; size: number }) => {
       </Svg>
     </VStack>
   )
-}
-
-const ImageAlt = (props: any) => {
-  if (isWeb) {
-    return <img src={props.source.uri} style={props.style} loading="lazy" />
-  }
-  return <Image {...props} />
 }
