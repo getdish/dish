@@ -279,17 +279,17 @@ PODS:
   - React-jsinspector (0.64.0)
   - react-native-blur (0.8.0):
     - React
-  - react-native-mapbox-gl (8.2.0-beta1):
+  - react-native-mapbox-gl (8.2.0-beta2):
     - Mapbox-iOS-SDK (~> 6.3)
     - React
     - React-Core
-    - react-native-mapbox-gl/DynamicLibrary (= 8.2.0-beta1)
-    - react-native-mapbox-gl/StaticLibraryFixer (= 8.2.0-beta1)
-  - react-native-mapbox-gl/DynamicLibrary (8.2.0-beta1):
+    - react-native-mapbox-gl/DynamicLibrary (= 8.2.0-beta2)
+    - react-native-mapbox-gl/StaticLibraryFixer (= 8.2.0-beta2)
+  - react-native-mapbox-gl/DynamicLibrary (8.2.0-beta2):
     - Mapbox-iOS-SDK (~> 6.3)
     - React
     - React-Core
-  - react-native-mapbox-gl/StaticLibraryFixer (8.2.0-beta1):
+  - react-native-mapbox-gl/StaticLibraryFixer (8.2.0-beta2):
     - Mapbox-iOS-SDK (~> 6.3)
     - React
     - React-Core
@@ -394,6 +394,9 @@ PODS:
     - React-RCTVibration
     - ReactCommon/turbomodule/core
     - Yoga
+  - RNSentry (2.4.2):
+    - React-Core
+    - Sentry (= 6.1.4)
   - RNSVG (12.1.1):
     - React
   - SDWebImage (5.11.1):
@@ -402,6 +405,9 @@ PODS:
   - SDWebImageWebPCoder (0.6.1):
     - libwebp (~> 1.0)
     - SDWebImage/Core (~> 5.7)
+  - Sentry (6.1.4):
+    - Sentry/Core (= 6.1.4)
+  - Sentry/Core (6.1.4)
   - UMAppLoader (1.4.0)
   - UMBarCodeScannerInterface (5.4.0)
   - UMCameraInterface (5.4.0)
@@ -435,7 +441,7 @@ DEPENDENCIES:
   - EXPermissions (from `../node_modules/expo-permissions/ios`)
   - EXScreenOrientation (from `../node_modules/expo-screen-orientation/ios`)
   - EXSecureStore (from `../node_modules/expo-secure-store/ios`)
-  - EXSplashScreen (from `../node_modules/expo-app-loading/node_modules/expo-splash-screen/ios`)
+  - EXSplashScreen (from `../node_modules/expo-splash-screen/ios`)
   - EXSQLite (from `../node_modules/expo-sqlite/ios`)
   - EXStructuredHeaders (from `../node_modules/expo-structured-headers/ios`)
   - EXUpdates (from `../node_modules/expo-updates/ios`)
@@ -476,6 +482,7 @@ DEPENDENCIES:
   - RNFastImage (from `../node_modules/react-native-fast-image`)
   - RNGestureHandler (from `../node_modules/react-native-gesture-handler`)
   - RNReanimated (from `../node_modules/react-native-reanimated`)
+  - "RNSentry (from `../node_modules/@sentry/react-native`)"
   - RNSVG (from `../node_modules/react-native-svg`)
   - UMAppLoader (from `../node_modules/unimodules-app-loader/ios`)
   - UMBarCodeScannerInterface (from `../node_modules/unimodules-barcode-scanner-interface/ios`)
@@ -502,6 +509,7 @@ SPEC REPOS:
     - MapboxMobileEvents
     - SDWebImage
     - SDWebImageWebPCoder
+    - Sentry
 
 EXTERNAL SOURCES:
   DoubleConversion:
@@ -531,7 +539,7 @@ EXTERNAL SOURCES:
   EXSecureStore:
     :path: "../node_modules/expo-secure-store/ios"
   EXSplashScreen:
-    :path: "../node_modules/expo-app-loading/node_modules/expo-splash-screen/ios"
+    :path: "../node_modules/expo-splash-screen/ios"
   EXSQLite:
     :path: "../node_modules/expo-sqlite/ios"
   EXStructuredHeaders:
@@ -602,6 +610,8 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native-gesture-handler"
   RNReanimated:
     :path: "../node_modules/react-native-reanimated"
+  RNSentry:
+    :path: "../node_modules/@sentry/react-native"
   RNSVG:
     :path: "../node_modules/react-native-svg"
   UMAppLoader:
@@ -672,7 +682,7 @@ SPEC CHECKSUMS:
   React-jsiexecutor: 06a9c77b56902ae7ffcdd7a4905f664adc5d237b
   React-jsinspector: 0ae35a37b20d5e031eb020a69cc5afdbd6406301
   react-native-blur: cad4d93b364f91e7b7931b3fa935455487e5c33c
-  react-native-mapbox-gl: 2733dbd037199e0484a5b4ba945488de6023b914
+  react-native-mapbox-gl: 28350f5f43df85fdb6b85398821a96db1fab0c76
   react-native-safe-area-context: b6e0e284002381d2ff29fa4fff42b4d8282e3c94
   React-perflogger: 9c547d8f06b9bf00cb447f2b75e8d7f19b7e02af
   React-RCTActionSheet: 3080b6e12e0e1a5b313c8c0050699b5c794a1b11
@@ -689,9 +699,11 @@ SPEC CHECKSUMS:
   RNFastImage: d4870d58f5936111c56218dbd7fcfc18e65b58ff
   RNGestureHandler: a479ebd5ed4221a810967000735517df0d2db211
   RNReanimated: b8c8004b43446e3c2709fe64b2b41072f87428ad
+  RNSentry: e86fb2e2fec0365644f4b582938bf66be515acce
   RNSVG: 551acb6562324b1d52a4e0758f7ca0ec234e278f
   SDWebImage: a7f831e1a65eb5e285e3fb046a23fcfbf08e696d
   SDWebImageWebPCoder: d0dac55073088d24b2ac1b191a71a8f8d0adac21
+  Sentry: 9d055e2de30a77685e86b219acf02e59b82091fc
   UMAppLoader: 92d044af52626af3d81a69796ad666fc7a9a7d78
   UMBarCodeScannerInterface: 3f6c1b09ef4b867ce752b8c0b3893bcf9cd85f32
   UMCameraInterface: d516032121192fee9a6c93bdfff0bb2cc7282796

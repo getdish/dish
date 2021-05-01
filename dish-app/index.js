@@ -4,7 +4,14 @@
 import '@dish/helpers/polyfill'
 import 'expo-asset'
 
+import * as Sentry from '@sentry/react-native'
 import { registerRootComponent } from 'expo'
+
+Sentry.init({
+  dsn: 'https://e87d54b2bd5c4bec9d82304e2d4b71d1@o600766.ingest.sentry.io/5744061',
+  release: process.env.REACT_APP_COMMIT_HASH || process.env.COMMIT_HASH || 'unreleased',
+  environment: process.env.DISH_ENV || 'development',
+})
 
 // console.log('polyfill..........')
 // require('@formatjs/intl-getcanonicallocales/polyfill')
