@@ -161,7 +161,9 @@ export const HomeDrawerSmallView = memo((props: { children: any }) => {
         if (scrolledY !== -1) {
           const scroller = scrollViews.get(contentParent.activeId)
           if (scroller) {
-            scroller.scrollTo({ y: scrolledY + -vy * 6 })
+            const y = scrolledY + -vy * 16
+            console.log('thrown to', y, vy)
+            scroller.scrollTo({ y })
             drawerStore.setSnapIndex(0)
             return
           }
