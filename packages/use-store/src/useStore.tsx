@@ -337,8 +337,6 @@ const selectKeys = (obj: any, keys: string[]) => {
 
 function useStoreFromInfo(info: StoreInfo, userSelector?: Selector<any> | undefined): any {
   if (!info.store) {
-    console.warn('hmr?')
-    debugger
     return null
   }
   const internal = useRef<StoreTracker>()
@@ -360,36 +358,41 @@ function useStoreFromInfo(info: StoreInfo, userSelector?: Selector<any> | undefi
   const shouldPrintDebug =
     !!process.env.LOG_LEVEL && (configureOpts.logLevel === 'debug' || shouldDebug(component, info))
 
-  const getSnapshot = useCallback(
-    (store) => {
-      const keys = curInternal.firstRun ? info.stateKeys : [...curInternal.tracked]
-      const snap = selector(store, keys)
-      if (shouldPrintDebug) {
-        console.log('💰 getSnapshot', { info, component, keys, snap })
-      }
-      return snap
-    },
-    [selector]
-  )
+  const getSnapshot =
+    userSelector ||
+    useCallback(
+      (store) => {
+        const keys = curInternal.firstRun ? info.stateKeys : [...curInternal.tracked]
+        const snap = selector(store, keys)
+        if (shouldPrintDebug) {
+          console.log('💰 getSnapshot', { info, component, keys, snap })
+        }
+        return snap
+      },
+      [selector]
+    )
 
-  const state = useMutableSource(info.source, getSnapshot, subscribe, shouldPrintDebug)
-
-  // before each render
-  curInternal.isTracking = true
+  const state = useMutableSource(info.source, getSnapshot, subscribe)
 
   // dispose tracker on unmount
   useEffect(() => {
     return curInternal.dispose
   }, [])
 
-  // track access, runs after each render
-  useLayoutEffect(() => {
-    curInternal.isTracking = false
-    curInternal.firstRun = false
-    if (shouldPrintDebug) {
-      console.log('💰 finish render, tracking', [...curInternal.tracked])
-    }
-  })
+  // we never allow removing selector
+  if (!userSelector) {
+    // before each render
+    curInternal.isTracking = true
+
+    // track access, runs after each render
+    useLayoutEffect(() => {
+      curInternal.isTracking = false
+      curInternal.firstRun = false
+      if (shouldPrintDebug) {
+        console.log('💰 finish render, tracking', [...curInternal.tracked])
+      }
+    })
+  }
 
   if (userSelector) {
     return state
