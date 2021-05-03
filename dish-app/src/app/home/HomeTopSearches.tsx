@@ -21,6 +21,7 @@ export const HomeTopSearches = memo(() => {
       marginHorizontal="auto"
       alignItems="center"
       justifyContent="center"
+      pointerEvents="auto"
       overflow="hidden"
     >
       {recentSearches.map((search, index) => {

@@ -63,7 +63,7 @@ export function useFeedDishItems(region?: RegionNormalized | null): FIDishRestau
     const grouped = groupBy(popularDishTags, (x) => x.slug)
     const sorted = sortBy(grouped, (x) => -x.length)
     const topDishes = sorted.slice(0, 5).map((x) => x[0])
-    return topDishes.map((tag, index) => {
+    return topDishes.map((tag) => {
       return {
         id: `dish-restaurant-${tag.name}`,
         region,
@@ -158,6 +158,7 @@ export const HomeFeedDishRestaurants = graphql(
     return (
       <ContentSectionHoverable
         onHoverIn={() => {
+          console.log('HOVER')
           onHoverResults(restaurants.map((x) => pick(x, 'id', 'slug') as any))
         }}
       >

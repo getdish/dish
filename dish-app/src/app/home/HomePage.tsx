@@ -1,9 +1,10 @@
-import { MapPosition, slugify } from '@dish/graph'
+import { MapPosition, RestaurantOnlyIdsPartial, slugify } from '@dish/graph'
+import { Store, createStore, useStore, useStoreInstance } from '@dish/use-store'
 import React, { Suspense, memo, useEffect, useMemo, useState } from 'react'
-import { LoadingItems } from 'snackui'
 import {
   AbsoluteVStack,
   HStack,
+  LoadingItems,
   Paragraph,
   Spacer,
   Text,
@@ -23,13 +24,11 @@ import {
 import { useRegionQuery } from '../../helpers/fetchRegion'
 import { getColorsForName } from '../../helpers/getColorsForName'
 import { queryClient } from '../../helpers/queryClient'
-import { useIsMountedRef } from '../../helpers/useIsMountedRef'
-import { router, useIsRouteActive } from '../../router'
+import { router } from '../../router'
 import { HomeStateItemHome } from '../../types/homeTypes'
-import { cancelUpdateRegion } from '../AppMapStore'
+import { cancelUpdateRegion, useSetAppMap } from '../AppMapStore'
 import { autocompletesStore } from '../AutocompletesStore'
 import { useHomeStateById } from '../homeStore'
-import { useLastValue } from '../hooks/useLastValue'
 import { useLastValueWhen } from '../hooks/useLastValueWhen'
 import { useLocalStorageState } from '../hooks/useLocalStorageState'
 import { setInitialRegionSlug } from '../initialRegionSlug'
@@ -41,14 +40,33 @@ import { PageTitleTag } from '../views/PageTitleTag'
 import { SlantedTitle } from '../views/SlantedTitle'
 import { HomePageFeed } from './HomePageFeed'
 import { HomeStackViewProps } from './HomeStackViewProps'
-import { HomeSuspense } from './HomeSuspense'
 import { HomeTopSearches } from './HomeTopSearches'
 import { PageContentWithFooter } from './PageContentWithFooter'
 
 type Props = HomeStackViewProps<HomeStateItemHome>
 
+class HomePageStore extends Store {
+  results: RestaurantOnlyIdsPartial[] = []
+
+  setResults(next: RestaurantOnlyIdsPartial[]) {
+    this.results = next
+  }
+}
+
+export const homePageStore = createStore(HomePageStore)
+
 export default memo(function HomePage(props: Props) {
   const [didLoadOnce, setDidLoadOnce] = useState(false)
+  const { results } = useStoreInstance(homePageStore)
+
+  console.log('results', results)
+
+  useSetAppMap({
+    isActive: props.isActive,
+    results,
+    center: props.item.center,
+    span: props.item.span,
+  })
 
   useEffect(() => {
     if (props.isActive) {
@@ -56,27 +74,24 @@ export default memo(function HomePage(props: Props) {
     }
   }, [props.isActive])
 
-  return useLastValueWhen(
-    () => {
-      if (!didLoadOnce) {
-        return <LoadingItems />
-      }
-      return (
-        <Suspense fallback={<LoadingItems />}>
-          <HomePageContent {...props} />
-        </Suspense>
-      )
-    },
-    !props.isActive,
-    'homepagecontent'
-  )
+  return useLastValueWhen(() => {
+    if (!didLoadOnce) {
+      return <LoadingItems />
+    }
+    return (
+      <Suspense fallback={<LoadingItems />}>
+        <HomePageContent {...props} />
+      </Suspense>
+    )
+  }, !props.isActive)
 })
 
 const HomePageContent = (props: Props) => {
-  const state = useHomeStateById<HomeStateItemHome>(props.item.id)
+  const { isActive, item } = props
+  const state = useHomeStateById<HomeStateItemHome>(item.id)
   const theme = useTheme()
   const regionResponse = useRegionQuery(state.region, {
-    enabled: props.isActive && !!state.region,
+    enabled: isActive && !!state.region,
   })
   const [position, setPosition] = useState<MapPosition>(initialPosition)
   const regionColors = getColorsForName(state.region)
@@ -84,17 +99,17 @@ const HomePageContent = (props: Props) => {
 
   if (process.env.NODE_ENV === 'development') {
     // prettier-ignore
-    console.log('👀 HomePage', state.region, { position, item: props.item, region, state, isActive: props.isActive })
+    console.log('👀 HomePage', state.region, { position, item: item, region, state, isActive: isActive })
   }
 
   useEffect(() => {
     if (!region) return
-    setInitialRegionSlug(props.item.region)
+    setInitialRegionSlug(item.region)
   }, [region])
 
   // // center map to region
   useEffect(() => {
-    if (!props.isActive) return
+    if (!isActive) return
     if (!region || !region.center || !region.span) return
     // if (appMapStore.lastRegion) {
     //   const via = appMapStore.lastRegion.via
@@ -105,7 +120,7 @@ const HomePageContent = (props: Props) => {
     // }
     cancelUpdateRegion()
     setPosition(region)
-  }, [props.isActive, JSON.stringify([region])])
+  }, [isActive, JSON.stringify([region])])
 
   useEffect(() => {
     return () => {
@@ -114,7 +129,7 @@ const HomePageContent = (props: Props) => {
   }, [state.region])
 
   useEffect(() => {
-    if (!props.isActive) return
+    if (!isActive) return
     if (regionResponse.status !== 'success') return
     if (region) {
       const regionSlug = region.slug ?? slugify(region.name)
@@ -124,10 +139,10 @@ const HomePageContent = (props: Props) => {
         region: regionSlug,
       })
     }
-  }, [props.isActive, regionResponse.status, region?.slug])
+  }, [isActive, regionResponse.status, region?.slug])
 
   useEffect(() => {
-    if (props.isActive && !state.region) {
+    if (isActive && !state.region) {
       // no region found!
       console.warn('no region, nav', region)
       router.navigate({
@@ -137,7 +152,7 @@ const HomePageContent = (props: Props) => {
         },
       })
     }
-  }, [props.isActive, state.region])
+  }, [isActive, state.region])
 
   const regionName = region?.name || state.curLocName || '...'
   const media = useMedia()
@@ -202,7 +217,7 @@ const HomePageContent = (props: Props) => {
         overflow="hidden"
         height={searchBarHeight}
         zIndex={10}
-        opacity={props.isActive ? 1 : 0}
+        opacity={isActive ? 1 : 0}
         pointerEvents="none"
       >
         <AbsoluteVStack
@@ -230,13 +245,7 @@ const HomePageContent = (props: Props) => {
               {homeHeaderContent}
 
               <PageContentWithFooter>
-                <HomePageFeed
-                  {...props}
-                  item={state}
-                  regionName={regionName}
-                  region={region}
-                  {...position}
-                />
+                <HomePageFeed item={state} regionName={regionName} region={region} {...position} />
               </PageContentWithFooter>
             </VStack>
           </VStack>

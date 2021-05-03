@@ -1,5 +1,5 @@
 import React from 'react'
-import { StackProps, VStack, useTheme } from 'snackui'
+import { StackProps, VStack } from 'snackui'
 
 export const ContentSectionHoverable = (props: StackProps) => {
   // const theme = useTheme()

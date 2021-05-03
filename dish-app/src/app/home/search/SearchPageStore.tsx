@@ -72,7 +72,7 @@ class SearchPageStore extends Store {
 
     const shouldCancel = () => {
       const val = this.lastSearchAt != curId || homeStore.currentStateType !== 'search' || false
-      if (val) console.log('cancelling')
+      // if (val) console.log('cancelling')
       return val
     }
 

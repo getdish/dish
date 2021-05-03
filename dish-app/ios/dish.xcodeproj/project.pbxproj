@@ -201,7 +201,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "export TARGET=native\nexport NODE_ENV=production\nexport IS_LIVE=1\nif [ \"${CONFIGURATION}\" == \"Debug\" ] || [ \"${SKIP_BUNDLING}\" = \"true\" ]; then\n  export SKIP_BUNDLING=true\n  export NODE_ENV=development\n  export IS_LIVE=0\n  export NODE_BINARY=${NODE_BINARY:-\"/opt/homebrew/bin/node\"} \nfi\n\nDEFAULT_NODE_BINARY=$(which node)\nexport NODE_BINARY=${NODE_BINARY:-$DEFAULT_NODE_BINARY}\necho \"whatitis $NODE_BINARY $NODE_ENV $IS_LIVE\"\n\n../node_modules/react-native/scripts/react-native-xcode.sh\n../node_modules/expo-constants/scripts/get-app-config-ios.sh\n../node_modules/expo-updates/scripts/create-manifest-ios.sh\n";
+			shellScript = "export TARGET=native\nexport NODE_ENV=production\nexport IS_LIVE=1\nif [ \"${CONFIGURATION}\" == \"Debug\" ] || [ \"${SKIP_BUNDLING}\" = \"true\" ]; then\n  export SKIP_BUNDLING=true\n  export NODE_ENV=development\n  export IS_LIVE=0 \nfi\n\nDEFAULT_NODE_BINARY=$(which node)\nexport NODE_BINARY=${NODE_BINARY:-$DEFAULT_NODE_BINARY}\n\nif [ -z \"$NODE_BINARY\" ]; then\n   export NODE_BINARY=\"/opt/homebrew/bin/node\"\nfi\n\necho \"whatitis $NODE_BINARY $NODE_ENV $IS_LIVE\"\n\n\n../node_modules/react-native/scripts/react-native-xcode.sh\n../node_modules/expo-constants/scripts/get-app-config-ios.sh\n../node_modules/expo-updates/scripts/create-manifest-ios.sh\n";
 		};
 		08A4A3CD28434E44B6B9DE2E /* [CP] Check Pods Manifest.lock */ = {
 			isa = PBXShellScriptBuildPhase;

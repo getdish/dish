@@ -242,7 +242,6 @@ class HomeStore extends Store {
   }
 
   updateHomeState(via: string, val: { id: string; [key: string]: any }) {
-    const t = timer()
     if (!val.id) {
       throw new Error(`Must have id`)
     }
@@ -260,7 +259,6 @@ class HomeStore extends Store {
       this.stateIds = [...new Set([...this.stateIds, val.id])]
       this.stateIndex = this.stateIds.length - 1
     }
-    t('updateHomeState:done')
   }
 
   clearSearch() {

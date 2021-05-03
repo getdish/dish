@@ -70,7 +70,6 @@ class DrawerStore extends Store {
       console.log('AVOID SNAP WHILE DRAGGING')
       return
     }
-    console.log('ANIMATE TO PX', px)
     this.lastSnapAt = Date.now()
     // this.isDragging = true
     if (!avoidSnap) {

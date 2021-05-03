@@ -5,9 +5,7 @@ import { HomeStackViewProps } from './HomeStackViewProps'
 
 type HomeProps = HomeStackViewProps<HomeStateItemHome>
 
-export type HomeFeedProps = Partial<HomeProps> & {
-  isActive: HomeProps['isActive']
+export type HomeFeedProps = Pick<HomeProps, 'item'> & {
   regionName?: string
   region?: RegionNormalized | null
-  item: HomeStateItemHome
 } & MapPosition
