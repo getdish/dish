@@ -7,7 +7,7 @@ import { getImageUrl } from '../../../helpers/getImageUrl'
 import { queryList } from '../../../queries/queryList'
 import { getListColor } from '../../home/list/listColors'
 import { Card } from '../../home/restaurant/Card'
-import { Image } from '../Image.native'
+import { Image } from '../Image'
 import { Link } from '../Link'
 import { Score } from '../Score'
 
