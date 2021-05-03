@@ -16,6 +16,7 @@ import { isTouchDevice } from '../constants/platforms'
 import { AutocompleteItem } from '../helpers/createAutocomplete'
 import { AutocompleteItemView } from './AutocompleteItemView'
 import { AutocompleteStore, AutocompleteTarget, autocompletesStore } from './AutocompletesStore'
+import { usePageFinishedLoading } from './usePageFinishedLoading'
 import { CloseButton } from './views/CloseButton'
 import { ContentParentStore, ContentScrollView } from './views/ContentScrollView'
 
@@ -140,6 +141,12 @@ export const AutocompleteResults = memo(
     const activeIndex = autocompleteStore.index
     const ogResults = autocompleteStore.results
     const results = [...prefixResults, ...ogResults]
+    const loaded = usePageFinishedLoading()
+
+    if (!loaded) {
+      return null
+    }
+
     return (
       <>
         {results.map((result, index) => {

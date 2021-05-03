@@ -46,3 +46,8 @@ delete_and_link_duplicate_modules &
 yarn patch-package || true &
 patch_app_packages &
 wait
+
+if [ -n "$EAS_BUILD" ]; then
+  echo "eas build projects..."
+  yarn build
+fi

@@ -12,6 +12,7 @@ import { AutocompleteEffects, useAppAutocompleteEffects } from './AutocompletesS
 import { Home } from './home/Home'
 import { PrivateRoute, Route, RouteSwitch } from './Route'
 import { Shortcuts } from './Shortcuts'
+import { usePageFinishedLoading } from './usePageFinishedLoading'
 import { ErrorBoundary } from './views/ErrorBoundary'
 import { NotFoundPage } from './views/NotFoundPage'
 
@@ -51,6 +52,8 @@ export function App() {
 
 function AppHomeContent() {
   const theme = useTheme()
+  const isLoaded = usePageFinishedLoading()
+
   return (
     <>
       <VStack
@@ -68,9 +71,7 @@ function AppHomeContent() {
 
         {!isSSR && (
           <ErrorBoundary name="main-map">
-            <Suspense fallback={null}>
-              <AppMap />
-            </Suspense>
+            <Suspense fallback={null}>{isLoaded ? <AppMap /> : null}</Suspense>
           </ErrorBoundary>
         )}
 
