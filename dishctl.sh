@@ -26,8 +26,8 @@ function dish_registry_auth() {
 
 function _kill_port_forwarder {
   echo "Killing script pids for \`kubectl proxy-forward ...\`"
-  ([ ! -z "$PG_PROXY_PID" ] && kill $PG_PROXY_PID) || true
-  ([ ! -z "$TS_PROXY_PID" ] && kill $TS_PROXY_PID) || true
+  ([ ! -n "$PG_PROXY_PID" ] && kill $PG_PROXY_PID) || true
+  ([ ! -n "$TS_PROXY_PID" ] && kill $TS_PROXY_PID) || true
 }
 
 function _setup_s3() {

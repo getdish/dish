@@ -12,7 +12,7 @@
   },
   "scripts": {
     "etc:colorize": "../dishctl.sh run 'DEBUG=1 node -r esbuild-register ./etc/add_colors_to_tiles.ts'",
-    "postinstall": "yarn patch-package || true && DEBUG=workspaces expo-yarn-workspaces postinstall",
+    "postinstall": "./etc/postinstall.sh",
     "etc:colorize:staging": "NODE_ENV=staging yarn etc:colorize",
     "app": "LOG_LEVEL=1 TARGET=native NODE_ENV=development react-native start",
     "app:build": "npx eas build --platform ios --non-interactive",
@@ -20,7 +20,6 @@
     "app:native": "LOCAL_HOST=$(ipconfig getifaddr en0) yarn app",
     "app:native:prod": "NODE_ENV=production yarn app:native",
     "app:native:reset": "watchman watch-del-all && yarn app:native --reset-cache",
-    "eas-build-pre-install": "echo $NETRC && echo $NETRC | base64 -d > .netrc && echo done",
     "web": "DISH_ENV=development ../dishctl.sh run 'yarn dish start'",
     "web:reset": "NODE_ENV=development ../dishctl.sh run 'yarn dish start --reset-cache'",
     "web:native": "DISH_ENV=development ../dishctl.sh run 'yarn dish start --local-proxy'",
