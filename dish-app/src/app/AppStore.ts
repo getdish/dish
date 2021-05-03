@@ -7,6 +7,8 @@ class AppStore extends Store {
     images: true,
     svg: true,
     emoji: true,
+    ratings: true,
+    peek: true,
   }
 }
 

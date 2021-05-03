@@ -1,45 +1,42 @@
-// import { PanGestureHandler } from 'react-native-gesture-handler'
-// import Animated, {
-//   useAnimatedGestureHandler,
-//   useAnimatedStyle,
-//   useSharedValue,
-//   withSpring,
-// } from 'react-native-reanimated'
+import { PanGestureHandler } from 'react-native-gesture-handler'
+import Animated, {
+  useAnimatedGestureHandler,
+  useAnimatedStyle,
+  useSharedValue,
+  withSpring,
+} from 'react-native-reanimated'
 
 import { StackDrawer as StackDrawerContents, StackDrawerProps } from './StackDrawerContents'
 
-// disabling reanimated until better support for debugging, jsc
-// hermes had some weird issue i spent way too much time chasing down, not worht it
-
 export function StackDrawer(props: StackDrawerProps) {
-  // const x = useSharedValue(0)
-  // const gestureHandler = useAnimatedGestureHandler({
-  //   onStart: (_, ctx) => {
-  //     // @ts-expect-error
-  //     ctx.startX = x.value
-  //   },
-  //   onActive: (event, ctx) => {
-  //     // @ts-expect-error
-  //     x.value = ctx.startX + event.translationX
-  //   },
-  //   onEnd: (_) => {
-  //     x.value = withSpring(0)
-  //   },
-  // })
+  const x = useSharedValue(0)
+  const gestureHandler = useAnimatedGestureHandler({
+    onStart: (_, ctx) => {
+      // @ts-expect-error
+      ctx.startX = x.value
+    },
+    onActive: (event, ctx) => {
+      // @ts-expect-error
+      x.value = ctx.startX + event.translationX
+    },
+    onEnd: (_) => {
+      x.value = withSpring(0)
+    },
+  })
 
-  // const animatedStyle = useAnimatedStyle(() => {
-  //   return {
-  //     transform: [
-  //       {
-  //         translateX: x.value,
-  //       },
-  //     ],
-  //   }
-  // })
+  const animatedStyle = useAnimatedStyle(() => {
+    return {
+      transform: [
+        {
+          translateX: x.value,
+        },
+      ],
+    }
+  })
 
   return (
     <>
-      {/* <PanGestureHandler onGestureEvent={gestureHandler}>
+      <PanGestureHandler onGestureEvent={gestureHandler}>
         <Animated.View
           style={{
             position: 'absolute',
@@ -51,10 +48,10 @@ export function StackDrawer(props: StackDrawerProps) {
             // backgroundColor: 'red',
           }}
         />
-      </PanGestureHandler> */}
-      {/* <Animated.View style={[{ flex: 1 }, animatedStyle]}> */}
-      <StackDrawerContents {...props} />
-      {/* </Animated.View> */}
+      </PanGestureHandler>
+      <Animated.View style={[{ flex: 1 }, animatedStyle]}>
+        <StackDrawerContents {...props} />
+      </Animated.View>
     </>
   )
 }

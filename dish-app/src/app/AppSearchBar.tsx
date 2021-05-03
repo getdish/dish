@@ -16,7 +16,7 @@ import { AppMenu } from './AppMenu'
 import { AppSearchInput } from './AppSearchInput'
 import { AppSearchInputLocation } from './AppSearchInputLocation'
 import { autocompletesStore } from './AutocompletesStore'
-import { useHomeStore } from './homeStore'
+import { homeStore, useHomeStore, useHomeStoreSelector } from './homeStore'
 import { useSearchBarTheme } from './hooks/useSearchBarTheme'
 import { DishLogoButton } from './views/DishLogoButton'
 import { Link } from './views/Link'
@@ -245,10 +245,11 @@ const AppSearchBarContents = memo(({ isColored }: { isColored: boolean }) => {
 })
 
 const SearchBarActionButton = memo(() => {
-  const home = useHomeStore()
+  const upRoute = useHomeStoreSelector((x) => x.upRoute)
+  const isOnHome = useHomeStoreSelector((x) => x.currentStateType === 'home')
   const autocompletes = useStoreInstance(autocompletesStore)
   const showAutocomplete = autocompletes.visible
-  const isDisabled = !showAutocomplete && home.currentStateType === 'home'
+  const isDisabled = !showAutocomplete && isOnHome
   // const theme = useTheme()
 
   const Icon = (() => {
@@ -267,11 +268,11 @@ const SearchBarActionButton = memo(() => {
         if (showAutocomplete) {
           autocompletes.setVisible(false)
         } else {
-          home.popBack()
+          homeStore.popBack()
         }
       }}
     >
-      <Link {...home.upRoute}>
+      <Link {...upRoute}>
         <VStack
           alignSelf="center"
           transform={[{ skewX: '-12deg' }, { scale: 0.97 }]}

@@ -1,6 +1,6 @@
 import { idle } from '@dish/async'
 import { isEqual } from '@dish/fast-compare'
-import { assert, handleAssertionError, stringify } from '@dish/helpers'
+import { assert, handleAssertionError, stringify, timer } from '@dish/helpers'
 import { HistoryItem } from '@dish/router'
 import { Store, createStore, useStoreInstance, useStoreInstanceSelector } from '@dish/use-store'
 import _, { clamp, findLast } from 'lodash'
@@ -35,7 +35,6 @@ import { appMapStore, cancelUpdateRegion } from './AppMapStore'
 import { drawerStore } from './drawerStore'
 
 class HomeStore extends Store {
-  showUserMenu = false
   searchBarTagIndex = 0
   stateIndex = 0
   stateIds = ['0']
@@ -141,7 +140,7 @@ class HomeStore extends Store {
     return initialHomeState.region
   }
 
-  tm: any = null
+  private tm: any = null
   setLoading(n: boolean) {
     clearTimeout(this.tm)
     this.loading = n
@@ -243,6 +242,7 @@ class HomeStore extends Store {
   }
 
   updateHomeState(via: string, val: { id: string; [key: string]: any }) {
+    const t = timer()
     if (!val.id) {
       throw new Error(`Must have id`)
     }
@@ -260,6 +260,7 @@ class HomeStore extends Store {
       this.stateIds = [...new Set([...this.stateIds, val.id])]
       this.stateIndex = this.stateIds.length - 1
     }
+    t('updateHomeState:done')
   }
 
   clearSearch() {
@@ -400,6 +401,8 @@ class HomeStore extends Store {
       return
     }
 
+    const time = timer()
+
     // happens on *any* route push or pop
     if (appMapStore.hovered) {
       appMapStore.setHovered(null)
@@ -430,6 +433,7 @@ class HomeStore extends Store {
     }
 
     const next = this.getHomeState(item)
+
     if (next) {
       // TODO this logic shoudln't be here
       // show map on some routes
@@ -452,7 +456,9 @@ class HomeStore extends Store {
         next.id = this.currentState.id
       }
 
+      time('homeStore:pre:update')
       this.updateHomeState('handleRouteChange', next)
+      time('homeStore:update')
     }
   }
 
@@ -468,25 +474,25 @@ class HomeStore extends Store {
     // this.autocompleteIndex = -tags.length + tagIndex
   }
 
-  private updateActiveSearchState(next: HomeStateTagNavigable) {
-    const state = _.findLast(this.states, (state) => isSearchState(state) || isHomeState(state))
-    if (!state) return
-    try {
-      assert(!!next['activeTags'])
-      const ids = 'activeTags' in state ? state.activeTags : null
-      const sameTagIds = stringify(ids) === stringify(next.activeTags)
-      const sameSearchQuery = isEqual(state.searchQuery, next.searchQuery)
-      assert(!sameTagIds || !sameSearchQuery)
-      const nextState = {
-        activeTags: ensureLenseTag(next.activeTags),
-        searchQuery: next.searchQuery,
-        id: this.currentState.id,
-      }
-      this.updateHomeState('homeStore.updateActiveSearchState', nextState)
-    } catch (err) {
-      handleAssertionError(err)
-    }
-  }
+  // private updateActiveSearchState(next: HomeStateTagNavigable) {
+  //   const state = _.findLast(this.states, (state) => isSearchState(state) || isHomeState(state))
+  //   if (!state) return
+  //   try {
+  //     assert(!!next['activeTags'])
+  //     const ids = 'activeTags' in state ? state.activeTags : null
+  //     const sameTagIds = stringify(ids) === stringify(next.activeTags)
+  //     const sameSearchQuery = isEqual(state.searchQuery, next.searchQuery)
+  //     assert(!sameTagIds || !sameSearchQuery)
+  //     const nextState = {
+  //       activeTags: ensureLenseTag(next.activeTags),
+  //       searchQuery: next.searchQuery,
+  //       id: this.currentState.id,
+  //     }
+  //     this.updateHomeState('homeStore.updateActiveSearchState', nextState)
+  //   } catch (err) {
+  //     handleAssertionError(err)
+  //   }
+  // }
 
   setSearchQuery(searchQuery: string) {
     this.updateCurrentState('setSearchQuery', {
@@ -522,7 +528,7 @@ class HomeStore extends Store {
   // this is useful for search where we mutate the current state while you type,
   // but then later you hit "enter" and we need to navigate to search (or home)
   // we definitely can clean up / name better some of this once things settle
-  lastNav = Date.now()
+  private lastNav = Date.now()
 
   getShouldNavigate({ state, ...rest }: HomeStateNav) {
     const navState = { state: state ?? this.currentState, ...rest }
@@ -565,7 +571,7 @@ class HomeStore extends Store {
     const didNav = await syncStateToRoute(nextState)
 
     if (curNav !== this.lastNav) return false
-    this.updateActiveSearchState(nextState)
+    // this.updateActiveSearchState(nextState)
 
     return didNav
   }
@@ -596,13 +602,20 @@ export const useHomeStore = (debug?: boolean): HomeStore => {
   return useStoreInstance(homeStore, debug)
 }
 
+export const useHomeStoreSelector = <A extends (store: HomeStore) => any>(
+  selector: A,
+  debug?: boolean
+): A extends (store: HomeStore) => infer B ? B : unknown => {
+  return useStoreInstanceSelector(homeStore, selector, [], debug)
+}
+
 export const useLastHomeState = <Type extends HomeStateItem['type']>(type: Type) => {
   return useStoreInstanceSelector(homeStore, (x) => _.findLast(x.states, (s) => s.type === type), [
     type,
   ])
 }
 
-export const useCurrentHomeType = () => {
+export const useHomeCurrentHomeType = () => {
   return useStoreInstanceSelector(homeStore, (x) => x.currentState.type)
 }
 

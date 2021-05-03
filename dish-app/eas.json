@@ -3,7 +3,8 @@
     "ios": {
       "release": {
         "workflow": "generic",
-        "scheme": "dish-prod"
+        "scheme": "dish-prod",
+        "distribution": "internal"
       }
     }
   }

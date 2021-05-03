@@ -32,6 +32,7 @@ export const useLink = (
   }, [])
 
   const onPress = (e: any) => {
+    console.log('press')
     if (props.stopPropagation) {
       e.stopPropagation()
     }
@@ -58,7 +59,7 @@ export const useLink = (
 
     if (props.asyncClick) {
       cancel.current = series([
-        () => sleep(32),
+        () => sleep(0),
         () => {
           cancel.current = null
           doNavigate(navItem, newLinkProps, props, e)
@@ -170,6 +171,7 @@ const getNormalizedLink = (props: Partial<LinkButtonProps>) => {
 }
 
 function doNavigate(navItem: any, linkProps: any, props: any, e: any) {
+  console.log('navigate', navItem)
   if (linkProps.onPress || props.onClick) {
     e.navigate = () => router.navigate(navItem)
     props.onClick?.(e!)

@@ -1,9 +1,6 @@
-import { ExternalLink, Link, MapPin } from '@dish/react-feather'
+import { ExternalLink, MapPin } from '@dish/react-feather'
 import React from 'react'
-import { Spacer, Text } from 'snackui'
-import { useTheme } from 'snackui'
-import { HStack } from 'snackui'
-import { useMedia } from 'snackui'
+import { HStack, Spacer, Text, useMedia, useTheme } from 'snackui'
 
 import { isWeb } from '../../../constants/constants'
 import { GeocodePlace } from '../../../types/homeTypes'

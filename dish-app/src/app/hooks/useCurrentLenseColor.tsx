@@ -1,9 +1,10 @@
+import { useDebounceValue } from 'snackui'
 import { useThemeName } from 'snackui'
 
 import { getColorsForName } from '../../helpers/getColorsForName'
 import { RGB, hexToRGB } from '../../helpers/rgb'
 import { HomeStateItemRestaurant } from '../../types/homeTypes'
-import { useHomeStore } from '../homeStore'
+import { useHomeStoreSelector } from '../homeStore'
 
 export const defaultLenseColor = {
   name: 'light',
@@ -16,23 +17,30 @@ export const defaultLenseColorDark = {
 }
 
 export const useCurrentLenseColor = () => {
-  const homeStore = useHomeStore()
   const themeName = useThemeName()
-  if (homeStore.currentStateType === 'search') {
-    if (homeStore.currentStateLense) {
-      return {
-        name: 'pink',
-        rgb: homeStore.currentStateLense.rgb as RGB,
+  const result = useHomeStoreSelector((home) => {
+    if (home.currentStateType === 'search') {
+      if (home.currentStateLense) {
+        return {
+          name: 'pink',
+          rgb: home.currentStateLense.rgb as RGB,
+        }
       }
     }
-  }
-  if (homeStore.currentStateType === 'restaurant') {
-    const state = homeStore.currentState as HomeStateItemRestaurant
-    const colors = getColorsForName(state.restaurantSlug)
-    return {
-      name: colors.name,
-      rgb: hexToRGB(colors.darkColor).rgb,
+    if (home.currentStateType === 'restaurant') {
+      const state = home.currentState as HomeStateItemRestaurant
+      const colors = getColorsForName(state.restaurantSlug)
+      return {
+        name: colors.name,
+        rgb: hexToRGB(colors.darkColor).rgb,
+      }
     }
+    return null
+  })
+  const resultDebounced = useDebounceValue(result, 40)
+  const res = resultDebounced || result
+  if (res) {
+    return res
   }
   return themeName === 'dark' ? defaultLenseColorDark : defaultLenseColor
 }

@@ -1,5 +1,6 @@
 import { MapPosition, slugify } from '@dish/graph'
-import React, { memo, useEffect, useMemo, useState } from 'react'
+import React, { Suspense, memo, useEffect, useMemo, useState } from 'react'
+import { LoadingItems } from 'snackui'
 import {
   AbsoluteVStack,
   HStack,
@@ -22,11 +23,14 @@ import {
 import { useRegionQuery } from '../../helpers/fetchRegion'
 import { getColorsForName } from '../../helpers/getColorsForName'
 import { queryClient } from '../../helpers/queryClient'
+import { useIsMountedRef } from '../../helpers/useIsMountedRef'
 import { router, useIsRouteActive } from '../../router'
 import { HomeStateItemHome } from '../../types/homeTypes'
 import { cancelUpdateRegion } from '../AppMapStore'
 import { autocompletesStore } from '../AutocompletesStore'
 import { useHomeStateById } from '../homeStore'
+import { useLastValue } from '../hooks/useLastValue'
+import { useLastValueWhen } from '../hooks/useLastValueWhen'
 import { useLocalStorageState } from '../hooks/useLocalStorageState'
 import { setInitialRegionSlug } from '../initialRegionSlug'
 import { CloseButton } from '../views/CloseButton'
@@ -37,34 +41,51 @@ import { PageTitleTag } from '../views/PageTitleTag'
 import { SlantedTitle } from '../views/SlantedTitle'
 import { HomePageFeed } from './HomePageFeed'
 import { HomeStackViewProps } from './HomeStackViewProps'
+import { HomeSuspense } from './HomeSuspense'
 import { HomeTopSearches } from './HomeTopSearches'
 import { PageContentWithFooter } from './PageContentWithFooter'
 
-export default memo(function HomePage(props: HomeStackViewProps<HomeStateItemHome>) {
-  const theme = useTheme()
+type Props = HomeStackViewProps<HomeStateItemHome>
+
+export default memo(function HomePage(props: Props) {
+  const [didLoadOnce, setDidLoadOnce] = useState(false)
+
+  useEffect(() => {
+    if (props.isActive) {
+      setDidLoadOnce(true)
+    }
+  }, [props.isActive])
+
+  return useLastValueWhen(
+    () => {
+      if (!didLoadOnce) {
+        return <LoadingItems />
+      }
+      return (
+        <Suspense fallback={<LoadingItems />}>
+          <HomePageContent {...props} />
+        </Suspense>
+      )
+    },
+    !props.isActive,
+    'homepagecontent'
+  )
+})
+
+const HomePageContent = (props: Props) => {
   const state = useHomeStateById<HomeStateItemHome>(props.item.id)
-  const isRouteActive = useIsRouteActive('home', 'homeRegion')
-  // first one is if the route is active, second is if the stack view active
-  const isActive = isRouteActive && props.isActive
+  const theme = useTheme()
   const regionResponse = useRegionQuery(state.region, {
     enabled: props.isActive && !!state.region,
-    suspense: false,
   })
   const [position, setPosition] = useState<MapPosition>(initialPosition)
-  const [showFeed, setShowFeed] = useState(isActive)
   const regionColors = getColorsForName(state.region)
   const region = regionResponse.data
 
-  useEffect(() => {
-    if (isActive) {
-      setShowFeed(true)
-    }
-  }, [isActive])
-
-  // if (process.env.NODE_ENV === 'development') {
-  //   // prettier-ignore
-  //   console.log('👀 HomePage', state.region, { position, item: props.item, region, state, isActive, showFeed })
-  // }
+  if (process.env.NODE_ENV === 'development') {
+    // prettier-ignore
+    console.log('👀 HomePage', state.region, { position, item: props.item, region, state, isActive: props.isActive })
+  }
 
   useEffect(() => {
     if (!region) return
@@ -73,7 +94,7 @@ export default memo(function HomePage(props: HomeStackViewProps<HomeStateItemHom
 
   // // center map to region
   useEffect(() => {
-    if (!isActive) return
+    if (!props.isActive) return
     if (!region || !region.center || !region.span) return
     // if (appMapStore.lastRegion) {
     //   const via = appMapStore.lastRegion.via
@@ -84,7 +105,7 @@ export default memo(function HomePage(props: HomeStackViewProps<HomeStateItemHom
     // }
     cancelUpdateRegion()
     setPosition(region)
-  }, [isActive, JSON.stringify([region])])
+  }, [props.isActive, JSON.stringify([region])])
 
   useEffect(() => {
     return () => {
@@ -93,7 +114,7 @@ export default memo(function HomePage(props: HomeStackViewProps<HomeStateItemHom
   }, [state.region])
 
   useEffect(() => {
-    if (!isActive) return
+    if (!props.isActive) return
     if (regionResponse.status !== 'success') return
     if (region) {
       const regionSlug = region.slug ?? slugify(region.name)
@@ -103,10 +124,10 @@ export default memo(function HomePage(props: HomeStackViewProps<HomeStateItemHom
         region: regionSlug,
       })
     }
-  }, [isActive, regionResponse.status, region?.slug])
+  }, [props.isActive, regionResponse.status, region?.slug])
 
   useEffect(() => {
-    if (isActive && !state.region) {
+    if (props.isActive && !state.region) {
       // no region found!
       console.warn('no region, nav', region)
       router.navigate({
@@ -116,7 +137,7 @@ export default memo(function HomePage(props: HomeStackViewProps<HomeStateItemHom
         },
       })
     }
-  }, [isActive, state.region])
+  }, [props.isActive, state.region])
 
   const regionName = region?.name || state.curLocName || '...'
   const media = useMedia()
@@ -181,7 +202,7 @@ export default memo(function HomePage(props: HomeStackViewProps<HomeStateItemHom
         overflow="hidden"
         height={searchBarHeight}
         zIndex={10}
-        opacity={isActive ? 1 : 0}
+        opacity={props.isActive ? 1 : 0}
         pointerEvents="none"
       >
         <AbsoluteVStack
@@ -209,15 +230,13 @@ export default memo(function HomePage(props: HomeStackViewProps<HomeStateItemHom
               {homeHeaderContent}
 
               <PageContentWithFooter>
-                {showFeed && (
-                  <HomePageFeed
-                    {...props}
-                    item={state}
-                    regionName={regionName}
-                    region={region}
-                    {...position}
-                  />
-                )}
+                <HomePageFeed
+                  {...props}
+                  item={state}
+                  regionName={regionName}
+                  region={region}
+                  {...position}
+                />
               </PageContentWithFooter>
             </VStack>
           </VStack>
@@ -225,7 +244,7 @@ export default memo(function HomePage(props: HomeStackViewProps<HomeStateItemHom
       </VStack>
     </>
   )
-})
+}
 
 const useThemeColor = (name: string) => {
   const themeName = useThemeName()

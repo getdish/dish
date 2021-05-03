@@ -1,4 +1,5 @@
 import { series, sleep } from '@dish/async'
+import { timer } from '@dish/helpers'
 import React, { useEffect, useState } from 'react'
 import {
   AbsoluteVStack,
@@ -11,6 +12,7 @@ import {
 } from 'snackui'
 
 import { drawerBorderRadius, drawerWidthMax } from '../../constants/constants'
+import { STACK_ANIMATION_DURATION } from '../home/HomeStackView'
 import { HomeSuspense } from '../home/HomeSuspense'
 import { PageTitleTag } from './PageTitleTag'
 import { StackCloseButton } from './StackCloseButton'
@@ -37,7 +39,7 @@ export const StackDrawer = ({
   useEffect(() => {
     return series([
       // dont show right away to get animation
-      () => sleep(120),
+      () => sleep(STACK_ANIMATION_DURATION),
       () => setIsLoaded(true),
     ])
   }, [])

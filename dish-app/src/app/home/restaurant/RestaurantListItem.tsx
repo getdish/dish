@@ -37,6 +37,7 @@ import { queryRestaurant } from '../../../queries/queryRestaurant'
 import { queryRestaurantTagScores } from '../../../queries/queryRestaurantTagScores'
 import { GeocodePlace } from '../../../types/homeTypes'
 import { appMapStore } from '../../AppMapStore'
+import { useAppShouldShow } from '../../AppStore'
 import { CloseButton } from '../../views/CloseButton'
 import { ContentScrollViewHorizontal } from '../../views/ContentScrollViewHorizontal'
 import { DishView } from '../../views/dish/DishView'
@@ -603,6 +604,11 @@ const RestaurantPeekDishes = memo(
     editable?: boolean
     onChangeTags?: (slugs: string[]) => void
   }) {
+    const show = useAppShouldShow('peek')
+    if (!show) {
+      return null
+    }
+
     const { isLoaded, size = 'md' } = props
     const dishes = props.tagSlugs
       ? queryRestaurant(props.restaurantSlug)[0]

@@ -1,8 +1,9 @@
 import React from 'react'
-import { Platform } from 'react-native'
+
+import { isWeb } from '../../constants/constants'
 
 export const PageTitleTag = (props: { children: any }) => {
-  if (Platform.OS !== 'web') {
+  if (!isWeb) {
     return null
   }
   const { Helmet } = require('react-helmet')

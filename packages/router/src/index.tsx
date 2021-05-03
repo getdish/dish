@@ -6,12 +6,11 @@ import { Router as TinyRouter } from 'tiny-request-router'
 
 // TODO fix HistoryType to narrow types
 
-const history =
+const USE_MEMORY =
   process.env.TARGET === 'node' ||
   typeof document === 'undefined' ||
   navigator?.userAgent.includes('jsdom')
-    ? createMemoryHistory()
-    : createBrowserHistory()
+const history = USE_MEMORY ? createMemoryHistory() : createBrowserHistory()
 
 // need them to declare the types here
 export interface RoutesTable {
@@ -251,10 +250,11 @@ export class Router<
         return
       }
     }
+    const to = item.path
     if (item.type === 'replace') {
-      history.replace(item.path, params)
+      history.replace(to, params)
     } else {
-      history.push(item.path, params)
+      history.push(to, params)
     }
   }
 

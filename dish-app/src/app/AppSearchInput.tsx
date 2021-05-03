@@ -27,7 +27,7 @@ import {
   autocompletesStore,
 } from './AutocompletesStore'
 import { searchPageStore, useSearchPageStore } from './home/search/SearchPageStore'
-import { homeStore, useHomeStore } from './homeStore'
+import { homeStore, useHomeStore, useHomeStoreSelector } from './homeStore'
 import { useAutocompleteInputFocus } from './hooks/useAutocompleteInputFocus'
 import { useSearchBarTheme } from './hooks/useSearchBarTheme'
 import { InputFrame } from './InputFrame'
@@ -96,10 +96,9 @@ export const getIsFocused = () => {
 export const AppSearchInput = memo(() => {
   const autocompleteStore = useStoreInstance(autocompleteSearchStore)
   const inputStore = useInputStoreSearch()
-  const home = useHomeStore()
+  const isSearchingCuisine = useHomeStoreSelector((x) => !!x.searchBarTags.length)
   const { color } = useSearchBarTheme()
   const media = useMedia()
-  const isSearchingCuisine = !!home.searchBarTags.length
   const isEditingList = false // useRouterSelector((x) => x.curPage.name === 'list' && x.curPage.params.state === 'edit')
   const textInput$ = useRef<TextInput | null>(null)
   const setSearch = useDebounce(autocompleteStore.setQuery, 250)
@@ -114,7 +113,7 @@ export const AppSearchInput = memo(() => {
   useOnMount(() => {
     searchBar = inputStore.node
     textInput$.current?.setNativeProps({
-      value: home.currentSearchQuery,
+      value: homeStore.currentSearchQuery,
     })
     return series([
       () => fullyIdle({ max: 600 }),
@@ -217,8 +216,8 @@ export const AppSearchInput = memo(() => {
                       // see above, we handle better for text selection
                       return
                     }
-                    if (home.searchbarFocusedTag) {
-                      home.setSearchBarTagIndex(0)
+                    if (homeStore.searchbarFocusedTag) {
+                      homeStore.setSearchBarTagIndex(0)
                     } else {
                       console.log('open autocomplete search')
                       autocompletesStore.setTarget('search')
@@ -268,10 +267,10 @@ export const AppSearchInput = memo(() => {
 // TODO not happy with logical structure here
 const SearchInputIcon = memo(({ color }: { color: string }) => {
   const media = useMedia()
-  const home = useHomeStore()
+  const isHomeLoading = useHomeStoreSelector((x) => x.loading)
   const search = useSearchPageStore()
   const isOnSearch = useIsRouteActive('search')
-  const loading = home.loading || (isOnSearch && search.status === 'loading')
+  const loading = isHomeLoading || (isOnSearch && search.status === 'loading')
   return (
     <VStack width={16} marginLeft={3} transform={[{ scale: loading ? 1.2 : 1 }]}>
       <TouchableOpacity onPress={focusSearchInput}>
@@ -293,11 +292,12 @@ const SearchInputIcon = memo(({ color }: { color: string }) => {
   )
 })
 
-const SearchCancelButton = memo(() => {
-  const home = useHomeStore()
-  const hasSearch = home.currentSearchQuery !== ''
-  const hasSearchTags = !!home.searchBarTags.length
-  const isActive = hasSearch || hasSearchTags
+const SearchCancelButton = memo(function SearchCancelButton() {
+  const isActive = useHomeStoreSelector((x) => {
+    const hasSearch = x.currentSearchQuery !== ''
+    const hasSearchTags = !!x.searchBarTags.length
+    return hasSearch || hasSearchTags
+  })
   const media = useMedia()
   return (
     <VStack
@@ -313,7 +313,7 @@ const SearchCancelButton = memo(() => {
         if (autocompletesStore.visible) {
           autocompletesStore.setVisible(false)
         } else {
-          home.clearSearch()
+          homeStore.clearSearch()
         }
       }}
     >

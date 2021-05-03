@@ -13,7 +13,7 @@ type AProps = React.DetailedHTMLProps<
 export type LinkProps<A, B> = LinkSharedProps &
   Omit<TextProps, 'display'> & {
     display?: TextProps['display'] | 'inline'
-    name?: A
+    name?: A | null
     // @ts-ignore
     params?: B
     tagName?: string

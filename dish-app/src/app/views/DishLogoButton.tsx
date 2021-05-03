@@ -1,8 +1,9 @@
 import React, { memo } from 'react'
+import { useDebounceValue } from 'snackui'
 import { AbsoluteVStack, HStack, VStack, useMedia } from 'snackui'
 
 import { logoHeight, logoWidth, logoXsHeight, logoXsWidth } from '../../constants/constants'
-import { useHomeStore } from '../homeStore'
+import { useHomeCurrentHomeType, useHomeStoreSelector } from '../homeStore'
 import { Link } from './Link'
 import { LinkButtonProps } from './LinkProps'
 import { LogoCircle, LogoColor } from './Logo'
@@ -21,12 +22,11 @@ const linkButtonProps: LinkButtonProps = {
 
 export const DishLogoButton = memo(({ color }: { color?: string }) => {
   const media = useMedia()
-  const { currentStateType } = useHomeStore()
+  const type = useHomeCurrentHomeType()
+  const currentType = useDebounceValue(type, 40)
   const wrapWithHomeLink = (el: any) => {
-    return currentStateType.indexOf('home') === 0 ? (
-      el
-    ) : (
-      <Link name="home">
+    return (
+      <Link name={currentType.indexOf('home') === 0 ? null : 'home'}>
         <HStack {...linkButtonProps}>{el}</HStack>
       </Link>
     )

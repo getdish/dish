@@ -67,7 +67,7 @@
             isEnabled = "YES">
          </EnvironmentVariable>
          <EnvironmentVariable
-            key = "NODE_BINARY"
+            key = "APP_NODE_BINARY"
             value = "/opt/homebrew/bin/node"
             isEnabled = "YES">
          </EnvironmentVariable>

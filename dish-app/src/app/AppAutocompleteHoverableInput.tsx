@@ -2,9 +2,9 @@ import React, { useRef } from 'react'
 import { Hoverable } from 'snackui'
 
 import { autocompletesStore } from './AutocompletesStore'
-import { useHomeStore } from './homeStore'
+import { homeStore } from './homeStore'
 
-export const AppAutocompleteHoverableInput = ({
+export function AppAutocompleteHoverableInput({
   children,
   input,
   autocompleteTarget,
@@ -16,8 +16,7 @@ export const AppAutocompleteHoverableInput = ({
   autocompleteTarget: 'search' | 'location'
   backgroundColor?: string
   borderRadius?: number
-}) => {
-  const home = useHomeStore()
+}) {
   const tm = useRef<any>(null)
   const tm2 = useRef<any>(null)
   return (
@@ -29,7 +28,7 @@ export const AppAutocompleteHoverableInput = ({
       onHoverMove={() => {
         clearTimeout(tm.current)
         tm.current = setTimeout(() => {
-          if (home.currentState.searchQuery) {
+          if (homeStore.currentState.searchQuery) {
             if (document.activeElement == input) {
               autocompletesStore.setTarget(autocompleteTarget)
             }

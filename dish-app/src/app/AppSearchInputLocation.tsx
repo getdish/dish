@@ -9,7 +9,7 @@ import { AppAutocompleteHoverableInput } from './AppAutocompleteHoverableInput'
 import { appMapStore } from './AppMapStore'
 import { inputTextStyles } from './AppSearchInput'
 import { autocompleteLocationStore, autocompletesStore } from './AutocompletesStore'
-import { useHomeStore } from './homeStore'
+import { useHomeStoreSelector } from './homeStore'
 import { useAutocompleteInputFocus } from './hooks/useAutocompleteInputFocus'
 import { useSearchBarTheme } from './hooks/useSearchBarTheme'
 import { InputFrame } from './InputFrame'
@@ -20,14 +20,13 @@ import { useAutocompleteFocusWebNonTouch } from './useAutocompleteFocusWeb'
 
 const isWebTouch = supportsTouchWeb
 
-export const AppSearchInputLocation = memo(() => {
+export const AppSearchInputLocation = memo(function AppSearchInputLocation() {
   // const theme = useTheme()
   // const media = useMedia()
   const inputStore = useInputStoreLocation()
   const input = inputStore.node
-  const home = useHomeStore()
+  const curLocName = useHomeStoreSelector((x) => x.currentState.curLocName)
   const { color } = useSearchBarTheme()
-  const { curLocName } = home.currentState
 
   // focus on visible
   useAutocompleteInputFocus(inputStore)

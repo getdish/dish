@@ -145,13 +145,15 @@ export const HomeDrawerSmallView = memo((props: { children: any }) => {
           console.log('out of bounds')
           return
         }
-        console.log('pan move', y, dy, 'vs', drawerStore.pan['_value'])
+        // console.log('pan move', y, dy, 'vs', drawerStore.pan['_value'])
         drawerStore.pan.setValue(dy)
       },
       onPanResponderRelease: (e, { vy }) => {
         isPanActive = false
         const scrollStore = getStore(ScrollStore, { id: contentParent.activeId })
-        scrollStore.setLock('none')
+        if (scrollStore.lock !== 'none') {
+          scrollStore.setLock('none')
+        }
         drawerStore.setIsDragging(false)
         drawerStore.pan.flattenOffset()
         const scrolledY = curScrollerYMove
@@ -159,7 +161,7 @@ export const HomeDrawerSmallView = memo((props: { children: any }) => {
         if (scrolledY !== -1) {
           const scroller = scrollViews.get(contentParent.activeId)
           if (scroller) {
-            scroller.scrollTo({ y: scrolledY + -vy * 2 })
+            scroller.scrollTo({ y: scrolledY + -vy * 6 })
             drawerStore.setSnapIndex(0)
             return
           }
