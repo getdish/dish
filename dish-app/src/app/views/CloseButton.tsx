@@ -12,7 +12,7 @@ type CircleButtonProps = StackProps & {
 export const CloseButton = (props: CircleButtonProps) => {
   return (
     <SmallCircleButton {...props}>
-      <X size={props.size ?? 14} color="white" />
+      <X size={props.size ?? 14} color="#999" />
     </SmallCircleButton>
   )
 }
@@ -20,7 +20,7 @@ export const CloseButton = (props: CircleButtonProps) => {
 export const BackButton = memo((props: CircleButtonProps) => {
   return (
     <SmallCircleButton {...props}>
-      <CornerLeftUp size={props.size} color="white" />
+      <CornerLeftUp size={props.size} color="#999" />
     </SmallCircleButton>
   )
 })
@@ -42,25 +42,17 @@ export const SmallCircleButton = ({
       borderRadius={1000}
       alignItems="center"
       justifyContent="center"
+      backgroundColor={theme.color}
       hoverStyle={{
-        opacity: 0.9,
+        backgroundColor: theme.colorSecondary,
       }}
       pressStyle={{
-        opacity: 0.6,
+        backgroundColor: theme.colorTertiary,
       }}
       {...(shadowed && {
         shadowColor: theme.shadowColor,
         shadowRadius: 10,
         shadowOffset: { width: 0, height: 2 },
-      })}
-      {...(subtle && {
-        backgroundColor: 'transparent',
-        hoverStyle: {
-          backgroundColor: theme.backgroundColorSecondary,
-        },
-        pressStyle: {
-          backgroundColor: theme.backgroundColorTertiary,
-        },
       })}
       width={width}
       height={height}
@@ -69,12 +61,6 @@ export const SmallCircleButton = ({
       padding={padding}
       {...props}
     >
-      <AbsoluteVStack
-        fullscreen
-        borderRadius={1000}
-        backgroundColor={theme.colorTertiary}
-        zIndex={-1}
-      />
       {children}
     </HStack>
   )
