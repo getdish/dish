@@ -114,11 +114,9 @@ export const HomeFeedDishRestaurants = graphql(
     const contents = useMemo(() => {
       return (
         <>
-          <Theme name="dark">
-            <FeedSlantedTitleLink tag={tag}>
-              {`${tag.icon ? tag.icon + ' ' : ''}${tag.name}`.trim()}
-            </FeedSlantedTitleLink>
-          </Theme>
+          <FeedSlantedTitleLink tag={tag}>
+            {`${tag.icon ? tag.icon + ' ' : ''}${tag.name}`.trim()}
+          </FeedSlantedTitleLink>
 
           <SkewedCardCarousel>
             {restaurants.map((restaurant, i) => {
@@ -139,6 +137,7 @@ export const HomeFeedDishRestaurants = graphql(
                           ratingStyle="pie"
                           size="lg"
                           restaurantSlug={restaurant.slug || ''}
+                          hideRank
                           color="#fff"
                           backgroundColor="transparent"
                           floating

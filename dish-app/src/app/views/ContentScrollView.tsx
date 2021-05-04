@@ -186,6 +186,7 @@ export const ContentScrollView = forwardRef<ScrollView, ContentScrollViewProps>(
       if (isAtTop) {
         if (!scrollStore.isAtTop) {
           scrollStore.setIsAtTop(true)
+          scrollStore.setLock('none')
         }
         // DONT LOCK HERE WILL INTERFERE WITH VERTICAL SCROLL PULL DOWN
       } else {

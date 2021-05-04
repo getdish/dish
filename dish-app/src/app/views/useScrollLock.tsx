@@ -14,7 +14,6 @@ export const useScrollLock = ({ id, direction }: { id: string; direction: Scroll
   const isLocked = () => store.lock === direction
 
   const updateLock = (val: boolean) => {
-    console.log('lock check cur', store.lock, 'next', direction, val)
     if (store.lock === 'vertical') {
       return
     }

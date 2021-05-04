@@ -20,7 +20,7 @@ export function TagsText({ tags, color }: { tags: any[]; color?: string }) {
             </Text>
           ) : null}
           <Spacer size="sm" />
-          <Text color={color} fontSize={16} fontWeight="600">
+          <Text color={color} fontSize={16} fontWeight="500">
             {tagDisplayName(tag)}
           </Text>
           {index < tags.length - 1 ? (

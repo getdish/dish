@@ -20,7 +20,7 @@ export const SkewedCard = ({ children, size, ...props }: StackProps & { size?: C
       opacity={1}
       transform={[{ scale: 0.85 }, { perspective: 1000 }, { rotateY: '-15deg' }, { translateX: 0 }]}
       hoverStyle={{
-        transform: [{ scale: 0.88 }, { perspective: 1000 }, { rotateY: '-10deg' }],
+        transform: [{ scale: 0.87 }, { perspective: 1000 }, { rotateY: '-15deg' }],
       }}
       pressStyle={{
         transform: [{ scale: 0.83 }, { perspective: 1000 }, { rotateY: '-10deg' }],
@@ -35,7 +35,7 @@ export const SkewedCard = ({ children, size, ...props }: StackProps & { size?: C
 export const SkewedCardCarousel = ({ children }: { children: any }) => {
   return (
     <ContentScrollViewHorizontal>
-      <HStack contain="paint" paddingVertical={10}>
+      <HStack paddingVertical={10}>
         {children}
         <VStack width={100} height={100} />
       </HStack>
