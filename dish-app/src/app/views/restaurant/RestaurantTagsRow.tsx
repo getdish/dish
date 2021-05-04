@@ -18,6 +18,7 @@ type TagRowProps = {
   spacing?: number
   grid?: boolean
   max?: number
+  exclude?: 'orphan' | 'dish' | 'category'
 }
 
 export const RestaurantTagsRow = (props: TagRowProps) => {
@@ -48,7 +49,9 @@ const RestaurantTagsRowContent = memo(
     if (props.tags) {
       tags = props.tags.map(getTagButtonProps)
     } else {
-      tags = queryRestaurantTags({ restaurantSlug, limit: props.max }).map(selectRishDishViewSimple)
+      tags = queryRestaurantTags({ restaurantSlug, limit: props.max, exclude: props.exclude }).map(
+        selectRishDishViewSimple
+      )
     }
     if (showMore) {
       tags = tags.slice(0, 2)

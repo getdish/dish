@@ -220,6 +220,7 @@ const RestaurantListItemContent = memo(
     const tagsRowContent = !hideTagRow && (
       <Suspense fallback={null}>
         <RestaurantTagsRow
+          exclude="dish"
           size="sm"
           restaurantSlug={restaurantSlug}
           restaurantId={restaurantId}
@@ -494,7 +495,7 @@ const RestaurantListItemContent = memo(
             <RestaurantDeliveryButtons label="🚗" restaurantSlug={restaurantSlug} />
           </Suspense>
 
-          <Spacer />
+          <Spacer size="xl" />
 
           {tagsRowContent}
         </HStack>
@@ -581,7 +582,7 @@ const RestaurantPeekDishes = memo(
           transform={[{ translateY: -30 }]}
           alignItems="center"
           height="100%"
-          width={dishSize * 5}
+          width={dishSize * 0.7 * 5}
         >
           {!!dishes[0]?.name &&
             dishes.map((dish, i) => {
@@ -593,7 +594,7 @@ const RestaurantPeekDishes = memo(
                 : dishSize
 
               return (
-                <VStack key={dish.slug} marginRight={-40} marginTop={isEven ? 0 : -20}>
+                <VStack key={dish.slug} marginRight={-35} marginTop={isEven ? 0 : -20}>
                   <DishView
                     preventLoad={!isLoaded && i > 2}
                     size={baseSize * (isEven ? 1 : 0.825)}
