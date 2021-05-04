@@ -230,20 +230,7 @@ export default memo(function AppMap() {
           borderBottomRightRadius={12}
           overflow="hidden"
         >
-          {!media.sm && (
-            <Theme name="dark">
-              <AbsoluteVStack
-                zIndex={1000000000}
-                pointerEvents="none"
-                left={0}
-                right={0}
-                bottom={0}
-                top={searchBarHeight}
-              >
-                <AppAutocompleteLocation />
-              </AbsoluteVStack>
-            </Theme>
-          )}
+          {!media.sm && <AppAutocompleteLocation />}
           <AppMapControls />
           <VStack
             width="100%"

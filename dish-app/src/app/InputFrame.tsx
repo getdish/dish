@@ -11,7 +11,6 @@ export const InputFrame = forwardRef(({ children }: { children: any }, ref) => {
       flex={1}
       maxWidth="100%"
       paddingLeft={10}
-      overflow="hidden"
       position="relative"
       backgroundColor="rgba(0,0,0,0.1)"
       hoverStyle={{

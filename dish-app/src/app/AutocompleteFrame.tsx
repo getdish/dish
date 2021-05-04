@@ -11,7 +11,7 @@ import {
   useTheme,
 } from 'snackui'
 
-import { drawerWidthMax, isWeb } from '../constants/constants'
+import { drawerWidthMax, isWeb, searchBarHeight } from '../constants/constants'
 import { isTouchDevice } from '../constants/platforms'
 import { AutocompleteItem } from '../helpers/createAutocomplete'
 import { AutocompleteItemView } from './AutocompleteItemView'
@@ -80,7 +80,12 @@ export const AutocompleteFrame = ({
             fullscreen
           />
         </AbsoluteVStack>
-        <AbsoluteVStack zIndex={10000} top={10} right={10} pointerEvents="auto">
+        <AbsoluteVStack
+          zIndex={10000}
+          top={media.notSm ? searchBarHeight + 10 + 10 : 10}
+          right={10}
+          pointerEvents="auto"
+        >
           <CloseButton size={20} onPressOut={prevent} zIndex={1000} onPress={hideAutocompletes} />
         </AbsoluteVStack>
         <VStack
@@ -94,7 +99,7 @@ export const AutocompleteFrame = ({
           borderRadius={media.sm ? 0 : 10}
           flex={media.sm ? 1 : 0}
           {...(media.notSm && {
-            paddingTop: 110,
+            paddingTop: 160,
           })}
           // dont add events here :(
         >
@@ -157,7 +162,7 @@ export const AutocompleteResults = memo(
           const isActive = !isWeb ? index === 0 : activeIndex === index
           return (
             <React.Fragment key={`${result.id}${index}`}>
-              <Theme name={isActive ? 'darkActive' : 'dark'}>
+              <Theme name={isActive ? 'active' : 'dark'}>
                 <AutocompleteItemView
                   target={target}
                   index={index}
