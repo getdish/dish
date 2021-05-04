@@ -1,10 +1,10 @@
 import { RestaurantQuery, order_by, query, restaurant } from '@dish/graph'
 
-export const queryRestaurant = (slug: string) => {
+export const queryRestaurant = (slug: string, _query = query) => {
   if (typeof slug !== 'string') {
     throw new Error(`No slug`)
   }
-  return query.restaurant({
+  return _query.restaurant({
     where: {
       slug: {
         _eq: slug,

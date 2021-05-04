@@ -164,10 +164,16 @@ export class Router<
 
     switch (item.direction) {
       case 'forward':
-        this.stackIndex += 1
+        if (this.stackIndex === this.stack.length - 1) {
+          return
+        }
+        this.stackIndex++
         break
       case 'backward':
-        this.stackIndex -= 1
+        if (this.stackIndex === 0) {
+          return
+        }
+        this.stackIndex--
         break
       case 'none':
         if (item.type === 'replace') {

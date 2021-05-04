@@ -103,7 +103,8 @@ export const RestaurantReviewCommentForm = memo(
     const [isSaved, setIsSaved] = useState(false)
     const lineHeight = 22
     const [height, setHeight] = useState(lineHeight)
-    const dishTags = getRestaurantDishes({ restaurantSlug })
+    const [restaurant] = queryRestaurant(restaurantSlug)
+    const dishTags = getRestaurantDishes({ restaurant })
 
     useDebounceEffect(
       () => {

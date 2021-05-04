@@ -399,8 +399,6 @@ class HomeStore extends Store {
       return
     }
 
-    const time = timer()
-
     // happens on *any* route push or pop
     if (appMapStore.hovered) {
       appMapStore.setHovered(null)
@@ -454,9 +452,7 @@ class HomeStore extends Store {
         next.id = this.currentState.id
       }
 
-      time('homeStore:pre:update')
       this.updateHomeState('handleRouteChange', next)
-      time('homeStore:update')
     }
   }
 
