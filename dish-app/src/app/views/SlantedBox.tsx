@@ -7,7 +7,7 @@ import { LinkButtonProps } from './LinkProps'
 export const slantedBoxStyle: BoxProps = {
   position: 'relative',
   zIndex: 10,
-  paddingVertical: 7,
+  paddingVertical: 8,
   paddingHorizontal: 10,
   shadowColor: '#000',
   shadowOpacity: 0.125,

@@ -31,7 +31,7 @@ export const AppSearchInputTagsRow = memo(({ input }: { input: HTMLInputElement 
                 color="#fff"
                 fontWeight="600"
                 backgroundColor="rgba(0,0,0,0.25)"
-                height={38}
+                floating
                 shadowRadius={8}
                 hideRating
                 hideRank

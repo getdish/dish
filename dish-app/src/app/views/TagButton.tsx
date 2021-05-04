@@ -5,6 +5,7 @@ import React, { memo } from 'react'
 import {
   AbsoluteVStack,
   Button,
+  HStack,
   Spacer,
   StackProps,
   Text,
@@ -150,22 +151,18 @@ const TagButtonInner = (props: TagButtonProps) => {
   const showRank = !hideRank && !!rank
 
   const contents = (
-    // @ts-expect-error
-    <Button
-      noTextWrap
-      spacing={fontSize * 0.8}
+    <HStack
+      spacing={fontSize * 0.5}
+      borderRadius={8}
+      alignItems="center"
       // className="ease-in-out-faster"
       // height={isSmall ? 28 : 34}
-      backgroundColor="transparent"
       paddingHorizontal={isSmall ? 2 : 12}
-      hoverStyle={{
-        backgroundColor: 'transparent',
-      }}
       paddingVertical={isSmall ? 3 : 5}
       height={isSmall ? 32 : 38}
       {...rest}
     >
-      {showRank && (
+      {showRank && rank && rank < 100 && (
         <Text
           fontSize={smallerFontSize}
           fontWeight="700"
@@ -208,9 +205,10 @@ const TagButtonInner = (props: TagButtonProps) => {
         fontSize={fontSize}
         fontWeight={fontWeight || '700'}
         lineHeight={isSmall ? 22 : 26}
-        color={color || theme.color}
+        color={theme.color}
+        {...(color && { color })}
         borderBottomColor={theme.backgroundColor}
-        borderBottomWidth={1}
+        borderBottomWidth={floating ? 0 : 1}
         opacity={0.8}
         marginTop={-1}
         {...(floating && {
@@ -278,7 +276,6 @@ const TagButtonInner = (props: TagButtonProps) => {
           backgroundColor="transparent"
           borderRadius={10}
           opacity={0.35}
-          marginLeft={-10}
           position="relative"
           width={isWeb ? 26 : 40}
           height={isWeb ? 26 : 40}
@@ -289,7 +286,7 @@ const TagButtonInner = (props: TagButtonProps) => {
           <X size={13} color={theme.color} />
         </VStack>
       )}
-    </Button>
+    </HStack>
   )
 
   return (
@@ -317,6 +314,7 @@ const TagButtonVote = graphql(
     })
     const Icon = vote ? ThumbsDown : ThumbsUp
     const color = props.color ?? 'rgba(0,0,0,0.7)'
+    const theme = useTheme()
     const iconProps = {
       size: 14 * scale,
       color,
@@ -324,7 +322,7 @@ const TagButtonVote = graphql(
 
     return (
       <VStack
-        backgroundColor="rgba(0,0,0,0.15)"
+        backgroundColor={theme.backgroundColorTransluscent}
         alignItems="center"
         justifyContent="center"
         borderRadius={100}
@@ -334,7 +332,7 @@ const TagButtonVote = graphql(
         opacity={0.8}
         hoverStyle={{
           opacity: 1,
-          transform: [{ scale: 1.1 }],
+          backgroundColor: theme.backgroundColorTransluscentHover,
         }}
         pressStyle={{
           opacity: 0.5,

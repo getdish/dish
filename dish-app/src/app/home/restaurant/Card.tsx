@@ -92,7 +92,6 @@ export function Card({
   const wordScale = longestWordLen > 14 ? 0.7 : longestWordLen > 9 ? 0.8 : 1
   const baseFontSize = 28 * lenScale * wordScale
   const fontSize = Math.round(baseFontSize * scales[size])
-  const themeName = useThemeName()
 
   return (
     <CardFrame square={square} size={size} aspectFixed={aspectFixed} hoverable={hoverable}>
@@ -111,7 +110,6 @@ export function Card({
           overflow="hidden"
           borderRadius={cardFrameBorderRadius}
           backgroundColor={backgroundColor || underColor || ''}
-          opacity={themeName === 'dark' ? 0.25 : 1}
         >
           {/* behind shadow */}
           {isBehind && (
@@ -249,11 +247,13 @@ export const CardOverlay = (props: { children: any }) => {
       <VStack position="relative">
         <AbsoluteVStack left={0} right={0} bottom={0} top={-40}>
           <LinearGradient
-            colors={['rgba(0,0,0,0)', '#rgba(0, 0, 0, 0.5)']}
+            colors={['rgba(0,0,0,0)', '#rgba(0, 0, 0, 1)']}
             style={StyleSheet.absoluteFill}
           />
         </AbsoluteVStack>
-        <VStack padding={10}>{props.children}</VStack>
+        <VStack alignItems="center" justifyContent="center" padding={10}>
+          {props.children}
+        </VStack>
       </VStack>
     </AbsoluteVStack>
   )

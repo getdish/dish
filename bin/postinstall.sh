@@ -10,6 +10,7 @@ function patch_app_packages() {
 
 function delete_and_link_duplicate_modules() {
   pushd $PROJECT_ROOT
+  # now delete then symlink
   rm -r dish-app/node_modules/esbuild-register &> /dev/null || true
   rm -r node_modules/react-native &> /dev/null || true
   rm -r node_modules/react &> /dev/null || true
