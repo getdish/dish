@@ -39,6 +39,7 @@ type CommentBubbleProps = Omit<StackProps, 'children'> & {
   expandable?: boolean
   date?: Date
   belowContent?: any
+  children?: any
 }
 
 export const CommentBubble = (props: CommentBubbleProps) => {
@@ -67,6 +68,7 @@ export const CommentBubble = (props: CommentBubbleProps) => {
       spacing="sm"
       overflow="hidden"
       margin={-10}
+      marginBottom={-20}
       {...rest}
     >
       {fullWidth && ensureFlexText}
@@ -111,6 +113,7 @@ function CommentBubbleContents({
   belowContent,
   avatarBackgroundColor,
   scrollable,
+  children,
 }: CommentBubbleProps & {
   onExpand?: () => any
   expanded?: boolean
@@ -130,39 +133,42 @@ function CommentBubbleContents({
   const colors = getColorsForName(`${name}`)
 
   const contents = (
-    <VStack>
+    <>
       {title ? (
         <>
           {title}
           <Spacer />
         </>
       ) : null}
-      <Paragraph
-        className="preserve-whitespace break-word"
-        selectable
-        maxWidth="100%"
-        overflow="hidden"
-        sizeLineHeight={0.85}
-        size={1}
-      >
-        {ellipseContentAbove && text.length > ellipseContentAbove ? (
-          <Text>
-            {expanded
-              ? text
-              : typeof text === 'string'
-              ? text.slice(0, ellipseContentAbove) + '...'
-              : text}{' '}
-            {!expanded && !!expandable && (
-              <Link onPress={onExpand}>
-                <Text>Read more &raquo;</Text>
-              </Link>
-            )}
-          </Text>
-        ) : (
-          text
-        )}
-      </Paragraph>
-    </VStack>
+      {text && (
+        <Paragraph
+          className="preserve-whitespace break-word"
+          selectable
+          maxWidth="100%"
+          overflow="hidden"
+          sizeLineHeight={0.9}
+          size={1}
+        >
+          {ellipseContentAbove && text.length > ellipseContentAbove ? (
+            <Text>
+              {expanded
+                ? text
+                : typeof text === 'string'
+                ? text.slice(0, ellipseContentAbove) + '...'
+                : text}{' '}
+              {!expanded && !!expandable && (
+                <Link onPress={onExpand}>
+                  <Text>Read more &raquo;</Text>
+                </Link>
+              )}
+            </Text>
+          ) : (
+            text
+          )}
+        </Paragraph>
+      )}
+      {children}
+    </>
   )
 
   return (
@@ -274,7 +280,7 @@ function CommentBubbleContents({
           </VStack>
 
           <HStack
-            backgroundColor={colors.darkColor}
+            backgroundColor={theme.backgroundColor}
             borderRadius={10}
             paddingHorizontal={5}
             paddingVertical={3}
@@ -290,8 +296,9 @@ function CommentBubbleContents({
               maxWidth="100%"
               flex={1}
               fontSize={13}
+              ellipse
             >
-              <Text ellipse>{name}</Text>
+              {name}
             </Link>
             {afterName}
           </HStack>

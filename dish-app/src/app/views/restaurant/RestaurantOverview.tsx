@@ -5,6 +5,7 @@ import React, { memo, useRef, useState } from 'react'
 import { AbsoluteVStack, Button, HStack, Input, Spacer, Text, VStack, useTheme } from 'snackui'
 
 import { blue } from '../../../constants/colors'
+import { isWeb } from '../../../constants/constants'
 import { queryRestaurant } from '../../../queries/queryRestaurant'
 import { ensureFlexText } from '../../home/restaurant/ensureFlexText'
 import { SmallButton } from '../SmallButton'
@@ -48,9 +49,9 @@ export const RestaurantOverview = memo(
       .slice(0, 3)
       .map((x) => x.sentence)
       .join(' ')
-    const summary = text ?? restaurant.summary ?? headlines
-    const scale = 2.1 - Math.max(1.0, Math.min(1.1, summary.length / 250))
-    const extra = size === 'lg' ? 2 : 1
+    const summary = text || restaurant.summary || headlines || 'No overview :('
+    const scale = 1
+    const extra = size === 'lg' ? 1.1 : 1
     const lineHeight = Math.round((size === 'lg' ? 26 : 24) * scale + extra * scale)
     const fontSize = Math.round(16 * scale + extra)
     const [isEditing, setIsEditing] = useState(false)
@@ -59,7 +60,7 @@ export const RestaurantOverview = memo(
     if (summary || editableDescription) {
       return (
         // height 100% necessary for native
-        <VStack height="100%">
+        <VStack width="100%">
           <HStack
             maxHeight={fullHeight ? 'auto' : lineHeight * maxLines - 2}
             maxWidth="100%"

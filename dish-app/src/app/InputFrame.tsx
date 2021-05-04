@@ -13,12 +13,12 @@ export const InputFrame = forwardRef(({ children }: { children: any }, ref) => {
       paddingLeft={10}
       overflow="hidden"
       position="relative"
-      backgroundColor="rgba(50,50,50,0.1)"
+      backgroundColor="rgba(0,0,0,0.1)"
       hoverStyle={{
-        backgroundColor: 'rgba(150,150,150,0.15)',
+        backgroundColor: 'rgba(0,0,0,0.15)',
       }}
       focusStyle={{
-        backgroundColor: 'rgba(150,150,150,0.25)',
+        backgroundColor: 'rgba(0,0,0,0.25)',
       }}
       {...(media.sm && {
         maxHeight: 44,

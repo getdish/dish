@@ -21,6 +21,7 @@ export const HomeLenseBar = memo(
             <VStack
               height="100%"
               zIndex={isActive ? 1 : 0}
+              marginRight={4}
               key={lense.id + index}
               justifyContent="center"
             >

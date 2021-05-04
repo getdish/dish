@@ -1,7 +1,8 @@
+// debug
 import { MapPin, Navigation } from '@dish/react-feather'
 import React, { memo, useCallback } from 'react'
 import { TextInput } from 'react-native'
-import { AbsoluteVStack, Button, HStack, VStack, getMedia } from 'snackui'
+import { AbsoluteVStack, Button, HStack, VStack, getMedia, useMedia } from 'snackui'
 
 import { isWeb } from '../constants/constants'
 import { supportsTouchWeb } from '../constants/platforms'
@@ -22,7 +23,7 @@ const isWebTouch = supportsTouchWeb
 
 export const AppSearchInputLocation = memo(function AppSearchInputLocation() {
   // const theme = useTheme()
-  // const media = useMedia()
+  const media = useMedia()
   const inputStore = useInputStoreLocation()
   const input = inputStore.node
   const curLocName = useHomeStoreSelector((x) => x.currentState.curLocName)
@@ -130,16 +131,18 @@ export const AppSearchInputLocation = memo(function AppSearchInputLocation() {
           </HStack>
           <Button
             backgroundColor="transparent"
-            // padding={10}
-            // does nothing on native
-            marginRight={2}
+            opacity={0.5}
+            hoverStyle={{
+              opacity: 1,
+            }}
+            icon={<Navigation size={20} color={color} />}
             borderRadius={1000}
             onPress={appMapStore.moveToUserLocation}
-            transform={[{ translateY: isWeb ? 2 : 0 }]}
+            {...(media.notSm && {
+              transform: [{ translateY: 2 }],
+            })}
             noTextWrap
-          >
-            <Navigation size={20} opacity={0.5} color={color} />
-          </Button>
+          />
         </InputFrame>
       </AppAutocompleteHoverableInput>
     </VStack>

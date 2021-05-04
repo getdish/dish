@@ -650,7 +650,7 @@ function setupMapEffect({
           generateId: true,
         })
 
-        const rgb = hexToRGB(grey).rgb
+        const pointColor = themeName === 'dark' ? `rgba(0,0,0,0.44)` : hexToRGB(grey).string
         map.addLayer({
           id: POINT_LAYER_ID,
           type: 'circle',
@@ -673,15 +673,7 @@ function setupMapEffect({
 
             // 'circle-stroke-color': 'transparent',
 
-            'circle-color': [
-              'match',
-              ['get', 'selected'],
-              1,
-              'yellow',
-              0,
-              `rgba(${rgb.join(',')}, 0.65)`,
-              `rgba(${rgb.join(',')}, 0.65)`,
-            ],
+            'circle-color': ['match', ['get', 'selected'], 1, 'yellow', 0, pointColor, pointColor],
 
             // [
             //   'step',

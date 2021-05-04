@@ -15,6 +15,10 @@ if (process.env.NODE_ENV === 'production') {
   })
 }
 
+if (process.env.NODE_ENV === 'development') {
+  require('@dish/graph').startLogging()
+}
+
 console.log('polyfills')
 navigator.geolocation = require('@react-native-community/geolocation')
 

@@ -37,7 +37,6 @@ export const SmallCircleButton = ({
   ...props
 }: CircleButtonProps) => {
   const theme = useTheme()
-  if (props['debug']) console.log('shadowed', shadowed)
   return (
     <HStack
       borderRadius={1000}

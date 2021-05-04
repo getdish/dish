@@ -12,6 +12,7 @@ export default route(async (req, res, nexy) => {
     return
   }
   const key = JSON.stringify(req.params ?? [])
+  console.log('[search] key', key)
   const cached = await redisGet(key)
   if (cached) {
     console.log('🏓 [search] cache hit')

@@ -30,7 +30,6 @@ export const queryFetcher: QueryFetcher = async function (query, variables) {
     variables,
   })
   const startTime = Date.now()
-  console.log('fetching', GRAPH_API)
   const response = await fetchLog(GRAPH_API, {
     method: 'POST',
     headers,

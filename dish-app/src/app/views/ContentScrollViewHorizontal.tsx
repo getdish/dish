@@ -1,10 +1,11 @@
 import { useStoreSelector } from '@dish/use-store'
-import React, { useContext, useMemo, useState } from 'react'
+import React, { useContext, useEffect, useMemo, useState } from 'react'
 import { ScrollView, ScrollViewProps, StyleSheet } from 'react-native'
 import { VStack, useDebounce } from 'snackui'
 
 import { isWeb } from '../../constants/constants'
 import { useAppDrawerWidthInner } from '../hooks/useAppDrawerWidth'
+import { useLastValue } from '../hooks/useLastValue'
 import { ContentScrollContext, ScrollStore } from './ContentScrollView'
 import { useScrollLock } from './useScrollLock'
 
@@ -80,8 +81,6 @@ export const ContentScrollViewHorizontal = (props: ContentScrollViewHorizontalPr
       />
     )
   }, [props])
-
-  console.log('isLockedVertical', isLockedVertical)
 
   return (
     // needs both pointer events to prevent/enable scroll on safari

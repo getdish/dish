@@ -1,5 +1,6 @@
 import { graphql } from '@dish/graph'
 import React from 'react'
+import { Button } from 'snackui'
 import { AbsoluteVStack, HStack, Hoverable, Text, VStack, useTheme } from 'snackui'
 
 import { getColorsForName } from '../../../helpers/getColorsForName'
@@ -9,6 +10,7 @@ import { getListColor } from '../../home/list/listColors'
 import { Card } from '../../home/restaurant/Card'
 import { Image } from '../Image'
 import { Link } from '../Link'
+import { LinkButton } from '../LinkButton'
 import { Score } from '../Score'
 
 type ListIDProps = {
@@ -116,34 +118,34 @@ export const ListCardHorizontal = graphql((props: ListIDProps) => {
   }
 
   return (
-    <Link name="list" asyncClick params={{ slug, userSlug, region }}>
-      <HStack
-        borderRadius={15}
-        padding={10}
-        paddingHorizontal={12}
-        backgroundColor={colors.extraLightColor}
-        borderWidth={1}
-        borderColor={colors.lightColor}
-        shadowColor={theme.shadowColor}
-        shadowRadius={3}
-        shadowOffset={{ height: 2, width: 0 }}
-        maxHeight={80}
-      >
-        <Image
-          source={{ uri: getImageUrl(photos[0] ?? '', 42, 42) }}
-          style={{
-            width: 42,
-            height: 42,
-            borderRadius: 100,
-          }}
-        />
-        <VStack>
-          <Text ellipse color={colors.darkColor} fontWeight="800">
-            {list.name}
-          </Text>
-          <Text>{list.user?.username}</Text>
-        </VStack>
-      </HStack>
-    </Link>
+    <LinkButton
+      name="list"
+      asyncClick
+      params={{ slug, userSlug, region }}
+      borderRadius={15}
+      padding={10}
+      paddingHorizontal={12}
+      backgroundColor={theme.cardBackgroundColor}
+      borderWidth={1}
+      elevation={2}
+      shadowRadius={3}
+      shadowOffset={{ height: 2, width: 0 }}
+      maxHeight={80}
+    >
+      <Image
+        source={{ uri: getImageUrl(photos[0] ?? '', 42, 42) }}
+        style={{
+          width: 42,
+          height: 42,
+          borderRadius: 100,
+        }}
+      />
+      <VStack>
+        <Text ellipse color={colors.darkColor} fontWeight="800">
+          {list.name}
+        </Text>
+        <Text>{list.user?.username}</Text>
+      </VStack>
+    </LinkButton>
   )
 })

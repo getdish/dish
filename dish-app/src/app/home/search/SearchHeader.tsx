@@ -81,7 +81,9 @@ export const SearchHeader = memo(() => {
                 justifyContent="center"
                 transform={[{ translateX: -10 }]}
               >
-                <SlantedTitle size="xs">Lists</SlantedTitle>
+                <SlantedTitle shadowColor="transparent" size="xs">
+                  Lists
+                </SlantedTitle>
                 <AbsoluteVStack right={-14} transform={[{ rotate: '90deg' }]}>
                   <Arrow />
                 </AbsoluteVStack>
