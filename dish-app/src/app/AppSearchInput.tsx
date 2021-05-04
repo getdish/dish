@@ -4,37 +4,27 @@ import { Loader, Search, X } from '@dish/react-feather'
 import { getStore, reaction, useStoreInstance } from '@dish/use-store'
 import React, { memo, useCallback, useEffect, useRef } from 'react'
 import { ScrollView, StyleSheet, TextInput, TouchableOpacity, View } from 'react-native'
-import {
-  HStack,
-  Spacer,
-  VStack,
-  getMedia,
-  useDebounce,
-  useMedia,
-  useOnMount,
-  useThemeName,
-} from 'snackui'
+import { HStack, Spacer, VStack, getMedia, useDebounce, useMedia, useOnMount } from 'snackui'
 
 import { isWeb, searchBarHeight } from '../constants/constants'
-import { getTagSlug } from '../helpers/getTagSlug'
 import { isWebIOS } from '../helpers/isIOS'
 import { filterToNavigable } from '../helpers/tagHelpers'
 import { router, useIsRouteActive } from '../router'
 import { AppAutocompleteHoverableInput } from './AppAutocompleteHoverableInput'
+import { AppSearchInputTagsRow } from './AppSearchInputTagsRow'
 import {
   AutocompleteStore,
   autocompleteSearchStore,
   autocompletesStore,
 } from './AutocompletesStore'
 import { searchPageStore, useSearchPageStore } from './home/search/SearchPageStore'
-import { homeStore, useHomeStore, useHomeStoreSelector } from './homeStore'
+import { homeStore, useHomeStoreSelector } from './homeStore'
 import { useAutocompleteInputFocus } from './hooks/useAutocompleteInputFocus'
 import { useSearchBarTheme } from './hooks/useSearchBarTheme'
 import { InputFrame } from './InputFrame'
 import { InputStore, setNodeOnInputStore, useInputStoreSearch } from './inputStore'
 import { SearchInputNativeDragFix } from './SearchInputNativeDragFix'
 import { useAutocompleteFocusWebNonTouch } from './useAutocompleteFocusWeb'
-import { TagButton, getTagButtonProps } from './views/TagButton'
 
 const isWebTouch = isWeb && supportsTouchWeb
 
@@ -179,7 +169,7 @@ export const AppSearchInput = memo(() => {
             }}
           >
             <HStack alignSelf="center" alignItems="center" minWidth="100%" height={innerHeight}>
-              <AppSearchInputTags input={input} />
+              <AppSearchInputTagsRow input={input} />
               <HStack
                 height={innerHeight}
                 maxWidth="100%"
@@ -456,60 +446,4 @@ export const inputTextStyles = StyleSheet.create({
       whiteSpace: 'nowrap',
     }),
   },
-})
-
-const AppSearchInputTags = memo(({ input }: { input: HTMLInputElement | null }) => {
-  const home = useHomeStore()
-  const tags = home.searchBarTags
-  const themeName = useThemeName()
-  const focusedTag = home.searchbarFocusedTag
-
-  return (
-    <>
-      {!!tags.length && (
-        // web no margin top, native may want -1
-        <HStack marginLeft={10} marginTop={isWeb ? 0 : -1} spacing={4}>
-          {tags.map((tag) => {
-            const isActive = focusedTag === tag
-            return (
-              <TagButton
-                key={getTagSlug(tag.slug)}
-                theme={themeName}
-                size="lg"
-                subtleIcon
-                shadowColor="#00000022"
-                color="#fff"
-                fontWeight="600"
-                backgroundColor="rgba(50,50,50,0.25)"
-                height={38}
-                shadowRadius={8}
-                hideRating
-                hideRank
-                hoverStyle={{
-                  backgroundColor: 'rgba(150,150,150,0.7)',
-                }}
-                {...(isActive && {
-                  backgroundColor: 'rgba(150,150,150,0.1)',
-                  hoverStyle: {
-                    backgroundColor: 'rgba(150,150,150,0.1)',
-                  },
-                })}
-                {...getTagButtonProps(tag)}
-                onPressOut={() => {
-                  home.setSearchBarFocusedTag(tag)
-                }}
-                closable
-                onClose={async () => {
-                  home.navigate({ tags: [tag] })
-                  await fullyIdle()
-                  setAvoidNextAutocompleteShowOnFocus()
-                  focusSearchInput()
-                }}
-              />
-            )
-          })}
-        </HStack>
-      )}
-    </>
-  )
 })

@@ -1,9 +1,8 @@
 import React from 'react'
-import { AbsoluteVStack, Circle, HStack, Spacer, Text, VStack, useTheme } from 'snackui'
+import { AbsoluteVStack, HStack, Spacer, Text, VStack, useTheme } from 'snackui'
 
 import { green, orange, purple, red, yellow } from '../../constants/colors'
 import { numberFormat } from '../../helpers/numberFormat'
-import { useAppShouldShow } from '../AppStore'
 import { Pie } from '../views/Pie'
 import { ProgressRing } from './ProgressRing'
 
@@ -30,11 +29,6 @@ export const RatingView = ({
   const innerSize = Math.round(stacked ? size * 0.66 : size * 0.33)
   const middleSize = Math.round(stacked ? size * 0.8 : size * 0.6)
   const outerSize = Math.round(stacked ? size : size * 0.85)
-
-  const show = useAppShouldShow('ratings')
-  if (!show) {
-    return null
-  }
 
   const innerRing = (
     <VStack transform={[{ rotate }]}>

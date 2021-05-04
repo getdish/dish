@@ -1,8 +1,6 @@
 import React from 'react'
 import Svg, { Circle, Path } from 'react-native-svg'
 
-import { useAppShouldShow } from '../AppStore'
-
 export const Pie = ({
   size = 200,
   color = 'green',
@@ -16,10 +14,6 @@ export const Pie = ({
 }) => {
   const h = size / 2
   const dInner = getCirclePath(size, percent)
-  const show = useAppShouldShow('svg')
-  if (!show) {
-    return null
-  }
   return (
     <Svg viewBox={`0 0 ${size} ${size}`} width={size} height={size}>
       {!!background && <Circle cx={h} cy={h} r={size / 2} fill={background} />}

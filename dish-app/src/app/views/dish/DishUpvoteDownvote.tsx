@@ -2,7 +2,6 @@ import { graphql } from '@dish/graph'
 import React, { Suspense, useEffect, useRef } from 'react'
 
 import { queryRestaurant } from '../../../queries/queryRestaurant'
-import { useAppShouldShow } from '../../AppStore'
 import { useUserTagVotes } from '../../hooks/useUserTagVotes'
 import { Score } from '../Score'
 
@@ -17,11 +16,6 @@ type Props = {
 }
 
 export const DishUpvoteDownvote = (props: Props) => {
-  const show = useAppShouldShow('ratings')
-  if (!show) {
-    return null
-  }
-
   if (!props.restaurantSlug) {
     return null
   }
