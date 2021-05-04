@@ -1,5 +1,6 @@
 import { graphql } from '@dish/graph'
 import React, { memo } from 'react'
+import { Paragraph } from 'snackui'
 import { HStack, StackProps, Text } from 'snackui'
 
 import { queryRestaurant } from '../../../queries/queryRestaurant'
@@ -33,14 +34,14 @@ export const RestaurantDeliveryButtons = memo(
     return (
       <HStack flexWrap="wrap" alignItems="center" spacing="xs" {...props}>
         {!!label && (
-          <Text
+          <Paragraph
             fontSize={14}
             color="rgba(0,0,0,0.5)"
             marginRight={8}
             transform={[{ translateY: -1 }]}
           >
             {label}
-          </Text>
+          </Paragraph>
         )}
         {sources.map((source) => {
           return (

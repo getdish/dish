@@ -26,7 +26,6 @@ export const RestaurantAddToListButton = ({
       )}
       <Tooltip contents="Add to list">
         <Button
-          cursor="pointer"
           icon={<Plus color={'#777'} size={16} />}
           tooltip="Add to list"
           onPress={() => {

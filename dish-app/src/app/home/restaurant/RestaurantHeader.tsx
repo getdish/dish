@@ -80,11 +80,17 @@ const RestaurantHeaderContent = memo(
 
       const content = (
         <VStack>
-          <AbsoluteVStack top={5} left={5} zIndex={100}>
+          <HStack position="absolute" top={5} left={5} zIndex={100}>
             <Suspense fallback={null}>
               <RestaurantAddToListButton restaurantSlug={restaurantSlug} />
             </Suspense>
-          </AbsoluteVStack>
+
+            <Spacer size="sm" />
+
+            <Suspense fallback={null}>
+              <RestaurantFavoriteStar size="lg" restaurantId={restaurantId} />
+            </Suspense>
+          </HStack>
 
           <AbsoluteVStack zIndex={0} pointerEvents="auto">
             <RestaurantPhotosRow
@@ -188,9 +194,6 @@ const RestaurantHeaderContent = memo(
                         <Theme name={themeName === 'dark' ? `${colors.name}-dark` : null}>
                           <Suspense fallback={null}>
                             <HStack marginBottom={10}>
-                              <RestaurantFavoriteStar size="lg" restaurantId={restaurantId} />
-                              <Spacer size="xs" />
-
                               <RestaurantAddressLinksRow
                                 curLocInfo={state?.curLocInfo ?? null}
                                 showMenu
@@ -208,6 +211,8 @@ const RestaurantHeaderContent = memo(
                                 curLocInfo={state?.curLocInfo ?? null}
                               />
                             </VStack>
+
+                            <Spacer size="sm" />
 
                             <VStack marginBottom={10}>
                               <SmallButton

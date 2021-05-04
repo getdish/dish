@@ -12,7 +12,7 @@ import { SmallButton } from '../SmallButton'
 
 const quote = (
   <AbsoluteVStack top={-10} left={-0}>
-    <Text fontSize={60} opacity={0.058}>
+    <Text color="#000" fontSize={60} opacity={0.1}>
       &ldquo;
     </Text>
   </AbsoluteVStack>
@@ -62,7 +62,7 @@ export const RestaurantOverview = memo(
         // height 100% necessary for native
         <VStack width="100%" height={fullHeight ? '100%' : undefined}>
           <HStack
-            maxHeight={fullHeight ? 'auto' : lineHeight * maxLines - 2}
+            maxHeight={lineHeight * maxLines - 2}
             maxWidth="100%"
             overflow="hidden"
             paddingHorizontal={30}
