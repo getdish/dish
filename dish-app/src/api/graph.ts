@@ -1,15 +1,10 @@
-import crypto from 'crypto'
-
 import { route, useRouteBodyParser } from '@dish/api'
-import { isEqual } from '@dish/fast-compare'
 import { GRAPH_API_INTERNAL, fetchLog } from '@dish/graph'
 import { Request } from 'express'
-import { FieldNode, SelectionNode, print } from 'graphql'
-import { DefinitionNode, OperationDefinitionNode } from 'graphql'
+import { FieldNode, OperationDefinitionNode, SelectionNode, print } from 'graphql'
 import gql from 'graphql-tag'
-import { omit } from 'lodash'
 
-import { redisClient, redisGet, redisSet } from './_rc'
+import { redisGet, redisSet } from './_rc'
 
 const hasuraHeaders = {
   'content-type': 'application/json',

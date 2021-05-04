@@ -3,14 +3,14 @@ import { assertPresent } from '@dish/helpers'
 import { Edit2 } from '@dish/react-feather'
 import { HistoryItem } from '@dish/router'
 import React, { memo, useContext } from 'react'
-import { Button, Toast, Tooltip } from 'snackui'
+import { Toast, Tooltip } from 'snackui'
 
 import { getActiveTags } from '../../../helpers/getActiveTags'
 import { getFullTags } from '../../../helpers/getFullTags'
 import { getTitleForState } from '../../../helpers/getTitleForState'
 import { router } from '../../../router'
 import { HomeStateItemSearch } from '../../../types/homeTypes'
-import { useHomeStateById } from '../../homeStore'
+import { homeStore, useHomeStateById } from '../../homeStore'
 import { useLastValueWhen } from '../../hooks/useLastValueWhen'
 import { userStore } from '../../userStore'
 import { SmallCircleButton } from '../../views/CloseButton'
@@ -50,12 +50,11 @@ export const SearchForkListButton = memo(
               const name = `My ${title}`
               const slug = slugify(name)
               const location = await getLocationFromRoute(router.curPage as any)
-              if (!location?.region) {
-                console.warn('no region??????')
-                return
-              }
-              const region = location.region.slug
-              assertPresent(region, 'no region')
+              const region =
+                location?.region?.slug ??
+                homeStore.lastHomeOrSearchState.region ??
+                homeStore.lastHomeState.region ??
+                'ca-san-francisco'
               const existing = await listFindOne(
                 {
                   slug,

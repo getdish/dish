@@ -15,15 +15,19 @@ export const SlantedTitle = ({ size, sizeLineHeight, ...props }: SlantedTitlePro
   const [{ children, ...rest }, textProps] = useTextStyle(props as any, true)
   return (
     <SlantedBox alignSelf="flex-start" {...(rest as any)}>
-      <Title
-        fontWeight="800"
-        size={size}
-        sizeLineHeight={sizeLineHeight}
-        textAlign="center"
-        {...textProps}
-      >
-        {children}
-      </Title>
+      {typeof children === 'string' ? (
+        <Title
+          fontWeight="800"
+          size={size}
+          sizeLineHeight={sizeLineHeight}
+          textAlign="center"
+          {...textProps}
+        >
+          {children}
+        </Title>
+      ) : (
+        children
+      )}
     </SlantedBox>
   )
 }

@@ -160,8 +160,8 @@ for (const [index, name] of colorNames.entries()) {
     backgroundColorSecondary: colors.color,
     backgroundColorTertiary: `${colors.darkColor}dd`,
     backgroundColorQuartenary: `${colors.darkColor}bb`,
-    backgroundColorTransluscent: `${colors.color}22`,
-    backgroundColorTransluscentHover: `${colors.color}33`,
+    backgroundColorTransluscent: `${colors.color}44`,
+    backgroundColorTransluscentHover: `${colors.color}66`,
     borderColor: colors.color,
     backgroundColorAlt: colors.lightColor,
   }

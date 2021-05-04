@@ -26,7 +26,7 @@ export const FilterButton = ({
 }) => {
   const { name, rgb } = useCurrentLenseColor()
   const [isActive, setIsActive] = useState(isActiveParent)
-  const themeName = isActive ? `${name}-dark` : null
+  const themeName = isActive ? name : null
 
   const iconElement = (() => {
     switch (tag.slug) {

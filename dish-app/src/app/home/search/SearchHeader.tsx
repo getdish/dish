@@ -1,5 +1,4 @@
 import React, { Suspense, memo, useContext } from 'react'
-import { Spacer } from 'snackui'
 import { AbsoluteVStack, HStack, Text, VStack, useMedia } from 'snackui'
 
 import { isWeb } from '../../../constants/constants'
@@ -44,13 +43,13 @@ export const SearchHeader = memo(() => {
               <SlantedTitle
                 paddingLeft={35}
                 paddingRight={25}
-                paddingVertical={5}
+                paddingVertical={12}
                 marginBottom={-3}
                 backgroundColor={rgbString(lenseColor)}
               >
                 <VStack alignItems="center" paddingTop={isWeb ? 0 : 5}>
                   <Text
-                    marginTop={-2}
+                    marginTop={-4}
                     height={28}
                     fontWeight="800"
                     color="#fff"

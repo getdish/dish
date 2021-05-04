@@ -6,7 +6,8 @@ import { buildApp } from '../lib/buildApp'
 import { getWebpackConfigBuilder } from '../lib/getWebpackConfigBuilder'
 
 if (!process.env.NODE_ENV) {
-  throw new Error(`No NODE_ENV set`)
+  console.warn('No node env set, setting to development')
+  process.env.NODE_ENV = 'development'
 }
 
 export class Build extends Command {
