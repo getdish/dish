@@ -137,17 +137,7 @@ export const HomeContainerLarge = (props) => {
         <UnderFade />
 
         <VStack flex={1} maxWidth="100%" marginLeft="auto" position="relative" opacity={1}>
-          <AbsoluteVStack
-            zIndex={100000000}
-            pointerEvents="none"
-            right={0}
-            bottom={0}
-            top={searchBarHeight}
-            width="100%"
-            maxWidth={drawerWidthMax}
-          >
-            <AppAutocompleteSearch />
-          </AbsoluteVStack>
+          <AppAutocompleteSearch />
 
           {props.children}
 

@@ -1,4 +1,3 @@
-// debug
 // TODO if we can have compiler pick up a few more things speeds will go up a lot
 import { Tag, TagQuery, TagType, graphql } from '@dish/graph'
 import { ThumbsDown, ThumbsUp, X } from '@dish/react-feather'
@@ -158,8 +157,7 @@ const TagButtonInner = (props: TagButtonProps) => {
       // className="ease-in-out-faster"
       // height={isSmall ? 28 : 34}
       backgroundColor="transparent"
-      borderRadius={0}
-      paddingHorizontal={isSmall ? 2 : 4}
+      paddingHorizontal={isSmall ? 2 : 12}
       hoverStyle={{
         backgroundColor: 'transparent',
       }}
@@ -167,6 +165,8 @@ const TagButtonInner = (props: TagButtonProps) => {
       height={isSmall ? 32 : 38}
       {...rest}
     >
+      <Spacer size="xxs" />
+
       {!hideRank && !!rank && (
         <Text
           fontSize={smallerFontSize}

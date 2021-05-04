@@ -1,4 +1,3 @@
-// debug
 import { MapPin, Navigation } from '@dish/react-feather'
 import React, { memo, useCallback } from 'react'
 import { TextInput } from 'react-native'

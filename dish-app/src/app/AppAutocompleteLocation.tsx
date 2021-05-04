@@ -20,7 +20,7 @@ export const AppAutocompleteLocation = () => {
   const autocompletes = useStoreInstance(autocompletesStore)
   const isActive = autocompletes.visible && autocompletes.target === 'location'
   return (
-    <Theme name="darkTranslucent">
+    <Theme name="dark">
       <AbsoluteVStack
         fullscreen
         opacity={isActive ? 1 : 0}
