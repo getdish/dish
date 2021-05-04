@@ -23,7 +23,7 @@ export const InputFrame = forwardRef(({ children }: { children: any }, ref) => {
       {...(media.sm && {
         maxHeight: 44,
         backgroundColor: theme.backgroundColorSecondary,
-        borderRadius: 12,
+        borderRadius: 10,
         hoverStyle: {
           backgroundColor: theme.backgroundColorSecondary,
         },

@@ -155,7 +155,7 @@ const AppSearchBarContents = memo(({ isColored }: { isColored: boolean }) => {
     >
       {!media.sm && <SearchBarActionButton />}
 
-      <VStack paddingHorizontal={media.xs ? 6 : 12}>
+      <VStack paddingHorizontal={media.xs ? 2 : 12}>
         <DishLogoButton color={isColored ? '#fff' : undefined} />
       </VStack>
 
@@ -220,19 +220,19 @@ const AppSearchBarContents = memo(({ isColored }: { isColored: boolean }) => {
       )}
 
       {media.xs && (
-        <HStack padding={12}>
-          <TouchableOpacity
-            onPressOut={() => {
-              autocompletes.setTarget(showLocation ? 'search' : 'location')
-            }}
-          >
+        <TouchableOpacity
+          onPressOut={() => {
+            autocompletes.setTarget(showLocation ? 'search' : 'location')
+          }}
+        >
+          <HStack padding={11}>
             {showLocation ? (
               <Search color={isWeb ? 'var(--color)' : '#999'} size={22} opacity={0.5} />
             ) : (
               <MapPin color={isWeb ? 'var(--color)' : '#999'} size={22} opacity={0.5} />
             )}
-          </TouchableOpacity>
-        </HStack>
+          </HStack>
+        </TouchableOpacity>
       )}
 
       {!media.sm && !media.xs && (

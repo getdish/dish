@@ -130,11 +130,13 @@ export const AppSearchInputLocation = memo(function AppSearchInputLocation() {
           </HStack>
           <Button
             backgroundColor="transparent"
-            padding={8}
-            alignSelf="center"
-            marginRight={5}
+            // padding={10}
+            // does nothing on native
+            marginRight={2}
             borderRadius={1000}
             onPress={appMapStore.moveToUserLocation}
+            transform={[{ translateY: isWeb ? 2 : 0 }]}
+            noTextWrap
           >
             <Navigation size={20} opacity={0.5} color={color} />
           </Button>

@@ -3,7 +3,7 @@ import { supportsTouchWeb } from '@dish/helpers'
 import { Loader, Search, X } from '@dish/react-feather'
 import { getStore, reaction, useStoreInstance } from '@dish/use-store'
 import React, { memo, useCallback, useEffect, useRef } from 'react'
-import { Platform, ScrollView, StyleSheet, TextInput, TouchableOpacity, View } from 'react-native'
+import { ScrollView, StyleSheet, TextInput, TouchableOpacity, View } from 'react-native'
 import {
   HStack,
   Spacer,
@@ -207,7 +207,7 @@ export const AppSearchInput = memo(() => {
                   }}
                   onKeyPress={handleKeyPressInner}
                   {...(!isWeb && {
-                    placeholderTextColor: '#777',
+                    placeholderTextColor: '#999',
                   })}
                   onFocus={() => {
                     isFocused = true
@@ -272,7 +272,7 @@ const SearchInputIcon = memo(({ color }: { color: string }) => {
   const isOnSearch = useIsRouteActive('search')
   const loading = isHomeLoading || (isOnSearch && search.status === 'loading')
   return (
-    <VStack width={16} marginLeft={3} transform={[{ scale: loading ? 1.2 : 1 }]}>
+    <VStack width={16} marginLeft={0} transform={[{ scale: loading ? 1.2 : 1 }]}>
       <TouchableOpacity onPress={focusSearchInput}>
         {loading ? (
           <VStack className="rotating" opacity={1}>
@@ -283,7 +283,7 @@ const SearchInputIcon = memo(({ color }: { color: string }) => {
             color={color}
             size={media.xs ? 18 : 20}
             style={{
-              opacity: 0.8,
+              opacity: 0.7,
             }}
           />
         )}
@@ -451,7 +451,7 @@ export const inputTextStyles = StyleSheet.create({
     fontSize: 18,
     fontWeight: '500',
     overflow: 'hidden',
-    ...(Platform.OS === 'web' && {
+    ...(isWeb && {
       textOverflow: 'ellipsis',
       whiteSpace: 'nowrap',
     }),

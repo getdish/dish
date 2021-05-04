@@ -1,4 +1,4 @@
-import { useStoreInstance } from '@dish/use-store'
+import { useStoreInstance, useStoreInstanceSelector } from '@dish/use-store'
 import React, { memo, useCallback, useEffect, useMemo } from 'react'
 import {
   AbsoluteVStack,
@@ -38,6 +38,7 @@ export default memo(function AppMap() {
   const media = useMedia()
   const mapSize = useMapSize(media.sm)
   const { width, paddingLeft } = useDebounceValue(mapSize, 1000)
+  const showUserLocation = useStoreInstanceSelector(appMapStore, (x) => !!x.userLocation)
   const store = useStoreInstance(appMapStore)
   const position = store.currentPosition
   const { center, span } = position
@@ -265,6 +266,7 @@ export default memo(function AppMap() {
               features={features}
               selected={position.id}
               hovered={appMapStore.hovered?.id}
+              showUserLocation={showUserLocation}
               // onMoveStart={handleMoveStart}
               onMoveEnd={handleMoveEnd}
               onDoubleClick={handleDoubleClick}

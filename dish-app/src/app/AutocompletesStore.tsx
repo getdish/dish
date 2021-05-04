@@ -83,14 +83,14 @@ export const useAppAutocompleteEffects = () => {
   useEffect(() => {
     // debounce to go after press event
     // ⚠️ NOTE: if your software keyboard is off on simulator, this will flicker and kill autocomplete right away
-    const handleHide = debounce(() => {
+    const handleHide = () => {
       if (process.env.NODE_ENV === 'development') {
         console.warn('this may be just because software keyboard is off! turn it on')
       }
       autocompletes.setVisible(false)
-    }, 150)
+    }
     const handleShow = () => {
-      handleHide.cancel()
+      // handleHide.cancel()
     }
     Keyboard.addListener('keyboardWillHide', handleHide)
     Keyboard.addListener('keyboardWillShow', handleShow)

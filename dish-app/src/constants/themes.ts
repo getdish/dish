@@ -102,7 +102,7 @@ const light: MyTheme = {
   ...baseTheme,
   ...lightBase,
   backgroundColor: '#fff',
-  backgroundColorSecondary: '#f2f2f2',
+  backgroundColorSecondary: '#f5f5f5',
   backgroundColorTertiary: '#e9e9e9',
   backgroundColorQuartenary: '#d9d9d9',
 }
