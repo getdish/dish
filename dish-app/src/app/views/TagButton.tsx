@@ -21,7 +21,6 @@ import { isWeb } from '../../constants/constants'
 import { tagDisplayName } from '../../constants/tagDisplayName'
 import { getTagSlug } from '../../helpers/getTagSlug'
 import { NavigableTag } from '../../types/tagTypes'
-import { useAppShouldShow } from '../AppStore'
 import { useUserTagVotes } from '../hooks/useUserTagVotes'
 import { Image } from './Image'
 import { Link } from './Link'
@@ -136,7 +135,6 @@ const TagButtonInner = (props: TagButtonProps) => {
   } = props
 
   const theme = useTheme()
-  const show = useAppShouldShow('emoji')
 
   if (!slug) {
     return null
@@ -184,7 +182,7 @@ const TagButtonInner = (props: TagButtonProps) => {
           {rank}
         </Text>
       )}
-      {!show ? null : hideIcon ? (
+      {hideIcon ? (
         <>&nbsp;</>
       ) : !!icon ? (
         icon.startsWith('http') ? (

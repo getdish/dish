@@ -56,7 +56,7 @@ export const HomeDrawerSmallView = memo((props: { children: any }) => {
       try {
         const store = getStore(ScrollStore, { id: contentParent.activeId })
         // prettier-ignore
-        console.log('should?', store.lock, { isPanActive, isTouchingHandle, isTouchingSearchBar })
+        // console.log('should?', store.lock, { isPanActive, isTouchingHandle, isTouchingSearchBar })
         if (store.lock === 'horizontal' || store.lock === 'vertical') {
           return false
         }

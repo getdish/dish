@@ -10,7 +10,6 @@ import { isHermes } from '../constants/platforms'
 import { getWindowHeight } from '../helpers/getWindow'
 import { UserMenuButton } from './AppMenu'
 import { appMenuStore } from './AppMenuStore'
-import { appStore } from './AppStore'
 import { AuthForm } from './AuthForm'
 import { useUserStore } from './userStore'
 import { DishLogoButton } from './views/DishLogoButton'
@@ -129,7 +128,7 @@ export const AppMenuContents = memo(
               </>
             )}
 
-            {Object.keys(appStore.show).map((key) => {
+            {/* {Object.keys(appStore.show).map((key) => {
               return (
                 <MenuLinkButton
                   key={key}
@@ -143,7 +142,7 @@ export const AppMenuContents = memo(
                   toggle {key}
                 </MenuLinkButton>
               )
-            })}
+            })} */}
 
             <Paragraph opacity={0.05} size="xxs">
               {isHermes ? 'hermes' : 'jsc'}

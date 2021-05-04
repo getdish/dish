@@ -59,8 +59,6 @@ export default memo(function HomePage(props: Props) {
   const [didLoadOnce, setDidLoadOnce] = useState(false)
   const { results } = useStoreInstance(homePageStore)
 
-  console.log('results', results)
-
   useSetAppMap({
     isActive: props.isActive,
     results,

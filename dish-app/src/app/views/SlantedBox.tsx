@@ -1,7 +1,6 @@
 import React from 'react'
 import { BoxProps, VStack, useTheme } from 'snackui'
 
-import { useAppShouldShow } from '../AppStore'
 import { LinkButton } from './LinkButton'
 import { LinkButtonProps } from './LinkProps'
 
@@ -20,14 +19,7 @@ export const slantedBoxStyle: BoxProps = {
 
 export const SlantedBox = (props: BoxProps) => {
   const theme = useTheme()
-  const show = useAppShouldShow('slants')
-  return (
-    <VStack
-      {...(show ? slantedBoxStyle : null)}
-      backgroundColor={theme.cardBackgroundColor}
-      {...props}
-    />
-  )
+  return <VStack {...slantedBoxStyle} backgroundColor={theme.cardBackgroundColor} {...props} />
 }
 
 export const SlantedLinkButton = (props: LinkButtonProps) => {

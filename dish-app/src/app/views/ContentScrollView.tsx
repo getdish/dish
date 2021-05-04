@@ -246,7 +246,7 @@ export const ContentScrollView = forwardRef<ScrollView, ContentScrollViewProps>(
 
     const isScrollingVerticalFromTop = () => {
       return (
-        scrollStore.lock === 'vertical' &&
+        (scrollStore.lock === 'vertical' || scrollStore.lock === 'none') &&
         scrollStore.isAtTop &&
         drawerStore.snapIndexName === 'top'
       )
@@ -286,20 +286,21 @@ export const ContentScrollView = forwardRef<ScrollView, ContentScrollViewProps>(
                   return false
                 }
                 const ss = scrollState.current
-                if (!ss.active) {
+                const pageY = isWeb ? e['touches'][0]?.pageY : e.nativeEvent.pageY
+                if (!ss.at) {
                   ss.active = true
-                  ss.at = e.nativeEvent.pageY
+                  ss.at = pageY
                   ss.start = getWindowHeight() - drawerStore.currentHeight
                 }
                 const start = getWindowHeight() - drawerStore.currentHeight
-                const y = ss.at - e.nativeEvent.pageY
+                const y = ss.at - pageY
                 const dy = start - y
-                console.log('set', y, dy, ss)
                 drawerStore.pan.setValue(dy)
               }}
               onTouchEnd={() => {
                 if (scrollState.current.active) {
                   scrollState.current.active = false
+                  scrollState.current.at = 0
                   console.log('finish')
                   drawerStore.animateDrawerToPx(drawerStore.pan['_value'], 0)
                 }
