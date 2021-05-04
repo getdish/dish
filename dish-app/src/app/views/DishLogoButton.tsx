@@ -62,7 +62,7 @@ export const DishLogoButton = memo(({ color }: { color?: string }) => {
         width={logoXsWidth}
         height={logoXsHeight}
         {...(media.sm && {
-          transform: [{ scale: 0.9 }, { translateY: -3.5 }],
+          transform: [{ scale: 0.85 }, { translateY: -3.5 }],
         })}
       >
         {wrapWithHomeLink(<LogoCircle />)}

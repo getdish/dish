@@ -29,13 +29,14 @@ export const MapView = ({
   onMoveStart,
   onSelect,
   style,
+  showUserLocation,
 }: MapProps) => {
   const { width, height } = Dimensions.get('screen')
   const drawerStore = useStoreInstance(drawerStoreInstance)
-  const drawerHeight = drawerStore.heightIgnoringFullyOpen
+  const drawerHeight = drawerStore.snapHeights[2]
   const [isLoaded, setIsLoaded] = useState(0)
   const paddingVertical = isLoaded ? drawerHeight / 2 : 0
-  const ty = -paddingVertical
+  const ty = -drawerStore.heightIgnoringFullyOpen / 2
   const tyRef = useRef(new Animated.Value(ty))
   const cameraRef = useRef<MapboxGL.Camera>(null)
   const mapRef = useRef<MapboxGL.MapView>(null)
@@ -137,6 +138,7 @@ export const MapView = ({
           }
         }}
       >
+        {showUserLocation && <MapboxGL.UserLocation animated renderMode="native" />}
         {/* // Causes error on Android: // Error while updating property 'stop' of a  view managed by: RCTMGLCamera*/}
         <MapboxGL.Camera
           ref={cameraRef}

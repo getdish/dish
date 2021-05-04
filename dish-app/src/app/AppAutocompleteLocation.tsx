@@ -18,12 +18,13 @@ import { setLocation } from './setLocation'
 
 export const AppAutocompleteLocation = () => {
   const autocompletes = useStoreInstance(autocompletesStore)
+  const isActive = autocompletes.visible && autocompletes.target === 'location'
   return (
     <Theme name="darkTranslucent">
       <AbsoluteVStack
         fullscreen
-        opacity={autocompletes.target === 'location' ? 1 : 0}
-        zIndex={autocompletes.visible ? zIndexAutocomplete : -100}
+        opacity={isActive ? 1 : 0}
+        zIndex={isActive ? zIndexAutocomplete : -100}
         pointerEvents="none"
       >
         <AutocompleteLocationInner />

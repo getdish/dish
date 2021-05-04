@@ -279,6 +279,8 @@ PODS:
   - React-jsinspector (0.64.0)
   - react-native-blur (0.8.0):
     - React
+  - react-native-geolocation (2.0.2):
+    - React
   - react-native-mapbox-gl (8.2.0-beta2):
     - Mapbox-iOS-SDK (~> 6.3)
     - React
@@ -465,6 +467,7 @@ DEPENDENCIES:
   - React-jsiexecutor (from `../node_modules/react-native/ReactCommon/jsiexecutor`)
   - React-jsinspector (from `../node_modules/react-native/ReactCommon/jsinspector`)
   - "react-native-blur (from `../node_modules/@react-native-community/blur`)"
+  - "react-native-geolocation (from `../node_modules/@react-native-community/geolocation`)"
   - "react-native-mapbox-gl (from `../node_modules/@react-native-mapbox-gl/maps`)"
   - react-native-safe-area-context (from `../node_modules/react-native-safe-area-context`)
   - React-perflogger (from `../node_modules/react-native/ReactCommon/reactperflogger`)
@@ -576,6 +579,8 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native/ReactCommon/jsinspector"
   react-native-blur:
     :path: "../node_modules/@react-native-community/blur"
+  react-native-geolocation:
+    :path: "../node_modules/@react-native-community/geolocation"
   react-native-mapbox-gl:
     :path: "../node_modules/@react-native-mapbox-gl/maps"
   react-native-safe-area-context:
@@ -682,6 +687,7 @@ SPEC CHECKSUMS:
   React-jsiexecutor: 06a9c77b56902ae7ffcdd7a4905f664adc5d237b
   React-jsinspector: 0ae35a37b20d5e031eb020a69cc5afdbd6406301
   react-native-blur: cad4d93b364f91e7b7931b3fa935455487e5c33c
+  react-native-geolocation: c956aeb136625c23e0dce0467664af2c437888c9
   react-native-mapbox-gl: 28350f5f43df85fdb6b85398821a96db1fab0c76
   react-native-safe-area-context: b6e0e284002381d2ff29fa4fff42b4d8282e3c94
   React-perflogger: 9c547d8f06b9bf00cb447f2b75e8d7f19b7e02af

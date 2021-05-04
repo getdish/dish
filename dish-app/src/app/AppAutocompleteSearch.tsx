@@ -26,14 +26,14 @@ import { useHomeStore } from './homeStore'
 
 export const AppAutocompleteSearch = () => {
   const autocompletes = useStoreInstance(autocompletesStore)
-
+  const isActive = autocompletes.visible && autocompletes.target === 'search'
   return (
     <Suspense fallback={null}>
       <Theme name="darkTranslucent">
         <AbsoluteVStack
-          zIndex={autocompletes.visible ? zIndexAutocomplete : -100}
+          zIndex={isActive ? zIndexAutocomplete : -100}
           fullscreen
-          opacity={autocompletes.target === 'search' ? 1 : 0}
+          opacity={isActive ? 1 : 0}
           pointerEvents="none"
         >
           <AutocompleteSearchInner />

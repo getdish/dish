@@ -10,7 +10,7 @@ export const isM1Sim =
   isWeb && typeof window !== 'undefined' ? window.location.search === '?m1' : false
 
 export const drawerPad = 8
-export const drawerBorderRadius = 17
+export const drawerBorderRadius = 15
 export const drawerWidthMax = 940
 export const drawerExtraLeftScrollSpace = 500
 

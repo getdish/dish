@@ -15,6 +15,9 @@ if (process.env.NODE_ENV === 'production') {
   })
 }
 
+console.log('polyfills')
+navigator.geolocation = require('@react-native-community/geolocation')
+
 // console.log('polyfill..........')
 // require('@formatjs/intl-getcanonicallocales/polyfill')
 // require('@formatjs/intl-locale/polyfill')

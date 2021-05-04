@@ -58,8 +58,15 @@
 	</dict> -->
 	<key>NSLocationWhenInUseUsageDescription</key>
 	<string>
+		 Users can enable their location see and search nearby food.
+		 Dish is a world guide on a map, with search and discovery. It focuses on finding restaurants
+		and delivery nearby.
+	</string>
+	<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
+	<string>
+		Users can enable their location to always show on the map to see and search nearby food.
 		Dish is a world guide on a map, with search and discovery. It focuses on finding restaurants
-		and delivery nearby. Users can enable their location see and search nearby food.
+		and delivery nearby.
 	</string>
 	<key>UILaunchStoryboardName</key>
 	<string>SplashScreen</string>

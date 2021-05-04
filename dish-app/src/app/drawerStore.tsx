@@ -5,16 +5,18 @@ import { isWeb } from '../constants/constants'
 import { getWindowHeight } from '../helpers/getWindow'
 import { autocompletesStore } from './AutocompletesStore'
 
+type DrawerSnapPoint = 'bottom' | 'middle' | 'top'
+
 class DrawerStore extends Store {
-  snapPoints = [isWeb ? 0.02 : 0.05, 0.28, 0.8]
   // 0 = top, 1 = middle, 2 = bottom
+  snapPoints = [isWeb ? 0.02 : 0.05, 0.28, 0.8]
   snapIndex = 1
   isDragging = false
   pan = new Animated.Value(this.getSnapPointOffset())
   spring: Animated.CompositeAnimation | null = null
   lastSnapAt = Date.now()
 
-  get snapIndexName() {
+  get snapIndexName(): DrawerSnapPoint {
     return this.snapIndex === 0 ? 'top' : this.snapIndex === 2 ? 'bottom' : 'middle'
   }
 
@@ -35,7 +37,7 @@ class DrawerStore extends Store {
     return getWindowHeight() - this.currentHeight
   }
 
-  get snapIndices() {
+  get snapHeights() {
     return this.snapPoints.map((_, i) => this.getSnapPointOffset(i))
   }
 

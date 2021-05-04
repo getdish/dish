@@ -138,18 +138,31 @@ class AppMapStore extends Store {
     this.hovered = n
   }
 
+  // private watchId: any
   async moveToUserLocation() {
-    const position = await this.getUserPosition()
-    const location: LngLat = {
-      lng: position.coords.longitude,
-      lat: position.coords.latitude,
+    // navigator.geolocation.clearWatch(this.watchId)
+    const positionToLngLat = (position: GeolocationPosition): LngLat => {
+      return {
+        lng: position.coords.longitude,
+        lat: position.coords.latitude,
+      }
     }
-    this.userLocation = location
-    const state = homeStore.currentState
-    appMapStore.setPosition({
-      ...state,
-      center: { ...location },
-    })
+    const position = await this.getUserPosition()
+    if (position) {
+      const positionLngLat = positionToLngLat(position)
+      this.userLocation = positionLngLat
+      const state = homeStore.currentState
+      appMapStore.setPosition({
+        center: positionLngLat,
+      })
+      // watching actually is anti-pattern, just move where they are once
+      // we could "show" where they are at all times, but that may be doable through mapbox
+      // this.watchId = navigator.geolocation.watchPosition(position => {
+      //   appMapStore.setPosition({
+      //     center: positionToLngLat(position)
+      //   })
+      // })
+    }
   }
 
   getUserPosition = () => {
