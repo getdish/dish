@@ -18,10 +18,19 @@ redisClient.on('error', (err) => {
   console.log('redis error ', JSON.stringify(err))
 })
 
-const rg = promisify(redisClient.get).bind(redisClient)
+const redisGet_ = promisify(redisClient.get).bind(redisClient)
+const redisSet_ = promisify(redisClient.set).bind(redisClient)
+
 export const redisGet = async (key: string) => {
   if (redisClient.connected) {
-    return await rg(key)
+    return await redisGet_(key)
+  }
+  return null
+}
+
+export const redisSet = async (key: string, value: string) => {
+  if (redisClient.connected) {
+    return await redisSet_(key, value)
   }
   return null
 }

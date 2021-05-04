@@ -60,7 +60,7 @@ export const RestaurantOverview = memo(
     if (summary || editableDescription) {
       return (
         // height 100% necessary for native
-        <VStack width="100%">
+        <VStack width="100%" height={fullHeight ? '100%' : undefined}>
           <HStack
             maxHeight={fullHeight ? 'auto' : lineHeight * maxLines - 2}
             maxWidth="100%"
