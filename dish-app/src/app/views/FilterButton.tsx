@@ -41,7 +41,6 @@ export const FilterButton = ({
 
   return (
     <SmallButton
-      debug
       tag={tag}
       icon={iconElement ? <VStack opacity={0.45}>{iconElement}</VStack> : null}
       {...rest}

@@ -28,7 +28,7 @@ type CommentBubbleProps = Omit<StackProps, 'children'> & {
   title?: any
   name: string
   avatar: string | any
-  text: any
+  text?: any
   before?: any
   avatarBackgroundColor?: string
   after?: any
