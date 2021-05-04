@@ -140,7 +140,7 @@ function CommentBubbleContents({
           <Spacer />
         </>
       ) : null}
-      {text && (
+      {!!text && (
         <Paragraph
           className="preserve-whitespace break-word"
           selectable

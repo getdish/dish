@@ -95,23 +95,21 @@ export const RestaurantPhotosRowContent = memo(
                 </VStack>
               )
             })}
-            <VStack>
-              <LinkButton
-                width={width * 2}
-                height="100%"
-                name="gallery"
-                alignItems="center"
-                justifyContent="center"
-                params={{ restaurantSlug }}
-                textProps={{
-                  textAlign: 'center',
-                  fontSize: 28,
-                  fontWeight: '800',
-                }}
-              >
-                Gallery 🖼
-              </LinkButton>
-            </VStack>
+            <LinkButton
+              width={width * 2}
+              height="100%"
+              name="gallery"
+              alignItems="center"
+              justifyContent="center"
+              params={{ restaurantSlug }}
+              textProps={{
+                textAlign: 'center',
+                fontSize: 28,
+                fontWeight: '800',
+              }}
+            >
+              Gallery 🖼
+            </LinkButton>
           </>
         )}
       </HStack>

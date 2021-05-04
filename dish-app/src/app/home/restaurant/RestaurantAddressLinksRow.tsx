@@ -2,6 +2,7 @@ import { graphql } from '@dish/graph'
 import { ExternalLink, Link2, PhoneCall } from '@dish/react-feather'
 import React, { memo } from 'react'
 import { useTheme } from 'snackui'
+import { Paragraph } from 'snackui'
 import { Box, HStack, HoverablePopover, Text, VStack } from 'snackui'
 
 import { isWeb } from '../../../constants/constants'
@@ -30,8 +31,8 @@ export const RestaurantAddressLinksRow = memo(
       const [restaurant] = queryRestaurant(restaurantSlug)
       const fontSize = size == 'lg' ? 16 : 14
       const iconSize = size === 'lg' ? 18 : 16
-      const iconColor = isWeb ? 'var(--color)' : '#777'
       const theme = useTheme()
+      const iconColor = theme.color
 
       if (!restaurant) {
         return null
@@ -69,34 +70,32 @@ export const RestaurantAddressLinksRow = memo(
       )
 
       return (
-        <Text fontSize={fontSize}>
-          <VStack>
-            {!!(curLocInfo && showAddress) && (
-              <Text color={theme.color} selectable ellipse fontSize={14} maxWidth={240}>
-                {getAddressText(
-                  curLocInfo,
-                  restaurant.address ?? '',
-                  (typeof showAddress === 'string' ? showAddress : size) ?? 'sm'
-                )}
-              </Text>
-            )}
+        <VStack>
+          {!!(curLocInfo && showAddress) && (
+            <Paragraph color={theme.color} selectable ellipse fontSize={14} maxWidth={240}>
+              {getAddressText(
+                curLocInfo,
+                restaurant.address ?? '',
+                (typeof showAddress === 'string' ? showAddress : size) ?? 'sm'
+              )}
+            </Paragraph>
+          )}
 
-            {size === 'sm' && (
-              <HoverablePopover
-                position="right"
-                allowHoverOnContent
-                noArrow
-                contents={<Box padding={10}>{linkElements}</Box>}
-              >
-                <SmallCircleButton>
-                  <ExternalLink size={10} color={iconColor} />
-                </SmallCircleButton>
-              </HoverablePopover>
-            )}
+          {size === 'sm' && (
+            <HoverablePopover
+              position="right"
+              allowHoverOnContent
+              noArrow
+              contents={<Box padding={10}>{linkElements}</Box>}
+            >
+              <SmallCircleButton>
+                <ExternalLink size={10} color={iconColor} />
+              </SmallCircleButton>
+            </HoverablePopover>
+          )}
 
-            {size !== 'sm' && linkElements}
-          </VStack>
-        </Text>
+          {size !== 'sm' && linkElements}
+        </VStack>
       )
     }
   )

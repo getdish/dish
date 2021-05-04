@@ -25,7 +25,7 @@ export const SmallButton = themeable(
 
     let contents = (
       <Button
-        borderRadius={20}
+        borderRadius={200}
         borderWidth={1}
         borderColor={theme.borderColor}
         {...(isWeb && {

@@ -22,11 +22,7 @@ export const RestaurantAddress = ({
   const theme = useTheme()
   return (
     <SmallButton
-      borderWidth={0}
-      icon={<MapPin color={color} size={16} style={{ opacity: 0.5 }} />}
-      textProps={{
-        opacity: 0.5,
-      }}
+      icon={<MapPin color={theme.color} size={16} style={{ opacity: 0.5 }} />}
       href={`https://www.google.com/maps/search/?q=${encodeURIComponent(address)}`}
       overflow="hidden"
     >
@@ -42,7 +38,7 @@ export const RestaurantAddress = ({
           {getAddressText(curLocInfo, address, size)}
         </Text>
         <Spacer />
-        <ExternalLink style={{ opacity: 0.5 }} color={isWeb ? 'var(--color)' : '#777'} size={12} />
+        <ExternalLink style={{ opacity: 0.5 }} color={theme.color} size={12} />
       </HStack>
     </SmallButton>
   )
