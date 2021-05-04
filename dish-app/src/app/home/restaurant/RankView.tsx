@@ -8,8 +8,8 @@ export const RankView = memo(({ rank }: { rank: number }) => {
   const theme = useTheme()
   return (
     <VStack
-      width={48}
-      height={48}
+      width={44}
+      height={44}
       {...(isWeb && {
         transform: [{ translateY: -10 }],
         marginRight: -15,
@@ -31,7 +31,7 @@ export const RankView = memo(({ rank }: { rank: number }) => {
         </TextSuperScript>
         <Text
           letterSpacing={-1}
-          fontSize={+rank > 9 ? 18 : 24}
+          fontSize={+rank > 9 ? 18 : 22}
           fontWeight="300"
           color={theme.colorAlt}
         >

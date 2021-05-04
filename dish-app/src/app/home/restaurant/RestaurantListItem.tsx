@@ -308,8 +308,8 @@ const RestaurantListItemContent = memo(
             <VStack paddingLeft={showAbove ? 47 : 10} paddingTop={25}>
               <HStack position="relative" alignItems="center">
                 <AbsoluteVStack
-                  top={-16}
-                  left={-34}
+                  top={-18}
+                  left={-30}
                   zIndex={-1}
                   {...(!showAbove && {
                     top: 0,
