@@ -1,5 +1,6 @@
 import React from 'react'
 import { StyleSheet } from 'react-native'
+import { useTheme, useThemeName } from 'snackui'
 import { AbsoluteVStack, HStack, LinearGradient, Paragraph, Spacer, Text, VStack } from 'snackui'
 
 import {
@@ -91,6 +92,7 @@ export function Card({
   const wordScale = longestWordLen > 14 ? 0.7 : longestWordLen > 9 ? 0.8 : 1
   const baseFontSize = 28 * lenScale * wordScale
   const fontSize = Math.round(baseFontSize * scales[size])
+  const themeName = useThemeName()
 
   return (
     <CardFrame square={square} size={size} aspectFixed={aspectFixed} hoverable={hoverable}>
@@ -109,6 +111,7 @@ export function Card({
           overflow="hidden"
           borderRadius={cardFrameBorderRadius}
           backgroundColor={backgroundColor || underColor || ''}
+          opacity={themeName === 'dark' ? 0.25 : 1}
         >
           {/* behind shadow */}
           {isBehind && (
