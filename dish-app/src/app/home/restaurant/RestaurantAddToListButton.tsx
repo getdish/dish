@@ -16,7 +16,6 @@ export const RestaurantAddToListButton = ({
   noLabel?: boolean
 }) => {
   const [showModal, setShowModal] = useState(false)
-  const theme = useTheme()
   return (
     <>
       {!!(showModal && restaurantSlug) && (
@@ -27,7 +26,6 @@ export const RestaurantAddToListButton = ({
       <Tooltip contents="Add to list">
         <Button
           icon={<Plus color={'#777'} size={16} />}
-          tooltip="Add to list"
           onPress={() => {
             if (!userStore.promptLogin()) {
               setShowModal(true)
@@ -36,9 +34,7 @@ export const RestaurantAddToListButton = ({
           pressStyle={{
             opacity: 0.6,
           }}
-          shadowColor={theme.shadowColor}
-          shadowOffset={{ height: 2, width: 0 }}
-          shadowRadius={4}
+          elevation={1}
           {...props}
         >
           {noLabel ? null : 'List'}
