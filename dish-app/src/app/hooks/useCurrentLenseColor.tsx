@@ -22,7 +22,7 @@ export const useCurrentLenseColor = () => {
     if (home.currentStateType === 'search') {
       if (home.currentStateLense) {
         return {
-          name: 'pink',
+          name: 'pink-dark',
           rgb: home.currentStateLense.rgb as RGB,
         }
       }
@@ -31,7 +31,7 @@ export const useCurrentLenseColor = () => {
       const state = home.currentState as HomeStateItemRestaurant
       const colors = getColorsForName(state.restaurantSlug)
       return {
-        name: colors.name,
+        name: `${colors.name}-dark`,
         rgb: hexToRGB(colors.darkColor).rgb,
       }
     }

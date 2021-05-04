@@ -63,6 +63,7 @@ export const AppSearchBarFloating = () => {
 
   const themeName = media.sm ? 'light' : searchThemeName
 
+  console.log('themeName', themeName)
   return (
     <Theme name={themeName}>
       <AbsoluteVStack

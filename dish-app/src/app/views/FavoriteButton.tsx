@@ -13,7 +13,6 @@ export type FavoriteButtonProps = {
 
 export const FavoriteButton = ({ isFavorite, onChange, size = 'md' }: FavoriteButtonProps) => {
   const sizePx = size === 'sm' ? 18 : size == 'lg' ? 26 : 22
-  const theme = useTheme()
   return (
     <Tooltip contents="Add to favorites">
       <Button
@@ -24,6 +23,8 @@ export const FavoriteButton = ({ isFavorite, onChange, size = 'md' }: FavoriteBu
                 cursor="default"
                 color="red"
                 fontSize={sizePx * 0.5}
+                width={sizePx * 0.7}
+                height={sizePx * 0.7}
                 lineHeight={sizePx * 0.5}
                 marginTop={1}
               >

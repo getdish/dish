@@ -11,7 +11,8 @@ const baseTheme = {
   colorQuartenary: '#444',
   shadowColor: `rgba(0,0,0,0.3)`,
   shadowColorLighter: `rgba(0,0,0,0.15)`,
-  backgroundColorTransluscent: '#1111155',
+  backgroundColorTransluscent: '#1111133',
+  backgroundColorTransluscentHover: '#1111166',
   backgroundColorDarker: '#11111',
   backgroundColorTransparent: 'rgba(40,40,200,0)',
   cardBackgroundColor: '#333',
@@ -57,7 +58,8 @@ const darkBase = {
   mapBackground: '#151515',
   backgroundColorTransparent: 'rgba(25,25,25,0)',
   backgroundColorAlt: 'rgba(54, 54, 104, 0.39)',
-  backgroundColorTransluscent: '#1111155',
+  backgroundColorTransluscent: 'rgba(100,100,100,0.1)',
+  backgroundColorTransluscentHover: 'rgba(100,100,100,0.2)',
   backgroundColorDarker: '#111111',
   colorAlt: '#fff',
   borderColor: '#353535',
@@ -75,8 +77,8 @@ const dark = {
   name: 'dark',
   ...baseTheme,
   ...darkBase,
-  backgroundColor: '#333',
-  backgroundColorSecondary: '#393939',
+  backgroundColor: '#272727',
+  backgroundColorSecondary: '#353535',
   backgroundColorTertiary: '#424242',
   backgroundColorQuartenary: '#555',
 }
@@ -93,7 +95,8 @@ const darkTranslucent: MyTheme = {
 
 const lightBase = {
   colorAlt: blue,
-  backgroundColorTransluscent: '#f2f2f255',
+  backgroundColorTransluscent: '#f2f2f222',
+  backgroundColorTransluscentHover: '#f2f2f233',
   backgroundColorDarker: '#f2f2f2',
   backgroundColorAlt: 'rgb(240, 250, 255)',
   borderColor: '#eee',
@@ -142,6 +145,8 @@ for (const [index, name] of colorNames.entries()) {
     backgroundColorSecondary: colors.lightColor,
     backgroundColorTertiary: `${colors.lightColor}dd`,
     backgroundColorQuartenary: `${colors.lightColor}bb`,
+    backgroundColorTransluscent: `${colors.lightColor}55`,
+    backgroundColorTransluscentHover: `${colors.lightColor}33`,
     borderColor: colors.lightColor,
     backgroundColorAlt: colors.darkColor,
   }
@@ -155,6 +160,8 @@ for (const [index, name] of colorNames.entries()) {
     backgroundColorSecondary: colors.color,
     backgroundColorTertiary: `${colors.darkColor}dd`,
     backgroundColorQuartenary: `${colors.darkColor}bb`,
+    backgroundColorTransluscent: `${colors.color}22`,
+    backgroundColorTransluscentHover: `${colors.color}33`,
     borderColor: colors.color,
     backgroundColorAlt: colors.lightColor,
   }

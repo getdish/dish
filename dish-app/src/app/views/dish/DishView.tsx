@@ -171,8 +171,8 @@ const DishViewContent = (props: DishViewProps) => {
           pointerEvents={showSearchButton_ ? 'auto' : 'none'}
           onPress={prevent}
           zIndex={888}
-          bottom="7.5%"
-          right="7.5%"
+          bottom="-7.5%"
+          left="15%"
         >
           <SearchTagButton
             backgroundColor={colors.lightColor}

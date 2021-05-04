@@ -114,7 +114,7 @@ export const HomeFeedDishRestaurants = graphql(
     const contents = useMemo(() => {
       return (
         <>
-          <FeedSlantedTitleLink tag={tag}>
+          <FeedSlantedTitleLink marginTop={-5} tag={tag}>
             {`${tag.icon ? tag.icon + ' ' : ''}${tag.name}`.trim()}
           </FeedSlantedTitleLink>
 
@@ -140,6 +140,7 @@ export const HomeFeedDishRestaurants = graphql(
                           hideRank
                           color="#fff"
                           backgroundColor="transparent"
+                          alignSelf="center"
                           floating
                           {...restaurant.dish}
                         />
