@@ -55,7 +55,7 @@ const upload = multer({
   }),
 }).array('avatar', 1)
 
-export default secureRoute('user', async (req: Request, res: Response) => {
+export default secureRoute('user', async (req, res) => {
   await runMiddleware(req, res, upload)
 
   const user = await getUserFromRoute(req)

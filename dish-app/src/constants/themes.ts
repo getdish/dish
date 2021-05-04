@@ -66,7 +66,7 @@ const darkBase = {
   colorSecondary: '#ddd',
   colorTertiary: '#999',
   colorQuartenary: '#aaa',
-  cardBackgroundColor: '#333',
+  cardBackgroundColor: '#353535',
   shadowColor: `rgba(0,0,0,0.4)`,
   shadowColorLighter: `rgba(0,0,0,0.2)`,
 }
@@ -75,9 +75,9 @@ const dark = {
   name: 'dark',
   ...baseTheme,
   ...darkBase,
-  backgroundColor: '#1f1f1f',
-  backgroundColorSecondary: '#333',
-  backgroundColorTertiary: '#444',
+  backgroundColor: '#333',
+  backgroundColorSecondary: '#393939',
+  backgroundColorTertiary: '#424242',
   backgroundColorQuartenary: '#555',
 }
 

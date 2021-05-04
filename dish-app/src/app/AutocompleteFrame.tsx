@@ -48,6 +48,7 @@ export const AutocompleteFrame = ({
       opacity={isShowing ? 1 : 0}
       pointerEvents={isShowing ? 'auto' : 'none'}
       borderRadius={14}
+      overflow="hidden"
       flex={1}
       {...(media.sm && {
         transform: [{ translateY: 10 }],
@@ -63,6 +64,7 @@ export const AutocompleteFrame = ({
         width="100%"
         height="100%"
         maxHeight="100%"
+        overflow="hidden"
         // DONT PUT EVENT HERE NEED TO DEBUG WHY IT BREAKS ON NATIVE
       >
         <AbsoluteVStack backgroundColor={theme.backgroundColor} fullscreen opacity={0.9} />
@@ -101,6 +103,7 @@ export const AutocompleteFrame = ({
           {...(media.notSm && {
             paddingTop: 160,
           })}
+          overflow="hidden"
           // dont add events here :(
         >
           {/* <Pressable

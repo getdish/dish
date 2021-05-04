@@ -103,7 +103,7 @@ export const RestaurantDishRowContent = memo(
         >
           {hasDishes ? (
             <VStack paddingHorizontal={40} paddingVertical={10}>
-              <HStack spacing="md">
+              <HStack spacing="xl">
                 <Theme name={themeName && selected === '' ? themeName : null}>
                   <ScalingPressable
                     onPress={() => {

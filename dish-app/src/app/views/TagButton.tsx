@@ -94,13 +94,14 @@ const typeColors = {
 export const TagButton = memo((props: TagButtonProps) => {
   const themeName = useThemeName()
   const color = (props.type && typeColors[props.type]) || 'green'
-  const next = props.theme || themeName.includes('dark') ? `${color}-dark` : color
+  const next = themeName.includes('dark') ? `${color}-dark` : color
   return (
     <Theme name={next}>
       <TagButtonInner {...props} />
     </Theme>
   )
 })
+
 const TagButtonInner = (props: TagButtonProps) => {
   const {
     rank,

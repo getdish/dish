@@ -120,7 +120,7 @@ const RestaurantHeaderContent = memo(
             </AbsoluteVStack>
           </AbsoluteVStack>
 
-          <Theme name={`${colors.name}-dark`}>
+          <Theme name={themeName === 'dark' ? `${colors.name}-dark` : colors.name}>
             <VStack
               marginTop={imgHeight - 70}
               minWidth={minWidth}
