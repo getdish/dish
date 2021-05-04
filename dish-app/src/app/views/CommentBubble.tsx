@@ -149,7 +149,7 @@ function CommentBubbleContents({
           sizeLineHeight={0.9}
           size={1}
         >
-          {ellipseContentAbove && text.length > ellipseContentAbove ? (
+          {ellipseContentAbove && text && text.length > ellipseContentAbove ? (
             <Text>
               {expanded
                 ? text

@@ -163,14 +163,14 @@ const Content = memo(
                               />
                             </Link>
 
-                            <Text
+                            <Paragraph
                               fontSize={22}
                               fontWeight="800"
                               color={positive > negative ? green : grey}
                               letterSpacing={-1}
                             >
                               {Math.round(ratio * 100)}%
-                            </Text>
+                            </Paragraph>
 
                             <HStack spacing="xs">
                               <SentimentText sentiment={1}>
@@ -185,11 +185,7 @@ const Content = memo(
                           <Spacer size="lg" />
 
                           <VStack position="relative" flex={1}>
-                            <Paragraph
-                              color={isWeb ? 'var(--color)' : '#222'}
-                              maxHeight={height - 100}
-                              overflow="hidden"
-                            >
+                            <Paragraph maxHeight={height - 100} overflow="hidden">
                               {!!tagName && isWeb && sentence ? (
                                 <div
                                   className="block"

@@ -1,5 +1,4 @@
 import { series, sleep } from '@dish/async'
-import { timer } from '@dish/helpers'
 import React, { useEffect, useState } from 'react'
 import {
   AbsoluteVStack,
