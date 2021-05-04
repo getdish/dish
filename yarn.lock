@@ -3009,9 +3009,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@gqless/react@npm:2.0.12":
-  version: 2.0.12
-  resolution: "@gqless/react@npm:2.0.12"
+"@gqless/react@npm:2.0.13":
+  version: 2.0.13
+  resolution: "@gqless/react@npm:2.0.13"
   dependencies:
     react-ssr-prepass: ^1.4.0
   peerDependencies:
@@ -3023,7 +3023,7 @@ __metadata:
       optional: true
     react:
       optional: true
-  checksum: 3227fa8699fd2686f0f29e90cc23d7541bca04151e62390f7fede7be3f69d0f1cc2ffbf5c17ad0e6eaf252067fda8de02dd4fd62ca27e15be11aa3c3c9fba9c6
+  checksum: f7cfd9bdbb7dd216e20ed32185c4bc4cb4390e1b133b82c8ff36fccffc00b0bb108a0ecaa2fddfdb297b9d87c7c256dbcb0784882ab8300119c240b254e8b7d8
   languageName: node
   linkType: hard
 
@@ -4975,11 +4975,11 @@ __metadata:
     "@babel/traverse": "*"
     "@babel/types": "*"
     "@dish/esdx": ^0.0.9
-    "@snackui/static": ^0.4.1
+    "@snackui/static": ^0.4.2
   languageName: unknown
   linkType: soft
 
-"@snackui/helpers@^0.4.1, @snackui/helpers@workspace:snackui/packages/helpers":
+"@snackui/helpers@^0.4.2, @snackui/helpers@workspace:snackui/packages/helpers":
   version: 0.0.0-use.local
   resolution: "@snackui/helpers@workspace:snackui/packages/helpers"
   dependencies:
@@ -4987,18 +4987,18 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@snackui/node@*, @snackui/node@^0.4.1, @snackui/node@workspace:snackui/packages/snackui-node":
+"@snackui/node@*, @snackui/node@^0.4.2, @snackui/node@workspace:snackui/packages/snackui-node":
   version: 0.0.0-use.local
   resolution: "@snackui/node@workspace:snackui/packages/snackui-node"
   dependencies:
-    "@snackui/helpers": ^0.4.1
+    "@snackui/helpers": ^0.4.2
     ts-transform-import-path-rewrite: ^0.3.0
     ttypescript: ^1.5.12
     typescript: ^4.2.3
   languageName: unknown
   linkType: soft
 
-"@snackui/static@*, @snackui/static@^0.4.1, @snackui/static@workspace:snackui/packages/snackui-static":
+"@snackui/static@*, @snackui/static@^0.4.2, @snackui/static@workspace:snackui/packages/snackui-static":
   version: 0.0.0-use.local
   resolution: "@snackui/static@workspace:snackui/packages/snackui-static"
   dependencies:
@@ -5015,8 +5015,8 @@ __metadata:
     "@dish/react-test-env": ^0.0.7
     "@dish/testy": "*"
     "@expo/match-media": ^0.1.0
-    "@snackui/helpers": ^0.4.1
-    "@snackui/node": ^0.4.1
+    "@snackui/helpers": ^0.4.2
+    "@snackui/node": ^0.4.2
     "@types/jest": "*"
     "@types/node": ^14.14.12
     "@types/react-native": ^0.64.2
@@ -21811,7 +21811,7 @@ __metadata:
   resolution: "snackui-loader@workspace:snackui/packages/snackui-loader"
   dependencies:
     "@dish/esdx": ^0.0.9
-    "@snackui/static": ^0.4.1
+    "@snackui/static": ^0.4.2
     fs-extra: ^9.1.0
     loader-utils: ^2.0.0
     lodash: ^4.17.21
@@ -21827,7 +21827,7 @@ __metadata:
     "@dish/fast-compare": ^2.7.6
     "@dish/proxy-worm": ^0.0.4
     "@react-native-community/blur": ^3.6.0
-    "@snackui/helpers": ^0.4.1
+    "@snackui/helpers": ^0.4.2
     "@types/node": ^14.11.10
     "@types/react": ^16.9.35
     "@types/react-dom": ^16.9.8
