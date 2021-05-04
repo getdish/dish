@@ -30,8 +30,8 @@ export const VoteButton = ({
   return (
     <VStack
       position="relative"
-      width={24 * scale}
-      height={24 * scale}
+      width={32 * scale}
+      height={32 * scale}
       borderRadius={100}
       alignItems="center"
       justifyContent="center"

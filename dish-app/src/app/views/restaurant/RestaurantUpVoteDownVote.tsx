@@ -65,8 +65,8 @@ const RestaurantUpVoteDownVoteContents = graphql(
     return (
       <VStack pointerEvents="auto" position="relative">
         <AbsoluteVStack
-          bottom={-18}
-          right={-24}
+          bottom={-20}
+          right={-30}
           zIndex={2}
           borderRadius={1000}
           backgroundColor={theme.cardBackgroundColor}
@@ -139,7 +139,7 @@ const RatingWithVotes = memo(
 
     const upvote = (
       <VoteButton
-        size={18 * scale}
+        size={20 * scale}
         Icon={isMultiple ? ChevronsUp : ChevronUp}
         shadowDirection="up"
         voted={vote == 1}
@@ -153,7 +153,7 @@ const RatingWithVotes = memo(
 
     const downvote = (
       <VoteButton
-        size={18 * scale}
+        size={20 * scale}
         Icon={isMultiple ? ChevronsDown : ChevronDown}
         voted={vote == -1}
         color={vote === -1 ? 'red' : voteButtonColor}
@@ -168,7 +168,7 @@ const RatingWithVotes = memo(
 
     return (
       <VStack alignItems="center" justifyContent="center" width={sizePx} height={sizePx}>
-        <AbsoluteVStack top={-10}>
+        <AbsoluteVStack top={-18}>
           {subtle ? (
             upvote
           ) : (
@@ -177,7 +177,7 @@ const RatingWithVotes = memo(
             </Tooltip>
           )}
         </AbsoluteVStack>
-        <HStack>
+        <HStack position="relative" zIndex={10}>
           <Text
             fontSize={fontSize}
             fontWeight="600"
@@ -194,7 +194,7 @@ const RatingWithVotes = memo(
             </TextSuperScript>
           )}
         </HStack>
-        <AbsoluteVStack bottom={-10}>
+        <AbsoluteVStack bottom={-18}>
           {subtle ? (
             downvote
           ) : (

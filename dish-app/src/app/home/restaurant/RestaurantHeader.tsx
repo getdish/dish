@@ -243,6 +243,7 @@ const RestaurantHeaderContent = memo(
 
                     <VStack width={contentLeftWidth}>
                       <RestaurantTagsRow
+                        exclude="dish"
                         restaurantSlug={restaurantSlug}
                         restaurantId={restaurantId}
                         spacing={10}

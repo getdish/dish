@@ -1,8 +1,7 @@
 import { graphql } from '@dish/graph'
 import React, { memo } from 'react'
 import { Image } from 'react-native'
-import { useTheme } from 'snackui'
-import { Grid, HStack, Paragraph, Spacer, Text, VStack } from 'snackui'
+import { Grid, HStack, Paragraph, Spacer, VStack, useTheme } from 'snackui'
 
 import { queryRestaurant } from '../../../queries/queryRestaurant'
 import { SlantedTitle } from '../../views/SlantedTitle'
@@ -16,7 +15,7 @@ export const RestaurantMenu = memo(
       <>
         {!items.length && (
           <VStack width="100%" padding={40} alignItems="center" justifyContent="center">
-            <Text opacity={0.5}>No menu found.</Text>
+            <Paragraph opacity={0.5}>No menu found.</Paragraph>
           </VStack>
         )}
         {!!items.length && (
