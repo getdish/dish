@@ -9,6 +9,7 @@ import React, {
   useState,
 } from 'react'
 import { ScrollView, ScrollViewProps, StyleSheet, View } from 'react-native'
+import { scrollTo } from 'react-native-reanimated'
 import { VStack, combineRefs, getMedia, useMedia } from 'snackui'
 
 import { isWeb } from '../../constants/constants'
@@ -168,9 +169,10 @@ export const ContentScrollView = forwardRef<ScrollView, ContentScrollViewProps>(
     // note, not using it, not reacting
     const scrollStore = getStore(ScrollStore, { id })
 
+    const THROTTLE_SCROLL = 150
+
     const doUpdate = (y: number, e: any) => {
       clearTimeout(finish.current)
-      lastUpdate.current = Date.now()
       const isAtTop = y <= 0
       if (isAtTop) {
         console.log('AT TOP ^^^')
@@ -198,7 +200,7 @@ export const ContentScrollView = forwardRef<ScrollView, ContentScrollViewProps>(
         }
         finish.current = setTimeout(() => {
           scrollStore.setLock('none')
-        }, 120)
+        }, THROTTLE_SCROLL * 1.3)
       }
     }
 
@@ -209,8 +211,9 @@ export const ContentScrollView = forwardRef<ScrollView, ContentScrollViewProps>(
       if (atTop && scrollStore.lock === 'drawer') {
         return
       }
-      const hasBeenAWhile = Date.now() - lastUpdate.current > 150
+      const hasBeenAWhile = Date.now() - lastUpdate.current > THROTTLE_SCROLL
       if (atTop !== isScrollAtTop.get(id) || hasBeenAWhile) {
+        lastUpdate.current = Date.now()
         doUpdate(y, e)
       }
     }
@@ -223,7 +226,15 @@ export const ContentScrollView = forwardRef<ScrollView, ContentScrollViewProps>(
 
     useEffect(() => {
       if (scrollRef.current) {
-        scrollViews.set(id, scrollRef.current)
+        const v = scrollRef.current
+        const s = {
+          ...v,
+          scrollTo(y: number, x = 0, animated = false) {
+            console.log('proxy scroll', y, animated ? 'ANIMATED' : '')
+            scrollTo(scrollRef, x, y, animated)
+          },
+        } as ScrollView
+        scrollViews.set(id, v) //s)
       }
     }, [id, scrollRef.current])
 
@@ -264,14 +275,13 @@ export const ContentScrollView = forwardRef<ScrollView, ContentScrollViewProps>(
             bounces={false}
             scrollEnabled={!preventScrolling}
             // short duration to catch before vertical scroll
-            scrollEventThrottle={8}
+            scrollEventThrottle={16}
             style={[styles.scroll, style]}
           >
             <View
               style={{ flex: 1 }}
               onMoveShouldSetResponderCapture={isScrollingVerticalFromTop}
               onTouchMove={(e) => {
-                console.log('is', isScrollingVerticalFromTop())
                 if (!isScrollingVerticalFromTop()) {
                   return false
                 }

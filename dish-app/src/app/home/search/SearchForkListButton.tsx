@@ -15,6 +15,7 @@ import { useLastValueWhen } from '../../hooks/useLastValueWhen'
 import { userStore } from '../../userStore'
 import { SmallCircleButton } from '../../views/CloseButton'
 import { Link } from '../../views/Link'
+import { LinkButton } from '../../views/LinkButton'
 import { randomListColor } from '../list/listColors'
 import { SearchPagePropsContext } from './SearchPagePropsContext'
 import { getLocationFromRoute, useLocationFromRoute } from './useLocationFromRoute'
@@ -33,9 +34,10 @@ export const SearchForkListButton = memo(
     const location = useLocationFromRoute(route)
     const regionName = location.data?.region?.name
     const tooltip = `my ${title.replace('the ', '')} in ${regionName?.toLowerCase() ?? ''} list`
+    const El = size === 'sm' ? Link : LinkButton
     return (
       <Tooltip contents={tooltip}>
-        <Link
+        <El
           promptLogin
           onPress={async () => {
             try {
@@ -123,9 +125,9 @@ export const SearchForkListButton = memo(
               <Edit2 color="#fff" size={14} />
             </SmallCircleButton>
           ) : (
-            <Button>{children || 'Create list'}</Button>
+            children || 'Create list'
           )}
-        </Link>
+        </El>
       </Tooltip>
     )
   }

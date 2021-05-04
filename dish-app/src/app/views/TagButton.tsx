@@ -1,3 +1,4 @@
+// debug
 // TODO if we can have compiler pick up a few more things speeds will go up a lot
 import { Tag, TagQuery, TagType, graphql } from '@dish/graph'
 import { ThumbsDown, ThumbsUp, X } from '@dish/react-feather'
@@ -153,16 +154,19 @@ const TagButtonInner = (props: TagButtonProps) => {
     // @ts-expect-error
     <Button
       noTextWrap
-      className="ease-in-out-faster"
+      spacing="sm"
+      // className="ease-in-out-faster"
       // height={isSmall ? 28 : 34}
-      borderRadius={isSmall ? 8 : 10}
-      paddingHorizontal={isSmall ? 4 : 8}
-      paddingVertical={isSmall ? 2 : 4}
-      // used again down below
-      height={isSmall ? 26 : 32}
+      backgroundColor="transparent"
+      borderRadius={0}
+      paddingHorizontal={isSmall ? 2 : 4}
+      hoverStyle={{
+        backgroundColor: 'transparent',
+      }}
+      paddingVertical={isSmall ? 3 : 5}
+      height={isSmall ? 32 : 38}
       {...rest}
     >
-      <Spacer size="xxxs" />
       {!hideRank && !!rank && (
         <Text
           fontSize={smallerFontSize}
@@ -205,12 +209,19 @@ const TagButtonInner = (props: TagButtonProps) => {
         fontWeight={fontWeight || '700'}
         lineHeight={isSmall ? 22 : 26}
         color={color || theme.color}
+        borderBottomColor={theme.backgroundColor}
+        borderBottomWidth={1}
+        opacity={0.8}
+        marginTop={-1}
         {...(floating && {
           color: '#fff',
           textShadowColor: 'rgba(0,0,0,0.4)',
           textShadowOffset: { height: 1, width: 0 },
           textShadowRadius: 3,
         })}
+        hoverStyle={{
+          opacity: 1,
+        }}
       >
         {name}
       </Text>
@@ -229,11 +240,7 @@ const TagButtonInner = (props: TagButtonProps) => {
               borderColor={theme.backgroundColorAlt}
             >
               <AbsoluteVStack opacity={floating ? 1 : 0.7} fullscreen>
-                <Pie
-                  size={pieSize - 2}
-                  percent={rating * 10}
-                  color={floating ? `#fff` : theme.color}
-                />
+                <Pie size={pieSize} percent={rating * 10} color={floating ? `#fff` : theme.color} />
               </AbsoluteVStack>
             </VStack>
           )}
@@ -264,25 +271,24 @@ const TagButtonInner = (props: TagButtonProps) => {
       )}
 
       {!!closable && (
-        <VStack onPress={prevent} onPressIn={prevent} onPressOut={onClose as any}>
-          <VStack
-            backgroundColor="transparent"
-            borderRadius={10}
-            opacity={0.35}
-            marginLeft={-10}
-            position="relative"
-            width={isWeb ? 26 : 40}
-            height={isWeb ? 26 : 40}
-            alignItems="center"
-            justifyContent="center"
-            alignSelf="center"
-          >
-            <X size={13} color={theme.color} />
-          </VStack>
+        <VStack
+          onPress={prevent}
+          onPressIn={prevent}
+          onPressOut={onClose as any}
+          backgroundColor="transparent"
+          borderRadius={10}
+          opacity={0.35}
+          marginLeft={-10}
+          position="relative"
+          width={isWeb ? 26 : 40}
+          height={isWeb ? 26 : 40}
+          alignItems="center"
+          justifyContent="center"
+          alignSelf="center"
+        >
+          <X size={13} color={theme.color} />
         </VStack>
       )}
-
-      {!closable && !votable && <Spacer size={6} />}
     </Button>
   )
 
@@ -312,13 +318,13 @@ const TagButtonVote = graphql(
     const Icon = vote ? ThumbsDown : ThumbsUp
     const color = props.color ?? 'rgba(0,0,0,0.7)'
     const iconProps = {
-      size: 16 * scale,
+      size: 14 * scale,
       color,
     }
 
     return (
       <VStack
-        backgroundColor="rgba(100,100,100,0.15)"
+        backgroundColor="rgba(0,0,0,0.15)"
         alignItems="center"
         justifyContent="center"
         borderRadius={100}
@@ -326,7 +332,7 @@ const TagButtonVote = graphql(
         height={32 * scale}
         marginRight={5 * scale}
         marginVertical={-2 * scale}
-        opacity={0.6}
+        opacity={0.8}
         hoverStyle={{
           opacity: 1,
           transform: [{ scale: 1.1 }],

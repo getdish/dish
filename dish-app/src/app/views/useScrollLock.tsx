@@ -67,7 +67,6 @@ export const useScrollLock = ({ id, direction }: { id: string; direction: Scroll
           updateLock(false)
         }, 200)
       }
-      console.log('scroll hz', store.lock)
       if (!isWeb && isActivelyScrolling.current === false) {
         // avoid locking because onScroll calls after onScrollEndDrag
         return

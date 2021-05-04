@@ -1,5 +1,6 @@
 import { Plus } from '@dish/react-feather'
 import React, { Suspense, useState } from 'react'
+import { useTheme } from 'snackui'
 import { Button, Tooltip } from 'snackui'
 
 import { userStore } from '../../userStore'
@@ -9,20 +10,13 @@ import { RestaurantAddToListModal } from './RestaurantAddToListModal'
 export const RestaurantAddToListButton = ({
   restaurantSlug,
   noLabel,
-  theme = 'active',
-  shadowed,
-  size,
-  subtle,
   ...props
 }: SmallButtonProps & {
-  theme?: string | null
-  size?: number
   restaurantSlug?: string
   noLabel?: boolean
-  shadowed?: boolean
-  subtle?: boolean
 }) => {
   const [showModal, setShowModal] = useState(false)
+  const theme = useTheme()
   return (
     <>
       {!!(showModal && restaurantSlug) && (
@@ -33,7 +27,7 @@ export const RestaurantAddToListButton = ({
       <Tooltip contents="Add to list">
         <Button
           cursor="pointer"
-          icon={<Plus color={'#777'} size={size ?? 16} />}
+          icon={<Plus color={'#777'} size={16} />}
           tooltip="Add to list"
           onPress={() => {
             if (!userStore.promptLogin()) {
@@ -43,6 +37,9 @@ export const RestaurantAddToListButton = ({
           pressStyle={{
             opacity: 0.6,
           }}
+          shadowColor={theme.shadowColor}
+          shadowOffset={{ height: 2, width: 0 }}
+          shadowRadius={4}
           {...props}
         >
           {noLabel ? null : 'List'}

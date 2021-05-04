@@ -142,7 +142,7 @@ export default route(async (req, res) => {
 
     // full cache hit
     if (cache.type === 'full') {
-      console.log('🏓 cache full')
+      console.log('🏓 100% cache')
       res.send({ data: cache.data })
       return
     }

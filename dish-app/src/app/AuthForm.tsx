@@ -36,7 +36,7 @@ export const AuthForm = memo(
     const userStore = useUserStore()
     const isLoggedIn = userStore.isLoggedIn
     const curPageName = useRouterCurPage().name
-    const [formPage, setFormPage] = useState(pages.find((x) => x === curPageName) ?? 'login')
+    const [formPage, setFormPage] = useState(pages.find((x) => x === curPageName) ?? 'signup')
 
     useEffect(() => {
       if (isLoggedIn) {
@@ -454,6 +454,11 @@ function SubmittableForm({
   )
 }
 
+const didJustFill = {
+  login: false,
+  password: false,
+}
+
 function useFormAction<Values extends { [key: string]: any }>({
   name,
   initialValues,
@@ -483,9 +488,16 @@ function useFormAction<Values extends { [key: string]: any }>({
     }
   }, [response.data, response.isError])
 
+  let prev = ''
   const onChange = (key: keyof Values) => (val: string) => {
     // @ts-expect-error
     data.current[key] = val
+    didJustFill[key as string] = val.length > prev.length + 3
+    prev = val
+    if (didJustFill.login && didJustFill.password) {
+      console.log('submitting view autofill?')
+      onSubmit()
+    }
   }
 
   if (response.isSuccess) {

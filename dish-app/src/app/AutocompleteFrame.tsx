@@ -48,10 +48,12 @@ export const AutocompleteFrame = ({
       opacity={isShowing ? 1 : 0}
       pointerEvents={isShowing ? 'auto' : 'none'}
       borderRadius={14}
-      overflow="hidden"
       flex={1}
       {...(media.sm && {
         transform: [{ translateY: 10 }],
+      })}
+      {...(media.notSm && {
+        marginTop: -100,
       })}
 
       // DONT PUT EVENT HERE NEED TO DEBUG WHY IT BREAKS ON NATIVE
@@ -87,11 +89,13 @@ export const AutocompleteFrame = ({
           // width 100% messes up width on web to be too wide, using alignSelf instead
           alignSelf="stretch"
           height="100%"
-          overflow="hidden"
           minHeight={200}
           padding={5}
           borderRadius={media.sm ? 0 : 10}
           flex={media.sm ? 1 : 0}
+          {...(media.notSm && {
+            paddingTop: 110,
+          })}
           // dont add events here :(
         >
           {/* <Pressable
@@ -153,7 +157,7 @@ export const AutocompleteResults = memo(
           const isActive = !isWeb ? index === 0 : activeIndex === index
           return (
             <React.Fragment key={`${result.id}${index}`}>
-              <Theme name={isActive ? 'active' : 'dark'}>
+              <Theme name={isActive ? 'darkActive' : 'dark'}>
                 <AutocompleteItemView
                   target={target}
                   index={index}

@@ -31,6 +31,17 @@ const active: MyTheme = {
   borderColorHover: 'rgb(217, 109, 134)',
 }
 
+const darkActive: MyTheme = {
+  name: 'active',
+  ...baseTheme,
+  backgroundColor: 'rgb(17, 10, 13)',
+  backgroundColorSecondary: 'rgb(17, 10, 13)',
+  backgroundColorTertiary: 'rgba(17, 10, 13, 0.85)',
+  backgroundColorQuartenary: 'rgba(17, 10, 13, 0.7)',
+  borderColor: 'rgb(17, 10, 13)',
+  borderColorHover: 'rgb(17, 10, 13)',
+}
+
 const error: MyTheme = {
   name: 'error',
   ...baseTheme,
@@ -155,6 +166,7 @@ const themes = {
   lightTranslucent,
   darkTranslucent,
   active,
+  darkActive,
   error,
   ...colorThemes,
 }

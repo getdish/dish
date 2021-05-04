@@ -82,7 +82,7 @@ const RestaurantHeaderContent = memo(
         <VStack>
           <AbsoluteVStack top={5} left={5} zIndex={100}>
             <Suspense fallback={null}>
-              <RestaurantAddToListButton shadowed restaurantSlug={restaurantSlug} />
+              <RestaurantAddToListButton restaurantSlug={restaurantSlug} />
             </Suspense>
           </AbsoluteVStack>
 
@@ -114,7 +114,7 @@ const RestaurantHeaderContent = memo(
             </AbsoluteVStack>
           </AbsoluteVStack>
 
-          <Theme name={colors.name}>
+          <Theme name={`${colors.name}-dark`}>
             <VStack
               marginTop={imgHeight - 70}
               minWidth={minWidth}
@@ -260,14 +260,13 @@ const RestaurantHeaderContent = memo(
                             avatar={<LogoCircle />}
                             name="DishBot"
                             avatarBackgroundColor="transparent"
-                            text={
-                              <RestaurantOverview
-                                maxLines={4}
-                                size="lg"
-                                restaurantSlug={restaurantSlug}
-                              />
-                            }
-                          />
+                          >
+                            <RestaurantOverview
+                              maxLines={6}
+                              size="lg"
+                              restaurantSlug={restaurantSlug}
+                            />
+                          </CommentBubble>
                         </Theme>
                       </VStack>
 

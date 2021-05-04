@@ -9,7 +9,7 @@ import { AppRegistry } from 'react-native'
 import { isSSR } from './constants/constants'
 import { Root } from './Root'
 
-if (process.env.NODE_ENV === 'development' && !window['STARTED']) {
+if (process.env.NODE_ENV === 'development') {
   startLogging()
 }
 
@@ -48,7 +48,7 @@ if (process.env.NODE_ENV === 'development') {
   module?.hot?.accept()
 }
 
-if (!window['STARTED'] && process.env.TARGET !== 'node') {
+if (!window['__ignore_hmr'] && process.env.TARGET !== 'node') {
   start()
-  window['STARTED'] = true
+  window['__ignore_hmr'] = true
 }
