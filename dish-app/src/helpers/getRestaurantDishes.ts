@@ -1,4 +1,4 @@
-import { restaurant_tag } from '@dish/graph'
+import { restaurant, restaurant_tag } from '@dish/graph'
 import { isPresent } from '@dish/helpers'
 
 import { queryRestaurant } from '../queries/queryRestaurant'
@@ -23,22 +23,19 @@ export interface DishTagItem extends Omit<DishTagItemSimple, 'slug' | 'id'> {
 }
 
 type Props = {
-  restaurantSlug: string
+  restaurant: restaurant | null
   tagSlugs?: string[]
   max?: number
 }
 
 export const getRestaurantDishes = ({
-  restaurantSlug,
+  restaurant,
   tagSlugs = [],
   max = 6,
 }: Props): DishTagItemSimple[] => {
-  const [restaurant] = queryRestaurant(restaurantSlug)
-
   if (!restaurant) {
     return []
   }
-
   let topTags = restaurant.top_tags({
     args: {
       tag_slugs: tagSlugs.filter(isPresent).join(','),

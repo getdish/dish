@@ -406,7 +406,7 @@ const RestaurantListItemContent = memo(
         </VStack>
 
         {/* CENTER CONTENT AREA */}
-        <HStack paddingLeft={10} flex={1} maxHeight={92}>
+        <HStack paddingLeft={5} flex={1} maxHeight={92}>
           <VStack
             {...contentSideProps}
             width={contentSideProps.maxWidth}
@@ -546,8 +546,9 @@ const RestaurantPeekDishes = memo(
     onChangeTags?: (slugs: string[]) => void
   }) {
     const { isLoaded, size = 'md' } = props
+    const restaurant = queryRestaurant(props.restaurantSlug)[0]
     const dishes = props.tagSlugs
-      ? queryRestaurant(props.restaurantSlug)[0]
+      ? restaurant
           ?.tags({
             where: {
               tag: {
@@ -559,7 +560,7 @@ const RestaurantPeekDishes = memo(
           })
           .map(selectRishDishViewSimple) ?? []
       : getRestaurantDishes({
-          restaurantSlug: props.restaurantSlug,
+          restaurant,
           tagSlugs: props.activeTagSlugs,
           max: 5,
         })

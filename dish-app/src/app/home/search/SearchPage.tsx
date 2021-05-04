@@ -253,7 +253,7 @@ const SearchPageContent = memo(function SearchPageContent(
         <SearchPagePropsContext.Provider value={props}>
           {/* for web, disabled for now */}
           {/* <SearchResultsSimpleScroll key={`${isLoading}`} {...props} /> */}
-          <SearchResultsInfiniteScroll key={`${isLoading}`} {...props} />
+          <SearchResultsInfiniteScroll {...props} />
         </SearchPagePropsContext.Provider>
       </VStack>
     </Suspense>

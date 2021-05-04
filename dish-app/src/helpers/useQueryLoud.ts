@@ -20,24 +20,25 @@ export function useQueryLoud<TData = unknown, TError = unknown, TQueryFnData = T
     queryKey,
     async (...args) => {
       try {
-        return await queryFn(...args)
+        const res = await queryFn(...args)
+        if (process.env.NODE_ENV === 'development') {
+          console.groupCollapsed(`🔦 ${queryKey.slice(0, 50)}`)
+          console.log(res)
+          console.groupEnd()
+        }
+        return res
       } catch (err) {
         Toast.show(`Query error: ${err.message}`)
         throw err
       }
     },
-    options
+    {
+      refetchOnMount: false,
+      refetchOnWindowFocus: false,
+      refetchOnReconnect: false,
+      ...options,
+    }
   )
-
-  if (process.env.NODE_ENV === 'development') {
-    useEffect(() => {
-      if (res.status === 'success') {
-        console.groupCollapsed(`🔦 ${queryKey.slice(0, 50)}`)
-        console.log(res.data)
-        console.groupEnd()
-      }
-    }, [res.data])
-  }
 
   useEffect(() => {
     if (!res.error) return

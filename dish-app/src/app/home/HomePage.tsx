@@ -95,10 +95,10 @@ const HomePageContent = (props: Props) => {
   const regionColors = getColorsForName(state.region)
   const region = regionResponse.data
 
-  if (process.env.NODE_ENV === 'development') {
-    // prettier-ignore
-    console.log('👀 HomePage', state.region, { position, item: item, region, state, isActive: isActive })
-  }
+  // if (process.env.NODE_ENV === 'development') {
+  //   // prettier-ignore
+  //   console.log('👀 HomePage', state.region, { position, item: item, region, state, isActive: isActive })
+  // }
 
   useEffect(() => {
     if (!region) return
@@ -168,31 +168,29 @@ const HomePageContent = (props: Props) => {
               paddingBottom={media.sm ? 25 : 25}
               paddingHorizontal={10}
             >
-              <VStack transform={[{ translateY: 3 }]} position="relative">
-                <Theme name="dark">
-                  <Link onPress={() => autocompletesStore.setTarget('location')}>
-                    <SlantedTitle
-                      maxHeight={44}
-                      backgroundColor={regionColors.color}
-                      color="#fff"
-                      minWidth={100}
-                      size={
-                        regionName.length > 24
-                          ? 'xs'
-                          : regionName.length > 17
-                          ? 'sm'
-                          : regionName.length > 14
-                          ? 'md'
-                          : regionName.length > 8
-                          ? 'lg'
-                          : 'xl'
-                      }
-                    >
-                      {regionName}
-                    </SlantedTitle>
-                  </Link>
-                </Theme>
-              </VStack>
+              <Theme name="dark">
+                <Link onPress={() => autocompletesStore.setTarget('location')}>
+                  <SlantedTitle
+                    maxHeight={50}
+                    backgroundColor={regionColors.color}
+                    color="#fff"
+                    minWidth={100}
+                    size={
+                      regionName.length > 24
+                        ? 'xs'
+                        : regionName.length > 17
+                        ? 'sm'
+                        : regionName.length > 14
+                        ? 'md'
+                        : regionName.length > 8
+                        ? 'lg'
+                        : 'xl'
+                    }
+                  >
+                    {regionName}
+                  </SlantedTitle>
+                </Link>
+              </Theme>
               <HomeTopSearches />
             </HStack>
           </ContentScrollViewHorizontal>

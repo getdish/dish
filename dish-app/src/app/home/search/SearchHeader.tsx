@@ -3,7 +3,6 @@ import { AbsoluteVStack, HStack, Text, VStack, useMedia } from 'snackui'
 
 import { isWeb } from '../../../constants/constants'
 import { tagLenses } from '../../../constants/localTags'
-import { isTouchDevice } from '../../../constants/platforms'
 import { getActiveTags } from '../../../helpers/getActiveTags'
 import { getTitleForState } from '../../../helpers/getTitleForState'
 import { rgbString } from '../../../helpers/rgb'
@@ -35,11 +34,14 @@ export const SearchHeader = memo(() => {
           <VStack paddingTop={media.sm ? 12 : 12 + 52 + 10} />
           <HStack position="relative">
             <VStack zIndex={0} transform={[{ translateX: -10 }]}>
-              {!isTouchDevice && (
-                <AbsoluteVStack zIndex={10000} top={-9} left={15}>
-                  <SearchForkListButton size="sm" />
-                </AbsoluteVStack>
-              )}
+              <AbsoluteVStack
+                display={media.sm ? 'none' : 'flex'}
+                zIndex={10000}
+                top={-9}
+                left={15}
+              >
+                <SearchForkListButton size="sm" />
+              </AbsoluteVStack>
               <SlantedTitle
                 paddingLeft={35}
                 paddingRight={25}
@@ -50,7 +52,7 @@ export const SearchHeader = memo(() => {
                 <VStack
                   alignItems="center"
                   paddingTop={isWeb ? 0 : 5}
-                  paddingLeft={media.sm ? 0 : 20}
+                  paddingLeft={media.sm ? 0 : 40}
                 >
                   <Text
                     marginTop={-4}

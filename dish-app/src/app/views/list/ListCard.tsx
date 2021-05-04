@@ -1,7 +1,6 @@
 import { graphql } from '@dish/graph'
 import React from 'react'
-import { Button } from 'snackui'
-import { AbsoluteVStack, HStack, Hoverable, Text, VStack, useTheme } from 'snackui'
+import { AbsoluteVStack, HStack, Hoverable, VStack } from 'snackui'
 
 import { getColorsForName } from '../../../helpers/getColorsForName'
 import { getImageUrl } from '../../../helpers/getImageUrl'
@@ -10,16 +9,15 @@ import { getListColor } from '../../home/list/listColors'
 import { Card } from '../../home/restaurant/Card'
 import { Image } from '../Image'
 import { Link } from '../Link'
-import { LinkButton } from '../LinkButton'
 import { Score } from '../Score'
 
-type ListIDProps = {
+export type ListIDProps = {
   slug?: string
   userSlug?: string
   region: string
 }
 
-const useList = ({ slug }: ListIDProps) => {
+export const useList = ({ slug }: ListIDProps) => {
   const [list] = slug ? queryList(slug) : []
   const colors = getColorsForName(list?.name ?? '')
   const photos = list
@@ -66,11 +64,11 @@ export const ListCard = graphql(
           isBehind={isBehind}
           outside={
             <AbsoluteVStack zIndex={1000000} top="-5%" right="-5%">
-              {/* <Score
+              <Score
                 size="sm"
                 score={Math.round(Math.random() * 100)}
                 rating={Math.random() * 100}
-              /> */}
+              />
             </AbsoluteVStack>
           }
           photo={
@@ -107,45 +105,3 @@ export const ListCard = graphql(
     return contents
   }
 )
-
-export const ListCardHorizontal = graphql((props: ListIDProps) => {
-  const { list, colors, photos, backgroundColor } = useList(props)
-  const { slug, userSlug, region } = props
-  const theme = useTheme()
-
-  if (!slug || !userSlug) {
-    return null
-  }
-
-  return (
-    <LinkButton
-      name="list"
-      asyncClick
-      params={{ slug, userSlug, region }}
-      borderRadius={15}
-      padding={10}
-      paddingHorizontal={12}
-      backgroundColor={theme.cardBackgroundColor}
-      borderWidth={1}
-      elevation={2}
-      shadowRadius={3}
-      shadowOffset={{ height: 2, width: 0 }}
-      maxHeight={80}
-    >
-      <Image
-        source={{ uri: getImageUrl(photos[0] ?? '', 42, 42) }}
-        style={{
-          width: 42,
-          height: 42,
-          borderRadius: 100,
-        }}
-      />
-      <VStack>
-        <Text ellipse color={colors.darkColor} fontWeight="800">
-          {list.name}
-        </Text>
-        <Text>{list.user?.username}</Text>
-      </VStack>
-    </LinkButton>
-  )
-})

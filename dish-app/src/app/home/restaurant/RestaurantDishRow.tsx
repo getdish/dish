@@ -7,6 +7,7 @@ import { isWeb } from '../../../constants/constants'
 import { getRestaurantDishes } from '../../../helpers/getRestaurantDishes'
 import { getTagSlug } from '../../../helpers/getTagSlug'
 import { DishTagItemSimple } from '../../../helpers/selectDishViewSimple'
+import { queryRestaurant } from '../../../queries/queryRestaurant'
 import { ContentScrollViewHorizontal } from '../../views/ContentScrollViewHorizontal'
 import { TagButtonSlanted } from '../../views/dish/TagButtonSlanted'
 import { ScalingPressable } from '../../views/ScalingPressable'
@@ -51,7 +52,8 @@ export const RestaurantDishRowContent = memo(
       max = 30,
       themeName,
     }: Props) => {
-      const dishes = getRestaurantDishes({ restaurantSlug, max })
+      const [restaurant] = queryRestaurant(restaurantSlug)
+      const dishes = getRestaurantDishes({ restaurant, max })
       const [hasScrolled, setHasScrolled] = useState(false)
       const hasDishes = !!dishes?.length
       const dishGroups = partition(

@@ -30,7 +30,7 @@ import React, { Suspense, useEffect, useState } from 'react'
 import { useColorScheme } from 'react-native'
 import { SafeAreaProvider } from 'react-native-safe-area-context'
 import { QueryClientProvider } from 'react-query'
-import { ThemeProvider, Toast, VStack, configureThemes } from 'snackui'
+import { ThemeProvider, Toast, configureThemes } from 'snackui'
 
 import { App } from './app/App'
 import { homeStore } from './app/homeStore'
@@ -101,8 +101,6 @@ export function RootSuspenseLoad(props: any) {
   return <Suspense fallback={null}>{props.children}</Suspense>
 }
 
-const startTime = Date.now()
-
 export function Root() {
   const [isLoaded, setIsLoaded] = useState(false)
   const userStore = useUserStore()
@@ -116,7 +114,6 @@ export function Root() {
 
   useEffect(() => {
     start().then(() => {
-      console.log('app loaded first route', Date.now() - startTime)
       setIsLoaded(true)
     })
   }, [])

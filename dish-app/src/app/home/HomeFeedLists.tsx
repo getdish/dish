@@ -102,8 +102,8 @@ export const HomeFeedListsContents = graphql(({ region, onHoverResults }: Props)
                 region: homeStore.lastRegionSlug,
               }}
             >
-              <SmallCircleButton padding={6}>
-                <Plus size={20} color="#fff" />
+              <SmallCircleButton padding={5}>
+                <Plus size={20} color="#999" />
               </SmallCircleButton>
             </Link>
           </HStack>
@@ -120,9 +120,9 @@ export const HomeFeedListsContents = graphql(({ region, onHoverResults }: Props)
               return (
                 <VStack
                   key={list.id || i}
-                  transform={[{ scale: 0.8 }]}
-                  marginHorizontal={-17}
-                  marginVertical={-18}
+                  // transform={[{ scale: 0.8 }]}
+                  // marginHorizontal={-17}
+                  // marginVertical={-18}
                 >
                   <ListCard
                     isBehind={i > 0}

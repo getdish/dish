@@ -1,23 +1,20 @@
-import { graphql, query } from '@dish/graph'
+import { graphql, query, useMetaState, useQuery } from '@dish/graph'
 import { isPresent } from '@dish/helpers'
-import React, { memo, useContext } from 'react'
+import React, { Suspense, memo, useContext } from 'react'
 import { HStack } from 'snackui'
 
 import { getActiveTags } from '../../../helpers/getActiveTags'
-import { ListCardHorizontal } from '../../views/list/ListCard'
+import { ListCardHorizontal } from '../../views/list/ListCardHorizontal'
 import { SearchForkListButton } from './SearchForkListButton'
 import { SearchPagePropsContext } from './SearchPagePropsContext'
 
 export const SearchPageListsRow = memo(
-  graphql((props: {}) => {
+  graphql((_props: {}) => {
     const curProps = useContext(SearchPagePropsContext)!
     const region = curProps.item.region
-
-    if (!region) {
-      return null
-    }
-
     const tags = getActiveTags(curProps.item)
+    const activeTags = tags.map((x) => x.slug).filter(isPresent)
+
     const lists = query.list_populated({
       args: {
         min_items: 2,
@@ -29,12 +26,16 @@ export const SearchPageListsRow = memo(
         tags: {
           tag: {
             slug: {
-              _in: tags.map((x) => x.slug).filter(isPresent),
+              _in: activeTags,
             },
           },
         },
       },
     })
+
+    if (!region) {
+      return null
+    }
 
     return (
       <HStack
@@ -44,16 +45,18 @@ export const SearchPageListsRow = memo(
         spacing="md"
         paddingHorizontal={20}
       >
-        {lists.map((list, i) => {
-          return (
-            <ListCardHorizontal
-              key={i}
-              slug={list.slug}
-              userSlug={list.user?.username ?? ''}
-              region={list.region ?? ''}
-            />
-          )
-        })}
+        <Suspense fallback={null}>
+          {lists.map((list, i) => {
+            return (
+              <ListCardHorizontal
+                key={i}
+                slug={list.slug}
+                userSlug={list.user?.username ?? ''}
+                region={list.region ?? ''}
+              />
+            )
+          })}
+        </Suspense>
 
         <SearchForkListButton>
           {!lists.length ? 'No lists yet, create first' : 'Create list'}
