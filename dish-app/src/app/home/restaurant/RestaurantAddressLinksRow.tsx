@@ -50,7 +50,6 @@ export const RestaurantAddressLinksRow = memo(
           )} */}
           {!!restaurant.telephone && (
             <SmallButton
-              backgroundColor="transparent"
               borderWidth={0}
               tooltip="Call"
               href={`tel:${restaurant.telephone}`}
@@ -59,7 +58,6 @@ export const RestaurantAddressLinksRow = memo(
           )}
           {!!restaurant.website && (
             <SmallButton
-              backgroundColor="transparent"
               borderWidth={0}
               tooltip="Website"
               href={restaurant.website ?? ''}

@@ -430,7 +430,7 @@ const SearchResultsInfiniteScroll = memo((props: Props) => {
         style={listStyle}
         canChangeSize
         externalScrollView={SearchPageScrollView as any}
-        renderAheadOffset={ITEM_HEIGHT * (isWeb ? 10 : 3)}
+        renderAheadOffset={ITEM_HEIGHT * (isWeb ? 12 : 3)}
         rowRenderer={rowRenderer}
         dataProvider={dataProvider}
         layoutProvider={layoutProvider}

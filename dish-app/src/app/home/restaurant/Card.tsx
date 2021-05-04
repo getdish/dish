@@ -1,4 +1,3 @@
-// debug
 import React from 'react'
 import { StyleSheet } from 'react-native'
 import { AbsoluteVStack, HStack, LinearGradient, Paragraph, Spacer, Text, VStack } from 'snackui'

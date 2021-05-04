@@ -22,6 +22,7 @@ export const RestaurantAddress = ({
   const theme = useTheme()
   return (
     <SmallButton
+      borderWidth={0}
       icon={<MapPin color={theme.color} size={16} style={{ opacity: 0.5 }} />}
       href={`https://www.google.com/maps/search/?q=${encodeURIComponent(address)}`}
       overflow="hidden"

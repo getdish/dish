@@ -146,12 +146,13 @@ const TagButtonInner = (props: TagButtonProps) => {
   const smallerFontSize: any = typeof fontSize === 'number' ? Math.round(fontSize * 0.85) : fontSize
   const ratingPts = typeof rating === 'number' ? rating * 10 - 50 : 0
   const pieSize = size === 'sm' ? 16 : 20
+  const showRank = !hideRank && !!rank
 
   const contents = (
     // @ts-expect-error
     <Button
       noTextWrap
-      spacing="sm"
+      spacing={fontSize * 0.8}
       // className="ease-in-out-faster"
       // height={isSmall ? 28 : 34}
       backgroundColor="transparent"
@@ -163,18 +164,17 @@ const TagButtonInner = (props: TagButtonProps) => {
       height={isSmall ? 32 : 38}
       {...rest}
     >
-      <Spacer size="xxs" />
-
-      {!hideRank && !!rank && (
+      {showRank && (
         <Text
           fontSize={smallerFontSize}
-          fontWeight="500"
+          fontWeight="700"
           alignContent="center"
           justifyContent="center"
           alignItems="center"
           display="flex"
           color={theme.color}
           letterSpacing={-1}
+          marginRight={-3}
         >
           <Text fontWeight="300" opacity={0.5}>
             #
@@ -182,6 +182,7 @@ const TagButtonInner = (props: TagButtonProps) => {
           {rank}
         </Text>
       )}
+
       {hideIcon ? (
         <>&nbsp;</>
       ) : !!icon ? (
@@ -328,7 +329,6 @@ const TagButtonVote = graphql(
         borderRadius={100}
         width={32 * scale}
         height={32 * scale}
-        marginRight={5 * scale}
         marginVertical={-2 * scale}
         opacity={0.8}
         hoverStyle={{
