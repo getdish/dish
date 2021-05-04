@@ -9,7 +9,7 @@ import { DefinitionNode, OperationDefinitionNode } from 'graphql'
 import gql from 'graphql-tag'
 import { omit } from 'lodash'
 
-import { redisClient, redisGet } from './_rc'
+import { redisClient, redisGet, redisSet } from './_rc'
 
 const hasuraHeaders = {
   'content-type': 'application/json',
@@ -163,9 +163,7 @@ export default route(async (req, res) => {
       if (cacheKey) {
         const val = response.data[name]
         // console.log('set into cache', name, cacheKey)
-        redisClient.set(cacheKey, JSON.stringify(val), () => {
-          //
-        })
+        redisSet(cacheKey, JSON.stringify(val))
       }
     }
 

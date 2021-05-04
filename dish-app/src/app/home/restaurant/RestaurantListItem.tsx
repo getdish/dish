@@ -420,7 +420,7 @@ const RestaurantListItemContent = memo(
             {/* ensures it always flexes all the way even if short text */}
             {ensureFlexText}
 
-            <RestaurantOverview restaurantSlug={restaurantSlug} maxLines={3} />
+            <RestaurantOverview fullHeight restaurantSlug={restaurantSlug} maxLines={3} />
           </VStack>
 
           {/* PEEK / TAGS (RIGHT SIDE) */}
