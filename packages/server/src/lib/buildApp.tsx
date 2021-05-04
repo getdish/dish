@@ -16,6 +16,7 @@ export async function buildApp({
   clean?: ServerConfig['clean']
   serial?: boolean
 }) {
+  process.env.TARGET = 'web'
   const web = createConfig({
     ...webpackConfig,
     disableHot: true,
