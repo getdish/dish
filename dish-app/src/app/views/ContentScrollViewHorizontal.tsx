@@ -81,6 +81,8 @@ export const ContentScrollViewHorizontal = (props: ContentScrollViewHorizontalPr
     )
   }, [props])
 
+  console.log('isLockedVertical', isLockedVertical)
+
   return (
     // needs both pointer events to prevent/enable scroll on safari
     <VStack

@@ -99,18 +99,19 @@ export const AppSearchBarFloating = () => {
             height={height}
             maxWidth={searchBarMaxWidth}
           >
+            {/* SHADOW AND BACKGROUND */}
             <AbsoluteVStack
               borderRadius={borderRadius}
-              className="searchbar-shadow "
+              className="searchbar-shadow"
               transform={[{ skewX: '-12deg' }]}
               overflow="hidden"
               zIndex={102}
+              opacity={1}
               fullscreen
               height={height}
               justifyContent="center"
               alignItems="center"
               backgroundColor={background}
-              opacity={themeName === 'dark' ? 0.8 : 1}
               shadowColor="#000"
               shadowOpacity={0.5}
               shadowOffset={{ height: 2, width: 0 }}

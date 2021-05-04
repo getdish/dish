@@ -1,6 +1,5 @@
 import { RestaurantOnlyIds, graphql } from '@dish/graph'
 import { isPresent } from '@dish/helpers'
-import { getStore } from '@dish/use-store'
 import React, { Suspense, memo, useEffect, useMemo, useState } from 'react'
 import { Hoverable, LoadingItems, Spacer } from 'snackui'
 
@@ -84,7 +83,6 @@ export const HomePageFeed = memo(
           return []
         })
         // set results
-        console.log('SET', results)
         homePageStore.setResults(results)
       }, [items, hoveredResults])
 

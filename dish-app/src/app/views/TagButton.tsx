@@ -143,9 +143,9 @@ const TagButtonInner = (props: TagButtonProps) => {
   }
 
   const isSmall = size === 'sm'
-  const scale = isSmall ? 0.85 : size == 'lg' ? 1.05 : 1
-  const fontSize = fontSizeProp ? fontSizeProp : 15 * scale
-  const smallerFontSize: any = typeof fontSize === 'number' ? fontSize * 0.85 : fontSize
+  const scale = isSmall ? 0.85 : size == 'lg' ? 1.025 : 1
+  const fontSize = fontSizeProp ? fontSizeProp : Math.round(15 * scale)
+  const smallerFontSize: any = typeof fontSize === 'number' ? Math.round(fontSize * 0.85) : fontSize
   const ratingPts = typeof rating === 'number' ? rating * 10 - 50 : 0
   const pieSize = size === 'sm' ? 16 : 20
 
@@ -172,10 +172,11 @@ const TagButtonInner = (props: TagButtonProps) => {
           alignItems="center"
           display="flex"
           color={theme.color}
+          letterSpacing={-1}
         >
-          <TextSuperScript fontWeight="300" opacity={0.5}>
+          <Text fontWeight="300" opacity={0.5}>
             #
-          </TextSuperScript>
+          </Text>
           {rank}
         </Text>
       )}
@@ -201,7 +202,7 @@ const TagButtonInner = (props: TagButtonProps) => {
       <Text
         ellipse
         fontSize={fontSize}
-        fontWeight={fontWeight || '600'}
+        fontWeight={fontWeight || '700'}
         lineHeight={isSmall ? 22 : 26}
         color={color || theme.color}
         {...(floating && {

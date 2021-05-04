@@ -1,3 +1,4 @@
+// debug
 import React from 'react'
 import { StyleSheet } from 'react-native'
 import { AbsoluteVStack, HStack, LinearGradient, Paragraph, Spacer, Text, VStack } from 'snackui'
@@ -85,8 +86,11 @@ export function Card({
     width: aspectFixed ? sizes.width : '100%',
   }
   const strTitle = title || ''
-  const baseFontSize =
-    strTitle.length > 30 ? 24 : strTitle.length > 14 || getLongestWord(strTitle) > 9 ? 26 : 30
+  const len = strTitle.length
+  const lenScale = len > 40 ? 0.8 : len > 30 ? 0.9 : 1
+  const longestWordLen = getLongestWord(strTitle)
+  const wordScale = longestWordLen > 14 ? 0.7 : longestWordLen > 9 ? 0.8 : 1
+  const baseFontSize = 28 * lenScale * wordScale
   const fontSize = Math.round(baseFontSize * scales[size])
 
   return (
@@ -108,7 +112,7 @@ export function Card({
           backgroundColor={backgroundColor || underColor || ''}
         >
           {/* behind shadow */}
-          {/* {isBehind && (
+          {isBehind && (
             <AbsoluteVStack
               className="ease-in-out"
               opacity={hideInfo ? 0 : 1}
@@ -116,12 +120,14 @@ export function Card({
               borderRadius={cardFrameBorderRadius}
               fullscreen
               transform={[{ translateX: -cardFrameWidth }]}
+              // this makes react native work...
+              backgroundColor="blue"
               shadowColor="#000"
               shadowOpacity={0.5}
               shadowRadius={100}
               shadowOffset={{ width: 10, height: 0 }}
             />
-          )} */}
+          )}
 
           <VStack className="hover-75-opacity-child" opacity={dimImage ? 0.5 : 1} {...frame}>
             {typeof photo === 'string' ? (
@@ -190,17 +196,18 @@ export function Card({
                 <VStack position="relative">
                   <Text
                     // not working below :(
-                    className={size === 'xs' ? 'ellipse' : 'break-work'}
+                    className={size === 'xs' ? 'ellipse' : 'break-word'}
                     textAlign="right"
                     textShadowColor="#00000033"
-                    textShadowRadius={0}
+                    textShadowRadius={2}
                     textShadowOffset={{ height: 2, width: 0 }}
-                    fontWeight={size === 'xs' ? '800' : '500'}
-                    letterSpacing={size === 'xs' ? 0 : -1}
+                    fontWeight={size === 'sm' ? '700' : '400'}
+                    letterSpacing={size === 'sm' ? -1 : -0.5}
                     color="#fff"
                     fontSize={fontSize}
+                    numberOfLines={3}
                     lineHeight={fontSize * 1.1}
-                    flexShrink={0}
+                    // flexShrink={0}
                   >
                     {title}
                   </Text>
