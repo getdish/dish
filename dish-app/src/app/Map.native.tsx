@@ -70,6 +70,8 @@ export const MapView = ({
     return series([() => sleep(2000), () => setIsLoaded(1)])
   }, [])
 
+  const pointColor = theme.name === 'dark' ? '#000' : 'rgba(20,30,240,0.5)'
+
   return (
     <Animated.View
       style={{
@@ -323,10 +325,10 @@ export const MapView = ({
                 'match',
                 ['get', 'selected'],
                 1,
-                'rgba(60,80,255,1)',
+                'rgba(255,255,255,1)',
                 0,
-                'rgba(20,30,240,0.5)',
-                'rgba(20,30,240,0.5)',
+                pointColor,
+                pointColor,
               ],
               circleRadius: ['interpolate', ['exponential', 1.5], ['zoom'], 9, 4, 11, 8, 16, 22],
             }}

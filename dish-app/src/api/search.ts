@@ -7,8 +7,11 @@ import { redisGet, redisSet } from './_rc'
 const proxyHandler = proxy(SEARCH_DOMAIN_INTERNAL, {
   userResDecorator: function (proxyRes, proxyResData, req, userRes) {
     const val = proxyResData.toString('utf8')
+    if (process.env.NODE_ENV === 'test') {
+      return val
+    }
     redisSet(req['_key'], val)
-    return proxyResData
+    return val
   },
 })
 
