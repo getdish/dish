@@ -6,7 +6,8 @@ import { createServer } from '../lib/createServer'
 import { ServerConfig } from '../types'
 
 if (!process.env.NODE_ENV) {
-  throw new Error(`No NODE_ENV set`)
+  console.warn('No node env set, setting to development')
+  process.env.NODE_ENV = 'development'
 }
 
 export class Start extends Command {
@@ -66,7 +67,6 @@ export class Start extends Command {
         .execSync('ipconfig getifaddr en0')
         .toString()
         .trim()
-      console.log('process.env.LOCAL_HOST', process.env.LOCAL_HOST)
     }
 
     const config: ServerConfig = {
