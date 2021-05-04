@@ -1,11 +1,9 @@
 // // debug
 // // for testing quickly
 // import React from 'react'
-// import { ThemeProvider, VStack, configureThemes, useTheme } from 'snackui'
+// import { AbsoluteVStack, ThemeProvider, VStack, configureThemes, useTheme } from 'snackui'
 
-// import { RatingView } from './app/home/RatingView'
-// import { TagButton } from './app/views/TagButton'
-// import { tagDefaultAutocomplete, tagLenses } from './constants/localTags'
+// import { StackDrawer } from './app/views/StackDrawer'
 // import themes from './constants/themes'
 
 // configureThemes(themes)
@@ -13,10 +11,9 @@
 // export function Root({ floating, size }) {
 //   return (
 //     <ThemeProvider themes={themes} defaultTheme="light">
-//       <VStack pointerEvents="auto">
-//         <TagButton {...tagLenses[0]} restaurantSlug="miss-saigon" votable />
-//         <TagButton {...tagLenses[0]} restaurantSlug="miss-saigon" votable />
-//       </VStack>
+//       <AbsoluteVStack fullscreen backgroundColor="#fff">
+//         <StackDrawer />
+//       </AbsoluteVStack>
 //     </ThemeProvider>
 //   )
 // }

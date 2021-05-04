@@ -10,6 +10,7 @@ export function createWebServerDev(
   app: any,
   { webpackConfig, rootDir, resetCache }: ServerConfigNormal
 ) {
+  process.env.TARGET = 'web'
   const createConfig = getWebpackConfigBuilder({ rootDir })
   const config = createConfig({
     target: 'web',

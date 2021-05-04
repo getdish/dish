@@ -1,4 +1,3 @@
-// debug
 import { graphql } from '@dish/graph'
 import { ellipseText, isPresent } from '@dish/helpers'
 import { Store, useStore } from '@dish/use-store'

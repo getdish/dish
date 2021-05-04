@@ -138,7 +138,7 @@ const DishButtonContent = (props: TagButtonSlantedProps) => {
           )}
 
           {showSearchButton && !!slug && (
-            <AbsoluteVStack bottom="-15%" right="-10%">
+            <AbsoluteVStack bottom={-10} right={-20}>
               <SearchTagButton tag={{ type: 'dish', slug }} backgroundColor="#fff" color="#000" />
             </AbsoluteVStack>
           )}
