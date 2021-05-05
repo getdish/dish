@@ -17,10 +17,10 @@ export const defaultLenseColorDark = {
 }
 
 const lenseColors = {
-  Veg: 'green',
-  Gems: 'pink',
-  Vibe: 'blue',
-  Drink: 'red',
+  gems: 'pink',
+  drinks: 'red',
+  vibe: 'blue',
+  veg: 'green',
 }
 
 export const useCurrentLenseColor = () => {
@@ -29,7 +29,7 @@ export const useCurrentLenseColor = () => {
     if (home.currentStateType === 'search') {
       if (home.currentStateLense) {
         return {
-          name: lenseColors[home.currentStateLense.name || 'Gems'],
+          name: lenseColors[home.currentStateLense.name?.toLowerCase() || 'gems'] ?? 'pink',
           rgb: home.currentStateLense.rgb as RGB,
         }
       }

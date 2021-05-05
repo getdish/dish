@@ -23,6 +23,7 @@ import {
   ContentScrollViewHorizontalFitted,
   useContentScrollHorizontalFitter,
 } from '../../views/ContentScrollViewHorizontal'
+import { Link } from '../../views/Link'
 import { LogoCircle } from '../../views/Logo'
 import { RestaurantOverview } from '../../views/restaurant/RestaurantOverview'
 import { RestaurantTagsRow } from '../../views/restaurant/RestaurantTagsRow'
@@ -214,12 +215,14 @@ const RestaurantHeaderContent = memo(
 
                             <Spacer size="sm" />
 
-                            <VStack marginBottom={10}>
+                            <Link
+                              marginBottom={10}
+                              name="restaurantHours"
+                              params={{ slug: restaurantSlug }}
+                            >
                               <SmallButton
                                 backgroundColor="transparent"
                                 borderWidth={0}
-                                name="restaurantHours"
-                                params={{ slug: restaurantSlug }}
                                 textProps={{
                                   ellipse: true,
                                   opacity: 0.5,
@@ -232,11 +235,9 @@ const RestaurantHeaderContent = memo(
                                   />
                                 }
                               >
-                                <Text color={theme.color}>
-                                  {`${open.text}${open.nextTime ? ` (${open.nextTime})` : ''}`}
-                                </Text>
+                                {`${open.text}${open.nextTime ? ` (${open.nextTime})` : ''}`}
                               </SmallButton>
-                            </VStack>
+                            </Link>
                           </Suspense>
                         </Theme>
                       </HStack>
@@ -252,7 +253,6 @@ const RestaurantHeaderContent = memo(
                         restaurantSlug={restaurantSlug}
                         restaurantId={restaurantId}
                         spacing={10}
-                        grid
                         max={8}
                         size="lg"
                       />

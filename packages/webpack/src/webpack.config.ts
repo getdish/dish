@@ -22,7 +22,7 @@ const CssMinimizerPlugin = require('css-minimizer-webpack-plugin')
 
 let GIT_SHA = ''
 try {
-  GIT_SHA = `${require('child_process').execSync('git rev-parse HEAD')}`
+  GIT_SHA = `${require('child_process').execSync('git rev-parse HEAD')}`.trim()
 } catch {
   // ok
 }
@@ -64,14 +64,12 @@ export function createWebpackConfig({
   const isHot = !isProduction && !isSSR && !disableHot && target !== 'node'
   const isStaticExtracted = !process.env.NO_EXTRACT
   const isVerbose = process.env.ANALYZE_BUNDLE || process.env.INSPECT
-  const minimize = noMinify || isSSR ? false : isProduction && !isSSR
+  const minimize = !isSSR
   const hashFileNamePart = '[contenthash]'
   const hotEntry = isHot ? 'webpack-hot-middleware/client' : null
   const smp = new SpeedMeasurePlugin()
-  const shouldExtractCSS = !noMinify && isProduction && !isSSR
-  const cacheName = `${process.env.TARGET}${env}${GIT_SHA}${noMinify}${isHot}${isSSR}${
-    resetCache ? Math.random() : ''
-  }`
+  // prettier-ignore
+  const cacheName = simpleHash(`${process.env.TARGET}${env}${GIT_SHA}${noMinify}${isHot}${isSSR}${resetCache ? Math.random() : ''}`)
 
   console.log(' [webpack] cacheName', cacheName)
 
@@ -174,6 +172,10 @@ export function createWebpackConfig({
         concatenateModules: isProduction,
         usedExports: isProduction,
         removeEmptyChunks: isProduction,
+        innerGraph: isProduction,
+        sideEffects: isProduction,
+        mangleExports: isProduction,
+        removeAvailableModules: isProduction,
         splitChunks:
           isProduction && !isSSR && !noMinify
             ? {
@@ -187,7 +189,8 @@ export function createWebpackConfig({
                     priority: -10,
                   },
                   styles: {
-                    test: /\.css$/,
+                    name: `styles`,
+                    type: 'css/mini-extract',
                     chunks: 'all',
                     enforce: true,
                   },
@@ -196,8 +199,19 @@ export function createWebpackConfig({
             : false,
         runtimeChunk: false,
         minimizer:
-          minimize == false || noMinify
-            ? []
+          !isProduction || noMinify
+            ? [
+                new CssMinimizerPlugin({
+                  minimizerOptions: {
+                    preset: [
+                      'lite',
+                      {
+                        discardDuplicates: true,
+                      },
+                    ],
+                  },
+                }),
+              ]
             : [
                 new CssMinimizerPlugin(),
                 new ESBuildMinifyPlugin({
@@ -237,9 +251,7 @@ export function createWebpackConfig({
               },
               {
                 test: /\.css$/i,
-                use: shouldExtractCSS
-                  ? [MiniCssExtractPlugin.loader, require.resolve('css-loader')]
-                  : [require.resolve('style-loader'), require.resolve('css-loader')],
+                use: [MiniCssExtractPlugin.loader, require.resolve('css-loader')],
               },
               {
                 test: /\.(png|svg|jpe?g|gif)$/,
@@ -300,7 +312,9 @@ export function createWebpackConfig({
         ],
       },
       plugins: [
-        shouldExtractCSS && new MiniCssExtractPlugin(),
+        new MiniCssExtractPlugin({
+          filename: '[name].[contenthash].css',
+        }),
 
         isSSR && new LoadablePlugin(),
 
@@ -404,4 +418,14 @@ function defaultBabelInclude(inputPath) {
     return false
   }
   return true
+}
+
+const simpleHash = (str: string) => {
+  let hash = 0
+  for (let i = 0; i < str.length; i++) {
+    const char = str.charCodeAt(i)
+    hash = (hash << 5) - hash + char
+    hash &= hash // Convert to 32bit integer
+  }
+  return new Uint32Array([hash])[0].toString(36)
 }
