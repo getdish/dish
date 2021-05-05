@@ -412,80 +412,96 @@ function createProxiedStore(storeInfo: Omit<StoreInfo, 'store' | 'source'>) {
   let didSet = false
   let isInAction = false
 
+  const setupActions = {}
+
+  const finishAction = (key: string) => {
+    isInAction = false
+    if (storeInstance[SHOULD_DEBUG]()) {
+      // prettier-ignore
+      console.log('finish action', constr.name, key, {  didSet })
+    }
+    if (didSet) {
+      storeInfo.triggerUpdate()
+      didSet = false
+    }
+  }
+
   const proxiedStore = new Proxy(storeInstance, {
     // GET
-    get(target, key) {
+    get(_, key) {
       // avoid tracking internal stuff
-      if (key === '_trackers' || key === '_listeners') {
-        return Reflect.get(target, key)
+      if (key === '_trackers' || key === '_listeners' || key === '$$typeof') {
+        return Reflect.get(storeInstance, key)
       }
-      const isDebugging = DebugStores.has(constr)
-      if (typeof key === 'string') {
-        if (key in actions) {
-          // wrap action and call didSet after
-          const actionFn = actions[key]
 
-          // fix bug in router for now, need to look at it soon
-          const isGetFn = key.startsWith('get')
+      if (typeof key !== 'string') {
+        if (key === UNWRAP_PROXY) {
+          return storeInstance
+        }
+        if (key === UNWRAP_STORE_INFO) {
+          return storeInfo
+        }
+        return Reflect.get(storeInstance, key)
+      }
 
-          let action = (...args: any[]) => {
+      // actions
+      if (key in setupActions) {
+        return setupActions[key]
+      }
+      // setup action one time
+      if (key in actions) {
+        // wrap action and call didSet after
+        const actionFn = actions[key]
+        // fix bug in router for now, need to look at it!!
+        const isGetFn = key.startsWith('get')
+
+        // wrap actions for tracking
+        let action = new Proxy(actionFn, {
+          apply(target, _thisArg, args) {
             if (isGetFn || gettersState.isGetting) {
-              return actionFn.apply(proxiedStore, args)
+              return Reflect.apply(target, proxiedStore, args)
             }
-
             // dumb for now
             isInAction = true
-
-            const finishAction = () => {
-              isInAction = false
-              if (storeInstance[SHOULD_DEBUG]()) {
-                // prettier-ignore
-                console.log('finish action', constr.name, key, {  didSet })
-              }
-              if (didSet) {
-                storeInfo.triggerUpdate()
-                didSet = false
-              }
-            }
-
             let res
             try {
-              res = actionFn.apply(proxiedStore, args)
+              res = Reflect.apply(target, proxiedStore, args)
               return res
             } finally {
               if (res instanceof Promise) {
-                res.then(finishAction)
+                return res.then(() => finishAction(key))
               } else {
-                finishAction()
+                return finishAction(key)
               }
             }
-          }
+          },
+        })
 
-          //
-          // just action debug logger!
-          //
-          //
-          if (process.env.NODE_ENV === 'development') {
-            if (
-              process.env.LOG_LEVEL !== '0' &&
-              (isDebugging || configureOpts.logLevel !== 'error') &&
-              !key.startsWith('get')
-            ) {
-              const ogAction = action
-              action = (...args: any[]) => {
-                setters = new Set()
-                const curSetters = setters
+        // dev mode do nice logging
+        if (process.env.NODE_ENV === 'development') {
+          action = new Proxy(action, {
+            apply(target, thisArg, args) {
+              const isDebugging = DebugStores.has(constr)
+              const shouldLog =
+                process.env.LOG_LEVEL !== '0' &&
+                (isDebugging || configureOpts.logLevel !== 'error') &&
+                // @ts-ignore
+                !key.startsWith('get')
 
-                // dev mode do a lot of nice logging
-                const isTopLevelLogger = logStack.size == 0
-                const logs = new Set<any[]>()
-                logStack.add(logs)
+              if (!shouldLog) {
+                return Reflect.apply(target, thisArg, args)
+              }
 
-                //
+              setters = new Set()
+              const curSetters = setters
+              const isTopLevelLogger = logStack.size == 0
+              const logs = new Set<any[]>()
+              logStack.add(logs)
+              let res
+              try {
                 // 🏃‍♀️ run action here now
-                //
-                const res = ogAction(...args)
-
+                res = Reflect.apply(target, thisArg, args)
+              } finally {
                 logStack.add('end')
 
                 const name = constr.name
@@ -555,19 +571,26 @@ function createProxiedStore(storeInfo: Omit<StoreInfo, 'store' | 'source'>) {
                   return `hsl(${hashCode(str) % 360}, 90%, 40%)`
                 }
               }
-            }
-          }
-
-          return action
+            },
+          })
         }
+
+        setupActions[key] = action
+        return action
+      }
+
+      // non-actions
+      if (typeof key === 'string') {
         if (storeAccessTrackers.size && !storeAccessTrackers.has(storeInstance)) {
           storeAccessTrackers.forEach((t) => {
             t(storeInstance)
           })
         }
+
         if (gettersState.isGetting) {
           gettersState.curGetKeys.add(key)
         }
+
         if (key in getters) {
           if (!gettersState.isGetting) {
             storeInstance[TRACK](key)
@@ -598,18 +621,14 @@ function createProxiedStore(storeInfo: Omit<StoreInfo, 'store' | 'source'>) {
           // }
           return res
         }
+
         if (!gettersState.isGetting) {
           storeInstance[TRACK](key)
-          return Reflect.get(target, key)
+          return Reflect.get(storeInstance, key)
         }
       }
-      if (key === UNWRAP_PROXY) {
-        return storeInstance
-      }
-      if (key === UNWRAP_STORE_INFO) {
-        return storeInfo
-      }
-      return Reflect.get(target, key)
+
+      return Reflect.get(storeInstance, key)
     },
 
     // SET
