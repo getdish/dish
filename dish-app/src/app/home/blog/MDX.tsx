@@ -9,13 +9,11 @@ import {
   H5,
   Paragraph,
   Text,
-  Theme,
   UnorderedList,
   UnorderedListItem,
   VStack,
 } from 'snackui'
 
-import { lightYellow, yellow } from '../../../constants/colors'
 import { HighlightedText } from '../../views/HighlightedText'
 import { Link } from '../../views/Link'
 import { BlogRatingDescription } from './components/BlogRatingDescription'
@@ -45,7 +43,7 @@ const components = {
 
   LargeImage: ({ alt, ...rest }: ImageProps & { alt?: string }) => (
     <>
-      <VStack width="110%" margin="20px -5%" md-margin={[20, -20]} md-width="calc(100% + 40px)">
+      <VStack width="110%">
         <Image
           style={{
             width: '100%',
@@ -106,12 +104,12 @@ const components = {
     <VStack>
       {contentSpace}
       <Paragraph
-        padding={[12, 20, 0]}
-        margin={[0, 20]} // top/bottom wont work here
-        borderLeft={(theme) => [2, theme.borderColor]}
+        // padding={[12, 20, 0]}
+        // margin={[0, 20]} // top/bottom wont work here
+        // borderLeft={(theme) => [2, theme.borderColor]}
         fontSize="110%"
         lineHeight="inherit"
-        alpha={0.5}
+        // alpha={0.5}
         {...props}
       />
       {contentSpaceLg}
