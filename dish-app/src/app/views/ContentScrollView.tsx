@@ -144,7 +144,6 @@ const cancelTouchContentIfDrawerDragging = (e) => {
   if (!drawerStore.isDragging) {
     return
   }
-  e.preventDefault()
   const node = (e.currentTarget as any) as HTMLDivElement
   if (node.style.overflow !== 'hidden') {
     last = node.style.overflow
