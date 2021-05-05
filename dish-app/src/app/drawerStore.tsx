@@ -51,14 +51,12 @@ class DrawerStore extends Store {
 
   setIsDragging(val: boolean) {
     this.isDragging = val
-    this.spring?.stop()
+    if (val === false) {
+      this.finishSpring()
+    }
   }
 
   setSnapIndex(point: number) {
-    if (this.isDragging) {
-      console.log('AVOID SNAP WHILE DRAGGING')
-      return
-    }
     this.snapIndex = point
     this.animateDrawerToPx(this.getSnapPointOffset(), 4, true)
   }
@@ -68,27 +66,61 @@ class DrawerStore extends Store {
     velocity: number = 0,
     avoidSnap = false
   ) {
-    if (this.isDragging) {
-      console.log('AVOID SNAP WHILE DRAGGING')
-      return
-    }
     this.lastSnapAt = Date.now()
-    // this.isDragging = true
+    this.isDragging = false
     if (!avoidSnap) {
       this.snapIndex = this.getSnapIndex(px, velocity)
     }
     const toValue = this.getSnapPointOffset()
+    const y = this.pan['_value']
+    const distanceToTravel = y > toValue ? y - toValue : toValue - y
+    // you want to make it slower the longer the distance it has to travel to account for spring
+    // lets first normalize to 0.1-1
+    const distanceNormalized = Math.max(0.1, Math.min(1, distanceToTravel / 150))
+    // now lets make further = slower
+    const distanceSpeed = 1 / distanceNormalized
+    const speed = Math.max(0.1, Math.abs(velocity) * distanceSpeed)
+    this.springId = Math.random()
+    const curId = this.springId
     this.spring = Animated.spring(this.pan, {
       useNativeDriver: true,
-      velocity,
+      stiffness: speed * 110,
+      damping: speed * 13,
+      mass: speed * 1,
       toValue,
     })
+    this.toValue = toValue
+    // may be able to avoid a lot of stuff here by just not .stop() in finishSpring unless explicitly starting again?
     this.spring.start(() => {
-      this.isDragging = false
-      this.pan.flattenOffset()
-      this.pan.setValue(toValue)
-      this.spring = null
+      if (curId == this.springId) {
+        this.finishSpring()
+      }
     })
+  }
+
+  private springId = 0
+  private toValue = 0
+  private finishSpring() {
+    this.isDragging = false
+    this.pan.flattenOffset()
+    this.pan.setValue(this.toValue)
+    this.spring?.stop()
+    this.spring = null
+  }
+
+  private getSnapIndex(px: number, velocity: number) {
+    const direction = velocity > 0 ? 'down' : 'up'
+    const estFinalPx = px + velocity * 5
+    for (const [index, point] of this.snapPoints.entries()) {
+      const cur = point * getWindowHeight()
+      const next = (this.snapPoints[index + 1] ?? 1) * getWindowHeight()
+      const halfDif = next - cur
+      const partWayThere = cur + halfDif * (direction === 'up' ? 0.66 : 0.33)
+      if (estFinalPx < partWayThere) {
+        return index
+      }
+    }
+    return 2
   }
 
   toggleDrawerPosition() {
@@ -111,22 +143,6 @@ class DrawerStore extends Store {
 
   private getSnapPointOffset(index = this.snapIndex) {
     return this.snapPoints[index] * getWindowHeight()
-  }
-
-  private getSnapIndex(px: number, velocity: number) {
-    const direction = velocity > 0 ? 'down' : 'up'
-    const estFinalPx = px + velocity * 5
-    for (const [index, point] of this.snapPoints.entries()) {
-      const cur = point * getWindowHeight()
-      const next = (this.snapPoints[index + 1] ?? 1) * getWindowHeight()
-      const halfDif = next - cur
-      const partWayThere = cur + halfDif * (direction === 'up' ? 0.66 : 0.33)
-      console.log('get snap index', cur, next, halfDif, partWayThere, estFinalPx < partWayThere)
-      if (estFinalPx < partWayThere) {
-        return index
-      }
-    }
-    return 2
   }
 }
 

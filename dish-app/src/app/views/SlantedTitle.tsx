@@ -1,6 +1,7 @@
 import React from 'react'
 import { BoxProps, SizableTextProps, Title, useTextStyle } from 'snackui'
 
+import { isStringChild } from '../../helpers/isStringChild'
 import { SlantedBox } from './SlantedBox'
 
 export type SlantedTitleProps = Omit<BoxProps, 'color'> &
@@ -15,7 +16,7 @@ export const SlantedTitle = ({ size, sizeLineHeight, ...props }: SlantedTitlePro
   const [{ children, ...rest }, textProps] = useTextStyle(props as any, true)
   return (
     <SlantedBox alignSelf="flex-start" {...(rest as any)}>
-      {typeof children === 'string' ? (
+      {isStringChild(children) ? (
         <Title
           fontWeight="800"
           size={size}

@@ -77,7 +77,6 @@ export const HomeDrawerSmallView = memo((props: { children: any }) => {
         }
         // horizontal prevent
         if (Math.abs(g.dx) > 8) {
-          console.log('horizontal, ignore')
           return false
         }
         if (snapIndexName === 'bottom') {
@@ -105,9 +104,9 @@ export const HomeDrawerSmallView = memo((props: { children: any }) => {
       onPanResponderGrant: (e, gestureState) => {
         isPanActive = true
         curScrollerYMove = -1
+        // may just want to call drawerStore.finishSpring
         drawerStore.spring?.stop()
         drawerStore.spring = null
-        console.log('cur pan val', drawerStore.pan['_value'], drawerStore.currentSnapPx)
         curSnapY = drawerStore.currentSnapPx //Math.max(minY, Math.min(maxY, drawerStore.pan['_value']))
         const scrollStore = getStore(ScrollStore, { id: contentParent.activeId })
         if (scrollStore.lock !== 'drawer') {
@@ -137,7 +136,6 @@ export const HomeDrawerSmallView = memo((props: { children: any }) => {
           if (!scroller) return
           const curY = scrollLastY.get(contentParent.activeId) ?? 0
           curScrollerYMove = curY + minY - y
-          console.log('pan moving scroll', curScrollerYMove)
           scroller.scrollTo({ y: curScrollerYMove, animated: false })
           return
         }
@@ -154,7 +152,6 @@ export const HomeDrawerSmallView = memo((props: { children: any }) => {
         if (scrollStore.lock !== 'none') {
           scrollStore.setLock('none')
         }
-        drawerStore.setIsDragging(false)
         drawerStore.pan.flattenOffset()
         const scrolledY = curScrollerYMove
         curScrollerYMove = -1

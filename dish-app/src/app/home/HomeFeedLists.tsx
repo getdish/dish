@@ -103,7 +103,7 @@ export const HomeFeedListsContents = graphql(({ region, onHoverResults }: Props)
               }}
             >
               <SmallCircleButton padding={5}>
-                <Plus size={20} color="#999" />
+                <Plus size={20} color="#fff" />
               </SmallCircleButton>
             </Link>
           </HStack>

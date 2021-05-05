@@ -12,7 +12,7 @@ type CircleButtonProps = StackProps & {
 export const CloseButton = (props: CircleButtonProps) => {
   return (
     <SmallCircleButton {...props}>
-      <X size={props.size ?? 14} color="#999" />
+      <X size={props.size ?? 14} color="#fff" />
     </SmallCircleButton>
   )
 }
@@ -20,7 +20,7 @@ export const CloseButton = (props: CircleButtonProps) => {
 export const BackButton = memo((props: CircleButtonProps) => {
   return (
     <SmallCircleButton {...props}>
-      <CornerLeftUp size={props.size} color="#999" />
+      <CornerLeftUp size={props.size} color="#fff" />
     </SmallCircleButton>
   )
 })
@@ -42,12 +42,12 @@ export const SmallCircleButton = ({
       borderRadius={1000}
       alignItems="center"
       justifyContent="center"
-      backgroundColor={theme.color}
+      backgroundColor={theme.colorQuartenary}
       hoverStyle={{
         backgroundColor: theme.colorSecondary,
       }}
       pressStyle={{
-        backgroundColor: theme.colorTertiary,
+        backgroundColor: theme.color,
       }}
       {...(shadowed && {
         shadowColor: theme.shadowColor,

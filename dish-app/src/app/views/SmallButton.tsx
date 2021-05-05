@@ -2,6 +2,7 @@ import React from 'react'
 import { Button, Text, Tooltip, themeable, useTheme } from 'snackui'
 
 import { isWeb } from '../../constants/constants'
+import { isStringChild } from '../../helpers/isStringChild'
 import { Link } from './Link'
 import { LinkButtonProps } from './LinkProps'
 
@@ -49,7 +50,7 @@ export const SmallButton = themeable(
     if (name || tag || tags || params || href) {
       contents = (
         <Link name={name} tag={tag} tags={tags} params={params} href={href}>
-          <Text color={theme.color}>{contents}</Text>
+          {isStringChild(contents) ? <Text color={theme.color}>{contents}</Text> : contents}
         </Link>
       )
     }
