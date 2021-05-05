@@ -137,6 +137,8 @@ export const AppSearchInput = memo(() => {
     handleKeyPress(e, inputStore)
   }, [])
 
+  const setInputNode = useCallback((view) => setNodeOnInputStore(inputStore)(view), [])
+
   return (
     <AppAutocompleteHoverableInput input={input} autocompleteTarget="search">
       <InputFrame>
@@ -177,7 +179,7 @@ export const AppSearchInput = memo(() => {
                   key={0}
                   ref={(view) => {
                     textInput$.current = view
-                    setNodeOnInputStore(inputStore, view)
+                    setInputNode(view)
                   }}
                   onBlur={(e) => {
                     inputStore.setIsFocused(true)

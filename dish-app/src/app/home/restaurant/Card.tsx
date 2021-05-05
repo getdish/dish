@@ -247,7 +247,7 @@ export const CardOverlay = (props: { children: any }) => {
       <VStack position="relative">
         <AbsoluteVStack left={0} right={0} bottom={0} top={-40}>
           <LinearGradient
-            colors={['rgba(0,0,0,0)', '#rgba(0, 0, 0, 1)']}
+            colors={['rgba(40,40,40,0)', 'rgba(40,40,40,1)']}
             style={StyleSheet.absoluteFill}
           />
         </AbsoluteVStack>
