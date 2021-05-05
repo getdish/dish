@@ -19,7 +19,6 @@ export function reaction<StoreInstance extends Store, Selector extends (a: Store
 
   function updateReaction() {
     const next = selector(store)
-    dispose(innerDispose)
     if (!equalityFn(last, next)) {
       if (process.env.NODE_ENV === 'development') {
         console.groupCollapsed(
@@ -32,6 +31,7 @@ export function reaction<StoreInstance extends Store, Selector extends (a: Store
         console.log('  ARG', next)
         console.groupEnd()
       }
+      dispose(innerDispose)
       last = next
       innerDispose = receiver(next)
     }
