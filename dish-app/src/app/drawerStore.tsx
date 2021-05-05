@@ -50,10 +50,13 @@ class DrawerStore extends Store {
   }
 
   setIsDragging(val: boolean) {
-    this.isDragging = val
-    if (val === false) {
-      this.finishSpring()
+    if (this.isDragging === val) {
+      return
     }
+    this.isDragging = val
+    // if (val === false) {
+    //   this.finishSpring()
+    // }
   }
 
   setSnapIndex(point: number) {
@@ -80,6 +83,7 @@ class DrawerStore extends Store {
     // now lets make further = slower
     const distanceSpeed = 1 / distanceNormalized
     const speed = Math.max(0.1, Math.abs(velocity) * distanceSpeed)
+    console.log('animating to', toValue)
     this.springId = Math.random()
     const curId = this.springId
     this.spring = Animated.spring(this.pan, {
