@@ -1,56 +1,60 @@
+import { reaction } from '@dish/use-store'
 import { useEffect } from 'react'
 
-import { getIsFocused } from './AppSearchInput'
-import { AutocompleteTarget, autocompletesStore } from './AutocompletesStore'
+import { autocompletesStore } from './AutocompletesStore'
+import { InputStore } from './inputStore'
 
-export const useAutocompleteFocusWebNonTouch = ({
-  target,
-  input,
-}: {
-  target: AutocompleteTarget
-  input: HTMLInputElement | null
-}) => {
+export const useAutocompleteFocusWebNonTouch = (inputStore: InputStore) => {
   useEffect(() => {
-    if (!input) return
-    let mouseDownAt = Date.now()
-    let wasFocused = false
-    let moveInit = [0, 0]
-    let moveAt = [0, 0]
+    return reaction(
+      inputStore as any,
+      (x) => x.node,
+      (node) => {
+        console.log('got node', node)
+        if (!node) {
+          return
+        }
+        let mouseDownAt = Date.now()
+        let wasFocused = false
+        let moveInit = [0, 0]
+        let moveAt = [0, 0]
 
-    const mouseMove = (e: MouseEvent) => {
-      moveAt = [e.pageX, e.pageY]
-    }
+        const mouseMove = (e: MouseEvent) => {
+          moveAt = [e.pageX, e.pageY]
+        }
 
-    const onMouseUp = () => {
-      window.removeEventListener('mousemove', mouseMove)
-      const isFocused = getIsFocused()
-      const shouldFocus = !wasFocused && isFocused
-      if (!shouldFocus) {
-        return
+        const onMouseUp = () => {
+          window.removeEventListener('mousemove', mouseMove)
+          const isFocused = inputStore.isFocused
+          if (!isFocused) {
+            return
+          }
+          const didMoveALot =
+            Math.abs(moveInit[0] - moveAt[0]) + Math.abs(moveInit[1] - moveAt[1]) > 15
+          const didLeaveMouseDown = Date.now() - mouseDownAt > 500
+          // dont slide up to be nice to text selection!
+          const shouldSlideOpen = didMoveALot || didLeaveMouseDown
+          autocompletesStore.setTarget(inputStore.props.name, !shouldSlideOpen)
+        }
+
+        const mouseDown = (e: MouseEvent) => {
+          wasFocused = inputStore.isFocused
+          mouseDownAt = Date.now()
+          moveInit = [e.pageX, e.pageY]
+          moveAt = moveInit
+          window.addEventListener('mousemove', mouseMove)
+        }
+
+        node.addEventListener('pointerup', onMouseUp)
+        node.addEventListener('mouseup', onMouseUp)
+        node.addEventListener('mousedown', mouseDown)
+        return () => {
+          node.removeEventListener('pointerup', onMouseUp)
+          node.removeEventListener('mouseup', onMouseUp)
+          node.removeEventListener('mousedown', mouseDown)
+          window.removeEventListener('mousemove', mouseMove)
+        }
       }
-      const didMoveALot = Math.abs(moveInit[0] - moveAt[0]) + Math.abs(moveInit[1] - moveAt[1]) > 15
-      const didLeaveMouseDown = Date.now() - mouseDownAt > 500
-      // dont slide up to be nice to text selection!
-      const shouldSlideOpen = didMoveALot || didLeaveMouseDown
-      autocompletesStore.setTarget(target, !shouldSlideOpen)
-    }
-
-    const mouseDown = (e: MouseEvent) => {
-      wasFocused = getIsFocused()
-      mouseDownAt = Date.now()
-      moveInit = [e.pageX, e.pageY]
-      moveAt = moveInit
-      window.addEventListener('mousemove', mouseMove)
-    }
-
-    input.addEventListener('pointerup', onMouseUp)
-    input.addEventListener('mouseup', onMouseUp)
-    input.addEventListener('mousedown', mouseDown)
-    return () => {
-      input.removeEventListener('pointerup', onMouseUp)
-      input.removeEventListener('mouseup', onMouseUp)
-      input.removeEventListener('mousedown', mouseDown)
-      window.removeEventListener('mousemove', mouseMove)
-    }
-  }, [input])
+    )
+  }, [])
 }

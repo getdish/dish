@@ -78,11 +78,6 @@ export const getSearchInput = () => {
   return searchBar
 }
 
-let isFocused = false
-export const getIsFocused = () => {
-  return isFocused
-}
-
 export const AppSearchInput = memo(() => {
   const autocompleteStore = useStoreInstance(autocompleteSearchStore)
   const inputStore = useInputStoreSearch()
@@ -135,7 +130,7 @@ export const AppSearchInput = memo(() => {
   // focus for web
   const isDesktop = isWeb && !isWebTouch
   if (isDesktop) {
-    useAutocompleteFocusWebNonTouch({ input, target: 'search' })
+    useAutocompleteFocusWebNonTouch(inputStore)
   }
 
   const handleKeyPressInner = useCallback((e) => {
@@ -184,8 +179,8 @@ export const AppSearchInput = memo(() => {
                     textInput$.current = view
                     setNodeOnInputStore(inputStore, view)
                   }}
-                  onBlur={async (e) => {
-                    isFocused = false
+                  onBlur={(e) => {
+                    inputStore.setIsFocused(true)
                     avoidNextFocus = false
                     // dont because it hides during autocomplete click
                     // and event is before mousedown even
@@ -200,7 +195,7 @@ export const AppSearchInput = memo(() => {
                     placeholderTextColor: '#999',
                   })}
                   onFocus={() => {
-                    isFocused = true
+                    inputStore.setIsFocused(true)
                     if (isDesktop) {
                       console.log('ignore focus')
                       // see above, we handle better for text selection

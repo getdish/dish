@@ -1,94 +1,56 @@
-import { LngLat, graphql, restaurant } from '@dish/graph'
-import { useStoreInstance } from '@dish/use-store'
-import { isEqual } from 'lodash'
+import { useStoreInstanceSelector } from '@dish/use-store'
 import mapboxgl from 'mapbox-gl'
-import React, { Suspense, memo, useEffect, useRef } from 'react'
-import { AbsoluteVStack, VStack, getMedia, useMedia } from 'snackui'
+import React, { Suspense, memo, useEffect, useRef, useState } from 'react'
+import { AbsoluteVStack, VStack, useDebounceValue, useMedia } from 'snackui'
 
-import { MAPBOX_ACCESS_TOKEN } from '../constants/constants'
-import {
-  defaultCenter,
-  defaultLocationAutocompleteResults,
-} from '../constants/defaultLocationAutocompleteResults'
-import { queryRestaurant } from '../queries/queryRestaurant'
-import { appMapStore, useAppMapKey } from './AppMapStore'
+import { MAPBOX_ACCESS_TOKEN, isWeb } from '../constants/constants'
+import { useAppMapKey } from './AppMapStore'
+import { autocompletesStore } from './AutocompletesStore'
 import { drawerStore } from './drawerStore'
-import { useHomeStore } from './homeStore'
 import { mapStyles } from './mapStyles'
 
 mapboxgl.accessToken = MAPBOX_ACCESS_TOKEN
 
-export default memo(() => {
-  const media = useMedia()
-  const drawer = useStoreInstance(drawerStore)
-
-  if (!media.xs) {
+export default memo(function AppMapPIP() {
+  if (!isWeb) {
     return null
   }
 
-  const isHidden = media.xs && drawer.snapIndex > 0
+  const media = useMedia()
 
   return (
-    <Suspense fallback={null}>
-      <VStack
-        className="ease-in-out"
-        transform={[{ scale: 0.8 }, { translateX: 15 }, { translateY: 15 }]}
-        {...(isHidden && {
-          opacity: 0,
-          pointerEvents: 'none',
-        })}
-      >
+    <VStack
+      className="ease-in-out"
+      transform={[{ scale: 0.8 }, { translateX: 15 }, { translateY: 15 }]}
+      {...(media.xs && {
+        opacity: 0,
+        pointerEvents: 'none',
+      })}
+    >
+      <Suspense fallback={null}>
         <AppPIPContent />
-      </VStack>
-    </Suspense>
+      </Suspense>
+    </VStack>
   )
 })
 
-const AppPIPContent = graphql(() => {
-  const home = useHomeStore()
-  const position = useAppMapKey('position')
+const AppPIPContent = memo(() => {
+  const media = useMedia()
+  const isAtTop = useStoreInstanceSelector(drawerStore, (drawer) => drawer.snapIndexName === 'top')
+  const position = useAppMapKey('currentPosition')
   const mapNode = useRef<HTMLDivElement>(null)
-  const state = home.currentState
-  const appMap = useStoreInstance(appMapStore)
-  const focusedRestaurant = appMap.hovered ?? appMap.selected
-
-  let restaurants: restaurant[] | null = null
-  let slug: string | null = null
-  let span: LngLat = position.span
-
-  if (state.type === 'restaurant') {
-    slug = state.restaurantSlug
-    const r = queryRestaurant(slug)[0]
-    if (r) restaurants = [r]
-    // zoom out on pip for restaurant
-    span = {
-      lat: span.lat * 2.5,
-      lng: span.lng * 2.5,
-    }
-  } else if (focusedRestaurant) {
-    slug = focusedRestaurant.slug ?? ''
-    // @ts-ignore
-    const r = queryRestaurant(slug)[0]
-    if (r) restaurants = [r]
-    // zoom in on pip for search
-    span = {
-      lat: 0.005,
-      lng: 0.005,
-    }
-  }
-
-  const restaurant = restaurants?.[0]
-  const curCenter = appMap.position.center
-  const restCenter = restaurant?.location?.coordinates as LngLat | null
-  const center = restCenter || curCenter || defaultCenter
+  const center = useDebounceValue(position.center, 300)
+  const [map, setMap] = useState<mapboxgl.Map | null>(null)
 
   const pipAction = (() => {
-    if (getMedia().xs && drawerStore.snapIndex === 0) {
+    if (isAtTop) {
       // move drawer down
       return () => {
-        drawerStore.setSnapIndex(2)
+        autocompletesStore.setVisible(false)
+        drawerStore.setSnapIndex(1)
       }
     }
+    // re-center
     // if (center[0] && !isEqual(center, appMapStore.position.center)) {
     //   return () => {
     //     appMapStore.setPosition({
@@ -99,40 +61,28 @@ const AppPIPContent = graphql(() => {
     // }
   })()
 
-  // const coordinate = useMemo(
-  //   () => coords && new mapkit.Coordinate(coords[1], coords[0]),
-  //   [JSON.stringify(coords)]
-  // )
-  // const annotation = useMemo(() => {
-  //   if (!coordinate || !restaurant) return null
-  //   const percent = getRestaurantRating(restaurant.rating)
-  //   const color = getRankingColor(percent)
-  //   return new mapkit.MarkerAnnotation(coordinate, {
-  //     color,
-  //   })
-  // }, [coordinate])
-
-  const pipSpan = (span: LngLat) => {
-    return {
-      lat: Math.max(span.lat, 0.005),
-      lng: Math.max(span.lng, 0.005),
-    }
-  }
+  useEffect(() => {
+    map?.setCenter([center.lng, center.lat])
+  }, [center])
 
   useEffect(() => {
     if (!mapNode.current) {
       return
     }
-    new mapboxgl.Map({
-      container: mapNode.current,
-      style: mapStyles.light,
-      center,
-      zoom: 11,
-      attributionControl: false,
-    }).addControl(
-      new mapboxgl.AttributionControl({
-        compact: true,
+    console.log('new map pip')
+    setMap(
+      new mapboxgl.Map({
+        container: mapNode.current,
+        style: mapStyles.dark,
+        center,
+        zoom: 11,
+        attributionControl: false,
       })
+      // .addControl(
+      //   new mapboxgl.AttributionControl({
+      //     compact: true,
+      //   })
+      // )
     )
   }, [mapNode.current])
 
@@ -173,8 +123,9 @@ const AppPIPContent = graphql(() => {
       overflow="hidden"
       shadowColor="rgba(0,0,0,0.2)"
       shadowRadius={18}
+      backgroundColor="red"
       shadowOffset={{ height: 3, width: 0 }}
-      className="12313333333 ease-in-out-slow"
+      className="ease-in-out-slow"
       transform={[{ scale: 1 }]}
       cursor="pointer"
       pressStyle={{
@@ -183,6 +134,9 @@ const AppPIPContent = graphql(() => {
       hoverStyle={{
         transform: [{ scale: 1.1 }],
       }}
+      {...(media.xs && {
+        display: 'none',
+      })}
       {...(!pipAction && {
         pointerEvents: 'none',
         opacity: 0,

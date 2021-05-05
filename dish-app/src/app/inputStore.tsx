@@ -8,6 +8,11 @@ import { searchPageStore } from './home/search/SearchPageStore'
 export class InputStore extends Store<{ name: 'location' | 'search' }> {
   node: HTMLInputElement | null = null
   value: string | null = null
+  isFocused = false
+
+  setIsFocused(val: boolean) {
+    this.isFocused = val
+  }
 
   focusNode() {
     this.node?.focus()
@@ -48,15 +53,11 @@ export const useInputStoreLocation = () => useStoreInstance(inputStoreLocation)
 export const inputStoreSearch = createStore(InputStore, { name: 'search' })
 export const useInputStoreSearch = () => useStoreInstance(inputStoreSearch)
 
-export const setNodeOnInputStore = throttle(
-  (inputStore: InputStore, view: any) => {
-    if (!view) return
-    const next = inputGetNode(view)
-    if (!next) return
-    inputStore.setNode(next)
-  },
-  100,
-  {
-    leading: true,
+export const setNodeOnInputStore = (inputStore: InputStore, view: any) => {
+  if (!view) return
+  const next = inputGetNode(view)
+  if (!next || next === inputStore.node) {
+    return
   }
-)
+  inputStore.setNode(next)
+}

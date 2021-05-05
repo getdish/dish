@@ -33,7 +33,7 @@ export const AppSearchInputLocation = memo(function AppSearchInputLocation() {
 
   // focus for web
   if (isWeb && !isWebTouch) {
-    useAutocompleteFocusWebNonTouch({ input, target: 'search' })
+    useAutocompleteFocusWebNonTouch(inputStore)
   }
 
   const handleKeyPress = useCallback((e) => {
@@ -102,7 +102,11 @@ export const AppSearchInputLocation = memo(function AppSearchInputLocation() {
               ref={(view) => setNodeOnInputStore(inputStore, view)}
               value={inputStore.value ?? ''}
               placeholder={curLocName ?? '...'}
+              onFocus={() => {
+                inputStore.setIsFocused(true)
+              }}
               onBlur={() => {
+                inputStore.setIsFocused(false)
                 if (isWeb && !getMedia().sm) {
                   if (autocompletesStore.target === 'location') {
                     autocompletesStore.setVisible(false)

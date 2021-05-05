@@ -144,6 +144,9 @@ const AppSearchBarContents = memo(({ isColored }: { isColored: boolean }) => {
   const media = useMedia()
   const showLocation = focus === 'location'
 
+  const searchInputEl = <AppSearchInput key={0} />
+  const searchLocationEl = <AppSearchInputLocation key={1} />
+
   return (
     <HStack
       flex={1}
@@ -173,17 +176,13 @@ const AppSearchBarContents = memo(({ isColored }: { isColored: boolean }) => {
         flex={media.sm ? 6 : 1}
         alignItems="center"
       >
-        {!media.xs && <AppSearchInput />}
+        {!media.xs && searchInputEl}
 
         {/* Search Input Start */}
         {media.xs && !isWeb && (
           <>
-            {showLocation && <AppSearchInputLocation />}
-            {!showLocation && (
-              <VStack flex={1}>
-                <AppSearchInput />
-              </VStack>
-            )}
+            {showLocation && searchLocationEl}
+            {!showLocation && <VStack flex={1}>{searchInputEl}</VStack>}
           </>
         )}
 
@@ -191,10 +190,10 @@ const AppSearchBarContents = memo(({ isColored }: { isColored: boolean }) => {
           <>
             {/* keep both in dom so we have access to ref */}
             <VStack flex={1} overflow="hidden" display={showLocation ? 'contents' : 'none'}>
-              <AppSearchInputLocation />
+              {searchLocationEl}
             </VStack>
             <VStack flex={1} overflow="hidden" display={!showLocation ? 'contents' : 'none'}>
-              <AppSearchInput />
+              {searchInputEl}
             </VStack>
           </>
         )}
@@ -214,7 +213,7 @@ const AppSearchBarContents = memo(({ isColored }: { isColored: boolean }) => {
             })}
             flex={1}
           >
-            <AppSearchInputLocation />
+            {searchLocationEl}
           </VStack>
           <Spacer size={16} />
         </>
