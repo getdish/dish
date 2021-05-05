@@ -52,7 +52,7 @@ export const SearchHeader = memo(() => {
                 <VStack
                   alignItems="center"
                   paddingTop={isWeb ? 0 : 5}
-                  paddingLeft={media.sm ? 0 : 40}
+                  paddingLeft={media.sm ? 0 : 20}
                 >
                   <Text
                     marginTop={-4}
