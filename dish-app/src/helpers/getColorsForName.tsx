@@ -22,7 +22,7 @@ export const getColorsForColor = (color: string) => {
   return getColorsForIndex(index == -1 ? 0 : index)
 }
 
-const getColorsForIndex = (index: number) => {
+const getColorsForIndex = (index = 0) => {
   const altIndex = (index + 1) % allLightColors.length
   return {
     name: colorNames[index],

@@ -16,13 +16,20 @@ export const defaultLenseColorDark = {
   rgb: [10, 10, 10, 0.875] as RGB,
 }
 
+const lenseColors = {
+  Veg: 'green',
+  Gems: 'pink',
+  Vibe: 'blue',
+  Drink: 'red',
+}
+
 export const useCurrentLenseColor = () => {
   const themeName = useThemeName()
   const result = useHomeStoreSelector((home) => {
     if (home.currentStateType === 'search') {
       if (home.currentStateLense) {
         return {
-          name: 'pink-dark',
+          name: lenseColors[home.currentStateLense.name || 'Gems'],
           rgb: home.currentStateLense.rgb as RGB,
         }
       }
