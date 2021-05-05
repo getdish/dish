@@ -73,6 +73,8 @@ export const AppSearchInputLocation = memo(function AppSearchInputLocation() {
     }
   }, [])
 
+  const setInputNode = useCallback((view) => setNodeOnInputStore(inputStore)(view), [])
+
   return (
     // needs overflow hidden or else search box expands past edge on media.sm
     // while searching location
@@ -99,7 +101,7 @@ export const AppSearchInputLocation = memo(function AppSearchInputLocation() {
             </AbsoluteVStack>
             {!isWeb && <SearchInputNativeDragFix name="location" />}
             <TextInput
-              ref={(view) => setNodeOnInputStore(inputStore, view)}
+              ref={setInputNode}
               value={inputStore.value ?? ''}
               placeholder={curLocName ?? '...'}
               onFocus={() => {
