@@ -1,3 +1,6 @@
+import { hexToRGB } from '../helpers/rgb'
+import { blue, green, pink, red } from './colors'
+
 export const tagDefaultAutocomplete = [
   {
     id: '97517a08-c2f1-4d38-8c50-d7932b3787da',
@@ -183,7 +186,7 @@ export const tagLenses = [
     type: 'lense',
     icon: '💎',
     slug: 'lenses__gems',
-    rgb: ['169', ' 88', ' 127'],
+    rgb: hexToRGB(pink).rgb,
   },
   {
     id: 'b1580bd8-4f60-45e3-a5a9-c31effe8e7a3',
@@ -191,7 +194,7 @@ export const tagLenses = [
     type: 'lense',
     icon: '🍷',
     slug: 'lenses__drinks',
-    rgb: ['153', ' 76', ' 76'],
+    rgb: hexToRGB(red).rgb,
   },
   {
     id: '5da93fbe-5715-43b4-8b15-6521e3897bd9',
@@ -199,7 +202,7 @@ export const tagLenses = [
     type: 'lense',
     icon: '🌃',
     slug: 'lenses__vibe',
-    rgb: ['30', ' 83', ' 141'],
+    rgb: hexToRGB(blue).rgb,
   },
   {
     id: '4768116c-bca3-4936-970b-5f2570a9e8f8',
@@ -207,7 +210,7 @@ export const tagLenses = [
     type: 'lense',
     icon: '🥬',
     slug: 'lenses__veg',
-    rgb: ['51', ' 153', ' 51'],
+    rgb: hexToRGB(green).rgb,
   },
   // {
   //   id: '30d67fcc-759b-4cd6-8241-400028de9196',
