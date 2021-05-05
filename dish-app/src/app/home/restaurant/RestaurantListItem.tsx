@@ -224,8 +224,8 @@ const RestaurantListItemContent = memo(
           size="sm"
           restaurantSlug={restaurantSlug}
           restaurantId={restaurantId}
-          spacing={8}
-          grid
+          spacing={0}
+          spacingHorizontal={27}
           max={4}
         />
       </Suspense>
@@ -364,9 +364,9 @@ const RestaurantListItemContent = memo(
             <VStack
               overflow="hidden"
               zIndex={2}
-              paddingLeft={showAbove ? 75 : 22}
+              paddingLeft={showAbove ? 85 : 22}
               paddingRight={20}
-              marginTop={media.sm ? -6 : 0}
+              marginTop={media.sm ? -6 : 2}
               transform={[{ translateY: -10 }]}
               pointerEvents="auto"
             >
@@ -379,17 +379,22 @@ const RestaurantListItemContent = memo(
 
                 {!!open.text && (
                   <>
-                    {!!open.isOpen && <Circle size={8} backgroundColor={green} />}
-                    <SmallButton
-                      name="restaurantHours"
-                      params={{ slug: restaurantSlug }}
-                      borderWidth={0}
-                      textProps={{
-                        opacity: 0.5,
-                      }}
-                    >
-                      {open.nextTime || '~~'}
-                    </SmallButton>
+                    {!!open.isOpen && (
+                      <>
+                        <Circle size={8} backgroundColor={green} />
+                        <Spacer size="sm" />
+                      </>
+                    )}
+                    <Link name="restaurantHours" params={{ slug: restaurantSlug }}>
+                      <SmallButton
+                        borderWidth={0}
+                        textProps={{
+                          opacity: 0.5,
+                        }}
+                      >
+                        {open.nextTime || '~~'}
+                      </SmallButton>
+                    </Link>
                   </>
                 )}
 
@@ -415,6 +420,7 @@ const RestaurantListItemContent = memo(
             flex={1}
             overflow="hidden"
             maxHeight={90}
+            paddingTop={4}
           >
             {/* ROW: OVERVIEW */}
             {/* ensures it always flexes all the way even if short text */}
@@ -457,27 +463,29 @@ const RestaurantListItemContent = memo(
           width="100%"
           overflow="hidden"
         >
-          <SmallButton
+          <Link
             name="restaurant"
             params={{
-              id: props.restaurantId,
               slug: props.restaurantSlug,
               section: 'reviews',
             }}
-            textProps={{
-              color: '#999',
-              fontSize: 14,
-              fontWeight: '600',
-            }}
-            tooltip={`Rating Breakdown (${totalReviews} reviews)`}
-            icon={
-              <MessageSquare size={16} color={isWeb ? 'var(--color)' : 'rgba(150,150,150,0.3)'} />
-            }
           >
-            {numberFormat(restaurant.reviews_aggregate().aggregate?.count() ?? 0, 'sm')}
-          </SmallButton>
+            <SmallButton
+              textProps={{
+                color: '#999',
+                fontSize: 14,
+                fontWeight: '600',
+              }}
+              tooltip={`Rating Breakdown (${totalReviews} reviews)`}
+              icon={
+                <MessageSquare size={16} color={isWeb ? 'var(--color)' : 'rgba(150,150,150,0.3)'} />
+              }
+            >
+              {numberFormat(restaurant.reviews_aggregate().aggregate?.count() ?? 0, 'sm')}
+            </SmallButton>
+          </Link>
 
-          <Spacer />
+          <Spacer size="lg" />
 
           <Suspense fallback={<Spacer size={44} />}>
             <RestaurantFavoriteStar size="md" restaurantId={restaurantId} />
@@ -495,7 +503,7 @@ const RestaurantListItemContent = memo(
             <RestaurantDeliveryButtons label="🚗" restaurantSlug={restaurantSlug} />
           </Suspense>
 
-          <Spacer size="xl" />
+          <Spacer size="xxl" />
 
           {tagsRowContent}
         </HStack>

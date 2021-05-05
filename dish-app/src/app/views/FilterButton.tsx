@@ -1,5 +1,5 @@
 import { Clock, ShoppingBag } from '@dish/react-feather'
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useLayoutEffect, useState } from 'react'
 import { VStack } from 'snackui'
 
 import { isWeb } from '../../constants/constants'
@@ -7,6 +7,7 @@ import { tagDisplayNames } from '../../constants/tagMeta'
 import { rgbString } from '../../helpers/rgb'
 import { NavigableTag } from '../../types/tagTypes'
 import { useCurrentLenseColor } from '../hooks/useCurrentLenseColor'
+import { Link } from './Link'
 import { SmallButton, SmallButtonProps } from './SmallButton'
 
 type FilterButtonProps = SmallButtonProps & {
@@ -26,7 +27,11 @@ export const FilterButton = ({
 }) => {
   const { name, rgb } = useCurrentLenseColor()
   const [isActive, setIsActive] = useState(isActiveParent)
-  const themeName = isActive ? name : null
+  const themeName = isActive ? `${name}-dark` : null
+
+  useLayoutEffect(() => {
+    setIsActive(isActive)
+  }, [isActive])
 
   const iconElement = (() => {
     switch (tag.slug) {
@@ -40,23 +45,26 @@ export const FilterButton = ({
   })()
 
   return (
-    <SmallButton
-      tag={tag}
-      icon={iconElement ? <VStack opacity={0.45}>{iconElement}</VStack> : null}
-      {...rest}
-      zIndex={100 - index + (isActive ? 1 : 0)}
-      theme={themeName}
-      textProps={{
-        fontWeight: '600',
-        fontSize: 16,
-        color: isActive ? '#fff' : rgbString(rgb),
-        ...rest.textProps,
-      }}
-      onPressOut={() => {
-        setIsActive((x) => !x)
-      }}
-    >
-      {rest.children ?? (tag.name ? tagDisplayNames[tag.name] : null) ?? tag.name}
-    </SmallButton>
+    <Link tag={tag}>
+      <SmallButton
+        icon={iconElement ? <VStack opacity={0.45}>{iconElement}</VStack> : null}
+        {...rest}
+        zIndex={100 - index + (isActive ? 1 : 0)}
+        theme={themeName}
+        textProps={{
+          fontWeight: '600',
+          fontSize: 16,
+          ...(isActive && {
+            color: '#fff',
+          }),
+          ...rest.textProps,
+        }}
+        onPressOut={() => {
+          setIsActive((x) => !x)
+        }}
+      >
+        {rest.children ?? (tag.name ? tagDisplayNames[tag.name] : null) ?? tag.name}
+      </SmallButton>
+    </Link>
   )
 }

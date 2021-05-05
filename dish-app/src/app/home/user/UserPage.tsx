@@ -25,6 +25,7 @@ import { ContentScrollViewHorizontal } from '../../views/ContentScrollViewHorizo
 import { Link } from '../../views/Link'
 import { ListCard } from '../../views/list/ListCard'
 import { NotFoundPage } from '../../views/NotFoundPage'
+import { SlantedTitle } from '../../views/SlantedTitle'
 import { SmallButton } from '../../views/SmallButton'
 import { SmallTitle } from '../../views/SmallTitle'
 import { StackDrawer } from '../../views/StackDrawer'
@@ -141,7 +142,7 @@ const UserPageContent = graphql(
                 </VStack>
               )}
 
-              <FeedSlantedTitle>Lists</FeedSlantedTitle>
+              <SlantedTitle alignSelf="center">Lists</SlantedTitle>
               <SkewedCardCarousel>
                 {lists.map((list, i) => {
                   return (
@@ -157,7 +158,7 @@ const UserPageContent = graphql(
                 })}
               </SkewedCardCarousel>
 
-              <FeedSlantedTitle>Recently</FeedSlantedTitle>
+              <SlantedTitle alignSelf="center">Recently</SlantedTitle>
               <Spacer size="xxxl" />
               <Suspense fallback={<LoadingItems />}>
                 {!hasReviews && <Text>No reviews yet...</Text>}

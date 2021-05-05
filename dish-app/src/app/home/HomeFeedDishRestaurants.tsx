@@ -165,5 +165,9 @@ export const HomeFeedDishRestaurants = graphql(
         {contents}
       </ContentSectionHoverable>
     )
+  },
+  {
+    // fixes infinite loop bug when switching region
+    suspense: false,
   }
 )

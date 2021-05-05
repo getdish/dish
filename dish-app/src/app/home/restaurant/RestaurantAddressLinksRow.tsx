@@ -9,6 +9,7 @@ import { isWeb } from '../../../constants/constants'
 import { queryRestaurant } from '../../../queries/queryRestaurant'
 import { GeocodePlace } from '../../../types/homeTypes'
 import { SmallCircleButton } from '../../views/CloseButton'
+import { Link } from '../../views/Link'
 import { SmallButton } from '../../views/SmallButton'
 
 export type AddressSize = 'lg' | 'md' | 'sm' | 'xs'
@@ -49,20 +50,22 @@ export const RestaurantAddressLinksRow = memo(
             />
           )} */}
           {!!restaurant.telephone && (
-            <SmallButton
-              borderWidth={0}
-              tooltip="Call"
-              href={`tel:${restaurant.telephone}`}
-              icon={<PhoneCall color={iconColor} size={iconSize} />}
-            />
+            <Link href={`tel:${restaurant.telephone}`}>
+              <SmallButton
+                borderWidth={0}
+                tooltip="Call"
+                icon={<PhoneCall color={iconColor} size={iconSize} />}
+              />
+            </Link>
           )}
           {!!restaurant.website && (
-            <SmallButton
-              borderWidth={0}
-              tooltip="Website"
-              href={restaurant.website ?? ''}
-              icon={<Link2 color={iconColor} size={iconSize} />}
-            />
+            <Link href={restaurant.website ?? ''}>
+              <SmallButton
+                borderWidth={0}
+                tooltip="Website"
+                icon={<Link2 color={iconColor} size={iconSize} />}
+              />
+            </Link>
           )}
         </HStack>
       )

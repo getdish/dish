@@ -16,7 +16,7 @@ type TagRowProps = {
   containerProps?: StackProps
   restaurantId?: string
   spacing?: number
-  grid?: boolean
+  spacingHorizontal?: number
   max?: number
   exclude?: 'orphan' | 'dish' | 'category'
 }
@@ -68,7 +68,7 @@ const RestaurantTagsRowContent = memo(
         ).map((tag, index) => {
           return (
             <React.Fragment key={`${index}${tag.name}`}>
-              <VStack marginBottom={props.spacing ?? 5} marginRight={props.spacing ?? 0}>
+              <VStack marginBottom={props.spacing ?? 5} marginRight={props.spacingHorizontal ?? 0}>
                 <TagButton
                   replaceSearch
                   size={size ?? 'sm'}

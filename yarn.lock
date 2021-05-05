@@ -2399,12 +2399,13 @@ __metadata:
     circular-dependency-plugin: ^5.2.2
     css-loader: ^5.2.4
     css-minimizer-webpack-plugin: ^2.0.0
+    cssnano-preset-lite: ^2.0.0
     esbuild-loader: ^2.12.0
     file-loader: ^6.2.0
     fs-extra: ^9.1.0
     html-webpack-plugin: ^5.3.1
     inspectpack: ^4.7.1
-    mini-css-extract-plugin: ^1.5.0
+    mini-css-extract-plugin: ^1.6.0
     react: "*"
     react-refresh: ^0.10.0
     snackui-loader: "*"
@@ -9610,6 +9611,20 @@ __metadata:
   peerDependencies:
     postcss: ^8.2.1
   checksum: 7b369239ce8c1da1e5be52abc597c9867d8ac61d7855a4adba9e574b0716f80ff9f89bf9acdecc9329a03c1cd9d678b91e5e40b084b7588e243132a5af51395f
+  languageName: node
+  linkType: hard
+
+"cssnano-preset-lite@npm:^2.0.0":
+  version: 2.0.0
+  resolution: "cssnano-preset-lite@npm:2.0.0"
+  dependencies:
+    cssnano-utils: ^2.0.0
+    postcss-discard-comments: ^5.0.0
+    postcss-discard-empty: ^5.0.0
+    postcss-normalize-whitespace: ^5.0.0
+  peerDependencies:
+    postcss: ^8.2.1
+  checksum: 2a8604ffd17cc8487c7d881298489bcf812c5a217e63ec61f2e15ceecdd76f7755cd20f60ba0e68cd660f6c6a9897565ef3bc0807c47fae8acdd797aa1216d1e
   languageName: node
   linkType: hard
 
@@ -16953,16 +16968,16 @@ __metadata:
   languageName: node
   linkType: hard
 
-"mini-css-extract-plugin@npm:^1.5.0":
-  version: 1.5.0
-  resolution: "mini-css-extract-plugin@npm:1.5.0"
+"mini-css-extract-plugin@npm:^1.6.0":
+  version: 1.6.0
+  resolution: "mini-css-extract-plugin@npm:1.6.0"
   dependencies:
     loader-utils: ^2.0.0
     schema-utils: ^3.0.0
     webpack-sources: ^1.1.0
   peerDependencies:
     webpack: ^4.4.0 || ^5.0.0
-  checksum: b666770b3bff39afd066e4b545ad95d53b8d82dd01863c4c22aa6b866d48e44c97f27aa8c5cdfd011f727dbaf60f2a21e69c4d55ab771fc4ac00575f36342060
+  checksum: c9c50bed4ffa0ce0099c26184ed6f5b8675be068252fb2a68b790d8afa58c896e0c36aae0e0601e5036fdc04ecad761e884ce4d27a75c8bd3fb69ff7b4c52f91
   languageName: node
   linkType: hard
 

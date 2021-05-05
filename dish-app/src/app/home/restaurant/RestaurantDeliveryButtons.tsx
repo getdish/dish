@@ -5,6 +5,7 @@ import { HStack, StackProps, Text } from 'snackui'
 
 import { queryRestaurant } from '../../../queries/queryRestaurant'
 import { Image } from '../../views/Image'
+import { Link } from '../../views/Link'
 import { SmallButton } from '../../views/SmallButton'
 import { getRestaurantDeliverySources } from './getRestaurantDeliverySources'
 
@@ -60,30 +61,31 @@ export const RestaurantDeliveryButtons = memo(
 
 const RestaurantDeliveryButton = ({ source, showLabels }: Props & { source: any }) => {
   return (
-    <SmallButton
-      href={source.url}
-      tooltip={!showLabels ? source.name : null}
-      icon={
-        <Image
-          accessibilityLabel={source.name}
-          source={{ uri: source.image }}
-          style={{
-            width: showLabels ? 20 : 24,
-            height: showLabels ? 20 : 24,
-            marginHorizontal: showLabels ? -2 : -6,
-            marginVertical: -6,
-            borderRadius: 40,
-            borderWidth: 1,
-            borderColor: '#fff',
-          }}
-        />
-      }
-      {...(showLabels && {
-        children: source.name,
-      })}
-      textProps={{
-        opacity: 0.7,
-      }}
-    />
+    <Link href={source.url}>
+      <SmallButton
+        tooltip={!showLabels ? source.name : null}
+        icon={
+          <Image
+            accessibilityLabel={source.name}
+            source={{ uri: source.image }}
+            style={{
+              width: showLabels ? 20 : 24,
+              height: showLabels ? 20 : 24,
+              marginHorizontal: showLabels ? -2 : -6,
+              marginVertical: -6,
+              borderRadius: 40,
+              borderWidth: 1,
+              borderColor: '#fff',
+            }}
+          />
+        }
+        {...(showLabels && {
+          children: source.name,
+        })}
+        textProps={{
+          opacity: 0.7,
+        }}
+      />
+    </Link>
   )
 }
