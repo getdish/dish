@@ -1980,8 +1980,9 @@ __metadata:
     react-helmet: ^6.1.0
     react-hook-form: ^6.13.0
     react-laag: ^2.0.2
-    react-native: ^0.64.0
+    react-native: ^0.64.1
     react-native-animatable: ^1.3.3
+    react-native-clean-project: ^3.6.3
     react-native-dotenv: ^2.5.3
     react-native-fast-image: ^8.3.4
     react-native-gesture-handler: ^1.10.3
@@ -4988,7 +4989,7 @@ __metadata:
     "@babel/traverse": "*"
     "@babel/types": "*"
     "@dish/esdx": ^0.0.9
-    "@snackui/static": ^0.4.2
+    "@snackui/static": ^0.4.3
   languageName: unknown
   linkType: soft
 
@@ -5011,7 +5012,7 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@snackui/static@*, @snackui/static@^0.4.2, @snackui/static@workspace:snackui/packages/snackui-static":
+"@snackui/static@*, @snackui/static@^0.4.3, @snackui/static@workspace:snackui/packages/snackui-static":
   version: 0.0.0-use.local
   resolution: "@snackui/static@workspace:snackui/packages/snackui-static"
   dependencies:
@@ -19992,6 +19993,15 @@ __metadata:
   languageName: node
   linkType: hard
 
+"react-native-clean-project@npm:^3.6.3":
+  version: 3.6.3
+  resolution: "react-native-clean-project@npm:3.6.3"
+  bin:
+    react-native-clean-project: source/index.js
+  checksum: 9437fc91378c73fc9bbc67a1bea17aa83ba274e0180df245b8206bf9633afc94cb39f2016ea1ea094a0421e43c843dcb43dd7dcc9fcd0819b38c6f416d930a5e
+  languageName: node
+  linkType: hard
+
 "react-native-codegen@npm:^0.0.6":
   version: 0.0.6
   resolution: "react-native-codegen@npm:0.0.6"
@@ -20128,9 +20138,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"react-native@npm:0.64.0":
-  version: 0.64.0
-  resolution: "react-native@npm:0.64.0"
+"react-native@npm:0.64.1":
+  version: 0.64.1
+  resolution: "react-native@npm:0.64.1"
   dependencies:
     "@jest/create-cache-key-function": ^26.5.0
     "@react-native-community/cli": ^5.0.1-alpha.0
@@ -20168,7 +20178,7 @@ __metadata:
     react: 17.0.1
   bin:
     react-native: cli.js
-  checksum: 0b785434e11bdd9839aedf7bae9118e251c86b0240b77c6a2e872d2c38a5df6668929b66b506289e43cd4a15d994a54d86191a59ef51ef120a5e90a225d6e1f1
+  checksum: 0988f2ee94ff52f2fbc0dae9860928d671fac0a8206c5cb8aae8d43c46033ed5c4daaa0c17f9fee97b3080b212c234b9da5c7cc4d3a02c18254cca295286305b
   languageName: node
   linkType: hard
 
@@ -21824,7 +21834,7 @@ __metadata:
   resolution: "snackui-loader@workspace:snackui/packages/snackui-loader"
   dependencies:
     "@dish/esdx": ^0.0.9
-    "@snackui/static": ^0.4.2
+    "@snackui/static": ^0.4.3
     fs-extra: ^9.1.0
     loader-utils: ^2.0.0
     lodash: ^4.17.21
