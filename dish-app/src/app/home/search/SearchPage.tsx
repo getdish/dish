@@ -4,7 +4,7 @@ import { ArrowUp } from '@dish/react-feather'
 import { HistoryItem } from '@dish/router'
 import { reaction } from '@dish/use-store'
 import React, { Suspense, forwardRef, memo, useCallback, useEffect, useMemo, useRef } from 'react'
-import { ScrollView, ScrollViewProps } from 'react-native'
+import { LayoutRectangle, ScrollView, ScrollViewProps } from 'react-native'
 import { DataProvider, LayoutProvider, RecyclerListView } from 'recyclerlistview'
 import {
   AbsoluteVStack,
@@ -17,6 +17,7 @@ import {
   Text,
   VStack,
   combineRefs,
+  useLayout,
   useMedia,
 } from 'snackui'
 
@@ -461,7 +462,7 @@ const listStyle = {
 }
 
 type SearchPageScrollViewProps = ScrollViewProps & {
-  onSizeChanged: (props: { width: number; height: number }) => any
+  onSizeChanged: (props?: LayoutRectangle) => void
 }
 
 const SearchPageScrollView = forwardRef<ScrollView, SearchPageScrollViewProps>(
@@ -488,13 +489,13 @@ const SearchPageScrollView = forwardRef<ScrollView, SearchPageScrollViewProps>(
       scrollRef.current?.scrollTo({ x: 0, y: 0, animated: true })
     }, [])
 
-    const handleLayout = useCallback((e) => {
-      const { width, height } = e.nativeEvent.layout
-      onSizeChanged({ width, height })
-    }, [])
+    const layoutProps = useLayout({
+      // @ts-expect-error
+      onChange: onSizeChanged,
+    })
 
     return (
-      <VStack onLayout={handleLayout} flex={1}>
+      <VStack flex={1} {...(layoutProps as any)}>
         <ContentScrollView id="search" ref={combineRefs(ref, scrollRef) as any} {...props}>
           <PageContentWithFooter>
             <SearchHeader />

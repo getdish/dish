@@ -196,7 +196,16 @@ export function createWebpackConfig({
                   },
                 },
               }
-            : false,
+            : {
+                cacheGroups: {
+                  styles: {
+                    name: `styles`,
+                    type: 'css/mini-extract',
+                    chunks: 'all',
+                    enforce: true,
+                  },
+                },
+              },
         runtimeChunk: false,
         minimizer:
           !isProduction || noMinify
@@ -217,7 +226,7 @@ export function createWebpackConfig({
                 new ESBuildMinifyPlugin({
                   target: 'es2019',
                   treeShaking: true,
-                  // css: true,
+                  css: false,
                 }),
               ],
       },
@@ -231,15 +240,17 @@ export function createWebpackConfig({
                 // @ts-ignore
                 use: [
                   'thread-loader',
-                  // fast refresh seems to work??
-                  {
-                    loader: require.resolve('esbuild-loader'),
-                    options: {
-                      loader: 'tsx',
-                      target: 'es2019',
-                      // implementation: esbuild,
-                    },
-                  },
+                  // // fast refresh seems to work??
+                  isProduction
+                    ? {
+                        loader: require.resolve('esbuild-loader'),
+                        options: {
+                          loader: 'tsx',
+                          target: 'es2019',
+                          // implementation: esbuild,
+                        },
+                      }
+                    : 'babel-loader',
                   isStaticExtracted
                     ? {
                         loader: require.resolve('snackui-loader'),

@@ -19,10 +19,8 @@ import { useColorsFor } from '../../../helpers/useColorsFor'
 import { queryRestaurant } from '../../../queries/queryRestaurant'
 import { HomeStateItemRestaurant } from '../../../types/homeTypes'
 import { CommentBubble } from '../../views/CommentBubble'
-import {
-  ContentScrollViewHorizontalFitted,
-  useContentScrollHorizontalFitter,
-} from '../../views/ContentScrollViewHorizontal'
+import { useContentScrollHorizontalFitter } from '../../views/ContentScrollViewHorizontal'
+import { ContentScrollViewHorizontalFitted } from '../../views/ContentScrollViewHorizontalFitted'
 import { Link } from '../../views/Link'
 import { LogoCircle } from '../../views/Logo'
 import { RestaurantOverview } from '../../views/restaurant/RestaurantOverview'

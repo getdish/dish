@@ -67,23 +67,29 @@ export const MapView = (props: MapProps) => {
   // window resize
   useEffect(() => {
     if (!map) return
+    let cancel: Function | null = null
     const handleResize = debounce(() => {
-      series([
+      console.log('GOGO')
+      cancel = series([
+        () => sleep(100),
         () => map.resize(),
-        () => sleep(350),
+        () => sleep(100),
         () => map.resize(),
         () => sleep(400),
         () => map.resize(),
-        () => sleep(700),
+        () => sleep(500),
         () => map.resize(),
       ])
-    }, 100)
+    }, 50)
     const handleResizeOuter = () => {
+      cancel?.()
+      cancel = null
       handleResize.cancel()
       handleResize()
     }
     Dimensions.addEventListener('change', handleResizeOuter)
     return () => {
+      cancel?.()
       handleResize.cancel()
       Dimensions.removeEventListener('change', handleResizeOuter)
     }

@@ -6,10 +6,8 @@ import { tagLenses } from '../../../constants/localTags'
 import { getActiveTags } from '../../../helpers/getActiveTags'
 import { getTitleForState } from '../../../helpers/getTitleForState'
 import { rgbString } from '../../../helpers/rgb'
-import {
-  ContentScrollViewHorizontalFitted,
-  useContentScrollHorizontalFitter,
-} from '../../views/ContentScrollViewHorizontal'
+import { useContentScrollHorizontalFitter } from '../../views/ContentScrollViewHorizontal'
+import { ContentScrollViewHorizontalFitted } from '../../views/ContentScrollViewHorizontalFitted'
 import { SlantedTitle } from '../../views/SlantedTitle'
 import { Arrow } from './Arrow'
 import { SearchForkListButton } from './SearchForkListButton'
