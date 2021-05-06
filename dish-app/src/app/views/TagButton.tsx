@@ -165,7 +165,6 @@ const TagButtonInner = (props: TagButtonProps) => {
       {showRank && rank && rank < 100 && (
         <Text
           fontSize={smallerFontSize}
-          fontWeight="700"
           alignContent="center"
           justifyContent="center"
           alignItems="center"
@@ -173,6 +172,7 @@ const TagButtonInner = (props: TagButtonProps) => {
           color={theme.color}
           letterSpacing={-1}
           marginRight={-3}
+          opacity={0.8}
         >
           <Text fontWeight="300" opacity={0.5}>
             #

@@ -22,10 +22,7 @@ module.exports = function (api) {
       isSSR && '@loadable/babel-plugin',
       isDev && !isSSR && 'react-refresh/babel',
       ...(isDev
-        ? [
-            // '@babel/plugin-transform-function-name',
-            'babel-plugin-react-wrapped-display-name',
-          ]
+        ? ['@babel/plugin-transform-function-name', 'babel-plugin-react-wrapped-display-name']
         : []),
       !isProd && '@babel/plugin-transform-react-display-name',
       ...(shouldOptimize
@@ -36,30 +33,30 @@ module.exports = function (api) {
             // '@eps1lon/babel-plugin-optimize-react',
           ]
         : []),
-      // '@babel/plugin-proposal-class-properties',
-      // '@babel/plugin-proposal-optional-chaining',
-      // ['@babel/plugin-proposal-decorators', { decoratorsBeforeExport: true }],
+      '@babel/plugin-proposal-class-properties',
+      '@babel/plugin-proposal-optional-chaining',
+      ['@babel/plugin-proposal-decorators', { decoratorsBeforeExport: true }],
       'babel-plugin-react-native-web',
       '@babel/plugin-syntax-typescript',
-      // '@babel/plugin-proposal-nullish-coalescing-operator',
+      '@babel/plugin-proposal-nullish-coalescing-operator',
       isProd && require.resolve('./babel.strip-invariant.plugin.js'),
     ]
       .filter(Boolean)
       .map(resolvePlugin),
     presets: [
-      // [
-      //   '@babel/preset-typescript',
-      //   { onlyRemoveTypeImports: true, isTSX: true, allExtensions: true },
-      // ],
-      // [
-      //   '@babel/preset-react',
-      //   {
-      //     // auto adds react import if necessaty
-      //     runtime: 'automatic',
-      //     useBuiltIns: true,
-      //     development: isDev,
-      //   },
-      // ],
+      [
+        '@babel/preset-typescript',
+        { onlyRemoveTypeImports: true, isTSX: true, allExtensions: true },
+      ],
+      [
+        '@babel/preset-react',
+        {
+          // auto adds react import if necessaty
+          runtime: 'automatic',
+          useBuiltIns: true,
+          development: isDev,
+        },
+      ],
       isLegacy && [
         '@babel/preset-env',
         {

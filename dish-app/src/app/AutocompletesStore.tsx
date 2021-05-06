@@ -60,7 +60,7 @@ export class AutocompleteStore extends Store<{ target: AutocompleteTarget }> {
   }
 
   setIndex(val: number) {
-    this.index = clamp(val, 0, this.results.length)
+    this.index = clamp(val, 0, this.results.length - 1)
   }
 }
 
