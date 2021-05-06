@@ -1,4 +1,5 @@
 import { Store, getStore, reaction } from '@dish/use-store'
+import { debounce } from 'lodash'
 import React, {
   Suspense,
   createContext,
@@ -72,7 +73,7 @@ export const usePreventVerticalScroll = (id: string) => {
     // TODO once reactions are finished to support doing all in one function
     // we can greatly simplify this area
 
-    const update = () => {
+    const update = debounce(() => {
       const isLarge = getMedia().lg
       const isActive =
         isParentActive &&
@@ -84,12 +85,12 @@ export const usePreventVerticalScroll = (id: string) => {
       const next = !isActive
       setPrevent((prev) => {
         if (prev != next) {
-          console.log('ACTIVE', id, next)
+          console.log('ACTIVE', id, parentStore.activeId, next)
           return next
         }
         return prev
       })
-    }
+    }, 0)
 
     const d0 = reaction(
       parentStore,
@@ -245,7 +246,12 @@ export const ContentScrollView = forwardRef<ScrollView, ContentScrollViewProps>(
 
     return (
       <ContentScrollContext.Provider value={id}>
-        <VStack flex={1} overflow="hidden" pointerEvents={preventScrolling ? 'none' : undefined}>
+        <VStack
+          position="relative"
+          flex={1}
+          overflow="hidden"
+          pointerEvents={preventScrolling ? 'none' : undefined}
+        >
           <ScrollView
             ref={combineRefs(scrollRef, ref)}
             {...props}
@@ -280,7 +286,8 @@ export const ContentScrollView = forwardRef<ScrollView, ContentScrollViewProps>(
             })}
             // for native...
             bounces={false}
-            scrollEnabled={!preventScrolling}
+            // DONT USE THIS IT CAUSES REFLOWS
+            // scrollEnabled={!preventScrolling}
             // short duration to catch before vertical scroll
             scrollEventThrottle={16}
             style={[styles.scroll, style]}

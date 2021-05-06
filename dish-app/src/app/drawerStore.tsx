@@ -87,7 +87,7 @@ class DrawerStore extends Store {
     const distanceToTravel = y > toValue ? y - toValue : toValue - y
     // you want to make it slower the longer the distance it has to travel to account for spring
     // lets first normalize to 0.1-1
-    const distanceNormalized = Math.max(0.1, Math.min(1, distanceToTravel / 350))
+    const distanceNormalized = Math.max(0.1, Math.min(1, distanceToTravel / 150))
     // now lets make further = slower
     const distanceSpeed = 1 / distanceNormalized
     const speed = Math.max(0.1, Math.abs(velocity) * distanceSpeed)
@@ -97,9 +97,9 @@ class DrawerStore extends Store {
     this.spring = Animated.spring(this.pan, {
       useNativeDriver: true,
       // velocity: speed,
-      stiffness: speed * 60,
-      damping: speed * 6,
-      mass: speed * 0.5,
+      stiffness: speed * 100,
+      damping: speed * 10,
+      mass: speed * 0.77,
       toValue,
     })
     this.toValue = toValue
@@ -131,7 +131,6 @@ class DrawerStore extends Store {
       ? 'down'
       : 'up'
     const estFinalPx = px + velocity * 5
-    console.log({ direction, estFinalPx })
     for (const [index, point] of this.snapPoints.entries()) {
       const cur = point * getWindowHeight()
       const next = (this.snapPoints[index + 1] ?? 1) * getWindowHeight()
