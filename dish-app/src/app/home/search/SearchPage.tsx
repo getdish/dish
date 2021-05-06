@@ -491,8 +491,7 @@ const SearchPageScrollView = forwardRef<ScrollView, SearchPageScrollViewProps>(
 
     const layoutProps = useLayout({
       onLayout: (x) => {
-        console.log('got size', x)
-        onSizeChanged(x)
+        onSizeChanged?.(x)
       },
     })
 
