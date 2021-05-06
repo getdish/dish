@@ -34,7 +34,10 @@ import { MapView } from './Map'
 import { mapStyles } from './mapStyles'
 
 export default memo(function AppMap() {
-  const { features, results, showRank, zoomOnHover, hovered, hideRegions } = useAppMapStore()
+  const appMapStore = useAppMapStore()
+  const { features, results, showRank } = appMapStore
+  const isOnHome = useStoreInstanceSelector(homeStore, (x) => x.currentStateType === 'home')
+  const hideRegions = !isOnHome || appMapStore.hideRegions
   const media = useMedia()
   const mapSize = useMapSize(media.sm)
   const { width, paddingLeft } = useDebounceValue(mapSize, 1000)
