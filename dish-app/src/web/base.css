@@ -630,3 +630,11 @@ mark {
 .transform-origin-center {
   transform-origin: center;
 }
+
+.will-prevent-touch {
+  contain: strict;
+}
+
+.prevent-touch > div {
+  overflow: hidden !important;
+}
