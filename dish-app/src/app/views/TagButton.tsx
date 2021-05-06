@@ -283,7 +283,7 @@ const TagButtonInner = (props: TagButtonProps) => {
           justifyContent="center"
           alignSelf="center"
         >
-          <X size={13} color={theme.color} />
+          <X size={13} color={theme.backgroundColor} />
         </VStack>
       )}
     </HStack>

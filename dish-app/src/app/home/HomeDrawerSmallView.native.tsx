@@ -54,10 +54,14 @@ export const HomeDrawerSmallView = memo((props: { children: any }) => {
     const getShouldActivate = (_e: GestureResponderEvent, g: PanResponderGestureState): boolean => {
       const dy = g.dy ?? drawerStore.pan['_value']
       try {
-        const store = getStore(ScrollStore, { id: contentParent.activeId })
+        const scroll = getStore(ScrollStore, { id: contentParent.activeId })
         // prettier-ignore
         // console.log('should?', store.lock, { isPanActive, isTouchingHandle, isTouchingSearchBar })
-        if (store.lock === 'horizontal' || store.lock === 'vertical') {
+        if (scroll.lock === 'horizontal' || scroll.lock === 'vertical') {
+          return false
+        }
+        if (!scroll.isAtTop) {
+          console.log(_e)
           return false
         }
         if (isPanActive) {

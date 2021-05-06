@@ -16,6 +16,7 @@ export const FavoriteButton = ({ isFavorite, onChange, size = 'md' }: FavoriteBu
   return (
     <Tooltip contents="Add to favorites">
       <Button
+        borderRadius={100}
         icon={
           <>
             {isFavorite && (

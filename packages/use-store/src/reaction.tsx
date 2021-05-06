@@ -8,7 +8,10 @@ const dispose = (d: any) => {
   }
 }
 
-export function reaction<StoreInstance extends Store, Selector extends (a: StoreInstance) => any>(
+export function reaction<
+  StoreInstance extends Store<any>,
+  Selector extends (a: StoreInstance) => any
+>(
   store: StoreInstance,
   selector: Selector,
   receiver: Selector extends (a: StoreInstance) => infer Derived ? (a: Derived) => any : unknown,

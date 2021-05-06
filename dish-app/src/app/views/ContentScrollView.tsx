@@ -63,8 +63,8 @@ export const usePreventVerticalScroll = (id: string) => {
     let isParentActive = false
     let isMinimized = false
     let isLockedHorizontalOrDrawer = false
-    let isAtTop = true
     let isDraggingDrawer = false
+    let isSpringing = false
 
     const parentStore = getStore(ContentParentStore)
     const scrollStore = getStore(ScrollStore, { id })
@@ -76,6 +76,7 @@ export const usePreventVerticalScroll = (id: string) => {
       const isLarge = getMedia().lg
       const isActive =
         isParentActive &&
+        !isSpringing &&
         !isMinimized &&
         !isDraggingDrawer &&
         !isLarge &&
@@ -94,28 +95,28 @@ export const usePreventVerticalScroll = (id: string) => {
 
     const d1 = reaction(
       drawerStore,
-      (x) => x.snapIndex === 2,
-      function drawerStoreSnapIndexToPreventScroll(x) {
-        isMinimized = x
+      (x) => [!!x.spring, x.snapIndexName === 'bottom', x.isDragging] as const,
+      function drawerStoreSnapIndexToPreventScroll([a, b, c]) {
+        isSpringing = a
+        isDraggingDrawer = b
+        isMinimized = c
         update()
+        if (isSpringing) {
+          // max time before reverting
+          const tm = setTimeout(() => {
+            isSpringing = false
+            update()
+          }, 100)
+          return () => clearTimeout(tm)
+        }
       }
     )
 
     const d2 = reaction(
-      scrollStore as any,
-      (x) => [x.lock, x.isAtTop] as const,
-      function scrollLockToPreventScroll([lock, t]) {
-        isAtTop = t
-        isLockedHorizontalOrDrawer = lock === 'horizontal' || lock === 'drawer'
-        update()
-      }
-    )
-
-    const d3 = reaction(
-      drawerStore,
-      (x) => x.isDragging,
-      function parentStoreActiveIdToPreventScroll(next) {
-        isDraggingDrawer = next
+      scrollStore,
+      (x) => x.lock === 'horizontal' || x.lock === 'drawer',
+      function scrollLockToPreventScroll(val) {
+        isLockedHorizontalOrDrawer = val
         update()
       }
     )
@@ -124,7 +125,6 @@ export const usePreventVerticalScroll = (id: string) => {
       d0()
       d1()
       d2()
-      d3()
     }
   }, [id])
 
@@ -173,17 +173,12 @@ export const ContentScrollView = forwardRef<ScrollView, ContentScrollViewProps>(
     const doUpdate = (y: number, e: any) => {
       clearTimeout(finish.current)
       const isAtTop = y <= 0
-      if (isAtTop) {
-        console.log('AT TOP ^^^')
-      }
       isScrollAtTop.set(id, isAtTop)
       onScrollYThrottled?.(y)
-
       // calls the recyclerview scroll
       if (props.onScroll) {
         props.onScroll(e)
       }
-
       if (isAtTop) {
         if (!scrollStore.isAtTop) {
           scrollStore.setIsAtTop(true)
@@ -200,20 +195,6 @@ export const ContentScrollView = forwardRef<ScrollView, ContentScrollViewProps>(
         finish.current = setTimeout(() => {
           scrollStore.setLock('none')
         }, THROTTLE_SCROLL * 1.3)
-      }
-    }
-
-    const setIsScrolling = (e) => {
-      const y = e.nativeEvent.contentOffset.y
-      scrollCurY.set(id, y)
-      const atTop = y <= 0
-      if (atTop && scrollStore.lock === 'drawer') {
-        return
-      }
-      const hasBeenAWhile = Date.now() - lastUpdate.current > THROTTLE_SCROLL
-      if (atTop !== isScrollAtTop.get(id) || hasBeenAWhile) {
-        lastUpdate.current = Date.now()
-        doUpdate(y, e)
       }
     }
 
@@ -241,6 +222,7 @@ export const ContentScrollView = forwardRef<ScrollView, ContentScrollViewProps>(
       at: 0,
       start: 0,
       active: false,
+      lastYs: null as number[] | null,
     })
 
     const isScrollingVerticalFromTop = () => {
@@ -257,7 +239,23 @@ export const ContentScrollView = forwardRef<ScrollView, ContentScrollViewProps>(
           <ScrollView
             ref={combineRefs(scrollRef, ref)}
             {...props}
-            onScroll={setIsScrolling}
+            onScroll={(e) => {
+              const y = e.nativeEvent.contentOffset.y
+              const atTop = y <= 0
+              scrollCurY.set(id, y)
+              // goin up
+              if (scrollState.current.lastYs) {
+                scrollState.current.lastYs = null
+              }
+              if (atTop && scrollStore.lock === 'drawer') {
+                return
+              }
+              const hasBeenAWhile = Date.now() - lastUpdate.current > THROTTLE_SCROLL
+              if (atTop !== isScrollAtTop.get(id) || hasBeenAWhile) {
+                lastUpdate.current = Date.now()
+                doUpdate(y, e)
+              }
+            }}
             onMomentumScrollEnd={({ nativeEvent }) => {
               scrollLastY.set(id, nativeEvent.contentOffset.y)
             }}
@@ -281,28 +279,57 @@ export const ContentScrollView = forwardRef<ScrollView, ContentScrollViewProps>(
               style={{ flex: 1 }}
               onMoveShouldSetResponderCapture={isScrollingVerticalFromTop}
               onTouchMove={(e) => {
+                if (e.nativeEvent.touches.length !== 1) {
+                  return
+                }
                 if (!isScrollingVerticalFromTop()) {
-                  return false
+                  return
                 }
                 const ss = scrollState.current
-                const pageY = isWeb ? e['touches'][0]?.pageY : e.nativeEvent.pageY
+                const pageY = e.nativeEvent.touches[0]?.pageY
                 if (!ss.at) {
                   ss.active = true
                   ss.at = pageY
                   ss.start = getWindowHeight() - drawerStore.currentHeight
                 }
                 const start = getWindowHeight() - drawerStore.currentHeight
-                const y = ss.at - pageY
-                const dy = start - y
-                drawerStore.pan.setValue(dy)
-              }}
-              onTouchEnd={() => {
-                if (scrollState.current.active) {
-                  scrollState.current.active = false
-                  scrollState.current.at = 0
-                  console.log('finish')
-                  drawerStore.animateDrawerToPx(drawerStore.pan['_value'], 0)
+                const pY = ss.at - pageY
+                const y = start - pY
+                if (y < drawerStore.minY) {
+                  drawerStore.setIsDragging(false)
+                  return
                 }
+                if (!ss.lastYs) {
+                  ss.lastYs = []
+                }
+                ss.lastYs.push(y)
+                if (ss.lastYs.length > 15) {
+                  ss.lastYs = ss.lastYs.slice(0, 2)
+                }
+                if (!drawerStore.isDragging) {
+                  drawerStore.setIsDragging(true)
+                }
+                drawerStore.pan.setValue(y)
+              }}
+              onTouchEnd={(e) => {
+                const ss = scrollState.current
+                if (!ss.active) return
+                ss.active = false
+                ss.at = 0
+                const vY = (() => {
+                  const ys = ss.lastYs
+                  if (!ys) return 10
+                  const num = ys.length
+                  return (
+                    -ys
+                      .map((cur, i) => {
+                        const next = ys[i + 1]
+                        return next ? cur - next : 0
+                      })
+                      .reduce((a, c) => a + c / num, 0) * 0.5
+                  )
+                })()
+                drawerStore.animateDrawerToPx(drawerStore.pan['_value'], vY)
               }}
             >
               <Suspense fallback={null}>{childrenMemo}</Suspense>

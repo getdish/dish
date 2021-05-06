@@ -113,30 +113,27 @@ export const HomeFeedListsContents = graphql(({ region, onHoverResults }: Props)
 
         <ContentScrollViewHorizontal>
           <HStack paddingHorizontal={20} spacing="md" paddingVertical={12}>
-            {recentLists.map((list, i) => {
-              if (!list) {
-                return null
-              }
-              return (
-                <VStack
-                  key={list.id || i}
-                  // transform={[{ scale: 0.8 }]}
-                  // marginHorizontal={-17}
-                  // marginVertical={-18}
-                >
-                  <ListCard
-                    isBehind={i > 0}
-                    hoverable={false}
-                    slug={list.slug}
-                    userSlug={list.user?.username ?? ''}
-                    region={list.region ?? ''}
-                    onHover={(hovered) => {
-                      hovered ? setHoveredList(list.id) : null
-                    }}
-                  />
-                </VStack>
-              )
-            })}
+            <SkewedCardCarousel>
+              {recentLists.map((list, i) => {
+                if (!list) {
+                  return null
+                }
+                return (
+                  <SkewedCard key={list.id || i} zIndex={1000 - i}>
+                    <ListCard
+                      isBehind={i > 0}
+                      hoverable={false}
+                      slug={list.slug}
+                      userSlug={list.user?.username ?? ''}
+                      region={list.region ?? ''}
+                      onHover={(hovered) => {
+                        hovered ? setHoveredList(list.id) : null
+                      }}
+                    />
+                  </SkewedCard>
+                )
+              })}
+            </SkewedCardCarousel>
           </HStack>
         </ContentScrollViewHorizontal>
       </>

@@ -87,10 +87,10 @@ export function Card({
   }
   const strTitle = title || ''
   const len = strTitle.length
-  const lenScale = len > 40 ? 0.8 : len > 30 ? 0.9 : 1
+  const lenScale = len > 50 ? 0.7 : len > 40 ? 0.8 : len > 30 ? 0.9 : 1
   const longestWordLen = getLongestWord(strTitle)
   const wordScale = longestWordLen > 14 ? 0.7 : longestWordLen > 9 ? 0.8 : 1
-  const baseFontSize = 28 * lenScale * wordScale
+  const baseFontSize = 27 * lenScale * wordScale
   const fontSize = Math.round(baseFontSize * scales[size])
 
   return (
@@ -201,7 +201,7 @@ export function Card({
                     textShadowColor="#00000033"
                     textShadowRadius={2}
                     textShadowOffset={{ height: 2, width: 0 }}
-                    fontWeight={size === 'sm' ? '700' : '400'}
+                    fontWeight={size === 'sm' ? '700' : '600'}
                     letterSpacing={size === 'sm' ? -1 : -0.5}
                     color="#fff"
                     fontSize={fontSize}
