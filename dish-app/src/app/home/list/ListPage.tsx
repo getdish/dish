@@ -322,8 +322,6 @@ const ListPageContent = graphql((props: Props) => {
 
   const username = list.user?.name ?? list.user?.username ?? ''
 
-  console.log(list.color)
-
   const tagButtons = list
     .tags({ limit: 10 })
     .map((x) => x.tag!)

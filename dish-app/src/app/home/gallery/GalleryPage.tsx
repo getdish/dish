@@ -8,6 +8,7 @@ import { AbsoluteVStack, HStack, LoadingItems, VStack, useWindowSize } from 'sna
 
 import { isWeb } from '../../../constants/constants'
 import { getImageUrl } from '../../../helpers/getImageUrl'
+import { getWindowHeight, getWindowWidth } from '../../../helpers/getWindow'
 import { queryRestaurant } from '../../../queries/queryRestaurant'
 import { router, useIsRouteActive, useRoute } from '../../../router'
 import { StackViewCloseButton } from '../../views/StackViewCloseButton'
@@ -102,7 +103,10 @@ export const GalleryLightbox = ({
     },
     {
       onCompleted(data) {
-        setPhotosList(uniqBy(data, (v) => v.url))
+        const bound = (x = 0) => Math.min(2000, Math.round(x / 500) * 500)
+        setPhotosList(
+          uniqBy(data, (v) => getImageUrl(v.url, bound(getWindowWidth()), bound(getWindowHeight())))
+        )
       },
     }
   )

@@ -521,8 +521,8 @@ function deploy_all() {
   where=${1:-registry}
   # make them all background so we can handle them the same
   echo "deploying apps via $where"
-  deploy "$where" redis | sed -e 's/^/redis: /;' &
-  deploy "$where" hooks | sed -e 's/^/hooks: /;' &
+  # deploy "$where" redis | sed -e 's/^/redis: /;' &
+  # deploy "$where" hooks | sed -e 's/^/hooks: /;' &
   # runs on dedicated now
   # runs on dedicated now
   # deploy "$where" db | sed -e 's/^/db: /;' &
@@ -535,8 +535,8 @@ function deploy_all() {
   # deploy "$where" tileserver | sed -e 's/^/tileserver: /;' &
   deploy "$where" timescale | sed -e 's/^/timescale: /;' &
   wait
-  deploy "$where" pg-admin | sed -e 's/^/pg-admin: /;' &
-  deploy "$where" worker-proxy | sed -e 's/^/worker-proxy: /;' &
+  # deploy "$where" pg-admin | sed -e 's/^/pg-admin: /;' &
+  # deploy "$where" worker-proxy | sed -e 's/^/worker-proxy: /;' &
   # deploy "$where" app | sed -e 's/^/app: /;' &
   # deploy "$where" search | sed -e 's/^/search: /;' &
   # deploy "$where" worker | sed -e 's/^/worker: /;' &
@@ -546,7 +546,7 @@ function deploy_all() {
   # disabled until fixed with fly
   # deploy "$where" bert | sed -e 's/^/bert: /;' &
   deploy "$where" cron | sed -e 's/^/cron: /;' &
-  deploy "$where" site | sed -e 's/^/site: /;' &
+  # deploy "$where" site | sed -e 's/^/site: /;' &
   wait
 }
 

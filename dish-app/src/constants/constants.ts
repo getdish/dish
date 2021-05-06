@@ -28,7 +28,7 @@ export const searchBarHeight = 50
 export const searchBarHeightWithPadding = searchBarHeight + searchBarTopOffset + 12
 export const searchBarMaxWidth = pageWidthMax - 640
 
-export const IMAGE_PROXY_DOMAIN = 'https://images.dishapp.com'
+export const IMAGE_PROXY_DOMAIN = 'https://image-proxy.dishapp.com'
 
 export const emptyObj = Object.freeze(Object.create(null))
 export const emptyArr = Object.freeze([])

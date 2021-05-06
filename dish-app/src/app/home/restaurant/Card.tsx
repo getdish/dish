@@ -93,6 +93,8 @@ export function Card({
   const baseFontSize = 27 * lenScale * wordScale
   const fontSize = Math.round(baseFontSize * scales[size])
 
+  console.log('photo', photo)
+
   return (
     <CardFrame square={square} size={size} aspectFixed={aspectFixed} hoverable={hoverable}>
       <VStack
