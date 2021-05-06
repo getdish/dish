@@ -230,17 +230,16 @@ export function createWebpackConfig({
                 include: babelInclude ?? defaultBabelInclude,
                 // @ts-ignore
                 use: [
+                  'thread-loader',
                   // fast refresh seems to work??
-                  isProduction
-                    ? {
-                        loader: require.resolve('esbuild-loader'),
-                        options: {
-                          loader: 'tsx',
-                          target: 'es2019',
-                          implementation: esbuild,
-                        },
-                      }
-                    : 'babel-loader',
+                  {
+                    loader: require.resolve('esbuild-loader'),
+                    options: {
+                      loader: 'tsx',
+                      target: 'es2019',
+                      // implementation: esbuild,
+                    },
+                  },
                   isStaticExtracted
                     ? {
                         loader: require.resolve('snackui-loader'),
