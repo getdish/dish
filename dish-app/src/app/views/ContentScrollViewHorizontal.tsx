@@ -47,7 +47,12 @@ export const ContentScrollViewHorizontal = (props: ContentScrollViewHorizontalPr
 
   return (
     // needs both pointer events to prevent/enable scroll on safari
-    <VStack pointerEvents={isLockedVertical ? 'none' : 'auto'} height={props.height}>
+    <VStack
+      overflow="hidden"
+      width="100%"
+      pointerEvents={isLockedVertical ? 'none' : 'auto'}
+      height={props.height}
+    >
       {/* DEBUG VIEW */}
       {/* {isScrolling && (
           <AbsoluteVStack fullscreen backgroundColor="rgba(255,255,0,0.1)" />

@@ -99,17 +99,13 @@ function RestaurantListItemMain(props: RestaurantListItemProps) {
   const handleScroll = isLoaded ? undefined : handleScrollMemo
 
   const contentInner = (
-    <VStack
-      alignItems="center"
-      overflow="hidden"
-      maxWidth="100%"
-      position="relative"
-      className="restaurant-list-item"
+    <ContentScrollViewHorizontal
+      height={ITEM_HEIGHT}
+      onScroll={handleScroll}
+      scrollEventThrottle={100}
     >
-      <ContentScrollViewHorizontal onScroll={handleScroll} scrollEventThrottle={100}>
-        <RestaurantListItemContent isLoaded={isLoaded} {...props} />
-      </ContentScrollViewHorizontal>
-    </VStack>
+      <RestaurantListItemContent isLoaded={isLoaded} {...props} />
+    </ContentScrollViewHorizontal>
   )
 
   if (isWeb && !isWebIOS) {
