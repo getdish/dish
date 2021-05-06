@@ -96,7 +96,7 @@ class DrawerStore extends Store {
     const curId = this.springId
     this.spring = Animated.spring(this.pan, {
       useNativeDriver: true,
-      stiffness: speed * 135,
+      stiffness: speed * 105,
       damping: speed * 14,
       mass: speed * 0.75,
       toValue,
