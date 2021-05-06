@@ -29,7 +29,6 @@ export const RestaurantAddress = ({
         iconAfter={<ExternalLink style={{ opacity: 0.5 }} color={theme.color} size={10} />}
         textProps={{
           maxWidth: media.sm ? 100 : 140,
-          opacity: 0.6,
         }}
       >
         {getAddressText(curLocInfo, address, size)}

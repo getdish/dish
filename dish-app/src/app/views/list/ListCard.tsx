@@ -56,7 +56,6 @@ export const ListCard = graphql(
         <Card
           aspectFixed
           square
-          size="sm"
           hoverable={hoverable}
           title={list.name}
           subTitle={`by ${list.user?.name ?? list.user?.username ?? ''}`}

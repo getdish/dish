@@ -2,12 +2,14 @@ import { graphql } from '@dish/graph'
 import { ellipseText } from '@dish/helpers'
 import { capitalize } from 'lodash'
 import React, { memo, useRef, useState } from 'react'
+import { BlurView } from 'snackui'
 import { AbsoluteVStack, Button, HStack, Input, Spacer, Text, VStack, useTheme } from 'snackui'
 
 import { blue } from '../../../constants/colors'
 import { isWeb } from '../../../constants/constants'
 import { queryRestaurant } from '../../../queries/queryRestaurant'
 import { ensureFlexText } from '../../home/restaurant/ensureFlexText'
+import { Link } from '../Link'
 import { SmallButton } from '../SmallButton'
 
 const quote = (
@@ -135,20 +137,21 @@ export const RestaurantOverview = memo(
                         maxLength: 380,
                       }
                     )}
+
+                {editableDescription && !isEditing && (
+                  <Link
+                    zIndex={1000001}
+                    onPress={() => {
+                      setIsEditing(true)
+                    }}
+                  >
+                    Edit
+                  </Link>
+                )}
                 {ensureFlexText}
               </Text>
             )}
           </HStack>
-          {editableDescription && (
-            <SmallButton
-              marginLeft={5}
-              onPress={() => {
-                setIsEditing(true)
-              }}
-            >
-              Edit description &raquo;
-            </SmallButton>
-          )}
         </VStack>
       )
     } else {

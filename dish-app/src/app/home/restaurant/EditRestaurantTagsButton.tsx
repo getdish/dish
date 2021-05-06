@@ -1,5 +1,5 @@
 import { graphql, restaurant_tag } from '@dish/graph'
-import { ChevronDown, ChevronUp, Plus, X } from '@dish/react-feather'
+import { ChevronDown, ChevronUp, Edit, Plus, X } from '@dish/react-feather'
 import { sortBy } from 'lodash'
 import React, { useCallback, useEffect, useState } from 'react'
 import { Image, ScrollView } from 'react-native'
@@ -24,7 +24,7 @@ import { CloseButton } from '../../views/CloseButton'
 import { PaneControlButtons } from '../../views/PaneControlButtons'
 import { SlantedTitle } from '../../views/SlantedTitle'
 
-export const EditRestaurantTags = graphql(
+export const EditRestaurantTagsButton = graphql(
   ({
     restaurantSlug,
     tagSlugs,
@@ -103,7 +103,7 @@ export const EditRestaurantTags = graphql(
     return (
       <>
         <AbsoluteVStack pointerEvents="auto" zIndex={10000}>
-          <Button onPress={() => setIsOpen(true)}>Edit</Button>
+          <Button onPress={() => setIsOpen(true)} icon={<Edit color="#999" />} />
         </AbsoluteVStack>
 
         <Modal visible={isOpen} maxWidth={480} width="90%" maxHeight="90%" onDismiss={hide}>

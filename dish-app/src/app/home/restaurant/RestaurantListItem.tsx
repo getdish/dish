@@ -40,7 +40,7 @@ import { SlantedTitle } from '../../views/SlantedTitle'
 import { SmallButton } from '../../views/SmallButton'
 import { TagButton, getTagButtonProps } from '../../views/TagButton'
 import { searchPageStore } from '../search/SearchPageStore'
-import { EditRestaurantTags } from './EditRestaurantTags'
+import { EditRestaurantTagsButton } from './EditRestaurantTagsButton'
 import { ensureFlexText } from './ensureFlexText'
 import { RankView } from './RankView'
 import { RestaurantAddress } from './RestaurantAddress'
@@ -386,14 +386,7 @@ const RestaurantListItemContent = memo(
                       </>
                     )}
                     <Link name="restaurantHours" params={{ slug: restaurantSlug }}>
-                      <SmallButton
-                        borderWidth={0}
-                        textProps={{
-                          opacity: 0.5,
-                        }}
-                      >
-                        {open.nextTime || '~~'}
-                      </SmallButton>
+                      <SmallButton borderWidth={0}>{open.nextTime || '~~'}</SmallButton>
                     </Link>
                   </>
                 )}
@@ -426,7 +419,12 @@ const RestaurantListItemContent = memo(
             {/* ensures it always flexes all the way even if short text */}
             {ensureFlexText}
 
-            <RestaurantOverview fullHeight restaurantSlug={restaurantSlug} maxLines={3} />
+            <RestaurantOverview
+              editableDescription={editableDescription}
+              fullHeight
+              restaurantSlug={restaurantSlug}
+              maxLines={3}
+            />
           </VStack>
 
           {/* PEEK / TAGS (RIGHT SIDE) */}
@@ -579,7 +577,7 @@ const RestaurantPeekDishes = memo(
     return (
       <>
         {props.editable && (
-          <EditRestaurantTags
+          <EditRestaurantTagsButton
             restaurantSlug={props.restaurantSlug}
             tagSlugs={props.tagSlugs ?? dishes.map((x) => x.slug)}
             onChange={props.onChangeTags}

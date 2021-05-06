@@ -90,9 +90,12 @@ export const AppMenuContents = memo(
             <MenuLinkButton
               icon={<Sun color="rgba(150,150,150,0.5)" size={16} />}
               onPress={(e) => {
+                e.stopPropagation()
+                e.preventDefault()
                 setTimeout(() => {
                   const next = (() => {
                     switch (userStore.theme) {
+                      // 🏓 auto = null
                       case 'dark':
                         return null
                       case 'light':
@@ -102,7 +105,6 @@ export const AppMenuContents = memo(
                     }
                   })()
                   userStore.setTheme(next)
-                  e.stopPropagation()
                 })
               }}
             >

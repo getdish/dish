@@ -25,6 +25,7 @@ export const RestaurantAddToListButton = ({
       )}
       <Tooltip contents="Add to list">
         <Button
+          borderRadius={100}
           icon={<Plus color={'#777'} size={16} />}
           onPress={() => {
             if (!userStore.promptLogin()) {

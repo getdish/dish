@@ -20,6 +20,14 @@ class DrawerStore extends Store {
     return this.snapIndex === 0 ? 'top' : this.snapIndex === 2 ? 'bottom' : 'middle'
   }
 
+  get minY(): number {
+    return this.snapHeights[0]
+  }
+
+  get maxY(): number {
+    return this.snapHeights[2]
+  }
+
   get currentSnapPoint() {
     return this.snapPoints[this.snapIndex]
   }
@@ -88,9 +96,9 @@ class DrawerStore extends Store {
     const curId = this.springId
     this.spring = Animated.spring(this.pan, {
       useNativeDriver: true,
-      stiffness: speed * 110,
-      damping: speed * 13,
-      mass: speed * 1,
+      stiffness: speed * 135,
+      damping: speed * 14,
+      mass: speed * 0.75,
       toValue,
     })
     this.toValue = toValue
@@ -113,8 +121,16 @@ class DrawerStore extends Store {
   }
 
   private getSnapIndex(px: number, velocity: number) {
-    const direction = velocity > 0 ? 'down' : 'up'
+    const isNonTouchSnap = velocity === 0
+    const direction = isNonTouchSnap
+      ? px > this.currentSnapPx
+        ? 'down'
+        : 'up'
+      : velocity > 0
+      ? 'down'
+      : 'up'
     const estFinalPx = px + velocity * 5
+    console.log({ direction, estFinalPx })
     for (const [index, point] of this.snapPoints.entries()) {
       const cur = point * getWindowHeight()
       const next = (this.snapPoints[index + 1] ?? 1) * getWindowHeight()

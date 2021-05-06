@@ -28,14 +28,16 @@ import {
   Spacer,
   StackProps,
   Text,
+  Theme,
   Toast,
   VStack,
   useTheme,
 } from 'snackui'
 
 import { bgLight } from '../../../constants/colors'
-import { isWeb } from '../../../constants/constants'
+import { isWeb, searchBarHeight } from '../../../constants/constants'
 import { useRegionQuery } from '../../../helpers/fetchRegion'
+import { getColorsForColor } from '../../../helpers/getColorsForName'
 import { getRestaurantIdentifiers } from '../../../helpers/getRestaurantIdentifiers'
 import { promote } from '../../../helpers/listHelpers'
 import { queryList } from '../../../queries/queryList'
@@ -146,24 +148,24 @@ const setIsEditing = (val: boolean) => {
 function useListRestaurants(list?: list) {
   const refetch = useRefetch()
   const listId = list?.id
-  const itemsQuery =
+  const list_restaurants =
     list?.restaurants({
       limit: 50,
       order_by: [{ position: order_by.asc }],
     }) ?? []
 
   const items =
-    itemsQuery.map((r) => {
-      const dishQuery = r.tags({
+    list_restaurants.map((list_restaurant) => {
+      const dishQuery = list_restaurant.tags({
         limit: 5,
         order_by: [{ position: order_by.asc }],
       })
       return {
         dishQuery,
-        restaurantId: r.restaurant.id,
-        restaurant: r.restaurant,
-        comment: r.comment,
-        position: r.position,
+        restaurantId: list_restaurant.restaurant.id,
+        restaurant: list_restaurant.restaurant,
+        comment: list_restaurant.comment,
+        position: list_restaurant.position,
         dishes: dishQuery.map((listTag) => listTag.restaurant_tag),
       }
     }) ?? []
@@ -206,7 +208,7 @@ function useListRestaurants(list?: list) {
             },
           })?.__typename
         })
-        await Promise.all([refetch(list), refetch(itemsQuery)])
+        await Promise.all([refetch(list), refetch(list_restaurants)])
       },
       async promote(index: number) {
         if (index == 0) return
@@ -224,7 +226,7 @@ function useListRestaurants(list?: list) {
             },
           })?.affected_rows
         })
-        await Promise.all([refetch(list), refetch(itemsQuery)])
+        await Promise.all([refetch(list), refetch(list_restaurants)])
       },
       async setComment(id: string, comment: string) {
         await mutate((mutation) => {
@@ -320,6 +322,8 @@ const ListPageContent = graphql((props: Props) => {
 
   const username = list.user?.name ?? list.user?.username ?? ''
 
+  console.log(list.color)
+
   const tagButtons = list
     .tags({ limit: 10 })
     .map((x) => x.tag!)
@@ -328,243 +332,253 @@ const ListPageContent = graphql((props: Props) => {
     })
 
   return (
-    <StackDrawer closable title={`${username}'s ${list.name}`}>
-      {props.isActive && isMyList && (
-        <BottomFloatingArea>
-          <Button
-            pointerEvents="auto"
-            theme="active"
-            borderRadius={100}
-            width={50}
-            height={50}
-            alignItems="center"
-            justifyContent="center"
-            shadowColor="#000"
-            shadowRadius={20}
-            shadowOffset={{ height: 4, width: 0 }}
-            shadowOpacity={0.35}
-            noTextWrap
-            onPress={() => {
-              setShowAddModal(true)
-            }}
+    <Theme name={list.color == 4 ? 'light' : 'dark'}>
+      <StackDrawer backgroundColor={color} closable title={`${username}'s ${list.name}`}>
+        {props.isActive && isMyList && (
+          <BottomFloatingArea>
+            <Button
+              pointerEvents="auto"
+              theme="active"
+              borderRadius={100}
+              width={50}
+              height={50}
+              alignItems="center"
+              justifyContent="center"
+              shadowColor="#000"
+              shadowRadius={20}
+              shadowOffset={{ height: 4, width: 0 }}
+              shadowOpacity={0.35}
+              noTextWrap
+              onPress={() => {
+                setShowAddModal(true)
+              }}
+            >
+              <Plus size={32} color="#fff" />
+            </Button>
+            <VStack pointerEvents="none" flex={1} />
+          </BottomFloatingArea>
+        )}
+
+        {isMyList && (
+          <Modal
+            visible={showAddModal}
+            onDismiss={() => setShowAddModal(false)}
+            width={380}
+            maxHeight={480}
+            minHeight={480}
           >
-            <Plus size={32} color="#fff" />
-          </Button>
-          <VStack pointerEvents="none" flex={1} />
-        </BottomFloatingArea>
-      )}
+            {showAddModal && (
+              <>
+                <PaneControlButtons>
+                  <CloseButton onPress={() => setShowAddModal(false)} />
+                </PaneControlButtons>
+                <Suspense fallback={null}>
+                  <ListAddRestuarant
+                    listSlug={props.item.slug}
+                    onAdd={({ id }) => {
+                      restaurantActions.add(id)
+                    }}
+                  />
+                </Suspense>
+              </>
+            )}
+          </Modal>
+        )}
 
-      {isMyList && (
-        <Modal
-          visible={showAddModal}
-          onDismiss={() => setShowAddModal(false)}
-          width={380}
-          maxHeight={480}
-          minHeight={480}
-        >
-          {showAddModal && (
-            <>
-              <PaneControlButtons>
-                <CloseButton onPress={() => setShowAddModal(false)} />
-              </PaneControlButtons>
-              <Suspense fallback={null}>
-                <ListAddRestuarant
-                  listSlug={props.item.slug}
-                  onAdd={({ id }) => {
-                    restaurantActions.add(id)
-                  }}
-                />
-              </Suspense>
-            </>
-          )}
-        </Modal>
-      )}
+        <ContentScrollView id="list">
+          <PageContentWithFooter>
+            <Spacer />
 
-      <ContentScrollView id="list">
-        <PageContentWithFooter>
-          <Spacer />
+            {/* overflow clip prevention with marginVerticals here */}
+            <VStack
+              position="relative"
+              backgroundColor={color}
+              transform={[
+                {
+                  rotate: '-2deg',
+                },
+              ]}
+            >
+              <PageTitle
+                noDivider
+                title={
+                  <VStack
+                    marginHorizontal="auto"
+                    marginVertical={15}
+                    alignItems="center"
+                    justifyContent="center"
+                  >
+                    <ScalingPressable>
+                      <Link name="user" params={{ username: list.user?.username ?? '' }}>
+                        <SlantedTitle transform={[]} size="xs" alignSelf="center">
+                          {username}'s
+                        </SlantedTitle>
+                      </Link>
+                    </ScalingPressable>
 
-          {/* overflow clip prevention with marginVerticals here */}
-          <VStack marginVertical={-15}>
-            <PageTitle
-              noDivider
-              title={
-                <VStack
-                  marginHorizontal="auto"
-                  marginVertical={15}
-                  alignItems="center"
-                  justifyContent="center"
-                >
-                  <ScalingPressable>
-                    <Link name="user" params={{ username: list.user?.username ?? '' }}>
-                      <SlantedTitle size="xs" alignSelf="center">
-                        {username}'s
-                      </SlantedTitle>
-                    </Link>
-                  </ScalingPressable>
-
-                  <VStack position="relative" alignSelf="center">
-                    {list.user?.avatar && (
-                      <AbsoluteVStack overflow="visible" bottom={-15} left={-60} zIndex={-3}>
-                        <UserAvatar
-                          size={130}
-                          charIndex={list.user.charIndex!}
-                          avatar={list.user.avatar}
-                        />
-                      </AbsoluteVStack>
-                    )}
-                    <SlantedTitle
-                      backgroundColor={color}
-                      color="#fff"
-                      marginTop={-5}
-                      alignSelf="center"
-                      zIndex={0}
-                      size="xl"
-                    >
-                      {isEditing ? (
-                        <Input
-                          fontSize={26}
-                          backgroundColor="transparent"
-                          defaultValue={list.name || ''}
-                          onChangeText={(val) => {
-                            draft.current.name = val
-                          }}
-                          fontWeight="700"
-                          textAlign="center"
-                          color="#fff"
-                          borderColor="transparent"
-                          margin={-5}
-                        />
-                      ) : (
-                        list.name
+                    <VStack position="relative" alignSelf="center">
+                      {list.user?.avatar && (
+                        <AbsoluteVStack overflow="visible" bottom={-15} left={-60} zIndex={-3}>
+                          <UserAvatar
+                            size={130}
+                            charIndex={list.user.charIndex!}
+                            avatar={list.user.avatar}
+                          />
+                        </AbsoluteVStack>
                       )}
-                    </SlantedTitle>
-                    <SlantedTitle zIndex={-1} size="xs" alignSelf="center">
-                      {region.data?.name ?? props.item.region}
-                    </SlantedTitle>
+                      <SlantedTitle
+                        transform={[]}
+                        backgroundColor={theme.backgroundColorDarker}
+                        color="#fff"
+                        marginTop={-5}
+                        alignSelf="center"
+                        zIndex={0}
+                        size="xl"
+                      >
+                        {isEditing ? (
+                          <Input
+                            fontSize={26}
+                            backgroundColor="transparent"
+                            defaultValue={list.name || ''}
+                            onChangeText={(val) => {
+                              draft.current.name = val
+                            }}
+                            fontWeight="700"
+                            textAlign="center"
+                            color="#fff"
+                            borderColor="transparent"
+                            margin={-5}
+                          />
+                        ) : (
+                          list.name
+                        )}
+                      </SlantedTitle>
+                      <SlantedTitle transform={[]} zIndex={-1} size="xs" alignSelf="center">
+                        {region.data?.name ?? props.item.region}
+                      </SlantedTitle>
+                    </VStack>
                   </VStack>
-                </VStack>
-              }
-              // after={
-              //   <AbsoluteVStack
-              //     top={-10}
-              //     right={0}
-              //     bottom={0}
-              //     alignItems="center"
-              //     justifyContent="center"
-              //     backgroundColor={theme.backgroundColor}
-              //     padding={20}
-              //   >
-              //     <Heart size={30} />
-              //   </AbsoluteVStack>
-              // }
-            />
-          </VStack>
+                }
+                // after={
+                //   <AbsoluteVStack
+                //     top={-10}
+                //     right={0}
+                //     bottom={0}
+                //     alignItems="center"
+                //     justifyContent="center"
+                //     backgroundColor={theme.backgroundColor}
+                //     padding={20}
+                //   >
+                //     <Heart size={30} />
+                //   </AbsoluteVStack>
+                // }
+              />
+            </VStack>
 
-          {isMyList && (
-            <>
-              <Spacer />
+            {isMyList && (
+              <>
+                <Spacer />
 
-              <HStack alignItems="center" justifyContent="center">
-                <>
-                  {!isEditing && (
-                    <Button alignSelf="center" onPress={() => setIsEditing(true)}>
-                      Edit
-                    </Button>
-                  )}
-                  {isEditing && (
-                    <>
-                      <Button
-                        theme="active"
-                        onPress={async () => {
-                          await listUpdate(
-                            {
-                              id: list.id,
-                              ...draft.current,
-                              ...(color !== '#999' && {
-                                color: listColors.indexOf(color),
-                              }),
-                              public: isPublic,
-                            },
-                            {
-                              query: list,
-                            }
-                          )
-                          await refetch(list)
-                          router.setRouteAlert(null)
-                          setIsEditing(false)
-                        }}
-                      >
-                        Save
+                <HStack alignItems="center" justifyContent="center">
+                  <>
+                    {!isEditing && (
+                      <Button alignSelf="center" onPress={() => setIsEditing(true)}>
+                        Edit
                       </Button>
-                      <Spacer size="sm" />
-                      <VStack
-                        opacity={0.8}
-                        hoverStyle={{
-                          opacity: 1,
-                        }}
-                        onPress={() => {
-                          setIsEditing(false)
-                        }}
-                      >
-                        <X color={isWeb ? 'var(--color)' : '#777'} size={20} />
-                      </VStack>
-                      <Spacer size="lg" />
-                    </>
-                  )}
+                    )}
+                    {isEditing && (
+                      <>
+                        <Button
+                          theme="active"
+                          onPress={async () => {
+                            await listUpdate(
+                              {
+                                id: list.id,
+                                ...draft.current,
+                                ...(color !== '#999' && {
+                                  color: listColors.indexOf(color),
+                                }),
+                                public: isPublic,
+                              },
+                              {
+                                query: list,
+                              }
+                            )
+                            await refetch(list)
+                            router.setRouteAlert(null)
+                            setIsEditing(false)
+                          }}
+                        >
+                          Save
+                        </Button>
+                        <Spacer size="sm" />
+                        <VStack
+                          opacity={0.8}
+                          hoverStyle={{
+                            opacity: 1,
+                          }}
+                          onPress={() => {
+                            setIsEditing(false)
+                          }}
+                        >
+                          <X color={isWeb ? 'var(--color)' : '#777'} size={20} />
+                        </VStack>
+                        <Spacer size="lg" />
+                      </>
+                    )}
 
-                  {isEditing && (
-                    <>
-                      <Paragraph>Color:&nbsp;&nbsp;</Paragraph>
-                      <ColorPicker colors={listColors} color={color} onChange={setColor} />
+                    {isEditing && (
+                      <>
+                        <Paragraph>Color&nbsp;&nbsp;</Paragraph>
+                        <ColorPicker colors={listColors} color={color} onChange={setColor} />
 
-                      <Spacer size="xl" />
+                        <Spacer size="xl" />
 
-                      <Paragraph>Public:&nbsp;&nbsp;</Paragraph>
-                      <Switch value={isPublic} onValueChange={setPublic} />
+                        <Paragraph>Public&nbsp;&nbsp;</Paragraph>
+                        <Switch value={isPublic} onValueChange={setPublic} />
 
-                      <Spacer size="xl" />
+                        <Spacer size="xl" />
 
-                      <SmallButton
-                        tooltip="Delete"
-                        icon={<Trash size={16} color="red" />}
-                        onPress={async () => {
-                          assertPresent(list.id, 'no list id')
-                          if (confirm('Permanently delete this list?')) {
-                            await mutate((mutation) => {
-                              return mutation.delete_list({
-                                where: {
-                                  id: {
-                                    _eq: list.id,
+                        <SmallButton
+                          tooltip="Delete"
+                          icon={<Trash size={16} />}
+                          onPress={async () => {
+                            assertPresent(list.id, 'no list id')
+                            if (confirm('Permanently delete this list?')) {
+                              await mutate((mutation) => {
+                                return mutation.delete_list({
+                                  where: {
+                                    id: {
+                                      _eq: list.id,
+                                    },
                                   },
-                                },
-                              })?.__typename
-                            })
-                            Toast.show('Deleted list')
-                            router.navigate({
-                              name: 'home',
-                            })
-                          }
-                        }}
-                      />
-                    </>
-                  )}
-                </>
-              </HStack>
-              <Spacer />
-            </>
-          )}
+                                })?.__typename
+                              })
+                              Toast.show('Deleted list')
+                              router.navigate({
+                                name: 'home',
+                              })
+                            }
+                          }}
+                        />
+                      </>
+                    )}
+                  </>
+                </HStack>
+                <Spacer />
+              </>
+            )}
 
-          {!!tagButtons && (
-            <>
-              <HStack spacing="sm" justifyContent="center">
-                {tagButtons}
-              </HStack>
-              <Spacer />
-            </>
-          )}
+            {!!tagButtons && (
+              <>
+                <HStack spacing="sm" justifyContent="center">
+                  {tagButtons}
+                </HStack>
+                <Spacer />
+              </>
+            )}
 
-          {/* <VStack
+            {/* <VStack
           backgroundColor={`${color}99`}
           paddingHorizontal={20}
           paddingVertical={20}
@@ -593,95 +607,105 @@ const ListPageContent = graphql((props: Props) => {
           )}
         </VStack> */}
 
-          <VStack minHeight={300}>
-            {!restaurants.length && (
-              <VStack
-                padding={20}
-                margin={20}
-                borderWidth={1}
-                borderColor="rgba(100,100,100,0.1)"
-                borderRadius={10}
-              >
-                <Paragraph fontWeight="800">Nothing added to this list, yet.</Paragraph>
-                {isMyList && (
-                  <Paragraph>
-                    Use the blue (+) button at the bottom. You can also add from any search page
-                    results.
-                  </Paragraph>
-                )}
-              </VStack>
-            )}
+            <VStack minHeight={300}>
+              {!restaurants.length && (
+                <VStack
+                  padding={20}
+                  margin={20}
+                  borderWidth={1}
+                  borderColor="rgba(100,100,100,0.1)"
+                  borderRadius={10}
+                >
+                  <Paragraph fontWeight="800">Nothing added to this list, yet.</Paragraph>
+                  {isMyList && (
+                    <Paragraph>
+                      Use the blue (+) button at the bottom. You can also add from any search page
+                      results.
+                    </Paragraph>
+                  )}
+                </VStack>
+              )}
 
-            {restaurants.map(({ restaurantId, restaurant, comment, dishes, position }, index) => {
-              const dishSlugs = dishes.map((x) => x?.tag.slug).filter(isPresent)
-              if (!restaurant.slug) {
-                return null
-              }
-              return (
-                <RestaurantListItem
-                  key={restaurant.slug}
-                  curLocInfo={props.item.curLocInfo ?? null}
-                  restaurantId={restaurantId}
-                  restaurantSlug={restaurant.slug}
-                  rank={index + 1}
-                  description={comment}
-                  hideTagRow
-                  above={
-                    isEditing && (
-                      <>
-                        <AbsoluteVStack top={-28} left={28}>
-                          <CircleButton
-                            backgroundColor={bgLight}
-                            width={44}
-                            height={44}
-                            onPress={() => {
-                              restaurantActions.delete(restaurantId)
+              {restaurants.map(({ restaurantId, restaurant, comment, dishes, position }, index) => {
+                const dishSlugs = dishes.map((x) => x?.tag.slug).filter(isPresent)
+                if (!restaurant.slug) {
+                  return null
+                }
+                return (
+                  <RestaurantListItem
+                    key={restaurant.slug}
+                    curLocInfo={props.item.curLocInfo ?? null}
+                    restaurantId={restaurantId}
+                    restaurantSlug={restaurant.slug}
+                    rank={index + 1}
+                    description={comment}
+                    hideTagRow
+                    above={
+                      isEditing && (
+                        <>
+                          <AbsoluteVStack top={-28} left={28}>
+                            <CircleButton
+                              backgroundColor={bgLight}
+                              width={44}
+                              height={44}
+                              onPress={() => {
+                                restaurantActions.delete(restaurantId)
+                              }}
+                            >
+                              <X size={20} />
+                            </CircleButton>
+                          </AbsoluteVStack>
+                          <Score
+                            votable
+                            upTooltip="Move up"
+                            downTooltip="Move down"
+                            score={index + 1}
+                            setVote={async (vote) => {
+                              restaurantActions.promote(vote === 1 ? index : index + 1)
                             }}
-                          >
-                            <X size={20} />
-                          </CircleButton>
-                        </AbsoluteVStack>
-                        <Score
-                          votable
-                          upTooltip="Move up"
-                          downTooltip="Move down"
-                          score={index + 1}
-                          setVote={async (vote) => {
-                            restaurantActions.promote(vote === 1 ? index : index + 1)
-                          }}
-                        />
-                      </>
-                    )
-                  }
-                  flexibleHeight
-                  dishSlugs={dishSlugs.length ? dishSlugs : undefined}
-                  editableDishes={isEditing}
-                  onChangeDishes={async (dishes) => {
-                    console.log('should change dishes', dishes)
-                    await restaurantActions.setDishes(restaurantId, dishes)
-                    Toast.success(`Updated dishes`)
-                  }}
-                  editableDescription={isEditing}
-                  onChangeDescription={async (next) => {
-                    await restaurantActions.setComment(restaurantId, next)
-                    Toast.success('Updated description')
-                  }}
-                  editablePosition={isEditing}
-                  onChangePosition={(next) => {
-                    console.log('should change position', next)
-                  }}
-                />
-              )
-            })}
-          </VStack>
-        </PageContentWithFooter>
-      </ContentScrollView>
-    </StackDrawer>
+                          />
+                        </>
+                      )
+                    }
+                    flexibleHeight
+                    dishSlugs={dishSlugs.length ? dishSlugs : undefined}
+                    editableDishes={isEditing}
+                    onChangeDishes={async (dishes) => {
+                      console.log('should change dishes', dishes)
+                      await restaurantActions.setDishes(restaurantId, dishes)
+                      Toast.success(`Updated dishes`)
+                    }}
+                    editableDescription={isEditing}
+                    onChangeDescription={async (next) => {
+                      await restaurantActions.setComment(restaurantId, next)
+                      Toast.success('Updated description')
+                    }}
+                    editablePosition={isEditing}
+                    onChangePosition={(next) => {
+                      console.log('should change position', next)
+                    }}
+                  />
+                )
+              })}
+            </VStack>
+          </PageContentWithFooter>
+        </ContentScrollView>
+      </StackDrawer>
+    </Theme>
   )
 })
 
 function ColorBubble(props: StackProps) {
-  return <VStack borderRadius={1000} width={34} height={34} {...props} />
+  return (
+    <VStack
+      borderWidth={2}
+      borderColor="#000"
+      borderRadius={1000}
+      width={34}
+      height={34}
+      {...props}
+    />
+  )
 }
 
 function ColorPicker({
