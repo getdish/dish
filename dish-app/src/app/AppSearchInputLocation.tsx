@@ -4,7 +4,7 @@ import { TextInput } from 'react-native'
 import { AbsoluteVStack, Button, HStack, VStack, getMedia, useMedia } from 'snackui'
 
 import { isWeb } from '../constants/constants'
-import { supportsTouchWeb } from '../constants/platforms'
+import { isTouchDevice, supportsTouchWeb } from '../constants/platforms'
 import { AppAutocompleteHoverableInput } from './AppAutocompleteHoverableInput'
 import { appMapStore } from './AppMapStore'
 import { inputTextStyles } from './AppSearchInput'
@@ -99,7 +99,7 @@ export const AppSearchInputLocation = memo(function AppSearchInputLocation() {
             >
               <MapPin color={color} size={18} opacity={0.35} />
             </AbsoluteVStack>
-            {!isWeb && <SearchInputNativeDragFix name="location" />}
+            {isTouchDevice && <SearchInputNativeDragFix name="location" />}
             <TextInput
               ref={setInputNode}
               value={inputStore.value ?? ''}

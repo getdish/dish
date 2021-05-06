@@ -7,6 +7,7 @@ import { ScrollView, StyleSheet, TextInput, TouchableOpacity, View } from 'react
 import { HStack, Spacer, VStack, getMedia, useDebounce, useMedia, useOnMount } from 'snackui'
 
 import { isWeb, searchBarHeight } from '../constants/constants'
+import { isTouchDevice } from '../constants/platforms'
 import { isWebIOS } from '../helpers/isIOS'
 import { filterToNavigable } from '../helpers/tagHelpers'
 import { router, useIsRouteActive } from '../router'
@@ -174,7 +175,7 @@ export const AppSearchInput = memo(() => {
                 flex={1}
                 alignItems="center"
               >
-                {!isWeb && <SearchInputNativeDragFix name="search" />}
+                {isTouchDevice && <SearchInputNativeDragFix name="search" />}
                 <TextInput
                   key={0}
                   ref={(view) => {

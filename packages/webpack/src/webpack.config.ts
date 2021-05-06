@@ -131,7 +131,7 @@ export function createWebpackConfig({
             // }),
           ]
         : [],
-      devtool: isProduction ? 'source-map' : 'eval-cheap-module-source-map',
+      devtool: isProduction ? 'source-map' : 'cheap-module-source-map',
       entry: {
         main:
           polyFillPath || isSSR
@@ -196,16 +196,7 @@ export function createWebpackConfig({
                   },
                 },
               }
-            : {
-                cacheGroups: {
-                  styles: {
-                    name: `styles`,
-                    type: 'css/mini-extract',
-                    chunks: 'all',
-                    enforce: true,
-                  },
-                },
-              },
+            : false,
         runtimeChunk: false,
         minimizer:
           !isProduction || noMinify
