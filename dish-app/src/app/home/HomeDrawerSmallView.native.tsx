@@ -61,7 +61,6 @@ export const HomeDrawerSmallView = memo((props: { children: any }) => {
           return false
         }
         if (!scroll.isAtTop) {
-          console.log(_e)
           return false
         }
         if (isPanActive) {
