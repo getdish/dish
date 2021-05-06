@@ -490,9 +490,13 @@ const SearchPageScrollView = forwardRef<ScrollView, SearchPageScrollViewProps>(
     }, [])
 
     const layoutProps = useLayout({
-      // @ts-expect-error
-      onChange: onSizeChanged,
+      onLayout: (x) => {
+        console.log('got size', x)
+        onSizeChanged(x)
+      },
     })
+
+    console.log('children', children)
 
     return (
       <VStack flex={1} {...(layoutProps as any)}>
