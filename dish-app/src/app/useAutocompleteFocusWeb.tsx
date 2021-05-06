@@ -10,7 +10,6 @@ export const useAutocompleteFocusWebNonTouch = (inputStore: InputStore) => {
       inputStore as any,
       (x) => x.node,
       (node) => {
-        console.log('got node', node)
         if (!node) {
           return
         }

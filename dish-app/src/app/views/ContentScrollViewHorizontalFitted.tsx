@@ -6,6 +6,8 @@ import {
   ContentScrollViewHorizontalProps,
 } from './ContentScrollViewHorizontal'
 
+console.log('useLayout', useLayout)
+
 export const ContentScrollViewHorizontalFitted = (
   props: ContentScrollViewHorizontalProps & {
     width: number
@@ -14,7 +16,7 @@ export const ContentScrollViewHorizontalFitted = (
 ) => {
   const layout = useLayout({
     onLayout({ width }) {
-      props.setWidth(width)
+      props.setWidth?.(width)
     },
   })
 

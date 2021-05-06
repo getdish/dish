@@ -189,10 +189,10 @@ const AppSearchBarContents = memo(({ isColored }: { isColored: boolean }) => {
         {media.xs && isWeb && (
           <>
             {/* keep both in dom so we have access to ref */}
-            <VStack flex={1} overflow="hidden" display={showLocation ? 'contents' : 'none'}>
+            <VStack flex={1} overflow="hidden" display={showLocation ? 'flex' : 'none'}>
               {searchLocationEl}
             </VStack>
-            <VStack flex={1} overflow="hidden" display={!showLocation ? 'contents' : 'none'}>
+            <VStack flex={1} overflow="hidden" display={!showLocation ? 'flex' : 'none'}>
               {searchInputEl}
             </VStack>
           </>
@@ -225,7 +225,7 @@ const AppSearchBarContents = memo(({ isColored }: { isColored: boolean }) => {
             autocompletes.setTarget(showLocation ? 'search' : 'location')
           }}
         >
-          <HStack padding={11}>
+          <HStack padding={12}>
             {showLocation ? (
               <Search color={isWeb ? 'var(--color)' : '#999'} size={22} opacity={0.5} />
             ) : (

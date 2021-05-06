@@ -79,19 +79,14 @@ export const usePreventVerticalScroll = (id: string) => {
       const isLarge = getMedia().lg
       const next = !(
         isParentActive &&
-        (!isFullyOpen ? !isScrollAtTop : false) &&
+        !isScrollAtTop &&
         !isSpringing &&
         !isDraggingDrawer &&
         !isLarge &&
         !isLockedHorizontalOrDrawer
       )
-      setPrevent((prev) => {
-        if (prev != next) {
-          console.log('prevent!', id, next, isFullyOpen, isScrollAtTop)
-          return next
-        }
-        return prev
-      })
+      console.log('prevent!', id, next, isFullyOpen, isScrollAtTop)
+      setPrevent(next)
     }, 20)
 
     const d0 = reaction(
