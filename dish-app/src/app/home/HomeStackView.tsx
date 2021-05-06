@@ -1,5 +1,5 @@
 import { useStore } from '@dish/use-store'
-import React, { Suspense, memo, useEffect, useLayoutEffect, useMemo } from 'react'
+import React, { Suspense, memo, useEffect, useMemo } from 'react'
 import { AnimatedVStack, VStack, useDebounceValue, useMedia } from 'snackui'
 
 import { isWeb, searchBarHeight, searchBarTopOffset } from '../../constants/constants'

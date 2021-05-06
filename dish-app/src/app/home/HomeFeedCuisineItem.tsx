@@ -52,7 +52,7 @@ export function useFeedTopCuisines({ center }: HomeFeedProps) {
 export const HomeFeedCuisineItem = memo(
   graphql(function HomeFeedCuisineItem(props: FICuisine & HoverResultsProp) {
     const restaurants = props.restaurants
-    const [titleWidth, setTitleWidth] = useState(100)
+    // const [titleWidth, setTitleWidth] = useState(100)
     const dishes = props.dishes
       ? query.tag({
           where: {
@@ -69,7 +69,7 @@ export const HomeFeedCuisineItem = memo(
         <>
           <FeedSlantedTitleLink
             tag={{ slug: props.tagSlug }}
-            onLayout={(x) => setTitleWidth(x.nativeEvent.layout.width)}
+            // onLayout={(x) => setTitleWidth(x.nativeEvent.layout.width)}
             zIndex={10}
           >
             {props.title}
@@ -85,7 +85,7 @@ export const HomeFeedCuisineItem = memo(
                   justifyContent="center"
                   overflow="hidden"
                 >
-                  <VStack width={titleWidth} />
+                  {/* <VStack width={titleWidth} /> */}
                   {dishes.map((dish, index) => {
                     const color = getColorsForName(dish.slug).color
                     const rgb = hexToRGB(color).rgb

@@ -81,7 +81,14 @@ export const usePreventVerticalScroll = (id: string) => {
         !isDraggingDrawer &&
         !isLarge &&
         !isLockedHorizontalOrDrawer
-      setPrevent(!isActive)
+      const next = !isActive
+      setPrevent((prev) => {
+        if (prev != next) {
+          console.log('ACTIVE', id, next)
+          return next
+        }
+        return prev
+      })
     }
 
     const d0 = reaction(
@@ -104,10 +111,13 @@ export const usePreventVerticalScroll = (id: string) => {
         if (isSpringing) {
           // max time before reverting
           const tm = setTimeout(() => {
+            console.log('set false')
             isSpringing = false
             update()
-          }, 100)
-          return () => clearTimeout(tm)
+          }, 200)
+          return () => {
+            clearTimeout(tm)
+          }
         }
       }
     )

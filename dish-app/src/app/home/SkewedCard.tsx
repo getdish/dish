@@ -35,10 +35,8 @@ export const SkewedCard = ({ children, size, ...props }: StackProps & { size?: C
 export const SkewedCardCarousel = ({ children }: { children: any }) => {
   return (
     <ContentScrollViewHorizontal>
-      <HStack paddingVertical={20}>
-        {children}
-        <VStack width={100} height={100} />
-      </HStack>
+      {children}
+      <VStack width={100} height={100} />
     </ContentScrollViewHorizontal>
   )
 }
