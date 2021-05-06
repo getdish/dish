@@ -19,6 +19,7 @@
     "@dish/babel-preset": "*",
     "@snackui/babel-plugin": "*",
     "@types/react": "*",
-    "@types/react-native": "*"
+    "@types/react-native": "*",
+    "thread-loader": "^3.0.3"
   }
 }

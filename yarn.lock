@@ -2347,6 +2347,7 @@ __metadata:
     react-dom: "*"
     react-native-web: "*"
     snackui: "*"
+    thread-loader: ^3.0.3
   languageName: unknown
   linkType: soft
 

@@ -345,8 +345,8 @@ const handleKeyPress = async (e: any, inputStore: InputStore) => {
   switch (code) {
     case 13: {
       // enter
-      // just searching normal
-      const item = results[index - 1]
+      // autocomplete
+      const item = results[index]
       const isSelectingFromList = isAutocompleteActive && item && index !== 0
 
       if (isSelectingFromList) {
