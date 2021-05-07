@@ -122,7 +122,7 @@ export const HomeDrawerSmallView = memo((props: { children: any }) => {
           scrollStore.setLock('drawer')
         }
         drawerStore.pan.setOffset(curSnapY)
-        drawerStore.pan.setValue(0)
+        drawerStore.setPan(0)
         if (!drawerStore.isDragging) {
           drawerStore.setIsDragging(true)
         }
@@ -143,6 +143,7 @@ export const HomeDrawerSmallView = memo((props: { children: any }) => {
         const scroller = scrollViews.get(contentParent.activeId)
         if (y < minY || curScrollerYMove > 0) {
           if (!scroller) return
+          drawerStore.isAtTop = true
           const curY = scrollLastY.get(contentParent.activeId) ?? 0
           curScrollerYMove = curY + minY - y
           scroller.scrollTo({ y: curScrollerYMove, animated: false })
@@ -153,7 +154,7 @@ export const HomeDrawerSmallView = memo((props: { children: any }) => {
           return
         }
         // console.log('pan move', y, dy, 'vs', drawerStore.pan['_value'])
-        drawerStore.pan.setValue(dy)
+        drawerStore.setPan(dy)
       },
       onPanResponderRelease: (e, { vy }) => {
         isPanActive = false

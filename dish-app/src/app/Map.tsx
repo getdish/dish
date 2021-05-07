@@ -11,7 +11,7 @@ import React, { useEffect, useRef, useState } from 'react'
 import { Dimensions } from 'react-native'
 import { useGet, useThemeName } from 'snackui'
 
-import { darkPurple, grey } from '../constants/colors'
+import { darkPurple, grey, pink } from '../constants/colors'
 import { MAPBOX_ACCESS_TOKEN, isM1Sim } from '../constants/constants'
 import * as mapHelpers from '../helpers/mapHelpers'
 import { hasMovedAtLeast, mapPositionToBBox } from '../helpers/mapHelpers'
@@ -656,26 +656,19 @@ function setupMapEffect({
           generateId: true,
         })
 
-        const pointColor = themeName === 'dark' ? `rgba(0,0,0,0.44)` : hexToRGB(grey).string
+        const pointColor = themeName === 'dark' ? `rgba(0,0,0,0.44)` : hexToRGB(pink, 0.44).string
         map.addLayer({
           id: POINT_LAYER_ID,
           type: 'circle',
           source: RESTAURANTS_SOURCE_ID,
           paint: {
-            'circle-radius': [
-              'case',
-              ['boolean', ['feature-state', 'hover'], false],
-              15 * (supportsTouchWeb ? 1.2 : 1),
-              12 * (supportsTouchWeb ? 1.2 : 1),
-            ],
-
-            // 'circle-stroke-width': {
-            //   stops: [
-            //     [8, 0],
-            //     [11, 0],
-            //     [16, 1],
-            //   ],
-            // },
+            'circle-radius': {
+              stops: [
+                [0, 0],
+                [20, 20],
+              ],
+              base: 2,
+            },
 
             // 'circle-stroke-color': 'transparent',
 

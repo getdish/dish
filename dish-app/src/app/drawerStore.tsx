@@ -4,6 +4,8 @@ import { Animated } from 'react-native'
 import { isWeb } from '../constants/constants'
 import { getWindowHeight } from '../helpers/getWindow'
 import { autocompletesStore } from './AutocompletesStore'
+import { InputStore } from './inputStore'
+import { ScrollStore } from './views/ContentScrollView'
 
 type DrawerSnapPoint = 'bottom' | 'middle' | 'top'
 
@@ -15,6 +17,13 @@ class DrawerStore extends Store {
   pan = new Animated.Value(this.getSnapPointOffset())
   spring: Animated.CompositeAnimation | null = null
   lastSnapAt = Date.now()
+  focusNext: InputStore | null = null
+  isAtTop = false
+  private updatePanValue = 0
+
+  setFocusNext(next: InputStore) {
+    this.focusNext = next
+  }
 
   get snapIndexName(): DrawerSnapPoint {
     return this.snapIndex === 0 ? 'top' : this.snapIndex === 2 ? 'bottom' : 'middle'
@@ -28,6 +37,28 @@ class DrawerStore extends Store {
     return this.snapHeights[2]
   }
 
+  getY() {
+    return this.currentSnapPx + this.pan['_value']
+  }
+
+  getIsAtTop() {
+    return this.getY() <= this.minY
+  }
+
+  get y() {
+    this.updatePanValue
+    return this.getY()
+  }
+
+  setPan(y: number) {
+    this.pan.setValue(y)
+    const next = this.getIsAtTop()
+    if (next !== this.isAtTop) {
+      console.log('update', next, this.isAtTop)
+      this.isAtTop = next
+    }
+  }
+
   get currentSnapPoint() {
     return this.snapPoints[this.snapIndex]
   }
@@ -36,13 +67,13 @@ class DrawerStore extends Store {
     return this.currentSnapPoint * getWindowHeight()
   }
 
-  get currentHeight() {
+  get currentSnapHeight() {
     return getWindowHeight() - this.currentSnapPx
   }
 
   get currentMapHeight() {
     // todo this can just be this.currentSnapPx
-    return getWindowHeight() - this.currentHeight
+    return getWindowHeight() - this.currentSnapHeight
   }
 
   get snapHeights() {
@@ -116,9 +147,13 @@ class DrawerStore extends Store {
   private finishSpring() {
     this.isDragging = false
     this.pan.flattenOffset()
-    this.pan.setValue(this.toValue)
+    this.setPan(this.toValue)
     this.spring?.stop()
     this.spring = null
+    if (this.focusNext) {
+      this.focusNext.focusNode()
+      this.focusNext = null
+    }
   }
 
   private getSnapIndex(px: number, velocity: number) {
