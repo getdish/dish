@@ -37,14 +37,6 @@ export const HomeDrawerSmallView = memo((props: { children: any }) => {
   // const preventScrolling = usePreventVerticalScroll(contentParent.activeId)
 
   const pan = useMemo(() => {
-    const move = Animated.event(
-      // [x, y] mapping
-      [null, { dy: drawerStore.pan }],
-      {
-        useNativeDriver: true,
-      }
-    )
-
     let curSnapY = 0
     let curScrollerYMove = -1
 

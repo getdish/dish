@@ -5,6 +5,7 @@ import { AbsoluteVStack, VStack, useDebounceValue, useMedia } from 'snackui'
 
 import { MAPBOX_ACCESS_TOKEN, isWeb } from '../constants/constants'
 import { useAppMapKey } from './AppMapStore'
+import { useAppShouldShow } from './AppStore'
 import { autocompletesStore } from './AutocompletesStore'
 import { drawerStore } from './drawerStore'
 import { mapStyles } from './mapStyles'
@@ -12,7 +13,9 @@ import { mapStyles } from './mapStyles'
 mapboxgl.accessToken = MAPBOX_ACCESS_TOKEN
 
 export default memo(function AppMapPIP() {
-  if (!isWeb) {
+  const show = useAppShouldShow('map')
+
+  if (!isWeb || !show) {
     return null
   }
 

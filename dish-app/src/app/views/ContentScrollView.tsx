@@ -56,8 +56,7 @@ export const useScrollActive = (id: string) => {
   if (!id) {
     throw new Error(`no id`)
   }
-
-  const active = useRef(false)
+  const [active, setActive] = useState(true)
 
   useEffect(() => {
     if (isWeb && !supportsTouchWeb) {
@@ -78,18 +77,19 @@ export const useScrollActive = (id: string) => {
     // we can greatly simplify this area
 
     const update = () => {
-      active.current =
+      const next =
         isParentActive &&
         (isFullyOpen || !isScrollAtTop) &&
         !isSpringing &&
         // !isDraggingDrawer &&
         !isLockedHorizontalOrDrawer
 
-      console.log('active?', id, active.current, {
+      console.log('active?', id, next, {
         isFullyOpen,
         isScrollAtTop,
         isLockedHorizontalOrDrawer,
       })
+      setActive(next)
     }
 
     const d0 = reaction(
@@ -141,7 +141,7 @@ export const useScrollActive = (id: string) => {
     }
   }, [id])
 
-  return () => active.current
+  return () => active
 }
 
 export const ContentScrollContext = createContext('id')
@@ -230,34 +230,6 @@ export const ContentScrollView = forwardRef<ScrollView, ContentScrollViewProps>(
       return (scrollStore.lock === 'vertical' || scrollStore.lock === 'none') && scrollStore.isAtTop
     }
 
-    useEffect(() => {
-      const node = scrollRef.current?.getScrollableNode() as HTMLDivElement
-      if (!node) return
-      const wheelEvent = 'onwheel' in document.createElement('div') ? 'wheel' : 'mousewheel'
-      const nonPassive = { passive: false }
-      let lastScrollTop = -1
-      const preventCheck = (e) => {
-        if (getScrollActive()) {
-          lastScrollTop = node.scrollTop
-          return
-        }
-        if (lastScrollTop == -1) {
-          lastScrollTop = node.scrollTop
-        }
-        node.scrollTop = lastScrollTop
-      }
-      node.addEventListener('scroll', preventCheck, nonPassive)
-      node.addEventListener('touchmove', preventCheck, nonPassive)
-      node.addEventListener(wheelEvent, preventCheck, nonPassive)
-      node.addEventListener('keydown', preventCheck, nonPassive)
-      return () => {
-        node.removeEventListener('scroll', preventCheck)
-        node.removeEventListener('touchmove', preventCheck)
-        node.removeEventListener(wheelEvent, preventCheck)
-        node.removeEventListener('keydown', preventCheck)
-      }
-    }, [])
-
     return (
       <ContentScrollContext.Provider value={id}>
         <VStack
@@ -294,7 +266,8 @@ export const ContentScrollView = forwardRef<ScrollView, ContentScrollViewProps>(
             })}
             // for native...
             bounces={isWeb}
-            // scrollEnabled={!preventScrolling}
+            // oh well we have to deal with reapints, just try and time them
+            scrollEnabled={getScrollActive()}
             // short duration to catch before vertical scroll
             // DONT USE THIS ON WEB IT CAUSES REFLOWS see classname above
             // {...(!isWeb && {
