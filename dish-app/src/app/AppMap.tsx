@@ -25,6 +25,7 @@ import {
   updateRegionFaster,
   useAppMapStore,
 } from './AppMapStore'
+import { useAppShouldShow } from './AppStore'
 import { drawerStore } from './drawerStore'
 import { ensureFlexText } from './home/restaurant/ensureFlexText'
 import { homeStore } from './homeStore'
@@ -43,6 +44,7 @@ export default memo(function AppMap() {
   const { width, paddingLeft } = useDebounceValue(mapSize, 1000)
   const showUserLocation = useStoreInstanceSelector(appMapStore, (x) => !!x.userLocation)
   const store = useStoreInstance(appMapStore)
+  const show = useAppShouldShow('map')
   const position = store.currentPosition
   const { center, span } = position
 
@@ -214,6 +216,10 @@ export default memo(function AppMap() {
   }, [])
 
   const themeName = useThemeName()
+
+  if (!show) {
+    return null
+  }
 
   return (
     <HStack position="absolute" fullscreen alignItems="center" justifyContent="center">

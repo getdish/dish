@@ -495,8 +495,6 @@ const SearchPageScrollView = forwardRef<ScrollView, SearchPageScrollViewProps>(
       },
     })
 
-    console.log('children', children)
-
     return (
       <VStack flex={1} {...(layoutProps as any)}>
         <ContentScrollView id="search" ref={combineRefs(ref, scrollRef) as any} {...props}>
