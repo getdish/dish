@@ -18,9 +18,9 @@ import {
   autocompleteSearchStore,
   autocompletesStore,
 } from './AutocompletesStore'
+import { drawerStore } from './drawerStore'
 import { searchPageStore, useSearchPageStore } from './home/search/SearchPageStore'
 import { homeStore, useHomeStoreSelector } from './homeStore'
-import { useAutocompleteInputFocus } from './hooks/useAutocompleteInputFocus'
 import { useSearchBarTheme } from './hooks/useSearchBarTheme'
 import { InputFrame } from './InputFrame'
 import { InputStore, setNodeOnInputStore, useInputStoreSearch } from './inputStore'
@@ -88,9 +88,6 @@ export const AppSearchInput = memo(() => {
   const isEditingList = false // useRouterSelector((x) => x.curPage.name === 'list' && x.curPage.params.state === 'edit')
   const textInput$ = useRef<TextInput | null>(null)
   const setSearch = useDebounce(autocompleteStore.setQuery, 250)
-
-  // focus on visible
-  useAutocompleteInputFocus(inputStore)
 
   const height = searchBarHeight - 6
   const outerHeight = height - 1
@@ -197,8 +194,13 @@ export const AppSearchInput = memo(() => {
                   {...(!isWeb && {
                     placeholderTextColor: '#999',
                   })}
-                  onFocus={() => {
-                    inputStore.setIsFocused(true)
+                  onFocus={(e) => {
+                    if (drawerStore.snapIndex > 0) {
+                      e.preventDefault()
+                      drawerStore.setFocusNext(inputStore)
+                    } else {
+                      inputStore.setIsFocused(true)
+                    }
                     if (isDesktop) {
                       console.log('ignore focus')
                       // see above, we handle better for text selection

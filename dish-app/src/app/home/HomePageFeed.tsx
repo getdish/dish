@@ -173,7 +173,7 @@ export const HomePageFeed = memo(
       )
     },
     {
-      suspense: false,
+      suspense: true,
     }
   )
 )

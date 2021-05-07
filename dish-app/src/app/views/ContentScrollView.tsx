@@ -5,12 +5,14 @@ import React, {
   createContext,
   forwardRef,
   useEffect,
+  useLayoutEffect,
   useMemo,
   useRef,
   useState,
 } from 'react'
 import { ScrollView, ScrollViewProps, StyleSheet, View } from 'react-native'
 import { scrollTo } from 'react-native-reanimated'
+import { useGet } from 'snackui'
 import { prevent } from 'snackui'
 import { VStack, combineRefs, getMedia, useMedia } from 'snackui'
 
@@ -50,12 +52,12 @@ export class ContentParentStore extends Store {
   }
 }
 
-export const usePreventVerticalScroll = (id: string) => {
+export const useScrollActive = (id: string) => {
   if (!id) {
     throw new Error(`no id`)
   }
 
-  const [prevent, setPrevent] = useState(false)
+  const active = useRef(false)
 
   useEffect(() => {
     if (isWeb && !supportsTouchWeb) {
@@ -75,19 +77,20 @@ export const usePreventVerticalScroll = (id: string) => {
     // TODO once reactions are finished to support doing all in one function
     // we can greatly simplify this area
 
-    const update = throttle(() => {
-      const isLarge = getMedia().lg
-      const next = !(
+    const update = () => {
+      active.current =
         isParentActive &&
-        !isScrollAtTop &&
+        (isFullyOpen || !isScrollAtTop) &&
         !isSpringing &&
-        !isDraggingDrawer &&
-        !isLarge &&
+        // !isDraggingDrawer &&
         !isLockedHorizontalOrDrawer
-      )
-      console.log('prevent!', id, next, isFullyOpen, isScrollAtTop)
-      setPrevent(next)
-    }, 20)
+
+      console.log('active?', id, active.current, {
+        isFullyOpen,
+        isScrollAtTop,
+        isLockedHorizontalOrDrawer,
+      })
+    }
 
     const d0 = reaction(
       parentStore,
@@ -100,11 +103,12 @@ export const usePreventVerticalScroll = (id: string) => {
 
     const d1 = reaction(
       drawerStore,
-      (x) => [!!x.spring, x.isDragging, x.snapIndexName === 'top'] as const,
+      (x) => [!!x.spring, x.isDragging, x.isAtTop] as const,
       function drawerStoreSnapIndexToPreventScroll([a, b, c]) {
         isSpringing = a
         isDraggingDrawer = b
         isFullyOpen = c
+        console.log('isFullyOpen', id, c)
         update()
         if (isSpringing) {
           // max time before reverting
@@ -137,7 +141,7 @@ export const usePreventVerticalScroll = (id: string) => {
     }
   }, [id])
 
-  return prevent
+  return () => active.current
 }
 
 export const ContentScrollContext = createContext('id')
@@ -151,10 +155,10 @@ type ContentScrollViewProps = ScrollViewProps & {
 export const ContentScrollView = forwardRef<ScrollView, ContentScrollViewProps>(
   ({ children, onScrollYThrottled, style, id, ...props }, ref) => {
     // this updates when drawer moves to top
-    // this is already handled in usePreventVerticalScroll i think
+    // this is already handled in useScrollActive i think
     // const isActive = useStoreSelector(ContentParentStore, x => x.activeId === id, { id })
     // const isDraggingParent = useStoreInstanceSelector(drawerStore, x => isActive && x.isDragging, [isActive])
-    const preventScrolling = usePreventVerticalScroll(id)
+    const getScrollActive = useScrollActive(id)
     const media = useMedia()
     const lastUpdate = useRef<any>(0)
     const finish = useRef<any>(0)
@@ -166,6 +170,9 @@ export const ContentScrollView = forwardRef<ScrollView, ContentScrollViewProps>(
 
     const doUpdate = (y: number, e: any) => {
       clearTimeout(finish.current)
+      if (!drawerStore.isAtTop && !getScrollActive()) {
+        return
+      }
       const isAtTop = y <= 0
       isScrollAtTop.set(id, isAtTop)
       onScrollYThrottled?.(y)
@@ -223,12 +230,38 @@ export const ContentScrollView = forwardRef<ScrollView, ContentScrollViewProps>(
       return (scrollStore.lock === 'vertical' || scrollStore.lock === 'none') && scrollStore.isAtTop
     }
 
-    console.log(id, preventScrolling)
+    useEffect(() => {
+      const node = scrollRef.current?.getScrollableNode() as HTMLDivElement
+      if (!node) return
+      const wheelEvent = 'onwheel' in document.createElement('div') ? 'wheel' : 'mousewheel'
+      const nonPassive = { passive: false }
+      let lastScrollTop = -1
+      const preventCheck = (e) => {
+        if (getScrollActive()) {
+          lastScrollTop = node.scrollTop
+          return
+        }
+        if (lastScrollTop == -1) {
+          lastScrollTop = node.scrollTop
+        }
+        node.scrollTop = lastScrollTop
+      }
+      node.addEventListener('scroll', preventCheck, nonPassive)
+      node.addEventListener('touchmove', preventCheck, nonPassive)
+      node.addEventListener(wheelEvent, preventCheck, nonPassive)
+      node.addEventListener('keydown', preventCheck, nonPassive)
+      return () => {
+        node.removeEventListener('scroll', preventCheck)
+        node.removeEventListener('touchmove', preventCheck)
+        node.removeEventListener(wheelEvent, preventCheck)
+        node.removeEventListener('keydown', preventCheck)
+      }
+    }, [])
 
     return (
       <ContentScrollContext.Provider value={id}>
         <VStack
-          className={`${preventScrolling ? 'prevent-touch ' : ' '} will-prevent-touch`}
+          // className={`${preventScrolling ? 'prevent-touch ' : ' '} will-prevent-touch`}
           position="relative"
           flex={1}
           overflow="hidden"
@@ -236,6 +269,7 @@ export const ContentScrollView = forwardRef<ScrollView, ContentScrollViewProps>(
           <ScrollView
             ref={combineRefs(scrollRef, ref)}
             {...props}
+            scrollEventThrottle={14}
             onScroll={(e) => {
               const y = e.nativeEvent.contentOffset.y
               const atTop = y <= 0
@@ -263,10 +297,9 @@ export const ContentScrollView = forwardRef<ScrollView, ContentScrollViewProps>(
             // scrollEnabled={!preventScrolling}
             // short duration to catch before vertical scroll
             // DONT USE THIS ON WEB IT CAUSES REFLOWS see classname above
-            {...(!isWeb && {
-              scrollEnabled: !preventScrolling,
-            })}
-            scrollEventThrottle={16}
+            // {...(!isWeb && {
+            //   scrollEnabled: !preventScrolling,
+            // })}
             style={[styles.scroll, style]}
           >
             <View
@@ -284,9 +317,9 @@ export const ContentScrollView = forwardRef<ScrollView, ContentScrollViewProps>(
                 if (!ss.at) {
                   ss.active = true
                   ss.at = pageY
-                  ss.start = getWindowHeight() - drawerStore.currentHeight
+                  ss.start = getWindowHeight() - drawerStore.currentSnapHeight
                 }
-                const start = getWindowHeight() - drawerStore.currentHeight
+                const start = getWindowHeight() - drawerStore.currentSnapHeight
                 const pY = ss.at - pageY
                 const y = start - pY
                 if (y < drawerStore.minY) {
@@ -303,7 +336,7 @@ export const ContentScrollView = forwardRef<ScrollView, ContentScrollViewProps>(
                 if (!drawerStore.isDragging) {
                   drawerStore.setIsDragging(true)
                 }
-                drawerStore.pan.setValue(y)
+                drawerStore.setPan(y)
               }}
               onTouchEnd={(e) => {
                 const ss = scrollState.current

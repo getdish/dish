@@ -26,6 +26,18 @@ export const ContentScrollViewHorizontal = (props: ContentScrollViewHorizontalPr
   const isLockedVertical = useStoreSelector(ScrollStore, (x) => x.lock === 'vertical', { id })
   const scrollLock = useScrollLock({ id, direction: 'horizontal' })
 
+  // useEffect(() => {
+  //   const node = scrollLock.scrollRef.current?.getScrollableNode() as HTMLDivElement
+  //   if (!node) return
+  //   node.addEventListener(
+  //     'touchmove',
+  //     (e) => {
+  //       e.stopPropagation()
+  //     },
+  //     { passive: false }
+  //   )
+  // }, [])
+
   const children = useMemo(() => {
     return (
       <ScrollView
