@@ -478,15 +478,12 @@ function createProxiedStore(storeInfo: Omit<StoreInfo, 'store' | 'source'>) {
         })
 
         // dev mode do nice logging
-        if (process.env.NODE_ENV === 'development') {
+        if (process.env.NODE_ENV === 'development' && !isGetFn && !key.startsWith('_')) {
           action = new Proxy(action, {
             apply(target, thisArg, args) {
               const isDebugging = DebugStores.has(constr)
               const shouldLog =
-                process.env.LOG_LEVEL !== '0' &&
-                (isDebugging || configureOpts.logLevel !== 'error') &&
-                // @ts-ignore
-                !key.startsWith('get')
+                process.env.LOG_LEVEL !== '0' && (isDebugging || configureOpts.logLevel !== 'error')
 
               if (!shouldLog) {
                 return Reflect.apply(target, thisArg, args)

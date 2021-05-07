@@ -1,11 +1,9 @@
 import React, { memo } from 'react'
-import { useDebounceValue } from 'snackui'
-import { AbsoluteVStack, HStack, VStack, useMedia } from 'snackui'
+import { AbsoluteVStack, HStack, VStack, useDebounceValue, useMedia } from 'snackui'
 
 import { logoHeight, logoWidth, logoXsHeight, logoXsWidth } from '../../constants/constants'
-import { useHomeCurrentHomeType, useHomeStoreSelector } from '../homeStore'
+import { useHomeCurrentHomeType } from '../homeStore'
 import { Link } from './Link'
-import { LinkButtonProps } from './LinkProps'
 import { LogoCircle, LogoColor } from './Logo'
 
 export const DishLogoButton = memo(({ color }: { color?: string }) => {
@@ -61,9 +59,8 @@ export const DishLogoButton = memo(({ color }: { color?: string }) => {
         justifyContent="center"
         width={logoXsWidth}
         height={logoXsHeight}
-        {...(media.sm && {
-          transform: [{ scale: 0.85 }, { translateY: -3.5 }],
-        })}
+        scale={0.85}
+        y={-3.5}
       >
         {wrapWithHomeLink(<LogoCircle />)}
       </AbsoluteVStack>

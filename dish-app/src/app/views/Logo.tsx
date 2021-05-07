@@ -60,7 +60,6 @@ export const LogoColor = ({ scale = 1, color }: { scale?: number; color?: string
 }
 
 export const LogoCircle = memo(() => {
-  // const media = useMedia()
   return circleSVG
 })
 

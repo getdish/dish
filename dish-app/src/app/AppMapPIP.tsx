@@ -1,6 +1,7 @@
 import { useStoreInstanceSelector } from '@dish/use-store'
 import mapboxgl from 'mapbox-gl'
 import React, { Suspense, memo, useEffect, useRef, useState } from 'react'
+import { useDebounceEffect } from 'snackui'
 import { AbsoluteVStack, VStack, useDebounceValue, useMedia } from 'snackui'
 
 import { MAPBOX_ACCESS_TOKEN, isWeb } from '../constants/constants'
@@ -14,6 +15,9 @@ mapboxgl.accessToken = MAPBOX_ACCESS_TOKEN
 
 export default memo(function AppMapPIP() {
   const show = useAppShouldShow('map')
+
+  // disable its stating twice..
+  return null
 
   if (!isWeb || !show) {
     return null
@@ -45,7 +49,7 @@ const AppPIPContent = memo(() => {
   const position = useAppMapKey('currentPosition')
   const mapNode = useRef<HTMLDivElement>(null)
   const center = useDebounceValue(position.center, 300)
-  const [map, setMap] = useState<mapboxgl.Map | null>(null)
+  const map = useRef<mapboxgl.Map>(null)
 
   const pipAction = (() => {
     if (isAtTop) {
@@ -67,28 +71,20 @@ const AppPIPContent = memo(() => {
   })()
 
   useEffect(() => {
-    map?.setCenter([center.lng, center.lat])
+    map.current?.setCenter([center.lng, center.lat])
   }, [center])
 
   useEffect(() => {
-    if (!mapNode.current) {
-      return
-    }
+    if (!mapNode.current) return
     console.log('new map pip')
-    setMap(
-      new mapboxgl.Map({
-        container: mapNode.current,
-        style: mapStyles.dark,
-        center,
-        zoom: 11,
-        attributionControl: false,
-      })
-      // .addControl(
-      //   new mapboxgl.AttributionControl({
-      //     compact: true,
-      //   })
-      // )
-    )
+    // @ts-ignore
+    map.current = new mapboxgl.Map({
+      container: mapNode.current,
+      style: mapStyles.dark,
+      center,
+      zoom: 11,
+      attributionControl: false,
+    })
   }, [mapNode.current])
 
   // useEffect(() => {
@@ -134,10 +130,10 @@ const AppPIPContent = memo(() => {
       scale={1}
       cursor="pointer"
       pressStyle={{
-        transform: [{ scale: 0.9 }],
+        scale: 0.9,
       }}
       hoverStyle={{
-        transform: [{ scale: 1.1 }],
+        scale: 1.1,
       }}
       {...(media.xs && {
         display: 'none',

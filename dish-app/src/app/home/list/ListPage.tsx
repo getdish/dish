@@ -292,6 +292,8 @@ const ListPageContent = graphql((props: Props) => {
   const [restaurants, restaurantActions] = useListRestaurants(list)
   const region = useRegionQuery(props.item.region)
 
+  console.log('list.color', list?.color)
+
   useSnapToFullscreenOnMount()
 
   useEffect(() => {
@@ -330,7 +332,7 @@ const ListPageContent = graphql((props: Props) => {
     })
 
   return (
-    <Theme name={list.color == 4 ? 'light' : 'dark'}>
+    <Theme name={list.color == 4 || list.color === 11 ? 'light' : 'dark'}>
       <StackDrawer backgroundColor={color} closable title={`${username}'s ${list.name}`}>
         {props.isActive && isMyList && (
           <BottomFloatingArea>

@@ -20,7 +20,6 @@
 
 import './globals'
 
-// import './whydidyourender'
 import { useHydrateCache } from '@dish/graph'
 import { configureAssertHelpers } from '@dish/helpers'
 import { ProvideRouter } from '@dish/router'
@@ -42,6 +41,7 @@ import themes, { MyTheme, MyThemes } from './constants/themes'
 import { addTagsToCache } from './helpers/allTags'
 import { queryClient } from './helpers/queryClient'
 import { DRoutesTable, router, routes } from './router'
+// import './whydidyourender'
 
 declare module 'snackui' {
   interface ThemeObject extends MyTheme {}
