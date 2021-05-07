@@ -103,7 +103,7 @@ export const AppSearchBarFloating = () => {
             <AbsoluteVStack
               borderRadius={borderRadius}
               className="searchbar-shadow"
-              transform={[{ skewX: '-12deg' }]}
+              skewX="-12deg"
               overflow="hidden"
               zIndex={102}
               opacity={1}
@@ -275,7 +275,8 @@ const SearchBarActionButton = memo(() => {
       <Link {...upRoute}>
         <VStack
           alignSelf="center"
-          transform={[{ skewX: '-12deg' }, { scale: 0.97 }]}
+          skewX="-12deg"
+          scale={0.97}
           pointerEvents={isDisabled ? 'none' : 'auto'}
           width={30}
           height={searchBarHeight + 5}
@@ -296,7 +297,7 @@ const SearchBarActionButton = memo(() => {
             },
           })}
         >
-          <VStack transform={[{ skewX: '12deg' }]}>
+          <VStack skewX="12deg">
             <Icon color={isWeb ? 'var(--color)' : '#888'} size={20} />
           </VStack>
         </VStack>

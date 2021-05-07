@@ -31,7 +31,7 @@ export const RatingView = ({
   const outerSize = Math.round(stacked ? size : size * 0.85)
 
   const innerRing = (
-    <VStack transform={[{ rotate }]}>
+    <VStack rotate={rotate}>
       <Pie color={purple} percent={ratingInner} size={innerSize} />
     </VStack>
   )

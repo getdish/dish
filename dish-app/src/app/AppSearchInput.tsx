@@ -195,12 +195,7 @@ export const AppSearchInput = memo(() => {
                     placeholderTextColor: '#999',
                   })}
                   onFocus={(e) => {
-                    if (drawerStore.snapIndex > 0) {
-                      e.preventDefault()
-                      drawerStore.setFocusNext(inputStore)
-                    } else {
-                      inputStore.setIsFocused(true)
-                    }
+                    inputStore.setIsFocused(true)
                     if (isDesktop) {
                       console.log('ignore focus')
                       // see above, we handle better for text selection
@@ -262,7 +257,7 @@ const SearchInputIcon = memo(({ color }: { color: string }) => {
   const isOnSearch = useIsRouteActive('search')
   const loading = isHomeLoading || (isOnSearch && search.status === 'loading')
   return (
-    <VStack width={16} marginLeft={0} transform={[{ scale: loading ? 1.2 : 1 }]}>
+    <VStack width={16} marginLeft={0} scale={loading ? 1.2 : 1}>
       <TouchableOpacity onPress={focusSearchInput}>
         {loading ? (
           <VStack className="rotating" opacity={1}>

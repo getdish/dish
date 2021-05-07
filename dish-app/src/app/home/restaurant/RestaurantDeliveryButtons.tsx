@@ -35,12 +35,7 @@ export const RestaurantDeliveryButtons = memo(
     return (
       <HStack flexWrap="wrap" alignItems="center" spacing="xs" {...props}>
         {!!label && (
-          <Paragraph
-            fontSize={14}
-            color="rgba(0,0,0,0.5)"
-            marginRight={8}
-            transform={[{ translateY: -1 }]}
-          >
+          <Paragraph fontSize={14} color="rgba(0,0,0,0.5)" marginRight={8} y={-1}>
             {label}
           </Paragraph>
         )}

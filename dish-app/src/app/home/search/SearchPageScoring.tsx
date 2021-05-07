@@ -45,17 +45,12 @@ export const SearchPageScoring = memo(() => {
             marginRight={-20}
             borderRadius={40}
             marginLeft={20}
-            transform={[{ rotate: '45deg' }]}
+            rotate="45deg"
           />
-          <AbsoluteVStack bottom={-32} left={15} transform={[{ rotate: '180deg' }]}>
+          <AbsoluteVStack bottom={-32} left={15} rotate="180deg">
             <Arrow />
           </AbsoluteVStack>
-          <VStack
-            borderBottomWidth={2}
-            transform={[{ translateY: -1 }]}
-            borderBottomColor={theme.borderColor}
-            flex={1}
-          />
+          <VStack borderBottomWidth={2} y={-1} borderBottomColor={theme.borderColor} flex={1} />
         </HStack>
       </HStack>
       <HStack

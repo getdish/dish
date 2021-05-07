@@ -380,7 +380,7 @@ const GalleryLightboxPhotosList = ({
               zIndex={isActive ? 1 : 0}
             >
               <VStack
-                transform={[{ scale: isActive ? 1.1 : 1 }]}
+                scale={isActive ? 1.1 : 1}
                 shadowOpacity={isActive ? 1 : 0}
                 shadowColor="#000"
                 shadowRadius={10}

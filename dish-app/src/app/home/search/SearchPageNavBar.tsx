@@ -34,7 +34,7 @@ export const SearchPageNavBar = memo(() => {
           <AbsoluteVStack top={-20} right={0}>
             <InverseRoundedEdge />
           </AbsoluteVStack>
-          <AbsoluteVStack top={-20} left={0} transform={[{ scaleX: -1 }]}>
+          <AbsoluteVStack top={-20} left={0} scaleX={-1}>
             <InverseRoundedEdge />
           </AbsoluteVStack>
           <VStack backgroundColor="#000" paddingBottom={safeArea.bottom}>

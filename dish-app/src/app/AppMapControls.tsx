@@ -88,7 +88,7 @@ const ToggleRegionButton = memo(() => {
         <Text userSelect="none" fontSize={12}>
           Area
         </Text>
-        <VStack transform={[{ scale: 0.8 }]}>
+        <VStack scale={0.8}>
           <Switch value={!searchRegion} />
         </VStack>
         <Text userSelect="none" fontSize={12}>

@@ -251,7 +251,7 @@ const RestaurantListItemContent = memo(
           <AbsoluteVStack
             backgroundColor={bgLight}
             width={300 - 40}
-            transform={[{ translateX: -320 }]}
+            x={-320}
             height="100%"
             padding={20}
             overflow="hidden"
@@ -363,7 +363,7 @@ const RestaurantListItemContent = memo(
               paddingLeft={showAbove ? 85 : 22}
               paddingRight={20}
               marginTop={media.sm ? -6 : 2}
-              transform={[{ translateY: -10 }]}
+              y={-10}
               pointerEvents="auto"
             >
               <HStack alignItems="center" cursor="pointer" spacing="sm">
@@ -425,11 +425,7 @@ const RestaurantListItemContent = memo(
 
           {/* PEEK / TAGS (RIGHT SIDE) */}
           {/* margin top: negative the titles second row height */}
-          <VStack
-            position="relative"
-            transform={[{ translateY: -30 }, { translateX: -15 }]}
-            pointerEvents="none"
-          >
+          <VStack position="relative" y={-30} x={-15} pointerEvents="none">
             <Suspense fallback={null}>
               <RestaurantPeekDishes
                 restaurantSlug={props.restaurantSlug}
@@ -582,7 +578,7 @@ const RestaurantPeekDishes = memo(
         <HStack
           pointerEvents="none"
           padding={20}
-          transform={[{ translateY: -30 }]}
+          y={-30}
           alignItems="center"
           height="100%"
           width={dishSize * 0.7 * 5}

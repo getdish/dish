@@ -18,7 +18,7 @@ export const PageFooter = memo(() => {
         backgroundColor="#000"
         right={-100}
         bottom={-55}
-        transform={[{ rotate: '-2deg' }]}
+        rotate="-2deg"
       >
         <Divider />
       </AbsoluteVStack>

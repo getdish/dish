@@ -54,13 +54,12 @@ export const AppMenuButton = memo(() => {
           pointerEvents="auto"
           borderRadius={100}
           backgroundColor="rgba(0,0,0,0.5)"
-          transform={[{ scale: 1.0001 }]}
+          scale={1.0001}
           hoverStyle={{
-            // backgroundColor: 'rgba(0,0,0,0.5)',
-            transform: [{ scale: 1.05 }],
+            scale: 1.05,
           }}
           pressStyle={{
-            transform: [{ scale: 0.95 }],
+            scale: 0.95,
           }}
           onPress={appMenu.show}
         >

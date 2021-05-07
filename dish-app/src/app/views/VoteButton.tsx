@@ -55,9 +55,7 @@ export const VoteButton = ({
         left={-8}
         right={-8}
         bottom={-translateDir * 8}
-        // transform={[{ translateY:  }]}
         overflow="hidden"
-        // backgroundColor="rgba(0,0,0,0.2)"
       >
         <AbsoluteVStack
           top={0}
@@ -68,7 +66,7 @@ export const VoteButton = ({
           shadowColor="#000"
           shadowOpacity={0.15}
           shadowRadius={4}
-          transform={[{ translateY: translateDir * -10 }]}
+          y={translateDir * -10}
         />
       </AbsoluteVStack>
     </VStack>

@@ -17,13 +17,8 @@ class DrawerStore extends Store {
   pan = new Animated.Value(this.getSnapPointOffset())
   spring: Animated.CompositeAnimation | null = null
   lastSnapAt = Date.now()
-  focusNext: InputStore | null = null
   isAtTop = false
   private updatePanValue = 0
-
-  setFocusNext(next: InputStore) {
-    this.focusNext = next
-  }
 
   get snapIndexName(): DrawerSnapPoint {
     return this.snapIndex === 0 ? 'top' : this.snapIndex === 2 ? 'bottom' : 'middle'
@@ -150,10 +145,6 @@ class DrawerStore extends Store {
     this.setPan(this.toValue)
     this.spring?.stop()
     this.spring = null
-    if (this.focusNext) {
-      this.focusNext.focusNode()
-      this.focusNext = null
-    }
   }
 
   private getSnapIndex(px: number, velocity: number) {

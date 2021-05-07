@@ -1,6 +1,8 @@
-import { RestaurantOnlyIds, graphql } from '@dish/graph'
+import { RestaurantOnlyIds, graphql, useMetaState } from '@dish/graph'
 import { isPresent } from '@dish/helpers'
 import React, { Suspense, memo, useEffect, useMemo, useState } from 'react'
+import { VStack } from 'snackui'
+import { AbsoluteVStack } from 'snackui'
 import { Hoverable, LoadingItems, Spacer } from 'snackui'
 
 import { getRestaurantIdentifiers } from '../../helpers/getRestaurantIdentifiers'
@@ -62,7 +64,18 @@ export const HomePageFeed = memo(
     function HomePageFeed(props: HomeFeedProps) {
       const { regionName } = props
       const items = useHomeFeed(props)
-      const isLoading = !!(!regionName || !items[0]?.id)
+      const isLoading = !regionName || false
+      //  ||
+      // !items.every((item) =>
+      //   item.type === 'cuisine'
+      //     ? !!item.restaurants[0]?.id
+      //     : item.type === 'dish-restaurants'
+      //     ? !!item.tag
+      //     : item.type === 'hot' || item.type === 'new'
+      //     ? !!item.restaurants[0]?.id
+      //     : true
+      // )
+      console.log('is', isLoading, items)
       const [hovered, setHovered] = useState<null | string>(null)
       const [hoveredResults, setHoveredResults] = useState<null | {
         via: FI['type']
@@ -163,17 +176,21 @@ export const HomePageFeed = memo(
       return (
         <>
           {isLoading && (
-            <>
+            <AbsoluteVStack pointerEvents="none" zIndex={100} fullscreen>
               <LoadingItems />
-            </>
+            </AbsoluteVStack>
           )}
 
-          {!isLoading && <Suspense fallback={<LoadingItems />}>{feedContents}</Suspense>}
+          {!isLoading && (
+            <>
+              <Suspense fallback={<LoadingItems />}>{feedContents}</Suspense>
+            </>
+          )}
         </>
       )
     },
     {
-      suspense: true,
+      suspense: false,
     }
   )
 )

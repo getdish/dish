@@ -24,7 +24,9 @@ export default memo(function AppMapPIP() {
   return (
     <VStack
       className="ease-in-out"
-      transform={[{ scale: 0.8 }, { translateX: 15 }, { translateY: 15 }]}
+      scale={0.8}
+      x={15}
+      y={15}
       {...(media.xs && {
         opacity: 0,
         pointerEvents: 'none',
@@ -129,7 +131,7 @@ const AppPIPContent = memo(() => {
       backgroundColor="red"
       shadowOffset={{ height: 3, width: 0 }}
       className="ease-in-out-slow"
-      transform={[{ scale: 1 }]}
+      scale={1}
       cursor="pointer"
       pressStyle={{
         transform: [{ scale: 0.9 }],

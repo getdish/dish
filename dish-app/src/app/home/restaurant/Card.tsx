@@ -1,3 +1,4 @@
+// debug
 import React from 'react'
 import { StyleSheet } from 'react-native'
 import { useTheme, useThemeName } from 'snackui'
@@ -119,9 +120,9 @@ export function Card({
               zIndex={1002}
               borderRadius={cardFrameBorderRadius}
               fullscreen
-              transform={[{ translateX: -cardFrameWidth }]}
+              x={-cardFrameWidth}
               // this makes react native work...
-              backgroundColor="blue"
+              backgroundColor="rgba(0,0,0,0.1)"
               shadowColor="#000"
               shadowOpacity={0.5}
               shadowRadius={100}
@@ -139,22 +140,6 @@ export function Card({
             )}
           </VStack>
 
-          {/* bottom color gradient */}
-          {/* <AbsoluteVStack
-            className="hover-0-opacity-child ease-in-out"
-            zIndex={10}
-            left={0}
-            bottom={0}
-            top="30%"
-            right={-20}
-            transform={[{ rotate: '45deg' }, { scaleX: 2 }, { translateY: 20 }]}
-          >
-            <LinearGradient
-              style={StyleSheet.absoluteFill}
-              colors={['transparent', colors.darkColor]}
-            />
-          </AbsoluteVStack> */}
-
           {typeof below === 'function' ? below(colors) : below}
         </AbsoluteVStack>
 
@@ -171,13 +156,7 @@ export function Card({
           flex={1}
         >
           {/* title gradient */}
-          <AbsoluteVStack
-            zIndex={-1}
-            top={0}
-            right={0}
-            // opacity={0.8}
-            transform={[{ rotate: '15deg' }, { scaleX: 2.5 }, { translateY: -20 }]}
-          >
+          <AbsoluteVStack zIndex={-1} fullscreen rotate="15deg" scaleX={2.5} y={-20}>
             <LinearGradient
               style={{ width: 150, height: 150 }}
               colors={[colors.pastelColor, colors.pastelColor, `${colors.darkColor}00`]}

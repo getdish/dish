@@ -48,7 +48,7 @@ export const LenseButton = ({
         backgroundColor={bg}
         borderRadius={100}
         marginRight={10}
-        transform={[{ scale: isActive ? 1.3 : 1.1 }]}
+        scale={isActive ? 1.3 : 1.1}
         {...(media.sm && {
           marginRight: 5,
           transform: [
@@ -74,7 +74,7 @@ export const LenseButton = ({
           {(lense.icon ?? '').trim()}
         </Text>
         <VStack
-          transform={[{ rotate: '-10deg' }]}
+          rotate="-10deg"
           zIndex={100}
           alignItems="center"
           borderRadius={4}
