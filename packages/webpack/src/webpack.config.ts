@@ -232,7 +232,7 @@ export function createWebpackConfig({
                 use: [
                   'thread-loader',
                   // // fast refresh seems to work??
-                  isProduction
+                  true || isProduction
                     ? {
                         loader: require.resolve('esbuild-loader'),
                         options: {

@@ -45,7 +45,7 @@ class DrawerStore extends Store {
     return this.getY()
   }
 
-  setPan(y: number) {
+  _setY(y: number) {
     this.pan.setValue(y)
     const next = this.getIsAtTop()
     if (next !== this.isAtTop) {
@@ -142,7 +142,7 @@ class DrawerStore extends Store {
   private finishSpring() {
     this.isDragging = false
     this.pan.flattenOffset()
-    this.setPan(this.toValue)
+    this._setY(this.toValue)
     this.spring?.stop()
     this.spring = null
   }

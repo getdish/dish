@@ -114,7 +114,7 @@ export const HomeDrawerSmallView = memo((props: { children: any }) => {
           scrollStore.setLock('drawer')
         }
         drawerStore.pan.setOffset(curSnapY)
-        drawerStore.setPan(0)
+        drawerStore._setY(0)
         if (!drawerStore.isDragging) {
           drawerStore.setIsDragging(true)
         }
@@ -146,7 +146,7 @@ export const HomeDrawerSmallView = memo((props: { children: any }) => {
           return
         }
         // console.log('pan move', y, dy, 'vs', drawerStore.pan['_value'])
-        drawerStore.setPan(dy)
+        drawerStore._setY(dy)
       },
       onPanResponderRelease: (e, { vy }) => {
         isPanActive = false

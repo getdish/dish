@@ -1940,7 +1940,7 @@ __metadata:
     "@types/requestidlecallback": 0.3.1
     "@unimodules/core": ^7.0.0
     "@unimodules/react-native-adapter": ^6.1.0
-    "@welldone-software/why-did-you-render": ^6.0.5
+    "@welldone-software/why-did-you-render": ^6.1.1
     apple-sign-in-rest: ^1.0.2
     aws-sdk: ^2.762.0
     babel-plugin-transform-inline-environment-variables: ^0.4.3
@@ -2031,6 +2031,7 @@ __metadata:
     "@babel/preset-typescript": ^7.13.0
     "@eps1lon/babel-plugin-optimize-react": ^0.0.4-alpha.4
     "@loadable/babel-plugin": ^5.13.2
+    "@welldone-software/why-did-you-render": ^6.1.1
     babel-plugin-lodash: ^3.3.4
     babel-plugin-react-native-web: ^0.15.0
     babel-plugin-react-wrapped-display-name: ^1.0.0
@@ -4992,11 +4993,11 @@ __metadata:
     "@babel/traverse": "*"
     "@babel/types": "*"
     "@dish/esdx": ^0.0.9
-    "@snackui/static": ^0.4.3
+    "@snackui/static": ^0.5.1
   languageName: unknown
   linkType: soft
 
-"@snackui/helpers@^0.4.2, @snackui/helpers@workspace:snackui/packages/helpers":
+"@snackui/helpers@^0.5.1, @snackui/helpers@workspace:snackui/packages/helpers":
   version: 0.0.0-use.local
   resolution: "@snackui/helpers@workspace:snackui/packages/helpers"
   dependencies:
@@ -5004,18 +5005,18 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@snackui/node@*, @snackui/node@^0.4.2, @snackui/node@workspace:snackui/packages/snackui-node":
+"@snackui/node@*, @snackui/node@^0.5.1, @snackui/node@workspace:snackui/packages/snackui-node":
   version: 0.0.0-use.local
   resolution: "@snackui/node@workspace:snackui/packages/snackui-node"
   dependencies:
-    "@snackui/helpers": ^0.4.2
+    "@snackui/helpers": ^0.5.1
     ts-transform-import-path-rewrite: ^0.3.0
     ttypescript: ^1.5.12
     typescript: ^4.2.3
   languageName: unknown
   linkType: soft
 
-"@snackui/static@*, @snackui/static@^0.4.3, @snackui/static@workspace:snackui/packages/snackui-static":
+"@snackui/static@*, @snackui/static@^0.5.1, @snackui/static@workspace:snackui/packages/snackui-static":
   version: 0.0.0-use.local
   resolution: "@snackui/static@workspace:snackui/packages/snackui-static"
   dependencies:
@@ -5032,8 +5033,8 @@ __metadata:
     "@dish/react-test-env": ^0.0.7
     "@dish/testy": "*"
     "@expo/match-media": ^0.1.0
-    "@snackui/helpers": ^0.4.2
-    "@snackui/node": ^0.4.2
+    "@snackui/helpers": ^0.5.1
+    "@snackui/node": ^0.5.1
     "@types/jest": "*"
     "@types/node": ^14.14.12
     "@types/react-native": ^0.64.2
@@ -6296,7 +6297,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@welldone-software/why-did-you-render@npm:^6.0.3, @welldone-software/why-did-you-render@npm:^6.0.5":
+"@welldone-software/why-did-you-render@npm:^6.0.3":
   version: 6.0.5
   resolution: "@welldone-software/why-did-you-render@npm:6.0.5"
   dependencies:
@@ -6304,6 +6305,17 @@ __metadata:
   peerDependencies:
     react: ^16 || ^17
   checksum: 7616b704a28e09f611e86330b9f87b4e27a881b7df995eea28c2cbdadf856ee1cec99d3cd52a1bd024c01cf9d965accb7dccd77c3fbd4821261063802e5db90b
+  languageName: node
+  linkType: hard
+
+"@welldone-software/why-did-you-render@npm:^6.1.1":
+  version: 6.1.1
+  resolution: "@welldone-software/why-did-you-render@npm:6.1.1"
+  dependencies:
+    lodash: ^4
+  peerDependencies:
+    react: ^16 || ^17
+  checksum: 8c8793e91a0eb740be45e4ea13a1846ea838aad631158f31b23ddc9609441f424e31283d4e9e254656c6e96dec65d4508ffd0d745946706a0ce84304836575c9
   languageName: node
   linkType: hard
 
@@ -21851,7 +21863,7 @@ __metadata:
   resolution: "snackui-loader@workspace:snackui/packages/snackui-loader"
   dependencies:
     "@dish/esdx": ^0.0.9
-    "@snackui/static": ^0.4.3
+    "@snackui/static": ^0.5.1
     fs-extra: ^9.1.0
     loader-utils: ^2.0.0
     lodash: ^4.17.21
@@ -21867,7 +21879,7 @@ __metadata:
     "@dish/fast-compare": ^2.7.6
     "@dish/proxy-worm": ^0.0.4
     "@react-native-community/blur": ^3.6.0
-    "@snackui/helpers": ^0.4.2
+    "@snackui/helpers": ^0.5.1
     "@types/node": ^14.11.10
     "@types/react": ^16.9.35
     "@types/react-dom": ^16.9.8

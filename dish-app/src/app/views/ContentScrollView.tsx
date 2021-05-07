@@ -309,7 +309,7 @@ export const ContentScrollView = forwardRef<ScrollView, ContentScrollViewProps>(
                 if (!drawerStore.isDragging) {
                   drawerStore.setIsDragging(true)
                 }
-                drawerStore.setPan(y)
+                drawerStore._setY(y)
               }}
               onTouchEnd={(e) => {
                 const ss = scrollState.current

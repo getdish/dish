@@ -53,9 +53,9 @@ export const client = createClient<GeneratedSchema>({
   schema: generatedSchema,
   scalarsEnumsHash,
   queryFetcher,
-  catchSelectionsTimeMS: 30,
+  catchSelectionsTimeMS: 0,
   normalization: false,
-  retry: 1,
+  retry: false,
 })
 
 export const { query, mutation, subscription, resolved, refetch, setCache, mutate } = client
