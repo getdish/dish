@@ -105,7 +105,7 @@ const RestaurantHeaderContent = memo(
               height={imgHeight}
               width={width}
               pointerEvents="none"
-              transform={[{ translateY: 1 }]}
+              y={1}
             >
               <LinearGradient
                 style={[StyleSheet.absoluteFill]}
@@ -154,19 +154,9 @@ const RestaurantHeaderContent = memo(
                       alignItems="center"
                       justifyContent="center"
                       minWidth={100}
-                      transform={[
-                        {
-                          skewX: '-12deg',
-                        },
-                      ]}
+                      skewX="-12deg"
                     >
-                      <HStack
-                        transform={[
-                          {
-                            skewX: '12deg',
-                          },
-                        ]}
-                      >
+                      <HStack skewX="12deg">
                         <Text
                           color="#fff"
                           alignSelf="flex-start"

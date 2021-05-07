@@ -31,7 +31,7 @@ export const SearchHeader = memo(() => {
         <VStack width="100%">
           <VStack paddingTop={media.sm ? 12 : 12 + 52 + 10} />
           <HStack position="relative">
-            <VStack zIndex={0} transform={[{ translateX: -10 }]}>
+            <VStack zIndex={0} x={-10}>
               <AbsoluteVStack
                 display={media.sm ? 'none' : 'flex'}
                 zIndex={10000}
@@ -78,16 +78,11 @@ export const SearchHeader = memo(() => {
               <SearchPageScoring />
             </VStack>
             <HStack marginLeft={-50} marginBottom={8} position="relative">
-              <VStack
-                position="relative"
-                alignItems="center"
-                justifyContent="center"
-                transform={[{ translateX: -10 }]}
-              >
+              <VStack position="relative" alignItems="center" justifyContent="center" x={-10}>
                 <SlantedTitle shadowColor="transparent" size="xs">
                   Lists
                 </SlantedTitle>
-                <AbsoluteVStack right={-14} transform={[{ rotate: '90deg' }]}>
+                <AbsoluteVStack right={-14} rotate="90deg">
                   <Arrow />
                 </AbsoluteVStack>
               </VStack>

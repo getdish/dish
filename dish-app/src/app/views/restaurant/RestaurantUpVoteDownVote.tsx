@@ -86,9 +86,9 @@ const RestaurantUpVoteDownVoteContents = graphql(
           borderRadius={rounded ? 100 : 12}
           padding={2}
           paddingHorizontal={5}
-          transform={[{ skewX: '-12deg' }]}
+          skewX="-12deg"
         >
-          <VStack alignItems="flex-end" transform={[{ skewX: '12deg' }]}>
+          <VStack alignItems="flex-end" skewX="12deg">
             <RatingWithVotes
               score={score}
               ratio={ratio}

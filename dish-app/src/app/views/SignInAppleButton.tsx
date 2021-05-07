@@ -9,12 +9,12 @@ export const SignInAppleButton = () => {
       className="ease-in-out-fast"
       width={230}
       height={60}
-      transform={[{ scale: 0.85 }]}
+      scale={0.85}
       hoverStyle={{
-        transform: [{ scale: 0.875 }],
+        scale: 0.875,
       }}
       pressStyle={{
-        transform: [{ scale: 0.8 }],
+        scale: 0.8,
       }}
     >
       <SignInAppleButtonInner />

@@ -193,14 +193,17 @@ const DishViewContent = (props: DishViewProps) => {
           paddingHorizontal={8}
           maxWidth={isWeb ? '70%' : '100%'}
           overflow="hidden"
-          transform={[{ translateX: -10 }, { skewX: '-12deg' }]}
+          x={-10}
+          skewX="-12deg"
           shadowColor="rgba(0,0,0,0.1)"
           shadowRadius={2}
           zIndex={1000}
           {...(isActive && {
             backgroundColor: '#000',
             shadowColor: 'rgba(0,0,0,0.2)',
-            transform: [{ scale: 1.05 }, { translateX: -10 }, { skewX: '-12deg' }],
+            scale: 1.05,
+            x: -10,
+            skewX: '-12deg',
           })}
         >
           <Text

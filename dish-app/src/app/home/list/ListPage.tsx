@@ -388,15 +388,7 @@ const ListPageContent = graphql((props: Props) => {
             <Spacer />
 
             {/* overflow clip prevention with marginVerticals here */}
-            <VStack
-              position="relative"
-              backgroundColor={color}
-              transform={[
-                {
-                  rotate: '-2deg',
-                },
-              ]}
-            >
+            <VStack position="relative" backgroundColor={color} rotate="-2deg">
               <PageTitle
                 noDivider
                 title={
@@ -408,7 +400,7 @@ const ListPageContent = graphql((props: Props) => {
                   >
                     <ScalingPressable>
                       <Link name="user" params={{ username: list.user?.username ?? '' }}>
-                        <SlantedTitle transform={[]} size="xs" alignSelf="center">
+                        <SlantedTitle scale={1} size="xs" alignSelf="center">
                           {username}'s
                         </SlantedTitle>
                       </Link>
@@ -425,7 +417,7 @@ const ListPageContent = graphql((props: Props) => {
                         </AbsoluteVStack>
                       )}
                       <SlantedTitle
-                        transform={[]}
+                        scale={1}
                         backgroundColor={theme.backgroundColorDarker}
                         color="#fff"
                         marginTop={-5}
@@ -451,7 +443,7 @@ const ListPageContent = graphql((props: Props) => {
                           list.name
                         )}
                       </SlantedTitle>
-                      <SlantedTitle transform={[]} zIndex={-1} size="xs" alignSelf="center">
+                      <SlantedTitle scale={1} zIndex={-1} size="xs" alignSelf="center">
                         {region.data?.name ?? props.item.region}
                       </SlantedTitle>
                     </VStack>

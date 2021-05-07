@@ -662,13 +662,12 @@ function setupMapEffect({
           type: 'circle',
           source: RESTAURANTS_SOURCE_ID,
           paint: {
-            'circle-radius': {
-              stops: [
-                [0, 0],
-                [20, 20],
-              ],
-              base: 2,
-            },
+            'circle-radius': [
+              'case',
+              ['boolean', ['feature-state', 'hover'], false],
+              15 * (supportsTouchWeb ? 1.2 : 1),
+              12 * (supportsTouchWeb ? 1.2 : 1),
+            ],
 
             // 'circle-stroke-color': 'transparent',
 

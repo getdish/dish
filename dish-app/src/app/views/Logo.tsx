@@ -9,7 +9,7 @@ export const Logo = (props: { scale?: number; color?: string }) => {
   const { color } = useSearchBarTheme()
   const scale = props.scale ?? 1
   return (
-    <VStack transform={[{ scale }]}>
+    <VStack scale={scale}>
       <Svg width={logoWidth} height={logoHeight} viewBox={`0 0 1201 544`}>
         <G stroke="none" strokeWidth="1" fill="none" fillRule="evenodd">
           <G transform="translate(-167.000000, -474.000000)" fill={props.color ?? color ?? '#fff'}>

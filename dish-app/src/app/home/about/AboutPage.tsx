@@ -136,7 +136,7 @@ export default function AboutPage({ item, isActive }: StackItemProps<HomeStateIt
                 right={15}
                 width={85}
                 height={85}
-                transform={[{ rotate: '12deg' }]}
+                rotate="12deg"
               >
                 <Image
                   style={{ width: '100%', height: '100%' }}

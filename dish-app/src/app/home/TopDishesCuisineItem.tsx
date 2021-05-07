@@ -22,7 +22,7 @@ const TopDishesCuisineItem = memo(({ country, index }: { index: number; country:
     return (country.dishes || []).map((top_dish, index) => {
       return (
         <HStack
-          transform={[{ translateY: index % 2 == 0 ? -5 : 5 }]}
+          translateY={index % 2 == 0 ? -5 : 5}
           hoverStyle={{
             zIndex: 1000,
           }}
@@ -62,8 +62,8 @@ const TopDishesCuisineItem = memo(({ country, index }: { index: number; country:
           borderTopLeftRadius={30}
           borderBottomLeftRadius={30}
           backgroundColor={`${getColorsForName(country.country).lightColor}55`}
-          transform={[{ rotate: '-2deg' }]}
-        ></AbsoluteVStack>
+          rotate="-2deg"
+        />
       )}
 
       <HStack justifyContent="center" alignItems="center">

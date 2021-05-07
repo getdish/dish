@@ -63,7 +63,7 @@ const DishButtonContent = (props: TagButtonSlantedProps) => {
         height={38}
         justifyContent="center"
         paddingHorizontal={12}
-        transform={[{ skewX: '-12deg' }]}
+        skewX="-12deg"
         shadowColor={theme.backgroundColorTertiary}
         shadowOffset={{ height: 2, width: 2 }}
         shadowRadius={0}
@@ -71,7 +71,7 @@ const DishButtonContent = (props: TagButtonSlantedProps) => {
         cursor="pointer"
         // {...rest}
       >
-        <HStack transform={[{ skewX: '12deg' }]} spacing="sm" alignItems="center">
+        <HStack skewX="12deg" spacing="sm" alignItems="center">
           {!!image && (
             <VStack
               overflow="hidden"
