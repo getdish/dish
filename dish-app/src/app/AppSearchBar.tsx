@@ -1,3 +1,4 @@
+// debug
 import { ArrowUp, ChevronLeft, MapPin, Search } from '@dish/react-feather'
 import { useStoreInstance } from '@dish/use-store'
 import React, { Suspense, memo } from 'react'
@@ -149,6 +150,7 @@ const AppSearchBarContents = memo(({ isColored }: { isColored: boolean }) => {
 
   return (
     <HStack
+      className="test-me"
       flex={1}
       pointerEvents="auto"
       alignItems="center"
@@ -163,7 +165,7 @@ const AppSearchBarContents = memo(({ isColored }: { isColored: boolean }) => {
         <DishLogoButton color={isColored ? '#fff' : undefined} />
       </VStack>
 
-      <HStack
+      <VStack
         className="ease-in-out"
         position="relative"
         width={media.sm ? 'auto' : '43%'}
@@ -189,15 +191,25 @@ const AppSearchBarContents = memo(({ isColored }: { isColored: boolean }) => {
         {media.xs && isWeb && (
           <>
             {/* keep both in dom so we have access to ref */}
-            <VStack flex={1} overflow="hidden" display={showLocation ? 'flex' : 'none'}>
+            <VStack
+              flex={1}
+              maxWidth="100%"
+              overflow="hidden"
+              display={showLocation ? 'flex' : 'none'}
+            >
               {searchLocationEl}
             </VStack>
-            <VStack flex={1} overflow="hidden" display={!showLocation ? 'flex' : 'none'}>
+            <VStack
+              flex={1}
+              maxWidth="100%"
+              overflow="hidden"
+              display={!showLocation ? 'flex' : 'none'}
+            >
               {searchInputEl}
             </VStack>
           </>
         )}
-      </HStack>
+      </VStack>
 
       {!media.xs && (
         <>
@@ -225,13 +237,13 @@ const AppSearchBarContents = memo(({ isColored }: { isColored: boolean }) => {
             autocompletes.setTarget(showLocation ? 'search' : 'location')
           }}
         >
-          <HStack padding={12}>
+          <VStack padding={12}>
             {showLocation ? (
               <Search color={isWeb ? 'var(--color)' : '#999'} size={22} opacity={0.5} />
             ) : (
               <MapPin color={isWeb ? 'var(--color)' : '#999'} size={22} opacity={0.5} />
             )}
-          </HStack>
+          </VStack>
         </TouchableOpacity>
       )}
 

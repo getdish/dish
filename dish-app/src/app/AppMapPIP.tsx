@@ -124,7 +124,6 @@ const AppPIPContent = memo(() => {
       overflow="hidden"
       shadowColor="rgba(0,0,0,0.2)"
       shadowRadius={18}
-      backgroundColor="red"
       shadowOffset={{ height: 3, width: 0 }}
       className="ease-in-out-slow"
       scale={1}
