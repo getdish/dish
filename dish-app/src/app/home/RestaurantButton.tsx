@@ -3,7 +3,6 @@ import { debounce } from 'lodash'
 import React, { useCallback } from 'react'
 import { Button, HStack, Hoverable, Text, VStack, useTheme } from 'snackui'
 
-import { getColorsForName } from '../../helpers/getColorsForName'
 import { getImageUrl } from '../../helpers/getImageUrl'
 import { queryRestaurant } from '../../queries/queryRestaurant'
 import { appMapStore } from '../AppMapStore'

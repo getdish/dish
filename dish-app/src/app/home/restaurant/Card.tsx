@@ -1,7 +1,5 @@
-// debug
 import React from 'react'
 import { StyleSheet } from 'react-native'
-import { useTheme, useThemeName } from 'snackui'
 import { AbsoluteVStack, HStack, LinearGradient, Paragraph, Spacer, Text, VStack } from 'snackui'
 
 import {
