@@ -172,9 +172,8 @@ class UserStore extends Store {
           ...this.user,
           ...user,
         }
-
-        if (!this.user.has_onboarded) {
-          console.log('go to user edit')
+        if (!this.user!.has_onboarded) {
+          console.log('onboarding, go to user edit')
           router.navigate({
             name: 'userEdit',
           })
