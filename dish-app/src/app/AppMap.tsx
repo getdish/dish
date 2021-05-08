@@ -216,7 +216,6 @@ export default memo(function AppMap() {
   }, [])
 
   const themeName = useThemeName()
-  console.log('themeName', themeName)
 
   if (!show) {
     return null

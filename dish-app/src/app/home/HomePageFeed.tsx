@@ -65,6 +65,7 @@ export const HomePageFeed = memo(
       const { regionName } = props
       const items = useHomeFeed(props)
       const isLoading = !regionName || false
+      // was trigger gqless infinite loops..
       //  ||
       // !items.every((item) =>
       //   item.type === 'cuisine'
@@ -75,7 +76,6 @@ export const HomePageFeed = memo(
       //     ? !!item.restaurants[0]?.id
       //     : true
       // )
-      console.log('is', isLoading, items)
       const [hovered, setHovered] = useState<null | string>(null)
       const [hoveredResults, setHoveredResults] = useState<null | {
         via: FI['type']
