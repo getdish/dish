@@ -20,15 +20,26 @@ export const fetchLog = (input: RequestInfo, init?: RequestInit | undefined): Pr
 }
 
 let requests = 0
-setInterval(() => {
-  requests = 0
-}, 80)
+let last
+function clear() {
+  clearTimeout(last)
+  // @ts-ignore
+  last = requestIdleCallback(() => {
+    if (requests !== 0) {
+      console.log('clear')
+      requests = 0
+    }
+  })
+}
+clear()
 
 export const queryFetcher: QueryFetcher = async function (query, variables) {
   requests++
   if (requests > 10) {
+    console.log('too many!')
     throw new Error(`Break out GQ`)
   }
+  clear()
   const headers = {
     'content-type': 'application/json',
     'x-user-is-logged-in': `${Auth.isLoggedIn}`,
