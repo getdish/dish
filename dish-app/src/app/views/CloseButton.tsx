@@ -1,4 +1,3 @@
-// debug
 import { CornerLeftUp, X } from '@dish/react-feather'
 import React, { memo } from 'react'
 import { AbsoluteVStack } from 'snackui'

@@ -19,7 +19,16 @@ export const fetchLog = (input: RequestInfo, init?: RequestInit | undefined): Pr
   return fetch(input, init)
 }
 
+let requests = 0
+setInterval(() => {
+  requests = 0
+}, 80)
+
 export const queryFetcher: QueryFetcher = async function (query, variables) {
+  requests++
+  if (requests > 10) {
+    throw new Error(`Break out GQ`)
+  }
   const headers = {
     'content-type': 'application/json',
     'x-user-is-logged-in': `${Auth.isLoggedIn}`,
