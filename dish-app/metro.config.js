@@ -1,6 +1,6 @@
 const { createMetroConfiguration } = require('expo-yarn-workspaces')
 const block = require('metro-config/src/defaults/exclusionList')
-const { join } = require('path')
+const path = require('path')
 
 const config = createMetroConfiguration(__dirname)
 
@@ -8,12 +8,13 @@ module.exports = {
   ...config,
   watchFolders: [
     ...config.watchFolders,
-    join(__dirname, '../packages'),
-    join(__dirname, '../snackui/packages'),
+    path.join(__dirname, '../packages'),
+    path.join(__dirname, '../snackui/packages'),
   ],
   resolver: {
     ...config.resolver,
     blockList: block([/.*\/android\/React(Android|Common)\/.*/, /.*\/versioned-react-native\/.*/]),
+    resolverMainFields: ['react-native', 'browser', 'tsmain', 'main'],
   },
   transformer: {
     ...config.transformer,
