@@ -34,7 +34,6 @@ export function Link<Name extends DRouteName = DRouteName>(
   const { wrapWithLinkElement } = useLink(allProps)
   return wrapWithLinkElement(
     !!Object.keys(textProps).length || isStringChild(children) ? (
-      // @ts-expect-error we are allowing display="inline"
       <Text color={brandColor} {...textProps}>
         {children}
       </Text>

@@ -2,7 +2,6 @@ import { supportsTouchWeb } from '@dish/helpers'
 import { capitalize } from 'lodash'
 import React, { Suspense, memo, useState } from 'react'
 import { StyleSheet } from 'react-native'
-import Svg, { G, Path } from 'react-native-svg'
 import {
   AbsoluteVStack,
   Box,

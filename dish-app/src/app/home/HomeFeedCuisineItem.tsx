@@ -1,5 +1,5 @@
 import { RestaurantOnlyIds, TopCuisineDish, graphql, order_by, query } from '@dish/graph'
-import React, { memo, useMemo, useState } from 'react'
+import React, { memo, useMemo } from 'react'
 import { HStack, Hoverable, VStack } from 'snackui'
 
 import { getColorsForName } from '../../helpers/getColorsForName'
@@ -16,7 +16,6 @@ import { RestaurantCard } from './restaurant/RestaurantCard'
 import { RestaurantStatBars } from './RestaurantStatBars'
 import { SkewedCard } from './SkewedCard'
 import { TagsText } from './TagsText'
-import { useTopCuisines } from './useTopCuisines'
 
 export type FICuisine = FIBase & {
   restaurants: RestaurantOnlyIds[]

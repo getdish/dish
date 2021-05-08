@@ -1,15 +1,14 @@
 import { fullyIdle, series } from '@dish/async'
 import { RestaurantItemMeta, graphql } from '@dish/graph'
 import { MessageSquare } from '@dish/react-feather'
-import { useStoreInstance, useStoreInstanceSelector } from '@dish/use-store'
+import { useStoreInstanceSelector } from '@dish/use-store'
 import { debounce } from 'lodash'
 import React, { Suspense, memo, useCallback, useEffect, useState } from 'react'
-import { Dimensions, StyleSheet } from 'react-native'
+import { Dimensions } from 'react-native'
 import {
   AbsoluteVStack,
   Circle,
   HStack,
-  LinearGradient,
   LoadingItem,
   LoadingItemsSmall,
   Spacer,
