@@ -36,7 +36,7 @@ clear()
 
 export const queryFetcher: QueryFetcher = async function (query, variables) {
   requests++
-  if (requests > 10) {
+  if (requests > 50) {
     console.log('too many!')
     throw new Error(`Break out GQ`)
   }
