@@ -6,7 +6,7 @@
 [subrepo]
 	remote = git@github.com:snackui/snackui.git
 	branch = master
-	commit = a0195f51bf6f53e68c2e49ee2a0cf9ca478dd584
-	parent = dfe17d3715e4f5abb2de1222fe1677b798cba952
+	commit = 11de25b105fe1198d515bbd66f5e228701a7d462
+	parent = b0af27d85bb567785680a5d25e76a8fac2bb7718
 	method = merge
 	cmdver = 0.4.3
