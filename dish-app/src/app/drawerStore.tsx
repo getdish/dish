@@ -119,7 +119,6 @@ class DrawerStore extends Store {
     const speed = Math.max(0.1, Math.abs(velocity) * distanceSpeed)
     this.springId = Math.random()
     const curId = this.springId
-    console.log('speed', speed)
     this.spring = Animated.spring(this.pan, {
       useNativeDriver: true,
       // velocity: speed,

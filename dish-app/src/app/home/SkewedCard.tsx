@@ -1,5 +1,5 @@
 import React from 'react'
-import { HStack, StackProps, VStack } from 'snackui'
+import { StackProps, VStack } from 'snackui'
 
 import { cardFrameBorderRadius } from '../../constants/constants'
 import { ContentScrollViewHorizontal } from '../views/ContentScrollViewHorizontal'
