@@ -1,10 +1,11 @@
+// debug
 import { reaction } from '@dish/use-store'
 import React, { Suspense, memo, useEffect } from 'react'
 import { StyleSheet } from 'react-native'
 // import { createReparentableSpace } from 'react-reparenting'
 import { AbsoluteVStack, HStack, LinearGradient, VStack, useMedia, useTheme } from 'snackui'
 
-import { searchBarHeight, zIndexDrawer } from '../../constants/constants'
+import { drawerWidthMax, searchBarHeight, zIndexDrawer } from '../../constants/constants'
 import { router } from '../../router'
 import { AppAutocompleteSearch } from '../AppAutocompleteSearch'
 import { appMenuStore } from '../AppMenuStore'
@@ -135,14 +136,11 @@ export const HomeContainerLarge = (props) => {
         justifyContent="flex-end"
       >
         <UnderFade />
+        <AppAutocompleteSearch />
 
-        <VStack flex={1} maxWidth="100%" marginLeft="auto" position="relative" opacity={1}>
-          <AppAutocompleteSearch />
+        {props.children}
 
-          {props.children}
-
-          <DrawerPortalProvider />
-        </VStack>
+        <DrawerPortalProvider />
       </HStack>
     </VStack>
   )

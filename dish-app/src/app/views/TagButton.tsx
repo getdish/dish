@@ -1,12 +1,11 @@
+// debug
 // TODO if we can have compiler pick up a few more things speeds will go up a lot
 import { Tag, TagQuery, TagType, graphql } from '@dish/graph'
 import { ThumbsDown, ThumbsUp, X } from '@dish/react-feather'
 import React, { memo } from 'react'
 import {
   AbsoluteVStack,
-  Button,
   HStack,
-  Spacer,
   StackProps,
   Text,
   TextProps,
@@ -26,7 +25,6 @@ import { useUserTagVotes } from '../hooks/useUserTagVotes'
 import { Image } from './Image'
 import { Link } from './Link'
 import { Pie } from './Pie'
-import { TextSuperScript } from './TextSuperScript'
 
 export type TagButtonTagProps = {
   type?: string
@@ -139,8 +137,10 @@ const TagButtonInner = (props: TagButtonProps) => {
   const theme = useTheme()
 
   if (!slug) {
+    console.log('no slug')
     return null
   }
+  console.log('slug', slug)
 
   const isSmall = size === 'sm'
   const scale = isSmall ? 0.85 : size == 'lg' ? 1.025 : 1
