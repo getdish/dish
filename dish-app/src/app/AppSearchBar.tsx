@@ -16,7 +16,7 @@ import { AppMenu } from './AppMenu'
 import { AppSearchInput } from './AppSearchInput'
 import { AppSearchInputLocation } from './AppSearchInputLocation'
 import { autocompletesStore } from './AutocompletesStore'
-import { homeStore, useHomeStore, useHomeStoreSelector } from './homeStore'
+import { homeStore, useHomeStoreSelector } from './homeStore'
 import { useSearchBarTheme } from './hooks/useSearchBarTheme'
 import { DishLogoButton } from './views/DishLogoButton'
 import { Link } from './views/Link'
@@ -149,7 +149,6 @@ const AppSearchBarContents = memo(({ isColored }: { isColored: boolean }) => {
 
   return (
     <HStack
-      className="test-me"
       flex={1}
       pointerEvents="auto"
       alignItems="center"
@@ -183,7 +182,11 @@ const AppSearchBarContents = memo(({ isColored }: { isColored: boolean }) => {
         {media.xs && !isWeb && (
           <>
             {showLocation && searchLocationEl}
-            {!showLocation && <VStack flex={1}>{searchInputEl}</VStack>}
+            {!showLocation && (
+              <VStack width="100%" maxWidth="100%" flex={1}>
+                {searchInputEl}
+              </VStack>
+            )}
           </>
         )}
 
