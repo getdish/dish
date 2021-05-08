@@ -1,6 +1,6 @@
 // TODO variant for width/height
 import React from 'react'
-import { VStack, useMedia, useTheme } from 'snackui'
+import { VStack, useTheme } from 'snackui'
 
 import {
   cardFrameBorderRadius,
