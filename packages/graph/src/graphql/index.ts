@@ -28,7 +28,6 @@ function clear() {
   clearTimeout(last)
   last = defer(() => {
     if (requests !== 0) {
-      console.log('clear')
       requests = 0
     }
   })
