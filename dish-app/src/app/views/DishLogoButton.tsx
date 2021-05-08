@@ -53,6 +53,7 @@ export const DishLogoButton = memo(({ color }: { color?: string }) => {
         )}
       </VStack>
       <AbsoluteVStack
+        className="123321"
         pointerEvents={media.xs ? 'auto' : 'none'}
         opacity={media.xs ? 1 : 0}
         alignItems="center"

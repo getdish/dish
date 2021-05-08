@@ -7,7 +7,7 @@ import { HomeStackViewPages } from './HomeStackViewPages'
 
 export function Home() {
   return (
-    <AbsoluteVStack pointerEvents="none" fullscreen zIndex={1000}>
+    <AbsoluteVStack backgroundColor="red" pointerEvents="none" fullscreen zIndex={1000}>
       <HomeDrawerSmall>
         <HomeStackView>
           {(props) => {

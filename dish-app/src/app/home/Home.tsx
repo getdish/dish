@@ -1,11 +1,10 @@
-// debug
 import { reaction } from '@dish/use-store'
 import React, { Suspense, memo, useEffect } from 'react'
 import { StyleSheet } from 'react-native'
 // import { createReparentableSpace } from 'react-reparenting'
 import { AbsoluteVStack, HStack, LinearGradient, VStack, useMedia, useTheme } from 'snackui'
 
-import { drawerWidthMax, searchBarHeight, zIndexDrawer } from '../../constants/constants'
+import { searchBarHeight, zIndexDrawer } from '../../constants/constants'
 import { router } from '../../router'
 import { AppAutocompleteSearch } from '../AppAutocompleteSearch'
 import { appMenuStore } from '../AppMenuStore'
