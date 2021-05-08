@@ -7,6 +7,13 @@ module.exports = function (api) {
     return {}
   }
 
+  if (process.env.SNACKUI_ONLY) {
+    return {
+      presets: ['@dish/babel-preset'],
+      plugins: ['@snackui/babel-plugin'],
+    }
+  }
+
   if (useOurBabel) {
     return {
       presets: ['@dish/babel-preset'],

@@ -1,3 +1,4 @@
+// debug
 import { reaction } from '@dish/use-store'
 import React, { Suspense, memo, useEffect } from 'react'
 import { StyleSheet } from 'react-native'

@@ -64,7 +64,7 @@ export function createWebpackConfig({
   const isHot = !isProduction && !isSSR && !disableHot && target !== 'node'
   const isStaticExtracted = !process.env.NO_EXTRACT
   const isVerbose = process.env.ANALYZE_BUNDLE || process.env.INSPECT
-  const minimize = !isSSR
+  const minimize = !isSSR && !noMinify
   const hashFileNamePart = '[contenthash]'
   const hotEntry = isHot ? 'webpack-hot-middleware/client' : null
   const smp = new SpeedMeasurePlugin()
@@ -177,7 +177,7 @@ export function createWebpackConfig({
         mangleExports: isProduction,
         removeAvailableModules: isProduction,
         splitChunks:
-          isProduction && !isSSR && !noMinify
+          isProduction && !noMinify
             ? {
                 maxAsyncRequests: 20,
                 maxInitialRequests: 10,
@@ -196,30 +196,38 @@ export function createWebpackConfig({
                   },
                 },
               }
-            : false,
-        runtimeChunk: false,
-        minimizer:
-          !isProduction || noMinify
-            ? [
-                new CssMinimizerPlugin({
-                  minimizerOptions: {
-                    preset: [
-                      'lite',
-                      {
-                        discardDuplicates: true,
-                      },
-                    ],
+            : {
+                cacheGroups: {
+                  styles: {
+                    name: `styles`,
+                    type: 'css/mini-extract',
+                    chunks: 'all',
+                    enforce: true,
                   },
-                }),
-              ]
-            : [
-                new CssMinimizerPlugin(),
-                new ESBuildMinifyPlugin({
-                  target: 'es2019',
-                  treeShaking: true,
-                  css: false,
-                }),
-              ],
+                },
+              },
+        runtimeChunk: false,
+        minimizer: !isProduction
+          ? [
+              new CssMinimizerPlugin({
+                minimizerOptions: {
+                  preset: [
+                    'lite',
+                    {
+                      discardDuplicates: true,
+                    },
+                  ],
+                },
+              }),
+            ]
+          : [
+              new CssMinimizerPlugin(),
+              new ESBuildMinifyPlugin({
+                target: 'es2019',
+                treeShaking: true,
+                css: false,
+              }),
+            ],
       },
       module: {
         rules: [
@@ -313,9 +321,13 @@ export function createWebpackConfig({
         ],
       },
       plugins: [
-        new MiniCssExtractPlugin({
-          filename: '[name].[contenthash].css',
-        }),
+        new MiniCssExtractPlugin(
+          isProduction
+            ? {
+                filename: '[name].[contenthash].css',
+              }
+            : undefined
+        ),
 
         isSSR && new LoadablePlugin(),
 

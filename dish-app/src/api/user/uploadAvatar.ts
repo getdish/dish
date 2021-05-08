@@ -66,7 +66,7 @@ export default secureRoute('user', async (req, res) => {
     return
   }
 
-  // @ts-expect-error
+  // @ts-ignore
   const files = req.files
 
   if (!Array.isArray(files) || !files.length) {
