@@ -83,12 +83,11 @@ export const useScrollActive = (id: string) => {
         !isSpringing &&
         // !isDraggingDrawer &&
         !isLockedHorizontalOrDrawer
-
-      console.log('active?', id, next, {
-        isFullyOpen,
-        isScrollAtTop,
-        isLockedHorizontalOrDrawer,
-      })
+      // console.log('active?', id, next, {
+      //   isFullyOpen,
+      //   isScrollAtTop,
+      //   isLockedHorizontalOrDrawer,
+      // })
       setActive(next)
     }
 
@@ -108,7 +107,6 @@ export const useScrollActive = (id: string) => {
         isSpringing = a
         isDraggingDrawer = b
         isFullyOpen = c
-        console.log('isFullyOpen', id, c)
         update()
         if (isSpringing) {
           // max time before reverting

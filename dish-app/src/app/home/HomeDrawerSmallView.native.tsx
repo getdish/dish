@@ -172,7 +172,7 @@ export const HomeDrawerSmallView = memo((props: { children: any }) => {
     })
 
     // responder.panHandlers = Object.keys(responder.panHandlers).reduce((acc, cur) => {
-    //   console.log('what is', cur)
+    //   console.log('---', cur)
     //   const og = responder.panHandlers[cur]
     //   acc[cur] = (...args) => {
     //     const res = og(...args)

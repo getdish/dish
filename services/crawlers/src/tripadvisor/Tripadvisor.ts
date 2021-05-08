@@ -334,7 +334,7 @@ export class Tripadvisor extends WorkerJob {
         break
       }
       if (line.includes('window.__WEB_CONTEXT__')) {
-        console.log('what is', line)
+        console.log('---', line)
       }
     }
     if (the_data_line != '') {

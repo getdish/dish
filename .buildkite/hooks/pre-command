@@ -94,7 +94,8 @@ EOF
 fi
 
 if [ "$FIRST_STEP" == "true" ]; then
-  flyctl version update || true &
+  echo "updating fly"
+  (flyctl version update || true) && flyctl version &
 fi
 
 ./dishctl.sh dish_registry_auth &
