@@ -21,10 +21,12 @@ export const fetchLog = (input: RequestInfo, init?: RequestInit | undefined): Pr
 
 let requests = 0
 let last
+const defer =
+  // @ts-ignore
+  typeof requestIdleCallback !== 'undefined' ? requestIdleCallback : (x) => setTimeout(x, 15)
 function clear() {
   clearTimeout(last)
-  // @ts-ignore
-  last = requestIdleCallback(() => {
+  last = defer(() => {
     if (requests !== 0) {
       console.log('clear')
       requests = 0

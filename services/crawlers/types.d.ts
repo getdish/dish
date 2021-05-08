@@ -26,9 +26,9 @@ declare module "@dish/crawlers" {
         _logBlockCounts(): void;
         _interceptRequests(request: Request): Promise<void>;
         _blockImage(request: Request): boolean;
-        _rewriteDomainsToAWS(request: Request): any;
+        _rewriteDomainsToAWS(request: Request): string | false;
         _isRequestSensitiveToAWSProxy(request: Request): true | undefined;
-        _isGoogleUserContent(request: Request): any;
+        _isGoogleUserContent(request: Request): boolean;
         _waitForSpecificRequest(request: Request): void;
         getPage(url: string): Promise<void>;
         screenshot(): Promise<void>;
