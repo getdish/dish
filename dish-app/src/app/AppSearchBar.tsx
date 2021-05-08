@@ -196,6 +196,7 @@ const AppSearchBarContents = memo(({ isColored }: { isColored: boolean }) => {
             <VStack
               flex={1}
               maxWidth="100%"
+              width="100%"
               overflow="hidden"
               display={showLocation ? 'flex' : 'none'}
             >
@@ -204,6 +205,7 @@ const AppSearchBarContents = memo(({ isColored }: { isColored: boolean }) => {
             <VStack
               flex={1}
               maxWidth="100%"
+              width="100%"
               overflow="hidden"
               display={!showLocation ? 'flex' : 'none'}
             >

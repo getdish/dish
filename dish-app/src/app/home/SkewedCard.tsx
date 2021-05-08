@@ -1,5 +1,5 @@
 import React from 'react'
-import { StackProps, VStack } from 'snackui'
+import { HStack, StackProps, VStack } from 'snackui'
 
 import { cardFrameBorderRadius } from '../../constants/constants'
 import { ContentScrollViewHorizontal } from '../views/ContentScrollViewHorizontal'
@@ -42,7 +42,7 @@ export const SkewedCard = ({ children, size, ...props }: StackProps & { size?: C
 export const SkewedCardCarousel = ({ children }: { children: any }) => {
   return (
     <ContentScrollViewHorizontal>
-      {children}
+      <HStack paddingVertical={10}>{children}</HStack>
       <VStack width={100} height={100} />
     </ContentScrollViewHorizontal>
   )

@@ -214,20 +214,18 @@ export function Card({
 export const CardOverlay = (props: { children: any }) => {
   return (
     <AbsoluteVStack
-      fullscreen
-      top="auto"
+      height="100%"
+      width="100%"
       justifyContent="flex-end"
       borderBottomLeftRadius={cardFrameBorderRadius}
       borderBottomRightRadius={cardFrameBorderRadius}
       overflow="hidden"
     >
       <VStack position="relative">
-        <AbsoluteVStack left={0} right={0} bottom={0} top={-40}>
-          <LinearGradient
-            colors={['rgba(40,40,40,0)', 'rgba(40,40,40,1)']}
-            style={StyleSheet.absoluteFill}
-          />
-        </AbsoluteVStack>
+        <LinearGradient
+          colors={['rgba(40,40,40,0)', 'rgba(40,40,40,1)']}
+          style={StyleSheet.absoluteFill}
+        />
         <VStack alignItems="center" justifyContent="center" padding={10}>
           {props.children}
         </VStack>

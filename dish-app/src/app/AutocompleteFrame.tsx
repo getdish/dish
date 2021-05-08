@@ -55,6 +55,9 @@ export const AutocompleteFrame = ({
       })}
       {...(media.notSm && {
         marginTop: -100,
+        marginLeft: 'auto',
+        width: '100%',
+        maxWidth: drawerWidthMax,
       })}
 
       // DONT PUT EVENT HERE NEED TO DEBUG WHY IT BREAKS ON NATIVE
