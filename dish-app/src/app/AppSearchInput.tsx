@@ -354,7 +354,6 @@ const handleKeyPress = async (e: any, inputStore: InputStore) => {
             params: { slug: item.slug },
           })
         } else if ('slug' in item) {
-          console.log('clear')
           homeStore.clearSearch()
           homeStore.navigate({
             tags: [item],
