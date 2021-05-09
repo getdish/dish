@@ -8,6 +8,18 @@ const dispose = (d: any) => {
   }
 }
 
+export const timer = () => {
+  const start = Date.now()
+  return (name: string, max?: number) => {
+    const t = Date.now() - start
+    console.log(` - (${t}ms) ${name}`)
+    if (max && t > max) {
+      debugger
+    }
+    return t
+  }
+}
+
 export function reaction<
   StoreInstance extends Store<any>,
   Selector extends (a: StoreInstance) => any

@@ -101,9 +101,6 @@ export const HomeFeedDishRestaurants = graphql(
           },
           limit: 1,
         })[0]
-
-        console.log('dish', selectRishDishViewSimple(rtag))
-
         return {
           id: restaurant.id,
           slug: restaurant.slug,

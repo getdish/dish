@@ -13,9 +13,13 @@ export const HomeDrawerSmall = (props: { children: any }) => {
       (x) => x.visible,
       function autocompleteVisibleToSnapAndKeyboard(visible) {
         if (visible === true) {
-          drawerStore.setSnapIndex(0)
+          if (drawerStore.snapIndex !== 0) {
+            drawerStore.setSnapIndex(0)
+          }
         } else {
-          drawerStore.setSnapIndex(1)
+          if (drawerStore.snapIndex !== 1) {
+            drawerStore.setSnapIndex(1)
+          }
           Keyboard.dismiss()
         }
       }

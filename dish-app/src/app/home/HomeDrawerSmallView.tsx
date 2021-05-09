@@ -54,6 +54,7 @@ export const HomeDrawerSmallView = memo((props: { children: any }) => {
         useNativeDriver: false,
       }),
       onPanResponderRelease: () => {
+        console.log('release')
         drawerStore.setIsDragging(false)
         drawerStore.pan.flattenOffset()
         drawerStore.animateDrawerToPx(drawerStore.pan['_value'])
