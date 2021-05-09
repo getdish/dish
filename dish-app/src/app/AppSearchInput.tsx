@@ -261,7 +261,8 @@ const SearchInputIcon = memo(({ color }: { color: string }) => {
     <VStack width={16} marginLeft={0} scale={loading ? 1.2 : 1}>
       <TouchableOpacity onPress={focusSearchInput}>
         {loading ? (
-          <VStack className="rotating" opacity={1}>
+          // DO NOT ROTATE THIS ON MOBILE WEB IT SLOWS THINGS DOWN *INCREDIBLY*
+          <VStack className={supportsTouchWeb ? '' : 'rotating'} opacity={1}>
             <Loader color={color} size={16} />
           </VStack>
         ) : (

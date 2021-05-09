@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from 'react'
 
 import { isEqualSubsetShallow } from './isEqualShallow'
+import { useCurrentComponent } from './useStoreDebug'
 
 const TARGET = Symbol()
 const GET_VERSION = Symbol()
@@ -11,6 +12,7 @@ export const createMutableSource = (target: any, getVersion: any): any => ({
 })
 
 export const useMutableSource = (source: any, getSnapshot: any, subscribe: any) => {
+  const cmp = useCurrentComponent()
   const lastVersion = useRef(0)
   const currentVersion = source[GET_VERSION](source[TARGET])
   const [state, setState] = useState(
@@ -62,6 +64,8 @@ export const useMutableSource = (source: any, getSnapshot: any, subscribe: any) 
           if (isEqualSubsetShallow(prev[4], nextSnapshot)) {
             return prev
           }
+          // TODO debug this a lot more
+          // console.log('!!!', cmp)
           return [
             /* [0] */ prev[0],
             /* [1] */ prev[1],

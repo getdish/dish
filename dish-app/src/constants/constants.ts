@@ -14,12 +14,12 @@ export const drawerBorderRadius = 15
 export const drawerWidthMax = 940
 export const drawerExtraLeftScrollSpace = 500
 
-export const listItemMaxSideWidth = drawerWidthMax / 2.5 - 40
+export const listItemMaxSideWidth = Math.round(drawerWidthMax / 2.5 - 40)
 
-export const logoWidth = 1303 * 0.064
-export const logoHeight = 608 * 0.064
-export const logoXsWidth = 1024 * 0.044
-export const logoXsHeight = 1024 * 0.044
+export const logoWidth = Math.round(1303 * 0.064)
+export const logoHeight = Math.round(608 * 0.064)
+export const logoXsWidth = Math.round(1024 * 0.044)
+export const logoXsHeight = Math.round(1024 * 0.044)
 
 export const pageWidthMax = 2000
 
@@ -43,10 +43,10 @@ export const zIndexMapControlsUnderlaySmall = 500
 export const zIndexGallery = 500
 
 export const cardFrameBorderRadius = 20
-export const cardFrameWidth = 210 * 0.9
-export const cardFrameHeight = 230 * 0.9
-export const cardFrameWidthSm = cardFrameWidth * 0.75
-export const cardFrameHeightSm = cardFrameHeight * 0.75
+export const cardFrameWidth = Math.round(210 * 0.9)
+export const cardFrameHeight = Math.round(230 * 0.9)
+export const cardFrameWidthSm = Math.round(cardFrameWidth * 0.75)
+export const cardFrameHeightSm = Math.round(cardFrameHeight * 0.75)
 
 export const MAPBOX_ACCESS_TOKEN =
   'pk.eyJ1IjoibndpZW5lcnQiLCJhIjoiY2lvbWlhYjRjMDA0NnVpbTIxMHM5ZW95eCJ9.DQyBjCEuPRVt1400yejGhA'

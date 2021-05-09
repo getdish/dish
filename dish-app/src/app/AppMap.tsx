@@ -1,30 +1,28 @@
 import { useStoreInstance, useStoreInstanceSelector } from '@dish/use-store'
 import React, { memo, useCallback, useEffect, useMemo } from 'react'
+import { StyleSheet } from 'react-native'
+import Animated, { useAnimatedStyle, useSharedValue, withSpring } from 'react-native-reanimated'
 import {
   AbsoluteVStack,
   HStack,
-  Theme,
+  LinearGradient,
   VStack,
   useDebounceValue,
   useGet,
   useMedia,
+  useTheme,
   useThemeName,
 } from 'snackui'
 
 import { isWeb, pageWidthMax, searchBarHeight, zIndexMap } from '../constants/constants'
 import { isTouchDevice, supportsTouchWeb } from '../constants/platforms'
+import { getWindowHeight } from '../helpers/getWindow'
 import { coordsToLngLat } from '../helpers/mapHelpers'
 import { router } from '../router'
 import { RegionWithVia } from '../types/homeTypes'
 import { AppAutocompleteLocation } from './AppAutocompleteLocation'
 import { AppMapControls } from './AppMapControls'
-import {
-  appMapStore,
-  cancelUpdateRegion,
-  updateRegion,
-  updateRegionFaster,
-  useAppMapStore,
-} from './AppMapStore'
+import { cancelUpdateRegion, updateRegion, updateRegionFaster, useAppMapStore } from './AppMapStore'
 import { useAppShouldShow } from './AppStore'
 import { drawerStore } from './drawerStore'
 import { ensureFlexText } from './home/restaurant/ensureFlexText'
@@ -35,6 +33,42 @@ import { MapView } from './Map'
 import { mapStyles } from './mapStyles'
 
 export default memo(function AppMap() {
+  const media = useMedia()
+  const theme = useTheme()
+  const drawerHeight = useStoreInstanceSelector(drawerStore, (x) => x.heightIgnoringFullyOpen)
+  const y = media.sm
+    ? (() => {
+        const distanceFromCenter = getWindowHeight() - drawerStore.snapHeights[1] - drawerHeight
+        return Math.min(0, -drawerHeight / 1.8 + distanceFromCenter / 4)
+      })()
+    : 0
+  const offset = useSharedValue(y)
+  const animatedStyles = useAnimatedStyle(() => {
+    return {
+      transform: [{ translateY: offset.value }],
+    }
+  })
+
+  useEffect(() => {
+    offset.value = withSpring(y, {
+      damping: 15,
+    })
+  }, [y])
+
+  return (
+    <Animated.View style={[{ width: '100%', height: '100%' }, animatedStyles]}>
+      <AppMapContents />
+      <AbsoluteVStack pointerEvents="none" bottom={0} left={0} right={0} height={100}>
+        <LinearGradient
+          style={StyleSheet.absoluteFill}
+          colors={[`${theme.mapBackground}00`, theme.mapBackground]}
+        />
+      </AbsoluteVStack>
+    </Animated.View>
+  )
+})
+
+const AppMapContents = memo(function AppMapContents() {
   const appMapStore = useAppMapStore()
   const { features, results, showRank } = appMapStore
   const isOnHome = useStoreInstanceSelector(homeStore, (x) => x.currentStateType === 'home')
@@ -90,15 +124,12 @@ export default memo(function AppMap() {
     })
   }, [restaurantSelected])
 
-  const drawer = useStoreInstance(drawerStore)
-  // ensure never goes to 0
-  const bottomOcclude = drawer.heightIgnoringFullyOpen + 10
   const padding = useMemo(() => {
     return media.sm
       ? {
           left: 10,
           top: 10,
-          bottom: bottomOcclude,
+          bottom: 10,
           right: 10,
         }
       : {
@@ -107,7 +138,7 @@ export default memo(function AppMap() {
           bottom: 10,
           right: 10,
         }
-  }, [media.sm, paddingLeft, bottomOcclude])
+  }, [media.sm, paddingLeft])
 
   const handleMoveEnd = useCallback(
     ({ center, span }) => {

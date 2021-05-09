@@ -7,9 +7,15 @@ export * from './doesStringContainTag'
 export const stringify = (a: any) => JSON.stringify(a)
 
 export const timer = () => {
-  const start = Date.now()
-  return (name: string) => {
-    console.log(` - (${Date.now() - start}ms) ${name}`)
+  let last = Date.now()
+  return (name: string, min?: number) => {
+    const next = Date.now()
+    const t = next - last
+    last = next
+    if (!min || t > min) {
+      console.log(` - (${t}ms) ${name}`)
+      return t
+    }
   }
 }
 

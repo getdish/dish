@@ -1,4 +1,4 @@
-import { useStoreInstance } from '@dish/use-store'
+import { useStoreInstance, useStoreInstanceSelector } from '@dish/use-store'
 import loadable from '@loadable/component'
 import React, { Suspense, memo } from 'react'
 import { AbsoluteVStack, HStack, useMedia } from 'snackui'
@@ -13,13 +13,13 @@ import { useSafeArea } from './hooks/useSafeArea'
 export const AppMapControlsOverlay = memo(() => {
   const media = useMedia()
   const { paddingLeft, width } = useMapSize(media.sm)
-  const drawer = useStoreInstance(drawerStore)
+  const isAtBottom = useStoreInstanceSelector(drawerStore, (x) => x.snapIndexName === 'bottom')
   const edgeInsets = useSafeArea()
-
   let bottom = 0
-  if (drawer.snapIndex === 2) {
+  if (isAtBottom) {
     bottom = getWindowHeight() - getWindowHeight() * drawerStore.snapPoints[2]
   }
+  console.log('render appmapcontrols')
 
   return (
     <AbsoluteVStack
