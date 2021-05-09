@@ -1,6 +1,6 @@
 import { AssertionError } from '@dish/helpers'
 import { getStore, useStore } from '@dish/use-store'
-import React, { memo, useMemo } from 'react'
+import React, { memo, useMemo, useRef } from 'react'
 import {
   Animated,
   GestureResponderEvent,
@@ -34,14 +34,15 @@ let isPanActive = false
 
 export const HomeDrawerSmallView = memo((props: { children: any }) => {
   const contentParent = useStore(ContentParentStore)
+  const panViewRef = useRef()
   // const preventScrolling = usePreventVerticalScroll(contentParent.activeId)
 
   const pan = useMemo(() => {
     let curSnapY = 0
     let curScrollerYMove = -1
 
-    const minY = getWindowHeight() * drawerStore.snapPoints[0] - 10
-    const maxY = getWindowHeight() * drawerStore.snapPoints[2] + 10
+    const minY = getWindowHeight() * drawerStore.snapPoints[0]
+    const maxY = getWindowHeight() * drawerStore.snapPoints[2]
 
     const getShouldActivate = (_e: GestureResponderEvent, g: PanResponderGestureState): boolean => {
       const dy = g.dy ?? drawerStore.pan['_value']
@@ -51,24 +52,20 @@ export const HomeDrawerSmallView = memo((props: { children: any }) => {
       if (isTouchingSearchBar) {
         return Math.abs(dy) > 8
       }
+      if (isPanActive) {
+        return true
+      }
+      // is touching main area
       try {
         const { snapIndexName } = drawerStore
         const scroll = getStore(ScrollStore, { id: contentParent.activeId })
+        if (curScrollerYMove > 0 || !scroll.isAtTop) {
+          console.log('not scrolled to top')
+          return false
+        }
         // prettier-ignore
         // console.log('should?', store.lock, { isPanActive, isTouchingHandle, isTouchingSearchBar })
         if (scroll.lock === 'horizontal' || scroll.lock === 'vertical') {
-          return false
-        }
-        if (isPanActive) {
-          return true
-        }
-        if (!scroll.isAtTop) {
-          if (dy > 0 && snapIndexName !== 'top') {
-            return true
-          }
-          // if (dy < 0 && snapIndexName !== 'top') {
-          //   return true
-          // }
           return false
         }
         const isScrolledToTop = isScrollAtTop.get(contentParent.activeId) ?? true
@@ -141,8 +138,10 @@ export const HomeDrawerSmallView = memo((props: { children: any }) => {
           scroller.scrollTo({ y: curScrollerYMove, animated: false })
           return
         }
-        if (y > maxY || y < minY) {
-          console.log('out of bounds')
+        if (y <= minY) {
+          return
+        }
+        if (y >= maxY) {
           return
         }
         // console.log('pan move', y, dy, 'vs', drawerStore.pan['_value'])
@@ -206,7 +205,9 @@ export const HomeDrawerSmallView = memo((props: { children: any }) => {
           onTouchStart={() => {
             isTouchingHandle = true
           }}
-          onTouchEnd={() => (isTouchingHandle = false)}
+          onTouchEnd={() => {
+            isTouchingHandle = false
+          }}
           {...pan.panHandlers}
         >
           <VStack
@@ -231,7 +232,7 @@ export const HomeDrawerSmallView = memo((props: { children: any }) => {
           {useMemo(
             () => (
               <BottomSheetContainer>
-                <View style={styles.container} {...pan.panHandlers}>
+                <View ref={panViewRef as any} style={styles.container} {...pan.panHandlers}>
                   <VStack zIndex={1000} maxHeight={searchBarHeight}>
                     <AppSearchBar />
                   </VStack>

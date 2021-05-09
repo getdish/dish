@@ -57,6 +57,7 @@ export const useScrollActive = (id: string) => {
     throw new Error(`no id`)
   }
   const [active, setActive] = useState(true)
+  console.log('useScrollActive', id, active)
 
   useEffect(() => {
     if (isWeb && !supportsTouchWeb) {
@@ -67,8 +68,8 @@ export const useScrollActive = (id: string) => {
     let isParentActive = false
     let isFullyOpen = false
     let isLockedHorizontalOrDrawer = false
-    let isDraggingDrawer = false
     let isSpringing = false
+    let isDraggingDrawer = false
 
     const parentStore = getStore(ContentParentStore)
     const scrollStore = getStore(ScrollStore, { id })
@@ -81,7 +82,7 @@ export const useScrollActive = (id: string) => {
         isParentActive &&
         (isFullyOpen || !isScrollAtTop) &&
         !isSpringing &&
-        // !isDraggingDrawer &&
+        !isDraggingDrawer &&
         !isLockedHorizontalOrDrawer
       // console.log('active?', id, next, {
       //   isFullyOpen,
@@ -111,10 +112,9 @@ export const useScrollActive = (id: string) => {
         if (isSpringing) {
           // max time before reverting
           const tm = setTimeout(() => {
-            console.log('set false')
             isSpringing = false
             update()
-          }, 10)
+          }, 150)
           return () => {
             clearTimeout(tm)
           }
@@ -294,7 +294,8 @@ export const ContentScrollView = forwardRef<ScrollView, ContentScrollViewProps>(
                 const pY = ss.at - pageY
                 const y = start - pY
                 if (y < drawerStore.minY) {
-                  drawerStore.setIsDragging(false)
+                  console.warn('I DISABLED THIS')
+                  // drawerStore.setIsDragging(false)
                   return
                 }
                 if (!ss.lastYs) {

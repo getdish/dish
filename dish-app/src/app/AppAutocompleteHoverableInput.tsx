@@ -1,5 +1,5 @@
 import React, { useRef } from 'react'
-import { Hoverable } from 'snackui'
+import { Hoverable, isTouchDevice } from 'snackui'
 
 import { autocompletesStore } from './AutocompletesStore'
 import { homeStore } from './homeStore'
@@ -8,15 +8,14 @@ export function AppAutocompleteHoverableInput({
   children,
   input,
   autocompleteTarget,
-  backgroundColor,
-  borderRadius = 10,
 }: {
   children: any
   input?: HTMLInputElement | null
   autocompleteTarget: 'search' | 'location'
-  backgroundColor?: string
-  borderRadius?: number
 }) {
+  if (isTouchDevice) {
+    return children
+  }
   const tm = useRef<any>(null)
   const tm2 = useRef<any>(null)
   return (

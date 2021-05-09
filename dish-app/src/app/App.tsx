@@ -70,6 +70,7 @@ function AppHomeContent() {
         {!isSSR && (
           <ErrorBoundary name="main-map">
             <Suspense fallback={null}>
+              {/*  */}
               <AppMap />
             </Suspense>
           </ErrorBoundary>
