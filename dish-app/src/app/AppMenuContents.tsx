@@ -167,7 +167,7 @@ const MenuLinkButton = (props: LinkButtonProps) => {
       hoverStyle={{
         transform: [{ scale: 1.03 }],
       }}
-      onPressOut={appMenuStore.hide}
+      // onPressOut={appMenuStore.hide}
       {...props}
     />
   )

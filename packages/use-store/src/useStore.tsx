@@ -411,15 +411,134 @@ function createProxiedStore(storeInfo: Omit<StoreInfo, 'store' | 'source'>) {
 
   let didSet = false
   let isInAction = false
+  const wrappedActions = {}
 
-  const setupActions = {}
+  // pre-setup actions
+  for (const key in actions) {
+    // wrap action and call didSet after
+    const actionFn = actions[key]
+    // fix bug in router for now, need to look at it!!
+    const isGetFn = key.startsWith('get')
 
-  const finishAction = (key: string) => {
-    isInAction = false
-    if (storeInstance[SHOULD_DEBUG]()) {
-      // prettier-ignore
-      console.log('finish action', constr.name, key, {  didSet })
+    // wrap actions for tracking
+    wrappedActions[key] = (...args) => {
+      if (isGetFn || gettersState.isGetting) {
+        return Reflect.apply(actionFn, proxiedStore, args)
+      }
+      // dumb for now
+      isInAction = true
+      let res
+      try {
+        res = Reflect.apply(actionFn, proxiedStore, args)
+        return res
+      } finally {
+        if (res instanceof Promise) {
+          return res.then(finishAction)
+        } else {
+          return finishAction()
+        }
+      }
     }
+
+    // dev mode do nice logging
+    if (process.env.NODE_ENV === 'development' && !isGetFn && !key.startsWith('_')) {
+      const ogAction = wrappedActions[key]
+      wrappedActions[key] = new Proxy(ogAction, {
+        apply(target, thisArg, args) {
+          const isDebugging = DebugStores.has(constr)
+          const shouldLog =
+            process.env.LOG_LEVEL !== '0' && (isDebugging || configureOpts.logLevel !== 'error')
+
+          if (!shouldLog) {
+            return Reflect.apply(target, thisArg, args)
+          }
+
+          setters = new Set()
+          const curSetters = setters
+          const isTopLevelLogger = logStack.size == 0
+          const logs = new Set<any[]>()
+          logStack.add(logs)
+          let res
+          try {
+            // 🏃‍♀️ run action here now
+            res = Reflect.apply(target, thisArg, args)
+          } finally {
+            logStack.add('end')
+
+            const name = constr.name
+            const color = strColor(name)
+            const simpleArgs = args.map(simpleStr)
+            logs.add([
+              `💰 %c${name}%c.${key}(${simpleArgs.join(', ')})${
+                isTopLevelLogger && logStack.size > 1 ? ` (+${logStack.size - 1})` : ''
+              }`,
+              `color: ${color};`,
+              'color: black;',
+            ])
+            logs.add([` ARGS`, ...args])
+            if (curSetters.size) {
+              curSetters.forEach(({ key, value }) => {
+                logs.add([` SET`, key, '=', value])
+              })
+            }
+            if (typeof res !== 'undefined') {
+              logs.add([' =>', res])
+            }
+
+            if (isTopLevelLogger) {
+              let error = null
+              try {
+                for (const item of [...logStack]) {
+                  if (item === 'end') {
+                    console.groupEnd()
+                    continue
+                  }
+                  const [head, ...rest] = item
+                  if (head) {
+                    console.groupCollapsed(...head)
+                    console.groupCollapsed('trace >')
+                    console.trace()
+                    console.groupEnd()
+                    for (const log of rest) {
+                      console.log(...log)
+                    }
+                  } else {
+                    console.log('Weird log', head, ...rest)
+                  }
+                }
+              } catch (err) {
+                error = err
+              }
+              for (const _ of [...logStack]) {
+                console.groupEnd()
+              }
+              if (error) {
+                console.error(`error loggin`, error)
+              }
+              logStack.clear()
+            }
+
+            return res
+
+            // dev-mode colored output
+            function hashCode(str: string) {
+              let hash = 0
+              for (var i = 0; i < str.length; i++) {
+                hash = str.charCodeAt(i) + ((hash << 5) - hash)
+              }
+              return hash
+            }
+            function strColor(str: string) {
+              return `hsl(${hashCode(str) % 360}, 90%, 40%)`
+            }
+          }
+        },
+      })
+    }
+  }
+
+  const finishAction = () => {
+    isInAction = false
     if (didSet) {
       storeInfo.triggerUpdate()
       didSet = false
@@ -429,6 +548,11 @@ function createProxiedStore(storeInfo: Omit<StoreInfo, 'store' | 'source'>) {
   const proxiedStore = new Proxy(storeInstance, {
     // GET
     get(_, key) {
+      // setup action one time
+      if (key in wrappedActions) {
+        return wrappedActions[key]
+      }
+
       // avoid tracking internal stuff
       if (key === '_trackers' || key === '_listeners' || key === '$$typeof') {
         return Reflect.get(storeInstance, key)
@@ -443,142 +567,10 @@ function createProxiedStore(storeInfo: Omit<StoreInfo, 'store' | 'source'>) {
         }
         return Reflect.get(storeInstance, key)
       }
-
-      // actions
-      if (key in setupActions) {
-        return setupActions[key]
-      }
-      // setup action one time
-      if (key in actions) {
-        // wrap action and call didSet after
-        const actionFn = actions[key]
-        // fix bug in router for now, need to look at it!!
-        const isGetFn = key.startsWith('get')
-
-        // wrap actions for tracking
-        let action = new Proxy(actionFn, {
-          apply(target, _thisArg, args) {
-            if (isGetFn || gettersState.isGetting) {
-              return Reflect.apply(target, proxiedStore, args)
-            }
-            // dumb for now
-            isInAction = true
-            let res
-            try {
-              res = Reflect.apply(target, proxiedStore, args)
-              return res
-            } finally {
-              if (res instanceof Promise) {
-                return res.then(() => finishAction(key))
-              } else {
-                return finishAction(key)
-              }
-            }
-          },
-        })
-
-        // dev mode do nice logging
-        if (process.env.NODE_ENV === 'development' && !isGetFn && !key.startsWith('_')) {
-          action = new Proxy(action, {
-            apply(target, thisArg, args) {
-              const isDebugging = DebugStores.has(constr)
-              const shouldLog =
-                process.env.LOG_LEVEL !== '0' && (isDebugging || configureOpts.logLevel !== 'error')
-
-              if (!shouldLog) {
-                return Reflect.apply(target, thisArg, args)
-              }
-
-              setters = new Set()
-              const curSetters = setters
-              const isTopLevelLogger = logStack.size == 0
-              const logs = new Set<any[]>()
-              logStack.add(logs)
-              let res
-              try {
-                // 🏃‍♀️ run action here now
-                res = Reflect.apply(target, thisArg, args)
-              } finally {
-                logStack.add('end')
-
-                const name = constr.name
-                const color = strColor(name)
-                const simpleArgs = args.map(simpleStr)
-                logs.add([
-                  `💰 %c${name}%c.${key}(${simpleArgs.join(', ')})${
-                    isTopLevelLogger && logStack.size > 1 ? ` (+${logStack.size - 1})` : ''
-                  }`,
-                  `color: ${color};`,
-                  'color: black;',
-                ])
-                logs.add([` ARGS`, ...args])
-                if (curSetters.size) {
-                  curSetters.forEach(({ key, value }) => {
-                    logs.add([` SET`, key, '=', value])
-                  })
-                }
-                if (typeof res !== 'undefined') {
-                  logs.add([' =>', res])
-                }
-
-                if (isTopLevelLogger) {
-                  let error = null
-                  try {
-                    for (const item of [...logStack]) {
-                      if (item === 'end') {
-                        console.groupEnd()
-                        continue
-                      }
-                      const [head, ...rest] = item
-                      if (head) {
-                        console.groupCollapsed(...head)
-                        console.groupCollapsed('trace >')
-                        console.trace()
-                        console.groupEnd()
-                        for (const log of rest) {
-                          console.log(...log)
-                        }
-                      } else {
-                        console.log('Weird log', head, ...rest)
-                      }
-                    }
-                  } catch (err) {
-                    error = err
-                  }
-                  for (const _ of [...logStack]) {
-                    console.groupEnd()
-                  }
-                  if (error) {
-                    console.error(`error loggin`, error)
-                  }
-                  logStack.clear()
-                }
-
-                return res
-
-                // dev-mode colored output
-                function hashCode(str: string) {
-                  let hash = 0
-                  for (var i = 0; i < str.length; i++) {
-                    hash = str.charCodeAt(i) + ((hash << 5) - hash)
-                  }
-                  return hash
-                }
-                function strColor(str: string) {
-                  return `hsl(${hashCode(str) % 360}, 90%, 40%)`
-                }
-              }
-            },
-          })
-        }
-
-        setupActions[key] = action
-        return action
-      }
-
       // non-actions
-      if (typeof key === 'string') {
+      else {
         if (storeAccessTrackers.size && !storeAccessTrackers.has(storeInstance)) {
+          console.log('access trackers trigger', storeAccessTrackers.size)
           storeAccessTrackers.forEach((t) => {
             t(storeInstance)
           })
@@ -621,7 +613,6 @@ function createProxiedStore(storeInfo: Omit<StoreInfo, 'store' | 'source'>) {
 
         if (!gettersState.isGetting) {
           storeInstance[TRACK](key)
-          return Reflect.get(storeInstance, key)
         }
       }
 
