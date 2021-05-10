@@ -240,19 +240,9 @@ export function createWebpackConfig({
                 use: [
                   'thread-loader',
                   // // fast refresh seems to work??
-                  {
-                    loader: require.resolve('esbuild-loader'),
-                    options: {
-                      loader: 'tsx',
-                      target: 'es2019',
-                      // implementation: esbuild,
-                    },
-                  },
+                  // {
                   {
                     loader: 'babel-loader',
-                    options: {
-                      plugins: ['react-native-reanimated/plugin'],
-                    },
                   },
                   isStaticExtracted
                     ? {

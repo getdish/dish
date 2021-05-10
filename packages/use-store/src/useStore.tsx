@@ -570,7 +570,6 @@ function createProxiedStore(storeInfo: Omit<StoreInfo, 'store' | 'source'>) {
       // non-actions
       else {
         if (storeAccessTrackers.size && !storeAccessTrackers.has(storeInstance)) {
-          console.log('access trackers trigger', storeAccessTrackers.size)
           storeAccessTrackers.forEach((t) => {
             t(storeInstance)
           })

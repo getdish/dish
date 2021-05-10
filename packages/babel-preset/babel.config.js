@@ -11,33 +11,30 @@ module.exports = function (api) {
 
   return {
     env: {
-      development: {
-        plugins: ['@babel/plugin-transform-modules-commonjs'],
-      },
       test: {
         plugins: ['@babel/plugin-transform-modules-commonjs'],
       },
     },
     plugins: [
+      'react-native-reanimated/plugin',
       isSSR && '@loadable/babel-plugin',
       isDev && !isSSR && 'react-refresh/babel',
       ...(isDev
-        ? ['@babel/plugin-transform-function-name', 'babel-plugin-react-wrapped-display-name']
+        ? [
+            '@babel/plugin-transform-function-name',
+            // lets see if its faster without them
+            // 'babel-plugin-react-wrapped-display-name',
+            // '@babel/plugin-transform-react-display-name',
+          ]
         : []),
-      !isProd && '@babel/plugin-transform-react-display-name',
       ...(shouldOptimize
         ? [
             'babel-plugin-lodash',
-            '@babel/plugin-transform-react-inline-elements',
-            '@babel/plugin-transform-react-constant-elements',
-            // '@eps1lon/babel-plugin-optimize-react',
+            // '@babel/plugin-transform-react-inline-elements',
+            // '@babel/plugin-transform-react-constant-elements',
           ]
         : []),
-      '@babel/plugin-proposal-class-properties',
-      '@babel/plugin-proposal-optional-chaining',
-      ['@babel/plugin-proposal-decorators', { decoratorsBeforeExport: true }],
       'babel-plugin-react-native-web',
-      '@babel/plugin-syntax-typescript',
       '@babel/plugin-proposal-nullish-coalescing-operator',
       isProd && require.resolve('./babel.strip-invariant.plugin.js'),
     ]
@@ -55,20 +52,6 @@ module.exports = function (api) {
           runtime: 'automatic',
           useBuiltIns: true,
           development: isDev,
-          // ...(isDev && {
-          //   importSource: '@welldone-software/why-did-you-render',
-          // }),
-        },
-      ],
-      isLegacy && [
-        '@babel/preset-env',
-        {
-          useBuiltIns: 'usage',
-          corejs: 3,
-          targets: {
-            browsers: ['>3%'],
-          },
-          exclude: ['@babel/plugin-transform-regenerator'],
         },
       ],
     ]
