@@ -1,5 +1,3 @@
-/// <reference lib="dom" />
-/// <reference lib="esnext" />
 declare module "@dish/async" {
     export type CancelFn = () => void;
     export class CancellablePromise<T> extends Promise<T> {

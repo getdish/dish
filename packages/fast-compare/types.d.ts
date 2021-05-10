@@ -1,5 +1,3 @@
-/// <reference lib="dom" />
-/// <reference lib="esnext" />
 declare module "@dish/fast-compare" {
     export const EQUALITY_KEY: unique symbol;
     export type IsEqualOptions = {

@@ -1,5 +1,3 @@
-/// <reference lib="dom" />
-/// <reference lib="esnext" />
 declare module "@dish/server" {
     import "./lib/env";
     export function run(): Promise<void>;

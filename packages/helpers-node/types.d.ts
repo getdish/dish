@@ -1,5 +1,3 @@
-/// <reference lib="dom" />
-/// <reference lib="esnext" />
 declare module "@dish/helpers-node" {
     export const JWT_SECRET: string;
     export const HASURA_GRAPHQL_ADMIN_SECRET: string;
@@ -27,7 +25,7 @@ declare module "@dish/helpers-node" {
     type uuid = Scalars['uuid'];
     export function reviewFindAllForRestaurant(restaurant_id: uuid): Promise<any>;
     export function reviewFindAllForUser(user_id: uuid): Promise<any>;
-    export function userFavoriteARestaurant(user_id: uuid, restaurant_id: uuid, favorited?: boolean): Promise<import("@dish/graph").WithID<import("@dish/graph").FlatResolvedModel<import("@dish/graph").ReviewQuery>>>;
+    export function userFavoriteARestaurant(user_id: uuid, restaurant_id: uuid, favorited?: boolean): Promise<any>;
     export function userFavorites(user_id: string): Promise<any>;
     export function reviewExternalUpsert(reviews: Review[]): Promise<ReviewWithId[]>;
     export function cleanReviewText(text: string | null | undefined): string;
