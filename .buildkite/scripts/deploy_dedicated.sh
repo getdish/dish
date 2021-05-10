@@ -39,8 +39,8 @@ ssh \
     source .env.production
     source .env.d1
     flyctl auth docker
-    parallel -j 6 --tag --lb -I% docker pull $IMAGE ::: 'dish-hasura' 'dish-hooks' 'dish-worker' 'dish-search' 'dish-app' 'dish-tileserver' 'dish-bert' 'dish-image-quality' 'dish-image-proxy'
     docker-compose build postgres nginx-proxy
+    docker-compose pull $SERVICES
     docker-compose stop -t 3 $SERVICES || true
     docker-compose rm -f $SERVICES || true
     docker-compose --env-file .env.production up -d $SERVICES
