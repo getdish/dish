@@ -57,7 +57,11 @@ export const HomeDrawerSmallView = memo((props: { children: any }) => {
       }
       // is touching main area
       try {
+        const isScrolledToTop = isScrollAtTop.get(contentParent.activeId) ?? true
         const { snapIndexName } = drawerStore
+        if (isScrolledToTop && snapIndexName === 'top' && dy > 6) {
+          return true
+        }
         const scroll = getStore(ScrollStore, { id: contentParent.activeId })
         if (curScrollerYMove > 0 || !scroll.isAtTop) {
           console.log('not scrolled to top')
@@ -68,7 +72,6 @@ export const HomeDrawerSmallView = memo((props: { children: any }) => {
         if (scroll.lock === 'horizontal' || scroll.lock === 'vertical') {
           return false
         }
-        const isScrolledToTop = isScrollAtTop.get(contentParent.activeId) ?? true
         // if at top, we avoid checking lock
         if (!isScrolledToTop && snapIndexName === 'top') {
           return false
