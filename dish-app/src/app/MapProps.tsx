@@ -1,5 +1,4 @@
 import { LngLat } from '@dish/graph'
-import mapboxgl from 'mapbox-gl'
 
 import { RegionWithVia } from '../types/homeTypes'
 
@@ -9,7 +8,7 @@ export type MapProps = {
   features: GeoJSON.Feature[]
   padding: { top: number; left: number; bottom: number; right: number }
   showUserLocation?: boolean
-  mapRef?: (map: mapboxgl.Map) => void
+  mapRef?: (map: any) => void
   style?: string
   onHover?: (id: string | null) => void
   onSelect?: (id: string) => void

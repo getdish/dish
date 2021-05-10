@@ -5,6 +5,7 @@ import { LoadingItems, ToastRoot, VStack, useTheme } from 'snackui'
 import { isSSR } from '../constants/constants'
 import AdminPage from './admin/AdminPage'
 import { AppIntroLetter } from './AppIntroLetter'
+import AppMap from './AppMap'
 import { AppMapControlsOverlay } from './AppMapControlsOverlay'
 import { AppMenuButton } from './AppMenuButton'
 import { AppSearchBarFloating } from './AppSearchBar'
@@ -111,13 +112,6 @@ function AppHomeContent() {
     </>
   )
 }
-
-const AppMap =
-  process.env.TARGET === 'ssr'
-    ? null
-    : process.env.NODE_ENV === 'development'
-    ? require('./AppMap').default
-    : loadable(() => import('./AppMap'))
 
 const UserEditPage =
   process.env.TARGET === 'ssr' || process.env.NODE_ENV === 'development'
