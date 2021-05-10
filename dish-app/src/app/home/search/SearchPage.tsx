@@ -4,7 +4,7 @@ import { ArrowUp } from '@dish/react-feather'
 import { HistoryItem } from '@dish/router'
 import { reaction } from '@dish/use-store'
 import React, { Suspense, forwardRef, memo, useCallback, useEffect, useMemo, useRef } from 'react'
-import { LayoutRectangle, ScrollView, ScrollViewProps } from 'react-native'
+import { LayoutRectangle, ScrollView, ScrollViewProps, View } from 'react-native'
 import { DataProvider, LayoutProvider, RecyclerListView } from 'recyclerlistview'
 import {
   AbsoluteVStack,
@@ -489,12 +489,12 @@ const SearchPageScrollView = forwardRef<ScrollView, SearchPageScrollViewProps>(
 
     const layoutProps = useLayout({
       onLayout: (x) => {
-        onSizeChanged?.(x)
+        onSizeChanged?.(x.nativeEvent.layout)
       },
     })
 
     return (
-      <VStack flex={1} ref={layoutProps.ref} onLayout={layoutProps.onLayout}>
+      <View style={{ flex: 1 }} {...layoutProps}>
         <ContentScrollView id="search" ref={combineRefs(ref, scrollRef) as any} {...props}>
           <PageContentWithFooter>
             <SearchHeader />
@@ -510,7 +510,7 @@ const SearchPageScrollView = forwardRef<ScrollView, SearchPageScrollViewProps>(
             </Suspense>
           </PageContentWithFooter>
         </ContentScrollView>
-      </VStack>
+      </View>
     )
   }
 )

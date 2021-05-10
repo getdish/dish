@@ -13,8 +13,8 @@ export const ContentScrollViewHorizontalFitted = (
   }
 ) => {
   const layout = useLayout({
-    onLayout({ width }) {
-      props.setWidth?.(width)
+    onLayout({ nativeEvent }) {
+      props.setWidth?.(nativeEvent.layout.width)
     },
   })
 
