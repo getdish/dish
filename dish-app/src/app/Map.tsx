@@ -69,7 +69,6 @@ export const MapView = (props: MapProps) => {
     if (!map) return
     let cancel: Function | null = null
     const handleResize = debounce(() => {
-      console.log('GOGO')
       cancel = series([
         () => sleep(100),
         () => map.resize(),
