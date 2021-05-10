@@ -1,5 +1,3 @@
-/// <reference lib="dom" />
-/// <reference lib="esnext" />
 declare module "@dish/worker-app" {
     import { WorkerJob } from "@dish/worker";
     import { Job } from "bull";

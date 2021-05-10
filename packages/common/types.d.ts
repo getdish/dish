@@ -1,5 +1,3 @@
-/// <reference lib="dom" />
-/// <reference lib="esnext" />
 declare module "@dish/common" {
     export const sentryMessage: (message: string, data?: any, tags?: {
         [key: string]: string;

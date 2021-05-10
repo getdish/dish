@@ -1,5 +1,3 @@
-/// <reference lib="dom" />
-/// <reference lib="esnext" />
 declare module "@dish/crawlers" {
     import "@dish/common";
     import { Browser, Page, Request } from "puppeteer";
@@ -269,7 +267,7 @@ declare module "@dish/crawlers" {
         private _getMenu;
         private _extractEmbeddedJSONData;
     }
-    export function tripadvisorGetFBC(): Promise<import("@dish/graph").WithID<import("@dish/graph").FlatResolvedModel<import("@dish/graph").RestaurantQuery>>>;
+    export function tripadvisorGetFBC(): Promise<any>;
 }
 
 declare module "@dish/crawlers" {

@@ -1,5 +1,3 @@
-/// <reference lib="dom" />
-/// <reference lib="esnext" />
 declare module "@dish/dsh" {
     import * as sh from "shelljs";
     export { exit } from "shelljs";

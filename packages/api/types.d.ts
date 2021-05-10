@@ -1,5 +1,3 @@
-/// <reference lib="dom" />
-/// <reference lib="esnext" />
 declare module "@dish/api" {
     import { Request, Response } from "express";
     export type Handler = (req: Request, res: Response, next?: any) => Promise<void> | void;

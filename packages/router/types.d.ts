@@ -1,5 +1,3 @@
-/// <reference lib="dom" />
-/// <reference lib="esnext" />
 declare module "@dish/router" {
     import { Store } from "@dish/use-store";
     import * as React from "react";
