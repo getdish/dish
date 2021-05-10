@@ -148,7 +148,7 @@ export const HomeDrawerSmallView = memo((props: { children: any }) => {
           return
         }
         // console.log('pan move', y, dy, 'vs', drawerStore.pan['_value'])
-        drawerStore._setY(dy)
+        drawerStore._setY(Math.round(dy))
       },
       onPanResponderRelease: (e, { vy }) => {
         isPanActive = false
@@ -204,7 +204,7 @@ export const HomeDrawerSmallView = memo((props: { children: any }) => {
         {/* handle */}
         <View
           pointerEvents="auto"
-          style={styles.panView}
+          style={styles.handle}
           onTouchStart={() => {
             isTouchingHandle = true
           }}
@@ -218,6 +218,7 @@ export const HomeDrawerSmallView = memo((props: { children: any }) => {
             paddingHorizontal={20}
             paddingVertical={20}
             onPress={drawerStore.toggleDrawerPosition}
+            alignSelf="center"
           >
             <VStack
               backgroundColor="rgba(100,100,100,0.35)"
@@ -263,18 +264,16 @@ const styles = StyleSheet.create({
   },
   animatedView: {
     maxWidth: pageWidthMax,
-    alignItems: 'center',
     width: '100%',
     position: 'absolute',
-    top: 0,
-    left: 0,
-    right: 0,
-    bottom: 0,
-    zIndex: 100,
+    height: '100%',
   },
-  panView: {
+  handle: {
     position: 'absolute',
     top: -40,
     padding: 5,
+    alignItems: 'center',
+    justifyContent: 'center',
+    alignSelf: 'center',
   },
 })
