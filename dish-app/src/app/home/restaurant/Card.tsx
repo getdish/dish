@@ -89,7 +89,7 @@ export function Card({
   const lenScale = len > 50 ? 0.7 : len > 40 ? 0.8 : len > 30 ? 0.9 : 1
   const longestWordLen = getLongestWord(strTitle)
   const wordScale = longestWordLen > 14 ? 0.7 : longestWordLen > 9 ? 0.8 : 1
-  const baseFontSize = 27 * lenScale * wordScale
+  const baseFontSize = 25 * lenScale * wordScale
   const fontSize = Math.round(baseFontSize * scales[size])
 
   return (
@@ -154,10 +154,18 @@ export function Card({
           flex={1}
         >
           {/* title gradient */}
-          <AbsoluteVStack zIndex={-1} fullscreen rotate="15deg" scaleX={2.5} y={-20}>
+          <AbsoluteVStack
+            zIndex={-1}
+            fullscreen
+            scaleX={2}
+            scaleY={0.75}
+            rotate="25deg"
+            y={-60}
+            x={-20}
+          >
             <LinearGradient
-              style={{ width: 150, height: 150 }}
-              colors={[colors.pastelColor, colors.pastelColor, `${colors.darkColor}00`]}
+              style={StyleSheet.absoluteFill}
+              colors={[colors.color, colors.pastelColor, `${colors.darkColor}00`]}
             />
           </AbsoluteVStack>
           <VStack
@@ -223,10 +231,10 @@ export const CardOverlay = (props: { children: any }) => {
     >
       <VStack position="relative">
         <LinearGradient
-          colors={['rgba(40,40,40,0)', 'rgba(40,40,40,1)']}
+          colors={['rgba(0,0,0,0)', 'rgba(0,0,0,1)']}
           style={StyleSheet.absoluteFill}
         />
-        <VStack alignItems="center" justifyContent="center" padding={10}>
+        <VStack alignItems="center" justifyContent="center" padding={10} paddingTop={30}>
           {props.children}
         </VStack>
       </VStack>
