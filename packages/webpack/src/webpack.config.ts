@@ -174,6 +174,9 @@ export function createWebpackConfig({
         removeEmptyChunks: isProduction,
         innerGraph: isProduction,
         sideEffects: isProduction,
+        mergeDuplicateChunks: isProduction,
+        providedExports: isProduction,
+        realContentHash: isProduction,
         mangleExports: isProduction,
         removeAvailableModules: isProduction,
         splitChunks:
@@ -222,6 +225,7 @@ export function createWebpackConfig({
                 target: 'es2019',
                 treeShaking: true,
                 css: false,
+                implementation: esbuild,
               }),
             ],
       },
@@ -246,9 +250,6 @@ export function createWebpackConfig({
                   // },
                   {
                     loader: 'babel-loader',
-                    // options: {
-                    //   plugins: ['react-native-reanimated/plugin'],
-                    // },
                   },
                   isStaticExtracted
                     ? {
