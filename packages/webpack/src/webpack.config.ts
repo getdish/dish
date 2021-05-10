@@ -412,6 +412,9 @@ const excludedRootPaths = [
 ]
 
 function defaultBabelInclude(inputPath) {
+  if (inputPath.includes('react-native-web/dist/exports/View')) {
+    return true
+  }
   if (inputPath.includes('@dish/')) {
     return true
   }

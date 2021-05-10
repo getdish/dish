@@ -122,6 +122,7 @@ const getNormalizeLinkProps = (
   }
   delete next['tag']
   delete next['tags']
+  delete next['asyncClick']
   return next
 }
 
