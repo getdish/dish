@@ -56,9 +56,9 @@ export default memo(function AppMap() {
   }, [y])
 
   return (
-    <Animated.View style={[{ width: '100%', height: '100%' }, animatedStyles]}>
+    <Animated.View style={[StyleSheet.absoluteFill, animatedStyles]}>
       <AppMapContents />
-      <AbsoluteVStack pointerEvents="none" bottom={0} left={0} right={0} height={100}>
+      <AbsoluteVStack zIndex={100} pointerEvents="none" bottom={0} left={0} right={0} height={200}>
         <LinearGradient
           style={StyleSheet.absoluteFill}
           colors={[`${theme.mapBackground}00`, theme.mapBackground]}

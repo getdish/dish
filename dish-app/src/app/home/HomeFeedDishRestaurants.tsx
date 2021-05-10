@@ -1,7 +1,6 @@
 import { graphql, order_by, query } from '@dish/graph'
 import { groupBy, pick, sortBy, uniqBy } from 'lodash'
 import React, { useMemo } from 'react'
-import { Theme } from 'snackui'
 
 import { isTouchDevice } from '../../constants/platforms'
 import { DishTagItemSimple, selectRishDishViewSimple } from '../../helpers/selectDishViewSimple'
