@@ -179,15 +179,12 @@ export function createWebpackConfig({
         splitChunks:
           isProduction && !noMinify
             ? {
-                maxAsyncRequests: 20,
-                maxInitialRequests: 10,
+                maxAsyncRequests: 8,
+                maxInitialRequests: 3,
                 automaticNameDelimiter: '~',
                 cacheGroups: {
                   default: false,
-                  defaultVendors: {
-                    test: /[\\/]node_modules[\\/]/,
-                    priority: -10,
-                  },
+                  defaultVendors: false,
                   styles: {
                     name: `styles`,
                     type: 'css/mini-extract',
@@ -200,7 +197,6 @@ export function createWebpackConfig({
                 cacheGroups: {
                   styles: {
                     name: `styles`,
-                    type: 'css/mini-extract',
                     chunks: 'all',
                     enforce: true,
                   },
@@ -347,13 +343,14 @@ export function createWebpackConfig({
 
         // !!pwaOptions && new WebpackPwaManifest(pwaOptions),
 
-        !!isVerbose &&
-          new DuplicatesPlugin({
-            emitErrors: false,
-            emitHandler: undefined,
-            ignoredPackages: undefined,
-            verbose: false,
-          }),
+        isVerbose ||
+          (isProduction &&
+            new DuplicatesPlugin({
+              emitErrors: false,
+              emitHandler: undefined,
+              ignoredPackages: undefined,
+              verbose: false,
+            })),
 
         // somewhat slow for rebuilds
         !!(process.env.CIRCULAR_DEPS || isProduction) &&
