@@ -48,6 +48,7 @@ export const DarkModal = ({
           animateState={hide ? 'out' : 'in'}
         >
           <VStack
+            className="debug-me"
             flex={1}
             maxHeight="100%" // needed for chrome
             position="relative"

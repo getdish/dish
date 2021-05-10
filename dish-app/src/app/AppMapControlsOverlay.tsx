@@ -20,7 +20,6 @@ export const AppMapControlsOverlay = memo(() => {
   if (isAtBottom) {
     bottom = getWindowHeight() - getWindowHeight() * drawerStore.snapPoints[2]
   }
-  console.log('render appmapcontrols')
 
   return (
     <AbsoluteVStack
