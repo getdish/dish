@@ -1,7 +1,9 @@
 #!/usr/bin/env node
 
 const exec = require('execa')
-const legacy = process.argv.reverse()[0] === 'legacy'
+
+const legacy = process.argv.includes() === 'legacy'
+
 const cmd = `chokidar`
 const args = [`src`, `-c`, `"node ${__dirname}/esdx.js${legacy ? ' legacy' : ''}"`]
 console.log(cmd, args.join(' '))

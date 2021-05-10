@@ -6,7 +6,8 @@ const { build } = require('esbuild')
 const fg = require('fast-glob')
 const { emitFlatDts } = require('rollup-plugin-flat-dts/api')
 
-const legacy = process.argv.reverse()[0] === 'legacy'
+const legacy = process.argv.includes('legacy')
+const skipTypes = process.argv.includes('skip-types')
 
 async function go() {
   const x = Date.now()
@@ -18,7 +19,7 @@ async function go() {
   }
 
   async function buildTsc() {
-    if (process.env.JS_ONLY) return
+    if (process.env.JS_ONLY || skipTypes) return
     if (legacy) {
       await exec('tsc', ['--emitDeclarationOnly', '--declarationMap', '--declarationDir', 'types'])
       return
@@ -59,7 +60,7 @@ async function go() {
         entryPoints: files,
         outdir: '_',
         sourcemap: true,
-        target: 'safari13',
+        target: 'es2020',
         keepNames: true,
         format: 'esm',
         logLevel: 'error',
