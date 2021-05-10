@@ -71,7 +71,7 @@ export function createWebpackConfig({
   // prettier-ignore
   const cacheName = simpleHash(`${process.env.TARGET}${env}${GIT_SHA}${noMinify}${isHot}${isSSR}${resetCache ? Math.random() : ''}`)
 
-  console.log(' [webpack] cacheName', cacheName)
+  console.log(' [webpack]', cacheName)
 
   function getConfig() {
     const defines = {
@@ -239,17 +239,14 @@ export function createWebpackConfig({
                 // @ts-ignore
                 use: [
                   'thread-loader',
-                  // // fast refresh seems to work??
-                  // {
-                  //   loader: require.resolve('esbuild-loader'),
-                  //   options: {
-                  //     loader: 'tsx',
-                  //     target: 'es2019',
-                  //     // implementation: esbuild,
-                  //   },
-                  // },
-                  {
-                    loader: 'babel-loader',
+                  'babel-loader',
+                  isProduction && {
+                    loader: require.resolve('esbuild-loader'),
+                    options: {
+                      loader: 'tsx',
+                      target: 'es2019',
+                      // implementation: esbuild,
+                    },
                   },
                   isStaticExtracted
                     ? {
