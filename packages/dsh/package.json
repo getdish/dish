@@ -17,7 +17,7 @@
   ],
   "dependencies": {
     "@types/shelljs": "^0.8.8",
-    "esbuild": "^0.11.5",
+    "esbuild": "^0.11.20",
     "esbuild-register": "^2.4.0",
     "shelljs": "^0.8.4"
   },

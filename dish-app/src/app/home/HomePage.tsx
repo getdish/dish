@@ -1,5 +1,5 @@
-import { MapPosition, RestaurantOnlyIdsPartial, slugify } from '@dish/graph'
-import { Store, createStore, useStore, useStoreInstance } from '@dish/use-store'
+import { MapPosition, slugify } from '@dish/graph'
+import { useStore, useStoreInstance } from '@dish/use-store'
 import React, { Suspense, memo, useEffect, useMemo, useState } from 'react'
 import {
   AbsoluteVStack,
@@ -39,21 +39,12 @@ import { Link } from '../views/Link'
 import { PageTitleTag } from '../views/PageTitleTag'
 import { SlantedTitle } from '../views/SlantedTitle'
 import { HomePageFeed } from './HomePageFeed'
+import { homePageStore } from './homePageStore'
 import { HomeStackViewProps } from './HomeStackViewProps'
 import { HomeTopSearches } from './HomeTopSearches'
 import { PageContentWithFooter } from './PageContentWithFooter'
 
 type Props = HomeStackViewProps<HomeStateItemHome>
-
-class HomePageStore extends Store {
-  results: RestaurantOnlyIdsPartial[] = []
-
-  setResults(next: RestaurantOnlyIdsPartial[]) {
-    this.results = next
-  }
-}
-
-export const homePageStore = createStore(HomePageStore)
 
 export default memo(function HomePage(props: Props) {
   const [didLoadOnce, setDidLoadOnce] = useState(false)

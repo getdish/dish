@@ -27,6 +27,7 @@ export function Link<Name extends DRouteName = DRouteName>(
     tags,
     tag,
     children,
+    display,
     promptLogin,
     href,
     ...textProps
@@ -34,7 +35,7 @@ export function Link<Name extends DRouteName = DRouteName>(
   const { wrapWithLinkElement } = useLink(allProps)
   return wrapWithLinkElement(
     !!Object.keys(textProps).length || isStringChild(children) ? (
-      <Text color={brandColor} {...textProps}>
+      <Text color={brandColor} display={display as any} {...textProps}>
         {children}
       </Text>
     ) : (
