@@ -127,7 +127,6 @@
     "uuid": "^8.3.0"
   },
   "devDependencies": {
-    "testcafe": "^1.11.0",
     "@dish/babel-preset": "*",
     "@snackui/babel-plugin": "*",
     "@types/lodash": "^4.14.165",
@@ -155,6 +154,7 @@
     "react-native-dotenv": "^2.5.3",
     "react-native-unimodules": "^0.12.0",
     "react-test-renderer": "^17.0.1",
+    "testcafe": "^1.11.0",
     "thread-loader": "^3.0.3",
     "typescript": "*"
   }
