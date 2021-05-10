@@ -1,6 +1,9 @@
 {
   "name": "dish-monorepo",
   "private": true,
+  "changelog": {
+    "repo": "snackui/snackui"
+  },
   "engines": {
     "node": ">=12 <=15"
   },
