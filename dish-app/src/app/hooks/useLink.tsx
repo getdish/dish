@@ -17,7 +17,7 @@ export const useLink = (
   props: LinkSharedProps & { name?: any; params?: any; tagName?: string }
 ) => {
   const forceUpdate = useForceUpdate()
-  const linkProps = getNormalizeLinkProps(props, forceUpdate)
+  const linkProps = getNormalizeLinkProps(props as any, forceUpdate)
   const cancel = useRef<Function | null>(null)
   const navItem: NavigateItem = {
     name: linkProps.name,
@@ -55,7 +55,7 @@ export const useLink = (
 
     e.preventDefault()
 
-    const newLinkProps = getNormalizeLinkProps(props, forceUpdate)
+    const newLinkProps = getNormalizeLinkProps(props as any, forceUpdate)
 
     if (props.asyncClick) {
       cancel.current = series([
