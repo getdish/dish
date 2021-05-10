@@ -38,7 +38,6 @@ import { RootPortalItem } from '../../Portal'
 import { ContentScrollView } from '../../views/ContentScrollView'
 import { PageTitleTag } from '../../views/PageTitleTag'
 import { StackDrawer } from '../../views/StackDrawer'
-import { HomeStackViewProps } from '../HomeStackViewProps'
 import { HomeSuspense } from '../HomeSuspense'
 import { PageContentWithFooter } from '../PageContentWithFooter'
 import { ITEM_HEIGHT, RestaurantListItem } from '../restaurant/RestaurantListItem'
@@ -46,12 +45,11 @@ import { SearchHeader } from './SearchHeader'
 import { SearchPageNavBar } from './SearchPageNavBar'
 import { SearchPagePropsContext } from './SearchPagePropsContext'
 import { searchPageStore, useSearchPageStore } from './SearchPageStore'
+import { SearchProps } from './SearchProps'
 import { searchResultsStore } from './searchResultsStore'
 import { useLocationFromRoute } from './useLocationFromRoute'
 
-export type Props = HomeStackViewProps<HomeStateItemSearch>
-
-export default memo(function SearchPage(props: Props) {
+export default memo(function SearchPage(props: SearchProps) {
   const state = useHomeStateById<HomeStateItemSearch>(props.item.id)
   const { title } = getTitleForState(state, {
     lowerCase: true,
@@ -83,7 +81,7 @@ export default memo(function SearchPage(props: Props) {
 })
 
 const SearchPageContent = memo(function SearchPageContent(
-  props: Props & { route: HistoryItem<'search'> }
+  props: SearchProps & { route: HistoryItem<'search'> }
 ) {
   const location = useLocationFromRoute(props.route)
   const tags = useTagsFromRoute(props.route)
@@ -292,7 +290,7 @@ const loadingResults: RestaurantSearchItem[] = [
   },
 ]
 
-const useActiveTagSlugs = (props: Props) => {
+const useActiveTagSlugs = (props: SearchProps) => {
   return useMemo(() => {
     return [
       ...slugify(props.item.searchQuery),
@@ -359,7 +357,7 @@ const useActiveTagSlugs = (props: Props) => {
 //   )
 // })
 
-const SearchResultsInfiniteScroll = memo((props: Props) => {
+const SearchResultsInfiniteScroll = memo((props: SearchProps) => {
   const drawerWidth = useAppDrawerWidth()
   const searchStore = useSearchPageStore()
   const activeTagSlugs = useActiveTagSlugs(props)

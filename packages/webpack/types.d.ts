@@ -1,5 +1,3 @@
-/// <reference lib="dom" />
-/// <reference lib="esnext" />
 declare module "@dish/webpack" {
     import { CreateWebpackConfig } from "@dish/server";
     import Webpack from "webpack";

@@ -1,9 +1,7 @@
-import { RestaurantOnlyIds, graphql, useMetaState } from '@dish/graph'
+import { RestaurantOnlyIds, graphql } from '@dish/graph'
 import { isPresent } from '@dish/helpers'
 import React, { Suspense, memo, useEffect, useMemo, useState } from 'react'
-import { VStack } from 'snackui'
-import { AbsoluteVStack } from 'snackui'
-import { Hoverable, LoadingItems, Spacer } from 'snackui'
+import { AbsoluteVStack, Hoverable, LoadingItems, Spacer } from 'snackui'
 
 import { getRestaurantIdentifiers } from '../../helpers/getRestaurantIdentifiers'
 import { FIBase } from './FIBase'
@@ -16,7 +14,7 @@ import {
 import { FIList, HomeFeedLists } from './HomeFeedLists'
 import { HomeFeedProps } from './HomeFeedProps'
 import { FIHotNew, HomeFeedTrendingNew, useHomeFeedTrendingNew } from './HomeFeedTrendingNew'
-import { homePageStore } from './HomePage'
+import { homePageStore } from './homePageStore'
 
 type FISpace = FIBase & {
   type: 'space'

@@ -1,5 +1,5 @@
 import { createContext } from 'react'
 
-import { Props } from './SearchPage'
+import { SearchProps } from './SearchProps'
 
-export const SearchPagePropsContext = createContext<Props | null>(null)
+export const SearchPagePropsContext = createContext<SearchProps | null>(null)
