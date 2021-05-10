@@ -5,6 +5,7 @@ import { AbsoluteVStack, HStack, useMedia } from 'snackui'
 
 import { searchBarHeight, zIndexMapControls } from '../constants/constants'
 import { getWindowHeight } from '../helpers/getWindow'
+import AppMapPIP from './AppMapPIP'
 import { AppMapRestaurantPeek } from './AppMapRestaurantPeek'
 import { drawerStore } from './drawerStore'
 import { useMapSize } from './hooks/useMapSize'
@@ -106,5 +107,3 @@ export const AppMapControlsOverlay = memo(() => {
 //                 </Tooltip>
 //               </VStack>
 //             )} */}
-
-const AppMapPIP = process.env.TARGET === 'ssr' ? () => null : loadable(() => import('./AppMapPIP'))
