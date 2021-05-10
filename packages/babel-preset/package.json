@@ -30,7 +30,9 @@
     "core-js": "^3.10.1",
     "react": "*",
     "react-dom": "*",
-    "react-refresh": "^0.10.0"
+    "react-native-reanimated": "^2.1.0",
+    "react-refresh": "^0.10.0",
+    "snackui-loader": "^0.7.0"
   },
   "peerDependencies": {
     "react-native-web": "*"
