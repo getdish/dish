@@ -115,7 +115,7 @@ export const AppSearchInput = memo(() => {
       (x) => x.currentSearchQuery,
       function searchQuerySync(value) {
         setSearch(value)
-        console.log(123123, textInput$.current?.['_node'])
+        console.log(123123, textInput$.current)
         textInput$.current?.setNativeProps({
           value,
         })
