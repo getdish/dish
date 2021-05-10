@@ -659,7 +659,7 @@ function deploy_fly_app() {
 
 function clean_docker_if_disk_full() {
   echo "checking if disk near full..."
-  df -H | grep -E '/data' | awk '{ print $5 " " $1 }' | while read output;
+  df -H | grep overlay | head -n 1 | awk '{ print $5 " " $1 }' | while read output;
   do
     used=$(echo "$output" | awk '{ print $1}' | cut -d'%' -f1)
     echo "$output used $used"
@@ -674,24 +674,14 @@ function clean_docker_if_disk_full() {
       break
     fi
   done
-  df -H | grep -E '/data' | awk '{ print $5 " " $1 }' | while read output;
+  df -H | grep overlay | awk '{ print $5 " " $1 }' | while read output;
   do
     used=$(echo "$output" | awk '{ print $1}' | cut -d'%' -f1)
     if [ "$used" -ge 90 ]; then
       echo "really full, delete all.."
-      docker rmi $(docker images -a -q)
-      rm -r /tmp
-      mkdir /tmp
-      break
-    fi
-  done
-  df -H | grep -E '/data' | awk '{ print $5 " " $1 }' | while read output;
-  do
-    used=$(echo "$output" | awk '{ print $1}' | cut -d'%' -f1)
-    if [ "$used" -ge 90 ]; then
-      echo "really really delete all, may break shit.."
-      # find ./buildkite/builds -name '*' -mtime +1 -exec rm -r {} \;
-      find ./data/docker/overlay2 -name '*' -mtime +1 -exec rm -r {} \;
+      docker system prune
+      docker image prune --all
+      rm -r /var/lib/buildkite/builds
       break
     fi
   done
