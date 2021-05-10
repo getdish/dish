@@ -19,6 +19,7 @@ module.exports = function (api) {
       },
     },
     plugins: [
+      'react-native-reanimated/plugin',
       isSSR && '@loadable/babel-plugin',
       isDev && !isSSR && 'react-refresh/babel',
       ...(isDev
