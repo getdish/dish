@@ -139,7 +139,6 @@ const TagButtonInner = (props: TagButtonProps) => {
     console.log('no slug')
     return null
   }
-  console.log('slug', slug)
 
   const isSmall = size === 'sm'
   const scale = isSmall ? 0.85 : size == 'lg' ? 1.025 : 1
