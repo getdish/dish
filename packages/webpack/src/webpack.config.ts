@@ -240,14 +240,16 @@ export function createWebpackConfig({
                 use: [
                   'thread-loader',
                   'babel-loader',
-                  isProduction && {
-                    loader: require.resolve('esbuild-loader'),
-                    options: {
-                      loader: 'tsx',
-                      target: 'es2019',
-                      // implementation: esbuild,
-                    },
-                  },
+                  isProduction
+                    ? {
+                        loader: require.resolve('esbuild-loader'),
+                        options: {
+                          loader: 'tsx',
+                          target: 'es2019',
+                          // implementation: esbuild,
+                        },
+                      }
+                    : null,
                   isStaticExtracted
                     ? {
                         loader: require.resolve('snackui-loader'),
