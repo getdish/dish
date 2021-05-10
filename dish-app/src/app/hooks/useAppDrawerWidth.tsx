@@ -4,7 +4,6 @@ import { drawerWidthMax } from '../../constants/constants'
 
 export function useAppDrawerWidth(max = drawerWidthMax): number {
   const [width] = useWindowSize()
-  console.log('width', width)
 
   if (width <= defaultMediaQueries.sm.maxWidth) {
     return width
