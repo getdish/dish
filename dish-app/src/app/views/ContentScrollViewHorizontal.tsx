@@ -1,7 +1,7 @@
 import { useStoreSelector } from '@dish/use-store'
-import React, { useContext, useEffect, useMemo, useState } from 'react'
+import React, { useContext, useEffect, useMemo, useRef, useState } from 'react'
 import { ScrollView, ScrollViewProps, StyleSheet } from 'react-native'
-import { VStack, useDebounce } from 'snackui'
+import { VStack, isTouchDevice, useDebounce, useGet } from 'snackui'
 
 import { useAppDrawerWidthInner } from '../hooks/useAppDrawerWidth'
 import { ContentScrollContext, ScrollStore } from './ContentScrollView'
@@ -23,8 +23,14 @@ export type ContentScrollViewHorizontalProps = ScrollViewProps & {
 // takes children but we memo so we can optimize if wanted
 export const ContentScrollViewHorizontal = (props: ContentScrollViewHorizontalProps) => {
   const id = useContext(ContentScrollContext)
-  const isLockedVertical = useStoreSelector(ScrollStore, (x) => x.lock === 'vertical', { id })
+  const isLockedOut = useStoreSelector(
+    ScrollStore,
+    (x) => x.lock === 'vertical' || x.lock === 'drawer',
+    { id }
+  )
+  const getIsLockedOut = useGet(isLockedOut)
   const scrollLock = useScrollLock({ id, direction: 'horizontal' })
+  const isTouching = useRef(false)
 
   // useEffect(() => {
   //   const node = scrollLock.scrollRef.current?.getScrollableNode() as HTMLDivElement
@@ -47,7 +53,11 @@ export const ContentScrollViewHorizontal = (props: ContentScrollViewHorizontalPr
         scrollEventThrottle={60}
         style={sheet.scrollStyle}
         {...props}
+        scrollEnabled={!isLockedOut}
         onScroll={(e) => {
+          if (isTouching.current && getIsLockedOut()) {
+            return false
+          }
           props.onScroll?.(e)
           scrollLock.onScroll(e)
         }}
@@ -55,15 +65,22 @@ export const ContentScrollViewHorizontal = (props: ContentScrollViewHorizontalPr
         onScrollEndDrag={scrollLock.onScrollEndDrag}
       />
     )
-  }, [props])
+  }, [isTouchDevice ? isTouching.current : isLockedOut, props])
 
   return (
     // needs both pointer events to prevent/enable scroll on safari
     <VStack
       overflow="hidden"
       width="100%"
-      pointerEvents={isLockedVertical ? 'none' : 'auto'}
+      pointerEvents={isLockedOut ? 'none' : 'auto'}
+      onTouchStart={() => {
+        isTouching.current = true
+      }}
+      onTouchEnd={() => {
+        isTouching.current = false
+      }}
       height={props.height}
+      contain="strict"
     >
       {/* DEBUG VIEW */}
       {/* {isScrolling && (

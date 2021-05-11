@@ -11,6 +11,7 @@ import {
   resolved,
   slugify,
   useRefetch,
+  user,
 } from '@dish/graph'
 import { assertPresent, isPresent } from '@dish/helpers'
 import { Plus, Trash, X } from '@dish/react-feather'
@@ -391,79 +392,11 @@ const ListPageContent = graphql((props: Props) => {
 
             {/* overflow clip prevention with marginVerticals here */}
             <VStack position="relative" backgroundColor={color} rotate="-2deg">
-              <PageTitle
-                noDivider
-                title={
-                  <VStack
-                    marginHorizontal="auto"
-                    marginVertical={15}
-                    alignItems="center"
-                    justifyContent="center"
-                  >
-                    <ScalingPressable>
-                      <Link name="user" params={{ username: list.user?.username ?? '' }}>
-                        <SlantedTitle scale={1} size="xs" alignSelf="center">
-                          {username}'s
-                        </SlantedTitle>
-                      </Link>
-                    </ScalingPressable>
-
-                    <VStack position="relative" alignSelf="center">
-                      {list.user?.avatar && (
-                        <AbsoluteVStack overflow="visible" bottom={-15} left={-60} zIndex={-3}>
-                          <UserAvatar
-                            size={130}
-                            charIndex={list.user.charIndex!}
-                            avatar={list.user.avatar}
-                          />
-                        </AbsoluteVStack>
-                      )}
-                      <SlantedTitle
-                        scale={1}
-                        backgroundColor={theme.backgroundColorDarker}
-                        color="#fff"
-                        marginTop={-5}
-                        alignSelf="center"
-                        zIndex={0}
-                        size="xl"
-                      >
-                        {isEditing ? (
-                          <Input
-                            fontSize={26}
-                            backgroundColor="transparent"
-                            defaultValue={list.name || ''}
-                            onChangeText={(val) => {
-                              draft.current.name = val
-                            }}
-                            fontWeight="700"
-                            textAlign="center"
-                            color="#fff"
-                            borderColor="transparent"
-                            margin={-5}
-                          />
-                        ) : (
-                          list.name
-                        )}
-                      </SlantedTitle>
-                      <SlantedTitle scale={1} zIndex={-1} size="xs" alignSelf="center">
-                        {region.data?.name ?? props.item.region}
-                      </SlantedTitle>
-                    </VStack>
-                  </VStack>
-                }
-                // after={
-                //   <AbsoluteVStack
-                //     top={-10}
-                //     right={0}
-                //     bottom={0}
-                //     alignItems="center"
-                //     justifyContent="center"
-                //     backgroundColor={theme.backgroundColor}
-                //     padding={20}
-                //   >
-                //     <Heart size={30} />
-                //   </AbsoluteVStack>
-                // }
+              <ListPageTitle
+                locationName={region.data?.name ?? props.item.region}
+                list={list}
+                isEditing={isEditing}
+                draft={draft}
               />
             </VStack>
 
@@ -686,6 +619,94 @@ const ListPageContent = graphql((props: Props) => {
     </Theme>
   )
 })
+
+const ListPageTitle = ({
+  list,
+  locationName,
+  isEditing,
+  draft,
+}: {
+  locationName: string
+  list: list
+  isEditing?: boolean
+  draft: any
+}) => {
+  const theme = useTheme()
+  const len = list.name?.length ?? 16
+
+  return (
+    <PageTitle
+      noDivider
+      title={
+        <VStack
+          marginHorizontal="auto"
+          marginVertical={15}
+          alignItems="center"
+          justifyContent="center"
+        >
+          <ScalingPressable>
+            <Link name="user" params={{ username: list.user?.username ?? '' }}>
+              <SlantedTitle scale={1} size="xs" alignSelf="center">
+                {list.user?.username ?? '...'}'s
+              </SlantedTitle>
+            </Link>
+          </ScalingPressable>
+
+          <VStack position="relative" alignSelf="center">
+            {list.user?.avatar && (
+              <AbsoluteVStack overflow="visible" bottom={-15} left={-60} zIndex={-3}>
+                <UserAvatar size={130} charIndex={list.user.charIndex!} avatar={list.user.avatar} />
+              </AbsoluteVStack>
+            )}
+            <SlantedTitle
+              scale={1}
+              backgroundColor={theme.backgroundColorDarker}
+              color="#fff"
+              marginTop={-5}
+              alignSelf="center"
+              zIndex={0}
+              size={len < 12 ? 'xl' : len < 16 ? 'lg' : len < 24 ? 'md' : len < 30 ? 'sm' : 'xs'}
+            >
+              {isEditing ? (
+                <Input
+                  fontSize={26}
+                  backgroundColor="transparent"
+                  defaultValue={list.name || ''}
+                  onChangeText={(val) => {
+                    draft.current.name = val
+                  }}
+                  fontWeight="700"
+                  textAlign="center"
+                  color="#fff"
+                  borderColor="transparent"
+                  margin={-5}
+                />
+              ) : (
+                list.name
+              )}
+            </SlantedTitle>
+            <SlantedTitle scale={1} zIndex={-1} size="xs" alignSelf="center">
+              {locationName}
+            </SlantedTitle>
+          </VStack>
+        </VStack>
+      }
+      // after={
+      //   <AbsoluteVStack
+      //     top={-10}
+      //     right={0}
+      //     bottom={0}
+      //     alignItems="center"
+      //     justifyContent="center"
+      //     backgroundColor={theme.backgroundColor}
+      //     padding={20}
+      //   >
+      //     <Heart size={30} />
+      //   </AbsoluteVStack>
+      // }
+    />
+  )
+}
 
 function ColorBubble(props: StackProps) {
   return (
