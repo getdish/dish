@@ -4991,11 +4991,11 @@ __metadata:
     "@babel/traverse": "*"
     "@babel/types": "*"
     "@dish/esdx": ^0.0.9
-    "@snackui/static": ^0.8.0
+    "@snackui/static": ^0.12.0
   languageName: unknown
   linkType: soft
 
-"@snackui/helpers@^0.8.0, @snackui/helpers@workspace:snackui/packages/helpers":
+"@snackui/helpers@^0.12.0, @snackui/helpers@workspace:snackui/packages/helpers":
   version: 0.0.0-use.local
   resolution: "@snackui/helpers@workspace:snackui/packages/helpers"
   dependencies:
@@ -5003,18 +5003,18 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@snackui/node@*, @snackui/node@^0.8.0, @snackui/node@workspace:snackui/packages/snackui-node":
+"@snackui/node@*, @snackui/node@^0.12.0, @snackui/node@workspace:snackui/packages/snackui-node":
   version: 0.0.0-use.local
   resolution: "@snackui/node@workspace:snackui/packages/snackui-node"
   dependencies:
-    "@snackui/helpers": ^0.8.0
+    "@snackui/helpers": ^0.12.0
     ts-transform-import-path-rewrite: ^0.3.0
     ttypescript: ^1.5.12
     typescript: ^4.2.3
   languageName: unknown
   linkType: soft
 
-"@snackui/static@*, @snackui/static@^0.8.0, @snackui/static@workspace:snackui/packages/snackui-static":
+"@snackui/static@*, @snackui/static@^0.12.0, @snackui/static@workspace:snackui/packages/snackui-static":
   version: 0.0.0-use.local
   resolution: "@snackui/static@workspace:snackui/packages/snackui-static"
   dependencies:
@@ -5031,8 +5031,8 @@ __metadata:
     "@dish/react-test-env": ^0.0.7
     "@dish/testy": "*"
     "@expo/match-media": ^0.1.0
-    "@snackui/helpers": ^0.8.0
-    "@snackui/node": ^0.8.0
+    "@snackui/helpers": ^0.12.0
+    "@snackui/node": ^0.12.0
     "@types/jest": "*"
     "@types/node": ^14.14.12
     "@types/react-native": ^0.64.2
@@ -10284,7 +10284,7 @@ __metadata:
     import-sort-style-module: ^6.0.0
     npm-run-all: ^4.1.5
     patch-package: ^6.4.7
-    prettier: ^2.2.1
+    prettier: ^2.3.0
     prettier-plugin-import-sort: ^0.0.6
     react: ^17.0.2
     react-dom: ^17.0.2
@@ -19327,6 +19327,15 @@ __metadata:
   languageName: node
   linkType: hard
 
+"prettier@npm:^2.3.0":
+  version: 2.3.0
+  resolution: "prettier@npm:2.3.0"
+  bin:
+    prettier: bin-prettier.js
+  checksum: 652640cc8b71bc5277cfb8bf6f161783ca588efcf683c3d630837b39da8d57fef35c9e00ae5855a8e3c75136c42274046c913cc2b2d2968558315f31c6a26981
+  languageName: node
+  linkType: hard
+
 "pretty-bytes@npm:5.4.1":
   version: 5.4.1
   resolution: "pretty-bytes@npm:5.4.1"
@@ -21763,7 +21772,7 @@ __metadata:
   resolution: "snackui-loader@workspace:snackui/packages/snackui-loader"
   dependencies:
     "@dish/esdx": ^0.0.9
-    "@snackui/static": ^0.8.0
+    "@snackui/static": ^0.12.0
     fs-extra: ^9.1.0
     loader-utils: ^2.0.0
     lodash: ^4.17.21
@@ -21779,7 +21788,7 @@ __metadata:
     "@dish/fast-compare": ^2.7.6
     "@dish/proxy-worm": ^0.0.4
     "@react-native-community/blur": ^3.6.0
-    "@snackui/helpers": ^0.8.0
+    "@snackui/helpers": ^0.12.0
     "@types/node": ^14.11.10
     "@types/react": ^16.9.35
     "@types/react-dom": ^16.9.8

@@ -468,25 +468,25 @@ class HomeStore extends Store {
     // this.autocompleteIndex = -tags.length + tagIndex
   }
 
-  // private updateActiveSearchState(next: HomeStateTagNavigable) {
-  //   const state = _.findLast(this.states, (state) => isSearchState(state) || isHomeState(state))
-  //   if (!state) return
-  //   try {
-  //     assert(!!next['activeTags'])
-  //     const ids = 'activeTags' in state ? state.activeTags : null
-  //     const sameTagIds = stringify(ids) === stringify(next.activeTags)
-  //     const sameSearchQuery = isEqual(state.searchQuery, next.searchQuery)
-  //     assert(!sameTagIds || !sameSearchQuery)
-  //     const nextState = {
-  //       activeTags: ensureLenseTag(next.activeTags),
-  //       searchQuery: next.searchQuery,
-  //       id: this.currentState.id,
-  //     }
-  //     this.updateHomeState('homeStore.updateActiveSearchState', nextState)
-  //   } catch (err) {
-  //     handleAssertionError(err)
-  //   }
-  // }
+  private updateActiveSearchState(next: HomeStateTagNavigable) {
+    const state = _.findLast(this.states, (state) => isSearchState(state) || isHomeState(state))
+    if (!state) return
+    try {
+      assert(!!next['activeTags'])
+      const ids = 'activeTags' in state ? state.activeTags : null
+      const sameTagIds = stringify(ids) === stringify(next.activeTags)
+      const sameSearchQuery = isEqual(state.searchQuery, next.searchQuery)
+      assert(!sameTagIds || !sameSearchQuery)
+      const nextState = {
+        activeTags: ensureLenseTag(next.activeTags),
+        searchQuery: next.searchQuery,
+        id: this.currentState.id,
+      }
+      this.updateHomeState('homeStore.updateActiveSearchState', nextState)
+    } catch (err) {
+      handleAssertionError(err)
+    }
+  }
 
   setSearchQuery(searchQuery: string) {
     this.updateCurrentState('setSearchQuery', {
@@ -531,29 +531,31 @@ class HomeStore extends Store {
   }
 
   async navigate({ state, ...rest }: HomeStateNav) {
-    const navState = { state: state ?? this.currentState, ...rest }
+    const curState = this.currentState
+    const navState = { state: state ?? curState, ...rest }
     const nextState = getNextHomeState(navState)
-    // const curState = this.currentState
 
-    // const updateTags = () => {
-    //   if (!('activeTags' in curState)) return
-    //   if (!('activeTags' in nextState)) return
-    //   const curActive = curState.activeTags
-    //   const nextActive = nextState.activeTags
-    //   if (isEqual(curActive, nextActive)) {
-    //     return
-    //   }
-    //   this.updateActiveSearchState({
-    //     id: curState.id,
-    //     type: curState.type,
-    //     searchQuery: nextState.searchQuery,
-    //     activeTags: nextActive,
-    //   })
-    // }
+    // TODO need to set up an official page hooks API
+    // SearchPage.preNavigate() would do this or similar
+    const updateTags = () => {
+      if (curState.type !== 'search' || nextState.type !== 'search') return
+      const curActive = curState.activeTags
+      const nextActive = nextState.activeTags
+      if (isEqual(curActive, nextActive)) {
+        return
+      }
+      this.updateActiveSearchState({
+        id: curState.id,
+        type: curState.type,
+        searchQuery: nextState.searchQuery,
+        activeTags: nextActive,
+      })
+    }
 
     const shouldNav = getShouldNavigate(nextState)
+    console.log('shouldNav', shouldNav)
     if (!shouldNav) {
-      // updateTags()
+      updateTags()
       return false
     }
 

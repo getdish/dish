@@ -142,7 +142,7 @@
     "ultra-runner": "^3.10.5"
   },
   "optionalDependencies": {
-    "prettier": "^2.2.1",
+    "prettier": "^2.3.0",
     "prettier-plugin-import-sort": "^0.0.6"
   },
   "importSort": {
