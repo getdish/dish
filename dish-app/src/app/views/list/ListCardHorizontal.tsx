@@ -19,14 +19,11 @@ export const ListCardHorizontal = graphql((props: ListIDProps) => {
   return (
     <Link name="list" asyncClick params={{ slug, userSlug, region }}>
       <Button
+        alignSelf="center"
         borderRadius={15}
         padding={10}
         paddingHorizontal={12}
-        backgroundColor={theme.cardBackgroundColor}
-        borderWidth={1}
-        elevation={2}
-        shadowRadius={3}
-        shadowOffset={{ height: 2, width: 0 }}
+        borderWidth={0}
         maxHeight={80}
       >
         <Image
