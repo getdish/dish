@@ -236,7 +236,7 @@ export const HomeDrawerSmallView = memo((props: { children: any }) => {
             () => (
               <BottomSheetContainer>
                 <View ref={panViewRef as any} style={styles.container} {...pan.panHandlers}>
-                  <VStack zIndex={1000} maxHeight={searchBarHeight}>
+                  <VStack height={searchBarHeight} zIndex={1000}>
                     <AppSearchBar />
                   </VStack>
                   <VStack position="relative" flex={1}>
