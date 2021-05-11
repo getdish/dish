@@ -64,7 +64,6 @@ export const HomeDrawerSmallView = memo((props: { children: any }) => {
         }
         const scroll = getStore(ScrollStore, { id: contentParent.activeId })
         if (curScrollerYMove > 0 || !scroll.isAtTop) {
-          console.log('not scrolled to top')
           return false
         }
         // prettier-ignore
@@ -133,7 +132,7 @@ export const HomeDrawerSmallView = memo((props: { children: any }) => {
         const y = curSnapY + dy
         // limit movement (TODO make it "resist" at edge)
         const scroller = scrollViews.get(contentParent.activeId)
-        if (y < minY || curScrollerYMove > 0) {
+        if (y < minY || curScrollerYMove >= 0) {
           if (!scroller) return
           drawerStore.isAtTop = true
           const curY = scrollLastY.get(contentParent.activeId) ?? 0
@@ -159,7 +158,7 @@ export const HomeDrawerSmallView = memo((props: { children: any }) => {
         drawerStore.pan.flattenOffset()
         const scrolledY = curScrollerYMove
         curScrollerYMove = -1
-        if (scrolledY !== -1) {
+        if (scrolledY > 0) {
           const scroller = scrollViews.get(contentParent.activeId)
           if (scroller) {
             const y = scrolledY + -vy * 16

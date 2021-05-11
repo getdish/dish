@@ -1,7 +1,7 @@
 import { RestaurantOnlyIds, graphql } from '@dish/graph'
 import { isPresent } from '@dish/helpers'
 import React, { Suspense, memo, useEffect, useMemo, useState } from 'react'
-import { AbsoluteVStack, Hoverable, LoadingItems, Spacer } from 'snackui'
+import { AbsoluteVStack, Hoverable, LoadingItems, Spacer, useDebounceEffect } from 'snackui'
 
 import { getRestaurantIdentifiers } from '../../helpers/getRestaurantIdentifiers'
 import { FIBase } from './FIBase'
@@ -80,22 +80,26 @@ export const HomePageFeed = memo(
         results: RestaurantOnlyIds[]
       }>(null)
 
-      useEffect(() => {
-        const results = items.flatMap((x) => {
-          if (hovered && hovered !== x.id) {
+      useDebounceEffect(
+        () => {
+          const results = items.flatMap((x) => {
+            if (hovered && hovered !== x.id) {
+              return []
+            }
+            if (hoveredResults?.via === x.type) {
+              return hoveredResults.results
+            }
+            if ('restaurants' in x) {
+              return x.restaurants.map(getRestaurantIdentifiers)
+            }
             return []
-          }
-          if (hoveredResults?.via === x.type) {
-            return hoveredResults.results
-          }
-          if ('restaurants' in x) {
-            return x.restaurants.map(getRestaurantIdentifiers)
-          }
-          return []
-        })
-        // set results
-        homePageStore.setResults(results)
-      }, [items, hoveredResults])
+          })
+          // set results
+          homePageStore.setResults(results)
+        },
+        150,
+        [items, hoveredResults]
+      )
 
       // const mapRegion = region
       //   ? ({

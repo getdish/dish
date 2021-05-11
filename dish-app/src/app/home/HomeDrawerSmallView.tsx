@@ -1,4 +1,3 @@
-import { supportsTouchWeb } from '@dish/helpers'
 import { useStoreInstance } from '@dish/use-store'
 import React, { memo, useEffect, useMemo } from 'react'
 import { Animated, PanResponder, StyleSheet, View } from 'react-native'
@@ -13,13 +12,8 @@ import { blurSearchInput } from '../AppSearchInput'
 import { autocompletesStore } from '../AutocompletesStore'
 import { drawerStore as drawerStoreInstance } from '../drawerStore'
 import { BottomSheetContainer } from '../views/BottomSheetContainer'
-import { HomeDrawerSmallView as HomeDrawerSmallViewNative } from './HomeDrawerSmallView.native'
 
 export const HomeDrawerSmallView = memo((props: { children: any }) => {
-  if (supportsTouchWeb) {
-    return <HomeDrawerSmallViewNative {...props} />
-  }
-
   const drawerStore = useStoreInstance(drawerStoreInstance)
   const media = useMedia()
 

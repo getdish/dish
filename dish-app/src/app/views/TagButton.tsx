@@ -136,7 +136,6 @@ const TagButtonInner = (props: TagButtonProps) => {
   const theme = useTheme()
 
   if (!slug) {
-    console.log('no slug')
     return null
   }
 
