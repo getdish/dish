@@ -24,6 +24,7 @@ export const AppSearchBarContents = memo(({ isColored }: { isColored: boolean })
 
   return (
     <HStack
+      width="100%"
       flex={1}
       pointerEvents="auto"
       alignItems="center"
@@ -58,7 +59,7 @@ export const AppSearchBarContents = memo(({ isColored }: { isColored: boolean })
           <>
             {showLocation && searchLocationEl}
             {!showLocation && (
-              <VStack width="100%" maxWidth="100%" flex={1}>
+              <VStack justifyContent="center" width="100%" maxWidth="100%" flex={1}>
                 {searchInputEl}
               </VStack>
             )}

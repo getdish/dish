@@ -7,8 +7,10 @@ import { CloseButton } from './CloseButton'
 export const StackViewCloseButton = memo(() => {
   return (
     <CloseButton
+      debug={1223}
       shadowed
-      onPressOut={async () => {
+      pointerEvents="auto"
+      onPress={async () => {
         await sleep(16)
         homeStore.up()
       }}

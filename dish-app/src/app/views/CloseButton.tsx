@@ -1,6 +1,5 @@
 import { CornerLeftUp, X } from '@dish/react-feather'
 import React, { memo } from 'react'
-import { AbsoluteVStack } from 'snackui'
 import { HStack, StackProps, useTheme } from 'snackui'
 
 type CircleButtonProps = StackProps & {
