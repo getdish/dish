@@ -18,8 +18,6 @@ export const ContentScrollViewHorizontalFitted = (
     },
   })
 
-  console.log('layoutProps', layoutProps.layout)
-
   return (
     <VStack
       {...layoutProps}

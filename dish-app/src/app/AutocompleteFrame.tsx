@@ -12,7 +12,6 @@ import {
 } from 'snackui'
 
 import { drawerWidthMax, isWeb, searchBarHeight } from '../constants/constants'
-import { isTouchDevice } from '../constants/platforms'
 import { AutocompleteItem } from '../helpers/createAutocomplete'
 import { AutocompleteItemView } from './AutocompleteItemView'
 import { AutocompleteStore, AutocompleteTarget, autocompletesStore } from './AutocompletesStore'
@@ -104,12 +103,6 @@ export const AutocompleteFrame = memo(
             overflow="hidden"
             // dont add events here :(
           >
-            {/* <Pressable
-            style={{ flex: 1 }}
-            onPress={() => {
-              autocompletes.setVisible(false)
-            }}
-          > */}
             <ContentScrollView
               id="autocomplete"
               // styles for native
@@ -123,7 +116,6 @@ export const AutocompleteFrame = memo(
               {/* pad bottom to scroll */}
               <VStack height={100} />
             </ContentScrollView>
-            {/* </Pressable> */}
           </VStack>
         </VStack>
       </VStack>

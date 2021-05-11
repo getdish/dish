@@ -33,21 +33,19 @@ export const SearchPageListsRow = memo(
       },
     })
 
-    console.log('lists', lists, activeTags, region)
-
     if (!region) {
       return null
     }
 
     return (
-      <HStack
-        height="100%"
-        alignItems="center"
-        justifyContent="center"
-        spacing="md"
-        paddingHorizontal={20}
-      >
-        <Suspense fallback={null}>
+      <Suspense fallback={null}>
+        <HStack
+          height="100%"
+          alignItems="center"
+          justifyContent="center"
+          spacing="md"
+          paddingHorizontal={20}
+        >
           {lists.map((list, i) => {
             return (
               <ListCardHorizontal
@@ -58,12 +56,12 @@ export const SearchPageListsRow = memo(
               />
             )
           })}
-        </Suspense>
 
-        <SearchForkListButton>
-          {!lists.length ? 'No lists yet, create first' : 'Create list'}
-        </SearchForkListButton>
-      </HStack>
+          <SearchForkListButton>
+            {!lists.length ? 'No lists yet, create first' : 'Create list'}
+          </SearchForkListButton>
+        </HStack>
+      </Suspense>
     )
   })
 )
