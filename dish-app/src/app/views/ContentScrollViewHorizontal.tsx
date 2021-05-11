@@ -65,7 +65,7 @@ export const ContentScrollViewHorizontal = (props: ContentScrollViewHorizontalPr
         onScrollEndDrag={scrollLock.onScrollEndDrag}
       />
     )
-  }, [isTouchDevice ? isTouching.current : isLockedOut, props])
+  }, [isTouching.current, isLockedOut, props])
 
   return (
     // needs both pointer events to prevent/enable scroll on safari

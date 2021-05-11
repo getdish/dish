@@ -1,4 +1,3 @@
-// debug
 import { RefreshCcw, X } from '@dish/react-feather'
 import { useSelector, useStoreInstance, useStoreInstanceSelector } from '@dish/use-store'
 import React, { memo } from 'react'
