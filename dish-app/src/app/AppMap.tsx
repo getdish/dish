@@ -1,3 +1,4 @@
+// debug
 import { useStoreInstance, useStoreInstanceSelector } from '@dish/use-store'
 import React, { memo, useCallback, useEffect, useMemo } from 'react'
 import { StyleSheet } from 'react-native'
@@ -50,6 +51,7 @@ export default memo(function AppMap() {
   })
 
   useEffect(() => {
+    if (media.sm) return
     offset.value = withSpring(y, {
       damping: 15,
     })
@@ -58,7 +60,14 @@ export default memo(function AppMap() {
   return (
     <Animated.View style={[StyleSheet.absoluteFill, animatedStyles]}>
       <AppMapContents />
-      <AbsoluteVStack zIndex={100} pointerEvents="none" bottom={0} left={0} right={0} height={200}>
+      <AbsoluteVStack
+        zIndex={100}
+        pointerEvents="none"
+        bottom={0}
+        left={0}
+        right={0}
+        height={media.sm ? 250 : 100}
+      >
         <LinearGradient
           style={StyleSheet.absoluteFill}
           colors={[`${theme.mapBackground}00`, theme.mapBackground]}
@@ -254,7 +263,13 @@ const AppMapContents = memo(function AppMapContents() {
 
   return (
     <HStack position="absolute" fullscreen alignItems="center" justifyContent="center">
-      <HStack height="100%" maxWidth={pageWidthMax} width="100%">
+      <HStack
+        height="100%"
+        alignItems="flex-end"
+        justifyContent="flex-end"
+        maxWidth={pageWidthMax}
+        width="100%"
+      >
         {!media.sm && (
           <VStack height="100%" flex={2}>
             {ensureFlexText}
@@ -265,6 +280,7 @@ const AppMapContents = memo(function AppMapContents() {
           contain="strict"
           zIndex={zIndexMap}
           maxHeight="100%"
+          height="100%"
           width={width}
           borderTopRightRadius={12}
           borderBottomRightRadius={12}

@@ -17,7 +17,7 @@ const baseTheme = {
   backgroundColorTransparent: 'rgba(40,40,200,0)',
   cardBackgroundColor: '#333',
   backgroundColorAlt: bgAlt,
-  mapBackground: '#dbdeeb',
+  mapBackground: '#D3D0F3',
   colorAlt: blue,
 }
 
