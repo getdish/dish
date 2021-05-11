@@ -84,6 +84,7 @@ export const AppSearchInputLocation = memo(function AppSearchInputLocation() {
           <HStack
             position="relative"
             minWidth="78.7%" // this is the hackiest ever fix for react native width issue for now
+            flexShrink={1}
             flex={1}
             onPressOut={() => {
               autocompletesStore.setTarget('location')

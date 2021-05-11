@@ -292,7 +292,6 @@ function CommentBubbleContents({
             <Link
               name="user"
               params={{ username: name }}
-              color="#fff"
               maxWidth="100%"
               flex={1}
               fontSize={13}

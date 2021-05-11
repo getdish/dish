@@ -12,15 +12,22 @@ export const ContentScrollViewHorizontalFitted = (
     setWidth: Function
   }
 ) => {
-  const layout = useLayout({
-    stateless: true,
+  const layoutProps = useLayout({
     onLayout({ nativeEvent }) {
       props.setWidth?.(nativeEvent.layout.width)
     },
   })
 
+  console.log('layoutProps', layoutProps.layout)
+
   return (
-    <VStack {...(layout as any)} width="100%" position="relative" zIndex={100}>
+    <VStack
+      {...layoutProps}
+      width={layoutProps.layout?.width ?? '100%'}
+      maxWidth="100%"
+      position="relative"
+      zIndex={100}
+    >
       <ContentScrollViewHorizontal
         {...props}
         style={[

@@ -75,6 +75,7 @@ export const StackDrawer = ({
       <VStack
         position="relative"
         flex={1}
+        flexShrink={1}
         borderRadius={drawerBorderRadius}
         maxWidth={media.sm ? '100%' : drawerWidthMax}
         backgroundColor={theme.backgroundColor}

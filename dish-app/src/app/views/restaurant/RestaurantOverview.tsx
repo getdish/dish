@@ -2,11 +2,9 @@ import { graphql } from '@dish/graph'
 import { ellipseText } from '@dish/helpers'
 import { capitalize } from 'lodash'
 import React, { memo, useRef, useState } from 'react'
-import { BlurView } from 'snackui'
-import { AbsoluteVStack, Button, HStack, Input, Spacer, Text, VStack, useTheme } from 'snackui'
+import { AbsoluteVStack, HStack, Input, Spacer, Text, VStack, useTheme } from 'snackui'
 
 import { blue } from '../../../constants/colors'
-import { isWeb } from '../../../constants/constants'
 import { queryRestaurant } from '../../../queries/queryRestaurant'
 import { ensureFlexText } from '../../home/restaurant/ensureFlexText'
 import { Link } from '../Link'
@@ -63,6 +61,7 @@ export const RestaurantOverview = memo(
       return (
         // height 100% necessary for native
         <VStack width="100%" height={fullHeight ? '100%' : undefined}>
+          {ensureFlexText}
           <HStack
             maxHeight={lineHeight * maxLines - 2}
             maxWidth="100%"
@@ -148,7 +147,6 @@ export const RestaurantOverview = memo(
                     Edit
                   </Link>
                 )}
-                {ensureFlexText}
               </Text>
             )}
           </HStack>

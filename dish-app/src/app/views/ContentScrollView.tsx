@@ -244,6 +244,7 @@ export const ContentScrollView = forwardRef<ScrollView, ContentScrollViewProps>(
           // className={`${!getScrollActive() ? 'prevent-touch ' : ' '} will-prevent-touch`}
           position="relative"
           flex={1}
+          flexShrink={1}
           overflow="hidden"
         >
           <ScrollView
