@@ -40,7 +40,7 @@ export const HomeDrawerSmallView = memo((props: { children: any }) => {
         drawerStore.spring?.stop()
         drawerStore.spring = null
         drawerStore.pan.setOffset(drawerStore.pan['_value'])
-        document.body.classList.add('all-input-blur')
+        // document.body.classList.add('all-input-blur')
         autocompletesStore.setVisible(false)
         blurSearchInput()
       },
@@ -52,7 +52,7 @@ export const HomeDrawerSmallView = memo((props: { children: any }) => {
         drawerStore.setIsDragging(false)
         drawerStore.pan.flattenOffset()
         drawerStore.animateDrawerToPx(drawerStore.pan['_value'])
-        document.body.classList.remove('all-input-blur')
+        // document.body.classList.remove('all-input-blur')
       },
     })
   }, [])
