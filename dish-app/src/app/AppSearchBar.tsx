@@ -126,6 +126,7 @@ export const AppSearchBarFloating = () => {
               justifyContent="center"
               width="100%"
               maxWidth={searchBarMaxWidth}
+              alignItems="center"
             >
               <Suspense fallback={null}>
                 <AppSearchBarContents isColored={isColored} />

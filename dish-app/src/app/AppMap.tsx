@@ -1,4 +1,3 @@
-// debug
 import { useStoreInstance, useStoreInstanceSelector } from '@dish/use-store'
 import React, { memo, useCallback, useEffect, useMemo } from 'react'
 import { StyleSheet } from 'react-native'
