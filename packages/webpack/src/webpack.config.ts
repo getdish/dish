@@ -377,8 +377,7 @@ export function createWebpackConfig({
 
         isHot && new Webpack.HotModuleReplacementPlugin({}),
 
-        !noMinify &&
-          (isVerbose || isProduction) &&
+        isVerbose &&
           new (require('webpack-bundle-analyzer').BundleAnalyzerPlugin)({
             analyzerMode: 'static',
           }),

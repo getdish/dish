@@ -235,7 +235,7 @@ export const ContentScrollView = forwardRef<ScrollView, ContentScrollViewProps>(
     })
 
     const isScrollingVerticalFromTop = () => {
-      return (scrollStore.lock === 'vertical' || scrollStore.lock === 'none') && scrollStore.isAtTop
+      return scrollStore.lock === 'vertical' && scrollStore.isAtTop
     }
 
     return (
@@ -287,6 +287,8 @@ export const ContentScrollView = forwardRef<ScrollView, ContentScrollViewProps>(
               style={{ flex: 1 }}
               onMoveShouldSetResponderCapture={isScrollingVerticalFromTop}
               onTouchMove={(e) => {
+                // this handles when things are scrolling already
+                // it moves the drawer once scroll goes above the top
                 if (e.nativeEvent.touches.length !== 1) {
                   return
                 }

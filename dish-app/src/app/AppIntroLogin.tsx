@@ -1,4 +1,3 @@
-// debug
 import { useStore } from '@dish/use-store'
 import React, { memo } from 'react'
 import { Image } from 'react-native'
@@ -24,7 +23,6 @@ export const AppIntroLogin = memo(() => {
         spacing="xl"
         alignItems="center"
         width="100%"
-        debug
       >
         {themeName == 'dark' ? (
           <Image
