@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import { Text, VStack, useMedia } from 'snackui'
 
 import { tagDisplayName } from '../../constants/tagDisplayName'
@@ -10,7 +10,7 @@ export type LenseButtonSize = 'md' | 'lg' | 'xl'
 
 export const LenseButton = ({
   lense,
-  isActive,
+  isActive: isActiveParent,
   minimal,
   size = 'md',
   backgroundColor,
@@ -23,6 +23,7 @@ export const LenseButton = ({
   size?: LenseButtonSize
   onPress?: (e: any) => any
 }) => {
+  const [isActive, setIsActive] = useState(isActiveParent)
   const media = useMedia()
   const lenseColorLight = rgbString(lense.rgb, media.sm ? 0.6 : 0.4)
   const lenseColorDark = rgbString(lense.rgb.map((x) => x * 1.2))
@@ -37,14 +38,19 @@ export const LenseButton = ({
   const name = tagDisplayName(lense)
   const isLong = name.length > 4
 
+  useEffect(() => {
+    setIsActive(isActiveParent)
+  }, [isActiveParent])
+
   return (
-    <Link {...(onPress ? { onPress } : { tag: lense })} disallowDisableWhenActive>
+    <Link {...(onPress ? { onPress } : { tag: lense })} asyncClick disallowDisableWhenActive>
       <VStack
         className="unselectable ease-in-out-fast"
         alignItems="center"
         justifyContent="center"
         width={scaledWidth}
         height={scaledSize}
+        onPress={() => setIsActive((x) => !x)}
         backgroundColor={bg}
         borderRadius={100}
         marginRight={10}

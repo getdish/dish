@@ -110,11 +110,7 @@ export const AppSearchInputLocation = memo(function AppSearchInputLocation() {
               }}
               onBlur={() => {
                 inputStore.setIsFocused(false)
-                if (isWeb && !getMedia().sm) {
-                  if (autocompletesStore.target === 'location') {
-                    autocompletesStore.setVisible(false)
-                  }
-                }
+                // no action here it will go away
               }}
               style={[
                 inputTextStyles.textInput,

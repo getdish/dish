@@ -1,6 +1,6 @@
-import { idle } from '@dish/async'
+import { sleep } from '@dish/async'
 import { isEqual } from '@dish/fast-compare'
-import { assert, handleAssertionError, stringify, timer } from '@dish/helpers'
+import { assert, handleAssertionError, stringify } from '@dish/helpers'
 import { HistoryItem } from '@dish/router'
 import { Store, createStore, useStoreInstance, useStoreInstanceSelector } from '@dish/use-store'
 import _, { clamp, findLast } from 'lodash'
@@ -31,7 +31,7 @@ import {
   HomeStatesByType,
 } from '../types/homeTypes'
 import { NavigableTag } from '../types/tagTypes'
-import { appMapStore, cancelUpdateRegion } from './AppMapStore'
+import { appMapStore } from './AppMapStore'
 import { drawerStore } from './drawerStore'
 
 class HomeStore extends Store {
@@ -534,28 +534,8 @@ class HomeStore extends Store {
     const curState = this.currentState
     const navState = { state: state ?? curState, ...rest }
     const nextState = getNextHomeState(navState)
-
-    // TODO need to set up an official page hooks API
-    // SearchPage.preNavigate() would do this or similar
-    const updateTags = () => {
-      if (curState.type !== 'search' || nextState.type !== 'search') return
-      const curActive = curState.activeTags
-      const nextActive = nextState.activeTags
-      if (isEqual(curActive, nextActive)) {
-        return
-      }
-      this.updateActiveSearchState({
-        id: curState.id,
-        type: curState.type,
-        searchQuery: nextState.searchQuery,
-        activeTags: nextActive,
-      })
-    }
-
     const shouldNav = getShouldNavigate(nextState)
-    console.log('shouldNav', shouldNav)
     if (!shouldNav) {
-      updateTags()
       return false
     }
 
