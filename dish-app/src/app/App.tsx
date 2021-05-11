@@ -72,7 +72,7 @@ function AppHomeContent() {
           <ErrorBoundary name="main-map">
             <Suspense fallback={null}>
               {/*  */}
-              {/* <AppMap /> */}
+              <AppMap />
             </Suspense>
           </ErrorBoundary>
         )}
@@ -83,7 +83,7 @@ function AppHomeContent() {
 
         <Suspense fallback={null}>
           {/*  */}
-          {/* <AppMapControlsOverlay /> */}
+          <AppMapControlsOverlay />
         </Suspense>
 
         <Suspense fallback={null}>
