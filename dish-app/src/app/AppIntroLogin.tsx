@@ -31,8 +31,7 @@ export const AppIntroLogin = memo(() => {
               marginBottom: -30,
               width: 892 * 0.25,
               height: 492 * 0.25,
-              // transform: [{ rotate: '6deg' }],
-              zIndex: -2,
+              zIndex: 0,
               position: 'relative',
             }}
           />
