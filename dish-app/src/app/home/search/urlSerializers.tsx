@@ -22,7 +22,6 @@ export const urlSerializers = {
     region: {
       match: (param: string) => +param[0] === +param[0] && param.includes('_'),
       serialize: ({ center, span, region }: Partial<HomeStateItemSearch>) => {
-        console.log('serializing', region)
         if (region) {
           return region
         }

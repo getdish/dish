@@ -3,7 +3,7 @@ import { capitalize } from 'lodash'
 import { UseQueryOptions } from 'react-query'
 
 import { RegionApiResponse, RegionNormalized } from '../types/homeTypes'
-import { coordsToLngLat, getMinLngLat, padLngLat, polygonToLngLat } from './mapHelpers'
+import { coordsToLngLat, getMinLngLat, polygonToLngLat, roundLngLat } from './mapHelpers'
 import { queryClient } from './queryClient'
 import { useQueryLoud } from './useQueryLoud'
 
@@ -22,8 +22,8 @@ export const fetchRegion = async (slug?: string | null) => {
     if (!!centerAt) {
       let response: RegionNormalized = {
         ...res,
-        center: coordsToLngLat(centerAt),
-        span: getMinLngLat(polygonToLngLat(res.bbox), { lng: 0.5, lat: 0.5 }),
+        center: roundLngLat(coordsToLngLat(centerAt)),
+        span: roundLngLat(getMinLngLat(polygonToLngLat(res.bbox), { lng: 0.5, lat: 0.5 })),
       }
       if (statePrefixRe.test(response.name)) {
         response = {

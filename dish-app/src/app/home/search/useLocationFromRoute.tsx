@@ -1,4 +1,4 @@
-import { LngLat } from '@dish/graph'
+import { LngLat, MapPosition } from '@dish/graph'
 import { HistoryItem } from '@dish/router'
 
 import { initialPosition } from '../../../constants/initialHomeState'
@@ -16,6 +16,8 @@ export function useLocationFromRoute(route: HistoryItem<'search'>) {
     suspense: false,
   })
 }
+
+export const regionPositions: { [key: string]: MapPosition } = {}
 
 export async function getLocationFromRoute(
   route: HistoryItem<'search'>
@@ -36,6 +38,10 @@ export async function getLocationFromRoute(
     // find by slug
     const region = await fetchRegion(params.region)
     if (region) {
+      regionPositions[params.region] = {
+        center: region.center,
+        span: region.span,
+      }
       return {
         center: region.center,
         span: region.span,
