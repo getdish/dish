@@ -59,7 +59,8 @@ export const useLink = (
 
     if (props.asyncClick) {
       cancel.current = series([
-        () => sleep(10),
+        // just enough time to do a lil animation, but not enough to slow the action, hard to get right
+        () => sleep(20),
         () => {
           cancel.current = null
           doNavigate(navItem, newLinkProps, props, e)

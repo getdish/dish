@@ -1,5 +1,5 @@
 import { Clock, ShoppingBag } from '@dish/react-feather'
-import React, { useLayoutEffect, useState } from 'react'
+import React, { useEffect, useLayoutEffect, useState } from 'react'
 import { VStack } from 'snackui'
 
 import { isWeb } from '../../constants/constants'
@@ -30,9 +30,9 @@ export const FilterButton = ({
   const themeName = isActive ? `${name}-dark` : null
   color = color ?? rgbString(rgb)
 
-  useLayoutEffect(() => {
-    setIsActive(isActive)
-  }, [isActive])
+  useEffect(() => {
+    setIsActive(isActiveParent)
+  }, [isActiveParent])
 
   const iconElement = (() => {
     switch (tag.slug) {
@@ -46,7 +46,7 @@ export const FilterButton = ({
   })()
 
   return (
-    <Link tag={tag}>
+    <Link tag={tag} asyncClick>
       <SmallButton
         icon={iconElement ? <VStack opacity={0.45}>{iconElement}</VStack> : null}
         {...rest}
@@ -59,7 +59,7 @@ export const FilterButton = ({
           }),
           ...rest.textProps,
         }}
-        onPressOut={() => {
+        onPress={() => {
           setIsActive((x) => !x)
         }}
       >
