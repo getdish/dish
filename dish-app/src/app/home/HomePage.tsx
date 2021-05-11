@@ -81,15 +81,16 @@ const HomePageContent = (props: Props) => {
   const theme = useTheme()
   const regionResponse = useRegionQuery(state.region, {
     enabled: isActive && !!state.region,
+    suspense: true,
   })
   const [position, setPosition] = useState<MapPosition>(initialPosition)
   const regionColors = getColorsForName(state.region)
   const region = regionResponse.data
 
-  // if (process.env.NODE_ENV === 'development') {
-  //   // prettier-ignore
-  //   console.log('👀 HomePage', state.region, { position, item: item, region, state, isActive: isActive })
-  // }
+  if (process.env.NODE_ENV === 'development') {
+    // prettier-ignore
+    console.log('👀 HomePage', state.region, { position, item: item, region, state, isActive: isActive })
+  }
 
   useEffect(() => {
     if (!region) return
@@ -198,7 +199,7 @@ const HomePageContent = (props: Props) => {
 
       {/* TOP FADE */}
       <AbsoluteVStack
-        top={-searchBarHeight + 8}
+        top={-searchBarHeight + 4}
         right={0}
         left={0}
         overflow="hidden"

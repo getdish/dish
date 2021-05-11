@@ -188,12 +188,18 @@ export const ContentScrollView = forwardRef<ScrollView, ContentScrollViewProps>(
         if (scrollStore.isAtTop) {
           scrollStore.setIsAtTop(false)
         }
+        if (isTouchDevice) {
+          // this is handled below
+          return
+        }
         if (scrollStore.lock === 'none') {
           scrollStore.setLock('vertical')
         }
-        finish.current = setTimeout(() => {
-          scrollStore.setLock('none')
-        }, THROTTLE_SCROLL * 1.3)
+        if (!isTouchDevice) {
+          finish.current = setTimeout(() => {
+            scrollStore.setLock('none')
+          }, THROTTLE_SCROLL * 1.3)
+        }
       }
     }
 
@@ -206,13 +212,13 @@ export const ContentScrollView = forwardRef<ScrollView, ContentScrollViewProps>(
     useEffect(() => {
       if (scrollRef.current) {
         const v = scrollRef.current
-        const s = {
-          ...v,
-          scrollTo(y: number, x = 0, animated = false) {
-            console.log('proxy scroll', y, animated ? 'ANIMATED' : '')
-            scrollTo(scrollRef, x, y, animated)
-          },
-        } as ScrollView
+        // const s = {
+        //   ...v,
+        //   scrollTo(y: number, x = 0, animated = false) {
+        //     console.log('proxy scroll', y, animated ? 'ANIMATED' : '')
+        //     scrollTo(scrollRef, x, y, animated)
+        //   },
+        // } as ScrollView
         scrollViews.set(id, v) //s)
       }
     }, [id, scrollRef.current])

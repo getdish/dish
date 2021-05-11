@@ -9,12 +9,14 @@ import {
   AbsoluteVStack,
   Circle,
   HStack,
+  Hoverable,
   LoadingItem,
   LoadingItemsSmall,
   Spacer,
   StackProps,
   Text,
   VStack,
+  isTouchDevice,
   useMedia,
   useTheme,
 } from 'snackui'
@@ -22,7 +24,6 @@ import {
 import { bgLight, brandColor, green } from '../../../constants/colors'
 import { isWeb } from '../../../constants/constants'
 import { getRestaurantDishes } from '../../../helpers/getRestaurantDishes'
-import { isWebIOS } from '../../../helpers/isIOS'
 import { numberFormat } from '../../../helpers/numberFormat'
 import { selectRishDishViewSimple } from '../../../helpers/selectDishViewSimple'
 import { queryRestaurant } from '../../../queries/queryRestaurant'
@@ -83,14 +84,6 @@ type RestaurantListItemProps = {
 const setHoveredSlow = debounce(appMapStore.setHovered, 300)
 
 export const RestaurantListItem = (props: RestaurantListItemProps) => {
-  return (
-    <Suspense fallback={<LoadingItem size="lg" />}>
-      <RestaurantListItemMain {...props} />
-    </Suspense>
-  )
-}
-
-function RestaurantListItemMain(props: RestaurantListItemProps) {
   const [isLoaded, setIsLoaded] = useState(false)
   const handleScrollMemo = useCallback(() => {
     setIsLoaded(true)
@@ -98,39 +91,38 @@ function RestaurantListItemMain(props: RestaurantListItemProps) {
   const handleScroll = isLoaded ? undefined : handleScrollMemo
 
   const contentInner = (
-    <ContentScrollViewHorizontal
-      height={ITEM_HEIGHT}
-      onScroll={handleScroll}
-      scrollEventThrottle={100}
-    >
-      <RestaurantListItemContent isLoaded={isLoaded} {...props} />
-    </ContentScrollViewHorizontal>
+    <Suspense fallback={<LoadingItem size="lg" />}>
+      <ContentScrollViewHorizontal
+        height={ITEM_HEIGHT}
+        onScroll={handleScroll}
+        scrollEventThrottle={100}
+      >
+        <RestaurantListItemContent isLoaded={isLoaded} {...props} />
+      </ContentScrollViewHorizontal>
+    </Suspense>
   )
 
-  if (isWeb && !isWebIOS) {
+  if (isWeb && !isTouchDevice) {
     return (
-      <div
-        className="see-through"
-        onMouseEnter={() => {
+      <Hoverable
+        onHoverIn={() => {
           setHoveredSlow({
             id: props.restaurantId,
             slug: props.restaurantSlug,
             via: 'list',
           })
         }}
-        onMouseLeave={() => {
+        onHoverOut={() => {
           setHoveredSlow.cancel()
         }}
       >
         {contentInner}
-      </div>
+      </Hoverable>
     )
   }
 
   return contentInner
 }
-
-const fadeOutWidth = 40
 
 const RestaurantListItemContent = memo(
   graphql(function RestaurantListItemContent(

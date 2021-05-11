@@ -23,6 +23,7 @@ export const logoXsHeight = Math.round(1024 * 0.044)
 
 export const pageWidthMax = 2000
 
+export const searchBarBorderRadius = 20
 export const searchBarTopOffset = 3
 export const searchBarHeight = 50
 export const searchBarHeightWithPadding = searchBarHeight + searchBarTopOffset + 12

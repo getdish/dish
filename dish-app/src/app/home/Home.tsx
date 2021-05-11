@@ -1,18 +1,29 @@
 import { reaction } from '@dish/use-store'
 import React, { Suspense, memo, useEffect } from 'react'
-import { StyleSheet } from 'react-native'
+import { Keyboard, StyleSheet } from 'react-native'
 // import { createReparentableSpace } from 'react-reparenting'
-import { AbsoluteVStack, HStack, LinearGradient, VStack, useMedia, useTheme } from 'snackui'
+import {
+  AbsoluteVStack,
+  HStack,
+  LinearGradient,
+  VStack,
+  supportsTouchWeb,
+  useMedia,
+  useTheme,
+} from 'snackui'
 
-import { drawerWidthMax, searchBarHeight, zIndexDrawer } from '../../constants/constants'
+import { searchBarHeight, zIndexDrawer } from '../../constants/constants'
 import { router } from '../../router'
 import { AppAutocompleteSearch } from '../AppAutocompleteSearch'
 import { appMenuStore } from '../AppMenuStore'
+import { autocompletesStore } from '../AutocompletesStore'
+import { drawerStore } from '../drawerStore'
 import { homeStore } from '../homeStore'
 import { useAppDrawerWidth } from '../hooks/useAppDrawerWidth'
 import { useLastValueWhen } from '../hooks/useLastValueWhen'
 import { DrawerPortalProvider } from '../Portal'
-import { HomeDrawerSmall } from './HomeDrawerSmall'
+import { HomeDrawerSmallView } from './HomeDrawerSmallView'
+import { HomeDrawerSmallView as HomeDrawerSmallViewNative } from './HomeDrawerSmallView.native'
 import { HomeStackView } from './HomeStackView'
 import { HomeStackViewPages } from './HomeStackViewPages'
 
@@ -102,7 +113,38 @@ export function HomeContainer(props: { children: any }) {
   )
 }
 
-export const HomeContainerLarge = (props) => {
+const HomeDrawerSmall = (props: { children: any }) => {
+  useEffect(() => {
+    return reaction(
+      autocompletesStore,
+      (x) => x.visible,
+      function autocompleteVisibleToSnapAndKeyboard(visible) {
+        if (visible === true) {
+          if (drawerStore.snapIndex !== 0) {
+            drawerStore.setSnapIndex(0)
+          }
+        } else {
+          if (drawerStore.snapIndex !== 1) {
+            drawerStore.setSnapIndex(1)
+          }
+          Keyboard.dismiss()
+        }
+      }
+    )
+  }, [])
+
+  if (supportsTouchWeb) {
+    return <HomeDrawerSmallViewNative {...props} />
+  }
+
+  return (
+    <>
+      <HomeDrawerSmallView {...props} />
+    </>
+  )
+}
+
+const HomeContainerLarge = (props) => {
   const media = useMedia()
   const drawerWidth = useAppDrawerWidth(Infinity)
   const lastWidth = useLastValueWhen(() => drawerWidth, media.sm)
