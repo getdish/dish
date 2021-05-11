@@ -1,7 +1,7 @@
 import { series, sleep } from '@dish/async'
 import { isPresent } from '@dish/helpers'
 import { useStoreInstance } from '@dish/use-store'
-import React, { memo, useCallback, useEffect } from 'react'
+import React, { memo, useCallback, useEffect, useMemo } from 'react'
 import { AbsoluteVStack, Theme, useDebounceValue } from 'snackui'
 
 import { zIndexAutocomplete } from '../constants/constants'
@@ -27,7 +27,14 @@ export const AppAutocompleteLocation = () => {
         zIndex={isActive ? zIndexAutocomplete : -100}
         pointerEvents="none"
       >
-        <AutocompleteLocationInner />
+        <AutocompleteFrame target="location">
+          {useMemo(
+            () => (
+              <AutocompleteLocationInner />
+            ),
+            []
+          )}
+        </AutocompleteFrame>
       </AbsoluteVStack>
     </Theme>
   )
@@ -83,8 +90,8 @@ const AutocompleteLocationInner = memo(() => {
   }, [])
 
   return (
-    <AutocompleteFrame target="location">
+    <>
       <AutocompleteResults target="location" onSelect={handleSelect} />
-    </AutocompleteFrame>
+    </>
   )
 })

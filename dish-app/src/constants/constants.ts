@@ -25,7 +25,7 @@ export const pageWidthMax = 2000
 
 export const searchBarBorderRadius = 20
 export const searchBarTopOffset = 3
-export const searchBarHeight = 50
+export const searchBarHeight = 54
 export const searchBarHeightWithPadding = searchBarHeight + searchBarTopOffset + 12
 export const searchBarMaxWidth = pageWidthMax - 640
 

@@ -33,6 +33,8 @@ export const SearchPageListsRow = memo(
       },
     })
 
+    console.log('lists', lists, activeTags, region)
+
     if (!region) {
       return null
     }

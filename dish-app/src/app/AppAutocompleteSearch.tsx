@@ -36,12 +36,20 @@ export const AppAutocompleteSearch = () => {
           opacity={isActive ? 1 : 0}
           pointerEvents="none"
         >
-          <AutocompleteSearchInner />
+          <AutocompleteFrame target="search">
+            {useMemo(
+              () => (
+                <AutocompleteSearchInner />
+              ),
+              []
+            )}
+          </AutocompleteFrame>
         </AbsoluteVStack>
       </Theme>
     </Suspense>
   )
 }
+
 const AutocompleteSearchInner = memo(() => {
   const home = useHomeStore()
   const store = useStoreInstance(autocompleteSearchStore)
@@ -84,9 +92,9 @@ const AutocompleteSearchInner = memo(() => {
   }, [])
 
   return (
-    <AutocompleteFrame target="search">
+    <>
       <AutocompleteResults target="search" prefixResults={prefixResults} onSelect={handleSelect} />
-    </AutocompleteFrame>
+    </>
   )
 })
 

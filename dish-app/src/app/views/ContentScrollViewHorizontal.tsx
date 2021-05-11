@@ -80,7 +80,7 @@ export const ContentScrollViewHorizontal = (props: ContentScrollViewHorizontalPr
         isTouching.current = false
       }}
       height={props.height}
-      contain="strict"
+      contain="paint"
     >
       {/* DEBUG VIEW */}
       {/* {isScrolling && (
