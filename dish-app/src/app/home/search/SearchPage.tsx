@@ -1,4 +1,5 @@
 import { series, sleep } from '@dish/async'
+import { isEqual } from '@dish/fast-compare'
 import { RestaurantSearchItem, slugify } from '@dish/graph'
 import { ArrowUp } from '@dish/react-feather'
 import { HistoryItem } from '@dish/router'
@@ -47,7 +48,7 @@ import { SearchPagePropsContext } from './SearchPagePropsContext'
 import { searchPageStore, useSearchPageStore } from './SearchPageStore'
 import { SearchProps } from './SearchProps'
 import { searchResultsStore } from './searchResultsStore'
-import { useLocationFromRoute } from './useLocationFromRoute'
+import { regionPositions, useLocationFromRoute } from './useLocationFromRoute'
 
 export default memo(function SearchPage(props: SearchProps) {
   const state = useHomeStateById<HomeStateItemSearch>(props.item.id)
@@ -114,18 +115,29 @@ const SearchPageContent = memo(function SearchPageContent(
   }, [center, JSON.stringify(location.data)])
 
   // sync search location to url
+  const regionPosition = props.item.region ? regionPositions[props.item.region] : null
   useEffect(() => {
     if (!props.isActive) return
-    const isSpecific = searchArgs?.center
+    if (!searchArgs) return
+    if (!regionPosition) return
+    const isOnRegion = props.item.region
+      ? isEqual(regionPosition, {
+          center: searchArgs.center,
+          span: searchArgs.span,
+        })
+      : false
+    if (!isOnRegion) {
+      console.log('not on region, url => specific coords', regionPosition, searchArgs)
+    }
     syncStateToRoute({
       ...props.item,
-      ...(isSpecific && {
-        center: searchArgs!.center,
-        span: searchArgs!.span,
+      ...(!isOnRegion && {
+        center: searchArgs.center,
+        span: searchArgs.span,
         region: undefined,
       }),
     })
-  }, [searchArgs])
+  }, [searchArgs, regionPosition])
 
   useSetAppMap({
     isActive: props.isActive,
@@ -490,7 +502,6 @@ const SearchPageScrollView = forwardRef<ScrollView, SearchPageScrollViewProps>(
     const layoutProps = useLayout({
       stateless: true,
       onLayout: (x) => {
-        console.log('search layout', x.nativeEvent.layout)
         onSizeChanged?.(x.nativeEvent.layout)
       },
     })

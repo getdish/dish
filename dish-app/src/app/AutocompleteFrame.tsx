@@ -82,7 +82,7 @@ export const AutocompleteFrame = memo(
           </AbsoluteVStack>
           <AbsoluteVStack
             zIndex={10000}
-            top={media.notSm ? searchBarHeight + 10 + 10 : 10}
+            top={media.sm ? 10 : searchBarHeight + 25}
             right={10}
             pointerEvents="auto"
           >
@@ -99,7 +99,7 @@ export const AutocompleteFrame = memo(
             borderRadius={media.sm ? 0 : 10}
             flex={media.sm ? 1 : 0}
             {...(media.notSm && {
-              paddingTop: 160,
+              paddingTop: 170,
             })}
             overflow="hidden"
             // dont add events here :(

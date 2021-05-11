@@ -14,13 +14,13 @@ export function OverlayLinkButton<
   return (
     <BlurView borderRadius={20} marginHorizontal={5}>
       <LinkButton
-        paddingVertical={8}
-        paddingHorizontal={12}
+        paddingVertical={10}
+        paddingHorizontal={16}
         borderRadius={90}
-        minHeight={40}
-        shadowColor="rgba(0,0,0,0.175)"
-        shadowRadius={13}
-        shadowOffset={{ width: 0, height: 3 }}
+        minHeight={46}
+        shadowColor="rgba(0,0,0,0.3)"
+        shadowRadius={10}
+        shadowOffset={{ width: 0, height: 2 }}
         overflow="hidden"
         pointerEvents="auto"
         hoverStyle={{
@@ -31,13 +31,7 @@ export function OverlayLinkButton<
           fontWeight: '600',
           fontSize: 16,
         }}
-        icon={
-          !Icon || React.isValidElement(Icon) ? (
-            Icon
-          ) : (
-            <Icon size={12} color="rgba(255,255,255,0.5)" />
-          )
-        }
+        icon={!Icon || React.isValidElement(Icon) ? Icon : <Icon size={16} color="#fff" />}
         {...props}
       >
         {children}

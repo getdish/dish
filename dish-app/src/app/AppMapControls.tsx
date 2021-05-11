@@ -1,8 +1,19 @@
+// debug
 import { RefreshCcw, X } from '@dish/react-feather'
 import { useSelector, useStoreInstance, useStoreInstanceSelector } from '@dish/use-store'
 import React, { memo } from 'react'
 import { Switch } from 'react-native'
-import { AbsoluteVStack, HStack, Text, Theme, VStack, useMedia } from 'snackui'
+import {
+  AbsoluteHStack,
+  AbsoluteVStack,
+  Button,
+  Circle,
+  HStack,
+  Text,
+  Theme,
+  VStack,
+  useMedia,
+} from 'snackui'
 
 import { isWeb, searchBarHeight, zIndexDrawer } from '../constants/constants'
 import { hasMovedAtLeast } from '../helpers/mapHelpers'
@@ -31,12 +42,9 @@ export const AppMapControls = memo(() => {
         pointerEvents="none"
       >
         <AbsoluteVStack
-          left={0}
-          right={0}
-          bottom={0}
-          paddingHorizontal={30}
-          pointerEvents="none"
-          top={5}
+          fullscreen
+          left={5}
+          right={5}
           {...(!isWeb && {
             top: safeArea.top - 10,
           })}
@@ -44,21 +52,20 @@ export const AppMapControls = memo(() => {
           alignItems="center"
           justifyContent="center"
         >
-          <HStack
-            position="absolute"
-            top={media.sm ? 10 : searchBarHeight + 15}
+          <AbsoluteHStack
+            top={media.sm ? 8 : searchBarHeight + 10}
             right={0}
+            minHeight={50}
             left={0}
             alignItems="center"
             justifyContent="center"
             flexWrap="wrap"
-            pointerEvents="none"
           >
             {/* {isWeb && <ToggleRegionButton />} */}
 
             {showSearchHere && (
               <OverlayLinkButton Icon={RefreshCcw} onPress={pagesStore.refresh}>
-                {media.notSm ? 'Search' : ''}
+                {media.notSm ? 'Search' : null}
               </OverlayLinkButton>
             )}
 
@@ -69,7 +76,7 @@ export const AppMapControls = memo(() => {
             )}
 
             <VStack flex={media.sm ? 1 : 0} />
-          </HStack>
+          </AbsoluteHStack>
         </AbsoluteVStack>
       </AbsoluteVStack>
     </Theme>

@@ -34,7 +34,6 @@ import { mapStyles } from './mapStyles'
 
 export default memo(function AppMap() {
   const media = useMedia()
-  const theme = useTheme()
   const drawerHeight = useStoreInstanceSelector(drawerStore, (x) => x.heightIgnoringFullyOpen)
   const y = media.sm
     ? (() => {
@@ -50,29 +49,18 @@ export default memo(function AppMap() {
   })
 
   useEffect(() => {
-    if (media.sm) return
     offset.value = withSpring(y, {
       damping: 15,
     })
   }, [y])
 
   return (
-    <Animated.View style={[StyleSheet.absoluteFill, animatedStyles]}>
-      <AppMapContents />
-      <AbsoluteVStack
-        zIndex={100}
-        pointerEvents="none"
-        bottom={0}
-        left={0}
-        right={0}
-        height={media.sm ? 250 : 100}
-      >
-        <LinearGradient
-          style={StyleSheet.absoluteFill}
-          colors={[`${theme.mapBackground}00`, theme.mapBackground]}
-        />
-      </AbsoluteVStack>
-    </Animated.View>
+    <>
+      {media.sm && <AppMapControls />}
+      <Animated.View style={[StyleSheet.absoluteFill, animatedStyles]}>
+        <AppMapContents />
+      </Animated.View>
+    </>
   )
 })
 
@@ -261,66 +249,85 @@ const AppMapContents = memo(function AppMapContents() {
   }
 
   return (
-    <HStack position="absolute" fullscreen alignItems="center" justifyContent="center">
-      <HStack
+    <HStack
+      position="absolute"
+      fullscreen
+      maxHeight="100%"
+      alignItems="flex-end"
+      justifyContent="flex-end"
+      maxWidth={pageWidthMax}
+    >
+      <VStack display={media.sm ? 'none' : 'flex'} height="100%" flex={2}>
+        {ensureFlexText}
+      </VStack>
+      <VStack
+        position="relative"
+        pointerEvents="auto"
+        contain="strict"
+        zIndex={zIndexMap}
+        maxHeight="100%"
         height="100%"
-        alignItems="flex-end"
-        justifyContent="flex-end"
-        maxWidth={pageWidthMax}
-        width="100%"
+        width={width}
+        maxWidth="100%"
+        borderTopRightRadius={12}
+        borderBottomRightRadius={12}
+        overflow="hidden"
+        {...(isTouchDevice && {
+          onTouchMove: () => {
+            if (!isWeb || supportsTouchWeb) {
+              if (drawerStore.snapIndex !== 2) {
+                drawerStore.setSnapIndex(2)
+              }
+            }
+          },
+        })}
       >
         {!media.sm && (
-          <VStack height="100%" flex={2}>
-            {ensureFlexText}
-          </VStack>
+          <>
+            <AppAutocompleteLocation />
+            <AppMapControls />
+          </>
         )}
-        <VStack
-          pointerEvents="auto"
-          contain="strict"
-          zIndex={zIndexMap}
-          maxHeight="100%"
-          height="100%"
-          width={width}
-          borderTopRightRadius={12}
-          borderBottomRightRadius={12}
-          overflow="hidden"
-        >
-          {!media.sm && <AppAutocompleteLocation />}
-          <AppMapControls />
-          <VStack
-            width="100%"
-            height="100%"
-            {...(isTouchDevice && {
-              onTouchMove: () => {
-                if (!isWeb || supportsTouchWeb) {
-                  if (drawerStore.snapIndex !== 2) {
-                    drawerStore.setSnapIndex(2)
-                  }
-                }
-              },
-            })}
-          >
-            <MapView
-              center={center}
-              span={span}
-              style={mapStyles[themeName]}
-              padding={padding}
-              features={features}
-              selected={position.id}
-              hovered={appMapStore.hovered?.id}
-              showUserLocation={showUserLocation}
-              // onMoveStart={handleMoveStart}
-              onMoveEnd={handleMoveEnd}
-              onDoubleClick={handleDoubleClick}
-              onHover={handleHover}
-              onSelect={handleSelect}
-              onSelectRegion={handleSelectRegion}
-              showRank={showRank}
-              hideRegions={hideRegions}
-            />
-          </VStack>
-        </VStack>
-      </HStack>
+        <AppMapBottomFade />
+        <MapView
+          center={center}
+          span={span}
+          style={mapStyles[themeName]}
+          padding={padding}
+          features={features}
+          selected={position.id}
+          hovered={appMapStore.hovered?.id}
+          showUserLocation={showUserLocation}
+          // onMoveStart={handleMoveStart}
+          onMoveEnd={handleMoveEnd}
+          onDoubleClick={handleDoubleClick}
+          onHover={handleHover}
+          onSelect={handleSelect}
+          onSelectRegion={handleSelectRegion}
+          showRank={showRank}
+          hideRegions={hideRegions}
+        />
+      </VStack>
     </HStack>
+  )
+})
+
+const AppMapBottomFade = memo(() => {
+  const media = useMedia()
+  const theme = useTheme()
+  return (
+    <AbsoluteVStack
+      zIndex={100}
+      pointerEvents="none"
+      bottom={0}
+      left={0}
+      right={0}
+      height={media.sm ? 250 : 100}
+    >
+      <LinearGradient
+        style={StyleSheet.absoluteFill}
+        colors={[`${theme.mapBackground}00`, theme.mapBackground]}
+      />
+    </AbsoluteVStack>
   )
 })
