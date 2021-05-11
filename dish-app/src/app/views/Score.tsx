@@ -113,6 +113,7 @@ export const Score = memo(
 
     return (
       <VStack
+        position="relative"
         pointerEvents="auto"
         backgroundColor={theme.cardBackgroundColor}
         alignItems="center"
