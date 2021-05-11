@@ -57,7 +57,7 @@ export const useScrollActive = (id: string) => {
     throw new Error(`no id`)
   }
   const [active, setActive] = useState(true)
-  console.log('useScrollActive', id, active)
+  const getCurrent = useGet(active)
 
   useEffect(() => {
     if (isWeb && !supportsTouchWeb) {
@@ -67,7 +67,7 @@ export const useScrollActive = (id: string) => {
     let isScrollAtTop = true
     let isParentActive = false
     let isFullyOpen = false
-    let isLockedHorizontalOrDrawer = false
+    let isLockedOrDrawer = false
     let isSpringing = false
     let isDraggingDrawer = false
 
@@ -83,13 +83,16 @@ export const useScrollActive = (id: string) => {
         (isFullyOpen || !isScrollAtTop) &&
         !isSpringing &&
         !isDraggingDrawer &&
-        !isLockedHorizontalOrDrawer
+        !isLockedOrDrawer
       // console.log('active?', id, next, {
       //   isFullyOpen,
       //   isScrollAtTop,
-      //   isLockedHorizontalOrDrawer,
+      //   isLockedOrDrawer,
       // })
-      setActive(next)
+      console.log('setting', next, getCurrent())
+      if (next !== getCurrent()) {
+        setActive(next)
+      }
     }
 
     const d0 = reaction(
@@ -124,10 +127,11 @@ export const useScrollActive = (id: string) => {
 
     const d2 = reaction(
       scrollStore,
-      (x) => [x.isAtTop, x.lock === 'horizontal' || x.lock === 'drawer'] as const,
+      (x) => [x.isAtTop, x.lock === 'drawer'] as const,
       function scrollLockToPreventScroll([a, b]) {
         isScrollAtTop = a
-        isLockedHorizontalOrDrawer = b
+        // dont check horizontal here or else it interrupts hz scroll ios safari
+        isLockedOrDrawer = b
         update()
       }
     )
@@ -139,7 +143,7 @@ export const useScrollActive = (id: string) => {
     }
   }, [id])
 
-  return () => active
+  return getCurrent
 }
 
 export const ContentScrollContext = createContext('id')
@@ -237,7 +241,7 @@ export const ContentScrollView = forwardRef<ScrollView, ContentScrollViewProps>(
     return (
       <ContentScrollContext.Provider value={id}>
         <VStack
-          // className={`${preventScrolling ? 'prevent-touch ' : ' '} will-prevent-touch`}
+          // className={`${!getScrollActive() ? 'prevent-touch ' : ' '} will-prevent-touch`}
           position="relative"
           flex={1}
           overflow="hidden"

@@ -488,7 +488,9 @@ const SearchPageScrollView = forwardRef<ScrollView, SearchPageScrollViewProps>(
     }, [])
 
     const layoutProps = useLayout({
+      stateless: true,
       onLayout: (x) => {
+        console.log('search layout', x.nativeEvent.layout)
         onSizeChanged?.(x.nativeEvent.layout)
       },
     })
