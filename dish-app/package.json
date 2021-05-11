@@ -26,7 +26,7 @@
     "web:prod": "DISH_ENV=production ../dishctl.sh run 'yarn dish start --prod'",
     "web:prod:dev": "DISH_ENV=production ../dishctl.sh run 'yarn dish start --prod --no-optimize'",
     "web:serve": "dish serve",
-    "web:build": "dish build",
+    "web:build": "NODE_ENV=production dish build",
     "web:build:analyze": "ANALYZE_BUNDLE=1 yarn web:build",
     "web:no-extract": "NO_EXTRACT=1 yarn web",
     "web:ssr": "PORT=80 node _/web/server.js",

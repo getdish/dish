@@ -69,7 +69,7 @@ export function createWebpackConfig({
   const hotEntry = isHot ? 'webpack-hot-middleware/client' : null
   const smp = new SpeedMeasurePlugin()
   // prettier-ignore
-  const cacheName = simpleHash(`${process.env.TARGET}${env}${GIT_SHA}${noMinify}${isHot}${isSSR}${resetCache ? Math.random() : ''}`)
+  const cacheName = simpleHash(`1${process.env.TARGET}${env}${GIT_SHA}${noMinify}${isHot}${isSSR}${resetCache ? Math.random() : ''}`)
 
   console.log(' [webpack]', cacheName)
 
