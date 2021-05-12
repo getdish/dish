@@ -89,8 +89,8 @@ export const useScrollActive = (id: string) => {
       //   isScrollAtTop,
       //   isLockedOrDrawer,
       // })
-      console.log('setting', next, getCurrent())
       if (next !== getCurrent()) {
+        console.log('setting', next, getCurrent())
         setActive(next)
       }
     }

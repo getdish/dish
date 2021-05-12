@@ -48,7 +48,7 @@ export default memo(function AppMap() {
     return {
       transform: [{ translateY: offset.value }],
     }
-  })
+  }, [])
 
   useEffect(() => {
     offset.value = withSpring(y, {

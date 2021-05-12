@@ -71,7 +71,7 @@ export function createWebpackConfig({
   // prettier-ignore
   const cacheName = simpleHash(`1${process.env.TARGET}${env}${GIT_SHA}${noMinify}${isHot}${isSSR}${resetCache ? Math.random() : ''}`)
 
-  console.log(' [webpack]', cacheName)
+  console.log(' [webpack]', { cacheName, minimize })
 
   function getConfig() {
     const defines = {
@@ -98,10 +98,6 @@ export function createWebpackConfig({
     const config: Webpack.Configuration = {
       infrastructureLogging: {
         debug: process.env.DEBUG_CACHE ? /webpack\.cache/ : false,
-      },
-      experiments: {
-        // works but home doesnt load by default
-        // lazyCompilation: true,
       },
       cache: {
         name: cacheName,
@@ -200,6 +196,7 @@ export function createWebpackConfig({
                 cacheGroups: {
                   styles: {
                     name: `styles`,
+                    type: 'css/mini-extract',
                     chunks: 'all',
                     enforce: true,
                   },
@@ -209,14 +206,15 @@ export function createWebpackConfig({
         minimizer: !isProduction
           ? [
               new CssMinimizerPlugin({
-                minimizerOptions: {
-                  preset: [
-                    'lite',
-                    {
-                      discardDuplicates: true,
-                    },
-                  ],
-                },
+                // this doesnt discard duplicates....
+                // minimizerOptions: {
+                //   preset: [
+                //     'lite',
+                //     {
+                //       discardDuplicates: true,
+                //     },
+                //   ],
+                // },
               }),
             ]
           : [
@@ -321,13 +319,9 @@ export function createWebpackConfig({
         ],
       },
       plugins: [
-        new MiniCssExtractPlugin(
-          isProduction
-            ? {
-                filename: '[name].[contenthash].css',
-              }
-            : undefined
-        ),
+        new MiniCssExtractPlugin({
+          filename: isProduction ? '[name].[contenthash].css' : '[name].css',
+        }),
 
         isSSR && new LoadablePlugin(),
 
