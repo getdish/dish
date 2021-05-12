@@ -18,7 +18,7 @@ export const SmallButton = themeable(
         minWidth={48}
         backgroundColor={theme.backgroundColorTransluscent}
         hoverStyle={{
-          backgroundColor: theme.backgroundColorTransluscent,
+          backgroundColor: theme.backgroundColor,
         }}
         {...rest}
       >

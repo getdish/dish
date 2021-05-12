@@ -5,6 +5,7 @@ import { AbsoluteVStack, HStack, Theme, VStack, useMedia, useTheme } from 'snack
 import { drawerWidthMax } from '../../../constants/constants'
 import { titleHeight } from '../../../constants/titleHeight'
 import { isSearchState } from '../../../helpers/homeStateHelpers'
+import { HomeStateItemSearch } from '../../../types/homeTypes'
 import { useLastHomeState } from '../../homeStore'
 import { useSafeArea } from '../../hooks/useSafeArea'
 import { HomeLenseBar } from '../../views/HomeLenseBar'
@@ -54,7 +55,8 @@ export const SearchPageNavBar = memo(() => {
         backgroundColor={theme.backgroundColorDarker}
         shadowColor={theme.shadowColorLighter}
         shadowRadius={6}
-        borderRadius={media.sm ? 20 : 0}
+        borderTopLeftRadius={media.sm ? 0 : 20}
+        borderTopRightRadius={media.sm ? 0 : 20}
         shadowOffset={{ height: 3, width: 0 }}
         zIndex={10000}
       >
@@ -67,15 +69,12 @@ export const SearchPageNavBar = memo(() => {
 })
 
 const SearchPageNavBarContent = memo(() => {
-  const state = useLastHomeState('search')
-
-  if (!isSearchState(state)) {
-    return null
-  }
+  const state = useLastHomeState('search') as HomeStateItemSearch | undefined
 
   return (
     <>
       <VStack
+        className="ease-in-out"
         alignItems="center"
         height={titleHeight}
         width="100%"
@@ -83,16 +82,19 @@ const SearchPageNavBarContent = memo(() => {
         minWidth="100%"
         paddingHorizontal={16}
         pointerEvents="auto"
+        opacity={state ? 1 : 0}
       >
-        <HStack width="100%" alignItems="center" justifyContent="space-between" height="100%">
-          <HStack height="100%" alignItems="center" justifyContent="center">
-            <HomeLenseBar activeTags={state.activeTags} />
+        {state && (
+          <HStack width="100%" alignItems="center" justifyContent="space-between" height="100%">
+            <HStack height="100%" alignItems="center" justifyContent="center">
+              <HomeLenseBar activeTags={state.activeTags} />
+            </HStack>
+
+            <VStack flex={1} />
+
+            <SearchPageFilterBar activeTags={state.activeTags} />
           </HStack>
-
-          <VStack flex={1} />
-
-          <SearchPageFilterBar activeTags={state.activeTags} />
-        </HStack>
+        )}
       </VStack>
     </>
   )

@@ -1,8 +1,7 @@
 import { Clock, ShoppingBag } from '@dish/react-feather'
-import React, { useEffect, useLayoutEffect, useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { VStack } from 'snackui'
 
-import { isWeb } from '../../constants/constants'
 import { tagDisplayNames } from '../../constants/tagMeta'
 import { rgbString } from '../../helpers/rgb'
 import { NavigableTag } from '../../types/tagTypes'

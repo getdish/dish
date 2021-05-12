@@ -88,17 +88,15 @@ const RestaurantUpVoteDownVoteContents = graphql(
           paddingHorizontal={5}
           skewX="-12deg"
         >
-          <VStack alignItems="flex-end" skewX="12deg">
-            <RatingWithVotes
-              score={score}
-              ratio={ratio}
-              vote={vote}
-              setVote={setVote}
-              onClickPoints={onClickPoints}
-              isMultiple={activeTagSlugs ? activeTagSlugs.length > 1 : false}
-              display={display}
-            />
-          </VStack>
+          <RatingWithVotes
+            score={score}
+            ratio={ratio}
+            vote={vote}
+            setVote={setVote}
+            onClickPoints={onClickPoints}
+            isMultiple={activeTagSlugs ? activeTagSlugs.length > 1 : false}
+            display={display}
+          />
         </VStack>
       </VStack>
     )
@@ -167,7 +165,13 @@ const RatingWithVotes = memo(
     const fontSize = Math.min(16, sizePx / `${score}`.length) * scale * 1.075
 
     return (
-      <VStack alignItems="center" justifyContent="center" width={sizePx} height={sizePx}>
+      <VStack
+        skewX="12deg"
+        alignItems="center"
+        justifyContent="center"
+        width={sizePx}
+        height={sizePx}
+      >
         <AbsoluteVStack top={-18}>
           {subtle ? (
             upvote

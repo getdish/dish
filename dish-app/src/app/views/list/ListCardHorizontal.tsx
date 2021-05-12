@@ -24,6 +24,7 @@ export const ListCardHorizontal = graphql((props: ListIDProps) => {
         padding={10}
         paddingHorizontal={12}
         borderWidth={0}
+        noTextWrap
         maxHeight={80}
       >
         <Image
@@ -35,10 +36,12 @@ export const ListCardHorizontal = graphql((props: ListIDProps) => {
           }}
         />
         <VStack>
-          <Text ellipse color={colors.darkColor} fontWeight="800">
+          <Text ellipse color={theme.color} fontWeight="800">
             {list.name}
           </Text>
-          <Text>{list.user?.username}</Text>
+          <Text color={theme.colorSecondary} fontSize={14}>
+            {list.user?.username}
+          </Text>
         </VStack>
       </Button>
     </Link>

@@ -10,6 +10,7 @@ import {
   StackProps,
   Text,
   VStack,
+  isTouchDevice,
   prevent,
   useThemeName,
 } from 'snackui'
@@ -222,26 +223,27 @@ const DishViewContent = (props: DishViewProps) => {
       </AbsoluteVStack>
 
       {!!image && (
-        <VStack
-        // BUG cant put transform on same as borderRadius + overflowHidden
-        // https://stackoverflow.com/questions/21087979/probleme-css3-scale-transform-and-overflowhidden-on-safari
-        // transform={[{ scale: isFallback ? 0.8 : 0.9 }]}
-        >
-          <VStack className="dish-image-" overflow="hidden" borderRadius={1000}>
-            <Image
-              source={{ uri: imageUrl }}
-              style={{
-                width: size,
-                height: size,
-              }}
-              resizeMode="cover"
-            />
-          </VStack>
-        </VStack>
+        // <VStack
+        // // BUG cant put transform on same as borderRadius + overflowHidden
+        // // https://stackoverflow.com/questions/21087979/probleme-css3-scale-transform-and-overflowhidden-on-safari
+        // // transform={[{ scale: isFallback ? 0.8 : 0.9 }]}
+        // >
+        <Image
+          source={{ uri: imageUrl }}
+          style={{
+            width: size,
+            height: size,
+            borderRadius: 1000,
+          }}
+          resizeMode="cover"
+        />
+        // </VStack>
       )}
 
-      <AbsoluteVStack fullscreen borderRadius={10000} overflow="hidden">
-        {/* {isFallback && (
+      {/* performance */}
+      {!isTouchDevice && (
+        <AbsoluteVStack fullscreen borderRadius={10000} overflow="hidden">
+          {/* {isFallback && (
           <AbsoluteVStack
             fullscreen
             transform={[{ translateX: -size * 0.75 }, { translateY: size * 0.42 }]}
@@ -249,17 +251,19 @@ const DishViewContent = (props: DishViewProps) => {
             <SineWave color={backgroundColor} size={size + 10} />
           </AbsoluteVStack>
         )} */}
-        <LinearGradient
-          style={[StyleSheet.absoluteFill]}
-          colors={[
-            `${backgroundColor}${isFallback && !disableFallbackFade ? 'aa' : '44'}`,
-            `${backgroundColor}${isFallback && !disableFallbackFade ? '55' : '00'}`,
-            `${color}${isFallback && !disableFallbackFade ? 'aa' : '44'}`,
-          ]}
-          start={[0, 0.5]}
-          end={[0.5, 0.5]}
-        />
-      </AbsoluteVStack>
+          <LinearGradient
+            style={[StyleSheet.absoluteFill]}
+            colors={[
+              `${backgroundColor}${isFallback && !disableFallbackFade ? 'aa' : '44'}`,
+              `${backgroundColor}${isFallback && !disableFallbackFade ? '55' : '00'}`,
+              `${color}${isFallback && !disableFallbackFade ? 'aa' : '44'}`,
+            ]}
+            start={[0, 0.5]}
+            end={[0.5, 0.5]}
+          />
+        </AbsoluteVStack>
+      )}
+
       {!image && (
         // native needs this vstack
         <VStack width={size} height={size} alignItems="center" justifyContent="center">

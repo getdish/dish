@@ -435,13 +435,34 @@ const SearchResultsInfiniteScroll = memo((props: SearchProps) => {
     return <SearchEmptyResults />
   }
 
+  // import is broken maybe i have too recent react-native version?
+  // i think the proxies break it, Element type invalid expected
+  // return (
+  //   <FlatList
+  //     ListHeaderComponent={SearchHeader}
+  //     ListFooterComponent={SearchFooter}
+  //     data={results}
+  //     renderItem={({ item, index }) => (
+  //       <RestaurantListItem
+  //         curLocInfo={props.item.curLocInfo ?? null}
+  //         restaurantId={item.id}
+  //         restaurantSlug={item.slug}
+  //         rank={index + 1}
+  //         activeTagSlugs={activeTagSlugs}
+  //         meta={item.meta}
+  //       />
+  //     )}
+  //     keyExtractor={(item) => item.id}
+  //   />
+  // )
+
   return (
     <>
       <RecyclerListView
         style={listStyle}
         canChangeSize
         externalScrollView={SearchPageScrollView as any}
-        renderAheadOffset={ITEM_HEIGHT * (isWeb ? 8 : 4)}
+        renderAheadOffset={ITEM_HEIGHT * (isWeb ? 8 : 2)}
         rowRenderer={rowRenderer}
         dataProvider={dataProvider}
         layoutProvider={layoutProvider}
