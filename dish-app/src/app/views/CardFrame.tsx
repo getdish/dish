@@ -61,6 +61,10 @@ export const CardFrame = ({
         square && {
           height: cardFrameWidthSm,
         })}
+      {...(size === 'md' &&
+        square && {
+          height: cardFrameWidth,
+        })}
       {...(size === 'xs' && {
         minWidth: 140,
         width: 'auto',

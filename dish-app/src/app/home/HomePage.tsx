@@ -228,15 +228,11 @@ const HomePageContent = (props: Props) => {
         alignSelf="flex-end"
       >
         <ContentScrollView id="home">
-          <VStack flex={1} overflow="hidden" maxWidth="100%">
-            <VStack>
-              {homeHeaderContent}
+          {homeHeaderContent}
 
-              <PageContentWithFooter>
-                <HomePageFeed item={state} regionName={regionName} region={region} {...position} />
-              </PageContentWithFooter>
-            </VStack>
-          </VStack>
+          <PageContentWithFooter>
+            <HomePageFeed item={state} regionName={regionName} region={region} {...position} />
+          </PageContentWithFooter>
         </ContentScrollView>
       </VStack>
     </>
