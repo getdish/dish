@@ -1,7 +1,7 @@
 import { StatusBar } from 'expo-status-bar'
 import React, { Suspense } from 'react'
 import { LogBox } from 'react-native'
-import { VStack, useTheme } from 'snackui'
+import { AbsoluteVStack, VStack, useTheme } from 'snackui'
 
 import AppMap from './AppMap'
 import { AppMenuButton } from './AppMenuButton'
@@ -21,12 +21,7 @@ export function App() {
     <>
       <StatusBar style="dark" />
       <AutocompleteEffects />
-      <VStack
-        flex={1}
-        backgroundColor={theme.mapBackground}
-        alignItems="center"
-        justifyContent="center"
-      >
+      <AbsoluteVStack fullscreen backgroundColor={theme.mapBackground}>
         <Suspense fallback={null}>
           {/* keep indent  */}
           <AppMap />
@@ -43,7 +38,7 @@ export function App() {
             <RestaurantHoursPage />
           </Route>
         </Suspense>
-      </VStack>
+      </AbsoluteVStack>
     </>
   )
 }

@@ -49,6 +49,7 @@ export const AppMapControls = memo(() => {
           })}
           zIndex={20000000}
           alignItems="center"
+          pointerEvents="none"
           justifyContent="center"
         >
           <AbsoluteHStack
@@ -59,6 +60,7 @@ export const AppMapControls = memo(() => {
             alignItems="center"
             justifyContent="center"
             flexWrap="wrap"
+            pointerEvents="none"
           >
             {/* {isWeb && <ToggleRegionButton />} */}
 

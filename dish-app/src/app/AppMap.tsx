@@ -35,12 +35,14 @@ import { mapStyles } from './mapStyles'
 export default memo(function AppMap() {
   const media = useMedia()
   const drawerHeight = useStoreInstanceSelector(drawerStore, (x) => x.heightIgnoringFullyOpen)
-  const y = media.sm
+  const y0 = media.sm
     ? (() => {
         const distanceFromCenter = getWindowHeight() - drawerStore.snapHeights[1] - drawerHeight
-        return Math.min(0, -drawerHeight / 1.8 + distanceFromCenter / 4)
+        return Math.round(Math.min(0, -drawerHeight / 1.8 + distanceFromCenter / 4))
       })()
     : 0
+
+  const y = useDebounceValue(y0, 150)
   const offset = useSharedValue(y)
   const animatedStyles = useAnimatedStyle(() => {
     return {
