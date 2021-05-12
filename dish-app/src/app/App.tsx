@@ -1,6 +1,6 @@
 import loadable from '@loadable/component'
 import React, { Suspense, useEffect } from 'react'
-import { LoadingItems, ToastRoot, VStack, useTheme } from 'snackui'
+import { AbsoluteVStack, LoadingItems, ToastRoot, VStack, useTheme } from 'snackui'
 
 import { isSSR } from '../constants/constants'
 import AdminPage from './admin/AdminPage'
@@ -55,41 +55,34 @@ function AppHomeContent() {
 
   return (
     <>
-      <VStack
-        zIndex={0}
-        flex={1}
-        maxWidth="100%"
-        maxHeight="100%"
-        overflow="hidden"
-        // map bg
-        backgroundColor={theme.mapBackground}
-      >
-        <Suspense fallback={null}>
-          <Home />
-        </Suspense>
+      {/* background */}
+      <AbsoluteVStack fullscreen zIndex={0} backgroundColor={theme.mapBackground} />
 
-        {!isSSR && (
-          <ErrorBoundary name="main-map">
-            <Suspense fallback={null}>
-              {/*  */}
-              <AppMap />
-            </Suspense>
-          </ErrorBoundary>
-        )}
+      <Suspense fallback={null}>
+        <Home />
+      </Suspense>
 
-        <Suspense fallback={null}>
-          <AppIntroLetter />
-        </Suspense>
+      {!isSSR && (
+        <ErrorBoundary name="main-map">
+          <Suspense fallback={null}>
+            {/*  */}
+            <AppMap />
+          </Suspense>
+        </ErrorBoundary>
+      )}
 
-        <Suspense fallback={null}>
-          {/*  */}
-          <AppMapControlsOverlay />
-        </Suspense>
+      <Suspense fallback={null}>
+        <AppIntroLetter />
+      </Suspense>
 
-        <Suspense fallback={null}>
-          <AppMenuButton />
-        </Suspense>
-      </VStack>
+      <Suspense fallback={null}>
+        {/*  */}
+        <AppMapControlsOverlay />
+      </Suspense>
+
+      <Suspense fallback={null}>
+        <AppMenuButton />
+      </Suspense>
 
       <Suspense fallback={null}>
         <AppSearchBarFloating />

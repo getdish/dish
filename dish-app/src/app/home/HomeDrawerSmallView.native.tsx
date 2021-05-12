@@ -187,71 +187,68 @@ export const HomeDrawerSmallView = memo((props: { children: any }) => {
   }, [])
 
   return (
-    <VStack pointerEvents="none" zIndex={zIndexDrawer} width="100%" height="100%" maxHeight="100%">
-      <Animated.View
-        style={[
-          styles.animatedView,
-          {
-            transform: [
-              {
-                translateY: drawerStore.pan,
-              },
-            ],
-          },
-        ]}
+    <Animated.View
+      pointerEvents="none"
+      style={[
+        styles.animatedView,
+        {
+          transform: [
+            {
+              translateY: drawerStore.pan,
+            },
+          ],
+        },
+      ]}
+    >
+      {/* handle */}
+      <View
+        pointerEvents="auto"
+        style={styles.handle}
+        onTouchStart={() => {
+          isTouchingHandle = true
+        }}
+        onTouchEnd={() => {
+          isTouchingHandle = false
+        }}
+        {...pan.panHandlers}
       >
-        {/* handle */}
-        <View
+        <VStack
           pointerEvents="auto"
-          style={styles.handle}
-          onTouchStart={() => {
-            isTouchingHandle = true
-          }}
-          onTouchEnd={() => {
-            isTouchingHandle = false
-          }}
-          {...pan.panHandlers}
+          paddingHorizontal={20}
+          paddingVertical={20}
+          onPress={drawerStore.toggleDrawerPosition}
+          alignSelf="center"
         >
           <VStack
-            pointerEvents="auto"
-            paddingHorizontal={20}
-            paddingVertical={20}
-            onPress={drawerStore.toggleDrawerPosition}
-            alignSelf="center"
-          >
-            <VStack
-              backgroundColor="rgba(100,100,100,0.35)"
-              width={60}
-              height={8}
-              borderRadius={100}
-            />
-          </VStack>
-        </View>
-
-        {/* DONT OVERLAY BECAUSE WE NEED HORIZONTAL SCROLLING */}
-        {/* SEE CONTENTSCROLLVIEW FOR PREVENTING SCROLL */}
-
-        <VStack width="100%" flex={1}>
-          {useMemo(
-            () => (
-              <BottomSheetContainer>
-                <View ref={panViewRef as any} style={styles.container} {...pan.panHandlers}>
-                  <VStack height={searchBarHeight} zIndex={1000}>
-                    <AppSearchBar />
-                  </VStack>
-                  <VStack position="relative" flex={1}>
-                    <AppAutocompleteLocation />
-                    <AppAutocompleteSearch />
-                    {props.children}
-                  </VStack>
-                </View>
-              </BottomSheetContainer>
-            ),
-            [props.children]
-          )}
+            backgroundColor="rgba(100,100,100,0.35)"
+            width={60}
+            height={8}
+            borderRadius={100}
+          />
         </VStack>
-      </Animated.View>
-    </VStack>
+      </View>
+
+      {/* DONT OVERLAY BECAUSE WE NEED HORIZONTAL SCROLLING */}
+      {/* SEE CONTENTSCROLLVIEW FOR PREVENTING SCROLL */}
+
+      {useMemo(
+        () => (
+          <BottomSheetContainer>
+            <View ref={panViewRef as any} style={styles.container} {...pan.panHandlers}>
+              <VStack height={searchBarHeight} zIndex={1000}>
+                <AppSearchBar />
+              </VStack>
+              <VStack position="relative" flex={1}>
+                <AppAutocompleteLocation />
+                <AppAutocompleteSearch />
+                {props.children}
+              </VStack>
+            </View>
+          </BottomSheetContainer>
+        ),
+        [props.children]
+      )}
+    </Animated.View>
   )
 })
 
@@ -262,6 +259,7 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   animatedView: {
+    zIndex: zIndexDrawer,
     maxWidth: pageWidthMax,
     width: '100%',
     position: 'absolute',
