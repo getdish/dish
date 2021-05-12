@@ -352,7 +352,9 @@ const RestaurantListItemContent = memo(
           <HStack
             zIndex={0}
             {...contentSideProps}
+            className="okkkkk"
             overflow="hidden"
+            backgroundColor="red"
             paddingLeft={showAbove ? 85 : 22}
             paddingRight={20}
             y={-6}
