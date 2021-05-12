@@ -2,9 +2,8 @@ import { series, sleep } from '@dish/async'
 import { isPresent } from '@dish/helpers'
 import { useStoreInstance } from '@dish/use-store'
 import React, { memo, useCallback, useEffect, useMemo } from 'react'
-import { AbsoluteVStack, Theme, useDebounceValue } from 'snackui'
+import { Theme, useDebounceValue } from 'snackui'
 
-import { zIndexAutocomplete } from '../constants/constants'
 import { defaultLocationAutocompleteResults } from '../constants/defaultLocationAutocompleteResults'
 import { AutocompleteItemFull, AutocompleteItemLocation } from '../helpers/createAutocomplete'
 import { locationToAutocomplete, searchLocations } from '../helpers/searchLocations'
@@ -16,29 +15,20 @@ import { filterAutocompletes } from './filterAutocompletes'
 import { useInputStoreLocation } from './inputStore'
 import { setLocation } from './setLocation'
 
-export const AppAutocompleteLocation = () => {
-  const autocompletes = useStoreInstance(autocompletesStore)
-  const isActive = autocompletes.visible && autocompletes.target === 'location'
+export const AppAutocompleteLocation = memo(() => {
   return (
     <Theme name="dark">
-      <AbsoluteVStack
-        fullscreen
-        opacity={isActive ? 1 : 0}
-        zIndex={isActive ? zIndexAutocomplete : -100}
-        pointerEvents="none"
-      >
-        <AutocompleteFrame target="location">
-          {useMemo(
-            () => (
-              <AutocompleteLocationInner />
-            ),
-            []
-          )}
-        </AutocompleteFrame>
-      </AbsoluteVStack>
+      <AutocompleteFrame target="location">
+        {useMemo(
+          () => (
+            <AutocompleteLocationInner />
+          ),
+          []
+        )}
+      </AutocompleteFrame>
     </Theme>
   )
-}
+})
 
 const AutocompleteLocationInner = memo(() => {
   const autocompletes = useStoreInstance(autocompletesStore)
