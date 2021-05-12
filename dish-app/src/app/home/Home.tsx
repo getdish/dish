@@ -99,7 +99,7 @@ export function HomeContainer(props: { children: any }) {
   // }, [media.sm])
 
   return (
-    <AbsoluteVStack fullscreen pointerEvents="none" zIndex={zIndexDrawer}>
+    <>
       {media.sm && <HomeDrawerSmall>{props.children}</HomeDrawerSmall>}
       {!media.sm && <HomeContainerLarge>{props.children}</HomeContainerLarge>}
       {/* <HomeDrawerSmall>
@@ -109,7 +109,7 @@ export function HomeContainer(props: { children: any }) {
       <HomeContainerLarge>
         <Reparentable id="lg">{parent === 'lg' ? children : []}</Reparentable>
       </HomeContainerLarge> */}
-    </AbsoluteVStack>
+    </>
   )
 }
 
@@ -161,6 +161,7 @@ const HomeContainerLarge = (props) => {
       top={0}
       pointerEvents="none"
       alignItems="flex-end"
+      zIndex={zIndexDrawer}
     >
       <HStack
         pointerEvents="auto"

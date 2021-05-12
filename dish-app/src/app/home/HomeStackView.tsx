@@ -101,25 +101,15 @@ const AppStackViewItem = memo(
         position="absolute"
         zIndex={index}
         className={`animate-up ${isFullyActive ? 'active' : 'untouchable'}`}
-        top={0}
+        top={top}
         right={0}
-        bottom={0}
+        bottom={-(index * 5)}
         left={0}
-        pointerEvents="none"
+        pointerEvents={isActive ? 'auto' : 'none'}
       >
-        <VStack
-          position="absolute"
-          flex={1}
-          top={top}
-          left={0}
-          bottom={-(index * 5)}
-          width="100%"
-          pointerEvents={isActive ? 'auto' : 'none'}
-        >
-          <ErrorBoundary name={`AppStackView.${item.type}`}>
-            <Suspense fallback={null}>{children}</Suspense>
-          </ErrorBoundary>
-        </VStack>
+        <ErrorBoundary name={`AppStackView.${item.type}`}>
+          <Suspense fallback={null}>{children}</Suspense>
+        </ErrorBoundary>
       </VStack>
     )
 

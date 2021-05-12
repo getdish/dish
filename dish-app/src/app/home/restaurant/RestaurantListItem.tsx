@@ -352,9 +352,8 @@ const RestaurantListItemContent = memo(
           <HStack
             zIndex={0}
             {...contentSideProps}
-            className="okkkkk"
+            className="safari-fix-overflow"
             overflow="hidden"
-            backgroundColor="red"
             paddingLeft={showAbove ? 85 : 22}
             paddingRight={20}
             y={-6}

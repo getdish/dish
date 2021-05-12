@@ -158,22 +158,24 @@ const TagButtonInner = (props: TagButtonProps) => {
       {...rest}
     >
       {showRank && rank && rank < 100 && (
-        <Text
-          fontSize={smallerFontSize}
-          alignContent="center"
-          justifyContent="center"
-          alignItems="center"
-          display="flex"
-          color={theme.color}
-          letterSpacing={-1}
-          marginRight={-3}
-          opacity={0.8}
-        >
-          <Text fontWeight="300" opacity={0.5}>
+        <>
+          <Text fontSize={11} fontWeight="300" opacity={0.5}>
             #
           </Text>
-          {rank}
-        </Text>
+          <Text
+            fontSize={smallerFontSize}
+            alignContent="center"
+            justifyContent="center"
+            alignItems="center"
+            display="flex"
+            color={theme.color}
+            letterSpacing={-1}
+            marginRight={-3}
+            opacity={0.8}
+          >
+            {rank}
+          </Text>
+        </>
       )}
 
       {hideIcon ? (
