@@ -16,6 +16,7 @@ import {
   StackProps,
   Text,
   VStack,
+  getMedia,
   isTouchDevice,
   useMedia,
   useTheme,
@@ -292,102 +293,99 @@ const RestaurantListItemContent = memo(
         >
           {/* LINK */}
           <Link tagName="div" name="restaurant" params={{ slug: restaurantSlug }} zIndex={2}>
-            <VStack paddingLeft={showAbove ? 47 : 10} paddingTop={25}>
-              <HStack position="relative" alignItems="center">
-                <AbsoluteVStack
-                  top={-18}
-                  left={-30}
-                  zIndex={-1}
-                  {...(!showAbove && {
-                    top: 0,
-                    left: -32,
-                  })}
+            <HStack
+              paddingLeft={showAbove ? 47 : 10}
+              paddingTop={25}
+              position="relative"
+              alignItems="center"
+            >
+              <AbsoluteVStack
+                x={-32}
+                y={-4}
+                zIndex={-1}
+                {...(!showAbove && {
+                  x: 0,
+                  y: -32,
+                })}
+              >
+                <RankView rank={rank} />
+              </AbsoluteVStack>
+
+              <Spacer size="xs" />
+
+              {/* SECOND LINK WITH actual <a /> */}
+              <Link name="restaurant" params={{ slug: restaurantSlug }}>
+                <HStack
+                  paddingHorizontal={8}
+                  borderRadius={8}
+                  alignItems="center"
+                  marginVertical={-5}
+                  maxWidth={contentSideProps.maxWidth}
+                  hoverStyle={{
+                    backgroundColor: theme.backgroundColorAlt,
+                  }}
+                  pressStyle={{
+                    backgroundColor: theme.backgroundColorAlt,
+                    opacity: 0.8,
+                  }}
                 >
-                  <RankView rank={rank} />
-                </AbsoluteVStack>
-
-                <Spacer size="xs" />
-
-                {/* SECOND LINK WITH actual <a /> */}
-                <Text selectable lineHeight={26} textDecorationColor="transparent" fontWeight="600">
-                  <Link name="restaurant" params={{ slug: restaurantSlug }}>
-                    <HStack
-                      paddingHorizontal={8}
-                      borderRadius={8}
-                      alignItems="center"
-                      marginVertical={-5}
-                      maxWidth={contentSideProps.maxWidth}
-                      hoverStyle={{
-                        backgroundColor: theme.backgroundColorAlt,
-                      }}
-                      pressStyle={{
-                        backgroundColor: theme.backgroundColorAlt,
-                        opacity: 0.8,
-                      }}
-                    >
-                      <Text
-                        fontSize={titleFontSize}
-                        lineHeight={titleHeight}
-                        height={titleHeight}
-                        color={theme.color}
-                        fontWeight="800"
-                        letterSpacing={-0.25}
-                        paddingHorizontal={1} // prevents clipping due to letter-spacing
-                        ellipse
-                      >
-                        {restaurantName}
-                      </Text>
-                    </HStack>
-                  </Link>
-                </Text>
-              </HStack>
-            </VStack>
+                  <Text
+                    fontSize={titleFontSize}
+                    lineHeight={titleHeight}
+                    height={titleHeight}
+                    color={theme.color}
+                    fontWeight="800"
+                    letterSpacing={-0.25}
+                    paddingHorizontal={1} // prevents clipping due to letter-spacing
+                    ellipse
+                  >
+                    {restaurantName}
+                  </Text>
+                </HStack>
+              </Link>
+            </HStack>
           </Link>
 
           <Spacer size={12} />
 
           {/* SECOND ROW TITLE */}
-          <VStack zIndex={0} {...contentSideProps}>
-            <VStack
-              overflow="hidden"
-              zIndex={2}
-              paddingLeft={showAbove ? 85 : 22}
-              paddingRight={20}
-              marginTop={media.sm ? -6 : 2}
-              y={-10}
-              pointerEvents="auto"
-            >
-              <HStack alignItems="center" cursor="pointer" spacing="sm">
-                {!!price_range && (
-                  <Text fontSize={14} fontWeight="700" color={theme.colorTertiary} marginRight={4}>
-                    {price_range}
-                  </Text>
-                )}
+          <HStack
+            zIndex={0}
+            {...contentSideProps}
+            overflow="hidden"
+            paddingLeft={showAbove ? 85 : 22}
+            paddingRight={20}
+            y={-6}
+            pointerEvents="auto"
+            alignItems="center"
+            cursor="pointer"
+            spacing="sm"
+          >
+            {!!price_range && (
+              <Text fontSize={14} fontWeight="700" color={theme.colorTertiary} marginRight={4}>
+                {price_range}
+              </Text>
+            )}
 
-                {!!open.text && (
-                  <>
-                    {!!open.isOpen && (
-                      <>
-                        <Circle size={8} backgroundColor={green} />
-                        <Spacer size="sm" />
-                      </>
-                    )}
-                    <Link name="restaurantHours" params={{ slug: restaurantSlug }}>
-                      <SmallButton borderWidth={0}>{open.nextTime || '~~'}</SmallButton>
-                    </Link>
-                  </>
-                )}
+            {!!open.isOpen && (
+              <>
+                <Circle size={8} backgroundColor={green} />
+                <Spacer size="sm" />
+              </>
+            )}
 
-                {!!restaurant.address && (
-                  <RestaurantAddress
-                    size="sm"
-                    curLocInfo={curLocInfo!}
-                    address={restaurant.address}
-                  />
-                )}
-              </HStack>
-            </VStack>
-          </VStack>
+            {!!open.text && (
+              <>
+                <Link name="restaurantHours" params={{ slug: restaurantSlug }}>
+                  <SmallButton borderWidth={0}>{open.nextTime || '~~'}</SmallButton>
+                </Link>
+              </>
+            )}
+
+            {!!restaurant.address && (
+              <RestaurantAddress size="sm" curLocInfo={curLocInfo!} address={restaurant.address} />
+            )}
+          </HStack>
         </VStack>
 
         {/* CENTER CONTENT AREA */}
@@ -416,21 +414,17 @@ const RestaurantListItemContent = memo(
 
           {/* PEEK / TAGS (RIGHT SIDE) */}
           {/* margin top: negative the titles second row height */}
-          <VStack position="relative" y={-30} x={-15} pointerEvents="none">
-            <Suspense fallback={null}>
-              <RestaurantPeekDishes
-                restaurantSlug={props.restaurantSlug}
-                restaurantId={props.restaurantId}
-                activeTagSlugs={activeTagSlugs}
-                tagSlugs={dishSlugs}
-                editable={editableDishes}
-                onChangeTags={handleChangeDishes}
-                isLoaded={isLoaded}
-              />
-            </Suspense>
-
-            <VStack flex={1} />
-          </VStack>
+          <Suspense fallback={null}>
+            <RestaurantPeekDishes
+              restaurantSlug={props.restaurantSlug}
+              restaurantId={props.restaurantId}
+              activeTagSlugs={activeTagSlugs}
+              tagSlugs={dishSlugs}
+              editable={editableDishes}
+              onChangeTags={handleChangeDishes}
+              isLoaded={isLoaded}
+            />
+          </Suspense>
         </HStack>
 
         {/* BOTTOM ROW */}
@@ -521,6 +515,10 @@ const RestaurantListItemScoreBreakdown = memo(
   )
 )
 
+// dont re-render this one
+const showInitial = getMedia().xs ? 1 : getMedia().sm ? 2 : 3
+console.log('showInitial', showInitial, getMedia())
+
 const RestaurantPeekDishes = memo(
   graphql(function RestaurantPeekDishes(props: {
     size?: 'lg' | 'md'
@@ -581,10 +579,11 @@ const RestaurantPeekDishes = memo(
                   : dishSize * 0.95
                 : dishSize
 
+              const preventLoad = !isLoaded && i > showInitial
               return (
                 <VStack key={dish.slug} marginRight={-35} marginTop={isEven ? 0 : -20}>
                   <DishView
-                    preventLoad={!isLoaded && i > 2}
+                    preventLoad={preventLoad}
                     size={baseSize * (isEven ? 1 : 0.825)}
                     restaurantSlug={props.restaurantSlug}
                     restaurantId={props.restaurantId}

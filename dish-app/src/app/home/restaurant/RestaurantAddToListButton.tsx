@@ -1,6 +1,5 @@
 import { Plus } from '@dish/react-feather'
 import React, { Suspense, useState } from 'react'
-import { useTheme } from 'snackui'
 import { Button, Tooltip } from 'snackui'
 
 import { userStore } from '../../userStore'

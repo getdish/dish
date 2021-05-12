@@ -152,8 +152,6 @@ const TagButtonInner = (props: TagButtonProps) => {
       spacing={fontSize * 0.5}
       borderRadius={8}
       alignItems="center"
-      // className="ease-in-out-faster"
-      // height={isSmall ? 28 : 34}
       paddingHorizontal={isSmall ? 2 : 12}
       paddingVertical={isSmall ? 3 : 5}
       height={isSmall ? 32 : 38}
@@ -233,10 +231,9 @@ const TagButtonInner = (props: TagButtonProps) => {
               transform={[{ rotate: `${(1 - rating / 10) * 180}deg` }]}
               // borderWidth={1}
               borderColor={theme.backgroundColorAlt}
+              opacity={floating ? 1 : 0.7}
             >
-              <AbsoluteVStack opacity={floating ? 1 : 0.7} fullscreen>
-                <Pie size={pieSize} percent={rating * 10} color={floating ? `#fff` : theme.color} />
-              </AbsoluteVStack>
+              <Pie size={pieSize} percent={rating * 10} color={floating ? `#fff` : theme.color} />
             </VStack>
           )}
 
