@@ -37,7 +37,9 @@ export function reaction<
     if (!equalityFn(last, next)) {
       if (process.env.NODE_ENV === 'development') {
         console.groupCollapsed(
-          `💰   ⏭   %c${receiver.name} (${store[UNWRAP_PROXY].constructor.name}) ${last} => ${next}`,
+          `💰  ⏭ %c${receiver.name} (${store[UNWRAP_PROXY].constructor.name}${
+            store.props?.id ? `:${store.props.id}` : ''
+          }) ${last} => ${next}`,
           'color: chocolate;'
         )
         console.groupCollapsed('trace >')
@@ -60,3 +62,34 @@ export function reaction<
     dispose(innerDispose)
   }
 }
+
+// start on simpler reaction
+// export function reaction2(fn: () => any): () => void {
+//   let state = runStoreSelector(fn)
+//   let disposeSubscribe
+//   const disposePrev = () => {
+//     // treat return functions as dispose
+//     if (typeof state.value === 'function') {
+//       state.value()
+//     }
+//   }
+//   const dispose = () => {
+//     disposeSubscribe?.()
+//     disposePrev()
+//   }
+//   function update() {
+//     dispose()
+//     disposeSubscribe = subscribeToStores([...state.stores], () => {
+//       const next = runStoreSelector(fn)
+//       disposePrev()
+//       if (!isEqualSubsetShallow(state.stores, next.stores)) {
+//         state = next
+//         update()
+//       } else {
+//         state = next
+//       }
+//     })
+//   }
+//   update()
+//   return dispose
+// }

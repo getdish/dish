@@ -1,10 +1,9 @@
-import { useCallback, useEffect, useLayoutEffect, useRef, useState } from 'react'
+import { useCallback, useEffect, useLayoutEffect, useRef } from 'react'
 
 import { configureOpts } from './configureUseStore'
 import { UNWRAP_PROXY, defaultOptions } from './constants'
 import { UNWRAP_STORE_INFO, cache, getStoreDescriptors, getStoreUid, simpleStr } from './helpers'
 import { Selector, StoreInfo, UseStoreOptions } from './interfaces'
-import { isEqualSubsetShallow } from './isEqualShallow'
 import { ADD_TRACKER, SHOULD_DEBUG, Store, StoreTracker, TRACK, TRIGGER_UPDATE } from './Store'
 import { createMutableSource, useMutableSource } from './useMutableSource'
 import {
@@ -134,86 +133,9 @@ export function useStoreSelector<
   return useStore(StoreKlass, props, { selector }) as any
 }
 
-// start on simpler reaction
-// export function reaction2(fn: () => any): () => void {
-//   let state = runStoreSelector(fn)
-//   let disposeSubscribe
-//   const disposePrev = () => {
-//     // treat return functions as dispose
-//     if (typeof state.value === 'function') {
-//       state.value()
-//     }
-//   }
-//   const dispose = () => {
-//     disposeSubscribe?.()
-//     disposePrev()
-//   }
-//   function update() {
-//     dispose()
-//     disposeSubscribe = subscribeToStores([...state.stores], () => {
-//       const next = runStoreSelector(fn)
-//       disposePrev()
-//       if (!isEqualSubsetShallow(state.stores, next.stores)) {
-//         state = next
-//         update()
-//       } else {
-//         state = next
-//       }
-//     })
-//   }
-//   update()
-//   return dispose
-// }
-
-export function useSelector<A>(fn: () => A): A {
-  const [state, setState] = useState(() => {
-    return runStoreSelector(fn)
-  })
-
-  useEffect(() => {
-    return subscribeToStores([...state.stores], () => {
-      const next = runStoreSelector(fn)
-      setState((prev) => {
-        if (
-          isEqualSubsetShallow(prev.stores, next.stores) &&
-          isEqualSubsetShallow(prev.value, next.value)
-        ) {
-          return prev
-        }
-        return next
-      })
-    })
-  }, [...state.stores])
-
-  return state.value
-}
-
-function runStoreSelector<A>(selector: () => A): { value: A; stores: Set<any> } {
-  const stores = new Set()
-  const dispose = trackStoresAccess((store) => {
-    stores.add(store)
-  })
-  const value = selector()
-  dispose()
-  return {
-    value,
-    stores,
-  }
-}
-
-function subscribeToStores(stores: any[], onUpdate: () => any) {
-  const disposes: Function[] = []
-  for (const store of stores) {
-    disposes.push(subscribe(store, onUpdate))
-  }
-  return () => {
-    disposes.forEach((x) => x())
-  }
-}
-
 type StoreAccessTracker = (store: any) => void
 const storeAccessTrackers = new Set<StoreAccessTracker>()
-function trackStoresAccess(cb: StoreAccessTracker) {
+export function trackStoresAccess(cb: StoreAccessTracker) {
   storeAccessTrackers.add(cb)
   return () => {
     storeAccessTrackers.delete(cb)
