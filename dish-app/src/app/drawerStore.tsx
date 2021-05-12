@@ -93,9 +93,13 @@ class DrawerStore extends Store {
     // }
   }
 
-  setSnapIndex(point: number) {
+  setSnapIndex(point: number, animate = true) {
     this.snapIndex = point
-    this.animateDrawerToPx(this.getSnapPointOffset(), 4, true)
+    this.lastSnapAt = Date.now()
+    this.isDragging = false
+    if (animate) {
+      this.animateDrawerToPx(this.getSnapPointOffset(), 4, true)
+    }
   }
 
   animateDrawerToPx(
@@ -103,7 +107,6 @@ class DrawerStore extends Store {
     velocity: number = 0,
     avoidSnap = false
   ) {
-    this.lastSnapAt = Date.now()
     this.isDragging = false
     if (!avoidSnap) {
       this.snapIndex = this.getSnapIndex(px, velocity)

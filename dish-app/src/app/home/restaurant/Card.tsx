@@ -156,9 +156,8 @@ export function Card({
           {/* title gradient */}
           <AbsoluteVStack
             zIndex={-1}
-            fullscreen
-            scaleX={2}
-            scaleY={0.75}
+            width={cardFrameWidth}
+            height={cardFrameHeight}
             rotate="25deg"
             y={-60}
             x={-20}
@@ -219,24 +218,33 @@ export function Card({
   )
 }
 
+const styles = StyleSheet.create({
+  cardFrameSm: {
+    position: 'absolute',
+    width: widths.sm,
+    height: heights.sm,
+  },
+  cardFrameMd: {
+    position: 'absolute',
+    width: widths.md,
+    height: heights.md,
+  },
+})
+
 export const CardOverlay = (props: { children: any }) => {
   return (
     <AbsoluteVStack
-      height="100%"
-      width="100%"
-      justifyContent="flex-end"
-      borderBottomLeftRadius={cardFrameBorderRadius}
-      borderBottomRightRadius={cardFrameBorderRadius}
+      fullscreen
+      borderRadius={cardFrameBorderRadius}
       overflow="hidden"
+      justifyContent="flex-end"
     >
-      <VStack position="relative">
-        <LinearGradient
-          colors={['rgba(0,0,0,0)', 'rgba(0,0,0,1)']}
-          style={StyleSheet.absoluteFill}
-        />
-        <VStack alignItems="center" justifyContent="center" padding={10} paddingTop={30}>
-          {props.children}
-        </VStack>
+      <LinearGradient
+        colors={['rgba(0,0,0,0)', 'rgba(0,0,0,0)', 'rgba(0,0,0,0)', 'rgba(0,0,0,0.7)']}
+        style={styles.cardFrameMd}
+      />
+      <VStack alignItems="center" justifyContent="center" padding={10} paddingTop={30}>
+        {props.children}
       </VStack>
     </AbsoluteVStack>
   )

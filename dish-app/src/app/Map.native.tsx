@@ -159,7 +159,7 @@ export const MapView = ({
                 sourceLayerID={sourceId}
                 sourceID={sourceId}
                 minZoomLevel={0 ?? minZoom}
-                maxZoomLevel={30 ?? maxZoom}
+                maxZoomLevel={22 ?? maxZoom}
                 style={{
                   fillColor: '#000000',
                   //  [

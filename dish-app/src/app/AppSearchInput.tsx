@@ -72,7 +72,9 @@ export function focusSearchInput() {
 }
 
 export function blurSearchInput() {
-  searchBar?.blur()
+  if (document.activeElement === searchBar) {
+    searchBar?.blur()
+  }
 }
 
 export const getSearchInput = () => {

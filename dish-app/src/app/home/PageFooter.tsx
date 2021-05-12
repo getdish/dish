@@ -1,13 +1,10 @@
 import React, { memo } from 'react'
-import { AbsoluteVStack, Divider, Spacer, Theme, VStack, useTheme } from 'snackui'
+import { AbsoluteVStack, Divider, Spacer, Theme, VStack, useMedia } from 'snackui'
 
-import { isWeb } from '../../constants/constants'
 import { AppIntroLogin } from '../AppIntroLogin'
 
 export const PageFooter = memo(() => {
-  if (!isWeb) {
-    return null
-  }
+  const media = useMedia()
 
   return (
     <VStack position="relative">
@@ -29,6 +26,8 @@ export const PageFooter = memo(() => {
         </Theme>
         <Spacer size="xxl" />
       </VStack>
+
+      <VStack height={media.sm ? 400 : 0} />
     </VStack>
   )
 })

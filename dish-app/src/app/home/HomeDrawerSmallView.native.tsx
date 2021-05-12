@@ -44,30 +44,41 @@ export const HomeDrawerSmallView = memo((props: { children: any }) => {
     const minY = getWindowHeight() * drawerStore.snapPoints[0]
     const maxY = getWindowHeight() * drawerStore.snapPoints[2]
 
-    const getShouldActivate = (_e: GestureResponderEvent, g: PanResponderGestureState): boolean => {
-      const dy = g.dy ?? drawerStore.pan['_value']
+    const getShouldActivate = (
+      _e: GestureResponderEvent,
+      { dy, dx }: PanResponderGestureState
+    ): boolean => {
       if (isTouchingHandle) {
         return true
       }
-      if (isTouchingSearchBar) {
-        return Math.abs(dy) > 8
-      }
       if (isPanActive) {
         return true
+      }
+      const dyAbs = Math.abs(dy)
+      const dxAbs = Math.abs(dx)
+      const isMovingHorizontal = dxAbs > 8 && dxAbs > dyAbs
+      if (isMovingHorizontal) {
+        return false
+      }
+      if (isTouchingSearchBar) {
+        return dyAbs > 8
       }
       // is touching main area
       try {
         const isScrolledToTop = isScrollAtTop.get(contentParent.activeId) ?? true
         const { snapIndexName } = drawerStore
-        if (isScrolledToTop && snapIndexName === 'top' && dy > 6) {
+        const scroll = getStore(ScrollStore, { id: contentParent.activeId })
+        // pulling down from top
+        const isPullingDownFromTop = isScrolledToTop && snapIndexName === 'top' && dy > 6
+        // prettier-ignore
+        // console.log('should?', scroll.lock, { isScrolledToTop, snapIndexName, dy, dx, isPullingDownFromTop })
+        if (isPullingDownFromTop) {
+          // this is handled in ContentScrollView onTouchMove
           return true
         }
-        const scroll = getStore(ScrollStore, { id: contentParent.activeId })
         if (curScrollerYMove > 0 || !scroll.isAtTop) {
           return false
         }
-        // prettier-ignore
-        // console.log('should?', store.lock, { isPanActive, isTouchingHandle, isTouchingSearchBar })
         if (scroll.lock === 'horizontal' || scroll.lock === 'vertical') {
           return false
         }
@@ -75,19 +86,14 @@ export const HomeDrawerSmallView = memo((props: { children: any }) => {
         if (!isScrolledToTop && snapIndexName === 'top') {
           return false
         }
-        // horizontal prevent
-        if (Math.abs(g.dx) > 8) {
-          return false
-        }
         if (snapIndexName === 'bottom') {
           return true
         }
-        if (snapIndexName === 'top') {
+        if (!isScrolledToTop && snapIndexName === 'middle' && dy < 6) {
           return true
         }
-        const threshold = 6
-        const isAboveYThreshold = Math.abs(dy) > threshold
-        return isAboveYThreshold
+        const isMovingVertical = dyAbs > dxAbs && dyAbs > 6
+        return isMovingVertical
       } catch (err) {
         if (!(err instanceof AssertionError)) {
           console.error(err.message, err.stack)
@@ -138,6 +144,10 @@ export const HomeDrawerSmallView = memo((props: { children: any }) => {
           const curY = scrollLastY.get(contentParent.activeId) ?? 0
           curScrollerYMove = curY + minY - y
           scroller.scrollTo({ y: curScrollerYMove, animated: false })
+          const scrollStore = getStore(ScrollStore, { id: contentParent.activeId })
+          if (scrollStore.lock === 'none') {
+            scrollStore.setLock('vertical')
+          }
           return
         }
         if (y <= minY) {
@@ -152,21 +162,26 @@ export const HomeDrawerSmallView = memo((props: { children: any }) => {
       onPanResponderRelease: (e, { vy }) => {
         isPanActive = false
         const scrollStore = getStore(ScrollStore, { id: contentParent.activeId })
-        if (scrollStore.lock !== 'none') {
-          scrollStore.setLock('none')
-        }
         drawerStore.pan.flattenOffset()
         const scrolledY = curScrollerYMove
         curScrollerYMove = -1
         if (scrolledY > 0) {
           const scroller = scrollViews.get(contentParent.activeId)
           if (scroller) {
-            const y = scrolledY + -vy * 16
-            console.log('thrown to', y, vy)
-            scroller.scrollTo({ y })
-            drawerStore.setSnapIndex(0)
+            const y = scrolledY + -vy * 10
+            window['scroller'] = scroller
+            console.log('thrown to', scroller, scrolledY, y, vy, scrollStore.lock)
+            scroller.scrollTo({ y, x: 0, animated: true })
+            // hacky... let it animate a bit before unlocking...
+            setTimeout(() => {
+              drawerStore.setSnapIndex(0, false)
+              scrollStore.setLock('none')
+            }, 150)
             return
           }
+        }
+        if (scrollStore.lock !== 'none') {
+          scrollStore.setLock('none')
         }
         drawerStore.animateDrawerToPx(drawerStore.pan['_value'], vy)
       },
