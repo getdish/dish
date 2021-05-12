@@ -1,3 +1,4 @@
+import { isSafari } from '@dish/helpers'
 import { useStore, useStoreInstance } from '@dish/use-store'
 import React, { memo, useEffect } from 'react'
 import {
@@ -11,7 +12,7 @@ import {
   useTheme,
 } from 'snackui'
 
-import { drawerWidthMax, isWeb, searchBarHeight } from '../constants/constants'
+import { drawerWidthMax, isWeb, searchBarHeight, zIndexAutocomplete } from '../constants/constants'
 import { AutocompleteItem } from '../helpers/createAutocomplete'
 import { AutocompleteItemView } from './AutocompleteItemView'
 import { AutocompleteStore, AutocompleteTarget, autocompletesStore } from './AutocompletesStore'
@@ -38,9 +39,11 @@ export const AutocompleteFrame = memo(
     }, [isShowing])
 
     return (
-      <VStack
+      <AbsoluteVStack
+        fullscreen
         opacity={isShowing ? 1 : 0}
         pointerEvents={isShowing ? 'auto' : 'none'}
+        zIndex={isShowing ? zIndexAutocomplete : -100}
         borderRadius={14}
         overflow="hidden"
         flex={1}
@@ -48,7 +51,7 @@ export const AutocompleteFrame = memo(
           transform: [{ translateY: 10 }],
         })}
         {...(media.notSm && {
-          marginTop: -100,
+          paddingTop: searchBarHeight + 10,
           marginLeft: 'auto',
           width: '100%',
           maxWidth: drawerWidthMax,
@@ -64,20 +67,21 @@ export const AutocompleteFrame = memo(
           overflow="hidden"
           // DONT PUT EVENT HERE NEED TO DEBUG WHY IT BREAKS ON NATIVE
         >
-          <AbsoluteVStack backgroundColor={theme.backgroundColor} fullscreen opacity={0.9} />
           <AbsoluteVStack
+            backgroundColor={theme.backgroundColor}
             fullscreen
-            backgroundColor="rgba(30,30,30,0.85)"
-            display={media.sm ? 'flex' : 'none'}
+            opacity={isSafari ? 1 : 0.9}
           />
           <AbsoluteVStack fullscreen display={media.sm ? 'none' : 'flex'}>
-            <BlurView
-              fallbackBackgroundColor="transparent"
-              blurRadius={200}
-              blurType="dark"
-              position="absolute"
-              fullscreen
-            />
+            {!isSafari && (
+              <BlurView
+                fallbackBackgroundColor="transparent"
+                blurRadius={200}
+                blurType="dark"
+                position="absolute"
+                fullscreen
+              />
+            )}
           </AbsoluteVStack>
           <AbsoluteVStack
             zIndex={10000}
@@ -97,9 +101,6 @@ export const AutocompleteFrame = memo(
             padding={5}
             borderRadius={media.sm ? 0 : 10}
             flex={media.sm ? 1 : 0}
-            {...(media.notSm && {
-              paddingTop: 170,
-            })}
             overflow="hidden"
             // dont add events here :(
           >
@@ -118,7 +119,7 @@ export const AutocompleteFrame = memo(
             </ContentScrollView>
           </VStack>
         </VStack>
-      </VStack>
+      </AbsoluteVStack>
     )
   }
 )

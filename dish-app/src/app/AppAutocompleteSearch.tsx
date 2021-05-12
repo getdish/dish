@@ -3,10 +3,8 @@ import { order_by, query, resolved } from '@dish/graph'
 import { useStoreInstance } from '@dish/use-store'
 import { groupBy } from 'lodash'
 import React, { Suspense, memo, useCallback, useEffect, useMemo } from 'react'
-import { useGet } from 'snackui'
-import { AbsoluteVStack, Theme, Toast, useDebounceValue } from 'snackui'
+import { Theme, Toast, useDebounceValue, useGet } from 'snackui'
 
-import { zIndexAutocomplete } from '../constants/constants'
 import { tagDefaultAutocomplete } from '../constants/localTags'
 import { isTouchDevice } from '../constants/platforms'
 import { AutocompleteItemFull, createAutocomplete } from '../helpers/createAutocomplete'
@@ -16,39 +14,26 @@ import { filterToNavigable } from '../helpers/tagHelpers'
 import { LngLat } from '../types/homeTypes'
 import { appMapStore } from './AppMapStore'
 import { AutocompleteFrame, AutocompleteResults } from './AutocompleteFrame'
-import {
-  AutocompleteStore,
-  autocompleteSearchStore,
-  autocompletesStore,
-} from './AutocompletesStore'
+import { AutocompleteStore, autocompleteSearchStore } from './AutocompletesStore'
 import { filterAutocompletes } from './filterAutocompletes'
 import { useHomeStore } from './homeStore'
 
-export const AppAutocompleteSearch = () => {
-  const autocompletes = useStoreInstance(autocompletesStore)
-  const isActive = autocompletes.visible && autocompletes.target === 'search'
+export const AppAutocompleteSearch = memo(() => {
   return (
     <Suspense fallback={null}>
       <Theme name="dark">
-        <AbsoluteVStack
-          zIndex={isActive ? zIndexAutocomplete : -100}
-          fullscreen
-          opacity={isActive ? 1 : 0}
-          pointerEvents="none"
-        >
-          <AutocompleteFrame target="search">
-            {useMemo(
-              () => (
-                <AutocompleteSearchInner />
-              ),
-              []
-            )}
-          </AutocompleteFrame>
-        </AbsoluteVStack>
+        <AutocompleteFrame target="search">
+          {useMemo(
+            () => (
+              <AutocompleteSearchInner />
+            ),
+            []
+          )}
+        </AutocompleteFrame>
       </Theme>
     </Suspense>
   )
-}
+})
 
 const AutocompleteSearchInner = memo(() => {
   const home = useHomeStore()

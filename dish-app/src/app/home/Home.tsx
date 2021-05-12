@@ -75,6 +75,7 @@ export const Home = memo(function Home() {
       <HomeContainer>
         <HomeStackView>
           {(props) => {
+            console.log('rendering', props)
             return <HomeStackViewPages {...props} />
           }}
         </HomeStackView>
