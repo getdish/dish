@@ -1,6 +1,7 @@
+import { isSafari } from '@dish/helpers'
 import { useStore } from '@dish/use-store'
 import React, { Suspense, memo, useEffect, useMemo } from 'react'
-import { AnimatedVStack, VStack, useDebounceValue, useMedia } from 'snackui'
+import { AnimatedVStack, VStack, isTouchDevice, useDebounceValue, useMedia } from 'snackui'
 
 import { isWeb, searchBarHeight, searchBarTopOffset } from '../../constants/constants'
 import { HomeStateItem } from '../../types/homeTypes'
@@ -77,6 +78,11 @@ const AppStackViewItem = memo(
       : index * 5 + (index > 0 ? searchBarHeight + searchBarTopOffset : 0)
     const isFullyActive = !isRemoving && !isAdding
 
+    // safari ios drag optimization: when fully inactive hide it
+    const isInactive = isSafari && isTouchDevice && !isRemoving && !isActive && !isActive
+    const isInactiveDelayed = useDebounceValue(isInactive, 300)
+    const isFullyInactive = isInactive && isInactiveDelayed
+
     let childProps = useMemo(
       () => ({
         index,
@@ -101,6 +107,7 @@ const AppStackViewItem = memo(
         position="absolute"
         zIndex={index}
         className={`animate-up ${isFullyActive ? 'active' : 'untouchable'}`}
+        display={isFullyInactive ? 'none' : 'flex'}
         top={top}
         right={0}
         bottom={-(index * 5)}

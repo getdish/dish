@@ -7,7 +7,9 @@ import {
   Spacer,
   Theme,
   VStack,
+  isTouchDevice,
   prevent,
+  useDebounceValue,
   useMedia,
   useTheme,
 } from 'snackui'
@@ -27,6 +29,11 @@ export const AutocompleteFrame = memo(
     const media = useMedia()
     const theme = useTheme()
 
+    // safari ios drag optimization, when fully inactive hide it
+    const isOut = isSafari && isTouchDevice && !isShowing
+    const isOutDelayed = useDebounceValue(isOut, 300)
+    const isFullyOut = isOutDelayed
+
     const contentParentStore = useStore(ContentParentStore)
     useEffect(() => {
       if (isShowing) {
@@ -44,6 +51,7 @@ export const AutocompleteFrame = memo(
         opacity={isShowing ? 1 : 0}
         pointerEvents={isShowing ? 'auto' : 'none'}
         zIndex={isShowing ? zIndexAutocomplete : -100}
+        display={isFullyOut ? 'none' : 'flex'}
         borderRadius={14}
         overflow="hidden"
         flex={1}
