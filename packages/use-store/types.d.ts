@@ -106,11 +106,17 @@ declare module "@dish/use-store" {
     export function createUseStore<Props, Store>(StoreKlass: (new (props: Props) => Store) | (new () => Store)): <Res, C extends Selector<Store, Res>>(props?: Props | undefined, selector?: C | undefined) => C extends Selector<any, infer B> ? B extends Object ? B : Store : Store;
     export function createUseStoreSelector<A extends Store<Props>, Props, Selected>(StoreKlass: (new (props: Props) => A) | (new () => A), selector: Selector<A, Selected>): (props?: Props) => Selected;
     export function useStoreSelector<A extends Store<B>, B, S extends Selector<any, Selected>, Selected>(StoreKlass: (new (props: B) => A) | (new () => A), selector: S, props?: B): Selected;
-    export function useSelector<A>(fn: () => A): A;
+    type StoreAccessTracker = (store: any) => void;
+    export function trackStoresAccess(cb: StoreAccessTracker): () => void;
     export function useStoreOnce<A extends Store<B>, B>(StoreKlass: (new (props: B) => A) | (new () => A), props?: B, selector?: any): A;
     export function getStore<A extends Store<B>, B>(StoreKlass: (new (props: B) => A) | (new () => A), props?: B): A;
     export const allStores: {};
     export const subscribe: (store: Store, callback: () => any) => () => void;
+}
+
+declare module "@dish/use-store" {
+    export function selector(fn: () => any): () => void;
+    export function useSelector<A>(fn: () => A): A;
 }
 
 declare module "@dish/use-store" {
