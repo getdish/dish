@@ -5,11 +5,11 @@ module.exports = function (api) {
   const isDev = api.env('development') || process.env.NODE_ENV === 'development'
   const isProd = !isDev
 
-  api.cache.using(() => `${process.env.NODE_ENV}${process.env.TARGET}${process.env.LEGACY}`)
+  api.cache.using(() => `${isProd}${isLegacy}${isSSR}`)
 
   const shouldOptimize = isProd && !isSSR
 
-  return {
+  const config = {
     env: {
       // development: {
       //   plugins: ['@babel/plugin-transform-modules-commonjs'],
@@ -76,6 +76,10 @@ module.exports = function (api) {
       .filter(Boolean)
       .map(resolvePlugin),
   }
+
+  // console.log('got', config)
+
+  return config
 }
 
 function resolvePlugin(plugin) {

@@ -1,25 +1,21 @@
 - [c] [0] crawl one restaurant, fix
 - [c] [0] test on ~10 restaurants
 - [c] [0] recrawl tucson, la, sd, sf
+- [m] [0] move region then search goes to prev region
+- [m] [0] go to diff region and return to one sometimes has empty list cards (graphql caching logic issue)
+- [d] [0] position relative avatar searchbarfloating
+- [d] [0] fix vote on dishes hover
 - [m] [0] (restaurantpage) hours modal text error
-- [m] [0] horizontal/vertiacal drag can get stuck moving between panes (noticed on search pane horizontal stuck)
-- [m] [0] remove vote arrows on dishes
-- [m] [0] super slow autocomplete item tap
-- [m] [0] map doesnt go to bottom on drawer open sometimes
 - [m] [0] (restaurantpage) cant go into gallery
 - [m] [0] (restaurantpage) dont do anything on change tag selected (scroll etc)
 - [m] [0] (restaurantpage) tap: address, phone, website get working
 - [m] [0] (searchpage) cant tap vote on tag
 - [m] [0] map zooms out every drawer shift
+- [d] [1] voting on lists
+- [d] [1] fix profile pages a lot
 - [m] [1] swipe back to go back on drawer cards
-- [m] [1] scroll UP should work when you are scrolled down on HOME, go to SEARCH, then go back to HOME, i think contentActive isn't being set or not propagating to scrolllock
 - [m] [2] re-search button should look like app menu button (bigger, shadow, blur, spaced bettter)
-- [m] [2] too easy to move horizontal a little bit before moving vertical, in general the vertical/horizontal scroll fighting needs to be improved
-- [m] [3] too much delay between open/close drawer and animate
-- [m] [3] dragging drawer seems to drop frames in dev mode at least, useNative possible?
 - [m] [3] map shouldn't shift down until touchend on drawer move
-- [m] [3] stack drawer should be faster, "optimistic" show/hide before state
-- [m] [3] login/signup animation is glitchy and slow
 - [m] get login/signup working
 - [m] [3] add apple sign in
 
