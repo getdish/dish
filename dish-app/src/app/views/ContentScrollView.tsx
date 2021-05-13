@@ -182,7 +182,6 @@ export const ContentScrollView = forwardRef<ScrollView, ContentScrollViewProps>(
     })
 
     const isScrollingVerticalFromTop = () => {
-      console.log('should', scrollStore.lock === 'vertical' && scrollStore.isAtTop)
       return scrollStore.lock === 'vertical' && scrollStore.isAtTop
     }
 
@@ -195,7 +194,6 @@ export const ContentScrollView = forwardRef<ScrollView, ContentScrollViewProps>(
           {...props}
           scrollEventThrottle={14}
           onScroll={(e) => {
-            console.log('on scrol')
             const y = e.nativeEvent.contentOffset.y
             const atTop = y <= 0
             scrollCurY.set(id, y)

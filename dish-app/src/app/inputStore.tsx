@@ -1,5 +1,7 @@
+import { sleep } from '@dish/async'
+import { isSafari } from '@dish/helpers'
 import { Store, createStore, useStoreInstance } from '@dish/use-store'
-import { debounce, throttle } from 'lodash'
+import { debounce, isSafeInteger, throttle } from 'lodash'
 
 import { inputClearSelection, inputGetNode, inputIsTextSelected } from '../helpers/input'
 import { autocompletesStore } from './AutocompletesStore'

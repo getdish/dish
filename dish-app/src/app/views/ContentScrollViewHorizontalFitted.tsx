@@ -1,4 +1,5 @@
 import React from 'react'
+import { StyleSheet } from 'react-native'
 import { VStack, useLayout } from 'snackui'
 
 import {
@@ -18,23 +19,20 @@ export const ContentScrollViewHorizontalFitted = (
     },
   })
 
+  const width = layoutProps.layout?.width ?? '100%'
+
   return (
     <VStack
       {...layoutProps}
-      width={layoutProps.layout?.width ?? '100%'}
+      minWidth={width}
+      width="100%"
       maxWidth="100%"
       position="relative"
       zIndex={100}
     >
       <ContentScrollViewHorizontal
         {...props}
-        style={[
-          {
-            width: '100%',
-            maxWidth: '100%',
-          },
-          props.contentContainerStyle,
-        ]}
+        style={[style.scrollView, props.contentContainerStyle]}
         contentContainerStyle={[
           {
             minWidth: props.width,
@@ -45,3 +43,10 @@ export const ContentScrollViewHorizontalFitted = (
     </VStack>
   )
 }
+
+const style = StyleSheet.create({
+  scrollView: {
+    width: '100%',
+    maxWidth: '100%',
+  },
+})

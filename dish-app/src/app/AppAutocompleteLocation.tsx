@@ -1,7 +1,7 @@
 import { series, sleep } from '@dish/async'
 import { isPresent } from '@dish/helpers'
 import { useStoreInstance } from '@dish/use-store'
-import React, { memo, useCallback, useEffect, useMemo } from 'react'
+import React, { Suspense, memo, useCallback, useEffect, useMemo } from 'react'
 import { Theme, useDebounceValue } from 'snackui'
 
 import { defaultLocationAutocompleteResults } from '../constants/defaultLocationAutocompleteResults'
@@ -18,14 +18,11 @@ import { setLocation } from './setLocation'
 export const AppAutocompleteLocation = memo(() => {
   return (
     <Theme name="dark">
-      <AutocompleteFrame target="location">
-        {useMemo(
-          () => (
-            <AutocompleteLocationInner />
-          ),
-          []
-        )}
-      </AutocompleteFrame>
+      <Suspense fallback={null}>
+        <AutocompleteFrame target="location">
+          <AutocompleteLocationInner />
+        </AutocompleteFrame>
+      </Suspense>
     </Theme>
   )
 })

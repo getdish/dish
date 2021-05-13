@@ -342,8 +342,8 @@ export function createWebpackConfig({
         isHot &&
           new ReactRefreshWebpack4Plugin({
             overlay: false,
-            exclude: /gqless|react-refresh|node_modules/,
-            include: /snackui/,
+            exclude: /gqless|react-refresh|node_modules\/(?!snackui)/,
+            // include: /snackui/,
           }),
 
         isHot && new Webpack.HotModuleReplacementPlugin({}),

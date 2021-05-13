@@ -518,7 +518,6 @@ const RestaurantListItemScoreBreakdown = memo(
 
 // dont re-render this one
 const showInitial = getMedia().xs ? 1 : getMedia().sm ? 2 : 3
-console.log('showInitial', showInitial, getMedia())
 
 const RestaurantPeekDishes = memo(
   graphql(function RestaurantPeekDishes(props: {
