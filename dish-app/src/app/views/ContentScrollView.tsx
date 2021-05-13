@@ -1,4 +1,4 @@
-import { Store, getStore, reaction, selector } from '@dish/use-store'
+import { Store, getStore, selector } from '@dish/use-store'
 import React, {
   Suspense,
   createContext,
@@ -9,13 +9,12 @@ import React, {
   useState,
 } from 'react'
 import { ScrollView, ScrollViewProps, StyleSheet, View } from 'react-native'
-import { combineRefs, useGet, useMedia } from 'snackui'
+import { combineRefs, useGet } from 'snackui'
 
 import { isWeb } from '../../constants/constants'
 import { isTouchDevice, supportsTouchWeb } from '../../constants/platforms'
 import { getWindowHeight } from '../../helpers/getWindow'
 import { drawerStore } from '../drawerStore'
-import { getIsTouchingHandle } from '../home/HomeDrawerSmallView.native'
 
 export type ScrollLock = 'horizontal' | 'vertical' | 'drawer' | 'none'
 

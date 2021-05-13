@@ -144,10 +144,6 @@ export function createWebpackConfig({
           filename: `static/js/app.ssr.${env}.js`,
           path: path.join(cwd, 'build', 'ssr'),
         }),
-        // ...(legacy && {
-        //   filename: `static/js/app.legacy.${hashFileNamePart}.js`,
-        //   path: path.join(cwd, 'build', 'legacy'),
-        // }),
       },
       node: {
         global: true,
@@ -204,26 +200,14 @@ export function createWebpackConfig({
               },
         runtimeChunk: false,
         minimizer: !isProduction
-          ? [
-              new CssMinimizerPlugin({
-                // this doesnt discard duplicates....
-                // minimizerOptions: {
-                //   preset: [
-                //     'lite',
-                //     {
-                //       discardDuplicates: true,
-                //     },
-                //   ],
-                // },
-              }),
-            ]
+          ? [new CssMinimizerPlugin()]
           : [
               new CssMinimizerPlugin(),
               new ESBuildMinifyPlugin({
                 target: 'es2019',
                 treeShaking: true,
                 css: false,
-                implementation: esbuild,
+                // implementation: esbuild,
               }),
             ],
       },
@@ -238,6 +222,7 @@ export function createWebpackConfig({
                 use: [
                   'thread-loader',
                   'babel-loader',
+                  // why????????? it breaks if not but no idea
                   isProduction
                     ? {
                         loader: require.resolve('esbuild-loader'),
@@ -259,6 +244,7 @@ export function createWebpackConfig({
               {
                 test: /\.css$/i,
                 use: [MiniCssExtractPlugin.loader, require.resolve('css-loader')],
+                sideEffects: true,
               },
               {
                 test: /\.(png|svg|jpe?g|gif)$/,
@@ -337,28 +323,19 @@ export function createWebpackConfig({
 
         // !!pwaOptions && new WebpackPwaManifest(pwaOptions),
 
-        isVerbose ||
-          (isProduction &&
-            new DuplicatesPlugin({
-              emitErrors: false,
-              emitHandler: undefined,
-              ignoredPackages: undefined,
-              verbose: false,
-            })),
+        (isVerbose || isProduction) &&
+          new DuplicatesPlugin({
+            emitErrors: false,
+            emitHandler: undefined,
+            ignoredPackages: undefined,
+            verbose: false,
+          }),
 
         // somewhat slow for rebuilds
         !!(process.env.CIRCULAR_DEPS || isProduction) &&
           new CircularDependencyPlugin({
-            // exclude detection of files based on a RegExp
             exclude: /a\.js|node_modules/,
-            // include specific files based on a RegExp
-            // include: /src/,
-            // add errors to webpack instead of warnings
-            // failOnError: true,
-            // allow import cycles that include an asyncronous import,
-            // e.g. via import(/* webpackMode: "weak" */ './file.js')
             allowAsyncCycles: false,
-            // set the current working directory for displaying module paths
             cwd: process.cwd(),
           }),
 
@@ -366,7 +343,7 @@ export function createWebpackConfig({
           new ReactRefreshWebpack4Plugin({
             overlay: false,
             exclude: /gqless|react-refresh|node_modules/,
-            // include: /snackui/,
+            include: /snackui/,
           }),
 
         isHot && new Webpack.HotModuleReplacementPlugin({}),
