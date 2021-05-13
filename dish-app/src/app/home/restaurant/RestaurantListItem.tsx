@@ -158,7 +158,7 @@ const RestaurantListItemContent = memo(
 
     useEffect(() => {
       if (!!restaurant.name && props.onFinishRender) {
-        return series([() => fullyIdle({ min: 50 }), props.onFinishRender!])
+        return series([() => fullyIdle({ min: 16 }), props.onFinishRender!])
       }
     }, [restaurant.name])
 

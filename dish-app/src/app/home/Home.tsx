@@ -115,7 +115,6 @@ export function HomeContainer(props: { children: any }) {
 
 const HomeDrawerSmall = (props: { children: any }) => {
   useEffect(() => {
-    console.log('set up reaction...')
     return reaction(
       autocompletesStore,
       (x) => x.visible,

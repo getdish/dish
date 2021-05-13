@@ -60,9 +60,10 @@ export const AppMapControlsOverlay = memo(() => {
             paddingBottom={media.xs ? edgeInsets.bottom + 15 : 15}
             paddingTop={20}
           >
-            <Suspense fallback={null}>
+            {/* todo make loadable() if adding back in */}
+            {/* <Suspense fallback={null}>
               <AppMapPIP />
-            </Suspense>
+            </Suspense> */}
 
             {!media.sm && (
               <>

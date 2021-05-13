@@ -79,7 +79,7 @@ class SearchPageStore extends Store {
     // prevent searching back to back quickly
     if (!force) {
       await sleep(wasSearching ? 250 : 50)
-      await fullyIdle({ max: 200 })
+      await fullyIdle({ checks: 2, max: 100 })
       if (shouldCancel()) return
     }
 

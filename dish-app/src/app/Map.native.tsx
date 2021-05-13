@@ -21,7 +21,7 @@ MapboxGL.setTelemetryEnabled(false)
 
 const idFn = (_) => _
 
-export const MapView = ({
+export default function Map({
   center,
   span,
   features,
@@ -30,7 +30,7 @@ export const MapView = ({
   onSelect,
   style,
   showUserLocation,
-}: MapProps) => {
+}: MapProps) {
   const height = useWindowDimensions().height
   // const isDrawerAtTop = useStoreInstanceSelector(drawerStore, (x) => x.snapIndexName === 'top')
   const drawerHeight = drawerStore.snapHeights[2]

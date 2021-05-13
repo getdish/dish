@@ -100,7 +100,7 @@ export const AppSearchInput = memo(() => {
       value: homeStore.currentSearchQuery,
     })
     return series([
-      () => fullyIdle({ max: 600 }),
+      () => fullyIdle({ checks: 3, max: 100 }),
       () => {
         if (!getMedia().sm) {
           focusSearchInput()

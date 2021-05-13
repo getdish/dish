@@ -13,7 +13,7 @@ export const PaginationNav = ({
   page: number
   setPage: React.Dispatch<React.SetStateAction<number>>
 }) => {
-  const pageItems = new Array(totalPages).fill(totalPages)
+  const pageItems = new Array(totalPages).fill(null)
   return (
     <>
       {totalPages > 1 && (

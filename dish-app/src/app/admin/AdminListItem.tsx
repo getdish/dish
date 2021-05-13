@@ -45,7 +45,7 @@ export const AdminListItem = memo(
     useEffect(() => {
       if (isEditing) {
         return series([
-          () => fullyIdle({ max: 40 }),
+          () => fullyIdle({ checks: 3, max: 40 }),
           () => {
             textInput.current?.focus()
             textInput.current?.select()

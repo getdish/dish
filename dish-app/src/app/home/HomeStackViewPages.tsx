@@ -29,27 +29,37 @@ export const HomeStackViewPages = (props: HomeStackViewProps) => {
   )
 }
 
-const isntLoadable =
+const RestaurantPage =
   process.env.TARGET === 'native' ||
   process.env.TARGET === 'ssr' ||
   process.env.NODE_ENV === 'development'
+    ? require('./restaurant/RestaurantPage').default
+    : loadable(() => import('./restaurant/RestaurantPage'))
 
-const RestaurantPage = isntLoadable
-  ? require('./restaurant/RestaurantPage').default
-  : loadable(() => import('./restaurant/RestaurantPage'))
+const SearchPage =
+  process.env.TARGET === 'native' ||
+  process.env.TARGET === 'ssr' ||
+  process.env.NODE_ENV === 'development'
+    ? require('./search/SearchPage').default
+    : loadable(() => import('./search/SearchPage'))
 
-const SearchPage = isntLoadable
-  ? require('./search/SearchPage').default
-  : loadable(() => import('./search/SearchPage'))
+const UserPage =
+  process.env.TARGET === 'native' ||
+  process.env.TARGET === 'ssr' ||
+  process.env.NODE_ENV === 'development'
+    ? require('./user/UserPage').default
+    : loadable(() => import('./user/UserPage'))
 
-const UserPage = isntLoadable
-  ? require('./user/UserPage').default
-  : loadable(() => import('./user/UserPage'))
+const AboutPage =
+  process.env.TARGET === 'native' ||
+  process.env.TARGET === 'ssr' ||
+  process.env.NODE_ENV === 'development'
+    ? require('./about/AboutPage').default
+    : loadable(() => import('./about/AboutPage'))
 
-const AboutPage = isntLoadable
-  ? require('./about/AboutPage').default
-  : loadable(() => import('./about/AboutPage'))
-
-const ListPage = isntLoadable
-  ? require('./list/ListPage').default
-  : loadable(() => import('./list/ListPage'))
+const ListPage =
+  process.env.TARGET === 'native' ||
+  process.env.TARGET === 'ssr' ||
+  process.env.NODE_ENV === 'development'
+    ? require('./list/ListPage').default
+    : loadable(() => import('./list/ListPage'))

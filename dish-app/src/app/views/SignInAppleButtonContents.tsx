@@ -1,28 +1,45 @@
 import { sleep } from '@dish/async'
 import { Auth } from '@dish/graph'
 import { isSafari } from '@dish/helpers'
-import React, { memo, useEffect, useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { HStack, Text, Toast, VStack } from 'snackui'
 
 import { useIsMountedRef } from '../../helpers/useIsMountedRef'
 import { userStore } from '../userStore'
 import { AppleLogoWhite } from './AppleLogoWhite'
 
-const { auth } = require('../../web/apple-sign-in')
+let auth
 
-export default memo(function SignInAppleButton() {
-  useEffect(() => {
-    const conf = {
-      clientId: 'com.dishapp',
-      scope: 'name email',
-      redirectURI: Auth.getRedirectUri(),
-      usePopup: isSafari,
-    }
-    auth.init(conf)
-  }, [])
-
+export function SignInAppleButtonContents() {
   const [loading, setLoading] = useState(false)
   const isMounted = useIsMountedRef()
+  const [hovered, setHovered] = useState(false)
+
+  useEffect(() => {
+    if (!hovered) {
+      return
+    }
+    import('../../web/apple-sign-in').then(({ auth: appleAuth }) => {
+      auth = appleAuth
+      const conf = {
+        clientId: 'com.dishapp',
+        scope: 'name email',
+        redirectURI: Auth.getRedirectUri(),
+        usePopup: isSafari,
+      }
+      auth.init(conf)
+    })
+  }, [hovered])
+
+  // load after a bit (lighthouse)
+  useEffect(() => {
+    const tm = setTimeout(() => {
+      setHovered(true)
+    }, 3000)
+    return () => {
+      clearTimeout(tm)
+    }
+  }, [])
 
   const handleSignIn = async () => {
     setLoading(true)
@@ -49,7 +66,7 @@ export default memo(function SignInAppleButton() {
   }
 
   return (
-    <VStack onPress={handleSignIn}>
+    <VStack onHoverIn={() => setHovered(true)} onPress={handleSignIn}>
       <VStack
         borderRadius={9}
         borderColor="rgba(255,255,255,0.3)"
@@ -76,4 +93,4 @@ export default memo(function SignInAppleButton() {
       </VStack>
     </VStack>
   )
-})
+}

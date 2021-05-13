@@ -2476,6 +2476,7 @@ __metadata:
     "@pmmmwh/react-refresh-webpack-plugin": ^0.4.3
     "@snackui/babel-plugin": "*"
     "@snackui/static": "*"
+    "@vue/preload-webpack-plugin": ^2.0.0
     "@welldone-software/why-did-you-render": ^6.0.3
     circular-dependency-plugin: ^5.2.2
     css-loader: ^5.2.4
@@ -2484,6 +2485,7 @@ __metadata:
     esbuild-loader: ^2.13.0
     file-loader: ^6.2.0
     fs-extra: ^9.1.0
+    html-inline-css-webpack-plugin: ^1.11.0
     html-webpack-plugin: ^5.3.1
     inspectpack: ^4.7.1
     mini-css-extract-plugin: ^1.6.0
@@ -6227,6 +6229,16 @@ __metadata:
   peerDependencies:
     graphql: ^0.11.0 || ^0.12.0 || ^0.13.0 || ^14.0.0 || ^15.0.0
   checksum: 4bc50405bdbb4840301c9dc24de2550716ce0bf18270efd8db3be86a744519f0083e6a00d83b713672f422bef8ea1a02ea9d61624d4385210572338984ab253d
+  languageName: node
+  linkType: hard
+
+"@vue/preload-webpack-plugin@npm:^2.0.0":
+  version: 2.0.0
+  resolution: "@vue/preload-webpack-plugin@npm:2.0.0"
+  peerDependencies:
+    html-webpack-plugin: ^5.0.0 || ^4.5.1
+    webpack: ^5.20.0 || ^4.1.0
+  checksum: fe00d048d4f3685ad08b22afe00d7d888c7f4ed44428b084a972527249c8a849047d8ada9bdc6fd0ac22e81825eb8474e42fc8ccccb399ac0fab088bd8505a90
   languageName: node
   linkType: hard
 
@@ -13131,6 +13143,17 @@ __metadata:
   version: 2.0.2
   resolution: "html-escaper@npm:2.0.2"
   checksum: a216ae96fa647155ce31ebf14e45b602eb84ab7b4a99d329d85d855d8a74d54c0c4146ac7eb4ada2761d3e22c067e73d6c66b54faefee37229ac025cfc97a513
+  languageName: node
+  linkType: hard
+
+"html-inline-css-webpack-plugin@npm:^1.11.0":
+  version: 1.11.0
+  resolution: "html-inline-css-webpack-plugin@npm:1.11.0"
+  dependencies:
+    lodash: ^4.17.15
+  peerDependencies:
+    html-webpack-plugin: ^3.0.0 || ^4.0.0 || ^5.0.0
+  checksum: c05e4f2cacad84cca42651b21febfbda2c8fe0559ba330a8abdac6df1758a7e5978771ebef816fb47e8c454cd860ba2feea08e9b89ba5912d10695ae8e602826
   languageName: node
   linkType: hard
 
