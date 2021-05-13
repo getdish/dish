@@ -91,6 +91,7 @@ export const UserMenuButton = () => {
     <Tooltip contents="Profile">
       <LinkButton
         backgroundColor="transparent"
+        position="relative"
         name="user"
         noTextWrap
         params={{

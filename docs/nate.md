@@ -3,7 +3,6 @@
 - [c] [0] recrawl tucson, la, sd, sf
 - [m] [0] move region then search goes to prev region
 - [m] [0] go to diff region and return to one sometimes has empty list cards (graphql caching logic issue)
-- [d] [0] position relative avatar searchbarfloating
 - [d] [0] fix vote on dishes hover
 - [m] [0] (restaurantpage) hours modal text error
 - [m] [0] (restaurantpage) cant go into gallery
