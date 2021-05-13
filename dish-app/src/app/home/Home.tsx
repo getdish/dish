@@ -125,10 +125,13 @@ const HomeDrawerSmall = (props: { children: any }) => {
             drawerStore.setSnapIndex(0)
           }
         } else {
+          Keyboard.dismiss()
+          if (drawerStore.isDragging) {
+            return
+          }
           if (drawerStore.snapIndex !== 1) {
             drawerStore.setSnapIndex(1)
           }
-          Keyboard.dismiss()
         }
       }
     )
