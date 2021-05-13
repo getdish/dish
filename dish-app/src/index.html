@@ -3,8 +3,14 @@
   <head>
     <meta charset="utf-8" />
     <meta httpEquiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
     <!-- links -->
+
+    <% if (process.env.NODE_ENV === 'development') { %>
+      <script async defer data-website-id="df3c2d9a-db34-4306-af5e-fb7e3035b3c3" src="http://localhost:5555/umami.js"></script>
+    <% } else { %>
+      <script async defer data-website-id="ef832896-0507-4fba-b1fe-3dad7d382d92" src="https://umami.dishapp.com/umami.js"></script>
+    <% } %>
   </head>
   <body>
     <noscript>

@@ -12,6 +12,7 @@
 - [m] [0] map zooms out every drawer shift
 - [d] [1] voting on lists
 - [d] [1] fix profile pages a lot
+- [m] [1] get regions working
 - [m] [1] swipe back to go back on drawer cards
 - [m] [2] re-search button should look like app menu button (bigger, shadow, blur, spaced bettter)
 - [m] [3] map shouldn't shift down until touchend on drawer move

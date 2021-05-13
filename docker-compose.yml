@@ -284,7 +284,18 @@ services:
       - acme:/etc/acme.sh
       - /var/run/docker.sock:/var/run/docker.sock:ro
     restart: always
-
+  umami:
+    image: ghcr.io/mikecao/umami:postgresql-latest
+    ports:
+      - "5555:3000"
+    environment:
+      VIRTUAL_HOST: umami.dishapp.com
+      VIRTUAL_PORT: 5555
+      DATABASE_URL: ${POSTGRES_URL_INTERNAL:-postgres://postgres:postgres@postgres/dish}
+      DATABASE_TYPE: postgresql
+      HASH_SALT: ${UMAMI_HASH_SALT}
+    depends_on:
+      - postgres
 volumes:
     conf:
     vhost:

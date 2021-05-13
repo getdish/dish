@@ -166,6 +166,10 @@ function redis_flush_all() {
   redis_command 'FLUSHALL'
 }
 
+function umami_migrate() {
+  psql "$POSTGRES_URL" < services/umami/setup.sql
+}
+
 function db_migrate() {
   echo "migrating db $POSTGRES_DB"
   pushd "$PROJECT_ROOT/services/hasura"

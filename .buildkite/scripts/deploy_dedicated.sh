@@ -39,6 +39,7 @@ ssh \
     source .env.production
     source .env.d1
     flyctl auth docker
+    ./dishctl.sh umami_migrate
     docker-compose build postgres nginx-proxy
     docker-compose pull $SERVICES
     docker-compose stop -t 3 $SERVICES || true
