@@ -328,14 +328,13 @@ export function createWebpackConfig({
           new PreloadWebpackPlugin({
             rel: 'preload',
             include: 'initial',
+            fileWhitelist: [/dish-neon/],
             as(entry) {
-              if (/\.css$/.test(entry)) return 'style'
-              if (/\.png$/.test(entry)) return 'image'
-              return false
+              if (/\.jpg$/.test(entry)) return 'image'
             },
           }),
 
-        isProduction && new HTMLInlineCSSWebpackPlugin(),
+        // isProduction && new HTMLInlineCSSWebpackPlugin(),
 
         // !!pwaOptions && new WebpackPwaManifest(pwaOptions),
 
