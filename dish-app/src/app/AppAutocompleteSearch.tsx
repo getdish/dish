@@ -20,18 +20,13 @@ import { useHomeStore } from './homeStore'
 
 export const AppAutocompleteSearch = memo(() => {
   return (
-    <Suspense fallback={null}>
-      <Theme name="dark">
+    <Theme name="dark">
+      <Suspense fallback={null}>
         <AutocompleteFrame target="search">
-          {useMemo(
-            () => (
-              <AutocompleteSearchInner />
-            ),
-            []
-          )}
+          <AutocompleteSearchInner />
         </AutocompleteFrame>
-      </Theme>
-    </Suspense>
+      </Suspense>
+    </Theme>
   )
 })
 

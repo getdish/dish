@@ -155,6 +155,7 @@ export const AutocompleteResults = memo(
     const ogResults = autocompleteStore.results
     const results = [...prefixResults, ...ogResults]
     const loaded = usePageFinishedLoading()
+    const media = useMedia()
 
     if (!loaded) {
       return null
@@ -179,6 +180,9 @@ export const AutocompleteResults = memo(
             </React.Fragment>
           )
         })}
+
+        {/* on small screens add */}
+        <VStack height={media.pointerCoarse ? 300 : 0} />
       </>
     )
   }

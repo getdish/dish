@@ -138,7 +138,6 @@ export const HomeDrawerSmallView = memo((props: { children: any }) => {
         isPanActive = false
       },
       onPanResponderMove: (e, { dy }) => {
-        console.log('move', dy)
         const y = curSnapY + dy
         // limit movement (TODO make it "resist" at edge)
         const scroller = scrollViews.get(contentParent.activeId)

@@ -87,16 +87,22 @@ const RestaurantUpVoteDownVoteContents = graphql(
           padding={2}
           paddingHorizontal={5}
           skewX="-12deg"
+          position="relative"
         >
-          <RatingWithVotes
-            score={score}
-            ratio={ratio}
-            vote={vote}
-            setVote={setVote}
-            onClickPoints={onClickPoints}
-            isMultiple={activeTagSlugs ? activeTagSlugs.length > 1 : false}
-            display={display}
-          />
+          <VStack
+            // has to be separate layer or else overflow breaks safari
+            skewX="12deg"
+          >
+            <RatingWithVotes
+              score={score}
+              ratio={ratio}
+              vote={vote}
+              setVote={setVote}
+              onClickPoints={onClickPoints}
+              isMultiple={activeTagSlugs ? activeTagSlugs.length > 1 : false}
+              display={display}
+            />
+          </VStack>
         </VStack>
       </VStack>
     )
@@ -166,11 +172,12 @@ const RatingWithVotes = memo(
 
     return (
       <VStack
-        skewX="12deg"
+        // backgroundColor="green"
         alignItems="center"
         justifyContent="center"
         width={sizePx}
         height={sizePx}
+        className="hello-world"
       >
         <AbsoluteVStack top={-18}>
           {subtle ? (
