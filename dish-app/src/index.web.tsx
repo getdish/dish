@@ -1,6 +1,7 @@
 import './web/base.css'
 
 import { startLogging } from '@dish/graph'
+import { isSafari } from '@dish/helpers'
 import { loadableReady } from '@loadable/component'
 import React from 'react'
 import { hydrate, render } from 'react-dom'
@@ -18,6 +19,12 @@ const ROOT = document.getElementById('root')!
 
 // register root component
 AppRegistry.registerComponent('dish', () => Root)
+
+if (isSafari) {
+  import('smoothscroll-polyfill').then((smooth) => {
+    smooth.polyfill()
+  })
+}
 
 async function start() {
   if (IS_NOT_CONCURRENT) {

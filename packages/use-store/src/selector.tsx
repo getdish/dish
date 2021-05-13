@@ -27,9 +27,18 @@ const logUpdate =
 // TODO test this works the same as useSelector
 export function selector(fn: () => any) {
   let prev = runStoreSelector(fn)
+  let disposeValue: Function | null = null
   const subscribe = () => {
     return subscribeToStores([...prev.stores], () => {
+      disposeValue?.()
       const next = runStoreSelector(fn)
+      if (typeof next.value === 'function') {
+        disposeValue = next.value
+        if (process.env.NODE_ENV === 'development') {
+          logUpdate!(fn, [...next.stores], '(fn)', '(fn)')
+        }
+        return
+      }
       if (
         isEqualSubsetShallow(prev.stores, next.stores) &&
         isEqualSubsetShallow(prev.value, next.value)
@@ -37,7 +46,7 @@ export function selector(fn: () => any) {
         return
       }
       if (process.env.NODE_ENV === 'development') {
-        logUpdate!(fn, [...prev.stores], prev.value, next.value)
+        logUpdate!(fn, [...next.stores], prev.value, next.value)
       }
       prev = next
       dispose()
@@ -47,6 +56,7 @@ export function selector(fn: () => any) {
   let dispose = subscribe()
   return () => {
     dispose()
+    disposeValue?.()
   }
 }
 
@@ -56,8 +66,18 @@ export function useSelector<A>(fn: () => A): A {
   })
 
   useEffect(() => {
-    return subscribeToStores([...state.stores], () => {
+    let dispose
+    const unsub = subscribeToStores([...state.stores], () => {
+      dispose?.()
       const next = runStoreSelector(fn)
+      // return function === return disposable
+      if (typeof next.value === 'function') {
+        if (process.env.NODE_ENV === 'development') {
+          logUpdate!(fn, [...next.stores], '(fn)', '(fn)')
+        }
+        dispose = next.value
+        return
+      }
       setState((prev) => {
         if (
           isEqualSubsetShallow(prev.stores, next.stores) &&
@@ -66,11 +86,15 @@ export function useSelector<A>(fn: () => A): A {
           return prev
         }
         if (process.env.NODE_ENV === 'development') {
-          logUpdate!(fn, [...prev.stores], prev.value, next.value)
+          logUpdate!(fn, [...next.stores], prev.value, next.value)
         }
         return next
       })
     })
+    return () => {
+      unsub()
+      dispose?.()
+    }
   }, [...state.stores])
 
   return state.value

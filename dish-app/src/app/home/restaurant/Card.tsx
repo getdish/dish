@@ -161,6 +161,7 @@ export function Card({
             rotate="25deg"
             y={-60}
             x={-20}
+            scaleX={1.5}
           >
             <LinearGradient
               style={StyleSheet.absoluteFill}

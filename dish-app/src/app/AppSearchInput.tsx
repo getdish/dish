@@ -1,7 +1,7 @@
 import { fullyIdle, idle, series } from '@dish/async'
-import { supportsTouchWeb } from '@dish/helpers'
+import { isSafari, supportsTouchWeb } from '@dish/helpers'
 import { Loader, Search, X } from '@dish/react-feather'
-import { getStore, reaction, useStoreInstance } from '@dish/use-store'
+import { getStore, reaction, useStoreInstance, useStoreInstanceSelector } from '@dish/use-store'
 import React, { memo, useCallback, useEffect, useRef } from 'react'
 import { ScrollView, StyleSheet, TextInput, TouchableOpacity, View } from 'react-native'
 import { HStack, Spacer, VStack, getMedia, useDebounce, useMedia, useOnMount } from 'snackui'
@@ -82,14 +82,13 @@ export const getSearchInput = () => {
 }
 
 export const AppSearchInput = memo(() => {
-  const autocompleteStore = useStoreInstance(autocompleteSearchStore)
   const inputStore = useInputStoreSearch()
   const isSearchingCuisine = useHomeStoreSelector((x) => !!x.searchBarTags.length)
   const { color } = useSearchBarTheme()
   const media = useMedia()
   const isEditingList = false // useRouterSelector((x) => x.curPage.name === 'list' && x.curPage.params.state === 'edit')
   const textInput$ = useRef<TextInput | null>(null)
-  const setSearch = useDebounce(autocompleteStore.setQuery, 250)
+  const setSearch = useDebounce(autocompleteSearchStore.setQuery, 100)
 
   const height = searchBarHeight - 6
   const outerHeight = height - 1
@@ -203,10 +202,13 @@ export const AppSearchInput = memo(() => {
                       // see above, we handle better for text selection
                       return
                     }
+                    if (drawerStore.isDragging) {
+                      return
+                    }
                     if (homeStore.searchbarFocusedTag) {
                       homeStore.setSearchBarTagIndex(0)
                     } else {
-                      console.log('open autocomplete search')
+                      console.log('open autocomplete search', e.currentTarget)
                       autocompletesStore.setTarget('search')
                     }
                   }}
@@ -318,6 +320,8 @@ const next = () => {
 }
 
 const handleKeyPress = async (e: any, inputStore: InputStore) => {
+  console.log('key press', e)
+
   // @ts-ignore
   const code = e.keyCode
   const isAutocompleteActive = autocompletesStore.visible

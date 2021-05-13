@@ -1995,6 +1995,7 @@ __metadata:
     react-test-renderer: ^17.0.1
     recyclerlistview: ^3.0.5
     redis: ^3.0.2
+    smoothscroll-polyfill: ^0.4.4
     testcafe: ^1.11.0
     thread-loader: ^3.0.3
     typescript: "*"
@@ -4991,11 +4992,11 @@ __metadata:
     "@babel/traverse": "*"
     "@babel/types": "*"
     "@dish/esdx": ^0.0.9
-    "@snackui/static": ^0.15.1
+    "@snackui/static": ^0.15.2
   languageName: unknown
   linkType: soft
 
-"@snackui/helpers@^0.15.1, @snackui/helpers@workspace:snackui/packages/helpers":
+"@snackui/helpers@^0.15.2, @snackui/helpers@workspace:snackui/packages/helpers":
   version: 0.0.0-use.local
   resolution: "@snackui/helpers@workspace:snackui/packages/helpers"
   dependencies:
@@ -5003,18 +5004,18 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@snackui/node@*, @snackui/node@^0.15.1, @snackui/node@workspace:snackui/packages/snackui-node":
+"@snackui/node@*, @snackui/node@^0.15.2, @snackui/node@workspace:snackui/packages/snackui-node":
   version: 0.0.0-use.local
   resolution: "@snackui/node@workspace:snackui/packages/snackui-node"
   dependencies:
-    "@snackui/helpers": ^0.15.1
+    "@snackui/helpers": ^0.15.2
     ts-transform-import-path-rewrite: ^0.3.0
     ttypescript: ^1.5.12
     typescript: ^4.2.3
   languageName: unknown
   linkType: soft
 
-"@snackui/static@*, @snackui/static@^0.15.1, @snackui/static@workspace:snackui/packages/snackui-static":
+"@snackui/static@*, @snackui/static@^0.15.2, @snackui/static@workspace:snackui/packages/snackui-static":
   version: 0.0.0-use.local
   resolution: "@snackui/static@workspace:snackui/packages/snackui-static"
   dependencies:
@@ -5031,8 +5032,8 @@ __metadata:
     "@dish/react-test-env": ^0.0.7
     "@dish/testy": "*"
     "@expo/match-media": ^0.1.0
-    "@snackui/helpers": ^0.15.1
-    "@snackui/node": ^0.15.1
+    "@snackui/helpers": ^0.15.2
+    "@snackui/node": ^0.15.2
     "@types/jest": "*"
     "@types/node": ^14.14.12
     "@types/react-native": ^0.64.2
@@ -21734,12 +21735,19 @@ __metadata:
   languageName: node
   linkType: hard
 
+"smoothscroll-polyfill@npm:^0.4.4":
+  version: 0.4.4
+  resolution: "smoothscroll-polyfill@npm:0.4.4"
+  checksum: a2643f711caad9d31ff181c3be976430c32dfcc4c46d5652b86b4166ea8f3693341c0a61f13d57e93b803ac05ccb1a8e30830581686c5d125ab2875ff2fd0bce
+  languageName: node
+  linkType: hard
+
 "snackui-loader@*, snackui-loader@workspace:snackui/packages/snackui-loader":
   version: 0.0.0-use.local
   resolution: "snackui-loader@workspace:snackui/packages/snackui-loader"
   dependencies:
     "@dish/esdx": ^0.0.9
-    "@snackui/static": ^0.15.1
+    "@snackui/static": ^0.15.2
     fs-extra: ^9.1.0
     loader-utils: ^2.0.0
     lodash: ^4.17.21
@@ -21755,7 +21763,7 @@ __metadata:
     "@dish/fast-compare": ^2.7.6
     "@dish/proxy-worm": ^0.0.4
     "@react-native-community/blur": ^3.6.0
-    "@snackui/helpers": ^0.15.1
+    "@snackui/helpers": ^0.15.2
     "@types/node": ^14.11.10
     "@types/react": ^16.9.35
     "@types/react-dom": ^16.9.8

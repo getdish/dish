@@ -14,11 +14,11 @@ class DrawerStore extends Store {
   snapPoints = [isWeb ? 0.02 : 0.05, 0.28, 0.8]
   snapIndex = 1
   isDragging = false
-  pan = new Animated.Value(this.getSnapPointOffset())
   spring: Animated.CompositeAnimation | null = null
-  lastSnapAt = Date.now()
-  isAtTop = false
-  private updatePanValue = 0
+  toValue = 0
+  pan = new Animated.Value(this.getSnapPointOffset())
+  private lastSnapAt = Date.now()
+  private springId = 0
 
   get snapIndexName(): DrawerSnapPoint {
     return this.snapIndex === 0 ? 'top' : this.snapIndex === 2 ? 'bottom' : 'middle'
@@ -32,26 +32,17 @@ class DrawerStore extends Store {
     return this.snapHeights[2]
   }
 
-  getY() {
-    return this.currentSnapPx + this.pan['_value']
-  }
-
-  getIsAtTop() {
-    return this.getY() <= this.minY
+  get isAtTop() {
+    return this.y <= this.minY
   }
 
   get y() {
-    this.updatePanValue
-    return this.getY()
+    return this.toValue
   }
 
   _setY(y: number) {
+    this.toValue = y
     this.pan.setValue(y)
-    const next = this.getIsAtTop()
-    if (next !== this.isAtTop) {
-      console.log('update', next, this.isAtTop)
-      this.isAtTop = next
-    }
   }
 
   get currentSnapPoint() {
@@ -98,7 +89,7 @@ class DrawerStore extends Store {
     this.lastSnapAt = Date.now()
     this.isDragging = false
     if (animate) {
-      this.animateDrawerToPx(this.getSnapPointOffset(), 4, true)
+      this.animateDrawerToPx(this.getSnapPointOffset(), 2, true)
     }
   }
 
@@ -119,18 +110,27 @@ class DrawerStore extends Store {
     const distanceNormalized = Math.max(0.1, Math.min(1, distanceToTravel / 150))
     // now lets make further = slower
     const distanceSpeed = 1 / distanceNormalized
-    const speed = Math.max(0.1, Math.abs(velocity) * distanceSpeed)
+    const speed = Math.max(0.01, Math.abs(velocity) * distanceSpeed)
+    console.log('velocity', velocity, speed, toValue)
+    this.toValue = toValue
+    this.springTo(toValue, speed)
+  }
+
+  private tm
+  springTo(toValue: number, speed = 0.01) {
+    clearTimeout(this.tm)
     this.springId = Math.random()
     const curId = this.springId
     this.spring = Animated.spring(this.pan, {
       useNativeDriver: true,
-      // velocity: speed,
-      stiffness: speed * 100,
-      damping: speed * 10,
-      mass: speed * 0.77,
+      stiffness: speed * 220,
+      damping: speed * 18,
+      mass: speed * 1.8,
       toValue,
     })
-    this.toValue = toValue
+    this.tm = setTimeout(() => {
+      this.spring = null
+    }, 400)
     // may be able to avoid a lot of stuff here by just not .stop() in finishSpring unless explicitly starting again?
     this.spring.start(() => {
       if (curId == this.springId) {
@@ -139,12 +139,9 @@ class DrawerStore extends Store {
     })
   }
 
-  private springId = 0
-  private toValue = 0
   private finishSpring() {
     this.isDragging = false
     this.pan.flattenOffset()
-    this._setY(this.toValue)
     this.spring?.stop()
     this.spring = null
   }

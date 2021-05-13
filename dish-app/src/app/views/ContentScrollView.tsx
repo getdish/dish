@@ -15,6 +15,7 @@ import { isWeb } from '../../constants/constants'
 import { isTouchDevice, supportsTouchWeb } from '../../constants/platforms'
 import { getWindowHeight } from '../../helpers/getWindow'
 import { drawerStore } from '../drawerStore'
+import { getIsTouchingHandle } from '../home/HomeDrawerSmallView.native'
 
 export type ScrollLock = 'horizontal' | 'vertical' | 'drawer' | 'none'
 
@@ -67,16 +68,28 @@ export const useScrollActive = (id: string) => {
     return selector(function getContentScrollViewActive() {
       const isScrollAtTop = scrollStore.isAtTop
       const isLockedOnDrawer = scrollStore.lock === 'drawer'
-      const isSpringing = !!drawerStore.spring
+      // const isSpringing = !!drawerStore.spring
       const isDraggingDrawer = drawerStore.isDragging
       const isFullyOpen = drawerStore.isAtTop
       const isParentActive = parentStore.activeId === id
       const active =
         isParentActive &&
         (isFullyOpen || !isScrollAtTop) &&
-        !isSpringing &&
+        // !isSpringing &&
         !isDraggingDrawer &&
         !isLockedOnDrawer
+
+      // console.log({
+      //   active,
+      //   isParentActive,
+      //   isFullyOpen,
+      //   isScrollAtTop,
+      //   // isSpringing,
+      //   isDraggingDrawer,
+      //   isLockedOnDrawer,
+      //   parent: parentStore.activeId,
+      // })
+
       if (active !== getCurrent()) {
         setActive(active)
       }
@@ -158,15 +171,7 @@ export const ContentScrollView = forwardRef<ScrollView, ContentScrollViewProps>(
 
     useEffect(() => {
       if (scrollRef.current) {
-        const v = scrollRef.current
-        // const s = {
-        //   ...v,
-        //   scrollTo(y: number, x = 0, animated = false) {
-        //     console.log('proxy scroll', y, animated ? 'ANIMATED' : '')
-        //     scrollTo(scrollRef, x, y, animated)
-        //   },
-        // } as ScrollView
-        scrollViews.set(id, v) //s)
+        scrollViews.set(id, scrollRef.current)
       }
     }, [id, scrollRef.current])
 
@@ -178,8 +183,11 @@ export const ContentScrollView = forwardRef<ScrollView, ContentScrollViewProps>(
     })
 
     const isScrollingVerticalFromTop = () => {
+      console.log('should', scrollStore.lock === 'vertical' && scrollStore.isAtTop)
       return scrollStore.lock === 'vertical' && scrollStore.isAtTop
     }
+
+    // console.log('active?', id, getScrollActive())
 
     return (
       <ContentScrollContext.Provider value={id}>
@@ -188,6 +196,7 @@ export const ContentScrollView = forwardRef<ScrollView, ContentScrollViewProps>(
           {...props}
           scrollEventThrottle={14}
           onScroll={(e) => {
+            console.log('on scrol')
             const y = e.nativeEvent.contentOffset.y
             const atTop = y <= 0
             scrollCurY.set(id, y)
@@ -234,6 +243,7 @@ export const ContentScrollView = forwardRef<ScrollView, ContentScrollViewProps>(
               if (!isScrollingVerticalFromTop()) {
                 return
               }
+              console.log('handle touch move')
               const ss = state.current
               const pageY = e.nativeEvent.touches[0]?.pageY
               if (!ss.at) {
@@ -245,7 +255,7 @@ export const ContentScrollView = forwardRef<ScrollView, ContentScrollViewProps>(
               const pY = ss.at - pageY
               const y = start - pY
               if (y < drawerStore.minY) {
-                console.warn('I DISABLED THIS')
+                console.warn('I DISABLED THIS', y, drawerStore.minY)
                 drawerStore.setIsDragging(false)
                 return
               }

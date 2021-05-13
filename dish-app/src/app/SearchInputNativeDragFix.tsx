@@ -1,8 +1,11 @@
-import React, { useMemo } from 'react'
+import { series, sleep } from '@dish/async'
+import { useSelector } from '@dish/use-store'
+import React from 'react'
 import { PanResponder, StyleSheet, TouchableWithoutFeedback, View } from 'react-native'
-import { useConstant } from 'snackui'
-import { VStack, useGet } from 'snackui'
+import { VStack, useConstant, useGet } from 'snackui'
 
+import { autocompletesStore } from './AutocompletesStore'
+import { drawerStore } from './drawerStore'
 import { inputStoreLocation, inputStoreSearch } from './inputStore'
 
 export let isTouchingSearchBar = false
@@ -14,20 +17,34 @@ export const SearchInputNativeDragFix = ({ name }: { name: 'search' | 'location'
     return PanResponder.create({
       onMoveShouldSetPanResponder: (_, { dy }) => {
         isTouchingSearchBar = true
-        console.log('returning true here')
         return true
       },
       onPanResponderTerminate: () => {
         isTouchingSearchBar = false
       },
       onPanResponderReject: () => {
-        getInputStore().node?.focus()
+        getInputStore().focusNode()
         isTouchingSearchBar = false
       },
       onPanResponderRelease: (e, gestureState) => {
         isTouchingSearchBar = false
       },
     })
+  })
+
+  useSelector(() => {
+    const hasSpring = drawerStore.spring
+    const visible = autocompletesStore.visible
+    const onTarget = autocompletesStore.target === name
+    if (visible && onTarget && !hasSpring) {
+      return series([
+        () => sleep(200),
+        () => {
+          console.warn('now... focus', hasSpring, visible, onTarget)
+          getInputStore().focusNode()
+        },
+      ])
+    }
   })
 
   return (
@@ -43,7 +60,8 @@ export const SearchInputNativeDragFix = ({ name }: { name: 'search' | 'location'
         onPress={(e) => {
           e.preventDefault()
           e.stopPropagation()
-          getInputStore().node?.focus()
+          console.log('did press', drawerStore.isDragging)
+          autocompletesStore.setTarget(name)
         }}
       >
         <View style={StyleSheet.absoluteFill} {...panResponder.panHandlers} />
