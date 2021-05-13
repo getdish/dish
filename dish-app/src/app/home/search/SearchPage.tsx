@@ -3,8 +3,17 @@ import { isEqual } from '@dish/fast-compare'
 import { RestaurantSearchItem, slugify } from '@dish/graph'
 import { ArrowUp } from '@dish/react-feather'
 import { HistoryItem } from '@dish/router'
-import { reaction } from '@dish/use-store'
-import React, { Suspense, forwardRef, memo, useCallback, useEffect, useMemo, useRef } from 'react'
+import { Store, createStore, reaction, useStoreInstanceSelector } from '@dish/use-store'
+import React, {
+  Suspense,
+  forwardRef,
+  memo,
+  useCallback,
+  useEffect,
+  useLayoutEffect,
+  useMemo,
+  useRef,
+} from 'react'
 import { LayoutRectangle, ScrollView, ScrollViewProps, View } from 'react-native'
 import { DataProvider, LayoutProvider, RecyclerListView } from 'recyclerlistview'
 import {
@@ -496,6 +505,15 @@ type SearchPageScrollViewProps = ScrollViewProps & {
   onSizeChanged: (props?: LayoutRectangle) => void
 }
 
+class SearchPageChildrenStore extends Store {
+  children = null
+
+  setChildren(next: any) {
+    this.children = next
+  }
+}
+const searchPageChildrenStore = createStore(SearchPageChildrenStore)
+
 const SearchPageScrollView = forwardRef<ScrollView, SearchPageScrollViewProps>(
   ({ children, onSizeChanged, ...props }, ref) => {
     const scrollRef = useRef<ScrollView>()
@@ -527,35 +545,47 @@ const SearchPageScrollView = forwardRef<ScrollView, SearchPageScrollViewProps>(
       },
     })
 
-    return (
-      <View style={{ flex: 1 }} {...layoutProps}>
-        <ContentScrollView id="search" ref={combineRefs(ref, scrollRef) as any} {...props}>
-          <PageContentWithFooter>
-            <SearchHeader />
-            <Spacer />
-            <VStack position="relative" flex={10} minHeight={600}>
-              <Suspense fallback={null}>{children}</Suspense>
-            </VStack>
-            <Suspense fallback={null}>
-              <SearchFooter
-                numResults={searchPageStore.results.length}
-                scrollToTop={scrollToTopHandler}
-              />
-            </Suspense>
-          </PageContentWithFooter>
-        </ContentScrollView>
-      </View>
-    )
+    useLayoutEffect(() => {
+      searchPageChildrenStore.setChildren(children)
+    }, [children])
+
+    useEffect(() => {
+      return () => {
+        searchPageChildrenStore.setChildren(null)
+      }
+    }, [])
+
+    // memo is important here, keeps scroll from stopping on ios safari
+    return useMemo(() => {
+      return (
+        <View style={{ flex: 1 }} {...layoutProps}>
+          <ContentScrollView id="search" ref={combineRefs(ref, scrollRef) as any} {...props}>
+            <PageContentWithFooter>
+              <SearchHeader />
+              <Spacer />
+              <SearchContent />
+              <Suspense fallback={null}>
+                <SearchFooter scrollToTop={scrollToTopHandler} />
+              </Suspense>
+            </PageContentWithFooter>
+          </ContentScrollView>
+        </View>
+      )
+    }, [])
   }
 )
 
-const SearchFooter = ({
-  numResults,
-  scrollToTop,
-}: {
-  numResults: number
-  scrollToTop: Function
-}) => {
+const SearchContent = memo(() => {
+  const children = useStoreInstanceSelector(searchPageChildrenStore, (x) => x.children)
+  return (
+    <VStack position="relative" flex={10} minHeight={600}>
+      <Suspense fallback={null}>{children}</Suspense>
+    </VStack>
+  )
+})
+
+const SearchFooter = memo(({ scrollToTop }: { scrollToTop: Function }) => {
+  const numResults = useStoreInstanceSelector(searchPageStore, (x) => x.results.length)
   return (
     <VStack alignItems="center" justifyContent="center" minHeight={300} width="100%">
       <Button
@@ -571,7 +601,7 @@ const SearchFooter = ({
       <Paragraph opacity={0.5}>Showing {numResults} results</Paragraph>
     </VStack>
   )
-}
+})
 
 const SearchLoading = (props: StackProps) => {
   return (

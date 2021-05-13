@@ -90,6 +90,7 @@ export const useScrollActive = (id: string) => {
       // })
 
       if (active !== getCurrent()) {
+        console.log('setting', active, getCurrent())
         setActive(active)
       }
       return active
@@ -166,6 +167,7 @@ export const ContentScrollView = forwardRef<ScrollView, ContentScrollViewProps>(
     const childrenMemo = useMemo(() => {
       return children
     }, [children])
+
     const scrollRef = useRef<ScrollView | null>(null)
 
     useEffect(() => {
@@ -174,18 +176,21 @@ export const ContentScrollView = forwardRef<ScrollView, ContentScrollViewProps>(
       }
     }, [id, scrollRef.current])
 
-    const state = useRef({
-      at: 0,
-      start: 0,
-      active: false,
-      lastYs: null as number[] | null,
-    })
+    const state = useRef<{ at: number; start: number; active: boolean; lastYs: number[] | null }>()
+    if (!state.current) {
+      state.current = {
+        at: 0,
+        start: 0,
+        active: false,
+        lastYs: null as number[] | null,
+      }
+    }
 
     const isScrollingVerticalFromTop = () => {
       return scrollStore.lock === 'vertical' && scrollStore.isAtTop
     }
 
-    // console.log('active?', id, getScrollActive())
+    console.log('active?', id, getScrollActive())
 
     return (
       <ContentScrollContext.Provider value={id}>
@@ -198,8 +203,8 @@ export const ContentScrollView = forwardRef<ScrollView, ContentScrollViewProps>(
             const atTop = y <= 0
             scrollCurY.set(id, y)
             // goin up
-            if (state.current.lastYs) {
-              state.current.lastYs = null
+            if (state.current!.lastYs) {
+              state.current!.lastYs = null
             }
             const hasBeenAWhile = Date.now() - lastUpdate.current > THROTTLE_SCROLL
             if (atTop !== isScrollAtTop.get(id) || hasBeenAWhile) {
@@ -241,7 +246,7 @@ export const ContentScrollView = forwardRef<ScrollView, ContentScrollViewProps>(
                 return
               }
               console.log('handle touch move')
-              const ss = state.current
+              const ss = state.current!
               const pageY = e.nativeEvent.touches[0]?.pageY
               if (!ss.at) {
                 ss.active = true
@@ -270,7 +275,7 @@ export const ContentScrollView = forwardRef<ScrollView, ContentScrollViewProps>(
             }}
             onTouchEnd={(e) => {
               scrollStore.setLock('none')
-              const ss = state.current
+              const ss = state.current!
               if (!ss.active) return
               ss.active = false
               ss.at = 0

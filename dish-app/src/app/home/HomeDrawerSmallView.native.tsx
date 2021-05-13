@@ -69,7 +69,7 @@ export const HomeDrawerSmallView = memo((props: { children: any }) => {
       try {
         const isScrolledToTop = isScrollAtTop.get(contentParent.activeId) ?? true
         const { snapIndexName } = drawerStore
-        const scroll = getStore(ScrollStore, { id: contentParent.activeId })
+        const scrollStore = getStore(ScrollStore, { id: contentParent.activeId })
         const isScrollingUpFromTop = isScrolledToTop && snapIndexName === 'top' && dy > 6
         // prettier-ignore
         // console.log('should?', scroll.lock, { isScrolledToTop, snapIndexName, dy, dx, isScrollingUpFromTop })
@@ -82,10 +82,10 @@ export const HomeDrawerSmallView = memo((props: { children: any }) => {
           // let natural scroller handle
           return false
         }
-        if (curScrollerYMove > 0 || !scroll.isAtTop) {
+        if (curScrollerYMove > 0 || !scrollStore.isAtTop) {
           return false
         }
-        if (scroll.lock === 'horizontal' || scroll.lock === 'vertical') {
+        if (scrollStore.lock === 'horizontal' || scrollStore.lock === 'vertical') {
           return false
         }
         if (snapIndexName === 'bottom') {

@@ -241,9 +241,6 @@ export class Router<
 
   navigate(navItem: NavigateItem<RT>) {
     const item = getHistoryItem(this, navItem as any)
-    if (item.params.region?.includes('_')) {
-      debugger
-    }
     if (this.notFound) {
       this.notFound = false
     }

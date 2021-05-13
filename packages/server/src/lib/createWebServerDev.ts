@@ -1,4 +1,5 @@
 import connectHistoryApiFallback from 'connect-history-api-fallback'
+import express from 'express'
 import webpack from 'webpack'
 import middleware from 'webpack-dev-middleware'
 import hotMiddleware from 'webpack-hot-middleware'
@@ -7,7 +8,7 @@ import { ServerConfigNormal } from '../types'
 import { getWebpackConfigBuilder } from './getWebpackConfigBuilder'
 
 export function createWebServerDev(
-  app: any,
+  app: express.Application,
   { webpackConfig, rootDir, resetCache }: ServerConfigNormal
 ) {
   process.env.TARGET = 'web'
@@ -26,17 +27,19 @@ export function createWebServerDev(
   }
 
   const headers = {
-    'Access-Control-Allow-Origin': '*',
+    'Access-Control-Allow-Origin':
+      process.env.NODE_ENV === 'development' ? '*' : 'https://dishapp.com',
     'Access-Control-Allow-Methods': 'GET, POST, PUT, DELETE, PATCH, OPTIONS',
     'Access-Control-Allow-Headers': 'X-Requested-With, content-type, Authorization',
   }
-  // @ts-ignore
-  app.all((_req, res, next) => {
+
+  app.use((_req, res, next) => {
     for (const name in headers) {
       res.setHeader(name, headers[name])
     }
     next()
   })
+
   const historyFb = connectHistoryApiFallback()
   app.use(historyFb)
   app.use(

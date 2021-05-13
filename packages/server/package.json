@@ -60,7 +60,7 @@
   },
   "devDependencies": {
     "@dish/esdx": "*",
-    "@types/express": "^4.17.10",
+    "@types/express": "^4.17.11",
     "@types/jsdom": "^16.2.5",
     "connect-history-api-fallback": "^1.6.0",
     "webpack": "*",
