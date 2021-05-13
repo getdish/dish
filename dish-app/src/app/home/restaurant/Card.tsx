@@ -8,6 +8,7 @@ import {
   cardFrameHeightSm,
   cardFrameWidth,
   cardFrameWidthSm,
+  isWeb,
 } from '../../../constants/constants'
 import { ColorShades, getColorsForColor, getColorsForName } from '../../../helpers/getColorsForName'
 import { CardFrame } from '../../views/CardFrame'
@@ -111,7 +112,8 @@ export function Card({
           backgroundColor={backgroundColor || underColor || ''}
         >
           {/* behind shadow */}
-          {isBehind && (
+          {/* on native this causes laggy scrolls */}
+          {isWeb && isBehind && (
             <AbsoluteVStack
               className="ease-in-out"
               opacity={hideInfo ? 0 : 1}
@@ -165,7 +167,7 @@ export function Card({
           >
             <LinearGradient
               style={StyleSheet.absoluteFill}
-              colors={[colors.color, colors.pastelColor, `${colors.darkColor}00`]}
+              colors={[colors.color, colors.pastelColor, `${colors.pastelColor}00`]}
             />
           </AbsoluteVStack>
           <VStack

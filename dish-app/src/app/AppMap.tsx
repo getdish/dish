@@ -327,6 +327,7 @@ const AppMapBottomFade = memo(() => {
       height={media.sm ? 250 : 100}
     >
       <LinearGradient
+        pointerEvents="none"
         style={StyleSheet.absoluteFill}
         colors={[`${theme.mapBackground}00`, theme.mapBackground]}
       />

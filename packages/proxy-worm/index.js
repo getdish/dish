@@ -3,6 +3,7 @@ module.exports = proxyWorm()
 function proxyWorm() {
   return new Proxy(
     {
+      __isProxyWorm__: true,
       StyleSheet: {
         create() {},
       },

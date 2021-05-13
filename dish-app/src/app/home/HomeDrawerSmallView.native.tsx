@@ -207,7 +207,7 @@ export const HomeDrawerSmallView = memo((props: { children: any }) => {
 
   return (
     <Animated.View
-      pointerEvents="none"
+      pointerEvents="box-none"
       style={[
         styles.animatedView,
         {

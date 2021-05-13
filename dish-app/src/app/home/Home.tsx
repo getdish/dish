@@ -12,7 +12,7 @@ import {
   useTheme,
 } from 'snackui'
 
-import { searchBarHeight, zIndexDrawer } from '../../constants/constants'
+import { isWeb, searchBarHeight, zIndexDrawer } from '../../constants/constants'
 import { router } from '../../router'
 import { AppAutocompleteSearch } from '../AppAutocompleteSearch'
 import { appMenuStore } from '../AppMenuStore'
@@ -75,7 +75,6 @@ export const Home = memo(function Home() {
       <HomeContainer>
         <HomeStackView>
           {(props) => {
-            console.log('rendering', props)
             return <HomeStackViewPages {...props} />
           }}
         </HomeStackView>
@@ -116,10 +115,12 @@ export function HomeContainer(props: { children: any }) {
 
 const HomeDrawerSmall = (props: { children: any }) => {
   useEffect(() => {
+    console.log('set up reaction...')
     return reaction(
       autocompletesStore,
       (x) => x.visible,
       function autocompleteVisibleToSnapAndKeyboard(visible) {
+        console.log('reaction time', visible)
         if (visible === true) {
           if (drawerStore.snapIndex !== 0) {
             drawerStore.setSnapIndex(0)
@@ -137,7 +138,7 @@ const HomeDrawerSmall = (props: { children: any }) => {
     )
   }, [])
 
-  if (supportsTouchWeb) {
+  if (!isWeb || supportsTouchWeb) {
     return <HomeDrawerSmallViewNative {...props} />
   }
 

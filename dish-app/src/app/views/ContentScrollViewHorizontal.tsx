@@ -48,6 +48,7 @@ export const ContentScrollViewHorizontal = (props: ContentScrollViewHorizontalPr
     return (
       <ScrollView
         horizontal
+        removeClippedSubviews
         showsHorizontalScrollIndicator={false}
         ref={scrollLock.scrollRef}
         scrollEventThrottle={60}
