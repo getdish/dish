@@ -1,6 +1,7 @@
+import { isSafari } from '@dish/helpers'
 import { useStoreInstance, useStoreInstanceSelector } from '@dish/use-store'
 import loadable from '@loadable/component'
-import React, { memo, useCallback, useEffect, useMemo, useRef, useState } from 'react'
+import React, { memo, useCallback, useEffect, useMemo, useState } from 'react'
 import { Animated, StyleSheet } from 'react-native'
 // import Animated, { useAnimatedStyle, useSharedValue, withSpring } from 'react-native-reanimated'
 import {
@@ -28,17 +29,45 @@ import { useAppShouldShow } from './AppStore'
 import { drawerStore } from './drawerStore'
 import { ensureFlexText } from './home/restaurant/ensureFlexText'
 import { homeStore } from './homeStore'
-import { useIsFullyIdle } from './hooks/useIsFullyIdle'
 import { useLastValueWhen } from './hooks/useLastValueWhen'
 import { useMapSize } from './hooks/useMapSize'
 import { mapStyles } from './mapStyles'
 
+const useIsInteractive = () => {
+  if (!isWeb || isSafari) {
+    return true
+  }
+  const [val, setVal] = useState(false)
+  useEffect(() => {
+    if (!val) {
+      let setOnce = false
+      const setTrueOnce = () => {
+        if (setOnce) return
+        console.trace('did')
+        setOnce = true
+        setVal(true)
+      }
+      // prettier-ignore
+      const events = ['resize', 'mousemove', 'touchstart', 'scroll', 'click', 'focus', 'keydown']
+      // maximum 10 seconds
+      const tm = setTimeout(setTrueOnce, 15_000)
+      for (const evt of events) {
+        window.addEventListener(evt, setTrueOnce, true)
+      }
+      return () => {
+        clearTimeout(tm)
+        for (const evt of events) {
+          window.removeEventListener(evt, setTrueOnce, true)
+        }
+      }
+    }
+  }, [val])
+  return val
+}
+
 export default memo(function AppMap() {
   // lighthouse/slow browser optimization
-  const isFullyIdle = useIsFullyIdle({
-    checks: 8,
-    max: 100,
-  })
+  const isFullyIdle = useIsInteractive()
   const media = useMedia()
   const drawerHeight = useStoreInstanceSelector(drawerStore, (x) => x.heightIgnoringFullyOpen)
   const y0 = media.sm

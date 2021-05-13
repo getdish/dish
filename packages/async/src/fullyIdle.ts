@@ -11,7 +11,7 @@ export type FullyIdleProps = {
 export function fullyIdle({ min = 1, checks = 1, max = 200 }: FullyIdleProps = {}) {
   return createCancellablePromise(async (res, rej) => {
     try {
-      for (const [check] of new Array(checks).fill(null).entries()) {
+      for (const _ of new Array(checks).fill(null)) {
         await Promise.all([sleepFn(min), Promise.race([sleepFn(max), requestIdle()])])
       }
       res()

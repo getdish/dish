@@ -68,9 +68,8 @@ export const UserOnboard = graphql(
                 source={typeof dishNeon === 'number' ? dishNeon : { uri: dishNeon }}
                 style={{
                   marginTop: -20,
-                  marginBottom: -20,
-                  width: 261,
-                  height: 161,
+                  width: 783 / 2,
+                  height: 483 / 2,
                 }}
               />
 
