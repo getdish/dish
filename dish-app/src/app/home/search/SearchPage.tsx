@@ -14,7 +14,7 @@ import React, {
   useMemo,
   useRef,
 } from 'react'
-import { LayoutRectangle, ScrollView, ScrollViewProps, View } from 'react-native'
+import { FlatList, LayoutRectangle, ScrollView, ScrollViewProps, View } from 'react-native'
 import { DataProvider, LayoutProvider, RecyclerListView } from 'recyclerlistview'
 import {
   AbsoluteVStack,
@@ -34,6 +34,7 @@ import {
 import { isWeb } from '../../../constants/constants'
 import { addTagsToCache, allTags } from '../../../helpers/allTags'
 import { getTitleForState } from '../../../helpers/getTitleForState'
+import { getWindowHeight } from '../../../helpers/getWindow'
 import { getFullTagsFromRoute } from '../../../helpers/syncStateFromRoute'
 import { syncStateToRoute } from '../../../helpers/syncStateToRoute'
 import { useQueryLoud } from '../../../helpers/useQueryLoud'
@@ -450,6 +451,8 @@ const SearchResultsInfiniteScroll = memo((props: SearchProps) => {
   //   <FlatList
   //     ListHeaderComponent={SearchHeader}
   //     ListFooterComponent={SearchFooter}
+  //     removeClippedSubviews
+  //     initialNumToRender={Math.ceil(getWindowHeight() / ITEM_HEIGHT)}
   //     data={results}
   //     renderItem={({ item, index }) => (
   //       <RestaurantListItem
@@ -471,7 +474,7 @@ const SearchResultsInfiniteScroll = memo((props: SearchProps) => {
         style={listStyle}
         canChangeSize
         externalScrollView={SearchPageScrollView as any}
-        renderAheadOffset={ITEM_HEIGHT * (isWeb ? 8 : 2)}
+        renderAheadOffset={ITEM_HEIGHT * (isWeb ? 8 : 100)}
         rowRenderer={rowRenderer}
         dataProvider={dataProvider}
         layoutProvider={layoutProvider}

@@ -90,7 +90,6 @@ export const useScrollActive = (id: string) => {
       // })
 
       if (active !== getCurrent()) {
-        console.log('setting', active, getCurrent())
         setActive(active)
       }
       return active
@@ -131,10 +130,6 @@ export const ContentScrollView = forwardRef<ScrollView, ContentScrollViewProps>(
       const isAtTop = y <= 0
       isScrollAtTop.set(id, isAtTop)
       onScrollYThrottled?.(y)
-      // calls the recyclerview scroll
-      if (props.onScroll) {
-        props.onScroll(e)
-      }
       if (isAtTop) {
         if (!scrollStore.isAtTop) {
           scrollStore.setIsAtTop(true)
@@ -190,15 +185,16 @@ export const ContentScrollView = forwardRef<ScrollView, ContentScrollViewProps>(
       return scrollStore.lock === 'vertical' && scrollStore.isAtTop
     }
 
-    console.log('active?', id, getScrollActive())
-
     return (
       <ContentScrollContext.Provider value={id}>
         <ScrollView
+          removeClippedSubviews
           ref={combineRefs(scrollRef, ref)}
           {...props}
-          scrollEventThrottle={14}
+          scrollEventThrottle={15}
           onScroll={(e) => {
+            // calls the recyclerview scroll
+            props.onScroll?.(e)
             const y = e.nativeEvent.contentOffset.y
             const atTop = y <= 0
             scrollCurY.set(id, y)
@@ -227,7 +223,7 @@ export const ContentScrollView = forwardRef<ScrollView, ContentScrollViewProps>(
             },
           })}
           // for native...
-          bounces={false}
+          bounces={isWeb ? true : false}
           // DONT USE THIS ON WEB IT CAUSES REFLOWS see classname above
           // oh well we have to deal with reapints, just try and time them
           scrollEnabled={getScrollActive()}

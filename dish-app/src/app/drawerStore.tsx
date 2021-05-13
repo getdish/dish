@@ -1,3 +1,4 @@
+import { isSafari } from '@dish/helpers'
 import { Store, createStore } from '@dish/use-store'
 import { Animated } from 'react-native'
 
@@ -85,6 +86,7 @@ class DrawerStore extends Store {
   }
 
   setSnapIndex(point: number, animate = true) {
+    console.log('set snap index', point)
     this.snapIndex = point
     this.lastSnapAt = Date.now()
     this.isDragging = false
@@ -128,9 +130,15 @@ class DrawerStore extends Store {
       mass: speed * 1.8,
       toValue,
     })
-    this.tm = setTimeout(() => {
-      this.spring = null
-    }, 400)
+    // this controls when the input will focus after drawer animation
+    // on safari we need to be more careful, it will drop frames and the cursor shows in a weird place
+    // but on the other platforms it doesnt seem to have much effect
+    this.tm = setTimeout(
+      () => {
+        this.spring = null
+      },
+      isSafari ? 380 : 0
+    )
     // may be able to avoid a lot of stuff here by just not .stop() in finishSpring unless explicitly starting again?
     this.spring.start(() => {
       if (curId == this.springId) {

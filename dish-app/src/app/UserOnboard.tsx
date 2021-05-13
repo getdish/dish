@@ -65,7 +65,7 @@ export const UserOnboard = graphql(
           {!hideLogo && (
             <VStack spacing alignItems="center">
               <Image
-                source={{ uri: dishNeon }}
+                source={typeof dishNeon === 'number' ? dishNeon : { uri: dishNeon }}
                 style={{
                   marginTop: -20,
                   marginBottom: -20,

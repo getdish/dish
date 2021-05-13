@@ -1,5 +1,5 @@
 import React, { memo } from 'react'
-import { HStack, Text, VStack, useMedia, useTheme } from 'snackui'
+import { HStack, Text, VStack, isStringChild, useMedia, useTheme } from 'snackui'
 
 export const PageTitle = memo(
   ({
@@ -54,7 +54,7 @@ export const PageTitle = memo(
         {before}
         <HStack spacing="xxl" flex={1} alignItems="center" justifyContent="center">
           {!noDivider && <VStack backgroundColor={theme.borderColor} height={1} flex={1} />}
-          {typeof contents === 'string' ? (
+          {isStringChild(contents) ? (
             <Text
               textAlign="center"
               letterSpacing={-0.25}

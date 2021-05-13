@@ -26,7 +26,7 @@ export const AppIntroLogin = memo(() => {
       >
         {themeName == 'dark' ? (
           <Image
-            source={{ uri: dishLogo }}
+            source={typeof dishLogo === 'number' ? dishLogo : { uri: dishLogo }}
             style={{
               marginBottom: -30,
               width: 892 * 0.25,

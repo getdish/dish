@@ -72,7 +72,7 @@ export function focusSearchInput() {
 }
 
 export function blurSearchInput() {
-  if (document.activeElement === searchBar) {
+  if (typeof document === 'undefined' || document.activeElement === searchBar) {
     searchBar?.blur()
   }
 }

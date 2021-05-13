@@ -1,9 +1,9 @@
 import { series, sleep } from '@dish/async'
 import { DISH_API_ENDPOINT, TILES_HOST } from '@dish/graph'
-import { useStoreInstance } from '@dish/use-store'
+import { useStoreInstance, useStoreInstanceSelector } from '@dish/use-store'
 import MapboxGL from '@react-native-mapbox-gl/maps'
 import React, { useEffect, useMemo, useRef, useState } from 'react'
-import { Animated, Dimensions, StyleSheet } from 'react-native'
+import { Animated, Dimensions, StyleSheet, useWindowDimensions } from 'react-native'
 import { VStack, useThemeName } from 'snackui'
 import { useTheme } from 'snackui'
 import { useDebounce } from 'snackui'
@@ -11,7 +11,7 @@ import { useDebounce } from 'snackui'
 import { green } from '../constants/colors'
 import { MAPBOX_ACCESS_TOKEN } from '../constants/constants'
 import { hasMovedAtLeast } from '../helpers/mapHelpers'
-import { drawerStore as drawerStoreInstance } from './drawerStore'
+import { drawerStore } from './drawerStore'
 import { setMap } from './getMap'
 import { MapProps } from './MapProps'
 import { tiles } from './tiles'
@@ -31,8 +31,8 @@ export const MapView = ({
   style,
   showUserLocation,
 }: MapProps) => {
-  const { width, height } = Dimensions.get('screen')
-  const drawerStore = useStoreInstance(drawerStoreInstance)
+  const height = useWindowDimensions().height
+  // const isDrawerAtTop = useStoreInstanceSelector(drawerStore, (x) => x.snapIndexName === 'top')
   const drawerHeight = drawerStore.snapHeights[2]
   const [isLoaded, setIsLoaded] = useState(0)
   const paddingVertical = isLoaded ? drawerHeight / 2 : 0
@@ -64,7 +64,7 @@ export const MapView = ({
 
   return (
     <MapboxGL.MapView
-      style={styles.map}
+      style={[styles.map /* isDrawerAtTop ? { opacity: 0 } : null */]}
       ref={mapRef}
       styleURL={style}
       onDidFinishLoadingMap={() => {
@@ -153,30 +153,31 @@ export const MapView = ({
           const sourceId = `${name}`.replace('.', '')
           const labelUrl = labelSource ? `${TILES_HOST}/${labelSource}.json` : ''
           return (
-            <MapboxGL.VectorSource key={sourceId} url={url} id={sourceId}>
-              <MapboxGL.FillLayer
-                id={`${sourceId}fill`}
-                sourceLayerID={sourceId}
-                sourceID={sourceId}
-                minZoomLevel={0 ?? minZoom}
-                maxZoomLevel={22 ?? maxZoom}
-                style={{
-                  fillColor: '#000000',
-                  //  [
-                  //   'case',
-                  //   ['==', ['feature-state', 'active'], true],
-                  //   activeColor,
-                  //   ['==', ['feature-state', 'hover'], true],
-                  //   hoverColor,
-                  //   ['==', ['feature-state', 'active'], false],
-                  //   color,
-                  //   'green',
-                  // ],
-                  // fillAntialias: true,
-                  // fillOpacity: 1,
-                }}
-              />
-              {/* {lineColor && (
+            <>
+              <MapboxGL.VectorSource key={sourceId} url={url} id={sourceId}>
+                <MapboxGL.FillLayer
+                  id={`${sourceId}fill`}
+                  sourceLayerID={sourceId}
+                  sourceID={sourceId}
+                  minZoomLevel={0 ?? minZoom}
+                  maxZoomLevel={22 ?? maxZoom}
+                  style={{
+                    fillColor: '#000000',
+                    //  [
+                    //   'case',
+                    //   ['==', ['feature-state', 'active'], true],
+                    //   activeColor,
+                    //   ['==', ['feature-state', 'hover'], true],
+                    //   hoverColor,
+                    //   ['==', ['feature-state', 'active'], false],
+                    //   color,
+                    //   'green',
+                    // ],
+                    // fillAntialias: true,
+                    // fillOpacity: 1,
+                  }}
+                />
+                {/* {lineColor && (
                 <MapboxGL.LineLayer
                   id={`${name}line`}
                   // sourceLayerID={sourceId}
@@ -209,6 +210,7 @@ export const MapView = ({
                   }}
                 />
               )} */}
+              </MapboxGL.VectorSource>
               {labelSource && (
                 <MapboxGL.VectorSource url={labelUrl} id={`${name}-labels`}>
                   <MapboxGL.SymbolLayer
@@ -253,7 +255,7 @@ export const MapView = ({
                   />
                 </MapboxGL.VectorSource>
               )}
-            </MapboxGL.VectorSource>
+            </>
           )
         }
       )}

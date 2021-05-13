@@ -14,6 +14,7 @@ export type SlantedTitleProps = Omit<BoxProps, 'color'> &
 
 export const SlantedTitle = ({ size, sizeLineHeight, ...props }: SlantedTitleProps) => {
   const [{ children, ...rest }, textStyle] = useTextProps(props as any, true)
+
   return (
     <SlantedBox alignSelf="flex-start" {...(rest as any)}>
       {isStringChild(children) ? (
