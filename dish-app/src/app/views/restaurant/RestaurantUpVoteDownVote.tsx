@@ -179,7 +179,7 @@ const RatingWithVotes = memo(
         height={sizePx}
         className="hello-world"
       >
-        <AbsoluteVStack top={-18}>
+        <AbsoluteVStack top={-24}>
           {subtle ? (
             upvote
           ) : (
@@ -205,7 +205,7 @@ const RatingWithVotes = memo(
             </TextSuperScript>
           )}
         </HStack>
-        <AbsoluteVStack bottom={-18}>
+        <AbsoluteVStack bottom={-24}>
           {subtle ? (
             downvote
           ) : (

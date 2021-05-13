@@ -19,7 +19,13 @@ export const isNative = process.env.TARGET === 'native'
 
 export const LOCAL_HOST = process.env.LOCAL_HOST ?? (hostname || `localhost`)
 const PROD_ORIGIN = 'https://dishapp.com'
-const ORIGIN = isProd ? PROD_ORIGIN : isStaging ? PROD_ORIGIN : `http://${LOCAL_HOST}:4444`
+const ORIGIN = isProd
+  ? PROD_ORIGIN
+  : isStaging
+  ? PROD_ORIGIN
+  : LOCAL_HOST === 'localhost'
+  ? `http://${LOCAL_HOST}:4444`
+  : `http://${LOCAL_HOST}`
 const ORIGIN_MINUS_PORT = ORIGIN.replace(/:[0-9]+/, '')
 export const DISH_API_ENDPOINT = `${ORIGIN}/api`
 export const SEARCH_DOMAIN = `${DISH_API_ENDPOINT}/search`

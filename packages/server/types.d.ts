@@ -152,8 +152,9 @@ declare module "@dish/server" {
 }
 
 declare module "@dish/server" {
+    import express from "express";
     import webpack from "webpack";
-    export function createWebServerDev(app: any, { webpackConfig, rootDir, resetCache }: ServerConfigNormal): webpack.Compiler;
+    export function createWebServerDev(app: express.Application, { webpackConfig, rootDir, resetCache }: ServerConfigNormal): webpack.Compiler;
 }
 
 declare module "@dish/server" {
