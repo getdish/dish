@@ -51,7 +51,7 @@ const internal: MapInternalState = {
   preventMoveEnd: false,
 }
 
-export const MapView = (props: MapProps) => {
+export default function Map(props: MapProps) {
   if (isM1Sim) {
     // bug: https://github.com/mapbox/mapbox-gl-js/issues/10260
     return null
@@ -204,7 +204,7 @@ export const MapView = (props: MapProps) => {
         () => {
           internal.preventMoveEnd = true
         },
-        () => fullyIdle({ max: 200 }),
+        () => fullyIdle({ checks: 3, max: 80 }),
         () => {
           map!.fitBounds(next, {
             duration,

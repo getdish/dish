@@ -17,6 +17,8 @@ import SpeedMeasurePlugin from 'speed-measure-webpack-plugin'
 import Webpack from 'webpack'
 
 const CssMinimizerPlugin = require('css-minimizer-webpack-plugin')
+const PreloadWebpackPlugin = require('@vue/preload-webpack-plugin')
+const HTMLInlineCSSWebpackPlugin = require('html-inline-css-webpack-plugin').default
 
 // import WebpackPwaManifest from 'webpack-pwa-manifest'
 
@@ -161,7 +163,7 @@ export function createWebpackConfig({
       optimization: {
         moduleIds: isProduction ? 'deterministic' : 'natural',
         minimize,
-        concatenateModules: isProduction,
+        concatenateModules: process.env.ANALYZE_BUNDLE ? false : isProduction,
         usedExports: isProduction,
         removeEmptyChunks: isProduction,
         innerGraph: isProduction,
@@ -174,8 +176,8 @@ export function createWebpackConfig({
         splitChunks:
           isProduction && !noMinify
             ? {
-                maxAsyncRequests: 8,
-                maxInitialRequests: 3,
+                maxAsyncRequests: 20,
+                maxInitialRequests: 5,
                 automaticNameDelimiter: '~',
                 cacheGroups: {
                   default: false,
@@ -320,6 +322,20 @@ export function createWebpackConfig({
         new Webpack.DefinePlugin(defines),
 
         !!htmlOptions && new HTMLWebpackPlugin(htmlOptions),
+
+        !!htmlOptions &&
+          isProduction &&
+          new PreloadWebpackPlugin({
+            rel: 'preload',
+            include: 'initial',
+            as(entry) {
+              if (/\.css$/.test(entry)) return 'style'
+              if (/\.png$/.test(entry)) return 'image'
+              return false
+            },
+          }),
+
+        isProduction && new HTMLInlineCSSWebpackPlugin(),
 
         // !!pwaOptions && new WebpackPwaManifest(pwaOptions),
 

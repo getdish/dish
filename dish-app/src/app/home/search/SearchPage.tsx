@@ -14,7 +14,7 @@ import React, {
   useMemo,
   useRef,
 } from 'react'
-import { FlatList, LayoutRectangle, ScrollView, ScrollViewProps, View } from 'react-native'
+import { LayoutRectangle, ScrollView, ScrollViewProps, View } from 'react-native'
 import { DataProvider, LayoutProvider, RecyclerListView } from 'recyclerlistview'
 import {
   AbsoluteVStack,
@@ -34,7 +34,6 @@ import {
 import { isWeb } from '../../../constants/constants'
 import { addTagsToCache, allTags } from '../../../helpers/allTags'
 import { getTitleForState } from '../../../helpers/getTitleForState'
-import { getWindowHeight } from '../../../helpers/getWindow'
 import { getFullTagsFromRoute } from '../../../helpers/syncStateFromRoute'
 import { syncStateToRoute } from '../../../helpers/syncStateToRoute'
 import { useQueryLoud } from '../../../helpers/useQueryLoud'

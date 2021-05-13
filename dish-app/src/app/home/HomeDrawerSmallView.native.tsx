@@ -11,7 +11,7 @@ import {
 } from 'react-native'
 import { VStack } from 'snackui'
 
-import { pageWidthMax, searchBarHeight, zIndexDrawer } from '../../constants/constants'
+import { isWeb, pageWidthMax, searchBarHeight, zIndexDrawer } from '../../constants/constants'
 import { getWindowHeight } from '../../helpers/getWindow'
 import { AppAutocompleteLocation } from '../AppAutocompleteLocation'
 import { AppAutocompleteSearch } from '../AppAutocompleteSearch'
@@ -207,7 +207,7 @@ export const HomeDrawerSmallView = memo((props: { children: any }) => {
 
   return (
     <Animated.View
-      pointerEvents="box-none"
+      pointerEvents={isWeb ? 'none' : 'box-none'}
       style={[
         styles.animatedView,
         {

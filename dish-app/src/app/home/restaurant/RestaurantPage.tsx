@@ -106,7 +106,7 @@ const RestaurantPage = memo(
       // only scroll if not scrolled already
       if (scrollY.current !== 0) return
       return series([
-        () => fullyIdle({ min: 500 }),
+        () => fullyIdle({ checks: 3, min: 50 }),
         () => {
           return new Promise((res) => {
             view.measure((_x, _y, _w, _h, _pX, pY) => {

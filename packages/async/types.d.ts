@@ -17,13 +17,12 @@ declare module "@dish/async" {
 }
 
 declare module "@dish/async" {
-    export function fullyIdle({ min, max, }?: {
+    export type FullyIdleProps = {
         min?: number;
         max?: number;
-    }): Promise<[
-        void,
-        void
-    ]>;
+        checks?: number;
+    };
+    export function fullyIdle({ min, checks, max }?: FullyIdleProps): import("cancellablePromise").CancellablePromise<Promise<void>>;
 }
 
 declare module "@dish/async" {

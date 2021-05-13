@@ -1,7 +1,6 @@
-import loadable from '@loadable/component'
 import { VStack } from 'snackui'
 
-import { isSSR, isWeb } from '../../constants/constants'
+import { SignInAppleButtonContents } from './SignInAppleButtonContents'
 
 export const SignInAppleButton = () => {
   return (
@@ -17,10 +16,7 @@ export const SignInAppleButton = () => {
         scale: 0.8,
       }}
     >
-      <SignInAppleButtonInner />
+      <SignInAppleButtonContents />
     </VStack>
   )
 }
-
-const SignInAppleButtonInner =
-  isSSR || !isWeb ? () => null : loadable(() => import('./SignInAppleButtonContents'))

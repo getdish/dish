@@ -1,16 +1,5 @@
-import { fullyIdle, series } from '@dish/async'
-import { useEffect, useState } from 'react'
+import { useIsFullyIdle } from './hooks/useIsFullyIdle'
 
-export const usePageFinishedLoading = (max?: number) => {
-  const [done, setDone] = useState(false)
-
-  useEffect(() => {
-    return series([
-      //
-      () => fullyIdle({ max: max ?? 800 }),
-      () => setDone(true),
-    ])
-  }, [])
-
-  return done
+export const usePageFinishedLoading = () => {
+  return useIsFullyIdle({ checks: 4, max: 100 })
 }

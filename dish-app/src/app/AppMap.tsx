@@ -1,7 +1,8 @@
 import { useStoreInstance, useStoreInstanceSelector } from '@dish/use-store'
-import React, { memo, useCallback, useEffect, useMemo } from 'react'
-import { StyleSheet } from 'react-native'
-import Animated, { useAnimatedStyle, useSharedValue, withSpring } from 'react-native-reanimated'
+import loadable from '@loadable/component'
+import React, { memo, useCallback, useEffect, useMemo, useRef, useState } from 'react'
+import { Animated, StyleSheet } from 'react-native'
+// import Animated, { useAnimatedStyle, useSharedValue, withSpring } from 'react-native-reanimated'
 import {
   AbsoluteVStack,
   HStack,
@@ -27,12 +28,17 @@ import { useAppShouldShow } from './AppStore'
 import { drawerStore } from './drawerStore'
 import { ensureFlexText } from './home/restaurant/ensureFlexText'
 import { homeStore } from './homeStore'
+import { useIsFullyIdle } from './hooks/useIsFullyIdle'
 import { useLastValueWhen } from './hooks/useLastValueWhen'
 import { useMapSize } from './hooks/useMapSize'
-import { MapView } from './Map'
 import { mapStyles } from './mapStyles'
 
 export default memo(function AppMap() {
+  // lighthouse/slow browser optimization
+  const isFullyIdle = useIsFullyIdle({
+    checks: 8,
+    max: 100,
+  })
   const media = useMedia()
   const drawerHeight = useStoreInstanceSelector(drawerStore, (x) => x.heightIgnoringFullyOpen)
   const y0 = media.sm
@@ -43,23 +49,36 @@ export default memo(function AppMap() {
     : 0
 
   const y = useDebounceValue(y0, 150)
-  const offset = useSharedValue(y)
-  const animatedStyles = useAnimatedStyle(() => {
-    return {
-      transform: [{ translateY: offset.value }],
-    }
-  }, [])
+  const [translateY] = useState(() => new Animated.Value(y))
+  // const offset = useSharedValue(y)
+  // const animatedStyles = useAnimatedStyle(() => {
+  //   return {
+  //     transform: [{ translateY: offset.value }],
+  //   }
+  // }, [])
 
   useEffect(() => {
-    offset.value = withSpring(y, {
-      damping: 15,
-    })
+    Animated.spring(translateY, {
+      useNativeDriver: true,
+      toValue: y,
+    }).start()
   }, [y])
+
+  if (!isFullyIdle) {
+    return null
+  }
 
   return (
     <>
       {media.sm && <AppMapControls />}
-      <Animated.View style={[StyleSheet.absoluteFill, animatedStyles]}>
+      <Animated.View
+        style={[
+          StyleSheet.absoluteFill,
+          {
+            transform: [{ translateY }],
+          },
+        ]}
+      >
         <AppMapContents />
       </Animated.View>
     </>
@@ -291,7 +310,7 @@ const AppMapContents = memo(function AppMapContents() {
           </>
         )}
         <AppMapBottomFade />
-        <MapView
+        <Map
           center={center}
           span={span}
           style={mapStyles[themeName]}
@@ -334,3 +353,8 @@ const AppMapBottomFade = memo(() => {
     </AbsoluteVStack>
   )
 })
+
+const Map =
+  process.env.TARGET === 'native' || process.env.TARGET === 'ssr'
+    ? require('./Map').default
+    : loadable(() => import('./Map'))
