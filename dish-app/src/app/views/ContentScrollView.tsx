@@ -241,7 +241,6 @@ export const ContentScrollView = forwardRef<ScrollView, ContentScrollViewProps>(
               if (!isScrollingVerticalFromTop()) {
                 return
               }
-              console.log('handle touch move')
               const ss = state.current!
               const pageY = e.nativeEvent.touches[0]?.pageY
               if (!ss.at) {

@@ -1,10 +1,10 @@
-import { Scalars, review_constraint } from '../graphql'
+import { Scalars } from '../graphql'
 import { createQueryHelpersFor } from '../helpers/queryHelpers'
 import { Review } from '../types'
 
 export type uuid = Scalars['uuid']
 
-const QueryHelpers = createQueryHelpersFor<Review>('review', review_constraint.review_pkey)
+const QueryHelpers = createQueryHelpersFor<Review>('review')
 export const reviewInsert = QueryHelpers.insert
 export const reviewUpsert = QueryHelpers.upsert
 export const reviewUpdate = QueryHelpers.update
