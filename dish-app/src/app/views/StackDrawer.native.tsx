@@ -1,55 +1,45 @@
-import { PanGestureHandler } from 'react-native-gesture-handler'
-import Animated, {
-  useAnimatedGestureHandler,
-  useAnimatedStyle,
-  useSharedValue,
-  withSpring,
-} from 'react-native-reanimated'
+import { useEffect, useRef, useState } from 'react'
+import { Animated, PanResponder, StyleSheet } from 'react-native'
 
-import { StackDrawer as StackDrawerContents, StackDrawerProps } from './StackDrawerContents'
+import { StackDrawer as StackDrawerContents, StackDrawerProps } from './StackDrawer'
 
 export function StackDrawer(props: StackDrawerProps) {
-  const x = useSharedValue(0)
-  const gestureHandler = useAnimatedGestureHandler({
-    onStart: (_, ctx) => {
-      // @ts-expect-error
-      ctx.startX = x.value
-    },
-    onActive: (event, ctx) => {
-      // @ts-expect-error
-      x.value = ctx.startX + event.translationX
-    },
-    onEnd: (_) => {
-      x.value = withSpring(0)
-    },
-  })
+  const x = 0
+  const [pan] = useState(() => new Animated.Value(x))
 
-  const animatedStyle = useAnimatedStyle(() => {
-    return {
-      transform: [
-        {
-          translateX: x.value,
-        },
-      ],
-    }
-  })
+  const panResponder = useRef(
+    PanResponder.create({
+      onMoveShouldSetPanResponder: () => true,
+      onPanResponderGrant: () => {
+        pan.setOffset(pan['_value'])
+      },
+      onPanResponderMove: Animated.event([null, { dx: pan }]),
+      onPanResponderRelease: () => {
+        pan.flattenOffset()
+      },
+    })
+  ).current
+
+  console.log('ok')
+
+  // useEffect(() => {
+  //   Animated.spring(translateY, {
+  //     useNativeDriver: true,
+  //     toValue: x,
+  //   }).start()
+  // }, [x])
 
   return (
     <>
-      <PanGestureHandler onGestureEvent={gestureHandler}>
-        <Animated.View
-          style={{
-            position: 'absolute',
-            width: 40,
-            top: 0,
-            left: 0,
-            bottom: 0,
-            zIndex: 1000,
-            // backgroundColor: 'red',
-          }}
-        />
-      </PanGestureHandler>
-      <Animated.View style={[{ flex: 1 }, animatedStyle]}>
+      <Animated.View
+        {...panResponder.panHandlers}
+        style={[
+          StyleSheet.absoluteFill,
+          {
+            transform: [{ translateX: pan }],
+          },
+        ]}
+      >
         <StackDrawerContents {...props} />
       </Animated.View>
     </>
