@@ -1,6 +1,7 @@
 import {
   DeepPartial,
   Review,
+  client,
   globalTagId,
   mutate,
   order_by,
@@ -14,6 +15,7 @@ import {
   setCache,
   useRefetch,
 } from '@dish/graph'
+import { useEffect, useState } from 'react'
 import { Toast } from 'snackui'
 
 import { useUserStore, userStore } from '../userStore'
@@ -152,7 +154,7 @@ export const useUserReviewsQuery = (where: review_bool_exp) => {
           ...review,
           user_id: user.id,
         }
-        const response = reviewUpsert([next])
+        const response = reviewUpsert([next], review_constraint.review_pkey)
         // const response = await mutate((mutation) => {
         //   return mutation.insert_review({
         //     objects: [next],
@@ -186,11 +188,19 @@ export const useUserFavoriteQuery = (where: review_bool_exp) => {
       x.restaurant_id === where.restaurant_id?._eq ||
       x.list_id === where.list_id?._eq
   )
-  const favorited = review?.favorited
+  // until gqless is more reliable...
+  const [state, setState] = useState(false)
+  const favorited = review?.favorited ?? false
+  useEffect(() => {
+    setState(favorited)
+  }, [favorited])
   const totalQuery = query.review_aggregate({
     where: {
       type: {
         _eq: 'favorite',
+      },
+      favorited: {
+        _eq: true,
       },
       user_id: {
         _eq: userId,
@@ -200,9 +210,9 @@ export const useUserFavoriteQuery = (where: review_bool_exp) => {
   })
   const total = totalQuery.aggregate?.count() ?? 0
   return {
-    favorited,
+    favorited: state,
     reviewsQuery,
-    total,
+    total: total + (state ? 1 : 0),
     toggle: async () => {
       const next = {
         id: review?.id,
@@ -216,11 +226,13 @@ export const useUserFavoriteQuery = (where: review_bool_exp) => {
         }),
         favorited: !favorited,
       }
-      console.log('what is', review?.id, next)
+      setState(next.favorited)
+      console.log('toggle me........', next.favorited)
+      // fixes slow speed bug
+      client.cache = {}
       await upsert(next)
-      setCache(reviewsQuery!, null)
-      refetch(reviewsQuery)
-      refetch(totalQuery)
+      // refetch(reviewsQuery)
+      // refetch(totalQuery)
     },
   }
 }
