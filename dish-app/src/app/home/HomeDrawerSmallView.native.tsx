@@ -74,6 +74,10 @@ export const HomeDrawerSmallView = memo((props: { children: any }) => {
         // prettier-ignore
         // console.log('should?', scroll.lock, { isScrolledToTop, snapIndexName, dy, dx, isScrollingUpFromTop })
         if (isScrollingUpFromTop) {
+          // native fixes scroll up then drag
+          if (scrollStore.lock === 'vertical') {
+            return false
+          }
           // this is handled in ContentScrollView onTouchMove
           return true
         }

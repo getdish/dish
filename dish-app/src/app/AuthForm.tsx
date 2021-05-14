@@ -1,5 +1,6 @@
+import { getStore } from '@dish/use-store'
 import { capitalize } from 'lodash'
-import React, { Suspense, memo, useEffect, useRef, useState } from 'react'
+import React, { Suspense, memo, useContext, useEffect, useRef, useState } from 'react'
 import { Controller, FieldError, RegisterOptions, useForm } from 'react-hook-form'
 import { useTheme } from 'snackui'
 import {
@@ -19,7 +20,9 @@ import {
 import { isWeb } from '../constants/constants'
 import { useQueryLoud } from '../helpers/useQueryLoud'
 import { router, useRouterCurPage } from '../router'
+import { drawerStore } from './drawerStore'
 import { useUserStore, userStore } from './userStore'
+import { ContentScrollContext, ScrollStore } from './views/ContentScrollView'
 import { Link } from './views/Link'
 import { SignInAppleButton } from './views/SignInAppleButton'
 import { SmallTitle } from './views/SmallTitle'
@@ -341,6 +344,7 @@ const ValidatedInput = ({
   errors?: FieldError | null
 }) => {
   const theme = useTheme()
+  const scrollId = useContext(ContentScrollContext)
   return (
     <>
       <Controller
@@ -352,6 +356,15 @@ const ValidatedInput = ({
           return (
             <Input
               color={isWeb ? 'var(--color)' : '#777'}
+              onFocus={() => {
+                if (drawerStore.snapIndexName !== 'top') {
+                  drawerStore.setSnapIndex(0)
+                }
+                const scrollStore = getStore(ScrollStore, { id: scrollId })
+                if (scrollStore) {
+                  scrollStore.scrollTo({ y: 10000000 })
+                }
+              }}
               {...(!isWeb && {
                 placeholderTextColor: theme.colorTertiary,
               })}

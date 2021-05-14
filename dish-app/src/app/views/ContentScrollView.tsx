@@ -28,6 +28,7 @@ export class ScrollStore extends Store<{ id: string }> {
   isAtTop = true
   lastTouchEnd = Date.now()
   lastTouchStart = Date.now()
+  scrollView: ScrollView | null = null
 
   setLock(val: ScrollLock) {
     this.lock = val
@@ -38,6 +39,10 @@ export class ScrollStore extends Store<{ id: string }> {
 
   setIsAtTop(val: boolean) {
     this.isAtTop = val
+  }
+
+  scrollTo(val: { x?: number; y?: number; animated?: boolean }) {
+    this.scrollView?.scrollTo(val)
   }
 }
 
@@ -168,6 +173,7 @@ export const ContentScrollView = forwardRef<ScrollView, ContentScrollViewProps>(
     useEffect(() => {
       if (scrollRef.current) {
         scrollViews.set(id, scrollRef.current)
+        scrollStore.scrollView = scrollRef.current
       }
     }, [id, scrollRef.current])
 
@@ -238,6 +244,7 @@ export const ContentScrollView = forwardRef<ScrollView, ContentScrollViewProps>(
               if (e.nativeEvent.touches.length !== 1) {
                 return
               }
+              console.log('>>', scrollStore.lock, scrollStore.isAtTop)
               if (!isScrollingVerticalFromTop()) {
                 return
               }

@@ -70,6 +70,12 @@ export default memo(function SearchPage(props: SearchProps) {
     router.curPage.name !== 'search'
   )
 
+  useEffect(() => {
+    return () => {
+      searchPageStore.resetResults()
+    }
+  }, [])
+
   return (
     <>
       <PageTitleTag>{title}</PageTitleTag>
