@@ -79,7 +79,12 @@ export default route(async (req, res) => {
 
         // avoid cache
         if (isLoggedIn) {
-          if (name == 'review' || name == 'user') {
+          if (
+            name == 'review' ||
+            name == 'user' ||
+            name === 'list' ||
+            name.includes('_aggregate')
+          ) {
             console.log('skip', name)
             continue
           }
@@ -89,6 +94,7 @@ export default route(async (req, res) => {
         const cached = await redisGet(key)
         if (cached) {
           vals.set(selection, cached)
+          console.log('cache hit', name)
           data[alias] = JSON.parse(cached)
         } else {
           // console.log('cache miss', alias, name, key)

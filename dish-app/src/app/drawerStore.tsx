@@ -126,8 +126,8 @@ class DrawerStore extends Store {
     this.spring = Animated.spring(this.pan, {
       useNativeDriver: true,
       stiffness: speed * 220,
-      damping: speed * 18,
-      mass: speed * 1.8,
+      damping: speed * 19.5,
+      mass: speed * 1.85,
       toValue,
     })
     // this controls when the input will focus after drawer animation

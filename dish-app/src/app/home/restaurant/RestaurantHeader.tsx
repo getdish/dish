@@ -23,6 +23,7 @@ import { useContentScrollHorizontalFitter } from '../../views/ContentScrollViewH
 import { ContentScrollViewHorizontalFitted } from '../../views/ContentScrollViewHorizontalFitted'
 import { Link } from '../../views/Link'
 import { LogoCircle } from '../../views/Logo'
+import { PaneControlButtonsLeft } from '../../views/PaneControlButtons'
 import { RestaurantOverview } from '../../views/restaurant/RestaurantOverview'
 import { RestaurantTagsRow } from '../../views/restaurant/RestaurantTagsRow'
 import { SmallButton } from '../../views/SmallButton'
@@ -79,17 +80,14 @@ const RestaurantHeaderContent = memo(
 
       const content = (
         <VStack>
-          <HStack position="absolute" top={5} left={5} zIndex={100}>
+          <PaneControlButtonsLeft>
             <Suspense fallback={null}>
               <RestaurantAddToListButton restaurantSlug={restaurantSlug} />
             </Suspense>
-
-            <Spacer size="sm" />
-
             <Suspense fallback={null}>
               <RestaurantFavoriteStar size="lg" restaurantId={restaurantId} />
             </Suspense>
-          </HStack>
+          </PaneControlButtonsLeft>
 
           <AbsoluteVStack zIndex={0} pointerEvents="auto">
             <RestaurantPhotosRow

@@ -12,6 +12,7 @@ import { getTagSlug } from '../../../helpers/getTagSlug'
 import { HomeActiveTagsRecord } from '../../../types/homeTypes'
 import { CloseButton } from '../../views/CloseButton'
 import { FilterButton } from '../../views/FilterButton'
+import { PaneControlButtons } from '../../views/PaneControlButtons'
 import { SlantedTitle } from '../../views/SlantedTitle'
 import { SmallButton } from '../../views/SmallButton'
 
@@ -69,10 +70,10 @@ const HomePageFilterBarSmall = ({ activeTags }: FilterBarProps) => {
             maxHeight={300}
             visible
           >
-            <SafeAreaView style={{ flex: 1, position: 'relative' }}>
-              <VStack alignSelf="flex-end" padding={20} marginVertical={-20}>
+            <SafeAreaView style={{ flex: 1, width: '100%', position: 'relative' }}>
+              <PaneControlButtons>
                 <CloseButton onPress={() => setShow(false)} />
-              </VStack>
+              </PaneControlButtons>
 
               <SlantedTitle alignSelf="center">Filters</SlantedTitle>
               <VStack alignItems="center" justifyContent="center" flex={1} spacing="sm">

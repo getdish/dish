@@ -84,6 +84,9 @@ export const AuthForm = memo(
         <InteractiveContainer alignSelf="center">
           <Button
             borderRadius={0}
+            textProps={{
+              fontWeight: formPage == 'login' ? '700' : '500',
+            }}
             active={formPage == 'login'}
             onPress={() => setFormPage('login')}
           >
@@ -91,6 +94,9 @@ export const AuthForm = memo(
           </Button>
           <Button
             borderRadius={0}
+            textProps={{
+              fontWeight: formPage == 'signup' ? '700' : '500',
+            }}
             active={formPage == 'signup'}
             onPress={() => setFormPage('signup')}
           >
@@ -152,7 +158,7 @@ const PasswordReset = ({ autoFocus }: AuthFormProps) => {
         control={control}
         errors={errors.confirmation}
         secureTextEntry
-        name="confirmation"
+        name="email"
         placeholder="Confirmation"
         onChangeText={onChange('confirmation')}
         rules={{
@@ -253,6 +259,7 @@ const LoginForm = ({ autoFocus, setFormPage }: AuthFormProps) => {
         rules={{
           required: true,
         }}
+        onSubmitEditing={onSubmit}
       />
     </SubmittableForm>
   )
@@ -311,6 +318,7 @@ const SignupForm = ({ autoFocus }: AuthFormProps) => {
         name="password"
         placeholder="Password"
         onChangeText={onChange('password')}
+        onSubmitEditing={onSubmit}
         rules={{
           min: 7,
           required: true,
@@ -348,6 +356,7 @@ const ValidatedInput = ({
                 placeholderTextColor: theme.colorTertiary,
               })}
               {...rest}
+              autoCompleteType={name}
               name={name}
               onBlur={onBlur}
               value={value}
@@ -425,7 +434,6 @@ function SubmittableForm({
           <HStack>
             <VStack flex={1} />
             <Button
-              // accessibilityComponentType="button"
               accessible
               accessibilityRole="button"
               alignSelf="flex-end"

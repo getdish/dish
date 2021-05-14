@@ -52,7 +52,7 @@ import { BottomFloatingArea } from '../../views/BottomFloatingArea'
 import { CloseButton } from '../../views/CloseButton'
 import { ContentScrollView } from '../../views/ContentScrollView'
 import { Link } from '../../views/Link'
-import { PaneControlButtons } from '../../views/PaneControlButtons'
+import { PaneControlButtons, PaneControlButtonsLeft } from '../../views/PaneControlButtons'
 import { ScalingPressable } from '../../views/ScalingPressable'
 import { Score } from '../../views/Score'
 import { SlantedTitle } from '../../views/SlantedTitle'
@@ -63,6 +63,8 @@ import { StackItemProps } from '../HomeStackView'
 import { PageContentWithFooter } from '../PageContentWithFooter'
 import { PageTitle } from '../PageTitle'
 import { CircleButton } from '../restaurant/CircleButton'
+import { ListFavoriteButton } from '../restaurant/ListFavoriteButton'
+import { RestaurantFavoriteStar } from '../restaurant/RestaurantFavoriteButton'
 import { RestaurantListItem } from '../restaurant/RestaurantListItem'
 import { useSnapToFullscreenOnMount } from '../restaurant/useSnapToFullscreenOnMount'
 import { UserAvatar } from '../user/UserAvatar'
@@ -167,7 +169,7 @@ function useListRestaurants(list?: list) {
         restaurant: list_restaurant.restaurant,
         comment: list_restaurant.comment,
         position: list_restaurant.position,
-        dishes: dishQuery.map((listTag) => listTag.restaurant_tag),
+        dishSlugs: dishQuery.map((listTag) => listTag.restaurant_tag?.tag.slug || ''),
       }
     }) ?? []
 
@@ -279,13 +281,14 @@ function useListRestaurants(list?: list) {
   ] as const
 }
 
+const lightBackgrounds = new Set([4, 11, 10])
+
 const ListPageContent = graphql((props: Props) => {
   const user = useUserStore()
   const isMyList = props.item.userSlug === slugify(user.user?.username)
   const isEditing = props.item.state === 'edit'
   const [showAddModal, setShowAddModal] = useState(false)
   const draft = useRef<Partial<List>>({})
-  const theme = useTheme()
   const refetch = useRefetch()
   const [list] = queryList(props.item.slug)
   const [color, setColor] = useStateSynced(getListColor(list?.color) ?? '#999')
@@ -328,13 +331,21 @@ const ListPageContent = graphql((props: Props) => {
   const tagButtons = list
     .tags({ limit: 10 })
     .map((x) => x.tag!)
-    .map((tag) => {
-      return <TagButton key={tag?.slug} size="sm" {...getTagButtonProps(tag)} />
+    .map((tag, i) => {
+      return <TagButton key={tag?.slug ?? i} size="sm" {...getTagButtonProps(tag)} />
     })
 
+  const isLight = list.color ? lightBackgrounds.has(list.color) : false
+
   return (
-    <Theme name={list.color == 4 || list.color === 11 ? 'light' : 'dark'}>
+    <Theme name={isLight ? 'light' : 'dark'}>
       <StackDrawer backgroundColor={color} closable title={`${username}'s ${list.name}`}>
+        <PaneControlButtonsLeft>
+          <Suspense fallback={null}>
+            <ListFavoriteButton size="lg" listId={list.id} />
+          </Suspense>
+        </PaneControlButtonsLeft>
+
         {props.isActive && isMyList && (
           <BottomFloatingArea>
             <Button
@@ -393,10 +404,12 @@ const ListPageContent = graphql((props: Props) => {
             {/* overflow clip prevention with marginVerticals here */}
             <VStack position="relative" backgroundColor={color} rotate="-2deg">
               <ListPageTitle
+                isLight={isLight}
                 locationName={region.data?.name ?? props.item.region}
                 list={list}
                 isEditing={isEditing}
                 draft={draft}
+                color={color}
               />
             </VStack>
 
@@ -494,43 +507,45 @@ const ListPageContent = graphql((props: Props) => {
               </>
             )}
 
-            {!!tagButtons && (
+            {!!tagButtons.length && (
               <>
-                <HStack spacing="sm" justifyContent="center">
+                <HStack spacing justifyContent="center">
                   {tagButtons}
                 </HStack>
                 <Spacer />
               </>
             )}
 
-            {/* <VStack
-          backgroundColor={`${color}99`}
-          paddingHorizontal={20}
-          paddingVertical={20}
-          alignSelf="center"
-          borderRadius={20}
-        >
-          {isEditing ? (
-            <Input
-              placeholder="Description..."
-              multiline
-              numberOfLines={2}
-              lineHeight={30}
-              fontSize={20}
-              marginVertical={-12}
-              textAlign="center"
-              marginHorizontal={-8}
-              defaultValue={list.description ?? ''}
-              onChangeText={(val) => {
-                draft.current.description = val
-              }}
-            />
-          ) : (
-            <Paragraph textAlign="center" size="xl">
-              {list.description}
-            </Paragraph>
-          )}
-        </VStack> */}
+            {!!(list.description || isEditing) && (
+              <VStack
+                backgroundColor={`${color}99`}
+                paddingHorizontal={20}
+                paddingVertical={20}
+                alignSelf="center"
+                borderRadius={20}
+              >
+                {isEditing ? (
+                  <Input
+                    placeholder="Description..."
+                    multiline
+                    numberOfLines={2}
+                    lineHeight={30}
+                    fontSize={20}
+                    marginVertical={-12}
+                    textAlign="center"
+                    marginHorizontal={-8}
+                    defaultValue={list.description ?? ''}
+                    onChangeText={(val) => {
+                      draft.current.description = val
+                    }}
+                  />
+                ) : (
+                  <Paragraph textAlign="center" size="xl">
+                    {list.description}
+                  </Paragraph>
+                )}
+              </VStack>
+            )}
 
             <VStack minHeight={300}>
               {!restaurants.length && (
@@ -551,67 +566,68 @@ const ListPageContent = graphql((props: Props) => {
                 </VStack>
               )}
 
-              {restaurants.map(({ restaurantId, restaurant, comment, dishes, position }, index) => {
-                const dishSlugs = dishes.map((x) => x?.tag.slug).filter(isPresent)
-                if (!restaurant.slug) {
-                  return null
-                }
-                return (
-                  <RestaurantListItem
-                    key={restaurant.slug}
-                    curLocInfo={props.item.curLocInfo ?? null}
-                    restaurantId={restaurantId}
-                    restaurantSlug={restaurant.slug}
-                    rank={index + 1}
-                    description={comment}
-                    hideTagRow
-                    above={
-                      isEditing && (
-                        <>
-                          <AbsoluteVStack top={-28} left={28}>
-                            <CircleButton
-                              backgroundColor={bgLight}
-                              width={44}
-                              height={44}
-                              onPress={() => {
-                                restaurantActions.delete(restaurantId)
+              {restaurants.map(
+                ({ restaurantId, restaurant, comment, dishSlugs, position }, index) => {
+                  if (!restaurant.slug) {
+                    return null
+                  }
+                  return (
+                    <RestaurantListItem
+                      key={restaurant.slug}
+                      curLocInfo={props.item.curLocInfo ?? null}
+                      restaurantId={restaurantId}
+                      restaurantSlug={restaurant.slug}
+                      rank={index + 1}
+                      description={comment}
+                      hideTagRow
+                      above={
+                        isEditing && (
+                          <>
+                            <AbsoluteVStack top={-28} left={28}>
+                              <CircleButton
+                                backgroundColor={bgLight}
+                                width={44}
+                                height={44}
+                                onPress={() => {
+                                  restaurantActions.delete(restaurantId)
+                                }}
+                              >
+                                <X size={20} />
+                              </CircleButton>
+                            </AbsoluteVStack>
+                            <Score
+                              votable
+                              upTooltip="Move up"
+                              downTooltip="Move down"
+                              score={index + 1}
+                              setVote={async (vote) => {
+                                restaurantActions.promote(vote === 1 ? index : index + 1)
                               }}
-                            >
-                              <X size={20} />
-                            </CircleButton>
-                          </AbsoluteVStack>
-                          <Score
-                            votable
-                            upTooltip="Move up"
-                            downTooltip="Move down"
-                            score={index + 1}
-                            setVote={async (vote) => {
-                              restaurantActions.promote(vote === 1 ? index : index + 1)
-                            }}
-                          />
-                        </>
-                      )
-                    }
-                    flexibleHeight
-                    dishSlugs={dishSlugs.length ? dishSlugs : undefined}
-                    editableDishes={isEditing}
-                    onChangeDishes={async (dishes) => {
-                      console.log('should change dishes', dishes)
-                      await restaurantActions.setDishes(restaurantId, dishes)
-                      Toast.success(`Updated dishes`)
-                    }}
-                    editableDescription={isEditing}
-                    onChangeDescription={async (next) => {
-                      await restaurantActions.setComment(restaurantId, next)
-                      Toast.success('Updated description')
-                    }}
-                    editablePosition={isEditing}
-                    onChangePosition={(next) => {
-                      console.log('should change position', next)
-                    }}
-                  />
-                )
-              })}
+                            />
+                          </>
+                        )
+                      }
+                      flexibleHeight
+                      dishSlugs={dishSlugs.length ? dishSlugs : undefined}
+                      editableDishes={isEditing}
+                      onChangeDishes={async (dishes) => {
+                        console.log('should change dishes', dishes)
+                        await restaurantActions.setDishes(restaurantId, dishes)
+                        Toast.success(`Updated dishes`)
+                      }}
+                      editableDescription={isEditing}
+                      onChangeDescription={async (next) => {
+                        await restaurantActions.setComment(restaurantId, next)
+                        Toast.success('Updated description')
+                      }}
+                      editablePosition={isEditing}
+                      onChangePosition={(next) => {
+                        console.log('should change position', next)
+                      }}
+                    />
+                  )
+                }
+              )}
             </VStack>
           </PageContentWithFooter>
         </ContentScrollView>
@@ -621,75 +637,86 @@ const ListPageContent = graphql((props: Props) => {
 })
 
 const ListPageTitle = ({
+  isLight,
   list,
   locationName,
   isEditing,
   draft,
+  color,
 }: {
+  isLight: boolean
+  color: string
   locationName: string
   list: list
   isEditing?: boolean
   draft: any
 }) => {
-  const theme = useTheme()
   const len = list.name?.length ?? 16
 
   return (
     <PageTitle
       noDivider
       title={
-        <VStack
-          marginHorizontal="auto"
-          marginVertical={15}
-          alignItems="center"
-          justifyContent="center"
-        >
-          <ScalingPressable>
-            <Link name="user" params={{ username: list.user?.username ?? '' }}>
-              <SlantedTitle scale={1} size="xs" alignSelf="center">
-                {list.user?.username ?? '...'}'s
-              </SlantedTitle>
-            </Link>
-          </ScalingPressable>
+        <Theme name="dark">
+          <VStack
+            marginHorizontal="auto"
+            marginVertical={15}
+            alignItems="center"
+            justifyContent="center"
+          >
+            <ScalingPressable>
+              <Link name="user" params={{ username: list.user?.username ?? '' }}>
+                <SlantedTitle scale={1} size="xs" alignSelf="center">
+                  {list.user?.username ?? '...'}'s
+                </SlantedTitle>
+              </Link>
+            </ScalingPressable>
 
-          <VStack position="relative" alignSelf="center">
-            {list.user?.avatar && (
-              <AbsoluteVStack overflow="visible" bottom={-15} left={-60} zIndex={-3}>
-                <UserAvatar size={130} charIndex={list.user.charIndex!} avatar={list.user.avatar} />
-              </AbsoluteVStack>
-            )}
-            <SlantedTitle
-              scale={1}
-              backgroundColor={theme.backgroundColorDarker}
-              color="#fff"
-              marginTop={-5}
-              alignSelf="center"
-              zIndex={0}
-              size={len < 12 ? 'xl' : len < 16 ? 'lg' : len < 24 ? 'md' : len < 30 ? 'sm' : 'xs'}
-            >
-              {isEditing ? (
-                <Input
-                  fontSize={26}
-                  backgroundColor="transparent"
-                  defaultValue={list.name || ''}
-                  onChangeText={(val) => {
-                    draft.current.name = val
-                  }}
-                  fontWeight="700"
-                  textAlign="center"
-                  color="#fff"
-                  borderColor="transparent"
-                  margin={-5}
-                />
-              ) : (
-                list.name
+            <VStack position="relative" alignSelf="center">
+              {list.user?.avatar && (
+                <AbsoluteVStack x={0} overflow="visible" bottom={-15} left={-20} zIndex={-3}>
+                  <UserAvatar
+                    size={130}
+                    charIndex={list.user.charIndex!}
+                    avatar={list.user.avatar}
+                  />
+                </AbsoluteVStack>
               )}
-            </SlantedTitle>
-            <SlantedTitle scale={1} zIndex={-1} size="xs" alignSelf="center">
-              {locationName}
-            </SlantedTitle>
+              <SlantedTitle
+                color={color}
+                backgroundColor="#000"
+                {...(isLight && {
+                  backgroundColor: '#fff',
+                })}
+                marginTop={-5}
+                alignSelf="center"
+                zIndex={0}
+                size={len < 12 ? 'xl' : len < 16 ? 'lg' : len < 24 ? 'md' : len < 30 ? 'sm' : 'xs'}
+              >
+                {isEditing ? (
+                  <Input
+                    fontSize={20}
+                    backgroundColor="transparent"
+                    defaultValue={list.name || ''}
+                    onChangeText={(val) => {
+                      draft.current.name = val
+                    }}
+                    fontWeight="700"
+                    textAlign="center"
+                    color={color}
+                    borderColor="transparent"
+                    margin={-5}
+                  />
+                ) : (
+                  list.name
+                )}
+              </SlantedTitle>
+              <SlantedTitle scale={1} zIndex={-1} size="xs" alignSelf="center">
+                {locationName}
+              </SlantedTitle>
+            </VStack>
           </VStack>
-        </VStack>
+        </Theme>
       }
       // after={
       //   <AbsoluteVStack

@@ -9,6 +9,7 @@ import { AppMenuContents } from './AppMenuContents'
 import { appMenuStore } from './AppMenuStore'
 import { useSafeArea } from './hooks/useSafeArea'
 import { CloseButton } from './views/CloseButton'
+import { PaneControlButtons } from './views/PaneControlButtons'
 
 export const AppMenuButton = memo(() => {
   const media = useMedia()
@@ -29,16 +30,17 @@ export const AppMenuButton = memo(() => {
         onDismiss={appMenu.hide}
         onRequestClose={appMenu.hide}
       >
-        <TouchableWithoutFeedback
+        {/* this causes every tap to close on web */}
+        {/* <TouchableWithoutFeedback
           // for bug which prevents dismiss from firing on swipe close
           // https://github.com/facebook/react-native/issues/26892
           onPressOut={appMenu.hide}
-        >
-          <AppMenuContents flex={1} hideUserMenu={appMenu.hide} />
-        </TouchableWithoutFeedback>
-        <AbsoluteVStack top={10} right={10}>
+        > */}
+        <AppMenuContents flex={1} hideUserMenu={appMenu.hide} />
+        {/* </TouchableWithoutFeedback> */}
+        <PaneControlButtons>
           <CloseButton onPress={appMenu.hide} />
-        </AbsoluteVStack>
+        </PaneControlButtons>
       </Modal>
       <AbsoluteVStack
         top={safeArea.top ? safeArea.top : 10}

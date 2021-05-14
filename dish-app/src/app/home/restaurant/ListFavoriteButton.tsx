@@ -4,21 +4,16 @@ import React, { Suspense, memo } from 'react'
 import { useUserFavoriteQuery } from '../../hooks/useUserReview'
 import { FavoriteButton, FavoriteButtonProps } from '../../views/FavoriteButton'
 
-export type RestaurantFavoriteButtonProps = {
-  size?: FavoriteButtonProps['size']
-  restaurantId: string
-}
-
-export const RestaurantFavoriteStar = memo(
-  graphql(({ size, restaurantId }: RestaurantFavoriteButtonProps) => {
+export const ListFavoriteButton = memo(
+  graphql(({ size, listId }: { size?: FavoriteButtonProps['size']; listId: string }) => {
     const { favorited, total, toggle } = useUserFavoriteQuery({
-      restaurant_id: { _eq: restaurantId },
+      list_id: { _eq: listId },
       type: { _eq: 'favorite' },
     })
     return (
       <Suspense fallback={null}>
         <FavoriteButton isFavorite={!!favorited} onToggle={toggle} size={size}>
-          {total > 0 ? total : null}
+          {typeof total === 'number' && total > 0 ? total : ''}
         </FavoriteButton>
       </Suspense>
     )

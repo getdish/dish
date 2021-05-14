@@ -27,7 +27,7 @@ export const PageFooter = memo(() => {
         <Spacer size="xxl" />
       </VStack>
 
-      <VStack height={media.sm ? 400 : 0} />
+      <VStack height={media.sm ? 200 : 0} />
     </VStack>
   )
 })
