@@ -2,16 +2,21 @@ import {
   DeepPartial,
   Review,
   globalTagId,
+  mutate,
+  order_by,
   query,
   reviewDelete,
+  reviewUpdate,
   reviewUpsert,
+  review_bool_exp,
+  review_constraint,
+  review_update_column,
   setCache,
   useRefetch,
 } from '@dish/graph'
-import { useState } from 'react'
-import { Toast, useLazyEffect } from 'snackui'
+import { Toast } from 'snackui'
 
-import { useUserStore } from '../userStore'
+import { useUserStore, userStore } from '../userStore'
 
 export type ReviewWithTag = Pick<
   Review,
@@ -20,6 +25,7 @@ export type ReviewWithTag = Pick<
   | 'tag_id'
   | 'text'
   | 'type'
+  | 'list_id'
   | 'vote'
   | 'restaurant_id'
   | 'user_id'
@@ -37,135 +43,6 @@ export type ReviewWithTag = Pick<
 
 type ReviewTypes = 'vote' | 'favorite' | 'comment'
 
-export const useUserReviewsQuery = (restaurantId: string, type?: ReviewTypes) => {
-  const refetch = useRefetch()
-  const userStore = useUserStore()
-  const userId = (userStore.user?.id as string) ?? ''
-  const [fetchKey, setFetchKey] = useState(0)
-  const shouldFetch = userId && restaurantId
-  const reviewsQuery = shouldFetch
-    ? query.review({
-        where: {
-          restaurant_id: {
-            _eq: restaurantId,
-          },
-          user_id: {
-            _eq: userId,
-          },
-          ...(!!type && {
-            type: {
-              _eq: type,
-            },
-          }),
-        },
-      })
-    : null
-  const reviews = reviewsQuery
-    ? reviewsQuery.map((review) => {
-        const tag = {
-          name: review?.tag?.name ?? '',
-          type: review?.tag?.type ?? '',
-        }
-        return {
-          id: review.id ?? '',
-          rating: review.rating ?? 0,
-          tag_id: review.tag_id ?? '',
-          text: review.text ?? '',
-          tag,
-          vote: review.vote ?? 0,
-          restaurant_id: review.restaurant_id ?? '',
-          user_id: review.user_id ?? '',
-          user: {
-            username: review.user.username ?? '',
-          },
-          favorited: review.favorited ?? false,
-          updated_at: review.updated_at ?? '',
-        } as ReviewWithTag
-      })
-    : []
-
-  // ensure fetched by gqless
-  useLazyEffect(() => {
-    if (fetchKey && shouldFetch) {
-      refetch(reviewsQuery).catch(console.error)
-      // const fetcher = refetch(reviewsQuery) as any
-      // if (fetcher) {
-      //   return series([() => resolved(fetcher), forceUpdate])
-      // }
-      // refetchAll()
-    }
-  }, [shouldFetch, fetchKey])
-
-  const doRefetch = () => {
-    setFetchKey(Math.random())
-  }
-
-  return {
-    userId,
-    reviews,
-    reviewsQuery,
-    refetch: doRefetch,
-    async upsert(
-      review: Partial<Review> & {
-        // require type
-        type: Review['type']
-      }
-    ) {
-      if (userStore.promptLogin()) {
-        return false
-      }
-      const user = userStore.user!
-      try {
-        // optimistic update
-        if (review.id) {
-          const cur = reviewsQuery?.find((x) => x.id === review.id)
-          if (cur) {
-            for (const key in review) {
-              cur[key] = review[key]
-            }
-          }
-        }
-
-        const response = await reviewUpsert([
-          {
-            // defaults
-            rating: 0,
-            ...review,
-            // overrides
-            user_id: user.id,
-          },
-        ])
-
-        if (!response.length) {
-          console.error('response', response)
-          Toast.show('Error saving')
-          return false
-        }
-
-        const result = response[0]
-
-        // post-optimistic update
-        if (result.id) {
-          const cur = reviewsQuery?.find((x) => x.id === result.id)
-          if (cur) {
-            for (const key in result) {
-              cur[key] = result[key]
-            }
-          }
-        }
-
-        Toast.show(`Saved`)
-        doRefetch()
-        return response
-      } catch (err) {
-        console.error('error', err)
-        Toast.show('Error saving')
-        return false
-      }
-    },
-  }
-}
-
 export const isTagReview = (r: DeepPartial<Review>) => !!r.tag_id && r.tag_id !== globalTagId
 
 export const useUserReviewCommentQuery = (
@@ -178,7 +55,10 @@ export const useUserReviewCommentQuery = (
     onDelete?: () => void
   } = {}
 ) => {
-  const { reviews, upsert, reviewsQuery } = useUserReviewsQuery(restaurantId, 'comment')
+  const { reviews, refetch, upsert, reviewsQuery } = useUserReviewsQuery({
+    restaurant_id: { _eq: restaurantId },
+    type: { _eq: 'comment' },
+  })
   const review = reviews.filter((x) => !isTagReview(x) && !!x.text)[0]
   return {
     review,
@@ -189,11 +69,8 @@ export const useUserReviewCommentQuery = (
         ...review,
         restaurant_id: restaurantId,
       })
-
-      setCache(reviewsQuery, result[0])
-
+      setCache(reviewsQuery, result?.[0])
       onUpsert?.()
-
       return result
     },
     async deleteReview() {
@@ -206,25 +83,144 @@ export const useUserReviewCommentQuery = (
       }
       onDelete?.()
       Toast.show(`Deleted!`)
-      // refetch()
+      refetch(reviewsQuery)
     },
   }
 }
 
-export const useUserFavoriteQuery = (restaurantId: string) => {
-  const { reviews, upsert } = useUserReviewsQuery(restaurantId, 'favorite')
-  const review = reviews.filter((x) => !isTagReview(x) && x.favorited)[0]
-  const [optimistic, setOptimistic] = useState<boolean | null>(null)
-  const isStarred = optimistic ?? review?.favorited
-  return [
-    isStarred,
-    (next: boolean) => {
-      setOptimistic(next)
-      return upsert({
-        type: 'favorite',
-        favorited: next,
-        restaurant_id: restaurantId,
+export const useUserReviewsQuery = (where: review_bool_exp) => {
+  const userStore = useUserStore()
+  const userId = (userStore.user?.id as string) ?? ''
+  const shouldFetch = userId && (where.restaurant_id || where.list_id)
+  const refetch = useRefetch()
+  const reviewsQuery = shouldFetch
+    ? query.review({
+        where: {
+          ...where,
+          user_id: {
+            _eq: userId,
+          },
+        },
+        limit: 10,
+        order_by: [{ updated_at: order_by.desc }],
       })
+    : null
+  const reviews = reviewsQuery
+    ? reviewsQuery.map<ReviewWithTag>((review) => {
+        const tag = {
+          name: review?.tag?.name ?? '',
+          type: review?.tag?.type ?? '',
+        }
+        const res: ReviewWithTag = {
+          id: review.id ?? '',
+          rating: review.rating ?? 0,
+          tag_id: review.tag_id ?? '',
+          text: review.text ?? '',
+          tag,
+          vote: review.vote ?? 0,
+          restaurant_id: review.restaurant_id ?? '',
+          list_id: review.list_id ?? '',
+          user_id: review.user_id ?? '',
+          user: {
+            username: review.user.username ?? '',
+          },
+          favorited: review.favorited ?? false,
+          updated_at: review.updated_at ?? '',
+        }
+        return res
+      })
+    : []
+
+  return {
+    userId,
+    reviews,
+    reviewsQuery,
+    refetch,
+    async upsert(
+      review: Partial<Review> & {
+        // require type
+        type: Review['type']
+      }
+    ) {
+      if (userStore.promptLogin()) {
+        return false
+      }
+      const user = userStore.user!
+      try {
+        const next = {
+          rating: 0,
+          ...review,
+          user_id: user.id,
+        }
+        const response = reviewUpsert([next])
+        // const response = await mutate((mutation) => {
+        //   return mutation.insert_review({
+        //     objects: [next],
+        //     on_conflict: {
+        //       constraint: review_constraint.review_pkey,
+        //       update_columns: [review_update_column.favorited],
+        //     },
+        //   })?.affected_rows
+        // })
+        if (!response) {
+          console.error('response', response)
+          Toast.show('Error saving')
+          return false
+        }
+        Toast.show(`Saved`)
+        refetch(reviewsQuery)
+      } catch (err) {
+        console.error('error', err)
+        Toast.show('Error saving')
+        return false
+      }
     },
-  ] as const
+  }
+}
+
+export const useUserFavoriteQuery = (where: review_bool_exp) => {
+  const { reviewsQuery, reviews, upsert, refetch, userId } = useUserReviewsQuery(where)
+  const review = reviews.find(
+    (x) =>
+      x.tag_id === where.tag_id?._eq ||
+      x.restaurant_id === where.restaurant_id?._eq ||
+      x.list_id === where.list_id?._eq
+  )
+  const favorited = review?.favorited
+  const totalQuery = query.review_aggregate({
+    where: {
+      type: {
+        _eq: 'favorite',
+      },
+      user_id: {
+        _eq: userId,
+      },
+      ...where,
+    },
+  })
+  const total = totalQuery.aggregate?.count() ?? 0
+  return {
+    favorited,
+    reviewsQuery,
+    total,
+    toggle: async () => {
+      const next = {
+        id: review?.id,
+        user_id: userStore.user?.id,
+        type: 'favorite',
+        ...(where.restaurant_id && {
+          restaurant_id: where.restaurant_id._eq,
+        }),
+        ...(where.list_id && {
+          list_id: where.list_id._eq,
+        }),
+        favorited: !favorited,
+      }
+      console.log('what is', review?.id, next)
+      await upsert(next)
+      setCache(reviewsQuery!, null)
+      refetch(reviewsQuery)
+      refetch(totalQuery)
+    },
+  }
 }

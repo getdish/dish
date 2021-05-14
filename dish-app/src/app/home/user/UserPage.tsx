@@ -78,8 +78,8 @@ export default function UserPageContainer(props: StackItemProps<HomeStateItemUse
 
 const getReviewRestuarants = (x: ReviewQuery) => {
   return {
-    id: x.restaurant.id,
-    slug: x.restaurant.slug,
+    id: x.restaurant?.id,
+    slug: x.restaurant?.slug,
   }
 }
 
@@ -106,16 +106,20 @@ const UserPageContent = graphql(
         username: {
           _eq: username,
         },
+        restaurant_id: {
+          _is_null: false,
+        },
+        ...(pane === 'review' && {
+          text: { _neq: '' },
+        }),
+        ...(pane === 'vote' && {
+          text: { _eq: '' },
+        }),
       },
       limit: 10,
-      ...(pane === 'review' && {
-        where: { text: { _neq: '' } },
-      }),
-      ...(pane === 'vote' && {
-        where: { text: { _eq: '' } },
-      }),
       order_by: [{ updated_at: order_by.desc }],
     })
+
     const hasReviews = !!reviews?.length
 
     useSnapToFullscreenOnMount()
@@ -123,7 +127,7 @@ const UserPageContent = graphql(
     useSetAppMap({
       hideRegions: true,
       isActive: isActive,
-      results: reviews.map(getReviewRestuarants),
+      results: reviews.map(getReviewRestuarants).filter((x) => x.id),
     })
 
     if (!user) {

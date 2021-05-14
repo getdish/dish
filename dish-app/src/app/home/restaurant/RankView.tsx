@@ -1,5 +1,5 @@
 import React, { memo } from 'react'
-import { Text, VStack, useTheme } from 'snackui'
+import { AbsoluteVStack, Text, VStack, useTheme } from 'snackui'
 
 import { isWeb } from '../../../constants/constants'
 import { TextSuperScript } from '../../views/TextSuperScript'
@@ -20,11 +20,16 @@ export const RankView = memo(({ rank }: { rank: number }) => {
         marginRight: 0,
       })}
       position="relative"
-      backgroundColor={theme.backgroundColorAlt}
-      borderRadius={1000}
       alignItems="center"
       justifyContent="center"
     >
+      <AbsoluteVStack
+        borderRadius={1000}
+        fullscreen
+        backgroundColor={theme.backgroundColorAlt}
+        opacity={0.35}
+        zIndex={-1}
+      />
       <Text textAlign="center" lineHeight={38}>
         <TextSuperScript color={theme.colorAlt} transform={[{ translateY: -15 }]} fontSize={11}>
           #

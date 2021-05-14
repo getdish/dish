@@ -304,8 +304,8 @@ const RestaurantListItemContent = memo(
                 y={-4}
                 zIndex={-1}
                 {...(!showAbove && {
-                  x: 0,
-                  y: -32,
+                  x: -36,
+                  y: 16,
                 })}
               >
                 <RankView rank={rank} />
@@ -447,9 +447,6 @@ const RestaurantListItemContent = memo(
             }}
           >
             <SmallButton
-              textProps={{
-                color: '#999',
-              }}
               tooltip={`Rating Breakdown (${totalReviews} reviews)`}
               icon={
                 <MessageSquare size={16} color={isWeb ? 'var(--color)' : 'rgba(150,150,150,0.3)'} />

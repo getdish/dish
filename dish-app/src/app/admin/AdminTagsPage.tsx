@@ -330,11 +330,11 @@ const TagListItem = graphql(
         <AdminListItem
           text={text}
           onDelete={() => {
-            //@ts-expect-error
+            // @ts-ignore
             tagDelete(tag)
           }}
           onEdit={(text) => {
-            //@ts-expect-error
+            // @ts-ignore
             setTagNameAndIcon(tag, text)
           }}
           column={column}

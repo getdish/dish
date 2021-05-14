@@ -54,12 +54,10 @@ export const AppMenuContents = memo(
                   username: slugify(user?.username ?? ''),
                 }}
               >
-                <>
-                  profile
-                  <AbsoluteVStack top={-7} right={0} bottom={0} alignItems="center">
-                    <UserMenuButton />
-                  </AbsoluteVStack>
-                </>
+                <AbsoluteVStack top={-7} right={20} bottom={0} alignItems="center">
+                  <UserMenuButton />
+                </AbsoluteVStack>
+                {user?.username}
               </MenuLinkButton>
             )}
 
@@ -161,8 +159,10 @@ const MenuLinkButton = (props: LinkButtonProps) => {
       width="100%"
       paddingVertical={12}
       paddingHorizontal={16}
+      justifyContent="flex-start"
       textProps={{
-        fontSize: 16,
+        fontSize: 18,
+        fontWeight: '700',
       }}
       hoverStyle={{
         transform: [{ scale: 1.03 }],

@@ -5,7 +5,6 @@ import { AbsoluteVStack, HStack, Theme, VStack, isTouchDevice, useMedia, useThem
 
 import { drawerWidthMax } from '../../../constants/constants'
 import { titleHeight } from '../../../constants/titleHeight'
-import { isSearchState } from '../../../helpers/homeStateHelpers'
 import { HomeStateItemSearch } from '../../../types/homeTypes'
 import { useLastHomeState } from '../../homeStore'
 import { useSafeArea } from '../../hooks/useSafeArea'

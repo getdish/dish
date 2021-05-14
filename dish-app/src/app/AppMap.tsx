@@ -43,7 +43,6 @@ const useIsInteractive = () => {
       let setOnce = false
       const setTrueOnce = () => {
         if (setOnce) return
-        console.trace('did')
         setOnce = true
         setVal(true)
       }

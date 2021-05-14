@@ -1,5 +1,5 @@
 import { getColorsForColor } from '../helpers/getColorsForName'
-import { allColors, bgAlt, blue, colorNames } from './colors'
+import { allColors, bgAlt, blue, colorNames, pink } from './colors'
 
 export type MyTheme = typeof dark
 export type MyThemes = typeof themes
@@ -24,12 +24,14 @@ const baseTheme = {
 const active: MyTheme = {
   name: 'active',
   ...baseTheme,
-  backgroundColor: 'rgb(217, 109, 134)',
-  backgroundColorSecondary: 'rgb(217, 109, 134)',
+  color: '#fff',
+  colorSecondary: '#fff',
+  backgroundColor: blue,
+  backgroundColorSecondary: blue,
   backgroundColorTertiary: 'rgba(217, 109, 134, 0.85)',
   backgroundColorQuartenary: 'rgba(217, 109, 134, 0.7)',
-  borderColor: 'rgb(217, 109, 134)',
-  borderColorHover: 'rgb(217, 109, 134)',
+  borderColor: blue,
+  borderColorHover: blue,
 }
 
 const darkActive: MyTheme = {
@@ -143,6 +145,7 @@ for (const [index, name] of colorNames.entries()) {
     color: colors.darkColor,
     colorSecondary: colors.color,
     colorTertiary: `${colors.color}99`,
+    colorQuartenary: `#00000055`,
     backgroundColor: colors.extraLightColor,
     backgroundColorSecondary: colors.lightColor,
     backgroundColorTertiary: `${colors.lightColor}dd`,
@@ -160,6 +163,7 @@ for (const [index, name] of colorNames.entries()) {
     color: colors.extraLightColor,
     colorSecondary: colors.lightColor,
     colorTertiary: `${colors.lightColor}99`,
+    colorQuartenary: `#ffffff55`,
     backgroundColor: colors.darkColor,
     backgroundColorSecondary: colors.color,
     backgroundColorTertiary: `${colors.darkColor}dd`,

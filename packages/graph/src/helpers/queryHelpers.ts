@@ -135,6 +135,7 @@ export async function upsert<T extends ModelType>(
   constraint = constraint ?? defaultConstraints[table]
   const objects = prepareData(table, objectsIn, '_insert_input')
   const update_columns = updateableColumns(table, objects[0])
+  console.log('update_columns', update_columns)
   // @ts-ignore
   return await resolvedMutationWithFields(
     () => {
