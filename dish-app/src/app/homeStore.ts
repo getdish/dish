@@ -431,14 +431,6 @@ class HomeStore extends Store {
     const next = this.getHomeState(item)
 
     if (next) {
-      // TODO this logic shoudln't be here
-      // show map on some routes
-      if (next.type === 'search' || next.type === 'restaurant') {
-        if (drawerStore.snapIndex === 0 && getMedia().sm) {
-          drawerStore.setSnapIndex(1)
-        }
-      }
-
       if (item.type === 'replace') {
         if (item.name !== this.currentState.type) {
           // for now allow homeRegion to replace home,

@@ -61,7 +61,7 @@ const RestaurantPage = memo(
       section === 'reviews' ? sectionSlug : null
     )
     const [scrollView, setScrollView] = useState<ScrollView | null>(null)
-    const [reviewsSection, setReviewsSection] = useState<View | null>(null)
+    const [reviewsSection, setReviewsSection] = useState<View | HTMLElement | null>(null)
     const [dishesSection, setDishesSection] = useState<View | null>(null)
 
     const position = useMemo(() => {
@@ -181,21 +181,13 @@ const RestaurantPage = memo(
               <RestaurantLists restaurantSlug={restaurantSlug} />
             </Suspense>
 
-            <VStack
-              // backgroundColor={theme.backgroundColorSecondary}
-              // borderColor={theme.backgroundColorSecondary}
-              // borderTopWidth={1}
-              // borderBottomWidth={1}
-              paddingVertical={20}
-            >
-              <View ref={setReviewsSection}>
-                <Suspense fallback={null}>
-                  <RestaurantReviewsList
-                    restaurantSlug={restaurantSlug}
-                    restaurantId={restaurant.id}
-                  />
-                </Suspense>
-              </View>
+            <VStack ref={setReviewsSection} paddingVertical={20}>
+              <Suspense fallback={null}>
+                <RestaurantReviewsList
+                  restaurantSlug={restaurantSlug}
+                  restaurantId={restaurant.id}
+                />
+              </Suspense>
             </VStack>
 
             <Spacer size="xl" />

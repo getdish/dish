@@ -40,14 +40,12 @@ export const RestaurantReviewsList = memo(
               Reviews
             </SlantedTitle>
 
-            <AbsoluteVStack top={0} right={0}>
+            <AbsoluteVStack top={-5} right={0}>
               <Suspense fallback={null}>
-                <Theme name="active">
-                  <RestaurantAddCommentButton
-                    restaurantId={restaurantId}
-                    restaurantSlug={restaurantSlug}
-                  />
-                </Theme>
+                <RestaurantAddCommentButton
+                  restaurantId={restaurantId}
+                  restaurantSlug={restaurantSlug}
+                />
               </Suspense>
             </AbsoluteVStack>
           </HStack>
