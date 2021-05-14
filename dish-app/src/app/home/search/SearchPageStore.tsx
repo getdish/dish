@@ -56,6 +56,8 @@ class SearchPageStore extends Store {
 
   resetResults() {
     this.results = []
+    this.lastSearchAt = 0
+    this.searchArgs = null
   }
 
   async runSearch({

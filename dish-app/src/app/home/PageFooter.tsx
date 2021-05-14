@@ -27,7 +27,8 @@ export const PageFooter = memo(() => {
         <Spacer size="xxl" />
       </VStack>
 
-      <VStack height={media.sm ? 200 : 0} />
+      {/* enough to let keyboard show below auth form */}
+      <VStack height={media.sm ? 280 : 0} />
     </VStack>
   )
 })
