@@ -67,7 +67,7 @@ const RestaurantHeaderContent = memo(
       const scale = width < 601 ? 0.7 : drawerWidth < 700 ? 0.85 : 1
       const fontScale = size === 'sm' ? 0.8 : 1
       const fontSizeBase =
-        nameLen > 40 ? 28 : nameLen > 30 ? 30 : nameLen > 24 ? 32 : nameLen > 18 ? 34 : 40
+        nameLen > 40 ? 24 : nameLen > 30 ? 26 : nameLen > 24 ? 30 : nameLen > 18 ? 34 : 40
       const fontSize = scale * fontSizeBase * fontScale
       const contentLeftWidth = width - 60
       const restaurantId = restaurant.id
@@ -133,41 +133,39 @@ const RestaurantHeaderContent = memo(
             >
               <VStack flex={1}>
                 {/* title row */}
-                <HStack paddingLeft={20} alignItems="center">
-                  <HStack position="relative">
-                    <VStack marginVertical={-6}>
-                      <Theme name="light">
-                        <RestaurantRatingView floating size={72} slug={restaurantSlug} />
-                      </Theme>
-                    </VStack>
-                    <Spacer size="lg" />
-                    <HStack
-                      backgroundColor={colors.themeColorAlt}
-                      shadowColor="#000"
-                      shadowOpacity={0.2}
-                      pointerEvents="auto"
-                      shadowRadius={5}
-                      shadowOffset={{ height: 3, width: 0 }}
-                      borderRadius={16}
-                      paddingHorizontal={20}
-                      paddingVertical={9}
-                      alignItems="center"
-                      justifyContent="center"
-                      minWidth={100}
-                      skewX="-12deg"
-                    >
-                      <HStack skewX="12deg">
-                        <Text
-                          color="#fff"
-                          alignSelf="flex-start"
-                          selectable
-                          letterSpacing={-1.2}
-                          fontSize={fontSize}
-                          fontWeight="800"
-                        >
-                          {restaurant.name || ' '}
-                        </Text>
-                      </HStack>
+                <HStack paddingLeft={20} alignItems="center" position="relative">
+                  <AbsoluteVStack y={-44} x={-10} zIndex={10}>
+                    <Theme name="light">
+                      <RestaurantRatingView floating size={62} slug={restaurantSlug} />
+                    </Theme>
+                  </AbsoluteVStack>
+                  <Spacer size="lg" />
+                  <HStack
+                    backgroundColor={colors.themeColorAlt}
+                    shadowColor="#000"
+                    shadowOpacity={0.2}
+                    pointerEvents="auto"
+                    shadowRadius={5}
+                    shadowOffset={{ height: 3, width: 0 }}
+                    borderRadius={16}
+                    paddingHorizontal={20}
+                    paddingVertical={9}
+                    alignItems="center"
+                    justifyContent="center"
+                    minWidth={100}
+                    skewX="-12deg"
+                  >
+                    <HStack skewX="12deg">
+                      <Text
+                        color="#fff"
+                        alignSelf="flex-start"
+                        selectable
+                        letterSpacing={-1.2}
+                        fontSize={fontSize}
+                        fontWeight="800"
+                      >
+                        {restaurant.name || ' '}
+                      </Text>
                     </HStack>
                   </HStack>
                 </HStack>
