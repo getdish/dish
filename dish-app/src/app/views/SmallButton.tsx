@@ -12,7 +12,7 @@ export const SmallButton = themeable(
     let contents = (
       <Button
         borderRadius={200}
-        // borderWidth={1}
+        borderWidth={1}
         borderColor={theme.borderColor}
         backgroundColor={theme.backgroundColorTransluscent}
         hoverStyle={{

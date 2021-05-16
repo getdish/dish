@@ -185,7 +185,11 @@ const Content = memo(
                           <Spacer size="lg" />
 
                           <VStack position="relative" flex={1}>
-                            <Paragraph maxHeight={height - 100} overflow="hidden">
+                            <Paragraph
+                              sizeLineHeight={0.9}
+                              maxHeight={height - 100}
+                              overflow="hidden"
+                            >
                               {!!tagName && isWeb && sentence ? (
                                 <div
                                   className="block"
@@ -208,7 +212,7 @@ const Content = memo(
                             <AbsoluteVStack zIndex={10} bottom={0} left={0} height={20} right={0}>
                               <LinearGradient
                                 colors={[
-                                  theme.backgroundColorTransparent,
+                                  `${theme.cardBackgroundColor}00`,
                                   theme.cardBackgroundColor,
                                 ]}
                                 style={StyleSheet.absoluteFill}
