@@ -202,9 +202,9 @@ export const useUserFavoriteQuery = (where: review_bool_exp) => {
       favorited: {
         _eq: true,
       },
-      user_id: {
-        _eq: userId,
-      },
+      // user_id: {
+      //   _eq: userId,
+      // },
       ...where,
     },
   })
