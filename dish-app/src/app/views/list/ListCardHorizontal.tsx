@@ -5,7 +5,8 @@ import { Button, Text, VStack, useTheme } from 'snackui'
 import { getImageUrl } from '../../../helpers/getImageUrl'
 import { Image } from '../Image'
 import { Link } from '../Link'
-import { ListIDProps, useList } from './ListCard'
+import { ListIDProps } from './ListCard'
+import { useList } from './useList'
 
 export const ListCardHorizontal = graphql((props: ListIDProps) => {
   const { list, colors, photos, backgroundColor } = useList(props)

@@ -719,6 +719,7 @@ if command -v git &> /dev/null; then
   source .env
   arch="$(uname -m)"
   if [ "${arch}" = "arm64" ]; then
+    echo "using env m1"
     source .env.m1
   fi
   # source current env next, .env.production by default
