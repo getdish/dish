@@ -2722,6 +2722,7 @@ declare module "@dish/graph" {
         parentId?: Maybe<uuid_comparison_exp>;
         popularity?: Maybe<Int_comparison_exp>;
         restaurant_taxonomies?: Maybe<restaurant_tag_bool_exp>;
+        reviews?: Maybe<review_bool_exp>;
         rgb?: Maybe<jsonb_comparison_exp>;
         slug?: Maybe<String_comparison_exp>;
         type?: Maybe<String_comparison_exp>;
@@ -2776,6 +2777,7 @@ declare module "@dish/graph" {
         parentId?: Maybe<Scalars['uuid']>;
         popularity?: Maybe<Scalars['Int']>;
         restaurant_taxonomies?: Maybe<restaurant_tag_arr_rel_insert_input>;
+        reviews?: Maybe<review_arr_rel_insert_input>;
         rgb?: Maybe<Scalars['jsonb']>;
         slug?: Maybe<Scalars['String']>;
         type?: Maybe<Scalars['String']>;
@@ -2841,6 +2843,7 @@ declare module "@dish/graph" {
         parentId?: Maybe<order_by>;
         popularity?: Maybe<order_by>;
         restaurant_taxonomies_aggregate?: Maybe<restaurant_tag_aggregate_order_by>;
+        reviews_aggregate?: Maybe<review_aggregate_order_by>;
         rgb?: Maybe<order_by>;
         slug?: Maybe<order_by>;
         type?: Maybe<order_by>;
@@ -14296,6 +14299,26 @@ declare module "@dish/graph" {
                     readonly where: "restaurant_tag_bool_exp";
                 };
             };
+            readonly reviews: {
+                readonly __type: "[review!]!";
+                readonly __args: {
+                    readonly distinct_on: "[review_select_column!]";
+                    readonly limit: "Int";
+                    readonly offset: "Int";
+                    readonly order_by: "[review_order_by!]";
+                    readonly where: "review_bool_exp";
+                };
+            };
+            readonly reviews_aggregate: {
+                readonly __type: "review_aggregate!";
+                readonly __args: {
+                    readonly distinct_on: "[review_select_column!]";
+                    readonly limit: "Int";
+                    readonly offset: "Int";
+                    readonly order_by: "[review_order_by!]";
+                    readonly where: "review_bool_exp";
+                };
+            };
             readonly rgb: {
                 readonly __type: "jsonb";
             };
@@ -14508,6 +14531,9 @@ declare module "@dish/graph" {
             readonly restaurant_taxonomies: {
                 readonly __type: "restaurant_tag_bool_exp";
             };
+            readonly reviews: {
+                readonly __type: "review_bool_exp";
+            };
             readonly rgb: {
                 readonly __type: "jsonb_comparison_exp";
             };
@@ -14628,6 +14654,9 @@ declare module "@dish/graph" {
             };
             readonly restaurant_taxonomies: {
                 readonly __type: "restaurant_tag_arr_rel_insert_input";
+            };
+            readonly reviews: {
+                readonly __type: "review_arr_rel_insert_input";
             };
             readonly rgb: {
                 readonly __type: "jsonb";
@@ -14908,6 +14937,9 @@ declare module "@dish/graph" {
             };
             readonly restaurant_taxonomies_aggregate: {
                 readonly __type: "restaurant_tag_aggregate_order_by";
+            };
+            readonly reviews_aggregate: {
+                readonly __type: "review_aggregate_order_by";
             };
             readonly rgb: {
                 readonly __type: "order_by";
@@ -19650,6 +19682,20 @@ declare module "@dish/graph" {
             order_by?: Maybe<Array<restaurant_tag_order_by>>;
             where?: Maybe<restaurant_tag_bool_exp>;
         }) => restaurant_tag_aggregate;
+        reviews: (args?: {
+            distinct_on?: Array<ScalarsEnums['review_select_column']>;
+            limit?: ScalarsEnums['Int'];
+            offset?: ScalarsEnums['Int'];
+            order_by?: Maybe<Array<review_order_by>>;
+            where?: Maybe<review_bool_exp>;
+        }) => Array<review>;
+        reviews_aggregate: (args?: {
+            distinct_on?: Array<ScalarsEnums['review_select_column']>;
+            limit?: ScalarsEnums['Int'];
+            offset?: ScalarsEnums['Int'];
+            order_by?: Maybe<Array<review_order_by>>;
+            where?: Maybe<review_bool_exp>;
+        }) => review_aggregate;
         rgb?: ScalarsEnums['jsonb'];
         slug?: ScalarsEnums['String'];
         type?: ScalarsEnums['String'];
@@ -20635,6 +20681,20 @@ declare module "@dish/graph" {
                 order_by?: import("graphql").Maybe<import("graphql").restaurant_tag_order_by[]> | undefined;
                 where?: import("graphql").Maybe<import("graphql").restaurant_tag_bool_exp> | undefined;
             } | undefined) => import("graphql").restaurant_tag_aggregate;
+            reviews: (args?: {
+                distinct_on?: (import("graphql").review_select_column | undefined)[] | undefined;
+                limit?: number | undefined;
+                offset?: number | undefined;
+                order_by?: import("graphql").Maybe<import("graphql").review_order_by[]> | undefined;
+                where?: import("graphql").Maybe<import("graphql").review_bool_exp> | undefined;
+            } | undefined) => import("graphql").review[];
+            reviews_aggregate: (args?: {
+                distinct_on?: (import("graphql").review_select_column | undefined)[] | undefined;
+                limit?: number | undefined;
+                offset?: number | undefined;
+                order_by?: import("graphql").Maybe<import("graphql").review_order_by[]> | undefined;
+                where?: import("graphql").Maybe<import("graphql").review_bool_exp> | undefined;
+            } | undefined) => import("graphql").review_aggregate;
             rgb?: any;
             slug?: string | undefined;
             type?: string | undefined;

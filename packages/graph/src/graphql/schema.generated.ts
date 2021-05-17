@@ -3651,6 +3651,7 @@ export interface tag_bool_exp {
   parentId?: Maybe<uuid_comparison_exp>
   popularity?: Maybe<Int_comparison_exp>
   restaurant_taxonomies?: Maybe<restaurant_tag_bool_exp>
+  reviews?: Maybe<review_bool_exp>
   rgb?: Maybe<jsonb_comparison_exp>
   slug?: Maybe<String_comparison_exp>
   type?: Maybe<String_comparison_exp>
@@ -3722,6 +3723,7 @@ export interface tag_insert_input {
   parentId?: Maybe<Scalars['uuid']>
   popularity?: Maybe<Scalars['Int']>
   restaurant_taxonomies?: Maybe<restaurant_tag_arr_rel_insert_input>
+  reviews?: Maybe<review_arr_rel_insert_input>
   rgb?: Maybe<Scalars['jsonb']>
   slug?: Maybe<Scalars['String']>
   type?: Maybe<Scalars['String']>
@@ -3797,6 +3799,7 @@ export interface tag_order_by {
   parentId?: Maybe<order_by>
   popularity?: Maybe<order_by>
   restaurant_taxonomies_aggregate?: Maybe<restaurant_tag_aggregate_order_by>
+  reviews_aggregate?: Maybe<review_aggregate_order_by>
   rgb?: Maybe<order_by>
   slug?: Maybe<order_by>
   type?: Maybe<order_by>
@@ -9734,6 +9737,26 @@ export const generatedSchema = {
         where: 'restaurant_tag_bool_exp',
       },
     },
+    reviews: {
+      __type: '[review!]!',
+      __args: {
+        distinct_on: '[review_select_column!]',
+        limit: 'Int',
+        offset: 'Int',
+        order_by: '[review_order_by!]',
+        where: 'review_bool_exp',
+      },
+    },
+    reviews_aggregate: {
+      __type: 'review_aggregate!',
+      __args: {
+        distinct_on: '[review_select_column!]',
+        limit: 'Int',
+        offset: 'Int',
+        order_by: '[review_order_by!]',
+        where: 'review_bool_exp',
+      },
+    },
     rgb: { __type: 'jsonb' },
     slug: { __type: 'String' },
     type: { __type: 'String' },
@@ -9814,6 +9837,7 @@ export const generatedSchema = {
     parentId: { __type: 'uuid_comparison_exp' },
     popularity: { __type: 'Int_comparison_exp' },
     restaurant_taxonomies: { __type: 'restaurant_tag_bool_exp' },
+    reviews: { __type: 'review_bool_exp' },
     rgb: { __type: 'jsonb_comparison_exp' },
     slug: { __type: 'String_comparison_exp' },
     type: { __type: 'String_comparison_exp' },
@@ -9861,6 +9885,7 @@ export const generatedSchema = {
     parentId: { __type: 'uuid' },
     popularity: { __type: 'Int' },
     restaurant_taxonomies: { __type: 'restaurant_tag_arr_rel_insert_input' },
+    reviews: { __type: 'review_arr_rel_insert_input' },
     rgb: { __type: 'jsonb' },
     slug: { __type: 'String' },
     type: { __type: 'String' },
@@ -9965,6 +9990,7 @@ export const generatedSchema = {
     parentId: { __type: 'order_by' },
     popularity: { __type: 'order_by' },
     restaurant_taxonomies_aggregate: { __type: 'restaurant_tag_aggregate_order_by' },
+    reviews_aggregate: { __type: 'review_aggregate_order_by' },
     rgb: { __type: 'order_by' },
     slug: { __type: 'order_by' },
     type: { __type: 'order_by' },
@@ -14846,6 +14872,56 @@ export interface tag {
      */
     where?: Maybe<restaurant_tag_bool_exp>
   }) => restaurant_tag_aggregate
+  /**
+   * An array relationship
+   */
+  reviews: (args?: {
+    /**
+     * distinct select on columns
+     */
+    distinct_on?: Array<ScalarsEnums['review_select_column']>
+    /**
+     * limit the number of rows returned
+     */
+    limit?: ScalarsEnums['Int']
+    /**
+     * skip the first n rows. Use only with order_by
+     */
+    offset?: ScalarsEnums['Int']
+    /**
+     * sort the rows by one or more columns
+     */
+    order_by?: Maybe<Array<review_order_by>>
+    /**
+     * filter the rows returned
+     */
+    where?: Maybe<review_bool_exp>
+  }) => Array<review>
+  /**
+   * An aggregated array relationship
+   */
+  reviews_aggregate: (args?: {
+    /**
+     * distinct select on columns
+     */
+    distinct_on?: Array<ScalarsEnums['review_select_column']>
+    /**
+     * limit the number of rows returned
+     */
+    limit?: ScalarsEnums['Int']
+    /**
+     * skip the first n rows. Use only with order_by
+     */
+    offset?: ScalarsEnums['Int']
+    /**
+     * sort the rows by one or more columns
+     */
+    order_by?: Maybe<Array<review_order_by>>
+    /**
+     * filter the rows returned
+     */
+    where?: Maybe<review_bool_exp>
+  }) => review_aggregate
   rgb?: ScalarsEnums['jsonb']
   slug?: ScalarsEnums['String']
   type?: ScalarsEnums['String']

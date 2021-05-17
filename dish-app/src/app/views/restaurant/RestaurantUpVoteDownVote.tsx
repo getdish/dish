@@ -1,6 +1,6 @@
 import { graphql } from '@dish/graph'
 import { ChevronDown, ChevronUp, ChevronsDown, ChevronsUp } from '@dish/react-feather'
-import React, { Suspense, memo } from 'react'
+import React, { Suspense, memo, useEffect } from 'react'
 import { GestureResponderEvent } from 'react-native'
 import { AbsoluteVStack, HStack, Text, Tooltip, VStack, useTheme } from 'snackui'
 
@@ -10,6 +10,7 @@ import { restaurantRatio } from '../../../helpers/restaurantsRatio'
 import { queryRestaurant } from '../../../queries/queryRestaurant'
 import { RestaurantRatingView } from '../../home/RestaurantRatingView'
 import { useUserTagVotes } from '../../hooks/useUserTagVotes'
+import { useUserStore } from '../../userStore'
 import { TextSuperScript } from '../TextSuperScript'
 import { VoteButton } from '../VoteButton'
 
@@ -47,6 +48,7 @@ const RestaurantUpVoteDownVoteContents = graphql(
     display,
   }: UpvoteDownvoteProps) => {
     const [restaurant] = queryRestaurant(restaurantSlug)
+    const userStore = useUserStore()
     const restaurantTagSlugs = (activeTagSlugs ?? []).reduce(
       (acc, cur) => ({ ...acc, [cur]: true }),
       {}
