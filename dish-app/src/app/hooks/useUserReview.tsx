@@ -3,15 +3,12 @@ import {
   Review,
   client,
   globalTagId,
-  mutate,
   order_by,
   query,
   reviewDelete,
-  reviewUpdate,
   reviewUpsert,
   review_bool_exp,
   review_constraint,
-  review_update_column,
   setCache,
   useRefetch,
 } from '@dish/graph'
@@ -202,9 +199,6 @@ export const useUserFavoriteQuery = (where: review_bool_exp) => {
       favorited: {
         _eq: true,
       },
-      // user_id: {
-      //   _eq: userId,
-      // },
       ...where,
     },
   })
@@ -224,15 +218,12 @@ export const useUserFavoriteQuery = (where: review_bool_exp) => {
         ...(where.list_id && {
           list_id: where.list_id._eq,
         }),
-        favorited: !favorited,
+        favorited: !state,
       }
       setState(next.favorited)
-      console.log('toggle me........', next.favorited)
       // fixes slow speed bug
       client.cache = {}
       await upsert(next)
-      // refetch(reviewsQuery)
-      // refetch(totalQuery)
     },
   }
 }

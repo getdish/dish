@@ -44,7 +44,7 @@ export const ListCard = graphql(
           backgroundColor={backgroundColor}
           isBehind={isBehind}
           outside={
-            <AbsoluteVStack zIndex={1000000} top="-5%" right="-5%">
+            <AbsoluteVStack zIndex={1000000} bottom="-5%" right="-5%">
               <FavoriteButton isFavorite={isFavorited} onToggle={toggleFavorite}>
                 {reviewsCount}
               </FavoriteButton>

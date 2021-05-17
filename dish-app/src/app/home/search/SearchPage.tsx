@@ -327,7 +327,7 @@ const useActiveTagSlugs = (props: SearchProps) => {
           return false
         }
         const type = allTags[x]?.type ?? 'outlier'
-        return type != 'lense' && type != 'filter' && type != 'outlier'
+        return type != 'filter' && type != 'outlier'
       }),
     ]
   }, [props.item.activeTags])

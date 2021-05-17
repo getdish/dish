@@ -49,6 +49,7 @@ const writeReview = async (review: Partial<Review>) => {
 }
 
 export const useUserTagVotes = (restaurantSlug: string, activeTags: HomeActiveTagsRecord) => {
+  // never change to avoid hooks issues, should never change from above
   const tagSlugList = useConstant(() => Object.keys(activeTags).filter((x) => activeTags[x]))
 
   // handles multiple
