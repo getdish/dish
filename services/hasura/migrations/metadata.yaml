@@ -981,6 +981,13 @@ tables:
         table:
           schema: public
           name: restaurant_tag
+  - name: reviews
+    using:
+      foreign_key_constraint_on:
+        column: tag_id
+        table:
+          schema: public
+          name: review
   insert_permissions:
   - role: contributor
     permission:

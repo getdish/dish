@@ -62,7 +62,7 @@
     "clean:build": "./dishctl.sh clean_build",
     "hasura:migrate": "./dishctl.sh db_migrate_init",
     "hasura:migrate:test": "DISH_ENV=test yarn hasura:migrate",
-    "hasura:admin": "(cd services/hasura && hasura console --endpoint http://localhost:8080 --admin-secret=$HASURA_GRAPHQL_ADMIN_SECRET)",
+    "hasura:admin": "./dishctl.sh hasura_admin",
     "prettier": "prettier --write \"**/*.(ts,tsx)\" || true",
     "expo:check-deps": "expo-yarn-workspaces check-workspace-dependencies",
     "snackui:pull": "git subrepo pull snackui",

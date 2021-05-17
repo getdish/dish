@@ -1,8 +1,8 @@
-import { Review, ReviewWithId, query, review, reviewUpsert } from '@dish/graph'
+import { Review, query, reviewUpsert } from '@dish/graph'
 import { Store, useStore } from '@dish/use-store'
-import { debounce, isNumber } from 'lodash'
-import { useCallback, useLayoutEffect, useRef } from 'react'
-import { Toast, useConstant, useForceUpdate } from 'snackui'
+import { debounce } from 'lodash'
+import { useCallback, useEffect, useLayoutEffect, useRef } from 'react'
+import { Toast, useConstant } from 'snackui'
 
 import { getFullTags } from '../../helpers/getFullTags'
 import { queryRestaurant } from '../../queries/queryRestaurant'
@@ -51,7 +51,7 @@ export const useUserTagVotes = (restaurantSlug: string, activeTags: HomeActiveTa
   const votes: VoteNumber[] = []
   const setVotes = useRef<Function[]>([])
   for (const tagSlug of tagSlugList) {
-    const [vote, setVote] = useUserTagVote({ restaurantSlug, tagSlug })
+    const { vote, setVote } = useUserTagVote({ restaurantSlug, tagSlug })
     votes.push(vote)
     setVotes.current.push(setVote)
   }
@@ -77,40 +77,29 @@ export const useUserTagVote = (props: VoteStoreProps) => {
   const userId = userStore.user?.id
   const voteStore = useStore(TagVoteStore, props)
   const [restaurant] = queryRestaurant(props.restaurantSlug)
-  let vote: 1 | -1 | 0 = 0
 
-  if (restaurant?.id && userId) {
-    const res = query.review({
-      where: {
-        restaurant_id: {
-          _eq: restaurant.id,
+  const vote = userId
+    ? restaurant?.reviews({
+        where: {
+          type: {
+            _eq: 'vote',
+          },
+          user_id: {
+            _eq: userId,
+          },
         },
-        user_id: {
-          _eq: userId,
-        },
-        type: {
-          _eq: 'vote',
-        },
-      },
-      limit: 200,
-    })
-    const found = res.find((x) => x.tag?.slug === props.tagSlug)
-    if (found) {
-      vote = found.vote ?? 0
-    }
-  } else {
-    // console.warn('none', restaurant.id, userId, tagId)
-  }
+      })[0]?.vote ?? 0
+    : 0
 
-  useLayoutEffect(() => {
+  useEffect(() => {
     if (vote !== voteStore.vote) {
       voteStore.setVote(vote)
     }
   }, [vote])
 
-  return [
-    voteStore.vote,
-    async (userVote: VoteNumber | 'toggle') => {
+  return {
+    vote,
+    setVote: async (userVote: VoteNumber | 'toggle') => {
       if (userStore.promptLogin()) {
         return
       }
@@ -122,7 +111,7 @@ export const useUserTagVote = (props: VoteStoreProps) => {
       voteStore.writeVote(restaurant.id, vote)
       Toast.show(`Saved`)
     },
-  ] as const
+  }
 }
 
 const toggleRating = (r: number) => (r == 1 ? -1 : 1)

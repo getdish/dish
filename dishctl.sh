@@ -194,11 +194,9 @@ function timescale_migrate() {
   popd
 }
 
-# function timescale_migrate() {
-#   pushd "$PROJECT_ROOT/services/timescale"
-#   DISH_ENV=not-production ./migrate.sh
-#   popd
-# }
+function hasura_admin() {
+  (cd services/hasura && hasura console --endpoint http://localhost:8080 --admin-secret=$HASURA_GRAPHQL_ADMIN_SECRET)
+}
 
 function hasura_migrate() {
   echo "migrating hasura"
@@ -717,7 +715,7 @@ function wait_until_hasura_ready() {
 export -f wait_until_hasura_ready
 
 function wait_until_dish_app_ready() {
-  echo "Waiting for dish to start..."
+  echo "Waiting for dish to start ($DISH_ENDPOINT)..."
   until is_dish_up; do sleep 0.1; done
   echo "dish is up"
 }
