@@ -1,4 +1,4 @@
-import { Review, query, reviewUpsert } from '@dish/graph'
+import { Review, order_by, query, reviewUpsert, review_constraint } from '@dish/graph'
 import { Store, useStore } from '@dish/use-store'
 import { debounce } from 'lodash'
 import { useCallback, useEffect, useLayoutEffect, useRef } from 'react'
@@ -21,28 +21,32 @@ export class TagVoteStore extends Store<VoteStoreProps> {
     this.vote = vote
   }
 
-  async writeVote(restaurantId: string, vote: VoteNumber) {
-    // insert into db
-    const [tag] = await getFullTags([{ slug: this.props.tagSlug }])
-    if (!tag) {
-      console.error('error writing vote', this.props.tagSlug)
-      return undefined
+  writeVote = debounce(async (restaurantId: string, vote: VoteNumber) => {
+    try {
+      // insert into db
+      const [tag] = await getFullTags([{ slug: this.props.tagSlug }])
+      if (!tag) {
+        console.error('error writing vote', this.props.tagSlug)
+        return undefined
+      }
+      const review = {
+        tag_id: tag.id,
+        user_id: userStore.user?.id,
+        restaurant_id: restaurantId,
+        vote,
+        type: 'vote',
+      }
+      return await writeReview(review)
+    } catch (err) {
+      Toast.error(`Error writing vote: ${err.message}`)
     }
-    const review = {
-      tag_id: tag.id,
-      user_id: userStore.user?.id,
-      restaurant_id: restaurantId,
-      vote,
-      type: 'vote',
-    }
-    return writeReview(review)
-  }
+  }, 50)
 }
 
-const writeReview = debounce(async (review: Partial<Review>) => {
+const writeReview = async (review: Partial<Review>) => {
   console.log('writing', review)
-  await reviewUpsert([review])
-}, 50)
+  await reviewUpsert([review], review_constraint.review_username_restaurant_id_tag_id_type_key)
+}
 
 export const useUserTagVotes = (restaurantSlug: string, activeTags: HomeActiveTagsRecord) => {
   const tagSlugList = useConstant(() => Object.keys(activeTags).filter((x) => activeTags[x]))
@@ -80,6 +84,7 @@ export const useUserTagVote = (props: VoteStoreProps) => {
 
   const vote = userId
     ? restaurant?.reviews({
+        limit: 1,
         where: {
           type: {
             _eq: 'vote',
@@ -87,7 +92,13 @@ export const useUserTagVote = (props: VoteStoreProps) => {
           user_id: {
             _eq: userId,
           },
+          tag: {
+            slug: {
+              _eq: props.tagSlug,
+            },
+          },
         },
+        order_by: [{ authored_at: order_by.desc }],
       })[0]?.vote ?? 0
     : 0
 
@@ -98,7 +109,7 @@ export const useUserTagVote = (props: VoteStoreProps) => {
   }, [vote])
 
   return {
-    vote,
+    vote: voteStore.vote,
     setVote: async (userVote: VoteNumber | 'toggle') => {
       if (userStore.promptLogin()) {
         return

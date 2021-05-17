@@ -25,7 +25,7 @@ export const TagSmallButton = memo((props: TagSmallButtonProps) => {
 
 export const TagSmallButtonContent = graphql(
   ({ restaurantSlug, tag, image }: TagSmallButtonProps) => {
-    const [vote, setVote] = useUserTagVote({
+    const { vote, setVote } = useUserTagVote({
       restaurantSlug,
       tagSlug: getTagSlug(tag.slug),
     })

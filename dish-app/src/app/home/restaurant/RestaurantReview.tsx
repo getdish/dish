@@ -96,8 +96,8 @@ export const RestaurantReview = memo(
           {...(!hideRestaurantName && {
             title: (
               <Text fontWeight="800">
-                <Link name="restaurant" params={{ slug: review.restaurant.slug ?? '' }}>
-                  {review.restaurant.name ?? ''}
+                <Link name="restaurant" params={{ slug: review.restaurant?.slug ?? '' }}>
+                  {review.restaurant?.name ?? ''}
                 </Link>
               </Text>
             ),

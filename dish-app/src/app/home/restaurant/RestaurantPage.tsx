@@ -159,6 +159,8 @@ const RestaurantPage = memo(
                 />
               </VStack>
 
+              <Spacer size="lg" />
+
               <View ref={setDishesSection}>
                 <RestaurantDishRow
                   max={35}
