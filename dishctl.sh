@@ -186,7 +186,22 @@ function db_migrate() {
   popd
 }
 
-function db_migrate_init() {
+function timescale_migrate() {
+  echo "Migrating timescale"
+  pushd "$PROJECT_ROOT/services/timescale"
+  npm install &> /dev/null || true
+  node ./scripts/migrate.js
+  popd
+}
+
+# function timescale_migrate() {
+#   pushd "$PROJECT_ROOT/services/timescale"
+#   DISH_ENV=not-production ./migrate.sh
+#   popd
+# }
+
+function hasura_migrate() {
+  echo "migrating hasura"
   db_migrate
   echo "cat init (disbaled until i can fix on tests)"
   # pushd "$PROJECT_ROOT/services/hasura"
@@ -198,12 +213,6 @@ function db_migrate_init() {
   #   -d "${POSTGRES_DB:-dish}" \
   #   --single-transaction
   # popd
-}
-
-function timescale_migrate() {
-  pushd "$PROJECT_ROOT/services/timescale"
-  DISH_ENV=not-production ./migrate.sh
-  popd
 }
 
 function dump_scrape_data_to_s3() {
@@ -689,6 +698,42 @@ function clean_docker_if_disk_full() {
       break
     fi
   done
+}
+
+function is_hasura_up() {
+  [ $(curl -L $HASURA_ENDPOINT/healthz -o /dev/null -w '%{http_code}\n' -s) == "200" ]
+}
+export -f is_hasura_up
+function is_dish_up() {
+  [ $(curl -L $DISH_ENDPOINT/healthz -o /dev/null -w '%{http_code}\n' -s) == "200" ]
+}
+export -f is_dish_up
+
+function wait_until_hasura_ready() {
+  echo "Waiting for Hasura to start ($HASURA_ENDPOINT)..."
+  until is_hasura_up; do sleep 0.1; done
+  echo "Hasura is up"
+}
+export -f wait_until_hasura_ready
+
+function wait_until_dish_app_ready() {
+  echo "Waiting for dish to start..."
+  until is_dish_up; do sleep 0.1; done
+  echo "dish is up"
+}
+export -f wait_until_dish_app_ready
+
+function wait_until_services_ready() {
+  echo "Waiting for hasura to finish starting"
+  if ! timeout --preserve-status 30 bash -c wait_until_hasura_ready; then
+    echo "Timed out waiting for Hasura container to start"
+    exit 1
+  fi
+  echo "Waiting for dish-app to finish starting"
+  if ! timeout --preserve-status 30 bash -c wait_until_dish_app_ready; then
+    echo "Timed out waiting for dish container to start"
+    exit 1
+  fi
 }
 
 function clean_build() {

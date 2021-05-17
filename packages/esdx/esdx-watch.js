@@ -2,11 +2,17 @@
 
 const exec = require('execa')
 
-const legacy = process.argv.includes() === 'legacy'
+const legacy = process.argv.includes('legacy')
+const skipTypes = process.argv.includes('skip-types')
 
 const cmd = `chokidar`
-const args = [`src`, `-c`, `"node ${__dirname}/esdx.js${legacy ? ' legacy' : ''}"`]
-console.log(cmd, args.join(' '))
+const args = [
+  `src`,
+  `-c`,
+  `"node ${__dirname}/esdx.js${legacy ? ' legacy' : ''}${skipTypes ? ' skip-types' : ''}"`,
+]
+
+console.log('esdx watch > ', cmd, args.join(' '))
 const proc = exec(cmd, args, {
   env: {
     NO_CLEAN: true,
