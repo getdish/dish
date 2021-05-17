@@ -16,6 +16,14 @@ tables:
         column_mapping:
           user_id: id
   array_relationships:
+  - name: list_reviews
+    using:
+      manual_configuration:
+        remote_table:
+          schema: public
+          name: review
+        column_mapping:
+          id: list_id
   - name: restaurants
     using:
       foreign_key_constraint_on:

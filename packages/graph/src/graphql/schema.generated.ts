@@ -360,6 +360,7 @@ export interface list_bool_exp {
   created_at?: Maybe<timestamptz_comparison_exp>
   description?: Maybe<String_comparison_exp>
   id?: Maybe<uuid_comparison_exp>
+  list_reviews?: Maybe<review_bool_exp>
   location?: Maybe<geometry_comparison_exp>
   name?: Maybe<String_comparison_exp>
   public?: Maybe<Boolean_comparison_exp>
@@ -391,6 +392,7 @@ export interface list_insert_input {
   created_at?: Maybe<Scalars['timestamptz']>
   description?: Maybe<Scalars['String']>
   id?: Maybe<Scalars['uuid']>
+  list_reviews?: Maybe<review_arr_rel_insert_input>
   location?: Maybe<Scalars['geometry']>
   name?: Maybe<Scalars['String']>
   public?: Maybe<Scalars['Boolean']>
@@ -448,6 +450,7 @@ export interface list_order_by {
   created_at?: Maybe<order_by>
   description?: Maybe<order_by>
   id?: Maybe<order_by>
+  list_reviews_aggregate?: Maybe<review_aggregate_order_by>
   location?: Maybe<order_by>
   name?: Maybe<order_by>
   public?: Maybe<order_by>
@@ -6530,6 +6533,26 @@ export const generatedSchema = {
     created_at: { __type: 'timestamptz!' },
     description: { __type: 'String' },
     id: { __type: 'uuid!' },
+    list_reviews: {
+      __type: '[review!]!',
+      __args: {
+        distinct_on: '[review_select_column!]',
+        limit: 'Int',
+        offset: 'Int',
+        order_by: '[review_order_by!]',
+        where: 'review_bool_exp',
+      },
+    },
+    list_reviews_aggregate: {
+      __type: 'review_aggregate!',
+      __args: {
+        distinct_on: '[review_select_column!]',
+        limit: 'Int',
+        offset: 'Int',
+        order_by: '[review_order_by!]',
+        where: 'review_bool_exp',
+      },
+    },
     location: { __type: 'geometry' },
     name: { __type: 'String!' },
     public: { __type: 'Boolean!' },
@@ -6625,6 +6648,7 @@ export const generatedSchema = {
     created_at: { __type: 'timestamptz_comparison_exp' },
     description: { __type: 'String_comparison_exp' },
     id: { __type: 'uuid_comparison_exp' },
+    list_reviews: { __type: 'review_bool_exp' },
     location: { __type: 'geometry_comparison_exp' },
     name: { __type: 'String_comparison_exp' },
     public: { __type: 'Boolean_comparison_exp' },
@@ -6642,6 +6666,7 @@ export const generatedSchema = {
     created_at: { __type: 'timestamptz' },
     description: { __type: 'String' },
     id: { __type: 'uuid' },
+    list_reviews: { __type: 'review_arr_rel_insert_input' },
     location: { __type: 'geometry' },
     name: { __type: 'String' },
     public: { __type: 'Boolean' },
@@ -6718,6 +6743,7 @@ export const generatedSchema = {
     created_at: { __type: 'order_by' },
     description: { __type: 'order_by' },
     id: { __type: 'order_by' },
+    list_reviews_aggregate: { __type: 'review_aggregate_order_by' },
     location: { __type: 'order_by' },
     name: { __type: 'order_by' },
     public: { __type: 'order_by' },
@@ -9019,8 +9045,8 @@ export const generatedSchema = {
     location: { __type: 'geometry' },
     native_data_unique_key: { __type: 'String' },
     rating: { __type: 'numeric' },
-    restaurant: { __type: 'restaurant!' },
-    restaurant_id: { __type: 'uuid!' },
+    restaurant: { __type: 'restaurant' },
+    restaurant_id: { __type: 'uuid' },
     sentiments: {
       __type: '[review_tag_sentence!]!',
       __args: {
@@ -11983,6 +12009,56 @@ export interface list {
   created_at: ScalarsEnums['timestamptz']
   description?: ScalarsEnums['String']
   id: ScalarsEnums['uuid']
+  /**
+   * An array relationship
+   */
+  list_reviews: (args?: {
+    /**
+     * distinct select on columns
+     */
+    distinct_on?: Array<ScalarsEnums['review_select_column']>
+    /**
+     * limit the number of rows returned
+     */
+    limit?: ScalarsEnums['Int']
+    /**
+     * skip the first n rows. Use only with order_by
+     */
+    offset?: ScalarsEnums['Int']
+    /**
+     * sort the rows by one or more columns
+     */
+    order_by?: Maybe<Array<review_order_by>>
+    /**
+     * filter the rows returned
+     */
+    where?: Maybe<review_bool_exp>
+  }) => Array<review>
+  /**
+   * An aggregated array relationship
+   */
+  list_reviews_aggregate: (args?: {
+    /**
+     * distinct select on columns
+     */
+    distinct_on?: Array<ScalarsEnums['review_select_column']>
+    /**
+     * limit the number of rows returned
+     */
+    limit?: ScalarsEnums['Int']
+    /**
+     * skip the first n rows. Use only with order_by
+     */
+    offset?: ScalarsEnums['Int']
+    /**
+     * sort the rows by one or more columns
+     */
+    order_by?: Maybe<Array<review_order_by>>
+    /**
+     * filter the rows returned
+     */
+    where?: Maybe<review_bool_exp>
+  }) => review_aggregate
   location?: ScalarsEnums['geometry']
   name: ScalarsEnums['String']
   public: ScalarsEnums['Boolean']
@@ -14179,8 +14255,8 @@ export interface review {
   /**
    * An object relationship
    */
-  restaurant: restaurant
-  restaurant_id: ScalarsEnums['uuid']
+  restaurant?: Maybe<restaurant>
+  restaurant_id?: ScalarsEnums['uuid']
   /**
    * An array relationship
    */
