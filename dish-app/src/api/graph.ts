@@ -160,20 +160,23 @@ async function getCachedSelections(
     }
   }
 
+  const fetchFields = uncached.map((x) => x.kind === 'Field' && x.name.value).filter(Boolean)
+  console.log(
+    `🏓 ${Math.round(((total - uncached.length) / total) * 100)}% cache${
+      fetchFields.length ? ` - fetching ${fetchFields.join(', ')}` : ''
+    }`
+  )
+
   // full cache
   if (uncached.length === 0) {
-    console.log('🏓 100% cache')
     return { type: 'full', data } as const
   }
 
   // can cache but none found (use og query)
   if (uncached.length === total) {
-    console.log(`🏓 0% cache`)
     return { type: 'empty', aliasToCacheKey } as const
   }
 
-  console.log(total, uncached.length)
-  console.log(`🏓 ${Math.round(((total - uncached.length) / total) * 100)}% cache`)
   return {
     type: 'partial',
     data,
