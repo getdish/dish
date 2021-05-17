@@ -171,6 +171,9 @@ function umami_migrate() {
 }
 
 function db_migrate() {
+  if ! [ -x "$(command -v hasura)" ]; then
+    curl -L https://github.com/hasura/graphql-engine/raw/stable/cli/get.sh | bash
+  fi
   echo "migrating db $POSTGRES_DB"
   pushd "$PROJECT_ROOT/services/hasura"
   echo "hasura migrate $HASURA_ENDPOINT"

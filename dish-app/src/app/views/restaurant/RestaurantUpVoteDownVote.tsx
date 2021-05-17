@@ -48,7 +48,6 @@ const RestaurantUpVoteDownVoteContents = graphql(
     display,
   }: UpvoteDownvoteProps) => {
     const [restaurant] = queryRestaurant(restaurantSlug)
-    const userStore = useUserStore()
     const restaurantTagSlugs = (activeTagSlugs ?? []).reduce(
       (acc, cur) => ({ ...acc, [cur]: true }),
       {}

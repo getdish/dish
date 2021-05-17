@@ -56,9 +56,9 @@ module.exports = function (api) {
           runtime: 'automatic',
           useBuiltIns: true,
           development: isDev,
-          // ...(isDev && {
-          //   importSource: '@welldone-software/why-did-you-render',
-          // }),
+          ...(isDev && {
+            importSource: '@welldone-software/why-did-you-render',
+          }),
         },
       ],
       isLegacy && [

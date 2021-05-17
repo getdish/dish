@@ -284,7 +284,11 @@ export function createWebpackConfig({
                 test: /\.mdx?$/,
                 use: [
                   {
-                    loader: require.resolve('babel-loader'),
+                    loader: require.resolve('esbuild-loader'),
+                    options: {
+                      loader: 'tsx',
+                      target: 'es2019',
+                    },
                   },
                   {
                     loader: require.resolve('@mdx-js/loader'),
