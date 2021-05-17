@@ -1,10 +1,11 @@
 import { route, useRouteBodyParser } from '@dish/api'
 import { GRAPH_API_INTERNAL, fetchLog } from '@dish/graph'
+import { isPresent } from '@dish/helpers'
 import { Request } from 'express'
 import { FieldNode, OperationDefinitionNode, SelectionNode, SelectionSetNode, print } from 'graphql'
 import gql from 'graphql-tag'
 
-import { redisClient, redisGet, redisSet } from './_rc'
+import { redisClient, redisDeletePattern, redisGet, redisSet } from './_rc'
 
 const hasuraHeaders = {
   'content-type': 'application/json',
@@ -63,9 +64,17 @@ const parseQueryForCache = async (props: GQLCacheProps) => {
   }
 
   if (operation.operation === 'mutation') {
-    // for now we just flush on every mutation :(
-    // TODO if we can just clear by type that would improve a ton
-    redisClient.flushall()
+    // brute force
+    // TODO can make this better, also can make this happen in a throttled way (also in a worker)
+    const names = operation.selectionSet.selections
+      .map((x) => (x.kind === 'Field' ? x.name.value : null))
+      .filter(isPresent)
+      .map((x) => x.replace('insert_', '').replace('update_', '').replace('upsert_', ''))
+    console.log(' [mutation] clearing cache for', names)
+    for (const name of names) {
+      const pattern = `*${name}*`
+      redisDeletePattern(pattern)
+    }
     return null
   }
 
@@ -195,6 +204,7 @@ const updateCacheWithData = ({ cacheKeys, data }: { data: any; cacheKeys: CacheK
       continue
     }
     const val = data[key]
+    // console.log('setting', cacheKey)
     redisSet(cacheKey, JSON.stringify(val))
   }
 }

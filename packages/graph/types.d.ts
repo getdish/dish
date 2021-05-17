@@ -2223,7 +2223,8 @@ declare module "@dish/graph" {
         review_native_data_unique_constraint = "review_native_data_unique_constraint",
         review_native_data_unique_key_key = "review_native_data_unique_key_key",
         review_pkey = "review_pkey",
-        review_username_restaurant_id_tag_id_authored_at_key = "review_username_restaurant_id_tag_id_authored_at_key"
+        review_username_restauarant_id_list_id_type_key = "review_username_restauarant_id_list_id_type_key",
+        review_username_restauarant_id_tag_id_type_key = "review_username_restauarant_id_tag_id_type_key"
     }
     export interface review_delete_at_path_input {
         categories?: Maybe<Array<Maybe<Scalars['String']>>>;
