@@ -106,7 +106,7 @@ const Content = memo(
             </AbsoluteVStack>
           )}
 
-          <SlantedTitle marginBottom={-40} alignSelf="center" size="sm">
+          <SlantedTitle marginBottom={-30} alignSelf="center" size="sm">
             {tagName ?? 'Overall'}
           </SlantedTitle>
 

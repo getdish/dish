@@ -1,9 +1,7 @@
-// TODO if we can have compiler pick up a few more things speeds will go up a lot
 import { Tag, TagQuery, TagType, graphql } from '@dish/graph'
 import { ThumbsDown, ThumbsUp, X } from '@dish/react-feather'
 import React, { memo } from 'react'
 import {
-  AbsoluteVStack,
   HStack,
   StackProps,
   Text,

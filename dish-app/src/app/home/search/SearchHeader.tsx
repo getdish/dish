@@ -20,9 +20,16 @@ export const SearchHeader = memo(() => {
   const { width, setWidthDebounce } = useContentScrollHorizontalFitter()
   const media = useMedia()
   const curProps = useContext(SearchPagePropsContext)!
+
+  if (!curProps) {
+    console.warn('no search props')
+    return null
+  }
+
   const { title, subTitle } = getTitleForState(curProps.item, {
     lowerCase: true,
   })
+
   const lenseTag = getActiveTags(curProps.item).find((x) => x.type === 'lense') ?? tagLenses[0]
   const lenseColor = lenseTag.rgb
   return (

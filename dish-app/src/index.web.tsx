@@ -1,4 +1,4 @@
-import './whydidyourender'
+// import './whydidyourender'
 import './web/base.css'
 
 import { startLogging } from '@dish/graph'

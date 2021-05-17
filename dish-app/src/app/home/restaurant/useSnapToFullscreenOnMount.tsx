@@ -11,7 +11,7 @@ const disposes = new Set<Function>()
 
 export const useSnapToFullscreenOnMount = () => {
   // if (isWeb && !supportsTouchWeb) {
-  console.log('disable useSnapToFullscreenOnMount')
+  // console.log('disable useSnapToFullscreenOnMount')
   return
   // }
   useOnMount(() => {
