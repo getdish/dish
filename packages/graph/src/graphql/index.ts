@@ -30,10 +30,12 @@ function clear() {
 clear()
 
 export const queryFetcher: QueryFetcher = async function (query, variables) {
-  requests++
-  if (requests > 10) {
-    console.log('too many!')
-    throw new Error(`Break out GQ`)
+  if (process.env.NODE_ENV !== 'test' && process.env.TARGET === 'web') {
+    requests++
+    if (requests > 10) {
+      console.log('too many!')
+      throw new Error(`Break out GQ`)
+    }
   }
   clear()
   const headers = {

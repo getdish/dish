@@ -3,19 +3,14 @@
 - [c] [0] recrawl tucson, la, sd, sf
 - [m] [0] move region then search goes to prev region
 - [m] [0] go to diff region and return to one sometimes has empty list cards (graphql caching logic issue)
-- [d] [0] fix vote on dishes hover
 - [m] [0] (restaurantpage) hours modal text error
 - [m] [0] (restaurantpage) cant go into gallery
 - [m] [0] (restaurantpage) dont do anything on change tag selected (scroll etc)
 - [m] [0] (restaurantpage) tap: address, phone, website get working
 - [m] [0] (searchpage) cant tap vote on tag
-- [m] [0] map zooms out every drawer shift
-- [d] [1] voting on lists
 - [d] [1] fix profile pages a lot
-- [m] [1] get regions working
+- [m] [1] get regions working (better)
 - [m] [1] swipe back to go back on drawer cards
-- [m] [2] re-search button should look like app menu button (bigger, shadow, blur, spaced bettter)
-- [m] [3] map shouldn't shift down until touchend on drawer move
 - [m] get login/signup working
 - [m] [3] add apple sign in
 

@@ -116,55 +116,35 @@ const DishViewContent = (props: DishViewProps) => {
   const showSearchButton_ = showSearchButton && isActive && slug
 
   let contents = (
-    <Hoverable onHoverIn={() => setIsHovered(true)} onHoverOut={() => setIsHovered(false)}>
-      {showVote && !!slug && (
-        <AbsoluteVStack
-          width={20}
-          height={20}
-          pointerEvents="none"
-          zIndex={1000000}
-          top="4%"
-          left="4%"
-        >
-          <Suspense fallback={null}>
-            <DishUpvoteDownvote
-              shadowed
-              size="sm"
-              subtle={isWeb && !supportsTouchWeb}
-              slug={slug}
-              score={score}
-              rating={rating}
-              {...(restaurantId &&
-                restaurantSlug && {
-                  restaurantId,
-                  restaurantSlug,
-                })}
-            />
-          </Suspense>
-        </AbsoluteVStack>
-      )}
-
+    <>
       <AbsoluteVStack
         className="ease-in-out-fast"
         fullscreen
-        pointerEvents="none"
         alignItems="flex-end"
         justifyContent="center"
         zIndex={4}
+        onHoverIn={() => setIsHovered(true)}
+        onHoverOut={() => setIsHovered(false)}
       >
-        {/* {!!icon && (
-          <Text
-            className="ease-in-out"
-            zIndex={10}
-            position="absolute"
-            bottom="15%"
-            left="0%"
-            fontSize={28}
-            transform={[{ scale: 1 }]}
-          >
-            {icon}
-          </Text>
-        )} */}
+        {showVote && !!slug && (
+          <AbsoluteVStack width={20} height={20} zIndex={1000000} top="4%" left="4%">
+            <Suspense fallback={null}>
+              <DishUpvoteDownvote
+                shadowed
+                size="sm"
+                subtle={isWeb && !supportsTouchWeb}
+                slug={slug}
+                score={score}
+                rating={rating}
+                {...(restaurantId &&
+                  restaurantSlug && {
+                    restaurantId,
+                    restaurantSlug,
+                  })}
+              />
+            </Suspense>
+          </AbsoluteVStack>
+        )}
 
         <AbsoluteVStack
           opacity={showSearchButton_ ? 1 : 0}
@@ -267,10 +247,10 @@ const DishViewContent = (props: DishViewProps) => {
       {!image && (
         // native needs this vstack
         <VStack width={size} height={size} alignItems="center" justifyContent="center">
-          <Text fontSize={80}>🥗</Text>
+          <Text fontSize={80}>{icon || '🥗'}</Text>
         </VStack>
       )}
-    </Hoverable>
+    </>
   )
 
   if (name && !slug) {
