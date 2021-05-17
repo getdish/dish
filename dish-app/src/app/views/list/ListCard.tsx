@@ -24,10 +24,10 @@ export const ListCard = graphql(
       isBehind?: boolean
     }
   ) => {
+    const { slug, userSlug, region, onHover, hoverable, isBehind } = props
     const { list, isFavorited, reviewsCount, toggleFavorite, photos, backgroundColor } = useList(
       props
     )
-    const { slug, userSlug, region, onHover, hoverable, isBehind } = props
 
     if (!slug || !userSlug) {
       return <Card title="" size="sm" />
