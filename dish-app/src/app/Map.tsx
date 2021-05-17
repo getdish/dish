@@ -32,8 +32,6 @@ const UNCLUSTERED_LABEL_LAYER_ID = 'UNCLUSTERED_LABEL_LAYER_ID'
 const CLUSTER_LABEL_LAYER_ID = 'CLUSTER_LABEL_LAYER_ID'
 const POINT_LAYER_ID = 'POINT_LAYER_ID'
 
-console.log('load map')
-
 const round = (val: number, dec = 1000000) => {
   return Math.round(val * dec) / dec
 }

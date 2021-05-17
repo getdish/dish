@@ -128,42 +128,89 @@ export default function Map({
       <MapboxGL.Camera
         ref={cameraRef}
         minZoomLevel={2}
-        maxZoomLevel={14}
+        maxZoomLevel={22}
         defaultSettings={{
           zoomLevel: span.lng * 200,
           bounds,
         }}
       />
-      {tiles.map(
-        ({
-          name,
-          minZoom,
-          maxZoom,
-          activeColor,
-          hoverColor,
-          color,
-          label,
-          promoteId,
-          labelSource,
-          lineColor,
-          lineColorActive,
-          lineColorHover,
-        }) => {
-          const url = `${DISH_API_ENDPOINT}/tile/${name}.json`
-          const sourceId = `${name}`.replace('.', '')
-          const labelUrl = labelSource ? `${TILES_HOST}/${labelSource}.json` : ''
-          return (
-            <>
-              <MapboxGL.VectorSource key={sourceId} url={url} id={sourceId}>
-                <MapboxGL.FillLayer
-                  id={`${sourceId}fill`}
-                  sourceLayerID={sourceId}
-                  sourceID={sourceId}
-                  minZoomLevel={0 ?? minZoom}
-                  maxZoomLevel={22 ?? maxZoom}
+
+      {/* <MapboxGL.VectorSource
+        id="regions"
+        url="http://192.168.7.53/api/tile/public.zcta5,public.hrr.json"
+      >
+        <MapboxGL.LineLayer
+          id="terrain-data"
+          sourceID="regions"
+          sourceLayerID="public.zcta5"
+          style={{
+            lineColor: '#000000',
+            lineWidth: 1,
+          }}
+        />
+      </MapboxGL.VectorSource> */}
+
+      <MapboxGL.VectorSource
+        id="regions"
+        url={`${DISH_API_ENDPOINT}/tile/public.zcta5,public.hrr,public.nhood_labels,public.zcta5_labels.json`}
+      >
+        {tiles.map(
+          ({
+            name,
+            minZoom,
+            maxZoom,
+            activeColor,
+            hoverColor,
+            color,
+            label,
+            promoteId,
+            labelSource,
+          }) => {
+            const id = `${name}`.replace('.', '')
+            const lineID = `${id}line`
+            const fillID = `${id}fill`
+            const labelID = `${id}label`
+            return (
+              <>
+                <MapboxGL.LineLayer
+                  id={lineID}
+                  sourceLayerID={name}
+                  sourceID="regions"
+                  minZoomLevel={minZoom}
+                  maxZoomLevel={maxZoom}
                   style={{
-                    fillColor: '#000000',
-                    //  [
+                    lineCap: 'round',
+                    lineColor: ['get', 'color'],
+                    // '#000000',
+                    // [
+                    //   'case',
+                    //   ['==', ['feature-state', 'active'], true],
+                    //   lineColorActive || '',
+                    //   ['==', ['feature-state', 'hover'], true],
+                    //   lineColorHover || '',
+                    //   ['==', ['feature-state', 'active'], null],
+                    //   lineColor,
+                    //   'green',
+                    // ],
+                    lineOpacity: 1,
+                    lineWidth: 3,
+                  }}
+                />
+                <MapboxGL.FillLayer
+                  id={fillID}
+                  sourceLayerID={name}
+                  sourceID="regions"
+                  minZoomLevel={minZoom}
+                  maxZoomLevel={maxZoom}
+                  style={{
+                    fillColor: [
+                      'case',
+                      ['has', 'color'],
+                      ['get', 'color'],
+                      'rgba(100,200,100,0.4)',
+                    ],
+
+                    // [
                     //   'case',
                     //   ['==', ['feature-state', 'active'], true],
                     //   activeColor,
@@ -171,63 +218,27 @@ export default function Map({
                     //   hoverColor,
                     //   ['==', ['feature-state', 'active'], false],
                     //   color,
-                    //   'green',
+                    //   'rgba(255,255,0,0.1)',
                     // ],
-                    // fillAntialias: true,
-                    // fillOpacity: 1,
+                    fillAntialias: true,
+                    fillOpacity: 0.25,
                   }}
                 />
-                {/* {lineColor && (
-                <MapboxGL.LineLayer
-                  id={`${name}line`}
-                  // sourceLayerID={sourceId}
-                  minZoomLevel={minZoom}
-                  maxZoomLevel={maxZoom}
-                  // TODO after updating to 8.2 beta this regressed
-                  // @ts-ignore
-                  style={{
-                    lineCap: [
-                      'case',
-                      ['==', ['feature-state', 'active'], true],
-                      lineColorActive || '',
-                      ['==', ['feature-state', 'hover'], true],
-                      lineColorHover || '',
-                      ['==', ['feature-state', 'active'], null],
-                      lineColor,
-                      'green',
-                    ],
-                    lineOpacity: 0.05,
-                    lineWidth: [
-                      'case',
-                      ['==', ['feature-state', 'active'], true],
-                      1,
-                      ['==', ['feature-state', 'hover'], true],
-                      2,
-                      ['==', ['feature-state', 'active'], null],
-                      3,
-                      4,
-                    ],
-                  }}
-                />
-              )} */}
-              </MapboxGL.VectorSource>
-              {labelSource && (
-                <MapboxGL.VectorSource url={labelUrl} id={`${name}-labels`}>
+                {labelSource && (
                   <MapboxGL.SymbolLayer
-                    id={`${name}label`}
-                    // TODO move it to a centroid computed source}
-                    sourceID={null as any}
-                    sourceLayerID={`${name}-labels`}
+                    id={labelID}
+                    sourceLayerID={labelSource}
+                    sourceID="regions"
                     minZoomLevel={minZoom}
                     maxZoomLevel={maxZoom}
                     style={{
                       textField: `{${label}}`,
                       textFont: ['PT Serif Bold', 'Arial Unicode MS Bold'],
-                      // 'textallowOverlap: true,
+                      // textAllowOverlap: true,
                       textVariableAnchor: ['center', 'center'],
                       textRadialOffset: 10,
                       // 'iconallowOverlap: true,
-                      textSize: 22,
+                      textSize: 14,
                       // , {
                       //   base: 1,
                       //   stops: [
@@ -249,17 +260,18 @@ export default function Map({
                       //   theme.colorSecondary,
                       //   'green',
                       // ],
-                      textHaloColor: 'rgba(255,255,255,0.1)',
+                      textHaloColor: 'rgba(255,255,255,1)',
                       textHaloWidth: 1,
                     }}
                   />
-                </MapboxGL.VectorSource>
-              )}
-            </>
-          )
-        }
-      )}
-      <MapboxGL.ShapeSource
+                )}
+              </>
+            )
+          }
+        )}
+      </MapboxGL.VectorSource>
+
+      {/* <MapboxGL.ShapeSource
         id="trackClustersSource"
         shape={{
           type: 'FeatureCollection',
@@ -318,7 +330,7 @@ export default function Map({
             circleRadius: ['interpolate', ['exponential', 1.5], ['zoom'], 9, 4, 11, 8, 16, 22],
           }}
         />
-      </MapboxGL.ShapeSource>
+      </MapboxGL.ShapeSource> */}
     </MapboxGL.MapView>
   )
 }
