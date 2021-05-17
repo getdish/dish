@@ -2950,7 +2950,9 @@ export enum review_constraint {
   /** unique or primary key constraint */
   review_pkey = 'review_pkey',
   /** unique or primary key constraint */
-  review_username_restaurant_id_tag_id_authored_at_key = 'review_username_restaurant_id_tag_id_authored_at_key',
+  review_username_restauarant_id_list_id_type_key = 'review_username_restauarant_id_list_id_type_key',
+  /** unique or primary key constraint */
+  review_username_restauarant_id_tag_id_type_key = 'review_username_restauarant_id_tag_id_type_key',
 }
 
 /** delete the field or element with specified path (for JSON arrays, negative integers count from the end) */
