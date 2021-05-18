@@ -2,18 +2,10 @@ import url from 'url'
 
 import { sleep } from '@dish/async'
 import { sentryMessage } from '@dish/common'
-import {
-  Restaurant,
-  ZeroUUID,
-  query,
-  resolved,
-  restaurantFindOne,
-  restaurantFindOneWithTags,
-} from '@dish/graph'
+import { Restaurant, ZeroUUID, query, resolved } from '@dish/graph'
 import { decode } from '@dish/helpers-node'
 import { ProxiedRequests, WorkerJob } from '@dish/worker'
 import { JobOptions, QueueOptions } from 'bull'
-import { selectFields } from 'gqless'
 import _ from 'lodash'
 
 import { restaurantSaveCanonical } from '../canonical-restaurant'

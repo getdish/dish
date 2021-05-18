@@ -4,7 +4,7 @@ import React, { Suspense, memo } from 'react'
 import { HStack, Spacer, StackProps, VStack } from 'snackui'
 
 import { selectRishDishViewSimple } from '../../../helpers/selectDishViewSimple'
-import { queryRestaurantTags } from '../../../queries/queryRestaurantTags'
+import { QueryRestaurantTagsProps, queryRestaurantTags } from '../../../queries/queryRestaurantTags'
 import { TagButton, TagButtonProps, TagButtonTagProps, getTagButtonProps } from '../TagButton'
 
 type TagRowProps = {
@@ -18,7 +18,7 @@ type TagRowProps = {
   spacing?: number
   spacingHorizontal?: number
   max?: number
-  exclude?: 'orphan' | 'dish' | 'category'
+  exclude?: QueryRestaurantTagsProps['exclude']
 }
 
 export const RestaurantTagsRow = (props: TagRowProps) => {

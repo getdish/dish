@@ -363,9 +363,10 @@ async function assessPhotoWithoutRetries(urls: string[]) {
     // prettier-ignore
     console.log('Fetching Image Quality API batch...', urls.length, 'first:', urls[0])
   }
-  const [imageQualities, imageCategories] = await Promise.all([
+  const [imageQualities, imageCategories, imageSimilarities] = await Promise.all([
     getImageQuality(urls),
     getImageCategory(urls),
+    getImageSimilarity(urls),
   ])
   const res: Partial<PhotoBase>[] = []
   for (const url of urls) {
@@ -383,6 +384,13 @@ async function assessPhotoWithoutRetries(urls: string[]) {
     })
   }
   return res
+}
+
+async function getImageSimilarity(urls: string[]) {
+  // TODO
+  // use imghash + fast-levenshtein
+  for (const url of urls) {
+  }
 }
 
 async function getImageCategory(
