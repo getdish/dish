@@ -89,20 +89,25 @@ steps:
 
   # non test images
 
-  - label: ":docker: build cron"
-    key: cron
-    depends_on: base
-    command: .buildkite/scripts/build_docker_compose.sh cron
+  # - label: ":docker: build cron"
+  #   key: cron
+  #   depends_on: base
+  #   command: .buildkite/scripts/build_docker_compose.sh cron
+  #   env:
+  #     PUSH: true
+
+  - label: ":docker: build summarizer"
+    key: summarizer
+    command: .buildkite/scripts/build_docker_compose.sh summarizer
     env:
       PUSH: true
 
-  # disable, https://community.fly.io/t/docker-push-failing-on-2-8gb-image/1117/2
-  # - label: ":docker: build bert"
-  #   key: bert
-  #   depends_on: base
-  #   command: .buildkite/scripts/build_docker_compose.sh bert
-  #   env:
-  #     PUSH: true
+  - label: ":docker: build bert"
+    key: bert
+    depends_on: base
+    command: .buildkite/scripts/build_docker_compose.sh bert
+    env:
+      PUSH: true
 
   - label: ":docker: build gorse"
     key: gorse
@@ -121,17 +126,6 @@ steps:
     command: .buildkite/scripts/build_docker_compose.sh image-quality
     env:
       PUSH: true
-
-  # - label: ":docker: build db"
-  #   retry:
-  #     automatic: true
-  #   env:
-  #     POSTGRES_NAME: db
-  #   plugins:
-  #     - docker-compose#v3.7.0:
-  #         build: postgres
-  #         image-repository: registry.fly.io/dish-db
-  #         cache-from: postgres:registry.fly.io/dish-db:latest
 
   - label: "setup services for tests"
     key: test-setup

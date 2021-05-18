@@ -2950,7 +2950,7 @@ export enum review_constraint {
   /** unique or primary key constraint */
   review_pkey = 'review_pkey',
   /** unique or primary key constraint */
-  review_username_restauarant_id_list_id_type_key = 'review_username_restauarant_id_list_id_type_key',
+  review_type_user_id_list_id_key = 'review_type_user_id_list_id_key',
   /** unique or primary key constraint */
   review_username_restauarant_id_tag_id_type_key = 'review_username_restauarant_id_tag_id_type_key',
 }

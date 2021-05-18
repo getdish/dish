@@ -673,7 +673,7 @@ function deploy_fly_app() {
 
 function clean_docker_if_disk_full() {
   echo "checking if disk near full..."
-  df -H | grep overlay | head -n 1 | awk '{ print $5 " " $1 }' | while read output;
+  df -H | grep /dev/nvme0n1p7 | head -n 1 | awk '{ print $5 " " $1 }' | while read output;
   do
     used=$(echo "$output" | awk '{ print $1}' | cut -d'%' -f1)
     echo "$output used $used"
@@ -684,11 +684,11 @@ function clean_docker_if_disk_full() {
       fi
       docker image prune --all --filter "until=2h" --force || true
       docker system prune --filter "until=2h" --force || true
-      # docker volume prune --force || true
+      docker volume rm $(docker volume ls -qf dangling=true)
       break
     fi
   done
-  df -H | grep overlay | awk '{ print $5 " " $1 }' | while read output;
+  df -H | grep /dev/nvme0n1p7 | awk '{ print $5 " " $1 }' | while read output;
   do
     used=$(echo "$output" | awk '{ print $1}' | cut -d'%' -f1)
     if [ "$used" -ge 90 ]; then

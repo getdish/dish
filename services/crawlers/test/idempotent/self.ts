@@ -44,6 +44,7 @@ const test = anyTest as TestInterface<Context>
 const GOOGLE_GEOCODER_ID = '0xgoogleid123'
 
 async function reset(t: ExecutionContext<Context>) {
+  console.log('reseting.')
   await flushTestData()
   await deleteAllTestScrapes()
   const [restaurant, _] = await restaurantInsert([
@@ -134,7 +135,7 @@ test('Merging', async (t) => {
   t.assert(parseFloat(p1.photo?.quality).toFixed(3), '4.575')
   t.is(!!updated, true)
   if (!updated) return
-  t.is(updated.name, 'Test Name Yelp')
+  t.is(updated.name, 'Barrel Proof')
   t.is(updated.address, '123 Street, Big City')
   t.is(updated.tags.length, 5)
   t.is(updated.tags.map((i) => i.tag.name).includes('Test Mexican'), true)
@@ -155,8 +156,7 @@ test('Merging', async (t) => {
       rating: 3.5,
     },
     google: {
-      url:
-        'https://www.google.com/maps/place/@0,0,11z/data=!3m1!4b1!4m5!3m4!1stest-google123!8m2!3d0!4d0',
+      url: 'https://www.google.com/maps/place/@0,0,11z/data=!3m1!4b1!4m5!3m4!1stest-google123!8m2!3d0!4d0',
     },
     tripadvisor: {
       url: 'https://tripadvisor.com',

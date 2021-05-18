@@ -50,13 +50,13 @@ export const allLightColors = [
 ]
 
 // WARNING IVE UPDATED THIS FROM SKETCH, THIS IS SOURCE OF TRUTH NOW
-export const yellow = '#D3B348'
-export const pink = `#C94375`
+export const yellow = '#feac20'
+export const pink = `#ee127b`
 export const green = `#0aa446`
 export const red = `#c95d44`
 export const orange = '#DC953D'
 export const blue = '#3658AA'
-export const purple = '#7F37BC'
+export const purple = '#af10fe'
 export const allColors = [yellow, pink, green, red, orange, blue, purple]
 
 export const yellowPastel = '#C4B88D'

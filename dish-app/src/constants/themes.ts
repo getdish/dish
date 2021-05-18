@@ -57,20 +57,20 @@ const error: MyTheme = {
 }
 
 const darkBase = {
-  mapBackground: '#151515',
-  backgroundColorTransparent: 'rgba(25,25,25,0)',
   backgroundColorAlt: 'rgba(54, 54, 104, 0.39)',
+  backgroundColorDarker: '#111111',
   backgroundColorTransluscent: 'rgba(100,100,100,0.05)',
   backgroundColorTransluscentHover: 'rgba(100,100,100,0.1)',
-  backgroundColorDarker: '#111111',
-  colorAlt: '#ffffff',
+  backgroundColorTransparent: 'rgba(25,25,25,0)',
   borderColor: '#353535',
   borderColorHover: '#353535',
+  cardBackgroundColor: '#353535',
   color: '#fefefe',
+  colorAlt: '#ffffff',
+  colorQuartenary: '#aaaaaa',
   colorSecondary: '#dddddd',
   colorTertiary: '#999999',
-  colorQuartenary: '#aaaaaa',
-  cardBackgroundColor: '#353535',
+  mapBackground: '#151515',
   shadowColor: `rgba(0,0,0,0.4)`,
   shadowColorLighter: `rgba(0,0,0,0.2)`,
 }

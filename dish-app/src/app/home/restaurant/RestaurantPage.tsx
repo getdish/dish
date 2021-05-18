@@ -35,12 +35,18 @@ import { useSnapToFullscreenOnMount } from './useSnapToFullscreenOnMount'
 type Props = HomeStackViewProps<HomeStateItemRestaurant>
 
 export default function RestaurantPageContainer(props: Props) {
+  const theme = useTheme()
   const colors = useColorsFor(props.item.restaurantSlug)
   return (
     <StackDrawer
       closable
       fallback={
-        <VStack backgroundColor={colors.themeColor}>
+        <VStack
+          backgroundColor={colors.themeColor}
+          borderBottomColor={theme.borderColor}
+          borderBottomWidth={1}
+          minHeight={450}
+        >
           <PageContentWithFooter>
             <LoadingItems />
           </PageContentWithFooter>
@@ -138,10 +144,6 @@ const RestaurantPage = memo(
 
     return (
       <>
-        <PageTitleTag>
-          {restaurant?.name ?? ''} has great {topTags.join(', ').toLowerCase()} - Dish guide
-        </PageTitleTag>
-
         <ContentScrollView
           ref={setScrollView}
           onScrollYThrottled={(y) => {

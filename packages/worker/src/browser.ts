@@ -20,17 +20,17 @@ export async function fetchBrowserHTML(url: string) {
   return await res.text()
 }
 
-const regions = ['atl', 'sea', 'lax', 'dfw'] // , 'ord', 'iad', 'sjc', 'vin', 'yyz'
 async function fetchBrowser(url: string, headers = {}, retry = 3) {
+  if (!process.env.WORKER_PROXY_URL) {
+    throw new Error(`no process.env.process.env.WORKER_PROXY_URL`)
+  }
   let i = 0
   while (i < retry) {
     i++
     try {
-      const region = regions[Math.round(Math.random() * regions.length)]
-      return await fetch('https://dish-proxy.fly.dev', {
+      return await fetch(process.env.WORKER_PROXY_URL, {
         headers: {
           url,
-          'fly-prefer-region': region,
           ...headers,
         },
       })

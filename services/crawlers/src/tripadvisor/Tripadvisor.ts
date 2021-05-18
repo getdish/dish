@@ -288,7 +288,7 @@ export class Tripadvisor extends WorkerJob {
         more = true
       }
     } catch (error) {
-      sentryException(error)
+      sentryException({ error })
     }
     return { more, data: response.data }
   }

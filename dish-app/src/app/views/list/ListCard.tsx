@@ -1,5 +1,5 @@
 import { graphql } from '@dish/graph'
-import React from 'react'
+import React, { Suspense } from 'react'
 import { AbsoluteVStack, HStack, Hoverable, VStack } from 'snackui'
 
 import { getImageUrl } from '../../../helpers/getImageUrl'
@@ -8,13 +8,22 @@ import { FavoriteButton, FavoriteButtonProps } from '../FavoriteButton'
 import { Image } from '../Image'
 import { Link } from '../Link'
 import { Score } from '../Score'
-import { useList } from './useList'
+import { useList, useListFavorite } from './useList'
 
 export type ListIDProps = {
   slug?: string
   userSlug?: string
   region: string
 }
+
+const ListFavoriteButton = graphql((props: ListIDProps) => {
+  const { isFavorited, toggleFavorite, reviewsCount } = useListFavorite(props)
+  return (
+    <FavoriteButton isFavorite={isFavorited} onToggle={toggleFavorite}>
+      {reviewsCount}
+    </FavoriteButton>
+  )
+})
 
 export const ListCard = graphql(
   (
@@ -25,9 +34,7 @@ export const ListCard = graphql(
     }
   ) => {
     const { slug, userSlug, region, onHover, hoverable, isBehind } = props
-    const { list, isFavorited, reviewsCount, toggleFavorite, photos, backgroundColor } = useList(
-      props
-    )
+    const { list, photos, backgroundColor } = useList(props)
 
     if (!slug || !userSlug) {
       return <Card title="" size="sm" />
@@ -45,9 +52,9 @@ export const ListCard = graphql(
           isBehind={isBehind}
           outside={
             <AbsoluteVStack zIndex={1000000} bottom="-5%" right="-5%">
-              <FavoriteButton isFavorite={isFavorited} onToggle={toggleFavorite}>
-                {reviewsCount}
-              </FavoriteButton>
+              <Suspense fallback={null}>
+                <ListFavoriteButton {...props} />
+              </Suspense>
             </AbsoluteVStack>
           }
           photo={

@@ -32,6 +32,7 @@ services:
       dockerfile: ./services/cron/Dockerfile
   postgres:
     image: registry.fly.io/dish-${POSTGRES_NAME:-postgres}${DISH_IMAGE_TAG}
+    restart: on-failure:5
     command: postgres -c config_file=/postgres/postgresql.conf
     build:
       context: ./services/${POSTGRES_NAME:-postgres}
@@ -46,11 +47,12 @@ services:
       - 5432:5432
   timescale:
     command: ["-c", "max_connections=300"]
+    restart: on-failure:5
     image: registry.fly.io/dish-timescale${DISH_IMAGE_TAG}
     build:
       context: ./services/timescale
     volumes:
-      - ${HOME}/.dish/timescaledb:/var/lib/postgresql/data
+      - ${HOME}/.dish/timescaledb${TIMESCALE_DB_FILE:-}:/var/lib/postgresql/data
     environment:
       POSTGRES_USER: ${TIMESCALE_USER:-postgres}
       POSTGRES_PASSWORD: ${TIMESCALE_PASSWORD:-postgres}
@@ -68,6 +70,13 @@ services:
       dockerfile: ./Dockerfile
     ports:
       - ${REDIS_PORT:-6379}:6379
+  summarizer:
+    image: registry.fly.io/dish-summarizer${DISH_IMAGE_TAG}
+    build:
+      context: ./services/summarizer
+      dockerfile: ./Dockerfile
+    ports:
+      - 5000:5000
   worker-proxy:
     image: registry.fly.io/dish-proxy${DISH_IMAGE_TAG}
     build:
@@ -115,6 +124,7 @@ services:
       - 'hooks'
   dish-app:
     image: registry.fly.io/dish-app${DISH_IMAGE_TAG}
+    restart: on-failure:5
     build:
       context: ./
       dockerfile: ./dish-app/Dockerfile
@@ -140,6 +150,7 @@ services:
       - 'tileserver'
   tileserver:
     image: registry.fly.io/dish-tileserver${DISH_IMAGE_TAG}
+    restart: on-failure:5
     build:
       context: ./services/tileserver
       dockerfile: ./Dockerfile

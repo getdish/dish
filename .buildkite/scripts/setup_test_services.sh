@@ -15,7 +15,7 @@ echo "POSTGRES_DB: $POSTGRES_DB"
 
 echo "Starting docker for $DISH_ENV"
 
-DB_DATA_DIR="/data/postgresdb/" \
+export DB_DATA_DIR="/data/postgresdb/"
 ./dishctl.sh docker_compose_up -d
 
 ./dishctl.sh wait_until_services_ready

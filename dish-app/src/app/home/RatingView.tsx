@@ -25,7 +25,7 @@ export const RatingView = ({
   const ratingInner = rating * 0.7
   const ratingMiddle = rating * 0.5
   const rotate = `${(1 - ratingInner / 100) * 180}deg`
-  const width = size * 0.1
+  const width = size * 0.05
   const innerSize = Math.round(stacked ? size * 0.66 : size * 0.33)
   const middleSize = Math.round(stacked ? size * 0.8 : size * 0.6)
   const outerSize = Math.round(stacked ? size : size * 0.85)
@@ -52,12 +52,11 @@ export const RatingView = ({
       {/* {stacked ? null : middleRing} */}
       <Text
         color={theme.color}
-        letterSpacing={-0.125 * width}
-        opacity={0.7}
-        fontWeight="900"
-        fontSize={3.5 * width}
+        letterSpacing={-0.13 * width}
+        fontWeight="800"
+        fontSize={7.5 * width}
       >
-        {Math.round(rating)}
+        {Math.min(99, Math.round(rating))}
       </Text>
     </ProgressRing>
   )
@@ -85,16 +84,25 @@ export const RatingView = ({
         {typeof count !== 'undefined' && (
           <AbsoluteVStack
             zIndex={-1}
-            top="-15%"
-            right="-15%"
-            backgroundColor="#fff"
-            width={size * 0.44}
-            height={size * 0.44}
+            top="-24%"
+            right="-24%"
+            width={size * 0.55}
+            height={size * 0.55}
             borderRadius={100}
-            alignItems="center"
             justifyContent="center"
+            alignItems="center"
+            backgroundColor={theme.backgroundColor}
+            shadowColor={theme.shadowColor}
+            shadowRadius={5}
+            shadowOffset={{ height: 2, width: 0 }}
           >
-            <Text color={theme.color} opacity={0.5} fontWeight="600" fontSize={longText ? 10 : 12}>
+            <Text
+              letterSpacing={-0.5}
+              color={theme.color}
+              opacity={0.75}
+              fontWeight="800"
+              fontSize={longText ? 12 : 14}
+            >
               {countText}
             </Text>
           </AbsoluteVStack>

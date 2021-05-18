@@ -29,14 +29,14 @@ type LatLon = {
   lat: number
 }
 
-export type Scrape = {
+export type Scrape<D extends ScrapeData = ScrapeData> = {
   id?: string
   time?: Date
   restaurant_id: string
   location: LatLon
   source: string
   id_from_source: string
-  data: ScrapeData
+  data: D
 }
 
 export type ScrapeData = { [key: string]: any }

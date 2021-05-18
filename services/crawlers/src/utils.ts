@@ -81,8 +81,11 @@ export class DB {
     })
     this.pool.on('error', (e) => {
       console.log(`Error: pool (${this.config.host}:${this.config.port})`, e.message, e.stack)
-      sentryException(e, {
-        more: 'Error likely from long-lived pool connection in node-pg',
+      sentryException({
+        error: e,
+        data: {
+          more: 'Error likely from long-lived pool connection in node-pg',
+        },
       })
       this.pool = null
     })

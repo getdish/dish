@@ -188,17 +188,29 @@ export class Yelp extends WorkerJob {
 
     this.log(`geo search: ${coords}, page ${start}, ${validResults.length} results`)
 
-    for (const data of validResults) {
-      const info = data.searchResultBusiness
-      const name = info.name
-      if (onlyRestaurant) {
-        if (!isMatchingRestaurant(info, onlyRestaurant)) {
-          this.log('YELP SANDBOX: Skipping ' + name)
-          continue
+    let toCrawl: any[] = []
+
+    if (!onlyRestaurant) {
+      toCrawl = validResults
+    } else {
+      const findOne = (strategy = 'strict') => {
+        if (toCrawl.length) return
+        for (const data of validResults) {
+          const info = data.searchResultBusiness
+          if (isMatchingRestaurant(info, onlyRestaurant, strategy as any)) {
+            // prettier-ignore
+            this.log(`YELP SANDBOX: found ${info.name} ${strategy} - scrape (${info.formattedAddress} ${info.phone} ${info.name}) restaurant (${onlyRestaurant.address} ${onlyRestaurant.telephone} ${onlyRestaurant.name})`)
+            toCrawl = [data]
+            found_the_one = true
+            break
+          }
         }
-        found_the_one = true
-        this.log('YELP SANDBOX: found ' + name)
       }
+      findOne('strict')
+      findOne('fuzzy')
+    }
+
+    for (const data of toCrawl) {
       const timeout = sleep(40000)
       await Promise.race([
         this.getRestaurant(data),
@@ -207,9 +219,6 @@ export class Yelp extends WorkerJob {
         }),
       ])
       timeout.cancel()
-      if (found_the_one) {
-        break
-      }
     }
 
     this.log('done with getRestaurants page')
@@ -254,6 +263,8 @@ export class Yelp extends WorkerJob {
     } else {
       biz_page = data.searchResultBusiness.businessUrl
     }
+    // lets use mobile!
+    biz_page = biz_page.replace('www.', 'm.')
     const biz_page_uri = url.parse(biz_page, true)
     await this.runOnWorker('getEmbeddedJSONData', [id, biz_page_uri.path, data.bizId])
   }
@@ -277,27 +288,27 @@ export class Yelp extends WorkerJob {
   async getEmbeddedJSONData(id: string, yelp_path: string, id_from_source: string) {
     this.current = yelp_path
     this.log(`getting embedded JSON for: ${yelp_path}`)
-    const response = await yelpAPI.getHyperscript(
+    const data = await yelpAPI.getHyperscript(
       yelp_path,
-      'script[data-hypernova-key*="BizDetailsApp"]'
+      'script[data-hypernova-key*="__mobile_site__Biz__dynamic"]'
     )
-    const data = this.extractEmbeddedJSONData(response)
     if (!data) {
       throw new Error(`No extraction found`)
     }
 
-    if (!('mapBoxProps' in data)) {
-      const message = "Error Couldn't extract embedded data"
-      this.log(message)
-      sentryMessage(message, { path: yelp_path })
+    if (!('legacy' in data)) {
+      if (process.env.NODE_ENV === 'development') {
+        // prettier-ignore
+        console.log('no mapBoxProps in\n', JSON.stringify(data, null, 2), 'via response\n', JSON.stringify(response, null, 2))
+      }
+      sentryMessage("Error Couldn't extract embedded data", { path: yelp_path }, this.log)
       return
     }
 
-    const uri = url.parse(data.mapBoxProps.staticMapProps.src.replace(/&amp;/g, '&'), true)
-    const coords = (uri.query.center as string).split(',')
-    const lat = parseFloat(coords[0])
-    const lon = parseFloat(coords[1])
     this.log(`merge scrape data: ${yelp_path}`)
+
+    const { mapState } = data.legacyProps.props.directionsModalProps
+    const lon = mapState
     const scrape = (await scrapeMergeData(id, { data_from_html_embed: data }))!
     const restaurant_id = await restaurantSaveCanonical(
       'yelp',
@@ -343,41 +354,42 @@ export class Yelp extends WorkerJob {
     await this.runOnWorker('getReviews', [id, bizId])
   }
 
-  extractEmbeddedJSONData(obj: { [key: string]: any }) {
-    const json = obj.bizDetailsPageProps
-    if (json) {
-      let data: { [keys: string]: any } = {}
-      const fields = [
-        'bizHoursProps',
-        'mapBoxProps',
-        'moreBusinessInfoProps',
-        'bizContactInfoProps',
-        'photoHeaderProps',
-      ]
-      for (const key of Object.keys(json)) {
-        if (fields.includes(key)) {
-          data[key] = json[key]
-        }
-      }
-      if (data?.photoHeaderProps?.photoFlagReasons) {
-        delete data.photoHeaderProps.photoFlagReasons
-      }
-      data = this.numericKeysFix(data)
-      return data
-    } else {
-      this.log(`no json found!`)
-    }
-    return null
-  }
+  // extractEmbeddedJSONData(obj: { [key: string]: any }) {
+  //   const json = obj.bizDetailsPageProps
+  //   if (json) {
+  //     let data: { [keys: string]: any } = {}
+  //     const fields = [
+  //       //
+  //       'legacyProps',
+  //       // 'bizHoursProps',
+  //       // 'mapBoxProps',
+  //       // 'bizContactInfoProps',
+  //       // 'photoHeaderProps',
+  //     ]
+  //     for (const key of Object.keys(json)) {
+  //       if (fields.includes(key)) {
+  //         data[key] = json[key]
+  //       }
+  //     }
+  //     if (data?.photoHeaderProps?.photoFlagReasons) {
+  //       delete data.photoHeaderProps.photoFlagReasons
+  //     }
+  //     data = this.numericKeysFix(data)
+  //     return data
+  //   } else {
+  //     this.log(`no json found!`)
+  //   }
+  //   return null
+  // }
 
-  numericKeysFix(data: { [key: string]: any }) {
-    if (data.ratingDetailsProps) {
-      data.ratingDetailsProps.monthlyRatingsByYear = escape(
-        JSON.stringify(data.ratingDetailsProps.monthlyRatingsByYear)
-      )
-    }
-    return data
-  }
+  // numericKeysFix(data: { [key: string]: any }) {
+  //   if (data.ratingDetailsProps) {
+  //     data.ratingDetailsProps.monthlyRatingsByYear = escape(
+  //       JSON.stringify(data.ratingDetailsProps.monthlyRatingsByYear)
+  //     )
+  //   }
+  //   return data
+  // }
 
   async getPhotos(id: string, bizId: string, photoTotal: number) {
     const PER_PAGE = 30
@@ -440,12 +452,18 @@ export class Yelp extends WorkerJob {
   }
 }
 
-function isMatchingRestaurant(data, restaurant: Restaurant) {
-  if (restaurant.address?.includes(data.formattedAddress)) {
-    return true
-  }
-  if (restaurant.telephone === data.phone) {
-    return true
+function isMatchingRestaurant(
+  data,
+  restaurant: Restaurant,
+  exactness: 'fuzzy' | 'strict' = 'strict'
+) {
+  if (exactness !== 'strict') {
+    if (data.formattedAddress && restaurant.address?.includes(data.formattedAddress)) {
+      return true
+    }
+    if (restaurant.telephone === data.phone) {
+      return true
+    }
   }
   if (restaurant.name === data.name) {
     return true
