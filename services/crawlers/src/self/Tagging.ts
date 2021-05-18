@@ -58,12 +58,14 @@ export class Tagging extends Loggable {
   }
 
   async main() {
-    const yelps = scrapeGetData(this.crawler.yelp, 'data_from_map_search.categories', []).map(
-      (c) => c.title
-    )
+    const yelps = scrapeGetData(
+      this.crawler.yelp,
+      (x) => x.data_from_search_list_item.categories,
+      []
+    ).map((c) => c.title)
     const tripadvisors = scrapeGetData(
       this.crawler.tripadvisor,
-      'overview.detailCard.tagTexts.cuisines.tags',
+      (x) => x.overview.detailCard.tagTexts.cuisines.tags,
       []
     ).map((c) => c.tagValue)
     const tags = uniq([...yelps, ...tripadvisors])
@@ -159,8 +161,10 @@ export class Tagging extends Loggable {
     WHERE restaurant_id = '${this.crawler.restaurant.id}'`)
     if (result.rows.length == 0) {
       sentryMessage('No rank for tag', {
-        restaurant_id: this.crawler.restaurant.id,
-        tag_id: tag_id,
+        data: {
+          restaurant_id: this.crawler.restaurant.id,
+          tag_id: tag_id,
+        },
       })
     }
     const rank = parseInt(result.rows[0].rank)
@@ -247,7 +251,7 @@ export class Tagging extends Loggable {
 
   async getPhotosWithText() {
     let photos: PhotoWithText[] = []
-    const photoData = this.crawler.getPaginatedData(this.crawler.yelp?.data ?? null, 'photos')
+    const photoData = this.crawler.getPaginatedData(this.crawler.yelp?.data.photos ?? null)
     this.log(`Yelp main photos: ${photoData.length}`)
     for (const item of photoData) {
       if (item.media_data) {
@@ -260,7 +264,7 @@ export class Tagging extends Loggable {
     const reviewPhotos = (
       await Promise.all(
         this.crawler
-          .getPaginatedData(this.crawler.yelp?.data ?? null, 'reviews')
+          .getPaginatedData(this.crawler.yelp?.data?.reviews)
           .flatMap((x) => x.photos)
           .map(async (item) => {
             const photo = item.src
@@ -272,8 +276,9 @@ export class Tagging extends Loggable {
               return
             }
             if (item.caption) {
+              // TODO put this high res logic somewhere and use in regular photos
               // replace with bigger image
-              const largeResUrl = photo.replace('300s', '1000s')
+              const largeResUrl = photo.replace('300s', '1000s').replace('348s', '1000s')
               const largeResExists = await fetch(largeResUrl).then((res) => res.status === 200)
               const url = largeResExists ? largeResUrl : photo
               return {
@@ -286,7 +291,8 @@ export class Tagging extends Loggable {
     ).filter(isPresent)
     this.log(`Yelp review photos: ${reviewPhotos.length}`)
     photos = [...photos, ...reviewPhotos]
-    const tripAdvisorPhotos = scrapeGetData(this.crawler.tripadvisor, 'photos_with_captions') || []
+    const tripAdvisorPhotos =
+      scrapeGetData(this.crawler.tripadvisor, (x) => x.photos_with_captions) || []
     this.log(`Tripadvisor photos with captions ${tripAdvisorPhotos.length}`)
     for (const item of tripAdvisorPhotos) {
       if (item.caption) {
@@ -361,7 +367,7 @@ export class Tagging extends Loggable {
       this.log(`getYelpReviews: No yelp data found`, this.crawler.yelp)
       return []
     }
-    const yelp_reviews = this.crawler.getPaginatedData(data, 'reviews')
+    const yelp_reviews = this.crawler.getPaginatedData(data.reviews)
     if (DISH_DEBUG > 1) {
       this.log(`Get yelp reviews`, yelp_reviews)
     }
@@ -386,11 +392,11 @@ export class Tagging extends Loggable {
 
   _getTripadvisorReviews() {
     const td_data = this.crawler.tripadvisor?.data || {}
-    const tripadvisor_reviews = this.crawler.getPaginatedData(td_data, 'reviews')
+    const tripadvisor_reviews = this.crawler.getPaginatedData(td_data.reviews)
     let reviews: Partial<Review>[] = []
     for (const tripadvisor_review of tripadvisor_reviews) {
       if (!tripadvisor_review.username || tripadvisor_review.username == '') {
-        sentryMessage('TRIPADVISOR: Review has no username', tripadvisor_review)
+        sentryMessage('TRIPADVISOR: Review has no username', { data: tripadvisor_review })
         continue
       }
       reviews.push({

@@ -289,7 +289,7 @@ function _traverse(o: any, fn: (obj: any, prop: string, value: any) => void) {
     if (o[i] !== null && typeof o[i] === 'object') {
       _traverse(o[i], fn)
     }
-    fn.apply({}, [o, i, o[i]])
+    fn(o, i, o[i])
   }
 }
 
@@ -303,11 +303,6 @@ export function ensureJSONSyntax(json: {}) {
 
 function ensureJSONKeySyntax(object: {}, key: string, value: any) {
   let fixed_key = key
-  if (key.includes('-')) {
-    fixed_key = '__HYPHEN__' + key.replace(/-/g, '_')
-    object[fixed_key] = value
-    delete object[key]
-  }
   if (key.includes('@')) {
     fixed_key = key.replace(/@/g, '')
     object[fixed_key] = value

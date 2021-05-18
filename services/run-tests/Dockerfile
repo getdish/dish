@@ -1,6 +1,7 @@
 # for running tests in on ci
 
-FROM registry.fly.io/dish-base:latest
+# start from worker so we have chrome installed
+FROM registry.fly.io/dish-worker:latest
 
 WORKDIR /app
 

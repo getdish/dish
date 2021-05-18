@@ -10439,6 +10439,7 @@ __metadata:
     esbuild: ^0.11.13
     esbuild-register: ^2.5.0
     esm: ^3.2.25
+    identity-obj-proxy: ^3.0.0
     import-sort-style-module: ^6.0.0
     npm-run-all: ^4.1.5
     patch-package: ^6.4.7
@@ -11047,12 +11048,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"esbuild@npm:0.11.13":
-  version: 0.11.13
-  resolution: "esbuild@npm:0.11.13"
+"esbuild@npm:0.12.1":
+  version: 0.12.1
+  resolution: "esbuild@npm:0.12.1"
   bin:
     esbuild: bin/esbuild
-  checksum: 0fc99418c4f8d3c3d889b807e2494348655e36221135b3b5266d6adabb3f458d8ec94a577f1936889b892f2edd840ca1e274f89c1701d20073f7a880d5a78d26
+  checksum: 9fad417f76b9bd8d8f62ae76572659066dfeefb11583cef73c283f7e0b75c9d1a341f9b9237b420bb1eb02234706e2563fea06ac9a1e01659705b57a3b75baa1
   languageName: node
   linkType: hard
 
@@ -12949,6 +12950,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"harmony-reflect@npm:^1.4.6":
+  version: 1.6.2
+  resolution: "harmony-reflect@npm:1.6.2"
+  checksum: 8c6ffbe85247f3af11ed5dddf65c444bbd5f1c46d13d0d6ad14644f94e3736c61692d7a4a3487b344a0b6725dc2b221cdb48642a65f0e84edebcdaafe0eb2894
+  languageName: node
+  linkType: hard
+
 "has-ansi@npm:^2.0.0":
   version: 2.0.0
   resolution: "has-ansi@npm:2.0.0"
@@ -13541,6 +13549,15 @@ __metadata:
   peerDependencies:
     postcss: ^8.1.0
   checksum: 4bf5c2e25b106a6c1f58d5f7b35134810aa785455f0c30e31939d873d4110964c5e470862026e0af51608b6d64853c614d9c724018f73cd59974106c0927e982
+  languageName: node
+  linkType: hard
+
+"identity-obj-proxy@npm:^3.0.0":
+  version: 3.0.0
+  resolution: "identity-obj-proxy@npm:3.0.0"
+  dependencies:
+    harmony-reflect: ^1.4.6
+  checksum: 87f71cb15bc6173123a97f37f4fe2a9e1e44d9ceaceb19b0b233a0ab62bcc08793a019bc00241d876a73421ec4005fd28952805ef72725cda5866d712d789fe7
   languageName: node
   linkType: hard
 

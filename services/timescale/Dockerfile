@@ -1,7 +1,3 @@
-# fly workaround, before running timescale mount to /data and run this:
-# FROM node:15.10.0-buster
-# CMD ["rm", "-r", "/data/lost+found"]
-
 FROM timescale/timescaledb-postgis:1.7.2-pg12
 
 ENV POSTGRES_USER=postgres

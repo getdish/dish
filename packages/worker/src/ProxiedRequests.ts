@@ -2,7 +2,7 @@ import { sleep } from '@dish/async'
 import _ from 'lodash'
 import fetch, { FetchOptions } from 'make-fetch-happen'
 
-import { fetchBrowserHTML, fetchBrowserHyperscript, fetchBrowserJSON } from './browser'
+import { fetchBrowserHTML, fetchBrowserJSON, fetchBrowserScriptData } from './browser'
 
 if (!process.env.LUMINATI_PROXY_HOST || !process.env.STORMPROXY_HOSTS) {
   console.error('Warning: Missing proxy config ⚠️ ⚠️ ⚠️', {
@@ -36,8 +36,8 @@ export class ProxiedRequests {
     return await this.get(uri, props).then((x) => x.json() as Promise<{ [key: string]: any }>)
   }
 
-  async getHyperscript(uri: string, selector: string) {
-    return await fetchBrowserHyperscript(this.domain + uri, selector)
+  async getScriptData(uri: string, selectors: string[]) {
+    return await fetchBrowserScriptData(this.domain + uri, selectors)
   }
 
   async getText(uri: string, props?: Opts) {

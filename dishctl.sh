@@ -205,15 +205,15 @@ function hasura_migrate() {
   echo "migrating hasura"
   db_migrate
   echo "cat init (disbaled until i can fix on tests)"
-  # pushd "$PROJECT_ROOT/services/hasura"
-  # PGPASSWORD=$POSTGRES_PASSWORD cat functions/*.sql | \
-  #   psql \
-  #   -p "$POSTGRES_PORT" \
-  #   -h localhost \
-  #   -U "${POSTGRES_USER:-postgres}" \
-  #   -d "${POSTGRES_DB:-dish}" \
-  #   --single-transaction
-  # popd
+  pushd "$PROJECT_ROOT/services/hasura"
+  cat functions/*.sql | \
+    PGPASSWORD=$POSTGRES_PASSWORD psql \
+    -p "$POSTGRES_PORT" \
+    -h localhost \
+    -U "${POSTGRES_USER:-postgres}" \
+    -d "${POSTGRES_DB:-dish}" \
+    --single-transaction
+  popd
 }
 
 function dump_scrape_data_to_s3() {
@@ -505,10 +505,14 @@ function docker_compose_up_subset() {
   echo "starting $services"
   services=$1
   extra=$2
+  flags=""
+  if [ "$DOCKER_NO_RECREATE" != "true" ]; then
+    flags="--remove-orphans --force-recreate"
+  fi
   if [ -z "$extra" ]; then
-    log_command -- docker-compose up --force-recreate --remove-orphans $services
+    log_command -- docker-compose up $flags $services
   else
-    log_command -- docker-compose up --force-recreate --remove-orphans "$extra" $services
+    log_command -- docker-compose up $flags "$extra" $services
   fi
   printf "\n\n\n"
 }
@@ -520,7 +524,7 @@ function docker_compose_up() {
       | grep -E -v "$services_list" \
       | tr '\r\n' ' '
   )
-  echo "docker_compose_up: $DB_DATA_DIR $DISH_IMAGE_TAG $POSTGRES_DB $HASURA_PORT"
+  echo "docker_compose_up: $services -- $DISH_IMAGE_TAG $POSTGRES_DB $HASURA_PORT"
   # cleans up misbehaving old containers
   if [ "$DISH_ENV" = "test" ]; then
     for service in $services; do
@@ -528,6 +532,11 @@ function docker_compose_up() {
     done
   fi
   docker_compose_up_subset "$services" "$@"
+}
+
+# bypass filtering and stuff
+function up() {
+  docker-compose up "$@"
 }
 
 function deploy_all() {
@@ -705,6 +714,12 @@ function is_hasura_up() {
   [ $(curl -L $HASURA_ENDPOINT/healthz -o /dev/null -w '%{http_code}\n' -s) == "200" ]
 }
 export -f is_hasura_up
+
+function is_timescale_up() {
+  [ $(curl -L $TIMESCALE_ENDPOINT -o /dev/null -w '%{http_code}\n' -s) == "000" ]
+}
+export -f is_timescale_up
+
 function is_dish_up() {
   [ $(curl -L $DISH_ENDPOINT/healthz -o /dev/null -w '%{http_code}\n' -s) == "200" ]
 }
@@ -717,6 +732,13 @@ function wait_until_hasura_ready() {
 }
 export -f wait_until_hasura_ready
 
+function wait_until_timescale_ready() {
+  echo "Waiting for Timescale to start ($TIMESCALE_ENDPOINT)..."
+  until is_timescale_up; do sleep 0.1; done
+  echo "Timescale is up"
+}
+export -f wait_until_timescale_ready
+
 function wait_until_dish_app_ready() {
   echo "Waiting for dish to start ($DISH_ENDPOINT)..."
   until is_dish_up; do sleep 0.1; done
@@ -728,6 +750,11 @@ function wait_until_services_ready() {
   echo "Waiting for hasura to finish starting"
   if ! timeout --preserve-status 30 bash -c wait_until_hasura_ready; then
     echo "Timed out waiting for Hasura container to start"
+    exit 1
+  fi
+  echo "Waiting for timescale to finish starting"
+  if ! timeout --preserve-status 30 bash -c wait_until_timescale_ready; then
+    echo "Timed out waiting for Timescale container to start"
     exit 1
   fi
   echo "Waiting for dish-app to finish starting"
@@ -753,6 +780,10 @@ function clean() {
 
 function run() {
   bash -c "$@"
+}
+
+function env() {
+  echo "exported env $DISH_ENV"
 }
 
 if command -v git &> /dev/null; then

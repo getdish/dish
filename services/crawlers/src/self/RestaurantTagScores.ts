@@ -91,8 +91,7 @@ export class RestaurantTagScores extends Loggable {
         return await fetchBertSentiment(text)
       } catch (error) {
         if (!error.message.includes('json')) {
-          sentryException({
-            error,
+          sentryException(error, {
             data: {
               function: 'fetchBertSentimentWithRetries',
               restaurant: this.crawler.restaurant.id,
@@ -105,7 +104,9 @@ export class RestaurantTagScores extends Loggable {
         if (retries > MAX_RETRIES) {
           this.crawler.log('Failed Bert sentiment request: ' + error.message)
           sentryMessage(MAX_RETRIES + ' failed attempts requesting Bert API', {
-            text: text,
+            data: {
+              text: text,
+            },
           })
           return
         }

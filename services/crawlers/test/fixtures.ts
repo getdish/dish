@@ -1,7 +1,7 @@
 import { Restaurant } from '@dish/graph'
 
 import { Scrape } from '../src/scrape-helpers'
-import { yelp_hours } from './yelp_hours'
+import { YelpScrape } from '../src/yelp/Yelp'
 
 const GOOGLE_GEOCODER_ID = '0xgoogleid123'
 
@@ -22,59 +22,65 @@ export const restaurant_fixture_nearly_matches: Partial<Restaurant> = {
   location: { type: 'Point', coordinates: [0, 0] },
 }
 
-export type YelpScrape = Scrape<{
-  dynamic: typeof import('./yelp-dynamic-fixture.json')
-  json: typeof import('./yelp-json-fixture.json')
-  [key: string]: any
-}>
-
 export const yelp: Partial<YelpScrape> = {
   source: 'yelp',
   id_from_source: 'test123',
   data: {
-    dynamic: require('./yelp-dynamic-fixture.json'),
-    json: require('./yelp-json-fixture.json'),
-    photosp0: [
-      {
-        src: 'https://i.imgur.com/92a8cNI.jpg',
-        media_data: {
+    data_from_search_list_item: {
+      name: 'Test Name Yelp',
+      formattedAddress: '123 Street, Big City',
+      businessUrl: 'http://www.intercontinentalsanfrancisco.com/',
+      categories: [{ title: 'Test Mexican' }, { title: 'Test Pizza' }, { title: 'Test Spain' }],
+      post: {
+        review_link: '',
+        rating: 4.0,
+      },
+      priceRange: '$$',
+      street: '123 Street',
+    },
+    dynamic: require('../src/fixtures/yelp-dynamic-fixture').default,
+    json: require('../src/fixtures/yelp-json-fixture').default,
+    photos: {
+      'dishpage-0': [
+        {
+          url: 'https://i.imgur.com/92a8cNI.jpg',
           caption: 'Test tag existing 1',
         },
-      },
-    ],
-    photosp1: [
-      {
-        src: 'https://i.imgur.com/N6YtgRI.jpeg',
-        media_data: {
+      ],
+      'dishpage-1': [
+        {
+          url: 'https://i.imgur.com/N6YtgRI.jpeg',
           caption: 'Test tag existing 2',
         },
-      },
-    ],
-    reviewsp0: [
-      {
-        id: 'abc123',
-        tags: [],
-        user: {
-          src: '',
-        },
-        photos: [{ src: '' }],
-        rating: 5,
-        localizedDate: '5/16/2020',
-        userId: 'FsLRE98uOHkBNzO1Ta5hIw',
-        comment: {
-          text: 'This restaurant had the worst Test tag existing 1 dishes! Vegetarian',
-          language: 'en',
-        },
-        lightboxMediaItems: [
-          {
-            url: '',
-            type: 'photo',
-            user: {},
-            caption: 'An amazing photo of Test tag existing 2!',
+      ],
+    },
+    reviews: {
+      'dishpage-0': [
+        {
+          id: 'abc123',
+          tags: [],
+          user: {
+            src: '',
           },
-        ],
-      },
-    ],
+          photos: [{ src: '' }],
+          rating: 5,
+          localizedDate: '5/16/2020',
+          userId: 'FsLRE98uOHkBNzO1Ta5hIw',
+          comment: {
+            text: 'This restaurant had the worst Test tag existing 1 dishes! Vegetarian',
+            language: 'en',
+          },
+          lightboxMediaItems: [
+            {
+              url: '',
+              type: 'photo',
+              user: {},
+              caption: 'An amazing photo of Test tag existing 2!',
+            },
+          ],
+        },
+      ],
+    },
   },
 }
 
@@ -164,32 +170,34 @@ export const tripadvisor: Partial<Scrape> = {
     },
     photos: ['https://i.imgur.com/udwFNWI.jpeg'],
     photos_with_captions: [{ url: 'https://i.imgur.com/udwFNWI.jpeg', caption: 'Test tag' }],
-    reviewsp0: [
-      {
-        text: 'Test tag existing 3 was ok. Vegan',
-        rating: 5,
-        username: 'tauser',
-        date: 'July 23, 2019',
-      },
-      {
-        text: 'No tags in here',
-        rating: 5,
-        username: 'tauser2',
-        date: 'July 23, 2019',
-      },
-      {
-        text: 'Notable Testpho was delicious',
-        rating: 5,
-        username: 'tauser3',
-        date: 'July 23, 2020',
-      },
-      {
-        text: 'Test tag was good. Test tag was amazing. Test tag was delicious',
-        rating: 1,
-        username: 'tauser4',
-        date: 'July 23, 2020',
-      },
-    ],
+    reviews: {
+      'dishpage-0': [
+        {
+          text: 'Test tag existing 3 was ok. Vegan',
+          rating: 5,
+          username: 'tauser',
+          date: 'July 23, 2019',
+        },
+        {
+          text: 'No tags in here',
+          rating: 5,
+          username: 'tauser2',
+          date: 'July 23, 2019',
+        },
+        {
+          text: 'Notable Testpho was delicious',
+          rating: 5,
+          username: 'tauser3',
+          date: 'July 23, 2020',
+        },
+        {
+          text: 'Test tag was good. Test tag was amazing. Test tag was delicious',
+          rating: 1,
+          username: 'tauser4',
+          date: 'July 23, 2020',
+        },
+      ],
+    },
   },
 }
 

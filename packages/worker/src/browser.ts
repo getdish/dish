@@ -6,11 +6,11 @@ export async function fetchBrowserJSON(url: string) {
   return await res.json()
 }
 
-export async function fetchBrowserHyperscript(url: string, selector: string) {
+export async function fetchBrowserScriptData(url: string, selectors: string[]) {
   const res = await fetchBrowser(url, {
     'content-type': 'application/json',
-    parse: 'hyperscript',
-    selector,
+    parse: 'script-data',
+    selectors: JSON.stringify(selectors),
   })
   return await res.json()
 }
@@ -20,22 +20,21 @@ export async function fetchBrowserHTML(url: string) {
   return await res.text()
 }
 
+const URL = process.env.WORKER_PROXY_URL ?? 'http://localhost:3535'
+
 async function fetchBrowser(url: string, headers = {}, retry = 3) {
-  if (!process.env.WORKER_PROXY_URL) {
-    throw new Error(`no process.env.process.env.WORKER_PROXY_URL`)
-  }
   let i = 0
   while (i < retry) {
     i++
     try {
-      return await fetch(process.env.WORKER_PROXY_URL, {
+      return await fetch(URL, {
         headers: {
           url,
           ...headers,
         },
       })
     } catch (err) {
-      console.error(`Error ${err.message}, retries left ${retry - i}`)
+      console.error(`fetchBrowser Error ${err.message}, retries left ${retry - i}`)
     }
   }
   throw new Error(`Failed to fetch`)

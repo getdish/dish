@@ -94,8 +94,10 @@ export class GPT3 {
     if (!response.choices || response.choices.length == 0) {
       console.error('GPT3 API error:', response)
       sentryMessage('GPT3 API error', {
-        restaurant: this.crawler.restaurant.slug,
-        response,
+        data: {
+          restaurant: this.crawler.restaurant.slug,
+          response,
+        },
       })
     } else {
       answer = response.choices[0].text

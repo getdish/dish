@@ -53,6 +53,6 @@ export async function settingSet(key: string, value: any) {
       },
       _append: { value },
     })
-    return (result as any) as Setting[]
+    return result as any as Setting[]
   })
 }

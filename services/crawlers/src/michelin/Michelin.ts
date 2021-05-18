@@ -44,8 +44,7 @@ export class Michelin extends WorkerJob {
       try {
         await this.saveRestaurant(restaurant)
       } catch (e) {
-        sentryException({
-          error: e,
+        sentryException(e, {
           data: [restaurant],
           logger: this.log,
         })

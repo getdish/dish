@@ -2,6 +2,7 @@ import {
   RestaurantWithId,
   Tag,
   flushTestData,
+  restaurantFindAll,
   restaurantFindOne,
   restaurantFindOneWithTags,
   restaurantInsert,
@@ -44,9 +45,11 @@ const test = anyTest as TestInterface<Context>
 const GOOGLE_GEOCODER_ID = '0xgoogleid123'
 
 async function reset(t: ExecutionContext<Context>) {
-  console.log('reseting.')
   await flushTestData()
   await deleteAllTestScrapes()
+
+  console.log('all', await restaurantFindAll())
+
   const [restaurant, _] = await restaurantInsert([
     restaurant_fixture,
     restaurant_fixture_nearly_matches,
@@ -129,13 +132,14 @@ test('Merging', async (t) => {
     id: t.context.restaurant.id,
   })
   const photos = await bestPhotosForRestaurant(t.context.restaurant.id)
+  console.log('photos', photos)
   const p0 = photos.find((p) => p.photo?.origin == 'https://i.imgur.com/N6YtgRI.jpeg')
   const p1 = photos.find((p) => p.photo?.origin == 'https://i.imgur.com/92a8cNI.jpg')
   t.assert(parseFloat(p0.photo?.quality).toFixed(3), '5.374')
   t.assert(parseFloat(p1.photo?.quality).toFixed(3), '4.575')
   t.is(!!updated, true)
   if (!updated) return
-  t.is(updated.name, 'Barrel Proof')
+  t.is(updated.name, 'Test Name Yelp')
   t.is(updated.address, '123 Street, Big City')
   t.is(updated.tags.length, 5)
   t.is(updated.tags.map((i) => i.tag.name).includes('Test Mexican'), true)
@@ -174,7 +178,6 @@ test('Merging dishes', async (t) => {
   })
   t.is(!!updated, true)
   if (!updated) return
-  console.log('updated!', updated)
   t.is(updated.menu_items.length, 2)
   t.assert(updated.menu_items.map((m) => m.name).includes('Nice Dish'))
   t.assert(updated.menu_items.map((m) => m.description).includes('I am unique to DoorDash'))
@@ -303,6 +306,7 @@ test('Tag rankings', async (t) => {
   await self.preMerge(self.restaurant)
   await self.finishTagsEtc()
   self.restaurant = await restaurantFindOneWithTagsSQL(self.restaurant.id)
+  console.log('self.restaurant.tags', self.restaurant.tags)
   t.is(self.restaurant.tags[0].rank, 1)
 })
 
@@ -318,6 +322,7 @@ test('Finding dishes in the corpus', async (t) => {
   await self.scanCorpus()
   await self.finishTagsEtc()
   const updated = await restaurantFindOneWithTagsSQL(t.context.restaurant.id)
+  console.log('updated', updated)
   t.assert(updated?.tags.map((i) => i.tag.id).includes(existing_tag1.id))
   t.assert(updated?.tags.map((i) => i.tag.id).includes(existing_tag2.id))
   t.assert(updated?.tags.map((i) => i.tag.id).includes(existing_tag3.id))
@@ -336,13 +341,18 @@ test('Review naive sentiments', async (t) => {
 
   // Ensure upserting/constraints work
   let reviews = await reviewFindAllForRestaurant(t.context.restaurant.id)
+  console.log('reviews1', reviews)
   t.is(reviews.length, 6)
   await self.scanCorpus()
   await self.finishTagsEtc()
 
   reviews = await reviewFindAllForRestaurant(t.context.restaurant.id)
+  console.log('reviews2', reviews)
   t.is(reviews.length, 6)
   const rv1 = reviews.find((rv) => rv.username == 'yelp-FsLRE98uOHkBNzO1Ta5hIw')
+
+  console.log('rv1.sentiments', rv1.sentiments)
+
   const rv1s1 = rv1.sentiments.find((s) => s.sentence.includes('Test tag existing 1'))
   t.is(rv1s1.naive_sentiment, -3)
   const rv1s2 = rv1.sentiments.find((s) => s.sentence.includes('Test tag existing 2'))
@@ -401,6 +411,7 @@ test('Find photos of dishes', async (t) => {
   const updated = await restaurantFindOneWithTagsSQL(t.context.restaurant.id)
   t.is(updated?.id, t.context.restaurant.id)
   if (!updated) return
+  console.log('updated.tags', updated.tags)
   const tag1 = updated.tags.find((i) => i.tag.id == existing_tag1.id) || ({} as Tag)
   const tag2 = updated.tags.find((i) => i.tag.id == existing_tag2.id) || ({} as Tag)
   t.is(updated.tags.length, 3)

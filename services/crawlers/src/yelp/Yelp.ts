@@ -11,6 +11,7 @@ import _ from 'lodash'
 import { restaurantSaveCanonical } from '../canonical-restaurant'
 import { DISH_DEBUG } from '../constants'
 import {
+  Scrape,
   ScrapeData,
   scrapeFindOneBySourceID,
   scrapeInsert,
@@ -19,8 +20,41 @@ import {
 } from '../scrape-helpers'
 import { aroundCoords, boundingBoxFromCenter, geocode } from '../utils'
 
+export type YelpDetailPageData = {
+  dynamic: typeof import('../fixtures/yelp-dynamic-fixture').default
+  json: typeof import('../fixtures/yelp-json-fixture').default
+}
+
+type YelpPhotosData = typeof import('../fixtures/yelp-photos-fixture').default
+
+export type YelpScrapeData = YelpDetailPageData & {
+  data_from_search_list_item: {
+    name: string
+    street: string
+    businessUrl: string
+    priceRange: any
+    categories: { title: string }[]
+    formattedAddress: string
+    post: {
+      rating: number
+      review_link: string
+    }
+  }
+  photos: {
+    [key: string]: { url: string; caption: string }[]
+  }
+  reviews: {
+    [key: string]: any
+  }
+}
+
+type RestaurantMatching = Required<Pick<Restaurant, 'name' | 'address' | 'telephone'>>
+
+export type YelpScrape = Scrape<YelpScrapeData>
+
 const BB_SEARCH = '/search/snippet?cflt=restaurants&l='
 const YELP_DOMAIN = 'https://www.yelp.com'
+const YELP_DOMAIN_MOBILE = 'https://m.yelp.com'
 
 const yelpAPI = new ProxiedRequests(YELP_DOMAIN, process.env.YELP_AWS_PROXY || YELP_DOMAIN, {
   headers: {
@@ -28,9 +62,19 @@ const yelpAPI = new ProxiedRequests(YELP_DOMAIN, process.env.YELP_AWS_PROXY || Y
   },
 })
 
+const yelpAPIMobile = new ProxiedRequests(
+  YELP_DOMAIN_MOBILE,
+  process.env.YELP_MOBILE_AWS_PROXY || YELP_DOMAIN_MOBILE,
+  {
+    headers: {
+      'X-My-X-Forwarded-For': 'm.yelp.com',
+    },
+  }
+)
+
 export class Yelp extends WorkerJob {
   current?: string
-  find_only: Restaurant | null = null
+  find_only: RestaurantMatching | null = null
 
   static queue_config: QueueOptions = {
     limiter: {
@@ -150,7 +194,7 @@ export class Yelp extends WorkerJob {
     top_right: readonly [number, number],
     bottom_left: readonly [number, number],
     start = 0,
-    onlyRestaurant: Restaurant | null = null
+    onlyRestaurant: RestaurantMatching | null = null
   ) {
     const PER_PAGE = 30
     const coords = [top_right[1], top_right[0], bottom_left[1], bottom_left[0]].join(',')
@@ -161,6 +205,7 @@ export class Yelp extends WorkerJob {
       this.log('no response!', response)
       return []
     }
+    // console.log('got', response)
     const componentsList = response.searchPageProps.mainContentComponentsListProps ?? []
     const pagination = componentsList.find((x) => x.type === 'pagination')
 
@@ -197,6 +242,7 @@ export class Yelp extends WorkerJob {
         if (toCrawl.length) return
         for (const data of validResults) {
           const info = data.searchResultBusiness
+          console.log('got info', info)
           if (isMatchingRestaurant(info, onlyRestaurant, strategy as any)) {
             // prettier-ignore
             this.log(`YELP SANDBOX: found ${info.name} ${strategy} - scrape (${info.formattedAddress} ${info.phone} ${info.name}) restaurant (${onlyRestaurant.address} ${onlyRestaurant.telephone} ${onlyRestaurant.name})`)
@@ -210,10 +256,17 @@ export class Yelp extends WorkerJob {
       findOne('fuzzy')
     }
 
+    if (!toCrawl.length) {
+      console.log('none found!')
+      return
+    }
+
+    console.log('got crawlable results', JSON.stringify(toCrawl, null, 2))
+
     for (const data of toCrawl) {
-      const timeout = sleep(40000)
+      const timeout = sleep(100_000)
       await Promise.race([
-        this.getRestaurant(data),
+        this.processRestaurant(data),
         timeout.then(() => {
           console.warn('Timed out getting restaurant', name)
         }),
@@ -246,30 +299,11 @@ export class Yelp extends WorkerJob {
     this.log('done with getRestaurants')
   }
 
-  async getRestaurant(data: ScrapeData) {
+  async processRestaurant(data: any) {
     if (!data.searchResultBusiness) {
       console.warn('no data.searchResultBusiness')
       return
     }
-    let biz_page: string
-    const id = await this.saveDataFromMapSearch(data)
-    this.log('Inserting scrape data for scrape id', id)
-    if (!id) {
-      throw new Error(`No id`)
-    }
-    const full_uri = url.parse(data.searchResultBusiness.businessUrl, true)
-    if (full_uri.query.redirect_url) {
-      biz_page = decodeURI(full_uri.query.redirect_url as string)
-    } else {
-      biz_page = data.searchResultBusiness.businessUrl
-    }
-    // lets use mobile!
-    biz_page = biz_page.replace('www.', 'm.')
-    const biz_page_uri = url.parse(biz_page, true)
-    await this.runOnWorker('getEmbeddedJSONData', [id, biz_page_uri.path, data.bizId])
-  }
-
-  async saveDataFromMapSearch(data: ScrapeData) {
     const id = await scrapeInsert({
       source: 'yelp',
       restaurant_id: ZeroUUID,
@@ -279,117 +313,115 @@ export class Yelp extends WorkerJob {
       },
       id_from_source: data.bizId,
       data: {
-        data_from_map_search: data.searchResultBusiness,
+        data_from_search_list_item: data.searchResultBusiness,
       },
     })
-    return id
+    this.log('Inserting scrape data for scrape id', id, 'bizId', data.bizId)
+    if (!id) {
+      throw new Error(`No id`)
+    }
+    let bizUrl = data.searchResultBusiness.businessUrl as string
+    const fullUrl = url.parse(bizUrl, true)
+    if (fullUrl.query.redirect_url) {
+      bizUrl = decodeURI(fullUrl.query.redirect_url as string)
+    }
+    // lets use mobile!
+    bizUrl = bizUrl.replace('www.', 'm.')
+    console.log('bizUrl', bizUrl)
+    const bizUrlParsed = url.parse(bizUrl, true)
+    await this.runOnWorker('getEmbeddedJSONData', [id, bizUrlParsed.path, data.bizId])
   }
 
   async getEmbeddedJSONData(id: string, yelp_path: string, id_from_source: string) {
     this.current = yelp_path
     this.log(`getting embedded JSON for: ${yelp_path}`)
-    const data = await yelpAPI.getHyperscript(
-      yelp_path,
-      'script[data-hypernova-key*="__mobile_site__Biz__dynamic"]'
-    )
-    if (!data) {
+    const [[dynamicIn], ldjsonsIn] = await yelpAPIMobile.getScriptData(yelp_path, [
+      'script[data-hypernova-key*="__mobile_site__Biz__dynamic"]',
+      'script[type*="application/ld+json"]',
+    ])
+
+    if (!dynamicIn) {
+      console.log('error, got', { dynamicIn, ldjsonsIn })
       throw new Error(`No extraction found`)
     }
 
-    if (!('legacy' in data)) {
-      if (process.env.NODE_ENV === 'development') {
+    if (!('legacyProps' in dynamicIn)) {
+      if (process.env.NODE_ENV !== 'production') {
         // prettier-ignore
-        console.log('no mapBoxProps in\n', JSON.stringify(data, null, 2), 'via response\n', JSON.stringify(response, null, 2))
+        console.log('no legacyProps in\n', JSON.stringify(dynamicIn, null, 2))
       }
-      sentryMessage("Error Couldn't extract embedded data", { path: yelp_path }, this.log)
+      sentryMessage("Error Couldn't extract embedded data", {
+        data: { path: yelp_path },
+        logger: this.log,
+      })
+      return
+    }
+
+    const dynamic = dynamicIn as YelpDetailPageData['dynamic']
+    // clean just a bit
+    delete dynamic['messages']
+
+    const json = ldjsonsIn.filter(Boolean).find((x) => x['@type'] === 'Restaurant') as
+      | YelpDetailPageData['json']
+      | undefined
+
+    if (!json) {
+      console.log('error no Restaurant schema data found', { json, ldjsonsIn })
       return
     }
 
     this.log(`merge scrape data: ${yelp_path}`)
+    const scrape = (await scrapeMergeData(id, { dynamic, json }))! as YelpScrape
 
-    const { mapState } = data.legacyProps.props.directionsModalProps
-    const lon = mapState
-    const scrape = (await scrapeMergeData(id, { data_from_html_embed: data }))!
+    const { mapState } = scrape.data.dynamic.legacyProps.props.directionsModalProps
+    const { latitude, longitude } = mapState.center
     const restaurant_id = await restaurantSaveCanonical(
       'yelp',
       id_from_source,
-      lon,
-      lat,
-      scrape.data.data_from_map_search.name,
-      scrape.data.data_from_map_search.formattedAddress
+      longitude,
+      latitude,
+      scrape.data.data_from_search_list_item.name,
+      scrape.data.data_from_search_list_item.formattedAddress
     )
     if (this.find_only) {
       this.log(`ID for ${this.find_only.name} is ${restaurant_id}`)
     }
     scrape.location = {
-      lon: lon,
-      lat: lat,
+      lon: longitude,
+      lat: latitude,
     }
     scrape.restaurant_id = restaurant_id
     await scrapeUpdateBasic(scrape)
-    await this.getNextScrapes(id, data)
+    await this.getNextScrapes(id, scrape)
     if (DISH_DEBUG > 1) {
       const data = await scrapeFindOneBySourceID('yelp', id_from_source)
       this.log(`Scrape:`, JSON.stringify(data, null, 2))
     }
   }
 
-  static getNameAndAddress(scrape: ScrapeData) {
+  static getNameAndAddress(scrape: YelpScrape) {
     return {
-      name: scrape.data.data_from_map_search.name,
-      address: scrape.data.data_from_map_search.formattedAddress,
+      name: scrape.data.data_from_search_list_item.name,
+      address: scrape.data.data_from_search_list_item.formattedAddress,
     }
   }
 
-  async getNextScrapes(id: string, data: ScrapeData) {
-    let photoTotal = data.photoHeaderProps?.mediaTotal ?? 0
+  async getNextScrapes(id: string, scrape: YelpScrape) {
+    // console.log('got', JSON.stringify(scrape.data, null, 2))
+    const photoGrid = scrape.data.dynamic.legacyProps.props.modules.serverModules.flatMap((x) =>
+      x.component === 'PhotoGrid' ? x : []
+    )[0]?.props
+    let photoTotal = (photoGrid.mediaCount as number) ?? 0
     this.log(`getNextScrapes photoTotal ${photoTotal}`)
     if (photoTotal > 31 && process.env.DISH_ENV == 'test') {
       photoTotal = 31
     }
-    const bizId = data.bizContactInfoProps.businessId
+    const bizId = scrape.id_from_source
     if (photoTotal > 0) {
       await this.runOnWorker('getPhotos', [id, bizId, photoTotal])
     }
     await this.runOnWorker('getReviews', [id, bizId])
   }
-
-  // extractEmbeddedJSONData(obj: { [key: string]: any }) {
-  //   const json = obj.bizDetailsPageProps
-  //   if (json) {
-  //     let data: { [keys: string]: any } = {}
-  //     const fields = [
-  //       //
-  //       'legacyProps',
-  //       // 'bizHoursProps',
-  //       // 'mapBoxProps',
-  //       // 'bizContactInfoProps',
-  //       // 'photoHeaderProps',
-  //     ]
-  //     for (const key of Object.keys(json)) {
-  //       if (fields.includes(key)) {
-  //         data[key] = json[key]
-  //       }
-  //     }
-  //     if (data?.photoHeaderProps?.photoFlagReasons) {
-  //       delete data.photoHeaderProps.photoFlagReasons
-  //     }
-  //     data = this.numericKeysFix(data)
-  //     return data
-  //   } else {
-  //     this.log(`no json found!`)
-  //   }
-  //   return null
-  // }
-
-  // numericKeysFix(data: { [key: string]: any }) {
-  //   if (data.ratingDetailsProps) {
-  //     data.ratingDetailsProps.monthlyRatingsByYear = escape(
-  //       JSON.stringify(data.ratingDetailsProps.monthlyRatingsByYear)
-  //     )
-  //   }
-  //   return data
-  // }
 
   async getPhotos(id: string, bizId: string, photoTotal: number) {
     const PER_PAGE = 30
@@ -404,40 +436,39 @@ export class Yelp extends WorkerJob {
   }
 
   async getPhotoPage(id: string, bizId: string, start: number, page: number) {
-    const url = '/biz_photos/get_media_slice/' + bizId + '?start=' + start + '&dir=b'
-    const response = await yelpAPI.getJSON(url, {
+    // https://m.yelp.com/biz_photos/qs7FgJ-UXgpbAMass0Oojg/get_photos?start=14&dir=b
+    const url = '/biz_photos/' + bizId + '/get_photos' + '?start=' + start + '&dir=b'
+    const response: YelpPhotosData = await yelpAPIMobile.getJSON(url, {
       headers: {
         'X-Requested-With': 'XMLHttpRequest',
       },
     })
     const media = response.media
-    for (let photo of media) {
-      delete photo.media_nav_html
-      delete photo.selected_media_html
-    }
     let photos: { [keys: string]: any } = {}
-    photos['photosp' + page] = media
-    await scrapeMergeData(id, photos)
+    photos['dishpage-' + page] = media
+      .filter((x) => x.src_high_res)
+      .map((item) => ({
+        url: item.src_high_res!.replace('348s', '1000s'),
+        caption: item.caption,
+      }))
+    await scrapeMergeData(id, { photos })
     this.log(`${this.current}, got photo page ${page} with ${media.length} photos`)
   }
 
   async getReviews(id: string, bizId: string, start: number = 0) {
     const PER_PAGE = 20
     const page = start / PER_PAGE
-
     const url = '/biz/' + bizId + '/review_feed?rl=en&sort_by=relevance_desc&q=&start=' + start
-
     const response = await yelpAPI.getJSON(url, {
       headers: {
         'X-Requested-With': 'XMLHttpRequest',
         'X-Requested-By-React': 'true',
       },
     })
-
     const data = response.reviews
     let reviews: ScrapeData = {}
-    reviews['reviewsp' + page] = data
-    await scrapeMergeData(id, reviews)
+    reviews['dishpage-' + page] = data
+    await scrapeMergeData(id, { reviews })
     this.log(`${this.current}, got review page ${page} with ${data.length} reviews`)
 
     if (process.env.DISH_ENV == 'test') {
@@ -454,19 +485,20 @@ export class Yelp extends WorkerJob {
 
 function isMatchingRestaurant(
   data,
-  restaurant: Restaurant,
+  restaurant: RestaurantMatching,
   exactness: 'fuzzy' | 'strict' = 'strict'
 ) {
   if (exactness !== 'strict') {
-    if (data.formattedAddress && restaurant.address?.includes(data.formattedAddress)) {
-      return true
-    }
-    if (restaurant.telephone === data.phone) {
-      return true
-    }
+    const similarAddress =
+      data.formattedAddress && restaurant.address?.includes(data.formattedAddress)
+    const samePhone = restaurant.telephone === data.phone
+    const similarName = data?.name.includes(restaurant.name) || restaurant.name?.includes(data.name)
+    return (
+      (similarName && samePhone) || (similarName && similarAddress) || (similarAddress && samePhone)
+    )
   }
   if (restaurant.name === data.name) {
-    return true
+    return data.formattedAddress === restaurant.address
   }
   return false
 }

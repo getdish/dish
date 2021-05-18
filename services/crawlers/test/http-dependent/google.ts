@@ -4,7 +4,7 @@ import path from 'path'
 import { restaurantFindOne } from '@dish/graph'
 import test from 'ava'
 
-import { Google } from '../../src/google/Google'
+import { GooglePuppeteer } from '../../src/google/GooglePuppeteer'
 import { deleteAllScrapesBySourceID, scrapeFindOneBySourceID } from '../../src/scrape-helpers'
 import { tripadvisorGetFBC } from '../../src/tripadvisor/Tripadvisor'
 
@@ -24,7 +24,7 @@ test.skip('Gets and persists a restaurant', async (t) => {
   }
   t.assert(restaurant)
   if (!restaurant) return
-  const google = new Google()
+  const google = new GooglePuppeteer()
   await google.boot()
   await google.getRestaurant(restaurant)
   const scrape = await scrapeFindOneBySourceID('google', ID)
@@ -48,7 +48,7 @@ test('Converting table to JSON', (t) => {
   const html = fs.readFileSync(path.resolve(__dirname, './etc/google_hours_table.html'), {
     encoding: 'utf8',
   })
-  const json = Google.convertTableToJSON(html)
+  const json = GooglePuppeteer.convertTableToJSON(html)
   t.deepEqual(json, [
     { day: 'Friday', hours: '7am–3pm' },
     { day: 'Saturday', hours: '7am–3pm' },

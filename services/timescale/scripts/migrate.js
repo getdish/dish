@@ -13,14 +13,14 @@ const config = {
   validateChecksums: false,
 }
 
-console.log('config', config)
+const { password, ...rest } = config
+console.log('config minus password', rest, 'password starts with', password[0])
 const postgrator = new Postgrator(config)
 
 console.log('migrating timescale...', process.env.NODE_ENV)
 
 async function main() {
   try {
-    await postgrator.migrate('000')
     const applied = await postgrator.migrate()
     console.log('up to date', applied.length)
   } catch (err) {

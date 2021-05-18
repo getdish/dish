@@ -2,7 +2,7 @@ declare module "@dish/worker" {
     export class Loggable {
         #private;
         get logName(): string | undefined;
-        log(...messages: any[]): void;
+        log: (...messages: any[]) => void;
         elapsedTime(): number;
         resetTimer(): void;
     }
@@ -10,7 +10,7 @@ declare module "@dish/worker" {
 
 declare module "@dish/worker" {
     export function fetchBrowserJSON(url: string): Promise<any>;
-    export function fetchBrowserHyperscript(url: string, selector: string): Promise<any>;
+    export function fetchBrowserScriptData(url: string, selectors: string[]): Promise<any>;
     export function fetchBrowserHTML(url: string): Promise<string>;
 }
 
@@ -26,7 +26,7 @@ declare module "@dish/worker" {
         start_with_aws: boolean;
         constructor(domain: string, aws_proxy: string, config?: Opts, start_with_aws?: boolean);
         getJSON(uri: string, props?: Opts): Promise<any>;
-        getHyperscript(uri: string, selector: string): Promise<any>;
+        getScriptData(uri: string, selectors: string[]): Promise<any>;
         getText(uri: string, props?: Opts): Promise<any>;
         get(uri: string, props?: Opts): Promise<any>;
         getStormProxyConfig(): {

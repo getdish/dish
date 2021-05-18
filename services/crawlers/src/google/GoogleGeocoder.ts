@@ -5,12 +5,13 @@ import { settingFindOne } from '@dish/graph'
 import { ProxiedRequests } from '@dish/worker'
 import _ from 'lodash'
 
+import { PLEASE, UpdateSearchEndpoint } from './UpdateSearchEndpoint'
+
 export const GOOGLE_SEARCH_ENDPOINT_KEY = 'GOOGLE_SEARCH_ENDPOINT'
 export const LON_TOKEN = '%LON%'
 export const LAT_TOKEN = '%LAT%'
 export const google_geocoder_id_regex = /(0x[a-f0-9]{13,16}:0x[a-f0-9]{13,16})/
 
-const PLEASE = 'PLEASE'
 const GOOGLE_DOMAIN = 'https://www.google.com'
 const SEARCH_ENDPOINT_EXPIRED = 'GOOGLE GEOCODER: search endpoint expired'
 const ID_NOT_FOUND = 'GOOGLE GEOCODER: ID not found'
@@ -41,7 +42,7 @@ export class GoogleGeocoder {
     this.query = query
     this.lat = lat
     this.lon = lon
-    await this._getSearchEndpoint()
+    await this.getSearchEndpoint()
     while (retries < 3) {
       try {
         return await this._searchForID()
@@ -52,7 +53,7 @@ export class GoogleGeocoder {
           )
           retries++
           await sleep(1000)
-          await this._getSearchEndpoint()
+          await this.getSearchEndpoint()
         } else {
           throw new Error(e)
         }
@@ -62,18 +63,26 @@ export class GoogleGeocoder {
     throw new Error(message)
   }
 
-  private async _getSearchEndpoint() {
-    const result = await settingFindOne({
+  private async getSearchEndpointSetting() {
+    return await settingFindOne({
       key: GOOGLE_SEARCH_ENDPOINT_KEY,
-    })
-    if (result) {
-      this.searchEndpoint = result.value
-    } else {
+    }).then((x) => x?.value)
+  }
+
+  private async getSearchEndpoint() {
+    this.searchEndpoint = await this.getSearchEndpointSetting()
+    console.log('got search setting', this.searchEndpoint)
+    if (typeof this.searchEndpoint !== 'string') {
+      const updater = new UpdateSearchEndpoint()
+      await updater.getNewSearchEndpoint()
+      this.searchEndpoint = await this.getSearchEndpointSetting()
+    }
+    if (typeof this.searchEndpoint !== 'string') {
       throw new Error('GOOGLE_SEARCH_ENDPOINT not found in DB')
     }
   }
 
-  _formatSearchURL() {
+  private formatSearchURL() {
     const url = this.searchEndpoint
     return (url.startsWith('/') ? url : `/${url}`)
       .replaceAll(LON_TOKEN, this.lon.toString())
@@ -82,7 +91,7 @@ export class GoogleGeocoder {
   }
 
   private async _searchForID() {
-    const url = this._formatSearchURL()
+    const url = this.formatSearchURL()
     const response = await googleAPI.getText(url, {
       headers: { 'user-agent': 'PLEASE' },
       skipBrowser: true,

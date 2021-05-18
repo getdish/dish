@@ -93,7 +93,7 @@ export class Infatuated extends WorkerJob {
         lat: lat,
       },
       data: {
-        data_from_map_search: data,
+        data_from_search_list_item: data,
       },
     })
     return id
@@ -101,8 +101,8 @@ export class Infatuated extends WorkerJob {
 
   static getNameAndAddress(scrape: ScrapeData) {
     return {
-      name: scrape.data.data_from_map_search.name,
-      address: scrape.data.data_from_map_search.street,
+      name: scrape.data.data_from_search_list_item.name,
+      address: scrape.data.data_from_search_list_item.street,
     }
   }
 }

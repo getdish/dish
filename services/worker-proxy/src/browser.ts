@@ -1,26 +1,14 @@
 // @ts-ignore
-import { Page, WebKitBrowser, webkit } from 'playwright-webkit'
+import { Page, WebKitBrowser, devices, webkit } from 'playwright-webkit'
 
 if (!process.env.LUMINATI_PROXY_HOST) {
-  throw new Error(`No proxy`)
+  throw new Error(`No proxy config`)
 }
-
-let browser: WebKitBrowser | null = null
-let browserHasLoadedOriginOnce = false
-let page: Page | null = null
-let tries = 0
-
-const baseProxy = {
-  server: `${process.env.LUMINATI_PROXY_HOST}:${process.env.LUMINATI_PROXY_PORT}`,
-  username: process.env.LUMINATI_PROXY_RESIDENTIAL_USER,
-  password: process.env.LUMINATI_PROXY_RESIDENTIAL_USER,
-}
-
-let activeProxy: typeof baseProxy | null = baseProxy
 
 const awsProxies = {
   'https://ubereats.com/': process.env.UBEREATS_PROXY,
   'https://yelp.com/': process.env.YELP_AWS_PROXY,
+  'https://m.yelp.com/': process.env.YELP_MOBILE_AWS_PROXY,
   'https://infatuated.com/': process.env.INFATUATED_PROXY,
   'https://michelin.com/': process.env.MICHELIN_PROXY,
   'https://tripadvisor.com/': process.env.TRIPADVISOR_PROXY,
@@ -29,60 +17,127 @@ const awsProxies = {
   'https://grubhub.com/': process.env.GRUBHUB_AWS_PROXY,
 }
 
-export async function ensurePage(forceRefresh = false) {
-  if (!browser || forceRefresh) {
-    tries++
-    if (browser) {
-      console.log('Force refresh from failed proxy, opening new browser')
-      await browser.close()
-    }
-    if (tries > 1) {
-      activeProxy = null
-    }
-    console.log('Starting browser, proxies:', activeProxy, awsProxies)
-    browserHasLoadedOriginOnce = false
-    browser = await webkit.launch({
-      headless: true,
-      ...(activeProxy && {
-        proxy: activeProxy,
-      }),
-    })
-    console.log('Browser version', browser.version())
-    page = await browser.newPage()
+const baseProxy = {
+  server: `${process.env.LUMINATI_PROXY_HOST}:${process.env.LUMINATI_PROXY_PORT}`,
+  username: process.env.LUMINATI_PROXY_RESIDENTIAL_USER,
+  password: process.env.LUMINATI_PROXY_RESIDENTIAL_USER,
+}
+
+const instances: {
+  [key: string]: {
+    browser: WebKitBrowser | null
+    page: Page | null
+    tries: number
+    proxy: null | string | typeof baseProxy
   }
-  return page!
+} = {}
+
+function getProxyURL(full: string, useAWS = false) {
+  let uri = full
+  const proxy = (() => {
+    if (useAWS) {
+      const proxyURI = uri.replace('//www.', '//')
+      for (const key in awsProxies) {
+        if (proxyURI.startsWith(key)) {
+          console.log('Using aws proxy', key, uri)
+          uri = proxyURI.replace(key, awsProxies[key])
+          return null
+        }
+      }
+      console.error(`No aws proxy found`)
+      return null
+    } else {
+      return baseProxy
+    }
+  })()
+  return {
+    uri,
+    isMobile: full.includes('//m.'),
+    origin: new URL(uri).origin,
+    proxy,
+  }
+}
+
+type CreateBrowserOpts = { recreate?: boolean; useAWS?: boolean }
+
+async function ensureInstance(
+  fullURL: string,
+  { recreate = false, useAWS = false }: CreateBrowserOpts = {}
+) {
+  try {
+    const url = getProxyURL(fullURL, useAWS)
+    const instance = instances[url.origin]
+    if (!instance || recreate) {
+      if (instance) {
+        console.log('closing existing...')
+        await instance.browser.close()
+      }
+      console.log('start browser with', { recreate, useAWS }, url)
+      const browser = await webkit.launch({
+        headless: true,
+        ...(url.proxy && {
+          proxy: url.proxy,
+        }),
+      })
+      const contextConfig = url.isMobile
+        ? {
+            ...devices['iPhone 11 Pro'],
+          }
+        : {}
+      console.log('using context', contextConfig)
+      const context = await browser.newContext(contextConfig)
+      const page = await context.newPage()
+      console.log('loading origin once first', url.origin)
+      await page.goto(url.origin)
+      console.log('creating page')
+      instances[url.origin] = {
+        proxy: url.proxy,
+        tries: instance?.tries ?? 0,
+        browser,
+        page,
+      }
+    }
+    return instances[url.origin]!
+  } catch (err) {
+    console.log(`Error creating browser instance`, err.message, err.stack)
+    throw err
+  }
+}
+
+async function getBrowserAndURL(uri: string, retry = 0, userOpts?: CreateBrowserOpts) {
+  const opts = {
+    useAWS: retry > 1 ? true : false,
+    recreate: retry < 1,
+    ...userOpts,
+  }
+  console.log('using opts', opts)
+  const instance = await ensureInstance(uri, opts)
+  const url = getProxyURL(uri, opts.useAWS)
+  return {
+    instance,
+    url,
+  }
 }
 
 export async function fetchBrowser(
-  uriBase: string,
-  type: 'html' | 'json' | 'hyperscript',
-  selector?: string,
-  maxTries = 3
+  uri: string,
+  type: 'html' | 'json' | 'script-data',
+  selectors?: string[] | null,
+  retry = 3
 ) {
-  let uri = uriBase
-  if (!activeProxy) {
-    uri = uri.replace('//www.', '//')
-    for (const key in awsProxies) {
-      if (uri.startsWith(key)) {
-        console.log('Using aws proxy', key)
-        uri = uri.replace(key, awsProxies[key])
-      }
-    }
-  }
-  console.log('fetchBrowser', uri)
   try {
-    if (type === 'hyperscript') {
-      return await fetchBrowserHyperscript(uri, selector ?? '')
+    if (type === 'script-data') {
+      return await fetchBrowserScriptData(uri, selectors ?? [], retry)
     }
     if (type === 'html') {
-      return await fetchBrowserHTML(uri)
+      return await fetchBrowserHTML(uri, retry)
     }
-    return await fetchBrowserJSON(uri)
+    return await fetchBrowserJSON(uri, retry)
   } catch (err) {
-    if (maxTries > 0) {
-      console.log(`Trying again (${maxTries} tries left)`)
-      await ensurePage(true)
-      return await fetchBrowser(uri, type, selector, maxTries - 1)
+    if (retry > 0) {
+      console.log('error fetching', err)
+      console.log(`Trying again (retry ${retry})`)
+      return await fetchBrowser(uri, type, selectors ?? [], retry - 1)
     } else {
       console.error(`Failed: ${err.message}`)
     }
@@ -90,20 +145,14 @@ export async function fetchBrowser(
 }
 
 export async function fetchBrowserJSON(uri: string, retry = 0) {
-  const page = await ensurePage()
-  const url = new URL(uri)
+  const { instance, url } = await getBrowserAndURL(uri, retry)
   try {
-    if (!browserHasLoadedOriginOnce) {
-      console.log('loading origin once first')
-      await page.goto(url.origin)
-      browserHasLoadedOriginOnce = true
-    }
-    if (retry == 0) {
-      // first attempt, lets try fetch inline
+    // all except last two attempts, do it inline for less resource usage
+    if (retry > 1) {
       try {
-        console.log('inline fetch', uri)
+        console.log('inline fetch', url)
         return await timeout(
-          page.evaluate((uri: string) => {
+          instance.page.evaluate((uri: string) => {
             return fetch(uri, {
               headers: {
                 'content-type': 'application/json',
@@ -111,33 +160,32 @@ export async function fetchBrowserJSON(uri: string, retry = 0) {
                 'Accept-Encoding': 'br;q=1.0, gzip;q=0.8, *;q=0.1',
               },
             }).then((res) => res.json())
-          }, uri),
-          5_000
+          }, url.uri),
+          10_000
         )
       } catch (err) {
-        console.error(`Error inline fetching: ${err.message}`)
+        console.error(`Error inline fetching, will try navigating: ${err.message}`)
         // allow to continue
       }
     }
-    console.log('goto url', uri)
-    await page.goto(uri, {
+    console.log('goto url', url.uri)
+    await instance.page.goto(url.uri, {
       waitUntil: 'domcontentloaded',
       timeout: 10_000,
     })
     console.log('get text content')
-    const out = await page.textContent('body', {
+    const out = await instance.page.textContent('body', {
       timeout: 10_000,
     })
     if (out) {
-      console.log('got body', typeof out, out)
+      console.log('got body', typeof out, out.slice(0, 1000))
       return JSON.parse(out) as { [key: string]: any }
     }
     console.log('got no out')
   } catch (err) {
     console.error(`Error: ${err.message}`)
     if (retry < 2) {
-      console.log('rety', retry)
-      browserHasLoadedOriginOnce = false
+      console.log('err retry', retry)
       return await fetchBrowserJSON(uri, retry + 1)
     }
     throw err
@@ -145,10 +193,16 @@ export async function fetchBrowserJSON(uri: string, retry = 0) {
   return null
 }
 
-export async function fetchBrowserHTML(uri: string) {
+export async function fetchBrowserHTML(uri: string, retry = 0) {
   try {
-    const page = await ensurePage()
-    await page.goto(uri)
+    const {
+      instance: { page },
+      url,
+    } = await getBrowserAndURL(uri, retry)
+    console.log('fetch browser html', uri, retry)
+    await page.goto(url.uri, {
+      timeout: 60_000,
+    })
     const content = await page.content()
     console.log('returning html content', content.slice(0, 50) + '...')
     return content
@@ -158,16 +212,57 @@ export async function fetchBrowserHTML(uri: string) {
   }
 }
 
-export async function fetchBrowserHyperscript(uri: string, selector: string) {
-  const page = await ensurePage()
-  await page.goto(uri)
-  console.log('hyperscript selector', selector)
-  const content = await page.textContent(selector)
-  if (content) {
-    console.log('got hyperscript, parsing..', content.slice(0, 50) + '...')
-    return hyperDecode(content)
+export async function fetchBrowserScriptData(uri: string, selectors: string[], retry = 0) {
+  const {
+    instance: { page },
+    url,
+  } = await getBrowserAndURL(uri, retry)
+  console.log('fetch browser hyperscript', uri, retry)
+  await page.goto(url.uri, {
+    timeout: 60_000,
+  })
+
+  let results: any[] = []
+
+  console.log('script selectors', selectors)
+  if (!selectors) {
+    console.log('error no selectors')
+    return
   }
-  return null
+
+  for (const selector of selectors) {
+    const handles = await page.$$(selector)
+    if (handles) {
+      results.push(
+        await Promise.all(
+          handles.map(async (handle) => {
+            try {
+              const textContent = await handle.textContent()
+              if (!textContent) {
+                return null
+              }
+              const isHyperscript = !!(await handle.getAttribute('data-hypernova-key'))
+              if (isHyperscript) {
+                console.log('got hyperscript, parsing..', textContent.slice(0, 50) + '...')
+                return hyperDecode(textContent)
+              }
+              const isLDJSON = (await handle.getAttribute('type')) == 'application/ld+json'
+              if (isLDJSON) {
+                console.log('got ldjson')
+                return JSON.parse(textContent)
+              }
+              return textContent
+            } catch (err) {
+              console.log('error processing handle', err.message, err.stack)
+              return null
+            }
+          })
+        )
+      )
+    }
+  }
+
+  return results
 }
 
 function hyperDecode(jsonPayload: string) {

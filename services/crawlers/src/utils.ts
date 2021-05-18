@@ -81,8 +81,7 @@ export class DB {
     })
     this.pool.on('error', (e) => {
       console.log(`Error: pool (${this.config.host}:${this.config.port})`, e.message, e.stack)
-      sentryException({
-        error: e,
+      sentryException(e, {
         data: {
           more: 'Error likely from long-lived pool connection in node-pg',
         },
@@ -102,7 +101,7 @@ export class DB {
       throw new Error('no client')
     }
     try {
-      const timeout = sleep(80_000)
+      const timeout = sleep(process.env.NODE_ENV === 'test' ? 3000 : 80_000)
       const res = await Promise.race([
         client.query(query),
         timeout.then(() => {

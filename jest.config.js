@@ -6,5 +6,9 @@ module.exports = {
   },
   bail: true,
   transformIgnorePatterns: ['node_modules/(?!@expo)/'],
-  // verbose: true,
+  testTimeout: 240_000,
+  // fixes if any library imports and tries to change source-maps
+  moduleNameMapper: {
+    'source-map-support/register': 'identity-obj-proxy',
+  },
 }

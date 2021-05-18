@@ -269,6 +269,7 @@ export async function bestPhotosForRestaurant(restaurant_id: uuid): Promise<Phot
     ) j1;
   `)
   const agg = result.rows[0].json_agg ?? []
+  console.log('agg', result.rows)
   const photos = agg.map((p) => {
     p.photo = JSON.parse(p.photo)
     return p
@@ -348,7 +349,7 @@ async function assessPhoto(urls: string[]) {
       }
       retries += 1
       if (retries > MAX_RETRIES) {
-        sentryMessage(MAX_RETRIES + ' failed attempts requesting image quality', urls)
+        sentryMessage(MAX_RETRIES + ' failed attempts requesting image quality', { data: urls })
         return []
       }
       console.log('Retrying Image Quality API')
@@ -518,7 +519,7 @@ export async function sendToDO(url: string, id: string) {
   try {
     response = await fetch(url, { method: 'HEAD' })
   } catch (e) {
-    sentryMessage('Failed downloading image HEAD', { url })
+    sentryMessage('Failed downloading image HEAD', { data: url })
     return id
   }
   const mime_type = response.headers.get('content-type')
@@ -535,8 +536,7 @@ export async function sendToDO(url: string, id: string) {
     }
     if (status == 408) retries += 1
     if (retries > 10) {
-      sentryException({
-        error: new Error('DO Spaces PUT Rate Limit'),
+      sentryException(new Error('DO Spaces PUT Rate Limit'), {
         data: {
           url: url,
           id: id,

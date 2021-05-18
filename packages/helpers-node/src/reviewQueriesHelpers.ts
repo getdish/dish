@@ -154,18 +154,15 @@ export async function reviewExternalUpsert(reviews: Review[]) {
   let all: ReviewWithId[] = []
   const grouped = chunk(reviews, 40)
   for (const [index, group] of grouped.entries()) {
-    // prettier-ignore
     console.log('reviewExternalUpsert: Inserting chunk', index, 'of', grouped.length)
-    all = [
-      ...all,
-      ...(await reviewUpsert(
-        group,
-        review_constraint.review_username_restauarant_id_tag_id_type_key,
-        {
-          keys: ['__typename'],
-        }
-      )),
-    ]
+    const next = await reviewUpsert(
+      group,
+      review_constraint.review_username_restauarant_id_tag_id_type_key,
+      {
+        keys: ['__typename'],
+      }
+    )
+    all = [...all, ...next]
   }
 
   return all
