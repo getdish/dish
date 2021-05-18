@@ -9,7 +9,20 @@ Sentry.init({
   environment: process.env.DISH_ENV || 'development',
 })
 
-export const sentryMessage = (message: string, data?: any, tags?: { [key: string]: string }) => {
+const defaultLogger = process.env.DISH_ENV != 'production' ? console.error : console.trace
+
+export const sentryMessage = (
+  message: string,
+  {
+    data,
+    tags,
+    logger = defaultLogger,
+  }: {
+    data?: any
+    tags?: { [key: string]: string }
+    logger?: (...args: any[]) => void
+  } = {}
+) => {
   Sentry.withScope((scope) => {
     if (tags) {
       scope.setTags(tags)
@@ -20,17 +33,18 @@ export const sentryMessage = (message: string, data?: any, tags?: { [key: string
   console.log('Sent message to Sentry: ' + message)
 }
 
-export const sentryException = ({
-  error,
-  data,
-  tags,
-  logger = process.env.DISH_ENV != 'production' ? console.error : console.trace,
-}: {
-  error: Error
-  data?: any
-  tags?: { [key: string]: string }
-  logger?: (...args: any[]) => void
-}) => {
+export const sentryException = (
+  error: Error,
+  {
+    data,
+    tags,
+    logger = defaultLogger,
+  }: {
+    data?: any
+    tags?: { [key: string]: string }
+    logger?: (...args: any[]) => void
+  } = {}
+) => {
   if (process.env.DISH_ENV != 'production') {
     logger(error)
     return

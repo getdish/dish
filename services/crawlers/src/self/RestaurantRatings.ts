@@ -24,14 +24,14 @@ export class RestaurantRatings {
 
   mergeRatings() {
     this.crawler.ratings = {
-      yelp: scrapeGetData(this.crawler.yelp, 'data_from_map_search.rating'),
-      ubereats: scrapeGetData(this.crawler.ubereats, 'main.rating.ratingValue'),
+      yelp: scrapeGetData(this.crawler.yelp, (x) => x.json.aggregateRating.ratingValue),
+      ubereats: scrapeGetData(this.crawler.ubereats, (x) => x.main.rating.ratingValue),
       infatuated: this._infatuatedRating(),
-      tripadvisor: scrapeGetData(this.crawler.tripadvisor, 'overview.rating.primaryRating'),
+      tripadvisor: scrapeGetData(this.crawler.tripadvisor, (x) => x.overview.rating.primaryRating),
       michelin: this._getMichelinRating(),
       doordash: this._doorDashRating(),
-      grubhub: scrapeGetData(this.crawler.grubhub, 'main.rating.rating_value'),
-      google: scrapeGetData(this.crawler.google, 'rating'),
+      grubhub: scrapeGetData(this.crawler.grubhub, (x) => x.main.rating.rating_value),
+      google: scrapeGetData(this.crawler.google, (x) => x.rating),
     }
     console.log('ratings before', this.crawler.ratings)
     for (const key in this.crawler.ratings) {
@@ -42,13 +42,16 @@ export class RestaurantRatings {
   }
 
   _infatuatedRating() {
-    const rating = scrapeGetData(this.crawler.infatuated, 'data_from_map_search.post.rating')
+    const rating = scrapeGetData(
+      this.crawler.infatuated,
+      (x) => x.data_from_search_list_item.post.rating
+    )
     if (rating < 0) return NaN
     return parseFloat(rating) / 2
   }
 
   _doorDashRating() {
-    const rating = scrapeGetData(this.crawler.doordash, 'main.averageRating')
+    const rating = scrapeGetData(this.crawler.doordash, (x) => x.main.averageRating)
     return rating == 0 ? null : rating
   }
 
@@ -84,7 +87,7 @@ export class RestaurantRatings {
   }
 
   private _getMichelinRating() {
-    const rating = scrapeGetData(this.crawler.michelin, 'main.michelin_award')
+    const rating = scrapeGetData(this.crawler.michelin, (x) => x.main.michelin_award)
     if (rating == '') {
       return NaN
     }

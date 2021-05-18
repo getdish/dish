@@ -1,4 +1,5 @@
 import { RestaurantWithId, ZeroUUID, ensureJSONSyntax, restaurantFindOne } from '@dish/graph'
+import { clone } from 'lodash'
 import { PoolConfig } from 'pg'
 
 import { DoorDash } from './doordash/DoorDash'
@@ -39,7 +40,21 @@ export type Scrape<D extends ScrapeData = ScrapeData> = {
   data: D
 }
 
-export type ScrapeData = { [key: string]: any }
+export type ScrapeData = { [key: string]: ScrapeData | any }
+
+export function scrapeGetData<
+  S extends Scrape = Scrape,
+  Select extends Function = (s: S['data']) => any
+>(
+  scrape: S | null,
+  select: Select,
+  defaultValue: any = ''
+): Select extends (s: S['data']) => infer Res ? Res : any {
+  if (!scrape) {
+    return defaultValue
+  }
+  return clone(select(scrape.data) ?? defaultValue)
+}
 
 export async function scrapeFindOneBySourceID(source: string, id: string, allow_not_found = false) {
   const result = await db.query(`
@@ -179,47 +194,6 @@ export async function scrapeMergeData(id: string, data: ScrapeData) {
     RETURNING *;
   `)
   return result.rows[0]
-}
-
-export function scrapeGetData(scrape: Scrape | null, path: string, default_value: any = ''): any {
-  if (!scrape) {
-    return default_value
-  }
-  let obj = scrape.data
-  if (!obj) {
-    return
-  }
-  const keys = path.split('.')
-  const length = keys.length
-  let index = -1
-  if (typeof obj === 'undefined') {
-    return default_value
-  }
-  for (let i = 0; i < length; i++) {
-    let key = keys[i]
-    const matches = key.match(/\[(.*)\]/)
-    if (matches) {
-      key = key.split('[')[0]
-      index = parseFloat(matches[0][1])
-    } else {
-      index = -1
-    }
-    if (key in obj) {
-      obj = obj[key]
-      if (obj === null) {
-        return default_value
-      }
-      if (index >= 0) {
-        obj = obj[index]
-      }
-      if (typeof obj === 'undefined') {
-        return default_value
-      }
-    } else {
-      return default_value
-    }
-  }
-  return obj
 }
 
 export async function deleteAllScrapesBySourceID(id: string) {

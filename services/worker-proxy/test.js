@@ -1,25 +1,30 @@
-const { webkit } = require('playwright-webkit')
+const { webkit, devices } = require('playwright-webkit')
 
 ;(async () => {
   const browser = await webkit.launch({
-    headless: true,
+    headless: false,
   })
-  const page = await browser.newPage()
-  await page.goto('https://yelp.com')
-  const out = await page.evaluate(
-    (uri) =>
-      fetch(uri, {
-        headers: {
-          'content-type': 'application/json',
-          accept: 'application/json',
-          'Accept-Encoding': 'br;q=1.0, gzip;q=0.8, *;q=0.1',
-        },
-      }).then((res) => res.json()),
-    'https://www.yelp.com/search/snippet?cflt=restaurants&l=g%3A-122.41335000000001%2C37.758125%2C-122.41135%2C37.760124999999995&start=0'
-  )
-  console.log(out)
+  const context = await browser.newContext({
+    ...devices['iPhone 11 Pro'],
+  })
+  const page = await context.newPage()
+  await page.goto('https://m.yelp.com/biz/square-pie-guys-san-francisco')
+  await page.screenshot({ path: `example.png` })
   await browser.close()
 })()
+
+// await page.goto('https://m.yelp.com')
+// const out = await page.evaluate(
+//   (uri) =>
+//     fetch(uri, {
+//       headers: {
+//         'content-type': 'application/json',
+//         accept: 'application/json',
+//         'Accept-Encoding': 'br;q=1.0, gzip;q=0.8, *;q=0.1',
+//       },
+//     }).then((res) => res.json()),
+//   ' https://m.yelp.com/location_suggest/v2?prefix=San%20Francisco%2C%20CA'
+// )
 
 // const p2 = require('playwright')
 

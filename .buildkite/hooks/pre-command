@@ -65,6 +65,7 @@ fi
 echo "psql installed"
 
 if ! [ -x "$(command -v npm)" ]; then
+  dpkg --configure -a
   apt-get update && apt-get install -y nodejs npm
   curl -o- -L https://yarnpkg.com/install.sh | bash
 fi

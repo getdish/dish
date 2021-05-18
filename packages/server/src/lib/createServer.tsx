@@ -80,7 +80,10 @@ export async function createServer(serverConf: ServerConfig) {
   }
 }
 
-async function createApiServer(app: any, { createConfig, ...config }: ServerConfigNormal) {
+let restarts = 0
+
+async function createApiServer(app: any, conf: ServerConfigNormal) {
+  const { createConfig, ...config } = conf
   const port = await getPort()
   const pa = `localhost:${port}`
   app.use('/api', proxy(pa))
@@ -98,8 +101,10 @@ async function createApiServer(app: any, { createConfig, ...config }: ServerConf
     })
     worker.on('exit', async (code) => {
       console.log(' [api] exited', code)
-      if (code !== 0) {
-        rej(`Worker stopped with exit code ${code}`)
+      if (restarts < 5) {
+        console.log('  [api] restarting...')
+        restarts++
+        createApiServer(app, conf)
       }
     })
     worker.on('message', (msg: string) => {

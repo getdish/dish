@@ -1,9 +1,12 @@
 declare module "@dish/common" {
-    export const sentryMessage: (message: string, data?: any, tags?: {
-        [key: string]: string;
-    } | undefined) => void;
-    export const sentryException: ({ error, data, tags, logger, }: {
-        error: Error;
+    export const sentryMessage: (message: string, { data, tags, logger, }?: {
+        data?: any;
+        tags?: {
+            [key: string]: string;
+        } | undefined;
+        logger?: ((...args: any[]) => void) | undefined;
+    }) => void;
+    export const sentryException: (error: Error, { data, tags, logger, }?: {
         data?: any;
         tags?: {
             [key: string]: string;

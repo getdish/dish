@@ -10,5 +10,5 @@ else
     sleep 1800
     killall chrome
   done &
-  xvfb-run node --expose-gc ./dist/index.js
+  node --expose-gc ./dist/index.js
 fi

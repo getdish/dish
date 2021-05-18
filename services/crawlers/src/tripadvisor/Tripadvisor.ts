@@ -229,10 +229,10 @@ export class Tripadvisor extends WorkerJob {
     if (!review_data.length) {
       return false
     }
-    let scrape_data: ScrapeData = {}
-    scrape_data['reviewsp' + page] = review_data
+    let reviews = {}
+    reviews['dishpage-' + page] = review_data
     this.log(`Merging review data for page ${page}: ${review_data.length} ${more}`)
-    await scrapeMergeData(scrape_id, scrape_data)
+    await scrapeMergeData(scrape_id, { reviews })
     return more
   }
 
@@ -288,7 +288,7 @@ export class Tripadvisor extends WorkerJob {
         more = true
       }
     } catch (error) {
-      sentryException({ error })
+      sentryException(error)
     }
     return { more, data: response.data }
   }

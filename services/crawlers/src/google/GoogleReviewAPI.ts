@@ -65,7 +65,7 @@ export class GoogleReviewAPI extends WorkerJob {
     }
     if (!restaurant.geocoder_id) {
       sentryMessage('GoogleReviewAPI: restaurant.geocoder_id is empty', {
-        restaurant_id: id,
+        data: { restaurant_id: id },
       })
       return
     }

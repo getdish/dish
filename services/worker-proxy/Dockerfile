@@ -3,7 +3,7 @@ FROM mcr.microsoft.com/playwright:bionic
 COPY package.json .
 RUN npm install && npm install playwright-webkit
 COPY src src
-RUN npm run build
+RUN npm run build:skip-types
 
 # ENV DEBUG=pw:api
 

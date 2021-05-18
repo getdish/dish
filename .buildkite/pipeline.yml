@@ -13,30 +13,30 @@ steps:
     key: base
     command: .buildkite/scripts/build_docker_compose.sh base
 
-  - label: ":docker: build dish-app"
-    key: dish-app
-    depends_on: base
-    command: .buildkite/scripts/build_docker_compose.sh dish-app
-
-  - label: ":docker: build run-tests"
-    key: run-tests
-    depends_on: base
-    command: .buildkite/scripts/build_docker_compose.sh run-tests
-
-  - label: ":docker: build hooks"
-    key: hooks
-    depends_on: base
-    command: .buildkite/scripts/build_docker_compose.sh hooks
-
-  - label: ":docker: build site"
-    key: site
-    depends_on: base
-    command: .buildkite/scripts/build_docker_compose.sh site
+  # - label: ":docker: build dish-app"
+  #   key: dish-app
+  #   depends_on: base
+  #   command: .buildkite/scripts/build_docker_compose.sh dish-app
 
   - label: ":docker: build worker"
     key: worker
     depends_on: base
     command: .buildkite/scripts/build_docker_compose.sh worker
+
+  - label: ":docker: build run-tests"
+    key: run-tests
+    depends_on: worker
+    command: .buildkite/scripts/build_docker_compose.sh run-tests
+
+  # - label: ":docker: build hooks"
+  #   key: hooks
+  #   depends_on: base
+  #   command: .buildkite/scripts/build_docker_compose.sh hooks
+
+  # - label: ":docker: build site"
+  #   key: site
+  #   depends_on: base
+  #   command: .buildkite/scripts/build_docker_compose.sh site
 
   - label: ":docker: build worker-proxy"
     key: worker-proxy
@@ -45,47 +45,48 @@ steps:
     env:
       PUSH: true
 
-  - label: ":docker: build search"
-    key: search
-    command: .buildkite/scripts/build_docker_compose.sh search
-    env:
-      PUSH: true
+  # - label: ":docker: build search"
+  #   key: search
+  #   command: .buildkite/scripts/build_docker_compose.sh search
+  #   env:
+  #     PUSH: true
 
-  - label: ":docker: build hasura"
-    key: hasura
-    command: .buildkite/scripts/build_docker_compose.sh hasura
-    env:
-      PUSH: true
+  # - label: ":docker: build hasura"
+  #   key: hasura
+  #   command: .buildkite/scripts/build_docker_compose.sh hasura
+  #   env:
+  #     PUSH: true
 
-  - label: ":docker: build timescale"
-    key: timescale
-    command: .buildkite/scripts/build_docker_compose.sh timescale
-    env:
-      PUSH: true
+  # - label: ":docker: build timescale"
+  #   key: timescale
+  #   command: .buildkite/scripts/build_docker_compose.sh timescale
+  #   env:
+  #     PUSH: true
 
-  - label: ":docker: build tileserver"
-    key: tileserver
-    command: .buildkite/scripts/build_docker_compose.sh tileserver
-    env:
-      PUSH: true
+  # - label: ":docker: build tileserver"
+  #   key: tileserver
+  #   command: .buildkite/scripts/build_docker_compose.sh tileserver
+  #   env:
+  #     PUSH: true
 
-  - label: ":docker: build postgres"
-    key: postgres
-    command: .buildkite/scripts/build_docker_compose.sh postgres
+  # - label: ":docker: build postgres"
+  #   key: postgres
+  #   command: .buildkite/scripts/build_docker_compose.sh postgres
 
   - label: "done with test images"
     command: "true"
     key: test-images
     depends_on:
-      - dish-app
-      - hooks
-      - search
-      - hasura
-      - timescale
-      - tileserver
+      # - dish-app
+      # - hooks
+      # - search
+      # - hasura
+      # - timescale
+      # - tileserver
       - run-tests
-      - postgres
+      # - postgres
       - worker
+      - worker-proxy
 
   # non test images
 
@@ -96,36 +97,36 @@ steps:
   #   env:
   #     PUSH: true
 
-  - label: ":docker: build summarizer"
-    key: summarizer
-    command: .buildkite/scripts/build_docker_compose.sh summarizer
-    env:
-      PUSH: true
+  # - label: ":docker: build summarizer"
+  #   key: summarizer
+  #   command: .buildkite/scripts/build_docker_compose.sh summarizer
+  #   env:
+  #     PUSH: true
 
-  - label: ":docker: build bert"
-    key: bert
-    depends_on: base
-    command: .buildkite/scripts/build_docker_compose.sh bert
-    env:
-      PUSH: true
+  # - label: ":docker: build bert"
+  #   key: bert
+  #   depends_on: base
+  #   command: .buildkite/scripts/build_docker_compose.sh bert
+  #   env:
+  #     PUSH: true
 
-  - label: ":docker: build gorse"
-    key: gorse
-    command: .buildkite/scripts/build_docker_compose.sh gorse
-    env:
-      PUSH: true
+  # - label: ":docker: build gorse"
+  #   key: gorse
+  #   command: .buildkite/scripts/build_docker_compose.sh gorse
+  #   env:
+  #     PUSH: true
 
-  - label: ":docker: build image-proxy"
-    key: image-proxy
-    command: .buildkite/scripts/build_docker_compose.sh image-proxy
-    env:
-      PUSH: true
+  # - label: ":docker: build image-proxy"
+  #   key: image-proxy
+  #   command: .buildkite/scripts/build_docker_compose.sh image-proxy
+  #   env:
+  #     PUSH: true
 
-  - label: ":docker: build image-quality"
-    key: image-quality
-    command: .buildkite/scripts/build_docker_compose.sh image-quality
-    env:
-      PUSH: true
+  # - label: ":docker: build image-quality"
+  #   key: image-quality
+  #   command: .buildkite/scripts/build_docker_compose.sh image-quality
+  #   env:
+  #     PUSH: true
 
   - label: "setup services for tests"
     key: test-setup
@@ -167,13 +168,6 @@ steps:
     if: build.branch == "production" || build.branch == "nate/dev"
     timeout_in_minutes: 10
     command: ".buildkite/scripts/deploy_dedicated.sh"
-    artifact_paths:
-      - "*.log"
-
-  - label: "deploy fly"
-    if: build.branch == "production" || build.branch == "nate/dev"
-    timeout_in_minutes: 10
-    command: ".buildkite/scripts/deploy_all.sh"
     artifact_paths:
       - "*.log"
 

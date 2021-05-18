@@ -8,13 +8,7 @@ import { SelectionOptions, resolvedWithFields } from '../helpers/queryResolvers'
 import { tagSlugs } from '../helpers/tagHelpers'
 import { Restaurant, RestaurantTag, RestaurantWithId } from '../types'
 import { restaurantTagUpsert } from './restaurantTagQueries'
-import {
-  tagFindAll,
-  tagGetAllChildren,
-  tagGetAllGenerics,
-  tagSelectAll,
-  tagUpsert,
-} from './tagQueries'
+import { tagGetAllChildren, tagGetAllGenerics, tagSelectAll, tagUpsert } from './tagQueries'
 
 const query = client.query
 
@@ -23,6 +17,7 @@ export const restaurantInsert = QueryHelpers.insert
 export const restaurantUpsert = QueryHelpers.upsert
 export const restaurantUpdate = QueryHelpers.update
 export const restaurantFindOne = QueryHelpers.findOne
+export const restaurantFindAll = QueryHelpers.findAll
 export const restaurantRefresh = QueryHelpers.refresh
 
 export const restaurant_fixture = {

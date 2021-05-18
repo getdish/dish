@@ -108,18 +108,20 @@ export class Puppeteer {
       ],
     })
     const chromium = await allSettledFirstFulfilled<string>([
+      execP(`which xvfb-chromium`),
       execP(`which chromium`),
       execP(`which google-chrome`),
       execP(`which google-chrome-stable`),
+      execP(`which chrome`),
     ])
-    console.log('chromium', chromium)
     this.browser = await puppeteer.launch({
+      pipe: true,
       ignoreDefaultArgs: ['--enable-automation'],
+      args: ['--no-sandbox'],
       ...(chromium && {
         executablePath: chromium,
       }),
     })
-
     this.page = await this.browser.newPage()
 
     this.page.on('error', (err) => {
@@ -154,7 +156,7 @@ export class Puppeteer {
       return
     }
     this.request_count += 1
-    request.continue({ url: url })
+    request.continue({ url })
   }
 
   _blockImage(request: Request) {
@@ -177,12 +179,13 @@ export class Puppeteer {
       return request.url()
     }
     if (is_main_domain) {
-      const proxied_url = request.url().replace(this.domain, this.aws_proxy)
+      const proxied_url = request.url().replace(this.domain, this.aws_proxy).replace('//', '/')
       return proxied_url
     } else if (is_googleusercontent) {
       const proxied_url = request
         .url()
         .replace(/https:\/\/.*\.com\//, process.env.GOOGLE_USERCONTENT_AWS_PROXY || '')
+        .replace('//', '/')
       return proxied_url
     } else {
       request.abort()
@@ -201,6 +204,7 @@ export class Puppeteer {
   _waitForSpecificRequest(request: Request) {
     if (!this.watch_requests_for) return
     if (request.url().includes(this.watch_requests_for)) {
+      console.log('found it!')
       this.found_watched_request = request.url()
     }
   }

@@ -40,7 +40,6 @@ export const redisSet = async (key: string, value: string) => {
 export const redisDeletePattern = async (pattern: string) => {
   const keys: string[] = await redisKeys_(pattern)
   if (!keys.length) {
-    console.log('no keys')
     return
   }
   await redisDelete_(keys)

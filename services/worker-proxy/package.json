@@ -8,6 +8,7 @@
   "module": "_",
   "scripts": {
     "build": "esdx",
+    "build:skip-types": "esdx skip-types",
     "watch": "esdx-watch"
   },
   "dependencies": {

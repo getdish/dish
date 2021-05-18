@@ -1,8 +1,7 @@
 declare module "@dish/worker-proxy" {
-    export function ensurePage(forceRefresh?: boolean): Promise<any>;
-    export function fetchBrowser(uriBase: string, type: 'html' | 'json' | 'hyperscript', selector?: string, maxTries?: number): any;
+    export function fetchBrowser(uri: string, type: 'html' | 'json' | 'script-data', selectors?: string[] | null, retry?: number): any;
     export function fetchBrowserJSON(uri: string, retry?: number): any;
-    export function fetchBrowserHTML(uri: string): Promise<any>;
-    export function fetchBrowserHyperscript(uri: string, selector: string): Promise<any>;
+    export function fetchBrowserHTML(uri: string, retry?: number): Promise<any>;
+    export function fetchBrowserScriptData(uri: string, selectors: string[], retry?: number): Promise<any[] | undefined>;
 }
 //# sourceMappingURL=types.d.ts.map

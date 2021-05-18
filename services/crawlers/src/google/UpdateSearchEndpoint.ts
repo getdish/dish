@@ -6,7 +6,9 @@ import { GOOGLE_SEARCH_ENDPOINT_KEY, LAT_TOKEN, LON_TOKEN } from './GoogleGeocod
 import { GooglePuppeteerJob } from './GooglePuppeteerJob'
 
 const sleep = (ms: number) => new Promise((res) => setTimeout(res, ms))
-const PLEASE = 'PLEASE'
+
+// may want to randomize
+export const PLEASE = `chicken`
 
 String.prototype.replaceAll = function (search, replacement) {
   var target = this
@@ -43,6 +45,7 @@ export class UpdateSearchEndpoint extends GooglePuppeteerJob {
     await this.boot()
     await this._catchSearchEndpoint()
     this._templatiseSearchEndpoint()
+    console.log('insert setting', this.searchEndpoint)
     await settingUpsert([
       {
         key: GOOGLE_SEARCH_ENDPOINT_KEY,
@@ -77,9 +80,14 @@ export class UpdateSearchEndpoint extends GooglePuppeteerJob {
     this.lon = -122.4194 + this.jitter()
     const url = this.GOOGLE_DOMAIN + `/maps/@${this.lat},${this.lon},17z/`
     const page = this.puppeteer.page
+    console.log('_theBrokenSearchBoxInteraction', url)
     await page.goto(url)
+    await sleep(Math.random() * 100)
     await page.focus('#searchboxinput')
+    console.log('searching')
+    await sleep(Math.random() * 100)
     await page.keyboard.type(PLEASE)
+    await sleep(Math.random() * 100)
     await page.keyboard.press('Enter')
   }
 
@@ -103,7 +111,7 @@ export class UpdateSearchEndpoint extends GooglePuppeteerJob {
   async _waitForSearchAPIRequest() {
     let count = 0
     while (!this.puppeteer.found_watched_request) {
-      await sleep(50)
+      await sleep(80)
       count++
       if (count > 500) break
     }

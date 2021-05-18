@@ -121,7 +121,13 @@ const parseQueryForCache = async (props: GQLCacheProps) => {
     const names = operation.selectionSet.selections
       .map((x) => (x.kind === 'Field' ? x.name.value : null))
       .filter(isPresent)
-      .map((x) => x.replace('insert_', '').replace('update_', '').replace('upsert_', ''))
+      .map((x) =>
+        x
+          .replace('insert_', '')
+          .replace('update_', '')
+          .replace('upsert_', '')
+          .replace('delete_', '')
+      )
     console.log(' [mutation] clearing cache for', names)
     for (const name of names) {
       const pattern = `*${name}*`

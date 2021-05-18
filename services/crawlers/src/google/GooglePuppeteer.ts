@@ -113,8 +113,7 @@ export class GooglePuppeteer extends GooglePuppeteerJob {
       await func.bind(this)()
     } catch (e) {
       if (!e.message.includes('waiting for selector')) {
-        sentryException({
-          error: e,
+        sentryException(e, {
           data: { function: func.name, restaurant: restaurant },
           tags: { source: 'Google crawler' },
           logger: this.log,

@@ -2,22 +2,20 @@
 
 set -eo pipefail
 
-export DISH_ENV=test
-
 set -a
 source .env
 source .env.test
 set +a
 
-mkdir -p "/data/postgresdb"
-chown -R root:root "/data/postgresdb"
-echo "POSTGRES_DB: $POSTGRES_DB"
+# if not already mounted/setup, we need to start postgres once and restart it
+if [ ! -d "/var/data/postgres/test" ]; then
+  echo "doing double start first time"
+  docker-compose run -d postgres
+  sleep 10
+  docker-compose down --remove-orphans -t 4
+fi
 
-echo "Starting docker for $DISH_ENV"
-
-export DB_DATA_DIR="/data/postgresdb/"
 ./dishctl.sh docker_compose_up -d
-
 ./dishctl.sh wait_until_services_ready
 ./dishctl.sh hasura_migrate
 ./dishctl.sh timescale_migrate

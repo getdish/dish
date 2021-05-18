@@ -7,7 +7,7 @@ export class Loggable {
     return this.constructor.name || '...'
   }
 
-  log(...messages: any[]) {
+  log = (...messages: any[]) => {
     if (DEBUG_LEVEL < 1) {
       return
     }

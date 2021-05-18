@@ -42,6 +42,37 @@ declare module "@dish/crawlers" {
 
 declare module "@dish/crawlers" {
     import "@dish/common";
+    import { WorkerJob } from "@dish/worker";
+    export class GooglePuppeteerJob extends WorkerJob {
+        GOOGLE_DOMAIN: string;
+        puppeteer: Puppeteer;
+        booted: boolean;
+        constructor();
+        boot(): Promise<void>;
+    }
+}
+
+declare module "@dish/crawlers" {
+    import { JobOptions, QueueOptions } from "bull";
+    export const PLEASE = "chicken";
+    export class UpdateSearchEndpoint extends GooglePuppeteerJob {
+        searchEndpoint: string;
+        lat: number;
+        lon: number;
+        static queue_config: QueueOptions;
+        static job_config: JobOptions;
+        constructor();
+        getNewSearchEndpoint(): Promise<void>;
+        _templatiseSearchEndpoint(): void;
+        jitter(): number;
+        _theBrokenSearchBoxInteraction(): Promise<void>;
+        _catchSearchEndpoint(): Promise<void>;
+        _waitForSearchAPIRequest(): Promise<void>;
+    }
+}
+
+declare module "@dish/crawlers" {
+    import "@dish/common";
     export const GOOGLE_SEARCH_ENDPOINT_KEY = "GOOGLE_SEARCH_ENDPOINT";
     export const LON_TOKEN = "%LON%";
     export const LAT_TOKEN = "%LAT%";
@@ -52,8 +83,9 @@ declare module "@dish/crawlers" {
         lat: number;
         searchEndpoint: string;
         searchForID(query: string, lat: number, lon: number): Promise<any>;
-        private _getSearchEndpoint;
-        _formatSearchURL(): string;
+        private getSearchEndpointSetting;
+        private getSearchEndpoint;
+        private formatSearchURL;
         private _searchForID;
         _hasSearchExpired(result: string): boolean;
     }
@@ -267,7 +299,7 @@ declare module "@dish/crawlers" {
         private _getMenu;
         private _extractEmbeddedJSONData;
     }
-    export function tripadvisorGetFBC(): Promise<any>;
+    export function tripadvisorGetFBC(): Promise<import("@dish/graph").WithID<import("@dish/graph").FlatResolvedModel<import("@dish/graph").RestaurantQuery>>>;
 }
 
 declare module "@dish/crawlers" {
@@ -318,12 +350,403 @@ declare module "@dish/crawlers" {
 }
 
 declare module "@dish/crawlers" {
+    const _default_1: {
+        readonly legacyProps: {
+            readonly props: {
+                readonly modules: {
+                    readonly serverModules: readonly [
+                        {
+                            readonly component: "InfoBox";
+                            readonly props: {
+                                readonly name: "Barrel Proof";
+                                readonly alternateNames: readonly [
+                                ];
+                                readonly rating: 4;
+                                readonly reviewCount: 87;
+                                readonly categories: readonly [
+                                    "Pizza",
+                                    "Sports Bars",
+                                    "Cocktail Bars"
+                                ];
+                                readonly isClosed: false;
+                                readonly isSaved: false;
+                                readonly hours: {
+                                    readonly todayFormatted: "11:00 am - 10:00 pm";
+                                    readonly yesterdayFormatted: "11:00 am - 10:00 pm";
+                                    readonly statusToday: 2;
+                                    readonly statusYesterday: 1;
+                                    readonly yesterdayDay: "Sun";
+                                    readonly todayDay: "Mon";
+                                };
+                                readonly isUnclaimed: false;
+                                readonly appointmentOnly: false;
+                                readonly claimUrl: "https://biz.yelp.com/signup/B-yUH6Bc1hxy8teT4wa73A/account?utm_campaign=claim_business&amp;utm_content=claim_status_link&amp;utm_medium=m_yelp&amp;utm_source=biz_page_unclaimed";
+                                readonly priceRange: 2;
+                                readonly currencySymbol: "$";
+                            };
+                        },
+                        {
+                            readonly component: "ActionButtons";
+                            readonly props: {
+                                readonly phoneLink: "tel:+14159326132";
+                                readonly websiteUrl: {
+                                    readonly displayUrl: "http://www.barrelproofsf.com";
+                                };
+                                readonly syndicationTrackingProps: {
+                                    readonly thirdPartyLeadsConfig: {
+                                        readonly categoryAliases: "cocktailbars,nightlife,pizza,restaurants,sportsbars";
+                                        readonly city: "San Francisco";
+                                        readonly state: "CA";
+                                    };
+                                };
+                            };
+                        },
+                        {
+                            readonly component: "ServiceUpdateSummary";
+                            readonly props: {
+                                readonly title: "COVID-19 Updates";
+                                readonly body: {
+                                    readonly text: "\"We are open for to-go cocktails, beer, wine, and food, from 11:00 am to 10:00 pm daily.  Call ahead (415-932-6132) or stop by to order.  We also offer delivery.\"";
+                                    readonly messageLastUpdated: "Posted on June 13, 2020";
+                                };
+                                readonly attributeAvailabilitySections: readonly [
+                                    {
+                                        readonly title: "Updated Services";
+                                        readonly source: null;
+                                        readonly showSourceIcon: null;
+                                        readonly attributeAvailabilityList: readonly [
+                                            {
+                                                readonly label: "Delivery";
+                                                readonly availability: "AVAILABLE";
+                                                readonly subtext: null;
+                                            },
+                                            {
+                                                readonly label: "Takeout";
+                                                readonly availability: "AVAILABLE";
+                                                readonly subtext: null;
+                                            }
+                                        ];
+                                    }
+                                ];
+                            };
+                            readonly status: "render";
+                        },
+                        {
+                            readonly component: "PhotoGrid";
+                            readonly props: {
+                                readonly media: readonly [
+                                    {
+                                        readonly srcUrl: "https://s3-media0.fl.yelpcdn.com/bphoto/lOPBZqhXrfyJpdsE0tI0dA/348s.jpg";
+                                        readonly url: "/biz_photos/barrel-proof-san-francisco?select=lOPBZqhXrfyJpdsE0tI0dA";
+                                        readonly type: "photo";
+                                    },
+                                    {
+                                        readonly srcUrl: "https://s3-media0.fl.yelpcdn.com/bphoto/KIoGYyUHRnd_VOAJ8rQL2g/348s.jpg";
+                                        readonly url: "/biz_photos/barrel-proof-san-francisco?select=KIoGYyUHRnd_VOAJ8rQL2g";
+                                        readonly type: "photo";
+                                    },
+                                    {
+                                        readonly srcUrl: "https://s3-media0.fl.yelpcdn.com/bphoto/tYFvxMaPCWnBf4I15D-5lA/348s.jpg";
+                                        readonly url: "/biz_photos/barrel-proof-san-francisco?select=tYFvxMaPCWnBf4I15D-5lA";
+                                        readonly type: "photo";
+                                    },
+                                    {
+                                        readonly srcUrl: "https://s3-media0.fl.yelpcdn.com/bphoto/nrlKePhXc9BkhRtpxwwe_w/348s.jpg";
+                                        readonly url: "/biz_photos/barrel-proof-san-francisco?select=nrlKePhXc9BkhRtpxwwe_w";
+                                        readonly type: "photo";
+                                    }
+                                ];
+                                readonly mediaCount: 69;
+                            };
+                        }
+                    ];
+                };
+                readonly bizId: "B-yUH6Bc1hxy8teT4wa73A";
+                readonly initialRequestId: "0945b0912f82b7c4";
+                readonly directionsModalProps: {
+                    readonly businessName: "Barrel Proof";
+                    readonly directionsLink: "http://maps.google.com/maps?daddr=2331+Mission+St%2C+San+Francisco%2C+CA%2C+US%2C+94110&amp;saddr=Current+Location";
+                    readonly mapState: {
+                        readonly hoods: {};
+                        readonly markers: readonly [
+                            {
+                                readonly key: "starred_location";
+                                readonly location: {
+                                    readonly latitude: 37.7597157;
+                                    readonly longitude: -122.4188774;
+                                };
+                                readonly icon: {
+                                    readonly regularUri: "";
+                                    readonly activeUri: "";
+                                    readonly name: "starred";
+                                    readonly size: readonly [
+                                        24,
+                                        32
+                                    ];
+                                    readonly scaledSize: readonly [
+                                        24,
+                                        32
+                                    ];
+                                    readonly anchorOffset: readonly [
+                                        12,
+                                        32
+                                    ];
+                                    readonly regularOrigin: readonly [
+                                        0,
+                                        0
+                                    ];
+                                    readonly activeOrigin: readonly [
+                                        0,
+                                        0
+                                    ];
+                                };
+                            },
+                            {
+                                readonly key: "current_location";
+                                readonly location: null;
+                                readonly icon: {
+                                    readonly regularUri: "";
+                                    readonly activeUri: "";
+                                    readonly name: "current_location";
+                                    readonly size: readonly [
+                                        46,
+                                        46
+                                    ];
+                                    readonly scaledSize: readonly [
+                                        46,
+                                        46
+                                    ];
+                                    readonly anchorOffset: readonly [
+                                        23,
+                                        23
+                                    ];
+                                    readonly regularOrigin: readonly [
+                                        0,
+                                        0
+                                    ];
+                                    readonly activeOrigin: readonly [
+                                        0,
+                                        0
+                                    ];
+                                };
+                            }
+                        ];
+                        readonly serviceAreas: null;
+                        readonly topBizBounds: null;
+                        readonly geobox: null;
+                        readonly center: {
+                            readonly latitude: 37.7597157;
+                            readonly longitude: -122.4188774;
+                        };
+                        readonly zoom: 15;
+                        readonly scrollwheelZoom: true;
+                        readonly zoomControlPosition: "top_left";
+                        readonly market: null;
+                        readonly overlayWidth: null;
+                        readonly library: "google";
+                        readonly moMapPossible: true;
+                        readonly shouldDrawCheckbox: false;
+                        readonly maxZoomLevel: null;
+                        readonly minZoomLevel: null;
+                        readonly adPinColor: null;
+                        readonly fitToGeobox: false;
+                    };
+                    readonly mapsLibrary: "google";
+                    readonly locale: "en_US";
+                    readonly bunsenEventData: {
+                        readonly business_id_encid: "B-yUH6Bc1hxy8teT4wa73A";
+                        readonly connection_type: "map_opened";
+                    };
+                };
+                readonly fromThisBizProps: {
+                    readonly specialtiesText: "Private Parties\nLarge spaces available for reservation\n30 TV's, 2 bars, video arcade and free pool. \nKitchen open until 10 pm Sunday- Thursday and 11pm on weekends.\nAsk us about private upstairs rental for your next event.";
+                    readonly yearEstablished: "2018";
+                    readonly historyText: "Barrel Proof is a cocktail sports bar located in the heart of the mission. With great drinks, delicious food and large floor plan with 30 TVs, 2 pool tables and arcade games.\n\n After 8 months of remodeling and countless inspectors we finally were able to open our doors for service as of February 3, 2018.";
+                    readonly bioText: null;
+                    readonly ownerName: null;
+                    readonly ownerRole: null;
+                    readonly avatarSrc: null;
+                    readonly avatarSrcSet: null;
+                };
+                readonly moreInfoProps: {
+                    readonly businessName: "Barrel Proof";
+                    readonly bizInfo: {
+                        readonly menu: {
+                            readonly label: "Menu";
+                            readonly linkUrl: "/biz_redir?url=http%3A%2F%2Fbarrelproofsf.com%2Fmenu%2F&amp;website_link_type=website&amp;src_bizid=B-yUH6Bc1hxy8teT4wa73A&amp;cachebuster=1621304688&amp;s=9e2567e7a6a2c6655ece392e4943d1bd14e924bfa23453f143f8fa9516bdbe81";
+                            readonly linkText: "barrelproofsf.com/menu";
+                        };
+                        readonly bizHours: readonly [
+                            {
+                                readonly formattedDate: "Mon-Tue";
+                                readonly formattedTime: "4:00 pm - 10:00 pm";
+                            },
+                            {
+                                readonly formattedDate: "Wed";
+                                readonly formattedTime: "4:00 pm - 12:00 am";
+                            },
+                            {
+                                readonly formattedDate: "Thu-Fri";
+                                readonly formattedTime: "4:00 pm - 2:00 am";
+                            },
+                            {
+                                readonly formattedDate: "Sat";
+                                readonly formattedTime: "2:00 pm - 2:00 am";
+                            },
+                            {
+                                readonly formattedDate: "Sun";
+                                readonly formattedTime: "2:00 pm - 10:00 pm";
+                            }
+                        ];
+                        readonly bizSpecialHours: readonly [
+                        ];
+                        readonly bizAttributes: readonly [
+                            {
+                                readonly title: "Takes Reservations";
+                                readonly label: "Yes";
+                            },
+                            {
+                                readonly title: "Delivery";
+                                readonly label: "Yes";
+                            },
+                            {
+                                readonly title: "Take-out";
+                                readonly label: "Yes";
+                            },
+                            {
+                                readonly title: "Accepts Credit Cards";
+                                readonly label: "Yes";
+                            },
+                            {
+                                readonly title: "Parking";
+                                readonly label: "Street";
+                            },
+                            {
+                                readonly title: "Bike Parking";
+                                readonly label: "Yes";
+                            },
+                            {
+                                readonly title: "Wheelchair Accessible";
+                                readonly label: "Yes";
+                            },
+                            {
+                                readonly title: "Good for Kids";
+                                readonly label: "Yes";
+                            },
+                            {
+                                readonly title: "Good for Groups";
+                                readonly label: "Yes";
+                            },
+                            {
+                                readonly title: "Attire";
+                                readonly label: "Casual";
+                            },
+                            {
+                                readonly title: "Ambience";
+                                readonly label: "Casual";
+                            },
+                            {
+                                readonly title: "Alcohol";
+                                readonly label: "Full Bar";
+                            },
+                            {
+                                readonly title: "Good For Happy Hour";
+                                readonly label: "Yes";
+                            },
+                            {
+                                readonly title: "Best Nights";
+                                readonly label: "Sat";
+                            },
+                            {
+                                readonly title: "Smoking";
+                                readonly label: "No";
+                            },
+                            {
+                                readonly title: "Wi-Fi";
+                                readonly label: "Free";
+                            },
+                            {
+                                readonly title: "Has TV";
+                                readonly label: "Yes";
+                            },
+                            {
+                                readonly title: "Caters";
+                                readonly label: "Yes";
+                            },
+                            {
+                                readonly title: "Has Pool Table";
+                                readonly label: "Yes";
+                            },
+                            {
+                                readonly title: "Gender Neutral Restrooms";
+                                readonly label: "Yes";
+                            }
+                        ];
+                    };
+                };
+            };
+        };
+    };
+    export default _default_1;
+}
+
+declare module "@dish/crawlers" {
+    const _default_2: {
+        readonly '@context': "http://schema.org/";
+        readonly '@type': "Restaurant";
+        readonly priceRange: "$11-30";
+        readonly telephone: "+14159326132";
+        readonly name: "Barrel Proof";
+        readonly address: {
+            readonly streetAddress: "2331 Mission St";
+            readonly addressLocality: "San Francisco";
+            readonly addressRegion: "CA";
+            readonly postalCode: "94110";
+            readonly addressCountry: "US";
+        };
+        readonly image: "https://s3-media0.fl.yelpcdn.com/bphoto/lOPBZqhXrfyJpdsE0tI0dA/348s.jpg";
+        readonly aggregateRating: {
+            readonly '@type': "AggregateRating";
+            readonly ratingValue: 4;
+            readonly reviewCount: 87;
+        };
+        readonly servesCuisine: "Pizza";
+    };
+    export default _default_2;
+}
+
+declare module "@dish/crawlers" {
     import { Restaurant } from "@dish/graph";
     import { WorkerJob } from "@dish/worker";
     import { JobOptions, QueueOptions } from "bull";
+    export type YelpDetailPageData = {
+        dynamic: typeof import("fixtures/yelp-dynamic-fixture").default;
+        json: typeof import("fixtures/yelp-json-fixture").default;
+    };
+    export type YelpScrapeData = YelpDetailPageData & {
+        data_from_search_list_item: {
+            name: string;
+            street: string;
+            businessUrl: string;
+            priceRange: any;
+            categories: {
+                title: string;
+            }[];
+            formattedAddress: string;
+            post: {
+                rating: number;
+                review_link: string;
+            };
+        };
+        parsed: {
+            [key: string]: any;
+        };
+    };
+    type RestaurantMatching = Pick<Restaurant, 'name' | 'address' | 'telephone'>;
+    export type YelpScrape = Scrape<YelpScrapeData>;
     export class Yelp extends WorkerJob {
         current?: string;
-        find_only: Restaurant | null;
+        find_only: RestaurantMatching | null;
         static queue_config: QueueOptions;
         static job_config: JobOptions;
         get logName(): string;
@@ -336,25 +759,14 @@ declare module "@dish/crawlers" {
         ], bottom_left: readonly [
             number,
             number
-        ], start?: number, onlyRestaurant?: Restaurant | null): Promise<never[] | undefined>;
-        getRestaurant(data: ScrapeData): Promise<void>;
-        saveDataFromMapSearch(data: ScrapeData): Promise<string | undefined>;
+        ], start?: number, onlyRestaurant?: RestaurantMatching | null): Promise<never[] | undefined>;
+        processRestaurant(data: any): Promise<void>;
         getEmbeddedJSONData(id: string, yelp_path: string, id_from_source: string): Promise<void>;
-        static getNameAndAddress(scrape: ScrapeData): {
-            name: any;
-            address: any;
+        static getNameAndAddress(scrape: YelpScrape): {
+            name: string;
+            address: string;
         };
-        getNextScrapes(id: string, data: ScrapeData): Promise<void>;
-        extractEmbeddedJSONData(obj: {
-            [key: string]: any;
-        }): {
-            [keys: string]: any;
-        } | null;
-        numericKeysFix(data: {
-            [key: string]: any;
-        }): {
-            [key: string]: any;
-        };
+        getNextScrapes(id: string, scrape: YelpScrape): Promise<void>;
         getPhotos(id: string, bizId: string, photoTotal: number): Promise<void>;
         getPhotoPage(id: string, bizId: string, start: number, page: number): Promise<void>;
         getReviews(id: string, bizId: string, start?: number): Promise<void>;
@@ -368,27 +780,27 @@ declare module "@dish/crawlers" {
         lon: number;
         lat: number;
     };
-    export type Scrape = {
+    export type Scrape<D extends ScrapeData = ScrapeData> = {
         id?: string;
         time?: Date;
         restaurant_id: string;
         location: LatLon;
         source: string;
         id_from_source: string;
-        data: ScrapeData;
+        data: D;
     };
     export type ScrapeData = {
-        [key: string]: any;
+        [key: string]: ScrapeData | any;
     };
-    export function scrapeFindOneBySourceID(source: string, id: string, allow_not_found?: boolean): Promise<Scrape | null>;
-    export function scrapeFindOneByUUID(id: string): Promise<Scrape>;
-    export function latestScrapeForRestaurant(restaurant: RestaurantWithId, source: string): Promise<Scrape | null>;
+    export function scrapeGetData<S extends Scrape = Scrape, Select extends Function = (s: S['data']) => any>(scrape: S | null, select: Select, defaultValue?: any): Select extends (s: S['data']) => infer Res ? Res : any;
+    export function scrapeFindOneBySourceID(source: string, id: string, allow_not_found?: boolean): Promise<Scrape<ScrapeData> | null>;
+    export function scrapeFindOneByUUID(id: string): Promise<Scrape<ScrapeData>>;
+    export function latestScrapeForRestaurant(restaurant: RestaurantWithId, source: string): Promise<Scrape<ScrapeData> | null>;
     export function removeScrapeForRestaurant(restaurant: RestaurantWithId, source: string): Promise<void>;
     export function scrapeInsert(scrape: Scrape): Promise<string | undefined>;
     export function scrapeUpdateBasic(scrape: Scrape): Promise<any>;
     export function scrapeUpdateAllRestaurantIDs(source: string, id_from_source: string, restaurant_id: string | null): Promise<void>;
     export function scrapeMergeData(id: string, data: ScrapeData): Promise<any>;
-    export function scrapeGetData(scrape: Scrape | null, path: string, default_value?: any): any;
     export function deleteAllScrapesBySourceID(id: string): Promise<void>;
     export function deleteAllTestScrapes(): Promise<void>;
     export function scrapeGetAllDistinct(): Promise<any[]>;
@@ -594,7 +1006,7 @@ declare module "@dish/crawlers" {
     import { JobOptions, QueueOptions } from "bull";
     export class Self extends WorkerJob {
         ALL_SOURCES: string[];
-        yelp: Scrape | null;
+        yelp: YelpScrape | null;
         ubereats: Scrape | null;
         infatuated: Scrape | null;
         michelin: Scrape | null;
@@ -643,7 +1055,6 @@ declare module "@dish/crawlers" {
         addWebsite(): void;
         addPriceRange(): void;
         addHours(): Promise<any>;
-        _toPostgresTime(day: string, time: string): string;
         oldestReview(): Promise<void>;
         addSourceOgIds(): void;
         addSources(): void;
@@ -671,18 +1082,6 @@ declare module "@dish/crawlers" {
         _debugDaemon(): void;
         _checkRAM(marker?: string): void;
         _checkNulls(): void;
-    }
-}
-
-declare module "@dish/crawlers" {
-    import "@dish/common";
-    import { WorkerJob } from "@dish/worker";
-    export class GooglePuppeteerJob extends WorkerJob {
-        GOOGLE_DOMAIN: string;
-        puppeteer: Puppeteer;
-        booted: boolean;
-        constructor();
-        boot(): Promise<void>;
     }
 }
 
@@ -790,24 +1189,6 @@ declare module "@dish/crawlers" {
 
 declare module "@dish/crawlers" {
     export function one(): Promise<void>;
-}
-
-declare module "@dish/crawlers" {
-    import { JobOptions, QueueOptions } from "bull";
-    export class UpdateSearchEndpoint extends GooglePuppeteerJob {
-        searchEndpoint: string;
-        lat: number;
-        lon: number;
-        static queue_config: QueueOptions;
-        static job_config: JobOptions;
-        constructor();
-        getNewSearchEndpoint(): Promise<void>;
-        _templatiseSearchEndpoint(): void;
-        jitter(): number;
-        _theBrokenSearchBoxInteraction(): Promise<void>;
-        _catchSearchEndpoint(): Promise<void>;
-        _waitForSearchAPIRequest(): Promise<void>;
-    }
 }
 
 declare module "@dish/crawlers" {
