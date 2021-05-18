@@ -6,8 +6,10 @@ import { LoadingItems, Spacer, VStack, useTheme } from 'snackui'
 
 import { searchBarHeight } from '../../../constants/constants'
 import { getMinLngLat } from '../../../helpers/mapHelpers'
+import { selectRishDishViewSimple } from '../../../helpers/selectDishViewSimple'
 import { UseColors, useColorsFor } from '../../../helpers/useColorsFor'
 import { queryRestaurant } from '../../../queries/queryRestaurant'
+import { queryRestaurantTags } from '../../../queries/queryRestaurantTags'
 import { router } from '../../../router'
 import { HomeStateItemRestaurant } from '../../../types/homeTypes'
 import { appMapStore, useSetAppMap } from '../../AppMapStore'
@@ -124,13 +126,21 @@ const RestaurantPage = memo(
 
     const scrollY = useRef(0)
 
+    const topTags = queryRestaurantTags({
+      restaurantSlug,
+      limit: 3,
+      exclude: ['category', 'country', 'lense'],
+    }).map((x) => x.tag.name)
+
     if (!restaurant) {
       return <NotFoundPage />
     }
 
     return (
       <>
-        <PageTitleTag>Dish - {restaurant?.name ?? ''} has the best [...tags] dishes.</PageTitleTag>
+        <PageTitleTag>
+          {restaurant?.name ?? ''} has great {topTags.join(', ').toLowerCase()} - Dish guide
+        </PageTitleTag>
 
         <ContentScrollView
           ref={setScrollView}

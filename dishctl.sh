@@ -288,7 +288,7 @@ function backup_scrape_db() {
   echo "backing up scrape db..."
   _setup_s3
   DUMP_FILE_NAME="dish-scrape-backup-`date +%Y-%m-%d-%H-%M`.dump"
-  pg_dump $TIMESCALE_FLY_POSTGRES_URL -C -w --format=c | \
+  pg_dump $TIMESCALE_URL -C -w --format=c | \
     s3 put - s3://dish-backups/$DUMP_FILE_NAME
   echo 'Successfully backed up scrape database'
 }
@@ -684,7 +684,7 @@ function clean_docker_if_disk_full() {
       fi
       docker image prune --all --filter "until=2h" --force || true
       docker system prune --filter "until=2h" --force || true
-      docker volume prune --force || true
+      # docker volume prune --force || true
       break
     fi
   done

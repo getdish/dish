@@ -5,12 +5,19 @@ import { Self } from './Self'
 
 const presets = {
   witty_guidebook: {
-    max_tokens: 188,
+    // this is 4 chars per token roughly
+    max_tokens: 100,
     stop: ['\n'],
+    // not sure, we may want more temp?
+    // What sampling temperature to use. Higher values means the model will take more risks. Try 0.9 for more creative applications, and 0 (argmax sampling) for ones with a well-defined answer.
+    // We generally recommend altering this or top_p but not both.
     temperature: 0,
-    top_p: 0.5,
-    frequency_penalty: 0.58,
-    presence_penalty: 0.09,
+    top_p: 1,
+    // Number between 0 and 1 that penalizes new tokens based on their existing frequency in the text so far. Decreases the model's likelihood to repeat the same line verbatim
+    frequency_penalty: 0.2,
+    // Number between 0 and 1 that penalizes new tokens based on whether they appear in the text so far. Increases the model's likelihood to talk about new topics
+    // we actually want it to summarize
+    presence_penalty: 0,
   },
 }
 

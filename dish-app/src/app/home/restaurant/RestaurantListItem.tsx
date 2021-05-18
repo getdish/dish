@@ -28,6 +28,7 @@ import { getRestaurantDishes } from '../../../helpers/getRestaurantDishes'
 import { numberFormat } from '../../../helpers/numberFormat'
 import { selectRishDishViewSimple } from '../../../helpers/selectDishViewSimple'
 import { queryRestaurant } from '../../../queries/queryRestaurant'
+import { QueryRestaurantTagsProps } from '../../../queries/queryRestaurantTags'
 import { queryRestaurantTagScores } from '../../../queries/queryRestaurantTagScores'
 import { GeocodePlace } from '../../../types/homeTypes'
 import { appMapStore } from '../../AppMapStore'
@@ -125,6 +126,8 @@ export const RestaurantListItem = (props: RestaurantListItemProps) => {
   return contentInner
 }
 
+const excludeTags: QueryRestaurantTagsProps['exclude'] = ['dish']
+
 const RestaurantListItemContent = memo(
   graphql(function RestaurantListItemContent(
     props: RestaurantListItemProps & { isLoaded: boolean }
@@ -208,7 +211,7 @@ const RestaurantListItemContent = memo(
     const tagsRowContent = !hideTagRow && (
       <Suspense fallback={null}>
         <RestaurantTagsRow
-          exclude="dish"
+          exclude={excludeTags}
           size="sm"
           restaurantSlug={restaurantSlug}
           restaurantId={restaurantId}

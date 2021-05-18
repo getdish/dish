@@ -65,6 +65,7 @@ export const RestaurantOverview = memo(
           <HStack
             maxHeight={lineHeight * maxLines - 2}
             maxWidth="100%"
+            width="100%"
             overflow="hidden"
             paddingHorizontal={30}
             marginHorizontal={-30}
@@ -120,7 +121,8 @@ export const RestaurantOverview = memo(
                 fontSize={fontSize}
                 lineHeight={lineHeight}
                 opacity={0.9}
-                minHeight={lineHeight * 2}
+                // short descriptions look bad in minHieght
+                // minHeight={lineHeight * 2}
                 // fontWeight="500"
                 color={theme.colorSecondary}
               >

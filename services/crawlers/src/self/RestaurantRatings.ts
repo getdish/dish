@@ -24,16 +24,19 @@ export class RestaurantRatings {
 
   mergeRatings() {
     this.crawler.ratings = {
-      yelp: parseFloat(scrapeGetData(this.crawler.yelp, 'data_from_map_search.rating')),
-      ubereats: parseFloat(scrapeGetData(this.crawler.ubereats, 'main.rating.ratingValue')),
+      yelp: scrapeGetData(this.crawler.yelp, 'data_from_map_search.rating'),
+      ubereats: scrapeGetData(this.crawler.ubereats, 'main.rating.ratingValue'),
       infatuated: this._infatuatedRating(),
-      tripadvisor: parseFloat(
-        scrapeGetData(this.crawler.tripadvisor, 'overview.rating.primaryRating')
-      ),
+      tripadvisor: scrapeGetData(this.crawler.tripadvisor, 'overview.rating.primaryRating'),
       michelin: this._getMichelinRating(),
       doordash: this._doorDashRating(),
-      grubhub: parseFloat(scrapeGetData(this.crawler.grubhub, 'main.rating.rating_value')),
-      google: parseFloat(scrapeGetData(this.crawler.google, 'rating')),
+      grubhub: scrapeGetData(this.crawler.grubhub, 'main.rating.rating_value'),
+      google: scrapeGetData(this.crawler.google, 'rating'),
+    }
+    console.log('ratings before', this.crawler.ratings)
+    for (const key in this.crawler.ratings) {
+      // @ts-ignore
+      this.crawler.ratings[key] = parseFloat(this.crawler.ratings[key])
     }
     this.crawler.restaurant.rating = this.weightRatings(this.crawler.ratings, RESTAURANT_WEIGHTS)
   }
@@ -53,22 +56,30 @@ export class RestaurantRatings {
     ratings: { [source: string]: number | null },
     master_weights: { [source: string]: number }
   ) {
-    let weights: { [source: string]: number } = {}
+    const weights: { [source: string]: number } = {}
     let total_weight = 0
     let final_rating = 0
-    Object.entries(ratings).forEach(([source, rating]) => {
-      if (Number.isNaN(rating) || typeof rating !== 'number' || rating == null) {
-        delete ratings[source]
+    const denulledRatings: { [source: string]: number } = {}
+
+    for (const source in ratings) {
+      const rating = ratings[source]
+      if (Number.isNaN(rating) || typeof rating !== 'number') {
+        continue
       } else {
         weights[source] = master_weights[source]
+        denulledRatings[source] = rating
         total_weight += master_weights[source]
       }
-    })
-    const denulled_ratings = ratings as { [source: string]: number }
-    Object.entries(denulled_ratings).forEach(([source, rating]) => {
+    }
+
+    for (const source in denulledRatings) {
+      const rating = denulledRatings[source]
       const normalised_weight = weights[source] / total_weight
       final_rating += rating * normalised_weight
-    })
+    }
+
+    console.log('Calculated final rating', final_rating, { ratings, weights })
+
     return final_rating
   }
 

@@ -1929,6 +1929,31 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@canvas/image-data@npm:^1.0.0":
+  version: 1.0.0
+  resolution: "@canvas/image-data@npm:1.0.0"
+  checksum: c30d5e8a25453348b5c1f437287907070ba82409a08e70033d9402958fcb6dfa153959fe1919c37abe81cde3d82c822e5ba099e722aca647f8eec4c6b42211f1
+  languageName: node
+  linkType: hard
+
+"@canvas/image@npm:^1.0.0":
+  version: 1.0.1
+  resolution: "@canvas/image@npm:1.0.1"
+  dependencies:
+    "@canvas/image-data": ^1.0.0
+    "@cwasm/jpeg-turbo": ^0.1.1
+    "@cwasm/lodepng": ^0.1.2
+    "@cwasm/nsbmp": ^0.1.0
+    "@cwasm/nsgif": ^0.1.0
+    "@cwasm/webp": ^0.1.3
+    fast-base64-decode: ^1.0.0
+    fast-base64-encode: ^1.0.0
+    fast-base64-length: ^1.0.0
+    simple-get: ^3.1.0
+  checksum: c51deaf92288fa2c2ae44e77794d58097b8be3722fc06e3a31b2f09d0370dc7e14f20523f2c0ff02f0f248d60d33a3f1ad5a37b0e362c091befb415c04b71c14
+  languageName: node
+  linkType: hard
+
 "@cnakazawa/watch@npm:^1.0.3":
   version: 1.0.4
   resolution: "@cnakazawa/watch@npm:1.0.4"
@@ -1947,6 +1972,51 @@ __metadata:
   dependencies:
     arrify: ^1.0.1
   checksum: 9df1d32f537f1db97a34e3268588f8f2cf21ddc21c1ec0aa14f7b925ff03d6ca45ed05e92e2a44e11db565c6dbc1243f8adb91f43e8220ad0e16dc57c5c9647b
+  languageName: node
+  linkType: hard
+
+"@cwasm/jpeg-turbo@npm:^0.1.1":
+  version: 0.1.3
+  resolution: "@cwasm/jpeg-turbo@npm:0.1.3"
+  dependencies:
+    "@canvas/image-data": ^1.0.0
+  checksum: e6299564eb0524602be4acf259c86a3574ccf57e4d1da4f1b077fc8fa08214977b653e843b2804792e47e3ead055e7abb6acd79831a986aa4699757209d49fc5
+  languageName: node
+  linkType: hard
+
+"@cwasm/lodepng@npm:^0.1.2":
+  version: 0.1.4
+  resolution: "@cwasm/lodepng@npm:0.1.4"
+  dependencies:
+    "@canvas/image-data": ^1.0.0
+  checksum: 45c0af9a15cf58d929e75584cca94312ae660525a2bfe200222e990e67516303550b9f6d386c900323234f5e1dd411ac5259720109edfe692fda6e4ba0598e31
+  languageName: node
+  linkType: hard
+
+"@cwasm/nsbmp@npm:^0.1.0":
+  version: 0.1.2
+  resolution: "@cwasm/nsbmp@npm:0.1.2"
+  dependencies:
+    "@canvas/image-data": ^1.0.0
+  checksum: 053a6da2a5164ec8beb5dd184828e25819f76631c0fefb558632ae5506ee79961ed6ed8c9073e9a037218e2326f3c7400f23475e9f273563b329146fb57812b2
+  languageName: node
+  linkType: hard
+
+"@cwasm/nsgif@npm:^0.1.0":
+  version: 0.1.2
+  resolution: "@cwasm/nsgif@npm:0.1.2"
+  dependencies:
+    "@canvas/image-data": ^1.0.0
+  checksum: 9a87a009dd2044d6260c935bd6923ec880f372f836af98e62810b89f6ad67f3d3d046dd0c467121620ad3eb8863bdbd655064dd7a981a62f8289c8366cb87a3c
+  languageName: node
+  linkType: hard
+
+"@cwasm/webp@npm:^0.1.3":
+  version: 0.1.5
+  resolution: "@cwasm/webp@npm:0.1.5"
+  dependencies:
+    "@canvas/image-data": ^1.0.0
+  checksum: a4ae0178086272d16e32ae636782fbf7b02babf30d0fa8ca7ddd908aac780003587598dddc9bdb874ec9ab2f5c9c9d6aa6ce746153bde67d2f808c1be9b26931
   languageName: node
   linkType: hard
 
@@ -2154,9 +2224,11 @@ __metadata:
     cheerio: ^1.0.0-rc.5
     chrono-node: ^2.1.6
     csv-parse: ^4.9.0
+    fast-levenshtein: ^3.0.0
     form-data: ^4.0.0
     gqless: ^2.0.13
     graphql: ^15.5.0
+    imghash: ^0.0.9
     js-base64: ^2.5.2
     lodash: "*"
     moment: ^2.27.0
@@ -7708,6 +7780,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"blockhash-core@npm:^0.1.0":
+  version: 0.1.0
+  resolution: "blockhash-core@npm:0.1.0"
+  checksum: 45016b14b2f70f81429752878cffd74e72d76b8932922729fea9eb62a7053451ed40e9cc03df9cbc60b24aa535595634ad69da308ec7b656d0d746f6c1cd670b
+  languageName: node
+  linkType: hard
+
 "bluebird@npm:^2.9.34":
   version: 2.11.0
   resolution: "bluebird@npm:2.11.0"
@@ -9956,6 +10035,15 @@ __metadata:
   languageName: node
   linkType: hard
 
+"decompress-response@npm:^4.2.0":
+  version: 4.2.1
+  resolution: "decompress-response@npm:4.2.1"
+  dependencies:
+    mimic-response: ^2.0.0
+  checksum: d854171a100833d66171ffba0990fc581133cfb62befc18edd2365edc40e8a48f9f96b6156465f1a74802112b9c241c792d865f5ee27e285c2e4417a17ac6c66
+  languageName: node
+  linkType: hard
+
 "decompress-response@npm:^5.0.0":
   version: 5.0.0
   resolution: "decompress-response@npm:5.0.0"
@@ -11707,6 +11795,27 @@ __metadata:
   languageName: node
   linkType: hard
 
+"fast-base64-decode@npm:^1.0.0":
+  version: 1.0.0
+  resolution: "fast-base64-decode@npm:1.0.0"
+  checksum: 1c775e5214ee7f3cf027018983eb628b0000f3141cfbcfa2b40b714a45a35efa7a98c0cdf114d83df37e7abdeb1606c404139f7678ccc97895a9da8b6e86ec2c
+  languageName: node
+  linkType: hard
+
+"fast-base64-encode@npm:^1.0.0":
+  version: 1.0.0
+  resolution: "fast-base64-encode@npm:1.0.0"
+  checksum: f04979522f8faaeac8b1070871fc9c986f5397cf0112db53adef1edffa39d0fcfd9c013274b081b38efa8e9e6fa54acad1098bc84886e86fd15494e328e879a5
+  languageName: node
+  linkType: hard
+
+"fast-base64-length@npm:^1.0.0":
+  version: 1.0.0
+  resolution: "fast-base64-length@npm:1.0.0"
+  checksum: d67b9eb72883a5c7c7c377a77b82c352b66b2cfba9dca22dc6c2b99cdcec1abb52fb6a1da94d7cb3c065c4920f158c25276a3adbb9a0884e6cb641b36f3d36b1
+  languageName: node
+  linkType: hard
+
 "fast-deep-equal@npm:^3.1.1":
   version: 3.1.3
   resolution: "fast-deep-equal@npm:3.1.3"
@@ -11756,6 +11865,15 @@ __metadata:
   languageName: node
   linkType: hard
 
+"fast-levenshtein@npm:^3.0.0":
+  version: 3.0.0
+  resolution: "fast-levenshtein@npm:3.0.0"
+  dependencies:
+    fastest-levenshtein: ^1.0.7
+  checksum: 5a79705d29e0e3e07c39adfc17163691cef5d2174f1cf81efe4b3a976f251fa7c7f92c12e5d64cd038184e7cd358f3b8d2c20583c115460c08de5d1ea1e87dbb
+  languageName: node
+  linkType: hard
+
 "fast-levenshtein@npm:~2.0.6":
   version: 2.0.6
   resolution: "fast-levenshtein@npm:2.0.6"
@@ -11767,6 +11885,13 @@ __metadata:
   version: 2.0.7
   resolution: "fast-safe-stringify@npm:2.0.7"
   checksum: 7bd22543263b707870d70c6f2336b6e8563e34d6807dc388cc0566895e31e0a8273af017a7eb1c9538d0ef54288284e1c0585b557bd856491295a847159fd929
+  languageName: node
+  linkType: hard
+
+"fastest-levenshtein@npm:^1.0.7":
+  version: 1.0.12
+  resolution: "fastest-levenshtein@npm:1.0.12"
+  checksum: aa3c45b6c9d0993c41fed6d637cb9c3bc03d968bec21b66b85a6a294ab25b613cf71dd501f9a7b35853e61d4f0e407242c8b26033351c77e14161af9e950559b
   languageName: node
   linkType: hard
 
@@ -11903,6 +12028,13 @@ __metadata:
   peerDependencies:
     webpack: ^4.0.0 || ^5.0.0
   checksum: 0f103418c072ec66c081a9908cd7824ee19905e18be16889cb050f5f373998afaf7ca4c2fd2df4cabf703a2cd526aefe59105930e3f8d266a5b35e6d5f5b3cf4
+  languageName: node
+  linkType: hard
+
+"file-type@npm:^10.10.0":
+  version: 10.11.0
+  resolution: "file-type@npm:10.11.0"
+  checksum: 31395a6189248a6f076597741aa6b3edfef4200f06507b3d43046b36208853999e4081b2b9e16ddb0ea445706898c42a8c327e453d8abfa63c2fac60ca82e4da
   languageName: node
   linkType: hard
 
@@ -13453,6 +13585,27 @@ __metadata:
   bin:
     image-size: bin/image-size.js
   checksum: 72035834016da448e3bf34a9a314ff41d08f71b1b805d6b78605a35180d57a5895c50a5e0ac3f710c380c5512240bb3fe0d9e49eafb969c8063ad2d86cd2b937
+  languageName: node
+  linkType: hard
+
+"image-type@npm:^4.1.0":
+  version: 4.1.0
+  resolution: "image-type@npm:4.1.0"
+  dependencies:
+    file-type: ^10.10.0
+  checksum: 0138e30ecff1d224efb02bae6f005368a0b4034696ab97c56d1eb40828d43e16b0f72ffce2979fd191ce47941b8a90bab7c5410cb8a990e42686d0e05e0cc129
+  languageName: node
+  linkType: hard
+
+"imghash@npm:^0.0.9":
+  version: 0.0.9
+  resolution: "imghash@npm:0.0.9"
+  dependencies:
+    "@canvas/image": ^1.0.0
+    blockhash-core: ^0.1.0
+    image-type: ^4.1.0
+    jpeg-js: ^0.4.1
+  checksum: 44e5761132f56698042807d7aa1b9920f48a36ba636052150697d523a8860b2e505837e4c0b00de5d3bae8f5ac061998a8ded33df5cda4c823b95c59ee78d80b
   languageName: node
   linkType: hard
 
@@ -15231,7 +15384,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"jpeg-js@npm:^0.4.0":
+"jpeg-js@npm:^0.4.0, jpeg-js@npm:^0.4.1":
   version: 0.4.3
   resolution: "jpeg-js@npm:0.4.3"
   checksum: c882ae02b8639d92b0004520dc949363dd1ff9dcfbadbb93f1760c9a3aab894fdca66af2ff57bcdb85a2741dba51cbaf748745eb3165bf2b73bdef2cfd639442
@@ -21725,6 +21878,24 @@ __metadata:
   version: 1.0.0
   resolution: "signedsource@npm:1.0.0"
   checksum: e6fdfce197bf4ad37c79078137ff8da4655da37caee4fa1c170475e12e0c4bb5104163fefaf81280099e284a19e81eded08a84bab1c4a358c710237473e37c96
+  languageName: node
+  linkType: hard
+
+"simple-concat@npm:^1.0.0":
+  version: 1.0.1
+  resolution: "simple-concat@npm:1.0.1"
+  checksum: 4623960448a49731b5abeedc5430f8158c5caa05f10a685b405b13ed8532c80b5d99e6ef5d53f76a695e66f551cdbcca22c1363ceef8f8b246cda1e21b9ef871
+  languageName: node
+  linkType: hard
+
+"simple-get@npm:^3.1.0":
+  version: 3.1.0
+  resolution: "simple-get@npm:3.1.0"
+  dependencies:
+    decompress-response: ^4.2.0
+    once: ^1.3.1
+    simple-concat: ^1.0.0
+  checksum: f56f08765eafde034b379d38d3dd1eb9b9ffb41d090d8216e71dce6ea3936499ee34b20942773a2605b08e8abce940691bd06e110ac12d08f83917493078831e
   languageName: node
   linkType: hard
 

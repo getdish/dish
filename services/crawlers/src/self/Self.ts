@@ -718,7 +718,6 @@ export class Self extends WorkerJob {
 
   getRatingFactors() {
     const factors = scrapeGetData(this.tripadvisor, 'overview.rating.ratingQuestions', [])
-    // @ts-ignore weird bug the type is right in graph but comes in null | undefined here
     this.restaurant.rating_factors = {
       food: factors.find((i) => i.name == 'Food')?.rating / 10,
       service: factors.find((i) => i.name == 'Service')?.rating / 10,
