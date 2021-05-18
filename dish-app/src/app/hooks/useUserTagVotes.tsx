@@ -45,7 +45,7 @@ export class TagVoteStore extends Store<VoteStoreProps> {
 
 const writeReview = async (review: Partial<Review>) => {
   console.log('writing', review)
-  await reviewUpsert([review], review_constraint.review_username_restauarant_id_tag_id_type_key)
+  await reviewUpsert([review], review_constraint.review_type_user_id_list_id_key)
 }
 
 export const useUserTagVotes = (restaurantSlug: string, activeTags: HomeActiveTagsRecord) => {

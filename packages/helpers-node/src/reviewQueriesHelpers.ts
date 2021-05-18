@@ -40,7 +40,7 @@ export async function reviewFindAllForRestaurant(restaurant_id: uuid) {
             ...selectFields(review, '*', 2),
             restaurant: {
               ...selectFields(review.restaurant),
-              tags: selectFields(review.restaurant.tags(), '*', 2),
+              tags: selectFields(review.restaurant?.tags(), '*', 2),
             },
             sentiments: selectFields(review.sentiments(), '*', 2),
           }
@@ -71,7 +71,7 @@ export async function reviewFindAllForUser(user_id: uuid) {
             ...selectFields(review, '*', 2),
             restaurant: {
               ...selectFields(review.restaurant),
-              tags: selectFields(review.restaurant.tags(), '*', 2),
+              tags: selectFields(review.restaurant?.tags(), '*', 2),
             },
             sentiments: selectFields(review.sentiments(), '*', 2),
           }
@@ -103,7 +103,7 @@ export async function userFavoriteARestaurant(
             ...selectFields(review, '*', 2),
             restaurant: {
               ...selectFields(review.restaurant),
-              tags: selectFields(review.restaurant.tags(), '*', 2),
+              tags: selectFields(review.restaurant?.tags(), '*', 2),
             },
             sentiments: selectFields(review.sentiments(), '*', 2),
           }
@@ -136,7 +136,7 @@ export async function userFavorites(user_id: string) {
             ...selectFields(review, '*', 2),
             restaurant: {
               ...selectFields(review.restaurant),
-              tags: selectFields(review.restaurant.tags(), '*', 2),
+              tags: selectFields(review.restaurant?.tags(), '*', 2),
             },
             sentiments: selectFields(review.sentiments(), '*', 2),
           }
@@ -160,7 +160,7 @@ export async function reviewExternalUpsert(reviews: Review[]) {
       ...all,
       ...(await reviewUpsert(
         group,
-        review_constraint.review_username_restaurant_id_tag_id_authored_at_key,
+        review_constraint.review_username_restauarant_id_tag_id_type_key,
         {
           keys: ['__typename'],
         }

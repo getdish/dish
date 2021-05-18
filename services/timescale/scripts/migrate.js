@@ -10,16 +10,17 @@ const config = {
   username: process.env.TIMESCALE_USER || 'postgres',
   password: process.env.TIMESCALE_PASS || 'postgres',
   ssl: process.env.USE_SSL === 'true' ? true : false,
+  validateChecksums: false,
 }
 
-// console.log(config)
-
+console.log('config', config)
 const postgrator = new Postgrator(config)
 
 console.log('migrating timescale...', process.env.NODE_ENV)
 
 async function main() {
   try {
+    await postgrator.migrate('000')
     const applied = await postgrator.migrate()
     console.log('up to date', applied.length)
   } catch (err) {

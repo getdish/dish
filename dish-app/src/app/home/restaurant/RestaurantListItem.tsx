@@ -244,7 +244,7 @@ const RestaurantListItemContent = memo(
         {/* expanded content */}
         {meta && isExpanded && (
           <AbsoluteVStack
-            backgroundColor={bgLight}
+            backgroundColor={theme.backgroundColorDarker}
             width={300 - 40}
             x={-320}
             height="100%"
@@ -510,7 +510,9 @@ const RestaurantListItemScoreBreakdown = memo(
               />
             )
           })}
-          <Text fontSize={12}>{JSON.stringify(meta ?? null, null, 2)}</Text>
+          {isWeb && process.env.NODE_ENV === 'development' && (
+            <pre style={{ color: '#777' }}>{JSON.stringify(meta ?? null, null, 2)}</pre>
+          )}
         </VStack>
       )
     }

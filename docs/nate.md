@@ -1,3 +1,7 @@
+
+- world map lists (top 100 X worldwide) would really show it off
+
+
 - [c] [0] crawl one restaurant, fix
 - [c] [0] test on ~10 restaurants
 - [c] [0] recrawl tucson, la, sd, sf
@@ -6,6 +10,7 @@
 - [c] [2] get cron crawling every few days
 - [i] [0] get cron working again
 - [i] [0] get backups uploading (postgres)
+- [d/m] [0] onboarding runthrough and fixup
 - [m] [0] move region then search goes to prev region
 - [m] [0] go to diff region and return to one sometimes has empty list cards (graphql caching logic issue)
 - [m] [0] (restaurantpage) hours modal text error
@@ -13,13 +18,15 @@
 - [m] [0] (restaurantpage) dont do anything on change tag selected (scroll etc)
 - [m] [0] (restaurantpage) tap: address, phone, website get working
 - [m] [0] (searchpage) cant tap vote on tag
+- [d] [1] test runthrough searching with keyboard at least ~3 fixes
 - [m] [1] upload photos from app
-- [m] [1] add ratings from photo upload
-- [d] [1] fix profile pages a lot
+- [m] [2] add ratings from photo upload
+- [a] [1] fix profile pages a lot
 - [m] [1] get regions working (better)
 - [m] [1] swipe back to go back on drawer cards
 - [m] get login/signup working
 - [m] [3] add apple sign in
+- [a] [4] opengraph / meta / seo
 
 ---
 
@@ -27,7 +34,7 @@
 - blog/signup
 - LAUNCH
 
-making it actually a community:
+making it actually a cool:
 
 - when you upvote something, have a chance to add it to your "top list"
 - expand into not just restaurants

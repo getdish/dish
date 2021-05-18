@@ -53,7 +53,7 @@ import { CloseButton } from '../../views/CloseButton'
 import { ContentScrollView } from '../../views/ContentScrollView'
 import { FavoriteButton } from '../../views/FavoriteButton'
 import { Link } from '../../views/Link'
-import { useList } from '../../views/list/useList'
+import { useList, useListFavorite } from '../../views/list/useList'
 import { PaneControlButtons, PaneControlButtonsLeft } from '../../views/PaneControlButtons'
 import { ScalingPressable } from '../../views/ScalingPressable'
 import { Score } from '../../views/Score'
@@ -292,7 +292,7 @@ const ListPageContent = graphql((props: Props) => {
   const [showAddModal, setShowAddModal] = useState(false)
   const draft = useRef<Partial<List>>({})
   const refetch = useRefetch()
-  const { list, isFavorited, toggleFavorite, reviewsCount } = useList({
+  const { list, isFavorited, toggleFavorite, reviewsCount } = useListFavorite({
     slug: props.item.slug,
     region: props.item.region,
   })

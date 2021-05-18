@@ -1,4 +1,11 @@
-import { Tag, flushTestData, tagFindOne, tagFindOneWithCategories, tagUpsert } from '@dish/graph'
+import {
+  Tag,
+  flushTestData,
+  tagFindAll,
+  tagFindOne,
+  tagFindOneWithCategories,
+  tagUpsert,
+} from '@dish/graph'
 import anyTest, { TestInterface } from 'ava'
 
 import { ParseFiverr } from '../../src/wikipedia/ParseFiverr'

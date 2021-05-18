@@ -22,7 +22,7 @@ rsync \
   --filter=':- .gitignore' \
   --filter='- .git' \
   -e "ssh -o StrictHostKeyChecking=no -i $PRIVATE_KEY" \
-  . "root@$DEDICATED_SERVER_HOST:/app" &> /dev/nul
+  . "root@$DEDICATED_SERVER_HOST:/app" &> /dev/null
 
 echo "ssh..."
 

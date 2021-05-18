@@ -56,7 +56,7 @@ export const queryRestaurantTags = ({
         },
         order_by: [{ rating: order_by.desc_nulls_last }, { votes_ratio: order_by.desc_nulls_last }],
       })
-  const catTags = exclude.includes('cat')
+  const catTags = exclude.includes('category')
     ? []
     : restaurant.tags({
         limit: 10,

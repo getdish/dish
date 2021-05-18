@@ -91,9 +91,13 @@ export class RestaurantTagScores extends Loggable {
         return await fetchBertSentiment(text)
       } catch (error) {
         if (!error.message.includes('json')) {
-          sentryException(error, {
-            function: 'fetchBertSentimentWithRetries',
-            restaurant: this.crawler.restaurant.id,
+          sentryException({
+            error,
+            data: {
+              function: 'fetchBertSentimentWithRetries',
+              restaurant: this.crawler.restaurant.id,
+            },
+            logger: this.log,
           })
           return
         }

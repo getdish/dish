@@ -89,8 +89,11 @@ async function startQueues(queues: Queue[]) {
       queue.process(name, CONCURRENCY, path)
       console.log('Created Bull worker queue for: ' + name)
       queue.on('failed', (job, err) => {
-        console.log('Queue failed', name)
-        sentryException(err, job, { crawler: name })
+        sentryException({
+          error: err,
+          data: job,
+          tags: { crawler: name },
+        })
       })
     })
   )

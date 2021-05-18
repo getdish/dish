@@ -22,25 +22,18 @@ export const restaurant_fixture_nearly_matches: Partial<Restaurant> = {
   location: { type: 'Point', coordinates: [0, 0] },
 }
 
-export const yelp: Partial<Scrape> = {
+export type YelpScrape = Scrape<{
+  dynamic: typeof import('./yelp-dynamic-fixture.json')
+  json: typeof import('./yelp-json-fixture.json')
+  [key: string]: any
+}>
+
+export const yelp: Partial<YelpScrape> = {
   source: 'yelp',
   id_from_source: 'test123',
   data: {
-    data_from_map_search: {
-      name: 'Test Name Yelp',
-      categories: [{ title: 'Test Mexican' }, { title: 'Test Pizza' }, { title: 'Test Spain' }],
-      rating: 4.0,
-    },
-    data_from_html_embed: {
-      mapBoxProps: {
-        addressProps: {
-          addressLines: ['123 Street', 'Big City'],
-        },
-      },
-      bizHoursProps: {
-        hoursInfoRows: yelp_hours,
-      },
-    },
+    dynamic: require('./yelp-dynamic-fixture.json'),
+    json: require('./yelp-json-fixture.json'),
     photosp0: [
       {
         src: 'https://i.imgur.com/92a8cNI.jpg',

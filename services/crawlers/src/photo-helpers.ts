@@ -535,9 +535,12 @@ export async function sendToDO(url: string, id: string) {
     }
     if (status == 408) retries += 1
     if (retries > 10) {
-      sentryException(new Error('DO Spaces PUT Rate Limit'), {
-        url: url,
-        id: id,
+      sentryException({
+        error: new Error('DO Spaces PUT Rate Limit'),
+        data: {
+          url: url,
+          id: id,
+        },
       })
       return id
     }

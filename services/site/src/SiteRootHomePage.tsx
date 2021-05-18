@@ -1,3 +1,4 @@
+// debug
 import './site.css'
 import './assets/font-gteesti/stylesheet.css'
 
@@ -21,6 +22,7 @@ import {
   VStack,
   defaultMediaQueries,
   useMedia,
+  useTheme,
 } from 'snackui'
 
 import { LogoCircle } from './DishLogo'
@@ -56,9 +58,13 @@ const DishTitleSlanted = (props: TitleProps) => {
 
 const DishTitleFitted = (props: TitleProps) => {
   const media = useMedia()
+  const theme = useTheme()
   return (
-    <DishTitle
+    <Text
+      className="title-font"
+      selectable
       alignSelf="center"
+      color={theme.color}
       textAlign="center"
       // @ts-expect-error
       fontSize="5.5vw"
@@ -167,11 +173,11 @@ export const SiteRoot = () => {
           </VStack>
         </VStack>
 
-        <ContentSection marginTop={-150} marginHorizontal="auto" zIndex={900}>
+        <ContentSection marginTop={-90} marginHorizontal="auto" zIndex={900}>
           <DishParagraph textAlign="center" sizeLineHeight={0.8} size={3.9}>
             <b>
               <Highlight backgroundColor="var(--teal)" color="#fff">
-                playlists of fun nights out, trips, the true top 🌮 in your city: you name it.
+                lists for the real world.
               </Highlight>
             </b>
           </DishParagraph>
