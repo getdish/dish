@@ -3128,19 +3128,19 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@gqless/cli@npm:2.0.6":
-  version: 2.0.6
-  resolution: "@gqless/cli@npm:2.0.6"
+"@gqless/cli@npm:2.0.16":
+  version: 2.0.16
+  resolution: "@gqless/cli@npm:2.0.16"
   dependencies:
     "@graphql-codegen/core": ^1.17.9
     "@graphql-codegen/typescript": ^1.21.1
-    "@graphql-tools/delegate": ^7.1.1
-    "@graphql-tools/utils": ^7.7.1
+    "@graphql-tools/delegate": ^7.1.2
+    "@graphql-tools/utils": ^7.7.3
     "@graphql-tools/wrap": ^7.0.5
     commander: ^7.2.0
     cosmiconfig: ^7.0.0
-    cross-fetch: ^3.1.2
-    gqless: ^2.0.5
+    cross-fetch: ^3.1.4
+    gqless: ^2.0.14
     mkdirp: ^1.0.4
     prettier: ^2.2.1
   peerDependencies:
@@ -3150,11 +3150,11 @@ __metadata:
       optional: true
   bin:
     gqless: bin/gqless.js
-  checksum: 640cc10332e1e20be4c65de9ba9aa5be5e2277dc56a6135d61a020e42734a7a04409f65ca4da2284850f9eb8d3424fcce72165a97ebe59ba272ab00c257cc86b
+  checksum: fe0ade16797cf4a653888e302615d034049edc1bdf39bbe1a11857606757a249f598447c9a6029a46289f802a0ddaad03bacdbbca8df7ff37d841a56079d344e
   languageName: node
   linkType: hard
 
-"@gqless/logger@npm:^2.0.11":
+"@gqless/logger@npm:2.0.11":
   version: 2.0.11
   resolution: "@gqless/logger@npm:2.0.11"
   dependencies:
@@ -3166,13 +3166,13 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@gqless/react@npm:2.0.12":
-  version: 2.0.12
-  resolution: "@gqless/react@npm:2.0.12"
+"@gqless/react@npm:2.0.15":
+  version: 2.0.15
+  resolution: "@gqless/react@npm:2.0.15"
   dependencies:
     react-ssr-prepass: ^1.4.0
   peerDependencies:
-    gqless: ^2.0.11
+    gqless: ^2.0.13
     graphql: ^15.5.0
     react: ">=16.8"
   peerDependenciesMeta:
@@ -3180,7 +3180,7 @@ __metadata:
       optional: true
     react:
       optional: true
-  checksum: 3227fa8699fd2686f0f29e90cc23d7541bca04151e62390f7fede7be3f69d0f1cc2ffbf5c17ad0e6eaf252067fda8de02dd4fd62ca27e15be11aa3c3c9fba9c6
+  checksum: b8b90d5e6d25fb792b9f39f377c4adc846de6b0f24afcedee23d5eb9fa8e3ff5833b792c24d11a1775641fae22f91d11947ac5a16765e94fb072b42be77eab7d
   languageName: node
   linkType: hard
 
@@ -3313,7 +3313,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@graphql-tools/delegate@npm:^7.1.1":
+"@graphql-tools/delegate@npm:^7.1.2":
   version: 7.1.5
   resolution: "@graphql-tools/delegate@npm:7.1.5"
   dependencies:
@@ -3428,6 +3428,19 @@ __metadata:
   peerDependencies:
     graphql: ^14.0.0 || ^15.0.0
   checksum: eba2bbb1d4d752a756fbda5c07fd4ce7642132e3c7f3f3f738bf5f6e83941374ef2c8b45154dd036575dd592ab08b999aff943c530d6fcaffad60c7455a7c51b
+  languageName: node
+  linkType: hard
+
+"@graphql-tools/utils@npm:^7.7.3":
+  version: 7.10.0
+  resolution: "@graphql-tools/utils@npm:7.10.0"
+  dependencies:
+    "@ardatan/aggregate-error": 0.0.6
+    camel-case: 4.1.2
+    tslib: ~2.2.0
+  peerDependencies:
+    graphql: ^14.0.0 || ^15.0.0
+  checksum: 8b8e674f344e825c27816ead8a66edca5aed2eac26b601bb028350837ae39fee3ca9241255b918b8199d60bff41884a4814f98df465a0a8a5db5b91428ce2aa9
   languageName: node
   linkType: hard
 
@@ -9510,7 +9523,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"cross-fetch@npm:^3.1.2":
+"cross-fetch@npm:^3.1.4":
   version: 3.1.4
   resolution: "cross-fetch@npm:3.1.4"
   dependencies:
@@ -12848,9 +12861,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"gqless@npm:2.0.11":
-  version: 2.0.11
-  resolution: "gqless@npm:2.0.11"
+"gqless@npm:2.0.14":
+  version: 2.0.14
+  resolution: "gqless@npm:2.0.14"
   dependencies:
     lodash: ^4.17.21
     lodash-es: ^4.17.21
@@ -12859,7 +12872,7 @@ __metadata:
   peerDependenciesMeta:
     graphql:
       optional: true
-  checksum: f11da2f212901c84480671a62caaa1426e18fd430e965c4b11dbf38c9f7a67ada908da9702ed50e76e3aff066bec2441cba46a95baf2c0294b8e37eeee656b66
+  checksum: a18f14541cfb0ff3222ef12351aecaf3a8d3f182515841984790d2b1dfcd3b67cd65c85ae1b0c329cf0e7ae6698c962c9790b6041b648a3660d45dee81e4d37c
   languageName: node
   linkType: hard
 

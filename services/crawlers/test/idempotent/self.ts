@@ -2,6 +2,8 @@ import {
   RestaurantWithId,
   Tag,
   flushTestData,
+  query,
+  resolved,
   restaurantFindAll,
   restaurantFindOne,
   restaurantFindOneWithTags,
@@ -48,7 +50,19 @@ async function reset(t: ExecutionContext<Context>) {
   await flushTestData()
   await deleteAllTestScrapes()
 
-  console.log('all', await restaurantFindAll())
+  console.log(
+    'all',
+    await resolved(() =>
+      query
+        .restaurant({
+          limit: 1000,
+        })
+        .map((x) => ({
+          name: x.name,
+          id: x.id,
+        }))
+    )
+  )
 
   const [restaurant, _] = await restaurantInsert([
     restaurant_fixture,

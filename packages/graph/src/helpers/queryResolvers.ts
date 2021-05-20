@@ -52,14 +52,12 @@ export async function resolvedWithFields<T extends () => unknown>(
   const next = await resolved(
     () => {
       const res = resolver()
-      if (res) {
-        const obj = selectFields(res as object, keys ?? '*', depth ?? 2)
-        if (select) {
-          merge(obj, select(res))
-        }
-        return obj
+      if (!res) return res
+      const obj = selectFields(res as object, keys ?? '*', depth ?? 2)
+      if (select) {
+        merge(obj, select(res))
       }
-      return res
+      return obj
     },
     {
       noCache: true,
