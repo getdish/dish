@@ -16,7 +16,6 @@ export const menuItemFindAll = QueryHelpers.findAll
 export const menuItemRefresh = QueryHelpers.refresh
 
 export const menuItemsUpsertMerge = async (items: Partial<MenuItem>[]) => {
-  console.log('menuItemsUpsertMerge...')
   const restaurant_id = items[0].restaurant_id
   const existing_items = await menuItemFindAll({ restaurant_id })
   let updated_items: Partial<MenuItem>[] = []

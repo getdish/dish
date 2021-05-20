@@ -80,25 +80,25 @@ export default {
             props: {
               media: [
                 {
-                  srcUrl: 'https://s3-media0.fl.yelpcdn.com/bphoto/lOPBZqhXrfyJpdsE0tI0dA/348s.jpg',
+                  srcUrl: 'https://i.imgur.com/92a8cNI.jpg',
                   url: '/biz_photos/barrel-proof-san-francisco?select=lOPBZqhXrfyJpdsE0tI0dA',
                   type: 'photo',
                 },
                 {
-                  srcUrl: 'https://s3-media0.fl.yelpcdn.com/bphoto/KIoGYyUHRnd_VOAJ8rQL2g/348s.jpg',
+                  srcUrl: 'https://i.imgur.com/N6YtgRI.jpeg',
                   url: '/biz_photos/barrel-proof-san-francisco?select=KIoGYyUHRnd_VOAJ8rQL2g',
                   type: 'photo',
                 },
-                {
-                  srcUrl: 'https://s3-media0.fl.yelpcdn.com/bphoto/tYFvxMaPCWnBf4I15D-5lA/348s.jpg',
-                  url: '/biz_photos/barrel-proof-san-francisco?select=tYFvxMaPCWnBf4I15D-5lA',
-                  type: 'photo',
-                },
-                {
-                  srcUrl: 'https://s3-media0.fl.yelpcdn.com/bphoto/nrlKePhXc9BkhRtpxwwe_w/348s.jpg',
-                  url: '/biz_photos/barrel-proof-san-francisco?select=nrlKePhXc9BkhRtpxwwe_w',
-                  type: 'photo',
-                },
+                // {
+                //   srcUrl: 'https://s3-media0.fl.yelpcdn.com/bphoto/tYFvxMaPCWnBf4I15D-5lA/348s.jpg',
+                //   url: '/biz_photos/barrel-proof-san-francisco?select=tYFvxMaPCWnBf4I15D-5lA',
+                //   type: 'photo',
+                // },
+                // {
+                //   srcUrl: 'https://s3-media0.fl.yelpcdn.com/bphoto/nrlKePhXc9BkhRtpxwwe_w/348s.jpg',
+                //   url: '/biz_photos/barrel-proof-san-francisco?select=nrlKePhXc9BkhRtpxwwe_w',
+                //   type: 'photo',
+                // },
               ],
               mediaCount: 69,
             },

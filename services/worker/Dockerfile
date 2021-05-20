@@ -1,8 +1,17 @@
-FROM registry.fly.io/dish-base
+FROM registry.fly.io/dish-base as chrome
 
 RUN apt-get update > /dev/null \
       && apt-get install -y chromium xvfb curl \
       && apt-get clean
+
+FROM registry.fly.io/dish-base
+
+COPY --from=chrome /bin /bin
+COPY --from=chrome /etc /etc
+COPY --from=chrome /lib /lib
+COPY --from=chrome /sbin /sbin
+COPY --from=chrome /usr /usr
+# may need /var
 
 WORKDIR /app/services/worker
 

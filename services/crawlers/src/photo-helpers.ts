@@ -269,7 +269,6 @@ export async function bestPhotosForRestaurant(restaurant_id: uuid): Promise<Phot
     ) j1;
   `)
   const agg = result.rows[0].json_agg ?? []
-  console.log('agg', result.rows)
   const photos = agg.map((p) => {
     p.photo = JSON.parse(p.photo)
     return p
