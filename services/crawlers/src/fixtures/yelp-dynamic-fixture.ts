@@ -108,7 +108,7 @@ export default {
       bizId: 'B-yUH6Bc1hxy8teT4wa73A',
       initialRequestId: '0945b0912f82b7c4',
       directionsModalProps: {
-        businessName: 'Barrel Proof',
+        businessName: 'Test Name Yelp',
         directionsLink:
           'http://maps.google.com/maps?daddr=2331+Mission+St%2C+San+Francisco%2C+CA%2C+US%2C+94110&amp;saddr=Current+Location',
         mapState: {
@@ -180,7 +180,7 @@ export default {
         avatarSrcSet: null,
       },
       moreInfoProps: {
-        businessName: 'Barrel Proof',
+        businessName: 'Test Name Yelp',
         bizInfo: {
           menu: {
             label: 'Menu',

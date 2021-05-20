@@ -72,9 +72,10 @@
     "snackui:push": "git subrepo clean snackui && git subrepo push snackui"
   },
   "resolutions": {
-    "gqless": "2.0.11",
-    "@gqless/react": "2.0.12",
-    "@gqless/cli": "2.0.6",
+    "gqless": "2.0.14",
+    "@gqless/logger": "2.0.11",
+    "@gqless/react": "2.0.15",
+    "@gqless/cli": "2.0.16",
     "react-native": "0.64.1",
     "@unimodules/core": "7.0.0",
     "aws-sdk": "2.762.0",
