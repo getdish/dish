@@ -4,7 +4,6 @@ import {
   flushTestData,
   query,
   resolved,
-  restaurantFindAll,
   restaurantFindOne,
   restaurantFindOneWithTags,
   restaurantInsert,
@@ -49,20 +48,6 @@ const GOOGLE_GEOCODER_ID = '0xgoogleid123'
 async function reset(t: ExecutionContext<Context>) {
   await flushTestData()
   await deleteAllTestScrapes()
-
-  console.log(
-    'all',
-    await resolved(() =>
-      query
-        .restaurant({
-          limit: 1000,
-        })
-        .map((x) => ({
-          name: x.name,
-          id: x.id,
-        }))
-    )
-  )
 
   const [restaurant, _] = await restaurantInsert([
     restaurant_fixture,
@@ -336,7 +321,6 @@ test('Finding dishes in the corpus', async (t) => {
   await self.scanCorpus()
   await self.finishTagsEtc()
   const updated = await restaurantFindOneWithTagsSQL(t.context.restaurant.id)
-  console.log('updated', updated)
   t.assert(updated?.tags.map((i) => i.tag.id).includes(existing_tag1.id))
   t.assert(updated?.tags.map((i) => i.tag.id).includes(existing_tag2.id))
   t.assert(updated?.tags.map((i) => i.tag.id).includes(existing_tag3.id))

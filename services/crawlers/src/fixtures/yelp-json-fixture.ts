@@ -11,7 +11,7 @@ export default {
     postalCode: '94110',
     addressCountry: 'US',
   },
-  image: 'https://s3-media0.fl.yelpcdn.com/bphoto/lOPBZqhXrfyJpdsE0tI0dA/348s.jpg',
+  image: 'https://i.imgur.com/N6YtgRI.jpg',
   aggregateRating: {
     '@type': 'AggregateRating',
     ratingValue: 4.0,

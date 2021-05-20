@@ -459,7 +459,6 @@ export class Self extends WorkerJob {
         for (let i = startI; i <= endI; i++) {
           days.push(weekdays[i % weekdays.length])
         }
-        console.log('days are', startI, endI, days)
         return days.map((day) => ({
           formattedDate: day as Day,
           formattedTime: dr.formattedTime,
@@ -477,11 +476,40 @@ export class Self extends WorkerJob {
     for (const day of dayData) {
       const times = day.formattedTime.split(' - ')
       if (!times || !times.length) continue
-      const [open, close] = times
-        .map((x) => x.replace(' ', '').trim().toLowerCase())
-        .map((x) => toPostgresTime(day.formattedDate, x))
+      let [openTime, closeTime] = times.map((x) => x.replace(' ', '').trim().toLowerCase())
+      const openDay = day.formattedDate
+      let closeDay = day.formattedDate
+      // if closes in the next day, move the close day up one
+      const closesInMorningFromPM = openTime.includes('pm') && closeTime.includes('am')
+      const closesInMorningFromAM =
+        openTime.includes('am') &&
+        closeTime.includes('am') &&
+        // basically if its 8:00am - 11:00am, its closing in the same day
+        // but if its 8:00am - 2:00am, its closing the next morning
+        // both are am and openTime > closeTime
+        +openTime.split(':')[0] > +closeTime.split(':')[0]
+
+      if (closesInMorningFromAM || closesInMorningFromPM) {
+        const curIndex = weekdays.indexOf(closeDay)
+        closeDay = weekdays[(curIndex + 1) % weekdays.length]
+      }
+
+      const open = toPostgresTime(openDay, openTime)
+      const close = toPostgresTime(closeDay, closeTime)
+
+      console.log({
+        open,
+        close,
+        openTime,
+        closeTime,
+        closesInMorningFromAM,
+        closesInMorningFromPM,
+      })
+
       records.push(`('${this.restaurant.id}'::UUID, timestamp '${open}', timestamp '${close}')`)
     }
+
+    console.log('records', records)
 
     if (records.length == 0) {
       return 0
