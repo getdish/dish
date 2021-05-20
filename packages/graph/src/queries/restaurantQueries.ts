@@ -114,10 +114,10 @@ export async function restaurantUpsertManyTags(
     return { ...existing, ...rt }
   })
   const chunks = chunk(populated, 10)
-  console.log('Upserting tags chunks...', chunks.length)
+  // console.log('Upserting tags chunks...', chunks.length)
   let next: RestaurantWithId | null = null
   for (const [index, chunk] of chunks.entries()) {
-    console.log('Inserting tags chunk...', index)
+    // console.log('Inserting tags chunk...', index)
     next = await restaurantUpsertRestaurantTags(restaurant, chunk, opts)
   }
   return next
@@ -182,7 +182,6 @@ async function restaurantUpdateTagNames(restaurant: RestaurantWithId, opts?: Sel
             tag_names: rest.tag_names,
             tags: rest.tags().map((r_t) => {
               const tagInfo = selectFields(r_t.tag)
-
               return {
                 ...selectFields(r_t, '*', 2),
                 tag: {

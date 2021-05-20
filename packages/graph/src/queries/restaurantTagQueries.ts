@@ -21,13 +21,12 @@ export async function restaurantTagUpsert(
     }
     return {
       ...tag,
-      restaurant_id,
+      restaurant_id: tag.restaurant_id ?? restaurant_id,
     }
   })
   const response = await resolvedMutationWithFields(
     () => {
-      const insert = mutation.insert_restaurant_tag
-      const obj = insert({
+      return mutation.insert_restaurant_tag({
         objects: objects as any,
         on_conflict: {
           constraint: restaurant_tag_constraint.restaurant_tag_pkey,
@@ -39,7 +38,6 @@ export async function restaurantTagUpsert(
           ],
         },
       })
-      return obj
     },
     {
       keys: '*',

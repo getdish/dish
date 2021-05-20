@@ -101,7 +101,7 @@ export class DB {
       throw new Error('no client')
     }
     try {
-      const timeout = sleep(process.env.NODE_ENV === 'test' ? 3000 : 80_000)
+      const timeout = sleep(process.env.NODE_ENV === 'test' ? 15_000 : 80_000)
       const res = await Promise.race([
         client.query(query),
         timeout.then(() => {

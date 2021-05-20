@@ -2,10 +2,37 @@ import { route, useRouteBodyParser } from '@dish/api'
 import { GRAPH_API_INTERNAL, fetchLog } from '@dish/graph'
 import { isPresent } from '@dish/helpers'
 import { Request } from 'express'
-import { FieldNode, OperationDefinitionNode, SelectionNode, SelectionSetNode, print } from 'graphql'
+import {
+  DocumentNode,
+  FieldNode,
+  OperationDefinitionNode,
+  SelectionNode,
+  SelectionSetNode,
+  print,
+} from 'graphql'
 import gql from 'graphql-tag'
 
 import { redisDeletePattern, redisGet, redisSet } from './_rc'
+
+type GQLCacheProps = {
+  query: string
+  variables: Object
+  isLoggedIn: boolean
+  body: any
+}
+
+type CacheKeys = { [key: string]: string }
+
+type GQLCacheResponse =
+  | { type: 'full'; data: Object; parsed?: DocumentNode | null }
+  | {
+      type: 'partial'
+      data: Object
+      parsed?: DocumentNode | null
+      aliasToCacheKey: CacheKeys
+      selectionSet: SelectionSetNode
+      body?: any
+    }
 
 const avoidCache = !process.env.NODE_ENV || process.env.NODE_ENV === 'test'
 const hasuraHeaders = {
@@ -18,6 +45,8 @@ const hasuraHeaders = {
 export default route(async (req, res) => {
   await useRouteBodyParser(req, res, { text: { type: '*/*', limit: '8192mb' } })
   const { body, method } = req
+  let cache: GQLCacheResponse | null = null
+
   try {
     if (!body || method !== 'POST') {
       console.log(' [graph] method', method)
@@ -32,7 +61,7 @@ export default route(async (req, res) => {
     }
     const isLoggedIn = req.headers['x-user-is-logged-in'] === 'true'
 
-    const cache = await parseQueryForCache({ query, variables, isLoggedIn, body })
+    cache = await parseQueryForCache({ query, variables, isLoggedIn, body })
 
     // not at all cacheable
     if (!cache) {
@@ -60,7 +89,7 @@ export default route(async (req, res) => {
 
     res.send(response)
   } catch (error) {
-    console.error('graph err', error, body)
+    console.error('graph err', error, body, cache?.parsed ? print(cache.parsed) : null)
     res
       .status(500)
       .send({ error: process.env.NODE_ENV === 'development' ? error : 'error fetching' })
@@ -88,20 +117,7 @@ const fetchFromGraph = async (req: Request, body?: any) => {
   }
 }
 
-type GQLCacheProps = {
-  query: string
-  variables: Object
-  isLoggedIn: boolean
-  body: any
-}
-
-type CacheKeys = { [key: string]: string }
-
-type GQLCacheResponse =
-  | { type: 'full'; data: Object }
-  | { type: 'partial'; data: Object; aliasToCacheKey: CacheKeys; selectionSet: SelectionSetNode }
-
-const parseQueryForCache = async (props: GQLCacheProps) => {
+const parseQueryForCache = async (props: GQLCacheProps): Promise<GQLCacheResponse | null> => {
   if (avoidCache) {
     return null
   }
@@ -145,7 +161,7 @@ const parseQueryForCache = async (props: GQLCacheProps) => {
       definitions: [
         {
           ...operation,
-          selectionSet: cacheResult.selectionSet,
+          selectionSet: cacheResult.selectionSet!,
         },
       ],
     })
@@ -160,11 +176,16 @@ const parseQueryForCache = async (props: GQLCacheProps) => {
     })
     return {
       ...cacheResult,
+      parsed,
       body,
     }
   }
 
-  return cacheResult
+  if (cacheResult) {
+    return { ...cacheResult, parsed }
+  }
+
+  return null
 }
 
 // rough for now, we need some better basic clearing

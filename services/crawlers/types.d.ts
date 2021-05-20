@@ -358,7 +358,7 @@ declare module "@dish/crawlers" {
                         {
                             readonly component: "InfoBox";
                             readonly props: {
-                                readonly name: "Barrel Proof";
+                                readonly name: "Test Name Yelp";
                                 readonly alternateNames: readonly [
                                 ];
                                 readonly rating: 4;
@@ -390,7 +390,7 @@ declare module "@dish/crawlers" {
                             readonly props: {
                                 readonly phoneLink: "tel:+14159326132";
                                 readonly websiteUrl: {
-                                    readonly displayUrl: "http://www.barrelproofsf.com";
+                                    readonly displayUrl: "http://www.intercontinentalsanfrancisco.com/";
                                 };
                                 readonly syndicationTrackingProps: {
                                     readonly thirdPartyLeadsConfig: {
@@ -436,23 +436,13 @@ declare module "@dish/crawlers" {
                             readonly props: {
                                 readonly media: readonly [
                                     {
-                                        readonly srcUrl: "https://s3-media0.fl.yelpcdn.com/bphoto/lOPBZqhXrfyJpdsE0tI0dA/348s.jpg";
+                                        readonly srcUrl: "https://i.imgur.com/92a8cNI.jpg";
                                         readonly url: "/biz_photos/barrel-proof-san-francisco?select=lOPBZqhXrfyJpdsE0tI0dA";
                                         readonly type: "photo";
                                     },
                                     {
-                                        readonly srcUrl: "https://s3-media0.fl.yelpcdn.com/bphoto/KIoGYyUHRnd_VOAJ8rQL2g/348s.jpg";
+                                        readonly srcUrl: "https://i.imgur.com/N6YtgRI.jpeg";
                                         readonly url: "/biz_photos/barrel-proof-san-francisco?select=KIoGYyUHRnd_VOAJ8rQL2g";
-                                        readonly type: "photo";
-                                    },
-                                    {
-                                        readonly srcUrl: "https://s3-media0.fl.yelpcdn.com/bphoto/tYFvxMaPCWnBf4I15D-5lA/348s.jpg";
-                                        readonly url: "/biz_photos/barrel-proof-san-francisco?select=tYFvxMaPCWnBf4I15D-5lA";
-                                        readonly type: "photo";
-                                    },
-                                    {
-                                        readonly srcUrl: "https://s3-media0.fl.yelpcdn.com/bphoto/nrlKePhXc9BkhRtpxwwe_w/348s.jpg";
-                                        readonly url: "/biz_photos/barrel-proof-san-francisco?select=nrlKePhXc9BkhRtpxwwe_w";
                                         readonly type: "photo";
                                     }
                                 ];
@@ -464,7 +454,7 @@ declare module "@dish/crawlers" {
                 readonly bizId: "B-yUH6Bc1hxy8teT4wa73A";
                 readonly initialRequestId: "0945b0912f82b7c4";
                 readonly directionsModalProps: {
-                    readonly businessName: "Barrel Proof";
+                    readonly businessName: "Test Name Yelp";
                     readonly directionsLink: "http://maps.google.com/maps?daddr=2331+Mission+St%2C+San+Francisco%2C+CA%2C+US%2C+94110&amp;saddr=Current+Location";
                     readonly mapState: {
                         readonly hoods: {};
@@ -569,7 +559,7 @@ declare module "@dish/crawlers" {
                     readonly avatarSrcSet: null;
                 };
                 readonly moreInfoProps: {
-                    readonly businessName: "Barrel Proof";
+                    readonly businessName: "Test Name Yelp";
                     readonly bizInfo: {
                         readonly menu: {
                             readonly label: "Menu";
@@ -696,15 +686,15 @@ declare module "@dish/crawlers" {
         readonly '@type': "Restaurant";
         readonly priceRange: "$11-30";
         readonly telephone: "+14159326132";
-        readonly name: "Barrel Proof";
+        readonly name: "Test Name Yelp";
         readonly address: {
-            readonly streetAddress: "2331 Mission St";
-            readonly addressLocality: "San Francisco";
+            readonly streetAddress: "123 Street";
+            readonly addressLocality: "Big City";
             readonly addressRegion: "CA";
             readonly postalCode: "94110";
             readonly addressCountry: "US";
         };
-        readonly image: "https://s3-media0.fl.yelpcdn.com/bphoto/lOPBZqhXrfyJpdsE0tI0dA/348s.jpg";
+        readonly image: "https://i.imgur.com/N6YtgRI.jpg";
         readonly aggregateRating: {
             readonly '@type': "AggregateRating";
             readonly ratingValue: 4;
@@ -716,33 +706,247 @@ declare module "@dish/crawlers" {
 }
 
 declare module "@dish/crawlers" {
+    const _default_3: {
+        media: ({
+            index: number;
+            media_id: string;
+            media_type: string;
+            src: string;
+            biz_photos_url: string;
+            caption: string;
+            page_title: string;
+            src_high_res: string;
+            video_source?: undefined;
+            video_url?: undefined;
+        } | {
+            index: number;
+            media_id: string;
+            media_type: string;
+            src: string;
+            biz_photos_url: string;
+            caption: string;
+            page_title: string;
+            video_source: string;
+            video_url: string;
+            src_high_res?: undefined;
+        } | {
+            index: number;
+            media_id: string;
+            media_type: string;
+            src: string;
+            biz_photos_url: string;
+            caption: null;
+            page_title: string;
+            src_high_res: string;
+            video_source?: undefined;
+            video_url?: undefined;
+        })[];
+    };
+    export default _default_3;
+}
+
+declare module "@dish/crawlers" {
     import { Restaurant } from "@dish/graph";
-    import { WorkerJob } from "@dish/worker";
-    import { JobOptions, QueueOptions } from "bull";
+    export const restaurant_fixture: Partial<Restaurant>;
+    export const restaurant_fixture_nearly_matches: Partial<Restaurant>;
     export type YelpDetailPageData = {
         dynamic: typeof import("fixtures/yelp-dynamic-fixture").default;
         json: typeof import("fixtures/yelp-json-fixture").default;
     };
+    export type YelpPhotosData = typeof import("fixtures/yelp-photos-fixture").default;
+    export type YelpListItemData = {
+        name: string;
+        street: string;
+        businessUrl: string;
+        priceRange: any;
+        categories: {
+            title: string;
+        }[];
+        formattedAddress: string;
+        reviewCount: number;
+        rating: number;
+        neighborhoods: string[];
+        phone: string;
+    };
     export type YelpScrapeData = YelpDetailPageData & {
-        data_from_search_list_item: {
-            name: string;
-            street: string;
-            businessUrl: string;
-            priceRange: any;
-            categories: {
-                title: string;
+        data_from_search_list_item: YelpListItemData;
+        photos: {
+            [key: string]: {
+                url: string;
+                caption: string;
             }[];
-            formattedAddress: string;
-            post: {
-                rating: number;
-                review_link: string;
-            };
         };
-        parsed: {
-            [key: string]: any;
+        reviews: {
+            [key: string]: YelpReviewData[];
         };
     };
-    type RestaurantMatching = Pick<Restaurant, 'name' | 'address' | 'telephone'>;
+    const yelpReview: {
+        id: string;
+        tags: never[];
+        user: {
+            src: string;
+        };
+        photos: {
+            src: string;
+            caption: string;
+        }[];
+        rating: number;
+        localizedDate: string;
+        userId: string;
+        comment: {
+            text: string;
+            language: string;
+        };
+        lightboxMediaItems: {
+            url: string;
+            type: string;
+            user: {};
+            caption: string;
+        }[];
+    };
+    export type YelpReviewData = typeof yelpReview;
+    export const yelp: Partial<YelpScrape>;
+    export const ubereats: {
+        source: string;
+        id_from_source: string;
+        data: {
+            main: {
+                phoneNumber: string;
+                location: {
+                    address: string;
+                };
+                title: string;
+                rating: {
+                    ratingValue: number;
+                };
+                metaJson: {};
+            };
+            dishes: {
+                title: string;
+                description: string;
+                price: number;
+                imageUrl: string;
+            }[];
+        };
+    };
+    export type UberEatsScrapeData = typeof ubereats['data'];
+    export const doordash: {
+        source: string;
+        id_from_source: string;
+        data: {
+            storeMenuSeo: string;
+            main: {
+                location: {
+                    address: string;
+                };
+                title: string;
+                averageRating: number;
+                rating: {
+                    ratingValue: number;
+                };
+            };
+            menus: {
+                currentMenu: {
+                    menuCategories: {
+                        items: {
+                            name: string;
+                            description: string;
+                            price: number;
+                            imageUrl: string;
+                        }[];
+                    }[];
+                };
+            };
+        };
+    };
+    export type DoorDashScrapeData = typeof doordash['data'];
+    export const tripadvisor: {
+        source: string;
+        id_from_source: string;
+        data: {
+            overview: {
+                name: string;
+                links: {
+                    warUrl: string;
+                };
+                detailCard: {
+                    tagTexts: {
+                        cuisines: {
+                            tags: {
+                                tagValue: string;
+                            }[];
+                        };
+                        priceRange: {
+                            tags: {
+                                tagValue: string;
+                            }[];
+                        };
+                    };
+                };
+                contact: {
+                    website: string;
+                    address: string;
+                    phone: string;
+                };
+                rating: {
+                    primaryRating: number;
+                    ratingQuestions: {
+                        name: string;
+                        rating: number;
+                    }[];
+                };
+            };
+            photos: string[];
+            photos_with_captions: {
+                url: string;
+                caption: string;
+            }[];
+            reviews: {
+                'dishpage-0': {
+                    text: string;
+                    rating: number;
+                    username: string;
+                    date: string;
+                }[];
+            };
+        };
+    };
+    export type TripAdvisorScrapeData = typeof tripadvisor['data'];
+    export const google: {
+        source: string;
+        id_from_source: string;
+        data: {
+            rating: number;
+            hero_image: string;
+            telephone: string;
+            website: string;
+            pricing: string;
+            reviews: string[];
+        };
+    };
+    export type GoogleScrapeData = typeof google['data'];
+    export const google_review_api: {
+        source: string;
+        id_from_source: string;
+        data: {
+            reviews: {
+                user_id: string;
+                name: string;
+                rating: number;
+                ago_text: string;
+                text: string;
+                photos: string[];
+            }[];
+        };
+    };
+    export type GoogleReviewScrapeData = typeof google_review_api['data'];
+}
+
+declare module "@dish/crawlers" {
+    import { Restaurant } from "@dish/graph";
+    import { WorkerJob } from "@dish/worker";
+    import { JobOptions, QueueOptions } from "bull";
+    type RestaurantMatching = Required<Pick<Restaurant, 'name' | 'address' | 'telephone'>>;
     export type YelpScrape = Scrape<YelpScrapeData>;
     export class Yelp extends WorkerJob {
         current?: string;
@@ -900,7 +1104,7 @@ declare module "@dish/crawlers" {
         constructor(crawler: Self);
         mergeRatings(): void;
         _infatuatedRating(): number;
-        _doorDashRating(): any;
+        _doorDashRating(): number | null;
         weightRatings(ratings: {
             [source: string]: number | null;
         }, master_weights: {
@@ -1007,14 +1211,14 @@ declare module "@dish/crawlers" {
     export class Self extends WorkerJob {
         ALL_SOURCES: string[];
         yelp: YelpScrape | null;
-        ubereats: Scrape | null;
+        ubereats: Scrape<UberEatsScrapeData> | null;
         infatuated: Scrape | null;
         michelin: Scrape | null;
-        tripadvisor: Scrape | null;
-        doordash: Scrape | null;
+        tripadvisor: Scrape<TripAdvisorScrapeData> | null;
+        doordash: Scrape<DoorDashScrapeData> | null;
         grubhub: Scrape | null;
-        google: Scrape | null;
-        google_review_api: Scrape | null;
+        google: Scrape<GoogleScrapeData> | null;
+        google_review_api: Scrape<GoogleReviewScrapeData> | null;
         available_sources: string[];
         main_db: DB;
         restaurant: RestaurantWithId;
@@ -1054,7 +1258,10 @@ declare module "@dish/crawlers" {
         mergeAddress(): void;
         addWebsite(): void;
         addPriceRange(): void;
-        addHours(): Promise<any>;
+        addHours(): Promise<{
+            count: any;
+            records: string[];
+        }>;
         oldestReview(): Promise<void>;
         addSourceOgIds(): void;
         addSources(): void;
@@ -1065,7 +1272,9 @@ declare module "@dish/crawlers" {
         getGrubHubDishes(): Promise<void>;
         mergePhotos(): Promise<void>;
         _getGooglePhotos(): string[];
-        getPaginatedData(data: ScrapeData | null, type: 'photos' | 'reviews'): any[];
+        getPaginatedData<A extends any>(data: {
+            [key: string]: A[];
+        }): A[];
         getRatingFactors(): void;
         addReviewHeadlines(): Promise<void>;
         updateAllGeocoderIDs(): Promise<void>;

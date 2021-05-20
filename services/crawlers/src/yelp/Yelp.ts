@@ -10,6 +10,7 @@ import _ from 'lodash'
 
 import { restaurantSaveCanonical } from '../canonical-restaurant'
 import { DISH_DEBUG } from '../constants'
+import { YelpDetailPageData, YelpPhotosData, YelpScrapeData } from '../fixtures/fixtures'
 import {
   Scrape,
   ScrapeData,
@@ -19,34 +20,6 @@ import {
   scrapeUpdateBasic,
 } from '../scrape-helpers'
 import { aroundCoords, boundingBoxFromCenter, geocode } from '../utils'
-
-export type YelpDetailPageData = {
-  dynamic: typeof import('../fixtures/yelp-dynamic-fixture').default
-  json: typeof import('../fixtures/yelp-json-fixture').default
-}
-
-type YelpPhotosData = typeof import('../fixtures/yelp-photos-fixture').default
-
-export type YelpScrapeData = YelpDetailPageData & {
-  data_from_search_list_item: {
-    name: string
-    street: string
-    businessUrl: string
-    priceRange: any
-    categories: { title: string }[]
-    formattedAddress: string
-    post: {
-      rating: number
-      review_link: string
-    }
-  }
-  photos: {
-    [key: string]: { url: string; caption: string }[]
-  }
-  reviews: {
-    [key: string]: any
-  }
-}
 
 type RestaurantMatching = Required<Pick<Restaurant, 'name' | 'address' | 'telephone'>>
 
@@ -175,7 +148,12 @@ export class Yelp extends WorkerJob {
     const mv = 0.0025
     const [lat, lng] = await geocode(found.subtitle)
     this.log('found new coords, try again at', JSON.stringify({ lat, lng }))
-    await this.getRestaurants([lat - mv, lng - mv], [lat + mv, lng + mv], 0, rest)
+    await this.getRestaurants(
+      [lat - mv, lng - mv],
+      [lat + mv, lng + mv],
+      0,
+      rest as RestaurantMatching
+    )
   }
 
   async allForCity(city_name: string) {

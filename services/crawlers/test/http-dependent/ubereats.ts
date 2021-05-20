@@ -17,8 +17,8 @@ test('gets and persists a restaurant and its dishes', async (t) => {
   t.is(scrape.data.main.title, title)
   t.is(scrape.data.main.location.address, '765 9th Ave, New York, NY 10019')
   t.deepEqual(scrape.location, {
-    lon: -73.988535,
-    lat: 40.764431,
+    lon: -73.9886095,
+    lat: 40.7643915,
   })
   t.assert(scrape.data.dishes.length > 50)
   const names = scrape.data.dishes.map((dish: any) => {

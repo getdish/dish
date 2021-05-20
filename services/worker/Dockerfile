@@ -1,4 +1,4 @@
-FROM registry.fly.io/dish-base as chrome
+FROM node:15.10.0-buster as chrome
 
 RUN apt-get update > /dev/null \
       && apt-get install -y chromium xvfb curl \

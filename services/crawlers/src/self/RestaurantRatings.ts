@@ -23,22 +23,20 @@ export class RestaurantRatings {
   }
 
   mergeRatings() {
-    this.crawler.ratings = {
-      yelp: scrapeGetData(this.crawler.yelp, (x) => x.json.aggregateRating.ratingValue),
-      ubereats: scrapeGetData(this.crawler.ubereats, (x) => x.main.rating.ratingValue),
-      infatuated: this._infatuatedRating(),
-      tripadvisor: scrapeGetData(this.crawler.tripadvisor, (x) => x.overview.rating.primaryRating),
-      michelin: this._getMichelinRating(),
-      doordash: this._doorDashRating(),
-      grubhub: scrapeGetData(this.crawler.grubhub, (x) => x.main.rating.rating_value),
-      google: scrapeGetData(this.crawler.google, (x) => x.rating),
+    const rating = (r: any) => (typeof r === 'string' ? +r : r ?? null)
+    const ratings = {
+      yelp: rating(scrapeGetData(this.crawler.yelp, (x) => x.json.aggregateRating.ratingValue)),
+      ubereats: rating(scrapeGetData(this.crawler.ubereats, (x) => x.main.rating.ratingValue)),
+      infatuated: rating(this._infatuatedRating()),
+      tripadvisor: rating(
+        scrapeGetData(this.crawler.tripadvisor, (x) => x.overview.rating.primaryRating)
+      ),
+      michelin: rating(this._getMichelinRating()),
+      doordash: rating(this._doorDashRating()),
+      grubhub: rating(scrapeGetData(this.crawler.grubhub, (x) => x.main.rating.rating_value)),
+      google: rating(scrapeGetData(this.crawler.google, (x) => x.rating)),
     }
-    console.log('ratings before', this.crawler.ratings)
-    for (const key in this.crawler.ratings) {
-      // @ts-ignore
-      this.crawler.ratings[key] = parseFloat(this.crawler.ratings[key])
-    }
-    this.crawler.restaurant.rating = this.weightRatings(this.crawler.ratings, RESTAURANT_WEIGHTS)
+    this.crawler.restaurant.rating = this.weightRatings(ratings, RESTAURANT_WEIGHTS)
   }
 
   _infatuatedRating() {
@@ -51,7 +49,10 @@ export class RestaurantRatings {
   }
 
   _doorDashRating() {
-    const rating = scrapeGetData(this.crawler.doordash, (x) => x.main.averageRating)
+    const rating = scrapeGetData(
+      this.crawler.doordash,
+      (x) => x.main.averageRating ?? x.main.rating.ratingValue
+    )
     return rating == 0 ? null : rating
   }
 

@@ -1,7 +1,7 @@
 import test from 'ava'
 
 import { deleteAllScrapesBySourceID, scrapeFindOneBySourceID } from '../../src/scrape-helpers'
-import { Yelp } from '../../src/yelp/Yelp'
+import { Yelp, YelpScrape } from '../../src/yelp/Yelp'
 
 // Flour + Water bizId
 const BIZ_ID = 'qs7FgJ-UXgpbAMass0Oojg'
@@ -18,11 +18,11 @@ test('Gets and persists a restaurant', async (t) => {
     address: '2401 Harrison St',
     telephone: '(415) 826-7000',
   })
-  const scrape = await scrapeFindOneBySourceID('yelp', BIZ_ID)
-  console.log('got scrape back', scrape)
+  const scrape = (await scrapeFindOneBySourceID('yelp', BIZ_ID)) as YelpScrape
   t.assert(scrape.data.data_from_search_list_item.name.includes('Flour + Water'))
   t.deepEqual(scrape.location, { lon: -122.4122826, lat: 37.7589326 })
-  t.is(scrape.data.data_from_html_embed.bizContactInfoProps.phoneNumber, '(415) 826-7000')
-  t.assert(scrape.data.photos['dishpage-0'].length > 25)
-  t.assert(scrape.data.reviews['dishpage-0'].length > 15)
+  t.is(scrape.data.data_from_search_list_item.phone, '(415) 826-7000')
+  console.log('scrape.data', scrape.data)
+  t.assert(scrape.data?.photos?.['dishpage-0'].length > 25)
+  t.assert(scrape.data?.reviews?.['dishpage-0'].length > 15)
 })

@@ -11,5 +11,5 @@ pushd ../..
 popd
 
 ava test/idempotent/* --verbose --serial "$@"
-# ava test/http-dependent/* --verbose --serial "$@"
+ava test/http-dependent/* --verbose --serial "$@"
 # ava test/http-dependent/yelp.ts --verbose --serial "$@"

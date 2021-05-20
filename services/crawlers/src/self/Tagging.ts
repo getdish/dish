@@ -81,6 +81,7 @@ export class Tagging extends Loggable {
     if (this.crawler.restaurant.rating > 4) {
       this.restaurant_tags.push({
         tag_id: GEM_UIID,
+        restaurant_id: this.crawler.restaurant.id,
       })
     }
   }
@@ -90,7 +91,13 @@ export class Tagging extends Loggable {
   }
 
   addRestaurantTags(restaurant_tags: Partial<RestaurantTag>[]) {
-    this.restaurant_tags = [...this.restaurant_tags, ...restaurant_tags]
+    this.restaurant_tags = [
+      ...this.restaurant_tags,
+      ...restaurant_tags.map((tag) => ({
+        restaurant_id: this.crawler.restaurant.id,
+        ...tag,
+      })),
+    ]
   }
 
   async upsertCountryTags(tags: string[]) {
@@ -100,6 +107,7 @@ export class Tagging extends Loggable {
       country_tags.map((tag: Tag) => {
         return {
           tag_id: tag.id,
+          restaurant_id: this.crawler.restaurant.id,
         } as RestaurantTag
       })
     )
@@ -139,7 +147,8 @@ export class Tagging extends Loggable {
       existing.rank = rank
     } else {
       const tag = {
-        tag_id: tag_id,
+        tag_id,
+        restaurant_id: this.crawler.restaurant.id,
         rank,
       }
       this.restaurant_tags.push(tag)
@@ -208,6 +217,7 @@ export class Tagging extends Loggable {
     for (const tag_id of Object.keys(this.restaurant_tag_ratings)) {
       this.restaurant_tags.push({
         tag_id,
+        restaurant_id: this.crawler.restaurant.id,
       })
     }
   }
@@ -223,6 +233,7 @@ export class Tagging extends Loggable {
     for (const tag of possibleTags) {
       const rtag = {
         tag_id: tag.id,
+        restaurant_id: this.crawler.restaurant.id,
         photos: [] as string[],
       }
       let atLeastOnePhoto = false
@@ -251,57 +262,64 @@ export class Tagging extends Loggable {
 
   async getPhotosWithText() {
     let photos: PhotoWithText[] = []
-    const photoData = this.crawler.getPaginatedData(this.crawler.yelp?.data.photos ?? null)
-    this.log(`Yelp main photos: ${photoData.length}`)
-    for (const item of photoData) {
-      if (item.media_data) {
-        photos.push({
-          url: item.src,
-          text: item.media_data.caption,
-        })
-      }
-    }
-    const reviewPhotos = (
-      await Promise.all(
-        this.crawler
-          .getPaginatedData(this.crawler.yelp?.data?.reviews)
-          .flatMap((x) => x.photos)
-          .map(async (item) => {
-            const photo = item.src
-            if (!photo) {
-              return null
-            }
-            if (photo.includes('180s')) {
-              // skip lower res images
-              return
-            }
-            if (item.caption) {
-              // TODO put this high res logic somewhere and use in regular photos
-              // replace with bigger image
-              const largeResUrl = photo.replace('300s', '1000s').replace('348s', '1000s')
-              const largeResExists = await fetch(largeResUrl).then((res) => res.status === 200)
-              const url = largeResExists ? largeResUrl : photo
-              return {
-                url,
-                text: item.caption,
-              } as PhotoWithText
-            }
+
+    if (this.crawler.yelp?.data.photos) {
+      const photoData = this.crawler.getPaginatedData(this.crawler.yelp.data.photos)
+      this.log(`Yelp main photos: ${photoData.length}`)
+      for (const item of photoData) {
+        if (item.caption) {
+          photos.push({
+            url: item.url,
+            text: item.caption,
           })
-      )
-    ).filter(isPresent)
-    this.log(`Yelp review photos: ${reviewPhotos.length}`)
-    photos = [...photos, ...reviewPhotos]
-    const tripAdvisorPhotos =
-      scrapeGetData(this.crawler.tripadvisor, (x) => x.photos_with_captions) || []
-    this.log(`Tripadvisor photos with captions ${tripAdvisorPhotos.length}`)
-    for (const item of tripAdvisorPhotos) {
-      if (item.caption) {
-        photos.push({
-          url: item.url,
-          text: item.caption,
-        })
+        }
       }
     }
+
+    if (this.crawler.yelp?.data?.reviews) {
+      const reviewPhotos = (
+        await Promise.all(
+          this.crawler
+            .getPaginatedData(this.crawler.yelp.data.reviews)
+            .flatMap((x) => x.photos)
+            .map(async (item) => {
+              const photo = item.src
+              if (!photo) {
+                return null
+              }
+              if (photo.includes('180s')) {
+                // skip lower res images
+                return
+              }
+              if (item.caption) {
+                // TODO put this high res logic somewhere and use in regular photos
+                // replace with bigger image
+                const largeResUrl = photo.replace('300s', '1000s').replace('348s', '1000s')
+                const largeResExists = await fetch(largeResUrl).then((res) => res.status === 200)
+                const url = largeResExists ? largeResUrl : photo
+                return {
+                  url,
+                  text: item.caption,
+                } as PhotoWithText
+              }
+            })
+        )
+      ).filter(isPresent)
+      this.log(`Yelp review photos: ${reviewPhotos.length}`)
+      photos = [...photos, ...reviewPhotos]
+      const tripAdvisorPhotos =
+        scrapeGetData(this.crawler.tripadvisor, (x) => x.photos_with_captions) || []
+      this.log(`Tripadvisor photos with captions ${tripAdvisorPhotos.length}`)
+      for (const item of tripAdvisorPhotos) {
+        if (item.caption) {
+          photos.push({
+            url: item.url,
+            text: item.caption,
+          })
+        }
+      }
+    }
+
     return photos
   }
 
@@ -391,9 +409,12 @@ export class Tagging extends Loggable {
   }
 
   _getTripadvisorReviews() {
-    const td_data = this.crawler.tripadvisor?.data || {}
-    const tripadvisor_reviews = this.crawler.getPaginatedData(td_data.reviews)
     let reviews: Partial<Review>[] = []
+    const data = this.crawler.tripadvisor?.data
+    if (!data) {
+      return reviews
+    }
+    const tripadvisor_reviews = this.crawler.getPaginatedData(data.reviews)
     for (const tripadvisor_review of tripadvisor_reviews) {
       if (!tripadvisor_review.username || tripadvisor_review.username == '') {
         sentryMessage('TRIPADVISOR: Review has no username', { data: tripadvisor_review })
@@ -427,7 +448,7 @@ export class Tagging extends Loggable {
         authored_at: date,
         restaurant_id: this.crawler.restaurant.id,
         text: review.text,
-        rating: parseFloat(review.rating),
+        rating: +review.rating,
       } as Review)
     }
     return reviews
