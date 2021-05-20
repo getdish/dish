@@ -19,8 +19,8 @@ type uuid = Scalars['uuid']
 
 export async function reviewFindAllForRestaurant(restaurant_id: uuid) {
   return await resolvedWithFields(
-    () => {
-      const r = query.review({
+    () =>
+      query.review({
         where: {
           restaurant_id: { _eq: restaurant_id },
         },
@@ -29,13 +29,13 @@ export async function reviewFindAllForRestaurant(restaurant_id: uuid) {
             updated_at: order_by.asc,
           },
         ],
-      })
-
-      return r
-    },
+      }),
     {
       select: (r: review[]) => {
         return r.map((review) => {
+          if (!review) {
+            return null
+          }
           return {
             ...selectFields(review, '*', 2),
             restaurant: {

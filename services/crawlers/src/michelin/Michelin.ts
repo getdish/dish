@@ -44,12 +44,14 @@ export class Michelin extends WorkerJob {
       try {
         await this.saveRestaurant(restaurant)
       } catch (e) {
+        console.log('error crawling', e)
         sentryException(e, {
           data: [restaurant],
           logger: this.log,
         })
       }
     }
+    this.log('got', restaurants.length)
     if (restaurants.length > 0 && process.env.NODE_ENV != 'test') {
       await this.runOnWorker('all', [page + 1])
     }

@@ -17,6 +17,13 @@ import moment from 'moment'
 
 import { DISH_DEBUG } from '../constants'
 import {
+  DoorDashScrapeData,
+  GoogleReviewScrapeData,
+  GoogleScrapeData,
+  TripAdvisorScrapeData,
+  UberEatsScrapeData,
+} from '../fixtures/fixtures'
+import {
   bestPhotosForRestaurant,
   bestPhotosForRestaurantTags,
   photoUpsert,
@@ -77,14 +84,14 @@ export class Self extends WorkerJob {
     'google_review_api',
   ]
   yelp: YelpScrape | null = null
-  ubereats: Scrape | null = null
+  ubereats: Scrape<UberEatsScrapeData> | null = null
   infatuated: Scrape | null = null
   michelin: Scrape | null = null
-  tripadvisor: Scrape | null = null
-  doordash: Scrape | null = null
+  tripadvisor: Scrape<TripAdvisorScrapeData> | null = null
+  doordash: Scrape<DoorDashScrapeData> | null = null
   grubhub: Scrape | null = null
-  google: Scrape | null = null
-  google_review_api: Scrape | null = null
+  google: Scrape<GoogleScrapeData> | null = null
+  google_review_api: Scrape<GoogleReviewScrapeData> | null = null
   available_sources: string[] = []
 
   main_db!: DB
@@ -266,10 +273,12 @@ export class Self extends WorkerJob {
     this.tagging.deDepulicateTags()
     this.log('Updating rankings...')
     await this.tagging.updateTagRankings()
+    this.log('Upsert tags...')
     await restaurantUpsertManyTags(this.restaurant, this.tagging.restaurant_tags, {
       select: () => ({}),
       keys: ['__typename'],
     })
+    this.log('Menu items merge...')
     if (this.menu_items.length != 0) {
       await menuItemsUpsertMerge(this.menu_items)
     }
@@ -316,8 +325,8 @@ export class Self extends WorkerJob {
   }
 
   async findPhotosForTags() {
-    const all_tag_photos = await this.tagging.findPhotosForTags()
-    await photoUpsert(all_tag_photos)
+    const all = await this.tagging.findPhotosForTags()
+    await photoUpsert(all)
     const most_aesthetic = await bestPhotosForRestaurantTags(this.restaurant.id)
     for (const photo_xref of most_aesthetic) {
       const match = this.tagging.restaurant_tags.find((rt) => rt.tag_id == photo_xref.tag_id)
@@ -358,7 +367,7 @@ export class Self extends WorkerJob {
       scrapeGetData(this.infatuated, (x) => x.data_from_search_list_item.name),
       scrapeGetData(this.michelin, (x) => x.main.name),
       scrapeGetData(this.grubhub, (x) => x.main.name),
-      scrapeGetData(this.doordash, (x) => x.main.name),
+      scrapeGetData(this.doordash, (x) => x.main.title),
       tripadvisor_name,
     ]
     this.restaurant.name = this.merge(names)
@@ -398,7 +407,7 @@ export class Self extends WorkerJob {
       scrapeGetData(this.infatuated, (x) => x.data_from_search_list_item.street),
       scrapeGetData(this.michelin, (x) => x.main.title),
       scrapeGetData(this.tripadvisor, (x) => x.overview.contact.address),
-      scrapeGetData(this.doordash, (x) => x.main.address.printableAddress),
+      scrapeGetData(this.doordash, (x) => x.main.location.address),
     ])
   }
 
@@ -470,8 +479,6 @@ export class Self extends WorkerJob {
       }
     })
 
-    console.log('dayData', dayData)
-
     const records: string[] = []
     for (const day of dayData) {
       const times = day.formattedTime.split(' - ')
@@ -497,25 +504,15 @@ export class Self extends WorkerJob {
       const open = toPostgresTime(openDay, openTime)
       const close = toPostgresTime(closeDay, closeTime)
 
-      console.log({
-        open,
-        close,
-        openTime,
-        closeTime,
-        closesInMorningFromAM,
-        closesInMorningFromPM,
-      })
-
       records.push(`('${this.restaurant.id}'::UUID, timestamp '${open}', timestamp '${close}')`)
     }
 
-    console.log('records', records)
-
     if (records.length == 0) {
-      return 0
+      return {
+        count: 0,
+        records,
+      }
     }
-
-    console.log('records', records)
 
     const query = `
         BEGIN TRANSACTION;
@@ -529,7 +526,10 @@ export class Self extends WorkerJob {
         END TRANSACTION;
       `
     const result = await this.main_db.query(query)
-    return result[2].rowCount
+    return {
+      count: result[2].rowCount,
+      records,
+    }
   }
 
   async oldestReview() {
@@ -572,7 +572,6 @@ export class Self extends WorkerJob {
     let path: string
     let parts: string[]
 
-    // @ts-ignore
     this.restaurant.sources = {
       ...this.restaurant.sources,
     } as {
@@ -591,6 +590,7 @@ export class Self extends WorkerJob {
     }
 
     path = scrapeGetData(this.yelp, (x) => x.data_from_search_list_item.businessUrl)
+    console.log('this.ratings', this.ratings)
     if (path != '') {
       // @ts-ignore
       this.restaurant.sources.yelp = {
@@ -617,7 +617,14 @@ export class Self extends WorkerJob {
       }
     }
 
-    const json_ue = JSON.parse(scrapeGetData(this.ubereats, (x) => x.main.metaJson, '"{}"'))
+    let json_ue = scrapeGetData(this.ubereats, (x) => x.main.metaJson, {})
+    if (typeof json_ue === 'string') {
+      try {
+        json_ue = JSON.parse(json_ue)
+      } catch (err) {
+        console.log('error parsing uber', err)
+      }
+    }
     if (json_ue['@id']) {
       // @ts-ignore
       this.restaurant.sources.ubereats = {
@@ -626,7 +633,7 @@ export class Self extends WorkerJob {
       }
     }
 
-    let json_dd = scrapeGetData(this.doordash, (x) => x.storeMenuSeo, '"{}"')
+    let json_dd = scrapeGetData(this.doordash, (x) => x.storeMenuSeo, {})
     if (json_dd['id']) {
       // @ts-ignore
       this.restaurant.sources.doordash = {
@@ -648,6 +655,7 @@ export class Self extends WorkerJob {
 
   _getGoogleSource() {
     if (!this.google_review_api) return
+    this.log('addSources getGoogleSource')
     const id = this.google_review_api.id_from_source
     const lon = this.restaurant.location.coordinates[0]
     const lat = this.restaurant.location.coordinates[1]
@@ -756,7 +764,7 @@ export class Self extends WorkerJob {
     let urls: string[] = [
       ...scrapeGetData(this.tripadvisor, (x) => x.photos, []),
       ...this._getGooglePhotos(),
-      ...(yelp_data ? this.getPaginatedData(yelp_data.photos)?.map((i) => i.src) : []),
+      ...(yelp_data ? this.getPaginatedData(yelp_data.photos)?.map((i) => i.url) : []),
     ]
     let photos: PhotoXref[] = urls.map((url) => {
       return {
@@ -783,34 +791,17 @@ export class Self extends WorkerJob {
     return urls
   }
 
-  getPaginatedData(data: any) {
-    if (!data) {
-      return []
-    }
-    let items: any[] = []
-    let page = 0
-    while (true) {
-      const item = data[`dishpage-${page}`]
-      if (item) {
-        items = items.concat(item)
-      } else {
-        // Allow scrapers to start their pages on both 0 and 1
-        if (page > 0) {
-          break
-        }
-      }
-      page++
-    }
-    return items
+  getPaginatedData<A extends any>(data: { [key: string]: A[] }): A[] {
+    return Object.keys(data).flatMap((key) => data[key])
   }
 
   getRatingFactors() {
     const factors = scrapeGetData(this.tripadvisor, (x) => x.overview.rating.ratingQuestions, [])
     this.restaurant.rating_factors = {
-      food: factors.find((i) => i.name == 'Food')?.rating / 10,
-      service: factors.find((i) => i.name == 'Service')?.rating / 10,
-      value: factors.find((i) => i.name == 'Value')?.rating / 10,
-      ambience: factors.find((i) => i.name == 'Atmosphere')?.rating / 10,
+      food: (factors.find((i) => i.name == 'Food')?.rating ?? 0) / 10,
+      service: (factors.find((i) => i.name == 'Service')?.rating ?? 0) / 10,
+      value: (factors.find((i) => i.name == 'Value')?.rating ?? 0) / 10,
+      ambience: (factors.find((i) => i.name == 'Atmosphere')?.rating ?? 0) / 10,
     }
   }
 

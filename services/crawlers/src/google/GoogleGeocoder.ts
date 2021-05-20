@@ -71,7 +71,6 @@ export class GoogleGeocoder {
 
   private async getSearchEndpoint() {
     this.searchEndpoint = await this.getSearchEndpointSetting()
-    console.log('got search setting', this.searchEndpoint)
     if (typeof this.searchEndpoint !== 'string') {
       const updater = new UpdateSearchEndpoint()
       await updater.getNewSearchEndpoint()

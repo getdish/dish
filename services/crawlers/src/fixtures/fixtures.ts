@@ -1,7 +1,6 @@
 import { Restaurant } from '@dish/graph'
 
-import { Scrape } from '../src/scrape-helpers'
-import { YelpScrape } from '../src/yelp/Yelp'
+import { YelpScrape } from '../yelp/Yelp'
 
 const GOOGLE_GEOCODER_ID = '0xgoogleid123'
 
@@ -11,7 +10,7 @@ export const restaurant_fixture: Partial<Restaurant> = {
   location: { type: 'Point', coordinates: [0, 0] },
   rating: 3,
   sources: {
-    yelp: { url: 'https://yelp.com', rating: 3.5 },
+    yelp: { url: 'https://www.yelp.com', rating: 3.5 },
     tripadvisor: { url: 'https://tripadvisor.com', rating: 2.5 },
     google: { url: 'https://google.com', rating: 4.5 },
   },
@@ -22,24 +21,80 @@ export const restaurant_fixture_nearly_matches: Partial<Restaurant> = {
   location: { type: 'Point', coordinates: [0, 0] },
 }
 
+export type YelpDetailPageData = {
+  dynamic: typeof import('../fixtures/yelp-dynamic-fixture').default
+  json: typeof import('../fixtures/yelp-json-fixture').default
+}
+
+export type YelpPhotosData = typeof import('../fixtures/yelp-photos-fixture').default
+
+export type YelpListItemData = {
+  name: string
+  street: string
+  businessUrl: string
+  priceRange: any
+  categories: { title: string }[]
+  formattedAddress: string
+  reviewCount: number
+  rating: number
+  neighborhoods: string[]
+  phone: string
+}
+
+export type YelpScrapeData = YelpDetailPageData & {
+  data_from_search_list_item: YelpListItemData
+  photos: {
+    [key: string]: { url: string; caption: string }[]
+  }
+  reviews: {
+    [key: string]: YelpReviewData[]
+  }
+}
+
+const yelpReview = {
+  id: 'abc123',
+  tags: [],
+  user: {
+    src: '',
+  },
+  photos: [{ src: '', caption: '' }],
+  rating: 5,
+  localizedDate: '5/16/2020',
+  userId: 'FsLRE98uOHkBNzO1Ta5hIw',
+  comment: {
+    text: 'This restaurant had the worst Test tag existing 1 dishes! Vegetarian',
+    language: 'en',
+  },
+  lightboxMediaItems: [
+    {
+      url: '',
+      type: 'photo',
+      user: {},
+      caption: 'An amazing photo of Test tag existing 2!',
+    },
+  ],
+}
+
+export type YelpReviewData = typeof yelpReview
+
 export const yelp: Partial<YelpScrape> = {
   source: 'yelp',
   id_from_source: 'test123',
   data: {
     data_from_search_list_item: {
       name: 'Test Name Yelp',
-      formattedAddress: '123 Street, Big City',
-      businessUrl: 'http://www.intercontinentalsanfrancisco.com/',
+      formattedAddress: '123 Street, Big City, America',
+      businessUrl: '',
       categories: [{ title: 'Test Mexican' }, { title: 'Test Pizza' }, { title: 'Test Spain' }],
-      post: {
-        review_link: '',
-        rating: 4.0,
-      },
+      rating: 4.0,
       priceRange: '$$',
+      reviewCount: 2000,
       street: '123 Street',
+      neighborhoods: ['Mission'],
+      phone: '(415) 826-7000',
     },
-    dynamic: require('../src/fixtures/yelp-dynamic-fixture').default,
-    json: require('../src/fixtures/yelp-json-fixture').default,
+    dynamic: require('./yelp-dynamic-fixture').default,
+    json: require('./yelp-json-fixture').default,
     photos: {
       'dishpage-0': [
         {
@@ -55,46 +110,24 @@ export const yelp: Partial<YelpScrape> = {
       ],
     },
     reviews: {
-      'dishpage-0': [
-        {
-          id: 'abc123',
-          tags: [],
-          user: {
-            src: '',
-          },
-          photos: [{ src: '' }],
-          rating: 5,
-          localizedDate: '5/16/2020',
-          userId: 'FsLRE98uOHkBNzO1Ta5hIw',
-          comment: {
-            text: 'This restaurant had the worst Test tag existing 1 dishes! Vegetarian',
-            language: 'en',
-          },
-          lightboxMediaItems: [
-            {
-              url: '',
-              type: 'photo',
-              user: {},
-              caption: 'An amazing photo of Test tag existing 2!',
-            },
-          ],
-        },
-      ],
+      'dishpage-0': [yelpReview],
     },
   },
 }
 
-export const ubereats: Partial<Scrape> = {
+export const ubereats = {
   source: 'ubereats',
   id_from_source: 'test124',
   // @ts-ignore weird bug the type is right in graph but comes in null | undefined here
   data: {
     main: {
+      phoneNumber: '',
       location: { address: '123 Street, Big City, America' },
       title: 'Test Name UberEats',
       rating: {
         ratingValue: 4.4,
       },
+      metaJson: {},
     },
     dishes: [
       {
@@ -107,14 +140,18 @@ export const ubereats: Partial<Scrape> = {
   },
 }
 
-export const doordash: Partial<Scrape> = {
+export type UberEatsScrapeData = typeof ubereats['data']
+
+export const doordash = {
   source: 'doordash',
   id_from_source: 'test125',
   // @ts-ignore weird bug the type is right in graph but comes in null | undefined here
   data: {
+    storeMenuSeo: '{}',
     main: {
       location: { address: '123 Street, Big City, America' },
       title: 'Test Name DoorDash',
+      averageRating: 4.7,
       rating: {
         ratingValue: 4.7,
       },
@@ -138,16 +175,35 @@ export const doordash: Partial<Scrape> = {
   },
 }
 
-export const tripadvisor: Partial<Scrape> = {
+export type DoorDashScrapeData = typeof doordash['data']
+
+export const tripadvisor = {
   source: 'tripadvisor',
   id_from_source: 'test123xcv',
   // @ts-ignore weird bug the type is right in graph but comes in null | undefined here
   data: {
     overview: {
+      name: 'Test Name Tripadvisor',
+      links: {
+        warUrl: '',
+      },
+      detailCard: {
+        tagTexts: {
+          cuisines: {
+            tags: [{ tagValue: 'Test Tripadvisor Mexican' }],
+          },
+          priceRange: {
+            tags: [{ tagValue: 'Low' }],
+          },
+        },
+      },
       contact: {
         website: 'OFdCX2h0dHA6Ly93d3cuaW50ZXJjb250aW5lbnRhbHNhbmZyYW5jaXNjby5jb20vX1o3cQ==',
+        address: '',
+        phone: '',
       },
       rating: {
+        primaryRating: 4,
         ratingQuestions: [
           {
             name: 'Food',
@@ -201,10 +257,17 @@ export const tripadvisor: Partial<Scrape> = {
   },
 }
 
-export const google: Partial<Scrape> = {
+export type TripAdvisorScrapeData = typeof tripadvisor['data']
+
+export const google = {
   source: 'google',
   id_from_source: 'test-google123',
   data: {
+    rating: 4,
+    hero_image: '',
+    telephone: '',
+    website: '',
+    pricing: '',
     reviews: [
       '4 stars\nNikhil Mascarenhas\nLocal Guide ・4 reviews\n 2 weeks ago\nA Google review....\n Like  Share',
       '1 stars\nName\nLocal Guide ・1 review1\n 1 week ago\nA bad review....\n Like  Share',
@@ -212,7 +275,9 @@ export const google: Partial<Scrape> = {
   },
 }
 
-export const google_review_api: Partial<Scrape> = {
+export type GoogleScrapeData = typeof google['data']
+
+export const google_review_api = {
   source: 'google_review_api',
   id_from_source: 'test-google123',
   data: {
@@ -228,3 +293,5 @@ export const google_review_api: Partial<Scrape> = {
     ],
   },
 }
+
+export type GoogleReviewScrapeData = typeof google_review_api['data']

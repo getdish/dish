@@ -1,5 +1,8 @@
 #!/bin/bash
 
+# you'd have to run setup_test_services inside run_tests
+  # --privileged
+
 docker run \
   --env-file .env \
   --env-file .env.test \

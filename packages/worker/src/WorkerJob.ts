@@ -86,6 +86,7 @@ export class WorkerJob extends Loggable {
       }
     } catch (e) {
       result = 'failed'
+      console.log('ERROR WorkerJob\n\n', e.message, e.stack, '\n\n')
       sentryException(e, {
         data: { function: func.name, restaurant: this.logName },
         tags: { source: `${this.constructor.name} job` },

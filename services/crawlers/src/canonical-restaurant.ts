@@ -52,7 +52,6 @@ async function findExistingCanonical(
   const geocoder = new GoogleGeocoder()
   const query = name + ', ' + address
   const google_id = await geocoder.searchForID(query, lat, lon)
-  console.log('got google id', google_id)
   if (google_id) {
     const restaurant = await restaurantFindOne({ geocoder_id: google_id })
     if (restaurant) {
