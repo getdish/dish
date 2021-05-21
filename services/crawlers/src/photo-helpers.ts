@@ -30,7 +30,9 @@ import { DB } from './utils'
 const PhotoBaseQueryHelpers = createQueryHelpersFor<PhotoBase>('photo')
 const PhotoXrefQueryHelpers = createQueryHelpersFor<PhotoXref>('photo_xref')
 const photoBaseUpsert = PhotoBaseQueryHelpers.upsert
+
 export const photoXrefUpsert = PhotoXrefQueryHelpers.upsert
+export const photoXrefFindAll = PhotoXrefQueryHelpers.findAll
 
 const selectBasePhotoXrefFields = {
   select: (v: photo_xref[]) => {

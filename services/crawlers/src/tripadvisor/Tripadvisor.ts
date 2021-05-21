@@ -61,7 +61,7 @@ export class Tripadvisor extends WorkerJob {
 
   async getRestaurants(lat: number, lon: number) {
     const base =
-      '/GMapsLocationController?' +
+      'GMapsLocationController?' +
       'Action=update&from=Restaurants&g=1&mapProviderFeature=ta-maps-gmaps3&validDates=false' +
       '&pinSel=v2&finalRequest=false&includeMeta=false&trackPageView=false'
     const dimensions = `&mz=17&mw=${this.MAPVIEW_SIZE}&mh=${this.MAPVIEW_SIZE}`
@@ -195,7 +195,7 @@ export class Tripadvisor extends WorkerJob {
   }
 
   buildGalleryURL(page = 0) {
-    let path = '/DynamicPlacementAjax?'
+    let path = 'DynamicPlacementAjax?'
     const offset = page * 50
     const params = [
       'detail=' + this.detail_id,

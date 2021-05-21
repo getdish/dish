@@ -4,6 +4,7 @@ import {
   PhotoXref,
   TagWithId,
   ZeroUUID,
+  photo_xref_constraint,
   restaurantFindOne,
   restaurantUpsert,
   tagGetAllCuisinesWithDishes,
@@ -15,6 +16,7 @@ import { JobOptions, QueueOptions } from 'bull'
 
 import {
   bestPhotosForTag,
+  photoXrefFindAll,
   photoXrefUpsert,
   updatePhotoQualityAndCategories,
   uploadToDO,
@@ -123,7 +125,8 @@ export class GoogleImages extends WorkerJob {
       '&client=firefox-b-d&gbv=2&source=lnms&tbm=isch&sa=X&biw=1920&bih=1138'
     let images: string[] = []
     const response = await axios.get(path)
-    const expression = /,\["(https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&//=]*)).*/
+    const expression =
+      /,\["(https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&//=]*)).*/
     var regex = new RegExp(expression)
     for (const line of response.data.split('\n')) {
       if (line.startsWith(',["http') && this.isImageBigEnough(line)) {

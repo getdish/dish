@@ -37,7 +37,6 @@ ssh \
     source .env.production
     source .env.d1
     flyctl auth docker
-    ./dishctl.sh umami_migrate
     docker-compose build postgres nginx-proxy
     docker-compose pull $SERVICES
     docker-compose stop -t 3 $SERVICES || true
@@ -46,6 +45,7 @@ ssh \
     ./dishctl.sh wait_until_services_ready
     ./dishctl.sh hasura_migrate
     ./dishctl.sh timescale_migrate
+    ./dishctl.sh umami_migrate
     echo done
     docker system prune --force
   "

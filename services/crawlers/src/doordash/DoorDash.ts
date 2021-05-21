@@ -15,8 +15,7 @@ type BasicStore = {
   lng: number
 }
 
-const DOORDASH_DOMAIN =
-  process.env.DOORDASH_GRAPHQL_AWS_PROXY || 'https://api-consumer-client.doordash.com/'
+const DOORDASH_DOMAIN = process.env.DOORDASH_GRAPHQL_AWS_PROXY || 'https://www.doordash.com/'
 
 const axios = axios_base.create({
   baseURL: DOORDASH_DOMAIN + 'graphql',
@@ -163,19 +162,17 @@ export class DoorDash extends WorkerJob {
         searchLng: lng,
         offset: offset,
         limit: PER_PAGE,
-        searchQuery: null,
-        filterQuery: null,
-        categoryQueryId: null,
+        query: null,
       },
       query: `query storeSearch(
-           $offset: Int!,
-           $limit: Int!,
-           $order: [String!],
-           $searchQuery: String,
-           $filterQuery: String,
-           $categoryQueryId: ID,
-           $searchLat: Float,
-           $searchLng: Float
+          $offset: Int!,
+          $limit: Int!,
+          $order: [String!],
+          $searchQuery: String,
+          $filterQuery: String,
+          $categoryQueryId: ID,
+          $searchLat: Float,
+          $searchLng: Float
         ) {
           storeSearch(
             offset: $offset,
@@ -186,47 +183,47 @@ export class DoorDash extends WorkerJob {
             categoryQueryId: $categoryQueryId,
             searchLat: $searchLat,
             searchLng: $searchLng
-          ) {
-            numStores
-            stores {
-              id
-              name
-              description
-              averageRating
-              numRatings
-              priceRange
-              featuredCategoryDescription
-              deliveryFee
-              extraSosDeliveryFee
-              displayDeliveryFee
-              headerImgUrl
-              url
-              menus {
-                popularItems {
-                  imgUrl
-                }
-              }
-              status {
-                unavailableReason
-              }
-              location {
-                lat
-                lng
+        ) {
+          numStores
+          stores {
+            id
+            name
+            description
+            averageRating
+            numRatings
+            priceRange
+            featuredCategoryDescription
+            deliveryFee
+            extraSosDeliveryFee
+            displayDeliveryFee
+            headerImgUrl
+            url
+            menus {
+              popularItems {
+                imgUrl
               }
             }
-            storeItems {
-              id
-              name
-              price
-              imageUrl
-              store {
-                name
-                url
-                id
-              }
+            status {
+              unavailableReason
+            }
+            location {
+              lat
+              lng
             }
           }
-        }`,
+          storeItems {
+            id
+            name
+            price
+            imageUrl
+            store {
+              name
+              url
+              id
+            }
+          }
+        }
+      }`,
     }
   }
 

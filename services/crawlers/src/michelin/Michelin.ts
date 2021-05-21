@@ -36,13 +36,19 @@ export class Michelin extends WorkerJob {
     console.log('Starting Michelin crawler. Using domain: ' + MICHELIN_DOMAIN)
   }
 
-  async all(page: number = 0) {
+  async all(page: number = 0, limit = Infinity, find?: string) {
     const [uri, data] = this.buildRequest(page)
     const response = await axios.post(uri as string, data)
-    const restaurants = response.data.results[0].hits
-    for (const restaurant of restaurants) {
+    const restaurants = response.data.results[0].hits as any[]
+    for (const [index, restaurant] of restaurants.entries()) {
+      if (index >= limit) {
+        break
+      }
       try {
-        await this.saveRestaurant(restaurant)
+        const { name } = await this.saveRestaurant(restaurant)
+        if (find && name === find) {
+          break
+        }
       } catch (e) {
         console.log('error crawling', e)
         sentryException(e, {
@@ -100,7 +106,7 @@ export class Michelin extends WorkerJob {
       data.name,
       data._highlightResult.street.value
     )
-    console.log('MICHELIN: crawling ' + data.name)
+    this.log('crawling ' + data.name + ' ' + id_from_source)
     const id = await scrapeInsert({
       source: 'michelin',
       restaurant_id,
@@ -113,7 +119,8 @@ export class Michelin extends WorkerJob {
         main: data,
       },
     })
-    return id
+
+    return { id, name: data.name }
   }
 
   static getNameAndAddress(scrape: ScrapeData) {
