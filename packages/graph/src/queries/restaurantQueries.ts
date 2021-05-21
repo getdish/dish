@@ -114,10 +114,9 @@ export async function restaurantUpsertManyTags(
     return { ...existing, ...rt }
   })
   const chunks = chunk(populated, 10)
-  // console.log('Upserting tags chunks...', chunks.length)
+  console.log('Upserting tags chunks...', chunks.length)
   let next: RestaurantWithId | null = null
   for (const [index, chunk] of chunks.entries()) {
-    // console.log('Inserting tags chunk...', index)
     next = await restaurantUpsertRestaurantTags(restaurant, chunk, opts)
   }
   return next
@@ -128,7 +127,6 @@ export async function restaurantUpsertOrphanTags(
   tag_strings: string[]
 ) {
   const restaurant_tags = await convertSimpleTagsToRestaurantTags(tag_strings)
-
   return await restaurantUpsertRestaurantTags(restaurant, restaurant_tags)
 }
 
@@ -167,7 +165,6 @@ async function restaurantUpdateTagNames(restaurant: RestaurantWithId, opts?: Sel
         .flat()
     ),
   ]
-
   const dataRestaurantUpdate = await restaurantUpdate(
     {
       ...restaurant,
@@ -180,19 +177,19 @@ async function restaurantUpdateTagNames(restaurant: RestaurantWithId, opts?: Sel
           return {
             ...selectFields(rest),
             tag_names: rest.tag_names,
-            tags: rest.tags().map((r_t) => {
-              const tagInfo = selectFields(r_t.tag)
+            tags: rest.tags().map((rt) => {
+              const tagInfo = selectFields(rt.tag)
               return {
-                ...selectFields(r_t, '*', 2),
+                ...selectFields(rt, '*', 2),
                 tag: {
                   ...tagInfo,
-                  categories: r_t.tag.categories().map((cat) => {
+                  categories: rt.tag.categories().map((cat) => {
                     return {
                       ...selectFields(cat),
                       category: selectFields(cat.category),
                     }
                   }),
-                  parent: selectFields(r_t.tag.parent),
+                  parent: selectFields(rt.tag.parent),
                 },
               }
             }),

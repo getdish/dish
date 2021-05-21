@@ -38,7 +38,7 @@ services:
     build:
       context: ./services/${POSTGRES_NAME:-postgres}
     volumes:
-      - /var/data/postgresdb/${DISH_ENV:-development}:/var/lib/postgresql/data
+      - ${POSTGRES_DB_DIR}:/var/lib/postgresql/data
       - ./services/postgres:/postgres
     environment:
       POSTGRES_USER: ${POSTGRES_USER:-postgres}
@@ -53,7 +53,7 @@ services:
     build:
       context: ./services/timescale
     volumes:
-      - /var/data/timescaledb/${DISH_ENV:-development}:/var/lib/postgresql/data
+      - ${TIMESCALE_DB_DIR}:/var/lib/postgresql/data
     environment:
       POSTGRES_USER: ${TIMESCALE_USER:-postgres}
       POSTGRES_PASSWORD: ${TIMESCALE_PASSWORD:-postgres}

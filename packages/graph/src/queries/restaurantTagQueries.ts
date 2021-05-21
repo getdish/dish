@@ -19,6 +19,7 @@ export async function restaurantTagUpsert(
     if (!tag.sentences || tag.sentences.length == 0) {
       delete tag.sentences
     }
+    delete tag.id
     return {
       ...tag,
       restaurant_id: tag.restaurant_id ?? restaurant_id,
@@ -29,12 +30,18 @@ export async function restaurantTagUpsert(
       return mutation.insert_restaurant_tag({
         objects: objects as any,
         on_conflict: {
-          constraint: restaurant_tag_constraint.restaurant_tag_pkey,
+          constraint: restaurant_tag_constraint.restaurant_tag_id_restaurant_id_pkey,
           update_columns: [
             restaurant_tag_update_column.rank,
             restaurant_tag_update_column.photos,
             restaurant_tag_update_column.rating,
             restaurant_tag_update_column.score,
+            restaurant_tag_update_column.score_breakdown,
+            restaurant_tag_update_column.source_breakdown,
+            restaurant_tag_update_column.upvotes,
+            restaurant_tag_update_column.downvotes,
+            restaurant_tag_update_column.review_mentions_count,
+            restaurant_tag_update_column.votes_ratio,
           ],
         },
       })

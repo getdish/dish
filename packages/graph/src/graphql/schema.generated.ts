@@ -2481,6 +2481,8 @@ export enum restaurant_tag_constraint {
   /** unique or primary key constraint */
   restaurant_tag_id_key = 'restaurant_tag_id_key',
   /** unique or primary key constraint */
+  restaurant_tag_id_restaurant_id_pkey = 'restaurant_tag_id_restaurant_id_pkey',
+  /** unique or primary key constraint */
   restaurant_tag_pkey = 'restaurant_tag_pkey',
 }
 

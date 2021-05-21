@@ -82,7 +82,7 @@ export class RestaurantRatings {
       final_rating += rating * normalised_weight
     }
 
-    console.log('Calculated final rating', final_rating, { ratings, weights })
+    // console.log('Calculated final rating', final_rating, { ratings, weights })
 
     return final_rating
   }

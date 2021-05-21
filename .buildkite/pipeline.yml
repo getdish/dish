@@ -142,6 +142,7 @@ steps:
       DOCKER_CLEAN_ON_FAIL: true
       SHOW_DOCKER_IMAGES: true
       POSTGRES_STRATEGY: simple
+      DATA_CLEAR_ON_FAIL: true
 
   - label: "run tests"
     key: tests
