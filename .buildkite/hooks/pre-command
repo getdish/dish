@@ -36,9 +36,8 @@ export PATH=$PATH:$HOME/bin
 export FLYCTL_INSTALL="/root/.fly"
 export PATH="$FLYCTL_INSTALL/bin:$PATH"
 
-set -a
 source .env
-set +a
+source .env.test
 
 export AWS_ACCESS_KEY_ID=$DO_SPACES_ID
 export AWS_SECRET_ACCESS_KEY=$DO_SPACES_SECRET
