@@ -2,6 +2,9 @@
   "name": "@dish/hasura",
   "version": "0.0.1",
   "description": "",
+  "testConfig": {
+    "isolate": true
+  },
   "devDependencies": {
     "ava": "*"
   },

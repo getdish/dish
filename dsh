@@ -10,6 +10,10 @@ TS_PROXY_PID=
 DISH_ENV="${DISH_ENV:-production}"
 ENV_FILE=".env.$DISH_ENV"
 
+function ci_shell() {
+  docker exec -it app_ci_1 bash
+}
+
 function generate_random_port() {
   echo "2$((1000 + RANDOM % 8999))"
 }
@@ -506,17 +510,17 @@ function docker_build_file() {
 }
 
 function docker_compose_up_subset() {
-  echo "DISH_ENV=$DISH_ENV docker-compose up $services; ($POSTGRES_DB)"
   services=$1
   extra=$2
   flags=""
+  echo "docker-compose up $flags $extra $services; ($POSTGRES_DB)"
   if [ "$DOCKER_NO_RECREATE" != "true" ]; then
     flags="--remove-orphans --force-recreate"
   fi
   if [ -z "$extra" ]; then
-    log_command -- docker-compose up $flags $services
+    docker-compose up $flags $services
   else
-    log_command -- docker-compose up $flags "$extra" $services
+    docker-compose up $flags "$extra" $services
   fi
   printf "\n\n\n"
 }
