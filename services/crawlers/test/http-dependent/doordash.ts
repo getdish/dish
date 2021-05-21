@@ -9,7 +9,7 @@ test.beforeEach(async () => {
   await deleteAllScrapesBySourceID(store.id)
 })
 
-test('gets and persists a restaurant and its dishes', async (t) => {
+test.skip('gets and persists a restaurant and its dishes', async (t) => {
   const dd = new DoorDash()
   await dd.getStore(store)
   const scrape = await scrapeFindOneBySourceID('doordash', store.id)

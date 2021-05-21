@@ -17,7 +17,6 @@ fi
 
 ./dishctl.sh docker_compose_up -d
 ./dishctl.sh wait_until_services_ready
-./dishctl.sh hasura_migrate
-./dishctl.sh timescale_migrate
+./dishctl.sh migrate
 
 echo "done"

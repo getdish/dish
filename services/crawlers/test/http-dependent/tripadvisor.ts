@@ -16,15 +16,13 @@ test('Gets and persists a restaurant', async (t) => {
   ta._TESTS__LIMIT_GEO_SEARCH = true
   await ta.getRestaurants(37.759125, -122.41235)
   const scrape = await scrapeFindOneBySourceID('tripadvisor', ID)
-
   t.is(scrape.data.overview.name, 'Flour + Water, California')
   t.deepEqual(scrape.location, {
     lon: -122.41235,
     lat: 37.759125,
   })
   t.is(scrape.data.overview.contact.phone, '+1 415-826-7000')
-  console.log('trip scrape.data', scrape.data)
-  t.assert(scrape.data.photos?.['dishpage-0']?.length > 80)
-  t.assert(scrape.data.reviews?.['dishpage-0']?.length > 9)
-  t.assert(scrape.data.reviews?.['dishpage-0']?.length > 9)
+  t.assert(scrape.data.photos?.length > 50)
+  const reviews = scrape.data.reviews
+  t.assert(Object.keys(reviews).some((k) => reviews[k].length > 9))
 })

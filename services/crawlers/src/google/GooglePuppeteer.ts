@@ -112,7 +112,8 @@ export class GooglePuppeteer extends GooglePuppeteerJob {
     try {
       await func.bind(this)()
     } catch (e) {
-      if (!e.message.includes('waiting for selector')) {
+      console.log('got err', e)
+      if (!e.message?.includes('waiting for selector')) {
         sentryException(e, {
           data: { function: func.name, restaurant: restaurant },
           tags: { source: 'Google crawler' },
@@ -133,8 +134,8 @@ export class GooglePuppeteer extends GooglePuppeteerJob {
       console.log('Google Loading', url)
       try {
         await this.puppeteer.page.goto(url, {
-          timeout: 10000,
-          waitUntil: 'domcontentloaded',
+          timeout: 15_000,
+          waitUntil: 'networkidle0',
         })
         return true
       } catch (err) {
@@ -162,11 +163,16 @@ export class GooglePuppeteer extends GooglePuppeteerJob {
   }
 
   async getHeroImage() {
-    const selector = '.section-hero-header-image-hero img'
-    await this.puppeteer.getElementText(selector)
-    this.scrape_data.hero_image = await this.puppeteer.page.evaluate((selector) => {
-      return document.querySelector(selector)?.getAttribute('src')
-    }, selector)
+    const image = await this.puppeteer.page.evaluate(
+      () =>
+        document.querySelector('.section-hero-header-image img')?.getAttribute('src') ??
+        Array.from(document.querySelectorAll("img[role='presentation']"))
+          .map((x) => x.getAttribute('src') || '')
+          .filter((x) => x.indexOf('googleusercontent.com') > 0)[0]
+    )
+    const hero = image?.replace(/w[0-9]+-h[0-9]+/, 'w1000-h1000')
+    console.log('image', image, hero)
+    this.scrape_data.hero_image = hero
   }
 
   async getSynopsis() {
@@ -176,7 +182,12 @@ export class GooglePuppeteer extends GooglePuppeteerJob {
   }
 
   async getRating() {
-    this.scrape_data.rating = (await this.puppeteer.getElementText('.section-star-display')).trim()
+    const stars = await this.puppeteer.page.evaluate(
+      'document.querySelector(".section-star-array").getAttribute("aria-label")'
+    )
+    if (typeof stars === 'string') {
+      this.scrape_data.rating = stars.replace(' stars', '').trim()
+    }
   }
 
   async getPricing() {

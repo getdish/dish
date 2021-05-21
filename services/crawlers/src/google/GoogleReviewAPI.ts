@@ -69,62 +69,54 @@ export class GoogleReviewAPI extends WorkerJob {
       })
       return
     }
-    let data: any[] = []
+    let allData: any[] = []
     let page = 0
+    let lastToken = ''
     while (true) {
       this.log(`fetching page ${page} for ${restaurant.name}`)
-      const html = await this.fetchReviewPage(restaurant.geocoder_id, page)
-      const new_data = this.parseReviewPage(html)
-      if (new_data.length == 0) break
-      data = [...data, ...new_data]
+      const html = await this.fetchReviewPage(restaurant.geocoder_id, lastToken)
+
+      const { data, nextPageToken } = this.parseReviewPage(html)
+      lastToken = nextPageToken ?? ''
+      if (data.length == 0) break
+      allData = [...allData, ...data]
       page++
       if (process.env.RUN_WITHOUT_WORKER == 'true') {
         break
       }
+      if (!nextPageToken) {
+        this.log(`no next page token, finishing`)
+        break
+      }
     }
-    await this.saveRestaurant(restaurant, data)
+    await this.saveRestaurant(restaurant, allData)
   }
 
+  // https://www.google.com/async/reviewSort?async=feature_id:0x0:0x97168583de68f09e,start_index:10,sort_by:newestFirst,review_source:Google,_fmt:html
   // curl \
-  //   'https://www.google.com/async/reviewSort?
-  //     client=firefox-b-d
-  //     &yv=3
-  //     &async=feature_id:0x14cab9e770d06d95%3A0x4b55747a9fc0e67a,
-  //            review_source:All%20reviews,
-  //            sort_by:qualityScore,
-  //            start_index:120,
-  //            is_owner:false,
-  //            filter_text:,
-  //            associated_topic:,
-  //            next_page_token:120,
-  //            _pms:s,
-  //            _fmt:pc
-  //   '
-  //   -H 'User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:80.0) Gecko/20100101 Firefox/80.0'
-  async fetchReviewPage(geocoder_id: string, page = 0) {
+  //   "https://www.google.com/async/reviewSort?client=firefox-b-d&yv=3&async=feature_id:0x14cab9e770d06d95%3A0x4b55747a9fc0e67a,review_source:All%20reviews,sort_by:qualityScore,start_index:120,is_owner:false,filter_text:,associated_topic:,next_page_token:120,_pms:s,_fmt:pc" \
+  //   -H "User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:80.0) Gecko/20100101 Firefox/80.0"
+  async fetchReviewPage(geocoder_id: string, nextPageToken: string) {
     const GOOGLE_HARDCODED_PAGE_SIZE = 10 // DO NOT CHANGE
-    const start = page * GOOGLE_HARDCODED_PAGE_SIZE
-    const base_path = 'async/reviewSort?client=firefox-b-d&yv=3&async='
+    const base_path = 'async/reviewSort?async='
     const options = [
       'feature_id:' + geocoder_id,
-      'start_index:' + start,
-      'next_page_token:' + start,
+      'start_index:' + GOOGLE_HARDCODED_PAGE_SIZE,
+      'next_page_token:' + nextPageToken,
       'sort_by:qualityScore',
-      'is_owner:false',
-      'use_expander:false',
-      'is_user_interaction:false',
-      'associated_topic:',
-      '_pms:qs',
-      '_fmt:pc',
+      'review_source:Google',
+      '_fmt:html',
     ]
     const path = base_path + options.join(',')
+    console.log('path', path)
     const response = await axios.get(path)
     if (!response.data) throw 'GoogleReviewAPI: no response'
     return response.data
   }
 
-  parseReviewPage(html) {
+  parseReviewPage(html: string) {
     const $ = cheerio.load(html)
+    const nextPageToken = $('.gws-localreviews__general-reviews-block').attr('data-next-page-token')
     const reviews = $('.gws-localreviews__google-review')
     let data: any[] = []
     for (let i = 0; i < reviews.length; i++) {
@@ -132,7 +124,6 @@ export class GoogleReviewAPI extends WorkerJob {
       const user = $(divs[0]).find('a').attr('href')
       const user_id = this.parseUserID(user)
       const name = $(divs[0]).text()
-      const stats = $(divs[1])
       const review = $(divs[2])
       const stars_text = review.find('g-review-stars > span').attr('aria-label')
       const rating = this.parseReviewRating(stars_text)
@@ -153,7 +144,7 @@ export class GoogleReviewAPI extends WorkerJob {
         photos,
       })
     }
-    return data
+    return { data, nextPageToken }
   }
 
   parseReviewText(text: string, full_text: string) {
