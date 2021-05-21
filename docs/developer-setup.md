@@ -30,7 +30,7 @@ All Dish's credentials are stored in `.env`. Even third-party web logins are con
 You can avoid copy-pasting environment variables using this:
 
 ```
-./dishctl.sh run 'some_command_that_needs_dish_ENV'
+./dsh run 'some_command_that_needs_dish_ENV'
 ```
 
 To switch env set DISH_ENV.
@@ -42,7 +42,7 @@ can be easily run with Docker Compose: https://docs.docker.com/compose/install/
 
 When working with Dish's Docker images you'll often need to be logged into our Docker
 
-Registry: `./dishctl.sh dish_registry_auth`.
+Registry: `./dsh dish_registry_auth`.
 
 Some helper commands to get started:
 
@@ -55,7 +55,7 @@ Once you're logged in and have Docker Compose installed, go to the root of this 
 
 For initial installation you may need to run this command a few times so postgres can generate encryption keys. You will also need to use an `init` arg to the first migrations run:
 
-`./dishctl.sh hasura_migrate`
+`./dsh hasura_migrate`
 
 When you need to rebuild the containers to update their code run:
 
@@ -143,8 +143,8 @@ If you want to run end to end tests:
 
     * Run the migrations:
       ```
-      ./dishctl.sh db_migrate_local
-      ./dishctl.sh timescale_migrate_local
+      ./dsh db_migrate_local
+      ./dsh timescale_migrate_local
       ```
 
     * To connect to these local services, visit:
@@ -165,7 +165,7 @@ You'll need a few things set up first:
     - `doctl kubernetes cluster kubeconfig save dish[blue/green]`
     - On production and staging, you'll need `flyctl` in order to login to our Docker registry.
 
-Then you can use the `./dishctl.sh hot_deploy path/to/Dockerfile/folder`
+Then you can use the `./dsh hot_deploy path/to/Dockerfile/folder`
 
 ## Hasura
 
@@ -200,7 +200,7 @@ After a while the migrations folder can get very full. Apart from being noisy, t
 ### Seed/Live data
 
 This is a big dump, can potentially take nearly an hour to import:
-`./dishctl.sh restore_latest_main_backup_to_local`
+`./dsh restore_latest_main_backup_to_local`
 
 ### Misc
 
@@ -254,7 +254,7 @@ When setting up a Blue/Green cluster, I found that:
 - `nodeSelector` isn't powerful enough to prevent the CI node getting full of other pods. But
   DO still haven't developed native support for taints/tolerations. Watch:
   https://github.com/digitalocean/DOKS/issues/3
-- `./dishctl.sh hot_deploy path/to/Dockerfile` for each service needed to be run. This could be done by doing a Github deploy too.
+- `./dsh hot_deploy path/to/Dockerfile` for each service needed to be run. This could be done by doing a Github deploy too.
 - In Hasura's console, I needed to click the "Reload metadata" button to get Hasura consistent
   with the DB again. I have no idea why.
 
@@ -301,6 +301,6 @@ we could deploy our own at somepoint with a Helm chart.
 
 Our staging VM is completely independent of our Kubernetes cluster. The staging VM runs on a single Digital Ocean droplet. It simply runs the same `docker-compose` setup used by local devs. The SSH private key is stored encrypted in our repo so you should be able to SSH in with:
 
-`./dishctl.sh staging_ssh`
+`./dsh staging_ssh`
 
 Deployment should happen automatically for all succesful builds on the staging branch. However, if you want changes to `docker-compose.yaml` to take affect you'll need to SSH in and manually deal with it.

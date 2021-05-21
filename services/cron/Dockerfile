@@ -13,11 +13,11 @@ RUN apt-get update > /dev/null && apt-get install -y lsb-release > /dev/null && 
 # # COPY --from=0 /bin /bin
 WORKDIR /app
 
-COPY dishctl.sh .env .env.production ./
+COPY dsh .env .env.production ./
 COPY services/cron services/cron
 
-# prevent dishctl from erroring
-RUN git init && git add ./dishctl.sh && git commit -m 'init'
+# prevent dish from erroring
+RUN git init && git add ./dsh && git commit -m 'init'
 
 WORKDIR /app/services/cron
 

@@ -11,4 +11,4 @@ flyctl secrets set \
     REPL_PASSWORD="$FLY_PG_REPL_PASSWORD" || true
 
 # can cause startup issues for hasura so clear here first
-. ../../dishctl.sh hasura_clean_event_logs
+. ../../dsh hasura_clean_event_logs

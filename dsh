@@ -8,7 +8,6 @@ PG_PROXY_PID=
 TS_PROXY_PID=
 
 DISH_ENV="${DISH_ENV:-production}"
-echo "running in env $DISH_ENV"
 ENV_FILE=".env.$DISH_ENV"
 
 function generate_random_port() {
@@ -76,12 +75,12 @@ function stop_crawl() {
 # Note that crawlers are also run on cron schedules.
 # For cities list see: crawlers/src/utils "CITY_LIST"
 
-# example: ./dishctl.sh start_crawler Yelp
+# example: ./dsh start_crawler Yelp
 function start_crawler() {
   worker_exec "node /app/services/crawlers/_/$1/all.js"
 }
 
-# example: ./dishctl.sh start_crawler_for_city yelp  Tucson, Arizona
+# example: ./dsh start_crawler_for_city yelp  Tucson, Arizona
 function start_crawler_for_city() {
   worker_exec "node /app/services/crawlers/dist/$1/all.js --city \"$2\""
 }
@@ -753,17 +752,17 @@ export -f wait_until_dish_app_ready
 
 function wait_until_services_ready() {
   echo "Waiting for hasura to finish starting"
-  if ! timeout --preserve-status 30 bash -c wait_until_hasura_ready; then
+  if ! timeout --preserve-status 25 bash -c wait_until_hasura_ready; then
     echo "Timed out waiting for Hasura container to start"
     exit 1
   fi
   echo "Waiting for timescale to finish starting"
-  if ! timeout --preserve-status 30 bash -c wait_until_timescale_ready; then
+  if ! timeout --preserve-status 25 bash -c wait_until_timescale_ready; then
     echo "Timed out waiting for Timescale container to start"
     exit 1
   fi
   echo "Waiting for dish-app to finish starting"
-  if ! timeout --preserve-status 30 bash -c wait_until_dish_app_ready; then
+  if ! timeout --preserve-status 25 bash -c wait_until_dish_app_ready; then
     echo "Timed out waiting for dish container to start"
     exit 1
   fi
@@ -784,11 +783,7 @@ function clean() {
 }
 
 function run() {
-  bash -c "$@"
-}
-
-function env() {
-  echo "exported env $DISH_ENV"
+  bash -c "$ORIGINAL_ARGS"
 }
 
 if command -v git &> /dev/null; then
@@ -801,7 +796,6 @@ if command -v git &> /dev/null; then
   source .env
   arch="$(uname -m)"
   if [ "${arch}" = "arm64" ]; then
-    echo "using env m1"
     source .env.m1
   fi
   # source current env next, .env.production by default
@@ -811,6 +805,7 @@ if command -v git &> /dev/null; then
     echo "Not loading ENV from $ENV_FILE as it doesn't exist"
   fi
   set +a
+  echo "dsh -- env $DISH_ENV $IS_M1"
   popd >/dev/null
 else
   echo "Not loading ENV as there's no \`git\` command"

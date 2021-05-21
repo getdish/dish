@@ -1,4 +1,4 @@
-// ./dishctl.sh main_db_command \
+// ./dsh main_db_command \
 //   "select ST_AsGeoJSON(wkb_geometry) from hrr where hrrcity = 'CA- SAN FRANCISCO'" \
 //   | grep '{' | node services/hasura/etc/split_multipolygon
 
