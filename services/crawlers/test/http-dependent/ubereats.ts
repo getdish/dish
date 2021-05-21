@@ -14,6 +14,7 @@ test('gets and persists a restaurant and its dishes', async (t) => {
   const ue = new UberEats()
   await ue.getRestaurant(ID)
   const scrape = await scrapeFindOneBySourceID('ubereats', ID)
+  console.log('uber scrape.data', scrape.data)
   t.is(scrape.data.main.title, title)
   t.is(scrape.data.main.location.address, '765 9th Ave, New York, NY 10019')
   t.deepEqual(scrape.location, {

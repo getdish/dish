@@ -81,6 +81,7 @@ export class DoorDash extends WorkerJob {
     if (!this.cookie || this.cookie == '') {
       await this.getCookie()
     }
+    console.log('GRAPH POST', DOORDASH_DOMAIN + 'graphql', this.cookie, graphql)
     const response = await axios.post('/', graphql, {
       headers: {
         Cookie: 'dd_guest_id=' + this.cookie,
@@ -115,7 +116,8 @@ export class DoorDash extends WorkerJob {
   }
 
   async getStore(store: BasicStore) {
-    const response = await this.graphRequest(this._getStoreGQL(store.id))
+    const gql = this._getStoreGQL(store.id)
+    const response = await this.graphRequest(gql)
     const main = response.storeInformation
     this.log('DoorDash: saving "' + main.name + '"')
     const id_from_source = main.id

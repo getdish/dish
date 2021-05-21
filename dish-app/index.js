@@ -1,7 +1,6 @@
 // only imported by native app!
 // for web just skip to src/index
 
-import '@dish/helpers/polyfill'
 import 'expo-asset'
 
 import * as Sentry from '@sentry/react-native'

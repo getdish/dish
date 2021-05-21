@@ -23,7 +23,8 @@ test('Gets and persists a restaurant', async (t) => {
     lat: 37.759125,
   })
   t.is(scrape.data.overview.contact.phone, '+1 415-826-7000')
-  t.assert(scrape.data.photos?.['dishpage-0'].length > 80)
-  t.assert(scrape.data.reviews?.['dishpage-0'].length > 9)
-  t.assert(scrape.data.reviews?.['dishpage-0'].length > 9)
+  console.log('trip scrape.data', scrape.data)
+  t.assert(scrape.data.photos?.['dishpage-0']?.length > 80)
+  t.assert(scrape.data.reviews?.['dishpage-0']?.length > 9)
+  t.assert(scrape.data.reviews?.['dishpage-0']?.length > 9)
 })
