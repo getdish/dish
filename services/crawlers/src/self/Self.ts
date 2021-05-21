@@ -243,9 +243,7 @@ export class Self extends WorkerJob {
     this.log('Merging: ' + this.restaurant.name)
     this.resetTimer()
     await this.getScrapeData()
-    this.log('got scrape data')
     this.noteAvailableSources()
-    this.log('scrapes fetched')
   }
 
   async postMerge() {

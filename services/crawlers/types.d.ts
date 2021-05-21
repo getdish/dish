@@ -170,9 +170,7 @@ declare module "@dish/crawlers" {
                 searchLng: number;
                 offset: number;
                 limit: number;
-                searchQuery: null;
-                filterQuery: null;
-                categoryQueryId: null;
+                query: null;
             };
             query: string;
         };
@@ -245,14 +243,17 @@ declare module "@dish/crawlers" {
         static queue_config: QueueOptions;
         static job_config: JobOptions;
         constructor();
-        all(page?: number): Promise<void>;
+        all(page?: number, limit?: number, find?: string): Promise<void>;
         buildRequest(page: number): (string | {
             requests: {
                 indexName: string;
                 params: string;
             }[];
         })[];
-        saveRestaurant(data: ScrapeData): Promise<string | undefined>;
+        saveRestaurant(data: ScrapeData): Promise<{
+            id: string | undefined;
+            name: any;
+        }>;
         static getNameAndAddress(scrape: ScrapeData): {
             name: any;
             address: any;
@@ -1030,6 +1031,7 @@ declare module "@dish/crawlers" {
     import "@dish/common";
     import { PhotoXref, uuid } from "@dish/graph";
     export const photoXrefUpsert: (items: Partial<import("@dish/graph").FlatResolvedModel<import("@dish/graph").PhotoXrefQuery>>[], constraint?: string | undefined, opts?: import("@dish/graph").SelectionOptions | undefined) => Promise<import("@dish/graph").WithID<import("@dish/graph").FlatResolvedModel<import("@dish/graph").PhotoXrefQuery>>[]>;
+    export const photoXrefFindAll: (a: Partial<import("@dish/graph").FlatResolvedModel<import("@dish/graph").PhotoXrefQuery>>, opts?: import("@dish/graph").SelectionOptions | undefined) => Promise<import("@dish/graph").WithID<import("@dish/graph").FlatResolvedModel<import("@dish/graph").PhotoXrefQuery>>[]>;
     export const DO_BASE = "https://dish-images.sfo2.digitaloceanspaces.com/";
     export function photoUpsert(photosOg: Partial<PhotoXref>[]): Promise<void>;
     export function uploadToDO(photos: Partial<PhotoXref>[]): Promise<void>;
@@ -1339,8 +1341,11 @@ declare module "@dish/crawlers" {
         get logName(): string;
         allForCity(city: string): Promise<void>;
         getRestaurant(id: string): Promise<void>;
-        fetchReviewPage(geocoder_id: string, page?: number): Promise<any>;
-        parseReviewPage(html: any): any[];
+        fetchReviewPage(geocoder_id: string, nextPageToken: string): Promise<any>;
+        parseReviewPage(html: string): {
+            data: any[];
+            nextPageToken: string | undefined;
+        };
         parseReviewText(text: string, full_text: string): string;
         parseReviewRating(stars: string | undefined): string | null;
         parseUserID(href: string | undefined): string | null;
@@ -1398,6 +1403,85 @@ declare module "@dish/crawlers" {
 
 declare module "@dish/crawlers" {
     export function one(): Promise<void>;
+}
+
+declare module "@dish/crawlers" {
+    const _default_4: {
+        data: {
+            storeSearchQuery: {
+                stores: {
+                    name: string;
+                    id: string;
+                    description: string;
+                    averageRating: number;
+                    numRatings: number;
+                    numRatingsDisplayString: string;
+                    priceRange: number;
+                    deliveryFee: null;
+                    extraSosDeliveryFee: null;
+                    displayDeliveryFee: string;
+                    headerImgUrl: string;
+                    url: string;
+                    isConsumerSubscriptionEligible: boolean;
+                    distanceFromConsumer: number;
+                    distanceFromConsumerInMeters: number;
+                    distanceFromConsumerString: string;
+                    menus: {
+                        popularItems: {
+                            imgUrl: string;
+                            __typename: string;
+                        }[];
+                        __typename: string;
+                    }[];
+                    merchantPromotions: null;
+                    status: {
+                        unavailableReason: null;
+                        asapAvailable: boolean;
+                        scheduledAvailable: boolean;
+                        asapMinutesRange: number[];
+                        asapPickupMinutesRange: number[];
+                        __typename: string;
+                    };
+                    location: {
+                        lat: number;
+                        lng: number;
+                        __typename: string;
+                    };
+                    badge: null;
+                    storeBadges: never[];
+                    isSponsored: boolean;
+                    __typename: string;
+                }[];
+                storeItems: {
+                    name: string;
+                    id: string;
+                    price: number;
+                    imageUrl: string;
+                    store: {
+                        name: string;
+                        url: string;
+                        id: string;
+                        __typename: string;
+                    };
+                    __typename: string;
+                }[];
+                numStores: number;
+                next: string;
+                __typename: string;
+            };
+        };
+        extensions: {
+            requestInfo: {
+                version: number;
+                requestId: string;
+                correlationId: string;
+            };
+            upstreamServiceInfo: {
+                version: number;
+            };
+        };
+    };
+    export default _default_4;
 }
 
 declare module "@dish/crawlers" {

@@ -76,6 +76,7 @@
     "@formatjs/intl-relativetimeformat": "^8.1.6",
     "@loadable/component": "^5.14.1",
     "@mdx-js/react": "^1.6.22",
+    "@nandorojo/anchor": "^0.2.2",
     "@react-native-community/blur": "^3.6.0",
     "@react-native-community/geolocation": "^2.0.2",
     "@react-native-mapbox-gl/maps": "^8.2.0-beta2",

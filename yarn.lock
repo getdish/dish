@@ -2070,6 +2070,7 @@ __metadata:
     "@formatjs/intl-relativetimeformat": ^8.1.6
     "@loadable/component": ^5.14.1
     "@mdx-js/react": ^1.6.22
+    "@nandorojo/anchor": ^0.2.2
     "@react-native-community/blur": ^3.6.0
     "@react-native-community/geolocation": ^2.0.2
     "@react-native-mapbox-gl/maps": ^8.2.0-beta2
@@ -4366,6 +4367,16 @@ __metadata:
     call-me-maybe: ^1.0.1
     glob-to-regexp: ^0.3.0
   checksum: e01193b783ed7682710a9af87ba05c69d15cc2183eedca36e37c720bbb7d7449f7d5cd8ad15c991f20c5d95cdce1a3a10ef6d82b1bb8a9762a193ad4245cc9da
+  languageName: node
+  linkType: hard
+
+"@nandorojo/anchor@npm:^0.2.2":
+  version: 0.2.2
+  resolution: "@nandorojo/anchor@npm:0.2.2"
+  peerDependencies:
+    react: "*"
+    react-native: "*"
+  checksum: 7f00ac2b0f7ed80614dd657503e1fde7f035492b0a21cd89f8278d099fa3d81746f18468e844621ff1d64e7ede0a26968327893f284b54802d4aec640869efb7
   languageName: node
   linkType: hard
 

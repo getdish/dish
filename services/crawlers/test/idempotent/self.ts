@@ -344,28 +344,24 @@ test('Review naive sentiments', async (t) => {
   t.is(reviews.length, 6)
   await self.scanCorpus()
   await self.finishTagsEtc()
-  console.warn(
-    '⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️ re-enable asap bug with tag insert'
-  )
-  // reviews = await reviewFindAllForRestaurant(t.context.restaurant.id)
-  // console.log('reviews2', reviews.length)
-  // t.is(reviews.length, 6)
-  // const rv1 = reviews.find((rv) => rv.username == 'yelp-FsLRE98uOHkBNzO1Ta5hIw')
-  // const rv1s1 = rv1.sentiments.find((s) => s.sentence.includes('Test tag existing 1'))
-  // t.is(rv1s1.naive_sentiment, -3)
-  // const rv1s2 = rv1.sentiments.find((s) => s.sentence.includes('Test tag existing 2'))
-  // t.is(rv1s2.naive_sentiment, 4)
-  // const rv2 = reviews.find((rv) => rv.username == 'tripadvisor-tauser')
-  // const rv2s1 = rv2.sentiments.find((s) => s.sentence.includes('Test tag existing 3'))
-  // t.is(rv2s1.naive_sentiment, 0)
-  // const rv3 = reviews.find((rv) => rv.username == 'tripadvisor-tauser2')
-  // t.is(rv3.sentiments.length, 0)
-  // const rv4 = reviews.find((rv) => rv.username == 'google-123')
-  // t.is(rv4.rating, 4.5)
+  reviews = await reviewFindAllForRestaurant(t.context.restaurant.id)
+  t.is(reviews.length, 6)
+  const rv1 = reviews.find((rv) => rv.username == 'yelp-FsLRE98uOHkBNzO1Ta5hIw')
+  const rv1s1 = rv1.sentiments.find((s) => s.sentence.includes('Test tag existing 1'))
+  t.is(rv1s1.naive_sentiment, -3)
+  const rv1s2 = rv1.sentiments.find((s) => s.sentence.includes('Test tag existing 2'))
+  t.is(rv1s2.naive_sentiment, 4)
+  const rv2 = reviews.find((rv) => rv.username == 'tripadvisor-tauser')
+  const rv2s1 = rv2.sentiments.find((s) => s.sentence.includes('Test tag existing 3'))
+  t.is(rv2s1.naive_sentiment, 0)
+  const rv3 = reviews.find((rv) => rv.username == 'tripadvisor-tauser2')
+  t.is(rv3.sentiments.length, 0)
+  const rv4 = reviews.find((rv) => rv.username == 'google-123')
+  t.is(rv4.rating, 4.5)
 })
 
 test('Finding filters and alternates in reviews', async (t) => {
-  const tags = await tagInsert([
+  await tagInsert([
     {
       name: 'Test Veg',
       type: 'filter',

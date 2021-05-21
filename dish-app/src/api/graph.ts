@@ -170,10 +170,12 @@ const parseQueryForCache = async (props: GQLCacheProps): Promise<GQLCacheRespons
     if (process.env.DEBUG && process.env.NODE_ENV === 'development') {
       console.log(' 🐕 fetch ', parsedQuery)
     }
+
     const body = JSON.stringify({
       query: parsedQuery,
       variables: props.variables,
     })
+
     return {
       ...cacheResult,
       parsed,
@@ -233,14 +235,12 @@ async function getCachedSelections(
     const name = `${selection.name.value || ''}`
     const selectionSet = selection.selectionSet
     if (shouldSkipCache(name, props.isLoggedIn) || !selectionSet?.selections) {
-      console.log('skip', name)
       uncached.push(selection)
       continue
     }
     const [subCacheable, subUncacheable] = getCacheable(selection, props.isLoggedIn)
     if (!subCacheable.length) {
       if (subUncacheable.length) {
-        console.log('skip none', name)
         uncached.push(selection)
       }
       continue

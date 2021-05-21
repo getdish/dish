@@ -403,6 +403,7 @@ export class Tagging extends Loggable {
           yelp_review.lightboxMediaItems?.map((i) => i.caption).join(' '),
         ].join(' '),
         rating: yelp_review.rating,
+        type: 'review',
       })
     }
     return reviews
@@ -429,6 +430,7 @@ export class Tagging extends Loggable {
         restaurant_id: this.crawler.restaurant.id,
         text: tripadvisor_review.text,
         rating: tripadvisor_review.rating,
+        type: 'review',
       })
     }
     return reviews
@@ -449,6 +451,7 @@ export class Tagging extends Loggable {
         restaurant_id: this.crawler.restaurant.id,
         text: review.text,
         rating: +review.rating,
+        type: 'review',
       } as Review)
     }
     return reviews

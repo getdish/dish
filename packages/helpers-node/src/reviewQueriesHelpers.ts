@@ -147,12 +147,21 @@ export async function userFavorites(user_id: string) {
 }
 
 export async function reviewExternalUpsert(reviews: Review[]) {
+  if (!reviews.length) {
+    return []
+  }
   reviews = reviews.map((r) => {
     r.text = cleanReviewText(r.text)
     return r
   })
   let all: ReviewWithId[] = []
   const grouped = chunk(reviews, 40)
+
+  // validate upsert
+  if (!reviews[0].type) {
+    throw new Error(`Needs a type`)
+  }
+
   for (const [index, group] of grouped.entries()) {
     console.log('reviewExternalUpsert: Inserting chunk', index, 'of', grouped.length)
     const next = await reviewUpsert(
@@ -177,7 +186,7 @@ export function cleanReviewText(text: string | null | undefined) {
 
 export function dedupeReviews(reviews: Review[]) {
   return uniqBy(reviews, (review: Review) => {
-    return review.username + review.restaurant_id + review.tag_id + review.authored_at
+    return `${review.type}${review.username}${review.restaurant_id}${review.tag_id}${review.authored_at}`
   })
 }
 

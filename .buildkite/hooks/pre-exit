@@ -52,4 +52,10 @@ if [ "$DOCKER_CLEAN" == "true" ] || { [ "$BUILDKITE_COMMAND_EXIT_STATUS" = "1" ]
   CLEAN_BUILDKITE_BUILDS=true ./dsh clean_docker_if_disk_full
 fi
 
+if [ "$DATA_CLEAN_ON_FAIL" == "true" ]; then
+  echo "cleaning data on failure..."
+  rm -r "$POSTGRES_DB_DIR"
+  rm -r "$TIMESCALE_DB_DIR"
+fi
+
 echo "bye"

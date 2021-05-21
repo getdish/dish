@@ -506,7 +506,7 @@ function docker_build_file() {
 }
 
 function docker_compose_up_subset() {
-  echo "starting $services"
+  echo "DISH_ENV=$DISH_ENV docker-compose up $services; ($POSTGRES_DB)"
   services=$1
   extra=$2
   flags=""
@@ -528,7 +528,6 @@ function docker_compose_up() {
       | grep -E -v "$services_list" \
       | tr '\r\n' ' '
   )
-  echo "docker_compose_up: $services -- $DISH_IMAGE_TAG $POSTGRES_DB $HASURA_PORT"
   # cleans up misbehaving old containers
   if [ "$DISH_ENV" = "test" ]; then
     for service in $services; do

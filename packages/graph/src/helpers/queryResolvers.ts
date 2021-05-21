@@ -1,7 +1,7 @@
 import { selectFields } from 'gqless'
 import { merge } from 'lodash'
 
-import { resolved } from '../graphql'
+import { client, resolved } from '../graphql'
 
 export type SelectionOptions = {
   select?: (v: any) => unknown
@@ -9,6 +9,8 @@ export type SelectionOptions = {
   depth?: number
   query?: any
 }
+
+const DISABLE_CACHE = true
 
 // just a helper that clears our cache after mutations for now
 export async function resolvedMutation<T extends () => unknown>(
@@ -21,7 +23,8 @@ export async function resolvedMutation<T extends () => unknown>(
     : any
 > {
   const next = await resolved(resolver, {
-    noCache: true,
+    noCache: DISABLE_CACHE,
+    refetch: DISABLE_CACHE,
   })
   //@ts-expect-error
   return next
@@ -31,6 +34,9 @@ export async function resolvedMutationWithFields<T>(
   resolver: () => T,
   { keys, select, depth }: SelectionOptions = {}
 ): Promise<T> {
+  if (DISABLE_CACHE) {
+    client.cache = {}
+  }
   // @ts-expect-error
   return await resolvedMutation(() => {
     const res = resolver()
@@ -60,7 +66,8 @@ export async function resolvedWithFields<T extends () => unknown>(
       return obj
     },
     {
-      noCache: true,
+      noCache: DISABLE_CACHE,
+      refetch: DISABLE_CACHE,
     }
   )
   return next
