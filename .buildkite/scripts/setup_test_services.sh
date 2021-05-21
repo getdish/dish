@@ -6,20 +6,23 @@ source .env
 source .env.test
 
 # if not already mounted/setup, we need to start postgres once and restart it
-if [ ! -d "/var/data/postgres/test" ]; then
-  echo "doing double start first time"
+# this is because there are problems where postgres gets corrupted/weird while other services
+# try and access it during init, giving it time to init here and then run later
+if [ ! -d "$POSTGRES_DB_DIR" ]; then
+  echo "doing double start first time since no postgres db dir: $POSTGRES_DB_DIR"
   docker-compose run -d postgres
   sleep 10
   docker-compose down --remove-orphans -t 4
+  docker-compose logs postgres
 fi
 
 # fixes issues of not allowing connecting during tests
-if [ -d "$HOME/.dish/postgresdb/test" ]; then
-  conf="$HOME/.dish/postgresdb/test/pg_hba.conf"
+if [ -d "$POSTGRES_DB_DIR" ]; then
+  conf="$POSTGRES_DB_DIR/pg_hba.conf"
   grep -qxF 'host all all all trust' "$conf" || echo 'host all all all trust' >> "$conf"
 fi
-if [ -d "$HOME/.dish/timescaledb/test" ]; then
-  conf="$HOME/.dish/timescaledb/test/pg_hba.conf"
+if [ -d "$TIMESCALE_DB_DIR" ]; then
+  conf="$TIMESCALE_DB_DIR/pg_hba.conf"
   grep -qxF 'host all all all trust' "$conf" || echo 'host all all all trust' >> "$conf"
 fi
 

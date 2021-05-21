@@ -5,6 +5,9 @@
   "private": true,
   "types": "types",
   "main": "dist",
+  "testConfig": {
+    "isolate": true
+  },
   "module": "_",
   "scripts": {
     "build": "esdx legacy legacy",

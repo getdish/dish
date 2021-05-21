@@ -1,6 +1,9 @@
 {
   "name": "@dish/gorse",
   "version": "0.0.1",
+  "testConfig": {
+    "isolate": true
+  },
   "scripts": {
     "build": "true",
     "watch": "true",

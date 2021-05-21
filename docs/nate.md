@@ -30,6 +30,23 @@
 
 ---
 
+better docker setup:
+
+- avoids need for registry entirely
+- can parallelize all tests
+
+1. add to ci: - /var/run/docker.sock:/var/run/docker.sock
+2. need to make run-tests image have docker installed inside it
+3. remove setup_services from pipeline
+4. make run-tests run setup_services instead
+5. use a different network in run-tests to avoid overlap
+6. make yarn test:parallel-only that runs all parallelizable tests at once
+7. make run-tests run test:parallel-only
+8. (see package.json testConfig) make run-tests have a script to get all the rest of the tests that can't be parallelized
+
+
+---
+
 - [a] [4] comments need voting or else no one will want to use them
 - blog/signup
 - LAUNCH
