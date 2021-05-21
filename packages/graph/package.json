@@ -9,7 +9,7 @@
   "scripts": {
     "build": "esdx legacy legacy",
     "watch": "esdx-watch legacy",
-    "generate": "DISH_ENV=development ../../dishctl.sh run 'node ./dist/generate.js'",
+    "generate": "DISH_ENV=development ../../dsh run 'node ./dist/generate.js'",
     "test": "NODE_ENV=test TARGET=node ava test/* --verbose --serial",
     "test:only": "NODE_ENV=test TARGET=node ava test/* --verbose --serial",
     "test:debug": "NODE_ENV=test TARGET=node DEBUG=1 ava test/* --verbose --serial",

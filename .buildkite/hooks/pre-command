@@ -81,7 +81,7 @@ if ! [ -x "$(command -v hasura)" ]; then
 fi
 
 if [ "$DOCKER_CLEAN_BEFORE" == "true" ]; then
-  ./dishctl.sh clean_docker_if_disk_full &
+  ./dsh clean_docker_if_disk_full &
 fi
 
 if [ ! -f "$HOME/.aws/credentials" ]; then
@@ -99,7 +99,7 @@ if [ "$FIRST_STEP" == "true" ]; then
   (flyctl version update || true) && flyctl version &
 fi
 
-./dishctl.sh dish_registry_auth &
+./dsh dish_registry_auth &
 
 echo "wait for background jobs to finish..."
 wait

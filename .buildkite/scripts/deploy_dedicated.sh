@@ -42,10 +42,10 @@ ssh \
     docker-compose stop -t 3 $SERVICES || true
     docker-compose rm -f $SERVICES || true
     docker-compose --env-file .env.production up -d $SERVICES
-    ./dishctl.sh wait_until_services_ready
-    ./dishctl.sh hasura_migrate
-    ./dishctl.sh timescale_migrate
-    ./dishctl.sh umami_migrate
+    ./dsh wait_until_services_ready
+    ./dsh hasura_migrate
+    ./dsh timescale_migrate
+    ./dsh umami_migrate
     echo done
     docker system prune --force
   "

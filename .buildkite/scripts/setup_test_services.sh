@@ -15,8 +15,8 @@ if [ ! -d "/var/data/postgres/test" ]; then
   docker-compose down --remove-orphans -t 4
 fi
 
-./dishctl.sh docker_compose_up -d
-./dishctl.sh wait_until_services_ready
-./dishctl.sh migrate
+./dsh docker_compose_up -d
+./dsh wait_until_services_ready
+./dsh migrate
 
 echo "done"

@@ -29,7 +29,7 @@
 //   dish_registry_auth()
 // }
 
-// const cmdPos = process.argv.indexOf('dishctl.ts')
+// const cmdPos = process.argv.indexOf('dish.ts')
 // const [fn, ...args] = process.argv.slice(cmdPos + 1)
 
 // if (!fn) {

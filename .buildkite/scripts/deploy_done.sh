@@ -9,4 +9,4 @@ Successful deploy of $commit \n
 Code: https://github.com/getdish/dish/tree/$commit \n
 CI Run: $BUILDKITE_BUILD_URL
 "
-./dishctl.sh send_slack_monitoring_message "$message"
+./dsh send_slack_monitoring_message "$message"

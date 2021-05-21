@@ -5,7 +5,7 @@ FROM registry.fly.io/dish-worker:latest
 
 WORKDIR /app
 
-COPY .env .env.test package.json ava.config.js jest.config.js dishctl.sh ./
+COPY .env .env.test package.json ava.config.js jest.config.js dsh ./
 
 # copy to get test folders back
 
