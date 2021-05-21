@@ -2,10 +2,8 @@
 
 set -eo pipefail
 
-set -a
 source .env
 source .env.test
-set +a
 
 # if not already mounted/setup, we need to start postgres once and restart it
 if [ ! -d "/var/data/postgres/test" ]; then
