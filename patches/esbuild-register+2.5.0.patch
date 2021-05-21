@@ -7,7 +7,7 @@ index b597dc5..d53c3c3 100644
      const {code: js, warnings, map: jsSourceMap} = _esbuild.transformSync.call(void 0, code, {
        sourcefile: filename,
 -      sourcemap: "both",
-+      sourcemap: false,
++      sourcemap: "inline",
        loader: getLoader(filename),
        target: options.target,
        jsxFactory: options.jsxFactory,

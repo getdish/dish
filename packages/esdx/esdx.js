@@ -46,8 +46,8 @@ async function go() {
       build({
         entryPoints: files,
         outdir: 'dist',
-        sourcemap: true,
-        target: 'node12',
+        sourcemap: 'inline',
+        target: 'node14',
         keepNames: true,
         format: 'cjs',
         logLevel: 'error',

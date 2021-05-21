@@ -220,7 +220,6 @@ export class Yelp extends WorkerJob {
         if (toCrawl.length) return
         for (const data of validResults) {
           const info = data.searchResultBusiness
-          console.log('got info', info)
           if (isMatchingRestaurant(info, onlyRestaurant, strategy as any)) {
             // prettier-ignore
             this.log(`YELP SANDBOX: found ${info.name} ${strategy} - scrape (${info.formattedAddress} ${info.phone} ${info.name}) restaurant (${onlyRestaurant.address} ${onlyRestaurant.telephone} ${onlyRestaurant.name})`)

@@ -9,7 +9,7 @@ const name = 'Squat & Gobble West Portal'
 
 test.beforeEach(async () => {
   await deleteAllScrapesBySourceID(ID)
-  await deleteAllFuzzyBy('restaurant', name)
+  await deleteAllFuzzyBy('restaurant', 'name', name)
 })
 
 test('gets and persists a restaurant', async (t) => {

@@ -1,4 +1,4 @@
-require('./_/polyfill-localStorage')
+require('./dist/polyfill-localStorage')
 
 String.prototype.replaceAll = function (search, replacement) {
   var target = this

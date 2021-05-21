@@ -105,6 +105,7 @@ export const GalleryLightbox = ({
       onCompleted(data) {
         const bound = (x = 0) => Math.min(2000, Math.round(x / 500) * 500)
         setPhotosList(
+          // @ts-ignore
           uniqBy(data, (v) => getImageUrl(v.url, bound(getWindowWidth()), bound(getWindowHeight())))
         )
       },
