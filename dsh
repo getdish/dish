@@ -1,21 +1,104 @@
 #!/bin/bash
 set -eo pipefail
-
  #Does this put our `set -e` into all the functions?
 export SHELLOPTS
-
-PG_PROXY_PID=
-TS_PROXY_PID=
 
 DISH_ENV="${DISH_ENV:-production}"
 ENV_FILE=".env.$DISH_ENV"
 
-function ci_shell() {
-  docker exec -it app_ci_1 bash
+function shell() {
+  ssh "root@$DEDICATED_SERVER_HOST"
 }
 
-function generate_random_port() {
-  echo "2$((1000 + RANDOM % 8999))"
+function internal() {
+  docker-compose -f docker-internal.yml "$@"
+}
+
+function ps_internal() {
+  docker-compose -f docker-internal.yml ps
+}
+
+function sh_ci() {
+  docker exec -it app_ci_1 sh
+}
+
+function deploy() {
+  docker stack deploy --prune -c docker-compose.yml dish
+}
+
+function deploy_traefik() {
+  docker stack deploy --prune -c docker-traefik.yml traefik
+}
+
+function deploy_internal() {
+  docker-compose -f docker-internal.yml up -d ci registry
+}
+
+function logs_ci() {
+  docker logs app_ci_1
+}
+
+function logs_traefik() {
+  docker service logs traefik_traefik
+}
+
+function logs_dish-app() {
+  docker service logs dish_dish-app
+}
+
+function logs_services() {
+  docker node ps
+}
+
+function log_service() {
+  docker service logs "$@"
+}
+
+function exec() {
+  app="${@:-dish-app}"
+  docker exec -ti dish_$app.1.$(docker service ps dish_$app -q --no-trunc | head -n1) /bin/bash
+}
+
+function exec_traefik() {
+  exec traefik_traefik
+}
+
+function restart_ci() {
+  docker-compose -f docker-internal.yml stop ci
+  docker-compose -f docker-internal.yml rm -f ci
+  docker-compose -f docker-internal.yml up -d ci
+}
+
+function stacks() {
+  docker stack ls
+  docker stack ps dish
+}
+
+function stacks_traefik() {
+  docker stack ps traefik
+}
+
+function nodes() {
+  docker node ls
+  docker node ps
+}
+
+function services() {
+  docker service ls
+  docker node ps
+}
+
+# to verify `docker pull registry.fly.io/dish-base` works
+function shell_worker() {
+  docker exec -it app_worker1_1 sh
+}
+
+function shell_registry() {
+  docker exec -it app_worker1_1 sh
+}
+
+function deploy_traefik() {
+  docker stack deploy -c docker-traefik.yml traefik
 }
 
 function log_command {
@@ -23,14 +106,66 @@ function log_command {
   eval $(printf '%q ' "$@") < /dev/tty
 }
 
-function dish_registry_auth() {
-  flyctl auth docker
+function ci_shell() {
+  docker exec -it app_ci_1 bash
 }
 
-function _kill_port_forwarder {
-  echo "Killing script pids for \`kubectl proxy-forward ...\`"
-  ([ ! -n "$PG_PROXY_PID" ] && kill $PG_PROXY_PID) || true
-  ([ ! -n "$TS_PROXY_PID" ] && kill $TS_PROXY_PID) || true
+function rsync_d1() {
+  PRIVATE_KEY="$PROJECT_ROOT/etc/keys/d1_reliablesite_dish"
+  echo "syncing"
+  rsync \
+    -avP --delete --filter=':- .gitignore' --filter='- .git' \
+    -e "ssh -o StrictHostKeyChecking=no -i $PRIVATE_KEY" \
+    . "root@$DEDICATED_SERVER_HOST:/app" &> /dev/null
+  echo "synced"
+}
+export -f rsync_d1
+
+function rsync_d1_watch() {
+  fswatch -0 -o path . | xargs -0 -n1 -I{} sh -c 'rsync_d1'
+}
+
+function start_swarm() {
+  SWARM_TOKEN=$(docker swarm join-token -q worker)
+  SWARM_MASTER=$(docker info --format "{{.Swarm.NodeAddr}}")
+  export REGISTRY_MIRROR_WORKER="${SWARM_MASTER}:${REGISTRY_PORT}"
+
+  # remove old
+  docker node rm --force $(docker node ls --filter "name=worker1" -q)
+  docker rm --force $(docker ps -q --filter "name=worker1")
+  
+  # start new
+  docker-compose -f docker-swarm.yml up -d
+
+  # attach to swarm
+  sleep 10
+  docker exec -it app_worker1_1 docker swarm join --token "$SWARM_TOKEN" "$SWARM_MASTER:2377"
+  docker exec -it app_worker1_1 \
+    apk add curl \
+    && curl -L https://fly.io/install.sh | sh \
+    && FLY_API_TOKEN="$FLY_API_TOKEN" /root/.fly/bin/flyctl auth docker
+
+  # to show if its running
+  sleep 2
+  docker node ls
+}
+
+ogpsql=$(which psql)
+
+function psql() {
+  PGPASSWORD="$POSTGRES_PASSWORD" log_command "$ogpsql" -d "$POSTGRES_DB" -U "$POSTGRES_USER" -p "$POSTGRES_PORT" -h "$POSTGRES_HOST"
+}
+
+function psql_timescale() {
+  PGPASSWORD="$TIMESCALE_PASSWORD" log_command "$ogpsql" -d "$TIMESCALE_DB" -U "$TIMESCALE_USER" -p "$TIMESCALE_PORT" -h "$TIMESCALE_HOST"
+}
+
+function generate_random_port() {
+  echo "2$((1000 + RANDOM % 8999))"
+}
+
+function dish_registry_auth() {
+  flyctl auth docker
 }
 
 function _setup_s3() {
@@ -170,7 +305,7 @@ function redis_flush_all() {
 }
 
 function umami_migrate() {
-  psql "$POSTGRES_URL" < services/umami/setup.sql
+  $ogpsql "$POSTGRES_URL" < services/umami/setup.sql
 }
 
 function db_migrate() {
@@ -206,16 +341,16 @@ function migrate() {
 }
 
 function hasura_admin() {
-  (cd services/hasura && hasura console --endpoint http://localhost:8080 --admin-secret=$HASURA_GRAPHQL_ADMIN_SECRET)
+  (cd services/hasura && hasura console --endpoint "http://localhost:$HASURA_PORT" --admin-secret=$HASURA_GRAPHQL_ADMIN_SECRET)
 }
 
 function hasura_migrate() {
   echo "migrating hasura"
   db_migrate
-  echo "cat init (disbaled until i can fix on tests)"
+  echo "init functions"
   pushd "$PROJECT_ROOT/services/hasura"
   cat functions/*.sql | \
-    PGPASSWORD=$POSTGRES_PASSWORD psql \
+    PGPASSWORD=$POSTGRES_PASSWORD $ogpsql \
     -p "$POSTGRES_PORT" \
     -h localhost \
     -U "${POSTGRES_USER:-postgres}" \
@@ -239,7 +374,7 @@ function dump_scrape_data_to_s3() {
     )
     to stdout with csv"
   echo "Dumping scrape table to S3..."
-  PGPASSWORD="$POSTGRES_PASSWORD" psql \
+  PGPASSWORD="$POSTGRES_PASSWORD" $ogpsql \
     -h "$POSTGRES_HOST" \
     -U postgres \
     -d "${POSTGRES_DB:-dish}" \
@@ -283,8 +418,7 @@ function list_backups() {
 function backup_main_db() {
   set -e
   echo "backing up main db..."
-  # _setup_s3
-  DUMP_FILE_NAME="dish-db-backup-`date +%Y-%m-%d-%H-%M`.dump"
+  DUMP_FILE_NAME="dish-$DISH_ENV-db-backup-`date +%Y-%m-%d-%H-%M`.dump"
   pg_dump "$POSTGRES_URL" \
     -C -w --format=c | \
     s3 put - "s3://dish-backups/$DUMP_FILE_NAME"
@@ -294,15 +428,14 @@ function backup_main_db() {
 function backup_scrape_db() {
   set -e
   echo "backing up scrape db..."
-  _setup_s3
-  DUMP_FILE_NAME="dish-scrape-backup-`date +%Y-%m-%d-%H-%M`.dump"
-  pg_dump $TIMESCALE_URL -C -w --format=c | \
-    s3 put - s3://dish-backups/$DUMP_FILE_NAME
+  DUMP_FILE_NAME="dish-$DISH_ENV-scrape-backup-`date +%Y-%m-%d-%H-%M`.dump"
+  pg_dump "$TIMESCALE_URL" -C -w --format=c | \
+    s3 put - "s3://dish-backups/$DUMP_FILE_NAME"
   echo 'Successfully backed up scrape database'
 }
 
 get_all_backups() {
-  s3 ls $DISH_BACKUP_BUCKET
+  s3 ls "$DISH_BACKUP_BUCKET"
 }
 
 get_latest_main_backup() {
@@ -391,34 +524,12 @@ function delete_unattached_volumes() {
   done
 }
 
-function main_db_command() {
-  if [ "$POSTGRES_URL" = "" ]; then
-    echo "no url given"
-  fi
-  echo "$1" | psql "$POSTGRES_URL" -P pager=off -P format=unaligned
-}
-
-function fly_tunnel() {
-  if dig _apps.internal | grep -q 'dish-'; then
-    echo "tunneled into fly"
-  else
-    fly ssh issue dish teamdishapp@gmail.com --agent
-    echo "May need to setup wireguard setup: https://fly.io/docs/reference/privatenetwork/"
-  fi
-}
-
 function console() {
   ssh "root@$1.internal"
 }
 
 function find_app() {
   find "$PROJECT_ROOT" -type d \( -name node_modules -o -name packages -o -name dist -o -name _ -o -name src \) -prune -false -o -type d -name "$1" | head -n 1
-}
-
-function logs() {
-  pushd "$(find_app $1)"
-  fly logs
-  popd
 }
 
 function bull_clear() {
@@ -584,107 +695,9 @@ function build() {
   docker-compose build "$@"
 }
 
-function deploy() {
-  where=${1:-registry}
-  app=$2
-  # todo begrudingly learn bash
-  if [ "$app" = "" ]; then exit 1; fi
-  if [ "$app" = "app" ];              then deploy_fly_app "$where" dish-app dish-app dish-app; fi
-  if [ "$app" = "hasura" ];           then deploy_fly_app "$where" dish-hasura services/hasura hasura; fi
-  if [ "$app" = "db" ];               then deploy_fly_app "$where" dish-db services/db db; fi
-  if [ "$app" = "search" ];           then deploy_fly_app "$where" dish-search services/search search; fi
-  if [ "$app" = "timescale" ];        then deploy_fly_app "$where" dish-timescale services/timescale timescale; fi
-  if [ "$app" = "pg-admin" ];         then deploy_fly_app "$where" dish-pg-admin services/pg-admin pg-admin; fi
-  if [ "$app" = "tileserver" ];       then deploy_fly_app "$where" dish-tileserver services/tileserver tileserver; fi
-  if [ "$app" = "hooks" ];            then deploy_fly_app "$where" dish-hooks services/hooks dish-hooks; fi
-  if [ "$app" = "worker" ];           then deploy_fly_app "$where" dish-worker services/worker worker; fi
-  if [ "$app" = "image-quality" ];    then deploy_fly_app "$where" dish-image-quality services/image-quality image-quality; fi
-  if [ "$app" = "image-recognize" ];  then deploy_fly_app "$where" dish-image-recognize services/image-recognize image-recognize; fi
-  if [ "$app" = "image-proxy" ];      then deploy_fly_app "$where" dish-image-proxy services/image-proxy image-proxy; fi
-  if [ "$app" = "bert" ];             then deploy_fly_app "$where" dish-bert services/bert bert; fi
-  if [ "$app" = "hooks" ];            then deploy_fly_app "$where" dish-hooks services/hooks hooks; fi
-  if [ "$app" = "cron" ];             then deploy_fly_app "$where" dish-cron services/cron cron; fi
-  if [ "$app" = "redis" ];            then deploy_fly_app "$where" dish-redis services/redis redis; fi
-  if [ "$app" = "run-tests" ];        then deploy_fly_app "$where" dish-run-tests services/run-tests run-tests; fi
-  if [ "$app" = "worker-proxy" ];     then deploy_fly_app "$where" dish-proxy services/worker-proxy worker-proxy; fi
-  if [ "$app" = "site" ];             then deploy_fly_app "$where" dish-site services/site site; fi
-}
-
 function deploy_fail() {
   echo "Error: deploy failed due to exit code 😭😭😭"
   exit 1
-}
-
-function deploy_fly_app() {
-  trap 'deploy_fail && trap - SIGTERM && kill -- -$$' SIGINT SIGTERM EXIT
-  where=$1
-  app=$2
-  folder=$3
-  log_file="$(pwd)/deploy-$app.log"
-  pre_deploy_logs="$(pwd)/pre-deploy-$app.log"
-  rm "$log_file" &> /dev/null || true
-  tag=${5:-latest}
-  echo ">>>> deploying $app in $folder with tag $tag"
-  pushd "$folder"
-  if [ -f ".ci/pre_deploy.sh" ]; then
-    echo " >> running pre-deploy script $app..."
-    touch "$pre_deploy_logs"
-    .ci/pre_deploy.sh &> "$pre_deploy_logs" &
-    pre_deploy_pid=$!
-    tail -f "$pre_deploy_logs" &
-    pre_tail_pid=$!
-    wait $pre_deploy_pid
-    kill $pre_tail_pid || true
-    printf " >> done pre_deploy\n\n"
-    if grep "is being deployed" < "$pre_deploy_logs"; then
-      if grep "failed" < "$pre_deploy_logs"; then
-        exit 1
-      else
-        return
-      fi
-    fi
-  fi
-  if [ "$where" = "registry" ]; then
-    did_kill_idempotent=0
-    echo " >> deploy..."
-    touch "$log_file"
-    tail -f "$log_file" &
-    tail_pid=$!
-    flyctl deploy --strategy rolling -i registry.fly.io/$app:$tag > "$log_file" 2>&1 &
-    pid=$!
-    while ps | grep "$pid " > /dev/null; do
-      # bugfix fly not deploying if same for now
-      if grep 'Release v0 created' < "$log_file"; then
-        echo " >> detected idempotent release that will hang (fly issue), continue..."
-        did_kill_idempotent=1
-        break
-      elif grep ' deployed successfully' < "$log_file"; then
-        echo " >> deployed, killing since it hangs sometimes on success..."
-        break
-      else
-        sleep 3
-      fi
-    done
-    kill $pid || true
-    kill $tail_pid || true
-    my_status=$?
-    if [[ $did_kill_idempotent -eq 1 ||  $my_status -eq 0 ]]; then
-      echo " >> done deploying"
-    else
-      echo " >> deploy issue $app $did_kill_idempotent $my_status"
-      exit 1
-    fi
-  else
-    # local
-    flyctl deploy --remote-only --strategy rolling
-  fi
-  if [ -f ".ci/post_deploy.sh" ]; then
-    echo " >> post-deploy script $app..."
-    .ci/post_deploy.sh
-  fi
-  # echo $(jobs -p)
-  echo " >> 🚀 $app "
-  popd
 }
 
 function clean_docker_if_disk_full() {

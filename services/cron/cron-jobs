@@ -1,0 +1,30 @@
+# Min  Hour Day  Mon  Weekday
+#
+# *    *    *    *    *  command to be executed
+#
+# ┬    ┬    ┬    ┬    ┬
+# │    │    │    │    └─  Weekday  (0=Sun .. 6=Sat)
+# │    │    │    └──────  Month    (1..12)
+# │    │    └───────────  Day      (1..31)
+# │    └────────────────  Hour     (0..23)
+# └─────────────────────  Minute   (0..59)
+
+*  *  *  *  * echo "cron is up" >> /var/log/cron.log 2>&1
+
+0  0  *  *  6 DISH_ENV=production /app/dsh backup_main_db >> /var/log/cron.log 2>&1
+0  0  *  *  0 DISH_ENV=production /app/dsh backup_scrape_db >> /var/log/cron.log 2>&1
+*/15  *  *  *  *  DISH_ENV=production /app/dsh ping_home_page 1>/dev/null >> /var/log/cron.log 2>&1
+0  *  *  *  *     DISH_ENV=production /app/dsh hasura_clean_event_logs >> /var/log/cron.log 2>&1
+
+#0  0  *  *  0  DISH_ENV=production /app/dsh start_crawler google >> /var/log/cron.log 2>&1
+#0 12  *  *  1  DISH_ENV=production /app/dsh start_crawler infatuated >> /var/log/cron.log 2>&1
+#0  0  *  *  2  DISH_ENV=production /app/dsh start_crawler grubhub >> /var/log/cron.log 2>&1
+#0  0  *  *  1  DISH_ENV=production /app/dsh start_crawler michelin >> /var/log/cron.log 2>&1
+#0  0  *  *  3  DISH_ENV=production /app/dsh start_crawler tripadvisor >> /var/log/cron.log 2>&1
+#0  0  *  *  2  DISH_ENV=production /app/dsh start_crawler self >> /var/log/cron.log 2>&1
+#0  0  1  *  4  DISH_ENV=production /app/dsh start_crawler ubereats >> /var/log/cron.log 2>&1
+#0  0  *  *  5  DISH_ENV=production /app/dsh start_crawler yelp >> /var/log/cron.log 2>&1
+#0  0  *  *  6  DISH_ENV=production /app/dsh start_crawler doordash >> /var/log/cron.log 2>&1
+
+#*/15  *  *  *  *  DISH_ENV=production /app/dsh update_all_node_taints 1>/dev/null >> /var/log/cron.log 2>&1
+#0  0  *  *  1 DISH_ENV=production /app/dsh grafana_backup >> /var/log/cron.log 2>&1

@@ -19,9 +19,7 @@ echo "🖥 deploying dedicated server: $SERVICES..."
 echo "rsync..."
 
 rsync \
-  -avP \
-  --filter=':- .gitignore' \
-  --filter='- .git' \
+  -avP --delete --filter=':- .gitignore' --filter='- .git' \
   -e "ssh -o StrictHostKeyChecking=no -i $PRIVATE_KEY" \
   . "root@$DEDICATED_SERVER_HOST:/app" &> /dev/null
 
@@ -38,15 +36,18 @@ ssh \
     source .env.d1
     yarn
     flyctl auth docker
-    docker-compose build postgres nginx-proxy
-    docker-compose pull $SERVICES
-    docker-compose stop -t 3 $SERVICES || true
-    docker-compose rm -f $SERVICES || true
-    docker-compose up -d $SERVICES
-    ./dsh wait_until_services_ready
-    ./dsh hasura_migrate
-    ./dsh timescale_migrate
-    ./dsh umami_migrate
+    # docker-compose build postgres nginx-proxy
+    # docker-compose pull $SERVICES
+    # docker-compose stop -t 3 $SERVICES || true
+    # docker-compose rm -f $SERVICES || true
+    # docker-compose up -d $SERVICES
+    # ./dsh wait_until_services_ready
+    dsh deploy
+    echo todo migrate on start
+    sleep 10
+    dsh hasura_migrate
+    dsh timescale_migrate
+    dsh umami_migrate
     docker system prune --force
     echo done
   "

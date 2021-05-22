@@ -92,7 +92,9 @@ export default route(async (req, res) => {
     console.error('graph err', error, body, cache?.parsed ? print(cache.parsed) : null)
     res
       .status(500)
-      .send({ error: process.env.NODE_ENV === 'development' ? error : 'error fetching' })
+      .send({
+        error: process.env.NODE_ENV === 'development' ? error : `error fetching: ${error.message}`,
+      })
   }
 })
 

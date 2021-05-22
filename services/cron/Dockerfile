@@ -9,16 +9,17 @@ RUN apt-get update > /dev/null && apt-get install -y lsb-release > /dev/null && 
       apt-get install -y cron curl postgresql-client-12 > /dev/null && \
       apt-get clean
 
-# COPY --from=0 /usr/bin /usr/bin
-# # COPY --from=0 /bin /bin
 WORKDIR /app
 
+# copy in all things we need
 COPY dsh .env .env.production ./
-COPY services/cron services/cron
 
-# prevent dish from erroring
+# lets ./dsh work
 RUN git init && git add ./dsh && git commit -m 'init'
 
-WORKDIR /app/services/cron
+COPY services/cron/cron-jobs /etc/cron.d/cron-jobs
+RUN chmod 0744 /etc/cron.d/cron-jobs
+RUN crontab /etc/cron.d/cron-jobs
+RUN touch /var/log/cron.log
 
-CMD ["entry.sh"]
+CMD cron && tail -f /var/log/cron.log
