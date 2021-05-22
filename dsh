@@ -1,6 +1,6 @@
 #!/bin/bash
 set -eo pipefail
- #Does this put our `set -e` into all the functions?
+#Does this put our `set -e` into all the functions?
 export SHELLOPTS
 
 DISH_ENV="${DISH_ENV:-production}"
@@ -22,12 +22,11 @@ function sh_ci() {
   docker exec -it app_ci_1 sh
 }
 
-# function shell_registry() {
-#   docker exec -it app_worker1_1 sh
-# }
-
 function deploy() {
   docker stack deploy --prune -c docker-compose.yml dish
+  # any better log of the pull?
+  printf "\n\nlast system logs:\n\n"
+  tail -n 10 /var/log/syslog
 }
 
 function deploy_traefik() {
@@ -35,7 +34,8 @@ function deploy_traefik() {
 }
 
 function deploy_internal() {
-  docker-compose -f docker-internal.yml up -d ci registry
+  docker-compose -f docker-internal.yml build ci
+  docker-compose -f docker-internal.yml up -d ci
 }
 
 function logs_ci() {
@@ -54,8 +54,8 @@ function logs_services() {
   docker node ps
 }
 
-function log_service() {
-  docker service logs "$@"
+function logs_service() {
+  docker service logs "dish_${@:-registry}.1"
 }
 
 function exec() {
@@ -101,12 +101,20 @@ function docker_login() {
 }
 
 function docker_registry_gc() {
-  docker exec -it $(docker ps -aqf "name=registry") bin/registry garbage-collect /etc/docker/registry/config.yml
+  rm -r /var/data/registry/registry-mirror-data/docker/registry/v2/repositories/dish-*
+  docker image prune --all --filter "until=2h" --force || true
+  docker system prune --filter "until=2h" --force || true
+  docker volume rm $(docker volume ls -qf dangling=true)
+  docker system prune
+  clean_dangling
+  for id in $(docker ps -aqf "name=registry-proxy" | xargs); do
+    docker exec -it "$id" bin/registry garbage-collect /etc/docker/registry/config.yml
+  done
 }
 
 function log_command {
   echo "$" "$@"
-  eval $(printf '%q ' "$@") < /dev/tty
+  eval $(printf '%q ' "$@") </dev/tty
 }
 
 function ci_shell() {
@@ -119,7 +127,7 @@ function rsync_d1() {
   rsync \
     -avP --delete --filter=':- .gitignore' --filter='- .git' \
     -e "ssh -o StrictHostKeyChecking=no -i $PRIVATE_KEY" \
-    . "root@$DEDICATED_SERVER_HOST:/app" &> /dev/null
+    . "root@$DEDICATED_SERVER_HOST:/app" &>/dev/null
   echo "synced"
 }
 export -f rsync_d1
@@ -136,7 +144,7 @@ function rsync_d1_watch() {
 #   # remove old
 #   docker node rm --force $(docker node ls --filter "name=worker1" -q)
 #   docker rm --force $(docker ps -q --filter "name=worker1")
-  
+
 #   # start new
 #   docker-compose -f docker-swarm.yml up -d
 
@@ -186,9 +194,9 @@ EOF
 }
 
 function reset_hosts() {
-  egrep -v "internal" ~/.ssh/known_hosts > /tmp/known_hosts \
-    && rm ~/.ssh/known_hosts \
-    && mv /tmp/known_hosts ~/.ssh/known_hosts
+  egrep -v "internal" ~/.ssh/known_hosts >/tmp/known_hosts &&
+    rm ~/.ssh/known_hosts &&
+    mv /tmp/known_hosts ~/.ssh/known_hosts
 }
 
 function worker_ssh() {
@@ -304,7 +312,7 @@ function redis_flush_all() {
 }
 
 function umami_migrate() {
-  $ogpsql "$POSTGRES_URL" < services/umami/setup.sql
+  $ogpsql "$POSTGRES_URL" <services/umami/setup.sql
 }
 
 function db_migrate() {
@@ -329,7 +337,7 @@ function db_migrate() {
 function timescale_migrate() {
   echo "Migrating timescale"
   pushd "$PROJECT_ROOT/services/timescale"
-  npm install &> /dev/null || true
+  npm install &>/dev/null || true
   node ./scripts/migrate.js
   popd
 }
@@ -348,13 +356,13 @@ function hasura_migrate() {
   db_migrate
   echo "init functions"
   pushd "$PROJECT_ROOT/services/hasura"
-  cat functions/*.sql | \
+  cat functions/*.sql |
     PGPASSWORD=$POSTGRES_PASSWORD $ogpsql \
-    -p "$POSTGRES_PORT" \
-    -h localhost \
-    -U "${POSTGRES_USER:-postgres}" \
-    -d "${POSTGRES_DB:-dish}" \
-    --single-transaction
+      -p "$POSTGRES_PORT" \
+      -h localhost \
+      -U "${POSTGRES_USER:-postgres}" \
+      -d "${POSTGRES_DB:-dish}" \
+      --single-transaction
   popd
 }
 
@@ -377,8 +385,8 @@ function dump_scrape_data_to_s3() {
     -h "$POSTGRES_HOST" \
     -U postgres \
     -d "${POSTGRES_DB:-dish}" \
-    -c "$copy_out" \
-  | s3 put - "$DISH_BACKUP_BUCKET/scrape.csv"
+    -c "$copy_out" |
+    s3 put - "$DISH_BACKUP_BUCKET/scrape.csv"
   echo "...scrape table dumped tpo S3."
 }
 
@@ -417,9 +425,9 @@ function list_backups() {
 function backup_main_db() {
   set -e
   echo "backing up main db..."
-  DUMP_FILE_NAME="dish-$DISH_ENV-db-backup-`date +%Y-%m-%d-%H-%M`.dump"
+  DUMP_FILE_NAME="dish-$DISH_ENV-db-backup-$(date +%Y-%m-%d-%H-%M).dump"
   pg_dump "$POSTGRES_URL" \
-    -C -w --format=c | \
+    -C -w --format=c |
     s3 put - "s3://dish-backups/$DUMP_FILE_NAME"
   echo 'Successfully backed up main database'
 }
@@ -427,8 +435,8 @@ function backup_main_db() {
 function backup_scrape_db() {
   set -e
   echo "backing up scrape db..."
-  DUMP_FILE_NAME="dish-$DISH_ENV-scrape-backup-`date +%Y-%m-%d-%H-%M`.dump"
-  pg_dump "$TIMESCALE_URL" -C -w --format=c | \
+  DUMP_FILE_NAME="dish-$DISH_ENV-scrape-backup-$(date +%Y-%m-%d-%H-%M).dump"
+  pg_dump "$TIMESCALE_URL" -C -w --format=c |
     s3 put - "s3://dish-backups/$DUMP_FILE_NAME"
   echo 'Successfully backed up scrape database'
 }
@@ -459,10 +467,10 @@ restore_latest_scrapes_backup_to_local() {
 
 get_latest_scrape_backup() {
   echo $(
-    s3 ls $DISH_BACKUP_BUCKET \
-      | grep "dish-scrape-backup" \
-      | tail -1 \
-      | awk '{ print $4 }'
+    s3 ls $DISH_BACKUP_BUCKET |
+      grep "dish-scrape-backup" |
+      tail -1 |
+      awk '{ print $4 }'
   )
 }
 
@@ -509,15 +517,15 @@ function restore_latest_scrape_backup() {
 }
 
 function delete_unattached_volumes() {
-  unattached_volumes="$(\
+  unattached_volumes="$(
     doctl compute volume list \
-      --format ID,DropletIDs \
-      | rg -v '\[' \
-      | tr -s ' ' \
-      | cut -d ' ' -f 1 \
-      | tail -n +2 \
+      --format ID,DropletIDs |
+      rg -v '\[' |
+      tr -s ' ' |
+      cut -d ' ' -f 1 |
+      tail -n +2
   )"
-  echo "$unattached_volumes" | while read volume_id ; do
+  echo "$unattached_volumes" | while read volume_id; do
     echo "Deleting $volume_id"
     doctl compute volume delete --force $volume_id
   done
@@ -545,10 +553,10 @@ function bull_repl() {
   fi
   fly_tunnel
   "$PROJECT_ROOT/node_modules/.bin/bull-repl" connect \
-      --host dish-redis.fly.dev \
-      --port 10000 \
-      --password redis \
-      "$1"
+    --host dish-redis.fly.dev \
+    --port 10000 \
+    --password redis \
+    "$1"
 }
 
 function gorse_status() {
@@ -581,11 +589,11 @@ function scrapes_update_distinct_sources() {
 }
 
 function crawler_mem_usage() {
-  ps -eo size,pid,usconcer,command --sort -size \
-    | awk '{ hr=$1/1024 ; printf("%13.2f Mb ",hr) } { for ( x=4 ; x<=NF ; x++ ) { printf("%s ",$x) } print "" }' \
-    | cut -d "" -f2 \
-    | cut -d "-" -f1 \
-    | grep sandbox
+  ps -eo size,pid,usconcer,command --sort -size |
+    awk '{ hr=$1/1024 ; printf("%13.2f Mb ",hr) } { for ( x=4 ; x<=NF ; x++ ) { printf("%s ",$x) } print "" }' |
+    cut -d "" -f2 |
+    cut -d "-" -f1 |
+    grep sandbox
 }
 
 function grafana_backup() {
@@ -619,6 +627,21 @@ function docker_build_file() {
   docker buildx build --progress=plain --platform linux/amd64 "$@"
 }
 
+function clean_dangling() {
+  # remove dangling images which can mess up pull/push
+  docker rmi $(docker images --filter "dangling=true" -q --no-trunc) || true
+}
+
+function docker_compose_build_and_push() {
+  echo "🐳 docker building and pushing $@"
+  if [ "$INTERNAL" = "true" ]; then
+    docker-compose -f docker-internal.yml build "$@" && \
+    docker-compose -f docker-internal.yml push "$@"
+  else
+    docker-compose build "$@" && docker-compose push "$@"
+  fi
+}
+
 function docker_compose_up_subset() {
   services=$1
   extra=$2
@@ -638,9 +661,9 @@ function docker_compose_up_subset() {
 function docker_compose_up() {
   services_list="$COMPOSE_EXCLUDE${COMPOSE_EXCLUDE_EXTRA:-}"
   services=$(
-    docker-compose config --services 2> /dev/null \
-      | grep -E -v "$services_list" \
-      | tr '\r\n' ' '
+    docker-compose config --services 2>/dev/null |
+      grep -E -v "$services_list" |
+      tr '\r\n' ' '
   )
   # cleans up misbehaving old containers
   if [ "$DISH_ENV" = "test" ]; then
@@ -656,38 +679,54 @@ function up() {
   docker-compose up "$@"
 }
 
-function deploy_all() {
-  set -e
-  where=${1:-registry}
-  # make them all background so we can handle them the same
-  echo "deploying apps via $where"
-  # deploy "$where" redis | sed -e 's/^/redis: /;' &
-  # deploy "$where" hooks | sed -e 's/^/hooks: /;' &
-  # runs on dedicated now
-  # runs on dedicated now
-  # deploy "$where" db | sed -e 's/^/db: /;' &
-  # wait
-  # depends on postgres
-  # depends on hooks
-  # deploy "$where" hasura | sed -e 's/^/hasura: /;' &
-  # wait
-   # depends on hasura
-  # deploy "$where" tileserver | sed -e 's/^/tileserver: /;' &
-  deploy "$where" timescale | sed -e 's/^/timescale: /;' &
-  wait
-  # deploy "$where" pg-admin | sed -e 's/^/pg-admin: /;' &
-  # deploy "$where" worker-proxy | sed -e 's/^/worker-proxy: /;' &
-  # deploy "$where" app | sed -e 's/^/app: /;' &
-  # deploy "$where" search | sed -e 's/^/search: /;' &
-  # deploy "$where" worker | sed -e 's/^/worker: /;' &
-  # deploy "$where" image-quality | sed -e 's/^/image-quality: /;' &
-  # deploy "$where" image-proxy | sed -e 's/^/image-proxy: /;' &
-  deploy "$where" image-recognize | sed -e 's/^/image-recognize: /;' &
-  # disabled until fixed with fly
-  # deploy "$where" bert | sed -e 's/^/bert: /;' &
-  deploy "$where" cron | sed -e 's/^/cron: /;' &
-  # deploy "$where" site | sed -e 's/^/site: /;' &
-  wait
+function deploy_dedicated() {
+  source .env.d1
+  SERVICES=$(
+    docker-compose config --services 2> /dev/null \
+      | grep -E -v "$COMPOSE_EXCLUDE" \
+      | tr '\r\n' ' '
+  )
+  echo "🖥 deploying dedicated server: $SERVICES (syncing)..."
+  rsync \
+    -avP --delete --filter=':- .gitignore' --filter='- .git' \
+    -e "ssh -o StrictHostKeyChecking=no -i $PRIVATE_KEY" \
+    . "root@$DEDICATED_SERVER_HOST:/app" &> /dev/null
+  echo " running commands..."
+  ssh \
+    -i "$PRIVATE_KEY" \
+    -o StrictHostKeyChecking=no \
+    "root@$DEDICATED_SERVER_HOST" "
+      set -e
+      cd /app
+      source .env
+      source .env.production
+      source .env.d1
+      yarn
+      flyctl auth docker
+      dsh deploy
+      echo todo migrate on start
+      sleep 10
+      dsh hasura_migrate
+      dsh timescale_migrate
+      dsh umami_migrate
+      docker system prune --force &
+      dsh wait_until_services_ready &
+      wait
+      echo done
+    "
+  printf "\n\n 🖥 deploying dedicated server done ✅ \n\n"
+}
+
+function deploy_done_notify() {
+  # post to slack
+  commit=$(git rev-parse HEAD)
+  # link="https://github.com/getdish/dish/tree/$commit"
+  message="
+  Successful deploy of $commit \n
+  Code: https://github.com/getdish/dish/tree/$commit \n
+  CI Run: $BUILDKITE_BUILD_URL
+  "
+  ./dsh send_slack_monitoring_message "$message"
 }
 
 function build() {
@@ -701,8 +740,7 @@ function deploy_fail() {
 
 function clean_docker_if_disk_full() {
   echo "checking if disk near full..."
-  df -H | grep /dev/nvme0n1p7 | head -n 1 | awk '{ print $5 " " $1 }' | while read output;
-  do
+  df -H | grep /dev/nvme0n1p7 | head -n 1 | awk '{ print $5 " " $1 }' | while read output; do
     used=$(echo "$output" | awk '{ print $1}' | cut -d'%' -f1)
     echo "$output used $used"
     if [ "$used" -ge 90 ]; then
@@ -716,8 +754,7 @@ function clean_docker_if_disk_full() {
       break
     fi
   done
-  df -H | grep /dev/nvme0n1p7 | awk '{ print $5 " " $1 }' | while read output;
-  do
+  df -H | grep /dev/nvme0n1p7 | awk '{ print $5 " " $1 }' | while read output; do
     used=$(echo "$output" | awk '{ print $1}' | cut -d'%' -f1)
     if [ "$used" -ge 90 ]; then
       echo "really full, delete all.."
@@ -727,6 +764,23 @@ function clean_docker_if_disk_full() {
       break
     fi
   done
+}
+
+function run_all_tests() {
+  docker run \
+    --net host \
+    -v /var/run/docker.sock:/var/run/docker.sock \
+    registry.dishapp.com/dish-run-tests:latest \
+    yarn test
+}
+
+function run_integration_tests() {
+  echo "Running Test Cafe end-to-end browser-based tests..."
+  pushd dish-app
+    docker run -d --net=host --name dish-app-integration-tests-$BUILDKITE_BUILD_NUMBER $DISH_REGISTRY/dish-app
+  sleep 5
+  ./test/testcafe.sh
+  popd
 }
 
 # https://gist.github.com/mortensteenrasmussen/512f0566dbc3ef1cc4a2c47dd9cdb973
@@ -744,10 +798,10 @@ function clean_docker_if_disk_full() {
 
 #   for manifest in ${manifests_without_tags}; do
 #     repo=$(find . | grep "_manifests/revisions/sha256/${manifest}/link" | awk -F "_manifest"  '{print $(NF-1)}' | sed 's#^./\(.*\)/#\1#')
-    
+
 #     #should have error checking on the curl command, it might fail silently atm.
 #     curl -s -X DELETE ${REGISTRY_URL}/v2/${repo}/manifests/sha256:${manifest} > /dev/null
-    
+
 #     ((count++))
 #     echo "Deleted ${count} of ${total_count} manifests."
 #   done
@@ -825,7 +879,37 @@ function run() {
   bash -c "$ORIGINAL_ARGS"
 }
 
-if command -v git &> /dev/null; then
+function setup_test_services() {
+  docker network create traefik-public || true
+  # if not already mounted/setup, we need to start postgres once and restart it
+  # this is because there are problems where postgres gets corrupted/weird while other services
+  # try and access it during init, giving it time to init here and then run later
+  if [ ! -d "$POSTGRES_DB_DIR" ]; then
+    echo "doing double start first time since no postgres db dir: $POSTGRES_DB_DIR"
+    docker-compose run -d postgres
+    sleep 10
+    docker-compose down --remove-orphans -t 4
+    docker-compose logs postgres
+  fi
+
+  # fixes issues of not allowing connecting during tests
+  if [ -d "$POSTGRES_DB_DIR" ]; then
+    conf="$POSTGRES_DB_DIR/pg_hba.conf"
+    grep -qxF 'host all all all trust' "$conf" || echo 'host all all all trust' >> "$conf"
+  fi
+  if [ -d "$TIMESCALE_DB_DIR" ]; then
+    conf="$TIMESCALE_DB_DIR/pg_hba.conf"
+    grep -qxF 'host all all all trust' "$conf" || echo 'host all all all trust' >> "$conf"
+  fi
+
+  docker_compose_up -d
+  wait_until_services_ready
+  migrate
+
+  echo "done"
+}
+
+if command -v git &>/dev/null; then
   export PROJECT_ROOT=$(git rev-parse --show-toplevel)
   # branch=$(git rev-parse --abbrev-ref HEAD)
   # export DOCKER_TAG_NAMESPACE=${branch//\//-}
@@ -851,7 +935,18 @@ else
   export all_env="$(env)"
 fi
 
+
 function_to_run=$1
+
+
+if [ "$NO_PRINT_HELP" != "1" ] && [ "$function_to_run" = "" ]; then
+  for f in $(declare -F | cut -d ' ' -f3); do
+   echo "${f}"
+  done
+  exit 0
+fi
+
+
 shift
 ORIGINAL_ARGS="$@"
 $function_to_run "$@"

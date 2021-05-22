@@ -3,8 +3,8 @@ log:
   fields:
     service: registry
 storage:
-  cache:
-    blobdescriptor: inmemory
+  # cache:
+  #   blobdescriptor: inmemory
   filesystem:
     rootdirectory: /var/lib/registry
   delete:
@@ -16,7 +16,7 @@ http:
 health:
   storagedriver:
     enabled: true
-    interval: 10s
+    interval: 20s
     threshold: 3
 # proxy:
 #   remoteurl: https://registry-1.docker.io

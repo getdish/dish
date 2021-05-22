@@ -20,6 +20,7 @@ services:
         # This public Traefik will only use services with this label
         # That way you can add other internal Traefik instances per stack if needed
         - traefik.constraint-label=traefik-public
+        - serverstransport.insecureskipverify=true
         # admin-auth middleware with HTTP Basic auth
         # Using the environment variables USERNAME and HASHED_PASSWORD
         - traefik.http.middlewares.admin-auth.basicauth.users=${TRAEFIK_USERNAME?err0}:${TRAEFIK_PASSWORD?err0}
