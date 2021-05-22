@@ -7,7 +7,11 @@ function clean_dangling() {
   docker rmi --force $(docker images --filter "dangling=true" -q --no-trunc) || true
 }
 
-docker-compose build "$@"
+if [ "$@" = "base" ]; then
+  docker-compose -f docker-internal.yml build "$@"
+else
+  docker-compose build "$@"
+fi
 
 if [ "$PUSH" = "true" ]; then
   # tries again once if failed

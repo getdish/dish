@@ -1,0 +1,59 @@
+version: '3.7'
+
+services:
+  ci:
+    image: registry.fly.io/dish-ci${DISH_IMAGE_TAG}
+    command: start --spawn 6 --token ${BUILDITE_AGENT_TOKEN}
+    privileged: true
+    build:
+      context: ./services/ci
+    volumes:
+      - /var/data:/var/data
+      - ${HOME}/.dish:/root/.dish
+      - /var/lib/buildkite/builds:/var/lib/buildkite/builds
+      - /usr/local/bin/buildkite-agent:/usr/local/bin/buildkite-agent
+      - ./etc/keys:/buildkite-secrets:ro
+      - ./data:/data
+    environment:
+      DISH_KEYS_PATH: /buildkite-secrets
+      BUILDKITE_BUILD_PATH: /var/lib/buildkite/builds
+      BUILDITE_AGENT_TOKEN: ${BUILDITE_AGENT_TOKEN}
+
+  base:
+    image: registry.fly.io/dish-base${DISH_IMAGE_TAG}
+    build:
+      context: .
+      dockerfile: ./Dockerfile    
+
+  run-tests:
+    image: registry.fly.io/dish-run-tests${DISH_IMAGE_TAG}
+    build:
+      context: .
+      dockerfile: ./services/run-tests/Dockerfile
+
+  registry:
+    image: registry
+    restart: always
+    ports:
+      - ${REGISTRY_PORT:-6666}:5000
+    volumes:
+      - /var/lib/registry:/var/lib/registry
+    environment:
+      - REGISTRY_PROXY_REMOTEURL=https://registry-1.docker.io
+
+  # worker1:
+  #   image: docker:dind
+  #   command: ["--registry-mirror", "http://${REGISTRY_MIRROR_WORKER}", "--insecure-registry", "${REGISTRY_MIRROR_WORKER}"]
+  #   privileged: true
+  #   hostname: worker1
+  #   volumes:
+  #     - /var/run/docker.sock:/var/run/docker.sock
+  #   environment:
+  #     - FLY_API_TOKEN=${FLY_API_TOKEN}
+  #   ports:
+  #     - "12375:2375"
+  #     - "15000:5000"
+  #     - "15001:5001"
+  #     - "15601:5601"
+  #   depends_on:
+  #     - registry

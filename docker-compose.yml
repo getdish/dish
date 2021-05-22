@@ -1,40 +1,243 @@
-version: '3.2'
+version: '3.7'
+
 services:
-  base:
-    image: registry.fly.io/dish-base${DISH_IMAGE_TAG}
+  dish-app:
+    image: registry.fly.io/dish-app${DISH_IMAGE_TAG}
+    networks:
+      - default
+      - traefik-public
+    deploy:
+      labels:
+        - traefik.enable=true
+        - traefik.docker.network=traefik-public
+        - traefik.constraint-label=traefik-public
+        - traefik.http.routers.dish-dish-app-http.rule=Host(`${DOMAIN}`) || Host(`www.${DOMAIN}`)
+        - traefik.http.routers.dish-dish-app-http.entrypoints=http
+        - traefik.http.routers.dish-dish-app-http.middlewares=dish-https-redirect
+        - traefik.http.routers.dish-dish-app-https.rule=Host(`${DOMAIN}`) || Host(`www.${DOMAIN}`)
+        - traefik.http.routers.dish-dish-app-https.entrypoints=https
+        - traefik.http.routers.dish-dish-app-https.tls=true
+        - traefik.http.routers.dish-dish-app-https.tls.certresolver=le
+        - traefik.http.services.dish-dish-app.loadbalancer.server.port=4444
     build:
-      context: .
-      dockerfile: ./Dockerfile
-  ci:
-    image: registry.fly.io/dish-ci${DISH_IMAGE_TAG}
-    command: start --spawn 6 --token ${BUILDITE_AGENT_TOKEN}
-    build:
-      context: ./services/ci
-    volumes:
-      - /var/data:/var/data
-      - ${HOME}/.dish:/root/.dish
-      - /var/lib/buildkite/builds:/var/lib/buildkite/builds
-      - /usr/local/bin/buildkite-agent:/usr/local/bin/buildkite-agent
-      - ./etc/keys:/buildkite-secrets:ro
-      - ./data:/data
+      context: ./
+      dockerfile: ./dish-app/Dockerfile
     environment:
-      DISH_KEYS_PATH: /buildkite-secrets
-      BUILDKITE_BUILD_PATH: /var/lib/buildkite/builds
-      BUILDITE_AGENT_TOKEN: ${BUILDITE_AGENT_TOKEN}
-  run-tests:
-    image: registry.fly.io/dish-run-tests${DISH_IMAGE_TAG}
+      - MARTIN_ENDPOINT=https://martin-tiles.dishapp.com
+      - HASURA_GRAPHQL_ADMIN_SECRET=${HASURA_GRAPHQL_ADMIN_SECRET:-password}
+      - JWT_ADMIN_PASSWORD=${JWT_ADMIN_PASSWORD}
+      - SENDGRID_API_KEY=${SENDGRID_API_KEY}
+      - DO_SPACES_ID=${DO_SPACES_ID}
+      - DO_SPACES_SECRET=${DO_SPACES_SECRET}
+      - HASURA_ENDPOINT=http://hasura:${HASURA_PORT_INTERNAL:-8080}
+      - SEARCH_ENDPOINT=http://search:9999
+      - REDIS_HOST=redis
+      - DISH_ENV=${DISH_ENV:-production}
+      - NODE_ENV=${NODE_ENV:-production}
+    ports:
+      - 4444:4444
+    depends_on:
+      - 'hasura'
+      - 'redis'
+      - 'tileserver'
+
+  search:
+    image: registry.fly.io/dish-search${DISH_IMAGE_TAG}
+    build:
+      context: ./services/search
+      dockerfile: ./Dockerfile
+    ports:
+      - 9999:9999
+    networks:
+      - default
+      - traefik-public
+    deploy:
+      labels:
+        - traefik.enable=true
+        - traefik.docker.network=traefik-public
+        - traefik.constraint-label=traefik-public
+        - traefik.http.routers.dish-search-http.rule=Host(`search.${DOMAIN}`)
+        - traefik.http.routers.dish-search-http.entrypoints=http
+        - traefik.http.routers.dish-search-http.middlewares=dish-https-redirect
+        - traefik.http.routers.dish-search-https.rule=Host(`search.${DOMAIN}`)
+        - traefik.http.routers.dish-search-https.entrypoints=https
+        - traefik.http.routers.dish-search-https.tls=true
+        - traefik.http.routers.dish-search-https.tls.certresolver=le
+        - traefik.http.services.dish-search.loadbalancer.server.port=9999
+    environment:
+      - POSTGRES_DB=${POSTGRES_DB:-dish}
+      - POSTGRES_USER=${POSTGRES_USER:-postgres}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD:-postgres}
+      - POSTGRES_HOST=postgres
+    depends_on:
+      - 'postgres'
+
+  tileserver:
+    image: registry.fly.io/dish-tileserver${DISH_IMAGE_TAG}
+    networks:
+      - default
+      - traefik-public
+    deploy:
+      labels:
+        - traefik.enable=true
+        - traefik.docker.network=traefik-public
+        - traefik.constraint-label=traefik-public
+        - traefik.http.routers.dish-tileserver-http.rule=Host(`tileserver.${DOMAIN}`)
+        - traefik.http.routers.dish-tileserver-http.entrypoints=http
+        - traefik.http.routers.dish-tileserver-http.middlewares=dish-https-redirect
+        - traefik.http.routers.dish-tileserver-https.rule=Host(`tileserver.${DOMAIN}`)
+        - traefik.http.routers.dish-tileserver-https.entrypoints=https
+        - traefik.http.routers.dish-tileserver-https.tls=true
+        - traefik.http.routers.dish-tileserver-https.tls.certresolver=le
+        - traefik.http.services.dish-tileserver.loadbalancer.server.port=3000
+    build:
+      context: ./services/tileserver
+      dockerfile: ./Dockerfile
+    ports:
+      - 3005:3000
+    environment:
+      - WATCH_MODE=true
+      - DATABASE_URL=${POSTGRES_URL_INTERNAL:-postgres://postgres:postgres@postgres/dish}
+    depends_on:
+      - 'postgres'
+    
+  site:
+    image: registry.fly.io/dish-site${DISH_IMAGE_TAG}
     build:
       context: .
-      dockerfile: ./services/run-tests/Dockerfile
-  cron:
-    image: registry.fly.io/dish-cron${DISH_IMAGE_TAG}
+      dockerfile: ./services/site/Dockerfile
+    ports:
+      - 3999:3999
+    networks:
+      - default
+      - traefik-public
+    deploy:
+      labels:
+        - traefik.enable=true
+        - traefik.docker.network=traefik-public
+        - traefik.constraint-label=traefik-public
+        - traefik.http.routers.dish-site-http.rule=Host(`site.${DOMAIN}`)
+        - traefik.http.routers.dish-site-http.entrypoints=http
+        - traefik.http.routers.dish-site-http.middlewares=dish-https-redirect
+        - traefik.http.routers.dish-site-https.rule=Host(`site.${DOMAIN}`)
+        - traefik.http.routers.dish-site-https.entrypoints=https
+        - traefik.http.routers.dish-site-https.tls=true
+        - traefik.http.routers.dish-site-https.tls.certresolver=le
+        - traefik.http.services.dish-site.loadbalancer.server.port=3999
+
+  image-proxy:
+    image: registry.fly.io/dish-image-proxy${DISH_IMAGE_TAG}
     build:
-      context: .
-      dockerfile: ./services/cron/Dockerfile
+      context: ./services/image-proxy
+    ports:
+      - 8981:8981
+    networks:
+      - default
+      - traefik-public
+    deploy:
+      labels:
+        - traefik.enable=true
+        - traefik.docker.network=traefik-public
+        - traefik.constraint-label=traefik-public
+        - traefik.http.routers.dish-image-proxy-http.rule=Host(`image-proxy.${DOMAIN}`)
+        - traefik.http.routers.dish-image-proxy-http.entrypoints=http
+        - traefik.http.routers.dish-image-proxy-http.middlewares=dish-https-redirect
+        - traefik.http.routers.dish-image-proxy-https.rule=Host(`image-proxy.${DOMAIN}`)
+        - traefik.http.routers.dish-image-proxy-https.entrypoints=https
+        - traefik.http.routers.dish-image-proxy-https.tls=true
+        - traefik.http.routers.dish-image-proxy-https.tls.certresolver=le
+        - traefik.http.services.dish-image-proxy.loadbalancer.server.port=8981
+
+  umami:
+    image: ghcr.io/mikecao/umami:postgresql-latest
+    networks:
+      - default
+      - traefik-public
+    deploy:
+      labels:
+        - traefik.enable=true
+        - traefik.docker.network=traefik-public
+        - traefik.constraint-label=traefik-public
+        - traefik.http.routers.dish-umami-http.rule=Host(`umami.${DOMAIN}`)
+        - traefik.http.routers.dish-umami-http.entrypoints=http
+        - traefik.http.routers.dish-umami-http.middlewares=dish-https-redirect
+        - traefik.http.routers.dish-umami-https.rule=Host(`umami.${DOMAIN}`)
+        - traefik.http.routers.dish-umami-https.entrypoints=https
+        - traefik.http.routers.dish-umami-https.tls=true
+        - traefik.http.routers.dish-umami-https.tls.certresolver=le
+        - traefik.http.services.dish-umami.loadbalancer.server.port=3000
+    ports:
+      - "5555:3000"
+    environment:
+      DATABASE_URL: ${POSTGRES_URL_INTERNAL:-postgres://postgres:postgres@postgres/dish}
+      DATABASE_TYPE: postgresql
+      HASH_SALT: ${UMAMI_HASH_SALT}
+    depends_on:
+      - postgres
+    
+  pg-admin:
+    image: registry.fly.io/pg-admin${DISH_IMAGE_TAG}
+    build:
+      context: ./services/timescale
+    networks:
+      - default
+      - traefik-public
+    deploy:
+      labels:
+        - traefik.enable=true
+        - traefik.docker.network=traefik-public
+        - traefik.constraint-label=traefik-public
+        - traefik.http.routers.dish-pg-admin-http.rule=Host(`pg-admin.${DOMAIN}`)
+        - traefik.http.routers.dish-pg-admin-http.entrypoints=http
+        - traefik.http.routers.dish-pg-admin-http.middlewares=dish-https-redirect
+        - traefik.http.routers.dish-pg-admin-https.rule=Host(`pg-admin.${DOMAIN}`)
+        - traefik.http.routers.dish-pg-admin-https.entrypoints=https
+        - traefik.http.routers.dish-pg-admin-https.tls=true
+        - traefik.http.routers.dish-pg-admin-https.tls.certresolver=le
+        - traefik.http.services.dish-pg-admin.loadbalancer.server.port=80
+
+  bert:
+    image: registry.fly.io/dish-bert${DISH_IMAGE_TAG}
+    networks:
+      - default
+      - traefik-public
+    build:
+      context: ./services/bert
+    ports:
+      - 8888:8080
+    deploy:
+      labels:
+        - traefik.enable=true
+        - traefik.docker.network=traefik-public
+        - traefik.constraint-label=traefik-public
+        - traefik.http.routers.dish-bert-http.rule=Host(`bert.${DOMAIN}`)
+        - traefik.http.routers.dish-bert-http.entrypoints=http
+        - traefik.http.services.dish-bert.loadbalancer.server.port=8080
+  
+  image-quality:
+    image: registry.fly.io/dish-image-quality${DISH_IMAGE_TAG}
+    networks:
+      - default
+    build:
+      context: ./services/image-quality
+    ports:
+      - 8883:5005
+    deploy:
+      labels:
+        - traefik.enable=true
+        - traefik.docker.network=traefik-public
+        - traefik.constraint-label=traefik-public
+        - traefik.http.routers.dish-image-quality-http.rule=Host(`image-quality.${DOMAIN}`)
+        - traefik.http.routers.dish-image-quality-http.entrypoints=http
+        - traefik.http.services.dish-image-quality.loadbalancer.server.port=80
+
+  # non public facing
+
   postgres:
     image: registry.fly.io/dish-${POSTGRES_NAME:-postgres}${DISH_IMAGE_TAG}
-    restart: on-failure:5
     command: postgres -c config_file=/postgres/postgresql.conf
+    networks:
+      - default
     build:
       context: ./services/${POSTGRES_NAME:-postgres}
     volumes:
@@ -46,10 +249,13 @@ services:
       POSTGRES_DB: ${POSTGRES_DB:-dish}
     ports:
       - 5432:5432
+
   timescale:
     command: ["-c", "max_connections=300"]
-    restart: on-failure:5
     image: ${TIMESCALE_IMAGE:-registry.fly.io/dish-timescale:latest}
+    networks:
+      - traefik-public
+      - default
     build:
       context: ./services/timescale
     volumes:
@@ -60,26 +266,35 @@ services:
       POSTGRES_DB: scrape_data
     ports:
       - ${TIMESCALE_PORT:-5433}:5432
-  pg-admin:
-    image: registry.fly.io/pg-admin${DISH_IMAGE_TAG}
-    build:
-      context: ./services/timescale
+
   redis:
     image: redis
+    networks:
+      - traefik-public
+      - default
     build:
       context: ./services/redis
       dockerfile: ./Dockerfile
     ports:
       - ${REDIS_PORT:-6379}:6379
+    networks:
+      default:
+
   summarizer:
     image: registry.fly.io/dish-summarizer${DISH_IMAGE_TAG}
+    networks:
+      - traefik-public
+      - default
     build:
       context: ./services/summarizer
       dockerfile: ./Dockerfile
     ports:
       - 5000:5000
+
   worker-proxy:
     image: registry.fly.io/dish-proxy${DISH_IMAGE_TAG}
+    networks:
+      - default
     build:
       context: ./services/worker-proxy
       dockerfile: ./Dockerfile
@@ -105,8 +320,12 @@ services:
       - LUMINATI_PROXY_DATACENTRE_PASSWORD=${LUMINATI_PROXY_DATACENTRE_PASSWORD}
       - LUMINATI_PROXY_RESIDENTIAL_USER=${LUMINATI_PROXY_RESIDENTIAL_USER}
       - LUMINATI_PROXY_RESIDENTIAL_PASSWORD=${LUMINATI_PROXY_RESIDENTIAL_PASSWORD}
+
   hooks:
     image: registry.fly.io/dish-hooks${DISH_IMAGE_TAG}
+    networks:
+      - traefik-public
+      - default
     build:
       context: ./
       dockerfile: ./services/hooks/Dockerfile
@@ -118,14 +337,25 @@ services:
       - GORSE_ENDPOINT=http://gorse:9000
       - DISH_ENV=${DISH_ENV:-production}
       - NODE_ENV=${NODE_ENV:-production}
+
   hasura:
     image: ${DOCKER_HASURA_IMAGE:-registry.fly.io/dish-hasura:latest}
-    restart: on-failure:5
+    networks:
+      - traefik-public
+      - default
     build:
       context: .
       dockerfile: ./services/hasura/Dockerfile
     ports:
-      - ${HASURA_PORT:-8080}:8080
+      - ${HASURA_PORT:?no hasura port}:8080
+    deploy:
+      labels:
+        - traefik.enable=true
+        - traefik.docker.network=traefik-public
+        - traefik.constraint-label=traefik-public
+        - traefik.http.routers.dish-hasura-http.rule=Host(`hasura.${DOMAIN}`)
+        - traefik.http.routers.dish-hasura-http.entrypoints=http
+        - traefik.http.services.dish-hasura.loadbalancer.server.port=8080
     environment:
       - HASURA_GRAPHQL_NO_OF_RETRIES=50
       - HASURA_GRAPHQL_DATABASE_URL=${POSTGRES_URL_INTERNAL:-postgres://postgres:postgres@postgres/dish}
@@ -137,72 +367,16 @@ services:
       - HASURA_GRAPHQL_ENABLE_CONSOLE=true
       - DISH_HOOKS_ENDPOINT=http://hooks:${HOOKS_PORT:-6154}
       - GORSE_SYNC_HOOK=http://hooks:${HOOKS_PORT:-6154}/gorse_sync
-      - VIRTUAL_HOST=hasura.dishapp.com
-      - VIRTUAL_PORT=8080
     depends_on:
       - 'postgres'
       - 'redis'
       - 'hooks'
-  dish-app:
-    image: registry.fly.io/dish-app${DISH_IMAGE_TAG}
-    restart: on-failure:5
-    build:
-      context: ./
-      dockerfile: ./dish-app/Dockerfile
-    environment:
-      - MARTIN_ENDPOINT=https://martin-tiles.dishapp.com
-      - HASURA_GRAPHQL_ADMIN_SECRET=${HASURA_GRAPHQL_ADMIN_SECRET:-password}
-      - JWT_ADMIN_PASSWORD=${JWT_ADMIN_PASSWORD}
-      - SENDGRID_API_KEY=${SENDGRID_API_KEY}
-      - DO_SPACES_ID=${DO_SPACES_ID}
-      - DO_SPACES_SECRET=${DO_SPACES_SECRET}
-      - VIRTUAL_HOST=dishapp.com,www.dishapp.com
-      - VIRTUAL_PORT=4444
-      - HASURA_ENDPOINT=http://hasura:8080
-      - SEARCH_ENDPOINT=http://search:9999
-      - REDIS_HOST=redis
-      - DISH_ENV=${DISH_ENV:-production}
-      - NODE_ENV=${NODE_ENV:-production}
-    ports:
-      - 4444:4444
-    depends_on:
-      - 'hasura'
-      - 'redis'
-      - 'tileserver'
-  tileserver:
-    image: registry.fly.io/dish-tileserver${DISH_IMAGE_TAG}
-    restart: on-failure:5
-    build:
-      context: ./services/tileserver
-      dockerfile: ./Dockerfile
-    ports:
-      - 3005:3000
-    environment:
-      - WATCH_MODE=true
-      - DATABASE_URL=${POSTGRES_URL_INTERNAL:-postgres://postgres:postgres@postgres/dish}
-      - VIRTUAL_HOST=martin-tiles.dishapp.com
-      - VIRTUAL_PORT=3005
-    depends_on:
-      - 'postgres'
-  search:
-    image: registry.fly.io/dish-search${DISH_IMAGE_TAG}
-    restart: on-failure:5
-    build:
-      context: ./services/search
-      dockerfile: ./Dockerfile
-    ports:
-      - 9999:9999
-    environment:
-      - POSTGRES_DB=${POSTGRES_DB:-dish}
-      - POSTGRES_USER=${POSTGRES_USER:-postgres}
-      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD:-postgres}
-      - POSTGRES_HOST=postgres
-      - VIRTUAL_HOST=search.dishapp.com
-      - VIRTUAL_PORT=9999
-    depends_on:
-      - 'postgres'
+
   gorse:
     image: registry.fly.io/dish-gorse${DISH_IMAGE_TAG}
+    networks:
+      - default
+      - traefik-public
     build:
       context: ./services/gorse
       dockerfile: ./Dockerfile
@@ -211,15 +385,16 @@ services:
       - ./services/gorse/config.local.toml:/app/config.toml
     ports:
       - 9000:9000
+
   worker:
     image: registry.fly.io/dish-worker${DISH_IMAGE_TAG}
+    networks:
+      - default
     build:
       context: .
       dockerfile: ./services/worker/Dockerfile
     environment:
-      - VIRTUAL_HOST=worker.dishapp.com
-      - VIRTUAL_PORT=9000
-      - HASURA_ENDPOINT=http://hasura:8080
+      - HASURA_ENDPOINT=http://hasura:${HASURA_PORT:-8080}
       - HASURA_GRAPHQL_ADMIN_SECRET=${HASURA_GRAPHQL_ADMIN_SECRET:-password}
       - REDIS_HOST=redis
       - PGHOST=postgres
@@ -253,83 +428,16 @@ services:
       - NODE_OPTIONS="--max_old_space_size=5120"
       - GORSE_ENDPOINT="http://gorse:9000"
       - DISH_DEBUG=1
-  bert:
-    image: registry.fly.io/dish-bert${DISH_IMAGE_TAG}
-    build:
-      context: ./services/bert
-    ports:
-      - 8888:8080
-    environment:
-      - VIRTUAL_HOST=bert.dishapp.com
-      - VIRTUAL_PORT=8888
-  site:
-    image: registry.fly.io/dish-site${DISH_IMAGE_TAG}
+
+  cron:
+    image: registry.fly.io/dish-cron${DISH_IMAGE_TAG}
+    networks:
+      - default
+      - traefik-public
     build:
       context: .
-      dockerfile: ./services/site/Dockerfile
-    ports:
-      - 3999:3999
-    environment:
-      - VIRTUAL_HOST=site.dishapp.com
-  image-quality:
-    image: registry.fly.io/dish-image-quality${DISH_IMAGE_TAG}
-    build:
-      context: ./services/image-quality
-    ports:
-      - 8883:5005
-    environment:
-      - VIRTUAL_HOST=image-quality.dishapp.com
-      - VIRTUAL_PORT=8883
-  image-proxy:
-    image: registry.fly.io/dish-image-proxy${DISH_IMAGE_TAG}
-    build:
-      context: ./services/image-proxy
-    ports:
-      - 8981:8981
-    environment:
-      - VIRTUAL_HOST=image-proxy.dishapp.com
-      - VIRTUAL_PORT=8981
-  nginx-proxy:
-    image: jwilder/nginx-proxy
-    container_name: nginx-proxy
-    ports:
-      - "80:80"
-      - "443:443"
-    volumes:
-      - conf:/etc/nginx/conf.d
-      - vhost:/etc/nginx/vhost.d
-      - html:/usr/share/nginx/html
-      - dhparam:/etc/nginx/dhparam
-      - certs:/etc/nginx/certs:ro
-      - /var/run/docker.sock:/tmp/docker.sock:ro
-    labels:
-      - "com.github.jrcs.letsencrypt_nginx_proxy_companion.nginx_proxy"
-    restart: always
-  letsencrypt:
-    image: jrcs/letsencrypt-nginx-proxy-companion
-    container_name: nginx-proxy-le
-    depends_on:
-      - nginx-proxy
-    volumes:
-      - vhost:/etc/nginx/vhost.d
-      - html:/usr/share/nginx/html
-      - dhparam:/etc/nginx/dhparam:ro
-      - certs:/etc/nginx/certs
-      - acme:/etc/acme.sh
-      - /var/run/docker.sock:/var/run/docker.sock:ro
-    restart: always
-  umami:
-    image: ghcr.io/mikecao/umami:postgresql-latest
-    ports:
-      - "5555:3000"
-    environment:
-      VIRTUAL_HOST: umami.dishapp.com
-      VIRTUAL_PORT: 5555
-      DATABASE_URL: ${POSTGRES_URL_INTERNAL:-postgres://postgres:postgres@postgres/dish}
-      DATABASE_TYPE: postgresql
-      HASH_SALT: ${UMAMI_HASH_SALT}
-    depends_on:
-      - postgres
+      dockerfile: ./services/cron/Dockerfile
+
 volumes:
     conf:
     vhost:
@@ -337,3 +445,8 @@ volumes:
     dhparam:
     certs:
     acme:
+
+networks:
+  traefik-public: 
+    external: true
+  

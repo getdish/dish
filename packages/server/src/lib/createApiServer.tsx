@@ -12,7 +12,7 @@ import { File, ServerConfigNormal } from '../types'
 export async function createApiServer(app: any, config: ServerConfigNormal) {
   const { apiDir, url, watch, rootDir } = config
 
-  if (!apiDir) {
+  if (!apiDir || !(await pathExists(apiDir))) {
     console.log(` [api] no api dir, not serving`)
     return
   }
