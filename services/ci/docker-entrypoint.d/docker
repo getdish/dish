@@ -2,7 +2,14 @@
 
 set -e
 
-mkdir -p /data/docker /etc/docker
-echo '{"data-root": "/data/docker"}' > /etc/docker/daemon.json
+# mkdir -p /data/docker /etc/docker
+# echo '{"data-root": "/data/docker"}' > /etc/docker/daemon.json
+
+echo /etc/docker/daemon.json
+
+update-ca-certificates
+
+docker login -u "$TRAEFIK_USERNAME" -p "$TRAEFIK_PASSWORD_PLAIN" registry.dishapp.com
+
 service docker start
 sleep 1

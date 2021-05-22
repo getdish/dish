@@ -11,67 +11,57 @@ steps:
 
   - label: ":docker: build base"
     key: base
-    command: INTERNAL=true .buildkite/scripts/build_docker_compose.sh base
+    command: INTERNAL=true ./dsh docker_compose_build_and_push base
 
   - label: ":docker: build dish-app"
     key: dish-app
     depends_on: base
-    command: .buildkite/scripts/build_docker_compose.sh dish-app
+    command: ./dsh docker_compose_build_and_push dish-app
 
   - label: ":docker: build worker"
     key: worker
-    depends_on: base
-    command: .buildkite/scripts/build_docker_compose.sh worker
+    depends_on: dish-app
+    command: ./dsh docker_compose_build_and_push worker
 
   - label: ":docker: build run-tests"
     key: run-tests
     depends_on: worker
-    command: INTERNAL=true .buildkite/scripts/build_docker_compose.sh run-tests
+    command: INTERNAL=true ./dsh docker_compose_build_and_push run-tests
 
   - label: ":docker: build hooks"
     key: hooks
-    depends_on: base
-    command: .buildkite/scripts/build_docker_compose.sh hooks
+    depends_on: run-tests
+    command: ./dsh docker_compose_build_and_push hooks
 
   - label: ":docker: build site"
     key: site
-    depends_on: base
-    command: .buildkite/scripts/build_docker_compose.sh site
+    depends_on: hooks
+    command: ./dsh docker_compose_build_and_push site
 
   - label: ":docker: build worker-proxy"
     key: worker-proxy
-    depends_on: base
-    command: .buildkite/scripts/build_docker_compose.sh worker-proxy
-    env:
-      PUSH: true
+    depends_on: site
+    command: ./dsh docker_compose_build_and_push worker-proxy
 
   - label: ":docker: build search"
     key: search
-    command: .buildkite/scripts/build_docker_compose.sh search
-    env:
-      PUSH: true
+    command: ./dsh docker_compose_build_and_push search
 
   - label: ":docker: build hasura"
     key: hasura
-    command: .buildkite/scripts/build_docker_compose.sh hasura
-    env:
-      PUSH: true
+    command: ./dsh docker_compose_build_and_push hasura
 
   - label: ":docker: build timescale"
     key: timescale
-    command: .buildkite/scripts/build_docker_compose.sh timescale
-    env:
-      PUSH: true
+    command: ./dsh docker_compose_build_and_push timescale
 
   - label: ":docker: build tileserver"
     key: tileserver
-    command: .buildkite/scripts/build_docker_compose.sh tileserver
-    env:
-      PUSH: true
+    command: ./dsh docker_compose_build_and_push tileserver
 
   - label: ":docker: build postgres"
     key: postgres
-    command: .buildkite/scripts/build_docker_compose.sh postgres
+    command: ./dsh docker_compose_build_and_push postgres
 
   - label: "done with test images"
     command: "true"
@@ -93,44 +83,32 @@ steps:
   - label: ":docker: build cron"
     key: cron
     depends_on: base
-    command: .buildkite/scripts/build_docker_compose.sh cron
-    env:
-      PUSH: true
+    command: ./dsh docker_compose_build_and_push cron
 
   - label: ":docker: build summarizer"
     key: summarizer
-    command: .buildkite/scripts/build_docker_compose.sh summarizer
-    env:
-      PUSH: true
+    command: ./dsh docker_compose_build_and_push summarizer
 
   - label: ":docker: build bert"
     key: bert
     depends_on: base
-    command: .buildkite/scripts/build_docker_compose.sh bert
-    env:
-      PUSH: true
+    command: ./dsh docker_compose_build_and_push bert
 
   - label: ":docker: build gorse"
     key: gorse
-    command: .buildkite/scripts/build_docker_compose.sh gorse
-    env:
-      PUSH: true
+    command: ./dsh docker_compose_build_and_push gorse
 
   - label: ":docker: build image-proxy"
     key: image-proxy
-    command: .buildkite/scripts/build_docker_compose.sh image-proxy
-    env:
-      PUSH: true
+    command: ./dsh docker_compose_build_and_push image-proxy
 
   - label: ":docker: build image-quality"
     key: image-quality
-    command: .buildkite/scripts/build_docker_compose.sh image-quality
-    env:
-      PUSH: true
+    command: ./dsh docker_compose_build_and_push image-quality
 
   - label: "setup services for tests"
     key: test-setup
-    command: ".buildkite/scripts/setup_test_services.sh"
+    command: "./dsh setup_test_services"
     timeout_in_minutes: 15
     depends_on:
       - test-images
@@ -146,7 +124,7 @@ steps:
   - label: "run tests"
     key: tests
     timeout_in_minutes: 10
-    command: ".buildkite/scripts/run_all_tests.sh; docker-compose down -t 3"
+    command: "./dsh run_all_tests; docker-compose down -t 3"
     depends_on: test-setup
     env:
       LOG_DOCKER: true
@@ -155,21 +133,21 @@ steps:
       DOCKER_CLEAN_ON_FAIL: true
 
   # - label: "run integration test"
-  #   command: ".buildkite/scripts/integration_tests.sh"
+  #   command: "./dsh run_integration_tests"
 
   - wait
 
   - label: "deploy dedicated"
     if: build.branch == "production" || build.branch == "nate/dev"
     timeout_in_minutes: 10
-    command: ".buildkite/scripts/deploy_dedicated.sh"
+    command: "./dsh deploy_dedicated"
     artifact_paths:
       - "*.log"
 
   - wait
 
-  - label: "slack done"
+  - label: "done"
     if: build.branch == "production" || build.branch == "nate/dev"
-    command: ".buildkite/scripts/deploy_done.sh"
+    command: "./dsh deploy_done_notify"
     env:
       DOCKER_CLEAN: true

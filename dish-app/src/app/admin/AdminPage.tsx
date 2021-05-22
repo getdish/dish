@@ -53,15 +53,18 @@ export default memo(function AdminPage() {
                 <AdminLinkButton icon="💽" href={GRAPH_DOMAIN}>
                   Hasura
                 </AdminLinkButton>
-                <AdminLinkButton icon="💪" href="https://bull.dishapp.com">
+                <AdminLinkButton icon="💪" href="https://worker.dishapp.com">
                   Workers
                 </AdminLinkButton>
                 <AdminLinkButton icon="👨‍👩‍👧‍👦" href="https://buildkite.com/dish">
                   CI
                 </AdminLinkButton>
-                <AdminLinkButton icon="📈" href="https://grafana.k8s.dishapp.com">
-                  Graphs
+                <AdminLinkButton icon="🗳" href="https://registry.dishapp.com">
+                  Registry
                 </AdminLinkButton>
+                {/* <AdminLinkButton icon="📈" href="https://grafana.k8s.dishapp.com">
+                  Graphs
+                </AdminLinkButton> */}
                 <AdminLinkButton
                   icon="📍"
                   href="https://traefik.dishapp.com/dashboard/#/http/routers/dish-registry-https@docker"
