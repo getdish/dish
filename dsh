@@ -22,6 +22,10 @@ function sh_ci() {
   docker exec -it app_ci_1 sh
 }
 
+# function shell_registry() {
+#   docker exec -it app_worker1_1 sh
+# }
+
 function deploy() {
   docker stack deploy --prune -c docker-compose.yml dish
 }
@@ -88,17 +92,12 @@ function services() {
   docker node ps
 }
 
-# to verify `docker pull registry.fly.io/dish-base` works
-function shell_worker() {
-  docker exec -it app_worker1_1 sh
-}
-
-function shell_registry() {
-  docker exec -it app_worker1_1 sh
-}
-
 function deploy_traefik() {
   docker stack deploy -c docker-traefik.yml traefik
+}
+
+function docker_login() {
+  docker login registry.dishapp.com -u "$TRAEFIK_USERNAME" -p "$TRAEFIK_PASSWORD_PLAIN"
 }
 
 function log_command {
@@ -125,30 +124,30 @@ function rsync_d1_watch() {
   fswatch -0 -o path . | xargs -0 -n1 -I{} sh -c 'rsync_d1'
 }
 
-function start_swarm() {
-  SWARM_TOKEN=$(docker swarm join-token -q worker)
-  SWARM_MASTER=$(docker info --format "{{.Swarm.NodeAddr}}")
-  export REGISTRY_MIRROR_WORKER="${SWARM_MASTER}:${REGISTRY_PORT}"
+# function start_swarm() {
+#   SWARM_TOKEN=$(docker swarm join-token -q worker)
+#   SWARM_MASTER=$(docker info --format "{{.Swarm.NodeAddr}}")
+#   export REGISTRY_MIRROR_WORKER="${SWARM_MASTER}:${REGISTRY_PORT}"
 
-  # remove old
-  docker node rm --force $(docker node ls --filter "name=worker1" -q)
-  docker rm --force $(docker ps -q --filter "name=worker1")
+#   # remove old
+#   docker node rm --force $(docker node ls --filter "name=worker1" -q)
+#   docker rm --force $(docker ps -q --filter "name=worker1")
   
-  # start new
-  docker-compose -f docker-swarm.yml up -d
+#   # start new
+#   docker-compose -f docker-swarm.yml up -d
 
-  # attach to swarm
-  sleep 10
-  docker exec -it app_worker1_1 docker swarm join --token "$SWARM_TOKEN" "$SWARM_MASTER:2377"
-  docker exec -it app_worker1_1 \
-    apk add curl \
-    && curl -L https://fly.io/install.sh | sh \
-    && FLY_API_TOKEN="$FLY_API_TOKEN" /root/.fly/bin/flyctl auth docker
+#   # attach to swarm
+#   sleep 10
+#   docker exec -it app_worker1_1 docker swarm join --token "$SWARM_TOKEN" "$SWARM_MASTER:2377"
+#   docker exec -it app_worker1_1 \
+#     apk add curl \
+#     && curl -L https://fly.io/install.sh | sh \
+#     && FLY_API_TOKEN="$FLY_API_TOKEN" /root/.fly/bin/flyctl auth docker
 
-  # to show if its running
-  sleep 2
-  docker node ls
-}
+#   # to show if its running
+#   sleep 2
+#   docker node ls
+# }
 
 ogpsql=$(which psql)
 
@@ -162,10 +161,6 @@ function psql_timescale() {
 
 function generate_random_port() {
   echo "2$((1000 + RANDOM % 8999))"
-}
-
-function dish_registry_auth() {
-  flyctl auth docker
 }
 
 function _setup_s3() {

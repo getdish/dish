@@ -98,7 +98,7 @@ if [ "$FIRST_STEP" == "true" ]; then
   (flyctl version update || true) && flyctl version &
 fi
 
-./dsh dish_registry_auth &
+./dsh docker_login &
 
 echo "wait for background jobs to finish..."
 wait
