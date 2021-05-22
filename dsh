@@ -100,6 +100,10 @@ function docker_login() {
   docker login registry.dishapp.com -u "$TRAEFIK_USERNAME" -p "$TRAEFIK_PASSWORD_PLAIN"
 }
 
+function docker_registry_gc() {
+  docker exec -it $(docker ps -aqf "name=registry") bin/registry garbage-collect /etc/docker/registry/config.yml
+}
+
 function log_command {
   echo "$" "$@"
   eval $(printf '%q ' "$@") < /dev/tty
@@ -724,6 +728,30 @@ function clean_docker_if_disk_full() {
     fi
   done
 }
+
+# https://gist.github.com/mortensteenrasmussen/512f0566dbc3ef1cc4a2c47dd9cdb973
+# function clean_registry() {
+#   REGISTRY_DIR=YOUR_REGISTRY_DIR/data/docker/registry/v2/repositories
+#   REGISTRY_URL=http://10.10.10.10:5000
+#   #add --insecure to the curl command on line 17 if you use https with self-signed certificates
+
+#   cd ${REGISTRY_DIR}
+#   count=0
+
+#   manifests_without_tags=$(comm -23 <(find . -type f -name "link" | grep "_manifests/revisions/sha256" | grep -v "\/signatures\/sha256\/" | awk -F/ '{print $(NF-1)}' | sort) <(for f in $(find . -type f -name "link" | grep "_manifests/tags/.*/current/link"); do cat ${f} | sed 's/^sha256://g'; echo; done | sort))
+
+#   total_count=$(echo ${manifests_without_tags} | wc -w)
+
+#   for manifest in ${manifests_without_tags}; do
+#     repo=$(find . | grep "_manifests/revisions/sha256/${manifest}/link" | awk -F "_manifest"  '{print $(NF-1)}' | sed 's#^./\(.*\)/#\1#')
+    
+#     #should have error checking on the curl command, it might fail silently atm.
+#     curl -s -X DELETE ${REGISTRY_URL}/v2/${repo}/manifests/sha256:${manifest} > /dev/null
+    
+#     ((count++))
+#     echo "Deleted ${count} of ${total_count} manifests."
+#   done
+# }
 
 function is_hasura_up() {
   [ $(curl -L $HASURA_ENDPOINT/healthz -o /dev/null -w '%{http_code}\n' -s) == "200" ]

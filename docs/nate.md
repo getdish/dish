@@ -1,7 +1,11 @@
 
 - world map lists (top 100 X worldwide) would really show it off
 
-
+- [a] [1] small tweaks to list page will make huge diff, stuff like:
+  - bigger bolder font for description
+  - avatar by description
+  - comments
+- [a] [1] comments on home would likewise be huge and could be very simply done
 - [c] [0] crawl one restaurant, fix
 - [c] [0] test on ~10 restaurants
 - [c] [0] recrawl tucson, la, sd, sf
