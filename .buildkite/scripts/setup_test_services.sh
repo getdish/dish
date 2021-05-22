@@ -5,6 +5,8 @@ set -eo pipefail
 source .env
 source .env.test
 
+docker network create traefik-public || true
+
 # if not already mounted/setup, we need to start postgres once and restart it
 # this is because there are problems where postgres gets corrupted/weird while other services
 # try and access it during init, giving it time to init here and then run later
