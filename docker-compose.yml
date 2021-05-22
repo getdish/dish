@@ -175,6 +175,32 @@ services:
     depends_on:
       - postgres
     
+  registry:
+    image: registry:2
+    restart: always
+    ports:
+      - ${REGISTRY_PORT:-6666}:5000
+    volumes:
+      - /var/data/registry/registry-mirror-data:/var/lib/registry
+      - ./etc/registry-mirror-config.yml:/etc/docker/registry/config.yml
+    networks:
+      - default
+      - traefik-public
+    deploy:
+      labels:
+        - traefik.enable=true
+        - traefik.docker.network=traefik-public
+        - traefik.constraint-label=traefik-public
+        - traefik.http.routers.dish-registry-http.rule=Host(`registry.${DOMAIN}`)
+        - traefik.http.routers.dish-registry-http.entrypoints=http
+        - traefik.http.routers.dish-registry-http.middlewares=dish-https-redirect
+        - traefik.http.routers.dish-registry-https.rule=Host(`registry.${DOMAIN}`)
+        - traefik.http.routers.dish-registry-https.entrypoints=https
+        - traefik.http.routers.dish-registry-https.tls=true
+        - traefik.http.routers.dish-registry-https.tls.certresolver=le
+        - traefik.http.routers.dish-registry-https.middlewares=admin-auth
+        - traefik.http.services.dish-registry.loadbalancer.server.port=5000
+
   pg-admin:
     image: registry.fly.io/pg-admin${DISH_IMAGE_TAG}
     build:
@@ -229,7 +255,7 @@ services:
         - traefik.constraint-label=traefik-public
         - traefik.http.routers.dish-image-quality-http.rule=Host(`image-quality.${DOMAIN}`)
         - traefik.http.routers.dish-image-quality-http.entrypoints=http
-        - traefik.http.services.dish-image-quality.loadbalancer.server.port=80
+        - traefik.http.services.dish-image-quality.loadbalancer.server.port=5005
 
   # non public facing
 

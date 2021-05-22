@@ -42,7 +42,7 @@ can be easily run with Docker Compose: https://docs.docker.com/compose/install/
 
 When working with Dish's Docker images you'll often need to be logged into our Docker
 
-Registry: `./dsh dish_registry_auth`.
+Registry: `./dsh docker_login`.
 
 Some helper commands to get started:
 

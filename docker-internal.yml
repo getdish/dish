@@ -31,16 +31,6 @@ services:
       context: .
       dockerfile: ./services/run-tests/Dockerfile
 
-  registry:
-    image: registry
-    restart: always
-    ports:
-      - ${REGISTRY_PORT:-6666}:5000
-    volumes:
-      - /var/lib/registry:/var/lib/registry
-    environment:
-      - REGISTRY_PROXY_REMOTEURL=https://registry-1.docker.io
-
   # worker1:
   #   image: docker:dind
   #   command: ["--registry-mirror", "http://${REGISTRY_MIRROR_WORKER}", "--insecure-registry", "${REGISTRY_MIRROR_WORKER}"]
