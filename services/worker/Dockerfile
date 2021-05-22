@@ -4,7 +4,7 @@ RUN apt-get update > /dev/null \
       && apt-get install -y chromium xvfb curl \
       && apt-get clean
 
-FROM registry.fly.io/dish-base
+FROM registry.dishapp.com/dish-base
 
 COPY --from=chrome /bin /bin
 COPY --from=chrome /etc /etc

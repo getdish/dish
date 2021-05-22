@@ -1,4 +1,4 @@
-FROM registry.fly.io/dish-base:latest
+FROM registry.dishapp.com/dish-base:latest
 
 RUN \
   apt-get update >/dev/null && apt-get install -y parallel build-essential \

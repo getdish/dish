@@ -1,4 +1,4 @@
-FROM registry.fly.io/dish-base:latest
+FROM registry.dishapp.com/dish-base:latest
 
 FROM node:15.10.0-buster
 
@@ -9,7 +9,7 @@ RUN \
       && apt-get clean \
       && rm -rf /var/lib/apt/lists/*
 
-FROM registry.fly.io/dish-base:latest
+FROM registry.dishapp.com/dish-base:latest
 COPY --from=0 /bin /usr/local/bin
 ENV NODE_ENV=production
 

@@ -9,5 +9,5 @@ source .env.test
 docker run \
   --net host \
   -v /var/run/docker.sock:/var/run/docker.sock \
-  registry.fly.io/dish-run-tests:latest \
+  registry.dishapp.com/dish-run-tests:latest \
   yarn test

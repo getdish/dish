@@ -1,4 +1,4 @@
-FROM registry.fly.io/dish-base:latest
+FROM registry.dishapp.com/dish-base:latest
 
 RUN apt-get update > /dev/null && apt-get install -y lsb-release > /dev/null && \
       echo "deb http://apt.postgresql.org/pub/repos/apt $(lsb_release -cs)-pgdg main" > /etc/apt/sources.list.d/pgdg.list && \

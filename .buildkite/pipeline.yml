@@ -11,7 +11,7 @@ steps:
 
   - label: ":docker: build base"
     key: base
-    command: .buildkite/scripts/build_docker_compose.sh base
+    command: INTERNAL=true .buildkite/scripts/build_docker_compose.sh base
 
   - label: ":docker: build dish-app"
     key: dish-app
@@ -26,7 +26,7 @@ steps:
   - label: ":docker: build run-tests"
     key: run-tests
     depends_on: worker
-    command: .buildkite/scripts/build_docker_compose.sh run-tests
+    command: INTERNAL=true .buildkite/scripts/build_docker_compose.sh run-tests
 
   - label: ":docker: build hooks"
     key: hooks
