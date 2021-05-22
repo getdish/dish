@@ -2,7 +2,7 @@ version: '3.7'
 
 services:
   ci:
-    image: registry.fly.io/dish-ci${DISH_IMAGE_TAG}
+    image: registry.dishapp.com/dish-ci${DISH_IMAGE_TAG}
     command: start --spawn 6 --token ${BUILDITE_AGENT_TOKEN}
     privileged: true
     build:
@@ -20,13 +20,13 @@ services:
       BUILDITE_AGENT_TOKEN: ${BUILDITE_AGENT_TOKEN}
 
   base:
-    image: registry.fly.io/dish-base${DISH_IMAGE_TAG}
+    image: registry.dishapp.com/dish-base${DISH_IMAGE_TAG}
     build:
       context: .
       dockerfile: ./Dockerfile    
 
   run-tests:
-    image: registry.fly.io/dish-run-tests${DISH_IMAGE_TAG}
+    image: registry.dishapp.com/dish-run-tests${DISH_IMAGE_TAG}
     build:
       context: .
       dockerfile: ./services/run-tests/Dockerfile

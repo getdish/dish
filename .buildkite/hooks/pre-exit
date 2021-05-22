@@ -7,7 +7,7 @@ if [ "$FIRST_STEP" == "true" ]; then
 fi
 
 from="$BUILDKITE_PIPELINE_NAME-$BUILDKITE_STEP_KEY-build-$BUILDKITE_BUILD_NUMBER"
-to="registry.fly.io/$DOCKER_TAG"
+to="registry.dishapp.com/$DOCKER_TAG"
 
 if [ -n "$DOCKER_TAG" ]; then
   echo "tagging, before:"

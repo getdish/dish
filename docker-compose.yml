@@ -2,7 +2,7 @@ version: '3.7'
 
 services:
   dish-app:
-    image: registry.fly.io/dish-app${DISH_IMAGE_TAG}
+    image: registry.dishapp.com/dish-app${DISH_IMAGE_TAG}
     networks:
       - default
       - traefik-public
@@ -42,7 +42,7 @@ services:
       - 'tileserver'
 
   search:
-    image: registry.fly.io/dish-search${DISH_IMAGE_TAG}
+    image: registry.dishapp.com/dish-search${DISH_IMAGE_TAG}
     build:
       context: ./services/search
       dockerfile: ./Dockerfile
@@ -73,7 +73,7 @@ services:
       - 'postgres'
 
   tileserver:
-    image: registry.fly.io/dish-tileserver${DISH_IMAGE_TAG}
+    image: registry.dishapp.com/dish-tileserver${DISH_IMAGE_TAG}
     networks:
       - default
       - traefik-public
@@ -102,7 +102,7 @@ services:
       - 'postgres'
     
   site:
-    image: registry.fly.io/dish-site${DISH_IMAGE_TAG}
+    image: registry.dishapp.com/dish-site${DISH_IMAGE_TAG}
     build:
       context: .
       dockerfile: ./services/site/Dockerfile
@@ -126,7 +126,7 @@ services:
         - traefik.http.services.dish-site.loadbalancer.server.port=3999
 
   image-proxy:
-    image: registry.fly.io/dish-image-proxy${DISH_IMAGE_TAG}
+    image: registry.dishapp.com/dish-image-proxy${DISH_IMAGE_TAG}
     build:
       context: ./services/image-proxy
     ports:
@@ -202,7 +202,7 @@ services:
         - traefik.http.services.dish-registry.loadbalancer.server.port=5000
 
   pg-admin:
-    image: registry.fly.io/pg-admin${DISH_IMAGE_TAG}
+    image: registry.dishapp.com/pg-admin${DISH_IMAGE_TAG}
     build:
       context: ./services/timescale
     networks:
@@ -223,7 +223,7 @@ services:
         - traefik.http.services.dish-pg-admin.loadbalancer.server.port=80
 
   bert:
-    image: registry.fly.io/dish-bert${DISH_IMAGE_TAG}
+    image: registry.dishapp.com/dish-bert${DISH_IMAGE_TAG}
     networks:
       - default
       - traefik-public
@@ -241,7 +241,7 @@ services:
         - traefik.http.services.dish-bert.loadbalancer.server.port=8080
   
   image-quality:
-    image: registry.fly.io/dish-image-quality${DISH_IMAGE_TAG}
+    image: registry.dishapp.com/dish-image-quality${DISH_IMAGE_TAG}
     networks:
       - default
     build:
@@ -260,7 +260,7 @@ services:
   # non public facing
 
   postgres:
-    image: registry.fly.io/dish-${POSTGRES_NAME:-postgres}${DISH_IMAGE_TAG}
+    image: registry.dishapp.com/dish-${POSTGRES_NAME:-postgres}${DISH_IMAGE_TAG}
     command: postgres -c config_file=/postgres/postgresql.conf
     networks:
       - default
@@ -278,7 +278,7 @@ services:
 
   timescale:
     command: ["-c", "max_connections=300"]
-    image: ${TIMESCALE_IMAGE:-registry.fly.io/dish-timescale:latest}
+    image: ${TIMESCALE_IMAGE:-registry.dishapp.com/dish-timescale:latest}
     networks:
       - traefik-public
       - default
@@ -307,7 +307,7 @@ services:
       default:
 
   summarizer:
-    image: registry.fly.io/dish-summarizer${DISH_IMAGE_TAG}
+    image: registry.dishapp.com/dish-summarizer${DISH_IMAGE_TAG}
     networks:
       - traefik-public
       - default
@@ -318,7 +318,7 @@ services:
       - 5000:5000
 
   worker-proxy:
-    image: registry.fly.io/dish-proxy${DISH_IMAGE_TAG}
+    image: registry.dishapp.com/dish-proxy${DISH_IMAGE_TAG}
     networks:
       - default
     build:
@@ -348,7 +348,7 @@ services:
       - LUMINATI_PROXY_RESIDENTIAL_PASSWORD=${LUMINATI_PROXY_RESIDENTIAL_PASSWORD}
 
   hooks:
-    image: registry.fly.io/dish-hooks${DISH_IMAGE_TAG}
+    image: registry.dishapp.com/dish-hooks${DISH_IMAGE_TAG}
     networks:
       - traefik-public
       - default
@@ -365,7 +365,7 @@ services:
       - NODE_ENV=${NODE_ENV:-production}
 
   hasura:
-    image: ${DOCKER_HASURA_IMAGE:-registry.fly.io/dish-hasura:latest}
+    image: ${DOCKER_HASURA_IMAGE:-registry.dishapp.com/dish-hasura:latest}
     networks:
       - traefik-public
       - default
@@ -399,7 +399,7 @@ services:
       - 'hooks'
 
   gorse:
-    image: registry.fly.io/dish-gorse${DISH_IMAGE_TAG}
+    image: registry.dishapp.com/dish-gorse${DISH_IMAGE_TAG}
     networks:
       - default
       - traefik-public
@@ -413,7 +413,7 @@ services:
       - 9000:9000
 
   worker:
-    image: registry.fly.io/dish-worker${DISH_IMAGE_TAG}
+    image: registry.dishapp.com/dish-worker${DISH_IMAGE_TAG}
     networks:
       - default
     build:
@@ -456,7 +456,7 @@ services:
       - DISH_DEBUG=1
 
   cron:
-    image: registry.fly.io/dish-cron${DISH_IMAGE_TAG}
+    image: registry.dishapp.com/dish-cron${DISH_IMAGE_TAG}
     networks:
       - default
       - traefik-public
