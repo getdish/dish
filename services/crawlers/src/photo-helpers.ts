@@ -398,7 +398,7 @@ async function getImageSimilarity(urls: string[]) {
 async function getImageCategory(
   urls: string[]
 ): Promise<{ url: string; categories: { label: string; probability: number }[] }[]> {
-  const IMAGE_CATEGORY_API = 'https://image-recognize:8080/recognize'
+  const IMAGE_CATEGORY_API = 'http://image-recognize:8080/recognize'
   return await Promise.all(
     urls.map(async (url) => {
       const data = await fetch(url).then((res) => res.buffer())
@@ -427,7 +427,7 @@ async function getImageCategory(
 async function getImageQuality(
   urls: string[]
 ): Promise<{ mean_score_prediction: number; image_id: string }[]> {
-  const IMAGE_QUALITY_API = 'http://image-quality:5005/prediction'
+  const IMAGE_QUALITY_API = 'http://image-quality:8883/prediction'
   const qualityResponse = await fetch(IMAGE_QUALITY_API, {
     method: 'POST',
     headers: {

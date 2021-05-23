@@ -54,6 +54,7 @@ services:
       dockerfile: ./Dockerfile
     ports:
       - 9999:9999
+    restart: on-failure:3
     networks:
       - default
       - traefik-public
@@ -252,9 +253,39 @@ services:
         - traefik.http.routers.dish-pg-admin-https.tls.certresolver=le
         - traefik.http.routers.dish-pg-admin-https.middlewares=admin-auth
         - traefik.http.services.dish-pg-admin.loadbalancer.server.port=80
-
+    
+  # backuppc:
+  #   image: adferrand/backuppc:4.4.0
+  #   volumes:
+  #     - /var/data/backuppc/etc:/etc/backuppc
+  #     - /var/data/backuppc/home:/home/backuppc
+  #     - /var/data/backuppc/data:/data/backuppc
+  #   networks:
+  #     - traefik-public
+  #   environment:
+  #     - BACKUPPC_WEB_USER=${BACKUPPC_WEB_USER?no user}
+  #     - BACKUPPC_WEB_PASSWD=${BACKUPPC_WEB_PASSWD?no pass}
+  #   deploy:
+  #     labels:
+  #       - traefik.enable=true
+  #       - traefik.docker.network=traefik-public
+  #       - traefik.constraint-label=traefik-public
+  #       - traefik.http.routers.dish-backuppc-http.rule=Host(`backuppc.${DOMAIN}`)
+  #       - traefik.http.routers.dish-backuppc-http.entrypoints=http
+  #       - traefik.http.routers.dish-backuppc-http.middlewares=dish-https-redirect
+  #       - traefik.http.routers.dish-backuppc-https.rule=Host(`backuppc.${DOMAIN}`)
+  #       - traefik.http.routers.dish-backuppc-https.entrypoints=https
+  #       - traefik.http.routers.dish-backuppc-https.tls=true
+  #       - traefik.http.routers.dish-backuppc-https.tls.certresolver=le
+  #       - traefik.http.services.dish-backuppc.loadbalancer.server.port=80
+          
+  # non public facing
+  
   bert:
     image: registry.dishapp.com/dish-bert${DISH_IMAGE_TAG}
+    networks:
+      - default
+      - traefik-public
     build:
       context: ./services/bert
     ports:
@@ -264,6 +295,9 @@ services:
   
   image-quality:
     image: registry.dishapp.com/dish-image-quality${DISH_IMAGE_TAG}
+    networks:
+      - default
+      - traefik-public
     build:
       context: ./services/image-quality
     ports:
@@ -273,13 +307,14 @@ services:
 
   image-recognize:
     image: registry.dishapp.com/dish-image-recognize${DISH_IMAGE_TAG}
+    networks:
+      - default
+      - traefik-public
     build:
       context: ./services/image-recognize
     ports:
       - 8884:8080
-    
-  # non public facing
-
+  
   postgres:
     image: registry.dishapp.com/dish-${POSTGRES_NAME:-postgres}${DISH_IMAGE_TAG}
     command: postgres -c config_file=/postgres/postgresql.conf
@@ -296,14 +331,15 @@ services:
       POSTGRES_DB: ${POSTGRES_DB:-dish}
     ports:
       - 5432:5432
-    # healthcheck:
-    #   test: ["CMD-SHELL", "pg_isready -U postgres"]
-    #   interval: 5s
-    #   timeout: 5s
-    #   retries: 5
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
 
   timescale:
     command: ["-c", "max_connections=300"]
+    restart: on-failure:5
     image: ${TIMESCALE_IMAGE:-registry.dishapp.com/dish-timescale:latest}
     networks:
       - traefik-public
@@ -392,12 +428,13 @@ services:
 
   hasura:
     image: ${DOCKER_HASURA_IMAGE:-registry.dishapp.com/dish-hasura:latest}
-    networks:
-      - traefik-public
-      - default
     build:
       context: .
       dockerfile: ./services/hasura/Dockerfile
+    restart: on-failure:3
+    networks:
+      - traefik-public
+      - default
     ports:
       - ${HASURA_PORT:?no hasura port}:8080
     deploy:
@@ -441,6 +478,7 @@ services:
 
   worker:
     image: registry.dishapp.com/dish-worker${DISH_IMAGE_TAG}
+    restart: on-failure:3
     networks:
       - default
     build:
