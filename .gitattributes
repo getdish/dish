@@ -1,4 +1,5 @@
 etc/keys/.netrc filter=git-crypt diff=git-crypt
+etc/docker/docker_registry.crt filter=git-crypt diff=git-crypt
 .env.production filter=git-crypt diff=git-crypt
 .env filter=git-crypt diff=git-crypt
 etc/dish-wire.conf filter=git-crypt diff=git-crypt
