@@ -253,40 +253,21 @@ services:
 
   bert:
     image: registry.dishapp.com/dish-bert${DISH_IMAGE_TAG}
-    networks:
-      - default
-      - traefik-public
     build:
       context: ./services/bert
     ports:
       - 8888:8080
     deploy:
       replicas: ${DOCKER_REPLICAS:-1}
-      labels:
-        - traefik.enable=true
-        - traefik.docker.network=traefik-public
-        - traefik.constraint-label=traefik-public
-        - traefik.http.routers.dish-bert-http.rule=Host(`bert.${DOMAIN}`)
-        - traefik.http.routers.dish-bert-http.entrypoints=http
-        - traefik.http.services.dish-bert.loadbalancer.server.port=8080
   
   image-quality:
     image: registry.dishapp.com/dish-image-quality${DISH_IMAGE_TAG}
-    networks:
-      - default
     build:
       context: ./services/image-quality
     ports:
       - 8883:5005
     deploy:
       replicas: ${DOCKER_REPLICAS:-1}
-      labels:
-        - traefik.enable=true
-        - traefik.docker.network=traefik-public
-        - traefik.constraint-label=traefik-public
-        - traefik.http.routers.dish-image-quality-http.rule=Host(`image-quality.${DOMAIN}`)
-        - traefik.http.routers.dish-image-quality-http.entrypoints=http
-        - traefik.http.services.dish-image-quality.loadbalancer.server.port=5005
 
   # non public facing
 

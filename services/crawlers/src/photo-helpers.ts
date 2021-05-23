@@ -427,7 +427,7 @@ async function getImageCategory(
 async function getImageQuality(
   urls: string[]
 ): Promise<{ mean_score_prediction: number; image_id: string }[]> {
-  const IMAGE_QUALITY_API = 'https://image-quality.dishapp.com/prediction'
+  const IMAGE_QUALITY_API = 'http://image-quality:5005/prediction'
   const qualityResponse = await fetch(IMAGE_QUALITY_API, {
     method: 'POST',
     headers: {
