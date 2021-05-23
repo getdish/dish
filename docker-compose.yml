@@ -4,8 +4,8 @@
 version: '3.7'
 
 services:
-  dish-app:
-    image: registry.dishapp.com/dish-app${DISH_IMAGE_TAG}
+  app:
+    image: registry.dishapp.com/app${DISH_IMAGE_TAG}
     networks:
       - default
       - traefik-public
@@ -15,17 +15,17 @@ services:
         - traefik.enable=true
         - traefik.docker.network=traefik-public
         - traefik.constraint-label=traefik-public
-        - traefik.http.routers.dish-dish-app-http.rule=Host(`${DOMAIN}`) || Host(`www.${DOMAIN}`)
-        - traefik.http.routers.dish-dish-app-http.entrypoints=http
-        - traefik.http.routers.dish-dish-app-http.middlewares=dish-https-redirect
-        - traefik.http.routers.dish-dish-app-https.rule=Host(`${DOMAIN}`) || Host(`www.${DOMAIN}`)
-        - traefik.http.routers.dish-dish-app-https.entrypoints=https
-        - traefik.http.routers.dish-dish-app-https.tls=true
-        - traefik.http.routers.dish-dish-app-https.tls.certresolver=le
-        - traefik.http.services.dish-dish-app.loadbalancer.server.port=4444
+        - traefik.http.routers.dish-app-http.rule=Host(`${DOMAIN}`) || Host(`www.${DOMAIN}`)
+        - traefik.http.routers.dish-app-http.entrypoints=http
+        - traefik.http.routers.dish-app-http.middlewares=dish-https-redirect
+        - traefik.http.routers.dish-app-https.rule=Host(`${DOMAIN}`) || Host(`www.${DOMAIN}`)
+        - traefik.http.routers.dish-app-https.entrypoints=https
+        - traefik.http.routers.dish-app-https.tls=true
+        - traefik.http.routers.dish-app-https.tls.certresolver=le
+        - traefik.http.services.dish-app.loadbalancer.server.port=4444
     build:
       context: ./
-      dockerfile: ./dish-app/Dockerfile
+      dockerfile: ./app/Dockerfile
     environment:
       - MARTIN_ENDPOINT=https://martin-tiles.dishapp.com
       - HASURA_GRAPHQL_ADMIN_SECRET=${HASURA_GRAPHQL_ADMIN_SECRET:-password}

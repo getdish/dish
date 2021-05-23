@@ -65,7 +65,7 @@ To build an individual container:
 
 `docker-compose build [container-name]`
 
-So, for example `docker-compose build dish-app`.
+So, for example `docker-compose build app`.
 
 ## Debugging broken docker build
 
@@ -127,7 +127,7 @@ Which are for local, staging, prod, respectively.
 First build the docker container, this can take up to 30 minutes:
 
     * At the very root of the entire git repo:
-      `docker build -t dish/app -f dish-app/Dockerfile .`
+      `docker build -t dish/app -f app/Dockerfile .`
 
     * Run the production build of the web site (it exposes on port 4444):
       `docker run -it --rm --net host dish/app`
@@ -150,7 +150,7 @@ If you want to run end to end tests:
     * To connect to these local services, visit:
       'http://localhost:80'
 
-    * Run the tests. from the `dish-app` path:
+    * Run the tests. from the `app` path:
       `yarn test` (specs, etc)
       `./test/testcafe.sh` (integration tests)
 

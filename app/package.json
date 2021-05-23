@@ -44,7 +44,7 @@
     "dev:react": "npx react-devtools",
     "test": "true",
     "build": "true",
-    "build:docker": "cd .. && docker build -t dish/app -f dish-app/Dockerfile .",
+    "build:docker": "cd .. && docker build -t dish/app -f app/Dockerfile .",
     "build:types": "tsc",
     "build:output": "tsc -p tsconfig.build.json",
     "build:splash": "expo-splash-screen --image-resize-mode contain -b '#000000' -i src/assets/splash.png",

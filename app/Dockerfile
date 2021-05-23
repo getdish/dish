@@ -20,9 +20,9 @@ WORKDIR /app
 
 COPY yarn.lock .yarnrc.yml ./
 COPY packages packages
-COPY dish-app dish-app
+COPY app app
 
-WORKDIR /app/dish-app
+WORKDIR /app/app
 
 RUN npm run web:build
 

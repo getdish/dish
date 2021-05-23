@@ -2,8 +2,8 @@
 set -e
 
 function patch_app_packages() {
-  pushd $PROJECT_ROOT/dish-app
-  echo "dish-app: yarn postinstall"
+  pushd $PROJECT_ROOT/app
+  echo "app: yarn postinstall"
   yarn postinstall || true
   popd
 }
@@ -11,16 +11,16 @@ function patch_app_packages() {
 function delete_and_link_duplicate_modules() {
   pushd $PROJECT_ROOT
   # now delete then symlink
-  rm -r dish-app/node_modules/esbuild-register &> /dev/null || true
+  rm -r app/node_modules/esbuild-register &> /dev/null || true
   rm -r node_modules/react-native &> /dev/null || true
   rm -r node_modules/react &> /dev/null || true
   rm -r node_modules/react-dom &> /dev/null || true
   rm -r node_modules/react-native-svg &> /dev/null || true
-  ln -s ../dish-app/node_modules/typescript node_modules &> /dev/null || true
-  ln -s ../dish-app/node_modules/react-native node_modules &> /dev/null || true
-  ln -s ../dish-app/node_modules/react node_modules &> /dev/null || true
-  ln -s ../dish-app/node_modules/react-dom node_modules &> /dev/null || true
-  ln -s ../dish-app/node_modules/react-native-svg node_modules &> /dev/null || true
+  ln -s ../app/node_modules/typescript node_modules &> /dev/null || true
+  ln -s ../app/node_modules/react-native node_modules &> /dev/null || true
+  ln -s ../app/node_modules/react node_modules &> /dev/null || true
+  ln -s ../app/node_modules/react-dom node_modules &> /dev/null || true
+  ln -s ../app/node_modules/react-native-svg node_modules &> /dev/null || true
   popd
 }
 

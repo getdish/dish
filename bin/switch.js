@@ -4,7 +4,7 @@ const path = require('path')
 
 const rootDir = path.join(__dirname, '..')
 const pkgPath = path.join(rootDir, 'package.json')
-const dishAppPath = path.join(rootDir, 'dish-app')
+const dishAppPath = path.join(rootDir, 'app')
 
 const pkg = require(pkgPath)
 const execa = require('execa')

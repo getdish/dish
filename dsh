@@ -46,8 +46,8 @@ function logs_traefik() {
   docker service logs traefik_traefik
 }
 
-function logs_dish-app() {
-  docker service logs dish_dish-app
+function logs_app() {
+  docker service logs dish_app
 }
 
 function logs_services() {
@@ -59,7 +59,7 @@ function logs_service() {
 }
 
 function exec() {
-  app="${@:-dish-app}"
+  app="${@:-app}"
   docker exec -ti dish_$app.1.$(docker service ps dish_$app -q --no-trunc | head -n1) /bin/bash
 }
 
@@ -404,7 +404,7 @@ function bull_delete_queue() {
 function dish_app_generate_tags() {
   export HASURA_ENDPOINT=https://hasura.dishapp.com
   export IS_LIVE=1
-  pushd $PROJECT_ROOT/dish-app
+  pushd $PROJECT_ROOT/app
   node -r esbuild-register ./etc/generate_tags.ts
 }
 
@@ -633,13 +633,14 @@ function clean_dangling() {
 }
 
 function docker_compose_build_and_push() {
-  echo "🐳 docker building and pushing $@"
+  echo "🐳 docker building... $@"
   if [ "$INTERNAL" = "true" ]; then
-    docker-compose -f docker-internal.yml build "$@" && \
-    docker-compose -f docker-internal.yml push "$@"
+    docker-compose -f docker-internal.yml build "$@"
   else
     docker-compose build "$@" && docker-compose push "$@"
   fi
+  echo "🐳 docker pushing... $@"
+  docker push "registry.dishapp.com/dish-$@"
 }
 
 function docker_compose_up_subset() {
@@ -776,8 +777,8 @@ function run_all_tests() {
 
 function run_integration_tests() {
   echo "Running Test Cafe end-to-end browser-based tests..."
-  pushd dish-app
-    docker run -d --net=host --name dish-app-integration-tests-$BUILDKITE_BUILD_NUMBER $DISH_REGISTRY/dish-app
+  pushd app
+    docker run -d --net=host --name app-integration-tests-$BUILDKITE_BUILD_NUMBER $DISH_REGISTRY/app
   sleep 5
   ./test/testcafe.sh
   popd
@@ -854,7 +855,7 @@ function wait_until_services_ready() {
     echo "Timed out waiting for Timescale container to start"
     exit 1
   fi
-  echo "Waiting for dish-app to finish starting"
+  echo "Waiting for app to finish starting"
   if ! timeout --preserve-status 25 bash -c wait_until_dish_app_ready; then
     echo "Timed out waiting for dish container to start"
     exit 1

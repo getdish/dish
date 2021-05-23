@@ -398,7 +398,7 @@ async function getImageSimilarity(urls: string[]) {
 async function getImageCategory(
   urls: string[]
 ): Promise<{ url: string; categories: { label: string; probability: number }[] }[]> {
-  const IMAGE_CATEGORY_API = 'https://dish-image-recognize.fly.dev/recognize'
+  const IMAGE_CATEGORY_API = 'https://image-recognize.dishapp.com/recognize'
   return await Promise.all(
     urls.map(async (url) => {
       const data = await fetch(url).then((res) => res.buffer())

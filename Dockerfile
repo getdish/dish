@@ -8,7 +8,7 @@ ENV PUPPETEER_SKIP_CHROMIUM_DOWNLOAD=true
 # copy everything
 COPY packages packages
 COPY services services
-COPY dish-app dish-app
+COPY app app
 COPY snackui snackui
 COPY package.json .
 
@@ -22,7 +22,7 @@ COPY .yarnrc.yml yarn.lock ./
 COPY .yarn .yarn
 COPY patches patches
 COPY bin bin
-COPY dish-app/etc dish-app/etc
+COPY app/etc app/etc
 
 # install
 RUN yarn install --immutable-cache \
@@ -37,7 +37,7 @@ COPY packages packages
 COPY services/crawlers services/crawlers
 COPY services/hooks services/hooks
 COPY services/worker services/worker
-COPY dish-app dish-app
+COPY app app
 COPY snackui snackui
 
 # remove all tests even node modules

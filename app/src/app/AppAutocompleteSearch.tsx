@@ -91,7 +91,7 @@ const homeDefaultResults = tagDefaultAutocomplete.map((tag) => {
 function useSearchQueryEffect(
   query: string,
   store: AutocompleteStore,
-  activeTags: import('/Users/n8/dish/dish-app/src/types/tagTypes').NavigableTag[]
+  activeTags: import('/Users/n8/dish/app/src/types/tagTypes').NavigableTag[]
 ) {
   useEffect(() => {
     if (!query) {

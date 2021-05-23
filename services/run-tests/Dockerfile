@@ -10,7 +10,7 @@ COPY .env .env.test package.json ava.config.js jest.config.js dsh ./
 # copy to get test folders back
 
 COPY packages packages
-COPY dish-app dish-app
+COPY app app
 COPY services services
 COPY snackui snackui
 
