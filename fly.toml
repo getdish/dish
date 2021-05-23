@@ -1,4 +1,0 @@
-app = "dish-base"
-
-kill_signal = "SIGINT"
-kill_timeout = 5

@@ -2042,9 +2042,9 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@dish/app@*, @dish/app@workspace:dish-app":
+"@dish/app@*, @dish/app@workspace:app":
   version: 0.0.0-use.local
-  resolution: "@dish/app@workspace:dish-app"
+  resolution: "@dish/app@workspace:app"
   dependencies:
     "@babel/cli": ^7.13.0
     "@babel/core": ^7.13.8

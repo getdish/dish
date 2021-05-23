@@ -82,19 +82,18 @@ async function getLocalComposeImages() {
   ).flatMap((x) => (x.status === 'fulfilled' && x.value ? x.value : []))
 }
 
-async function pushLocalComposeImages() {
-  const dockerfiles = await getLocalComposeImages()
-  for (const file of dockerfiles) {
-    const nm = basename(dirname(file)).replace('dish-', '')
-    await $`docker tag registry.fly.io/dish-${nm} registry.dishapp.com/dish-${nm}`
-    await $`docker push registry.dishapp.com/dish-${nm}`
-  }
-}
+// async function pushLocalComposeImages() {
+//   const dockerfiles = await getLocalComposeImages()
+//   for (const file of dockerfiles) {
+//     const nm = basename(dirname(file))
+//     await $`docker tag registry.fly.io/dish-${nm} registry.dishapp.com/dish-${nm}`
+//     await $`docker push registry.dishapp.com/dish-${nm}`
+//   }
+// }
 
 try {
   console.log(await getPackageJsonPaths())
   console.log(await getLocalComposeImages())
-  console.log(await pushLocalComposeImages())
 } catch (err) {
   console.log(err.message)
 }

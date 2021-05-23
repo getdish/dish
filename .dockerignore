@@ -10,8 +10,8 @@ Dockerfile
 **/tsconfig.tsbuildinfo
 **/.expo
 **/target/*
-dish-app/ios
-dish-app/android
+app/ios
+app/android
 .expo/*
 .expo-shared/*
 .github/*
@@ -21,8 +21,6 @@ assets
 docs
 *.md
 .vscode
-**/fly.toml
-fly.toml
 docker-compose.yml
 **/.ci
 services/hasura/migrations

@@ -22,7 +22,7 @@ yes | PATH="/usr/lib/jvm/java-8-openjdk/jre/bin/:$PATH" \
 Some certificate, I don't know what for:
 
 ```
-keytool -genkey -v -keystore dish-app/android/app/debug.keystore \
+keytool -genkey -v -keystore app/android/app/debug.keystore \
   -storepass android -alias androiddebugkey -keypass android \
   -keyalg RSA -keysize 2048 -validity 10000
 ```
@@ -33,10 +33,10 @@ Basic development workflow:
 # Build and watch app as normal (in project root)
 TARGET=native yarn build:watch
 
-# Starts react-native and debug server (in dish-app)
+# Starts react-native and debug server (in app)
 yarn start
 
-# Builds the Android dev APK, opens `adb` connection (in dish-app)
+# Builds the Android dev APK, opens `adb` connection (in app)
 yarn android
 ```
 
@@ -51,12 +51,12 @@ Error: EISDIR: illegal operation on a directory, read
     at Object.readSync (fs.js:523:3)
     at tryReadSync (fs.js:348:20)
     at Object.readFileSync (fs.js:385:19)
-    at UnableToResolveError.buildCodeFrameMessage (/home/tombh/Workspace/dish/dish-app/node_modules/metro/src/node-haste/DependencyGraph/ModuleResolution.js:339:17)
-    at new UnableToResolveError (/home/tombh/Workspace/dish/dish-app/node_modules/metro/src/node-haste/DependencyGraph/ModuleResolution.js:325:35)
-    at ModuleResolver.resolveDependency (/home/tombh/Workspace/dish/dish-app/node_modules/metro/src/node-haste/DependencyGraph/ModuleResolution.js:203:15)
-    at DependencyGraph.resolveDependency (/home/tombh/Workspace/dish/dish-app/node_modules/metro/src/node-haste/DependencyGraph.js:404:43)
-    at /home/tombh/Workspace/dish/dish-app/node_modules/metro/src/lib/transformHelpers.js:301:42
-    at /home/tombh/Workspace/dish/dish-app/node_modules/metro/src/Server.js:1459:14
+    at UnableToResolveError.buildCodeFrameMessage (/home/tombh/Workspace/dish/app/node_modules/metro/src/node-haste/DependencyGraph/ModuleResolution.js:339:17)
+    at new UnableToResolveError (/home/tombh/Workspace/dish/app/node_modules/metro/src/node-haste/DependencyGraph/ModuleResolution.js:325:35)
+    at ModuleResolver.resolveDependency (/home/tombh/Workspace/dish/app/node_modules/metro/src/node-haste/DependencyGraph/ModuleResolution.js:203:15)
+    at DependencyGraph.resolveDependency (/home/tombh/Workspace/dish/app/node_modules/metro/src/node-haste/DependencyGraph.js:404:43)
+    at /home/tombh/Workspace/dish/app/node_modules/metro/src/lib/transformHelpers.js:301:42
+    at /home/tombh/Workspace/dish/app/node_modules/metro/src/Server.js:1459:14
     at Generator.next (<anonymous>)
 ```
 

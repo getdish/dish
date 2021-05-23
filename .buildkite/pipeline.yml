@@ -13,34 +13,34 @@ steps:
     key: base
     command: INTERNAL=true ./dsh docker_compose_build_and_push base
 
-  - label: ":docker: build dish-app"
-    key: dish-app
+  - label: ":docker: build app"
+    key: app
     depends_on: base
-    command: ./dsh docker_compose_build_and_push dish-app
+    command: ./dsh docker_compose_build_and_push app
 
   - label: ":docker: build worker"
     key: worker
-    depends_on: dish-app
+    depends_on: base
     command: ./dsh docker_compose_build_and_push worker
 
   - label: ":docker: build run-tests"
     key: run-tests
-    depends_on: worker
+    depends_on: base
     command: INTERNAL=true ./dsh docker_compose_build_and_push run-tests
 
   - label: ":docker: build hooks"
     key: hooks
-    depends_on: run-tests
+    depends_on: base
     command: ./dsh docker_compose_build_and_push hooks
 
   - label: ":docker: build site"
     key: site
-    depends_on: hooks
+    depends_on: base
     command: ./dsh docker_compose_build_and_push site
 
   - label: ":docker: build worker-proxy"
     key: worker-proxy
-    depends_on: site
+    depends_on: base
     command: ./dsh docker_compose_build_and_push worker-proxy
 
   - label: ":docker: build search"
@@ -67,7 +67,7 @@ steps:
     command: "true"
     key: test-images
     depends_on:
-      - dish-app
+      - app
       - hooks
       - search
       - hasura

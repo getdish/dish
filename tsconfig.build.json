@@ -6,7 +6,7 @@
     "skipLibCheck": true
   },
   "references": [
-    { "path": "dish-app" },
+    { "path": "app" },
     { "path": "packages/server" },
     { "path": "packages/react-feather" },
     { "path": "services/crawlers" },

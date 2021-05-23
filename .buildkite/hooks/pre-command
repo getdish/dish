@@ -53,11 +53,6 @@ if ! [ -x "$(command -v netstat)" ]; then
 fi
 echo "netstat installed"
 
-if ! [ -x "$(command -v flyctl)" ]; then
-  curl -L https://fly.io/install.sh | sh
-fi
-echo "flyctl installed"
-
 if ! [ -x "$(command -v psql)" ]; then
   apt-get update && apt-get install -y postgresql-client
 fi
