@@ -11,6 +11,8 @@ services:
       - traefik-public
     deploy:
       replicas: ${DOCKER_REPLICAS:-1}
+      update_config:
+        order: start-first
       labels:
         - traefik.enable=true
         - traefik.docker.network=traefik-public
@@ -269,6 +271,13 @@ services:
     deploy:
       replicas: ${DOCKER_REPLICAS:-1}
 
+  image-recognize:
+    image: registry.dishapp.com/dish-image-recognize${DISH_IMAGE_TAG}
+    build:
+      context: ./services/image-recognize
+    ports:
+      - 8884:8080
+    
   # non public facing
 
   postgres:
