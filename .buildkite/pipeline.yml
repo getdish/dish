@@ -11,37 +11,37 @@ steps:
 
   - label: ":docker: build base"
     key: base
-    command: INTERNAL=true ./dsh docker_compose_build_and_push base
+    command: INTERNAL=true ./dsh docker_compose_build base
 
   - label: ":docker: build app"
     key: app
     depends_on: base
-    command: ./dsh docker_compose_build_and_push app
+    command: ./dsh docker_compose_build app
 
   - label: ":docker: build worker"
     key: worker
     depends_on: base
-    command: ./dsh docker_compose_build_and_push worker
+    command: ./dsh docker_compose_build worker
 
   - label: ":docker: build run-tests"
     key: run-tests
     depends_on: base
-    command: INTERNAL=true ./dsh docker_compose_build_and_push run-tests
+    command: INTERNAL=true ./dsh docker_compose_build run-tests
 
   - label: ":docker: build hooks"
     key: hooks
     depends_on: base
-    command: ./dsh docker_compose_build_and_push hooks
+    command: ./dsh docker_compose_build hooks
 
   - label: ":docker: build site"
     key: site
     depends_on: base
-    command: ./dsh docker_compose_build_and_push site
+    command: ./dsh docker_compose_build site
 
   - label: ":docker: build worker-proxy"
     key: worker-proxy
     depends_on: base
-    command: ./dsh docker_compose_build_and_push worker-proxy
+    command: ./dsh docker_compose_build worker-proxy
 
   - label: ":docker: build search"
     key: search
@@ -136,6 +136,13 @@ steps:
   #   command: "./dsh run_integration_tests"
 
   - wait
+
+  - label: "prepush images to registry"
+    if: build.branch == "production" || build.branch == "nate/dev"
+    # note this trick means it runs before the wait
+    depends_on: test-images
+    command: ./dsh docker_compose_push_core
+
 
   - label: "deploy dedicated"
     if: build.branch == "production" || build.branch == "nate/dev"

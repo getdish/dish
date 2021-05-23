@@ -632,15 +632,27 @@ function clean_dangling() {
   docker rmi $(docker images --filter "dangling=true" -q --no-trunc) || true
 }
 
-function docker_compose_build_and_push() {
-  echo "🐳 docker building... $@"
+function docker_compose_build() {
+echo "🐳 docker building... $@"
   if [ "$INTERNAL" = "true" ]; then
     docker-compose -f docker-internal.yml build "$@"
   else
     docker-compose build "$@" && docker-compose push "$@"
   fi
+}
+
+function docker_compose_build_and_push() {
+  docker_compose_build "$@"
   echo "🐳 docker pushing... $@"
   docker push "registry.dishapp.com/dish-$@"
+}
+
+function docker_compose_push_core() {
+  docker push registry.fly.io/dish-base | sed -e 's/^/base: /;' &
+  docker push registry.fly.io/dish-app | sed -e 's/^/app: /;' &
+  docker push registry.fly.io/dish-hooks | sed -e 's/^/hooks: /;' &
+  docker push registry.fly.io/dish-site | sed -e 's/^/site: /;' &
+  docker push registry.fly.io/dish-worker | sed -e 's/^/worker: /;' &
 }
 
 function docker_compose_up_subset() {
