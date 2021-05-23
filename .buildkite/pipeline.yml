@@ -124,8 +124,11 @@ steps:
   - label: "run tests"
     key: tests
     timeout_in_minutes: 10
-    command: "./dsh run_all_tests; docker-compose down -t 3"
+    command: "./dsh run_all_tests"
     depends_on: test-setup
+    retry:
+      automatic:
+        limit: 1
     env:
       LOG_DOCKER: true
       SHOW_DOCKER_IMAGES: true

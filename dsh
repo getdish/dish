@@ -1,7 +1,5 @@
 #!/bin/bash
 set -eo pipefail
-#Does this put our `set -e` into all the functions?
-export SHELLOPTS
 
 DISH_ENV="${DISH_ENV:-production}"
 ENV_FILE=".env.$DISH_ENV"
@@ -23,14 +21,22 @@ function sh_ci() {
 }
 
 function deploy() {
-  docker stack deploy --prune -c docker-compose.yml dish
+  docker stack deploy --with-registry-auth --prune -c docker-compose.yml dish
   # any better log of the pull?
   printf "\n\nlast system logs:\n\n"
   tail -n 10 /var/log/syslog
 }
 
+function docker_logs() {
+  journalctl -u docker.service | tail -n 50
+}
+
 function deploy_traefik() {
   docker stack deploy --prune -c docker-traefik.yml traefik
+  sleep 2
+  docker service ps --no-trunc traefik_traefik
+  sleep 2
+  docker_logs
 }
 
 function deploy_internal() {
@@ -125,9 +131,9 @@ function rsync_d1() {
   PRIVATE_KEY="$PROJECT_ROOT/etc/keys/d1_reliablesite_dish"
   echo "syncing"
   rsync \
-    -avP --delete --filter=':- .gitignore' --filter='- .git' \
+    -avP --force --delete --filter=':- .gitignore' --filter='- .git' \
     -e "ssh -o StrictHostKeyChecking=no -i $PRIVATE_KEY" \
-    . "root@$DEDICATED_SERVER_HOST:/app" &>/dev/null
+    . "root@$DEDICATED_SERVER_HOST:/app"
   echo "synced"
 }
 export -f rsync_d1
@@ -343,7 +349,7 @@ function timescale_migrate() {
 }
 
 function migrate() {
-  hasura_migrate
+  # hasura_migrate # testing cli-migrations hasura image to auto-migrate
   timescale_migrate
 }
 
@@ -689,11 +695,9 @@ function deploy_dedicated() {
       | grep -E -v "$COMPOSE_EXCLUDE" \
       | tr '\r\n' ' '
   )
-  echo "🖥 deploying dedicated server: $SERVICES (syncing)..."
-  rsync \
-    -avP --delete --filter=':- .gitignore' --filter='- .git' \
-    -e "ssh -o StrictHostKeyChecking=no -i $PRIVATE_KEY" \
-    . "root@$DEDICATED_SERVER_HOST:/app" &> /dev/null
+
+  echo "🖥 deploying dedicated server (syncing) $DEDICATED_SERVER_HOST: $SERVICES ..."
+  rsync_d1
   echo " running commands..."
   ssh \
     -i "$PRIVATE_KEY" \
@@ -706,15 +710,13 @@ function deploy_dedicated() {
       source .env.d1
       yarn
       flyctl auth docker
-      dsh deploy
-      echo todo migrate on start
-      sleep 10
-      dsh hasura_migrate
-      dsh timescale_migrate
-      dsh umami_migrate
-      docker system prune --force &
-      dsh wait_until_services_ready &
-      wait
+      ./dsh deploy
+      # sleep 10
+      # ./dsh wait_until_services_ready
+      # ./dsh hasura_migrate
+      # ./dsh timescale_migrate
+      # ./dsh umami_migrate
+      docker system prune --force
       echo done
     "
   printf "\n\n 🖥 deploying dedicated server done ✅ \n\n"
@@ -770,11 +772,14 @@ function clean_docker_if_disk_full() {
 }
 
 function run_all_tests() {
+    # -v "$POSTGRES_DB_DIR:$POSTGRES_DB_DIR" \
+    # -v "$TIMESCALE_DB_DIR:$TIMESCALE_DB_DIR" \
   docker run \
     --net host \
     -v /var/run/docker.sock:/var/run/docker.sock \
     registry.dishapp.com/dish-run-tests:latest \
-    yarn test
+    yarn test || echo "failed tests"
+  docker-compose down -t 3
 }
 
 function run_integration_tests() {
@@ -902,14 +907,16 @@ function setup_test_services() {
   # try and access it during init, giving it time to init here and then run later
   if [ ! -d "$POSTGRES_DB_DIR" ]; then
     echo "doing double start first time since no postgres db dir: $POSTGRES_DB_DIR"
+    ls -la /root/.dish
     mkdir -p "$POSTGRES_DB_DIR"
     docker-compose run -d postgres
     wait_until_postgres_ready
   fi
 
   # saw some hanging around, just in case run this its pretty fast
-  echo "down"
-  docker-compose down --remove-orphans -t 4
+  # nm, errors removing old network
+  echo "stopping"
+  docker-compose stop -t 4
 
   # fixes issues of not allowing connecting during tests
   if [ -d "$POSTGRES_DB_DIR" ]; then
@@ -923,7 +930,8 @@ function setup_test_services() {
 
   docker_compose_up -d
   wait_until_services_ready
-  migrate
+  # testing migrate on start method
+  # migrate
 
   echo "done"
 }

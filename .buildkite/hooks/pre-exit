@@ -6,6 +6,11 @@ if [ "$FIRST_STEP" == "true" ]; then
   exit 0
 fi
 
+if [ "$DISH_ENV" != "test" ]; then
+  echo "not in test mode! danger"
+  exit 1
+fi
+
 from="$BUILDKITE_PIPELINE_NAME-$BUILDKITE_STEP_KEY-build-$BUILDKITE_BUILD_NUMBER"
 to="registry.dishapp.com/$DOCKER_TAG"
 
@@ -25,8 +30,8 @@ fi
 
 if [ "$BUILDKITE_COMMAND_EXIT_STATUS" = "1" ] && [ "$DATA_CLEAR_ON_FAIL" == "true" ]; then
   echo "cleaning data on failure..."
-  rm -r "$POSTGRES_DB_DIR"
-  rm -r "$TIMESCALE_DB_DIR"
+  rm -r "$POSTGRES_DB_DIR" || true
+  rm -r "$TIMESCALE_DB_DIR" || true
 fi
 
 if [ "$SHOW_DOCKER_IMAGES" = "true" ]; then
@@ -52,6 +57,11 @@ fi
 if [ "$IS_COMPOSE_RUNNER" = "true" ] && [ "$BUILDKITE_COMMAND_EXIT_STATUS" = "1" ]; then
   echo "shutting down docker"
   docker-compose down || true
+fi
+
+if [ "$BUILDKITE_COMMAND_EXIT_STATUS" = "1" ] && [ "$DOCKER_CLEAN_ON_FAIL" = "1" ]; then
+  rm -r "$POSTGRES_DB_DIR"
+  rm -r "$TIMESCALE_DB_DIR"
 fi
 
 if [ "$DOCKER_CLEAN" == "true" ] || { [ "$BUILDKITE_COMMAND_EXIT_STATUS" = "1" ] && [ "$DOCKER_CLEAN_ON_FAIL" = "1" ]; }; then

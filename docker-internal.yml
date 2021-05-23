@@ -4,18 +4,16 @@ services:
   ci:
     image: registry.dishapp.com/dish-ci${DISH_IMAGE_TAG}
     command: start --spawn 8 --token ${BUILDITE_AGENT_TOKEN}
-    privileged: true
+    # privileged: true
     build:
       context: ./services/ci
     volumes:
-      - /var/data:/var/data
-      - ${HOME}/.dish:/root/.dish
       - /var/lib/buildkite/builds:/var/lib/buildkite/builds
       - /usr/local/bin/buildkite-agent:/usr/local/bin/buildkite-agent
       - ./etc/keys:/buildkite-secrets:ro
       - /etc/docker/daemon.json:/etc/docker/daemon.json
       - /etc/docker/certs.d:/etc/docker/certs.d
-      - ./data:/data
+      - /var/run/docker.sock:/var/run/docker.sock
     environment:
       DISH_KEYS_PATH: /buildkite-secrets
       BUILDKITE_BUILD_PATH: /var/lib/buildkite/builds

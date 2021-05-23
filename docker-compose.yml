@@ -47,6 +47,49 @@ services:
       - 'redis'
       - 'tileserver'
 
+  hasura:
+    image: ${DOCKER_HASURA_IMAGE:-registry.dishapp.com/dish-hasura:latest}
+    build:
+      context: .
+      dockerfile: ./services/hasura/Dockerfile
+    restart: on-failure:3
+    networks:
+      - traefik-public
+      - default
+    ports:
+      - ${HASURA_PORT:?no hasura port}:8080
+    deploy:
+      replicas: ${DOCKER_REPLICAS:-1}
+      update_config:
+        order: start-first
+      labels:
+        - traefik.enable=true
+        - traefik.docker.network=traefik-public
+        - traefik.constraint-label=traefik-public
+        - traefik.http.routers.dish-hasura-http.rule=Host(`hasura.${DOMAIN}`)
+        - traefik.http.routers.dish-hasura-http.entrypoints=http
+        - traefik.http.routers.dish-hasura-http.middlewares=dish-https-redirect
+        - traefik.http.routers.dish-hasura-https.rule=Host(`hasura.${DOMAIN}`)
+        - traefik.http.routers.dish-hasura-https.entrypoints=https
+        - traefik.http.routers.dish-hasura-https.tls=true
+        - traefik.http.routers.dish-hasura-https.tls.certresolver=le
+        - traefik.http.services.dish-hasura.loadbalancer.server.port=9999
+    environment:
+      - HASURA_GRAPHQL_NO_OF_RETRIES=50
+      - HASURA_GRAPHQL_DATABASE_URL=${POSTGRES_URL_INTERNAL:-postgres://postgres:postgres@postgres/dish}
+      - HASURA_GRAPHQL_ENABLED_LOG_TYPES=startup, http-log, webhook-log, websocket-log, query-log
+      - HASURA_GRAPHQL_ENABLE_TELEMETRY=false
+      - HASURA_GRAPHQL_ADMIN_SECRET=${HASURA_GRAPHQL_ADMIN_SECRET:-password}
+      - HASURA_GRAPHQL_UNAUTHORIZED_ROLE=anon
+      - HASURA_GRAPHQL_JWT_SECRET={"type":"HS256", "key":"12345678901234567890123456789012"}
+      - HASURA_GRAPHQL_ENABLE_CONSOLE=true
+      - DISH_HOOKS_ENDPOINT=http://hooks:${HOOKS_PORT:-6154}
+      - GORSE_SYNC_HOOK=http://hooks:${HOOKS_PORT:-6154}/gorse_sync
+    depends_on:
+      - 'postgres'
+      - 'redis'
+      - 'hooks'
+    
   search:
     image: registry.dishapp.com/dish-search${DISH_IMAGE_TAG}
     build:
@@ -60,6 +103,8 @@ services:
       - traefik-public
     deploy:
       replicas: ${DOCKER_REPLICAS:-1}
+      update_config:
+        order: start-first
       labels:
         - traefik.enable=true
         - traefik.docker.network=traefik-public
@@ -87,6 +132,8 @@ services:
       - traefik-public
     deploy:
       replicas: ${DOCKER_REPLICAS:-1}
+      update_config:
+        order: start-first
       labels:
         - traefik.enable=true
         - traefik.docker.network=traefik-public
@@ -121,6 +168,8 @@ services:
       - default
       - traefik-public
     deploy:
+      update_config:
+        order: start-first
       labels:
         - traefik.enable=true
         - traefik.docker.network=traefik-public
@@ -318,6 +367,7 @@ services:
   postgres:
     image: registry.dishapp.com/dish-${POSTGRES_NAME:-postgres}${DISH_IMAGE_TAG}
     command: postgres -c config_file=/postgres/postgresql.conf
+    restart: on-failure:5
     networks:
       - default
     build:
@@ -354,6 +404,17 @@ services:
       POSTGRES_DB: scrape_data
     ports:
       - ${TIMESCALE_PORT:-5433}:5432
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  timescale-migrate:
+    image: registry.dishapp.com/dish-run-tests
+    command: ["dsh", "timescale_migrate"]
+    depends_on:
+      - timescale
 
   redis:
     image: redis
@@ -425,42 +486,6 @@ services:
       - GORSE_ENDPOINT=http://gorse:9000
       - DISH_ENV=${DISH_ENV:-production}
       - NODE_ENV=${NODE_ENV:-production}
-
-  hasura:
-    image: ${DOCKER_HASURA_IMAGE:-registry.dishapp.com/dish-hasura:latest}
-    build:
-      context: .
-      dockerfile: ./services/hasura/Dockerfile
-    restart: on-failure:3
-    networks:
-      - traefik-public
-      - default
-    ports:
-      - ${HASURA_PORT:?no hasura port}:8080
-    deploy:
-      replicas: ${DOCKER_REPLICAS:-1}
-      labels:
-        - traefik.enable=true
-        - traefik.docker.network=traefik-public
-        - traefik.constraint-label=traefik-public
-        - traefik.http.routers.dish-hasura-http.rule=Host(`hasura.${DOMAIN}`)
-        - traefik.http.routers.dish-hasura-http.entrypoints=http
-        - traefik.http.services.dish-hasura.loadbalancer.server.port=8080
-    environment:
-      - HASURA_GRAPHQL_NO_OF_RETRIES=50
-      - HASURA_GRAPHQL_DATABASE_URL=${POSTGRES_URL_INTERNAL:-postgres://postgres:postgres@postgres/dish}
-      - HASURA_GRAPHQL_ENABLED_LOG_TYPES=startup, http-log, webhook-log, websocket-log, query-log
-      - HASURA_GRAPHQL_ENABLE_TELEMETRY=false
-      - HASURA_GRAPHQL_ADMIN_SECRET=${HASURA_GRAPHQL_ADMIN_SECRET:-password}
-      - HASURA_GRAPHQL_UNAUTHORIZED_ROLE=anon
-      - HASURA_GRAPHQL_JWT_SECRET={"type":"HS256", "key":"12345678901234567890123456789012"}
-      - HASURA_GRAPHQL_ENABLE_CONSOLE=true
-      - DISH_HOOKS_ENDPOINT=http://hooks:${HOOKS_PORT:-6154}
-      - GORSE_SYNC_HOOK=http://hooks:${HOOKS_PORT:-6154}/gorse_sync
-    depends_on:
-      - 'postgres'
-      - 'redis'
-      - 'hooks'
 
   gorse:
     image: registry.dishapp.com/dish-gorse${DISH_IMAGE_TAG}

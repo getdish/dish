@@ -2,6 +2,10 @@
 
 set -eo pipefail
 
+# TODO much of this install stuff could be in the agent container itself?
+# would mean that restarting the ci itself doesnt incur lots of cost, mostly
+# helpful as i'm having to restart it a bit to figure out a good config
+
 echo "HOME = $HOME"
 
 if [ "$FIRST_STEP" == "true" ]; then
