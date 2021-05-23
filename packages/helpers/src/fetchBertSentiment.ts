@@ -8,7 +8,7 @@ type Sentiment = {
 }
 
 export async function fetchBertSentiment(sentence: string): Promise<Sentiment> {
-  const url = `http://bert:8888/predict`
+  const url = `${process.env.BERT_ENDPOINT}/predict`
   return fetch(url, {
     method: 'post',
     headers: {
