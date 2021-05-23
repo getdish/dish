@@ -182,7 +182,7 @@ curl -L https://github.com/hasura/graphql-engine/raw/master/cli/get.sh | bash
 
 If this is your first install, or there's new migrations waiting to be run:
 
-`hasura migrate apply --endpoint http://localhost:8080 --admin-secret=password`
+`hasura migrate apply --endpoint http://localhost:8091 --admin-secret=password`
 
 To remove data / reset dev env:
 
@@ -190,7 +190,7 @@ To remove data / reset dev env:
 
 Then run the admin UI using:
 
-`hasura console --endpoint http://localhost:8080 --admin-secret=password`
+`hasura console --endpoint http://localhost:8091 --admin-secret=password`
 
 This will set up two way persistence so when you modify tables it persists to
 your migrations.

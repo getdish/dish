@@ -678,6 +678,7 @@ function docker_compose_up() {
       grep -E -v "$services_list" |
       tr '\r\n' ' '
   )
+  docker_login
   # cleans up misbehaving old containers
   if [ "$DISH_ENV" = "test" ]; then
     for service in $services; do
@@ -830,6 +831,11 @@ function is_timescale_up() {
 }
 export -f is_timescale_up
 
+function is_postgres_up() {
+  [ $(curl -L $POSTGRES_ENDPOINT -o /dev/null -w '%{http_code}\n' -s) == "000" ]
+}
+export -f is_postgres_up
+
 function is_dish_up() {
   [ $(curl -L $DISH_ENDPOINT/healthz -o /dev/null -w '%{http_code}\n' -s) == "200" ]
 }
@@ -841,6 +847,13 @@ function wait_until_hasura_ready() {
   echo "Hasura is up"
 }
 export -f wait_until_hasura_ready
+
+function wait_until_postgres_ready() {
+  echo "Waiting for Postgres to start ($POSTGRES_ENDPOINT)..."
+  until is_postgres_up; do sleep 0.1; done
+  echo "Postgres is up"
+}
+export -f wait_until_postgres_ready
 
 function wait_until_timescale_ready() {
   echo "Waiting for Timescale to start ($TIMESCALE_ENDPOINT)..."
@@ -894,16 +907,20 @@ function run() {
 
 function setup_test_services() {
   docker network create traefik-public || true
+
   # if not already mounted/setup, we need to start postgres once and restart it
   # this is because there are problems where postgres gets corrupted/weird while other services
   # try and access it during init, giving it time to init here and then run later
   if [ ! -d "$POSTGRES_DB_DIR" ]; then
     echo "doing double start first time since no postgres db dir: $POSTGRES_DB_DIR"
+    mkdir -p "$POSTGRES_DB_DIR"
     docker-compose run -d postgres
-    sleep 10
-    docker-compose down --remove-orphans -t 4
-    docker-compose logs postgres
+    wait_until_postgres_ready
   fi
+
+  # saw some hanging around, just in case run this its pretty fast
+  echo "down"
+  docker-compose down --remove-orphans -t 4
 
   # fixes issues of not allowing connecting during tests
   if [ -d "$POSTGRES_DB_DIR" ]; then

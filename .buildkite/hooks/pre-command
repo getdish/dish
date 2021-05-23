@@ -22,7 +22,10 @@ else
 fi
 
 if [ "$SHOW_DOCKER_IMAGES" == "true" ]; then
+  echo "docker images"
   docker images | head -n 30 || true
+  echo "docker ps"
+  docker ps
   echo "done"
 fi
 

@@ -10,7 +10,7 @@ services:
       - default
       - traefik-public
     deploy:
-      replicas: 2
+      replicas: ${DOCKER_REPLICAS:-1}
       labels:
         - traefik.enable=true
         - traefik.docker.network=traefik-public
@@ -56,7 +56,7 @@ services:
       - default
       - traefik-public
     deploy:
-      replicas: 2
+      replicas: ${DOCKER_REPLICAS:-1}
       labels:
         - traefik.enable=true
         - traefik.docker.network=traefik-public
@@ -83,7 +83,7 @@ services:
       - default
       - traefik-public
     deploy:
-      replicas: 2
+      replicas: ${DOCKER_REPLICAS:-1}
       labels:
         - traefik.enable=true
         - traefik.docker.network=traefik-public
@@ -141,7 +141,7 @@ services:
       - default
       - traefik-public
     deploy:
-      replicas: 2
+      replicas: ${DOCKER_REPLICAS:-1}
       labels:
         - traefik.enable=true
         - traefik.docker.network=traefik-public
@@ -197,7 +197,7 @@ services:
     depends_on:
       - registry-proxy
     deploy:
-      replicas: 2
+      replicas: ${DOCKER_REPLICAS:-1}
       placement:
         constraints: [node.role == manager]
       labels:
@@ -225,7 +225,7 @@ services:
       - /var/data/registry/registry-mirror-data:/var/lib/registry
       - ./etc/registry-mirror-config.yml:/etc/docker/registry/config.yml
     deploy:
-      replicas: 2
+      replicas: ${DOCKER_REPLICAS:-1}
       placement:
         constraints: [node.role == manager]
 
@@ -261,7 +261,7 @@ services:
     ports:
       - 8888:8080
     deploy:
-      replicas: 2
+      replicas: ${DOCKER_REPLICAS:-1}
       labels:
         - traefik.enable=true
         - traefik.docker.network=traefik-public
@@ -279,7 +279,7 @@ services:
     ports:
       - 8883:5005
     deploy:
-      replicas: 2
+      replicas: ${DOCKER_REPLICAS:-1}
       labels:
         - traefik.enable=true
         - traefik.docker.network=traefik-public
@@ -306,6 +306,11 @@ services:
       POSTGRES_DB: ${POSTGRES_DB:-dish}
     ports:
       - 5432:5432
+    # healthcheck:
+    #   test: ["CMD-SHELL", "pg_isready -U postgres"]
+    #   interval: 5s
+    #   timeout: 5s
+    #   retries: 5
 
   timescale:
     command: ["-c", "max_connections=300"]
@@ -406,7 +411,7 @@ services:
     ports:
       - ${HASURA_PORT:?no hasura port}:8080
     deploy:
-      replicas: 2
+      replicas: ${DOCKER_REPLICAS:-1}
       labels:
         - traefik.enable=true
         - traefik.docker.network=traefik-public

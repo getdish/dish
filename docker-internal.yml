@@ -3,7 +3,7 @@ version: '3.7'
 services:
   ci:
     image: registry.dishapp.com/dish-ci${DISH_IMAGE_TAG}
-    command: start --spawn 6 --token ${BUILDITE_AGENT_TOKEN}
+    command: start --spawn 8 --token ${BUILDITE_AGENT_TOKEN}
     privileged: true
     build:
       context: ./services/ci

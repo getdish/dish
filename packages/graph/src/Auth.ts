@@ -54,7 +54,7 @@ export async function userFetchSimple(
     if (response.status == 401) {
       handleLogOut?.()
     }
-    console.error('Auth fetch() error', url, method, data, response.status, response.statusText)
+    console.error('Auth fetch() error', url, method, response.status, response.statusText)
   }
   return response
 }
