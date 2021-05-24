@@ -2,14 +2,17 @@
 
 set -e
 
-# mkdir -p /data/docker /etc/docker
-# echo '{"data-root": "/data/docker"}' > /etc/docker/daemon.json
+mkdir -p /data/docker /etc/docker
 
-echo /etc/docker/daemon.json
-
-update-ca-certificates
+echo '{ "insecure-registries" : ["registry.dishapp.com:443"] }' > /etc/docker/daemon.json
 
 docker login -u "$TRAEFIK_USERNAME" -p "$TRAEFIK_PASSWORD_PLAIN" registry.dishapp.com
 
+echo "starting"
 service docker start
+
 sleep 1
+
+# # fixes super tricky bug where it goes super slow because no network exists!!!!!!!!!!
+docker network create traefik-public || true
+

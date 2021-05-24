@@ -1,21 +1,19 @@
 #!/bin/bash
-
 set -eo pipefail
 
-# TODO much of this install stuff could be in the agent container itself?
-# would mean that restarting the ci itself doesnt incur lots of cost, mostly
-# helpful as i'm having to restart it a bit to figure out a good config
-
 echo "HOME = $HOME"
+
+docker network create traefik-public || true
 
 if [ "$FIRST_STEP" == "true" ]; then
   rm -f exit_this_build || true
 
   # remove old data cache which can mess up tests db, recreate
-  rm -r "$HOME/.dish" || true
-  mkdir -p "$HOME/.dish"
-  mkdir -p "$HOME/bin"
-  mkdir -p /data
+  # only do on failure, this is also likely out of date directories
+  # rm -r "$HOME/.dish" || true
+  # mkdir -p "$HOME/.dish"
+  # mkdir -p "$HOME/bin"
+  # mkdir -p /data
 else
   if [[ -f "exit_this_build" ]]; then
       SKIP_STEPS=$(cat exit_this_build)
@@ -27,21 +25,26 @@ fi
 
 if [ "$SHOW_DOCKER_IMAGES" == "true" ]; then
   echo "docker images"
-  docker images | head -n 30 || true
+  docker images | head -n 30 || true &
   echo "docker ps"
-  docker ps
+  docker ps &
   echo "done"
 fi
 
-gpg --import "$DISH_KEYS_PATH/teamdish_gpg"
-echo "unlocking"
-git-crypt unlock
+./dsh docker_login &
+
+if [ "$DOCKER_CLEAN_BEFORE" == "true" ]; then
+  ./dsh clean_docker_if_disk_full &
+fi
+
+# if env encrypted, unlock
+source .env &> /dev/null || echo "unlocking" \
+  && gpg --import "$DISH_KEYS_PATH/teamdish_gpg" \
+  && git-crypt unlock
 
 # environment
 
 export PATH=$PATH:$HOME/bin
-export FLYCTL_INSTALL="/root/.fly"
-export PATH="$FLYCTL_INSTALL/bin:$PATH"
 
 source .env
 source .env.test
@@ -51,38 +54,6 @@ export AWS_SECRET_ACCESS_KEY=$DO_SPACES_SECRET
 
 if [[ "$BUILDKITE_BRANCH" == "nate/dev" || "$BUILDKITE_BRANCH" == "production" ]]; then
   export SHOULD_DEPLOY="1"
-fi
-
-# install
-
-if ! [ -x "$(command -v netstat)" ]; then
-  apt-get update && apt-get install -y net-tools
-fi
-echo "netstat installed"
-
-if ! [ -x "$(command -v psql)" ]; then
-  apt-get update && apt-get install -y postgresql-client
-fi
-echo "psql installed"
-
-if ! [ -x "$(command -v npm)" ]; then
-  dpkg --configure -a
-  apt-get update && apt-get install -y nodejs npm
-  curl -o- -L https://yarnpkg.com/install.sh | bash
-fi
-echo "npm installed"
-
-if ! [ -x "$(command -v docker)" ]; then
-  apt-get update && apt-get install -y docker docker-compose
-  echo "docker installed"
-fi
-
-if ! [ -x "$(command -v hasura)" ]; then
-  curl -L https://github.com/hasura/graphql-engine/raw/stable/cli/get.sh | bash
-fi
-
-if [ "$DOCKER_CLEAN_BEFORE" == "true" ]; then
-  ./dsh clean_docker_if_disk_full &
 fi
 
 if [ ! -f "$HOME/.aws/credentials" ]; then
@@ -95,14 +66,6 @@ aws_secret_access_key=$DO_SPACES_SECRET
 EOF
 fi
 
-if [ "$FIRST_STEP" == "true" ]; then
-  echo "updating fly"
-  (flyctl version update || true) && flyctl version &
-fi
-
-./dsh docker_login &
-
-echo "wait for background jobs to finish..."
 wait
 
 echo "done"

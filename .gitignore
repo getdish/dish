@@ -12,13 +12,9 @@ site/.cache
 *.log
 .ops
 
-.yarn/*
-!.yarn/cache
-!.yarn/patches
-!.yarn/plugins
-!.yarn/releases
-!.yarn/sdks
-!.yarn/versions
+.yarn/build-state.yml
+.yarn/install-state.gz
+.yarn/cache/*.flock
 
 # keep it in repo for fast builds
 .ultra.cache.json
@@ -132,4 +128,3 @@ app/test/screenshots
 # Docker compose data
 data/
 
-!services/build

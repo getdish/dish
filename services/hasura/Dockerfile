@@ -1,1 +1,5 @@
-FROM hasura/graphql-engine:v1.3.3.cli-migrations-v2
+FROM hasura/graphql-engine:v1.3.3
+# :v1.3.3.cli-migrations-v2
+# put mirgrations ourself here
+
+RUN echo hi

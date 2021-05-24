@@ -14,9 +14,10 @@ COPY package.json .
 
 RUN find . \! -name "package.json" -not -path "*/bin/*" -type f -print | xargs rm -rf
 
-FROM node:15.10.0-buster
-WORKDIR /app
-COPY --from=0 /app .
+# this takes a long ass time with big repo
+# FROM node:15.10.0-buster
+# WORKDIR /app
+# COPY --from=0 /app .
 
 COPY .yarnrc.yml yarn.lock ./
 COPY .yarn .yarn
@@ -27,8 +28,7 @@ COPY app/etc app/etc
 # install
 RUN yarn install --immutable-cache \
   && yarn postinstall \
-  && yarn cache clean \
-  && rm .yarn/install-state.gz
+  && yarn cache clean
 
 COPY tsconfig.json tsconfig.build.json \
       tsconfig.base.parent.json tsconfig.base.json ava.config.js ./

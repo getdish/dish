@@ -11,57 +11,57 @@ steps:
 
   - label: ":docker: build base"
     key: base
-    command: INTERNAL=true ./dsh docker_compose_build base
+    command: ./dsh compose_build base
 
   - label: ":docker: build app"
     key: app
     depends_on: base
-    command: ./dsh docker_compose_build app
+    command: ./dsh compose_build app
 
   - label: ":docker: build worker"
     key: worker
     depends_on: base
-    command: ./dsh docker_compose_build worker
+    command: ./dsh compose_build worker
 
   - label: ":docker: build run-tests"
     key: run-tests
     depends_on: base
-    command: INTERNAL=true ./dsh docker_compose_build run-tests
+    command: ./dsh compose_build run-tests
 
   - label: ":docker: build hooks"
     key: hooks
     depends_on: base
-    command: ./dsh docker_compose_build hooks
+    command: ./dsh compose_build hooks
 
   - label: ":docker: build site"
     key: site
     depends_on: base
-    command: ./dsh docker_compose_build site
+    command: ./dsh compose_build site
 
   - label: ":docker: build worker-proxy"
     key: worker-proxy
     depends_on: base
-    command: ./dsh docker_compose_build worker-proxy
+    command: ./dsh compose_build worker-proxy
 
   - label: ":docker: build search"
     key: search
-    command: ./dsh docker_compose_build_and_push search
+    command: ./dsh compose_build_and_push search
 
   - label: ":docker: build hasura"
     key: hasura
-    command: ./dsh docker_compose_build_and_push hasura
+    command: ./dsh compose_build_and_push hasura
 
   - label: ":docker: build timescale"
     key: timescale
-    command: ./dsh docker_compose_build_and_push timescale
+    command: ./dsh compose_build_and_push timescale
 
   - label: ":docker: build tileserver"
     key: tileserver
-    command: ./dsh docker_compose_build_and_push tileserver
+    command: ./dsh compose_build_and_push tileserver
 
   - label: ":docker: build postgres"
     key: postgres
-    command: ./dsh docker_compose_build_and_push postgres
+    command: ./dsh compose_build_and_push postgres
 
   - label: "done with test images"
     command: "true"
@@ -83,28 +83,24 @@ steps:
   - label: ":docker: build cron"
     key: cron
     depends_on: base
-    command: ./dsh docker_compose_build_and_push cron
+    command: ./dsh compose_build_and_push cron
 
   - label: ":docker: build summarizer"
     key: summarizer
-    command: ./dsh docker_compose_build_and_push summarizer
+    command: ./dsh compose_build_and_push summarizer
 
   - label: ":docker: build bert"
     key: bert
     depends_on: base
-    command: ./dsh docker_compose_build_and_push bert
+    command: ./dsh compose_build_and_push bert
 
   - label: ":docker: build gorse"
     key: gorse
-    command: ./dsh docker_compose_build_and_push gorse
-
-  - label: ":docker: build image-proxy"
-    key: image-proxy
-    command: ./dsh docker_compose_build_and_push image-proxy
+    command: ./dsh compose_build_and_push gorse
 
   - label: ":docker: build image-quality"
     key: image-quality
-    command: ./dsh docker_compose_build_and_push image-quality
+    command: ./dsh compose_build_and_push image-quality
 
   - label: "setup services for tests"
     key: test-setup
@@ -147,10 +143,10 @@ steps:
     command: ./dsh docker_compose_push_core
 
 
-  - label: "deploy dedicated"
+  - label: "deploy"
     if: build.branch == "production" || build.branch == "nate/dev"
     timeout_in_minutes: 10
-    command: "./dsh deploy_dedicated"
+    command: "./dsh deploy"
     artifact_paths:
       - "*.log"
 

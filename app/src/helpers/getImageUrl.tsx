@@ -9,6 +9,6 @@ export const getImageUrl = (
   if (!url) {
     return ''
   }
-  const imageUrl = `${IMAGE_PROXY_DOMAIN}/smartcrop?width=${width}&height=${height}&quality=${quality}&url=${url}`
+  const imageUrl = `${IMAGE_PROXY_DOMAIN}/pr:sharp/q:${quality}/rs:fill:${width}:${height}:0/g:sm/plain/${url}`
   return imageUrl
 }

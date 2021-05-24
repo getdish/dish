@@ -1,0 +1,55 @@
+version: '3.7'
+
+services:
+  registry:
+    image: joxit/docker-registry-ui:latest
+    environment:
+      - REGISTRY_URL=https://registry.dishapp.com
+      - REGISTRY_TITLE=DishRegistry3
+      - NGINX_PROXY_PASS_URL=http://registry_registry-proxy:5000
+      - DELETE_IMAGES=true
+      - SINGLE_REGISTRY=false
+    networks:
+      - default
+      - traefik-public
+    depends_on:
+      - registry-proxy
+    deploy:
+      replicas: ${DOCKER_REPLICAS:-1}
+      placement:
+        constraints: [node.role == manager]
+      labels:
+        - traefik.enable=true
+        - traefik.docker.network=traefik-public
+        - traefik.constraint-label=traefik-public
+        - traefik.http.routers.registry-http.rule=Host(`registry.${DOMAIN}`)
+        - traefik.http.routers.registry-http.entrypoints=http
+        # - traefik.http.routers.registry-http.middlewares=dish-https-redirect
+        - traefik.http.routers.registry-http.middlewares=admin-auth
+        # - traefik.http.routers.registry-https.rule=Host(`registry.${DOMAIN}`)
+        # - traefik.http.routers.registry-https.entrypoints=https
+        # - traefik.http.routers.registry-https.tls=true
+        # - traefik.http.routers.registry-https.tls.certresolver=le
+        - traefik.http.services.registry.loadbalancer.server.port=80
+
+  # to allow push/pull of our own images
+  registry-proxy:
+    image: registry:2
+    environment:
+      - REGISTRY_HTTP_SECRET=${REGISTRY_HTTP_SECRET?:password}
+      - REGISTRY_STORAGE_DELETE_ENABLED=true
+    volumes:
+      - /var/data/registry:/var/lib/registry
+      - ./etc/registry-mirror-config.yml:/etc/docker/registry/config.yml
+    deploy:
+      replicas: 1
+      resources:
+        limits:
+          memory: 8GB
+      placement:
+        constraints: [node.role == manager]
+
+networks:
+  traefik-public: 
+    external: true
+  
