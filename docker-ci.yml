@@ -1,0 +1,23 @@
+version: '3.7'
+
+services:
+  ci:
+    image: registry.dishapp.com/dish-ci${DISH_IMAGE_TAG}
+    command: start --spawn 6 --token ${BUILDITE_AGENT_TOKEN}
+    privileged: true
+    build:
+      context: ./services/ci
+    volumes:
+      - /var/data/buildkite:/var/lib/buildkite/builds
+      # - /usr/bin/buildkite-agent:/usr/local/bin/buildkite-agent
+      - ./etc/keys:/buildkite-secrets:ro
+      # so we can share docker builds, but not interfere with system
+      - /var/data/buildkite-docker:/var/lib/docker
+      # - /var/run/docker.sock:/var/run/docker.sock
+      # - /etc/docker/certs.d:/etc/docker/certs.d
+    environment:
+      DISH_KEYS_PATH: /buildkite-secrets
+      BUILDKITE_BUILD_PATH: /var/lib/buildkite/builds
+      BUILDITE_AGENT_TOKEN: ${BUILDITE_AGENT_TOKEN}
+      TRAEFIK_USERNAME: ${TRAEFIK_USERNAME}
+      TRAEFIK_PASSWORD_PLAIN: ${TRAEFIK_PASSWORD_PLAIN}

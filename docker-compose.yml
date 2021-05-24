@@ -1,6 +1,3 @@
-# could try this?
-# https://json.schemastore.org/traefik-v2.json
-
 version: '3.7'
 
 services:
@@ -13,18 +10,25 @@ services:
       replicas: ${DOCKER_REPLICAS:-1}
       update_config:
         order: start-first
+        failure_action: rollback
+        parallelism: 1
+        delay: 5s
+      restart_policy:
+        condition: on-failure
+        delay: 5s
+        max_attempts: 5
       labels:
         - traefik.enable=true
         - traefik.docker.network=traefik-public
         - traefik.constraint-label=traefik-public
-        - traefik.http.routers.dish-app-http.rule=Host(`${DOMAIN}`) || Host(`www.${DOMAIN}`)
-        - traefik.http.routers.dish-app-http.entrypoints=http
-        - traefik.http.routers.dish-app-http.middlewares=dish-https-redirect
-        - traefik.http.routers.dish-app-https.rule=Host(`${DOMAIN}`) || Host(`www.${DOMAIN}`)
-        - traefik.http.routers.dish-app-https.entrypoints=https
-        - traefik.http.routers.dish-app-https.tls=true
-        - traefik.http.routers.dish-app-https.tls.certresolver=le
-        - traefik.http.services.dish-app.loadbalancer.server.port=4444
+        - traefik.http.routers.app-http.rule=Host(`${DOMAIN}`) || Host(`www.${DOMAIN}`)
+        - traefik.http.routers.app-http.entrypoints=http
+        - traefik.http.routers.app-http.middlewares=dish-https-redirect
+        - traefik.http.routers.app-https.rule=Host(`${DOMAIN}`) || Host(`www.${DOMAIN}`)
+        - traefik.http.routers.app-https.entrypoints=https
+        - traefik.http.routers.app-https.tls=true
+        - traefik.http.routers.app-https.tls.certresolver=alt3
+        - traefik.http.services.app.loadbalancer.server.port=4444
     build:
       context: ./
       dockerfile: ./app/Dockerfile
@@ -47,6 +51,38 @@ services:
       - 'redis'
       - 'tileserver'
 
+  postgres:
+    image: registry.dishapp.com/dish-${POSTGRES_NAME:-postgres}${DISH_IMAGE_TAG}
+    command: postgres -c config_file=/postgres/postgresql.conf
+    deploy:
+      update_config:
+        order: start-first
+        failure_action: rollback
+        parallelism: 1
+        delay: 5s
+      restart_policy:
+        condition: on-failure
+        delay: 5s
+        max_attempts: 5
+    networks:
+      - default
+    build:
+      context: ./services/${POSTGRES_NAME:-postgres}
+    volumes:
+      - ${POSTGRES_DB_DIR}:/var/lib/postgresql/data
+      - ./services/postgres:/postgres
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:-postgres}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-postgres}
+      POSTGRES_DB: ${POSTGRES_DB:-dish}
+    ports:
+      - 5432:5432
+    # healthcheck:
+    #   test: ["CMD-SHELL", "pg_isready -U postgres"]
+    #   interval: 5s
+    #   timeout: 5s
+    #   retries: 5
+
   hasura:
     image: ${DOCKER_HASURA_IMAGE:-registry.dishapp.com/dish-hasura:latest}
     build:
@@ -62,18 +98,24 @@ services:
       replicas: ${DOCKER_REPLICAS:-1}
       update_config:
         order: start-first
+        failure_action: rollback
+        parallelism: 1
+        delay: 5s
+      restart_policy:
+        condition: on-failure
+        delay: 5s
       labels:
         - traefik.enable=true
         - traefik.docker.network=traefik-public
         - traefik.constraint-label=traefik-public
-        - traefik.http.routers.dish-hasura-http.rule=Host(`hasura.${DOMAIN}`)
-        - traefik.http.routers.dish-hasura-http.entrypoints=http
-        - traefik.http.routers.dish-hasura-http.middlewares=dish-https-redirect
-        - traefik.http.routers.dish-hasura-https.rule=Host(`hasura.${DOMAIN}`)
-        - traefik.http.routers.dish-hasura-https.entrypoints=https
-        - traefik.http.routers.dish-hasura-https.tls=true
-        - traefik.http.routers.dish-hasura-https.tls.certresolver=le
-        - traefik.http.services.dish-hasura.loadbalancer.server.port=9999
+        - traefik.http.routers.hasura-http.rule=Host(`hasura.${DOMAIN}`)
+        - traefik.http.routers.hasura-http.entrypoints=http
+        - traefik.http.routers.hasura-http.middlewares=dish-https-redirect
+        - traefik.http.routers.hasura-https.rule=Host(`hasura.${DOMAIN}`)
+        - traefik.http.routers.hasura-https.entrypoints=https
+        - traefik.http.routers.hasura-https.tls=true
+        - traefik.http.routers.hasura-https.tls.certresolver=le
+        - traefik.http.services.hasura.loadbalancer.server.port=8080
     environment:
       - HASURA_GRAPHQL_NO_OF_RETRIES=50
       - HASURA_GRAPHQL_DATABASE_URL=${POSTGRES_URL_INTERNAL:-postgres://postgres:postgres@postgres/dish}
@@ -105,18 +147,24 @@ services:
       replicas: ${DOCKER_REPLICAS:-1}
       update_config:
         order: start-first
+        failure_action: rollback
+        parallelism: 1
+        delay: 5s
+      restart_policy:
+        condition: on-failure
+        delay: 5s
       labels:
         - traefik.enable=true
         - traefik.docker.network=traefik-public
         - traefik.constraint-label=traefik-public
-        - traefik.http.routers.dish-search-http.rule=Host(`search.${DOMAIN}`)
-        - traefik.http.routers.dish-search-http.entrypoints=http
-        - traefik.http.routers.dish-search-http.middlewares=dish-https-redirect
-        - traefik.http.routers.dish-search-https.rule=Host(`search.${DOMAIN}`)
-        - traefik.http.routers.dish-search-https.entrypoints=https
-        - traefik.http.routers.dish-search-https.tls=true
-        - traefik.http.routers.dish-search-https.tls.certresolver=le
-        - traefik.http.services.dish-search.loadbalancer.server.port=9999
+        - traefik.http.routers.search-http.rule=Host(`search.${DOMAIN}`)
+        - traefik.http.routers.search-http.entrypoints=http
+        - traefik.http.routers.search-http.middlewares=dish-https-redirect
+        - traefik.http.routers.search-https.rule=Host(`search.${DOMAIN}`)
+        - traefik.http.routers.search-https.entrypoints=https
+        - traefik.http.routers.search-https.tls=true
+        - traefik.http.routers.search-https.tls.certresolver=le
+        - traefik.http.services.search.loadbalancer.server.port=9999
     environment:
       - POSTGRES_DB=${POSTGRES_DB:-dish}
       - POSTGRES_USER=${POSTGRES_USER:-postgres}
@@ -134,18 +182,25 @@ services:
       replicas: ${DOCKER_REPLICAS:-1}
       update_config:
         order: start-first
+        failure_action: rollback
+        parallelism: 1
+        delay: 5s
+      restart_policy:
+        condition: on-failure
+        delay: 5s
+        max_attempts: 5
       labels:
         - traefik.enable=true
         - traefik.docker.network=traefik-public
         - traefik.constraint-label=traefik-public
-        - traefik.http.routers.dish-tileserver-http.rule=Host(`tileserver.${DOMAIN}`)
-        - traefik.http.routers.dish-tileserver-http.entrypoints=http
-        - traefik.http.routers.dish-tileserver-http.middlewares=dish-https-redirect
-        - traefik.http.routers.dish-tileserver-https.rule=Host(`tileserver.${DOMAIN}`)
-        - traefik.http.routers.dish-tileserver-https.entrypoints=https
-        - traefik.http.routers.dish-tileserver-https.tls=true
-        - traefik.http.routers.dish-tileserver-https.tls.certresolver=le
-        - traefik.http.services.dish-tileserver.loadbalancer.server.port=3000
+        - traefik.http.routers.tileserver-http.rule=Host(`tileserver.${DOMAIN}`)
+        - traefik.http.routers.tileserver-http.entrypoints=http
+        - traefik.http.routers.tileserver-http.middlewares=dish-https-redirect
+        - traefik.http.routers.tileserver-https.rule=Host(`tileserver.${DOMAIN}`)
+        - traefik.http.routers.tileserver-https.entrypoints=https
+        - traefik.http.routers.tileserver-https.tls=true
+        - traefik.http.routers.tileserver-https.tls.certresolver=le
+        - traefik.http.services.tileserver.loadbalancer.server.port=3000
     build:
       context: ./services/tileserver
       dockerfile: ./Dockerfile
@@ -174,38 +229,43 @@ services:
         - traefik.enable=true
         - traefik.docker.network=traefik-public
         - traefik.constraint-label=traefik-public
-        - traefik.http.routers.dish-site-http.rule=Host(`site.${DOMAIN}`)
-        - traefik.http.routers.dish-site-http.entrypoints=http
-        - traefik.http.routers.dish-site-http.middlewares=dish-https-redirect
-        - traefik.http.routers.dish-site-https.rule=Host(`site.${DOMAIN}`)
-        - traefik.http.routers.dish-site-https.entrypoints=https
-        - traefik.http.routers.dish-site-https.tls=true
-        - traefik.http.routers.dish-site-https.tls.certresolver=le
-        - traefik.http.services.dish-site.loadbalancer.server.port=3999
+        - traefik.http.routers.site-http.rule=Host(`site.${DOMAIN}`)
+        - traefik.http.routers.site-http.entrypoints=http
+        - traefik.http.routers.site-http.middlewares=dish-https-redirect
+        - traefik.http.routers.site-https.rule=Host(`site.${DOMAIN}`)
+        - traefik.http.routers.site-https.entrypoints=https
+        - traefik.http.routers.site-https.tls=true
+        - traefik.http.routers.site-https.tls.certresolver=le
+        - traefik.http.services.site.loadbalancer.server.port=3999
 
   image-proxy:
-    image: registry.dishapp.com/dish-image-proxy${DISH_IMAGE_TAG}
-    build:
-      context: ./services/image-proxy
+    image: darthsim/imgproxy:v2
     ports:
-      - 8981:8981
+      - 8981:8080
     networks:
       - default
       - traefik-public
+    environment:
+      IMGPROXY_ALLOW_ORIGIN: dishapp.com
+      IMGPROXY_ALLOWED_SOURCES: https://dish-images.sfo2.digitaloceanspaces.com/
+      # 10MB max
+      IMGPROXY_MAX_SRC_FILE_SIZE: 10,485,760 
     deploy:
-      replicas: ${DOCKER_REPLICAS:-1}
+      replicas: 1
+      update_config:
+        order: start-first
       labels:
         - traefik.enable=true
         - traefik.docker.network=traefik-public
         - traefik.constraint-label=traefik-public
-        - traefik.http.routers.dish-image-proxy-http.rule=Host(`image-proxy.${DOMAIN}`)
-        - traefik.http.routers.dish-image-proxy-http.entrypoints=http
-        - traefik.http.routers.dish-image-proxy-http.middlewares=dish-https-redirect
-        - traefik.http.routers.dish-image-proxy-https.rule=Host(`image-proxy.${DOMAIN}`)
-        - traefik.http.routers.dish-image-proxy-https.entrypoints=https
-        - traefik.http.routers.dish-image-proxy-https.tls=true
-        - traefik.http.routers.dish-image-proxy-https.tls.certresolver=le
-        - traefik.http.services.dish-image-proxy.loadbalancer.server.port=8981
+        - traefik.http.routers.image-proxy-http.rule=Host(`image-proxy.${DOMAIN}`)
+        - traefik.http.routers.image-proxy-http.entrypoints=http
+        - traefik.http.routers.image-proxy-http.middlewares=dish-https-redirect
+        - traefik.http.routers.image-proxy-https.rule=Host(`image-proxy.${DOMAIN}`)
+        - traefik.http.routers.image-proxy-https.entrypoints=https
+        - traefik.http.routers.image-proxy-https.tls=true
+        - traefik.http.routers.image-proxy-https.tls.certresolver=le
+        - traefik.http.services.image-proxy.loadbalancer.server.port=8080
 
   umami:
     image: ghcr.io/mikecao/umami:postgresql-latest
@@ -217,14 +277,14 @@ services:
         - traefik.enable=true
         - traefik.docker.network=traefik-public
         - traefik.constraint-label=traefik-public
-        - traefik.http.routers.dish-umami-http.rule=Host(`umami.${DOMAIN}`)
-        - traefik.http.routers.dish-umami-http.entrypoints=http
-        - traefik.http.routers.dish-umami-http.middlewares=dish-https-redirect
-        - traefik.http.routers.dish-umami-https.rule=Host(`umami.${DOMAIN}`)
-        - traefik.http.routers.dish-umami-https.entrypoints=https
-        - traefik.http.routers.dish-umami-https.tls=true
-        - traefik.http.routers.dish-umami-https.tls.certresolver=le
-        - traefik.http.services.dish-umami.loadbalancer.server.port=3000
+        - traefik.http.routers.umami-http.rule=Host(`umami.${DOMAIN}`)
+        - traefik.http.routers.umami-http.entrypoints=http
+        - traefik.http.routers.umami-http.middlewares=dish-https-redirect
+        - traefik.http.routers.umami-https.rule=Host(`umami.${DOMAIN}`)
+        - traefik.http.routers.umami-https.entrypoints=https
+        - traefik.http.routers.umami-https.tls=true
+        - traefik.http.routers.umami-https.tls.certresolver=alt3
+        - traefik.http.services.umami.loadbalancer.server.port=3000
     ports:
       - "5555:3000"
     environment:
@@ -233,53 +293,6 @@ services:
       HASH_SALT: ${UMAMI_HASH_SALT}
     depends_on:
       - postgres
-
-  registry:
-    image: joxit/docker-registry-ui:latest
-    restart: unless-stopped
-    environment:
-      - REGISTRY_URL=https://registry.dishapp.com
-      - REGISTRY_TITLE=DishRegistry3
-      - NGINX_PROXY_PASS_URL=http://dish_registry-proxy:5000
-      - DELETE_IMAGES=true
-      - SINGLE_REGISTRY=false
-    networks:
-      - default
-      - traefik-public
-    depends_on:
-      - registry-proxy
-    deploy:
-      replicas: ${DOCKER_REPLICAS:-1}
-      placement:
-        constraints: [node.role == manager]
-      labels:
-        - traefik.enable=true
-        - traefik.docker.network=traefik-public
-        - traefik.constraint-label=traefik-public
-        - traefik.http.routers.dish-registry-http.rule=Host(`registry.${DOMAIN}`)
-        - traefik.http.routers.dish-registry-http.entrypoints=http
-        - traefik.http.routers.dish-registry-http.middlewares=dish-https-redirect
-        - traefik.http.routers.dish-registry-https.rule=Host(`registry.${DOMAIN}`)
-        - traefik.http.routers.dish-registry-https.entrypoints=https
-        - traefik.http.routers.dish-registry-https.tls=true
-        - traefik.http.routers.dish-registry-https.tls.certresolver=le
-        - traefik.http.routers.dish-registry-https.middlewares=admin-auth
-        - traefik.http.services.dish-registry.loadbalancer.server.port=80
-
-  # to allow push/pull of our own images
-  registry-proxy:
-    image: registry:2
-    restart: always
-    environment:
-      - REGISTRY_HTTP_SECRET=${REGISTRY_HTTP_SECRET?:password}
-      - REGISTRY_STORAGE_DELETE_ENABLED=true
-    volumes:
-      - /var/data/registry/registry-mirror-data:/var/lib/registry
-      - ./etc/registry-mirror-config.yml:/etc/docker/registry/config.yml
-    deploy:
-      replicas: ${DOCKER_REPLICAS:-1}
-      placement:
-        constraints: [node.role == manager]
 
   pg-admin:
     image: registry.dishapp.com/pg-admin${DISH_IMAGE_TAG}
@@ -293,40 +306,15 @@ services:
         - traefik.enable=true
         - traefik.docker.network=traefik-public
         - traefik.constraint-label=traefik-public
-        - traefik.http.routers.dish-pg-admin-http.rule=Host(`pg-admin.${DOMAIN}`)
-        - traefik.http.routers.dish-pg-admin-http.entrypoints=http
-        - traefik.http.routers.dish-pg-admin-http.middlewares=dish-https-redirect
-        - traefik.http.routers.dish-pg-admin-https.rule=Host(`pg-admin.${DOMAIN}`)
-        - traefik.http.routers.dish-pg-admin-https.entrypoints=https
-        - traefik.http.routers.dish-pg-admin-https.tls=true
-        - traefik.http.routers.dish-pg-admin-https.tls.certresolver=le
-        - traefik.http.routers.dish-pg-admin-https.middlewares=admin-auth
-        - traefik.http.services.dish-pg-admin.loadbalancer.server.port=80
-    
-  # backuppc:
-  #   image: adferrand/backuppc:4.4.0
-  #   volumes:
-  #     - /var/data/backuppc/etc:/etc/backuppc
-  #     - /var/data/backuppc/home:/home/backuppc
-  #     - /var/data/backuppc/data:/data/backuppc
-  #   networks:
-  #     - traefik-public
-  #   environment:
-  #     - BACKUPPC_WEB_USER=${BACKUPPC_WEB_USER?no user}
-  #     - BACKUPPC_WEB_PASSWD=${BACKUPPC_WEB_PASSWD?no pass}
-  #   deploy:
-  #     labels:
-  #       - traefik.enable=true
-  #       - traefik.docker.network=traefik-public
-  #       - traefik.constraint-label=traefik-public
-  #       - traefik.http.routers.dish-backuppc-http.rule=Host(`backuppc.${DOMAIN}`)
-  #       - traefik.http.routers.dish-backuppc-http.entrypoints=http
-  #       - traefik.http.routers.dish-backuppc-http.middlewares=dish-https-redirect
-  #       - traefik.http.routers.dish-backuppc-https.rule=Host(`backuppc.${DOMAIN}`)
-  #       - traefik.http.routers.dish-backuppc-https.entrypoints=https
-  #       - traefik.http.routers.dish-backuppc-https.tls=true
-  #       - traefik.http.routers.dish-backuppc-https.tls.certresolver=le
-  #       - traefik.http.services.dish-backuppc.loadbalancer.server.port=80
+        - traefik.http.routers.pg-admin-http.rule=Host(`pg-admin.${DOMAIN}`)
+        - traefik.http.routers.pg-admin-http.entrypoints=http
+        - traefik.http.routers.pg-admin-http.middlewares=dish-https-redirect
+        - traefik.http.routers.pg-admin-https.rule=Host(`pg-admin.${DOMAIN}`)
+        - traefik.http.routers.pg-admin-https.entrypoints=https
+        - traefik.http.routers.pg-admin-https.tls=true
+        - traefik.http.routers.pg-admin-https.tls.certresolver=le
+        - traefik.http.routers.pg-admin-https.middlewares=admin-auth
+        - traefik.http.services.pg-admin.loadbalancer.server.port=80
           
   # non public facing
   
@@ -363,29 +351,6 @@ services:
       context: ./services/image-recognize
     ports:
       - 8884:8080
-  
-  postgres:
-    image: registry.dishapp.com/dish-${POSTGRES_NAME:-postgres}${DISH_IMAGE_TAG}
-    command: postgres -c config_file=/postgres/postgresql.conf
-    restart: on-failure:5
-    networks:
-      - default
-    build:
-      context: ./services/${POSTGRES_NAME:-postgres}
-    volumes:
-      - ${POSTGRES_DB_DIR}:/var/lib/postgresql/data
-      - ./services/postgres:/postgres
-    environment:
-      POSTGRES_USER: ${POSTGRES_USER:-postgres}
-      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-postgres}
-      POSTGRES_DB: ${POSTGRES_DB:-dish}
-    ports:
-      - 5432:5432
-    healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U postgres"]
-      interval: 5s
-      timeout: 5s
-      retries: 5
 
   timescale:
     command: ["-c", "max_connections=300"]
@@ -410,9 +375,14 @@ services:
       timeout: 5s
       retries: 5
 
+  # TODO rename dish-run-tests to dish-mono or dish-run
   timescale-migrate:
     image: registry.dishapp.com/dish-run-tests
-    command: ["dsh", "timescale_migrate"]
+    command: ["bash", "-c", "./dsh migrate_timescale"]
+    environment:
+      DISH_ENV: ${DISH_ENV:-development}
+      TIMESCALE_USER: ${TIMESCALE_USER:-postgres}
+      TIMESCALE_PASSWORD: ${TIMESCALE_PASSWORD:-postgres}
     depends_on:
       - timescale
 
@@ -496,7 +466,7 @@ services:
       context: ./services/gorse
       dockerfile: ./Dockerfile
     volumes:
-      - /var/data/gorse/${DISH_ENV:-development}:/data
+      - /var/data/gorse:/data
       - ./services/gorse/config.local.toml:/app/config.toml
     ports:
       - 9000:9000

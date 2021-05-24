@@ -1,0 +1,243 @@
+version: "3.7"
+
+networks:
+  net:
+    driver: overlay
+    attachable: true
+  traefik-public:
+    external: true
+
+configs:
+  dockerd_config:
+    file: ./services/swarmprom/Caddyfile
+  node_rules:
+    file: ./services/swarmprom/swarm_node.rules.yml
+  task_rules:
+    file: ./services/swarmprom/swarm_task.rules.yml
+
+services:
+  dockerd-exporter:
+    image: stefanprodan/caddy
+    networks:
+      - net
+    environment:
+      - DOCKER_GWBRIDGE_IP=172.18.0.1
+    configs:
+      - source: dockerd_config
+        target: /etc/caddy/Caddyfile
+    deploy:
+      mode: global
+      resources:
+        limits:
+          memory: 512M
+        reservations:
+          memory: 128M
+
+  cadvisor:
+    image: google/cadvisor
+    networks:
+      - net
+    # disabling disk as supposedly it reduces cpu usage by a lot
+    # but mostly testing it as maybe it was the cause of the insane slowdown during ci
+    # see https://github.com/google/cadvisor/issues/2523
+    command: -logtostderr -docker_only=true -housekeeping_interval=30s -disable_metrics=disk
+    volumes:
+      # - /var/run/docker.sock:/var/run/docker.sock:ro
+      - /:/rootfs:ro
+      - /var/run:/var/run
+      - /sys:/sys:ro
+      - /var/data/docker:/var/lib/docker:ro
+    deploy:
+      mode: global
+      resources:
+        limits:
+          memory: 512M
+        reservations:
+          memory: 128M
+
+  grafana:
+    image: registry.dishapp.com/dish-grafana${DISH_IMAGE_TAG}
+    build:
+      context: ./services/grafana
+      dockerfile: ./Dockerfile
+    networks:
+      - default
+      - net
+      - traefik-public
+    environment:
+      - GF_SECURITY_ADMIN_USER=${ADMIN_USER:-admin}
+      - GF_SECURITY_ADMIN_PASSWORD=${TRAEFIK_PASSWORD_PLAIN:-admin}
+      - GF_USERS_ALLOW_SIGN_UP=false
+      #- GF_SERVER_ROOT_URL=${GF_SERVER_ROOT_URL:-localhost}
+      #- GF_SMTP_ENABLED=${GF_SMTP_ENABLED:-false}
+      #- GF_SMTP_FROM_ADDRESS=${GF_SMTP_FROM_ADDRESS:-grafana@test.com}
+      #- GF_SMTP_FROM_NAME=${GF_SMTP_FROM_NAME:-Grafana}
+      #- GF_SMTP_HOST=${GF_SMTP_HOST:-smtp:25}
+      #- GF_SMTP_USER=${GF_SMTP_USER}
+      #- GF_SMTP_PASSWORD=${GF_SMTP_PASSWORD}
+    volumes:
+      - ./services/grafana/dashboards:/var/lib/grafana/dashboards
+      - ./services/grafana/datasources:/var/lib/grafana/datasources
+      - ./services/grafana/screens:/var/lib/grafana/screens
+    deploy:
+      mode: replicated
+      replicas: 1
+      placement:
+        constraints:
+          - node.role == manager
+      resources:
+        limits:
+          memory: 256M
+        reservations:
+          memory: 128M
+      labels:
+        - traefik.enable=true
+        - traefik.docker.network=traefik-public
+        - traefik.constraint-label=traefik-public
+        - traefik.http.routers.swarmprom-grafana-http.rule=Host(`grafana.${DOMAIN?Variable not set}`)
+        - traefik.http.routers.swarmprom-grafana-http.entrypoints=http
+        - traefik.http.routers.swarmprom-grafana-http.middlewares=dish-https-redirect
+        - traefik.http.routers.swarmprom-grafana-https.rule=Host(`grafana.${DOMAIN?Variable not set}`)
+        - traefik.http.routers.swarmprom-grafana-https.entrypoints=https
+        - traefik.http.routers.swarmprom-grafana-https.tls=true
+        - traefik.http.routers.swarmprom-grafana-https.tls.certresolver=alt3
+        - traefik.http.services.swarmprom-grafana.loadbalancer.server.port=3000
+
+  alertmanager:
+    image: stefanprodan/swarmprom-alertmanager:v0.14.0
+    networks:
+      - default
+      - net
+      - traefik-public
+    environment:
+      - SLACK_URL=${SLACK_URL:-https://hooks.slack.com/services/TOKEN}
+      - SLACK_CHANNEL=${SLACK_CHANNEL:-general}
+      - SLACK_USER=${SLACK_USER:-alertmanager}
+    command:
+      - '--config.file=/etc/alertmanager/alertmanager.yml'
+      - '--storage.path=/alertmanager'
+    volumes:
+      - ./services/alertmanager:/alertmanager
+    deploy:
+      mode: replicated
+      replicas: 1
+      placement:
+        constraints:
+          - node.role == manager
+      resources:
+        limits:
+          memory: 128M
+        reservations:
+          memory: 64M
+      labels:
+        - traefik.enable=true
+        - traefik.docker.network=traefik-public
+        - traefik.constraint-label=traefik-public
+        - traefik.http.routers.swarmprom-alertmanager-http.rule=Host(`alertmanager.${DOMAIN?Variable not set}`)
+        - traefik.http.routers.swarmprom-alertmanager-http.entrypoints=http
+        - traefik.http.routers.swarmprom-alertmanager-http.middlewares=dish-https-redirect
+        - traefik.http.routers.swarmprom-alertmanager-https.rule=Host(`alertmanager.${DOMAIN?Variable not set}`)
+        - traefik.http.routers.swarmprom-alertmanager-https.entrypoints=https
+        - traefik.http.routers.swarmprom-alertmanager-https.tls=true
+        - traefik.http.routers.swarmprom-alertmanager-https.tls.certresolver=alt3
+        - traefik.http.services.swarmprom-alertmanager.loadbalancer.server.port=9093
+        - traefik.http.middlewares.swarmprom-alertmanager-auth.basicauth.users=${ADMIN_USER?Variable not set}:${HASHED_PASSWORD?Variable not set}
+        - traefik.http.routers.swarmprom-alertmanager-https.middlewares=swarmprom-alertmanager-auth
+
+  unsee:
+    image: cloudflare/unsee:v0.8.0
+    networks:
+      - default
+      - net
+      - traefik-public
+    environment:
+      - "ALERTMANAGER_URIS=default:http://alertmanager:9093"
+    deploy:
+      mode: replicated
+      replicas: 1
+      labels:
+        - traefik.enable=true
+        - traefik.docker.network=traefik-public
+        - traefik.constraint-label=traefik-public
+        - traefik.http.routers.swarmprom-unsee-http.rule=Host(`unsee.${DOMAIN?Variable not set}`)
+        - traefik.http.routers.swarmprom-unsee-http.entrypoints=http
+        - traefik.http.routers.swarmprom-unsee-http.middlewares=dish-https-redirect
+        - traefik.http.routers.swarmprom-unsee-https.rule=Host(`unsee.${DOMAIN?Variable not set}`)
+        - traefik.http.routers.swarmprom-unsee-https.entrypoints=https
+        - traefik.http.routers.swarmprom-unsee-https.tls=true
+        - traefik.http.routers.swarmprom-unsee-https.tls.certresolver=alt3
+        - traefik.http.services.swarmprom-unsee.loadbalancer.server.port=8080
+        - traefik.http.middlewares.swarmprom-unsee-auth.basicauth.users=${ADMIN_USER?Variable not set}:${HASHED_PASSWORD?Variable not set}
+        - traefik.http.routers.swarmprom-unsee-https.middlewares=swarmprom-unsee-auth
+
+  node-exporter:
+    image: stefanprodan/swarmprom-node-exporter:v0.16.0
+    networks:
+      - net
+    environment:
+      - NODE_ID={{.Node.ID}}
+    volumes:
+      - /proc:/host/proc:ro
+      - /sys:/host/sys:ro
+      - /:/rootfs:ro
+      - /etc/hostname:/etc/nodename
+    command:
+      - '--path.sysfs=/host/sys'
+      - '--path.procfs=/host/proc'
+      - '--collector.textfile.directory=/etc/node-exporter/'
+      - '--collector.filesystem.ignored-mount-points=^/(sys|proc|dev|host|etc)($$|/)'
+      - '--no-collector.ipvs'
+    deploy:
+      mode: global
+      resources:
+        limits:
+          memory: 512M
+        reservations:
+          memory: 256M
+
+  prometheus:
+    image: registry.dishapp.com/dish-prometheus${DISH_IMAGE_TAG}
+    build:
+      context: ./services/prometheus
+      dockerfile: ./Dockerfile
+    networks:
+      - default
+      - net
+      - traefik-public
+    command:
+      - '--config.file=/etc/prometheus/prometheus.yml'
+      - '--storage.tsdb.path=/prometheus'
+      - '--storage.tsdb.retention=${PROMETHEUS_RETENTION:-24h}'
+    volumes:
+      - ./services/prometheus/conf:/prometheus/conf
+      - ./services/prometheus/rules:/prometheus/rules
+    configs:
+      - source: node_rules
+        target: /etc/prometheus/swarm_node.rules.yml
+      - source: task_rules
+        target: /etc/prometheus/swarm_task.rules.yml
+    deploy:
+      mode: replicated
+      replicas: 1
+      placement:
+        constraints:
+          - node.role == manager
+      resources:
+        limits:
+          memory: 4096M
+        reservations:
+          memory: 512M
+      labels:
+        - traefik.enable=true
+        - traefik.docker.network=traefik-public
+        - traefik.constraint-label=traefik-public
+        - traefik.http.routers.swarmprom-prometheus-http.rule=Host(`prometheus.${DOMAIN?Variable not set}`)
+        - traefik.http.routers.swarmprom-prometheus-http.entrypoints=http
+        - traefik.http.routers.swarmprom-prometheus-http.middlewares=dish-https-redirect
+        - traefik.http.routers.swarmprom-prometheus-https.rule=Host(`prometheus.${DOMAIN?Variable not set}`)
+        - traefik.http.routers.swarmprom-prometheus-https.entrypoints=https
+        - traefik.http.routers.swarmprom-prometheus-https.tls=true
+        - traefik.http.routers.swarmprom-prometheus-https.tls.certresolver=alt3
+        - traefik.http.services.swarmprom-prometheus.loadbalancer.server.port=9090
+        - traefik.http.middlewares.swarmprom-prometheus-auth.basicauth.users=${ADMIN_USER?Variable not set}:${HASHED_PASSWORD?Variable not set}
+        - traefik.http.routers.swarmprom-prometheus-https.middlewares=swarmprom-prometheus-auth

@@ -1,26 +1,6 @@
 version: '3.7'
 
 services:
-  ci:
-    image: registry.dishapp.com/dish-ci${DISH_IMAGE_TAG}
-    command: start --spawn 8 --token ${BUILDITE_AGENT_TOKEN}
-    # privileged: true
-    build:
-      context: ./services/ci
-    volumes:
-      - /var/lib/buildkite/builds:/var/lib/buildkite/builds
-      - /usr/local/bin/buildkite-agent:/usr/local/bin/buildkite-agent
-      - ./etc/keys:/buildkite-secrets:ro
-      - /etc/docker/daemon.json:/etc/docker/daemon.json
-      - /etc/docker/certs.d:/etc/docker/certs.d
-      - /var/run/docker.sock:/var/run/docker.sock
-    environment:
-      DISH_KEYS_PATH: /buildkite-secrets
-      BUILDKITE_BUILD_PATH: /var/lib/buildkite/builds
-      BUILDITE_AGENT_TOKEN: ${BUILDITE_AGENT_TOKEN}
-      TRAEFIK_USERNAME: ${TRAEFIK_USERNAME}
-      TRAEFIK_PASSWORD_PLAIN: ${TRAEFIK_PASSWORD_PLAIN}
-
   base:
     image: registry.dishapp.com/dish-base${DISH_IMAGE_TAG}
     build:

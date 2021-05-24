@@ -3,8 +3,8 @@ log:
   fields:
     service: registry
 storage:
-  # cache:
-  #   blobdescriptor: inmemory
+  cache:
+    blobdescriptor: inmemory
   filesystem:
     rootdirectory: /var/lib/registry
   delete:
