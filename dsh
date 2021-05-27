@@ -1,5 +1,8 @@
 #!/bin/bash
-set -eo pipefail
+
+if [ "$KEEP_ALIVE" != "true" ]; then
+  set -eo pipefail
+fi
 
 DISH_ENV="${DISH_ENV:-production}"
 ENV_FILE=".env.$DISH_ENV"
@@ -17,9 +20,11 @@ function shell() {
 function deploy() {
   if [ "$1" = "all" ]; then
     deploy_all_to io1
-  fi
-  if [ "$1" = "ci" ]; then
+  elif [ "$1" = "ci" ]; then
     deploy_ci_to io2
+  else
+    echo "no deploy command"
+    exit 1
   fi
 }
 
@@ -111,6 +116,7 @@ function deploy_to() {
   hostvar="$1_HOST"
   host="${!hostvar}"
   key="$PROJECT_ROOT/etc/keys/server_rsa"
+  chmod 600 "$key"
   if [ "$host" = "" ] || [ ! -f "$key" ]; then
     echo "no host or private key $host $key"
     exit 1
@@ -132,6 +138,7 @@ function deploy_to() {
 
 function docker_logs() {
   journalctl -u docker.service | tail -n 50
+  docker events
 }
 
 function docker_prune() {
@@ -222,7 +229,7 @@ function deploy_traefik() {
 }
 
 function docker_login() {
-  docker login registry.dishapp.com -u "$TRAEFIK_USERNAME" -p "$TRAEFIK_PASSWORD_PLAIN"
+  docker login registry.dishapp.com -u "$TRAEFIK_USERNAME" -p "$TRAEFIK_PASSWORD_PLAIN" &> /dev/null
 }
 
 function deploy_internal() {
@@ -342,6 +349,7 @@ function setup_server_pre_sync() {
   ssh -i "$key" -o StrictHostKeyChecking=no "root@$host" "
     echo setup pre
     set -e
+    apt update
     apt install -y fail2ban
     mkdir -p /app
     mkdir -p /var/data/buildkite
@@ -552,6 +560,7 @@ function redis_flush_all() {
 }
 
 function migrate_umami() {
+  echo "migrating umami"
   psql "$POSTGRES_URL" <services/umami/setup.sql
 }
 
@@ -880,9 +889,10 @@ function sync_to() {
     echo "no host or private key $host $key"
     exit 1
   fi
+  chmod 600 "$key"
   echo " ⬆️  syncing . to $host:/app"
   rsync \
-    -avP --force --delete \
+    -avP --force \
     --exclude-from="$(git -C . ls-files --exclude-standard -oi --directory > /tmp/excludes; echo /tmp/excludes)" \
     --exclude='- .git' \
     -e "ssh -o StrictHostKeyChecking=no -i $key" . "root@$host:/app"
@@ -896,6 +906,7 @@ function sync_to_watch() {
 }
 
 function deploy_done_notify() {
+  echo "notifying slack..."
   # post to slack
   commit=$(git rev-parse HEAD)
   # link="https://github.com/getdish/dish/tree/$commit"
@@ -914,7 +925,7 @@ function deploy_fail() {
 
 function clean_docker_if_disk_full() {
   echo "checking if disk near full..."
-  df -H | grep /dev/nvme0n1p7 | head -n 1 | awk '{ print $5 " " $1 }' | while read output; do
+  df -H | grep /dev/md2 | head -n 1 | awk '{ print $5 " " $1 }' | while read output; do
     used=$(echo "$output" | awk '{ print $1}' | cut -d'%' -f1)
     echo "$output used $used"
     if [ "$used" -ge 90 ]; then
@@ -928,7 +939,7 @@ function clean_docker_if_disk_full() {
       break
     fi
   done
-  df -H | grep /dev/nvme0n1p7 | awk '{ print $5 " " $1 }' | while read output; do
+  df -H | grep /dev/md2 | awk '{ print $5 " " $1 }' | while read output; do
     used=$(echo "$output" | awk '{ print $1}' | cut -d'%' -f1)
     if [ "$used" -ge 90 ]; then
       echo "really full, delete all.."
@@ -1077,19 +1088,20 @@ function setup_test_services() {
   docker-compose stop -t 4
 
   # fixes issues of not allowing connecting during tests
-  if [ -d "$POSTGRES_DB_DIR" ]; then
-    conf="$POSTGRES_DB_DIR/pg_hba.conf"
-    grep -qxF 'host all all all trust' "$conf" || echo 'host all all all trust' >> "$conf"
-  fi
-  if [ -d "$TIMESCALE_DB_DIR" ]; then
-    conf="$TIMESCALE_DB_DIR/pg_hba.conf"
-    grep -qxF 'host all all all trust' "$conf" || echo 'host all all all trust' >> "$conf"
-  fi
+  # pg_conf="$POSTGRES_DB_DIR/pg_hba.conf"
+  # if [ -d "$POSTGRES_DB_DIR" ]; then
+  #   grep -qxF 'host all all all trust' "$pg_conf" || echo 'host all all all trust' >> "$conf"
+  # fi
+  # ts_conf="$TIMESCALE_DB_DIR/pg_hba.conf"
+  # if [ -d "$TIMESCALE_DB_DIR" ]; then
+  #   grep -qxF 'host all all all trust' "$ts_conf" || echo 'host all all all trust' >> "$conf"
+  # fi
 
   compose_up -d
   wait_until_services_ready
-  # testing migrate on start method
-  # migrate
+  
+  # TODO migrate on start method
+  migrate_all
 
   echo "done"
 }
@@ -1155,3 +1167,7 @@ fi
 shift
 ORIGINAL_ARGS="$@"
 $function_to_run "$@"
+
+if [ "$KEEP_ALIVE" = "true" ]; then
+  tail -f dsh
+fi

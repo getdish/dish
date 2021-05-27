@@ -3,8 +3,6 @@ set -eo pipefail
 
 echo "HOME = $HOME"
 
-docker network create traefik-public || true
-
 if [ "$FIRST_STEP" == "true" ]; then
   rm -f exit_this_build || true
 
@@ -39,7 +37,7 @@ fi
 
 # if env encrypted, unlock
 source .env &> /dev/null || echo "unlocking" \
-  && gpg --import "$DISH_KEYS_PATH/teamdish_gpg" \
+  && gpg --import "/buildkite-secrets/teamdish_gpg" \
   && git-crypt unlock
 
 # environment
@@ -51,10 +49,6 @@ source .env.test
 
 export AWS_ACCESS_KEY_ID=$DO_SPACES_ID
 export AWS_SECRET_ACCESS_KEY=$DO_SPACES_SECRET
-
-if [[ "$BUILDKITE_BRANCH" == "nate/dev" || "$BUILDKITE_BRANCH" == "production" ]]; then
-  export SHOULD_DEPLOY="1"
-fi
 
 if [ ! -f "$HOME/.aws/credentials" ]; then
   echo "setting up aws credentials for space $DO_SPACES_ID"
