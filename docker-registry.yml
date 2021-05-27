@@ -24,13 +24,14 @@ services:
         - traefik.constraint-label=traefik-public
         - traefik.http.routers.registry-http.rule=Host(`registry.${DOMAIN}`)
         - traefik.http.routers.registry-http.entrypoints=http
-        # - traefik.http.routers.registry-http.middlewares=dish-https-redirect
-        - traefik.http.routers.registry-http.middlewares=admin-auth
-        # - traefik.http.routers.registry-https.rule=Host(`registry.${DOMAIN}`)
-        # - traefik.http.routers.registry-https.entrypoints=https
-        # - traefik.http.routers.registry-https.tls=true
-        # - traefik.http.routers.registry-https.tls.certresolver=le
         - traefik.http.services.registry.loadbalancer.server.port=80
+        - traefik.http.routers.registry-http.middlewares=dish-https-redirect
+        - traefik.http.routers.registry-https.middlewares=admin-auth
+        - traefik.http.routers.registry-https.rule=Host(`registry.${DOMAIN}`)
+        - traefik.http.routers.registry-https.entrypoints=https
+        - traefik.http.routers.registry-https.tls=true
+        # alt, alt4, alt3
+        - traefik.http.routers.registry-https.tls.certresolver=alt3
 
   # to allow push/pull of our own images
   registry-proxy:

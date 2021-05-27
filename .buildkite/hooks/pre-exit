@@ -28,12 +28,6 @@ if [ -n "$DOCKER_PUSH" ]; then
   docker push "$to:latest"
 fi
 
-if [ "$BUILDKITE_COMMAND_EXIT_STATUS" = "1" ] && [ "$DATA_CLEAR_ON_FAIL" == "true" ]; then
-  echo "cleaning data on failure..."
-  rm -r "$POSTGRES_DB_DIR" || true
-  rm -r "$TIMESCALE_DB_DIR" || true
-fi
-
 if [ "$SHOW_DOCKER_IMAGES" = "true" ]; then
   docker images | head -n 30 || true
 fi
@@ -52,6 +46,12 @@ if [ "$LOG_DOCKER" == "true" ]; then
   docker-compose logs --tail 2000
   echo "other logs..."
   cat ./*.log || true
+fi
+
+if [ "$BUILDKITE_COMMAND_EXIT_STATUS" = "1" ] && [ "$DATA_CLEAR_ON_FAIL" == "true" ]; then
+  echo "cleaning data on failure..."
+  rm -r "$POSTGRES_DB_DIR" || true
+  rm -r "$TIMESCALE_DB_DIR" || true
 fi
 
 if [ "$IS_COMPOSE_RUNNER" = "true" ] && [ "$BUILDKITE_COMMAND_EXIT_STATUS" = "1" ]; then

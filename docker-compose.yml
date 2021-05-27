@@ -247,7 +247,7 @@ services:
       - traefik-public
     environment:
       IMGPROXY_ALLOW_ORIGIN: dishapp.com
-      IMGPROXY_ALLOWED_SOURCES: https://dish-images.sfo2.digitaloceanspaces.com/
+      IMGPROXY_ALLOWED_SOURCES: https://dish-images.sfo2.digitaloceanspaces.com/,https://d3h1lg3ksw6i6b.cloudfront.net/
       # 10MB max
       IMGPROXY_MAX_SRC_FILE_SIZE: 10,485,760 
     deploy:
@@ -369,11 +369,11 @@ services:
       POSTGRES_DB: scrape_data
     ports:
       - ${TIMESCALE_PORT:-5433}:5432
-    healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U postgres"]
-      interval: 5s
-      timeout: 5s
-      retries: 5
+    # healthcheck:
+    #   test: ["CMD-SHELL", "pg_isready -U postgres -p 5433"]
+    #   interval: 5s
+    #   timeout: 5s
+    #   retries: 5
 
   # TODO rename dish-run-tests to dish-mono or dish-run
   timescale-migrate:
@@ -381,10 +381,21 @@ services:
     command: ["bash", "-c", "./dsh migrate_timescale"]
     environment:
       DISH_ENV: ${DISH_ENV:-development}
+      NODE_ENV: ${NODE_ENV:-development}
+      # for whatever reason in swarm this has to be pointing to
+      # internal not external port
+      TIMESCALE_PORT: 5432
+      TIMESCALE_HOST: ${TIMESCALE_HOST:-timescale}
       TIMESCALE_USER: ${TIMESCALE_USER:-postgres}
       TIMESCALE_PASSWORD: ${TIMESCALE_PASSWORD:-postgres}
+      KEEP_ALIVE: "true"
     depends_on:
       - timescale
+    deploy:
+      restart_policy:
+        condition: on-failure
+        delay: 10s
+        max_attempts: 3
 
   redis:
     image: redis

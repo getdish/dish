@@ -146,7 +146,7 @@ steps:
   - label: "deploy"
     if: build.branch == "production" || build.branch == "nate/dev"
     timeout_in_minutes: 10
-    command: "./dsh deploy"
+    command: "./dsh deploy all"
     artifact_paths:
       - "*.log"
 
