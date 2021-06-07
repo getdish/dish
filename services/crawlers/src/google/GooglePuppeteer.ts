@@ -176,6 +176,7 @@ export class GooglePuppeteer extends GooglePuppeteerJob {
   }
 
   async getSynopsis() {
+    // TODO not working
     this.scrape_data.synopsis = (
       await this.puppeteer.getElementText('.section-editorial-quote')
     ).trim()
