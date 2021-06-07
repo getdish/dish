@@ -195,11 +195,11 @@ services:
         - traefik.constraint-label=traefik-public
         - traefik.http.routers.tileserver-http.rule=Host(`tileserver.${DOMAIN}`)
         - traefik.http.routers.tileserver-http.entrypoints=http
-        - traefik.http.routers.tileserver-http.middlewares=dish-https-redirect
+        # - traefik.http.routers.tileserver-http.middlewares=dish-https-redirect
         - traefik.http.routers.tileserver-https.rule=Host(`tileserver.${DOMAIN}`)
-        - traefik.http.routers.tileserver-https.entrypoints=https
-        - traefik.http.routers.tileserver-https.tls=true
-        - traefik.http.routers.tileserver-https.tls.certresolver=le
+        # - traefik.http.routers.tileserver-https.entrypoints=https
+        # - traefik.http.routers.tileserver-https.tls=true
+        # - traefik.http.routers.tileserver-https.tls.certresolver=le
         - traefik.http.services.tileserver.loadbalancer.server.port=3000
     build:
       context: ./services/tileserver
