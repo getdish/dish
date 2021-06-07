@@ -31,22 +31,24 @@ services:
         # It can be re-used by other stacks in other Docker Compose files
         - traefik.http.middlewares.dish-https-redirect.redirectscheme.scheme=https
         - traefik.http.middlewares.dish-https-redirect.redirectscheme.permanent=true
-        # traefik-http set up only to use the middleware to redirect to https
+        # middleware for forwarding to cloudflare
+        - traefik.http.middlewares.cloudflare-headers.headers.sslproxyheaders.X-Forwarded-Proto=https
+        # traefikui-http set up only to use the middleware to redirect to https
         # Uses the environment variable DOMAIN
-        - traefik.http.routers.dish-http.rule=Host(`traefik.${DOMAIN}`)
-        - traefik.http.routers.dish-http.entrypoints=http
-        - traefik.http.routers.dish-http.middlewares=dish-https-redirect
-        # traefik-https the actual router using HTTPS
+        - traefik.http.routers.traefikui-http.rule=Host(`traefik.${DOMAIN}`)
+        - traefik.http.routers.traefikui-http.entrypoints=http
+        - traefik.http.routers.traefikui-http.middlewares=dish-https-redirect
+        # traefikui-https the actual router using HTTPS
         # Uses the environment variable DOMAIN
-        - traefik.http.routers.dish-https.rule=Host(`traefik.${DOMAIN}`)
-        - traefik.http.routers.dish-https.entrypoints=https
-        - traefik.http.routers.dish-https.tls=true
+        - traefik.http.routers.traefikui-https.rule=Host(`traefik.${DOMAIN}`)
+        - traefik.http.routers.traefikui-https.entrypoints=https
+        - traefik.http.routers.traefikui-https.tls=true
         # Use the special Traefik service api@internal with the web UI/Dashboard
-        - traefik.http.routers.dish-https.service=api@internal
+        - traefik.http.routers.traefikui-https.service=api@internal
         # Use the "le" (Let's Encrypt) resolver created below
-        - traefik.http.routers.dish-https.tls.certresolver=alt4
+        - traefik.http.routers.traefikui-https.tls.certresolver=alt4
         # Enable HTTP Basic auth, using the middleware created above
-        - traefik.http.routers.dish-https.middlewares=admin-auth
+        - traefik.http.routers.traefikui-https.middlewares=admin-auth
         # Define the port inside of the Docker service to use
         - traefik.http.services.dish.loadbalancer.server.port=80
     volumes:

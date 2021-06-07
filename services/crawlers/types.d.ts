@@ -1,4 +1,17 @@
 declare module "@dish/crawlers" {
+    import { Pool, PoolConfig, QueryResult } from "pg";
+    export class DB {
+        config: PoolConfig;
+        pool: Pool | null;
+        static main_db: DB;
+        constructor(config: PoolConfig);
+        static one_query_on_main(query: string): Promise<QueryResult<any>>;
+        connect(): Promise<import("pg").PoolClient>;
+        query(query: string): Promise<QueryResult<any>>;
+    }
+}
+
+declare module "@dish/crawlers" {
     import "@dish/common";
     import { Browser, Page, Request } from "puppeteer";
     export class Puppeteer {
@@ -95,22 +108,12 @@ declare module "@dish/crawlers" {
 declare module "@dish/crawlers" {
     import "@dish/common";
     import { Restaurant } from "@dish/graph";
-    import { Pool, PoolConfig, QueryResult } from "pg";
     type Coord = [
         number,
         number
     ];
     export const CITY_LIST: string[];
     export function getCities(): string[];
-    export class DB {
-        config: PoolConfig;
-        pool: Pool | null;
-        static main_db: DB;
-        constructor(config: PoolConfig);
-        static one_query_on_main(query: string): Promise<QueryResult<any>>;
-        connect(): Promise<import("pg").PoolClient>;
-        query(query: string): Promise<QueryResult<any>>;
-    }
     export function shiftLatLonByMetres(lat: number, lon: number, diff_north: number, diff_east: number): [
         number,
         number

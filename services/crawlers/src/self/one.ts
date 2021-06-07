@@ -2,7 +2,7 @@ import '@dish/helpers/polyfill'
 
 import { restaurantFindOne } from '@dish/graph'
 
-import { DB } from '../utils'
+import { DB } from '../DB'
 import { GPT3 } from './GPT3'
 import { Self } from './Self'
 

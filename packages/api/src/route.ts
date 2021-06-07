@@ -1,5 +1,5 @@
 import bodyParser from 'body-parser'
-import { Handler as ExpressHandler, Request, Response, response } from 'express'
+import { Handler as ExpressHandler, Request, Response } from 'express'
 
 import { Handler } from './interfaces'
 
@@ -55,9 +55,9 @@ export const urlEncodedRoute = (fn: Handler, opts?: BodyParseOptsURLEncoded['url
   bodyParsedRoute(fn, { urlEncoded: opts })
 
 export function handleErrors(fn: Handler) {
-  return async (req: Request, res: Response) => {
+  return async (req: Request, res: Response, next) => {
     try {
-      const handlerRes = fn(req, res)
+      const handlerRes = fn(req, res, next)
       if (handlerRes instanceof Promise) {
         await handlerRes
       }
