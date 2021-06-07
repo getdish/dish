@@ -817,6 +817,7 @@ tables:
       - id
       - list_id
       - location
+      - native_data_unique_key
       - rating
       - restaurant_id
       - source

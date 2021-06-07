@@ -2,6 +2,7 @@ import { RestaurantWithId, ZeroUUID, ensureJSONSyntax, restaurantFindOne } from 
 import { clone } from 'lodash'
 import { PoolConfig } from 'pg'
 
+import { DB } from './DB'
 import { DoorDash } from './doordash/DoorDash'
 import { GoogleGeocoder } from './google/GoogleGeocoder'
 import { GrubHub } from './grubhub/GrubHub'
@@ -9,12 +10,13 @@ import { Infatuated } from './infatuated/Infatuated'
 import { Michelin } from './michelin/Michelin'
 import { Tripadvisor } from './tripadvisor/Tripadvisor'
 import { UberEats } from './ubereats/UberEats'
-import { DB } from './utils'
 import { Yelp } from './yelp/Yelp'
+
+const port = +(process.env.TIMESCALE_PORT_INTERNAL || process.env.TIMESCALE_PORT || 5433)
 
 const db_config: PoolConfig = {
   host: process.env.TIMESCALE_HOST || 'localhost',
-  port: process.env.TIMESCALE_PORT ? +process.env.TIMESCALE_PORT : 5433,
+  port,
   user: process.env.TIMESCALE_USER || 'postgres',
   password: process.env.TIMESCALE_PASSWORD || 'postgres',
   database: process.env.TIMESCALE_DB || 'scrape_data',

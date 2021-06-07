@@ -4,6 +4,7 @@ if [ "$KEEP_ALIVE" != "true" ]; then
   set -eo pipefail
 fi
 
+CWD_DIR=$(pwd)
 DISH_ENV="${DISH_ENV:-production}"
 ENV_FILE=".env.$DISH_ENV"
 SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )"
@@ -178,13 +179,14 @@ function deploy_dish() {
   if [ "$1" == "--force" ]; then
     #  force restart
     docker stack services -q dish | while read -r service; do
-      restart "$service"
+      echo "dish restarting: $service"
+      docker_restart "$service"
     done
   fi
   # migrate_all
 }
 
-function restart() {
+function docker_restart() {
   docker service update --force "$1"
 }
 
@@ -222,8 +224,10 @@ function deploy_portainer() {
 }
 
 function deploy_traefik() {
-  docker network create --driver=overlay traefik-public || true
-  docker stack deploy --prune -c docker-traefik.yml traefik
+  docker network create --driver=overlay traefik-public &>/dev/null || true
+  # sometimes fails with "update out of sequence" but thats ok, retry
+  docker stack deploy --prune -c docker-traefik.yml traefik || 
+    docker stack deploy --prune -c docker-traefik.yml traefik
   docker service update --force traefik_traefik
   docker service ps --no-trunc traefik_traefik
 }
@@ -859,11 +863,14 @@ function clean_dangling() {
 }
 
 function docker_compose_push_core() {
-  docker push registry.fly.io/dish-base | sed -e 's/^/base: /;' &
-  docker push registry.fly.io/dish-app | sed -e 's/^/app: /;' &
-  docker push registry.fly.io/dish-hooks | sed -e 's/^/hooks: /;' &
-  docker push registry.fly.io/dish-site | sed -e 's/^/site: /;' &
-  docker push registry.fly.io/dish-worker | sed -e 's/^/worker: /;' &
+  docker push registry.dishapp.com/dish-base | sed -e 's/^/base: /;' &
+  docker push registry.dishapp.com/dish-app | sed -e 's/^/app: /;' &
+  docker push registry.dishapp.com/dish-hooks | sed -e 's/^/hooks: /;' &
+  docker push registry.dishapp.com/dish-site | sed -e 's/^/site: /;' &
+  docker push registry.dishapp.com/dish-worker | sed -e 's/^/worker: /;' &
+  docker push registry.dishapp.com/dish-worker-proxy | sed -e 's/^/worker-proxy: /;' &
+  docker push registry.dishapp.com/dish-run-tests | sed -e 's/^/run-tests: /;' &
+  wait
 }
 
 function setup_buildkite() {
@@ -892,7 +899,7 @@ function sync_to() {
   chmod 600 "$key"
   echo " ⬆️  syncing . to $host:/app"
   rsync \
-    -avP --force \
+    -avP -q --force \
     --exclude-from="$(git -C . ls-files --exclude-standard -oi --directory > /tmp/excludes; echo /tmp/excludes)" \
     --exclude='- .git' \
     -e "ssh -o StrictHostKeyChecking=no -i $key" . "root@$host:/app"
@@ -1064,7 +1071,10 @@ function clean() {
 }
 
 function run() {
+  echo "executing: $ORIGINAL_ARGS in $CWD_DIR"
+  pushd "$CWD_DIR"
   bash -c "$ORIGINAL_ARGS"
+  popd "$CWD_DIR"
 }
 
 function disk_speed() {

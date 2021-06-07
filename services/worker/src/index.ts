@@ -6,6 +6,14 @@ import express from 'express'
 
 import { klass_map } from './job_processor'
 
+// for dev it should quit background jobs better
+const cleanExit = (e) => {
+  console.log('clean exit', e)
+  process.exit(0)
+}
+process.on('SIGINT', cleanExit) // catch ctrl-c
+process.on('SIGTERM', cleanExit) // catch kill
+
 // this is actually concurrency PER-QUEUE
 // but we have one process per queue by default
 // so its Queues (~8 right now) * Processes (1)
@@ -99,11 +107,3 @@ async function startQueues(queues: Queue[]) {
 }
 
 main()
-
-// for dev it should quit background jobs better
-const cleanExit = () => {
-  console.log('clean exit')
-  process.exit(0)
-}
-process.on('SIGINT', cleanExit) // catch ctrl-c
-process.on('SIGTERM', cleanExit) // catch kill

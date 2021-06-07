@@ -16,6 +16,7 @@ import { Base64 } from 'js-base64'
 import moment from 'moment'
 
 import { DISH_DEBUG } from '../constants'
+import { DB } from '../DB'
 import {
   DoorDashScrapeData,
   GoogleReviewScrapeData,
@@ -31,7 +32,6 @@ import {
 } from '../photo-helpers'
 import {
   Scrape,
-  ScrapeData,
   latestScrapeForRestaurant,
   scrapeGetAllDistinct,
   scrapeGetData,
@@ -39,7 +39,6 @@ import {
 } from '../scrape-helpers'
 import { Tripadvisor } from '../tripadvisor/Tripadvisor'
 import {
-  DB,
   googlePermalink,
   restaurantCountForCity,
   restaurantFindIDBatchForCity,

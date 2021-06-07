@@ -800,6 +800,8 @@ function setupMapEffect({
             activeColor,
           } = tile
 
+          console.log('adding tile', TILES_HOST)
+
           map.addSource(name, {
             type: 'vector',
             url: `${TILES_HOST}/${name}.json`,

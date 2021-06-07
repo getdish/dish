@@ -3,7 +3,7 @@ import '@dish/common'
 import { WorkerJob } from '@dish/worker'
 import axios_base from 'axios'
 import { JobOptions, QueueOptions } from 'bull'
-import _ from 'lodash'
+import * as _ from 'lodash'
 
 import { restaurantSaveCanonical } from '../canonical-restaurant'
 import { ScrapeData, scrapeInsert } from '../scrape-helpers'

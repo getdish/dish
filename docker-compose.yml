@@ -33,7 +33,7 @@ services:
       context: ./
       dockerfile: ./app/Dockerfile
     environment:
-      - MARTIN_ENDPOINT=https://martin-tiles.dishapp.com
+      - MARTIN_API_PATH=/api/tile
       - HASURA_GRAPHQL_ADMIN_SECRET=${HASURA_GRAPHQL_ADMIN_SECRET:-password}
       - JWT_ADMIN_PASSWORD=${JWT_ADMIN_PASSWORD}
       - SENDGRID_API_KEY=${SENDGRID_API_KEY}
@@ -195,8 +195,10 @@ services:
         - traefik.constraint-label=traefik-public
         - traefik.http.routers.tileserver-http.rule=Host(`tileserver.${DOMAIN}`)
         - traefik.http.routers.tileserver-http.entrypoints=http
+        - traefik.http.routers.tileserver-http.middlewares=cloudflare-headers
         # - traefik.http.routers.tileserver-http.middlewares=dish-https-redirect
-        - traefik.http.routers.tileserver-https.rule=Host(`tileserver.${DOMAIN}`)
+        # - traefik.http.middlewares.https-redirect.headers.sslredirect=true
+        # - traefik.http.routers.tileserver-https.rule=Host(`tileserver.${DOMAIN}`)
         # - traefik.http.routers.tileserver-https.entrypoints=https
         # - traefik.http.routers.tileserver-https.tls=true
         # - traefik.http.routers.tileserver-https.tls.certresolver=le
@@ -267,6 +269,69 @@ services:
         - traefik.http.routers.image-proxy-https.tls.certresolver=le
         - traefik.http.services.image-proxy.loadbalancer.server.port=8080
 
+  worker:
+    image: registry.dishapp.com/dish-worker${DISH_IMAGE_TAG}
+    restart: on-failure:3
+    ports:
+      - 3434:3434
+    networks:
+      - default
+    build:
+      context: .
+      dockerfile: ./services/worker/Dockerfile
+    deploy:
+      replicas: 1
+      update_config:
+        order: start-first
+      labels:
+        - traefik.enable=true
+        - traefik.docker.network=traefik-public
+        - traefik.constraint-label=traefik-public
+        - traefik.http.routers.worker-http.rule=Host(`worker.${DOMAIN}`)
+        - traefik.http.routers.worker-http.entrypoints=http
+        - traefik.http.routers.worker-http.middlewares=dish-https-redirect
+        - traefik.http.routers.worker-https.rule=Host(`worker.${DOMAIN}`)
+        - traefik.http.routers.worker-https.entrypoints=https
+        - traefik.http.routers.worker-https.tls=true
+        - traefik.http.routers.worker-https.tls.certresolver=le
+        - traefik.http.services.worker.loadbalancer.server.port=3434
+    environment:
+      - HASURA_ENDPOINT=http://hasura:${HASURA_PORT:-8080}
+      - HASURA_GRAPHQL_ADMIN_SECRET=${HASURA_GRAPHQL_ADMIN_SECRET:-password}
+      - REDIS_HOST=redis
+      - PGHOST=postgres
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD:-postgres}
+      - TIMESCALE_HOST=timescale
+      - TIMESCALE_PASSWORD=${TIMESCALE_PASSWORD:-postgres}
+      - TIMESCALE_PORT=${TIMESCALE_PORT:-5433}
+      - TIMESCALE_PORT_INTERNAL=${TIMESCALE_PORT_INTERNAL:-5432}
+      - STORMPROXY_HOSTS=${STORMPROXY_HOSTS}
+      - UBEREATS_PROXY=${UBEREATS_PROXY}
+      - HEREMAPS_API_TOKEN${HEREMAPS_API_TOKEN}
+      - INFATUATED_PROXY=${INFATUATED_PROXY}
+      - MICHELIN_PROXY=${MICHELIN_PROXY}
+      - YELP_MOBILE_AWS_PROXY=${YELP_MOBILE_AWS_PROXY}
+      - YELP_AWS_PROXY=${YELP_AWS_PROXY}
+      - TRIPADVISOR_PROXY=${TRIPADVISOR_PROXY}
+      - GOOGLE_SEARCH_PROXY=${GOOGLE_SEARCH_PROXY}
+      - GOOGLE_AWS_PROXY=${GOOGLE_AWS_PROXY}
+      - GOOGLE_USERCONTENT_AWS_PROXY=${GOOGLE_USERCONTENT_AWS_PROXY}
+      - DOORDASH_GRAPHQL_AWS_PROXY=${DOORDASH_GRAPHQL_AWS_PROXY}
+      - GRUBHUB_AWS_PROXY=${GRUBHUB_AWS_PROXY}
+      - YELP_CDN_AWS_PROXY=${YELP_CDN_AWS_PROXY}
+      - LUMINATI_PROXY_HOST=${LUMINATI_PROXY_HOST}
+      - LUMINATI_PROXY_PORT=${LUMINATI_PROXY_PORT}
+      - LUMINATI_PROXY_DATACENTRE_USER=${LUMINATI_PROXY_DATACENTRE_USER}
+      - LUMINATI_PROXY_DATACENTRE_PASSWORD=${LUMINATI_PROXY_DATACENTRE_PASSWORD}
+      - LUMINATI_PROXY_RESIDENTIAL_USER=${LUMINATI_PROXY_RESIDENTIAL_USER}
+      - LUMINATI_PROXY_RESIDENTIAL_PASSWORD=${LUMINATI_PROXY_RESIDENTIAL_PASSWORD}
+      - DO_SPACES_ID=${DO_SPACES_ID}
+      - DO_SPACES_SECRET=${DO_SPACES_SECRET}
+      - GPT3_KEY=${GPT3_KEY}
+      - NODE_OPTIONS="--max_old_space_size=5120"
+      - GORSE_ENDPOINT="http://gorse:9000"
+      - DISH_DEBUG=1
+      
   umami:
     image: ghcr.io/mikecao/umami:postgresql-latest
     networks:
@@ -382,9 +447,8 @@ services:
     environment:
       DISH_ENV: ${DISH_ENV:-development}
       NODE_ENV: ${NODE_ENV:-development}
-      # for whatever reason in swarm this has to be pointing to
-      # internal not external port
-      TIMESCALE_PORT: 5432
+      TIMESCALE_PORT: ${TIMESCALE_PORT:-5433}
+      TIMESCALE_PORT_INTERNAL: ${TIMESCALE_PORT_INTERNAL:-5432}
       TIMESCALE_HOST: ${TIMESCALE_HOST:-timescale}
       TIMESCALE_USER: ${TIMESCALE_USER:-postgres}
       TIMESCALE_PASSWORD: ${TIMESCALE_PASSWORD:-postgres}
@@ -481,50 +545,6 @@ services:
       - ./services/gorse/config.local.toml:/app/config.toml
     ports:
       - 9000:9000
-
-  worker:
-    image: registry.dishapp.com/dish-worker${DISH_IMAGE_TAG}
-    restart: on-failure:3
-    networks:
-      - default
-    build:
-      context: .
-      dockerfile: ./services/worker/Dockerfile
-    environment:
-      - HASURA_ENDPOINT=http://hasura:${HASURA_PORT:-8080}
-      - HASURA_GRAPHQL_ADMIN_SECRET=${HASURA_GRAPHQL_ADMIN_SECRET:-password}
-      - REDIS_HOST=redis
-      - PGHOST=postgres
-      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD:-postgres}
-      - TIMESCALE_HOST=timescale
-      - TIMESCALE_PASSWORD=${TIMESCALE_PASSWORD:-postgres}
-      - TIMESCALE_PORT=5433
-      - STORMPROXY_HOSTS=${STORMPROXY_HOSTS}
-      - UBEREATS_PROXY=${UBEREATS_PROXY}
-      - HEREMAPS_API_TOKEN${HEREMAPS_API_TOKEN}
-      - INFATUATED_PROXY=${INFATUATED_PROXY}
-      - MICHELIN_PROXY=${MICHELIN_PROXY}
-      - YELP_MOBILE_AWS_PROXY=${YELP_MOBILE_AWS_PROXY}
-      - YELP_AWS_PROXY=${YELP_AWS_PROXY}
-      - TRIPADVISOR_PROXY=${TRIPADVISOR_PROXY}
-      - GOOGLE_SEARCH_PROXY=${GOOGLE_SEARCH_PROXY}
-      - GOOGLE_AWS_PROXY=${GOOGLE_AWS_PROXY}
-      - GOOGLE_USERCONTENT_AWS_PROXY=${GOOGLE_USERCONTENT_AWS_PROXY}
-      - DOORDASH_GRAPHQL_AWS_PROXY=${DOORDASH_GRAPHQL_AWS_PROXY}
-      - GRUBHUB_AWS_PROXY=${GRUBHUB_AWS_PROXY}
-      - YELP_CDN_AWS_PROXY=${YELP_CDN_AWS_PROXY}
-      - LUMINATI_PROXY_HOST=${LUMINATI_PROXY_HOST}
-      - LUMINATI_PROXY_PORT=${LUMINATI_PROXY_PORT}
-      - LUMINATI_PROXY_DATACENTRE_USER=${LUMINATI_PROXY_DATACENTRE_USER}
-      - LUMINATI_PROXY_DATACENTRE_PASSWORD=${LUMINATI_PROXY_DATACENTRE_PASSWORD}
-      - LUMINATI_PROXY_RESIDENTIAL_USER=${LUMINATI_PROXY_RESIDENTIAL_USER}
-      - LUMINATI_PROXY_RESIDENTIAL_PASSWORD=${LUMINATI_PROXY_RESIDENTIAL_PASSWORD}
-      - DO_SPACES_ID=${DO_SPACES_ID}
-      - DO_SPACES_SECRET=${DO_SPACES_SECRET}
-      - GPT3_KEY=${GPT3_KEY}
-      - NODE_OPTIONS="--max_old_space_size=5120"
-      - GORSE_ENDPOINT="http://gorse:9000"
-      - DISH_DEBUG=1
 
   cron:
     image: registry.dishapp.com/dish-cron${DISH_IMAGE_TAG}

@@ -25,7 +25,7 @@ import { selectFields } from 'gqless'
 import { chunk, uniqBy } from 'lodash'
 import fetch, { Response } from 'node-fetch'
 
-import { DB } from './utils'
+import { DB } from './DB'
 
 const PhotoBaseQueryHelpers = createQueryHelpersFor<PhotoBase>('photo')
 const PhotoXrefQueryHelpers = createQueryHelpersFor<PhotoXref>('photo_xref')
