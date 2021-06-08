@@ -175,7 +175,10 @@ export function createWebpackConfig({
         removeAvailableModules: isProduction,
         splitChunks:
           isProduction && !noMinify
-            ? {
+            ? // TODO pull vendors out into own bundle
+              // It's best practice to isolate a bundle that can load React at fast as possible without any code
+              // https://github.com/reactwg/react-18/discussions/37#discussioncomment-841427
+              {
                 maxAsyncRequests: 20,
                 maxInitialRequests: 5,
                 automaticNameDelimiter: '~',

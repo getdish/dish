@@ -146,7 +146,9 @@ steps:
   - label: "deploy"
     if: build.branch == "production" || build.branch == "nate/dev"
     timeout_in_minutes: 10
-    depends_on: push-images
+    depends_on:
+      - tests
+      - push-images
     command: "./dsh deploy all"
     artifact_paths:
       - "*.log"

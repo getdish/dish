@@ -14,6 +14,8 @@ const proxyHandler = proxy(TILES_HOST_INTERNAL)
 export default route(async (req, res, next) => {
   const url = `${tilesHost}${req.path}`
 
+  console.log('???', tilesHost, tilesPublicHost)
+
   if (req.path.includes('.pbf')) {
     return proxyHandler(req, res, next)
   }

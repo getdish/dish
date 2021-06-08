@@ -47,7 +47,7 @@ async function go() {
         entryPoints: files,
         outdir: 'dist',
         sourcemap: 'inline',
-        target: 'node14',
+        target: 'node15',
         keepNames: true,
         format: 'cjs',
         logLevel: 'error',

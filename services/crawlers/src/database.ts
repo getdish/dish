@@ -2,10 +2,10 @@ import { sleep } from '@dish/async'
 import { sentryException } from '@dish/common'
 import { Pool, PoolConfig, QueryResult } from 'pg'
 
-export class DB {
+export class Database {
   pool: Pool | null = null
 
-  static main_db = new DB({
+  static main_db = new Database({
     host: process.env.PGHOST || 'localhost',
     port: process.env.POSTGRES_PORT ? +process.env.POSTGRES_PORT : 5432,
     ssl: process.env.USE_SSL ? true : false,
@@ -20,13 +20,14 @@ export class DB {
   constructor(public config: PoolConfig) {}
 
   static async one_query_on_main(query: string) {
-    return await DB.main_db.query(query)
+    return await Database.main_db.query(query)
   }
 
   async connect() {
     if (this.pool) {
       return await this.pool.connect()
     }
+    console.log('conf', this.config)
     this.pool = new Pool({
       idleTimeoutMillis: 500000,
       connectionTimeoutMillis: 300000,
@@ -84,3 +85,20 @@ export class DB {
     return result
   }
 }
+
+const extPort = process.env.TIMESCALE_PORT || 5433
+const intPort = process.env.TIMESCALE_PORT_INTERNAL || 5432
+const port = +(process.env.EXTERNAL ? extPort : intPort)
+
+const db_config: PoolConfig = {
+  host: process.env.TIMESCALE_HOST || 'localhost',
+  port,
+  user: process.env.TIMESCALE_USER || 'postgres',
+  password: process.env.TIMESCALE_PASSWORD || 'postgres',
+  database: 'postgres',
+  ssl: process.env.TIMESCALE_SSH ? true : false,
+  connectionTimeoutMillis: 300_000,
+  idleTimeoutMillis: 500_000,
+}
+
+export const db = new Database(db_config)

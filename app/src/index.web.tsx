@@ -5,7 +5,7 @@ import { startLogging } from '@dish/graph'
 import { isSafari } from '@dish/helpers'
 import { loadableReady } from '@loadable/component'
 import React from 'react'
-import { hydrate, render } from 'react-dom'
+import { createRoot, hydrate, render } from 'react-dom'
 import { AppRegistry } from 'react-native'
 
 import { isSSR } from './constants/constants'
@@ -39,9 +39,7 @@ async function start() {
       hydrate(<Root />, ROOT)
     })
   } else {
-    render(<Root />, ROOT)
-    // console.warn('👟 Concurrent Mode')
-    // require('react-dom').unstable_createRoot(ROOT).render(<Root />)
+    createRoot(ROOT).render(<Root />)
   }
 }
 

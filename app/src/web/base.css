@@ -23,6 +23,8 @@ body {
   overflow: hidden;
   position: relative;
   max-height: 100vh;
+  position: absolute;
+  inset: 0;
 }
 
 @media (prefers-color-scheme: dark) {

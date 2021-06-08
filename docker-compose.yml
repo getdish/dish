@@ -12,7 +12,7 @@ x-dish-env: &dish-env
   REDIS_HOST: redis
   PGHOST: postgres
   POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-postgres}
-  TIMESCALE_HOST: timescale
+  TIMESCALE_HOST: ${TIMESCALE_HOST:-timescale}
   TIMESCALE_PASSWORD: ${TIMESCALE_PASSWORD:-postgres}
   TIMESCALE_PORT: ${TIMESCALE_PORT:-5433}
   TIMESCALE_PORT_INTERNAL: ${TIMESCALE_PORT_INTERNAL:-5432}
@@ -44,7 +44,7 @@ x-dish-env: &dish-env
 
 services:
   app:
-    image: registry.dishapp.com/app${DISH_IMAGE_TAG}
+    image: registry.dishapp.com/dish-app${DISH_IMAGE_TAG}
     networks:
       - default
       - traefik-public
@@ -432,11 +432,10 @@ services:
     environment:
       POSTGRES_USER: ${TIMESCALE_USER:-postgres}
       POSTGRES_PASSWORD: ${TIMESCALE_PASSWORD:-postgres}
-      POSTGRES_DB: scrape_data
     ports:
       - ${TIMESCALE_PORT:-5433}:5432
     # healthcheck:
-    #   test: ["CMD-SHELL", "pg_isready -U postgres -p 5433"]
+    #   test: ["CMD-SHELL", "pg_isready -U postgres -p 5432"]
     #   interval: 5s
     #   timeout: 5s
     #   retries: 5
@@ -444,7 +443,7 @@ services:
   # TODO rename dish-run-tests to dish-mono or dish-run
   timescale-migrate:
     image: registry.dishapp.com/dish-run-tests:latest
-    command: ["bash", "-c", "./dsh migrate_timescale"]
+    command: bash -c 'sleep 5 && ./dsh migrate_timescale'
     environment:
       <<: *dish-env
       KEEP_ALIVE: "true"

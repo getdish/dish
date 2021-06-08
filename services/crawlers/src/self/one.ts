@@ -2,7 +2,7 @@ import '@dish/helpers/polyfill'
 
 import { restaurantFindOne } from '@dish/graph'
 
-import { DB } from '../DB'
+import { Database } from '../database'
 import { GPT3 } from './GPT3'
 import { Self } from './Self'
 
@@ -28,7 +28,7 @@ async function all() {
 async function query() {
   const internal = new Self()
   if (!process.env.QUERY) return
-  const result = await DB.main_db.query(process.env.QUERY)
+  const result = await Database.main_db.query(process.env.QUERY)
   for (const row of result.rows) {
     await internal.runOnWorker('mergeAll', [row.id])
   }
@@ -41,7 +41,7 @@ async function gpt3_one() {
   if (restaurant) {
     console.log('Using GPT3 ENV as restaurant slug...')
     internal.restaurant = restaurant
-    internal.main_db = DB.main_db
+    internal.main_db = Database.main_db
     await internal.generateGPT3Summary(restaurant.id)
   } else {
     console.log('Restaurant not found, using GPT3 ENV as text to complete...')
@@ -51,7 +51,7 @@ async function gpt3_one() {
 
 async function gpt3_many(query: string) {
   const internal = new Self()
-  const result = await DB.main_db.query(query)
+  const result = await Database.main_db.query(query)
   for (const row of result.rows) {
     await internal.runOnWorker('generateGPT3Summary', [row.id])
   }
