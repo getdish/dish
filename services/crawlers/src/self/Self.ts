@@ -16,7 +16,7 @@ import { Base64 } from 'js-base64'
 import moment from 'moment'
 
 import { DISH_DEBUG } from '../constants'
-import { DB } from '../DB'
+import { Database } from '../database'
 import {
   DoorDashScrapeData,
   GoogleReviewScrapeData,
@@ -93,7 +93,7 @@ export class Self extends WorkerJob {
   google_review_api: Scrape<GoogleReviewScrapeData> | null = null
   available_sources: string[] = []
 
-  main_db!: DB
+  main_db!: Database
   restaurant!: RestaurantWithId
   ratings!: { [key: string]: number }
   tagging: Tagging
@@ -236,7 +236,7 @@ export class Self extends WorkerJob {
   }
 
   async preMerge(restaurant: RestaurantWithId) {
-    this.main_db = DB.main_db
+    this.main_db = Database.main_db
     this._debugDaemon()
     this.restaurant = restaurant
     this.log('Merging: ' + this.restaurant.name)
@@ -860,7 +860,7 @@ export class Self extends WorkerJob {
     this._job_identifier_restaurant_id = id
     const restaurant = await restaurantFindOneWithTagsSQL(id)
     if (restaurant) {
-      this.main_db = DB.main_db
+      this.main_db = Database.main_db
       this.restaurant = restaurant
       await this.gpt3.generateGPT3Summary()
       await restaurantUpdate(this.restaurant)

@@ -25,7 +25,7 @@ import { selectFields } from 'gqless'
 import { chunk, uniqBy } from 'lodash'
 import fetch, { Response } from 'node-fetch'
 
-import { DB } from './DB'
+import { Database } from './database'
 
 const PhotoBaseQueryHelpers = createQueryHelpersFor<PhotoBase>('photo')
 const PhotoXrefQueryHelpers = createQueryHelpersFor<PhotoXref>('photo_xref')
@@ -250,7 +250,7 @@ async function unassessedPhotosForRestaurantTag(restaurant_id: uuid): Promise<Ph
 
 export async function bestPhotosForRestaurant(restaurant_id: uuid): Promise<PhotoXref[]> {
   const TOP_FRACTION_CUTOFF = process.env.NODE_ENV == 'test' ? 1 : 0.2
-  const result = await DB.one_query_on_main(`
+  const result = await Database.one_query_on_main(`
     SELECT json_agg(j1) FROM (
       SELECT * FROM (
         SELECT

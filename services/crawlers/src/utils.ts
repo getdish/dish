@@ -5,7 +5,7 @@ import axios from 'axios'
 import _ from 'lodash'
 import moment, { Moment } from 'moment'
 
-import { DB } from './DB'
+import { Database } from './database'
 import { isGoogleGeocoderID } from './google/GoogleGeocoder'
 
 const HEREMAPS_API_TOKEN = process.env.HEREMAPS_API_TOKEN
@@ -171,7 +171,7 @@ export async function restaurantFindIDBatchForCity(
     ORDER BY id
     LIMIT ${size}
   `
-  const result = await DB.one_query_on_main(query)
+  const result = await Database.one_query_on_main(query)
   return result.rows
 }
 
@@ -185,7 +185,7 @@ export async function restaurantCountForCity(city: string, radius = 0.5) {
         ${radius}
       )
   `
-  const result = await DB.one_query_on_main(query)
+  const result = await Database.one_query_on_main(query)
   return result.rows[0].count
 }
 
@@ -201,7 +201,7 @@ export async function restaurantFindBasicBatchForAll(
     ORDER BY id
     LIMIT ${size}
   `
-  const result = await DB.one_query_on_main(query)
+  const result = await Database.one_query_on_main(query)
   return result.rows
 }
 
@@ -218,7 +218,7 @@ export async function batchIDsForAll(
     ORDER BY id
     LIMIT ${size}
   `
-  const result = await DB.one_query_on_main(query)
+  const result = await Database.one_query_on_main(query)
   return result.rows.map((r) => r.id)
 }
 
@@ -230,13 +230,13 @@ export async function photoBatchForAll(size: number, previous_id: string, extra_
     ORDER BY id
     LIMIT ${size}
   `
-  const result = await DB.one_query_on_main(query)
+  const result = await Database.one_query_on_main(query)
   return result.rows
 }
 
 export async function getTableCount(table: string, where = ''): Promise<number> {
   const query = `SELECT count(id) FROM ${table} ${where}`
-  const result = await DB.one_query_on_main(query)
+  const result = await Database.one_query_on_main(query)
   return parseInt(result.rows[0].count)
 }
 
@@ -275,7 +275,7 @@ export async function restaurantDeleteOrUpdateByGeocoderID(
   END
   $do$
   `
-  await DB.one_query_on_main(query)
+  await Database.one_query_on_main(query)
 }
 
 export async function restaurantFindOneWithTagsSQL(restaurant_id: string) {
@@ -302,7 +302,7 @@ export async function restaurantFindOneWithTagsSQL(restaurant_id: string) {
       WHERE restaurant.id = '${restaurant_id}'
     ) s
   `
-  const response = await DB.one_query_on_main(query)
+  const response = await Database.one_query_on_main(query)
   const restaurant = response.rows[0].json_agg[0]
   if (!restaurant.tags) {
     restaurant.tags = []

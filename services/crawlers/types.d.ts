@@ -1,17 +1,4 @@
 declare module "@dish/crawlers" {
-    import { Pool, PoolConfig, QueryResult } from "pg";
-    export class DB {
-        config: PoolConfig;
-        pool: Pool | null;
-        static main_db: DB;
-        constructor(config: PoolConfig);
-        static one_query_on_main(query: string): Promise<QueryResult<any>>;
-        connect(): Promise<import("pg").PoolClient>;
-        query(query: string): Promise<QueryResult<any>>;
-    }
-}
-
-declare module "@dish/crawlers" {
     import "@dish/common";
     import { Browser, Page, Request } from "puppeteer";
     export class Puppeteer {
@@ -67,7 +54,7 @@ declare module "@dish/crawlers" {
 
 declare module "@dish/crawlers" {
     import { JobOptions, QueueOptions } from "bull";
-    export const PLEASE = "chicken";
+    export const PLEASE = "PLEASE";
     export class UpdateSearchEndpoint extends GooglePuppeteerJob {
         searchEndpoint: string;
         lat: number;
@@ -103,6 +90,20 @@ declare module "@dish/crawlers" {
         _hasSearchExpired(result: string): boolean;
     }
     export function isGoogleGeocoderID(id: string): RegExpMatchArray | null;
+}
+
+declare module "@dish/crawlers" {
+    import { Pool, PoolConfig, QueryResult } from "pg";
+    export class Database {
+        config: PoolConfig;
+        pool: Pool | null;
+        static main_db: Database;
+        constructor(config: PoolConfig);
+        static one_query_on_main(query: string): Promise<QueryResult<any>>;
+        connect(): Promise<import("pg").PoolClient>;
+        query(query: string): Promise<QueryResult<any>>;
+    }
+    export const db: Database;
 }
 
 declare module "@dish/crawlers" {
@@ -983,7 +984,6 @@ declare module "@dish/crawlers" {
 
 declare module "@dish/crawlers" {
     import { RestaurantWithId } from "@dish/graph";
-    export const db: DB;
     type LatLon = {
         lon: number;
         lat: number;
@@ -1225,7 +1225,7 @@ declare module "@dish/crawlers" {
         google: Scrape<GoogleScrapeData> | null;
         google_review_api: Scrape<GoogleReviewScrapeData> | null;
         available_sources: string[];
-        main_db: DB;
+        main_db: Database;
         restaurant: RestaurantWithId;
         ratings: {
             [key: string]: number;

@@ -143,8 +143,8 @@ export class GoogleGeocoder {
         GoogleClean: "${google_clean_query}"
         Google:      "${google_formatted_query}"
         Dish:        "${expected_query}"
-        Dish2:       "${expected_query_2}"
-        `,
+        Dish2:       "${expected_query_2}"\n`,
+        'result: ',
         result
       )
       return true

@@ -8,7 +8,7 @@ const config = {
   driver: 'pg',
   host: process.env.TIMESCALE_HOST || 'localhost',
   port,
-  database: process.env.TIMESCALE_DATABASE || 'scrape_data',
+  database: process.env.TIMESCALE_DATABASE || 'postgres',
   username: process.env.TIMESCALE_USER || 'postgres',
   password: process.env.TIMESCALE_PASS || 'postgres',
   ssl: process.env.USE_SSL === 'true' ? true : false,
@@ -16,17 +16,14 @@ const config = {
 }
 
 const { password, ...rest } = config
-console.log(
-  'config minus password',
-  rest,
-  'password starts with',
-  password[0],
-  'port internal',
-  process.env.TIMESCALE_PORT_INTERNAL
-)
+
+console.log('>> config minus password', rest)
+console.log('>> password starts with', password[0])
+console.log('>> port internal?', process.env.TIMESCALE_PORT_INTERNAL)
+
 const postgrator = new Postgrator(config)
 
-console.log('migrating timescale...', process.env.NODE_ENV, process.env.TIMESCALE_HOST)
+console.log('> migrating timescale...', process.env.NODE_ENV, process.env.TIMESCALE_HOST)
 
 async function main() {
   try {

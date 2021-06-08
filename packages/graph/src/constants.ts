@@ -44,7 +44,8 @@ export const globalTagId = ZeroUUID
 export const externalUserUUID = OneUUID
 
 export const TILES_HOST = `${DISH_API_ENDPOINT}/tile`
-export const TILES_HOST_INTERNAL = process.env.TILES_HOST ?? `tileserver:3000`
+export const TILES_HOST_INTERNAL =
+  process.env.TILES_HOST_INTERNAL ?? process.env.TILES_HOST ?? `tileserver:3000`
 
 export const GRAPH_DOMAIN =
   process.env.HASURA_ENDPOINT || `http://${ORIGIN_MINUS_PORT}:${process.env.HASURA_PORT || 8080}`

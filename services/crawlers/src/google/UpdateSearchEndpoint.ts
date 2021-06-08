@@ -7,8 +7,7 @@ import { GooglePuppeteerJob } from './GooglePuppeteerJob'
 
 const sleep = (ms: number) => new Promise((res) => setTimeout(res, ms))
 
-// may want to randomize
-export const PLEASE = `chicken`
+export const PLEASE = `PLEASE`
 
 String.prototype.replaceAll = function (search, replacement) {
   var target = this

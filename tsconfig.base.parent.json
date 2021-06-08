@@ -21,9 +21,9 @@
     "sourceMap": false,
     "strict": true,
     "strictNullChecks": true,
-    "target": "es2019",
+    "target": "es2020",
     "types": ["node", "jest"],
-    "lib": ["es2019", "dom", "esnext"]
+    "lib": ["es2020", "dom", "esnext"]
   },
   "exclude": ["_", "test/**/*"],
   "typeAcquisition": {

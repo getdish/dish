@@ -40,7 +40,7 @@ function compose() {
 }
 
 function compose_build() {
-  echo "🐳 compose build... $@"
+  echo "🐳 compose build... $@ $TIMESCALE_IMAGE"
   if [ "$1" = "base" ] || [ "$1" = "run-tests" ]; then
     docker-compose -f docker-internal.yml build "$@"
   else
@@ -67,10 +67,10 @@ function compose_up_subset() {
   services=$1
   extra=$2
   flags=""
-  echo "docker-compose up $flags $extra $services; ($POSTGRES_DB)"
   if [ "$DOCKER_NO_RECREATE" != "true" ]; then
     flags="--remove-orphans --force-recreate"
   fi
+  echo "docker-compose up $flags $extra $services ($POSTGRES_DB $TIMESCALE_HOST $TIMESCALE_PORT_INTERNAL)"
   if [ -z "$extra" ]; then
     docker-compose up $flags $services
   else
@@ -180,8 +180,11 @@ function deploy_dish() {
     #  force restart
     docker stack services -q dish | while read -r service; do
       echo "dish restarting: $service"
+      # date out of sequence errors on backgrounding &
+      # docker_restart "$service" &
       docker_restart "$service"
     done
+    wait
   fi
   # migrate_all
 }
@@ -569,10 +572,10 @@ function migrate_umami() {
 }
 
 function migrate_timescale() {
-  echo "Migrating timescale"
+  echo "Migrating timescale $TIMESCALE_PORT_INTERNAL"
   pushd "$PROJECT_ROOT/services/timescale"
   npm install &>/dev/null || true
-  node ./scripts/migrate.js
+  TIMESCALE_PORT_INTERNAL=$TIMESCALE_PORT_INTERNAL node ./scripts/migrate.js
   popd
 }
 
@@ -1091,6 +1094,8 @@ function setup_test_services() {
   if [ ! -d "$POSTGRES_DB_DIR" ]; then
     echo "doing double start first time since no postgres db dir: $POSTGRES_DB_DIR"
     mkdir -p "$POSTGRES_DB_DIR"
+    # only for buildkite non-docker mode, brittle
+    chown -R buildkite-agent:buildkite-agent "$POSTGRES_DB_DIR"
     docker-compose run -d postgres
     wait_until_postgres_ready
   fi
@@ -1165,7 +1170,7 @@ popd >/dev/null
 
 function_to_run=$1
 
-echo "dsh -- env $PROJECT_ROOT $DISH_ENV $function_to_run"
+echo "dsh -- env $DISH_ENV in $PROJECT_ROOT running $function_to_run"
 
 if [ "$NO_PRINT_HELP" != "1" ] && [ "$function_to_run" = "" ]; then
   for f in $(declare -F | cut -d ' ' -f3); do
