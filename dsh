@@ -863,6 +863,7 @@ function clean_dangling() {
 }
 
 function docker_compose_push_core() {
+  echo "pushing images..."
   docker push registry.dishapp.com/dish-base | sed -e 's/^/base: /;' &
   docker push registry.dishapp.com/dish-app | sed -e 's/^/app: /;' &
   docker push registry.dishapp.com/dish-hooks | sed -e 's/^/hooks: /;' &
