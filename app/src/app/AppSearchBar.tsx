@@ -1,5 +1,5 @@
 import React, { Suspense } from 'react'
-import { VStack, useMedia } from 'snackui'
+import { useMedia } from 'snackui'
 
 import { AppSearchBarContents } from './AppSearchBarContents'
 

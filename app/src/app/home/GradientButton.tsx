@@ -21,7 +21,7 @@ export function GradientButton({
       paddingHorizontal={25}
       alignItems="center"
       justifyContent="center"
-      borderRadius={14}
+      borderRadius={50}
       borderWidth={bordered ? 1 : 0}
       backgroundColor="transparent"
       className="hover-parent ease-in-out-faster safari-fix-overflow"
