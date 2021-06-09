@@ -21,6 +21,10 @@ export const getBreadcrumbs = (states: HomeStateItem[]) => {
   for (let i = states.length - 1; i >= 0; i--) {
     const cur = states[i]
 
+    if (crumbs.length === MAX_CRUMBS) {
+      break
+    }
+
     if (cur.type === 'home') {
       crumbs.unshift(cur)
       return crumbs
@@ -32,8 +36,7 @@ export const getBreadcrumbs = (states: HomeStateItem[]) => {
     }
   }
 
-  // maximum 7 crumbs (balancing memory usage could use some params?)
-  return crumbs.slice(0, Math.min(crumbs.length, MAX_CRUMBS))
+  return crumbs
 }
 
 window['getBreadcrumbs'] = getBreadcrumbs
