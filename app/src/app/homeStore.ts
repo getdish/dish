@@ -1,11 +1,9 @@
-import { sleep } from '@dish/async'
 import { isEqual } from '@dish/fast-compare'
 import { assert, handleAssertionError, stringify } from '@dish/helpers'
 import { HistoryItem } from '@dish/router'
 import { Store, createStore, useStoreInstance, useStoreInstanceSelector } from '@dish/use-store'
 import _, { clamp, findLast } from 'lodash'
 import { Keyboard } from 'react-native'
-import { getMedia } from 'snackui'
 
 import { initialHomeState } from '../constants/initialHomeState'
 import { tagLenses } from '../constants/localTags'
@@ -32,7 +30,6 @@ import {
 } from '../types/homeTypes'
 import { NavigableTag } from '../types/tagTypes'
 import { appMapStore } from './AppMapStore'
-import { drawerStore } from './drawerStore'
 
 class HomeStore extends Store {
   searchBarTagIndex = 0

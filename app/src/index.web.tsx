@@ -1,11 +1,11 @@
-// import './whydidyourender'
 import './web/base.css'
 
+// import './whydidyourender'
 import { startLogging } from '@dish/graph'
 import { isSafari } from '@dish/helpers'
 import { loadableReady } from '@loadable/component'
 import React from 'react'
-import { createRoot, hydrate, render } from 'react-dom'
+import { hydrate, render } from 'react-dom'
 import { AppRegistry } from 'react-native'
 
 import { isSSR } from './constants/constants'
@@ -15,7 +15,7 @@ if (process.env.NODE_ENV === 'development') {
   startLogging()
 }
 
-const IS_NOT_CONCURRENT = window.location.search.indexOf(`not-concurrent`) > -1
+const FORCE_NOT_CONCURRENT = window.location.search.indexOf(`not-concurrent`) > -1
 const ROOT = document.getElementById('root')!
 
 // register root component
@@ -27,24 +27,24 @@ if (isSafari) {
   })
 }
 
-async function start() {
-  if (IS_NOT_CONCURRENT) {
+async function main() {
+  if (FORCE_NOT_CONCURRENT) {
     render(<Root />, ROOT)
     return
   }
-
   // disable as we're not doing SSR for now
   if (false && process.env.NODE_ENV === 'production') {
     loadableReady(() => {
       hydrate(<Root />, ROOT)
     })
-  } else {
-    createRoot(ROOT).render(<Root />)
+    return
   }
+  // createRoot(ROOT).render(<Root />)
+  render(<Root />, ROOT)
 }
 
 // SSR exports
-if (isSSR) {
+if (process.env.IS_SSR_RENDERING || process.env.TARGET === 'ssr') {
   exports.App = Root
   exports.ReactDOMServer = require('react-dom/server')
 }
@@ -55,6 +55,6 @@ if (process.env.NODE_ENV === 'development') {
 }
 
 if (!window['__ignore_hmr'] && process.env.TARGET !== 'node') {
-  start()
+  main()
   window['__ignore_hmr'] = true
 }

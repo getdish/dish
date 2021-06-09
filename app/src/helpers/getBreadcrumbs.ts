@@ -1,5 +1,4 @@
 import { HomeStateItem } from '../types/homeTypes'
-import { isSearchState } from './homeStateHelpers'
 
 const breadCrumbTypes = {
   search: true,
@@ -14,6 +13,8 @@ export const isBreadcrumbState = (type: HomeStateItem['type']) => {
   return breadCrumbTypes[type]
 }
 
+const MAX_CRUMBS = 3 //isTouchDevice && isWeb ? 3 : 5
+
 export const getBreadcrumbs = (states: HomeStateItem[]) => {
   let crumbs: HomeStateItem[] = []
   // reverse loop to find latest
@@ -26,20 +27,13 @@ export const getBreadcrumbs = (states: HomeStateItem[]) => {
     }
 
     if (isBreadcrumbState(cur.type)) {
-      if (crumbs.some((x) => x.type === cur.type)) {
-        continue
-      }
-      if (cur.type !== 'search' && crumbs.some(isSearchState)) {
-        continue
-      }
-      if (isSearchState(cur) && crumbs.some(isSearchState)) {
-        continue
-      }
       crumbs.unshift(cur)
       continue
     }
   }
-  return crumbs
+
+  // maximum 7 crumbs (balancing memory usage could use some params?)
+  return crumbs.slice(0, Math.min(crumbs.length, MAX_CRUMBS))
 }
 
 window['getBreadcrumbs'] = getBreadcrumbs
