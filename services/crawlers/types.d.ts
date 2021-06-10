@@ -1279,7 +1279,7 @@ declare module "@dish/crawlers" {
         _getGooglePhotos(): string[];
         getPaginatedData<A extends any>(data: {
             [key: string]: A[];
-        }): A[];
+        } | null): A[];
         getRatingFactors(): void;
         addReviewHeadlines(): Promise<void>;
         updateAllGeocoderIDs(): Promise<void>;

@@ -1,7 +1,5 @@
 FROM registry.dishapp.com/dish-base:latest
 
-FROM node:15.10.0-buster
-
 RUN \
   apt-get update >/dev/null && apt-get install -y parallel build-essential \
             libcairo2-dev libpixman-1-dev libpango1.0-dev \

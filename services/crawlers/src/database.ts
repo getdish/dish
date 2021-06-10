@@ -1,5 +1,6 @@
 import { sleep } from '@dish/async'
 import { sentryException } from '@dish/common'
+import { omit } from 'lodash'
 import { Pool, PoolConfig, QueryResult } from 'pg'
 
 export class Database {
@@ -27,7 +28,7 @@ export class Database {
     if (this.pool) {
       return await this.pool.connect()
     }
-    console.log('conf', this.config)
+    console.log('conf', omit(this.config, 'password'))
     this.pool = new Pool({
       idleTimeoutMillis: 500000,
       connectionTimeoutMillis: 300000,

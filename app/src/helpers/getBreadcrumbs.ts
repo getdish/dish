@@ -16,27 +16,30 @@ export const isBreadcrumbState = (type: HomeStateItem['type']) => {
 const MAX_CRUMBS = 3 //isTouchDevice && isWeb ? 3 : 5
 
 export const getBreadcrumbs = (states: HomeStateItem[]) => {
-  let crumbs: HomeStateItem[] = []
-  // reverse loop to find latest
-  for (let i = states.length - 1; i >= 0; i--) {
-    const cur = states[i]
-
-    if (crumbs.length === MAX_CRUMBS) {
+  let res: HomeStateItem[] = []
+  const statesBackwards = [...states].reverse()
+  for (const cur of statesBackwards) {
+    if (res.length === MAX_CRUMBS) {
       break
     }
-
     if (cur.type === 'home') {
-      crumbs.unshift(cur)
-      return crumbs
+      res.unshift(cur)
+      return res
     }
-
     if (isBreadcrumbState(cur.type)) {
-      crumbs.unshift(cur)
+      res.unshift(cur)
       continue
     }
   }
-
-  return crumbs
+  if (!res.some((x) => x.type === 'home')) {
+    const home = statesBackwards.find((x) => x.type === 'home')
+    if (!home) {
+      console.error('no home???')
+    } else {
+      res.unshift(home)
+    }
+  }
+  return res
 }
 
 window['getBreadcrumbs'] = getBreadcrumbs
