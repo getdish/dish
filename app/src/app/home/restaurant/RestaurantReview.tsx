@@ -49,7 +49,7 @@ export const RestaurantReview = memo(
 
       useLazyEffect(() => {
         if (refetchKey) {
-          // refetchAll()
+          console.log('refetching review', refetchKey)
           refetch(review || reviews)
         }
       }, [refetchKey])

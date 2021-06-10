@@ -4,10 +4,9 @@ import { AbsoluteVStack, HStack, Hoverable, VStack } from 'snackui'
 
 import { getImageUrl } from '../../../helpers/getImageUrl'
 import { Card } from '../../home/restaurant/Card'
-import { FavoriteButton, FavoriteButtonProps } from '../FavoriteButton'
+import { FavoriteButton } from '../FavoriteButton'
 import { Image } from '../Image'
 import { Link } from '../Link'
-import { Score } from '../Score'
 import { useList, useListFavorite } from './useList'
 
 export type ListIDProps = {

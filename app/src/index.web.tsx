@@ -38,8 +38,8 @@ async function main() {
     })
     return
   }
-  createRoot(ROOT).render(<Root />)
-  // render(<Root />, ROOT)
+  // createRoot(ROOT).render(<Root />)
+  render(<Root />, ROOT)
 }
 
 // SSR exports

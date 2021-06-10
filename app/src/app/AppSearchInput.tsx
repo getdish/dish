@@ -139,117 +139,115 @@ export const AppSearchInput = memo(() => {
   const setInputNode = useCallback((view) => setNodeOnInputStore(inputStore)(view), [])
 
   return (
-    <AppAutocompleteHoverableInput input={input} autocompleteTarget="search">
-      <InputFrame>
-        {/* Loading / Search Icon */}
-        <SearchInputIcon color={color} />
+    <InputFrame>
+      {/* Loading / Search Icon */}
+      <SearchInputIcon color={color} />
 
-        <VStack
-          // @ts-ignore
-          ref={searchInputContainer}
-          minWidth="50%"
-          flex={2}
-          height={outerHeight}
+      <VStack
+        // @ts-ignore
+        ref={searchInputContainer}
+        minWidth="50%"
+        flex={2}
+        height={outerHeight}
+      >
+        <ScrollView
+          horizontal
+          showsHorizontalScrollIndicator={false}
+          contentContainerStyle={{
+            alignItems: 'center',
+            minWidth: '100%',
+          }}
+          style={{
+            minWidth: '100%',
+            paddingRight: 10,
+            flex: 1,
+          }}
         >
-          <ScrollView
-            horizontal
-            showsHorizontalScrollIndicator={false}
-            contentContainerStyle={{
-              alignItems: 'center',
-              minWidth: '100%',
-            }}
-            style={{
-              minWidth: '100%',
-              paddingRight: 10,
-              flex: 1,
-            }}
-          >
-            <HStack alignSelf="center" alignItems="center" minWidth="100%" height={innerHeight}>
-              <AppSearchInputTagsRow input={input} />
-              <HStack
-                height={innerHeight}
-                maxWidth="100%"
-                position="relative"
-                flex={1}
-                alignItems="center"
-              >
-                {isTouchDevice && <SearchInputNativeDragFix name="search" />}
-                <TextInput
-                  key={0}
-                  ref={(view) => {
-                    textInput$.current = view
-                    setInputNode(view)
-                  }}
-                  onBlur={(e) => {
-                    inputStore.setIsFocused(true)
-                    avoidNextFocus = false
-                    // dont because it hides during autocomplete click
-                    // and event is before mousedown even
-                    // if (isWeb && !getMedia().sm) {
-                    //   if (autocompletesStore.target === 'search') {
-                    //     autocompletesStore.setVisible(false)
-                    //   }
-                    // }
-                  }}
-                  onKeyPress={handleKeyPressInner}
-                  {...(!isWeb && {
-                    placeholderTextColor: '#999',
-                  })}
-                  onFocus={(e) => {
-                    inputStore.setIsFocused(true)
-                    if (isDesktop) {
-                      console.log('ignore focus')
-                      // see above, we handle better for text selection
-                      return
-                    }
-                    if (drawerStore.isDragging) {
-                      return
-                    }
-                    if (homeStore.searchbarFocusedTag) {
-                      homeStore.setSearchBarTagIndex(0)
-                    } else {
-                      console.log('open autocomplete search', e.currentTarget)
+          <HStack alignSelf="center" alignItems="center" minWidth="100%" height={innerHeight}>
+            <AppSearchInputTagsRow input={input} />
+            <HStack
+              height={innerHeight}
+              maxWidth="100%"
+              position="relative"
+              flex={1}
+              alignItems="center"
+            >
+              {isTouchDevice && <SearchInputNativeDragFix name="search" />}
+              <TextInput
+                key={0}
+                ref={(view) => {
+                  textInput$.current = view
+                  setInputNode(view)
+                }}
+                onBlur={(e) => {
+                  inputStore.setIsFocused(true)
+                  avoidNextFocus = false
+                  // dont because it hides during autocomplete click
+                  // and event is before mousedown even
+                  // if (isWeb && !getMedia().sm) {
+                  //   if (autocompletesStore.target === 'search') {
+                  //     autocompletesStore.setVisible(false)
+                  //   }
+                  // }
+                }}
+                onKeyPress={handleKeyPressInner}
+                {...(!isWeb && {
+                  placeholderTextColor: '#999',
+                })}
+                onFocus={(e) => {
+                  inputStore.setIsFocused(true)
+                  if (isDesktop) {
+                    console.log('ignore focus')
+                    // see above, we handle better for text selection
+                    return
+                  }
+                  if (drawerStore.isDragging) {
+                    return
+                  }
+                  if (homeStore.searchbarFocusedTag) {
+                    homeStore.setSearchBarTagIndex(0)
+                  } else {
+                    console.log('open autocomplete search', e.currentTarget)
+                    autocompletesStore.setTarget('search')
+                  }
+                }}
+                onChangeText={(text) => {
+                  if (text !== '') {
+                    if (autocompletesStore.target !== 'search') {
                       autocompletesStore.setTarget('search')
                     }
-                  }}
-                  onChangeText={(text) => {
-                    if (text !== '') {
-                      if (autocompletesStore.target !== 'search') {
-                        autocompletesStore.setTarget('search')
-                      }
-                    }
-                    setSearch(text)
-                  }}
-                  placeholder={
-                    isEditingList
-                      ? 'Add restaurant to list...'
-                      : isSearchingCuisine
-                      ? '...'
-                      : `${placeHolder}...`
                   }
-                  style={[
-                    inputTextStyles.textInput,
-                    {
-                      color,
-                      flex: 1,
-                      fontSize: media.sm ? 18 : 18,
-                      fontWeight: '500',
-                      height,
-                      lineHeight: height * 0.45,
-                      paddingHorizontal: 15,
-                    },
-                  ]}
-                />
-              </HStack>
+                  setSearch(text)
+                }}
+                placeholder={
+                  isEditingList
+                    ? 'Add restaurant to list...'
+                    : isSearchingCuisine
+                    ? '...'
+                    : `${placeHolder}...`
+                }
+                style={[
+                  inputTextStyles.textInput,
+                  {
+                    color,
+                    flex: 1,
+                    fontSize: media.sm ? 18 : 18,
+                    fontWeight: '500',
+                    height,
+                    lineHeight: height * 0.45,
+                    paddingHorizontal: 15,
+                  },
+                ]}
+              />
             </HStack>
-          </ScrollView>
-        </VStack>
+          </HStack>
+        </ScrollView>
+      </VStack>
 
-        <SearchCancelButton />
+      <SearchCancelButton />
 
-        <Spacer size={8} />
-      </InputFrame>
-    </AppAutocompleteHoverableInput>
+      <Spacer size={8} />
+    </InputFrame>
   )
 })
 
