@@ -175,7 +175,11 @@ function useSearchQueryEffect(
   }, [query])
 }
 
-function searchAutocomplete(searchQuery: string, center: LngLat, span: LngLat) {
+function searchAutocomplete(
+  searchQuery: string,
+  center: LngLat,
+  span: LngLat
+): Promise<AutocompleteItemFull[]> {
   return resolved(() => {
     return [
       ...searchDishTags(searchQuery),

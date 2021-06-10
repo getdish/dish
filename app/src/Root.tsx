@@ -29,7 +29,7 @@ import { configureAssertHelpers } from '@dish/helpers'
 import { ProvideRouter } from '@dish/router'
 import { configureUseStore } from '@dish/use-store'
 import AppLoading from 'expo-app-loading'
-import React, { Suspense, useEffect, useState } from 'react'
+import React, { StrictMode, Suspense, useEffect, useState } from 'react'
 import { useColorScheme } from 'react-native'
 import { SafeAreaProvider } from 'react-native-safe-area-context'
 import { QueryClientProvider } from 'react-query'
@@ -122,20 +122,22 @@ export function Root() {
   }, [])
 
   return (
-    <SafeAreaProvider>
-      <PlatformSpecificProvider>
-        <ThemeProvider themes={themes} defaultTheme={userStore.theme ?? colorScheme ?? 'dark'}>
-          <ProvideRouter routes={routes}>
-            <QueryClientProvider client={queryClient}>
-              <Suspense fallback={null}>
-                {!isLoaded && <AppLoading />}
-                {isLoaded ? <App /> : null}
-              </Suspense>
-              <RootPortalProvider />
-            </QueryClientProvider>
-          </ProvideRouter>
-        </ThemeProvider>
-      </PlatformSpecificProvider>
-    </SafeAreaProvider>
+    <StrictMode>
+      <SafeAreaProvider>
+        <PlatformSpecificProvider>
+          <ThemeProvider themes={themes} defaultTheme={userStore.theme ?? colorScheme ?? 'dark'}>
+            <ProvideRouter routes={routes}>
+              <QueryClientProvider client={queryClient}>
+                <Suspense fallback={null}>
+                  {!isLoaded && <AppLoading />}
+                  {isLoaded ? <App /> : null}
+                </Suspense>
+                <RootPortalProvider />
+              </QueryClientProvider>
+            </ProvideRouter>
+          </ThemeProvider>
+        </PlatformSpecificProvider>
+      </SafeAreaProvider>
+    </StrictMode>
   )
 }

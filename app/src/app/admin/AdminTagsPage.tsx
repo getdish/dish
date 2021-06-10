@@ -222,12 +222,13 @@ const TagListContent = memo(
                 _eq: 'null',
               },
             }),
-            ...(!lastRowSelection &&
-              column === 0 && {
-                type: {
-                  _eq: 'root',
-                },
-              }),
+            ...(!lastRowSelection
+              ? column === 0 && {
+                  type: {
+                    _eq: 'root',
+                  },
+                }
+              : null),
             ...(!!search && {
               name: {
                 _ilike: `%${search}%`,

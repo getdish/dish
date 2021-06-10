@@ -2,9 +2,58 @@ import { RenderResult, act, cleanup, fireEvent, render } from '@testing-library/
 import { last } from 'lodash'
 import React, { StrictMode } from 'react'
 
-import { Store, createStore, useStore, useStoreInstance, useStoreInstanceSelector } from '../src'
+import {
+  Store,
+  configureUseStore,
+  createStore,
+  useStore,
+  useStoreInstance,
+  useStoreInstanceSelector,
+} from '../src'
 
 Error.stackTraceLimit = Infinity
+
+// configureUseStore({
+//   logLevel: 'debug',
+// })
+
+const sleep = (x = 100) => new Promise((res) => setTimeout(res, x))
+type Todo = { text: string; done: boolean }
+
+class TodoList extends Store<{
+  id: number
+}> {
+  items: Todo[] = [{ text: 'hi', done: false }]
+  alt = ''
+
+  get itemsDiff() {
+    return this.items.map((x, i) => i)
+  }
+
+  get lastItem() {
+    return this.items[this.items.length - 1]
+  }
+
+  changeAlt() {
+    this.alt = `${Math.random()}`
+  }
+
+  add() {
+    this.items = [...this.items, { text: `item-${this.items.length}`, done: false }]
+  }
+
+  async asyncAdd() {
+    await sleep()
+    this.add()
+  }
+}
+
+class Store2 extends Store<{ id: number }> {
+  x = 0
+  add() {
+    this.x = 1
+  }
+}
 
 async function testSimpleStore(id: number) {
   const { getAllByTitle } = render(
@@ -170,7 +219,14 @@ describe('basic tests', () => {
     function SimpleStoreTestUsedProperties(props: { id: number }) {
       const store = useStore(TodoList, props)
       renderCount++
-      return <button title="add" onClick={() => store.add()}></button>
+      console.log('render')
+      return (
+        <>
+          <button title="add" onClick={() => store.add()}></button>
+          <button title="changeAlt" onClick={() => store.changeAlt()}></button>
+          <div title="alt">{store.alt}</div>
+        </>
+      )
     }
     const { getAllByTitle } = render(<SimpleStoreTestUsedProperties id={5} />)
     const getCurrentByTitle = (name: string) => last(getAllByTitle(name))!
@@ -183,7 +239,17 @@ describe('basic tests', () => {
     act(() => {
       fireEvent.click(getCurrentByTitle('add'))
     })
-    expect(renderCount).toEqual(1)
+    act(() => {
+      fireEvent.click(getCurrentByTitle('add'))
+    })
+    act(() => {
+      fireEvent.click(getCurrentByTitle('add'))
+    })
+    act(() => {
+      fireEvent.click(getCurrentByTitle('changeAlt'))
+    })
+    // new react fires a couple more
+    expect(renderCount).toEqual(4)
   })
 
   it('only re-renders tracked properties (selectors + singleton)', async () => {
@@ -240,39 +306,6 @@ function SimpleStoreTest(props: { id: number }) {
 function SimpleStoreTest2(props: { id: number }) {
   const store = useStore(TodoList, props)
   return <div title="x2">{store.lastItem.text}</div>
-}
-
-const sleep = (x = 100) => new Promise((res) => setTimeout(res, x))
-type Todo = { text: string; done: boolean }
-
-class TodoList extends Store<{
-  id: number
-}> {
-  items: Todo[] = [{ text: 'hi', done: false }]
-
-  get itemsDiff() {
-    return this.items.map((x, i) => i)
-  }
-
-  get lastItem() {
-    return this.items[this.items.length - 1]
-  }
-
-  add() {
-    this.items = [...this.items, { text: `item-${this.items.length}`, done: false }]
-  }
-
-  async asyncAdd() {
-    await sleep()
-    this.add()
-  }
-}
-
-class Store2 extends Store<{ id: number }> {
-  x = 0
-  add() {
-    this.x = 1
-  }
 }
 
 // // TODO testing using in combination

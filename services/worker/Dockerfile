@@ -1,4 +1,4 @@
-FROM ubuntu:21.04 as chrome
+FROM debian:bullseye-20210511 as chrome
 
 RUN apt-get update > /dev/null \
       && apt-get install -y chromium xvfb curl \

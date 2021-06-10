@@ -179,12 +179,20 @@ export function createWebpackConfig({
               // It's best practice to isolate a bundle that can load React at fast as possible without any code
               // https://github.com/reactwg/react-18/discussions/37#discussioncomment-841427
               {
+                chunks: 'async',
                 maxAsyncRequests: 20,
                 maxInitialRequests: 5,
                 automaticNameDelimiter: '~',
                 cacheGroups: {
-                  default: false,
-                  defaultVendors: false,
+                  default: {
+                    priority: -20,
+                    reuseExistingChunk: true,
+                  },
+                  defaultVendors: {
+                    test: /[\\/]node_modules[\\/]/,
+                    priority: -10,
+                    reuseExistingChunk: true,
+                  },
                   styles: {
                     name: `styles`,
                     type: 'css/mini-extract',

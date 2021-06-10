@@ -38,7 +38,7 @@ export class Build extends Command {
         clean: flags.clean,
         createConfig: getWebpackConfigBuilder({ rootDir }),
         webpackConfig: {
-          noMinify: flags['no-optimize'] ?? false,
+          noMinify: flags['no-optimize'] || false,
           entry: join(rootDir, 'src', 'index.ts'),
           env: 'production',
           snackOptions: {

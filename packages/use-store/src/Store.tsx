@@ -1,5 +1,3 @@
-import { unstable_batchedUpdates } from 'react-dom'
-
 import { shouldDebug } from './useStoreDebug'
 
 export const TRIGGER_UPDATE = Symbol()
@@ -13,6 +11,7 @@ export type StoreTracker = {
   dispose: () => void
   component?: any
   firstRun: boolean
+  last?: any
 }
 
 export class Store<Props extends Object | null = null> {
@@ -29,9 +28,7 @@ export class Store<Props extends Object | null = null> {
   }
 
   [TRIGGER_UPDATE]() {
-    unstable_batchedUpdates(() => {
-      this._listeners.forEach((cb) => cb())
-    })
+    this._listeners.forEach((cb) => cb())
   }
 
   [ADD_TRACKER](tracker: StoreTracker) {

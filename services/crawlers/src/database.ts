@@ -6,22 +6,14 @@ import { Pool, PoolConfig, QueryResult } from 'pg'
 export class Database {
   pool: Pool | null = null
 
-  static main_db = new Database({
-    host: process.env.PGHOST || 'localhost',
-    port: process.env.POSTGRES_PORT ? +process.env.POSTGRES_PORT : 5432,
-    ssl: process.env.USE_SSL ? true : false,
-    user: process.env.PGUSER || 'postgres',
-    password: process.env.POSTGRES_PASSWORD || 'postgres',
-    database: process.env.POSTGRES_DB || 'dish',
-    idleTimeoutMillis: 500000,
-    connectionTimeoutMillis: 300000,
-    max: 10,
-  })
+  static get main_db() {
+    return main_db
+  }
 
   constructor(public config: PoolConfig) {}
 
   static async one_query_on_main(query: string) {
-    return await Database.main_db.query(query)
+    return await main_db.query(query)
   }
 
   async connect() {
@@ -101,5 +93,17 @@ const db_config: PoolConfig = {
   connectionTimeoutMillis: 300_000,
   idleTimeoutMillis: 500_000,
 }
+
+export const main_db = new Database({
+  host: process.env.PGHOST || 'localhost',
+  port: process.env.POSTGRES_PORT ? +process.env.POSTGRES_PORT : 5432,
+  ssl: process.env.USE_SSL ? true : false,
+  user: process.env.PGUSER || 'postgres',
+  password: process.env.POSTGRES_PASSWORD || 'postgres',
+  database: process.env.POSTGRES_DB || 'dish',
+  idleTimeoutMillis: 500000,
+  connectionTimeoutMillis: 300000,
+  max: 10,
+})
 
 export const db = new Database(db_config)
