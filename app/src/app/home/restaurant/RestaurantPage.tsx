@@ -6,7 +6,6 @@ import { LoadingItems, Spacer, VStack, useTheme } from 'snackui'
 
 import { searchBarHeight } from '../../../constants/constants'
 import { getMinLngLat } from '../../../helpers/mapHelpers'
-import { selectRishDishViewSimple } from '../../../helpers/selectDishViewSimple'
 import { UseColors, useColorsFor } from '../../../helpers/useColorsFor'
 import { queryRestaurant } from '../../../queries/queryRestaurant'
 import { queryRestaurantTags } from '../../../queries/queryRestaurantTags'
@@ -17,7 +16,6 @@ import { drawerStore } from '../../drawerStore'
 import { ContentScrollView } from '../../views/ContentScrollView'
 import { ListCard } from '../../views/list/ListCard'
 import { NotFoundPage } from '../../views/NotFoundPage'
-import { PageTitleTag } from '../../views/PageTitleTag'
 import { SlantedTitle } from '../../views/SlantedTitle'
 import { StackDrawer } from '../../views/StackDrawer'
 import { HomeStackViewProps } from '../HomeStackViewProps'
@@ -36,6 +34,7 @@ type Props = HomeStackViewProps<HomeStateItemRestaurant>
 
 export default function RestaurantPageContainer(props: Props) {
   const theme = useTheme()
+  console.log('render me', props.item.restaurantSlug)
   const colors = useColorsFor(props.item.restaurantSlug)
   return (
     <StackDrawer

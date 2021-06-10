@@ -8,7 +8,6 @@ import React from 'react'
 import { createRoot, hydrate, render } from 'react-dom'
 import { AppRegistry } from 'react-native'
 
-import { isSSR } from './constants/constants'
 import { Root } from './Root'
 
 if (process.env.NODE_ENV === 'development') {

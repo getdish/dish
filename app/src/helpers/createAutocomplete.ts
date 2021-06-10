@@ -30,7 +30,7 @@ export type AutocompleteItemFull = AutocompleteItem & {
   id: string
 }
 
-export function createAutocomplete<A extends Base>(
+export function createAutocomplete<A extends Base = any>(
   item: AutocompleteItem
 ): A & AutocompleteItemFull {
   return {

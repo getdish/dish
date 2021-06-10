@@ -1,4 +1,5 @@
-FROM ubuntu:21.04
+# m1 support
+FROM debian:bullseye-20210511
 
 WORKDIR /app
 
@@ -9,15 +10,19 @@ ENV PUPPETEER_SKIP_CHROMIUM_DOWNLOAD=true
 # install node and yarn
 
 RUN apt-get update >/dev/null \ 
-  && apt-get -qqy --no-install-recommends install curl \
+  && apt-get -qqy --no-install-recommends install curl software-properties-common \
   && curl -sL https://deb.nodesource.com/setup_16.x | bash - \
-  && apt-get -qqy --no-install-recommends install nodejs npm
+  && curl -sL https://dl.yarnpkg.com/debian/pubkey.gpg | gpg --dearmor | tee /usr/share/keyrings/yarnkey.gpg >/dev/null \
+  && echo "deb [signed-by=/usr/share/keyrings/yarnkey.gpg] https://dl.yarnpkg.com/debian stable main" | tee /etc/apt/sources.list.d/yarn.list \
+  && apt-get update >/dev/null \ 
+  && apt-get -qqy --no-install-recommends install nodejs yarn
 
-RUN npm i -g yarn \
-  && yarn set version berry \
+RUN yarn set version berry \
   && yarn --version >> /app/yarn.version \
   && cat /app/yarn.version \
   && apt-get clean
+
+RUN node --version
 
 # copy everything
 COPY packages packages
@@ -27,11 +32,6 @@ COPY snackui snackui
 COPY package.json .
 
 RUN find . \! -name "package.json" -not -path "*/bin/*" -type f -print | xargs rm -rf
-
-# this takes a long ass time with big repo
-# FROM node:15.10.0-buster
-# WORKDIR /app
-# COPY --from=0 /app .
 
 COPY .yarnrc.yml yarn.lock ./
 COPY .yarn .yarn

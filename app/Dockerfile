@@ -1,9 +1,8 @@
-FROM registry.dishapp.com/dish-base:latest
+FROM debian:bullseye-20210511
 
 RUN \
   apt-get update >/dev/null && apt-get install -y parallel build-essential \
-            libcairo2-dev libpixman-1-dev libpango1.0-dev \
-            libjpeg62-turbo-dev libgif-dev patch > /dev/null \
+            libcairo2-dev libpixman-1-dev libpango1.0-dev patch > /dev/null \
       && apt-get clean \
       && rm -rf /var/lib/apt/lists/*
 
@@ -11,7 +10,7 @@ FROM registry.dishapp.com/dish-base:latest
 COPY --from=0 /bin /usr/local/bin
 ENV NODE_ENV=production
 
-# avoid rebuilds
+# avoid some rebuilds
 RUN rm -r services && rm -r packages/worker
 
 WORKDIR /app
@@ -22,6 +21,7 @@ COPY app app
 
 WORKDIR /app/app
 
+# DEBUG=* to debug
 RUN npm run web:build
 
 EXPOSE 4444

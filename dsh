@@ -175,7 +175,8 @@ function deploy_all() {
 # shellcheck disable=SC2120
 function deploy_dish() {
   echo "deploying dish - $DISH_ENV $POSTGRES_DB $POSTGRES_DB_DIR"
-  docker stack deploy --with-registry-auth --prune -c docker-compose.yml dish
+  docker stack deploy --with-registry-auth --prune -c docker-compose.yml dish ||
+    echo "retry" && docker stack deploy --with-registry-auth --prune -c docker-compose.yml dish
   if [ "$1" == "--force" ]; then
     #  force restart
     docker stack services -q dish | while read -r service; do
@@ -221,7 +222,8 @@ function deploy_registry() {
 }
 
 function deploy_portainer() {
-  docker stack deploy --prune -c docker-portainer.yml portainer
+  docker stack deploy --prune -c docker-portainer.yml portainer ||
+    echo "retry" && docker stack deploy --prune -c docker-portainer.yml portainer
   docker service update --force portainer_portainer
   docker service ps --no-trunc portainer_portainer
 }
@@ -968,7 +970,7 @@ function run_all_tests() {
     -v /var/run/docker.sock:/var/run/docker.sock \
     -v "$POSTGRES_DB_DIR:$POSTGRES_DB_DIR" \
     -v "$TIMESCALE_DB_DIR:$TIMESCALE_DB_DIR" \
-    registry.dishapp.com/dish-run-tests:latest yarn test || echo "failed tests"
+    registry.dishapp.com/dish-run-tests:latest yarn test || echo "failed tests" && exit 1
   docker-compose down -t 3
 }
 

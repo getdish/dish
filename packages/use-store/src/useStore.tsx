@@ -1,4 +1,5 @@
-import { useCallback, useEffect, useLayoutEffect, useRef } from 'react'
+// @ts-ignore
+import { startTransition, useCallback, useEffect, useLayoutEffect, useRef } from 'react'
 // @ts-ignore
 // prettier-ignore
 import { unstable_createMutableSource as createMutableSource, unstable_useMutableSource as useMutableSource } from 'react'
@@ -7,6 +8,7 @@ import { configureOpts } from './configureUseStore'
 import { UNWRAP_PROXY, defaultOptions } from './constants'
 import { UNWRAP_STORE_INFO, cache, getStoreDescriptors, getStoreUid, simpleStr } from './helpers'
 import { Selector, StoreInfo, UseStoreOptions } from './interfaces'
+import { isEqualSubsetShallow } from './isEqualShallow'
 import { ADD_TRACKER, SHOULD_DEBUG, Store, StoreTracker, TRACK, TRIGGER_UPDATE } from './Store'
 import {
   DebugStores,
@@ -272,6 +274,7 @@ function useStoreFromInfo(info: StoreInfo, userSelector?: Selector<any> | undefi
       firstRun: true,
       tracked: new Set<string>(),
       dispose: null as any,
+      last: null,
     }
     const dispose = info.store[ADD_TRACKER](internal.current)
     internal.current.dispose = dispose
@@ -288,9 +291,13 @@ function useStoreFromInfo(info: StoreInfo, userSelector?: Selector<any> | undefi
       (store) => {
         const keys = curInternal.firstRun ? info.stateKeys : [...curInternal.tracked]
         const snap = selector(store, keys)
-        if (shouldPrintDebug) {
-          console.log('💰 getSnapshot', { info, component, keys, snap })
+        if (isEqualSubsetShallow(snap, internal.current!.last)) {
+          return internal.current!.last
         }
+        if (shouldPrintDebug) {
+          console.log('💰 getSnapshot', info.stateKeys, { component, keys, snap })
+        }
+        internal.current!.last = snap
         return snap
       },
       [selector]
@@ -345,16 +352,19 @@ function createProxiedStore(storeInfo: Omit<StoreInfo, 'store' | 'source'>) {
     const isGetFn = key.startsWith('get')
 
     // wrap actions for tracking
-    wrappedActions[key] = (...args) => {
+    wrappedActions[key] = function useStoreAction(...args: any[]) {
       if (isGetFn || gettersState.isGetting) {
         return Reflect.apply(actionFn, proxiedStore, args)
       }
       // dumb for now
       isInAction = true
-      let res
+      let res: any
+
       try {
         res = Reflect.apply(actionFn, proxiedStore, args)
         return res
+      } catch (err) {
+        console.error(err.message, err.stack)
       } finally {
         if (res instanceof Promise) {
           return res.then(finishAction)

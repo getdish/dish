@@ -20,6 +20,7 @@ import anyTest, { ExecutionContext, TestInterface } from 'ava'
 import sinon from 'sinon'
 
 import { restaurantSaveCanonical } from '../../src/canonical-restaurant'
+import { Database } from '../../src/database'
 import {
   doordash,
   google,
@@ -35,7 +36,7 @@ import { bestPhotosForRestaurant } from '../../src/photo-helpers'
 import { deleteAllTestScrapes, scrapeInsert } from '../../src/scrape-helpers'
 import { Self } from '../../src/self/Self'
 import { GEM_UIID } from '../../src/self/Tagging'
-import { DB, restaurantFindOneWithTagsSQL } from '../../src/utils'
+import { restaurantFindOneWithTagsSQL } from '../../src/utils'
 import { breakdown } from '../restaurant_base_breakdown'
 
 interface Context {
@@ -447,14 +448,14 @@ test('Adding opening hours', async (t) => {
   await dish.preMerge(t.context.restaurant)
   const { count, records } = await dish.addHours()
   t.is(count, 7)
-  const openers = await DB.one_query_on_main(`
+  const openers = await Database.one_query_on_main(`
     SELECT restaurant_id
       FROM opening_hours
       WHERE hours @> f_opening_hours_normalised_time('1996-01-01 18:00');
   `)
   t.not(openers.rows[0], null)
   t.is(dish.restaurant.id, openers.rows[0].restaurant_id)
-  const closers = await DB.one_query_on_main(`
+  const closers = await Database.one_query_on_main(`
     SELECT restaurant_id
       FROM opening_hours
       WHERE hours @> f_opening_hours_normalised_time('1996-01-01 10:00');

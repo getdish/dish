@@ -97,12 +97,13 @@ declare module "@dish/crawlers" {
     export class Database {
         config: PoolConfig;
         pool: Pool | null;
-        static main_db: Database;
+        static get main_db(): Database;
         constructor(config: PoolConfig);
         static one_query_on_main(query: string): Promise<QueryResult<any>>;
         connect(): Promise<import("pg").PoolClient>;
         query(query: string): Promise<QueryResult<any>>;
     }
+    export const main_db: Database;
     export const db: Database;
 }
 
