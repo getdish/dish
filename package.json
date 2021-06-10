@@ -42,7 +42,7 @@
     "build:ordered": "ultra -r --no-pretty --build",
     "build": "ultra -r --no-pretty --concurrency 30 build",
     "build:force": "ultra --silent -r --no-pretty --rebuild --concurrency 30 build",
-    "build:js": "JS_ONLY=1 yarn workspaces foreach -piR run build",
+    "build:js": "JS_ONLY=1 yarn workspaces foreach -piR run build || pwd",
     "build:docker": "./dsh buildkit_build_local",
     "watch": "npm-run-all --parallel check:ts:watch build:ts:watch",
     "build:refs": "typescript-monorepo-toolkit inject-refs .",
@@ -68,8 +68,8 @@
     "snackui:push": "git subrepo clean snackui && git subrepo push snackui"
   },
   "resolutions": {
-    "react": "17.0.2",
-    "react-dom": "17.0.2",
+    "react": "18.0.0-alpha-aecb3b6d1",
+    "react-dom": "18.0.0-alpha-aecb3b6d1",
     "fs-extra": "10.0.0",
     "gqless": "2.0.14",
     "@gqless/logger": "2.0.11",
@@ -78,7 +78,7 @@
     "react-native": "0.64.1",
     "@unimodules/core": "7.0.0",
     "aws-sdk": "2.762.0",
-    "typescript": "4.2.4",
+    "typescript": "4.3.2",
     "node-fetch": "2.6.1",
     "webpack": "5.37.0",
     "terser": "5.5.1",

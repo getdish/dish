@@ -7,7 +7,7 @@ import { pageWidthMax, searchBarHeight, zIndexDrawer } from '../../constants/con
 import { isWebIOS } from '../../helpers/isIOS'
 import { AppAutocompleteLocation } from '../AppAutocompleteLocation'
 import { AppAutocompleteSearch } from '../AppAutocompleteSearch'
-import { AppSearchBar } from '../AppSearchBar'
+import { AppSearchBarInline } from '../AppSearchBarInline'
 import { blurSearchInput } from '../AppSearchInput'
 import { autocompletesStore } from '../AutocompletesStore'
 import { drawerStore as drawerStoreInstance } from '../drawerStore'
@@ -120,7 +120,7 @@ export const HomeDrawerSmallView = memo((props: { children: any }) => {
 
         <BottomSheetContainer>
           <View style={sheet.searchBarContainer} {...panResponder.panHandlers}>
-            <AppSearchBar />
+            <AppSearchBarInline />
           </View>
 
           <VStack flex={1} maxHeight="100%" position="relative">

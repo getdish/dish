@@ -27,7 +27,12 @@ export class ProxiedRequests {
     if (!props?.skipBrowser) {
       try {
         const url = this.domain + uri
-        console.log(`ProxiedRequests.getJSON`, url)
+        console.log(
+          `ProxiedRequests.getJSON`,
+          +(process.env.DEBUG || '0') > 2
+            ? url
+            : url.slice(0, 50) + (url.length > 50 ? '... (DEBUG>2)' : '')
+        )
         return await fetchBrowserJSON(url)
       } catch (err) {
         console.warn('Error with browser fetch, fall back to proxies', err)

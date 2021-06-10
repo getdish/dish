@@ -15,7 +15,7 @@ import { isWeb, pageWidthMax, searchBarHeight, zIndexDrawer } from '../../consta
 import { getWindowHeight } from '../../helpers/getWindow'
 import { AppAutocompleteLocation } from '../AppAutocompleteLocation'
 import { AppAutocompleteSearch } from '../AppAutocompleteSearch'
-import { AppSearchBar } from '../AppSearchBar'
+import { AppSearchBar } from '../AppSearchBarInline'
 import { blurSearchInput } from '../AppSearchInput'
 import { autocompletesStore } from '../AutocompletesStore'
 import { drawerStore } from '../drawerStore'

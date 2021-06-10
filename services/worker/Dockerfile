@@ -1,4 +1,4 @@
-FROM node:15.10.0-buster as chrome
+FROM ubuntu:21.04 as chrome
 
 RUN apt-get update > /dev/null \
       && apt-get install -y chromium xvfb curl \

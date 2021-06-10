@@ -1,9 +1,23 @@
-FROM node:15.10.0-buster
+FROM ubuntu:21.04
+
 WORKDIR /app
 
 ENV PATH=$PATH:/app/node_modules/.bin:node_modules/.bin
 ENV NODE_OPTIONS="--max_old_space_size=8192"
 ENV PUPPETEER_SKIP_CHROMIUM_DOWNLOAD=true
+
+# install node and yarn
+
+RUN apt-get update >/dev/null \ 
+  && apt-get -qqy --no-install-recommends install curl \
+  && curl -sL https://deb.nodesource.com/setup_16.x | bash - \
+  && apt-get -qqy --no-install-recommends install nodejs npm
+
+RUN npm i -g yarn \
+  && yarn set version berry \
+  && yarn --version >> /app/yarn.version \
+  && cat /app/yarn.version \
+  && apt-get clean
 
 # copy everything
 COPY packages packages
@@ -24,6 +38,9 @@ COPY .yarn .yarn
 COPY patches patches
 COPY bin bin
 COPY app/etc app/etc
+
+RUN groupadd --gid 1000 node \
+  && useradd --uid 1000 --gid node --shell /bin/bash --create-home node
 
 # install
 RUN yarn install --immutable-cache \
@@ -51,9 +68,10 @@ RUN find . -type d \(  -name "test" -o -name "tests"  \) -print | xargs rm -rf &
   # link in esdx bugfix
   && ln -s /app/packages/esdx/esdx.js /app/node_modules/.bin/esdx
 
-RUN yarn build:js \
+RUN yarn build:js
+# \
   # remove package.json scripts
-  && sed -i '/\"scripts\"/,/}/ d; /^$/d' package.json
+  # && sed -i '/\"scripts\"/,/}/ d; /^$/d' package.json
 
 # so we can deploy/tag on fly
 RUN touch ./__noop__

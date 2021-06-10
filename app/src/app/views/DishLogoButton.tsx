@@ -48,7 +48,7 @@ export const DishLogoButton = memo(({ color }: { color?: string }) => {
         {wrapWithHomeLink(
           // marginVertical={-7} native only? web wroks
           <VStack marginVertical="auto">
-            <LogoColor color={color} />
+            <LogoColor color={media.sm ? undefined : '#fff'} />
           </VStack>
         )}
       </VStack>

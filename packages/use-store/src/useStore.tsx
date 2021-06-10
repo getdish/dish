@@ -1,11 +1,13 @@
 import { useCallback, useEffect, useLayoutEffect, useRef } from 'react'
+// @ts-ignore
+// prettier-ignore
+import { unstable_createMutableSource as createMutableSource, unstable_useMutableSource as useMutableSource } from 'react'
 
 import { configureOpts } from './configureUseStore'
 import { UNWRAP_PROXY, defaultOptions } from './constants'
 import { UNWRAP_STORE_INFO, cache, getStoreDescriptors, getStoreUid, simpleStr } from './helpers'
 import { Selector, StoreInfo, UseStoreOptions } from './interfaces'
 import { ADD_TRACKER, SHOULD_DEBUG, Store, StoreTracker, TRACK, TRIGGER_UPDATE } from './Store'
-import { createMutableSource, useMutableSource } from './useMutableSource'
 import {
   DebugStores,
   shouldDebug,

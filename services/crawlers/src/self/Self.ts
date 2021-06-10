@@ -788,7 +788,8 @@ export class Self extends WorkerJob {
     return urls
   }
 
-  getPaginatedData<A extends any>(data: { [key: string]: A[] }): A[] {
+  getPaginatedData<A extends any>(data: { [key: string]: A[] } | null): A[] {
+    if (!data) return []
     return Object.keys(data).flatMap((key) => data[key])
   }
 

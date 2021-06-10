@@ -5,7 +5,7 @@ import { startLogging } from '@dish/graph'
 import { isSafari } from '@dish/helpers'
 import { loadableReady } from '@loadable/component'
 import React from 'react'
-import { hydrate, render } from 'react-dom'
+import { createRoot, hydrate, render } from 'react-dom'
 import { AppRegistry } from 'react-native'
 
 import { isSSR } from './constants/constants'
@@ -39,8 +39,8 @@ async function main() {
     })
     return
   }
-  // createRoot(ROOT).render(<Root />)
-  render(<Root />, ROOT)
+  createRoot(ROOT).render(<Root />)
+  // render(<Root />, ROOT)
 }
 
 // SSR exports

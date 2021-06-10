@@ -102,7 +102,7 @@ services:
     build:
       context: ./services/${POSTGRES_NAME:-postgres}
     volumes:
-      - ${POSTGRES_DB_DIR}:/var/lib/postgresql/data
+      - ${POSTGRES_DB_DIR?err}:/var/lib/postgresql/data
       - ./services/postgres:/postgres
     environment:
       POSTGRES_USER: ${POSTGRES_USER:-postgres}

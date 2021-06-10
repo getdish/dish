@@ -21,10 +21,11 @@ export const RestaurantAddToListModal = graphql(
     if (!restaurant) {
       return null
     }
-    const lists = user.lists({
-      limit: 20,
-      order_by: [{ created_at: order_by.desc }],
-    })
+    const lists =
+      user?.lists({
+        limit: 20,
+        order_by: [{ created_at: order_by.desc }],
+      }) ?? []
     const restaurantId = restaurant.id
     const listsWithRestaurant = query.list({
       where: {
