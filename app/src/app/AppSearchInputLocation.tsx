@@ -79,74 +79,72 @@ export const AppSearchInputLocation = memo(function AppSearchInputLocation() {
     // needs overflow hidden or else search box expands past edge on media.sm
     // while searching location
     <VStack position="relative" flex={1} overflow="hidden">
-      <AppAutocompleteHoverableInput input={inputStore.node} autocompleteTarget="location">
-        <InputFrame>
-          <HStack
-            position="relative"
-            minWidth="78.7%" // this is the hackiest ever fix for react native width issue for now
-            flexShrink={1}
-            flex={1}
-            onPressOut={() => {
-              autocompletesStore.setTarget('location')
-            }}
+      <InputFrame>
+        <HStack
+          position="relative"
+          minWidth="78.7%" // this is the hackiest ever fix for react native width issue for now
+          flexShrink={1}
+          flex={1}
+          onPressOut={() => {
+            autocompletesStore.setTarget('location')
+          }}
+        >
+          <AbsoluteVStack
+            top={0}
+            left={0}
+            bottom={0}
+            alignItems="center"
+            justifyContent="center"
+            pointerEvents="none"
           >
-            <AbsoluteVStack
-              top={0}
-              left={0}
-              bottom={0}
-              alignItems="center"
-              justifyContent="center"
-              pointerEvents="none"
-            >
-              <MapPin color={color} size={18} opacity={0.35} />
-            </AbsoluteVStack>
-            {isTouchDevice && <SearchInputNativeDragFix name="location" />}
-            <TextInput
-              ref={setInputNode}
-              value={inputStore.value ?? ''}
-              placeholder={curLocName ?? '...'}
-              onFocus={() => {
-                inputStore.setIsFocused(true)
-              }}
-              onBlur={() => {
-                inputStore.setIsFocused(false)
-                // no action here it will go away
-              }}
-              style={[
-                inputTextStyles.textInput,
-                {
-                  flex: 1,
-                  color,
-                  paddingLeft: 16 + 10,
-                  paddingRight: 16,
-                  fontSize: 16,
-                },
-              ]}
-              onKeyPress={handleKeyPress}
-              onChangeText={(text) => {
-                inputStore.setValue(text)
-                if (text && !autocompletesStore.visible) {
-                  autocompletesStore.setTarget('location')
-                }
-              }}
-            />
-          </HStack>
-          <Button
-            backgroundColor="transparent"
-            opacity={0.5}
-            hoverStyle={{
-              opacity: 1,
+            <MapPin color={color} size={18} opacity={0.35} />
+          </AbsoluteVStack>
+          {isTouchDevice && <SearchInputNativeDragFix name="location" />}
+          <TextInput
+            ref={setInputNode}
+            value={inputStore.value ?? ''}
+            placeholder={curLocName ?? '...'}
+            onFocus={() => {
+              inputStore.setIsFocused(true)
             }}
-            icon={<Navigation size={20} color={color} />}
-            borderRadius={1000}
-            onPress={appMapStore.moveToUserLocation}
-            {...(media.notSm && {
-              transform: [{ translateY: 2 }],
-            })}
-            noTextWrap
+            onBlur={() => {
+              inputStore.setIsFocused(false)
+              // no action here it will go away
+            }}
+            style={[
+              inputTextStyles.textInput,
+              {
+                flex: 1,
+                color,
+                paddingLeft: 16 + 10,
+                paddingRight: 16,
+                fontSize: 16,
+              },
+            ]}
+            onKeyPress={handleKeyPress}
+            onChangeText={(text) => {
+              inputStore.setValue(text)
+              if (text && !autocompletesStore.visible) {
+                autocompletesStore.setTarget('location')
+              }
+            }}
           />
-        </InputFrame>
-      </AppAutocompleteHoverableInput>
+        </HStack>
+        <Button
+          backgroundColor="transparent"
+          opacity={0.5}
+          hoverStyle={{
+            opacity: 1,
+          }}
+          icon={<Navigation size={20} color={color} />}
+          borderRadius={1000}
+          onPress={appMapStore.moveToUserLocation}
+          {...(media.notSm && {
+            transform: [{ translateY: 2 }],
+          })}
+          noTextWrap
+        />
+      </InputFrame>
     </VStack>
   )
 })

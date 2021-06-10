@@ -1,0 +1,13 @@
+diff --git a/node_modules/@gqless/react/dist/gqless-react.esm.js b/node_modules/@gqless/react/dist/gqless-react.esm.js
+index 463ab87..14859da 100644
+--- a/node_modules/@gqless/react/dist/gqless-react.esm.js
++++ b/node_modules/@gqless/react/dist/gqless-react.esm.js
+@@ -25,7 +25,7 @@ function useForceUpdate() {
+     return Object.assign(() => {
+       if (wasCalled.current) return;
+       wasCalled.current = true;
+-      setTimeout(update);
++      update();
+     }, {
+       wasCalled
+     });

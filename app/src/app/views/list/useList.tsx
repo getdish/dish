@@ -23,7 +23,7 @@ export const useList = ({ slug }: ListIDProps) => {
   const colors = getColorsForName(list?.name ?? '')
   const photos = list
     ?.restaurants({
-      limit: 4,
+      limit: 2,
       where: {
         restaurant: {
           image: {
@@ -33,9 +33,7 @@ export const useList = ({ slug }: ListIDProps) => {
       },
     })
     .map((x) => x.restaurant.image)
-
   const backgroundColor = getListColor(list?.color) ?? colors.color
-
   return { list, colors, photos, backgroundColor }
 }
 
