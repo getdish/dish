@@ -1,8 +1,5 @@
 // @ts-ignore
 import { startTransition, useCallback, useEffect, useLayoutEffect, useRef } from 'react'
-// @ts-ignore
-// prettier-ignore
-import { unstable_createMutableSource as createMutableSource, unstable_useMutableSource as useMutableSource } from 'react'
 
 import { configureOpts } from './configureUseStore'
 import { UNWRAP_PROXY, defaultOptions } from './constants'
@@ -10,6 +7,10 @@ import { UNWRAP_STORE_INFO, cache, getStoreDescriptors, getStoreUid, simpleStr }
 import { Selector, StoreInfo, UseStoreOptions } from './interfaces'
 import { isEqualSubsetShallow } from './isEqualShallow'
 import { ADD_TRACKER, SHOULD_DEBUG, Store, StoreTracker, TRACK, TRIGGER_UPDATE } from './Store'
+// @ts-ignore
+// prettier-ignore
+// import { unstable_createMutableSource as createMutableSource, unstable_useMutableSource as useMutableSource } from 'react'
+import { createMutableSource, useMutableSource } from './useMutableSource'
 import {
   DebugStores,
   shouldDebug,

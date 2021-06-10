@@ -122,7 +122,7 @@ export function Root() {
   }, [])
 
   return (
-    <StrictMode>
+    <>
       <SafeAreaProvider>
         <PlatformSpecificProvider>
           <ThemeProvider themes={themes} defaultTheme={userStore.theme ?? colorScheme ?? 'dark'}>
@@ -138,6 +138,6 @@ export function Root() {
           </ThemeProvider>
         </PlatformSpecificProvider>
       </SafeAreaProvider>
-    </StrictMode>
+    </>
   )
 }

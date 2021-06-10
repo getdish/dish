@@ -267,6 +267,9 @@ export function createWebpackConfig({
                     options: {
                       limit: 1000,
                       name: `static/media/[name].[hash].[ext]`,
+                      // react-native-web compat
+                      // https://github.com/necolas/react-native-web/commit/17d8b12299baf353968c1fed434336715a0e7bcc
+                      esModule: false,
                     },
                   },
                   // {

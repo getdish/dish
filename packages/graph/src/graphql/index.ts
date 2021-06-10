@@ -55,8 +55,10 @@ export const queryFetcher: QueryFetcher = async function (query, variables) {
     mode: 'cors',
   })
   const json = await response.json()
-  if (process.env.NODE_ENV === 'developmnet' && isSafari) {
-    console.log(` [gqless] (${Date.now() - startTime}ms)`)
+  if (process.env.NODE_ENV === 'development' && isSafari) {
+    console.groupCollapsed(` [gqless] (${Date.now() - startTime}ms)`)
+    console.log(json)
+    console.groupEnd()
   }
   if (process.env.DEBUG || process.env.LOG_FETCH) {
     console.log(` [gqless] =>`, JSON.stringify(json, null, 2))
@@ -71,7 +73,7 @@ export const client = createClient<GeneratedSchema>({
   schema: generatedSchema,
   scalarsEnumsHash,
   queryFetcher,
-  catchSelectionsTimeMS: 0,
+  catchSelectionsTimeMS: 30,
   normalization: false,
   retry: false,
 })
