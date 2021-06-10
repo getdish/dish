@@ -73,7 +73,6 @@ export const useListFavorite = ({ slug }: ListIDProps) => {
     : null
   const review = reviewQ?.[0]
   const reviewId = review?.id
-  console.log('review', userId, review?.id, review?.favorited)
   const getId = useGet(reviewId)
   const isFavoritedCurrent = review?.favorited ?? false
 

@@ -10075,15 +10075,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"deep-assign@npm:^3.0.0":
-  version: 3.0.0
-  resolution: "deep-assign@npm:3.0.0"
-  dependencies:
-    is-obj: ^1.0.0
-  checksum: 25c6583d3c46abbdd1a76c9792d930713e48950f6b8656b5bbef9492ab3408bfa0fe3a708160b767d18bd0e8e2491dbff5495a6e1ba499f2d6a9b0f8bda479e9
-  languageName: node
-  linkType: hard
-
 "deep-eql@npm:^3.0.1":
   version: 3.0.1
   resolution: "deep-eql@npm:3.0.1"
@@ -10438,7 +10429,7 @@ __metadata:
     patch-package: ^6.4.7
     prettier: ^2.3.0
     prettier-plugin-import-sort: ^0.0.6
-    react-native-web: ^0.15.6
+    react-native-web: ^0.16.5
     react-refresh: "*"
     snackui: "*"
     tsconfig-paths: ^3.9.0
@@ -14424,13 +14415,6 @@ __metadata:
   version: 7.0.0
   resolution: "is-number@npm:7.0.0"
   checksum: eec6e506c6de472af4bdfd0cc477e8aeb76f0a7066c8680fcdfed5324ee31a7d2b59d22313007c58aa80eb937f0c40eefdceedb851997d46b490b49f87160369
-  languageName: node
-  linkType: hard
-
-"is-obj@npm:^1.0.0":
-  version: 1.0.1
-  resolution: "is-obj@npm:1.0.1"
-  checksum: 0913a3bb6424d6bfb37e2daa5ef4a5d31a388b0f5a53f36bbe1fd95f1264efe92c6fd87a5c3f41e25b3db42fe60924fe6ae1f0efb274375b090fd093a5301ccf
   languageName: node
   linkType: hard
 
@@ -20244,23 +20228,21 @@ __metadata:
   languageName: node
   linkType: hard
 
-"react-native-web@npm:0.15.6":
-  version: 0.15.6
-  resolution: "react-native-web@npm:0.15.6"
+"react-native-web@npm:0.16.5":
+  version: 0.16.5
+  resolution: "react-native-web@npm:0.16.5"
   dependencies:
     array-find-index: ^1.0.2
     create-react-class: ^15.7.0
-    deep-assign: ^3.0.0
     fbjs: ^3.0.0
     hyphenate-style-name: ^1.0.4
     inline-style-prefixer: ^6.0.0
     normalize-css-color: ^1.0.2
     prop-types: ^15.6.0
-    react-timer-mixin: ^0.13.4
   peerDependencies:
     react: ">=17.0.1"
     react-dom: ">=17.0.1"
-  checksum: 4dc4d90a0434b7a6857e36e20bae7d961d956d310579604cf58d040c2d73d8ebebfbb975b60fe16315f7965c2bdcbfa527883924bc9e4c85e64abb95c213881d
+  checksum: 6370ad6a721be85cf1f9ec62d7a3474f833a5feb9856c828ce90cb5271f48a1e7de3b0a9cea526c1023344ee0a30759cb8bad380ffaf0faae5f9eb175f8cb550
   languageName: node
   linkType: hard
 
@@ -20440,13 +20422,6 @@ __metadata:
   peerDependencies:
     react: 17.0.1
   checksum: 6ec269430beea4356180d90868a9959399781a03ae8de6a29f2edc29d6ca41432653d4103991467ebcc47be5bd2d9197789411e913da66369c2aa2f13311105f
-  languageName: node
-  linkType: hard
-
-"react-timer-mixin@npm:^0.13.4":
-  version: 0.13.4
-  resolution: "react-timer-mixin@npm:0.13.4"
-  checksum: 9982ef559324d468bd9e63d853204924a9aeab2715be3a822b689a1609362c29b879cceea86e51be37b34cae5c8f9082bef68d78ea37236178087d1e3551bc34
   languageName: node
   linkType: hard
 

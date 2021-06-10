@@ -1,4 +1,4 @@
-import { graphql, query, useRefetch } from '@dish/graph'
+import { graphql, query, review, useRefetch } from '@dish/graph'
 import { uniqBy } from 'lodash'
 import React, { memo } from 'react'
 import { ScrollView } from 'react-native'
@@ -20,32 +20,38 @@ const bottomMetaTextProps: TextProps = {
 export const RestaurantReview = memo(
   graphql(
     ({
+      review: reviewQuery,
       reviewId,
       refetchKey,
       hideUsername,
       hideRestaurantName,
       height,
     }: {
-      reviewId: string
+      review?: review
+      reviewId?: string
       refetchKey?: string
       hideUsername?: boolean
       hideRestaurantName?: boolean
       height?: number
     }) => {
       const refetch = useRefetch()
-      const reviews = query.review({
-        limit: 1,
-        where: {
-          id: {
-            _eq: reviewId,
-          },
-        },
-      })
-      const review = reviews[0]
+      const reviews = reviewQuery
+        ? null
+        : query.review({
+            limit: 1,
+            where: {
+              id: {
+                _eq: reviewId,
+              },
+            },
+          })
+      const review = reviewQuery ? reviewQuery : reviews?.[0]
 
       useLazyEffect(() => {
-        // refetchAll()
-        refetch(reviews).catch(console.error)
+        if (refetchKey) {
+          // refetchAll()
+          refetch(review || reviews)
+        }
       }, [refetchKey])
 
       if (!review) {

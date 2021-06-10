@@ -66,7 +66,7 @@ export const RestaurantReviewsList = memo(
                 return (
                   <VStack marginVertical={20} flex={1} key={i}>
                     <VStack flex={1} />
-                    <RestaurantReview hideRestaurantName reviewId={review.id} />
+                    <RestaurantReview hideRestaurantName review={review} />
                   </VStack>
                 )
               })}
