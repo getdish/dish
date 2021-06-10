@@ -101,7 +101,11 @@ export class Yelp extends WorkerJob {
           rest
         )
       } catch (err) {
-        this.log('Error finding by searching for exact location, switch to general search')
+        this.log(
+          'Error finding by searching for exact location, switch to general search',
+          err.message,
+          err.stack
+        )
         // @ts-ignore
         await this.refindRestaurant(rest)
       }
@@ -238,7 +242,7 @@ export class Yelp extends WorkerJob {
       return
     }
 
-    console.log('got crawlable results', JSON.stringify(toCrawl, null, 2))
+    this.log('got crawlable results', toCrawl.length)
 
     for (const data of toCrawl) {
       const timeout = sleep(100_000)
@@ -413,6 +417,10 @@ export class Yelp extends WorkerJob {
   }
 
   async getPhotoPage(id: string, bizId: string, start: number, page: number) {
+    if (page > 2 && process.env.DISH_ENV === 'test') {
+      console.log('test mode exit early')
+      return
+    }
     // https://m.yelp.com/biz_photos/qs7FgJ-UXgpbAMass0Oojg/get_photos?start=14&dir=b
     const url = '/biz_photos/' + bizId + '/get_photos' + '?start=' + start + '&dir=b'
     const response: YelpPhotosData = await yelpAPIMobile.getJSON(url, {
@@ -449,7 +457,7 @@ export class Yelp extends WorkerJob {
     this.log(`${this.current}, got review page ${page} with ${data.length} reviews`)
 
     if (process.env.DISH_ENV == 'test') {
-      this.log('Exiting review loop, in test')
+      this.log('Exiting review loop early in test mode')
       return
     }
 

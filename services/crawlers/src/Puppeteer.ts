@@ -137,14 +137,19 @@ export class Puppeteer {
 
   async interceptRequests() {
     await this.page.setRequestInterception(true)
-    this.page.on('request', (request) => this._interceptRequests(request))
+    this.page.on('request', this._interceptRequests)
+  }
+
+  async stopInterceptingRequests() {
+    this.page.off('request', this._interceptRequests)
+    await this.page.setRequestInterception(false)
   }
 
   _logBlockCounts() {
     console.log('Blocked: ' + this.blocked_count, 'Allowed: ' + this.request_count)
   }
 
-  async _interceptRequests(request: Request) {
+  private _interceptRequests = async (request: Request) => {
     this._waitForSpecificRequest(request)
     const url = this._rewriteDomainsToAWS(request)
     if (!url) {

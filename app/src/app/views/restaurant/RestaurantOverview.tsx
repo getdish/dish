@@ -47,7 +47,7 @@ export const RestaurantOverview = memo(
 
     const headlines = (restaurant.headlines ?? [])
       .slice(0, 3)
-      .map((x) => x.sentence)
+      .map((x) => x?.sentence)
       .join(' ')
     const summary = text || restaurant.summary || headlines || 'No overview :('
     const scale = 1

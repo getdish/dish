@@ -11,6 +11,7 @@ export type RestaurantFavoriteButtonProps = {
 
 export const RestaurantFavoriteStar = memo(
   graphql(({ size, restaurantId }: RestaurantFavoriteButtonProps) => {
+    return null
     const { favorited, total, toggle } = useUserFavoriteQuery({
       restaurant_id: { _eq: restaurantId },
       type: { _eq: 'favorite' },

@@ -31,7 +31,7 @@ export class ProxiedRequests {
           `ProxiedRequests.getJSON`,
           +(process.env.DEBUG || '0') > 2
             ? url
-            : url.slice(0, 50) + (url.length > 50 ? '... (DEBUG>2)' : '')
+            : url.slice(0, 150) + (url.length > 150 ? '... (DEBUG>2)' : '')
         )
         return await fetchBrowserJSON(url)
       } catch (err) {

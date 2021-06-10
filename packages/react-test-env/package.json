@@ -14,7 +14,7 @@
   },
   "dependencies": {
     "@dish/esdx": "*",
-    "@testing-library/react": "^11.2.6",
+    "@testing-library/react": "^11.2.7",
     "@types/react": "^16.9.44",
     "@types/react-dom": "^16.9.8",
     "@types/react-native": "^0.62.12",

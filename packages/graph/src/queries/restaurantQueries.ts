@@ -148,7 +148,9 @@ export async function restaurantUpsertRestaurantTags(
   opts?: SelectionOptions
 ) {
   const updated_restaurant = await restaurantTagUpsert(restaurant.id, restaurant_tags)
-  return await restaurantUpdateTagNames(updated_restaurant, opts)
+  const next = { ...restaurant, ...updated_restaurant }
+  console.log('next', next)
+  return await restaurantUpdateTagNames(next, opts)
 }
 
 async function restaurantUpdateTagNames(restaurant: RestaurantWithId, opts?: SelectionOptions) {

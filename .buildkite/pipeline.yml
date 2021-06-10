@@ -25,7 +25,7 @@ steps:
 
   - label: ":docker: build run-tests"
     key: run-tests
-    depends_on: base
+    depends_on: worker
     command: ./dsh compose_build run-tests
 
   - label: ":docker: build hooks"

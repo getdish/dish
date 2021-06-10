@@ -90,11 +90,9 @@ export default route(async (req, res) => {
     res.send(response)
   } catch (error) {
     console.error('graph err', error, body, cache?.parsed ? print(cache.parsed) : null)
-    res
-      .status(500)
-      .send({
-        error: process.env.NODE_ENV === 'development' ? error : `error fetching: ${error.message}`,
-      })
+    res.status(500).send({
+      error: process.env.NODE_ENV === 'development' ? error : `error fetching: ${error.message}`,
+    })
   }
 })
 
@@ -209,7 +207,6 @@ const getCacheable = (selection: FieldNode, isLoggedIn = false) => {
     const subName = `${subSelection.name.value || ''}`
     const skip = shouldSkipCache(subName, isLoggedIn)
     if (skip) {
-      console.log('cant', subName)
       u.push(subSelection)
     } else {
       c.push(subSelection)
@@ -259,9 +256,6 @@ async function getCachedSelections(
     const cacheKey = getKey(cacheableSel, props.variables)
     const alias = `${selection.alias?.value || name}`
 
-    // for cache set to use
-    aliasToCacheKey[alias] = cacheKey
-
     const cached = await redisGet(cacheKey)
     if (process.env.DEBUG && process.env.NODE_ENV === 'development') {
       // prettier-ignore
@@ -274,7 +268,6 @@ async function getCachedSelections(
         const total = selectionSet.selections.length
         const partialNum = (total - subUncacheable.length) / total
         numPartiallyCached += partialNum
-        console.log('total', partialNum, total, subUncacheable.length)
         uncached.push({
           ...selection,
           selectionSet: {
@@ -284,8 +277,8 @@ async function getCachedSelections(
         })
       }
     } else {
-      console.log('miss', cacheKey)
       uncached.push(selection)
+      aliasToCacheKey[alias] = cacheKey
     }
   }
 
@@ -362,8 +355,16 @@ const updateCacheWithData = ({ cacheKeys, data }: { data: any; cacheKeys: CacheK
       continue
     }
     const val = data[key]
+    console.log('SETTING', cacheKey, key, val)
     redisSet(cacheKey, JSON.stringify(val))
   }
+}
+
+const objStr = (obj) => {
+  if (typeof obj === 'string') return obj
+  if (Array.isArray(obj)) return obj.map(objStr)
+  if (!obj || typeof obj !== 'object') return `${obj}`
+  return Object.entries(obj).flat().map(objStr).join(':')
 }
 
 const getKey = (obj: FieldNode | SelectionNode, variables?: any, avoidRecursion = false) => {
@@ -380,9 +381,11 @@ const getKey = (obj: FieldNode | SelectionNode, variables?: any, avoidRecursion 
     if (k === 'selectionSet') {
       if (avoidRecursion) continue
       if (val) {
+        key += `{`
         for (const item of val.selections) {
-          key += getKey(item, variables)
+          key += getKey(item, variables) + ' '
         }
+        key += `}`
       }
       continue
     }
@@ -390,12 +393,12 @@ const getKey = (obj: FieldNode | SelectionNode, variables?: any, avoidRecursion 
       key += val.value
       continue
     }
-    if (k === 'arguments') {
+    if (k === 'arguments' && val.length) {
       key += `(${val
         .map((arg) => {
           if (!arg || !arg.value) return ''
           const name = arg.value.name.value ?? ''
-          return `${arg.name.value}:${JSON.stringify(variables?.[name] ?? null)}`
+          return `${arg.name.value}:${objStr(variables?.[name])}`
         })
         .join(',')})`
       continue
@@ -416,8 +419,10 @@ const getKey = (obj: FieldNode | SelectionNode, variables?: any, avoidRecursion 
       key += val.value
       continue
     }
-    key += typeof val === 'string' ? val : JSON.stringify(val)
+    key += typeof val === 'string' ? val : Object.entries(val).flat().join('.')
   }
-  // console.log('key', obj.name.value, key)
-  return `${obj.name.value}-${key}`
+  if (obj.name.value !== key) {
+    return `${obj.name.value}-${key}`
+  }
+  return key
 }
