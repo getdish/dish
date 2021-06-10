@@ -7,7 +7,7 @@ index 463ab87..14859da 100644
        if (wasCalled.current) return;
        wasCalled.current = true;
 -      setTimeout(update);
-+      update();
++      Promise.resolve().then(update);
      }, {
        wasCalled
      });

@@ -176,10 +176,15 @@ export class GooglePuppeteer extends GooglePuppeteerJob {
   }
 
   async getSynopsis() {
-    // TODO not working
-    this.scrape_data.synopsis = (
-      await this.puppeteer.getElementText('.section-editorial-quote')
-    ).trim()
+    try {
+      // TODO not working
+      this.scrape_data.synopsis = (
+        await this.puppeteer.getElementText('.uxOu9-sTGRBb-T3yXSc span')
+      ).trim()
+    } catch (err) {
+      console.log('error page content is', await this.puppeteer.page.content())
+      throw err
+    }
   }
 
   async getRating() {

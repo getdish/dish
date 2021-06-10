@@ -19,13 +19,17 @@ export const fetchLog = (input: RequestInfo, init?: RequestInit | undefined): Pr
   return fetch(input, init)
 }
 
+// prevent loops
 let requests = 0
 let last
 function clear() {
   clearTimeout(last)
-  last = setTimeout(() => {
-    requests = 0
-  }, 50)
+  last = setTimeout(
+    () => {
+      requests = 0
+    },
+    process.env.NODE_ENV === 'development' ? 1000 : 3000
+  )
 }
 clear()
 
@@ -33,7 +37,9 @@ export const queryFetcher: QueryFetcher = async function (query, variables) {
   if (process.env.NODE_ENV !== 'test' && process.env.TARGET === 'web') {
     requests++
     if (requests > 10) {
-      console.log('too many!')
+      console.warn(
+        'too many! this is caused oftentimes by the data coming from graph not matching the expected data from the query'
+      )
       throw new Error(`Break out GQ`)
     }
   }
@@ -73,7 +79,7 @@ export const client = createClient<GeneratedSchema>({
   schema: generatedSchema,
   scalarsEnumsHash,
   queryFetcher,
-  catchSelectionsTimeMS: 20,
+  catchSelectionsTimeMS: 0,
   normalization: true,
   retry: false,
 })

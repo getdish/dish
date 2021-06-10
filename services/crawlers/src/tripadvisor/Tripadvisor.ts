@@ -8,17 +8,27 @@ import axios_base from 'axios'
 import { JobOptions, QueueOptions } from 'bull'
 import * as cheerio from 'cheerio'
 import _ from 'lodash'
+import { Page } from 'puppeteer'
 
 import { restaurantSaveCanonical } from '../canonical-restaurant'
 import { DISH_DEBUG } from '../constants'
 import { GoogleGeocoder } from '../google/GoogleGeocoder'
-import { ScrapeData, scrapeInsert, scrapeMergeData } from '../scrape-helpers'
+import { Puppeteer } from '../Puppeteer'
+import {
+  ScrapeData,
+  scrapeFindOneBySourceID,
+  scrapeFindOneByUUID,
+  scrapeInsert,
+  scrapeMergeData,
+} from '../scrape-helpers'
 import { aroundCoords, decodeEntities, geocode } from '../utils'
 
-const TRIPADVISOR_DOMAIN = process.env.TRIPADVISOR_PROXY || 'https://www.tripadvisor.com'
+const TRIPADVISOR_DOMAIN = 'https://www.tripadvisor.com'
+const TRIPADVISOR_PROXY = process.env.TRIPADVISOR_PROXY || TRIPADVISOR_DOMAIN
 
+const removeStartSlash = (x: string) => (x.startsWith('/') ? x.slice(1) : x)
 const axios = axios_base.create({
-  baseURL: TRIPADVISOR_DOMAIN,
+  baseURL: TRIPADVISOR_PROXY,
   headers: {
     common: {
       'X-My-X-Forwarded-For': 'www.tripadvisor.com',
@@ -66,26 +76,31 @@ export class Tripadvisor extends WorkerJob {
       '&pinSel=v2&finalRequest=false&includeMeta=false&trackPageView=false'
     const dimensions = `&mz=17&mw=${this.MAPVIEW_SIZE}&mh=${this.MAPVIEW_SIZE}`
     const coords = `&mc=${lat},${lon}`
-    const uri = TRIPADVISOR_DOMAIN + base + dimensions + coords
+    const uri = TRIPADVISOR_PROXY + base + dimensions + coords
     const response = await axios.get(uri)
-
     for (const data of response.data.restaurants) {
-      await this.runOnWorker('getRestaurant', [data.url])
+      await this.runOnWorker('getRestaurant', [removeStartSlash(data.url)])
       if (this._TESTS__LIMIT_GEO_SEARCH) break
     }
   }
 
   async getRestaurant(path: string) {
     this.detail_id = this.extractDetailID(path)
-    const response = await axios.get(TRIPADVISOR_DOMAIN + path)
+    const pup = new Puppeteer(TRIPADVISOR_DOMAIN, process.env.TRIPADVISOR_PROXY)
+    await pup.boot()
+    await pup.page.goto(TRIPADVISOR_DOMAIN + removeStartSlash(path), {
+      timeout: 15_000,
+      waitUntil: 'networkidle0',
+    })
     this.log(`Got html response`)
-    let data = this._extractEmbeddedJSONData(response.data)
+    const content = await pup.page.content()
+    let data = this._extractEmbeddedJSONData(content)
     const scrape_id = await this.saveRestaurant(data)
     this.log(`Saved restaurant data`)
     if (!scrape_id) return
-    await this.savePhotos(response.data, scrape_id)
+    await this.savePhotos(scrape_id)
     this.log(`Saved photos`)
-    await this.saveReviews(path, scrape_id, 0, response.data)
+    await this.saveReviews(scrape_id, 0, pup)
     this.log(`Saved reviews`)
   }
 
@@ -129,25 +144,97 @@ export class Tripadvisor extends WorkerJob {
     }
   }
 
-  async saveReviews(path: string, scrape_id: string, page: number, html: string = '') {
-    this.log(`saveReviews for ${TRIPADVISOR_DOMAIN + path}`)
-    if (html == '') {
-      const response = await axios.get(TRIPADVISOR_DOMAIN + path)
-      html = response.data
+  // parallelism is overcomplicating, so i turned it off here
+  async saveReviews(scrape_id: string, pageNum: number, pup: Puppeteer) {
+    const page = pup.page
+    if (process.env.DISH_ENV == 'test' && pageNum > 3) {
+      console.log('TEST MODE, finishing on page 3')
+      return
     }
-    const more = await this._persistReviewData(html, scrape_id, page, path)
-    if (more) {
-      page++
-      if (page == 1) {
-        path = path.replace('-Reviews-', `-Reviews-or${page * 10}-`)
-      } else {
-        path = path.replace(/-Reviews-or[0-9]*0-/, `-Reviews-or${page * 10}-`)
+    const scrape = await scrapeFindOneByUUID(scrape_id)
+    if (!scrape) {
+      throw new Error(`No scrape`)
+    }
+    // click on more... if any exist, this actually expands every review for us:
+    try {
+      await page.click('.review-container .partial_entry .taLnk')
+    } catch (err) {
+      console.log('no More..., may be ok', err.message)
+    }
+
+    const data = await (async () => {
+      try {
+        // if mobile, open it up first
+        await page.click('.see-more-mobile')
+      } catch {
+        // ok
       }
-      await this.runOnWorker('saveReviews', [path, scrape_id, page])
+      const reviews = await page.$$('.reviewSelector')
+      if (!reviews) {
+        throw new Error('no review selector')
+      }
+      const data: ScrapeData[] = []
+      for (const review of reviews) {
+        const [uid, username, quote, date, text, rating] = await Promise.all([
+          review.$eval('.memberOverlayLink', (x) => (x.id || '').replace('UID_', '')),
+          review.$eval('.memberInfoColumn .info_text', (x) => x.textContent),
+          review.$eval('.quote .noQuotes', (x) => x.textContent),
+          review.$eval('.ratingDate', (x) => x.getAttribute('title')),
+          review.$eval('.partial_entry', (x) => x.textContent),
+          review.$eval('.partial_entry', (x) => x.textContent),
+        ])
+        data.push({
+          uid,
+          // TODO: Get actual internal username
+          username,
+          quote,
+          date,
+          text: text?.replace('Show less', '').trim(),
+          rating,
+        })
+      }
+      if (!data.length) {
+        return null
+      }
+      return data
+    })()
+
+    // merge
+    if (data) {
+      this.log(`Merging reviews (page ${pageNum}, reviews ${data.length})`)
+      await scrapeMergeData(scrape_id, {
+        reviews: {
+          ...(scrape.data.reviews || null),
+          ['dishpage-' + page]: data,
+        },
+      })
     }
+
+    const nextButton = await page.$('.nav.next.ui_button.primary')
+    if (!nextButton) return
+    const href = await (
+      await page.evaluateHandle((x) => x.getAttribute('href'), nextButton)
+    ).jsonValue()
+    if (href === null) {
+      console.log('no more reviews')
+      return
+    }
+    if (typeof href !== 'string') {
+      console.error(`non-string href`, href)
+      return
+    }
+    this.log(`Loading next page ${href}`)
+    await pup.close()
+    const next = new Puppeteer(TRIPADVISOR_DOMAIN, process.env.TRIPADVISOR_PROXY)
+    await next.boot()
+    await next.page.goto(TRIPADVISOR_DOMAIN + removeStartSlash(href), {
+      timeout: 15_000,
+      waitUntil: 'networkidle0',
+    })
+    await this.saveReviews(scrape_id, pageNum + 1, next)
   }
 
-  async savePhotos(html: string, scrape_id: string) {
+  async savePhotos(scrape_id: string) {
     let page = 0
     let photos: any[] = []
     while (true) {
@@ -167,7 +254,7 @@ export class Tripadvisor extends WorkerJob {
 
   async parsePhotoPage(page = 0) {
     const path = this.buildGalleryURL(page)
-    const response = await axios.get(TRIPADVISOR_DOMAIN + path, {
+    const response = await axios.get(TRIPADVISOR_PROXY + path, {
       headers: {
         'X-Requested-With': 'XMLHttpRequest',
       },
@@ -221,90 +308,18 @@ export class Tripadvisor extends WorkerJob {
     return restaurant_name_parts.join(', ')
   }
 
-  private async _persistReviewData(html: string, scrape_id: string, page: number, path: string) {
-    if (process.env.DISH_ENV == 'test' && page > 2) {
-      return false
-    }
-    const { more, data: review_data } = await this._extractReviews(html, path)
-    if (!review_data.length) {
-      return false
-    }
-    let reviews = {}
-    reviews['dishpage-' + page] = review_data
-    this.log(`Merging review data for page ${page}: ${review_data.length} ${more}`)
-    await scrapeMergeData(scrape_id, { reviews })
-    return more
-  }
+  // private _getRatingFromClasses(review: any) {
+  //   let rating: number | null = null
+  //   const classes = review.find('.ui_bubble_rating').attr('class')!.split(' ')
 
-  private async _extractReviews(html: string, path: string) {
-    const full = await this.getFullReviews(html, path)
-    const updated_html = full.data
-    const $ = cheerio.load(updated_html)
-    const reviews = $('.reviewSelector').toArray()
-    const data: ScrapeData[] = []
-    for (const review of reviews) {
-      const review = $(reviews)
-      data.push({
-        // TODO: Get actual internal username
-        username: review.find('.memberInfoColumn .info_text').text(),
-        rating: this._getRatingFromClasses(review),
-        quote: review.find('.quote .noQuotes').text(),
-        text: review.find('.partial_entry').text(),
-        date: review.find('.ratingDate').attr('title'),
-      })
-    }
-    return { more: full.more, data }
-  }
-
-  private async getFullReviews(html: string, referer_path: string) {
-    let ids: string[] = []
-    const $ = cheerio.load(html)
-    const reviews = $('#REVIEWS .listContainer .review-container')
-    let more = false
-    for (let i = 0; i < reviews.length; i++) {
-      const review = $(reviews[i])
-      const id = review.find('.reviewSelector').attr('data-reviewid')
-      if (!id) continue
-      ids.push(id)
-    }
-    const params = [
-      'Mode=EXPANDED_HOTEL_REVIEWS_RESP',
-      'metaReferer=',
-      'contextChoice=DETAIL',
-      'reviews=' + ids.join(','),
-    ]
-    const path = '/OverlayWidgetAjax?' + params.join('&')
-    const response = await axios.get(TRIPADVISOR_DOMAIN + path, {
-      headers: {
-        Referer: 'https://www.tripadvisor.com' + referer_path,
-      },
-    })
-    try {
-      const pagination = $('.ui_pagination > a.next')
-      if (!pagination) {
-        require('fs').writeFileSync('./debug-html.tmp', html)
-        this.log(`No pagination found`)
-      } else if (!pagination.attr('class')?.includes('disabled')) {
-        more = true
-      }
-    } catch (error) {
-      sentryException(error)
-    }
-    return { more, data: response.data }
-  }
-
-  private _getRatingFromClasses(review: any) {
-    let rating: number | null = null
-    const classes = review.find('.ui_bubble_rating').attr('class')!.split(' ')
-
-    for (let i = 0; i < classes.length; i++) {
-      const classname = classes[i]
-      if (classname.startsWith('bubble_')) {
-        rating = parseInt(classname.split('_')[1]) / 10
-      }
-    }
-    return rating
-  }
+  //   for (let i = 0; i < classes.length; i++) {
+  //     const classname = classes[i]
+  //     if (classname.startsWith('bubble_')) {
+  //       rating = parseInt(classname.split('_')[1]) / 10
+  //     }
+  //   }
+  //   return rating
+  // }
 
   private _getOverview(data: ScrapeData) {
     const source_id = data.redux?.page?.detailId

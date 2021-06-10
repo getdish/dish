@@ -20,7 +20,7 @@ export class RestaurantBaseScore extends Loggable {
     this.crawler.restaurant.score_breakdown = {}
     this.breakdown.sources = {}
     const all_sources = [...this.crawler.available_sources, 'dish', 'all']
-    const unique_tag = await tagFindOne({ name: 'Unique' })
+    const unique_tag = await tagFindOne({ slug: 'lenses__gems' })
     if (!unique_tag?.id) {
       throw new Error("Couldn't find the 'Unique' lense tag in DB")
     }
