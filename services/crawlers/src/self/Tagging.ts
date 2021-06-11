@@ -196,7 +196,12 @@ export class Tagging extends Loggable {
     this.log('Collecting restaurant tags...')
     await this.collectFoundRestaurantTags()
     this.log('Upserting reviews...')
-    await reviewExternalUpsert(reviews_with_sentiments)
+    try {
+      await reviewExternalUpsert(reviews_with_sentiments)
+    } catch (err) {
+      console.log('upserting failed for', reviews_with_sentiments)
+      throw err
+    }
   }
 
   cleanAllSources(sources: TextSource[]) {

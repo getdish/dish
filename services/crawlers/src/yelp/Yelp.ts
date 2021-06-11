@@ -374,7 +374,7 @@ export class Yelp extends WorkerJob {
     scrape.restaurant_id = restaurant_id
     await scrapeUpdateBasic(scrape)
     await this.getNextScrapes(id, scrape)
-    if (DISH_DEBUG > 1) {
+    if (DISH_DEBUG > 2) {
       const data = await scrapeFindOneBySourceID('yelp', id_from_source)
       this.log(`Scrape:`, JSON.stringify(data, null, 2))
     }

@@ -149,7 +149,6 @@ export async function restaurantUpsertRestaurantTags(
 ) {
   const updated_restaurant = await restaurantTagUpsert(restaurant.id, restaurant_tags)
   const next = { ...restaurant, ...updated_restaurant }
-  console.log('next', next)
   return await restaurantUpdateTagNames(next, opts)
 }
 

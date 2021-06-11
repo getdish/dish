@@ -1,5 +1,5 @@
 {
-  "extends": "../../tsconfig.base",
+  "extends": "../../tsconfig.base.parent",
   "compilerOptions": {
     "composite": true,
     "outDir": "_",

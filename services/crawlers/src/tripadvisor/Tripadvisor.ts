@@ -181,15 +181,24 @@ export class Tripadvisor extends WorkerJob {
           review.$eval('.quote .noQuotes', (x) => x.textContent),
           review.$eval('.ratingDate', (x) => x.getAttribute('title')),
           review.$eval('.partial_entry', (x) => x.textContent),
-          review.$eval('.partial_entry', (x) => x.textContent),
-        ])
+          review
+            .$eval('.ui_bubble_rating', (x) =>
+              getComputedStyle(x, '::after').getPropertyValue('content')
+            )
+            .then((after) => {
+              // 4 stars = \e00b\e00b\e00b\e00b\e00d
+              return after
+                ? after.split('e00').reduce((rating, part) => rating + (part === 'b' ? 1 : 0), 0)
+                : ''
+            }),
+        ] as const)
         data.push({
           uid,
           // TODO: Get actual internal username
           username,
           quote,
           date,
-          text: text?.replace('Show less', '').trim(),
+          text: (text || '').replace('Show less', '').trim(),
           rating,
         })
       }
@@ -307,19 +316,6 @@ export class Tripadvisor extends WorkerJob {
     restaurant_name_parts.pop()
     return restaurant_name_parts.join(', ')
   }
-
-  // private _getRatingFromClasses(review: any) {
-  //   let rating: number | null = null
-  //   const classes = review.find('.ui_bubble_rating').attr('class')!.split(' ')
-
-  //   for (let i = 0; i < classes.length; i++) {
-  //     const classname = classes[i]
-  //     if (classname.startsWith('bubble_')) {
-  //       rating = parseInt(classname.split('_')[1]) / 10
-  //     }
-  //   }
-  //   return rating
-  // }
 
   private _getOverview(data: ScrapeData) {
     const source_id = data.redux?.page?.detailId

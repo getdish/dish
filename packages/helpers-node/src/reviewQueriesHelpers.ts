@@ -164,14 +164,19 @@ export async function reviewExternalUpsert(reviews: Review[]) {
 
   for (const [index, group] of grouped.entries()) {
     console.log('reviewExternalUpsert: Inserting chunk', index, 'of', grouped.length)
-    const next = await reviewUpsert(
-      group,
-      review_constraint.review_username_restauarant_id_tag_id_type_key,
-      {
-        keys: ['__typename'],
-      }
-    )
-    all = [...all, ...next]
+    try {
+      const next = await reviewUpsert(
+        group,
+        review_constraint.review_username_restauarant_id_tag_id_type_key,
+        {
+          keys: ['__typename'],
+        }
+      )
+      all = [...all, ...next]
+    } catch (err) {
+      console.log('Error failed inserting', group)
+      throw err
+    }
   }
 
   return all
