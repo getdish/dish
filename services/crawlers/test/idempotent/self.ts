@@ -82,6 +82,7 @@ async function reset(t: ExecutionContext<Context>) {
     },
     {
       name: 'Unique',
+      slug: 'lenses__gems',
       alternates: ['notable'],
       type: 'lense',
     },
@@ -165,6 +166,7 @@ test('Merging', async (t) => {
     },
     google: {
       url: 'https://www.google.com/maps/place/@0,0,11z/data=!3m1!4b1!4m5!3m4!1stest-google123!8m2!3d0!4d0',
+      rating: 4,
     },
     tripadvisor: {
       url: 'https://tripadvisor.com',

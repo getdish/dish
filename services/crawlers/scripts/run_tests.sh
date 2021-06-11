@@ -10,5 +10,7 @@ popd
 
 node --version
 
-ava test/idempotent/* --verbose --serial "$@"
-ava test/http-dependent/* --verbose --serial "$@"
+# ava test/idempotent/* --verbose --serial "$@"
+# ava test/http-dependent/* --verbose --serial "$@"
+
+ava test/http-dependent/google.ts --verbose --serial "$@"

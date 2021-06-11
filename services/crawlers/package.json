@@ -1,7 +1,7 @@
 {
   "name": "@dish/crawlers",
   "version": "0.0.1",
-  "types": "types.d.ts",
+  "types": "src",
   "main": "dist",
   "sideEffects": false,
   "testConfig": {
@@ -12,8 +12,8 @@
   },
   "scripts": {
     "start": "node dist/index.js",
-    "build": "esdx",
-    "watch": "esdx-watch",
+    "build": "esdx skip-types",
+    "watch": "esdx-watch skip-types",
     "crawl:one": "ENV=dev ./scripts/run_crawl.sh --one",
     "crawl:one:internal": "ENV=dev ./scripts/run_crawl.sh --one-internal",
     "test": "DISH_DEBUG=1 ./scripts/run_tests.sh",

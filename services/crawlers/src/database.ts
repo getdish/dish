@@ -20,7 +20,6 @@ export class Database {
     if (this.pool) {
       return await this.pool.connect()
     }
-    console.log('conf', omit(this.config, 'password'))
     this.pool = new Pool({
       idleTimeoutMillis: 500000,
       connectionTimeoutMillis: 300000,

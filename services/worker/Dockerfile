@@ -1,4 +1,4 @@
-FROM debian:bullseye-20210511 as chrome
+FROM node:16.3.0-buster as chrome
 
 RUN apt-get update > /dev/null \
       && apt-get install -y chromium xvfb curl \

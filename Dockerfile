@@ -1,5 +1,5 @@
 # m1 support
-FROM debian:bullseye-20210511
+FROM node:16.3.0-buster
 
 WORKDIR /app
 
@@ -7,22 +7,13 @@ ENV PATH=$PATH:/app/node_modules/.bin:node_modules/.bin
 ENV NODE_OPTIONS="--max_old_space_size=8192"
 ENV PUPPETEER_SKIP_CHROMIUM_DOWNLOAD=true
 
-# install node and yarn
-
-RUN apt-get update >/dev/null \ 
-  && apt-get -qqy --no-install-recommends install curl software-properties-common \
-  && curl -sL https://deb.nodesource.com/setup_16.x | bash - \
-  && curl -sL https://dl.yarnpkg.com/debian/pubkey.gpg | gpg --dearmor | tee /usr/share/keyrings/yarnkey.gpg >/dev/null \
+# install yarn
+RUN curl -sL https://dl.yarnpkg.com/debian/pubkey.gpg | gpg --dearmor | tee /usr/share/keyrings/yarnkey.gpg >/dev/null \
   && echo "deb [signed-by=/usr/share/keyrings/yarnkey.gpg] https://dl.yarnpkg.com/debian stable main" | tee /etc/apt/sources.list.d/yarn.list \
   && apt-get update >/dev/null \ 
-  && apt-get -qqy --no-install-recommends install nodejs yarn
-
-RUN yarn set version berry \
-  && yarn --version >> /app/yarn.version \
-  && cat /app/yarn.version \
+  && apt-get -qqy --no-install-recommends install yarn \
+  && yarn set version berry \
   && apt-get clean
-
-RUN node --version
 
 # copy everything
 COPY snackui snackui

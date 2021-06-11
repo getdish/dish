@@ -171,7 +171,6 @@ export class GooglePuppeteer extends GooglePuppeteerJob {
           .filter((x) => x.indexOf('googleusercontent.com') > 0)[0]
     )
     const hero = image?.replace(/w[0-9]+-h[0-9]+/, 'w1000-h1000')
-    console.log('image', image, hero)
     this.scrape_data.hero_image = hero
   }
 
@@ -221,9 +220,14 @@ export class GooglePuppeteer extends GooglePuppeteerJob {
   }
 
   async getHours() {
+    await this.puppeteer.page.click(`img[aria-label="Hours"]`)
     const html = await this.puppeteer.page.evaluate(() => {
-      const selector = '.section-open-hours-container'
-      return document.querySelector(selector)?.innerHTML
+      // a bit more robust to find a few perhaps
+      const table =
+        document.querySelector('table.y0skZc-jyrRxf-Tydcue') ||
+        document.querySelector('table.NVpwyf-qJTHM-ibL1re') ||
+        document.querySelector('table')
+      return table?.innerHTML
     })
     this.scrape_data.hours = GooglePuppeteer.convertTableToJSON(html || '')
   }

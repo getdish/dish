@@ -1,4 +1,4 @@
-FROM debian:bullseye-20210511
+FROM node:16.3.0-buster
 
 RUN \
   apt-get update >/dev/null && apt-get install -y parallel build-essential \

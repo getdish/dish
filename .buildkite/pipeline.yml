@@ -18,6 +18,9 @@ steps:
     depends_on: base
     command: ./dsh compose_build app
 
+  # otherwise base can get slowed down, clogging the rest
+  - wait
+
   - label: ":docker: build worker"
     key: worker
     depends_on: base
