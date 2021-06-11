@@ -15,6 +15,7 @@ cd "$PROJECT_ROOT"
 function shell() {
   hostvar="$1_HOST"
   host="${!hostvar}"
+  ssh-add -K etc/keys/server_rsa
   ssh "root@$host"
 }
 

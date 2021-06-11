@@ -1105,7 +1105,19 @@ declare module "@dish/crawlers" {
     export class RestaurantRatings {
         crawler: Self;
         constructor(crawler: Self);
-        mergeRatings(): void;
+        getRatings(): {
+            rating: number;
+            ratings: {
+                yelp: any;
+                ubereats: any;
+                infatuated: any;
+                tripadvisor: any;
+                michelin: any;
+                doordash: any;
+                grubhub: any;
+                google: any;
+            };
+        };
         _infatuatedRating(): number;
         _doorDashRating(): number | null;
         weightRatings(ratings: {
@@ -1225,9 +1237,6 @@ declare module "@dish/crawlers" {
         available_sources: string[];
         main_db: Database;
         restaurant: RestaurantWithId;
-        ratings: {
-            [key: string]: number;
-        };
         tagging: Tagging;
         restaurant_ratings: RestaurantRatings;
         restaurant_base_score: RestaurantBaseScore;
@@ -1257,7 +1266,6 @@ declare module "@dish/crawlers" {
         merge(strings: string[]): string;
         mergeName(): void;
         mergeTelephone(): void;
-        mergeRatings(): void;
         mergeAddress(): void;
         addWebsite(): void;
         addPriceRange(): void;
@@ -1268,7 +1276,6 @@ declare module "@dish/crawlers" {
         oldestReview(): Promise<void>;
         addSourceOgIds(): void;
         addSources(): void;
-        _getGoogleSource(): void;
         mergeImage(): Promise<void>;
         getUberDishes(): Promise<void>;
         getDoorDashDishes(): Promise<void>;

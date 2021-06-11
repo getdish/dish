@@ -95,7 +95,6 @@ export class Self extends WorkerJob {
 
   main_db!: Database
   restaurant!: RestaurantWithId
-  ratings!: { [key: string]: number }
   tagging: Tagging
   restaurant_ratings: RestaurantRatings
   restaurant_base_score: RestaurantBaseScore
@@ -222,7 +221,6 @@ export class Self extends WorkerJob {
       this.mergeName,
       this.mergeTelephone,
       this.mergeAddress,
-      this.mergeRatings,
       this.addWebsite,
       this.addSourceOgIds,
       this.addSources,
@@ -378,10 +376,6 @@ export class Self extends WorkerJob {
       scrapeGetData(this.tripadvisor, (x) => x.overview.contact.phone),
       scrapeGetData(this.google, (x) => x.telephone),
     ])
-  }
-
-  mergeRatings() {
-    this.restaurant_ratings.mergeRatings()
   }
 
   mergeAddress() {
@@ -571,9 +565,11 @@ export class Self extends WorkerJob {
 
     this.restaurant.sources = {
       ...this.restaurant.sources,
-    } as {
-      [key: string]: { url: string; rating: number }
-    }
+    } as Record<string, { url: string; rating: number }>
+
+    const { rating, ratings } = this.restaurant_ratings.getRatings()
+
+    this.restaurant.rating = rating
 
     path = scrapeGetData(this.tripadvisor, (x) => x.overview.links.warUrl)
     if (path != '') {
@@ -582,35 +578,32 @@ export class Self extends WorkerJob {
       url = 'https://www.tripadvisor.com/' + parts.join('-')
       this.restaurant.sources.tripadvisor = {
         url,
-        rating: this.ratings?.tripadvisor,
+        rating: ratings?.tripadvisor,
       }
     }
 
     path = scrapeGetData(this.yelp, (x) => x.data_from_search_list_item.businessUrl)
-    console.log('this.ratings', this.ratings)
+    this.log('ratings', ratings)
     if (path != '') {
-      // @ts-ignore
       this.restaurant.sources.yelp = {
         url: 'https://www.yelp.com' + path,
-        rating: this.ratings?.yelp,
+        rating: ratings?.yelp,
       }
     }
 
     path = scrapeGetData(this.infatuated, (x) => x.data_from_search_list_item.post.review_link)
     if (path != '') {
-      // @ts-ignore
       this.restaurant.sources.infatuated = {
         url: 'https://www.theinfatuation.com' + path,
-        rating: this.ratings?.infatuated,
+        rating: ratings?.infatuated,
       }
     }
 
     path = scrapeGetData(this.michelin, (x) => x.main.url)
     if (path != '') {
-      // @ts-ignore
       this.restaurant.sources.michelin = {
         url: 'https://guide.michelin.com' + path,
-        rating: this.ratings?.michelin,
+        rating: ratings?.michelin,
       }
     }
 
@@ -623,34 +616,28 @@ export class Self extends WorkerJob {
       }
     }
     if (json_ue['@id']) {
-      // @ts-ignore
       this.restaurant.sources.ubereats = {
         url: json_ue['@id'],
-        rating: this.ratings?.ubereats,
+        rating: ratings?.ubereats,
       }
     }
 
     let json_dd = scrapeGetData(this.doordash, (x) => x.storeMenuSeo, {})
     if (json_dd['id']) {
-      // @ts-ignore
       this.restaurant.sources.doordash = {
         url: json_dd['id'].split('?')[0],
-        rating: this.ratings?.doordash,
+        rating: ratings?.doordash,
       }
     }
 
     const gh_id = scrapeGetData(this.grubhub, (x) => x.main.id)
     if (gh_id) {
-      // @ts-ignore
       this.restaurant.sources.grubhub = {
         url: 'https://www.grubhub.com/restaurant/' + gh_id,
-        rating: this.ratings?.grubhub,
+        rating: ratings?.grubhub,
       }
     }
-    this._getGoogleSource()
-  }
 
-  _getGoogleSource() {
     if (!this.google_review_api) return
     this.log('addSources getGoogleSource')
     const id = this.google_review_api.id_from_source
@@ -660,7 +647,7 @@ export class Self extends WorkerJob {
     // @ts-ignore
     this.restaurant.sources.google = {
       url: source,
-      rating: this.ratings?.google,
+      rating: ratings?.google,
     }
   }
 

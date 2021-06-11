@@ -22,7 +22,7 @@ export class RestaurantRatings {
     this.crawler = crawler
   }
 
-  mergeRatings() {
+  getRatings() {
     const rating = (r: any) => (typeof r === 'string' ? +r : r ?? null)
     const ratings = {
       yelp: rating(scrapeGetData(this.crawler.yelp, (x) => x.json.aggregateRating.ratingValue)),
@@ -36,7 +36,10 @@ export class RestaurantRatings {
       grubhub: rating(scrapeGetData(this.crawler.grubhub, (x) => x.main.rating.rating_value)),
       google: rating(scrapeGetData(this.crawler.google, (x) => x.rating)),
     }
-    this.crawler.restaurant.rating = this.weightRatings(ratings, RESTAURANT_WEIGHTS)
+    return {
+      rating: this.weightRatings(ratings, RESTAURANT_WEIGHTS),
+      ratings,
+    }
   }
 
   _infatuatedRating() {

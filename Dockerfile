@@ -25,10 +25,10 @@ RUN yarn set version berry \
 RUN node --version
 
 # copy everything
-COPY packages packages
-COPY services services
-COPY app app
 COPY snackui snackui
+COPY app app
+COPY services services
+COPY packages packages
 COPY package.json .
 
 RUN find . \! -name "package.json" -not -path "*/bin/*" -type f -print | xargs rm -rf
@@ -38,9 +38,6 @@ COPY .yarn .yarn
 COPY patches patches
 COPY bin bin
 COPY app/etc app/etc
-
-RUN groupadd --gid 1000 node \
-  && useradd --uid 1000 --gid node --shell /bin/bash --create-home node
 
 # install
 RUN yarn install --immutable-cache \

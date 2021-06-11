@@ -14,9 +14,12 @@ COPY app app
 COPY services services
 COPY snackui snackui
 
+ENV DISH_ENV=test
 ENV NODE_ENV=test
 ENV POSTGRES_DB=test
 ENV CI=true
+
+RUN node --version
 
 RUN touch stay_alive
 CMD ["tail", "-f", "stay_alive"]
