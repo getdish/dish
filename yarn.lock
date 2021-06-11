@@ -10406,7 +10406,7 @@ __metadata:
     "@types/react-native": ^0.64.2
     "@yarnpkg/plugin-patch": ^2.1.2
     ava: ^3.14.0
-    esbuild: ^0.11.13
+    esbuild: ^0.12.8
     esbuild-register: ^2.5.0
     esm: ^3.2.25
     fs-extra: ^10.0.0
@@ -11018,12 +11018,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"esbuild@npm:0.12.1":
-  version: 0.12.1
-  resolution: "esbuild@npm:0.12.1"
+"esbuild@npm:0.12.8":
+  version: 0.12.8
+  resolution: "esbuild@npm:0.12.8"
   bin:
     esbuild: bin/esbuild
-  checksum: 9fad417f76b9bd8d8f62ae76572659066dfeefb11583cef73c283f7e0b75c9d1a341f9b9237b420bb1eb02234706e2563fea06ac9a1e01659705b57a3b75baa1
+  checksum: 91ad2c8ddb8a3b0b1746e41e09684ab9415fa77aa39b0a07b45e9041cfb8825353e11ae2f4cefb53189f8c5a40edc372aa8cb8093e48d782635576f518a1b662
   languageName: node
   linkType: hard
 
