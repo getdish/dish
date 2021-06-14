@@ -1,4 +1,4 @@
-import { tagFindOne } from '@dish/graph'
+import { tagFindAll, tagFindOne } from '@dish/graph'
 import { Loggable } from '@dish/worker'
 
 import { Self } from './Self'
@@ -8,7 +8,7 @@ const REVIEW_BAND_FACTORS = { _5: 2, _4: 1, _3: 0, _2: -1, _1: -2 }
 export class RestaurantBaseScore extends Loggable {
   crawler: Self
   breakdown: any = {}
-  unique_tag_id?: string
+  gem_tag_id?: string
 
   constructor(crawler: Self) {
     super()
@@ -20,11 +20,12 @@ export class RestaurantBaseScore extends Loggable {
     this.crawler.restaurant.score_breakdown = {}
     this.breakdown.sources = {}
     const all_sources = [...this.crawler.available_sources, 'dish', 'all']
-    const unique_tag = await tagFindOne({ slug: 'lenses__gems' })
-    if (!unique_tag?.id) {
+    const gem_tag = await tagFindOne({ slug: 'lenses__gems' })
+    if (!gem_tag?.id) {
+      console.log('all tags', await tagFindAll({}))
       throw new Error("Couldn't find the 'lenses__gems' lense tag in DB")
     }
-    this.unique_tag_id = unique_tag?.id
+    this.gem_tag_id = gem_tag.id
     for (const source of all_sources) {
       this.log('Generate breakdown for', source)
       this.breakdown.sources[source] = { ratings: {}, summaries: {} } as any
@@ -264,11 +265,11 @@ export class RestaurantBaseScore extends Loggable {
             JOIN review ON rts.review_id = review.id
             JOIN tag ON rts.tag_id = tag.id
               WHERE review.restaurant_id = '${this.crawler.restaurant.id}'
-              AND rts.tag_id = '${this.unique_tag_id}'
+              AND rts.tag_id = '${this.gem_tag_id}'
               ${source_sql}
           )
         )
-        AND id != '${this.unique_tag_id}'
+        AND id != '${this.gem_tag_id}'
       ) ${sub_query_name}
     `
   }

@@ -108,7 +108,7 @@ export class GooglePuppeteer extends GooglePuppeteerJob {
   }
 
   async runFailableFn(func: Function, restaurant: Restaurant) {
-    console.log('GOOGLE: Running failable step: ' + func.name)
+    console.log('GOOGLE: Running step: ' + func.name)
     try {
       await func.bind(this)()
     } catch (e) {

@@ -583,7 +583,8 @@ function migrate_timescale() {
 }
 
 function migrate() {
-  # migrate_hasura # testing cli-migrations hasura image to auto-migrate
+  # TODO we have timescale-migrate service, just need hasura-migrate service now
+  migrate_hasura
   migrate_timescale
 }
 
@@ -971,7 +972,7 @@ function run_all_tests() {
     -v /var/run/docker.sock:/var/run/docker.sock \
     -v "$POSTGRES_DB_DIR:$POSTGRES_DB_DIR" \
     -v "$TIMESCALE_DB_DIR:$TIMESCALE_DB_DIR" \
-    registry.dishapp.com/dish-run-tests:latest yarn test || echo "failed tests" && exit 1
+    registry.dishapp.com/dish-run-tests:latest yarn test || (echo "failed tests" && exit 1)
   docker-compose down -t 3
 }
 
