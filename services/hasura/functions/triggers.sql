@@ -45,19 +45,21 @@ BEGIN
     UPDATE tag SET "displayName" = NEW.name WHERE id = NEW.id;
   END IF;
 
-  UPDATE tag SET
-    slug = new_slug.slug
-  FROM (
-    SELECT slugify(parent.name) || '__' || slugify(child.name) AS slug
-    FROM tag child JOIN tag parent ON child."parentId" = parent.id
-      WHERE child.id = NEW.id
-  ) new_slug
-    WHERE tag.id = NEW.id
-    AND (
-      tag.slug <> new_slug.slug
-      OR
-      tag.slug IS NULL
-    );
+  IF NEW."slug" IS NULL THEN
+    UPDATE tag SET
+      slug = new_slug.slug
+    FROM (
+      SELECT slugify(parent.name) || '__' || slugify(child.name) AS slug
+      FROM tag child JOIN tag parent ON child."parentId" = parent.id
+        WHERE child.id = NEW.id
+    ) new_slug
+      WHERE tag.id = NEW.id
+      AND (
+        tag.slug <> new_slug.slug
+        OR
+        tag.slug IS NULL
+      );
+  END IF;
 
   RETURN NEW;
 END

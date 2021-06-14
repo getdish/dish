@@ -75,15 +75,22 @@ async function reset(t: ExecutionContext<Context>) {
       return scrapeInsert(s)
     })
   )
-  await tagUpsert([
+  // const parent = await tagUpsert([
+  //   {
+  //     name: 'Lenses'
+  //   }
+  // ])
+  const inserted = await tagUpsert([
     {
       name: 'Gem',
+      slug: 'lenses__gems',
+      alternates: ['notable'],
+      type: 'lense',
       id: GEM_UIID,
     },
     {
       name: 'Unique',
-      slug: 'lenses__gems',
-      alternates: ['notable'],
+      slug: 'lenses__unique',
       type: 'lense',
     },
   ])
@@ -142,7 +149,7 @@ test('Merging', async (t) => {
   if (!updated) return
   t.is(updated.name, 'Test Name Yelp')
   t.is(updated.address, '123 Street, Big City, America')
-  t.is(updated.tags.length, 6)
+  t.is(updated.tags.length, 7)
   t.is(updated.tags.map((i) => i.tag.name).includes('Test Tripadvisor Mexican'), true)
   t.is(updated.tags.map((i) => i.tag.name).includes('Test Mexican'), true)
   t.is(updated.tags.map((i) => i.tag.name).includes('Test Pizza'), true)
@@ -434,7 +441,7 @@ test('Identifying country tags', async (t) => {
   const updated = await restaurantFindOneWithTagsSQL(t.context.restaurant.id)
   t.assert(updated, 'not found')
   if (!updated) return
-  t.is(updated.tags.length, 6)
+  t.is(updated.tags.length, 7)
   const tag1 = updated.tags.find((i) => i.tag.id == existing_tag1.id) || ({} as Tag)
   const tag2 = updated.tags.find((i) => i.tag.id == existing_tag2.id) || ({} as Tag)
   const tag3 = updated.tags.find((i) => i.tag.name == 'Test Pizza') || ({} as Tag)
