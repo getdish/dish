@@ -227,7 +227,7 @@ export class GooglePuppeteer extends GooglePuppeteerJob {
         document.querySelector('table.y0skZc-jyrRxf-Tydcue') ||
         document.querySelector('table.NVpwyf-qJTHM-ibL1re') ||
         document.querySelector('table')
-      return table?.innerHTML
+      return table?.outerHTML
     })
     this.scrape_data.hours = GooglePuppeteer.convertTableToJSON(html || '')
   }
