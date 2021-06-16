@@ -1,10 +1,12 @@
 #!/usr/bin/env zx
 
+import { exec } from 'child_process'
 import { dirname, join, resolve } from 'path'
 import { Transform } from 'stream'
 
 import fsExtra from 'fs-extra'
 import { readdir } from 'fs/promises'
+import { ExecOptions } from 'node:child_process'
 import { basename } from 'node:path'
 import { $, cd } from 'zx'
 
@@ -95,6 +97,32 @@ const isParallelizableTestPackageJson = (x) => {
   return !!x.contents.tests?.parallel
 }
 
+async function execPromise(command: string, opts?: ExecOptions & { prefix?: string }) {
+  return await new Promise((res, rej) => {
+    exec(command, opts, (err, stdout, stderr) => {
+      if (err) {
+        console.log('Error running', command, err, stdout, stderr)
+        return rej(err)
+      }
+      console.log('Finished successfully', command)
+      if (stdout) {
+        console.log(
+          opts?.prefix
+            ? stdout
+                .split('\n')
+                .map((x) => opts.prefix + x)
+                .join('\n')
+            : stdout
+        )
+      }
+      if (stderr) {
+        console.log('stderr:', stderr)
+      }
+      res(stdout)
+    })
+  })
+}
+
 async function runAllTests() {
   const dirs = await getTestablePackageJsons()
   const [parallel, serial] = [
@@ -107,12 +135,22 @@ async function runAllTests() {
   async function runTest({ path }: Package) {
     const dir = dirname(path)
     const name = basename(dir)
-    const prefixer = new PrefixStream(`${name}:`.padStart(16))
-    console.log(`> testing ${name} in ${dir}`)
-    $.verbose = false
-    cd(dir)
-    await $`npm test`.pipe(prefixer)
-    $.verbose = true
+    try {
+      console.log(`\n\n🏃‍♀️ testing ${name} in ${dir}`)
+      await execPromise(`npm test`, {
+        cwd: dir,
+        prefix: `${name.padStart(16)}: `,
+      })
+      console.log('Finished test', name)
+      // this was buggy, not outputting errors and pipes didnt work right
+      // $.verbose = false
+      // cd(dir)
+      // await $`npm test`.pipe(prefixer)
+      // $.verbose = true
+    } catch (err) {
+      console.log('Error running tests for', name, 'exit')
+      process.exit(1)
+    }
   }
 
   async function runParallel() {
@@ -125,22 +163,15 @@ async function runAllTests() {
     }
   }
 
-  await Promise.all([
-    // run all at once
-    runSerial(),
-    runParallel(),
-  ])
-}
-
-// hacky because i cant get pipe working normally
-class PrefixStream extends Transform {
-  constructor(public prefix: string) {
-    super()
-  }
-  _transform(chunk, encoding, done) {
-    const out = encoding === 'utf8' ? chunk : chunk.toString()
-    process.stdout.write(this.prefix + out)
-    done(null, '')
+  try {
+    await Promise.all([
+      // run all at once
+      runSerial(),
+      runParallel(),
+    ])
+    console.log('Done with tests')
+  } catch (err) {
+    console.log('error running tests', err.message, err.stack)
   }
 }
 
@@ -155,6 +186,7 @@ class PrefixStream extends Transform {
 
 try {
   await runAllTests()
+  process.exit(0)
   // console.log(await getPackageJsonPaths())
   // console.log(await getLocalComposeImages())
 } catch (err) {

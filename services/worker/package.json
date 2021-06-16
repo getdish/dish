@@ -11,8 +11,7 @@
     "start": "./entry.sh",
     "start:clear": "CLEAR_JOBS=1 ./entry.sh",
     "repl": "npx bull-repl connect",
-    "worker": "node dist/worker.js",
-    "test": "true"
+    "worker": "node dist/worker.js"
   },
   "dependencies": {
     "@bull-board/api": "^3.2.8",
