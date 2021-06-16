@@ -176,11 +176,14 @@ function deploy_all() {
   deploy_dish
 }
 
+function deploy_dish_stack() {
+  docker stack deploy --with-registry-auth --prune -c docker-compose.yml dish
+}
+
 # shellcheck disable=SC2120
 function deploy_dish() {
   echo "deploying dish - $DISH_ENV $POSTGRES_DB $POSTGRES_DB_DIR"
-  docker stack deploy --with-registry-auth --prune -c docker-compose.yml dish || \
-    echo "retry" && docker stack deploy --with-registry-auth --prune -c docker-compose.yml dish
+  deploy_dish_stack || echo "retry" && deploy_dish_stack
   if [ "$1" == "--force" ]; then
     #  force restart
     docker stack services -q dish | while read -r service; do
@@ -574,12 +577,6 @@ function migrate_timescale() {
   popd
 }
 
-function migrate() {
-  # TODO we have timescale-migrate service, just need hasura-migrate service now
-  migrate_hasura
-  migrate_timescale
-}
-
 function hasura_admin() {
   (cd services/hasura && hasura console --endpoint "http://localhost:$HASURA_PORT" --admin-secret=$HASURA_GRAPHQL_ADMIN_SECRET)
 }
@@ -969,7 +966,7 @@ function run_all_tests() {
 }
 
 function run_all_tests_in_compose() {
-  exec timescale-migrate yarn test
+  exec migrate yarn test
 }
 
 function run_integration_tests() {

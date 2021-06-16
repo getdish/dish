@@ -47,7 +47,7 @@
     "watch": "npm-run-all --parallel check:ts:watch build:ts:watch",
     "build:refs": "typescript-monorepo-toolkit inject-refs .",
     "test": "KEEP_ALIVE=0 DISH_ENV=test ./dsh run_dsh",
-    "test:migrate": "DISH_ENV=test ./dsh migrate",
+    "test:migrate": "DISH_ENV=test ./dsh migrate_all",
     "crawl:tucson": "node services/crawlers/dist/yelp/all.js --city 'Tucson, Arizona'",
     "crawl:one": "EXTERNAL=1 DISH_DEBUG=2 SLUG=$SLUG ./dsh run 'node services/crawlers/dist/one.js'",
     "crawl:one:production": "IS_LIVE=1 DEBUG=1 DISH_ENV=production SLUG=$SLUG yarn crawl:one",
