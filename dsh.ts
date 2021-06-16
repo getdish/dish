@@ -1,7 +1,6 @@
 #!/usr/bin/env zx
 
-import { basename, join, resolve } from 'path'
-import { dirname } from 'path'
+import { dirname, join, resolve } from 'path'
 
 import fsExtra from 'fs-extra'
 import { readdir } from 'fs/promises'
@@ -82,6 +81,14 @@ async function getLocalComposeImages() {
   ).flatMap((x) => (x.status === 'fulfilled' && x.value ? x.value : []))
 }
 
+async function runAllTests() {
+  const dirs = await getTestablePackageJsons()
+  for (const { path } of dirs) {
+    const dir = dirname(path)
+    await $`cd ${dir} && yarn test`
+  }
+}
+
 // async function pushLocalComposeImages() {
 //   const dockerfiles = await getLocalComposeImages()
 //   for (const file of dockerfiles) {
@@ -92,8 +99,9 @@ async function getLocalComposeImages() {
 // }
 
 try {
-  console.log(await getPackageJsonPaths())
-  console.log(await getLocalComposeImages())
+  await runAllTests()
+  // console.log(await getPackageJsonPaths())
+  // console.log(await getLocalComposeImages())
 } catch (err) {
   console.log(err.message)
 }

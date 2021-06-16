@@ -89,7 +89,8 @@ export default route(async (req, res) => {
 
     res.send(response)
   } catch (error) {
-    console.error('graph err', error, body, cache?.parsed ? print(cache.parsed) : null)
+    // prettier-ignore
+    console.error('graph err', GRAPH_API_INTERNAL, error, body, cache?.parsed ? print(cache.parsed) : null)
     res.status(500).send({
       error: process.env.NODE_ENV === 'development' ? error : `error fetching: ${error.message}`,
     })

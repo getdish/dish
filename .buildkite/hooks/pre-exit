@@ -43,7 +43,7 @@ fi
 
 if [ "$LOG_DOCKER" == "true" ]; then
   echo "docker logs..."
-  docker-compose logs --tail 2000
+  docker-compose logs --tail 5000
   echo "other logs..."
   cat ./*.log || true
 fi
@@ -65,7 +65,7 @@ if [ "$BUILDKITE_COMMAND_EXIT_STATUS" = "1" ] && [ "$DOCKER_CLEAN_ON_FAIL" = "1"
 fi
 
 if [ "$DOCKER_CLEAN" == "true" ] || { [ "$BUILDKITE_COMMAND_EXIT_STATUS" = "1" ] && [ "$DOCKER_CLEAN_ON_FAIL" = "1" ]; }; then
-  docker-compose down || true
+  docker-compose down -t 4 || true
   CLEAN_BUILDKITE_BUILDS=true ./dsh clean_docker_if_disk_full
 fi
 

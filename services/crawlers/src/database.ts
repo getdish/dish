@@ -40,7 +40,7 @@ export class Database {
 
   async query(query: string) {
     if (process.env.DEBUG) {
-      console.log('DB.query', this.config['port'], query)
+      console.log('DB.query', this.config['host'], this.config['port'], query)
     }
     let result: QueryResult
     const client = await this.connect()
@@ -93,7 +93,7 @@ const db_config: PoolConfig = {
   idleTimeoutMillis: 500_000,
 }
 
-export const main_db = new Database({
+const main_db_config: PoolConfig = {
   host: process.env.PGHOST || 'localhost',
   port: process.env.POSTGRES_PORT ? +process.env.POSTGRES_PORT : 5432,
   ssl: process.env.USE_SSL ? true : false,
@@ -103,6 +103,12 @@ export const main_db = new Database({
   idleTimeoutMillis: 500000,
   connectionTimeoutMillis: 300000,
   max: 10,
-})
+}
 
+export const main_db = new Database(main_db_config)
 export const db = new Database(db_config)
+
+if (process.env.DEBUG) {
+  // prettier-ignore
+  console.log('db configs', JSON.stringify({ db_config, main_db_config }, null, 2))
+}
