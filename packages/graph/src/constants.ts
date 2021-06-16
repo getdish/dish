@@ -9,6 +9,7 @@ export const isManualDebugMode = search.startsWith('?debug')
 
 // why not NODE_ENV?
 // Because its nice to be able to test production endpoints in dev mode
+// ... hmm may want to default to this in production, but have a flag to force
 export const isProd =
   process.env.IS_LIVE === '1' || hostname === 'dishapp' || hostname.includes('live') || false
 

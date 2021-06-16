@@ -6,7 +6,7 @@ RUN apt-get update > /dev/null && apt-get install -y git gnupg wget lsb-release 
       echo "deb http://deb.debian.org/debian buster-backports main" >> /etc/apt/sources.list && \
       apt-get update > /dev/null && \
       apt-get install -y s3cmd > /dev/null && \
-      apt-get install -y cron curl postgresql-client-12 > /dev/null && \
+      apt-get install -y vim cron curl postgresql-client-12 > /dev/null && \
       apt-get clean
 
 WORKDIR /app

@@ -51,6 +51,7 @@
     "test:migrate": "DISH_ENV=test ./dsh migrate",
     "crawl:tucson": "node services/crawlers/dist/yelp/all.js --city 'Tucson, Arizona'",
     "crawl:one": "EXTERNAL=1 DISH_DEBUG=2 SLUG=$SLUG ./dsh run 'node services/crawlers/dist/one.js'",
+    "crawl:one:production": "IS_LIVE=1 DEBUG=1 DISH_ENV=production SLUG=$SLUG yarn crawl:one",
     "crawl:one:external": "SKIP=internal yarn crawl:one",
     "crawl:one:yelp": "SKIP=internal,google,tripadvisor yarn crawl:one",
     "crawl:internal": "./dsh run 'RUN=1 QUERY=\"SELECT id from restaurant $QUERY\" node ./services/crawlers/dist/self/one.js'",
