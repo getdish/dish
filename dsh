@@ -561,7 +561,7 @@ function redis_command() {
 
 function redis_cli() {
   fly_tunnel
-  redis-cli -h "$REDIS_HOST" -a "$REDIS_PASSWORD" -p 10000 "$@"
+  redis-cli -h "$REDIS_HOST" -a "$REDIS_PASSWORD" -p "$REDIS_PORT" "$@"
 }
 
 function redis_cli_list_all() {

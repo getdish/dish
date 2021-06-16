@@ -99,6 +99,7 @@ async function runAllTests() {
 // }
 
 try {
+  console.log('running')
   await runAllTests()
   // console.log(await getPackageJsonPaths())
   // console.log(await getLocalComposeImages())

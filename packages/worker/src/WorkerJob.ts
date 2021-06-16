@@ -1,35 +1,8 @@
 import { sentryException } from '@dish/common'
-import Bull from 'bull'
 import BullQueue, { EveryRepeatOptions, Job, JobOptions, Queue, QueueOptions } from 'bull'
 import _ from 'lodash'
 
 import { Loggable } from './Loggable'
-
-// fly redis doesnt support .subscribe()
-// dony use process.env.FLY_REDIS_CACHE_URL
-
-const redisOptions = () => {
-  if (process.env.REDIS_URL) {
-    const matched = process.env.REDIS_URL.match(
-      /redis:\/\/([a-z0-9]*):([a-z0-9]*)@([a-z0-9-_\.]+):([0-9]+)/i
-    )
-    if (matched) {
-      const [url, user, password, host, port] = matched
-      return {
-        port: +port,
-        host,
-        password,
-      }
-    }
-  }
-  return {
-    port: +(process.env.REDIS_PORT || 6379),
-    host: process.env.REDIS_HOST || 'redis',
-    password: process.env.REDIS_PASSWORD || '',
-  }
-}
-
-console.log('redisOptions', redisOptions())
 
 export type JobData = {
   className: string
@@ -147,6 +120,28 @@ export class WorkerJob extends Loggable {
   }
 }
 
+// const url = `redis://${host}:${port}`
+
+// console.log('create client connecting to ', url)
+// export const redisClient = require('redis').createClient({
+//   url,
+// })
+
+// redisClient.on('error', (err) => {
+//   console.log('redis error ', JSON.stringify(err))
+// })
+
+// const opts = redisOptions()
+// console.log('redis options are', opts)
+// const createRedis = () =>
+//   new Redis(opts.port, opts.host, {
+//     password: opts.password,
+//     autoResubscribe: true,
+//     autoResendUnfulfilledCommands: true,
+//   })
+// const redisClient = createRedis()
+// const redisSubscriber = createRedis()
+
 export function getBullQueue(name: string, config: {} = {}) {
   return new BullQueue(name, {
     limiter: {
@@ -154,10 +149,13 @@ export function getBullQueue(name: string, config: {} = {}) {
       duration: 1000,
     },
     ...config,
-    redis: redisOptions(),
+    redis: {
+      host: process.env.REDIS_HOST || 'redis',
+      port: +(process.env.REDIS_PORT || '6379'),
+    },
   })
 }
 
-export async function onBullQueueReady(queue: Bull.Queue) {
+export async function onBullQueueReady(queue: Queue) {
   await queue.isReady()
 }

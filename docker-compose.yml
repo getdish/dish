@@ -406,11 +406,10 @@ services:
     image: registry.dishapp.com/dish-image-quality${DISH_IMAGE_TAG}
     networks:
       - default
-      - traefik-public
     build:
       context: ./services/image-quality
     ports:
-      - 8883:5005
+      - 5005:5005
     deploy:
       replicas: ${DOCKER_REPLICAS:-1}
 
@@ -418,7 +417,6 @@ services:
     image: registry.dishapp.com/dish-image-recognize${DISH_IMAGE_TAG}
     networks:
       - default
-      - traefik-public
     build:
       context: ./services/image-recognize
     ports:
@@ -429,7 +427,6 @@ services:
     restart: on-failure:5
     image: ${TIMESCALE_IMAGE:-registry.dishapp.com/dish-timescale:latest}
     networks:
-      - traefik-public
       - default
     build:
       context: ./services/timescale
@@ -464,15 +461,12 @@ services:
   redis:
     image: redis
     networks:
-      - traefik-public
       - default
     build:
       context: ./services/redis
       dockerfile: ./Dockerfile
     ports:
       - ${REDIS_PORT:-6379}:6379
-    networks:
-      default:
 
   summarizer:
     image: registry.dishapp.com/dish-summarizer${DISH_IMAGE_TAG}

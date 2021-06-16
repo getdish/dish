@@ -3,10 +3,11 @@ import { promisify } from 'util'
 import redis from 'redis'
 
 const pass = process.env.REDIS_PASSWORD
-const envUrl = process.env.REDIS_URL
 const host = process.env.REDIS_HOST || 'redis'
 const port = process.env.REDIS_PORT || 6379
-const url = envUrl || `redis://${pass ? `:${pass}:` : ''}${host}:${port}`
+const url = `redis://${pass ? `:${pass}:` : ''}${host}:${port}`
+
+console.log('redis url', url)
 
 export const redisClient = redis.createClient({
   url,
