@@ -219,7 +219,7 @@ describe('basic tests', () => {
     function SimpleStoreTestUsedProperties(props: { id: number }) {
       const store = useStore(TodoList, props)
       renderCount++
-      console.log('render')
+      // console.log('render')
       return (
         <>
           <button title="add" onClick={() => store.add()}></button>
