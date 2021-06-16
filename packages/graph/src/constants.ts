@@ -11,7 +11,7 @@ export const isManualDebugMode = search.startsWith('?debug')
 // Because its nice to be able to test production endpoints in dev mode
 // ... hmm may want to default to this in production, but have a flag to force
 export const isProd =
-  process.env.IS_LIVE === '1' || hostname === 'dishapp' || hostname.includes('live') || false
+  process.env.IS_LIVE === '1' || hostname === 'dishapp.com' || hostname.includes('live') || false
 
 export const isNode = process.env.TARGET !== 'web' || !getWindow() || false
 export const isStaging = process.env.NODE_ENV === 'staging' || hostname.includes('staging') || false
@@ -19,8 +19,12 @@ export const isDev = (!isProd && !isStaging) || false
 export const isNative = process.env.TARGET === 'native'
 
 export const LOCAL_HOST = process.env.LOCAL_HOST ?? (hostname || `localhost`)
+
+// TODO split this ORIGIN into internal/external so we can use it more clearly everywhere
+// so external: dishapp.com, internal app:4444
+
 // const PROD_ORIGIN = 'https://dishapp.com'
-const ORIGIN = process.env.APP_ENDPOINT ?? 'app:4444'
+const ORIGIN = isProd ? 'https://dishapp.com' : process.env.APP_ENDPOINT ?? 'app:4444'
 // isProd
 //   ? PROD_ORIGIN
 //   : isStaging
@@ -56,16 +60,17 @@ export const GRAPH_DOMAIN =
 export const GRAPH_API_INTERNAL = `${GRAPH_DOMAIN}/v1/graphql`
 export const GRAPH_API = `${DISH_API_ENDPOINT}/graph`
 
-// console.log('graph.const', {
-//   HASURA_ENDPOINT: process.env.HASURA_ENDPOINT,
-//   DISH_API_ENDPOINT,
-//   SEARCH_DOMAIN_INTERNAL,
-//   LOCAL_HOST,
-//   TILES_HOST,
-//   GRAPH_API,
-//   GRAPH_API_INTERNAL,
-//   SEARCH_DOMAIN,
-//   isNode,
-//   isProd,
-//   isNative,
-// })
+console.log('graph.const', {
+  HASURA_ENDPOINT: process.env.HASURA_ENDPOINT,
+  APP_ENDPOINT: process.env.APP_ENDPOINT,
+  DISH_API_ENDPOINT,
+  SEARCH_DOMAIN_INTERNAL,
+  LOCAL_HOST,
+  TILES_HOST,
+  GRAPH_API,
+  GRAPH_API_INTERNAL,
+  SEARCH_DOMAIN,
+  isNode,
+  isProd,
+  isNative,
+})

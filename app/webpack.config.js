@@ -7,8 +7,8 @@ module.exports = (opts) => {
     entry: path.resolve(path.join(__dirname, 'src', 'index.web.tsx')),
     cwd: __dirname,
     defineOptions: {
-      ...(process.env.NODE_ENV === 'production' && {
-        APP_ENDPOINT: JSON.stringify(process.env.APP_ENDPOINT),
+      ...(process.env.APP_ENDPOINT && {
+        'process.env.APP_ENDPOINT': process.env.APP_ENDPOINT,
       }),
     },
     resolve: {
