@@ -129,7 +129,7 @@
     "snackui": "*",
     "tsconfig-paths": "^3.9.0",
     "typescript": "^4.2.4",
-    "zx": "^1.10.0"
+    "zx": "^1.14.1"
   },
   "devDependencies": {
     "@babel/runtime": "^7.13.16",
