@@ -12,7 +12,7 @@ interface Context {
 
 const test = anyTest as TestInterface<Context>
 
-const GORSE_ENDPOINT = 'http://localhost:9000'
+const GORSE_ENDPOINT = process.env.GORSE_ENDPOINT || 'http://localhost:9000'
 
 test.beforeEach(async (t) => {
   await flushTestData()

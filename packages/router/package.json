@@ -11,6 +11,9 @@
     "watch": "esdx-watch",
     "test": "TARGET=node DISH_ENV=test jest --runInBand --forceExit"
   },
+  "tests": {
+    "parallel": true
+  },
   "dependencies": {
     "@dish/use-store": "*",
     "history": "^5.0.0",

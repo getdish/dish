@@ -1,10 +1,12 @@
 #!/usr/bin/env zx
 
 import { dirname, join, resolve } from 'path'
+import { Transform } from 'stream'
 
 import fsExtra from 'fs-extra'
 import { readdir } from 'fs/promises'
-import { $ } from 'zx'
+import { basename } from 'node:path'
+import { $, cd } from 'zx'
 
 const { readFile, readJSON } = fsExtra
 
@@ -40,14 +42,22 @@ async function getPackageJsonPaths() {
   })
 }
 
+type Package = {
+  path: string
+  contents: Record<string, any>
+}
+
 async function getPackageJsonContents() {
   return await Promise.all(
     (
       await getPackageJsonPaths()
-    ).map(async (path) => ({
-      path,
-      contents: await readJSON(path),
-    }))
+    ).map(
+      async (path) =>
+        ({
+          path,
+          contents: await readJSON(path),
+        } as Package)
+    )
   )
 }
 
@@ -81,11 +91,56 @@ async function getLocalComposeImages() {
   ).flatMap((x) => (x.status === 'fulfilled' && x.value ? x.value : []))
 }
 
+const isParallelizableTestPackageJson = (x) => {
+  return !!x.contents.tests?.parallel
+}
+
 async function runAllTests() {
   const dirs = await getTestablePackageJsons()
-  for (const { path } of dirs) {
+  const [parallel, serial] = [
+    dirs.filter(isParallelizableTestPackageJson),
+    dirs.filter((x) => !isParallelizableTestPackageJson(x)),
+  ]
+
+  console.log(`Running tests: ${parallel.length} parallel, ${serial.length} serial`)
+
+  async function runTest({ path }: Package) {
     const dir = dirname(path)
-    await $`cd ${dir} && yarn test`
+    const name = basename(dir)
+    const prefixer = new PrefixStream(`${name}:`.padStart(16))
+    console.log(`> testing ${name} in ${dir}`)
+    $.verbose = false
+    cd(dir)
+    await $`npm test`.pipe(prefixer)
+    $.verbose = true
+  }
+
+  async function runParallel() {
+    await Promise.all(parallel.map(runTest))
+  }
+
+  async function runSerial() {
+    for (const pkg of serial) {
+      await runTest(pkg)
+    }
+  }
+
+  await Promise.all([
+    // run all at once
+    runSerial(),
+    runParallel(),
+  ])
+}
+
+// hacky because i cant get pipe working normally
+class PrefixStream extends Transform {
+  constructor(public prefix: string) {
+    super()
+  }
+  _transform(chunk, encoding, done) {
+    const out = encoding === 'utf8' ? chunk : chunk.toString()
+    process.stdout.write(this.prefix + out)
+    done(null, '')
   }
 }
 
@@ -99,7 +154,6 @@ async function runAllTests() {
 // }
 
 try {
-  console.log('running')
   await runAllTests()
   // console.log(await getPackageJsonPaths())
   // console.log(await getLocalComposeImages())

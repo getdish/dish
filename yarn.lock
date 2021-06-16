@@ -5972,6 +5972,16 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@types/node-fetch@npm:^2.5.10":
+  version: 2.5.10
+  resolution: "@types/node-fetch@npm:2.5.10"
+  dependencies:
+    "@types/node": "*"
+    form-data: ^3.0.0
+  checksum: 7687038f73cf0f2e4bac8ced3abdfbb77f8b2719de2f180d0064238d7460c8b4dc0b39c08da35a76d7db9f86528599ea0f7cee7c468ad7cfecfe2db1c5863641
+  languageName: node
+  linkType: hard
+
 "@types/node@npm:*, @types/node@npm:^14.14.12":
   version: 14.14.31
   resolution: "@types/node@npm:14.14.31"
@@ -10454,7 +10464,7 @@ __metadata:
     typescript: ^4.2.4
     typescript-monorepo-toolkit: ^0.2.0
     ultra-runner: ^3.10.5
-    zx: ^1.10.0
+    zx: ^1.14.1
   dependenciesMeta:
     prettier:
       optional: true
@@ -25235,17 +25245,18 @@ __metadata:
   languageName: node
   linkType: hard
 
-"zx@npm:^1.10.0":
-  version: 1.10.0
-  resolution: "zx@npm:1.10.0"
+"zx@npm:^1.14.1":
+  version: 1.14.1
+  resolution: "zx@npm:1.14.1"
   dependencies:
     "@types/node": ^15.3
+    "@types/node-fetch": ^2.5.10
     chalk: ^4.1.1
     node-fetch: ^2.6.1
     shq: ^1.0.2
     which: ^2.0.2
   bin:
     zx: zx.mjs
-  checksum: 45de124bf8edcc90ea72f8bb9ab459aff7d762b22818ec73b8e4074bc4736e1f52242ed5cf9f4dbdbd86161579232ce68e45ae8f43c568f3cf7853e759c12dc5
+  checksum: 56242bdbee7357ad10828697c36fff5c1fc39325518bf9408ca614da33927903ca0f74bdead4fdc54c426f700011ca492c39355600bf876d10402231ca558dde
   languageName: node
   linkType: hard
