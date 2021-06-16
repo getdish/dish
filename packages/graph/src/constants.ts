@@ -60,17 +60,17 @@ export const GRAPH_DOMAIN =
 export const GRAPH_API_INTERNAL = `${GRAPH_DOMAIN}/v1/graphql`
 export const GRAPH_API = `${DISH_API_ENDPOINT}/graph`
 
-console.log('graph.const', {
-  HASURA_ENDPOINT: process.env.HASURA_ENDPOINT,
-  APP_ENDPOINT: process.env.APP_ENDPOINT,
-  DISH_API_ENDPOINT,
-  SEARCH_DOMAIN_INTERNAL,
-  LOCAL_HOST,
-  TILES_HOST,
-  GRAPH_API,
-  GRAPH_API_INTERNAL,
-  SEARCH_DOMAIN,
-  isNode,
-  isProd,
-  isNative,
-})
+// console.log('graph.const', {
+//   HASURA_ENDPOINT: process.env.HASURA_ENDPOINT,
+//   APP_ENDPOINT: process.env.APP_ENDPOINT,
+//   DISH_API_ENDPOINT,
+//   SEARCH_DOMAIN_INTERNAL,
+//   LOCAL_HOST,
+//   TILES_HOST,
+//   GRAPH_API,
+//   GRAPH_API_INTERNAL,
+//   SEARCH_DOMAIN,
+//   isNode,
+//   isProd,
+//   isNative,
+// })

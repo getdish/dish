@@ -20,7 +20,7 @@ export async function fetchBrowserHTML(url: string) {
   return await res.text()
 }
 
-const URL = process.env.WORKER_PROXY_ENDPOINT ?? 'http://localhost:3535'
+const URL = process.env.PUPPET_PROXY_ENDPOINT ?? 'http://localhost:3535'
 
 async function fetchBrowser(url: string, headers = {}, retry = 3) {
   let i = 0
