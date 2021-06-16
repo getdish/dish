@@ -443,15 +443,15 @@ services:
     #   timeout: 5s
     #   retries: 5
 
-  # TODO rename dish-run-tests to dish-mono or dish-run
-  timescale-migrate:
+  migrate:
     image: registry.dishapp.com/dish-run-tests:latest
-    command: bash -c 'sleep 5 && ./dsh migrate_timescale'
+    command: bash -c 'sleep 5 && ./dsh migrate_all'
     environment:
       <<: *dish-env
       KEEP_ALIVE: "true"
     depends_on:
       - timescale
+      - hasura
     deploy:
       restart_policy:
         condition: on-failure
