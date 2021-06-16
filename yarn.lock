@@ -2605,9 +2605,9 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@dish/worker-proxy@workspace:services/worker-proxy":
+"@dish/puppet-proxy@workspace:services/puppet-proxy":
   version: 0.0.0-use.local
-  resolution: "@dish/worker-proxy@workspace:services/worker-proxy"
+  resolution: "@dish/puppet-proxy@workspace:services/puppet-proxy"
   dependencies:
     "@dish/esdx": "*"
     express: ^4.17.1

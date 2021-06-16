@@ -27,12 +27,7 @@ export class ProxiedRequests {
     if (!props?.skipBrowser) {
       try {
         const url = this.domain + uri
-        console.log(
-          `ProxiedRequests.getJSON`,
-          +(process.env.DEBUG || '0') > 2
-            ? url
-            : url.slice(0, 150) + (url.length > 150 ? '... (DEBUG>2)' : '')
-        )
+        console.log(`ProxiedRequests.getJSON`, url)
         return await fetchBrowserJSON(url)
       } catch (err) {
         console.warn('Error with browser fetch, fall back to proxies', err)
@@ -106,7 +101,6 @@ export class ProxiedRequests {
 
     while (true) {
       const url = base + uri
-      console.log('ProxiedRequests.get', url)
       const { host, port, auth } = agentConfig
       const proto = agentConfig.protocol ?? 'http'
       const user = auth ? `${auth.username}:${auth.password}@` : ''
@@ -118,33 +112,34 @@ export class ProxiedRequests {
       tried.push({ url, options })
       try {
         const tm = sleep(8000).then(() => 'failed')
+        console.log('ProxiedRequests.get', url)
         const res = await Promise.race([fetch(url, options), tm])
         if (res === 'failed') {
           throw `ProxiedRequests.get Timed out`
         }
         if (res.status !== 200) {
           console.warn('⚠️ non 200 response: ', res.status, res.statusText)
+          throw new Error(`non 200`)
         } else {
           console.log('✅ 200')
         }
         return res
       } catch (e) {
         tries++
-        if (tries > 2) {
+        if (tries > 1) {
           setStormProxy()
-        } else if (tries < 4) {
-          if (process.env.DISABLE_LUMINATI) {
-            break
-          }
+        } else if (tries < 3 && !process.env.DISABLE_LUMINATI) {
           setLuminatiProxy()
         } else {
           setLuminatiResidentialProxy()
         }
         if (tries > 4) {
-          console.log('Error:', e.message, options)
+          console.log('Error:', e.message, { options, tried })
           throw new Error('Too many 503 errors for: ' + uri)
         }
-        console.warn(`CRAWLER PROXY: 503 response, so retrying (${tries}) with ${method}`)
+        const errMsg = e.message?.replace(url, '(url)')
+        console.warn(`CRAWLER PROXY: error, retrying (${tries}) with ${method}: ${errMsg}`)
+        console.warn(`  options: ${JSON.stringify(options || null, null, 2)}`)
       }
     }
 

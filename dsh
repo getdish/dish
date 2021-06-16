@@ -1,7 +1,7 @@
 #!/bin/bash
 
 if [ "$KEEP_ALIVE" != "true" ]; then
-  set -eo pipefail
+  set -e
 fi
 
 CWD_DIR=$(pwd)
@@ -485,6 +485,10 @@ function start_crawler_for_city() {
   exec worker "node /app/services/crawlers/dist/$1/all.js --city \"$2\""
 }
 
+function crawl_one() {
+  exec worker "node /app/services/crawlers/dist/one.js $1"
+}
+
 function crawl_self() {
   echo "Running self crawler"
   exec worker "node /app/services/crawlers/dist/self/all.js"
@@ -866,7 +870,7 @@ function docker_compose_push_core() {
   docker push registry.dishapp.com/dish-hooks | sed -e 's/^/hooks: /;' &
   docker push registry.dishapp.com/dish-site | sed -e 's/^/site: /;' &
   docker push registry.dishapp.com/dish-worker | sed -e 's/^/worker: /;' &
-  docker push registry.dishapp.com/dish-worker-proxy | sed -e 's/^/worker-proxy: /;' &
+  docker push registry.dishapp.com/dish-puppet-proxy | sed -e 's/^/puppet-proxy: /;' &
   docker push registry.dishapp.com/dish-run-tests | sed -e 's/^/run-tests: /;' &
   wait
 }

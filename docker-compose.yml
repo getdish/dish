@@ -5,7 +5,7 @@ x-dish-env: &dish-env
   SEARCH_ENDPOINT: ${SEARCH_ENDPOINT?bad_env}
   GORSE_ENDPOINT: ${GORSE_ENDPOINT?bad_env}
   APP_ENDPOINT: ${APP_ENDPOINT?bad_env}
-  WORKER_PROXY_ENDPOINT: ${WORKER_PROXY_ENDPOINT?bad_env}
+  PUPPET_PROXY_ENDPOINT: ${PUPPET_PROXY_ENDPOINT?bad_env}
   BERT_ENDPOINT: ${BERT_ENDPOINT?bad_env}
   TIMESCALE_ENDPOINT: ${TIMESCALE_ENDPOINT?bad_env}
   IMAGE_RECOGNIZE_ENDPOINT: ${IMAGE_RECOGNIZE_ENDPOINT?bad_env}
@@ -479,12 +479,12 @@ services:
     ports:
       - 5002:5000
 
-  worker-proxy:
-    image: registry.dishapp.com/dish-proxy${DISH_IMAGE_TAG}
+  puppet-proxy:
+    image: registry.dishapp.com/dish-puppet-proxy${DISH_IMAGE_TAG}
     networks:
       - default
     build:
-      context: ./services/worker-proxy
+      context: ./services/puppet-proxy
       dockerfile: ./Dockerfile
     ports:
       - 3535:3535
