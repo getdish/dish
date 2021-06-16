@@ -16,7 +16,12 @@ class WorkerTest extends WorkerJob {
 }
 
 test.before(async () => {
-  const queue = new Queue('WorkerTest')
+  const queue = new Queue('WorkerTest', {
+    redis: {
+      host: process.env.REDIS_HOST || 'redis',
+      port: +(process.env.REDIS_PORT || '6379'),
+    },
+  })
   queue.process(async (job: Job) => {
     const Worker = eval(job.data.className)
     const worker = new Worker()

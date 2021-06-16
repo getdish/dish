@@ -66,6 +66,19 @@ steps:
     key: postgres
     command: ./dsh compose_build_and_push postgres
 
+  - label: ":docker: build image-quality"
+    key: image-quality
+    command: ./dsh compose_build_and_push image-quality
+
+  - label: ":docker: build bert"
+    key: bert
+    depends_on: base
+    command: ./dsh compose_build_and_push bert
+
+  - label: ":docker: build gorse"
+    key: gorse
+    command: ./dsh compose_build_and_push gorse
+
   - label: "done with test images"
     command: "true"
     key: test-images
@@ -74,7 +87,10 @@ steps:
       - hooks
       - search
       - hasura
+      - bert
+      - gorse
       - timescale
+      - image-quality
       - tileserver
       - run-tests
       - postgres
@@ -92,23 +108,12 @@ steps:
     key: summarizer
     command: ./dsh compose_build_and_push summarizer
 
-  - label: ":docker: build bert"
-    key: bert
-    depends_on: base
-    command: ./dsh compose_build_and_push bert
-
-  - label: ":docker: build gorse"
-    key: gorse
-    command: ./dsh compose_build_and_push gorse
-
-  - label: ":docker: build image-quality"
-    key: image-quality
-    command: ./dsh compose_build_and_push image-quality
+  # tests
 
   - label: "setup services for tests"
     key: test-setup
     command: "./dsh setup_test_services"
-    timeout_in_minutes: 15
+    timeout_in_minutes: 10
     depends_on:
       - test-images
     retry:

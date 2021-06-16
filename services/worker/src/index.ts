@@ -1,7 +1,9 @@
+import { createBullBoard } from '@bull-board/api'
+import { BullAdapter } from '@bull-board/api/bullAdapter'
+import { ExpressAdapter } from '@bull-board/express'
 import { sentryException } from '@dish/common'
 import { getBullQueue } from '@dish/worker'
 import Bull from 'bull'
-import { BullAdapter, router, setQueues } from 'bull-board'
 import express from 'express'
 
 import { klass_map } from './job_processor'
@@ -59,8 +61,12 @@ async function main() {
 
 function startDashboard(queues: Queue[]) {
   return new Promise<void>((res) => {
-    // setup bull-board routing
-    setQueues(queues.map((x) => new BullAdapter(x.queue)))
+    const serverAdapter = new ExpressAdapter()
+    const board = createBullBoard({
+      serverAdapter,
+      queues: queues.map((x) => new BullAdapter(x.queue as any)),
+    })
+
     const app = express()
     app.post('/clear', (req, res) => {
       const queueHeader = `${req.headers['queues'] ?? ''}`.trim()
@@ -71,7 +77,7 @@ function startDashboard(queues: Queue[]) {
       }
       res.send(200)
     })
-    app.use('/', router)
+    app.use('/', serverAdapter.getRouter())
     app.listen(3434, () => {
       console.log('listening on', 3434)
       res()

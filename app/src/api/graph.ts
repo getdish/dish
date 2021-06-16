@@ -356,7 +356,6 @@ const updateCacheWithData = ({ cacheKeys, data }: { data: any; cacheKeys: CacheK
       continue
     }
     const val = data[key]
-    console.log('SETTING', cacheKey, key, val)
     redisSet(cacheKey, JSON.stringify(val))
   }
 }
