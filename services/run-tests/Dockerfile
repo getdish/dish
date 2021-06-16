@@ -5,7 +5,7 @@ FROM registry.dishapp.com/dish-worker:latest
 
 WORKDIR /app
 
-COPY .env .env.test .env.production .env.development package.json ava.config.js jest.config.js dsh ./
+COPY .env .env.test .env.production .env.development package.json ava.config.js jest.config.js dsh dsh.ts ./
 
 # copy to get test folders back
 

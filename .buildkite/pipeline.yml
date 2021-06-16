@@ -123,13 +123,13 @@ steps:
   - label: "run tests"
     key: tests
     timeout_in_minutes: 10
-    command: "./dsh run_all_tests"
+    command: "./dsh run_all_tests_in_compose"
     depends_on: test-setup
     env:
       LOG_DOCKER: true
       SHOW_DOCKER_IMAGES: true
       DOCKER_COMPOSE_DOWN: true
-      DOCKER_CLEAN_ON_FAIL: true
+      DOCKER_CLEAN: true
 
   # - label: "run integration test"
   #   command: "./dsh run_integration_tests"

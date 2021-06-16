@@ -24,10 +24,12 @@ const redisOptions = () => {
   }
   return {
     port: +(process.env.REDIS_PORT || 6379),
-    host: process.env.REDIS_HOST || 'localhost',
+    host: process.env.REDIS_HOST || 'redis',
     password: process.env.REDIS_PASSWORD || '',
   }
 }
+
+console.log('redisOptions', redisOptions())
 
 export type JobData = {
   className: string

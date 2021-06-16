@@ -32,7 +32,9 @@ function deploy() {
 
 function exec() {
   app=${1:-app}
-  cmd=${2:-/bin/bash}
+  shift
+  cmd=$*
+  echo "exec $app: running $cmd"
   docker exec -it $(docker ps | grep $app | head -n1 | awk '{print $1}') $cmd
 }
 
@@ -90,6 +92,7 @@ function compose_up() {
   docker_login
   # cleans up misbehaving old containers
   if [ "$DISH_ENV" = "test" ]; then
+    echo "in env test cleanup old services first"
     for service in $services; do
       docker-compose rm --force "$service" || true
     done
@@ -973,7 +976,10 @@ function run_all_tests() {
     -v "$POSTGRES_DB_DIR:$POSTGRES_DB_DIR" \
     -v "$TIMESCALE_DB_DIR:$TIMESCALE_DB_DIR" \
     registry.dishapp.com/dish-run-tests:latest yarn test || (echo "failed tests" && exit 1)
-  docker-compose down -t 3
+}
+
+function run_all_tests_in_compose() {
+  exec timescale-migrate yarn test || echo "tests failed" && exit 1
 }
 
 function run_integration_tests() {
@@ -983,6 +989,10 @@ function run_integration_tests() {
   sleep 5
   ./test/testcafe.sh
   popd
+}
+
+function run_dsh() {
+  esbuild ./dsh.ts  --target=node15 --format=esm --outdir=node_modules/.cache --out-extension:.js=.mjs && node ./node_modules/.bin/zx ./node_modules/.cache/dsh.mjs
 }
 
 # https://gist.github.com/mortensteenrasmussen/512f0566dbc3ef1cc4a2c47dd9cdb973
@@ -1090,6 +1100,7 @@ function disk_speed() {
 }
 
 function setup_test_services() {
+  echo "setup test services for env $DISH_ENV"
   docker network create traefik-public || true
 
   # if not already mounted/setup, we need to start postgres once and restart it
@@ -1101,23 +1112,20 @@ function setup_test_services() {
     # only for buildkite non-docker mode, brittle
     chown -R buildkite-agent:buildkite-agent "$POSTGRES_DB_DIR"
     docker-compose run -d postgres
+    echo "sourcing local env"
+    source .env.local
     wait_until_postgres_ready
   fi
 
   echo "stopping"
   docker-compose stop -t 4
 
-  # fixes issues of not allowing connecting during tests
-  # pg_conf="$POSTGRES_DB_DIR/pg_hba.conf"
-  # if [ -d "$POSTGRES_DB_DIR" ]; then
-  #   grep -qxF 'host all all all trust' "$pg_conf" || echo 'host all all all trust' >> "$conf"
-  # fi
-  # ts_conf="$TIMESCALE_DB_DIR/pg_hba.conf"
-  # if [ -d "$TIMESCALE_DB_DIR" ]; then
-  #   grep -qxF 'host all all all trust' "$ts_conf" || echo 'host all all all trust' >> "$conf"
-  # fi
-
+  echo "running"
+  source_env
   compose_up -d
+
+  echo "sourcing local to check and migrate"
+  source .env.local
   wait_until_services_ready
   
   # TODO migrate on start method

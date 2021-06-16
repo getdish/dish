@@ -19,16 +19,19 @@ export const isDev = (!isProd && !isStaging) || false
 export const isNative = process.env.TARGET === 'native'
 
 export const LOCAL_HOST = process.env.LOCAL_HOST ?? (hostname || `localhost`)
-const PROD_ORIGIN = 'https://dishapp.com'
-const ORIGIN = isProd
-  ? PROD_ORIGIN
-  : isStaging
-  ? PROD_ORIGIN
-  : LOCAL_HOST === 'localhost'
-  ? `http://${LOCAL_HOST}:4444`
-  : `http://${LOCAL_HOST}`
+// const PROD_ORIGIN = 'https://dishapp.com'
+const ORIGIN = process.env.APP_ENDPOINT ?? 'app:4444'
+// isProd
+//   ? PROD_ORIGIN
+//   : isStaging
+//   ? PROD_ORIGIN
+//   : LOCAL_HOST === 'localhost'
+//   ? `http://${LOCAL_HOST}:4444`
+//   : `http://${LOCAL_HOST}`
+
 const ORIGIN_MINUS_PORT = ORIGIN.replace(/:[0-9]+/, '')
 export const DISH_API_ENDPOINT = `${ORIGIN}/api`
+
 export const SEARCH_DOMAIN = `${DISH_API_ENDPOINT}/search`
 export const SEARCH_DOMAIN_INTERNAL = (() => {
   const staging = 'https://search-staging.dishapp.com'
@@ -54,11 +57,13 @@ export const GRAPH_API_INTERNAL = `${GRAPH_DOMAIN}/v1/graphql`
 export const GRAPH_API = `${DISH_API_ENDPOINT}/graph`
 
 // console.log('graph.const', {
+//   HASURA_ENDPOINT: process.env.HASURA_ENDPOINT,
 //   DISH_API_ENDPOINT,
 //   SEARCH_DOMAIN_INTERNAL,
 //   LOCAL_HOST,
 //   TILES_HOST,
 //   GRAPH_API,
+//   GRAPH_API_INTERNAL,
 //   SEARCH_DOMAIN,
 //   isNode,
 //   isProd,

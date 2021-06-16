@@ -4,11 +4,9 @@ import redis from 'redis'
 
 const pass = process.env.REDIS_PASSWORD
 const envUrl = process.env.REDIS_URL
-const url =
-  envUrl ||
-  `redis://${pass ? `:${pass}:` : ''}${process.env.REDIS_HOST || 'localhost'}:${
-    process.env.REDIS_PORT || 6379
-  }`
+const host = process.env.REDIS_HOST || 'redis'
+const port = process.env.REDIS_PORT || 6379
+const url = envUrl || `redis://${pass ? `:${pass}:` : ''}${host}:${port}`
 
 export const redisClient = redis.createClient({
   url,
