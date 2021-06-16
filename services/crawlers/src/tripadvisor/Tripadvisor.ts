@@ -233,14 +233,14 @@ export class Tripadvisor extends WorkerJob {
       return
     }
     this.log(`Loading next page ${href}`)
-    await pup.close()
-    const next = new Puppeteer(TRIPADVISOR_DOMAIN, process.env.TRIPADVISOR_PROXY)
-    await next.boot()
-    await next.page.goto(TRIPADVISOR_DOMAIN + removeStartSlash(href), {
+    // await pup.close()
+    // const next = new Puppeteer(TRIPADVISOR_DOMAIN, process.env.TRIPADVISOR_PROXY)
+    // await next.boot()
+    await pup.page.goto(TRIPADVISOR_DOMAIN + removeStartSlash(href), {
       timeout: 15_000,
       waitUntil: 'networkidle0',
     })
-    await this.saveReviews(scrape_id, pageNum + 1, next)
+    await this.saveReviews(scrape_id, pageNum + 1, pup)
   }
 
   async savePhotos(scrape_id: string) {

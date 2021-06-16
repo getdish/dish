@@ -43,7 +43,7 @@ fi
 
 if [ "$LOG_DOCKER" == "true" ]; then
   echo "docker logs..."
-  docker-compose logs --tail 5000
+  docker-compose logs --tail 3000
   echo "other logs..."
   cat ./*.log || true
 fi

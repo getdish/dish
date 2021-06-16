@@ -179,7 +179,7 @@ function deploy_all() {
 # shellcheck disable=SC2120
 function deploy_dish() {
   echo "deploying dish - $DISH_ENV $POSTGRES_DB $POSTGRES_DB_DIR"
-  docker stack deploy --with-registry-auth --prune -c docker-compose.yml dish ||
+  docker stack deploy --with-registry-auth --prune -c docker-compose.yml dish || \
     echo "retry" && docker stack deploy --with-registry-auth --prune -c docker-compose.yml dish
   if [ "$1" == "--force" ]; then
     #  force restart
@@ -226,7 +226,7 @@ function deploy_registry() {
 }
 
 function deploy_portainer() {
-  docker stack deploy --prune -c docker-portainer.yml portainer ||
+  docker stack deploy --prune -c docker-portainer.yml portainer || \
     echo "retry" && docker stack deploy --prune -c docker-portainer.yml portainer
   docker service update --force portainer_portainer
   docker service ps --no-trunc portainer_portainer
@@ -460,16 +460,6 @@ function _setup_s3() {
   apk add --no-cache -X http://dl-cdn.alpinelinux.org/alpine/edge/testing s3cmd
 }
 
-function worker_ssh() {
-  fly_tunnel
-  log_command ssh -o StrictHostKeyChecking=no -l "root" "dish-worker.internal" -- "$@"
-}
-
-function worker_exec() {
-  set -e
-  worker_ssh "$@"
-}
-
 function stop_all_crawls() {
   curl -X 'POST' https://worker.dishapp.com/clear -H 'queues: all'
 }
@@ -484,12 +474,24 @@ function stop_crawl() {
 
 # example: ./dsh start_crawler Yelp
 function start_crawler() {
-  worker_exec "node /app/services/crawlers/_/$1/all.js"
+  exec worker "node /app/services/crawlers/_/$1/all.js"
 }
 
 # example: ./dsh start_crawler_for_city yelp  Tucson, Arizona
 function start_crawler_for_city() {
-  worker_exec "node /app/services/crawlers/dist/$1/all.js --city \"$2\""
+  exec worker "node /app/services/crawlers/dist/$1/all.js --city \"$2\""
+}
+
+function crawl_self() {
+  echo "Running self crawler"
+  exec worker "node /app/services/crawlers/dist/self/all.js"
+}
+
+function crawl_self_by_query() {
+  [ -z "$1" ] && exit 1
+  query="SELECT id FROM restaurant $1"
+  echo "Running self crawler with SQL: $query"
+  exec worker "RUN=1 QUERY=${query@Q} node /app/services/crawlers/dist/self/one.js"
 }
 
 function start_all_crawlers_for_city() {
@@ -527,18 +529,6 @@ function all_crawlers_for_cities() {
   #start_all_crawlers_for_city 'Istanbul, Turkey'
 }
 
-function crawl_self() {
-  echo "Running self crawler"
-  worker_exec "node /app/services/crawlers/dist/self/all.js"
-}
-
-function crawl_self_by_query() {
-  [ -z "$1" ] && exit 1
-  query="SELECT id FROM restaurant $1"
-  echo "Running self crawler with SQL: $query"
-  worker_exec "RUN=1 QUERY=${query@Q} node /app/services/crawlers/dist/self/one.js"
-}
-
 function crawl_self_sf_limited_cuisine() {
   query="
     WHERE st_dwithin(
@@ -560,7 +550,6 @@ function redis_command() {
 }
 
 function redis_cli() {
-  fly_tunnel
   redis-cli -h "$REDIS_HOST" -a "$REDIS_PASSWORD" -p "$REDIS_PORT" "$@"
 }
 
@@ -799,10 +788,11 @@ function find_app() {
 }
 
 function bull_clear() {
-  curl -X POST https://dish-worker.fly.dev/clear
+  curl -X POST https://worker.dishapp.com/clear
 }
 
 function bull_repl() {
+  # TODO make this work on our infra
   if [ "$1" = "" ]; then
     echo "Must specify a queue"
     echo "  its the constructor name of any class that extends WorkerJob"
@@ -979,7 +969,7 @@ function run_all_tests() {
 }
 
 function run_all_tests_in_compose() {
-  exec timescale-migrate yarn test || echo "tests failed" && exit 1
+  exec timescale-migrate yarn test
 }
 
 function run_integration_tests() {

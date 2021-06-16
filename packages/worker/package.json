@@ -12,6 +12,9 @@
     "test": "DISH_ENV=test ava test/* --verbose",
     "test:watch": "DISH_ENV=test ava test/* --watch"
   },
+  "tests": {
+    "parallel": true
+  },
   "dependencies": {
     "@dish/async": "*",
     "@dish/common": "*",

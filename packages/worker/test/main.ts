@@ -3,7 +3,7 @@ process.env.DISH_ENV = 'development'
 import test from 'ava'
 import Queue, { Job } from 'bull'
 
-import { WorkerJob } from '../src/index'
+import { WorkerJob } from '../src/WorkerJob'
 
 const sleep = (ms: number) => new Promise((res) => setTimeout(res, ms))
 

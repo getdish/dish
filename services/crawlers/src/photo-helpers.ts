@@ -45,12 +45,7 @@ const selectBasePhotoXrefFields = {
 }
 
 export const DO_BASE = 'https://dish-images.sfo2.digitaloceanspaces.com/'
-
-const prod_hooks_endpoint = 'https://hooks.dishapp.com'
-const dev_hooks_endpoint =
-  process.env.HOOKS_ENDPOINT ?? `http://localhost:${process.env.HOOKS_PORT || 6154}`
-const DISH_HOOKS_ENDPOINT =
-  process.env.DISH_ENV == 'production' ? prod_hooks_endpoint : dev_hooks_endpoint
+const DISH_HOOKS_ENDPOINT = process.env.HOOKS_ENDPOINT
 
 export async function photoUpsert(photosOg: Partial<PhotoXref>[]) {
   if (photosOg.length == 0) return
