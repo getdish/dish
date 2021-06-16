@@ -89,7 +89,13 @@ export function createWebpackConfig({
       'process.env.DEBUG': JSON.stringify(process.env.DEBUG || false),
       'process.env.LOG_LEVEL': JSON.stringify(process.env.LOG_LEVEL || 0),
       'process.env.DEBUG_ASSERT': JSON.stringify(process.env.DEBUG_ASSERT || false),
-      ...defineOptions,
+      ...Object.fromEntries(
+        Object.entries(defineOptions || {}).map(([key, value]) => [key, JSON.stringify(value)])
+      ),
+    }
+
+    if (process.env.NODE_ENV === 'production') {
+      console.log('defines', defines)
     }
 
     // i had to manually create the webpack cache folder or else it didnt work!
