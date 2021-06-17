@@ -1,4 +1,4 @@
-import './lib/env'
+import './lib/serverEnv'
 
 import { join } from 'path'
 
