@@ -228,18 +228,25 @@ function deploy_registry() {
   docker service update --force registry_registry
 }
 
+function deploy_portainer_stack() {
+  docker stack deploy --prune -c docker-portainer.yml portainer
+}
+
 function deploy_portainer() {
-  docker stack deploy --prune -c docker-portainer.yml portainer || \
-    echo "retry" && docker stack deploy --prune -c docker-portainer.yml portainer
+  # retry (out of sequence errors occasionally)
+  deploy_portainer_stack || deploy_portainer_stack
   docker service update --force portainer_portainer
   docker service ps --no-trunc portainer_portainer
 }
 
+function deploy_traefik_stack() {
+  docker stack deploy --prune -c docker-traefik.yml traefik
+}
+
 function deploy_traefik() {
   docker network create --driver=overlay traefik-public &>/dev/null || true
-  # sometimes fails with "update out of sequence" but thats ok, retry
-  docker stack deploy --prune -c docker-traefik.yml traefik || 
-    docker stack deploy --prune -c docker-traefik.yml traefik
+  # retry (out of sequence errors occasionally)
+  deploy_traefik_stack || deploy_traefik_stack
   docker service update --force traefik_traefik
   docker service ps --no-trunc traefik_traefik
 }
