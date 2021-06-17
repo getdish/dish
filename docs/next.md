@@ -34,7 +34,7 @@
 
 # inbox
 
-- need to do closed restaurant detection pass
+- need to do closed restaurant detection pass!!
   - plus admin tools (one click on rest page button bar)
 
 if (no yelp data) {
