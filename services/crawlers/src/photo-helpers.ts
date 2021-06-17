@@ -45,7 +45,6 @@ const selectBasePhotoXrefFields = {
 }
 
 export const DO_BASE = 'https://dish-images.sfo2.digitaloceanspaces.com/'
-const DISH_HOOKS_ENDPOINT = process.env.HOOKS_ENDPOINT
 
 export async function photoUpsert(photosOg: Partial<PhotoXref>[]) {
   if (photosOg.length == 0) return
@@ -545,20 +544,25 @@ export async function sendToDO(url: string, id: string) {
 }
 
 async function doPut(url: string, id: uuid, content_type: string) {
-  const uploadUrl = DISH_HOOKS_ENDPOINT + '/do_image_upload'
-  const result = await fetch(uploadUrl, {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify({
-      photo_id: id,
-      photo_url: url,
-      content_type,
-    }),
-  })
-  console.log('Dish hook do_image_upload response: ', result.status, await result.text(), url)
-  return result
+  const uploadUrl = process.env.HOOKS_ENDPOINT + '/do_image_upload'
+  try {
+    const result = await fetch(uploadUrl, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        photo_id: id,
+        photo_url: url,
+        content_type,
+      }),
+    })
+    console.log('Dish hook do_image_upload response: ', result.status, await result.text(), url)
+    return result
+  } catch (err) {
+    console.log('Failed uploading to ', uploadUrl)
+    throw err
+  }
 }
 
 export async function findHeroImage(restaurant_id: uuid) {
