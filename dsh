@@ -596,6 +596,7 @@ function migrate_hasura() {
   echo "migrating db $POSTGRES_DB"
   pushd "$PROJECT_ROOT/services/hasura"
   echo "hasura migrate $HASURA_ENDPOINT"
+  ls -la
   hasura --skip-update-check \
     migrate apply \
     --endpoint "$HASURA_ENDPOINT" \

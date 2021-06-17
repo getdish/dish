@@ -58,7 +58,7 @@ export class ProxiedRequests {
       },
     })
 
-    let agentConfig: any = this.getStormProxyConfig()
+    let agentConfig: any = null
     let tries = 0
     let base: string = this.domain
     let method: string = 'none'
@@ -101,13 +101,14 @@ export class ProxiedRequests {
 
     while (true) {
       const url = base + uri
-      const { host, port, auth } = agentConfig
-      const proto = agentConfig.protocol ?? 'http'
-      const user = auth ? `${auth.username}:${auth.password}@` : ''
-      const proxy = `${proto}://${user}${host}:${port}`
       const options = {
         ...config,
-        proxy,
+      }
+      if (agentConfig) {
+        const { host, port, auth } = agentConfig
+        const proto = agentConfig.protocol ?? 'http'
+        const user = auth ? `${auth.username}:${auth.password}@` : ''
+        options.proxy = `${proto}://${user}${host}:${port}`
       }
       tried.push({ url, options })
       try {
@@ -125,17 +126,19 @@ export class ProxiedRequests {
         }
         return res
       } catch (e) {
-        tries++
-        if (tries > 1) {
-          setStormProxy()
-        } else if (tries < 3 && !process.env.DISABLE_LUMINATI) {
-          setLuminatiProxy()
-        } else {
-          setLuminatiResidentialProxy()
-        }
         if (tries > 4) {
           console.log('Error:', e.message, { options, tried })
           throw new Error('Too many 503 errors for: ' + uri)
+        }
+        tries++
+        if (tries > 1) {
+          setStormProxy()
+        } else {
+          if (tries > 2 && !process.env.DISABLE_LUMINATI) {
+            setLuminatiProxy()
+          } else {
+            setLuminatiResidentialProxy()
+          }
         }
         const errMsg = e.message?.replace(url, '(url)')
         console.warn(`CRAWLER PROXY: error, retrying (${tries}) with ${method}: ${errMsg}`)
