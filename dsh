@@ -466,10 +466,6 @@ function generate_random_port() {
   echo "2$((1000 + RANDOM % 8999))"
 }
 
-function _setup_s3() {
-  apk add --no-cache -X http://dl-cdn.alpinelinux.org/alpine/edge/testing s3cmd
-}
-
 function stop_all_crawls() {
   curl -X 'POST' https://worker.dishapp.com/clear -H 'queues: all'
 }
@@ -625,7 +621,6 @@ function migrate_hasura() {
 function dump_scrape_data_to_s3() {
   _run_on_cluster postgres:12-alpine && return 0
   set -e
-  _setup_s3
   copy_out="copy (select
       created_at,
       source,
@@ -743,14 +738,12 @@ function _restore_main_backup() {
 function __restore_latest_main_backup() {
   _run_on_cluster postgres:12-alpine && return 0
   set -e
-  _setup_s3
   _restore_main_backup "$(get_latest_main_backup)"
 }
 
 function restore_main_backup() {
   _run_on_cluster postgres:12-alpine && return 0
   set -e
-  _setup_s3
   _restore_main_backup "$1"
 }
 
@@ -762,7 +755,6 @@ function restore_latest_main_backup() {
 function restore_latest_scrape_backup() {
   _run_on_cluster postgres:12-alpine && return 0
   set -e
-  _setup_s3
   latest_backup=$(get_latest_scrape_backup)
   s3 get \$latest_backup backup.dump
   echo "Restoring \$latest_backup ..."
