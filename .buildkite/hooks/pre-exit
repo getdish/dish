@@ -42,8 +42,9 @@ if [ "$DOCKER_COMPOSE_DOWN" == "true" ]; then
 fi
 
 if [ "$LOG_DOCKER" == "true" ]; then
-  echo "docker-compose logs --tail 200 (see all in $(pwd)/compose.log)..."
-  docker-compose logs --tail 200
+  echo "docker-compose logs (see all in $(pwd)/compose.log)..."
+  echo "..."
+  docker-compose logs | tail -n 200
   docker-compose logs --tail 6000 > ./compose.log
   echo "end docker-compose logs"
   cat ./*.log || true
