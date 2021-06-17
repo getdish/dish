@@ -45,24 +45,6 @@ async function putFeedback(feedback: GorseFeedback) {
   return result
 }
 
-function shell(cmd: string) {
-  return new Promise((resolve, reject) => {
-    exec(
-      cmd,
-      {
-        env: process.env,
-      },
-      (error, stdout, stderr) => {
-        if (error) {
-          console.warn(error)
-          return reject(error)
-        }
-        return resolve(stdout ? stdout : stderr)
-      }
-    )
-  })
-}
-
 app.post('/gorse_sync', async (req, res) => {
   try {
     const payload = req.body
