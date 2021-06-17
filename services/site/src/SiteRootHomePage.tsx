@@ -294,7 +294,7 @@ export const SiteRoot = () => {
             zIndex={1000}
             alignSelf="center"
           >
-            Our plan to not be evil, sell out, and die
+            what we see in decentralization
           </DishTitleSlanted>
 
           <VStack
@@ -308,12 +308,11 @@ export const SiteRoot = () => {
           >
             <ContentSection paddingTop={40} paddingVertical={0}>
               <DishParagraph fontWeight="800" size={3} textAlign="center" size="xxxxxl">
-                A non-profit + a DAO
+                A new way to run companies
               </DishParagraph>
 
               <DishParagraph textAlign="center" size="xxxl" sizeLineHeight={0.95}>
-                An egalitarian distribution of tokens distributed under a community govenernance
-                structure that incentivies high quality content. Open source, open core.
+                lorem
               </DishParagraph>
 
               <DishParagraph textAlign="center" size="xl" sizeLineHeight={0.95}>
@@ -321,8 +320,7 @@ export const SiteRoot = () => {
                 <Text marginVertical={-2}>
                   <LogoCircle scale={0.7} />
                 </Text>{' '}
-                to pay out for good writing, moderating, images, lists, tags, and comments. We
-                giving users literal investment in the success of the company.
+                we're incentivizing good photos, lists, reviews and organization.
               </DishParagraph>
 
               <DishParagraph textAlign="center" sizeLineHeight={0.8} fontWeight="800" size={2}>
@@ -391,7 +389,9 @@ export const SiteRoot = () => {
 
         <ContentSection paddingTop={200} zIndex={10}>
           <VStack overflow="hidden" spacing="xxxl">
-            <DishParagraph size="xxxxl">
+            <DishParagraph size="xxxxl">Insert nice letter here.</DishParagraph>
+
+            {/* <DishParagraph size="xxxxl">
               It's 2033, your virtual CryptoKitty, Jerry, nestles ethereally among excel sheets in
               your lap. You smile at the glowing bugger.
             </DishParagraph>
@@ -416,7 +416,7 @@ export const SiteRoot = () => {
               “I didn't! I knew you'd forget, so got him a 1-of-1000{' '}
               <b>Kaws paisley Handkerchief NFT</b>, a 98% likelihood of being a big success with
               Matt, and 88% match to your personality profile.”
-            </DishParagraph>
+            </DishParagraph> */}
 
             <DishParagraph opacity={0.7} textAlign="center" size="xl">
               Hidden, faked, averaged, inflated.
