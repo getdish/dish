@@ -9,7 +9,7 @@
 # │    └────────────────  Hour     (0..23)
 # └─────────────────────  Minute   (0..59)
 
-*  *  *  *  * echo "cron is up" >> /var/log/cron.log 2>&1
+0  *  *  *  * echo "cron is up" >> /var/log/cron.log 2>&1
 
 0  0  *  *  6 DISH_ENV=production /app/dsh backup_main_db >> /var/log/cron.log 2>&1
 0  0  *  *  0 DISH_ENV=production /app/dsh backup_scrape_db >> /var/log/cron.log 2>&1
