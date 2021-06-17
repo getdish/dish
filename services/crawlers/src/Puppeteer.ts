@@ -236,7 +236,10 @@ export class Puppeteer {
   }
 
   async getElementText(selector: string) {
-    await this.page.waitForSelector(selector)
+    await this.page.waitForSelector(selector, {
+      // dont need long timeout here its already a loaded page
+      timeout: 4000,
+    })
     const element = await this.page.$(selector)
     return await this.page.evaluate((element) => element.textContent, element)
   }
