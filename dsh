@@ -939,9 +939,6 @@ function clean_docker_if_disk_full() {
     echo "$output used $used"
     if [ "$used" -ge 90 ]; then
       echo "running out of space, pruning..."
-      if [ "$CLEAN_BUILDKITE_BUILDS" == "true" ]; then
-        rm -r "/var/lib/buildkite/builds/*" || true
-      fi
       docker image prune --all --filter "until=2h" --force || true
       docker system prune --filter "until=2h" --force || true
       docker volume rm $(docker volume ls -qf dangling=true)
@@ -954,7 +951,6 @@ function clean_docker_if_disk_full() {
       echo "really full, delete all.."
       docker system prune
       docker image prune --all
-      rm -r /var/lib/buildkite/builds
       break
     fi
   done
