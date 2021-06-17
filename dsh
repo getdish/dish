@@ -819,6 +819,13 @@ function ping_home_page() {
   curl 'https://search.dishapp.com/top_cuisines?lon=-122.421351&lat=37.759251&distance=0.16'
 }
 
+function main_db_command() {
+  if [ "$POSTGRES_URL" = "" ]; then
+    echo "no url given"
+  fi
+  echo "$1" | psql "$POSTGRES_URL" -P pager=off -P format=unaligned
+}
+
 function hasura_clean_event_logs() {
   main_db_command '
     DELETE FROM hdb_catalog.event_invocation_logs;
