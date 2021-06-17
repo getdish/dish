@@ -1,5 +1,5 @@
 declare module "@dish/server" {
-    import "./lib/env";
+    import "./lib/serverEnv";
     export function run(): Promise<void>;
 }
 

@@ -126,22 +126,22 @@ export class ProxiedRequests {
         }
         return res
       } catch (e) {
-        if (tries > 4) {
-          console.log('Error:', e.message, { options, tried })
-          throw new Error('Too many 503 errors for: ' + uri)
-        }
         tries++
-        if (tries > 1) {
+        if (tries === 2) {
           setStormProxy()
-        } else {
-          if (tries > 2 && !process.env.DISABLE_LUMINATI) {
+        } else if (!process.env.DISABLE_LUMINATI) {
+          if (tries == 3) {
             setLuminatiProxy()
           } else {
             setLuminatiResidentialProxy()
           }
         }
+        if (tries > 4) {
+          console.log('Error:', e.message, { options, tried })
+          throw new Error('Too many 503 errors for: ' + uri)
+        }
         const errMsg = e.message?.replace(url, '(url)')
-        console.warn(`CRAWLER PROXY: error, retrying (${tries}) with ${method}: ${errMsg}`)
+        console.warn(`ProxiedRequests: error, retrying (${tries}) with ${method}: ${errMsg}`)
         console.warn(`  options: ${JSON.stringify(options || null, null, 2)}`)
       }
     }
