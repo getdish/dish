@@ -3,9 +3,9 @@
   "version": "0.0.1",
   "types": "types.d.ts",
   "scripts": {
-    "start": "TARGET=web NODE_ENV=development dish start --port 4555",
+    "start": "TARGET=web NODE_ENV=development dish start --port 3999",
     "build:prod": "TARGET=web NODE_ENV=production dish build",
-    "serve": "TARGET=web NODE_ENV=production dish serve"
+    "serve": "TARGET=web NODE_ENV=production dish serve --port 3999"
   },
   "dependencies": {
     "@dish/server": "*",
