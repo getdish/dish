@@ -94,7 +94,7 @@ const db_config: PoolConfig = {
 }
 
 const main_db_config: PoolConfig = {
-  host: process.env.PGHOST || 'localhost',
+  host: process.env.POSTGRES_HOST || 'localhost',
   port: process.env.POSTGRES_PORT ? +process.env.POSTGRES_PORT : 5432,
   ssl: process.env.USE_SSL ? true : false,
   user: process.env.PGUSER || 'postgres',
