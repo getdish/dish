@@ -165,24 +165,30 @@ export async function update<T extends WithID<ModelType>>(
   if (!object.id) {
     throw new Error(`Must have ID to update`)
   }
+  // this seems bad? sometimes you want to set something to null
   for (const key of Object.keys(object)) {
     if (object[key] == null) delete object[key]
   }
   opts.keys = opts.keys || Object.keys(generatedSchema[table + '_set_input'])
-  const [resolved] = await resolvedMutationWithFields(() => {
-    const res = mutation[action]({
-      where: { id: { _eq: object.id } },
-      _set: omit(object, 'id'),
-    })
-    // if (opts.query && res) {
-    //   assignSelections(opts.query, res)
+  try {
+    const [resolved] = await resolvedMutationWithFields(() => {
+      const res = mutation[action]({
+        where: { id: { _eq: object.id } },
+        _set: omit(object, 'id'),
+      })
+      // if (opts.query && res) {
+      //   assignSelections(opts.query, res)
+      // }
+      return res as WithID<T>[]
+    }, opts)
+    // if (opts.query && resolved) {
+    //   setCache(opts.query, resolved)
     // }
-    return res as WithID<T>[]
-  }, opts)
-  // if (opts.query && resolved) {
-  //   setCache(opts.query, resolved)
-  // }
-  return resolved
+    return resolved
+  } catch(err) {
+    console.log('Error updating:', object, opts)
+    throw err
+  }
 }
 
 export async function deleteAllFuzzyBy(
@@ -248,11 +254,10 @@ function formatRelationData<T>(
 ) {
   return objects.map((cur) => {
     return Object.keys(cur).reduce((acc, key) => {
-      const hasArgs = !!generatedSchema[table][key]['__args']
+      // const hasArgs = !!generatedSchema[table][key]['__args']
       const schemaType = generatedSchema[table][key]['__type']
       const { pureType: typeName, isArray, isNullable, nullableItems } = parseSchemaType(schemaType)
       const inputKeys = Object.keys(generatedSchema[table + inputType])
-
       const fieldName = key
 
       if (!inputKeys.includes(fieldName)) return acc

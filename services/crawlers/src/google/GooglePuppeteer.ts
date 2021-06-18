@@ -181,7 +181,11 @@ export class GooglePuppeteer extends GooglePuppeteerJob {
         await this.puppeteer.getElementText('.uxOu9-sTGRBb-T3yXSc span')
       ).trim()
     } catch (err) {
-      console.log('error page content is', await this.puppeteer.page.content())
+      if (process.env.DEBUG) {
+        console.log('error page content is', await this.puppeteer.page.content())
+      } else {
+        console.log('likely no synopsis, set DEBUG=1 to see html')
+      }
       throw err
     }
   }
