@@ -12,7 +12,7 @@ RUN apt-get update > /dev/null && apt-get install -y git gnupg wget lsb-release 
 WORKDIR /app
 
 # copy in all things we need
-COPY dsh .env .env.production ./
+COPY dsh dsh.ts package.json .env .env.production .env.test ./
 
 # lets ./dsh work
 RUN git init && git add ./dsh && git commit -m 'init'
