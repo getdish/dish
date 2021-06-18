@@ -34,16 +34,20 @@
 
 # inbox
 
+- seeing the front of the restaruant in a wide angle shot is so key to intuitively finding a place you've been to !!
+
+- HASURA_GRAPHQL_JWT_SECRET seems like its just 12346... ? should secure that
+
 - need to do closed restaurant detection pass!!
   - plus admin tools (one click on rest page button bar)
+  - if (no yelp data) y = getYelpRestaurant, p = loadPage(y.yelpUrl), p.contains('IS CLOSED')) && y.markClosed()
 
-if (no yelp data) {
-  y = getYelpRestaurant
-  p = loadPage(y.yelpUrl)
-  if (p.contains('IS CLOSED')) {
-    y.markClosed()
-  }
-}
+
+# blockchain
+
+- 
+
+---
 
 - world map lists (top 100 X worldwide) would really show it off
 

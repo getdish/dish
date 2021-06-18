@@ -23,6 +23,5 @@ docs
 .vscode
 docker-compose.yml
 **/.ci
-services/hasura/migrations
 **/build
 *.tsbuildinfo

@@ -1,3 +1,20 @@
+Without really re-reading the old plan, want to create a new one as of today.
+
+We need to start from why this will be motivating to work on for a decade or more, and how it will fundamentally change the world.
+
+I think it's this: we're proving Crypto can work for a real use case, and in doing so we're going to defeat Google.
+
+Ambitious enough?
+
+I don't even like "ambitious" as the principle, I think either revolutainary or world-improving is better.
+
+So we're designing a new type of business model for consumer apps, one which distributes equity and control to everyone invovled in a fair way.
+
+We also will need to design it so it solves all the Evil Google problems, which mostly stem from their insane profit-seeking behavior.
+
+---
+
+
 # Looping back around to the plan
 
 1. I like it overall, slimmed it down
