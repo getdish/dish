@@ -184,6 +184,10 @@ function deploy_dish_stack() {
 function deploy_dish() {
   echo "deploying dish - $DISH_ENV $POSTGRES_DB $POSTGRES_DB_DIR"
   deploy_dish_stack || echo "retry" && deploy_dish_stack
+
+  echo "for some reason postgres not been coming back online, temp fix"
+  docker service update --force dish_postgres
+  
   if [ "$1" == "--force" ]; then
     #  force restart
     docker stack services -q dish | while read -r service; do
