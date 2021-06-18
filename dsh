@@ -675,7 +675,7 @@ function s3() {
 }
 
 function list_backups() {
-  s3 ls "$DISH_BACKUP_BUCKET" | sort -k1,2
+  s3 ls "s3://$DISH_BACKUP_BUCKET" | sort -k1,2
 }
 
 function backup_main_db() {
@@ -684,7 +684,7 @@ function backup_main_db() {
   DUMP_FILE_NAME="dish-$DISH_ENV-db-backup-$(date +%Y-%m-%d-%H-%M).dump"
   pg_dump "$POSTGRES_URL" \
     -C -w --format=c |
-    s3 put - "s3://dish-backups/$DUMP_FILE_NAME"
+    s3 put - "s3://$DISH_BACKUP_BUCKET/$DUMP_FILE_NAME"
   echo 'Successfully backed up main database'
 }
 
@@ -693,41 +693,42 @@ function backup_scrape_db() {
   echo "backing up scrape db..."
   DUMP_FILE_NAME="dish-$DISH_ENV-scrape-backup-$(date +%Y-%m-%d-%H-%M).dump"
   pg_dump "$TIMESCALE_URL" -C -w --format=c |
-    s3 put - "s3://dish-backups/$DUMP_FILE_NAME"
+    s3 put - "s3://$DISH_BACKUP_BUCKET/$DUMP_FILE_NAME"
   echo 'Successfully backed up scrape database'
 }
 
-get_all_backups() {
-  s3 ls "$DISH_BACKUP_BUCKET"
+function get_all_backups() {
+  s3 ls "s3://$DISH_BACKUP_BUCKET"
 }
 
-get_latest_main_backup() {
+function get_latest_main_backup() {
   echo $(
-    s3 ls $DISH_BACKUP_BUCKET | grep 'dish-db' | tail -1 | awk '{ print $4 }'
+    s3 ls s3://$DISH_BACKUP_BUCKET | grep 'dish-db' | tail -1 | awk '{ print $4 }'
   )
 }
 
-restore_latest_main_backup_to_local() {
-  latest_backup=$(get_latest_main_backup)
-  dump_file="/tmp/latest_dish_backup.dump"
-  s3 get "$latest_backup" "$dump_file"
-  # POSTGRES_PASSWORD=postgres pg_restore -h localhost -U postgres -p 5432 -d dish "$dump_file"
-}
-
-restore_latest_scrapes_backup_to_local() {
-  latest_backup=$(get_latest_scrape_backup)
-  dump_file="/tmp/latest_scrape_backup.dump"
-  s3 get "$latest_backup" "$dump_file"
-  POSTGRES_PASSWORD=postgres pg_restore -h localhost -U postgres -p 5433 -d dish "$dump_file"
-}
-
-get_latest_scrape_backup() {
+function get_latest_scrape_backup() {
   echo $(
-    s3 ls $DISH_BACKUP_BUCKET |
+    s3 ls s3://$DISH_BACKUP_BUCKET |
       grep "dish-scrape-backup" |
       tail -1 |
       awk '{ print $4 }'
   )
+}
+
+function restore_latest_main_backup_to_local() {
+  get_latest_main_backup
+  latest_backup=$(get_latest_main_backup)
+  dump_file="/tmp/latest_dish_backup.dump"
+  log_command s3 get "$latest_backup" "$dump_file"
+  # POSTGRES_PASSWORD=postgres pg_restore -h localhost -U postgres -p 5432 -d dish "$dump_file"
+}
+
+function restore_latest_scrapes_backup_to_local() {
+  latest_backup=$(get_latest_scrape_backup)
+  dump_file="/tmp/latest_scrape_backup.dump"
+  log_command s3 get "$latest_backup" "$dump_file"
+  POSTGRES_PASSWORD=postgres pg_restore -h localhost -U postgres -p 5433 -d dish "$dump_file"
 }
 
 function _restore_main_backup() {
