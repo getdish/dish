@@ -840,7 +840,12 @@ export class Self extends WorkerJob {
         ...this.restaurant.scrape_metadata,
         gpt_summary_updated_at: Date.now(),
       }
-      await restaurantUpdate(this.restaurant)
+      try {
+        await restaurantUpdate(this.restaurant)
+      } catch (err) {
+        console.log('error generateSummary', err.message, err.stack)
+        console.log('err restaurant', this.restaurant)
+      }
     }
   }
 
