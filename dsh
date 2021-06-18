@@ -459,11 +459,11 @@ function ci_shell() {
 }
 
 function psql_postgres() {
-  PGPASSWORD="$POSTGRES_PASSWORD" log_command psql -d "$POSTGRES_DB" -U "$POSTGRES_USER" -p "$POSTGRES_PORT" -h localhost
+  PGPASSWORD="$POSTGRES_PASSWORD" log_command psql -d "$POSTGRES_DB" -U "$POSTGRES_USER" -p "$POSTGRES_PORT" -h "$POSTGRES_HOST"
 }
 
 function psql_timescale() {
-  PGPASSWORD="$TIMESCALE_PASSWORD" log_command psql -d "$TIMESCALE_DB" -U "$TIMESCALE_USER" -p "$TIMESCALE_PORT" -h localhost
+  PGPASSWORD="$TIMESCALE_PASSWORD" log_command psql -d "$TIMESCALE_DB" -U "$TIMESCALE_USER" -p "$TIMESCALE_PORT" -h "$TIMESCALE_HOST"
 }
 
 function generate_random_port() {
@@ -600,7 +600,6 @@ function migrate_hasura() {
   echo "migrating db $POSTGRES_DB"
   pushd "$PROJECT_ROOT/services/hasura"
   echo "hasura migrate $HASURA_ENDPOINT"
-  ls -la
   hasura --skip-update-check \
     migrate apply \
     --endpoint "$HASURA_ENDPOINT" \
@@ -616,7 +615,7 @@ function migrate_hasura() {
   cat functions/*.sql |
     PGPASSWORD=$POSTGRES_PASSWORD psql \
       -p "$POSTGRES_PORT" \
-      -h localhost \
+      -h "$POSTGRES_HOST" \
       -U "${POSTGRES_USER:-postgres}" \
       -d "${POSTGRES_DB:-dish}" \
       --single-transaction
@@ -716,77 +715,31 @@ function get_latest_scrape_backup() {
   )
 }
 
-function restore_latest_main_backup_to_local() {
-  get_latest_main_backup
-  latest_backup=$(get_latest_main_backup)
-  dump_file="/tmp/latest_dish_backup.dump"
-  log_command s3 get "$latest_backup" "$dump_file"
-  # POSTGRES_PASSWORD=postgres pg_restore -h localhost -U postgres -p 5432 -d dish "$dump_file"
-}
-
-function restore_latest_scrapes_backup_to_local() {
-  latest_backup=$(get_latest_scrape_backup)
-  dump_file="/tmp/latest_scrape_backup.dump"
-  log_command s3 get "$latest_backup" "$dump_file"
-  POSTGRES_PASSWORD=postgres pg_restore -h localhost -U postgres -p 5433 -d dish "$dump_file"
-}
-
-function _restore_main_backup() {
-  backup=$1
-  echo "Restoring $backup ..."
-  s3 get $backup backup.dump
-  cat backup.dump | POSTGRES_PASSWORD=$POSTGRES_PASSWORD pg_restore \
-    -h $POSTGRES_HOST \
-    -U postgres \
-    -d dish
-}
-
-function __restore_latest_main_backup() {
-  _run_on_cluster postgres:12-alpine && return 0
-  set -e
-  _restore_main_backup "$(get_latest_main_backup)"
-}
-
-function restore_main_backup() {
-  _run_on_cluster postgres:12-alpine && return 0
-  set -e
-  _restore_main_backup "$1"
+# note: to restore the db ideally we'd start an instance of postgres on the side on diff port/data dir
+#       and restore to that, then cp to /var/data/postgresql/production and dsh docker_restart dish_postgres
+function restore_postgres_tmp_backup() {
+  # docker run registry.dishapp.com/dish-postgres &
+  dump_file="${1:-/tmp/latest_dish_backup.dump}"
+  PGPASSWORD=$POSTGRES_PASSWORD pg_restore -j 6 --no-owner --role="$POSTGRES_USER" -h "$POSTGRES_HOST" -U "$POSTGRES_USER" -p "$POSTGRES_PORT" -d "$POSTGRES_DB" "$dump_file"
 }
 
 function restore_latest_main_backup() {
-  __restore_latest_main_backup
-  migrate_hasura
+  latest_backup=$(get_latest_main_backup)
+  dump_file="/tmp/latest_dish_backup.dump"
+  log_command s3 get "$latest_backup" "$dump_file"
+  # restore_postgres_tmp_backup
 }
 
-function restore_latest_scrape_backup() {
-  _run_on_cluster postgres:12-alpine && return 0
-  set -e
+function restore_timescale_tmp_backup() {
+  dump_file="/tmp/latest_scrape_backup.dump"
+  PGPASSWORD=$TIMESCALE_PASSWORD pg_restore -j 6 --no-owner --role="$TIMESCALE_USER" -h "$TIMESCALE_HOST" -U "$TIMESCALE_USER" -p "$TIMESCALE_PORT" -d "$TIMESCALE_DB" "$dump_file"
+}
+
+function restore_latest_scrapes_backup() {
   latest_backup=$(get_latest_scrape_backup)
-  s3 get \$latest_backup backup.dump
-  echo "Restoring \$latest_backup ..."
-  cat backup.dump | POSTGRES_PASSWORD=$POSTGRES_PASSWORD pg_restore \
-    -h $TIMESCALE_HOST \
-    -U postgres \
-    -d dish
-}
-
-function delete_unattached_volumes() {
-  unattached_volumes="$(
-    doctl compute volume list \
-      --format ID,DropletIDs |
-      rg -v '\[' |
-      tr -s ' ' |
-      cut -d ' ' -f 1 |
-      tail -n +2
-  )"
-  echo "$unattached_volumes" | while read volume_id; do
-    echo "Deleting $volume_id"
-    doctl compute volume delete --force $volume_id
-  done
-}
-
-function console() {
-  ssh "root@$1.internal"
+  dump_file="/tmp/latest_scrape_backup.dump"
+  log_command s3 get "$latest_backup" "$dump_file"
+  restore_timescale_tmp_backup
 }
 
 function find_app() {
@@ -1171,6 +1124,9 @@ function source_env() {
     source "$ENV_FILE"
   else
     echo "Not loading ENV from $ENV_FILE as it doesn't exist"
+  fi
+  if [ "$IS_LOCAL" = "1" ]; then
+    source .env.local
   fi
 }
 
