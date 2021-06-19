@@ -33,7 +33,7 @@ import React, { StrictMode, Suspense, useEffect, useState } from 'react'
 import { useColorScheme } from 'react-native'
 import { SafeAreaProvider } from 'react-native-safe-area-context'
 import { QueryClientProvider } from 'react-query'
-import { ThemeProvider, Toast, configureThemes } from 'snackui'
+import { AbsoluteVStack, ThemeProvider, Toast, configureThemes } from 'snackui'
 
 import { App } from './app/App'
 import { homeStore } from './app/homeStore'
@@ -137,7 +137,21 @@ export function Root() {
             </ProvideRouter>
           </ThemeProvider>
         </PlatformSpecificProvider>
+        <Radar />
       </SafeAreaProvider>
     </>
   )
+}
+
+function Radar() {
+  if (process.env.NODE_ENV === 'development') {
+    const LagRadar = require('react-lag-radar').default
+    return (
+      <AbsoluteVStack bottom={20} right={20} zIndex={10000} pointerEvents="none">
+        <LagRadar frames={20} speed={0.0017} size={100} inset={3} />
+      </AbsoluteVStack>
+    )
+  }
+
+  return null
 }
