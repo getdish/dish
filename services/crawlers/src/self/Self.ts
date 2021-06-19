@@ -336,26 +336,27 @@ export class Self extends WorkerJob {
   }
 
   merge(strings: string[]) {
+    const filledIn = strings.filter((x) => x?.length > 0)
     let overlaps: string[] = []
-    for (let pair of Self.allPairs(strings)) {
+    for (let pair of Self.allPairs(filledIn)) {
       const overlap = Self.findOverlap(pair[0], pair[1])
       if (overlap) {
         overlaps.push(overlap)
       }
     }
-    const shortest_string = Self.shortestString(strings)
+    const shortest_string = Self.shortestString(filledIn)
     const shortest_overlap = Self.shortestString(overlaps)
     if (shortest_overlap.length) {
       return shortest_overlap
     } else {
+      if (shortest_string.length === 0) {
+        return null
+      }
       return shortest_string
     }
   }
 
   mergeName() {
-    const tripadvisor_name = Tripadvisor.cleanName(
-      scrapeGetData(this.tripadvisor, (x) => x.overview.name)
-    )
     const names = [
       scrapeGetData(this.yelp, (x) => x.json.name),
       scrapeGetData(this.ubereats, (x) => x.main.title),
@@ -363,9 +364,18 @@ export class Self extends WorkerJob {
       scrapeGetData(this.michelin, (x) => x.main.name),
       scrapeGetData(this.grubhub, (x) => x.main.name),
       scrapeGetData(this.doordash, (x) => x.main.title),
-      tripadvisor_name,
+      Tripadvisor.cleanName(scrapeGetData(this.tripadvisor, (x) => x.overview.name)),
     ]
-    this.restaurant.name = this.merge(names)
+    const name = this.merge(names)
+    if (name) {
+      this.restaurant.name = name
+    }
+    if (DISH_DEBUG) {
+      this.log('found names', names, 'chose', name)
+      if (!name) {
+        console.log('no name?', '\n', this.yelp?.data)
+      }
+    }
   }
 
   mergeTelephone() {
@@ -379,7 +389,7 @@ export class Self extends WorkerJob {
   }
 
   mergeAddress() {
-    this.restaurant.address = this.merge([
+    const addresses = [
       scrapeGetData(
         this.yelp,
         (x) =>
@@ -399,7 +409,11 @@ export class Self extends WorkerJob {
       scrapeGetData(this.michelin, (x) => x.main.title),
       scrapeGetData(this.tripadvisor, (x) => x.overview.contact.address),
       scrapeGetData(this.doordash, (x) => x.main.location.address),
-    ])
+    ]
+    this.restaurant.address = this.merge(addresses)
+    if (DISH_DEBUG) {
+      this.log('found addresses', addresses, 'chose', this.restaurant.address)
+    }
   }
 
   addWebsite() {
