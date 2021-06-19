@@ -183,10 +183,10 @@ function deploy_dish_stack() {
 # shellcheck disable=SC2120
 function deploy_dish() {
   echo "deploying dish - $DISH_ENV $POSTGRES_DB $POSTGRES_DB_DIR"
-  deploy_dish_stack || echo "retry" && deploy_dish_stack
+  deploy_dish_stack || (echo "retry" && deploy_dish_stack)
 
-  echo "for some reason postgres not been coming back online, temp fix"
-  docker service update --force dish_postgres
+  # echo "for some reason postgres not been coming back online, temp fix"
+  # docker service update --force dish_postgres
   
   if [ "$1" == "--force" ]; then
     #  force restart
@@ -198,7 +198,14 @@ function deploy_dish() {
     done
     wait
   fi
-  # migrate_all
+
+  sleep 5
+
+  if ! timeout --preserve-status 15 bash -c wait_until_postgres_ready; then
+    echo "Timed out waiting for postgres to start, reset WAL and retry"
+    sudo -u systemd-coredump /usr/lib/postgresql/12/bin/pg_resetwal -f /var/data/postgresdb/production
+    docker_restart dish_postgres
+  fi
 }
 
 function docker_restart() {
