@@ -134,7 +134,7 @@ function deploy_to() {
     echo setup env
     source .env
     source .env.production
-    echo deploy
+    ./dsh pull_all
     ./dsh deploy_all
     docker system prune --force || true &
     echo done
@@ -163,6 +163,16 @@ function destroy_all() {
   docker stack rm swarmpron || true
   docker stack rm dish || true
   docker system prune -f
+}
+
+function pull_all() {
+  docker-compose pull &
+  docker-compose -f docker-internal.yml pull &
+  docker-compose -f docker-swarmprom.yml pull &
+  docker-compose -f docker-traefik.yml pull &
+  docker-compose -f docker-registry.yml pull &
+  docker-compose -f docker-portainer.yml pull &
+  wait
 }
 
 function deploy_all() {
@@ -470,7 +480,11 @@ function psql_postgres() {
 }
 
 function psql_timescale() {
-  PGPASSWORD="$TIMESCALE_PASSWORD" log_command psql -d "$TIMESCALE_DB" -U "$TIMESCALE_USER" -p "$TIMESCALE_PORT" -h "$TIMESCALE_HOST"
+  port=$TIMESCALE_PORT_INTERNAL
+  if [ "$TIMESCALE_HOST" = "localhost" ]; then
+    port=$TIMESCALE_PORT
+  fi
+  PGPASSWORD="$TIMESCALE_PASSWORD" log_command psql -d "$TIMESCALE_DB" -U "$TIMESCALE_USER" -p "$port" -h "$TIMESCALE_HOST"
 }
 
 function generate_random_port() {

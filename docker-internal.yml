@@ -12,20 +12,3 @@ services:
     build:
       context: .
       dockerfile: ./services/run-tests/Dockerfile
-
-  # worker1:
-  #   image: docker:dind
-  #   command: ["--registry-mirror", "http://${REGISTRY_MIRROR_WORKER}", "--insecure-registry", "${REGISTRY_MIRROR_WORKER}"]
-  #   privileged: true
-  #   hostname: worker1
-  #   volumes:
-  #     - /var/run/docker.sock:/var/run/docker.sock
-  #   environment:
-  #     - FLY_API_TOKEN=${FLY_API_TOKEN}
-  #   ports:
-  #     - "12375:2375"
-  #     - "15000:5000"
-  #     - "15001:5001"
-  #     - "15601:5601"
-  #   depends_on:
-  #     - registry
