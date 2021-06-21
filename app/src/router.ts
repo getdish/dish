@@ -47,6 +47,7 @@ export const routes = {
   admin: new Route('/admin'),
   adminTags: new Route('/admin/tags'),
   adminReviews: new Route('/admin/reviews'),
+  adminPlaces: new Route('/admin/places'),
   adminUsers: new Route('/admin/users'),
   search: new Route<SearchRouteParams>('/s/:lense/:region/:tags?/:search?'),
 

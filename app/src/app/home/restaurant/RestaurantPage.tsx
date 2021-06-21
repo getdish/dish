@@ -34,7 +34,6 @@ type Props = HomeStackViewProps<HomeStateItemRestaurant>
 
 export default function RestaurantPageContainer(props: Props) {
   const theme = useTheme()
-  console.log('render me', props.item.restaurantSlug)
   const colors = useColorsFor(props.item.restaurantSlug)
   return (
     <StackDrawer

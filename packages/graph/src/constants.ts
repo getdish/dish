@@ -24,7 +24,11 @@ export const LOCAL_HOST = process.env.LOCAL_HOST ?? (hostname || `localhost`)
 // so external: dishapp.com, internal app:4444
 
 // const PROD_ORIGIN = 'https://dishapp.com'
-const ORIGIN = isProd ? 'https://dishapp.com' : process.env.APP_ENDPOINT ?? 'app:4444'
+const ORIGIN = isProd
+  ? 'https://dishapp.com'
+  : process.env.TARGET === 'web'
+  ? window.location.origin
+  : process.env.APP_ENDPOINT ?? 'app:4444'
 // isProd
 //   ? PROD_ORIGIN
 //   : isStaging

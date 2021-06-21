@@ -1,5 +1,5 @@
 import { Handler, Req, Res, RouteExit, handleErrors } from '@dish/api'
-import { userFindOne } from '@dish/graph'
+import { DISH_API_ENDPOINT, userFindOne } from '@dish/graph'
 import { JWT_SECRET } from '@dish/helpers-node'
 import * as jwt from 'jsonwebtoken'
 
