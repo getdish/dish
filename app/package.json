@@ -19,7 +19,7 @@
     "app:build": "npx eas build --platform ios --non-interactive",
     "app:reset": "yarn app --reset-cache",
     "app:reset:hard": "watchman watch-del-all && yarn app:reset",
-    "web": "DISH_ENV=development ../dsh run 'yarn dish start --local-proxy'",
+    "web": "IS_LOCAL=1 DISH_ENV=development ../dsh run 'yarn dish start --local-proxy'",
     "web:reset": "NODE_ENV=development ../dsh run 'yarn dish start --reset-cache'",
     "web:https": "sudo dish start --https --host d1sh.com --port 443",
     "web:debug": "DEBUG_WEBPACK=1 node --max_old_space_size=8192 --inspect ../node_modules/.bin/dish start --serial",
