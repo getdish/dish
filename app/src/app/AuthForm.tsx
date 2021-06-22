@@ -499,6 +499,7 @@ function useFormAction<Values extends { [key: string]: any }>({
     retry: false,
   })
   const onSubmit = handleSubmit(() => {
+    console.log('submitting', data.current)
     setIsSubmitting(true)
     setSend(Math.random())
   })
@@ -516,7 +517,6 @@ function useFormAction<Values extends { [key: string]: any }>({
     didJustFill[key as string] = val.length > prev.length + 3
     prev = val
     if (didJustFill.login && didJustFill.password) {
-      console.log('submitting view autofill?')
       onSubmit()
     }
   }

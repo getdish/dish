@@ -370,6 +370,9 @@ async function assessPhotoWithoutRetries(urls: string[]) {
     const id = crypto.createHash('md5').update(url).digest('hex')
     const quality = imageQualities.find((r) => id == r.image_id)?.mean_score_prediction
     const categories = imageCategories.find((x) => x.url === url)?.categories
+    if (process.env.DISH_DEBUG) {
+      console.log('got image categories', categories)
+    }
     if (!quality || !categories) {
       console.warn('No result found!')
       continue
