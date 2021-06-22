@@ -1,5 +1,6 @@
 import { sentryMessage } from '@dish/common'
 
+import { getSummary } from './getSummary'
 import { post_prompt, pre_prompt } from './gpt3_prompts_text'
 import { Self } from './Self'
 
@@ -23,25 +24,6 @@ const presets = {
 
 // in order of most powerful => least
 type OpenAIEngines = 'davinci' | 'curie' | 'babbage' | 'ada'
-
-async function getSummary(of: string) {
-  const request: RequestInit = {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'text/plain',
-    },
-    body: of,
-  }
-  if (process.env.DISH_DEBUG) {
-    console.log('getting summary...', of)
-  }
-  const result = await fetch(`${process.env.SUMMARIZER_ENDPOINT}/summarize?ratio=0.1`, request)
-  const response = await result.json()
-  if (process.env.DISH_DEBUG) {
-    console.log('...summarized: ', response.summary)
-  }
-  return response.summary
-}
 
 export class GPT3 {
   crawler: Self
@@ -78,7 +60,7 @@ export class GPT3 {
         WHERE review.restaurant_id = '${this.crawler.restaurant.id}'
         AND LENGTH(text) < 1000
       GROUP BY review.id
-      ORDER BY SUM(naive_sentiment) DESC LIMIT 4
+      ORDER BY SUM(naive_sentiment) DESC LIMIT 6
     `
   }
 
@@ -89,7 +71,7 @@ export class GPT3 {
         WHERE review.restaurant_id = '${this.crawler.restaurant.id}'
         AND LENGTH(text) < 1000
       GROUP BY review.id
-      ORDER BY COUNT(rts.id) DESC LIMIT 4
+      ORDER BY COUNT(rts.id) DESC LIMIT 6
     `
   }
 

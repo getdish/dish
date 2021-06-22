@@ -36,8 +36,8 @@ export class WorkerJob extends Loggable {
     }
     const job: JobData = {
       className: this.constructor.name,
-      fn: fn,
-      args: args,
+      fn,
+      args,
     }
     const queue = getBullQueue(this.constructor.name)
     const default_config = (this.constructor as typeof WorkerJob).job_config

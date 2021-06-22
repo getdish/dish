@@ -80,7 +80,7 @@ export class Database {
 
 const extPort = process.env.TIMESCALE_PORT || 5433
 const intPort = process.env.TIMESCALE_PORT_INTERNAL || 5432
-const port = +(process.env.EXTERNAL ? extPort : intPort)
+const port = +(process.env.IS_LOCAL ? extPort : intPort)
 
 const db_config: PoolConfig = {
   host: process.env.TIMESCALE_HOST || 'localhost',

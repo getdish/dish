@@ -34,6 +34,8 @@
 
 # inbox
 
+- get production crawler working with faster feedback loop (no need to exec worker, just run it directly using .env.local)
+
 - can likely merge all docker intranet apps into one .yml
 
 - seeing the front of the restaruant in a wide angle shot is so key to intuitively finding a place you've been to !!
