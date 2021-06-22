@@ -6,15 +6,15 @@ import { Self } from './Self'
 const presets = {
   witty_guidebook: {
     // this is 4 chars per token roughly
-    max_tokens: 100,
+    max_tokens: 150,
     stop: ['\n'],
     // not sure, we may want more temp?
     // What sampling temperature to use. Higher values means the model will take more risks. Try 0.9 for more creative applications, and 0 (argmax sampling) for ones with a well-defined answer.
     // We generally recommend altering this or top_p but not both.
-    temperature: 0,
+    temperature: 0.1,
     top_p: 1,
     // Number between 0 and 1 that penalizes new tokens based on their existing frequency in the text so far. Decreases the model's likelihood to repeat the same line verbatim
-    frequency_penalty: 0.2,
+    frequency_penalty: 0.5,
     // Number between 0 and 1 that penalizes new tokens based on whether they appear in the text so far. Increases the model's likelihood to talk about new topics
     // we actually want it to summarize
     presence_penalty: 0,
@@ -23,6 +23,25 @@ const presets = {
 
 // in order of most powerful => least
 type OpenAIEngines = 'davinci' | 'curie' | 'babbage' | 'ada'
+
+async function getSummary(of: string) {
+  const request: RequestInit = {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'text/plain',
+    },
+    body: of,
+  }
+  if (process.env.DISH_DEBUG) {
+    console.log('getting summary...', of)
+  }
+  const result = await fetch(`${process.env.SUMMARIZER_ENDPOINT}/summarize?ratio=0.1`, request)
+  const response = await result.json()
+  if (process.env.DISH_DEBUG) {
+    console.log('...summarized: ', response.summary)
+  }
+  return response.summary
+}
 
 export class GPT3 {
   crawler: Self
@@ -37,7 +56,8 @@ export class GPT3 {
     const engine: OpenAIEngines = is_in_sanfran && is_high_scoring ? 'davinci' : 'curie'
     this.crawler.log('Running GPT3 summariser for restaurant...')
     const highlights = await this.findHighlights()
-    const completion = await this.complete(highlights, engine)
+    const summary = await getSummary(highlights)
+    const completion = await this.complete(summary, engine)
     this.crawler.restaurant.summary = completion
   }
 

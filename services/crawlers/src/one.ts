@@ -29,9 +29,12 @@ export async function main(slug: string) {
 
     // clear existing scrapes
     if (rest.id && !shouldSkip('external') && !shouldSkip('scrapes')) {
-      console.log('Clearing existing scrapes for restaurant')
-      const res = await db.query(`DELETE FROM scrape WHERE restaurant_id = '${rest.id}';`)
-      console.log('Deleted', res.rows)
+      if (process.env.CLEAR_EXISTING === '1') {
+        const res = await db.query(`DELETE FROM scrape WHERE restaurant_id = '${rest.id}';`)
+        console.log('Deleted', res.rows)
+      } else {
+        console.log('To clear existing scrapes for restaurant set CLEAR_EXISTING=1')
+      }
     }
 
     if (!shouldSkip('external')) {
