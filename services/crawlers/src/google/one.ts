@@ -15,6 +15,9 @@ async function one_puppeteer(slug: string) {
 async function one_geocoder(slug: string) {
   const restaurant = await restaurantFindOne({ slug })
   if (!restaurant) throw new Error('Google sandbox: could not find ' + name)
+  if (!restaurant.location) {
+    throw new Error(`No restaurant.location`)
+  }
   const geocoder = new GoogleGeocoder()
   const query = restaurant.name + ',' + restaurant?.address
   const id = await geocoder.searchForID(

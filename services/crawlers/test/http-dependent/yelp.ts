@@ -13,10 +13,15 @@ test.beforeEach(async () => {
 
 test('Gets and persists a restaurant', async (t) => {
   const yelp = new Yelp()
-  await yelp.getRestaurants([37.759065, -122.412375], [37.758865, -122.412175], 0, {
-    name: 'Flour + Water',
-    address: '2401 Harrison St',
-    telephone: '(415) 826-7000',
+  await yelp.getRestaurants({
+    top_right: [37.759065, -122.412375],
+    bottom_left: [37.758865, -122.412175],
+    start: 0,
+    onlyRestaurant: {
+      name: 'Flour + Water',
+      address: '2401 Harrison St',
+      telephone: '(415) 826-7000',
+    },
   })
   const scrape = (await scrapeFindOneBySourceID('yelp', BIZ_ID)) as YelpScrape
   t.assert(scrape.data.data_from_search_list_item.name.includes('Flour + Water'))

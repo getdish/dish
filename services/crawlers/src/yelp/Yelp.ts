@@ -25,7 +25,6 @@ type RestaurantMatching = Required<Pick<Restaurant, 'name' | 'address' | 'teleph
 
 export type YelpScrape = Scrape<YelpScrapeData>
 
-const BB_SEARCH = '/search/snippet?cflt=restaurants&l='
 const YELP_DOMAIN = 'https://www.yelp.com'
 const YELP_DOMAIN_MOBILE = 'https://m.yelp.com'
 
@@ -93,13 +92,12 @@ export class Yelp extends WorkerJob {
     const [lng, lat] = rest.location?.coordinates ?? []
     if (lng && lat) {
       try {
-        await this.getRestaurants(
-          [lat - mv, lng - mv],
-          [lat + mv, lng + mv],
-          0,
-          // @ts-ignore
-          rest
-        )
+        await this.getRestaurants({
+          top_right: [lat - mv, lng - mv],
+          bottom_left: [lat + mv, lng + mv],
+          start: 0,
+          onlyRestaurant: rest as any,
+        })
       } catch (err) {
         this.log(
           'Error finding by searching for exact location, switch to general search',
@@ -152,12 +150,12 @@ export class Yelp extends WorkerJob {
     const mv = 0.0025
     const [lat, lng] = await geocode(found.subtitle)
     this.log('found new coords, try again at', JSON.stringify({ lat, lng }))
-    await this.getRestaurants(
-      [lat - mv, lng - mv],
-      [lat + mv, lng + mv],
-      0,
-      rest as RestaurantMatching
-    )
+    await this.getRestaurants({
+      top_right: [lat - mv, lng - mv],
+      bottom_left: [lat + mv, lng + mv],
+      start: 0,
+      onlyRestaurant: rest as RestaurantMatching,
+    })
   }
 
   async allForCity(city_name: string) {
@@ -168,26 +166,38 @@ export class Yelp extends WorkerJob {
     const longest_radius = (MAPVIEW_SIZE * Math.sqrt(2)) / 2
     for (const box_center of region_coords) {
       const bounding_box = boundingBoxFromCenter(box_center[0], box_center[1], longest_radius)
-      await this.runOnWorker('getRestaurants', [bounding_box[0], bounding_box[1], 0])
+      await this.runOnWorker('getRestaurants', [
+        {
+          top_right: bounding_box[0],
+          bottom_left: bounding_box[1],
+          start: 0,
+        },
+      ])
     }
   }
 
-  async getRestaurants(
-    top_right: readonly [number, number],
-    bottom_left: readonly [number, number],
+  async getRestaurants({
+    top_right,
+    bottom_left,
     start = 0,
-    onlyRestaurant: RestaurantMatching | null = null
-  ) {
-    const PER_PAGE = 30
+    onlyRestaurant = null,
+    // comma seems to work!
+    category = 'food,restaurants',
+  }: {
+    top_right: [number, number]
+    bottom_left: [number, number]
+    start: number
+    onlyRestaurant: RestaurantMatching | null
+    category?: 'all' | 'food' | 'restaurants' | 'food,restaurants'
+  }) {
     const coords = [top_right[1], top_right[0], bottom_left[1], bottom_left[0]].join(',')
     const bb = encodeURIComponent('g:' + coords)
-    const uri = BB_SEARCH + bb + '&start=' + start
+    const uri = `/search/snippet?cflt=${category}&l=${bb}&start=${start}`
     const response = await yelpAPI.getJSON(uri)
     if (!response) {
       this.log('no response!', response)
       return []
     }
-    // console.log('got', response)
     const componentsList = response.searchPageProps.mainContentComponentsListProps ?? []
     const pagination = componentsList.find((x) => x.type === 'pagination')
 
@@ -258,13 +268,12 @@ export class Yelp extends WorkerJob {
     this.log('done with getRestaurants page')
 
     if (pagination && !found_the_one) {
-      const next_page = start + PER_PAGE
+      // yelp returns results per page in weird location here, use that or fallback to 10
+      const perPage = componentsList.find((x) => x?.props?.resultsPerPage) ?? 10
+      const next_page = start + perPage
       if (next_page <= pagination.totalResults) {
         await this.runOnWorker('getRestaurants', [
-          top_right,
-          bottom_left,
-          next_page,
-          onlyRestaurant,
+          { top_right, bottom_left, next_page, onlyRestaurant },
         ])
       }
     }

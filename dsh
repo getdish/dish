@@ -180,8 +180,8 @@ function deploy_all() {
   deploy_traefik
   deploy_portainer
   deploy_registry
-  sleep 15 # let registry come online, todo see wait_until
-  docker_login || exit 1
+  # let registry come online if necessary
+  sleep 1 && docker_login || sleep 10 || docker_login || exit 1
   deploy_swarmprom
   deploy_dish
 }
@@ -948,17 +948,22 @@ function run_all_tests() {
     -v /var/run/docker.sock:/var/run/docker.sock \
     -v "$POSTGRES_DB_DIR:$POSTGRES_DB_DIR" \
     -v "$TIMESCALE_DB_DIR:$TIMESCALE_DB_DIR" \
-    registry.dishapp.com/dish-run-tests:latest yarn test || (echo "failed tests" && exit 1)
+    registry.dishapp.com/dish-run-tests:latest yarn test
 }
 
 function run_all_tests_in_compose() {
   exec migrate yarn test
 }
 
+function run_all_tests_in_compose_retry() {
+  # this just runs it inside the `dish-migrate` container which is idle
+  exec migrate yarn test || (echo "failed, retrying" && exec migrate yarn test)
+}
+
 function run_integration_tests() {
   echo "Running Test Cafe end-to-end browser-based tests..."
   pushd app
-    docker run -d --net=host --name app-integration-tests-$BUILDKITE_BUILD_NUMBER $DISH_REGISTRY/app
+    docker run -d --net=host --name "app-integration-tests-$BUILDKITE_BUILD_NUMBER" "$DISH_REGISTRY/app"
   sleep 5
   ./test/testcafe.sh
   popd

@@ -128,7 +128,7 @@ steps:
   - label: "run tests"
     key: tests
     timeout_in_minutes: 10
-    command: "./dsh run_all_tests_in_compose"
+    command: "./dsh run_all_tests_in_compose_retry"
     depends_on: test-setup
     env:
       LOG_DOCKER: true
