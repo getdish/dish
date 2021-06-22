@@ -67,7 +67,7 @@ export const GRAPH_API = `${DISH_API_ENDPOINT}/graph`
 export const SUMMARIZER_API = `${process.env.SUMMARIZER_ENDPOINT}/summarize_by_ratio`
 // export const SUMMARIZER_API = `${process.env.SUMMARIZER_ENDPOINT}/summarize_by_sentence`
 
-if (process.env.DISH_DEBUG) {
+if (+(process.env.DISH_DEBUG || '0') > 1) {
   console.log('@dish/graph constants', {
     SUMMARIZER_API,
     HASURA_ENDPOINT: process.env.HASURA_ENDPOINT,

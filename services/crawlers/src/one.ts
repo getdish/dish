@@ -8,6 +8,8 @@ import * as Self from './self/one'
 import * as Tripadvisor from './tripadvisor/one'
 import * as Yelp from './yelp/one'
 
+process.env.DISH_DEBUG = '2'
+
 export async function main(slug: string) {
   try {
     const rest = await restaurantFindOne({
