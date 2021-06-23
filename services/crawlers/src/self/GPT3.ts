@@ -1,18 +1,17 @@
 import { sentryMessage } from '@dish/common'
 
 import { getSummary } from './getSummary'
-import { post_prompt, pre_prompt } from './gpt3_prompts_text'
 import { Self } from './Self'
 
 const presets = {
   witty_guidebook: {
     // this is 4 chars per token roughly
     max_tokens: 150,
-    stop: ['\n'],
+    stop: ['"""'],
     // not sure, we may want more temp?
     // What sampling temperature to use. Higher values means the model will take more risks. Try 0.9 for more creative applications, and 0 (argmax sampling) for ones with a well-defined answer.
     // We generally recommend altering this or top_p but not both.
-    temperature: 0.1,
+    temperature: 0,
     top_p: 1,
     // Number between 0 and 1 that penalizes new tokens based on their existing frequency in the text so far. Decreases the model's likelihood to repeat the same line verbatim
     frequency_penalty: 0.5,
@@ -77,7 +76,11 @@ export class GPT3 {
 
   async complete(input: string, engine: OpenAIEngines = 'curie', preset = 'witty_guidebook') {
     let body = presets[preset]
-    body.prompt = pre_prompt + '\n' + input + `\n` + post_prompt
+    body.prompt = `My son asked me what this passage means:
+${input}
+"""
+I summarized it for him in a funny way:
+"""`
     const request: RequestInit = {
       method: 'POST',
       headers: {

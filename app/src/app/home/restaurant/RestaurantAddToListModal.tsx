@@ -21,6 +21,10 @@ export const RestaurantAddToListModal = graphql(
     if (!restaurant) {
       return null
     }
+    if (!user) {
+      console.log('no user')
+      return null
+    }
     const lists =
       user?.lists({
         limit: 20,
