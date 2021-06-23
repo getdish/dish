@@ -77,7 +77,7 @@ const RestaurantHeaderContent = memo(
       const [hasScrolled, setHasScrolled] = useState(false)
       const colors = useColorsFor(restaurantSlug)
       const themeName = useThemeName()
-      const theme = useTheme()
+      // const theme = useTheme()
 
       const content = (
         <VStack>
@@ -120,7 +120,7 @@ const RestaurantHeaderContent = memo(
 
           <Theme name={themeName === 'dark' ? `${colors.name}-dark` : colors.name}>
             <VStack
-              marginTop={imgHeight - 70}
+              marginTop={140}
               minWidth={minWidth}
               maxWidth={width}
               borderTopRightRadius={drawerBorderRadius - 1}
@@ -133,7 +133,7 @@ const RestaurantHeaderContent = memo(
               <VStack flex={1}>
                 {/* title row */}
                 <HStack paddingLeft={20} alignItems="center" position="relative">
-                  <AbsoluteVStack y={-44} x={-10} zIndex={10}>
+                  <AbsoluteVStack y={-35} x={-10} zIndex={10}>
                     <Theme name="light">
                       <RestaurantRatingView floating size={62} slug={restaurantSlug} />
                     </Theme>
@@ -147,7 +147,7 @@ const RestaurantHeaderContent = memo(
                     shadowRadius={5}
                     shadowOffset={{ height: 3, width: 0 }}
                     borderRadius={16}
-                    paddingHorizontal={20}
+                    paddingHorizontal={30}
                     paddingVertical={9}
                     alignItems="center"
                     justifyContent="center"
@@ -228,50 +228,6 @@ const RestaurantHeaderContent = memo(
                       </HStack>
 
                       {afterAddress}
-                    </VStack>
-
-                    <Spacer size="sm" />
-
-                    <VStack width={contentLeftWidth}>
-                      <RestaurantTagsRow
-                        exclude={['dish']}
-                        restaurantSlug={restaurantSlug}
-                        restaurantId={restaurantId}
-                        spacing={10}
-                        max={8}
-                        size="lg"
-                      />
-
-                      <Spacer size="lg" />
-
-                      <Suspense fallback={null}>
-                        <RestaurantLists restaurantSlug={restaurantSlug} />
-                      </Suspense>
-
-                      <VStack marginLeft={-30} marginRight={-10}>
-                        {/* idk why this theme here is necessary */}
-                        <Theme name={themeName}>
-                          <CommentBubble
-                            avatar={<LogoCircle />}
-                            name="DishBot"
-                            avatarBackgroundColor="transparent"
-                          >
-                            <RestaurantOverview
-                              maxLines={6}
-                              size="lg"
-                              restaurantSlug={restaurantSlug}
-                            />
-                          </CommentBubble>
-                        </Theme>
-                      </VStack>
-
-                      <RestaurantDeliveryButtons
-                        marginTop={20}
-                        marginBottom={20}
-                        label="Delivers"
-                        showLabels
-                        restaurantSlug={restaurantSlug}
-                      />
                     </VStack>
                   </VStack>
                 </HStack>

@@ -13,17 +13,23 @@ import { router } from '../../../router'
 import { HomeStateItemRestaurant } from '../../../types/homeTypes'
 import { appMapStore, useSetAppMap } from '../../AppMapStore'
 import { drawerStore } from '../../drawerStore'
+import { CommentBubble } from '../../views/CommentBubble'
 import { ContentScrollView } from '../../views/ContentScrollView'
+import { LogoCircle } from '../../views/Logo'
 import { NotFoundPage } from '../../views/NotFoundPage'
+import { RestaurantOverview } from '../../views/restaurant/RestaurantOverview'
+import { RestaurantTagsRow } from '../../views/restaurant/RestaurantTagsRow'
 import { StackDrawer } from '../../views/StackDrawer'
 import { HomeStackViewProps } from '../HomeStackViewProps'
 import { PageContentWithFooter } from '../PageContentWithFooter'
+import { RestaurantDeliveryButtons } from './RestaurantDeliveryButtons'
 import { RestaurantDishRow } from './RestaurantDishRow'
 import { RestaurantHeader } from './RestaurantHeader'
+import { RestaurantLists } from './RestaurantLists'
 import { RestaurantMenu } from './RestaurantMenu'
 import { RestaurantReviewsList } from './RestaurantReviewsList'
 import { RestaurantTagPhotos } from './RestaurantTagPhotos'
-import { RestaurantTagReviews } from './RestaurantTagReviews'
+import { RestaurantOverallAndTagReviews } from './RestaurantTagReviews'
 import { useSelectedDish } from './useSelectedDish'
 import { useSnapToFullscreenOnMount } from './useSnapToFullscreenOnMount'
 
@@ -156,8 +162,8 @@ const RestaurantPage = memo(
             >
               <RestaurantHeader minHeight={450} restaurantSlug={restaurantSlug} />
 
-              <VStack marginHorizontal={-20} marginBottom={-36}>
-                <RestaurantTagReviews
+              <VStack marginHorizontal={-20} marginBottom={-36} marginTop={-20}>
+                <RestaurantOverallAndTagReviews
                   tagSlug={selectedDish}
                   borderless
                   showScoreTable
@@ -165,8 +171,6 @@ const RestaurantPage = memo(
                   restaurantId={restaurant.id}
                 />
               </VStack>
-
-              <Spacer size="lg" />
 
               <View ref={setDishesSection}>
                 <RestaurantDishRow
@@ -186,6 +190,32 @@ const RestaurantPage = memo(
 
               {/* END head color AREA */}
             </VStack>
+
+            <Suspense fallback={null}>
+              <RestaurantLists restaurantSlug={restaurantSlug} />
+            </Suspense>
+
+            {/* OVERVIEW - DISH BOT */}
+            <VStack paddingRight={20}>
+              {/* idk why this theme here is necessary */}
+              {/* <Theme name={themeName}> */}
+              <CommentBubble
+                avatar={<LogoCircle />}
+                name="DishBot"
+                avatarBackgroundColor="transparent"
+              >
+                <RestaurantOverview maxLines={6} size="lg" restaurantSlug={restaurantSlug} />
+              </CommentBubble>
+              {/* </Theme> */}
+            </VStack>
+
+            <RestaurantDeliveryButtons
+              marginTop={20}
+              marginBottom={20}
+              label="Delivers"
+              showLabels
+              restaurantSlug={restaurantSlug}
+            />
 
             <VStack ref={setReviewsSection} paddingVertical={20}>
               <Suspense fallback={null}>

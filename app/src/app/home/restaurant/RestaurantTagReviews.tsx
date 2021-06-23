@@ -47,7 +47,7 @@ const height = 220
 const scrollHeight = height - 40
 const itemHeight = scrollHeight - 20
 
-export const RestaurantTagReviews = (props: Props) => {
+export const RestaurantOverallAndTagReviews = (props: Props) => {
   return (
     <VStack height={height + 40}>
       <Suspense fallback={null}>
@@ -106,9 +106,9 @@ const Content = memo(
             </AbsoluteVStack>
           )}
 
-          <SlantedTitle marginBottom={-30} alignSelf="center" size="sm">
+          {/* <SlantedTitle fontSize={12} marginBottom={-30} alignSelf="center" size="sm">
             {tagName ?? 'Overall'}
-          </SlantedTitle>
+          </SlantedTitle> */}
 
           <VStack
             minWidth={260}
@@ -163,14 +163,14 @@ const Content = memo(
                               />
                             </Link>
 
-                            <Paragraph
-                              fontSize={22}
+                            <Text
+                              fontSize={30}
                               fontWeight="800"
                               color={positive > negative ? green : grey}
                               letterSpacing={-1}
                             >
                               {Math.round(ratio * 100)}%
-                            </Paragraph>
+                            </Text>
 
                             <HStack spacing="xs">
                               <SentimentText sentiment={1}>
