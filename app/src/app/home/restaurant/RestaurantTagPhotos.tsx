@@ -40,6 +40,10 @@ export const RestaurantTagPhotosContent = memo(
     const tagPhotos = tag?.photos ?? []
     const numTags = tagPhotos?.length
 
+    if (!numTags) {
+      return null
+    }
+
     return (
       <ContentScrollViewHorizontal height={220}>
         <Suspense fallback={<LoadingItems />}>

@@ -69,6 +69,10 @@ export const RestaurantDishRowContent = memo(
           : undefined
       }, [hasScrolled])
 
+      if (!hasDishes) {
+        return null
+      }
+
       const getDishRow = (dishes: DishTagItemSimple[]) => {
         return dishes.map((dish, index) => {
           const isSelected = selected === getTagSlug(dish.slug)
