@@ -1,5 +1,5 @@
 import { fullyIdle, series } from '@dish/async'
-import { graphql, order_by } from '@dish/graph'
+import { graphql } from '@dish/graph'
 import React, { Suspense, memo, useEffect, useMemo, useRef, useState } from 'react'
 import { ScrollView, View } from 'react-native'
 import { LoadingItems, Spacer, VStack, useTheme } from 'snackui'
@@ -14,13 +14,10 @@ import { HomeStateItemRestaurant } from '../../../types/homeTypes'
 import { appMapStore, useSetAppMap } from '../../AppMapStore'
 import { drawerStore } from '../../drawerStore'
 import { ContentScrollView } from '../../views/ContentScrollView'
-import { ListCard } from '../../views/list/ListCard'
 import { NotFoundPage } from '../../views/NotFoundPage'
-import { SlantedTitle } from '../../views/SlantedTitle'
 import { StackDrawer } from '../../views/StackDrawer'
 import { HomeStackViewProps } from '../HomeStackViewProps'
 import { PageContentWithFooter } from '../PageContentWithFooter'
-import { SkewedCard, SkewedCardCarousel } from '../SkewedCard'
 import { RestaurantDishRow } from './RestaurantDishRow'
 import { RestaurantHeader } from './RestaurantHeader'
 import { RestaurantMenu } from './RestaurantMenu'
@@ -190,10 +187,6 @@ const RestaurantPage = memo(
               {/* END head color AREA */}
             </VStack>
 
-            <Suspense fallback={null}>
-              <RestaurantLists restaurantSlug={restaurantSlug} />
-            </Suspense>
-
             <VStack ref={setReviewsSection} paddingVertical={20}>
               <Suspense fallback={null}>
                 <RestaurantReviewsList
@@ -213,48 +206,6 @@ const RestaurantPage = memo(
           </PageContentWithFooter>
         </ContentScrollView>
       </>
-    )
-  })
-)
-
-const RestaurantLists = memo(
-  graphql(({ restaurantSlug }: { restaurantSlug: string }) => {
-    const [restaurant] = queryRestaurant(restaurantSlug)
-
-    if (!restaurant) {
-      return null
-    }
-
-    const lists = restaurant.lists({
-      limit: 10,
-      order_by: [{ list: { created_at: order_by.asc } }],
-    })
-
-    if (lists.length === 0) {
-      return null
-    }
-
-    return (
-      <VStack marginTop={-20}>
-        <SlantedTitle size="md" marginBottom={-26} alignSelf="center" fontWeight="700">
-          Lists
-        </SlantedTitle>
-        <SkewedCardCarousel>
-          {lists.map(({ list }, i) => {
-            return (
-              <SkewedCard zIndex={1000 - i} key={list.id || i}>
-                <ListCard
-                  isBehind={i > 0}
-                  hoverable={false}
-                  slug={list.slug}
-                  userSlug={list.user?.username ?? 'no-user'}
-                  region={list.region ?? 'no-region'}
-                />
-              </SkewedCard>
-            )
-          })}
-        </SkewedCardCarousel>
-      </VStack>
     )
   })
 )

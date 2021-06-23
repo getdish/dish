@@ -34,6 +34,7 @@ import { RestaurantAddToListButton } from './RestaurantAddToListButton'
 import { RestaurantDeliveryButtons } from './RestaurantDeliveryButtons'
 import { openingHours } from './RestaurantDetailRow'
 import { RestaurantFavoriteStar } from './RestaurantFavoriteButton'
+import { RestaurantLists } from './RestaurantLists'
 import { RestaurantPhotosRow } from './RestaurantPhotosRow'
 
 type RestaurantHeaderProps = {
@@ -241,7 +242,11 @@ const RestaurantHeaderContent = memo(
                         size="lg"
                       />
 
-                      <Spacer size="xl" />
+                      <Spacer size="lg" />
+
+                      <Suspense fallback={null}>
+                        <RestaurantLists restaurantSlug={restaurantSlug} />
+                      </Suspense>
 
                       <VStack marginLeft={-30} marginRight={-10}>
                         {/* idk why this theme here is necessary */}
