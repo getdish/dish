@@ -3,6 +3,11 @@ FROM node:16.3.0-buster
 
 WORKDIR /app
 
+ARG GIT_BRANCH=""
+ARG GIT_COMMIT=""
+ENV GIT_BRANCH=${GIT_BRANCH}
+ENV GIT_COMMIT=${GIT_COMMIT}
+
 ENV PATH=$PATH:/app/node_modules/.bin:node_modules/.bin
 ENV NODE_OPTIONS="--max_old_space_size=8192"
 ENV PUPPETEER_SKIP_CHROMIUM_DOWNLOAD=true
