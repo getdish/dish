@@ -43,12 +43,13 @@ function compose() {
 }
 
 function compose_build() {
-  args="--build-arg=GIT_COMMIT=$(git rev-parse --short HEAD) --build-arg=GIT_BRANCH=$(git rev-parse --abbrev-ref HEAD)"
-  echo "🐳 compose build... $args $@"  
+  args1="--build-arg=GIT_COMMIT=$(git rev-parse --short HEAD)"
+  args2="--build-arg=GIT_BRANCH=$(git rev-parse --abbrev-ref HEAD)"
+  echo "🐳 compose build... $args1 $args2 $@"  
   if [ "$1" = "base" ] || [ "$1" = "run-tests" ]; then
-    docker-compose -f docker-internal.yml build "$args" "$@"
+    docker-compose -f docker-internal.yml build "$args1" "$args2" "$@"
   else
-    docker-compose build "$args" "$@"
+    docker-compose build "$args1" "$args2" "$@"
   fi
 }
 
