@@ -76,11 +76,12 @@ export class GPT3 {
 
   async complete(input: string, engine: OpenAIEngines = 'curie', preset = 'witty_guidebook') {
     let body = presets[preset]
-    body.prompt = `My son asked me what this passage means:
+    body.prompt = `A smart summarizer AI reads in the following:
 ${input}
 """
-I summarized it for him in a funny way:
-"""`
+It writes a short description with highlights of this restaurant:
+"""
+`
     const request: RequestInit = {
       method: 'POST',
       headers: {
