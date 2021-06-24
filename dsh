@@ -477,6 +477,11 @@ function ci_shell() {
   docker exec -it app_ci_1 bash
 }
 
+# TODO make this automatic
+function postgres_resetwal() {
+  sudo -u systemd-coredump /usr/lib/postgresql/12/bin/pg_resetwal -f /var/data/postgresdb/production
+}
+
 function psql_postgres() {
   PGPASSWORD="$POSTGRES_PASSWORD" log_command psql -d "$POSTGRES_DB" -U "$POSTGRES_USER" -p "$POSTGRES_PORT" -h "$POSTGRES_HOST"
 }
