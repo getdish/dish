@@ -1,40 +1,23 @@
 import '@dish/common'
 
-import { sentryException } from '@dish/common'
 import { restaurantFindOne, restaurantUpdate } from '@dish/graph'
+import { fetchRetry } from '@dish/helpers'
 import { WorkerJob } from '@dish/worker'
 import * as acorn from 'acorn'
-import axios_base from 'axios'
 import { JobOptions, QueueOptions } from 'bull'
 import * as cheerio from 'cheerio'
 import _ from 'lodash'
-import { Page } from 'puppeteer'
 
 import { restaurantSaveCanonical } from '../canonical-restaurant'
-import { DISH_DEBUG } from '../constants'
 import { GoogleGeocoder } from '../google/GoogleGeocoder'
 import { Puppeteer } from '../Puppeteer'
-import {
-  ScrapeData,
-  scrapeFindOneBySourceID,
-  scrapeFindOneByUUID,
-  scrapeInsert,
-  scrapeMergeData,
-} from '../scrape-helpers'
+import { ScrapeData, scrapeFindOneByUUID, scrapeInsert, scrapeMergeData } from '../scrape-helpers'
 import { aroundCoords, decodeEntities, geocode } from '../utils'
 
 const TRIPADVISOR_DOMAIN = 'https://www.tripadvisor.com'
 const TRIPADVISOR_PROXY = process.env.TRIPADVISOR_PROXY || TRIPADVISOR_DOMAIN
 
 const removeStartSlash = (x: string) => (x.startsWith('/') ? x.slice(1) : x)
-const axios = axios_base.create({
-  baseURL: TRIPADVISOR_PROXY,
-  headers: {
-    common: {
-      'X-My-X-Forwarded-For': 'www.tripadvisor.com',
-    },
-  },
-})
 
 export class Tripadvisor extends WorkerJob {
   public scrape_id!: string
@@ -77,8 +60,12 @@ export class Tripadvisor extends WorkerJob {
     const dimensions = `&mz=17&mw=${this.MAPVIEW_SIZE}&mh=${this.MAPVIEW_SIZE}`
     const coords = `&mc=${lat},${lon}`
     const uri = TRIPADVISOR_PROXY + base + dimensions + coords
-    const response = await axios.get(uri)
-    for (const data of response.data.restaurants) {
+    const response = await fetchRetry(uri, {
+      headers: {
+        'X-My-X-Forwarded-For': 'www.tripadvisor.com',
+      },
+    }).then((res) => res.json())
+    for (const data of response.restaurants) {
       await this.runOnWorker('getRestaurant', [removeStartSlash(data.url)])
       if (this._TESTS__LIMIT_GEO_SEARCH) break
     }
@@ -262,13 +249,16 @@ export class Tripadvisor extends WorkerJob {
   }
 
   async parsePhotoPage(page = 0) {
-    const path = this.buildGalleryURL(page)
-    const response = await axios.get(TRIPADVISOR_PROXY + path, {
+    const offset = page * 50
+    const path =
+      `DynamicPlacementAjax?detail=${this.detail_id}` +
+      `&albumViewMode=hero&placementRollUps=responsive-photo-viewer&metaReferer=Restaurant_Review&offset=${offset}`
+    const html = await fetchRetry(TRIPADVISOR_PROXY + path, {
       headers: {
+        'X-My-X-Forwarded-For': 'www.tripadvisor.com',
         'X-Requested-With': 'XMLHttpRequest',
       },
-    })
-    const html = response.data
+    }).then((x) => x.text())
     const $ = cheerio.load(html)
     const photos = $('.tinyThumb')
     let parsed: any[] = []
@@ -288,19 +278,6 @@ export class Tripadvisor extends WorkerJob {
       })
     }
     return parsed
-  }
-
-  buildGalleryURL(page = 0) {
-    let path = 'DynamicPlacementAjax?'
-    const offset = page * 50
-    const params = [
-      'detail=' + this.detail_id,
-      'albumViewMode=hero',
-      'placementRollUps=responsive-photo-viewer',
-      'metaReferer=Restaurant_Review',
-      'offset=' + offset,
-    ].join('&')
-    return path + params
   }
 
   extractDetailID(path: string) {

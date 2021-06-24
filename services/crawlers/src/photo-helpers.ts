@@ -371,7 +371,7 @@ async function assessPhotoWithoutRetries(urls: string[]) {
     const quality = imageQualities.find((r) => id == r.image_id)?.mean_score_prediction
     const categories = imageCategories.find((x) => x.url === url)?.categories
     if (process.env.DISH_DEBUG) {
-      console.log('got image categories', categories)
+      console.log('got image categories', categories?.map((x) => x.label).join(','))
     }
     if (!quality || !categories) {
       console.warn('No result found!')
