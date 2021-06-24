@@ -39,6 +39,14 @@ declare module "@dish/helpers" {
 }
 
 declare module "@dish/helpers" {
+    export const fetchRetry: (url: RequestInfo, { retry, retryDelay, backoff, ...opts }?: RequestInit & {
+        retry?: number | undefined;
+        backoff?: boolean | undefined;
+        retryDelay?: number | undefined;
+    }) => any;
+}
+
+declare module "@dish/helpers" {
     export function reduce<A extends {
         [key: string]: any;
     }>(obj: A, transform: (key: keyof A, val: any) => any): {
