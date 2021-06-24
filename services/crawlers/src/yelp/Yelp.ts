@@ -351,15 +351,13 @@ export class Yelp extends WorkerJob {
     // clean just a bit
     delete dynamic['messages']
 
-    const json: YelpDetailPageData['json'] | null =
-      ldjsonsIn
-        .filter(Boolean)
-        .find((x) => x['@type'] === 'Restaurant' || x['@type'] === 'LocalBusiness') ||
-      ldjsonsIn[0] ||
-      null
+    const jsonByType = ldjsonsIn
+      .filter(Boolean)
+      .find((x) => x['@type'] === 'Restaurant' || x['@type'] === 'LocalBusiness')
+    const json: YelpDetailPageData['json'] | null = jsonByType || ldjsonsIn[1] || null
 
     if (!json) {
-      console.log('error no Restaurant schema data found', { json, ldjsonsIn })
+      console.log('error no schema data found', { json, ldjsonsIn })
       return
     }
 

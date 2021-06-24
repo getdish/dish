@@ -43,11 +43,12 @@ function compose() {
 }
 
 function compose_build() {
-  echo "🐳 compose build... $@ $TIMESCALE_IMAGE"
+  args="--build-arg=GIT_COMMIT=$(git rev-parse --short HEAD) --build-arg=GIT_BRANCH=$(git rev-parse --abbrev-ref HEAD)"
+  echo "🐳 compose build... $args $@"  
   if [ "$1" = "base" ] || [ "$1" = "run-tests" ]; then
-    docker-compose -f docker-internal.yml build "$@"
+    docker-compose -f docker-internal.yml build "$args" "$@"
   else
-    docker-compose build "$@"
+    docker-compose build "$args" "$@"
   fi
 }
 
@@ -1164,7 +1165,7 @@ popd >/dev/null
 
 function_to_run=$1
 
-echo "dsh -- env $DISH_ENV in $PROJECT_ROOT running $function_to_run"
+echo "dsh -- env $DISH_ENV in $PROJECT_ROOT running $function_to_run $GIT_COMMIT"
 
 if [ "$NO_PRINT_HELP" != "1" ] && [ "$function_to_run" = "" ]; then
   for f in $(declare -F | cut -d ' ' -f3); do
