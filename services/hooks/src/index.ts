@@ -1,5 +1,3 @@
-import { exec } from 'child_process'
-
 import AWS from 'aws-sdk'
 import express from 'express'
 import fetch from 'node-fetch'
@@ -92,10 +90,12 @@ app.post('/do_image_upload', async (req, res) => {
         }
       )
     })
+    console.log('Uploaded', payload.photo_id)
     // const result = await shell(`${ROOT}/do_image_upload.sh ${args}`)
     // console.log(result)
     res.send('OK')
   } catch (error) {
+    console.error(error.message, error.stack)
     if (error.message.includes('rate')) {
       res.status(408)
       res.send('Digital Ocean Spaces rate limit')
