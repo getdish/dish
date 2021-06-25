@@ -7,7 +7,9 @@ import { AbsoluteVStack, HStack, Input, Spacer, Text, VStack, useTheme } from 's
 import { blue } from '../../../constants/colors'
 import { queryRestaurant } from '../../../queries/queryRestaurant'
 import { ensureFlexText } from '../../home/restaurant/ensureFlexText'
+import { CommentBubble } from '../CommentBubble'
 import { Link } from '../Link'
+import { LogoCircle } from '../Logo'
 import { SmallButton } from '../SmallButton'
 
 const quote = (
@@ -21,6 +23,7 @@ const quote = (
 export const RestaurantOverview = memo(
   graphql(function RestaurantOverview({
     text,
+    isDishBot,
     editableDescription,
     onEdit,
     restaurantSlug,
@@ -29,6 +32,7 @@ export const RestaurantOverview = memo(
     disableEllipse,
     maxLines = 3,
   }: {
+    isDishBot?: boolean
     restaurantSlug: string
     fullHeight?: boolean
     size?: 'lg'
@@ -58,7 +62,7 @@ export const RestaurantOverview = memo(
     const editedText = useRef('')
 
     if (summary || editableDescription) {
-      return (
+      const content = (
         // height 100% necessary for native
         <VStack width="100%" height={fullHeight ? '100%' : undefined}>
           {ensureFlexText}
@@ -154,6 +158,16 @@ export const RestaurantOverview = memo(
           </HStack>
         </VStack>
       )
+
+      if (isDishBot) {
+        return (
+          <CommentBubble avatar={<LogoCircle />} name="DishBot" avatarBackgroundColor="transparent">
+            {content}
+          </CommentBubble>
+        )
+      }
+
+      return content
     } else {
       // console.log('no summary', summary)
     }

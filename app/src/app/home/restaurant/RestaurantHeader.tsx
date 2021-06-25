@@ -10,7 +10,6 @@ import {
   Text,
   Theme,
   VStack,
-  useTheme,
   useThemeName,
 } from 'snackui'
 
@@ -25,16 +24,13 @@ import { Link } from '../../views/Link'
 import { LogoCircle } from '../../views/Logo'
 import { PaneControlButtonsLeft } from '../../views/PaneControlButtons'
 import { RestaurantOverview } from '../../views/restaurant/RestaurantOverview'
-import { RestaurantTagsRow } from '../../views/restaurant/RestaurantTagsRow'
 import { SmallButton } from '../../views/SmallButton'
 import { RestaurantRatingView } from '../RestaurantRatingView'
 import { RestaurantAddress } from './RestaurantAddress'
 import { RestaurantAddressLinksRow } from './RestaurantAddressLinksRow'
 import { RestaurantAddToListButton } from './RestaurantAddToListButton'
-import { RestaurantDeliveryButtons } from './RestaurantDeliveryButtons'
 import { openingHours } from './RestaurantDetailRow'
 import { RestaurantFavoriteStar } from './RestaurantFavoriteButton'
-import { RestaurantLists } from './RestaurantLists'
 import { RestaurantPhotosRow } from './RestaurantPhotosRow'
 
 type RestaurantHeaderProps = {
@@ -71,7 +67,6 @@ const RestaurantHeaderContent = memo(
       const fontSizeBase =
         nameLen > 40 ? 24 : nameLen > 30 ? 26 : nameLen > 24 ? 30 : nameLen > 18 ? 34 : 40
       const fontSize = scale * fontSizeBase * fontScale
-      const contentLeftWidth = width - 60
       const restaurantId = restaurant.id
       const [photoWidth, setPhotoWidth] = useState(width * 0.5)
       const [hasScrolled, setHasScrolled] = useState(false)
@@ -120,7 +115,7 @@ const RestaurantHeaderContent = memo(
 
           <Theme name={themeName === 'dark' ? `${colors.name}-dark` : colors.name}>
             <VStack
-              marginTop={140}
+              marginTop={160}
               minWidth={minWidth}
               maxWidth={width}
               borderTopRightRadius={drawerBorderRadius - 1}
@@ -231,6 +226,21 @@ const RestaurantHeaderContent = memo(
                     </VStack>
                   </VStack>
                 </HStack>
+
+                {/* OVERVIEW - DISH BOT */}
+
+                {/* overview bubble */}
+                <VStack paddingRight={20}>
+                  {/* keeps text color of background instead of header theme */}
+                  <Theme name={themeName}>
+                    <RestaurantOverview
+                      isDishBot
+                      maxLines={6}
+                      size="lg"
+                      restaurantSlug={restaurantSlug}
+                    />
+                  </Theme>
+                </VStack>
               </VStack>
             </VStack>
           </Theme>

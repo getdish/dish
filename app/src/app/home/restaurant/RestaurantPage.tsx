@@ -195,20 +195,6 @@ const RestaurantPage = memo(
               <RestaurantLists restaurantSlug={restaurantSlug} />
             </Suspense>
 
-            {/* OVERVIEW - DISH BOT */}
-            <VStack paddingRight={20}>
-              {/* idk why this theme here is necessary */}
-              {/* <Theme name={themeName}> */}
-              <CommentBubble
-                avatar={<LogoCircle />}
-                name="DishBot"
-                avatarBackgroundColor="transparent"
-              >
-                <RestaurantOverview maxLines={6} size="lg" restaurantSlug={restaurantSlug} />
-              </CommentBubble>
-              {/* </Theme> */}
-            </VStack>
-
             <RestaurantDeliveryButtons
               marginTop={20}
               marginBottom={20}
