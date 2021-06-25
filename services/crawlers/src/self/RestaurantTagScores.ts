@@ -4,6 +4,7 @@ import { bertResultToNumber, fetchBertSentiment } from '@dish/helpers'
 import { Loggable } from '@dish/worker'
 import { chunk } from 'lodash'
 
+import { DISH_DEBUG } from '../constants'
 import { Self } from './Self'
 
 const BERT_NEGATIVE_SENTIMENT_CRITERIA = -0.999
@@ -50,7 +51,6 @@ export class RestaurantTagScores extends Loggable {
     for (const [index, batch] of batches.entries()) {
       this.log('Analyzing sentiment for batch', index, 'of ', batches.length)
       const assessed_batch = await this.getBertSentimentBatch(batch)
-
       assessed.push(...assessed_batch)
     }
     return assessed
