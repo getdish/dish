@@ -36,7 +36,7 @@ export const RestaurantPhotosRowContent = memo(
     if (!restaurant) {
       return null
     }
-    const mainPhoto = restaurant.image
+    // const mainPhoto = restaurant.image
     const otherPhotos = restaurant
       .photo_table({
         limit: 6,
@@ -51,7 +51,7 @@ export const RestaurantPhotosRowContent = memo(
       .map((x) => x.photo.url)
       .filter(isPresent)
 
-    const photos = mainPhoto ? [mainPhoto, ...otherPhotos] : otherPhotos
+    const photos = otherPhotos //mainPhoto ? [mainPhoto, ...otherPhotos] : otherPhotos
     const initialWidth = useConstant(() => width)
 
     const photosData = photos.map((url, index) => {
