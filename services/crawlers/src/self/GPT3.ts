@@ -1,5 +1,6 @@
 import { sentryMessage } from '@dish/common'
 
+import { DISH_DEBUG } from '../constants'
 import { getSummary } from './getSummary'
 import { Self } from './Self'
 
@@ -33,7 +34,8 @@ Summary: Top tier tacos. Big Birria tacos with amazing flavor (the cheese is a m
 ---
 `
 
-export const post_prompt = `"""
+export const post_prompt = `
+"""
 Summary:`
 
 // in order of most powerful => least
@@ -50,7 +52,7 @@ export class GPT3 {
     const is_in_sanfran = this.crawler.restaurant.address?.includes('Francisco')
     const is_high_scoring = this.crawler.restaurant.score >= 700
     const engine: OpenAIEngines = is_in_sanfran && is_high_scoring ? 'davinci' : 'curie'
-    this.crawler.log('Running GPT3 summariser for restaurant...')
+    this.crawler.log('Running GPT3 summariser for restaurant...', engine)
     const highlights = await this.findHighlights()
     const summary = await getSummary(highlights)
     const completion = await this.complete(summary, engine)
@@ -100,7 +102,7 @@ export class GPT3 {
       },
       body: JSON.stringify(body),
     }
-    if (process.env.DISH_DEBUG) {
+    if (DISH_DEBUG > 1) {
       console.log('Requesting GPT3 summary...')
       console.log(body.prompt)
     }
@@ -118,7 +120,7 @@ export class GPT3 {
     } else {
       answer = response.choices[0].text
     }
-    if (process.env.DISH_DEBUG) {
+    if (DISH_DEBUG > 1) {
       console.log('...GPT3 summary returned: ')
       console.log(answer)
     }
