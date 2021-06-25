@@ -248,6 +248,7 @@ export class Yelp extends WorkerJob {
       }
       findOne('strict')
       findOne('fuzzy')
+      findOne('name')
     }
 
     if (!toCrawl.length) {
@@ -500,21 +501,34 @@ export class Yelp extends WorkerJob {
 }
 
 function isMatchingRestaurant(
-  data,
+  data: any,
   restaurant: RestaurantMatching,
-  exactness: 'fuzzy' | 'strict' = 'strict'
+  exactness: 'fuzzy' | 'strict' | 'name' = 'strict'
 ) {
+  const similarName = isSimilar(restaurant.name, data?.name)
+  if (exactness === 'name') {
+    return similarName
+  }
+  const similarAddress = isSimilar(data.formattedAddress, restaurant?.address)
+  const similarPhone = isSimilar(restaurant.telephone, data.phone)
   if (exactness !== 'strict') {
-    const similarAddress =
-      data.formattedAddress && restaurant.address?.includes(data.formattedAddress)
-    const samePhone = restaurant.telephone === data.phone
-    const similarName = data?.name.includes(restaurant.name) || restaurant.name?.includes(data.name)
     return (
-      (similarName && samePhone) || (similarName && similarAddress) || (similarAddress && samePhone)
+      (similarName && similarPhone) ||
+      (similarName && similarAddress) ||
+      (similarAddress && similarPhone)
     )
   }
-  if (restaurant.name === data.name) {
+  if (similarName) {
     return data.formattedAddress === restaurant.address
   }
   return false
 }
+
+// TODO could use levenshtein
+const isSimilar = (a?: string | null, b?: string | null) => {
+  const ac = stripExtraChars(a ?? '')
+  const bc = stripExtraChars(b ?? '')
+  return ac.includes(bc) || bc.includes(ac)
+}
+
+const stripExtraChars = (str: string) => str.replace(/[^a-z0-9]/gi, '')
