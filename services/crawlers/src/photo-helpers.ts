@@ -26,6 +26,7 @@ import { selectFields } from 'gqless'
 import { chunk, difference, uniqBy } from 'lodash'
 import fetch, { Response } from 'node-fetch'
 
+import { DISH_DEBUG } from './constants'
 import { Database } from './database'
 
 const PhotoBaseQueryHelpers = createQueryHelpersFor<PhotoBase>('photo')
@@ -60,11 +61,7 @@ async function ensureValidPhotos(photosOg: Partial<PhotoXref>[]) {
   const valid = (
     await Promise.all(
       photosOg.map(async (photo) => {
-        if (!photo.photo?.url) return null
-        const res = await fetch(photo.photo?.url)
-        if (res.status !== 200) return null
-        const contentType = res.headers.get('content-type')
-        return contentType?.startsWith('image/') ? photo : null
+        return (await isValidPhoto(photo.photo?.url)) ? photo : null
       })
     )
   ).filter(isPresent)
@@ -80,6 +77,14 @@ async function ensureValidPhotos(photosOg: Partial<PhotoXref>[]) {
     }
   }
   return valid
+}
+
+async function isValidPhoto(url?: string | null) {
+  if (!url) return false
+  const res = await fetch(url)
+  if (res.status >= 300) return false
+  const contentType = res.headers.get('content-type')
+  return contentType?.startsWith('image/')
 }
 
 function normalizePhotos(photos: Partial<PhotoXref>[]) {
@@ -385,7 +390,7 @@ async function assessPhoto(urls: string[]) {
 
 // gets quality + categories
 async function assessPhotoWithoutRetries(urls: string[]) {
-  if (process.env.DISH_DEBUG) {
+  if (DISH_DEBUG) {
     // prettier-ignore
     console.log('Fetching Image Quality API batch...', urls.length, 'first:', urls[0])
   }
@@ -479,17 +484,38 @@ function proxyYelpCDN(photo: string) {
 }
 
 async function findUnassessedPhotos(photos: Partial<PhotoXref>[]): Promise<string[]> {
-  let unassessed_photos: PhotoXref[] = []
+  let unassessed: PhotoXref[] = []
   if (photos[0].restaurant_id != ZeroUUID && photos[0].tag_id == ZeroUUID) {
-    unassessed_photos = await unassessedPhotosForRestaurant(photos[0].restaurant_id)
+    unassessed = await unassessedPhotosForRestaurant(photos[0].restaurant_id)
   }
   if (photos[0].restaurant_id != ZeroUUID && photos[0].tag_id != ZeroUUID) {
-    unassessed_photos = await unassessedPhotosForRestaurantTag(photos[0].restaurant_id)
+    unassessed = [
+      //
+      ...unassessed,
+      ...(await unassessedPhotosForRestaurantTag(photos[0].restaurant_id)),
+    ]
   }
   if (photos[0].tag_id != ZeroUUID && photos[0].restaurant_id == ZeroUUID) {
-    unassessed_photos = await unassessedPhotosForTag(photos[0].tag_id)
+    unassessed = [
+      //
+      ...unassessed,
+      ...(await unassessedPhotosForTag(photos[0].tag_id)),
+    ]
   }
-  return unassessed_photos
+
+  // filter and delete invalid urls here as well in case we have old urls from previous scrapes that are no longer valid
+  // the other filter/delete only handles the current scrape
+  const validPhotos = (
+    await Promise.all(
+      unassessed.map(async (x) => {
+        if (await isValidPhoto(x.photo.url)) return x
+        await photoXrefDelete(x)
+        return null
+      })
+    )
+  ).filter(isPresent)
+
+  return validPhotos
     .filter((p) => {
       if (!p.photo?.url) {
         console.error('findUnassessedPhotos(): Photo.url NOT NULL violation')
