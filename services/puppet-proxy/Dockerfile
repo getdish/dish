@@ -1,7 +1,7 @@
 FROM mcr.microsoft.com/playwright:bionic
 
 COPY package.json .
-RUN npm install && npm install playwright-webkit
+RUN npm install
 COPY src src
 RUN npm run build:skip-types
 
