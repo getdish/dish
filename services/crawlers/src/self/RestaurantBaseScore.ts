@@ -59,6 +59,9 @@ export class RestaurantBaseScore extends Loggable {
     this.crawler.restaurant.upvotes = upvotes
     this.crawler.restaurant.downvotes = downvotes
     this.crawler.restaurant.votes_ratio = upvotes / (downvotes + upvotes)
+    this.log(
+      `upvotesDownvotes: ${upvotes} / ${downvotes} (votes_ratio: ${this.crawler.restaurant.votes_ratio})`
+    )
   }
 
   async scoreFromPhotos() {

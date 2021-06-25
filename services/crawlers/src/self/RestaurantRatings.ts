@@ -1,3 +1,4 @@
+import { DISH_DEBUG } from '../constants'
 import { scrapeGetData } from '../scrape-helpers'
 import { Self } from './Self'
 
@@ -70,7 +71,8 @@ export class RestaurantRatings {
 
     for (const source in ratings) {
       const rating = ratings[source]
-      if (Number.isNaN(rating) || typeof rating !== 'number') {
+      // rating === 0 should be impossible and mean no votes at all, so ignore that too
+      if (Number.isNaN(rating) || typeof rating !== 'number' || rating === 0) {
         continue
       } else {
         weights[source] = master_weights[source]
@@ -85,7 +87,9 @@ export class RestaurantRatings {
       final_rating += rating * normalised_weight
     }
 
-    // console.log('Calculated final rating', final_rating, { ratings, weights })
+    if (DISH_DEBUG) {
+      console.log('Calculated final rating', { final_rating, total_weight, ratings, weights })
+    }
 
     return final_rating
   }
