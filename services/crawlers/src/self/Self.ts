@@ -530,10 +530,16 @@ export class Self extends WorkerJob {
              ) t(id, f, t), f_opening_hours_hours(f, t) hours;
         END TRANSACTION;
       `
-    const result = await this.main_db.query(query)
-    return {
-      count: result[2].rowCount,
-      records,
+
+    try {
+      const result = await this.main_db.query(query)
+      return {
+        count: result[2].rowCount,
+        records,
+      }
+    } catch (err) {
+      console.error('Error setting hours', err.message, err.stack)
+      console.log('Hours records:', records.join(','))
     }
   }
 
