@@ -20,9 +20,10 @@ import {
   resolvedWithFields,
   uuid,
 } from '@dish/graph'
+import { isPresent } from '@dish/helpers'
 import FormData from 'form-data'
 import { selectFields } from 'gqless'
-import { chunk, uniqBy } from 'lodash'
+import { chunk, difference, uniqBy } from 'lodash'
 import fetch, { Response } from 'node-fetch'
 
 import { Database } from './database'
@@ -360,13 +361,30 @@ async function assessPhotoWithoutRetries(urls: string[]) {
     // prettier-ignore
     console.log('Fetching Image Quality API batch...', urls.length, 'first:', urls[0])
   }
+  // ensure they are valid image urls otherwise these steps fail
+  const validUrls = (
+    await Promise.all(
+      urls.map(async (url) => {
+        const res = await fetch(url)
+        if (res.status !== 200) return null
+        const contentType = res.headers.get('content-type')
+        return contentType?.startsWith('image/') ? url : null
+      })
+    )
+  ).filter(isPresent)
+
+  if (validUrls.length !== urls.length) {
+    console.warn(`Warning! some urls aren't valid: ${difference(urls, validUrls)}`)
+  }
+
   const [imageQualities, imageCategories, imageSimilarities] = await Promise.all([
-    getImageQuality(urls),
-    getImageCategory(urls),
-    getImageSimilarity(urls),
+    getImageQuality(validUrls),
+    getImageCategory(validUrls),
+    getImageSimilarity(validUrls),
   ])
+
   const res: Partial<PhotoBase>[] = []
-  for (const url of urls) {
+  for (const url of validUrls) {
     const id = crypto.createHash('md5').update(url).digest('hex')
     const quality = imageQualities.find((r) => id == r.image_id)?.mean_score_prediction
     const categories = imageCategories.find((x) => x.url === url)?.categories
@@ -525,9 +543,10 @@ export async function sendToDO(url: string, id: string) {
 
   while (true) {
     let retries = 1
-    const result = await doPut(url, id, mime_type || 'application/json')
+    const result = await doImageUpload(url, id, mime_type || 'application/json')
     const status = result.status
     if (status < 300) {
+      // success
       return
     }
     if (status > 299 && status != 408) {
@@ -546,7 +565,7 @@ export async function sendToDO(url: string, id: string) {
   }
 }
 
-async function doPut(url: string, id: uuid, content_type: string) {
+async function doImageUpload(url: string, id: uuid, content_type: string) {
   const uploadUrl = process.env.HOOKS_ENDPOINT + '/do_image_upload'
   try {
     const result = await fetch(uploadUrl, {
