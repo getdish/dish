@@ -17,6 +17,7 @@ import { CommentBubble } from '../../views/CommentBubble'
 import { ContentScrollView } from '../../views/ContentScrollView'
 import { LogoCircle } from '../../views/Logo'
 import { NotFoundPage } from '../../views/NotFoundPage'
+import { PageTitleTag } from '../../views/PageTitleTag'
 import { RestaurantOverview } from '../../views/restaurant/RestaurantOverview'
 import { RestaurantTagsRow } from '../../views/restaurant/RestaurantTagsRow'
 import { StackDrawer } from '../../views/StackDrawer'
@@ -145,6 +146,7 @@ const RestaurantPage = memo(
 
     return (
       <>
+        <PageTitleTag>{`${restaurant.name} has the best ${topTags.join(', ')}`}</PageTitleTag>
         <ContentScrollView
           ref={setScrollView}
           onScrollYThrottled={(y) => {
