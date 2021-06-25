@@ -147,6 +147,31 @@ big impact changes
 
 ## bigger impact changes
 
+
+### Generally making the stack a lot easier to work with.
+
+On a high level:
+
+#### Reducing complexity
+
+- reduce services/images:
+  - worker, cron, run-tests: these images have big overlap, combine into one
+  - search => dish-app
+  - make base image lighter ? avoiding deps building in the beginning
+
+#### Adding introspection
+
+- UI for databases: timescale + postgres thats ideally in dish-app/admin
+
+#### Speeding up and simplifying local dev flows
+
+- Ideally should be able to run against some sort of "personal" instance thats in the cloud but you have shell access into
+
+#### Automate failure and recovery modes better
+
+- Crawls should detect when failures are happening at a high rate and cancel the rest of the crawl
+
+
 - importing instagram and other feed data to have more aliveness
 - top dishes <=> map pins + easily moving around cities.
   - then easily filter it down to any cuisine (top right input opposite "Uniquely Good")
