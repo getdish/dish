@@ -63,8 +63,10 @@ export const RestaurantPhotosRowContent = memo(
       const uri = getImageUrl(url, initialWidth * wScale * 1.5, photoHeight * 1.5, 100)
       return { uri, height: photoHeight, width: photoWidth, isEscalated }
     })
-
     const fullWidth = photosData.reduce((a, b) => a + b.width, 0)
+
+    console.log('photosData', JSON.stringify(photosData, null, 2))
+
     return (
       // an attempt to get native to scroll but not working
       <HStack minWidth={fullWidth}>
