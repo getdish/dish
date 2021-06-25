@@ -42,6 +42,7 @@ export type YelpListItemData = {
 }
 
 export type YelpScrapeData = YelpDetailPageData & {
+  yelp_path: string
   data_from_search_list_item: YelpListItemData
   photos: {
     [key: string]: { url: string; caption: string }[]

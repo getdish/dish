@@ -1,4 +1,3 @@
-// @ts-ignore
 import { Page, WebKitBrowser, devices, webkit } from 'playwright-webkit'
 
 if (!process.env.LUMINATI_PROXY_HOST) {
@@ -87,8 +86,10 @@ async function ensureInstance(
       console.log('using context', contextConfig)
       const context = await browser.newContext(contextConfig)
       const page = await context.newPage()
-      console.log('loading origin once first', url.origin)
-      await page.goto(url.origin)
+      if (process.env.NODE_ENV === 'production') {
+        console.log('loading origin once first', url.origin)
+        await page.goto(url.origin)
+      }
       console.log('creating page')
       instances[url.origin] = {
         proxy: url.proxy,
@@ -146,6 +147,7 @@ export async function fetchBrowser(
 
 export async function fetchBrowserJSON(uri: string, retry = 0) {
   const { instance, url } = await getBrowserAndURL(uri, retry)
+  if (!instance || !instance.page) throw new Error(`No browser instance`)
   try {
     // all except last two attempts, do it inline for less resource usage
     if (retry > 1) {
@@ -199,6 +201,7 @@ export async function fetchBrowserHTML(uri: string, retry = 0) {
       instance: { page },
       url,
     } = await getBrowserAndURL(uri, retry)
+    if (!page) throw new Error(`No browser instance`)
     console.log('fetch browser html', uri, retry)
     await page.goto(url.uri, {
       timeout: 60_000,
@@ -217,6 +220,7 @@ export async function fetchBrowserScriptData(uri: string, selectors: string[], r
     instance: { page },
     url,
   } = await getBrowserAndURL(uri, retry)
+  if (!page) throw new Error(`No browser instance`)
   console.log('fetch browser hyperscript', uri, retry)
   await page.goto(url.uri, {
     timeout: 60_000,
@@ -237,21 +241,25 @@ export async function fetchBrowserScriptData(uri: string, selectors: string[], r
         await Promise.all(
           handles.map(async (handle) => {
             try {
-              const textContent = await handle.textContent()
-              if (!textContent) {
-                return null
-              }
               const isHyperscript = !!(await handle.getAttribute('data-hypernova-key'))
               if (isHyperscript) {
+                const textContent = await handle.textContent()
+                if (!textContent) {
+                  return null
+                }
                 console.log('got hyperscript, parsing..', textContent.slice(0, 50) + '...')
                 return hyperDecode(textContent)
               }
               const isLDJSON = (await handle.getAttribute('type')) == 'application/ld+json'
               if (isLDJSON) {
+                const textContent = await handle.textContent()
+                if (!textContent) {
+                  return null
+                }
                 console.log('got ldjson')
                 return JSON.parse(textContent)
               }
-              return textContent
+              return await handle.innerHTML()
             } catch (err) {
               console.log('error processing handle', err.message, err.stack)
               return null

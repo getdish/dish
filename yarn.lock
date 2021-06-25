@@ -2392,9 +2392,8 @@ __metadata:
   dependencies:
     "@dish/esdx": "*"
     express: ^4.17.1
-    typescript: ^4.2.4
-  peerDependencies:
     playwright-webkit: ^1.10.0
+    typescript: ^4.2.4
   languageName: unknown
   linkType: soft
 
@@ -11806,7 +11805,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"extract-zip@npm:^2.0.0":
+"extract-zip@npm:^2.0.0, extract-zip@npm:^2.0.1":
   version: 2.0.1
   resolution: "extract-zip@npm:2.0.1"
   dependencies:
@@ -15368,7 +15367,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"jpeg-js@npm:^0.4.0, jpeg-js@npm:^0.4.1":
+"jpeg-js@npm:^0.4.0, jpeg-js@npm:^0.4.1, jpeg-js@npm:^0.4.2":
   version: 0.4.3
   resolution: "jpeg-js@npm:0.4.3"
   checksum: c882ae02b8639d92b0004520dc949363dd1ff9dcfbadbb93f1760c9a3aab894fdca66af2ff57bcdb85a2741dba51cbaf748745eb3165bf2b73bdef2cfd639442
@@ -17059,7 +17058,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"mime@npm:^2.3.1, mime@npm:^2.4.1, mime@npm:^2.4.4, mime@npm:^2.4.7":
+"mime@npm:^2.3.1, mime@npm:^2.4.1, mime@npm:^2.4.4, mime@npm:^2.4.6, mime@npm:^2.4.7":
   version: 2.5.2
   resolution: "mime@npm:2.5.2"
   bin:
@@ -18906,6 +18905,30 @@ __metadata:
   languageName: node
   linkType: hard
 
+"playwright-webkit@npm:^1.10.0":
+  version: 1.12.2
+  resolution: "playwright-webkit@npm:1.12.2"
+  dependencies:
+    commander: ^6.1.0
+    debug: ^4.1.1
+    extract-zip: ^2.0.1
+    https-proxy-agent: ^5.0.0
+    jpeg-js: ^0.4.2
+    mime: ^2.4.6
+    pngjs: ^5.0.0
+    progress: ^2.0.3
+    proper-lockfile: ^4.1.1
+    proxy-from-env: ^1.1.0
+    rimraf: ^3.0.2
+    stack-utils: ^2.0.3
+    ws: ^7.4.6
+    yazl: ^2.5.1
+  bin:
+    playwright: lib/cli/cli.js
+  checksum: ed4121ab3c7e823b1cbe73250c4eb3a4829a7bb06e4e2bd037de91c07f0d4467d2b372b0ec585128bd0df5c3addc2cf3c0b6e920845be040731b7286dff90e95
+  languageName: node
+  linkType: hard
+
 "plist@npm:^3.0.1":
   version: 3.0.1
   resolution: "plist@npm:3.0.1"
@@ -19657,6 +19680,17 @@ __metadata:
     object-assign: ^4.1.1
     react-is: ^16.8.1
   checksum: a440dd406c5cf53bf39f3e898d2c65178511d34ca3c8c789b30c177992408b9e4273969726b274719aa69ccce5ab34b2fd8caa60b90f23cd2e910cdcf682de52
+  languageName: node
+  linkType: hard
+
+"proper-lockfile@npm:^4.1.1":
+  version: 4.1.2
+  resolution: "proper-lockfile@npm:4.1.2"
+  dependencies:
+    graceful-fs: ^4.2.4
+    retry: ^0.12.0
+    signal-exit: ^3.0.2
+  checksum: a89fe12b3ed2a1413731cfa3b705b94f2411354cce660a2120cc0bd9337cef3710c41f73b88bc4f13eca8efa6530883645dea8e077b32d519d067f0f11271c34
   languageName: node
   linkType: hard
 
@@ -24961,6 +24995,21 @@ __metadata:
   languageName: node
   linkType: hard
 
+"ws@npm:^7.4.6":
+  version: 7.5.0
+  resolution: "ws@npm:7.5.0"
+  peerDependencies:
+    bufferutil: ^4.0.1
+    utf-8-validate: ^5.0.2
+  peerDependenciesMeta:
+    bufferutil:
+      optional: true
+    utf-8-validate:
+      optional: true
+  checksum: f9ac36310e795995f13ac7abff9c3b104b2460864de7f0b6233d285f62c6929529e24f386ff87740c3646f818fefa014be587371aa9a5a6fffae2cd9d1e9e008
+  languageName: node
+  linkType: hard
+
 "xcode@npm:2.0.0":
   version: 2.0.0
   resolution: "xcode@npm:2.0.0"
@@ -25291,6 +25340,15 @@ __metadata:
     buffer-crc32: ~0.2.3
     fd-slicer: ~1.1.0
   checksum: 6d0c4e72706ec2df6ea842d09c792e7b34badc5db3d8a893e0c70d0e464c9bf82bac4b1690f3515b5e1d96b72fceb6cc4dd96465426077ba6dddc54e7dd4d517
+  languageName: node
+  linkType: hard
+
+"yazl@npm:^2.5.1":
+  version: 2.5.1
+  resolution: "yazl@npm:2.5.1"
+  dependencies:
+    buffer-crc32: ~0.2.3
+  checksum: ee9bd2f57dfe1bdca333749bbb42b5a9e68a39871a31d8eed93b5606b8dfa1a1dda89af5cfd274a455c0f5f5790d743538067f2468d3bc8cd4227cdc94bc6ec3
   languageName: node
   linkType: hard
 

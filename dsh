@@ -143,7 +143,11 @@ function deploy_to() {
   "
 }
 
-function docker_logs() {
+function logs() {
+  docker service logs "$@"
+}
+
+function docker_swarm_logs() {
   journalctl -u docker.service | tail -n 50
   docker events
 }
@@ -480,7 +484,7 @@ function ci_shell() {
 
 # TODO make this automatic
 function postgres_resetwal() {
-  sudo -u systemd-coredump /usr/lib/postgresql/12/bin/pg_resetwal -f /var/data/postgresdb/production
+  sudo -u systemd-coredump /usr/lib/postgresql/12/bin/pg_resetwal -f /var/data/postgresdb/production || echo "didnt reset"
 }
 
 function psql_postgres() {

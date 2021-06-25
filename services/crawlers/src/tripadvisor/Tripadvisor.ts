@@ -14,7 +14,7 @@ import { Puppeteer } from '../Puppeteer'
 import { ScrapeData, scrapeFindOneByUUID, scrapeInsert, scrapeMergeData } from '../scrape-helpers'
 import { aroundCoords, decodeEntities, geocode } from '../utils'
 
-const TRIPADVISOR_DOMAIN = 'https://www.tripadvisor.com'
+const TRIPADVISOR_DOMAIN = 'https://www.tripadvisor.com/'
 const TRIPADVISOR_PROXY = process.env.TRIPADVISOR_PROXY || TRIPADVISOR_DOMAIN
 
 const removeStartSlash = (x: string) => (x.startsWith('/') ? x.slice(1) : x)
@@ -75,7 +75,9 @@ export class Tripadvisor extends WorkerJob {
     this.detail_id = this.extractDetailID(path)
     const pup = new Puppeteer(TRIPADVISOR_DOMAIN, process.env.TRIPADVISOR_PROXY)
     await pup.boot()
-    await pup.page.goto(TRIPADVISOR_DOMAIN + removeStartSlash(path), {
+    const restaurantUrl = TRIPADVISOR_DOMAIN + removeStartSlash(path)
+    this.log(`Loading url`, restaurantUrl)
+    await pup.page.goto(restaurantUrl, {
       timeout: 15_000,
       waitUntil: 'networkidle0',
     })
@@ -134,8 +136,8 @@ export class Tripadvisor extends WorkerJob {
   // parallelism is overcomplicating, so i turned it off here
   async saveReviews(scrape_id: string, pageNum: number, pup: Puppeteer) {
     const page = pup.page
-    if (process.env.DISH_ENV == 'test' && pageNum > 3) {
-      console.log('TEST MODE, finishing on page 3')
+    if (process.env.DISH_ENV == 'test' && pageNum > 1) {
+      console.log('TEST MODE, finishing past page 1')
       return
     }
     const scrape = await scrapeFindOneByUUID(scrape_id)

@@ -4,7 +4,7 @@ import { sleep } from '@dish/async'
 import { sentryMessage } from '@dish/common'
 import { Restaurant, ZeroUUID, query, resolved } from '@dish/graph'
 import { decode } from '@dish/helpers-node'
-import { ProxiedRequests, WorkerJob } from '@dish/worker'
+import { ProxiedRequests, WorkerJob, fetchBrowserHTML, fetchBrowserScriptData } from '@dish/worker'
 import { JobOptions, QueueOptions } from 'bull'
 import _ from 'lodash'
 
@@ -45,7 +45,7 @@ const yelpAPIMobile = new ProxiedRequests(
 )
 
 export class Yelp extends WorkerJob {
-  current?: string
+  current_biz_path?: string
   find_only: RestaurantMatching | null = null
 
   static queue_config: QueueOptions = {
@@ -60,7 +60,7 @@ export class Yelp extends WorkerJob {
   }
 
   get logName() {
-    return `Yelp ${this.current || this.find_only?.name || '...'}`
+    return `Yelp ${this.current_biz_path || this.find_only?.name || '...'}`
   }
 
   async crawlSingle(slug: string) {
@@ -121,7 +121,7 @@ export class Yelp extends WorkerJob {
     }
     const addrs = rest.address.split(', ')
     const city = addrs.slice(addrs.length - 2, addrs.length).join(', ')
-    const name = decode(rest.name).replace(/[^a-z0-9]/, '')
+    const name = decode(rest.name).replace(/[^a-z0-9]/gi, '')
     // prettier-ignore
     const searchUrl = `/search_suggest/v2/prefetch?loc=${encodeURIComponent(city)}&loc_name_param=loc&is_new_loc=&prefix=${encodeURIComponent(name)}&is_initial_prefetch=`
     this.log(`Searching for restaurant ${YELP_DOMAIN + searchUrl}`)
@@ -230,6 +230,9 @@ export class Yelp extends WorkerJob {
     if (!onlyRestaurant) {
       toCrawl = validResults
     } else {
+      this.log(
+        `looking for specific restaurant based on ${onlyRestaurant.name} ${onlyRestaurant.address} ${onlyRestaurant.telephone}`
+      )
       const findOne = (strategy = 'strict') => {
         if (toCrawl.length) return
         for (const data of validResults) {
@@ -248,7 +251,7 @@ export class Yelp extends WorkerJob {
     }
 
     if (!toCrawl.length) {
-      console.log('none found!')
+      console.log('none found!', validResults.map((x) => x?.searchResultBusiness?.name).join(', '))
       return
     }
 
@@ -323,7 +326,7 @@ export class Yelp extends WorkerJob {
   }
 
   async getEmbeddedJSONData(id: string, yelp_path: string, id_from_source: string) {
-    this.current = yelp_path
+    this.current_biz_path = yelp_path
     this.log(`getting embedded JSON for: ${yelp_path}`)
     const [[dynamicIn], ldjsonsIn] = await yelpAPIMobile.getScriptData(yelp_path, [
       'script[data-hypernova-key*="__mobile_site__Biz__dynamic"]',
@@ -362,7 +365,7 @@ export class Yelp extends WorkerJob {
     }
 
     this.log(`merge scrape data: ${yelp_path}`)
-    const scrape = (await scrapeMergeData(id, { dynamic, json }))! as YelpScrape
+    const scrape = (await scrapeMergeData(id, { dynamic, json, yelp_path }))! as YelpScrape
 
     const { mapState } = scrape.data.dynamic.legacyProps.props.directionsModalProps
     const { latitude, longitude } = mapState.center
@@ -409,45 +412,63 @@ export class Yelp extends WorkerJob {
     }
     const bizId = scrape.id_from_source
     if (photoTotal > 0) {
-      await this.runOnWorker('getPhotos', [id, bizId, photoTotal])
+      await this.runOnWorker('getPhotos', [
+        id,
+        scrape.data.yelp_path.replace('/biz/', ''),
+        photoTotal,
+      ])
     }
     await this.runOnWorker('getReviews', [id, bizId])
   }
 
-  async getPhotos(id: string, bizId: string, photoTotal: number) {
+  async getPhotos(id: string, slug: string, photoTotal: number) {
     const PER_PAGE = 30
-    const YELPS_START_IS_THE_CEILING_OF_THE_PAGE = PER_PAGE
-    for (
-      let start = YELPS_START_IS_THE_CEILING_OF_THE_PAGE;
-      start <= photoTotal + PER_PAGE;
-      start += PER_PAGE
-    ) {
-      await this.runOnWorker('getPhotoPage', [id, bizId, start, Math.floor(start / PER_PAGE) - 1])
+    const pagesTotal = Math.ceil(photoTotal / PER_PAGE)
+    const pages = [...new Array(pagesTotal).fill(0)].map((_, i) => i)
+    this.log(`getPhotos pages ${pages.join(', ')}`)
+    for (const page of pages) {
+      await this.runOnWorker('getPhotoPage', [id, slug, page * PER_PAGE, page])
     }
   }
 
-  async getPhotoPage(id: string, bizId: string, start: number, page: number) {
+  async getPhotoPage(id: string, slug: string, start: number, page: number) {
     if (page > 2 && process.env.DISH_ENV === 'test') {
-      console.log('test mode exit early')
+      console.log('test mode exit after first page')
       return
     }
+    // this is removed :(
     // https://m.yelp.com/biz_photos/qs7FgJ-UXgpbAMass0Oojg/get_photos?start=14&dir=b
-    const url = '/biz_photos/' + bizId + '/get_photos' + '?start=' + start + '&dir=b'
-    const response: YelpPhotosData = await yelpAPIMobile.getJSON(url, {
-      headers: {
-        'X-Requested-With': 'XMLHttpRequest',
-      },
-    })
-    const media = response.media
-    let photos: { [keys: string]: any } = {}
-    photos['dishpage-' + page] = media
-      .filter((x) => x.src_high_res)
-      .map((item) => ({
-        url: item.src_high_res!.replace('348s', '1000s'),
-        caption: item.caption,
-      }))
+    const url = `${YELP_DOMAIN}/biz_photos/${slug}?start=${start}`
+    this.log(`getting photo page ${url}`)
+    //'/biz_photos/' + bizId + '/get_photos' + '?start=' + start + '&dir=b'
+    const response = await fetchBrowserScriptData(url, ['[data-photo-id]'])
+    const items = response.flat()
+
+    const data: { url: string; caption: string }[] = []
+
+    for (const item of items) {
+      if (!item || typeof item !== 'string') {
+        continue
+      }
+      const url = (item.match(/src="([^"]+)"/)?.[1] ?? '').replace(/\/[0-9]+s.jpg/, '/1000s.jpg')
+      // if no url or exists already ignore
+      if (!url || data.find((x) => x.url === url)) {
+        continue
+      }
+      const caption = item.match(/alt="Photo of[^\.]+\. ([^\"]+)"/)?.[1] ?? ''
+      data.push({
+        url: url,
+        caption: decode(caption.trim()),
+      })
+    }
+    if (DISH_DEBUG > 3) {
+      console.log(`Got photos`, data)
+    }
+
+    const photos: { [keys: string]: any } = {}
+    photos['dishpage-' + page] = data
     await scrapeMergeData(id, { photos })
-    this.log(`${this.current}, got photo page ${page} with ${media.length} photos`)
+    this.log(`got photo page ${page} with ${data.length} photos`)
   }
 
   async getReviews(id: string, bizId: string, start: number = 0) {
@@ -464,7 +485,7 @@ export class Yelp extends WorkerJob {
     let reviews: ScrapeData = {}
     reviews['dishpage-' + page] = data
     await scrapeMergeData(id, { reviews })
-    this.log(`${this.current}, got review page ${page} with ${data.length} reviews`)
+    this.log(`${this.current_biz_path}, got review page ${page} with ${data.length} reviews`)
 
     if (process.env.DISH_ENV == 'test') {
       this.log('Exiting review loop early in test mode')
