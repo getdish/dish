@@ -1,6 +1,6 @@
 import '@dish/helpers/polyfill'
 
-import { restaurantFindOne } from '@dish/graph'
+import { restaurantFindOne, restaurantUpdate } from '@dish/graph'
 
 import * as Google from './google/one'
 import { db } from './scrape-helpers'
@@ -25,6 +25,14 @@ export async function main(slug: string) {
       'crawling restaurant',
       `${slug} ${rest.id} ${rest.name} ${rest.address} ${rest.telephone}`
     )
+
+    // reset scrape_metadata so it redoes summary
+    console.log('reset restaurant scrape metadata')
+    rest.scrape_metadata = {
+      ...rest.scrape_metadata,
+      gpt_summary_updated_at: null,
+    }
+    await restaurantUpdate(rest)
 
     const skips = (process.env.SKIP ?? '').split(',')
     const shouldSkip = (str: string) => skips.includes(str)
