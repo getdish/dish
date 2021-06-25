@@ -33,6 +33,7 @@ const PhotoXrefQueryHelpers = createQueryHelpersFor<PhotoXref>('photo_xref')
 const photoBaseUpsert = PhotoBaseQueryHelpers.upsert
 
 export const photoXrefUpsert = PhotoXrefQueryHelpers.upsert
+export const photoXrefDelete = PhotoXrefQueryHelpers.delete
 export const photoXrefFindAll = PhotoXrefQueryHelpers.findAll
 
 const selectBasePhotoXrefFields = {
@@ -49,9 +50,36 @@ export const DO_BASE = 'https://dish-images.sfo2.digitaloceanspaces.com/'
 
 export async function photoUpsert(photosOg: Partial<PhotoXref>[]) {
   if (photosOg.length == 0) return
-  const photos = normalizePhotos(photosOg)
+  const photos = await ensureValidPhotos(normalizePhotos(photosOg))
   await photoXrefUpsert(photos)
   await postUpsert(photos)
+}
+
+// ensure they are valid image urls otherwise other steps fail
+async function ensureValidPhotos(photosOg: Partial<PhotoXref>[]) {
+  const valid = (
+    await Promise.all(
+      photosOg.map(async (photo) => {
+        if (!photo.photo?.url) return null
+        const res = await fetch(photo.photo?.url)
+        if (res.status !== 200) return null
+        const contentType = res.headers.get('content-type')
+        return contentType?.startsWith('image/') ? photo : null
+      })
+    )
+  ).filter(isPresent)
+
+  const invalids = difference(photosOg, valid)
+  if (invalids.length) {
+    // prettier-ignore
+    console.warn(`Warning! some urls aren't valid, deleting: ${invalids.map((x) => x.photo?.url ?? '').join(', ')}`)
+    for (const invalid of invalids) {
+      if (invalid.id) {
+        await photoXrefDelete({ id: invalid.id })
+      }
+    }
+  }
+  return valid
 }
 
 function normalizePhotos(photos: Partial<PhotoXref>[]) {
@@ -361,30 +389,15 @@ async function assessPhotoWithoutRetries(urls: string[]) {
     // prettier-ignore
     console.log('Fetching Image Quality API batch...', urls.length, 'first:', urls[0])
   }
-  // ensure they are valid image urls otherwise these steps fail
-  const validUrls = (
-    await Promise.all(
-      urls.map(async (url) => {
-        const res = await fetch(url)
-        if (res.status !== 200) return null
-        const contentType = res.headers.get('content-type')
-        return contentType?.startsWith('image/') ? url : null
-      })
-    )
-  ).filter(isPresent)
-
-  if (validUrls.length !== urls.length) {
-    console.warn(`Warning! some urls aren't valid: ${difference(urls, validUrls)}`)
-  }
 
   const [imageQualities, imageCategories, imageSimilarities] = await Promise.all([
-    getImageQuality(validUrls),
-    getImageCategory(validUrls),
-    getImageSimilarity(validUrls),
+    getImageQuality(urls),
+    getImageCategory(urls),
+    getImageSimilarity(urls),
   ])
 
   const res: Partial<PhotoBase>[] = []
-  for (const url of validUrls) {
+  for (const url of urls) {
     const id = crypto.createHash('md5').update(url).digest('hex')
     const quality = imageQualities.find((r) => id == r.image_id)?.mean_score_prediction
     const categories = imageCategories.find((x) => x.url === url)?.categories
