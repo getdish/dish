@@ -3,11 +3,6 @@ FROM node:16.3.0-buster
 
 WORKDIR /app
 
-ARG GIT_BRANCH=""
-ARG GIT_COMMIT=""
-ENV GIT_BRANCH=${GIT_BRANCH}
-ENV GIT_COMMIT=${GIT_COMMIT}
-
 ENV PATH=$PATH:/app/node_modules/.bin:node_modules/.bin
 ENV NODE_OPTIONS="--max_old_space_size=8192"
 ENV PUPPETEER_SKIP_CHROMIUM_DOWNLOAD=true
@@ -65,6 +60,11 @@ RUN yarn build:js
 # \
   # remove package.json scripts
   # && sed -i '/\"scripts\"/,/}/ d; /^$/d' package.json
+
+ARG GIT_BRANCH=""
+ARG GIT_COMMIT=""
+ENV GIT_BRANCH=${GIT_BRANCH}
+ENV GIT_COMMIT=${GIT_COMMIT}
 
 # so we can deploy/tag on fly
 RUN touch ./__noop__
