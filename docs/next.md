@@ -9,6 +9,7 @@
 - [c] [0] recrawl tucson, la, sd, sf
 - [c] [1] dedupe images
 - [c] [1] tags move to single-primary image (highest quality)
+- [c] [2] closed restaurants detection (i've seen a number of variants)
 - [c] [2] get cron crawling every few days
 - [i] [0] get cron working again
 - [i] [0] get backups uploading (postgres)
@@ -46,10 +47,40 @@
   - plus admin tools (one click on rest page button bar)
   - if (no yelp data) y = getYelpRestaurant, p = loadPage(y.yelpUrl), p.contains('IS CLOSED')) && y.markClosed()
 
+- validating/improving dish images
+  - generally validate our image tag matching, document our current stats somewhere of "tagged images"
+  - image quality API seems to not be super great
+  - add admin panel page for tracking some stats:
+    - show count of # images found per-dish (avg per dish to start + total)
+  - test case to ensure lily image tag matching:
+    - https://www.yelp.com/biz/lily-san-francisco
+
+- admin panel for crawling a specific subset of results
+  - for now i'm thinking limit it to SF + cuisine/dish:
+    - vietnamese: pho, banh xeo, banh mi
+    - mexican: taco, guacamole, salsa
+- fix/add final crawlers (google, uber eats, caviar?) on subset
+- see if any easy bugs to fix on user profiles
+
 
 # blockchain
 
-- 
+---
+
+- User camera image upload endpoint that ties to a review of a single dish
+
+- script to export all dish-tagged images into local folders
+  - folder name for each "cuisine__dish"
+
+- redo GPT3 summaries
+  - table style:
+    - | dish | rating | short summary |
+
+# search quality (lower priority)
+- when i search for nopalito to try and find the restaurant with that name that has gpt3 - i think we can safely say "near exact match names" can rank highly for plain (non-tag) search http://d1live.com/gems/san-francisco/-/nopalito
+- searching without tag is slow - try "birria taco" in sf
+  - this is because of the full-text search across reviews and menu_items tables. there's a bit of research i could to improve the index. but maybe we need to look at a dedicated full-text engine. but remember that searching for tags is still as fast as ever
+
 
 ---
 
