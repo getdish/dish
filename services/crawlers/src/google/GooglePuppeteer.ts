@@ -167,7 +167,7 @@ export class GooglePuppeteer extends GooglePuppeteerJob {
       () =>
         document.querySelector('.section-hero-header-image img')?.getAttribute('src') ??
         Array.from(document.querySelectorAll("img[role='presentation']"))
-          .map((x) => x.getAttribute('src') || '')
+          .map((x) => x?.getAttribute('src') || '')
           .filter((x) => x.indexOf('googleusercontent.com') > 0)[0]
     )
     const hero = image?.replace(/w[0-9]+-h[0-9]+/, 'w1000-h1000')
