@@ -155,7 +155,7 @@ test('Merging', async (t) => {
   t.is(updated.tags.map((i) => i.tag.name).includes('Test Pizza'), true)
   t.assert(updated.photos?.[0].includes('https://i.imgur.com'))
   t.assert(updated.photos?.[1].includes('https://i.imgur.com'))
-  t.is(updated.rating, 3.7363636363636368)
+  t.is(updated.rating, 4.11)
   t.deepEqual(updated.rating_factors as any, {
     food: 5,
     service: 4.5,
