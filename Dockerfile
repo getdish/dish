@@ -61,11 +61,6 @@ RUN yarn build:js
   # remove package.json scripts
   # && sed -i '/\"scripts\"/,/}/ d; /^$/d' package.json
 
-ARG GIT_BRANCH=""
-ARG GIT_COMMIT=""
-ENV GIT_BRANCH=${GIT_BRANCH}
-ENV GIT_COMMIT=${GIT_COMMIT}
-
 # so we can deploy/tag on fly
 RUN touch ./__noop__
 CMD ["tail -f ./__noop__"]
