@@ -43,7 +43,9 @@ export const RestaurantDeliveryButtons = memo(
           return (
             <RestaurantDeliveryButton
               key={source.id}
-              source={source}
+              name={source.name}
+              image={source.image}
+              url={source.url}
               restaurantSlug={restaurantSlug}
               showLabels={showLabels}
             />
@@ -54,15 +56,21 @@ export const RestaurantDeliveryButtons = memo(
   })
 )
 
-const RestaurantDeliveryButton = ({ source, showLabels }: Props & { source: any }) => {
+const RestaurantDeliveryButton = ({
+  url,
+  name = '',
+  image,
+  showLabels,
+}: Props & { url?: string; name?: string; image?: string }) => {
+  console.log('image is', image)
   return (
-    <Link href={source.url}>
+    <Link href={url}>
       <SmallButton
-        tooltip={!showLabels ? source.name : null}
+        tooltip={!showLabels ? name : null}
         icon={
           <Image
-            accessibilityLabel={source.name}
-            source={{ uri: source.image }}
+            accessibilityLabel={name}
+            source={{ uri: image }}
             style={{
               width: showLabels ? 20 : 24,
               height: showLabels ? 20 : 24,
@@ -75,7 +83,7 @@ const RestaurantDeliveryButton = ({ source, showLabels }: Props & { source: any 
           />
         }
         {...(showLabels && {
-          children: source.name,
+          children: name,
         })}
         textProps={{
           opacity: 0.7,

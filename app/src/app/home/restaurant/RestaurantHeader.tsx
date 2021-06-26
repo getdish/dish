@@ -28,6 +28,7 @@ import { RestaurantRatingView } from '../RestaurantRatingView'
 import { RestaurantAddress } from './RestaurantAddress'
 import { RestaurantAddressLinksRow } from './RestaurantAddressLinksRow'
 import { RestaurantAddToListButton } from './RestaurantAddToListButton'
+import { RestaurantDeliveryButtons } from './RestaurantDeliveryButtons'
 import { openingHours } from './RestaurantDetailRow'
 import { RestaurantFavoriteStar } from './RestaurantFavoriteButton'
 import { RestaurantPhotosRow } from './RestaurantPhotosRow'
@@ -156,14 +157,7 @@ const RestaurantHeaderContent = memo(
                 {/* title row */}
                 <HStack paddingLeft={20} alignItems="center" position="relative">
                   <AbsoluteVStack y={-35} x={-10} zIndex={10}>
-                    <Theme name="light">
-                      <RestaurantRatingView
-                        showBreakdown
-                        floating
-                        size={62}
-                        slug={restaurantSlug}
-                      />
-                    </Theme>
+                    <RestaurantRatingView showBreakdown floating size={62} slug={restaurantSlug} />
                   </AbsoluteVStack>
                   <Spacer size="lg" />
                   <HStack
@@ -251,9 +245,17 @@ const RestaurantHeaderContent = memo(
                               </SmallButton>
                             </Link>
 
+                            <RestaurantDeliveryButtons
+                              marginTop={-8}
+                              marginBottom={0}
+                              marginLeft={8}
+                              showLabels
+                              restaurantSlug={restaurantSlug}
+                            />
+
                             <Spacer />
 
-                            <HStack minWidth={1600} y={-5}>
+                            <HStack minWidth={1600} y={-3}>
                               <RestaurantTagsRow
                                 exclude={['dish']}
                                 restaurantSlug={restaurantSlug}

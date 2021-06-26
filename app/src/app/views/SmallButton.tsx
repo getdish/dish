@@ -2,7 +2,7 @@ import React from 'react'
 import { Button, ButtonProps, Tooltip, themeable, useTheme } from 'snackui'
 
 export type SmallButtonProps = ButtonProps & {
-  tooltip?: string
+  tooltip?: string | null
 }
 
 export const SmallButton = themeable(
