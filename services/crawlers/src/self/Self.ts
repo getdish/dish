@@ -512,6 +512,7 @@ export class Self extends WorkerJob {
       if ([open, close].some((x) => x === 'Invalid date')) {
         // prettier-ignore
         console.log('⚠️ WARN: Invalid date parsed', { open, openDay, openTime, close, closeDay, closeTime })
+        console.log('   ...', { hours: this.restaurant.hours, dayData })
         continue
       }
 
