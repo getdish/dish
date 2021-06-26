@@ -509,6 +509,12 @@ export class Self extends WorkerJob {
       const open = toPostgresTime(openDay, openTime)
       const close = toPostgresTime(closeDay, closeTime)
 
+      if ([open, close].some((x) => x === 'Invalid date')) {
+        // prettier-ignore
+        console.log('⚠️ WARN: Invalid date parsed', { open, openDay, openTime, close, closeDay, closeTime })
+        continue
+      }
+
       records.push(`('${this.restaurant.id}'::UUID, timestamp '${open}', timestamp '${close}')`)
     }
 
