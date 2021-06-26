@@ -205,14 +205,6 @@ const RestaurantPage = memo(
               <RestaurantLists restaurantSlug={restaurantSlug} />
             </Suspense>
 
-            <RestaurantDeliveryButtons
-              marginTop={20}
-              marginBottom={20}
-              label="Delivers"
-              showLabels
-              restaurantSlug={restaurantSlug}
-            />
-
             <VStack ref={setReviewsSection} paddingVertical={20}>
               <Suspense fallback={null}>
                 <RestaurantReviewsList
