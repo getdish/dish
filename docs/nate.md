@@ -2,7 +2,8 @@
 - make lists prettier (formatting esp with writing)
 - run one city crawl test by going up in orders of magnitude
 - run over app once or twice fixing interaction (web & native)
-- fix up dish photos / dish tags working bette
+- fix up dish photos / dish tags working better
+- fix rating display sub-factors
 - beta / invite features
 
 

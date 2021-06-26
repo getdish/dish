@@ -1,6 +1,6 @@
 import { RestaurantQuery, graphql } from '@dish/graph'
 import React from 'react'
-import { Box, HoverablePopover, VStack } from 'snackui'
+import { AbsoluteHStack, BlurView, Box, HStack, HoverablePopover, VStack, useTheme } from 'snackui'
 
 import { queryRestaurant } from '../../queries/queryRestaurant'
 import { suspense } from '../hoc/suspense'
@@ -17,11 +17,13 @@ export const RestaurantRatingView = suspense(
       size = 32,
       floating,
       hoverable,
+      showBreakdown,
     }: {
       hoverable?: boolean
       slug: string
       size?: number
       floating?: boolean
+      showBreakdown?: boolean
     }) => {
       const [restaurant] = queryRestaurant(slug)
       if (!restaurant) {
@@ -57,14 +59,46 @@ export const RestaurantRatingView = suspense(
       //     })
       // )
 
-      const ratingViewEl = (
+      let ratingViewEl = (
         <RatingView
           {...ratingViewProps}
-          {...(size >= 48 && {
-            count: ratingCount(restaurant),
-          })}
+          // {...(size >= 48 && {
+          //   count: ratingCount(restaurant),
+          // })}
         />
       )
+
+      const theme = useTheme()
+
+      if (showBreakdown) {
+        ratingViewEl = (
+          <HStack position="relative">
+            {ratingViewEl}
+            <AbsoluteHStack zIndex={-1} top="-24%" right="-24%">
+              <AbsoluteHStack
+                // width={400}
+                borderRadius={100}
+                alignItems="center"
+                shadowRadius={5}
+                shadowOffset={{ height: 3, width: 0 }}
+                paddingHorizontal={16}
+                paddingVertical={4}
+                shadowColor={theme.shadowColor}
+                overflow="hidden"
+              >
+                <AbsoluteHStack
+                  backgroundColor={theme.backgroundColorDarker}
+                  opacity={0.75}
+                  fullscreen
+                />
+                <BlurView>
+                  <RatingView {...ratingViewProps} stacked size={size * 0.66} />
+                </BlurView>
+              </AbsoluteHStack>
+            </AbsoluteHStack>
+          </HStack>
+        )
+      }
 
       if (!hoverable) {
         return ratingViewEl

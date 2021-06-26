@@ -145,8 +145,6 @@ big impact changes
 
 ---
 
-## bigger impact changes
-
 
 ### Generally making the stack a lot easier to work with.
 
@@ -159,17 +157,20 @@ On a high level:
   - search => dish-app
   - make base image lighter ? avoiding deps building in the beginning
 
-#### Adding introspection
+#### Improving access
 
 - UI for databases: timescale + postgres thats ideally in dish-app/admin
 
-#### Speeding up and simplifying local dev flows
+#### Local development
 
+- mounting local code folders and hot reloading
 - Ideally should be able to run against some sort of "personal" instance thats in the cloud but you have shell access into
 
 #### Automate failure and recovery modes better
 
 - Crawls should detect when failures are happening at a high rate and cancel the rest of the crawl
+
+---
 
 
 - importing instagram and other feed data to have more aliveness

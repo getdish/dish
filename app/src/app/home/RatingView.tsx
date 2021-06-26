@@ -25,39 +25,55 @@ export const RatingView = ({
   const ratingInner = rating * 0.7
   const ratingMiddle = rating * 0.5
   const rotate = `${(1 - ratingInner / 100) * 180}deg`
-  const width = size * 0.05
-  const innerSize = Math.round(stacked ? size * 0.66 : size * 0.33)
-  const middleSize = Math.round(stacked ? size * 0.8 : size * 0.6)
-  const outerSize = Math.round(stacked ? size : size * 0.85)
+  const width = size * 0.04
+  const stackedSize = size * 0.85
+  const innerSize = Math.round(stacked ? stackedSize : size * 0.33)
+  const middleSize = Math.round(stacked ? stackedSize : size * 0.6)
+  const outerSize = Math.round(stacked ? stackedSize : size * 0.85)
 
   const innerRing = (
-    <VStack rotate={rotate}>
-      <Pie color={purple} percent={ratingInner} size={innerSize} />
-    </VStack>
+    <>
+      {/* <Pie color={purple} percent={ratingInner} size={innerSize} /> */}
+      <ProgressRing
+        backgroundColor="rgba(125,125,125,0.1)"
+        percent={ratingInner}
+        size={innerSize}
+        color={purple}
+        width={width}
+      />
+    </>
   )
 
   const middleRing = (
-    <ProgressRing percent={ratingMiddle} size={middleSize} color={yellow} width={width}>
+    <ProgressRing
+      backgroundColor="rgba(125,125,125,0.1)"
+      percent={ratingMiddle}
+      size={middleSize}
+      color={yellow}
+      width={width}
+    >
       {stacked ? null : innerRing}
     </ProgressRing>
   )
 
   const outerRing = (
     <ProgressRing
+      backgroundColor="rgba(125,125,125,0.1)"
       percent={rating}
       size={outerSize}
       color={rating >= 80 ? green : rating <= 50 ? red : orange}
       width={width}
     >
-      {/* {stacked ? null : middleRing} */}
-      <Text
-        color={theme.color}
-        letterSpacing={-0.13 * width}
-        fontWeight="800"
-        fontSize={7.5 * width}
-      >
-        {Math.min(99, Math.round(rating))}
-      </Text>
+      {stacked ? null : (
+        <Text
+          color={theme.color}
+          letterSpacing={-0.13 * width}
+          fontWeight="800"
+          fontSize={7.5 * width}
+        >
+          {Math.min(99, Math.round(rating))}
+        </Text>
+      )}
     </ProgressRing>
   )
 
@@ -112,39 +128,33 @@ export const RatingView = ({
   }
 
   return (
-    <>
+    <HStack spacing="sm">
       <HStack display="inline-flex" alignItems="center">
-        <VStack width={size} height={size} alignItems="center" justifyContent="center">
-          {outerRing}
-        </VStack>
-        <Spacer />
+        {outerRing}
+        <Spacer size="xs" />
         <Text>
           Food
-          <Text marginLeft={10} opacity={0.5}>
+          <Text fontSize={13} marginHorizontal={5} opacity={0.5}>
             {Math.round(rating)}%
           </Text>
         </Text>
       </HStack>
       <HStack alignItems="center">
-        <VStack width={size} height={size} alignItems="center" justifyContent="center">
-          {middleRing}
-        </VStack>
-        <Spacer />
+        {middleRing}
+        <Spacer size="xs" />
         <Text>
           Service
-          <Text marginLeft={10} opacity={0.5}>
+          <Text fontSize={13} marginHorizontal={5} opacity={0.5}>
             {Math.round(ratingMiddle)}%
           </Text>
         </Text>
       </HStack>
       <HStack alignItems="center">
-        <VStack width={size} height={size} alignItems="center" justifyContent="center">
-          {innerRing}
-        </VStack>
-        <Spacer />
+        {innerRing}
+        <Spacer size="xs" />
         <Text>
           Ambience
-          <Text marginLeft={10} opacity={0.5}>
+          <Text fontSize={13} marginHorizontal={5} opacity={0.5}>
             {Math.round(ratingInner)}%
           </Text>
         </Text>
@@ -160,6 +170,6 @@ export const RatingView = ({
           <Text>Reviews</Text>
         </HStack>
       )}
-    </>
+    </HStack>
   )
 }
