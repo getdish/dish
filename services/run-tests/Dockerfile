@@ -17,5 +17,10 @@ COPY app app
 COPY services services
 COPY snackui snackui
 
+ARG GIT_BRANCH=""
+ARG GIT_COMMIT=""
+ENV GIT_BRANCH=${GIT_BRANCH}
+ENV GIT_COMMIT=${GIT_COMMIT}
+
 RUN touch stay_alive
 CMD ["tail", "-f", "stay_alive"]

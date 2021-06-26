@@ -19,4 +19,10 @@ COPY services/worker/pin_nodesource /etc/apt/preferences.d/nodesource
 ADD services/worker/xvfb-chromium /usr/bin/xvfb-chromium
 
 ENV NODE_ENV=production
+
+ARG GIT_BRANCH=""
+ARG GIT_COMMIT=""
+ENV GIT_BRANCH=${GIT_BRANCH}
+ENV GIT_COMMIT=${GIT_COMMIT}
+
 CMD ["./entry.sh"]

@@ -22,4 +22,9 @@ RUN chmod 0744 /etc/cron.d/cron-jobs
 RUN crontab /etc/cron.d/cron-jobs
 RUN touch /var/log/cron.log
 
+ARG GIT_BRANCH=""
+ARG GIT_COMMIT=""
+ENV GIT_BRANCH=${GIT_BRANCH}
+ENV GIT_COMMIT=${GIT_COMMIT}
+
 CMD cron && tail -f /var/log/cron.log
