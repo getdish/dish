@@ -8,12 +8,14 @@ export const ProgressRing = ({
   children,
   color,
   width = 3,
+  backgroundColor,
 }: {
   size: number
   percent: number
   children?: any
   color: string
   width?: number
+  backgroundColor?: string
 }) => {
   const ratio = (percent ?? 0) / 100
   const rotation = (1 - ratio) * 180
@@ -25,6 +27,7 @@ export const ProgressRing = ({
       tintColor={color}
       lineCap="round"
       rotation={rotation}
+      backgroundColor={backgroundColor}
     >
       {children}
     </CircularProgress>

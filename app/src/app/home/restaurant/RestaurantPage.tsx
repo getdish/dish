@@ -2,7 +2,7 @@ import { fullyIdle, series } from '@dish/async'
 import { graphql } from '@dish/graph'
 import React, { Suspense, memo, useEffect, useMemo, useRef, useState } from 'react'
 import { ScrollView, View } from 'react-native'
-import { LoadingItems, Spacer, VStack, useTheme } from 'snackui'
+import { LoadingItems, Spacer, Theme, VStack, useTheme, useThemeName } from 'snackui'
 
 import { searchBarHeight } from '../../../constants/constants'
 import { getMinLngLat } from '../../../helpers/mapHelpers'
@@ -13,13 +13,10 @@ import { router } from '../../../router'
 import { HomeStateItemRestaurant } from '../../../types/homeTypes'
 import { appMapStore, useSetAppMap } from '../../AppMapStore'
 import { drawerStore } from '../../drawerStore'
-import { CommentBubble } from '../../views/CommentBubble'
 import { ContentScrollView } from '../../views/ContentScrollView'
-import { LogoCircle } from '../../views/Logo'
 import { NotFoundPage } from '../../views/NotFoundPage'
 import { PageTitleTag } from '../../views/PageTitleTag'
 import { RestaurantOverview } from '../../views/restaurant/RestaurantOverview'
-import { RestaurantTagsRow } from '../../views/restaurant/RestaurantTagsRow'
 import { StackDrawer } from '../../views/StackDrawer'
 import { HomeStackViewProps } from '../HomeStackViewProps'
 import { PageContentWithFooter } from '../PageContentWithFooter'
@@ -133,7 +130,7 @@ const RestaurantPage = memo(
     }, [scrollView, item.sectionSlug])
 
     const scrollY = useRef(0)
-
+    const themeName = useThemeName()
     const topTags = queryRestaurantTags({
       restaurantSlug,
       limit: 3,
@@ -185,6 +182,17 @@ const RestaurantPage = memo(
                   // themeName={`${colors.name}-dark`}
                 />
               </View>
+
+              <VStack pointerEvents="auto" paddingRight={20}>
+                <Theme name={themeName}>
+                  <RestaurantOverview
+                    isDishBot
+                    maxLines={6}
+                    size="lg"
+                    restaurantSlug={restaurantSlug}
+                  />
+                </Theme>
+              </VStack>
 
               <Spacer size="xl" />
 

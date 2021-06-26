@@ -125,6 +125,7 @@ export const RestaurantOverview = memo(
                 fontSize={fontSize}
                 lineHeight={lineHeight}
                 opacity={0.9}
+                selectable
                 // short descriptions look bad in minHieght
                 // minHeight={lineHeight * 2}
                 // fontWeight="500"
