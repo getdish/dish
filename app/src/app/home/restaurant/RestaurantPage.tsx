@@ -161,16 +161,6 @@ const RestaurantPage = memo(
             >
               <RestaurantHeader minHeight={450} restaurantSlug={restaurantSlug} />
 
-              <VStack marginHorizontal={-20} marginBottom={-36} marginTop={-20}>
-                <RestaurantOverallAndTagReviews
-                  tagSlug={selectedDish}
-                  borderless
-                  showScoreTable
-                  restaurantSlug={restaurantSlug}
-                  restaurantId={restaurant.id}
-                />
-              </VStack>
-
               <View ref={setDishesSection}>
                 <RestaurantDishRow
                   max={35}
@@ -182,6 +172,16 @@ const RestaurantPage = memo(
                   // themeName={`${colors.name}-dark`}
                 />
               </View>
+
+              <VStack marginHorizontal={-20} marginBottom={-36} marginTop={-20}>
+                <RestaurantOverallAndTagReviews
+                  tagSlug={selectedDish}
+                  borderless
+                  showScoreTable
+                  restaurantSlug={restaurantSlug}
+                  restaurantId={restaurant.id}
+                />
+              </VStack>
 
               <VStack pointerEvents="auto" paddingRight={20}>
                 <Theme name={themeName}>
