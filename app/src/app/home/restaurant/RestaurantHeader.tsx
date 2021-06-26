@@ -25,6 +25,7 @@ import { Link } from '../../views/Link'
 import { LogoCircle } from '../../views/Logo'
 import { PaneControlButtonsLeft } from '../../views/PaneControlButtons'
 import { RestaurantOverview } from '../../views/restaurant/RestaurantOverview'
+import { RestaurantTagsRow } from '../../views/restaurant/RestaurantTagsRow'
 import { SmallButton } from '../../views/SmallButton'
 import { RestaurantRatingView } from '../RestaurantRatingView'
 import { RestaurantAddress } from './RestaurantAddress'
@@ -205,7 +206,7 @@ const RestaurantHeaderContent = memo(
                   {spacer}
                   <VStack flex={10}>
                     <VStack pointerEvents="auto" overflow="hidden" paddingRight={20}>
-                      <HStack alignItems="center" flexWrap="wrap" maxWidth="100%" minHeight={55}>
+                      <HStack alignItems="center" maxWidth="100%" minHeight={55}>
                         <Theme name={themeName === 'dark' ? `${colors.name}-dark` : null}>
                           <Suspense fallback={null}>
                             <HStack marginBottom={10}>
@@ -252,6 +253,19 @@ const RestaurantHeaderContent = memo(
                                 {`${open.text}${open.nextTime ? ` (${open.nextTime})` : ''}`}
                               </SmallButton>
                             </Link>
+
+                            <Spacer />
+
+                            <HStack minWidth={1600} y={-5}>
+                              <RestaurantTagsRow
+                                exclude={['dish']}
+                                restaurantSlug={restaurantSlug}
+                                restaurantId={restaurantId}
+                                spacing={10}
+                                max={8}
+                                size="lg"
+                              />
+                            </HStack>
                           </Suspense>
                         </Theme>
                       </HStack>
