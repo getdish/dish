@@ -485,21 +485,26 @@ function proxyYelpCDN(photo: string) {
 
 async function findUnassessedPhotos(photos: Partial<PhotoXref>[]): Promise<string[]> {
   let unassessed: PhotoXref[] = []
-  if (photos[0].restaurant_id != ZeroUUID && photos[0].tag_id == ZeroUUID) {
-    unassessed = await unassessedPhotosForRestaurant(photos[0].restaurant_id)
+  const firstPhoto = photos[0]
+  if (!firstPhoto) {
+    console.log('none unassessed')
+    return []
   }
-  if (photos[0].restaurant_id != ZeroUUID && photos[0].tag_id != ZeroUUID) {
+  if (firstPhoto.restaurant_id != ZeroUUID && firstPhoto.tag_id == ZeroUUID) {
+    unassessed = await unassessedPhotosForRestaurant(firstPhoto.restaurant_id)
+  }
+  if (firstPhoto.restaurant_id != ZeroUUID && firstPhoto.tag_id != ZeroUUID) {
     unassessed = [
       //
       ...unassessed,
-      ...(await unassessedPhotosForRestaurantTag(photos[0].restaurant_id)),
+      ...(await unassessedPhotosForRestaurantTag(firstPhoto.restaurant_id)),
     ]
   }
-  if (photos[0].tag_id != ZeroUUID && photos[0].restaurant_id == ZeroUUID) {
+  if (firstPhoto.tag_id != ZeroUUID && firstPhoto.restaurant_id == ZeroUUID) {
     unassessed = [
       //
       ...unassessed,
-      ...(await unassessedPhotosForTag(photos[0].tag_id)),
+      ...(await unassessedPhotosForTag(firstPhoto.tag_id)),
     ]
   }
 
@@ -528,6 +533,10 @@ async function findUnassessedPhotos(photos: Partial<PhotoXref>[]): Promise<strin
 
 async function findNotUploadedPhotos(photos: Partial<PhotoXref>[]) {
   let not_uploaded: PhotoXref[] = []
+  if (!photos[0]) {
+    console.log('no photos')
+    return not_uploaded
+  }
   if (photos[0].restaurant_id != ZeroUUID && photos[0].tag_id == ZeroUUID) {
     not_uploaded = await findNotUploadedRestaurantPhotos(photos[0].restaurant_id)
   }
