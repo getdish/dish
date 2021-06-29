@@ -1,3 +1,4 @@
+- restaurantpage - tag buttons active state
 - fix last missing data in crawlers
 - make lists prettier (formatting esp with writing)
 - run one city crawl test by going up in orders of magnitude
