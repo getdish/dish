@@ -50,7 +50,7 @@
   #ifdef DEBUG
     [self initializeReactNativeApp];
   #else
-    EXUpdatesAppController *controller = [EXUpdatesAppController sharedInstance];
+//    EXUpdatesAppController *controller = [EXUpdatesAppController sharedInstance];
     controller.delegate = self;
     [controller startAndShowLaunchScreen:self.window];
   #endif
@@ -90,10 +90,10 @@
 #endif
 }
 
-- (void)appController:(EXUpdatesAppController *)appController didStartWithSuccess:(BOOL)success {
-  appController.bridge = [self initializeReactNativeApp];
-  EXSplashScreenService *splashScreenService = (EXSplashScreenService *)[UMModuleRegistryProvider getSingletonModuleForClass:[EXSplashScreenService class]];
-  [splashScreenService showSplashScreenFor:self.window.rootViewController];
-}
+//- (void)appController:(EXUpdatesAppController *)appController didStartWithSuccess:(BOOL)success {
+//  appController.bridge = [self initializeReactNativeApp];
+//  EXSplashScreenService *splashScreenService = (EXSplashScreenService *)[UMModuleRegistryProvider getSingletonModuleForClass:[EXSplashScreenService class]];
+//  [splashScreenService showSplashScreenFor:self.window.rootViewController];
+//}
 
 @end

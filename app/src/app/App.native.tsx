@@ -1,7 +1,7 @@
-import { StatusBar } from 'expo-status-bar'
+// import { StatusBar } from 'expo-status-bar'
 import React, { Suspense } from 'react'
 import { LogBox } from 'react-native'
-import { AbsoluteVStack, VStack, useTheme } from 'snackui'
+import { AbsoluteVStack, useTheme } from 'snackui'
 
 import AppMap from './AppMap'
 import { AppMenuButton } from './AppMenuButton'
@@ -19,7 +19,7 @@ export function App() {
 
   return (
     <>
-      <StatusBar style="dark" />
+      {/* <StatusBar style="dark" /> */}
       <AutocompleteEffects />
       <AbsoluteVStack fullscreen backgroundColor={theme.mapBackground}>
         <Suspense fallback={null}>

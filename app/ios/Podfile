@@ -13,7 +13,7 @@ target 'dish' do
     :hermes_enabled => true
   )
   use_unimodules!
-  use_flipper!({ 'Flipper' => '0.92.0', 'Flipper-Folly' => '2.6.7',  'Flipper-RSocket' => '1.4.3' })
+  use_flipper!()
 
   pre_install do |installer|
     $RNMBGL.pre_install(installer)
@@ -22,13 +22,12 @@ target 'dish' do
   post_install do |installer|
     $RNMBGL.post_install(installer)
 
-    # installer.pods_project.targets.each do |target|
-    #   target.build_configurations.each do |config|
-    #     config.build_settings['IPHONEOS_DEPLOYMENT_TARGET'] = '11.0'
-    #   end
-    # end
+    installer.pods_project.targets.each do |target|
+      target.build_configurations.each do |config|
+      config.build_settings['IPHONEOS_DEPLOYMENT_TARGET'] = '11.0'
+      end
+    end
 
     react_native_post_install(installer)
-    flipper_post_install(installer)
   end
 end
