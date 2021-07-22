@@ -2,6 +2,7 @@
 // for web just skip to src/index
 
 import 'expo-asset'
+import '@dish/helpers/polyfill'
 
 import * as Sentry from '@sentry/react-native'
 import { registerRootComponent } from 'expo'

@@ -26,9 +26,12 @@ export const LOCAL_HOST = process.env.LOCAL_HOST ?? (hostname || `localhost`)
 // const PROD_ORIGIN = 'https://dishapp.com'
 const ORIGIN = isProd
   ? 'https://dishapp.com'
+  : LOCAL_HOST !== 'localhost'
+  ? `http://${LOCAL_HOST}`
   : process.env.TARGET === 'web'
   ? window.location.origin
   : process.env.APP_ENDPOINT ?? 'app:4444'
+
 // isProd
 //   ? PROD_ORIGIN
 //   : isStaging
@@ -67,7 +70,11 @@ export const GRAPH_API = `${DISH_API_ENDPOINT}/graph`
 export const SUMMARIZER_API = `${process.env.SUMMARIZER_ENDPOINT}/summarize_by_ratio`
 // export const SUMMARIZER_API = `${process.env.SUMMARIZER_ENDPOINT}/summarize_by_sentence`
 
-if (+(process.env.DISH_DEBUG || '0') > 1) {
+export const DISH_DEBUG = +(process.env.DISH_DEBUG || '0')
+
+console.log('DISH_DEBUG', DISH_DEBUG)
+
+if (DISH_DEBUG >= 1) {
   console.log('@dish/graph constants', {
     SUMMARIZER_API,
     HASURA_ENDPOINT: process.env.HASURA_ENDPOINT,

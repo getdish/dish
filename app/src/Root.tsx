@@ -29,7 +29,7 @@ import { configureAssertHelpers } from '@dish/helpers'
 import { ProvideRouter } from '@dish/router'
 import { configureUseStore } from '@dish/use-store'
 import AppLoading from 'expo-app-loading'
-import React, { StrictMode, Suspense, useEffect, useState } from 'react'
+import React, { Suspense, useEffect, useState } from 'react'
 import { useColorScheme } from 'react-native'
 import { SafeAreaProvider } from 'react-native-safe-area-context'
 import { QueryClientProvider } from 'react-query'
@@ -40,6 +40,7 @@ import { homeStore } from './app/homeStore'
 import { PlatformSpecificProvider } from './app/PlatformSpecificProvider'
 import { RootPortalProvider } from './app/Portal'
 import { useUserStore, userStore } from './app/userStore'
+import { isWeb } from './constants/constants'
 import { tagDefaultAutocomplete, tagFilters, tagLenses } from './constants/localTags'
 import themes, { MyTheme, MyThemes } from './constants/themes'
 import { addTagsToCache } from './helpers/allTags'
@@ -137,7 +138,7 @@ export function Root() {
             </ProvideRouter>
           </ThemeProvider>
         </PlatformSpecificProvider>
-        <Radar />
+        {isWeb && <Radar />}
       </SafeAreaProvider>
     </>
   )
