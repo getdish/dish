@@ -4,6 +4,8 @@ import proxy from 'express-http-proxy'
 
 import { redisGet, redisSet } from './_rc'
 
+console.log('SEARCH_DOMAIN_INTERNAL', SEARCH_DOMAIN_INTERNAL)
+
 const proxyHandler = proxy(SEARCH_DOMAIN_INTERNAL, {
   userResDecorator: function (proxyRes, proxyResData, req, userRes) {
     const val = proxyResData.toString('utf8')
