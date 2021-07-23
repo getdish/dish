@@ -1,10 +1,10 @@
 import React, { memo } from 'react'
-import { Image } from 'react-native'
 import { Box, Theme, VStack } from 'snackui'
 
 import { thirdPartyCrawlSources } from '../../constants/thirdPartyCrawlSources'
 import { useHomeStore } from '../homeStore'
 import { FilterButton } from './FilterButton'
+import { Image } from './Image'
 
 export const SearchPageDeliveryFilterButtons = memo(() => {
   const home = useHomeStore()

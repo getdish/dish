@@ -11,7 +11,13 @@ import {
 } from 'react-native'
 import { VStack } from 'snackui'
 
-import { isWeb, pageWidthMax, searchBarHeight, zIndexDrawer } from '../../constants/constants'
+import {
+  isNative,
+  isWeb,
+  pageWidthMax,
+  searchBarHeight,
+  zIndexDrawer,
+} from '../../constants/constants'
 import { getWindowHeight } from '../../helpers/getWindow'
 import { AppAutocompleteLocation } from '../AppAutocompleteLocation'
 import { AppAutocompleteSearch } from '../AppAutocompleteSearch'
@@ -179,6 +185,10 @@ export const HomeDrawerSmallView = memo((props: { children: any }) => {
           if (scroller) {
             const y = Math.round(scrolledY + -vy * 10)
             console.log('thrown to', scroller, scrolledY, y, vy, scrollStore.lock)
+            if (isNative) {
+              console.log('avoiding throw, seemed like it was freezing UI for a while, checking')
+              return null
+            }
             scroller.scrollTo({ y, x: 0, animated: true })
             // hacky... let it animate a bit before unlocking...
             setTimeout(() => {

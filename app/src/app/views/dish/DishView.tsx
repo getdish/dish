@@ -5,7 +5,6 @@ import { StyleSheet } from 'react-native'
 import {
   AbsoluteVStack,
   Box,
-  Hoverable,
   LinearGradient,
   StackProps,
   Text,
