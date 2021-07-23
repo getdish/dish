@@ -1,7 +1,7 @@
 import { graphql } from '@dish/graph'
 import { Clock } from '@dish/react-feather'
 import React, { Suspense, memo, useState } from 'react'
-import { Image, StyleSheet } from 'react-native'
+import { StyleSheet } from 'react-native'
 import {
   AbsoluteVStack,
   HStack,
@@ -20,6 +20,7 @@ import { queryRestaurant } from '../../../queries/queryRestaurant'
 import { HomeStateItemRestaurant } from '../../../types/homeTypes'
 import { useContentScrollHorizontalFitter } from '../../views/ContentScrollViewHorizontal'
 import { ContentScrollViewHorizontalFitted } from '../../views/ContentScrollViewHorizontalFitted'
+import { Image } from '../../views/Image'
 import { Link } from '../../views/Link'
 import { PaneControlButtonsLeft } from '../../views/PaneControlButtons'
 import { RestaurantTagsRow } from '../../views/restaurant/RestaurantTagsRow'

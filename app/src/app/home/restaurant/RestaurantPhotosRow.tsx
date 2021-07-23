@@ -1,8 +1,7 @@
 import { graphql, order_by } from '@dish/graph'
 import { isPresent } from '@dish/helpers'
-import React, { Suspense, memo, useMemo } from 'react'
-import { SpacerProps, Spacing, useConstant, useTheme } from 'snackui'
-import { HStack, Text, VStack } from 'snackui'
+import React, { Suspense, memo } from 'react'
+import { HStack, Spacing, Text, VStack, useConstant, useTheme } from 'snackui'
 
 import { bgLight } from '../../../constants/colors'
 import { getImageUrl } from '../../../helpers/getImageUrl'

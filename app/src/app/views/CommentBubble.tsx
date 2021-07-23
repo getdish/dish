@@ -1,8 +1,6 @@
 import { User } from '@dish/react-feather'
 import React, { useState } from 'react'
-import { Image, ScrollView } from 'react-native'
-import { Theme } from 'snackui'
-import { useTheme } from 'snackui'
+import { ScrollView } from 'react-native'
 import {
   AbsoluteVStack,
   Circle,
@@ -13,6 +11,7 @@ import {
   StackProps,
   Text,
   VStack,
+  useTheme,
 } from 'snackui'
 
 import { thirdPartyCrawlSources } from '../../constants/thirdPartyCrawlSources'
@@ -21,6 +20,7 @@ import { getTimeFormat } from '../../helpers/getTimeFormat'
 import { getWindowHeight } from '../../helpers/getWindow'
 import { ensureFlexText } from '../home/restaurant/ensureFlexText'
 import { CloseButton } from './CloseButton'
+import { Image } from './Image'
 import { Link } from './Link'
 import { PaneControlButtons } from './PaneControlButtons'
 
