@@ -1,6 +1,5 @@
 import { Auth, graphql, useRefetch } from '@dish/graph'
 import React, { useEffect, useRef, useState } from 'react'
-import { Image } from 'react-native'
 import { HStack, Input, Paragraph, Spacer, Text, TextArea, Toast, VStack } from 'snackui'
 
 import dishNeon from '../assets/dish-neon.jpg'
@@ -8,6 +7,7 @@ import { queryUser } from '../queries/queryUser'
 import { characters } from './home/user/characters'
 import { UserAvatar } from './home/user/UserAvatar'
 import { useUserStore } from './userStore'
+import { Image } from './views/Image'
 import { SmallButton } from './views/SmallButton'
 
 export const UserOnboard = graphql(

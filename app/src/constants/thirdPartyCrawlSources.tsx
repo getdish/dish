@@ -49,3 +49,5 @@ export const thirdPartyCrawlSources = {
     delivery: false,
   },
 } as const
+
+console.log('thirdPartyCrawlSources', thirdPartyCrawlSources)

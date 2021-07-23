@@ -2,7 +2,7 @@ import { graphql } from '@dish/graph'
 import { ellipseText, isPresent } from '@dish/helpers'
 import { Store, useStore } from '@dish/use-store'
 import React, { Suspense, memo } from 'react'
-import { Image, StyleSheet } from 'react-native'
+import { StyleSheet } from 'react-native'
 import {
   AbsoluteVStack,
   HStack,
@@ -21,6 +21,7 @@ import { numberFormat } from '../../../helpers/numberFormat'
 import { queryRestaurant } from '../../../queries/queryRestaurant'
 import { CloseButton } from '../../views/CloseButton'
 import { ContentScrollViewHorizontal } from '../../views/ContentScrollViewHorizontal'
+import { Image } from '../../views/Image'
 import { Link } from '../../views/Link'
 import { SlantedTitle } from '../../views/SlantedTitle'
 import { SentimentText } from './SentimentText'

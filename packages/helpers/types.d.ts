@@ -67,4 +67,9 @@ declare module "@dish/helpers" {
     export function isPresent<T extends Object>(input: null | undefined | T): input is T;
     export function breakIntoSentences(text: string): string[];
 }
+
+declare module "@dish/helpers" {
+    export function localSet(): void;
+    export function localGet(): void;
+}
 //# sourceMappingURL=types.d.ts.map

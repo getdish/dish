@@ -1,9 +1,9 @@
 import { graphql } from '@dish/graph'
 import React, { memo } from 'react'
-import { Image } from 'react-native'
 import { Grid, HStack, Paragraph, Spacer, VStack, useTheme } from 'snackui'
 
 import { queryRestaurant } from '../../../queries/queryRestaurant'
+import { Image } from '../../views/Image'
 import { SlantedTitle } from '../../views/SlantedTitle'
 
 export const RestaurantMenu = memo(

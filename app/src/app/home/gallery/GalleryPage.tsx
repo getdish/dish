@@ -3,7 +3,7 @@ import { isPresent } from '@dish/helpers'
 import { ChevronLeft, ChevronRight } from '@dish/react-feather'
 import { isPlainObject, orderBy, uniqBy } from 'lodash'
 import React, { Suspense, memo, useEffect, useMemo, useRef, useState } from 'react'
-import { Image, ScrollView } from 'react-native'
+import { ScrollView } from 'react-native'
 import { AbsoluteVStack, HStack, LoadingItems, VStack, useWindowSize } from 'snackui'
 
 import { isWeb } from '../../../constants/constants'
@@ -11,6 +11,7 @@ import { getImageUrl } from '../../../helpers/getImageUrl'
 import { getWindowHeight, getWindowWidth } from '../../../helpers/getWindow'
 import { queryRestaurant } from '../../../queries/queryRestaurant'
 import { router, useIsRouteActive, useRoute } from '../../../router'
+import { Image } from '../../views/Image'
 import { StackViewCloseButton } from '../../views/StackViewCloseButton'
 
 export default memo(function GalleryPage() {

@@ -1,7 +1,6 @@
 import { graphql } from '@dish/graph'
 import React, { memo } from 'react'
-import { Paragraph } from 'snackui'
-import { HStack, StackProps, Text } from 'snackui'
+import { HStack, Paragraph, StackProps } from 'snackui'
 
 import { queryRestaurant } from '../../../queries/queryRestaurant'
 import { Image } from '../../views/Image'
@@ -44,7 +43,7 @@ export const RestaurantDeliveryButtons = memo(
             <RestaurantDeliveryButton
               key={source.id}
               name={source.name}
-              image={source.image}
+              image={typeof source.image === 'string' ? source.image : null}
               url={source.url}
               restaurantSlug={restaurantSlug}
               showLabels={showLabels}
@@ -62,25 +61,26 @@ const RestaurantDeliveryButton = ({
   image,
   showLabels,
 }: Props & { url?: string; name?: string; image?: string }) => {
-  console.log('image is', image)
   return (
     <Link href={url}>
       <SmallButton
         tooltip={!showLabels ? name : null}
         icon={
-          <Image
-            accessibilityLabel={name}
-            source={{ uri: image }}
-            style={{
-              width: showLabels ? 20 : 24,
-              height: showLabels ? 20 : 24,
-              marginHorizontal: showLabels ? -2 : -6,
-              marginVertical: -6,
-              borderRadius: 40,
-              borderWidth: 1,
-              borderColor: '#fff',
-            }}
-          />
+          !!image ? (
+            <Image
+              accessibilityLabel={name}
+              source={{ uri: image }}
+              style={{
+                width: showLabels ? 20 : 24,
+                height: showLabels ? 20 : 24,
+                marginHorizontal: showLabels ? -2 : -6,
+                marginVertical: -6,
+                borderRadius: 40,
+                borderWidth: 1,
+                borderColor: '#fff',
+              }}
+            />
+          ) : null
         }
         {...(showLabels && {
           children: name,

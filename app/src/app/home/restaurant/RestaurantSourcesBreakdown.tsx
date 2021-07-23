@@ -1,7 +1,6 @@
 import { graphql } from '@dish/graph'
 import { sortBy } from 'lodash'
 import React, { memo } from 'react'
-import { Image } from 'react-native'
 import {
   HStack,
   Spacer,
@@ -19,6 +18,7 @@ import { tagDisplayName } from '../../../constants/tagDisplayName'
 import { thirdPartyCrawlSources } from '../../../constants/thirdPartyCrawlSources'
 import { queryRestaurant } from '../../../queries/queryRestaurant'
 import { homeStore } from '../../homeStore'
+import { Image } from '../../views/Image'
 import { useBreakdownsBySources } from './useBreakdownsBySources'
 
 export const col0Props: TableCellProps = {

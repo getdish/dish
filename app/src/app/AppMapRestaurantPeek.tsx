@@ -1,12 +1,12 @@
 import { graphql } from '@dish/graph'
 import { useStoreInstanceSelector } from '@dish/use-store'
 import React, { memo, useEffect, useState } from 'react'
-import { Image } from 'react-native'
 import { Box, HStack, Spacer, Text, VStack } from 'snackui'
 
 import { queryRestaurant } from '../queries/queryRestaurant'
 import { appMapStore } from './AppMapStore'
 import { useHomeStore } from './homeStore'
+import { Image } from './views/Image'
 import { LinkButton } from './views/LinkButton'
 
 export const AppMapRestaurantPeek = memo(
