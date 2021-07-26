@@ -31,9 +31,9 @@ export default function AboutPage({ item, isActive }: StackItemProps<HomeStateIt
       <ContentScrollView id="about">
         <VStack spacing="xl">
           <VStack
-            marginLeft={-60}
-            marginRight={20}
-            paddingLeft={60}
+            // marginLeft={-60}
+            // marginRight={20}
+            // paddingLeft={60}
             borderRadius={60}
             maxWidth="100%"
             alignItems="center"
