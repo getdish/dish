@@ -47,10 +47,10 @@ export const zIndexMapControlsUnderlaySmall = 500
 export const zIndexGallery = 500
 
 export const cardFrameBorderRadius = 20
-export const cardFrameWidth = Math.round(210 * 0.9)
-export const cardFrameHeight = Math.round(230 * 0.9)
-export const cardFrameWidthSm = Math.round(cardFrameWidth * 0.75)
-export const cardFrameHeightSm = Math.round(cardFrameHeight * 0.75)
+export const cardFrameWidth = Math.round(220)
+export const cardFrameHeight = Math.round(260)
+export const cardFrameWidthSm = Math.round(cardFrameWidth * 0.8)
+export const cardFrameHeightSm = Math.round(cardFrameHeight * 0.8)
 
 export const MAPBOX_ACCESS_TOKEN =
   'pk.eyJ1IjoibndpZW5lcnQiLCJhIjoiY2lvbWlhYjRjMDA0NnVpbTIxMHM5ZW95eCJ9.DQyBjCEuPRVt1400yejGhA'

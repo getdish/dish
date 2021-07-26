@@ -9,7 +9,7 @@ const baseTheme = {
   colorSecondary: '#cccccc',
   colorTertiary: '#777777',
   colorQuartenary: '#444',
-  shadowColor: `rgba(0,0,0,0.3)`,
+  shadowColor: `rgba(0,0,0,0.225)`,
   shadowColorLighter: `rgba(0,0,0,0.15)`,
   backgroundColorTransluscent: '#1111133',
   backgroundColorTransluscentHover: '#1111166',
