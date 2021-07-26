@@ -36,7 +36,7 @@ import { homeStore } from './app/homeStore'
 import { PlatformSpecificProvider } from './app/PlatformSpecificProvider'
 import { RootPortalProvider } from './app/Portal'
 import { useUserStore, userStore } from './app/userStore'
-import { isWeb } from './constants/constants'
+import { isWeb, showRadar } from './constants/constants'
 import { tagDefaultAutocomplete, tagFilters, tagLenses } from './constants/localTags'
 import themes, { MyTheme, MyThemes } from './constants/themes'
 import { addTagsToCache } from './helpers/allTags'
@@ -134,7 +134,7 @@ export function Root() {
             </ProvideRouter>
           </ThemeProvider>
         </PlatformSpecificProvider>
-        {isWeb && <Radar />}
+        {showRadar && <Radar />}
       </SafeAreaProvider>
     </>
   )
