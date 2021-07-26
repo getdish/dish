@@ -9,6 +9,9 @@ export const isNative = process.env.TARGET === 'native'
 export const isM1Sim =
   isWeb && typeof window !== 'undefined' ? window.location.search === '?m1' : false
 
+export const showRadar =
+  isWeb && typeof window !== 'undefined' ? window.location.search === '?radar' : false
+
 export const drawerPad = 8
 export const drawerBorderRadius = 18
 export const drawerWidthMax = 940
