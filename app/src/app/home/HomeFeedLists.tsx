@@ -83,10 +83,11 @@ export const HomeFeedListsContents = graphql(({ region, onHoverResults }: Props)
     }
     return (
       <>
-        <FeedSlantedTitle>
+        <>
           {/* marginVertical good on native */}
           <HStack alignItems="center" marginVertical={-2}>
-            <Paragraph fontWeight="700" fontSize={18}>
+            {/* TODO why not picking up font weight? */}
+            <Paragraph fontWeight="800" size="xl">
               Top Lists
             </Paragraph>
             <Spacer size="sm" />
@@ -100,11 +101,11 @@ export const HomeFeedListsContents = graphql(({ region, onHoverResults }: Props)
               }}
             >
               <SmallCircleButton padding={5}>
-                <Plus size={20} color="#fff" />
+                <Plus size={16} color="#fff" />
               </SmallCircleButton>
             </Link>
           </HStack>
-        </FeedSlantedTitle>
+        </>
 
         <SkewedCardCarousel>
           {recentLists.map((list, i) => {

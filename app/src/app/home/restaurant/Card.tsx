@@ -18,13 +18,14 @@ export type CardProps = {
   below?: ((colors: ColorShades) => any) | JSX.Element | string | null
   outside?: ((colors: ColorShades) => any) | JSX.Element | string | null
   photo?: string | JSX.Element | null
-  title?: string | null
+  title?: string | JSX.Element | null
   subTitle?: string | null
   hideInfo?: boolean
   aspectFixed?: boolean
   hoverable?: boolean
   size?: 'sm' | 'md' | 'xs'
   backgroundColor?: string | null
+  borderColor?: string | null
   isBehind?: boolean
   dimImage?: boolean
   padTitleSide?: boolean
@@ -59,6 +60,7 @@ export function Card({
   photo,
   title = '',
   colorsKey,
+  borderColor,
   subTitle,
   padTitleSide,
   aspectFixed,
@@ -72,7 +74,9 @@ export function Card({
 }: CardProps) {
   const colors = backgroundColor
     ? getColorsForColor(backgroundColor)
-    : getColorsForName(colorsKey || title || '')
+    : typeof title === 'string'
+    ? getColorsForName(colorsKey || title || '')
+    : getColorsForName('')
   const underColor = `${colors.pastelColor}99`
   const isSm = size === 'sm'
   const width = widths[size]
@@ -85,7 +89,7 @@ export function Card({
     ...sizes,
     width: aspectFixed ? sizes.width : '100%',
   }
-  const strTitle = title || ''
+  const strTitle = typeof title === 'string' ? title : 'hello world'
   const len = strTitle.length
   const lenScale = len > 50 ? 0.7 : len > 40 ? 0.8 : len > 30 ? 0.9 : 1
   const longestWordLen = getLongestWord(strTitle)
@@ -94,7 +98,13 @@ export function Card({
   const fontSize = Math.round(baseFontSize * scales[size])
 
   return (
-    <CardFrame square={square} size={size} aspectFixed={aspectFixed} hoverable={hoverable}>
+    <CardFrame
+      borderColor={borderColor}
+      square={square}
+      size={size}
+      aspectFixed={aspectFixed}
+      hoverable={hoverable}
+    >
       {/* background */}
       <AbsoluteVStack
         fullscreen
@@ -150,7 +160,7 @@ export function Card({
         height="100%"
       >
         {/* title gradient */}
-        <AbsoluteVStack
+        {/* <AbsoluteVStack
           zIndex={-1}
           width={cardFrameWidth}
           height={cardFrameHeight}
@@ -163,7 +173,7 @@ export function Card({
             style={StyleSheet.absoluteFill}
             colors={[colors.color, colors.pastelColor, `${colors.pastelColor}00`]}
           />
-        </AbsoluteVStack>
+        </AbsoluteVStack> */}
         <VStack
           className="ease-in-out"
           opacity={hideInfo ? 0 : 1}
@@ -182,7 +192,7 @@ export function Card({
                   textShadowColor="#00000033"
                   textShadowRadius={2}
                   textShadowOffset={{ height: 2, width: 0 }}
-                  fontWeight={size === 'sm' ? '700' : '600'}
+                  fontWeight={size === 'sm' ? '700' : '800'}
                   letterSpacing={size === 'sm' ? -1 : -0.5}
                   color="#fff"
                   fontSize={fontSize}
@@ -239,7 +249,7 @@ export const CardOverlay = (props: { children: any }) => {
         colors={['rgba(0,0,0,0)', 'rgba(0,0,0,0)', 'rgba(0,0,0,0)', 'rgba(0,0,0,0.7)']}
         style={styles.cardFrameMd}
       />
-      <VStack alignItems="center" justifyContent="center" padding={10} paddingTop={30}>
+      <VStack padding={10} paddingTop={30} zIndex={10}>
         {props.children}
       </VStack>
     </AbsoluteVStack>

@@ -16,6 +16,7 @@ export const CardFrame = ({
   transparent,
   children,
   aspectFixed,
+  borderColor,
   size,
   square,
   skew,
@@ -28,6 +29,7 @@ export const CardFrame = ({
   size?: 'md' | 'sm' | 'xs'
   square?: boolean
   skew?: boolean
+  borderColor?: string | null
 }) => {
   const theme = useTheme()
   return (
