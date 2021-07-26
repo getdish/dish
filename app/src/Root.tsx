@@ -1,13 +1,8 @@
-// import { CardFrame } from './app/views/CardFrame'
-
-// CardFrame
-
 // // debug
 // // for testing quickly
 // import React from 'react'
-// import { AbsoluteVStack, ThemeProvider, VStack, configureThemes, useTheme } from 'snackui'
+// import { Paragraph, ThemeProvider, configureThemes } from 'snackui'
 
-// import { StackDrawer } from './app/views/StackDrawer'
 // import themes from './constants/themes'
 
 // configureThemes(themes)
@@ -15,9 +10,10 @@
 // export function Root({ floating, size }) {
 //   return (
 //     <ThemeProvider themes={themes} defaultTheme="light">
-//       <AbsoluteVStack fullscreen backgroundColor="#fff">
-//         <StackDrawer />
-//       </AbsoluteVStack>
+//       <Paragraph color="red" size="xxl">
+//         test should be a snap. Know how you have your favorite nights out, places to walk, . Search
+//         delivery apps have sketchy reviews and fake popups to boot.
+//       </Paragraph>
 //     </ThemeProvider>
 //   )
 // }
@@ -29,7 +25,7 @@ import { configureAssertHelpers } from '@dish/helpers'
 import { ProvideRouter } from '@dish/router'
 import { configureUseStore } from '@dish/use-store'
 import AppLoading from 'expo-app-loading'
-import React, { Suspense, useEffect, useState } from 'react'
+import React, { StrictMode, Suspense, useEffect, useState } from 'react'
 import { useColorScheme } from 'react-native'
 import { SafeAreaProvider } from 'react-native-safe-area-context'
 import { QueryClientProvider } from 'react-query'
