@@ -45,9 +45,13 @@ export const AppIntroLogin = memo(() => {
           fontWeight="800"
           size="lg"
           textAlign="center"
+          position="relative"
+          zIndex={1000}
         >
           pocket guide to the world
         </Paragraph>
+
+        <AuthForm />
 
         <LinkButton
           textProps={{
@@ -67,8 +71,6 @@ export const AppIntroLogin = memo(() => {
         >
           learn more
         </LinkButton>
-
-        <AuthForm />
       </VStack>
     </>
   )

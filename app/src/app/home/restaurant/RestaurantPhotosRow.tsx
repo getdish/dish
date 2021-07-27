@@ -114,19 +114,20 @@ export const RestaurantPhotosRowContent = memo(
                   <SimpleCard
                     zIndex={1000 - index}
                     slanted
+                    isBehind={index > 0}
                     width={width}
                     height={height}
                     key={index}
                     className={`scroll-snap-photo`}
                     alignItems="center"
-                    marginRight={-50}
+                    marginRight={-58}
                     justifyContent="center"
                     {...(floating && {
                       borderRadius: 12,
                       overflow: 'hidden',
                       shadowColor: theme.shadowColor,
-                      shadowRadius: 5,
-                      shadowOffset: { width: 0, height: 2 },
+                      shadowRadius: 10,
+                      shadowOffset: { width: 5, height: 2 },
                     })}
                   >
                     {(() => {

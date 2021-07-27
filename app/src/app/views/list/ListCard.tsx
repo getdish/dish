@@ -5,12 +5,17 @@ import {
   HStack,
   Hoverable,
   LinearGradient,
+  Paragraph,
   Text,
   VStack,
   useThemeName,
 } from 'snackui'
 
-import { cardFrameHeight, cardFrameWidth } from '../../../constants/constants'
+import {
+  cardFrameBorderRadius,
+  cardFrameHeight,
+  cardFrameWidth,
+} from '../../../constants/constants'
 import { getImageUrl } from '../../../helpers/getImageUrl'
 import { Card, CardOverlay, CardProps } from '../../home/restaurant/Card'
 import { FavoriteButton } from '../FavoriteButton'
@@ -72,9 +77,9 @@ export const ListCard = graphql(
                 <SlantedTitle maxWidth="87%" size="xs" backgroundColor="#000000cc" color="#fff">
                   {list.name}
                 </SlantedTitle>
-                <Text fontWeight="400" color="#000" marginBottom={-10} marginTop={10}>
+                <Paragraph size="sm" opacity={0.8} fontWeight="500" x={20} y={20}>
                   by {list.user?.name ?? list.user?.username ?? ''}
-                </Text>
+                </Paragraph>
               </AbsoluteVStack>
             </>
           }
@@ -88,7 +93,14 @@ export const ListCard = graphql(
                 zIndex={10}
               ></AbsoluteVStack> */}
 
-              <HStack opacity={0.7} position="absolute" fullscreen flexWrap="wrap">
+              <HStack
+                overflow="hidden"
+                borderRadius={cardFrameBorderRadius}
+                opacity={0.7}
+                position="absolute"
+                fullscreen
+                flexWrap="wrap"
+              >
                 {photos.slice(0, 2).map((photo, index) => {
                   const uri = getImageUrl(photo ?? '', cardFrameWidth, cardFrameHeight)
                   if (!uri) {
@@ -110,7 +122,11 @@ export const ListCard = graphql(
                       })}
                     >
                       <Image
-                        style={{ width: cardFrameWidth, height: cardFrameWidth }}
+                        style={{
+                          width: cardFrameWidth,
+                          height: cardFrameWidth,
+                          borderRadius: 1000,
+                        }}
                         source={{ uri }}
                       />
                     </VStack>

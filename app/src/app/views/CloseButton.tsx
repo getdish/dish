@@ -1,6 +1,6 @@
 import { CornerLeftUp, X } from '@dish/react-feather'
 import React, { memo } from 'react'
-import { HStack, StackProps, useTheme } from 'snackui'
+import { Button, HStack, StackProps, VStack, useTheme } from 'snackui'
 
 type CircleButtonProps = StackProps & {
   size?: number
@@ -11,7 +11,9 @@ type CircleButtonProps = StackProps & {
 export const CloseButton = (props: CircleButtonProps) => {
   return (
     <SmallCircleButton {...props}>
-      <X size={props.size ?? 14} color="#fff" />
+      <VStack x={-1}>
+        <X size={14} color="#fff" />
+      </VStack>
     </SmallCircleButton>
   )
 }
@@ -29,38 +31,28 @@ export const SmallCircleButton = ({
   children,
   width,
   height,
-  minWidth,
-  minHeight,
-  padding = 9,
   subtle,
+  size = 1,
   ...props
 }: CircleButtonProps) => {
   const theme = useTheme()
   return (
-    <HStack
+    <Button
       borderRadius={1000}
       alignItems="center"
       justifyContent="center"
-      backgroundColor={theme.colorQuartenary}
-      hoverStyle={{
-        backgroundColor: theme.colorSecondary,
-      }}
-      pressStyle={{
-        backgroundColor: theme.color,
-      }}
       {...(shadowed && {
-        shadowColor: theme.shadowColor,
+        shadowColor: theme.shadowColorLighter,
         shadowRadius: 10,
         shadowOffset: { width: 0, height: 2 },
       })}
-      width={width}
-      height={height}
-      minWidth={minWidth}
-      minHeight={minHeight}
-      padding={padding}
+      width={width ?? size}
+      height={height ?? size}
+      maxWidth={width ?? size}
+      maxHeight={height ?? size}
       {...props}
     >
       {children}
-    </HStack>
+    </Button>
   )
 }
