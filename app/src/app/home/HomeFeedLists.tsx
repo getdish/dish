@@ -3,7 +3,7 @@ import { graphql, order_by, query, resolved } from '@dish/graph'
 import { Plus } from '@dish/react-feather'
 import { shuffle } from 'lodash'
 import React, { Suspense, useEffect, useMemo, useState } from 'react'
-import { Divider, HStack, Spacer, Text, useDebounce } from 'snackui'
+import { Divider, HStack, Paragraph, Spacer, Text, useDebounce } from 'snackui'
 
 import { getRestaurantIdentifiers } from '../../helpers/getRestaurantIdentifiers'
 import { homeStore } from '../homeStore'
@@ -91,7 +91,7 @@ export const HomeFeedListsContents = graphql(({ region, onHoverResults }: Props)
           <HStack marginVertical={-2} width="100%" alignItems="center">
             <Divider flex />
             <HStack alignItems="center" justifyContent="center">
-              <Text
+              <Paragraph
                 backgroundColor="rgba(150,150,150,0.2)"
                 paddingVertical={5}
                 paddingHorizontal={12}
@@ -100,7 +100,7 @@ export const HomeFeedListsContents = graphql(({ region, onHoverResults }: Props)
                 fontSize={13}
               >
                 Trending
-              </Text>
+              </Paragraph>
               <Spacer size="sm" />
               <Link
                 promptLogin
