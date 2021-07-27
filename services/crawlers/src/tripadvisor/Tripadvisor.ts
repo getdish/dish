@@ -2,7 +2,7 @@ import '@dish/common'
 
 import { restaurantFindOne, restaurantUpdate } from '@dish/graph'
 import { fetchRetry } from '@dish/helpers'
-import { WorkerJob } from '@dish/worker'
+import { WorkerJob, fetchBrowserJSON } from '@dish/worker'
 import * as acorn from 'acorn'
 import { JobOptions, QueueOptions } from 'bull'
 import * as cheerio from 'cheerio'
@@ -261,11 +261,9 @@ export class Tripadvisor extends WorkerJob {
     const path =
       `DynamicPlacementAjax?detail=${this.detail_id}` +
       `&albumViewMode=hero&placementRollUps=responsive-photo-viewer&metaReferer=Restaurant_Review&offset=${offset}`
-    const html = await fetchRetry(TRIPADVISOR_PROXY + path, {
-      headers: {
-        'X-My-X-Forwarded-For': 'www.tripadvisor.com',
-        'X-Requested-With': 'XMLHttpRequest',
-      },
+    const html = await fetchBrowserJSON(TRIPADVISOR_PROXY + path, {
+      'X-My-X-Forwarded-For': 'www.tripadvisor.com',
+      'X-Requested-With': 'XMLHttpRequest',
     }).then((x) => x.text())
     const $ = cheerio.load(html)
     const photos = $('.tinyThumb')

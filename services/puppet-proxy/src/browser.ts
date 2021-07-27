@@ -69,7 +69,7 @@ async function ensureInstance(
     if (!instance || recreate) {
       if (instance) {
         console.log('closing existing...')
-        await instance.browser.close()
+        await instance.browser?.close()
       }
       console.log('start browser with', { recreate, useAWS }, url)
       const browser = await webkit.launch({
@@ -123,8 +123,15 @@ async function getBrowserAndURL(uri: string, retry = 0, userOpts?: CreateBrowser
 export async function fetchBrowser(
   uri: string,
   type: 'html' | 'json' | 'script-data',
-  selectors?: string[] | null,
-  retry = 3
+  {
+    headers,
+    retry = 3,
+    selectors,
+  }: {
+    retry?: number
+    headers?: Object
+    selectors?: string[] | null
+  } = {}
 ) {
   try {
     if (type === 'script-data') {
@@ -133,19 +140,19 @@ export async function fetchBrowser(
     if (type === 'html') {
       return await fetchBrowserHTML(uri, retry)
     }
-    return await fetchBrowserJSON(uri, retry)
+    return await fetchBrowserJSON(uri, headers, retry)
   } catch (err) {
     if (retry > 0) {
       console.log('error fetching', err)
       console.log(`Trying again (retry ${retry})`)
-      return await fetchBrowser(uri, type, selectors ?? [], retry - 1)
+      return await fetchBrowser(uri, type, { headers, selectors, retry: retry - 1 })
     } else {
       console.error(`Failed: ${err.message}`)
     }
   }
 }
 
-export async function fetchBrowserJSON(uri: string, retry = 0) {
+export async function fetchBrowserJSON(uri: string, headers?: { [key: string]: any }, retry = 0) {
   const { instance, url } = await getBrowserAndURL(uri, retry)
   if (!instance || !instance.page) throw new Error(`No browser instance`)
   try {
@@ -160,6 +167,7 @@ export async function fetchBrowserJSON(uri: string, retry = 0) {
                 'content-type': 'application/json',
                 accept: 'application/json',
                 'Accept-Encoding': 'br;q=1.0, gzip;q=0.8, *;q=0.1',
+                ...(headers ?? {}),
               },
             }).then((res) => res.json())
           }, url.uri),
@@ -188,7 +196,7 @@ export async function fetchBrowserJSON(uri: string, retry = 0) {
     console.error(`Error: ${err.message}`)
     if (retry < 2) {
       console.log('err retry', retry)
-      return await fetchBrowserJSON(uri, retry + 1)
+      return await fetchBrowserJSON(uri, headers, retry + 1)
     }
     throw err
   }
