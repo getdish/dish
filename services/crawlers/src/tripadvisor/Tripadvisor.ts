@@ -60,13 +60,10 @@ export class Tripadvisor extends WorkerJob {
     const dimensions = `&mz=17&mw=${this.MAPVIEW_SIZE}&mh=${this.MAPVIEW_SIZE}`
     const coords = `&mc=${lat},${lon}`
     const uri = TRIPADVISOR_PROXY + base + dimensions + coords
-    const response = await fetchRetry(uri, {
-      headers: {
-        'X-My-X-Forwarded-For': 'www.tripadvisor.com',
-      },
-    }).then((res) => res.json())
-
-    if (!response.restaurants) {
+    const response = await fetchBrowserJSON(uri, {
+      'X-My-X-Forwarded-For': 'www.tripadvisor.com',
+    })
+    if (!response?.restaurants) {
       console.warn('error, fail: no restaurants in response', response, uri)
       return
     }
