@@ -72,9 +72,7 @@ export const SUMMARIZER_API = `${process.env.SUMMARIZER_ENDPOINT}/summarize_by_r
 
 export const DISH_DEBUG = +(process.env.DISH_DEBUG || '0')
 
-console.log('DISH_DEBUG', DISH_DEBUG)
-
-if (DISH_DEBUG >= 1) {
+if (DISH_DEBUG >= 2) {
   console.log('@dish/graph constants', {
     SUMMARIZER_API,
     HASURA_ENDPOINT: process.env.HASURA_ENDPOINT,

@@ -65,6 +65,12 @@ export class Tripadvisor extends WorkerJob {
         'X-My-X-Forwarded-For': 'www.tripadvisor.com',
       },
     }).then((res) => res.json())
+
+    if (!response.restaurants) {
+      console.warn('error, fail: no restaurants in response', response, uri)
+      return
+    }
+
     for (const data of response.restaurants) {
       await this.runOnWorker('getRestaurant', [removeStartSlash(data.url)])
       if (this._TESTS__LIMIT_GEO_SEARCH) break

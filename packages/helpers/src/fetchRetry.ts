@@ -11,6 +11,9 @@ export const fetchRetry = async (
     return await fetch(url, opts)
   } catch (err) {
     if (retry > 0) {
+      if (process.env.DISH_DEBUG) {
+        console.log('retry fetching', retry)
+      }
       await new Promise((res) => setTimeout(res, retryDelay))
       return await fetchRetry(url, {
         retry: retry - 1,
