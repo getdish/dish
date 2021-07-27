@@ -33,18 +33,22 @@ const types = {
 } as const
 
 function startServer() {
-  app.use(async (req, res, next) => {
+  app.use(async (req, res) => {
     try {
-      const headers = req.headers
-      if (!req.headers['url']) {
+      const headers = req.headers ?? {}
+      console.log('got headers', headers)
+      if (!headers['url']) {
         res.status(500).send('no url')
         return
       }
-      const url = `${req.headers['url']}`
+      const url = `${headers['url']}`
       const type = types[`${headers['parse'] ?? 'html'}`]
-      const selectors = JSON.parse(`${headers['selectors'] ?? ''}` || 'null')
-      console.log(`worker processing ${JSON.stringify({ url, type, selectors })}`)
-      return res.json(await runInQueue(() => fetchBrowser(url, type, selectors)))
+      const options = {
+        selectors: JSON.parse(`${headers['selectors'] || ''}` || 'null'),
+        headers: JSON.parse(`${headers['headers'] || ''}` || 'null'),
+      }
+      console.log(`worker processing ${JSON.stringify({ url, type, options })}`)
+      return res.json(await runInQueue(() => fetchBrowser(url, type, options)))
     } catch (err) {
       console.log('error handling request', err.message, err.stack)
       return res.status(500).json(null)

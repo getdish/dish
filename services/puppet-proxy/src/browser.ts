@@ -161,16 +161,25 @@ export async function fetchBrowserJSON(uri: string, headers?: { [key: string]: a
       try {
         console.log('inline fetch', url)
         return await timeout(
-          instance.page.evaluate((uri: string) => {
-            return fetch(uri, {
-              headers: {
-                'content-type': 'application/json',
-                accept: 'application/json',
-                'Accept-Encoding': 'br;q=1.0, gzip;q=0.8, *;q=0.1',
-                ...(headers ?? {}),
-              },
-            }).then((res) => res.json())
-          }, url.uri),
+          instance.page.evaluate(
+            ({ uri, headers }) => {
+              const allHeaders = Object.assign(
+                {
+                  'content-type': 'application/json',
+                  accept: 'application/json',
+                  'Accept-Encoding': 'br;q=1.0, gzip;q=0.8, *;q=0.1',
+                },
+                headers
+              )
+              return fetch(uri, {
+                headers: allHeaders,
+              }).then((res) => res.json())
+            },
+            {
+              uri: url.uri,
+              headers,
+            }
+          ),
           10_000
         )
       } catch (err) {
