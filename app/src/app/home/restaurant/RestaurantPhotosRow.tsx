@@ -9,6 +9,7 @@ import { queryRestaurant } from '../../../queries/queryRestaurant'
 import { Image } from '../../views/Image'
 import { Link } from '../../views/Link'
 import { LinkButton } from '../../views/LinkButton'
+import { SimpleCard, SkewedCardCarousel } from '../SimpleCard'
 
 type Props = {
   escalating?: boolean
@@ -87,7 +88,7 @@ export const RestaurantPhotosRowContent = memo(
             </HStack>
           )}
           {!!photos.length && (
-            <HStack spacing={spacing}>
+            <SkewedCardCarousel>
               {[
                 ...photosData,
                 {
@@ -110,15 +111,18 @@ export const RestaurantPhotosRowContent = memo(
                 },
               ].map((item, index) => {
                 return (
-                  <VStack
+                  <SimpleCard
+                    zIndex={1000 - index}
+                    slanted
                     width={width}
                     height={height}
                     key={index}
                     className={`scroll-snap-photo`}
                     alignItems="center"
+                    marginRight={-50}
                     justifyContent="center"
                     {...(floating && {
-                      borderRadius: 40,
+                      borderRadius: 12,
                       overflow: 'hidden',
                       shadowColor: theme.shadowColor,
                       shadowRadius: 5,
@@ -149,10 +153,10 @@ export const RestaurantPhotosRowContent = memo(
                         </>
                       )
                     })()}
-                  </VStack>
+                  </SimpleCard>
                 )
               })}
-            </HStack>
+            </SkewedCardCarousel>
           )}
         </HStack>
       )

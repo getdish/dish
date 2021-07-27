@@ -47,7 +47,7 @@ export const zIndexMapControlsUnderlaySmall = 500
 export const zIndexGallery = 500
 
 export const cardFrameBorderRadius = 20
-export const cardFrameWidth = Math.round(220)
+export const cardFrameWidth = Math.round(200)
 export const cardFrameHeight = Math.round(260)
 export const cardFrameWidthSm = Math.round(cardFrameWidth * 0.8)
 export const cardFrameHeightSm = Math.round(cardFrameHeight * 0.8)

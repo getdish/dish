@@ -343,8 +343,8 @@ const ListPageContent = graphql((props: Props) => {
   const isLight = list.color ? lightBackgrounds.has(list.color) : false
 
   return (
-    <Theme name={isLight ? 'light' : 'dark'}>
-      <StackDrawer backgroundColor={color} closable title={`${username}'s ${list.name}`}>
+    <>
+      <StackDrawer closable title={`${username}'s ${list.name}`}>
         <PaneControlButtonsLeft>
           <FavoriteButton isFavorite={isFavorited} onToggle={toggleFavorite}>
             {reviewsCount}
@@ -407,7 +407,7 @@ const ListPageContent = graphql((props: Props) => {
             <Spacer />
 
             {/* overflow clip prevention with marginVerticals here */}
-            <VStack position="relative" backgroundColor={color} rotate="-2deg">
+            <VStack position="relative">
               <ListPageTitle
                 isLight={isLight}
                 locationName={region.data?.name ?? props.item.region}
@@ -523,10 +523,10 @@ const ListPageContent = graphql((props: Props) => {
 
             {!!(list.description || isEditing) && (
               <VStack
-                backgroundColor={`${color}99`}
+                // backgroundColor={`${color}99`}
                 paddingHorizontal={20}
                 paddingVertical={20}
-                alignSelf="center"
+                alignSelf="flex-start"
                 borderRadius={20}
               >
                 {isEditing ? (
@@ -639,7 +639,7 @@ const ListPageContent = graphql((props: Props) => {
           </PageContentWithFooter>
         </ContentScrollView>
       </StackDrawer>
-    </Theme>
+    </>
   )
 })
 
@@ -690,11 +690,7 @@ const ListPageTitle = ({
                 </AbsoluteVStack>
               )}
               <SlantedTitle
-                color={color}
-                backgroundColor="#000"
-                {...(isLight && {
-                  backgroundColor: '#fff',
-                })}
+                backgroundColor={color}
                 marginTop={-5}
                 alignSelf="center"
                 zIndex={0}

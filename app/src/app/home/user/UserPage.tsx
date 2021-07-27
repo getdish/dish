@@ -34,7 +34,7 @@ import { StackItemProps } from '../HomeStackView'
 import { PageContentWithFooter } from '../PageContentWithFooter'
 import { RestaurantReview } from '../restaurant/RestaurantReview'
 import { useSnapToFullscreenOnMount } from '../restaurant/useSnapToFullscreenOnMount'
-import { SkewedCard, SkewedCardCarousel } from '../SkewedCard'
+import { SimpleCard, SkewedCardCarousel } from '../SimpleCard'
 import { UserAvatar } from './UserAvatar'
 
 type UserPane = 'vote' | 'review' | ''
@@ -150,14 +150,14 @@ const UserPageContent = graphql(
               <SkewedCardCarousel>
                 {lists.map((list, i) => {
                   return (
-                    <SkewedCard zIndex={1000 - i} key={list.slug || i}>
+                    <SimpleCard zIndex={1000 - i} key={list.slug || i}>
                       <ListCard
                         isBehind={i > 0}
                         userSlug={list.user?.username ?? ''}
                         slug={list.slug}
                         region={list.region ?? ''}
                       />
-                    </SkewedCard>
+                    </SimpleCard>
                   )
                 })}
               </SkewedCardCarousel>

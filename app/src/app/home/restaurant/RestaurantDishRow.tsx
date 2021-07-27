@@ -1,6 +1,7 @@
 import { graphql } from '@dish/graph'
 import { partition } from 'lodash'
 import React, { Suspense, memo, useMemo, useState } from 'react'
+import { Pressable } from 'react-native'
 import { HStack, LoadingItem, Spacer, Theme, VStack } from 'snackui'
 
 import { isWeb } from '../../../constants/constants'
@@ -78,23 +79,22 @@ export const RestaurantDishRowContent = memo(
           const isSelected = selected === getTagSlug(dish.slug)
           return (
             <React.Fragment key={dish.name}>
-              <ScalingPressable
+              <Pressable
                 {...(!!selectable && {
                   onPress() {
                     onSelect?.(getTagSlug(dish.slug))
                   },
                 })}
               >
-                <Theme name={isSelected && themeName ? themeName : null}>
-                  <TagButtonSlanted
-                    noLink
-                    restaurantSlug={restaurantSlug}
-                    restaurantId={restaurantId}
-                    showSearchButton
-                    {...dish}
-                  />
-                </Theme>
-              </ScalingPressable>
+                <TagButtonSlanted
+                  isActive={isSelected}
+                  noLink
+                  restaurantSlug={restaurantSlug}
+                  restaurantId={restaurantId}
+                  showSearchButton
+                  {...dish}
+                />
+              </Pressable>
             </React.Fragment>
           )
         })
