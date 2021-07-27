@@ -18,8 +18,8 @@ steps:
     depends_on: base
     command: ./dsh compose_build app
 
-  # otherwise base can get slowed down, clogging the rest
-  - wait
+  # base can get slowed down, clogging the rest
+  # - wait
 
   - label: ":docker: build worker"
     key: worker
@@ -43,7 +43,6 @@ steps:
 
   - label: ":docker: build puppet-proxy"
     key: puppet-proxy
-    depends_on: base
     command: ./dsh compose_build puppet-proxy
 
   - label: ":docker: build search"
@@ -87,8 +86,6 @@ steps:
       - hooks
       - search
       - hasura
-      - bert
-      - gorse
       - timescale
       - image-quality
       - tileserver
