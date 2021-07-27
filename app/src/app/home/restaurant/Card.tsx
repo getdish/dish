@@ -133,7 +133,7 @@ export function Card({
           />
         )}
 
-        <VStack className="hover-75-opacity-child" opacity={dimImage ? 0.5 : 1} {...frame}>
+        <VStack className="hover-75-opacity-child" opacity={dimImage ? 0.76 : 1} {...frame}>
           {typeof photo === 'string' ? (
             photo ? (
               <Image resizeMode="cover" {...sizes} style={frame} source={{ uri: photo }} />
@@ -245,10 +245,10 @@ export const CardOverlay = (props: { children: any }) => {
       overflow="hidden"
       justifyContent="flex-end"
     >
-      <LinearGradient
-        colors={['rgba(0,0,0,0)', 'rgba(0,0,0,0)', 'rgba(0,0,0,0)', 'rgba(0,0,0,0.7)']}
+      {/* <LinearGradient
+        colors={['rgba(0,0,0,0)', 'rgba(0,0,0,0)', 'rgba(0,0,0,0)', 'rgba(0,0,0,0.27)']}
         style={styles.cardFrameMd}
-      />
+      /> */}
       <VStack padding={10} paddingTop={30} zIndex={10}>
         {props.children}
       </VStack>

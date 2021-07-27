@@ -123,7 +123,7 @@ export const HomeFeedDishRestaurants = graphql(
                   <RestaurantCard
                     padTitleSide
                     hoverToMap
-                    isBehind={i > 0}
+                    // isBehind={i > 0}
                     hideScore
                     restaurantId={restaurant.id}
                     restaurantSlug={restaurant.slug || ''}

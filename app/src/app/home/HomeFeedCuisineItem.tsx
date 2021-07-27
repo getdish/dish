@@ -110,7 +110,7 @@ export const HomeFeedCuisineItem = memo(
                       <RestaurantCard
                         hoverToMap
                         dimImage
-                        isBehind={i > 0}
+                        // isBehind={i > 0}
                         restaurantId={r.id}
                         restaurantSlug={r.slug}
                         hoverable={false}
