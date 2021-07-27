@@ -30,6 +30,11 @@ function useHomeFeed(props: HomeFeedProps): FI[] {
   return useMemo(() => {
     const [newest, hottest] = hotNewItems
     return [
+      newest,
+      {
+        id: 'space',
+        type: 'space',
+      } as const,
       {
         id: 'list-0',
         type: 'list',
@@ -40,18 +45,17 @@ function useHomeFeed(props: HomeFeedProps): FI[] {
         id: 'space',
         type: 'space',
       } as const,
-      ...dishItems.slice(0, 1),
       hottest,
       {
         id: 'space',
         type: 'space',
       } as const,
-      ...dishItems.slice(1, 2),
-      newest,
+      ...dishItems.slice(0, 1),
       {
         id: 'space',
         type: 'space',
       } as const,
+      ...dishItems.slice(1, 2),
       ...dishItems.slice(2),
     ].filter(isPresent)
   }, [dishItems, hotNewItems])

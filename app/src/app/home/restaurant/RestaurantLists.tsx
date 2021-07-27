@@ -5,7 +5,7 @@ import { VStack } from 'snackui'
 import { queryRestaurant } from '../../../queries/queryRestaurant'
 import { ListCard } from '../../views/list/ListCard'
 import { SlantedTitle } from '../../views/SlantedTitle'
-import { SkewedCard, SkewedCardCarousel } from '../SkewedCard'
+import { SimpleCard, SkewedCardCarousel } from '../SimpleCard'
 
 export const RestaurantLists = memo(
   graphql(({ restaurantSlug }: { restaurantSlug: string }) => {
@@ -32,7 +32,7 @@ export const RestaurantLists = memo(
         <SkewedCardCarousel>
           {lists.map(({ list }, i) => {
             return (
-              <SkewedCard zIndex={1000 - i} key={list.id || i}>
+              <SimpleCard zIndex={1000 - i} key={list.id || i}>
                 <ListCard
                   isBehind={i > 0}
                   hoverable={false}
@@ -40,7 +40,7 @@ export const RestaurantLists = memo(
                   userSlug={list.user?.username ?? 'no-user'}
                   region={list.region ?? 'no-region'}
                 />
-              </SkewedCard>
+              </SimpleCard>
             )
           })}
         </SkewedCardCarousel>

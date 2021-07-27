@@ -14,7 +14,7 @@ import { HoverResultsProp } from './HoverResultsProp'
 import { CardOverlay } from './restaurant/Card'
 import { RestaurantCard } from './restaurant/RestaurantCard'
 import { RestaurantStatBars } from './RestaurantStatBars'
-import { SkewedCard } from './SkewedCard'
+import { SimpleCard } from './SimpleCard'
 import { TagsText } from './TagsText'
 
 export type FICuisine = FIBase & {
@@ -106,7 +106,7 @@ export const HomeFeedCuisineItem = memo(
               <HStack paddingRight={100}>
                 {restaurants.map((r, i) => {
                   return (
-                    <SkewedCard zIndex={1000 - i} key={r.id}>
+                    <SimpleCard zIndex={1000 - i} key={r.id}>
                       <RestaurantCard
                         hoverToMap
                         dimImage
@@ -120,7 +120,7 @@ export const HomeFeedCuisineItem = memo(
                           </CardOverlay>
                         )}
                       />
-                    </SkewedCard>
+                    </SimpleCard>
                   )
                 })}
               </HStack>

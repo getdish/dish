@@ -183,23 +183,16 @@ const RestaurantPage = memo(
                 />
               </VStack>
 
-              <VStack pointerEvents="auto" paddingRight={20}>
-                <Theme name={themeName}>
-                  <RestaurantOverview
-                    isDishBot
-                    maxLines={6}
-                    size="lg"
-                    restaurantSlug={restaurantSlug}
-                  />
-                </Theme>
-              </VStack>
-
-              <Spacer size="xl" />
-
               <RestaurantTagPhotos tagSlug={selectedDish} restaurantSlug={restaurantSlug} />
+
+              <Spacer />
 
               {/* END head color AREA */}
             </VStack>
+
+            <RestaurantOverview isDishBot maxLines={6} size="lg" restaurantSlug={restaurantSlug} />
+
+            <Spacer size="xl" />
 
             <Suspense fallback={null}>
               <RestaurantLists restaurantSlug={restaurantSlug} />

@@ -12,7 +12,7 @@ import { HomeFeedProps } from './HomeFeedProps'
 import { HoverResultsProp } from './HoverResultsProp'
 import { RestaurantCard } from './restaurant/RestaurantCard'
 import { RestaurantButton } from './RestaurantButton'
-import { SkewedCard, SkewedCardCarousel } from './SkewedCard'
+import { SimpleCard, SkewedCardCarousel } from './SimpleCard'
 
 export type FIHotNew = FIBase & {
   type: 'new' | 'hot'
@@ -134,7 +134,7 @@ export const HomeFeedTrendingNew = memo(
                 return null
               }
               return (
-                <SkewedCard zIndex={1000 - i} key={r.id}>
+                <SimpleCard zIndex={1000 - i} key={r.id}>
                   <RestaurantCard
                     size="sm"
                     aspectFixed
@@ -146,7 +146,7 @@ export const HomeFeedTrendingNew = memo(
                     hoverable={false}
                     hoverToMap
                   />
-                </SkewedCard>
+                </SimpleCard>
               )
             })}
           </SkewedCardCarousel>

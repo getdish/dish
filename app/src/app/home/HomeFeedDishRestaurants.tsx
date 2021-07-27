@@ -12,7 +12,7 @@ import { FIBase } from './FIBase'
 import { HoverResultsProp } from './HoverResultsProp'
 import { CardOverlay } from './restaurant/Card'
 import { RestaurantCard } from './restaurant/RestaurantCard'
-import { SkewedCard, SkewedCardCarousel } from './SkewedCard'
+import { SimpleCard, SkewedCardCarousel } from './SimpleCard'
 
 export type FIDishRestaurants = FIBase & {
   type: 'dish-restaurants'
@@ -119,7 +119,7 @@ export const HomeFeedDishRestaurants = graphql(
           <SkewedCardCarousel>
             {restaurants.map((restaurant, i) => {
               return (
-                <SkewedCard zIndex={1000 - i} key={restaurant.id || i}>
+                <SimpleCard zIndex={1000 - i} key={restaurant.id || i}>
                   <RestaurantCard
                     padTitleSide
                     hoverToMap
@@ -145,7 +145,7 @@ export const HomeFeedDishRestaurants = graphql(
                       </CardOverlay>
                     )}
                   />
-                </SkewedCard>
+                </SimpleCard>
               )
             })}
           </SkewedCardCarousel>

@@ -4,6 +4,7 @@ import React, { Suspense, memo, useContext } from 'react'
 import { HStack } from 'snackui'
 
 import { getActiveTags } from '../../../helpers/getActiveTags'
+import { ListCard } from '../../views/list/ListCard'
 import { ListCardHorizontal } from '../../views/list/ListCardHorizontal'
 import { SearchForkListButton } from './SearchForkListButton'
 import { SearchPagePropsContext } from './SearchPagePropsContext'
@@ -48,8 +49,9 @@ export const SearchPageListsRow = memo(
         >
           {lists.map((list, i) => {
             return (
-              <ListCardHorizontal
+              <ListCard
                 key={i}
+                size="sm"
                 slug={list.slug}
                 userSlug={list.user?.username ?? ''}
                 region={list.region ?? ''}

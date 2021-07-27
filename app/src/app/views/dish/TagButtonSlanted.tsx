@@ -19,6 +19,7 @@ export type TagButtonSlantedProps = Partial<DishTagItem> & {
   hideVote?: boolean
   bold?: boolean
   maxTextWidth?: number
+  isActive?: boolean
 }
 
 export const TagButtonSlanted = memo((props: TagButtonSlantedProps) => {
@@ -40,6 +41,7 @@ const DishButtonContent = (props: TagButtonSlantedProps) => {
     rating,
     restaurantSlug,
     noLink,
+    isActive,
     maxTextWidth,
     showSearchButton,
     bold,
@@ -57,16 +59,16 @@ const DishButtonContent = (props: TagButtonSlantedProps) => {
   let contents = (
     <>
       <Box
-        backgroundColor={theme.backgroundColor}
+        {...(!isActive && {
+          backgroundColor: 'transparent',
+        })}
         borderRadius={16}
+        borderWidth={0}
         paddingVertical={3}
         height={38}
         justifyContent="center"
         paddingHorizontal={12}
         skewX="-12deg"
-        shadowColor={theme.backgroundColorTertiary}
-        shadowOffset={{ height: 2, width: 2 }}
-        shadowRadius={0}
         zIndex={1000}
         cursor="pointer"
         // {...rest}
@@ -96,7 +98,7 @@ const DishButtonContent = (props: TagButtonSlantedProps) => {
             <Text
               className="ease-in-out"
               zIndex={10}
-              fontSize={28}
+              fontSize={18}
               marginLeft={image ? -30 : 0}
               marginRight={-4}
             >
@@ -105,10 +107,8 @@ const DishButtonContent = (props: TagButtonSlantedProps) => {
           )}
 
           {!!rank && (
-            <Text fontSize={fontSize * 0.7} fontWeight="700" color={theme.color}>
-              <TextSuperScript fontWeight="300" opacity={0.5}>
-                #
-              </TextSuperScript>
+            <Text fontSize={fontSize * 0.7} color={theme.color}>
+              <TextSuperScript opacity={0.5}>#</TextSuperScript>
               {rank}
             </Text>
           )}

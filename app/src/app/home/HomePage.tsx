@@ -163,8 +163,10 @@ const HomePageContent = (props: Props) => {
               <Theme name="dark">
                 <Link onPress={() => autocompletesStore.setTarget('location')}>
                   <SlantedTitle
-                    backgroundColor={regionColors.color}
-                    color="#fff"
+                    backgroundColor="#fff"
+                    borderBottomColor={regionColors.color}
+                    borderBottomWidth={2}
+                    color={regionColors.color}
                     minWidth={100}
                     size={
                       regionName.length > 24

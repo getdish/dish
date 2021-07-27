@@ -22,7 +22,7 @@ import {
   useTheme,
 } from 'snackui'
 
-import { bgLight, brandColor, green } from '../../../constants/colors'
+import { brandColor, green } from '../../../constants/colors'
 import { isWeb } from '../../../constants/constants'
 import { getRestaurantDishes } from '../../../helpers/getRestaurantDishes'
 import { numberFormat } from '../../../helpers/numberFormat'
@@ -172,7 +172,7 @@ const RestaurantListItemContent = memo(
     const contentSideProps: StackProps = {
       width: media.sm ? '70%' : '60%',
       minWidth: media.sm ? (isWeb ? '40vw' : Dimensions.get('window').width * 0.65) : 320,
-      maxWidth: Math.min(Dimensions.get('window').width * 0.74, media.sm ? 360 : 460),
+      maxWidth: Math.min(Dimensions.get('window').width * 0.74, media.sm ? 360 : 620),
     }
 
     const handleChangeDishes = useCallback(onChangeDishes as any, [])

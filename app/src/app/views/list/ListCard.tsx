@@ -12,7 +12,7 @@ import {
 
 import { cardFrameHeight, cardFrameWidth } from '../../../constants/constants'
 import { getImageUrl } from '../../../helpers/getImageUrl'
-import { Card, CardOverlay } from '../../home/restaurant/Card'
+import { Card, CardOverlay, CardProps } from '../../home/restaurant/Card'
 import { FavoriteButton } from '../FavoriteButton'
 import { Image } from '../Image'
 import { Link } from '../Link'
@@ -40,9 +40,10 @@ export const ListCard = graphql(
       onHover?: (is: boolean) => any
       hoverable?: boolean
       isBehind?: boolean
+      size?: CardProps['size']
     }
   ) => {
-    const { slug, userSlug, region, onHover, hoverable, isBehind } = props
+    const { slug, userSlug, region, onHover, hoverable, isBehind, size } = props
     const { list, photos, backgroundColor } = useList(props)
 
     if (!slug || !userSlug) {
@@ -54,6 +55,7 @@ export const ListCard = graphql(
         <Card
           aspectFixed
           square
+          size={size}
           hoverable={hoverable}
           backgroundColor={backgroundColor}
           // borderColor={backgroundColor}
@@ -67,7 +69,7 @@ export const ListCard = graphql(
                 </Suspense>
               </AbsoluteVStack>
               <AbsoluteVStack zIndex={1000000} bottom="-5%" left="-5%" right="-5%">
-                <SlantedTitle maxWidth="87%" size="sm" backgroundColor="#000000cc" color="#fff">
+                <SlantedTitle maxWidth="87%" size="xs" backgroundColor="#000000cc" color="#fff">
                   {list.name}
                 </SlantedTitle>
                 <Text fontWeight="400" color="#000" marginBottom={-10} marginTop={10}>
@@ -116,7 +118,7 @@ export const ListCard = graphql(
                 })}
               </HStack>
 
-              <CardOverlay />
+              {/* <CardOverlay /> */}
 
               {/* <AbsoluteVStack padding={10} fullscreen>
                 <VStack flex={1} maxHeight={cardFrameHeight}>

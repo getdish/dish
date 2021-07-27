@@ -6,7 +6,12 @@ import { ContentScrollViewHorizontal } from '../views/ContentScrollViewHorizonta
 
 type CarouselSize = 'md' | 'sm'
 
-export const SkewedCard = ({ children, size, ...props }: StackProps & { size?: CarouselSize }) => {
+export const SimpleCard = ({
+  children,
+  size,
+  slanted,
+  ...props
+}: StackProps & { size?: CarouselSize; slanted?: boolean }) => {
   return (
     <VStack
       marginRight={size === 'sm' ? -3 : -10}
@@ -19,13 +24,20 @@ export const SkewedCard = ({ children, size, ...props }: StackProps & { size?: C
       position="relative"
       opacity={1}
       scale={0.85}
-      // perspective={1000}
-      // rotateY="-15deg"
+      {...(slanted && {
+        scale: 0.85,
+        perspective: 1000,
+        rotateY: '-15deg',
+      })}
       translateX={0}
       hoverStyle={{
         scale: 0.87,
-        // perspective: 1000,
-        // rotateY: '-15deg',
+        ...(slanted && {
+          // TODO bug in snackui
+          scale: 0.87,
+          perspective: 1000,
+          rotateY: '-15deg',
+        }),
       }}
       pressStyle={{
         scale: 0.83,

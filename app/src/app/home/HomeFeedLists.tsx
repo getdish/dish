@@ -1,18 +1,18 @@
 import { series } from '@dish/async'
 import { graphql, order_by, query, resolved } from '@dish/graph'
 import { Plus } from '@dish/react-feather'
+import { shuffle } from 'lodash'
 import React, { Suspense, useEffect, useMemo, useState } from 'react'
-import { HStack, Paragraph, Spacer, useDebounce } from 'snackui'
+import { Divider, HStack, Spacer, Text, useDebounce } from 'snackui'
 
 import { getRestaurantIdentifiers } from '../../helpers/getRestaurantIdentifiers'
 import { homeStore } from '../homeStore'
 import { SmallCircleButton } from '../views/CloseButton'
 import { Link } from '../views/Link'
 import { ListCard } from '../views/list/ListCard'
-import { FeedSlantedTitle } from './FeedSlantedTitle'
 import { FIBase } from './FIBase'
 import { HoverResultsProp } from './HoverResultsProp'
-import { SkewedCard, SkewedCardCarousel } from './SkewedCard'
+import { SimpleCard, SkewedCardCarousel } from './SimpleCard'
 
 export type FIList = FIBase & {
   type: 'list'
@@ -25,12 +25,14 @@ export const HomeFeedLists = (props: Props) => {
   return (
     <Suspense fallback={null}>
       <HomeFeedListsContents {...props} />
+      <Spacer size="xl" />
+      <HomeFeedListsContents {...props} />
     </Suspense>
   )
 }
 
 export const HomeFeedListsContents = graphql(({ region, onHoverResults }: Props) => {
-  const recentLists = query.list_populated({
+  let recentLists = query.list_populated({
     args: {
       min_items: 2,
     },
@@ -45,6 +47,7 @@ export const HomeFeedListsContents = graphql(({ region, onHoverResults }: Props)
     },
     order_by: [{ created_at: order_by.desc }],
   })
+
   const [hoveredList, setHoveredListFast] = useState<string | null>(null)
   const setHoveredList = useDebounce(setHoveredListFast, 300)
 
@@ -85,25 +88,35 @@ export const HomeFeedListsContents = graphql(({ region, onHoverResults }: Props)
       <>
         <>
           {/* marginVertical good on native */}
-          <HStack alignItems="center" marginVertical={-2}>
-            {/* TODO why not picking up font weight? */}
-            <Paragraph fontWeight="800" size="xl">
-              Top Lists
-            </Paragraph>
-            <Spacer size="sm" />
-            <Link
-              promptLogin
-              name="list"
-              params={{
-                userSlug: 'me',
-                slug: 'create',
-                region: homeStore.lastRegionSlug,
-              }}
-            >
-              <SmallCircleButton padding={5}>
-                <Plus size={16} color="#fff" />
-              </SmallCircleButton>
-            </Link>
+          <HStack marginVertical={-2} width="100%" alignItems="center">
+            <Divider flex />
+            <HStack alignItems="center" justifyContent="center">
+              <Text
+                backgroundColor="rgba(150,150,150,0.2)"
+                paddingVertical={5}
+                paddingHorizontal={12}
+                borderRadius={100}
+                fontWeight="500"
+                fontSize={13}
+              >
+                Trending
+              </Text>
+              <Spacer size="sm" />
+              <Link
+                promptLogin
+                name="list"
+                params={{
+                  userSlug: 'me',
+                  slug: 'create',
+                  region: homeStore.lastRegionSlug,
+                }}
+              >
+                <SmallCircleButton padding={5}>
+                  <Plus size={16} color="#fff" />
+                </SmallCircleButton>
+              </Link>
+            </HStack>
+            <Divider flex />
           </HStack>
         </>
 
@@ -113,7 +126,7 @@ export const HomeFeedListsContents = graphql(({ region, onHoverResults }: Props)
               return null
             }
             return (
-              <SkewedCard key={list.id || i} zIndex={1000 - i}>
+              <SimpleCard key={list.id || i} zIndex={1000 - i}>
                 <ListCard
                   isBehind={i > 0}
                   hoverable={false}
@@ -124,7 +137,7 @@ export const HomeFeedListsContents = graphql(({ region, onHoverResults }: Props)
                     hovered ? setHoveredList(list.id) : null
                   }}
                 />
-              </SkewedCard>
+              </SimpleCard>
             )
           })}
         </SkewedCardCarousel>
