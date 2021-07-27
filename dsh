@@ -969,7 +969,9 @@ function run_all_tests_in_compose() {
 
 function run_all_tests_in_compose_retry() {
   # this just runs it inside the `dish-migrate` container which is idle
-  exec migrate yarn test || (echo "failed, retrying" && exec migrate yarn test)
+  exec migrate yarn test
+  # if you want to retry on failed (too course, we should retry just the http stuff really)
+  # || (echo "failed, retrying" && exec migrate yarn test)
 }
 
 function run_integration_tests() {

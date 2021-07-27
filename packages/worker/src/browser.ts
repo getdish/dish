@@ -2,7 +2,9 @@ export async function fetchBrowserJSON(url: string, headers?: Object) {
   const res = await fetchBrowser(url, {
     'content-type': 'application/json',
     parse: 'json',
-    headers,
+    ...(headers && {
+      headers: JSON.stringify(headers),
+    }),
   })
   return await res.json()
 }

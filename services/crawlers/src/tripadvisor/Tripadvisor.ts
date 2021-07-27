@@ -63,9 +63,13 @@ export class Tripadvisor extends WorkerJob {
     const response = await fetchBrowserJSON(uri, {
       'X-My-X-Forwarded-For': 'www.tripadvisor.com',
     })
+
     if (!response?.restaurants) {
-      console.warn('error, fail: no restaurants in response', response, uri)
-      return
+      throw new Error(
+        `error, fail: no restaurants in response via uri ${uri}\n:${JSON.stringify(
+          response || null
+        )}`
+      )
     }
 
     for (const data of response.restaurants) {
@@ -261,7 +265,7 @@ export class Tripadvisor extends WorkerJob {
     const html = await fetchBrowserJSON(TRIPADVISOR_PROXY + path, {
       'X-My-X-Forwarded-For': 'www.tripadvisor.com',
       'X-Requested-With': 'XMLHttpRequest',
-    }).then((x) => x.text())
+    })
     const $ = cheerio.load(html)
     const photos = $('.tinyThumb')
     let parsed: any[] = []
