@@ -1,3 +1,5 @@
+// TODO rename to fetchSmart or something and add timeout
+
 export const fetchRetry = async (
   url: RequestInfo,
   {
