@@ -1,9 +1,9 @@
 import '@dish/common'
 
 import { restaurantFindOne, restaurantUpdate } from '@dish/graph'
-import { fetchRetry } from '@dish/helpers'
 import { WorkerJob, fetchBrowserJSON } from '@dish/worker'
 import * as acorn from 'acorn'
+import axios from 'axios'
 import { JobOptions, QueueOptions } from 'bull'
 import * as cheerio from 'cheerio'
 import _ from 'lodash'
@@ -60,11 +60,13 @@ export class Tripadvisor extends WorkerJob {
     const dimensions = `&mz=17&mw=${this.MAPVIEW_SIZE}&mh=${this.MAPVIEW_SIZE}`
     const coords = `&mc=${lat},${lon}`
     const uri = TRIPADVISOR_PROXY + base + dimensions + coords
-    const response = await fetchBrowserJSON(uri, {
-      'X-My-X-Forwarded-For': 'www.tripadvisor.com',
+    const response = await axios.get(uri, {
+      headers: {
+        'X-My-X-Forwarded-For': 'www.tripadvisor.com',
+      },
     })
-
-    if (!response?.restaurants) {
+    const data = response.data
+    if (!data?.restaurants) {
       throw new Error(
         `error, fail: no restaurants in response via uri ${uri}\n:${JSON.stringify(
           response || null
@@ -72,8 +74,8 @@ export class Tripadvisor extends WorkerJob {
       )
     }
 
-    for (const data of response.restaurants) {
-      await this.runOnWorker('getRestaurant', [removeStartSlash(data.url)])
+    for (const item of data.restaurants) {
+      await this.runOnWorker('getRestaurant', [removeStartSlash(item.url)])
       if (this._TESTS__LIMIT_GEO_SEARCH) break
     }
   }
@@ -262,14 +264,20 @@ export class Tripadvisor extends WorkerJob {
     const path =
       `DynamicPlacementAjax?detail=${this.detail_id}` +
       `&albumViewMode=hero&placementRollUps=responsive-photo-viewer&metaReferer=Restaurant_Review&offset=${offset}`
-    const html = await fetchBrowserJSON(TRIPADVISOR_PROXY + path, {
-      'X-My-X-Forwarded-For': 'www.tripadvisor.com',
-      'X-Requested-With': 'XMLHttpRequest',
+    const html = await axios.get(TRIPADVISOR_PROXY + path, {
+      headers: {
+        'X-My-X-Forwarded-For': 'www.tripadvisor.com',
+        'X-Requested-With': 'XMLHttpRequest',
+      },
     })
-    const $ = cheerio.load(html)
+    if (typeof html.data !== 'string') {
+      console.log('error data', html.data)
+      throw new Error(`Invalid data: ${typeof html.data}`)
+    }
+    const $ = cheerio.load(html.data)
     const photos = $('.tinyThumb')
     let parsed: any[] = []
-    if (html.includes('Oh, snap! We don&#39;t have any photos for')) {
+    if (html.data.includes('Oh, snap! We don&#39;t have any photos for')) {
       return false
     }
     for (let i = 0; i < photos.length; i++) {

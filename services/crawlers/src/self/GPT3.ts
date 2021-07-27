@@ -1,4 +1,5 @@
 import { sentryMessage } from '@dish/common'
+import fetch, { RequestInit } from 'node-fetch'
 
 import { DISH_DEBUG } from '../constants'
 import { getSummary } from './getSummary'
@@ -107,7 +108,7 @@ export class GPT3 {
       console.log(body.prompt)
     }
     const result = await fetch(`https://api.openai.com/v1/engines/${engine}/completions`, request)
-    const response = await result.json()
+    const response: any = await result.json()
     let answer = ''
     if (!response.choices || response.choices.length == 0) {
       console.error('GPT3 API error:', response)

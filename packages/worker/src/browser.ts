@@ -1,3 +1,5 @@
+import fetch from 'node-fetch'
+
 export async function fetchBrowserJSON(url: string, headers?: Object) {
   const res = await fetchBrowser(url, {
     'content-type': 'application/json',

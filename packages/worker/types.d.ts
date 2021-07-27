@@ -9,8 +9,8 @@ declare module "@dish/worker" {
 }
 
 declare module "@dish/worker" {
-    export function fetchBrowserJSON(url: string): Promise<any>;
-    export function fetchBrowserScriptData(url: string, selectors: string[]): Promise<any>;
+    export function fetchBrowserJSON(url: string, headers?: Object): Promise<unknown>;
+    export function fetchBrowserScriptData(url: string, selectors: string[]): Promise<unknown>;
     export function fetchBrowserHTML(url: string): Promise<string>;
 }
 
@@ -25,8 +25,8 @@ declare module "@dish/worker" {
         config: Opts;
         start_with_aws: boolean;
         constructor(domain: string, aws_proxy: string, config?: Opts, start_with_aws?: boolean);
-        getJSON(uri: string, props?: Opts): Promise<any>;
-        getScriptData(uri: string, selectors: string[]): Promise<any>;
+        getJSON(uri: string, props?: Opts): Promise<unknown>;
+        getScriptData(uri: string, selectors: string[]): Promise<unknown>;
         getText(uri: string, props?: Opts): Promise<any>;
         get(uri: string, props?: Opts): Promise<any>;
         getStormProxyConfig(): {
@@ -61,8 +61,7 @@ declare module "@dish/worker" {
 }
 
 declare module "@dish/worker" {
-    import Bull from "bull";
-    import { Job, JobOptions, Queue, QueueOptions } from "bull";
+    import BullQueue, { Job, JobOptions, Queue, QueueOptions } from "bull";
     export type JobData = {
         className: string;
         fn: string;
@@ -79,10 +78,10 @@ declare module "@dish/worker" {
         _runFailableFunction(func: Function): Promise<void>;
         private addJob;
         private manageRepeatable;
-        addBigJob(fn: string, args: any[]): Promise<void | Bull.Job<any>>;
+        addBigJob(fn: string, args: any[]): Promise<void | BullQueue.Job<any>>;
     }
-    export function getBullQueue(name: string, config?: {}): Bull.Queue<any>;
-    export function onBullQueueReady(queue: Bull.Queue): Promise<void>;
+    export function getBullQueue(name: string, config?: {}): BullQueue.Queue<any>;
+    export function onBullQueueReady(queue: Queue): Promise<void>;
 }
 
 declare module "@dish/worker" {

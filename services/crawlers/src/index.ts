@@ -1,4 +1,5 @@
 import '@dish/helpers/polyfill'
+import '@dish/helpers/polyfill-node'
 
 export { CI } from './ci/CI'
 export { Self } from './self/Self'
