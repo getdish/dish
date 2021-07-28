@@ -53,7 +53,7 @@ const DishButtonContent = (props: TagButtonSlantedProps) => {
 
   const imageUrl = getImageUrl(image ?? '', 120, 120, 120)
   const isLong = dishName.length > 20 || !!dishName.split(' ').find((x) => x.length >= 10)
-  const fontSize = isLong ? 16 : 18
+  const fontSize = isLong ? 14 : 16
   const theme = useTheme()
 
   let contents = (
@@ -138,7 +138,7 @@ const DishButtonContent = (props: TagButtonSlantedProps) => {
           )}
 
           {showSearchButton && !!slug && (
-            <AbsoluteVStack bottom={-10} right={-20}>
+            <AbsoluteVStack opacity={0} hoverStyle={{ opacity: 1 }} bottom={-10} right={-20}>
               <SearchTagButton tag={{ type: 'dish', slug }} backgroundColor="#fff" color="#000" />
             </AbsoluteVStack>
           )}

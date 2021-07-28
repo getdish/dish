@@ -8,7 +8,7 @@ export class Loggable {
   }
 
   log = (...messages: any[]) => {
-    if (DEBUG_LEVEL < 1) {
+    if (DEBUG_LEVEL < 2) {
       return
     }
     const time = this.elapsedTime() + 's'

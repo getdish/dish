@@ -44,22 +44,19 @@ export const AppIntroLetter = memo(() => {
         <>
           <SmallCircleButton
             position="absolute"
+            icon={<Home size={42} color="rgba(255,255,255,0.5)" />}
             zIndex={1000}
             top={15}
             right={15}
-            opacity={0.5}
-            backgroundColor="transparent"
+            size={48}
             hoverStyle={{
               backgroundColor: 'rgba(255,255,255,0.3)',
             }}
-            padding={10}
             onPress={() => {
               setCloses(closes + 1)
               store.setHidden(true)
             }}
-          >
-            <Home size={24} color="#fff" />
-          </SmallCircleButton>
+          />
           <AbsoluteVStack bottom={-50} zIndex={1000} right={-40} rotate="-10deg">
             <Text fontSize={100}>🌮</Text>
           </AbsoluteVStack>

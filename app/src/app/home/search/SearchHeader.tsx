@@ -48,7 +48,7 @@ export const SearchHeader = memo(() => {
                 <SearchForkListButton size="sm" />
               </AbsoluteVStack>
               <SlantedTitle
-                paddingLeft={35}
+                paddingLeft={45}
                 paddingRight={25}
                 paddingVertical={12}
                 marginBottom={-3}

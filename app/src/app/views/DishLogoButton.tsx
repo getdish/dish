@@ -3,6 +3,7 @@ import { AbsoluteVStack, HStack, VStack, useDebounceValue, useMedia } from 'snac
 
 import { logoHeight, logoWidth, logoXsHeight, logoXsWidth } from '../../constants/constants'
 import { useHomeCurrentHomeType } from '../homeStore'
+import { useCurrentLenseColor } from '../hooks/useCurrentLenseColor'
 import { Link } from './Link'
 import { LogoCircle, LogoColor } from './Logo'
 
@@ -10,6 +11,8 @@ export const DishLogoButton = memo(({ color }: { color?: string }) => {
   const media = useMedia()
   const type = useHomeCurrentHomeType()
   const currentType = useDebounceValue(type, 40)
+  const searchBarTheme = useCurrentLenseColor()
+
   const wrapWithHomeLink = (el: any) => {
     return (
       <Link name={currentType.indexOf('home') === 0 ? null : 'home'}>
@@ -48,7 +51,9 @@ export const DishLogoButton = memo(({ color }: { color?: string }) => {
         {wrapWithHomeLink(
           // marginVertical={-7} native only? web wroks
           <VStack marginVertical="auto">
-            <LogoColor color={media.sm ? undefined : '#fff'} />
+            <LogoColor
+              color={media.sm ? undefined : searchBarTheme.name === 'light' ? undefined : '#fff'}
+            />
           </VStack>
         )}
       </VStack>
