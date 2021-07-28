@@ -67,7 +67,7 @@ const RestaurantHeaderContent = memo(
       const scale = width < 601 ? 0.7 : drawerWidth < 700 ? 0.85 : 1
       const fontScale = size === 'sm' ? 0.8 : 1.1
       const fontSizeBase =
-        nameLen > 40 ? 24 : nameLen > 30 ? 26 : nameLen > 24 ? 30 : nameLen > 16 ? 34 : 38
+        nameLen > 40 ? 18 : nameLen > 30 ? 22 : nameLen > 24 ? 26 : nameLen > 16 ? 28 : 32
       const fontSize = scale * fontSizeBase * fontScale
       const restaurantId = restaurant.id
       const [initialDrawerWidth] = useState(drawerWidth)
@@ -165,11 +165,10 @@ const RestaurantHeaderContent = memo(
                     shadowOffset={{ height: 3, width: 0 }}
                     borderRadius={10}
                     paddingHorizontal={20}
-                    maxWidth={Math.min(getWindowWidth() * 0.8, 400)}
                     paddingVertical={9}
                     alignItems="center"
                     position="relative"
-                    zIndex={100}
+                    zIndex={10000}
                     justifyContent="center"
                     minWidth={100}
                     skewX="-12deg"
@@ -179,7 +178,7 @@ const RestaurantHeaderContent = memo(
                         color="#fff"
                         alignSelf="flex-start"
                         selectable
-                        letterSpacing={-1.2}
+                        letterSpacing={-1}
                         fontSize={fontSize}
                         fontWeight="800"
                       >

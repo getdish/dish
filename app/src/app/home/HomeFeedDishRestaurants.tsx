@@ -1,10 +1,12 @@
 import { graphql, order_by, query } from '@dish/graph'
 import { groupBy, pick, sortBy, uniqBy } from 'lodash'
 import React, { useMemo } from 'react'
+import { LoadingItems, VStack } from 'snackui'
 
 import { isTouchDevice } from '../../constants/platforms'
 import { DishTagItemSimple, selectRishDishViewSimple } from '../../helpers/selectDishViewSimple'
 import { RegionNormalized } from '../../types/homeTypes'
+import { suspense } from '../hoc/suspense'
 import { TagButton } from '../views/TagButton'
 import { ContentSectionHoverable } from './ContentSectionHoverable'
 import { FeedSlantedTitleLink } from './FeedSlantedTitle'
@@ -20,7 +22,7 @@ export type FIDishRestaurants = FIBase & {
   tag: DishTagItemSimple
 }
 
-export function useFeedDishItems(region?: RegionNormalized | null): FIDishRestaurants[] {
+function useFeedDishItems(region?: RegionNormalized | null): FIDishRestaurants[] {
   const bbox = region?.bbox
   const popularDishTags = bbox
     ? query
@@ -33,7 +35,7 @@ export function useFeedDishItems(region?: RegionNormalized | null): FIDishRestau
               _gt: 15,
             },
           },
-          order_by: [{ votes_ratio: order_by.desc_nulls_last }],
+          order_by: [{ votes_ratio: order_by.desc }],
           limit: 12,
         })
         .flatMap((r) => {
@@ -47,7 +49,7 @@ export function useFeedDishItems(region?: RegionNormalized | null): FIDishRestau
                   },
                 },
               },
-              order_by: [{ upvotes: order_by.desc_nulls_last }],
+              order_by: [{ upvotes: order_by.desc }],
             })
             .map(selectRishDishViewSimple)
         })
@@ -74,7 +76,23 @@ export function useFeedDishItems(region?: RegionNormalized | null): FIDishRestau
   }, [key])
 }
 
-export const HomeFeedDishRestaurants = graphql(
+export const HomeFeedDishRestaurants = suspense(
+  graphql((props: HoverResultsProp) => {
+    const items = useFeedDishItems()
+    return (
+      <>
+        {items.map((item) => {
+          return <HomeFeedDishRestaurantsItem key={item.id} {...props} {...item} />
+        })}
+      </>
+    )
+  }),
+  <VStack height={600} backgroundColor="red">
+    <LoadingItems />
+  </VStack>
+)
+
+const HomeFeedDishRestaurantsItem = graphql(
   ({ tag, region, onHoverResults }: FIDishRestaurants & HoverResultsProp) => {
     const restaurantsQuery = query.restaurant_with_tags({
       args: {
