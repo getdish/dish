@@ -1,3 +1,9 @@
+- fix loading homepage fast
+- fix move between regions
+- fix re-load homepage cache issue
+- fix searchbar buttons bg hover
+- fix router/stack bug on back/close
+- fix search page debug why slow restaurantitem query
 - restaurantpage - tag buttons active state
 - fix last missing data in crawlers
 - make lists prettier (formatting esp with writing)
