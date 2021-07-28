@@ -52,7 +52,7 @@ import { openingHours, priceRange } from './RestaurantDetailRow'
 import { RestaurantFavoriteStar } from './RestaurantFavoriteButton'
 import { useTotalReviews } from './useTotalReviews'
 
-export const ITEM_HEIGHT = 260
+export const ITEM_HEIGHT = 250
 
 type RestaurantListItemProps = {
   curLocInfo: GeocodePlace | null
@@ -172,7 +172,7 @@ const RestaurantListItemContent = memo(
     const contentSideProps: StackProps = {
       width: media.sm ? '70%' : '60%',
       minWidth: media.sm ? (isWeb ? '40vw' : Dimensions.get('window').width * 0.65) : 320,
-      maxWidth: Math.min(Dimensions.get('window').width * 0.74, media.sm ? 360 : 620),
+      maxWidth: Math.min(Dimensions.get('window').width * 0.74, media.sm ? 360 : 580),
     }
 
     const handleChangeDishes = useCallback(onChangeDishes as any, [])
@@ -192,7 +192,7 @@ const RestaurantListItemContent = memo(
         : nameLen > 15
         ? 0.975
         : 1.15
-    const titleFontSize = Math.round((media.sm ? 20 : 25) * titleFontScale)
+    const titleFontSize = Math.round((media.sm ? 19 : 22) * titleFontScale)
     const titleHeight = titleFontSize + 8 * 2
     const score = Math.round((meta?.effective_score ?? 0) / 20)
     const theme = useTheme()
@@ -289,7 +289,6 @@ const RestaurantListItemContent = memo(
         {/* ROW: TITLE */}
         <VStack
           hoverStyle={{ backgroundColor: 'rgba(0,0,0,0.015)' }}
-          paddingTop={4}
           paddingLeft={14}
           width={950}
           position="relative"

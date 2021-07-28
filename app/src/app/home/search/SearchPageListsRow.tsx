@@ -49,9 +49,8 @@ export const SearchPageListsRow = memo(
         >
           {lists.map((list, i) => {
             return (
-              <ListCard
+              <ListCardHorizontal
                 key={i}
-                size="sm"
                 slug={list.slug}
                 userSlug={list.user?.username ?? ''}
                 region={list.region ?? ''}

@@ -7,8 +7,8 @@ export const PaneControlButtons = (props: { children: any }) => {
     <AbsoluteHStack
       className="pane-control-buttons"
       zIndex={10000000000}
-      top={media.sm ? 6 : -6}
-      right={media.sm ? 6 : -12}
+      top={media.sm ? 6 : -8}
+      right={media.sm ? 6 : -14}
       spacing
     >
       {props.children}

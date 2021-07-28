@@ -56,14 +56,14 @@ export const AutocompleteItemView = memo(
           }}
         />
       ) : result.icon ? (
-        <Text fontSize={32}>{result.icon} </Text>
+        <Text fontSize={28}>{result.icon} </Text>
       ) : null
 
     return (
       <LinkButton
         alignSelf="stretch"
         justifyContent={'flex-start'}
-        minHeight={56}
+        minHeight={46}
         backgroundColor={isActive ? theme.backgroundColor : 'transparent'}
         hoverStyle={{
           backgroundColor: theme.backgroundColorTertiary,
@@ -91,9 +91,7 @@ export const AutocompleteItemView = memo(
         <HStack>
           <VStack flex={1}>
             <HStack marginVertical={-3} flex={1} alignItems="center">
-              {icon}
-              {!!icon && <Spacer size="lg" />}
-              <Text fontWeight="700" ellipse color="#fff" fontSize={24} lineHeight={28}>
+              <Text fontWeight="700" ellipse color="#fff" fontSize={20} lineHeight={28}>
                 {!!result.namePrefix && (
                   <>
                     <Text fontWeight="300">{result.namePrefix}</Text>{' '}
@@ -101,6 +99,8 @@ export const AutocompleteItemView = memo(
                 )}
                 {result.name}
               </Text>
+              {!!icon && <Spacer size="md" />}
+              {icon}
             </HStack>
             {!!result.description && (
               <>

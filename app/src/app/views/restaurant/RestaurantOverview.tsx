@@ -57,7 +57,7 @@ export const RestaurantOverview = memo(
     const scale = 1
     const extra = size === 'lg' ? 1.1 : 1
     const lineHeight = Math.round((size === 'lg' ? 26 : 24) * scale + extra * scale)
-    const fontSize = Math.round(16 * scale + extra)
+    const fontSize = Math.round(15 * scale + extra)
     const [isEditing, setIsEditing] = useState(false)
     const editedText = useRef('')
 
@@ -71,7 +71,7 @@ export const RestaurantOverview = memo(
             maxWidth="100%"
             width="100%"
             overflow="hidden"
-            paddingHorizontal={30}
+            paddingHorizontal={25}
             marginHorizontal={-30}
             flex={1}
             alignSelf="center"

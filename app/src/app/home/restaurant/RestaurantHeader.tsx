@@ -15,6 +15,7 @@ import {
 
 import { drawerBorderRadius, isWeb } from '../../../constants/constants'
 import { getImageUrl } from '../../../helpers/getImageUrl'
+import { getWindowWidth } from '../../../helpers/getWindow'
 import { useColorsFor } from '../../../helpers/useColorsFor'
 import { queryRestaurant } from '../../../queries/queryRestaurant'
 import { HomeStateItemRestaurant } from '../../../types/homeTypes'
@@ -64,9 +65,9 @@ const RestaurantHeaderContent = memo(
       const nameLen = restaurant.name?.length ?? 10
       const { width, drawerWidth, minWidth, setWidthDebounce } = useContentScrollHorizontalFitter()
       const scale = width < 601 ? 0.7 : drawerWidth < 700 ? 0.85 : 1
-      const fontScale = size === 'sm' ? 0.8 : 1.2
+      const fontScale = size === 'sm' ? 0.8 : 1.1
       const fontSizeBase =
-        nameLen > 40 ? 24 : nameLen > 30 ? 26 : nameLen > 24 ? 30 : nameLen > 18 ? 34 : 40
+        nameLen > 40 ? 24 : nameLen > 30 ? 26 : nameLen > 24 ? 30 : nameLen > 16 ? 34 : 38
       const fontSize = scale * fontSizeBase * fontScale
       const restaurantId = restaurant.id
       const [initialDrawerWidth] = useState(drawerWidth)
@@ -132,7 +133,7 @@ const RestaurantHeaderContent = memo(
 
           <Theme name={themeName === 'dark' ? `${colors.name}-dark` : colors.name}>
             <VStack
-              paddingTop={20}
+              paddingTop={0}
               minWidth={minWidth}
               maxWidth={width}
               borderTopRightRadius={drawerBorderRadius - 1}
@@ -145,21 +146,30 @@ const RestaurantHeaderContent = memo(
               <VStack flex={1}>
                 {/* title row */}
                 <HStack paddingLeft={20} alignItems="flex-end" position="relative">
-                  <AbsoluteVStack y={-35} x={-10} zIndex={10}>
-                    <RestaurantRatingView floating size={62} slug={restaurantSlug} />
+                  <AbsoluteVStack y={-50} x={-10} zIndex={200}>
+                    <Theme name="light">
+                      <RestaurantRatingView floating size={66} slug={restaurantSlug} />
+                    </Theme>
                   </AbsoluteVStack>
+
                   <Spacer size="lg" />
+
                   <HStack
-                    backgroundColor={colors.themeColorAlt}
+                    // backgroundColor={colors.themeColorAlt}
+                    backgroundColor="#000000ee"
                     shadowColor="#000"
                     shadowOpacity={0.2}
+                    marginRight={-30}
                     pointerEvents="auto"
                     shadowRadius={5}
                     shadowOffset={{ height: 3, width: 0 }}
-                    borderRadius={16}
-                    paddingHorizontal={30}
+                    borderRadius={10}
+                    paddingHorizontal={20}
+                    maxWidth={Math.min(getWindowWidth() * 0.8, 400)}
                     paddingVertical={9}
                     alignItems="center"
+                    position="relative"
+                    zIndex={100}
                     justifyContent="center"
                     minWidth={100}
                     skewX="-12deg"

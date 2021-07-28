@@ -88,7 +88,8 @@ export const AuthForm = memo(
           <Button
             borderRadius={0}
             textProps={{
-              fontWeight: formPage == 'login' ? '700' : '500',
+              fontSize: 12,
+              fontWeight: formPage == 'login' ? '800' : '500',
             }}
             active={formPage == 'login'}
             onPress={() => setFormPage('login')}
@@ -98,7 +99,8 @@ export const AuthForm = memo(
           <Button
             borderRadius={0}
             textProps={{
-              fontWeight: formPage == 'signup' ? '700' : '500',
+              fontSize: 12,
+              fontWeight: formPage == 'signup' ? '800' : '500',
             }}
             active={formPage == 'signup'}
             onPress={() => setFormPage('signup')}

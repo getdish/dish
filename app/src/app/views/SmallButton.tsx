@@ -6,7 +6,7 @@ export type SmallButtonProps = ButtonProps & {
 }
 
 export const SmallButton = themeable(
-  ({ children, tooltip, theme: themeProp, ...rest }: SmallButtonProps) => {
+  ({ children, tooltip, theme: themeProp, textProps, ...rest }: SmallButtonProps) => {
     const theme = useTheme()
 
     let contents = (
@@ -17,6 +17,10 @@ export const SmallButton = themeable(
         backgroundColor={theme.backgroundColorTransluscent}
         hoverStyle={{
           backgroundColor: theme.backgroundColor,
+        }}
+        textProps={{
+          fontSize: 13,
+          ...textProps,
         }}
         {...rest}
       >

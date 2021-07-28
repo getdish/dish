@@ -1,8 +1,9 @@
+// debug
 import { CornerLeftUp, X } from '@dish/react-feather'
 import React, { memo } from 'react'
-import { Button, HStack, StackProps, VStack, useTheme } from 'snackui'
+import { Button, ButtonProps, VStack, useTheme } from 'snackui'
 
-type CircleButtonProps = StackProps & {
+type CircleButtonProps = ButtonProps & {
   size?: number
   shadowed?: boolean
   subtle?: boolean
@@ -11,9 +12,7 @@ type CircleButtonProps = StackProps & {
 export const CloseButton = (props: CircleButtonProps) => {
   return (
     <SmallCircleButton {...props}>
-      <VStack x={-1}>
-        <X size={14} color="#fff" />
-      </VStack>
+      <X size={18} color="#999" />
     </SmallCircleButton>
   )
 }
@@ -21,7 +20,7 @@ export const CloseButton = (props: CircleButtonProps) => {
 export const BackButton = memo((props: CircleButtonProps) => {
   return (
     <SmallCircleButton {...props}>
-      <CornerLeftUp size={props.size} color="#fff" />
+      <CornerLeftUp size={props.size} color="#999" />
     </SmallCircleButton>
   )
 })
@@ -32,22 +31,26 @@ export const SmallCircleButton = ({
   width,
   height,
   subtle,
-  size = 1,
+  size = 44,
   ...props
 }: CircleButtonProps) => {
   const theme = useTheme()
+  console.log(width, height, size)
   return (
     <Button
       borderRadius={1000}
       alignItems="center"
       justifyContent="center"
+      paddingHorizontal={0}
+      paddingVertical={0}
       {...(shadowed && {
-        shadowColor: theme.shadowColorLighter,
+        shadowColor: theme.shadowColor,
         shadowRadius: 10,
         shadowOffset: { width: 0, height: 2 },
       })}
-      width={width ?? size}
-      height={height ?? size}
+      noTextWrap
+      minWidth={width ?? size}
+      minHeight={height ?? size}
       maxWidth={width ?? size}
       maxHeight={height ?? size}
       {...props}

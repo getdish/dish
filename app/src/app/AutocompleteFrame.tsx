@@ -97,7 +97,7 @@ export const AutocompleteFrame = memo(
             right={10}
             pointerEvents="auto"
           >
-            <CloseButton size={20} onPressOut={prevent} zIndex={1000} onPress={hideAutocompletes} />
+            <CloseButton shadowed onPressOut={prevent} zIndex={1000} onPress={hideAutocompletes} />
           </AbsoluteVStack>
           <VStack
             className="ease-in-out"

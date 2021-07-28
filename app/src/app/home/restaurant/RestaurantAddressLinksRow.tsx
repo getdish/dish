@@ -73,7 +73,7 @@ export const RestaurantAddressLinksRow = memo(
       return (
         <VStack>
           {!!(curLocInfo && showAddress) && (
-            <Paragraph color={theme.color} selectable ellipse fontSize={14} maxWidth={240}>
+            <Paragraph color={theme.color} selectable ellipse fontSize={12} maxWidth={240}>
               {getAddressText(
                 curLocInfo,
                 restaurant.address ?? '',

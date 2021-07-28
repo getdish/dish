@@ -87,7 +87,7 @@ export class RestaurantRatings {
       final_rating += rating * normalised_weight
     }
 
-    if (DISH_DEBUG) {
+    if (DISH_DEBUG > 1) {
       console.log('Calculated final rating', { final_rating, total_weight, ratings, weights })
     }
 
