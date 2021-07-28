@@ -24,7 +24,13 @@ type Props = {
 
 export const RestaurantPhotosRow = (props: Props) => {
   return (
-    <VStack overflow="hidden" height={props.height} minWidth={props.width}>
+    <VStack
+      position="relative"
+      zIndex={0}
+      overflow="hidden"
+      height={props.height}
+      minWidth={props.width}
+    >
       <Suspense fallback={null}>
         <RestaurantPhotosRowContent {...props} />
       </Suspense>

@@ -1,71 +1,65 @@
 import { RestaurantOnlyIds, graphql } from '@dish/graph'
-import { isPresent } from '@dish/helpers'
-import React, { Suspense, memo, useEffect, useMemo, useState } from 'react'
+import React, { Suspense, memo, useMemo, useState } from 'react'
 import { AbsoluteVStack, Hoverable, LoadingItems, Spacer, useDebounceEffect } from 'snackui'
 
 import { getRestaurantIdentifiers } from '../../helpers/getRestaurantIdentifiers'
 import { FIBase } from './FIBase'
 import { FICuisine, HomeFeedCuisineItem } from './HomeFeedCuisineItem'
-import {
-  FIDishRestaurants,
-  HomeFeedDishRestaurants,
-  useFeedDishItems,
-} from './HomeFeedDishRestaurants'
+import { FIDishRestaurants, HomeFeedDishRestaurants } from './HomeFeedDishRestaurants'
 import { FIList, HomeFeedLists } from './HomeFeedLists'
 import { HomeFeedProps } from './HomeFeedProps'
-import { FIHotNew, HomeFeedTrendingNew, useHomeFeedTrendingNew } from './HomeFeedTrendingNew'
+import { FIHotNew, HomeFeedTrendingNew } from './HomeFeedTrendingNew'
 import { homePageStore } from './homePageStore'
 
 type FISpace = FIBase & {
-  type: 'space'
+  type: 'space' | 'dish-restaurants'
 }
 
-type FI = FICuisine | FIDishRestaurants | FIList | FIHotNew | FISpace
+type FI = FICuisine | FIList | FIHotNew | FISpace
 
-function useHomeFeed(props: HomeFeedProps): FI[] {
+function getHomeFeed(props: HomeFeedProps): FI[] {
   const { item, region } = props
-  const dishItems = useFeedDishItems(region)
-  const hotNewItems = useHomeFeedTrendingNew(props)
-
-  return useMemo(() => {
-    const [newest, hottest] = hotNewItems
-    return [
-      newest,
-      {
-        id: 'space',
-        type: 'space',
-      } as const,
-      {
-        id: 'list-0',
-        type: 'list',
-        region: item.region,
-        title: `Lists`,
-      } as FIList,
-      {
-        id: 'space',
-        type: 'space',
-      } as const,
-      hottest,
-      {
-        id: 'space',
-        type: 'space',
-      } as const,
-      ...dishItems.slice(0, 1),
-      {
-        id: 'space',
-        type: 'space',
-      } as const,
-      ...dishItems.slice(1, 2),
-      ...dishItems.slice(2),
-    ].filter(isPresent)
-  }, [dishItems, hotNewItems])
+  return [
+    {
+      id: 'new',
+      type: 'new',
+      size: 'sm',
+    } as const,
+    {
+      id: 'space',
+      type: 'space',
+    } as const,
+    {
+      id: 'list-0',
+      type: 'list',
+      region: item.region,
+      title: `Lists`,
+    } as FIList,
+    {
+      id: 'space',
+      type: 'space',
+    } as const,
+    {
+      id: 'hot',
+      type: 'hot',
+      size: 'sm',
+    } as const,
+    {
+      id: 'space',
+      type: 'space',
+    } as const,
+    {
+      id: 'dish-restaurants',
+      type: 'dish-restaurants',
+    } as const,
+  ]
 }
 
 export const HomePageFeed = memo(
   graphql(
     function HomePageFeed(props: HomeFeedProps) {
       const { regionName } = props
-      const items = useHomeFeed(props)
+      const items = getHomeFeed(props)
       const isLoading = !regionName || false
       // was trigger gqless infinite loops..
       //  ||
@@ -91,7 +85,7 @@ export const HomePageFeed = memo(
               return []
             }
             if (hoveredResults?.via === x.type) {
-              return hoveredResults.results
+              return hoveredResults?.results
             }
             if ('restaurants' in x) {
               return x.restaurants.map(getRestaurantIdentifiers)
@@ -123,6 +117,7 @@ export const HomePageFeed = memo(
             case 'hot':
               return (
                 <HomeFeedTrendingNew
+                  {...props}
                   {...item}
                   onHoverResults={(results) => {
                     setHoveredResults({ via: item.type, results })
