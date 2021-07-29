@@ -46,7 +46,6 @@ function useHomeFeedTrendingNew(props: HomeFeedProps): FIHotNew[] {
     : []
 
   const status = !trending[0] || trending[0].id === null ? 'loading' : 'complete'
-
   const key = `${status}${newest.map((x) => x.slug)}${trending.map((x) => x.slug)}`
   return useMemo(() => {
     return [

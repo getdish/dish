@@ -24,8 +24,8 @@ export const RatingView = ({
   const longText = countText ? countText.length > 2 : false
   const ratingInner = rating * 0.7
   const ratingMiddle = rating * 0.5
-  const rotate = `${(1 - ratingInner / 100) * 180}deg`
-  const width = size * 0.04
+  // const rotate = `${(1 - ratingInner / 100) * 180}deg`
+  const width = size * 0.05
   const stackedSize = size * 0.85
   const innerSize = Math.round(stacked ? stackedSize : size * 0.33)
   const middleSize = Math.round(stacked ? stackedSize : size * 0.6)
@@ -59,19 +59,19 @@ export const RatingView = ({
   const outerRing = (
     <ProgressRing
       backgroundColor="rgba(125,125,125,0.1)"
-      percent={rating}
+      percent={rating * 10}
       size={outerSize}
-      color={rating >= 80 ? green : rating <= 50 ? red : orange}
+      color={rating >= 8 ? green : rating <= 5 ? red : orange}
       width={width}
     >
       {stacked ? null : (
         <Text
           color={theme.color}
           letterSpacing={-0.13 * width}
-          fontWeight="800"
-          fontSize={7.5 * width}
+          fontWeight="200"
+          fontSize={9 * width}
         >
-          {Math.min(99, Math.round(rating))}
+          {Math.min(9, Math.round(rating))}
         </Text>
       )}
     </ProgressRing>
