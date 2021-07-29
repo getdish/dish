@@ -1,4 +1,4 @@
-import { selectFields } from 'gqless'
+import { selectFields } from '@pablosz/gqless'
 import { merge } from 'lodash'
 
 import { client, resolved } from '../graphql'

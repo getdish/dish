@@ -8,8 +8,8 @@ import {
   tagUpsert,
   tagUpsertCategorizations,
 } from '@dish/graph'
+import { selectFields } from '@pablosz/gqless'
 import parse from 'csv-parse/lib/sync'
-import { selectFields } from 'gqless'
 import { pick } from 'lodash'
 import _ from 'lodash'
 import { transliterate } from 'transliteration'

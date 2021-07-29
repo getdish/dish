@@ -1,5 +1,5 @@
-import { RestaurantOnlyIds, graphql, query, restaurant } from '@dish/graph'
-import React, { memo, useMemo } from 'react'
+import { graphql, query } from '@dish/graph'
+import React, { memo } from 'react'
 import { AbsoluteVStack, HStack, LoadingItem, VStack } from 'snackui'
 
 import { getRestaurantIdentifiers } from '../../helpers/getRestaurantIdentifiers'
@@ -32,24 +32,21 @@ export const HomeFeedTrendingNew = suspense(
     }: HomeFeedProps & FIHotNew & HoverResultsProp) {
       const { item, region } = props
       const slug = item.region || region?.slug || ''
-      const restaurants =
-        props.type === 'new'
-          ? slug
-            ? query.restaurant_new({
-                args: {
-                  region_slug: slug,
-                },
-                limit: 8,
-              })
-            : []
-          : slug
-          ? query.restaurant_trending({
-              args: {
-                region_slug: slug,
-              },
-              limit: 8,
-            })
-          : []
+      const restaurants = !slug
+        ? []
+        : props.type === 'new'
+        ? query.restaurant_new({
+            args: {
+              region_slug: slug,
+            },
+            limit: 8,
+          })
+        : query.restaurant_trending({
+            args: {
+              region_slug: slug,
+            },
+            limit: 8,
+          })
 
       const status = !restaurants[0] || restaurants[0].id === null ? 'loading' : 'complete'
 

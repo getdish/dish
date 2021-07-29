@@ -1,4 +1,4 @@
-import { parseSchemaType, selectFields } from 'gqless'
+import { parseSchemaType, selectFields } from '@pablosz/gqless'
 import { omit } from 'lodash'
 
 import {
@@ -185,7 +185,7 @@ export async function update<T extends WithID<ModelType>>(
     //   setCache(opts.query, resolved)
     // }
     return resolved
-  } catch(err) {
+  } catch (err) {
     console.log('Error updating:', object, opts)
     throw err
   }

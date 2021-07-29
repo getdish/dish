@@ -268,7 +268,7 @@ const Inner = () => {
       borderColor={theme.borderColor}
       borderWidth={1}
       borderRadius={15}
-      padding={10}
+      paddingVertical={20}
       paddingHorizontal={13}
       margin={10}
       marginHorizontal={15}
@@ -276,13 +276,13 @@ const Inner = () => {
       maxWidth={740}
       alignSelf="center"
     >
-      <AbsoluteVStack top={-10} right={-10}>
+      <AbsoluteVStack top={-20} right={-20}>
         <CloseButton onPress={() => setShow(false)} />
       </AbsoluteVStack>
       <Paragraph>
-        <Text fontWeight="700">Welcome!</Text> Dish is building a pocket map of the world, starting
-        with food. We want to make it easier to know what's uniquely good in each city and
-        neighborhood and share great things to do. <Link name="about">Read more</Link>.
+        <Text fontWeight="700">Dish is a pocket map of the world powered by community.</Text> We
+        want to make it easier to know what's uniquely good in each city and neighborhood.{' '}
+        <Link name="about">Read more</Link>.
       </Paragraph>
     </VStack>
   )

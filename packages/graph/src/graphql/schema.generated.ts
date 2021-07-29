@@ -4633,7 +4633,7 @@ export interface zcta5_variance_order_by {
   ogc_fid?: Maybe<order_by>
 }
 
-export const scalarsEnumsHash: import('gqless').ScalarsEnumsHash = {
+export const scalarsEnumsHash: import('@pablosz/gqless').ScalarsEnumsHash = {
   Boolean: true,
   Float: true,
   ID: true,

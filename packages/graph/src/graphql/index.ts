@@ -1,5 +1,5 @@
 import { isSafari } from '@dish/helpers'
-import { QueryFetcher, createClient } from 'gqless'
+import { QueryFetcher, createClient } from '@pablosz/gqless'
 
 import { Auth } from '../Auth'
 import { GRAPH_API, isManualDebugMode } from '../constants'
@@ -79,8 +79,8 @@ export const client = createClient<GeneratedSchema>({
   schema: generatedSchema,
   scalarsEnumsHash,
   queryFetcher,
-  catchSelectionsTimeMS: 0,
-  normalization: true,
+  catchSelectionsTimeMS: 10,
+  normalization: false,
   retry: false,
 })
 
