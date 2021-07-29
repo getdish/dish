@@ -37,25 +37,25 @@ export const HomeFeedLists = graphql((props: Props) => {
     order_by: [{ created_at: order_by.desc }],
   })
 
-  const trending = query.list_populated({
-    args: {
-      min_items: 2,
-    },
-    limit: 8,
-    where: {
-      public: {
-        _neq: false,
-      },
-      region: {
-        _eq: props.region,
-      },
-    },
-    order_by: [{ list_reviews_aggregate: { avg: { rating: order_by.desc } } }],
-  })
+  // const trending = query.list_populated({
+  //   args: {
+  //     min_items: 2,
+  //   },
+  //   limit: 8,
+  //   where: {
+  //     public: {
+  //       _neq: false,
+  //     },
+  //     region: {
+  //       _eq: props.region,
+  //     },
+  //   },
+  //   order_by: [{ list_reviews_aggregate: { avg: { rating: order_by.desc } } }],
+  // })
 
   return (
     <Suspense fallback={null}>
-      <HomeFeedListsContents lists={trending} {...props} title="Trending" />
+      {/* <HomeFeedListsContents lists={trending} {...props} title="Trending" /> */}
       <HomeFeedListsContents lists={recent} {...props} title="Recent" />
     </Suspense>
   )

@@ -39,7 +39,7 @@ function getHomeFeed(props: HomeFeedProps): FI[] {
     {
       id: 'hot',
       type: 'hot',
-      title: 'Hot',
+      title: 'Hot Spots',
       size: 'sm',
     } as const,
     {

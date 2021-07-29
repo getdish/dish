@@ -3,7 +3,7 @@ import React, { memo, useEffect, useMemo } from 'react'
 import { Animated, PanResponder, StyleSheet, View } from 'react-native'
 import { AbsoluteVStack, VStack, useMedia } from 'snackui'
 
-import { pageWidthMax, searchBarHeight, zIndexDrawer } from '../../constants/constants'
+import { isWeb, pageWidthMax, searchBarHeight, zIndexDrawer } from '../../constants/constants'
 import { isWebIOS } from '../../helpers/isIOS'
 import { AppAutocompleteLocation } from '../AppAutocompleteLocation'
 import { AppAutocompleteSearch } from '../AppAutocompleteSearch'
@@ -45,7 +45,7 @@ export const HomeDrawerSmallView = memo((props: { children: any }) => {
         blurSearchInput()
       },
       onPanResponderMove: Animated.event([null, { dy: drawerStore.pan }], {
-        useNativeDriver: false,
+        useNativeDriver: !isWeb,
       }),
       onPanResponderRelease: () => {
         console.log('release')

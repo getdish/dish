@@ -1,4 +1,4 @@
-import { createReactClient } from '@gqless/react'
+import { createReactClient } from '@pablosz/gqless-react'
 
 import { client } from './graphql'
 import { GeneratedSchema } from './graphql'

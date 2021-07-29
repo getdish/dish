@@ -1,4 +1,4 @@
-import { parseSchemaType } from 'gqless'
+import { parseSchemaType } from '@pablosz/gqless'
 
 import { scalarsEnumsHash } from '../graphql'
 

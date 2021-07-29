@@ -1,6 +1,4 @@
-/**
- * @type {import("@gqless/cli").GqlessConfig}
- */
+
 const PORT = process.env.HASURA_PORT || 8080
 const config = {
   endpoint: `http://localhost:${PORT}/v1/graphql`,

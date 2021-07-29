@@ -11,7 +11,7 @@ import {
   reviewUpsert,
   review_constraint,
 } from '@dish/graph'
-import { selectFields } from 'gqless'
+import { selectFields } from '@pablosz/gqless'
 import { decode } from 'html-entities'
 import { chunk, uniqBy } from 'lodash'
 

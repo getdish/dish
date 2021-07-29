@@ -35,7 +35,6 @@ export const SmallCircleButton = ({
   ...props
 }: CircleButtonProps) => {
   const theme = useTheme()
-  console.log(width, height, size)
   return (
     <Button
       borderRadius={1000}

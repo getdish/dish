@@ -87,7 +87,7 @@ export default memo(function AppMap() {
 
   useEffect(() => {
     Animated.spring(translateY, {
-      useNativeDriver: true,
+      useNativeDriver: !isWeb,
       toValue: y,
     }).start()
   }, [y])

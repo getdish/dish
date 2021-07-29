@@ -25,7 +25,7 @@ import { StackViewCloseButton } from '../../views/StackViewCloseButton'
 import { PageTitle } from '../PageTitle'
 
 export default memo(
-  graphql<any>(function RestaurantHoursPage() {
+  graphql(function RestaurantHoursPage() {
     const params = router.curPage.params
     const [restaurant] = queryRestaurant(params.slug)
     if (!restaurant) {

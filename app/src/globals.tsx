@@ -6,7 +6,7 @@ import { isSSR } from './constants/constants'
 
 Error.stackTraceLimit = Infinity
 
-const gqless = {
+const gqty = {
   query,
   mutation,
   client,
@@ -26,7 +26,7 @@ if (process.env.TARGET === 'native') {
   if (process.env.NODE_ENV === 'development') {
     console.log('⬇️ ⬇️ ⬇️ set debugger here for repl on stuff')
     function rndebugger() {
-      gqless
+      gqty
       const stores = UseStore.allStores
       stores
       // ➡️➡️➡️➡️➡️➡️➡️ here
@@ -39,7 +39,7 @@ global['stores'] = UseStore.allStores
 global['useStore'] = UseStore
 // @ts-ignore
 global['React'] = React
-global['gqless'] = gqless
+global['gqty'] = gqty
 
 if (typeof global !== 'undefined') {
   global['requestIdleCallback'] = global['requestIdleCallback'] || setTimeout

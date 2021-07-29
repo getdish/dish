@@ -86,7 +86,6 @@ class DrawerStore extends Store {
   }
 
   setSnapIndex(point: number, animate = true) {
-    console.log('set snap index', point)
     this.snapIndex = point
     this.lastSnapAt = Date.now()
     this.isDragging = false
@@ -113,7 +112,6 @@ class DrawerStore extends Store {
     // now lets make further = slower
     const distanceSpeed = 1 / distanceNormalized
     const speed = Math.max(0.01, Math.abs(velocity) * distanceSpeed)
-    console.log('velocity', velocity, speed, toValue)
     this.toValue = toValue
     this.springTo(toValue, speed)
   }
@@ -124,7 +122,7 @@ class DrawerStore extends Store {
     this.springId = Math.random()
     const curId = this.springId
     this.spring = Animated.spring(this.pan, {
-      useNativeDriver: true,
+      useNativeDriver: !isWeb,
       stiffness: speed * 220,
       damping: speed * 22.5,
       mass: speed * 1.8,
