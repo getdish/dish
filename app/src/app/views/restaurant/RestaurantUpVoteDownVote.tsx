@@ -66,8 +66,8 @@ const RestaurantUpVoteDownVoteContents = graphql(
     return (
       <VStack pointerEvents="auto" position="relative">
         <AbsoluteVStack
-          bottom={-20}
-          right={-30}
+          bottom={-16}
+          right={-35}
           zIndex={2}
           borderRadius={1000}
           backgroundColor={theme.cardBackgroundColor}
@@ -75,8 +75,7 @@ const RestaurantUpVoteDownVoteContents = graphql(
           shadowOpacity={0.1}
           shadowRadius={3}
         >
-          {/* FLOWER */}
-          <RestaurantRatingView slug={restaurantSlug} floating size={42} />
+          <RestaurantRatingView slug={restaurantSlug} floating size={48} />
         </AbsoluteVStack>
         <VStack
           shadowColor="#000"

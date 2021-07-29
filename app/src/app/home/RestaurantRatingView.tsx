@@ -1,14 +1,11 @@
-import { RestaurantQuery, graphql } from '@dish/graph'
+import { graphql } from '@dish/graph'
 import React from 'react'
 import { AbsoluteHStack, BlurView, Box, HStack, HoverablePopover, VStack, useTheme } from 'snackui'
 
 import { queryRestaurant } from '../../queries/queryRestaurant'
 import { suspense } from '../hoc/suspense'
+import { ratingCount } from './ratingCount'
 import { RatingView } from './RatingView'
-
-const ratingCount = (restaurant: RestaurantQuery) => {
-  return restaurant.reviews_aggregate({}).aggregate?.count({}) ?? 0
-}
 
 export const RestaurantRatingView = suspense(
   graphql(
@@ -30,7 +27,7 @@ export const RestaurantRatingView = suspense(
         return null
       }
       const ratingViewProps = {
-        rating: (restaurant.rating ?? 0) * 20,
+        rating: Math.round(((restaurant.rating ?? 0) * 20) / 10),
         size,
         floating,
       }
@@ -59,14 +56,7 @@ export const RestaurantRatingView = suspense(
       //     })
       // )
 
-      let ratingViewEl = (
-        <RatingView
-          {...ratingViewProps}
-          // {...(size >= 48 && {
-          //   count: ratingCount(restaurant),
-          // })}
-        />
-      )
+      let ratingViewEl = <RatingView {...ratingViewProps} />
 
       const theme = useTheme()
 
