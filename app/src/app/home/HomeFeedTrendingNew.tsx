@@ -20,54 +20,9 @@ export type FIHotNew = FIBase & {
   size?: 'sm' | 'md'
 }
 
-const getGraphResults = (r: restaurant[]) => {
-  return r[0]?.slug ? r : []
-}
-
-function useHomeFeedTrendingNew(props: HomeFeedProps): FIHotNew[] {
-  const { item, region } = props
-  const slug = item.region || region?.slug || ''
-  const newest = slug
-    ? query.restaurant_new({
-        args: {
-          region_slug: slug,
-        },
-        limit: 8,
-      })
-    : []
-
-  const trending = slug
-    ? query.restaurant_trending({
-        args: {
-          region_slug: slug,
-        },
-        limit: 8,
-      })
-    : []
-
-  const status = !trending[0] || trending[0].id === null ? 'loading' : 'complete'
-  const key = `${status}${newest.map((x) => x.slug)}${trending.map((x) => x.slug)}`
-  return useMemo(() => {
-    return [
-      {
-        id: '1',
-        type: 'new',
-        size: 'sm',
-        title: 'New',
-        restaurants: getGraphResults(newest),
-        status,
-      },
-      {
-        id: '2',
-        type: 'hot',
-        size: 'sm',
-        title: 'Trending',
-        restaurants: getGraphResults(trending),
-        status,
-      },
-    ]
-  }, [key])
-}
+// const getGraphResults = (r: restaurant[]) => {
+//   return r[0]?.slug ? r : []
+// }
 
 export const HomeFeedTrendingNew = suspense(
   memo(
@@ -75,7 +30,28 @@ export const HomeFeedTrendingNew = suspense(
       onHoverResults,
       ...props
     }: HomeFeedProps & FIHotNew & HoverResultsProp) {
-      const restaurants = useHomeFeedTrendingNew(props)
+      const { item, region } = props
+      const slug = item.region || region?.slug || ''
+      const restaurants =
+        props.type === 'new'
+          ? slug
+            ? query.restaurant_new({
+                args: {
+                  region_slug: slug,
+                },
+                limit: 8,
+              })
+            : []
+          : slug
+          ? query.restaurant_trending({
+              args: {
+                region_slug: slug,
+              },
+              limit: 8,
+            })
+          : []
+
+      const status = !restaurants[0] || restaurants[0].id === null ? 'loading' : 'complete'
 
       if (!restaurants.length) {
         return null
@@ -94,12 +70,13 @@ export const HomeFeedTrendingNew = suspense(
               pointerEvents="none"
               justifyContent="center"
               minWidth={100}
+              zIndex={1000}
             >
-              <SlantedTitle alignSelf="flex-end" size="xs" zIndex={10}>
+              <SlantedTitle alignSelf="flex-end" size="xs">
                 {props.title}
               </SlantedTitle>
             </AbsoluteVStack>
-            <VStack maxWidth="100%" overflow="hidden">
+            <VStack position="relative" zIndex={0} maxWidth="100%" overflow="hidden">
               <ContentScrollViewHorizontal>
                 <VStack paddingVertical={13} paddingHorizontal={60} flexWrap="nowrap">
                   <HStack spacing="sm">
@@ -127,7 +104,7 @@ export const HomeFeedTrendingNew = suspense(
       } else {
         contents = (
           <ContentSectionHoverable>
-            <FeedSlantedTitle zIndex={10}>{props.title}</FeedSlantedTitle>
+            <FeedSlantedTitle zIndex={100}>{props.title}</FeedSlantedTitle>
             <SkewedCardCarousel>
               {restaurants.map((r, i) => {
                 if (!r) {

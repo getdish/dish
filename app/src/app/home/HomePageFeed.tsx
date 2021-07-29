@@ -22,12 +22,9 @@ function getHomeFeed(props: HomeFeedProps): FI[] {
   return [
     {
       id: 'new',
+      title: 'New Spots',
       type: 'new',
       size: 'sm',
-    } as const,
-    {
-      id: 'space',
-      type: 'space',
     } as const,
     {
       id: 'list-0',
@@ -42,6 +39,7 @@ function getHomeFeed(props: HomeFeedProps): FI[] {
     {
       id: 'hot',
       type: 'hot',
+      title: 'Hot',
       size: 'sm',
     } as const,
     {
