@@ -157,7 +157,7 @@ const HomePageContent = (props: Props) => {
             <HStack
               alignItems="center"
               paddingVertical={media.sm ? 10 : 20}
-              paddingBottom={media.sm ? 25 : 25}
+              paddingBottom={media.sm ? 10 : 15}
               paddingHorizontal={10}
             >
               <Theme name="dark">
