@@ -1,4 +1,5 @@
 import { RestaurantOnlyIds, graphql } from '@dish/graph'
+import { isPresent } from '@dish/helpers'
 import React, { Suspense, memo, useEffect, useMemo, useState } from 'react'
 import { AbsoluteVStack, Hoverable, LoadingItems, Spacer, useDebounceEffect } from 'snackui'
 
@@ -44,12 +45,13 @@ export const HomePageFeed = memo(
           id: 'space',
           type: 'space',
         } as const,
-        didInitialLoad &&
-          ({
-            id: 'dish-restaurants',
-            type: 'dish-restaurants',
-          } as const),
-      ]
+        didInitialLoad
+          ? ({
+              id: 'dish-restaurants',
+              type: 'dish-restaurants',
+            } as const)
+          : undefined,
+      ].filter(isPresent)
 
       const isLoading = !regionName || false
       // was trigger gqless infinite loops..
@@ -69,6 +71,7 @@ export const HomePageFeed = memo(
         results: RestaurantOnlyIds[]
       }>(null)
 
+      // TODO fix
       useDebounceEffect(
         () => {
           const results = items.flatMap((x) => {
@@ -78,9 +81,9 @@ export const HomePageFeed = memo(
             if (hoveredResults?.via === x.type) {
               return hoveredResults?.results
             }
-            if ('restaurants' in x) {
-              return x.restaurants.map(getRestaurantIdentifiers)
-            }
+            // if ('restaurants' in x) {
+            //   return x.restaurants.map(getRestaurantIdentifiers)
+            // }
             return []
           })
           // set results
@@ -105,7 +108,7 @@ export const HomePageFeed = memo(
             case 'space':
               return <Spacer size="xl" />
             case 'new':
-            case 'hot':
+              // case 'hot':
               return (
                 <HomeFeedTrendingNew
                   {...props}
@@ -124,16 +127,16 @@ export const HomePageFeed = memo(
                   }}
                 />
               )
-            case 'cuisine':
-              return (
-                <HomeFeedCuisineItem
-                  {...item}
-                  onHoverResults={(results) => {
-                    console.log('setting hover', results)
-                    setHoveredResults({ via: item.type, results })
-                  }}
-                />
-              )
+            // case 'cuisine':
+            //   return (
+            //     <HomeFeedCuisineItem
+            //       {...item}
+            //       onHoverResults={(results) => {
+            //         console.log('setting hover', results)
+            //         setHoveredResults({ via: item.type, results })
+            //       }}
+            //     />
+            //   )
             case 'list':
               return (
                 <HomeFeedLists

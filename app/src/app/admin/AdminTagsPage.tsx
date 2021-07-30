@@ -396,7 +396,7 @@ const TagEditColumn = memo(() => {
 })
 
 const TagEdit = memo(
-  graphql(() => {
+  graphql((props: any) => {
     const tagStore = useStore(AdminTagStore)
 
     if (tagStore.selectedId) {

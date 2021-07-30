@@ -10,7 +10,7 @@ import { Image } from './views/Image'
 import { LinkButton } from './views/LinkButton'
 
 export const AppMapRestaurantPeek = memo(
-  graphql(() => {
+  graphql((props: any) => {
     const home = useHomeStore()
     const [slug, setSlug] = useState('')
     const [selectedSlug, hoveredSlug] = useStoreInstanceSelector(
