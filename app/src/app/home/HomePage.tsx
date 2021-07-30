@@ -26,7 +26,7 @@ import { getColorsForName } from '../../helpers/getColorsForName'
 import { queryClient } from '../../helpers/queryClient'
 import { router } from '../../router'
 import { HomeStateItemHome } from '../../types/homeTypes'
-import { cancelUpdateRegion, useSetAppMap } from '../AppMapStore'
+import { appMapStore, cancelUpdateRegion, useSetAppMap } from '../AppMapStore'
 import { autocompletesStore } from '../AutocompletesStore'
 import { useHomeStateById } from '../homeStore'
 import { useLastValueWhen } from '../hooks/useLastValueWhen'
@@ -75,6 +75,9 @@ export default memo(function HomePage(props: Props) {
   }, !props.isActive)
 })
 
+// happens once on first load
+let hasMovedToInitialRegion = false
+
 const HomePageContent = (props: Props) => {
   const { isActive, item } = props
   const state = useHomeStateById<HomeStateItemHome>(item.id)
@@ -97,17 +100,10 @@ const HomePageContent = (props: Props) => {
     setInitialRegionSlug(item.region)
   }, [region])
 
-  // // center map to region
+  // center map to region
   useEffect(() => {
     if (!isActive) return
     if (!region || !region.center || !region.span) return
-    // if (appMapStore.lastRegion) {
-    //   const via = appMapStore.lastRegion.via
-    //   if (via !== 'url') {
-    //     console.warn('avoid map zoom unless coming from external', via)
-    //     return
-    //   }
-    // }
     cancelUpdateRegion()
     setPosition(region)
   }, [isActive, JSON.stringify([region])])
@@ -118,19 +114,35 @@ const HomePageContent = (props: Props) => {
     }
   }, [state.region])
 
+  // move initially to url region - this seems non-ideal state should just drive map
+  useEffect(() => {
+    if (!region) return
+    if (!hasMovedToInitialRegion) {
+      hasMovedToInitialRegion = true
+      appMapStore.setPosition({
+        center: region.center,
+        span: region.span,
+      })
+    }
+  }, [position])
+
+  // set location for next reload + move map on initial load
   useEffect(() => {
     if (!isActive) return
     if (regionResponse.status !== 'success') return
-    if (region) {
-      const regionSlug = region.slug ?? slugify(region.name)
+    if (!region) return
+    const next = region.slug ?? slugify(region.name)
+    const prev = getDefaultLocation().region
+    if (next !== prev) {
       setDefaultLocation({
         center: region.center,
         span: region.span,
-        region: regionSlug,
+        region: next,
       })
     }
-  }, [isActive, regionResponse.status, region?.slug])
+  }, [isActive, position])
 
+  // if no region, nav to default one
   useEffect(() => {
     if (isActive && !state.region) {
       // no region found!
@@ -170,14 +182,14 @@ const HomePageContent = (props: Props) => {
                     minWidth={100}
                     size={
                       regionName.length > 24
-                        ? 'xs'
+                        ? 'xxs'
                         : regionName.length > 17
-                        ? 'sm'
+                        ? 'xs'
                         : regionName.length > 14
-                        ? 'md'
+                        ? 'sm'
                         : regionName.length > 8
-                        ? 'lg'
-                        : 'xl'
+                        ? 'md'
+                        : 'lg'
                     }
                   >
                     {regionName}

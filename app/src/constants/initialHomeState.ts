@@ -41,9 +41,13 @@ export function getDefaultLocation(): AppMapPosition & { region?: string } {
 
 export function setDefaultLocation(value: Partial<HomeStateItemLocation>) {
   const prev = getDefaultLocation()
-  setLocalJSON('DEFAULT_LOCATION', {
+  const next = {
     region: value.region ?? prev.region ?? initialLocation.region,
     span: value.span ?? prev.span ?? initialLocation.span,
     center: value.center ?? prev.center ?? initialLocation.center,
-  })
+  }
+  if (process.env.NODE_ENV === 'development') {
+    console.log('setDefaultLocation', next)
+  }
+  setLocalJSON('DEFAULT_LOCATION', next)
 }
