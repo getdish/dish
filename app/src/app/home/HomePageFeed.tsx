@@ -1,11 +1,11 @@
 import { RestaurantOnlyIds, graphql } from '@dish/graph'
-import React, { Suspense, memo, useMemo, useState } from 'react'
+import React, { Suspense, memo, useEffect, useMemo, useState } from 'react'
 import { AbsoluteVStack, Hoverable, LoadingItems, Spacer, useDebounceEffect } from 'snackui'
 
 import { getRestaurantIdentifiers } from '../../helpers/getRestaurantIdentifiers'
 import { FIBase } from './FIBase'
 import { FICuisine, HomeFeedCuisineItem } from './HomeFeedCuisineItem'
-import { FIDishRestaurants, HomeFeedDishRestaurants } from './HomeFeedDishRestaurants'
+import { HomeFeedDishRestaurants } from './HomeFeedDishRestaurants'
 import { FIList, HomeFeedLists } from './HomeFeedLists'
 import { HomeFeedProps } from './HomeFeedProps'
 import { FIHotNew, HomeFeedTrendingNew } from './HomeFeedTrendingNew'
@@ -17,47 +17,40 @@ type FISpace = FIBase & {
 
 type FI = FICuisine | FIList | FIHotNew | FISpace
 
-function getHomeFeed(props: HomeFeedProps): FI[] {
-  const { item, region } = props
-  return [
-    {
-      id: 'new',
-      title: 'New Spots',
-      type: 'new',
-      size: 'sm',
-    } as const,
-    {
-      id: 'list-0',
-      type: 'list',
-      region: item.region,
-      title: `Lists`,
-    } as FIList,
-    {
-      id: 'space',
-      type: 'space',
-    } as const,
-    {
-      id: 'hot',
-      type: 'hot',
-      title: 'Hot Spots',
-      size: 'sm',
-    } as const,
-    {
-      id: 'space',
-      type: 'space',
-    } as const,
-    {
-      id: 'dish-restaurants',
-      type: 'dish-restaurants',
-    } as const,
-  ]
-}
-
 export const HomePageFeed = memo(
   graphql(
     function HomePageFeed(props: HomeFeedProps) {
-      const { regionName } = props
-      const items = getHomeFeed(props)
+      const { regionName, item } = props
+      const [didInitialLoad, _set] = useState(false)
+
+      useEffect(() => {
+        _set(true)
+      }, [])
+
+      const items = [
+        {
+          id: 'new',
+          title: 'New Spots',
+          type: 'new',
+          size: 'sm',
+        } as const,
+        {
+          id: 'list-0',
+          type: 'list',
+          region: item.region,
+          title: `Lists`,
+        } as FIList,
+        {
+          id: 'space',
+          type: 'space',
+        } as const,
+        didInitialLoad &&
+          ({
+            id: 'dish-restaurants',
+            type: 'dish-restaurants',
+          } as const),
+      ]
+
       const isLoading = !regionName || false
       // was trigger gqless infinite loops..
       //  ||
