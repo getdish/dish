@@ -4,7 +4,6 @@
 - fix searchbar buttons bg hover
 - fix router/stack bug on back/close
 - fix search page debug why slow restaurantitem query
-- restaurantpage - tag buttons active state
 - fix last missing data in crawlers
 - make lists prettier (formatting esp with writing)
 - run one city crawl test by going up in orders of magnitude
