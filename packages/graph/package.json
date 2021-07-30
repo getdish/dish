@@ -22,10 +22,10 @@
   "dependencies": {
     "@dish/helpers": "*",
     "@dish/use-store": "*",
-    "@pablosz/gqless": "^2.0.15",
-    "@pablosz/gqless-logger": "^2.0.12",
-    "@pablosz/gqless-react": "^2.0.16",
+    "@gqty/logger": "^1.0.1",
+    "@gqty/react": "^1.0.1",
     "esbuild-register": "*",
+    "gqty": "^1.0.1",
     "graphql": "^15.5.0",
     "isomorphic-unfetch": "^3.1.0",
     "lodash": "*",
@@ -36,7 +36,8 @@
     "@dish/esdx": "*",
     "@dish/helpers-node": "*",
     "@dish/react-test-env": "*",
-    "@pablosz/gqless-cli": "^2.0.18",
+    "@gqty/cli": "^1.0.1",
+    "@types/node": "*",
     "ava": "^3.14.0"
   }
 }

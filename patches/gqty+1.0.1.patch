@@ -1,0 +1,24 @@
+diff --git a/package.json b/package.json
+index 7790202ae72ca77caa6cdf25506b6d435ed05275..3f53c1b8f1261ac7f6e11d9a117ea57c4e6c451b 100644
+--- a/package.json
++++ b/package.json
+@@ -17,19 +17,8 @@
+   "author": "PabloSzx <pablosaez1995@gmail.com>",
+   "license": "MIT",
+   "main": "index.js",
+-  "module": "index.mjs",
+   "types": "index.d.ts",
+   "typescript": {
+     "definition": "index.d.ts"
+-  },
+-  "exports": {
+-    "./*": {
+-      "require": "./*.js",
+-      "import": "./*.mjs"
+-    },
+-    ".": {
+-      "require": "./index.js",
+-      "import": "./index.mjs"
+-    }
+   }
+ }

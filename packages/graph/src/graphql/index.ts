@@ -1,5 +1,5 @@
 import { isSafari } from '@dish/helpers'
-import { QueryFetcher, createClient } from '@pablosz/gqless'
+import { QueryFetcher, createClient } from 'gqty'
 
 import { Auth } from '../Auth'
 import { GRAPH_API, isManualDebugMode } from '../constants'
@@ -10,7 +10,7 @@ export * from './schema.generated'
 
 export const fetchLog = (input: RequestInfo, init?: RequestInit | undefined): Promise<Response> => {
   if (isManualDebugMode || process.env.DEBUG || process.env.LOG_FETCH) {
-    console.log(` [gqless]
+    console.log(` [gqty]
       fetch('${input}', ${
       init ? JSON.stringify(init, null, 2) : undefined
     }).then(x => x.json()).then(console.log.bind(console))
@@ -62,15 +62,15 @@ export const queryFetcher: QueryFetcher = async function (query, variables) {
   })
   const json = await response.json()
   if (process.env.NODE_ENV === 'development' && isSafari) {
-    console.groupCollapsed(` [gqless] (${Date.now() - startTime}ms)`)
+    console.groupCollapsed(` [gqty] (${Date.now() - startTime}ms)`)
     console.log(json)
     console.groupEnd()
   }
   if (process.env.DEBUG || process.env.LOG_FETCH) {
-    console.log(` [gqless] =>`, JSON.stringify(json, null, 2))
+    console.log(` [gqty] =>`, JSON.stringify(json, null, 2))
   }
   if (json.errors) {
-    console.error(` [gqless] errors ${JSON.stringify(json.errors, null, 2)}`)
+    console.error(` [gqty] errors ${JSON.stringify(json.errors, null, 2)}`)
   }
   return json
 }

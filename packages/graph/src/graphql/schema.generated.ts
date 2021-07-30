@@ -1,5 +1,5 @@
 /**
- * GQLESS AUTO-GENERATED CODE: PLEASE DO NOT MODIFY MANUALLY
+ * GQTY AUTO-GENERATED CODE: PLEASE DO NOT MODIFY MANUALLY
  */
 
 export type Maybe<T> = T | null
@@ -4633,7 +4633,7 @@ export interface zcta5_variance_order_by {
   ogc_fid?: Maybe<order_by>
 }
 
-export const scalarsEnumsHash: import('@pablosz/gqless').ScalarsEnumsHash = {
+export const scalarsEnumsHash: import('gqty').ScalarsEnumsHash = {
   Boolean: true,
   Float: true,
   ID: true,

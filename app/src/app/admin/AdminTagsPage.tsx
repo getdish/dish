@@ -246,7 +246,7 @@ const TagListContent = memo(
 
       const allResults = column === 0 ? [allTagsTag as tag, ...results] : results
 
-      // refetch on every re-render so we dont have stale reads from gqless
+      // refetch on every re-render so we dont have stale reads from gqty
       useEffect(() => {
         console.log('refertching')
         // refetchAll()

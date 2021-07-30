@@ -6,7 +6,7 @@ import { DishTagItemSimple, selectRishDishViewSimple } from './selectDishViewSim
 
 /**
  * Careful with query helpers, they need to be DETERMINISTIC
- * even when gqless returns the fake proxy objects.
+ * even when gqty returns the fake proxy objects.
  *
  * Basically, whenever you do a `continue` or break early, be
  * sure you already read all the properties

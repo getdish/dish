@@ -1,4 +1,4 @@
-import { selectFields } from '@pablosz/gqless'
+import { selectFields } from 'gqty'
 import _, { chunk } from 'lodash'
 
 import { ZeroUUID, globalTagId } from '../constants'

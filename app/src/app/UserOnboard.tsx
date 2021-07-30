@@ -124,7 +124,7 @@ export const UserOnboard = graphql(
                   }}
                   onPress={() => {
                     console.log('setting', i)
-                    setCharIndex(i) // TODO can remove if gqless works
+                    setCharIndex(i) // TODO can remove if gqty works
                   }}
                 >
                   <Text fontSize={30} lineHeight={25} key={i}>

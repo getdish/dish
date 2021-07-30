@@ -1,6 +1,6 @@
 import '@dish/helpers/polyfill'
 
-import { inspectWriteGenerate } from '@pablosz/gqless-cli'
+import { inspectWriteGenerate } from '@gqty/cli'
 
 import { GRAPH_API_INTERNAL } from './constants'
 import { getAuthHeaders } from './getAuth'
