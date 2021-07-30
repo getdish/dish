@@ -91,7 +91,7 @@ function compose_up() {
       grep -E -v "$services_list" |
       tr '\r\n' ' '
   )
-  docker_login || echo "failed login" && exit 1
+  docker_login
   # cleans up misbehaving old containers
   if [ "$DISH_ENV" = "test" ]; then
     echo "in env test cleanup old services first"
@@ -280,7 +280,7 @@ function deploy_traefik() {
 }
 
 function docker_login() {
-  docker login registry.dishapp.com -u "$TRAEFIK_USERNAME" -p "$TRAEFIK_PASSWORD_PLAIN" &> /dev/null
+  docker login registry.dishapp.com -u "$TRAEFIK_USERNAME" -p "$TRAEFIK_PASSWORD_PLAIN" || echo "login exit 1 but it succeeds sometimes?"
 }
 
 function deploy_internal() {
@@ -1111,10 +1111,10 @@ function setup_test_services() {
   fi
 
   echo "stopping"
-  docker-compose stop -t 4
+  docker-compose stop -t 4 || echo "error stopping"
 
-  echo "running"
   source_env
+  echo "running"
   compose_up -d
 
   echo "sourcing local to check and migrate"
