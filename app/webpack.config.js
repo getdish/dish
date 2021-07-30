@@ -17,7 +17,7 @@ module.exports = (opts) => {
         'react-dom': path.join(require.resolve('react-dom'), '..'),
         'react-native': 'react-native-web',
         '@dish/react-feather': 'react-feather',
-        '@pablosz/gqless': path.join(require.resolve('@pablosz/gqless'), '..'),
+        gqty: path.join(require.resolve('gqty'), '..'),
         recyclerlistview: 'recyclerlistview/web',
         // bugfix until merged
         'react-native-web/src/modules/normalizeColor':

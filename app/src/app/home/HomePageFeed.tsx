@@ -54,7 +54,7 @@ export const HomePageFeed = memo(
       ].filter(isPresent)
 
       const isLoading = !regionName || false
-      // was trigger gqless infinite loops..
+      // was trigger gqty infinite loops..
       //  ||
       // !items.every((item) =>
       //   item.type === 'cuisine'

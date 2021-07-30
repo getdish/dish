@@ -185,7 +185,7 @@ export const useUserFavoriteQuery = (where: review_bool_exp) => {
       x.restaurant_id === where.restaurant_id?._eq ||
       x.list_id === where.list_id?._eq
   )
-  // until gqless is more reliable...
+  // until gqty is more reliable...
   const [state, setState] = useState(false)
   const favorited = review?.favorited ?? false
   useEffect(() => {

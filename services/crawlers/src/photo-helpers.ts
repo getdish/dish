@@ -21,8 +21,8 @@ import {
   uuid,
 } from '@dish/graph'
 import { isPresent } from '@dish/helpers'
-import { selectFields } from '@pablosz/gqless'
 import FormData from 'form-data'
+import { selectFields } from 'gqty'
 import { chunk, difference, uniqBy } from 'lodash'
 import fetch, { Response } from 'node-fetch'
 

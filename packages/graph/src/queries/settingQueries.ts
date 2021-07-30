@@ -1,4 +1,4 @@
-import { selectFields } from '@pablosz/gqless'
+import { selectFields } from 'gqty'
 
 import { mutation, setting } from '../graphql'
 import { createQueryHelpersFor, prepareData } from '../helpers/queryHelpers'

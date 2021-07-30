@@ -3,9 +3,9 @@ import path, { join } from 'path'
 import { isPresent } from '@dish/helpers'
 import { CreateWebpackConfig } from '@dish/server'
 import LoadablePlugin from '@loadable/webpack-plugin'
-import ReactRefreshWebpack4Plugin from '@pmmmwh/react-refresh-webpack-plugin'
+import ReactRefreshPlugin from '@pmmmwh/react-refresh-webpack-plugin'
 import CircularDependencyPlugin from 'circular-dependency-plugin'
-import esbuild from 'esbuild'
+// import esbuild from 'esbuild'
 import { ESBuildMinifyPlugin } from 'esbuild-loader'
 import { ensureDirSync } from 'fs-extra'
 import HTMLWebpackPlugin from 'html-webpack-plugin'
@@ -18,7 +18,7 @@ import Webpack from 'webpack'
 
 const CssMinimizerPlugin = require('css-minimizer-webpack-plugin')
 const PreloadWebpackPlugin = require('@vue/preload-webpack-plugin')
-const HTMLInlineCSSWebpackPlugin = require('html-inline-css-webpack-plugin').default
+// const HTMLInlineCSSWebpackPlugin = require('html-inline-css-webpack-plugin').default
 
 // import WebpackPwaManifest from 'webpack-pwa-manifest'
 
@@ -379,9 +379,9 @@ export function createWebpackConfig({
           }),
 
         isHot &&
-          new ReactRefreshWebpack4Plugin({
+          new ReactRefreshPlugin({
             overlay: false,
-            exclude: /gqless|react-refresh|node_modules\/(?!snackui)/,
+            exclude: /gqty|react-refresh|node_modules\/(?!snackui)/,
             // include: /snackui/,
           }),
 

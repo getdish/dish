@@ -1,4 +1,4 @@
-import { parseSchemaType, selectFields } from '@pablosz/gqless'
+import { parseSchemaType, selectFields } from 'gqty'
 import { omit } from 'lodash'
 
 import {

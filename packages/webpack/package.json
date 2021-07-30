@@ -20,6 +20,7 @@
     "@pmmmwh/react-refresh-webpack-plugin": "^0.4.3",
     "@snackui/babel-plugin": "*",
     "@snackui/static": "*",
+    "@types/node": "*",
     "@vue/preload-webpack-plugin": "^2.0.0",
     "circular-dependency-plugin": "^5.2.2",
     "css-loader": "^5.2.4",

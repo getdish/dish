@@ -13,7 +13,7 @@ export type VoteNumber = -1 | 0 | 1
 
 type VoteStoreProps = { tagSlug: string; restaurantSlug: string }
 
-// using this for now until gqless optimistic update gets better
+// using this for now until gqty optimistic update gets better
 export class TagVoteStore extends Store<VoteStoreProps> {
   vote: VoteNumber = 0
 

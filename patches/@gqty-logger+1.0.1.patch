@@ -1,0 +1,24 @@
+diff --git a/package.json b/package.json
+index 04ac25db9af1fc085963f2d6b688b9307981842e..1c3ff1e7e27cf06dafadea22640a92e969255f59 100644
+--- a/package.json
++++ b/package.json
+@@ -19,19 +19,8 @@
+     "node": ">=12"
+   },
+   "main": "index.js",
+-  "module": "index.mjs",
+   "types": "index.d.ts",
+   "typescript": {
+     "definition": "index.d.ts"
+-  },
+-  "exports": {
+-    "./*": {
+-      "require": "./*.js",
+-      "import": "./*.mjs"
+-    },
+-    ".": {
+-      "require": "./index.js",
+-      "import": "./index.mjs"
+-    }
+   }
+ }

@@ -167,7 +167,6 @@ export class Self extends WorkerJob {
     if (!restaurant) {
       sentryMessage('SELF CRAWLER restaurantFindOneWithTags() null', {
         data: {
-          hasura: global['latestUnhandledGQLessRejection']?.errors[0]?.message,
           mergeAllID: id,
         },
       })
