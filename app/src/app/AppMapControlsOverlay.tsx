@@ -1,11 +1,9 @@
-import { useStoreInstance, useStoreInstanceSelector } from '@dish/use-store'
-import loadable from '@loadable/component'
+import { useStoreInstanceSelector } from '@dish/use-store'
 import React, { Suspense, memo } from 'react'
 import { AbsoluteVStack, HStack, useMedia } from 'snackui'
 
 import { searchBarHeight, zIndexMapControls } from '../constants/constants'
 import { getWindowHeight } from '../helpers/getWindow'
-import AppMapPIP from './AppMapPIP'
 import { AppMapRestaurantPeek } from './AppMapRestaurantPeek'
 import { drawerStore } from './drawerStore'
 import { useMapSize } from './hooks/useMapSize'

@@ -10,6 +10,7 @@
 - run over app once or twice fixing interaction (web & native)
 - fix up dish photos / dish tags working better
 - fix rating display sub-factors
+- regression `TODO fix` on HomePageFeed
 - beta / invite features
 
 
