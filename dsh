@@ -91,7 +91,7 @@ function compose_up() {
       grep -E -v "$services_list" |
       tr '\r\n' ' '
   )
-  docker_login
+  docker_login || echo "failed login" && exit 1
   # cleans up misbehaving old containers
   if [ "$DISH_ENV" = "test" ]; then
     echo "in env test cleanup old services first"

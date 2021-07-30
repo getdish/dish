@@ -433,7 +433,7 @@ services:
     build:
       context: ./services/timescale
     volumes:
-      - ${TIMESCALE_DB_DIR}:/var/lib/postgresql/data
+      - ${TIMESCALE_DB_DIR?err}:/var/lib/postgresql/data
     environment:
       POSTGRES_USER: ${TIMESCALE_USER:-postgres}
       POSTGRES_PASSWORD: ${TIMESCALE_PASSWORD:-postgres}
@@ -448,6 +448,8 @@ services:
   migrate:
     image: registry.dishapp.com/dish-run-tests:latest
     command: bash -c 'sleep 5 && ./dsh migrate_all'
+    networks:
+      - default
     environment:
       <<: *dish-env
       KEEP_ALIVE: "true"

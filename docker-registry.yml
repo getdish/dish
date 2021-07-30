@@ -12,6 +12,8 @@ services:
     networks:
       - default
       - traefik-public
+    ports:
+      - 7676:80
     depends_on:
       - registry-proxy
     deploy:
