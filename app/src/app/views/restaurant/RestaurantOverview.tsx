@@ -161,20 +161,20 @@ export const RestaurantOverview = memo(
       )
 
       if (isDishBot) {
-        return (
-          <VStack padding={20}>
-            <Text>
-              <Text fontWeight="800">DishBot</Text> summarizes...
-            </Text>
-            <Spacer />
-            {content}
-          </VStack>
-        )
         // return (
-        //   <CommentBubble avatar={<LogoCircle />} name="DishBot" avatarBackgroundColor="transparent">
+        //   <VStack padding={20}>
+        //     <Text>
+        //       <Text fontWeight="800">DishBot</Text> summarizes...
+        //     </Text>
+        //     <Spacer />
         //     {content}
-        //   </CommentBubble>
+        //   </VStack>
         // )
+        return (
+          <CommentBubble name="" avatar={<VStack />} avatarBackgroundColor="transparent">
+            {content}
+          </CommentBubble>
+        )
       }
 
       return content

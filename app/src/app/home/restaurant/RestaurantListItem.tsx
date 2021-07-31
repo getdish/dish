@@ -393,7 +393,7 @@ const RestaurantListItemContent = memo(
 
         {/* CENTER CONTENT AREA */}
         {/* zindex must be above title/bottom so hovers work on dishview voting/search */}
-        <HStack zIndex={10} paddingLeft={5} flex={1} maxHeight={92}>
+        <HStack y={-10} zIndex={10} paddingLeft={5} flex={1} maxHeight={92}>
           <VStack
             {...contentSideProps}
             width={contentSideProps.maxWidth}
@@ -402,13 +402,13 @@ const RestaurantListItemContent = memo(
             flex={1}
             overflow="hidden"
             maxHeight={90}
-            paddingTop={4}
           >
             {/* ROW: OVERVIEW */}
             {/* ensures it always flexes all the way even if short text */}
             {ensureFlexText}
 
             <RestaurantOverview
+              isDishBot
               editableDescription={editableDescription}
               fullHeight
               restaurantSlug={restaurantSlug}

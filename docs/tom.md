@@ -1,7 +1,10 @@
+- todo: merge with next.md
+
 - crawlers get working on bay area:
   - test on a handful of restaurants and ensure they are reliable/accurate
   - fix any issues due to changing api's, etc
   - we need closed restaurant detection of some sort
+    - if no yelp data, y = getYelpRestaurant, p = loadPage(y.yelpUrl), p.contains('IS CLOSED')) && y.markClosed()
   - discuss any potential improvements with team
     - photos + tag detection on photos + tag sentiment
     - rating sub-factors: showing ambience/vibe/service/deal split out

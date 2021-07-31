@@ -1,17 +1,16 @@
+realtime map mvp
+  - pre-load just coords + name + (cuisine tag, top tag) for each region on map (going outwards better)
 
-- [a] [1] small tweaks to list page will make huge diff, stuff like:
-  - bigger bolder font for description
-  - avatar by description
-  - comments
-- [a] [1] comments on home would likewise be huge and could be very simply done
-- [c] [0] crawl one restaurant, fix
+- searchpage: making overview look like dishbot commentbubble
+- load next search points on map move and show them dimmed on map
+
+- [a] [0] load new search in background
 - [c] [0] test on ~10 restaurants
 - [c] [0] recrawl tucson, la, sd, sf
 - [c] [1] dedupe images
 - [c] [1] tags move to single-primary image (highest quality)
 - [c] [2] closed restaurants detection (i've seen a number of variants)
 - [c] [2] get cron crawling every few days
-- [i] [0] get cron working again
 - [i] [0] get backups uploading (postgres)
 - [d/m] [0] onboarding runthrough and fixup
 - [m] [0] move region then search goes to prev region
@@ -23,7 +22,7 @@
 - [m] [0] (searchpage) cant tap vote on tag
 - [d] [1] test runthrough searching with keyboard at least ~3 fixes
 - [m] [1] upload photos from app
-- [m] [2] add ratings from photo upload
+<!-- - [m] [2] add ratings from photo upload -->
 - [a] [1] fix profile pages a lot
 - [m] [1] get regions working (better)
 - [m] [1] swipe back to go back on drawer cards
@@ -35,17 +34,11 @@
 
 # inbox
 
-- get production crawler working with faster feedback loop (no need to exec worker, just run it directly using .env.local)
-
 - can likely merge all docker intranet apps into one .yml
 
 - seeing the front of the restaruant in a wide angle shot is so key to intuitively finding a place you've been to !!
 
 - HASURA_GRAPHQL_JWT_SECRET seems like its just 12346... ? should secure that
-
-- need to do closed restaurant detection pass!!
-  - plus admin tools (one click on rest page button bar)
-  - if (no yelp data) y = getYelpRestaurant, p = loadPage(y.yelpUrl), p.contains('IS CLOSED')) && y.markClosed()
 
 - validating/improving dish images
   - generally validate our image tag matching, document our current stats somewhere of "tagged images"
@@ -55,19 +48,9 @@
   - test case to ensure lily image tag matching:
     - https://www.yelp.com/biz/lily-san-francisco
 
-- admin panel for crawling a specific subset of results
-  - for now i'm thinking limit it to SF + cuisine/dish:
-    - vietnamese: pho, banh xeo, banh mi
-    - mexican: taco, guacamole, salsa
+- admin panel for crawling a specific subset of results using search or sql or list of tags
 - fix/add final crawlers (google, uber eats, caviar?) on subset
 - see if any easy bugs to fix on user profiles
-
-
-# blockchain
-
----
-
-- User camera image upload endpoint that ties to a review of a single dish
 
 - script to export all dish-tagged images into local folders
   - folder name for each "cuisine__dish"
