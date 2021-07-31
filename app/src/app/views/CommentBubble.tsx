@@ -179,6 +179,7 @@ function CommentBubbleContents({
       padding={10}
       width="100%"
       spacing
+      pointerEvents="none"
     >
       {before}
 
@@ -190,12 +191,13 @@ function CommentBubbleContents({
         borderRadius={20}
         position="relative"
         zIndex={10}
-        shadowColor="rgba(0,0,0,0.075)"
-        shadowRadius={8}
+        shadowColor={theme.shadowColorLighter}
+        shadowRadius={12}
         shadowOffset={{ height: 3, width: 0 }}
         height={bubbleHeight}
+        pointerEvents="auto"
       >
-        {/* little bubble */}
+        {/* tiny bottom left bubble */}
         <AbsoluteVStack
           bottom={-10}
           left={0}
@@ -209,7 +211,10 @@ function CommentBubbleContents({
         />
 
         {scrollable ? (
-          <ScrollView style={{ maxHeight: Math.min(getWindowHeight() * 0.8, 600) }}>
+          <ScrollView
+            pointerEvents="auto"
+            style={{ maxHeight: Math.min(getWindowHeight() * 0.8, 600) }}
+          >
             {contents}
           </ScrollView>
         ) : (
@@ -219,7 +224,7 @@ function CommentBubbleContents({
         {!!(date || belowContent) && (
           <>
             <Spacer size="sm" />
-            <HStack>
+            <HStack pointerEvents="auto">
               {!!date && (
                 <>
                   <Paragraph opacity={0.5}>{getTimeFormat(new Date(date))}</Paragraph>

@@ -56,6 +56,8 @@ export const RatingView = ({
     </ProgressRing>
   )
 
+  const ratingRounded = Math.min(10, Math.round(rating))
+
   const outerRing = (
     <ProgressRing
       backgroundColor="rgba(125,125,125,0.1)"
@@ -68,10 +70,10 @@ export const RatingView = ({
         <Text
           color={theme.color}
           letterSpacing={-0.13 * width}
-          fontWeight="200"
+          fontWeight={`${([3, 3, 3, 3, 4, 5, 5, 6, 7, 7, 8, 8][ratingRounded] ?? 5) * 100}` as any}
           fontSize={9 * width}
         >
-          {Math.min(9, Math.round(rating))}
+          {ratingRounded}
         </Text>
       )}
     </ProgressRing>
