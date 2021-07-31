@@ -393,7 +393,7 @@ const RestaurantListItemContent = memo(
 
         {/* CENTER CONTENT AREA */}
         {/* zindex must be above title/bottom so hovers work on dishview voting/search */}
-        <HStack y={-10} zIndex={10} paddingLeft={5} flex={1} maxHeight={92}>
+        <HStack pointerEvents="none" y={-10} zIndex={10} paddingLeft={5} flex={1} maxHeight={92}>
           <VStack
             {...contentSideProps}
             width={contentSideProps.maxWidth}
