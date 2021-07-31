@@ -1,4 +1,3 @@
-// debug
 import './site.css'
 import './assets/font-gteesti/stylesheet.css'
 

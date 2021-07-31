@@ -2421,7 +2421,7 @@ __metadata:
     css-loader: ^5.2.4
     css-minimizer-webpack-plugin: ^2.0.0
     cssnano-preset-lite: ^2.0.0
-    esbuild-loader: ^2.13.0
+    esbuild-loader: ^2.13.1
     file-loader: ^6.2.0
     fs-extra: ^9.1.0
     html-inline-css-webpack-plugin: ^1.11.0
@@ -10633,7 +10633,7 @@ __metadata:
     "@types/react-native": ^0.64.2
     "@yarnpkg/plugin-patch": ^2.1.2
     ava: ^3.14.0
-    esbuild: ^0.12.8
+    esbuild: ^0.12.17
     esbuild-register: ^2.6.0
     esm: ^3.2.25
     fs-extra: ^10.0.0
@@ -11187,7 +11187,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"esbuild-loader@npm:^2.13.0":
+"esbuild-loader@npm:^2.13.1":
   version: 2.13.1
   resolution: "esbuild-loader@npm:2.13.1"
   dependencies:
@@ -11214,12 +11214,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"esbuild@npm:0.12.12":
-  version: 0.12.12
-  resolution: "esbuild@npm:0.12.12"
+"esbuild@npm:0.12.17":
+  version: 0.12.17
+  resolution: "esbuild@npm:0.12.17"
   bin:
     esbuild: bin/esbuild
-  checksum: c6bb94603e67457c43858e96f0f22735fb7867ff2bfac5b49131ebd6f8d61fe1e905d994c388af9a0b84cb803b7036c5f901639d480d3f46e2e112bdd078098b
+  checksum: 9c0c230470a1daa7e1e623bbbf24c8d15187406b862a82258a7df2c3db59bc1f04b5889b50ac940b7b2b3c43dac13e675181a60e828fc39c0288f5c6ccccfec0
   languageName: node
   linkType: hard
 

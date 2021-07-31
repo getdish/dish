@@ -240,18 +240,26 @@ export function createWebpackConfig({
                 // @ts-ignore
                 use: [
                   'thread-loader',
-                  'babel-loader',
+                  // 'babel-loader',
+                  {
+                    loader: require.resolve('esbuild-loader'),
+                    options: {
+                      loader: 'tsx',
+                      target: 'es2019',
+                      // implementation: esbuild,
+                    },
+                  },
                   // why????????? it breaks if not but no idea
-                  isProduction
-                    ? {
-                        loader: require.resolve('esbuild-loader'),
-                        options: {
-                          loader: 'tsx',
-                          target: 'es2019',
-                          // implementation: esbuild,
-                        },
-                      }
-                    : null,
+                  // isProduction
+                  //   ? {
+                  //       loader: require.resolve('esbuild-loader'),
+                  //       options: {
+                  //         loader: 'tsx',
+                  //         target: 'es2019',
+                  //         // implementation: esbuild,
+                  //       },
+                  //     }
+                  //   : null,
                   isStaticExtracted
                     ? {
                         loader: require.resolve('snackui-loader'),
