@@ -28,50 +28,42 @@ export const HomePageFeed = memo(
         _set(true)
       }, [])
 
-      const items = [
-        {
-          id: 'new',
-          title: 'New Spots',
-          type: 'new',
-          size: 'sm',
-        } as const,
-        {
-          id: 'list-0',
-          type: 'list',
-          region: item.region,
-          title: `Lists`,
-        } as FIList,
-        {
-          id: 'space',
-          type: 'space',
-        } as const,
-        didInitialLoad
-          ? ({
-              id: 'dish-restaurants',
-              type: 'dish-restaurants',
-            } as const)
-          : undefined,
-      ].filter(isPresent)
+      const items = useMemo(
+        () =>
+          [
+            {
+              id: 'new',
+              title: 'New Spots',
+              type: 'new',
+              size: 'sm',
+            } as const,
+            {
+              id: 'list-0',
+              type: 'list',
+              region: item.region,
+              title: `Lists`,
+            } as FIList,
+            {
+              id: 'space',
+              type: 'space',
+            } as const,
+            didInitialLoad
+              ? ({
+                  id: 'dish-restaurants',
+                  type: 'dish-restaurants',
+                } as const)
+              : undefined,
+          ].filter(isPresent),
+        [didInitialLoad]
+      )
 
       const isLoading = !regionName || false
-      // was trigger gqty infinite loops..
-      //  ||
-      // !items.every((item) =>
-      //   item.type === 'cuisine'
-      //     ? !!item.restaurants[0]?.id
-      //     : item.type === 'dish-restaurants'
-      //     ? !!item.tag
-      //     : item.type === 'hot' || item.type === 'new'
-      //     ? !!item.restaurants[0]?.id
-      //     : true
-      // )
       const [hovered, setHovered] = useState<null | string>(null)
       const [hoveredResults, setHoveredResults] = useState<null | {
         via: FI['type']
         results: RestaurantOnlyIds[]
       }>(null)
 
-      // TODO fix
       useDebounceEffect(
         () => {
           const results = items.flatMap((x) => {
@@ -81,9 +73,6 @@ export const HomePageFeed = memo(
             if (hoveredResults?.via === x.type) {
               return hoveredResults?.results
             }
-            // if ('restaurants' in x) {
-            //   return x.restaurants.map(getRestaurantIdentifiers)
-            // }
             return []
           })
           // set results
@@ -92,15 +81,6 @@ export const HomePageFeed = memo(
         150,
         [items, hoveredResults]
       )
-
-      // const mapRegion = region
-      //   ? ({
-      //       slug: region.slug,
-      //       name: region.name,
-      //       geometry: region.bbox,
-      //       via: 'click',
-      //     } as const)
-      //   : null
 
       const contents = useMemo(() => {
         return items.map((item) => {

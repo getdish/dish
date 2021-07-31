@@ -360,19 +360,19 @@ function setupMapEffect({
 
   const cancels = new Set<Function>()
 
-  const tileSetter = (
-    feature: mapboxgl.FeatureIdentifier | mapboxgl.MapboxGeoJSONFeature
-  ) => (state: { [key: string]: any }) => {
-    map.setFeatureState(feature, state)
-    map.setFeatureState(
-      {
-        ...feature,
-        source: 'public.nhood_labels',
-        sourceLayer: 'public.nhood_labels',
-      },
-      state
-    )
-  }
+  const tileSetter =
+    (feature: mapboxgl.FeatureIdentifier | mapboxgl.MapboxGeoJSONFeature) =>
+    (state: { [key: string]: any }) => {
+      map.setFeatureState(feature, state)
+      map.setFeatureState(
+        {
+          ...feature,
+          source: 'public.nhood_labels',
+          sourceLayer: 'public.nhood_labels',
+        },
+        state
+      )
+    }
 
   let isMouseDown = false
   let lastUpdate = null
@@ -820,9 +820,9 @@ function setupMapEffect({
                 ['==', ['feature-state', 'active'], true],
                 1.0,
                 ['==', ['feature-state', 'hover'], true],
-                isDark ? 0.5 : 0.3,
+                isDark ? 0.5 : 0.2,
                 ['==', ['feature-state', 'active'], null],
-                isDark ? 0.25 : 0.15,
+                isDark ? 0.25 : 0.05,
                 0,
               ],
               'fill-color': [
@@ -832,7 +832,7 @@ function setupMapEffect({
                 ['==', ['feature-state', 'hover'], true],
                 ['get', 'color'],
                 ['==', ['feature-state', 'active'], null],
-                ['case', ['has', 'color'], ['get', 'color'], 'rgba(100,200,100,0.4)'],
+                ['case', ['has', 'color'], ['get', 'color'], 'rgba(100,200,100,0.14)'],
                 'green',
               ],
             },
@@ -857,7 +857,7 @@ function setupMapEffect({
                 'green',
               ],
               'line-opacity': 1,
-              'line-width': 3,
+              'line-width': 2,
             },
             'source-layer': name,
           })

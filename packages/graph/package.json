@@ -22,10 +22,10 @@
   "dependencies": {
     "@dish/helpers": "*",
     "@dish/use-store": "*",
-    "@gqty/logger": "^1.0.1",
+    "@gqty/logger": "^1.0.2",
     "@gqty/react": "^1.0.1",
     "esbuild-register": "*",
-    "gqty": "^1.0.1",
+    "gqty": "^1.0.2",
     "graphql": "^15.5.0",
     "isomorphic-unfetch": "^3.1.0",
     "lodash": "*",
