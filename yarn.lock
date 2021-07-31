@@ -1974,7 +1974,7 @@ __metadata:
     express: ^4.17.1
     flexsearch: ^0.6.32
     fs-extra: ^9.1.0
-    gqty: ^1.0.1
+    gqty: ^1.0.2
     graphql: ^15.5.0
     graphql-tag: ^2.11.0
     immer: ^8.0.0
@@ -2094,7 +2094,7 @@ __metadata:
     csv-parse: ^4.9.0
     fast-levenshtein: ^3.0.0
     form-data: ^4.0.0
-    gqty: ^1.0.1
+    gqty: ^1.0.2
     graphql: ^15.5.0
     imghash: ^0.0.9
     js-base64: ^2.5.2
@@ -2162,12 +2162,12 @@ __metadata:
     "@dish/react-test-env": "*"
     "@dish/use-store": "*"
     "@gqty/cli": ^1.0.1
-    "@gqty/logger": ^1.0.1
+    "@gqty/logger": ^1.0.2
     "@gqty/react": ^1.0.1
     "@types/node": "*"
     ava: ^3.14.0
     esbuild-register: "*"
-    gqty: ^1.0.1
+    gqty: ^1.0.2
     graphql: ^15.5.0
     isomorphic-unfetch: ^3.1.0
     lodash: "*"
@@ -3116,27 +3116,15 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@gqty/logger@1.0.1":
-  version: 1.0.1
-  resolution: "@gqty/logger@npm:1.0.1"
+"@gqty/logger@npm:^1.0.2":
+  version: 1.0.2
+  resolution: "@gqty/logger@npm:1.0.2"
   dependencies:
     prettier: ^2.3.2
     serialize-error: ^8.1.0
   peerDependencies:
-    gqty: ^1.0.1
-  checksum: d796697e3ad1c3ddafb4c8ebae37e7f928957113164f2fd8099475ae579c834597428982f75b89119af58acd283efe2f893941064c12022bbde4dd0451a22440
-  languageName: node
-  linkType: hard
-
-"@gqty/logger@patch:@gqty/logger@1.0.1#./patches/@gqty-logger+1.0.1.patch::locator=dish-monorepo%40workspace%3A.":
-  version: 1.0.1
-  resolution: "@gqty/logger@patch:@gqty/logger@npm%3A1.0.1#./patches/@gqty-logger+1.0.1.patch::version=1.0.1&hash=be8f40&locator=dish-monorepo%40workspace%3A."
-  dependencies:
-    prettier: ^2.3.2
-    serialize-error: ^8.1.0
-  peerDependencies:
-    gqty: ^1.0.1
-  checksum: 4356e541e4a2ba11eac5c326c1fe55897a206b90ab5c3a20d63da328acc5ec37ccba02e7930dcf4ccf905a6e89389aa82587455457801e35ebbcc6cda4c54851
+    gqty: ^1.0.2
+  checksum: 9db5fe6b95ffa71c72c6e2e0f92cfb4ee5ed69f12113e9d741624571a189f1c1308e68e55bbb4baec2d8fe4b20d06ef7afaa1fbd098c630b08597335f507dc48
   languageName: node
   linkType: hard
 
@@ -12893,27 +12881,15 @@ __metadata:
   languageName: node
   linkType: hard
 
-gqty@1.0.1:
-  version: 1.0.1
-  resolution: "gqty@npm:1.0.1"
+"gqty@npm:^1.0.1, gqty@npm:^1.0.2":
+  version: 1.0.2
+  resolution: "gqty@npm:1.0.2"
   dependencies:
     lodash: ^4.17.21
     lodash-es: ^4.17.21
   peerDependencies:
     graphql: ^15.5.1
-  checksum: d7bf2ecc24a1b36dfd3266b7b74e01359c3163689fb411b5307f3b36baca79b093df11178f0df0fbc4ca16f1652efd14cdfc8dda42963fbffc971a06e8017879
-  languageName: node
-  linkType: hard
-
-"gqty@patch:gqty@1.0.1#./patches/gqty+1.0.1.patch::locator=dish-monorepo%40workspace%3A.":
-  version: 1.0.1
-  resolution: "gqty@patch:gqty@npm%3A1.0.1#./patches/gqty+1.0.1.patch::version=1.0.1&hash=4eb2c5&locator=dish-monorepo%40workspace%3A."
-  dependencies:
-    lodash: ^4.17.21
-    lodash-es: ^4.17.21
-  peerDependencies:
-    graphql: ^15.5.1
-  checksum: 44e26ff2666ec7b15924cc429bb66ed35229b7fdced518c9c1e45d849139a2b6c2eb8d28dc8ea5271ef47b4dfaa454e1f98581d1fffa71dc2a47326b347654c2
+  checksum: 37323be691e4dc13062a10cec8df9cb3cbef0caf87e47bf1ccf1ad1d354bc7f288c5d24a793c7f5a345528762cd8ff81320f33126b369f1bf180b3367391bdb7
   languageName: node
   linkType: hard
 

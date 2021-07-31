@@ -69,8 +69,6 @@
     "snackui:push": "git subrepo clean snackui && git subrepo push snackui"
   },
   "resolutions": {
-    "@gqty/logger": "patch:@gqty/logger@1.0.1#./patches/@gqty-logger+1.0.1.patch",
-    "gqty": "patch:gqty@1.0.1#./patches/gqty+1.0.1.patch",
     "react": "18.0.0-alpha-568dc3532",
     "react-dom": "18.0.0-alpha-568dc3532",
     "react-refresh": "0.11.0-alpha-568dc3532",
