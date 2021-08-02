@@ -12,7 +12,6 @@ import { LogoColor } from './views/Logo'
 
 export const AppIntroLogin = memo(() => {
   const store = useStore(IntroModalStore)
-  const themeName = useThemeName()
 
   return (
     <>
@@ -24,30 +23,9 @@ export const AppIntroLogin = memo(() => {
         alignItems="center"
         width="100%"
       >
-        {themeName == 'dark' ? (
-          <Image
-            source={typeof dishLogo === 'number' ? dishLogo : { uri: dishLogo }}
-            style={{
-              marginBottom: -30,
-              width: 892 * 0.25,
-              height: 492 * 0.25,
-              zIndex: 0,
-              position: 'relative',
-            }}
-          />
-        ) : (
-          <LogoColor scale={2} />
-        )}
+        <LogoColor scale={1.8} />
 
-        <Paragraph
-          paddingHorizontal="3%"
-          minWidth={280}
-          fontWeight="800"
-          size="lg"
-          textAlign="center"
-          position="relative"
-          zIndex={1000}
-        >
+        <Paragraph minWidth={280} size="lg" textAlign="center" position="relative" zIndex={1000}>
           pocket guide to the world
         </Paragraph>
 

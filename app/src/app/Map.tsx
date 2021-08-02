@@ -664,8 +664,8 @@ function setupMapEffect({
             'circle-radius': [
               'case',
               ['boolean', ['feature-state', 'hover'], false],
-              15 * (supportsTouchWeb ? 1.2 : 1),
-              12 * (supportsTouchWeb ? 1.2 : 1),
+              15 * (supportsTouchWeb ? 1.2 : 0.75),
+              12 * (supportsTouchWeb ? 1.2 : 0.75),
             ],
 
             // 'circle-stroke-color': 'transparent',
@@ -743,7 +743,7 @@ function setupMapEffect({
             'icon-ignore-placement': true,
             'text-field': ['format', ['get', 'searchPosition']],
             'text-font': ['DIN Offc Pro Bold', 'Arial Unicode MS Bold'],
-            'text-size': 15,
+            'text-size': 13,
             // 'text-variable-anchor': ['bottom', 'top', 'right', 'left'],
             'text-anchor': 'center',
           },

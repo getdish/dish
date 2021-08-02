@@ -32,6 +32,8 @@ const ORIGIN = isProd
   ? window.location.origin
   : process.env.APP_ENDPOINT ?? 'app:4444'
 
+// console.log('process.env.TARGET', process.env.TARGET, ORIGIN)
+
 // isProd
 //   ? PROD_ORIGIN
 //   : isStaging

@@ -1,16 +1,19 @@
 import { restaurant_tag, tag } from '@dish/graph'
 
+import { RGB } from './rgb'
+
 export type DishTagItemSimple = {
   id: string
   name: string
   icon?: string
   score?: number
   rating?: number
-  image: string
+  image?: string
   slug: string
   isFallback?: boolean
   type: string
   rank?: number
+  rgb?: RGB
 }
 
 export const selectRishDishViewSimple = (tag: restaurant_tag): DishTagItemSimple => {
@@ -31,17 +34,20 @@ export const selectRishDishViewSimple = (tag: restaurant_tag): DishTagItemSimple
     isFallback: !tagImage,
     type: tag.tag.type || '',
     rank: tag.rank || undefined,
+    rgb: tag.tag.rgb,
   }
 }
 
-export const selectTagDishViewSimple = (tag: tag) => {
+export const selectTagDishViewSimple = (tag: tag): DishTagItemSimple => {
   const [tagImage, tagFallbackImage] = tag.default_images ?? []
   return {
     id: tag.id,
+    type: tag.type || '',
     name: tag.name || '',
     icon: tag.icon || '',
     slug: tag.slug || '',
     image: tagImage || tagFallbackImage,
     isFallback: !tagImage,
+    rgb: tag.rgb,
   }
 }

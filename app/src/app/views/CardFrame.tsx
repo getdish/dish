@@ -1,40 +1,52 @@
 // TODO variant for width/height
 import React from 'react'
-import { VStack, useTheme } from 'snackui'
+import { AbsoluteVStack, VStack, useTheme } from 'snackui'
 
 import {
   cardFrameBorderRadius,
   cardFrameHeight,
+  cardFrameHeightLg,
   cardFrameHeightSm,
   cardFrameWidth,
+  cardFrameWidthLg,
   cardFrameWidthSm,
 } from '../../constants/constants'
 
 export const CardFrame = ({
-  hoverable,
+  hoverEffect,
   expandable,
   transparent,
   children,
   aspectFixed,
   borderColor,
+  backgroundColor,
   size,
   square,
+  chromeless,
+  className,
+  flat,
   skew,
+  borderless,
 }: {
   children?: any
+  className?: string
   expandable?: boolean
-  hoverable?: boolean
+  hoverEffect?: 'scale' | 'background' | false
   transparent?: boolean
   aspectFixed?: boolean
-  size?: 'md' | 'sm' | 'xs'
+  size?: 'md' | 'sm' | 'xs' | 'lg'
+  flat?: boolean
   square?: boolean
   skew?: boolean
   borderColor?: string | null
+  backgroundColor?: string | null
+  chromeless?: boolean
+  borderless?: boolean
 }) => {
   const theme = useTheme()
   return (
     <VStack
-      className="hover-parent ease-in-out-fastest"
+      className={`hover-parent ease-in-out-fastest ${className || ''}`}
       contain="layout"
       borderRadius={cardFrameBorderRadius}
       width={cardFrameWidth}
@@ -47,6 +59,9 @@ export const CardFrame = ({
       alignItems="center"
       justifyContent="center"
       minWidth={cardFrameWidth}
+      {...(flat && {
+        borderRadius: 0,
+      })}
       {...(expandable && {
         width: cardFrameWidth * 2,
       })}
@@ -57,15 +72,24 @@ export const CardFrame = ({
         width: cardFrameWidthSm,
         minWidth: cardFrameWidthSm,
         height: cardFrameHeightSm,
-        // maxHeight: square ? cardFrameWidth : 'auto',
+      })}
+      {...(size === 'lg' && {
+        width: cardFrameWidthLg,
+        minWidth: cardFrameWidthLg,
+        height: cardFrameHeightLg,
+        maxHeight: cardFrameHeightLg,
       })}
       {...(size === 'sm' &&
         square && {
-          height: cardFrameWidthSm,
+          height: 100,
         })}
       {...(size === 'md' &&
         square && {
           height: cardFrameWidth,
+        })}
+      {...(size === 'lg' &&
+        square && {
+          height: cardFrameWidthLg,
         })}
       {...(size === 'xs' && {
         minWidth: 140,
@@ -76,7 +100,7 @@ export const CardFrame = ({
       {...(skew && {
         transform: [{ skewX: '-12deg' }],
       })}
-      {...(hoverable && {
+      {...(hoverEffect === 'scale' && {
         hoverStyle: {
           transform: [{ scale: 1.015 }],
         },
@@ -84,7 +108,31 @@ export const CardFrame = ({
           transform: [{ scale: 0.975 }],
         },
       })}
+      {...(chromeless && {
+        borderRadius: 0,
+        backgroundColor: 'transparent',
+        shadowColor: 'transparent',
+        shadowRadius: 0,
+      })}
+      {...(!borderless && {
+        borderColor: theme.backgroundColorDarker,
+        borderWidth: 1,
+      })}
     >
+      {/* background */}
+      {!!backgroundColor && (
+        <AbsoluteVStack
+          fullscreen
+          className="hover-100-opacity-child chrome-fix-overflow safari-fix-overflow"
+          scale={1}
+          overflow="hidden"
+          borderRadius={flat ? 0 : cardFrameBorderRadius}
+          backgroundColor={backgroundColor}
+          {...(hoverEffect === 'background' && {
+            opacity: 0.6,
+          })}
+        />
+      )}
       {children}
     </VStack>
   )

@@ -9,16 +9,16 @@ export function TagsText({ tags, color }: { tags: any[]; color?: string }) {
       {tags.map((tag, index) => (
         <React.Fragment key={tag.name}>
           {tag.icon ? (
-            <Text marginLeft={-1} width={24} fontSize={20} lineHeight={20} y={1}>
+            <Text width={20} fontSize={16} scale={1} lineHeight={20} y={1} rotateY="-20deg">
               {tag.icon.trim()}{' '}
             </Text>
           ) : null}
           <Spacer size="sm" />
-          <Text color={color} fontSize={16} fontWeight="500">
+          <Text color={color} fontSize={15} fontWeight="500">
             {tagDisplayName(tag)}
           </Text>
           {index < tags.length - 1 ? (
-            <Text paddingHorizontal={8} fontSize={12} opacity={0.23} y={-3}>
+            <Text paddingHorizontal={8} fontSize={12} opacity={0.23} y={-1}>
               +
             </Text>
           ) : null}

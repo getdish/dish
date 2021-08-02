@@ -205,8 +205,8 @@ test('Home page feed', async (t) => {
   t.deepEqual(Object.keys(json), ['trending', 'newest', 'total_restaurants_in_region'])
 })
 
-test('Regions', async (t) => {
-  const response = await fetch(SEARCH_DOMAIN + '/regions?slug=xxx')
-  const json = await response.json()
-  t.deepEqual(Object.keys(json), ['bbox', 'centroid', 'name', 'slug'])
-})
+// test('Regions', async (t) => {
+//   const response = await fetch(SEARCH_DOMAIN + '/regions?slug=xxx')
+//   const json = await response.json()
+//   t.deepEqual(Object.keys(json), ['bbox', 'centroid', 'name', 'slug'])
+// })

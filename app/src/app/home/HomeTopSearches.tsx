@@ -17,7 +17,7 @@ export const HomeTopSearches = memo(() => {
       // for easier touchability
       paddingVertical={16}
       marginVertical={-8}
-      spacing="xs"
+      spacing="sm"
       marginHorizontal="auto"
       alignItems="center"
       justifyContent="center"
@@ -28,7 +28,7 @@ export const HomeTopSearches = memo(() => {
         const rgb = search.tags.find((x) => x.type === 'lense')?.rgb ?? tagLenses[0].rgb
         return (
           <Link key={index} tags={search.tags} asyncClick>
-            <GradientButton rgb={rgb}>
+            <GradientButton bordered rgb={rgb}>
               <TagsText tags={search.tags} color={themeName === 'dark' ? '#fff' : rgbString(rgb)} />
             </GradientButton>
           </Link>
@@ -39,18 +39,18 @@ export const HomeTopSearches = memo(() => {
 })
 
 const recentSearches: { tags: NavigableTag[] }[] = [
-  {
-    tags: [tagLenses[0]],
-  },
-  {
-    tags: [tagLenses[1]],
-  },
-  {
-    tags: [tagLenses[2]],
-  },
-  {
-    tags: [tagLenses[3]],
-  },
+  // {
+  //   tags: [tagLenses[0]],
+  // },
+  // {
+  //   tags: [tagLenses[1]],
+  // },
+  // {
+  //   tags: [tagLenses[2]],
+  // },
+  // {
+  //   tags: [tagLenses[3]],
+  // },
   {
     tags: [
       {

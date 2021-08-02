@@ -4,6 +4,21 @@ declare module "@dish/helpers-node" {
 }
 
 declare module "@dish/helpers-node" {
+    import { Pool, PoolConfig, QueryResult } from "pg";
+    export class Database {
+        config: PoolConfig;
+        pool: Pool | null;
+        static get main_db(): Database;
+        constructor(config: PoolConfig);
+        static one_query_on_main(query: string): Promise<QueryResult<any>>;
+        connect(): Promise<import("pg").PoolClient>;
+        query(query: string, values?: any): Promise<QueryResult<any>>;
+    }
+    export const main_db: Database;
+    export const db: Database;
+}
+
+declare module "@dish/helpers-node" {
     export function hashPassword(password: string): any;
 }
 

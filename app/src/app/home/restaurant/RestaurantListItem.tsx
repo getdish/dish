@@ -1,5 +1,6 @@
 import { fullyIdle, series } from '@dish/async'
 import { RestaurantItemMeta, graphql } from '@dish/graph'
+import { isSafari } from '@dish/helpers'
 import { MessageSquare } from '@dish/react-feather'
 import { useStoreInstanceSelector } from '@dish/use-store'
 import { debounce } from 'lodash'
@@ -391,29 +392,31 @@ const RestaurantListItemContent = memo(
           </HStack>
         </VStack>
 
+        <VStack flex={1} />
+
         {/* CENTER CONTENT AREA */}
         {/* zindex must be above title/bottom so hovers work on dishview voting/search */}
         <HStack pointerEvents="none" y={-10} zIndex={10} paddingLeft={5} flex={1} maxHeight={92}>
           <VStack
             {...contentSideProps}
-            width={contentSideProps.maxWidth}
             className="fix-safari-shrink-height"
             justifyContent="center"
             flex={1}
-            overflow="hidden"
-            maxHeight={90}
+            // overflow="hidden"
+            // chrome this fixes layout:
+            y={isSafari ? -9 : 16}
+            zIndex={100}
           >
-            {/* ROW: OVERVIEW */}
-            {/* ensures it always flexes all the way even if short text */}
-            {ensureFlexText}
-
-            <RestaurantOverview
-              isDishBot
-              editableDescription={editableDescription}
-              fullHeight
-              restaurantSlug={restaurantSlug}
-              maxLines={3}
-            />
+            <VStack width="120%" x={-20}>
+              {/* ROW: OVERVIEW */}
+              <RestaurantOverview
+                isDishBot
+                editableDescription={editableDescription}
+                fullHeight
+                restaurantSlug={restaurantSlug}
+                maxLines={3}
+              />
+            </VStack>
           </VStack>
 
           {/* PEEK / TAGS (RIGHT SIDE) */}
@@ -435,7 +438,7 @@ const RestaurantListItemContent = memo(
 
         <HStack
           paddingLeft={20}
-          height={52}
+          height={44}
           className="safari-fix-overflow"
           position="relative"
           alignItems="center"
@@ -568,6 +571,7 @@ const RestaurantPeekDishes = memo(
           pointerEvents="none"
           padding={20}
           y={-30}
+          x={20}
           alignItems="center"
           height="100%"
           width={dishSize * 0.7 * 5}

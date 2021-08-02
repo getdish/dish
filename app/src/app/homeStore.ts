@@ -57,7 +57,7 @@ class HomeStore extends Store {
   }
 
   getLastStateByType<Type extends HomeStateItem['type']>(type: Type) {
-    return (findLast(this.states, (x) => x.type === type) as any) as HomeStatesByType[Type]
+    return findLast(this.states, (x) => x.type === type) as any as HomeStatesByType[Type]
   }
 
   get currentStates() {
@@ -220,22 +220,6 @@ class HomeStore extends Store {
     const n = this.getUpRouteForType(type)
     if (!n) return
     router.navigate(n)
-  }
-
-  async updateAreaInfo() {
-    const { center, span } = appMapStore.currentPosition
-    const curId = homeStore.currentState.id
-    const curLocInfo = await reverseGeocode(center, span)
-    if (!curLocInfo) return
-    if (curId !== homeStore.currentState.id) return
-    const curLocName = curLocInfo.fullName ?? curLocInfo.name ?? curLocInfo.country
-    const cur = this.currentState
-    if (!isEqual(cur.curLocInfo, curLocInfo) || !isEqual(cur.curLocName, curLocName)) {
-      homeStore.updateCurrentState('appMapStore.updateAreaInfo', {
-        curLocInfo,
-        curLocName,
-      })
-    }
   }
 
   updateHomeState(via: string, val: { id: string; [key: string]: any }) {

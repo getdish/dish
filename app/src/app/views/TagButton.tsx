@@ -17,6 +17,7 @@ import {
 import { isWeb } from '../../constants/constants'
 import { tagDisplayName } from '../../constants/tagDisplayName'
 import { getTagSlug } from '../../helpers/getTagSlug'
+import { RGB } from '../../helpers/rgb'
 import { NavigableTag } from '../../types/tagTypes'
 import { useUserTagVotes } from '../hooks/useUserTagVotes'
 import { Image } from './Image'
@@ -37,27 +38,29 @@ export type TagButtonTagProps = {
 export const getTagButtonProps = (
   tag?: TagButtonTagProps | NavigableTag | TagQuery | null
 ): TagButtonProps => {
+  if (!tag) {
+    return {
+      name: '',
+    }
+  }
   return {
-    name: tag ? tagDisplayName(tag as any) : '',
-    type: tag?.type as TagType,
-    icon: tag?.icon ?? '',
-    ...(tag && {
-      rgb: Array.isArray(tag.rgb) ? tag.rgb : tag.rgb?.(),
-      slug: tag.slug ?? '',
+    name: tagDisplayName(tag as any),
+    type: tag.type as TagType,
+    icon: tag.icon ?? '',
+    rgb: Array.isArray(tag.rgb) ? tag.rgb : tag.rgb?.(),
+    slug: tag.slug ?? '',
+    ...('rank' in tag && {
+      rank: tag.rank,
+      score: tag.score,
+      rating: tag.rating,
     }),
-    ...(tag &&
-      'rank' in tag && {
-        rank: tag.rank,
-        score: tag.score,
-        rating: tag.rating,
-      }),
   }
 }
 
 export type TagButtonProps = StackProps &
   Omit<TagButtonTagProps, 'rgb'> & {
     theme?: ThemeName
-    rgb?: [number, number, number]
+    rgb?: RGB
     slug?: string
     restaurantSlug?: string
     size?: 'lg' | 'md' | 'sm'
@@ -200,10 +203,9 @@ const TagButtonInner = (props: TagButtonProps) => {
         fontSize={fontSize}
         fontWeight={fontWeight || '700'}
         lineHeight={isSmall ? 22 : 26}
-        color={theme.color}
-        {...(color && { color })}
-        borderBottomColor={theme.backgroundColor}
-        borderBottomWidth={floating ? 0 : 1}
+        color={color || theme.color}
+        // borderBottomColor={theme.backgroundColor}
+        // borderBottomWidth={floating ? 0 : 1}
         opacity={0.8}
         marginTop={-1}
         {...(floating && {
@@ -294,6 +296,7 @@ const TagButtonInner = (props: TagButtonProps) => {
       replace={replace}
       replaceSearch={replaceSearch}
       asyncClick
+      stopPropagation
     >
       {contents}
     </Link>

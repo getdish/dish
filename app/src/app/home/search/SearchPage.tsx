@@ -3,7 +3,7 @@ import { isEqual } from '@dish/fast-compare'
 import { RestaurantSearchItem, slugify } from '@dish/graph'
 import { ArrowUp } from '@dish/react-feather'
 import { HistoryItem } from '@dish/router'
-import { Store, createStore, reaction, useStoreInstanceSelector } from '@dish/use-store'
+import { Store, createStore, reaction, selector, useStoreInstanceSelector } from '@dish/use-store'
 import React, {
   Suspense,
   forwardRef,
@@ -34,6 +34,7 @@ import {
 import { isWeb } from '../../../constants/constants'
 import { addTagsToCache, allTags } from '../../../helpers/allTags'
 import { getTitleForState } from '../../../helpers/getTitleForState'
+import { reverseGeocode } from '../../../helpers/reverseGeocode'
 import { getFullTagsFromRoute } from '../../../helpers/syncStateFromRoute'
 import { syncStateToRoute } from '../../../helpers/syncStateToRoute'
 import { useQueryLoud } from '../../../helpers/useQueryLoud'
@@ -74,6 +75,30 @@ export default memo(function SearchPage(props: SearchProps) {
     return () => {
       searchPageStore.resetResults()
     }
+  }, [])
+
+  useEffect(() => {
+    let id = 0
+    return reaction(
+      appMapStore,
+      (x) => x.currentPosition,
+      async () => {
+        const curId = ++id
+        if (homeStore.currentState.id !== props.item.id) {
+          return
+        }
+        // react to current position
+        appMapStore.currentPosition
+        const next = await appMapStore.getCurrentLocationInfo()
+        if (!next || curId !== id) {
+          return
+        }
+        homeStore.updateCurrentState('SearchPage.updateCurrentLocation', {
+          curLocInfo: next.curLocInfo,
+          curLocName: next.curLocName,
+        })
+      }
+    )
   }, [])
 
   return (
@@ -570,7 +595,6 @@ const SearchPageScrollView = forwardRef<ScrollView, SearchPageScrollViewProps>(
           <ContentScrollView id="search" ref={combineRefs(ref, scrollRef) as any} {...props}>
             <PageContentWithFooter>
               <SearchHeader />
-              <Spacer />
               <SearchContent />
               <Suspense fallback={null}>
                 <SearchFooter scrollToTop={scrollToTopHandler} />

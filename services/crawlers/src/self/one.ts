@@ -1,8 +1,8 @@
 import '@dish/helpers/polyfill'
 
 import { restaurantFindOne } from '@dish/graph'
+import { Database } from '@dish/helpers-node'
 
-import { Database } from '../database'
 import { GPT3 } from './GPT3'
 import { Self } from './Self'
 

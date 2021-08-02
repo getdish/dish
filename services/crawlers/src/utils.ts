@@ -1,11 +1,11 @@
 import '@dish/common'
 
 import { Restaurant, settingGet, settingSet } from '@dish/graph'
+import { Database } from '@dish/helpers-node'
 import axios from 'axios'
 import _ from 'lodash'
 import moment, { Moment } from 'moment'
 
-import { Database } from './database'
 import { isGoogleGeocoderID } from './google/GoogleGeocoder'
 
 const HEREMAPS_API_TOKEN = process.env.HEREMAPS_API_TOKEN

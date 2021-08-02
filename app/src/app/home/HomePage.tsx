@@ -28,7 +28,7 @@ import { router } from '../../router'
 import { HomeStateItemHome } from '../../types/homeTypes'
 import { appMapStore, cancelUpdateRegion, useSetAppMap } from '../AppMapStore'
 import { autocompletesStore } from '../AutocompletesStore'
-import { useHomeStateById } from '../homeStore'
+import { homeStore, useHomeStateById } from '../homeStore'
 import { useLastValueWhen } from '../hooks/useLastValueWhen'
 import { useLocalStorageState } from '../hooks/useLocalStorageState'
 import { setInitialRegionSlug } from '../initialRegionSlug'
@@ -82,30 +82,24 @@ const HomePageContent = (props: Props) => {
   const { isActive, item } = props
   const state = useHomeStateById<HomeStateItemHome>(item.id)
   const theme = useTheme()
+  const enabled = isActive && !!state.region
   const regionResponse = useRegionQuery(state.region, {
-    enabled: isActive && !!state.region,
+    enabled,
     suspense: true,
   })
   const [position, setPosition] = useState<MapPosition>(initialPosition)
   const regionColors = getColorsForName(state.region)
   const region = regionResponse.data
 
-  if (process.env.NODE_ENV === 'development') {
-    // prettier-ignore
-    console.log('👀 HomePage', state.region, { position, item: item, region, state, isActive: isActive })
-  }
-
-  useEffect(() => {
-    if (!region) return
-    setInitialRegionSlug(item.region)
-  }, [region])
-
-  // center map to region
   useEffect(() => {
     if (!isActive) return
     if (!region || !region.center || !region.span) return
+    setInitialRegionSlug(item.region)
     cancelUpdateRegion()
     setPosition(region)
+    homeStore.updateCurrentState('HomePage.curLoc', {
+      curLocName: region.name,
+    })
   }, [isActive, JSON.stringify([region])])
 
   useEffect(() => {
@@ -159,6 +153,11 @@ const HomePageContent = (props: Props) => {
   const regionName = region?.name || state.curLocName || '...'
   const media = useMedia()
 
+  if (process.env.NODE_ENV === 'development') {
+    // prettier-ignore
+    console.log('👀 HomePage', { enabled, regionResponse, position, item, region, state, isActive })
+  }
+
   const homeHeaderContent = useMemo(() => {
     return (
       <>
@@ -166,42 +165,38 @@ const HomePageContent = (props: Props) => {
         <Spacer size="md" {...(media.sm && { size: 4 })} />
         <HStack marginVertical={-16}>
           <ContentScrollViewHorizontal>
-            <HStack
-              alignItems="center"
-              paddingVertical={media.sm ? 10 : 20}
-              paddingBottom={media.sm ? 10 : 15}
-              paddingHorizontal={10}
-            >
-              <Theme name="dark">
-                <Link onPress={() => autocompletesStore.setTarget('location')}>
-                  <SlantedTitle
-                    backgroundColor={theme.backgroundColor}
-                    borderBottomColor={regionColors.color}
-                    borderBottomWidth={2}
-                    color={regionColors.color}
-                    minWidth={100}
-                    size={
-                      regionName.length > 24
-                        ? 'xxs'
-                        : regionName.length > 17
-                        ? 'xs'
-                        : regionName.length > 14
-                        ? 'sm'
-                        : regionName.length > 8
-                        ? 'md'
-                        : 'lg'
-                    }
-                  >
-                    {regionName}
-                  </SlantedTitle>
-                </Link>
-              </Theme>
+            <HStack alignItems="center" paddingVertical={media.sm ? 10 : 15} paddingHorizontal={10}>
+              <Link onPress={() => autocompletesStore.setTarget('location')}>
+                <SlantedTitle
+                  // borderBottomColor={regionColors.color}
+                  // borderBottomWidth={2}
+                  // backgroundColor={theme.backgroundColor}
+                  // color={regionColors.color}
+                  backgroundColor={regionColors.color}
+                  color="#fff"
+                  minWidth={100}
+                  size={
+                    regionName.length > 24
+                      ? 'xxs'
+                      : regionName.length > 17
+                      ? 'xs'
+                      : regionName.length > 14
+                      ? 'sm'
+                      : regionName.length > 8
+                      ? 'md'
+                      : 'lg'
+                  }
+                >
+                  {regionName}
+                </SlantedTitle>
+              </Link>
               <HomeTopSearches />
             </HStack>
           </ContentScrollViewHorizontal>
         </HStack>
-        <Spacer size="lg" />
+        <Spacer size="xs" />
         <HomePageIntroDialogue />
+        <Spacer size="md" />
       </>
     )
   }, [regionColors.color, regionName])
@@ -291,10 +286,12 @@ const Inner = () => {
       <AbsoluteVStack top={-20} right={-20}>
         <CloseButton onPress={() => setShow(false)} />
       </AbsoluteVStack>
-      <Paragraph>
-        <Text fontWeight="700">Dish is a pocket map of the world powered by community.</Text> We
-        want to make it easier to know what's uniquely good in each city and neighborhood.{' '}
-        <Link name="about">Read more</Link>.
+      <Paragraph size="md" textAlign="center">
+        <Text fontWeight="800">A better pocket guide for the world.</Text> Find great playlists for
+        the real world, earn money curating and reviewing.{' '}
+        <Link name="about" fontWeight="600">
+          Learn more
+        </Link>
       </Paragraph>
     </VStack>
   )

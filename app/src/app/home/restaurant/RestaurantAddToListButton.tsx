@@ -34,7 +34,6 @@ export const RestaurantAddToListButton = ({
           pressStyle={{
             opacity: 0.6,
           }}
-          elevation={1}
           {...props}
         >
           {noLabel ? null : 'List'}

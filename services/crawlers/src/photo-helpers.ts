@@ -21,13 +21,13 @@ import {
   uuid,
 } from '@dish/graph'
 import { isPresent } from '@dish/helpers'
+import { Database } from '@dish/helpers-node'
 import FormData from 'form-data'
 import { selectFields } from 'gqty'
 import { chunk, difference, uniqBy } from 'lodash'
 import fetch, { Response } from 'node-fetch'
 
 import { DISH_DEBUG } from './constants'
-import { Database } from './database'
 
 const PhotoBaseQueryHelpers = createQueryHelpersFor<PhotoBase>('photo')
 const PhotoXrefQueryHelpers = createQueryHelpersFor<PhotoXref>('photo_xref')

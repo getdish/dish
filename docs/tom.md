@@ -1,4 +1,5 @@
 - todo: merge with next.md
+- get top cuisine/dish query into hasura itself so we get caching for free + can subquery anything we want without multiple trips to server + simplify it a bit perhaps so its a bit faster
 
 - crawlers get working on bay area:
   - test on a handful of restaurants and ensure they are reliable/accurate
@@ -12,6 +13,7 @@
     - start with partial crawl and fix any issues at scale
 
 - homepage
+  - ensure the tags we have in the initial search autocomplete dropdown exist in db for next crawl
   - we have a new hasura fn `list_populated`, ensure this is decent/fast
     - may want to discuss this query quickly with team and make sure good
 

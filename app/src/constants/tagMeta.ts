@@ -7,6 +7,7 @@ export const tagDisplayNames = {
   Veg: 'Green',
   Drinks: 'Drink',
   Gems: 'Top',
+  Unique: 'Top',
 }
 
 export const tagDisplayIcons = {

@@ -1,6 +1,12 @@
 /* tmp bugfix until i can figure out why tis excluded... */
 ._paRi-14px{padding-right:14px;}
 
+/* 
+div {
+  word-break: break-word;
+  hyphens: auto;
+} */
+
 html,
 body {
   max-height: 100vh;

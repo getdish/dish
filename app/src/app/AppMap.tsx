@@ -337,7 +337,7 @@ const AppMapContents = memo(function AppMapContents() {
             <AppMapControls />
           </>
         )}
-        {/* <AppMapBottomFade /> */}
+        {media.sm && <AppMapBottomFade />}
         <Map
           center={center}
           span={span}
