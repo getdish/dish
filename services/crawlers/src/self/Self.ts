@@ -10,13 +10,13 @@ import {
   restaurantUpdate,
   restaurantUpsertManyTags,
 } from '@dish/graph'
+import { Database } from '@dish/helpers-node'
 import { DEBUG_LEVEL, WorkerJob } from '@dish/worker'
 import { JobOptions, QueueOptions } from 'bull'
 import { Base64 } from 'js-base64'
 import moment from 'moment'
 
 import { DISH_DEBUG } from '../constants'
-import { Database } from '../database'
 import {
   DoorDashScrapeData,
   GoogleReviewScrapeData,

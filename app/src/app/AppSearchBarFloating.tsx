@@ -1,10 +1,9 @@
 import React, { Suspense } from 'react'
 import { StyleSheet } from 'react-native'
-import { AbsoluteVStack, LinearGradient, Theme, VStack, useMedia } from 'snackui'
+import { AbsoluteVStack, LinearGradient, Theme, VStack, useMedia, useThemeName } from 'snackui'
 
 import { bgLightTranslucent } from '../constants/colors'
 import {
-  searchBarBorderRadius,
   searchBarHeight,
   searchBarMaxWidth,
   searchBarTopOffset,
@@ -12,6 +11,8 @@ import {
 } from '../constants/constants'
 import { AppSearchBarContents } from './AppSearchBarContents'
 import { useSearchBarTheme } from './hooks/useSearchBarTheme'
+
+const searchBarBorderRadius = 4
 
 // export const parentIds = {
 //   small: 'searchbar-small',
@@ -22,6 +23,7 @@ export const AppSearchBarFloating = () => {
   const media = useMedia()
   const { theme: searchThemeName, background, isColored } = useSearchBarTheme()
   const height = searchBarHeight + 0
+  const parentThemeName = useThemeName()
 
   if (media.sm) {
     return null
@@ -36,7 +38,11 @@ export const AppSearchBarFloating = () => {
   //   const newParent = parentIds[media.sm ? 'small' : 'large']
   //   sendReparentableChild(parent, newParent, 0, 0)
   // }, [media.sm])
-  const themeName = media.sm ? 'light' : searchThemeName
+  const themeName = media.sm
+    ? parentThemeName
+    : searchThemeName === 'light'
+    ? 'dark'
+    : searchThemeName
 
   return (
     <Theme name={themeName}>
@@ -78,7 +84,7 @@ export const AppSearchBarFloating = () => {
             <AbsoluteVStack
               borderRadius={searchBarBorderRadius}
               className="searchbar-shadow"
-              skewX="-12deg"
+              skewX="-8deg"
               overflow="hidden"
               zIndex={102}
               opacity={1}
@@ -88,9 +94,9 @@ export const AppSearchBarFloating = () => {
               alignItems="center"
               backgroundColor={background}
               shadowColor="#000"
-              shadowOpacity={0.5}
+              shadowOpacity={0.25}
               shadowOffset={{ height: 2, width: 0 }}
-              shadowRadius={15}
+              shadowRadius={5}
             />
             <VStack
               position="relative"

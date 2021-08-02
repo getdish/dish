@@ -1,7 +1,6 @@
 import { restaurant, restaurant_tag } from '@dish/graph'
 import { isPresent } from '@dish/helpers'
 
-import { queryRestaurant } from '../queries/queryRestaurant'
 import { DishTagItemSimple, selectRishDishViewSimple } from './selectDishViewSimple'
 
 /**

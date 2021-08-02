@@ -21,7 +21,7 @@ export const DishLogoButton = memo(({ color }: { color?: string }) => {
           scale={1}
           hoverStyle={{
             scale: 1.05,
-            y: -1,
+            y: 0,
           }}
           pressStyle={{
             opacity: 0.8,

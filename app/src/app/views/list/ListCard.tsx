@@ -1,15 +1,6 @@
 import { graphql } from '@dish/graph'
 import React, { Suspense } from 'react'
-import {
-  AbsoluteVStack,
-  HStack,
-  Hoverable,
-  LinearGradient,
-  Paragraph,
-  Text,
-  VStack,
-  useThemeName,
-} from 'snackui'
+import { AbsoluteVStack, HStack, Hoverable, Paragraph, VStack } from 'snackui'
 
 import {
   cardFrameBorderRadius,
@@ -17,7 +8,7 @@ import {
   cardFrameWidth,
 } from '../../../constants/constants'
 import { getImageUrl } from '../../../helpers/getImageUrl'
-import { Card, CardOverlay, CardProps } from '../../home/restaurant/Card'
+import { Card, CardProps } from '../../home/restaurant/Card'
 import { FavoriteButton } from '../FavoriteButton'
 import { Image } from '../Image'
 import { Link } from '../Link'
@@ -61,7 +52,7 @@ export const ListCard = graphql(
           aspectFixed
           square
           size={size}
-          hoverable={hoverable}
+          hoverEffect={hoverable ? 'scale' : false}
           backgroundColor={backgroundColor}
           // borderColor={backgroundColor}
           // backgroundColor="#fff"

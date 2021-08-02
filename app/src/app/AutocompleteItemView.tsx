@@ -66,7 +66,7 @@ export const AutocompleteItemView = memo(
         minHeight={46}
         backgroundColor={isActive ? theme.backgroundColor : 'transparent'}
         hoverStyle={{
-          backgroundColor: theme.backgroundColorTertiary,
+          backgroundColor: theme.backgroundColor,
         }}
         onPressOut={() => {
           Keyboard.dismiss()
@@ -88,9 +88,9 @@ export const AutocompleteItemView = memo(
         })}
         noTextWrap
       >
-        <HStack>
+        <HStack width="100%">
           <VStack flex={1}>
-            <HStack marginVertical={-3} flex={1} alignItems="center">
+            <HStack width="100%" marginVertical={-3} flex={1} alignItems="center">
               <Text fontWeight="700" ellipse color="#fff" fontSize={20} lineHeight={28}>
                 {!!result.namePrefix && (
                   <>
@@ -99,7 +99,7 @@ export const AutocompleteItemView = memo(
                 )}
                 {result.name}
               </Text>
-              {!!icon && <Spacer size="md" />}
+              {!!icon && <VStack flex={1} />}
               {icon}
             </HStack>
             {!!result.description && (

@@ -154,6 +154,7 @@ const SearchBarActionButton = memo(() => {
 
   return (
     <Link
+      marginRight={-18}
       onPress={() => {
         if (showAutocomplete) {
           autocompletes.setVisible(false)

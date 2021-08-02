@@ -20,6 +20,7 @@ import {
   setDefaultLocation,
 } from '../constants/initialHomeState'
 import { bboxToLngLat, getZoomLevel, hasMovedAtLeast, padLngLat } from '../helpers/mapHelpers'
+import { reverseGeocode } from '../helpers/reverseGeocode'
 import { queryRestaurant } from '../queries/queryRestaurant'
 import { RegionWithVia } from '../types/homeTypes'
 import { AppMapPosition, MapResultItem } from '../types/mapTypes'
@@ -120,6 +121,19 @@ class AppMapStore extends Store {
 
   get isOnRegion() {
     return !!this.lastRegion && !hasMovedAtLeast(this.lastRegion, this.position, 0.04)
+  }
+
+  async getCurrentLocationInfo() {
+    const { center, span } = this.currentPosition
+    const curLocInfo = await reverseGeocode(center, span)
+    if (!curLocInfo) {
+      return null
+    }
+    const curLocName = curLocInfo.fullName ?? curLocInfo.name ?? curLocInfo.country
+    return {
+      curLocName,
+      curLocInfo,
+    }
   }
 
   clearHover() {
@@ -245,6 +259,7 @@ export function updateRegionImmediate(region: RegionWithVia) {
       return
     }
     appMapStore.setLastRegion(region)
+    console.log('map navigate to', region)
     homeStore.navigate({
       state: {
         ...currentState,

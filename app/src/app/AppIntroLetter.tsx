@@ -44,7 +44,7 @@ export const AppIntroLetter = memo(() => {
         <>
           <SmallCircleButton
             position="absolute"
-            icon={<Home size={42} color="rgba(255,255,255,0.5)" />}
+            icon={<Home size={24} color="rgba(255,255,255,0.5)" />}
             zIndex={1000}
             top={15}
             right={15}
@@ -57,11 +57,11 @@ export const AppIntroLetter = memo(() => {
               store.setHidden(true)
             }}
           />
-          <AbsoluteVStack bottom={-50} zIndex={1000} right={-40} rotate="-10deg">
-            <Text fontSize={100}>🌮</Text>
+          <AbsoluteVStack bottom={-10} zIndex={1000} right={-40} rotate="-10deg">
+            <Text fontSize={62}>🌮</Text>
           </AbsoluteVStack>
-          <AbsoluteVStack bottom={-50} zIndex={1000} left={-40} rotate="10deg">
-            <Text fontSize={100}>🍜</Text>
+          <AbsoluteVStack bottom={-10} zIndex={1000} left={-40} rotate="10deg">
+            <Text fontSize={62}>🍜</Text>
           </AbsoluteVStack>
         </>
       }

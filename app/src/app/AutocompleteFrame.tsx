@@ -93,7 +93,7 @@ export const AutocompleteFrame = memo(
           </AbsoluteVStack>
           <AbsoluteVStack
             zIndex={10000}
-            top={media.sm ? 10 : searchBarHeight + 25}
+            top={media.sm ? 10 : searchBarHeight + 18}
             right={10}
             pointerEvents="auto"
           >

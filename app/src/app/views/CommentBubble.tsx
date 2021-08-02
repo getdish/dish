@@ -192,7 +192,7 @@ function CommentBubbleContents({
         position="relative"
         zIndex={10}
         shadowColor={theme.shadowColorLighter}
-        shadowRadius={12}
+        shadowRadius={8}
         shadowOffset={{ height: 3, width: 0 }}
         height={bubbleHeight}
         pointerEvents="auto"
@@ -205,7 +205,7 @@ function CommentBubbleContents({
           height={20}
           borderRadius={100}
           backgroundColor={theme.cardBackgroundColor}
-          shadowColor="rgba(0,0,0,0.2)"
+          shadowColor={theme.shadowColorLighter}
           shadowRadius={4}
           shadowOffset={{ height: 3, width: -3 }}
         />

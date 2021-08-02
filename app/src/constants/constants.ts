@@ -26,7 +26,7 @@ export const logoXsHeight = Math.round(1024 * 0.044)
 
 export const pageWidthMax = 2000
 
-export const searchBarBorderRadius = 14
+export const searchBarBorderRadius = 0
 export const searchBarTopOffset = 3
 export const searchBarHeight = 54
 export const searchBarHeightWithPadding = searchBarHeight + searchBarTopOffset + 12
@@ -47,9 +47,11 @@ export const zIndexMapControlsUnderlaySmall = 500
 export const zIndexGallery = 500
 
 export const cardFrameBorderRadius = 20
-export const cardFrameWidth = Math.round(200)
-export const cardFrameHeight = Math.round(260)
-export const cardFrameWidthSm = Math.round(cardFrameWidth * 0.8)
+export const cardFrameWidth = 170
+export const cardFrameHeight = 240
+export const cardFrameWidthLg = 180
+export const cardFrameHeightLg = 260
+export const cardFrameWidthSm = Math.round(cardFrameWidth * 0.9)
 export const cardFrameHeightSm = Math.round(cardFrameHeight * 0.8)
 
 export const MAPBOX_ACCESS_TOKEN =

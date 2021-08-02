@@ -1,10 +1,11 @@
 import React, { memo } from 'react'
-import { AbsoluteVStack, Divider, Spacer, Theme, VStack, useMedia } from 'snackui'
+import { AbsoluteVStack, Divider, Spacer, Theme, VStack, useMedia, useTheme } from 'snackui'
 
 import { AppIntroLogin } from '../AppIntroLogin'
 
 export const PageFooter = memo(() => {
   const media = useMedia()
+  const theme = useTheme()
 
   return (
     <VStack position="relative">
@@ -12,7 +13,7 @@ export const PageFooter = memo(() => {
         zIndex={-1}
         top={-15}
         left={-100}
-        backgroundColor="#000"
+        backgroundColor={theme.backgroundColorDarker}
         right={-100}
         bottom={-55}
         rotate="-2deg"
@@ -21,9 +22,7 @@ export const PageFooter = memo(() => {
       </AbsoluteVStack>
 
       <VStack paddingVertical={20} alignItems="center" paddingHorizontal="5%">
-        <Theme name="dark">
-          <AppIntroLogin />
-        </Theme>
+        <AppIntroLogin />
         <Spacer size="xxl" />
       </VStack>
 

@@ -17,7 +17,7 @@ const baseTheme = {
   backgroundColorTransparent: 'rgba(40,40,200,0)',
   cardBackgroundColor: '#333333',
   backgroundColorAlt: bgAlt,
-  mapBackground: '#D3D0F3',
+  mapBackground: '#EAF9F8',
   colorAlt: blue,
 }
 
@@ -148,8 +148,8 @@ for (const [index, name] of colorNames.entries()) {
     colorQuartenary: `#00000055`,
     backgroundColor: colors.extraLightColor,
     backgroundColorSecondary: colors.lightColor,
-    backgroundColorTertiary: `${colors.lightColor}dd`,
-    backgroundColorQuartenary: `${colors.lightColor}bb`,
+    backgroundColorTertiary: `${colors.lightColor}33`,
+    backgroundColorQuartenary: `${colors.lightColor}77`,
     backgroundColorTransluscent: `${colors.lightColor}22`,
     backgroundColorTransluscentHover: `${colors.lightColor}33`,
     borderColor: colors.lightColor,

@@ -1,6 +1,5 @@
 import { sleep } from '@dish/async'
 import { sentryException } from '@dish/common'
-import { omit } from 'lodash'
 import { Pool, PoolConfig, QueryResult } from 'pg'
 
 export class Database {
@@ -26,6 +25,9 @@ export class Database {
       max: 10,
       ...this.config,
     })
+    this.pool.on('connect', () => {
+      console.log('connected to', this.config)
+    })
     this.pool.on('error', (e) => {
       console.log(`Error: pool (${this.config.host}:${this.config.port})`, e.message, e.stack)
       sentryException(e, {
@@ -38,7 +40,7 @@ export class Database {
     return await this.pool.connect()
   }
 
-  async query(query: string) {
+  async query(query: string, values?: any) {
     if (process.env.DEBUG) {
       console.log('DB.query', this.config['host'], this.config['port'], query)
     }
@@ -50,7 +52,7 @@ export class Database {
     try {
       const timeout = sleep(process.env.NODE_ENV === 'test' ? 15000 : 80000)
       const res = await Promise.race([
-        client.query(query),
+        client.query(query, values),
         timeout.then(() => {
           console.error(`Timed out on query`, query)
           return 'timed_out'

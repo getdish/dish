@@ -1,4 +1,4 @@
-import { SEARCH_DOMAIN } from '@dish/graph'
+import { DISH_API_ENDPOINT, SEARCH_DOMAIN } from '@dish/graph'
 import { capitalize } from 'lodash'
 import { UseQueryOptions } from 'react-query'
 
@@ -16,9 +16,10 @@ export const fetchRegion = async (slug?: string | null) => {
     return null
   }
   try {
-    const url = `${SEARCH_DOMAIN}/regions?slug=${encodeURIComponent(slug)}`
+    const url = `${DISH_API_ENDPOINT}/region?slug=${encodeURIComponent(slug)}`
     const res: RegionApiResponse = await fetch(url).then((x) => x.json())
     const centerAt = res?.centroid?.coordinates
+    console.log('got region response', res, centerAt)
     if (!!centerAt) {
       let response: RegionNormalized = {
         ...res,

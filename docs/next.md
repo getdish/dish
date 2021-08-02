@@ -34,6 +34,8 @@ realtime map mvp
 
 # inbox
 
+- searching tags should default to a grouped higher order tag, try "oysters" and you see a ton of different cuisine based categories, but there should be a meta category, just "Oysters", and the rest probably shouldn't show (but search should probably include all of them!)
+
 - can likely merge all docker intranet apps into one .yml
 
 - seeing the front of the restaruant in a wide angle shot is so key to intuitively finding a place you've been to !!

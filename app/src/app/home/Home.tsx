@@ -39,25 +39,6 @@ export const Home = memo(function Home() {
 
   useEffect(() => {
     return reaction(
-      homeStore,
-      (x) => {
-        if (x.currentState.type === 'home' || x.currentState.type === 'search') {
-          // only if not already found
-          if (!x.currentState.curLocName) {
-            return x.currentState
-          }
-        }
-        return null
-      },
-      function updateAreaInfo(positionedState) {
-        if (!positionedState) return
-        homeStore.updateAreaInfo()
-      }
-    )
-  }, [])
-
-  useEffect(() => {
-    return reaction(
       router as any,
       (x) => {
         return x.curPage.name

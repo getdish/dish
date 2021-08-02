@@ -1,9 +1,9 @@
 import '@dish/helpers/polyfill'
 
 import { restaurantFindOne, restaurantUpdate } from '@dish/graph'
+import { db } from '@dish/helpers-node'
 
 import * as Google from './google/one'
-import { db } from './scrape-helpers'
 import * as Self from './self/one'
 import * as Tripadvisor from './tripadvisor/one'
 import * as Yelp from './yelp/one'

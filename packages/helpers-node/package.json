@@ -10,11 +10,14 @@
     "watch": "esdx-watch"
   },
   "dependencies": {
+    "@dish/async": "*",
+    "@dish/common": "*",
     "@dish/graph": "*",
     "bcryptjs": "^2.4.3",
     "html-entities": "^2.1.1",
     "jsonwebtoken": "^8.5.1",
-    "lodash": "*"
+    "lodash": "*",
+    "pg": "^8.7.1"
   },
   "devDependencies": {
     "@dish/esdx": "*"

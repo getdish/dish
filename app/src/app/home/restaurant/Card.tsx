@@ -1,6 +1,15 @@
 import React from 'react'
 import { StyleSheet } from 'react-native'
-import { AbsoluteVStack, HStack, LinearGradient, Paragraph, Spacer, Text, VStack } from 'snackui'
+import {
+  AbsoluteVStack,
+  HStack,
+  LinearGradient,
+  Paragraph,
+  Spacer,
+  Text,
+  VStack,
+  useTheme,
+} from 'snackui'
 
 import {
   cardFrameBorderRadius,
@@ -22,8 +31,8 @@ export type CardProps = {
   subTitle?: string | null
   hideInfo?: boolean
   aspectFixed?: boolean
-  hoverable?: boolean
-  size?: 'sm' | 'md' | 'xs'
+  hoverEffect?: 'scale' | 'background' | false
+  size?: 'lg' | 'md' | 'sm' | 'xs'
   backgroundColor?: string | null
   borderColor?: string | null
   isBehind?: boolean
@@ -31,24 +40,32 @@ export type CardProps = {
   padTitleSide?: boolean
   square?: boolean
   colorsKey?: string
+  variant?: 'flat'
+  chromeless?: boolean
+  borderless?: boolean
+  afterTitle?: any
+  className?: string
 }
 
 const widths = {
   xs: 250,
   sm: cardFrameWidthSm,
   md: cardFrameWidth,
+  lg: cardFrameWidth * 1.5,
 }
 
 const heights = {
   xs: 48,
   sm: cardFrameHeightSm,
   md: cardFrameHeight,
+  lg: cardFrameHeight,
 }
 
 const scales = {
   xs: 0.6,
   sm: 0.85,
   md: 0.95,
+  lg: 1,
 }
 
 const getLongestWord = (title: string) =>
@@ -64,12 +81,17 @@ export function Card({
   subTitle,
   padTitleSide,
   aspectFixed,
-  hoverable,
+  hoverEffect,
   hideInfo,
   square,
+  chromeless,
   backgroundColor,
   isBehind,
   dimImage,
+  borderless,
+  className,
+  afterTitle,
+  variant,
   size = 'md',
 }: CardProps) {
   const colors = backgroundColor
@@ -77,7 +99,6 @@ export function Card({
     : typeof title === 'string'
     ? getColorsForName(colorsKey || title || '')
     : getColorsForName('')
-  const underColor = `${colors.pastelColor}99`
   const isSm = size === 'sm'
   const width = widths[size]
   const height = square ? width : heights[size]
@@ -85,10 +106,10 @@ export function Card({
     width,
     height,
   }
-  const frame = {
-    ...sizes,
-    width: aspectFixed ? sizes.width : '100%',
-  }
+  // const frame = {
+  //   ...sizes,
+  //   width: aspectFixed ? sizes.width : '100%',
+  // }
   const strTitle = typeof title === 'string' ? title : 'hello world'
   const len = strTitle.length
   const lenScale = len > 50 ? 0.7 : len > 40 ? 0.8 : len > 30 ? 0.9 : 1
@@ -96,55 +117,67 @@ export function Card({
   const wordScale = longestWordLen > 14 ? 0.7 : longestWordLen > 9 ? 0.8 : 1
   const baseFontSize = 25 * lenScale * wordScale
   const fontSize = Math.round(baseFontSize * scales[size])
+  const isFlat = variant === 'flat'
+  const theme = useTheme()
 
   return (
     <CardFrame
+      className={className}
       borderColor={borderColor}
+      backgroundColor={backgroundColor}
       square={square}
       size={size}
       aspectFixed={aspectFixed}
-      hoverable={hoverable}
+      hoverEffect={hoverEffect}
+      flat={isFlat}
+      chromeless={chromeless}
+      borderless={borderless}
     >
-      {/* background */}
-      <AbsoluteVStack
-        fullscreen
-        className="chrome-fix-overflow"
-        scale={1}
-        overflow="hidden"
-        borderRadius={cardFrameBorderRadius}
-        backgroundColor={backgroundColor || underColor || ''}
-      >
-        {/* behind shadow */}
-        {/* on native this causes laggy scrolls */}
-        {isWeb && isBehind && (
-          <AbsoluteVStack
-            className="ease-in-out"
-            opacity={hideInfo ? 0 : 1}
-            zIndex={1002}
-            borderRadius={cardFrameBorderRadius}
-            fullscreen
-            x={-cardFrameWidth}
-            // this makes react native work...
-            backgroundColor="rgba(0,0,0,0.1)"
-            shadowColor="#000"
-            shadowOpacity={0.5}
-            shadowRadius={100}
-            shadowOffset={{ width: 10, height: 0 }}
-          />
-        )}
-
-        <VStack className="hover-75-opacity-child" opacity={dimImage ? 0.76 : 1} {...frame}>
+      {!!photo && (
+        <AbsoluteVStack
+          borderWidth={2}
+          borderColor={theme.backgroundColorTransluscent}
+          bottom="-3%"
+          right="-3%"
+          zIndex={10}
+        >
           {typeof photo === 'string' ? (
             photo ? (
-              <Image resizeMode="cover" {...sizes} style={frame} source={{ uri: photo }} />
+              <Image
+                resizeMode="cover"
+                {...sizes}
+                style={{
+                  borderRadius: 100,
+                  width: sizes.height * 0.17,
+                  height: sizes.height * 0.17,
+                }}
+                source={{ uri: photo }}
+              />
             ) : null
           ) : (
             photo
           )}
-        </VStack>
+        </AbsoluteVStack>
+      )}
 
-        {typeof below === 'function' ? below(colors) : below}
-      </AbsoluteVStack>
+      {/* behind shadow */}
+      {/* on native this causes laggy scrolls */}
+      {!chromeless && isWeb && isBehind && (
+        <AbsoluteVStack
+          className="ease-in-out"
+          opacity={hideInfo ? 0 : 1}
+          zIndex={1002}
+          borderRadius={isFlat ? 0 : cardFrameBorderRadius}
+          fullscreen
+          x={-cardFrameWidth}
+          // this makes react native work...
+          backgroundColor="rgba(0,0,0,0.1)"
+          shadowColor={theme.shadowColor}
+          shadowOpacity={0.5}
+          shadowRadius={100}
+          shadowOffset={{ width: 10, height: 0 }}
+        />
+      )}
 
       {typeof outside === 'function' ? outside(colors) : outside}
 
@@ -154,26 +187,11 @@ export function Card({
         justifyContent="flex-end"
         pointerEvents="none"
         zIndex={11}
-        borderRadius={cardFrameBorderRadius}
+        borderRadius={isFlat ? 0 : cardFrameBorderRadius}
         overflow="hidden"
         width="100%"
         height="100%"
       >
-        {/* title gradient */}
-        {/* <AbsoluteVStack
-          zIndex={-1}
-          width={cardFrameWidth}
-          height={cardFrameHeight}
-          rotate="25deg"
-          y={-60}
-          x={-20}
-          scaleX={1.5}
-        >
-          <LinearGradient
-            style={StyleSheet.absoluteFill}
-            colors={[colors.color, colors.pastelColor, `${colors.pastelColor}00`]}
-          />
-        </AbsoluteVStack> */}
         <VStack
           className="ease-in-out"
           opacity={hideInfo ? 0 : 1}
@@ -189,33 +207,34 @@ export function Card({
                   // not working below :(
                   className={size === 'xs' ? 'ellipse' : 'break-word'}
                   textAlign="right"
-                  textShadowColor="#00000033"
+                  textShadowColor={theme.shadowColor}
                   textShadowRadius={2}
                   textShadowOffset={{ height: 2, width: 0 }}
                   fontWeight={size === 'sm' ? '700' : '800'}
                   letterSpacing={size === 'sm' ? -1 : -0.5}
-                  color="#fff"
+                  color={theme.color}
                   fontSize={fontSize}
                   numberOfLines={3}
                   lineHeight={fontSize * 1.1}
                   // flexShrink={0}
                 >
-                  {title}
+                  {title} {!!afterTitle ? <Text fontWeight="300">{afterTitle}</Text> : null}
                 </Text>
               </VStack>
               <Spacer size="xs" />
               {!!subTitle && size !== 'xs' && (
                 <Paragraph
                   textAlign="right"
-                  color="#fff"
                   fontWeight="800"
-                  textShadowColor="#00000033"
+                  textShadowColor={theme.shadowColor}
                   textShadowRadius={2}
                   textShadowOffset={{ height: 2, width: 0 }}
                 >
                   {subTitle}
                 </Paragraph>
               )}
+
+              {typeof below === 'function' ? below(colors) : below}
             </VStack>
           </HStack>
         </VStack>
@@ -224,32 +243,21 @@ export function Card({
   )
 }
 
-const styles = StyleSheet.create({
-  cardFrameSm: {
-    position: 'absolute',
-    width: widths.sm,
-    height: heights.sm,
-  },
-  cardFrameMd: {
-    position: 'absolute',
-    width: widths.md,
-    height: heights.md,
-  },
-})
-
-export const CardOverlay = (props: { children: any }) => {
+export const CardOverlay = (props: { children: any; flat?: boolean }) => {
   return (
     <AbsoluteVStack
       fullscreen
-      borderRadius={cardFrameBorderRadius}
+      borderRadius={props.flat ? 0 : cardFrameBorderRadius}
       overflow="hidden"
       justifyContent="flex-end"
     >
-      {/* <LinearGradient
-        colors={['rgba(0,0,0,0)', 'rgba(0,0,0,0)', 'rgba(0,0,0,0)', 'rgba(0,0,0,0.27)']}
-        style={styles.cardFrameMd}
-      /> */}
-      <VStack padding={10} paddingTop={30} zIndex={10}>
+      {!props.flat && (
+        <LinearGradient
+          colors={['rgba(0,0,0,0)', 'rgba(0,0,0,0)', 'rgba(0,0,0,0.17)']}
+          style={StyleSheet.absoluteFill}
+        />
+      )}
+      <VStack flex={1} paddingHorizontal={14} paddingVertical={16} zIndex={10}>
         {props.children}
       </VStack>
     </AbsoluteVStack>

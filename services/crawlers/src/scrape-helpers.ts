@@ -1,7 +1,7 @@
 import { RestaurantWithId, ZeroUUID, ensureJSONSyntax, restaurantFindOne } from '@dish/graph'
+import { db } from '@dish/helpers-node'
 import { clone } from 'lodash'
 
-import { db } from './database'
 import { DoorDash } from './doordash/DoorDash'
 import { GoogleGeocoder } from './google/GoogleGeocoder'
 import { GrubHub } from './grubhub/GrubHub'
@@ -10,8 +10,6 @@ import { Michelin } from './michelin/Michelin'
 import { Tripadvisor } from './tripadvisor/Tripadvisor'
 import { UberEats } from './ubereats/UberEats'
 import { Yelp } from './yelp/Yelp'
-
-export * from './database'
 
 type LatLon = {
   lon: number

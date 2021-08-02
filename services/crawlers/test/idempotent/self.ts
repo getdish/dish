@@ -2,9 +2,6 @@ import {
   RestaurantWithId,
   Tag,
   flushTestData,
-  order_by,
-  query,
-  resolved,
   restaurantFindOne,
   restaurantFindOneWithTags,
   restaurantInsert,
@@ -15,12 +12,11 @@ import {
   tagInsert,
   tagUpsert,
 } from '@dish/graph'
-import { reviewFindAllForRestaurant } from '@dish/helpers-node'
+import { Database, reviewFindAllForRestaurant } from '@dish/helpers-node'
 import anyTest, { ExecutionContext, TestInterface } from 'ava'
 import sinon from 'sinon'
 
 import { restaurantSaveCanonical } from '../../src/canonical-restaurant'
-import { Database } from '../../src/database'
 import {
   doordash,
   google,

@@ -2080,6 +2080,7 @@ __metadata:
     "@dish/esdx": "*"
     "@dish/graph": "*"
     "@dish/helpers": "*"
+    "@dish/helpers-node": "*"
     "@dish/worker": "*"
     "@types/cheerio": ^0.22.24
     "@types/pg": ^7.14.10
@@ -2101,7 +2102,7 @@ __metadata:
     lodash: "*"
     moment: ^2.27.0
     node-fetch: 3.0.0-beta.9
-    pg: ^8.5.1
+    pg: ^8.7.1
     proxy-chain: ^0.4.4
     puppeteer-core: ^9.0.0
     puppeteer-extra: ^3.1.18
@@ -2191,12 +2192,15 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@dish/helpers-node@workspace:packages/helpers-node"
   dependencies:
+    "@dish/async": "*"
+    "@dish/common": "*"
     "@dish/esdx": "*"
     "@dish/graph": "*"
     bcryptjs: ^2.4.3
     html-entities: ^2.1.1
     jsonwebtoken: ^8.5.1
     lodash: "*"
+    pg: ^8.7.1
   languageName: unknown
   linkType: soft
 
@@ -19114,7 +19118,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"pg@npm:^8.5.1":
+"pg@npm:^8.7.1":
   version: 8.7.1
   resolution: "pg@npm:8.7.1"
   dependencies:
@@ -23631,7 +23635,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "timescale@workspace:services/timescale"
   dependencies:
-    pg: ^8.5.1
+    pg: ^8.7.1
     postgrator: ^4.1.1
   languageName: unknown
   linkType: soft

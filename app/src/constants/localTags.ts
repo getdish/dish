@@ -1,5 +1,5 @@
 import { hexToRGB } from '../helpers/rgb'
-import { blue, green, pink, red } from './colors'
+import { blue, bluePastel, green, greenPastel, pink, pinkPastel, red, redPastel } from './colors'
 
 export const tagDefaultAutocomplete = [
   {
@@ -8,7 +8,6 @@ export const tagDefaultAutocomplete = [
     type: 'dish',
     icon: '🍜',
     slug: 'vietnamese__pho',
-    rgb: [],
   },
   {
     id: '1212987b-580f-4733-beee-e4cf3a6155b8',
@@ -24,7 +23,6 @@ export const tagDefaultAutocomplete = [
     type: 'dish',
     icon: '🥩',
     slug: 'american__steak',
-    rgb: [],
   },
   {
     id: 'bead10d3-f8e2-4e99-934d-e85b92ae1a8c',
@@ -32,7 +30,6 @@ export const tagDefaultAutocomplete = [
     type: 'dish',
     icon: '🍣',
     slug: 'hawaiian__poke',
-    rgb: [],
   },
   {
     id: '1cb327c1-fbc6-4366-94e0-e795e015ef31',
@@ -40,7 +37,6 @@ export const tagDefaultAutocomplete = [
     type: '',
     icon: '🥟',
     slug: 'global__dim-sum',
-    rgb: [],
   },
   {
     id: 'd57bf047-54d5-4a4b-9f69-c511fe26e0f8',
@@ -48,7 +44,6 @@ export const tagDefaultAutocomplete = [
     type: 'dish',
     icon: '🥪',
     slug: 'vietnamese__banh-mi',
-    rgb: [],
   },
   {
     id: 'ed0cf73a-674d-429e-a15c-35bb046ccf6a',
@@ -186,7 +181,7 @@ export const tagLenses = [
     type: 'lense',
     icon: '💎',
     slug: 'lenses__gems',
-    rgb: hexToRGB(pink).rgb,
+    rgb: hexToRGB(pinkPastel).rgb,
   },
   {
     id: 'b1580bd8-4f60-45e3-a5a9-c31effe8e7a3',
@@ -194,7 +189,7 @@ export const tagLenses = [
     type: 'lense',
     icon: '🍷',
     slug: 'lenses__drinks',
-    rgb: hexToRGB(red).rgb,
+    rgb: hexToRGB(redPastel).rgb,
   },
   {
     id: '5da93fbe-5715-43b4-8b15-6521e3897bd9',
@@ -202,7 +197,7 @@ export const tagLenses = [
     type: 'lense',
     icon: '🌃',
     slug: 'lenses__vibe',
-    rgb: hexToRGB(blue).rgb,
+    rgb: hexToRGB(bluePastel).rgb,
   },
   {
     id: '4768116c-bca3-4936-970b-5f2570a9e8f8',
@@ -210,7 +205,7 @@ export const tagLenses = [
     type: 'lense',
     icon: '🥬',
     slug: 'lenses__veg',
-    rgb: hexToRGB(green).rgb,
+    rgb: hexToRGB(greenPastel).rgb,
   },
   // {
   //   id: '30d67fcc-759b-4cd6-8241-400028de9196',

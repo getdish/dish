@@ -12,7 +12,7 @@
 - fix rating display sub-factors
 - regression `TODO fix` on HomePageFeed
 - beta / invite features
-
+- when in a region mode, map should limit how much it automatically zooms to stay within bounds of showing that region
 
 # post-launch
 
