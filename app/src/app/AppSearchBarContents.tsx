@@ -4,7 +4,7 @@ import React, { Suspense, memo } from 'react'
 import { TouchableOpacity } from 'react-native'
 import { HStack, Spacer, VStack, useMedia } from 'snackui'
 
-import { isWeb, searchBarBorderRadius, searchBarHeight } from '../constants/constants'
+import { isWeb, searchBarHeight } from '../constants/constants'
 import { AppMenu } from './AppMenu'
 import { AppSearchInput } from './AppSearchInput'
 import { AppSearchInputLocation } from './AppSearchInputLocation'
@@ -30,7 +30,7 @@ export const AppSearchBarContents = memo(({ isColored }: { isColored: boolean })
       alignItems="center"
       justifyContent="center"
       userSelect="none"
-      paddingHorizontal={media.xs ? 5 : 0}
+      paddingHorizontal={media.xs ? 5 : 14}
       minHeight={searchBarHeight}
     >
       {!media.sm && <SearchBarActionButton />}
@@ -93,7 +93,7 @@ export const AppSearchBarContents = memo(({ isColored }: { isColored: boolean })
 
       {!media.xs && (
         <>
-          <Spacer size={10} />
+          <Spacer size={4} />
           <VStack
             className="ease-in-out"
             overflow="hidden"
@@ -154,7 +154,7 @@ const SearchBarActionButton = memo(() => {
 
   return (
     <Link
-      marginRight={-18}
+      marginRight={-5}
       onPress={() => {
         if (showAutocomplete) {
           autocompletes.setVisible(false)
@@ -167,12 +167,9 @@ const SearchBarActionButton = memo(() => {
         <VStack
           alignSelf="center"
           skewX="-12deg"
-          scale={0.97}
           pointerEvents={isDisabled ? 'none' : 'auto'}
           width={30}
-          height={searchBarHeight + 5}
-          borderTopLeftRadius={searchBarBorderRadius}
-          borderBottomLeftRadius={searchBarBorderRadius}
+          height={searchBarHeight}
           alignItems="center"
           justifyContent="center"
           opacity={0}

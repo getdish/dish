@@ -407,7 +407,7 @@ const RestaurantListItemContent = memo(
             y={isSafari ? -9 : 16}
             zIndex={100}
           >
-            <VStack width="120%" x={-20}>
+            <VStack width="110%" x={-20}>
               {/* ROW: OVERVIEW */}
               <RestaurantOverview
                 isDishBot

@@ -123,7 +123,7 @@ const AppMapContents = memo(function AppMapContents() {
   const { width, paddingLeft } = useDebounceValue(mapSize, 1000)
   const showUserLocation = useStoreInstanceSelector(appMapStore, (x) => !!x.userLocation)
   const store = useStoreInstance(appMapStore)
-  const show = useAppShouldShow('map')
+  const show = true //useAppShouldShow('map')
   const position = store.currentPosition
   const { center, span } = position
 

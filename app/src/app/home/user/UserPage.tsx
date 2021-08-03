@@ -1,4 +1,4 @@
-import { ReviewQuery, UserQuery, graphql, order_by, query } from '@dish/graph'
+import { ReviewQuery, graphql, order_by, query } from '@dish/graph'
 import { useRouterSelector } from '@dish/router'
 import React, { Suspense, memo } from 'react'
 import {
@@ -29,7 +29,6 @@ import { SlantedTitle } from '../../views/SlantedTitle'
 import { SmallButton } from '../../views/SmallButton'
 import { SmallTitle } from '../../views/SmallTitle'
 import { StackDrawer } from '../../views/StackDrawer'
-import { FeedSlantedTitle } from '../FeedSlantedTitle'
 import { StackItemProps } from '../HomeStackView'
 import { PageContentWithFooter } from '../PageContentWithFooter'
 import { RestaurantReview } from '../restaurant/RestaurantReview'
@@ -146,7 +145,9 @@ const UserPageContent = graphql(
                 </VStack>
               )}
 
-              <SlantedTitle alignSelf="center">Lists</SlantedTitle>
+              <SlantedTitle size="sm" alignSelf="center">
+                Lists
+              </SlantedTitle>
               <SkewedCardCarousel>
                 {lists.map((list, i) => {
                   return (
@@ -162,18 +163,17 @@ const UserPageContent = graphql(
                 })}
               </SkewedCardCarousel>
 
-              <SlantedTitle alignSelf="center">Recently</SlantedTitle>
+              <SlantedTitle size="sm" alignSelf="center">
+                Recently
+              </SlantedTitle>
               <Spacer size="xxxl" />
-              <Suspense fallback={<LoadingItems />}>
-                {!hasReviews && <Text>No reviews yet...</Text>}
-                {hasReviews && (
-                  <VStack>
-                    {reviews.map(({ id }) => (
-                      <RestaurantReview key={id} reviewId={id} />
-                    ))}
-                  </VStack>
-                )}
-              </Suspense>
+              <VStack paddingHorizontal={20}>
+                <Suspense fallback={<LoadingItems />}>
+                  {!hasReviews && <Text>No reviews yet...</Text>}
+                  {hasReviews &&
+                    reviews.map(({ id }) => <RestaurantReview key={id} reviewId={id} />)}
+                </Suspense>
+              </VStack>
             </VStack>
           </VStack>
         </PageContentWithFooter>
@@ -226,7 +226,8 @@ const UserHeader = memo(
 
                   <InteractiveContainer>
                     <SmallButton
-                      borderColor="transparent"
+                      borderRadius={0}
+                      borderWidth={0}
                       theme={!pane ? 'active' : null}
                       onPress={() => {
                         setPane()
@@ -235,7 +236,8 @@ const UserHeader = memo(
                       Profile
                     </SmallButton>
                     <SmallButton
-                      borderColor="transparent"
+                      borderRadius={0}
+                      borderWidth={0}
                       theme={pane === 'review' ? 'active' : null}
                       onPress={() => {
                         setPane('review')
@@ -244,7 +246,8 @@ const UserHeader = memo(
                       Reviews
                     </SmallButton>
                     <SmallButton
-                      borderColor="transparent"
+                      borderRadius={0}
+                      borderWidth={0}
                       theme={pane === 'vote' ? 'active' : null}
                       onPress={() => {
                         setPane('vote')
@@ -254,6 +257,8 @@ const UserHeader = memo(
                     </SmallButton>
                   </InteractiveContainer>
                 </HStack>
+
+                <Spacer />
 
                 <Divider />
               </VStack>

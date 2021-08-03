@@ -4,6 +4,7 @@ import { AbsoluteVStack, LinearGradient, Theme, VStack, useMedia, useThemeName }
 
 import { bgLightTranslucent } from '../constants/colors'
 import {
+  searchBarBorderRadius,
   searchBarHeight,
   searchBarMaxWidth,
   searchBarTopOffset,
@@ -11,8 +12,6 @@ import {
 } from '../constants/constants'
 import { AppSearchBarContents } from './AppSearchBarContents'
 import { useSearchBarTheme } from './hooks/useSearchBarTheme'
-
-const searchBarBorderRadius = 4
 
 // export const parentIds = {
 //   small: 'searchbar-small',
@@ -70,7 +69,7 @@ export const AppSearchBarFloating = () => {
         </AbsoluteVStack>
 
         {/* container */}
-        <AbsoluteVStack top={searchBarTopOffset} left={20} right={20} alignItems="center">
+        <AbsoluteVStack top={searchBarTopOffset} left={-20} right={-20} alignItems="center">
           {/* bg/shadows */}
           <VStack
             position="relative"
@@ -78,13 +77,11 @@ export const AppSearchBarFloating = () => {
             justifyContent="center"
             width="100%"
             height={height}
-            maxWidth={searchBarMaxWidth}
           >
             {/* SHADOW AND BACKGROUND */}
             <AbsoluteVStack
               borderRadius={searchBarBorderRadius}
               className="searchbar-shadow"
-              skewX="-8deg"
               overflow="hidden"
               zIndex={102}
               opacity={1}
@@ -94,18 +91,18 @@ export const AppSearchBarFloating = () => {
               alignItems="center"
               backgroundColor={background}
               shadowColor="#000"
-              shadowOpacity={0.25}
+              shadowOpacity={0.15}
               shadowOffset={{ height: 2, width: 0 }}
               shadowRadius={5}
             />
             <VStack
+              width="100%"
               position="relative"
               zIndex={104}
               flex={1}
               height={height}
               paddingRight={10}
               justifyContent="center"
-              width="100%"
               maxWidth={searchBarMaxWidth}
               alignItems="center"
             >

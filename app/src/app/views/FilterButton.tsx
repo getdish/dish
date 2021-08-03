@@ -50,6 +50,7 @@ export const FilterButton = ({
         icon={iconElement ? <VStack opacity={0.45}>{iconElement}</VStack> : null}
         {...rest}
         zIndex={100 - index + (isActive ? 1 : 0)}
+        borderWidth={0}
         theme={themeName}
         textProps={{
           fontWeight: '700',
