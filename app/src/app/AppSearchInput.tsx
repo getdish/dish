@@ -1,7 +1,7 @@
 import { fullyIdle, idle, series } from '@dish/async'
-import { isSafari, supportsTouchWeb } from '@dish/helpers'
+import { supportsTouchWeb } from '@dish/helpers'
 import { Loader, Search, X } from '@dish/react-feather'
-import { getStore, reaction, useStoreInstance, useStoreInstanceSelector } from '@dish/use-store'
+import { getStore, reaction } from '@dish/use-store'
 import React, { memo, useCallback, useEffect, useRef } from 'react'
 import { ScrollView, StyleSheet, TextInput, TouchableOpacity, View } from 'react-native'
 import { HStack, Spacer, VStack, getMedia, useDebounce, useMedia, useOnMount } from 'snackui'
@@ -11,7 +11,6 @@ import { isTouchDevice } from '../constants/platforms'
 import { isWebIOS } from '../helpers/isIOS'
 import { filterToNavigable } from '../helpers/tagHelpers'
 import { router, useIsRouteActive } from '../router'
-import { AppAutocompleteHoverableInput } from './AppAutocompleteHoverableInput'
 import { AppSearchInputTagsRow } from './AppSearchInputTagsRow'
 import {
   AutocompleteStore,

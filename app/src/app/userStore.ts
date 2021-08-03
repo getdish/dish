@@ -80,6 +80,7 @@ class UserStore extends Store {
   }
 
   async afterLogin(data) {
+    appMenuStore.setIsVisible(false)
     Auth.setLoginData(data)
     await this.refreshUser(data.user)
   }

@@ -81,7 +81,7 @@ export const UserOnboard = graphql(
             </VStack>
           )}
 
-          <HStack alignItems="center" justifyContent="center">
+          <HStack position="relative" alignItems="center" justifyContent="center">
             <UserAvatar avatar={user.avatar ?? ''} charIndex={charIndex} />
             <form
               id="userform"

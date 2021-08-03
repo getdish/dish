@@ -853,11 +853,11 @@ function setupMapEffect({
                 ['==', ['feature-state', 'hover'], true],
                 ['get', 'color'],
                 ['==', ['feature-state', 'active'], null],
-                'rgba(0,0,0,0.0)',
+                'rgba(0,0,0,0.2)',
                 'green',
               ],
               'line-opacity': 1,
-              'line-width': 2,
+              'line-width': 0.5,
             },
             'source-layer': name,
           })

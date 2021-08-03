@@ -8,7 +8,6 @@ import { isWeb, searchBarHeight } from '../constants/constants'
 import { isHermes } from '../constants/platforms'
 import { getWindowHeight } from '../helpers/getWindow'
 import { UserMenuButton } from './AppMenu'
-import { appMenuStore } from './AppMenuStore'
 import { appStore } from './AppStore'
 import { AuthForm } from './AuthForm'
 import { useUserStore } from './userStore'
@@ -85,7 +84,7 @@ export const AppMenuContents = memo(
             )}
 
             <MenuLinkButton
-              icon={<Sun color="rgba(150,150,150,0.5)" size={16} />}
+              iconAfter={<Sun color="rgba(150,150,150,0.5)" size={16} />}
               onPress={(e) => {
                 e.stopPropagation()
                 e.preventDefault()

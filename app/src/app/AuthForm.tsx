@@ -90,6 +90,7 @@ export const AuthForm = memo(
             textProps={{
               fontSize: 12,
               fontWeight: formPage == 'login' ? '800' : '500',
+              opacity: formPage === 'login' ? 1 : 0.5,
             }}
             active={formPage == 'login'}
             onPress={() => setFormPage('login')}
@@ -101,6 +102,7 @@ export const AuthForm = memo(
             textProps={{
               fontSize: 12,
               fontWeight: formPage == 'signup' ? '800' : '500',
+              opacity: formPage === 'signup' ? 1 : 0.5,
             }}
             active={formPage == 'signup'}
             onPress={() => setFormPage('signup')}

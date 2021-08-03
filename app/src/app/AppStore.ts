@@ -2,7 +2,7 @@ import { Store, createStore, useStoreInstance, useStoreInstanceSelector } from '
 
 class AppStore extends Store {
   show = {
-    map: true,
+    // map: true,
     // slants: true,
     // images: true,
     // svg: true,
