@@ -30,7 +30,7 @@ export const searchBarBorderRadius = 7
 export const searchBarTopOffset = 3
 export const searchBarHeight = 54
 export const searchBarHeightWithPadding = searchBarHeight + searchBarTopOffset + 12
-export const searchBarMaxWidth = 1140
+export const searchBarMaxWidth = 1240
 
 export const IMAGE_PROXY_DOMAIN = 'https://image-proxy.dishapp.com'
 

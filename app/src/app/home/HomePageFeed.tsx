@@ -35,19 +35,18 @@ type FI =
 
 export const HomePageFeed = memo(
   graphql(
-    function HomePageFeed(props: HomeFeedProps) {
+    (props: HomeFeedProps) => {
       const { regionName, item } = props
-
       const isLoading = !regionName
-      const [hovered, setHovered] = useState<null | MapHoveredRestaurant>(null)
 
-      useDebounceEffect(
-        () => {
-          appMapStore.setHovered(hovered)
-        },
-        80,
-        [hovered]
-      )
+      // const [hovered, setHovered] = useState<null | MapHoveredRestaurant>(null)
+      // useDebounceEffect(
+      //   () => {
+      //     appMapStore.setHovered(hovered)
+      //   },
+      //   80,
+      //   [hovered]
+      // )
 
       const restaurants = query
         .restaurant({
@@ -61,16 +60,17 @@ export const HomePageFeed = memo(
         })
         .map((r) => ({ image: r.image, name: r.name }))
 
-      const cuisinesQuery = query.tag({
-        where: {
-          type: {
-            _eq: 'country',
-          },
-        },
-        limit: 10,
-      })
-
+      // const cuisinesQuery = query.tag({
+      //   where: {
+      //     type: {
+      //       _eq: 'country',
+      //     },
+      //   },
+      //   limit: 10,
+      // })
+      // const cuisines = cuisinesQuery.map(selectTagDishViewSimple)
       // const topCuisines = useTopCuisines(props.item.center || initialLocation.center)
+
       const tagLists = query.list({
         where: {
           region: {
@@ -87,8 +87,6 @@ export const HomePageFeed = memo(
         order_by: [{ updated_at: order_by.asc }],
         limit: 12,
       })
-
-      const cuisines = cuisinesQuery.map(selectTagDishViewSimple)
 
       const trendingLists = query.list({
         where: {
@@ -117,18 +115,16 @@ export const HomePageFeed = memo(
         limit: 8,
       })
 
+      const allRestaurants = [...tagLists, ...lenseLists, ...trendingLists].flatMap((list) => {
+        return list.restaurants({ limit: 30 }).map((x) => getRestaurantIdentifiers(x.restaurant))
+      })
+
       useDebounceEffect(
         () => {
-          homePageStore.setResults(
-            [...tagLists, ...lenseLists, ...trendingLists].flatMap((list) => {
-              return list
-                .restaurants({ limit: 30 })
-                .map((x) => getRestaurantIdentifiers(x.restaurant))
-            })
-          )
+          homePageStore.setResults(allRestaurants)
         },
         100,
-        [tagLists, lenseLists, trendingLists]
+        [allRestaurants.map((x) => x.id).join('')]
       )
 
       return (
@@ -152,7 +148,6 @@ export const HomePageFeed = memo(
                             name="list"
                             params={{
                               slug: foundList?.slug ?? '',
-                              region: item.region,
                               userSlug: foundList?.user?.username ?? '',
                             }}
                           >
@@ -189,20 +184,36 @@ export const HomePageFeed = memo(
                     {/* shuffle([...tagDefaultAutocomplete, ...cuisines]) */}
                     {tagLists.map((list, i) => (
                       <VStack alignItems="center" flex={1} key={i}>
-                        <FeedCard
-                          variant="flat"
-                          chromeless
-                          square
-                          title={list.name}
-                          tags={list
-                            .tags({ limit: 2 })
-                            .map((x) => (x.tag ? selectTagDishViewSimple(x.tag) : null))
-                            .filter(isPresent)}
-                          photo={restaurants[i]?.image}
-                          emphasizeTag
-                        />
+                        <Link
+                          name="list"
+                          params={{
+                            slug: list?.slug ?? '',
+                            userSlug: list?.user?.username ?? '',
+                          }}
+                        >
+                          <FeedCard
+                            variant="flat"
+                            chromeless
+                            square
+                            title={list.name}
+                            tags={list
+                              .tags({ limit: 2 })
+                              .map((x) => (x.tag ? selectTagDishViewSimple(x.tag) : null))
+                              .filter(isPresent)}
+                            photo={restaurants[i]?.image}
+                            emphasizeTag
+                          />
+                        </Link>
                       </VStack>
                     ))}
+                    {!tagLists.length &&
+                      tagDefaultAutocomplete.map((tag, i) => (
+                        <VStack alignItems="center" flex={1} key={i}>
+                          <Link tag={tag}>
+                            <FeedCard variant="flat" chromeless square tags={[tag]} emphasizeTag />
+                          </Link>
+                        </VStack>
+                      ))}
                   </HStack>
                 </ContentScrollViewHorizontal>
               </HStack>
@@ -220,7 +231,6 @@ export const HomePageFeed = memo(
                         <Link
                           name="list"
                           params={{
-                            region: list?.region || '',
                             slug: list?.slug || '',
                             userSlug: list?.user?.username || '',
                           }}
@@ -253,7 +263,6 @@ export const HomePageFeed = memo(
                           params={{
                             userSlug: 'me',
                             slug: 'create',
-                            region: homeStore.lastRegionSlug,
                           }}
                         >
                           <FeedCard chromeless size="lg" variant="flat">

@@ -12,7 +12,7 @@ import {
   useTheme,
 } from 'snackui'
 
-import { isWeb, searchBarHeight, zIndexDrawer } from '../../constants/constants'
+import { drawerWidthMax, isWeb, searchBarHeight, zIndexDrawer } from '../../constants/constants'
 import { router } from '../../router'
 import { AppAutocompleteSearch } from '../AppAutocompleteSearch'
 import { appMenuStore } from '../AppMenuStore'
@@ -160,6 +160,11 @@ const HomeContainerLarge = (props) => {
         shadowRadius={25}
         shadowOffset={{ width: 10, height: 0 }}
         justifyContent="flex-end"
+        {...(media.notSm && {
+          marginLeft: 'auto',
+          width: '100%',
+          maxWidth: drawerWidthMax,
+        })}
       >
         <UnderFade />
         <AppAutocompleteSearch />

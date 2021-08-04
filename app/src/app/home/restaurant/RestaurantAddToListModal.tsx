@@ -139,7 +139,6 @@ export const RestaurantAddToListModal = graphql(
                   params={{
                     slug: list.slug ?? '',
                     userSlug: userStore.user?.username ?? '',
-                    region: list.region ?? '',
                   }}
                   onPressOut={onDismiss}
                 >
