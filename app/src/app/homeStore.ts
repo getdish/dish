@@ -226,7 +226,13 @@ class HomeStore extends Store {
     if (!val.id) {
       throw new Error(`Must have id`)
     }
-    const state = this.allStates[val.id] ?? null
+    let state = this.allStates[val.id] ?? null
+    // default to replace the current state if type doesn't change
+    if (!state) {
+      if (val.type && this.currentState.type === val.type) {
+        state = this.currentState
+      }
+    }
     if (state) {
       if (val.type && state.type !== val.type) {
         throw new Error(`Cant change the type`)

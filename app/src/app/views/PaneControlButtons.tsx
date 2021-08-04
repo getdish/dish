@@ -24,7 +24,8 @@ export const PaneControlButtonsLeft = (props: { children: any }) => {
       zIndex={10000000000}
       top={media.sm ? 6 : 12}
       left={media.sm ? 6 : 12}
-      spacing
+      spacing="sm"
+      alignItems="center"
     >
       {props.children}
     </AbsoluteHStack>

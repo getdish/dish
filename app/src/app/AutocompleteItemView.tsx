@@ -18,6 +18,7 @@ export const AutocompleteItemView = memo(
     onAdd,
     hideBackground,
     preventNavigate,
+    hideIcon,
     isActive,
     index,
   }: {
@@ -30,6 +31,7 @@ export const AutocompleteItemView = memo(
     hideBackground?: boolean
     onAdd?: () => any
     isActive?: boolean
+    hideIcon?: boolean
   }) => {
     const showLocation = target === 'location'
     const theme = useTheme()
@@ -88,10 +90,10 @@ export const AutocompleteItemView = memo(
         })}
         noTextWrap
       >
-        <HStack width="100%">
-          <VStack flex={1}>
+        <HStack alignItems="center" width="100%">
+          <VStack overflow="hidden" flex={1}>
             <HStack width="100%" marginVertical={-3} flex={1} alignItems="center">
-              <Text fontWeight="700" ellipse color="#fff" fontSize={20} lineHeight={28}>
+              <Text fontWeight="700" ellipse color={theme.color} fontSize={20} lineHeight={26}>
                 {!!result.namePrefix && (
                   <>
                     <Text fontWeight="300">{result.namePrefix}</Text>{' '}
@@ -99,8 +101,6 @@ export const AutocompleteItemView = memo(
                 )}
                 {result.name}
               </Text>
-              {!!icon && <VStack flex={1} />}
-              {icon}
             </HStack>
             {!!result.description && (
               <>
@@ -111,6 +111,12 @@ export const AutocompleteItemView = memo(
               </>
             )}
           </VStack>
+          {!hideIcon && (
+            <>
+              <VStack flex={1} />
+              {icon}
+            </>
+          )}
           {plusButtonEl}
         </HStack>
       </LinkButton>

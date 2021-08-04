@@ -78,6 +78,7 @@ export const ListAddRestuarant = graphql(
         return (
           <AutocompleteItemView
             preventNavigate
+            hideIcon
             key={result.id ?? index}
             hideBackground
             onSelect={() => {}}
@@ -97,7 +98,7 @@ export const ListAddRestuarant = graphql(
 
     return (
       <VStack width="100%" height="100%" flex={1}>
-        <SlantedTitle alignSelf="center" marginTop={-15}>
+        <SlantedTitle size="sm" alignSelf="center" marginTop={-15}>
           Add
         </SlantedTitle>
         <VStack width="100%" flexShrink={0}>

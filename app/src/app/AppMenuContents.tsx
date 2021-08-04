@@ -8,6 +8,7 @@ import { isWeb, searchBarHeight } from '../constants/constants'
 import { isHermes } from '../constants/platforms'
 import { getWindowHeight } from '../helpers/getWindow'
 import { UserMenuButton } from './AppMenu'
+import { appMenuStore } from './AppMenuStore'
 import { appStore } from './AppStore'
 import { AuthForm } from './AuthForm'
 import { useUserStore } from './userStore'
@@ -166,7 +167,7 @@ const MenuLinkButton = (props: LinkButtonProps) => {
       hoverStyle={{
         transform: [{ scale: 1.03 }],
       }}
-      // onPressOut={appMenuStore.hide}
+      onPressOut={appMenuStore.hide}
       {...props}
     />
   )
