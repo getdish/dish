@@ -381,7 +381,7 @@ const RestaurantListItemContent = memo(
             {!!open.text && (
               <>
                 <Link name="restaurantHours" params={{ slug: restaurantSlug }}>
-                  <SmallButton borderWidth={0}>{open.nextTime || '~~'}</SmallButton>
+                  <SmallButton backgroundColor="transparent">{open.nextTime || '~~'}</SmallButton>
                 </Link>
               </>
             )}
@@ -396,7 +396,7 @@ const RestaurantListItemContent = memo(
 
         {/* CENTER CONTENT AREA */}
         {/* zindex must be above title/bottom so hovers work on dishview voting/search */}
-        <HStack pointerEvents="none" y={-10} zIndex={10} paddingLeft={5} flex={1} maxHeight={92}>
+        <HStack pointerEvents="none" y={-10} zIndex={10} paddingLeft={15} flex={1} maxHeight={92}>
           <VStack
             {...contentSideProps}
             className="fix-safari-shrink-height"
@@ -404,7 +404,7 @@ const RestaurantListItemContent = memo(
             flex={1}
             // overflow="hidden"
             // chrome this fixes layout:
-            y={isSafari ? -9 : 16}
+            y={isSafari ? -5 : 16}
             zIndex={100}
           >
             <VStack width="110%" x={-20}>

@@ -130,6 +130,7 @@ export const RestaurantOverview = memo(
                 // minHeight={lineHeight * 2}
                 // fontWeight="500"
                 color={theme.colorSecondary}
+                pointerEvents="auto"
               >
                 {disableEllipse
                   ? summary
@@ -161,6 +162,7 @@ export const RestaurantOverview = memo(
       )
 
       if (isDishBot) {
+        return content
         // return (
         //   <VStack padding={20}>
         //     <Text>
@@ -170,11 +172,11 @@ export const RestaurantOverview = memo(
         //     {content}
         //   </VStack>
         // )
-        return (
-          <CommentBubble name="" avatar={<VStack />} avatarBackgroundColor="transparent">
-            {content}
-          </CommentBubble>
-        )
+        // return (
+        //   <CommentBubble name="" avatar={<VStack />} avatarBackgroundColor="transparent">
+        //     {content}
+        //   </CommentBubble>
+        // )
       }
 
       return content

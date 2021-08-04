@@ -86,9 +86,7 @@ export const SearchHeader = memo(() => {
             </VStack>
             <HStack marginLeft={-50} marginBottom={8} position="relative">
               <VStack position="relative" alignItems="center" justifyContent="center" x={-10}>
-                <SlantedTitle shadowColor="transparent" size="xs">
-                  Lists
-                </SlantedTitle>
+                <SlantedTitle size="xs">Lists</SlantedTitle>
                 <AbsoluteVStack right={-14} rotate="90deg">
                   <Arrow />
                 </AbsoluteVStack>
