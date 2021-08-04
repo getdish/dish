@@ -97,5 +97,7 @@ const sheet = StyleSheet.create({
     width: '100%',
     maxWidth: '100%',
     overflow: 'hidden',
+    position: 'relative',
+    zIndex: 0,
   },
 })
