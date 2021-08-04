@@ -43,7 +43,7 @@ export const SmallCircleButton = ({
       paddingVertical={0}
       {...(shadowed && {
         shadowColor: theme.shadowColor,
-        shadowRadius: 10,
+        shadowRadius: 5,
         shadowOffset: { width: 0, height: 2 },
       })}
       noTextWrap

@@ -214,7 +214,7 @@ const TagButtonInner = (props: TagButtonProps) => {
           {...(floating && {
             color: '#fff',
             textShadowColor: 'rgba(0,0,0,0.4)',
-            textShadowOffset: { height: 1, width: 0 },
+            textShadowOffset: { height: 3, width: 0 },
             textShadowRadius: 3,
           })}
           hoverStyle={{
@@ -283,7 +283,7 @@ const TagButtonInner = (props: TagButtonProps) => {
           justifyContent="center"
           alignSelf="center"
         >
-          <X size={13} color={theme.backgroundColor} />
+          <X size={13} color={theme.color} />
         </VStack>
       )}
     </HStack>

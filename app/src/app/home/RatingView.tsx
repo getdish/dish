@@ -3,7 +3,6 @@ import { AbsoluteVStack, HStack, Spacer, Text, VStack, useTheme } from 'snackui'
 
 import { green, orange, purple, red, yellow } from '../../constants/colors'
 import { numberFormat } from '../../helpers/numberFormat'
-import { Pie } from '../views/Pie'
 import { ProgressRing } from './ProgressRing'
 
 export const RatingView = ({

@@ -131,17 +131,16 @@ export const AppSearchInputLocation = memo(function AppSearchInputLocation() {
           />
         </HStack>
         <Button
+          alignSelf="center"
           backgroundColor="transparent"
           opacity={0.5}
+          marginRight={4}
           hoverStyle={{
             opacity: 1,
           }}
           icon={<Navigation size={20} color={color} />}
           borderRadius={1000}
           onPress={appMapStore.moveToUserLocation}
-          {...(media.notSm && {
-            transform: [{ translateY: 2 }],
-          })}
           noTextWrap
         />
       </InputFrame>

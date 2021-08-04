@@ -74,7 +74,7 @@ export const RestaurantPhotosRowContent = memo(
 
       const photosData = photos.map((url, index) => {
         const photoHeight = escalating ? (index < 2 ? height : 500) : height
-        const isEscalated = escalating && index >= 2
+        const isEscalated = escalating && index >= 3
         const wScale = isEscalated ? 1.25 : 1
         const photoWidth = width * wScale
         // dont change uri
@@ -126,7 +126,7 @@ export const RestaurantPhotosRowContent = memo(
                     key={index}
                     className={`scroll-snap-photo`}
                     alignItems="center"
-                    marginRight={-58}
+                    marginRight={-40}
                     justifyContent="center"
                     {...(floating && {
                       borderRadius: 12,
@@ -143,7 +143,7 @@ export const RestaurantPhotosRowContent = memo(
                       const { uri, width, height, isEscalated } = item
                       return (
                         <>
-                          {(!isEscalated || showEscalated || index === 2) && (
+                          {(!isEscalated || showEscalated) && (
                             <Link name="gallery" params={{ restaurantSlug }}>
                               <Image
                                 source={{

@@ -14,7 +14,7 @@ export const slantedBoxStyle: BoxProps = {
   shadowRadius: 6,
   shadowOffset: { height: 2, width: 0 },
   borderRadius: 7,
-  transform: [{ rotate: '-2deg' }],
+  transform: [{ rotate: '-1.25deg' }],
 }
 
 export const SlantedBox = (props: BoxProps) => {

@@ -7,18 +7,18 @@ import { FavoriteButton, FavoriteButtonProps } from '../../views/FavoriteButton'
 export type RestaurantFavoriteButtonProps = {
   size?: FavoriteButtonProps['size']
   restaurantId: string
+  floating?: boolean
 }
 
 export const RestaurantFavoriteStar = memo(
-  graphql(({ size, restaurantId }: RestaurantFavoriteButtonProps) => {
-    return null
+  graphql(({ size, restaurantId, floating }: RestaurantFavoriteButtonProps) => {
     const { favorited, total, toggle } = useUserFavoriteQuery({
       restaurant_id: { _eq: restaurantId },
       type: { _eq: 'favorite' },
     })
     return (
       <Suspense fallback={null}>
-        <FavoriteButton isFavorite={!!favorited} onToggle={toggle} size={size}>
+        <FavoriteButton floating={floating} isFavorite={!!favorited} onToggle={toggle} size={size}>
           {total > 0 ? total : null}
         </FavoriteButton>
       </Suspense>

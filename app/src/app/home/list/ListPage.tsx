@@ -304,13 +304,13 @@ const ListPageContent = graphql((props: Props) => {
 
   useEffect(() => {
     if (isEditing) {
-      return router.setRouteAlert({
+      router.setRouteAlert({
         condition: () => true,
         message: `Cancel editing list and lose edits?`,
       })
-    }
-    return () => {
-      router.setRouteAlert(null)
+      return () => {
+        router.setRouteAlert(null)
+      }
     }
   }, [isEditing])
 
@@ -346,24 +346,18 @@ const ListPageContent = graphql((props: Props) => {
     <>
       <StackDrawer closable title={`${username}'s ${list.name}`}>
         <PaneControlButtonsLeft>
-          <FavoriteButton isFavorite={isFavorited} onToggle={toggleFavorite}>
+          <FavoriteButton floating isFavorite={isFavorited} onToggle={toggleFavorite}>
             {reviewsCount}
           </FavoriteButton>
           {!isEditing && (
-            <Button
-              borderRadius={100}
-              elevation={1}
-              alignSelf="center"
-              onPress={() => setIsEditing(true)}
-            >
+            <SmallButton elevation={1} alignSelf="center" onPress={() => setIsEditing(true)}>
               Edit
-            </Button>
+            </SmallButton>
           )}
           {isEditing && (
             <>
-              <Button
+              <SmallButton
                 theme="active"
-                borderRadius={100}
                 elevation={1}
                 onPress={async () => {
                   await listUpdate(
@@ -384,7 +378,7 @@ const ListPageContent = graphql((props: Props) => {
                 }}
               >
                 Save
-              </Button>
+              </SmallButton>
               <Spacer size="sm" />
               <VStack
                 opacity={0.8}
@@ -412,10 +406,7 @@ const ListPageContent = graphql((props: Props) => {
               height={50}
               alignItems="center"
               justifyContent="center"
-              shadowColor="#000"
-              shadowRadius={20}
-              shadowOffset={{ height: 4, width: 0 }}
-              shadowOpacity={0.35}
+              elevation={2}
               noTextWrap
               onPress={() => {
                 setShowAddModal(true)

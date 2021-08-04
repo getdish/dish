@@ -1,5 +1,5 @@
 import React, { Suspense, memo, useContext } from 'react'
-import { AbsoluteVStack, HStack, Text, VStack, useMedia } from 'snackui'
+import { AbsoluteVStack, HStack, Text, VStack, useMedia, useTheme } from 'snackui'
 
 import { isWeb } from '../../../constants/constants'
 import { tagLenses } from '../../../constants/localTags'
@@ -32,6 +32,7 @@ export const SearchHeader = memo(() => {
 
   const lenseTag = getActiveTags(curProps.item).find((x) => x.type === 'lense') ?? tagLenses[0]
   const lenseColor = lenseTag.rgb
+  const theme = useTheme()
   return (
     <>
       <ContentScrollViewHorizontalFitted width={width} setWidth={setWidthDebounce}>
@@ -52,7 +53,8 @@ export const SearchHeader = memo(() => {
                 paddingRight={25}
                 paddingVertical={12}
                 marginBottom={-3}
-                backgroundColor={rgbString(lenseColor)}
+                backgroundColor="transparent"
+                shadowOpacity={0}
               >
                 <VStack
                   alignItems="center"
@@ -60,21 +62,22 @@ export const SearchHeader = memo(() => {
                   paddingLeft={media.sm ? 0 : 20}
                 >
                   <Text
+                    color={theme.color}
                     marginTop={-4}
+                    marginBottom={8}
                     height={28}
                     fontWeight="800"
-                    color="#fff"
-                    fontSize={22}
+                    fontSize={28}
                     lineHeight={28}
                   >
                     {title}
                   </Text>
                   {!!subTitle && (
                     <Text
-                      color="#fff"
+                      color={rgbString(lenseColor)}
                       opacity={0.8}
                       className="nobreak"
-                      fontSize={16}
+                      fontSize={22}
                       fontWeight="300"
                     >
                       {subTitle}

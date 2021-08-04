@@ -142,6 +142,8 @@ export const AppSearchInput = memo(() => {
       {/* Loading / Search Icon */}
       <SearchInputIcon color={color} />
 
+      <Spacer size="xs" />
+
       <VStack
         // @ts-ignore
         ref={searchInputContainer}

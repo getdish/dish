@@ -130,7 +130,6 @@ const RestaurantPage = memo(
     }, [scrollView, item.sectionSlug])
 
     const scrollY = useRef(0)
-    const themeName = useThemeName()
     const topTags = queryRestaurantTags({
       restaurantSlug,
       limit: 3,
@@ -190,10 +189,10 @@ const RestaurantPage = memo(
               {/* END head color AREA */}
             </VStack>
 
-            <VStack paddingTop={15}>
+            <VStack paddingTop={15} paddingBottom={5}>
               <RestaurantOverview
                 isDishBot
-                maxLines={6}
+                maxLines={4}
                 size="lg"
                 restaurantSlug={restaurantSlug}
               />
