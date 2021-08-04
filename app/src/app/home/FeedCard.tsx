@@ -1,5 +1,5 @@
 import React from 'react'
-import { AbsoluteVStack, Text, VStack, useTheme } from 'snackui'
+import { AbsoluteHStack, AbsoluteVStack, Text, VStack, useTheme } from 'snackui'
 
 import { DishTagItem } from '../../helpers/getRestaurantDishes'
 import { rgbString } from '../../helpers/rgb'
@@ -51,11 +51,15 @@ export const FeedCard = ({
           <CardOverlay flat={chromeless || variant === 'flat'}>
             {children}
 
-            {tags.map((tag) => (
-              <AbsoluteVStack top={0} right={0} key={tag.slug} scale={emphasizeTag ? 1 : 0.75}>
-                <TagButton {...tag} />
-              </AbsoluteVStack>
-            ))}
+            <AbsoluteHStack top={0} right={0} scale={emphasizeTag ? 1 : 0.75}>
+              {tags.map((tag) => (
+                <TagButton
+                  key={tag.slug}
+                  onlyIcon={tags.length > 1 && tag.type === 'lense'}
+                  {...tag}
+                />
+              ))}
+            </AbsoluteHStack>
 
             <VStack flex={1} />
 

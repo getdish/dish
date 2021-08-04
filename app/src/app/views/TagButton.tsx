@@ -67,6 +67,7 @@ export type TagButtonProps = StackProps &
     votable?: boolean
     closable?: boolean
     onClose?: Function
+    onlyIcon?: boolean
     color?: any
     hideIcon?: boolean
     subtleIcon?: boolean
@@ -115,6 +116,7 @@ const TagButtonInner = (props: TagButtonProps) => {
     onClose,
     replaceSearch,
     votable,
+    onlyIcon,
     fontSize: fontSizeProp,
     fontWeight,
     color,
@@ -153,12 +155,12 @@ const TagButtonInner = (props: TagButtonProps) => {
       spacing={fontSize * 0.5}
       borderRadius={8}
       alignItems="center"
-      paddingHorizontal={isSmall ? 2 : 12}
+      paddingHorizontal={isSmall ? 2 : 8}
       paddingVertical={isSmall ? 3 : 5}
       height={isSmall ? 32 : 38}
       {...rest}
     >
-      {showRank && rank && rank < 100 && (
+      {!onlyIcon && showRank && rank && rank < 100 && (
         <>
           <Text fontSize={11} fontWeight="300" opacity={0.5}>
             #
@@ -198,28 +200,30 @@ const TagButtonInner = (props: TagButtonProps) => {
         )
       ) : null}
 
-      <Text
-        ellipse
-        fontSize={fontSize}
-        fontWeight={fontWeight || '700'}
-        lineHeight={isSmall ? 22 : 26}
-        color={color || theme.color}
-        // borderBottomColor={theme.backgroundColor}
-        // borderBottomWidth={floating ? 0 : 1}
-        opacity={0.8}
-        marginTop={-1}
-        {...(floating && {
-          color: '#fff',
-          textShadowColor: 'rgba(0,0,0,0.4)',
-          textShadowOffset: { height: 1, width: 0 },
-          textShadowRadius: 3,
-        })}
-        hoverStyle={{
-          opacity: 1,
-        }}
-      >
-        {name}
-      </Text>
+      {!onlyIcon && (
+        <Text
+          ellipse
+          fontSize={fontSize}
+          fontWeight={fontWeight || '700'}
+          lineHeight={isSmall ? 22 : 26}
+          color={color || theme.color}
+          // borderBottomColor={theme.backgroundColor}
+          // borderBottomWidth={floating ? 0 : 1}
+          opacity={0.8}
+          marginTop={-1}
+          {...(floating && {
+            color: '#fff',
+            textShadowColor: 'rgba(0,0,0,0.4)',
+            textShadowOffset: { height: 1, width: 0 },
+            textShadowRadius: 3,
+          })}
+          hoverStyle={{
+            opacity: 1,
+          }}
+        >
+          {tagDisplayName(name)}
+        </Text>
+      )}
 
       {!hideRating && typeof rating !== 'undefined' && (
         <>

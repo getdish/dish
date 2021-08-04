@@ -2,24 +2,28 @@ import { RestaurantOnlyIds, graphql, order_by, query } from '@dish/graph'
 import { isPresent } from '@dish/helpers'
 import { Plus } from '@dish/react-feather'
 import { shuffle } from 'lodash'
-import React, { memo, useState } from 'react'
-import { AbsoluteVStack, Grid, HStack, LoadingItems, VStack } from 'snackui'
+import React, { memo, useEffect, useState } from 'react'
+import { AbsoluteVStack, Grid, HStack, LoadingItems, VStack, useDebounceEffect } from 'snackui'
 
 import { cardFrameWidth } from '../../constants/constants'
 import { tagDefaultAutocomplete, tagLenses } from '../../constants/localTags'
 import { getColorsForName } from '../../helpers/getColorsForName'
+import { getRestaurantIdentifiers } from '../../helpers/getRestaurantIdentifiers'
 import { rgbString } from '../../helpers/rgb'
 import { selectTagDishViewSimple } from '../../helpers/selectDishViewSimple'
+import { MapHoveredRestaurant, appMapStore } from '../AppMapStore'
 import { homeStore } from '../homeStore'
 import { ContentScrollViewHorizontal } from '../views/ContentScrollViewHorizontal'
 import { Link } from '../views/Link'
 import { SlantedTitle } from '../views/SlantedTitle'
 import { FeedCard } from './FeedCard'
 import { FIBase } from './FIBase'
+import { getListPhoto } from './getListPhoto'
 import { FICuisine } from './HomeFeedCuisineItem'
 import { FIList } from './HomeFeedLists'
 import { HomeFeedProps } from './HomeFeedProps'
 import { FIHotNew } from './HomeFeedTrendingNew'
+import { homePageStore } from './homePageStore'
 
 type FI =
   | FICuisine
@@ -35,29 +39,15 @@ export const HomePageFeed = memo(
       const { regionName, item } = props
 
       const isLoading = !regionName
-      const [hovered, setHovered] = useState<null | string>(null)
-      const [hoveredResults, setHoveredResults] = useState<null | {
-        via: FI['type']
-        results: RestaurantOnlyIds[]
-      }>(null)
+      const [hovered, setHovered] = useState<null | MapHoveredRestaurant>(null)
 
-      // useDebounceEffect(
-      //   () => {
-      //     const results = items.flatMap((x) => {
-      //       if (hovered && hovered !== x.id) {
-      //         return []
-      //       }
-      //       if (hoveredResults?.via === x.type) {
-      //         return hoveredResults?.results
-      //       }
-      //       return []
-      //     })
-      //     // set results
-      //     homePageStore.setResults(results)
-      //   },
-      //   150,
-      //   [items, hoveredResults]
-      // )
+      useDebounceEffect(
+        () => {
+          appMapStore.setHovered(hovered)
+        },
+        80,
+        [hovered]
+      )
 
       const restaurants = query
         .restaurant({
@@ -81,7 +71,7 @@ export const HomePageFeed = memo(
       })
 
       // const topCuisines = useTopCuisines(props.item.center || initialLocation.center)
-      const cuisineLists = query.list({
+      const tagLists = query.list({
         where: {
           region: {
             _eq: item.region,
@@ -97,12 +87,6 @@ export const HomePageFeed = memo(
         order_by: [{ updated_at: order_by.asc }],
         limit: 12,
       })
-
-      console.log(
-        'what is',
-        cuisineLists.map((x) => x.name)
-        // topCuisines
-      )
 
       const cuisines = cuisinesQuery.map(selectTagDishViewSimple)
 
@@ -132,6 +116,20 @@ export const HomePageFeed = memo(
         order_by: [{ updated_at: order_by.asc }],
         limit: 8,
       })
+
+      useDebounceEffect(
+        () => {
+          homePageStore.setResults(
+            [...tagLists, ...lenseLists, ...trendingLists].flatMap((list) => {
+              return list
+                .restaurants({ limit: 30 })
+                .map((x) => getRestaurantIdentifiers(x.restaurant))
+            })
+          )
+        },
+        100,
+        [tagLists, lenseLists, trendingLists]
+      )
 
       return (
         <>
@@ -164,19 +162,7 @@ export const HomePageFeed = memo(
                               square
                               title={foundList?.name}
                               tags={[lense]}
-                              photo={
-                                foundList?.restaurants({
-                                  where: {
-                                    restaurant: {
-                                      image: {
-                                        _is_null: false,
-                                      },
-                                    },
-                                  },
-                                  order_by: [{ position: order_by.asc }],
-                                  limit: 1,
-                                })[0]?.restaurant?.image
-                              }
+                              photo={getListPhoto(foundList)}
                               backgroundColor={rgbString(lense.rgb, 0.2)}
                               emphasizeTag
                             />
@@ -200,20 +186,18 @@ export const HomePageFeed = memo(
                     marginBottom={20}
                     paddingHorizontal={16}
                   >
-                    {shuffle([...tagDefaultAutocomplete, ...cuisines]).map((lense, i) => (
+                    {/* shuffle([...tagDefaultAutocomplete, ...cuisines]) */}
+                    {tagLists.map((list, i) => (
                       <VStack alignItems="center" flex={1} key={i}>
                         <FeedCard
                           variant="flat"
                           chromeless
                           square
-                          title={
-                            i % 2 === 0 ? (
-                              <>San&nbsp;Francisco gems.</>
-                            ) : (
-                              <>Best places in SF for drinks.</>
-                            )
-                          }
-                          tags={[{ rgb: [200, 100, 200], ...lense }]}
+                          title={list.name}
+                          tags={list
+                            .tags({ limit: 2 })
+                            .map((x) => (x.tag ? selectTagDishViewSimple(x.tag) : null))
+                            .filter(isPresent)}
                           photo={restaurants[i]?.image}
                           emphasizeTag
                         />
@@ -260,6 +244,7 @@ export const HomePageFeed = memo(
                       </VStack>
                     )
                   })}
+
                   {trendingLists.length < 8 &&
                     [...new Array(8 - trendingLists.length)].map((_, index) => (
                       <VStack alignItems="center" flex={1} key={index + 100} marginBottom={20}>
