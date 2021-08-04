@@ -126,24 +126,26 @@ export const AuthForm = memo(
 )
 
 const PasswordReset = ({ autoFocus }: AuthFormProps) => {
-  const { onChange, onSubmit, isSubmitting, control, errors, watch, isSuccess } = useFormAction({
-    name: 'passwordReset',
-    initialValues: {
-      password: '',
-      confirmation: '',
-    },
-    submit: (obj) =>
-      userStore.fetch('POST', '/api/user/passwordReset', {
-        ...obj,
-        token: router.curPage.params.token,
-      }),
-  })
+  const { onChange, onSubmit, isSubmitting, control, errors, watch, isSuccess, errorMessage } =
+    useFormAction({
+      name: 'passwordReset',
+      initialValues: {
+        password: '',
+        confirmation: '',
+      },
+      submit: (obj) =>
+        userStore.fetch('POST', '/api/user/passwordReset', {
+          ...obj,
+          token: router.curPage.params.token,
+        }),
+    })
   return (
     <SubmittableForm
       isSubmitting={isSubmitting}
       onSubmit={onSubmit}
       isSuccess={isSuccess}
       successText="Your password has been reset, you can now login"
+      errorText={errorMessage}
     >
       <VStack alignItems="center">
         <Title>Reset Password</Title>
@@ -180,13 +182,14 @@ const PasswordReset = ({ autoFocus }: AuthFormProps) => {
 }
 
 const ForgotPassword = ({ autoFocus, setFormPage }: AuthFormProps) => {
-  const { onChange, onSubmit, control, errors, isSuccess, isSubmitting } = useFormAction({
-    name: 'forgotPassword',
-    initialValues: {
-      login: '',
-    },
-    submit: (obj) => userStore.fetch('POST', '/api/user/forgotPassword', obj),
-  })
+  const { onChange, onSubmit, control, errors, isSuccess, isSubmitting, errorMessage } =
+    useFormAction({
+      name: 'forgotPassword',
+      initialValues: {
+        login: '',
+      },
+      submit: (obj) => userStore.fetch('POST', '/api/user/forgotPassword', obj),
+    })
   return (
     <SubmittableForm
       isSubmitting={isSubmitting}
@@ -194,6 +197,7 @@ const ForgotPassword = ({ autoFocus, setFormPage }: AuthFormProps) => {
       successText="If we have your details in our database you will receive an email shortly"
       submitText="Go"
       isSuccess={isSuccess}
+      errorText={errorMessage}
       after={
         <HStack alignSelf="flex-end">
           <Text fontSize={14}>
@@ -223,20 +227,22 @@ const ForgotPassword = ({ autoFocus, setFormPage }: AuthFormProps) => {
 }
 
 const LoginForm = ({ autoFocus, setFormPage }: AuthFormProps) => {
-  const { onChange, onSubmit, control, errors, isSuccess, isSubmitting } = useFormAction({
-    name: 'login',
-    initialValues: {
-      login: '',
-      password: '',
-    },
-    submit: userStore.login,
-  })
+  const { onChange, onSubmit, control, errors, isSuccess, isSubmitting, errorMessage } =
+    useFormAction({
+      name: 'login',
+      initialValues: {
+        login: '',
+        password: '',
+      },
+      submit: userStore.login,
+    })
   return (
     <SubmittableForm
       isSubmitting={isSubmitting}
       onSubmit={onSubmit}
       isSuccess={isSuccess}
       submitText="Go"
+      errorText={errorMessage}
       after={
         <Link alignSelf="flex-end" fontSize={14} onClick={(e) => setFormPage('forgotPassword')}>
           Forgot password?
@@ -273,7 +279,7 @@ const LoginForm = ({ autoFocus, setFormPage }: AuthFormProps) => {
 }
 
 const SignupForm = ({ autoFocus }: AuthFormProps) => {
-  const { onChange, onSubmit, control, errors, isSubmitting } = useFormAction({
+  const { onChange, onSubmit, control, errors, isSubmitting, errorMessage } = useFormAction({
     name: 'register',
     initialValues: {
       username: '',
@@ -282,8 +288,14 @@ const SignupForm = ({ autoFocus }: AuthFormProps) => {
     },
     submit: userStore.register,
   })
+
   return (
-    <SubmittableForm isSubmitting={isSubmitting} onSubmit={onSubmit} submitText="Signup">
+    <SubmittableForm
+      errorText={errorMessage}
+      isSubmitting={isSubmitting}
+      onSubmit={onSubmit}
+      submitText="Signup"
+    >
       <ValidatedInput
         control={control}
         errors={errors.email}
@@ -525,14 +537,18 @@ function useFormAction<Values extends { [key: string]: any }>({
     }
   }
 
+  let errorMessage = ''
+
   if (response.isSuccess) {
     console.log('🤠 NICE JOB', send, name, data, response)
   } else {
-    // console.log('response', response)
+    console.log('err response', response)
+    errorMessage = `${response.error || ''}`
   }
 
   return {
     errors,
+    errorMessage,
     isSubmitting,
     control,
     response,
