@@ -170,7 +170,7 @@ export const HomePageFeed = memo(
               </HStack>
 
               <HStack position="relative">
-                <AbsoluteVStack top={-10} left={10}>
+                <AbsoluteVStack zIndex={10} top={-10} left={10}>
                   <SlantedTitle size="xs">Tags</SlantedTitle>
                 </AbsoluteVStack>
 

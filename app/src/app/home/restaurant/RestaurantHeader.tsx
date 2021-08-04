@@ -65,7 +65,7 @@ const RestaurantHeaderContent = memo(
       const nameLen = restaurant.name?.length ?? 10
       const { width, drawerWidth, minWidth, setWidthDebounce } = useContentScrollHorizontalFitter()
       const scale = width < 601 ? 0.7 : drawerWidth < 700 ? 0.85 : 1
-      const fontScale = size === 'sm' ? 0.8 : 1.1
+      const fontScale = size === 'sm' ? 0.9 : 1.1
       const fontSizeBase =
         nameLen > 40 ? 18 : nameLen > 30 ? 22 : nameLen > 24 ? 26 : nameLen > 16 ? 28 : 32
       const fontSize = scale * fontSizeBase * fontScale

@@ -190,7 +190,14 @@ const RestaurantPage = memo(
               {/* END head color AREA */}
             </VStack>
 
-            <RestaurantOverview isDishBot maxLines={6} size="lg" restaurantSlug={restaurantSlug} />
+            <VStack paddingTop={15}>
+              <RestaurantOverview
+                isDishBot
+                maxLines={6}
+                size="lg"
+                restaurantSlug={restaurantSlug}
+              />
+            </VStack>
 
             <Spacer size="xl" />
 

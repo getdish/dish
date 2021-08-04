@@ -1,5 +1,5 @@
 import React from 'react'
-import { AbsoluteVStack, HStack, StackProps, VStack } from 'snackui'
+import { AbsoluteVStack, HStack, StackProps, VStack, useTheme } from 'snackui'
 
 import { cardFrameBorderRadius, cardFrameWidth, isWeb } from '../../constants/constants'
 import { ContentScrollViewHorizontal } from '../views/ContentScrollViewHorizontal'
@@ -13,14 +13,16 @@ export const SimpleCard = ({
   isBehind,
   ...props
 }: StackProps & { size?: CarouselSize; slanted?: boolean; isBehind?: boolean }) => {
+  const theme = useTheme()
   return (
     <VStack
-      marginRight={size === 'sm' ? -3 : -10}
+      backgroundColor={theme.backgroundColor}
+      marginRight={size === 'sm' ? -3 : -8}
       className="disable-hover-touch ease-in-out-faster"
       borderRadius={cardFrameBorderRadius}
       shadowColor="#000"
       shadowOpacity={0.14}
-      shadowRadius={10}
+      shadowRadius={5}
       shadowOffset={{ height: 4, width: 4 }}
       position="relative"
       opacity={1}

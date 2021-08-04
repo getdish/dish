@@ -137,11 +137,15 @@ export default function ListPage(props: Props) {
 const setIsEditing = (val: boolean) => {
   router.navigate({
     name: 'list',
+    replace: true,
     params: {
       ...router.curPage.params,
       state: val ? 'edit' : undefined,
     },
   })
+  if (val === false) {
+    router.setRouteAlert(null)
+  }
 }
 
 function useListRestaurants(list?: list) {
@@ -305,6 +309,9 @@ const ListPageContent = graphql((props: Props) => {
         message: `Cancel editing list and lose edits?`,
       })
     }
+    return () => {
+      router.setRouteAlert(null)
+    }
   }, [isEditing])
 
   useSetAppMap({
@@ -342,6 +349,57 @@ const ListPageContent = graphql((props: Props) => {
           <FavoriteButton isFavorite={isFavorited} onToggle={toggleFavorite}>
             {reviewsCount}
           </FavoriteButton>
+          {!isEditing && (
+            <Button
+              borderRadius={100}
+              elevation={1}
+              alignSelf="center"
+              onPress={() => setIsEditing(true)}
+            >
+              Edit
+            </Button>
+          )}
+          {isEditing && (
+            <>
+              <Button
+                theme="active"
+                borderRadius={100}
+                elevation={1}
+                onPress={async () => {
+                  await listUpdate(
+                    {
+                      id: list.id,
+                      ...draft.current,
+                      ...(color !== '#999' && {
+                        color: listColors.indexOf(color),
+                      }),
+                      public: isPublic,
+                    },
+                    {
+                      query: list,
+                    }
+                  )
+                  await refetch(list)
+                  setIsEditing(false)
+                }}
+              >
+                Save
+              </Button>
+              <Spacer size="sm" />
+              <VStack
+                opacity={0.8}
+                hoverStyle={{
+                  opacity: 1,
+                }}
+                onPress={() => {
+                  setIsEditing(false)
+                }}
+              >
+                <X color={isWeb ? 'var(--color)' : '#777'} size={20} />
+              </VStack>
+              <Spacer size="lg" />
+            </>
+          )}
         </PaneControlButtonsLeft>
 
         {props.isActive && isMyList && (
@@ -417,52 +475,6 @@ const ListPageContent = graphql((props: Props) => {
 
                 <HStack alignItems="center" justifyContent="center">
                   <>
-                    {!isEditing && (
-                      <Button alignSelf="center" onPress={() => setIsEditing(true)}>
-                        Edit
-                      </Button>
-                    )}
-                    {isEditing && (
-                      <>
-                        <Button
-                          theme="active"
-                          onPress={async () => {
-                            await listUpdate(
-                              {
-                                id: list.id,
-                                ...draft.current,
-                                ...(color !== '#999' && {
-                                  color: listColors.indexOf(color),
-                                }),
-                                public: isPublic,
-                              },
-                              {
-                                query: list,
-                              }
-                            )
-                            await refetch(list)
-                            router.setRouteAlert(null)
-                            setIsEditing(false)
-                          }}
-                        >
-                          Save
-                        </Button>
-                        <Spacer size="sm" />
-                        <VStack
-                          opacity={0.8}
-                          hoverStyle={{
-                            opacity: 1,
-                          }}
-                          onPress={() => {
-                            setIsEditing(false)
-                          }}
-                        >
-                          <X color={isWeb ? 'var(--color)' : '#777'} size={20} />
-                        </VStack>
-                        <Spacer size="lg" />
-                      </>
-                    )}
-
                     {isEditing && (
                       <>
                         <Paragraph>Color&nbsp;&nbsp;</Paragraph>
