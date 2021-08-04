@@ -20,17 +20,16 @@ export const SimpleCard = ({
       marginRight={size === 'sm' ? -3 : -8}
       className="disable-hover-touch ease-in-out-faster"
       borderRadius={cardFrameBorderRadius}
-      shadowColor="#000"
-      shadowOpacity={0.14}
+      shadowColor={theme.shadowColor}
       shadowRadius={5}
-      shadowOffset={{ height: 4, width: 4 }}
+      shadowOffset={{ height: 3, width: 3 }}
       position="relative"
       opacity={1}
       scale={0.85}
       {...(slanted && {
         scale: 0.85,
         perspective: 800,
-        rotateY: '-15deg',
+        rotateY: '-18deg',
       })}
       translateX={0}
       hoverStyle={{
@@ -39,7 +38,7 @@ export const SimpleCard = ({
           // TODO bug in snackui
           scale: 0.87,
           perspective: 800,
-          rotateY: '-15deg',
+          rotateY: '-18deg',
         }),
       }}
       pressStyle={{
@@ -61,7 +60,7 @@ export const SimpleCard = ({
           backgroundColor="rgba(0,0,0,0.1)"
           shadowColor="#000"
           shadowOpacity={0.8}
-          shadowRadius={100}
+          shadowRadius={30}
           shadowOffset={{ width: 10, height: 0 }}
         />
       )}

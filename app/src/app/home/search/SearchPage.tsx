@@ -133,7 +133,7 @@ const SearchPageContent = memo(function SearchPageContent(
     span = homeStore.lastHomeOrSearchState.span!,
   } = searchState
   const { searchArgs, results, searchRegion, status } = searchStore
-  const isLoading = status === 'loading'
+  // const isLoading = status === 'loading'
 
   usePageLoadEffect(props, ({ isRefreshing }) => {
     if (isRefreshing && props.isActive) {

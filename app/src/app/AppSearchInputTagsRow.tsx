@@ -28,15 +28,14 @@ export const AppSearchInputTagsRow = memo(({ input }: { input: HTMLInputElement 
                 size="lg"
                 subtleIcon
                 shadowColor="#00000022"
-                color="#fff"
+                color="#000"
                 fontWeight="600"
-                backgroundColor="rgba(0,0,0,0.25)"
-                floating
+                backgroundColor="rgba(255,255,255,1)"
                 shadowRadius={8}
                 hideRating
                 hideRank
                 hoverStyle={{
-                  backgroundColor: 'rgba(150,150,150,0.7)',
+                  backgroundColor: 'rgba(255,255,255,1)',
                 }}
                 {...(isActive && {
                   backgroundColor: 'rgba(150,150,150,0.1)',

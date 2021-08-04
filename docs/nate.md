@@ -1,7 +1,6 @@
+- searchpage error on upvote
 - upgrade list page
 - fix mobile web bugs
-- fix lists create/edit
-- fix loading homepage fast
 - fix move between regions
 - fix re-load homepage cache issue
 - fix router/stack bug on back/close

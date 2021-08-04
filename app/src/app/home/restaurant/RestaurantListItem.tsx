@@ -173,7 +173,7 @@ const RestaurantListItemContent = memo(
     const contentSideProps: StackProps = {
       width: media.sm ? '70%' : '60%',
       minWidth: media.sm ? (isWeb ? '40vw' : Dimensions.get('window').width * 0.65) : 320,
-      maxWidth: Math.min(Dimensions.get('window').width * 0.74, media.sm ? 360 : 580),
+      maxWidth: Math.min(Dimensions.get('window').width * 0.7, media.sm ? 360 : 540),
     }
 
     const handleChangeDishes = useCallback(onChangeDishes as any, [])
@@ -455,32 +455,35 @@ const RestaurantListItemContent = memo(
             <SmallButton
               tooltip={`Rating Breakdown (${totalReviews} reviews)`}
               icon={
-                <MessageSquare size={16} color={isWeb ? 'var(--color)' : 'rgba(150,150,150,0.3)'} />
+                <MessageSquare
+                  size={16}
+                  color={isWeb ? 'var(--colorTertiary)' : 'rgba(150,150,150,0.3)'}
+                />
               }
             >
               {numberFormat(restaurant.reviews_aggregate().aggregate?.count() ?? 0, 'sm')}
             </SmallButton>
           </Link>
 
-          <Spacer size="lg" />
+          <Spacer size="sm" />
 
           <Suspense fallback={<Spacer size={44} />}>
             <RestaurantFavoriteStar size="md" restaurantId={restaurantId} />
           </Suspense>
 
-          <Spacer />
+          <Spacer size="sm" />
 
           <Suspense fallback={<Spacer size={44} />}>
             <RestaurantAddToListButton restaurantSlug={restaurantSlug} noLabel />
           </Suspense>
 
-          <Spacer />
+          <Spacer size="sm" />
 
           <Suspense fallback={null}>
-            <RestaurantDeliveryButtons label="🚗" restaurantSlug={restaurantSlug} />
+            <RestaurantDeliveryButtons label="" restaurantSlug={restaurantSlug} />
           </Suspense>
 
-          <Spacer size="xxl" />
+          <Spacer size="lg" />
 
           {tagsRowContent}
         </HStack>

@@ -145,15 +145,21 @@ export const HomePageFeed = memo(
                       return (
                         <VStack alignItems="center" flex={1} key={i} marginBottom={20}>
                           <Link
-                            name="list"
-                            params={{
-                              slug: foundList?.slug ?? '',
-                              userSlug: foundList?.user?.username ?? '',
-                            }}
+                            {...(foundList && {
+                              name: 'list',
+                              params: {
+                                slug: foundList?.slug ?? '',
+                                userSlug: foundList?.user?.username ?? '',
+                              },
+                            })}
+                            {...(!foundList && {
+                              tag: lense,
+                            })}
                           >
                             <FeedCard
                               variant="flat"
                               chromeless
+                              size={foundList?.name ? 'sm' : 'xs'}
                               square
                               title={foundList?.name}
                               tags={[lense]}
@@ -171,7 +177,7 @@ export const HomePageFeed = memo(
 
               <HStack position="relative">
                 <AbsoluteVStack zIndex={10} top={-10} left={10}>
-                  <SlantedTitle size="xs">Tags</SlantedTitle>
+                  <SlantedTitle size="xxs">Top Cuisine & Dishes</SlantedTitle>
                 </AbsoluteVStack>
 
                 <ContentScrollViewHorizontal>
@@ -220,7 +226,7 @@ export const HomePageFeed = memo(
 
               <VStack paddingHorizontal={16} position="relative">
                 <AbsoluteVStack top={-10} left={10}>
-                  <SlantedTitle size="xs">Top Lists</SlantedTitle>
+                  <SlantedTitle size="xxs">Top Playlists</SlantedTitle>
                 </AbsoluteVStack>
                 <Grid itemMinWidth={cardFrameWidth}>
                   {trendingLists.map((list, i) => {

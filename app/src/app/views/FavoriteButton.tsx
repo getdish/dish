@@ -2,7 +2,10 @@ import { Heart } from '@dish/react-feather'
 import React from 'react'
 import { Button, ButtonProps, Text, Tooltip, prevent } from 'snackui'
 
+import { SmallButton } from './SmallButton'
+
 export type FavoriteButtonProps = ButtonProps & {
+  floating?: boolean
   isFavorite: boolean
   onToggle: () => void
   size?: 'lg' | 'md' | 'sm'
@@ -10,6 +13,7 @@ export type FavoriteButtonProps = ButtonProps & {
 
 export const FavoriteButton = ({
   isFavorite,
+  floating,
   onToggle,
   size = 'md',
   ...rest
@@ -17,8 +21,7 @@ export const FavoriteButton = ({
   const sizePx = size === 'sm' ? 18 : size == 'lg' ? 26 : 22
   return (
     <Tooltip contents="Add to favorites">
-      <Button
-        borderRadius={100}
+      <SmallButton
         icon={
           <>
             {isFavorite && (
@@ -46,7 +49,7 @@ export const FavoriteButton = ({
         pressStyle={{
           opacity: 0.6,
         }}
-        elevation={1}
+        elevation={floating ? 1 : 0}
         {...rest}
       />
     </Tooltip>

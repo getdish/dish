@@ -21,7 +21,7 @@ import { useSearchBarTheme } from './hooks/useSearchBarTheme'
 export const AppSearchBarFloating = () => {
   const media = useMedia()
   const { theme: searchThemeName, background, isColored } = useSearchBarTheme()
-  const height = searchBarHeight + 0
+  const height = searchBarHeight + 9
   const parentThemeName = useThemeName()
 
   if (media.sm) {
@@ -53,7 +53,7 @@ export const AppSearchBarFloating = () => {
         pointerEvents="none"
         left={0}
         right={0}
-        top={4}
+        top={0}
       >
         {/* under fade */}
         <AbsoluteVStack
@@ -69,7 +69,7 @@ export const AppSearchBarFloating = () => {
         </AbsoluteVStack>
 
         {/* container */}
-        <AbsoluteVStack top={searchBarTopOffset} left={-20} right={-20} alignItems="center">
+        <AbsoluteVStack top={0} left={-20} right={-20} alignItems="center">
           {/* bg/shadows */}
           <VStack
             position="relative"
@@ -91,8 +91,8 @@ export const AppSearchBarFloating = () => {
               alignItems="center"
               backgroundColor={background}
               shadowColor="#000"
-              shadowOpacity={0.15}
-              shadowOffset={{ height: 2, width: 0 }}
+              shadowOpacity={0.25}
+              shadowOffset={{ height: 0, width: 0 }}
               shadowRadius={5}
             />
             <VStack

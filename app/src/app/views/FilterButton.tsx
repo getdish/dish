@@ -1,6 +1,6 @@
 import { Clock, ShoppingBag } from '@dish/react-feather'
 import React, { useEffect, useState } from 'react'
-import { VStack } from 'snackui'
+import { VStack, useThemeName } from 'snackui'
 
 import { tagDisplayNames } from '../../constants/tagMeta'
 import { rgbString } from '../../helpers/rgb'
@@ -26,7 +26,8 @@ export const FilterButton = ({
 }) => {
   const { name, rgb } = useCurrentLenseColor()
   const [isActive, setIsActive] = useState(isActiveParent)
-  const themeName = isActive ? `${name}-dark` : null
+  const curThemeName = useThemeName()
+  const themeName = isActive ? (curThemeName === 'dark' ? `${name}-dark` : name) : null
   color = color ?? rgbString(rgb)
 
   useEffect(() => {
@@ -36,9 +37,9 @@ export const FilterButton = ({
   const iconElement = (() => {
     switch (tag.slug) {
       case 'filters__open':
-        return <Clock size={18} color={color} />
+        return <Clock size={18} color={isActive ? '#fff' : color} />
       case 'filters__delivery':
-        return <ShoppingBag size={18} color={color} />
+        return <ShoppingBag size={18} color={isActive ? '#fff' : color} />
       default:
         return null
     }
@@ -54,9 +55,6 @@ export const FilterButton = ({
         theme={themeName}
         textProps={{
           fontWeight: '700',
-          ...(isActive && {
-            color: color,
-          }),
           ...rest.textProps,
         }}
         onPress={() => {

@@ -3,16 +3,18 @@ import React, { Suspense, useState } from 'react'
 import { Button, Tooltip } from 'snackui'
 
 import { userStore } from '../../userStore'
-import { SmallButtonProps } from '../../views/SmallButton'
+import { SmallButton, SmallButtonProps } from '../../views/SmallButton'
 import { RestaurantAddToListModal } from './RestaurantAddToListModal'
 
 export const RestaurantAddToListButton = ({
   restaurantSlug,
+  floating,
   noLabel,
   ...props
 }: SmallButtonProps & {
   restaurantSlug?: string
   noLabel?: boolean
+  floating?: boolean
 }) => {
   const [showModal, setShowModal] = useState(false)
   return (
@@ -23,7 +25,8 @@ export const RestaurantAddToListButton = ({
         </Suspense>
       )}
       <Tooltip contents="Add to list">
-        <Button
+        <SmallButton
+          elevation={floating ? 1 : 0}
           borderRadius={100}
           icon={<Plus color={'#777'} size={16} />}
           onPress={() => {
@@ -31,13 +34,10 @@ export const RestaurantAddToListButton = ({
               setShowModal(true)
             }
           }}
-          pressStyle={{
-            opacity: 0.6,
-          }}
           {...props}
         >
           {noLabel ? null : 'List'}
-        </Button>
+        </SmallButton>
       </Tooltip>
     </>
   )

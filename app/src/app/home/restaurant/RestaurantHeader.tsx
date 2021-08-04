@@ -1,27 +1,14 @@
 import { graphql } from '@dish/graph'
 import { Clock } from '@dish/react-feather'
 import React, { Suspense, memo, useState } from 'react'
-import { StyleSheet } from 'react-native'
-import {
-  AbsoluteVStack,
-  HStack,
-  LinearGradient,
-  Spacer,
-  Text,
-  Theme,
-  VStack,
-  useThemeName,
-} from 'snackui'
+import { AbsoluteVStack, HStack, Spacer, Text, Theme, VStack, useThemeName } from 'snackui'
 
 import { drawerBorderRadius, isWeb } from '../../../constants/constants'
-import { getImageUrl } from '../../../helpers/getImageUrl'
-import { getWindowWidth } from '../../../helpers/getWindow'
 import { useColorsFor } from '../../../helpers/useColorsFor'
 import { queryRestaurant } from '../../../queries/queryRestaurant'
 import { HomeStateItemRestaurant } from '../../../types/homeTypes'
 import { useContentScrollHorizontalFitter } from '../../views/ContentScrollViewHorizontal'
 import { ContentScrollViewHorizontalFitted } from '../../views/ContentScrollViewHorizontalFitted'
-import { Image } from '../../views/Image'
 import { Link } from '../../views/Link'
 import { PaneControlButtonsLeft } from '../../views/PaneControlButtons'
 import { RestaurantTagsRow } from '../../views/restaurant/RestaurantTagsRow'
@@ -54,7 +41,6 @@ export const RestaurantHeader = (props: RestaurantHeaderProps) => {
 const RestaurantHeaderContent = memo(
   graphql(
     ({ state, restaurantSlug, afterAddress, size }: RestaurantHeaderProps) => {
-      const imgHeight = 240
       const [restaurant] = queryRestaurant(restaurantSlug)
       if (!restaurant) {
         return null
@@ -65,71 +51,25 @@ const RestaurantHeaderContent = memo(
       const nameLen = restaurant.name?.length ?? 10
       const { width, drawerWidth, minWidth, setWidthDebounce } = useContentScrollHorizontalFitter()
       const scale = width < 601 ? 0.7 : drawerWidth < 700 ? 0.85 : 1
-      const fontScale = size === 'sm' ? 0.9 : 1.1
+      const fontScale = size === 'sm' ? 0.9 : 1.3
       const fontSizeBase =
         nameLen > 40 ? 18 : nameLen > 30 ? 22 : nameLen > 24 ? 26 : nameLen > 16 ? 28 : 32
       const fontSize = scale * fontSizeBase * fontScale
       const restaurantId = restaurant.id
-      const [initialDrawerWidth] = useState(drawerWidth)
-      const [photoWidth] = useState(Math.max(160, drawerWidth * 0.25))
       const [hasScrolled, setHasScrolled] = useState(false)
       const colors = useColorsFor(restaurantSlug)
       const themeName = useThemeName()
-      // const theme = useTheme()
 
       const content = (
-        <VStack>
+        <>
           <PaneControlButtonsLeft>
             <Suspense fallback={null}>
-              <RestaurantAddToListButton restaurantSlug={restaurantSlug} />
+              <RestaurantAddToListButton floating restaurantSlug={restaurantSlug} />
             </Suspense>
             <Suspense fallback={null}>
-              <RestaurantFavoriteStar size="lg" restaurantId={restaurantId} />
+              <RestaurantFavoriteStar floating size="lg" restaurantId={restaurantId} />
             </Suspense>
           </PaneControlButtonsLeft>
-
-          <AbsoluteVStack zIndex={0} pointerEvents="auto">
-            {/* {!!restaurant.image && (
-              <Image
-                style={{
-                  opacity: 1,
-                  width: initialDrawerWidth,
-                  height: imgHeight,
-                }}
-                source={{
-                  uri: getImageUrl(restaurant.image, initialDrawerWidth, imgHeight, 100),
-                }}
-              />
-            )} */}
-
-            {/* <AbsoluteVStack
-              left={0}
-              right={0}
-              height={imgHeight}
-              width={width}
-              pointerEvents="none"
-              y={1}
-            >
-              <LinearGradient
-                style={[StyleSheet.absoluteFill]}
-                colors={[
-                  // `${colors.themeColorAlt}aa`,
-                  `${colors.themeColor}00`,
-                  // `${colors.themeColor}00`,
-                  colors.themeColor,
-                ]}
-              />
-
-              <AbsoluteVStack fullscreen x="20%">
-                <LinearGradient
-                  style={[StyleSheet.absoluteFill]}
-                  start={[0, 0]}
-                  end={[1, 0]}
-                  colors={[`${colors.themeColor}00`, colors.themeColor, colors.themeColor]}
-                />
-              </AbsoluteVStack>
-            </AbsoluteVStack> */}
-          </AbsoluteVStack>
 
           <Theme name={themeName === 'dark' ? `${colors.name}-dark` : colors.name}>
             <VStack
@@ -156,7 +96,7 @@ const RestaurantHeaderContent = memo(
 
                   <HStack
                     // backgroundColor={colors.themeColorAlt}
-                    backgroundColor="#000000ee"
+                    backgroundColor={colors.themeColorAlt}
                     shadowColor="#000"
                     shadowOpacity={0.2}
                     marginRight={-30}
@@ -168,7 +108,7 @@ const RestaurantHeaderContent = memo(
                     paddingVertical={9}
                     alignItems="center"
                     position="relative"
-                    zIndex={10000}
+                    zIndex={199}
                     justifyContent="center"
                     minWidth={100}
                     skewX="-12deg"
@@ -191,9 +131,9 @@ const RestaurantHeaderContent = memo(
                     restaurantSlug={restaurantSlug}
                     spacing="md"
                     floating
-                    width={photoWidth}
-                    height={imgHeight * 0.8}
-                    escalating
+                    width={170}
+                    height={180}
+                    // escalating
                     showEscalated={hasScrolled}
                   />
                 </HStack>
@@ -263,7 +203,7 @@ const RestaurantHeaderContent = memo(
 
                             <Spacer />
 
-                            <HStack minWidth={1600} y={-3}>
+                            <HStack maxWidth={300} overflow="hidden" minWidth={1600} y={-3}>
                               <RestaurantTagsRow
                                 exclude={['dish']}
                                 restaurantSlug={restaurantSlug}
@@ -295,7 +235,7 @@ const RestaurantHeaderContent = memo(
               </VStack>
             </VStack>
           </Theme>
-        </VStack>
+        </>
       )
 
       if (!isWeb) {

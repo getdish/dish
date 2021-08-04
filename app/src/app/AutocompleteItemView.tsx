@@ -68,7 +68,7 @@ export const AutocompleteItemView = memo(
         minHeight={46}
         backgroundColor={isActive ? theme.backgroundColor : 'transparent'}
         hoverStyle={{
-          backgroundColor: theme.backgroundColor,
+          backgroundColor: isActive ? theme.backgroundColor : theme.backgroundColorDarker,
         }}
         onPressOut={() => {
           Keyboard.dismiss()
