@@ -11,9 +11,8 @@ import {
   resolved,
   slugify,
   useRefetch,
-  user,
 } from '@dish/graph'
-import { assertPresent, isPresent } from '@dish/helpers'
+import { assertPresent } from '@dish/helpers'
 import { Plus, Trash, X } from '@dish/react-feather'
 import React, { Suspense, useEffect, useRef, useState } from 'react'
 import { Switch } from 'react-native'
@@ -33,16 +32,13 @@ import {
   Toast,
   VStack,
   useTheme,
-  useThemeName,
 } from 'snackui'
 
 import { bgLight } from '../../../constants/colors'
-import { isWeb, searchBarHeight } from '../../../constants/constants'
+import { isWeb } from '../../../constants/constants'
 import { useRegionQuery } from '../../../helpers/fetchRegion'
-import { getColorsForColor } from '../../../helpers/getColorsForName'
 import { getRestaurantIdentifiers } from '../../../helpers/getRestaurantIdentifiers'
 import { promote } from '../../../helpers/listHelpers'
-import { queryList } from '../../../queries/queryList'
 import { router } from '../../../router'
 import { HomeStateItemList } from '../../../types/homeTypes'
 import { useSetAppMap } from '../../AppMapStore'
@@ -54,7 +50,7 @@ import { CloseButton } from '../../views/CloseButton'
 import { ContentScrollView } from '../../views/ContentScrollView'
 import { FavoriteButton } from '../../views/FavoriteButton'
 import { Link } from '../../views/Link'
-import { useList, useListFavorite } from '../../views/list/useList'
+import { useListFavorite } from '../../views/list/useList'
 import { PaneControlButtons, PaneControlButtonsLeft } from '../../views/PaneControlButtons'
 import { ScalingPressable } from '../../views/ScalingPressable'
 import { Score } from '../../views/Score'
@@ -66,8 +62,6 @@ import { StackItemProps } from '../HomeStackView'
 import { PageContentWithFooter } from '../PageContentWithFooter'
 import { PageTitle } from '../PageTitle'
 import { CircleButton } from '../restaurant/CircleButton'
-import { ListFavoriteButton } from '../restaurant/ListFavoriteButton'
-import { RestaurantFavoriteStar } from '../restaurant/RestaurantFavoriteButton'
 import { RestaurantListItem } from '../restaurant/RestaurantListItem'
 import { useSnapToFullscreenOnMount } from '../restaurant/useSnapToFullscreenOnMount'
 import { UserAvatar } from '../user/UserAvatar'
@@ -113,7 +107,6 @@ export default function ListPage(props: Props) {
           replace: true,
           params: {
             userSlug: slugify(username),
-            region: list.region,
             slug: list.slug,
             state: 'edit',
           },
@@ -692,6 +685,7 @@ const ListPageTitle = ({
               <SlantedTitle
                 backgroundColor={color}
                 marginTop={-5}
+                color="#fff"
                 alignSelf="center"
                 zIndex={0}
                 size={len < 12 ? 'xl' : len < 16 ? 'lg' : len < 24 ? 'md' : len < 30 ? 'sm' : 'xs'}
@@ -706,7 +700,7 @@ const ListPageTitle = ({
                     }}
                     fontWeight="700"
                     textAlign="center"
-                    color={color}
+                    color="#fff"
                     borderColor="transparent"
                     margin={-5}
                   />

@@ -47,7 +47,7 @@ export const ListCard = graphql(
     }
 
     const contents = (
-      <Link name="list" asyncClick params={{ slug, userSlug, region }}>
+      <Link name="list" asyncClick params={{ slug, userSlug }}>
         <Card
           aspectFixed
           square

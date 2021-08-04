@@ -1,4 +1,5 @@
 - todo: merge with next.md
+- restaurant page loads slowly - check which query/ies are causing
 - get top cuisine/dish query into hasura itself so we get caching for free + can subquery anything we want without multiple trips to server + simplify it a bit perhaps so its a bit faster
 
 - crawlers get working on bay area:

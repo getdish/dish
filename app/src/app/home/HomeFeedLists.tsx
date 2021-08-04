@@ -124,7 +124,6 @@ export const HomeFeedListsContents = graphql(
                   params={{
                     userSlug: 'me',
                     slug: 'create',
-                    region: homeStore.lastRegionSlug,
                   }}
                 >
                   <SmallCircleButton>

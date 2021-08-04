@@ -853,7 +853,7 @@ function setupMapEffect({
                 ['==', ['feature-state', 'hover'], true],
                 ['get', 'color'],
                 ['==', ['feature-state', 'active'], null],
-                'rgba(0,0,0,0.2)',
+                'rgba(0,0,0,0.1)',
                 'green',
               ],
               'line-opacity': 1,

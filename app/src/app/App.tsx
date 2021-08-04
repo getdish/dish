@@ -1,6 +1,6 @@
 import loadable from '@loadable/component'
 import React, { Suspense, useEffect } from 'react'
-import { AbsoluteVStack, LoadingItems, ToastRoot, VStack, useTheme } from 'snackui'
+import { AbsoluteVStack, LoadingItems, Modal, ToastRoot, VStack, useTheme } from 'snackui'
 
 import { isSSR } from '../constants/constants'
 import AdminPage from './admin/AdminPage'
@@ -15,6 +15,7 @@ import { PrivateRoute, Route, RouteSwitch } from './Route'
 import { Shortcuts } from './Shortcuts'
 import { ErrorBoundary } from './views/ErrorBoundary'
 import { NotFoundPage } from './views/NotFoundPage'
+import { SlantedTitle } from './views/SlantedTitle'
 
 export function App() {
   // helper that warns on root level unmounts (uncaught suspense)
@@ -36,7 +37,9 @@ export function App() {
       <Suspense fallback={<LoadingItems />}>
         <RouteSwitch>
           <Route name="notFound">
-            <NotFoundPage title="404 Not Found" />
+            <AppHomeContent>
+              <NotFoundPage />
+            </AppHomeContent>
           </Route>
           <PrivateRoute name="admin">
             <AdminPage />
@@ -50,7 +53,7 @@ export function App() {
   )
 }
 
-function AppHomeContent() {
+function AppHomeContent(props: { children?: any }) {
   const theme = useTheme()
 
   return (
@@ -103,6 +106,8 @@ function AppHomeContent() {
           <RestaurantHoursPage />
         </Route>
       </Suspense>
+
+      {props.children}
     </>
   )
 }

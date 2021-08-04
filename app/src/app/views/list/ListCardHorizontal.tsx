@@ -18,7 +18,7 @@ export const ListCardHorizontal = graphql((props: ListIDProps) => {
   }
 
   return (
-    <Link name="list" asyncClick params={{ slug, userSlug, region }}>
+    <Link name="list" asyncClick params={{ slug, userSlug }}>
       <Button
         alignSelf="center"
         borderRadius={15}

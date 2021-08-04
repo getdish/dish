@@ -64,7 +64,7 @@ export const AppMenuContents = memo(
               promptLogin
               name="list"
               params={{
-                userSlug: slugify(user?.username ?? ''),
+                userSlug: slugify(user?.username ?? 'me'),
                 slug: 'create',
               }}
             >
