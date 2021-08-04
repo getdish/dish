@@ -58,7 +58,7 @@ const error: MyTheme = {
 
 const darkBase = {
   backgroundColorAlt: 'rgba(54, 54, 104, 0.39)',
-  backgroundColorDarker: '#111111',
+  backgroundColorDarker: '#161616',
   backgroundColorTransluscent: 'rgba(100,100,100,0.05)',
   backgroundColorTransluscentHover: 'rgba(100,100,100,0.1)',
   backgroundColorTransparent: 'rgba(25,25,25,0)',
