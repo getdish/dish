@@ -10,7 +10,7 @@ import { useList } from './useList'
 
 export const ListCardHorizontal = graphql((props: ListIDProps) => {
   const { list, colors, photos, backgroundColor } = useList(props)
-  const { slug, userSlug, region } = props
+  const { slug, userSlug } = props
   const theme = useTheme()
 
   if (!slug || !userSlug) {

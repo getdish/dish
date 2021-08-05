@@ -14,7 +14,7 @@ import { mapStyles } from './mapStyles'
 mapboxgl.accessToken = MAPBOX_ACCESS_TOKEN
 
 export default memo(function AppMapPIP() {
-  const show = useAppShouldShow('map')
+  const show = true //useAppShouldShow('map')
 
   // disable its stating twice..
   return null

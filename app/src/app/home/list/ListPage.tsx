@@ -718,7 +718,7 @@ const ListPageTitle = ({
                 )}
                 {/* </Text> */}
               </SlantedTitle>
-              <SlantedTitle fontWeight="300" scale={1} zIndex={-1} size="xsx" alignSelf="center">
+              <SlantedTitle fontWeight="300" scale={1} zIndex={-1} size="xs" alignSelf="center">
                 {locationName ?? 'anywhere'}
               </SlantedTitle>
             </VStack>

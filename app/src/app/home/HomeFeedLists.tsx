@@ -1,3 +1,5 @@
+// not in use
+
 import { series } from '@dish/async'
 import { graphql, list, order_by, query, resolved } from '@dish/graph'
 import { Plus } from '@dish/react-feather'
@@ -135,7 +137,7 @@ export const HomeFeedListsContents = graphql(
             </HStack>
           </>
 
-          <SkewedCardCarousel>
+          {/* <SkewedCardCarousel>
             {lists.map((list, i) => {
               if (!list) {
                 return null
@@ -155,7 +157,7 @@ export const HomeFeedListsContents = graphql(
                 </SimpleCard>
               )
             })}
-          </SkewedCardCarousel>
+          </SkewedCardCarousel> */}
         </VStack>
       )
     }, [key])
