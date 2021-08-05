@@ -15,6 +15,23 @@ export const brandColorLighter = `#EC6996`
 // all indices must match going down
 export const colorNames = ['yellow', 'pink', 'green', 'red', 'orange', 'blue', 'purple'] as const
 
+export const extraDarkYellow = '#1c1d17'
+export const extraDarkPink = '#181518'
+export const extraDarkGreen = '#161c19'
+export const extraDarkRed = '#201818'
+export const extraDarkOrange = '#231b13'
+export const extraDarkBlue = '#101217'
+export const extraDarkPurple = '#18121b'
+export const allExtraDarkColors = [
+  extraDarkYellow,
+  extraDarkPink,
+  extraDarkGreen,
+  extraDarkRed,
+  extraDarkOrange,
+  extraDarkBlue,
+  extraDarkPurple,
+]
+
 export const extraLightYellow = '#F7F5ED'
 export const extraLightPink = '#F7EDF1'
 export const extraLightGreen = '#EDF7F2'

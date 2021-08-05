@@ -19,7 +19,13 @@ import {
   initialLocation,
   setDefaultLocation,
 } from '../constants/initialHomeState'
-import { bboxToLngLat, getZoomLevel, hasMovedAtLeast, padLngLat } from '../helpers/mapHelpers'
+import {
+  bboxToLngLat,
+  getMaxLngLat,
+  getZoomLevel,
+  hasMovedAtLeast,
+  padLngLat,
+} from '../helpers/mapHelpers'
 import { reverseGeocode } from '../helpers/reverseGeocode'
 import { queryRestaurant } from '../queries/queryRestaurant'
 import { RegionWithVia } from '../types/homeTypes'
@@ -388,7 +394,11 @@ export const useSetAppMap = (
                 lng: centerCoord.geometry.coordinates[0],
                 lat: centerCoord.geometry.coordinates[1],
               },
-              span: padLngLat(bboxToLngLat(resultsBbox), 3),
+              span: getMaxLngLat(padLngLat(bboxToLngLat(resultsBbox), 3), {
+                // dont zoom too much in
+                lng: 0.005,
+                lat: 0.005,
+              }),
             }
             appMapStore.setPosition({
               via: 'results',

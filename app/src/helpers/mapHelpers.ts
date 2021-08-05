@@ -128,6 +128,10 @@ export const getMinLngLat = (ll: LngLat, max: LngLat) => {
   return reduce(ll, (k, v) => Math.min(max[k], v))
 }
 
+export const getMaxLngLat = (ll: LngLat, max: LngLat) => {
+  return reduce(ll, (k, v) => Math.max(max[k], v))
+}
+
 // used to help prevent duplicate searches on slight diff in map move
 export const roundLngLat = (ll: LngLat): LngLat => {
   return reduce(ll, (_, v) => Math.round(v * 100000) / 100000)
