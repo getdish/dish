@@ -113,11 +113,14 @@ export const HomePageFeed = memo(
       })
 
       const allRestaurants = [...tagLists, ...lenseLists, ...trendingLists].flatMap((list) => {
-        return list.restaurants({ limit: 30 }).map((x) => getRestaurantIdentifiers(x.restaurant))
+        return list.restaurants({ limit: 20 }).map((x) => getRestaurantIdentifiers(x.restaurant))
       })
 
       useDebounceEffect(
         () => {
+          if (!allRestaurants[0]?.id) {
+            return
+          }
           homePageStore.setResults(allRestaurants)
         },
         100,

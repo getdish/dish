@@ -20,7 +20,7 @@ export default route(async (req, res) => {
     }
     res.send(data)
   } else {
-    res.send(null)
+    res.sendStatus(500)
   }
 })
 
