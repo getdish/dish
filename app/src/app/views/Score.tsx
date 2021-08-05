@@ -83,7 +83,7 @@ export const Score = memo(
       )
       voteContent = (
         <>
-          <AbsoluteVStack zIndex={-1} top={-20}>
+          <AbsoluteVStack zIndex={-1} top={-24}>
             {subtle ? (
               upvote
             ) : (
@@ -92,7 +92,7 @@ export const Score = memo(
               </Tooltip>
             )}
           </AbsoluteVStack>
-          <AbsoluteVStack zIndex={-1} bottom={-20}>
+          <AbsoluteVStack zIndex={-1} bottom={-24}>
             {subtle ? (
               downvote
             ) : (
@@ -115,7 +115,7 @@ export const Score = memo(
       <VStack
         position="relative"
         pointerEvents="auto"
-        backgroundColor={theme.cardBackgroundColor}
+        // backgroundColor={theme.cardBackgroundColor}
         alignItems="center"
         justifyContent="center"
         className={isWeb && !supportsTouchWeb && showVoteOnHover ? ' show-on-hover' : ''}
@@ -142,7 +142,7 @@ export const Score = memo(
               size={Math.round(sizePx + 3)}
               color={colors.color}
               percent={rating * 10}
-              width={sizePx * 0.1}
+              width={sizePx * 0.08}
             />
           </AbsoluteVStack>
         )}

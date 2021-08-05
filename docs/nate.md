@@ -1,3 +1,5 @@
+- fix total map restaurants show more
+- hover effect + map restaurants on top cuisine & dishes
 - searchpage error on upvote
 - upgrade list page
 - fix mobile web bugs

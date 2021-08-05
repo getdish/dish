@@ -12,10 +12,12 @@ export const RestaurantReviewsList = memo(
     ({
       restaurantSlug,
       restaurantId,
+      before,
     }: {
       restaurantSlug: string
       restaurantId: string
       numToShow?: number
+      before?: any
     }) => {
       const topReviews = query.review({
         limit: 4,
@@ -36,11 +38,11 @@ export const RestaurantReviewsList = memo(
             alignItems="center"
             justifyContent="center"
           >
-            <SlantedTitle size="sm" marginTop={-32} fontWeight="700">
+            <SlantedTitle size="xs" marginTop={-32} fontWeight="700">
               Reviews
             </SlantedTitle>
 
-            <AbsoluteVStack top={-5} right={0}>
+            <AbsoluteVStack top={-40} right={0}>
               <Suspense fallback={null}>
                 <RestaurantAddCommentButton
                   restaurantId={restaurantId}
@@ -49,7 +51,10 @@ export const RestaurantReviewsList = memo(
               </Suspense>
             </AbsoluteVStack>
           </HStack>
+
           <Spacer />
+
+          {before}
 
           <Suspense fallback={null}>
             {!topReviews.length && !ownReview && (

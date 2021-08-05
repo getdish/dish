@@ -34,7 +34,7 @@ export const RestaurantAddCommentButton = graphql(
           icon={<Edit color={isWeb ? 'var(--color)' : '#000'} size={size ?? 16} />}
           {...props}
         >
-          {hideLabel ? null : !!review?.text ? 'Edit' : 'Add'}
+          {hideLabel ? null : !!review?.text ? 'Edit' : 'Add your review'}
         </SmallButton>
       </Link>
     )

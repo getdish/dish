@@ -52,7 +52,13 @@ export const DishLogoButton = memo(({ color }: { color?: string }) => {
           // marginVertical={-7} native only? web wroks
           <VStack marginVertical="auto">
             <LogoColor
-              color={media.sm ? undefined : searchBarTheme.name === 'light' ? undefined : '#fff'}
+              color={
+                media.sm
+                  ? undefined
+                  : searchBarTheme.name === 'light' || searchBarTheme.name === 'dark'
+                  ? undefined
+                  : '#fff'
+              }
             />
           </VStack>
         )}
