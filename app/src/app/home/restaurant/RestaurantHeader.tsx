@@ -86,16 +86,15 @@ const RestaurantHeaderContent = memo(
               <VStack flex={1}>
                 {/* title row */}
                 <HStack paddingLeft={20} alignItems="flex-end" position="relative">
-                  <AbsoluteVStack y={-50} x={-10} zIndex={200}>
+                  <VStack marginRight={-15} marginBottom={-5} zIndex={200}>
                     <Theme name="light">
                       <RestaurantRatingView floating size={66} slug={restaurantSlug} />
                     </Theme>
-                  </AbsoluteVStack>
-
-                  <Spacer size="lg" />
+                  </VStack>
 
                   <HStack
                     // backgroundColor={colors.themeColorAlt}
+                    y={10}
                     backgroundColor={colors.themeColorAlt}
                     shadowColor="#000"
                     shadowOpacity={0.2}
@@ -127,16 +126,19 @@ const RestaurantHeaderContent = memo(
                     </HStack>
                   </HStack>
 
+                  <VStack width={170} height={180} />
+                </HStack>
+
+                <AbsoluteVStack fullscreen left="20%">
                   <RestaurantPhotosRow
                     restaurantSlug={restaurantSlug}
                     spacing="md"
                     floating
                     width={170}
                     height={180}
-                    // escalating
                     showEscalated={hasScrolled}
                   />
-                </HStack>
+                </AbsoluteVStack>
 
                 <Spacer size="lg" />
 

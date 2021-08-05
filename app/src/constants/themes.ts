@@ -155,6 +155,23 @@ for (const [index, name] of colorNames.entries()) {
     borderColor: colors.lightColor,
     backgroundColorAlt: colors.darkColor,
   }
+  colorThemes[`${name}-pastel`] = {
+    name,
+    ...baseTheme,
+    ...lightBase,
+    color: colors.darkColor,
+    colorSecondary: `${colors.darkColor}F2`,
+    colorTertiary: `${colors.darkColor}E6`,
+    colorQuartenary: `${colors.darkColor}CC`,
+    backgroundColor: colors.extraLightColor,
+    backgroundColorSecondary: `${colors.extraLightColor}F2`,
+    backgroundColorTertiary: `${colors.extraLightColor}E6`,
+    backgroundColorQuartenary: `${colors.extraLightColor}CC`,
+    backgroundColorTransluscent: `${colors.extraLightColor}55`,
+    backgroundColorTransluscentHover: `${colors.extraLightColor}33`,
+    borderColor: colors.color,
+    backgroundColorAlt: colors.color,
+  }
   const darkName = `${name}-dark`
   colorThemes[darkName] = {
     name: darkName,

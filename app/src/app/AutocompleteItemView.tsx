@@ -41,7 +41,7 @@ export const AutocompleteItemView = memo(
         <VStack flex={1} />
         <VStack padding={8} flexShrink={0}>
           <CircleButton onPress={onAdd}>
-            <Plus size={16} />
+            <Plus color="#777" size={16} />
           </CircleButton>
         </VStack>
       </>
