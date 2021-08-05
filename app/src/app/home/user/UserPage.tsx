@@ -13,6 +13,7 @@ import {
   Spacer,
   Text,
   VStack,
+  useTheme,
 } from 'snackui'
 
 import { queryUser } from '../../../queries/queryUser'
@@ -34,6 +35,7 @@ import { PageContentWithFooter } from '../PageContentWithFooter'
 import { RestaurantReview } from '../restaurant/RestaurantReview'
 import { useSnapToFullscreenOnMount } from '../restaurant/useSnapToFullscreenOnMount'
 import { SimpleCard, SkewedCardCarousel } from '../SimpleCard'
+import { CardCarousel } from './CardCarousel'
 import { UserAvatar } from './UserAvatar'
 
 type UserPane = 'vote' | 'review' | ''
@@ -54,23 +56,9 @@ export default function UserPageContainer(props: StackItemProps<HomeStateItemUse
 
   return (
     <StackDrawer closable title={`${props.item.username} | Dish food reviews`}>
-      <VStack flexShrink={0}>
-        <Suspense
-          fallback={
-            <VStack height={160} borderColor="#eee" borderBottomWidth={1}>
-              <LoadingItem lines={2} />
-            </VStack>
-          }
-        >
-          <UserHeader {...props} setPane={setPane} pane={pane} />
-        </Suspense>
-      </VStack>
-
-      <VStack flex={1} flexShrink={0}>
-        <Suspense fallback={<LoadingItems />}>
-          <UserPageContent {...props} pane={pane} />
-        </Suspense>
-      </VStack>
+      <Suspense fallback={<LoadingItems />}>
+        <UserPageContent {...props} setPane={setPane} pane={pane} />
+      </Suspense>
     </StackDrawer>
   )
 }
@@ -83,7 +71,8 @@ const getReviewRestuarants = (x: ReviewQuery) => {
 }
 
 const UserPageContent = graphql(
-  ({ item, isActive, pane }: StackItemProps<HomeStateItemUser> & { pane: UserPane | null }) => {
+  (props: StackItemProps<HomeStateItemUser> & { pane: UserPane | null; setPane: Function }) => {
+    const { item, isActive, pane, setPane } = props
     const username = item.username
     if (!username) {
       return null
@@ -136,44 +125,44 @@ const UserPageContent = graphql(
     return (
       <ContentScrollView id="user">
         <PageContentWithFooter>
-          <VStack spacing="xl" paddingVertical={20}>
-            <VStack>
-              {!!user.about && (
-                <VStack>
-                  <SmallTitle>About</SmallTitle>
-                  <Paragraph size="lg">{user.about}</Paragraph>
-                </VStack>
-              )}
-
-              <SlantedTitle size="sm" alignSelf="center">
-                Lists
-              </SlantedTitle>
-              <SkewedCardCarousel>
-                {lists.map((list, i) => {
-                  return (
-                    <SimpleCard zIndex={1000 - i} key={list.slug || i}>
-                      <ListCard
-                        isBehind={i > 0}
-                        userSlug={list.user?.username ?? ''}
-                        slug={list.slug}
-                        region={list.region ?? ''}
-                      />
-                    </SimpleCard>
-                  )
-                })}
-              </SkewedCardCarousel>
-
-              <SlantedTitle size="sm" alignSelf="center">
-                Recently
-              </SlantedTitle>
-              <Spacer size="xxxl" />
-              <VStack paddingHorizontal={20}>
-                <Suspense fallback={<LoadingItems />}>
-                  {!hasReviews && <Text>No reviews yet...</Text>}
-                  {hasReviews &&
-                    reviews.map(({ id }) => <RestaurantReview key={id} reviewId={id} />)}
-                </Suspense>
+          <Suspense
+            fallback={
+              <VStack height={160} borderColor="#eee" borderBottomWidth={1}>
+                <LoadingItem lines={2} />
               </VStack>
+            }
+          >
+            <UserHeader {...props} setPane={setPane} pane={pane} />
+          </Suspense>
+
+          <VStack spacing="lg" paddingVertical={20}>
+            {!!user.about && (
+              <VStack>
+                <SmallTitle>About</SmallTitle>
+                <Paragraph size="lg">{user.about}</Paragraph>
+              </VStack>
+            )}
+
+            <CardCarousel>
+              {lists.map((list, i) => {
+                return (
+                  <ListCard
+                    // zIndex={1000 - i}
+                    size="lg"
+                    floating
+                    key={list.slug || i}
+                    userSlug={list.user?.username ?? ''}
+                    slug={list.slug}
+                  />
+                )
+              })}
+            </CardCarousel>
+
+            <VStack paddingHorizontal={20}>
+              <Suspense fallback={<LoadingItems />}>
+                {!hasReviews && <Text>No reviews yet...</Text>}
+                {hasReviews && reviews.map(({ id }) => <RestaurantReview key={id} reviewId={id} />)}
+              </Suspense>
             </VStack>
           </VStack>
         </PageContentWithFooter>
@@ -195,6 +184,7 @@ const UserHeader = memo(
       const userStore = useUserStore()
       const user = queryUser(item?.username ?? '')
       const isOwnProfile = userStore.user?.username === user?.username
+      const theme = useTheme()
 
       if (!user) {
         return null
@@ -202,71 +192,67 @@ const UserHeader = memo(
 
       return (
         <VStack position="relative">
-          <ContentScrollViewHorizontal>
-            <VStack maxWidth="100%" width="100%">
-              <VStack flex={1} padding={20} paddingVertical={25}>
-                <HStack alignItems="center" flex={1} position="relative">
-                  <VStack marginTop={-10} marginBottom={5} marginRight={10}>
-                    <UserAvatar avatar={user.avatar ?? ''} charIndex={user.charIndex ?? 0} />
-                  </VStack>
-                  <VStack flex={1}>
-                    <Text fontSize={28} fontWeight="bold" paddingRight={30}>
-                      {user.username ?? 'no-name'}
-                    </Text>
-                    <Spacer size={4} />
-                    <HStack>
-                      <Text color="#777" fontSize={14}>
-                        {user.location?.trim() || 'Earth, Universe'}
-                      </Text>
-                    </HStack>
-                    <Spacer size={12} />
-                  </VStack>
-
-                  <VStack flex={1} minWidth={20} />
-
-                  <InteractiveContainer>
-                    <SmallButton
-                      borderRadius={0}
-                      borderWidth={0}
-                      theme={!pane ? 'active' : null}
-                      onPress={() => {
-                        setPane()
-                      }}
-                    >
-                      Profile
-                    </SmallButton>
-                    <SmallButton
-                      borderRadius={0}
-                      borderWidth={0}
-                      theme={pane === 'review' ? 'active' : null}
-                      onPress={() => {
-                        setPane('review')
-                      }}
-                    >
-                      Reviews
-                    </SmallButton>
-                    <SmallButton
-                      borderRadius={0}
-                      borderWidth={0}
-                      theme={pane === 'vote' ? 'active' : null}
-                      onPress={() => {
-                        setPane('vote')
-                      }}
-                    >
-                      Votes
-                    </SmallButton>
-                  </InteractiveContainer>
-                </HStack>
-
-                <Spacer />
-
-                <Divider />
+          <VStack flex={1} paddingHorizontal={20} paddingTop={25}>
+            <HStack alignItems="center" flex={1} position="relative">
+              <VStack marginVertical={-10} marginRight={10}>
+                <UserAvatar avatar={user.avatar ?? ''} charIndex={user.charIndex ?? 0} />
               </VStack>
-            </VStack>
-          </ContentScrollViewHorizontal>
+              <VStack flex={1}>
+                <Text color={theme.color} fontSize={38} fontWeight="700" paddingRight={30}>
+                  {user.username ?? 'no-name'}
+                </Text>
+                <Spacer size={4} />
+                <HStack>
+                  <Text color="#777" fontSize={14}>
+                    {user.location?.trim() || 'Earth, Universe'}
+                  </Text>
+                </HStack>
+                <Spacer size={12} />
+              </VStack>
+
+              <VStack flex={1} minWidth={20} />
+
+              <InteractiveContainer>
+                <SmallButton
+                  borderRadius={0}
+                  borderWidth={0}
+                  theme={!pane ? 'active' : null}
+                  onPress={() => {
+                    setPane()
+                  }}
+                >
+                  Profile
+                </SmallButton>
+                <SmallButton
+                  borderRadius={0}
+                  borderWidth={0}
+                  theme={pane === 'review' ? 'active' : null}
+                  onPress={() => {
+                    setPane('review')
+                  }}
+                >
+                  Reviews
+                </SmallButton>
+                <SmallButton
+                  borderRadius={0}
+                  borderWidth={0}
+                  theme={pane === 'vote' ? 'active' : null}
+                  onPress={() => {
+                    setPane('vote')
+                  }}
+                >
+                  Votes
+                </SmallButton>
+              </InteractiveContainer>
+            </HStack>
+
+            <Spacer />
+
+            <Divider />
+          </VStack>
 
           {isOwnProfile && (
-            <AbsoluteVStack zIndex={10} bottom={-10} right={10}>
+            <AbsoluteVStack zIndex={10} bottom={-15} right={10}>
               <Link name="userEdit">
                 <Button>Edit profile</Button>
               </Link>

@@ -24,6 +24,7 @@ export const CardFrame = ({
   square,
   chromeless,
   className,
+  floating,
   flat,
   skew,
   borderless,
@@ -33,6 +34,7 @@ export const CardFrame = ({
   expandable?: boolean
   hoverEffect?: 'scale' | 'background' | false
   transparent?: boolean
+  floating?: boolean
   aspectFixed?: boolean
   size?: 'md' | 'sm' | 'xs' | 'lg'
   flat?: boolean
@@ -117,6 +119,11 @@ export const CardFrame = ({
       {...(!borderless && {
         borderColor: theme.backgroundColorDarker,
         borderWidth: 1,
+      })}
+      {...(floating && {
+        shadowColor: theme.shadowColor,
+        shadowRadius: 1,
+        shadowOffset: { height: 4, width: 4 },
       })}
     >
       {/* background */}

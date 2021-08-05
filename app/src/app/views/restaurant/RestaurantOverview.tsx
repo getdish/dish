@@ -124,12 +124,11 @@ export const RestaurantOverview = memo(
                 marginBottom="auto"
                 fontSize={fontSize}
                 lineHeight={lineHeight}
-                opacity={0.9}
                 selectable
                 // short descriptions look bad in minHieght
                 // minHeight={lineHeight * 2}
                 // fontWeight="500"
-                color={theme.colorSecondary}
+                color={theme.colorQuartenary}
                 pointerEvents="auto"
               >
                 {disableEllipse

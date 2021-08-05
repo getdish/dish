@@ -6,19 +6,7 @@ import { rgbString } from '../../helpers/rgb'
 import { TagButton } from '../views/TagButton'
 import { Card, CardOverlay } from './restaurant/Card'
 
-export const FeedCard = ({
-  title,
-  author,
-  tags = [],
-  size = 'sm',
-  square,
-  photo,
-  variant,
-  children,
-  chromeless,
-  backgroundColor,
-  emphasizeTag,
-}: {
+export type FeedCardProps = {
   title?: string | JSX.Element | null
   children?: any
   author?: string
@@ -29,8 +17,24 @@ export const FeedCard = ({
   variant?: 'flat'
   chromeless?: boolean
   backgroundColor?: string
+  floating?: boolean
   emphasizeTag?: boolean
-}) => {
+}
+
+export const FeedCard = ({
+  title,
+  author,
+  tags = [],
+  size = 'sm',
+  square,
+  photo,
+  floating,
+  variant,
+  children,
+  chromeless,
+  backgroundColor,
+  emphasizeTag,
+}: FeedCardProps) => {
   const theme = useTheme()
   const color = tags[0]?.rgb ?? [200, 150, 150]
   const colorString = rgbString(color)
@@ -45,6 +49,7 @@ export const FeedCard = ({
       borderless={!!backgroundColor}
       hoverEffect="background"
       photo={photo}
+      floating={floating}
       backgroundColor={backgroundColor}
       outside={
         <>

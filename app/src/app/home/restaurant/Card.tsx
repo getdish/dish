@@ -45,6 +45,7 @@ export type CardProps = {
   borderless?: boolean
   afterTitle?: any
   className?: string
+  floating?: boolean
 }
 
 const widths = {
@@ -78,6 +79,7 @@ export function Card({
   title = '',
   colorsKey,
   borderColor,
+  floating,
   subTitle,
   padTitleSide,
   aspectFixed,
@@ -122,6 +124,7 @@ export function Card({
 
   return (
     <CardFrame
+      floating={floating}
       className={className}
       borderColor={borderColor}
       backgroundColor={backgroundColor}
