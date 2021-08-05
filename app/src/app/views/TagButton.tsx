@@ -60,7 +60,7 @@ export const getTagButtonProps = (
 export type TagButtonProps = StackProps &
   Omit<TagButtonTagProps, 'rgb'> & {
     theme?: ThemeName
-    rgb?: RGB
+    rgb?: RGB | null
     slug?: string
     restaurantSlug?: string
     size?: 'lg' | 'md' | 'sm'

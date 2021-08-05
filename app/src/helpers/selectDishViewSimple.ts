@@ -13,7 +13,7 @@ export type DishTagItemSimple = {
   isFallback?: boolean
   type: string
   rank?: number
-  rgb?: RGB
+  rgb?: RGB | null
 }
 
 export const selectRishDishViewSimple = (tag: restaurant_tag): DishTagItemSimple => {

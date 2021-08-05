@@ -6,6 +6,7 @@ import { queryRestaurant } from '../../../queries/queryRestaurant'
 import { ListCard } from '../../views/list/ListCard'
 import { SlantedTitle } from '../../views/SlantedTitle'
 import { SimpleCard, SkewedCardCarousel } from '../SimpleCard'
+import { CardCarousel } from '../user/CardCarousel'
 
 export const RestaurantLists = memo(
   graphql(({ restaurantSlug }: { restaurantSlug: string }) => {
@@ -29,21 +30,18 @@ export const RestaurantLists = memo(
         <SlantedTitle size="xs" marginBottom={-26} alignSelf="center" fontWeight="700">
           Lists
         </SlantedTitle>
-        <SkewedCardCarousel>
+        <CardCarousel>
           {lists.map(({ list }, i) => {
             return (
-              <SimpleCard zIndex={1000 - i} key={list.id || i}>
-                <ListCard
-                  isBehind={i > 0}
-                  hoverable={false}
-                  slug={list.slug}
-                  userSlug={list.user?.username ?? 'no-user'}
-                  region={list.region ?? 'no-region'}
-                />
-              </SimpleCard>
+              <ListCard
+                // zIndex={1000 - i}
+                key={list.id || i}
+                slug={list.slug}
+                userSlug={list.user?.username ?? 'no-user'}
+              />
             )
           })}
-        </SkewedCardCarousel>
+        </CardCarousel>
       </VStack>
     )
   })

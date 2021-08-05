@@ -1,10 +1,9 @@
-import { graphql, query, useMetaState, useQuery } from '@dish/graph'
+import { graphql, query } from '@dish/graph'
 import { isPresent } from '@dish/helpers'
 import React, { Suspense, memo, useContext } from 'react'
 import { HStack } from 'snackui'
 
 import { getActiveTags } from '../../../helpers/getActiveTags'
-import { ListCard } from '../../views/list/ListCard'
 import { ListCardHorizontal } from '../../views/list/ListCardHorizontal'
 import { SearchForkListButton } from './SearchForkListButton'
 import { SearchPagePropsContext } from './SearchPagePropsContext'
@@ -53,7 +52,7 @@ export const SearchPageListsRow = memo(
                 key={i}
                 slug={list.slug}
                 userSlug={list.user?.username ?? ''}
-                region={list.region ?? ''}
+                // region={list.region ?? ''}
               />
             )
           })}

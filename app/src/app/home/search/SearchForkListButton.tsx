@@ -71,7 +71,6 @@ export const SearchForkListButton = memo(
                   name: 'list',
                   params: {
                     slug,
-                    region,
                     userSlug: username,
                   },
                 })
@@ -108,7 +107,6 @@ export const SearchForkListButton = memo(
                 name: 'list',
                 params: {
                   slug,
-                  region,
                   userSlug: username,
                 },
               })

@@ -87,7 +87,6 @@ if (process.env.NODE_ENV === 'development') {
   })
 }
 
-// @ts-expect-error
 const cacheSnapshot = global.__CACHE_SNAPSHOT
 
 // can be used by ssr in the future to load app
