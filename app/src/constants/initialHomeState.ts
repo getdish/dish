@@ -1,4 +1,4 @@
-import { MapPosition } from '@dish/graph'
+import { DISH_DEBUG, MapPosition } from '@dish/graph'
 
 import { getLocalJSON, setLocalJSON } from '../helpers/getLocalJSON'
 import { router } from '../router'
@@ -45,14 +45,6 @@ export function getDefaultLocation(): AppMapPosition & { region?: string } {
   }
 }
 
-console.log('getDefaultLocation', getDefaultLocation(), {
-  urlRegion,
-  initialRegion,
-  curPage,
-  initialHomeState,
-  initialLocation,
-})
-
 export function setDefaultLocation(value: Partial<HomeStateItemLocation>) {
   const prev = getDefaultLocation()
   const next = {
@@ -64,4 +56,14 @@ export function setDefaultLocation(value: Partial<HomeStateItemLocation>) {
     console.log('setDefaultLocation', next)
   }
   setLocalJSON('DEFAULT_LOCATION', next)
+}
+
+if (DISH_DEBUG) {
+  console.log('getDefaultLocation', getDefaultLocation(), {
+    urlRegion,
+    initialRegion,
+    curPage,
+    initialHomeState,
+    initialLocation,
+  })
 }

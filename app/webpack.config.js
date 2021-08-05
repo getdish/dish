@@ -10,6 +10,8 @@ module.exports = (opts) => {
       ...(process.env.APP_ENDPOINT && {
         'process.env.APP_ENDPOINT': process.env.APP_ENDPOINT,
       }),
+      'process.env.DISH_DEBUG':
+        process.env.DISH_DEBUG ?? process.env.NODE_ENV === 'production' ? '0' : '1',
     },
     resolve: {
       alias: {
