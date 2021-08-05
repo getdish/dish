@@ -1,9 +1,3 @@
-realtime map mvp
-  - pre-load just coords + name + (cuisine tag, top tag) for each region on map (going outwards better)
-
-- searchpage: making overview look like dishbot commentbubble
-- load next search points on map move and show them dimmed on map
-
 - [a] [0] load new search in background
 - [c] [0] test on ~10 restaurants
 - [c] [0] recrawl tucson, la, sd, sf
@@ -41,8 +35,6 @@ realtime map mvp
 
 - seeing the front of the restaruant in a wide angle shot is so key to intuitively finding a place you've been to !!
 
-- HASURA_GRAPHQL_JWT_SECRET seems like its just 12346... ? should secure that
-
 - validating/improving dish images
   - generally validate our image tag matching, document our current stats somewhere of "tagged images"
   - image quality API seems to not be super great
@@ -61,6 +53,53 @@ realtime map mvp
 - redo GPT3 summaries
   - table style:
     - | dish | rating | short summary |
+
+---
+
+content ideas:
+
+  - using company money to set up a fund initially to keep good lists coming
+    - interview series with chefs (pick 5 places that mean something to you, tell a story)
+    - michelin starred places
+    - "definitive" guides to regions
+    - "controversial" lists like "LA hands down beats SF in tacos, here's the comparison"
+    - "informative" lists like "Why Mexican food fails in the bay, and why Asian food rocks" or "3 asian cuisines that are amazing in the bay, 3 that are better in LA" etc
+
+  - setting up more automated ways for people to see bounties or payouts for certain types of content. a bounties page essentially for listers to go to and earn some money.
+
+  - hooking in analytics such that we can automatically suggest interesting topics for people. think of it as a sort of data-analytics team within a newspaper, but public as more of an analytics dashboard we build and improve
+
+bring the app "to life":
+
+  - home map needs to load points/regions faster and better
+    - secondary points, hover effects, colorized by type, emoji for standouts
+    - load next search points on map move and show them dimmed on map
+  
+  - more social stuff overall
+    - home showing better profile info, userpages far nicer
+
+  - more interesting tags on the home
+
+  - ensure interesting lists on home
+  
+  - incentives made fun/clear
+    - show "desired" lists and other info clearly
+
+  - fun light notification bubbles + more feedback
+
+incentivizing good content:
+
+  - being able to airdrop tokens for certain lists that meet thresholds
+
+  - show "desired" things clearly
+
+  - we need a way to figure out interesting tags and have them grow and organically tie into making lists. eg:
+
+    - "friendly bathroom"
+    - ""
+    - "quality decaf"
+
+---
 
 # search quality (lower priority)
 - when i search for nopalito to try and find the restaurant with that name that has gpt3 - i think we can safely say "near exact match names" can rank highly for plain (non-tag) search http://d1live.com/gems/san-francisco/-/nopalito
