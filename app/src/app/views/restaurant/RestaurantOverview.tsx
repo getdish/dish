@@ -128,7 +128,7 @@ export const RestaurantOverview = memo(
                 // short descriptions look bad in minHieght
                 // minHeight={lineHeight * 2}
                 // fontWeight="500"
-                color={theme.colorQuartenary}
+                color={theme.colorTertiary}
                 pointerEvents="auto"
               >
                 {disableEllipse

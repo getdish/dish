@@ -34,7 +34,7 @@ import {
   useTheme,
 } from 'snackui'
 
-import { bgLight } from '../../../constants/colors'
+import { bgLight, bluePastel } from '../../../constants/colors'
 import { isWeb } from '../../../constants/constants'
 import { useRegionQuery } from '../../../helpers/fetchRegion'
 import { getRestaurantIdentifiers } from '../../../helpers/getRestaurantIdentifiers'
@@ -293,7 +293,6 @@ const ListPageContent = graphql((props: Props) => {
   const refetch = useRefetch()
   const { list, isFavorited, toggleFavorite, reviewsCount } = useListFavorite({
     slug: props.item.slug,
-    region: props.item.region,
   })
   const [color, setColor] = useStateSynced(getListColor(list?.color) ?? '#999')
   const [isPublic, setPublic] = useStateSynced(list?.public ?? true)
@@ -343,7 +342,7 @@ const ListPageContent = graphql((props: Props) => {
   const isLight = list.color ? lightBackgrounds.has(list.color) : false
 
   return (
-    <>
+    <Theme name="green-pastel">
       <StackDrawer closable title={`${username}'s ${list.name}`}>
         <PaneControlButtonsLeft>
           <FavoriteButton floating isFavorite={isFavorited} onToggle={toggleFavorite}>
@@ -462,47 +461,43 @@ const ListPageContent = graphql((props: Props) => {
 
             {isMyList && (
               <>
-                <Spacer />
-
                 <HStack alignItems="center" justifyContent="center">
-                  <>
-                    {isEditing && (
-                      <>
-                        <Paragraph>Color&nbsp;&nbsp;</Paragraph>
-                        <ColorPicker colors={listColors} color={color} onChange={setColor} />
+                  {isEditing && (
+                    <>
+                      <Paragraph>Color&nbsp;&nbsp;</Paragraph>
+                      <ColorPicker colors={listColors} color={color} onChange={setColor} />
 
-                        <Spacer size="xl" />
+                      <Spacer size="xl" />
 
-                        <Paragraph>Public&nbsp;&nbsp;</Paragraph>
-                        <Switch value={isPublic} onValueChange={setPublic} />
+                      <Paragraph>Public&nbsp;&nbsp;</Paragraph>
+                      <Switch value={isPublic} onValueChange={setPublic} />
 
-                        <Spacer size="xl" />
+                      <Spacer size="xl" />
 
-                        <SmallButton
-                          tooltip="Delete"
-                          icon={<Trash size={16} />}
-                          onPress={async () => {
-                            assertPresent(list.id, 'no list id')
-                            if (confirm('Permanently delete this list?')) {
-                              await mutate((mutation) => {
-                                return mutation.delete_list({
-                                  where: {
-                                    id: {
-                                      _eq: list.id,
-                                    },
+                      <SmallButton
+                        tooltip="Delete"
+                        icon={<Trash size={16} />}
+                        onPress={async () => {
+                          assertPresent(list.id, 'no list id')
+                          if (confirm('Permanently delete this list?')) {
+                            await mutate((mutation) => {
+                              return mutation.delete_list({
+                                where: {
+                                  id: {
+                                    _eq: list.id,
                                   },
-                                })?.__typename
-                              })
-                              Toast.show('Deleted list')
-                              router.navigate({
-                                name: 'home',
-                              })
-                            }
-                          }}
-                        />
-                      </>
-                    )}
-                  </>
+                                },
+                              })?.__typename
+                            })
+                            Toast.show('Deleted list')
+                            router.navigate({
+                              name: 'home',
+                            })
+                          }
+                        }}
+                      />
+                    </>
+                  )}
                 </HStack>
                 <Spacer />
               </>
@@ -522,15 +517,15 @@ const ListPageContent = graphql((props: Props) => {
                 // backgroundColor={`${color}99`}
                 paddingHorizontal={20}
                 paddingVertical={20}
-                alignSelf="flex-start"
                 borderRadius={20}
               >
                 {isEditing ? (
                   <Input
                     placeholder="Description..."
                     multiline
-                    numberOfLines={2}
+                    numberOfLines={1}
                     lineHeight={30}
+                    width="100%"
                     fontSize={20}
                     marginVertical={-12}
                     textAlign="center"
@@ -548,94 +543,92 @@ const ListPageContent = graphql((props: Props) => {
               </VStack>
             )}
 
-            <Theme name={theme.name}>
-              <VStack minHeight={300} backgroundColor={theme.backgroundColor}>
-                {!restaurants.length && (
-                  <VStack
-                    padding={20}
-                    margin={20}
-                    borderWidth={1}
-                    borderColor="rgba(100,100,100,0.1)"
-                    borderRadius={10}
-                  >
-                    <Paragraph fontWeight="800">Nothing added to this list, yet.</Paragraph>
-                    {isMyList && (
-                      <Paragraph>
-                        Use the blue (+) button at the bottom. You can also add from any search page
-                        results.
-                      </Paragraph>
-                    )}
-                  </VStack>
-                )}
+            <VStack minHeight={300}>
+              {!restaurants.length && (
+                <VStack
+                  padding={20}
+                  margin={20}
+                  borderWidth={1}
+                  borderColor="rgba(100,100,100,0.1)"
+                  borderRadius={10}
+                >
+                  <Paragraph fontWeight="800">Nothing added to this list, yet.</Paragraph>
+                  {isMyList && (
+                    <Paragraph>
+                      Use the blue (+) button at the bottom. You can also add from any search page
+                      results.
+                    </Paragraph>
+                  )}
+                </VStack>
+              )}
 
-                {restaurants.map(
-                  ({ restaurantId, restaurant, comment, dishSlugs, position }, index) => {
-                    if (!restaurant.slug) {
-                      return null
-                    }
-                    return (
-                      <RestaurantListItem
-                        key={restaurant.slug}
-                        curLocInfo={props.item.curLocInfo ?? null}
-                        restaurantId={restaurantId}
-                        restaurantSlug={restaurant.slug}
-                        rank={index + 1}
-                        description={comment}
-                        hideTagRow
-                        above={
-                          isEditing && (
-                            <>
-                              <AbsoluteVStack top={-28} left={28}>
-                                <CircleButton
-                                  backgroundColor={bgLight}
-                                  width={44}
-                                  height={44}
-                                  onPress={() => {
-                                    restaurantActions.delete(restaurantId)
-                                  }}
-                                >
-                                  <X size={20} />
-                                </CircleButton>
-                              </AbsoluteVStack>
-                              <Score
-                                votable
-                                upTooltip="Move up"
-                                downTooltip="Move down"
-                                score={index + 1}
-                                setVote={async (vote) => {
-                                  restaurantActions.promote(vote === 1 ? index : index + 1)
-                                }}
-                              />
-                            </>
-                          )
-                        }
-                        flexibleHeight
-                        dishSlugs={dishSlugs.length ? dishSlugs : undefined}
-                        editableDishes={isEditing}
-                        onChangeDishes={async (dishes) => {
-                          console.log('should change dishes', dishes)
-                          await restaurantActions.setDishes(restaurantId, dishes)
-                          Toast.success(`Updated dishes`)
-                        }}
-                        editableDescription={isEditing}
-                        onChangeDescription={async (next) => {
-                          await restaurantActions.setComment(restaurantId, next)
-                          Toast.success('Updated description')
-                        }}
-                        editablePosition={isEditing}
-                        onChangePosition={(next) => {
-                          console.log('should change position', next)
-                        }}
-                      />
-                    )
+              {restaurants.map(
+                ({ restaurantId, restaurant, comment, dishSlugs, position }, index) => {
+                  if (!restaurant.slug) {
+                    return null
                   }
-                )}
-              </VStack>
-            </Theme>
+                  return (
+                    <RestaurantListItem
+                      key={restaurant.slug}
+                      curLocInfo={props.item.curLocInfo ?? null}
+                      restaurantId={restaurantId}
+                      restaurantSlug={restaurant.slug}
+                      rank={index + 1}
+                      description={comment}
+                      hideTagRow
+                      above={
+                        isEditing && (
+                          <>
+                            <AbsoluteVStack top={-28} left={28}>
+                              <CircleButton
+                                backgroundColor={bgLight}
+                                width={44}
+                                height={44}
+                                onPress={() => {
+                                  restaurantActions.delete(restaurantId)
+                                }}
+                              >
+                                <X size={20} />
+                              </CircleButton>
+                            </AbsoluteVStack>
+                            <Score
+                              votable
+                              upTooltip="Move up"
+                              downTooltip="Move down"
+                              score={index + 1}
+                              setVote={async (vote) => {
+                                restaurantActions.promote(vote === 1 ? index : index + 1)
+                              }}
+                            />
+                          </>
+                        )
+                      }
+                      flexibleHeight
+                      dishSlugs={dishSlugs.length ? dishSlugs : undefined}
+                      editableDishes={isEditing}
+                      onChangeDishes={async (dishes) => {
+                        console.log('should change dishes', dishes)
+                        await restaurantActions.setDishes(restaurantId, dishes)
+                        Toast.success(`Updated dishes`)
+                      }}
+                      editableDescription={isEditing}
+                      onChangeDescription={async (next) => {
+                        await restaurantActions.setComment(restaurantId, next)
+                        Toast.success('Updated description')
+                      }}
+                      editablePosition={isEditing}
+                      onChangePosition={(next) => {
+                        console.log('should change position', next)
+                      }}
+                    />
+                  )
+                }
+              )}
+            </VStack>
           </PageContentWithFooter>
         </ContentScrollView>
       </StackDrawer>
-    </>
+    </Theme>
   )
 })
 
@@ -655,12 +648,13 @@ const ListPageTitle = ({
   draft: any
 }) => {
   const len = list.name?.length ?? 16
+  const theme = useTheme()
 
   return (
     <PageTitle
       noDivider
       title={
-        <Theme name="dark">
+        <>
           <VStack
             marginHorizontal="auto"
             marginVertical={15}
@@ -676,7 +670,7 @@ const ListPageTitle = ({
             </ScalingPressable>
 
             <VStack position="relative" alignSelf="center">
-              {list.user?.avatar && (
+              {!!list.user?.avatar && (
                 <AbsoluteVStack x={0} overflow="visible" bottom={-15} left={-20} zIndex={-3}>
                   <UserAvatar
                     size={130}
@@ -685,14 +679,20 @@ const ListPageTitle = ({
                   />
                 </AbsoluteVStack>
               )}
+
               <SlantedTitle
-                backgroundColor={color}
                 marginTop={-5}
-                color="#fff"
+                color={color}
                 alignSelf="center"
                 zIndex={0}
                 size={len < 12 ? 'xl' : len < 16 ? 'lg' : len < 24 ? 'md' : len < 30 ? 'sm' : 'xs'}
               >
+                {/* <Text
+                fontSize={len < 12 ? 60 : len < 16 ? 42 : len < 24 ? 34 : len < 30 ? 24 : 18}
+                marginVertical={10}
+                color={theme.color}
+                fontWeight="800"
+              > */}
                 {isEditing ? (
                   <Input
                     fontSize={20}
@@ -710,13 +710,14 @@ const ListPageTitle = ({
                 ) : (
                   list.name
                 )}
+                {/* </Text> */}
               </SlantedTitle>
               <SlantedTitle scale={1} zIndex={-1} size="xs" alignSelf="center">
                 {locationName}
               </SlantedTitle>
             </VStack>
           </VStack>
-        </Theme>
+        </>
       }
       // after={
       //   <AbsoluteVStack

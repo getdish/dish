@@ -1,3 +1,4 @@
+- Paragraph fontWeight not setting
 - fix total map restaurants show more
 - hover effect + map restaurants on top cuisine & dishes
 - searchpage error on upvote

@@ -26,7 +26,7 @@ export const RestaurantLists = memo(
 
     return (
       <VStack marginTop={-15} marginBottom={15}>
-        <SlantedTitle size="md" marginBottom={-26} alignSelf="center" fontWeight="700">
+        <SlantedTitle size="xs" marginBottom={-26} alignSelf="center" fontWeight="700">
           Lists
         </SlantedTitle>
         <SkewedCardCarousel>
