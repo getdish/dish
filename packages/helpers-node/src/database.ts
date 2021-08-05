@@ -1,5 +1,6 @@
 import { sleep } from '@dish/async'
 import { sentryException } from '@dish/common'
+import { DISH_DEBUG } from '@dish/graph'
 import { Pool, PoolConfig, QueryResult } from 'pg'
 
 export class Database {
@@ -25,9 +26,11 @@ export class Database {
       max: 10,
       ...this.config,
     })
-    this.pool.on('connect', () => {
-      console.log('connected to', this.config)
-    })
+    if (DISH_DEBUG > 2) {
+      this.pool.on('connect', () => {
+        console.log('connected to', this.config)
+      })
+    }
     this.pool.on('error', (e) => {
       console.log(`Error: pool (${this.config.host}:${this.config.port})`, e.message, e.stack)
       sentryException(e, {
