@@ -107,7 +107,7 @@
     "react-feather": "^2.0.9",
     "react-helmet": "^6.1.0",
     "react-hook-form": "^6.13.0",
-    "react-laag": "^2.0.2",
+    "react-laag": "2.0.3",
     "react-lag-radar": "^1.0.0",
     "react-native": "^0.63.4",
     "react-native-fast-image": "^8.3.4",
