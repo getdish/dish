@@ -131,9 +131,9 @@ export const RestaurantPhotosRowContent = memo(
                     {...(floating && {
                       borderRadius: 12,
                       overflow: 'hidden',
-                      shadowColor: theme.shadowColor,
-                      shadowRadius: 10,
-                      shadowOffset: { width: 5, height: 2 },
+                      shadowColor: theme.shadowColorLighter,
+                      shadowRadius: 7,
+                      shadowOffset: { width: 4, height: 2 },
                     })}
                   >
                     {(() => {

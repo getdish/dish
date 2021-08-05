@@ -142,7 +142,7 @@ export const Score = memo(
               size={Math.round(sizePx + 3)}
               color={colors.color}
               percent={rating * 10}
-              width={sizePx * 0.08}
+              width={sizePx * 0.06}
             />
           </AbsoluteVStack>
         )}
