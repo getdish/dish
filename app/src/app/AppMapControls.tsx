@@ -53,7 +53,7 @@ export const AppMapControls = memo(() => {
           justifyContent="center"
         >
           <AbsoluteHStack
-            top={media.sm ? 8 : searchBarHeight + 10}
+            top={media.sm ? 8 : searchBarHeight + 16}
             right={0}
             minHeight={50}
             left={0}

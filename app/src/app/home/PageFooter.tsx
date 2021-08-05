@@ -9,21 +9,12 @@ export const PageFooter = memo(() => {
 
   return (
     <VStack position="relative">
-      <AbsoluteVStack
-        zIndex={-1}
-        top={-15}
-        left={-100}
-        backgroundColor={theme.backgroundColorDarker}
-        right={-100}
-        bottom={-55}
-        rotate="-2deg"
-      >
+      <AbsoluteVStack zIndex={-1} top={-15} left={-100} right={-100} bottom={-55} rotate="-2deg">
         <Divider />
       </AbsoluteVStack>
 
       <VStack paddingVertical={20} alignItems="center" paddingHorizontal="5%">
         <AppIntroLogin />
-        <Spacer size="xxl" />
       </VStack>
 
       {/* enough to let keyboard show below auth form */}

@@ -53,7 +53,7 @@ const DishButtonContent = (props: TagButtonSlantedProps) => {
 
   const imageUrl = getImageUrl(image ?? '', 120, 120, 120)
   const isLong = dishName.length > 20 || !!dishName.split(' ').find((x) => x.length >= 10)
-  const fontSize = isLong ? 14 : 16
+  const fontSize = isLong ? 13 : 15
   const theme = useTheme()
 
   let contents = (
@@ -116,7 +116,7 @@ const DishButtonContent = (props: TagButtonSlantedProps) => {
           <Text
             className="ease-in-out-fast"
             fontWeight={bold ? '800' : '400'}
-            color={theme.color}
+            color={theme.colorSecondary}
             opacity={0.8}
             fontSize={fontSize}
             textAlign="center"

@@ -140,7 +140,7 @@ const RestaurantHeaderContent = memo(
                   />
                 </AbsoluteVStack>
 
-                <Spacer size="lg" />
+                <Spacer size="xl" />
 
                 {/* below title row */}
                 <HStack pointerEvents="auto" flex={1} alignItems="flex-start" minWidth={280}>
@@ -181,7 +181,7 @@ const RestaurantHeaderContent = memo(
                                 borderWidth={0}
                                 textProps={{
                                   ellipse: true,
-                                  opacity: 0.5,
+                                  opacity: 0.65,
                                 }}
                                 icon={
                                   <Clock

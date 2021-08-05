@@ -59,8 +59,8 @@ export const SimpleCard = ({
           // this makes react native work...
           backgroundColor="rgba(0,0,0,0.1)"
           shadowColor="#000"
-          shadowOpacity={0.8}
-          shadowRadius={30}
+          shadowOpacity={0.3}
+          shadowRadius={20}
           shadowOffset={{ width: 10, height: 0 }}
         />
       )}
