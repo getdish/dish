@@ -1,6 +1,7 @@
 import { MapPosition } from '@dish/graph'
 
 import { getLocalJSON, setLocalJSON } from '../helpers/getLocalJSON'
+import { router } from '../router'
 import { HomeStateItemHome, HomeStateItemLocation } from '../types/homeTypes'
 import { AppMapPosition } from '../types/mapTypes'
 
@@ -17,12 +18,16 @@ export const initialPosition: MapPosition = {
   },
 }
 
+const curPage = router.curPage
+const urlRegion = curPage.name === 'homeRegion' ? curPage.params.region : null
+const initialRegion = urlRegion ?? location?.region ?? 'ca-san-francisco'
+
 export const initialHomeState: HomeStateItemHome = {
   id: '0',
   type: 'home',
   activeTags: {},
   searchQuery: '',
-  region: location?.region ?? 'ca-san-francisco',
+  region: initialRegion,
   section: '',
 }
 
@@ -36,8 +41,17 @@ export function getDefaultLocation(): AppMapPosition & { region?: string } {
   return {
     via: 'init',
     ...location,
+    region: initialRegion,
   }
 }
+
+console.log('getDefaultLocation', getDefaultLocation(), {
+  urlRegion,
+  initialRegion,
+  curPage,
+  initialHomeState,
+  initialLocation,
+})
 
 export function setDefaultLocation(value: Partial<HomeStateItemLocation>) {
   const prev = getDefaultLocation()

@@ -509,22 +509,22 @@ const ListPageContent = graphql((props: Props) => {
               </>
             )}
 
-            {!!tagButtons.length && (
-              <>
-                <HStack spacing justifyContent="center">
-                  {tagButtons}
-                </HStack>
-                <Spacer />
-              </>
-            )}
-
-            {!!(list.description || isEditing) && (
-              <VStack
+            {!!(list.description || isEditing || !!tagButtons.length) && (
+              <HStack
                 // backgroundColor={`${color}99`}
                 paddingHorizontal={20}
                 paddingVertical={20}
                 borderRadius={20}
               >
+                {!!tagButtons.length && (
+                  <>
+                    <HStack spacing justifyContent="center">
+                      {tagButtons}
+                    </HStack>
+                    <Spacer />
+                  </>
+                )}
+
                 {isEditing ? (
                   <Input
                     placeholder="Description..."
@@ -546,7 +546,7 @@ const ListPageContent = graphql((props: Props) => {
                     {list.description}
                   </Paragraph>
                 )}
-              </VStack>
+              </HStack>
             )}
 
             <VStack minHeight={300}>
