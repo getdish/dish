@@ -28,6 +28,7 @@ realtime map mvp
 - [m] [1] swipe back to go back on drawer cards
 - [m] get login/signup working
 - [m] [3] add apple sign in
+- [m] [3] hover to color map circles in a group
 - [a] [4] opengraph / meta / seo
 
 ---

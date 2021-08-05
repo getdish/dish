@@ -1,6 +1,6 @@
 import { fullyIdle } from '@dish/async'
 import React, { memo } from 'react'
-import { HStack, useThemeName } from 'snackui'
+import { HStack, useTheme, useThemeName } from 'snackui'
 
 import { isWeb } from '../constants/constants'
 import { getTagSlug } from '../helpers/getTagSlug'
@@ -13,6 +13,7 @@ export const AppSearchInputTagsRow = memo(({ input }: { input: HTMLInputElement 
   const tags = home.searchBarTags
   const themeName = useThemeName()
   const focusedTag = home.searchbarFocusedTag
+  // const theme = useTheme()
 
   return (
     <>
@@ -30,7 +31,7 @@ export const AppSearchInputTagsRow = memo(({ input }: { input: HTMLInputElement 
                 shadowColor="#00000022"
                 color="#000"
                 fontWeight="600"
-                backgroundColor="rgba(255,255,255,1)"
+                // backgroundColor={theme.}
                 shadowRadius={8}
                 hideRating
                 hideRank

@@ -189,26 +189,27 @@ const RestaurantPage = memo(
               {/* END head color AREA */}
             </VStack>
 
-            <VStack paddingTop={15} paddingBottom={5}>
-              <RestaurantOverview
-                isDishBot
-                maxLines={4}
-                size="lg"
-                restaurantSlug={restaurantSlug}
-              />
-            </VStack>
-
             <Spacer size="xl" />
 
             <Suspense fallback={null}>
               <RestaurantLists restaurantSlug={restaurantSlug} />
             </Suspense>
 
-            <VStack ref={setReviewsSection} paddingVertical={20}>
+            <VStack ref={setReviewsSection}>
               <Suspense fallback={null}>
                 <RestaurantReviewsList
                   restaurantSlug={restaurantSlug}
                   restaurantId={restaurant.id}
+                  before={
+                    <VStack paddingTop={5} paddingBottom={5}>
+                      <RestaurantOverview
+                        isDishBot
+                        maxLines={4}
+                        size="lg"
+                        restaurantSlug={restaurantSlug}
+                      />
+                    </VStack>
+                  }
                 />
               </Suspense>
             </VStack>
