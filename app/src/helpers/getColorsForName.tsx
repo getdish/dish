@@ -2,6 +2,7 @@ import {
   allColors,
   allColorsPastel,
   allDarkColor,
+  allExtraDarkColors,
   allExtraLightColors,
   allLightColors,
   colorNames,
@@ -27,6 +28,7 @@ const getColorsForIndex = (index = 0) => {
   return {
     name: colorNames[index],
     darkColor: allDarkColor[index],
+    extraDarkColor: allExtraDarkColors[index],
     lightColor: allLightColors[index],
     extraLightColor: allExtraLightColors[index],
     altColor: allColors[altIndex],

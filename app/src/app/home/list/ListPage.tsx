@@ -32,6 +32,7 @@ import {
   Toast,
   VStack,
   useTheme,
+  useThemeName,
 } from 'snackui'
 
 import { bgLight, bluePastel } from '../../../constants/colors'
@@ -284,6 +285,7 @@ function useListRestaurants(list?: list) {
 const lightBackgrounds = new Set([4, 11, 10])
 
 const ListPageContent = graphql((props: Props) => {
+  const themeName = useThemeName()
   const theme = useTheme()
   const user = useUserStore()
   const isMyList = props.item.userSlug === slugify(user.user?.username)
@@ -342,7 +344,7 @@ const ListPageContent = graphql((props: Props) => {
   const isLight = list.color ? lightBackgrounds.has(list.color) : false
 
   return (
-    <Theme name="green-pastel">
+    <Theme name={themeName === 'dark' ? `green-${themeName}` : 'green'}>
       <StackDrawer closable title={`${username}'s ${list.name}`}>
         <PaneControlButtonsLeft>
           <FavoriteButton floating isFavorite={isFavorited} onToggle={toggleFavorite}>
@@ -445,10 +447,14 @@ const ListPageContent = graphql((props: Props) => {
 
         <ContentScrollView id="list">
           <PageContentWithFooter>
-            <Spacer />
-
             {/* overflow clip prevention with marginVerticals here */}
-            <VStack position="relative">
+            <VStack position="relative" marginHorizontal={-20}>
+              <AbsoluteVStack
+                zIndex={-1}
+                fullscreen
+                rotateY="-12deg"
+                backgroundColor={theme.backgroundColorTransluscent}
+              />
               <ListPageTitle
                 isLight={isLight}
                 locationName={region.data?.name ?? props.item.region}
@@ -712,8 +718,8 @@ const ListPageTitle = ({
                 )}
                 {/* </Text> */}
               </SlantedTitle>
-              <SlantedTitle scale={1} zIndex={-1} size="xs" alignSelf="center">
-                {locationName}
+              <SlantedTitle fontWeight="300" scale={1} zIndex={-1} size="xsx" alignSelf="center">
+                {locationName ?? 'anywhere'}
               </SlantedTitle>
             </VStack>
           </VStack>
