@@ -231,6 +231,7 @@ class HomeStore extends Store {
     if (!state) {
       if (val.type && this.currentState.type === val.type) {
         state = this.currentState
+        val.id = state.id
       }
     }
     if (state) {
