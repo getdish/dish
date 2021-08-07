@@ -1,6 +1,6 @@
 import { RoutesTable } from '@dish/router'
 import React from 'react'
-import { BlurView, useTheme } from 'snackui'
+import { BlurView } from 'snackui'
 
 import { DRouteName } from '../../router'
 import { LinkButton } from './LinkButton'
@@ -10,9 +10,8 @@ export function OverlayLinkButton<
   Name extends DRouteName = DRouteName,
   Params = RoutesTable[Name]['params']
 >({ Icon, children, ...props }: LinkButtonProps<Name, Params> & { Icon?: any }) {
-  const theme = useTheme()
   return (
-    <BlurView borderRadius={20} marginHorizontal={5}>
+    <BlurView borderRadius={20} marginHorizontal={3}>
       <LinkButton
         paddingVertical={10}
         paddingHorizontal={16}
@@ -23,10 +22,6 @@ export function OverlayLinkButton<
         shadowOffset={{ width: 0, height: 2 }}
         overflow="hidden"
         pointerEvents="auto"
-        hoverStyle={{
-          transform: [{ scale: 1.025 }],
-          backgroundColor: theme.backgroundColor,
-        }}
         textProps={{
           fontWeight: '600',
           fontSize: 14,

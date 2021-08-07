@@ -76,6 +76,8 @@ export const AppMapControls = memo(() => {
               </OverlayLinkButton>
             )}
 
+            {/* <ToggleRegionButton /> */}
+
             {isHoverZoomed && (
               <OverlayLinkButton Icon={X} onPress={appMapStore.clearHover}>
                 Clear hover

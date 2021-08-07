@@ -122,6 +122,14 @@ d1live.com 127.0.0.1
 
 Which are for local, staging, prod, respectively.
 
+### Developing
+
+You'll generally run the web app (yarn app), build watcher (yarn watch), and backend (yarn start) in three terminal panes.
+
+If you edit something in snackui, just be sure to commit it as its own commit as we sync that folder using git-subrepo to the snackui git repo.
+
+For debugging snackui stuff you can always put `// debug` at the top of the file to see a ton of info on the compile time transforms and the output source. If you have a runtime issue you can put the `debug` prop to true on any snackui component and it should output info as well.
+
 ### Run end to end tests
 
 First build the docker container, this can take up to 30 minutes:

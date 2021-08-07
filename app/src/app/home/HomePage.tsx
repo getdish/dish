@@ -194,8 +194,6 @@ const HomePageContent = (props: Props) => {
             </HStack>
           </ContentScrollViewHorizontal>
         </HStack>
-        <Spacer size="xs" />
-        <HomePageIntroDialogue />
         <Spacer size="md" />
       </>
     )
