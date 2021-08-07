@@ -13,6 +13,7 @@ export const InputFrame = forwardRef(({ children }: { children: any }, ref) => {
       maxWidth="100%"
       paddingLeft={10}
       position="relative"
+      maxHeight={44}
       backgroundColor={theme.backgroundColorTransluscent}
       hoverStyle={{
         backgroundColor: theme.backgroundColorTransluscentHover,
