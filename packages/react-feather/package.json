@@ -8,8 +8,8 @@
   "module": "_",
   "sideEffects": false,
   "scripts": {
-    "build": "esdx skip-types",
-    "watch": "esdx-watch skip-types",
+    "build": "esdx",
+    "watch": "esdx-watch",
     "generate": "node ./bin/build"
   },
   "license": "MIT",

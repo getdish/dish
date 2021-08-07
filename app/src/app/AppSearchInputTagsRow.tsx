@@ -13,7 +13,7 @@ export const AppSearchInputTagsRow = memo(({ input }: { input: HTMLInputElement 
   const tags = home.searchBarTags
   const themeName = useThemeName()
   const focusedTag = home.searchbarFocusedTag
-  // const theme = useTheme()
+  const theme = useTheme()
 
   return (
     <>
@@ -31,7 +31,7 @@ export const AppSearchInputTagsRow = memo(({ input }: { input: HTMLInputElement 
                 shadowColor="#00000022"
                 color="#000"
                 fontWeight="600"
-                // backgroundColor={theme.}
+                backgroundColor={theme.cardBackgroundColor}
                 shadowRadius={8}
                 hideRating
                 hideRank

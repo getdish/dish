@@ -1,23 +1,13 @@
-import { RefreshCcw, X } from '@dish/react-feather'
+import { Minus, Plus, RefreshCcw, X } from '@dish/react-feather'
 import { useSelector, useStoreInstance, useStoreInstanceSelector } from '@dish/use-store'
 import React, { memo } from 'react'
 import { Switch } from 'react-native'
-import {
-  AbsoluteHStack,
-  AbsoluteVStack,
-  Button,
-  Circle,
-  HStack,
-  Text,
-  Theme,
-  VStack,
-  useMedia,
-} from 'snackui'
+import { AbsoluteHStack, AbsoluteVStack, HStack, Text, Theme, VStack, useMedia } from 'snackui'
 
 import { isWeb, searchBarHeight, zIndexDrawer } from '../constants/constants'
 import { hasMovedAtLeast } from '../helpers/mapHelpers'
 import { useIsRouteActive } from '../router'
-import { appMapStore } from './AppMapStore'
+import * as AppMapStore from './AppMapStore'
 import { searchPageStore, useSearchPageStore } from './home/search/SearchPageStore'
 import { homeStore } from './homeStore'
 import { useSafeArea } from './hooks/useSafeArea'
@@ -28,8 +18,9 @@ export const AppMapControls = memo(() => {
   const media = useMedia()
   const safeArea = useSafeArea()
   const showSearchHere = useShowSearchHere()
+  const appMapStore = useStoreInstance(AppMapStore.appMapStore)
   const isHoverZoomed = useStoreInstanceSelector(
-    appMapStore,
+    AppMapStore.appMapStore,
     (x) => x.hovered?.via === 'list' && x.zoomOnHover
   )
   return (
@@ -63,6 +54,21 @@ export const AppMapControls = memo(() => {
             pointerEvents="none"
           >
             {/* {isWeb && <ToggleRegionButton />} */}
+
+            {!appMapStore.hideRegions && (
+              <>
+                <OverlayLinkButton
+                  disabled={appMapStore.currentZoomLevel === 'far'}
+                  Icon={Minus}
+                  onPress={appMapStore.zoomOut}
+                ></OverlayLinkButton>
+                <OverlayLinkButton
+                  disabled={appMapStore.currentZoomLevel === 'close'}
+                  Icon={Plus}
+                  onPress={appMapStore.zoomIn}
+                ></OverlayLinkButton>
+              </>
+            )}
 
             {showSearchHere && (
               <OverlayLinkButton Icon={RefreshCcw} onPress={pagesStore.refresh}>
@@ -111,7 +117,7 @@ function useShowSearchHere() {
   return useSelector(() => {
     const isOnSearch = homeStore.currentStateType === 'search'
     const sp = searchPageStore.searchPosition
-    const { center, span } = appMapStore.nextPosition
+    const { center, span } = AppMapStore.appMapStore.nextPosition
     if (searchPageStore.status === 'loading') return false
     if (!isOnSearch) return false
     const hasMoved = hasMovedAtLeast(sp, { center, span }, 0.001)

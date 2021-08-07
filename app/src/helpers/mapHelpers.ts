@@ -31,7 +31,9 @@ export const getZoomFromSpan = (span: LngLat) => {
   return zoom
 }
 
-export const getZoomLevel = (span: LngLat) => {
+export type MapZoomLevel = 'close' | 'medium' | 'far'
+
+export const getZoomLevel = (span: LngLat): MapZoomLevel => {
   const curZoom = getZoomFromSpan(span)
   return curZoom < 0.05 ? 'close' : curZoom > 0.3 ? 'far' : 'medium'
 }
