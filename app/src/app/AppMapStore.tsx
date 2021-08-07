@@ -20,6 +20,7 @@ import {
   setDefaultLocation,
 } from '../constants/initialHomeState'
 import {
+  MapZoomLevel,
   bboxToLngLat,
   getMaxLngLat,
   getZoomLevel,
@@ -112,6 +113,10 @@ class AppMapStore extends Store {
     return this.nextPosition ?? this.position
   }
 
+  get currentZoomLevel() {
+    return getZoomLevel(this.currentPosition.span)
+  }
+
   setNextPosition(pos: Partial<AppMapPosition>) {
     this.nextPosition = {
       center: pos.center ?? this.position.center,
@@ -185,6 +190,50 @@ class AppMapStore extends Store {
     }
   }
 
+  zoomIn() {
+    switch (this.currentZoomLevel) {
+      case 'far':
+        this.zoomToLevel('medium')
+        break
+      case 'medium':
+        this.zoomToLevel('close')
+        break
+    }
+  }
+
+  zoomOut() {
+    switch (this.currentZoomLevel) {
+      case 'close':
+        this.zoomToLevel('medium')
+        break
+      case 'medium':
+        this.zoomToLevel('far')
+        break
+    }
+  }
+
+  static levels: { [key in MapZoomLevel]: LngLat } = {
+    close: {
+      lng: 0.03,
+      lat: 0.01,
+    },
+    medium: {
+      lng: 0.12,
+      lat: 0.05,
+    },
+    far: {
+      lng: 0.75,
+      lat: 0.28,
+    },
+  }
+
+  zoomToLevel(level: MapZoomLevel) {
+    const span = AppMapStore.levels[level]
+    this.setPosition({
+      span,
+    })
+  }
+
   getUserPosition = () => {
     return new Promise<any>((res, rej) => {
       navigator.geolocation.getCurrentPosition(res, rej)
@@ -239,22 +288,6 @@ export const useAppMapKey = <A extends keyof AppMapStore>(key: A) =>
 export const useZoomLevel = () => {
   const position = useAppMapKey('position')
   return getZoomLevel(position.span!)
-}
-
-export const mapZoomToMedium = () => {
-  let span = appMapStore.position.span!
-  let center = appMapStore.position.center!
-  for (const state of [...appMapStore.lastPositions].reverse()) {
-    if (getZoomLevel(state.span!) === 'medium') {
-      span = state.span!
-      center = state.center!
-      break
-    }
-  }
-  appMapStore.setPosition({
-    span,
-    center,
-  })
 }
 
 export function updateRegionImmediate(region: RegionWithVia) {
