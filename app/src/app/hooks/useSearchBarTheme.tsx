@@ -25,7 +25,7 @@ export const useSearchBarTheme = () => {
   return {
     theme: color.name,
     color: '#fff',
-    background: isColored ? rgbString(color.rgb, 0.9) : rgbString(color.rgb),
+    background: isColored ? rgbString(color.rgb, 1) : rgbString(color.rgb),
     isColored,
     backgroundRgb: color.rgb,
   }

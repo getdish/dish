@@ -16,7 +16,7 @@ import { AbsoluteVStack, LoadingItems, StackProps, VStack, useMedia, useTheme } 
 import { drawerBorderRadius, drawerWidthMax } from '../../constants/constants'
 import { STACK_ANIMATION_DURATION } from '../home/HomeStackView'
 import { HomeSuspense } from '../home/HomeSuspense'
-import { PageTitleTag } from './PageTitleTag'
+import { PageHead } from './PageHead'
 import { StackCloseButton } from './StackCloseButton'
 
 export type StackDrawerProps = StackProps & {
@@ -48,7 +48,7 @@ export const StackDrawer = ({
 
   return (
     <>
-      {!!title && <PageTitleTag>{title}</PageTitleTag>}
+      {!!title && <PageHead>{title}</PageHead>}
       <AbsoluteVStack
         position="absolute"
         left={media.sm ? 0 : 'auto'}

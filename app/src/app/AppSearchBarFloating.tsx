@@ -7,7 +7,6 @@ import {
   searchBarBorderRadius,
   searchBarHeight,
   searchBarMaxWidth,
-  searchBarTopOffset,
   zIndexSearchBarFloating,
 } from '../constants/constants'
 import { AppSearchBarContents } from './AppSearchBarContents'
@@ -55,8 +54,8 @@ export const AppSearchBarFloating = () => {
         right={0}
         top={0}
       >
-        {/* under fade */}
-        <AbsoluteVStack
+        {/* under fade (only useful if actually floating so things show behind) */}
+        {/* <AbsoluteVStack
           // doesnt fix flickering
           // display={media.sm ? 'none' : 'flex'}
           fullscreen
@@ -66,7 +65,7 @@ export const AppSearchBarFloating = () => {
             style={[StyleSheet.absoluteFill]}
             colors={[bgLightTranslucent, `rgba(255,255,255,0)`]}
           />
-        </AbsoluteVStack>
+        </AbsoluteVStack> */}
 
         {/* container */}
         <AbsoluteVStack top={0} left={-20} right={-20} alignItems="center">

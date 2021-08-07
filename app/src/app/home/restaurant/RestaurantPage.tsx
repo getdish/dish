@@ -15,7 +15,7 @@ import { appMapStore, useSetAppMap } from '../../AppMapStore'
 import { drawerStore } from '../../drawerStore'
 import { ContentScrollView } from '../../views/ContentScrollView'
 import { NotFoundPage } from '../../views/NotFoundPage'
-import { PageTitleTag } from '../../views/PageTitleTag'
+import { PageHead } from '../../views/PageHead'
 import { RestaurantOverview } from '../../views/restaurant/RestaurantOverview'
 import { StackDrawer } from '../../views/StackDrawer'
 import { HomeStackViewProps } from '../HomeStackViewProps'
@@ -142,7 +142,7 @@ const RestaurantPage = memo(
 
     return (
       <>
-        <PageTitleTag>{`${restaurant.name} has the best ${topTags.join(', ')}`}</PageTitleTag>
+        <PageHead>{`${restaurant.name} has the best ${topTags.join(', ')}`}</PageHead>
         <ContentScrollView
           ref={setScrollView}
           onScrollYThrottled={(y) => {

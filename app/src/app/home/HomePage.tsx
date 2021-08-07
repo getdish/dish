@@ -40,7 +40,7 @@ import { CloseButton } from '../views/CloseButton'
 import { ContentScrollView } from '../views/ContentScrollView'
 import { ContentScrollViewHorizontal } from '../views/ContentScrollViewHorizontal'
 import { Link } from '../views/Link'
-import { PageTitleTag } from '../views/PageTitleTag'
+import { PageHead } from '../views/PageHead'
 import { PaneControlButtons } from '../views/PaneControlButtons'
 import { SlantedTitle } from '../views/SlantedTitle'
 import { HomePageFeed } from './HomePageFeed'
@@ -206,7 +206,7 @@ const HomePageContent = (props: Props) => {
 
   return (
     <>
-      <PageTitleTag>Dish - Uniquely Great Food</PageTitleTag>
+      <PageHead>Dish - Uniquely Great Food</PageHead>
 
       <HomePageWelcomeBubble />
 
