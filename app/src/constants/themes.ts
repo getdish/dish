@@ -90,9 +90,9 @@ const darkTranslucent: MyTheme = {
   ...baseTheme,
   ...darkBase,
   backgroundColor: 'rgba(0,0,0,0.7)',
-  backgroundColorSecondary: 'rgba(25,25,25,0.5)',
-  backgroundColorTertiary: 'rgba(50,50,50,0.25)',
-  backgroundColorQuartenary: 'rgba(75,75,75,0.1)',
+  backgroundColorSecondary: 'rgba(25,25,25,0.65)',
+  backgroundColorTertiary: 'rgba(50,50,50,0.6)',
+  backgroundColorQuartenary: 'rgba(75,75,75,0.5)',
 }
 
 const lightBase = {

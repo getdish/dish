@@ -26,33 +26,20 @@ export function LinkButton<Name extends DRouteName = DRouteName>(
     activeTextStyle,
     textProps,
     opacity,
-    disabled,
     theme,
     ...restProps
   } = props
-  const themeName = useThemeName()
+  // const themeName = useThemeName()
   return wrapWithLinkElement(
     <Button
-      disabled={disabled}
       {...restProps}
       {...(isActive && activeStyle)}
       textProps={isActive ? props.activeTextStyle : textProps}
-      opacity={opacity}
-      {...(disabled &&
-        typeof opacity !== 'number' && {
-          opacity: 0.5,
-        })}
       // {...(theme &&
+      //   colorNames.includes(theme as any) &&
       //   themeName === 'dark' && {
-      //     textProps: {
-      //       color: '#fff',
-      //     },
+      //     theme: `${theme}-dark`,
       //   })}
-      {...(theme &&
-        colorNames.includes(theme as any) &&
-        themeName === 'dark' && {
-          theme: `${theme}-dark`,
-        })}
     >
       {getChildren(props, isActive)}
     </Button>
