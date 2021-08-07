@@ -3,8 +3,10 @@ import { useStore, useStoreInstance } from '@dish/use-store'
 import React, { Suspense, memo, useEffect, useMemo, useState } from 'react'
 import {
   AbsoluteVStack,
+  AnimatedVStack,
   HStack,
   LoadingItems,
+  Modal,
   Paragraph,
   Spacer,
   Text,
@@ -32,11 +34,14 @@ import { homeStore, useHomeStateById } from '../homeStore'
 import { useLastValueWhen } from '../hooks/useLastValueWhen'
 import { useLocalStorageState } from '../hooks/useLocalStorageState'
 import { setInitialRegionSlug } from '../initialRegionSlug'
+import { IntroModalStore } from '../IntroModalStore'
+import { PortalItem } from '../Portal'
 import { CloseButton } from '../views/CloseButton'
 import { ContentScrollView } from '../views/ContentScrollView'
 import { ContentScrollViewHorizontal } from '../views/ContentScrollViewHorizontal'
 import { Link } from '../views/Link'
 import { PageTitleTag } from '../views/PageTitleTag'
+import { PaneControlButtons } from '../views/PaneControlButtons'
 import { SlantedTitle } from '../views/SlantedTitle'
 import { HomePageFeed } from './HomePageFeed'
 import { homePageStore } from './homePageStore'
@@ -203,6 +208,8 @@ const HomePageContent = (props: Props) => {
     <>
       <PageTitleTag>Dish - Uniquely Great Food</PageTitleTag>
 
+      <HomePageWelcomeBubble />
+
       {/* TOP FADE */}
       <AbsoluteVStack
         top={-searchBarHeight + 4}
@@ -245,53 +252,55 @@ const HomePageContent = (props: Props) => {
   )
 }
 
-const useThemeColor = (name: string) => {
-  const themeName = useThemeName()
-  return `${name}${themeName === 'dark' ? '-dark' : ''}`
-}
-
-const HomePageIntroDialogue = memo(() => {
-  const themeColor = useThemeColor('yellow')
+const HomePageWelcomeBubble = memo(() => {
   return (
-    <Theme name={themeColor}>
-      <Inner />
-    </Theme>
+    <PortalItem id="root">
+      <Theme name="dark">
+        <Inner />
+      </Theme>
+    </PortalItem>
   )
 })
 
 const Inner = () => {
+  const introStore = useStore(IntroModalStore)
   const [show, setShow] = useLocalStorageState('home-intro-dialogue', true)
   const theme = useTheme()
 
-  if (!show) {
+  if (!show || !introStore.hidden) {
     return null
   }
 
   return (
-    <VStack
-      backgroundColor={theme.backgroundColor}
-      borderColor={theme.borderColor}
-      borderWidth={1}
-      borderRadius={15}
-      paddingVertical={20}
-      paddingHorizontal={13}
-      margin={10}
-      marginHorizontal={15}
-      position="relative"
-      maxWidth={740}
-      alignSelf="center"
-    >
-      <AbsoluteVStack top={-20} right={-20}>
-        <CloseButton onPress={() => setShow(false)} />
-      </AbsoluteVStack>
-      <Paragraph size="md" textAlign="center">
-        <Text fontWeight="800">A better pocket guide for the world.</Text> Find great playlists for
-        the real world, earn money curating and reviewing.{' '}
-        <Link name="about" fontWeight="600">
-          Learn more
-        </Link>
-      </Paragraph>
-    </VStack>
+    <AbsoluteVStack zIndex={100000000} fullscreen alignItems="flex-end" justifyContent="flex-end">
+      <AnimatedVStack>
+        <VStack
+          backgroundColor={theme.backgroundColor}
+          borderColor={theme.borderColor}
+          borderWidth={1}
+          borderRadius={15}
+          margin={10}
+          marginHorizontal={15}
+          position="relative"
+          maxWidth={600}
+          pointerEvents="auto"
+          elevation={1}
+        >
+          <PaneControlButtons>
+            <CloseButton onPress={() => setShow(false)} />
+          </PaneControlButtons>
+          <VStack paddingVertical={20} paddingHorizontal={20}>
+            <Paragraph size="md" sizeLineHeight={0.9}>
+              <Text fontWeight="800">A better pocket guide for the world.</Text> Find great
+              playlists for the real world, earn money curating and reviewing.{' '}
+              <Link name="about" fontWeight="600">
+                Learn more
+              </Link>
+            </Paragraph>
+          </VStack>
+        </VStack>
+      </AnimatedVStack>
+    </AbsoluteVStack>
   )
 }
 
