@@ -29,6 +29,8 @@
 
 # inbox
 
+- search by region on search pages is an seo upgrade
+
 - searching tags should default to a grouped higher order tag, try "oysters" and you see a ton of different cuisine based categories, but there should be a meta category, just "Oysters", and the rest probably shouldn't show (but search should probably include all of them!)
 
 - can likely merge all docker intranet apps into one .yml
