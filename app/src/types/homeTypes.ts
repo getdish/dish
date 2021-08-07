@@ -155,6 +155,7 @@ export type HomeStateItemSimple = Pick<HomeStateItem, 'id' | 'type'>
 
 export type HomeStateItemList = HomeStateItemBase & {
   type: 'list'
+  color?: string
   slug: string
   userSlug: string
   region: string
