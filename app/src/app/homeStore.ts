@@ -16,7 +16,6 @@ import { getShouldNavigate } from '../helpers/getShouldNavigate'
 import { getTagSlug } from '../helpers/getTagSlug'
 import { isHomeState, isSearchState } from '../helpers/homeStateHelpers'
 import { isSearchBarTag } from '../helpers/isSearchBarTag'
-import { reverseGeocode } from '../helpers/reverseGeocode'
 import { syncStateFromRoute } from '../helpers/syncStateFromRoute'
 import { syncStateToRoute } from '../helpers/syncStateToRoute'
 import { router } from '../router'
@@ -540,7 +539,7 @@ class HomeStore extends Store {
     this.searchBarTagIndex = clamp(val, -this.searchBarTags.length, 0)
   }
 
-  updateCurrentState(via: string, val: Partial<Omit<HomeStateItem, 'type'>>) {
+  updateCurrentState<A extends HomeStateItem>(via: string, val: Partial<Omit<A, 'type'>>) {
     this.updateHomeState(`updateCurrentState(${via})`, {
       id: this.currentState.id,
       ...val,

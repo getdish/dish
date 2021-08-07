@@ -13,7 +13,7 @@ export const defaultLenseColor = {
 
 export const defaultLenseColorDark = {
   name: 'dark',
-  rgb: [30, 30, 30, 0.875] as RGB,
+  rgb: [22, 22, 22, 0.875] as RGB,
 }
 
 const lenseColors = {
@@ -26,6 +26,14 @@ const lenseColors = {
 export const useCurrentLenseColor = () => {
   const themeName = useThemeName()
   const result = useHomeStoreSelector((home) => {
+    if (home.currentState.type === 'list') {
+      if (home.currentState.color) {
+        return {
+          name: home.currentState.color,
+          rgb: hexToRGB(home.currentState.color).rgb,
+        }
+      }
+    }
     if (home.currentStateType === 'search') {
       if (home.currentStateLense) {
         return {

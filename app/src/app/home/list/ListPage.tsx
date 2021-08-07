@@ -38,6 +38,7 @@ import {
 import { bgLight, bluePastel } from '../../../constants/colors'
 import { isWeb } from '../../../constants/constants'
 import { useRegionQuery } from '../../../helpers/fetchRegion'
+import { getColorsForColor } from '../../../helpers/getColorsForName'
 import { getRestaurantIdentifiers } from '../../../helpers/getRestaurantIdentifiers'
 import { promote } from '../../../helpers/listHelpers'
 import { router } from '../../../router'
@@ -282,11 +283,11 @@ function useListRestaurants(list?: list) {
   ] as const
 }
 
-const lightBackgrounds = new Set([4, 11, 10])
+const lightBackgrounds = new Set([0, 4, 11, 10])
 
 const ListPageContent = graphql((props: Props) => {
-  const themeName = useThemeName()
-  const theme = useTheme()
+  // const themeName = useThemeName()
+  // const theme = useTheme()
   const user = useUserStore()
   const isMyList = props.item.userSlug === slugify(user.user?.username)
   const isEditing = props.item.state === 'edit'
@@ -296,12 +297,19 @@ const ListPageContent = graphql((props: Props) => {
   const { list, isFavorited, toggleFavorite, reviewsCount } = useListFavorite({
     slug: props.item.slug,
   })
-  const [color, setColor] = useStateSynced(getListColor(list?.color) ?? '#999')
+  const [color, setColor] = useStateSynced(getListColor(list?.color) ?? '#999999')
   const [isPublic, setPublic] = useStateSynced(list?.public ?? true)
   const [restaurants, restaurantActions] = useListRestaurants(list)
   const region = useRegionQuery(props.item.region)
 
   useSnapToFullscreenOnMount()
+
+  useEffect(() => {
+    if (!props.isActive) return
+    homeStore.updateCurrentState<HomeStateItemList>('ListPage.color', {
+      color,
+    })
+  }, [props.isActive, color])
 
   useEffect(() => {
     if (isEditing) {
@@ -341,10 +349,11 @@ const ListPageContent = graphql((props: Props) => {
       return <TagButton key={tag?.slug ?? i} size="sm" {...getTagButtonProps(tag)} />
     })
 
-  const isLight = list.color ? lightBackgrounds.has(list.color) : false
+  const isLight = typeof list.color === 'number' ? lightBackgrounds.has(list.color) : false
 
+  // <Theme name={themeName === 'dark' ? `green-${themeName}` : 'green'}>
   return (
-    <Theme name={themeName === 'dark' ? `green-${themeName}` : 'green'}>
+    <>
       <StackDrawer closable title={`${username}'s ${list.name}`}>
         <PaneControlButtonsLeft>
           <FavoriteButton floating isFavorite={isFavorited} onToggle={toggleFavorite}>
@@ -449,19 +458,18 @@ const ListPageContent = graphql((props: Props) => {
           <PageContentWithFooter>
             {/* overflow clip prevention with marginVerticals here */}
             <VStack position="relative" marginHorizontal={-20}>
-              <AbsoluteVStack
+              {/* <AbsoluteVStack
                 zIndex={-1}
                 fullscreen
                 rotateY="-12deg"
                 backgroundColor={theme.backgroundColorTransluscent}
-              />
+              /> */}
               <ListPageTitle
                 isLight={isLight}
                 locationName={region.data?.name ?? props.item.region}
                 list={list}
                 isEditing={isEditing}
                 draft={draft}
-                color={color}
               />
             </VStack>
 
@@ -634,7 +642,7 @@ const ListPageContent = graphql((props: Props) => {
           </PageContentWithFooter>
         </ContentScrollView>
       </StackDrawer>
-    </Theme>
+    </>
   )
 })
 
@@ -644,17 +652,16 @@ const ListPageTitle = ({
   locationName,
   isEditing,
   draft,
-  color,
 }: {
   isLight: boolean
-  color: string
   locationName: string
   list: list
   isEditing?: boolean
   draft: any
 }) => {
   const len = list.name?.length ?? 16
-  const theme = useTheme()
+  const color = getListColor(list.color)
+  const textColor = isLight ? '#000' : '#fff'
 
   return (
     <PageTitle
@@ -688,17 +695,12 @@ const ListPageTitle = ({
 
               <SlantedTitle
                 marginTop={-5}
-                color={color}
+                backgroundColor={color}
                 alignSelf="center"
                 zIndex={0}
                 size={len < 12 ? 'xl' : len < 16 ? 'lg' : len < 24 ? 'md' : len < 30 ? 'sm' : 'xs'}
+                color={textColor}
               >
-                {/* <Text
-                fontSize={len < 12 ? 60 : len < 16 ? 42 : len < 24 ? 34 : len < 30 ? 24 : 18}
-                marginVertical={10}
-                color={theme.color}
-                fontWeight="800"
-              > */}
                 {isEditing ? (
                   <Input
                     fontSize={20}
@@ -709,14 +711,13 @@ const ListPageTitle = ({
                     }}
                     fontWeight="700"
                     textAlign="center"
-                    color="#fff"
+                    color={textColor}
                     borderColor="transparent"
                     margin={-5}
                   />
                 ) : (
                   list.name
                 )}
-                {/* </Text> */}
               </SlantedTitle>
               <SlantedTitle fontWeight="300" scale={1} zIndex={-1} size="xs" alignSelf="center">
                 {locationName ?? 'anywhere'}
@@ -725,19 +726,6 @@ const ListPageTitle = ({
           </VStack>
         </>
       }
-      // after={
-      //   <AbsoluteVStack
-      //     top={-10}
-      //     right={0}
-      //     bottom={0}
-      //     alignItems="center"
-      //     justifyContent="center"
-      //     backgroundColor={theme.backgroundColor}
-      //     padding={20}
-      //   >
-      //     <Heart size={30} />
-      //   </AbsoluteVStack>
-      // }
     />
   )
 }
