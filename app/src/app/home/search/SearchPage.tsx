@@ -47,7 +47,7 @@ import { useLastValueWhen } from '../../hooks/useLastValueWhen'
 import { usePageLoadEffect } from '../../hooks/usePageLoadEffect'
 import { RootPortalItem } from '../../Portal'
 import { ContentScrollView } from '../../views/ContentScrollView'
-import { PageTitleTag } from '../../views/PageTitleTag'
+import { PageHead } from '../../views/PageHead'
 import { StackDrawer } from '../../views/StackDrawer'
 import { HomeSuspense } from '../HomeSuspense'
 import { PageContentWithFooter } from '../PageContentWithFooter'
@@ -103,7 +103,7 @@ export default memo(function SearchPage(props: SearchProps) {
 
   return (
     <>
-      <PageTitleTag>{title}</PageTitleTag>
+      <PageHead>{title}</PageHead>
       <StackDrawer closable>
         <HomeSuspense>
           <SearchNavBarContainer isActive={props.isActive} />

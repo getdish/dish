@@ -33,14 +33,6 @@ body {
   inset: 0;
 }
 
-@media (prefers-color-scheme: dark) {
-  #root {
-    border-radius: 10px;
-    overflow: hidden;
-    transform: translateZ(0);
-  }
-}
-
 * {
   flex-basis: initial !important;
 }

@@ -4,9 +4,11 @@ import { Image, Keyboard } from 'react-native'
 import { HStack, Spacer, Text, VStack, useDebounce, useTheme } from 'snackui'
 
 import { AutocompleteItem } from '../helpers/createAutocomplete'
+import { rgbString } from '../helpers/rgb'
 import { AutocompleteSelectCb } from './AutocompleteFrame'
 import { ShowAutocomplete, autocompletesStore } from './AutocompletesStore'
 import { CircleButton } from './home/restaurant/CircleButton'
+import { useCurrentLenseColor } from './hooks/useCurrentLenseColor'
 import { LinkButton } from './views/LinkButton'
 
 export const AutocompleteItemView = memo(
@@ -35,6 +37,7 @@ export const AutocompleteItemView = memo(
   }) => {
     const showLocation = target === 'location'
     const theme = useTheme()
+    const themeColor = rgbString(useCurrentLenseColor().rgb)
     const hideAutocompleteSlow = useDebounce(() => autocompletesStore.setVisible(false), 50)
     const plusButtonEl = showAddButton ? (
       <>
@@ -66,9 +69,9 @@ export const AutocompleteItemView = memo(
         alignSelf="stretch"
         justifyContent="flex-start"
         minHeight={46}
-        backgroundColor={isActive ? theme.backgroundColor : 'transparent'}
+        backgroundColor={isActive ? themeColor : 'transparent'}
         hoverStyle={{
-          backgroundColor: isActive ? theme.backgroundColor : theme.backgroundColorDarker,
+          backgroundColor: isActive ? themeColor : theme.backgroundColorDarker,
         }}
         onPressOut={() => {
           Keyboard.dismiss()
