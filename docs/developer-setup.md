@@ -122,6 +122,27 @@ d1live.com 127.0.0.1
 
 Which are for local, staging, prod, respectively.
 
+If you want to load those URL's without ports, which is recommended, you'll want to run nginx locally and proxy pass to the port the app runs on (4444):
+
+`brew install nginx` and follow any instructions to run it at startup, then add this to your configuration folder (something like `/opt/homebrew/etc/nginx/servers/dish.conf`):
+
+```
+server {
+  listen 80;
+  server_name d1sh.com;
+
+  location / {
+    proxy_set_header Upgrade $http_upgrade;
+    proxy_set_header Connection "upgrade";
+    proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+    proxy_set_header Host $host;
+    proxy_pass http://0.0.0.0:4444;
+  }
+}
+```
+
+Now you should be able to just access http://d1sh.com to develop on the local site with the local db, or http://d1live.com for the local site with the production db.
+
 ### Developing
 
 You'll generally run the web app (yarn app), build watcher (yarn watch), and backend (yarn start) in three terminal panes.

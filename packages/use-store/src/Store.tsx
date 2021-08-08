@@ -1,3 +1,6 @@
+// @ts-ignore
+import { startTransition } from 'react'
+
 import { shouldDebug } from './useStoreDebug'
 
 export const TRIGGER_UPDATE = Symbol()
@@ -28,7 +31,9 @@ export class Store<Props extends Object | null = null> {
   }
 
   [TRIGGER_UPDATE]() {
-    this._listeners.forEach((cb) => cb())
+    startTransition(() => {
+      this._listeners.forEach((cb) => cb())
+    })
   }
 
   [ADD_TRACKER](tracker: StoreTracker) {
