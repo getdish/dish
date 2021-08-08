@@ -180,6 +180,7 @@ const HomePageContent = (props: Props) => {
                   backgroundColor={regionColors.color}
                   color="#fff"
                   minWidth={100}
+                  fontWeight="900"
                   size={
                     regionName.length > 24
                       ? 'xxs'

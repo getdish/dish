@@ -143,7 +143,7 @@ const TagButtonInner = (props: TagButtonProps) => {
   }
 
   const isSmall = size === 'sm'
-  const scale = isSmall ? 0.85 : size == 'lg' ? 1.025 : 1
+  const scale = isSmall ? 0.85 : size == 'lg' ? 1.1 : 1
   const fontSize = fontSizeProp ? fontSizeProp : Math.round(15 * scale)
   const smallerFontSize: any = typeof fontSize === 'number' ? Math.round(fontSize * 0.85) : fontSize
   const ratingPts = typeof rating === 'number' ? rating * 10 - 50 : 0
