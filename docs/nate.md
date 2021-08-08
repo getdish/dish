@@ -1,3 +1,4 @@
+- back/fwd between regions not working right
 - fix map zooms too far in usually (ca-san-francisco)
 - Paragraph fontWeight not setting
 - fix total map restaurants show more

@@ -13,6 +13,7 @@ import { selectTagDishViewSimple } from '../../helpers/selectDishViewSimple'
 import { ContentScrollViewHorizontal } from '../views/ContentScrollViewHorizontal'
 import { Link } from '../views/Link'
 import { SlantedTitle } from '../views/SlantedTitle'
+import { TagButton } from '../views/TagButton'
 import { FeedCard } from './FeedCard'
 import { FIBase } from './FIBase'
 import { getListPhoto } from './getListPhoto'
@@ -141,29 +142,31 @@ export const HomePageFeed = memo(
                 <ContentScrollViewHorizontal>
                   <HStack spacing="xs" paddingHorizontal={16}>
                     {tagLenses.map((lense, i) => {
-                      const foundList = lenseLists[i]
+                      // const foundList = lenseLists[i]
                       return (
                         <VStack alignItems="center" flex={1} key={i} marginBottom={20}>
                           <Link
-                            {...(foundList && {
-                              name: 'list',
-                              params: {
-                                slug: foundList?.slug ?? '',
-                                userSlug: foundList?.user?.username ?? '',
-                              },
-                            })}
-                            {...(!foundList && {
-                              tag: lense,
-                            })}
+                            // {...(foundList && {
+                            //   name: 'list',
+                            //   params: {
+                            //     slug: foundList?.slug ?? '',
+                            //     userSlug: foundList?.user?.username ?? '',
+                            //   },
+                            // })}
+                            // {...(!foundList && {
+                            //   tag: lense,
+                            // })}
+                            tag={lense}
                           >
                             <FeedCard
                               variant="flat"
                               chromeless
-                              size={foundList?.name ? 'sm' : 'xs'}
+                              size="xs"
+                              // size={foundList?.name ? 'sm' : 'xs'}
                               square
-                              title={foundList?.name}
+                              // title={foundList?.name}
                               tags={[lense]}
-                              photo={getListPhoto(foundList)}
+                              // photo={getListPhoto(foundList)}
                               backgroundColor={rgbString(lense.rgb, 0.2)}
                               emphasizeTag
                             />
@@ -177,7 +180,7 @@ export const HomePageFeed = memo(
 
               <HStack position="relative">
                 <AbsoluteVStack zIndex={10} top={-10} left={10}>
-                  <SlantedTitle size="xxs">Top Cuisine & Dishes</SlantedTitle>
+                  <SlantedTitle size="xxs">Trending tags</SlantedTitle>
                 </AbsoluteVStack>
 
                 <ContentScrollViewHorizontal>
@@ -188,30 +191,32 @@ export const HomePageFeed = memo(
                     paddingHorizontal={16}
                   >
                     {/* shuffle([...tagDefaultAutocomplete, ...cuisines]) */}
-                    {tagLists.map((list, i) => (
-                      <VStack alignItems="center" flex={1} key={i}>
-                        <Link
-                          name="list"
-                          params={{
-                            slug: list?.slug ?? '',
-                            userSlug: list?.user?.username ?? '',
-                          }}
-                        >
-                          <FeedCard
-                            variant="flat"
-                            chromeless
-                            square
-                            title={list.name}
-                            tags={list
-                              .tags({ limit: 2 })
-                              .map((x) => (x.tag ? selectTagDishViewSimple(x.tag) : null))
-                              .filter(isPresent)}
-                            photo={restaurants[i]?.image}
-                            emphasizeTag
-                          />
-                        </Link>
-                      </VStack>
-                    ))}
+                    {tagLists.map((list, i) => {
+                      const tags = list
+                        .tags({ limit: 2 })
+                        .map((x) => (x.tag ? selectTagDishViewSimple(x.tag) : null))
+                        .filter(isPresent)
+                      return (
+                        <VStack alignItems="center" flex={1} key={i}>
+                          <Link tags={tags}>
+                            <FeedCard
+                              variant="flat"
+                              chromeless
+                              square
+                              title={
+                                <VStack pointerEvents="none">
+                                  {tags.map((tag) => (
+                                    <TagButton key={tag.id} {...tag} />
+                                  ))}
+                                </VStack>
+                              }
+                              photo={restaurants[i]?.image}
+                              emphasizeTag
+                            />
+                          </Link>
+                        </VStack>
+                      )
+                    })}
                     {!tagLists.length &&
                       tagDefaultAutocomplete.map((tag, i) => (
                         <VStack alignItems="center" flex={1} key={i}>

@@ -24,6 +24,7 @@
 - [m] [3] add apple sign in
 - [m] [3] hover to color map circles in a group
 - [a] [4] opengraph / meta / seo
+- [a] [1] show favorites on map
 
 ---
 
@@ -72,6 +73,9 @@ content ideas:
   - hooking in analytics such that we can automatically suggest interesting topics for people. think of it as a sort of data-analytics team within a newspaper, but public as more of an analytics dashboard we build and improve
 
 bring the app "to life":
+
+  - more interactivity:
+    - map shows favorites instantly (map needs a way to have "background" points that are unintrusive (extra hover delay to activate, on mobile zoom needs to be higher))
 
   - home map needs to load points/regions faster and better
     - secondary points, hover effects, colorized by type, emoji for standouts
