@@ -46,7 +46,7 @@ export const FilterButton = ({
   })()
 
   return (
-    <Link tag={tag} asyncClick>
+    <Link tag={tag} replace asyncClick>
       <SmallButton
         icon={iconElement ? <VStack opacity={0.45}>{iconElement}</VStack> : null}
         {...rest}

@@ -41,6 +41,8 @@ export type HomeStateItemBase = {
   id: string
   curLocName?: string
   curLocInfo?: GeocodePlace | null
+  center?: LngLat
+  span?: LngLat
 }
 
 export type HomeStateItem =
@@ -72,8 +74,6 @@ export type HomeStateTagNavigable = Partial<HomeStateItemBase> & {
   activeTags?: HomeActiveTagsRecord
   type: HomeStateItem['type']
   region?: string
-  center?: LngLat
-  span?: LngLat
 }
 
 export type HomeActiveTagsRecord = { [id: string]: boolean }

@@ -26,7 +26,7 @@ export type RouteAlert<A extends RoutesTable> = {
 export type HistoryType = 'push' | 'pop' | 'replace'
 export type HistoryDirection = 'forward' | 'backward' | 'none'
 
-export type RouteData = { [key: string]: string | number | Object }
+export type RouteData = { [key: string]: any }
 
 export type HistoryItem<A extends RouteName = string> = {
   id: string

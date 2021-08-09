@@ -13,7 +13,7 @@ declare module "@dish/router" {
     export type HistoryType = 'push' | 'pop' | 'replace';
     export type HistoryDirection = 'forward' | 'backward' | 'none';
     export type RouteData = {
-        [key: string]: string | number | Object;
+        [key: string]: any;
     };
     export type HistoryItem<A extends RouteName = string> = {
         id: string;

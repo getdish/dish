@@ -359,7 +359,7 @@ const ListPageContent = graphql((props: Props) => {
           <FavoriteButton floating isFavorite={isFavorited} onToggle={toggleFavorite}>
             {reviewsCount}
           </FavoriteButton>
-          {!isEditing && (
+          {!isEditing && isMyList && (
             <SmallButton elevation={1} alignSelf="center" onPress={() => setIsEditing(true)}>
               Edit
             </SmallButton>

@@ -58,12 +58,12 @@ export function setDefaultLocation(value: Partial<HomeStateItemLocation>) {
   setLocalJSON('DEFAULT_LOCATION', next)
 }
 
-if (DISH_DEBUG) {
-  console.log('getDefaultLocation', getDefaultLocation(), {
-    urlRegion,
-    initialRegion,
-    curPage,
-    initialHomeState,
-    initialLocation,
-  })
-}
+// if (DISH_DEBUG) {
+//   console.log('getDefaultLocation', getDefaultLocation(), {
+//     urlRegion,
+//     initialRegion,
+//     curPage,
+//     initialHomeState,
+//     initialLocation,
+//   })
+// }

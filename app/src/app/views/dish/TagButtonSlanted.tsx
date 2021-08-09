@@ -147,10 +147,6 @@ const DishButtonContent = (props: TagButtonSlantedProps) => {
     </>
   )
 
-  if (name && !slug) {
-    console.warn('NO DISH INFO', name, slug)
-  }
-
   if (!noLink) {
     contents = (
       <Link

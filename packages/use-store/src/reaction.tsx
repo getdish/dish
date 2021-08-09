@@ -25,7 +25,7 @@ export function reaction<
     if (!equalityFn(last, next)) {
       if (process.env.NODE_ENV === 'development') {
         console.groupCollapsed(
-          `💰  ⏭ %c${receiver.name} (${store[UNWRAP_PROXY].constructor.name}${
+          `💰  ⏭ %c${receiver.name.padStart(24)} (${store[UNWRAP_PROXY].constructor.name}${
             store.props?.id ? `:${store.props.id}` : ''
           }) ${last} => ${next}`,
           'color: chocolate;'

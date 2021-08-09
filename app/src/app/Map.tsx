@@ -197,14 +197,14 @@ export default function Map(props: MapProps) {
 
     // west, south, east, north
     const next = mapPositionToBBox({ center, span })
-
-    if (hasMovedAtLeast(getCurrentLocation(map), { center, span })) {
-      const duration = 605
+    const shouldMove = hasMovedAtLeast(getCurrentLocation(map), { center, span })
+    if (shouldMove) {
+      const duration = 300
       const cancelSeries = series([
         () => {
           internal.preventMoveEnd = true
         },
-        () => fullyIdle({ checks: 3, max: 80 }),
+        () => fullyIdle({ checks: 1, max: 50 }),
         () => {
           map!.fitBounds(next, {
             duration,
@@ -799,8 +799,6 @@ function setupMapEffect({
             hoverColor,
             activeColor,
           } = tile
-
-          console.log('adding tile', TILES_HOST)
 
           map.addSource(name, {
             type: 'vector',

@@ -33,6 +33,7 @@ export const getNavigateItemForState = (
     name,
     params,
     replace,
+    data: state,
   }
 }
 

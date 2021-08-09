@@ -53,14 +53,6 @@ type Props = HomeStackViewProps<HomeStateItemHome>
 
 export default memo(function HomePage(props: Props) {
   const [didLoadOnce, setDidLoadOnce] = useState(false)
-  const { results } = useStoreInstance(homePageStore)
-
-  useSetAppMap({
-    isActive: props.isActive,
-    results,
-    center: props.item.center,
-    span: props.item.span,
-  })
 
   useEffect(() => {
     if (props.isActive) {
@@ -95,6 +87,14 @@ const HomePageContent = (props: Props) => {
   const [position, setPosition] = useState<MapPosition>(initialPosition)
   const regionColors = getColorsForName(state.region)
   const region = regionResponse.data
+  const { results } = useStoreInstance(homePageStore)
+
+  useSetAppMap({
+    isActive: props.isActive,
+    results,
+    center: state.center,
+    span: state.span,
+  })
 
   useEffect(() => {
     if (!isActive) return
@@ -158,10 +158,10 @@ const HomePageContent = (props: Props) => {
   const regionName = region?.name || state.curLocName || '...'
   const media = useMedia()
 
-  if (process.env.NODE_ENV === 'development') {
-    // prettier-ignore
-    console.log('👀 HomePage', { enabled, regionResponse, position, item, region, state, isActive })
-  }
+  // if (process.env.NODE_ENV === 'development') {
+  //   // prettier-ignore
+  //   console.log('👀 HomePage', { enabled, regionResponse, position, item, region, state, isActive })
+  // }
 
   const homeHeaderContent = useMemo(() => {
     return (
