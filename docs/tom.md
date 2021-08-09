@@ -15,7 +15,7 @@
     - start with partial crawl and fix any issues at scale
 
 - homepage
-  - ensure the tags we have in the initial search autocomplete dropdown exist in db for next crawl
+  - ensure the tags we have in the initial search autocomplete dropdown exist in db for next crawl (can just replace with tags that exist to save time step 1)
   - we have a new hasura fn `list_populated`, ensure this is decent/fast
     - may want to discuss this query quickly with team and make sure good
 
