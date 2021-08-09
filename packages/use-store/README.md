@@ -1,5 +1,58 @@
 # use-store
 
+Basically, reactive classes in react:
+
+```tsx
+class X {
+  y = 0
+
+  add() {
+    this.y += 1
+  }
+}
+
+// Can use it a few ways, all these will access *the same* store:
+const useX = createUseStore(X)
+const x = createStoreInstance(X)
+
+// all of these will be reactive, so only props you use cause re-renders
+export function ReactComponent() {
+  const x0 = useStore(X)
+  const x1 = useX()
+  const x2 = useStoreInstance(x)
+  
+  return (
+    <>
+      <div>{x0.y}</div>
+      <button action={x0.add}>add</button>
+    </>
+  )
+}
+
+// if you want a different instance or namespace, pass props, these will also all access the same store:
+export function ReactComponentAlt() {
+  const x0 = useStore(X, { id: 100 })
+  const x1 = useX({ id: 100 })
+  const x2 = useStoreInstance(x, { id: 100 })
+  
+  return (
+    <div>{x0.y}</div>
+  )
+}
+
+// finally, you can make selectors with
+export function ReactComponentAlt() {
+  const xplusten0 = useStoreSelector(X, { id: 100 }, x => x.y + 10)
+  const xplusten1 = useStoreInstanceSelector(X, { id: 100 }, x => x.y + 10)
+
+  return (
+    <div>{xplusten}</div>
+  )
+}
+```
+
+---
+
 TODO
 
 - usePortal

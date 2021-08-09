@@ -151,6 +151,8 @@ If you edit something in snackui, just be sure to commit it as its own commit as
 
 For debugging snackui stuff you can always put `// debug` at the top of the file to see a ton of info on the compile time transforms and the output source. If you have a runtime issue you can put the `debug` prop to true on any snackui component and it should output info as well.
 
+We use `@dish/use-store` as our general state manager, you can access `window.stores` in frontend devtools to see all stores. It's sketchy and could use some more organizing principles, for now I usually put it near where it's initially used and that's about it. See the README.md there for more.
+
 ### Run end to end tests
 
 First build the docker container, this can take up to 30 minutes:
