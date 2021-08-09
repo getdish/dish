@@ -13,7 +13,7 @@ import { getFuzzyMatchQuery } from '../../../helpers/getFuzzyMatchQuery'
 import { searchRestaurants } from '../../../helpers/searchRestaurants'
 import { queryList } from '../../../queries/queryList'
 import { queryRestaurant } from '../../../queries/queryRestaurant'
-import { appMapStore } from '../../AppMapStore'
+import { appMapStore } from '../../AppMap'
 import { AutocompleteItemView } from '../../AutocompleteItemView'
 import { SlantedTitle } from '../../views/SlantedTitle'
 

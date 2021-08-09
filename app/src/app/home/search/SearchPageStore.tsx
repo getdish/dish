@@ -15,7 +15,7 @@ import { initialPosition } from '../../../constants/initialHomeState'
 import { allTags } from '../../../helpers/allTags'
 import { getActiveTags } from '../../../helpers/getActiveTags'
 import { HomeStateNav } from '../../../types/homeTypes'
-import { appMapStore } from '../../AppMapStore'
+import { appMapStore } from '../../AppMap'
 import { homeStore } from '../../homeStore'
 
 export type ActiveEvent = 'key' | 'pin' | 'hover' | null

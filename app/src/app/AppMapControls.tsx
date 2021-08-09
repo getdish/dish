@@ -7,7 +7,7 @@ import { AbsoluteHStack, AbsoluteVStack, HStack, Text, Theme, VStack, useMedia }
 import { isWeb, searchBarHeight, zIndexDrawer } from '../constants/constants'
 import { hasMovedAtLeast } from '../helpers/mapHelpers'
 import { useIsRouteActive } from '../router'
-import * as AppMapStore from './AppMapStore'
+import * as AppMapStore from './AppMap'
 import { searchPageStore, useSearchPageStore } from './home/search/SearchPageStore'
 import { homeStore } from './homeStore'
 import { useSafeArea } from './hooks/useSafeArea'

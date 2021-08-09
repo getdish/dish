@@ -1,6 +1,6 @@
 # use-store
 
-Basically, reactive classes in react:
+Simplish reactive classes in react. It doesn't do granular deep object reaction, just the top level set.
 
 ```tsx
 class X {

@@ -26,6 +26,10 @@ export const getBreadcrumbs = (states: HomeStateItem[]) => {
       res.unshift(cur)
       return res
     }
+    if (res.some((x) => x.type === cur.type)) {
+      // dont stack same type (? testing)
+      continue
+    }
     if (isBreadcrumbState(cur.type)) {
       res.unshift(cur)
       continue

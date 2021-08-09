@@ -85,7 +85,10 @@ export type Region = MapPosition & {
 
 export type Point = [number, number]
 
-export type RegionWithVia = Region & {
+export type MapTileID = string
+
+export type MapRegionEvent = Region & {
+  id: MapTileID
   via: 'click' | 'drag' | 'url'
 }
 

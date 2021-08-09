@@ -28,7 +28,7 @@ import {
   HomeStatesByType,
 } from '../types/homeTypes'
 import { NavigableTag } from '../types/tagTypes'
-import { appMapStore } from './AppMapStore'
+import { appMapStore } from './AppMap'
 
 class HomeStore extends Store {
   searchBarTagIndex = 0
@@ -521,6 +521,9 @@ class HomeStore extends Store {
   }
 
   updateCurrentState<A extends HomeStateItem>(via: string, val: Partial<Omit<A, 'type'>>) {
+    if (process.env.NODE_ENV === 'development') {
+      console.log(`🏡 updateCurrentState ${via}`, val)
+    }
     this.updateHomeState(`updateCurrentState(${via})`, {
       id: this.currentState.id,
       ...val,

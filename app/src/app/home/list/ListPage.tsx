@@ -43,7 +43,7 @@ import { getRestaurantIdentifiers } from '../../../helpers/getRestaurantIdentifi
 import { promote } from '../../../helpers/listHelpers'
 import { router } from '../../../router'
 import { HomeStateItemList } from '../../../types/homeTypes'
-import { useSetAppMap } from '../../AppMapStore'
+import { useSetAppMap } from '../../AppMap'
 import { homeStore, useHomeStateById } from '../../homeStore'
 import { useStateSynced } from '../../hooks/useStateSynced'
 import { useUserStore, userStore } from '../../userStore'

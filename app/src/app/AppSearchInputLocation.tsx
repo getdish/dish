@@ -6,7 +6,7 @@ import { AbsoluteVStack, Button, HStack, VStack, getMedia, useMedia } from 'snac
 import { isWeb } from '../constants/constants'
 import { isTouchDevice, supportsTouchWeb } from '../constants/platforms'
 import { AppAutocompleteHoverableInput } from './AppAutocompleteHoverableInput'
-import { appMapStore } from './AppMapStore'
+import { appMapStore } from './AppMap'
 import { inputTextStyles } from './AppSearchInput'
 import { autocompleteLocationStore, autocompletesStore } from './AutocompletesStore'
 import { useHomeStoreSelector } from './homeStore'

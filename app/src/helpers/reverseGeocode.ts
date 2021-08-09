@@ -1,4 +1,4 @@
-import { appMapStore } from '../app/AppMapStore'
+import { appMapStore } from '../app/AppMap'
 import { MAPBOX_ACCESS_TOKEN } from '../constants/constants'
 import { GeocodePlace, LngLat } from '../types/homeTypes'
 import { spanToScope } from './mapHelpers'
