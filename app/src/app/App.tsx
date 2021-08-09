@@ -1,6 +1,6 @@
 import loadable from '@loadable/component'
 import React, { Suspense, useEffect } from 'react'
-import { AbsoluteVStack, LoadingItems, Modal, ToastRoot, VStack, useTheme } from 'snackui'
+import { AbsoluteVStack, LoadingItems, ToastRoot, useTheme } from 'snackui'
 
 import { isSSR } from '../constants/constants'
 import AdminPage from './admin/AdminPage'
@@ -15,7 +15,6 @@ import { PrivateRoute, Route, RouteSwitch } from './Route'
 import { Shortcuts } from './Shortcuts'
 import { ErrorBoundary } from './views/ErrorBoundary'
 import { NotFoundPage } from './views/NotFoundPage'
-import { SlantedTitle } from './views/SlantedTitle'
 
 export function App() {
   // helper that warns on root level unmounts (uncaught suspense)

@@ -39,7 +39,7 @@ import { syncStateToRoute } from '../../../helpers/syncStateToRoute'
 import { useQueryLoud } from '../../../helpers/useQueryLoud'
 import { router } from '../../../router'
 import { HomeStateItemSearch } from '../../../types/homeTypes'
-import { appMapStore, useSetAppMap } from '../../AppMapStore'
+import { appMapStore, useSetAppMap } from '../../AppMap'
 import { homeStore, useHomeStateById } from '../../homeStore'
 import { useAppDrawerWidth } from '../../hooks/useAppDrawerWidth'
 import { useLastValueWhen } from '../../hooks/useLastValueWhen'
@@ -185,15 +185,8 @@ const SearchPageContent = memo(function SearchPageContent(
     hideRegions: !searchRegion,
     center,
     span,
-    ...(location.data?.region && {
-      region: {
-        name: location.data.region.name,
-        slug: location.data.region.name,
-        center,
-        span,
-        via: 'url',
-      },
-    }),
+    // TODO? once we have region toggle
+    // region: location.data?.region?.name,
   })
 
   const { item } = props

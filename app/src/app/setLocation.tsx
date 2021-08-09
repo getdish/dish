@@ -2,7 +2,7 @@ import { defaultLocationAutocompleteResults } from '../constants/defaultLocation
 import { setDefaultLocation } from '../constants/initialHomeState'
 import { getNavigateItemForState } from '../helpers/getNavigateItemForState'
 import { router } from '../router'
-import { appMapStore } from './AppMapStore'
+import { appMapStore } from './AppMap'
 import { autocompleteLocationStore } from './AutocompletesStore'
 import { setKnownLocationSlug } from './home/search/urlSerializers'
 import { homeStore } from './homeStore'

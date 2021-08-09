@@ -6,7 +6,6 @@ import {
   AnimatedVStack,
   HStack,
   LoadingItems,
-  Modal,
   Paragraph,
   Spacer,
   Text,
@@ -14,7 +13,6 @@ import {
   VStack,
   useMedia,
   useTheme,
-  useThemeName,
 } from 'snackui'
 
 import { drawerWidthMax, searchBarHeight } from '../../constants/constants'
@@ -28,7 +26,7 @@ import { getColorsForName } from '../../helpers/getColorsForName'
 import { queryClient } from '../../helpers/queryClient'
 import { router } from '../../router'
 import { HomeStateItemHome } from '../../types/homeTypes'
-import { appMapStore, cancelUpdateRegion, useSetAppMap } from '../AppMapStore'
+import { cancelUpdateRegion, useSetAppMap } from '../AppMap'
 import { autocompletesStore } from '../AutocompletesStore'
 import { homeStore, useHomeStateById } from '../homeStore'
 import { useLastValueWhen } from '../hooks/useLastValueWhen'
@@ -94,6 +92,7 @@ const HomePageContent = (props: Props) => {
     results,
     center: state.center,
     span: state.span,
+    region: state.region,
   })
 
   useEffect(() => {
@@ -118,7 +117,7 @@ const HomePageContent = (props: Props) => {
     if (!region) return
     if (!hasMovedToInitialRegion) {
       hasMovedToInitialRegion = true
-      appMapStore.setPosition({
+      homeStore.updateCurrentState('HomePage region initial move effect', {
         center: region.center,
         span: region.span,
       })

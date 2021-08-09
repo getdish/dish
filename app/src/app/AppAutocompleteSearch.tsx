@@ -12,7 +12,7 @@ import { getFuzzyMatchQuery } from '../helpers/getFuzzyMatchQuery'
 import { searchRestaurants } from '../helpers/searchRestaurants'
 import { filterToNavigable } from '../helpers/tagHelpers'
 import { LngLat } from '../types/homeTypes'
-import { appMapStore } from './AppMapStore'
+import { appMapStore } from './AppMap'
 import { AutocompleteFrame, AutocompleteResults } from './AutocompleteFrame'
 import { AutocompleteStore, autocompleteSearchStore } from './AutocompletesStore'
 import { filterAutocompletes } from './filterAutocompletes'
@@ -34,10 +34,10 @@ const AutocompleteSearchInner = memo(() => {
   const home = useHomeStore()
   const store = useStoreInstance(autocompleteSearchStore)
   const { lastActiveTags, currentSearchQuery } = home
-  const searchState = useMemo(() => [store.query.trim(), lastActiveTags] as const, [
-    store.query,
-    lastActiveTags,
-  ])
+  const searchState = useMemo(
+    () => [store.query.trim(), lastActiveTags] as const,
+    [store.query, lastActiveTags]
+  )
   const [query, activeTags] = useDebounceValue(searchState, 250)
   const getQuery = useGet(query)
 

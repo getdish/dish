@@ -1,6 +1,6 @@
 import { LngLat } from '@dish/graph'
 
-import { RegionWithVia } from '../types/homeTypes'
+import { MapRegionEvent } from '../types/homeTypes'
 
 export type MapProps = {
   center: LngLat
@@ -12,7 +12,8 @@ export type MapProps = {
   style?: string
   onHover?: (id: string | null) => void
   onSelect?: (id: string) => void
-  onSelectRegion?: (region: RegionWithVia) => void
+  onSelectRegion?: (region: MapRegionEvent) => void
+  tileId?: string
   onDoubleClick?: (id: string) => void
   onMoveEnd?: (props: MapPosition) => void
   onMoveStart?: () => void
