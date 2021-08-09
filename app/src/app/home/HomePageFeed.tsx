@@ -205,8 +205,8 @@ export const HomePageFeed = memo(
                               square
                               title={
                                 <VStack pointerEvents="none">
-                                  {tags.map((tag) => (
-                                    <TagButton key={tag.id} {...tag} />
+                                  {tags.map((tag, i) => (
+                                    <TagButton key={`${i}${tag.id}`} {...tag} />
                                   ))}
                                 </VStack>
                               }
@@ -268,7 +268,7 @@ export const HomePageFeed = memo(
 
                   {trendingLists.length < 8 &&
                     [...new Array(8 - trendingLists.length)].map((_, index) => (
-                      <VStack alignItems="center" flex={1} key={index + 100} marginBottom={20}>
+                      <VStack alignItems="center" flex={1} key={index} marginBottom={20}>
                         <Link
                           name="list"
                           params={{

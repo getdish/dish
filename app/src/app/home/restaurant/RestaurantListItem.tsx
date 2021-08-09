@@ -200,10 +200,10 @@ const RestaurantListItemContent = memo(
     const showAbove = !!above || !!activeTagSlugs
     const [editedDescription, setEditedDescription] = useState('')
 
-    const handleEdit = useCallback((next) => {
-      setEditedDescription(next)
-      onChangeDescription?.(next)
-    }, [])
+    // const handleEdit = useCallback((next) => {
+    //   setEditedDescription(next)
+    //   onChangeDescription?.(next)
+    // }, [])
 
     const toggleSetExpanded = useCallback(() => {
       setIsExpanded((x) => !x)
@@ -404,7 +404,7 @@ const RestaurantListItemContent = memo(
             flex={1}
             // overflow="hidden"
             // chrome this fixes layout:
-            y={isSafari ? -5 : 16}
+            y={isSafari ? -5 : 0}
             zIndex={100}
           >
             <VStack width="110%" x={-20}>

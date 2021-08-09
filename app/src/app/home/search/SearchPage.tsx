@@ -3,7 +3,7 @@ import { isEqual } from '@dish/fast-compare'
 import { RestaurantSearchItem, slugify } from '@dish/graph'
 import { ArrowUp } from '@dish/react-feather'
 import { HistoryItem } from '@dish/router'
-import { Store, createStore, reaction, selector, useStoreInstanceSelector } from '@dish/use-store'
+import { Store, createStore, reaction, useStoreInstanceSelector } from '@dish/use-store'
 import React, {
   Suspense,
   forwardRef,
@@ -34,7 +34,6 @@ import {
 import { isWeb } from '../../../constants/constants'
 import { addTagsToCache, allTags } from '../../../helpers/allTags'
 import { getTitleForState } from '../../../helpers/getTitleForState'
-import { reverseGeocode } from '../../../helpers/reverseGeocode'
 import { getFullTagsFromRoute } from '../../../helpers/syncStateFromRoute'
 import { syncStateToRoute } from '../../../helpers/syncStateToRoute'
 import { useQueryLoud } from '../../../helpers/useQueryLoud'

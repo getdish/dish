@@ -189,8 +189,6 @@ function getOrCreateStoreInfo(
   // init
   const storeInstance = new StoreKlass(props!)
 
-  allStores[uid] = storeInstance
-
   const getters = {}
   const actions = {}
   const stateKeys: string[] = []
@@ -230,8 +228,14 @@ function getOrCreateStoreInfo(
       isGetting: false,
     },
   }
+
   const store = createProxiedStore(storeInfo)
+
+  allStores[uid] = store
+
+  // if has a mount function call it
   store.mount?.()
+
   const value: StoreInfo = {
     ...storeInfo,
     store,
@@ -364,7 +368,7 @@ function createProxiedStore(storeInfo: Omit<StoreInfo, 'store' | 'source'>) {
       try {
         res = Reflect.apply(actionFn, proxiedStore, args)
         return res
-      } catch (err) {
+      } catch (err: any) {
         console.error(err.message, err.stack)
       } finally {
         if (res instanceof Promise) {
@@ -404,7 +408,7 @@ function createProxiedStore(storeInfo: Omit<StoreInfo, 'store' | 'source'>) {
             const color = strColor(name)
             const simpleArgs = args.map(simpleStr)
             logs.add([
-              `💰 %c${name}%c.${key}(${simpleArgs.join(', ')})${
+              `💰 %c${name.padStart(18)}%c.${key}(${simpleArgs.join(', ')})${
                 isTopLevelLogger && logStack.size > 1 ? ` (+${logStack.size - 1})` : ''
               }`,
               `color: ${color};`,

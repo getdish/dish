@@ -226,13 +226,14 @@ class HomeStore extends Store {
       throw new Error(`Must have id`)
     }
     let state = this.allStates[val.id] ?? null
+    // disable: should be explicit
     // default to replace the current state if type doesn't change
-    if (!state) {
-      if (val.type && this.currentState.type === val.type) {
-        state = this.currentState
-        val.id = state.id
-      }
-    }
+    // if (!state) {
+    //   if (val.type && this.currentState.type === val.type) {
+    //     state = this.currentState
+    //     val.id = state.id
+    //   }
+    // }
     if (state) {
       if (val.type && state.type !== val.type) {
         throw new Error(`Cant change the type`)
@@ -282,8 +283,6 @@ class HomeStore extends Store {
           curLocName: '',
           region: item.params.region ?? prev?.region,
           section: item.params.section ?? '',
-          center: appMapStore.currentPosition.center,
-          span: appMapStore.currentPosition.span,
         }
         break
       }
@@ -372,6 +371,8 @@ class HomeStore extends Store {
     }
 
     return {
+      center: item.data?.center ?? appMapStore.currentPosition.center,
+      span: item.data?.span ?? appMapStore.currentPosition.span,
       curLocName: currentState?.curLocName,
       curLocInfo: currentState?.curLocInfo,
       searchQuery,
@@ -447,26 +448,6 @@ class HomeStore extends Store {
     // this.autocompleteIndex = -tags.length + tagIndex
   }
 
-  private updateActiveSearchState(next: HomeStateTagNavigable) {
-    const state = _.findLast(this.states, (state) => isSearchState(state) || isHomeState(state))
-    if (!state) return
-    try {
-      assert(!!next['activeTags'])
-      const ids = 'activeTags' in state ? state.activeTags : null
-      const sameTagIds = stringify(ids) === stringify(next.activeTags)
-      const sameSearchQuery = isEqual(state.searchQuery, next.searchQuery)
-      assert(!sameTagIds || !sameSearchQuery)
-      const nextState = {
-        activeTags: ensureLenseTag(next.activeTags),
-        searchQuery: next.searchQuery,
-        id: this.currentState.id,
-      }
-      this.updateHomeState('homeStore.updateActiveSearchState', nextState)
-    } catch (err) {
-      handleAssertionError(err)
-    }
-  }
-
   setSearchQuery(searchQuery: string) {
     this.updateCurrentState('setSearchQuery', {
       searchQuery,
@@ -524,9 +505,9 @@ class HomeStore extends Store {
     let curNav = this.lastNav
 
     const didNav = await syncStateToRoute(nextState)
-
-    if (curNav !== this.lastNav) return false
-    // this.updateActiveSearchState(nextState)
+    if (curNav !== this.lastNav) {
+      return false
+    }
 
     return didNav
   }

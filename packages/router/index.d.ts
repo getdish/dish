@@ -12,7 +12,7 @@ export declare type RouteAlert<A extends RoutesTable> = {
 export declare type HistoryType = 'push' | 'pop' | 'replace';
 export declare type HistoryDirection = 'forward' | 'backward' | 'none';
 export declare type RouteData = {
-    [key: string]: string | number | Object;
+    [key: string]: any;
 };
 export declare type HistoryItem<A extends RouteName = string> = {
     id: string;

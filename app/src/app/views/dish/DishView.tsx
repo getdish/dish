@@ -252,10 +252,6 @@ const DishViewContent = (props: DishViewProps) => {
     </>
   )
 
-  if (name && !slug) {
-    console.warn('NO DISH INFO', name, slug)
-  }
-
   if (!noLink) {
     contents = (
       <Link

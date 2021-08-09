@@ -542,8 +542,10 @@ function useFormAction<Values extends { [key: string]: any }>({
   if (response.isSuccess) {
     console.log('🤠 NICE JOB', send, name, data, response)
   } else {
-    console.log('err response', response)
-    errorMessage = `${response.error || ''}`
+    if (response.isError) {
+      console.log('err response', response)
+      errorMessage = `${response.error || ''}`
+    }
   }
 
   return {

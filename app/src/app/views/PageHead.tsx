@@ -1,15 +1,13 @@
 import React from 'react'
-import { useTheme } from 'snackui'
 
 import { isWeb } from '../../constants/constants'
 import { rgbString } from '../../helpers/rgb'
 import { useCurrentLenseColor } from '../hooks/useCurrentLenseColor'
 
 export const PageHead = (props: { children: any }) => {
-  const themeName = useTheme()
+  // const themeName = useTheme()
   const lenseColor = useCurrentLenseColor()
   const themeColor = rgbString(lenseColor.rgb, 1)
-  console.log('themeColor', themeColor)
   if (!isWeb) {
     return null
   }

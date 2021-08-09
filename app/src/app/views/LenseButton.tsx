@@ -43,7 +43,12 @@ export const LenseButton = ({
   }, [isActiveParent])
 
   return (
-    <Link {...(onPress ? { onPress } : { tag: lense })} asyncClick disallowDisableWhenActive>
+    <Link
+      {...(onPress ? { onPress } : { tag: lense })}
+      replace
+      asyncClick
+      disallowDisableWhenActive
+    >
       <VStack
         className="unselectable ease-in-out-fast"
         alignItems="center"

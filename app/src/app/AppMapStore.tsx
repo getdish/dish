@@ -298,7 +298,6 @@ export function updateRegionImmediate(region: RegionWithVia) {
       return
     }
     appMapStore.setLastRegion(region)
-    console.log('map navigate to', region)
     homeStore.navigate({
       state: {
         ...currentState,
@@ -344,7 +343,10 @@ export const useSetAppMap = (
   useEffect(() => {
     if (!isActive) return
     if (!center && !span) return
-    // console.log('got new map pos from useSetAppMap', center)
+    homeStore.updateCurrentState('useSetAppMap.position', {
+      center,
+      span,
+    })
     appMapStore.setPosition({
       center,
       span,

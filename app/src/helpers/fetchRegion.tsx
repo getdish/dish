@@ -19,7 +19,7 @@ export const fetchRegion = async (slug?: string | null) => {
     const url = `${DISH_API_ENDPOINT}/region?slug=${encodeURIComponent(slug)}`
     const res: RegionApiResponse = await fetch(url).then((x) => x.json())
     const centerAt = res?.centroid?.coordinates
-    console.log('got region response', res, centerAt)
+    // console.log('got region response', res, centerAt)
     if (!!centerAt) {
       let response: RegionNormalized = {
         ...res,
