@@ -105,8 +105,7 @@ const DishViewContent = (props: DishViewProps) => {
   const fontSize = Math.max(13, (isLong ? 14 : 16) * (isTiny ? 0.75 : 1))
   const colors = getColorsForName(name)
   const themeName = useThemeName()
-  const { lightColor, darkColor, color } = colors
-  const backgroundColor = themeName === 'dark' ? darkColor : lightColor
+  const backgroundColor = themeName === 'dark' ? colors.color600 : colors.color200
   const isActive = (isHovered || selected) ?? false
 
   const showVote =
@@ -154,8 +153,8 @@ const DishViewContent = (props: DishViewProps) => {
           left="15%"
         >
           <SearchTagButton
-            backgroundColor={colors.lightColor}
-            color={colors.color}
+            backgroundColor={colors.color200}
+            color={colors.color400}
             // @ts-ignore
             tag={{ slug, type: 'dish' }}
           />
@@ -235,7 +234,7 @@ const DishViewContent = (props: DishViewProps) => {
             colors={[
               `${backgroundColor}${isFallback && !disableFallbackFade ? 'aa' : '44'}`,
               `${backgroundColor}${isFallback && !disableFallbackFade ? '55' : '00'}`,
-              `${color}${isFallback && !disableFallbackFade ? 'aa' : '44'}`,
+              `${colors.color400}${isFallback && !disableFallbackFade ? 'aa' : '44'}`,
             ]}
             start={[0, 0.5]}
             end={[0.5, 0.5]}

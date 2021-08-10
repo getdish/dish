@@ -31,14 +31,13 @@ async function updateCounties() {
     }
     const colors = getColorsForName(slug)
     if (colors) {
-      console.log('setting', slug, colors.pastelColor)
       await mutate((mutation) => {
         const res = mutation.update_hrr_by_pk({
           pk_columns: {
             ogc_fid,
           },
           _set: {
-            color: colors.color,
+            color: colors.color400,
           },
         })
         if (res) {

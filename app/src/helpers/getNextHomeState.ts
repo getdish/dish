@@ -1,10 +1,5 @@
 import { initialHomeState } from '../constants/initialHomeState'
-import {
-  HomeStateItem,
-  HomeStateItemHome,
-  HomeStateItemSearch,
-  HomeStateNav,
-} from '../types/homeTypes'
+import { HomeStateItem, HomeStateNav } from '../types/homeTypes'
 import { allTags, allTagsNameToSlug, tagNameKey } from './allTags'
 import { getActiveTagSlugs } from './getActiveTagSlugs'
 import { shouldBeOnSearch } from './shouldBeOnSearch'

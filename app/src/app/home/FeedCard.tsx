@@ -4,7 +4,7 @@ import { AbsoluteHStack, AbsoluteVStack, Text, VStack, useTheme } from 'snackui'
 import { DishTagItem } from '../../helpers/getRestaurantDishes'
 import { rgbString } from '../../helpers/rgb'
 import { TagButton } from '../views/TagButton'
-import { Card, CardOverlay } from './restaurant/Card'
+import { Card, CardOverlay, CardProps } from './restaurant/Card'
 
 export type FeedCardProps = {
   title?: string | JSX.Element | null
@@ -12,7 +12,7 @@ export type FeedCardProps = {
   author?: string
   tags?: DishTagItem[]
   photo?: string | null
-  size?: any
+  size?: CardProps['size']
   square?: boolean
   variant?: 'flat'
   chromeless?: boolean
@@ -56,12 +56,19 @@ export const FeedCard = ({
           <CardOverlay flat={chromeless || variant === 'flat'}>
             {children}
 
-            <AbsoluteHStack top={0} right={0} scale={emphasizeTag ? 1 : 0.75}>
+            <AbsoluteHStack
+              top={0}
+              right={0}
+              scale={emphasizeTag ? 1.075 : 0.75}
+              x={emphasizeTag ? -5 : 0}
+              y={emphasizeTag ? 5 : 0}
+            >
               {tags.map((tag) => (
                 <TagButton
                   key={tag.slug}
                   onlyIcon={tags.length > 1 && tag.type === 'lense'}
                   size={emphasizeTag ? 'lg' : 'md'}
+                  fontWeight={emphasizeTag ? '300' : '700'}
                   {...tag}
                 />
               ))}
@@ -71,7 +78,7 @@ export const FeedCard = ({
 
             <Text
               className="hover-100-opacity-child"
-              fontWeight="800"
+              fontWeight={emphasizeTag ? '300' : '700'}
               fontSize={emphasizeTag ? (size === 'sm' ? 13 : 18) : size === 'sm' ? 16 : 23}
               color={colorString}
               // opacity={0.8}

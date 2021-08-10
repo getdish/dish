@@ -7,7 +7,7 @@ import { AbsoluteVStack, Box, BoxProps, Divider, Paragraph, Spacer, Toast, VStac
 import { isWeb, searchBarHeight } from '../constants/constants'
 import { isHermes } from '../constants/platforms'
 import { getWindowHeight } from '../helpers/getWindow'
-import { UserMenuButton } from './AppMenu'
+import { UserMenuButton } from './AppMenuButton'
 import { appMenuStore } from './AppMenuStore'
 import { appStore } from './AppStore'
 import { AuthForm } from './AuthForm'

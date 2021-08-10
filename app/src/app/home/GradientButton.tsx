@@ -22,19 +22,22 @@ export function GradientButton({
       paddingHorizontal={22}
       alignItems="center"
       justifyContent="center"
-      borderRadius={12}
+      borderRadius={6}
       borderWidth={bordered ? 1 : 0}
-      borderColor={theme.backgroundColorDarker}
+      borderColor={theme.backgroundColorTertiary}
       backgroundColor="transparent"
-      className="hover-parent ease-in-out-faster safari-fix-overflow"
+      className="ease-in-out-faster safari-fix-overflow"
       position="relative"
       overflow="hidden"
       // flexShrink={1}
+      hoverStyle={{
+        backgroundColor: rgbString(rgb, 0.15),
+      }}
       pressStyle={{
         transform: [{ scale: 0.98 }],
       }}
     >
-      {useMemo(() => {
+      {/* {useMemo(() => {
         return (
           <AbsoluteVStack opacity={0} className="hover-50-opacity-child" fullscreen>
             <LinearGradient
@@ -45,7 +48,7 @@ export function GradientButton({
             />
           </AbsoluteVStack>
         )
-      }, [rgb])}
+      }, [rgb])} */}
       {children}
     </HStack>
   )

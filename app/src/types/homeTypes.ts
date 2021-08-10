@@ -108,7 +108,7 @@ export type RegionApiResponse = {
 export type RegionNormalized = RegionApiResponse & MapPosition
 
 export type HomeStateItemHome = HomeStateItemBase & {
-  type: 'home'
+  type: 'home' | 'homeRegion'
   activeTags: HomeActiveTagsRecord
   region: string
   section: string

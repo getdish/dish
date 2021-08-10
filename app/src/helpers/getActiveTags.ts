@@ -4,7 +4,7 @@ import { allTags } from './allTags'
 import { memoize } from './memoizeWeak'
 
 export const getActiveTags = memoize((state: Partial<HomeStateItem>): NavigableTag[] => {
-  if (!('activeTags' in state) || !state.activeTags) {
+  if (!state || !('activeTags' in state) || !state.activeTags) {
     return []
   }
   const { activeTags } = state

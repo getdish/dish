@@ -66,7 +66,7 @@ export class Database {
       }
       timeout.cancel()
       result = res as any
-    } catch (e) {
+    } catch (e: any) {
       console.error('Errored query: ' + query)
       console.error(e.message)
       if (query.includes('BEGIN;') || query.includes('TRANSACTION;')) {

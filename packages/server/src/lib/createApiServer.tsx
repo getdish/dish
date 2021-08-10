@@ -29,6 +29,8 @@ export async function createApiServer(app: any, config: ServerConfigNormal) {
   const filtered = {
     host: true,
     accept: true,
+    'x-forwarded-for': true,
+    'accept-charset': true,
     'user-agent': true,
     'accept-language': true,
     'accept-encoding': true,
@@ -50,7 +52,10 @@ export async function createApiServer(app: any, config: ServerConfigNormal) {
         }),
         winston.format.printf((info) => {
           const { req, res, responseTime } = info.metadata.meta
-          let out = ` [api] ${info.message.replace(/^https?\s+/i, '')} ${responseTime}ms`
+          let out = ` [api] (${res.statusCode}) ${info.message.replace(
+            /^https?\s+/i,
+            ''
+          )} ${responseTime}ms`
           if (info.metadata.error) {
             out = out + ' ' + info.metadata.error
             if (info.metadata.error.stack) {
@@ -59,15 +64,14 @@ export async function createApiServer(app: any, config: ServerConfigNormal) {
           }
           const reqstr = Object.keys(req.headers)
             .map((k) => {
-              const val = secret[k] ? `${k}:🔒` : filtered[k] ? '' : `${k}:${req.headers[k]}`
+              const val = secret[k] ? `${k}:🔒 ` : filtered[k] ? '-' : `${k}:${req.headers[k]} `
               return `${val}`
             })
             .filter(Boolean)
-            .join(', ')
+            .join('')
           if (reqstr.trim()) {
-            out += `\n  <= ${reqstr}`
+            out += `: ${reqstr}`
           }
-          out += `\n  => ${res.statusCode}`
           return out
         })
       ),

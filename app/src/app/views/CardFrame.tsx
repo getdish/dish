@@ -117,8 +117,11 @@ export const CardFrame = ({
         shadowRadius: 0,
       })}
       {...(!borderless && {
-        borderColor: theme.backgroundColorDarker,
+        borderColor: theme.backgroundColorTertiary,
         borderWidth: 1,
+        hoverStyle: {
+          borderColor: theme.backgroundColorQuartenary,
+        },
       })}
       {...(floating && {
         shadowColor: theme.shadowColor,

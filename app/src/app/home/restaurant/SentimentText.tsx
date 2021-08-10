@@ -2,7 +2,7 @@ import { ThumbsDown, ThumbsUp } from '@dish/react-feather'
 import React from 'react'
 import { HStack, Spacer, Text, TextProps, useTheme } from 'snackui'
 
-import { green, grey, red } from '../../../constants/colors'
+import { green200, grey, red200 } from '../../../constants/colors'
 
 export const SentimentText = ({
   sentiment,
@@ -13,13 +13,13 @@ export const SentimentText = ({
   // have to wrap with hstack to get border radius on native
   const Icon = sentiment > 0 ? ThumbsUp : ThumbsDown
   const theme = useTheme()
-  const color = sentiment > 0 ? green : sentiment < 0 ? red : grey
+  const color = sentiment > 0 ? green200 : sentiment < 0 ? red200 : grey
   return (
     <HStack
       paddingHorizontal={4 * scale}
       borderRadius={6 * scale}
       alignItems="center"
-      backgroundColor={theme.backgroundColorAlt}
+      backgroundColor={theme.backgroundColorDarker}
     >
       {!!children && (
         <>

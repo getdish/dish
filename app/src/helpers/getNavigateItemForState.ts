@@ -1,4 +1,4 @@
-import { urlSerializers } from '../app/home/search/urlSerializers'
+import { isLngLatParam, urlSerializers } from '../app/home/search/urlSerializers'
 import { homeStore } from '../app/homeStore'
 import { tagLenses } from '../constants/localTags'
 import { SPLIT_TAG } from '../constants/SPLIT_TAG'
@@ -26,7 +26,10 @@ export const getNavigateItemForState = (
   const curState = homeStore.currentState
   const name = getNameForState(state)
   const isChangingType = name !== router.curPage.name
-  const isChangingRegion = state.region !== curState['region']
+  // for now we change the region into a lng_lat, but that shouldn't create a new state
+  const isChangingRegion = isLngLatParam(state.region || '')
+    ? false
+    : state.region !== curState['region']
   const replace = !isChangingType && !isChangingRegion
   const params = getParamsForState(state)
   return {

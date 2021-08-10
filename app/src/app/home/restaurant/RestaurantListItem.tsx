@@ -53,7 +53,7 @@ import { openingHours, priceRange } from './RestaurantDetailRow'
 import { RestaurantFavoriteStar } from './RestaurantFavoriteButton'
 import { useTotalReviews } from './useTotalReviews'
 
-export const ITEM_HEIGHT = 250
+export const ITEM_HEIGHT = 220
 
 type RestaurantListItemProps = {
   curLocInfo: GeocodePlace | null
@@ -193,7 +193,7 @@ const RestaurantListItemContent = memo(
         : nameLen > 15
         ? 0.975
         : 1.15
-    const titleFontSize = Math.round((media.sm ? 19 : 22) * titleFontScale)
+    const titleFontSize = Math.round((media.sm ? 21 : 24) * titleFontScale)
     const titleHeight = titleFontSize + 8 * 2
     const score = Math.round((meta?.effective_score ?? 0) / 20)
     const theme = useTheme()
@@ -272,6 +272,7 @@ const RestaurantListItemContent = memo(
           borderBottomRightRadius={8}
         />
 
+        {/* vote button and score */}
         <AbsoluteVStack top={34} left={-5} zIndex={2000000}>
           {showAbove
             ? above ?? (
@@ -289,7 +290,7 @@ const RestaurantListItemContent = memo(
 
         {/* ROW: TITLE */}
         <VStack
-          hoverStyle={{ backgroundColor: 'rgba(0,0,0,0.015)' }}
+          hoverStyle={{ backgroundColor: theme.backgroundColorTransluscent }}
           paddingLeft={14}
           width={950}
           position="relative"
@@ -325,11 +326,7 @@ const RestaurantListItemContent = memo(
                   marginVertical={-5}
                   maxWidth={contentSideProps.maxWidth}
                   hoverStyle={{
-                    backgroundColor: theme.backgroundColorAlt,
-                  }}
-                  pressStyle={{
-                    backgroundColor: theme.backgroundColorAlt,
-                    opacity: 0.8,
+                    backgroundColor: theme.backgroundColorTertiary,
                   }}
                 >
                   <Text
@@ -337,7 +334,7 @@ const RestaurantListItemContent = memo(
                     lineHeight={titleHeight}
                     height={titleHeight}
                     color={theme.color}
-                    fontWeight="800"
+                    fontWeight="300"
                     letterSpacing={-0.25}
                     paddingHorizontal={1} // prevents clipping due to letter-spacing
                     ellipse
@@ -349,7 +346,7 @@ const RestaurantListItemContent = memo(
             </HStack>
           </Link>
 
-          <Spacer size={12} />
+          <Spacer size={6} />
 
           {/* SECOND ROW TITLE */}
           <HStack
@@ -396,25 +393,23 @@ const RestaurantListItemContent = memo(
 
         {/* CENTER CONTENT AREA */}
         {/* zindex must be above title/bottom so hovers work on dishview voting/search */}
-        <HStack pointerEvents="none" y={-10} zIndex={10} paddingLeft={15} flex={1} maxHeight={92}>
+        <HStack pointerEvents="none" zIndex={10} paddingLeft={10} flex={1} maxHeight={69}>
           <VStack
             {...contentSideProps}
             className="fix-safari-shrink-height"
             justifyContent="center"
             flex={1}
-            // overflow="hidden"
-            // chrome this fixes layout:
-            y={isSafari ? -5 : 0}
+            y={isSafari ? -5 : -15}
             zIndex={100}
           >
-            <VStack width="110%" x={-20}>
+            <VStack width="110%">
               {/* ROW: OVERVIEW */}
               <RestaurantOverview
                 isDishBot
                 editableDescription={editableDescription}
                 fullHeight
                 restaurantSlug={restaurantSlug}
-                maxLines={3}
+                maxLines={2}
               />
             </VStack>
           </VStack>

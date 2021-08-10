@@ -1,7 +1,7 @@
 import { supportsTouchWeb } from '@dish/helpers'
 import { ArrowDown, ArrowUp } from '@dish/react-feather'
 import React, { memo } from 'react'
-import { Paragraph } from 'snackui'
+import { HStack, Paragraph } from 'snackui'
 import { AbsoluteVStack, StackProps, Text, Tooltip, VStack, useTheme } from 'snackui'
 
 import { green, grey, red } from '../../constants/colors'
@@ -10,6 +10,7 @@ import { isTouchDevice } from '../../constants/platforms'
 import { getColorsForColor } from '../../helpers/getColorsForName'
 import { numberFormat } from '../../helpers/numberFormat'
 import { ProgressRing } from '../home/ProgressRing'
+import { useUserStore } from '../userStore'
 import { VoteButton } from './VoteButton'
 
 type Props = StackProps & {
@@ -41,6 +42,7 @@ export const Score = memo(
     size,
     ...props
   }: Props) => {
+    const userStore = useUserStore()
     const voteButtonColor = subtle ? '#ccc' : '#999'
     const scale = size === 'sm' ? 0.5 : 1
     const sizePx = 53 * scale
@@ -55,7 +57,7 @@ export const Score = memo(
     let voteContent: any = null
 
     // disable voting on touch device directly on score
-    if (votable && !isTouchDevice) {
+    if (votable && !isTouchDevice && userStore.isLoggedIn) {
       const upvote = (
         <VoteButton
           size={22 * scale}
@@ -63,6 +65,7 @@ export const Score = memo(
           shadowDirection="up"
           voted={vote == 1}
           color={vote === 1 ? 'green' : voteButtonColor}
+          backgroundColor="transparent"
           onPress={(e) => {
             e.stopPropagation()
             setVote?.(vote === 1 ? 0 : 1)
@@ -75,6 +78,7 @@ export const Score = memo(
           Icon={ArrowDown}
           voted={vote == -1}
           color={vote === -1 ? 'red' : voteButtonColor}
+          backgroundColor="transparent"
           onPress={(e) => {
             e.stopPropagation()
             setVote?.(vote == -1 ? 0 : -1)
@@ -83,7 +87,7 @@ export const Score = memo(
       )
       voteContent = (
         <>
-          <AbsoluteVStack zIndex={-1} top={-24}>
+          <VStack>
             {subtle ? (
               upvote
             ) : (
@@ -91,8 +95,6 @@ export const Score = memo(
                 {upvote}
               </Tooltip>
             )}
-          </AbsoluteVStack>
-          <AbsoluteVStack zIndex={-1} bottom={-24}>
             {subtle ? (
               downvote
             ) : (
@@ -100,7 +102,7 @@ export const Score = memo(
                 {downvote}
               </Tooltip>
             )}
-          </AbsoluteVStack>
+          </VStack>
         </>
       )
     }
@@ -109,17 +111,14 @@ export const Score = memo(
       typeof rating === 'number' ? (rating >= 7 ? green : rating < 5 ? red : grey) : grey
     )
 
-    const theme = useTheme()
-
     return (
-      <VStack
+      <HStack
         position="relative"
         pointerEvents="auto"
         // backgroundColor={theme.cardBackgroundColor}
         alignItems="center"
         justifyContent="center"
         className={isWeb && !supportsTouchWeb && showVoteOnHover ? ' show-on-hover' : ''}
-        width={sizePx}
         height={sizePx}
         {...(shadowed && {
           shadowColor: 'rgba(0,0,0,0.125)',
@@ -129,37 +128,24 @@ export const Score = memo(
         borderRadius={1000}
         {...props}
       >
-        {voteContent}
-
         {typeof rating === 'number' && (
-          <AbsoluteVStack
-            fullscreen
-            alignItems="center"
-            justifyContent="center"
-            // transform={[{ rotate: `${(1 - rating / 10) * 180}deg` }]}
-          >
+          <VStack position="relative">
+            <AbsoluteVStack fullscreen alignItems="center" justifyContent="center">
+              <Paragraph fontSize={fontSize} fontWeight="700" letterSpacing={-1}>
+                {numberFormat(score, 'sm')}
+              </Paragraph>
+            </AbsoluteVStack>
             <ProgressRing
               size={Math.round(sizePx + 3)}
-              color={colors.color}
+              color={colors.color400}
               percent={rating * 10}
               width={sizePx * 0.06}
             />
-          </AbsoluteVStack>
+          </VStack>
         )}
 
-        <VStack
-          zIndex={100}
-          borderRadius={100}
-          width={sizePx * 0.75}
-          height={sizePx * 0.75}
-          alignItems="center"
-          justifyContent="center"
-        >
-          <Paragraph fontSize={fontSize} fontWeight="700" letterSpacing={-1}>
-            {numberFormat(score, 'sm')}
-          </Paragraph>
-        </VStack>
-      </VStack>
+        {voteContent}
+      </HStack>
     )
   }
 )

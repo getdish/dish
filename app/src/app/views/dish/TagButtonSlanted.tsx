@@ -13,7 +13,6 @@ import { SearchTagButton } from './SearchTagButton'
 export type TagButtonSlantedProps = Partial<DishTagItem> & {
   restaurantId?: string
   restaurantSlug?: string
-  selected?: boolean
   noLink?: boolean
   showSearchButton?: boolean
   hideVote?: boolean
@@ -116,7 +115,7 @@ const DishButtonContent = (props: TagButtonSlantedProps) => {
           <Text
             className="ease-in-out-fast"
             fontWeight={bold ? '800' : '400'}
-            color={theme.colorSecondary}
+            color={bold ? theme.color : isActive ? theme.color : theme.colorSecondary}
             opacity={0.8}
             fontSize={fontSize}
             textAlign="center"
@@ -138,7 +137,7 @@ const DishButtonContent = (props: TagButtonSlantedProps) => {
           )}
 
           {showSearchButton && !!slug && (
-            <AbsoluteVStack opacity={0} hoverStyle={{ opacity: 1 }} bottom={-10} right={-20}>
+            <AbsoluteVStack bottom={-15} right={-18} scale={0.65} hoverStyle={{ scale: 0.7 }}>
               <SearchTagButton tag={{ type: 'dish', slug }} backgroundColor="#fff" color="#000" />
             </AbsoluteVStack>
           )}

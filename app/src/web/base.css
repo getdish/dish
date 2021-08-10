@@ -98,7 +98,7 @@ textarea {
   transition: all 25ms ease-in-out;
 }
 .ease-in-out-faster {
-  transition: all 50ms ease-in-out;
+  transition: all 40ms ease-in-out;
 }
 .ease-in-out-fast {
   transition: all 100ms ease-in-out;

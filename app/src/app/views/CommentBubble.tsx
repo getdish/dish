@@ -243,7 +243,7 @@ function CommentBubbleContents({
             <Circle
               backgroundColor={
                 avatarBackgroundColor ??
-                (isYelp ? thirdPartyCrawlSources.yelp.color : colors.pastelColor)
+                (isYelp ? thirdPartyCrawlSources.yelp.color : colors.color200)
               }
               size={circleSize}
             >

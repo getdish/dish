@@ -80,7 +80,7 @@ export const RestaurantOverview = memo(
             alignSelf="center"
             position="relative"
           >
-            {quote}
+            {/* {quote} */}
             {isEditing ? (
               <VStack>
                 {ensureFlexText}

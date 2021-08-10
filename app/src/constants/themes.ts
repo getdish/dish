@@ -1,5 +1,14 @@
 import { getColorsForColor } from '../helpers/getColorsForName'
-import { allColors, bgAlt, blue, colorNames, pink } from './colors'
+import {
+  colors as allColors,
+  bgAlt,
+  blue,
+  blue200,
+  blue300,
+  blue600,
+  colorNames,
+  pink,
+} from './colors'
 
 export type MyTheme = typeof dark
 export type MyThemes = typeof themes
@@ -34,17 +43,6 @@ const active: MyTheme = {
   borderColorHover: blue,
 }
 
-const darkActive: MyTheme = {
-  name: 'active',
-  ...baseTheme,
-  backgroundColor: 'rgb(17, 10, 13)',
-  backgroundColorSecondary: 'rgb(17, 10, 13)',
-  backgroundColorTertiary: 'rgba(17, 10, 13, 0.85)',
-  backgroundColorQuartenary: 'rgba(17, 10, 13, 0.7)',
-  borderColor: 'rgb(17, 10, 13)',
-  borderColorHover: 'rgb(17, 10, 13)',
-}
-
 const error: MyTheme = {
   name: 'error',
   ...baseTheme,
@@ -57,7 +55,7 @@ const error: MyTheme = {
 }
 
 const darkBase = {
-  backgroundColorAlt: 'rgba(54, 54, 104, 0.39)',
+  backgroundColorAlt: blue600,
   backgroundColorDarker: '#161616',
   backgroundColorTransluscent: 'rgba(100,100,100,0.05)',
   backgroundColorTransluscentHover: 'rgba(100,100,100,0.1)',
@@ -97,10 +95,10 @@ const darkTranslucent: MyTheme = {
 
 const lightBase = {
   colorAlt: blue,
-  backgroundColorTransluscent: '#f2f2f222',
-  backgroundColorTransluscentHover: '#f2f2f233',
-  backgroundColorDarker: '#f2f2f2',
-  backgroundColorAlt: 'rgb(240, 250, 255)',
+  backgroundColorTransluscent: '#f2f2f244',
+  backgroundColorTransluscentHover: '#f2f2f255',
+  backgroundColorDarker: '#f6f6f6',
+  backgroundColorAlt: blue200,
   borderColor: '#eeeeee',
   borderColorHover: '#d5d5d5',
   color: '#111111',
@@ -118,7 +116,7 @@ const light: MyTheme = {
   ...baseTheme,
   ...lightBase,
   backgroundColor: '#ffffff',
-  backgroundColorSecondary: '#f5f5f5',
+  backgroundColorSecondary: '#f2f2f2',
   backgroundColorTertiary: '#e9e9e9',
   backgroundColorQuartenary: '#d9d9d9',
 }
@@ -127,10 +125,10 @@ const lightTranslucent: MyTheme = {
   name: 'lightTranslucent',
   ...baseTheme,
   ...lightBase,
-  backgroundColor: 'rgba(255,255,255,0.85)',
-  backgroundColorSecondary: 'rgba(250,250,250,0.85)',
-  backgroundColorTertiary: 'rgba(240,240,240,0.85)',
-  backgroundColorQuartenary: 'rgba(240,240,240,0.7)',
+  backgroundColor: 'rgba(255,255,255,0.75)',
+  backgroundColorSecondary: 'rgba(250,250,250,0.6)',
+  backgroundColorTertiary: 'rgba(240,240,240,0.4)',
+  backgroundColorQuartenary: 'rgba(240,240,240,0.3)',
 }
 
 const colorThemes: { [key: string]: MyTheme } = {}
@@ -142,55 +140,57 @@ for (const [index, name] of colorNames.entries()) {
     name,
     ...baseTheme,
     ...lightBase,
-    color: colors.darkColor,
-    colorSecondary: colors.color,
-    colorTertiary: `${colors.color}99`,
+    color: colors.color600,
+    colorSecondary: colors.color400,
+    colorTertiary: `${colors.color400}99`,
     colorQuartenary: `#00000055`,
-    backgroundColor: colors.extraLightColor,
-    backgroundColorSecondary: colors.lightColor,
-    backgroundColorTertiary: `${colors.lightColor}33`,
-    backgroundColorQuartenary: `${colors.lightColor}77`,
-    backgroundColorTransluscent: `${colors.lightColor}22`,
-    backgroundColorTransluscentHover: `${colors.lightColor}33`,
-    borderColor: colors.lightColor,
-    backgroundColorAlt: colors.darkColor,
+    cardBackgroundColor: colors.color100,
+    backgroundColor: colors.color100,
+    backgroundColorSecondary: colors.color200,
+    backgroundColorTertiary: colors.color300,
+    backgroundColorQuartenary: colors.color400,
+    backgroundColorTransluscent: `${colors.color100}22`,
+    backgroundColorTransluscentHover: `${colors.color100}33`,
+    borderColor: colors.color200,
+    backgroundColorAlt: colors.color600,
   }
-  colorThemes[`${name}-pastel`] = {
-    name,
+  const lightName = `${name}-light`
+  colorThemes[lightName] = {
+    name: lightName,
     ...baseTheme,
     ...lightBase,
-    color: colors.pastelColor,
-    colorSecondary: `${colors.pastelColor}F2`,
-    colorTertiary: `${colors.pastelColor}E6`,
-    colorQuartenary: `${colors.pastelColor}CC`,
-    cardBackgroundColor: colors.lightColor,
-    backgroundColor: colors.extraLightColor,
-    backgroundColorSecondary: `${colors.extraLightColor}F2`,
-    backgroundColorTertiary: `${colors.extraLightColor}E6`,
-    backgroundColorQuartenary: `${colors.extraLightColor}CC`,
-    backgroundColorTransluscent: `${colors.extraLightColor}55`,
-    backgroundColorTransluscentHover: `${colors.extraLightColor}33`,
+    color: colors.color600,
+    colorSecondary: colors.color500,
+    colorTertiary: colors.color400,
+    colorQuartenary: colors.color500,
+    cardBackgroundColor: '#fff',
+    backgroundColor: colors.color50,
+    backgroundColorSecondary: colors.color100,
+    backgroundColorTertiary: colors.color200,
+    backgroundColorQuartenary: colors.color300,
+    backgroundColorTransluscent: `${colors.color50}55`,
+    backgroundColorTransluscentHover: `${colors.color50}33`,
     borderColor: colors.altPastelColor,
-    backgroundColorAlt: colors.color,
+    backgroundColorAlt: colors.color200,
   }
   const darkName = `${name}-dark`
   colorThemes[darkName] = {
     name: darkName,
     ...baseTheme,
     ...lightBase,
-    color: colors.extraLightColor,
-    colorSecondary: colors.lightColor,
-    colorTertiary: `${colors.lightColor}99`,
-    colorQuartenary: `#ffffff55`,
-    cardBackgroundColor: colors.darkColor,
-    backgroundColor: colors.extraDarkColor,
-    backgroundColorSecondary: colors.extraDarkColor,
-    backgroundColorTertiary: `${colors.darkColor}dd`,
-    backgroundColorQuartenary: `${colors.darkColor}bb`,
-    backgroundColorTransluscent: `${colors.color}33`,
-    backgroundColorTransluscentHover: `${colors.color}44`,
-    borderColor: colors.color,
-    backgroundColorAlt: colors.lightColor,
+    color: colors.color50,
+    colorSecondary: colors.color100,
+    colorTertiary: colors.color200,
+    colorQuartenary: colors.color300,
+    cardBackgroundColor: colors.color500,
+    backgroundColor: colors.color700,
+    backgroundColorSecondary: colors.color600,
+    backgroundColorTertiary: colors.color500,
+    backgroundColorQuartenary: colors.color400,
+    backgroundColorTransluscent: `${colors.color800}55`,
+    backgroundColorTransluscentHover: `${colors.color800}77`,
+    borderColor: colors.color500,
+    backgroundColorAlt: colors.color200,
   }
 }
 
@@ -200,7 +200,6 @@ const themes = {
   lightTranslucent,
   darkTranslucent,
   active,
-  darkActive,
   error,
   ...colorThemes,
 }

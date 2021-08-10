@@ -1,22 +1,13 @@
 import { graphql } from '@dish/graph'
 import { isPresent } from '@dish/helpers'
-import React, { Suspense } from 'react'
-import { AbsoluteVStack, HStack, Hoverable, Paragraph, VStack } from 'snackui'
+import React from 'react'
+import { Hoverable } from 'snackui'
 
-import {
-  cardFrameBorderRadius,
-  cardFrameHeight,
-  cardFrameWidth,
-} from '../../../constants/constants'
-import { getImageUrl } from '../../../helpers/getImageUrl'
 import { selectTagDishViewSimple } from '../../../helpers/selectDishViewSimple'
 import { FeedCard, FeedCardProps } from '../../home/FeedCard'
 import { getListPhoto } from '../../home/getListPhoto'
-import { Card, CardProps } from '../../home/restaurant/Card'
 import { FavoriteButton } from '../FavoriteButton'
-import { Image } from '../Image'
 import { Link } from '../Link'
-import { SlantedTitle } from '../SlantedTitle'
 import { useList, useListFavorite } from './useList'
 
 export type ListIDProps = {

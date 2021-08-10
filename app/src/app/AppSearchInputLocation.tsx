@@ -1,11 +1,10 @@
 import { MapPin, Navigation } from '@dish/react-feather'
 import React, { memo, useCallback } from 'react'
 import { TextInput } from 'react-native'
-import { AbsoluteVStack, Button, HStack, VStack, getMedia, useMedia } from 'snackui'
+import { AbsoluteVStack, Button, HStack, VStack } from 'snackui'
 
 import { isWeb } from '../constants/constants'
 import { isTouchDevice, supportsTouchWeb } from '../constants/platforms'
-import { AppAutocompleteHoverableInput } from './AppAutocompleteHoverableInput'
 import { appMapStore } from './AppMap'
 import { inputTextStyles } from './AppSearchInput'
 import { autocompleteLocationStore, autocompletesStore } from './AutocompletesStore'
@@ -21,10 +20,7 @@ import { useAutocompleteFocusWebNonTouch } from './useAutocompleteFocusWeb'
 const isWebTouch = supportsTouchWeb
 
 export const AppSearchInputLocation = memo(function AppSearchInputLocation() {
-  // const theme = useTheme()
-  const media = useMedia()
   const inputStore = useInputStoreLocation()
-  const input = inputStore.node
   const curLocName = useHomeStoreSelector((x) => x.currentState.curLocName)
   const { color } = useSearchBarTheme()
 

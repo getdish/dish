@@ -7,7 +7,7 @@ import AdminPage from './admin/AdminPage'
 import { AppIntroLetter } from './AppIntroLetter'
 import AppMap from './AppMap'
 import { AppMapControlsOverlay } from './AppMapControlsOverlay'
-import { AppMenuButton } from './AppMenuButton'
+import { AppMenuButtonFloating } from './AppMenuButtonFloating'
 import { AppSearchBarFloating } from './AppSearchBarFloating'
 import { AutocompleteEffects } from './AutocompletesStore'
 import { Home } from './home/Home'
@@ -83,7 +83,7 @@ function AppHomeContent(props: { children?: any }) {
       </Suspense>
 
       <Suspense fallback={null}>
-        <AppMenuButton />
+        <AppMenuButtonFloating />
       </Suspense>
 
       <Suspense fallback={null}>

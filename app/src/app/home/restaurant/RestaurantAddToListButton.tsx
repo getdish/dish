@@ -1,6 +1,6 @@
 import { Plus } from '@dish/react-feather'
 import React, { Suspense, useState } from 'react'
-import { Button, Tooltip } from 'snackui'
+import { Button, Tooltip, useTheme } from 'snackui'
 
 import { userStore } from '../../userStore'
 import { SmallButton, SmallButtonProps } from '../../views/SmallButton'
@@ -17,6 +17,7 @@ export const RestaurantAddToListButton = ({
   floating?: boolean
 }) => {
   const [showModal, setShowModal] = useState(false)
+  const theme = useTheme()
   return (
     <>
       {!!(showModal && restaurantSlug) && (
@@ -28,7 +29,7 @@ export const RestaurantAddToListButton = ({
         <SmallButton
           elevation={floating ? 1 : 0}
           borderRadius={100}
-          icon={<Plus color={'#777'} size={16} />}
+          icon={<Plus color={theme.color} size={16} />}
           onPress={() => {
             if (!userStore.promptLogin()) {
               setShowModal(true)

@@ -1,6 +1,6 @@
-import { allColors, allColorsPastel, allDarkColor } from '../../../constants/colors'
+import * as Colors from '../../../constants/colors'
 
-export const listColors = [...allColors, ...allColorsPastel, ...allDarkColor]
+export const listColors = [...Colors.colors300, ...Colors.colors400, ...Colors.colors500]
 
 export function getListColor(index?: number | null) {
   return listColors[index ?? 0]

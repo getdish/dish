@@ -58,16 +58,14 @@ export default memo(function HomePage(props: Props) {
     }
   }, [props.isActive])
 
-  return useLastValueWhen(() => {
-    if (!didLoadOnce) {
-      return <LoadingItems />
-    }
-    return (
-      <Suspense fallback={<LoadingItems />}>
-        <HomePageContent {...props} />
-      </Suspense>
-    )
-  }, !props.isActive)
+  if (!didLoadOnce) {
+    return <LoadingItems />
+  }
+  return (
+    <Suspense fallback={<LoadingItems />}>
+      <HomePageContent {...props} />
+    </Suspense>
+  )
 })
 
 // happens once on first load
@@ -89,21 +87,31 @@ const HomePageContent = (props: Props) => {
 
   useSetAppMap({
     isActive: props.isActive,
+    fitToResults: false,
     results,
     center: state.center,
     span: state.span,
     region: state.region,
   })
 
+  // region based effects
   useEffect(() => {
     if (!isActive) return
     if (!region || !region.center || !region.span) return
     setInitialRegionSlug(item.region)
     cancelUpdateRegion()
-    setPosition(region)
     homeStore.updateCurrentState('HomePage.curLoc', {
       curLocName: region.name,
     })
+    if (!region) return
+    // move initially to url region - this seems non-ideal state should just drive map
+    // if (!hasMovedToInitialRegion) {
+    hasMovedToInitialRegion = true
+    homeStore.updateCurrentState('HomePage region initial move effect', {
+      center: region.center,
+      span: region.span,
+    })
+    // }
   }, [isActive, JSON.stringify([region])])
 
   useEffect(() => {
@@ -111,18 +119,6 @@ const HomePageContent = (props: Props) => {
       queryClient.cancelQueries(state.region)
     }
   }, [state.region])
-
-  // move initially to url region - this seems non-ideal state should just drive map
-  useEffect(() => {
-    if (!region) return
-    if (!hasMovedToInitialRegion) {
-      hasMovedToInitialRegion = true
-      homeStore.updateCurrentState('HomePage region initial move effect', {
-        center: region.center,
-        span: region.span,
-      })
-    }
-  }, [position])
 
   // set location for next reload + move map on initial load
   useEffect(() => {
@@ -138,7 +134,7 @@ const HomePageContent = (props: Props) => {
         region: next,
       })
     }
-  }, [isActive, position])
+  }, [isActive, region])
 
   // if no region, nav to default one
   useEffect(() => {
