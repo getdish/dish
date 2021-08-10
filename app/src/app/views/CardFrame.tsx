@@ -28,6 +28,7 @@ export const CardFrame = ({
   flat,
   skew,
   borderless,
+  pressable,
 }: {
   children?: any
   className?: string
@@ -44,6 +45,7 @@ export const CardFrame = ({
   backgroundColor?: string | null
   chromeless?: boolean
   borderless?: boolean
+  pressable?: boolean
 }) => {
   const theme = useTheme()
   return (
@@ -127,6 +129,11 @@ export const CardFrame = ({
         shadowColor: theme.shadowColor,
         shadowRadius: 1,
         shadowOffset: { height: 4, width: 4 },
+      })}
+      {...(pressable && {
+        pressStyle: {
+          backgroundColor: theme.backgroundColorDarker,
+        },
       })}
     >
       {/* background */}

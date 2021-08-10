@@ -19,6 +19,7 @@ export type FeedCardProps = {
   backgroundColor?: string
   floating?: boolean
   emphasizeTag?: boolean
+  pressable?: boolean
 }
 
 export const FeedCard = ({
@@ -34,6 +35,7 @@ export const FeedCard = ({
   chromeless,
   backgroundColor,
   emphasizeTag,
+  pressable,
 }: FeedCardProps) => {
   const theme = useTheme()
   const color = tags[0]?.rgb ?? [200, 150, 150]
@@ -51,11 +53,10 @@ export const FeedCard = ({
       photo={photo}
       floating={floating}
       backgroundColor={backgroundColor}
+      pressable={pressable}
       outside={
         <>
           <CardOverlay flat={chromeless || variant === 'flat'}>
-            {children}
-
             <AbsoluteHStack
               top={0}
               right={0}
@@ -76,21 +77,22 @@ export const FeedCard = ({
 
             <VStack flex={1} />
 
-            <Text
-              className="hover-100-opacity-child"
-              fontWeight={emphasizeTag ? '300' : '700'}
-              fontSize={emphasizeTag ? (size === 'sm' ? 13 : 18) : size === 'sm' ? 16 : 23}
-              color={colorString}
-              // opacity={0.8}
-            >
-              {title}
-            </Text>
-
-            {!!author && (
-              <Text color={theme.color} fontWeight="300" marginTop={8} opacity={0.5}>
-                {author}
+            <VStack spacing={size}>
+              {children}
+              <Text
+                className="hover-100-opacity-child"
+                fontWeight={emphasizeTag ? '300' : '700'}
+                fontSize={emphasizeTag ? (size === 'sm' ? 13 : 18) : size === 'sm' ? 16 : 23}
+                color={colorString}
+              >
+                {title}
               </Text>
-            )}
+              {!!author && (
+                <Text color={theme.color} fontWeight="300" marginTop={8} opacity={0.5}>
+                  {author ?? ''}
+                </Text>
+              )}
+            </VStack>
           </CardOverlay>
           {/* <ListFavoriteButton {...props} />*/}
         </>

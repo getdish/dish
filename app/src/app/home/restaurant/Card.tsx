@@ -46,6 +46,7 @@ export type CardProps = {
   afterTitle?: any
   className?: string
   floating?: boolean
+  pressable?: boolean
 }
 
 const widths = {
@@ -90,6 +91,7 @@ export function Card({
   backgroundColor,
   isBehind,
   dimImage,
+  pressable,
   borderless,
   className,
   afterTitle,
@@ -135,6 +137,7 @@ export function Card({
       flat={isFlat}
       chromeless={chromeless}
       borderless={borderless}
+      pressable={pressable}
     >
       {!!photo && (
         <AbsoluteVStack
@@ -256,7 +259,7 @@ export const CardOverlay = (props: { children: any; flat?: boolean }) => {
     >
       {!props.flat && (
         <LinearGradient
-          colors={['rgba(0,0,0,0)', 'rgba(0,0,0,0)', 'rgba(0,0,0,0.17)']}
+          colors={['rgba(0,0,0,0)', 'rgba(0,0,0,0)', 'rgba(0,0,0,0.05)']}
           style={StyleSheet.absoluteFill}
         />
       )}

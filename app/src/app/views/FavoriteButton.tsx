@@ -16,6 +16,7 @@ export const FavoriteButton = ({
   floating,
   onToggle,
   size = 'md',
+  children,
   ...rest
 }: FavoriteButtonProps) => {
   const sizePx = size === 'sm' ? 18 : size == 'lg' ? 26 : 22
@@ -49,9 +50,14 @@ export const FavoriteButton = ({
         pressStyle={{
           opacity: 0.6,
         }}
+        textProps={{
+          opacity: 0.6,
+        }}
         elevation={floating ? 1 : 0}
         {...rest}
-      />
+      >
+        {typeof children === 'number' ? `${children}` : children}
+      </SmallButton>
     </Tooltip>
   )
 }

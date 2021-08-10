@@ -5,7 +5,6 @@ import { VStack } from 'snackui'
 import { queryRestaurant } from '../../../queries/queryRestaurant'
 import { ListCard } from '../../views/list/ListCard'
 import { SlantedTitle } from '../../views/SlantedTitle'
-import { SimpleCard, SkewedCardCarousel } from '../SimpleCard'
 import { CardCarousel } from '../user/CardCarousel'
 
 export const RestaurantLists = memo(

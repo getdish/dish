@@ -1,7 +1,7 @@
-import { graphql, order_by, query } from '@dish/graph'
+import { RestaurantSearchItem, graphql, order_by, query, search } from '@dish/graph'
 import { isPresent } from '@dish/helpers'
 import { Plus } from '@dish/react-feather'
-import React, { memo } from 'react'
+import React, { memo, useEffect, useState } from 'react'
 import { AbsoluteVStack, Grid, HStack, LoadingItems, VStack, useDebounceEffect } from 'snackui'
 
 import { cardFrameWidth } from '../../constants/constants'
@@ -10,11 +10,14 @@ import { getColorsForName } from '../../helpers/getColorsForName'
 import { getRestaurantIdentifiers } from '../../helpers/getRestaurantIdentifiers'
 import { rgbString } from '../../helpers/rgb'
 import { selectTagDishViewSimple } from '../../helpers/selectDishViewSimple'
+import { homeStore } from '../homeStore'
 import { ContentScrollViewHorizontal } from '../views/ContentScrollViewHorizontal'
 import { Link } from '../views/Link'
+import { ListCard, ListCardFrame } from '../views/list/ListCard'
 import { SlantedTitle } from '../views/SlantedTitle'
 import { TagButton } from '../views/TagButton'
 import { FeedCard } from './FeedCard'
+import { getListPhoto } from './getListPhoto'
 import { HomeFeedProps } from './HomeFeedProps'
 import { homePageStore } from './homePageStore'
 
@@ -83,6 +86,22 @@ export const HomePageFeed = memo(
         limit: 16,
       })
 
+      const [lenseRestaurants, setLenseRestaurants] = useState<RestaurantSearchItem[]>([])
+
+      useEffect(() => {
+        const { currentState } = homeStore
+        search({
+          center: currentState.center!,
+          span: currentState.span!,
+          query: '',
+          limit: 20,
+          main_tag: 'lenses__gems',
+        }).then((res) => {
+          console.warn('res', res)
+          setLenseRestaurants(res.restaurants)
+        })
+      }, [])
+
       const lenseLists = []
       // query.list({
       //   where: {
@@ -101,9 +120,12 @@ export const HomePageFeed = memo(
       //   limit: 8,
       // })
 
-      const allRestaurants = [...tagLists, ...lenseLists, ...trendingLists].flatMap((list) => {
-        return list.restaurants({ limit: 20 }).map((x) => getRestaurantIdentifiers(x.restaurant))
-      })
+      const allRestaurants = [
+        ...lenseRestaurants.map((x) => getRestaurantIdentifiers(x)),
+        ...[...tagLists, ...lenseLists, ...trendingLists].flatMap((list) => {
+          return list.restaurants({ limit: 20 }).map((x) => getRestaurantIdentifiers(x.restaurant))
+        }),
+      ]
 
       useDebounceEffect(
         () => {
@@ -191,10 +213,15 @@ export const HomePageFeed = memo(
                               variant="flat"
                               chromeless
                               square
+                              size="sm"
                               title={
                                 <VStack pointerEvents="none">
                                   {tags.map((tag, i) => (
-                                    <TagButton key={`${i}${tag.id}`} {...tag} />
+                                    <TagButton
+                                      key={`${i}${tag.id}`}
+                                      marginHorizontal={-5}
+                                      {...tag}
+                                    />
                                   ))}
                                 </VStack>
                               }
@@ -227,7 +254,24 @@ export const HomePageFeed = memo(
                     const color = getColorsForName(list?.name || '').altPastelColor
                     return (
                       <VStack alignItems="center" flex={1} key={i} marginBottom={26}>
-                        <Link
+                        <ListCardFrame
+                          chromeless
+                          author={` by ${list?.user?.username ?? ''}`}
+                          size="lg"
+                          backgroundColor={`${color}25`}
+                          variant="flat"
+                          title={list?.name ?? ''}
+                          userSlug={list.user?.username ?? ''}
+                          slug={list?.slug ?? ''}
+                          tags={
+                            list
+                              ?.tags({ limit: 2 })
+                              .map((x) => (x.tag ? selectTagDishViewSimple(x.tag) : null))
+                              .filter(isPresent) ?? []
+                          }
+                          photo={getListPhoto(list)}
+                        />
+                        {/* <Link
                           name="list"
                           params={{
                             slug: list?.slug || '',
@@ -236,11 +280,11 @@ export const HomePageFeed = memo(
                         >
                           <FeedCard
                             chromeless
-                            author={` by ${list?.user?.username}`}
+                            author={` by ${list?.user?.username ?? ''}`}
                             size="lg"
                             backgroundColor={`${color}25`}
                             variant="flat"
-                            title={list?.name}
+                            title={list?.name ?? ''}
                             tags={
                               list
                                 ?.tags({ limit: 2 })
@@ -248,8 +292,8 @@ export const HomePageFeed = memo(
                                 .filter(isPresent) ?? []
                             }
                             photo={restaurants[i]?.image}
-                          />
-                        </Link>
+                          ></FeedCard>
+                        </Link> */}
                       </VStack>
                     )
                   })}
