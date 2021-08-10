@@ -22,7 +22,6 @@ export function RouteSwitch(props: { children: any }) {
   const activeIndex = useRef(0)
   const stateListenerIndex = useRef(new WeakMap())
   const stateListeners = useRef(new Set<Function>())
-
   const nextActiveIndex = names.findIndex((x) => activeRoutes[x])
   const getState = (index: number): RouteState =>
     activeIndex.current <= -1 ? 'collect' : activeIndex.current === index ? 'active' : 'inactive'
@@ -76,6 +75,8 @@ export function RouteSwitch(props: { children: any }) {
   )
 }
 
+const routePaths: string[] = Object.keys(routes).map((x) => routes[x].path)
+
 export function Route(props: { name: string; exact?: boolean; children: any }) {
   const curPage = useRouterCurPage()
   const activeName = curPage.name
@@ -84,7 +85,6 @@ export function Route(props: { name: string; exact?: boolean; children: any }) {
   const routeContext = useContext(RouteContext)
   const isExactMatching = !!props.exact && activeName === props.name
   const routePath = routes[props.name].path
-  const routePaths: string[] = Object.keys(routes).map((x) => routes[x].path)
   const childRouteNames = routePaths
     .filter((p) => p.indexOf(routePath) === 0)
     .map((path) => routePathToName[path])

@@ -36,6 +36,7 @@ if (process.env.TARGET === 'native') {
 }
 
 global['stores'] = UseStore.allStores
+global['$'] = UseStore.allStores
 global['useStore'] = UseStore
 // @ts-ignore
 global['React'] = React

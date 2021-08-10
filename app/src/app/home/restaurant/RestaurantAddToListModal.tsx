@@ -71,11 +71,11 @@ export const RestaurantAddToListModal = graphql(
         <ScrollView style={{ width: '100%', flex: 1, paddingVertical: 30 }}>
           <HStack
             alignItems="center"
-            backgroundColor={colors.extraLightColor}
+            backgroundColor={colors.color100}
             borderWidth={1}
             borderRadius={10}
             margin={10}
-            borderColor={colors.lightColor}
+            borderColor={colors.color300}
             padding={20}
           >
             <Text>

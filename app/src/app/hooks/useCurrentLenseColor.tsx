@@ -8,12 +8,12 @@ import { useHomeStoreSelector } from '../homeStore'
 
 export const defaultLenseColor = {
   name: 'light',
-  rgb: [0, 0, 0, 0.92] as RGB,
+  rgb: [10, 10, 10, 1] as RGB,
 }
 
 export const defaultLenseColorDark = {
   name: 'dark',
-  rgb: [22, 22, 22, 0.875] as RGB,
+  rgb: [22, 22, 22, 1] as RGB,
 }
 
 const lenseColors = {
@@ -47,7 +47,7 @@ export const useCurrentLenseColor = () => {
       const colors = getColorsForName(state.restaurantSlug)
       return {
         name: `${colors.name}-dark`,
-        rgb: hexToRGB(colors.darkColor).rgb,
+        rgb: hexToRGB(colors.color600).rgb,
       }
     }
     return null

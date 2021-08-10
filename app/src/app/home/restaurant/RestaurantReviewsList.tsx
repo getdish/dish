@@ -42,7 +42,7 @@ export const RestaurantReviewsList = memo(
               Reviews
             </SlantedTitle>
 
-            <AbsoluteVStack top={-40} right={0}>
+            <AbsoluteVStack top={-30} right={0}>
               <Suspense fallback={null}>
                 <RestaurantAddCommentButton
                   restaurantId={restaurantId}

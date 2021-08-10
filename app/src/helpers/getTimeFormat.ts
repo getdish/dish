@@ -16,11 +16,16 @@ const units = [
 const relatime = (elapsed: number) => {
   for (const [unit, amount] of units) {
     if (Math.abs(elapsed) > amount || unit === 'second') {
-      return relativeTimeFormat(Math.round(elapsed / amount), {
+      const answer = relativeTimeFormat(Math.round(elapsed / amount), {
         locales: 'en',
         style: 'narrow',
         unit,
       })
+      if (answer.startsWith('in ')) {
+        return answer.replace('in ', '') + ' ago'
+      }
+      return answer
     }
   }
+  return '?'
 }

@@ -11,10 +11,10 @@ export function useColorsFor(name?: string | null) {
   return {
     ...colors,
     get themeColor() {
-      return isDark ? colors.darkColor : colors.extraLightColor
+      return isDark ? colors.color700 : colors.color50
     },
     get themeColorAlt() {
-      return isDark ? colors.color : colors.darkColor
+      return isDark ? colors.color400 : colors.color500
     },
   }
 }

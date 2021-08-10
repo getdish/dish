@@ -24,7 +24,7 @@ const initialRegion = urlRegion ?? location?.region ?? 'ca-san-francisco'
 
 export const initialHomeState: HomeStateItemHome = {
   id: '0',
-  type: 'home',
+  type: 'homeRegion',
   activeTags: {},
   searchQuery: '',
   region: initialRegion,

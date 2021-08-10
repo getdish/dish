@@ -5,7 +5,7 @@ import { TouchableOpacity } from 'react-native'
 import { HStack, Spacer, VStack, useMedia } from 'snackui'
 
 import { isWeb, searchBarHeight } from '../constants/constants'
-import { AppMenu } from './AppMenu'
+import { AppMenuButton } from './AppMenuButton'
 import { AppSearchInput } from './AppSearchInput'
 import { AppSearchInputLocation } from './AppSearchInputLocation'
 import { autocompletesStore } from './AutocompletesStore'
@@ -129,7 +129,7 @@ export const AppSearchBarContents = memo(({ isColored }: { isColored: boolean })
 
       {!media.sm && !media.xs && (
         <Suspense fallback={null}>
-          <AppMenu />
+          <AppMenuButton />
         </Suspense>
       )}
     </HStack>

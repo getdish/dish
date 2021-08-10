@@ -1,8 +1,6 @@
 import React, { Suspense } from 'react'
-import { StyleSheet } from 'react-native'
-import { AbsoluteVStack, LinearGradient, Theme, VStack, useMedia, useThemeName } from 'snackui'
+import { AbsoluteVStack, Theme, VStack, useMedia } from 'snackui'
 
-import { bgLightTranslucent } from '../constants/colors'
 import {
   searchBarBorderRadius,
   searchBarHeight,
@@ -19,9 +17,8 @@ import { useSearchBarTheme } from './hooks/useSearchBarTheme'
 
 export const AppSearchBarFloating = () => {
   const media = useMedia()
-  const { theme: searchThemeName, background, isColored } = useSearchBarTheme()
+  const { theme, themeName, background, isColored } = useSearchBarTheme()
   const height = searchBarHeight + 9
-  const parentThemeName = useThemeName()
 
   if (media.sm) {
     return null
@@ -36,14 +33,10 @@ export const AppSearchBarFloating = () => {
   //   const newParent = parentIds[media.sm ? 'small' : 'large']
   //   sendReparentableChild(parent, newParent, 0, 0)
   // }, [media.sm])
-  const themeName = media.sm
-    ? parentThemeName
-    : searchThemeName === 'light'
-    ? 'dark'
-    : searchThemeName
+  const barThemeName = media.sm ? theme.name : themeName === 'light' ? 'dark' : themeName
 
   return (
-    <Theme name={themeName}>
+    <Theme name={barThemeName}>
       <AbsoluteVStack
         className="searchbar-container ease-in-out"
         zIndex={zIndexSearchBarFloating}

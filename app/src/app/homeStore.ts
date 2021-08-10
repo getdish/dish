@@ -55,7 +55,7 @@ class HomeStore extends Store {
       | HomeStateItemHome
   }
 
-  getLastStateByType<Type extends HomeStateItem['type']>(type: Type) {
+  getLastStateByType<Type extends keyof HomeStatesByType>(type: Type) {
     return findLast(this.states, (x) => x.type === type) as any as HomeStatesByType[Type]
   }
 
@@ -234,6 +234,15 @@ class HomeStore extends Store {
     //     val.id = state.id
     //   }
     // }
+    if (
+      val.id !== this.currentState.id &&
+      val.type === 'search' &&
+      val.type &&
+      this.currentState.type === val.type
+    ) {
+      console.warn('pushing a new state thats the same type as the last state... desired?')
+      debugger
+    }
     if (state) {
       if (val.type && state.type !== val.type) {
         throw new Error(`Cant change the type`)
@@ -275,13 +284,14 @@ class HomeStore extends Store {
       case 'homeRegion':
       case 'home': {
         const prev = _.findLast(this.states, isHomeState)
+        const region = item.params.region ?? prev?.region
         nextState = {
-          type: 'home',
+          type: 'home', // region ? 'homeRegion' : 'home',
           searchQuery: '',
           activeTags: {},
           curLocInfo: null,
           curLocName: '',
-          region: item.params.region ?? prev?.region,
+          region,
           section: item.params.section ?? '',
         }
         break
@@ -394,10 +404,10 @@ class HomeStore extends Store {
 
     if (item.type === 'pop') {
       const curIndex = this.stateIndex
-      const total = this.states.length
+      const lastIndex = this.states.length - 1
       switch (item.direction) {
         case 'forward': {
-          this.stateIndex = Math.min(total, curIndex + 1)
+          this.stateIndex = Math.min(lastIndex, curIndex + 1)
           return
         }
         case 'backward': {
@@ -409,11 +419,11 @@ class HomeStore extends Store {
         }
       }
       return
-    }
-
-    if (item.type !== 'replace') {
-      // remove future states no longer accessible
-      this.stateIds = this.stateIds.slice(0, this.stateIndex + 1)
+    } else {
+      if (item.type !== 'replace') {
+        // remove future states no longer accessible
+        this.stateIds = this.stateIds.slice(0, this.stateIndex + 1)
+      }
     }
 
     const next = this.getHomeState(item)

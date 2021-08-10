@@ -12,12 +12,17 @@ export const SmallButton = themeable(
     let contents = (
       <Button
         borderRadius={200}
-        borderWidth={0}
+        borderWidth={1}
+        borderColor={theme.backgroundColorTransluscent}
+        backgroundColor="transparent"
         // borderColor={theme.borderColor}
         // backgroundColor={theme.backgroundColorTransluscent}
-        // hoverStyle={{
-        //   backgroundColor: theme.backgroundColor,
-        // }}
+        hoverStyle={{
+          backgroundColor: theme.backgroundColorSecondary,
+        }}
+        pressStyle={{
+          backgroundColor: theme.backgroundColorTertiary,
+        }}
         height={44}
         maxHeight={44}
         minWidth={44}

@@ -4,7 +4,7 @@ import React, { memo } from 'react'
 import { ScrollView } from 'react-native'
 import { Divider, HStack, Text, TextProps, useLazyEffect } from 'snackui'
 
-import { lightGreen, lightRed, lightYellow } from '../../../constants/colors'
+import { green200, red200, yellow200 } from '../../../constants/colors'
 import { isWeb } from '../../../constants/constants'
 import { dateTimeFormat } from '../../../helpers/dateTimeFormat'
 import { CommentBubble } from '../../views/CommentBubble'
@@ -73,7 +73,7 @@ export const RestaurantReview = memo(
               {...bottomMetaTextProps}
               borderRadius={100}
               backgroundColor={
-                review.rating >= 4 ? lightGreen : review.rating >= 3 ? lightYellow : lightRed
+                review.rating >= 4 ? green200 : review.rating >= 3 ? yellow200 : red200
               }
               lineHeight={20}
               paddingHorizontal={12}

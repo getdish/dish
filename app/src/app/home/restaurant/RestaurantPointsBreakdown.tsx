@@ -3,7 +3,7 @@ import React, { memo, useState } from 'react'
 import { View } from 'react-native'
 import { Divider, HStack, Paragraph, Spacer, Text, TextProps, VStack } from 'snackui'
 
-import { lightGreen, lightYellow } from '../../../constants/colors'
+import { green200, yellow200 } from '../../../constants/colors'
 import { thirdPartyCrawlSources } from '../../../constants/thirdPartyCrawlSources'
 import { numberFormat } from '../../../helpers/numberFormat'
 import { queryRestaurant } from '../../../queries/queryRestaurant'
@@ -64,7 +64,7 @@ export const RestaurantPointsBreakdown = memo(
             <Spacer />
             {reviewsBreakdown.score != null ? (
               <Paragraph size={0.9} color="rgba(0,0,0,0.7)">
-                <TextHighlight backgroundColor={lightGreen}>
+                <TextHighlight backgroundColor={green200}>
                   {numberFormat(Math.round(reviewsBreakdown['score']))}
                 </TextHighlight>{' '}
                 from {numberFormat(totalReviews)} reviews
@@ -77,7 +77,7 @@ export const RestaurantPointsBreakdown = memo(
 
             {photosBreakdown.score != null ? (
               <Paragraph size={0.9} color="rgba(0,0,0,0.7)">
-                <TextHighlight backgroundColor={lightGreen}>
+                <TextHighlight backgroundColor={green200}>
                   {numberFormat(Math.round(photosBreakdown['score']))}
                 </TextHighlight>{' '}
                 from {photosBreakdown['meeting_criteria_count']} good photos
@@ -89,11 +89,11 @@ export const RestaurantPointsBreakdown = memo(
             <Spacer size="lg" />
 
             <Paragraph textAlign="center" size={0.9} color="rgba(0,0,0,0.6)">
-              <TextHighlight fontWeight="700" backgroundColor={lightGreen}>
+              <TextHighlight fontWeight="700" backgroundColor={green200}>
                 {numberFormat(Math.round(nativeReviewPoints))}
               </TextHighlight>{' '}
               points from {numberFormat(totalNativeReviews)} Dish reviews and <View />
-              <TextHighlight fontWeight="700" backgroundColor={lightYellow}>
+              <TextHighlight fontWeight="700" backgroundColor={yellow200}>
                 {numberFormat(Math.round(externalReviewPoints))}
               </TextHighlight>{' '}
               from {numberFormat(totalExternalReviews)} {sourceNames(sources)} reviews.

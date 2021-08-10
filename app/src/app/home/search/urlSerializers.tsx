@@ -10,6 +10,8 @@ export function setKnownLocationSlug(slug: string, { span, center }: MapPosition
   knownLocationSlugs[urlSerializers.search.region.serialize({ center, span })] = slug
 }
 
+export const isLngLatParam = (param: string) => +param[0] === +param[0] && param.includes('_')
+
 export const urlSerializers = {
   home: {
     region: {
@@ -20,7 +22,7 @@ export const urlSerializers = {
   },
   search: {
     region: {
-      match: (param: string) => +param[0] === +param[0] && param.includes('_'),
+      match: isLngLatParam,
       serialize: ({ center, span, region }: Partial<HomeStateItemSearch>) => {
         if (region) {
           return region

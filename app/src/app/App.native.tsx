@@ -4,7 +4,7 @@ import { LogBox } from 'react-native'
 import { AbsoluteVStack, useTheme } from 'snackui'
 
 import AppMap from './AppMap'
-import { AppMenuButton } from './AppMenuButton'
+import { AppMenuButtonFloating } from './AppMenuButtonFloating'
 import { AutocompleteEffects } from './AutocompletesStore'
 import GalleryPage from './home/gallery/GalleryPage'
 import { Home } from './home/Home'
@@ -29,7 +29,7 @@ export function App() {
 
         <Home />
 
-        <AppMenuButton />
+        <AppMenuButtonFloating />
 
         <Suspense fallback={null}>
           <GalleryPage />

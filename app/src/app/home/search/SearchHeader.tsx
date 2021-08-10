@@ -32,6 +32,7 @@ export const SearchHeader = memo(() => {
 
   const lenseTag = getActiveTags(curProps.item).find((x) => x.type === 'lense') ?? tagLenses[0]
   const lenseColor = lenseTag.rgb
+  console.log('lenseColor', lenseColor)
   const theme = useTheme()
   return (
     <>
@@ -64,7 +65,7 @@ export const SearchHeader = memo(() => {
                   <Text
                     color={theme.color}
                     marginTop={-4}
-                    marginBottom={8}
+                    marginBottom={0}
                     height={28}
                     fontWeight="800"
                     fontSize={28}

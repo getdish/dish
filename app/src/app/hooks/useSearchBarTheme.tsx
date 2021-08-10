@@ -15,7 +15,8 @@ export const useSearchBarTheme = () => {
   const isColored = color.rgb !== defaultLenseColor.rgb && color.rgb !== defaultLenseColorDark.rgb
   if (media.sm) {
     return {
-      theme: 'light',
+      theme,
+      themeName: 'light',
       color: theme.color,
       background: '#fff',
       isColored: color.rgb !== defaultLenseColor.rgb && color.rgb !== defaultLenseColorDark.rgb,
@@ -23,7 +24,8 @@ export const useSearchBarTheme = () => {
     }
   }
   return {
-    theme: color.name,
+    theme,
+    themeName: 'lightTranslucent',
     color: '#fff',
     background: isColored ? rgbString(color.rgb, 1) : rgbString(color.rgb),
     isColored,

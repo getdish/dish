@@ -28,18 +28,15 @@ import {
   Spacer,
   StackProps,
   Text,
-  Theme,
   Toast,
   VStack,
-  useTheme,
-  useThemeName,
 } from 'snackui'
 
-import { bgLight, bluePastel } from '../../../constants/colors'
+import { bgLight } from '../../../constants/colors'
 import { isWeb } from '../../../constants/constants'
 import { useRegionQuery } from '../../../helpers/fetchRegion'
-import { getColorsForColor } from '../../../helpers/getColorsForName'
 import { getRestaurantIdentifiers } from '../../../helpers/getRestaurantIdentifiers'
+import { getTimeFormat } from '../../../helpers/getTimeFormat'
 import { promote } from '../../../helpers/listHelpers'
 import { router } from '../../../router'
 import { HomeStateItemList } from '../../../types/homeTypes'
@@ -49,6 +46,7 @@ import { useStateSynced } from '../../hooks/useStateSynced'
 import { useUserStore, userStore } from '../../userStore'
 import { BottomFloatingArea } from '../../views/BottomFloatingArea'
 import { CloseButton } from '../../views/CloseButton'
+import { CommentBubble } from '../../views/CommentBubble'
 import { ContentScrollView } from '../../views/ContentScrollView'
 import { FavoriteButton } from '../../views/FavoriteButton'
 import { Link } from '../../views/Link'
@@ -283,7 +281,7 @@ function useListRestaurants(list?: list) {
   ] as const
 }
 
-const lightBackgrounds = new Set([0, 4, 11, 10])
+const lightBackgrounds = new Set([0, 4, 11])
 
 const ListPageContent = graphql((props: Props) => {
   // const themeName = useThemeName()
@@ -517,22 +515,53 @@ const ListPageContent = graphql((props: Props) => {
               </>
             )}
 
-            {!!(list.description || isEditing || !!tagButtons.length) && (
-              <HStack
-                // backgroundColor={`${color}99`}
-                paddingHorizontal={20}
-                paddingVertical={20}
-                borderRadius={20}
-              >
-                {!!tagButtons.length && (
-                  <>
-                    <HStack spacing justifyContent="center">
-                      {tagButtons}
-                    </HStack>
-                    <Spacer />
-                  </>
-                )}
+            <HStack
+              // backgroundColor={`${color}99`}
+              paddingHorizontal={20}
+              paddingVertical={20}
+              borderRadius={20}
+              alignItems="center"
+            >
+              <HStack alignItems="center">
+                <UserAvatar
+                  size={24}
+                  charIndex={list?.user?.charIndex}
+                  avatar={list?.user?.avatar}
+                />
+                <Paragraph opacity={0.5} size="sm">
+                  by {list.user?.username}
+                </Paragraph>
+                <Spacer />
+                <Paragraph opacity={0.5} size="sm">
+                  &middot;
+                </Paragraph>
+                <Spacer />
+                <Paragraph opacity={0.5} size="sm">
+                  {list.created_at ? getTimeFormat(new Date(list.created_at)) : ''}
+                </Paragraph>
+              </HStack>
 
+              {!!tagButtons.length && (
+                <>
+                  <Spacer />
+                  <Paragraph opacity={0.5} size="sm">
+                    &middot;
+                  </Paragraph>
+                  <Spacer />
+                  <HStack spacing justifyContent="center">
+                    {tagButtons}
+                  </HStack>
+                </>
+              )}
+
+              <Spacer />
+              <Paragraph opacity={0.5} size="sm">
+                &middot;
+              </Paragraph>
+            </HStack>
+
+            {!!(list.description || isEditing) && (
+              <CommentBubble avatar={list.user?.avatar} name={list.user?.username ?? ''}>
                 {isEditing ? (
                   <Input
                     placeholder="Description..."
@@ -542,7 +571,6 @@ const ListPageContent = graphql((props: Props) => {
                     width="100%"
                     fontSize={20}
                     marginVertical={-12}
-                    textAlign="center"
                     marginHorizontal={-8}
                     defaultValue={list.description ?? ''}
                     onChangeText={(val) => {
@@ -550,11 +578,9 @@ const ListPageContent = graphql((props: Props) => {
                     }}
                   />
                 ) : (
-                  <Paragraph textAlign="center" size="xl">
-                    {list.description}
-                  </Paragraph>
+                  <Paragraph size="lg">{list.description}</Paragraph>
                 )}
-              </HStack>
+              </CommentBubble>
             )}
 
             <VStack minHeight={300}>
@@ -582,59 +608,61 @@ const ListPageContent = graphql((props: Props) => {
                     return null
                   }
                   return (
-                    <RestaurantListItem
-                      key={restaurant.slug}
-                      curLocInfo={props.item.curLocInfo ?? null}
-                      restaurantId={restaurantId}
-                      restaurantSlug={restaurant.slug}
-                      rank={index + 1}
-                      description={comment}
-                      hideTagRow
-                      above={
-                        isEditing && (
-                          <>
-                            <AbsoluteVStack top={-28} left={28}>
-                              <CircleButton
-                                backgroundColor={bgLight}
-                                width={44}
-                                height={44}
-                                onPress={() => {
-                                  restaurantActions.delete(restaurantId)
+                    <React.Fragment key={restaurant.slug}>
+                      <RestaurantListItem
+                        curLocInfo={props.item.curLocInfo ?? null}
+                        restaurantId={restaurantId}
+                        restaurantSlug={restaurant.slug}
+                        rank={index + 1}
+                        description={comment}
+                        hideTagRow
+                        above={
+                          isEditing && (
+                            <>
+                              <AbsoluteVStack top={-28} left={28}>
+                                <CircleButton
+                                  backgroundColor={bgLight}
+                                  width={44}
+                                  height={44}
+                                  onPress={() => {
+                                    restaurantActions.delete(restaurantId)
+                                  }}
+                                >
+                                  <X size={20} />
+                                </CircleButton>
+                              </AbsoluteVStack>
+                              <Score
+                                votable
+                                upTooltip="Move up"
+                                downTooltip="Move down"
+                                score={index + 1}
+                                setVote={async (vote) => {
+                                  restaurantActions.promote(vote === 1 ? index : index + 1)
                                 }}
-                              >
-                                <X size={20} />
-                              </CircleButton>
-                            </AbsoluteVStack>
-                            <Score
-                              votable
-                              upTooltip="Move up"
-                              downTooltip="Move down"
-                              score={index + 1}
-                              setVote={async (vote) => {
-                                restaurantActions.promote(vote === 1 ? index : index + 1)
-                              }}
-                            />
-                          </>
-                        )
-                      }
-                      flexibleHeight
-                      dishSlugs={dishSlugs.length ? dishSlugs : undefined}
-                      editableDishes={isEditing}
-                      onChangeDishes={async (dishes) => {
-                        console.log('should change dishes', dishes)
-                        await restaurantActions.setDishes(restaurantId, dishes)
-                        Toast.success(`Updated dishes`)
-                      }}
-                      editableDescription={isEditing}
-                      onChangeDescription={async (next) => {
-                        await restaurantActions.setComment(restaurantId, next)
-                        Toast.success('Updated description')
-                      }}
-                      editablePosition={isEditing}
-                      onChangePosition={(next) => {
-                        console.log('should change position', next)
-                      }}
-                    />
+                              />
+                            </>
+                          )
+                        }
+                        flexibleHeight
+                        dishSlugs={dishSlugs.length ? dishSlugs : undefined}
+                        editableDishes={isEditing}
+                        onChangeDishes={async (dishes) => {
+                          console.log('should change dishes', dishes)
+                          await restaurantActions.setDishes(restaurantId, dishes)
+                          Toast.success(`Updated dishes`)
+                        }}
+                        editableDescription={isEditing}
+                        onChangeDescription={async (next) => {
+                          await restaurantActions.setComment(restaurantId, next)
+                          Toast.success('Updated description')
+                        }}
+                        editablePosition={isEditing}
+                        onChangePosition={(next) => {
+                          console.log('should change position', next)
+                        }}
+                      />
+                      <Spacer />
+                    </React.Fragment>
                   )
                 }
               )}
@@ -683,22 +711,12 @@ const ListPageTitle = ({
             </ScalingPressable>
 
             <VStack position="relative" alignSelf="center">
-              {!!list.user?.avatar && (
-                <AbsoluteVStack x={0} overflow="visible" bottom={-15} left={-20} zIndex={-3}>
-                  <UserAvatar
-                    size={130}
-                    charIndex={list.user.charIndex!}
-                    avatar={list.user.avatar}
-                  />
-                </AbsoluteVStack>
-              )}
-
               <SlantedTitle
                 marginTop={-5}
                 backgroundColor={color}
                 alignSelf="center"
                 zIndex={0}
-                size={len < 12 ? 'xl' : len < 16 ? 'lg' : len < 24 ? 'md' : len < 30 ? 'sm' : 'xs'}
+                size={len < 12 ? 'xxl' : len < 16 ? 'xl' : len < 24 ? 'lg' : len < 30 ? 'md' : 'sm'}
                 color={textColor}
               >
                 {isEditing ? (
@@ -719,7 +737,7 @@ const ListPageTitle = ({
                   list.name
                 )}
               </SlantedTitle>
-              <SlantedTitle fontWeight="300" scale={1} zIndex={-1} size="xs" alignSelf="center">
+              <SlantedTitle fontWeight="300" scale={1} zIndex={-1} size="xxs" alignSelf="center">
                 {locationName ?? 'anywhere'}
               </SlantedTitle>
             </VStack>

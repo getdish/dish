@@ -44,7 +44,7 @@ type Props = {
   borderless?: boolean
 }
 
-const height = 220
+const height = 210
 const scrollHeight = height - 40
 const itemHeight = scrollHeight - 20
 

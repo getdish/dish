@@ -1,3 +1,5 @@
+- speed of search / discuss putting search.sql into the graph
+
 - todo: merge with next.md
 - HASURA_GRAPHQL_JWT_SECRET seems like its just 12346... ? should secure that
 - restaurant page loads slowly - check which query/ies are causing

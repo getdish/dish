@@ -11,7 +11,7 @@ import React, { useEffect, useRef, useState } from 'react'
 import { Dimensions } from 'react-native'
 import { useGet, useThemeName } from 'snackui'
 
-import { darkPurple, pink } from '../constants/colors'
+import { pink, purple700 } from '../constants/colors'
 import { MAPBOX_ACCESS_TOKEN, isM1Sim } from '../constants/constants'
 import * as mapHelpers from '../helpers/mapHelpers'
 import { hasMovedAtLeast, mapPositionToBBox } from '../helpers/mapHelpers'
@@ -279,7 +279,6 @@ export default function Map(props: MapProps) {
           console.warn('no id')
           return
         }
-        console.log('feature.id', feature.id)
         setTileActive(map, `${feature.id}`, true)
         curRegion = {
           ...mapHelpers.polygonToMapPosition(feature.geometry as any),
@@ -533,7 +532,7 @@ export default function Map(props: MapProps) {
               // 'text-anchor': 'bottom',
             },
             paint: {
-              'text-color': isDark ? '#fff' : darkPurple,
+              'text-color': isDark ? '#fff' : purple700,
               // 'text-halo-color': blue,
               // 'text-halo-width': 1,
             },

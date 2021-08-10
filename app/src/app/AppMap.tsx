@@ -320,8 +320,7 @@ const AppMapContents = memo(function AppMapContents() {
   }, [])
 
   const themeName = useThemeName()
-
-  console.log('AppMap: ', { region, padding })
+  const tileId = region ? appMapStore.regionSlugToTileId[region] : null
 
   if (!show) {
     return null
@@ -378,7 +377,7 @@ const AppMapContents = memo(function AppMapContents() {
           hovered={appMapStore.hovered?.id}
           showUserLocation={showUserLocation}
           // onMoveStart={handleMoveStart}
-          tileId={region ? appMapStore.regionSlugToTileId[region] : null}
+          tileId={tileId}
           onMoveEnd={handleMoveEnd}
           onDoubleClick={handleDoubleClick}
           onHover={handleHover}
@@ -727,7 +726,7 @@ export const useSetAppMap = (
     zoomOnHover,
     center,
     span,
-    fitToResults,
+    fitToResults = false,
     hideRegions,
     region,
   } = props
@@ -735,6 +734,7 @@ export const useSetAppMap = (
   useEffect(() => {
     if (!isActive) return
     if (!center && !span) return
+    if (fitToResults) return
     homeStore.updateCurrentState('useSetAppMap.position', {
       center,
       span,
@@ -745,15 +745,12 @@ export const useSetAppMap = (
     })
   }, [fitToResults, isActive, center?.lat, center?.lng, span?.lat, span?.lng])
 
-  if (process.env.NODE_ENV === 'development') {
-    console.log(' >>>>>>>> useSetAppMap', isActive, props)
-  }
-
   useEffect(() => {
     if (!isActive) return
 
     const disposeSeries = series([
       () => {
+        // set first to more quickly update non-feature based settings
         appMapStore.setState({
           showRank,
           zoomOnHover,
@@ -815,9 +812,6 @@ export const useSetAppMap = (
           region,
           features,
         }
-        if (process.env.NODE_ENV === 'development') {
-          console.log(' <<<<<<<<<< useSetAppMap', isActive, state, fitToResults)
-        }
 
         appMapStore.setState(state)
 
@@ -856,5 +850,5 @@ export const useSetAppMap = (
         features: [],
       })
     }
-  }, [JSON.stringify(results), fitToResults, isActive, zoomOnHover, hideRegions])
+  }, [JSON.stringify(results), fitToResults, isActive, zoomOnHover, hideRegions, region, showRank])
 }

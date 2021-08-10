@@ -23,7 +23,7 @@ export const VoteButton = ({
 }) => {
   const media = useMedia()
   const theme = useTheme()
-  const scale = media.sm ? 1.1 : 1
+  const scale = (media.sm ? 1.1 : 1) * size * 0.0666
   const [hovered, setHovered] = useState(false)
   const isUp = shadowDirection === 'up'
   const translateDir = isUp ? -1 : 1
@@ -35,14 +35,12 @@ export const VoteButton = ({
       borderRadius={100}
       alignItems="center"
       justifyContent="center"
-      className="shown-hover ease-in-out transition-opacity"
       onHoverIn={() => setHovered(true)}
       onHoverOut={() => setHovered(false)}
       onPressIn={prevent}
       backgroundColor={theme.cardBackgroundColor}
       pressStyle={{
-        backgroundColor: bgLight,
-        borderColor: '#aaa',
+        backgroundColor: theme.backgroundColor,
       }}
       {...props}
     >

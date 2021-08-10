@@ -15,21 +15,8 @@ import { Link } from '../views/Link'
 import { SlantedTitle } from '../views/SlantedTitle'
 import { TagButton } from '../views/TagButton'
 import { FeedCard } from './FeedCard'
-import { FIBase } from './FIBase'
-import { getListPhoto } from './getListPhoto'
-import { FICuisine } from './HomeFeedCuisineItem'
-import { FIList } from './HomeFeedLists'
 import { HomeFeedProps } from './HomeFeedProps'
-import { FIHotNew } from './HomeFeedTrendingNew'
 import { homePageStore } from './homePageStore'
-
-type FI =
-  | FICuisine
-  | FIList
-  | FIHotNew
-  | (FIBase & {
-      type: 'space' | 'dish-restaurants' | 'categories'
-    })
 
 export const HomePageFeed = memo(
   graphql(
@@ -96,22 +83,23 @@ export const HomePageFeed = memo(
         limit: 16,
       })
 
-      const lenseLists = query.list({
-        where: {
-          tags: {
-            tag: {
-              slug: {
-                _in: tagLenses.map((x) => x.slug),
-              },
-            },
-          },
-          region: {
-            _eq: item.region,
-          },
-        },
-        order_by: [{ updated_at: order_by.asc }],
-        limit: 8,
-      })
+      const lenseLists = []
+      // query.list({
+      //   where: {
+      //     tags: {
+      //       tag: {
+      //         slug: {
+      //           _in: tagLenses.map((x) => x.slug),
+      //         },
+      //       },
+      //     },
+      //     region: {
+      //       _eq: item.region,
+      //     },
+      //   },
+      //   order_by: [{ updated_at: order_by.asc }],
+      //   limit: 8,
+      // })
 
       const allRestaurants = [...tagLists, ...lenseLists, ...trendingLists].flatMap((list) => {
         return list.restaurants({ limit: 20 }).map((x) => getRestaurantIdentifiers(x.restaurant))

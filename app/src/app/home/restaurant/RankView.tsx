@@ -27,7 +27,7 @@ export const RankView = memo(({ rank }: { rank: number }) => {
       <AbsoluteVStack
         borderRadius={1000}
         fullscreen
-        backgroundColor={theme.backgroundColorAlt}
+        backgroundColor={theme.backgroundColorSecondary}
         opacity={0.35}
         zIndex={-1}
       />

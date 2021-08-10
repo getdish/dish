@@ -1,5 +1,6 @@
 import { promisify } from 'util'
 
+import { DISH_DEBUG } from '@dish/graph'
 import redis from 'redis'
 
 const pass = process.env.REDIS_PASSWORD
@@ -14,7 +15,7 @@ export const redisClient = redis.createClient({
 })
 
 redisClient.on('error', (err) => {
-  console.log('redis error ', JSON.stringify(err))
+  console.log('  redis down ', DISH_DEBUG >= 2 ? JSON.stringify(err) : '')
 })
 
 const redisGet_ = promisify(redisClient.get).bind(redisClient)

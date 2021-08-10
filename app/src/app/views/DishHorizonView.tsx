@@ -1,16 +1,7 @@
 import React from 'react'
 import { AbsoluteVStack, Circle } from 'snackui'
 
-import {
-  darkGreen,
-  darkPink,
-  darkPurple,
-  darkYellow,
-  green,
-  pink,
-  purple,
-  yellow,
-} from '../../constants/colors'
+import { green, pink, purple, yellow } from '../../constants/colors'
 
 export function DishHorizonView() {
   return (

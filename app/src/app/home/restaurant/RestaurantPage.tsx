@@ -2,7 +2,7 @@ import { fullyIdle, series } from '@dish/async'
 import { graphql } from '@dish/graph'
 import React, { Suspense, memo, useEffect, useMemo, useRef, useState } from 'react'
 import { ScrollView, View } from 'react-native'
-import { LoadingItems, Spacer, Theme, VStack, useTheme, useThemeName } from 'snackui'
+import { Divider, LoadingItems, Spacer, Theme, VStack, useTheme, useThemeName } from 'snackui'
 
 import { searchBarHeight } from '../../../constants/constants'
 import { getMinLngLat } from '../../../helpers/mapHelpers'
@@ -138,6 +138,10 @@ const RestaurantPage = memo(
       exclude: ['category', 'country', 'lense'],
     }).map((x) => x.tag.name)
 
+    const themeName = useThemeName()
+    const headerThemeName = themeName === 'dark' ? `${colors.name}-dark` : `${colors.name}-light`
+    console.log('headerThemeName', headerThemeName)
+
     if (!restaurant) {
       return <NotFoundPage />
     }
@@ -155,47 +159,55 @@ const RestaurantPage = memo(
           <PageContentWithFooter>
             {/* HEADER */}
             {/* -1 margin bottom to overlap bottom border */}
-            <VStack
-              backgroundColor={colors.themeColor}
-              borderBottomColor={theme.borderColor}
-              borderBottomWidth={1}
-            >
-              <RestaurantHeader minHeight={450} restaurantSlug={restaurantSlug} />
-
-              <View ref={setDishesSection}>
-                <RestaurantDishRow
-                  max={35}
+            <Theme name={headerThemeName}>
+              <VStack
+                backgroundColor={colors.themeColor}
+                // borderBottomColor={theme.borderColor}
+                // borderBottomWidth={1}
+              >
+                <RestaurantHeader
+                  themeName={themeName}
+                  minHeight={450}
                   restaurantSlug={restaurantSlug}
-                  restaurantId={restaurant.id ?? undefined}
-                  selectable
-                  selected={selectedDish}
-                  onSelect={setSelectedDishToggle}
-                  // themeName={`${colors.name}-dark`}
                 />
-              </View>
 
-              <VStack marginHorizontal={-20} marginBottom={-36} marginTop={-20}>
-                <RestaurantOverallAndTagReviews
-                  tagSlug={selectedDish}
-                  borderless
-                  showScoreTable
-                  restaurantSlug={restaurantSlug}
-                  restaurantId={restaurant.id}
-                />
+                <View ref={setDishesSection}>
+                  <RestaurantDishRow
+                    max={35}
+                    restaurantSlug={restaurantSlug}
+                    restaurantId={restaurant.id ?? undefined}
+                    selectable
+                    selected={selectedDish}
+                    onSelect={setSelectedDishToggle}
+                    // themeName={`${colors.name}-dark`}
+                  />
+                </View>
+
+                <VStack marginHorizontal={-20} marginBottom={-20} marginTop={-25}>
+                  <RestaurantOverallAndTagReviews
+                    tagSlug={selectedDish}
+                    borderless
+                    showScoreTable
+                    restaurantSlug={restaurantSlug}
+                    restaurantId={restaurant.id}
+                  />
+                </VStack>
+
+                <RestaurantTagPhotos tagSlug={selectedDish} restaurantSlug={restaurantSlug} />
+
+                <Spacer />
+
+                <Suspense fallback={null}>
+                  <RestaurantLists restaurantSlug={restaurantSlug} />
+                </Suspense>
+
+                <Spacer size="xl" />
+
+                {/* END head color AREA */}
               </VStack>
+            </Theme>
 
-              <RestaurantTagPhotos tagSlug={selectedDish} restaurantSlug={restaurantSlug} />
-
-              <Spacer />
-
-              {/* END head color AREA */}
-            </VStack>
-
-            <Spacer size="xl" />
-
-            <Suspense fallback={null}>
-              <RestaurantLists restaurantSlug={restaurantSlug} />
-            </Suspense>
+            <Spacer />
 
             <VStack ref={setReviewsSection}>
               <Suspense fallback={null}>
