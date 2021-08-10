@@ -24,6 +24,8 @@
 
 # inbox
 
+- discuss strict region on search page
+
 - discuss final lenses: add "food" lense ?
 
 - discuss merge app, worker, cron so we can test and run jobs while developing easily

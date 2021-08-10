@@ -32,6 +32,7 @@ main AS (
   SELECT
     restaurant.id as restaurant_id,
     slug,
+    location,
     score,
 
     -- Ranking
@@ -349,6 +350,8 @@ SELECT json_build_object(
           final.restaurant_id,
         'slug',
           final.slug,
+        'location',
+          final.location,
         'meta', json_build_object(
           'restaurant_rank',
             final.restaurant_rank,

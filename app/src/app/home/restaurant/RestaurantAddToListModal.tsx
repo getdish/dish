@@ -89,7 +89,7 @@ export const RestaurantAddToListModal = graphql(
             return (
               <HStack paddingHorizontal={20} paddingVertical={3} key={listId}>
                 <VStack flex={1}>
-                  <Title size="sm">{list.name}</Title>
+                  <Title size="sm">{list?.name}</Title>
                 </VStack>
 
                 {!isAdded && (

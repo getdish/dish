@@ -136,28 +136,6 @@ export const HomeFeedListsContents = graphql(
               <Divider flex />
             </HStack>
           </>
-
-          {/* <SkewedCardCarousel>
-            {lists.map((list, i) => {
-              if (!list) {
-                return null
-              }
-              return (
-                <SimpleCard key={list.id || i} zIndex={1000 - i}>
-                  <ListCard
-                    isBehind={i > 0}
-                    hoverable={false}
-                    slug={list.slug}
-                    userSlug={list.user?.username ?? ''}
-                    region={list.region ?? ''}
-                    onHover={(hovered) => {
-                      hovered ? setHoveredList(list.id) : null
-                    }}
-                  />
-                </SimpleCard>
-              )
-            })}
-          </SkewedCardCarousel> */}
         </VStack>
       )
     }, [key])
