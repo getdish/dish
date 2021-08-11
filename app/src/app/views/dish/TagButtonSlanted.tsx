@@ -1,6 +1,6 @@
 import { capitalize } from 'lodash'
 import React, { Suspense, memo } from 'react'
-import { AbsoluteVStack, Box, HStack, Text, VStack, useTheme } from 'snackui'
+import { AbsoluteVStack, Box, HStack, Spacer, Text, VStack, useTheme } from 'snackui'
 
 import { getImageUrl } from '../../../helpers/getImageUrl'
 import { DishTagItem } from '../../../helpers/getRestaurantDishes'
@@ -58,9 +58,11 @@ const DishButtonContent = (props: TagButtonSlantedProps) => {
   let contents = (
     <>
       <Box
-        {...(!isActive && {
-          backgroundColor: 'transparent',
-        })}
+        // {...(!isActive && {
+        //   backgroundColor: 'transparent',
+        // })}
+        // backgroundColor={theme.backgroundColorSecondary}
+        backgroundColor={isActive ? theme.backgroundColorTertiary : theme.backgroundColorSecondary}
         borderRadius={16}
         borderWidth={0}
         paddingVertical={3}
@@ -127,17 +129,20 @@ const DishButtonContent = (props: TagButtonSlantedProps) => {
           </Text>
 
           {typeof score !== 'undefined' && (
-            <DishUpvoteDownvote
-              size="sm"
-              slug={slug || ''}
-              score={score}
-              rating={rating ?? 0}
-              restaurantSlug={restaurantSlug}
-            />
+            <>
+              <DishUpvoteDownvote
+                size="sm"
+                slug={slug || ''}
+                score={score}
+                rating={rating ?? 0}
+                restaurantSlug={restaurantSlug}
+              />
+              <Spacer size="sm" />
+            </>
           )}
 
           {showSearchButton && !!slug && (
-            <AbsoluteVStack bottom={-15} right={-18} scale={0.65} hoverStyle={{ scale: 0.7 }}>
+            <AbsoluteVStack bottom={-10} right={-10} scale={0.7} hoverStyle={{ scale: 0.75 }}>
               <SearchTagButton tag={{ type: 'dish', slug }} backgroundColor="#fff" color="#000" />
             </AbsoluteVStack>
           )}

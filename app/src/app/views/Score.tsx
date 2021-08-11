@@ -60,12 +60,11 @@ export const Score = memo(
     if (votable && !isTouchDevice && userStore.isLoggedIn) {
       const upvote = (
         <VoteButton
-          size={22 * scale}
+          size={20 * scale}
           Icon={ArrowUp}
           shadowDirection="up"
           voted={vote == 1}
           color={vote === 1 ? 'green' : voteButtonColor}
-          backgroundColor="transparent"
           onPress={(e) => {
             e.stopPropagation()
             setVote?.(vote === 1 ? 0 : 1)
@@ -74,11 +73,10 @@ export const Score = memo(
       )
       const downvote = (
         <VoteButton
-          size={22 * scale}
+          size={20 * scale}
           Icon={ArrowDown}
           voted={vote == -1}
           color={vote === -1 ? 'red' : voteButtonColor}
-          backgroundColor="transparent"
           onPress={(e) => {
             e.stopPropagation()
             setVote?.(vote == -1 ? 0 : -1)
@@ -87,7 +85,7 @@ export const Score = memo(
       )
       voteContent = (
         <>
-          <VStack>
+          <VStack borderRadius={4} overflow="hidden">
             {subtle ? (
               upvote
             ) : (
@@ -117,22 +115,24 @@ export const Score = memo(
       <HStack
         position="relative"
         pointerEvents="auto"
-        backgroundColor={theme.cardBackgroundColor}
         alignItems="center"
+        spacing="sm"
         justifyContent="center"
         className={isWeb && !supportsTouchWeb && showVoteOnHover ? ' show-on-hover' : ''}
-        width={sizePx}
-        height={sizePx}
-        {...(shadowed && {
-          shadowColor: 'rgba(0,0,0,0.125)',
-          shadowRadius: 6,
-          shadowOffset: { height: 3, width: -1 },
-        })}
-        borderRadius={1000}
         {...props}
       >
         {typeof rating === 'number' && (
-          <VStack position="relative">
+          <VStack
+            borderRadius={1000}
+            backgroundColor={theme.cardBackgroundColor}
+            height={sizePx}
+            position="relative"
+            {...(shadowed && {
+              shadowColor: 'rgba(0,0,0,0.125)',
+              shadowRadius: 6,
+              shadowOffset: { height: 3, width: -1 },
+            })}
+          >
             <AbsoluteVStack fullscreen alignItems="center" justifyContent="center">
               <Paragraph fontSize={fontSize} fontWeight="700" letterSpacing={-1}>
                 {numberFormat(score, 'sm')}
@@ -146,7 +146,6 @@ export const Score = memo(
             />
           </VStack>
         )}
-
         {voteContent}
       </HStack>
     )

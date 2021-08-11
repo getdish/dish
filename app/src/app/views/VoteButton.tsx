@@ -32,14 +32,12 @@ export const VoteButton = ({
       position="relative"
       width={32 * scale}
       height={32 * scale}
-      borderRadius={100}
       alignItems="center"
       justifyContent="center"
       onHoverIn={() => setHovered(true)}
       onHoverOut={() => setHovered(false)}
       onPressIn={prevent}
       backgroundColor={theme.backgroundColor}
-      borderWidth={1}
       borderColor={theme.backgroundColorSecondary}
       pressStyle={{
         backgroundColor: theme.backgroundColor,

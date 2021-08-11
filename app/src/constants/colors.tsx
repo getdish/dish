@@ -72,20 +72,29 @@ export const colors600 = [yellow600, pink600, green600, red600, orange600, blue6
 export const yellow700 = '#403C23'
 export const pink700 = '#4D1528'
 export const green700 = '#18452B'
-export const red700 = '#4D1818'
+export const red700 = '#4D1A1A'
 export const orange700 = '#4D301B'
 export const blue700 = '#182747'
 export const purple700 = '#361852'
 export const colors700 = [yellow700, pink700, green700, red700, orange700, blue700, purple700]
 
-export const yellow800 = '#282B1A'
-export const pink800 = '#2B2426'
-export const green800 = '#192B22'
-export const red800 = '#2B1C1C'
-export const orange800 = '#231B13'
-export const blue800 = '#1C202B'
-export const purple800 = '#261B2B'
+export const yellow800 = '#343821'
+export const pink800 = '#382F32'
+export const green800 = '#20382C'
+export const red800 = '#382424'
+export const orange800 = '#382B1E'
+export const blue800 = '#242A38'
+export const purple800 = '#312338'
 export const colors800 = [yellow800, pink800, green800, red800, orange800, blue800, purple800]
+
+export const yellow900 = '#292B1E'
+export const pink900 = '#2B2829'
+export const green900 = '#212B26'
+export const red900 = '#2B2020'
+export const orange900 = '#231E1A'
+export const blue900 = '#20232B'
+export const purple900 = '#271F2B'
+export const colors900 = [yellow900, pink900, green900, red900, orange900, blue900, purple900]
 
 // WARNING IVE UPDATED THIS FROM SKETCH, THIS IS SOURCE OF TRUTH NOW
 export const yellow = yellow400
@@ -109,6 +118,7 @@ export const colorObjects: {
   color600: string
   color700: string
   color800: string
+  color900: string
   altColor: string
   altPastelColor: string
 }[] = []
@@ -127,6 +137,7 @@ for (const [index, name] of colorNames.entries()) {
     color600: colors600[index],
     color700: colors700[index],
     color800: colors800[index],
+    color900: colors900[index],
     altColor: colors400[altIndex],
     altPastelColor: colors200[altIndex],
   }
