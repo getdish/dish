@@ -59,12 +59,12 @@ export const SearchPageScoring = memo(() => {
         borderColor={theme.borderColor}
         paddingHorizontal={18}
         borderRadius={100}
-        marginLeft={20}
+        marginLeft={50}
         marginRight={30}
         height={48}
         position="relative"
       >
-        <AbsoluteVStack left={-66}>
+        <AbsoluteVStack left={-42}>
           <SlantedTitle size="xxs" fontWeight="300">
             Scoring
           </SlantedTitle>

@@ -1,5 +1,5 @@
 import { HomeStateItem } from '../types/homeTypes'
-import { isHomeState } from './homeStateHelpers'
+import { isHomeState, isSearchState } from './homeStateHelpers'
 
 const breadCrumbTypes = {
   search: true,
@@ -22,6 +22,14 @@ export const getBreadcrumbs = (states: HomeStateItem[]) => {
   for (const cur of statesBackwards) {
     if (res.length === MAX_CRUMBS) {
       break
+    }
+    // search should never go "above" another state, always the last before home
+    if (isSearchState(cur)) {
+      res.unshift(cur)
+      const lastHome = statesBackwards.find(isHomeState)
+      if (!lastHome) continue
+      res.unshift(lastHome)
+      return res
     }
     if (isHomeState(cur)) {
       res.unshift(cur)

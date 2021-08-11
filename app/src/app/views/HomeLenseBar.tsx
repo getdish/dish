@@ -1,5 +1,5 @@
-import React, { memo } from 'react'
-import { VStack } from 'snackui'
+import React, { memo, useEffect, useState } from 'react'
+import { VStack, useDebounce } from 'snackui'
 
 import { tagLenses } from '../../constants/localTags'
 import { HomeActiveTagsRecord } from '../../types/homeTypes'
@@ -11,12 +11,17 @@ export const HomeLenseBar = memo(
     size?: LenseButtonSize
     minimal?: boolean
     backgroundColor?: string
-    onPressLense?: (lense: typeof tagLenses[number]) => void
   }) => {
+    const [active, setActive] = useState<HomeActiveTagsRecord>({})
+
+    useEffect(() => {
+      setActive(props.activeTags || {})
+    }, [props.activeTags])
+
     return (
       <>
         {tagLenses.map((lense, index) => {
-          const isActive = props.activeTags?.[lense.slug] ?? false
+          const isActive = active[lense.slug] || false
           return (
             <VStack
               height="100%"
@@ -31,12 +36,12 @@ export const HomeLenseBar = memo(
                 minimal={props.minimal}
                 size={props.size}
                 backgroundColor={props.backgroundColor}
-                {...(props.onPressLense && {
-                  onPress: (e) => {
-                    e.stopPropagation()
-                    props.onPressLense?.(lense)
-                  },
-                })}
+                onPress={(e) => {
+                  e.stopPropagation()
+                  setActive({
+                    [lense.slug]: true,
+                  })
+                }}
               />
             </VStack>
           )
