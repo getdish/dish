@@ -193,7 +193,7 @@ const RestaurantListItemContent = memo(
         : nameLen > 15
         ? 0.975
         : 1.15
-    const titleFontSize = Math.round((media.sm ? 21 : 24) * titleFontScale)
+    const titleFontSize = Math.round((media.sm ? 21 : 23) * titleFontScale)
     const titleHeight = titleFontSize + 8 * 2
     const score = Math.round((meta?.effective_score ?? 0) / 20)
     const theme = useTheme()
@@ -334,7 +334,7 @@ const RestaurantListItemContent = memo(
                     lineHeight={titleHeight}
                     height={titleHeight}
                     color={theme.color}
-                    fontWeight="300"
+                    fontWeight="400"
                     letterSpacing={-0.25}
                     paddingHorizontal={1} // prevents clipping due to letter-spacing
                     ellipse
@@ -568,7 +568,7 @@ const RestaurantPeekDishes = memo(
         <HStack
           pointerEvents="none"
           padding={20}
-          y={-30}
+          y={-40}
           x={20}
           alignItems="center"
           height="100%"

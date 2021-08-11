@@ -1,7 +1,6 @@
 import React from 'react'
 import { Divider, Spacer, Title, VStack } from 'snackui'
 
-import { bgLightLight } from '../../../constants/colors'
 import { HomeStateItemBlog } from '../../../types/homeTypes'
 import { ContentScrollView } from '../../views/ContentScrollView'
 import { Link } from '../../views/Link'
@@ -48,20 +47,13 @@ function BlogPageIndex() {
   return (
     <>
       <VStack>
-        <VStack paddingHorizontal={25} paddingVertical={40} backgroundColor={bgLightLight}>
+        <VStack paddingHorizontal={25} paddingVertical={40}>
           <Title size="xl">Dish Blog</Title>
         </VStack>
         <Divider />
         <VStack spacing="lg" paddingHorizontal={25} paddingVertical={40}>
           {allPosts.map((post, index) => (
-            <VStack
-              key={index}
-              borderRadius={10}
-              padding={10}
-              hoverStyle={{
-                backgroundColor: bgLightLight,
-              }}
-            >
+            <VStack key={index} borderRadius={10} padding={10}>
               <Link name="blog" params={{ slug: post.id }}>
                 <Title selectable={false} textAlign="left" size="xs">
                   {post.title}

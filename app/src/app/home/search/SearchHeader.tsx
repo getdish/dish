@@ -1,5 +1,5 @@
 import React, { Suspense, memo, useContext } from 'react'
-import { AbsoluteVStack, HStack, Text, VStack, useMedia, useTheme } from 'snackui'
+import { AbsoluteVStack, HStack, Spacer, Text, VStack, useMedia, useTheme } from 'snackui'
 
 import { isWeb } from '../../../constants/constants'
 import { tagLenses } from '../../../constants/localTags'
@@ -32,7 +32,6 @@ export const SearchHeader = memo(() => {
 
   const lenseTag = getActiveTags(curProps.item).find((x) => x.type === 'lense') ?? tagLenses[0]
   const lenseColor = lenseTag.rgb
-  console.log('lenseColor', lenseColor)
   const theme = useTheme()
   return (
     <>
@@ -40,35 +39,16 @@ export const SearchHeader = memo(() => {
         <VStack width="100%">
           <VStack paddingTop={media.sm ? 12 : 12 + 52 + 10} />
           <HStack position="relative">
-            <VStack zIndex={0} x={-10}>
-              <AbsoluteVStack
-                display={media.sm ? 'none' : 'flex'}
-                zIndex={10000}
-                top={-9}
-                left={15}
-              >
-                <SearchForkListButton size="sm" />
-              </AbsoluteVStack>
-              <SlantedTitle
-                paddingLeft={45}
-                paddingRight={25}
-                paddingVertical={12}
-                marginBottom={-3}
-                backgroundColor="transparent"
-                shadowOpacity={0}
-              >
-                <VStack
-                  alignItems="center"
-                  paddingTop={isWeb ? 0 : 5}
-                  paddingLeft={media.sm ? 0 : 20}
-                >
+            <VStack zIndex={10} x={-10}>
+              <VStack paddingLeft={25} paddingRight={25} paddingVertical={12} marginBottom={-3}>
+                <VStack paddingTop={isWeb ? 0 : 5} paddingLeft={media.sm ? 0 : 20}>
                   <Text
                     color={theme.color}
                     marginTop={-4}
                     marginBottom={0}
                     height={28}
-                    fontWeight="800"
-                    fontSize={28}
+                    fontWeight="700"
+                    fontSize={title.length < 20 ? 30 : 28}
                     lineHeight={28}
                   >
                     {title}
@@ -85,16 +65,19 @@ export const SearchHeader = memo(() => {
                     </Text>
                   )}
                 </VStack>
-              </SlantedTitle>
+              </VStack>
+              <Spacer size="xs" />
               <SearchPageScoring />
             </VStack>
-            <HStack marginLeft={-50} marginBottom={8} position="relative">
+            <HStack marginLeft={-30} marginBottom={8} position="relative">
               <VStack position="relative" alignItems="center" justifyContent="center" x={-10}>
                 <SlantedTitle size="xs">Lists</SlantedTitle>
                 <AbsoluteVStack right={-14} rotate="90deg">
                   <Arrow />
                 </AbsoluteVStack>
               </VStack>
+
+              {/* <SearchForkListButton size="sm" /> */}
 
               <Suspense fallback={null}>
                 <SearchPageListsRow />

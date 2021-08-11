@@ -5,7 +5,6 @@ import { HStack } from 'snackui'
 
 import { getActiveTags } from '../../../helpers/getActiveTags'
 import { ListCard } from '../../views/list/ListCard'
-import { ListCardHorizontal } from '../../views/list/ListCardHorizontal'
 import { SearchForkListButton } from './SearchForkListButton'
 import { SearchPagePropsContext } from './SearchPagePropsContext'
 
@@ -50,18 +49,16 @@ export const SearchPageListsRow = memo(
           {lists.map((list, i) => {
             return (
               <ListCard
-                size="sm"
+                size="xs"
                 key={i}
-                slug={list.slug}
+                slug={list.slug ?? ''}
                 userSlug={list.user?.username ?? ''}
                 // region={list.region ?? ''}
               />
             )
           })}
 
-          <SearchForkListButton>
-            {!lists.length ? 'No lists yet, create first' : 'Create list'}
-          </SearchForkListButton>
+          <SearchForkListButton>{!lists.length ? 'Create' : 'Create list'}</SearchForkListButton>
         </HStack>
       </Suspense>
     )

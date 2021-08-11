@@ -19,8 +19,10 @@ export const drawerExtraLeftScrollSpace = 500
 
 export const listItemMaxSideWidth = Math.round(drawerWidthMax / 2.5 - 40)
 
-export const logoWidth = Math.round(1303 * 0.064)
-export const logoHeight = Math.round(608 * 0.064)
+export const logoWidth = 1496
+export const logoHeight = 894
+export const logoSmWidth = Math.round(1496 * 0.069)
+export const logoSmHeight = Math.round(894 * 0.069)
 export const logoXsWidth = Math.round(1024 * 0.044)
 export const logoXsHeight = Math.round(1024 * 0.044)
 

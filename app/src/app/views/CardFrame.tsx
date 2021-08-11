@@ -12,6 +12,25 @@ import {
   cardFrameWidthSm,
 } from '../../constants/constants'
 
+export type CardFrameProps = {
+  children?: any
+  className?: string
+  expandable?: boolean
+  hoverEffect?: 'scale' | 'background' | false
+  transparent?: boolean
+  floating?: boolean
+  aspectFixed?: boolean
+  size?: 'lg' | 'md' | 'sm' | 'xs' | 'xxs'
+  flat?: boolean
+  square?: boolean
+  skew?: boolean
+  borderColor?: string | null
+  backgroundColor?: string | null
+  chromeless?: boolean
+  borderless?: boolean
+  pressable?: boolean
+}
+
 export const CardFrame = ({
   hoverEffect,
   expandable,
@@ -29,24 +48,7 @@ export const CardFrame = ({
   skew,
   borderless,
   pressable,
-}: {
-  children?: any
-  className?: string
-  expandable?: boolean
-  hoverEffect?: 'scale' | 'background' | false
-  transparent?: boolean
-  floating?: boolean
-  aspectFixed?: boolean
-  size?: 'md' | 'sm' | 'xs' | 'lg'
-  flat?: boolean
-  square?: boolean
-  skew?: boolean
-  borderColor?: string | null
-  backgroundColor?: string | null
-  chromeless?: boolean
-  borderless?: boolean
-  pressable?: boolean
-}) => {
+}: CardFrameProps) => {
   const theme = useTheme()
   return (
     <VStack
@@ -96,6 +98,12 @@ export const CardFrame = ({
           height: cardFrameWidthLg,
         })}
       {...(size === 'xs' && {
+        minWidth: 140,
+        width: 'auto',
+        maxWidth: 250,
+        height: 88,
+      })}
+      {...(size === 'xxs' && {
         minWidth: 140,
         width: 'auto',
         maxWidth: 250,

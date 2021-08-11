@@ -4,7 +4,7 @@ import { Plus } from '@dish/react-feather'
 import React, { memo, useEffect, useState } from 'react'
 import { AbsoluteVStack, Grid, HStack, LoadingItems, VStack, useDebounceEffect } from 'snackui'
 
-import { cardFrameWidth } from '../../constants/constants'
+import { cardFrameWidth, cardFrameWidthLg } from '../../constants/constants'
 import { tagDefaultAutocomplete, tagLenses } from '../../constants/localTags'
 import { getColorsForName } from '../../helpers/getColorsForName'
 import { getRestaurantIdentifiers } from '../../helpers/getRestaurantIdentifiers'
@@ -171,7 +171,7 @@ export const HomePageFeed = memo(
                             <FeedCard
                               variant="flat"
                               chromeless
-                              size="xs"
+                              size="xxs"
                               // size={foundList?.name ? 'sm' : 'xs'}
                               square
                               // title={foundList?.name}
@@ -248,7 +248,7 @@ export const HomePageFeed = memo(
                 <AbsoluteVStack top={-10} left={10}>
                   <SlantedTitle size="xxs">Top Playlists</SlantedTitle>
                 </AbsoluteVStack>
-                <Grid itemMinWidth={cardFrameWidth}>
+                <Grid itemMinWidth={cardFrameWidthLg}>
                   {trendingLists.map((list, i) => {
                     // getListColor(list?.color) ?? '#999'
                     const color = getColorsForName(list?.name || '').altPastelColor
