@@ -1,3 +1,4 @@
+- fix add to list not showing sometimes
 - [m] [0] (searchpage) cant tap vote on tag
 - [d/m] [0] onboarding runthrough and fixup
 - [m] [0] (restaurantpage) cant go into gallery
@@ -14,7 +15,6 @@
 - hover effect + map restaurants on top cuisine & dishes
 - fix mobile web bugs
 - fix re-load homepage cache issue
-- fix router/stack bug on back/close
 - beta / invite features
 
 # post-launch
