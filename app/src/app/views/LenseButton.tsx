@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { Text, VStack, useMedia } from 'snackui'
+import { Text, VStack, useMedia, useTheme } from 'snackui'
 
 import { tagDisplayName } from '../../constants/tagDisplayName'
 import { rgbString } from '../../helpers/rgb'
@@ -37,6 +37,7 @@ export const LenseButton = ({
   const lineHeight = sizePx * scale * 0.39
   const name = tagDisplayName(lense)
   const isLong = name.length > 4
+  const theme = useTheme()
 
   useEffect(() => {
     setIsActive(isActiveParent)
@@ -50,7 +51,7 @@ export const LenseButton = ({
       disallowDisableWhenActive
     >
       <VStack
-        className="unselectable ease-in-out-fast"
+        className="unselectable ease-in-out-fastest"
         alignItems="center"
         justifyContent="center"
         width={scaledWidth}
@@ -71,15 +72,8 @@ export const LenseButton = ({
         padding={0}
         marginTop={-10}
         pressStyle={{
-          opacity: 0.8,
-          transform: [{ scale: 0.9 }],
+          backgroundColor: theme.backgroundColorDarker,
         }}
-        {...(isActive && {
-          transform: [{ scale: 1.1 }],
-          hoverStyle: {
-            transform: [{ scale: 1.1 }],
-          },
-        })}
       >
         <Text fontSize={iconSize} lineHeight={scaledSize} textAlign="center">
           {(lense.icon ?? '').trim()}

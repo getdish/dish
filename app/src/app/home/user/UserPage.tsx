@@ -22,11 +22,9 @@ import { HomeStateItemUser } from '../../../types/homeTypes'
 import { useSetAppMap } from '../../AppMap'
 import { useUserStore } from '../../userStore'
 import { ContentScrollView } from '../../views/ContentScrollView'
-import { ContentScrollViewHorizontal } from '../../views/ContentScrollViewHorizontal'
 import { Link } from '../../views/Link'
 import { ListCard } from '../../views/list/ListCard'
 import { NotFoundPage } from '../../views/NotFoundPage'
-import { SlantedTitle } from '../../views/SlantedTitle'
 import { SmallButton } from '../../views/SmallButton'
 import { SmallTitle } from '../../views/SmallTitle'
 import { StackDrawer } from '../../views/StackDrawer'
@@ -34,7 +32,6 @@ import { StackItemProps } from '../HomeStackView'
 import { PageContentWithFooter } from '../PageContentWithFooter'
 import { RestaurantReview } from '../restaurant/RestaurantReview'
 import { useSnapToFullscreenOnMount } from '../restaurant/useSnapToFullscreenOnMount'
-import { SimpleCard, SkewedCardCarousel } from '../SimpleCard'
 import { CardCarousel } from './CardCarousel'
 import { UserAvatar } from './UserAvatar'
 
@@ -114,7 +111,8 @@ const UserPageContent = graphql(
 
     useSetAppMap({
       hideRegions: true,
-      isActive: isActive,
+      fitToResults: true,
+      isActive,
       results: reviews.map(getReviewRestuarants).filter((x) => x.id),
     })
 

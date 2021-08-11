@@ -14,11 +14,13 @@ import {
   useThemeName,
 } from 'snackui'
 
-import { isWeb } from '../../../constants/constants'
+import { cardFrameBorderRadius, isWeb } from '../../../constants/constants'
 import { getColorsForName } from '../../../helpers/getColorsForName'
 import { getImageUrl } from '../../../helpers/getImageUrl'
 import { DishTagItem } from '../../../helpers/getRestaurantDishes'
 import { NavigableTag } from '../../../types/tagTypes'
+import { FeedCard } from '../../home/FeedCard'
+import { SimpleCard } from '../../home/SimpleCard'
 import { ColoredCircle } from '../ColoredCircle'
 import { Image } from '../Image'
 import { Link } from '../Link'
@@ -55,9 +57,7 @@ export type DishViewProps = DishTagItem &
   }
 
 export const DishView = memo((props: DishViewProps) => {
-  const fallback = (
-    <ColoredCircle size={props.size ?? 150} backgroundColor="rgba(100,100,100,0.15)" />
-  )
+  const fallback = null
   if (props.preventLoad) {
     return fallback
   }
@@ -125,7 +125,7 @@ const DishViewContent = (props: DishViewProps) => {
         onHoverOut={() => setIsHovered(false)}
       >
         {showVote && !!slug && (
-          <AbsoluteVStack width={20} height={20} zIndex={1000000} top="4%" left="4%">
+          <AbsoluteVStack zIndex={1000000} top={6} left={6}>
             <Suspense fallback={null}>
               <DishUpvoteDownvote
                 shadowed
@@ -173,13 +173,9 @@ const DishViewContent = (props: DishViewProps) => {
           overflow="hidden"
           x={-10}
           skewX="-12deg"
-          shadowColor="rgba(0,0,0,0.1)"
-          shadowRadius={2}
           zIndex={1000}
           {...(isActive && {
             backgroundColor: '#000',
-            shadowColor: 'rgba(0,0,0,0.2)',
-            scale: 1.05,
             x: -10,
             skewX: '-12deg',
           })}
@@ -211,35 +207,11 @@ const DishViewContent = (props: DishViewProps) => {
           style={{
             width: size,
             height: size,
-            borderRadius: 1000,
+            borderRadius: cardFrameBorderRadius,
           }}
           resizeMode="cover"
         />
         // </VStack>
-      )}
-
-      {/* performance */}
-      {!isTouchDevice && (
-        <AbsoluteVStack fullscreen borderRadius={10000} overflow="hidden">
-          {/* {isFallback && (
-          <AbsoluteVStack
-            fullscreen
-            transform={[{ translateX: -size * 0.75 }, { translateY: size * 0.42 }]}
-          >
-            <SineWave color={backgroundColor} size={size + 10} />
-          </AbsoluteVStack>
-        )} */}
-          <LinearGradient
-            style={[StyleSheet.absoluteFill]}
-            colors={[
-              `${backgroundColor}${isFallback && !disableFallbackFade ? 'aa' : '44'}`,
-              `${backgroundColor}${isFallback && !disableFallbackFade ? '55' : '00'}`,
-              `${colors.color400}${isFallback && !disableFallbackFade ? 'aa' : '44'}`,
-            ]}
-            start={[0, 0.5]}
-            end={[0.5, 0.5]}
-          />
-        </AbsoluteVStack>
       )}
 
       {!image && (
@@ -273,18 +245,42 @@ const DishViewContent = (props: DishViewProps) => {
   }
 
   return (
-    <ColoredCircle
+    <SimpleCard
       backgroundColor={backgroundColor}
       borderColor={selected ? '#000' : 'transparent'}
       borderWidth={1}
       pointerEvents="auto"
-      size={size}
+      size={size < 40 ? 'sm' : 'md'}
       {...rest}
     >
       {contents}
-    </ColoredCircle>
+    </SimpleCard>
   )
 }
+
+// {/* performance */}
+// {!isTouchDevice && (
+//   <AbsoluteVStack fullscreen borderRadius={10000} overflow="hidden">
+//     {/* {isFallback && (
+//     <AbsoluteVStack
+//       fullscreen
+//       transform={[{ translateX: -size * 0.75 }, { translateY: size * 0.42 }]}
+//     >
+//       <SineWave color={backgroundColor} size={size + 10} />
+//     </AbsoluteVStack>
+//   )} */}
+//     <LinearGradient
+//       style={[StyleSheet.absoluteFill]}
+//       colors={[
+//         `${backgroundColor}${isFallback && !disableFallbackFade ? 'aa' : '44'}`,
+//         `${backgroundColor}${isFallback && !disableFallbackFade ? '55' : '00'}`,
+//         `${colors.color400}${isFallback && !disableFallbackFade ? 'aa' : '44'}`,
+//       ]}
+//       start={[0, 0.5]}
+//       end={[0.5, 0.5]}
+//     />
+//   </AbsoluteVStack>
+// )}
 
 // const SineWave = ({ color, size }: { color: string; size: number }) => {
 //   return (

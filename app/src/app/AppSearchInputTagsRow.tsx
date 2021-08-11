@@ -11,7 +11,7 @@ import { TagButton, getTagButtonProps } from './views/TagButton'
 export const AppSearchInputTagsRow = memo(({ input }: { input: HTMLInputElement | null }) => {
   const home = useHomeStore()
   const tags = home.searchBarTags
-  const themeName = useThemeName()
+  // const themeName = useThemeName()
   const focusedTag = home.searchbarFocusedTag
   const theme = useTheme()
 
@@ -25,23 +25,24 @@ export const AppSearchInputTagsRow = memo(({ input }: { input: HTMLInputElement 
             return (
               <TagButton
                 key={getTagSlug(tag.slug)}
-                theme={themeName}
+                theme="light"
                 size="lg"
                 subtleIcon
-                shadowColor="#00000022"
-                color="#000"
-                fontWeight="600"
-                backgroundColor={theme.cardBackgroundColor}
-                shadowRadius={8}
+                // shadowColor="#00000022"
+                // color="#000"
+                // fontWeight="600"
+                backgroundColor={theme.backgroundColorTransluscent}
+                hoverStyle={{
+                  backgroundColor: theme.backgroundColorTransluscent,
+                }}
+                // shadowRadius={8}
+                elevation={1}
                 hideRating
                 hideRank
-                hoverStyle={{
-                  backgroundColor: 'rgba(255,255,255,1)',
-                }}
                 {...(isActive && {
-                  backgroundColor: 'rgba(150,150,150,0.1)',
+                  backgroundColor: theme.backgroundColor,
                   hoverStyle: {
-                    backgroundColor: 'rgba(150,150,150,0.1)',
+                    backgroundColor: theme.backgroundColor,
                   },
                 })}
                 {...getTagButtonProps(tag)}

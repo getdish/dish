@@ -48,7 +48,7 @@ export const zIndexSearchBarFloating = 450
 export const zIndexMapControlsUnderlaySmall = 500
 export const zIndexGallery = 500
 
-export const cardFrameBorderRadius = 20
+export const cardFrameBorderRadius = 16
 export const cardFrameWidth = 170
 export const cardFrameHeight = 240
 export const cardFrameWidthLg = 180

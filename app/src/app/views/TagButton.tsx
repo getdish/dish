@@ -204,7 +204,7 @@ const TagButtonInner = (props: TagButtonProps) => {
         <Text
           ellipse
           fontSize={fontSize}
-          fontWeight={fontWeight || '700'}
+          fontWeight={fontWeight || '500'}
           lineHeight={isSmall ? 22 : 26}
           color={color || theme.color}
           // borderBottomColor={theme.backgroundColor}
@@ -213,7 +213,7 @@ const TagButtonInner = (props: TagButtonProps) => {
           marginTop={-1}
           {...(floating && {
             color: '#fff',
-            textShadowColor: 'rgba(0,0,0,0.4)',
+            textShadowColor: theme.shadowColorLighter,
             textShadowOffset: { height: 3, width: 0 },
             textShadowRadius: 3,
           })}
@@ -228,18 +228,10 @@ const TagButtonInner = (props: TagButtonProps) => {
       {!hideRating && typeof rating !== 'undefined' && (
         <>
           {ratingStyle === 'pie' && (
-            <VStack
-              position="relative"
-              backgroundColor={theme.backgroundColorQuartenary}
-              borderRadius={100}
-              width={pieSize}
-              height={pieSize}
-              transform={[{ rotate: `${(1 - rating / 10) * 180}deg` }]}
-              // borderWidth={1}
-              borderColor={theme.backgroundColorAlt}
-              opacity={floating ? 1 : 0.7}
-            >
-              <Pie size={pieSize} percent={rating * 10} color={floating ? `#fff` : theme.color} />
+            <VStack position="relative" opacity={floating ? 1 : 0.7}>
+              <Text color={theme.color} fontSize={13} fontWeight="300" letterSpacing={-0.5}>
+                {ratingPts < 0 ? ratingPts : `+${ratingPts}`}
+              </Text>
             </VStack>
           )}
 

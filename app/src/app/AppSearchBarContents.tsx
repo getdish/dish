@@ -35,7 +35,7 @@ export const AppSearchBarContents = memo(({ isColored }: { isColored: boolean })
     >
       {!media.sm && <SearchBarActionButton />}
 
-      <VStack paddingHorizontal={media.xs ? 2 : 12}>
+      <VStack paddingHorizontal={media.xs ? 2 : 12} maxHeight={searchBarHeight} overflow="hidden">
         <DishLogoButton color={isColored ? '#fff' : undefined} />
       </VStack>
 

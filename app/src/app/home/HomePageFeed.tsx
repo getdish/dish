@@ -190,7 +190,7 @@ export const HomePageFeed = memo(
 
               <HStack position="relative">
                 <AbsoluteVStack zIndex={10} top={-10} left={10}>
-                  <SlantedTitle size="xxs">Trending tags</SlantedTitle>
+                  <SlantedTitle size="xxs">Topics</SlantedTitle>
                 </AbsoluteVStack>
 
                 <ContentScrollViewHorizontal>
@@ -246,7 +246,7 @@ export const HomePageFeed = memo(
 
               <VStack paddingHorizontal={16} position="relative">
                 <AbsoluteVStack top={-10} left={10}>
-                  <SlantedTitle size="xxs">Top Playlists</SlantedTitle>
+                  <SlantedTitle size="xxs">Playlists</SlantedTitle>
                 </AbsoluteVStack>
                 <Grid itemMinWidth={cardFrameWidthLg}>
                   {trendingLists.map((list, i) => {

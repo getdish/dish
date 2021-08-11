@@ -93,7 +93,7 @@ class UserStore extends Store {
   promptLogin() {
     if (!this.isLoggedIn) {
       appMenuStore.show()
-      Toast.show(`Please sign in`)
+      Toast.show(`Welcome!`)
       return true
     }
     return false

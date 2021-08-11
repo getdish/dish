@@ -24,6 +24,7 @@ export const RestaurantAddress = ({
   return (
     <Link href={`https://www.google.com/maps/search/?q=${encodeURIComponent(address)}`}>
       <SmallButton
+        tooltip={size === 'xs' ? getAddressText(curLocInfo, address, 'lg') : null}
         backgroundColor="transparent"
         icon={<MapPin color={theme.color} size={16} style={{ opacity: 0.5 }} />}
         iconAfter={<ExternalLink style={{ opacity: 0.5 }} color={theme.color} size={10} />}

@@ -43,6 +43,7 @@ import { SlantedTitle } from '../../views/SlantedTitle'
 import { SmallButton } from '../../views/SmallButton'
 import { TagButton, getTagButtonProps } from '../../views/TagButton'
 import { searchPageStore } from '../search/SearchPageStore'
+import { SkewedCardCarousel } from '../SimpleCard'
 import { EditRestaurantTagsButton } from './EditRestaurantTagsButton'
 import { ensureFlexText } from './ensureFlexText'
 import { RankView } from './RankView'
@@ -53,7 +54,7 @@ import { openingHours, priceRange } from './RestaurantDetailRow'
 import { RestaurantFavoriteStar } from './RestaurantFavoriteButton'
 import { useTotalReviews } from './useTotalReviews'
 
-export const ITEM_HEIGHT = 220
+export const ITEM_HEIGHT = 170
 
 type RestaurantListItemProps = {
   curLocInfo: GeocodePlace | null
@@ -173,7 +174,7 @@ const RestaurantListItemContent = memo(
     const contentSideProps: StackProps = {
       width: media.sm ? '70%' : '60%',
       minWidth: media.sm ? (isWeb ? '40vw' : Dimensions.get('window').width * 0.65) : 320,
-      maxWidth: Math.min(Dimensions.get('window').width * 0.7, media.sm ? 360 : 540),
+      maxWidth: Math.min(Dimensions.get('window').width * 0.5, media.sm ? 360 : 460),
     }
 
     const handleChangeDishes = useCallback(onChangeDishes as any, [])
@@ -197,7 +198,6 @@ const RestaurantListItemContent = memo(
     const titleHeight = titleFontSize + 8 * 2
     const score = Math.round((meta?.effective_score ?? 0) / 20)
     const theme = useTheme()
-    const showAbove = !!above || !!activeTagSlugs
     const [editedDescription, setEditedDescription] = useState('')
 
     // const handleEdit = useCallback((next) => {
@@ -274,44 +274,27 @@ const RestaurantListItemContent = memo(
 
         {/* vote button and score */}
         <AbsoluteVStack top={34} left={-5} zIndex={2000000}>
-          {showAbove
-            ? above ?? (
-                // RANKING VIEW
-                <RestaurantUpVoteDownVote
-                  rounded
-                  score={score}
-                  restaurantSlug={restaurantSlug}
-                  activeTagSlugs={activeTagSlugs}
-                  onClickPoints={toggleSetExpanded}
-                />
-              )
-            : null}
+          {above}
+          <RestaurantUpVoteDownVote
+            rounded
+            score={score}
+            restaurantSlug={restaurantSlug}
+            activeTagSlugs={activeTagSlugs}
+            onClickPoints={toggleSetExpanded}
+          />
         </AbsoluteVStack>
 
         {/* ROW: TITLE */}
         <VStack
           hoverStyle={{ backgroundColor: theme.backgroundColorTransluscent }}
-          paddingLeft={14}
+          paddingLeft={64}
           width={950}
           position="relative"
         >
           {/* LINK */}
           <Link tagName="div" name="restaurant" params={{ slug: restaurantSlug }} zIndex={2}>
-            <HStack
-              paddingLeft={showAbove ? 47 : 10}
-              paddingTop={25}
-              position="relative"
-              alignItems="center"
-            >
-              <AbsoluteVStack
-                x={-32}
-                y={-4}
-                zIndex={-1}
-                {...(!showAbove && {
-                  x: -36,
-                  y: 16,
-                })}
-              >
+            <HStack paddingLeft={10} paddingTop={15} position="relative" alignItems="center">
+              <AbsoluteVStack x={-26} y={4} zIndex={-1}>
                 <RankView rank={rank} />
               </AbsoluteVStack>
 
@@ -346,72 +329,34 @@ const RestaurantListItemContent = memo(
             </HStack>
           </Link>
 
-          <Spacer size={6} />
-
-          {/* SECOND ROW TITLE */}
-          <HStack
-            zIndex={0}
-            {...contentSideProps}
-            className="safari-fix-overflow"
-            overflow="hidden"
-            paddingLeft={showAbove ? 85 : 22}
-            paddingRight={20}
-            y={-6}
-            pointerEvents="auto"
-            alignItems="center"
-            cursor="pointer"
-            spacing="sm"
-          >
-            {!!price_range && (
-              <Text fontSize={14} fontWeight="700" color={theme.colorTertiary} marginRight={4}>
-                {price_range}
-              </Text>
-            )}
-
-            {!!open.isOpen && (
-              <>
-                <Circle size={8} backgroundColor={green} />
-                <Spacer size="sm" />
-              </>
-            )}
-
-            {!!open.text && (
-              <>
-                <Link name="restaurantHours" params={{ slug: restaurantSlug }}>
-                  <SmallButton backgroundColor="transparent">{open.nextTime || '~~'}</SmallButton>
-                </Link>
-              </>
-            )}
-
-            {!!restaurant.address && (
-              <RestaurantAddress size="sm" curLocInfo={curLocInfo!} address={restaurant.address} />
-            )}
-          </HStack>
+          <Spacer size="md" />
         </VStack>
-
-        <VStack flex={1} />
 
         {/* CENTER CONTENT AREA */}
         {/* zindex must be above title/bottom so hovers work on dishview voting/search */}
-        <HStack pointerEvents="none" zIndex={10} paddingLeft={10} flex={1} maxHeight={69}>
+        <HStack
+          marginTop={-5}
+          pointerEvents="none"
+          zIndex={10}
+          paddingLeft={70}
+          flex={1}
+          maxHeight={69}
+        >
           <VStack
             {...contentSideProps}
             className="fix-safari-shrink-height"
             justifyContent="center"
             flex={1}
-            y={isSafari ? -5 : -15}
             zIndex={100}
           >
-            <VStack width="110%">
-              {/* ROW: OVERVIEW */}
-              <RestaurantOverview
-                isDishBot
-                editableDescription={editableDescription}
-                fullHeight
-                restaurantSlug={restaurantSlug}
-                maxLines={2}
-              />
-            </VStack>
+            {/* ROW: OVERVIEW */}
+            <RestaurantOverview
+              isDishBot
+              editableDescription={editableDescription}
+              fullHeight
+              restaurantSlug={restaurantSlug}
+              maxLines={2}
+            />
           </VStack>
 
           {/* PEEK / TAGS (RIGHT SIDE) */}
@@ -472,7 +417,35 @@ const RestaurantListItemContent = memo(
             <RestaurantAddToListButton restaurantSlug={restaurantSlug} noLabel />
           </Suspense>
 
-          <Spacer size="sm" />
+          <Spacer size="lg" />
+
+          {!!price_range && (
+            <>
+              <Text fontSize={14} fontWeight="700" color={theme.colorTertiary}>
+                {price_range}
+              </Text>
+              <Spacer size="lg" />
+            </>
+          )}
+
+          {!!open.isOpen && (
+            <>
+              <Circle size={8} backgroundColor={green} />
+              <Spacer size="sm" />
+            </>
+          )}
+
+          {!!open.text && (
+            <>
+              <Link name="restaurantHours" params={{ slug: restaurantSlug }}>
+                <SmallButton backgroundColor="transparent">{open.nextTime || '~~'}</SmallButton>
+              </Link>
+            </>
+          )}
+
+          {!!restaurant.address && (
+            <RestaurantAddress size="xs" curLocInfo={curLocInfo!} address={restaurant.address} />
+          )}
 
           <Suspense fallback={null}>
             <RestaurantDeliveryButtons label="" restaurantSlug={restaurantSlug} />
@@ -554,7 +527,7 @@ const RestaurantPeekDishes = memo(
         })
 
     const foundMatchingSearchedDish = props.activeTagSlugs?.includes(dishes?.[0]?.slug)
-    const dishSize = 160
+    const dishSize = 130
 
     return (
       <>
@@ -565,38 +538,32 @@ const RestaurantPeekDishes = memo(
             onChange={props.onChangeTags}
           />
         )}
-        <HStack
-          pointerEvents="none"
-          padding={20}
-          y={-40}
-          x={20}
-          alignItems="center"
-          height="100%"
-          width={dishSize * 0.7 * 5}
-        >
-          {!!dishes[0]?.name &&
-            dishes.map((dish, i) => {
-              const isEven = i % 2 === 0
-              const baseSize = foundMatchingSearchedDish
-                ? i == 0
-                  ? dishSize
-                  : dishSize * 0.95
-                : dishSize
+        <HStack pointerEvents="none" padding={20} y={-20} x={-50} alignItems="center">
+          <SkewedCardCarousel>
+            {!!dishes[0]?.name &&
+              dishes.map((dish, i) => {
+                // const isEven = i % 2 === 0
+                const baseSize = foundMatchingSearchedDish
+                  ? i == 0
+                    ? dishSize
+                    : dishSize * 0.95
+                  : dishSize
 
-              const preventLoad = !isLoaded && i > showInitial
-              return (
-                <VStack key={dish.slug} marginRight={-35} marginTop={isEven ? 0 : -20}>
-                  <DishView
-                    preventLoad={preventLoad}
-                    size={baseSize * (isEven ? 1 : 0.825)}
-                    restaurantSlug={props.restaurantSlug}
-                    restaurantId={props.restaurantId}
-                    {...dish}
-                    showSearchButton={!props.editable}
-                  />
-                </VStack>
-              )
-            })}
+                const preventLoad = !isLoaded && i > showInitial
+                return (
+                  <VStack key={dish.slug} marginRight={-10} zIndex={100 - i}>
+                    <DishView
+                      preventLoad={preventLoad}
+                      size={baseSize}
+                      restaurantSlug={props.restaurantSlug}
+                      restaurantId={props.restaurantId}
+                      {...dish}
+                      showSearchButton={!props.editable}
+                    />
+                  </VStack>
+                )
+              })}
+          </SkewedCardCarousel>
         </HStack>
       </>
     )

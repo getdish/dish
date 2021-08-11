@@ -214,16 +214,6 @@ const RestaurantPage = memo(
                 <RestaurantReviewsList
                   restaurantSlug={restaurantSlug}
                   restaurantId={restaurant.id}
-                  before={
-                    <VStack paddingTop={5} paddingBottom={5}>
-                      <RestaurantOverview
-                        isDishBot
-                        maxLines={4}
-                        size="lg"
-                        restaurantSlug={restaurantSlug}
-                      />
-                    </VStack>
-                  }
                 />
               </Suspense>
             </VStack>

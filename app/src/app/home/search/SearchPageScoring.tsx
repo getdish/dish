@@ -65,20 +65,21 @@ export const SearchPageScoring = memo(() => {
         position="relative"
       >
         <AbsoluteVStack left={-66}>
-          <SlantedTitle size="xs" fontWeight="300" color={theme.colorSecondary}>
+          <SlantedTitle size="xxs" fontWeight="300">
             Scoring
           </SlantedTitle>
         </AbsoluteVStack>
 
-        <HStack spacing="sm">
+        <HStack opacity={0.7} spacing="sm">
           {tagsWithPct.map(({ tag, pct }, index) => {
             return (
               <TagButton
                 hideRating
+                hideIcon
                 key={tag.slug ?? index}
                 size="sm"
                 {...getTagButtonProps(tag)}
-                after={`(${pct}%)`}
+                after={`${pct}%`}
               />
             )
           })}

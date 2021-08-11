@@ -20,6 +20,7 @@ import { useContentScrollHorizontalFitter } from '../../views/ContentScrollViewH
 import { ContentScrollViewHorizontalFitted } from '../../views/ContentScrollViewHorizontalFitted'
 import { Link } from '../../views/Link'
 import { PaneControlButtonsLeft } from '../../views/PaneControlButtons'
+import { RestaurantOverview } from '../../views/restaurant/RestaurantOverview'
 import { RestaurantTagsRow } from '../../views/restaurant/RestaurantTagsRow'
 import { SmallButton } from '../../views/SmallButton'
 import { RestaurantRatingView } from '../RestaurantRatingView'
@@ -216,7 +217,7 @@ const RestaurantHeaderContent = memo(
                       </>
                     </HStack>
 
-                    <HStack maxWidth={300} overflow="hidden" minWidth={1600} y={-3}>
+                    <HStack maxWidth={300} overflow="hidden" minWidth={900} y={-3}>
                       <RestaurantTagsRow
                         exclude={['dish']}
                         restaurantSlug={restaurantSlug}
@@ -231,20 +232,22 @@ const RestaurantHeaderContent = memo(
                 </VStack>
               </HStack>
 
-              {/* <VStack pointerEvents="auto" paddingRight={20}>
-                  <Theme name={themeName}>
-                    <RestaurantOverview
-                      isDishBot
-                      maxLines={6}
-                      size="lg"
-                      restaurantSlug={restaurantSlug}
-                    />
-                  </Theme>
-                </VStack> */}
+              <VStack pointerEvents="auto">
+                <RestaurantOverview
+                  isDishBot
+                  maxLines={3}
+                  size="lg"
+                  restaurantSlug={restaurantSlug}
+                />
+              </VStack>
             </VStack>
           </VStack>
         </>
       )
+
+      if (true) {
+        return content
+      }
 
       if (!isWeb) {
         return content

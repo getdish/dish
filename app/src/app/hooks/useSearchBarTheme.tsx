@@ -25,7 +25,7 @@ export const useSearchBarTheme = () => {
   }
   return {
     theme,
-    themeName: 'lightTranslucent',
+    themeName: theme.name === 'dark' ? 'darkTranslucent' : 'lightTranslucent',
     color: '#fff',
     background: isColored ? rgbString(color.rgb, 1) : rgbString(color.rgb),
     isColored,
