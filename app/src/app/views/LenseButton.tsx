@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react'
+import { Pressable } from 'react-native'
 import { Text, VStack, useMedia, useTheme } from 'snackui'
 
 import { tagDisplayName } from '../../constants/tagDisplayName'
@@ -44,64 +45,61 @@ export const LenseButton = ({
   }, [isActiveParent])
 
   return (
-    <Link
-      {...(onPress ? { onPress } : { tag: lense })}
-      replace
-      asyncClick
-      disallowDisableWhenActive
-    >
-      <VStack
-        className="unselectable ease-in-out-fastest"
-        alignItems="center"
-        justifyContent="center"
-        width={scaledWidth}
-        height={scaledSize}
-        onPress={() => setIsActive((x) => !x)}
-        backgroundColor={bg}
-        borderRadius={100}
-        marginRight={10}
-        scale={isActive ? 1.3 : 1.1}
-        {...(media.sm && {
-          marginRight: 5,
-          transform: [
-            {
-              scale: isActive ? 1.25 : 0.85,
-            },
-          ],
-        })}
-        padding={0}
-        marginTop={-10}
-        pressStyle={{
-          backgroundColor: theme.backgroundColorDarker,
-        }}
-      >
-        <Text fontSize={iconSize} lineHeight={scaledSize} textAlign="center">
-          {(lense.icon ?? '').trim()}
-        </Text>
+    <Pressable onPress={onPress}>
+      <Link tag={lense} replace asyncClick disallowDisableWhenActive>
         <VStack
-          rotate="-10deg"
-          zIndex={100}
+          className="unselectable ease-in-out-fastest"
           alignItems="center"
-          borderRadius={4}
-          paddingHorizontal={4}
-          marginTop={-10}
-          backgroundColor="transparent"
-          {...(isActive && {
-            backgroundColor: lenseColorDark,
+          justifyContent="center"
+          width={scaledWidth}
+          height={scaledSize}
+          onPress={() => setIsActive((x) => !x)}
+          backgroundColor={bg}
+          borderRadius={100}
+          marginRight={10}
+          scale={isActive ? 1.3 : 1.1}
+          {...(media.sm && {
+            marginRight: 5,
+            transform: [
+              {
+                scale: isActive ? 1.25 : 0.85,
+              },
+            ],
           })}
+          padding={0}
+          marginTop={-10}
+          pressStyle={{
+            backgroundColor: theme.backgroundColorDarker,
+          }}
         >
-          <Text
-            fontWeight="700"
-            lineHeight={lineHeight}
-            fontSize={isLong ? 12 : 14}
-            color={color}
-            textAlign="center"
-            height={16}
-          >
-            {name}
+          <Text fontSize={iconSize} lineHeight={scaledSize} textAlign="center">
+            {(lense.icon ?? '').trim()}
           </Text>
+          <VStack
+            rotate="-10deg"
+            zIndex={100}
+            alignItems="center"
+            borderRadius={4}
+            paddingHorizontal={4}
+            marginTop={-10}
+            backgroundColor="transparent"
+            {...(isActive && {
+              backgroundColor: lenseColorDark,
+            })}
+          >
+            <Text
+              fontWeight="700"
+              lineHeight={lineHeight}
+              fontSize={isLong ? 12 : 14}
+              color={color}
+              textAlign="center"
+              height={16}
+            >
+              {name}
+            </Text>
+          </VStack>
         </VStack>
-      </VStack>
-    </Link>
+      </Link>
+    </Pressable>
   )
 }

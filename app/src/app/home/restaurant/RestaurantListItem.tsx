@@ -11,6 +11,7 @@ import {
   Circle,
   HStack,
   Hoverable,
+  InteractiveContainer,
   LoadingItem,
   LoadingItemsSmall,
   Spacer,
@@ -293,7 +294,7 @@ const RestaurantListItemContent = memo(
           {/* LINK */}
           <Link tagName="div" name="restaurant" params={{ slug: restaurantSlug }} zIndex={2}>
             <HStack paddingLeft={64} paddingTop={15} position="relative" alignItems="center">
-              <AbsoluteVStack x={-26} y={4} zIndex={-1}>
+              <AbsoluteVStack x={-28} y={3} zIndex={-1}>
                 <RankView rank={rank} />
               </AbsoluteVStack>
 
@@ -334,12 +335,14 @@ const RestaurantListItemContent = memo(
         {/* CENTER CONTENT AREA */}
         {/* zindex must be above title/bottom so hovers work on dishview voting/search */}
         <HStack
-          marginTop={-5}
+          y={-10}
+          // marginBottom={-5}
           pointerEvents="none"
           zIndex={10}
-          paddingLeft={70}
+          paddingLeft={65}
+          paddingRight={10}
           flex={1}
-          maxHeight={69}
+          maxHeight={66}
         >
           <VStack
             {...contentSideProps}
@@ -377,44 +380,43 @@ const RestaurantListItemContent = memo(
 
         <HStack
           paddingLeft={20}
-          height={44}
+          height={46}
           className="safari-fix-overflow"
           position="relative"
           alignItems="center"
           width="100%"
           overflow="hidden"
         >
-          <Link
-            name="restaurant"
-            params={{
-              slug: props.restaurantSlug,
-              section: 'reviews',
-            }}
-          >
-            <SmallButton
-              tooltip={`Rating Breakdown (${totalReviews} reviews)`}
-              icon={
-                <MessageSquare
-                  size={16}
-                  color={isWeb ? 'var(--colorTertiary)' : 'rgba(150,150,150,0.3)'}
-                />
-              }
+          <InteractiveContainer>
+            <Link
+              name="restaurant"
+              params={{
+                slug: props.restaurantSlug,
+                section: 'reviews',
+              }}
             >
-              {numberFormat(restaurant.reviews_aggregate().aggregate?.count() ?? 0, 'sm')}
-            </SmallButton>
-          </Link>
+              <SmallButton
+                borderRadius={0}
+                tooltip={`Rating Breakdown (${totalReviews} reviews)`}
+                icon={
+                  <MessageSquare
+                    size={16}
+                    color={isWeb ? 'var(--colorTertiary)' : 'rgba(150,150,150,0.3)'}
+                  />
+                }
+              >
+                {numberFormat(restaurant.reviews_aggregate().aggregate?.count() ?? 0, 'sm')}
+              </SmallButton>
+            </Link>
 
-          <Spacer size="sm" />
+            <Suspense fallback={<Spacer size={44} />}>
+              <RestaurantFavoriteStar borderRadius={0} size="md" restaurantId={restaurantId} />
+            </Suspense>
 
-          <Suspense fallback={<Spacer size={44} />}>
-            <RestaurantFavoriteStar size="md" restaurantId={restaurantId} />
-          </Suspense>
-
-          <Spacer size="sm" />
-
-          <Suspense fallback={<Spacer size={44} />}>
-            <RestaurantAddToListButton restaurantSlug={restaurantSlug} noLabel />
-          </Suspense>
+            <Suspense fallback={<Spacer size={44} />}>
+              <RestaurantAddToListButton borderRadius={0} restaurantSlug={restaurantSlug} noLabel />
+            </Suspense>
+          </InteractiveContainer>
 
           <Spacer size="lg" />
 
@@ -437,7 +439,7 @@ const RestaurantListItemContent = memo(
           {!!open.text && (
             <>
               <Link name="restaurantHours" params={{ slug: restaurantSlug }}>
-                <SmallButton backgroundColor="transparent">{open.nextTime || '~~'}</SmallButton>
+                <SmallButton textProps={{ opacity: 0.6 }}>{open.nextTime || '~~'}</SmallButton>
               </Link>
             </>
           )}
@@ -537,7 +539,7 @@ const RestaurantPeekDishes = memo(
             onChange={props.onChangeTags}
           />
         )}
-        <HStack pointerEvents="none" padding={20} y={-20} x={-50} alignItems="center">
+        <HStack pointerEvents="none" padding={20} y={-20} x={-40} alignItems="center">
           <SkewedCardCarousel>
             {!!dishes[0]?.name &&
               dishes.map((dish, i) => {

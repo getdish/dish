@@ -95,12 +95,12 @@ const darkTranslucent: MyTheme = {
 
 const lightBase = {
   colorAlt: blue,
-  backgroundColorTransluscent: '#f2f2f244',
-  backgroundColorTransluscentHover: '#f2f2f255',
+  backgroundColorTransluscent: '#f2f2f222',
+  backgroundColorTransluscentHover: '#f2f2f244',
   backgroundColorDarker: '#f6f6f6',
   backgroundColorAlt: blue200,
-  borderColor: '#eeeeee',
-  borderColorHover: '#d5d5d5',
+  borderColor: '#f2f2f2',
+  borderColorHover: '#eeeeee',
   color: '#111111',
   colorSecondary: '#444444',
   colorTertiary: '#777777',

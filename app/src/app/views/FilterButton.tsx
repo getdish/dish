@@ -57,6 +57,7 @@ export const FilterButton = ({
         theme={themeName}
         textProps={{
           fontWeight: '700',
+          color: isActive ? '#fff' : theme.color,
           ...rest.textProps,
         }}
         onPress={() => {

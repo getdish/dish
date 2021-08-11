@@ -57,7 +57,7 @@ export const RestaurantOverview = memo(
     const scale = size === 'lg' ? 1.1 : 1
     const extra = size === 'lg' ? 2 : 1
     const lineHeight = Math.round((size === 'lg' ? 26 : 24) * scale + extra * scale)
-    const fontSize = Math.round(15 * scale + extra)
+    const fontSize = Math.round(14 * scale + extra)
     const [isEditing, setIsEditing] = useState(false)
     const editedText = useRef('')
 
