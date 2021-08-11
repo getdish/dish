@@ -36,10 +36,14 @@ export const ListCard = graphql((props: ListCardProps) => {
     <ListCardFrame
       {...props}
       title={list?.name}
-      tags={list
-        ?.tags({ limit: 2 })
-        .map((x) => (x.tag ? selectTagDishViewSimple(x.tag) : null))
-        .filter(isPresent)}
+      tags={
+        props.size === 'xs'
+          ? []
+          : list
+              ?.tags({ limit: 2 })
+              .map((x) => (x.tag ? selectTagDishViewSimple(x.tag) : null))
+              .filter(isPresent)
+      }
       photo={getListPhoto(list)}
     />
   )
@@ -57,9 +61,11 @@ export const ListCardFrame = graphql((props: ListCardProps) => {
       })}
     >
       <FeedCard pressable variant="flat" chromeless floating {...feedCardProps}>
-        <Suspense fallback={null}>
-          <ListFavoriteButton {...props} />
-        </Suspense>
+        {!props.size?.endsWith('xs') && (
+          <Suspense fallback={null}>
+            <ListFavoriteButton {...props} />
+          </Suspense>
+        )}
       </FeedCard>
     </Link>
   )

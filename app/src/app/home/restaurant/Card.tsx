@@ -20,7 +20,7 @@ import {
   isWeb,
 } from '../../../constants/constants'
 import { ColorShades, getColorsForColor, getColorsForName } from '../../../helpers/getColorsForName'
-import { CardFrame } from '../../views/CardFrame'
+import { CardFrame, CardFrameProps } from '../../views/CardFrame'
 import { Image } from '../../views/Image'
 
 export type CardProps = {
@@ -32,7 +32,7 @@ export type CardProps = {
   hideInfo?: boolean
   aspectFixed?: boolean
   hoverEffect?: 'scale' | 'background' | false
-  size?: 'lg' | 'md' | 'sm' | 'xs'
+  size?: CardFrameProps['size']
   backgroundColor?: string | null
   borderColor?: string | null
   isBehind?: boolean
@@ -64,6 +64,7 @@ const heights = {
 }
 
 const scales = {
+  xxs: 0.5,
   xs: 0.6,
   sm: 0.85,
   md: 0.95,
@@ -201,8 +202,8 @@ export function Card({
         <VStack
           className="ease-in-out"
           opacity={hideInfo ? 0 : 1}
-          paddingHorizontal={size === 'xs' ? 30 : 20}
-          paddingVertical={size === 'xs' ? 15 : 20}
+          paddingHorizontal={size.endsWith('xs') ? 30 : 20}
+          paddingVertical={size.endsWith('xs') ? 15 : 20}
           flex={1}
         >
           <HStack flex={1} width="100%" maxWidth="100%">
@@ -211,7 +212,7 @@ export function Card({
               <VStack position="relative">
                 <Text
                   // not working below :(
-                  className={size === 'xs' ? 'ellipse' : 'break-word'}
+                  className={size.endsWith('xs') ? 'ellipse' : 'break-word'}
                   textAlign="right"
                   textShadowColor={theme.shadowColor}
                   textShadowRadius={2}
@@ -228,7 +229,7 @@ export function Card({
                 </Text>
               </VStack>
               <Spacer size="xs" />
-              {!!subTitle && size !== 'xs' && (
+              {!!subTitle && !size.endsWith('xs') && (
                 <Paragraph
                   textAlign="right"
                   fontWeight="800"

@@ -1,5 +1,5 @@
 import React from 'react'
-import { AbsoluteHStack, AbsoluteVStack, Text, VStack, useTheme } from 'snackui'
+import { AbsoluteHStack, Text, VStack, useTheme } from 'snackui'
 
 import { DishTagItem } from '../../helpers/getRestaurantDishes'
 import { rgbString } from '../../helpers/rgb'
@@ -70,6 +70,7 @@ export const FeedCard = ({
                   onlyIcon={tags.length > 1 && tag.type === 'lense'}
                   size={emphasizeTag ? 'lg' : 'md'}
                   fontWeight={emphasizeTag ? '300' : '700'}
+                  color={colorString}
                   {...tag}
                 />
               ))}
@@ -81,8 +82,16 @@ export const FeedCard = ({
               {children}
               <Text
                 className="hover-100-opacity-child"
-                fontWeight={emphasizeTag ? '300' : '700'}
-                fontSize={emphasizeTag ? (size === 'sm' ? 13 : 18) : size === 'sm' ? 16 : 23}
+                fontWeight={emphasizeTag ? '400' : '700'}
+                fontSize={
+                  emphasizeTag
+                    ? size === 'sm' || size.endsWith('xs')
+                      ? 13
+                      : 18
+                    : size === 'sm' || size.endsWith('xs')
+                    ? 16
+                    : 23
+                }
                 color={colorString}
               >
                 {title}

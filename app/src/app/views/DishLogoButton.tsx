@@ -1,7 +1,13 @@
 import React, { memo } from 'react'
 import { AbsoluteVStack, HStack, VStack, useDebounceValue, useMedia } from 'snackui'
 
-import { logoHeight, logoWidth, logoXsHeight, logoXsWidth } from '../../constants/constants'
+import {
+  logoHeight,
+  logoSmWidth,
+  logoWidth,
+  logoXsHeight,
+  logoXsWidth,
+} from '../../constants/constants'
 import { useHomeCurrentHomeType } from '../homeStore'
 import { useCurrentLenseColor } from '../hooks/useCurrentLenseColor'
 import { Link } from './Link'
@@ -37,7 +43,8 @@ export const DishLogoButton = memo(({ color }: { color?: string }) => {
   return (
     <VStack
       className="ease-in-out-faster"
-      width={media.xs ? logoXsWidth : logoWidth}
+      width={media.xs ? logoXsWidth : logoSmWidth}
+      y={media.xs ? 0 : -4}
       height={logoHeight}
       position="relative"
     >
@@ -51,15 +58,7 @@ export const DishLogoButton = memo(({ color }: { color?: string }) => {
         {wrapWithHomeLink(
           // marginVertical={-7} native only? web wroks
           <VStack marginVertical="auto">
-            <LogoColor
-              color={
-                media.sm
-                  ? undefined
-                  : searchBarTheme.name === 'light' || searchBarTheme.name === 'dark'
-                  ? undefined
-                  : '#fff'
-              }
-            />
+            <LogoColor color={media.sm ? undefined : '#fff'} />
           </VStack>
         )}
       </VStack>

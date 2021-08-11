@@ -132,14 +132,13 @@ for (const [index, name] of colorNames.entries()) {
   }
 }
 
-export const bgLightLight = '#B8E0F333'
 export const bgAlt = blue300
-export const bgLight = 'rgb(240, 250, 255)'
-export const bgLightTranslucent = 'rgba(220, 234, 255, 0.25)'
-export const bgLightHover = `rgba(230, 245, 250, 1)`
-export const bgLightPress = `rgba(220, 235, 245, 1)`
-export const brandColor = `#CA3366`
-export const brandColorDark = `#A61C4A`
-export const brandColorDarker = `#800A32`
-export const brandColorLight = `#DE487B`
-export const brandColorLighter = `#EC6996`
+export const bgLight = pink100
+export const bgLightTranslucent = `${pink100}55`
+export const bgLightHover = pink50
+export const bgLightPress = pink200
+export const brandColor = `#E3236A`
+export const brandColorDark = pink600
+export const brandColorDarker = pink700
+export const brandColorLight = pink300
+export const brandColorLighter = pink200
