@@ -76,7 +76,10 @@ export const HomePageFeed = memo(
         limit: 12,
       })
 
-      const trendingLists = query.list({
+      const trendingLists = query.list_populated({
+        args: {
+          min_items: 2,
+        },
         where: {
           region: {
             _eq: item.region,
@@ -252,11 +255,17 @@ export const HomePageFeed = memo(
                   {trendingLists.map((list, i) => {
                     // getListColor(list?.color) ?? '#999'
                     const color = getColorsForName(list?.name || '').altPastelColor
+                    const numItems = list.restaurants_aggregate().aggregate?.count() ?? 0
+                    console.log(
+                      'list.list_reviews_aggregate().aggregate?.count() ?? 0',
+                      list.restaurants_aggregate().aggregate?.count() ?? 0
+                    )
                     return (
                       <VStack alignItems="center" flex={1} key={i} marginBottom={26}>
                         <ListCardFrame
                           chromeless
                           author={` by ${list?.user?.username ?? ''}`}
+                          numItems={numItems}
                           size="lg"
                           backgroundColor={`${color}25`}
                           variant="flat"

@@ -1,7 +1,7 @@
 import { graphql } from '@dish/graph'
 import { isPresent } from '@dish/helpers'
 import React, { Suspense } from 'react'
-import { Hoverable } from 'snackui'
+import { Hoverable, VStack } from 'snackui'
 
 import { selectTagDishViewSimple } from '../../../helpers/selectDishViewSimple'
 import { FeedCard, FeedCardProps } from '../../home/FeedCard'
@@ -9,6 +9,13 @@ import { getListPhoto } from '../../home/getListPhoto'
 import { FavoriteButton } from '../FavoriteButton'
 import { Link } from '../Link'
 import { useList, useListFavorite } from './useList'
+
+export type ListCardProps = ListIDProps &
+  FeedCardProps & {
+    numItems?: number
+    onHover?: (is: boolean) => any
+    floating?: boolean
+  }
 
 export type ListIDProps = {
   slug: string
@@ -23,12 +30,6 @@ const ListFavoriteButton = graphql((props: ListIDProps) => {
     </FavoriteButton>
   )
 })
-
-type ListCardProps = ListIDProps &
-  FeedCardProps & {
-    onHover?: (is: boolean) => any
-    floating?: boolean
-  }
 
 export const ListCard = graphql((props: ListCardProps) => {
   const { list } = useList(props)
@@ -62,9 +63,11 @@ export const ListCardFrame = graphql((props: ListCardProps) => {
     >
       <FeedCard pressable variant="flat" chromeless floating {...feedCardProps}>
         {!props.size?.endsWith('xs') && (
-          <Suspense fallback={null}>
-            <ListFavoriteButton {...props} />
-          </Suspense>
+          <VStack x={-5}>
+            <Suspense fallback={null}>
+              <ListFavoriteButton {...props} />
+            </Suspense>
+          </VStack>
         )}
       </FeedCard>
     </Link>

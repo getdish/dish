@@ -37,7 +37,7 @@ export const useList = ({ slug }: ListIDProps) => {
   return { list, colors, photos, backgroundColor }
 }
 
-export const useListFavorite = ({ slug }: ListIDProps) => {
+export const useListFavorite = ({ slug }: { slug: string }) => {
   const [list] = slug ? queryList(slug) : []
   const listId = list?.id
   const { user } = useUserStore()

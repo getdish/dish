@@ -20,6 +20,7 @@ export type FeedCardProps = {
   floating?: boolean
   emphasizeTag?: boolean
   pressable?: boolean
+  numItems?: number
 }
 
 export const FeedCard = ({
@@ -34,12 +35,14 @@ export const FeedCard = ({
   children,
   chromeless,
   backgroundColor,
+  numItems,
   emphasizeTag,
   pressable,
 }: FeedCardProps) => {
   const theme = useTheme()
   const color = tags[0]?.rgb ?? [200, 150, 150]
   const colorString = rgbString(color)
+  const longTitle = typeof title === 'string' && title.length > 15 ? true : false
   return (
     <Card
       className="hover-parent"
@@ -87,17 +90,22 @@ export const FeedCard = ({
                   emphasizeTag
                     ? size === 'sm' || size.endsWith('xs')
                       ? 13
+                      : longTitle
+                      ? 15
                       : 18
                     : size === 'sm' || size.endsWith('xs')
                     ? 16
+                    : longTitle
+                    ? 18
                     : 23
                 }
                 color={colorString}
               >
                 {title}
               </Text>
-              {!!author && (
+              {!!(author || typeof numItems !== 'undefined') && (
                 <Text color={theme.color} fontWeight="300" marginTop={8} opacity={0.5}>
+                  {numItems ? <>{`${numItems}`} &middot; </> : ''}
                   {author ?? ''}
                 </Text>
               )}
