@@ -107,6 +107,8 @@ export const Score = memo(
       )
     }
 
+    const theme = useTheme()
+
     const colors = getColorsForColor(
       typeof rating === 'number' ? (rating >= 7 ? green : rating < 5 ? red : grey) : grey
     )
@@ -115,10 +117,11 @@ export const Score = memo(
       <HStack
         position="relative"
         pointerEvents="auto"
-        // backgroundColor={theme.cardBackgroundColor}
+        backgroundColor={theme.cardBackgroundColor}
         alignItems="center"
         justifyContent="center"
         className={isWeb && !supportsTouchWeb && showVoteOnHover ? ' show-on-hover' : ''}
+        width={sizePx}
         height={sizePx}
         {...(shadowed && {
           shadowColor: 'rgba(0,0,0,0.125)',

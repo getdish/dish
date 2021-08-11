@@ -33,7 +33,7 @@ export const AppSearchBarFloating = () => {
   //   const newParent = parentIds[media.sm ? 'small' : 'large']
   //   sendReparentableChild(parent, newParent, 0, 0)
   // }, [media.sm])
-  const barThemeName = media.sm ? theme.name : themeName === 'light' ? 'dark' : themeName
+  const barThemeName = media.sm ? theme.name : themeName
 
   return (
     <Theme name={barThemeName}>

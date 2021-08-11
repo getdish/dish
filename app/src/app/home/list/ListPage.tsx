@@ -281,7 +281,8 @@ function useListRestaurants(list?: list) {
   ] as const
 }
 
-const lightBackgrounds = new Set([0, 4, 11])
+// in dark mode maybe thats why i had 11 in here?
+const lightBackgrounds = new Set([0, 4])
 
 const ListPageContent = graphql((props: Props) => {
   // const themeName = useThemeName()
@@ -515,53 +516,51 @@ const ListPageContent = graphql((props: Props) => {
               </>
             )}
 
-            <HStack
-              // backgroundColor={`${color}99`}
-              paddingHorizontal={20}
-              paddingVertical={20}
-              borderRadius={20}
-              alignItems="center"
-            >
-              <HStack alignItems="center">
-                <UserAvatar
-                  size={24}
-                  charIndex={list?.user?.charIndex}
-                  avatar={list?.user?.avatar}
-                />
-                <Paragraph opacity={0.5} size="sm">
-                  by {list.user?.username}
-                </Paragraph>
-                <Spacer />
-                <Paragraph opacity={0.5} size="sm">
-                  &middot;
-                </Paragraph>
-                <Spacer />
-                <Paragraph opacity={0.5} size="sm">
-                  {list.created_at ? getTimeFormat(new Date(list.created_at)) : ''}
-                </Paragraph>
-              </HStack>
-
-              {!!tagButtons.length && (
-                <>
-                  <Spacer />
-                  <Paragraph opacity={0.5} size="sm">
-                    &middot;
-                  </Paragraph>
-                  <Spacer />
-                  <HStack spacing justifyContent="center">
-                    {tagButtons}
-                  </HStack>
-                </>
-              )}
-
-              <Spacer />
-              <Paragraph opacity={0.5} size="sm">
-                &middot;
-              </Paragraph>
-            </HStack>
-
             {!!(list.description || isEditing) && (
-              <CommentBubble avatar={list.user?.avatar} name={list.user?.username ?? ''}>
+              <CommentBubble
+                after={
+                  <HStack paddingHorizontal={20} borderRadius={20} alignItems="center">
+                    <HStack alignItems="center">
+                      <UserAvatar
+                        size={24}
+                        charIndex={list?.user?.charIndex}
+                        avatar={list?.user?.avatar}
+                      />
+                      <Spacer size="sm" />
+                      <Paragraph opacity={0.5} size="sm">
+                        by {list.user?.username}
+                      </Paragraph>
+                      <Spacer />
+                      <Paragraph opacity={0.5} size="sm">
+                        &middot;
+                      </Paragraph>
+                      <Spacer />
+                      <Paragraph opacity={0.5} size="sm">
+                        {list.created_at ? getTimeFormat(new Date(list.created_at)) : ''}
+                      </Paragraph>
+                    </HStack>
+
+                    {!!tagButtons.length && (
+                      <>
+                        <Spacer />
+                        <Paragraph opacity={0.5} size="sm">
+                          &middot;
+                        </Paragraph>
+                        <Spacer />
+                        <HStack spacing justifyContent="center">
+                          {tagButtons}
+                        </HStack>
+                      </>
+                    )}
+                    <Paragraph opacity={0.5} size="sm">
+                      &middot;
+                    </Paragraph>
+                    <Spacer />
+                  </HStack>
+                }
+                avatar={list.user?.avatar}
+                name={list.user?.username ?? ''}
+              >
                 {isEditing ? (
                   <Input
                     placeholder="Description..."
@@ -698,13 +697,13 @@ const ListPageTitle = ({
         <>
           <VStack
             marginHorizontal="auto"
-            marginVertical={15}
+            marginTop={15}
             alignItems="center"
             justifyContent="center"
           >
             <ScalingPressable>
               <Link name="user" params={{ username: list.user?.username ?? '' }}>
-                <SlantedTitle scale={1} size="xs" alignSelf="center">
+                <SlantedTitle scale={1} size="md" alignSelf="center">
                   {list.user?.username ?? '...'}'s
                 </SlantedTitle>
               </Link>
@@ -716,7 +715,9 @@ const ListPageTitle = ({
                 backgroundColor={color}
                 alignSelf="center"
                 zIndex={0}
-                size={len < 12 ? 'xxl' : len < 16 ? 'xl' : len < 24 ? 'lg' : len < 30 ? 'md' : 'sm'}
+                size={
+                  len < 12 ? 'xxxl' : len < 16 ? 'xxl' : len < 24 ? 'xl' : len < 30 ? 'lg' : 'md'
+                }
                 color={textColor}
               >
                 {isEditing ? (

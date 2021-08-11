@@ -38,7 +38,9 @@ export const VoteButton = ({
       onHoverIn={() => setHovered(true)}
       onHoverOut={() => setHovered(false)}
       onPressIn={prevent}
-      backgroundColor={theme.cardBackgroundColor}
+      backgroundColor={theme.backgroundColor}
+      borderWidth={1}
+      borderColor={theme.backgroundColorSecondary}
       pressStyle={{
         backgroundColor: theme.backgroundColor,
       }}
@@ -46,7 +48,7 @@ export const VoteButton = ({
     >
       <Icon
         size={size * (voted ? 1.2 : 1)}
-        color={hovered ? hoverColor ?? '#000' : color ?? '#ccc'}
+        color={hovered ? hoverColor ?? theme.colorSecondary : color ?? '#ccc'}
       />
       <AbsoluteVStack
         top={translateDir * 8}

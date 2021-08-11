@@ -124,10 +124,7 @@ export const RestaurantPhotosRowContent = memo(
                     width={width}
                     height={height}
                     key={index}
-                    className={`scroll-snap-photo`}
-                    alignItems="center"
                     marginRight={-40}
-                    justifyContent="center"
                     {...(floating && {
                       borderRadius: 12,
                       overflow: 'hidden',

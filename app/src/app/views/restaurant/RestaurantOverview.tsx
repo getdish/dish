@@ -67,7 +67,7 @@ export const RestaurantOverview = memo(
         <VStack
           width="100%"
           height={fullHeight ? '100%' : undefined}
-          maxHeight={lineHeight * maxLines - 2}
+          maxHeight={lineHeight * maxLines}
         >
           {ensureFlexText}
           <HStack

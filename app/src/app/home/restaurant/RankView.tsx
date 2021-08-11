@@ -10,10 +10,11 @@ export const RankView = memo(({ rank }: { rank: number }) => {
     <VStack
       width={44}
       height={44}
-      {...(isWeb && {
-        transform: [{ translateY: -10 }],
-        marginRight: -15,
-      })}
+      {...(isWeb &&
+        {
+          // transform: [{ translateY: -10 }],
+          // marginRight: -15,
+        })}
       {...(!isWeb && {
         marginLeft: -6,
         marginTop: -10,
@@ -22,13 +23,12 @@ export const RankView = memo(({ rank }: { rank: number }) => {
       position="relative"
       alignItems="center"
       justifyContent="center"
-      opacity={0.7}
+      opacity={0.5}
     >
       <AbsoluteVStack
         borderRadius={1000}
         fullscreen
-        backgroundColor={theme.backgroundColorSecondary}
-        opacity={0.35}
+        // backgroundColor={theme.backgroundColorSecondary}
         zIndex={-1}
       />
       <Text textAlign="center" lineHeight={38}>
