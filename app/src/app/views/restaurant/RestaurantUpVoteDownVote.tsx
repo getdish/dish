@@ -77,33 +77,15 @@ const RestaurantUpVoteDownVoteContents = graphql(
         >
           <RestaurantRatingView slug={restaurantSlug} floating size={48} />
         </AbsoluteVStack>
-        <VStack
-          shadowColor="#000"
-          // backgroundColor={theme.cardBackgroundColor}
-          // shadowOpacity={0.1}
-          // shadowOffset={{ height: 2, width: 0 }}
-          // shadowRadius={7}
-          // borderRadius={rounded ? 100 : 12}
-          padding={2}
-          paddingHorizontal={5}
-          // skewX="-12deg"
-          position="relative"
-        >
-          <VStack
-          // has to be separate layer or else overflow breaks safari
-          // skewX="12deg"
-          >
-            <RatingWithVotes
-              score={score}
-              ratio={ratio}
-              vote={vote}
-              setVote={setVote}
-              onClickPoints={onClickPoints}
-              isMultiple={activeTagSlugs ? activeTagSlugs.length > 1 : false}
-              display={display}
-            />
-          </VStack>
-        </VStack>
+        <RatingWithVotes
+          score={score}
+          ratio={ratio}
+          vote={vote}
+          setVote={setVote}
+          onClickPoints={onClickPoints}
+          isMultiple={activeTagSlugs ? activeTagSlugs.length > 1 : false}
+          display={display}
+        />
       </VStack>
     )
   }

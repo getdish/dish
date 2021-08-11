@@ -27,10 +27,9 @@ export const getNavigateItemForState = (
   const name = getNameForState(state)
   const isChangingType = name !== router.curPage.name
   // for now we change the region into a lng_lat, but that shouldn't create a new state
-  const isChangingRegion = isLngLatParam(state.region || '')
-    ? false
-    : state.region !== curState['region']
-  const replace = !isChangingType && !isChangingRegion
+  const isGeo = isLngLatParam(state.region || '')
+  const isChangingRegion = state.region !== curState['region']
+  const replace = isGeo ? true : !isChangingType && !isChangingRegion
   const params = getParamsForState(state)
   return {
     name,

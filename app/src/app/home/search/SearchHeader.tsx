@@ -48,7 +48,7 @@ export const SearchHeader = memo(() => {
                     marginBottom={0}
                     height={28}
                     fontWeight="700"
-                    fontSize={title.length < 20 ? 30 : 28}
+                    fontSize={title.length < 20 ? 27 : 24}
                     lineHeight={28}
                   >
                     {title}
@@ -58,7 +58,7 @@ export const SearchHeader = memo(() => {
                       color={rgbString(lenseColor)}
                       opacity={0.8}
                       className="nobreak"
-                      fontSize={22}
+                      fontSize={20}
                       fontWeight="300"
                     >
                       {subTitle}
@@ -69,7 +69,7 @@ export const SearchHeader = memo(() => {
               <Spacer size="xs" />
               <SearchPageScoring />
             </VStack>
-            <HStack marginLeft={-30} marginBottom={8} position="relative">
+            <HStack marginLeft={-10} marginBottom={8} position="relative">
               <VStack position="relative" alignItems="center" justifyContent="center" x={-10}>
                 <SlantedTitle size="xs">Lists</SlantedTitle>
                 <AbsoluteVStack right={-14} rotate="90deg">

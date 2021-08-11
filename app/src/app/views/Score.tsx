@@ -60,7 +60,7 @@ export const Score = memo(
     if (votable && !isTouchDevice && userStore.isLoggedIn) {
       const upvote = (
         <VoteButton
-          size={20 * scale}
+          size={18 * scale}
           Icon={ArrowUp}
           shadowDirection="up"
           voted={vote == 1}
@@ -73,7 +73,7 @@ export const Score = memo(
       )
       const downvote = (
         <VoteButton
-          size={20 * scale}
+          size={18 * scale}
           Icon={ArrowDown}
           voted={vote == -1}
           color={vote === -1 ? 'red' : voteButtonColor}
@@ -85,7 +85,7 @@ export const Score = memo(
       )
       voteContent = (
         <>
-          <VStack borderRadius={4} overflow="hidden">
+          <VStack marginVertical={-5} borderRadius={4} overflow="hidden">
             {subtle ? (
               upvote
             ) : (

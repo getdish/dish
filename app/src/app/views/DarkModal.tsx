@@ -48,13 +48,11 @@ export const DarkModal = ({
           animateState={hide ? 'out' : 'in'}
         >
           <VStack
-            className="debug-me"
             flex={1}
             maxHeight="100%" // needed for chrome
             position="relative"
             backgroundColor="#000"
-            borderTopLeftRadius={20}
-            borderTopRightRadius={20}
+            borderRadius={20}
             shadowColor="rgba(0,0,0,1)"
             shadowRadius={150}
             shadowOffset={{ height: 10, width: 0 }}
@@ -74,6 +72,7 @@ export const DarkModal = ({
             </ScrollView>
           </VStack>
         </AnimatedVStack>
+        <VStack flex={1} />
       </AbsoluteVStack>
     </Theme>
   )
