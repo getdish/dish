@@ -28,14 +28,14 @@ export const RestaurantOverview = memo(
     onEdit,
     restaurantSlug,
     fullHeight,
-    size,
+    size = 'md',
     disableEllipse,
     maxLines = 3,
   }: {
     isDishBot?: boolean
     restaurantSlug: string
     fullHeight?: boolean
-    size?: 'lg'
+    size?: 'lg' | 'md'
     text?: string | null
     editableDescription?: boolean
     onEdit?: (next: string) => void
@@ -54,8 +54,8 @@ export const RestaurantOverview = memo(
       .map((x) => x?.sentence)
       .join(' ')
     const summary = text || restaurant.summary || headlines || 'No overview :('
-    const scale = 1
-    const extra = size === 'lg' ? 1.1 : 1
+    const scale = size === 'lg' ? 1.1 : 1
+    const extra = size === 'lg' ? 2 : 1
     const lineHeight = Math.round((size === 'lg' ? 26 : 24) * scale + extra * scale)
     const fontSize = Math.round(15 * scale + extra)
     const [isEditing, setIsEditing] = useState(false)
@@ -66,6 +66,7 @@ export const RestaurantOverview = memo(
         // height 100% necessary for native
         <VStack
           width="100%"
+          marginVertical={lineHeight * 0.5}
           height={fullHeight ? '100%' : undefined}
           maxHeight={lineHeight * maxLines}
         >
