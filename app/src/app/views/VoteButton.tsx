@@ -38,6 +38,7 @@ export const VoteButton = ({
       onHoverOut={() => setHovered(false)}
       onPressIn={prevent}
       backgroundColor={theme.backgroundColor}
+      borderRadius={100}
       borderColor={theme.backgroundColorSecondary}
       pressStyle={{
         backgroundColor: theme.backgroundColor,

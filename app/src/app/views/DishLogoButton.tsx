@@ -44,13 +44,13 @@ export const DishLogoButton = memo(({ color }: { color?: string }) => {
     <VStack
       className="ease-in-out-faster"
       width={media.xs ? logoXsWidth : logoSmWidth}
-      y={media.xs ? 0 : -4}
       height={logoHeight}
       position="relative"
     >
       <VStack
         opacity={1}
         pointerEvents={media.xs ? 'none' : 'auto'}
+        y={media.sm ? 3 : 0}
         {...(media.xs && {
           opacity: 0,
         })}
@@ -63,15 +63,14 @@ export const DishLogoButton = memo(({ color }: { color?: string }) => {
         )}
       </VStack>
       <AbsoluteVStack
-        className="123321"
         pointerEvents={media.xs ? 'auto' : 'none'}
         opacity={media.xs ? 1 : 0}
-        alignItems="center"
-        justifyContent="center"
+        alignSelf="center"
         width={logoXsWidth}
         height={logoXsHeight}
-        scale={0.85}
-        y={-3.5}
+        scale={0.88}
+        y={7}
+        x={3}
       >
         {wrapWithHomeLink(<LogoCircle />)}
       </AbsoluteVStack>

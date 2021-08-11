@@ -287,13 +287,12 @@ const RestaurantListItemContent = memo(
         {/* ROW: TITLE */}
         <VStack
           hoverStyle={{ backgroundColor: theme.backgroundColorTransluscent }}
-          paddingLeft={64}
           width={950}
           position="relative"
         >
           {/* LINK */}
           <Link tagName="div" name="restaurant" params={{ slug: restaurantSlug }} zIndex={2}>
-            <HStack paddingLeft={10} paddingTop={15} position="relative" alignItems="center">
+            <HStack paddingLeft={64} paddingTop={15} position="relative" alignItems="center">
               <AbsoluteVStack x={-26} y={4} zIndex={-1}>
                 <RankView rank={rank} />
               </AbsoluteVStack>
@@ -309,7 +308,7 @@ const RestaurantListItemContent = memo(
                   marginVertical={-5}
                   maxWidth={contentSideProps.maxWidth}
                   hoverStyle={{
-                    backgroundColor: theme.backgroundColorTertiary,
+                    backgroundColor: theme.backgroundColorSecondary,
                   }}
                 >
                   <Text

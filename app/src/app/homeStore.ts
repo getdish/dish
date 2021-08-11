@@ -148,20 +148,20 @@ class HomeStore extends Store {
     }
   }
 
-  private getUpType() {
+  get upType() {
     const curType = this.currentState.type
     const crumbs = this.breadcrumbs
+    // if (crumbs.length === 2) {
+    //   return findLast(crumbs, (x) => x.type.startsWith('home'))?.type ?? 'home'
+    // }
     if (!isBreadcrumbState(curType)) {
-      return _.last(crumbs)?.type
+      return _.last(crumbs)?.type ?? 'home'
     }
     return findLast(crumbs, (x) => x.type !== curType)?.type ?? 'home'
   }
 
   up() {
-    const to = this.getUpType()
-    if (to) {
-      this.popTo(to)
-    }
+    this.popTo(this.upType)
   }
 
   popBack() {
@@ -212,6 +212,7 @@ class HomeStore extends Store {
   }
 
   popTo(type: HomeStateItem['type']) {
+    console.log('we need better popping')
     if (this.getIsUpBack(type)) {
       router.back()
       return

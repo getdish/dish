@@ -59,7 +59,7 @@ export const SearchPageScoring = memo(() => {
         borderColor={theme.borderColor}
         paddingHorizontal={18}
         borderRadius={100}
-        marginLeft={100}
+        marginLeft={20}
         marginRight={30}
         height={48}
         position="relative"
