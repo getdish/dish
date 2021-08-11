@@ -95,8 +95,8 @@ const darkTranslucent: MyTheme = {
 
 const lightBase = {
   colorAlt: blue,
-  backgroundColorTransluscent: '#f2f2f222',
-  backgroundColorTransluscentHover: '#f2f2f244',
+  backgroundColorTransluscent: '#ffffff22',
+  backgroundColorTransluscentHover: '#ffffff33',
   backgroundColorDarker: '#f6f6f6',
   backgroundColorAlt: blue200,
   borderColor: '#f2f2f2',
