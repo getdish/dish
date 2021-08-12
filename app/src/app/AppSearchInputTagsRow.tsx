@@ -31,9 +31,12 @@ export const AppSearchInputTagsRow = memo(({ input }: { input: HTMLInputElement 
                 // shadowColor="#00000022"
                 // color="#000"
                 // fontWeight="600"
-                backgroundColor={theme.backgroundColorTransluscent}
+                backgroundColor="#fff"
                 hoverStyle={{
-                  backgroundColor: theme.backgroundColorTransluscent,
+                  backgroundColor: '#ffffffee',
+                }}
+                pressStyle={{
+                  backgroundColor: '#ffffff99',
                 }}
                 // shadowRadius={8}
                 elevation={1}

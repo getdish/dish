@@ -25,12 +25,12 @@ export const AppIntroLogin = memo(() => {
         <LogoColor scale={2} />
 
         <Paragraph
-          fontWeight="800"
+          fontWeight="300"
           minWidth={280}
-          size="lg"
+          size="xl"
           textAlign="center"
           position="relative"
-          color={theme.colorTertiary}
+          color={theme.color}
           zIndex={1000}
         >
           pocket guide to the world
@@ -43,7 +43,7 @@ export const AppIntroLogin = memo(() => {
           </>
         )}
 
-        <Spacer size="lg" />
+        <Spacer size="xxl" />
 
         <LinkButton
           alignSelf="center"

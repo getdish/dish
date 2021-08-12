@@ -1,3 +1,4 @@
+- not zooming back out on restaurant (back) => search
 - selecting new location autocomplete reverts to last region
 - clear search (show loading) when changing filter/lense
 - fix add to list not showing sometimes

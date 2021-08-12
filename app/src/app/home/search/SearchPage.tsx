@@ -77,10 +77,6 @@ export default memo(function SearchPage(props: SearchProps) {
   }, [])
 
   useEffect(() => {
-    searchPageStore.resetResults()
-  }, [JSON.stringify(state.activeTags)])
-
-  useEffect(() => {
     let id = 0
     return reaction(
       appMapStore,

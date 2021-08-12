@@ -225,7 +225,7 @@ function CommentBubbleContents({
         {!!(date || belowContent) && (
           <>
             <Spacer size="sm" />
-            <HStack backgroundColor="red" pointerEvents="auto">
+            <HStack pointerEvents="auto">
               {!!name && (
                 <Link
                   name="user"
