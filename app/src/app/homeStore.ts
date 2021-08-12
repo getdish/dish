@@ -29,6 +29,7 @@ import {
 } from '../types/homeTypes'
 import { NavigableTag } from '../types/tagTypes'
 import { appMapStore } from './AppMap'
+import { searchPageStore } from './home/search/SearchPageStore'
 
 class HomeStore extends Store {
   searchBarTagIndex = 0
@@ -235,6 +236,10 @@ class HomeStore extends Store {
     //     val.id = state.id
     //   }
     // }
+    // TODO THIS SHOULD BE ON A PRE-HOOK ON PAGES IN GENERAL
+    if (val.type === 'search' && this.currentState.type === 'search') {
+      searchPageStore.resetResults()
+    }
     if (
       val.id !== this.currentState.id &&
       val.type === 'search' &&

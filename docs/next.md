@@ -24,6 +24,12 @@
 
 # inbox
 
+- related good restaurants nearby on restaurantpage
+
+- comments (list page, review)
+
+- may want lists to have inline mentions in the body, or integrate the visual of listpage into the body (would also make a good listcard)
+
 - location search show current region + parent region as an icon
 
 - list.region => list.regions with insert hook to set using restaurants to power home showing more results
