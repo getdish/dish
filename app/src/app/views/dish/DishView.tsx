@@ -125,7 +125,7 @@ const DishViewContent = (props: DishViewProps) => {
         onHoverOut={() => setIsHovered(false)}
       >
         {showVote && !!slug && (
-          <AbsoluteVStack zIndex={1000000} top={6} left={6}>
+          <AbsoluteVStack zIndex={1000000} top={0} left={0} y={-6} x={-6}>
             <Suspense fallback={null}>
               <DishUpvoteDownvote
                 shadowed

@@ -19,6 +19,7 @@ import { getColorsForName } from '../../helpers/getColorsForName'
 import { getTimeFormat } from '../../helpers/getTimeFormat'
 import { getWindowHeight } from '../../helpers/getWindow'
 import { ensureFlexText } from '../home/restaurant/ensureFlexText'
+import { UserAvatar } from '../home/user/UserAvatar'
 import { CloseButton } from './CloseButton'
 import { Image } from './Image'
 import { Link } from './Link'
@@ -27,7 +28,7 @@ import { PaneControlButtons } from './PaneControlButtons'
 type CommentBubbleProps = Omit<StackProps, 'children'> & {
   title?: any
   name: string
-  avatar: string | any
+  avatar?: { charIndex: number; image: string } | null
   text?: any
   before?: any
   avatarBackgroundColor?: string
@@ -183,9 +184,9 @@ function CommentBubbleContents({
     >
       {before}
 
+      {/* main card */}
       <VStack
         padding={15}
-        marginBottom={-30}
         marginLeft={20}
         backgroundColor={theme.cardBackgroundColor}
         borderRadius={20}
@@ -224,7 +225,20 @@ function CommentBubbleContents({
         {!!(date || belowContent) && (
           <>
             <Spacer size="sm" />
-            <HStack pointerEvents="auto">
+            <HStack backgroundColor="red" pointerEvents="auto">
+              {!!name && (
+                <Link
+                  name="user"
+                  params={{ username: name }}
+                  maxWidth="100%"
+                  flex={1}
+                  fontSize={13}
+                  ellipse
+                >
+                  {name}
+                </Link>
+              )}
+
               {!!date && (
                 <>
                   <Paragraph opacity={0.5}>{getTimeFormat(new Date(date))}</Paragraph>
@@ -237,77 +251,31 @@ function CommentBubbleContents({
         )}
       </VStack>
 
-      <HStack>
-        <VStack alignItems="center" width={circleSize}>
-          <VStack marginBottom={-10}>
-            <Circle
-              backgroundColor={
-                avatarBackgroundColor ??
-                (isYelp ? thirdPartyCrawlSources.yelp.color : colors.color200)
+      <HStack y={-16} alignItems="center" width={circleSize}>
+        <VStack
+          borderRadius={100}
+          backgroundColor={
+            avatarBackgroundColor ?? (isYelp ? thirdPartyCrawlSources.yelp.color : colors.color200)
+          }
+        >
+          {!avatar && <User color={theme.color} size={imageSize} />}
+          {!!avatar && (
+            <UserAvatar
+              charIndex={avatar.charIndex}
+              size={imageSize}
+              avatar={
+                isTripAdvisor
+                  ? thirdPartyCrawlSources.tripadvisor.image
+                  : isYelp
+                  ? thirdPartyCrawlSources.yelp.image
+                  : avatar.image
               }
-              size={circleSize}
-            >
-              <VStack borderRadius={100} overflow="hidden">
-                {isTripAdvisor ? (
-                  <Image
-                    source={{ uri: thirdPartyCrawlSources.tripadvisor.image }}
-                    style={{
-                      width: imageSize,
-                      height: imageSize,
-                      margin: -1,
-                    }}
-                  />
-                ) : isYelp ? (
-                  <Image
-                    source={{ uri: thirdPartyCrawlSources.yelp.image }}
-                    style={{
-                      width: imageSize,
-                      height: imageSize,
-                      margin: -1,
-                    }}
-                  />
-                ) : typeof avatar === 'string' ? (
-                  <Image
-                    source={{ uri: avatar }}
-                    style={{
-                      width: imageSize,
-                      height: imageSize,
-                      margin: -1,
-                    }}
-                  />
-                ) : !!avatar ? (
-                  avatar
-                ) : (
-                  <User color="#fff" size={imageSize} />
-                )}
-              </VStack>
-            </Circle>
-          </VStack>
-
-          <HStack
-            backgroundColor={theme.backgroundColor}
-            borderRadius={10}
-            paddingHorizontal={5}
-            paddingVertical={3}
-            position="relative"
-            overflow="hidden"
-            maxWidth={90}
-            zIndex={2}
-          >
-            <Link
-              name="user"
-              params={{ username: name }}
-              maxWidth="100%"
-              flex={1}
-              fontSize={13}
-              ellipse
-            >
-              {name}
-            </Link>
-            {afterName}
-          </HStack>
+            />
+          )}
         </VStack>
+
         <Spacer size="lg" />
+
         {after}
       </HStack>
     </VStack>

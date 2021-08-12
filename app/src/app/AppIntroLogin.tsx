@@ -43,6 +43,8 @@ export const AppIntroLogin = memo(() => {
           </>
         )}
 
+        <Spacer size="lg" />
+
         <LinkButton
           alignSelf="center"
           name="about"

@@ -24,6 +24,7 @@ export const UserAvatar = memo(
         backgroundColor={theme.backgroundColorSecondary}
         width={size}
         height={size}
+        position="relative"
       >
         {!!avatar && (
           <Image
