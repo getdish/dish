@@ -61,6 +61,7 @@ type RestaurantListItemProps = {
   curLocInfo: GeocodePlace | null
   restaurantId: string
   restaurantSlug: string
+  hideRate?: boolean
   rank: number
   meta?: RestaurantItemMeta
   activeTagSlugs?: string[]
@@ -142,6 +143,7 @@ const RestaurantListItemContent = memo(
       curLocInfo,
       activeTagSlugs,
       isLoaded,
+      hideRate,
       meta,
       hideTagRow,
       description,
@@ -276,13 +278,15 @@ const RestaurantListItemContent = memo(
         {/* vote button and score */}
         <AbsoluteVStack top={34} left={-5} zIndex={2000000}>
           {above}
-          <RestaurantUpVoteDownVote
-            rounded
-            score={score}
-            restaurantSlug={restaurantSlug}
-            activeTagSlugs={activeTagSlugs}
-            onClickPoints={toggleSetExpanded}
-          />
+          {!hideRate && (
+            <RestaurantUpVoteDownVote
+              rounded
+              score={score}
+              restaurantSlug={restaurantSlug}
+              activeTagSlugs={activeTagSlugs}
+              onClickPoints={toggleSetExpanded}
+            />
+          )}
         </AbsoluteVStack>
 
         {/* ROW: TITLE */}
@@ -293,7 +297,12 @@ const RestaurantListItemContent = memo(
         >
           {/* LINK */}
           <Link tagName="div" name="restaurant" params={{ slug: restaurantSlug }} zIndex={2}>
-            <HStack paddingLeft={64} paddingTop={15} position="relative" alignItems="center">
+            <HStack
+              paddingLeft={hideRate ? 10 : 64}
+              paddingTop={15}
+              position="relative"
+              alignItems="center"
+            >
               <AbsoluteVStack x={-28} y={3} zIndex={-1}>
                 <RankView rank={rank} />
               </AbsoluteVStack>
@@ -339,7 +348,7 @@ const RestaurantListItemContent = memo(
           // marginBottom={-5}
           pointerEvents="none"
           zIndex={10}
-          paddingLeft={65}
+          paddingLeft={hideRate ? 0 : 65}
           paddingRight={10}
           flex={1}
           maxHeight={66}

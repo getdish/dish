@@ -53,6 +53,7 @@ export const Score = memo(
             isOpen: false,
           }
     const fontSize = Math.round(24 * scale + (size === 'sm' ? 2 : 2))
+    const btnSize = (isTouchDevice ? 33 : 22) * scale
 
     let voteContent: any = null
 
@@ -60,7 +61,7 @@ export const Score = memo(
     if (votable && !isTouchDevice && userStore.isLoggedIn) {
       const upvote = (
         <VoteButton
-          size={(isTouchDevice ? 33 : 22) * scale}
+          size={btnSize}
           Icon={ArrowUp}
           shadowDirection="up"
           voted={vote == 1}
@@ -73,7 +74,7 @@ export const Score = memo(
       )
       const downvote = (
         <VoteButton
-          size={(isTouchDevice ? 33 : 22) * scale}
+          size={btnSize}
           Icon={ArrowDown}
           voted={vote == -1}
           color={vote === -1 ? 'red' : voteButtonColor}
@@ -85,7 +86,12 @@ export const Score = memo(
       )
       voteContent = (
         <>
-          <InteractiveContainer marginVertical={-4}>
+          <InteractiveContainer
+            flexWrap="nowrap"
+            flexDirection="column"
+            height={btnSize * 4.5}
+            marginVertical={-4}
+          >
             {subtle ? (
               upvote
             ) : (

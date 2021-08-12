@@ -32,7 +32,7 @@ import {
   VStack,
 } from 'snackui'
 
-import { bgLight } from '../../../constants/colors'
+import { bgLight, red400 } from '../../../constants/colors'
 import { isWeb } from '../../../constants/constants'
 import { useRegionQuery } from '../../../helpers/fetchRegion'
 import { getRestaurantIdentifiers } from '../../../helpers/getRestaurantIdentifiers'
@@ -623,21 +623,23 @@ const ListPageContent = graphql((props: Props) => {
                         rank={index + 1}
                         description={comment}
                         hideTagRow
+                        hideRate
                         above={
                           isEditing && (
                             <>
                               <AbsoluteVStack top={-28} left={28}>
                                 <CircleButton
-                                  backgroundColor={bgLight}
-                                  width={44}
-                                  height={44}
+                                  backgroundColor={red400}
+                                  width={40}
+                                  height={40}
                                   onPress={() => {
                                     restaurantActions.delete(restaurantId)
                                   }}
                                 >
-                                  <X size={20} />
+                                  <X size={20} color="#fff" />
                                 </CircleButton>
                               </AbsoluteVStack>
+
                               <Score
                                 votable
                                 upTooltip="Move up"
