@@ -117,7 +117,7 @@ const RestaurantHeaderContent = memo(
                     fullscreen
                     backgroundColor={colors.themeColorAlt}
                     borderRadius={10}
-                    opacity={0.95}
+                    // opacity={0.95}
                     shadowColor="#000"
                     shadowOpacity={0.2}
                     shadowRadius={5}

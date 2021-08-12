@@ -58,11 +58,10 @@ const DishButtonContent = (props: TagButtonSlantedProps) => {
   let contents = (
     <>
       <Box
-        // {...(!isActive && {
-        //   backgroundColor: 'transparent',
-        // })}
-        // backgroundColor={theme.backgroundColorSecondary}
-        backgroundColor={isActive ? theme.backgroundColorTertiary : theme.backgroundColorSecondary}
+        backgroundColor={isActive ? theme.cardBackgroundColor : theme.backgroundColor}
+        hoverStyle={{
+          backgroundColor: isActive ? theme.cardBackgroundColor : theme.backgroundColorSecondary,
+        }}
         borderRadius={16}
         borderWidth={0}
         paddingVertical={3}
@@ -108,7 +107,13 @@ const DishButtonContent = (props: TagButtonSlantedProps) => {
           )}
 
           {!!rank && (
-            <Text fontSize={fontSize * 0.7} color={theme.color}>
+            <Text
+              marginLeft={2}
+              marginRight={-5}
+              fontSize={fontSize * 0.7}
+              color={theme.colorTertiary}
+              opacity={0.5}
+            >
               <TextSuperScript opacity={0.5}>#</TextSuperScript>
               {rank}
             </Text>
@@ -116,7 +121,7 @@ const DishButtonContent = (props: TagButtonSlantedProps) => {
 
           <Text
             className="ease-in-out-fast"
-            fontWeight={bold ? '800' : '400'}
+            fontWeight={bold ? '800' : '500'}
             color={bold ? theme.color : isActive ? theme.color : theme.colorSecondary}
             opacity={0.8}
             fontSize={fontSize}
