@@ -354,59 +354,6 @@ const ListPageContent = graphql((props: Props) => {
   return (
     <>
       <StackDrawer closable title={`${username}'s ${list.name}`}>
-        <PaneControlButtonsLeft>
-          <FavoriteButton floating isFavorite={isFavorited} onToggle={toggleFavorite}>
-            {reviewsCount}
-          </FavoriteButton>
-          {!isEditing && isMyList && (
-            <SmallButton elevation={1} alignSelf="center" onPress={() => setIsEditing(true)}>
-              Edit
-            </SmallButton>
-          )}
-          {isEditing && (
-            <>
-              <SmallButton
-                theme="active"
-                elevation={1}
-                onPress={async () => {
-                  router.setRouteAlert(null)
-                  setIsEditing(false)
-                  await listUpdate(
-                    {
-                      id: list.id,
-                      ...draft.current,
-                      ...(color !== '#999' && {
-                        color: listColors.indexOf(color),
-                      }),
-                      public: isPublic,
-                    },
-                    {
-                      query: list,
-                    }
-                  )
-                  await refetch(list)
-                  Toast.show('Saved')
-                }}
-              >
-                Save
-              </SmallButton>
-              <Spacer size="sm" />
-              <VStack
-                opacity={0.8}
-                hoverStyle={{
-                  opacity: 1,
-                }}
-                onPress={() => {
-                  setIsEditing(false)
-                }}
-              >
-                <X color={isWeb ? 'var(--color)' : '#777'} size={20} />
-              </VStack>
-              <Spacer size="lg" />
-            </>
-          )}
-        </PaneControlButtonsLeft>
-
         {props.isActive && isMyList && (
           <BottomFloatingArea>
             <Button
@@ -457,6 +404,61 @@ const ListPageContent = graphql((props: Props) => {
 
         <ContentScrollView id="list">
           <PageContentWithFooter>
+            <PaneControlButtonsLeft>
+              <FavoriteButton floating isFavorite={isFavorited} onToggle={toggleFavorite}>
+                {reviewsCount}
+              </FavoriteButton>
+
+              {!isEditing && isMyList && (
+                <SmallButton elevation={1} alignSelf="center" onPress={() => setIsEditing(true)}>
+                  Edit
+                </SmallButton>
+              )}
+
+              {isEditing && (
+                <>
+                  <SmallButton
+                    theme="active"
+                    elevation={1}
+                    onPress={async () => {
+                      router.setRouteAlert(null)
+                      setIsEditing(false)
+                      await listUpdate(
+                        {
+                          id: list.id,
+                          ...draft.current,
+                          ...(color !== '#999' && {
+                            color: listColors.indexOf(color),
+                          }),
+                          public: isPublic,
+                        },
+                        {
+                          query: list,
+                        }
+                      )
+                      await refetch(list)
+                      Toast.show('Saved')
+                    }}
+                  >
+                    Save
+                  </SmallButton>
+                  <Spacer size="sm" />
+                  <VStack
+                    opacity={0.8}
+                    hoverStyle={{
+                      opacity: 1,
+                    }}
+                    onPress={() => {
+                      setIsEditing(false)
+                    }}
+                  >
+                    <X color={isWeb ? 'var(--color)' : '#777'} size={20} />
+                  </VStack>
+                  <Spacer size="lg" />
+                </>
+              )}
+            </PaneControlButtonsLeft>
+
             {/* overflow clip prevention with marginVerticals here */}
             <VStack position="relative" marginHorizontal={-20}>
               {/* <AbsoluteVStack
@@ -514,80 +516,65 @@ const ListPageContent = graphql((props: Props) => {
                     </>
                   )}
                 </HStack>
-                <Spacer />
               </>
             )}
 
             {!!(list.description || isEditing) && (
-              <CommentBubble
-                paddingHorizontal={24}
-                after={
-                  <HStack paddingHorizontal={20} borderRadius={20} alignItems="center">
-                    <HStack position="relative" alignItems="center">
-                      <Paragraph opacity={0.5} size="sm">
-                        by {list.user?.username}
-                      </Paragraph>
-                      <Spacer />
-                      <Paragraph opacity={0.5} size="sm">
-                        &middot;
-                      </Paragraph>
-                      <Spacer />
-                      <Paragraph opacity={0.5} size="sm">
-                        {list.created_at ? getTimeFormat(new Date(list.created_at)) : ''}
-                      </Paragraph>
-                    </HStack>
-
-                    {!!tagButtons.length && (
-                      <>
-                        <Spacer />
-                        <Paragraph opacity={0.5} size="sm">
-                          &middot;
-                        </Paragraph>
-                        <Spacer />
+              <>
+                <CommentBubble
+                  paddingHorizontal={24}
+                  date={list.created_at}
+                  after={
+                    <>
+                      {!!tagButtons.length && (
                         <HStack spacing justifyContent="center">
                           {tagButtons}
                         </HStack>
-                      </>
-                    )}
-                    <Paragraph opacity={0.5} size="sm">
-                      &middot;
-                    </Paragraph>
-                    <Spacer />
-                  </HStack>
-                }
-                avatar={{ image: list.user?.avatar || '', charIndex: list.user?.charIndex || 0 }}
-                name={list.user?.username ?? ''}
-              >
-                {isEditing ? (
-                  <Input
-                    placeholder="Description..."
-                    multiline
-                    numberOfLines={10}
-                    lineHeight={30}
-                    width="100%"
-                    fontSize={20}
-                    marginVertical={-12}
-                    marginHorizontal={-8}
-                    defaultValue={list.description ?? ''}
-                    onChangeText={(val) => {
-                      draft.current.description = val
-                    }}
-                  />
-                ) : (
-                  <>
-                    {list.description?.split('\n\n').map((x, i) => (
-                      <Paragraph
-                        paddingBottom={26}
-                        key={i}
-                        sizeLineHeight={1.1}
-                        size={i == 0 ? 'lg' : 'md'}
-                      >
-                        {x}
-                      </Paragraph>
-                    ))}
-                  </>
-                )}
-              </CommentBubble>
+                      )}
+                    </>
+                  }
+                  avatar={{ image: list.user?.avatar || '', charIndex: list.user?.charIndex || 0 }}
+                  name={list.user?.username ?? ''}
+                >
+                  {isEditing ? (
+                    <Input
+                      placeholder="Description..."
+                      multiline
+                      numberOfLines={10}
+                      lineHeight={30}
+                      width="100%"
+                      fontSize={20}
+                      marginVertical={-12}
+                      marginHorizontal={-8}
+                      defaultValue={list.description ?? ''}
+                      onChangeText={(val) => {
+                        draft.current.description = val
+                      }}
+                    />
+                  ) : (
+                    (() => {
+                      const items = list.description?.split('\n\n') ?? []
+                      return (
+                        <>
+                          {items.map((x, i) => {
+                            return (
+                              <Paragraph
+                                paddingBottom={i < items.length - 1 ? 26 : 0}
+                                key={i}
+                                sizeLineHeight={1.1}
+                                size={i == 0 ? 'lg' : 'md'}
+                              >
+                                {x}
+                              </Paragraph>
+                            )
+                          })}
+                        </>
+                      )
+                    })()
+                  )}
+                </CommentBubble>
+                <Spacer size="xl" />
+              </>
             )}
 
             <VStack minHeight={300}>
@@ -616,60 +603,60 @@ const ListPageContent = graphql((props: Props) => {
                   }
                   return (
                     <React.Fragment key={restaurant.slug}>
-                      <RestaurantListItem
-                        curLocInfo={props.item.curLocInfo ?? null}
-                        restaurantId={restaurantId}
-                        restaurantSlug={restaurant.slug}
-                        rank={index + 1}
-                        description={comment}
-                        hideTagRow
-                        hideRate
-                        above={
-                          isEditing && (
-                            <>
-                              <AbsoluteVStack top={-28} left={28}>
-                                <CircleButton
-                                  backgroundColor={red400}
-                                  width={40}
-                                  height={40}
-                                  onPress={() => {
-                                    restaurantActions.delete(restaurantId)
-                                  }}
-                                >
-                                  <X size={20} color="#fff" />
-                                </CircleButton>
-                              </AbsoluteVStack>
-
-                              <Score
-                                votable
-                                upTooltip="Move up"
-                                downTooltip="Move down"
-                                score={index + 1}
-                                setVote={async (vote) => {
-                                  restaurantActions.promote(vote === 1 ? index : index + 1)
+                      <HStack>
+                        {isEditing && (
+                          <>
+                            <AbsoluteVStack top={-28} left={28}>
+                              <CircleButton
+                                backgroundColor={red400}
+                                width={40}
+                                height={40}
+                                onPress={() => {
+                                  restaurantActions.delete(restaurantId)
                                 }}
-                              />
-                            </>
-                          )
-                        }
-                        flexibleHeight
-                        dishSlugs={dishSlugs.length ? dishSlugs : undefined}
-                        editableDishes={isEditing}
-                        onChangeDishes={async (dishes) => {
-                          console.log('should change dishes', dishes)
-                          await restaurantActions.setDishes(restaurantId, dishes)
-                          Toast.success(`Updated dishes`)
-                        }}
-                        editableDescription={isEditing}
-                        onChangeDescription={async (next) => {
-                          await restaurantActions.setComment(restaurantId, next)
-                          Toast.success('Updated description')
-                        }}
-                        editablePosition={isEditing}
-                        onChangePosition={(next) => {
-                          console.log('should change position', next)
-                        }}
-                      />
+                              >
+                                <X size={20} color="#fff" />
+                              </CircleButton>
+                            </AbsoluteVStack>
+
+                            <Score
+                              votable
+                              upTooltip="Move up"
+                              downTooltip="Move down"
+                              score={index + 1}
+                              setVote={async (vote) => {
+                                restaurantActions.promote(vote === 1 ? index : index + 1)
+                              }}
+                            />
+                          </>
+                        )}
+                        <RestaurantListItem
+                          curLocInfo={props.item.curLocInfo ?? null}
+                          restaurantId={restaurantId}
+                          restaurantSlug={restaurant.slug}
+                          rank={index + 1}
+                          description={comment}
+                          hideTagRow
+                          hideRate
+                          flexibleHeight
+                          dishSlugs={dishSlugs.length ? dishSlugs : undefined}
+                          editableDishes={isEditing}
+                          onChangeDishes={async (dishes) => {
+                            console.log('should change dishes', dishes)
+                            await restaurantActions.setDishes(restaurantId, dishes)
+                            Toast.success(`Updated dishes`)
+                          }}
+                          editableDescription={isEditing}
+                          onChangeDescription={async (next) => {
+                            await restaurantActions.setComment(restaurantId, next)
+                            Toast.success('Updated description')
+                          }}
+                          editablePosition={isEditing}
+                          onChangePosition={(next) => {
+                            console.log('should change position', next)
+                          }}
+                        />
+                      </HStack>
                       <Spacer />
                     </React.Fragment>
                   )

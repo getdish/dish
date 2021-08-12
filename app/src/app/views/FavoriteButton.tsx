@@ -23,6 +23,7 @@ export const FavoriteButton = ({
   return (
     <Tooltip contents="Add to favorites">
       <SmallButton
+        alignSelf="flex-start"
         icon={
           <>
             {isFavorite && (

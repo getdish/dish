@@ -28,8 +28,7 @@ class SearchPageStore extends Store {
   meta: HomeMeta | null = null
   searchPosition = initialPosition
   searchRegion = false
-  searchArgs: RestaurantSearchArgs | null = null
-  private lastSearchAt = 0
+  private lastSearchArgs: RestaurantSearchArgs | null = null
 
   setIndex(index: number, event: ActiveEvent) {
     this.index = Math.min(Math.max(-1, index), this.max)
@@ -56,9 +55,10 @@ class SearchPageStore extends Store {
 
   resetResults() {
     this.results = []
-    this.lastSearchAt = 0
-    this.searchArgs = null
+    this.status = 'loading'
   }
+
+  private isSearching = false
 
   async runSearch({
     searchQuery = homeStore.lastHomeOrSearchState?.searchQuery ?? '',
@@ -67,21 +67,57 @@ class SearchPageStore extends Store {
     searchQuery?: string
     force?: boolean
   }) {
-    const wasSearching = this.lastSearchAt !== 0
-    this.lastSearchAt = Date.now()
+    const wasSearching = this.isSearching
+    const state = homeStore.lastHomeOrSearchState
+    if (!state) {
+      console.log('no search state')
+      return
+    }
+    const tags = state ? getActiveTags(state) : []
+    const center = appMapStore.nextPosition.center
+    const span = appMapStore.nextPosition.span
+    const dishSearchedTag = tags.find((k) => allTags[k.slug!]?.type === 'dish')?.slug
+    let otherTags = tags
+      .map((tag) => tag.slug?.replace('lenses__', '').replace('filters__', '') ?? '')
+      .filter((t) => (dishSearchedTag ? !t.includes(dishSearchedTag) : true))
+    const mainTag = dishSearchedTag ?? otherTags[0]
+
+    const nextSearchArgs = {
+      center: roundLngLat(center),
+      span: roundLngLat(span),
+      query: state.searchQuery,
+      tags: otherTags,
+      main_tag: mainTag,
+    }
+
+    if (!force && isEqual(nextSearchArgs, this.lastSearchArgs)) {
+      console.warn('no change')
+      return
+    }
+
+    this.lastSearchArgs = nextSearchArgs
+    this.isSearching = true
     this.status = 'loading'
-    let curId = this.lastSearchAt
 
     const shouldCancel = () => {
-      const val = this.lastSearchAt != curId || homeStore.currentStateType !== 'search' || false
-      // if (val) console.log('cancelling')
-      return val
+      const fail = !isEqual(this.lastSearchArgs, nextSearchArgs)
+      if (homeStore.currentStateType !== 'search') {
+        console.warn('not right type?')
+        return
+      }
+      if (process.env.NODE_ENV === 'development') {
+        if (fail) console.warn('cancelling search')
+      }
+      if (fail) {
+        this.isSearching = false
+      }
+      return fail
     }
 
     // prevent searching back to back quickly
     if (!force) {
-      await sleep(wasSearching ? 250 : 50)
-      await fullyIdle({ checks: 2, max: 100 })
+      await sleep(wasSearching ? 120 : 20)
+      await fullyIdle({ checks: 2, max: 40 })
       if (shouldCancel()) return
     }
 
@@ -98,60 +134,25 @@ class SearchPageStore extends Store {
       return
     }
 
-    const state = homeStore.lastHomeOrSearchState
-    if (!state) {
-      console.log('no search state')
+    console.log('🔦🔦  search', nextSearchArgs, tags, mainTag)
+    const res = await search(nextSearchArgs)
+    console.log('search res', res)
+    if (shouldCancel()) return
+    if (!res) {
+      console.log('no res', res)
+      this.status = 'complete'
       return
     }
-    const tags = state ? getActiveTags(state) : []
-    const center = appMapStore.nextPosition.center
-    const span = appMapStore.nextPosition.span
-    const dishSearchedTag = tags.find((k) => allTags[k.slug!]?.type === 'dish')?.slug
-    let otherTags = tags
-      .map((tag) => tag.slug?.replace('lenses__', '').replace('filters__', '') ?? '')
-      .filter((t) => (dishSearchedTag ? !t.includes(dishSearchedTag) : true))
-    const mainTag = dishSearchedTag ?? otherTags[0]
-
-    const lastSearch = this.searchArgs
-    this.searchArgs = {
-      center: roundLngLat(center),
-      span: roundLngLat(span),
-      query: state.searchQuery,
-      tags: otherTags,
-      main_tag: mainTag,
-    }
-    console.log('🔦🔦  search', this.searchArgs, tags, mainTag)
-
-    // prevent duplicate searches
-    if (force || !isEqual(this.searchArgs, lastSearch) || !this.results.length) {
-      const res = await search(this.searchArgs)
-      console.log('search res', res)
-      if (shouldCancel()) return
-      if (!res) {
-        console.log('no res', res)
-        this.status = 'complete'
-        return
-      }
-      // only update searchkey once finished
-      this.results = (res.restaurants ?? []).filter(isPresent).slice(0, 80)
-      this.meta = res.meta
-    } else {
-      console.warn('same saerch again?')
-    }
-
-    // ok
+    // only update searchkey once finished
+    this.results = (res.restaurants ?? []).filter(isPresent).slice(0, 80)
+    this.meta = res.meta
+    this.isSearching = false
     this.status = 'complete'
     // set this at very end of search
     this.searchPosition = {
       center: appMapStore.nextPosition.center,
       span: appMapStore.nextPosition.span,
     }
-
-    // clear it so we can check if any currently running already at start
-    if (this.lastSearchAt === curId) {
-      this.lastSearchAt = 0
-    }
-
     return {
       center,
       span,

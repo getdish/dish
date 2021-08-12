@@ -41,8 +41,8 @@ export type HomeStateItemBase = {
   id: string
   curLocName?: string
   curLocInfo?: GeocodePlace | null
-  center?: LngLat
-  span?: LngLat
+  center?: LngLat | null
+  span?: LngLat | null
 }
 
 export type HomeStateItem =
@@ -73,7 +73,7 @@ export type HomeStateTagNavigable = Partial<HomeStateItemBase> & {
   searchQuery: HomeStateItemBase['searchQuery']
   activeTags?: HomeActiveTagsRecord
   type: HomeStateItem['type']
-  region?: string
+  region?: string | false
 }
 
 export type HomeActiveTagsRecord = { [id: string]: boolean }
@@ -128,9 +128,7 @@ export type HomeStateItemAbout = HomeStateItemBase & {
 export type HomeStateItemSearch = HomeStateItemBase & {
   type: 'search'
   activeTags: HomeActiveTagsRecord
-  region?: string
-  center?: LngLat
-  span?: LngLat
+  region?: string | false
 }
 
 export type HomeStateItemRestaurant = HomeStateItemBase & {

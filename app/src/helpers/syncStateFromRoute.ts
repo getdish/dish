@@ -1,5 +1,7 @@
+import { LngLat } from '@dish/graph/types'
 import { HistoryItem } from '@dish/router'
 
+import { isLngLatParam, urlSerializers } from '../app/home/search/urlSerializers'
 import { tagLenses } from '../constants/localTags'
 import { SPLIT_TAG } from '../constants/SPLIT_TAG'
 import { FullTag, NavigableTag } from '../types/tagTypes'
@@ -20,8 +22,24 @@ export const syncStateFromRoute = (item: HistoryItem<'search'>) => {
   if (!item?.params) {
     return { tags, searchQuery }
   }
+
+  let region = ''
+  let center: LngLat | null = null
+  let span: LngLat | null = null
+  if (item.params.region) {
+    const res = urlSerializers.search.region.deserialize(item.params.region)
+    if (typeof res === 'string') {
+      region = res
+    } else {
+      center = res.center
+      span = res.span
+    }
+  }
+
   if (item.params.lense) {
-    const slug = `lenses__${item.params.lense}`
+    const slug = item.params.lense.startsWith('lenses__')
+      ? item.params.lense
+      : `lenses__${item.params.lense}`
     let lenseTag = tagLenses.find((x) => x.slug == slug)
     if (!lenseTag) {
       console.warn('No known lense! reverting to default', slug, item.params)
@@ -36,7 +54,8 @@ export const syncStateFromRoute = (item: HistoryItem<'search'>) => {
       }
     }
   }
-  return { tags, searchQuery }
+
+  return { tags, searchQuery, center, span, region }
 }
 
 export const getFullTagsFromRoute = async (item: HistoryItem<'search'>): Promise<FullTag[]> => {

@@ -71,10 +71,10 @@ const HomeSearchInfoBoxCountry = memo(
             >
               Popular dishes:
             </Paragraph>
-            {topCountryDishes.map((tag) => {
+            {topCountryDishes.map((tag, i) => {
               return (
                 <TagButton
-                  key={tag.id}
+                  key={tag.id ?? i}
                   name={tag.name || ''}
                   icon={tag.icon || ''}
                   slug={tag.slug || ''}
@@ -132,8 +132,7 @@ const HomeSearchInfoBoxDish = memo(({ state }: { state: HomeStateItemSearch }) =
             borderRadius: 100,
           }}
           source={{
-            uri:
-              'https://www.seriouseats.com/recipes/images/2014/09/20140707-small-house-thai-cooking-school-khao-soi-10.jpg',
+            uri: 'https://www.seriouseats.com/recipes/images/2014/09/20140707-small-house-thai-cooking-school-khao-soi-10.jpg',
           }}
         />
         <Text bottom={-5} left={-15} position="absolute" fontSize={42}>

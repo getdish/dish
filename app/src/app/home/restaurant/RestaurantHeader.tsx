@@ -1,22 +1,12 @@
 import { graphql } from '@dish/graph'
 import { Clock } from '@dish/react-feather'
 import React, { Suspense, memo, useState } from 'react'
-import {
-  AbsoluteVStack,
-  HStack,
-  Spacer,
-  Text,
-  Theme,
-  VStack,
-  useTheme,
-  useThemeName,
-} from 'snackui'
+import { AbsoluteVStack, HStack, Spacer, Text, Theme, VStack } from 'snackui'
 
 import { drawerBorderRadius, isWeb } from '../../../constants/constants'
 import { useColorsFor } from '../../../helpers/useColorsFor'
 import { queryRestaurant } from '../../../queries/queryRestaurant'
 import { HomeStateItemRestaurant } from '../../../types/homeTypes'
-import { useContentScrollHorizontalFitter } from '../../views/ContentScrollViewHorizontal'
 import { ContentScrollViewHorizontalFitted } from '../../views/ContentScrollViewHorizontalFitted'
 import { Link } from '../../views/Link'
 import { PaneControlButtonsLeft } from '../../views/PaneControlButtons'
@@ -60,8 +50,9 @@ const RestaurantHeaderContent = memo(
       const paddingPx = size === 'sm' ? 10 : 30
       const spacer = <Spacer size={paddingPx} />
       const nameLen = restaurant.name?.length ?? 10
-      const { width, drawerWidth, minWidth, setWidthDebounce } = useContentScrollHorizontalFitter()
-      const scale = width < 601 ? 0.7 : drawerWidth < 700 ? 0.85 : 1
+      // const { width, drawerWidth, minWidth, setWidthDebounce } = useContentScrollHorizontalFitter()
+      const scale = 1
+      // const scale = width < 601 ? 0.7 : drawerWidth < 700 ? 0.85 : 1
       const fontScale = size === 'sm' ? 0.9 : 1.3
       const fontSizeBase =
         nameLen > 40 ? 18 : nameLen > 30 ? 22 : nameLen > 24 ? 26 : nameLen > 16 ? 28 : 32
@@ -82,8 +73,8 @@ const RestaurantHeaderContent = memo(
           </PaneControlButtonsLeft>
           <VStack
             paddingTop={0}
-            minWidth={minWidth}
-            maxWidth={width}
+            // minWidth={minWidth}
+            // maxWidth={width}
             borderTopRightRadius={drawerBorderRadius - 1}
             borderTopLeftRadius={drawerBorderRadius - 1}
             width="100%"

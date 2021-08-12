@@ -8,6 +8,7 @@ import React, { Suspense, memo, useCallback, useEffect, useState } from 'react'
 import { Dimensions } from 'react-native'
 import {
   AbsoluteVStack,
+  Button,
   Circle,
   HStack,
   Hoverable,
@@ -77,6 +78,7 @@ type RestaurantListItemProps = {
   hideTagRow?: boolean
   flexibleHeight?: boolean
   above?: any
+  beforeBottomRow?: any
 }
 
 /**
@@ -98,11 +100,7 @@ export const RestaurantListItem = (props: RestaurantListItemProps) => {
 
   const contentInner = (
     <Suspense fallback={<LoadingItem size="lg" />}>
-      <ContentScrollViewHorizontal
-        height={ITEM_HEIGHT}
-        onScroll={handleScroll}
-        scrollEventThrottle={100}
-      >
+      <ContentScrollViewHorizontal onScroll={handleScroll} scrollEventThrottle={100}>
         <RestaurantListItemContent isLoaded={isLoaded} {...props} />
       </ContentScrollViewHorizontal>
     </Suspense>
@@ -146,6 +144,7 @@ const RestaurantListItemContent = memo(
       hideRate,
       meta,
       hideTagRow,
+      beforeBottomRow,
       description,
       dishSlugs,
       flexibleHeight,
@@ -159,6 +158,7 @@ const RestaurantListItemContent = memo(
     } = props
     const media = useMedia()
     const [restaurant] = queryRestaurant(restaurantSlug)
+    const [editDescription, setEditDescription] = useState(false)
 
     if (!restaurant) {
       return null
@@ -176,8 +176,12 @@ const RestaurantListItemContent = memo(
 
     const contentSideProps: StackProps = {
       width: media.sm ? '70%' : '60%',
-      minWidth: media.sm ? (isWeb ? '40vw' : Dimensions.get('window').width * 0.65) : 320,
-      maxWidth: Math.min(Dimensions.get('window').width * 0.5, media.sm ? 360 : 460),
+      minWidth: media.sm ? (isWeb ? '60vw' : Dimensions.get('window').width * 0.65) : 320,
+      maxWidth: Math.min(
+        Dimensions.get('window').width * 0.5,
+        // flexibleHeight here should really be allowMoreWidth or something
+        media.sm ? 360 : flexibleHeight ? 560 : 480
+      ),
     }
 
     const handleChangeDishes = useCallback(onChangeDishes as any, [])
@@ -187,26 +191,20 @@ const RestaurantListItemContent = memo(
     const nameLen = restaurantName.length
     const titleFontScale =
       nameLen > 50
-        ? 0.7
-        : nameLen > 40
         ? 0.8
+        : nameLen > 40
+        ? 0.85
         : nameLen > 30
-        ? 0.9
+        ? 0.95
         : nameLen > 25
-        ? 0.925
-        : nameLen > 15
         ? 0.975
-        : 1.15
+        : nameLen > 15
+        ? 1
+        : 1
     const titleFontSize = Math.round((media.sm ? 21 : 23) * titleFontScale)
     const titleHeight = titleFontSize + 8 * 2
     const score = Math.round((meta?.effective_score ?? 0) / 20)
     const theme = useTheme()
-    const [editedDescription, setEditedDescription] = useState('')
-
-    // const handleEdit = useCallback((next) => {
-    //   setEditedDescription(next)
-    //   onChangeDescription?.(next)
-    // }, [])
 
     const toggleSetExpanded = useCallback(() => {
       setIsExpanded((x) => !x)
@@ -351,7 +349,7 @@ const RestaurantListItemContent = memo(
           paddingLeft={hideRate ? 0 : 65}
           paddingRight={10}
           flex={1}
-          maxHeight={66}
+          maxHeight={flexibleHeight ? 1000 : 66}
         >
           <VStack
             {...contentSideProps}
@@ -363,10 +361,12 @@ const RestaurantListItemContent = memo(
             {/* ROW: OVERVIEW */}
             <RestaurantOverview
               isDishBot
-              editableDescription={editableDescription}
+              editDescription={editDescription}
+              onEditCancel={() => setEditDescription(false)}
+              onEditDescription={onChangeDescription}
               fullHeight
               restaurantSlug={restaurantSlug}
-              maxLines={2}
+              maxLines={flexibleHeight ? 1000 : 2}
             />
           </VStack>
 
@@ -396,6 +396,18 @@ const RestaurantListItemContent = memo(
           width="100%"
           overflow="hidden"
         >
+          {beforeBottomRow}
+
+          {!!editableDescription && !editDescription && (
+            <Button onPress={() => setEditDescription(true)}>Edit Description</Button>
+          )}
+
+          {!!editableDescription && editDescription && (
+            <Button theme="action" onPress={() => setEditDescription(false)}>
+              Save
+            </Button>
+          )}
+
           <InteractiveContainer>
             <Link
               name="restaurant"
@@ -541,14 +553,21 @@ const RestaurantPeekDishes = memo(
 
     return (
       <>
-        {props.editable && (
-          <EditRestaurantTagsButton
-            restaurantSlug={props.restaurantSlug}
-            tagSlugs={props.tagSlugs ?? dishes.map((x) => x.slug)}
-            onChange={props.onChangeTags}
-          />
-        )}
-        <HStack pointerEvents="none" padding={20} y={-20} x={-40} alignItems="center">
+        <HStack
+          position="relative"
+          pointerEvents="none"
+          padding={20}
+          y={-20}
+          x={-15}
+          alignItems="center"
+        >
+          {props.editable && (
+            <EditRestaurantTagsButton
+              restaurantSlug={props.restaurantSlug}
+              tagSlugs={props.tagSlugs ?? dishes.map((x) => x.slug)}
+              onChange={props.onChangeTags}
+            />
+          )}
           <SkewedCardCarousel>
             {!!dishes[0]?.name &&
               dishes.map((dish, i) => {

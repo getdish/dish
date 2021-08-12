@@ -1,10 +1,29 @@
+import { isEqual } from '@dish/fast-compare'
+
+import { isLngLatParam } from '../app/home/search/urlSerializers'
+import { regionPositions } from '../app/home/search/useLocationFromRoute'
 import { initialHomeState } from '../constants/initialHomeState'
-import { HomeStateItem, HomeStateNav } from '../types/homeTypes'
+import { HomeStateItem, HomeStateNav, HomeStateTagNavigable } from '../types/homeTypes'
 import { allTags, allTagsNameToSlug, tagNameKey } from './allTags'
 import { getActiveTagSlugs } from './getActiveTagSlugs'
 import { shouldBeOnSearch } from './shouldBeOnSearch'
 
 const ensureUnique = new Set(['lense', 'country', 'dish'])
+
+const isOffRegion = (state: HomeStateTagNavigable) => {
+  if (!state.region) {
+    return true
+  }
+  if (isLngLatParam(state.region)) {
+    console.warn('we put a geo into state, should be false instead')
+    return true
+  }
+  const regionPosition = regionPositions[state.region]
+  if (!regionPosition) {
+    return false
+  }
+  return !isEqual(regionPosition, { center: state.center, span: state.span })
+}
 
 export const getNextHomeState = (navState: HomeStateNav): HomeStateItem => {
   const { tags = [], disallowDisableWhenActive = false, replaceSearch = false } = navState
@@ -54,12 +73,17 @@ export const getNextHomeState = (navState: HomeStateNav): HomeStateItem => {
 
   const activeTags = Object.fromEntries([...existing].map((slug) => [slug, true]))
 
+  // if they've moved off the region, set it to geo-coordinates
+  const region = isOffRegion(state) ? false : state.region
+
   const nextState = {
     id: state.id,
     searchQuery,
     activeTags,
-    region: state.region,
+    region,
     type: state.type,
+    center: state.center,
+    span: state.span,
   }
 
   nextState.type = shouldBeOnSearch(nextState) ? 'search' : 'home'

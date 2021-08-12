@@ -11,6 +11,7 @@ import { addTagsToCache, allTags } from '../helpers/allTags'
 import { ensureLenseTag } from '../helpers/ensureLenseTag'
 import { getActiveTags } from '../helpers/getActiveTags'
 import { getBreadcrumbs, isBreadcrumbState } from '../helpers/getBreadcrumbs'
+import { getNavigateItemForState } from '../helpers/getNavigateItemForState'
 import { getNextHomeState } from '../helpers/getNextHomeState'
 import { getShouldNavigate } from '../helpers/getShouldNavigate'
 import { getTagSlug } from '../helpers/getTagSlug'
@@ -236,10 +237,6 @@ class HomeStore extends Store {
     //     val.id = state.id
     //   }
     // }
-    // TODO THIS SHOULD BE ON A PRE-HOOK ON PAGES IN GENERAL
-    if (val.type === 'search' && this.currentState.type === 'search') {
-      searchPageStore.resetResults()
-    }
     if (
       val.id !== this.currentState.id &&
       val.type === 'search' &&
@@ -326,22 +323,25 @@ class HomeStore extends Store {
       }
 
       case 'search': {
+        searchPageStore.resetResults()
         const prev = findLastHomeOrSearch(this.states)
         if (!prev) {
           throw new Error('unreachable')
         }
-        const { tags, searchQuery } = syncStateFromRoute(router.curPage as HistoryItem<'search'>)
-        const activeTags = tags.reduce((acc, cur) => {
+        const routeState = syncStateFromRoute(router.curPage as HistoryItem<'search'>)
+        const activeTags = routeState.tags.reduce((acc, cur) => {
           acc[cur.slug!] = true
           return acc
         }, {})
 
-        addTagsToCache(tags)
+        addTagsToCache(routeState.tags)
 
-        const region = router.curPage.params.region ?? prev.region
+        const region = routeState.region ?? router.curPage.params.region ?? prev.region
         const isChangingRegion = region !== prev.region
         const state: Partial<HomeStateItemSearch> = {
           type: 'search',
+          center: routeState.center,
+          span: routeState.span,
           region,
           activeTags,
           searchQuery,
@@ -503,14 +503,16 @@ class HomeStore extends Store {
   getShouldNavigate({ state, ...rest }: HomeStateNav) {
     const navState = { state: state ?? this.currentState, ...rest }
     const nextState = getNextHomeState(navState)
-    return getShouldNavigate(nextState)
+    const navItem = getNavigateItemForState(nextState)
+    return getShouldNavigate(navItem)
   }
 
   async navigate({ state, ...rest }: HomeStateNav) {
     const curState = this.currentState
     const navState = { state: state ?? curState, ...rest }
     const nextState = getNextHomeState(navState)
-    const shouldNav = getShouldNavigate(nextState)
+    const navItem = getNavigateItemForState(nextState)
+    const shouldNav = getShouldNavigate(navItem)
     if (!shouldNav) {
       return false
     }

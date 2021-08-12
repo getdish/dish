@@ -712,8 +712,8 @@ export const cancelUpdateRegion = () => {
 
 export const useSetAppMap = (
   props: MapOpts & {
-    center?: MapPosition['center']
-    span?: MapPosition['span']
+    center?: MapPosition['center'] | null
+    span?: MapPosition['span'] | null
     results?: RestaurantOnlyIdsPartial[]
     isActive: boolean
     region?: string | null

@@ -12,14 +12,17 @@ export function setKnownLocationSlug(slug: string, { span, center }: MapPosition
 
 export const isLngLatParam = (param: string) => +param[0] === +param[0] && param.includes('_')
 
-export const urlSerializers = {
-  home: {
-    region: {
-      serialize: ({ region }: HomeStateItemHome) => {
-        return region ?? 'ca-san-francisco'
-      },
+const homeSerializer = {
+  region: {
+    serialize: ({ region }: HomeStateItemHome) => {
+      return region ?? 'ca-san-francisco'
     },
   },
+}
+
+export const urlSerializers = {
+  home: homeSerializer,
+  homeRegion: homeSerializer,
   search: {
     region: {
       match: isLngLatParam,
@@ -34,16 +37,20 @@ export const urlSerializers = {
         return 'ca-san-francisco'
       },
       deserialize: (param: string) => {
-        const [latStr, lngStr, spanLatStr, spanLngStr] = param.split('_')
-        return {
-          center: {
-            lat: +latStr,
-            lng: +lngStr,
-          },
-          span: {
-            lat: +spanLatStr,
-            lng: +spanLngStr,
-          },
+        if (isLngLatParam(param)) {
+          const [latStr, lngStr, spanLatStr, spanLngStr] = param.split('_')
+          return {
+            center: {
+              lat: +latStr,
+              lng: +lngStr,
+            },
+            span: {
+              lat: +spanLatStr,
+              lng: +spanLngStr,
+            },
+          }
+        } else {
+          return param
         }
       },
     },

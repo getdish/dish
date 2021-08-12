@@ -30,12 +30,12 @@ export const AppSearchBarContents = memo(({ isColored }: { isColored: boolean })
       alignItems="center"
       justifyContent="center"
       userSelect="none"
-      paddingHorizontal={media.xs ? 5 : 14}
+      paddingHorizontal={media.sm ? 5 : 14}
       minHeight={searchBarHeight}
     >
       {!media.sm && <SearchBarActionButton />}
 
-      <VStack paddingHorizontal={media.xs ? 2 : 12} maxHeight={searchBarHeight} overflow="hidden">
+      <VStack paddingHorizontal={media.sm ? 2 : 12} maxHeight={searchBarHeight} overflow="hidden">
         <DishLogoButton color={isColored ? '#fff' : undefined} />
       </VStack>
 
@@ -107,30 +107,35 @@ export const AppSearchBarContents = memo(({ isColored }: { isColored: boolean })
           >
             {searchLocationEl}
           </VStack>
-          <Spacer size={16} />
         </>
       )}
 
       {media.xs && (
-        <TouchableOpacity
-          onPressOut={() => {
-            autocompletes.setTarget(showLocation ? 'search' : 'location')
-          }}
-        >
-          <VStack padding={12}>
-            {showLocation ? (
-              <Search color={isWeb ? 'var(--color)' : '#999'} size={22} opacity={0.5} />
-            ) : (
-              <MapPin color={isWeb ? 'var(--color)' : '#999'} size={22} opacity={0.5} />
-            )}
-          </VStack>
-        </TouchableOpacity>
+        <>
+          <Spacer size={16} />
+          <TouchableOpacity
+            onPressOut={() => {
+              autocompletes.setTarget(showLocation ? 'search' : 'location')
+            }}
+          >
+            <VStack>
+              {showLocation ? (
+                <Search color={isWeb ? 'var(--color)' : '#999'} size={22} opacity={0.5} />
+              ) : (
+                <MapPin color={isWeb ? 'var(--color)' : '#999'} size={22} opacity={0.5} />
+              )}
+            </VStack>
+          </TouchableOpacity>
+        </>
       )}
 
       {!media.sm && !media.xs && (
-        <Suspense fallback={null}>
-          <AppMenuButton />
-        </Suspense>
+        <>
+          <Spacer size={16} />
+          <Suspense fallback={null}>
+            <AppMenuButton />
+          </Suspense>
+        </>
       )}
     </HStack>
   )
