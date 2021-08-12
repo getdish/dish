@@ -24,6 +24,10 @@
 
 # inbox
 
+- location search show current region + parent region as an icon
+
+- list.region => list.regions with insert hook to set using restaurants to power home showing more results
+
 - discuss strict region on search page
 
 - discuss final lenses: add "food" lense ?

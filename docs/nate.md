@@ -1,3 +1,5 @@
+- selecting new location autocomplete reverts to last region
+- clear search (show loading) when changing filter/lense
 - fix add to list not showing sometimes
 - [m] [0] (searchpage) cant tap vote on tag
 - [d/m] [0] onboarding runthrough and fixup

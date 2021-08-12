@@ -217,17 +217,18 @@ export const HomePageFeed = memo(
                               chromeless
                               square
                               size="sm"
-                              title={
-                                <VStack pointerEvents="none">
-                                  {tags.map((tag, i) => (
-                                    <TagButton
-                                      key={`${i}${tag.id}`}
-                                      marginHorizontal={-5}
-                                      {...tag}
-                                    />
-                                  ))}
-                                </VStack>
-                              }
+                              title={list.name}
+                              tags={tags}
+                              //   <VStack pointerEvents="none">
+                              //     {tags.map((tag, i) => (
+                              //       <TagButton
+                              //         key={`${i}${tag.id}`}
+                              //         marginHorizontal={-5}
+                              //         {...tag}
+                              //       />
+                              //     ))}
+                              //   </VStack>
+                              // }
                               photo={restaurants[i]?.image}
                               emphasizeTag
                             />

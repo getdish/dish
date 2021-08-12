@@ -37,8 +37,9 @@ const active: MyTheme = {
   colorSecondary: '#ffffff',
   backgroundColor: blue,
   backgroundColorSecondary: blue,
-  backgroundColorTertiary: 'rgba(217, 109, 134, 0.85)',
-  backgroundColorQuartenary: 'rgba(217, 109, 134, 0.7)',
+  backgroundColorTertiary: `${blue}55`,
+  backgroundColorQuartenary: `${blue}44`,
+  backgroundColorTransluscent: `${blue}33`,
   borderColor: blue,
   borderColorHover: blue,
 }

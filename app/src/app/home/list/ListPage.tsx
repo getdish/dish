@@ -369,6 +369,8 @@ const ListPageContent = graphql((props: Props) => {
                 theme="active"
                 elevation={1}
                 onPress={async () => {
+                  router.setRouteAlert(null)
+                  setIsEditing(false)
                   await listUpdate(
                     {
                       id: list.id,
@@ -383,7 +385,7 @@ const ListPageContent = graphql((props: Props) => {
                     }
                   )
                   await refetch(list)
-                  setIsEditing(false)
+                  Toast.show('Saved')
                 }}
               >
                 Save
@@ -518,15 +520,10 @@ const ListPageContent = graphql((props: Props) => {
 
             {!!(list.description || isEditing) && (
               <CommentBubble
+                paddingHorizontal={24}
                 after={
                   <HStack paddingHorizontal={20} borderRadius={20} alignItems="center">
-                    <HStack alignItems="center">
-                      <UserAvatar
-                        size={24}
-                        charIndex={list?.user?.charIndex}
-                        avatar={list?.user?.avatar}
-                      />
-                      <Spacer size="sm" />
+                    <HStack position="relative" alignItems="center">
                       <Paragraph opacity={0.5} size="sm">
                         by {list.user?.username}
                       </Paragraph>
@@ -558,14 +555,14 @@ const ListPageContent = graphql((props: Props) => {
                     <Spacer />
                   </HStack>
                 }
-                avatar={list.user?.avatar}
+                avatar={{ image: list.user?.avatar || '', charIndex: list.user?.charIndex || 0 }}
                 name={list.user?.username ?? ''}
               >
                 {isEditing ? (
                   <Input
                     placeholder="Description..."
                     multiline
-                    numberOfLines={1}
+                    numberOfLines={10}
                     lineHeight={30}
                     width="100%"
                     fontSize={20}
@@ -577,7 +574,18 @@ const ListPageContent = graphql((props: Props) => {
                     }}
                   />
                 ) : (
-                  <Paragraph size="lg">{list.description}</Paragraph>
+                  <>
+                    {list.description?.split('\n\n').map((x, i) => (
+                      <Paragraph
+                        paddingBottom={26}
+                        key={i}
+                        sizeLineHeight={1.1}
+                        size={i == 0 ? 'lg' : 'md'}
+                      >
+                        {x}
+                      </Paragraph>
+                    ))}
+                  </>
                 )}
               </CommentBubble>
             )}

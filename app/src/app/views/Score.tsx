@@ -1,7 +1,7 @@
 import { supportsTouchWeb } from '@dish/helpers'
 import { ArrowDown, ArrowUp } from '@dish/react-feather'
 import React, { memo } from 'react'
-import { HStack, Paragraph } from 'snackui'
+import { HStack, InteractiveContainer, Paragraph } from 'snackui'
 import { AbsoluteVStack, StackProps, Text, Tooltip, VStack, useTheme } from 'snackui'
 
 import { green, grey, red } from '../../constants/colors'
@@ -52,7 +52,7 @@ export const Score = memo(
         : {
             isOpen: false,
           }
-    const fontSize = Math.round(22 * scale + (size === 'sm' ? 2 : 0))
+    const fontSize = Math.round(24 * scale + (size === 'sm' ? 2 : 2))
 
     let voteContent: any = null
 
@@ -60,7 +60,7 @@ export const Score = memo(
     if (votable && !isTouchDevice && userStore.isLoggedIn) {
       const upvote = (
         <VoteButton
-          size={18 * scale}
+          size={(isTouchDevice ? 33 : 22) * scale}
           Icon={ArrowUp}
           shadowDirection="up"
           voted={vote == 1}
@@ -73,7 +73,7 @@ export const Score = memo(
       )
       const downvote = (
         <VoteButton
-          size={18 * scale}
+          size={(isTouchDevice ? 33 : 22) * scale}
           Icon={ArrowDown}
           voted={vote == -1}
           color={vote === -1 ? 'red' : voteButtonColor}
@@ -85,7 +85,7 @@ export const Score = memo(
       )
       voteContent = (
         <>
-          <VStack marginVertical={-5} borderRadius={4} overflow="hidden">
+          <InteractiveContainer marginVertical={-4}>
             {subtle ? (
               upvote
             ) : (
@@ -100,7 +100,7 @@ export const Score = memo(
                 {downvote}
               </Tooltip>
             )}
-          </VStack>
+          </InteractiveContainer>
         </>
       )
     }

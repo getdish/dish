@@ -23,6 +23,9 @@ export const SmallButton = themeable(
         pressStyle={{
           backgroundColor: theme.backgroundColorTertiary,
         }}
+        {...(themeProp == 'active' && {
+          backgroundColor: theme.backgroundColor,
+        })}
         height={44}
         maxHeight={44}
         minWidth={44}
