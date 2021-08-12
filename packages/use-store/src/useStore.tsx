@@ -445,7 +445,7 @@ function createProxiedStore(storeInfo: Omit<StoreInfo, 'store' | 'source'>) {
                     console.log('Weird log', head, ...rest)
                   }
                 }
-              } catch (err) {
+              } catch (err: any) {
                 error = err
               }
               for (const _ of [...logStack]) {

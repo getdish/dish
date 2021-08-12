@@ -89,6 +89,8 @@ export const SearchHeader = memo(() => {
       <Suspense fallback={null}>
         <SearchPageResultsInfoBox state={curProps.item} />
       </Suspense>
+
+      <Spacer />
     </>
   )
 })

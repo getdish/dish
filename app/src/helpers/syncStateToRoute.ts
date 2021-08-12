@@ -10,7 +10,8 @@ const checkLoop = loopPreventer({
 })
 
 export async function syncStateToRoute(state: HomeStateTagNavigable) {
-  const should = getShouldNavigate(state)
+  const navItem = getNavigateItemForState(state)
+  const should = getShouldNavigate(navItem)
   if (should) {
     checkLoop()
     const navItem = getNavigateItemForState(state)

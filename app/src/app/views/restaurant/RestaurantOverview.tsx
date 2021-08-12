@@ -24,8 +24,9 @@ export const RestaurantOverview = memo(
   graphql(function RestaurantOverview({
     text,
     isDishBot,
-    editableDescription,
-    onEdit,
+    editDescription,
+    onEditDescription,
+    onEditCancel,
     restaurantSlug,
     fullHeight,
     size = 'md',
@@ -37,8 +38,9 @@ export const RestaurantOverview = memo(
     fullHeight?: boolean
     size?: 'lg' | 'md'
     text?: string | null
-    editableDescription?: boolean
-    onEdit?: (next: string) => void
+    editDescription?: boolean
+    onEditDescription?: (next: string) => void
+    onEditCancel?: () => void
     disableEllipse?: boolean
     maxLines?: number
   }) {
@@ -58,10 +60,9 @@ export const RestaurantOverview = memo(
     const extra = size === 'lg' ? 2 : 1
     const lineHeight = Math.round((size === 'lg' ? 26 : 24) * scale + extra * scale)
     const fontSize = Math.round(14 * scale + extra)
-    const [isEditing, setIsEditing] = useState(false)
     const editedText = useRef('')
 
-    if (summary || editableDescription) {
+    if (summary || editDescription) {
       const content = (
         // height 100% necessary for native
         <VStack
@@ -82,8 +83,8 @@ export const RestaurantOverview = memo(
             position="relative"
           >
             {/* {quote} */}
-            {isEditing ? (
-              <VStack>
+            {editDescription ? (
+              <VStack pointerEvents="auto">
                 {ensureFlexText}
                 <Input
                   defaultValue={summary}
@@ -104,7 +105,7 @@ export const RestaurantOverview = memo(
                   <Text
                     color={blue}
                     onPress={() => {
-                      setIsEditing(false)
+                      onEditCancel?.()
                     }}
                   >
                     Cancel
@@ -112,8 +113,7 @@ export const RestaurantOverview = memo(
                   <Spacer size="sm" />
                   <SmallButton
                     onPress={() => {
-                      onEdit?.(editedText.current)
-                      setIsEditing(false)
+                      onEditDescription?.(editedText.current)
                     }}
                   >
                     Save
@@ -147,17 +147,6 @@ export const RestaurantOverview = memo(
                         maxLength: 380,
                       }
                     )}
-
-                {editableDescription && !isEditing && (
-                  <Link
-                    zIndex={1000001}
-                    onPress={() => {
-                      setIsEditing(true)
-                    }}
-                  >
-                    Edit
-                  </Link>
-                )}
               </Text>
             )}
           </HStack>

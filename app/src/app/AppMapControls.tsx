@@ -61,12 +61,12 @@ export const AppMapControls = memo(() => {
                   disabled={appMapStore.currentZoomLevel === 'far'}
                   Icon={Minus}
                   onPress={appMapStore.zoomOut}
-                ></OverlayLinkButton>
+                />
                 <OverlayLinkButton
                   disabled={appMapStore.currentZoomLevel === 'close'}
                   Icon={Plus}
                   onPress={appMapStore.zoomIn}
-                ></OverlayLinkButton>
+                />
               </>
             )}
 

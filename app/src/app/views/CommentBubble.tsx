@@ -225,33 +225,12 @@ function CommentBubbleContents({
         {!!(date || belowContent) && (
           <>
             <Spacer size="sm" />
-            <HStack pointerEvents="auto">
-              {!!name && (
-                <Link
-                  name="user"
-                  params={{ username: name }}
-                  maxWidth="100%"
-                  flex={1}
-                  fontSize={13}
-                  ellipse
-                >
-                  {name}
-                </Link>
-              )}
-
-              {!!date && (
-                <>
-                  <Paragraph opacity={0.5}>{getTimeFormat(new Date(date))}</Paragraph>
-                  <Spacer size="sm" />
-                </>
-              )}
-              {belowContent}
-            </HStack>
+            {belowContent}
           </>
         )}
       </VStack>
 
-      <HStack y={-16} alignItems="center" width={circleSize}>
+      <HStack y={-6} alignItems="center" width={circleSize}>
         <VStack
           borderRadius={100}
           backgroundColor={
@@ -276,8 +255,42 @@ function CommentBubbleContents({
 
         <Spacer size="lg" />
 
-        {after}
+        <HStack alignItems="center" spacing>
+          {!!name && (
+            <Link
+              name="user"
+              params={{ username: name }}
+              pointerEvents="auto"
+              maxWidth="100%"
+              flex={1}
+              fontSize={13}
+              ellipse
+            >
+              {name}
+            </Link>
+          )}
+
+          {!!name && <Middot />}
+
+          {!!date && (
+            <>
+              <Paragraph size="sm" opacity={0.5}>
+                {getTimeFormat(new Date(date))}
+              </Paragraph>
+            </>
+          )}
+
+          {!!date && <Middot />}
+
+          {after}
+        </HStack>
       </HStack>
     </VStack>
   )
 }
+
+const Middot = () => (
+  <Paragraph opacity={0.5} size="sm">
+    &middot;
+  </Paragraph>
+)

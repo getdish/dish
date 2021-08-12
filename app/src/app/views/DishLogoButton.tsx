@@ -1,15 +1,8 @@
 import React, { memo } from 'react'
 import { AbsoluteVStack, HStack, VStack, useDebounceValue, useMedia } from 'snackui'
 
-import {
-  logoHeight,
-  logoSmWidth,
-  logoWidth,
-  logoXsHeight,
-  logoXsWidth,
-} from '../../constants/constants'
+import { logoHeight, logoSmWidth, logoXsHeight, logoXsWidth } from '../../constants/constants'
 import { useHomeCurrentHomeType } from '../homeStore'
-import { useCurrentLenseColor } from '../hooks/useCurrentLenseColor'
 import { Link } from './Link'
 import { LogoCircle, LogoColor } from './Logo'
 
@@ -17,7 +10,7 @@ export const DishLogoButton = memo(({ color }: { color?: string }) => {
   const media = useMedia()
   const type = useHomeCurrentHomeType()
   const currentType = useDebounceValue(type, 40)
-  const searchBarTheme = useCurrentLenseColor()
+  // const searchBarTheme = useCurrentLenseColor()
 
   const wrapWithHomeLink = (el: any) => {
     return (
@@ -26,12 +19,11 @@ export const DishLogoButton = memo(({ color }: { color?: string }) => {
           className="ease-in-out-fast transform-origin-center"
           scale={1}
           hoverStyle={{
-            scale: 1.05,
-            y: 0,
+            scale: 1.025,
           }}
           pressStyle={{
             opacity: 0.8,
-            scale: 0.95,
+            scale: 0.975,
           }}
         >
           {el}
@@ -50,7 +42,7 @@ export const DishLogoButton = memo(({ color }: { color?: string }) => {
       <VStack
         opacity={1}
         pointerEvents={media.xs ? 'none' : 'auto'}
-        y={media.sm ? 3 : -3}
+        y={media.xs ? -3 : -2}
         {...(media.xs && {
           opacity: 0,
         })}

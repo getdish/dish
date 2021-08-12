@@ -1,3 +1,5 @@
+- after autocomplete select tag, needs to clear input value of tag
+- one more routing bug somehow going up
 - not zooming back out on restaurant (back) => search
 - selecting new location autocomplete reverts to last region
 - clear search (show loading) when changing filter/lense

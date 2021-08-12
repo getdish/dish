@@ -34,6 +34,7 @@ import {
 import { isWeb } from '../../../constants/constants'
 import { addTagsToCache, allTags } from '../../../helpers/allTags'
 import { getTitleForState } from '../../../helpers/getTitleForState'
+import { roundLngLat } from '../../../helpers/mapHelpers'
 import { getFullTagsFromRoute } from '../../../helpers/syncStateFromRoute'
 import { syncStateToRoute } from '../../../helpers/syncStateToRoute'
 import { useQueryLoud } from '../../../helpers/useQueryLoud'
@@ -123,19 +124,26 @@ export default memo(function SearchPage(props: SearchProps) {
 const SearchPageContent = memo(function SearchPageContent(
   props: SearchProps & { route: HistoryItem<'search'> }
 ) {
+  const { item } = props
   const location = useLocationFromRoute(props.route)
   const tags = useTagsFromRoute(props.route)
   const searchStore = useSearchPageStore()
-  const searchState = useHomeStateById<HomeStateItemSearch>(props.item.id)
+  const searchState = useHomeStateById<HomeStateItemSearch>(item.id)
   const {
     center = homeStore.lastHomeOrSearchState.center!,
     span = homeStore.lastHomeOrSearchState.span!,
   } = searchState
-  const { searchArgs, results, searchRegion, status } = searchStore
+  const { results, searchRegion, status } = searchStore
   // const isLoading = status === 'loading'
 
-  usePageLoadEffect(props, ({ isRefreshing }) => {
+  usePageLoadEffect(props, ({ item, isRefreshing }) => {
     if (isRefreshing && props.isActive) {
+      homeStore.updateHomeState(`SearchPage.refresh`, {
+        id: item.id,
+        // set new position span before refreshing search
+        center: appMapStore.nextPosition.center,
+        span: appMapStore.nextPosition.span,
+      })
       searchPageStore.refresh()
     }
   })
@@ -147,36 +155,21 @@ const SearchPageContent = memo(function SearchPageContent(
     // dont move it again quickly
     // this sort of logic could be put at the map level
     homeStore.updateHomeState(`search.location`, {
-      id: props.item.id,
+      id: item.id,
       center: location.data.center,
       span: location.data.span,
     })
   }, [center, JSON.stringify(location.data)])
 
-  // sync search location to url
-  const regionPosition = props.item.region ? regionPositions[props.item.region] : null
+  //
+  // SEARCH
+  //
+  const searchKey = JSON.stringify([props.isActive, item.activeTags, item.searchQuery, item.id])
+
   useEffect(() => {
     if (!props.isActive) return
-    if (!searchArgs) return
-    if (!regionPosition) return
-    const isOnRegion = props.item.region
-      ? isEqual(regionPosition, {
-          center: searchArgs.center,
-          span: searchArgs.span,
-        })
-      : false
-    if (!isOnRegion) {
-      console.log('not on region, url => specific coords', regionPosition, searchArgs)
-    }
-    syncStateToRoute({
-      ...props.item,
-      ...(!isOnRegion && {
-        center: searchArgs.center,
-        span: searchArgs.span,
-        region: undefined,
-      }),
-    })
-  }, [searchArgs, regionPosition])
+    searchPageStore.runSearch({})
+  }, [searchKey])
 
   useSetAppMap({
     isActive: props.isActive,
@@ -188,17 +181,6 @@ const SearchPageContent = memo(function SearchPageContent(
     // TODO? once we have region toggle
     // region: location.data?.region?.name,
   })
-
-  const { item } = props
-
-  //
-  // SEARCH
-  //
-  const sk = JSON.stringify([item.activeTags, item.searchQuery, item.id])
-  useEffect(() => {
-    if (!props.isActive) return
-    searchPageStore.runSearch({})
-  }, [sk])
 
   // ... in Map.tsx the fitBounds that runs
   // in some cases comes from `center/span` above which are

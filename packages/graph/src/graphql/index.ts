@@ -36,7 +36,7 @@ clear()
 export const queryFetcher: QueryFetcher = async function (query, variables) {
   if (process.env.NODE_ENV !== 'test' && process.env.TARGET === 'web') {
     requests++
-    if (requests > 20) {
+    if (requests > 30) {
       console.warn(
         'too many! this is caused oftentimes by the data coming from graph not matching the expected data from the query'
       )

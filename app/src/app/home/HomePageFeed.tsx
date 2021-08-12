@@ -91,6 +91,8 @@ export const HomePageFeed = memo(
 
       const [lenseRestaurants, setLenseRestaurants] = useState<RestaurantSearchItem[]>([])
 
+      console.warn('TODO link to hover lense button etc', lenseRestaurants)
+
       useEffect(() => {
         const { currentState } = homeStore
         search({
@@ -257,10 +259,6 @@ export const HomePageFeed = memo(
                     // getListColor(list?.color) ?? '#999'
                     const color = getColorsForName(list?.name || '').altPastelColor
                     const numItems = list.restaurants_aggregate().aggregate?.count() ?? 0
-                    console.log(
-                      'list.list_reviews_aggregate().aggregate?.count() ?? 0',
-                      list.restaurants_aggregate().aggregate?.count() ?? 0
-                    )
                     return (
                       <VStack alignItems="center" flex={1} key={i} marginBottom={26}>
                         <ListCardFrame

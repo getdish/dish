@@ -3,17 +3,17 @@ import { homeStore } from '../app/homeStore'
 import { tagLenses } from '../constants/localTags'
 import { SPLIT_TAG } from '../constants/SPLIT_TAG'
 import { NavigateItem, SearchRouteParams, router } from '../router'
-import { HomeStateItem, HomeStateTagNavigable } from '../types/homeTypes'
+import { HomeStateTagNavigable } from '../types/homeTypes'
 import { getActiveTags } from './getActiveTags'
 import { isHomeState, isSearchState } from './homeStateHelpers'
 import { shouldBeOnSearch } from './shouldBeOnSearch'
 
-export const getNavigateItemForState = (
-  state: Partial<HomeStateItem> & Pick<HomeStateItem, 'type'>
-): NavigateItem => {
+export const getNavigateItemForState = (state: HomeStateTagNavigable): NavigateItem => {
   if (!state) {
     throw new Error(`provide currentState at least`)
   }
+
+  const curHomeStateType = homeStore.currentState.type
 
   // only handle "special" states here (home/search)
   if (!isHomeState(state) && !isSearchState(state)) {
@@ -23,14 +23,16 @@ export const getNavigateItemForState = (
     }
   }
 
+  const params = getParamsForState(state)
   const curState = homeStore.currentState
   const name = getNameForState(state)
-  const isChangingType = name !== router.curPage.name
+  const isChangingType = name !== curHomeStateType
   // for now we change the region into a lng_lat, but that shouldn't create a new state
-  const isGeo = isLngLatParam(state.region || '')
-  const isChangingRegion = state.region !== curState['region']
+  const isGeo = isLngLatParam(params.region || '')
+  // nullish region = replacing to geo-coordinates
+  const isChangingRegion = state.region && state.region !== curState['region']
   const replace = isGeo ? true : !isChangingType && !isChangingRegion
-  const params = getParamsForState(state)
+
   return {
     name,
     params,
@@ -75,8 +77,11 @@ const getParamsForState = (state: HomeStateTagNavigable): SearchRouteParams | an
     }
 
     const serializer = urlSerializers[state.type]
+    if (!serializer) {
+      throw new Error(`no serializer`)
+    }
     return {
-      region: serializer?.region.serialize(state as any) ?? 'ca-san-francisco',
+      region: serializer.region.serialize(state as any),
       tags: tags || '-',
       search: state.searchQuery,
       lense,

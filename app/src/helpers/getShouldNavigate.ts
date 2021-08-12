@@ -1,8 +1,7 @@
-import { router } from '../router'
-import { HomeStateTagNavigable } from '../types/homeTypes'
-import { getNavigateItemForState } from './getNavigateItemForState'
+import { NavigableItems, NavigateItem, RoutesTable } from '@dish/router'
 
-export function getShouldNavigate(state: HomeStateTagNavigable) {
-  const navItem = getNavigateItemForState(state)
-  return router.getShouldNavigate(navItem)
+import { router } from '../router'
+
+export function getShouldNavigate(navItem: NavigateItem<RoutesTable, NavigableItems<RoutesTable>>) {
+  return router.getShouldNavigate(navItem as any)
 }
