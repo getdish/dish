@@ -119,7 +119,7 @@ export const RestaurantDishRowContent = memo(
                 </ScalingPressable>
                 {getDishRow(dishGroups[0])}
               </HStack>
-              <Spacer size="sm" />
+              <Spacer size="lg" />
               <HStack marginLeft={24} spacing="sm">
                 {getDishRow(dishGroups[1])}
               </HStack>

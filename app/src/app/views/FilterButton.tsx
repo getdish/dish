@@ -54,6 +54,9 @@ export const FilterButton = ({
         zIndex={100 - index + (isActive ? 1 : 0)}
         borderWidth={0}
         backgroundColor={isActive ? color : theme.backgroundColorSecondary}
+        hoverStyle={{
+          backgroundColor: isActive ? color : theme.backgroundColorTertiary,
+        }}
         theme={themeName}
         textProps={{
           fontWeight: '700',

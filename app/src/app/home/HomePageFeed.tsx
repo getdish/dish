@@ -2,9 +2,17 @@ import { RestaurantSearchItem, graphql, order_by, query, search } from '@dish/gr
 import { isPresent } from '@dish/helpers'
 import { Plus } from '@dish/react-feather'
 import React, { memo, useEffect, useState } from 'react'
-import { AbsoluteVStack, Grid, HStack, LoadingItems, VStack, useDebounceEffect } from 'snackui'
+import {
+  AbsoluteVStack,
+  Grid,
+  HStack,
+  LoadingItems,
+  Spacer,
+  VStack,
+  useDebounceEffect,
+} from 'snackui'
 
-import { cardFrameWidth, cardFrameWidthLg } from '../../constants/constants'
+import { cardFrameWidthLg } from '../../constants/constants'
 import { tagDefaultAutocomplete, tagLenses } from '../../constants/localTags'
 import { getColorsForName } from '../../helpers/getColorsForName'
 import { getRestaurantIdentifiers } from '../../helpers/getRestaurantIdentifiers'
@@ -13,9 +21,8 @@ import { selectTagDishViewSimple } from '../../helpers/selectDishViewSimple'
 import { homeStore } from '../homeStore'
 import { ContentScrollViewHorizontal } from '../views/ContentScrollViewHorizontal'
 import { Link } from '../views/Link'
-import { ListCard, ListCardFrame } from '../views/list/ListCard'
+import { ListCardFrame } from '../views/list/ListCard'
 import { SlantedTitle } from '../views/SlantedTitle'
-import { TagButton } from '../views/TagButton'
 import { FeedCard } from './FeedCard'
 import { getListPhoto } from './getListPhoto'
 import { HomeFeedProps } from './HomeFeedProps'
@@ -46,7 +53,7 @@ export const HomePageFeed = memo(
           },
           limit: 10,
         })
-        .map((r) => ({ image: r.image, name: r.name }))
+        ?.map((r) => ({ image: r.image, name: r.name }))
 
       // const cuisinesQuery = query.tag({
       //   where: {
@@ -103,7 +110,7 @@ export const HomePageFeed = memo(
           main_tag: 'lenses__gems',
         }).then((res) => {
           console.warn('res', res)
-          setLenseRestaurants(res.restaurants)
+          setLenseRestaurants(res.restaurants || [])
         })
       }, [])
 
@@ -174,9 +181,9 @@ export const HomePageFeed = memo(
                             tag={lense}
                           >
                             <FeedCard
-                              variant="flat"
+                              flat
                               chromeless
-                              size="xxs"
+                              size="xs"
                               // size={foundList?.name ? 'sm' : 'xs'}
                               square
                               // title={foundList?.name}
@@ -189,11 +196,36 @@ export const HomePageFeed = memo(
                         </VStack>
                       )
                     })}
+
+                    {tagLists.map((list, i) => {
+                      const tags = list
+                        .tags({ limit: 2 })
+                        .map((x) => (x.tag ? selectTagDishViewSimple(x.tag) : null))
+                        .filter(isPresent)
+                      return (
+                        <VStack alignItems="center" flex={1} key={i}>
+                          <Link tags={tags}>
+                            <FeedCard
+                              flat
+                              chromeless
+                              square
+                              size="xs"
+                              title={list.name}
+                              tags={tags}
+                              // photo={restaurants[i]?.image}
+                              emphasizeTag
+                            />
+                          </Link>
+                        </VStack>
+                      )
+                    })}
                   </HStack>
                 </ContentScrollViewHorizontal>
               </HStack>
 
-              <HStack position="relative">
+              <Spacer />
+
+              {/* <HStack position="relative">
                 <AbsoluteVStack zIndex={10} top={-10} left={10}>
                   <SlantedTitle size="xxs">Topics</SlantedTitle>
                 </AbsoluteVStack>
@@ -205,7 +237,6 @@ export const HomePageFeed = memo(
                     marginBottom={20}
                     paddingHorizontal={16}
                   >
-                    {/* shuffle([...tagDefaultAutocomplete, ...cuisines]) */}
                     {tagLists.map((list, i) => {
                       const tags = list
                         .tags({ limit: 2 })
@@ -215,22 +246,12 @@ export const HomePageFeed = memo(
                         <VStack alignItems="center" flex={1} key={i}>
                           <Link tags={tags}>
                             <FeedCard
-                              variant="flat"
+                              flat
                               chromeless
                               square
                               size="sm"
                               title={list.name}
                               tags={tags}
-                              //   <VStack pointerEvents="none">
-                              //     {tags.map((tag, i) => (
-                              //       <TagButton
-                              //         key={`${i}${tag.id}`}
-                              //         marginHorizontal={-5}
-                              //         {...tag}
-                              //       />
-                              //     ))}
-                              //   </VStack>
-                              // }
                               photo={restaurants[i]?.image}
                               emphasizeTag
                             />
@@ -242,66 +263,52 @@ export const HomePageFeed = memo(
                       tagDefaultAutocomplete.map((tag, i) => (
                         <VStack alignItems="center" flex={1} key={i}>
                           <Link tag={tag}>
-                            <FeedCard variant="flat" chromeless square tags={[tag]} emphasizeTag />
+                            <FeedCard flat chromeless square tags={[tag]} emphasizeTag />
                           </Link>
                         </VStack>
                       ))}
                   </HStack>
                 </ContentScrollViewHorizontal>
-              </HStack>
+              </HStack> */}
 
               <VStack paddingHorizontal={16} position="relative">
-                <AbsoluteVStack top={-10} left={10}>
-                  <SlantedTitle size="xxs">Playlists</SlantedTitle>
+                <AbsoluteVStack zIndex={100} top={-15} left={10}>
+                  <SlantedTitle size="xs">Playlists</SlantedTitle>
                 </AbsoluteVStack>
+
                 <Grid itemMinWidth={cardFrameWidthLg}>
                   {trendingLists.map((list, i) => {
                     // getListColor(list?.color) ?? '#999'
                     const color = getColorsForName(list?.name || '').altPastelColor
                     const numItems = list.restaurants_aggregate().aggregate?.count() ?? 0
                     return (
-                      <VStack alignItems="center" flex={1} key={i} marginBottom={26}>
+                      <VStack
+                        paddingHorizontal={5}
+                        alignItems="center"
+                        flex={1}
+                        key={i}
+                        marginBottom={26}
+                      >
                         <ListCardFrame
                           chromeless
+                          hoverEffect="background"
+                          flexible
                           author={` by ${list?.user?.username ?? ''}`}
                           numItems={numItems}
                           size="lg"
                           backgroundColor={`${color}25`}
-                          variant="flat"
+                          flat
                           title={list?.name ?? ''}
                           userSlug={list.user?.username ?? ''}
                           slug={list?.slug ?? ''}
                           tags={
                             list
                               ?.tags({ limit: 2 })
-                              .map((x) => (x.tag ? selectTagDishViewSimple(x.tag) : null))
+                              ?.map((x) => (x.tag ? selectTagDishViewSimple(x.tag) : null))
                               .filter(isPresent) ?? []
                           }
                           photo={getListPhoto(list)}
                         />
-                        {/* <Link
-                          name="list"
-                          params={{
-                            slug: list?.slug || '',
-                            userSlug: list?.user?.username || '',
-                          }}
-                        >
-                          <FeedCard
-                            chromeless
-                            author={` by ${list?.user?.username ?? ''}`}
-                            size="lg"
-                            backgroundColor={`${color}25`}
-                            variant="flat"
-                            title={list?.name ?? ''}
-                            tags={
-                              list
-                                ?.tags({ limit: 2 })
-                                .map((x) => (x.tag ? selectTagDishViewSimple(x.tag) : null))
-                                .filter(isPresent) ?? []
-                            }
-                            photo={restaurants[i]?.image}
-                          ></FeedCard>
-                        </Link> */}
                       </VStack>
                     )
                   })}
@@ -316,7 +323,7 @@ export const HomePageFeed = memo(
                             slug: 'create',
                           }}
                         >
-                          <FeedCard chromeless size="lg" variant="flat">
+                          <FeedCard chromeless size="lg" flat>
                             <Plus color="#eeeeee" />
                           </FeedCard>
                         </Link>

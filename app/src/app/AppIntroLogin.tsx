@@ -1,9 +1,10 @@
 import { useStore } from '@dish/use-store'
 import React, { memo } from 'react'
-import { Paragraph, Spacer, VStack, useTheme } from 'snackui'
+import { Spacer, VStack, useTheme } from 'snackui'
 
 import { AuthForm } from './AuthForm'
 import { IntroModalStore } from './IntroModalStore'
+import { TagLine } from './TagLine'
 import { userStore } from './userStore'
 import { LinkButton } from './views/LinkButton'
 import { LogoColor } from './views/Logo'
@@ -23,18 +24,7 @@ export const AppIntroLogin = memo(() => {
         width="100%"
       >
         <LogoColor scale={2} />
-
-        <Paragraph
-          fontWeight="300"
-          minWidth={280}
-          size="xl"
-          textAlign="center"
-          position="relative"
-          color={theme.color}
-          zIndex={1000}
-        >
-          pocket guide to the world
-        </Paragraph>
+        <TagLine />
 
         {!userStore.isLoggedIn && (
           <>
