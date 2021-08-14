@@ -603,21 +603,24 @@ const ListPageContent = graphql((props: Props) => {
                   }
                   return (
                     <React.Fragment key={restaurant.slug}>
-                      <HStack>
+                      <HStack position="relative">
                         {isEditing && (
-                          <>
-                            <AbsoluteVStack top={-28} left={28}>
-                              <CircleButton
-                                backgroundColor={red400}
-                                width={40}
-                                height={40}
-                                onPress={() => {
-                                  restaurantActions.delete(restaurantId)
-                                }}
-                              >
-                                <X size={20} color="#fff" />
-                              </CircleButton>
-                            </AbsoluteVStack>
+                          <VStack
+                            alignItems="center"
+                            spacing
+                            paddingHorizontal={10}
+                            paddingVertical={20}
+                          >
+                            <CircleButton
+                              backgroundColor={red400}
+                              width={40}
+                              height={40}
+                              onPress={() => {
+                                restaurantActions.delete(restaurantId)
+                              }}
+                            >
+                              <X size={20} color="#fff" />
+                            </CircleButton>
 
                             <Score
                               votable
@@ -628,9 +631,10 @@ const ListPageContent = graphql((props: Props) => {
                                 restaurantActions.promote(vote === 1 ? index : index + 1)
                               }}
                             />
-                          </>
+                          </VStack>
                         )}
                         <RestaurantListItem
+                          dishSize="lg"
                           curLocInfo={props.item.curLocInfo ?? null}
                           restaurantId={restaurantId}
                           restaurantSlug={restaurant.slug}

@@ -1,15 +1,12 @@
 import { graphql } from '@dish/graph'
 import { ellipseText } from '@dish/helpers'
 import { capitalize } from 'lodash'
-import React, { memo, useRef, useState } from 'react'
-import { AbsoluteVStack, HStack, Input, Spacer, Text, VStack, useTheme } from 'snackui'
+import React, { memo, useRef } from 'react'
+import { AbsoluteVStack, HStack, Input, Spacer, Text, VStack, useDebounce, useTheme } from 'snackui'
 
 import { blue } from '../../../constants/colors'
 import { queryRestaurant } from '../../../queries/queryRestaurant'
 import { ensureFlexText } from '../../home/restaurant/ensureFlexText'
-import { CommentBubble } from '../CommentBubble'
-import { Link } from '../Link'
-import { LogoCircle } from '../Logo'
 import { SmallButton } from '../SmallButton'
 
 const quote = (
@@ -20,11 +17,13 @@ const quote = (
   </AbsoluteVStack>
 )
 
+const idFn = (_) => _
+
 export const RestaurantOverview = memo(
   graphql(function RestaurantOverview({
     text,
     isDishBot,
-    editDescription,
+    isEditingDescription,
     onEditDescription,
     onEditCancel,
     restaurantSlug,
@@ -38,7 +37,7 @@ export const RestaurantOverview = memo(
     fullHeight?: boolean
     size?: 'lg' | 'md'
     text?: string | null
-    editDescription?: boolean
+    isEditingDescription?: boolean
     onEditDescription?: (next: string) => void
     onEditCancel?: () => void
     disableEllipse?: boolean
@@ -46,6 +45,7 @@ export const RestaurantOverview = memo(
   }) {
     const theme = useTheme()
     const [restaurant] = queryRestaurant(restaurantSlug)
+    const onChangeDescriptionDbc = useDebounce(onEditDescription ?? idFn, 150)
 
     if (!restaurant) {
       return null
@@ -60,9 +60,8 @@ export const RestaurantOverview = memo(
     const extra = size === 'lg' ? 2 : 1
     const lineHeight = Math.round((size === 'lg' ? 26 : 24) * scale + extra * scale)
     const fontSize = Math.round(14 * scale + extra)
-    const editedText = useRef('')
 
-    if (summary || editDescription) {
+    if (summary || isEditingDescription) {
       const content = (
         // height 100% necessary for native
         <VStack
@@ -83,42 +82,21 @@ export const RestaurantOverview = memo(
             position="relative"
           >
             {/* {quote} */}
-            {editDescription ? (
-              <VStack pointerEvents="auto">
+            {isEditingDescription ? (
+              <VStack flex={1} overflow="hidden" pointerEvents="auto">
                 {ensureFlexText}
                 <Input
                   defaultValue={summary}
                   flex={1}
                   height="100%"
-                  width="100%"
+                  maxWidth="100%"
                   multiline
                   numberOfLines={5}
                   fontSize={fontSize}
                   lineHeight={lineHeight}
                   color={theme.color}
-                  onChangeText={(text) => {
-                    editedText.current = text
-                  }}
+                  onChangeText={onChangeDescriptionDbc}
                 />
-                <HStack marginVertical={10} alignItems="center" justifyContent="center" flex={1}>
-                  <VStack flex={1} />
-                  <Text
-                    color={blue}
-                    onPress={() => {
-                      onEditCancel?.()
-                    }}
-                  >
-                    Cancel
-                  </Text>
-                  <Spacer size="sm" />
-                  <SmallButton
-                    onPress={() => {
-                      onEditDescription?.(editedText.current)
-                    }}
-                  >
-                    Save
-                  </SmallButton>
-                </HStack>
               </VStack>
             ) : (
               <Text
