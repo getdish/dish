@@ -351,7 +351,6 @@ export function createWebpackConfig({
           new PreloadWebpackPlugin({
             rel: 'preload',
             include: 'initial',
-            fileWhitelist: [/dish-neon/],
             as(entry) {
               if (/\.jpg$/.test(entry)) return 'image'
             },

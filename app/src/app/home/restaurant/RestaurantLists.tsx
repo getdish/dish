@@ -35,7 +35,7 @@ export const RestaurantLists = memo(
               <ListCard
                 // zIndex={1000 - i}
                 key={list.id || i}
-                slug={list.slug}
+                slug={list.slug || ''}
                 userSlug={list.user?.username ?? 'no-user'}
               />
             )

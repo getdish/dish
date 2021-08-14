@@ -4,6 +4,7 @@ import React, { Suspense, memo, useContext } from 'react'
 import { HStack } from 'snackui'
 
 import { getActiveTags } from '../../../helpers/getActiveTags'
+import { getInitialRegionSlug } from '../../initialRegionSlug'
 import { ListCard } from '../../views/list/ListCard'
 import { SearchForkListButton } from './SearchForkListButton'
 import { SearchPagePropsContext } from './SearchPagePropsContext'
@@ -21,7 +22,7 @@ export const SearchPageListsRow = memo(
       },
       where: {
         region: {
-          _eq: region,
+          _eq: region || getInitialRegionSlug(),
         },
         tags: {
           tag: {

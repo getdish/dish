@@ -733,7 +733,7 @@ export const useSetAppMap = (
 
   useEffect(() => {
     if (!isActive) return
-    if (!center && !span) return
+    if (!center || !span) return
     if (fitToResults) return
     homeStore.updateCurrentState('useSetAppMap.position', {
       center,

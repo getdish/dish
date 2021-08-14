@@ -240,19 +240,19 @@ const RestaurantHeaderContent = memo(
         return content
       }
 
-      if (!isWeb) {
-        return content
-      }
+      // if (!isWeb) {
+      //   return content
+      // }
 
-      return (
-        <ContentScrollViewHorizontalFitted
-          onScroll={hasScrolled ? undefined : () => setHasScrolled(true)}
-          width={width}
-          setWidth={setWidthDebounce}
-        >
-          {content}
-        </ContentScrollViewHorizontalFitted>
-      )
+      // return (
+      //   <ContentScrollViewHorizontalFitted
+      //     onScroll={hasScrolled ? undefined : () => setHasScrolled(true)}
+      //     width={width}
+      //     setWidth={setWidthDebounce}
+      //   >
+      //     {content}
+      //   </ContentScrollViewHorizontalFitted>
+      // )
     },
     {
       suspense: false,

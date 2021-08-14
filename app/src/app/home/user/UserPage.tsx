@@ -150,7 +150,7 @@ const UserPageContent = graphql(
                     floating
                     key={list.slug || i}
                     userSlug={list.user?.username ?? ''}
-                    slug={list.slug}
+                    slug={list.slug || ''}
                   />
                 )
               })}

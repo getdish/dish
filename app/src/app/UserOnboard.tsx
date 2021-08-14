@@ -2,12 +2,11 @@ import { Auth, graphql, useRefetch } from '@dish/graph'
 import React, { useEffect, useRef, useState } from 'react'
 import { HStack, Input, Paragraph, Spacer, Text, TextArea, Toast, VStack } from 'snackui'
 
-import dishNeon from '../assets/dish-neon.jpg'
 import { queryUser } from '../queries/queryUser'
 import { characters } from './home/user/characters'
 import { UserAvatar } from './home/user/UserAvatar'
 import { useUserStore } from './userStore'
-import { Image } from './views/Image'
+import { LogoColor } from './views/Logo'
 import { SmallButton } from './views/SmallButton'
 
 export const UserOnboard = graphql(
@@ -63,15 +62,8 @@ export const UserOnboard = graphql(
           paddingHorizontal={20}
         >
           {!hideLogo && (
-            <VStack spacing alignItems="center">
-              <Image
-                source={typeof dishNeon === 'number' ? dishNeon : { uri: dishNeon }}
-                style={{
-                  marginTop: -20,
-                  width: 783 / 2,
-                  height: 483 / 2,
-                }}
-              />
+            <VStack marginTop={20} spacing alignItems="center">
+              <LogoColor scale={2} />
 
               <Paragraph zIndex={10} color="#fff">
                 Welcome to the beta! Lets get you onboarded.
