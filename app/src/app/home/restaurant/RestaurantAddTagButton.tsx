@@ -14,7 +14,7 @@ export const RestaurantAddTagButton = ({ restaurant }: { restaurant: Restaurant 
       onChangeOpen={setIsOpen}
       contents={
         <Box>
-          <HomeLenseBar onPressLense={() => {}} />
+          <HomeLenseBar />
         </Box>
       }
     >

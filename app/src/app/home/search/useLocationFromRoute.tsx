@@ -32,6 +32,7 @@ export async function getLocationFromRoute(
 
     // lat _ lng _ spanlat _ spanlng
     if (urlSerializers.search.region.match(params.region)) {
+      // @ts-expect-error
       return urlSerializers.search.region.deserialize(params.region)
     }
 

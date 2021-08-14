@@ -111,7 +111,10 @@ export const RestaurantReview = memo(
           date={review.updated_at}
           belowContent={review.vote ? <SentimentText sentiment={review.vote} /> : null}
           bubbleHeight={height}
-          avatar={review.user.avatar ?? ''}
+          avatar={{
+            image: review.user.avatar ?? '',
+            charIndex: review.user.charIndex || 0,
+          }}
           height={height}
           ellipseContentAbove={200}
           text={review.text ?? ''}

@@ -142,7 +142,10 @@ export const RestaurantReviewCommentForm = memo(
       <VStack minHeight="100%">
         <CommentBubble
           name={user.username ?? ''}
-          avatar={''}
+          avatar={{
+            image: user.avatar || '',
+            charIndex: user.charIndex || 0,
+          }}
           text={
             <TextInput
               value={reviewText}

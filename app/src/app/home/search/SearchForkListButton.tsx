@@ -59,7 +59,7 @@ export const SearchForkListButton = memo(
                 {
                   slug,
                   user_id: id,
-                  region,
+                  // region,
                 },
                 {
                   depth: 1,
@@ -80,7 +80,7 @@ export const SearchForkListButton = memo(
                 {
                   name,
                   slug,
-                  region,
+                  // region,
                   description: subTitle,
                   color: randomListColor(),
                   user_id: id,
