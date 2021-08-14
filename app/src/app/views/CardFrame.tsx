@@ -13,41 +13,43 @@ import {
 } from '../../constants/constants'
 
 export type CardFrameProps = {
+  aspectFixed?: boolean
+  backgroundColor?: string | null
+  borderColor?: string | null
+  borderless?: boolean
   children?: any
+  chromeless?: boolean
   className?: string
   expandable?: boolean
-  hoverEffect?: 'scale' | 'background' | false
-  transparent?: boolean
-  floating?: boolean
-  aspectFixed?: boolean
-  size?: 'lg' | 'md' | 'sm' | 'xs' | 'xxs'
   flat?: boolean
-  square?: boolean
-  skew?: boolean
-  borderColor?: string | null
-  backgroundColor?: string | null
-  chromeless?: boolean
-  borderless?: boolean
+  flexible?: boolean
+  floating?: boolean
+  hoverEffect?: 'scale' | 'background' | false
   pressable?: boolean
+  size?: 'lg' | 'md' | 'sm' | 'xs' | 'xxs'
+  skew?: boolean
+  square?: boolean
+  transparent?: boolean
 }
 
 export const CardFrame = ({
-  hoverEffect,
-  expandable,
-  transparent,
-  children,
   aspectFixed,
-  borderColor,
   backgroundColor,
-  size,
-  square,
+  borderColor,
+  borderless,
+  children,
   chromeless,
   className,
-  floating,
+  expandable,
   flat,
-  skew,
-  borderless,
+  flexible,
+  floating,
+  hoverEffect,
   pressable,
+  size,
+  skew,
+  square,
+  transparent,
 }: CardFrameProps) => {
   const theme = useTheme()
   return (
@@ -58,6 +60,7 @@ export const CardFrame = ({
       width={cardFrameWidth}
       height={square ? cardFrameWidth : cardFrameHeight}
       backgroundColor={theme.cardBackgroundColor}
+      borderColor={borderColor as any}
       shadowColor={theme.shadowColor}
       shadowRadius={4}
       shadowOffset={{ height: 1, width: 0 }}
@@ -126,22 +129,28 @@ export const CardFrame = ({
         shadowColor: 'transparent',
         shadowRadius: 0,
       })}
+      {...(transparent && {
+        backgroundColor: 'transparent',
+      })}
       {...(!borderless && {
         borderColor: theme.backgroundColorTertiary,
         borderWidth: 1,
         hoverStyle: {
-          borderColor: theme.backgroundColorQuartenary,
+          borderColor: theme.backgroundColorAlt,
         },
       })}
       {...(floating && {
-        shadowColor: theme.shadowColor,
-        shadowRadius: 1,
-        shadowOffset: { height: 4, width: 4 },
+        shadowColor: theme.shadowColorLighter,
+        shadowRadius: 0,
+        shadowOffset: { height: 3, width: 3 },
       })}
       {...(pressable && {
         pressStyle: {
           backgroundColor: theme.backgroundColorDarker,
         },
+      })}
+      {...(flexible && {
+        width: '100%',
       })}
     >
       {/* background */}

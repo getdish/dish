@@ -23,30 +23,18 @@ import { ColorShades, getColorsForColor, getColorsForName } from '../../../helpe
 import { CardFrame, CardFrameProps } from '../../views/CardFrame'
 import { Image } from '../../views/Image'
 
-export type CardProps = {
+export type CardProps = CardFrameProps & {
   below?: ((colors: ColorShades) => any) | JSX.Element | string | null
   outside?: ((colors: ColorShades) => any) | JSX.Element | string | null
   photo?: string | JSX.Element | null
   title?: string | JSX.Element | null
   subTitle?: string | null
   hideInfo?: boolean
-  aspectFixed?: boolean
-  hoverEffect?: 'scale' | 'background' | false
-  size?: CardFrameProps['size']
-  backgroundColor?: string | null
-  borderColor?: string | null
   isBehind?: boolean
   dimImage?: boolean
   padTitleSide?: boolean
-  square?: boolean
   colorsKey?: string
-  variant?: 'flat'
-  chromeless?: boolean
-  borderless?: boolean
   afterTitle?: any
-  className?: string
-  floating?: boolean
-  pressable?: boolean
 }
 
 const widths = {
@@ -74,31 +62,24 @@ const scales = {
 const getLongestWord = (title: string) =>
   title?.split(' ').reduce((acc, cur) => Math.max(cur.length, acc), 0) ?? 0
 
-export function Card({
-  below,
-  outside,
-  photo,
-  title = '',
-  colorsKey,
-  borderColor,
-  floating,
-  subTitle,
-  padTitleSide,
-  aspectFixed,
-  hoverEffect,
-  hideInfo,
-  square,
-  chromeless,
-  backgroundColor,
-  isBehind,
-  dimImage,
-  pressable,
-  borderless,
-  className,
-  afterTitle,
-  variant,
-  size = 'md',
-}: CardProps) {
+export function Card(props: CardProps) {
+  const {
+    below,
+    outside,
+    photo,
+    title = '',
+    colorsKey,
+    subTitle,
+    padTitleSide,
+    aspectFixed,
+    hideInfo,
+    isBehind,
+    dimImage,
+    afterTitle,
+    size = 'md',
+    ...cardFrameProps
+  } = props
+  const { backgroundColor } = props
   const colors = backgroundColor
     ? getColorsForColor(backgroundColor)
     : typeof title === 'string'
@@ -106,7 +87,7 @@ export function Card({
     : getColorsForName('')
   const isSm = size === 'sm'
   const width = widths[size]
-  const height = square ? width : heights[size]
+  const height = cardFrameProps.square ? width : heights[size]
   const sizes = {
     width,
     height,
@@ -122,30 +103,17 @@ export function Card({
   const wordScale = longestWordLen > 14 ? 0.7 : longestWordLen > 9 ? 0.8 : 1
   const baseFontSize = 25 * lenScale * wordScale
   const fontSize = Math.round(baseFontSize * scales[size])
-  const isFlat = variant === 'flat'
   const theme = useTheme()
 
   return (
-    <CardFrame
-      floating={floating}
-      className={className}
-      borderColor={borderColor}
-      backgroundColor={backgroundColor}
-      square={square}
-      size={size}
-      aspectFixed={aspectFixed}
-      hoverEffect={hoverEffect}
-      flat={isFlat}
-      chromeless={chromeless}
-      borderless={borderless}
-      pressable={pressable}
-    >
+    <CardFrame size={size} {...cardFrameProps}>
       {!!photo && (
         <AbsoluteVStack
-          borderWidth={2}
+          borderWidth={4}
+          borderRadius={1000}
           borderColor={theme.backgroundColorTransluscent}
-          bottom="-3%"
-          right="-3%"
+          bottom="-4%"
+          right="-4%"
           zIndex={10}
         >
           {typeof photo === 'string' ? (
@@ -169,12 +137,12 @@ export function Card({
 
       {/* behind shadow */}
       {/* on native this causes laggy scrolls */}
-      {!chromeless && isWeb && isBehind && (
+      {!props.chromeless && isWeb && isBehind && (
         <AbsoluteVStack
           className="ease-in-out"
           opacity={hideInfo ? 0 : 1}
           zIndex={1002}
-          borderRadius={isFlat ? 0 : cardFrameBorderRadius}
+          borderRadius={props.flat ? 0 : cardFrameBorderRadius}
           fullscreen
           x={-cardFrameWidth}
           // this makes react native work...
@@ -194,7 +162,7 @@ export function Card({
         justifyContent="flex-end"
         pointerEvents="none"
         zIndex={11}
-        borderRadius={isFlat ? 0 : cardFrameBorderRadius}
+        borderRadius={props.flat ? 0 : cardFrameBorderRadius}
         overflow="hidden"
         width="100%"
         height="100%"

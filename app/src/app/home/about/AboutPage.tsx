@@ -1,18 +1,16 @@
 import React from 'react'
 import { Image } from 'react-native'
-import { AbsoluteVStack, Divider, H3, HStack, Paragraph, Spacer, Text, VStack } from 'snackui'
+import { AbsoluteVStack, Divider, Paragraph, Spacer, VStack } from 'snackui'
 
 import dontPanic from '../../../assets/dont-panic.svg'
-import { green, orange, purple } from '../../../constants/colors'
 import { tagLenses } from '../../../constants/localTags'
 import { HomeStateItemAbout } from '../../../types/homeTypes'
+import { TagLine } from '../../TagLine'
 import { ContentScrollView } from '../../views/ContentScrollView'
-import { Link } from '../../views/Link'
 import { LinkButton } from '../../views/LinkButton'
 import { LogoColor } from '../../views/Logo'
 import { StackDrawer } from '../../views/StackDrawer'
 import { StackItemProps } from '../HomeStackView'
-import { RatingView } from '../RatingView'
 import { useSnapToFullscreenOnMount } from '../restaurant/useSnapToFullscreenOnMount'
 
 const inlineButton = {
@@ -39,30 +37,15 @@ export default function AboutPage({ item, isActive }: StackItemProps<HomeStateIt
             alignItems="center"
             position="relative"
           >
-            <Spacer size="xxl" />
-
-            <VStack marginVertical={10}>
-              <LogoColor scale={2.5} />
-            </VStack>
-            {/* <Spacer size="xl" />
-            <Paragraph
-              zIndex={10}
-              color="#999"
-              textAlign="center"
-              size={1.1}
-              fontWeight="300"
-            >
-              pocket guide to the world
-            </Paragraph> */}
+            <Spacer size="xl" />
+            <LogoColor scale={2} />
+            <TagLine />
           </VStack>
 
           <VStack paddingHorizontal="5%" spacing="xl">
-            <Paragraph textAlign="center" size="lg" fontWeight="800">
-              A Hitchhiker's Guide
-            </Paragraph>
-
             <Paragraph size="xxl">
-              Too many hole-in-the-walls have great food and ⭐️⭐️⭐️ stars. Good
+              A Hitchhiker's Guide to our galaxy. Too many hole-in-the-walls have great food and
+              ⭐️⭐️⭐️ stars. Good
               <LinkButton
                 theme="yellow"
                 {...inlineButton}

@@ -58,8 +58,8 @@ const error: MyTheme = {
 const darkBase = {
   backgroundColorAlt: blue600,
   backgroundColorDarker: '#161616',
-  backgroundColorTransluscent: 'rgba(0,0,0,0.075)',
-  backgroundColorTransluscentHover: 'rgba(0,0,0,0.1)',
+  backgroundColorTransluscent: 'rgba(0,0,0,0.1)',
+  backgroundColorTransluscentHover: 'rgba(0,0,0,0.2)',
   backgroundColorTransparent: 'rgba(25,25,25,0)',
   borderColor: '#353535',
   borderColorHover: '#353535',
@@ -80,8 +80,8 @@ const dark = {
   ...darkBase,
   backgroundColor: '#272727',
   backgroundColorSecondary: '#353535',
-  backgroundColorTertiary: '#424242',
-  backgroundColorQuartenary: '#555555',
+  backgroundColorTertiary: '#444444',
+  backgroundColorQuartenary: '#454545',
 }
 
 const darkTranslucent: MyTheme = {

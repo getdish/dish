@@ -41,6 +41,7 @@ import {
   bboxToLngLat,
   coordsToLngLat,
   getMaxLngLat,
+  getMinLngLat,
   getZoomLevel,
   hasMovedAtLeast,
   padLngLat,
@@ -141,7 +142,7 @@ export default memo(function AppMap() {
 
 const AppMapContents = memo(function AppMapContents() {
   const appMapStore = useAppMapStore()
-  const { features, results, showRank, region } = appMapStore
+  const { features, results, showRank, region, hovered, zoomOnHover } = appMapStore
   const isOnHome = useStoreInstanceSelector(homeStore, (x) => x.currentStateType === 'home')
   const hideRegions = !isOnHome || appMapStore.hideRegions
   const media = useMedia()
@@ -154,21 +155,21 @@ const AppMapContents = memo(function AppMapContents() {
   const { center, span } = position
 
   // HOVERED
-  // useEffect(() => {
-  //   if (!hovered || !zoomOnHover) return
-  //   if (hovered.via !== 'list') return
-  //   return series([
-  //     () => resolved(() => queryRestaurant(hovered.slug)[0]?.location),
-  //     (location) => {
-  //       if (!location) return
-  //       appMapStore.setPosition({
-  //         via: 'hover',
-  //         center: coordsToLngLat(location.coordinates),
-  //         span: getMinLngLat(span, { lng: 0.1, lat: 0.1 }),
-  //       })
-  //     },
-  //   ])
-  // }, [hovered, zoomOnHover])
+  useEffect(() => {
+    if (!hovered || !zoomOnHover) return
+    if (hovered.via !== 'list') return
+    return series([
+      () => resolved(() => queryRestaurant(hovered.slug)[0]?.location),
+      (location) => {
+        if (!location) return
+        appMapStore.setPosition({
+          via: 'hover',
+          center: coordsToLngLat(location.coordinates),
+          span: getMinLngLat(span, { lng: 0.02, lat: 0.02 }),
+        })
+      },
+    ])
+  }, [hovered, zoomOnHover])
 
   // gather restaruants
   const isLoading = !results.length
@@ -542,7 +543,7 @@ class AppMapStore extends Store {
     const beforeHover = findLast(this.lastPositions, (x) => x.via !== 'hover')
     this.hovered = null
     if (beforeHover) {
-      this.position = beforeHover
+      this.setNextPosition(beforeHover)
     }
   }
 

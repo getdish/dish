@@ -6,21 +6,13 @@ import { rgbString } from '../../helpers/rgb'
 import { TagButton } from '../views/TagButton'
 import { Card, CardOverlay, CardProps } from './restaurant/Card'
 
-export type FeedCardProps = {
-  title?: string | JSX.Element | null
-  children?: any
+export type FeedCardProps = CardProps & {
   author?: string
-  tags?: DishTagItem[]
-  photo?: string | null
-  size?: CardProps['size']
-  square?: boolean
-  variant?: 'flat'
-  chromeless?: boolean
-  backgroundColor?: string
-  floating?: boolean
-  emphasizeTag?: boolean
-  pressable?: boolean
+  children?: any
   numItems?: number
+  tags?: DishTagItem[]
+  title?: string | JSX.Element | null
+  emphasizeTag?: boolean
 }
 
 export const FeedCard = ({
@@ -28,17 +20,11 @@ export const FeedCard = ({
   author,
   tags = [],
   size = 'sm',
-  square,
-  photo,
-  floating,
-  variant,
   children,
-  chromeless,
-  backgroundColor,
   numItems,
-  emphasizeTag,
-  pressable,
+  ...cardProps
 }: FeedCardProps) => {
+  const { chromeless, emphasizeTag, flat } = cardProps
   const theme = useTheme()
   const color = tags[0]?.rgb ?? [200, 150, 150]
   const colorString = rgbString(color)
@@ -47,19 +33,12 @@ export const FeedCard = ({
     <Card
       className="hover-parent"
       dimImage
-      chromeless={chromeless}
-      variant={variant}
-      size={size}
-      square={square}
-      borderless={!!backgroundColor}
+      borderless={!!cardProps.backgroundColor}
       hoverEffect="background"
-      photo={photo}
-      floating={floating}
-      backgroundColor={backgroundColor}
-      pressable={pressable}
+      size={size}
       outside={
         <>
-          <CardOverlay flat={chromeless || variant === 'flat'}>
+          <CardOverlay flat={chromeless || flat}>
             <AbsoluteHStack
               top={0}
               right={0}
@@ -79,25 +58,26 @@ export const FeedCard = ({
               ))}
             </AbsoluteHStack>
 
+            {children}
+
             <VStack flex={1} />
 
             <VStack spacing={size}>
-              {children}
               <Text
                 className="hover-100-opacity-child"
                 fontWeight={emphasizeTag ? '400' : '700'}
                 fontSize={
                   emphasizeTag
                     ? size === 'sm' || size.endsWith('xs')
-                      ? 13
+                      ? 12
                       : longTitle
-                      ? 15
-                      : 18
+                      ? 12
+                      : 20
                     : size === 'sm' || size.endsWith('xs')
-                    ? 16
+                    ? 20
                     : longTitle
-                    ? 18
-                    : 23
+                    ? 24
+                    : 30
                 }
                 color={colorString}
               >
@@ -114,6 +94,7 @@ export const FeedCard = ({
           {/* <ListFavoriteButton {...props} />*/}
         </>
       }
+      {...cardProps}
     />
   )
 }

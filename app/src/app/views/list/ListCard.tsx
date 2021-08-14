@@ -22,10 +22,15 @@ export type ListIDProps = {
   userSlug: string
 }
 
+// omg why is there two diff versinos of this
 const ListFavoriteButton = graphql((props: ListIDProps) => {
   const { isFavorited, toggleFavorite, reviewsCount } = useListFavorite(props)
   return (
-    <FavoriteButton isFavorite={isFavorited} onToggle={toggleFavorite}>
+    <FavoriteButton
+      backgroundColor="transparent"
+      isFavorite={isFavorited}
+      onToggle={toggleFavorite}
+    >
       {`${reviewsCount}`}
     </FavoriteButton>
   )
@@ -61,7 +66,7 @@ export const ListCardFrame = graphql((props: ListCardProps) => {
         params: { slug, userSlug },
       })}
     >
-      <FeedCard pressable variant="flat" chromeless floating {...feedCardProps}>
+      <FeedCard pressable flat chromeless floating {...feedCardProps}>
         {!props.size?.endsWith('xs') && (
           <VStack x={-5}>
             <Suspense fallback={null}>

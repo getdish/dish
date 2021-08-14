@@ -44,7 +44,7 @@ export const colors300 = [yellow300, pink300, green300, red300, orange300, blue3
 
 export const yellow400 = '#C7B750'
 export const pink400 = '#C7507C'
-export const green400 = '#50C783'
+export const green400 = '#4ABA7B'
 export const red400 = '#C75050'
 export const orange400 = '#C78150'
 export const blue400 = '#5072C7'

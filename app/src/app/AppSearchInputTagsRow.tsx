@@ -28,9 +28,7 @@ export const AppSearchInputTagsRow = memo(({ input }: { input: HTMLInputElement 
                 theme="light"
                 size="lg"
                 subtleIcon
-                // shadowColor="#00000022"
-                // color="#000"
-                // fontWeight="600"
+                color="#111"
                 backgroundColor="#fff"
                 hoverStyle={{
                   backgroundColor: '#ffffffee',
