@@ -17,17 +17,18 @@ import { Plus, Trash, X } from '@dish/react-feather'
 import React, { Suspense, useEffect, useRef, useState } from 'react'
 import { Switch } from 'react-native'
 import {
-  AbsoluteVStack,
   Box,
   Button,
   HStack,
   Input,
+  InteractiveContainer,
   Modal,
   Paragraph,
   Popover,
   Spacer,
   StackProps,
   Text,
+  Title,
   Toast,
   VStack,
 } from 'snackui'
@@ -284,6 +285,16 @@ function useListRestaurants(list?: list) {
 // in dark mode maybe thats why i had 11 in here?
 const lightBackgrounds = new Set([0, 4])
 
+enum ListTheme {
+  modern = 'modern',
+  minimal = 'minimal',
+}
+
+const listThemes = {
+  0: ListTheme.modern,
+  1: ListTheme.minimal,
+} as const
+
 const ListPageContent = graphql((props: Props) => {
   // const themeName = useThemeName()
   // const theme = useTheme()
@@ -300,6 +311,10 @@ const ListPageContent = graphql((props: Props) => {
   const [isPublic, setPublic] = useStateSynced(list?.public ?? true)
   const [restaurants, restaurantActions] = useListRestaurants(list)
   const region = useRegionQuery(props.item.region)
+
+  // TESTING
+  const listThemeIndex = (list?.color ?? 0) > 10 ? 0 : 1 // list.theme
+  const listTheme = listThemes[listThemeIndex]
 
   useSnapToFullscreenOnMount()
 
@@ -468,6 +483,7 @@ const ListPageContent = graphql((props: Props) => {
                 backgroundColor={theme.backgroundColorTransluscent}
               /> */}
               <ListPageTitle
+                listTheme={listTheme}
                 isLight={isLight}
                 locationName={region.data?.name ?? props.item.region}
                 list={list}
@@ -478,44 +494,61 @@ const ListPageContent = graphql((props: Props) => {
 
             {isMyList && (
               <>
-                <HStack alignItems="center" justifyContent="center">
-                  {isEditing && (
-                    <>
-                      <Paragraph>Color&nbsp;&nbsp;</Paragraph>
-                      <ColorPicker colors={listColors} color={color} onChange={setColor} />
+                {isEditing && (
+                  <HStack spacing alignItems="center" justifyContent="center">
+                    <Paragraph>Color:</Paragraph>
 
-                      <Spacer size="xl" />
+                    <ColorPicker colors={listColors} color={color} onChange={setColor} />
 
-                      <Paragraph>Public&nbsp;&nbsp;</Paragraph>
-                      <Switch value={isPublic} onValueChange={setPublic} />
-
-                      <Spacer size="xl" />
-
-                      <SmallButton
-                        tooltip="Delete"
-                        icon={<Trash size={16} />}
-                        onPress={async () => {
-                          assertPresent(list.id, 'no list id')
-                          if (confirm('Permanently delete this list?')) {
-                            await mutate((mutation) => {
-                              return mutation.delete_list({
-                                where: {
-                                  id: {
-                                    _eq: list.id,
-                                  },
-                                },
-                              })?.__typename
-                            })
-                            Toast.show('Deleted list')
-                            router.navigate({
-                              name: 'home',
-                            })
-                          }
+                    <Paragraph>Theme:</Paragraph>
+                    <InteractiveContainer>
+                      <Button
+                        borderRadius={0}
+                        onPress={() => {
+                          list.theme = 0
                         }}
-                      />
-                    </>
-                  )}
-                </HStack>
+                        active={listTheme === 'modern'}
+                      >
+                        Modern
+                      </Button>
+                      <Button
+                        borderRadius={0}
+                        onPress={() => {
+                          list.theme = 1
+                        }}
+                        active={listTheme === 'minimal'}
+                      >
+                        Minimal
+                      </Button>
+                    </InteractiveContainer>
+
+                    <Paragraph>Public:</Paragraph>
+                    <Switch value={isPublic} onValueChange={setPublic} />
+
+                    <SmallButton
+                      tooltip="Delete"
+                      icon={<Trash size={16} />}
+                      onPress={async () => {
+                        assertPresent(list.id, 'no list id')
+                        if (confirm('Permanently delete this list?')) {
+                          await mutate((mutation) => {
+                            return mutation.delete_list({
+                              where: {
+                                id: {
+                                  _eq: list.id,
+                                },
+                              },
+                            })?.__typename
+                          })
+                          Toast.show('Deleted list')
+                          router.navigate({
+                            name: 'home',
+                          })
+                        }
+                      }}
+                    />
+                  </HStack>
+                )}
               </>
             )}
 
@@ -540,7 +573,7 @@ const ListPageContent = graphql((props: Props) => {
                     <Input
                       placeholder="Description..."
                       multiline
-                      numberOfLines={10}
+                      numberOfLines={7}
                       lineHeight={30}
                       width="100%"
                       fontSize={20}
@@ -680,70 +713,103 @@ const ListPageTitle = ({
   locationName,
   isEditing,
   draft,
+  listTheme,
 }: {
   isLight: boolean
   locationName: string
   list: list
   isEditing?: boolean
   draft: any
+  listTheme: ListTheme
 }) => {
   const len = list.name?.length ?? 16
   const color = getListColor(list.color)
-  const textColor = isLight ? '#000' : '#fff'
+  const textColor = listTheme === 'minimal' ? color : isLight ? '#000' : '#fff'
+  const titleSize = len < 12 ? 'xxxl' : len < 16 ? 'xxl' : len < 24 ? 'xl' : len < 30 ? 'lg' : 'md'
+  const titleContents = isEditing ? (
+    <Input
+      fontSize={20}
+      backgroundColor="transparent"
+      defaultValue={list.name || ''}
+      onChangeText={(val) => {
+        draft.current.name = val
+      }}
+      fontWeight="700"
+      textAlign="center"
+      color={textColor}
+      borderColor="transparent"
+      margin={-5}
+    />
+  ) : (
+    list.name
+  )
 
   return (
     <PageTitle
       noDivider
       title={
         <>
-          <VStack
-            marginHorizontal="auto"
-            marginTop={15}
-            alignItems="center"
-            justifyContent="center"
-          >
-            <ScalingPressable>
-              <Link name="user" params={{ username: list.user?.username ?? '' }}>
-                <SlantedTitle scale={1} size="md" alignSelf="center">
-                  {list.user?.username ?? '...'}'s
-                </SlantedTitle>
-              </Link>
-            </ScalingPressable>
+          <Spacer size="xl" />
 
-            <VStack position="relative" alignSelf="center">
-              <SlantedTitle
-                marginTop={-5}
-                backgroundColor={color}
-                alignSelf="center"
-                zIndex={0}
-                size={
-                  len < 12 ? 'xxxl' : len < 16 ? 'xxl' : len < 24 ? 'xl' : len < 30 ? 'lg' : 'md'
-                }
-                color={textColor}
-              >
-                {isEditing ? (
-                  <Input
-                    fontSize={20}
-                    backgroundColor="transparent"
-                    defaultValue={list.name || ''}
-                    onChangeText={(val) => {
-                      draft.current.name = val
-                    }}
-                    fontWeight="700"
-                    textAlign="center"
-                    color={textColor}
-                    borderColor="transparent"
-                    margin={-5}
-                  />
-                ) : (
-                  list.name
-                )}
-              </SlantedTitle>
-              <SlantedTitle fontWeight="300" scale={1} zIndex={-1} size="xxs" alignSelf="center">
-                {locationName ?? 'anywhere'}
-              </SlantedTitle>
+          {listTheme === 'minimal' && (
+            <VStack
+              alignItems="flex-start"
+              justifyContent="flex-end"
+              minHeight={200}
+              width="100%"
+              paddingHorizontal={20}
+              // alignItems="center"
+              // justifyContent="center"
+            >
+              <Title size="xxxxl" color={textColor}>
+                {titleContents}
+              </Title>
+
+              <Spacer size="lg" />
+
+              <HStack opacity={0.5} spacing="lg" alignItems="center">
+                <Link name="user" params={{ username: list.user?.username ?? '' }}>
+                  <Paragraph scale={1} size="md">
+                    by {list.user?.username ?? '...'}'s
+                  </Paragraph>
+                </Link>
+
+                <Paragraph>&middot;</Paragraph>
+
+                <Title fontWeight="300" zIndex={-1} size="xs">
+                  {locationName ?? 'anywhere'}
+                </Title>
+              </HStack>
             </VStack>
-          </VStack>
+          )}
+
+          {listTheme === 'modern' && (
+            <VStack marginHorizontal="auto" alignItems="center" justifyContent="center">
+              <ScalingPressable>
+                <Link name="user" params={{ username: list.user?.username ?? '' }}>
+                  <SlantedTitle scale={1} size="md" alignSelf="center">
+                    {list.user?.username ?? '...'}'s
+                  </SlantedTitle>
+                </Link>
+              </ScalingPressable>
+
+              <VStack position="relative" alignSelf="center">
+                <SlantedTitle
+                  marginTop={-5}
+                  backgroundColor={color}
+                  alignSelf="center"
+                  zIndex={0}
+                  size={titleSize}
+                  color={textColor}
+                >
+                  {titleContents}
+                </SlantedTitle>
+                <SlantedTitle fontWeight="300" scale={1} zIndex={-1} size="xxs" alignSelf="center">
+                  {locationName ?? 'anywhere'}
+                </SlantedTitle>
+              </VStack>
+            </VStack>
+          )}
         </>
       }
     />

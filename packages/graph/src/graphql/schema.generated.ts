@@ -347,6 +347,7 @@ export interface list_arr_rel_insert_input {
 /** order by avg() on columns of table "list" */
 export interface list_avg_order_by {
   color?: Maybe<order_by>
+  theme?: Maybe<order_by>
 }
 
 /** Boolean expression to filter rows from the table "list". All fields are combined with a logical 'AND'. */
@@ -366,6 +367,7 @@ export interface list_bool_exp {
   restaurants?: Maybe<list_restaurant_bool_exp>
   slug?: Maybe<String_comparison_exp>
   tags?: Maybe<list_tag_bool_exp>
+  theme?: Maybe<Int_comparison_exp>
   updated_at?: Maybe<timestamptz_comparison_exp>
   user?: Maybe<user_bool_exp>
   user_id?: Maybe<uuid_comparison_exp>
@@ -382,6 +384,7 @@ export enum list_constraint {
 /** input type for incrementing integer column in table "list" */
 export interface list_inc_input {
   color?: Maybe<Scalars['Int']>
+  theme?: Maybe<Scalars['Int']>
 }
 
 /** input type for inserting data into table "list" */
@@ -398,6 +401,7 @@ export interface list_insert_input {
   restaurants?: Maybe<list_restaurant_arr_rel_insert_input>
   slug?: Maybe<Scalars['String']>
   tags?: Maybe<list_tag_arr_rel_insert_input>
+  theme?: Maybe<Scalars['Int']>
   updated_at?: Maybe<Scalars['timestamptz']>
   user?: Maybe<user_obj_rel_insert_input>
   user_id?: Maybe<Scalars['uuid']>
@@ -412,6 +416,7 @@ export interface list_max_order_by {
   name?: Maybe<order_by>
   region?: Maybe<order_by>
   slug?: Maybe<order_by>
+  theme?: Maybe<order_by>
   updated_at?: Maybe<order_by>
   user_id?: Maybe<order_by>
 }
@@ -425,6 +430,7 @@ export interface list_min_order_by {
   name?: Maybe<order_by>
   region?: Maybe<order_by>
   slug?: Maybe<order_by>
+  theme?: Maybe<order_by>
   updated_at?: Maybe<order_by>
   user_id?: Maybe<order_by>
 }
@@ -456,6 +462,7 @@ export interface list_order_by {
   restaurants_aggregate?: Maybe<list_restaurant_aggregate_order_by>
   slug?: Maybe<order_by>
   tags_aggregate?: Maybe<list_tag_aggregate_order_by>
+  theme?: Maybe<order_by>
   updated_at?: Maybe<order_by>
   user?: Maybe<user_order_by>
   user_id?: Maybe<order_by>
@@ -887,6 +894,8 @@ export enum list_select_column {
   /** column name */
   slug = 'slug',
   /** column name */
+  theme = 'theme',
+  /** column name */
   updated_at = 'updated_at',
   /** column name */
   user_id = 'user_id',
@@ -903,6 +912,7 @@ export interface list_set_input {
   public?: Maybe<Scalars['Boolean']>
   region?: Maybe<Scalars['String']>
   slug?: Maybe<Scalars['String']>
+  theme?: Maybe<Scalars['Int']>
   updated_at?: Maybe<Scalars['timestamptz']>
   user_id?: Maybe<Scalars['uuid']>
 }
@@ -910,21 +920,25 @@ export interface list_set_input {
 /** order by stddev() on columns of table "list" */
 export interface list_stddev_order_by {
   color?: Maybe<order_by>
+  theme?: Maybe<order_by>
 }
 
 /** order by stddev_pop() on columns of table "list" */
 export interface list_stddev_pop_order_by {
   color?: Maybe<order_by>
+  theme?: Maybe<order_by>
 }
 
 /** order by stddev_samp() on columns of table "list" */
 export interface list_stddev_samp_order_by {
   color?: Maybe<order_by>
+  theme?: Maybe<order_by>
 }
 
 /** order by sum() on columns of table "list" */
 export interface list_sum_order_by {
   color?: Maybe<order_by>
+  theme?: Maybe<order_by>
 }
 
 /** order by aggregate values of table "list_tag" */
@@ -1068,6 +1082,8 @@ export enum list_update_column {
   /** column name */
   slug = 'slug',
   /** column name */
+  theme = 'theme',
+  /** column name */
   updated_at = 'updated_at',
   /** column name */
   user_id = 'user_id',
@@ -1076,16 +1092,19 @@ export enum list_update_column {
 /** order by var_pop() on columns of table "list" */
 export interface list_var_pop_order_by {
   color?: Maybe<order_by>
+  theme?: Maybe<order_by>
 }
 
 /** order by var_samp() on columns of table "list" */
 export interface list_var_samp_order_by {
   color?: Maybe<order_by>
+  theme?: Maybe<order_by>
 }
 
 /** order by variance() on columns of table "list" */
 export interface list_variance_order_by {
   color?: Maybe<order_by>
+  theme?: Maybe<order_by>
 }
 
 /** order by aggregate values of table "menu_item" */
@@ -6603,6 +6622,7 @@ export const generatedSchema = {
         where: 'list_tag_bool_exp',
       },
     },
+    theme: { __type: 'Int!' },
     updated_at: { __type: 'timestamptz!' },
     user: { __type: 'user' },
     user_id: { __type: 'uuid!' },
@@ -6643,8 +6663,12 @@ export const generatedSchema = {
     data: { __type: '[list_insert_input!]!' },
     on_conflict: { __type: 'list_on_conflict' },
   },
-  list_avg_fields: { __typename: { __type: 'String!' }, color: { __type: 'Float' } },
-  list_avg_order_by: { color: { __type: 'order_by' } },
+  list_avg_fields: {
+    __typename: { __type: 'String!' },
+    color: { __type: 'Float' },
+    theme: { __type: 'Float' },
+  },
+  list_avg_order_by: { color: { __type: 'order_by' }, theme: { __type: 'order_by' } },
   list_bool_exp: {
     _and: { __type: '[list_bool_exp]' },
     _not: { __type: 'list_bool_exp' },
@@ -6661,11 +6685,12 @@ export const generatedSchema = {
     restaurants: { __type: 'list_restaurant_bool_exp' },
     slug: { __type: 'String_comparison_exp' },
     tags: { __type: 'list_tag_bool_exp' },
+    theme: { __type: 'Int_comparison_exp' },
     updated_at: { __type: 'timestamptz_comparison_exp' },
     user: { __type: 'user_bool_exp' },
     user_id: { __type: 'uuid_comparison_exp' },
   },
-  list_inc_input: { color: { __type: 'Int' } },
+  list_inc_input: { color: { __type: 'Int' }, theme: { __type: 'Int' } },
   list_insert_input: {
     color: { __type: 'Int' },
     created_at: { __type: 'timestamptz' },
@@ -6679,6 +6704,7 @@ export const generatedSchema = {
     restaurants: { __type: 'list_restaurant_arr_rel_insert_input' },
     slug: { __type: 'String' },
     tags: { __type: 'list_tag_arr_rel_insert_input' },
+    theme: { __type: 'Int' },
     updated_at: { __type: 'timestamptz' },
     user: { __type: 'user_obj_rel_insert_input' },
     user_id: { __type: 'uuid' },
@@ -6692,6 +6718,7 @@ export const generatedSchema = {
     name: { __type: 'String' },
     region: { __type: 'String' },
     slug: { __type: 'String' },
+    theme: { __type: 'Int' },
     updated_at: { __type: 'timestamptz' },
     user_id: { __type: 'uuid' },
   },
@@ -6703,6 +6730,7 @@ export const generatedSchema = {
     name: { __type: 'order_by' },
     region: { __type: 'order_by' },
     slug: { __type: 'order_by' },
+    theme: { __type: 'order_by' },
     updated_at: { __type: 'order_by' },
     user_id: { __type: 'order_by' },
   },
@@ -6715,6 +6743,7 @@ export const generatedSchema = {
     name: { __type: 'String' },
     region: { __type: 'String' },
     slug: { __type: 'String' },
+    theme: { __type: 'Int' },
     updated_at: { __type: 'timestamptz' },
     user_id: { __type: 'uuid' },
   },
@@ -6726,6 +6755,7 @@ export const generatedSchema = {
     name: { __type: 'order_by' },
     region: { __type: 'order_by' },
     slug: { __type: 'order_by' },
+    theme: { __type: 'order_by' },
     updated_at: { __type: 'order_by' },
     user_id: { __type: 'order_by' },
   },
@@ -6756,6 +6786,7 @@ export const generatedSchema = {
     restaurants_aggregate: { __type: 'list_restaurant_aggregate_order_by' },
     slug: { __type: 'order_by' },
     tags_aggregate: { __type: 'list_tag_aggregate_order_by' },
+    theme: { __type: 'order_by' },
     updated_at: { __type: 'order_by' },
     user: { __type: 'user_order_by' },
     user_id: { __type: 'order_by' },
@@ -7173,17 +7204,34 @@ export const generatedSchema = {
     public: { __type: 'Boolean' },
     region: { __type: 'String' },
     slug: { __type: 'String' },
+    theme: { __type: 'Int' },
     updated_at: { __type: 'timestamptz' },
     user_id: { __type: 'uuid' },
   },
-  list_stddev_fields: { __typename: { __type: 'String!' }, color: { __type: 'Float' } },
-  list_stddev_order_by: { color: { __type: 'order_by' } },
-  list_stddev_pop_fields: { __typename: { __type: 'String!' }, color: { __type: 'Float' } },
-  list_stddev_pop_order_by: { color: { __type: 'order_by' } },
-  list_stddev_samp_fields: { __typename: { __type: 'String!' }, color: { __type: 'Float' } },
-  list_stddev_samp_order_by: { color: { __type: 'order_by' } },
-  list_sum_fields: { __typename: { __type: 'String!' }, color: { __type: 'Int' } },
-  list_sum_order_by: { color: { __type: 'order_by' } },
+  list_stddev_fields: {
+    __typename: { __type: 'String!' },
+    color: { __type: 'Float' },
+    theme: { __type: 'Float' },
+  },
+  list_stddev_order_by: { color: { __type: 'order_by' }, theme: { __type: 'order_by' } },
+  list_stddev_pop_fields: {
+    __typename: { __type: 'String!' },
+    color: { __type: 'Float' },
+    theme: { __type: 'Float' },
+  },
+  list_stddev_pop_order_by: { color: { __type: 'order_by' }, theme: { __type: 'order_by' } },
+  list_stddev_samp_fields: {
+    __typename: { __type: 'String!' },
+    color: { __type: 'Float' },
+    theme: { __type: 'Float' },
+  },
+  list_stddev_samp_order_by: { color: { __type: 'order_by' }, theme: { __type: 'order_by' } },
+  list_sum_fields: {
+    __typename: { __type: 'String!' },
+    color: { __type: 'Int' },
+    theme: { __type: 'Int' },
+  },
+  list_sum_order_by: { color: { __type: 'order_by' }, theme: { __type: 'order_by' } },
   list_tag: {
     __typename: { __type: 'String!' },
     created_at: { __type: 'timestamptz!' },
@@ -7287,12 +7335,24 @@ export const generatedSchema = {
     list_id: { __type: 'uuid' },
     tag_id: { __type: 'uuid' },
   },
-  list_var_pop_fields: { __typename: { __type: 'String!' }, color: { __type: 'Float' } },
-  list_var_pop_order_by: { color: { __type: 'order_by' } },
-  list_var_samp_fields: { __typename: { __type: 'String!' }, color: { __type: 'Float' } },
-  list_var_samp_order_by: { color: { __type: 'order_by' } },
-  list_variance_fields: { __typename: { __type: 'String!' }, color: { __type: 'Float' } },
-  list_variance_order_by: { color: { __type: 'order_by' } },
+  list_var_pop_fields: {
+    __typename: { __type: 'String!' },
+    color: { __type: 'Float' },
+    theme: { __type: 'Float' },
+  },
+  list_var_pop_order_by: { color: { __type: 'order_by' }, theme: { __type: 'order_by' } },
+  list_var_samp_fields: {
+    __typename: { __type: 'String!' },
+    color: { __type: 'Float' },
+    theme: { __type: 'Float' },
+  },
+  list_var_samp_order_by: { color: { __type: 'order_by' }, theme: { __type: 'order_by' } },
+  list_variance_fields: {
+    __typename: { __type: 'String!' },
+    color: { __type: 'Float' },
+    theme: { __type: 'Float' },
+  },
+  list_variance_order_by: { color: { __type: 'order_by' }, theme: { __type: 'order_by' } },
   menu_item: {
     __typename: { __type: 'String!' },
     created_at: { __type: 'timestamptz!' },
@@ -12188,6 +12248,7 @@ export interface list {
      */
     where?: Maybe<list_tag_bool_exp>
   }) => list_tag_aggregate
+  theme: ScalarsEnums['Int']
   updated_at: ScalarsEnums['timestamptz']
   /**
    * An object relationship
@@ -12232,6 +12293,7 @@ export interface list_aggregate_fields {
 export interface list_avg_fields {
   __typename: 'list_avg_fields' | undefined
   color?: Maybe<ScalarsEnums['Float']>
+  theme?: Maybe<ScalarsEnums['Float']>
 }
 
 /**
@@ -12246,6 +12308,7 @@ export interface list_max_fields {
   name?: Maybe<ScalarsEnums['String']>
   region?: Maybe<ScalarsEnums['String']>
   slug?: Maybe<ScalarsEnums['String']>
+  theme?: Maybe<ScalarsEnums['Int']>
   updated_at?: Maybe<ScalarsEnums['timestamptz']>
   user_id?: Maybe<ScalarsEnums['uuid']>
 }
@@ -12262,6 +12325,7 @@ export interface list_min_fields {
   name?: Maybe<ScalarsEnums['String']>
   region?: Maybe<ScalarsEnums['String']>
   slug?: Maybe<ScalarsEnums['String']>
+  theme?: Maybe<ScalarsEnums['Int']>
   updated_at?: Maybe<ScalarsEnums['timestamptz']>
   user_id?: Maybe<ScalarsEnums['uuid']>
 }
@@ -12695,6 +12759,7 @@ export interface list_restaurant_variance_fields {
 export interface list_stddev_fields {
   __typename: 'list_stddev_fields' | undefined
   color?: Maybe<ScalarsEnums['Float']>
+  theme?: Maybe<ScalarsEnums['Float']>
 }
 
 /**
@@ -12703,6 +12768,7 @@ export interface list_stddev_fields {
 export interface list_stddev_pop_fields {
   __typename: 'list_stddev_pop_fields' | undefined
   color?: Maybe<ScalarsEnums['Float']>
+  theme?: Maybe<ScalarsEnums['Float']>
 }
 
 /**
@@ -12711,6 +12777,7 @@ export interface list_stddev_pop_fields {
 export interface list_stddev_samp_fields {
   __typename: 'list_stddev_samp_fields' | undefined
   color?: Maybe<ScalarsEnums['Float']>
+  theme?: Maybe<ScalarsEnums['Float']>
 }
 
 /**
@@ -12719,6 +12786,7 @@ export interface list_stddev_samp_fields {
 export interface list_sum_fields {
   __typename: 'list_sum_fields' | undefined
   color?: Maybe<ScalarsEnums['Int']>
+  theme?: Maybe<ScalarsEnums['Int']>
 }
 
 /**
@@ -12805,6 +12873,7 @@ export interface list_tag_mutation_response {
 export interface list_var_pop_fields {
   __typename: 'list_var_pop_fields' | undefined
   color?: Maybe<ScalarsEnums['Float']>
+  theme?: Maybe<ScalarsEnums['Float']>
 }
 
 /**
@@ -12813,6 +12882,7 @@ export interface list_var_pop_fields {
 export interface list_var_samp_fields {
   __typename: 'list_var_samp_fields' | undefined
   color?: Maybe<ScalarsEnums['Float']>
+  theme?: Maybe<ScalarsEnums['Float']>
 }
 
 /**
@@ -12821,6 +12891,7 @@ export interface list_var_samp_fields {
 export interface list_variance_fields {
   __typename: 'list_variance_fields' | undefined
   color?: Maybe<ScalarsEnums['Float']>
+  theme?: Maybe<ScalarsEnums['Float']>
 }
 
 /**

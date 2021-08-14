@@ -382,6 +382,7 @@ const RestaurantListItemContent = memo(
               restaurantSlug={restaurantSlug}
               maxLines={flexibleHeight ? 1000 : 2}
             />
+            {flexibleHeight ? <VStack flex={1} /> : null}
           </VStack>
 
           {/* PEEK / TAGS (RIGHT SIDE) */}
@@ -577,8 +578,9 @@ const RestaurantPeekDishes = memo(
           position="relative"
           pointerEvents="none"
           paddingHorizontal={20}
-          paddingVertical={10}
-          y={-10}
+          paddingVertical={0}
+          // this is to pull it up near title
+          marginTop={-50}
           x={-15}
           alignItems="center"
         >
