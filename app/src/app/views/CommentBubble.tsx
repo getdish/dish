@@ -274,7 +274,7 @@ function CommentBubbleContents({
 
           {!!date && (
             <>
-              <Paragraph size="sm" opacity={0.5}>
+              <Paragraph flexShrink={0} size="sm" opacity={0.5}>
                 {getTimeFormat(new Date(date))}
               </Paragraph>
             </>

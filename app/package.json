@@ -90,7 +90,7 @@
     "express": "^4.17.1",
     "flexsearch": "^0.6.32",
     "fs-extra": "^9.1.0",
-    "gqty": "^1.0.2",
+    "gqty": "1.0.3",
     "graphql": "^15.5.0",
     "graphql-tag": "^2.11.0",
     "immer": "^8.0.0",

@@ -24,6 +24,8 @@
 
 # inbox
 
+- show little map markers with color/rating/(sometimes emoji)
+
 - related good restaurants nearby on restaurantpage
 
 - comments (list page, review)

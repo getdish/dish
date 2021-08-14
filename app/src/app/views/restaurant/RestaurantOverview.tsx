@@ -1,13 +1,11 @@
 import { graphql } from '@dish/graph'
 import { ellipseText } from '@dish/helpers'
 import { capitalize } from 'lodash'
-import React, { memo, useRef } from 'react'
-import { AbsoluteVStack, HStack, Input, Spacer, Text, VStack, useDebounce, useTheme } from 'snackui'
+import React, { memo } from 'react'
+import { AbsoluteVStack, HStack, Input, Text, VStack, useDebounce, useTheme } from 'snackui'
 
-import { blue } from '../../../constants/colors'
 import { queryRestaurant } from '../../../queries/queryRestaurant'
 import { ensureFlexText } from '../../home/restaurant/ensureFlexText'
-import { SmallButton } from '../SmallButton'
 
 const quote = (
   <AbsoluteVStack top={-10} left={-0}>
@@ -67,10 +65,9 @@ export const RestaurantOverview = memo(
         <VStack
           width="100%"
           marginVertical={lineHeight * 0.5}
-          height={fullHeight ? '100%' : undefined}
+          height={fullHeight ? 'auto' : undefined}
           maxHeight={lineHeight * maxLines}
         >
-          {ensureFlexText}
           <HStack
             maxWidth="100%"
             width="100%"
@@ -102,8 +99,6 @@ export const RestaurantOverview = memo(
               <Text
                 className="break-word"
                 display="flex"
-                marginTop="auto"
-                marginBottom="auto"
                 fontSize={fontSize}
                 lineHeight={lineHeight}
                 selectable
@@ -128,6 +123,7 @@ export const RestaurantOverview = memo(
               </Text>
             )}
           </HStack>
+          {ensureFlexText}
         </VStack>
       )
 

@@ -172,7 +172,7 @@ function destroy_all() {
 }
 
 function pull_all() {
-  docker-compose pull &
+  docker-compose pull
   docker-compose -f docker-internal.yml pull &
   docker-compose -f docker-swarmprom.yml pull &
   docker-compose -f docker-traefik.yml pull &
