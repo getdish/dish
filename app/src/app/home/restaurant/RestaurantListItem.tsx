@@ -1,6 +1,5 @@
 import { fullyIdle, series } from '@dish/async'
 import { RestaurantItemMeta, graphql } from '@dish/graph'
-import { isSafari } from '@dish/helpers'
 import { MessageSquare } from '@dish/react-feather'
 import { useStoreInstanceSelector } from '@dish/use-store'
 import { debounce } from 'lodash'
@@ -47,7 +46,6 @@ import { TagButton, getTagButtonProps } from '../../views/TagButton'
 import { searchPageStore } from '../search/SearchPageStore'
 import { SkewedCardCarousel } from '../SimpleCard'
 import { EditRestaurantTagsButton } from './EditRestaurantTagsButton'
-import { ensureFlexText } from './ensureFlexText'
 import { RankView } from './RankView'
 import { RestaurantAddress } from './RestaurantAddress'
 import { RestaurantAddToListButton } from './RestaurantAddToListButton'
@@ -79,6 +77,7 @@ type RestaurantListItemProps = {
   flexibleHeight?: boolean
   above?: any
   beforeBottomRow?: any
+  dishSize?: 'md' | 'lg'
 }
 
 /**
@@ -138,6 +137,7 @@ const RestaurantListItemContent = memo(
       rank,
       restaurantId,
       restaurantSlug,
+      dishSize,
       curLocInfo,
       activeTagSlugs,
       isLoaded,
@@ -145,7 +145,7 @@ const RestaurantListItemContent = memo(
       meta,
       hideTagRow,
       beforeBottomRow,
-      description,
+      description = null,
       dishSlugs,
       flexibleHeight,
       above,
@@ -158,7 +158,17 @@ const RestaurantListItemContent = memo(
     } = props
     const media = useMedia()
     const [restaurant] = queryRestaurant(restaurantSlug)
-    const [editDescription, setEditDescription] = useState(false)
+    const [state, setState] = useState({
+      editing: false,
+      description: null as null | string,
+    })
+
+    useEffect(() => {
+      setState((prev) => ({
+        ...prev,
+        description,
+      }))
+    }, [description])
 
     if (!restaurant) {
       return null
@@ -343,7 +353,6 @@ const RestaurantListItemContent = memo(
         {/* zindex must be above title/bottom so hovers work on dishview voting/search */}
         <HStack
           y={-10}
-          // marginBottom={-5}
           pointerEvents="none"
           zIndex={10}
           paddingLeft={hideRate ? 0 : 65}
@@ -361,9 +370,14 @@ const RestaurantListItemContent = memo(
             {/* ROW: OVERVIEW */}
             <RestaurantOverview
               isDishBot
-              editDescription={editDescription}
-              onEditCancel={() => setEditDescription(false)}
-              onEditDescription={onChangeDescription}
+              isEditingDescription={state.editing}
+              text={state.description}
+              onEditCancel={() => {
+                setState((prev) => ({ ...prev, editing: false }))
+              }}
+              onEditDescription={(description) => {
+                setState((prev) => ({ ...prev, description }))
+              }}
               fullHeight
               restaurantSlug={restaurantSlug}
               maxLines={flexibleHeight ? 1000 : 2}
@@ -380,6 +394,7 @@ const RestaurantListItemContent = memo(
               tagSlugs={dishSlugs}
               editable={editableDishes}
               onChangeTags={handleChangeDishes}
+              size={dishSize}
               isLoaded={isLoaded}
             />
           </Suspense>
@@ -395,15 +410,24 @@ const RestaurantListItemContent = memo(
           alignItems="center"
           width="100%"
           overflow="hidden"
+          spacing
         >
           {beforeBottomRow}
 
-          {!!editableDescription && !editDescription && (
-            <Button onPress={() => setEditDescription(true)}>Edit Description</Button>
+          {!!editableDescription && !state.editing && (
+            <Button onPress={() => setState((prev) => ({ ...prev, editing: true }))}>
+              Edit Description
+            </Button>
           )}
 
-          {!!editableDescription && editDescription && (
-            <Button theme="action" onPress={() => setEditDescription(false)}>
+          {!!editableDescription && state.editing && (
+            <Button
+              theme="action"
+              onPress={() => {
+                setState((prev) => ({ ...prev, editing: false }))
+                onChangeDescription?.(state.description ?? '')
+              }}
+            >
               Save
             </Button>
           )}
@@ -439,21 +463,17 @@ const RestaurantListItemContent = memo(
             </Suspense>
           </InteractiveContainer>
 
-          <Spacer size="lg" />
-
           {!!price_range && (
             <>
               <Text fontSize={14} fontWeight="700" color={theme.colorTertiary}>
                 {price_range}
               </Text>
-              <Spacer size="lg" />
             </>
           )}
 
           {!!open.isOpen && (
             <>
               <Circle size={8} backgroundColor={green} />
-              <Spacer size="sm" />
             </>
           )}
 
@@ -473,7 +493,7 @@ const RestaurantListItemContent = memo(
             <RestaurantDeliveryButtons label="" restaurantSlug={restaurantSlug} />
           </Suspense>
 
-          <Spacer size="lg" />
+          <Spacer size="sm" />
 
           {tagsRowContent}
         </HStack>
@@ -549,15 +569,16 @@ const RestaurantPeekDishes = memo(
         })
 
     const foundMatchingSearchedDish = props.activeTagSlugs?.includes(dishes?.[0]?.slug)
-    const dishSize = 130
+    const dishSize = size === 'lg' ? 150 : 130
 
     return (
       <>
         <HStack
           position="relative"
           pointerEvents="none"
-          padding={20}
-          y={-20}
+          paddingHorizontal={20}
+          paddingVertical={10}
+          y={-10}
           x={-15}
           alignItems="center"
         >
@@ -580,7 +601,7 @@ const RestaurantPeekDishes = memo(
 
                 const preventLoad = !isLoaded && i > showInitial
                 return (
-                  <VStack key={dish.slug} marginRight={-10} zIndex={100 - i}>
+                  <VStack key={dish.slug} marginRight={-2} zIndex={100 - i}>
                     <DishView
                       preventLoad={preventLoad}
                       size={baseSize}
