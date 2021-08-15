@@ -25,6 +25,8 @@ export default memo(function UserEditPage() {
         </>
       }
     >
+      <SlantedTitle alignSelf="center">Profile</SlantedTitle>
+      <Spacer />
       <VStack pointerEvents="auto" width="95%" maxWidth={880} height="100%" flex={1}>
         <Spacer />
         <Suspense fallback={<LoadingItems />}>

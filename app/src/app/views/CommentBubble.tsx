@@ -176,7 +176,8 @@ function CommentBubbleContents({
     <VStack
       maxWidth="100%"
       overflow="hidden"
-      paddingHorizontal={15}
+      paddingRight={15}
+      paddingLeft={3}
       padding={10}
       width="100%"
       spacing

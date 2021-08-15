@@ -11,6 +11,7 @@ import { UserOnboard } from './UserOnboard'
 import { useUserStore } from './userStore'
 import { SmallCircleButton } from './views/CloseButton'
 import { DarkModal } from './views/DarkModal'
+import { SlantedTitle } from './views/SlantedTitle'
 
 export const AppIntroLetter = memo(() => {
   const userStore = useUserStore()

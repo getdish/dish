@@ -24,6 +24,8 @@
 
 # inbox
 
+- lists need a way to change the slug since we auto-generate it first. it should probably just do it one time, so need to track that in db (or some other way?).
+
 - show little map markers with color/rating/(sometimes emoji)
 
 - related good restaurants nearby on restaurantpage

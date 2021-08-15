@@ -168,7 +168,7 @@ class UserStore extends Store {
           refetch: true,
         }
       )
-      if (user) {
+      if (user.id) {
         this.user = {
           ...this.user,
           ...user,
