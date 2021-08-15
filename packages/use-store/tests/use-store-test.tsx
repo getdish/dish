@@ -1,3 +1,5 @@
+import '@dish/react-test-env'
+
 import { RenderResult, act, cleanup, fireEvent, render } from '@testing-library/react'
 import { last } from 'lodash'
 import React, { StrictMode } from 'react'

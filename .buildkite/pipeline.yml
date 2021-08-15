@@ -3,8 +3,6 @@ env:
   DISH_ENV: 'test'
   DOCKER_BUILDKIT: 0
   COMPOSE_DOCKER_CLI_BUILD: 0
-  DOCKER_CLIENT_TIMEOUT: 360
-  COMPOSE_HTTP_TIMEOUT: 360
 
 steps:
   # images that tests need
