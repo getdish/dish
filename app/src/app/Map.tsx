@@ -181,20 +181,19 @@ export default function Map(props: MapProps) {
     window['map'] = map
     window['mapHelpers'] = mapHelpers
 
-    // const loadMarker = (name: string, asset: string) => {
-    //   return new Promise((res, rej) => {
-    //     if (!map) return rej()
-    //     map.loadImage(asset, (err, image) => {
-    //       if (err) return rej(err)
-    //       if (map) {
-    //         if (!map.hasImage(name)) {
-    //           map.addImage(name, image)
-    //         }
-    //       }
-    //       res(image)
-    //     })
-    //   })
-    // }
+    const loadMarker = (name: string, asset: string) => {
+      return new Promise((res, rej) => {
+        if (!map) return rej()
+        map.loadImage(asset, (err, image) => {
+          if (err || !image || !map) return rej(err)
+          if (!map.hasImage(name)) {
+            console.log('loaded image', image)
+            map.addImage(name, image)
+          }
+          res(image)
+        })
+      })
+    }
 
     const cancels = new Set<Function>()
 
@@ -292,13 +291,15 @@ export default function Map(props: MapProps) {
       }
     }
 
+    const mapMarkerRed = require('../assets/map-marker-red.png')
+
     cancels.add(
       series([
         () =>
           Promise.all([
             new Promise((res) => map.on('load', res)),
             new Promise((res) => map.on('idle', res)), // this waits for style load
-            // loadMarker('map-pin', require('../assets/map-pin.png').default),
+            loadMarker('map-marker-red', mapMarkerRed),
             // loadMarker('icon-sushi', require('../assets/icon-sushi.png').default),
             // loadMarker(
             //   'map-pin-blank',
@@ -468,9 +469,6 @@ export default function Map(props: MapProps) {
                 15 * (supportsTouchWeb ? 1.2 : 0.75),
                 12 * (supportsTouchWeb ? 1.2 : 0.75),
               ],
-
-              // 'circle-stroke-color': 'transparent',
-
               'circle-color': [
                 'match',
                 ['get', 'selected'],
@@ -480,18 +478,6 @@ export default function Map(props: MapProps) {
                 pointColor,
                 pointColor,
               ],
-
-              // [
-              //   'step',
-              //   ['get', 'point_count'],
-              //   15,
-              //   20,
-              //   20,
-              //   50,
-              //   25,
-              //   100,
-              //   30,
-              // ],
             },
           })
           cancels.add(() => {
@@ -521,13 +507,21 @@ export default function Map(props: MapProps) {
             type: 'symbol',
             filter: ['!', ['has', 'point_count']],
             layout: {
-              'icon-allow-overlap': true,
-              'icon-ignore-placement': true,
+              // markers
+              // 'icon-anchor': 'top',
+              // 'icon-keep-upright': true,
+              // 'symbol-placement': 'point',
+              // 'icon-pitch-alignment': 'viewport',
+              // 'icon-offset': [0, -120],
+              // 'icon-image': 'map-marker-red',
+              // 'icon-size': 0.3333,
+              // 'icon-allow-overlap': true,
+              // 'icon-ignore-placement': true,
               'text-field': ['format', ['get', 'title']],
               'text-font': ['DIN Offc Pro Bold', 'Arial Unicode MS Bold'],
               'text-size': 14,
               'text-line-height': 1,
-              'text-variable-anchor': ['right', 'left'],
+              'text-variable-anchor': ['bottom'],
               // 'text-offset': [0, 20],
               // 'text-anchor': 'bottom',
             },
@@ -710,7 +704,7 @@ export default function Map(props: MapProps) {
                     ['==', ['feature-state', 'hover'], true],
                     isDark ? 'rgba(255,255,255,0.65)' : 'rgba(0,0,0,0.5)',
                     ['==', ['feature-state', 'active'], null],
-                    isDark ? 'rgba(255,255,255,0.85)' : 'rgba(0,0,0,0.65)',
+                    isDark ? 'rgba(255,255,255,0.85)' : 'rgba(0,0,0,0.33)',
                     'green',
                   ],
                   // 'text-halo-color': 'rgba(255,255,255,0.1)',
