@@ -1,5 +1,6 @@
 import { slugify } from '@dish/graph'
 import { Sun } from '@dish/react-feather'
+import { capitalize } from 'lodash'
 import React, { memo } from 'react'
 import { ScrollView } from 'react-native'
 import { AbsoluteVStack, Box, BoxProps, Divider, Paragraph, Spacer, Toast, VStack } from 'snackui'
@@ -24,13 +25,15 @@ export const AppMenuContents = memo(
     return (
       <Box
         maxHeight={Math.max(350, getWindowHeight() - searchBarHeight - 30)}
+        padding={0}
+        overflow="hidden"
         alignItems="stretch"
         pointerEvents="auto"
         minWidth={240}
         {...props}
       >
         <ScrollView>
-          <VStack spacing="sm" padding={10}>
+          <VStack>
             {!isWeb && (
               <VStack alignItems="center" justifyContent="center">
                 <LogoColor scale={1.5} />
@@ -41,23 +44,19 @@ export const AppMenuContents = memo(
             {!isLoggedIn && (
               <>
                 <AuthForm onDidLogin={hideUserMenu} />
-                <Spacer size="md" />
                 <Divider />
-                <Spacer size="md" />
               </>
             )}
 
             {isLoggedIn && (
               <MenuLinkButton
                 name="user"
+                icon={<UserMenuButton />}
                 params={{
                   username: slugify(user?.username ?? ''),
                 }}
               >
-                <AbsoluteVStack top={-7} right={20} bottom={0} alignItems="center">
-                  <UserMenuButton />
-                </AbsoluteVStack>
-                {user?.username}
+                Profile
               </MenuLinkButton>
             )}
 
@@ -69,7 +68,7 @@ export const AppMenuContents = memo(
                 slug: 'create',
               }}
             >
-              create playlist
+              Create Playlist
             </MenuLinkButton>
 
             {isLoggedIn && user?.username === 'admin' && (
@@ -78,9 +77,7 @@ export const AppMenuContents = memo(
 
             {isLoggedIn && (
               <>
-                <Spacer size="md" />
                 <Divider />
-                <Spacer size="md" />
               </>
             )}
 
@@ -105,24 +102,22 @@ export const AppMenuContents = memo(
                 })
               }}
             >
-              {userStore.theme ?? 'auto'}
+              {capitalize(userStore.theme ?? 'auto')}
             </MenuLinkButton>
 
             {/* {isWeb && <MenuLinkButton name="blog">Blog</MenuLinkButton>} */}
-            <MenuLinkButton name="about">about</MenuLinkButton>
+            <MenuLinkButton name="about">About</MenuLinkButton>
 
             {isLoggedIn && (
               <>
-                <Spacer size="md" />
                 <Divider />
-                <Spacer size="md" />
                 <MenuLinkButton
                   onPress={() => {
                     Toast.show(`Logging out...`)
                     setTimeout(logout, 1000)
                   }}
                 >
-                  logout
+                  Logout
                 </MenuLinkButton>
               </>
             )}
@@ -138,12 +133,12 @@ export const AppMenuContents = memo(
                     }
                   }}
                 >
-                  toggle {key}
+                  Toggle {key}
                 </MenuLinkButton>
               )
             })}
 
-            <Paragraph opacity={0.05} size="xxs">
+            <Paragraph position="absolute" bottom={0} left={0} opacity={0.05} size="xxs">
               {isHermes ? 'hermes' : 'jsc'}
             </Paragraph>
           </VStack>
@@ -157,16 +152,11 @@ const MenuLinkButton = (props: LinkButtonProps) => {
   return (
     <LinkButton
       width="100%"
-      paddingVertical={12}
+      paddingVertical={16}
       paddingHorizontal={16}
+      borderRadius={0}
+      backgroundColor="transparent"
       justifyContent="flex-start"
-      textProps={{
-        fontSize: 18,
-        fontWeight: '700',
-      }}
-      hoverStyle={{
-        transform: [{ scale: 1.03 }],
-      }}
       onPressOut={appMenuStore.hide}
       {...props}
     />
