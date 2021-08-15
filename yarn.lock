@@ -1943,7 +1943,7 @@ __metadata:
     "@turf/intersect": ^6.3.0
     "@turf/union": ^6.3.0
     "@types/lodash": ^4.14.165
-    "@types/mapbox-gl": ^2.1.1
+    "@types/mapbox-gl": ^2.4.0
     "@types/react": "*"
     "@types/react-native": "*"
     "@types/redis": ^2.8.28
@@ -1971,7 +1971,7 @@ __metadata:
     immer: ^8.0.0
     jsonwebtoken: ^8.4.0
     lodash: "*"
-    mapbox-gl: ^2.3.1
+    mapbox-gl: ^2.4.0
     metro-react-native-babel-preset: ^0.66.2
     multer: ^1.4.2
     multer-s3: ^2.9.0
@@ -6212,12 +6212,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/mapbox-gl@npm:^2.1.1":
-  version: 2.3.3
-  resolution: "@types/mapbox-gl@npm:2.3.3"
+"@types/mapbox-gl@npm:^2.4.0":
+  version: 2.4.0
+  resolution: "@types/mapbox-gl@npm:2.4.0"
   dependencies:
     "@types/geojson": "*"
-  checksum: 01c4688ae08907c821412cdea96e8639f447f973948b210fb19310646dff583f481dc393b30b961f43e595207e5736d2fb75f6cc9adf885b70f638c29cedb7a1
+  checksum: f1ff09350c785c90f205965f0ca0f5e50afba376e4840ad2d12fca21b822b9b2ef1cabafe8bca3421967e62531d46227b032a242570fbf70cd647c522f93f5cc
   languageName: node
   linkType: hard
 
@@ -16917,9 +16917,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"mapbox-gl@npm:^2.3.1":
-  version: 2.3.1
-  resolution: "mapbox-gl@npm:2.3.1"
+"mapbox-gl@npm:^2.4.0":
+  version: 2.4.0
+  resolution: "mapbox-gl@npm:2.4.0"
   dependencies:
     "@mapbox/geojson-rewind": ^0.5.0
     "@mapbox/geojson-types": ^1.0.2
@@ -16944,7 +16944,7 @@ __metadata:
     supercluster: ^7.1.3
     tinyqueue: ^2.0.3
     vt-pbf: ^3.1.1
-  checksum: ad201505a9f34cf9dd613dbea82cef1df1fd7f407d13579230ec935089bf438b76b7b8ff78efcff13ee555b14301679bf17e16866924904b6b875a9f5a6b34c9
+  checksum: 9fb305b21fa6808c08ddfd7babb832877fbb3ad27ee689a52b8379514cc46bf43df63d7e6c15c8bdca97d8b4cd70cd67be636cf1e8fbf5285aa2e677b96c14ce
   languageName: node
   linkType: hard
 
