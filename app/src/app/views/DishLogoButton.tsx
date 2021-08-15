@@ -60,9 +60,8 @@ export const DishLogoButton = memo(({ color }: { color?: string }) => {
         alignSelf="center"
         width={logoXsWidth}
         height={logoXsHeight}
-        scale={0.88}
+        scale={0.75}
         y={7}
-        x={3}
       >
         {wrapWithHomeLink(<LogoCircle />)}
       </AbsoluteVStack>

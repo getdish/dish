@@ -74,7 +74,7 @@ export const FeedCard = ({
                       ? 12
                       : 20
                     : size === 'sm' || size.endsWith('xs')
-                    ? 20
+                    ? 16
                     : longTitle
                     ? 24
                     : 30

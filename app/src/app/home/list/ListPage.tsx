@@ -33,11 +33,10 @@ import {
   VStack,
 } from 'snackui'
 
-import { bgLight, red400 } from '../../../constants/colors'
+import { red400 } from '../../../constants/colors'
 import { isWeb } from '../../../constants/constants'
 import { useRegionQuery } from '../../../helpers/fetchRegion'
 import { getRestaurantIdentifiers } from '../../../helpers/getRestaurantIdentifiers'
-import { getTimeFormat } from '../../../helpers/getTimeFormat'
 import { promote } from '../../../helpers/listHelpers'
 import { router } from '../../../router'
 import { HomeStateItemList } from '../../../types/homeTypes'
@@ -65,7 +64,6 @@ import { PageTitle } from '../PageTitle'
 import { CircleButton } from '../restaurant/CircleButton'
 import { RestaurantListItem } from '../restaurant/RestaurantListItem'
 import { useSnapToFullscreenOnMount } from '../restaurant/useSnapToFullscreenOnMount'
-import { UserAvatar } from '../user/UserAvatar'
 import { ListAddRestuarant } from './ListAddRestuarant'
 import { getListColor, listColors, randomListColor } from './listColors'
 
@@ -212,6 +210,7 @@ function useListRestaurants(list?: list) {
             },
           })?.__typename
         })
+        console.log('added, refreshing')
         await Promise.all([refetch(list), refetch(list_restaurants)])
       },
       async promote(index: number) {
@@ -476,12 +475,6 @@ const ListPageContent = graphql((props: Props) => {
 
             {/* overflow clip prevention with marginVerticals here */}
             <VStack position="relative" marginHorizontal={-20}>
-              {/* <AbsoluteVStack
-                zIndex={-1}
-                fullscreen
-                rotateY="-12deg"
-                backgroundColor={theme.backgroundColorTransluscent}
-              /> */}
               <ListPageTitle
                 listTheme={listTheme}
                 isLight={isLight}
@@ -555,7 +548,7 @@ const ListPageContent = graphql((props: Props) => {
             {!!(list.description || isEditing) && (
               <>
                 <CommentBubble
-                  paddingHorizontal={24}
+                  paddingHorizontal={20}
                   date={list.created_at}
                   after={
                     <>
@@ -729,16 +722,25 @@ const ListPageTitle = ({
   const titleContents = isEditing ? (
     <Input
       fontSize={20}
+      fontWeight="700"
+      width="auto"
+      textAlign="center"
+      {...(listTheme === 'minimal' && {
+        fontSize: 40,
+        fontWeight: '400',
+        width: '100%',
+        textAlign: 'left',
+      })}
       backgroundColor="transparent"
       defaultValue={list.name || ''}
       onChangeText={(val) => {
         draft.current.name = val
       }}
-      fontWeight="700"
-      textAlign="center"
       color={textColor}
       borderColor="transparent"
-      margin={-5}
+      marginHorizontal={-15}
+      multiline
+      marginVertical={-5}
     />
   ) : (
     list.name
@@ -749,19 +751,16 @@ const ListPageTitle = ({
       noDivider
       title={
         <>
-          <Spacer size="xl" />
-
           {listTheme === 'minimal' && (
             <VStack
               alignItems="flex-start"
               justifyContent="flex-end"
               minHeight={200}
               width="100%"
-              paddingHorizontal={20}
-              // alignItems="center"
-              // justifyContent="center"
+              paddingHorizontal={25}
             >
-              <Title size="xxxxl" color={textColor}>
+              <Spacer size={84} />
+              <Title width="100%" size="xxxl" color={textColor}>
                 {titleContents}
               </Title>
 
@@ -784,7 +783,12 @@ const ListPageTitle = ({
           )}
 
           {listTheme === 'modern' && (
-            <VStack marginHorizontal="auto" alignItems="center" justifyContent="center">
+            <VStack
+              paddingTop={50}
+              marginHorizontal="auto"
+              alignItems="center"
+              justifyContent="center"
+            >
               <ScalingPressable>
                 <Link name="user" params={{ username: list.user?.username ?? '' }}>
                   <SlantedTitle scale={1} size="md" alignSelf="center">
