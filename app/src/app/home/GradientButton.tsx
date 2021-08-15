@@ -24,7 +24,7 @@ export function GradientButton({
       justifyContent="center"
       borderRadius={6}
       borderWidth={bordered ? 1 : 0}
-      borderColor={theme.backgroundColorQuartenary}
+      borderColor={theme.backgroundColorSecondary}
       backgroundColor="transparent"
       className="ease-in-out-faster safari-fix-overflow"
       position="relative"

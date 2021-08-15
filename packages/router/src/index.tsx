@@ -78,22 +78,30 @@ export class Router<
     history.listen((event) => {
       const state = event.location.state as any
       const id = state?.id
-      const prevItem = this.stack[this.stackIndex - 1]
-      const nextItem = this.stack[this.stackIndex + 1]
-      const direction: HistoryDirection =
-        prevItem?.id === id ? 'backward' : nextItem?.id === id ? 'forward' : 'none'
+      const prevItems = this.stack.slice(0, this.stackIndex)
+      const nextItems = this.stack.slice(this.stackIndex + 1)
+
+      let direction: HistoryDirection =
+        event.action === 'POP'
+          ? prevItems.some((x) => x.id === id)
+            ? 'backward'
+            : nextItems.some((x) => x.id === id)
+            ? 'forward'
+            : 'none'
+          : 'none'
       let type: HistoryType =
         event.action === 'REPLACE' ? 'replace' : event.action === 'POP' ? 'pop' : 'push'
+
+      if (type === 'pop' && direction == 'none') {
+        // happens when they go back after a hard refresh, change to push
+        type = 'push'
+        direction = 'forward'
+      }
 
       // if (process.env.DEBUG) {
       //   // prettier-ignore
       //   console.log('router.history', { type,direction,event,state,prevItem,nextItem,stack: this.stack })
       // }
-
-      if (type === 'pop' && direction == 'none') {
-        // happens when they go back after a hard refresh, change to push
-        type = 'push'
-      }
 
       this.handlePath(event.location.pathname, {
         id,
@@ -136,16 +144,17 @@ export class Router<
     return this.history[this.history.length - 1] ?? defaultPage
   }
 
-  private handlePath(pathname: string, item: Pick<HistoryItem, 'id' | 'type' | 'direction'>) {
+  private handlePath(
+    pathname: string,
+    item: Pick<HistoryItem, 'id' | 'type' | 'direction'> & Partial<HistoryItem>
+  ) {
     const match = this.router.match('GET', pathname)
     if (!match) {
       console.log('no match', pathname, item)
       return
     }
+
     const next: HistoryItem = {
-      id: item.id ?? uid(),
-      type: item.type,
-      direction: item.direction,
       name: match.handler,
       path: pathname,
       params: {
@@ -159,7 +168,9 @@ export class Router<
         this.nextNavItem && {
           data: this.nextNavItem.data,
         }),
+      ...item,
     }
+
     this.history = [...this.history, next]
 
     switch (item.direction) {
