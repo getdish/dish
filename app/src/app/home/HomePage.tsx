@@ -58,13 +58,23 @@ export default memo(function HomePage(props: Props) {
     }
   }, [props.isActive])
 
-  if (!didLoadOnce) {
-    return <LoadingItems />
-  }
   return (
-    <Suspense fallback={<LoadingItems />}>
-      <HomePageContent {...props} />
-    </Suspense>
+    <>
+      {!didLoadOnce && (
+        <VStack marginTop={searchBarHeight}>
+          <LoadingItems />
+        </VStack>
+      )}
+      <Suspense
+        fallback={
+          <VStack marginTop={searchBarHeight}>
+            <LoadingItems />
+          </VStack>
+        }
+      >
+        <HomePageContent {...props} />
+      </Suspense>
+    </>
   )
 })
 
