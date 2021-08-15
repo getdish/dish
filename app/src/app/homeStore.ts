@@ -398,33 +398,38 @@ class HomeStore extends Store {
     } as HomeStateItem
   }
 
+  // TODO this could become a StackStore or something
   handleRouteChange(item: HistoryItem) {
     if (item.name === 'notFound') {
       return
     }
 
     // happens on *any* route push or pop
+    // TODO this would then be a hook like StackStore.addRouteChangeListener
     if (appMapStore.hovered) {
       appMapStore.setHovered(null)
     }
 
     if (item.type === 'pop') {
-      const curIndex = this.stateIndex
-      const lastIndex = this.states.length - 1
-      switch (item.direction) {
-        case 'forward': {
-          this.stateIndex = Math.min(lastIndex, curIndex + 1)
-          return
-        }
-        case 'backward': {
-          this.stateIndex = Math.max(0, curIndex - 1)
-          return
-        }
-        default: {
-          console.error('NO DIRECTION FOR A POP??', item)
-        }
+      // find state to jump to
+      let nextState: HomeStateItem | null = null
+      if (item.direction === 'backward') {
+        const backStates = this.states.slice(0, this.stateIndex)
+        backStates.reverse() // reverse to find most recent match
+        nextState = backStates.find((x) => x.id === item.id) ?? null
+      } else {
+        const forwardStates = this.states.slice(this.stateIndex + 1)
+        nextState = forwardStates.find((x) => x.id === item.id) ?? null
       }
-      return
+
+      if (!nextState) {
+        console.warn('warning! no state found in history, perhaps from old refresh')
+        // allow it then to continue to push
+        // probably should just move the index +1/-1 to if possible to fallback to something
+      } else {
+        this.stateIndex = this.states.indexOf(nextState) ?? this.stateIndex
+        return
+      }
     } else {
       if (item.type !== 'replace') {
         // remove future states no longer accessible

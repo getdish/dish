@@ -128,6 +128,8 @@ export function Route(props: { name: string; exact?: boolean; children: any }) {
     return content
   })()
 
+  console.log('what is happening', stateRef, children, props, isMatched, activeName, curPage)
+
   // during collect dont render null to prevent unecessary unmounts
   return useLastValueWhen(() => children, stateRef.current === 'collect')
 }
