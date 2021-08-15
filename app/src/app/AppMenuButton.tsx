@@ -37,7 +37,7 @@ export const AppMenuButton = memo(() => {
         }
         mountImmediately
       >
-        <MenuLinkButton
+        <AppMenuLinkButton
           Icon={Menu}
           onPress={() => appMenu.setIsVisible(!showUserMenu)}
           text={!media.sm && !userStore.isLoggedIn ? 'Signup' : ''}
@@ -58,7 +58,7 @@ export const AppMenuButton = memo(() => {
 
           {!userStore.isLoggedIn && (
             <Tooltip contents="About">
-              <MenuLinkButton
+              <AppMenuLinkButton
                 name="about"
                 Icon={HelpCircle}
                 ActiveIcon={ChevronUp}
@@ -104,7 +104,7 @@ export const UserMenuButton = () => {
   )
 }
 
-const MenuLinkButton = memo(
+const AppMenuLinkButton = memo(
   ({
     Icon,
     ActiveIcon,
