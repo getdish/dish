@@ -186,3 +186,8 @@ function clean_dangling() {
   # remove dangling images which can mess up pull/push
   docker rmi $(docker images --filter "dangling=true" -q --no-trunc) || true
 }
+
+function hungry_services_tunnels() {
+  ssh -N -i etc/keys/server_rsa -L 5005:localhost:5005 root@$io1_HOST &
+  ssh -N -i etc/keys/server_rsa -L 8884:localhost:8884 root@$io1_HOST
+}
