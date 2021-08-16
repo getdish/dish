@@ -32,3 +32,11 @@ function source_env() {
     source .env.local
   fi
 }
+
+function pushd() {
+  command pushd "$@" >/dev/null
+}
+
+function popd() {
+  command popd "$@" >/dev/null
+}

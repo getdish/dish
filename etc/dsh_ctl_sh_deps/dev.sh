@@ -24,7 +24,13 @@ function clean() {
 }
 
 function run() {
-  echo "executing: $ORIGINAL_ARGS in $CWD_DIR"
+  if [ ! -z "$DEV_USER" ]; then
+    source .env.development
+    source .env.local
+  fi
+  if [ "$VERBOSITY" -gt "0" ]; then
+    echo "executing: $ORIGINAL_ARGS in $CWD_DIR"
+  fi
   pushd "$CWD_DIR"
   bash -c "$ORIGINAL_ARGS"
   popd

@@ -4,10 +4,19 @@ if [ "$KEEP_ALIVE" != "true" ]; then
   set -e
 fi
 
+if command -v git &> /dev/null; then
+  DEV_USER=$(git config user.email | tr -d "[:space:]")
+fi
+
+if [ "$DEV_USER" = "tom@tombh.co.uk" ]; then
+  VERBOSITY=${VERBOSITY:-"0"}
+fi
+
 CWD_DIR=$(pwd)
 DISH_ENV="${DISH_ENV:-production}"
 ENV_FILE=".env.$DISH_ENV"
-SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )"
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" &>/dev/null && pwd)"
+VERBOSITY=${VERBOSITY:-"1"}
 export PROJECT_ROOT=$SCRIPT_DIR
 export DOCKER_CONFIG="$PROJECT_ROOT/etc/docker"
 
@@ -33,11 +42,13 @@ popd >/dev/null
 
 function_to_run=$1
 
-echo "dsh -- env $DISH_ENV in $PROJECT_ROOT running $function_to_run $GIT_COMMIT"
+if [ "$VERBOSITY" -gt "0" ]; then
+  echo "dsh -- env $DISH_ENV in $PROJECT_ROOT running $function_to_run $GIT_COMMIT"
+fi
 
 if [ "$NO_PRINT_HELP" != "1" ] && [ "$function_to_run" = "" ]; then
   for f in $(declare -F | cut -d ' ' -f3); do
-   echo "${f}"
+    echo "${f}"
   done
   exit 0
 fi
