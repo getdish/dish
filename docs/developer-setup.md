@@ -25,15 +25,21 @@ All Dish's credentials are stored in `.env`. Even third-party web logins are con
 - You can now just use `git` as normal, all the encryption/decryption happens
   automatically with hooks and filters.
 
+### Yarn package manager and runner
+
+There are various ways to install Yarn: https://yarnpkg.com/getting-started/install
+
+We're currently using Yarn v2, which you can enable from standard `yarn` with:
+
+`yarn set version berry`
+
 ### Using environment in commands
 
-You can avoid copy-pasting environment variables using this:
+Generally you'll want to run almost everything via either `dsh` or `./dsh run`. It can be nice
+to add `./dsh` to your local `$PATH` or make an `alias`, so that you can call `dsh` from anywhere
+in the repo.
 
-```
-./dsh run 'some_command_that_needs_dish_ENV'
-```
-
-To switch env set DISH_ENV.
+To switch envs set DISH_ENV.
 
 ## Core Stack
 
@@ -46,26 +52,18 @@ Registry: `./dsh docker_login`.
 
 Some helper commands to get started:
 
-- `yarn bootstrap`: builds the base image
-- `yarn start` will run docker-compose for local development
-
-Once you're logged in and have Docker Compose installed, go to the root of this repo and run:
-
-`docker-compose up`
-
-For initial installation you may need to run this command a few times so postgres can generate encryption keys. You will also need to use an `init` arg to the first migrations run:
-
-`./dsh migrate_hasura`
+`dsh run yarn start` will run docker-compose for local development
+`dsh migrate_hasura` for updating migrations
 
 When you need to rebuild the containers to update their code run:
 
-`docker-compose build`
+`dsh run docker-compose build`
 
 To build an individual container:
 
-`docker-compose build [container-name]`
+`dsh run docker-compose build [container-name]`
 
-So, for example `docker-compose build app`.
+So, for example `dsh run docker-compose build app`.
 
 ## Debugging broken docker build
 
@@ -145,7 +143,7 @@ Now you should be able to just access http://d1sh.com to develop on the local si
 
 ### Developing
 
-You'll generally run the web app (yarn app), build watcher (yarn watch), and backend (yarn start) in three terminal panes.
+You'll generally run the web app (`yarn web`), build watcher (`yarn build:ts:watch`), and backend (`yarn start`) in three terminal panes.
 
 If you edit something in snackui, just be sure to commit it as its own commit as we sync that folder using git-subrepo to the snackui git repo.
 
@@ -153,50 +151,18 @@ For debugging snackui stuff you can always put `// debug` at the top of the file
 
 We use `@dish/use-store` as our general state manager, you can access `window.stores` in frontend devtools to see all stores. It's sketchy and could use some more organizing principles, for now I usually put it near where it's initially used and that's about it. See the README.md there for more.
 
-### Run end to end tests
+### Running tests
 
-First build the docker container, this can take up to 30 minutes:
+To ensure all the required environment run tests like this:
 
-    * At the very root of the entire git repo:
-      `docker build -t dish/app -f app/Dockerfile .`
+`dsh run yarn run ava test/* --verbose --serial`
 
-    * Run the production build of the web site (it exposes on port 4444):
-      `docker run -it --rm --net host dish/app`
+Some tests, like the internal crawlers, require services not started by `yarn start`. These
+services aren't started by `yarn start` because they're large and also because we don't really
+develop against them, so it's fine to keep them out of CI. You can create proxied tunnels to all
+them with:
 
-    * To connect to our production backing services:
-      * add 127.0.0.1 d1live.com to /etc/hosts
-      * visit http://d1live.com:4444
-
-If you want to run end to end tests:
-
-    * Make sure the [core stack](#core-stack) is up:
-      `docker-compose build && docker-compose up`
-
-    * Run the migrations:
-      ```
-      ./dsh db_migrate_local
-      ./dsh timescale_migrate_local
-      ```
-
-    * To connect to these local services, visit:
-      'http://localhost:80'
-
-    * Run the tests. from the `app` path:
-      `yarn test` (specs, etc)
-      `./test/testcafe.sh` (integration tests)
-
-## Hot Deploys
-
-If you need to deploy something quickly and are willing to skip CI, you can run a hot deploy.
-
-You'll need a few things set up first:
-
-    - On production: `kubectl` and `doctl` installed
-    - `doctl auth init -t $DO_DISH_KEY` token is avaiable in enc.env.yaml
-    - `doctl kubernetes cluster kubeconfig save dish[blue/green]`
-    - On production and staging, you'll need `flyctl` in order to login to our Docker registry.
-
-Then you can use the `./dsh hot_deploy path/to/Dockerfile/folder`
+`dsh hungry_services_tunnels`
 
 ## Hasura
 
@@ -239,94 +205,6 @@ This is a big dump, can potentially take nearly an hour to import:
 
 Note that the `@dish/graph` package is set up to use the live Hasura instance if the
 domain name contains 'live'. You can set such a domain up on your local machine using the `/etc/hosts` file with an entry like `127.0.0.1 d1sh_hasura_live.com`. You may want to avoid spelling 'dish' with a real 'i' as that might be a keyword for triggering other production features.
-
-## Kubernetes
-
-Our Kubernetes (k8s) is managed by Terraform, an Infrastructure as Code framework. This means that all changes to the cluster architecture and state can be tracked in Git. Some changes such as autoscaling changes are obviously not tracked.
-
-### Getting started
-
-#### Prerequisites
-
-All of these should be installable through your OS's standard package manager (Brew, Snaps, PPAs). However, most of these also have oneliner `curl` commands to install simple static binaries.
-
-- [`doctl`](https://github.com/digitalocean/doctl): Talking to the Digital Ocean API.
-- [`kubectl`](https://kubernetes.io/docs/tasks/tools/install-kubectl/): Talking to the Kubernetes API.
-- [Terraform](https://learn.hashicorp.com/terraform/getting-started/install.html): Infrastructure As Code. Talking to the k8s API.
-- [Helm](https://helm.sh/docs/intro/install/): Kubernetes package manager.
-
-#### Authorizing `doctl`
-
-`doctl auth init -t $DIGITAL_OCEAN_API_TOKEN`
-(Token is avaiable in `enc.env.yaml`)
-
-#### Creating the cluster for the first time
-
-- `./etc/terraform_init.sh` Connects to DO Spaces to save state. Downloads modules
-- `terraform apply -target=module.cluster` Just build the bare compute resources
-- `doctl kubernetes cluster kubeconfig save dish[blue/green]` Sets up `kubectl`
-- `terraform apply` Adds all the remaining resources
-
-#### Connecting to an existing cluster
-
-- `terraform init` Connects to DO Spaces to save state. Downloads modules
-- `doctl kubernetes cluster kubeconfig save dish[blue/green]` Sets up `kubectl`
-
-##### Load Balancer IP
-
-A platform-specific load balancer will be created outside the Kubernetes cluster. On DO it doesn't currently seem possible to associate a specific IP address. So you will need to look at the DO UI under Networking->Load Balancers to find the new IP address and assign it as an A record to the appropriate domain.
-
-#### Deploying
-
-##### Notes on creating a new Kubernetes cluster
-
-When setting up a Blue/Green cluster, I found that:
-
-- `nodeSelector` isn't powerful enough to prevent the CI node getting full of other pods. But
-  DO still haven't developed native support for taints/tolerations. Watch:
-  https://github.com/digitalocean/DOKS/issues/3
-- `./dsh hot_deploy path/to/Dockerfile` for each service needed to be run. This could be done by doing a Github deploy too.
-- In Hasura's console, I needed to click the "Reload metadata" button to get Hasura consistent
-  with the DB again. I have no idea why.
-
-### What's on our cluster?
-
-Most importantly the main services like the web app, worker, user server, ML endpoints etc.
-
-Of particular note:
-
-#### Databases
-
-The main DB is Postgres (under the `postgres-ha` namespace), it is setup in High Availability
-mode with replication and failover. There is also another Postgres DB (Timescale) that just keeps our scrape data. And Redis is installed to keep worker jobs.
-
-#### Nginx Ingress
-
-This is basically our interface to the public internet. It's hooked up
-to Lets Encrypt via a Helm-installed cert-manager service to automatically manage SSL certs.
-We have wildcard certs `*.k8s.dishapp.com`. If you want lower level subdomains (eg; `super.dishapp.com`), you wil need to add rules in the relevant `kubernetes_ingress` Terraform resource. Nginx Ingress can also do everything that Nginx can do.
-
-#### Prometheus
-
-Prometheus is a monitoring framework. It collects metrics from all kinds of places, both from
-the cluster itself and the various apps and services running on the cluster. The main access
-to Prometheus is via its Grafana UI: https://grafana.k8s.dishapp.com The username is `admin`
-and the password is in `.env`
-
-#### Sentry error tracking and management
-
-Sentry is an advanced error tracking interface: https://sentry.io/welcome/
-
-Our service is at https://sentry.k8s.dishapp.com The username is 'admin@sentry.local'
-and the password is in `.env`.
-
-#### Kubernetes dashboard
-
-The k8s dashboard gives a good overview of everything running on the cluster. It can be
-very helpful for debugging. Though do remember `kubectl` can do everything the dashboard
-does and more. The dashboard is provided by Digital Ocean:
-https://cloud.digitalocean.com/kubernetes/clusters/f2db42e5-2407-4422-920d-b307bc5f636d/dashboard/ Though they don't seem to update the underlying dashboard version very often, so
-we could deploy our own at somepoint with a Helm chart.
 
 ## Staging
 
