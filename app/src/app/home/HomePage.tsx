@@ -212,7 +212,7 @@ const HomePageContent = (props: Props) => {
 
   return (
     <>
-      <PageHead>Dish - Uniquely Great Food</PageHead>
+      <PageHead isActive={props.isActive}>Dish - Uniquely Great Food</PageHead>
 
       <HomePageWelcomeBubble />
 

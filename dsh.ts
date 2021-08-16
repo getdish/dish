@@ -1,13 +1,13 @@
 #!/usr/bin/env zx
 
 import { exec } from 'child_process'
+import { readdir } from 'fs/promises'
+import { ExecOptions } from 'node:child_process'
+import { basename } from 'node:path'
 import { dirname, join, resolve } from 'path'
 import { Transform } from 'stream'
 
 import fsExtra from 'fs-extra'
-import { readdir } from 'fs/promises'
-import { ExecOptions } from 'node:child_process'
-import { basename } from 'node:path'
 import { $, cd } from 'zx'
 
 const { readFile, readJSON } = fsExtra
@@ -104,11 +104,12 @@ async function execPromise(command: string, opts?: ExecOptions & { prefix?: stri
         console.log('Error running', command, err, stdout, stderr)
         return rej(err)
       }
-      console.log('Finished successfully', command)
+      console.log('Finished command', command)
       if (stdout) {
         console.log(
           opts?.prefix
             ? stdout
+                .toString()
                 .split('\n')
                 .map((x) => opts.prefix + x)
                 .join('\n')
@@ -116,7 +117,7 @@ async function execPromise(command: string, opts?: ExecOptions & { prefix?: stri
         )
       }
       if (stderr) {
-        console.log('stderr:', stderr)
+        console.log(`Error stderr running ${command} in ${opts?.cwd ?? ''}:`, '\n', stderr)
       }
       res(stdout)
     })

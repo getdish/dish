@@ -103,7 +103,7 @@ export default memo(function SearchPage(props: SearchProps) {
 
   return (
     <>
-      <PageHead>{title}</PageHead>
+      <PageHead isActive={props.isActive}>{title}</PageHead>
       <StackDrawer closable>
         <HomeSuspense>
           <SearchNavBarContainer isActive={props.isActive} />

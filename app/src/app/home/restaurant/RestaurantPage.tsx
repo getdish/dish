@@ -147,7 +147,9 @@ const RestaurantPage = memo(
 
       return (
         <>
-          <PageHead>{`${restaurant.name} has the best ${topTags.join(', ')}`}</PageHead>
+          <PageHead isActive={props.isActive}>{`${restaurant.name} has the best ${topTags.join(
+            ', '
+          )}`}</PageHead>
           <ContentScrollView
             ref={setScrollView}
             onScrollYThrottled={(y) => {

@@ -1,9 +1,7 @@
 import { RoutesTable } from '@dish/router'
 import React from 'react'
-import { useThemeName } from 'snackui'
 import { Button } from 'snackui'
 
-import { colorNames } from '../../constants/colors'
 import { DRouteName } from '../../router'
 import { useLink } from '../hooks/useLink'
 import { LinkButtonProps } from './LinkProps'

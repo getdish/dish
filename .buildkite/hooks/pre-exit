@@ -42,12 +42,12 @@ if [ "$DOCKER_COMPOSE_DOWN" == "true" ]; then
 fi
 
 if [ "$LOG_DOCKER" == "true" ]; then
-  echo "docker-compose logs (see all in $(pwd)/compose.log)..."
+  echo "--- docker-compose logs"
+  echo "Showing tail 100 lines (see all in $(pwd)/compose.log)..."
   echo "..."
-  docker-compose logs | tail -n 150
+  docker-compose logs | tail -n 100
   docker-compose logs --tail 6000 > ./compose.log
-  echo "end docker-compose logs"
-  cat ./*.log || true
+  # cat ./*.log || true
 fi
 
 if [ "$BUILDKITE_COMMAND_EXIT_STATUS" = "1" ] && [ "$DATA_CLEAR_ON_FAIL" == "true" ]; then
