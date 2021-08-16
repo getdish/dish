@@ -128,3 +128,4 @@ app/test/screenshots
 # Docker compose data
 data/
 
+etc/docker/config.json

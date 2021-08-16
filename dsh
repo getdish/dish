@@ -9,6 +9,7 @@ DISH_ENV="${DISH_ENV:-production}"
 ENV_FILE=".env.$DISH_ENV"
 SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )"
 export PROJECT_ROOT=$SCRIPT_DIR
+export DOCKER_CONFIG="$PROJECT_ROOT/etc/docker"
 
 cd "$PROJECT_ROOT"
 
