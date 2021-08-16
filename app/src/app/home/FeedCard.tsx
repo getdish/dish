@@ -64,6 +64,7 @@ export const FeedCard = ({
 
             <VStack spacing={size}>
               <Text
+                letterSpacing={-0.5}
                 className="hover-100-opacity-child"
                 fontWeight={emphasizeTag ? '400' : '700'}
                 fontSize={
@@ -72,12 +73,12 @@ export const FeedCard = ({
                       ? 12
                       : longTitle
                       ? 12
-                      : 20
+                      : 18
                     : size === 'sm' || size.endsWith('xs')
-                    ? 16
+                    ? 15
                     : longTitle
-                    ? 24
-                    : 30
+                    ? 22
+                    : 28
                 }
                 color={colorString}
               >
