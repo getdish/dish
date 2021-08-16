@@ -3,7 +3,7 @@ import React, { useState } from 'react'
 import { ScrollView } from 'react-native'
 import {
   AbsoluteVStack,
-  Circle,
+  Divider,
   HStack,
   Modal,
   Paragraph,
@@ -21,7 +21,6 @@ import { getWindowHeight } from '../../helpers/getWindow'
 import { ensureFlexText } from '../home/restaurant/ensureFlexText'
 import { UserAvatar } from '../home/user/UserAvatar'
 import { CloseButton } from './CloseButton'
-import { Image } from './Image'
 import { Link } from './Link'
 import { PaneControlButtons } from './PaneControlButtons'
 
@@ -41,6 +40,7 @@ type CommentBubbleProps = Omit<StackProps, 'children'> & {
   date?: Date
   belowContent?: any
   children?: any
+  chromeless?: boolean
 }
 
 export const CommentBubble = (props: CommentBubbleProps) => {
@@ -108,6 +108,7 @@ function CommentBubbleContents({
   before,
   after,
   afterName,
+  chromeless,
   date,
   onExpand,
   expanded,
@@ -172,6 +173,64 @@ function CommentBubbleContents({
     </>
   )
 
+  const metaContents = (
+    <HStack y={-6} alignItems="center" width={circleSize}>
+      <VStack
+        borderRadius={100}
+        backgroundColor={
+          avatarBackgroundColor ?? (isYelp ? thirdPartyCrawlSources.yelp.color : colors.color200)
+        }
+      >
+        {!avatar && <User color={theme.color} size={imageSize} />}
+        {!!avatar && (
+          <UserAvatar
+            charIndex={avatar.charIndex}
+            size={imageSize}
+            avatar={
+              isTripAdvisor
+                ? thirdPartyCrawlSources.tripadvisor.image
+                : isYelp
+                ? thirdPartyCrawlSources.yelp.image
+                : avatar.image
+            }
+          />
+        )}
+      </VStack>
+
+      <Spacer size="lg" />
+
+      <HStack alignItems="center" spacing>
+        {!!name && (
+          <Link
+            name="user"
+            params={{ username: name }}
+            pointerEvents="auto"
+            maxWidth="100%"
+            flex={1}
+            fontSize={13}
+            ellipse
+          >
+            {name}
+          </Link>
+        )}
+
+        {!!name && <Middot />}
+
+        {!!date && (
+          <>
+            <Paragraph flexShrink={0} size="sm" opacity={0.5}>
+              {getTimeFormat(new Date(date))}
+            </Paragraph>
+          </>
+        )}
+
+        {!!date && <Middot />}
+
+        {after}
+      </HStack>
+    </HStack>
+  )
+
   return (
     <VStack
       maxWidth="100%"
@@ -185,9 +244,12 @@ function CommentBubbleContents({
     >
       {before}
 
+      {chromeless && metaContents}
+
       {/* main card */}
       <VStack
-        padding={15}
+        paddingHorizontal={15}
+        paddingVertical={10}
         marginLeft={20}
         backgroundColor={theme.cardBackgroundColor}
         borderRadius={20}
@@ -198,32 +260,58 @@ function CommentBubbleContents({
         shadowOffset={{ height: 3, width: 0 }}
         height={bubbleHeight}
         pointerEvents="auto"
+        {...(chromeless && {
+          backgroundColor: 'transparent',
+          paddingLeft: 0,
+          paddingRight: 0,
+          shadowColor: 'transparent',
+        })}
       >
         {/* tiny bottom left bubble */}
-        <AbsoluteVStack
-          bottom={-10}
-          left={0}
-          width={20}
-          height={20}
-          borderRadius={100}
-          backgroundColor={theme.cardBackgroundColor}
-          shadowColor={theme.shadowColorLighter}
-          shadowRadius={4}
-          shadowOffset={{ height: 3, width: -3 }}
-        />
-
-        {scrollable ? (
-          <ScrollView
-            pointerEvents="auto"
-            style={{ maxHeight: Math.min(getWindowHeight() * 0.8, 600) }}
-          >
-            {contents}
-          </ScrollView>
-        ) : (
-          contents
+        {!chromeless && (
+          <AbsoluteVStack
+            bottom={-10}
+            left={0}
+            width={20}
+            height={20}
+            borderRadius={100}
+            backgroundColor={theme.cardBackgroundColor}
+            shadowColor={theme.shadowColorLighter}
+            shadowRadius={4}
+            shadowOffset={{ height: 3, width: -3 }}
+          />
         )}
 
-        {!!(date || belowContent) && (
+        {!!contents && (
+          <>
+            {chromeless && (
+              <>
+                <Divider />
+                <Spacer size="lg" />
+              </>
+            )}
+
+            {scrollable ? (
+              <ScrollView
+                pointerEvents="auto"
+                style={{ maxHeight: Math.min(getWindowHeight() * 0.8, 600) }}
+              >
+                {contents}
+              </ScrollView>
+            ) : (
+              contents
+            )}
+
+            {chromeless && (
+              <>
+                <Spacer size="lg" />
+                <Divider />
+              </>
+            )}
+          </>
+        )}
+
+        {!!belowContent && (
           <>
             <Spacer size="sm" />
             {belowContent}
@@ -231,61 +319,7 @@ function CommentBubbleContents({
         )}
       </VStack>
 
-      <HStack y={-6} alignItems="center" width={circleSize}>
-        <VStack
-          borderRadius={100}
-          backgroundColor={
-            avatarBackgroundColor ?? (isYelp ? thirdPartyCrawlSources.yelp.color : colors.color200)
-          }
-        >
-          {!avatar && <User color={theme.color} size={imageSize} />}
-          {!!avatar && (
-            <UserAvatar
-              charIndex={avatar.charIndex}
-              size={imageSize}
-              avatar={
-                isTripAdvisor
-                  ? thirdPartyCrawlSources.tripadvisor.image
-                  : isYelp
-                  ? thirdPartyCrawlSources.yelp.image
-                  : avatar.image
-              }
-            />
-          )}
-        </VStack>
-
-        <Spacer size="lg" />
-
-        <HStack alignItems="center" spacing>
-          {!!name && (
-            <Link
-              name="user"
-              params={{ username: name }}
-              pointerEvents="auto"
-              maxWidth="100%"
-              flex={1}
-              fontSize={13}
-              ellipse
-            >
-              {name}
-            </Link>
-          )}
-
-          {!!name && <Middot />}
-
-          {!!date && (
-            <>
-              <Paragraph flexShrink={0} size="sm" opacity={0.5}>
-                {getTimeFormat(new Date(date))}
-              </Paragraph>
-            </>
-          )}
-
-          {!!date && <Middot />}
-
-          {after}
-        </HStack>
-      </HStack>
+      {!chromeless && metaContents}
     </VStack>
   )
 }

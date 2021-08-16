@@ -51,6 +51,7 @@ import { ContentScrollView } from '../../views/ContentScrollView'
 import { FavoriteButton } from '../../views/FavoriteButton'
 import { Link } from '../../views/Link'
 import { useListFavorite } from '../../views/list/useList'
+import { PageHead } from '../../views/PageHead'
 import { PaneControlButtons, PaneControlButtonsLeft } from '../../views/PaneControlButtons'
 import { ScalingPressable } from '../../views/ScalingPressable'
 import { Score } from '../../views/Score'
@@ -367,7 +368,10 @@ const ListPageContent = graphql((props: Props) => {
   // <Theme name={themeName === 'dark' ? `green-${themeName}` : 'green'}>
   return (
     <>
-      <StackDrawer closable title={`${username}'s ${list.name}`}>
+      <StackDrawer closable>
+        <PageHead isActive={props.isActive}>{`${username}'s ${list.name}${
+          region.data?.name ? `in ${region.data.name}` : ''
+        }`}</PageHead>
         {props.isActive && isMyList && (
           <BottomFloatingArea>
             <Button
@@ -548,6 +552,7 @@ const ListPageContent = graphql((props: Props) => {
             {!!(list.description || isEditing) && (
               <>
                 <CommentBubble
+                  chromeless={listTheme === 'minimal'}
                   paddingHorizontal={20}
                   date={list.created_at}
                   after={
@@ -755,30 +760,13 @@ const ListPageTitle = ({
             <VStack
               alignItems="flex-start"
               justifyContent="flex-end"
-              minHeight={200}
               width="100%"
               paddingHorizontal={25}
             >
               <Spacer size={84} />
               <Title width="100%" size="xxxl" color={textColor}>
-                {titleContents}
+                {titleContents} <Text opacity={0.5}>{locationName ?? 'anywhere'}</Text>
               </Title>
-
-              <Spacer size="lg" />
-
-              <HStack opacity={0.5} spacing="lg" alignItems="center">
-                <Link name="user" params={{ username: list.user?.username ?? '' }}>
-                  <Paragraph scale={1} size="md">
-                    by {list.user?.username ?? '...'}'s
-                  </Paragraph>
-                </Link>
-
-                <Paragraph>&middot;</Paragraph>
-
-                <Title fontWeight="300" zIndex={-1} size="xs">
-                  {locationName ?? 'anywhere'}
-                </Title>
-              </HStack>
             </VStack>
           )}
 
