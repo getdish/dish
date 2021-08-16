@@ -1,22 +1,11 @@
 import { series, sleep } from '@dish/async'
-import { clamp } from 'lodash'
-import { default as React, useEffect, useRef, useState } from 'react'
-import {
-  Animated,
-  Dimensions,
-  Image,
-  PanResponder,
-  Platform,
-  StyleSheet,
-  Text,
-  View,
-} from 'react-native'
+import { default as React, useEffect, useState } from 'react'
+import { Dimensions } from 'react-native'
 import { AbsoluteVStack, LoadingItems, StackProps, VStack, useMedia, useTheme } from 'snackui'
 
 import { drawerBorderRadius, drawerWidthMax } from '../../constants/constants'
 import { STACK_ANIMATION_DURATION } from '../home/HomeStackView'
 import { HomeSuspense } from '../home/HomeSuspense'
-import { PageHead } from './PageHead'
 import { StackCloseButton } from './StackCloseButton'
 
 export type StackDrawerProps = StackProps & {
@@ -48,7 +37,6 @@ export const StackDrawer = ({
 
   return (
     <>
-      {!!title && <PageHead>{title}</PageHead>}
       <AbsoluteVStack
         position="absolute"
         left={media.sm ? 0 : 'auto'}

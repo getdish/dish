@@ -1,4 +1,5 @@
-import { ArrowUp, ChevronLeft, MapPin, Search } from '@dish/react-feather'
+import { slugify } from '@dish/graph'
+import { ArrowUp, ChevronLeft, MapPin, Plus, Search } from '@dish/react-feather'
 import { useStoreInstance } from '@dish/use-store'
 import React, { Suspense, memo } from 'react'
 import { TouchableOpacity } from 'react-native'
@@ -6,10 +7,13 @@ import { HStack, Spacer, VStack, useMedia } from 'snackui'
 
 import { isWeb, searchBarHeight } from '../constants/constants'
 import { AppMenuButton } from './AppMenuButton'
+import { AppMenuLinkButton } from './AppMenuLinkButton'
 import { AppSearchInput } from './AppSearchInput'
 import { AppSearchInputLocation } from './AppSearchInputLocation'
 import { autocompletesStore } from './AutocompletesStore'
 import { homeStore, useHomeStoreSelector } from './homeStore'
+import { UserMenuButton } from './UserMenuButton'
+import { useUserStore } from './userStore'
 import { DishLogoButton } from './views/DishLogoButton'
 import { Link } from './views/Link'
 
@@ -18,6 +22,7 @@ export const AppSearchBarContents = memo(({ isColored }: { isColored: boolean })
   const focus = autocompletes.visible ? autocompletes.target : false
   const media = useMedia()
   const showLocation = focus === 'location'
+  const userStore = useUserStore()
 
   const searchInputEl = <AppSearchInput key={0} />
   const searchLocationEl = <AppSearchInputLocation key={1} />
@@ -103,7 +108,7 @@ export const AppSearchBarContents = memo(({ isColored }: { isColored: boolean })
             {...(media.sm && {
               maxWidth: focus === 'search' ? 120 : focus === 'location' ? '100%' : '25%',
             })}
-            flex={1}
+            flex={media.sm ? 1 : 10}
           >
             {searchLocationEl}
           </VStack>
@@ -131,7 +136,29 @@ export const AppSearchBarContents = memo(({ isColored }: { isColored: boolean })
 
       {!media.sm && !media.xs && (
         <>
-          <Spacer size={16} />
+          <Spacer />
+
+          {userStore.isLoggedIn && (
+            <>
+              <Suspense fallback={<Spacer size={32} />}>
+                <UserMenuButton />
+              </Suspense>
+            </>
+          )}
+
+          <VStack>
+            <AppMenuLinkButton
+              promptLogin
+              Icon={Plus}
+              tooltip="Create playlist"
+              name="list"
+              params={{
+                userSlug: slugify(userStore.user?.username ?? 'me'),
+                slug: 'create',
+              }}
+            />
+          </VStack>
+
           <Suspense fallback={null}>
             <AppMenuButton />
           </Suspense>

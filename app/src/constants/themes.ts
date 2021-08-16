@@ -1,14 +1,5 @@
 import { getColorsForColor } from '../helpers/getColorsForName'
-import {
-  colors as allColors,
-  bgAlt,
-  blue,
-  blue200,
-  blue300,
-  blue600,
-  colorNames,
-  pink,
-} from './colors'
+import { bgAlt, blue, blue200, blue600, colorNames, colors400 } from './colors'
 
 export type MyTheme = typeof dark
 export type MyThemes = typeof themes
@@ -20,8 +11,8 @@ const baseTheme = {
   colorQuartenary: '#444',
   shadowColor: `rgba(0,0,0,0.225)`,
   shadowColorLighter: `rgba(0,0,0,0.15)`,
-  backgroundColorTransluscent: '#1111133',
-  backgroundColorTransluscentHover: '#1111166',
+  backgroundColorTransluscent: '#1111144',
+  backgroundColorTransluscentHover: '#1111188',
   backgroundColorDarker: '#111111',
   backgroundColorTransparent: 'rgba(40,40,200,0)',
   cardBackgroundColor: '#333333',
@@ -135,7 +126,7 @@ const lightTranslucent: MyTheme = {
 const colorThemes: { [key: string]: MyTheme } = {}
 
 for (const [index, name] of colorNames.entries()) {
-  const color = allColors[index]
+  const color = colors400[index]
   const colors = getColorsForColor(color)
   colorThemes[name] = {
     name,

@@ -1,6 +1,5 @@
-import React, { useMemo } from 'react'
-import { StyleSheet } from 'react-native'
-import { AbsoluteVStack, HStack, LinearGradient, useTheme } from 'snackui'
+import React from 'react'
+import { HStack, useTheme } from 'snackui'
 
 import { RGB, rgbString } from '../../helpers/rgb'
 
@@ -26,7 +25,7 @@ export function GradientButton({
       borderWidth={bordered ? 1 : 0}
       borderColor={theme.backgroundColorSecondary}
       backgroundColor="transparent"
-      className="ease-in-out-faster safari-fix-overflow"
+      className="safari-fix-overflow"
       position="relative"
       overflow="hidden"
       // flexShrink={1}

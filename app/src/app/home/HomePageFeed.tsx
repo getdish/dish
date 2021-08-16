@@ -1,6 +1,6 @@
 import { RestaurantSearchItem, graphql, order_by, query, search } from '@dish/graph'
 import { isPresent } from '@dish/helpers'
-import { Plus } from '@dish/react-feather'
+import { Plus, X } from '@dish/react-feather'
 import React, { memo, useEffect, useState } from 'react'
 import {
   AbsoluteVStack,
@@ -19,6 +19,7 @@ import { getRestaurantIdentifiers } from '../../helpers/getRestaurantIdentifiers
 import { rgbString } from '../../helpers/rgb'
 import { selectTagDishViewSimple } from '../../helpers/selectDishViewSimple'
 import { homeStore } from '../homeStore'
+import { SmallCircleButton } from '../views/CloseButton'
 import { ContentScrollViewHorizontal } from '../views/ContentScrollViewHorizontal'
 import { Link } from '../views/Link'
 import { ListCardFrame } from '../views/list/ListCard'
