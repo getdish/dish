@@ -10,7 +10,7 @@ ENV PUPPETEER_SKIP_CHROMIUM_DOWNLOAD=true
 # install yarn
 RUN curl -sL https://dl.yarnpkg.com/debian/pubkey.gpg | gpg --dearmor | tee /usr/share/keyrings/yarnkey.gpg >/dev/null \
   && echo "deb [signed-by=/usr/share/keyrings/yarnkey.gpg] https://dl.yarnpkg.com/debian stable main" | tee /etc/apt/sources.list.d/yarn.list \
-  && apt-get update >/dev/null \ 
+  && apt-get update >/dev/null \
   && apt-get -qqy --no-install-recommends install yarn \
   && yarn set version berry \
   && apt-get clean
@@ -44,6 +44,7 @@ COPY services/hooks services/hooks
 COPY services/worker services/worker
 COPY app app
 COPY snackui snackui
+COPY etc/dsh_ctl_sh_deps etc/dsh_ctl_sh_deps
 
 # remove all tests even node modules
 RUN find . -type d \(  -name "test" -o -name "tests"  \) -print | xargs rm -rf && \
