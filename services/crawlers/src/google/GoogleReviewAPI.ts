@@ -61,7 +61,7 @@ export class GoogleReviewAPI extends WorkerJob {
   async getRestaurant(id: string) {
     const restaurant = await restaurantFindOne({ id })
     if (!restaurant) {
-      throw 'GoogleReviewAPI: No restaurant found for ID:' + id
+      throw new Error('GoogleReviewAPI: No restaurant found for ID:' + id)
     }
     if (!restaurant.geocoder_id) {
       sentryMessage('GoogleReviewAPI: restaurant.geocoder_id is empty', {
@@ -110,7 +110,7 @@ export class GoogleReviewAPI extends WorkerJob {
     const path = base_path + options.join(',')
     console.log('path', path)
     const response = await axios.get(path)
-    if (!response.data) throw 'GoogleReviewAPI: no response'
+    if (!response.data) throw new Error('GoogleReviewAPI: no response')
     return response.data
   }
 

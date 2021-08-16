@@ -143,7 +143,7 @@ export class GooglePuppeteer extends GooglePuppeteerJob {
         throw err
       }
     }
-    throw "GOOGLE CRAWLER: Couldn't get main page for: " + this.name
+    throw new Error("GOOGLE CRAWLER: Couldn't get main page for: " + this.name)
   }
 
   static convertTableToJSON(html: string) {
