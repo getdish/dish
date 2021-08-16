@@ -11,18 +11,10 @@ import { LogoColor } from './views/Logo'
 
 export const AppIntroLogin = memo(() => {
   const store = useStore(IntroModalStore)
-  const theme = useTheme()
 
   return (
     <>
-      <VStack
-        overflow="hidden"
-        borderRadius={20}
-        paddingTop={20}
-        // paddingVertical={20}
-        alignItems="center"
-        width="100%"
-      >
+      <VStack overflow="hidden" borderRadius={20} padding={30} alignItems="center">
         <LogoColor scale={2} />
         <TagLine />
 

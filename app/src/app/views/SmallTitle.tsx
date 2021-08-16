@@ -8,10 +8,10 @@ export const SmallTitle = memo(
     divider = 'bottom',
     after,
     color,
-    fontSize,
-    fontWeight,
+    fontSize = 16,
+    fontWeight = '500',
     lineHeight,
-    letterSpacing,
+    letterSpacing = -0.25,
     textAlign,
     ...rest
   }: StackProps &
@@ -22,30 +22,36 @@ export const SmallTitle = memo(
     }) => {
     const dividerElement = color ? <Divider backgroundColor={color} opacity={0.1} /> : <Divider />
     return (
-      <VStack alignItems="center" {...rest}>
-        <HStack width="100%" alignItems="center" justifyContent="center">
+      <VStack width="100%" alignItems="center" {...rest}>
+        <HStack width="100%" alignItems="center">
           {divider === 'center' && dividerElement}
           <Text
-            paddingHorizontal={30}
+            paddingHorizontal={20}
+            flexShrink={0}
             {...{
-              letterSpacing: letterSpacing ?? -0.25,
               color: color ?? (isActive ? '#000' : '#888'),
-              fontSize: fontSize ?? 16,
-              fontWeight: fontWeight ?? '500',
+              letterSpacing,
+              fontSize,
+              fontWeight,
               lineHeight,
               textAlign,
             }}
+            {...(divider === 'center' && {
+              flexGrow: 10,
+            })}
           >
             {children}
           </Text>
           {divider === 'center' && dividerElement}
-          {after && (
-            <>
-              <Spacer size="xs" />
-              {after}
-            </>
-          )}
         </HStack>
+
+        {after && (
+          <>
+            <Spacer size="xs" />
+            {after}
+          </>
+        )}
+
         {divider === 'bottom' && (
           <>
             <Spacer size="sm" />

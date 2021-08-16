@@ -33,115 +33,115 @@ export const AppMenuContents = memo(
         {...props}
       >
         <ScrollView>
-          <VStack>
-            {!isWeb && (
-              <VStack alignItems="center" justifyContent="center">
-                <LogoColor scale={1.5} />
-                <Spacer />
-              </VStack>
-            )}
+          {!isWeb && (
+            <VStack alignItems="center" justifyContent="center">
+              <LogoColor scale={1.5} />
+              <Spacer />
+            </VStack>
+          )}
 
-            {!isLoggedIn && (
-              <>
+          {!isLoggedIn && (
+            <>
+              <VStack padding={20}>
                 <AuthForm onDidLogin={hideUserMenu} />
-                <Divider />
-              </>
-            )}
+              </VStack>
+              <Divider />
+            </>
+          )}
 
-            {isLoggedIn && (
+          {isLoggedIn && (
+            <MenuLinkButton
+              name="user"
+              icon={<UserMenuButton />}
+              params={{
+                username: slugify(user?.username ?? ''),
+              }}
+            >
+              Profile
+            </MenuLinkButton>
+          )}
+
+          <MenuLinkButton
+            promptLogin
+            name="list"
+            params={{
+              userSlug: slugify(user?.username ?? 'me'),
+              slug: 'create',
+            }}
+          >
+            Create Playlist
+          </MenuLinkButton>
+
+          {isLoggedIn && user?.username === 'admin' && (
+            <MenuLinkButton name="adminTags">Admin</MenuLinkButton>
+          )}
+
+          {isLoggedIn && (
+            <>
+              <Divider />
+            </>
+          )}
+
+          <MenuLinkButton
+            iconAfter={<Sun color="rgba(150,150,150,0.5)" size={16} />}
+            onPress={(e) => {
+              e.stopPropagation()
+              e.preventDefault()
+              setTimeout(() => {
+                const next = (() => {
+                  switch (userStore.theme) {
+                    // 🏓 auto = null
+                    case 'dark':
+                      return null
+                    case 'light':
+                      return 'dark'
+                    case null:
+                      return 'light'
+                  }
+                })()
+                userStore.setTheme(next)
+              })
+            }}
+          >
+            {capitalize(userStore.theme ?? 'auto')}
+          </MenuLinkButton>
+
+          {/* {isWeb && <MenuLinkButton name="blog">Blog</MenuLinkButton>} */}
+          <MenuLinkButton name="about">About</MenuLinkButton>
+
+          {isLoggedIn && (
+            <>
+              <Divider />
               <MenuLinkButton
-                name="user"
-                icon={<UserMenuButton />}
-                params={{
-                  username: slugify(user?.username ?? ''),
+                onPress={() => {
+                  Toast.show(`Logging out...`)
+                  setTimeout(logout, 1000)
                 }}
               >
-                Profile
+                Logout
               </MenuLinkButton>
-            )}
+            </>
+          )}
 
-            <MenuLinkButton
-              promptLogin
-              name="list"
-              params={{
-                userSlug: slugify(user?.username ?? 'me'),
-                slug: 'create',
-              }}
-            >
-              Create Playlist
-            </MenuLinkButton>
+          {Object.keys(appStore.show).map((key) => {
+            return (
+              <MenuLinkButton
+                key={key}
+                onPress={() => {
+                  appStore.show = {
+                    ...appStore.show,
+                    [key]: !appStore.show[key],
+                  }
+                }}
+              >
+                Toggle {key}
+              </MenuLinkButton>
+            )
+          })}
 
-            {isLoggedIn && user?.username === 'admin' && (
-              <MenuLinkButton name="adminTags">Admin</MenuLinkButton>
-            )}
-
-            {isLoggedIn && (
-              <>
-                <Divider />
-              </>
-            )}
-
-            <MenuLinkButton
-              iconAfter={<Sun color="rgba(150,150,150,0.5)" size={16} />}
-              onPress={(e) => {
-                e.stopPropagation()
-                e.preventDefault()
-                setTimeout(() => {
-                  const next = (() => {
-                    switch (userStore.theme) {
-                      // 🏓 auto = null
-                      case 'dark':
-                        return null
-                      case 'light':
-                        return 'dark'
-                      case null:
-                        return 'light'
-                    }
-                  })()
-                  userStore.setTheme(next)
-                })
-              }}
-            >
-              {capitalize(userStore.theme ?? 'auto')}
-            </MenuLinkButton>
-
-            {/* {isWeb && <MenuLinkButton name="blog">Blog</MenuLinkButton>} */}
-            <MenuLinkButton name="about">About</MenuLinkButton>
-
-            {isLoggedIn && (
-              <>
-                <Divider />
-                <MenuLinkButton
-                  onPress={() => {
-                    Toast.show(`Logging out...`)
-                    setTimeout(logout, 1000)
-                  }}
-                >
-                  Logout
-                </MenuLinkButton>
-              </>
-            )}
-
-            {Object.keys(appStore.show).map((key) => {
-              return (
-                <MenuLinkButton
-                  key={key}
-                  onPress={() => {
-                    appStore.show = {
-                      ...appStore.show,
-                      [key]: !appStore.show[key],
-                    }
-                  }}
-                >
-                  Toggle {key}
-                </MenuLinkButton>
-              )
-            })}
-
-            <Paragraph position="absolute" bottom={0} left={0} opacity={0.05} size="xxs">
-              {isHermes ? 'hermes' : 'jsc'}
-            </Paragraph>
-          </VStack>
+          <Paragraph position="absolute" bottom={0} left={0} opacity={0.05} size="xxs">
+            {isHermes ? 'hermes' : 'jsc'}
+          </Paragraph>
         </ScrollView>
       </Box>
     )

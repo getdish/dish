@@ -74,13 +74,9 @@ export const AuthForm = memo(
               <SignInAppleButton />
             </VStack>
             <Spacer />
-            <HStack width="100%" alignItems="center">
-              <VStack height={1} flex={1} backgroundColor="rgba(255,255,255,0.1)" />
-              <SmallTitle fontSize={14} divider="center">
-                or
-              </SmallTitle>
-              <VStack height={1} flex={1} backgroundColor="rgba(255,255,255,0.1)" />
-            </HStack>
+            <SmallTitle fontSize={14} divider="center">
+              or
+            </SmallTitle>
           </>
         )}
 
