@@ -29,7 +29,6 @@ import { HomeStateItemHome } from '../../types/homeTypes'
 import { cancelUpdateRegion, useSetAppMap } from '../AppMap'
 import { autocompletesStore } from '../AutocompletesStore'
 import { homeStore, useHomeStateById } from '../homeStore'
-import { useLastValueWhen } from '../hooks/useLastValueWhen'
 import { useLocalStorageState } from '../hooks/useLocalStorageState'
 import { setInitialRegionSlug } from '../initialRegionSlug'
 import { IntroModalStore } from '../IntroModalStore'
@@ -50,31 +49,16 @@ import { PageContentWithFooter } from './PageContentWithFooter'
 type Props = HomeStackViewProps<HomeStateItemHome>
 
 export default memo(function HomePage(props: Props) {
-  const [didLoadOnce, setDidLoadOnce] = useState(false)
-
-  useEffect(() => {
-    if (props.isActive) {
-      setDidLoadOnce(true)
-    }
-  }, [props.isActive])
-
   return (
-    <>
-      {!didLoadOnce && (
+    <Suspense
+      fallback={
         <VStack marginTop={searchBarHeight}>
           <LoadingItems />
         </VStack>
-      )}
-      <Suspense
-        fallback={
-          <VStack marginTop={searchBarHeight}>
-            <LoadingItems />
-          </VStack>
-        }
-      >
-        <HomePageContent {...props} />
-      </Suspense>
-    </>
+      }
+    >
+      <HomePageContent {...props} />
+    </Suspense>
   )
 })
 
@@ -178,10 +162,6 @@ const HomePageContent = (props: Props) => {
             <HStack alignItems="center" paddingVertical={media.sm ? 10 : 15} paddingHorizontal={10}>
               <Link onPress={() => autocompletesStore.setTarget('location')}>
                 <SlantedTitle
-                  // borderBottomColor={regionColors.color}
-                  // borderBottomWidth={2}
-                  // backgroundColor={theme.backgroundColor}
-                  // color={regionColors.color}
                   backgroundColor={regionColors.color}
                   color="#fff"
                   minWidth={100}
@@ -250,7 +230,13 @@ const HomePageContent = (props: Props) => {
           {homeHeaderContent}
 
           <PageContentWithFooter>
-            <HomePageFeed item={state} regionName={regionName} region={region} {...position} />
+            <HomePageFeed
+              isActive={isActive}
+              item={state}
+              regionName={regionName}
+              region={region}
+              {...position}
+            />
           </PageContentWithFooter>
         </ContentScrollView>
       </VStack>

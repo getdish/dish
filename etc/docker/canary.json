@@ -1,0 +1,1 @@
+Get "https://desktop.docker.com/compose-canary.json": dial tcp: lookup desktop.docker.com on [::1]:53: read udp [::1]:55461->[::1]:53: read: connection refused

@@ -1,6 +1,6 @@
 import { RestaurantSearchItem, graphql, order_by, query, search } from '@dish/graph'
 import { isPresent } from '@dish/helpers'
-import { Plus, X } from '@dish/react-feather'
+import { Plus } from '@dish/react-feather'
 import React, { memo, useEffect, useState } from 'react'
 import {
   AbsoluteVStack,
@@ -13,13 +13,12 @@ import {
 } from 'snackui'
 
 import { cardFrameWidthLg } from '../../constants/constants'
-import { tagDefaultAutocomplete, tagLenses } from '../../constants/localTags'
+import { tagLenses } from '../../constants/localTags'
 import { getColorsForName } from '../../helpers/getColorsForName'
 import { getRestaurantIdentifiers } from '../../helpers/getRestaurantIdentifiers'
 import { rgbString } from '../../helpers/rgb'
 import { selectTagDishViewSimple } from '../../helpers/selectDishViewSimple'
 import { homeStore } from '../homeStore'
-import { SmallCircleButton } from '../views/CloseButton'
 import { ContentScrollViewHorizontal } from '../views/ContentScrollViewHorizontal'
 import { Link } from '../views/Link'
 import { ListCardFrame } from '../views/list/ListCard'
@@ -32,8 +31,11 @@ import { homePageStore } from './homePageStore'
 export const HomePageFeed = memo(
   graphql(
     (props: HomeFeedProps) => {
-      const { regionName, item } = props
-      const isLoading = !regionName
+      const { isActive, regionName, item } = props
+
+      if (!isActive) {
+        return <LoadingItems />
+      }
 
       // const [hovered, setHovered] = useState<null | MapHoveredRestaurant>(null)
       // useDebounceEffect(
@@ -44,17 +46,17 @@ export const HomePageFeed = memo(
       //   [hovered]
       // )
 
-      const restaurants = query
-        .restaurant({
-          order_by: [{ upvotes: order_by.desc }],
-          where: {
-            image: {
-              _is_null: false,
-            },
-          },
-          limit: 10,
-        })
-        ?.map((r) => ({ image: r.image, name: r.name }))
+      // const restaurants = query
+      //   .restaurant({
+      //     order_by: [{ upvotes: order_by.desc }],
+      //     where: {
+      //       image: {
+      //         _is_null: false,
+      //       },
+      //     },
+      //     limit: 10,
+      //   })
+      //   ?.map((r) => ({ image: r.image, name: r.name }))
 
       // const cuisinesQuery = query.tag({
       //   where: {
@@ -153,80 +155,72 @@ export const HomePageFeed = memo(
 
       return (
         <>
-          {isLoading && (
-            <AbsoluteVStack pointerEvents="none" zIndex={100} fullscreen>
-              <LoadingItems />
-            </AbsoluteVStack>
-          )}
+          <HStack position="relative">
+            <ContentScrollViewHorizontal>
+              <HStack spacing="xs" paddingHorizontal={16}>
+                {tagLenses.map((lense, i) => {
+                  // const foundList = lenseLists[i]
+                  return (
+                    <VStack alignItems="center" flex={1} key={i} marginBottom={20}>
+                      <Link
+                        // {...(foundList && {
+                        //   name: 'list',
+                        //   params: {
+                        //     slug: foundList?.slug ?? '',
+                        //     userSlug: foundList?.user?.username ?? '',
+                        //   },
+                        // })}
+                        // {...(!foundList && {
+                        //   tag: lense,
+                        // })}
+                        tag={lense}
+                      >
+                        <FeedCard
+                          flat
+                          chromeless
+                          size="xs"
+                          // size={foundList?.name ? 'sm' : 'xs'}
+                          square
+                          // title={foundList?.name}
+                          tags={[lense]}
+                          // photo={getListPhoto(foundList)}
+                          backgroundColor={rgbString(lense.rgb, 0.2)}
+                          emphasizeTag
+                        />
+                      </Link>
+                    </VStack>
+                  )
+                })}
 
-          {!isLoading && (
-            <VStack>
-              <HStack position="relative">
-                <ContentScrollViewHorizontal>
-                  <HStack spacing="xs" paddingHorizontal={16}>
-                    {tagLenses.map((lense, i) => {
-                      // const foundList = lenseLists[i]
-                      return (
-                        <VStack alignItems="center" flex={1} key={i} marginBottom={20}>
-                          <Link
-                            // {...(foundList && {
-                            //   name: 'list',
-                            //   params: {
-                            //     slug: foundList?.slug ?? '',
-                            //     userSlug: foundList?.user?.username ?? '',
-                            //   },
-                            // })}
-                            // {...(!foundList && {
-                            //   tag: lense,
-                            // })}
-                            tag={lense}
-                          >
-                            <FeedCard
-                              flat
-                              chromeless
-                              size="xs"
-                              // size={foundList?.name ? 'sm' : 'xs'}
-                              square
-                              // title={foundList?.name}
-                              tags={[lense]}
-                              // photo={getListPhoto(foundList)}
-                              backgroundColor={rgbString(lense.rgb, 0.2)}
-                              emphasizeTag
-                            />
-                          </Link>
-                        </VStack>
-                      )
-                    })}
-
-                    {tagLists.map((list, i) => {
-                      const tags = list
-                        .tags({ limit: 2 })
-                        .map((x) => (x.tag ? selectTagDishViewSimple(x.tag) : null))
-                        .filter(isPresent)
-                      return (
-                        <VStack alignItems="center" flex={1} key={i}>
-                          <Link tags={tags}>
-                            <FeedCard
-                              flat
-                              chromeless
-                              square
-                              size="xs"
-                              title={list.name}
-                              tags={tags}
-                              // photo={restaurants[i]?.image}
-                              emphasizeTag
-                            />
-                          </Link>
-                        </VStack>
-                      )
-                    })}
-                  </HStack>
-                </ContentScrollViewHorizontal>
+                {tagLists.map((list, i) => {
+                  const tags = list
+                    .tags({ limit: 2 })
+                    .map((x) => (x.tag ? selectTagDishViewSimple(x.tag) : null))
+                    .filter(isPresent)
+                  return (
+                    <VStack alignItems="center" flex={1} key={i}>
+                      <Link tags={tags}>
+                        <FeedCard
+                          flat
+                          chromeless
+                          square
+                          size="xs"
+                          title={list.name}
+                          tags={tags}
+                          // photo={restaurants[i]?.image}
+                          emphasizeTag
+                        />
+                      </Link>
+                    </VStack>
+                  )
+                })}
               </HStack>
+            </ContentScrollViewHorizontal>
+          </HStack>
 
-              <Spacer />
+          <Spacer />
 
-              {/* <HStack position="relative">
+          {/* <HStack position="relative">
                 <AbsoluteVStack zIndex={10} top={-10} left={10}>
                   <SlantedTitle size="xxs">Topics</SlantedTitle>
                 </AbsoluteVStack>
@@ -272,68 +266,66 @@ export const HomePageFeed = memo(
                 </ContentScrollViewHorizontal>
               </HStack> */}
 
-              <VStack paddingHorizontal={16} position="relative">
-                <AbsoluteVStack zIndex={100} top={-15} left={10}>
-                  <SlantedTitle size="xs">Playlists</SlantedTitle>
-                </AbsoluteVStack>
+          <VStack paddingHorizontal={16} position="relative">
+            <AbsoluteVStack zIndex={100} top={-15} left={10}>
+              <SlantedTitle size="xs">Playlists</SlantedTitle>
+            </AbsoluteVStack>
 
-                <Grid itemMinWidth={cardFrameWidthLg}>
-                  {trendingLists.map((list, i) => {
-                    // getListColor(list?.color) ?? '#999'
-                    const color = getColorsForName(list?.name || '').altPastelColor
-                    const numItems = list.restaurants_aggregate().aggregate?.count() ?? 0
-                    return (
-                      <VStack
-                        paddingHorizontal={5}
-                        alignItems="center"
-                        flex={1}
-                        key={i}
-                        marginBottom={26}
-                      >
-                        <ListCardFrame
-                          chromeless
-                          hoverEffect="background"
-                          flexible
-                          author={` by ${list?.user?.username ?? ''}`}
-                          numItems={numItems}
-                          size="lg"
-                          backgroundColor={`${color}25`}
-                          flat
-                          title={list?.name ?? ''}
-                          userSlug={list.user?.username ?? ''}
-                          slug={list?.slug ?? ''}
-                          tags={
-                            list
-                              ?.tags({ limit: 2 })
-                              ?.map((x) => (x.tag ? selectTagDishViewSimple(x.tag) : null))
-                              .filter(isPresent) ?? []
-                          }
-                          photo={getListPhoto(list)}
-                        />
-                      </VStack>
-                    )
-                  })}
+            <Grid itemMinWidth={cardFrameWidthLg}>
+              {trendingLists.map((list, i) => {
+                // getListColor(list?.color) ?? '#999'
+                const color = getColorsForName(list?.name || '').altPastelColor
+                const numItems = list.restaurants_aggregate().aggregate?.count() ?? 0
+                return (
+                  <VStack
+                    paddingHorizontal={5}
+                    alignItems="center"
+                    flex={1}
+                    key={i}
+                    marginBottom={26}
+                  >
+                    <ListCardFrame
+                      chromeless
+                      hoverEffect="background"
+                      flexible
+                      author={` by ${list?.user?.username ?? ''}`}
+                      numItems={numItems}
+                      size="lg"
+                      backgroundColor={`${color}25`}
+                      flat
+                      title={list?.name ?? ''}
+                      userSlug={list.user?.username ?? ''}
+                      slug={list?.slug ?? ''}
+                      tags={
+                        list
+                          ?.tags({ limit: 2 })
+                          ?.map((x) => (x.tag ? selectTagDishViewSimple(x.tag) : null))
+                          .filter(isPresent) ?? []
+                      }
+                      photo={getListPhoto(list)}
+                    />
+                  </VStack>
+                )
+              })}
 
-                  {trendingLists.length < 8 &&
-                    [...new Array(8 - trendingLists.length)].map((_, index) => (
-                      <VStack alignItems="center" flex={1} key={index} marginBottom={20}>
-                        <Link
-                          name="list"
-                          params={{
-                            userSlug: 'me',
-                            slug: 'create',
-                          }}
-                        >
-                          <FeedCard chromeless size="lg" flat>
-                            <Plus color="#eeeeee" />
-                          </FeedCard>
-                        </Link>
-                      </VStack>
-                    ))}
-                </Grid>
-              </VStack>
-            </VStack>
-          )}
+              {trendingLists.length < 8 &&
+                [...new Array(8 - trendingLists.length)].map((_, index) => (
+                  <VStack alignItems="center" flex={1} key={index} marginBottom={20}>
+                    <Link
+                      name="list"
+                      params={{
+                        userSlug: 'me',
+                        slug: 'create',
+                      }}
+                    >
+                      <FeedCard chromeless size="lg" flat>
+                        <Plus color="#eeeeee" />
+                      </FeedCard>
+                    </Link>
+                  </VStack>
+                ))}
+            </Grid>
+          </VStack>
         </>
       )
     },
