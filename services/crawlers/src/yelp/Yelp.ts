@@ -193,7 +193,7 @@ export class Yelp extends WorkerJob {
     const coords = [top_right[1], top_right[0], bottom_left[1], bottom_left[0]].join(',')
     const bb = encodeURIComponent('g:' + coords)
     const uri = `/search/snippet?cflt=${category}&l=${bb}&start=${start}`
-    const response = await yelpAPI.getJSON(uri)
+    const response: any = await yelpAPI.getJSON(uri)
     if (!response) {
       this.log('no response!', response)
       return []

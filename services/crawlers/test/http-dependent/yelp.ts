@@ -12,6 +12,7 @@ test.beforeEach(async () => {
 })
 
 test('Gets and persists a restaurant', async (t) => {
+  console.log('get and persist')
   const yelp = new Yelp()
   await yelp.getRestaurants({
     top_right: [37.759065, -122.412375],

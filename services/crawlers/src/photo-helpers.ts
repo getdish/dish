@@ -98,7 +98,7 @@ function normalizePhotos(photos: Partial<PhotoXref>[]) {
   next = uniqBy(next, (el) => [el.tag_id, el.restaurant_id, el.photo?.url].join())
   return next.map((p) => {
     if (!p.photo || !p.photo.url) {
-      throw 'Photo must have URL'
+      throw new Error('Photo must have URL')
     }
     p.photo.origin = p.photo?.url
     return p
@@ -117,7 +117,7 @@ export async function uploadToDO(photos: Partial<PhotoXref>[]) {
   if (!not_uploaded) return
   const uploaded = await uploadToDOSpaces(not_uploaded)
   const updated = uploaded.map((p) => {
-    if (!p.photo) throw 'uploadToDO() No photo!?'
+    if (!p.photo) throw new Error('uploadToDO() No photo!?')
     return {
       id: p.photo.id,
       url: DO_BASE + p.photo_id,

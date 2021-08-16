@@ -56,7 +56,7 @@ export async function scrapeFindOneBySourceID(source: string, id: string, allow_
     if (allow_not_found) {
       return null
     } else {
-      throw 'Scrape not found: ' + id
+      throw new Error('Scrape not found: ' + id)
     }
   }
   result.rows[0].location = parseLocation(result.rows[0].location)

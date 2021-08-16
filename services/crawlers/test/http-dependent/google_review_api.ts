@@ -20,12 +20,12 @@ test('Gets and persists a restaurant', async (t) => {
     restaurant = await restaurantFindOne({ name })
   }
   t.assert(restaurant)
-  if (!restaurant) throw 'No restaurant in google_review_api test'
+  if (!restaurant) throw new Error('No restaurant in google_review_api test')
   const gra = new GoogleReviewAPI()
   await gra.getRestaurant(restaurant.id)
   const scrape = await scrapeFindOneBySourceID('google_review_api', ID)
   t.assert(scrape)
-  if (!scrape) throw 'No scrape'
+  if (!scrape) throw new Error('No scrape')
   // console.log('google_review scrape.data', scrape.data)
   const review = scrape.data.reviews[0]
   t.assert(review.name != '')

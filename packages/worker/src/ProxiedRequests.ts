@@ -116,7 +116,7 @@ export class ProxiedRequests {
         console.log('ProxiedRequests.get', url)
         const res = await Promise.race([fetch(url, options), tm])
         if (res === 'failed') {
-          throw `ProxiedRequests.get Timed out`
+          throw new Error(`ProxiedRequests.get Timed out`)
         }
         if (res.status !== 200) {
           console.warn('⚠️ non 200 response: ', res.status, res.statusText)

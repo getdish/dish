@@ -298,7 +298,7 @@ export class Tripadvisor extends WorkerJob {
   extractDetailID(path: string) {
     const re = new RegExp(/-d([0-9]*)-/)
     let matches = re.exec(path)
-    if (!matches) throw "Couldn't parse detail_id from Tripadvisor URL"
+    if (!matches) throw new Error("Couldn't parse detail_id from Tripadvisor URL")
     const detail_id = matches[1]
     return detail_id
   }
@@ -360,7 +360,7 @@ export async function tripadvisorGetFBC() {
   const t = new Tripadvisor()
   await t.getRestaurant(tripadvisor_fbc)
   const restaurant = await restaurantFindOne({ name: 'Fresh Brew Coffee' })
-  if (!restaurant) throw 'No restaurant after hot fetching Fresh Brew Coffee'
+  if (!restaurant) throw new Error('No restaurant after hot fetching Fresh Brew Coffee')
   const geocoder = new GoogleGeocoder()
   const query = restaurant.name + ',' + restaurant.address
   const lon = restaurant.location.coordinates[0]
