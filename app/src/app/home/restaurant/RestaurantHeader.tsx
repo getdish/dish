@@ -1,13 +1,12 @@
 import { graphql } from '@dish/graph'
 import { Clock } from '@dish/react-feather'
 import React, { Suspense, memo, useState } from 'react'
-import { AbsoluteVStack, HStack, Spacer, Text, Theme, VStack } from 'snackui'
+import { AbsoluteVStack, HStack, Spacer, Text, Theme, VStack, useMedia } from 'snackui'
 
 import { drawerBorderRadius, isWeb } from '../../../constants/constants'
 import { useColorsFor } from '../../../helpers/useColorsFor'
 import { queryRestaurant } from '../../../queries/queryRestaurant'
 import { HomeStateItemRestaurant } from '../../../types/homeTypes'
-import { ContentScrollViewHorizontalFitted } from '../../views/ContentScrollViewHorizontalFitted'
 import { Link } from '../../views/Link'
 import { PaneControlButtonsLeft } from '../../views/PaneControlButtons'
 import { RestaurantOverview } from '../../views/restaurant/RestaurantOverview'
@@ -32,9 +31,10 @@ type RestaurantHeaderProps = {
 }
 
 export const RestaurantHeader = (props: RestaurantHeaderProps) => {
+  const media = useMedia()
   return (
     <Suspense fallback={<VStack minHeight={props.minHeight} />}>
-      <RestaurantHeaderContent {...props} />
+      <RestaurantHeaderContent size={media.sm ? 'sm' : 'md'} {...props} />
     </Suspense>
   )
 }
@@ -53,10 +53,10 @@ const RestaurantHeaderContent = memo(
       // const { width, drawerWidth, minWidth, setWidthDebounce } = useContentScrollHorizontalFitter()
       const scale = 1
       // const scale = width < 601 ? 0.7 : drawerWidth < 700 ? 0.85 : 1
-      const fontScale = size === 'sm' ? 0.9 : 1.3
+      const fontScale = size === 'sm' ? 0.75 : 1.25
       const fontSizeBase =
         nameLen > 40 ? 18 : nameLen > 30 ? 22 : nameLen > 24 ? 26 : nameLen > 16 ? 28 : 32
-      const fontSize = scale * fontSizeBase * fontScale
+      const fontSize = Math.round(scale * fontSizeBase * fontScale)
       const restaurantId = restaurant.id
       const [hasScrolled, setHasScrolled] = useState(false)
       const colors = useColorsFor(restaurantSlug)
