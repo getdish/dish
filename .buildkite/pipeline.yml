@@ -106,7 +106,7 @@ steps:
   # tests
 
   - label: "prepush images to registry"
-    if: build.branch == "production" || build.branch == "nate/dev"
+    if: build.branch == "production"
     key: push-images
     # note this trick means it runs before the wait
     depends_on: test-images
