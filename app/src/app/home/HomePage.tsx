@@ -29,6 +29,7 @@ import { HomeStateItemHome } from '../../types/homeTypes'
 import { cancelUpdateRegion, useSetAppMap } from '../AppMap'
 import { autocompletesStore } from '../AutocompletesStore'
 import { homeStore, useHomeStateById } from '../homeStore'
+import { useLastValueWhen } from '../hooks/useLastValueWhen'
 import { useLocalStorageState } from '../hooks/useLocalStorageState'
 import { setInitialRegionSlug } from '../initialRegionSlug'
 import { IntroModalStore } from '../IntroModalStore'
@@ -190,6 +191,11 @@ const HomePageContent = (props: Props) => {
     )
   }, [regionColors.color, regionName])
 
+  const [loaded, setLoaded] = useState(false)
+  useEffect(() => {
+    props.isActive && setLoaded(true)
+  }, [props.isActive])
+
   return (
     <>
       <PageHead isActive={props.isActive}>Dish - Uniquely Great Food</PageHead>
@@ -230,13 +236,18 @@ const HomePageContent = (props: Props) => {
           {homeHeaderContent}
 
           <PageContentWithFooter>
-            <HomePageFeed
-              isActive={isActive}
-              item={state}
-              regionName={regionName}
-              region={region}
-              {...position}
-            />
+            {/* TODO pass isActive once gqty supports skeleton loading */}
+            {loaded ? (
+              <HomePageFeed
+                isActive={isActive}
+                item={state}
+                regionName={regionName}
+                region={region}
+                {...position}
+              />
+            ) : (
+              <LoadingItems />
+            )}
           </PageContentWithFooter>
         </ContentScrollView>
       </VStack>

@@ -33,10 +33,6 @@ export const HomePageFeed = memo(
     (props: HomeFeedProps) => {
       const { isActive, regionName, item } = props
 
-      if (!isActive) {
-        return <LoadingItems />
-      }
-
       // const [hovered, setHovered] = useState<null | MapHoveredRestaurant>(null)
       // useDebounceEffect(
       //   () => {
