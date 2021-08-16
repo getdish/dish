@@ -1,5 +1,4 @@
 import { series, sleep } from '@dish/async'
-import { isEqual } from '@dish/fast-compare'
 import { RestaurantSearchItem, slugify } from '@dish/graph'
 import { ArrowUp } from '@dish/react-feather'
 import { HistoryItem } from '@dish/router'
@@ -34,9 +33,7 @@ import {
 import { isWeb } from '../../../constants/constants'
 import { addTagsToCache, allTags } from '../../../helpers/allTags'
 import { getTitleForState } from '../../../helpers/getTitleForState'
-import { roundLngLat } from '../../../helpers/mapHelpers'
 import { getFullTagsFromRoute } from '../../../helpers/syncStateFromRoute'
-import { syncStateToRoute } from '../../../helpers/syncStateToRoute'
 import { useQueryLoud } from '../../../helpers/useQueryLoud'
 import { router } from '../../../router'
 import { HomeStateItemSearch } from '../../../types/homeTypes'
@@ -58,7 +55,7 @@ import { SearchPagePropsContext } from './SearchPagePropsContext'
 import { searchPageStore, useSearchPageStore } from './SearchPageStore'
 import { SearchProps } from './SearchProps'
 import { searchResultsStore } from './searchResultsStore'
-import { regionPositions, useLocationFromRoute } from './useLocationFromRoute'
+import { useLocationFromRoute } from './useLocationFromRoute'
 
 export default memo(function SearchPage(props: SearchProps) {
   const state = useHomeStateById<HomeStateItemSearch>(props.item.id)
