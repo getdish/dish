@@ -54,7 +54,7 @@ import { openingHours, priceRange } from './RestaurantDetailRow'
 import { RestaurantFavoriteStar } from './RestaurantFavoriteButton'
 import { useTotalReviews } from './useTotalReviews'
 
-export const ITEM_HEIGHT = 170
+export const ITEM_HEIGHT = 180
 
 type RestaurantListItemProps = {
   curLocInfo: GeocodePlace | null
@@ -211,7 +211,7 @@ const RestaurantListItemContent = memo(
         : nameLen > 15
         ? 1
         : 1
-    const titleFontSize = Math.round((media.sm ? 21 : 23) * titleFontScale)
+    const titleFontSize = Math.round((media.sm ? 20 : 23) * titleFontScale)
     const titleHeight = titleFontSize + 8 * 2
     const score = Math.round((meta?.effective_score ?? 0) / 20)
     const theme = useTheme()
@@ -228,7 +228,7 @@ const RestaurantListItemContent = memo(
           restaurantSlug={restaurantSlug}
           restaurantId={restaurantId}
           spacing={0}
-          spacingHorizontal={27}
+          spacingHorizontal={0}
           max={4}
         />
       </Suspense>
@@ -497,10 +497,11 @@ const RestaurantListItemContent = memo(
             <RestaurantDeliveryButtons label="" restaurantSlug={restaurantSlug} />
           </Suspense>
 
-          <Spacer size="sm" />
-
           {tagsRowContent}
         </HStack>
+
+        {/* bottom spacing */}
+        <Spacer height={10} />
       </VStack>
     )
   })
@@ -522,7 +523,6 @@ const RestaurantListItemScoreBreakdown = memo(
           {restaurantTags.map((rtag) => {
             return (
               <TagButton
-                backgroundColor="transparent"
                 key={rtag.slug}
                 {...getTagButtonProps(rtag)}
                 votable
@@ -584,7 +584,7 @@ const RestaurantPeekDishes = memo(
           paddingHorizontal={20}
           paddingVertical={0}
           // this is to pull it up near title
-          marginTop={-50}
+          marginTop={-35}
           x={-15}
           alignItems="center"
         >

@@ -21,6 +21,8 @@
 
 # inbox
 
+- duplicate image check, i beleive i started on this by adding a hash function that we could check against but didnt finish
+
 - login/signup forms need a upgrade runthrough:
   - default to login if they have a cookie showing they've been logged in before
   - if they autocomplete the signup form, we can either move them to login or at least copy the values into login

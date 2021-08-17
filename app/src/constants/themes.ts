@@ -87,8 +87,9 @@ const darkTranslucent: MyTheme = {
 
 const lightBase = {
   colorAlt: blue,
-  backgroundColorTransluscent: '#ffffff22',
-  backgroundColorTransluscentHover: '#ffffff33',
+  // restaurantitem header wants this to be off white
+  backgroundColorTransluscent: '#f2f2f222',
+  backgroundColorTransluscentHover: '#f2f2f233',
   backgroundColorDarker: '#f6f6f6',
   backgroundColorAlt: blue200,
   borderColor: '#f2f2f2',
@@ -156,12 +157,12 @@ for (const [index, name] of colorNames.entries()) {
     colorTertiary: colors.color500,
     colorQuartenary: colors.color400,
     cardBackgroundColor: '#fff',
-    backgroundColor: colors.color50,
-    backgroundColorSecondary: colors.color100,
-    backgroundColorTertiary: colors.color200,
-    backgroundColorQuartenary: colors.color300,
-    backgroundColorTransluscent: `${colors.color50}55`,
-    backgroundColorTransluscentHover: `${colors.color50}33`,
+    backgroundColor: colors.color25,
+    backgroundColorSecondary: colors.color50,
+    backgroundColorTertiary: colors.color100,
+    backgroundColorQuartenary: colors.color200,
+    backgroundColorTransluscent: `${colors.color25}55`,
+    backgroundColorTransluscentHover: `${colors.color25}33`,
     borderColor: colors.altPastelColor,
     backgroundColorAlt: colors.color200,
   }

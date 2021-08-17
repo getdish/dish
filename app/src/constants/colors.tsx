@@ -6,22 +6,31 @@ export const darkGrey = `#555555`
 // all indices must match going down
 export const colorNames = ['yellow', 'pink', 'green', 'red', 'orange', 'blue', 'purple'] as const
 
-export const yellow50 = '#F7F6EB'
-export const pink50 = '#F7EDF1'
-export const green50 = '#EDF7F2'
-export const red50 = '#F7F1ED'
-export const orange50 = '#FFF9F5'
-export const blue50 = '#F0FAFF'
-export const purple50 = '#F5EEF8'
+export const yellow25 = '#F7F6EB'
+export const pink25 = '#F7EDF1'
+export const green25 = '#EDF7F2'
+export const red25 = '#F7F1ED'
+export const orange25 = '#FFF9F5'
+export const blue25 = '#F0FAFF'
+export const purple25 = '#F5EEF8'
+export const colors25 = [yellow25, pink25, green25, red25, orange25, blue25, purple25]
+
+export const yellow50 = '#F7F3DA'
+export const pink50 = '#F7D7E2'
+export const green50 = '#D7F7E5'
+export const red50 = '#F7E6DA'
+export const orange50 = '#F7E6DA'
+export const blue50 = '#DAEDF7'
+export const purple50 = '#EADAF8'
 export const colors50 = [yellow50, pink50, green50, red50, orange50, blue50, purple50]
 
-export const yellow100 = '#F7F3DA'
-export const pink100 = '#F7D7E2'
-export const green100 = '#D7F7E5'
-export const red100 = '#F7E6DA'
-export const orange100 = '#F7E6DA'
-export const blue100 = '#DAEDF7'
-export const purple100 = '#C2A2E0'
+export const yellow100 = '#F0EAC5'
+export const pink100 = '#F2C7D5'
+export const green100 = '#C9F2DB'
+export const red100 = '#F2C7C7'
+export const orange100 = '#F2D9C7'
+export const blue100 = '#C7D4F2'
+export const purple100 = '#DDC7F2'
 export const colors100 = [yellow100, pink100, green100, red100, orange100, blue100, purple100]
 
 export const yellow200 = '#E0D8A2'
@@ -42,10 +51,10 @@ export const blue300 = '#7F90BA'
 export const purple300 = '#9B7DB8'
 export const colors300 = [yellow300, pink300, green300, red300, orange300, blue300, purple300]
 
-export const yellow400 = '#C7B750'
+export const yellow400 = '#C7B85A'
 export const pink400 = '#C7507C'
-export const green400 = '#4ABA7B'
-export const red400 = '#C75050'
+export const green400 = '#4CB57A'
+export const red400 = '#C45151'
 export const orange400 = '#C78150'
 export const blue400 = '#5072C7'
 export const purple400 = '#8D50C7'
@@ -104,10 +113,11 @@ export const red = red400
 export const orange = orange400
 export const blue = blue400
 export const purple = purple400
-export const colors = [yellow, pink, green, red, orange, blue, purple]
+export const colors = colors400
 
 export const colorObjects: {
   name: string
+  color25: string
   color50: string
   color100: string
   color200: string
@@ -127,6 +137,7 @@ for (const [index, name] of colorNames.entries()) {
   const altIndex = (index + 1) % colors.length
   colorObjects[index] = {
     name,
+    color25: colors25[index],
     color50: colors50[index],
     color100: colors100[index],
     color200: colors200[index],
