@@ -28,7 +28,7 @@ function run() {
     source .env.development
     source .env.local
   fi
-  if [ "$VERBOSITY" -gt "0" ]; then
+  if [ "$DISH_DEBUG" -gt "2" ]; then
     echo "executing: $ORIGINAL_ARGS in $CWD_DIR"
   fi
   pushd "$CWD_DIR"

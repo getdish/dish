@@ -62,13 +62,6 @@ export class Start extends Command {
     const { flags } = this.parse(Start)
     const rootDir = process.cwd()
 
-    if (flags['local-proxy']) {
-      process.env.LOCAL_HOST = require('child_process')
-        .execSync('ipconfig getifaddr en0')
-        .toString()
-        .trim()
-    }
-
     const config: ServerConfig = {
       rootDir,
       port: flags.port,

@@ -69,7 +69,7 @@ function deploy_dish_stack() {
 function deploy_dish() {
   echo "deploying dish - $DISH_ENV $POSTGRES_DB $POSTGRES_DB_DIR"
 
-  updateable_services="_app|_cron|_hasura|_hasura|_hooks|_search|_site|_worker"
+  updateable_services="_app|_cron|_hasura|_hooks|_search|_site|_worker"
   services=$(docker stack services --format "{{.Name}}" dish | grep -E "$updateable_services")
 
   echo "$services" | while read -r service; do

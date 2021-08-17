@@ -5,18 +5,26 @@ if [ "$KEEP_ALIVE" != "true" ]; then
 fi
 
 if command -v git &> /dev/null; then
-  DEV_USER=$(git config user.email | tr -d "[:space:]")
+  export DEV_USER=$(git config user.email | tr -d "[:space:]")
+fi
+
+if command -v ipconfig &> /dev/null; then
+  LOCAL_HOST=$(ipconfig getifaddr en0)
 fi
 
 if [ "$DEV_USER" = "tom@tombh.co.uk" ]; then
-  VERBOSITY=${VERBOSITY:-"0"}
+  DISH_DEBUG=${DISH_DEBUG:-"0"}
+fi
+
+if [ "$DEV_USER" = "natewienert@gmail.com" ]; then
+  DISH_DEBUG=${DISH_DEBUG:-"2"}
 fi
 
 CWD_DIR=$(pwd)
 DISH_ENV="${DISH_ENV:-production}"
 ENV_FILE=".env.$DISH_ENV"
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" &>/dev/null && pwd)"
-VERBOSITY=${VERBOSITY:-"1"}
+export LOCAL_HOST=${LOCALHOST:-"localhost"}
 export PROJECT_ROOT=$SCRIPT_DIR
 export DOCKER_CONFIG="$PROJECT_ROOT/etc/docker"
 
@@ -42,7 +50,7 @@ popd >/dev/null
 
 function_to_run=$1
 
-if [ "$VERBOSITY" -gt "0" ]; then
+if [ "$DISH_DEBUG" -gt "0" ]; then
   echo "dsh -- env $DISH_ENV in $PROJECT_ROOT running $function_to_run $GIT_COMMIT"
 fi
 
@@ -56,6 +64,13 @@ fi
 shift
 ORIGINAL_ARGS="$@"
 $function_to_run "$@"
+
+# Kills all child process, ampersanded things like `long_running_daemon.sh &`
+trap terminate SIGINT
+terminate(){
+  pkill -SIGINT -P $$
+  exit
+}
 
 if [ "$KEEP_ALIVE" = "true" ]; then
   tail -f dsh

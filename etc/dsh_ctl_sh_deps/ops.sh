@@ -188,6 +188,15 @@ function clean_dangling() {
 }
 
 function hungry_services_tunnels() {
-  ssh -N -i etc/keys/server_rsa -L 5005:localhost:5005 root@$io1_HOST &
-  ssh -N -i etc/keys/server_rsa -L 8884:localhost:8884 root@$io1_HOST
+  echo "Opening tunnels to hungry services on prod..."
+  hungry_service_tunnel 5005 &
+  hungry_service_tunnel 8884 &
+  wait
+}
+
+# This are big, relatively unchanging services, such as bert, image-quality, that don't need to be
+# brought up and down in every CI run
+function hungry_service_tunnel() {
+  port=$1
+  ssh -N -i etc/keys/server_rsa -L $port:localhost:$port root@$io1_HOST
 }
