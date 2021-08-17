@@ -41,7 +41,7 @@ export const RestaurantTagsRow = (props: TagRowProps) => {
 
 const RestaurantTagsRowContent = memo(
   graphql(function RestaurantTagsRow(props: TagRowProps) {
-    const { size, restaurantSlug, showMore } = props
+    const { size = 'sm', restaurantSlug, showMore } = props
     if (!restaurantSlug) {
       return null
     }
@@ -72,10 +72,13 @@ const RestaurantTagsRowContent = memo(
                 marginBottom={props.spacing ?? 5}
                 marginRight={props.spacingHorizontal ?? 0}
                 replaceSearch
-                size={size ?? 'sm'}
+                size={size}
                 {...tag}
                 votable
                 restaurantSlug={restaurantSlug}
+                {...(size === 'sm' && {
+                  backgroundColor: 'transparent',
+                })}
               />
               <Spacer />
             </React.Fragment>

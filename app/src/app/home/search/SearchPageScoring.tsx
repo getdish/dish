@@ -74,6 +74,7 @@ export const SearchPageScoring = memo(() => {
           {tagsWithPct.map(({ tag, pct }, index) => {
             return (
               <TagButton
+                backgroundColor="transparent"
                 hideRating
                 hideIcon
                 key={tag.slug ?? index}

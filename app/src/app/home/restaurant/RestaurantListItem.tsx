@@ -522,6 +522,7 @@ const RestaurantListItemScoreBreakdown = memo(
           {restaurantTags.map((rtag) => {
             return (
               <TagButton
+                backgroundColor="transparent"
                 key={rtag.slug}
                 {...getTagButtonProps(rtag)}
                 votable

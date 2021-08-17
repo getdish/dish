@@ -94,6 +94,7 @@ export const LenseButton = ({
               color={color}
               textAlign="center"
               height={16}
+              ellipse
             >
               {name}
             </Text>
