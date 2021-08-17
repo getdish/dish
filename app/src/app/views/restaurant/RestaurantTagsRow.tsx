@@ -76,9 +76,6 @@ const RestaurantTagsRowContent = memo(
                 {...tag}
                 votable
                 restaurantSlug={restaurantSlug}
-                {...(size === 'sm' && {
-                  backgroundColor: 'transparent',
-                })}
               />
               <Spacer />
             </React.Fragment>

@@ -94,7 +94,7 @@ const typeColors = {
 export const TagButton = memo((props: TagButtonProps) => {
   const themeName = useThemeName()
   const color = (props.type && typeColors[props.type]) || 'green'
-  const next = themeName.includes('dark') ? `${color}-dark` : color
+  const next = themeName.includes('dark') ? `${color}-dark` : `${color}-light`
   return (
     <Theme name={next}>
       <TagButtonInner {...props} />
@@ -154,9 +154,12 @@ const TagButtonInner = (props: TagButtonProps) => {
     <HStack
       spacing={fontSize * 0.5}
       borderRadius={8}
-      backgroundColor={theme.backgroundColorSecondary}
+      backgroundColor={theme.backgroundColor}
+      hoverStyle={{
+        backgroundColor: theme.backgroundColorSecondary,
+      }}
       alignItems="center"
-      paddingHorizontal={isSmall ? 2 : 8}
+      paddingHorizontal={isSmall ? 5 : 12}
       paddingVertical={isSmall ? 3 : 5}
       height={isSmall ? 32 : 38}
       {...rest}
