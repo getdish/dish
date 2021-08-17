@@ -68,31 +68,19 @@ function deploy_dish_stack() {
 # shellcheck disable=SC2120
 function deploy_dish() {
   echo "deploying dish - $DISH_ENV $POSTGRES_DB $POSTGRES_DB_DIR"
-  postgres_resetwal
-  deploy_dish_stack || (echo "retry" && deploy_dish_stack)
 
-  # echo "for some reason postgres not been coming back online, temp fix"
-  # docker service update --force dish_postgres
+  updateable_services="_app|_cron|_hasura|_hasura|_hooks|_search|_site|_worker"
+  services=$(docker stack services --format "{{.Name}}" dish | grep -E "$updateable_services")
 
-  if [ "$1" == "--force" ]; then
-    #  force restart
-    docker stack services -q dish | while read -r service; do
-      echo "dish restarting: $service"
-      # date out of sequence errors on backgrounding &
-      # docker_restart "$service" &
-      docker_restart "$service"
-    done
-    wait
-  fi
+  echo "$services" | while read -r service; do
+    echo "dish restarting: $service"
+    docker_restart "$service"
+  done
+  wait
 
   sleep 5
-
-  if ! timeout --preserve-status 15 bash -c wait_until_postgres_ready; then
-    echo "Timed out waiting for postgres to start, reset WAL and retry"
-    postgres_resetwal
-    docker_restart dish_postgres
-  fi
 }
+
 
 function deploy_one() {
   # stack service
