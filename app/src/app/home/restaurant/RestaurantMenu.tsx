@@ -1,47 +1,17 @@
 import { graphql } from '@dish/graph'
 import React, { memo, useState } from 'react'
-import { StyleSheet } from 'react-native'
-import {
-  AbsoluteHStack,
-  Button,
-  Grid,
-  HStack,
-  LinearGradient,
-  Paragraph,
-  Spacer,
-  VStack,
-  useTheme,
-} from 'snackui'
+import { Grid, HStack, Paragraph, Spacer, VStack, useTheme } from 'snackui'
 
 import { queryRestaurant } from '../../../queries/queryRestaurant'
 import { Image } from '../../views/Image'
 import { SlantedTitle } from '../../views/SlantedTitle'
-
-export const HiddenSection = (props: { children: any; cutoff: number }) => {
-  const theme = useTheme()
-  const [open, setOpen] = useState(false)
-
-  return (
-    <VStack overflow="hidden" position="relative" maxHeight={open ? 10_000 : props.cutoff}>
-      {props.children}
-      <AbsoluteHStack zIndex={10} bottom={0} left={0} right={0} justifyContent="center">
-        <Button onClick={() => setOpen((x) => !x)}>{open ? 'Close' : 'Show full menu'}</Button>
-      </AbsoluteHStack>
-      <LinearGradient
-        pointerEvents="none"
-        style={[StyleSheet.absoluteFill, { top: '50%', opacity: open ? 0 : 1 }]}
-        start={[0, 0]}
-        end={[0, 1]}
-        colors={[theme.backgroundColorTransparent, theme.backgroundColor]}
-      />
-    </VStack>
-  )
-}
+import { HiddenSection } from './HiddenSection'
 
 export const RestaurantMenu = memo(
   graphql(({ restaurantSlug }: { restaurantSlug: string }) => {
     const [restaurant] = queryRestaurant(restaurantSlug)
-    const items = restaurant?.menu_items({ limit: 120 }) ?? []
+    const [showingMenu, setShowingMenu] = useState(false)
+    const items = restaurant?.menu_items({ limit: showingMenu ? 120 : 16 }) ?? []
     const theme = useTheme()
     return (
       <>
@@ -56,7 +26,7 @@ export const RestaurantMenu = memo(
               Menu
             </SlantedTitle>
             <Spacer size="xl" />
-            <HiddenSection cutoff={600}>
+            <HiddenSection onChangeOpen={setShowingMenu} cutoff={600}>
               <Grid itemMinWidth={320}>
                 {items.map((item, i) => (
                   <VStack

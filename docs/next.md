@@ -6,9 +6,6 @@
 - [c] [2] closed restaurants detection (i've seen a number of variants)
 - [c] [2] get cron crawling every few days
 - [i] [0] get backups uploading (postgres)
-- [m] [0] move region then search goes to prev region
-- [m] [0] go to diff region and return to one sometimes has empty list cards (graphql caching logic issue)
-- [m] [0] (restaurantpage) dont do anything on change tag selected (scroll etc)
 - [d] [1] test runthrough searching with keyboard at least ~3 fixes
 - [m] [1] upload photos from app
 <!-- - [m] [2] add ratings from photo upload -->
@@ -23,6 +20,10 @@
 ---
 
 # inbox
+
+- login/signup forms need a upgrade runthrough:
+  - default to login if they have a cookie showing they've been logged in before
+  - if they autocomplete the signup form, we can either move them to login or at least copy the values into login
 
 - lists need a way to change the slug since we auto-generate it first. it should probably just do it one time, so need to track that in db (or some other way?).
 
